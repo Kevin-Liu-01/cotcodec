@@ -39,3 +39,28 @@ Forum, Interconnects, The Gradient (community).
 
 Competitive groups tracked: DeepSeek Research, Microsoft (EfficientXLang),
 Li et al. (UPenn), Wang et al. (LMU Munich), Schut/Gal (Oxford).
+
+## [2026-04-28] intel | Full intelligence source audit
+
+Audited all Kevin's data sources for research intelligence:
+
+- **294 X bookmarks** (168 unique accounts) — extracted 60+ research-relevant
+  bookmarks covering agent harnesses, memory architecture, token optimization,
+  subagent orchestration, benchmark infrastructure
+- **41 installed skills** — mapped 13 research-relevant + 3 design/viz skills
+- **51 Obsidian clips** — 8 research-relevant clips identified
+- **378 wiki pages** — key pages mapped for each orchestration variable
+- **10 key people to track** — @garrytan, @karpathy, @rauchg, @shawmakesmagic,
+  @akseljoonas, @mvanhorn, @hwchase17, @affaanmustafa, @iamfakeguru, @himanshustwts
+- **10 primary research tools** — last30days, agent-reach, Jina Reader,
+  Semantic Scholar API, arXiv API, GitHub CLI, Exa, qmd, defuddle, nia-docs
+
+Key signals captured:
+- Claude Managed Agents (Anthropic official harness) — compatibility requirement
+- Caveman token optimization (65% savings) — reasoning format baseline
+- Claude Code reverse-engineering — compaction policy data points
+- GBrain v0.11 Minions — delegation topology evidence
+- ml-intern (HuggingFace) — automated research loop pattern
+
+Built: `research/intelligence-sources.md` (comprehensive inventory)
+Updated: `memory.json` with key signals, people, tool inventory

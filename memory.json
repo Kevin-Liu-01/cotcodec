@@ -290,7 +290,43 @@
     "key_papers_since_proposal": [],
     "provider_changes": [],
     "benchmark_updates": [],
-    "notes": "Danqi flagged that the world is changing fast. This section tracks everything that might affect the experimental design."
+    "notes": "Danqi flagged that the world is changing fast. This section tracks everything that might affect the experimental design.",
+    "key_signals_from_bookmarks": [
+      "Claude Managed Agents (Anthropic official harness) — 57K likes, 50K bookmarks. Must be compatible.",
+      "GBrain v0.11 Minions (queue/jobs for subagents) — delegation topology variable",
+      "Karpathy Confusion Protocol in GStack — ambiguity detection = verification cadence variable",
+      "Caveman token optimization: 65% savings benchmarked — reasoning format variable baseline",
+      "Claude Code reverse-engineering: autoCompact at 167K, 29-30% false claims — compaction policy variable",
+      "Shaw's 8-subagent parallel cleanup — delegation topology variable",
+      "open-agents.dev (Vercel) — reference platform for cloud coding agents",
+      "ml-intern (HuggingFace) — automated research loop agent (papers → citations → GPU experiments)",
+      "Vercel Workflows GA — durable execution for agents, retry/recovery infrastructure",
+      "Custom ESLint for anti-slop — lint-enforced orchestration constraints"
+    ],
+    "key_people": [
+      { "handle": "@garrytan", "why": "GBrain/GStack. Reference agent brain+skills architecture. 14 bookmarks.", "track": "every_release" },
+      { "handle": "@karpathy", "why": "LLM-Wiki originator. Confusion Protocol. 99K bookmarks on foundational tweet.", "track": "every_post" },
+      { "handle": "@rauchg", "why": "Vercel CEO. open-agents.dev, Workflow SDK, Sandboxes. Agent infra at scale.", "track": "weekly" },
+      { "handle": "@shawmakesmagic", "why": "Subagent orchestration, code quality. 16K bookmarks.", "track": "weekly" },
+      { "handle": "@akseljoonas", "why": "HuggingFace ml-intern. Automated research loop.", "track": "weekly" },
+      { "handle": "@mvanhorn", "why": "last30days v3 creator. 20K stars. Our primary research engine.", "track": "monthly" },
+      { "handle": "@hwchase17", "why": "LangChain. 'Memory is markdown' quote. Agent memory architecture.", "track": "weekly" },
+      { "handle": "@affaanmustafa", "why": "Everything Claude Code (140K stars). Token optimization, hooks.", "track": "monthly" },
+      { "handle": "@iamfakeguru", "why": "Claude Code source reverse-engineering. Internal gates revealed.", "track": "on_post" },
+      { "handle": "@himanshustwts", "why": "Claude Code memory architecture reverse-engineering.", "track": "on_post" }
+    ]
+  },
+
+  "intelligence_tools": {
+    "_note": "Full inventory at research/intelligence-sources.md",
+    "primary_research_engines": ["last30days", "agent-reach", "jina-reader", "semantic-scholar-api", "arxiv-api", "github-cli", "exa", "qmd"],
+    "data_sources": {
+      "x_bookmarks": { "count": 294, "last_sync": "2026-04-24", "path": "~/Documents/GitHub/my-wiki/raw/x-bookmarks/bookmarks.jsonl" },
+      "obsidian_clips": { "count": 51, "path": "~/Documents/GitHub/my-wiki/raw/obsidian/" },
+      "wiki_pages": { "count": 378, "path": "~/Documents/GitHub/my-wiki/wiki/" },
+      "installed_skills": { "count": 41, "path": "~/.cursor/skills/" }
+    },
+    "unique_bookmarked_accounts": 168
   },
 
   "infrastructure": {
