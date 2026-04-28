@@ -398,17 +398,77 @@ When experiments produce findings, update both the wiki and `memory.json`.
 | `update-memory` | `skills/update-memory.md` | Update memory.json after findings |
 | `fertility-check` | `skills/fertility-check.md` | Tokenizer fertility measurement |
 
+## Compute Infrastructure
+
+### Mac Mini (Always-On Runner)
+
+The Mac Mini serves as the project's always-on compute node. Setup:
+`./scripts/setup-mac-mini.sh`
+
+| Role | What it does |
+|------|-------------|
+| Experiment runner | Process queued experiments 24/7 via `scripts/run-queue.sh` |
+| Research scanner | Weekly frontier scans on cron (Monday 6am) |
+| Local inference | Run open-weight models (DeepSeek, Qwen, Llama) via MLX/Ollama for free |
+| Benchmark host | Run tau-bench, API-Bank, WebArena docker environments |
+| Trace analysis | DuckDB at `data/traces.duckdb` for fast SQL queries over experiment data |
+| Auto-sync | Push results to GitHub automatically after each batch |
+
+### Experiment Workflow
+
+```
+Kevin's laptop                           Mac Mini
+──────────────                           ────────
+Define experiment YAML                   
+  │                                      
+  ├── ./scripts/queue-experiment.sh ──→  data/queue/*.yaml
+  │                                        │
+  │                                        ├── ./scripts/run-queue.sh (cron)
+  │                                        │     │
+  │                                        │     ├── Run harness against API/local models
+  │                                        │     ├── Collect traces to data/traces/
+  │                                        │     ├── Aggregate to data/results/
+  │                                        │     └── git push results
+  │                                        │
+  └── git pull ←──────────────────────── Results available
+```
+
+### Local Inference Strategy
+
+Free experimentation on open-weight models before spending on API calls:
+
+| Model | Framework | Use case |
+|-------|-----------|----------|
+| DeepSeek-R1 (distilled 8B) | MLX / Ollama | Primary — our key evidence paper. Free pilots. |
+| Qwen-3 8B | MLX / Ollama | Multilingual Chinese-English. Language variable experiments. |
+| Llama-4 8B | MLX / Ollama | Open-weight baseline. |
+| Claude-4-Sonnet | Anthropic API | Publication-grade closed-model experiments. |
+| GPT-4o / GPT-5 | OpenAI API | Cross-provider comparison. |
+
+**Strategy:** Run pilot experiments locally (free, unlimited), validate harness
+correctness, then run publication experiments on closed models (metered).
+
+### API Budget
+
+Track per-experiment spend. Pilot experiments should cost <$5 each.
+Full benchmark runs budget ~$50-100 per condition per benchmark.
+Use `memory.json` → `infrastructure.compute.api_budget` to track.
+
 ## Required Tooling
 
 | Tool | Purpose |
 |------|---------|
 | Python 3.11+ | Harness runtime |
-| `uv` or `pip` | Package management |
+| `uv` | Package management (fast, modern) |
 | `httpx` | Async API calls |
 | `tiktoken` | OpenAI tokenizer measurement |
 | `anthropic` | Claude API client |
 | `openai` | OpenAI API client |
+| `mlx` / `mlx-lm` | Local inference on Apple Silicon |
+| `ollama` | Easy local model serving |
+| `duckdb` | Fast trace analysis (SQL over JSONL) |
 | `matplotlib` / `seaborn` | Plotting (Pareto frontiers) |
 | `pandas` | Data analysis |
 | `pyyaml` | Experiment configs |
 | `rich` | Terminal output |
+| `tailscale` | Remote access to Mac Mini |
