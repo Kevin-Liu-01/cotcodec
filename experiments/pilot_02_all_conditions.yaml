@@ -4,7 +4,7 @@ description: >
   initial signal on which conditions are worth pursuing at scale.
 
 benchmark: tau_bench
-model: claude-4-sonnet
+model: claude-sonnet-4.6
 
 conditions:
   - english_only

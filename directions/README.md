@@ -65,6 +65,14 @@ See individual files in this directory for each variable:
 | Tool scheduling | `10-tool-scheduling.md` | Medium-Low | 4 |
 | Delegation topology | `11-delegation-topology.md` | Low | 4+ |
 | Instruction hierarchy | `12-instruction-hierarchy.md` | Low | 4+ |
+| **Harness beats model** | `13-harness-beats-model.md` | **High** | **1-2** |
+| **Degradation detection** | `14-degradation-detection.md` | **High** | **1-2** |
+
+Variables 13-14 are meta-directions that cut across all other variables:
+- **Harness beats model** tests whether optimizing variables 1-12 on an old
+  model outperforms a new model with naive orchestration
+- **Degradation detection** ensures changes to any variable don't cause
+  regressions (directly motivated by Anthropic's April 23, 2026 postmortem)
 
 ## Why Language First
 

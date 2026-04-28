@@ -48,7 +48,7 @@ class FertilityMeasurer:
     Anthropic token counting requires the API (added when needed).
     """
 
-    def __init__(self, model: str = "gpt-4o"):
+    def __init__(self, model: str = "gpt-5.5"):
         self.model = model
         try:
             self.encoding = tiktoken.encoding_for_model(model)

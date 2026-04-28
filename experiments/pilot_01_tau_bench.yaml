@@ -5,7 +5,7 @@ description: >
   Not for publication — for harness validation only.
 
 benchmark: tau_bench
-model: claude-4-sonnet
+model: claude-sonnet-4.6
 
 conditions:
   - english_only

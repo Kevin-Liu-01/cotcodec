@@ -1,0 +1,53 @@
+name: harness_beats_model_01
+description: >
+  The headline experiment: can a 2024 model with optimized orchestration
+  beat a 2026 frontier model with naive orchestration?
+
+  Phase 1: baseline (naive English-only) for all model tiers.
+  Phase 2: full orchestration on old models only.
+  Phase 3: Pareto frontier comparison.
+
+benchmark: tau_bench
+
+models:
+  frontier_naive:
+    - claude-opus-4.7-adaptive
+    - gpt-5.5
+  strong_naive:
+    - claude-sonnet-4.6
+    - gpt-5.4
+  old_orchestrated:
+    - claude-sonnet-3.5
+    - gpt-4o
+
+conditions:
+  naive: [english_only]
+  orchestrated:
+    - english_only
+    - internal_chinese
+    - controlled_chinese
+    - english_compressed
+    - structured_english
+    - dynamic_router
+
+tasks: 20
+seeds: [42, 43, 44, 45, 46]
+
+metrics:
+  - total_billed_tokens
+  - task_success_rate
+  - tool_call_exact_match
+  - argument_correctness
+  - wall_clock_latency_ms
+  - retry_count
+  - cost_usd
+
+analysis:
+  - pareto_frontier: cost_usd vs task_success_rate
+  - comparison: "Can old_orchestrated reach frontier_naive success at lower cost?"
+  - decomposition: "Which orchestration variables contribute most to the uplift?"
+
+notes: >
+  Directly motivated by Anthropic's April 23 postmortem showing that
+  harness-level changes (effort, caching, verbosity) caused perceived
+  model degradation. If harness can degrade, harness can also uplift.

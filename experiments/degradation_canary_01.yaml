@@ -1,0 +1,46 @@
+name: degradation_canary_01
+description: >
+  Validate the OrchVar-Canary benchmark: confirm each canary task category
+  fails under the corresponding known-bad orchestration change.
+
+  Simulates the three Anthropic postmortem bugs as orchestration conditions
+  and verifies the canary benchmark catches them.
+
+benchmark: orchvar_canary
+
+model: claude-sonnet-4.6
+
+conditions:
+  - english_only
+  - english_only_low_effort
+  - english_only_no_thinking_cache
+  - english_only_25word_limit
+
+simulated_bugs:
+  low_effort:
+    description: "Simulate effort high→medium (Anthropic bug #1)"
+    orchestration_change: "Set reasoning effort to medium"
+    expected_canary_failure: reasoning_depth
+
+  no_thinking_cache:
+    description: "Simulate thinking cleared every turn (Anthropic bug #2)"
+    orchestration_change: "Clear all prior thinking on every turn"
+    expected_canary_failure: context_recall, multi_turn_memory
+
+  25word_limit:
+    description: "Simulate ≤25 word verbosity limit (Anthropic bug #3)"
+    orchestration_change: "Add 'keep text between tool calls to ≤25 words'"
+    expected_canary_failure: verbosity_sensitive
+
+tasks: -1  # all canary tasks
+seeds: [42, 43, 44]
+
+metrics:
+  - task_success_rate
+  - mcnemar_p_value
+  - canary_category_pass_rate
+
+analysis:
+  - "Does each simulated bug cause the expected canary category to fail?"
+  - "McNemar's test significance on each category"
+  - "False positive rate: do unrelated categories remain stable?"

@@ -168,6 +168,15 @@ Key question: do our experimental assumptions still hold?
 Multilingual safety, instruction following, agent safety evaluation.
 Key question: do orchestration changes introduce safety regressions?
 
+### Thread H: Model Quality & Degradation
+Model releases, quality regressions, harness-vs-model effects.
+Key question: when quality degrades, is it the model or the harness?
+Reference: Anthropic April 23, 2026 postmortem, ICLR 2026 McNemar's test paper.
+
+### Thread I: Harness-Beats-Model Evidence
+Evidence that orchestration improvements outweigh model generation jumps.
+Key question: can we find cases where old+orchestrated > new+naive?
+
 ---
 
 ## Signal Evaluation Protocol

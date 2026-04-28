@@ -95,3 +95,33 @@ Built: `research/x-following-analysis.md` (319 lines — full following classifi
 Rewrote: `research/intelligence-sources.md` (complete inventory)
 Enriched: `directions/02,03,08,09,11,12.md` with bookmark evidence
 Updated: `memory.json` with full audit data + 33 people tracking list
+
+## [2026-04-28] models+benchmarks | Frontier model update, harness-beats-model, degradation detection
+
+**Model landscape updated to April 2026 frontier:**
+- Frontier tier: Claude Opus 4.7 Adaptive (Elo 1503, SWE 87.6%), GPT-5.5
+  (agentic 90.1, long-context 87.5), DeepSeek V4 Pro (overall 85, 9x cheaper, MIT)
+- Strong tier: Sonnet 4.6, GPT-5.4 (Toolathlon 54.6%), DeepSeek V3.2, Gemini 3 Pro
+  (tau-bench 85.4%)
+- Baseline old: Sonnet 3.5, GPT-4o (for harness-beats-model hypothesis)
+- All experiment YAMLs and model references updated
+
+**Two new research directions:**
+- `directions/13-harness-beats-model.md` — can old model + optimized orchestration
+  beat new model + naive orchestration? Directly motivated by Anthropic April 23
+  postmortem (3 harness-level changes caused perceived model degradation)
+- `directions/14-degradation-detection.md` — McNemar's test statistical framework
+  (ICLR 2026) + OrchVar-Canary custom benchmark for catching harness regressions
+
+**Benchmark overhaul (2 existing + 6 new + 2 custom):**
+- Added: MCP-Atlas (1K tasks, 36 MCP servers), Toolathlon (108 multi-system),
+  SWE-bench Verified (500 human-validated), Amazing Agent Race (1400 DAG puzzles)
+- Custom: OrchVar-Canary (regression detection, inspired by Anthropic postmortem),
+  Multilingual-Agent-Fidelity (semantic fidelity under language switching)
+- New module: `harness/metrics/degradation.py` — McNemar's test, Bonferroni/Fisher/Simes
+  aggregation, canary task categories
+
+**3 new experiments:**
+- `harness_beats_model_01.yaml` — old + orchestrated vs. new + naive
+- `degradation_canary_01.yaml` — validate canary catches simulated Anthropic bugs
+- `frontier_comparison_01.yaml` — all 4 frontier models, all 7 conditions, 10 seeds

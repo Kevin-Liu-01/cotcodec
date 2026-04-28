@@ -1,0 +1,104 @@
+# Variable 14: Degradation Detection
+
+**Status:** New research direction. Directly motivated by Anthropic's April 23, 2026 postmortem.
+
+## The Problem
+
+Orchestration variable changes can cause quality degradation that is:
+- **Invisible to internal evals** — Anthropic's own evals didn't catch 2 of 3 issues
+- **Indistinguishable from model noise** — users see "worse" but can't prove it statistically
+- **Compounding** — multiple small changes stack into perceived broad degradation
+- **Hard to reproduce** — bugs appear only in corner cases (stale sessions, specific effort levels)
+
+The Anthropic postmortem is the case study: three harness-level changes, each
+affecting different traffic slices on different schedules, created what looked
+like "broad, inconsistent degradation."
+
+## The Research Question
+
+Can we build automated detection that catches orchestration-level quality
+regressions before users notice them?
+
+## Anthropic Postmortem Decomposition
+
+| Change | Orchestration variable | Detection difficulty | Their timeline |
+|--------|----------------------|---------------------|----------------|
+| Effort high→medium | V2: Reasoning format | Low — direct A/B | 33 days to revert |
+| Thinking cache cleared every turn | V9: Compaction + V3: Memory | High — corner case, stale sessions | 15 days to fix |
+| "≤25 words between tool calls" | V4: Context allocation | Medium — needs broad evals | 4 days to revert |
+
+Key quotes from the postmortem:
+- "Neither our internal usage nor evals initially reproduced the issues"
+- "Two unrelated experiments made it challenging for us to reproduce"
+- "Combined with this only happening in a corner case (stale sessions)"
+- Opus 4.7 Code Review found the bug that Opus 4.6 Code Review missed
+
+## Approaches
+
+### 1. McNemar's Test (ICLR 2026)
+
+From "When LLMs get significantly worse" (accepted ICLR 2026):
+
+Instead of comparing aggregate scores (which are noisy), compare per-sample
+outcomes. For each test sample, record whether the model got it right under
+condition A vs. condition B. McNemar's test then determines if the difference
+is statistically significant.
+
+- Can detect degradations as small as 0.3% accuracy drop
+- Controls false positive rate
+- Works on top of LM Evaluation Harness (already standard)
+
+Three aggregation methods across benchmarks:
+- **Bonferroni** — most conservative, low false positives
+- **Fisher** — balanced sensitivity
+- **Simes** — most sensitive, higher false positive risk
+
+### 2. OrchVar-Canary Benchmark
+
+A custom benchmark specifically designed to be sensitive to orchestration
+variable changes. Small (50-100 tasks), fast to run, high signal.
+
+**Task categories:**
+
+| Category | What it catches | Inspired by |
+|----------|----------------|-------------|
+| **Reasoning depth probes** | Tasks that fail when thinking is too short | Effort high→medium regression |
+| **Context recall probes** | Tasks that need info from step 2 at step 10 | Thinking cache bug |
+| **Verbosity-sensitive** | Tasks where brevity causes info loss | "≤25 words" prompt regression |
+| **Multi-turn memory** | Tasks that degrade if working memory is cleared | Memory policy regressions |
+| **Tool argument precision** | Tasks where sloppy args cause failure | Schema fidelity under compression |
+| **Safety canaries** | Tasks that test refusal under language mixing | Instruction hierarchy regressions |
+
+Design principle: each task should PASS under good orchestration and FAIL
+under a specific known-bad orchestration change. If the canary dies, you
+know exactly which variable changed.
+
+### 3. Continuous Monitoring
+
+Run the canary suite on every harness change:
+
+```
+Harness change committed
+  → Run OrchVar-Canary (50 tasks, ~5 min)
+  → Compare against last N runs (McNemar's test)
+  → If significant regression → block change, alert
+  → If no regression → proceed
+```
+
+This is the agent-systems equivalent of a CI test suite, but for
+orchestration quality instead of code correctness.
+
+## Connections
+
+- **All variables** — degradation detection is the quality gate for every other variable
+- **Harness-beats-model** (V13) — if harness changes can degrade frontier models,
+  detecting those changes is critical infrastructure
+- **Verification cadence** (V8) — degradation detection IS verification at the
+  experiment level, not the step level
+
+## Prior Work
+
+- Anthropic, "An update on recent Claude Code quality reports" (April 23, 2026)
+- Kiela et al. 2026 — "When LLMs get significantly worse" (ICLR 2026)
+- Amazon LLM-Accuracy-Stats — github.com/amazon-science/LLM-Accuracy-Stats
+- MonitorBench — Chain-of-thought monitorability (arXiv 2603.28590)

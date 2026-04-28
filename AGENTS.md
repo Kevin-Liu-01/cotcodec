@@ -158,15 +158,20 @@ cotcodec/
 │   │   └── polish.py      # Polish stress condition
 │   ├── benchmarks/        # Benchmark adapters
 │   │   ├── base.py        # Abstract benchmark interface
-│   │   ├── tau_bench.py   # τ-bench adapter
-│   │   ├── api_bank.py    # API-Bank adapter
-│   │   ├── webarena.py    # WebArena adapter
-│   │   └── swe_bench.py   # SWE-bench adapter (optional)
+│   │   ├── tau_bench.py           # τ-bench adapter
+│   │   ├── api_bank.py            # API-Bank adapter
+│   │   ├── mcp_atlas.py           # MCP-Atlas (Scale Labs, 36 servers, 1K tasks)
+│   │   ├── toolathlon.py          # Toolathlon (108 multi-system workflows)
+│   │   ├── swe_bench_verified.py  # SWE-bench Verified (500 human-validated)
+│   │   ├── agent_race.py          # Amazing Agent Race (1400 DAG puzzles)
+│   │   ├── orchvar_canary.py      # OrchVar-Canary (custom, regression detection)
+│   │   └── multilingual_fidelity.py  # Multilingual-Agent-Fidelity (custom, Paper 1)
 │   ├── metrics/           # Metric collection and analysis
 │   │   ├── collector.py   # Per-step metric collection
 │   │   ├── analyzer.py    # Pareto frontier, decomposition
 │   │   ├── fertility.py   # Tokenizer fertility measurement
-│   │   └── safety.py      # Safety evaluation suite
+│   │   ├── safety.py      # Safety evaluation suite
+│   │   └── degradation.py # McNemar's test degradation detection
 │   └── routing/           # Dynamic routing policy
 │       ├── features.py    # Message feature extraction
 │       ├── policy.py      # Routing policy implementation
@@ -437,13 +442,41 @@ Define experiment YAML
 
 Free experimentation on open-weight models before spending on API calls:
 
+### Model Tiers
+
+**Frontier (publication-grade):**
+
+| Model | Provider | Key metric | Price (in/out per M) |
+|-------|----------|-----------|---------------------|
+| Claude Opus 4.7 (Adaptive) | Anthropic API | Arena Elo 1503, SWE-bench 87.6% | $5 / $25 |
+| GPT-5.5 | OpenAI API | BenchLM agentic 90.1, long-context 87.5 | $5 / $30 |
+| DeepSeek V4 Pro | API or local | BenchLM overall 85, LiveCodeBench 93.5 | $1.74 / $3.48 |
+
+**Strong (primary experiments):**
+
+| Model | Provider | Key metric | Note |
+|-------|----------|-----------|------|
+| Claude Sonnet 4.6 | Anthropic API | Best cost/perf | Workhorse for pilots |
+| GPT-5.4 | OpenAI API | Toolathlon 54.6% | Strong tool use |
+| DeepSeek V3.2 | API or local | tau-bench 80.4% | Good baseline |
+| Gemini 3 Pro | Google API | tau-bench 85.4% | Leads tau-bench |
+
+**Baseline old (for harness-beats-model hypothesis):**
+
+| Model | Provider | Key metric | Note |
+|-------|----------|-----------|------|
+| Claude Sonnet 3.5 | Anthropic API | BenchLM agentic 82.4 | 2024-era, still strong |
+| GPT-4o | OpenAI API | Well-characterized | 2024-era baseline |
+| DeepSeek R1 8B | Local (MLX/Ollama) | Free | Original key evidence model |
+
+**Local inference (free, unlimited on Mac Mini):**
+
 | Model | Framework | Use case |
 |-------|-----------|----------|
-| DeepSeek-R1 (distilled 8B) | MLX / Ollama | Primary — our key evidence paper. Free pilots. |
-| Qwen-3 8B | MLX / Ollama | Multilingual Chinese-English. Language variable experiments. |
-| Llama-3.3 | MLX / Ollama | Meta's latest open-weight baseline. |
-| Claude-4-Sonnet | Anthropic API | Publication-grade closed-model experiments. |
-| GPT-4o / GPT-5 | OpenAI API | Cross-provider comparison. |
+| DeepSeek V4 Pro | MLX / Ollama | Frontier AND free. MIT open weights. |
+| DeepSeek R1 8B | MLX / Ollama | Distilled, fast for harness validation. |
+| Qwen 3 8B | MLX / Ollama | Multilingual Chinese-English. Language variable experiments. |
+| Llama 3.3 | MLX / Ollama | Meta open-weight baseline. |
 
 **Strategy:** Run pilot experiments locally (free, unlimited), validate harness
 correctness, then run publication experiments on closed models (metered).

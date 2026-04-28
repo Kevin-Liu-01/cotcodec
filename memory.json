@@ -136,6 +136,22 @@
         "note": "Safety-critical. Wallace et al. Language mixing may blur boundaries."
       }
     ],
+    "meta_directions": [
+      {
+        "variable": "harness_beats_model",
+        "file": "directions/13-harness-beats-model.md",
+        "tractability": "high",
+        "status": "new",
+        "note": "Can old model + optimized orchestration beat new model + naive? Motivated by Anthropic April 23 postmortem."
+      },
+      {
+        "variable": "degradation_detection",
+        "file": "directions/14-degradation-detection.md",
+        "tractability": "high",
+        "status": "new",
+        "note": "McNemar's test + OrchVar-Canary benchmark. Catches harness-level quality regressions."
+      }
+    ],
     "interaction_hypotheses": [
       "Language × memory: shorter language = more memory budget (multiplicative)",
       "Language × planning: planning text is highest compression target",
@@ -186,15 +202,48 @@
         "name": "tau-bench",
         "purpose": "Tool-agent-user interaction; argument correctness and policy compliance",
         "repo": "https://github.com/sierra-research/tau-bench",
+        "top_performer": "Gemini 3 Pro (85.4%)",
         "priority": 1,
-        "status": "not_started"
+        "status": "stub_built"
+      },
+      {
+        "name": "MCP-Atlas",
+        "purpose": "36 real MCP servers, 220 tools, 1000 tasks. Multi-server tool orchestration.",
+        "source": "https://scale.com/research/mcpatlas",
+        "paper": "arXiv 2602.00933",
+        "top_performer": "Claude Opus 4.5 (62.3%)",
+        "priority": 1,
+        "status": "stub_built"
+      },
+      {
+        "name": "Toolathlon",
+        "purpose": "108 tasks across real software systems, ~20 tool interactions each",
+        "source": "https://www.bracai.eu/post/toolathlon-benchmark",
+        "top_performer": "GPT-5.4 (54.6%)",
+        "priority": 1,
+        "status": "stub_built"
+      },
+      {
+        "name": "SWE-bench Verified",
+        "purpose": "500 human-validated GitHub issues. Code-heavy stress test.",
+        "repo": "https://github.com/SWE-bench/SWE-bench",
+        "top_performer": "Claude Opus 4.7 (87.6%)",
+        "priority": 1,
+        "status": "stub_built"
       },
       {
         "name": "API-Bank",
         "purpose": "Tool planning and API usage",
         "repo": "https://github.com/AlibabaResearch/DAMO-ConvAI/tree/main/api-bank",
-        "priority": 1,
-        "status": "not_started"
+        "priority": 2,
+        "status": "stub_built"
+      },
+      {
+        "name": "Amazing Agent Race",
+        "purpose": "1400 DAG puzzles. Decomposes navigation (27-52%) vs tool-use (<17%) errors.",
+        "paper": "arXiv 2604.10261",
+        "priority": 2,
+        "status": "stub_built"
       },
       {
         "name": "WebArena",
@@ -209,13 +258,22 @@
         "repo": "https://github.com/WPENGxs/X-WebAgentBench",
         "priority": 2,
         "status": "not_started"
+      }
+    ],
+    "custom_benchmarks": [
+      {
+        "name": "OrchVar-Canary",
+        "purpose": "Detect orchestration-level quality regressions. 50-100 tasks targeting specific variables.",
+        "novel_contribution": "Inspired by Anthropic April 23 postmortem. First benchmark designed to catch harness-level regressions.",
+        "priority": 1,
+        "status": "stub_built"
       },
       {
-        "name": "SWE-bench",
-        "purpose": "Code-heavy stress test (optional)",
-        "repo": "https://github.com/SWE-bench/SWE-bench",
-        "priority": 3,
-        "status": "not_started"
+        "name": "Multilingual-Agent-Fidelity",
+        "purpose": "Semantic fidelity under language switching. Terminology-heavy agent tasks.",
+        "novel_contribution": "Custom for Paper 1. Tests whether language routing causes meaningful drift.",
+        "priority": 1,
+        "status": "stub_built"
       }
     ],
     "conditions": [
@@ -282,11 +340,30 @@
 
   "landscape_tracking": {
     "last_radar_run": null,
-    "models_to_track": [
-      "claude-4-sonnet", "claude-4-opus", "gpt-4o", "gpt-5",
-      "deepseek-r1", "deepseek-v3", "gemini-2.5-pro",
-      "qwen-3", "llama-3.3"
-    ],
+    "models_to_track": {
+      "frontier": [
+        { "id": "claude-opus-4.7-adaptive", "provider": "anthropic", "arena_elo": 1503, "swe_bench": 87.6, "pricing": "$5/$25 per M", "note": "Highest Arena Elo. Best SWE-bench. New tokenizer inflates costs up to 35%." },
+        { "id": "gpt-5.5", "provider": "openai", "benchlm_agentic": 90.1, "long_context": 87.5, "pricing": "$5/$30 per M", "note": "Best long-context (128-256k). Top agentic score. 2x price increase from 5.4." },
+        { "id": "deepseek-v4-pro", "provider": "deepseek", "benchlm_overall": 85, "livecode": 93.5, "pricing": "$1.74/$3.48 per M", "note": "Highest overall score. MIT license, open weights. 9x cheaper than GPT-5.5. Cache hits $0.145/M." }
+      ],
+      "strong": [
+        { "id": "claude-sonnet-4.6", "provider": "anthropic", "note": "Workhorse. Best cost/performance for pilots." },
+        { "id": "gpt-5.4", "provider": "openai", "toolathlon": 54.6, "note": "Leads Toolathlon." },
+        { "id": "deepseek-v3.2", "provider": "deepseek", "tau_bench": 80.4, "note": "Strong tau-bench." },
+        { "id": "gemini-3-pro", "provider": "google", "tau_bench": 85.4, "note": "Leads tau-bench." }
+      ],
+      "baseline_old": [
+        { "id": "claude-sonnet-3.5", "provider": "anthropic", "benchlm_agentic": 82.4, "note": "2024-era. For harness-beats-model hypothesis." },
+        { "id": "gpt-4o", "provider": "openai", "note": "2024-era. Well-characterized baseline." },
+        { "id": "deepseek-r1-8b", "provider": "local", "note": "Distilled. Free local inference. Original key evidence model." }
+      ],
+      "local_inference": [
+        { "id": "deepseek-v4-pro", "note": "Frontier AND free. Open weights, MIT." },
+        { "id": "deepseek-r1-8b", "note": "Distilled, fast pilots." },
+        { "id": "qwen-3-8b", "note": "Multilingual. Chinese-English." },
+        { "id": "llama-3.3", "note": "Meta baseline." }
+      ]
+    },
     "key_papers_since_proposal": [],
     "provider_changes": [],
     "benchmark_updates": [],
@@ -423,19 +500,20 @@
       "api_budget": {
         "note": "Experiment cost model — track per-experiment spend",
         "providers": {
-          "anthropic": { "models": ["claude-4-sonnet", "claude-4-opus"], "pricing_url": "https://docs.anthropic.com/en/docs/about-claude/models" },
-          "openai": { "models": ["gpt-4o", "gpt-5"], "pricing_url": "https://openai.com/api/pricing" },
-          "deepseek": { "models": ["deepseek-r1", "deepseek-v3"], "note": "Also run locally via llama.cpp/MLX on Mac Mini" },
-          "google": { "models": ["gemini-2.5-pro"], "pricing_url": "https://ai.google.dev/pricing" }
+          "anthropic": { "models": ["claude-opus-4.7-adaptive", "claude-sonnet-4.6", "claude-sonnet-3.5"], "pricing_url": "https://docs.anthropic.com/en/docs/about-claude/models" },
+          "openai": { "models": ["gpt-5.5", "gpt-5.4", "gpt-4o"], "pricing_url": "https://platform.openai.com/docs/models" },
+          "deepseek": { "models": ["deepseek-v4-pro", "deepseek-v3.2", "deepseek-r1-8b"], "note": "V4 Pro + R1 also run locally (open weights)" },
+          "google": { "models": ["gemini-3-pro"], "pricing_url": "https://ai.google.dev/pricing" }
         },
-        "strategy": "Run pilot experiments on cheapest model first (DeepSeek local or Sonnet), then scale to expensive models for publication-grade runs"
+        "strategy": "Free pilots on DeepSeek V4 Pro / R1 locally. Strong tier (Sonnet 4.6, GPT-5.4) for primary experiments. Frontier tier (Opus 4.7, GPT-5.5) for publication-grade. Baseline old models (3.5 Sonnet, GPT-4o) for harness-beats-model."
       },
       "local_inference": {
         "purpose": "Run open-weight models locally for free experimentation",
         "models": [
-          { "name": "deepseek-r1", "note": "Primary — our key evidence paper uses this model. Distilled versions run on M-series." },
-          { "name": "qwen-3", "note": "Strong multilingual, Chinese-English. Good for language variable experiments." },
-          { "name": "llama-3.3-70b", "note": "Meta's latest open-weight (no llama-4 repo yet). Baseline for open vs. closed comparison." }
+          { "name": "deepseek-v4-pro", "note": "Frontier AND free. MIT license. BenchLM overall 85. LiveCodeBench 93.5." },
+          { "name": "deepseek-r1-8b", "note": "Distilled, fast for pilots. Original key evidence model." },
+          { "name": "qwen-3-8b", "note": "Strong multilingual, Chinese-English. Good for language variable experiments." },
+          { "name": "llama-3.3", "note": "Meta's latest open-weight. Baseline for open vs. closed comparison." }
         ],
         "frameworks": [
           { "name": "MLX", "note": "Apple-native, fastest on M-series. Preferred for Mac Mini." },

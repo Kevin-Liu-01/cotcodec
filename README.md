@@ -36,7 +36,7 @@ pip install -e ".[dev]"
 python -m harness.runner experiments/pilot_01_tau_bench.yaml
 
 # Measure tokenizer fertility
-python scripts/fertility.py --model gpt-4o
+python scripts/fertility.py --model gpt-5.5
 
 # Analyze traces
 python scripts/analyze.py data/traces/

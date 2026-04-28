@@ -1,0 +1,51 @@
+name: frontier_comparison_01
+description: >
+  Cross-provider frontier comparison with all orchestration conditions.
+  Tests whether language routing benefits vary by model architecture
+  and provider. The core Paper 1 experiment at full scale.
+
+benchmark: tau_bench
+
+models:
+  - claude-opus-4.7-adaptive
+  - gpt-5.5
+  - deepseek-v4-pro
+  - gemini-3-pro
+
+conditions:
+  - english_only
+  - internal_chinese
+  - controlled_chinese
+  - english_compressed
+  - structured_english
+  - dynamic_router
+  - polish_stress
+
+tasks: -1  # all available
+seeds: [42, 43, 44, 45, 46, 47, 48, 49, 50, 51]
+
+metrics:
+  - total_billed_tokens
+  - total_billed_tokens_input
+  - total_billed_tokens_output
+  - task_success_rate
+  - tool_call_exact_match
+  - argument_correctness
+  - wall_clock_latency_ms
+  - retry_count
+  - recovery_success_rate
+  - safety_failure_rate
+  - semantic_fidelity_score
+  - cost_usd
+
+analysis:
+  - pareto_frontier: "[cost_usd, wall_clock_latency_ms] vs task_success_rate"
+  - message_type_decomposition: "Where do savings arise per model?"
+  - cross_provider: "Does Chinese help more on DeepSeek than Claude?"
+  - safety: "Any model show safety regression under language mixing?"
+  - router_vs_fixed: "Does the dynamic router outperform any fixed condition?"
+
+notes: >
+  Publication-grade experiment. All 4 frontier models, all 7 conditions,
+  10 seeds for statistical significance. Budget: ~$200-400 total.
+  Run on Mac Mini for DeepSeek (free), API for Claude/GPT/Gemini.

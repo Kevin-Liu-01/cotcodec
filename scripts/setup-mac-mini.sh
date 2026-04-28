@@ -25,9 +25,11 @@ uv pip install mlx mlx-lm
 brew install ollama
 
 echo "→ Pulling open-weight models (this takes a while)..."
-ollama pull deepseek-r1:8b     # Distilled, fast for pilots
-ollama pull qwen3:8b           # Multilingual
-ollama pull llama3.3:latest    # Meta's latest open-weight baseline
+ollama pull deepseek-r1:8b       # Distilled, fast for harness validation
+ollama pull qwen3:8b             # Multilingual Chinese-English
+ollama pull llama3.3:latest      # Meta open-weight baseline
+# DeepSeek V4 Pro: pull when available on Ollama (MIT open weights)
+# ollama pull deepseek-v4-pro:latest
 
 # 4. Benchmark repos
 echo "→ Cloning benchmark repos..."
