@@ -59,3 +59,15 @@ A dedicated study would isolate format from language.
 - Xu et al. 2024 — Symbolic Chain-of-Thought
 - Cuadron et al. 2025 — Overthinking in agentic tasks
 - Munkhbat et al. 2025 — Self-training elicits concise reasoning
+
+## Community Evidence (from Kevin's X bookmarks — 9 signals)
+
+- **Caveman token optimization** (6.5K bm @om_patel5) — "TEACH CLAUDE TO TALK LIKE A
+  CAVEMAN TO SAVE TOKENS" turned into a skill. Benchmarked: 65% average savings, range
+  22-87% across 10 tasks. This IS a reasoning format condition. Three intensity levels:
+  lite (drops filler), full (drops articles), ultra (maximum compression).
+  Repo: github.com/thedotmack/claude-mem
+- **Claude Code memory architecture** (8.3K bm @himanshustwts) — three-layer structured
+  format: index → topic files → transcripts. The format IS the memory policy.
+- **andrej-karpathy-skills** (10.4K bm combined) — Karpathy's LLM failure mode observations
+  turned into structured CLAUDE.md rules. Reasoning constraints as format.

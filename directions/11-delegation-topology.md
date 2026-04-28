@@ -42,3 +42,23 @@ represent different points in the design space.
 - **Context allocation** — each sub-agent gets its own context window (or shares one)
 - **Language** — different agents could use different internal languages
 - **Tool scheduling** — multi-agent enables natural parallelism
+
+## Community Evidence (from Kevin's X bookmarks — 13 signals)
+
+- **Shaw 8-subagent parallel cleanup** (16.5K bm @shawmakesmagic) — "Use this prompt:
+  I want to clean up my codebase. Make a sub agent for each of the following: [8 specialists]."
+  Specialist dispatch pattern with massive community validation.
+- **open-agents.dev** (5.6K bm @rauchg) — Vercel's reference platform for cloud coding agents.
+  "Stripe (Minions), Ramp (Inspect), Spotify (Honk), Block (Goose) are building their own
+  AI software factories." Enterprise delegation topology evidence.
+- **ml-intern** (5.5K bm @akseljoonas) — HuggingFace's automated research loop agent.
+  "Researches papers, goes through citations, implements ideas in GPU."
+  Manager-worker topology for research automation.
+- **GBrain v0.11 Minions** (1.3K bm @garrytan) — "Got sick of OpenClaw's subagents timing out.
+  Built a queue/jobs system based on BullMQ. Minions are 10x faster, more reliable."
+  Queue-based delegation solves timeout problem.
+- **DeRonin 10 social accounts** (6.4K bm) — "I run 10 social media accounts and don't write
+  a single post manually." Specialist dispatch for content creation.
+- **Claude Managed Agents** (50.7K bm @claudeai) — Anthropic's official multi-agent harness.
+  "Everything you need to build and deploy agents at scale." The delegation API we must
+  be compatible with.

@@ -41,3 +41,22 @@ tokens on verification of correct steps.
 - **Retry** — verification detects failures early, enabling cheaper retries
 - **Reasoning format** — structured formats are easier to verify automatically
 - **Planning** — verification can trigger re-planning if the plan is off track
+
+## Community Evidence (from Kevin's X bookmarks — 16 signals)
+
+- **KingBootoshi custom ESLint anti-slop** (1.1K bm) — "PUT YOUR AGENTS ON CUSTOM ESLINT
+  RULES ASAP. IT IS THE BEST WAY TO GUARANTEE ANTI-SLOP." Lint rules as verification
+  infrastructure — structural, not advisory. Agent retries automatically on lint failure.
+- **Karpathy AutoResearch** (10.4K bm via @shannholmberg) — verification loop in research
+  agent: search → evaluate → validate → iterate. Continuous verification cadence.
+- **Design system reverse-engineering** (18.6K bm @heynavtoor) — "Someone reverse-engineered
+  the design systems of Apple, Spotify, Airbnb, and 30+ companies." Verification by
+  comparison against known-good reference implementations.
+- **NickSpisak monthly health checks** (9.3K bm) — scheduled verification cadence for
+  knowledge base quality. Weekly lint, monthly full audit.
+- **GStack Confusion Protocol** (834 bm @garrytan) — "Karpathy called it: the #1 AI coding
+  failure mode is the agent confidently picking the wrong path at an ambiguous decision point."
+  Verification BEFORE action, not after.
+- **Claude Code 29-30% false claims** (16.5K bm @iamfakeguru) — "Post-edit verification gate
+  (type-check + lint after every edit) is gated behind USER_TYPE === 'ant'." Evidence that
+  verification cadence directly affects reliability. Internal Anthropic has it; external doesn't.

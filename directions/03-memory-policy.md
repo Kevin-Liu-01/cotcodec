@@ -63,3 +63,23 @@ the real world hit context limits. The question is always "what do we keep?"
 - Maharana et al. 2024 — Long-term conversational memory
 - Wu et al. 2024 — LongMemEval
 - Liu et al. 2024 — Lost in the Middle
+
+## Community Evidence (from Kevin's X bookmarks — 31 signals)
+
+- **Karpathy LLM Knowledge Bases** (99K bookmarks) — the foundational methodology.
+  "Memory is markdown. Skills are markdown. Brain is a git repo." Every brain system
+  independently converges on this pattern.
+- **GBrain SOUL.md** (4.7K bm @garrytan) — production memory at 17,888 pages. Compiled
+  truth + timeline separation, enrichment tiers, signal detector on every message.
+- **himanshustwts Claude Code memory architecture** (8.3K bm) — reverse-engineered
+  three-layer design: index (always loaded), topic files (on-demand), transcripts (grep-only).
+  autoDream background memory rewriting. Staleness is first-class.
+- **NickSpisak "Second Brain"** (9.3K bm) — raw/ + wiki/ + outputs/ + qmd. Near-identical
+  to Kevin's architecture. Monthly health checks = operational memory policy.
+- **michael_chomsky memory debate** (754 bm) — "Garry is correct but oversimplifying memory.
+  Memory is harder than it sounds." Important counterpoint to flat-markdown approaches.
+- **DhravyaShah** (following, @DhravyaShah) — "the memory/context guy", founder of supermemory.
+  prev Cloudflare. Potential collaborator or competitor.
+- **contextconor** (following, @contextconor) — Hyperspell (YC F25), "your company brain."
+  Building knowledge base infrastructure.
+- **claude-mem** (2.6K bm) — open-source Claude Code infinite memory extension.

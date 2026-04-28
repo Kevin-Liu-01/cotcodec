@@ -64,3 +64,34 @@ Key signals captured:
 
 Built: `research/intelligence-sources.md` (comprehensive inventory)
 Updated: `memory.json` with key signals, people, tool inventory
+
+## [2026-04-28] intel | Deep intelligence audit — every bookmark, every follow
+
+Full audit of all Kevin's data sources:
+
+**X Bookmarks (294):**
+- Every bookmark read, classified into 6 categories (agent_architecture: 147,
+  design_engineering: 104, research: 13, tools: 4, career: 5, other: 21)
+- 160 research-relevant signals extracted and mapped to 12 orchestration variables
+- 53 unique linked URLs/repos cataloged
+- Variable 3 (Memory policy) richest with 31 signals
+- Variable 12 (Instruction hierarchy) has 18 signals
+- Variable 8 (Verification cadence) has 16 signals
+- Variable 11 (Delegation topology) has 13 signals
+
+**X Following (172):**
+- Full list pulled via `twitter following kevskgs --json`
+- Classified: ai_ml_research (80), design (31), dedalus (10), infra (11),
+  founders (8), agent_builders (4), other (28)
+- 41 accounts overlap between following and bookmarks (highest signal)
+- Key followed accounts not in bookmarks identified as monitoring gaps
+
+**Cross-reference:**
+- 33 tiered people to track (6 Tier 1, 14 Tier 2, 13 Tier 3)
+- 6 direction docs enriched with community evidence
+
+Built: `research/bookmark-signals.md` (329 lines — all 160 signals by variable)
+Built: `research/x-following-analysis.md` (319 lines — full following classified)
+Rewrote: `research/intelligence-sources.md` (complete inventory)
+Enriched: `directions/02,03,08,09,11,12.md` with bookmark evidence
+Updated: `memory.json` with full audit data + 33 people tracking list

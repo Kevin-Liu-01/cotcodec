@@ -291,29 +291,83 @@
     "provider_changes": [],
     "benchmark_updates": [],
     "notes": "Danqi flagged that the world is changing fast. This section tracks everything that might affect the experimental design.",
-    "key_signals_from_bookmarks": [
-      "Claude Managed Agents (Anthropic official harness) — 57K likes, 50K bookmarks. Must be compatible.",
-      "GBrain v0.11 Minions (queue/jobs for subagents) — delegation topology variable",
-      "Karpathy Confusion Protocol in GStack — ambiguity detection = verification cadence variable",
-      "Caveman token optimization: 65% savings benchmarked — reasoning format variable baseline",
-      "Claude Code reverse-engineering: autoCompact at 167K, 29-30% false claims — compaction policy variable",
-      "Shaw's 8-subagent parallel cleanup — delegation topology variable",
-      "open-agents.dev (Vercel) — reference platform for cloud coding agents",
-      "ml-intern (HuggingFace) — automated research loop agent (papers → citations → GPU experiments)",
-      "Vercel Workflows GA — durable execution for agents, retry/recovery infrastructure",
-      "Custom ESLint for anti-slop — lint-enforced orchestration constraints"
-    ],
+    "bookmark_audit": {
+      "date": "2026-04-28",
+      "total_bookmarks": 294,
+      "unique_accounts": 168,
+      "research_relevant_signals": 160,
+      "linked_urls": 53,
+      "categories": {
+        "agent_architecture": 147,
+        "design_engineering": 104,
+        "research_papers": 13,
+        "tools_infrastructure": 4,
+        "career_content": 5,
+        "other": 21
+      },
+      "signal_distribution_by_variable": {
+        "0_general_agent_infra": 68,
+        "1_language": 3,
+        "2_reasoning_format": 9,
+        "3_memory_policy": 31,
+        "4_context_allocation": 13,
+        "5_observation_granularity": 1,
+        "6_planning_depth": 4,
+        "7_retry_recovery": 10,
+        "8_verification_cadence": 16,
+        "10_tool_scheduling": 6,
+        "11_delegation_topology": 13,
+        "12_instruction_hierarchy": 18
+      }
+    },
+    "following_audit": {
+      "date": "2026-04-28",
+      "total_following": 172,
+      "categories": {
+        "ai_ml_research": 80,
+        "design_engineering": 31,
+        "dedalus_team": 10,
+        "infrastructure": 11,
+        "founders_builders": 8,
+        "agent_builders": 4,
+        "other": 28
+      },
+      "follow_and_bookmark_overlap": 41
+    },
     "key_people": [
-      { "handle": "@garrytan", "why": "GBrain/GStack. Reference agent brain+skills architecture. 14 bookmarks.", "track": "every_release" },
-      { "handle": "@karpathy", "why": "LLM-Wiki originator. Confusion Protocol. 99K bookmarks on foundational tweet.", "track": "every_post" },
-      { "handle": "@rauchg", "why": "Vercel CEO. open-agents.dev, Workflow SDK, Sandboxes. Agent infra at scale.", "track": "weekly" },
-      { "handle": "@shawmakesmagic", "why": "Subagent orchestration, code quality. 16K bookmarks.", "track": "weekly" },
-      { "handle": "@akseljoonas", "why": "HuggingFace ml-intern. Automated research loop.", "track": "weekly" },
-      { "handle": "@mvanhorn", "why": "last30days v3 creator. 20K stars. Our primary research engine.", "track": "monthly" },
-      { "handle": "@hwchase17", "why": "LangChain. 'Memory is markdown' quote. Agent memory architecture.", "track": "weekly" },
-      { "handle": "@affaanmustafa", "why": "Everything Claude Code (140K stars). Token optimization, hooks.", "track": "monthly" },
-      { "handle": "@iamfakeguru", "why": "Claude Code source reverse-engineering. Internal gates revealed.", "track": "on_post" },
-      { "handle": "@himanshustwts", "why": "Claude Code memory architecture reverse-engineering.", "track": "on_post" }
+      { "handle": "@karpathy", "why": "LLM-Wiki originator. Confusion Protocol. 99K bm foundational tweet.", "track": "every_post", "tier": 1 },
+      { "handle": "@garrytan", "why": "GBrain/GStack. 14 bookmarks. Every release maps to orchestration variables.", "track": "every_release", "tier": 1 },
+      { "handle": "@claudeai", "why": "Claude Managed Agents (51K bm). Compatibility target.", "track": "every_post", "tier": 1 },
+      { "handle": "@AnthropicAI", "why": "Project Glasswing (15K bm). Model releases. API changes.", "track": "every_post", "tier": 1 },
+      { "handle": "@rauchg", "why": "open-agents.dev (5.6K bm). Workflow SDK. Agent infra at scale.", "track": "weekly", "tier": 1 },
+      { "handle": "@sama", "why": "OpenAI CEO. Model releases. Reasoning direction.", "track": "weekly", "tier": 1 },
+      { "handle": "@shawmakesmagic", "why": "8-subagent parallel orchestration (16K bm). Delegation topology.", "track": "weekly", "tier": 2 },
+      { "handle": "@iamfakeguru", "why": "Claude Code reverse-engineering (16K bm). Internal gates.", "track": "weekly", "tier": 2 },
+      { "handle": "@himanshustwts", "why": "Claude Code memory architecture (8K bm). Three-layer design.", "track": "weekly", "tier": 2 },
+      { "handle": "@om_patel5", "why": "Caveman 65% token savings (6.5K bm). Reasoning format baseline.", "track": "weekly", "tier": 2 },
+      { "handle": "@akseljoonas", "why": "ml-intern automated research loop (5.5K bm).", "track": "weekly", "tier": 2 },
+      { "handle": "@NickSpisak_", "why": "Second Brain recipe (9.3K bm). Near-identical architecture.", "track": "weekly", "tier": 2 },
+      { "handle": "@tom_doerr", "why": "6 bookmarks. GitHub repo discovery pipeline.", "track": "weekly", "tier": 2 },
+      { "handle": "@mvanhorn", "why": "last30days v3 creator. Our primary research engine.", "track": "monthly", "tier": 2 },
+      { "handle": "@ctatedev", "why": "Vercel. agent-browser. Browser automation infrastructure.", "track": "weekly", "tier": 2 },
+      { "handle": "@bcherny", "why": "Claude Code @ Anthropic. Insider perspective.", "track": "weekly", "tier": 2 },
+      { "handle": "@trq212", "why": "Claude Code @ Anthropic. MIT Media Lab.", "track": "weekly", "tier": 2 },
+      { "handle": "@leerob", "why": "Teaching @ Cursor, prev Vercel.", "track": "weekly", "tier": 2 },
+      { "handle": "@steipete", "why": "ClawFather. OpenClaw power user.", "track": "weekly", "tier": 2 },
+      { "handle": "@DhravyaShah", "why": "The memory/context guy. supermemory founder.", "track": "weekly", "tier": 2 },
+      { "handle": "@KingBootoshi", "why": "Custom ESLint anti-slop (1.1K bm). Verification cadence.", "track": "on_post", "tier": 3 },
+      { "handle": "@michael_chomsky", "why": "Agent memory debate (754 bm). Memory policy.", "track": "on_post", "tier": 3 },
+      { "handle": "@andrewfarah", "why": "fieldtheory creator. X bookmark sync tool.", "track": "monthly", "tier": 3 },
+      { "handle": "@demishassabis", "why": "DeepMind CEO. AGI direction.", "track": "monthly", "tier": 3 },
+      { "handle": "@drfeifei", "why": "Stanford CS Prof. StanfordHAI.", "track": "monthly", "tier": 3 },
+      { "handle": "@ylecun", "why": "NYU Prof. Meta Chief AI Scientist.", "track": "monthly", "tier": 3 },
+      { "handle": "@geoffreyhinton", "why": "Deep learning pioneer.", "track": "monthly", "tier": 3 },
+      { "handle": "@fchollet", "why": "Keras creator. ARC-AGI.", "track": "monthly", "tier": 3 },
+      { "handle": "@_akhaliq", "why": "AI research paper daily curation @ HuggingFace.", "track": "daily", "tier": 2 },
+      { "handle": "@lilianweng", "why": "Ex-VP AI Safety OpenAI. Thinking Machines Lab.", "track": "monthly", "tier": 3 },
+      { "handle": "@goodside", "why": "Jagged frontier screenshots. Prompt engineering signal.", "track": "weekly", "tier": 3 },
+      { "handle": "@LangChain", "why": "Agent engineering platform.", "track": "weekly", "tier": 3 },
+      { "handle": "@contextconor", "why": "Hyperspell (YC F25). Company brain.", "track": "monthly", "tier": 3 }
     ]
   },
 
@@ -326,7 +380,9 @@
       "wiki_pages": { "count": 378, "path": "~/Documents/GitHub/my-wiki/wiki/" },
       "installed_skills": { "count": 41, "path": "~/.cursor/skills/" }
     },
-    "unique_bookmarked_accounts": 168
+    "unique_bookmarked_accounts": 168,
+    "x_following": { "count": 172, "path": "/tmp/x_following.json", "categories": "research/x-following-analysis.md" },
+    "bookmark_signals": { "count": 160, "path": "research/bookmark-signals.md" }
   },
 
   "infrastructure": {

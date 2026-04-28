@@ -1,211 +1,301 @@
-# Intelligence Sources — Full Inventory
+# Intelligence Sources — Complete Inventory
 
-> Everything Kevin has at his disposal for research intelligence.
-> Audited 2026-04-28 from X bookmarks (294), wiki (378 pages), 41 installed skills,
-> 51 Obsidian clips, and all integration tools.
+> Audited 2026-04-28. 294 X bookmarks (168 accounts), 172 X following,
+> 41 installed skills, 378 wiki pages, 51 Obsidian clips, 53 linked repos/tools.
+>
+> Companion docs:
+> - `research/bookmark-signals.md` — all 160 research signals mapped to 12 variables
+> - `research/x-following-analysis.md` — full following list classified
 
 ---
 
-## 1. Research Tools (What Agents Can Execute)
+## 1. Research Tools
 
 ### Primary Research Engines
 
-| Tool | Installed at | Capability | Cost |
-|------|-------------|------------|------|
-| **last30days** | `~/.cursor/skills/last30days/` | Multi-platform search: Reddit, X, YouTube, TikTok, Instagram, HN, Polymarket, GitHub, Bluesky, web. Scored by real engagement. `--agent` mode for automation. | Requires ScrapeCreators API ($) |
-| **agent-reach** | `~/.agents/skills/agent-reach/` | 17 platforms via CLI. Twitter, Reddit, YouTube, GitHub, web pages, RSS. Zero config for 8 channels. | Mostly free (Jina, GitHub CLI) |
-| **Jina Reader** | `curl -s "https://r.jina.ai/URL"` | Read any web page as markdown | Free tier |
-| **defuddle** | `npx defuddle parse URL --markdown` | Local web reader fallback, no API | Free |
-| **nia-docs** | `npx nia-docs URL` | Mount any docs site as filesystem. `tree`, `grep`, `cat` on docs. | Free |
-| **Semantic Scholar API** | `api.semanticscholar.org` | Citation tracking, paper discovery, forward references | Free (rate limited) |
-| **arXiv API** | `export.arxiv.org/api/query` | Paper search by title/abstract/author | Free |
-| **GitHub CLI** | `gh search repos`, `gh api` | Trending repos, issues, releases, org repos | Free |
-| **Exa** | `mcporter call 'exa.web_search_exa(...)'` | Semantic web search | API key required |
-| **qmd** | `qmd search/query/get` | Local hybrid wiki search (BM25 + vector + reranking) | Free (local GGUF) |
+| Tool | Command | Capability | Cost |
+|------|---------|------------|------|
+| **last30days** | `~/.cursor/skills/last30days/` | Reddit, X, YouTube, TikTok, HN, Polymarket, GitHub, Bluesky, web. Scored by real engagement. | ScrapeCreators API |
+| **agent-reach** | `~/.agents/skills/agent-reach/` | 17 platforms via CLI. Twitter, Reddit, YouTube, GitHub, web, RSS. | Mostly free |
+| **Jina Reader** | `curl -s "https://r.jina.ai/URL"` | Read any web page as markdown. | Free tier |
+| **defuddle** | `npx defuddle parse URL --markdown` | Local web reader fallback. | Free |
+| **nia-docs** | `npx nia-docs URL` | Mount docs as filesystem (`tree`, `grep`, `cat`). | Free |
+| **Semantic Scholar** | `api.semanticscholar.org` | Citation tracking, paper discovery. | Free (rate limited) |
+| **arXiv API** | `export.arxiv.org/api/query` | Paper search by title/abstract. | Free |
+| **GitHub CLI** | `gh search repos`, `gh api` | Trending repos, issues, releases. | Free |
+| **Exa** | `mcporter call 'exa.web_search_exa(...)'` | Semantic web search. | API key |
+| **qmd** | `qmd search/query/get` | Local hybrid wiki search (BM25 + vector). | Free (local GGUF) |
+| **fieldtheory** | `ft sync`, `ft search`, `ft classify` | X bookmark sync + search + LLM classification. | Free |
+| **twitter CLI** | `twitter search/following/followers` | X search, following lists, account data. | Cookie-based |
 
-### CLI Tools
+### MCP Servers
 
-| Tool | Command | Purpose |
-|------|---------|---------|
-| `twitter` | `twitter search "query" -n 10` | X/Twitter search (cookie-based) |
-| `rdt` | `rdt search "query"` | Reddit search |
-| `yt-dlp` | `yt-dlp --dump-json "URL"` | YouTube transcripts and metadata |
-| `gh` | `gh search repos "query"` | GitHub repos, PRs, issues |
-| `rg` | `rg "pattern"` | Ripgrep text search |
-| `feedparser` | Python RSS parsing | RSS feed monitoring |
+| Server | Purpose |
+|--------|---------|
+| Supabase | Database for trace storage |
+| Linear | Research task tracking |
+| Slack | Team communication |
+| Playwright | Browser automation for web scraping |
+| Cursor IDE Browser | Live page inspection and testing |
+| Figma | Paper figures and diagrams |
+| Stripe | (available, not research-relevant) |
 
-### MCP Servers Available
+### Data Pipelines
 
-| Server | Tools | Purpose |
-|--------|-------|---------|
-| `plugin-supabase-supabase` | Database ops | Data storage for traces |
-| `plugin-linear-linear` | Issue tracking | Research task management |
-| `plugin-slack-slack` | Slack integration | Team communication |
-| `plugin-vercel-vercel` | Deploy, env vars | If publishing artifacts |
-| `plugin-figma-figma` | Figma design | Paper figures, diagrams |
-| `user-playwright` | Browser automation | Web scraping, testing |
-| `cursor-ide-browser` | In-IDE browser | Live page inspection |
-
-### Data Integrations (my-wiki)
-
-| Integration | Script | Data | Status |
-|-------------|--------|------|--------|
-| X Bookmarks | `scripts/sync-x-bookmarks.sh` (fieldtheory) | 294 bookmarks in `raw/x-bookmarks/bookmarks.jsonl` | Active, last sync 2026-04-24 |
-| Obsidian Clips | `scripts/sync-obsidian.sh` | 51 web clips in `raw/obsidian/` | Active |
-| Google Calendar | `scripts/sync-calendar.ts` | 26 day files in `raw/calendar/` | Active |
-| Gmail | `scripts/sync-email.ts` | 4 digest files in `raw/email/` | Active |
-| Circleback Meetings | `scripts/sync-meetings.ts` | Meeting transcripts | Configured |
+| Source | Script | Items | Last sync |
+|--------|--------|-------|-----------|
+| X Bookmarks | `ft sync` → `raw/x-bookmarks/bookmarks.jsonl` | 294 | 2026-04-24 |
+| Obsidian Clips | `scripts/sync-obsidian.sh` → `raw/obsidian/` | 51 | Manual |
+| Calendar | `scripts/sync-calendar.ts` → `raw/calendar/` | 26 days | Active |
+| Email | `scripts/sync-email.ts` → `raw/email/` | 4 digests | Active |
+| Meetings | `scripts/sync-meetings.ts` → `raw/meetings/` | Configured | On-demand |
 
 ---
 
-## 2. Key People to Track (from bookmarks + wiki)
+## 2. People to Track
 
-### Agent Harness & Infrastructure Builders
+### Tier 1: Every Post Matters (follow + bookmark + high relevance)
 
-| Person | Handle | Why they matter | Bookmark count |
-|--------|--------|-----------------|----------------|
-| **Garry Tan** | `@garrytan` | GBrain (17K+ page brain), GStack (72K stars). The reference implementation for agent brain + skills architecture. Every release is directly relevant. | 14 |
-| **Andrej Karpathy** | `@karpathy` | LLM-Wiki pattern (our architecture). Confusion Protocol, AutoResearch. His observations about LLM failure modes are our quality spec. | 7 (incl. derivatives) |
-| **Guillermo Rauch** | `@rauchg` | Vercel CEO. Open-agents.dev, Workflow SDK, Vercel Sandboxes. Agent infrastructure at scale. | 3 |
-| **Shaw (Eliza)** | `@shawmakesmagic` | Subagent orchestration patterns, code quality via parallel agents. | 1 (16K bookmarks on his post) |
-| **Chris Tate** | `@ctatedev` | Vercel. agent-browser creator. CLI-to-server patterns. | 2 |
-| **Harrison Chase** | `@hwchase17` | LangChain creator. "Memory is markdown" quote. Agent memory architecture. | Referenced in wiki |
-| **Affaan Mustafa** | `@affaanmustafa` | Everything Claude Code (140K stars). Token optimization, hooks, continuous learning. | Via wiki |
-| **Nick Spisak** | `@NickSpisak_` | "Second Brain" recipe: raw/ + wiki/ + outputs/. qmd for search. Monthly health checks. | 3 |
+| Handle | Name | Bio | Bookmarks | Why |
+|--------|------|-----|-----------|-----|
+| `@karpathy` | Andrej Karpathy | Director of AI @ Tesla → OpenAI. LLM-Wiki originator. | 1 (99K bm) | LLM-Wiki pattern. Confusion Protocol. AutoResearch. Every observation shapes our quality bar. |
+| `@garrytan` | Garry Tan | YC CEO. GStack (72K stars) + GBrain (17K pages). | 14 | Every GBrain/GStack release directly maps to our orchestration variables. |
+| `@claudeai` | Claude | Anthropic's Claude. | 1 (51K bm) | Claude Managed Agents = our compatibility target. |
+| `@AnthropicAI` | Anthropic | AI safety and research. | 1 (15K bm) | Project Glasswing, model releases, API changes. |
+| `@rauchg` | Guillermo Rauch | Vercel CEO. | 3 | open-agents.dev, Workflow SDK, Sandboxes. Agent infrastructure at scale. |
+| `@sama` | Sam Altman | OpenAI CEO. | Following | Model releases, API changes, reasoning model direction. |
 
-### Research-Adjacent Accounts
+### Tier 2: Weekly Check (high-signal agent/research accounts)
 
-| Person | Handle | Relevance |
-|--------|--------|-----------|
-| **Aksel (HuggingFace)** | `@akseljoonas` | ml-intern: automated research loop agent. Papers → citations → GPU experiments. | 
-| **Om Patel** | `@om_patel5` | Claude Code deep-dives, token optimization benchmarks (caveman: 65% savings), ECC coverage. |
-| **iamfakeguru** | `@iamfakeguru` | Reverse-engineered Claude Code source. Internal gates, autoCompact, truncation. 1.6M views. |
-| **himanshustwts** | `@himanshustwts` | Claude Code memory architecture reverse-engineering. Three-layer design. |
-| **Arlan (nia-docs)** | `@arlanr` | Vault: self-improving knowledge base. 50+ integrations. nia-docs docs-as-filesystem. |
-| **Michael** | `@michael_chomsky` | Agent memory analysis. Garry Tan / Harrison Chase memory debate. |
-| **mvanhorn** | `@mvanhorn` | last30days v3 creator. 20K+ GitHub stars. Agent-led search engine. |
-| **KingBootoshi** | `@KingBootoshi` | Custom ESLint rules for anti-slop. Lint-enforced agent guardrails. |
-| **andrewfarah** | `@andrewfarah` | fieldtheory creator (our X bookmark sync tool). |
+| Handle | Name | Bio | Signal |
+|--------|------|-----|--------|
+| `@shawmakesmagic` | Shaw | Eliza creator. | 8-subagent parallel orchestration (16K bm). Delegation topology. |
+| `@iamfakeguru` | — | Agent infrastructure advisor. | Claude Code reverse-engineering (16K bm). Internal gates. |
+| `@himanshustwts` | — | AI research x product. | Claude Code memory architecture (8K bm). Three-layer design. |
+| `@om_patel5` | Om Patel | 16yo SaaS dev. | Caveman token savings benchmarks (6.5K bm). Token optimization. |
+| `@akseljoonas` | Aksel | HuggingFace agent builder. | ml-intern: automated research loop (5.5K bm). |
+| `@NickSpisak_` | Nick Spisak | AI Transformation Engineer. | "Second Brain" recipe (9K bm). Near-identical architecture. |
+| `@sharbel` | — | Co-founder. | Karpathy agent skills (10K bm). |
+| `@tom_doerr` | Tom Doerr | GitHub repos, DSPy, agents. | 6 bookmarks. Tool discovery pipeline. |
+| `@mvanhorn` | — | last30days creator. | Our primary research engine (2.6K bm). |
+| `@ctatedev` | Chris Tate | Vercel. agent-browser. | Browser automation infrastructure. |
+| `@bcherny` | Boris Cherny | Claude Code @ Anthropic. | Following. Insider perspective on Claude Code. |
+| `@trq212` | — | Claude Code @ Anthropic. MIT Media Lab. | Following. Insider perspective. |
+| `@leerob` | Lee Robinson | Teaching @ Cursor, prev Vercel. | Following. Cursor/Vercel ecosystem. |
+| `@steipete` | Peter Steinberger | "ClawFather". OpenClaw power user. | Following. Agent harness patterns. |
+| `@DhravyaShah` | Dhravya Shah | "The memory/context guy". supermemory. | Following. Memory policy variable. |
+| `@contextconor` | Conor | Hyperspell (YC F25). "Your company brain." | Following. Knowledge base competitor. |
 
-### Frontier Design Engineers (Kevin's intersection)
+### Tier 3: Monthly / On-Post (research-adjacent)
 
-| Person | Handle | Relevance |
-|--------|--------|-----------|
-| **Emil Kowalski** | `@emilkowalski` | Linear. Animation decisions, motion design patterns. |
-| **Josh Puckett** | `@joshpuckett` | Type design, interaction design. Iteration Design. |
-| **basement.studio** | `@basementstudio` | Shader Lab, 3D web, creative engineering. |
-| **Raphael Salaja** | `@raphaelsalaja` | Declarative web audio. Warp design engineer. |
-| **Zeno Rocha** | `@zenorocha` | React Email, Resend. Open source launches. |
+| Handle | Name | Bio | Signal |
+|--------|------|-----|--------|
+| `@demishassabis` | Demis Hassabis | DeepMind CEO. Nobel Laureate. | Following. AGI direction, model releases. |
+| `@drfeifei` | Fei-Fei Li | Stanford CS Prof. StanfordHAI co-director. | Following. AI research direction. |
+| `@ylecun` | Yann LeCun | NYU Prof. Meta Chief AI Scientist. | Following. Open-weight model direction. |
+| `@geoffreyhinton` | Geoffrey Hinton | Deep learning pioneer. | Following. AI safety perspective. |
+| `@AndrewYNg` | Andrew Ng | Coursera co-founder. Stanford. | Following. AI education, research trends. |
+| `@fchollet` | Francois Chollet | Keras creator. ARC-AGI. | Following. Intelligence benchmarks. |
+| `@_akhaliq` | AK | AI research paper tweets @ HuggingFace. | Following. Daily paper curation. |
+| `@lilianweng` | Lilian Weng | Ex-VP AI Safety @ OpenAI. Thinking Machines Lab. | Following. Safety research. |
+| `@rasbt` | Sebastian Raschka | ML/AI researcher. LLM book author. | Following. ML education, research roundups. |
+| `@dair_ai` | DAIR.AI | Democratizing AI research. | Following. Research aggregation. |
+| `@emollick` | Ethan Mollick | Wharton Prof. AI + innovation. | Following. AI adoption research. |
+| `@addyosmani` | Addy Osmani | Google Cloud AI Director. | Following. Gemini, AI infrastructure. |
+| `@LangChain` | LangChain | Agent engineering platform. | Following. Agent framework evolution. |
+| `@huggingface` | Hugging Face | AI community. | Following. Open-source models, papers. |
+| `@goodside` | Riley Goodside | "Screenshots of the jagged frontier." | Following. Prompt engineering signal. |
+| `@_chenglou` | Cheng Lou | React, Reason, Midjourney. | Following. Design engineering intersection. |
+| `@michael_chomsky` | Michael | Agent memory analysis. | 1 (754 bm). Memory policy debate. |
+| `@KingBootoshi` | — | Agentic engineer. | 1 (1.1K bm). Custom ESLint anti-slop. Verification cadence. |
+| `@andrewfarah` | Andrew Farah | fieldtheory creator. Density CEO. | 2. Our X bookmark sync tool. |
 
----
+### Dedalus Team (10 following)
 
-## 3. Key Signals from Bookmarks (Research-Relevant)
+`@itsCathyDi`, `@WindsorNguyen`, `@SMLIANG0`, `@zhou963759`, `@VitusDoesThings`,
+`@NickyHeC01`, `@Tsionhgk`, `@supermistyx`, `@itsaryanmahajan`, `@dedaluslabs`
 
-### Agent Architecture Signals
+### Design Engineers (31 following — Kevin's creative intersection)
 
-| Signal | Source | Impact on CoTCodec |
-|--------|--------|--------------------|
-| **"Memory is markdown. Skills are markdown. Brain is a git repo."** | Harrison Chase / Garry Tan | Our architecture is validated. The entire ecosystem converges on this pattern. |
-| **Karpathy's Confusion Protocol** | Garry Tan implementing in GStack | Ambiguity in agent decisions = orchestration variable (planning depth, verification cadence) |
-| **GBrain v0.11 Minions (queue/jobs system)** | Garry Tan | Subagent timeout problem → delegation topology variable. BullMQ-based, 10x faster. |
-| **Claude Managed Agents** | @claudeai (57K likes, 50K bookmarks) | Anthropic's official agent harness. Our harness must be compatible/comparable. |
-| **Open-agents.dev (Vercel)** | Guillermo Rauch | Reference platform for cloud coding agents. Stripe Minions, Ramp, Spotify. |
-| **Vercel Workflows GA** | @vercel | Durable execution for agents. Retry/recovery as infrastructure. |
-| **ml-intern (HuggingFace)** | @akseljoonas | Automated research loop: papers → citations → GPU experiments. Research agent pattern. |
-| **Claude Code reverse-engineering** | @iamfakeguru, @himanshustwts | autoCompact at 167K tokens, 29-30% false claims, 2K-line blind spot. Internal gates revealed. |
-| **Caveman token optimization: 65% savings** | @om_patel5 | Direct evidence for our reasoning format variable. Compressed English condition baseline. |
-| **Shaw's 8-subagent cleanup prompt** | @shawmakesmagic (16K bookmarks) | Delegation topology: parallel specialist subagents for quality. |
-| **Custom ESLint for anti-slop** | @KingBootoshi | Lint-enforced orchestration constraints. Verification cadence via tooling. |
-
-### Methodology Signals (LLM Wiki pattern validation)
-
-| Signal | Source | Implication |
-|--------|--------|-------------|
-| **Karpathy's LLM Knowledge Bases tweet** (54K likes, 99K bookmarks) | @karpathy | The foundational tweet. Our entire architecture. 99K bookmarks = massive adoption. |
-| **NousResearch Hermes Agent + LLM-Wiki** | @Teknium | Packages Karpathy's pattern for Obsidian research vaults. Community validation. |
-| **Nick Spisak's "Second Brain" recipe** | @NickSpisak_ (9K bookmarks) | raw/ + wiki/ + outputs/, qmd for search. Near-identical to our architecture. |
-| **GBrain 17,888 pages production** | @garrytan | Scale validation. Our architecture works at 100x our current size. |
-| **Michael's agent memory analysis** | @michael_chomsky | "Memory is harder than Garry makes it sound." Important counterpoint. |
-| **Vault: self-improving knowledge base** | @arlanr | 50+ integrations, updates while you sleep. Competitor/inspiration. |
-| **fieldtheory v3** | @andrewfarah | Our X bookmark sync tool. 294 bookmarks flowing into the research pipeline. |
-| **last30days v3** | @mvanhorn (20K stars) | Our primary research engine. Agent-led search scored by real engagement. |
-
----
-
-## 4. Obsidian Clips (51 sources in raw/obsidian/)
-
-Research-relevant clips:
-
-| Clip | Research relevance |
-|------|--------------------|
-| `Brin — The Universal Allowlist for Agents.md` | Agent security, supply chain |
-| `Code review for the age of AI.md` | Verification cadence variable |
-| `The Agent Skills Directory.md` | Skills ecosystem mapping |
-| `find-skills by vercel-labsskills.md` | Skills discovery infrastructure |
-| `Zero-Config Linting for Biome, ESLint, and Oxlint.md` | Lint-enforced orchestration |
-| `UI Skills - A set of skills to polish interfaces built by agents.md` | Agent skill architecture |
-| `Self-Promotion+Content Strategy.md` | Paper promotion when ready |
-| `AI-Native Observability.md` | Agent monitoring/tracing |
+`@emilkowalski` (Linear), `@joshpuckett` (Iteration Design), `@raphaelsalaja` (Warp),
+`@basementstudio`, `@mrdoob` (three.js), `@evilrabbit_` (Vercel founding designer),
+`@JohnPhamous` (Vercel design eng), `@raunofreiberg` (Vercel staff design eng),
+`@benjitaylor` (X design lead), `@FarzaTV` (Clicky/Buildspace), `@shadcn`,
+`@ayushsoni_io`, `@jakubkrehel` (Interfere), `@MengTo` (Design+Code),
+`@levelsio`, `@webmaster`, `@theo` (t3), `@zachlloydtweets` (Warp founder),
+and 13 more.
 
 ---
 
-## 5. Installed Skills (41 directories at ~/.cursor/skills/)
+## 3. Key Signals by Orchestration Variable
 
-### Research-Relevant Skills
+### Variable 3: Memory Policy (31 signals — richest)
 
-| Skill | Path | Use for CoTCodec |
-|-------|------|-----------------|
-| `last30days` | Full multi-platform research engine | Weekly frontier scans |
-| `agent-reach` | 17-platform internet access | Paper fetching, API docs, lab blogs |
-| `cross-modal-review` | Quality gate via second model | Paper review before Danqi |
-| `skill-audit` | Scan transcripts for patterns | Extract research insights from sessions |
-| `counterfactual` | Compare current vs. minimal correct | Harness debugging |
-| `bugs` | CTF-style adversarial audit | Safety evaluation, injection testing |
-| `gstack-review` | Staff engineer code review | Harness code quality |
-| `gstack-qa` | Real browser testing | Benchmark environment testing |
-| `project-briefing` | Last 24h commit summary | Daily experiment progress |
-| `daily-bugfix-check` | Recent commit bug check | Harness correctness |
-| `content-strategy` | Content planning | Paper promotion, X/LinkedIn posts |
-| `social-draft` | Platform-optimized drafting | Paper announcement posts |
-| `kevin-voice` | Write in Kevin's voice | Paper author bio, descriptions |
+Top signals:
+- Karpathy LLM Knowledge Bases (99K bm) — the foundational methodology
+- GBrain SOUL.md, RESOLVER.md releases — production memory patterns
+- himanshustwts Claude Code memory architecture — three-layer design
+- NickSpisak "Second Brain" recipe — near-identical to our architecture
+- michael_chomsky memory debate — "memory is harder than Garry makes it sound"
+- DhravyaShah (following) — "the memory/context guy", founder of supermemory
+- contextconor (following) — Hyperspell "your company brain"
 
-### Design/Viz Skills (for paper figures)
+### Variable 12: Instruction Hierarchy (18 signals — safety critical)
+
+Top signals:
+- Anthropic Project Glasswing (15K bm) — securing critical software
+- Shaw's agent security patterns
+- GStack security fixes wave
+- andrej-karpathy-skills for LLM failure modes
+
+### Variable 8: Verification Cadence (16 signals)
+
+Top signals:
+- KingBootoshi custom ESLint anti-slop (1.1K bm)
+- Design system reverse-engineering (18K bm) — verification patterns
+- Karpathy AutoResearch optimization (10K bm)
+- NickSpisak monthly health checks
+- GStack confusion protocol — ambiguity gates
+
+### Variable 11: Delegation Topology (13 signals)
+
+Top signals:
+- Shaw 8-subagent parallel cleanup (16K bm) — specialist dispatch
+- open-agents.dev (5.6K bm) — cloud coding agent reference platform
+- ml-intern (5.5K bm) — automated research loop via agent
+- GBrain Minions v0.11 (1.3K bm) — queue/jobs for subagents
+- DeRonin 10 social media accounts delegation (6.4K bm)
+
+### Variable 4: Context Allocation (13 signals)
+
+Top signals:
+- Claude Code autoCompact reverse-engineering (16K bm)
+- Website cloner skill context management (8.5K bm)
+- MCP context cost analysis (anakin, 13 bm but directly relevant)
+
+### Variable 7: Retry/Recovery (10 signals)
+
+Top signals:
+- Claude Code reverse-engineering — 29-30% false claims rate
+- Shaw 8-subagent cleanup — recovery via parallel specialists
+- Vercel Workflows GA — durable execution infrastructure
+
+### Variable 2: Reasoning Format (9 signals)
+
+Top signals:
+- Caveman token savings 65% (6.5K bm) — compressed reasoning format
+- Claude Code memory architecture — structured three-layer format
+- ChatGPT Images 2.0 (7K bm) — "thinking-level intelligence" in different modality
+
+### Variable 10: Tool Scheduling (6 signals)
+
+- GBrain Minions BullMQ queue — 10x faster, more reliable
+- ml-intern parallel paper processing
+- Parallel worktree agents (GStack /batch)
+
+### Variable 6: Planning Depth (4 signals)
+
+- GStack planning reviews — virtual CEO, Eng Manager, Designer review plans
+- Karpathy Confusion Protocol — ambiguity gates before execution
+- Vercel Workflows — orchestrator-as-code planning pattern
+
+### Variable 1: Language (3 signals)
+
+- Caveman token savings — compressed English as language condition
+- Multilingual agent frameworks
+
+---
+
+## 4. Linked Repos & Tools (53 unique URLs)
+
+### Agent/Research Repos
+
+| Bookmarks | URL | What |
+|-----------|-----|------|
+| 26,467 | github.com/msitarzewski/agency-agents | Full AI agency setup |
+| 15,374 | anthropic.com/glasswing | Project Glasswing security initiative |
+| 5,623 | open-agents.dev | Vercel reference platform for cloud agents |
+| 5,062 | github.com/zubair-trabzada/geo-seo-claude | GEO/SEO optimization agent |
+| 4,506 | github.com/farzaa/clicky | Open-source project |
+| 2,588 | github.com/thedotmack/claude-mem | Claude Code infinite memory |
+| 2,196 | github.com/forrestchang/andrej-karpathy-skills | Karpathy LLM failure modes skill |
+| 1,039 | shaders.com/docs/guide/mcp | Shaders MCP server |
+| 653 | github.com/nowork-studio/toprank | AI agent for Google Ads + SEO |
+| 496 | agent-browser.dev | Agent browser automation |
+| 415 | github.com/pickle-com/glass | Invisible desktop assistant |
+| 377 | github.com/sherlock-project/sherlock | Username search across 400+ networks |
+| 4 | github.com/garrytan/gbrain/.../GBRAIN_SKILLPACK.md | GBrain skillpack |
+
+### Design Engineering Resources
+
+| Bookmarks | URL | What |
+|-----------|-----|------|
+| 13,923 | illustrated-manuscript.vercel.app | Pretext illuminated manuscript |
+| 3,560 | jakub.kr/writing/details-that-make-interfaces-feel-better | UI micro-polish |
+| 3,361 | arcoty.pe | Font pairing tool |
+| 3,180 | skills.sh | Agent skills directory |
+| 2,843 | github.com/Shpigford/dither | Vector dithering tool |
+| 2,776 | animations.dev | Animation skill file tips |
+| 2,550 | eng.basement.studio/tools/shader-lab | Shader Lab |
+| 1,169 | audio.raphaelsalaja.com | Declarative web audio |
+| 592 | designengineer.tools | Design engineer tool list |
+| 538 | ui-skills.com | UI Skills for agents |
+| 538 | desengs.com | Design engineer resources |
+
+---
+
+## 5. Installed Skills (41 directories)
+
+### Research-Critical
+
+| Skill | Use for CoTCodec |
+|-------|-----------------|
+| `last30days` | Multi-platform research engine — weekly frontier scans |
+| `agent-reach` | 17-platform internet access — paper fetching, lab blogs |
+| `cross-modal-review` | Quality gate via second model — paper review before Danqi |
+| `bugs` | CTF-style adversarial audit — safety evaluation |
+| `counterfactual` | Compare current vs. minimal correct — harness debugging |
+| `skill-audit` | Scan transcripts for patterns — extract research insights |
+| `gstack-review` | Staff engineer code review — harness quality |
+| `gstack-qa` | Real browser testing — benchmark environment testing |
+| `project-briefing` | Last 24h commit summary — experiment progress |
+| `daily-bugfix-check` | Recent commit bug check — harness correctness |
+
+### Paper Communication
 
 | Skill | Use |
 |-------|-----|
-| `frontend-design` | Pareto frontier visualizations |
+| `content-strategy` | Paper promotion planning |
+| `social-draft` | Platform-optimized paper announcement posts |
+| `kevin-voice` | Author bio, descriptions in Kevin's voice |
+| `copywriting` | Abstract and introduction polish |
+
+### Design/Visualization
+
+| Skill | Use |
+|-------|-----|
+| `frontend-design` + `frontend-design-taste` | Pareto frontier visualizations, paper figures |
 | `oklch-skill` | Color palette for figures |
-| `gsap-scrolltrigger` | Interactive result presentations |
+| `gsap-scrolltrigger` + `motion-framer` | Interactive result presentations |
 
 ---
 
-## 6. Wiki Knowledge Base (378 pages across 18 categories)
+## 6. Wiki Knowledge Base (378 pages)
 
-### Categories Most Relevant to CoTCodec
+### Research-Critical Pages
 
-| Category | Pages | Relevance |
-|----------|-------|-----------|
-| **Skills** | 117 | Agent orchestration patterns, harness techniques |
-| **Tools** | 39 | Research tools, agent infrastructure |
-| **Concepts** | 16 | Agent ethos, brain-agent loop, production safety |
-| **Architecture** | 10 | Claude Code harness, GBrain comparison, agent system |
-| **Philosophies** | 26 | Builder ethos, no-one-off-work, ownership |
-| **Research** | 3 | CoTCodec paper, language orchestration brief |
-| **People** | 88 | Contact network, collaborators |
-
-### Key Wiki Pages for CoTCodec Research
-
-| Page | Why |
-|------|-----|
+| Page | Relevance |
+|------|-----------|
 | `wiki/research/cotcodec-paper.md` | The proposal mirror |
 | `wiki/research/language-orchestration.md` | Compiled research brief |
-| `wiki/architecture/claude-code-harness.md` | Harness patterns to replicate |
-| `wiki/architecture/gbrain-comparison.md` | Architecture validation |
+| `wiki/architecture/claude-code-harness.md` | Harness patterns (hooks, rules, skills, memory) |
+| `wiki/architecture/gbrain-comparison.md` | Architecture validation at scale |
 | `wiki/tools/gbrain.md` | 25 skills, signal detector, RESOLVER |
 | `wiki/tools/gstack.md` | 23 skills, UX behavioral foundations |
-| `wiki/tools/everything-claude-code.md` | 10 ideas worth stealing |
+| `wiki/tools/everything-claude-code.md` | 10 ideas: compaction, instincts, verification |
 | `wiki/concepts/brain-agent-loop.md` | Core methodology |
-| `wiki/concepts/agent-ethos.md` | Surgeon mindset |
+| `wiki/concepts/agent-ethos.md` | Surgeon mindset, hard limits |
+| `wiki/concepts/lint-enforced-agent-guardrails.md` | Verification via lint |
 | `wiki/philosophies/no-one-off-work.md` | Codification lifecycle |
 | `wiki/philosophies/builder-ethos.md` | Boil the lake, search before building |
 | `wiki/tools/last30days.md` | Research engine reference |
@@ -214,31 +304,16 @@ Research-relevant clips:
 
 ---
 
-## 7. Raw Sources Available
+## 7. Usage Protocol
 
-| Source | Path | Count | Status |
-|--------|------|-------|--------|
-| X Bookmarks | `raw/x-bookmarks/bookmarks.jsonl` | 294 entries | Synced 2026-04-24 |
-| Obsidian Clips | `raw/obsidian/*.md` | 51 clips | Manually synced |
-| Calendar | `raw/calendar/2026/*.md` | 26 day files | Synced |
-| Email | `raw/email/*.md` | 4 digests | Synced |
-| Research | `raw/research/*.tex, *.md` | 6 files | Manual |
-| Career | `raw/career/resume-kevin-liu.tex` | 1 file | Manual |
-| HumanX targets | `raw/humanx-*.csv` | 4 CSV files | Event data |
-
----
-
-## Usage Protocol
-
-When running frontier research scans:
-
-1. **Search wiki first** — `qmd search/query` for compiled knowledge
-2. **Check X bookmarks** — `raw/x-bookmarks/bookmarks.jsonl` for signal Kevin already found interesting
-3. **Run last30days** — for the last 30 days of live community signal across platforms
-4. **Use agent-reach** — for specific URLs, lab blogs, paper fetching
-5. **Use Jina Reader** — for reading specific articles found via search
-6. **Use Semantic Scholar** — for citation tracking on key papers
-7. **Use arXiv API** — for new paper discovery
-8. **Use GitHub CLI** — for new repos, frameworks, benchmarks
-9. **Aggregate findings** → `research/scans/YYYY-MM-DD.md`
-10. **Update state** → `memory.json`, relevant `directions/*.md`, `wiki/log.md`
+1. **Wiki first** — `qmd search/query` for compiled knowledge
+2. **Check bookmarks** — `raw/x-bookmarks/bookmarks.jsonl` for signal Kevin already found interesting
+3. **Check following** — `/tmp/x_following.json` for accounts Kevin tracks
+4. **Run last30days** — live community signal across platforms
+5. **Use agent-reach** — specific URLs, lab blogs, paper fetching
+6. **Use Jina Reader** — reading specific articles
+7. **Use Semantic Scholar** — citation tracking on key papers
+8. **Use arXiv API** — new paper discovery
+9. **Use GitHub CLI** — new repos, frameworks, benchmarks
+10. **Aggregate** → `research/scans/YYYY-MM-DD.md`
+11. **Update state** → `memory.json`, `directions/*.md`, `wiki/log.md`

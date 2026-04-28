@@ -43,3 +43,13 @@ Chinese reasoning.
 - **Safety** — this is the most safety-relevant orchestration variable
 - **Language** — multilingual mixing may blur instruction boundaries
 - **Memory** — old system instructions can get "lost in the middle"
+
+## Community Evidence (from Kevin's X bookmarks — 18 signals)
+
+- **Anthropic Project Glasswing** (15.4K bm @AnthropicAI) — "An urgent initiative to help
+  secure the world's most critical software." Instruction hierarchy is the foundation.
+- **GStack security fixes wave** (117 bm @garrytan) — "Big wave of security fixes for GStack
+  and GBrain." Open-source agent harnesses have real security surface area.
+- **Claude Managed Agents** (50.7K bm @claudeai) — official agent harness implies a specific
+  instruction hierarchy (system → developer → agent → user). Our conditions must test
+  whether language mixing degrades this hierarchy.
