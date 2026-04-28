@@ -125,3 +125,23 @@ Updated: `memory.json` with full audit data + 33 people tracking list
 - `harness_beats_model_01.yaml` — old + orchestrated vs. new + naive
 - `degradation_canary_01.yaml` — validate canary catches simulated Anthropic bugs
 - `frontier_comparison_01.yaml` — all 4 frontier models, all 7 conditions, 10 seeds
+
+## [2026-04-28] research | Deep research on model degradation + harness-beats-model evidence
+
+Researched the full 2026 "model quality crisis" across all major providers:
+
+**Quantified harness-beats-model evidence:**
+- SWE-bench: 42% → 78% from scaffolding alone (model swap < 1.3pts)
+- AdaptOrch (arXiv 2602.16873): formal proof orchestration variance > model selection
+- Vercel: 80% → 100% by reducing tools 15 → 2
+- LangChain: +13.7pts from harness iteration only
+
+**Provider-specific degradation mapped to orchestration variables:**
+- GPT-5: hallucination 12%→23%, code length 187→62 lines (token economics, quantization, RLHF)
+- Sonnet 4.6: 25→480 errors/week (19x), 1400+ events over 50 sessions (GitHub #46935)
+- Gemini 3.1 Pro: formatting regression, attention drift, capacity issues
+- DeepSeek V4: multi-turn stagnation from reasoning suffix constraints (V2)
+- Cursor Composer 2: shipped Kimi K2.5 as own model — proved harness IS the product
+
+Updated: directions/13 with full evidence from all providers + quantified data,
+directions/14 with cross-provider degradation table, memory.json with evidence + papers

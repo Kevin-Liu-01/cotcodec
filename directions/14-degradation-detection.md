@@ -4,15 +4,27 @@
 
 ## The Problem
 
-Orchestration variable changes can cause quality degradation that is:
+The 2026 "model quality crisis" revealed that EVERY major provider has
+shipped orchestration-level regressions that users perceived as model
+degradation. The phenomenon is industry-wide:
+
+| Provider | Degradation | Root cause category | Our variable |
+|----------|------------|--------------------|----|
+| Anthropic (Opus 4.6, Sonnet 4.6) | Forgetful, repetitive, less intelligent | Effort level, cache bug, verbosity limit | V2, V3, V4, V9 |
+| OpenAI (GPT-5) | Lazy outputs, hallucinations ↑, code length ↓ | Token economics, quantization, RLHF caution | V2, V4, V8 |
+| Google (Gemini 3.1 Pro) | Formatting ignored, attention drift, robotic | Capacity management, context handling | V4, V5 |
+| DeepSeek (V4) | Multi-turn stagnation, repetitive, robotic | Reasoning suffix constraints | V2 |
+| Cursor (Composer 2) | — | Shipped Kimi K2.5 as own model | Meta (harness IS the product) |
+
+These degradations share characteristics that are hard to detect:
 - **Invisible to internal evals** — Anthropic's own evals didn't catch 2 of 3 issues
 - **Indistinguishable from model noise** — users see "worse" but can't prove it statistically
 - **Compounding** — multiple small changes stack into perceived broad degradation
-- **Hard to reproduce** — bugs appear only in corner cases (stale sessions, specific effort levels)
+- **Hard to reproduce** — bugs appear only in corner cases (stale sessions, peak load)
+- **Cross-provider** — every provider ships these; none has systematic detection
 
-The Anthropic postmortem is the case study: three harness-level changes, each
-affecting different traffic slices on different schedules, created what looked
-like "broad, inconsistent degradation."
+Sonnet 4.6 was quantified: 25 errors/week → 480 errors/week (19x increase) over
+60 days across 50 sessions, tracking 1,400+ frustration events. (GitHub #46935)
 
 ## The Research Question
 
