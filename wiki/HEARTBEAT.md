@@ -20,10 +20,14 @@ updated: 2026-04-28
 | Cadence | Action |
 |---------|--------|
 | Every session | Check `memory.json` for stale landscape tracking |
+| **Daily** | Quick frontier check: HF Papers, arXiv cs.CL+cs.AI, X key accounts |
+| **Weekly** | Full frontier research scan (`automations/frontier-research.md`) |
 | Weekly | Sync with `language-orchestration-radar` in my-wiki |
 | Weekly | Run tokenizer fertility checks for any new model releases |
 | Bi-weekly | Review and update experiment definitions |
-| Monthly | Full literature review — update bibliography |
+| Bi-weekly | Deep-dive community scan: HN, Reddit, GitHub Trending |
+| Monthly | Full landscape review, bibliography audit |
+| Monthly | Competitive intelligence check: who's publishing on our questions? |
 | Before meeting Danqi | Prepare landscape summary, propose design changes |
 
 ## Phase 2: Systematic Experiments (September → November 2026)

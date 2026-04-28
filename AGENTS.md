@@ -74,6 +74,44 @@ settings will need revisiting. This means:
 - Benchmarks must be **pluggable** (add new ones as they appear)
 - The experimental design must be **revisable** (conditions, metrics configurable)
 - Track landscape changes in `memory.json` → `landscape_tracking`
+- **Research intelligence is non-negotiable** — see below
+
+## Frontier Research Intelligence
+
+The field moves weekly. Between now and fall, entire research threads will
+emerge, models will ship, benchmarks will update. If we're not tracking
+this systematically, we show up with a stale proposal.
+
+**Full spec:** `research/frontier-research-spec.md`
+**Automation:** `automations/frontier-research.md`
+**Skill:** `skills/frontier-research.md`
+**Reports:** `research/scans/YYYY-MM-DD.md`
+
+### Source Coverage
+
+| Tier | Sources | Signal | Noise | Cadence |
+|------|---------|--------|-------|---------|
+| 1 — Labs | Anthropic, OpenAI, DeepSeek, DeepMind, Meta, Qwen, Mistral, xAI, Cohere | Highest | Lowest | Daily-Weekly |
+| 2 — Academic | arXiv (cs.CL/AI/MA/SE), ACL Anthology, Semantic Scholar, HF Papers, Princeton/Stanford/CMU/UW NLP | High | Low | Daily-Weekly |
+| 3 — Community | X, HN, Reddit (r/ML, r/LocalLLaMA), GitHub Trending, Alignment Forum, Interconnects | Fastest | Highest | Daily-Weekly |
+
+### Research Threads
+
+| Thread | Variables | What to track |
+|--------|-----------|---------------|
+| A — Agent Internal Communication | 1-2 | Language, reasoning format, structured protocols |
+| B — Context Management | 3-5, 9 | Memory, allocation, observation, compaction |
+| C — Planning & Recovery | 6-8 | Planning depth, retry, verification |
+| D — Coordination & Control | 10-12 | Tool scheduling, delegation, instruction hierarchy |
+| E — Benchmarks & Evaluation | All | New benchmarks, leaderboard changes |
+| F — Models & Providers | All | New models, API changes, pricing |
+| G — Safety & Alignment | All | Multilingual safety, instruction following |
+
+### Competitive Intelligence
+
+Track groups working on adjacent problems — DeepSeek Research, Microsoft
+(EfficientXLang), Li et al. (UPenn), Wang et al. (LMU Munich). If someone
+publishes on our question, brief Danqi within 24 hours.
 
 ## Directory Structure
 
@@ -102,6 +140,9 @@ cotcodec/
 │   ├── USER.md            # Kevin in research context
 │   ├── HEARTBEAT.md       # Research operational cadence
 │   └── log.md             # Chronological operation log
+├── research/              # Frontier research tracking
+│   ├── frontier-research-spec.md  # Full intelligence spec
+│   └── scans/             # Weekly scan reports (YYYY-MM-DD.md)
 ├── harness/               # Evaluation framework
 │   ├── README.md          # Harness architecture and usage
 │   ├── config.py          # Shared configuration
@@ -192,9 +233,10 @@ metrics:
 3. Create an experiment YAML using the new benchmark
 4. Run pilot (3-5 tasks) and verify trace collection works
 
-### Adding a New Language Condition
+### Adding a New Orchestration Condition
 
 1. Create `harness/conditions/<name>.py` implementing `LanguageCondition`
+   (will be generalized to `OrchestrationCondition` as we study more variables)
 2. Add condition config to `memory.json` → `benchmarking.conditions`
 3. The condition must implement: `transform_message(message, message_type) → str`
 4. Test on a small set of messages before using in experiments
@@ -350,6 +392,7 @@ When experiments produce findings, update both the wiki and `memory.json`.
 
 | Skill | Path | Purpose |
 |-------|------|---------|
+| `frontier-research` | `skills/frontier-research.md` | Frontier research scan across labs, arxiv, community |
 | `run-experiment` | `skills/run-experiment.md` | Execute experiment from YAML |
 | `analyze-traces` | `skills/analyze-traces.md` | Trace analysis and decomposition |
 | `update-memory` | `skills/update-memory.md` | Update memory.json after findings |
