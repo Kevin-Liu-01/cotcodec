@@ -27,7 +27,7 @@ brew install ollama
 echo "→ Pulling open-weight models (this takes a while)..."
 ollama pull deepseek-r1:8b     # Distilled, fast for pilots
 ollama pull qwen3:8b           # Multilingual
-ollama pull llama4:8b           # Baseline
+ollama pull llama3.3:latest    # Meta's latest open-weight baseline
 
 # 4. Benchmark repos
 echo "→ Cloning benchmark repos..."

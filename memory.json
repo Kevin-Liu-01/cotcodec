@@ -206,14 +206,14 @@
       {
         "name": "X-WebAgentBench",
         "purpose": "Multilingual interactive web tasks",
-        "repo": "https://github.com/peterxwang/X-WebAgentBench",
+        "repo": "https://github.com/WPENGxs/X-WebAgentBench",
         "priority": 2,
         "status": "not_started"
       },
       {
         "name": "SWE-bench",
         "purpose": "Code-heavy stress test (optional)",
-        "repo": "https://github.com/princeton-nlp/SWE-bench",
+        "repo": "https://github.com/SWE-bench/SWE-bench",
         "priority": 3,
         "status": "not_started"
       }
@@ -285,7 +285,7 @@
     "models_to_track": [
       "claude-4-sonnet", "claude-4-opus", "gpt-4o", "gpt-5",
       "deepseek-r1", "deepseek-v3", "gemini-2.5-pro",
-      "qwen-3", "llama-4"
+      "qwen-3", "llama-3.3"
     ],
     "key_papers_since_proposal": [],
     "provider_changes": [],
@@ -343,7 +343,7 @@
         "models": [
           { "name": "deepseek-r1", "note": "Primary — our key evidence paper uses this model. Distilled versions run on M-series." },
           { "name": "qwen-3", "note": "Strong multilingual, Chinese-English. Good for language variable experiments." },
-          { "name": "llama-4", "note": "Meta's open-weight. Baseline for open vs. closed comparison." }
+          { "name": "llama-3.3-70b", "note": "Meta's latest open-weight (no llama-4 repo yet). Baseline for open vs. closed comparison." }
         ],
         "frameworks": [
           { "name": "MLX", "note": "Apple-native, fastest on M-series. Preferred for Mac Mini." },

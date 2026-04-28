@@ -441,7 +441,7 @@ Free experimentation on open-weight models before spending on API calls:
 |-------|-----------|----------|
 | DeepSeek-R1 (distilled 8B) | MLX / Ollama | Primary — our key evidence paper. Free pilots. |
 | Qwen-3 8B | MLX / Ollama | Multilingual Chinese-English. Language variable experiments. |
-| Llama-4 8B | MLX / Ollama | Open-weight baseline. |
+| Llama-3.3 | MLX / Ollama | Meta's latest open-weight baseline. |
 | Claude-4-Sonnet | Anthropic API | Publication-grade closed-model experiments. |
 | GPT-4o / GPT-5 | OpenAI API | Cross-provider comparison. |
 

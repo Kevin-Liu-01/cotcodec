@@ -44,8 +44,8 @@ Check each lab for new posts/papers since last scan:
 # Anthropic
 curl -s "https://r.jina.ai/https://anthropic.com/research"
 
-# OpenAI
-curl -s "https://r.jina.ai/https://openai.com/research"
+# OpenAI (openai.com blocks raw curl; use Jina or check their blog index)
+curl -s "https://r.jina.ai/https://openai.com/index/"
 
 # DeepSeek — check GitHub releases
 gh api repos/deepseek-ai/DeepSeek-R1/releases --jq '.[0:3] | .[] | .tag_name + " " + .published_at'
@@ -125,8 +125,8 @@ Check for pricing, model, or API changes:
 # Anthropic docs
 curl -s "https://r.jina.ai/https://docs.anthropic.com/en/docs/about-claude/models"
 
-# OpenAI pricing
-curl -s "https://r.jina.ai/https://openai.com/api/pricing"
+# OpenAI pricing (use platform docs — openai.com/api/pricing blocks curl)
+curl -s "https://r.jina.ai/https://platform.openai.com/docs/models"
 ```
 
 ## Evaluation

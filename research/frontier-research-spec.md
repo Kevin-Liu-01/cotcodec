@@ -27,7 +27,7 @@ invalidates, supports, or supersedes our research questions.
 | Source | URL | What to track | Cadence |
 |--------|-----|---------------|---------|
 | **Anthropic** | `anthropic.com/research`, `docs.anthropic.com` | Token counting changes, tool use overhead, context window updates, multilingual behavior, agent architecture | Daily |
-| **OpenAI** | `openai.com/research`, `platform.openai.com/docs` | Reasoning model updates (o-series), structured outputs, function calling changes, token pricing | Daily |
+| **OpenAI** | `openai.com/index` (blog), `platform.openai.com/docs` | Reasoning model updates (o-series), structured outputs, function calling changes, token pricing | Daily |
 | **DeepSeek** | `github.com/deepseek-ai`, `arxiv.org (deepseek)` | R1 follow-ups, language mixing behavior, RL reasoning, open-weight multilingual models | Weekly |
 | **Google DeepMind** | `deepmind.google/research`, Gemini docs | Gemini reasoning, agent frameworks, multilingual capabilities, context caching | Weekly |
 | **Meta FAIR** | `ai.meta.com/research`, `github.com/meta-llama` | Llama reasoning, open-weight agent capabilities, multilingual tokenizers | Weekly |
