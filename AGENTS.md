@@ -1,7 +1,8 @@
 # CoTCodec — Agent Operating Guide
 
-A research project studying language choice as an orchestration variable for
-tool-using LLM agents. Princeton University / Dedalus Labs, Fall 2026.
+A research program studying **orchestration variables** for tool-using LLM agents.
+Language is Paper 1. The broader program covers the full space of choices that
+agent systems make implicitly and never measure. Princeton / Dedalus Labs, Fall 2026.
 
 **Advisor:** Professor Danqi Chen (Princeton NLP Group)
 **Author:** Kevin Liu (Princeton CS '28, Dedalus Labs founding engineer)
@@ -21,20 +22,46 @@ Read `wiki/SOUL.md`, `wiki/USER.md`, `wiki/HEARTBEAT.md` on every session start.
 2. Read `memory.json` — check current phase, next actions, landscape changes
 3. Report what needs attention before doing anything else
 
-## Core Thesis
+## The Broader Thesis
 
-Internal language choice should be studied as an orchestration policy over explicit
-agent messages. The intervention is narrow: user responses, tool schemas, and JSON
-stay English. Only framework-visible intermediate messages vary (planner notes,
-subtask handoffs, memory summaries, retry diagnoses, coordinator messages).
+Agent orchestration is an underexplored design space. Most systems make
+orchestration choices **implicitly** — hard-coded into the framework, never
+measured, never optimized. Making them **explicit, measurable, and optimizable**
+is the research contribution.
 
-**Formal routing policy:**
+Every agent loop makes invisible choices at every step:
 
-π(m_t, x_t) → ℓ_t ∈ {English, Chinese, Structured English, Controlled Chinese}
+| Choice | What most systems do | What we study |
+|--------|---------------------|---------------|
+| What language to reason in | English (default) | **Language** (Paper 1) |
+| How to format reasoning | Free-form prose | **Reasoning format** |
+| What to remember | Everything until context fills | **Memory policy** |
+| How much context to allocate | Implicitly, whatever fits | **Context allocation** |
+| How much tool output to keep | All of it | **Observation granularity** |
+| How far ahead to plan | Whatever the prompt says | **Planning depth** |
+| What to do when tools fail | Retry the same way | **Retry / recovery** |
+| When to verify intermediate state | Never | **Verification cadence** |
+| When to compress context | At 95% full | **Compaction policy** |
+| How to order tool calls | Sequential | **Tool scheduling** |
+| How to distribute work | Single agent | **Delegation topology** |
+| How to weight conflicting instructions | Equally | **Instruction hierarchy** |
 
-**Optimization:**
+Each is an **orchestration variable** σ with the same formal structure:
 
+```
+π(m_t, x_t) → σ_t ∈ {option_1, ..., option_k}
 max_π U(π) = Success − λ_c·Cost − λ_t·Latency − λ_s·SafetyRisk
+```
+
+See `directions/README.md` for the full taxonomy and `directions/01-12` for
+individual variable exploration docs.
+
+## Paper 1: Language
+
+Language is the most tractable first variable (easy to manipulate, easy to
+measure, clear priors from DeepSeek-R1 and EfficientXLang). The intervention
+is narrow: only framework-visible intermediate messages vary. Tool schemas
+and final responses stay English.
 
 **The best paper is a routing policy, not "always use Chinese."**
 
@@ -56,6 +83,20 @@ cotcodec/
 ├── CLAUDE.md              # Points here
 ├── .cursorrules           # Points here
 ├── memory.json            # Project state, direction, exploration strategies
+├── directions/            # Research directions beyond language
+│   ├── README.md          # Full orchestration variable taxonomy
+│   ├── 01-language.md     # Paper 1 (active)
+│   ├── 02-reasoning-format.md  # Paper 1-2 candidate
+│   ├── 03-memory-policy.md     # Paper 2 candidate
+│   ├── 04-context-allocation.md  # Paper 2 candidate
+│   ├── 05-observation-granularity.md  # Paper 2-3 candidate
+│   ├── 06-planning-depth.md     # Paper 3 candidate
+│   ├── 07-retry-recovery.md     # Paper 3 candidate
+│   ├── 08-verification-cadence.md  # Paper 3 candidate
+│   ├── 09-compaction-policy.md  # Paper 3-4 candidate
+│   ├── 10-tool-scheduling.md    # Paper 4 candidate
+│   ├── 11-delegation-topology.md  # Paper 4+ candidate
+│   └── 12-instruction-hierarchy.md  # Paper 4+ candidate
 ├── wiki/                  # Research knowledge base
 │   ├── SOUL.md            # Agent identity for this project
 │   ├── USER.md            # Kevin in research context

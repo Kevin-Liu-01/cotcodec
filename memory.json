@@ -29,17 +29,120 @@
   },
 
   "direction": {
-    "core_thesis": "Internal language choice should be studied as an orchestration policy over explicit agent messages — not as a claim about hidden cognition.",
-    "intervention_boundary": "Only framework-visible intermediate messages vary. User responses, tool schemas, JSON stay English.",
-    "optimization_target": "max U(π) = Success − λ_c·Cost − λ_t·Latency − λ_s·SafetyRisk",
-    "key_insight": "The best paper is a routing policy, not 'always use Chinese.' Different message types have different failure modes.",
+    "broader_thesis": "Agent orchestration is an underexplored design space. Most systems make orchestration choices implicitly — hard-coded, never measured, never optimized. Making them explicit, measurable, and optimizable is the research contribution.",
+    "paper_1_thesis": "Internal language choice should be studied as an orchestration policy over explicit agent messages — not as a claim about hidden cognition.",
+    "generalized_formulation": "For any orchestration variable σ: π(m_t, x_t) → σ_t. Language is σ = ℓ. But σ can be memory policy, planning depth, retry strategy, verification cadence, context allocation, observation granularity, tool scheduling, delegation topology, instruction hierarchy, or reasoning format.",
+    "optimization_target": "max_π U(π) = Success − λ_c·Cost − λ_t·Latency − λ_s·SafetyRisk (applies to ALL orchestration variables, not just language)",
+    "key_insight": "Language is Paper 1 because it's the most tractable (easy to manipulate, easy to measure, clear priors). But the harness generalizes to any orchestration variable.",
     "danqi_caveat": "World is changing fast — revisit settings, models, benchmarks before fall. Infrastructure and harness should be model-agnostic.",
     "current_priorities": [
-      "Build evaluation harness (model-agnostic, benchmark-agnostic)",
-      "Implement language conditions and routing policies",
-      "Set up data collection pipeline for traces, tokens, metrics",
-      "Establish baselines (English-only, LLMLingua, structured English)",
+      "Build evaluation harness (model-agnostic, benchmark-agnostic, variable-agnostic)",
+      "Paper 1: language conditions and routing policies",
+      "Explore directions beyond language (see directions/)",
       "Track landscape changes via language-orchestration-radar automation"
+    ]
+  },
+
+  "orchestration_variables": {
+    "_note": "The full design space. See directions/ for detailed exploration docs.",
+    "paper_1": [
+      {
+        "variable": "language",
+        "file": "directions/01-language.md",
+        "tractability": "high",
+        "status": "active",
+        "conditions_implemented": true
+      },
+      {
+        "variable": "reasoning_format",
+        "file": "directions/02-reasoning-format.md",
+        "tractability": "high",
+        "status": "partially_covered_by_structured_english",
+        "conditions_implemented": false,
+        "note": "Structured English condition straddles language and format"
+      }
+    ],
+    "paper_2_candidates": [
+      {
+        "variable": "memory_policy",
+        "file": "directions/03-memory-policy.md",
+        "tractability": "medium",
+        "status": "unexplored",
+        "note": "Strong connection to Kevin's Dedalus experience and MemGPT literature"
+      },
+      {
+        "variable": "context_allocation",
+        "file": "directions/04-context-allocation.md",
+        "tractability": "medium",
+        "status": "unexplored",
+        "note": "Subsumes several variables. Meta-level: how to divide the budget."
+      },
+      {
+        "variable": "observation_granularity",
+        "file": "directions/05-observation-granularity.md",
+        "tractability": "medium",
+        "status": "unexplored",
+        "note": "High practical impact. Tool outputs are largest token consumer."
+      }
+    ],
+    "paper_3_candidates": [
+      {
+        "variable": "planning_depth",
+        "file": "directions/06-planning-depth.md",
+        "tractability": "medium",
+        "status": "unexplored"
+      },
+      {
+        "variable": "retry_recovery",
+        "file": "directions/07-retry-recovery.md",
+        "tractability": "medium",
+        "status": "unexplored"
+      },
+      {
+        "variable": "verification_cadence",
+        "file": "directions/08-verification-cadence.md",
+        "tractability": "medium",
+        "status": "unexplored",
+        "note": "Directly maps to Kevin's harness hook work (quality gates)"
+      },
+      {
+        "variable": "compaction_policy",
+        "file": "directions/09-compaction-policy.md",
+        "tractability": "medium_low",
+        "status": "unexplored",
+        "note": "Claude Code autoCompact at 167K is the motivating example"
+      }
+    ],
+    "future_papers": [
+      {
+        "variable": "tool_scheduling",
+        "file": "directions/10-tool-scheduling.md",
+        "tractability": "medium_low",
+        "status": "unexplored",
+        "note": "LLMCompiler showed parallel calling works. Speculative execution is untested."
+      },
+      {
+        "variable": "delegation_topology",
+        "file": "directions/11-delegation-topology.md",
+        "tractability": "low",
+        "status": "unexplored",
+        "note": "Connects to Kevin's MCP SDK and multi-agent work at Dedalus"
+      },
+      {
+        "variable": "instruction_hierarchy",
+        "file": "directions/12-instruction-hierarchy.md",
+        "tractability": "low",
+        "status": "unexplored",
+        "note": "Safety-critical. Wallace et al. Language mixing may blur boundaries."
+      }
+    ],
+    "interaction_hypotheses": [
+      "Language × memory: shorter language = more memory budget (multiplicative)",
+      "Language × planning: planning text is highest compression target",
+      "Reasoning format × verification: structured formats enable automatic verification",
+      "Memory × observation: summarized observations are easier to retain",
+      "Planning × retry: better plans → fewer retries → lower total cost",
+      "Context allocation × everything: meta-variable that mediates all others"
     ]
   },
 
