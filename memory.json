@@ -1,0 +1,231 @@
+{
+  "project": {
+    "name": "CoTCodec",
+    "full_title": "Language Choice as an Orchestration Variable for Tool-Using LLM Agents",
+    "author": "Kevin Liu",
+    "affiliation": "Princeton University / Dedalus Labs",
+    "repo": "~/Documents/GitHub/cotcodec",
+    "wiki_mirror": "~/Documents/GitHub/my-wiki/wiki/research/cotcodec-paper.md",
+    "latex_source": "~/Documents/GitHub/my-wiki/raw/research/language-orchestration-research-spec.tex",
+    "created": "2026-03-01",
+    "status": "pre-implementation"
+  },
+
+  "advisor": {
+    "name": "Danqi Chen",
+    "role": "Research advisor, Princeton NLP Group",
+    "wiki_page": "~/Documents/GitHub/my-wiki/wiki/people/danqi-chen.md",
+    "confirmation": {
+      "date": "2026-04-28",
+      "message": "Sure! I am happy to take you on this fall :) Please reach out when it gets closer to the fall and we can discuss your proposal further (the world is changing so much, so we will likely need to revisit the settings etc).",
+      "status": "confirmed_for_fall_2026",
+      "action_items": [
+        "Reach out closer to fall (August 2026) to discuss updated proposal",
+        "Revisit experimental settings — field moving fast",
+        "Build infrastructure now so experiments can run immediately when fall starts",
+        "Track landscape changes that affect proposal framing"
+      ]
+    }
+  },
+
+  "direction": {
+    "core_thesis": "Internal language choice should be studied as an orchestration policy over explicit agent messages — not as a claim about hidden cognition.",
+    "intervention_boundary": "Only framework-visible intermediate messages vary. User responses, tool schemas, JSON stay English.",
+    "optimization_target": "max U(π) = Success − λ_c·Cost − λ_t·Latency − λ_s·SafetyRisk",
+    "key_insight": "The best paper is a routing policy, not 'always use Chinese.' Different message types have different failure modes.",
+    "danqi_caveat": "World is changing fast — revisit settings, models, benchmarks before fall. Infrastructure and harness should be model-agnostic.",
+    "current_priorities": [
+      "Build evaluation harness (model-agnostic, benchmark-agnostic)",
+      "Implement language conditions and routing policies",
+      "Set up data collection pipeline for traces, tokens, metrics",
+      "Establish baselines (English-only, LLMLingua, structured English)",
+      "Track landscape changes via language-orchestration-radar automation"
+    ]
+  },
+
+  "exploration_strategies": {
+    "phase_1_foundation": {
+      "timeline": "Now → August 2026",
+      "goals": [
+        "Build and validate evaluation harness on tau-bench and API-Bank",
+        "Implement all 7 language conditions",
+        "Run pilot experiments (3-5 tasks per benchmark per condition)",
+        "Measure tokenizer fertility across models for English, Chinese, Korean, Polish",
+        "Calibrate cost model with real API pricing",
+        "Build dynamic router prototype"
+      ]
+    },
+    "phase_2_systematic": {
+      "timeline": "September → November 2026",
+      "goals": [
+        "Full benchmark runs with statistical significance",
+        "Message-type decomposition (where do savings arise?)",
+        "Pareto frontier analysis (cost-latency vs success-reliability)",
+        "Safety evaluation (multilingual blending, injection resistance)",
+        "Semantic fidelity checks (entailment scoring)",
+        "Router optimization"
+      ]
+    },
+    "phase_3_writeup": {
+      "timeline": "November → December 2026",
+      "goals": [
+        "Paper draft with all experiments",
+        "Negative result documentation (equally valuable)",
+        "Artifact release (harness, data, router)",
+        "Submit to venue (ACL/EMNLP/NeurIPS workshop)"
+      ]
+    }
+  },
+
+  "benchmarking": {
+    "primary_benchmarks": [
+      {
+        "name": "tau-bench",
+        "purpose": "Tool-agent-user interaction; argument correctness and policy compliance",
+        "repo": "https://github.com/sierra-research/tau-bench",
+        "priority": 1,
+        "status": "not_started"
+      },
+      {
+        "name": "API-Bank",
+        "purpose": "Tool planning and API usage",
+        "repo": "https://github.com/AlibabaResearch/DAMO-ConvAI/tree/main/api-bank",
+        "priority": 1,
+        "status": "not_started"
+      },
+      {
+        "name": "WebArena",
+        "purpose": "Long-horizon web tasks",
+        "repo": "https://github.com/web-arena-x/webarena",
+        "priority": 2,
+        "status": "not_started"
+      },
+      {
+        "name": "X-WebAgentBench",
+        "purpose": "Multilingual interactive web tasks",
+        "repo": "https://github.com/peterxwang/X-WebAgentBench",
+        "priority": 2,
+        "status": "not_started"
+      },
+      {
+        "name": "SWE-bench",
+        "purpose": "Code-heavy stress test (optional)",
+        "repo": "https://github.com/princeton-nlp/SWE-bench",
+        "priority": 3,
+        "status": "not_started"
+      }
+    ],
+    "conditions": [
+      { "id": "english_only", "description": "All internal messages in English (baseline)", "priority": 1 },
+      { "id": "internal_chinese", "description": "Free-form Chinese for variable messages", "priority": 1 },
+      { "id": "controlled_chinese", "description": "Chinese with restricted lexicon and explicit markers", "priority": 1 },
+      { "id": "english_compressed", "description": "English + LLMLingua prompt compression", "priority": 1 },
+      { "id": "structured_english", "description": "Structured English protocol (telegraphic, schema-like)", "priority": 1 },
+      { "id": "dynamic_router", "description": "Lightweight router selecting per message type", "priority": 2 },
+      { "id": "polish_stress", "description": "Polish (high-fragmentation contrast condition)", "priority": 3 }
+    ],
+    "metrics": [
+      "total_billed_tokens_input",
+      "total_billed_tokens_output",
+      "wall_clock_latency_ms",
+      "task_success_rate",
+      "tool_call_exact_match",
+      "argument_correctness",
+      "retry_count",
+      "recovery_success_rate",
+      "safety_failure_rate",
+      "semantic_fidelity_score",
+      "cost_usd"
+    ]
+  },
+
+  "data_collection": {
+    "trace_schema": {
+      "experiment_id": "string",
+      "benchmark": "string",
+      "condition": "string",
+      "model": "string",
+      "task_id": "string",
+      "seed": "number",
+      "messages": [
+        {
+          "step": "number",
+          "role": "string",
+          "type": "planner_note | subtask_handoff | tool_call | tool_result | memory_update | retry_diagnosis | final_response",
+          "language": "string",
+          "content": "string",
+          "token_count_input": "number",
+          "token_count_output": "number",
+          "latency_ms": "number"
+        }
+      ],
+      "outcome": {
+        "success": "boolean",
+        "tool_calls_correct": "number",
+        "tool_calls_total": "number",
+        "retries": "number",
+        "safety_failures": "number",
+        "total_tokens": "number",
+        "total_latency_ms": "number",
+        "cost_usd": "number"
+      }
+    },
+    "storage": {
+      "traces": "data/traces/{benchmark}/{condition}/{experiment_id}.jsonl",
+      "aggregated": "data/results/{experiment_id}_summary.json",
+      "tokens": "data/tokens/{model}_fertility.json"
+    }
+  },
+
+  "landscape_tracking": {
+    "last_radar_run": null,
+    "models_to_track": [
+      "claude-4-sonnet", "claude-4-opus", "gpt-4o", "gpt-5",
+      "deepseek-r1", "deepseek-v3", "gemini-2.5-pro",
+      "qwen-3", "llama-4"
+    ],
+    "key_papers_since_proposal": [],
+    "provider_changes": [],
+    "benchmark_updates": [],
+    "notes": "Danqi flagged that the world is changing fast. This section tracks everything that might affect the experimental design."
+  },
+
+  "infrastructure": {
+    "harness": {
+      "status": "scaffolded",
+      "framework": "Python (asyncio + httpx for API calls)",
+      "config": "YAML experiment definitions",
+      "output": "JSONL traces + JSON summaries"
+    },
+    "automations": {
+      "language_orchestration_radar": {
+        "schedule": "weekly",
+        "source": "~/Documents/GitHub/my-wiki/automations/language-orchestration-radar.md",
+        "status": "active_in_my_wiki"
+      },
+      "fertility_benchmark": {
+        "schedule": "on_new_model",
+        "purpose": "Measure tokenizer fertility for new models across target languages",
+        "status": "not_built"
+      },
+      "baseline_refresh": {
+        "schedule": "monthly",
+        "purpose": "Check for new compression baselines (LLMLingua-3, etc.)",
+        "status": "not_built"
+      }
+    }
+  },
+
+  "state": {
+    "last_updated": "2026-04-28",
+    "last_session": "2026-04-28",
+    "phase": "phase_1_foundation",
+    "next_actions": [
+      "Review and finalize harness architecture",
+      "Set up Python project with dependencies",
+      "Implement English-only baseline condition",
+      "Run first pilot on tau-bench (3-5 tasks)",
+      "Measure tokenizer fertility for Claude/GPT/DeepSeek"
+    ]
+  }
+}

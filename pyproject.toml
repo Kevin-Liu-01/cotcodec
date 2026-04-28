@@ -1,0 +1,37 @@
+[project]
+name = "cotcodec"
+version = "0.1.0"
+description = "Language Choice as an Orchestration Variable for Tool-Using LLM Agents"
+requires-python = ">=3.11"
+authors = [{ name = "Kevin Liu", email = "k.bowen.liu@gmail.com" }]
+
+dependencies = [
+    "anthropic",
+    "openai",
+    "httpx",
+    "tiktoken",
+    "pyyaml",
+    "pandas",
+    "matplotlib",
+    "seaborn",
+    "rich",
+    "pydantic",
+    "numpy",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest",
+    "pytest-asyncio",
+    "ruff",
+]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "SIM"]
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"

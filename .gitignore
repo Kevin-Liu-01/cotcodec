@@ -1,0 +1,32 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+dist/
+build/
+.eggs/
+*.egg
+.venv/
+venv/
+
+# Data (collected traces are large — keep schemas, not data)
+data/traces/
+data/results/
+data/tokens/*.json
+!data/tokens/parallel_corpus.json
+
+# Raw benchmark data
+raw/baselines/
+raw/papers/*.pdf
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Env
+.env
+.env.local

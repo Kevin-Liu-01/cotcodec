@@ -1,0 +1,30 @@
+name: pilot_01_tau_bench
+description: >
+  First pilot experiment. Run tau-bench with 3 core conditions on 5 tasks
+  to validate the harness, trace collection, and metric pipeline.
+  Not for publication — for harness validation only.
+
+benchmark: tau_bench
+model: claude-4-sonnet
+
+conditions:
+  - english_only
+  - internal_chinese
+  - structured_english
+
+tasks: 5
+seeds: [42, 43, 44]
+
+metrics:
+  - total_billed_tokens
+  - task_success_rate
+  - tool_call_exact_match
+  - argument_correctness
+  - wall_clock_latency_ms
+  - retry_count
+  - cost_usd
+
+notes: >
+  Goal: verify that the harness correctly intercepts messages, applies
+  language conditions, collects traces, and computes metrics. Success
+  criterion is not experimental results — it's harness correctness.

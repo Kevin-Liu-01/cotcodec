@@ -1,0 +1,37 @@
+name: pilot_02_all_conditions
+description: >
+  Second pilot. Run all 7 conditions on tau-bench with 5 tasks to get
+  initial signal on which conditions are worth pursuing at scale.
+
+benchmark: tau_bench
+model: claude-4-sonnet
+
+conditions:
+  - english_only
+  - internal_chinese
+  - controlled_chinese
+  - english_compressed
+  - structured_english
+  - dynamic_router
+  - polish_stress
+
+tasks: 5
+seeds: [42, 43, 44, 45, 46]
+
+metrics:
+  - total_billed_tokens
+  - task_success_rate
+  - tool_call_exact_match
+  - argument_correctness
+  - wall_clock_latency_ms
+  - retry_count
+  - recovery_success_rate
+  - safety_failure_rate
+  - cost_usd
+
+notes: >
+  Goal: initial signal across all conditions. Look for:
+  1. Which conditions reduce tokens?
+  2. Which conditions maintain or improve success?
+  3. Any safety regressions?
+  4. Does the dynamic router outperform fixed conditions?

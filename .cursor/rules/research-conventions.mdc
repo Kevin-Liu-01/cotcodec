@@ -1,0 +1,29 @@
+# Research Conventions
+
+## Experiment Discipline
+
+- NEVER modify collected traces after collection
+- NEVER re-run an experiment with modified parameters under the same name
+- ALWAYS create a new experiment YAML for parameter changes
+- ALWAYS validate harness on pilot (3-5 tasks) before full runs
+- ALWAYS include safety evaluation in every experiment
+
+## Code Style
+
+- Python 3.11+, type hints on all functions
+- Async where API calls are involved
+- Ruff for formatting and linting
+- Dataclasses for structured data, Pydantic for validation
+
+## Memory Protocol
+
+- Update memory.json after every session with new findings
+- Append to wiki/log.md for every significant action
+- Track landscape changes (new papers, models, API pricing)
+
+## Reproducibility
+
+- Every experiment must be rerunnable from its YAML definition
+- Random seeds are explicit and recorded in traces
+- Model versions recorded in every trace
+- API request/response pairs logged for debugging

@@ -1,0 +1,41 @@
+name: full_01_tau_bench
+description: >
+  Full tau-bench evaluation. All viable conditions (filtered by pilot results),
+  full task set, statistical significance via multiple seeds.
+  For publication.
+
+benchmark: tau_bench
+model: claude-4-sonnet
+
+conditions:
+  - english_only
+  - internal_chinese
+  - controlled_chinese
+  - english_compressed
+  - structured_english
+  - dynamic_router
+
+tasks: -1  # all available tasks
+seeds: [42, 43, 44, 45, 46, 47, 48, 49, 50, 51]
+
+metrics:
+  - total_billed_tokens
+  - total_billed_tokens_input
+  - total_billed_tokens_output
+  - task_success_rate
+  - tool_call_exact_match
+  - argument_correctness
+  - wall_clock_latency_ms
+  - retry_count
+  - recovery_success_rate
+  - safety_failure_rate
+  - semantic_fidelity_score
+  - cost_usd
+
+notes: >
+  Publication-grade experiment. Requirements:
+  - 10 seeds per (task, condition) for statistical significance
+  - Full safety evaluation suite
+  - Semantic fidelity checks on all variable messages
+  - Message-type decomposition analysis
+  - Pareto frontier computation
