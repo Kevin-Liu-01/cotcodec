@@ -192,18 +192,56 @@ that justifies the entire research program.
 - **Compaction** — postmortem showed a compaction bug alone caused major degradation
 - **Verification** — postmortem showed internal verification gates catch 29% false claims
 
-## Prior Work
+## Sources (all verified 2026-04-28)
 
-- **AdaptOrch** (arXiv 2602.16873) — Formal proof: under performance convergence,
-  orchestration variance exceeds model selection variance by Ω(1/ε²)
-- **CORE-Bench / SWE-bench** — 42% → 78% from scaffolding alone (Particula.tech)
-- **"The Agent Harness Is the Architecture"** — Evangelos Pappas, Feb 2026
-- **Anthropic postmortem** (April 23, 2026) — 3 harness bugs degraded Opus + Sonnet
-- **GPT-5 degradation reports** — hallucination 12% → 23%, code length 187 → 62 lines
-- **Gemini 3.1 Pro regression** — formatting, context drift, capacity management
-- **DeepSeek V4 multi-turn bug** — reasoning suffix constraints cause stagnation
-- **Cursor/Kimi K2.5** — proved harness IS the product (shipped someone else's model)
-- **Cuadron et al. 2025** — Overthinking in agentic tasks
-- **Kiela et al. 2026** (ICLR) — Statistical degradation detection via McNemar's test
-- **Quantifying Laziness** (arXiv 2512.20662) — Measured lazy outputs across frontier models
-- **Yen et al. 2024** — tau-bench (model vs. harness effects on tool correctness)
+### Harness-beats-model evidence
+
+| Claim | Source | URL |
+|-------|--------|-----|
+| SWE-bench 42% → 78% scaffolding alone | Particula.tech | https://particula.tech/blog/agent-scaffolding-beats-model-upgrades-swe-bench |
+| Same result, Victorino analysis | Victorino Group | https://victorinollc.com/thinking/harness-difference |
+| AdaptOrch Ω(1/ε²) proof | arXiv 2602.16873 | https://arxiv.org/abs/2602.16873 |
+| "The Agent Harness Is the Architecture" | Evangelos Pappas, Medium | https://medium.com/@epappas/the-agent-harness-is-the-architecture-and-your-model-is-not-the-bottleneck-5ae5fd067bb2 |
+
+### Provider degradation evidence
+
+| Provider | Source | URL |
+|----------|--------|-----|
+| Anthropic postmortem (3 harness bugs) | Anthropic Engineering | https://www.anthropic.com/engineering/april-23-postmortem |
+| Sonnet 4.6: 25→480 errors/week, 1400+ events | GitHub #46935 | https://github.com/anthropics/claude-code/issues/46935 |
+| Sonnet 4.6 systematic degradation | GitHub #38903 | https://github.com/anthropics/claude-code/issues/38903 |
+| Sonnet 4.6 long-session degradation | GitHub #48063 | https://github.com/anthropics/claude-code/issues/48063 |
+| Claude quality special report | TechManiacs | https://techmaniacs.com/2026/04/17/special-report-why-claude-has-seemed-slower-lower-quality-and-less-reliable/ |
+| GPT-5 quality complaints | ChatGPT Disaster | https://chatgptdisaster.com/gpt-5-problems-2026.html |
+| GPT-5 "great downgrade" | Arsturn | https://www.arsturn.com/blog/gpt-5-criticisms-the-great-downgrade |
+| ChatGPT quality degradation analysis | Atom Writer | https://www.atomwriter.com/blog/chatgpt-quality-degradation/ |
+| Gemini 3.1 Pro quality regression | TokenCalculator | https://tokencalculator.com/degradation |
+| Gemini 3.1 Pro capacity/lockout issues | Awesome Agents | https://awesomeagents.ai/news/gemini-3-1-pro-capacity-quota-issues/ |
+| DeepSeek V4 multi-turn stagnation bug | GitHub #1125 | https://github.com/deepseek-ai/DeepSeek-V3/issues/1125 |
+| DeepSeek V4 limitations analysis | Geeky Gadgets | https://www.geeky-gadgets.com/open-source-deepseek-v4-limitations/ |
+| Cursor Composer 2 / Kimi K2.5 exposure | The Open Source Press | https://www.theopensourcepress.com/cursor-shipped-kimi-k2-5-as-their-own-model-heres-how-it-unraveled/ |
+| Cursor/Kimi acknowledgment | Implicator | https://www.implicator.ai/cursor-acknowledges-kimi-k2-5-as-composer-2-base-after-developer-spots-model-id/ |
+
+### Academic / research
+
+| Paper | Venue | URL |
+|-------|-------|-----|
+| Quantifying Laziness in LLMs | arXiv 2512.20662 | https://arxiv.org/abs/2512.20662 |
+| When LLMs get significantly worse (McNemar's test) | ICLR 2026 | https://arxiv.org/abs/2602.10144 |
+| MonitorBench: CoT Monitorability | arXiv 2603.28590 | https://arxiv.org/abs/2603.28590 |
+| The Amazing Agent Race | arXiv 2604.10261 | https://arxiv.org/abs/2604.10261 |
+| LLM-Accuracy-Stats framework | Amazon Science | https://github.com/amazon-science/LLM-Accuracy-Stats |
+| Overthinking in agentic tasks | Cuadron et al. 2025 | https://arxiv.org/abs/2502.08235 |
+| tau-bench | Yen et al. 2024 | https://arxiv.org/abs/2406.12045 |
+
+### Benchmarks / leaderboards
+
+| Benchmark | Source | URL |
+|-----------|--------|-----|
+| BenchLM agentic rankings | BenchLM.ai | https://benchlm.ai/llm-agent-benchmarks |
+| Toolathlon leaderboard | BrAcAI | https://www.bracai.eu/post/toolathlon-benchmark |
+| MCP-Atlas | Scale Labs | https://scale.com/research/mcpatlas |
+| SWE-bench | SWE-bench | https://www.swebench.com |
+| Best AI benchmarks 2026 | Awesome Agents | https://awesomeagents.ai/tools/best-ai-benchmarks-2026/ |
+| Frontier model comparison (Apr 2026) | BenchLM.ai | https://benchlm.ai/blog/posts/deepseek-v4-vs-claude-opus-4-7-vs-gpt-5-5 |
+| LLM quality degradation causes | BSWEN | https://docs.bswen.com/blog/2026-03-25-llm-quality-degradation |

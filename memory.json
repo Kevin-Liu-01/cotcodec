@@ -369,23 +369,26 @@
     "benchmark_updates": [],
     "notes": "Danqi flagged that the world is changing fast. This section tracks everything that might affect the experimental design.",
     "harness_beats_model_evidence": [
-      "SWE-bench: 42% → 78% from scaffolding alone, model swap < 1.3pts (CORE-Bench/Particula)",
-      "LangChain Terminal Bench: +13.7pts from harness iteration only (GPT-5.2-Codex)",
-      "Vercel agent: 80% → 100% by reducing tools 15 → 2 (3.5x faster, -37% tokens)",
-      "AdaptOrch (arXiv 2602.16873): mathematical proof that orchestration variance > model selection variance under convergence",
-      "Anthropic postmortem: 3 harness bugs degraded Opus+Sonnet (effort, cache, verbosity)",
-      "GPT-5 degradation: hallucination 12%→23%, code length 187→62 lines (token economics, quantization, RLHF)",
-      "Gemini 3.1 Pro: formatting regression, attention drift, capacity management issues",
-      "DeepSeek V4: multi-turn stagnation from reasoning suffix constraints (Variable 2)",
-      "Cursor/Kimi K2.5: proved harness IS the product — shipped someone else's model under own orchestration",
-      "Sonnet 4.6: 25→480 errors/week (19x), 1400+ frustration events across 50 sessions (GitHub #46935)"
+      { "claim": "SWE-bench: 42% → 78% from scaffolding alone, model swap < 1.3pts", "url": "https://particula.tech/blog/agent-scaffolding-beats-model-upgrades-swe-bench" },
+      { "claim": "LangChain Terminal Bench: +13.7pts from harness iteration only", "url": "https://victorinollc.com/thinking/harness-difference" },
+      { "claim": "Vercel agent: 80% → 100% by reducing tools 15 → 2", "url": "https://victorinollc.com/thinking/harness-difference" },
+      { "claim": "AdaptOrch: orchestration variance > model selection under convergence", "url": "https://arxiv.org/abs/2602.16873" },
+      { "claim": "Anthropic postmortem: 3 harness bugs degraded Opus+Sonnet", "url": "https://www.anthropic.com/engineering/april-23-postmortem" },
+      { "claim": "Sonnet 4.6: 25→480 errors/week (19x), 1400+ events", "url": "https://github.com/anthropics/claude-code/issues/46935" },
+      { "claim": "GPT-5: hallucination 12%→23%, code length 187→62 lines", "url": "https://chatgptdisaster.com/gpt-5-problems-2026.html" },
+      { "claim": "Gemini 3.1 Pro: formatting regression, attention drift", "url": "https://tokencalculator.com/degradation" },
+      { "claim": "DeepSeek V4: multi-turn stagnation from reasoning suffix constraints", "url": "https://github.com/deepseek-ai/DeepSeek-V3/issues/1125" },
+      { "claim": "Cursor shipped Kimi K2.5 as own model — harness IS the product", "url": "https://www.theopensourcepress.com/cursor-shipped-kimi-k2-5-as-their-own-model-heres-how-it-unraveled/" }
     ],
     "key_papers_for_harness_hypothesis": [
-      { "title": "AdaptOrch: Task-Adaptive Multi-Agent Orchestration", "arxiv": "2602.16873", "finding": "Orchestration variance > model selection under convergence" },
-      { "title": "The Agent Harness Is the Architecture", "author": "Evangelos Pappas", "source": "Medium, Feb 2026", "finding": "Model is not the bottleneck past capability floor" },
-      { "title": "When LLMs get significantly worse", "venue": "ICLR 2026", "arxiv": "2602.10144", "finding": "McNemar's test detects 0.3% degradation" },
-      { "title": "Quantifying Laziness in LLMs", "arxiv": "2512.20662", "finding": "Widespread laziness in multi-part instructions across frontier models" },
-      { "title": "Anthropic Claude Code postmortem", "date": "2026-04-23", "finding": "3 harness-level changes caused broad perceived degradation" }
+      { "title": "AdaptOrch: Task-Adaptive Multi-Agent Orchestration", "arxiv": "2602.16873", "url": "https://arxiv.org/abs/2602.16873", "finding": "Orchestration variance > model selection under convergence" },
+      { "title": "The Agent Harness Is the Architecture", "author": "Evangelos Pappas", "url": "https://medium.com/@epappas/the-agent-harness-is-the-architecture-and-your-model-is-not-the-bottleneck-5ae5fd067bb2", "finding": "Model is not the bottleneck past capability floor" },
+      { "title": "When LLMs get significantly worse", "venue": "ICLR 2026", "url": "https://arxiv.org/abs/2602.10144", "finding": "McNemar's test detects 0.3% degradation" },
+      { "title": "Quantifying Laziness in LLMs", "url": "https://arxiv.org/abs/2512.20662", "finding": "Widespread laziness in multi-part instructions across frontier models" },
+      { "title": "Anthropic Claude Code postmortem", "url": "https://www.anthropic.com/engineering/april-23-postmortem", "finding": "3 harness-level changes caused broad perceived degradation" },
+      { "title": "MonitorBench: CoT Monitorability", "url": "https://arxiv.org/abs/2603.28590", "finding": "Chain-of-thought monitoring benchmark" },
+      { "title": "The Amazing Agent Race", "url": "https://arxiv.org/abs/2604.10261", "finding": "Navigation errors (27-52%) dominate, tool-use errors < 17%" },
+      { "title": "MCP-Atlas", "url": "https://scale.com/research/mcpatlas", "finding": "36 MCP servers, 220 tools, 1000 tasks benchmark" }
     ],
     "bookmark_audit": {
       "date": "2026-04-28",

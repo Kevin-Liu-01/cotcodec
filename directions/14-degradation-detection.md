@@ -108,9 +108,20 @@ orchestration quality instead of code correctness.
 - **Verification cadence** (V8) — degradation detection IS verification at the
   experiment level, not the step level
 
-## Prior Work
+## Sources (all verified 2026-04-28)
 
-- Anthropic, "An update on recent Claude Code quality reports" (April 23, 2026)
-- Kiela et al. 2026 — "When LLMs get significantly worse" (ICLR 2026)
-- Amazon LLM-Accuracy-Stats — github.com/amazon-science/LLM-Accuracy-Stats
-- MonitorBench — Chain-of-thought monitorability (arXiv 2603.28590)
+| Source | URL |
+|--------|-----|
+| Anthropic postmortem (3 harness bugs) | https://www.anthropic.com/engineering/april-23-postmortem |
+| Sonnet 4.6: 1400+ frustration events quantified | https://github.com/anthropics/claude-code/issues/46935 |
+| When LLMs get significantly worse (McNemar's test, ICLR 2026) | https://arxiv.org/abs/2602.10144 |
+| OpenReview discussion | https://openreview.net/forum?id=cM3gsqEI4K |
+| Amazon LLM-Accuracy-Stats framework | https://github.com/amazon-science/LLM-Accuracy-Stats |
+| MonitorBench: CoT monitorability | https://arxiv.org/abs/2603.28590 |
+| GPT-5 quality degradation reports | https://chatgptdisaster.com/gpt-5-problems-2026.html |
+| ChatGPT quality analysis | https://www.atomwriter.com/blog/chatgpt-quality-degradation/ |
+| Claude quality special report | https://techmaniacs.com/2026/04/17/special-report-why-claude-has-seemed-slower-lower-quality-and-less-reliable/ |
+| Gemini 3.1 Pro degradation | https://tokencalculator.com/degradation |
+| DeepSeek V4 multi-turn bug | https://github.com/deepseek-ai/DeepSeek-V3/issues/1125 |
+| LLM quality degradation causes | https://docs.bswen.com/blog/2026-03-25-llm-quality-degradation |
+| Quantifying Laziness in LLMs | https://arxiv.org/abs/2512.20662 |
