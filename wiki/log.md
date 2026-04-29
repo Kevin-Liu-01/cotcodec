@@ -145,3 +145,35 @@ Researched the full 2026 "model quality crisis" across all major providers:
 
 Updated: directions/13 with full evidence from all providers + quantified data,
 directions/14 with cross-provider degradation table, memory.json with evidence + papers
+
+## [2026-04-29] signal | CRITICAL — Abstract Chain-of-Thought (IBM Research)
+
+**Paper:** "Thinking Without Words: Efficient Latent Reasoning with Abstract
+Chain-of-Thought" — Ramji, Naseem, Fernandez Astudillo (IBM Research AI)
+**URL:** https://arxiv.org/abs/2604.22709
+**Tweet:** https://x.com/KeshavRamji/status/2048743883580817620
+
+A learned discrete codebook of 64 abstract tokens achieves **11.6x fewer
+reasoning tokens** than verbal CoT while matching performance. The model
+learns a "reasoning language" — power-law distribution emerges over the
+abstract vocabulary, akin to Zipf's law in natural language.
+
+Key results: MATH-500 (11.6x compression, 90.6% vs 92.6%), AlpacaEval
+(2.2x, 36.7% vs 34.3% — EXCEEDS verbal), HotpotQA (4.3x), GPQA-Diamond
+(7.9x), AIME'25 (2.7x).
+
+Impact on CoTCodec:
+1. **Changes the reasoning format spectrum.** Our language routing (20-40%
+   savings) sits between compressed English and abstract tokens (80-92%).
+2. **Validates our thesis.** The paper cites DeepSeek-R1-Zero language mixing
+   as motivation. Same observation that started CoTCodec, taken further.
+3. **Different tradeoff.** Abstract-CoT requires post-training (warm-up + RL).
+   Language routing is inference-time only — no model modification.
+4. **Open question for agents.** NOT tested on tool-use tasks. Does abstract
+   reasoning preserve tool argument fidelity? This is our gap to fill.
+5. **Framing update.** "Language routing is the best inference-time approach;
+   abstract CoT is the best post-training approach."
+
+Updated: directions/01 (language impact), directions/02 (full rewrite with
+Abstract-CoT integration), LaTeX bibliography (5 new entries including
+ramji2026abstractcot), memory.json landscape_tracking, wiki timeline.

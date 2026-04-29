@@ -364,7 +364,19 @@
         { "id": "llama-3.3", "note": "Meta baseline." }
       ]
     },
-    "key_papers_since_proposal": [],
+    "key_papers_since_proposal": [
+      {
+        "title": "Thinking Without Words: Efficient Latent Reasoning with Abstract Chain-of-Thought",
+        "authors": "Ramji, Naseem, Fernandez Astudillo (IBM Research AI)",
+        "url": "https://arxiv.org/abs/2604.22709",
+        "date": "2026-04-29",
+        "impact": "CRITICAL",
+        "finding": "Learned discrete codebook of 64 abstract tokens achieves 11.6x fewer reasoning tokens than verbal CoT while matching performance. Power-law distribution emerges in abstract vocabulary. Cold-start RL alone fails — warm-up with verbal CoT guidance is required.",
+        "impact_on_cotcodec": "Changes the landscape fundamentally. Language routing (20-40% savings) is now the best inference-time-only approach; Abstract-CoT (80-92% savings) is the best post-training approach. Must cite, compare, and position against. Abstract CoT has NOT been tested on agent/tool-use tasks — open question for our benchmarks.",
+        "variables_affected": [1, 2],
+        "action": "cite, update-spec, reposition-framing"
+      }
+    ],
     "provider_changes": [],
     "benchmark_updates": [],
     "notes": "Danqi flagged that the world is changing fast. This section tracks everything that might affect the experimental design.",
