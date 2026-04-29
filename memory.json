@@ -32,7 +32,7 @@
     "broader_thesis": "Agent orchestration is an underexplored design space. Most systems make orchestration choices implicitly — hard-coded, never measured, never optimized. Making them explicit, measurable, and optimizable is the research contribution.",
     "paper_1_thesis": "Internal language choice should be studied as an orchestration policy over explicit agent messages — not as a claim about hidden cognition.",
     "generalized_formulation": "For any orchestration variable σ: π(m_t, x_t) → σ_t. Language is σ = ℓ. But σ can be memory policy, planning depth, retry strategy, verification cadence, context allocation, observation granularity, tool scheduling, delegation topology, instruction hierarchy, or reasoning format.",
-    "optimization_target": "max_π U(π) = Success − λ_c·Cost − λ_t·Latency − λ_s·SafetyRisk (applies to ALL orchestration variables, not just language)",
+    "optimization_target": "max_π U(π) = Success − λ_c·Cost − λ_t·Latency − λ_s·SafetyRisk − λ_m·MonitorabilityCost (applies to ALL orchestration variables. MonitorabilityCost term added after Abstract-CoT + OpenAI CoT monitoring research showed efficiency-monitorability tradeoff is fundamental)",
     "key_insight": "Language is Paper 1 because it's the most tractable (easy to manipulate, easy to measure, clear priors). But the harness generalizes to any orchestration variable.",
     "danqi_caveat": "World is changing fast — revisit settings, models, benchmarks before fall. Infrastructure and harness should be model-agnostic.",
     "current_priorities": [
@@ -150,6 +150,13 @@
         "tractability": "high",
         "status": "new",
         "note": "McNemar's test + OrchVar-Canary benchmark. Catches harness-level quality regressions."
+      },
+      {
+        "variable": "interpretable_abstract_reasoning",
+        "file": "directions/15-interpretable-abstract-reasoning.md",
+        "tractability": "high",
+        "status": "new",
+        "note": "Bridges efficiency-monitorability gap. 5 concrete directions: typed tokens, hybrid CoT with verbal checkpoints, monitorability tax formalization, abstract tokens on agent benchmarks, learned orchestration language spectrum. Motivated by Abstract-CoT + OpenAI CoT monitoring (arXiv 2503.11926) + METR CoT faithfulness research."
       }
     ],
     "interaction_hypotheses": [

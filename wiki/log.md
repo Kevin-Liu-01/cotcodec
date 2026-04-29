@@ -177,3 +177,29 @@ Impact on CoTCodec:
 Updated: directions/01 (language impact), directions/02 (full rewrite with
 Abstract-CoT integration), LaTeX bibliography (5 new entries including
 ramji2026abstractcot), memory.json landscape_tracking, wiki timeline.
+
+## [2026-04-29] research | Interpretable Abstract Reasoning — efficiency vs. monitorability
+
+Built `directions/15-interpretable-abstract-reasoning.md` from the safety debate
+around Abstract-CoT. Key insight from community discussion: abstract tokens
+destroy CoT monitorability, which OpenAI (Baker et al., arXiv 2503.11926) and
+METR showed is the most effective safety monitoring signal.
+
+**5 concrete research directions developed:**
+
+1. **Structured abstract tokens** — typed/vectorized/grounded tokens that
+   deterministically map to semantic categories instead of random init
+2. **Hybrid CoT** — abstract reasoning with verbal checkpoints at decision
+   points. Checkpoint frequency IS an orchestration variable (maps to V8).
+3. **Monitorability tax** — new term in optimization: U(π) = Success − λ_c·Cost
+   − λ_t·Latency − λ_s·SafetyRisk − **λ_m·MonitorabilityCost**. Measure the
+   Pareto frontier of efficiency vs. monitorability.
+4. **Abstract tokens on agent benchmarks** — our unique gap. First to test
+   abstract reasoning on tool-use tasks (tool arg precision, multi-step state,
+   error diagnosis, schema fidelity).
+5. **Learned orchestration language spectrum** — Human language → Compressed
+   → Structured → Abstract discrete → Continuous latent. Where on this spectrum
+   should each agent task type sit?
+
+Added 2 new LaTeX bibliography entries (baker2025monitoring, metr2025cotinformative).
+Updated optimization target with MonitorabilityCost term.
