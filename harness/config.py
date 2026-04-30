@@ -7,7 +7,7 @@ from enum import Enum
 from pathlib import Path
 from typing import Any
 
-import yaml
+from harness.yaml_utils import load_yaml_file
 
 
 class MessageType(str, Enum):
@@ -33,6 +33,9 @@ class MessageType(str, Enum):
 
 class ConditionID(str, Enum):
     ENGLISH_ONLY = "english_only"
+    ENGLISH_ONLY_LOW_EFFORT = "english_only_low_effort"
+    ENGLISH_ONLY_NO_THINKING_CACHE = "english_only_no_thinking_cache"
+    ENGLISH_ONLY_25WORD_LIMIT = "english_only_25word_limit"
     INTERNAL_CHINESE = "internal_chinese"
     CONTROLLED_CHINESE = "controlled_chinese"
     ENGLISH_COMPRESSED = "english_compressed"
@@ -50,13 +53,24 @@ FIXED_MESSAGE_TYPES = frozenset(
 )
 
 
+@dataclass(frozen=True)
+class ExperimentRunSpec:
+    """A concrete run slice expanded from an experiment config."""
+
+    group: str
+    model: str
+    conditions: list[ConditionID]
+
+
 @dataclass
 class ExperimentConfig:
     name: str
     description: str
     benchmark: str
-    conditions: list[ConditionID]
-    model: str
+    conditions: list[ConditionID] = field(default_factory=list)
+    model: str | None = None
+    models: list[str] = field(default_factory=list)
+    run_specs: list[ExperimentRunSpec] = field(default_factory=list)
     tasks: int | list[str] = 5
     seeds: list[int] = field(default_factory=lambda: [42, 43, 44])
     metrics: list[str] = field(default_factory=lambda: [
@@ -70,10 +84,139 @@ class ExperimentConfig:
 
     @classmethod
     def from_yaml(cls, path: str | Path) -> ExperimentConfig:
-        with open(path) as f:
-            raw = yaml.safe_load(f)
-        conditions = [ConditionID(c) for c in raw.pop("conditions", [])]
-        return cls(conditions=conditions, **raw)
+        raw = load_yaml_file(path)
+
+        known_fields = {
+            "name",
+            "description",
+            "benchmark",
+            "model",
+            "tasks",
+            "seeds",
+            "metrics",
+        }
+
+        raw_conditions = raw.pop("conditions", [])
+        raw_models = raw.pop("models", None)
+        raw_run_groups = raw.pop("run_groups", None)
+
+        condition_groups = cls._parse_conditions(raw_conditions)
+        run_specs = cls._build_run_specs(
+            model=raw.get("model"),
+            models=raw_models,
+            condition_groups=condition_groups,
+            raw_run_groups=raw_run_groups,
+        )
+
+        raw["conditions"] = condition_groups.get("default", [])
+        raw["models"] = (
+            list(raw_models)
+            if isinstance(raw_models, list)
+            else [raw["model"]] if raw.get("model") else []
+        )
+        raw["run_specs"] = run_specs
+
+        extra = {
+            key: value
+            for key, value in raw.items()
+            if key not in known_fields | {"conditions", "models", "run_specs"}
+        }
+
+        filtered = {key: raw[key] for key in raw if key in known_fields | {"conditions", "models", "run_specs"}}
+        filtered["extra"] = extra
+        return cls(**filtered)
+
+    @staticmethod
+    def _parse_conditions(
+        raw_conditions: list[str] | dict[str, list[str]]
+    ) -> dict[str, list[ConditionID]]:
+        if isinstance(raw_conditions, dict):
+            return {
+                name: [ConditionID(condition) for condition in values]
+                for name, values in raw_conditions.items()
+            }
+        return {
+            "default": [ConditionID(condition) for condition in raw_conditions]
+        }
+
+    @classmethod
+    def _build_run_specs(
+        cls,
+        model: str | None,
+        models: list[str] | dict[str, list[str]] | None,
+        condition_groups: dict[str, list[ConditionID]],
+        raw_run_groups: list[dict[str, Any]] | None,
+    ) -> list[ExperimentRunSpec]:
+        if raw_run_groups:
+            return [
+                ExperimentRunSpec(
+                    group=group["name"],
+                    model=model_name,
+                    conditions=[ConditionID(c) for c in group["conditions"]],
+                )
+                for group in raw_run_groups
+                for model_name in group["models"]
+            ]
+
+        if isinstance(models, dict):
+            run_specs: list[ExperimentRunSpec] = []
+            for group_name, group_models in models.items():
+                condition_key = cls._match_condition_group(group_name, condition_groups)
+                for model_name in group_models:
+                    run_specs.append(
+                        ExperimentRunSpec(
+                            group=group_name,
+                            model=model_name,
+                            conditions=condition_groups[condition_key],
+                        )
+                    )
+            return run_specs
+
+        if isinstance(models, list):
+            return [
+                ExperimentRunSpec(
+                    group="default",
+                    model=model_name,
+                    conditions=condition_groups["default"],
+                )
+                for model_name in models
+            ]
+
+        if model is not None:
+            return [
+                ExperimentRunSpec(
+                    group="default",
+                    model=model,
+                    conditions=condition_groups["default"],
+                )
+            ]
+
+        raise ValueError("Experiment config must define `model`, `models`, or `run_groups`.")
+
+    @staticmethod
+    def _match_condition_group(
+        model_group: str,
+        condition_groups: dict[str, list[ConditionID]],
+    ) -> str:
+        if model_group in condition_groups:
+            return model_group
+
+        matches = [
+            name
+            for name in condition_groups
+            if model_group == name or model_group.endswith(f"_{name}")
+        ]
+        if len(matches) == 1:
+            return matches[0]
+
+        raise ValueError(
+            f"Could not infer condition group for model group `{model_group}`. "
+            f"Available condition groups: {sorted(condition_groups)}"
+        )
+
+    def iter_run_specs(self) -> list[ExperimentRunSpec]:
+        """Return concrete (group, model, conditions) slices for execution."""
+        return list(self.run_specs)
 
 
 @dataclass
@@ -132,6 +275,7 @@ class ExperimentTrace:
     model: str
     task_id: str
     seed: int
+    run_group: str | None = None
     messages: list[TraceMessage] = field(default_factory=list)
     outcome: TraceOutcome | None = None
 
@@ -143,6 +287,7 @@ class ExperimentTrace:
             "model": self.model,
             "task_id": self.task_id,
             "seed": self.seed,
+            "run_group": self.run_group,
             "messages": [m.to_dict() for m in self.messages],
             "outcome": self.outcome.to_dict() if self.outcome else None,
         }

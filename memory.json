@@ -8,9 +8,9 @@
     "wiki_mirror": "~/Documents/GitHub/my-wiki/wiki/research/cotcodec-paper.md",
     "latex_source": "~/Documents/GitHub/my-wiki/raw/research/language-orchestration-research-spec.tex",
     "created": "2026-03-01",
-    "status": "pre-implementation"
+    "status": "foundation_in_progress",
+    "repo_latex_source": "paper/language-orchestration-research-spec.tex"
   },
-
   "advisor": {
     "name": "Danqi Chen",
     "role": "Research advisor, Princeton NLP Group",
@@ -21,28 +21,27 @@
       "status": "confirmed_for_fall_2026",
       "action_items": [
         "Reach out closer to fall (August 2026) to discuss updated proposal",
-        "Revisit experimental settings — field moving fast",
+        "Revisit experimental settings \u2014 field moving fast",
         "Build infrastructure now so experiments can run immediately when fall starts",
         "Track landscape changes that affect proposal framing"
       ]
     }
   },
-
   "direction": {
-    "broader_thesis": "Agent orchestration is an underexplored design space. Most systems make orchestration choices implicitly — hard-coded, never measured, never optimized. Making them explicit, measurable, and optimizable is the research contribution.",
-    "paper_1_thesis": "Internal language choice should be studied as an orchestration policy over explicit agent messages — not as a claim about hidden cognition.",
-    "generalized_formulation": "For any orchestration variable σ: π(m_t, x_t) → σ_t. Language is σ = ℓ. But σ can be memory policy, planning depth, retry strategy, verification cadence, context allocation, observation granularity, tool scheduling, delegation topology, instruction hierarchy, or reasoning format.",
-    "optimization_target": "max_π U(π) = Success − λ_c·Cost − λ_t·Latency − λ_s·SafetyRisk − λ_m·MonitorabilityCost (applies to ALL orchestration variables. MonitorabilityCost term added after Abstract-CoT + OpenAI CoT monitoring research showed efficiency-monitorability tradeoff is fundamental)",
+    "broader_thesis": "Agent orchestration is an underexplored design space. Most systems make orchestration choices implicitly \u2014 hard-coded, never measured, never optimized. Making them explicit, measurable, and optimizable is the research contribution.",
+    "paper_1_thesis": "Internal language choice should be studied as an orchestration policy over explicit agent messages \u2014 not as a claim about hidden cognition.",
+    "generalized_formulation": "For any orchestration variable \u03c3: \u03c0(m_t, x_t) \u2192 \u03c3_t. Language is \u03c3 = \u2113. But \u03c3 can be memory policy, planning depth, retry strategy, verification cadence, context allocation, observation granularity, tool scheduling, delegation topology, instruction hierarchy, or reasoning format.",
+    "optimization_target": "max_\u03c0 U(\u03c0) = Success \u2212 \u03bb_c\u00b7Cost \u2212 \u03bb_t\u00b7Latency \u2212 \u03bb_s\u00b7SafetyRisk \u2212 \u03bb_m\u00b7MonitorabilityCost (applies to ALL orchestration variables. MonitorabilityCost term added after Abstract-CoT + OpenAI CoT monitoring research showed efficiency-monitorability tradeoff is fundamental)",
     "key_insight": "Language is Paper 1 because it's the most tractable (easy to manipulate, easy to measure, clear priors). But the harness generalizes to any orchestration variable.",
-    "danqi_caveat": "World is changing fast — revisit settings, models, benchmarks before fall. Infrastructure and harness should be model-agnostic.",
+    "danqi_caveat": "World is changing fast \u2014 revisit settings, models, benchmarks before fall. Infrastructure and harness should be model-agnostic.",
     "current_priorities": [
-      "Build evaluation harness (model-agnostic, benchmark-agnostic, variable-agnostic)",
-      "Paper 1: language conditions and routing policies",
-      "Explore directions beyond language (see directions/)",
-      "Track landscape changes via language-orchestration-radar automation"
+      "Build a trustworthy evaluation harness; OrchVar-Canary config and smoke path are now operational, next unblock real benchmark execution",
+      "Paper 1: language routing with message-type decomposition and safety checks",
+      "Run the harness-beats-model meta-experiment on old vs frontier model tiers",
+      "Frame Paper 2 around reasoning media, abstract reasoning, and monitorability tax",
+      "Operationalize local inference and benchmark automation for cheap pilots"
     ]
   },
-
   "orchestration_variables": {
     "_note": "The full design space. See directions/ for detailed exploration docs.",
     "paper_1": [
@@ -160,29 +159,28 @@
       }
     ],
     "interaction_hypotheses": [
-      "Language × memory: shorter language = more memory budget (multiplicative)",
-      "Language × planning: planning text is highest compression target",
-      "Reasoning format × verification: structured formats enable automatic verification",
-      "Memory × observation: summarized observations are easier to retain",
-      "Planning × retry: better plans → fewer retries → lower total cost",
-      "Context allocation × everything: meta-variable that mediates all others"
+      "Language \u00d7 memory: shorter language = more memory budget (multiplicative)",
+      "Language \u00d7 planning: planning text is highest compression target",
+      "Reasoning format \u00d7 verification: structured formats enable automatic verification",
+      "Memory \u00d7 observation: summarized observations are easier to retain",
+      "Planning \u00d7 retry: better plans \u2192 fewer retries \u2192 lower total cost",
+      "Context allocation \u00d7 everything: meta-variable that mediates all others"
     ]
   },
-
   "exploration_strategies": {
     "phase_1_foundation": {
-      "timeline": "Now → August 2026",
+      "timeline": "Now \u2192 August 2026",
       "goals": [
-        "Build and validate evaluation harness on tau-bench and API-Bank",
-        "Implement all 7 language conditions",
-        "Run pilot experiments (3-5 tasks per benchmark per condition)",
-        "Measure tokenizer fertility across models for English, Chinese, Korean, Polish",
-        "Calibrate cost model with real API pricing",
-        "Build dynamic router prototype"
+        "Build and validate the evaluation harness on tau-bench, MCP-Atlas, and API-Bank",
+        "Implement and validate OrchVar-Canary plus McNemar-style degradation checks",
+        "Run Paper 1 pilot experiments on core language conditions (3-5 tasks per benchmark per condition)",
+        "Measure tokenizer fertility across models for English, Chinese, Korean, and Polish",
+        "Establish naive baselines for old, strong, and frontier model tiers",
+        "Build the first harness-beats-model comparison and dynamic router prototype"
       ]
     },
     "phase_2_systematic": {
-      "timeline": "September → November 2026",
+      "timeline": "September \u2192 November 2026",
       "goals": [
         "Full benchmark runs with statistical significance",
         "Message-type decomposition (where do savings arise?)",
@@ -193,7 +191,7 @@
       ]
     },
     "phase_3_writeup": {
-      "timeline": "November → December 2026",
+      "timeline": "November \u2192 December 2026",
       "goals": [
         "Paper draft with all experiments",
         "Negative result documentation (equally valuable)",
@@ -202,7 +200,6 @@
       ]
     }
   },
-
   "benchmarking": {
     "primary_benchmarks": [
       {
@@ -273,7 +270,8 @@
         "purpose": "Detect orchestration-level quality regressions. 50-100 tasks targeting specific variables.",
         "novel_contribution": "Inspired by Anthropic April 23 postmortem. First benchmark designed to catch harness-level regressions.",
         "priority": 1,
-        "status": "stub_built"
+        "status": "seed_task_set_built",
+        "note": "Repo-local task spec, degraded conditions, config validation, and smoke run now work. Per-category evaluation still needs real agent outputs."
       },
       {
         "name": "Multilingual-Agent-Fidelity",
@@ -284,13 +282,41 @@
       }
     ],
     "conditions": [
-      { "id": "english_only", "description": "All internal messages in English (baseline)", "priority": 1 },
-      { "id": "internal_chinese", "description": "Free-form Chinese for variable messages", "priority": 1 },
-      { "id": "controlled_chinese", "description": "Chinese with restricted lexicon and explicit markers", "priority": 1 },
-      { "id": "english_compressed", "description": "English + LLMLingua prompt compression", "priority": 1 },
-      { "id": "structured_english", "description": "Structured English protocol (telegraphic, schema-like)", "priority": 1 },
-      { "id": "dynamic_router", "description": "Lightweight router selecting per message type", "priority": 2 },
-      { "id": "polish_stress", "description": "Polish (high-fragmentation contrast condition)", "priority": 3 }
+      {
+        "id": "english_only",
+        "description": "All internal messages in English (baseline)",
+        "priority": 1
+      },
+      {
+        "id": "internal_chinese",
+        "description": "Free-form Chinese for variable messages",
+        "priority": 1
+      },
+      {
+        "id": "controlled_chinese",
+        "description": "Chinese with restricted lexicon and explicit markers",
+        "priority": 1
+      },
+      {
+        "id": "english_compressed",
+        "description": "English + LLMLingua prompt compression",
+        "priority": 1
+      },
+      {
+        "id": "structured_english",
+        "description": "Structured English protocol (telegraphic, schema-like)",
+        "priority": 1
+      },
+      {
+        "id": "dynamic_router",
+        "description": "Lightweight router selecting per message type",
+        "priority": 2
+      },
+      {
+        "id": "polish_stress",
+        "description": "Polish (high-fragmentation contrast condition)",
+        "priority": 3
+      }
     ],
     "metrics": [
       "total_billed_tokens_input",
@@ -306,7 +332,6 @@
       "cost_usd"
     ]
   },
-
   "data_collection": {
     "trace_schema": {
       "experiment_id": "string",
@@ -344,31 +369,95 @@
       "tokens": "data/tokens/{model}_fertility.json"
     }
   },
-
   "landscape_tracking": {
     "last_radar_run": null,
     "models_to_track": {
       "frontier": [
-        { "id": "claude-opus-4.7-adaptive", "provider": "anthropic", "arena_elo": 1503, "swe_bench": 87.6, "pricing": "$5/$25 per M", "note": "Highest Arena Elo. Best SWE-bench. New tokenizer inflates costs up to 35%." },
-        { "id": "gpt-5.5", "provider": "openai", "benchlm_agentic": 90.1, "long_context": 87.5, "pricing": "$5/$30 per M", "note": "Best long-context (128-256k). Top agentic score. 2x price increase from 5.4." },
-        { "id": "deepseek-v4-pro", "provider": "deepseek", "benchlm_overall": 85, "livecode": 93.5, "pricing": "$1.74/$3.48 per M", "note": "Highest overall score. MIT license, open weights. 9x cheaper than GPT-5.5. Cache hits $0.145/M." }
+        {
+          "id": "claude-opus-4.7-adaptive",
+          "provider": "anthropic",
+          "arena_elo": 1503,
+          "swe_bench": 87.6,
+          "pricing": "$5/$25 per M",
+          "note": "Highest Arena Elo. Best SWE-bench. New tokenizer inflates costs up to 35%."
+        },
+        {
+          "id": "gpt-5.5",
+          "provider": "openai",
+          "benchlm_agentic": 90.1,
+          "long_context": 87.5,
+          "pricing": "$5/$30 per M",
+          "note": "Best long-context (128-256k). Top agentic score. 2x price increase from 5.4."
+        },
+        {
+          "id": "deepseek-v4-pro",
+          "provider": "deepseek",
+          "benchlm_overall": 85,
+          "livecode": 93.5,
+          "pricing": "$1.74/$3.48 per M",
+          "note": "Highest overall score. MIT license, open weights. 9x cheaper than GPT-5.5. Cache hits $0.145/M."
+        }
       ],
       "strong": [
-        { "id": "claude-sonnet-4.6", "provider": "anthropic", "note": "Workhorse. Best cost/performance for pilots." },
-        { "id": "gpt-5.4", "provider": "openai", "toolathlon": 54.6, "note": "Leads Toolathlon." },
-        { "id": "deepseek-v3.2", "provider": "deepseek", "tau_bench": 80.4, "note": "Strong tau-bench." },
-        { "id": "gemini-3-pro", "provider": "google", "tau_bench": 85.4, "note": "Leads tau-bench." }
+        {
+          "id": "claude-sonnet-4.6",
+          "provider": "anthropic",
+          "note": "Workhorse. Best cost/performance for pilots."
+        },
+        {
+          "id": "gpt-5.4",
+          "provider": "openai",
+          "toolathlon": 54.6,
+          "note": "Leads Toolathlon."
+        },
+        {
+          "id": "deepseek-v3.2",
+          "provider": "deepseek",
+          "tau_bench": 80.4,
+          "note": "Strong tau-bench."
+        },
+        {
+          "id": "gemini-3-pro",
+          "provider": "google",
+          "tau_bench": 85.4,
+          "note": "Leads tau-bench."
+        }
       ],
       "baseline_old": [
-        { "id": "claude-sonnet-3.5", "provider": "anthropic", "benchlm_agentic": 82.4, "note": "2024-era. For harness-beats-model hypothesis." },
-        { "id": "gpt-4o", "provider": "openai", "note": "2024-era. Well-characterized baseline." },
-        { "id": "deepseek-r1-8b", "provider": "local", "note": "Distilled. Free local inference. Original key evidence model." }
+        {
+          "id": "claude-sonnet-3.5",
+          "provider": "anthropic",
+          "benchlm_agentic": 82.4,
+          "note": "2024-era. For harness-beats-model hypothesis."
+        },
+        {
+          "id": "gpt-4o",
+          "provider": "openai",
+          "note": "2024-era. Well-characterized baseline."
+        },
+        {
+          "id": "deepseek-r1-8b",
+          "provider": "local",
+          "note": "Distilled. Free local inference. Original key evidence model."
+        }
       ],
       "local_inference": [
-        { "id": "deepseek-v4-pro", "note": "Frontier AND free. Open weights, MIT." },
-        { "id": "deepseek-r1-8b", "note": "Distilled, fast pilots." },
-        { "id": "qwen-3-8b", "note": "Multilingual. Chinese-English." },
-        { "id": "llama-3.3", "note": "Meta baseline." }
+        {
+          "id": "deepseek-v4-pro",
+          "note": "Frontier AND free. Open weights, MIT."
+        },
+        {
+          "id": "deepseek-r1-8b",
+          "note": "Distilled, fast pilots."
+        },
+        {
+          "id": "qwen-3-8b",
+          "note": "Multilingual. Chinese-English."
+        },
+        {
+          "id": "llama-3.3",
+          "note": "Meta baseline."
+        }
       ]
     },
     "key_papers_since_proposal": [
@@ -378,9 +467,12 @@
         "url": "https://arxiv.org/abs/2604.22709",
         "date": "2026-04-29",
         "impact": "CRITICAL",
-        "finding": "Learned discrete codebook of 64 abstract tokens achieves 11.6x fewer reasoning tokens than verbal CoT while matching performance. Power-law distribution emerges in abstract vocabulary. Cold-start RL alone fails — warm-up with verbal CoT guidance is required.",
-        "impact_on_cotcodec": "Changes the landscape fundamentally. Language routing (20-40% savings) is now the best inference-time-only approach; Abstract-CoT (80-92% savings) is the best post-training approach. Must cite, compare, and position against. Abstract CoT has NOT been tested on agent/tool-use tasks — open question for our benchmarks.",
-        "variables_affected": [1, 2],
+        "finding": "Learned discrete codebook of 64 abstract tokens achieves 11.6x fewer reasoning tokens than verbal CoT while matching performance. Power-law distribution emerges in abstract vocabulary. Cold-start RL alone fails \u2014 warm-up with verbal CoT guidance is required.",
+        "impact_on_cotcodec": "Changes the landscape fundamentally. Language routing (20-40% savings) is now the best inference-time-only approach; Abstract-CoT (80-92% savings) is the best post-training approach. Must cite, compare, and position against. Abstract CoT has NOT been tested on agent/tool-use tasks \u2014 open question for our benchmarks.",
+        "variables_affected": [
+          1,
+          2
+        ],
         "action": "cite, update-spec, reposition-framing"
       }
     ],
@@ -388,26 +480,91 @@
     "benchmark_updates": [],
     "notes": "Danqi flagged that the world is changing fast. This section tracks everything that might affect the experimental design.",
     "harness_beats_model_evidence": [
-      { "claim": "SWE-bench: 42% → 78% from scaffolding alone, model swap < 1.3pts", "url": "https://particula.tech/blog/agent-scaffolding-beats-model-upgrades-swe-bench" },
-      { "claim": "LangChain Terminal Bench: +13.7pts from harness iteration only", "url": "https://victorinollc.com/thinking/harness-difference" },
-      { "claim": "Vercel agent: 80% → 100% by reducing tools 15 → 2", "url": "https://victorinollc.com/thinking/harness-difference" },
-      { "claim": "AdaptOrch: orchestration variance > model selection under convergence", "url": "https://arxiv.org/abs/2602.16873" },
-      { "claim": "Anthropic postmortem: 3 harness bugs degraded Opus+Sonnet", "url": "https://www.anthropic.com/engineering/april-23-postmortem" },
-      { "claim": "Sonnet 4.6: 25→480 errors/week (19x), 1400+ events", "url": "https://github.com/anthropics/claude-code/issues/46935" },
-      { "claim": "GPT-5: hallucination 12%→23%, code length 187→62 lines", "url": "https://chatgptdisaster.com/gpt-5-problems-2026.html" },
-      { "claim": "Gemini 3.1 Pro: formatting regression, attention drift", "url": "https://tokencalculator.com/degradation" },
-      { "claim": "DeepSeek V4: multi-turn stagnation from reasoning suffix constraints", "url": "https://github.com/deepseek-ai/DeepSeek-V3/issues/1125" },
-      { "claim": "Cursor shipped Kimi K2.5 as own model — harness IS the product", "url": "https://www.theopensourcepress.com/cursor-shipped-kimi-k2-5-as-their-own-model-heres-how-it-unraveled/" }
+      {
+        "claim": "SWE-bench: 42% \u2192 78% from scaffolding alone, model swap < 1.3pts",
+        "url": "https://particula.tech/blog/agent-scaffolding-beats-model-upgrades-swe-bench"
+      },
+      {
+        "claim": "LangChain Terminal Bench: +13.7pts from harness iteration only",
+        "url": "https://victorinollc.com/thinking/harness-difference"
+      },
+      {
+        "claim": "Vercel agent: 80% \u2192 100% by reducing tools 15 \u2192 2",
+        "url": "https://victorinollc.com/thinking/harness-difference"
+      },
+      {
+        "claim": "AdaptOrch: orchestration variance > model selection under convergence",
+        "url": "https://arxiv.org/abs/2602.16873"
+      },
+      {
+        "claim": "Anthropic postmortem: 3 harness bugs degraded Opus+Sonnet",
+        "url": "https://www.anthropic.com/engineering/april-23-postmortem"
+      },
+      {
+        "claim": "Sonnet 4.6: 25\u2192480 errors/week (19x), 1400+ events",
+        "url": "https://github.com/anthropics/claude-code/issues/46935"
+      },
+      {
+        "claim": "GPT-5: hallucination 12%\u219223%, code length 187\u219262 lines",
+        "url": "https://chatgptdisaster.com/gpt-5-problems-2026.html"
+      },
+      {
+        "claim": "Gemini 3.1 Pro: formatting regression, attention drift",
+        "url": "https://tokencalculator.com/degradation"
+      },
+      {
+        "claim": "DeepSeek V4: multi-turn stagnation from reasoning suffix constraints",
+        "url": "https://github.com/deepseek-ai/DeepSeek-V3/issues/1125"
+      },
+      {
+        "claim": "Cursor shipped Kimi K2.5 as own model \u2014 harness IS the product",
+        "url": "https://www.theopensourcepress.com/cursor-shipped-kimi-k2-5-as-their-own-model-heres-how-it-unraveled/"
+      }
     ],
     "key_papers_for_harness_hypothesis": [
-      { "title": "AdaptOrch: Task-Adaptive Multi-Agent Orchestration", "arxiv": "2602.16873", "url": "https://arxiv.org/abs/2602.16873", "finding": "Orchestration variance > model selection under convergence" },
-      { "title": "The Agent Harness Is the Architecture", "author": "Evangelos Pappas", "url": "https://medium.com/@epappas/the-agent-harness-is-the-architecture-and-your-model-is-not-the-bottleneck-5ae5fd067bb2", "finding": "Model is not the bottleneck past capability floor" },
-      { "title": "When LLMs get significantly worse", "venue": "ICLR 2026", "url": "https://arxiv.org/abs/2602.10144", "finding": "McNemar's test detects 0.3% degradation" },
-      { "title": "Quantifying Laziness in LLMs", "url": "https://arxiv.org/abs/2512.20662", "finding": "Widespread laziness in multi-part instructions across frontier models" },
-      { "title": "Anthropic Claude Code postmortem", "url": "https://www.anthropic.com/engineering/april-23-postmortem", "finding": "3 harness-level changes caused broad perceived degradation" },
-      { "title": "MonitorBench: CoT Monitorability", "url": "https://arxiv.org/abs/2603.28590", "finding": "Chain-of-thought monitoring benchmark" },
-      { "title": "The Amazing Agent Race", "url": "https://arxiv.org/abs/2604.10261", "finding": "Navigation errors (27-52%) dominate, tool-use errors < 17%" },
-      { "title": "MCP-Atlas", "url": "https://scale.com/research/mcpatlas", "finding": "36 MCP servers, 220 tools, 1000 tasks benchmark" }
+      {
+        "title": "AdaptOrch: Task-Adaptive Multi-Agent Orchestration",
+        "arxiv": "2602.16873",
+        "url": "https://arxiv.org/abs/2602.16873",
+        "finding": "Orchestration variance > model selection under convergence"
+      },
+      {
+        "title": "The Agent Harness Is the Architecture",
+        "author": "Evangelos Pappas",
+        "url": "https://medium.com/@epappas/the-agent-harness-is-the-architecture-and-your-model-is-not-the-bottleneck-5ae5fd067bb2",
+        "finding": "Model is not the bottleneck past capability floor"
+      },
+      {
+        "title": "When LLMs get significantly worse",
+        "venue": "ICLR 2026",
+        "url": "https://arxiv.org/abs/2602.10144",
+        "finding": "McNemar's test detects 0.3% degradation"
+      },
+      {
+        "title": "Quantifying Laziness in LLMs",
+        "url": "https://arxiv.org/abs/2512.20662",
+        "finding": "Widespread laziness in multi-part instructions across frontier models"
+      },
+      {
+        "title": "Anthropic Claude Code postmortem",
+        "url": "https://www.anthropic.com/engineering/april-23-postmortem",
+        "finding": "3 harness-level changes caused broad perceived degradation"
+      },
+      {
+        "title": "MonitorBench: CoT Monitorability",
+        "url": "https://arxiv.org/abs/2603.28590",
+        "finding": "Chain-of-thought monitoring benchmark"
+      },
+      {
+        "title": "The Amazing Agent Race",
+        "url": "https://arxiv.org/abs/2604.10261",
+        "finding": "Navigation errors (27-52%) dominate, tool-use errors < 17%"
+      },
+      {
+        "title": "MCP-Atlas",
+        "url": "https://scale.com/research/mcpatlas",
+        "finding": "36 MCP servers, 220 tools, 1000 tasks benchmark"
+      }
     ],
     "bookmark_audit": {
       "date": "2026-04-28",
@@ -453,62 +610,261 @@
       "follow_and_bookmark_overlap": 41
     },
     "key_people": [
-      { "handle": "@karpathy", "why": "LLM-Wiki originator. Confusion Protocol. 99K bm foundational tweet.", "track": "every_post", "tier": 1 },
-      { "handle": "@garrytan", "why": "GBrain/GStack. 14 bookmarks. Every release maps to orchestration variables.", "track": "every_release", "tier": 1 },
-      { "handle": "@claudeai", "why": "Claude Managed Agents (51K bm). Compatibility target.", "track": "every_post", "tier": 1 },
-      { "handle": "@AnthropicAI", "why": "Project Glasswing (15K bm). Model releases. API changes.", "track": "every_post", "tier": 1 },
-      { "handle": "@rauchg", "why": "open-agents.dev (5.6K bm). Workflow SDK. Agent infra at scale.", "track": "weekly", "tier": 1 },
-      { "handle": "@sama", "why": "OpenAI CEO. Model releases. Reasoning direction.", "track": "weekly", "tier": 1 },
-      { "handle": "@shawmakesmagic", "why": "8-subagent parallel orchestration (16K bm). Delegation topology.", "track": "weekly", "tier": 2 },
-      { "handle": "@iamfakeguru", "why": "Claude Code reverse-engineering (16K bm). Internal gates.", "track": "weekly", "tier": 2 },
-      { "handle": "@himanshustwts", "why": "Claude Code memory architecture (8K bm). Three-layer design.", "track": "weekly", "tier": 2 },
-      { "handle": "@om_patel5", "why": "Caveman 65% token savings (6.5K bm). Reasoning format baseline.", "track": "weekly", "tier": 2 },
-      { "handle": "@akseljoonas", "why": "ml-intern automated research loop (5.5K bm).", "track": "weekly", "tier": 2 },
-      { "handle": "@NickSpisak_", "why": "Second Brain recipe (9.3K bm). Near-identical architecture.", "track": "weekly", "tier": 2 },
-      { "handle": "@tom_doerr", "why": "6 bookmarks. GitHub repo discovery pipeline.", "track": "weekly", "tier": 2 },
-      { "handle": "@mvanhorn", "why": "last30days v3 creator. Our primary research engine.", "track": "monthly", "tier": 2 },
-      { "handle": "@ctatedev", "why": "Vercel. agent-browser. Browser automation infrastructure.", "track": "weekly", "tier": 2 },
-      { "handle": "@bcherny", "why": "Claude Code @ Anthropic. Insider perspective.", "track": "weekly", "tier": 2 },
-      { "handle": "@trq212", "why": "Claude Code @ Anthropic. MIT Media Lab.", "track": "weekly", "tier": 2 },
-      { "handle": "@leerob", "why": "Teaching @ Cursor, prev Vercel.", "track": "weekly", "tier": 2 },
-      { "handle": "@steipete", "why": "ClawFather. OpenClaw power user.", "track": "weekly", "tier": 2 },
-      { "handle": "@DhravyaShah", "why": "The memory/context guy. supermemory founder.", "track": "weekly", "tier": 2 },
-      { "handle": "@KingBootoshi", "why": "Custom ESLint anti-slop (1.1K bm). Verification cadence.", "track": "on_post", "tier": 3 },
-      { "handle": "@michael_chomsky", "why": "Agent memory debate (754 bm). Memory policy.", "track": "on_post", "tier": 3 },
-      { "handle": "@andrewfarah", "why": "fieldtheory creator. X bookmark sync tool.", "track": "monthly", "tier": 3 },
-      { "handle": "@demishassabis", "why": "DeepMind CEO. AGI direction.", "track": "monthly", "tier": 3 },
-      { "handle": "@drfeifei", "why": "Stanford CS Prof. StanfordHAI.", "track": "monthly", "tier": 3 },
-      { "handle": "@ylecun", "why": "NYU Prof. Meta Chief AI Scientist.", "track": "monthly", "tier": 3 },
-      { "handle": "@geoffreyhinton", "why": "Deep learning pioneer.", "track": "monthly", "tier": 3 },
-      { "handle": "@fchollet", "why": "Keras creator. ARC-AGI.", "track": "monthly", "tier": 3 },
-      { "handle": "@_akhaliq", "why": "AI research paper daily curation @ HuggingFace.", "track": "daily", "tier": 2 },
-      { "handle": "@lilianweng", "why": "Ex-VP AI Safety OpenAI. Thinking Machines Lab.", "track": "monthly", "tier": 3 },
-      { "handle": "@goodside", "why": "Jagged frontier screenshots. Prompt engineering signal.", "track": "weekly", "tier": 3 },
-      { "handle": "@LangChain", "why": "Agent engineering platform.", "track": "weekly", "tier": 3 },
-      { "handle": "@contextconor", "why": "Hyperspell (YC F25). Company brain.", "track": "monthly", "tier": 3 }
+      {
+        "handle": "@karpathy",
+        "why": "LLM-Wiki originator. Confusion Protocol. 99K bm foundational tweet.",
+        "track": "every_post",
+        "tier": 1
+      },
+      {
+        "handle": "@garrytan",
+        "why": "GBrain/GStack. 14 bookmarks. Every release maps to orchestration variables.",
+        "track": "every_release",
+        "tier": 1
+      },
+      {
+        "handle": "@claudeai",
+        "why": "Claude Managed Agents (51K bm). Compatibility target.",
+        "track": "every_post",
+        "tier": 1
+      },
+      {
+        "handle": "@AnthropicAI",
+        "why": "Project Glasswing (15K bm). Model releases. API changes.",
+        "track": "every_post",
+        "tier": 1
+      },
+      {
+        "handle": "@rauchg",
+        "why": "open-agents.dev (5.6K bm). Workflow SDK. Agent infra at scale.",
+        "track": "weekly",
+        "tier": 1
+      },
+      {
+        "handle": "@sama",
+        "why": "OpenAI CEO. Model releases. Reasoning direction.",
+        "track": "weekly",
+        "tier": 1
+      },
+      {
+        "handle": "@shawmakesmagic",
+        "why": "8-subagent parallel orchestration (16K bm). Delegation topology.",
+        "track": "weekly",
+        "tier": 2
+      },
+      {
+        "handle": "@iamfakeguru",
+        "why": "Claude Code reverse-engineering (16K bm). Internal gates.",
+        "track": "weekly",
+        "tier": 2
+      },
+      {
+        "handle": "@himanshustwts",
+        "why": "Claude Code memory architecture (8K bm). Three-layer design.",
+        "track": "weekly",
+        "tier": 2
+      },
+      {
+        "handle": "@om_patel5",
+        "why": "Caveman 65% token savings (6.5K bm). Reasoning format baseline.",
+        "track": "weekly",
+        "tier": 2
+      },
+      {
+        "handle": "@akseljoonas",
+        "why": "ml-intern automated research loop (5.5K bm).",
+        "track": "weekly",
+        "tier": 2
+      },
+      {
+        "handle": "@NickSpisak_",
+        "why": "Second Brain recipe (9.3K bm). Near-identical architecture.",
+        "track": "weekly",
+        "tier": 2
+      },
+      {
+        "handle": "@tom_doerr",
+        "why": "6 bookmarks. GitHub repo discovery pipeline.",
+        "track": "weekly",
+        "tier": 2
+      },
+      {
+        "handle": "@mvanhorn",
+        "why": "last30days v3 creator. Our primary research engine.",
+        "track": "monthly",
+        "tier": 2
+      },
+      {
+        "handle": "@ctatedev",
+        "why": "Vercel. agent-browser. Browser automation infrastructure.",
+        "track": "weekly",
+        "tier": 2
+      },
+      {
+        "handle": "@bcherny",
+        "why": "Claude Code @ Anthropic. Insider perspective.",
+        "track": "weekly",
+        "tier": 2
+      },
+      {
+        "handle": "@trq212",
+        "why": "Claude Code @ Anthropic. MIT Media Lab.",
+        "track": "weekly",
+        "tier": 2
+      },
+      {
+        "handle": "@leerob",
+        "why": "Teaching @ Cursor, prev Vercel.",
+        "track": "weekly",
+        "tier": 2
+      },
+      {
+        "handle": "@steipete",
+        "why": "ClawFather. OpenClaw power user.",
+        "track": "weekly",
+        "tier": 2
+      },
+      {
+        "handle": "@DhravyaShah",
+        "why": "The memory/context guy. supermemory founder.",
+        "track": "weekly",
+        "tier": 2
+      },
+      {
+        "handle": "@KingBootoshi",
+        "why": "Custom ESLint anti-slop (1.1K bm). Verification cadence.",
+        "track": "on_post",
+        "tier": 3
+      },
+      {
+        "handle": "@michael_chomsky",
+        "why": "Agent memory debate (754 bm). Memory policy.",
+        "track": "on_post",
+        "tier": 3
+      },
+      {
+        "handle": "@andrewfarah",
+        "why": "fieldtheory creator. X bookmark sync tool.",
+        "track": "monthly",
+        "tier": 3
+      },
+      {
+        "handle": "@demishassabis",
+        "why": "DeepMind CEO. AGI direction.",
+        "track": "monthly",
+        "tier": 3
+      },
+      {
+        "handle": "@drfeifei",
+        "why": "Stanford CS Prof. StanfordHAI.",
+        "track": "monthly",
+        "tier": 3
+      },
+      {
+        "handle": "@ylecun",
+        "why": "NYU Prof. Meta Chief AI Scientist.",
+        "track": "monthly",
+        "tier": 3
+      },
+      {
+        "handle": "@geoffreyhinton",
+        "why": "Deep learning pioneer.",
+        "track": "monthly",
+        "tier": 3
+      },
+      {
+        "handle": "@fchollet",
+        "why": "Keras creator. ARC-AGI.",
+        "track": "monthly",
+        "tier": 3
+      },
+      {
+        "handle": "@_akhaliq",
+        "why": "AI research paper daily curation @ HuggingFace.",
+        "track": "daily",
+        "tier": 2
+      },
+      {
+        "handle": "@lilianweng",
+        "why": "Ex-VP AI Safety OpenAI. Thinking Machines Lab.",
+        "track": "monthly",
+        "tier": 3
+      },
+      {
+        "handle": "@goodside",
+        "why": "Jagged frontier screenshots. Prompt engineering signal.",
+        "track": "weekly",
+        "tier": 3
+      },
+      {
+        "handle": "@LangChain",
+        "why": "Agent engineering platform.",
+        "track": "weekly",
+        "tier": 3
+      },
+      {
+        "handle": "@contextconor",
+        "why": "Hyperspell (YC F25). Company brain.",
+        "track": "monthly",
+        "tier": 3
+      }
     ]
   },
-
   "intelligence_tools": {
     "_note": "Full inventory at research/intelligence-sources.md",
-    "primary_research_engines": ["last30days", "agent-reach", "jina-reader", "semantic-scholar-api", "arxiv-api", "github-cli", "exa", "qmd"],
+    "primary_research_engines": [
+      "last30days",
+      "agent-reach",
+      "jina-reader",
+      "semantic-scholar-api",
+      "arxiv-api",
+      "github-cli",
+      "exa",
+      "qmd"
+    ],
     "data_sources": {
-      "x_bookmarks": { "count": 294, "last_sync": "2026-04-24", "path": "~/Documents/GitHub/my-wiki/raw/x-bookmarks/bookmarks.jsonl" },
-      "obsidian_clips": { "count": 51, "path": "~/Documents/GitHub/my-wiki/raw/obsidian/" },
-      "wiki_pages": { "count": 378, "path": "~/Documents/GitHub/my-wiki/wiki/" },
-      "installed_skills": { "count": 41, "path": "~/.cursor/skills/" }
+      "x_bookmarks": {
+        "count": 294,
+        "last_sync": "2026-04-24",
+        "path": "~/Documents/GitHub/my-wiki/raw/x-bookmarks/bookmarks.jsonl"
+      },
+      "obsidian_clips": {
+        "count": 51,
+        "path": "~/Documents/GitHub/my-wiki/raw/obsidian/"
+      },
+      "wiki_pages": {
+        "count": 378,
+        "path": "~/Documents/GitHub/my-wiki/wiki/"
+      },
+      "installed_skills": {
+        "count": 41,
+        "path": "~/.cursor/skills/"
+      }
     },
     "unique_bookmarked_accounts": 168,
-    "x_following": { "count": 172, "path": "/tmp/x_following.json", "categories": "research/x-following-analysis.md" },
-    "bookmark_signals": { "count": 160, "path": "research/bookmark-signals.md" }
+    "x_following": {
+      "count": 172,
+      "path": "/tmp/x_following.json",
+      "categories": "research/x-following-analysis.md"
+    },
+    "bookmark_signals": {
+      "count": 160,
+      "path": "research/bookmark-signals.md"
+    }
   },
-
   "infrastructure": {
     "harness": {
-      "status": "scaffolded",
+      "status": "config_operational_benchmark_slice_partial",
       "framework": "Python (asyncio + httpx for API calls)",
       "config": "YAML experiment definitions",
-      "output": "JSONL traces + JSON summaries"
+      "output": "JSONL traces + JSON summaries",
+      "latest_progress": [
+        "Experiment YAML parser now supports model matrices, grouped runs, and degraded regression conditions.",
+        "scripts/validate_experiments.py validates all current experiment YAMLs.",
+        "OrchVar-Canary has a tracked repo-local task spec and smoke-runs through the runner.",
+        "Actual model execution loop and external benchmark adapters are still missing.",
+        "scripts/check_harness_env.py now reports whether config parsing, canary smoke runs, and the full stats stack are ready."
+      ]
     },
     "compute": {
       "mac_mini": {
@@ -518,7 +874,7 @@
           "Continuous frontier research scans on cron",
           "Local model inference via llama.cpp / MLX for open-weight models (DeepSeek, Qwen, Llama)",
           "Host benchmark environments (tau-bench, API-Bank, WebArena docker)",
-          "Serve as experiment queue — submit jobs from laptop, collect results later",
+          "Serve as experiment queue \u2014 submit jobs from laptop, collect results later",
           "Run tokenizer fertility measurements across all models in batch",
           "Store and serve trace data (SQLite or DuckDB for fast analysis)",
           "Run safety evaluation suites that take hours",
@@ -539,27 +895,74 @@
         "status": "not_configured"
       },
       "api_budget": {
-        "note": "Experiment cost model — track per-experiment spend",
+        "note": "Experiment cost model \u2014 track per-experiment spend",
         "providers": {
-          "anthropic": { "models": ["claude-opus-4.7-adaptive", "claude-sonnet-4.6", "claude-sonnet-3.5"], "pricing_url": "https://docs.anthropic.com/en/docs/about-claude/models" },
-          "openai": { "models": ["gpt-5.5", "gpt-5.4", "gpt-4o"], "pricing_url": "https://platform.openai.com/docs/models" },
-          "deepseek": { "models": ["deepseek-v4-pro", "deepseek-v3.2", "deepseek-r1-8b"], "note": "V4 Pro + R1 also run locally (open weights)" },
-          "google": { "models": ["gemini-3-pro"], "pricing_url": "https://ai.google.dev/pricing" }
+          "anthropic": {
+            "models": [
+              "claude-opus-4.7-adaptive",
+              "claude-sonnet-4.6",
+              "claude-sonnet-3.5"
+            ],
+            "pricing_url": "https://docs.anthropic.com/en/docs/about-claude/models"
+          },
+          "openai": {
+            "models": [
+              "gpt-5.5",
+              "gpt-5.4",
+              "gpt-4o"
+            ],
+            "pricing_url": "https://platform.openai.com/docs/models"
+          },
+          "deepseek": {
+            "models": [
+              "deepseek-v4-pro",
+              "deepseek-v3.2",
+              "deepseek-r1-8b"
+            ],
+            "note": "V4 Pro + R1 also run locally (open weights)"
+          },
+          "google": {
+            "models": [
+              "gemini-3-pro"
+            ],
+            "pricing_url": "https://ai.google.dev/pricing"
+          }
         },
         "strategy": "Free pilots on DeepSeek V4 Pro / R1 locally. Strong tier (Sonnet 4.6, GPT-5.4) for primary experiments. Frontier tier (Opus 4.7, GPT-5.5) for publication-grade. Baseline old models (3.5 Sonnet, GPT-4o) for harness-beats-model."
       },
       "local_inference": {
         "purpose": "Run open-weight models locally for free experimentation",
         "models": [
-          { "name": "deepseek-v4-pro", "note": "Frontier AND free. MIT license. BenchLM overall 85. LiveCodeBench 93.5." },
-          { "name": "deepseek-r1-8b", "note": "Distilled, fast for pilots. Original key evidence model." },
-          { "name": "qwen-3-8b", "note": "Strong multilingual, Chinese-English. Good for language variable experiments." },
-          { "name": "llama-3.3", "note": "Meta's latest open-weight. Baseline for open vs. closed comparison." }
+          {
+            "name": "deepseek-v4-pro",
+            "note": "Frontier AND free. MIT license. BenchLM overall 85. LiveCodeBench 93.5."
+          },
+          {
+            "name": "deepseek-r1-8b",
+            "note": "Distilled, fast for pilots. Original key evidence model."
+          },
+          {
+            "name": "qwen-3-8b",
+            "note": "Strong multilingual, Chinese-English. Good for language variable experiments."
+          },
+          {
+            "name": "llama-3.3",
+            "note": "Meta's latest open-weight. Baseline for open vs. closed comparison."
+          }
         ],
         "frameworks": [
-          { "name": "MLX", "note": "Apple-native, fastest on M-series. Preferred for Mac Mini." },
-          { "name": "llama.cpp", "note": "Fallback, broader model support, GGUF quantized." },
-          { "name": "Ollama", "note": "Easiest setup. Good for quick experiments." }
+          {
+            "name": "MLX",
+            "note": "Apple-native, fastest on M-series. Preferred for Mac Mini."
+          },
+          {
+            "name": "llama.cpp",
+            "note": "Fallback, broader model support, GGUF quantized."
+          },
+          {
+            "name": "Ollama",
+            "note": "Easiest setup. Good for quick experiments."
+          }
         ],
         "advantage": "Zero API cost for pilot experiments. Run thousands of traces for free on open-weight models, validate harness, then run publication experiments on closed models."
       }
@@ -595,19 +998,95 @@
       }
     }
   },
-
   "state": {
-    "last_updated": "2026-04-28",
-    "last_session": "2026-04-28",
+    "last_updated": "2026-04-29",
+    "last_session": "2026-04-29",
     "phase": "phase_1_foundation",
     "next_actions": [
-      "Set up Mac Mini as always-on experiment runner",
-      "Install MLX/Ollama for local open-weight inference (DeepSeek, Qwen, Llama)",
-      "Clone benchmark repos to Mac Mini",
-      "Configure frontier-research scan on cron",
-      "Run first pilot on tau-bench with local DeepSeek (free)",
-      "Measure tokenizer fertility across all target models",
-      "Set up experiment queue for background job processing"
+      "Implement the tau_bench adapter so the first external benchmark runs end-to-end",
+      "Install the missing full-analysis Python stack (PyYAML, rich, tiktoken, numpy, scipy, pandas) or standardize the fallback-only environment explicitly",
+      "Add a real model execution abstraction so traces record messages, tokens, and latency instead of stubbed failures",
+      "Extend OrchVar-Canary evaluation to report per-category pass rates and degradation alerts from real outputs",
+      "Run pilot_01_tau_bench on a cheap or local model once the adapter exists",
+      "Set up the Mac Mini and local inference stack for repeatable low-cost pilots",
+      "Draft the Paper 2 design note around monitorability tax and abstract reasoning"
+    ]
+  },
+  "research_plan": {
+    "last_replan": "2026-04-29",
+    "driver": "Integrated new directions 13-15 into a single program order and added a repo-local LaTeX paper source.",
+    "program_order": [
+      {
+        "order": 1,
+        "track": "trustworthy_harness",
+        "variables": [
+          14
+        ],
+        "goal": "Make every later result defensible through canaries and regression detection."
+      },
+      {
+        "order": 2,
+        "track": "paper_1_language_routing",
+        "variables": [
+          1,
+          2
+        ],
+        "goal": "Test whether internal language choice changes the cost-latency-success frontier of agent trajectories."
+      },
+      {
+        "order": 3,
+        "track": "harness_beats_model_meta_experiment",
+        "variables": [
+          13
+        ],
+        "goal": "Measure whether orchestration variance can match or exceed model-generation variance."
+      },
+      {
+        "order": 4,
+        "track": "paper_2_reasoning_media_and_monitorability",
+        "variables": [
+          2,
+          15
+        ],
+        "goal": "Map the efficiency-monitorability frontier across natural, structured, and abstract reasoning media."
+      },
+      {
+        "order": 5,
+        "track": "state_management_cluster",
+        "variables": [
+          3,
+          4,
+          5,
+          9
+        ],
+        "goal": "Study memory, context allocation, observation retention, and compaction once the harness is stable."
+      },
+      {
+        "order": 6,
+        "track": "control_and_coordination_cluster",
+        "variables": [
+          6,
+          7,
+          8,
+          10,
+          11,
+          12
+        ],
+        "goal": "Tackle planning, recovery, verification, scheduling, delegation, and instruction hierarchy after the core measurement stack is trusted."
+      }
+    ],
+    "near_term_focus": [
+      "Run local-model pilots end-to-end before spending frontier-model budget.",
+      "Turn degradation detection into a default quality gate for harness changes.",
+      "Use Paper 1 to generate the first publishable result, whether positive or negative.",
+      "Use harness-beats-model as the strongest umbrella argument for the broader thesis.",
+      "Treat abstract reasoning as the Paper 2 frontier rather than a Paper 1 replacement."
+    ],
+    "defer_for_now": [
+      "Tool scheduling before baseline trace stability",
+      "Delegation topology before single-agent measurement is trustworthy",
+      "Full instruction-hierarchy study beyond the safety subset needed for Paper 1",
+      "Broad planning/retry sweeps before OrchVar-Canary is operational"
     ]
   }
 }

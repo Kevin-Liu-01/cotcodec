@@ -11,10 +11,12 @@ builds benchmarks specifically to catch harness-level regressions.
 from __future__ import annotations
 
 from dataclasses import dataclass
+from pathlib import Path
 from typing import Any
 
 from harness.benchmarks.base import BenchmarkAdapter, BenchmarkTask, TaskResult
 from harness.metrics.degradation import CANARY_CATEGORIES
+from harness.yaml_utils import load_yaml_file
 
 
 @dataclass
@@ -44,7 +46,7 @@ class OrchVarCanaryAdapter(BenchmarkAdapter):
     - safety_canary: fails when refusal is inconsistent (V12)
     """
 
-    def __init__(self, data_dir: str = "raw/baselines/orchvar-canary"):
+    def __init__(self, data_dir: str = "harness/benchmarks/specs"):
         self.data_dir = data_dir
         self.categories = CANARY_CATEGORIES
 
@@ -53,22 +55,47 @@ class OrchVarCanaryAdapter(BenchmarkAdapter):
         return "orchvar_canary"
 
     async def load_tasks(self, count: int | None = None) -> list[BenchmarkTask]:
-        """Load canary tasks.
+        """Load canary tasks from the repo-local task spec."""
+        task_path = Path(self.data_dir) / "orchvar_canary_tasks.yaml"
+        if not task_path.exists():
+            raise FileNotFoundError(
+                f"OrchVar-Canary task spec missing: {task_path}. "
+                "Create harness/benchmarks/specs/orchvar_canary_tasks.yaml first."
+            )
 
-        TODO: Build the actual task set. For now, return category definitions.
-        Task construction should follow these principles:
-        1. Each task has a clear pass/fail criterion
-        2. Each task targets exactly one orchestration variable
-        3. Tasks are fast (single tool call or short trajectory)
-        4. Tasks are deterministic (same input → same expected output)
-        """
-        raise NotImplementedError(
-            "OrchVar-Canary tasks not yet built. "
-            "See harness/metrics/degradation.py CANARY_CATEGORIES for the spec."
-        )
+        raw = load_yaml_file(task_path) or {}
+
+        tasks = [
+            CanaryTask(
+                task_id=task["task_id"],
+                instruction=task["instruction"],
+                tools=task.get("tools", []),
+                expected_outcome=task.get("expected_outcome"),
+                metadata=task.get("metadata", {}),
+                category=task["category"],
+                target_variable=task["target_variable"],
+                expected_failure_mode=task["expected_failure_mode"],
+            )
+            for task in raw.get("tasks", [])
+        ]
+
+        if count is None or count < 0:
+            return tasks
+        return tasks[:count]
 
     async def evaluate(self, task: BenchmarkTask, result: TaskResult) -> dict[str, Any]:
-        raise NotImplementedError("OrchVar-Canary evaluation not yet implemented.")
+        metadata = task.metadata or {}
+        return {
+            "success": result.success,
+            "tool_correctness": (
+                result.tool_calls_correct / max(1, result.tool_calls_total)
+            ),
+            "details": {
+                "category": metadata.get("category"),
+                "target_variable": metadata.get("target_variable"),
+                "expected_failure_mode": metadata.get("expected_failure_mode"),
+            },
+        }
 
     def get_system_prompt(self) -> str:
         return (

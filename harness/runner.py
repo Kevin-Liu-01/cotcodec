@@ -13,18 +13,50 @@ import uuid
 from datetime import datetime
 from pathlib import Path
 
-from rich.console import Console
-from rich.table import Table
-
 from harness.config import ConditionID, ExperimentConfig
 from harness.conditions import get_condition
 from harness.metrics.collector import MetricCollector
+
+try:
+    from rich.console import Console
+    from rich.table import Table
+except ModuleNotFoundError:
+    class Console:  # type: ignore[no-redef]
+        def print(self, *args, **kwargs) -> None:
+            print(*args)
+
+    class Table:  # type: ignore[no-redef]
+        def __init__(self, title: str = ""):
+            self.title = title
+            self.columns: list[str] = []
+            self.rows: list[list[str]] = []
+
+        def add_column(self, name: str, **_: object) -> None:
+            self.columns.append(name)
+
+        def add_row(self, *values: str) -> None:
+            self.rows.append(list(values))
+
+        def __str__(self) -> str:
+            lines = [self.title] if self.title else []
+            if self.columns:
+                lines.append(" | ".join(self.columns))
+                lines.append("-" * max(3, len(lines[-1])))
+            lines.extend(" | ".join(row) for row in self.rows)
+            return "\n".join(lines)
+
 
 console = Console()
 
 BENCHMARK_ADAPTERS = {
     "tau_bench": "harness.benchmarks.tau_bench.TauBenchAdapter",
     "api_bank": "harness.benchmarks.api_bank.APIBankAdapter",
+    "mcp_atlas": "harness.benchmarks.mcp_atlas.MCPAtlasAdapter",
+    "toolathlon": "harness.benchmarks.toolathlon.ToolathlonAdapter",
+    "swe_bench_verified": "harness.benchmarks.swe_bench_verified.SWEBenchVerifiedAdapter",
+    "agent_race": "harness.benchmarks.agent_race.AgentRaceAdapter",
+    "orchvar_canary": "harness.benchmarks.orchvar_canary.OrchVarCanaryAdapter",
+    "multilingual_fidelity": "harness.benchmarks.multilingual_fidelity.MultilingualFidelityAdapter",
 }
 
 
@@ -52,8 +84,7 @@ async def run_experiment(config: ExperimentConfig) -> dict:
     console.print(f"\n[bold]Experiment: {config.name}[/bold]")
     console.print(f"ID: {experiment_id}")
     console.print(f"Benchmark: {config.benchmark}")
-    console.print(f"Model: {config.model}")
-    console.print(f"Conditions: {[c.value for c in config.conditions]}")
+    console.print(f"Run specs: {len(config.iter_run_specs())}")
     console.print(f"Seeds: {config.seeds}")
     console.print()
 
@@ -62,53 +93,68 @@ async def run_experiment(config: ExperimentConfig) -> dict:
 
     summaries = []
 
-    for condition_id in config.conditions:
-        condition = get_condition(condition_id)
-        system_prompt = condition.transform_system_prompt(base_prompt)
+    tasks_count = None
+    if isinstance(config.tasks, int) and config.tasks >= 0:
+        tasks_count = config.tasks
 
-        collector = MetricCollector(
-            experiment_id=experiment_id,
-            benchmark=config.benchmark,
-            condition=condition_id,
-            model=config.model,
-        )
+    for run_spec in config.iter_run_specs():
+        console.print(f"[cyan]Run group: {run_spec.group}[/cyan]")
+        console.print(f"  Model: {run_spec.model}")
+        console.print(f"  Conditions: {[condition.value for condition in run_spec.conditions]}")
 
-        console.print(f"[yellow]Condition: {condition_id.value}[/yellow]")
-        console.print(f"  Target language: {condition.target_language}")
-        console.print(f"  System prompt length: {len(system_prompt)} chars")
+        for condition_id in run_spec.conditions:
+            condition = get_condition(condition_id)
+            system_prompt = condition.transform_system_prompt(base_prompt)
 
-        tasks = await benchmark.load_tasks(
-            count=config.tasks if isinstance(config.tasks, int) else None
-        )
+            collector = MetricCollector(
+                experiment_id=experiment_id,
+                benchmark=config.benchmark,
+                condition=condition_id,
+                model=run_spec.model,
+                run_group=run_spec.group,
+            )
 
-        for task in tasks:
-            for seed in config.seeds:
-                collector.start_task(task.task_id, seed)
+            console.print(f"[yellow]Condition: {condition_id.value}[/yellow]")
+            console.print(f"  Target language: {condition.target_language}")
+            console.print(f"  System prompt length: {len(system_prompt)} chars")
 
-                # TODO: Execute agent loop with model API
-                # This is where the actual LLM calls happen.
-                # For now, we just demonstrate the harness structure.
-                console.print(
-                    f"  Task {task.task_id} seed={seed} — "
-                    f"[dim]agent loop not yet implemented[/dim]"
-                )
+            tasks = await benchmark.load_tasks(count=tasks_count)
 
-                collector.end_task(success=False)
+            for task in tasks:
+                for seed in config.seeds:
+                    collector.start_task(task.task_id, seed)
 
-        trace_path = collector.flush(output_dir)
-        summary = collector.summary()
-        summaries.append(summary)
+                    # TODO: Execute agent loop with model API
+                    # This is where the actual LLM calls happen.
+                    # For now, we just demonstrate the harness structure.
+                    console.print(
+                        f"  Task {task.task_id} seed={seed} - "
+                        f"[dim]agent loop not yet implemented[/dim]"
+                    )
 
-        console.print(f"  Traces written to: {trace_path}")
-        console.print()
+                    collector.end_task(success=False)
+
+            trace_path = collector.flush(output_dir)
+            summary = collector.summary()
+            summaries.append(summary)
+
+            console.print(f"  Traces written to: {trace_path}")
+            console.print()
 
     result = {
         "experiment_id": experiment_id,
         "config": {
             "name": config.name,
             "benchmark": config.benchmark,
-            "model": config.model,
-            "conditions": [c.value for c in config.conditions],
+            "models": [run.model for run in config.iter_run_specs()],
+            "run_specs": [
+                {
+                    "group": run.group,
+                    "model": run.model,
+                    "conditions": [condition.value for condition in run.conditions],
+                }
+                for run in config.iter_run_specs()
+            ],
             "tasks": config.tasks,
             "seeds": config.seeds,
         },
@@ -129,6 +175,8 @@ async def run_experiment(config: ExperimentConfig) -> dict:
 def _print_summary_table(summaries: list[dict]) -> None:
     """Print a comparison table of experiment results."""
     table = Table(title="Experiment Results")
+    table.add_column("Group", style="magenta")
+    table.add_column("Model", style="green")
     table.add_column("Condition", style="cyan")
     table.add_column("Success Rate", justify="right")
     table.add_column("Avg Tokens", justify="right")
@@ -138,6 +186,8 @@ def _print_summary_table(summaries: list[dict]) -> None:
 
     for s in summaries:
         table.add_row(
+            s.get("run_group") or "-",
+            s["model"],
             s["condition"],
             f"{s['success_rate']:.1%}",
             f"{s['avg_tokens']:.0f}",

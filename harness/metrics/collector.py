@@ -47,11 +47,13 @@ class MetricCollector:
         benchmark: str,
         condition: ConditionID,
         model: str,
+        run_group: str | None = None,
     ):
         self.experiment_id = experiment_id
         self.benchmark = benchmark
         self.condition = condition
         self.model = model
+        self.run_group = run_group
         self._current_trace: ExperimentTrace | None = None
         self._traces: list[ExperimentTrace] = []
         self._task_start_time: float = 0.0
@@ -64,6 +66,7 @@ class MetricCollector:
             model=self.model,
             task_id=task_id,
             seed=seed,
+            run_group=self.run_group,
         )
         self._task_start_time = time.monotonic()
 
@@ -155,6 +158,7 @@ class MetricCollector:
             "benchmark": self.benchmark,
             "condition": self.condition.value,
             "model": self.model,
+            "run_group": self.run_group,
             "task_count": len(self._traces),
             "success_rate": sum(1 for o in outcomes if o.success) / max(1, len(outcomes)),
             "avg_tokens": sum(o.total_tokens for o in outcomes) / max(1, len(outcomes)),

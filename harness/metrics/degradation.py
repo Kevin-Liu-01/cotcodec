@@ -16,8 +16,6 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any
 
-import numpy as np
-
 
 @dataclass
 class SampleOutcome:
@@ -170,8 +168,9 @@ class DegradationDetector:
             }
 
         elif method == "fisher":
+            import math
             from scipy import stats
-            stat = -2 * sum(np.log(max(p, 1e-300)) for p in p_values)
+            stat = -2 * sum(math.log(max(p, 1e-300)) for p in p_values)
             combined_p = 1 - stats.chi2.cdf(stat, df=2 * n_tests)
             return {
                 "method": "fisher",

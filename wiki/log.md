@@ -203,3 +203,82 @@ METR showed is the most effective safety monitoring signal.
 
 Added 2 new LaTeX bibliography entries (baker2025monitoring, metr2025cotinformative).
 Updated optimization target with MonitorabilityCost term.
+
+## [2026-04-29] roadmap | Replanned program order and added repo-local paper source
+
+Integrated the new directions into an explicit program sequence instead of
+keeping them as a flat list of interesting ideas.
+
+**Program-order decisions:**
+- Pulled `Variable 14: degradation detection` into the foundation layer.
+  Rationale: after Anthropic's April 23 postmortem, regression detection is
+  required infrastructure, not a later paper.
+- Kept `Variable 1: language` as Paper 1. Rationale: still the cleanest
+  inference-time intervention with the best measurement story.
+- Pulled `Variable 13: harness beats model` forward as the first meta-result.
+  Rationale: it is the strongest umbrella argument for the full research thesis.
+- Reframed `Variable 2 + Variable 15` as the next major paper on reasoning
+  media, abstract reasoning, and monitorability tax.
+- Deferred lower-tractability coordination work until the harness and canaries
+  are trustworthy.
+
+Built:
+- `research/research-plan.md` — repo-level roadmap with program order, near-term
+  execution plan, deferrals, and success criteria before Fall 2026
+- `paper/language-orchestration-research-spec.tex` — repo-local LaTeX source for
+  the Paper 1 research spec
+
+Updated:
+- `memory.json` — new `research_plan` section, revised phase-1 goals, updated
+  current priorities, new repo LaTeX source path, refreshed next actions
+
+## [2026-04-29] harness | Experiment schema operationalized + canary smoke path built
+
+Turned the roadmap into runnable harness artifacts instead of leaving the
+experiment layer half-ahead-of-the-parser.
+
+Built:
+- `research/experiment-backlog.md` — execution backlog mapping roadmap tracks to
+  concrete experiment files, statuses, and blockers
+- `scripts/validate_experiments.py` — validates every experiment YAML and prints
+  the expanded run matrix
+- `harness/yaml_utils.py` — YAML loader with Ruby stdlib fallback so config
+  parsing works even when PyYAML is missing in the environment
+- `harness/conditions/degraded.py` — degraded English regression conditions for
+  `english_only_low_effort`, `english_only_no_thinking_cache`, and
+  `english_only_25word_limit`
+- `harness/benchmarks/specs/orchvar_canary_tasks.yaml` — tracked seed task set
+  for the custom regression benchmark
+
+Updated:
+- `harness/config.py` — experiment configs now support model matrices, grouped
+  runs, and richer YAML shapes without exploding on `models:` or grouped
+  condition definitions
+- `harness/runner.py` — benchmark registry expanded; runner now executes grouped
+  run specs and no longer requires `rich` just to start
+- `harness/benchmarks/orchvar_canary.py` — custom canary benchmark now loads a
+  repo-local task spec and can enumerate tasks in a smoke run
+- `harness/metrics/__init__.py` + `harness/metrics/degradation.py` — removed
+  eager optional-dependency imports that blocked basic harness execution
+
+Verified:
+- `python3 scripts/validate_experiments.py` passes for all current YAMLs
+- `python3 -m harness.runner experiments/degradation_canary_01.yaml` now runs
+  through config parsing, benchmark loading, task enumeration, and trace flush
+  successfully; the remaining blocker is the still-stubbed agent execution loop
+  rather than experiment schema drift
+
+## [2026-04-29] env | Harness preflight added after dependency failures
+
+Built `scripts/check_harness_env.py` after repeated missing-dependency failures
+(`yaml`, `rich`, `tiktoken`, `numpy`, `scipy`, `pandas`, `pdflatex`) during
+schema validation and smoke-run work.
+
+Current verified state from the script:
+- config parsing: ready (via Ruby YAML fallback)
+- canary smoke runs: ready
+- full stats stack: blocked pending Python deps
+- paper compilation: blocked pending LaTeX install
+
+This turns environment drift into an explicit preflight check instead of a
+surprise during experiment runs.
