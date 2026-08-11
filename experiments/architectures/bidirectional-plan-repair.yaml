@@ -1,0 +1,100 @@
+schema_version: 1
+name: bidirectional-plan-repair
+direction: Bidirectional Diffusion for Closed-Loop Plan Repair
+readiness: contract
+claim_scope: attachment-capability
+research_question: >-
+  Can checkpoint-finetuned masked diffusion repair only the affected subgraph
+  of a partially executed typed action DAG more successfully than autoregressive
+  replan-and-verify at equal wall time and total model evaluations?
+null_hypothesis: >-
+  Bidirectional denoising provides no localized repair advantage once the
+  autoregressive baseline receives the same verifier and compute budget.
+
+starting_point:
+  arms:
+    - name: llada-local-repair
+      mode: checkpoint-finetune
+      model_ids: [llada-8b-base]
+      is_control: false
+      purpose: LoRA-finetune a reviewed LLaDA snapshot to infill masked nodes and incident edges in typed action DAGs.
+    - name: qwen-autoregressive-replan
+      mode: checkpoint-finetune
+      model_ids: [qwen3-0.6b-base]
+      is_control: true
+      purpose: Finetune an autoregressive planner that regenerates the affected suffix and uses the identical verifier.
+
+intervention:
+  mechanism: >-
+    Serialize a typed action DAG with immutable executed nodes masked observation
+    slots and an explicit affected-subgraph mask; after each observation,
+    re-denoise only editable nodes while preserving the executed prefix exactly.
+  trainable_components:
+    - matched LoRA budget on the diffusion and autoregressive checkpoints
+    - shared typed-DAG parser serializer and validity verifier
+  frozen_components:
+    - reviewed base-model weights
+    - executed nodes and observations at repair time
+    - repair trigger affected-subgraph algorithm and evaluation budget
+
+data:
+  train:
+    source: generated typed PDDL and stochastic API DAGs with logged failures and valid local repairs
+    identity: generator grammar action schemas environment versions and seeds must be frozen before enablement
+  development:
+    source: disjoint domains for mask schedule LoRA rank and verifier threshold selection
+    identity: development action-schema families excluded from sealed test families
+  test:
+    source: sealed PDDL and API episodes with deterministic tool replay and injected observation changes
+    identity: unseen domain and action-schema compositions with fixed episode hashes
+    sealed: true
+  contamination_checks:
+    - split domain generator action schemas and graph motifs rather than random serialized plans
+    - assert executed nodes are byte-identical before and after every repair
+    - replay every claimed-valid plan in the deterministic environment rather than trusting text judgment
+
+controls:
+  - name: autoregressive-replan-with-verifier
+    matches: [training-examples, lora-parameters, verifier-calls, wall-time, total-model-flops]
+  - name: full-graph-diffusion
+    matches: [checkpoint, lora-parameters, denoising-evaluations, verifier, training-data]
+  - name: nearest-valid-template
+    matches: [environment-observations, repair-trigger, verifier, latency-budget]
+
+primary_endpoint:
+  metric: executable episode success at equal p95 wall time and verifier budget
+  direction: maximize
+  minimum_effect: 5.0
+  unit_of_analysis: sealed environment episode
+  aggregation: paired episode difference stratified by domain and failure type
+
+statistics:
+  seeds: [42, 43, 44]
+  interval: paired stratified bootstrap 95% interval plus all seed effects
+  multiplicity: one primary diffusion-versus-AR comparison; Holm correction for repair-locality endpoints
+
+falsifiers:
+  - Kill if AR plus verifier matches success at equal p95 wall time and total model evaluations.
+  - Kill if local repair modifies an executed node or is not more localized than full-graph regeneration.
+  - Kill if repeated denoising loses the batch-1 latency comparison after warm-up and compilation are charged.
+
+execution:
+  enabled: false
+  max_gpu_hours: 16
+  gpus: 1
+  checkpoint_to_persistent_storage: true
+  fresh_job_resume_test: true
+  checkpoint_interval_minutes: 10
+  blocked_by:
+    - review and vendor the exact LLaDA custom modeling code revision
+    - implement typed-DAG serialization deterministic replay and affected-subgraph masks
+    - measure whether one H100 can execute the paired 8B diffusion cell inside the ceiling
+    - publish a clean architecture image and validate one Slurm/Pyxis GPU job
+
+required_artifacts:
+  - immutable model receipts reviewed custom-code hash and LoRA hashes
+  - generator environment action-schema and split manifests
+  - before-observation and after-repair DAGs with executed-node invariance checks
+  - success validity locality model-evaluation FLOP and latency ledgers
+  - deterministic replay logs for every claimed success
+  - atomic checkpoint and fresh-job continuation equivalence report

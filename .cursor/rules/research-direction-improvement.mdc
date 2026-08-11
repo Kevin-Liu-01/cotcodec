@@ -1,0 +1,27 @@
+---
+description: Required adversarial loop for proposing or promoting research directions
+globs: "research/proposals/**/*.md,directions/**/*.md,research/scans/**/*.md"
+alwaysApply: false
+---
+
+# Research Direction Improvement
+
+For novel mechanisms or experiments over 8 GPU-hours, use
+`skills/research-direction-improve.md` and run:
+
+```bash
+uv run python scripts/research_direction_doctor.py <proposal.md>
+```
+
+Do not describe an idea as completely novel. State the search cutoff, coverage,
+closest prior work, and the exact delta. A proposal is pilot-ready only at
+100/100 with all doctors passed and independent adversarial review recorded.
+The PASS must include a hashed evidence bundle; Markdown assertions alone never
+count. A score of 100 also requires two provider-distinct Ed25519 review
+signatures rooted in the external read-only trust store configured by trusted
+CI, not a proposal-controlled repository file. Compute remains FAIL while the
+real model loop, benchmark adapter, container smoke, or Slurm dry-run is unavailable.
+
+Parallel work is limited to independent search cells. One owner performs
+coupled synthesis and resolves reviewer defects. Fix the highest-impact defect
+per wave; preserve every score and rejected hypothesis in the audit trail.

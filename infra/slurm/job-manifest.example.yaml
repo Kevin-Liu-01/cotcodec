@@ -1,0 +1,15 @@
+name: coded-delta-contract
+image: registry.example/cotcodec@sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+command: [uv, run, python, -m, harness.runner, experiments/degradation_canary_01.yaml]
+run_root: /shared/cotcodec/runs
+git_sha: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+source_sha256: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+seeds: [42, 43, 44]
+resources:
+  gpu_type: h100
+  gpus: 1
+  cpus: 16
+  memory_gb: 64
+  minutes: 120
+budget:
+  max_gpu_hours: 2

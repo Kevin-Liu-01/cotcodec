@@ -1,0 +1,173 @@
+schema_version: 1
+name: capsule-policy-kimi
+status: contract
+research_question: >-
+  Does a model-specific LoRA trained to speak one fixed orchestration-capsule
+  event/action protocol improve agent-task success across two conformant hosts
+  while preserving the external capsule's safety-critical decisions exactly?
+null_hypothesis: >-
+  Any improvement is matched by prompting or LoRA alone, depends on one host,
+  or changes safety-critical capsule behavior.
+portability_claim: >-
+  Only the external capsule contract is portable; each base receives a separate
+  LoRA and no weight-transfer claim is made between Qwen and Kimi.
+
+stages:
+  - name: qwen-interface-smoke
+    role: smoke
+    tinker_id: Qwen/Qwen3.5-4B
+    context_tokens: 65536
+    train_tokens_per_seed: 50000
+    sample_tokens_per_seed: 50000
+    prefill_tokens_per_seed: 100000
+    prices:
+      prefill_per_million: 0.33
+      sample_per_million: 1.005
+      train_per_million: 0.737
+      verified_at: "2026-08-10"
+      source: https://tinker-docs.thinkingmachines.ai/tinker/models/
+  - name: kimi-target-pilot
+    role: target
+    tinker_id: moonshotai/Kimi-K2.6
+    context_tokens: 32768
+    train_tokens_per_seed: 100000
+    sample_tokens_per_seed: 100000
+    prefill_tokens_per_seed: 200000
+    prices:
+      prefill_per_million: 2.205
+      sample_per_million: 5.49
+      train_per_million: 4.84
+      verified_at: "2026-08-10"
+      source: https://tinker-docs.thinkingmachines.ai/tinker/models/
+
+lora:
+  rank: 16
+  learning_rate: 0.0001
+  batch_size: 8
+  max_steps: 100
+  train_mlp: true
+  train_attn: true
+  train_unembed: false
+
+seeds: [42, 43, 44]
+
+data:
+  record_schema: rendered-prefix-target-v1
+  renderer_identity: pending frozen tinker-cookbook Kimi and Qwen renderer revisions
+  train:
+    source: generated capsule lifecycle traces with tool outcomes and canonical memory verification retry and block actions
+    identity: generator version protocol schema task families and seed range must be frozen before execution
+    sha256: null
+  development:
+    source: disjoint task and injection families for LoRA checkpoint and threshold selection
+    identity: development templates tools and failure motifs are excluded from the sealed test
+    sha256: null
+  test:
+    source: sealed paired tool episodes replayed through two live conformant harness adapters
+    identity: unseen task templates tool namespaces injection payloads and recovery motifs with fixed episode hashes
+    sha256: null
+    sealed: true
+  contamination_checks:
+    - Split task generator template tool namespace and failure motif rather than serialized rows.
+    - Freeze adapters before sealed outcomes and reject benchmark-specific adapter logic.
+    - Deduplicate normalized prompts and event/action traces across all splits.
+
+arms:
+  - name: base-no-policy
+    capsule: false
+    lora: false
+    prompt_policy: false
+    native_host_policy: false
+    purpose: Unmodified base model and host establishes task and safety behavior without the intervention.
+  - name: prompt-only-policy
+    capsule: false
+    lora: false
+    prompt_policy: true
+    native_host_policy: false
+    purpose: Textual capsule instructions measure whether runtime machinery and training are unnecessary.
+  - name: capsule-only
+    capsule: true
+    lora: false
+    prompt_policy: false
+    native_host_policy: false
+    purpose: Fixed external memory and verification behavior without any model-specific post-training.
+  - name: lora-only
+    capsule: false
+    lora: true
+    prompt_policy: false
+    native_host_policy: false
+    purpose: Model-specific protocol training without external enforcement isolates the value of the capsule.
+  - name: capsule-aware-lora
+    capsule: true
+    lora: true
+    prompt_policy: false
+    native_host_policy: false
+    purpose: Separately trained Qwen and Kimi LoRAs communicate with the identical fixed external capsule.
+  - name: native-host-reference
+    capsule: false
+    lora: false
+    prompt_policy: false
+    native_host_policy: true
+    purpose: Matched native memory and verification modules bound the utility retained by portable capsules.
+
+controls:
+  - Match task IDs seeds model sampling renderer tool evidence and maximum context across every arm.
+  - Match LoRA rank training examples steps token ceiling and checkpoint selection across trained arms.
+  - Match capsule and native policy state evidence reset boundaries action budgets and latency accounting.
+
+primary_endpoint:
+  metric: paired executable episode-success difference between capsule-aware-LoRA and capsule-only
+  direction: maximize
+  minimum_effect: 0.05
+  unit_of_analysis: sealed task-host-model episode clustered by task family and seed
+  safety_gate: 100 percent agreement on block verification and session-isolation decisions
+
+falsifiers:
+  - Kill if prompt-only matches capsule-aware LoRA within the preregistered equivalence margin.
+  - Kill if LoRA-only matches capsule-aware LoRA or bypasses an external safety-critical decision.
+  - Kill if improvement appears on Qwen but not Kimi or depends on one harness adapter.
+  - Kill if any cross-session memory leak or safety-critical replay disagreement occurs.
+  - Kill or downscope if reconciled Tinker billing exceeds the declared ceiling.
+
+checkpoints:
+  full_state_every_steps: 10
+  sampler_weights_every_steps: 10
+  periodic_ttl_seconds: 7200
+  durable_ttl_seconds: 604800
+  retain_minimum_generations: 2
+  resume_with_optimizer: true
+  download_final_weights: true
+  keep_local_cursor_and_rng: true
+  fresh_client_resume_test: true
+
+budget:
+  max_usd: 6.0
+  max_client_minutes: 240
+  max_checkpoint_storage_gb_month: 5.0
+  storage_per_gb_month: 0.10
+
+execution:
+  enabled: false
+  client_runtime: slurm-cpu-container
+  sdk_version: 0.23.3
+  secret_env: TINKER_API_KEY
+  container_image: null
+  command_argv: null
+  capability_receipt_sha256: null
+  blocked_by:
+    - Obtain Tinker access and inject TINKER_API_KEY through the cluster secret mechanism.
+    - Build and hash the lifecycle-trace datasets and sealed split.
+    - Implement live CoTCodec and second-host capsule adapters before training on their traces.
+    - Publish a digest-pinned Tinker client image and pass a CPU-only Slurm Pyxis dry run.
+    - Prove full-state save fresh-client optimizer resume and final weight download on Qwen first.
+
+required_artifacts:
+  - validated contract and exact SDK lock
+  - online server capability receipt containing the supported model identities
+  - dataset split hashes generator hash renderer identity and contamination report
+  - Tinker training-run IDs full-state and sampler checkpoint paths
+  - downloaded final adapter archive hashes and checkpoint lineage
+  - per-step token cost loss timing and retry ledgers
+  - delayed Tinker billing-usage reconciliation including storage gigabyte-hours
+  - paired per-episode outputs capsule actions native actions and enforcement receipts
+  - signal checkpoint and fresh-client continuation equivalence report

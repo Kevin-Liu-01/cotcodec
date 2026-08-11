@@ -1,0 +1,5 @@
+{
+  "schema_version": 1,
+  "attestors": [],
+  "note": "Schema/example only. The doctor rejects this repo-local file for promotion. Trusted CI must set COTCODEC_PROTECTED_CI=1, point COTCODEC_TRUSTED_ATTESTORS_PATH to an external non-writable store, and pin COTCODEC_TRUSTED_ATTESTORS_SHA256."
+}

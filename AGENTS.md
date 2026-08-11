@@ -113,6 +113,45 @@ Track groups working on adjacent problems — DeepSeek Research, Microsoft
 (EfficientXLang), Li et al. (UPenn), Wang et al. (LMU Munich). If someone
 publishes on our question, brief Danqi within 24 hours.
 
+## Research Gauntlet 100
+
+Every new research direction must pass the gauntlet in
+`skills/research-direction-improve.md` before it is promoted into the roadmap.
+The loop is required when a task asks for novel directions, a new mechanism,
+or an experiment that could consume more than 8 GPU-hours.
+
+The core loop is:
+
+```
+preflight doctors -> independent discovery -> novelty audit -> candidate contract
+  -> adversarial review -> fix the largest defect -> repeat
+```
+
+`100/100` means **pilot-ready**, not proven true, globally novel, or perfect.
+The lower of two independent reviewer scores is authoritative. A direction may
+only score 100 when every doctor passes and the proposal includes a falsifier,
+an executable pilot, primary-source novelty coverage, Docker provenance, and a
+Slurm launch plan. Markdown PASS rows are summaries, not proof: a 100 also
+requires the hashed evidence bundle in `research/proposals/evidence/`, including
+source/query artifacts, two provider-distinct reviews bound to the proposal
+and evidence-root hashes by pre-trusted Ed25519 keys, real-model container and
+Slurm attestations, doctor outputs, and the final hash-chained audit record. If
+the real model loop or Slurm dry-run is unavailable, Compute is FAIL.
+Reviewer keys must come from the external read-only trust path configured by
+trusted CI; a trust file committed with the proposal is never sufficient.
+
+Parallelize independent evidence collection. Give coupled synthesis,
+experimental identification, and final integration one sequential owner. This
+rule is empirical: Claude-of-Duty's parallel directory waves improved its
+critic score by only 0.46 and increased coupled defects, while a sequential
+owner improved the score by 1.00 and cut defects from 66 to 26.
+
+Every loop declares finite query, wall-clock, token, dollar, iteration, and
+GPU-hour budgets. Stop honestly when any budget is exhausted, novelty is
+invalidated, safety fails, the same fatal defect survives three waves, or the
+score improves by less than two points across three waves. Never force a score
+upward and never erase negative evidence.
+
 ## Directory Structure
 
 ```
@@ -438,9 +477,46 @@ Define experiment YAML
   └── git pull ←──────────────────────── Results available
 ```
 
+### Cluster Session Durability
+
+Use `tmux` on the Princeton login host for the operator session:
+
+```bash
+bash scripts/tmux-research-session.sh cotcodec
+```
+
+Keep editors, submission commands, monitors, and interactive allocation clients
+inside it. `tmux` survives an SSH or laptop disconnect; it does **not** survive a
+login-node reboot, cluster shutdown, node drain, Slurm cancellation, or job time
+limit. Do not run heavy compute on the login node, and do not treat `tmux` as a
+scientific recovery mechanism. Submitted `sbatch` jobs are scheduler-owned and
+continue without an attached terminal.
+
+Every long workload must checkpoint atomically to persistent project/scratch
+storage, never node-local `/tmp`. Save model/adapter state, optimizer, scheduler,
+scaler, RNG states, data cursor, step, config, source/model hashes, and parent job
+ID. Keep at least two validated generations; checkpoint periodically and on the
+Slurm preemption signal. A workload is not queue-ready until a fresh job restores
+the checkpoint and reproduces the uninterrupted continuation.
+
 ### Local Inference Strategy
 
 Free experimentation on open-weight models before spending on API calls:
+
+**Checkpoint-first rule.** Do not pretrain a foundation model when the
+intervention can be tested by importing a strong open checkpoint. Use:
+
+- Ollama or MLX for fast local smoke tests and harness validation;
+- Hugging Face Hub + Transformers/Accelerate for reproducible language-model
+  loading, fine-tuning, architecture surgery, and distributed H100 runs;
+- Diffusers for Stable Diffusion-family, video, and other diffusion checkpoints;
+- vLLM, SGLang, or TGI when a high-throughput OpenAI-compatible server is needed.
+
+Pin the exact model repository revision, weight hashes, tokenizer/processor,
+generation config, license, and any remote modeling code. Ollama tags are for
+exploration; publication runs must resolve them to immutable model artifacts.
+Do not enable unreviewed `trust_remote_code`. Prefer adapters, sidecars,
+checkpoint transplant, or continued training over training from scratch.
 
 ### Model Tiers
 
@@ -473,13 +549,21 @@ Free experimentation on open-weight models before spending on API calls:
 
 | Model | Framework | Use case |
 |-------|-----------|----------|
-| DeepSeek V4 Pro | MLX / Ollama | Frontier AND free. MIT open weights. |
-| DeepSeek R1 8B | MLX / Ollama | Distilled, fast for harness validation. |
-| Qwen 3 8B | MLX / Ollama | Multilingual Chinese-English. Language variable experiments. |
-| Llama 3.3 | MLX / Ollama | Meta open-weight baseline. |
+| SmolLM2-135M pinned snapshot | Transformers | Complete downloader/loader/provenance smoke. |
+| Qwen3-0.6B Base pinned snapshot | Transformers or converted MLX | Multilingual Transformer discovery base. |
+| Mamba-130M HF pinned snapshot | Transformers | Recurrent discovery and interface control. |
+| `qwen3:0.6b` / `deepseek-r1:8b` | Ollama | Mutable local agent smokes only; never publication provenance. |
+
+**Cluster-only open checkpoints:** FLA DeltaNet 1.3B, BLT-1B, LLaDA-8B,
+SDXL, and Kimi Linear 48B-A3B Base are tracked in `models/registry.yaml`.
+Kimi is a later 8×H100 scale cell, not a Mac Mini model; review and vendor its
+custom code before any execution.
 
 **Strategy:** Run pilot experiments locally (free, unlimited), validate harness
 correctness, then run publication experiments on closed models (metered).
+For architecture research, follow
+`research/architecture-experiment-methodologies.md` and validate
+`experiments/architectures/*.yaml` before allocating a GPU.
 
 ### API Budget
 
@@ -499,6 +583,9 @@ Use `memory.json` → `infrastructure.compute.api_budget` to track.
 | `openai` | OpenAI API client |
 | `mlx` / `mlx-lm` | Local inference on Apple Silicon |
 | `ollama` | Easy local model serving |
+| `transformers` / `accelerate` | Hugging Face checkpoint loading and distributed training |
+| `diffusers` | Stable Diffusion-family and diffusion-model checkpoints |
+| `vllm` / `sglang` / `tgi` | High-throughput open-model serving |
 | `duckdb` | Fast trace analysis (SQL over JSONL) |
 | `matplotlib` / `seaborn` | Plotting (Pareto frontiers) |
 | `pandas` | Data analysis |

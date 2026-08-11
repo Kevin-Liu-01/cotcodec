@@ -1,0 +1,222 @@
+schema_version: 1
+name: causal-memory-holdout
+direction: Causal Memory Holdout Trials
+readiness: contract
+claim_scope: systems-pipeline
+research_question: >-
+  At a fixed memory budget, can a past-only policy trained from randomized
+  serving-versus-holdout trials improve executable agent success over
+  observational future-utility, next-use prediction, and matched-rollout RL?
+null_hypothesis: >-
+  Randomized holdout effects are too sparse, interactive, or unpredictable from
+  write-time information to improve a memory policy over simpler controls.
+
+stage0_reference:
+  implementation: harness/causal_memory_trials.py
+  command_argv:
+    - uv
+    - run
+    - python
+    - scripts/run_causal_memory_sensitivity.py
+    - --episodes
+    - "2000"
+    - --world-seed
+    - "7"
+    - --assignment-seed
+    - "42"
+    - --audit-fraction
+    - "0.25"
+    - --folds
+    - "5"
+    - --output-dir
+    - data/results/causal-memory-holdout/stage0-seed42
+    - --require-gates
+  episodes: 2000
+  one_candidate_per_episode: true
+  propensity_schedule: [0.5, 0.25, 0.1]
+  paired_audit_fraction: 0.25
+  cross_fit_folds: 5
+  nuisance_model: ridge
+  policy_model: ridge
+  replay_randomness: common-deterministic-key
+  assignment_durability: process-order fsync-before-continuation; crash resume not implemented
+  minimum_effective_sample_size: 400
+  minimum_per_arm_effective_sample_size: 100
+  maximum_aipw_to_paired_oracle_ate_gap: 0.05
+  minimum_aipw_to_paired_oracle_spearman: 0.20
+  minimum_policy_to_paired_oracle_spearman: 0.20
+  output_contract:
+    - assignment_journal.jsonl
+    - observed_trials.jsonl
+    - paired_audit.jsonl
+    - feature_audits.jsonl
+    - prepared_trials.jsonl
+    - manifest.json
+    - analysis/folds.jsonl
+    - analysis/nuisance.jsonl
+    - analysis/pseudo_outcomes.jsonl
+    - analysis/report.json
+    - analysis/manifest.json
+    - sensitivity-manifest.json
+
+starting_point:
+  arms:
+    - name: symbolic-paired-oracle
+      mode: frozen-checkpoint-retrofit
+      model_ids: []
+      is_control: false
+      purpose: >-
+        Exercise intervention ordering, content-addressed prefix features,
+        replay receipts, AIPW-to-oracle checks, and policy fitting in a designed-effect world.
+    - name: qwen-frozen-screen
+      mode: frozen-checkpoint-retrofit
+      model_ids: [qwen3-0.6b-base]
+      is_control: false
+      purpose: >-
+        Establish whether a real model produces nonzero, prefix-predictable
+        memory effects before any controller LoRA or Kimi spending.
+    - name: deterministic-baselines
+      mode: frozen-checkpoint-retrofit
+      model_ids: [qwen3-0.6b-base]
+      is_control: true
+      purpose: >-
+        Compare retention policies with identical model, memory records,
+        retrieval opportunities, metadata, and environment trajectories.
+
+intervention:
+  mechanism: >-
+    Randomize one candidate memory at its first eligible retrieval opportunity
+    to serving or non-serving holdout with known propensity, audit single-arm
+    causal estimates against paired replay, and train a past-only utility gate.
+  unit: exactly one eligible candidate memory per pilot episode
+  assignment: >-
+    At the first preregistered retrieval opportunity, assign the candidate to
+    serve or non-serving holdout with committed-seed propensity 0.5. Log the
+    assignment before model inference. Sensitivity cells use propensities 0.5,
+    0.25, and 0.1. The holdout remains inaccessible to the
+    model and tools.
+  paired_audit: >-
+    On a sealed replay subset, restore the identical pre-retrieval agent and
+    environment snapshot, execute the opposite assignment with common RNG and
+    deterministic tool responses, and compute the paired task-utility effect.
+  estimator: >-
+    Cross-fitted augmented inverse propensity weighting with nuisance models
+    trained on disjoint folds. Compare its pseudo-outcomes against the paired
+    audit oracle before using the estimator outside replayable environments.
+  policy_inputs:
+    allowed:
+      - prefix-only semantic type and source
+      - provenance and contradiction status
+      - current memory occupancy and declared cost
+      - causal write-time history features
+    forbidden:
+      - future query text or use time
+      - suffix outcomes or branch identity
+      - paired-oracle effect or target-cell labels
+  trainable_components:
+    - small gradient-boosted or MLP conditional-effect head
+  frozen_components:
+    - language model
+    - task generator and split manifests
+    - assignment RNG and propensity schedule
+    - retrieval trigger and executable evaluator
+
+data:
+  train:
+    source: deterministic 20-40-step tool episodes with facts corrections deletes distractors near-duplicate keys and multi-hop queries
+    identity: generator families namespaces composition graphs correction mechanisms and use-delay seeds must be frozen
+    target_episodes: 2000
+  development:
+    source: disjoint generator families for feature selection calibration and nuisance-model tuning
+    identity: no test namespace template composition graph or delay family
+  test:
+    source: sealed deterministic episodes plus a preregistered real-model paired-audit subset
+    identity: episode and snapshot hashes fixed before fitting the final policy
+    sealed: true
+  contamination_checks:
+    - keep every template family namespace composition graph and delay distribution in exactly one split
+    - identical prefix hashes must produce identical policy features and decisions
+    - permuting suffixes must not change a write-time decision
+    - assignment must be committed before any treated model call
+    - inspect feature lineage and fail on any forbidden field
+
+controls:
+  - name: fifo-lru-lfu-random
+    matches: [memory-bytes, metadata-bytes, retrieval-calls, model-tokens, wall-time-ledger]
+  - name: surprise-and-semantic-dedup
+    matches: [policy-capacity, tuning-trials, memory-bytes, model-evidence]
+  - name: learned-next-use
+    matches: [policy-parameters, training-episodes, tuning-trials, inference-latency]
+  - name: observational-history-utility
+    matches: [training-episodes, outcome-access, policy-parameters, memory-bytes]
+  - name: matched-rollout-policy-gradient
+    matches: [environment-rollouts, policy-parameters, search-budget, model-tokens]
+  - name: query-time-controlled-intervention
+    matches: [paired-audit-episodes, retrieval-opportunities, model-tokens, evaluator]
+  - name: paired-leave-one-out-oracle
+    matches: [candidate-records, model, environment, evaluator]
+
+primary_endpoint:
+  metric: paired executable episode-success difference at memory budget K=4 versus the strongest non-randomized learned control
+  direction: maximize
+  minimum_effect: 3.0
+  unit_of_analysis: sealed episode clustered within generator family
+  aggregation: paired family-stratified bootstrap with all training-seed effects reported
+
+diagnostic_gates:
+  - paired-audit Spearman correlation at least 0.20
+  - effective randomized-sample size at least 400
+  - stable calibration and policy value at propensities 0.25 0.5 and 0.1
+  - zero future-feature access and zero cross-session memory visibility
+
+statistics:
+  seeds: [42, 43, 44]
+  interval: paired hierarchical bootstrap 95% interval and randomization-inference p-value
+  multiplicity: one primary policy comparison; Holm correction for secondary policy and budget cells
+  confirmation: use five training seeds only after the registered kill screen passes
+
+falsifiers:
+  - Kill if randomized estimates do not recover the deterministic paired oracle.
+  - Kill if effective sample size is below 400 or estimates are unstable across propensities.
+  - Kill if sealed paired-audit rank correlation is below 0.20.
+  - Kill if the policy fails to beat the strongest control by 3 success points at K=4.
+  - Kill if the first randomized saturation study shows destructive multi-memory interference.
+  - Kill if trial-generation cost exceeds the context or retrieval cost saved.
+  - Kill on any future leakage cross-session bleed or project safety red line.
+
+tinker_scale_up:
+  enabled: false
+  order:
+    - Qwen/Qwen3.5-4B interface and policy-training cell
+    - moonshotai/Kimi-K2.6 separately trained confirmation cell
+  invariant: >-
+    Propensity logger, holdout ledger, split manifest, estimator, memory budget,
+    and evaluator remain external and identical. Tinker trains a discrete
+    controller or model-specific LoRA; no weight portability is claimed.
+  blocked_by:
+    - Stage 1 primary and diagnostic gates
+    - authenticated Tinker capability receipt and fresh-client resume proof
+    - rendered immutable JSONL splits and cost receipt
+
+execution:
+  enabled: false
+  max_gpu_hours: 8
+  gpus: 1
+  checkpoint_to_persistent_storage: true
+  fresh_job_resume_test: true
+  checkpoint_interval_minutes: 10
+  blocked_by:
+    - implement the executable agent loop and deterministic episode generator
+    - replace symbolic self-attested replay receipts with engine-owned restore handles and trace comparison
+    - extend prefix-event lineage and suffix-permutation checks to the real tool environment
+    - time one 100-episode cell and freeze the eight-hour budget ledger
+    - publish a clean digest-pinned image and validate one Slurm Pyxis GPU job
+
+required_artifacts:
+  - immutable model task generator split and environment receipts
+  - candidate assignment propensity prefix snapshot and outcome JSONL
+  - paired continuation traces and deterministic equality audit
+  - nuisance-model folds pseudo-outcomes effective sample size and calibration
+  - policy decisions task outcomes memory-byte token latency and safety ledgers
+  - atomic checkpoints and fresh-job continuation equivalence report
+  - every seed effect negative stratum and amortized trial-generation cost

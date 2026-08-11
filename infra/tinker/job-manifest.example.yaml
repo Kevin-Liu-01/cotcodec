@@ -1,0 +1,19 @@
+backend: tinker
+name: capsule-kimi-contract
+image: registry.example/cotcodec@sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+command: [uv, run, --extra, tinker, python, scripts/run_tinker_training.py, experiments/tinker/capsule-policy-kimi.yaml, --stage, qwen-interface-smoke, --seed, "42", --train-jsonl, /inputs/train.jsonl, --output-dir, /outputs]
+run_root: /shared/cotcodec/tinker-runs
+git_sha: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+source_sha256: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+contract: experiments/tinker/capsule-policy-kimi.yaml
+contract_sha256: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+train_jsonl: /shared/cotcodec/datasets/capsule-policy-train.jsonl
+train_sha256: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+seeds: [42, 43, 44]
+run_seed: 42
+resources:
+  cpus: 8
+  memory_gb: 32
+  minutes: 240
+budget:
+  max_usd: 6

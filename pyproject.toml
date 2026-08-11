@@ -17,9 +17,28 @@ dependencies = [
     "rich",
     "pydantic",
     "numpy",
+    "scipy",
+    "cryptography",
+    "huggingface-hub",
 ]
 
 [project.optional-dependencies]
+architecture = [
+    "accelerate",
+    "safetensors",
+    "torch",
+    "transformers",
+]
+diffusion = [
+    "accelerate",
+    "diffusers",
+    "safetensors",
+    "torch",
+    "transformers",
+]
+tinker = [
+    "tinker==0.23.3",
+]
 dev = [
     "pytest",
     "pytest-asyncio",
@@ -35,3 +54,4 @@ select = ["E", "F", "I", "UP", "B", "SIM"]
 
 [tool.pytest.ini_options]
 asyncio_mode = "auto"
+pythonpath = ["."]

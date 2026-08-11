@@ -1,0 +1,62 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Research Gauntlet Evidence Bundle",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "proposal_sha256",
+    "evidence_root_sha256",
+    "source_snapshots",
+    "query_log",
+    "reviews",
+    "compute",
+    "doctors",
+    "audit_log"
+  ],
+  "properties": {
+    "schema_version": {"const": 1},
+    "proposal_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "evidence_root_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "source_snapshots": {"type": "array", "minItems": 5},
+    "query_log": {"$ref": "#/$defs/artifact"},
+    "reviews": {
+      "type": "array",
+      "minItems": 2,
+      "maxItems": 2,
+      "items": {"$ref": "#/$defs/signedReview"}
+    },
+    "compute": {"type": "object"},
+    "doctors": {"type": "array", "minItems": 6},
+    "audit_log": {"$ref": "#/$defs/artifact"}
+  },
+  "$defs": {
+    "artifact": {
+      "type": "object",
+      "required": ["artifact", "sha256"],
+      "properties": {
+        "artifact": {"type": "string"},
+        "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+      }
+    },
+    "signedReview": {
+      "allOf": [
+        {"$ref": "#/$defs/artifact"},
+        {
+          "type": "object",
+          "required": [
+            "provider",
+            "model",
+            "run_id",
+            "verdict",
+            "candidate_sha256",
+            "evidence_root_sha256",
+            "prompt_sha256",
+            "signed_at",
+            "key_id",
+            "signature"
+          ]
+        }
+      ]
+    }
+  }
+}

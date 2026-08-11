@@ -1,0 +1,113 @@
+schema_version: 1
+name: portable-sidecar-update
+direction: Portable Sidecar Update Dynamics
+readiness: contract
+claim_scope: portability-protocol
+research_question: >-
+  Can one task-conditioned rank-8 sidecar update rule transfer to a held-out
+  task-base pairing across a Transformer and a recurrent base using only a
+  task-blind capacity-capped alignment and causal online outcomes?
+null_hypothesis: >-
+  The missing-cell result is explained by target alignment leakage, a generic
+  sidecar, or ordinary online optimization rather than portable update dynamics.
+
+starting_point:
+  arms:
+    - name: qwen-transformer-sidecar
+      mode: frozen-checkpoint-retrofit
+      model_ids: [qwen3-0.6b-base]
+      is_control: false
+      purpose: Attach the canonical four-layer sidecar to a frozen Transformer residual stream.
+    - name: mamba-recurrent-sidecar
+      mode: frozen-checkpoint-retrofit
+      model_ids: [mamba-130m-hf]
+      is_control: false
+      purpose: Attach the identical canonical sidecar state to four frozen recurrent residual layers.
+    - name: kimi-linear-scale-sidecar
+      mode: frozen-checkpoint-retrofit
+      model_ids: [kimi-linear-48b-a3b-base]
+      is_control: false
+      purpose: >-
+        Only after the small-base screen passes, test whether the same sidecar
+        interface survives a 48B-total 3B-active KDA/attention hybrid; this is
+        operator-diversity evidence, not part of the cheap discovery cell.
+
+intervention:
+  mechanism: >-
+    At four evenly spaced layers read a rank-8 factorized 64x64 episode state,
+    emit an action, then apply exactly one outcome-conditioned low-rank write;
+    only task-blind rank-8 base projections are base specific.
+  trainable_components:
+    - shared portable network emitting retention step size and rank-one factors
+    - task latent fit on source bases only
+    - target-base alignment fit on frozen anchor-task latents only
+  frozen_components:
+    - Qwen Mamba and Kimi base weights
+    - canonical state width rank layer count event order and reset boundary
+    - target alignment before the sealed task-base cell is opened
+
+data:
+  train:
+    source: typed streaming tool tasks partitioned into meta anchor and new-task roles
+    identity: five-role generator families and ontology namespaces must be frozen before enablement
+  development:
+    source: disjoint task and base pairings used only for rank horizon checkpoint and feedback encoding
+    identity: T-dev x B-dev with generator templates and ontologies absent from target cell
+  test:
+    source: sealed missing cell tau-new x b-target with the same causal outcome stream for all dynamic methods
+    identity: task latent fit only on tau-new x b-source; zero target-cell calibration or training data
+    sealed: true
+  contamination_checks:
+    - split generator family namespace argument ontology and composition family, not only random rows
+    - verify alignment gradients never observe tau-new examples or outcomes
+    - run latent-swap rule-swap anchor-permutation and alignment-only recovery probes
+
+controls:
+  - name: common-sidecar-no-portability
+    matches: [state-bytes, online-outcomes, update-count, trainable-parameters, wall-time]
+  - name: fresh-optimizer
+    matches: [online-outcomes, update-count, state-lifetime, hyperparameter-search, wall-time]
+  - name: static-task-delta
+    matches: [task-latent, alignment-capacity, trainable-parameters, source-evidence]
+  - name: oracle-per-base-updater
+    matches: [architecture-interface, outcome-stream, evaluation-episodes, metrics]
+
+primary_endpoint:
+  metric: mean prequential regret in the sealed task-base cell relative to the no-update base
+  direction: minimize
+  minimum_effect: 0.05
+  unit_of_analysis: held-out task-base pairing, not individual episode
+  aggregation: mean across preregistered missing cells with task and base as crossed effects
+
+statistics:
+  seeds: [42, 43, 44]
+  interval: task-base cluster bootstrap 95% interval plus all cell and seed effects
+  multiplicity: one primary common-sidecar comparison; Holm correction for remaining baselines
+
+falsifiers:
+  - Kill if the sealed pairing does not beat common-sidecar and fresh-optimizer controls under matched information and compute.
+  - Kill if alignment-only latent-swap rule-swap or anchor-permutation controls recover the target task.
+  - Kill if reset isolation deletion or poisoning crosses the project safety red lines.
+  - Kill if amortized source meta-training requires an impractical number of target tasks to break even.
+
+execution:
+  enabled: false
+  max_gpu_hours: 16
+  gpus: 1
+  checkpoint_to_persistent_storage: true
+  fresh_job_resume_test: true
+  checkpoint_interval_minutes: 10
+  blocked_by:
+    - implement one feedback encoding and the four-layer residual hook on the two small bases
+    - review and vendor Kimi custom code and prove an 8xH100 tensor-parallel load
+    - freeze generator-family role splits and at least three sealed missing cells
+    - measure a one-cell unroll throughput and HBM contract
+    - publish a clean architecture image and validate one Slurm/Pyxis GPU job
+
+required_artifacts:
+  - immutable receipts for both base models and reviewed loading code
+  - explicit five-role task-base split manifest and gradient-access audit
+  - stepwise prequential predictions before and after every online write
+  - parameter state-byte FLOP wall-time and amortization ledgers
+  - reset deletion isolation and poisoning traces
+  - atomic checkpoint and fresh-job continuation equivalence report

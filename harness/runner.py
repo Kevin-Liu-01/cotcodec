@@ -8,19 +8,21 @@ from __future__ import annotations
 
 import asyncio
 import json
+import os
 import sys
 import uuid
 from datetime import datetime
 from pathlib import Path
 
-from harness.config import ConditionID, ExperimentConfig
 from harness.conditions import get_condition
+from harness.config import ExperimentConfig
 from harness.metrics.collector import MetricCollector
 
 try:
     from rich.console import Console
     from rich.table import Table
 except ModuleNotFoundError:
+
     class Console:  # type: ignore[no-redef]
         def print(self, *args, **kwargs) -> None:
             print(*args)
@@ -64,6 +66,7 @@ def _load_benchmark(name: str):
     """Dynamically load a benchmark adapter."""
     module_path, class_name = BENCHMARK_ADAPTERS[name].rsplit(".", 1)
     import importlib
+
     module = importlib.import_module(module_path)
     return getattr(module, class_name)()
 
@@ -78,8 +81,21 @@ async def run_experiment(config: ExperimentConfig) -> dict:
     4. Collect traces and metrics
     5. Write results to disk
     """
-    experiment_id = f"{config.name}_{datetime.now().strftime('%Y%m%d_%H%M%S')}_{uuid.uuid4().hex[:6]}"
-    output_dir = Path("data/traces")
+    expected_seeds = os.environ.get("COTCODEC_SEEDS")
+    if expected_seeds is not None:
+        try:
+            manifest_seeds = [int(seed) for seed in expected_seeds.split(":")]
+        except ValueError as exc:
+            raise ValueError("COTCODEC_SEEDS must be colon-separated integers") from exc
+        if config.seeds != manifest_seeds:
+            raise ValueError(
+                f"experiment seeds {config.seeds} do not match manifest seeds {manifest_seeds}"
+            )
+
+    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+    experiment_id = f"{config.name}_{timestamp}_{uuid.uuid4().hex[:6]}"
+    output_root = Path(os.environ.get("COTCODEC_OUTPUT_DIR", "data"))
+    output_dir = output_root / "traces"
 
     console.print(f"\n[bold]Experiment: {config.name}[/bold]")
     console.print(f"ID: {experiment_id}")
@@ -162,7 +178,7 @@ async def run_experiment(config: ExperimentConfig) -> dict:
         "timestamp": datetime.now().isoformat(),
     }
 
-    result_path = Path(f"data/results/{experiment_id}_summary.json")
+    result_path = output_root / "results" / f"{experiment_id}_summary.json"
     result_path.parent.mkdir(parents=True, exist_ok=True)
     with open(result_path, "w") as f:
         json.dump(result, f, indent=2)

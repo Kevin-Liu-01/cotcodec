@@ -35,11 +35,15 @@
     "key_insight": "Language is Paper 1 because it's the most tractable (easy to manipulate, easy to measure, clear priors). But the harness generalizes to any orchestration variable.",
     "danqi_caveat": "World is changing fast \u2014 revisit settings, models, benchmarks before fall. Infrastructure and harness should be model-agnostic.",
     "current_priorities": [
-      "Build a trustworthy evaluation harness; OrchVar-Canary config and smoke path are now operational, next unblock real benchmark execution",
+      "Contact Danqi now for the scheduled August 2026 landscape and proposal review",
+      "Build the executable agent-loop spine, deterministic canary oracles, and paired regression gate before expensive experiments",
       "Paper 1: language routing with message-type decomposition and safety checks",
       "Run the harness-beats-model meta-experiment on old vs frontier model tiers",
       "Frame Paper 2 around reasoning media, abstract reasoning, and monitorability tax",
-      "Operationalize local inference and benchmark automation for cheap pilots"
+      "Reproduce PorTAL under corrected evaluation, replace the passing Causal Memory Holdout symbolic reference with a 20–40-step tool environment and frozen open-model adapter, and keep Portable Sidecar Update Dynamics at contract-test stage",
+      "Treat fail-closed portable capsules as instrumentation after the real agent loop exists, not as a research direction or universal protocol",
+      "Use Tinker for a bounded Qwen-to-Kimi capsule-protocol post-training ladder after live adapters and rendered trace splits exist",
+      "Install Slurm plus Pyxis/Enroot on the audited 8xH100 host"
     ]
   },
   "orchestration_variables": {
@@ -156,6 +160,27 @@
         "tractability": "high",
         "status": "new",
         "note": "Bridges efficiency-monitorability gap. 5 concrete directions: typed tokens, hybrid CoT with verbal checkpoints, monitorability tax formalization, abstract tokens on agent benchmarks, learned orchestration language spectrum. Motivated by Abstract-CoT + OpenAI CoT monitoring (arXiv 2503.11926) + METR CoT faithfulness research."
+      },
+      {
+        "variable": "portable_sidecar_update_dynamics",
+        "file": "directions/16-portable-learning-dynamics.md",
+        "tractability": "medium",
+        "status": "architecture_adjacent_high_collision_contract_only",
+        "note": "Narrowed after adversarial review to an episode-scoped sidecar update with task-blind alignment and held-out task x operator pairing evaluation. The first 16 H100-hours are an interface/timing contract, not a claim pilot."
+      },
+      {
+        "variable": "causal_memory_holdout_trials",
+        "file": "directions/17-causal-memory-holdout-trials.md",
+        "tractability": "medium_high",
+        "status": "frontier_candidate_narrow_delta_found_gauntlet_fail",
+        "note": "Randomize one eligible memory item to serving or non-serving holdout with known propensity, audit causal estimates against paired deterministic replay, and train a strictly past-only gate. Direct future-utility, reflection-backfilling, query-intervention, and RL priors are controls. Accepted Gauntlet score remains 0 until signed reviews, protected evidence, a real model loop, safety evidence, and Slurm attestations exist."
+      },
+      {
+        "variable": "translation_aligned_byte_boundary_transport",
+        "file": "directions/18-translation-equivariant-byte-boundaries.md",
+        "tractability": "medium_low",
+        "status": "architecture_moonshot_audit_incomplete",
+        "note": "Use debiased unbalanced position-aware transport over aligned translations to supervise BLT-style dynamic boundary probability mass. This is aligned-span regularization, not an equivariance law. Tinker cannot modify this architecture; use reviewed open BLT code and a 20M–50M matched-compute screen before any 125M confirmation."
       }
     ],
     "interaction_hypotheses": [
@@ -370,7 +395,7 @@
     }
   },
   "landscape_tracking": {
-    "last_radar_run": null,
+    "last_radar_run": "2026-08-10",
     "models_to_track": {
       "frontier": [
         {
@@ -474,6 +499,50 @@
           2
         ],
         "action": "cite, update-spec, reposition-framing"
+      },
+      {
+        "title": "PorTAL: Portable Task Adaptation Across Language Models",
+        "authors": "Ramp Labs",
+        "url": "https://labs.ramp.com/research/portal-portable-task-adaptation/",
+        "date": "2026-08-10",
+        "impact": "CRITICAL",
+        "finding": "Task latent plus canonical hypernetwork and base alignment can generate LoRA adapters across model families, but the released target alignment still uses target-task labels and evaluation has prefix-sampling and held-out-test limitations.",
+        "impact_on_cotcodec": "Requires a corrected reproduction. Portable Sidecar Update Dynamics remains a high-collision hypothesis after learned-update prior-art review, not an automatic extension.",
+        "variables_affected": [
+          3,
+          4
+        ],
+        "action": "reproduce-with-corrected-evaluation"
+      },
+      {
+        "title": "Kimi Linear",
+        "authors": "Moonshot AI",
+        "url": "https://github.com/MoonshotAI/Kimi-Linear",
+        "date": "2026-08-10",
+        "impact": "HIGH",
+        "finding": "KDA plus periodic global attention makes a production-scale linear-attention hybrid a strong baseline rather than a new direction.",
+        "impact_on_cotcodec": "Deprioritize generic attention replacement; test new state capabilities or dynamic operator routing.",
+        "variables_affected": [
+          3,
+          4,
+          10
+        ],
+        "action": "baseline-and-reframe"
+      },
+      {
+        "title": "SR-TTT v2 corrected evaluation",
+        "authors": "SR-TTT authors",
+        "url": "https://arxiv.org/html/2603.06642v2",
+        "date": "2026-08-10",
+        "impact": "CRITICAL",
+        "finding": "The revision retracts original exact-memory gains after off-by-one and noncausal leakage; corrected evaluation reports zero exact matches in 2,250 paired trials.",
+        "impact_on_cotcodec": "All memory experiments now require startup-causality perturbations, exact generation, and storage/addressing/readout diagnostics.",
+        "variables_affected": [
+          3,
+          5,
+          9
+        ],
+        "action": "add-mandatory-memory-causality-gates"
       }
     ],
     "provider_changes": [],
@@ -862,11 +931,41 @@
         "Experiment YAML parser now supports model matrices, grouped runs, and degraded regression conditions.",
         "scripts/validate_experiments.py validates all current experiment YAMLs.",
         "OrchVar-Canary has a tracked repo-local task spec and smoke-runs through the runner.",
+        "A strict portable-capsule prototype now supports capability compilation, replay idempotency, session isolation, conflict rejection, a provenance memory graph, and verify-before-final; synthetic two-manifest replay passes but no live framework adapter exists.",
+        "A pinned Tinker 0.23.3 backend now has an offline/online capability doctor, bounded SFT runner, full-state and sampler checkpoint receipts, final archive hashing, CPU-only Slurm submission rules, and a disabled $6 Qwen-to-Kimi contract; no authenticated or paid run has occurred.",
+        "Causal Memory Holdout now has a typed TrialWorld reference, content-addressed prefix events, suffix-permutation checks, process-order fsync-before-continuation assignments, A/A and paired replay receipts, fully sealed audit episodes, group-cross-fitted AIPW, separate estimator/policy oracle gates, immutable raw/analysis manifests, and adversarial tests. The 2,000-episode sensitivity reference returns only SYMBOLIC_SENSITIVITY_PLUMBING_PASS: at propensities 0.50/0.25/0.10, non-audit ESS is 1517/1138/546, minimum arm ESS is 758/382/146, AIPW-oracle Spearman is 0.435/0.474/0.488, ATE gap is 0.016/0.032/0.025, and policy-oracle Spearman is 0.294/0.294/0.237. No real model or tool benchmark has run; adapter self-attestation remains a live-environment blocker. The gitignored local sensitivity manifest hashes to a4705716ea162347b1f13b9287d84867901f10f4435f1d5fee31e24d56fb4069.",
+        "Translation-Aligned Byte Boundary Transport now has an exact debiased NumPy UOT doctor with separate link confidence/source/target fractions, unequal-length and one-to-many support, corrected zero-mass accounting, SciPy primal equivalence, permutation controls, and immutable provenance. Aligned loss is 0.0107 versus 0.0811 for the shifted control; no Torch gradient or BLT quality claim exists. The gitignored local doctor receipt hashes to 9747145490d6011533cdab9ede19e7520925fe2262e3b772797e2437c191cd27.",
         "Actual model execution loop and external benchmark adapters are still missing.",
         "scripts/check_harness_env.py now reports whether config parsing, canary smoke runs, and the full stats stack are ready."
       ]
     },
     "compute": {
+      "h100_host": {
+        "host": "fal-h100-01",
+        "audited": "2026-08-10",
+        "hardware": "8x NVIDIA H100 80GB HBM3; 208 CPU threads; 1.7 TiB RAM; 22 TB disk",
+        "container_runtime": "Docker and Podman present; NVIDIA container CLI present; kevin cannot access the Docker daemon, but rootless Podman is reachable and built localhost/cotcodec:smoke-20260810 (image ID 4c4f881a42e70ae27d749f3248a7e0e7183083271f84a8ba142e4e776fb397b6)",
+        "scheduler_status": "blocked",
+        "blocker": "sbatch, srun, sinfo, Enroot, and Apptainer were not visible in PATH; rootless Podman 3.4.4 lacks NVIDIA CDI/OCI hook GPU passthrough",
+        "container_smoke": "CPU/container doctor, embedded-provenance verifier, full stats environment, persistent output mount, and harness wiring passed; the harness agent loop remains a stub, so its zero-rate result is not scientific evidence",
+        "operator_session": "Use tmux on the cluster login host for editors, submission, monitoring, logs, and interactive clients; sbatch jobs remain Slurm-owned after disconnect",
+        "durability_contract": "tmux covers SSH/laptop disconnect only. Atomic versioned checkpoints must live on persistent storage and pass a fresh-job restore test; reboots, shutdowns, drains, time limits, and cancellations are not covered by tmux",
+        "required_action": "Host administrator installs Slurm plus Munge and Pyxis/Enroot and configures NVIDIA CDI/OCI hooks, then run bash scripts/check_compute_env.sh login",
+        "publication_contract": "Digest-pinned OCI image under Slurm; direct-host runs are smoke tests only"
+      },
+      "tinker": {
+        "status": "contract_valid_access_and_live_adapters_blocked",
+        "sdk": "tinker==0.23.3",
+        "models": [
+          "Qwen/Qwen3.5-4B",
+          "moonshotai/Kimi-K2.6"
+        ],
+        "contract": "experiments/tinker/capsule-policy-kimi.yaml",
+        "cost_ceiling_usd": 5.2823,
+        "budget_usd": 6.0,
+        "execution_model": "Tinker owns remote LoRA GPUs; a digest-pinned CPU-only Slurm/Pyxis client owns data order, receipts, checkpoints, and evaluation provenance",
+        "blocker": "TINKER_API_KEY is absent; rendered trace datasets, live CoTCodec plus second-host adapters, online capability receipt, cluster secret injection, immutable image, and Qwen fresh-client resume proof are missing"
+      },
       "mac_mini": {
         "role": "Always-on experiment runner, research scanner, local inference",
         "capabilities": [
@@ -931,24 +1030,40 @@
         "strategy": "Free pilots on DeepSeek V4 Pro / R1 locally. Strong tier (Sonnet 4.6, GPT-5.4) for primary experiments. Frontier tier (Opus 4.7, GPT-5.5) for publication-grade. Baseline old models (3.5 Sonnet, GPT-4o) for harness-beats-model."
       },
       "local_inference": {
-        "purpose": "Run open-weight models locally for free experimentation",
-        "models": [
-          {
-            "name": "deepseek-v4-pro",
-            "note": "Frontier AND free. MIT license. BenchLM overall 85. LiveCodeBench 93.5."
-          },
-          {
-            "name": "deepseek-r1-8b",
-            "note": "Distilled, fast for pilots. Original key evidence model."
-          },
-          {
-            "name": "qwen-3-8b",
-            "note": "Strong multilingual, Chinese-English. Good for language variable experiments."
-          },
-          {
-            "name": "llama-3.3",
-            "note": "Meta's latest open-weight. Baseline for open vs. closed comparison."
-          }
+        "purpose": "Import strong open checkpoints before pretraining: local smoke via Ollama/MLX, H100 training via Hugging Face, and diffusion research via Diffusers",
+      "models": [
+        {
+          "name": "smollm2-135m",
+          "note": "Pinned loader and retrofit smoke. Full 272,445,324-byte snapshot and offline CPU generation passed on 2026-08-10."
+        },
+        {
+          "name": "qwen3-0.6b-base",
+          "note": "Pinned Apache-2.0 multilingual Transformer discovery base."
+        },
+        {
+          "name": "mamba-130m-hf",
+          "note": "Pinned Apache-2.0 recurrent discovery and sidecar-interface base."
+        },
+        {
+          "name": "delta-net-1.3b-8k",
+          "note": "Pinned FLA checkpoint for coded-memory retrofit; model license must be resolved before publication use."
+        },
+        {
+          "name": "kimi-linear-48b-a3b-base",
+          "note": "Pinned official MIT KDA/attention/MoE scale cell. Metadata is hashed; full execution is blocked on custom-code review and 8xH100 tensor-parallel load/restore proof."
+        },
+        {
+          "name": "blt-1b",
+          "note": "Pinned gated CC-BY-NC checkpoint for byte-patch interface work, not commercial use."
+        },
+        {
+          "name": "llada-8b-base",
+          "note": "Pinned masked-diffusion LM for plan repair; custom modeling code must be reviewed and vendored."
+        },
+        {
+          "name": "sdxl-base-1.0",
+          "note": "Pinned Diffusers vision smoke input; not a language-plan baseline."
+        }
         ],
         "frameworks": [
           {
@@ -962,9 +1077,24 @@
           {
             "name": "Ollama",
             "note": "Easiest setup. Good for quick experiments."
+          },
+          {
+            "name": "Hugging Face Transformers + Accelerate",
+            "note": "Default reproducible path for pinned language-model checkpoints, fine-tuning, adapters, and distributed H100 execution."
+          },
+          {
+            "name": "Hugging Face Diffusers",
+            "note": "Import Stable Diffusion-family and other diffusion checkpoints for vision, video, and plan-repair research."
+          },
+          {
+            "name": "vLLM / SGLang / TGI",
+            "note": "High-throughput serving for imported open checkpoints."
           }
         ],
-        "advantage": "Zero API cost for pilot experiments. Run thousands of traces for free on open-weight models, validate harness, then run publication experiments on closed models."
+      "advantage": "Avoid foundation pretraining when adapters, sidecars, checkpoint transplant, or continued training can isolate the mechanism. Pin model revisions, weights, tokenizer, config, license, and remote code for every scientific run.",
+      "registry": "models/registry.yaml",
+      "methodology": "research/architecture-experiment-methodologies.md",
+      "validation": "Four architecture contracts pass structural validation but remain honestly blocked; the SmolLM2 full acquisition and offline loader smoke pass, while Kimi Linear has a metadata-only receipt and no code execution."
       }
     },
     "automations": {
@@ -999,22 +1129,28 @@
     }
   },
   "state": {
-    "last_updated": "2026-04-29",
-    "last_session": "2026-04-29",
+    "last_updated": "2026-08-10",
+    "last_session": "2026-08-10",
     "phase": "phase_1_foundation",
     "next_actions": [
-      "Implement the tau_bench adapter so the first external benchmark runs end-to-end",
-      "Install the missing full-analysis Python stack (PyYAML, rich, tiktoken, numpy, scipy, pandas) or standardize the fallback-only environment explicitly",
-      "Add a real model execution abstraction so traces record messages, tokens, and latency instead of stubbed failures",
-      "Extend OrchVar-Canary evaluation to report per-category pass rates and degradation alerts from real outputs",
-      "Run pilot_01_tau_bench on a cheap or local model once the adapter exists",
-      "Set up the Mac Mini and local inference stack for repeatable low-cost pilots",
-      "Draft the Paper 2 design note around monitorability tax and abstract reasoning"
+      "Contact Danqi for the due August 2026 landscape and proposal review",
+      "Implement one bounded executable agent-loop spine with complete TaskResult traces plus tested USR1 checkpoint/resume",
+      "After the real loop exists, implement live CoTCodec and AHP capsule adapters and freeze the deterministic conformance corpus before adding LangChain or Vercel",
+      "Obtain Tinker access, configure cluster-secret injection, and run the authenticated capability doctor; execute only the Qwen smoke before the Kimi cell",
+      "Replace circular canary evaluation with deterministic fixtures and category-specific oracles",
+      "Add a predeclared paired regression gate keyed by experiment, benchmark, model, task, and seed",
+      "Ask the fal-h100-01 administrator to install Slurm plus Munge and Pyxis/Enroot and configure NVIDIA CDI/OCI hooks",
+      "Configure protected CI with an external digest-pinned reviewer trust store before any Gauntlet can score 100",
+      "Reproduce PorTAL with seeded stratified or full evaluation and an untouched test split",
+      "Extend the passing Causal Memory Holdout reference into the registered 20–40-step tool generator, add train/dev/test family splits and deterministic task oracles, then implement the frozen Qwen TrialWorld adapter before any controller training",
+      "Keep Coded Delta only as a syndrome falsification cell; run the 20M translation-boundary screen only after its remaining novelty and data-license audit",
+      "Keep Portable Sidecar Update Dynamics to a one-cell Qwen/Mamba contract before any Kimi scale cell or claim matrix",
+      "Implement the tau_bench adapter and run the first real end-to-end pilot"
     ]
   },
   "research_plan": {
-    "last_replan": "2026-04-29",
-    "driver": "Integrated new directions 13-15 into a single program order and added a repo-local LaTeX paper source.",
+    "last_replan": "2026-08-10",
+    "driver": "Portable capsules are explicitly infrastructure. Causal Memory Holdout Trials remains the leading new mechanism: its randomized-assignment, replay, cross-fitted AIPW, prefix-lineage, and immutable-artifact CPU reference now returns a bounded SYMBOLIC_SENSITIVITY_PLUMBING_PASS across propensities 0.50, 0.25, and 0.10, but this is designed-effect plumbing evidence rather than a scientific result. Translation-Aligned Byte Boundary Transport has an exact alignment-sensitive NumPy doctor but no differentiable BLT integration. A real agent loop, engine-owned replay/tool instrumentation, 20–40-step environment, frozen-model adapter, signed evidence, and Slurm GPU path remain gating dependencies.",
     "program_order": [
       {
         "order": 1,
@@ -1076,11 +1212,13 @@
       }
     ],
     "near_term_focus": [
-      "Run local-model pilots end-to-end before spending frontier-model budget.",
-      "Turn degradation detection into a default quality gate for harness changes.",
+      "Complete the executable loop, deterministic canary oracles, and paired regression gate before spending H100 budget.",
+      "Run local-model pilots end-to-end before frontier-model or architecture-scale spending.",
       "Use Paper 1 to generate the first publishable result, whether positive or negative.",
       "Use harness-beats-model as the strongest umbrella argument for the broader thesis.",
-      "Treat abstract reasoning as the Paper 2 frontier rather than a Paper 1 replacement."
+      "Treat abstract reasoning as the Paper 2 frontier rather than a Paper 1 replacement.",
+      "Run Causal Memory Holdout Trials as the first bounded frontier bet; treat Coded Delta as a falsification diagnostic and Portable Sidecar Update Dynamics as a high-collision contract-stage idea, not replacements for Paper 1.",
+      "Treat portable capsules and the Tinker Qwen-to-Kimi ladder as experimental infrastructure, never as the novelty claim."
     ],
     "defer_for_now": [
       "Tool scheduling before baseline trace stability",

@@ -1,0 +1,232 @@
+schema_version: 1
+verified_at: "2026-08-10"
+models:
+  smollm2-135m:
+    backend: huggingface
+    repo_id: HuggingFaceTB/SmolLM2-135M
+    revision: 93efa2f097d58c2a74874c7e644dbc9b0cee75a2
+    runtime: transformers
+    architecture_family: transformer
+    license: apache-2.0
+    access: public
+    trust_remote_code: false
+    publication_eligible: true
+    roles: [loader-smoke, retrofit-smoke, small-transformer-control]
+    metadata_files:
+      - README.md
+      - config.json
+      - generation_config.json
+      - tokenizer_config.json
+    required_files:
+      - config.json
+      - model.safetensors
+      - tokenizer.json
+    source_url: https://huggingface.co/HuggingFaceTB/SmolLM2-135M
+
+  qwen3-0.6b-base:
+    backend: huggingface
+    repo_id: Qwen/Qwen3-0.6B-Base
+    revision: da87bfb608c14b7cf20ba1ce41287e8de496c0cd
+    runtime: transformers
+    architecture_family: transformer
+    license: apache-2.0
+    access: public
+    trust_remote_code: false
+    publication_eligible: true
+    roles: [multilingual-base, transformer-sidecar-base, agent-smoke]
+    metadata_files:
+      - LICENSE
+      - README.md
+      - config.json
+      - generation_config.json
+      - tokenizer_config.json
+    required_files:
+      - LICENSE
+      - config.json
+      - model.safetensors
+      - tokenizer.json
+    source_url: https://huggingface.co/Qwen/Qwen3-0.6B-Base
+
+  mamba-130m-hf:
+    backend: huggingface
+    repo_id: state-spaces/mamba-130m-hf
+    revision: 1e76775f628fbf1350fbe4dbb3d971ba64af25a1
+    runtime: transformers
+    architecture_family: mamba
+    license: apache-2.0
+    access: public
+    trust_remote_code: false
+    publication_eligible: true
+    roles: [recurrent-control, sidecar-interface-smoke]
+    metadata_files:
+      - README.md
+      - config.json
+      - generation_config.json
+      - tokenizer_config.json
+    required_files:
+      - config.json
+      - model.safetensors
+      - tokenizer.json
+    source_url: https://huggingface.co/state-spaces/mamba-130m-hf
+    code_url: https://github.com/state-spaces/mamba
+
+  delta-net-1.3b-8k:
+    backend: huggingface
+    repo_id: fla-hub/delta_net-1.3B-8K-100B
+    revision: ebd56f383ef7ba3fbfa862897885d51073948989
+    runtime: fla
+    architecture_family: delta-net
+    license: unresolved-model-card
+    access: public
+    trust_remote_code: false
+    publication_eligible: false
+    roles: [coded-memory-retrofit, recurrent-base]
+    metadata_files:
+      - README.md
+      - config.json
+      - generation_config.json
+      - tokenizer_config.json
+    required_files:
+      - config.json
+      - model.safetensors
+      - tokenizer.json
+    source_url: https://huggingface.co/fla-hub/delta_net-1.3B-8K-100B
+    code_url: https://github.com/fla-org/flash-linear-attention
+    blocker: Resolve the checkpoint license independently of the MIT code license.
+
+  kimi-linear-48b-a3b-base:
+    backend: huggingface
+    repo_id: moonshotai/Kimi-Linear-48B-A3B-Base
+    revision: 3b171c17bfc4ee348599b6781a2ca8715c21c8dc
+    runtime: custom-transformers-vllm
+    architecture_family: kimi-linear-kda-hybrid-moe
+    license: mit
+    access: public
+    trust_remote_code: true
+    publication_eligible: false
+    roles: [kda-hybrid-control, sidecar-scale-base, long-context-memory-diagnostic]
+    metadata_files:
+      - README.md
+      - config.json
+      - configuration_kimi.py
+      - generation_config.json
+      - modeling_kimi.py
+      - tokenization_kimi.py
+      - tokenizer_config.json
+    required_files:
+      - config.json
+      - configuration_kimi.py
+      - modeling_kimi.py
+      - model.safetensors.index.json
+      - tokenization_kimi.py
+      - tiktoken.model
+    source_url: https://huggingface.co/moonshotai/Kimi-Linear-48B-A3B-Base
+    code_url: https://github.com/MoonshotAI/Kimi-Linear
+    blocker: >-
+      Review and vendor the custom modeling/tokenizer code, then prove an
+      8xH100 tensor-parallel load and checkpoint-resume path; this is a scale
+      cell, not a laptop smoke model.
+
+  blt-1b:
+    backend: huggingface
+    repo_id: facebook/blt-1b
+    revision: 8134b32f0b1d25d1248c30e8c7bdfd442d3bb380
+    runtime: facebook-blt
+    architecture_family: byte-latent-transformer
+    license: cc-by-nc-4.0
+    access: gated-manual
+    trust_remote_code: false
+    publication_eligible: false
+    roles: [byte-patch-retrofit, byte-patch-reference]
+    metadata_files:
+      - LICENSE
+      - README.md
+      - config.json
+      - train_args.json
+    required_files:
+      - LICENSE
+      - config.json
+      - model.safetensors
+      - train_args.json
+    source_url: https://huggingface.co/facebook/blt-1b
+    code_url: https://github.com/facebookresearch/blt
+    blocker: Non-commercial license and manual Hub access require explicit approval.
+
+  llada-8b-base:
+    backend: huggingface
+    repo_id: GSAI-ML/LLaDA-8B-Base
+    revision: 0f2787f2d87eac5eed8a087d5ecd24277e6255b2
+    runtime: custom-transformers
+    architecture_family: masked-diffusion-lm
+    license: mit
+    access: public
+    trust_remote_code: true
+    publication_eligible: false
+    roles: [bidirectional-plan-repair]
+    metadata_files:
+      - README.md
+      - config.json
+      - configuration_llada.py
+      - generation_config.json
+      - modeling_llada.py
+      - tokenizer_config.json
+    required_files:
+      - config.json
+      - configuration_llada.py
+      - modeling_llada.py
+      - model.safetensors.index.json
+      - tokenizer.json
+    source_url: https://huggingface.co/GSAI-ML/LLaDA-8B-Base
+    code_url: https://github.com/ML-GSAI/LLaDA
+    blocker: Review and pin the custom modeling code before execution; never pass trust_remote_code blindly.
+
+  sdxl-base-1.0:
+    backend: huggingface
+    repo_id: stabilityai/stable-diffusion-xl-base-1.0
+    revision: 462165984030d82259a11f4367a4eed129e94a7b
+    runtime: diffusers
+    architecture_family: latent-image-diffusion
+    license: openrail++
+    access: public
+    trust_remote_code: false
+    publication_eligible: true
+    roles: [diffusers-loader-smoke, vision-pipeline-control]
+    metadata_files:
+      - LICENSE.md
+      - README.md
+      - model_index.json
+      - scheduler/scheduler_config.json
+      - unet/config.json
+      - vae/config.json
+    required_files:
+      - LICENSE.md
+      - model_index.json
+      - unet/diffusion_pytorch_model.safetensors
+      - vae/diffusion_pytorch_model.safetensors
+    source_url: https://huggingface.co/stabilityai/stable-diffusion-xl-base-1.0
+
+  ollama-qwen3-0.6b:
+    backend: ollama
+    model_ref: qwen3:0.6b
+    runtime: ollama
+    architecture_family: transformer-quantized
+    license: upstream-dependent
+    access: public
+    trust_remote_code: false
+    publication_eligible: false
+    roles: [local-agent-smoke]
+    source_url: https://ollama.com/library/qwen3
+    blocker: Ollama tags are mutable exploration aliases, not publication artifacts.
+
+  ollama-deepseek-r1-8b:
+    backend: ollama
+    model_ref: deepseek-r1:8b
+    runtime: ollama
+    architecture_family: transformer-quantized
+    license: upstream-dependent
+    access: public
+    trust_remote_code: false
+    publication_eligible: false
+    roles: [local-reasoning-smoke]
+    source_url: https://ollama.com/library/deepseek-r1
+    blocker: Ollama tags are mutable exploration aliases, not publication artifacts.

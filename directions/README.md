@@ -68,6 +68,9 @@ See individual files in this directory for each variable:
 | **Harness beats model** | `13-harness-beats-model.md` | **High** | **1-2** |
 | **Degradation detection** | `14-degradation-detection.md` | **High** | **1-2** |
 | **Interpretable abstract reasoning** | `15-interpretable-abstract-reasoning.md` | **High** | **2** |
+| **Portable sidecar update dynamics** | `16-portable-learning-dynamics.md` | **Low-medium** | **Architecture-adjacent** |
+| **Causal memory holdout trials** | `17-causal-memory-holdout-trials.md` | **Medium-high** | **Frontier orchestration** |
+| **Translation-aligned byte boundary transport** | `18-translation-equivariant-byte-boundaries.md` | **Medium-low** | **Architecture moonshot** |
 
 Variables 13-15 are meta-directions that cut across all other variables:
 - **Harness beats model** tests whether optimizing variables 1-12 on an old
@@ -76,6 +79,29 @@ Variables 13-15 are meta-directions that cut across all other variables:
   regressions (directly motivated by Anthropic's April 23, 2026 postmortem)
 - **Interpretable abstract reasoning** bridges the efficiency-monitorability
   gap (motivated by Abstract-CoT + OpenAI/METR CoT monitoring safety research)
+
+Direction 16 is intentionally outside the original orchestration-variable
+taxonomy. It is a high-collision architecture-adjacent bridge: test one
+task-conditioned sidecar update under task-blind base alignment, then measure
+its agent-level effects with the same deterministic harness and safety contract.
+
+Direction 17 stays inside the memory-policy thesis but changes how the policy is
+learned. Known-propensity serving-versus-holdout trials estimate downstream task
+effects, paired replay audits the estimator, and a strictly past-only gate turns
+those causal targets into write/evict decisions. The initial claim covers one
+randomized item per episode; interacting memories require a later saturation
+design.
+
+Direction 18 is outside the original orchestration taxonomy. It uses parallel
+translations to supervise boundary probability mass in a tokenizer-free byte
+model, testing whether semantically corresponding spans should become
+corresponding global-compute patches. It is the architecture-level moonshot and
+must beat entropy patching after patch count, bytes, FLOPs, and wall time match.
+
+Portable orchestration capsules and the Tinker/Qwen/Kimi policy ladder are
+enabling infrastructure, not research directions. Their engineering and
+conformance contract lives in
+`research/infrastructure/portable-orchestration-capsules.md`.
 
 ## Why Language First
 

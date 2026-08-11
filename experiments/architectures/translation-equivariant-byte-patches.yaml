@@ -1,0 +1,154 @@
+schema_version: 1
+name: translation-equivariant-byte-patches
+direction: Translation-Aligned Byte Boundary Transport
+readiness: contract
+claim_scope: architecture-causal
+research_question: >-
+  At equal byte data and patch compute, does a translation-aligned boundary and
+  patch-state transport objective produce more consistent dynamic byte patches
+  than entropy-only BLT patching without reducing bits per byte?
+null_hypothesis: >-
+  Any multilingual gain comes from the auxiliary representation loss or extra
+  parallel data rather than changing where the byte model forms patches.
+
+reference_doctor:
+  implementation: harness/translation_boundaries.py
+  command_argv:
+    - uv
+    - run
+    - python
+    - scripts/run_boundary_transport_doctor.py
+    - --output
+    - data/results/translation-boundaries/reference-doctor.json
+  runtime: numpy-cpu
+  solver: debiased-position-aware-unbalanced-sinkhorn
+  boundary_inputs: causal non-negative mass on byte gaps
+  alignment_inputs: frozen weighted half-open byte-span links
+  registered_cases:
+    - aligned unequal-length profiles
+    - shifted-boundary negative control
+    - correct versus permuted span links
+    - fractional one-to-many span links
+    - tiny-primal SciPy equivalence
+  gates:
+    - aligned loss must be less than 80 percent of shifted-control loss
+    - unequal byte lengths must produce finite loss
+    - correct span links must score below 80 percent of permuted-link loss
+    - fractional one-to-many links must account for all allocated mass
+    - every solver block must meet tolerance before its iteration ceiling
+  exclusions:
+    - no language-model quality claim
+    - no differentiable BLT integration claim
+    - no architecture novelty claim from doctor passage
+
+stages:
+  - stage: cpu-objective-doctor
+    gpu_hours: 0
+    promotion_gate: exact primal and all reference-doctor semantic gates pass
+  - stage: small-model-identifiability
+    parameters: 20M-50M
+    gpu_hours_ceiling: 16
+    promotion_gate: boundary-only arm beats entropy and fixed-boundary controls without a bits-per-byte regression
+  - stage: confirmation
+    parameters: 125M
+    gpu_hours_ceiling: new contract required after small-model passage
+    promotion_gate: three-seed primary endpoint and all language non-inferiority gates pass
+  - stage: released-checkpoint-scale
+    parameters: 1B
+    gpu_hours_ceiling: new contract and license approval required
+    promotion_gate: confirmation stage passes
+
+starting_point:
+  arms:
+    - name: blt-checkpoint-interface
+      mode: continued-pretraining-retrofit
+      model_ids: [blt-1b]
+      is_control: false
+      purpose: Test whether the released BLT boundary machinery accepts the objective without destructive forgetting.
+    - name: aligned-patches-small-from-scratch
+      mode: matched-from-scratch
+      model_ids: [blt-1b]
+      is_control: false
+      purpose: Use the audited BLT code lineage without loading 1B weights to train the 20M-50M translation-aligned boundary arm.
+    - name: entropy-patches-small-from-scratch
+      mode: matched-from-scratch
+      model_ids: [blt-1b]
+      is_control: true
+      purpose: Train the same 20M-50M BLT configuration with entropy-only boundaries and identical byte data.
+
+intervention:
+  mechanism: >-
+    For aligned English Chinese Korean and Polish sentence views, use a frozen
+    byte-span alignment to penalize boundary disagreement and apply
+    stop-gradient optimal transport between corresponding patch states while
+    retaining the ordinary next-byte objective.
+  trainable_components:
+    - byte encoder global transformer and byte decoder in from-scratch arms
+    - entropy boundary predictor plus translation-alignment auxiliary heads
+  frozen_components:
+    - byte normalization and language-specific reconstruction targets
+    - parallel-pair alignment after preprocessing is frozen
+    - byte training budget target patch-rate grid and evaluation tokenizer
+
+data:
+  train:
+    source: license-cleared parallel English-Chinese-English-Korean-English-Polish corpus with equal bytes per language
+    identity: corpus repositories revisions filters normalization and pair hashes must be frozen before enablement
+  development:
+    source: held-out document and domain partitions for objective weight and target patch-rate selection
+    identity: document IDs disjoint from training and sealed test; no sentence-level random leakage
+  test:
+    source: FLORES-style professionally translated multilingual evaluation plus terminology and tool-schema stress sets
+    identity: untouched sentences with pair and document hashes stored in the evidence bundle
+    sealed: true
+  contamination_checks:
+    - deduplicate by normalized byte n-gram and semantic-nearest-neighbor retrieval across documents
+    - keep all translations of one semantic item in exactly one split
+    - report each language and script separately rather than only a macro average
+
+controls:
+  - name: entropy-only-blt
+    matches: [architecture, patch-count, parameters, byte-data, optimizer, training-flops]
+  - name: representation-loss-fixed-boundaries
+    matches: [parallel-pairs, auxiliary-loss-weight, parameters, training-flops]
+  - name: sentencepiece-transformer
+    matches: [parameters, training-bytes, optimizer, training-flops, wall-time-view]
+
+primary_endpoint:
+  metric: macro exact tool-schema and terminology fidelity across four languages at matched bits per byte
+  direction: maximize
+  minimum_effect: 3.0
+  unit_of_analysis: sealed semantic item with all translations clustered together
+  aggregation: language-stratified macro difference with paired item bootstrap
+
+statistics:
+  seeds: [42, 43, 44]
+  interval: paired semantic-item bootstrap 95% interval plus language and seed effects
+  multiplicity: one macro primary endpoint; Holm correction for per-language secondary endpoints
+
+falsifiers:
+  - Kill if the fixed-boundary representation-loss control matches the aligned-boundary arm.
+  - Kill if gains disappear after matching patch count training FLOPs or wall time.
+  - Kill if macro fidelity rises by sacrificing bits per byte or any language loses more than 5 points.
+
+execution:
+  enabled: false
+  max_gpu_hours: 16
+  gpus: 1
+  checkpoint_to_persistent_storage: true
+  fresh_job_resume_test: true
+  checkpoint_interval_minutes: 15
+  blocked_by:
+    - obtain approved gated BLT weights and record the non-commercial license decision
+    - freeze licensed parallel corpora preprocessing alignments and exact split hashes
+    - implement Torch forward parity gradcheck and soft-to-hard boundary diagnostics
+    - implement the 20M-50M matched BLT and fixed-boundary auxiliary-loss control
+    - measure one-cell throughput before requesting the 16-GPU-hour screen
+
+required_artifacts:
+  - model data license and immutable revision receipts
+  - pair-level split manifest normalization config and contamination report
+  - byte patch boundaries alignments and patch-state transport diagnostics
+  - bits-per-byte patch-rate FLOP parameter throughput and wall-time ledgers
+  - per-language semantic tool-schema and terminology predictions
+  - atomic checkpoint and fresh-job continuation equivalence report

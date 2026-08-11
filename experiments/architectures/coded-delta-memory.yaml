@@ -1,0 +1,115 @@
+schema_version: 1
+name: coded-delta-memory
+direction: Coded Delta Memory
+readiness: contract
+claim_scope: architecture-causal
+research_question: >-
+  Under equal recurrent-state bytes and measured compute, does a fixed 4+2
+  systematic parity code with syndrome-guided single-block correction improve
+  exact associative recall over ordinary DeltaNet and uncoded replication?
+null_hypothesis: >-
+  Any recall gain is explained by extra state, heads, parameters, or compute;
+  syndrome-guided correction adds no benefit over an equal-budget replica.
+
+starting_point:
+  arms:
+    - name: checkpoint-retrofit-screen
+      mode: frozen-checkpoint-retrofit
+      model_ids: [delta-net-1.3b-8k]
+      is_control: false
+      purpose: >-
+        Attach the coded-state read/write path to a pretrained DeltaNet to test
+        interface compatibility and whether retained language behavior survives.
+    - name: coded-delta-from-scratch
+      mode: matched-from-scratch
+      model_ids: [smollm2-135m]
+      is_control: false
+      purpose: >-
+        Train a 125M-class coded DeltaNet with the SmolLM2 tokenizer as the
+        causal architecture arm; no SmolLM2 weights are transplanted.
+    - name: ordinary-delta-from-scratch
+      mode: matched-from-scratch
+      model_ids: [smollm2-135m]
+      is_control: true
+      purpose: >-
+        Train the same depth and width with ordinary DeltaNet state while
+        matching total state bytes, projection parameters, data, and schedule.
+
+intervention:
+  mechanism: >-
+    Split every value into four source shards, produce two fixed
+    random-orthogonal parity shards, write six independently projected causal
+    delta states, and invoke single-block erasure reconstruction only when a
+    development-frozen parity residual exceeds its threshold.
+  trainable_components:
+    - six key/value state projections within the fixed total projection budget
+    - ordinary model parameters in the matched from-scratch arms
+  frozen_components:
+    - 4+2 parity matrix and decoder algorithm
+    - load-ratio grid and syndrome threshold after development selection
+    - pretrained DeltaNet weights during the retrofit screen
+
+data:
+  train:
+    source: deterministic MQAR v1 generator with ordered values, updates, deletes, and contradictions
+    identity: mqar-v1 train seeds 0-9999; generator source hash must be frozen before enablement
+  development:
+    source: deterministic MQAR v1 generator plus natural-text overload calibration
+    identity: mqar-v1 development seeds 10000-10999; threshold selection only
+  test:
+    source: deterministic MQAR v1 generator with natural overload, near-key collision, and state-noise strata
+    identity: mqar-v1 sealed test seeds 11000-12999; six fixed load ratios
+    sealed: true
+  contamination_checks:
+    - assert disjoint episode seeds and generated key/value tuples across all splits
+    - perturb the first token and verify no later target is available before its causal write
+    - report generation exact match separately from teacher-forced readout
+
+controls:
+  - name: wider-multihead-delta
+    matches: [total-state-bytes, trainable-parameters, measured-flops, tokenizer, training-tokens]
+  - name: uncoded-replicated-state
+    matches: [six-state-blocks, total-state-bytes, read-candidates, measured-flops]
+  - name: bounded-exact-cache
+    matches: [state-plus-metadata-bytes, lookup-flops, wall-time-budget, training-evidence]
+  - name: coded-correction-disabled
+    matches: [all-weights, all-state, parity-writes, syndrome-compute]
+
+primary_endpoint:
+  metric: normalized area under exact-recall capacity curve over load ratios 0.5,0.75,1,1.25,1.5,2
+  direction: maximize
+  minimum_effect: 5.0
+  unit_of_analysis: sealed MQAR episode, clustered within training seed
+  aggregation: hierarchical bootstrap over episodes within seed, with all seed effects reported
+
+statistics:
+  seeds: [42, 43, 44]
+  interval: 95% hierarchical bootstrap confidence interval and seed-level range
+  multiplicity: one registered primary comparison; Holm correction for secondary control comparisons
+
+falsifiers:
+  - Kill if the coded arm gains fewer than 5 normalized AUC points over every matched control.
+  - Kill if correction enabled does not beat the identical coded state with correction disabled.
+  - Kill if the best syndrome explanation is rarely a correctable single-block error or failures are strongly correlated across blocks.
+  - Kill if parity and six erasure decodes erase the batch-1 wall-time advantage.
+
+execution:
+  enabled: false
+  max_gpu_hours: 16
+  gpus: 1
+  checkpoint_to_persistent_storage: true
+  fresh_job_resume_test: true
+  checkpoint_interval_minutes: 15
+  blocked_by:
+    - implement and hash the deterministic MQAR v1 generator
+    - implement the six-block coded delta kernel and matched-compute ledger
+    - resolve the fla-hub checkpoint license
+    - publish a clean architecture image and validate one Slurm/Pyxis GPU job
+
+required_artifacts:
+  - immutable model receipts and environment provenance
+  - per-episode JSONL predictions with split and seed identity
+  - state-byte parameter FLOP and wall-time ledgers for every arm
+  - syndrome residual calibration AURC ECE and block-error covariance
+  - atomic checkpoints plus fresh-job resume equivalence report
+  - primary analysis with every seed effect and negative results

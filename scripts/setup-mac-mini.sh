@@ -24,12 +24,10 @@ echo "→ Installing local inference frameworks..."
 uv pip install mlx mlx-lm
 brew install ollama
 
-echo "→ Pulling open-weight models (this takes a while)..."
-ollama pull deepseek-r1:8b       # Distilled, fast for harness validation
-ollama pull qwen3:8b             # Multilingual Chinese-English
-ollama pull llama3.3:latest      # Meta open-weight baseline
-# DeepSeek V4 Pro: pull when available on Ollama (MIT open weights)
-# ollama pull deepseek-v4-pro:latest
+echo "→ Local model runtimes installed. Models are not pulled implicitly."
+echo "  Inspect models/registry.yaml and use scripts/fetch_open_model.py."
+echo "  Example smoke alias (mutable, not publication provenance):"
+echo "    uv run python scripts/fetch_open_model.py fetch ollama-qwen3-0.6b"
 
 # 4. Benchmark repos
 echo "→ Cloning benchmark repos..."

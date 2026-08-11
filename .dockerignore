@@ -1,0 +1,14 @@
+.git
+.gitignore
+.venv
+__pycache__
+*.py[cod]
+*.egg-info
+.env
+.env.*
+data/traces
+data/results
+raw/papers
+raw/baselines
+slurm-*.out
+.DS_Store
