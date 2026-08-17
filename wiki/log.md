@@ -2971,3 +2971,40 @@ v3. V1/v2 remain superseded development history.
   portfolio remains capped at 100 H100-hours with matrix `90ac9627...`;
   Fidelis still requires a matched common-actor control matrix and protected
   external attestation before any H100 claim cell.
+
+## 2026-08-17 — SodaMem released artifacts audited, system result not reproduced
+
+- Registered the previously unregistered LangMem experiment contract in the
+  generic memory gate, added fail-closed tests, and resealed its evidence after
+  the contract hash changed. All 50 memory experiment contracts now validate;
+  the LangMem receipt is `ffc7e656...`.
+- Pinned SodaMem `b182c1a...` / tree `2c6f29b...`, source archive
+  `2abd4be8...`, Apache-2.0 license, upstream lock, two released LongMemEval
+  artifacts, and the existing independently pinned LongMemEval-S dataset.
+- The upstream documented `dev` environment was incomplete for its collected
+  tests: it omitted the declared `chroma`, `llm`, and `server` extras. With
+  those extras added under the exact lock, the source passed 737 tests with 19
+  skips.
+- Two byte-identical, zero-API, zero-LLM CPU audits aligned every released row
+  to all 500 LongMemEval-S tasks, including 30 abstentions and 32 numeric
+  answers; recomputed the stored same-model self-judge score at 464/500; and
+  validated 8,427 nonempty retrieved evidence rows.
+- The audit also exposed hard evidence boundaries. The judged artifact stores
+  `evidence_ids: true` rather than an ID list on all 500 rows. The raw source
+  spans and 12 GB store are absent, the reader prompt was not captured, and
+  the pre-release construction code cannot be recovered from this tree.
+  Full normalized reference text appears in 314 hypotheses and 239 of 470
+  non-abstention retrieval unions; these counts are diagnostics, not semantic
+  accuracy or evidence sufficiency.
+- Sealed
+  `SODAMEM_RELEASED_ARTIFACTS_AUDITED_NOT_REPRODUCED` at
+  `research/evidence/memory/sodamem-published-artifact-audit-v1.json`
+  (`a9e914b2...`) under the new non-scientific
+  `local-artifact-audited` evidence grade. H100 admission remains ungranted;
+  next gates are a provider-distinct judge and a common-construction
+  SodaMem-versus-flat-history-versus-temporal-graph control.
+- Removed SodaMem from both H100 execution orders and reduced only the affected
+  finite wave ceilings. The validated 93-candidate portfolio is now capped at
+  84 H100-hours with matrix `3b19dba0...`; the ledger still records one
+  scientific reproduction, two conformance reproductions, and 33 negative
+  findings, plus one artifact audit.

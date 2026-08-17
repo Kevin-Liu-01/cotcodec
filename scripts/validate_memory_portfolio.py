@@ -13,6 +13,10 @@ from typing import Any
 
 if __package__:
     from scripts.compile_memory_landscape import compile_landscape
+    from scripts.seal_sodamem_artifact_evidence import (
+        SodaMemArtifactEvidenceError,
+        validate_sodamem_artifact_evidence,
+    )
     from scripts.validate_fidelis_zero_llm_evidence import (
         FidelisEvidenceError,
         validate_fidelis_zero_llm_evidence,
@@ -24,6 +28,10 @@ if __package__:
     )
 else:
     from compile_memory_landscape import compile_landscape
+    from seal_sodamem_artifact_evidence import (  # type: ignore[no-redef]
+        SodaMemArtifactEvidenceError,
+        validate_sodamem_artifact_evidence,
+    )
     from validate_fidelis_zero_llm_evidence import (  # type: ignore[no-redef]
         FidelisEvidenceError,
         validate_fidelis_zero_llm_evidence,
@@ -58,6 +66,7 @@ STATUSES = {
     "runtime-contract-implemented",
     "source-adapter-implemented",
     "source-admission-blocked",
+    "artifact-audited-not-reproduced",
     "source-doctor-implemented",
     "discovery-killed",
 }
@@ -1727,6 +1736,37 @@ def load_and_validate_portfolio(
                     ) from exc
                 except FidelisEvidenceError as exc:
                     raise MemoryPortfolioError(f"{candidate_owner}: {exc}") from exc
+            if status == "artifact-audited-not-reproduced":
+                source = sources[source_id]
+                receipt = source.get("reproduction_receipt")
+                if (
+                    source_id != "sodamem"
+                    or source.get("evidence_grade") != "local-artifact-audited"
+                    or not isinstance(receipt, dict)
+                    or candidate.get("evidence_path") != receipt.get("artifact_path")
+                    or candidate.get("evidence_sha256") != receipt.get("receipt_sha256")
+                ):
+                    raise MemoryPortfolioError(
+                        f"{candidate_owner}: artifact audit differs from source receipt"
+                    )
+                evidence = _bound_artifact(
+                    f"{candidate_owner}.artifact_audit",
+                    candidate.get("evidence_path"),
+                    candidate.get("evidence_sha256"),
+                )
+                try:
+                    payload = json.loads(evidence)
+                    if not isinstance(payload, dict):
+                        raise TypeError
+                    validate_sodamem_artifact_evidence(
+                        payload, project_root=PROJECT_ROOT
+                    )
+                except (json.JSONDecodeError, UnicodeDecodeError, TypeError) as exc:
+                    raise MemoryPortfolioError(
+                        f"{candidate_owner}: artifact audit evidence is invalid JSON"
+                    ) from exc
+                except SodaMemArtifactEvidenceError as exc:
+                    raise MemoryPortfolioError(f"{candidate_owner}: {exc}") from exc
             if status == "actor-translation-killed":
                 source = sources[source_id]
                 receipt = source.get("reproduction_receipt")
@@ -1924,6 +1964,7 @@ def load_and_validate_portfolio(
                     "cpu-lifecycle-blocked",
                     "discovery-killed",
                     "source-admission-blocked",
+                    "artifact-audited-not-reproduced",
                 }
             }
             for source_id in sorted(executable_sources):

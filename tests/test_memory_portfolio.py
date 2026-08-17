@@ -19,7 +19,7 @@ def test_live_memory_portfolio_is_bound_and_contained() -> None:
     assert result["wave_count"] == 6
     assert result["candidate_count"] >= 25
     assert result["blocked_license_candidate_count"] >= 8
-    assert result["portfolio_max_gpu_hours"] == 100
+    assert result["portfolio_max_gpu_hours"] == 84
     assert len(result["matrix_sha256"]) == 64
 
 
@@ -136,6 +136,36 @@ def test_fidelis_cpu_retrieval_requires_bound_evidence(tmp_path) -> None:
     candidate["evidence_sha256"] = "0" * 64
     with pytest.raises(
         MemoryPortfolioError, match="CPU retrieval evidence differs from source receipt"
+    ):
+        load_and_validate_portfolio(_write_portfolio(tmp_path, payload))
+
+
+def test_sodamem_artifact_audit_requires_bound_non_reproduction_evidence(
+    tmp_path,
+) -> None:
+    result = load_and_validate_portfolio(DEFAULT_PORTFOLIO)
+    candidates = [
+        candidate
+        for wave in result["portfolio"]["waves"]
+        for candidate in wave["candidates"]
+        if candidate["source_id"] == "sodamem"
+    ]
+    assert len(candidates) == 2
+    assert all(
+        candidate["status"] == "artifact-audited-not-reproduced"
+        for candidate in candidates
+    )
+
+    payload = copy.deepcopy(result["portfolio"])
+    candidate = next(
+        candidate
+        for wave in payload["waves"]
+        for candidate in wave["candidates"]
+        if candidate["source_id"] == "sodamem"
+    )
+    candidate["evidence_sha256"] = "0" * 64
+    with pytest.raises(
+        MemoryPortfolioError, match="artifact audit differs from source receipt"
     ):
         load_and_validate_portfolio(_write_portfolio(tmp_path, payload))
 

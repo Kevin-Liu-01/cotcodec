@@ -1,7 +1,7 @@
 {
   "claim_boundary": "Exact pinned LangMem public tool, deterministic background-manager transport, official PostgresStore lifecycle, logical deletion, namespace-purge surface, and physical plaintext residue; not extraction quality, semantic retrieval, procedural prompt quality, model effect, managed LangGraph service behavior, H100 actor quality, or publication evidence.",
   "code_files": {
-    "experiments/memory/stage3-langmem-native-lifecycle-doctor.yaml": "f0bd991fa00da7d86d11a9a6aa74ae8caa45d17d06819c0cc35c90f137026002",
+    "experiments/memory/stage3-langmem-native-lifecycle-doctor.yaml": "11f0dc1d66f5a3c987addae2c75fcece452bf21f3af95cc0804f25ff3e673cbb",
     "infra/memory-baselines/langmem/Dockerfile.lifecycle-doctor": "17d07cbf4c88e3ca3c5618da48447d8274cb1d68323c0cd65ee8901ef73e17fc",
     "infra/memory-baselines/langmem/lifecycle_doctor.py": "445002c8d3223f16449492767ee3a8f719bc8191eee9ada5cf7d2cde98e3aacb",
     "pyproject.toml": "6a725a0179890c1922f08e4eca93df144dfac3fdb8a3991fe73b84b03aa45e96",
