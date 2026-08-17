@@ -1,0 +1,66 @@
+schema_version: 1
+name: stage3-mnemosyne-lifecycle-doctor
+status: registered-cpu-falsification
+scientific_result: false
+publication_ready: false
+
+source:
+  source_id: mnemosyne-oss
+  repository: https://github.com/mnemosyne-oss/mnemosyne
+  revision: a0e14243e04dbe3fc29287e58126ff5dc0e02b35
+  tree: 31237041cfca8cbac932c9a589d6133e07927873
+  version: 3.16.0
+  git_archive_tar_sha256: 789ad4b0d531bd7e399a9158f05d37ee663713725a3fbdf561c00ffd03a721cd
+  license: MIT
+  license_sha256: f391a152fdd56e2f1ab85539ea29ca9a7c6a5ece217fa9ea37309737506199e0
+  uv_lock_sha256: 17114e8eeba15ff50b99c92c77effc259ddf98577184e0eb5b7fdde871dd4071
+
+runtime:
+  containment: docker-network-none
+  local_platform: linux/arm64
+  runtime_network: none
+  read_only_root: true
+  cap_drop_all: true
+  no_new_privileges: true
+  provider_secrets: forbidden
+  sudo: forbidden
+  gpu_count: 0
+  max_gpu_hours: 0
+  clean_state_repeats: 2
+  base_image: ghcr.io/astral-sh/uv@sha256:d1e005e6f5aac724b7554db95f1c128a77d8d35b59ebe70e188852b4bdad3a3d
+  base_image_version: 0.12.5-python3.13-trixie-slim
+
+intervention:
+  sessions: [tenant-a, tenant-b]
+  storage: sqlite
+  embeddings: false
+  model_calls: 0
+  external_api_calls: 0
+  force_sleep: true
+  fresh_process_phases: [prepare, verify-restart, purge]
+  test_duplicate_retry: true
+  test_session_isolation: true
+  test_restart: true
+  test_recall_reactivation: true
+  test_documented_forget: true
+  test_plaintext_residue: true
+
+expected_falsification:
+  status: BLOCKED_CONSOLIDATED_FORGET_AND_NO_REACTIVATION
+  working_to_episodic_consolidation: true
+  consolidated_source_hidden_from_active_context: true
+  consolidated_memory_recallable_after_restart: true
+  recall_promotes_to_active_context: false
+  documented_forget_removes_episodic_summary: false
+  native_session_scoped_purge_available: false
+  plaintext_canary_residue_after_documented_forget: true
+  reproduced_in_two_clean_states: true
+
+admission:
+  h100_actor: forbidden-for-this-revision
+  scientific_claim: forbidden
+  publication_claim: forbidden
+  next_gate: >-
+    Admit only a newer immutable revision or explicit patch arm that supplies a
+    source-complete forget/purge operation, proves fresh-process physical erasure,
+    and defines a real archive-to-active transition without cross-session bleed.

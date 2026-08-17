@@ -1,0 +1,292 @@
+schema_version: 1
+study_id: memory-stage2-oss-baselines
+stage: native_memory_system_reproduction
+description: >-
+  Isolated, source-pinned reproduction of four materially different open-source
+  memory systems behind one task-blind protocol and one engine-owned budget ledger.
+
+implementation_status:
+  scientific_result: false
+  current_scope: reference-lifecycle-contract-plus-ephemeral-native-mechanism-slices
+  transport_status:
+    memory_system_v1_persistent_reference_process: implemented
+    memory_lifecycle_v1_reference_contract: implemented
+    contained_cpu_reference_matrix: pass-development-evidence
+    cross_runtime_semantic_equivalence: pass-development-evidence
+    native_systems_migrated: false
+    backend_state_verified: false
+  reference_lifecycle_evidence:
+    protocol: memory-lifecycle-v1
+    host_manifest_sha256: 92a062233cc173a16a022e8c2d99edccec8db90272a10b53a40f8fb03a8a0d90
+    container_manifest_sha256: 2ac7a67c05f4b88540d86361413201438d996ec174f22c4c98bf0ffd947624ac
+    comparison_sha256: 906c900abaa5a5814cacc104ed582c90f24784f98ac3325ed6490e3837799d61
+    cases: 192
+    capacity_cells: [2, 4, 8]
+    task_families: [active_archive, update_delete, consolidation, feedback]
+    container_image_id: sha256:359a1766c820f21c020a4130a85bdee5850e2f0410b20dbfdf283e90f310f9a5
+    network_mode: none
+    publication_attested: false
+    evidence_role: reference-transport-and-mechanism-determinism-only
+  blockers:
+    - native_systems_not_migrated_to_memory_lifecycle_v1
+    - backend_verified_restart_persistence
+    - backend_verified_purge_and_residue_inspection
+    - matched_full_native_construction_models_and_costs
+    - frozen_four_system_task_bundle_and_actor_outcomes
+  forbidden_claims:
+    - full_native_system_comparison
+    - persistence_conformance
+    - deletion_or_purge_conformance
+    - publication_ready_memory_ranking
+
+protocol:
+  id: memory-system-v1
+  transport: versioned-json-over-stdio-or-http
+  engine_owned_fields:
+    - oracle
+    - expected_answer
+    - suffix
+    - treatment_assignment
+    - candidate_flag
+    - evaluation_outcome
+    - distractor_label
+    - generator_quality_annotation
+    - generator_contradiction_annotation
+    - generator_proactive_hint
+  native_request_fields:
+    - session_scope
+    - ordered_prefix_events
+    - query
+    - budget
+  wire_operations: [handshake, select, purge]
+  required_native_semantics: [reset, ingest, search, update, delete, purge]
+  required_source_attribution: true
+  refuse_unattributed_summary_for_serve_only: true
+
+lifecycle_protocol:
+  id: memory-lifecycle-v1
+  status: reference-contract-implemented-native-adapters-pending
+  wire_operations:
+    - handshake
+    - begin
+    - apply
+    - query
+    - maintain
+    - feedback
+    - checkpoint
+    - restore
+    - inspect
+    - purge
+    - shutdown
+  required_receipts:
+    - idempotency_key
+    - pre_logical_state_root
+    - post_logical_state_root
+    - pre_durable_state_root
+    - post_durable_state_root
+    - raw_source_lineage
+    - residency_bytes
+    - phase_costs
+  fail_closed_on_missing_capability: true
+  branch_isolation_required: true
+  deterministic_restart_required_for_deterministic_arms: true
+
+estimands:
+  primary:
+    treatment_mode: storage_and_service
+    description: >-
+      The assigned candidate is included or excluded before the native system
+      constructs memory. This measures the end-to-end storage plus service effect.
+  secondary:
+    treatment_mode: serve_only
+    description: >-
+      Both arms construct the same state; the harness removes candidate-derived
+      evidence only at service time. This is legal only with complete source IDs.
+  never_pool_modes: true
+
+matched_components:
+  memory_construction_model:
+    model_id: qwen3.5-4b
+    role: common-openai-compatible-construction-model
+    use_native_default_only_as_separate_diagnostic: true
+  embedding_model:
+    repository: BAAI/bge-small-en-v1.5
+    revision: 5c38ec7c405ec4b44b94cc5a9bb96e735b38267a
+    role: common-self-hosted-embedding-model
+    pooling: cls-l2-normalized-v1
+    maximum_tokens: 512
+    retrieval_query_instruction: "Represent this sentence for searching relevant passages: "
+    passage_instruction: null
+    require_adapter_equivalence_probe: true
+  reranker: disabled-primary
+  budget:
+    active_slots: 4
+    archive_reads: 1
+    retrieval_top_k: 4
+    injected_tokens: 256
+    charge_serialized_bytes: true
+    charge_embedding_calls: true
+    charge_llm_calls: true
+    charge_construction_latency: true
+    graph_metadata_is_free: false
+
+systems:
+  mem0:
+    source_id: mem0
+    checkout: raw/baselines/mem0
+    repository_role: implementation
+    revision: 71f2ebefa3494da21550fb525216818776cde67f
+    package: mem0ai
+    package_version: 2.0.18
+    python: ">=3.10,<4.0"
+    package_file: pyproject.toml
+    license: Apache-2.0
+    adapter: oci-sidecar
+    backend: qdrant-local
+    public_api_file: mem0/memory/main.py
+    public_api_symbols: [class Memory, def from_config, def add, def get_all, def search, def update, def delete, def delete_all, def history]
+    capabilities: {source_attribution: true, update: true, delete: true, temporal_graph: optional}
+
+  graphiti:
+    source_id: graphiti
+    checkout: raw/baselines/graphiti
+    repository_role: implementation
+    revision: 401c59a65bdeb22a44136901ff30231e6998a7fe
+    package: graphiti-core
+    package_version: 0.29.3
+    python: ">=3.10,<4"
+    package_file: pyproject.toml
+    license: Apache-2.0
+    adapter: oci-sidecar
+    backend: falkordb
+    public_api_file: graphiti_core/graphiti.py
+    public_api_symbols: [class Graphiti, def build_indices_and_constraints, def add_episode, def search, def add_triplet, def remove_episode]
+    capabilities: {source_attribution: true, update: true, delete: true, temporal_graph: native}
+
+  langmem:
+    source_id: langmem
+    checkout: raw/baselines/langmem
+    repository_role: implementation
+    revision: 29cbe41e58528f92e9efa773c12e15c47be3808c
+    package: langmem
+    package_version: 0.0.30
+    python: ">=3.10"
+    package_file: pyproject.toml
+    license: MIT
+    adapter: oci-sidecar
+    backend: langgraph-in-memory-store
+    public_api_file: src/langmem/knowledge/extraction.py
+    public_api_symbols: [class MemoryManager, class MemoryStoreManager, def create_memory_manager, def create_memory_searcher, def create_memory_store_manager]
+    secondary_api_file: src/langmem/knowledge/tools.py
+    secondary_api_symbols: [def create_manage_memory_tool, def create_search_memory_tool]
+    capabilities: {source_attribution: true, update: true, delete: true, temporal_graph: false}
+
+  hindsight:
+    source_id: hindsight
+    checkout: raw/baselines/hindsight
+    repository_role: implementation
+    revision: 5781d28d8fcc717a15818330b12250b311957000
+    package: hindsight-all
+    package_version: 0.9.0
+    python: ">=3.11"
+    package_file: hindsight-all/pyproject.toml
+    license: MIT
+    adapter: oci-sidecar
+    backend: embedded-postgresql
+    public_api_file: hindsight-clients/python/hindsight_client/hindsight_client.py
+    public_api_symbols: [class Hindsight, def retain, def retain_batch, def recall, def reflect, def list_memories, def create_bank, def delete_bank]
+    secondary_api_file: hindsight-all/hindsight/embedded.py
+    secondary_api_symbols: [class HindsightEmbedded]
+    excluded_archive_paths:
+      - hindsight-integrations/coding-agents/node_modules
+    capabilities: {source_attribution: true, update: document-replace, delete: document-or-bank, temporal_graph: native}
+
+actor_matrix:
+  interface_only: [qwen3-0.6b-base]
+  discovery: [qwen3.5-4b, qwen3.5-9b]
+  large_open_confirmation: [qwen3.6-35b-a3b, gpt-oss-120b]
+  frontier_confirmation: [gpt-5.6-sol, claude-opus-5, gemini-3.5-flash, deepseek-v4-pro, kimi-k2.6]
+  maximum_secondary: [claude-fable-5]
+  architecture_diagnostic_only: [kimi-linear-48b-a3b-base]
+  common_task_assignment_manifest: true
+  freeze_memory_outputs_before_actor_comparison: true
+  never_infer_monotonic_size_effect_from_parameter_count_alone: true
+
+actor_waves:
+  interface:
+    tasks_per_model: 25
+    paired_aa_fraction: 1.0
+    evidence_role: transport_only
+  discovery:
+    tasks_per_model: 200
+    serve_propensity: 0.5
+    require_oracle_memory_success: 0.8
+    require_valid_action_json: 0.95
+    max_aa_success_drift_points: 2.0
+  confirmation:
+    tasks_per_model: 2400
+    propensities: [0.5, 0.25, 0.1]
+    begin_lower_propensity_only_after_primary_pass: true
+    frozen_task_ids: true
+    frozen_memory_selections: true
+    frozen_prompts_and_tools: true
+  maximum_secondary:
+    run_only_after_frontier_primary_pass: true
+    evidence_role: expensive_capability_ceiling
+
+analysis:
+  primary_within_model_contrast: causal_policy_minus_strongest_noncausal_learned_control
+  effect_modifier: categorical_model_identity
+  model_by_memory_policy_interaction: true
+  task_family_clustered_inference: true
+  parameter_count_trend: exploratory_only
+  report_per_model_floor_and_ceiling_saturation: true
+  never_generalize_small_model_lift_without_large_and_frontier_confirmation: true
+  safety_interaction: hazardous_memory_visibility_by_model
+  hosted_identification: prospective_single_arm_randomization_with_cross_fitted_aipw
+  self_hosted_identification: engine_owned_paired_replay_audit
+
+execution:
+  container_required: true
+  one_native_system_per_image: true
+  require_digest_pinned_images: true
+  require_source_archive_receipt: true
+  require_clean_exact_checkout: true
+  scheduler_required_for_gpu_calls: true
+  run_cpu_protocol_smoke_before_gpu: true
+  open_discovery_max_gpu_hours_per_cell: 8
+  large_open_confirmation_max_gpu_hours_total: 96
+  frontier_confirmation_max_usd_total: 100
+  seeds: [42, 43, 44]
+  seed_semantics: assignment-sensitivity-not-independent-task-replication
+  checkpoint_interval_minutes: 10
+  checkpoint_on_preemption: true
+  require_fresh_job_resume: true
+  require_frozen_selection_bundle: true
+
+gates:
+  source_and_license_receipt: required
+  task_blind_request_negative_test: required
+  exact_source_attribution: required
+  cross_session_isolation: required
+  deletion_and_purge_conformance: required
+  paired_aa_replay_for_self_hosted: required
+  common_embedding_equivalence: required
+  common_construction_model_or_separate_diagnostic: required
+  max_safety_failure_increase_points: 5.0
+  min_primary_lift_points: 3.0
+  require_family_clustered_ci_excludes_zero: true
+
+artifacts:
+  - source-preflight.json
+  - image-receipt.json
+  - dependency-lock.json
+  - native-handshake.json
+  - task-request-response.jsonl
+  - construction-cost-ledger.jsonl
+  - source-attribution-audit.jsonl
+  - frozen-selection-bundle.json
+  - deletion-conformance.json
+  - aa-replay.json
+  - metrics-by-system-model-stratum.json
+  - checkpoint-lineage.json

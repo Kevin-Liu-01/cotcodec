@@ -1,0 +1,79 @@
+{
+  "server": {
+    "host": "0.0.0.0",
+    "port": 1933,
+    "auth_mode": "trusted",
+    "root_api_key": "doctor-root-key-not-a-secret",
+    "cors_origins": []
+  },
+  "storage": {
+    "workspace": "/app/.openviking/data",
+    "vectordb": {
+      "name": "context",
+      "backend": "local",
+      "project": "cotcodec-doctor",
+      "dimension": 16
+    },
+    "agfs": {
+      "backend": "local",
+      "timeout": 10,
+      "pathlock": {
+        "provider": "filesystem",
+        "lock_expire_secs": 30.0
+      }
+    }
+  },
+  "embedding": {
+    "dense": {
+      "provider": "openai",
+      "model": "cotcodec-deterministic-hash-v1",
+      "api_key": "doctor-only-not-a-secret",
+      "api_base": "http://openviking-model-stub:8080/v1",
+      "dimension": 16,
+      "input": "text",
+      "encoding_format": "float"
+    },
+    "max_retries": 0,
+    "text_source": "content_only",
+    "max_input_tokens": 4096
+  },
+  "vlm": {
+    "provider": "openai",
+    "model": "cotcodec-deterministic-chat-v1",
+    "api_key": "doctor-only-not-a-secret",
+    "api_base": "http://openviking-model-stub:8080/v1",
+    "temperature": 0.0,
+    "max_retries": 0,
+    "thinking": false,
+    "media": {
+      "enabled": false
+    }
+  },
+  "rerank": {},
+  "retrieval": {
+    "hotness_alpha": 0.0,
+    "score_propagation_alpha": 1.0,
+    "recall_intent_timeout_s": 1.0,
+    "recall_rewrite_timeout_s": 1.0,
+    "enable_intent": false
+  },
+  "default_search_mode": "fast",
+  "default_search_limit": 4,
+  "auto_generate_l0": false,
+  "auto_generate_l1": false,
+  "enable_watch_scheduler": false,
+  "memory": {
+    "version": "v2",
+    "extraction_enabled": false,
+    "session_skill_extraction_enabled": false
+  },
+  "ingest": {
+    "enabled": false
+  },
+  "log": {
+    "level": "INFO",
+    "format": "%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+    "output": "stdout",
+    "rotation": false
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "code_sha256s": {
+    "harness/memory_trials/dense_control.py": "487f90b055ed64a7579a08bb0187f2f6b747f97a6c3510131afa4e68ff9d778d",
+    "harness/memory_trials/procedural_bank.py": "ddea80da146e57e7481ecfe6f72be72496de1ffbeca25c0649b352c8a5a3aff1",
+    "scripts/dense_bge_factory.py": "b3e66d211ec4a197f0a6c8f9829c5477f7a18b23e818ed77d2f43f255cde9f24",
+    "scripts/run_reasoningbank_frozen_bank_doctor.py": "a8cc5524a17da7819482a062b3a0bc145220ff45ae99614ab67bd61bba36e107"
+  },
+  "files": {
+    "bank.json": "99be19f00089e05463f4a025b57c48ced82e06b4805e1bbbfd11010c1d81f874",
+    "fixture-source-artifacts.jsonl": "2891c295e87564fdd967da30f875d47f9674724b281d1f938e3745ec85e4b12f",
+    "report.json": "b6fcd4450bb62fa58902c3bce94016099ad42a33dfb30ca284078f0caec57c98",
+    "retrievals.jsonl": "3c88c94f65ef8a97ad9b47e7450f515023012b7b7a633a07e6c322e43cc6bbbe"
+  },
+  "manifest_sha256": "10ef698406fb8ffb108fec79cc6d9451ac90e19e38a1ee79caf98ff5dd5876ec",
+  "model_receipt_file_sha256": "9d30a2f1646e5e7b1d99db79232ca29ba727ae238736d02f95ea4270ca63926e",
+  "schema_version": 1,
+  "status": "FROZEN_PROCEDURAL_BANK_CPU_DOCTOR_PASS"
+}

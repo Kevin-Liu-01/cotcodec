@@ -1,0 +1,60 @@
+schema_version: 1
+name: stage3-mnemosyne-cognitive-lifecycle-doctor
+status: registered-cpu-falsification
+scientific_result: false
+publication_ready: false
+
+source:
+  source_id: mnemosyne-cognitive-os
+  repository: https://github.com/28naem-del/mnemosyne
+  revision: 5506aae7cec9ada5523099fd5ab858a4eee593b6
+  tree: d5cb986483135f016d731d73baad95f2326d84bb
+  declared_version: 1.0.1
+  license: MIT
+  license_sha256: 97c063041231883a482d84fe93a1ffce5183bed6ffd17bef32e40a27aeb83e08
+  git_archive_tar_sha256: 278cd0fe963854df21847fcaf6b7a650c7ad00f584a551bf48b71e6eb44e2d2e
+  dependency_lock: package-lock.json
+  dependency_lock_sha256: 791028b9eb8b0c918157436a41f1d4f7d675920ec39018e2b9b7364025d887b9
+  upstream_ci_runs_tests: false
+  explicit_upstream_tests: 62
+
+runtime:
+  containment: docker-internal-network-only
+  external_egress: none
+  read_only_roots: true
+  cap_drop_all: true
+  no_new_privileges: true
+  provider_secrets: forbidden
+  sudo: forbidden
+  gpu_count_inside_containers: 0
+  clean_state_repeats: 2
+  qdrant_restarts_per_repeat: 1
+  node_base_image: node:22.21.1-bookworm-slim@sha256:25b3eb23a00590b7499f2a2ce939322727fcce1b15fdd69754fcd09536a3ae2c
+  qdrant_image: qdrant/qdrant@sha256:affb67e1d6f2f93d7d20b90d238a7d4b974d36351c162e73bda794e4b2e03483
+
+intervention:
+  subsystem: qdrant-lifecycle-consolidation-and-forget
+  provider_calls: 0
+  model_backend_calls: 0
+  execute_committed_vitest_suites: true
+  execute_public_dry_run_consolidation: true
+  execute_repeated_consolidation: true
+  execute_public_forget: true
+  execute_fresh_qdrant_restart: true
+  inspect_tombstoned_payload: true
+
+expected_falsification:
+  status: MNEMOSYNE_COGNITIVE_ACTIVE_INACTIVE_ADMISSION_KILLED
+  dry_run_mutates_state: true
+  repeated_consolidation_is_non_idempotent: true
+  demotion_remains_in_serving_search: true
+  forget_retains_plaintext: true
+  scoped_purge_absent: true
+  state_and_tombstones_persist_after_restart: true
+
+admission:
+  h100_actor: forbidden-for-this-revision
+  active_inactive_quality: not-evaluated
+  graph_quality: not-evaluated
+  scientific_claim: forbidden
+  publication_claim: forbidden

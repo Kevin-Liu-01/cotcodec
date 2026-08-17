@@ -1,0 +1,38 @@
+{
+  "artifact_files": {
+    "Dockerfile": "2a93a236f34595fa14e66ef3ade3d8546d7db15feca720c011bb57afd8478ca0",
+    "doctor.py": "beb575fe6bb383d25857cc8cef6ba4c535cab4e6113531cf4abf32c5b6af4c3e",
+    "experiment.yaml": "a56ed1a75f87bacd9f5aa46fb89a3e4da63747764606f3ce8f6487307416bda2",
+    "image-inspect.json": "7134a4c291bc4c3498526aaeb17236894835b3ad4955c5af11d69e1b38f6cdca",
+    "manifest.json": "b30360b587f9547724c215f004cab2d13526a754a205435644209518a741e68f",
+    "repeat-1.json": "4e01203bed87488f6dfc0a795938cc0d3d08d39e2541d03fc3459f2fd13a0cf9",
+    "repeat-2.json": "4e01203bed87488f6dfc0a795938cc0d3d08d39e2541d03fc3459f2fd13a0cf9",
+    "report.json": "cfac5de9fc21eb5bfcb9e136209da1f92da8ed58c4eddfbc94eaf82db07cec7a",
+    "source-receipt.json": "574fbd7a15adddfd107310d6bf305fd5bedca4a81ac60c3e518b1904ee944e85",
+    "source.tar": "a0f8ad511b796264c706c3df261d31c5ada04ecc14c2701b8d9f016d29682166"
+  },
+  "artifact_root": "data/results/tokenmizer-checkpoint/2026-08-16-local-docker-v1",
+  "claim_boundary": {
+    "active_inactive_h100_admission": "forbidden-for-this-revision",
+    "context_compaction_quality_evaluated": false,
+    "context_compaction_quality_future_contract": "separate-preregistered-study-required"
+  },
+  "code_files": {
+    "infra/memory-baselines/tokenmizer/Dockerfile": "2a93a236f34595fa14e66ef3ade3d8546d7db15feca720c011bb57afd8478ca0",
+    "infra/memory-baselines/tokenmizer/doctor.py": "beb575fe6bb383d25857cc8cef6ba4c535cab4e6113531cf4abf32c5b6af4c3e",
+    "scripts/validate_tokenmizer_checkpoint_experiment.py": "d956e866a6960e8b9f40f88095472e0326e5c987bccfbbf7d200df8f1335c215"
+  },
+  "evidence_grade": "local-negative-reproduced",
+  "evidence_kind": "contained-checkpoint-lifecycle-negative",
+  "image_id": "sha256:a1827caaef364fcff624b4d61cec6e79f6c883a0e4b6a68955f6f1290f315c34",
+  "projection_sha256": "5a9cb5226d51b464f20576bbda3de2d3609fa7016dae88c2d2c4bb92a0765f86",
+  "publication_ready": false,
+  "runtime_lane": "local-arm64-docker-network-none",
+  "schema_version": 1,
+  "scientific_result": false,
+  "source_id": "tokenmizer",
+  "source_revisions": {
+    "https://github.com/Shweta-Mishra-ai/tokenmizer": "131e3d1569de3e8f70c198ade4e791b47f63dc41"
+  },
+  "status": "TOKENMIZER_ACTIVE_INACTIVE_ADMISSION_KILLED"
+}

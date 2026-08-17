@@ -14,8 +14,12 @@ data/traces/
 data/results/
 data/tokens/*.json
 !data/tokens/parallel_corpus.json
+data/benchmarks/
+data/model-metadata/
+data/model-metadata-receipts/
 data/models/
 data/model-receipts/
+data/source-archives/
 
 # Raw benchmark data
 raw/baselines/

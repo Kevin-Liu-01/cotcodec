@@ -1,0 +1,60 @@
+{
+  "artifact_files": {
+    "Dockerfile": "f4cbd0b5fc18450fd539e22dc5fa82278190e03a1f4f5d833d0ac4a6472f3e8d",
+    "doctor-image-inspect.json": "a590247eb09347e07779a02fb4b1971048a00960099b4d5a33af14dd6e17b747",
+    "doctor.py": "1a63ea0c2b4f56943b2ec6953c720d595d8f46a262afce2676d8976758a2ce4c",
+    "experiment.yaml": "3e66888c08013279407d91de9169499d6d8f9d7302ef4d8b65dd85786e00306e",
+    "manifest.json": "b64277d439b66e620a662a63352e6b3b464955a5c0c82bd13d47619bbb2524cb",
+    "repeat-1-phase-1.txt": "15119daffe1e31ca258c158d9861dfbcc64a93a1019f8c941648fdb1c9d0eba8",
+    "repeat-1-phase-2.txt": "0f189b9b34382959893c31adf331abe416d2ed570bd525bbd82a7485e4fcdbe3",
+    "repeat-1.json": "fecbdf63ac3379104deb488a95d365580aa52f0867e4a2b115acf8c67315b719",
+    "repeat-2-phase-1.txt": "15119daffe1e31ca258c158d9861dfbcc64a93a1019f8c941648fdb1c9d0eba8",
+    "repeat-2-phase-2.txt": "0f189b9b34382959893c31adf331abe416d2ed570bd525bbd82a7485e4fcdbe3",
+    "repeat-2.json": "70eb56e1313f2f6dceecbb815955bb59f525c5af495f7b3ba7c1fcf9bb122374",
+    "report.json": "74b2ec1dbfdd1599341c68ea97cde35e67ff7967c1330589ca3674659dea654c",
+    "source-receipt.json": "6979a2307612d13ea9c766ff671715a39bd4028bc44cbd81967888b1fb666f6d",
+    "source.tar": "91e0f4099336d34fdb60aee6d9c134ba8f91a2b358d1f46548501353e448461a"
+  },
+  "artifact_root": "data/results/activegraph-fork-lifecycle/2026-08-16-local-docker-v1",
+  "claim_boundary": "Exact pinned native fork, nested-fork, replay, retirement, archive, restart, and plaintext-residue behavior; not retrieval quality, active/inactive paging, model-effect, H100-actor, or publication evidence.",
+  "code_files": {
+    "experiments/memory/stage3-activegraph-fork-lifecycle-doctor.yaml": "3e66888c08013279407d91de9169499d6d8f9d7302ef4d8b65dd85786e00306e",
+    "infra/memory-baselines/activegraph/Dockerfile": "f4cbd0b5fc18450fd539e22dc5fa82278190e03a1f4f5d833d0ac4a6472f3e8d",
+    "infra/memory-baselines/activegraph/doctor.py": "1a63ea0c2b4f56943b2ec6953c720d595d8f46a262afce2676d8976758a2ce4c",
+    "scripts/run_activegraph_lifecycle_doctor.py": "7ff39c064a222453a261dd29025e65e15d7f3d96d521cd05b1e4da7d9bffb5e8",
+    "scripts/validate_activegraph_lifecycle_evidence.py": "b0cece9851617b8bc9fea887122578e712afe5cfb76fcfadf1dcfc714c210f55",
+    "scripts/validate_activegraph_lifecycle_experiment.py": "9c8cb9621c95faf74cfd0cf58a7d9f3211aa2d87404fe748e14f11ea608db6a1"
+  },
+  "evidence_grade": "local-negative-reproduced",
+  "evidence_kind": "contained-native-fork-lifecycle-negative",
+  "findings": {
+    "archive_run_moves_rows_not_erases": true,
+    "native_scoped_purge_absent": true,
+    "nested_fork_isolated": true,
+    "nested_fork_restart_isolated": true,
+    "parent_fork_divergence": true,
+    "parent_fork_restart_isolated": true,
+    "rejected_archive_contains_canary": true,
+    "rejected_run_active_log_empty": true,
+    "rejected_run_archive_survived_restart": true,
+    "rejected_run_metadata_survived_restart": true,
+    "rejected_run_moved_to_archive": true,
+    "rejected_run_plaintext_survived_restart": true,
+    "rejected_run_retire_idempotent": true,
+    "retention_contract_is_archive_never_delete": true,
+    "retire_calls_archive_run": true
+  },
+  "fresh_process_restart_count_per_run": 1,
+  "h100_actor_admission": "forbidden-for-this-revision",
+  "publication_ready": false,
+  "run_count": 2,
+  "runtime_lane": "local-arm64-docker-network-none",
+  "schema_version": 1,
+  "scientific_result": false,
+  "source_id": "activegraph-event-sourced-runtime",
+  "source_revisions": {
+    "https://github.com/yoheinakajima/activegraph": "8aedb1866cf5dce056af97529152ffd6f468a1ed"
+  },
+  "stable_phase_projection_sha256": "bc1be630657d7629ce35975b0387f4e34968c8eb79c3a18f7ca838fd204940a1",
+  "status": "BLOCKED_ARCHIVE_ONLY_RETENTION_NO_SCOPED_PURGE_AND_SHARED_DB_ERASURE"
+}

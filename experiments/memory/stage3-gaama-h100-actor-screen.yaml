@@ -1,0 +1,86 @@
+schema_version: 1
+name: stage3-gaama-h100-actor-screen
+study_id: gaama-natural-h100-actor-screen-v1
+description: >-
+  Bounded discovery-only H100 answer screen over the already-admitted GAAMA
+  natural held-out retrieval result. Retrieval is frozen before inference and
+  true graph PPR is compared with flat BM25 and three degree-preserving shuffled
+  graph controls over an identical dialogue-node source.
+
+input:
+  evidence_path: research/evidence/memory/gaama-natural-graph-v5.json
+  evidence_sha256: 011a21918946e19255c1118de41ec99131e1cb64c32b50bc68af8da58d84dc79
+  cpu_study: gaama-natural-heldout-graph-retrieval-v1
+  cpu_status: GAAMA_NATURAL_GRAPH_PASS
+  gaama_source_id: gaama
+  gaama_revision: 2d992f7f7b97c802bfe4c799878a5477cac1b6ff
+  locomo10_sha256: 79fa87e90f04081343b8c8debecb80a9a6842b76a7aa537dc9fdf651ea698ff4
+  locomo10_license: CC-BY-NC-4.0
+
+panel:
+  seed: 20260815
+  questions: 200
+  categories: [1, 2, 3, 4]
+  questions_per_category: 50
+  arms:
+    - flat
+    - true_graph
+    - shuffled_graph_seed_42
+    - shuffled_graph_seed_43
+    - shuffled_graph_seed_44
+  retrieval_top_k: 10
+  max_words_per_record: 80
+  aa_questions: 20
+  answer_metrics: [normalized_exact_match, token_f1]
+  official_locomo_evaluation: false
+
+model:
+  model_id: qwen3.5-4b
+  revision: 851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a
+  artifact_root_sha256: 3b8a075149bffe4dea784db5b4b37bc0896688cba0b3de7d8d0f6e8ae6157b9e
+  dtype: bfloat16
+  max_new_tokens: 64
+  use_chat_template: true
+  do_sample: false
+  deterministic_algorithms: true
+  attention_implementation: eager
+  cublas_workspace_config: ":4096:8"
+
+gates:
+  actor_aa_exact: true
+  completion_nonempty: true
+  flat_actor_f1_minimum: 0.20
+  true_f1_must_exceed_flat: true
+  true_f1_must_exceed_mean_shuffled: true
+  true_f1_must_exceed_at_least_n_shuffles: 2
+  mean_prompt_token_ratio_maximum: 1.10
+  valid_statuses: [GAAMA_H100_ACTOR_PASS, GAAMA_H100_ACTOR_KILLED]
+
+execution:
+  runtime: docker-single-node-discovery-v1
+  scheduler: slurm
+  gpu_type: h100
+  gpus: 1
+  cpus: 16
+  memory_gb: 64
+  minutes: 120
+  max_gpu_hours: 2
+  network_mode: none
+  checkpoint_every_completed_case: true
+  checkpoint_on_preemption: true
+  prove_fresh_job_resume: true
+  persistent_output_required: true
+  login_node_compute_forbidden: true
+  sudo_forbidden: true
+  cluster_lane: discovery-only-slurm21-cgroupv1
+
+claims:
+  scientific_result: false
+  publication_ready: false
+  discovery_only: true
+  supports: >-
+    A bounded model-mediated falsifier for whether the frozen structural
+    retrieval delta survives into deterministic answer quality on this panel.
+  does_not_support: >-
+    Official LoCoMo quality, general graph-memory superiority, GAAMA's generated
+    node or GEL claims, publication evidence, or a Kimi/large-model conclusion.

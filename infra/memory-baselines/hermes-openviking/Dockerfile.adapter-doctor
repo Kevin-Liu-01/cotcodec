@@ -1,0 +1,16 @@
+ARG BASE_IMAGE
+FROM ${BASE_IMAGE}
+
+COPY upstream/agent /opt/hermes/agent
+COPY upstream/tools /opt/hermes/tools
+COPY upstream/hermes_cli /opt/hermes/hermes_cli
+COPY upstream/plugins/memory/openviking /opt/hermes/plugins/memory/openviking
+COPY upstream/utils.py /opt/hermes/utils.py
+COPY upstream/hermes_constants.py /opt/hermes/hermes_constants.py
+COPY adapter_doctor.py /opt/hermes/adapter_doctor.py
+
+ENV PYTHONPATH=/opt/hermes \
+    PYTHONDONTWRITEBYTECODE=1
+
+USER 65532:65532
+ENTRYPOINT ["/app/.venv/bin/python", "/opt/hermes/adapter_doctor.py"]

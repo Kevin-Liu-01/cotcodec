@@ -1,0 +1,116 @@
+schema_version: 1
+name: stage3-astra-native-lifecycle-doctor
+status: registered-h100-lifecycle-falsification
+scientific_result: false
+description: >-
+  Exercise ASTRA's native CockroachDB-backed working-set lifecycle without an
+  LLM: bounded active-window eviction, durable retrieval-driven re-admission,
+  acknowledged session persistence, forced database-process restart, user
+  isolation, duplicate writes, soft deletion, and all-pinned overflow. This is
+  an admission doctor, not memory-quality evidence.
+
+source:
+  source_id: astra-working-set
+  repository: https://github.com/cyh7789/astra
+  revision: 644f9d4e65f4e725996025834c91531592ab6166
+  tree: 43592dc01aa730efb263d24255b094e1f4dc24f3
+  git_archive_tar_sha256: f283ca328a080bd6c8c7fac723d490f3d73d15a71f0b7290090bd371957f3d48
+  license: MIT
+  license_sha256: f109128ffcc7d51c9f9ee414f04b7b2c6a633808b4d565138ca43e0c77dbd86a
+  package_lock_sha256: 44ffc76a024117bd76488a4878e8b372c9aab9abe1abfd9489bf17135218c2b5
+  package_json_sha256: a45d6da6de09c5c96443f4c7ff129aed9bc99ce2c3ccc76fb56bed33cfc53a9d
+
+runtime:
+  containment: docker-under-slurm
+  platform: linux/amd64
+  app_base_image: node:22.21.1-bookworm-slim@sha256:25b3eb23a00590b7499f2a2ce939322727fcce1b15fdd69754fcd09536a3ae2c
+  app_image_acquisition: preloaded-docker-save
+  app_image_id: sha256:556c340f700017b8ec937ebb286f4ed1b9c4dcb652252dfd44d6eae677d04970
+  app_image_archive_sha256: eac838215d1cdb61d1734e8bd4641863b9aeec2892cb3043824c8758951845da
+  database_image: cockroachdb/cockroach:v26.2.3@sha256:1073844226a6291b8a44fcb9cab5cb02035bb8fea3266dcc5dd021c0b34484a0
+  database_child_manifest: sha256:fdbcdb6eb621e0d6f17e4b8591b7acae5cad6355b41965358813e78c1b67419c
+  acquisition_network: pinned-git-and-cached-database-digest-before-measured-phases
+  runtime_network: shared-container-namespace-loopback-only
+  read_only_roots: true
+  cap_drop_all: true
+  no_new_privileges: true
+  provider_secrets: forbidden
+  sudo: forbidden
+  scheduler: slurm
+  gpu_sku: H100
+  gpu_count: 1
+  max_gpu_hours: 1
+  cpus_per_task: 16
+  memory_gib: 64
+  wall_clock_minutes: 30
+  clean_state_repeats: 2
+  checkpoint_boundary: completed-clean-repeat
+
+native_capability_contract:
+  supported:
+    - fixed-active-window-k12
+    - durable-inactive-cockroachdb-memory
+    - retrieval-driven-readmission
+    - session-window-upsert-and-restore
+    - per-user-query-filtering
+  falsified_or_absent:
+    - idempotency-keyed-write
+    - physical-user-purge
+    - hard-cap-when-all-records-pinned
+
+intervention:
+  model_calls: 0
+  external_embedding_calls: 0
+  embedder: deterministic-upstream-fake-embedder-1024
+  active_capacity: 12
+  active_character_budget: 1500
+  sequence:
+    - write-thirteen-durable-user-a-memories
+    - admit-in-order-and-confirm-oldest-eviction-at-k12
+    - retrieve-and-readmit-first-evicted-memory
+    - save-user-a-and-user-b-session-state
+    - repeat-identical-write-and-observe-distinct-native-ids
+    - confirm-thirteen-pinned-records-exceed-k12
+    - kill-database-process-after-acknowledged-writes
+    - start-fresh-database-container-on-same-store
+    - restore-identical-user-a-window-and-user-b-state
+    - retrieve-and-readmit-second-evicted-memory
+    - soft-delete-a-canary-and-query-physical-row-residue
+
+expected_falsification:
+  status: BLOCKED_NATIVE_PURGE_IDEMPOTENCY_AND_PINNED_CAP
+  bounded_unpinned_window: true
+  evicted_memory_remains_durable: true
+  retrieval_driven_readmission: true
+  forced_restart_preserves_acknowledged_state: true
+  user_isolation: true
+  duplicate_write_creates_distinct_rows: true
+  soft_deleted_plaintext_row_remains: true
+  session_state_retains_soft_deleted_reference: true
+  all_pinned_window_exceeds_capacity: true
+  reproduced_in_two_clean_states: true
+
+kill_criteria:
+  - source, lock, license, base-image, database-image, or helper identity drift
+  - runtime outside an allocated H100 Slurm job
+  - any provider secret, model call, external embedding call, or external network during measured container phases
+  - acknowledged state fails to survive the forced database-process restart
+  - cross-user memory or session visibility
+  - normalized projections differ across two clean stores
+  - evidence is described as memory-quality, causal-credit, or publication-ready
+
+admission:
+  active_inactive_h100_actor: forbidden-for-this-revision
+  unblock_requires:
+    - explicit idempotency key and divergent-retry rejection
+    - native physical scoped purge or cryptographic erasure with zero recoverable residue
+    - enforceable hard capacity under pinned-record saturation
+    - matched frozen pager, recency, true-LRU, and archive frames
+
+forbidden_claims:
+  - memory quality improvement
+  - causal memory credit
+  - compliant deletion
+  - exactly once writes
+  - hard bounded active memory under pin saturation
+  - publication ready

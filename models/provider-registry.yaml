@@ -1,0 +1,121 @@
+schema_version: 1
+verified_at: "2026-08-13"
+models:
+  gpt-4o-2024-08-06:
+    provider: openai
+    model_id: gpt-4o-2024-08-06
+    endpoint: chat-completions
+    api_key_env: OPENAI_API_KEY
+    base_url: https://api.openai.com/v1
+    max_tokens_field: max_tokens
+    availability: verify-at-run
+    version_semantics: provider-versioned-id
+    official_url: https://developers.openai.com/api/docs/models/gpt-4o
+    pricing_url: https://openai.com/api/pricing/
+    pricing_usd_per_million:
+      input_cache_miss: 2.50
+      input_cache_hit: 1.25
+      output: 10.00
+    role: longmemeval-official-judge
+
+  gpt-5.6-sol:
+    provider: openai
+    model_id: gpt-5.6-sol
+    endpoint: responses
+    api_key_env: OPENAI_API_KEY
+    availability: verify-at-run
+    version_semantics: provider-versioned-id
+    official_url: https://developers.openai.com/api/docs/models/gpt-5.6-sol
+    pricing_url: https://developers.openai.com/api/docs/models/gpt-5.6-sol
+    pricing_usd_per_million:
+      input_cache_miss: 5.00
+      input_cache_hit: 0.50
+      output: 30.00
+    role: frontier-capability-ceiling
+
+  claude-opus-5:
+    provider: anthropic
+    model_id: claude-opus-5
+    endpoint: messages
+    api_key_env: ANTHROPIC_API_KEY
+    availability: generally-available
+    version_semantics: pinned-model-id
+    official_url: https://platform.claude.com/docs/en/about-claude/models/overview
+    pricing_url: https://platform.claude.com/docs/en/about-claude/models/whats-new-opus-5
+    pricing_usd_per_million:
+      input_cache_miss: 5.00
+      input_cache_hit: 0.50
+      output: 25.00
+    role: frontier-agent-primary
+
+  claude-fable-5:
+    provider: anthropic
+    model_id: claude-fable-5
+    endpoint: messages
+    api_key_env: ANTHROPIC_API_KEY
+    availability: generally-available
+    version_semantics: pinned-model-id
+    official_url: https://platform.claude.com/docs/en/about-claude/models/overview
+    pricing_url: https://platform.claude.com/docs/en/about-claude/models/overview
+    pricing_usd_per_million:
+      input_cache_miss: 10.00
+      input_cache_hit: 1.00
+      output: 50.00
+    role: maximum-capability-secondary
+
+  gemini-3.5-flash:
+    provider: google
+    model_id: gemini-3.5-flash
+    endpoint: generate-content
+    api_key_env: GEMINI_API_KEY
+    availability: stable
+    version_semantics: stable-model-id
+    official_url: https://ai.google.dev/gemini-api/docs/models
+    pricing_url: https://ai.google.dev/gemini-api/docs/pricing
+    pricing_usd_per_million:
+      input_cache_miss: 1.50
+      input_cache_hit: 0.15
+      output: 9.00
+    role: frontier-stable-cross-provider
+
+  deepseek-v4-pro:
+    provider: deepseek
+    model_id: deepseek-v4-pro
+    endpoint: chat-completions
+    api_key_env: DEEPSEEK_API_KEY
+    base_url: https://api.deepseek.com
+    max_tokens_field: max_tokens
+    availability: generally-available
+    version_semantics: mutable-service-id
+    official_url: https://api-docs.deepseek.com/updates/
+    pricing_url: https://api-docs.deepseek.com/quick_start/pricing/
+    pricing_usd_per_million:
+      input_cache_miss: 0.435
+      input_cache_hit: 0.003625
+      output: 0.87
+    role: frontier-open-architecture-provider
+
+  kimi-k2.6:
+    provider: moonshot
+    model_id: kimi-k2.6
+    endpoint: chat-completions
+    api_key_env: MOONSHOT_API_KEY
+    base_url: https://api.moonshot.ai/v1
+    max_tokens_field: max_completion_tokens
+    availability: generally-available
+    version_semantics: mutable-service-id
+    official_url: https://platform.kimi.ai/docs/models
+    pricing_url: https://platform.kimi.ai/docs/pricing/chat-k26
+    pricing_usd_per_million:
+      input_cache_miss: 0.95
+      input_cache_hit: 0.16
+      output: 4.00
+    role: kimi-frontier-primary
+
+runtime_verification:
+  list_models_before_each_wave: true
+  bind_requested_and_returned_model_ids: true
+  record_sdk_and_api_versions: true
+  record_response_ids_and_service_fingerprints: true
+  repeat_aa_drift_subset: true
+  reject_latest_aliases: true

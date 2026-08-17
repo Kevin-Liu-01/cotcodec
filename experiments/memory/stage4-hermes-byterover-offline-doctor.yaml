@@ -1,0 +1,81 @@
+schema_version: 1
+name: stage4-hermes-byterover-offline-doctor
+description: >-
+  Source-pinned, zero-model native ByteRover CLI compatibility falsifier for
+  the bundled Hermes adapter. Seed a local context tree, then execute native
+  offline search and Hermes' exact query/curate argv under network-none.
+
+sources:
+  hermes:
+    repository: https://github.com/NousResearch/hermes-agent
+    revision: a90d5369f76c87c98547d2e283aa26d5cfabf322
+    tree: 963eb136bfb21fd0b296a40529cbb3575c610874
+    git_archive_tar_sha256: 2a2934d3c8379816b2e3919f4cf1191f04e93f136da6f2128246d368644a9514
+    license: MIT
+    provider_sha256: 47a6c290fdb735bff3ca4523bced92e45c85ebb3af6af63712b469394a8945a8
+  byterover:
+    repository: https://github.com/campfirein/byterover-cli
+    revision: 1f4609c18ca735810860b3ba9178cae2dd8a67b0
+    tree: fdaf08c5cf26047d7d458229b90e76d4eb4ff9cf
+    tag: v3.16.1
+    tag_object: 68ef7f91801e18ff50f361bd4cad5f36b8791789
+    version: 3.16.1
+    license: Elastic-2.0
+    license_sha256: 99cea22154caece32dde4ee3124d0b6ad44a0f9baab9841889841a567245ab1f
+    package_json_sha256: 2c9e6a20885a76c93bfaa5a7f1b29af0b85e074d867e1a7b8d9d53a61df5ebe6
+    package_lock_sha256: 518ef0565634d0e000ffaf688f488ad35bd2c3075927842bf741dfaa9df061a0
+    npm_tarball_sha256: 14039b1ff40820e699484c4db994ee837be66d3919971ce0bc3026287b42dd00
+    npm_integrity: sha512-uI6zETcy5QO6H29/sdn4BKGWzJl658sjHWxcpO+LHYcmxQj1mAmmi9lluqQZYoXXrnrbp+an8NYhjd5MKmDTcw==
+
+runtime:
+  base_image: docker.io/library/node:22.21.1-bookworm-slim@sha256:25b3eb23a00590b7499f2a2ce939322727fcce1b15fdd69754fcd09536a3ae2c
+  local_platform: linux/arm64
+  network_mode: none
+  read_only_root: true
+  cap_drop_all: true
+  no_new_privileges: true
+  user: "1000:1000"
+  cpu_limit: 2
+  memory_limit: 2g
+  gpu_count: 0
+  phase_timeout_seconds: 90
+  command_timeout_seconds: 7
+  clean_repetitions: 2
+
+contract:
+  phases: [prepare, restart]
+  require_fresh_process_per_phase: true
+  seed_local_context_tree: true
+  native_offline_command: search
+  hermes_read_command: query
+  hermes_write_command: curate
+  require_daemon_network_fatal: true
+  require_every_daemon_command_bounded: true
+  require_global_profile_directory: true
+  require_native_session_purge: false
+  model_calls: 0
+  embedding_calls: 0
+  network_calls: 0
+
+expected_falsification:
+  status: BLOCKED_OFFLINE_DAEMON_AND_PORTABLE_SESSION_LIFECYCLE_REPRODUCED
+  offline_search_available_under_network_none: false
+  hermes_query_available_under_network_none: false
+  hermes_curate_available_under_network_none: false
+  session_scoped_directory: false
+  native_session_purge_supported: false
+
+admission:
+  provider_contract: native-negative-only
+  memory_lifecycle_h100: forbidden-for-this-revision
+  unblock_requires:
+    - offline-daemon-startup-with-local-tree
+    - hermes-use-of-deterministic-search-or-pinned-local-llm
+    - explicit-session-or-tenant-scope
+    - native-session-purge-or-crypto-erasure
+
+claims:
+  scientific_result: false
+  publication_ready: false
+  supports: native CLI and Hermes command-boundary falsification only
+  does_not_support: ByteRover memory quality, cloud sync, actor improvement, or secure erasure

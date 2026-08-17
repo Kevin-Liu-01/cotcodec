@@ -1,0 +1,94 @@
+schema_version: 1
+name: stage3-memorybank-corrected-decay-h100-screen
+description: >-
+  Discovery-only Qwen3.5-4B executable-utility screen over three frozen,
+  clean-room MemoryBank decay controls. The task, assignment, actor, prompt,
+  decoding, and memory budgets are identical across arms.
+
+input:
+  evidence_path: research/evidence/memory/memorybank-corrected-decay-v1.json
+  evidence_sha256: 7cec12ca307c998bf07b58f6a14372b3efea58668f940c319fde075d526fbdc6
+  evidence_status: MEMORYBANK_CORRECTED_DECAY_CONTROL_ADMITTED
+  upstream_revision: cf61c4196e4cfdb0f2b7a0316249fa40312dc3a9
+  task_count: 200
+  task_source_seed: 7
+  task_manifest_sha256: b4f6ebc040b8d83ca75ceaf9118abbcefc38083a6a6b402665cc6859dd6a1463
+  treatment_mode: storage_and_service
+  bundles:
+    corrected:
+      path: data/results/memorybank-decay/frozen-controls-v1/corrected.json
+      file_sha256: 8a8cdd3ff0fe33e4b9fc0fdbbee1a001b935ae29bf6decad0e31a4535f44a500
+      semantic_sha256: 468540a3e8bcb44d223ce1aee8abd4c06726d450d2e9af6e03632eb689b3f2f8
+      system_id: memorybank-corrected-decay-v1
+      role: corrected-primary
+    upstream_precedence:
+      path: data/results/memorybank-decay/frozen-controls-v1/upstream-precedence.json
+      file_sha256: fe9b7ab3588c26d29006c2107606b054fc17d5266da9f8ee7214d2c3fa9a70e0
+      semantic_sha256: 02ff175501ff0ee28f0ee9e5c723a32299f16d400bfe636d3a8771477cec040f
+      system_id: memorybank-upstream-precedence-v1
+      role: implementation-bug-negative
+    no_decay:
+      path: data/results/memorybank-decay/frozen-controls-v1/no-decay.json
+      file_sha256: fddb26029d68de646a8ef766a411ac843537e75c0119586c563e428919952333
+      semantic_sha256: 6bf74611d01fe3cdf9a6cf139a01a9285ce766da844003bf84c5977b05ac4664
+      system_id: memorybank-no-decay-v1
+      role: no-forgetting-upper-control
+
+model:
+  model_id: qwen3.5-4b
+  revision: 851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a
+  artifact_root_sha256: 3b8a075149bffe4dea784db5b4b37bc0896688cba0b3de7d8d0f6e8ae6157b9e
+  dtype: bfloat16
+  max_new_tokens: 128
+  do_sample: false
+  deterministic_algorithms: true
+  attention_implementation: eager
+  cublas_workspace_config: ":4096:8"
+
+design:
+  assignment_seeds: [42, 43, 44]
+  assignment_seed_semantics: repeated-design-sensitivity-not-independent-samples
+  serve_propensity: 0.5
+  paired_replay_fraction: 0.25
+  memory_budget:
+    active_slots: 4
+    max_archive_reads: 1
+    retrieval_top_k: 4
+    max_injected_tokens: 256
+  primary_contrast: corrected-minus-upstream-precedence-executable-success
+  secondary_contrast: corrected-minus-no-decay-executable-success
+  minimum_corrected_minus_upstream_points: 3.0
+  require_group_clustered_interval_for_claim: true
+  terminal_outcomes:
+    - MEMORYBANK_CORRECTED_DECAY_ACTOR_PASS
+    - MEMORYBANK_CORRECTED_DECAY_ACTOR_KILLED
+
+execution:
+  runtime: docker-single-node-discovery-v1
+  scheduler: slurm
+  gpu_type: h100
+  gpus_per_arm: 1
+  cpus_per_arm: 16
+  memory_gb_per_arm: 64
+  minutes_per_arm: 45
+  max_gpu_hours_per_arm: 0.75
+  max_total_gpu_hours: 2.25
+  network_mode: none
+  checkpoint_every_trial: true
+  checkpoint_on_preemption: true
+  prove_fresh_job_resume: true
+  login_node_compute_forbidden: true
+  sudo_forbidden: true
+  cluster_lane: discovery-only-slurm21-cgroupv1
+
+claims:
+  scientific_result: false
+  publication_ready: false
+  discovery_only: true
+  supports: >-
+    A bounded model-mediated test of three deterministic decay/ranking
+    interventions over one frozen generated-task panel.
+  does_not_support: >-
+    Upstream MemoryBank reproduction, summary/personality mechanisms,
+    active/archive paging, public-benchmark quality, causal item credit,
+    publication evidence, or larger-model conclusions.

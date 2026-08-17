@@ -1,0 +1,111 @@
+schema_version: 1
+name: stage3-magic-context-paging-doctor
+status: registered-cpu-falsification
+scientific_result: false
+description: >-
+  Test Magic Context's deterministic chronological prompt paging and supported
+  single-message expansion projection while actively falsifying lossless raw
+  transcript recovery, portable cross-harness isolation, and secure purge. This
+  is not semantic active/inactive item memory and does not run the historian,
+  dreamer, embeddings, or any language model.
+
+source:
+  source_id: magic-context
+  repository: https://github.com/cortexkit/magic-context
+  revision: 13e1d4c3fa3803ba1f4595029d8c4750dc9bef98
+  tree: f420beb3be130544534ff7a9778a49e92fa0ed75
+  git_archive_tar_sha256: 8eb4b81542b157d55fb4c43cea523fc8297a6b360f8a90feff2a8737b8d40080
+  license: MIT
+  license_sha256: 0e3d1aa1cbe4aec50224fc6c91eb898d42949d6ff84fe515f9e2bb0663f5d483
+  bun_lock_sha256: 8e8bc07020c1ad17a5a560740b8ec5f108a205b9c58cce166340b99251b9cb5f
+
+runtime:
+  containment: docker-network-none
+  local_platform: linux/arm64
+  local_base_image: oven/bun:1.3.10@sha256:b62061062f07ba02a7e6828a04d8ce736717315eda00dc101a0a59646ed526a5
+  cluster_confirmation: cpu-slurm-only-if-promoted
+  runtime_network: none
+  read_only_root: true
+  cap_drop_all: true
+  no_new_privileges: true
+  provider_secrets: forbidden
+  sudo: forbidden
+  gpu_count: 0
+  max_gpu_hours: 0
+  max_cpu_cores: 1
+  max_memory_mib: 768
+  wall_clock_minutes: 15
+  clean_state_repeats: 2
+
+native_capability_contract:
+  supported:
+    - deterministic-p1-p5-chronological-prompt-decay
+    - p5-omission-with-compartment-row-retained
+    - supported-single-message-text-and-tool-projection
+    - bounded-range-preview-with-continuation
+    - fresh-process-restart
+  refused:
+    - semantic-item-active-to-inactive-transition
+    - semantic-item-inactive-to-active-transition
+    - exact-raw-json-transcript-recovery
+    - persistent-promotion-back-into-active-context
+    - cross-harness-security-tenancy
+    - native-secure-purge
+
+intervention:
+  historian: false
+  dreamer: false
+  project_memory: false
+  embeddings: false
+  model_calls: 0
+  embedding_calls: 0
+  network_calls: 0
+  direct_compartments: 52
+  history_token_budgets: [300, 100000]
+  sequence:
+    - seed-host-raw-db-and-two-session-canaries
+    - seed-model-free-p1-p4-compartments-directly
+    - render-wide-and-tight-prompt-budgets
+    - recover-supported-single-message-projection
+    - restart-and-compare-byte-stable-projection
+    - reopen-as-pi-with-the-same-session-id
+    - clear-plugin-session-and-delete-one-host-raw-row
+    - scan-sqlite-and-wal-files-for-plaintext-residue
+
+expected_falsification:
+  status: BLOCKED_PORTABLE_LIFECYCLE_AND_SECURE_PURGE_REPRODUCED
+  chronological_prompt_paging_supported: true
+  oldest_compartment_omitted_but_stored: true
+  supported_text_and_tool_projection_restart_stable: true
+  reasoning_and_structural_parts_are_not_recovered: true
+  host_raw_row_deletion_makes_expansion_unrecoverable: true
+  same_session_id_cross_harness_alias_reproduced: true
+  physical_zero_residue_after_logical_clear: false
+  reproduced_in_two_clean_states: true
+
+kill_criteria:
+  - source, lock, license, image, or helper identity drift
+  - any provider secret, model call, embedding call, or runtime network
+  - prompt paging or supported projection changes across a fresh process
+  - tight-budget rendering does not omit the oldest stored compartment
+  - host raw deletion is silently reconstructed or fabricated
+  - the result is described as semantic item paging or exact transcript recovery
+
+admission:
+  chronological_prompt_paging_boundary: supported-cpu-conformance-only
+  portable_lifecycle: blocked
+  semantic_memory_h100: forbidden-for-this-mechanism
+  unblock_requires:
+    - harness-scoped primary keys and reads
+    - an explicit host-storage ownership and purge contract
+    - secure-delete or crypto-erasure residue proof
+    - a separate historian-quality experiment with a pinned model and prompt
+
+forbidden_claims:
+  - semantic active inactive memory
+  - exact raw transcript expansion
+  - inactive to active promotion
+  - secure deletion
+  - security tenancy
+  - memory quality improvement
+  - publication ready

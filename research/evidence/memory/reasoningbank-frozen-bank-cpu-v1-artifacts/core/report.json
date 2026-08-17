@@ -1,0 +1,50 @@
+{
+  "api_calls": 0,
+  "bank_artifact_sha256": "4d6c4456c2e4c1c95419c14c72bea60f7994fa460cdfa9b994e0e60b605d1f14",
+  "document_text_field": "procedural_text",
+  "environment": {
+    "deterministic_algorithms": true,
+    "machine": "aarch64",
+    "platform": "Linux-6.8.0-117-generic-aarch64-with-glibc2.36",
+    "python": "3.12.11",
+    "torch": "2.11.0+cpu",
+    "torch_threads": 1,
+    "transformers": "5.15.0"
+  },
+  "evaluation_queries": 6,
+  "evidence_role": "contained-real-encoder-contract-only",
+  "fixture_receipts_only": true,
+  "fixture_source_artifacts": 6,
+  "gpus": 0,
+  "limitations": [
+    "synthetic retrieval fixtures, not agent-task quality evidence",
+    "procedures are fixture text, not regenerated from ReasoningBank trajectories",
+    "no matched actor or procedural-memory control matrix was executed",
+    "local Docker evidence is not external Slurm or publication attestation"
+  ],
+  "model": {
+    "artifact_root_sha256": "85a178e1c7da2659a137728e9b6794f97a2607adfa315e3ee0eeb0f5cc497883",
+    "dimensions": 384,
+    "maximum_tokens": 512,
+    "model": "BAAI/bge-small-en-v1.5",
+    "model_receipt_sha256": "9d30a2f1646e5e7b1d99db79232ca29ba727ae238736d02f95ea4270ca63926e",
+    "pooling_strategy": "cls-l2-normalized-v1",
+    "publication_eligible": true,
+    "registry_model_id": "bge-small-en-v1.5",
+    "revision": "5c38ec7c405ec4b44b94cc5a9bb96e735b38267a"
+  },
+  "network_required": false,
+  "publication_ready": false,
+  "real_reasoningbank_trajectories_present": false,
+  "repeated_bank_freeze_exact": true,
+  "repeated_retrieval_exact": true,
+  "retrieval_bank_immutable": true,
+  "schema_version": 1,
+  "scientific_result": false,
+  "split_manifest_sha256": "e24f57a0279441f26fa863ff854bbd872a6e9bbb1a8ad89d60d23dd7e4fb535c",
+  "status": "FROZEN_PROCEDURAL_BANK_CPU_DOCTOR_PASS",
+  "task_family_mismatch_rejected": true,
+  "top_one_correct": 6,
+  "train_items": 6,
+  "train_task_leakage_rejected": true
+}

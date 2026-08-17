@@ -12,7 +12,7 @@ Based on:
 from __future__ import annotations
 
 import json
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
@@ -169,6 +169,7 @@ class DegradationDetector:
 
         elif method == "fisher":
             import math
+
             from scipy import stats
             stat = -2 * sum(math.log(max(p, 1e-300)) for p in p_values)
             combined_p = 1 - stats.chi2.cdf(stat, df=2 * n_tests)

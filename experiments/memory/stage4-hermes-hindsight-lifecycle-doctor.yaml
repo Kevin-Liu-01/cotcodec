@@ -1,0 +1,128 @@
+schema_version: 1
+name: stage4-hermes-hindsight-lifecycle-doctor
+description: >-
+  Native Hindsight lifecycle and exact Hermes-provider falsifier. Exercise
+  direct retain, auto-prefetch, session-end auto-retain, two fresh backend and
+  database restarts, two-tenant isolation, and native admin deletion with a
+  deterministic local embedding service, then scan all retained PostgreSQL
+  files for plaintext residue. This is not a memory-quality study.
+
+sources:
+  hindsight:
+    repository: https://github.com/vectorize-io/hindsight
+    revision: 5781d28d8fcc717a15818330b12250b311957000
+    tree: a33e9ea9a13c83f70925bf657aac3e36ea837475
+    git_archive_tar_sha256: 993a015782322ab0fd336b6ab457d895d74d941390e36ebfd562dec9790bdf9c
+    license: MIT
+    license_sha256: 01fde0bedf83bdc185065d7af524a61690efe576a67f922eaff3a1280c17b63a
+    root_pyproject_sha256: 4310866acf638e7e4917bf1a98a5593b3a3e60de30b0ca0bd23ff7174e25c71c
+    uv_lock_sha256: 0d8576e1ed8651437cdab5b4974e7dc1efbc160ea7eb682ab372e367b80d7d0b
+    api_pyproject_sha256: 321ab77f4232b7e5a3598e3e88abe988ddf7170ac6fcb65471476b8427b6aacb
+    client_pyproject_sha256: 12768f067c6f87d2189326b08466eb9e6615d909fb7819caf60e4db1db475afe
+  hermes:
+    repository: https://github.com/NousResearch/hermes-agent
+    revision: a90d5369f76c87c98547d2e283aa26d5cfabf322
+    tree: 963eb136bfb21fd0b296a40529cbb3575c610874
+    git_archive_tar_sha256: 2a2934d3c8379816b2e3919f4cf1191f04e93f136da6f2128246d368644a9514
+    license: MIT
+    license_sha256: 821556e6336796450ab852d375117b48a4887e71d255794fd6318d99982a5ab6
+    provider_sha256: 8d3c75411d3ae66cf3b91770297adc30c1aff96fbc3a1c0ec14057f185e0bbe5
+    plugin_manifest_sha256: 1fdf277afbe5eb490e718d957c662d3102052b3611c1e48b09e59fc7f9bb2b06
+    lazy_dependencies_sha256: 5a2e30bcd0a7a9c4f7bb719528deb62ec048728c0887723de2cad60bab6d3f02
+
+runtime:
+  platform: linux/arm64
+  network: internal-only
+  external_api_access: false
+  rootfs_read_only: true
+  cap_drop_all: true
+  no_new_privileges: true
+  backend_user: "65532:65532"
+  adapter_user: "65532:65532"
+  postgres_user: postgres
+  stub_user: "65532:65532"
+  gpu_count: 0
+  database_mode: external-postgresql-pgvector
+  database_data_checksums: true
+  stable_worker_id: cotcodec-hermes-hindsight-doctor
+  images:
+    hindsight_backend: sha256:91ddf1da2ac339c4b44f2a837c1536965a3cf41f2fe7b332416b65e29b4b424e
+    postgres_pgvector: sha256:78bf48b801e792f99e3ac62b5036fd3876e9be48afda16c1e331af1c75ceb2ff
+    model_stub: sha256:6136cd68a7bed538b224756278fb15344e79e2c19b9640d9b942e41170ade440
+    hermes_adapter: sha256:0ae493490c0539a08343eec995865fdb0651562896f58cfd8fc0ae720b6d9c06
+  controls:
+    embedding: deterministic-16-dimensional-token-hash
+    backend_dockerfile_sha256: f367f49d3b75e84b7ab0e4f25ebcaf773f4ff0221e3c0d133e2acca7b6ee1290
+    adapter_dockerfile_sha256: b771259bb8d8b18c1722ce1ea352cd5c8565908b9dbd3801411257d2efc4ba02
+    adapter_doctor_sha256: 37ca1e3282fee036a78f502be022fe1d401b8302ad2f84856137af033118b093
+    model_stub_sha256: 6952793d45d1891b7c1739a5d53a8779c126f32032405dab8b7af4ff8a1702ab
+    doctor_sha256: 36392411d6d1bb9151631b35b66215e3784f37a9ae1135781d351b22b8ec726f
+    postgres_repo_digest: pgvector/pgvector@sha256:78bf48b801e792f99e3ac62b5036fd3876e9be48afda16c1e331af1c75ceb2ff
+
+contract:
+  provider_path: exact-hermes-hindsight-provider
+  hermes_client_version: "0.6.1"
+  native_service_version: "0.9.0"
+  tenant_count: 2
+  full_stack_restart_count: 2
+  operation_sequence:
+    - tenant-a-tool-retain
+    - tenant-a-prefetch
+    - tenant-b-cannot-see-a
+    - tenant-b-sync-turn-retain
+    - tenant-b-search-own
+    - tenant-a-cannot-see-b
+    - tenant-a-full-restart-search
+    - tenant-b-full-restart-search
+    - tenant-a-admin-delete
+    - tenant-b-admin-delete
+    - tenant-a-delete-survives-full-restart
+    - tenant-b-delete-survives-full-restart
+  require_prompt_integration_active: true
+  require_auto_prefetch: true
+  require_session_end_auto_retain: true
+  require_restart_persistence: true
+  require_tenant_isolation: true
+  require_logical_delete_survives_restart: true
+  require_hermes_purge_tool: false
+  scan_all_retained_files_for_plaintext: true
+  model_calls: 0
+  external_network_calls: 0
+
+expected_falsification:
+  status: BLOCKED_NATIVE_PHYSICAL_PURGE_RESIDUE
+  restart_persistence_supported: true
+  tenant_isolation_supported: true
+  logical_delete_survives_restart: true
+  hermes_purge_tool_exposed: false
+  physical_zero_plaintext_residue: false
+
+admission:
+  provider_contract: local-negative-only
+  memory_quality_h100: forbidden-for-this-revision
+  unblock_requires:
+    - first-class-hermes-purge-tool-or-registered-administrative-erasure-contract
+    - native-physical-purge-or-crypto-erasure
+    - zero-plaintext-residue-after-fresh-database-and-backend-restart
+    - separate-matched-quality-cell-after-lifecycle-pass
+
+claims:
+  scientific_result: false
+  publication_ready: false
+  supports: >-
+    exact Hermes retain, recall, prefetch, and session-end retention transport;
+    native restart persistence; logical tenant isolation; logical deletion
+  does_not_support: >-
+    a Hermes purge tool, physical erasure, memory quality, agent improvement,
+    H100 admission, or publication claims
+
+limitations:
+  - >-
+    Hermes' plugin manifest accepts hindsight-client >=0.6.1, while its lazy
+    dependency allowlist pins exactly 0.6.1. This doctor follows the executable
+    exact pin and tests it against Hindsight service 0.9.0.
+  - >-
+    Hindsight's embedded pg0 path was not used in the registered run because
+    pg0 0.15.1 started a queryable PostgreSQL process but returned running=false
+    and no URI to Hindsight on this contained arm64 runtime. The registered
+    study uses Hindsight's supported external PostgreSQL configuration instead.

@@ -1,0 +1,53 @@
+schema_version: 1
+name: stage3-memforge-fresh-install-doctor
+status: registered-cpu-falsification
+scientific_result: false
+publication_ready: false
+
+source:
+  source_id: memforge
+  repository: https://github.com/salishforge/memforge
+  revision: 16e2f15c5881a38911f64ca81b3dc0b25d6207ec
+  tree: 97411a5c0318c3f4b1d273ab0696b915184fca3a
+  declared_version: 3.7.0
+  license: MIT
+  license_sha256: dac7f81d95c038f342d1afd54d48527ac370ed03bb20b008dfefb68f1d6fd6b3
+  git_archive_tar_sha256: e2f588676aa06e95cb07cc20224e336a1ce7ff1b9b5757fa808f57323b4b0b93
+  dependency_lock: package-lock.json
+  dependency_lock_sha256: 15c4f6a7e24ea93042b608143eae9c698dca7ccf57180f2d18e1309cb8cc32c9
+  canonical_schema_sha256: 95ee46167dcbaf7617669e7720680978f640f6ae7cf4b37cad32f5d5db82779f
+
+runtime:
+  containment: docker-network-none
+  read_only_root: true
+  cap_drop_all: true
+  no_new_privileges: true
+  provider_secrets: forbidden
+  sudo: forbidden
+  gpu_count_inside_containers: 0
+  clean_state_repeats: 2
+  official_compose_postgres_image: postgres@sha256:cf78e76683b9ca8c5733cbbdce6c9262b45b6767934dd0a95e671f9a0fc20685
+  pgvector_control_image: pgvector/pgvector@sha256:ccc6e83d6e35e931dc7c5def2022729d5a6c370318d099181995567ff1fb4d6b
+
+intervention:
+  subsystem: exact-canonical-schema-fresh-install
+  provider_calls: 0
+  model_backend_calls: 0
+  official_compose_image_trial: true
+  pgvector_enabled_control_trial: true
+  schema_patch_applied: false
+
+expected_falsification:
+  status: MEMFORGE_FRESH_INSTALL_ADMISSION_KILLED
+  official_compose_image_lacks_vector_extension: true
+  canonical_schema_references_warm_tier_before_creation: true
+  exact_revision_lifecycle_not_executable: true
+
+admission:
+  h100_actor: forbidden-for-this-revision
+  hot_warm_cold_lifecycle: not-evaluated
+  graph_quality: not-evaluated
+  memory_quality: not-evaluated
+  repair_arm: requires-separate-contract
+  scientific_claim: forbidden
+  publication_claim: forbidden

@@ -1,0 +1,69 @@
+schema_version: 1
+name: stage3-shodh-tier-admission-doctor
+status: registered-cpu-falsification
+scientific_result: false
+publication_ready: false
+
+source:
+  source_id: shodh-memory
+  repository: https://github.com/varun29ankuS/shodh-memory
+  revision: 98c6e4861847a76f75eb880acf9e145d30794a46
+  tree: a7c6ee81b9299cfe4fd56789b1cfd76a5c46bc85
+  git_archive_tar_sha256: e5930fc638929d98e2149452afd2d7d02c74134115e78bcd8197d7f06165ed60
+  license: Apache-2.0
+  license_sha256: 219672554a141ac4ba8a1cb3fecf8d1e3209515963ff1c1f946c5cda3a85d86d
+  cargo_lock_sha256: 0f3356ec80fe3b3f683fd896e2a65c23d5cc8e11fc175b3f90efc58487b03972
+  cargo_toml_sha256: d55820c0eeba14f1478925fd50e2823425baa30193976719e73534afc92892db
+  memory_module_sha256: bb4b9d19d343aa567b9a47a0b191324fccea3658c81ee5e391b2b7bfa604583e
+  memory_types_sha256: f58a702a2e1ae75798f8b6835214dec5a230315e4ce4ed262605cce06ee72cbf
+
+runtime:
+  containment: docker-network-none
+  local_platform: linux/arm64
+  runtime_network: none
+  read_only_root: true
+  cap_drop_all: true
+  no_new_privileges: true
+  provider_secrets: forbidden
+  sudo: forbidden
+  gpu_count: 0
+  max_gpu_hours: 0
+  clean_state_repeats: 2
+  base_image: rust@sha256:867f1d1162913c401378a8504fb17fe2032c760dc316448766f150a130204aad
+  dependency_lock: Cargo.lock
+  cargo_locked: true
+  offline_simplified_embeddings: true
+
+intervention:
+  fresh_working_record_storage_probe: true
+  fresh_process_restart: true
+  offline_aged_session_restart_probe: true
+  real_maintenance_path: true
+  public_forget_all_probe: true
+  physical_plaintext_residue_probe: true
+  model_calls: 0
+  embedding_provider_calls: 0
+  external_api_calls: 0
+
+expected_falsification:
+  status: BLOCKED_OVERLAPPING_RESIDENCY_AND_RESTART_STRANDING
+  new_working_record_already_in_long_term_storage: true
+  restart_drops_active_caches: true
+  restart_preserves_stale_working_tier_label: true
+  eligible_persisted_session_is_stranded_after_restart: true
+  logical_forget_all_hides_record_after_restart: true
+  forget_all_return_overcounts_overlapping_tiers: true
+  plaintext_residue_after_forget_all: false
+  plaintext_scan_is_erasure_proof: false
+  reproduced_in_two_clean_states: true
+
+admission:
+  h100_actor: forbidden-for-this-revision
+  scientific_claim: forbidden
+  publication_claim: forbidden
+  scope: tier-and-forgetting-lifecycle-control-only
+  next_gate: >-
+    Require disjoint and restart-reconstructible tier residency, promotion of
+    durable session records after an offline age transition, unique-record
+    accounting before any actor-quality or H100 run. The negative raw-byte
+    residue observation is retained but is not treated as erasure proof.

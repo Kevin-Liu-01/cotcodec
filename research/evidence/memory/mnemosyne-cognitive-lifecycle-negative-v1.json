@@ -1,0 +1,52 @@
+{
+  "artifact_files": {
+    "Dockerfile": "8b4e813412dc443113a13ae8542e4f3fffeb336a42be3aeb145479291a076427",
+    "doctor.mjs": "270c7769fe94cea745fce922079f79c43f8b4570c1788765340456bd737b07ef",
+    "experiment.yaml": "fd37fcb6cc1452f1328deebf30a1327161495875ffa4c3402837c4c8b7c32ae0",
+    "image-inspect.json": "e34e82cd86cc932d7a035cbb885f6b35fb98676899be4cc46b748aa4aebf825d",
+    "manifest.json": "d12c2b647f0facc76f5f07656e359fafa0e3f445fae1f575fb79dc6306533f60",
+    "qdrant-image-inspect.json": "749a22803fa98ac8af95e3c3dc64a88603c8ebb921f5f398bf2f8ad9996561ea",
+    "repeat-1-initial-qdrant.log": "5a5de638c85ba745c9214914a219893a160612f340d9c15ed8f5aa341425e485",
+    "repeat-1-initial.json": "aab568dfa67fde0bef49950831de13434fa1a2eae24a61ea220ed216b74111a0",
+    "repeat-1-restart-qdrant.log": "de52537198b7b530e69a814ab5b8a585f4c9589fcd41ddcb88ae5a30158d2751",
+    "repeat-1-restart.json": "9308a508b146eb0c5d8a729a8535c81c4f1302a1f780515aa3cce4ffa4cbb9ef",
+    "repeat-2-initial-qdrant.log": "93896dc67bae4279c2ee34d37f5ece3e52d379ae996a1da29dd98b6f4b250edc",
+    "repeat-2-initial.json": "aab568dfa67fde0bef49950831de13434fa1a2eae24a61ea220ed216b74111a0",
+    "repeat-2-restart-qdrant.log": "bdc9d171fb1d4b9fecae2e5efa8f1ead2c45b58f5dd03dde2e2e6fd4e2e056f6",
+    "repeat-2-restart.json": "9308a508b146eb0c5d8a729a8535c81c4f1302a1f780515aa3cce4ffa4cbb9ef",
+    "report.json": "bba78562a377f14a8fc4a06759d858706560d9f51b8e6de9a4c96e9540230b7a",
+    "source-receipt.json": "e8ba44f83d51618308c4f76f2c161c0874f469722771ae25dd33213cebb3fcd9",
+    "source.tar": "278cd0fe963854df21847fcaf6b7a650c7ad00f584a551bf48b71e6eb44e2d2e",
+    "upstream-tests.json": "ac790da4782e24f54c965b81e419631996016f4fa0e513832d7bfb06806beed9"
+  },
+  "artifact_root": "data/results/mnemosyne-cognitive/2026-08-16-local-docker-v1",
+  "claim_boundary": {
+    "active_inactive_quality_evaluated": false,
+    "graph_quality_evaluated": false,
+    "h100_actor_admission": "forbidden-for-this-revision"
+  },
+  "code_files": {
+    "experiments/memory/stage3-mnemosyne-cognitive-lifecycle-doctor.yaml": "fd37fcb6cc1452f1328deebf30a1327161495875ffa4c3402837c4c8b7c32ae0",
+    "infra/memory-baselines/mnemosyne-cognitive/Dockerfile": "8b4e813412dc443113a13ae8542e4f3fffeb336a42be3aeb145479291a076427",
+    "infra/memory-baselines/mnemosyne-cognitive/doctor.mjs": "270c7769fe94cea745fce922079f79c43f8b4570c1788765340456bd737b07ef",
+    "research/mnemosyne-cognitive-lifecycle-audit-2026-08-16.md": "ea1a133daa3dabd968dbe1b96715d5b4b513be28574724af2bc10853a3bdbb09",
+    "scripts/run_mnemosyne_cognitive_lifecycle_doctor.py": "0a2ab83d14e12990b393409da1016c45ad95f5a5e6ea145f0ffe952279757371",
+    "scripts/validate_mnemosyne_cognitive_evidence.py": "058d273984f66cf81a6e143fb30e850f4a5ab3700ea2cc5fd47f1c59c44a2507",
+    "scripts/validate_mnemosyne_cognitive_experiment.py": "9fc2f14d95b639f9752c617b2761125c25444c1819ad77e5db0c6dfd9e82cf02"
+  },
+  "evidence_grade": "local-negative-reproduced",
+  "evidence_kind": "native-negative-reproduction",
+  "image_id": "sha256:b64c3e21d431440cadd289e72eea3a2d63bb9bb38da95bf9ebbc3469dceef6d4",
+  "initial_projection_sha256": "a78cf1418f4687e6744c43d5408617b420b6a31a78c42d8ccf89e99f5996b691",
+  "publication_ready": false,
+  "qdrant_image_id": "sha256:affb67e1d6f2f93d7d20b90d238a7d4b974d36351c162e73bda794e4b2e03483",
+  "restart_projection_sha256": "fcebdca6cf05a724e57719f91e789a28ccd8911e56d859179bb4ec5fab23641a",
+  "run_count": 2,
+  "schema_version": 1,
+  "scientific_result": false,
+  "source_id": "mnemosyne-cognitive-os",
+  "source_revisions": {
+    "https://github.com/28naem-del/mnemosyne": "5506aae7cec9ada5523099fd5ab858a4eee593b6"
+  },
+  "status": "MNEMOSYNE_COGNITIVE_ACTIVE_INACTIVE_ADMISSION_KILLED"
+}

@@ -1,0 +1,96 @@
+schema_version: 1
+name: stage3-reasoningbank-source-admission-doctor
+status: registered-source-admission-doctor
+scientific_result: false
+protocol: procedural-bank-source-admission-v1
+description: >-
+  Audit the exact ReasoningBank release without importing its cloud-coupled
+  modules. Bind the source, lock, and critical driver files; identify
+  evaluation-time mutation and concurrency hazards; and prohibit an H100
+  actor study until a frozen held-out procedural bank and immutable retrieval
+  cache exist. This is source admission evidence, not memory-quality evidence.
+
+source:
+  source_id: reasoningbank
+  repository: https://github.com/google-research/reasoning-bank
+  revision: ed80611788292ea739f1effd31f16c53823b8a0d
+  tree: 7cc5e6e08ee8035cde81f1fb9fd871d32423a3e3
+  git_archive_tar_sha256: d85d169c84f82782cefc50044adc192ab1d28956f36e177de0bf213d48298e09
+  license: Apache-2.0
+  license_sha256: 58d1e17ffe5109a7ae296caafcadfdbe6a7d176f0bc4ab01e12a689b0499d8bd
+  pyproject_sha256: 8d2b9f61b5cae47ed7a83e61e4893f9c0a2c1035fe37ef64006748ab4934cfbe
+  uv_lock_sha256: 6835cc5149faf4ddd573cae98851bbd5db6844a1bed567fe8a85525d862d77fa
+  critical_file_sha256s:
+    WebArena/run.py: f9edcac62cc612f48db9859c60f71b7479aa126beda802437dd82d81030817b3
+    WebArena/memory_management.py: 35b8b800180024f3446c4a295fe9d7c19d4aa2cddd0b2f2a44b6680e4d6bc4f9
+    WebArena/pipeline_memory.py: e0bab83fb7d6e4abc3ea01d1b1f545f9c2730c1719c2bda6d73e54023a80bb96
+    WebArena/induce_memory.py: 97d7da3fe5bd3e37d05e4aa07c050b1154334951cc2cad20619774ae77e0912c
+    WebArena/pipeline_scaling.py: 6df79d99f42b9900a83ed10bea2225183e3d894e30bd293f62ffce8ee2ef4494
+    WebArena/induce_scaling.py: bb7399af96a674fc36de61665b91d87748aeef7f972df8757ce42869d12f30be
+    third_party/src/minisweagent/run/extra/swebench.py: 8365112cd2dd2f3dbd74eff611b5d166530c6ddac4b09b674ae384da96531951
+    third_party/src/minisweagent/memory/memory_management.py: fe71285a878920d501013ab86b58ef12c9c08071ee0e690061774d5ff5588955
+
+mechanism_scope:
+  representation: success-and-failure-procedural-items
+  residency: immutable-inactive-bank-after-training
+  retrieval: top-one-query-similarity
+  injection: system-prompt-procedural-text
+  lifecycle_provider_claim: forbidden
+  active_inactive_paging_claim: forbidden
+  causal_credit_claim: forbidden
+
+release_findings:
+  import_time_cloud_clients: true
+  mutable_unrevisioned_embedding_models: true
+  webarena_query_cache_mutates_during_evaluation: true
+  webarena_bank_mutates_after_each_evaluation_task: true
+  swebench_query_cache_mutates_during_evaluation: true
+  swebench_bank_mutates_after_each_evaluation_task: true
+  swebench_shared_bank_and_cache_used_by_worker_threads: true
+  trajectory_pickle_is_trusted_input: true
+  trajectory_extraction_swallows_exceptions: true
+  induction_temperature_is_unseeded: true
+  scaling_reads_only_final_trial_directory: true
+  scaling_reward_label_is_inverted: true
+
+required_patch_arm:
+  freeze_bank_before_dev_and_test: true
+  freeze_retrieval_index_before_dev_and_test: true
+  disjoint_workflow_families: [train, dev, test]
+  offline_pinned_embedder: true
+  no_import_time_provider_client: true
+  no_pickle_input: true
+  deterministic_generation_receipts: true
+  atomic_idempotent_artifacts: true
+  matched_controls:
+    - no-memory
+    - raw-success-trajectory
+    - raw-failure-trajectory
+    - success-only-procedural-items
+    - failure-only-procedural-items
+    - shuffled-procedural-items
+    - reasoningbank-success-and-failure
+
+execution:
+  source_checkout_only: true
+  runtime_import_forbidden: true
+  network: none
+  api_calls: 0
+  gpus: 0
+  max_gpu_hours: 0
+  cpu_time_limit_minutes: 2
+  sudo: forbidden
+
+admission:
+  status: BLOCKED_MUTABLE_EVALUATION_AND_UNPINNED_RETRIEVAL
+  h100_admission: forbidden-for-this-release-driver
+  next_gate: reviewed-frozen-bank-patch-arm-and-contained-cpu-retrieval-doctor
+  publication_ready: false
+
+forbidden_claims:
+  - ReasoningBank quality was reproduced
+  - released WebArena evaluation is held out
+  - released SWE-Bench evaluation is order independent
+  - released test-time scaling preserves reward labels
+  - ReasoningBank is a persistent lifecycle provider
+  - H100 admission passed

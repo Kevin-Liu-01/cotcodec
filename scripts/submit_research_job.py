@@ -13,11 +13,19 @@ from typing import Any
 
 import yaml
 
+if __package__:
+    from scripts.memory_job_admission import validate_memory_job_admission
+else:
+    from memory_job_admission import validate_memory_job_admission
+
 OCI_RE = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._:/-]*@sha256:[0-9a-f]{64}$")
 SHA_RE = re.compile(r"^[0-9a-f]{64}$")
 GIT_RE = re.compile(r"^[0-9a-f]{40}$")
 NAME_RE = re.compile(r"^[a-z0-9][a-z0-9-]{0,39}$")
 RUN_ROOT_RE = re.compile(r"^/[A-Za-z0-9._/-]{1,255}$")
+INPUT_PATH_RE = re.compile(r"^/[A-Za-z0-9._/-]{1,511}$")
+JOB_ID_RE = re.compile(r"^[1-9][0-9]{0,19}$")
+SUBPATH_RE = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._/-]{0,127}$")
 MAX_SINGLE_JOB_GPU_HOURS = 64.0
 
 
@@ -38,6 +46,9 @@ def validate_manifest(raw: dict[str, Any]) -> dict[str, Any]:
     resources = raw.get("resources")
     budget = raw.get("budget")
     seeds = raw.get("seeds")
+    resume_from_job_id = raw.get("resume_from_job_id")
+    resume_subpath = raw.get("resume_subpath")
+    memory_bundle = raw.get("memory_bundle")
 
     if not isinstance(name, str) or not NAME_RE.fullmatch(name):
         raise ValueError("name must be a lowercase kebab-case Slurm-safe slug")
@@ -100,8 +111,25 @@ def validate_manifest(raw: dict[str, Any]) -> dict[str, Any]:
         or not all(isinstance(seed, int) and not isinstance(seed, bool) for seed in seeds)
     ):
         raise ValueError("seeds must contain at least three distinct integers")
+    if resume_from_job_id is None:
+        if resume_subpath is not None:
+            raise ValueError("resume_subpath requires resume_from_job_id")
+        normalized_predecessor = None
+        normalized_subpath = None
+    else:
+        normalized_predecessor = str(resume_from_job_id)
+        if not JOB_ID_RE.fullmatch(normalized_predecessor):
+            raise ValueError("resume_from_job_id must be a positive Slurm job id")
+        if (
+            not isinstance(resume_subpath, str)
+            or not SUBPATH_RE.fullmatch(resume_subpath)
+            or Path(resume_subpath).is_absolute()
+            or ".." in Path(resume_subpath).parts
+        ):
+            raise ValueError("resume_subpath must be a safe relative artifact directory")
+        normalized_subpath = resume_subpath
 
-    return {
+    manifest = {
         "name": name,
         "image": image,
         "command": command,
@@ -116,6 +144,40 @@ def validate_manifest(raw: dict[str, Any]) -> dict[str, Any]:
         "minutes": minutes,
         "max_gpu_hours": float(max_gpu_hours),
     }
+    if normalized_predecessor is not None:
+        manifest["resume_from_job_id"] = normalized_predecessor
+        manifest["resume_subpath"] = normalized_subpath
+    if memory_bundle is not None:
+        if not isinstance(memory_bundle, dict):
+            raise ValueError("memory_bundle must be a mapping")
+        host_path = memory_bundle.get("host_path")
+        artifact_sha256 = memory_bundle.get("sha256")
+        container_path = memory_bundle.get(
+            "container_path", "/inputs/memory-selection-bundle.json"
+        )
+        if (
+            not isinstance(host_path, str)
+            or not INPUT_PATH_RE.fullmatch(host_path)
+            or ".." in Path(host_path).parts
+        ):
+            raise ValueError("memory_bundle.host_path must be a simple absolute path")
+        if not isinstance(artifact_sha256, str) or not SHA_RE.fullmatch(artifact_sha256):
+            raise ValueError("memory_bundle.sha256 must be 64 lowercase hex characters")
+        if container_path != "/inputs/memory-selection-bundle.json":
+            raise ValueError("memory_bundle.container_path is fixed by the batch contract")
+        manifest["memory_bundle"] = {
+            "host_path": host_path,
+            "sha256": artifact_sha256,
+            "container_path": "/inputs/memory-selection-bundle.json",
+        }
+    admission = validate_memory_job_admission(
+        raw.get("memory_source_admission"),
+        command=command,
+        has_memory_bundle=memory_bundle is not None,
+    )
+    if admission is not None:
+        manifest["memory_source_admission"] = admission
+    return manifest
 
 
 def sbatch_argv(manifest: dict[str, Any], test_only: bool) -> list[str]:
@@ -133,6 +195,12 @@ def sbatch_argv(manifest: dict[str, Any], test_only: bool) -> list[str]:
         "COTCODEC_SEEDS": ":".join(str(seed) for seed in manifest["seeds"]),
         "COTCODEC_EXPECTED_GPUS": str(manifest["gpus"]),
     }
+    if predecessor := manifest.get("resume_from_job_id"):
+        exported["COTCODEC_PREDECESSOR_JOB_ID"] = predecessor
+        exported["COTCODEC_RESUME_SUBPATH"] = manifest["resume_subpath"]
+    if memory_bundle := manifest.get("memory_bundle"):
+        exported["COTCODEC_MEMORY_BUNDLE_HOST_HEX"] = memory_bundle["host_path"].encode().hex()
+        exported["COTCODEC_MEMORY_BUNDLE_SHA256"] = memory_bundle["sha256"]
     export_arg = ",".join(f"{key}={value}" for key, value in exported.items())
     argv = [
         "sbatch",

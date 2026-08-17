@@ -1,0 +1,76 @@
+schema_version: 1
+study_id: memory-stage1-smollm2-smoke
+stage: loader_smoke
+description: >-
+  Frozen-model interface and replay smoke. Passing this file is not evidence
+  that the model has useful long-horizon memory ability.
+
+source:
+  type: generated
+  generator_version: memory-events-v3
+  implemented_history_modes: [plain, supersession, deletion-recreate]
+  total_episodes: 100
+  episodes_per_stratum: 25
+  step_range: [20, 40]
+  strata: [active_core, inactive_archive, temporal_graph, proactive_tool]
+
+model:
+  model_id: smollm2-135m
+  dtype: float32
+  eval_mode: true
+  decoding:
+    do_sample: false
+    max_new_tokens: 64
+    constrained_schema: answer_or_tool_json
+
+memory_budget:
+  primary_active_slots: 4
+  max_archive_reads_per_opportunity: 1
+  max_retrieval_top_k: 4
+  max_injected_tokens: 256
+  charge_serialized_bytes: true
+  charge_construction_calls: true
+
+causal_design:
+  serve_propensities: [0.50]
+  paired_replay_fraction: 1.0
+  candidates_per_episode: 1
+  assignment_before_continuation: true
+  prefix_only_features: true
+
+controls:
+  matrix_execution: false
+  executed_by_runner: [engine-direct-records]
+  implementation_available:
+    - bm25
+    - dense-bge-retrieval
+    - full-prefix-ceiling
+    - raw-log-rrf
+    - profile-expansion
+    - lru
+    - no-memory
+    - recency
+    - lexical
+    - learned-next-use
+    - temporal-graph
+    - reference
+  planned_controls: [control-matrix-after-loader-smoke]
+  primary_claim_enabled: false
+
+gates:
+  require_model_receipt: true
+  require_zero_malformed_actions: true
+  require_zero_replay_mismatch: true
+  require_zero_session_bleed: true
+  require_zero_nonfinite_outputs: true
+  require_zero_checkpoint_mismatch: true
+
+execution:
+  seeds: [42]
+  container_required: true
+  scheduler_required: true
+  gpus: 1
+  max_gpu_hours: 1
+  checkpoint_interval_minutes: 10
+  checkpoint_on_preemption: true
+  prove_fresh_job_resume: true

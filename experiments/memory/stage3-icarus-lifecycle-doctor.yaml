@@ -1,0 +1,81 @@
+schema_version: 1
+name: stage3-icarus-lifecycle-doctor
+status: registered-cpu-falsification
+scientific_result: false
+publication_ready: false
+
+source:
+  source_id: icarus-memory-infra
+  repository: https://github.com/esaradev/icarus-memory-infra
+  revision: 6e348708dcddb7cf1ad47726cb287cd4c9183c40
+  tree: fcdbae5db3ed582f679bac2b7348818e20b6e91c
+  version: 0.3.0
+  git_archive_tar_sha256: e0a396bd48be2f2a30d751ed10d6ab1a2a2c80dda094e6334b33f87045d19c05
+  license: MIT
+  license_sha256: 15f6d225dbd3d8496c521f42454ffff7a9cbbdd3d52d2bb447de6c72440ef19c
+  pyproject_sha256: c982050f9f5b1b46d8a854bd2b709bd4d7ca21cb6aeca19195ddb4ca3049a0c7
+
+runtime:
+  containment: docker-network-none
+  local_platform: linux/arm64
+  runtime_network: none
+  read_only_root: true
+  cap_drop_all: true
+  no_new_privileges: true
+  provider_secrets: forbidden
+  sudo: forbidden
+  gpu_count: 0
+  max_gpu_hours: 0
+  clean_state_repeats: 2
+  base_image: ghcr.io/astral-sh/uv@sha256:d1e005e6f5aac724b7554db95f1c128a77d8d35b59ebe70e188852b4bdad3a3d
+  base_image_version: 0.12.5-python3.13-trixie-slim
+  dependency_lock: absent-upstream
+  resolved_discovery_runtime:
+    mcp: 2.0.0
+    pydantic: 2.13.4
+    pyyaml: 6.0.3
+
+upstream_suite:
+  command: [python, -m, pytest, -q]
+  passed: 207
+  failed: 6
+  skipped: 39
+  expected_failure: mcp-major-version-path-incompatibility
+  limitation: >-
+    Upstream declares mcp>=1.0 without a lock or upper bound. The current
+    contained resolver selects mcp 2.0.0, where mcp.server.fastmcp is absent.
+
+intervention:
+  phases: [prepare, verify-restart, purge-probe]
+  sessions: [agent-a, agent-b]
+  manual_promotion_page: decisions/checkout-latency
+  test_duplicate_end_session: true
+  test_supersession: true
+  test_non_destructive_rollback: true
+  test_fresh_process_restart: true
+  test_agent_archive_isolation: true
+  test_native_delete_or_purge: true
+  test_plaintext_residue: true
+  model_calls: 0
+  embedding_calls: 0
+  external_api_calls: 0
+
+expected_falsification:
+  status: BLOCKED_NON_IDEMPOTENT_PROMOTION_AND_NO_NATIVE_PURGE
+  manual_promotion_reproduced: true
+  duplicate_end_session_creates_extra_summary: true
+  duplicate_end_session_creates_extra_wiki_link: true
+  fresh_process_restart_preserves_archive_wiki_supersession_and_rollback: true
+  native_delete_or_purge_api_available: false
+  all_plaintext_canaries_remain_physically_present: true
+  reproduced_in_two_clean_states: true
+
+admission:
+  h100_actor: forbidden-for-this-revision
+  scientific_claim: forbidden
+  publication_claim: forbidden
+  next_gate: >-
+    Require a newer immutable revision or explicit patch arm with a locked MCP
+    dependency, request-idempotent end_session/promotion, scoped native deletion
+    or cryptographic erasure, fresh-process zero-residue proof, and the same
+    supersession, rollback, restart, and isolation guarantees.

@@ -157,6 +157,18 @@ class TrialOutcome(BaseModel):
     exogenous_trace_sha256: str = Field(pattern=r"^[0-9a-f]{64}$")
     candidate_visible: bool
     metrics: dict[str, float] = Field(default_factory=dict)
+    trace_json: str | None = None
+    trace_sha256: str | None = Field(default=None, pattern=r"^[0-9a-f]{64}$")
+    prompt_json: str | None = None
+    prompt_sha256: str | None = Field(default=None, pattern=r"^[0-9a-f]{64}$")
+    memory_frame_json: str | None = None
+    memory_frame_sha256: str | None = Field(default=None, pattern=r"^[0-9a-f]{64}$")
+    model_output_json: str | None = None
+    model_output_sha256: str | None = Field(default=None, pattern=r"^[0-9a-f]{64}$")
+    model_receipt_json: str | None = None
+    model_receipt_sha256: str | None = Field(default=None, pattern=r"^[0-9a-f]{64}$")
+    tool_trace_json: str | None = None
+    tool_trace_sha256: str | None = Field(default=None, pattern=r"^[0-9a-f]{64}$")
 
     @model_validator(mode="after")
     def validate_visibility(self) -> TrialOutcome:
@@ -165,6 +177,36 @@ class TrialOutcome(BaseModel):
             raise ValueError("candidate visibility receipt contradicts the assigned arm")
         if any(not math.isfinite(value) for value in self.metrics.values()):
             raise ValueError("outcome metrics must be finite")
+        detailed_values = (
+            self.trace_sha256,
+            self.prompt_json,
+            self.prompt_sha256,
+            self.memory_frame_json,
+            self.memory_frame_sha256,
+            self.model_output_json,
+            self.model_output_sha256,
+            self.model_receipt_json,
+            self.model_receipt_sha256,
+            self.tool_trace_json,
+            self.tool_trace_sha256,
+        )
+        if self.trace_json is None and any(value is not None for value in detailed_values):
+            raise ValueError("trace receipts require trace_json")
+        if self.trace_json is not None:
+            if any(value is None for value in detailed_values):
+                raise ValueError("trace_json requires all detailed replay artifacts")
+            bindings = (
+                ("trace", self.trace_json, self.trace_sha256),
+                ("prompt", self.prompt_json, self.prompt_sha256),
+                ("memory_frame", self.memory_frame_json, self.memory_frame_sha256),
+                ("model_output", self.model_output_json, self.model_output_sha256),
+                ("model_receipt", self.model_receipt_json, self.model_receipt_sha256),
+                ("tool_trace", self.tool_trace_json, self.tool_trace_sha256),
+            )
+            for label, raw, expected_hash in bindings:
+                computed = hashlib.sha256(raw.encode()).hexdigest()
+                if computed != expected_hash:
+                    raise ValueError(f"{label}_sha256 does not bind {label}_json")
         return self
 
 
@@ -178,6 +220,7 @@ class TrialPlan(BaseModel):
     trial_ids: tuple[str, ...]
     allowed_features: tuple[str, ...]
     paired_audit_ids: frozenset[str]
+    replay_mode: Literal["paired", "single_arm"] = "paired"
     propensity: float = Field(gt=0.0, lt=1.0)
     assignment_seed: int
     folds: int = Field(default=5, ge=2, le=20)
@@ -199,8 +242,10 @@ class TrialPlan(BaseModel):
         unknown_audits = set(self.paired_audit_ids) - set(self.trial_ids)
         if unknown_audits:
             raise ValueError(f"unknown paired audit ids: {sorted(unknown_audits)}")
-        if not self.paired_audit_ids:
-            raise ValueError("paired_audit_ids must include a sealed replay audit set")
+        if self.replay_mode == "paired" and not self.paired_audit_ids:
+            raise ValueError("paired replay mode requires a sealed replay audit set")
+        if self.replay_mode == "single_arm" and self.paired_audit_ids:
+            raise ValueError("single-arm mode cannot execute counterfactual replay audits")
         return self
 
 
@@ -413,6 +458,74 @@ def _validate_paired_replay(first: TrialOutcome, second: TrialOutcome) -> None:
     ):
         if getattr(first, field) != getattr(second, field):
             raise ReplayMismatchError(f"paired branches differ in {field}")
+
+
+def validate_prepared_for_plan(
+    plan: TrialPlan,
+    prepared: PreparedTrial,
+    permuted: PreparedTrial,
+) -> None:
+    """Public validity check shared by durable collection implementations."""
+
+    _validate_features(plan, prepared)
+    _validate_features(plan, permuted)
+    if permuted.snapshot_sha256 == prepared.snapshot_sha256:
+        raise FeatureLeakageError("suffix permutation did not change the suffix snapshot")
+    if permuted.prefix_digest != prepared.prefix_digest or permuted.features != prepared.features:
+        raise FeatureLeakageError(
+            "suffix permutation changed write-time features or prefix digest"
+        )
+
+
+def make_assignment_receipt(
+    plan: TrialPlan,
+    prepared: PreparedTrial,
+    *,
+    sequence: int,
+) -> tuple[dict[str, Any], bool, str]:
+    """Create the deterministic assignment that must be committed before inference."""
+
+    serve, draw_digest = _assignment(plan, prepared)
+    visibility: Literal["serve", "holdout"] = "serve" if serve else "holdout"
+    replay_key = _keyed_hex(
+        "cmht-replay-v1",
+        plan.assignment_seed,
+        prepared.trial_id,
+        prepared.snapshot_sha256,
+    )
+    return (
+        {
+            "schema_version": "1.0",
+            "sequence": sequence,
+            "trial_id": prepared.trial_id,
+            "candidate_id": prepared.candidate_id,
+            "prefix_digest": prepared.prefix_digest,
+            "snapshot_sha256": prepared.snapshot_sha256,
+            "visibility": visibility,
+            "propensity_serve": plan.propensity,
+            "draw_digest": draw_digest,
+            "replay_key": replay_key,
+        },
+        serve,
+        replay_key,
+    )
+
+
+def validate_trial_outcome(
+    prepared: PreparedTrial,
+    outcome: TrialOutcome,
+    replay_key: str,
+    expected_visibility: Literal["serve", "holdout"],
+) -> None:
+    """Public outcome validation for resumable collectors."""
+
+    _validate_outcome(prepared, outcome, replay_key, expected_visibility)
+
+
+def validate_paired_trial(first: TrialOutcome, second: TrialOutcome) -> None:
+    """Public common-randomness validation for resumable collectors."""
+
+    _validate_paired_replay(first, second)
 
 
 def run_trials(
@@ -1289,6 +1402,10 @@ __all__ = [
     "TrialWorld",
     "analyze_trials",
     "make_symbolic_plan",
+    "make_assignment_receipt",
     "run_trials",
+    "validate_paired_trial",
+    "validate_prepared_for_plan",
+    "validate_trial_outcome",
     "verify_analysis",
 ]

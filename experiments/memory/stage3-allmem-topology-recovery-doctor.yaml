@@ -1,0 +1,109 @@
+schema_version: 1
+name: stage3-allmem-topology-recovery-doctor
+status: registered-cpu-falsification
+scientific_result: false
+description: >-
+  Reproduce the pinned All-Mem active-anchor and archived-evidence mechanics
+  with a deterministic local controller, then test whether UPDATE, SPLIT, and
+  MERGE preserve an executable graph path back to immutable source nodes. This
+  is a source and lifecycle admission test, not a memory-quality result.
+
+source:
+  source_id: all-mem
+  repository: https://github.com/LvCan926/All-Mem
+  revision: f5d6912717b0d6c65a19ba2660fb9b6637d4d50e
+  tree: 1c13ee386fe416eeb51e64b26c221fd1e4b84b66
+  git_archive_tar_sha256: 2e46c0afe667ff6656f1adf6c1f66b61d67abe3d015c144661ef38ba8180f298
+  license: MIT
+  license_sha256: 77aed0526cdc2e6a51c7b837c907828bb238d0ea704a458c1d24e486f666e27d
+  requirements_sha256: f12326a89eb7b10b04dda1b21af8a9a11920566125efc4e5d29b885cce9d077c
+  core_sha256: 9f2a9fb638b44b229b9a618437f44490d5721084621b461ed7dabe8b2f76da75
+  llm_sha256: d3303b4d4ab5526835483b587dbaf0bd84ba21844428512654ec04064e69037c
+
+runtime:
+  containment: docker-network-none
+  platform: linux/arm64
+  base_image: docker.io/library/python@sha256:ecb0ac954790dd64a0d518d699b9c61a91780c42b0d877c802dbaffd04db66f9
+  base_image_label: docker.io/library/python:3.11.15-slim-bookworm
+  runtime_network: none
+  read_only_root: true
+  cap_drop_all: true
+  no_new_privileges: true
+  provider_secrets: forbidden
+  sudo: forbidden
+  gpu_count: 0
+  max_gpu_hours: 0
+  max_cpu_cores: 1
+  max_memory_mib: 1024
+  wall_clock_minutes: 20
+  clean_state_repeats: 2
+
+native_capability_contract:
+  exercised:
+    - active-anchor-retrieval
+    - archived-version-expansion
+    - split
+    - merge
+    - update
+    - pickle-save-load
+  refused:
+    - provider-llm
+    - provider-embedding
+    - tenant-isolation
+    - scoped-purge
+    - archive-to-active-promotion
+    - atomic-crash-recovery
+
+intervention:
+  external_model_calls: 0
+  deterministic_controller: true
+  deterministic_hash_embedding: true
+  sequence:
+    - write-version-pair-and-apply-update
+    - write-duplicate-pair-and-apply-merge
+    - write-mixed-topic-record-and-apply-split
+    - rebuild-active-index
+    - query-active-anchors-and-expand-archived-version
+    - verify-derived-source-labels-against-raw-node-reachability
+    - save-pickle-and-load-from-fresh-container
+
+expected_falsification:
+  status: BLOCKED_SPLIT_MERGE_RAW_EVIDENCE_RECOVERY
+  update_has_typed_path_to_archived_source: true
+  split_has_typed_path_to_archived_source: false
+  merge_has_typed_path_to_archived_sources: false
+  derived_nodes_keep_source_ids_without_raw_node_path: true
+  query_can_expand_archived_update_version: true
+  persistence_format: pickle
+  native_scoped_purge: false
+  external_model_calls: 0
+  reproduced_in_two_clean_states: true
+  fresh_restart_semantic_projection_stable: true
+  exact_equal_content_tie_order_is_not_required: true
+
+kill_criteria:
+  - source, license, requirements, core, LLM helper, image, or doctor identity drift
+  - any provider secret, provider call, runtime network, or GPU
+  - active-anchor retrieval cannot recover the UPDATE predecessor
+  - SPLIT or MERGE unexpectedly gains a typed raw-source recovery edge at this revision
+  - prepare and fresh-container verify semantic projections differ after equal-content tie normalization
+  - clean-state semantic repetitions differ after UUID and equal-content tie normalization
+  - the result is reported as a memory-quality, graph-efficacy, or active-inactive-paging result
+
+admission:
+  active_inactive_h100: forbidden-for-this-revision
+  graph_quality_h100: forbidden-for-this-revision
+  unblock_requires:
+    - newer immutable upstream revision or explicit patch arm
+    - typed transitive recovery edges for every split and merge source
+    - deterministic tenant and session ownership
+    - scoped zero-residue purge
+    - atomic checkpoint and two-fresh-restart proof
+    - matched flat-versus-topology retrieval cell with frozen nodes and actor
+
+forbidden_claims:
+  - memory quality improvement
+  - graph efficacy
+  - bidirectional active inactive paging
+  - compliant deletion
+  - publication ready

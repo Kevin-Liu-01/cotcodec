@@ -1,0 +1,83 @@
+{
+  "artifact_files": {
+    "aggregate-report.json": "8a7e377b4906fa4e58e3929a45c950ee2657a439fe50724e634c55dc981e09aa",
+    "analysis-plan.json": "6dfcfe41724ec23c9e12d94e9019dfd45d7facbc96f31f5ae97bf8869ef6fe62",
+    "execution-amendment-003.json": "069980b53a7adae121fc9d93d1d6999d1e4df7e4e56c4dde80af70f83285662c",
+    "remote-jobs/328/termination.env": "a4e1d8fc21f64a3bc32f7c3a3c128f1a683001bbdb4cc42c036b96f5b21761d9",
+    "remote-jobs/329/manifest.json": "f9f135a25ea28b5cfb8ac19467e4446e4263fa7945b91d0742529260143e2071",
+    "remote-jobs/329/memorybank-upstream-precedence/screen-matrix-report.json": "b344be98d18e8d1ae7e59b353abcfe1c77f5f5d6df8d1c98669cc5fe662ffb18",
+    "remote-jobs/329/termination.env": "37a71a7f4fd27262afe13a50665758defc6fbec9a29d4973ed7732587785d438",
+    "remote-jobs/330/termination.env": "a019f1aeca5b43b44e882f77b0de5ba75de55c2556c5790a3eda33e52a238dc1",
+    "remote-jobs/333/image-inspect.json": "f9df6ac2fffa83f660c13a68a43aa3676c2348b41415c8d8401b3f7cb974d0a7",
+    "remote-jobs/333/manifest.json": "805aff2da2959023ac5cf05e7f0fec0119ab0375d79e29af998a7759001dfd48",
+    "remote-jobs/333/memorybank-corrected/screen-matrix-report.json": "a84bcf5b5c26d990b48c692b4f06b5cb38e137101716b13ff1a33c85f145ac0b",
+    "remote-jobs/333/model-receipt.json": "75ebfc531acdcbc0c39bbf83ee7bf5267a3ddf02c4fafdf6181624612a0d3082",
+    "remote-jobs/333/resume-receipt.json": "444376561bb6cc200e99a8bee3b61193c21fecbeccac07e74b83040ae5d6e70c",
+    "remote-jobs/333/termination.env": "2e7bcfdfedb97b90dcf68b90dc861461676eac433520b64a45b291fee84aa542",
+    "remote-jobs/334/manifest.json": "75cec66fd1cd121b6497bd4f682b2aecb5cff72b56f0cae5f224a9db2c67164d",
+    "remote-jobs/334/memorybank-no-decay/screen-matrix-report.json": "f4f1611f456c6b1d763af1959318de1e5697f941ad788fbacf97d8a69ed73dcf",
+    "remote-jobs/334/resume-receipt.json": "42316b8cc259bace734084531f13e96379c9be7fb8ed3c9f9f4ad516b7561d16",
+    "remote-jobs/334/termination.env": "db7e064697663c169ddc073e3191425feceb477247bc2e2df581dd5eba10c860",
+    "remote-jobs/slurm-328.out": "0bdd0e298a593a4f3fe2481ab3c4e033d40ff98443a7478ceb54dbe50ac78642",
+    "remote-jobs/slurm-329.out": "898003c5ac5c1ee6bb02a09cbcfd72750d9ef54d0a6ae0b454afa5925a83e3d0",
+    "remote-jobs/slurm-330.out": "a0bb999dd3742f38dd60ee7ffb26cb23d42cd845c3bcf4d41d936a60189d6f7e",
+    "remote-jobs/slurm-333.out": "f79f5bfa7717bab00d51890c6d2d319791ab189dae5a8e989029c7f1a44f5162",
+    "remote-jobs/slurm-334.out": "ef28f16d92f40423f64fd356af6c078b6d757dfa9cf3367382e572dfe03f8ff0"
+  },
+  "artifact_root": "data/results/infrastructure/memorybank-h100-source-2026-08-16-v3",
+  "claim_boundary": {
+    "larger_model_admission": "forbidden-because-no-decay-dominates",
+    "memorybank_paper_reproduced": false,
+    "no_decay_control_dominates_corrected": true,
+    "upstream_precedence_bug_repaired": true
+  },
+  "evidence_grade": "local-negative-reproduced",
+  "evidence_kind": "clean-room-h100-control-screen",
+  "experiment_path": "experiments/memory/stage3-memorybank-corrected-decay-h100-screen.yaml",
+  "experiment_sha256": "b3cc850ec1de79252052af8c0f63da9940f7d79b75a4a7455be3412c22746b15",
+  "git_sha": "581ded8df71564b0212d8af5dcd401257aa6a28f",
+  "git_tree": "5a83330044fda59e998e09c18266ad6f99a84bce",
+  "image_id": "sha256:ca32b5c26b92fbe2a7054ae96543cd62928b0493896ec355b869b612022aa9a2",
+  "initial_jobs": {
+    "corrected": 328,
+    "no_decay": 330,
+    "upstream_precedence": 329
+  },
+  "model": {
+    "artifact_root_sha256": "3b8a075149bffe4dea784db5b4b37bc0896688cba0b3de7d8d0f6e8ae6157b9e",
+    "model_id": "qwen3.5-4b",
+    "receipt_sha256": "75ebfc531acdcbc0c39bbf83ee7bf5267a3ddf02c4fafdf6181624612a0d3082",
+    "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a"
+  },
+  "outcome": {
+    "corrected_minus_no_decay_ci95_points": [
+      -66.77215189873418,
+      -50.0
+    ],
+    "corrected_minus_no_decay_points": -58.38709677419355,
+    "corrected_minus_upstream_ci95_points": [
+      6.148867313915858,
+      16.24203821656051
+    ],
+    "corrected_minus_upstream_points": 10.96774193548387,
+    "safety_failures": 0,
+    "valid_action_rate": 1.0
+  },
+  "publication_ready": false,
+  "resume_jobs": {
+    "corrected": 333,
+    "no_decay": 334
+  },
+  "runtime_lane": "docker-under-slurm-h100-discovery",
+  "schema_version": 1,
+  "scientific_result": false,
+  "source_archive_path": "data/results/infrastructure/memorybank-h100-source-2026-08-16-v3/source.tar.gz",
+  "source_archive_sha256": "2d960d1a5cf6fd64cdd0baba0a2c752ad6216b8443d741cb7deef9e07d031322",
+  "source_receipt_path": "data/results/infrastructure/memorybank-h100-source-2026-08-16-v3/source-receipt.json",
+  "source_receipt_sha256": "4589b7be3bb04b94e6f84a3d6eb4f512df6f11cefb2671e9ebef353474f67075",
+  "source_id": "memorybank-siliconfriend",
+  "source_revisions": {
+    "https://github.com/zhongwanjun/MemoryBank-SiliconFriend": "cf61c4196e4cfdb0f2b7a0316249fa40312dc3a9"
+  },
+  "status": "MEMORYBANK_CORRECTED_DECAY_PASS_NO_DECAY_KILLS_SCALING"
+}

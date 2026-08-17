@@ -1,0 +1,76 @@
+# syntax=docker/dockerfile:1
+FROM docker.io/library/python:3.12.11-slim-bookworm@sha256:c00fc7b44d844b6da22861ec24af43968a5200eac4ec607b4725d585165d6b49
+
+ARG COTCODEC_GRAPHITI_LIFECYCLE_SIDECAR_SHA256
+ARG COTCODEC_GRAPHITI_LIFECYCLE_DOCTOR_SHA256
+ARG COTCODEC_GRAPHITI_LIFECYCLE_VALIDATOR_SHA256
+ARG COTCODEC_GRAPHITI_LIFECYCLE_EXPERIMENT_SHA256
+ARG COTCODEC_GCC_VERSION=4:12.2.0-3
+ARG COTCODEC_GXX_VERSION=4:12.2.0-3
+ARG COTCODEC_LIBC6_DEV_VERSION=2.36-9+deb12u14
+ARG COTCODEC_MAKE_VERSION=4.3-4.1
+ARG COTCODEC_PKG_CONFIG_VERSION=1.8.1-1
+
+RUN apt-get update \
+    && apt-get install --yes --no-install-recommends \
+       "gcc=$COTCODEC_GCC_VERSION" \
+       "g++=$COTCODEC_GXX_VERSION" \
+       "libc6-dev=$COTCODEC_LIBC6_DEV_VERSION" \
+       "make=$COTCODEC_MAKE_VERSION" \
+       "pkg-config=$COTCODEC_PKG_CONFIG_VERSION" \
+    && python -m pip install --no-cache-dir uv==0.11.30
+
+WORKDIR /workspace/cotcodec
+ENV HOME=/state \
+    PYTHONPATH=/workspace/cotcodec \
+    PYTHONUNBUFFERED=1 \
+    UV_LINK_MODE=copy \
+    VIRTUAL_ENV=/workspace/cotcodec/.venv \
+    PATH=/workspace/cotcodec/.venv/bin:${PATH}
+
+COPY pyproject.toml uv.lock README.md ./
+RUN uv sync --frozen --no-dev --extra memory-graphiti --no-install-project
+
+COPY graphiti-source/ /opt/graphiti-source/
+COPY harness/ /workspace/cotcodec/harness/
+COPY infra/memory-baselines/graphiti_lifecycle_sidecar.py \
+     /workspace/cotcodec/infra/memory-baselines/graphiti_lifecycle_sidecar.py
+COPY scripts/run_deterministic_embedding_server.py \
+     /workspace/cotcodec/scripts/run_deterministic_embedding_server.py
+COPY scripts/run_graphiti_lifecycle_doctor.py \
+     /workspace/cotcodec/scripts/run_graphiti_lifecycle_doctor.py
+COPY scripts/validate_graphiti_lifecycle_experiment.py \
+     /workspace/cotcodec/scripts/validate_graphiti_lifecycle_experiment.py
+COPY experiments/memory/stage3-graphiti-native-lifecycle-doctor.yaml \
+     /workspace/cotcodec/experiments/memory/stage3-graphiti-native-lifecycle-doctor.yaml
+
+RUN test "$(sha256sum infra/memory-baselines/graphiti_lifecycle_sidecar.py | cut -d' ' -f1)" = "$COTCODEC_GRAPHITI_LIFECYCLE_SIDECAR_SHA256" \
+    && test "$(sha256sum scripts/run_graphiti_lifecycle_doctor.py | cut -d' ' -f1)" = "$COTCODEC_GRAPHITI_LIFECYCLE_DOCTOR_SHA256" \
+    && test "$(sha256sum scripts/validate_graphiti_lifecycle_experiment.py | cut -d' ' -f1)" = "$COTCODEC_GRAPHITI_LIFECYCLE_VALIDATOR_SHA256" \
+    && test "$(sha256sum experiments/memory/stage3-graphiti-native-lifecycle-doctor.yaml | cut -d' ' -f1)" = "$COTCODEC_GRAPHITI_LIFECYCLE_EXPERIMENT_SHA256" \
+    && uv pip install --python /workspace/cotcodec/.venv/bin/python --no-deps /opt/graphiti-source \
+    && /workspace/cotcodec/.venv/bin/python -c \
+       "import importlib.metadata; assert importlib.metadata.version('graphiti-core') == '0.29.3'; assert importlib.metadata.version('falkordblite') == '0.10.0'" \
+    && /workspace/cotcodec/.venv/bin/python scripts/validate_graphiti_lifecycle_experiment.py \
+    && apt-get purge --yes --auto-remove gcc g++ libc6-dev make pkg-config \
+    && rm -rf /var/lib/apt/lists/* /state/.cache/uv
+
+LABEL org.opencontainers.image.source="https://github.com/getzep/graphiti" \
+      org.opencontainers.image.revision="401c59a65bdeb22a44136901ff30231e6998a7fe" \
+      org.opencontainers.image.cotcodec-python-base="docker.io/library/python:3.12.11-slim-bookworm@sha256:c00fc7b44d844b6da22861ec24af43968a5200eac4ec607b4725d585165d6b49" \
+      org.cotcodec.source-archive-sha256="9cfbc01e90f4e6dfbf61fefe86e7f04b15c57c08a7ff8298f873d6f5696d0303" \
+      org.cotcodec.memory-lifecycle-adapter="graphiti-explicit-triplet-lifecycle-v1" \
+      org.cotcodec.graphiti-lifecycle-sidecar-sha256="$COTCODEC_GRAPHITI_LIFECYCLE_SIDECAR_SHA256" \
+      org.cotcodec.graphiti-lifecycle-doctor-sha256="$COTCODEC_GRAPHITI_LIFECYCLE_DOCTOR_SHA256" \
+      org.cotcodec.graphiti-lifecycle-validator-sha256="$COTCODEC_GRAPHITI_LIFECYCLE_VALIDATOR_SHA256" \
+      org.cotcodec.graphiti-lifecycle-experiment-sha256="$COTCODEC_GRAPHITI_LIFECYCLE_EXPERIMENT_SHA256" \
+      org.cotcodec.graphiti-build-gcc="$COTCODEC_GCC_VERSION" \
+      org.cotcodec.graphiti-build-gxx="$COTCODEC_GXX_VERSION" \
+      org.cotcodec.graphiti-build-libc6-dev="$COTCODEC_LIBC6_DEV_VERSION" \
+      org.cotcodec.graphiti-build-make="$COTCODEC_MAKE_VERSION" \
+      org.cotcodec.graphiti-build-pkg-config="$COTCODEC_PKG_CONFIG_VERSION" \
+      org.cotcodec.runtime-architecture="linux-amd64-emulated-discovery" \
+      org.cotcodec.scientific-result="false"
+
+USER 65532:65532
+ENTRYPOINT ["/workspace/cotcodec/.venv/bin/python", "/workspace/cotcodec/scripts/run_graphiti_lifecycle_doctor.py"]

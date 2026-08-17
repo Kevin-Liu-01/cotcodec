@@ -1,0 +1,60 @@
+schema_version: 1
+name: stage3-memoria-transactional-lifecycle-doctor
+status: registered-cpu-falsification
+scientific_result: false
+publication_ready: false
+
+source:
+  source_id: memoria-matrixorigin
+  repository: https://github.com/matrixorigin/Memoria
+  revision: efd3d6515969971dfa894737272b8317bcb643e7
+  tree: c07d7b427a9d664d8473b0c2139ecc0d72e229d4
+  version: 0.4.0
+  license: Apache-2.0
+  license_sha256: a6e2f408924ad44acabe43da942d149060a4e8174a8f30240a089bda10279607
+  cargo_lock_sha256: 904c09b1ba24b6c27ca8c20093b1e96de1386201fcc4a0f333a3149e0782d435
+  git_archive_tar_sha256: a81f15ca11c616d477e929853019a2156799229f75c1d264a761fe7b42cdaa2e
+
+runtime:
+  containment: docker-internal-network
+  runtime_network: internal-only
+  provider_secrets: forbidden
+  sudo: forbidden
+  gpu_count_inside_containers: 0
+  matrixone_image: matrixorigin/matrixone@sha256:66e2e0123d32094bff32ef7b8ba06d6d84391983cd1c9c41329dc3f7a05a2518
+  rust_builder_image: rust:1.85-slim@sha256:a5da637ee23946bafb8517476efe46cbc24f1d15d2099a26bd1f039c005c1a9a
+  debian_runtime_image: debian:bookworm-slim@sha256:817e6cf99d6fc127ff4ffe8580049b60deba0adfbbb2bd65ddc3ef8fbb7aade0
+  matrixone_restarts: 2
+  clean_state_repeats: 2
+
+intervention:
+  exact_source_crates: [memoria-git, memoria-storage]
+  database_mode: legacy-shared-database-falsifier
+  embedding_provider: deterministic-none
+  provider_calls: 0
+  model_backend_calls: 0
+  test_snapshot_create_restore_drop: true
+  test_branch_isolation_and_native_merge: true
+  test_merge_idempotency: true
+  test_cross_user_branch_visibility: true
+  test_restart_persistence: true
+  test_soft_purge_physical_residue: true
+  test_nonatomic_restore_source_contract: true
+
+expected_falsification:
+  status: BLOCKED_SHARED_TABLE_BRANCH_EXPOSURE_SOFT_PURGE_RESIDUE_AND_NONATOMIC_ROLLBACK
+  branch_snapshot_merge_positive_path: true
+  shared_database_branch_contains_other_user_rows: true
+  purge_leaves_inactive_memory_row: true
+  snapshot_restore_is_delete_then_insert: true
+  reproduced_in_two_clean_states: true
+
+admission:
+  h100_actor: forbidden-for-this-revision
+  scientific_claim: forbidden
+  publication_claim: forbidden
+  next_gate: >-
+    Admit only a newer revision or explicit reviewed patch arm that makes branch
+    scope unambiguous, supplies physical or cryptographic erasure across active
+    rows and retained snapshots, and provides an atomic or crash-recoverable
+    rollback protocol; rerun this doctor before any H100 actor cell.

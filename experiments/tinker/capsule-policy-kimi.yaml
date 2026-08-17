@@ -1,6 +1,7 @@
 schema_version: 1
 name: capsule-policy-kimi
 status: contract
+experiment_kind: portable_capsule
 research_question: >-
   Does a model-specific LoRA trained to speak one fixed orchestration-capsule
   event/action protocol improve agent-task success across two conformant hosts

@@ -1,0 +1,23 @@
+ARG BASE_IMAGE
+FROM ${BASE_IMAGE}
+
+ARG COTCODEC_SUPERMEMORY_SOURCE_REVISION
+ARG COTCODEC_SUPERMEMORY_RELEASE_REVISION
+ARG COTCODEC_SUPERMEMORY_BINARY_SHA256
+ARG COTCODEC_SUPERMEMORY_MODEL_REVISION
+
+LABEL org.opencontainers.image.source="https://github.com/supermemoryai/supermemory" \
+      org.opencontainers.image.revision="${COTCODEC_SUPERMEMORY_SOURCE_REVISION}" \
+      org.cotcodec.supermemory-release-revision="${COTCODEC_SUPERMEMORY_RELEASE_REVISION}" \
+      org.cotcodec.supermemory-binary-sha256="${COTCODEC_SUPERMEMORY_BINARY_SHA256}" \
+      org.cotcodec.supermemory-model-revision="${COTCODEC_SUPERMEMORY_MODEL_REVISION}" \
+      org.cotcodec.evidence-role="binary-only-cpu-lifecycle-doctor"
+
+COPY supermemory-server /usr/local/bin/supermemory-server
+COPY model-cache/ /opt/supermemory-models/
+COPY doctor.py /opt/cotcodec/doctor.py
+
+RUN chmod 0555 /usr/local/bin/supermemory-server /opt/cotcodec/doctor.py
+
+USER 65532:65532
+ENTRYPOINT ["python", "/opt/cotcodec/doctor.py"]

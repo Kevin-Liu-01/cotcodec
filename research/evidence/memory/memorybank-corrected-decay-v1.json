@@ -1,0 +1,51 @@
+{
+  "code_files": {
+    "experiments/memory/stage3-memorybank-corrected-decay-doctor.yaml": "2c13cdbd5ec135be40aa9ac8ee6683169e90a8d6330a2e957dd535f45a42ecba",
+    "harness/memory_trials/__init__.py": "b01798b40afb58b8f6d973c2458d7dd92551410667f85dca23238e1e8ee72342",
+    "harness/memory_trials/memorybank_decay.py": "274dd2424a8444b399827d34279d81c3064db381d1d0ba0bfa8d28273389e979",
+    "harness/memory_trials/systems.py": "a358f90d355560db5e311fa2d9ba291cb7f051161ffcc20ca4c8438c95c0da53",
+    "scripts/analyze_memorybank_frozen_controls.py": "fe4f3a73c51dadb693bd5820db9cd6546da9d0771466914b8b5402c66aa8c84d",
+    "scripts/freeze_memory_system_outputs.py": "6e8d1cc97b46e53818a27e6ac06b0ad53f06203f35951853db2a2f382e961d4a",
+    "scripts/run_memorybank_decay_container.py": "a2d7383cf8096ce73c053c36dc41cf8919027496bff83aca8f5b625971a4284c",
+    "scripts/run_memorybank_decay_doctor.py": "ac5632e4238c69a63ca3b6057420a0d511497db0f14b3f0295baaa281c6030ff",
+    "scripts/validate_memorybank_decay_experiment.py": "6a6d2502d97548b4d7b8f6b23ecb7dc64376b97176b00089e42409af49f94672"
+  },
+  "cpu_doctor": {
+    "artifact_root": "data/results/memorybank-decay/2026-08-16-local-docker-v1",
+    "files": {
+      "doctor.py": "ac5632e4238c69a63ca3b6057420a0d511497db0f14b3f0295baaa281c6030ff",
+      "experiment.yaml": "2c13cdbd5ec135be40aa9ac8ee6683169e90a8d6330a2e957dd535f45a42ecba",
+      "image-inspect.json": "3a7f2143aad62d13708a5a918ccd03acb084e783c3cac389e40e333addbf7eb0",
+      "manifest.json": "43b5937d72acace2a14a7dbd390020340b514db513a5f96dd526d9f51a1873c3",
+      "memorybank_decay.py": "274dd2424a8444b399827d34279d81c3064db381d1d0ba0bfa8d28273389e979",
+      "repeat-1.json": "f40437ac9078848972a6c57147abf0b1040f2956ee263b2efe9e526d51d4f28a",
+      "repeat-2.json": "f40437ac9078848972a6c57147abf0b1040f2956ee263b2efe9e526d51d4f28a",
+      "report.json": "36ddf659b78de11c2d880e4d64e8ad2647de0c011bfb13e1d58be1b0f74eb565"
+    },
+    "run_count": 2,
+    "status": "MEMORYBANK_CORRECTED_DECAY_CONTRACT_PASS"
+  },
+  "evidence_grade": "local-conformance-reproduced",
+  "evidence_kind": "clean-room-mechanism-control-conformance",
+  "frozen_controls": {
+    "artifact_root": "data/results/memorybank-decay/frozen-controls-v1",
+    "files": {
+      "contrast-report.json": "f719a7de0af2e9a08effb0e63409d86c33b3750b0a09ddf60984f3e0da93a82f",
+      "corrected.json": "8a8cdd3ff0fe33e4b9fc0fdbbee1a001b935ae29bf6decad0e31a4535f44a500",
+      "no-decay.json": "fddb26029d68de646a8ef766a411ac843537e75c0119586c563e428919952333",
+      "upstream-precedence.json": "fe9b7ab3588c26d29006c2107606b054fc17d5266da9f8ee7214d2c3fa9a70e0"
+    },
+    "status": "MEMORYBANK_FROZEN_CONTROL_CONTRAST_PASS",
+    "task_count": 200
+  },
+  "h100_actor_admission": "bounded-discovery-screen",
+  "publication_ready": false,
+  "schema_version": 1,
+  "scientific_result": false,
+  "source_id": "memorybank-siliconfriend",
+  "source_revisions": {
+    "https://github.com/zhongwanjun/MemoryBank-SiliconFriend": "cf61c4196e4cfdb0f2b7a0316249fa40312dc3a9"
+  },
+  "status": "MEMORYBANK_CORRECTED_DECAY_CONTROL_ADMITTED",
+  "upstream_code_imported": false
+}

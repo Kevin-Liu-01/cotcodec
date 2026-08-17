@@ -1,0 +1,100 @@
+schema_version: 1
+name: stage3-mem0-native-lifecycle-doctor
+status: registered-native-cpu-lifecycle-doctor
+scientific_result: false
+protocol: memory-lifecycle-v1
+description: >-
+  Exercise the reviewed Mem0 2.0.18 native local-Qdrant path as a persistent
+  inactive archive. Test task-blind CRUD, native retrieval, checkpoint
+  verification after a fresh process, branch isolation, idempotency, physical
+  scoped purge, and residue, including the exact post-native crash scope.
+  Explicitly reject active-tier maintenance and outcome feedback. This is
+  lifecycle evidence, not a memory-quality result.
+
+source:
+  source_id: mem0
+  repository: https://github.com/mem0ai/mem0
+  revision: 71f2ebefa3494da21550fb525216818776cde67f
+  version: 2.0.18
+  git_archive_tar_sha256: c577ecf9a460b0fa581032037ccbfd887f7a7d0afa0fc091d13fd8b692089b12
+  adapter: mem0-native-lifecycle-v1
+  inference: false
+  backend: qdrant-local-persistent
+  embedding: deterministic-interface-doctor-v1
+
+mechanism_scope:
+  representation: semantic-record
+  residency: inactive-archive-only
+  supported_operations: [apply, query, checkpoint, restore, inspect, purge]
+  unsupported_operations: [maintain, feedback]
+  active_inactive_paging_claim: forbidden
+
+cases:
+  fresh_process_restart: true
+  write_update_delete: true
+  native_query: true
+  branch_isolation: true
+  idempotent_retry: true
+  divergent_retry_rejection: true
+  interrupted_operation_fail_closed: true
+  scoped_purge_and_plaintext_residue: true
+  post_native_crash_scope_plaintext_residue: true
+  post_native_crash_scope_plaintext_proof_windows: true
+
+gates:
+  exact_source_and_adapter_receipts: true
+  all_resident_records_reported_as_archive: true
+  checkpoint_verifies_persisted_state_without_reconstruction: true
+  restart_evidence_identity_exact_and_score_delta_le_1e-6: true
+  update_preserves_transitive_source_lineage: true
+  delete_removes_native_and_logical_record: true
+  equal_prefix_branch_roots_match: true
+  branch_mutation_does_not_change_sibling: true
+  idempotent_retry_receipt_exact: true
+  divergent_retry_rejected: true
+  maintain_and_feedback_capabilities_absent: true
+  purged_scopes_remove_plaintext_canary: true
+  interrupted_pending_operation_is_fail_closed: true
+  crash_scope_plaintext_proof_windows_self_verify: true
+
+expected_negative_findings:
+  post_native_crash_continuation_recovered: false
+  post_native_crash_residue_must_be_reported: true
+
+execution:
+  container_required: true
+  runtime_network: none
+  loopback_embedding_server_only: true
+  gpus: 0
+  max_gpu_hours: 0
+  cpu_time_limit_minutes: 10
+  clean_state_repetitions: 2
+  sudo: forbidden
+  h100_admission: blocked-until-all-gates-crash-recovery-and-residue-clearance-pass
+
+artifacts:
+  - dockerfile
+  - experiment.yaml
+  - harness/memory_trials/lifecycle.py
+  - image-inspect.json
+  - infra/memory-baselines/mem0_lifecycle_sidecar.py
+  - infra/memory-baselines/mem0_sidecar.py
+  - run-1/manifest.json
+  - run-1/report.json
+  - run-1/stderr.txt
+  - run-1/stdout.txt
+  - run-2/manifest.json
+  - run-2/report.json
+  - run-2/stderr.txt
+  - run-2/stdout.txt
+  - scripts/run_mem0_lifecycle_doctor.py
+  - scripts/validate_mem0_lifecycle_experiment.py
+  - source-context.json
+
+forbidden_claims:
+  - Mem0 memory quality improved
+  - Mem0 is an active inactive pager
+  - Mem0 maintenance or feedback was tested
+  - crash-safe continuation passed
+  - crash-scope residue was cleared unless the recorded evidence proves it
+  - publication ready

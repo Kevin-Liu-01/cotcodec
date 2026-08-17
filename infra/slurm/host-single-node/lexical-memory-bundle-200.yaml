@@ -1,0 +1,17 @@
+runtime: docker-single-node-discovery-v1
+name: memory-lexical-freeze
+image_id: sha256:ba360ea13ea50e77e4900cb258c4dc73156060295abd381899f90f9991cedd10
+git_sha: 581ded8df71564b0212d8af5dcd401257aa6a28f
+source_sha256: 8c51687b22ea710b6d478c65d831dacd3da89b88092328e32e6009ebfa2b841a
+run_root: /home/kevin/cotcodec-runs/docker-research
+command: [python, scripts/freeze_memory_system_outputs.py, --reference-system, lexical, --episodes, "200", --source-seed, "7", --treatment-mode, both, --active-slots, "4", --max-archive-reads, "1", --retrieval-top-k, "4", --max-injected-tokens, "256", --output, /outputs/frozen-lexical-200.json]
+model:
+  cache_host_path: /home/kevin/cotcodec-runs/hf-cache
+  model_id: qwen3.5-4b
+  revision: 851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a
+  receipt_sha256: 75ebfc531acdcbc0c39bbf83ee7bf5267a3ddf02c4fafdf6181624612a0d3082
+  artifact_root_sha256: 3b8a075149bffe4dea784db5b4b37bc0896688cba0b3de7d8d0f6e8ae6157b9e
+seeds: [42, 43, 44]
+resources: {gpu_type: h100, gpus: 1, cpus: 4, memory_gb: 8, minutes: 15}
+budget: {max_gpu_hours: 0.25}
+

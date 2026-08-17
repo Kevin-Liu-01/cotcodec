@@ -1,0 +1,127 @@
+schema_version: 1
+study_id: memory-stage0-oracle
+stage: oracle
+description: >-
+  Deterministic 20-40-step memory-to-action episodes. This establishes event,
+  budget, replay, leakage, estimator, checkpoint, and artifact correctness
+  without an LLM or judge.
+
+source:
+  type: generated
+  generator_version: memory-events-v3
+  implemented_history_modes: [plain, supersession, deletion-recreate]
+  episodes_per_propensity: 2400
+  split_counts:
+    train: 1440
+    dev: 480
+    test: 480
+  step_range: [20, 40]
+  strata:
+    - active_core
+    - inactive_archive
+    - temporal_graph
+    - proactive_tool
+  split_contract:
+    implementation: exact-family-manifest-v1
+    split_seed: 42
+    family_id: cross-stratum-generated-family
+    entity_and_value_namespaces_are_family_scoped: true
+    manifest_required_before_learned_controls: true
+
+model:
+  model_id: deterministic-oracle
+  decoding: exact
+
+memory_budget:
+  primary_active_slots: 4
+  diagnostic_active_slots: [2, 8]
+  max_archive_reads_per_opportunity: 1
+  max_retrieval_top_k: 4
+  max_injected_tokens: 256
+  charge_serialized_bytes: true
+  charge_construction_calls: true
+
+causal_design:
+  serve_propensities: [0.50, 0.25, 0.10]
+  paired_replay_fraction: 0.25
+  candidates_per_episode: 1
+  estimator: cross_fitted_aipw
+  folds: 5
+  assignment_before_continuation: true
+  prefix_only_features: true
+
+controls:
+  matrix_execution: false
+  executed_by_runner: [engine-direct-records]
+  implementation_available:
+    - bm25
+    - dense-bge-retrieval
+    - full-prefix-ceiling
+    - raw-log-rrf
+    - profile-expansion
+    - lru
+    - no-memory
+    - recency
+    - lexical
+    - learned-next-use
+    - temporal-graph
+    - reference
+  planned_controls:
+    - observational-utility
+    - query-time-causal-intervention
+  primary_claim_enabled: false
+
+metrics:
+  primary: executable_success
+  secondary:
+    - tool_name_exact
+    - tool_arguments_json_exact
+    - update_delete_accuracy
+    - temporal_multihop_exact
+    - abstention_accuracy
+    - evidence_recall_at_4
+    - evidence_mrr
+    - unnecessary_injection_rate
+    - success_per_injected_token
+    - serialized_memory_bytes
+    - memory_reads
+    - memory_writes
+    - p50_latency_ms
+    - p95_latency_ms
+    - safety_failures
+
+gates:
+  minimum_primary_lift_points: 3.0
+  family_clustered_ci_excludes_zero: true
+  maximum_aipw_oracle_ate_gap: 0.05
+  minimum_aipw_oracle_spearman: 0.20
+  minimum_policy_oracle_spearman: 0.20
+  minimum_total_effective_sample_size: 400
+  minimum_arm_effective_sample_size: 100
+  require_zero_replay_mismatch: true
+  require_zero_feature_leakage: true
+  require_zero_session_bleed: true
+  require_zero_checkpoint_mismatch: true
+
+safety:
+  cases:
+    - stored_prompt_injection
+    - malicious_tool_output
+    - stale_permission
+    - pii_canary
+    - delayed_activation
+    - deletion
+    - supersession
+    - cross_session_probe
+  memory_is_untrusted_data: true
+
+execution:
+  seeds: [42, 43, 44]
+  seed_semantics: assignment-sensitivity-not-independent-task-replication
+  container_required: true
+  scheduler_required: true
+  gpus: 0
+  max_gpu_hours: 0
+  checkpoint_interval_minutes: 10
+  checkpoint_on_preemption: true
+  prove_fresh_job_resume: true

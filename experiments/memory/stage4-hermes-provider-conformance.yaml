@@ -1,0 +1,97 @@
+schema_version: 1
+name: stage4-hermes-provider-conformance
+status: registered-cpu-provider-contract
+scientific_result: false
+protocol: hermes-memory-provider-conformance-v1
+description: >-
+  Test every memory provider named by the pinned Hermes documentation without
+  conflating unit contracts, local storage, self-hosted services, and cloud
+  backends. The CPU matrix runs before any model-bearing H100 comparison.
+
+sources:
+  hermes:
+    repository: https://github.com/NousResearch/hermes-agent
+    revision: a90d5369f76c87c98547d2e283aa26d5cfabf322
+    tree: 963eb136bfb21fd0b296a40529cbb3575c610874
+    archive_sha256: 2a2934d3c8379816b2e3919f4cf1191f04e93f136da6f2128246d368644a9514
+    version: 0.20.1
+    license: MIT
+  memori:
+    repository: https://github.com/MemoriLabs/Memori
+    revision: 538b61f245295aa1a43df8033879f8293627f74d
+    tree: 6efd92a1d65c49dec682850d29401899f83d6268
+    license: Apache-2.0
+    integration_version: 0.1.8
+    integration_wheel_sha256: d15840b7e4ce791c348e0e4ec366f05f221779df7a37815a6305b232b84e631f
+    runtime_version: 3.3.6
+    runtime_wheels:
+      linux_aarch64_sha256: 85e216a3b264a78693e11498d794c92dabdefaf55f78fa031dc834366f337a5b
+      linux_x86_64_sha256: 96405cd5095f51cbc69b565726a9938bf5cb6adc16d8834652be35e58586e483
+
+providers:
+  bundled:
+    byterover: adapter-contract-only
+    hindsight: adapter-contract-plus-strict-timeout-probe
+    holographic: local-sqlite-contract
+    honcho: adapter-contract-only
+    mem0: adapter-contract-only
+    openviking: adapter-contract-without-server
+    retaindb: adapter-contract-only
+    supermemory: adapter-contract-only
+  external:
+    memori: package-tests-plus-real-hermes-install-and-discovery
+
+gates:
+  exact_provider_roster:
+    - byterover
+    - hindsight
+    - holographic
+    - honcho
+    - mem0
+    - memori
+    - openviking
+    - retaindb
+    - supermemory
+  every_provider_has_an_isolated_test_group: true
+  memori_directory_install_and_memory_loader_discovery: true
+  strict_hindsight_timeout_probe: true
+  no_live_backend_claim_from_mock_or_fail_open_tests: true
+  no_quality_claim_without_matched_tasks_and_actor: true
+
+execution:
+  container_required: true
+  runtime_image: ghcr.io/astral-sh/uv:0.11.6-python3.13-trixie@sha256:b3c543b6c4f23a5f2df22866bd7857e5d304b67a564f4feab6ac22044dde719b
+  runtime_image_id: sha256:b3c543b6c4f23a5f2df22866bd7857e5d304b67a564f4feab6ac22044dde719b
+  runtime_network: none
+  read_only_root: true
+  cap_drop_all: true
+  no_new_privileges: true
+  sudo: forbidden
+  gpus: 0
+  max_gpu_hours: 0
+  cpu_time_limit_minutes: 15
+  scheduler_required_for_model_calls: true
+  model_compute: h100-only
+
+native_followup:
+  local_first:
+    - holographic
+    - byterover
+  self_hosted:
+    - openviking
+    - mem0
+    - hindsight
+    - supermemory
+  credentialed_only_after_explicit_authority:
+    - honcho
+    - retaindb
+    - memori
+  lifecycle_protocol: memory-lifecycle-v1
+  h100_admission: cpu-lifecycle-pass-required
+
+forbidden_claims:
+  - all providers have native backends reproduced
+  - provider unit tests measure memory quality
+  - a passing fail-open test proves service availability
+  - Hermes documentation and package metadata are mutually consistent
+  - publication ready

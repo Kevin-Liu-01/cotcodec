@@ -1,0 +1,108 @@
+schema_version: 1
+name: stage3-hippo-retention-cross-tenant-doctor
+status: registered-cpu-falsification
+scientific_result: false
+description: >-
+  Reproduce the pinned Hippo Memory fixed-retention primitives and attempt to
+  falsify tenant-safe sleep consolidation and purge. Hippo's bounded working
+  buffer is a separate ephemeral store: eviction and flush delete rows rather
+  than moving them to an archive. This is not an active/inactive paging study.
+
+source:
+  source_id: hippo-memory
+  repository: https://github.com/kitfunso/hippo-memory
+  revision: 4aeb04c68ff079ff1713c977ac4d2a96757cff44
+  tree: 88d0613e1e5aaec6d1c401c200d5ad3372af0828
+  tag: v1.30.0
+  git_archive_tar_sha256: d966a02bf1c811f191e94fa21317a3a2a3a9797ff7f3da93caa114a794845bb8
+  license: MIT
+  license_sha256: c3e197e295e989f797bf994a98ee514179c5ea031320af0823b2bb4c8b05a09d
+  package_lock_sha256: 8faa74fa7fb588dadc67fe8579c605750f14f1bc2a8060c3c81c1de2225ff200
+
+runtime:
+  containment: docker-network-none
+  local_platform: linux/arm64
+  local_base_image: node:24.13.0-bookworm-slim@sha256:4660b1ca8b28d6d1906fd644abe34b2ed81d15434d26d845ef0aced307cf4b6f
+  cluster_confirmation: required-before-any-h100-admission
+  runtime_network: none
+  read_only_root: true
+  cap_drop_all: true
+  no_new_privileges: true
+  provider_secrets: forbidden
+  sudo: forbidden
+  gpu_count: 0
+  max_gpu_hours: 0
+  max_cpu_cores: 1
+  max_memory_mib: 768
+  wall_clock_minutes: 15
+  clean_state_repeats: 2
+
+native_capability_contract:
+  supported:
+    - bounded-working-memory-k20
+    - importance-eviction-by-deletion
+    - clock-decay
+    - retrieval-strengthening
+    - receipt-linked-outcome-feedback
+    - host-wide-sleep-consolidation
+  refused:
+    - configurable-active-slots
+    - active-to-archive-transition
+    - archive-to-active-transition
+    - working-memory-flush-to-archive
+    - tenant-scoped-native-purge
+
+intervention:
+  fixed_clock: true
+  replay_count: 0
+  auto_trace_capture: false
+  embeddings: false
+  extraction: false
+  physics: false
+  memory_value_rescue: false
+  model_calls: 0
+  sequence:
+    - overfill-working-memory-with-21-low-and-1-high-item
+    - write-three-overlapping-episodic-canaries-across-two-tenants
+    - run-native-sleep
+    - apply-retrieval-strengthening-and-positive-outcome
+    - restart-and-reinspect
+    - flush-one-working-memory-session
+    - delete-all-logical-records
+    - scan-persistent-files-for-plaintext-canary-residue
+
+expected_falsification:
+  status: BLOCKED_CROSS_TENANT_CONSOLIDATION_AND_PURGE_RESIDUE_REPRODUCED
+  host_wide_sleep_merges_cross_tenant_sources: true
+  mixed_semantic_owned_by_default_tenant: true
+  mixed_semantic_retrievable_by_default_tenant: true
+  mixed_semantic_source_lineage_complete: false
+  logical_delete_reaches_zero_rows: true
+  plaintext_canary_residue_in_sqlite: true
+  reproduced_in_two_clean_states: true
+
+kill_criteria:
+  - source, lock, license, image, or helper identity drift
+  - any provider secret, model call, embedding call, or runtime network
+  - cross-tenant semantic is not reproduced identically in two clean states
+  - restart changes the normalized native state projection
+  - logical deletion does not reach zero rows
+  - experiment is reported as active/inactive paging or memory-quality evidence
+
+admission:
+  active_inactive_h100: forbidden-for-this-revision
+  retention_actor_pilot: blocked
+  unblock_requires:
+    - newer immutable upstream revision or explicit patch arm
+    - per-tenant consolidation partition
+    - transitive source lineage on derived memories
+    - scoped purge with zero SQLite, FTS, mirror, and derivative residue
+    - contained amd64 Slurm confirmation
+
+forbidden_claims:
+  - active inactive paging
+  - causal outcome credit
+  - memory quality improvement
+  - tenant-safe consolidation
+  - compliant deletion
+  - publication ready

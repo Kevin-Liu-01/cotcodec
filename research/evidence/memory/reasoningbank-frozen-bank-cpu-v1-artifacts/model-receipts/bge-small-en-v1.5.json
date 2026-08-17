@@ -1,0 +1,85 @@
+{
+  "artifact_root_sha256": "85a178e1c7da2659a137728e9b6794f97a2607adfa315e3ee0eeb0f5cc497883",
+  "backend": "huggingface",
+  "files": [
+    {
+      "bytes": 1519,
+      "path": ".gitattributes",
+      "sha256": "11ad7efa24975ee4b0c3c3a38ed18737f0658a5f75a0a96787b576a78a023361"
+    },
+    {
+      "bytes": 190,
+      "path": "1_Pooling/config.json",
+      "sha256": "d1caf60c96f5fba2157c0c26b76d80818fad6cf0b8eb5e73ec372ff9818eba5c"
+    },
+    {
+      "bytes": 94783,
+      "path": "README.md",
+      "sha256": "ddb964361a55c6e5dfca6361615854b260c9c960205d04c7520151aaa1d75837"
+    },
+    {
+      "bytes": 743,
+      "path": "config.json",
+      "sha256": "094f8e891b932f2000c92cfc663bac4c62069f5d8af5b5278c4306aef3084750"
+    },
+    {
+      "bytes": 124,
+      "path": "config_sentence_transformers.json",
+      "sha256": "940d5f50db195fa6e5e6a4f122c095f77880de259d74b14a65779ed48bdd7c56"
+    },
+    {
+      "bytes": 133466304,
+      "path": "model.safetensors",
+      "sha256": "3c9f31665447c8911517620762200d2245a2518d6e7208acc78cd9db317e21ad"
+    },
+    {
+      "bytes": 349,
+      "path": "modules.json",
+      "sha256": "84e40c8e006c9b1d6c122e02cba9b02458120b5fb0c87b746c41e0207cf642cf"
+    },
+    {
+      "bytes": 133093490,
+      "path": "onnx/model.onnx",
+      "sha256": "828e1496d7fabb79cfa4dcd84fa38625c0d3d21da474a00f08db0f559940cf35"
+    },
+    {
+      "bytes": 133508397,
+      "path": "pytorch_model.bin",
+      "sha256": "84868a67d847f7f37d1df745b73a4c20b5bc0a797c87a23b265f8a0131728b88"
+    },
+    {
+      "bytes": 52,
+      "path": "sentence_bert_config.json",
+      "sha256": "84e39fda68ccbff05bfa723ae9c0e70e23e2ec373b76e0f8c6e71af72a693cbf"
+    },
+    {
+      "bytes": 125,
+      "path": "special_tokens_map.json",
+      "sha256": "b6d346be366a7d1d48332dbc9fdf3bf8960b5d879522b7799ddba59e76237ee3"
+    },
+    {
+      "bytes": 711396,
+      "path": "tokenizer.json",
+      "sha256": "d241a60d5e8f04cc1b2b3e9ef7a4921b27bf526d9f6050ab90f9267a1f9e5c66"
+    },
+    {
+      "bytes": 366,
+      "path": "tokenizer_config.json",
+      "sha256": "9261e7d79b44c8195c1cada2b453e55b00aeb81e907a6664974b4d7776172ab3"
+    },
+    {
+      "bytes": 231508,
+      "path": "vocab.txt",
+      "sha256": "07eced375cec144d27c900241f3e339478dec958f92fddbc551f295c992038a3"
+    }
+  ],
+  "mode": "full",
+  "model_id": "bge-small-en-v1.5",
+  "publication_eligible": true,
+  "registry_sha256": "1e166ba6a236a00f18b4e80fe0db004929e357b7c57758b4cccc5e0a7c9041cf",
+  "repo_id": "BAAI/bge-small-en-v1.5",
+  "revision": "5c38ec7c405ec4b44b94cc5a9bb96e735b38267a",
+  "schema_version": 1,
+  "total_bytes": 401109346,
+  "trust_remote_code": false
+}

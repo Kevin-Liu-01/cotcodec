@@ -1,0 +1,32 @@
+# syntax=docker/dockerfile:1.7
+ARG COTCODEC_LIFECYCLE_PYTHON_BASE=docker.io/library/python:3.12.11-slim-bookworm@sha256:519591d6871b7bc437060736b9f7456b8731f1499a57e22e6c285135ae657bf7
+FROM ${COTCODEC_LIFECYCLE_PYTHON_BASE}
+
+ARG COTCODEC_LIFECYCLE_PYTHON_BASE
+ARG GIT_SHA=unknown
+ARG CODE_RECEIPT_SHA256=unknown
+ARG SOURCE_STATE=dirty-development
+
+LABEL org.opencontainers.image.title="cotcodec-memory-lifecycle-cpu" \
+      org.opencontainers.image.revision="${GIT_SHA}" \
+      org.opencontainers.image.cotcodec-code-receipt-sha256="${CODE_RECEIPT_SHA256}" \
+      org.opencontainers.image.cotcodec-source-state="${SOURCE_STATE}" \
+      org.opencontainers.image.cotcodec-scientific-result="false" \
+      org.opencontainers.image.cotcodec-python-base="${COTCODEC_LIFECYCLE_PYTHON_BASE}" \
+      org.opencontainers.image.source="https://github.com/Kevin-Liu-01/cotcodec"
+
+RUN python -m pip install --no-cache-dir uv==0.11.30
+
+WORKDIR /workspace/cotcodec
+ENV PYTHONUNBUFFERED=1 \
+    UV_LINK_MODE=copy \
+    VIRTUAL_ENV=/workspace/cotcodec/.venv \
+    PATH=/workspace/cotcodec/.venv/bin:${PATH}
+
+COPY pyproject.toml uv.lock README.md ./
+RUN uv sync --frozen --no-dev --no-install-project
+
+COPY . .
+RUN python scripts/validate_memory_experiments.py
+
+ENTRYPOINT ["/workspace/cotcodec/.venv/bin/python", "scripts/run_memory_lifecycle_contract.py"]

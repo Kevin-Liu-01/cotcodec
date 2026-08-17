@@ -1,0 +1,246 @@
+{
+  "AppArmorProfile": "docker-default",
+  "Args": [
+    "/opt/cotcodec/scripts/run_reasoningbank_frozen_bank_doctor.py"
+  ],
+  "Config": {
+    "AttachStderr": true,
+    "AttachStdin": false,
+    "AttachStdout": true,
+    "Cmd": null,
+    "Domainname": "",
+    "Entrypoint": [
+      "python",
+      "/opt/cotcodec/scripts/run_reasoningbank_frozen_bank_doctor.py"
+    ],
+    "Env": [
+      "USER=cotcodec-doctor",
+      "LOGNAME=cotcodec-doctor",
+      "TORCHINDUCTOR_CACHE_DIR=/tmp/torchinductor",
+      "PATH=/usr/local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+      "LANG=C.UTF-8",
+      "GPG_KEY=7169605F62C751356D054A26A821E680E5FA6305",
+      "PYTHON_VERSION=3.12.11",
+      "PYTHON_SHA256=c30bb24b7f1e9a19b11b55a546434f74e739bb4c271a3e3a80ff4380d49f7adb",
+      "HOME=/tmp",
+      "HF_HOME=/tmp/huggingface",
+      "PYTHONDONTWRITEBYTECODE=1",
+      "PYTHONUNBUFFERED=1",
+      "PYTHONPATH=/opt/cotcodec"
+    ],
+    "Hostname": "a03bdd621666",
+    "Image": "sha256:d3f7858e55209cd3af46b97e21aafcb8e0675ee59a64a787589ee2679f283430",
+    "Labels": {
+      "org.opencontainers.image.cotcodec-base-image": "docker.io/library/python:3.12.11-slim-bookworm@sha256:519591d6871b7bc437060736b9f7456b8731f1499a57e22e6c285135ae657bf7",
+      "org.opencontainers.image.cotcodec-code-sha256": "5bcc1cbc873c33fb49d1061daf7b829f872112b3bbb93d4ce9c9db092a920ce8",
+      "org.opencontainers.image.cotcodec-scientific-result": "false",
+      "org.opencontainers.image.cotcodec-torch-cpu-wheel-sha256": "70ecb2659af6373b7c5336e692e665605b0201ea21ff51aaea47e1d75ea6b5aa",
+      "org.opencontainers.image.source": "https://github.com/Kevin-Liu-01/cotcodec",
+      "org.opencontainers.image.title": "cotcodec-reasoningbank-frozen-bank-doctor"
+    },
+    "OpenStdin": false,
+    "StdinOnce": false,
+    "Tty": false,
+    "User": "501:20",
+    "Volumes": null,
+    "WorkingDir": "/opt/cotcodec"
+  },
+  "Created": "2026-08-15T12:16:57.012302711Z",
+  "Driver": "overlayfs",
+  "ExecIDs": null,
+  "HostConfig": {
+    "AutoRemove": false,
+    "Binds": [
+      "/Users/kevinliu/repos/cotcodec/data/model-receipts:/receipts:ro",
+      "/Users/kevinliu/repos/cotcodec/data/results/reasoningbank-frozen-bank/2026-08-15-cpu-doctor-v10-sealed:/outputs:rw",
+      "/Users/kevinliu/repos/cotcodec/data/models:/models:ro"
+    ],
+    "BlkioDeviceReadBps": [],
+    "BlkioDeviceReadIOps": [],
+    "BlkioDeviceWriteBps": [],
+    "BlkioDeviceWriteIOps": [],
+    "BlkioWeight": 0,
+    "BlkioWeightDevice": [],
+    "CapAdd": null,
+    "CapDrop": [
+      "ALL"
+    ],
+    "Cgroup": "",
+    "CgroupParent": "",
+    "CgroupnsMode": "private",
+    "ConsoleSize": [
+      0,
+      0
+    ],
+    "ContainerIDFile": "",
+    "CpuCount": 0,
+    "CpuPercent": 0,
+    "CpuPeriod": 0,
+    "CpuQuota": 0,
+    "CpuRealtimePeriod": 0,
+    "CpuRealtimeRuntime": 0,
+    "CpuShares": 0,
+    "CpusetCpus": "",
+    "CpusetMems": "",
+    "DeviceCgroupRules": null,
+    "DeviceRequests": null,
+    "Devices": [],
+    "Dns": null,
+    "DnsOptions": [],
+    "DnsSearch": [],
+    "ExtraHosts": null,
+    "GroupAdd": null,
+    "IOMaximumBandwidth": 0,
+    "IOMaximumIOps": 0,
+    "IpcMode": "private",
+    "Isolation": "",
+    "Links": null,
+    "LogConfig": {
+      "Config": {},
+      "Type": "json-file"
+    },
+    "MaskedPaths": [
+      "/proc/acpi",
+      "/proc/asound",
+      "/proc/interrupts",
+      "/proc/kcore",
+      "/proc/keys",
+      "/proc/latency_stats",
+      "/proc/sched_debug",
+      "/proc/scsi",
+      "/proc/timer_list",
+      "/proc/timer_stats",
+      "/sys/devices/virtual/powercap",
+      "/sys/firmware"
+    ],
+    "Memory": 4294967296,
+    "MemoryReservation": 0,
+    "MemorySwap": 8589934592,
+    "MemorySwappiness": null,
+    "NanoCpus": 4000000000,
+    "NetworkMode": "none",
+    "OomKillDisable": null,
+    "OomScoreAdj": 0,
+    "PidMode": "",
+    "PidsLimit": 256,
+    "PortBindings": {},
+    "Privileged": false,
+    "PublishAllPorts": false,
+    "ReadonlyPaths": [
+      "/proc/bus",
+      "/proc/fs",
+      "/proc/irq",
+      "/proc/sys",
+      "/proc/sysrq-trigger"
+    ],
+    "ReadonlyRootfs": true,
+    "RestartPolicy": {
+      "MaximumRetryCount": 0,
+      "Name": "no"
+    },
+    "Runtime": "runc",
+    "SecurityOpt": [
+      "no-new-privileges"
+    ],
+    "ShmSize": 67108864,
+    "Tmpfs": {
+      "/tmp": "rw,noexec,nosuid,nodev,size=536870912"
+    },
+    "UTSMode": "",
+    "Ulimits": [],
+    "UsernsMode": "",
+    "VolumeDriver": "",
+    "VolumesFrom": null
+  },
+  "HostnamePath": "/var/lib/docker/containers/a03bdd6216660b798daa5243257f81209673198183ab4fcc764e358f98eaad27/hostname",
+  "HostsPath": "/var/lib/docker/containers/a03bdd6216660b798daa5243257f81209673198183ab4fcc764e358f98eaad27/hosts",
+  "Id": "a03bdd6216660b798daa5243257f81209673198183ab4fcc764e358f98eaad27",
+  "Image": "sha256:d3f7858e55209cd3af46b97e21aafcb8e0675ee59a64a787589ee2679f283430",
+  "ImageManifestDescriptor": {
+    "digest": "sha256:d3f7858e55209cd3af46b97e21aafcb8e0675ee59a64a787589ee2679f283430",
+    "mediaType": "application/vnd.oci.image.manifest.v1+json",
+    "platform": {
+      "architecture": "arm64",
+      "os": "linux"
+    },
+    "size": 4049
+  },
+  "LogPath": "/var/lib/docker/containers/a03bdd6216660b798daa5243257f81209673198183ab4fcc764e358f98eaad27/a03bdd6216660b798daa5243257f81209673198183ab4fcc764e358f98eaad27-json.log",
+  "MountLabel": "",
+  "Mounts": [
+    {
+      "Destination": "/receipts",
+      "Mode": "ro",
+      "Propagation": "rprivate",
+      "RW": false,
+      "Source": "/Users/kevinliu/repos/cotcodec/data/model-receipts",
+      "Type": "bind"
+    },
+    {
+      "Destination": "/outputs",
+      "Mode": "rw",
+      "Propagation": "rprivate",
+      "RW": true,
+      "Source": "/Users/kevinliu/repos/cotcodec/data/results/reasoningbank-frozen-bank/2026-08-15-cpu-doctor-v10-sealed",
+      "Type": "bind"
+    },
+    {
+      "Destination": "/models",
+      "Mode": "ro",
+      "Propagation": "rprivate",
+      "RW": false,
+      "Source": "/Users/kevinliu/repos/cotcodec/data/models",
+      "Type": "bind"
+    }
+  ],
+  "Name": "/cotcodec-reasoningbank-48812",
+  "NetworkSettings": {
+    "Networks": {
+      "none": {
+        "Aliases": null,
+        "DNSNames": null,
+        "DriverOpts": null,
+        "EndpointID": "",
+        "Gateway": "",
+        "GlobalIPv6Address": "",
+        "GlobalIPv6PrefixLen": 0,
+        "GwPriority": 0,
+        "IPAMConfig": null,
+        "IPAddress": "",
+        "IPPrefixLen": 0,
+        "IPv6Gateway": "",
+        "Links": null,
+        "MacAddress": "",
+        "NetworkID": "d35164b13780660a04b201668e66b1e494bebc9485560a5f6d86ce3bba0ba5a6"
+      }
+    },
+    "Ports": {},
+    "SandboxID": "",
+    "SandboxKey": ""
+  },
+  "Path": "python",
+  "Platform": "linux",
+  "ProcessLabel": "",
+  "ResolvConfPath": "/var/lib/docker/containers/a03bdd6216660b798daa5243257f81209673198183ab4fcc764e358f98eaad27/resolv.conf",
+  "RestartCount": 0,
+  "State": {
+    "Dead": false,
+    "Error": "",
+    "ExitCode": 0,
+    "FinishedAt": "2026-08-15T12:16:59.678873578Z",
+    "OOMKilled": false,
+    "Paused": false,
+    "Pid": 0,
+    "Restarting": false,
+    "Running": false,
+    "StartedAt": "2026-08-15T12:16:57.052155369Z",
+    "Status": "exited"
+  },
+  "Storage": {
+    "RootFS": {
+      "Snapshot": {
+        "Name": "overlayfs"
+      }
+    }
+  }
+}

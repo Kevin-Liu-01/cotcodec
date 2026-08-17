@@ -3,14 +3,14 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from enum import Enum
+from enum import StrEnum
 from pathlib import Path
 from typing import Any
 
 from harness.yaml_utils import load_yaml_file
 
 
-class MessageType(str, Enum):
+class MessageType(StrEnum):
     PLANNER_NOTE = "planner_note"
     SUBTASK_HANDOFF = "subtask_handoff"
     MEMORY_UPDATE = "memory_update"
@@ -31,7 +31,7 @@ class MessageType(str, Enum):
         }
 
 
-class ConditionID(str, Enum):
+class ConditionID(StrEnum):
     ENGLISH_ONLY = "english_only"
     ENGLISH_ONLY_LOW_EFFORT = "english_only_low_effort"
     ENGLISH_ONLY_NO_THINKING_CACHE = "english_only_no_thinking_cache"
@@ -122,7 +122,8 @@ class ExperimentConfig:
             if key not in known_fields | {"conditions", "models", "run_specs"}
         }
 
-        filtered = {key: raw[key] for key in raw if key in known_fields | {"conditions", "models", "run_specs"}}
+        constructor_fields = known_fields | {"conditions", "models", "run_specs"}
+        filtered = {key: raw[key] for key in raw if key in constructor_fields}
         filtered["extra"] = extra
         return cls(**filtered)
 

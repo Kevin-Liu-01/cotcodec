@@ -1,0 +1,37 @@
+runtime: docker-single-node-discovery-v1
+name: qwen35-9b-smoke
+image_id: sha256:ba360ea13ea50e77e4900cb258c4dc73156060295abd381899f90f9991cedd10
+git_sha: 581ded8df71564b0212d8af5dcd401257aa6a28f
+source_sha256: 8c51687b22ea710b6d478c65d831dacd3da89b88092328e32e6009ebfa2b841a
+run_root: /home/kevin/cotcodec-runs/docker-research
+command:
+  - python
+  - scripts/run_memory_model_screen.py
+  - experiments/memory/stage1-model-transport.yaml
+  - --model-id
+  - qwen3.5-9b
+  - --model-root
+  - /model-cache/cotcodec-models
+  - --receipt-root
+  - /model-cache/cotcodec-receipts
+  - --output-dir
+  - /outputs/screen
+  - --episodes
+  - "4"
+  - --assignment-seed
+  - "42"
+model:
+  cache_host_path: /home/kevin/cotcodec-runs/hf-cache
+  model_id: qwen3.5-9b
+  revision: c202236235762e1c871ad0ccb60c8ee5ba337b9a
+  receipt_sha256: 0a9e052d561b017c505adf5a1c6fcdc048522660a0db134486b84edbf3de5cb3
+  artifact_root_sha256: 9845026dbe255e24b105224eebbb5436d315713b9a5c53c434137896b160c5b1
+seeds: [42, 43, 44]
+resources:
+  gpu_type: h100
+  gpus: 1
+  cpus: 8
+  memory_gb: 48
+  minutes: 30
+budget:
+  max_gpu_hours: 0.5

@@ -1,0 +1,131 @@
+schema_version: 1
+name: stage-b-past-sm01-checkpoint
+status: registered-discovery-pilot-not-scientific-result
+scientific_result: false
+description: >-
+  Run the exact eight-episode PAST-Bench SM01 preference-adoption family with
+  Hermes+ and the pinned Qwen3.6-35B-A3B checkpoint. Compare persistence on
+  versus off, and independently prove an episode-three stop plus fresh-Slurm-job
+  resume against an uninterrupted run before admitting the family screen.
+
+source:
+  repository: https://github.com/Gen-Verse/PAST-Bench
+  revision: f8223517ae7491e776b69793d9f11e9d074ab42e
+  source_receipt_sha256: 5e686206db8d1447d1b18d27bfffdd792f45c9d3418aedc7c15a5d134d6a6a5c
+  runtime_receipt_sha256: 27fb11233ecb18bbdc60ca1c7c0100284b93c87b9fb5d07eb461d028bfd4a64d
+  sequence_path: configs/self_evolve_v2/hermes_self_evolve_v2_sm01_preference_adoption_only.yaml
+  sequence_sha256: 6a311daff3ab1dc5f800ac0adb300f7b6ed5f6e37ba23d2f0b1e96516b719c60
+  family: memory_ability/SM01_preference_adoption
+  episode_count: 8
+  expected_task_ids:
+    - SM01_COLD_001
+    - SM01_LEARN_A_001
+    - SM01_LEARN_B_001
+    - SM01_EVAL_NEAR_001
+    - SM01_EVAL_FAR_001
+    - SM01_CONTROL_002
+    - SM01_CONTROL_001
+    - SM01_CONTROL_003
+
+agent:
+  id: hermes-plus
+  version: 0.4.0
+  runtime: local-inside-outer-container
+  runtime_config: /tools/infra/research/past-bench/sm01-runtime.yaml
+  runtime_cache: /state/runtime_cache
+  comparison: [with_persistence, without_persistence]
+  reflection: registered-sequence-default
+  background_review_wait_seconds: 5.0
+
+model:
+  id: qwen3.6-35b-a3b
+  repository: Qwen/Qwen3.6-35B-A3B
+  revision: 995ad96eacd98c81ed38be0c5b274b04031597b0
+  receipt_sha256: 18c2a12881bf613c7110439b8e765ff89a4c060a1fb60aee62bb7250890ce1f9
+  artifact_root_sha256: 8ac6d764b84034f4ed0df3f2388c9180afceab806f7e75f5d1e43a73bdd2736b
+  trust_remote_code: false
+  server: vllm-0.25.1
+  tensor_parallel_size: 2
+  dtype: bfloat16
+  max_model_length: 32768
+  max_sequences: 1
+  generation_config: vllm-defaults
+  seed: 42
+  temperature: 0.0
+  thinking: false
+  tool_call_parser: qwen3_xml
+  judge: disabled
+
+intervention:
+  sole_condition_difference: registered-hermes-persistence-path
+  identical:
+    - task order
+    - prompts and fixtures
+    - mock services and tool schemas
+    - model artifact and decoding
+    - episode timeout and turn ceiling
+  fresh_sessions: enforce-sequence-manifest
+  pathway_evidence_required: true
+
+recovery:
+  checkpoint_boundary: every-completed-episode
+  controlled_stop_after_episode: 3
+  checkpoint_signal: USR1
+  persistent_storage_required: true
+  minimum_retained_generations: 2
+  resume_job_must_be_fresh: true
+  completed_episode_rerun_count: 0
+  compare_against_uninterrupted: true
+  deterministic_projection_suffix_equal: required
+  raw_trace_byte_equality: report-not-assume
+
+execution:
+  scheduler: slurm
+  container: docker
+  gpu: H100
+  gpus_per_job: 2
+  network: internal-model-network-only
+  runtime_pull: false
+  sudo: forbidden
+  modes:
+    uninterrupted:
+      time_limit_minutes: 90
+      max_gpu_hours: 3
+    stop_after_episode_three:
+      time_limit_minutes: 30
+      max_gpu_hours: 1
+    fresh_job_resume:
+      time_limit_minutes: 90
+      max_gpu_hours: 3
+  prior_failed_contained_runtime_gpu_hours: 0.451111
+  total_max_gpu_hours: 7.5
+
+gates:
+  - exact source image, source SBOM, vLLM image SBOM, and model receipts
+  - exact SM01 sequence bytes and ordered task roster
+  - no external egress from either container
+  - no task or model call before the execution identity is durable
+  - native tool calls remain valid through the Hermes+ adapter
+  - every episode produces a graded trace and pathway artifact receipt
+  - episode-three stop writes a valid immutable checkpoint
+  - fresh job restores without rerunning episodes one through three
+  - uninterrupted and resumed deterministic suffix projections are equal
+  - persistence conditions differ only by the registered persistence path
+
+kill:
+  - malformed tool call or task/order drift
+  - any external egress
+  - missing or invalid checkpoint generation
+  - resume identity drift or completed-episode rerun
+  - deterministic suffix mismatch
+  - cross-condition state bleed
+  - projected four-family screen cost above eight H100-hours
+
+artifacts:
+  - experiment receipt and exact logical workload argv
+  - image, SBOM, model, GPU, Slurm, and containment receipts
+  - per-episode JSONL traces and deterministic projections
+  - sequence and comparison summaries
+  - immutable checkpoint generations and lineage
+  - uninterrupted-versus-resumed comparison report
+  - token, latency, pathway, task-score, and GPU-hour ledgers

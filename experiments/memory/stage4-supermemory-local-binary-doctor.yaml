@@ -1,0 +1,124 @@
+schema_version: 1
+name: stage4-supermemory-local-binary-doctor
+status: registered-cpu-black-box-conformance
+scientific_result: false
+description: >-
+  Test the immutable Supermemory local v0.0.3 Linux ARM64 release as a black-box
+  artifact. The official repository and release commit do not contain the local
+  server implementation, so this is not an open-source code reproduction. The
+  cell admits only direct-memory CRUD, crash/restart, tenant isolation, and
+  physical-purge capability claims.
+
+source:
+  source_id: supermemory
+  repository: https://github.com/supermemoryai/supermemory
+  documentation_revision: 82dae50ef458139823b3bfd3ebaaaac90ffd8a7c
+  documentation_tree: 5c58a2b231ea606683bf7b258d16f0155de31f8c
+  documentation_archive_tar_sha256: 367af62b9353b89aea57942def25e20acad7a4eae8a2434b3e209a9a1d932667
+  license: MIT
+  license_sha256: 9ce388a89cce6a2dc109579d044f7f16e1397d8ee6fdb1f3bd3b980d365a07ae
+  readme_sha256: 16d7a458a77c8cb5ff8b400eed4328d4e76e672b7b0db144050a86e5e8002617
+  configuration_doc_sha256: a357a6b74160cb048ce70430a84415712294e2b3f020b6e8aee61cc1d5a51b65
+  memory_operations_doc_sha256: cfa4b6b98fdec926af654582d2081603f9c27ec4bbb1aabec24977b83f8fa369
+  release_tag: server-v0.0.3
+  release_revision: 39ef7e1e5ea01b34d2cdd1801d0d227d445a985d
+  release_tree: ca1cf46027d94fe3307bbf063a2ddb635d6b7b88
+  release_archive_tar_sha256: f515205dede24fc7f2402ef9d6b34c8002d8fee5d81331ace363f4d73803faf9
+  release_tree_path_list_sha256: 85226b9fd290c6965c9e1c71653638afc0b062abb1b546c50834b5b26ca22483
+  local_server_source_in_release_tree: false
+  binary_artifact:
+    url: https://github.com/supermemoryai/supermemory/releases/download/server-v0.0.3/supermemory-server-linux-arm64
+    manifest_url: https://github.com/supermemoryai/supermemory/releases/download/server-v0.0.3/manifest.json
+    manifest_sha256: 2b05221afcc6936a25a97cf2602aedf1a51775f8181348f18c66711a6cc6e0e9
+    sha256: 167f595afdb6fba3f6ef12e23b31aa99d177684b188376072d4b46f60d3b4d8e
+    bytes: 214510741
+    format: elf-linux-arm64-dynamically-linked
+
+embedding_model:
+  repository: https://huggingface.co/Xenova/bge-base-en-v1.5
+  revision: 4d6cd88e18e51a5e020c2c305726d76ada9c03cf
+  dimensions: 768
+  files:
+    Xenova/bge-base-en-v1.5/config.json: d83c21fa7366994560727112ef0a31d8a2ec1c280c2a3e66326fdb877f64c91e
+    Xenova/bge-base-en-v1.5/onnx/model_quantized.onnx: c9729cc84cbd0e9fecc759505d2be65916c9fe05222d7ea26c65fcb3382af38d
+    Xenova/bge-base-en-v1.5/tokenizer.json: d241a60d5e8f04cc1b2b3e9ef7a4921b27bf526d9f6050ab90f9267a1f9e5c66
+    Xenova/bge-base-en-v1.5/tokenizer_config.json: 9261e7d79b44c8195c1cada2b453e55b00aeb81e907a6664974b4d7776172ab3
+
+runtime:
+  containment: docker-network-none
+  local_platform: linux/arm64
+  local_base_image: python@sha256:7e6269297b5711841583c4d018ca3b151f299fc8e707bd0188c1397f466f377f
+  runtime_network: none
+  read_only_root: true
+  cap_drop_all: true
+  no_new_privileges: true
+  provider_secrets: forbidden
+  sudo: forbidden
+  gpu_count: 0
+  max_gpu_hours: 0
+  max_cpu_cores: 2
+  max_memory_mib: 2560
+  wall_clock_minutes: 20
+  clean_state_repeats: 2
+
+native_capability_contract:
+  supported:
+    - direct-memory-create
+    - local-bge-search
+    - versioned-update
+    - soft-forget
+    - encrypted-local-storage
+    - fresh-process-restart
+  refused:
+    - source-auditable-local-server
+    - tenant-scoped-native-physical-purge
+    - hard-delete-memory
+    - custom-embedding-provider-at-v0.0.3
+
+intervention:
+  model_calls: 0
+  provider_calls: 0
+  local_embedding_calls: native
+  fixed_canaries: true
+  branch_count: 2
+  crash_injection: sigkill-after-committed-versioned-update
+  sequence:
+    - direct-create-one-memory-in-each-container
+    - version-update-container-a
+    - verify-latest-and-history
+    - sigkill-server
+    - fresh-process-restart-and-retrieve
+    - verify-cross-container-isolation
+    - native-soft-forget-container-a
+    - verify-container-b-survives
+    - scan-provider-state-for-plaintext-canaries
+
+expected_outcome:
+  status: BLOCKED_ACKNOWLEDGED_WRITES_LOST_ON_SIGKILL
+  acknowledged_writes_survive_sigkill: false
+  version_history_survives_sigkill: false
+  graceful_restart_persists_acknowledged_pair: true
+  cross_tenant_plaintext_disclosure: false
+  soft_forget_excludes_normal_search: true
+  provider_plaintext_at_rest_detected: false
+  native_tenant_scoped_physical_purge_available: false
+  reproduced_in_two_clean_states: true
+
+admission:
+  memory_lifecycle_h100: forbidden-for-this-release
+  quality_claim: forbidden
+  publication_reproduction: forbidden
+  unblock_requires:
+    - auditable local-server source at an immutable revision or explicit binary-only claim
+    - acknowledged direct-memory writes survive abrupt process loss
+    - native or adapter-scoped physical purge with zero retained tenant state
+    - contained Linux AMD64 Slurm confirmation
+    - matched actor and judge contract after lifecycle admission
+
+forbidden_claims:
+  - open-source local-server reproduction
+  - compliant physical deletion
+  - memory quality improvement
+  - model-independent provider comparison
+  - H100 ready
+  - publication ready
