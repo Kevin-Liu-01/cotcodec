@@ -14,9 +14,9 @@ def test_live_landscape_is_complete_and_content_addressed() -> None:
     matrix, rows = _rows_by_id()
     assert matrix["source_count"] == len(rows) == 229
     assert len(matrix["matrix_sha256"]) == 64
-    assert matrix["reproduced_source_count"] == 0
+    assert matrix["reproduced_source_count"] == 1
     assert matrix["conformance_reproduced_source_count"] == 2
-    assert matrix["negative_finding_reproduced_source_count"] == 32
+    assert matrix["negative_finding_reproduced_source_count"] == 33
     assert matrix["access_class_counts"]["paper-or-page-only"] == 60
 
 
@@ -55,6 +55,7 @@ def test_repository_license_status_does_not_imply_reproduction() -> None:
     foresightkv = rows["foresightkv"]
     assert sodamem["access_class"] == "all-repository-licenses-resolved"
     assert sodamem["scientific_result_reproduced"] is False
+    assert rows["fidelis"]["scientific_result_reproduced"] is True
     assert foresightkv["access_class"] == "all-repository-licenses-unresolved"
     assert foresightkv["resolved_license_repository_count"] == 0
 

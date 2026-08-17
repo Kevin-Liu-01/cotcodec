@@ -116,6 +116,30 @@ def test_gaama_actor_negative_requires_bound_evidence(tmp_path) -> None:
         load_and_validate_portfolio(_write_portfolio(tmp_path, payload))
 
 
+def test_fidelis_cpu_retrieval_requires_bound_evidence(tmp_path) -> None:
+    result = load_and_validate_portfolio(DEFAULT_PORTFOLIO)
+    candidate = next(
+        candidate
+        for wave in result["portfolio"]["waves"]
+        for candidate in wave["candidates"]
+        if candidate["source_id"] == "fidelis"
+    )
+    assert candidate["status"] == "cpu-retrieval-reproduced"
+
+    payload = copy.deepcopy(result["portfolio"])
+    candidate = next(
+        candidate
+        for wave in payload["waves"]
+        for candidate in wave["candidates"]
+        if candidate["source_id"] == "fidelis"
+    )
+    candidate["evidence_sha256"] = "0" * 64
+    with pytest.raises(
+        MemoryPortfolioError, match="CPU retrieval evidence differs from source receipt"
+    ):
+        load_and_validate_portfolio(_write_portfolio(tmp_path, payload))
+
+
 def test_portfolio_rejects_declared_ledger_drift(tmp_path) -> None:
     payload = yaml.safe_load(DEFAULT_PORTFOLIO.read_text(encoding="utf-8"))
     payload["ledger"] = "research/not-the-validated-ledger.yaml"

@@ -92,6 +92,10 @@ if __package__:
         AgenticowEvidenceError,
         validate_agenticow_lifecycle_evidence,
     )
+    from scripts.validate_fidelis_zero_llm_evidence import (
+        FidelisEvidenceError,
+        validate_fidelis_zero_llm_evidence,
+    )
     from scripts.validate_gaama_h100_evidence import (
         GaamaH100EvidenceError,
         validate_gaama_h100_evidence,
@@ -228,6 +232,10 @@ else:
     from validate_agenticow_lifecycle_evidence import (  # type: ignore[no-redef]
         AgenticowEvidenceError,
         validate_agenticow_lifecycle_evidence,
+    )
+    from validate_fidelis_zero_llm_evidence import (  # type: ignore[no-redef]
+        FidelisEvidenceError,
+        validate_fidelis_zero_llm_evidence,
     )
     from validate_gaama_h100_evidence import (  # type: ignore[no-redef]
         GaamaH100EvidenceError,
@@ -1187,6 +1195,18 @@ def validate_source(
                 "local-negative-reproduced",
             }:
                 _validate_local_evidence_bundle(entry_id, entry, artifact_bytes)
+            elif evidence_grade == "local-reproduced" and entry_id == "fidelis":
+                try:
+                    bundle = json.loads(artifact_bytes)
+                    if not isinstance(bundle, dict):
+                        raise TypeError
+                    validate_fidelis_zero_llm_evidence(bundle)
+                except (json.JSONDecodeError, UnicodeDecodeError, TypeError) as exc:
+                    raise MemorySourceError(
+                        "fidelis: local reproduction evidence is invalid JSON"
+                    ) from exc
+                except FidelisEvidenceError as exc:
+                    raise MemorySourceError(f"fidelis: {exc}") from exc
         else:
             if not isinstance(receipt_url, str):
                 raise MemorySourceError(f"{entry_id}: reproduction receipt_url must be a string")

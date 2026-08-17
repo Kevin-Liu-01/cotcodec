@@ -2938,3 +2938,36 @@ v3. V1/v2 remain superseded development history.
   conformance reproductions, and 33 bounded negative findings. Removing this
   killed candidate from the first wave lowers the 93-candidate portfolio
   ceiling to 100 H100-hours with matrix `691956fb...`.
+
+## 2026-08-17 — Fidelis zero-LLM retrieval result reproduced
+
+- Pinned Fidelis `0950ff3...` / tree `d50069ac...`, the MIT source archive,
+  LongMemEval-S cleaned revision `98d7416...`, official Ollama v0.20.6 Darwin
+  binary, exact `nomic-embed-text` manifest and blobs, Python 3.11.15,
+  `bm25s==0.3.3`, and `numpy==2.4.4` by artifact and installed-tree hashes.
+- Four deterministic no-filter shards restored the 470 non-abstention
+  questions and reproduced every committed upstream Stage 1b top-five ID and
+  logged-score list. Recomputed recall-any@1 is 391/470 (83.2% rounded) and
+  recall-any@5 is 462/470 (98.3% rounded).
+- A one-question falsifier under official Ollama v0.32.9 and the same model
+  artifacts moved the gold session from rank one to rank three. The runtime is
+  part of the treatment; the result is not portable across unpinned Ollama
+  versions.
+- Audited two upstream instrumentation boundaries: v35 logs pre-temporal-boost
+  scores beside post-boost IDs on 90 boosted questions, and resume does not
+  restore every aggregate/timing accumulator. Scores remain exact transport
+  evidence, while metrics are recomputed from IDs; the entire local aggregate
+  and all latency claims are excluded.
+- Sealed `FIDELIS_ZERO_LLM_RETRIEVAL_REPRODUCTION_PASS` at
+  `research/evidence/memory/fidelis-zero-llm-retrieval-v1.json`
+  (`32e5327f...`) with audit
+  `research/fidelis-zero-llm-reproduction-2026-08-17.md`. Stage 2, the 73.0%
+  QA claim, packaged-service equivalence, write/persistence lifecycle,
+  generalization, network isolation, and external attestation remain outside
+  the reproduced claim.
+- The ledger now records its first locally reproduced scientific result: 229
+  sources, 182 pinned repositories, one scientific reproduction, two
+  conformance reproductions, and 33 negative findings. The 93-candidate
+  portfolio remains capped at 100 H100-hours with matrix `90ac9627...`;
+  Fidelis still requires a matched common-actor control matrix and protected
+  external attestation before any H100 claim cell.
