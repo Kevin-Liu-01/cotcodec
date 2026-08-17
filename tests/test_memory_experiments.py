@@ -35,6 +35,7 @@ def test_live_memory_experiment_contracts_are_valid() -> None:
         "stage3-lifecycle-mechanism-screen.yaml",
         "stage3-hippo-retention-cross-tenant-doctor.yaml",
         "stage3-icarus-lifecycle-doctor.yaml",
+        "stage3-jiuwen-memory-file-lifecycle-doctor.yaml",
         "stage3-langmem-native-lifecycle-doctor.yaml",
         "stage3-lightmem2-context-paging-doctor.yaml",
         "stage3-lightmem-offline-consolidation-doctor.yaml",

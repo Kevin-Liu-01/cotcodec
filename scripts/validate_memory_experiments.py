@@ -45,6 +45,7 @@ from scripts import (  # noqa: E402
     validate_hermes_provider_experiment,
     validate_hippo_retention_experiment,
     validate_icarus_lifecycle_experiment,
+    validate_jiuwen_memory_lifecycle_experiment,
     validate_langmem_lifecycle_experiment,
     validate_lightmem2_context_paging_experiment,
     validate_lightmem_offline_experiment,
@@ -157,6 +158,9 @@ EXTERNAL_EXPERIMENT_VALIDATORS = {
     ),
     "stage3-icarus-lifecycle-doctor": (
         validate_icarus_lifecycle_experiment.validate_experiment_contract
+    ),
+    "stage3-jiuwen-memory-file-lifecycle-doctor": (
+        validate_jiuwen_memory_lifecycle_experiment.validate_experiment_contract
     ),
     "stage3-langmem-native-lifecycle-doctor": (
         validate_langmem_lifecycle_experiment.validate_experiment_contract

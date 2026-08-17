@@ -235,6 +235,7 @@ def test_reproducibility_audit_exposes_paper_and_license_gaps() -> None:
     assert audit["scientific_result_reproduced_source_count"] == 1
     assert audit["scientific_result_reproduced_sources"] == ["fidelis"]
     assert audit["local_conformance_reproduced_sources"] == [
+        "gbrain",
         "hermes-provider-conformance",
         "neo4j-agent-memory",
     ]
@@ -252,6 +253,7 @@ def test_reproducibility_audit_exposes_paper_and_license_gaps() -> None:
         "hermes-observational-memory",
         "hippo-memory",
         "icarus-memory-infra",
+        "jiuwen-memory",
         "langmem",
         "lightmem",
         "lightmem2",

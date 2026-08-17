@@ -1,7 +1,7 @@
 schema_version: 1
 verified_at: "2026-08-17"
 ledger: research/memory-sources.yaml
-matrix_sha256: 9528d123789bebc9e5715a6c8111778c016a521f3165e18c7b92bef59fb035d4
+matrix_sha256: 8b8d459c822cb343093c9103b49d50d9cabe57fde8d9116aa30844d7044a1550
 portfolio_max_gpu_hours: 84
 scope: >-
   Selected falsifiers and systems for active/inactive, graph, learned-controller,
@@ -85,6 +85,10 @@ reference_lifecycle_contract:
     - source_id: memforge
       evidence_role: local-arm64-exact-schema-fresh-install-negative
       status: MEMFORGE_FRESH_INSTALL_ADMISSION_KILLED
+      h100_admission: forbidden-for-this-revision
+    - source_id: jiuwen-memory
+      evidence_role: local-arm64-file-index-tenancy-and-migration-negative
+      status: JIUWEN_FILE_BACKEND_ADMISSION_KILLED_GLOBAL_ID_AND_MIGRATION_RESET
       h100_admission: forbidden-for-this-revision
 
 provider_conformance_contracts:
@@ -238,6 +242,11 @@ killed_revisions:
     terminal_status: MNEMOSYNE_COGNITIVE_ACTIVE_INACTIVE_ADMISSION_KILLED
     evidence_path: research/evidence/memory/mnemosyne-cognitive-lifecycle-negative-v1.json
     evidence_sha256: 6ee8209b541a8fd103612df9bb3dc90a6b882131e14605e81219194a3034fb9a
+  - source_id: jiuwen-memory
+    repository_revision: 600432b55e480bec5948ee40089884ccf15a7c5d
+    terminal_status: JIUWEN_FILE_BACKEND_ADMISSION_KILLED_GLOBAL_ID_AND_MIGRATION_RESET
+    evidence_path: research/evidence/memory/jiuwen-memory-file-lifecycle-negative-v1.json
+    evidence_sha256: 7e1d06c90f965678ca6395c5b36e7a5c15c4699727b0df4482750237cfe95858
   - source_id: timem
     repository_revision: 6d279a5f5d40ee229e1995df15c182cb2062c71c
     terminal_status: TIMEM_CORE_RUNTIME_ADMISSION_KILLED
@@ -364,7 +373,6 @@ waves:
     execution_order:
       - mempalace
       - fidelis
-      - jiuwen-memory
       - memforest
       - infini-memory
       - mnemo-cortex
@@ -473,10 +481,16 @@ waves:
       - source_id: jiuwen-memory
         mode: contained-import
         repository_role: implementation-tests-compose-and-migrations
-        status: planned
+        status: discovery-killed
         priority: secondary
-        scientific_role: Multi-level raw, summary, structured, profile, and background-consolidation lifecycle control.
-        next_gate: Run migration, restart, tenancy, and purge doctors; keep its currently independent graph path out of main-pipeline claims.
+        scientific_role: Exact-source file-index tenancy and migration negative whose global memory-ID key splits Markdown authority from searchable index ownership and whose migration version is process-local.
+        next_gate: Do not run JiuwenMemory 600432b on H100. Admit only a newer immutable revision or explicit repair arm with a tenant-composite index key, durable migration metadata, a self-consistent lock, and a cross-platform physical-purge or cryptographic-erasure contract, followed by the same fixed-seed two-clean-state doctor. Evaluate extraction, dreaming, graph, and retrieval quality only after lifecycle admission.
+        negative_evidence:
+          artifact_path: research/jiuwen-memory-file-lifecycle-audit-2026-08-17.md
+          artifact_sha256: 9ed5d2555d89e1163d0fa3f3a62aa957d72090ad911f85a242e95afc26ac0e88
+          receipt_path: research/evidence/memory/jiuwen-memory-file-lifecycle-negative-v1.json
+          receipt_sha256: 7e1d06c90f965678ca6395c5b36e7a5c15c4699727b0df4482750237cfe95858
+          status: JIUWEN_FILE_BACKEND_ADMISSION_KILLED_GLOBAL_ID_AND_MIGRATION_RESET
       - source_id: sage-wiki
         mode: contained-import
         repository_role: implementation-tests-and-benchmark-artifacts

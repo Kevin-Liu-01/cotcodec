@@ -32,6 +32,12 @@ if __package__:
     from scripts.seal_icarus_lifecycle_evidence import (
         validate_evidence as validate_icarus_evidence,
     )
+    from scripts.seal_jiuwen_memory_lifecycle_evidence import (
+        JiuwenEvidenceError,
+    )
+    from scripts.seal_jiuwen_memory_lifecycle_evidence import (
+        validate_evidence as validate_jiuwen_evidence,
+    )
     from scripts.seal_langmem_native_lifecycle_evidence import (
         LangMemEvidenceError,
         validate_langmem_native_lifecycle_evidence,
@@ -182,6 +188,12 @@ else:
     )
     from seal_icarus_lifecycle_evidence import (  # type: ignore[no-redef]
         validate_evidence as validate_icarus_evidence,
+    )
+    from seal_jiuwen_memory_lifecycle_evidence import (  # type: ignore[no-redef]
+        JiuwenEvidenceError,
+    )
+    from seal_jiuwen_memory_lifecycle_evidence import (  # type: ignore[no-redef]
+        validate_evidence as validate_jiuwen_evidence,
     )
     from seal_langmem_native_lifecycle_evidence import (  # type: ignore[no-redef]
         LangMemEvidenceError,
@@ -508,9 +520,7 @@ def _validate_local_evidence_bundle(
     if entry["evidence_grade"] == "local-negative-reproduced":
         if entry_id == "langmem":
             try:
-                validate_langmem_native_lifecycle_evidence(
-                    bundle, project_root=PROJECT_ROOT
-                )
+                validate_langmem_native_lifecycle_evidence(bundle, project_root=PROJECT_ROOT)
             except LangMemEvidenceError as exc:
                 raise MemorySourceError(f"{entry_id}: {exc}") from exc
             return
@@ -532,6 +542,12 @@ def _validate_local_evidence_bundle(
                     PROJECT_ROOT / entry["reproduction_receipt"]["artifact_path"]
                 )
             except IcarusEvidenceError as exc:
+                raise MemorySourceError(f"{entry_id}: {exc}") from exc
+            return
+        if entry_id == "jiuwen-memory":
+            try:
+                validate_jiuwen_evidence(bundle)
+            except JiuwenEvidenceError as exc:
                 raise MemorySourceError(f"{entry_id}: {exc}") from exc
             return
         if entry_id == "lightmem2":
