@@ -1,7 +1,7 @@
 schema_version: 1
 verified_at: "2026-08-17"
 ledger: research/memory-sources.yaml
-matrix_sha256: 3b19dba06da6a71f15b7c81e0ff98b7c99b52dc5be4c3f7343aa1993caed6f9e
+matrix_sha256: 9528d123789bebc9e5715a6c8111778c016a521f3165e18c7b92bef59fb035d4
 portfolio_max_gpu_hours: 84
 scope: >-
   Selected falsifiers and systems for active/inactive, graph, learned-controller,
@@ -364,8 +364,6 @@ waves:
     execution_order:
       - mempalace
       - fidelis
-      - gbrain
-      - sage-wiki
       - jiuwen-memory
       - memforest
       - infini-memory
@@ -466,10 +464,12 @@ waves:
       - source_id: gbrain
         mode: contained-import
         repository_role: implementation-tests-evals-and-benchmark-fixtures
-        status: planned
+        status: source-admission-blocked
         priority: secondary
-        scientific_role: File-authoritative graph, consolidation, and push-versus-pull harness control.
-        next_gate: Freeze one Markdown/Git source tree and compare pull retrieval with hook injection at equal actor, bytes, calls, and derived-index build cost.
+        scientific_role: Exact-source deterministic injection conformance control that remains blocked from the registered push-versus-pull actor comparison.
+        next_gate: The d941e9f source passed 146 focused tests and two semantically identical BrainBench same-hash runs, but BrainBench has no matched pull arm and only OpenClaw is a shipped production seam. Implement and preregister a matched pull-retrieval versus production hook-injection cell at equal actor, bytes, calls, and derived-index build cost before any H100 or memory-quality claim.
+        evidence_path: research/evidence/memory/gbrain-brainbench-conformance-v1.json
+        evidence_sha256: 4c6f6d5fb8524826054a324c44f100f00177b6d22cca472e8c3b5539852f87b4
       - source_id: jiuwen-memory
         mode: contained-import
         repository_role: implementation-tests-compose-and-migrations
@@ -480,10 +480,12 @@ waves:
       - source_id: sage-wiki
         mode: contained-import
         repository_role: implementation-tests-and-benchmark-artifacts
-        status: planned
+        status: artifact-audited-not-reproduced
         priority: secondary
-        scientific_role: File-authoritative, evidenced, bi-temporal graph retrieval control.
-        next_gate: Regrade committed partial artifacts, then freeze a matched full-task flat-versus-graph bundle at equal top-k, bytes, and actor.
+        scientific_role: File-authoritative, evidenced, bi-temporal graph retrieval control whose committed benchmark artifacts are audited but whose binary and retrieval payloads are not reproducibly bound.
+        next_gate: Run an exact-source common-construction full-task flat versus lexical/vector versus graph comparison at matched top-k, bytes, calls, actor, and judge while retaining retrieval IDs/text and immutable binary, image, SBOM, dataset, and provider receipts.
+        evidence_path: research/evidence/memory/sage-wiki-published-artifact-audit-v1.json
+        evidence_sha256: eeb7f14c189f540b15493d5db8af7a9b14d11d106f349c9fb609152a72f01cef
       - source_id: fidelis
         mode: contained-import
         repository_role: implementation-benchmark-drivers-and-per-question-artifacts

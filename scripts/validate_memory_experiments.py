@@ -35,6 +35,7 @@ from scripts import (  # noqa: E402
     validate_gaama_actor_experiment,
     validate_gaama_graph_experiment,
     validate_gaama_natural_experiment,
+    validate_gbrain_brainbench_experiment,
     validate_graphiti_lifecycle_experiment,
     validate_hermes_byterover_experiment,
     validate_hermes_hindsight_experiment,
@@ -65,6 +66,7 @@ from scripts import (  # noqa: E402
     validate_reasoningbank_frozen_bank_experiment,
     validate_reasoningbank_source_experiment,
     validate_recmem_consolidation_experiment,
+    validate_sage_wiki_artifact_experiment,
     validate_shodh_tier_experiment,
     validate_sodamem_artifact_experiment,
     validate_supermemory_local_experiment,
@@ -162,6 +164,9 @@ EXTERNAL_EXPERIMENT_VALIDATORS = {
     "stage3-sodamem-published-artifact-audit": (
         validate_sodamem_artifact_experiment.validate_experiment_contract
     ),
+    "stage3-sage-wiki-published-artifact-audit": (
+        validate_sage_wiki_artifact_experiment.validate_experiment_contract
+    ),
     "stage3-lightmem2-context-paging-doctor": (
         validate_lightmem2_context_paging_experiment.validate_experiment_contract
     ),
@@ -188,6 +193,9 @@ EXTERNAL_EXPERIMENT_VALIDATORS = {
     ),
     "stage3-gaama-natural-graph-doctor": (
         validate_gaama_natural_experiment.validate_experiment_contract
+    ),
+    "stage3-gbrain-brainbench-conformance-doctor": (
+        validate_gbrain_brainbench_experiment.validate_experiment_contract
     ),
     "stage3-graphiti-native-lifecycle-doctor": (
         validate_graphiti_lifecycle_experiment.validate_experiment_contract

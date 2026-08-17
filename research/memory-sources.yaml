@@ -3404,16 +3404,24 @@ sources:
       entity and evidence graph with bi-temporal invalidation, and fuses BM25,
       vector, and graph retrieval while retaining provenance for each edge.
     use_as: [file-authoritative-graph-control, evidence-edge-control, bitemporal-invalidation-control]
-    evidence_grade: open-harness-reported
+    evidence_grade: local-artifact-audited
+    reproduction_receipt:
+      artifact_path: research/evidence/memory/sage-wiki-published-artifact-audit-v1.json
+      receipt_sha256: eeb7f14c189f540b15493d5db8af7a9b14d11d106f349c9fb609152a72f01cef
     benchmark_claims:
       - benchmark: LongMemEval and LoCoMo repository evaluation slices
         result: "repository reports 93.3% on a 30-question LongMemEval slice and includes a 150-question LoCoMo artifact; neither is a full matched benchmark run"
         source_url: https://github.com/xoai/sage-wiki
-        evidence_grade: open-harness-reported
+        evidence_grade: local-artifact-audited
     limitations:
-      - The committed LongMemEval result covers 30 questions and the LoCoMo result covers 150, both with GPT-5 answerer and judge.
-      - An earlier report changed retrieval and judging together, and the repository documents an excluded or miscompiled LoCoMo conversation.
-      - Large top-k settings can approach whole-corpus retrieval, so graph benefit must be tested at matched bytes and reads.
+      - Two byte-identical local audits bound the exact source archive and all ten committed result files, recomputed every overall, group, cutoff, and latency aggregate, and verified all 45 report annotations; this is artifact archaeology, not benchmark reproduction.
+      - The 61 LongMemEval artifact rows and 3,235 LoCoMo artifact rows align exactly to independently pinned datasets and the committed deterministic sample policies. BEAM loads a mutable Hugging Face dataset without a revision and is not independently source-bound.
+      - Every result reports "sage-wiki dev (commit none, built unknown)". No result is bound to revision 78b7157, and generic model names such as gpt-5 and gpt-4o-mini do not identify immutable provider snapshots.
+      - Aggregate serialization removes retrieval IDs and text. Multi-cutoff artifacts additionally report retrieved_count zero despite positive memories_evaluated values, and compiled projects, databases, manifests, raw provider responses, request IDs, and fingerprints are absent.
+      - locomo_full contains 1,540 rows while usage records only 152 answerer and judge calls and compile metadata only for conversation zero. locomo_parity scores 529 rows and records 1,011 infrastructure errors, so neither metadata block supports a clean full-run cost or parity claim.
+      - Cross-generation comparisons changed retrieval depth, answerer, judge, prompts, and sample together. No matched flat arm exists, so the committed artifacts do not identify a graph-retrieval mechanism effect.
+      - The exact pin passed 158 Python evaluation tests and 359 focused Go tests with 18 skips, but those tests do not reconstruct the missing benchmark stores or retrieval outputs.
+      - H100 admission is not granted. The next gate is an exact-source common-construction full-task flat versus lexical/vector versus graph comparison at matched top-k, bytes, calls, actor, and judge with immutable binary, image, SBOM, dataset, provider, and retrieval receipts.
 
   memory-stress:
     kind: longitudinal-memory-degradation-benchmark
@@ -3727,9 +3735,14 @@ sources:
       recall, remember, entity, synthesis, forgetting, context-pack, and delta
       operations, and supports both pull retrieval and hook-driven injection.
     use_as: [file-authoritative-memory-control, push-vs-pull-control, graph-plus-consolidation-harness]
-    evidence_grade: open-harness-reported
+    evidence_grade: local-conformance-reproduced
+    reproduction_receipt:
+      artifact_path: research/evidence/memory/gbrain-brainbench-conformance-v1.json
+      receipt_sha256: 4c6f6d5fb8524826054a324c44f100f00177b6d22cca472e8c3b5539852f87b4
     limitations:
-      - Repository marketing and committed generated-corpus metrics are author-reported and have not been reproduced under the registered actor or task contract.
+      - The exact d941e9f source and pinned Bun 1.3.13 runtime passed 146 focused upstream tests and two semantically identical same-hash BrainBench runs; this is deterministic conformance, not an actor or memory-quality result.
+      - Only OpenClaw exercises a shipped production injection seam; Claude Code and Codex are GBrain-owned contract adapters rather than reproduced third-party production integrations.
+      - BrainBench has no matched pull-retrieval arm, so it does not answer the registered push-versus-pull question and does not grant H100 admission.
       - Graph, vector, hooks, consolidation, and context packing are coupled unless explicitly disabled in a matched component matrix.
       - The default derived index is not the authority; reproducibility requires binding the exact Markdown/Git source tree and index build receipt.
 
