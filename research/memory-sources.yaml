@@ -1,5 +1,5 @@
 schema_version: 1
-verified_at: "2026-08-15"
+verified_at: "2026-08-17"
 scope: >-
   Primary-source and official-code ledger for long-lived memory in tool-using
   language-model agents. Reported benchmark numbers are evidence about a
@@ -3491,16 +3491,29 @@ sources:
       verbatim passages, with an optional workload-specific escalation path,
       rather than an LLM write-time extraction or graph construction stage.
     use_as: [zero-write-llm-retrieval-control, bm25-dense-rrf-control, workload-specialization-diagnostic]
-    evidence_grade: open-harness-reported
+    evidence_grade: local-reproduced
+    reproduction_receipt:
+      artifact_path: research/evidence/memory/fidelis-zero-llm-retrieval-v1.json
+      receipt_sha256: 32e5327f42bd72dba59aa637cce18ca6a8c71c1be39407c7c287016f458008f0
     benchmark_claims:
-      - benchmark: LongMemEval-S session retrieval and answer-generation artifacts
-        result: "repository reports 83.2% R@1 and 98.3% R@5 for a 470-question zero-LLM retrieval path, plus 73.0% QA on 434 graded questions; later escalated paths report higher retrieval but are workload-specific"
+      - benchmark: LongMemEval-S session retrieval
+        result: "CoTCodec reproduced the 470-question zero-LLM Stage 1b projection exactly: 391/470 recall-any@1 (83.2% rounded), 462/470 recall-any@5 (98.3% rounded), and 470/470 top-five ID and logged-score list matches under pinned Ollama 0.20.6"
+        source_url: https://github.com/hermes-labs-ai/fidelis
+        evidence_grade: local-reproduced
+        artifact_path: research/evidence/memory/fidelis-zero-llm-retrieval-v1.json
+      - benchmark: LongMemEval-S answer generation
+        result: "repository reports 73.0% QA on 434 graded questions; CoTCodec did not reproduce this Stage 2/QA claim"
         source_url: https://github.com/hermes-labs-ai/fidelis
         evidence_grade: open-harness-reported
     limitations:
       - The repository contains many evolving run variants and internal documents with superseded or conflicting headline values.
-      - The zero-LLM default still depends on a local embedding model whose immutable runtime and artifact receipt are not sealed by the committed result.
-      - The authors explicitly report substantially weaker real Claude Code session retrieval and no scale evidence beyond the benchmark workload.
+      - The local reproduction is limited to the committed v35 benchmark driver's Stage 1b retrieval projection; it does not establish equivalence with the packaged service path.
+      - The repository explicitly optimized this pipeline on LongMemEval-S, and its own generalizability review reports materially weaker real Claude Code session retrieval; no out-of-distribution claim is admitted.
+      - Exact output required Ollama 0.20.6. Ollama 0.32.9 changed the first-question ranking under the same model manifest and blobs, so runtime version is part of the treatment.
+      - Upstream declares bm25s with an open lower bound and uses a mutable Ollama latest tag; the local receipt binds exact wheels, installed package trees, manifest, blobs, Python, server binaries, and host identity.
+      - The v35 runner logs pre-temporal-boost scores beside post-temporal-boost IDs; score/ID alignment is not guaranteed for the 90 temporal-boosted questions, so metrics were recomputed from IDs and hit flags.
+      - The resumed shard-local aggregate is invalid because the runner does not restore every metric and timing accumulator; it is excluded wholesale, and no latency claim is reproduced.
+      - Stage 2 reranking, 73.0% QA, write behavior, persistence lifecycle, deletion, network isolation, scale beyond the benchmark workload, and external attestation remain untested.
 
   past-bench:
     kind: longitudinal-persistent-agent-benchmark

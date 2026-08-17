@@ -13,6 +13,10 @@ from typing import Any
 
 if __package__:
     from scripts.compile_memory_landscape import compile_landscape
+    from scripts.validate_fidelis_zero_llm_evidence import (
+        FidelisEvidenceError,
+        validate_fidelis_zero_llm_evidence,
+    )
     from scripts.validate_memory_sources import (
         DEFAULT_LEDGER,
         load_and_validate,
@@ -20,6 +24,10 @@ if __package__:
     )
 else:
     from compile_memory_landscape import compile_landscape
+    from validate_fidelis_zero_llm_evidence import (  # type: ignore[no-redef]
+        FidelisEvidenceError,
+        validate_fidelis_zero_llm_evidence,
+    )
     from validate_memory_sources import DEFAULT_LEDGER, load_and_validate, load_unique_yaml
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
@@ -45,6 +53,7 @@ STATUSES = {
     "planned",
     "candidate-image-and-sbom-built",
     "candidate-image-built-not-sbom",
+    "cpu-retrieval-reproduced",
     "cpu-lifecycle-blocked",
     "runtime-contract-implemented",
     "source-adapter-implemented",
@@ -1689,6 +1698,35 @@ def load_and_validate_portfolio(
                     raise MemoryPortfolioError(
                         f"{candidate_owner}: natural component evidence drifted"
                     )
+            if status == "cpu-retrieval-reproduced":
+                source = sources[source_id]
+                receipt = source.get("reproduction_receipt")
+                if (
+                    source_id != "fidelis"
+                    or source.get("evidence_grade") != "local-reproduced"
+                    or not isinstance(receipt, dict)
+                    or candidate.get("evidence_path") != receipt.get("artifact_path")
+                    or candidate.get("evidence_sha256") != receipt.get("receipt_sha256")
+                ):
+                    raise MemoryPortfolioError(
+                        f"{candidate_owner}: CPU retrieval evidence differs from source receipt"
+                    )
+                evidence = _bound_artifact(
+                    f"{candidate_owner}.cpu_retrieval",
+                    candidate.get("evidence_path"),
+                    candidate.get("evidence_sha256"),
+                )
+                try:
+                    payload = json.loads(evidence)
+                    if not isinstance(payload, dict):
+                        raise TypeError
+                    validate_fidelis_zero_llm_evidence(payload)
+                except (json.JSONDecodeError, UnicodeDecodeError, TypeError) as exc:
+                    raise MemoryPortfolioError(
+                        f"{candidate_owner}: CPU retrieval evidence is invalid JSON"
+                    ) from exc
+                except FidelisEvidenceError as exc:
+                    raise MemoryPortfolioError(f"{candidate_owner}: {exc}") from exc
             if status == "actor-translation-killed":
                 source = sources[source_id]
                 receipt = source.get("reproduction_receipt")

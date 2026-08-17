@@ -232,8 +232,8 @@ def test_reproducibility_audit_exposes_paper_and_license_gaps() -> None:
         item.startswith("foresightkv:")
         for item in audit["unresolved_repositories"]
     )
-    assert audit["scientific_result_reproduced_source_count"] == 0
-    assert audit["scientific_result_reproduced_sources"] == []
+    assert audit["scientific_result_reproduced_source_count"] == 1
+    assert audit["scientific_result_reproduced_sources"] == ["fidelis"]
     assert audit["local_conformance_reproduced_sources"] == [
         "hermes-provider-conformance",
         "neo4j-agent-memory",

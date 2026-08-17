@@ -1,7 +1,7 @@
 schema_version: 1
-verified_at: "2026-08-16"
+verified_at: "2026-08-17"
 ledger: research/memory-sources.yaml
-matrix_sha256: 691956fbf5b56852f7d272af09ca5eb3547e3a0a046e7c15dc78c964e46cc024
+matrix_sha256: 90ac96272dbe08de330d6f5e06dc164190942900ce81c3c3c86063850d08cdba
 portfolio_max_gpu_hours: 100
 scope: >-
   Selected falsifiers and systems for active/inactive, graph, learned-controller,
@@ -486,10 +486,12 @@ waves:
       - source_id: fidelis
         mode: contained-import
         repository_role: implementation-benchmark-drivers-and-per-question-artifacts
-        status: planned
+        status: cpu-retrieval-reproduced
         priority: primary
-        scientific_role: Zero-write-LLM BM25, dense, and reciprocal-rank-fusion retrieval floor.
-        next_gate: Recompute the 470-question zero-LLM artifact under an immutable embedding/runtime receipt and compare with the existing dense-BGE and raw-log controls.
+        scientific_role: Exact-source zero-write-LLM BM25, dense, reciprocal-rank-fusion, and temporal-boost retrieval floor with a reproduced 470-question LongMemEval-S projection.
+        next_gate: The exact Ollama 0.20.6 runtime reproduced 391/470 recall-any@1, 462/470 recall-any@5, and every top-five ID and logged-score list; Ollama 0.32.9 changed the first-question ranking, so runtime is part of the treatment. Do not use the resumed local aggregate or promote QA, latency, service-equivalence, lifecycle, or generalization claims. Admit only a preregistered common-actor comparison against dense-BGE and raw-log controls at equal roster, top-k, injected bytes, calls, and judge under a clean source/image/SBOM capsule, protected external attestation, and contained Slurm authority.
+        evidence_path: research/evidence/memory/fidelis-zero-llm-retrieval-v1.json
+        evidence_sha256: 32e5327f42bd72dba59aa637cce18ca6a8c71c1be39407c7c287016f458008f0
       - source_id: mnemo-cortex
         mode: contained-import
         repository_role: implementation-tests-dreaming-and-passport-eval
