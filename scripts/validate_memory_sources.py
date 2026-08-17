@@ -28,6 +28,10 @@ if __package__:
     from scripts.seal_icarus_lifecycle_evidence import (
         validate_evidence as validate_icarus_evidence,
     )
+    from scripts.seal_langmem_native_lifecycle_evidence import (
+        LangMemEvidenceError,
+        validate_langmem_native_lifecycle_evidence,
+    )
     from scripts.seal_lightmem2_context_paging_evidence import (
         EvidenceError as LightMem2EvidenceError,
     )
@@ -158,6 +162,10 @@ else:
     )
     from seal_icarus_lifecycle_evidence import (  # type: ignore[no-redef]
         validate_evidence as validate_icarus_evidence,
+    )
+    from seal_langmem_native_lifecycle_evidence import (  # type: ignore[no-redef]
+        LangMemEvidenceError,
+        validate_langmem_native_lifecycle_evidence,
     )
     from seal_lightmem2_context_paging_evidence import (  # type: ignore[no-redef]
         EvidenceError as LightMem2EvidenceError,
@@ -448,6 +456,14 @@ def _validate_local_evidence_bundle(
     if bundle.get("source_revisions") != expected_revisions:
         raise MemorySourceError(f"{entry_id}: local evidence source revisions drifted")
     if entry["evidence_grade"] == "local-negative-reproduced":
+        if entry_id == "langmem":
+            try:
+                validate_langmem_native_lifecycle_evidence(
+                    bundle, project_root=PROJECT_ROOT
+                )
+            except LangMemEvidenceError as exc:
+                raise MemorySourceError(f"{entry_id}: {exc}") from exc
+            return
         if entry_id == "astra-working-set":
             try:
                 validate_astra_native_lifecycle_evidence(bundle, project_root=PROJECT_ROOT)

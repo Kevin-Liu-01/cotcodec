@@ -19,7 +19,7 @@ def test_live_memory_portfolio_is_bound_and_contained() -> None:
     assert result["wave_count"] == 6
     assert result["candidate_count"] >= 25
     assert result["blocked_license_candidate_count"] >= 8
-    assert result["portfolio_max_gpu_hours"] == 108
+    assert result["portfolio_max_gpu_hours"] == 100
     assert len(result["matrix_sha256"]) == 64
 
 

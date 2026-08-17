@@ -1,0 +1,35 @@
+# syntax=docker/dockerfile:1.7
+ARG COTCODEC_IMAGE
+FROM ${COTCODEC_IMAGE}
+
+ARG COTCODEC_DOCTOR_SHA256
+ARG COTCODEC_EXPERIMENT_SHA256
+
+USER root
+COPY pyproject.toml uv.lock /workspace/cotcodec/
+COPY langmem-source/ /opt/langmem-source/
+COPY infra/memory-baselines/langmem/lifecycle_doctor.py /workspace/cotcodec/infra/memory-baselines/langmem/lifecycle_doctor.py
+COPY experiments/memory/stage3-langmem-native-lifecycle-doctor.yaml /workspace/cotcodec/experiments/memory/stage3-langmem-native-lifecycle-doctor.yaml
+
+WORKDIR /workspace/cotcodec
+RUN test "$(sha256sum infra/memory-baselines/langmem/lifecycle_doctor.py | cut -d' ' -f1)" = "$COTCODEC_DOCTOR_SHA256" \
+    && test "$(sha256sum experiments/memory/stage3-langmem-native-lifecycle-doctor.yaml | cut -d' ' -f1)" = "$COTCODEC_EXPERIMENT_SHA256" \
+    && uv sync --frozen --no-dev --extra memory-langmem --no-install-project --no-install-package langmem \
+    && uv pip install --python /workspace/cotcodec/.venv/bin/python --no-deps /opt/langmem-source \
+    && /workspace/cotcodec/.venv/bin/python -c "import importlib.metadata as m; assert m.version('langmem') == '0.0.30'; assert m.version('langgraph') == '1.2.11'; assert m.version('langgraph-checkpoint-postgres') == '3.1.0'; assert m.version('psycopg') == '3.3.4'"
+
+LABEL org.opencontainers.image.source="https://github.com/langchain-ai/langmem" \
+      org.opencontainers.image.revision="29cbe41e58528f92e9efa773c12e15c47be3808c" \
+      org.opencontainers.image.licenses="MIT" \
+      org.cotcodec.source-tree="d85d1f815fb2b54bbc0a85c18453b7a7953ca38c" \
+      org.cotcodec.source-archive-sha256="24c85c514c80bb263a16626971e8ef53978fd1bc7f9319e47d8a5a0bf4956521" \
+      org.cotcodec.lifecycle-doctor-sha256="$COTCODEC_DOCTOR_SHA256" \
+      org.cotcodec.lifecycle-experiment-sha256="$COTCODEC_EXPERIMENT_SHA256" \
+      org.cotcodec.discovery-only="true"
+
+ENV HOME=/tmp/home \
+    PYTHONPATH=/workspace/cotcodec \
+    PYTHONUNBUFFERED=1
+
+USER 65532:65532
+ENTRYPOINT ["/workspace/cotcodec/.venv/bin/python", "/workspace/cotcodec/infra/memory-baselines/langmem/lifecycle_doctor.py"]
