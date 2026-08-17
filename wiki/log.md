@@ -2885,3 +2885,28 @@ v3. V1/v2 remain superseded development history.
 - The live ledger now records 229 sources, 182 pinned repositories, three
   conformance reproductions, and 31 negative findings. The 93-candidate
   portfolio matrix is `4174f49e...` under the unchanged 108-H100-hour ceiling.
+
+## 2026-08-17 — ASTRA native lifecycle evidence promoted into the ledger
+
+- Reconciled the stale split between project memory, which correctly recorded
+  Slurm job 269's ASTRA lifecycle negative, and the source ledger/portfolio,
+  which still described that native lifecycle as unexecuted.
+- Added the reusable sealer and strict validator
+  `scripts/seal_astra_native_lifecycle_evidence.py`. The committed receipt
+  `research/evidence/memory/astra-native-lifecycle-negative-v1.json`
+  (`8bf14f32...`) embeds `analysis.json`, both repeat checkpoints, the manifest,
+  scheduler output, and the scheduler allocation receipt; it does not depend on
+  ignored `data/` to remain verifiable.
+- The validator rechecks containment, one-H100 Slurm allocation, forced restart,
+  durable re-admission, isolation, purge/idempotency/pin-cap blockers, exact
+  projection hashes, equal access totals, and the four/ten differing persistent
+  access-count records across clean stores.
+- Promoted ASTRA `644f9d4` from component conformance to
+  `BLOCKED_NONDETERMINISTIC_RECALL_ACCESS_ACCOUNTING`, added it to killed
+  revisions, removed it from H100 execution order, and preserved the earlier
+  26/26 component receipt as bound prior evidence. No actor or memory-quality
+  claim is admitted for this revision.
+- The live ledger now records 229 sources, 182 pinned repositories, two
+  conformance reproductions, and 32 bounded negative findings. The 93-candidate
+  portfolio remains capped at 108 H100-hours with matrix `be14faf7...`; the
+  active/inactive wave has no executable admitted candidate.

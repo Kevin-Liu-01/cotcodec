@@ -65,6 +65,7 @@ NEGATIVE_TERMINAL_STATUSES = {
         "BLOCKED_CROSS_SCOPE_DESTRUCTIVE_DELETE_STALE_CHILD_BRIEFING_AND_"
         "SOFT_DELETE_RESIDUE"
     ),
+    "astra-working-set": "BLOCKED_NONDETERMINISTIC_RECALL_ACCESS_ACCOUNTING",
     "all-mem": "BLOCKED_SPLIT_MERGE_RAW_EVIDENCE_RECOVERY",
     "graphiti-native-lifecycle-adapter": (
         "BLOCKED_FALKORDBLITE_ARM64_MODULE_ARCHITECTURE_MISMATCH"
@@ -214,6 +215,36 @@ def _validate_negative_receipt(
         ):
             raise MemoryPortfolioError(
                 f"{owner}: agenticow receipt semantics drifted"
+            )
+    elif source_id == "astra-working-set":
+        findings = receipt.get("claim_boundary", {})
+        if (
+            receipt.get("evidence_kind")
+            != "h100-native-lifecycle-admission-negative"
+            or receipt.get("source_revisions", {}).get(
+                "https://github.com/cyh7789/astra"
+            )
+            != revision
+            or receipt.get("runtime_lane")
+            != "docker-under-slurm-h100-allocation-no-container-gpu"
+            or receipt.get("run_count") != 2
+            or receipt.get("slurm_job_id") != 269
+            or receipt.get("gpu_sku") != "H100"
+            or receipt.get("gpu_count") != 1
+            or receipt.get("projection_without_access_count_sha256")
+            != "5c947f1b251659dccbee26cab6e1f45b6911eb4d52149ed5a3ff0d8d6b1a31eb"
+            or findings.get("native_restart_executed") is not True
+            or findings.get("durable_readmission_executed") is not True
+            or findings.get("user_isolation_executed") is not True
+            or findings.get("deterministic_recall_state") is not False
+            or findings.get("physical_purge_available") is not False
+            or findings.get("idempotency_key_available") is not False
+            or findings.get("hard_pinned_capacity_enforced") is not False
+            or findings.get("h100_actor_admission")
+            != "forbidden-for-this-revision"
+        ):
+            raise MemoryPortfolioError(
+                f"{owner}: ASTRA native lifecycle receipt semantics drifted"
             )
     elif source_id == "total-recall-oss":
         if (
@@ -1293,6 +1324,7 @@ def _validate_killed_revisions(
         if source_id in {
             "activegraph-event-sourced-runtime",
             "agenticow",
+            "astra-working-set",
             "all-mem",
             "graphiti-native-lifecycle-adapter",
             "hermes-byterover-cli",
@@ -1493,7 +1525,6 @@ def load_and_validate_portfolio(
             execution_order_raw = wave.get("execution_order")
             if (
                 not isinstance(execution_order_raw, list)
-                or not execution_order_raw
                 or not all(isinstance(item, str) and item for item in execution_order_raw)
                 or len(set(execution_order_raw)) != len(execution_order_raw)
             ):

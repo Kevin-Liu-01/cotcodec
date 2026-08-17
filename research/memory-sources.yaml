@@ -5387,37 +5387,39 @@ sources:
       residents across turns and session gaps; persists the active window; and
       can retrieve an evicted durable record into the active set again.
     use_as: [active-inactive-pager-candidate, fixed-working-set-control, cross-context-handoff-control]
-    evidence_grade: local-conformance-reproduced
+    evidence_grade: local-negative-reproduced
     reproduction_receipt:
-      artifact_path: research/evidence/memory/astra-working-set-core-v1.json
-      receipt_sha256: 3a310140916bd73dc525e5cd2a614978b40b106602411dc22eb7532f5e24258e
+      artifact_path: research/evidence/memory/astra-native-lifecycle-negative-v1.json
+      receipt_sha256: 8bf14f32867248921fc9a367ee26de22389c7f3c7cf2b959a52c48dae7977c6a
     limitations:
       - >-
         Two fresh network-disabled, read-only, cap-dropped ARM64 containers
         reproduced the same 26-test semantic projection for MemoryWindow,
-        retrieval, and guard components. This is component conformance only;
-        CockroachDB lifecycle, durable eviction-to-retrieval promotion, model
-        quality, and H100 execution were not run.
+        retrieval, and guard components. The earlier self-contained component
+        receipt remains bound inside the native lifecycle receipt, but the
+        stronger H100 lifecycle result now determines the ledger grade.
       - >-
         The repository's 14/15 detail-recall and 13/15 scene-attribution numbers
         come from three live runs over fifteen queries with no sealed raw bundle;
         they remain author-reported and are not admitted as a benchmark result.
       - >-
+        Slurm job 269 executed two clean Docker-contained CockroachDB lifecycles
+        on one H100 allocation. Restart, durable re-admission, and user
+        isolation passed, but tied recall scores changed which durable records
+        received access-count increments across clean stores despite equal
+        totals. Persistent recall state is therefore nondeterministic.
+      - >-
         Pinned entries can exceed the nominal capacity, writes do not expose an
         idempotency key, approval state is process-local, deletion is soft, and
-        the database role is not demonstrated least-privilege. These are fatal
-        lifecycle gates for a publication pager cell.
+        the database role is not demonstrated least-privilege. These remain
+        fatal lifecycle gates for a publication pager cell.
       - >-
-        The exact native lifecycle falsifier is registered at
-        experiments/memory/stage3-astra-native-lifecycle-doctor.yaml with
-        digest-pinned ASTRA and CockroachDB images, forced database-process
-        restart, two clean stores, and one H100 Slurm allocation. It remains
-        unexecuted and has no native lifecycle receipt.
-      - >-
-        Bedrock, Voyage, and CockroachDB deployment identities are not fully
-        pinned by the repository. A native contained lifecycle doctor must bind
-        exact service/model identities, restart, branch isolation, purge,
-        budget, and eviction-then-repromotion traces before any H100 actor run.
+        The committed native lifecycle receipt embeds both repeat checkpoints,
+        scheduler output, and scheduler allocation. It is discovery evidence,
+        not memory-quality evidence. No actor cell may run for this revision; a
+        newer pin or explicit repair arm must add deterministic recall
+        tie-breaking, physical purge, idempotency-keyed writes, and a hard
+        pin-saturation cap, then pass the same two-clean-store doctor.
 
   memoria-matrixorigin:
     kind: branchable-transactional-agent-memory-system

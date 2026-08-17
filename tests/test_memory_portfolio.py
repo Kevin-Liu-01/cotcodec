@@ -209,6 +209,19 @@ def test_direct_revision_admission_rejects_total_recall_killed_pin() -> None:
         )
 
 
+def test_direct_revision_admission_rejects_astra_killed_pin() -> None:
+    result = load_and_validate_portfolio(DEFAULT_PORTFOLIO)
+    with pytest.raises(
+        MemoryPortfolioError,
+        match="BLOCKED_NONDETERMINISTIC_RECALL_ACCESS_ACCOUNTING",
+    ):
+        assert_revision_admitted(
+            result["portfolio"],
+            "astra-working-set",
+            "644f9d4e65f4e725996025834c91531592ab6166",
+        )
+
+
 def test_direct_revision_admission_rejects_mnemon_killed_pin() -> None:
     result = load_and_validate_portfolio(DEFAULT_PORTFOLIO)
     with pytest.raises(MemoryPortfolioError, match="MNEMON_STATIC_ROUTING_KILLED"):

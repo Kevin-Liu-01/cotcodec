@@ -349,12 +349,17 @@ registered boolean lifecycle check in both clean stores, but failed the
 preregistered cross-repeat projection gate: the same total recall accesses were
 assigned to different tied records (four differences before restart and ten
 after restart). The source orders equal vector/fused scores without a stable
-secondary key, so persistent access reinforcement is nondeterministic. The
-sealed negative is
+secondary key, so persistent access reinforcement is nondeterministic. The raw
+analysis is retained at
 `data/results/astra-native-lifecycle/2026-08-15-job269-v11/analysis.json`
-(`adf6c861...`). Frozen ASTRA actor frames are forbidden until a newer or
-explicit repair arm closes deterministic tie-breaking, physical purge,
-idempotency, and hard pinned-capacity gates.
+(`adf6c861...`), and all six job artifacts are embedded in the committed
+self-contained receipt
+`research/evidence/memory/astra-native-lifecycle-negative-v1.json`
+(`8bf14f32...`). The ledger therefore treats the stronger lifecycle result as a
+bounded negative rather than leaving ASTRA at component conformance. Frozen
+ASTRA actor frames are forbidden until a newer or explicit repair arm closes
+deterministic tie-breaking, physical purge, idempotency, and hard
+pinned-capacity gates.
 
 A fourth source wave adds orthogonal controls without producing a new
 architecture direction. [Memoria](https://github.com/matrixorigin/Memoria/tree/efd3d6515969971dfa894737272b8317bcb643e7)

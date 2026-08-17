@@ -26,10 +26,13 @@ can reinforce different items from identical inputs. Physical purge,
 idempotency-keyed writes, and a hard cap under all-pinned saturation also remain
 absent. No H100 actor cell is allowed.
 
-The sealed negative bundle is
-`data/results/astra-native-lifecycle/2026-08-15-job269-v11/`; its manifest
-verifies both repeat checkpoints, scheduler output, scheduler receipt, and the
-structured analysis. `analysis.json` hashes to
+The raw negative bundle is retained at
+`data/results/astra-native-lifecycle/2026-08-15-job269-v11/`. Its six job
+artifacts are embedded and hash-bound in the committed, self-contained receipt
+`research/evidence/memory/astra-native-lifecycle-negative-v1.json`. The receipt
+validator rechecks both repeat checkpoints, scheduler output, scheduler
+allocation, containment arguments, lifecycle semantics, and the exact
+cross-repeat access-count divergence. `analysis.json` hashes to
 `adf6c86108a36617f4e98a4ac9e9e57d6f17deea56b11a8471e70bdd9a042f57`.
 This is discovery-grade lifecycle evidence (`scientific_result=false` and
 `publication_ready=false`), not memory-quality evidence.
