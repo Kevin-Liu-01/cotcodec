@@ -1,0 +1,93 @@
+{
+  "core_files": {
+    "bank.json": "99be19f00089e05463f4a025b57c48ced82e06b4805e1bbbfd11010c1d81f874",
+    "fixture-source-artifacts.jsonl": "2891c295e87564fdd967da30f875d47f9674724b281d1f938e3745ec85e4b12f",
+    "manifest.json": "6270ee3c2687911d44a1cb6b4e76943325f632adeb1bc0b0a6908bd9c6a25c98",
+    "report.json": "b6fcd4450bb62fa58902c3bce94016099ad42a33dfb30ca284078f0caec57c98",
+    "retrievals.jsonl": "3c88c94f65ef8a97ad9b47e7450f515023012b7b7a633a07e6c322e43cc6bbbe"
+  },
+  "created_contract": {
+    "cap_drop": [
+      "ALL"
+    ],
+    "device_requests": null,
+    "exit_code": null,
+    "image_id": "sha256:d3f7858e55209cd3af46b97e21aafcb8e0675ee59a64a787589ee2679f283430",
+    "memory_bytes": 4294967296,
+    "mounts": {
+      "/models": {
+        "source": "/Users/kevinliu/repos/cotcodec/data/models",
+        "writable": false
+      },
+      "/outputs": {
+        "source": "/Users/kevinliu/repos/cotcodec/data/results/reasoningbank-frozen-bank/2026-08-15-cpu-doctor-v9-sealed",
+        "writable": true
+      },
+      "/receipts": {
+        "source": "/Users/kevinliu/repos/cotcodec/data/model-receipts",
+        "writable": false
+      }
+    },
+    "nano_cpus": 4000000000,
+    "network_mode": "none",
+    "oom_killed": null,
+    "pids_limit": 256,
+    "read_only_rootfs": true,
+    "security_opt": [
+      "no-new-privileges"
+    ],
+    "user": "501:20"
+  },
+  "host_code_sha256s": {
+    "infra/memory-baselines/reasoningbank-frozen/Dockerfile": "a8cd37be01bc34761cd732d51db6eb961b5e6c4a5f5288c72a635b956abf3be8",
+    "scripts/run_reasoningbank_frozen_bank_container.py": "1a8ebed32733e0e698a5b292385820df93b7ae7cd87a1ce51b219a908fc0ac57"
+  },
+  "image_id": "sha256:d3f7858e55209cd3af46b97e21aafcb8e0675ee59a64a787589ee2679f283430",
+  "image_labels": {
+    "org.opencontainers.image.cotcodec-base-image": "docker.io/library/python:3.12.11-slim-bookworm@sha256:519591d6871b7bc437060736b9f7456b8731f1499a57e22e6c285135ae657bf7",
+    "org.opencontainers.image.cotcodec-code-sha256": "5bcc1cbc873c33fb49d1061daf7b829f872112b3bbb93d4ce9c9db092a920ce8",
+    "org.opencontainers.image.cotcodec-scientific-result": "false",
+    "org.opencontainers.image.cotcodec-torch-cpu-wheel-sha256": "70ecb2659af6373b7c5336e692e665605b0201ea21ff51aaea47e1d75ea6b5aa",
+    "org.opencontainers.image.source": "https://github.com/Kevin-Liu-01/cotcodec",
+    "org.opencontainers.image.title": "cotcodec-reasoningbank-frozen-bank-doctor"
+  },
+  "publication_ready": false,
+  "receipt_sha256": "f0a2c81c7152e9933b410f3e60b607e0b5aa51e68e8c9c8f005c1b4243dcc769",
+  "schema_version": 1,
+  "scientific_result": false,
+  "status": "FROZEN_PROCEDURAL_BANK_CPU_DOCTOR_PASS",
+  "stderr_sha256": "a001f75664f92167754785a89e465d2f72f952499b6f02d08355b9f3ba154027",
+  "stdout_sha256": "b6fcd4450bb62fa58902c3bce94016099ad42a33dfb30ca284078f0caec57c98",
+  "stopped_contract": {
+    "cap_drop": [
+      "ALL"
+    ],
+    "device_requests": null,
+    "exit_code": 0,
+    "image_id": "sha256:d3f7858e55209cd3af46b97e21aafcb8e0675ee59a64a787589ee2679f283430",
+    "memory_bytes": 4294967296,
+    "mounts": {
+      "/models": {
+        "source": "/Users/kevinliu/repos/cotcodec/data/models",
+        "writable": false
+      },
+      "/outputs": {
+        "source": "/Users/kevinliu/repos/cotcodec/data/results/reasoningbank-frozen-bank/2026-08-15-cpu-doctor-v9-sealed",
+        "writable": true
+      },
+      "/receipts": {
+        "source": "/Users/kevinliu/repos/cotcodec/data/model-receipts",
+        "writable": false
+      }
+    },
+    "nano_cpus": 4000000000,
+    "network_mode": "none",
+    "oom_killed": false,
+    "pids_limit": 256,
+    "read_only_rootfs": true,
+    "security_opt": [
+      "no-new-privileges"
+    ],
+    "user": "501:20"
+  }
+}

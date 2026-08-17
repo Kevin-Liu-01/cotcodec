@@ -77,6 +77,20 @@ class DynamicRouterCondition(LanguageCondition):
         """Rough heuristic for code density based on syntax markers."""
         if not content:
             return 0.0
-        code_markers = ["{", "}", "(", ")", "=", ";", "//", "/*", "*/", "->", "=>", "def ", "class "]
+        code_markers = [
+            "{",
+            "}",
+            "(",
+            ")",
+            "=",
+            ";",
+            "//",
+            "/*",
+            "*/",
+            "->",
+            "=>",
+            "def ",
+            "class ",
+        ]
         marker_count = sum(content.count(m) for m in code_markers)
         return min(1.0, marker_count / max(1, len(content.split())))

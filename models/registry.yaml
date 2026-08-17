@@ -1,6 +1,29 @@
 schema_version: 1
-verified_at: "2026-08-10"
+verified_at: "2026-08-11"
 models:
+  bge-small-en-v1.5:
+    backend: huggingface
+    repo_id: BAAI/bge-small-en-v1.5
+    revision: 5c38ec7c405ec4b44b94cc5a9bb96e735b38267a
+    runtime: transformers
+    architecture_family: bert-embedding
+    license: mit
+    access: public
+    trust_remote_code: false
+    publication_eligible: true
+    roles: [shared-memory-embedding, retrieval-equivalence]
+    metadata_files:
+      - README.md
+      - config.json
+      - modules.json
+      - tokenizer_config.json
+    required_files:
+      - README.md
+      - config.json
+      - model.safetensors
+      - tokenizer.json
+    source_url: https://huggingface.co/BAAI/bge-small-en-v1.5
+
   smollm2-135m:
     backend: huggingface
     repo_id: HuggingFaceTB/SmolLM2-135M
@@ -46,6 +69,111 @@ models:
       - model.safetensors
       - tokenizer.json
     source_url: https://huggingface.co/Qwen/Qwen3-0.6B-Base
+
+  qwen3.5-4b:
+    backend: huggingface
+    repo_id: Qwen/Qwen3.5-4B
+    revision: 851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a
+    runtime: vllm-sglang-transformers
+    architecture_family: gated-deltanet-attention-hybrid
+    license: apache-2.0
+    access: public
+    trust_remote_code: false
+    publication_eligible: true
+    roles: [small-competent-agent, scale-transport, tinker-controller-smoke]
+    metadata_files:
+      - LICENSE
+      - README.md
+      - chat_template.jinja
+      - config.json
+      - tokenizer_config.json
+    required_files:
+      - LICENSE
+      - chat_template.jinja
+      - config.json
+      - model.safetensors.index.json
+      - tokenizer.json
+    source_url: https://huggingface.co/Qwen/Qwen3.5-4B
+
+  qwen3.5-9b:
+    backend: huggingface
+    repo_id: Qwen/Qwen3.5-9B
+    revision: c202236235762e1c871ad0ccb60c8ee5ba337b9a
+    runtime: vllm-sglang-transformers
+    architecture_family: gated-deltanet-attention-hybrid
+    license: apache-2.0
+    access: public
+    trust_remote_code: false
+    publication_eligible: true
+    roles: [medium-open-agent, within-family-scale-transport]
+    metadata_files:
+      - LICENSE
+      - README.md
+      - chat_template.jinja
+      - config.json
+      - tokenizer_config.json
+    required_files:
+      - LICENSE
+      - chat_template.jinja
+      - config.json
+      - model.safetensors.index.json
+      - tokenizer.json
+    source_url: https://huggingface.co/Qwen/Qwen3.5-9B
+
+  qwen3.6-35b-a3b:
+    backend: huggingface
+    repo_id: Qwen/Qwen3.6-35B-A3B
+    revision: 995ad96eacd98c81ed38be0c5b274b04031597b0
+    runtime: vllm-sglang
+    architecture_family: gated-deltanet-attention-hybrid-moe
+    license: apache-2.0
+    access: public
+    trust_remote_code: false
+    publication_eligible: true
+    roles: [large-open-agent, moe-scale-transport, tinker-controller-medium]
+    metadata_files:
+      - LICENSE
+      - README.md
+      - chat_template.jinja
+      - config.json
+      - generation_config.json
+      - tokenizer_config.json
+    required_files:
+      - LICENSE
+      - chat_template.jinja
+      - config.json
+      - model.safetensors.index.json
+      - tokenizer.json
+    source_url: https://huggingface.co/Qwen/Qwen3.6-35B-A3B
+
+  gpt-oss-120b:
+    backend: huggingface
+    repo_id: openai/gpt-oss-120b
+    revision: b5c939de8f754692c1647ca79fbf85e8c1e70f8a
+    runtime: vllm-sglang-transformers
+    architecture_family: transformer-moe-mxfp4
+    license: apache-2.0
+    access: public
+    trust_remote_code: false
+    publication_eligible: true
+    roles: [large-open-frontier-control, architecture-transport, single-h100-scale]
+    metadata_files:
+      - LICENSE
+      - README.md
+      - USAGE_POLICY
+      - chat_template.jinja
+      - config.json
+      - generation_config.json
+      - tokenizer_config.json
+    required_files:
+      - LICENSE
+      - USAGE_POLICY
+      - chat_template.jinja
+      - config.json
+      - model.safetensors.index.json
+      - tokenizer.json
+    source_url: https://huggingface.co/openai/gpt-oss-120b
+    code_url: https://github.com/openai/gpt-oss
 
   mamba-130m-hf:
     backend: huggingface

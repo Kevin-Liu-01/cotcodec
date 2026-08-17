@@ -1,0 +1,81 @@
+schema_version: 1
+name: stage3-mnemon-active-space-admission-doctor
+status: registered-cpu-admission
+scientific_result: false
+publication_ready: false
+
+sources:
+  mnemon:
+    source_id: mnemon
+    repository: https://github.com/mnemon-dev/mnemon
+    revision: 88d2981edeb18a5ebe048af472f6f96527615454
+    tree: 056fd6d91cf391aaf7667990fdfcef784c670fc1
+    git_archive_tar_sha256: a7dba5eea43bc727b0360ba598312067eb2e599525eded3f929fb942ebb781c6
+    license: Apache-2.0
+    license_sha256: c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4
+    go_mod_sha256: e51be8227e2f6c1ad566c802d8b5fb1b473cbfb2cb80d89cc59f16be4092d47b
+    go_sum_sha256: 5b7fbc2805e1e04a5f86287027c0b0bfffc9e5e06805143253a17a944808db16
+  dsh_mnemon:
+    source_id: dsh-mnemon
+    repository: https://github.com/omdsh-dev/dsh-mnemon
+    revision: 1889c68400e52a391ee9a6eedf15bf44bc39dd06
+    tree: 87024a203721069a5dbb01b013dcca9475df3328
+    git_archive_tar_sha256: 6d168ff938b4fcf5bac27e4a7b753f18b987cefb2ce45cdb7795cc7231cc5027
+    license: MIT
+    license_sha256: 0bc72d9f737802b30a7e43d1b59912e81698e75948759ba07c276732aba0c7a2
+    package_json_sha256: 7c65168075572f0181694cd96d9116013773346926e77a92f8517bb902ba16e0
+    pnpm_lock_sha256: fe13b83ab54345dfa8e7b95726a533310112458920a334eb1099458390aa0daf
+
+runtime:
+  containment: docker-network-none
+  local_platform: linux/arm64
+  runtime_network: none
+  read_only_root: true
+  cap_drop_all: true
+  no_new_privileges: true
+  provider_secrets: forbidden
+  sudo: forbidden
+  gpu_count: 0
+  max_gpu_hours: 0
+  clean_state_repeats: 2
+  go_base_image: golang@sha256:ab1d1823abb55a9504d2e3e003b75b36dbeb1cbcc4c92593d85a84ee46becc6c
+  node_base_image: node@sha256:0711b541c1c33a8a530ac4f0d391baa9a15b3d804695b1b24a47daa5fb60e74d
+  go_dependency_lock: go.sum
+  node_dependency_lock: pnpm-lock.yaml
+
+intervention:
+  real_mnemon_cli: true
+  real_dsh_mnemon_service: true
+  create_two_named_stores: true
+  active_set_recall_probe: true
+  inactive_explicit_read_probe: true
+  targeted_write_activation_probe: true
+  fresh_service_restart: true
+  soft_forget_residue_probe: true
+  whole_space_delete_probe: true
+  model_calls: 0
+  embedding_provider_calls: 0
+  external_api_calls: 0
+
+admission_gates:
+  expected_status: ADMITTED_STATIC_ACTIVE_SPACE_CONTROL_WITH_SOFT_DELETE_BOUNDARY
+  require_two_clean_states: true
+  require_distinct_native_databases: true
+  require_inactive_recall_exclusion: true
+  require_restart_persistence: true
+  require_soft_delete_boundary: true
+  require_whole_space_delete: true
+  learned_bidirectional_paging_claim: forbidden
+  physical_item_erasure_claim: forbidden
+  access_control_claim: forbidden
+
+admission:
+  h100_actor: bounded-static-selection-cell-after-sealed-pass
+  scientific_claim: forbidden
+  publication_claim: forbidden
+  scope: static-active-space-orchestration-control-only
+  next_gate: >-
+    Freeze task-blind store contents and active-set decisions, then run a small
+    H100 actor cell against no-memory, all-spaces, and oracle-space controls.
+    Charge registry and multi-store recall overhead. Do not call this learned
+    promotion/demotion, item-level forgetting, access control, or physical purge.

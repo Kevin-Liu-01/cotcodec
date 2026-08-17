@@ -1,0 +1,88 @@
+{
+  "schema_version": 1,
+  "source_id": "longmemeval-natural-session-topology",
+  "study": "longmemeval-natural-session-topology-retrieval-v1",
+  "status": "NATURAL_SESSION_TOPOLOGY_RETRIEVAL_KILLED",
+  "evidence_grade": "local-negative-reproduced",
+  "evidence_kind": "natural-session-topology-negative",
+  "evidence_role": "local-arm64-contained-natural-topology-negative",
+  "source_revisions": {},
+  "artifact_root": "data/results/neo4j-natural-topology/2026-08-15-local-docker-v1",
+  "artifact_sha256": {
+    "repeat-1/manifest.json": "ab51252ed5ed330476b2d8bb1b013a2d132c21fd622d0bb874a6f94e6f489822",
+    "repeat-1/panel.json": "51ac988d0e3e6d7062cafd3a8a3a65000b7ec6a9db397f8434d1ea316dc43156",
+    "repeat-1/report.json": "3677db5b4e5de74c45cb8b50430fd10972061d6bdd771f91436512cedb07eaa3",
+    "repeat-2/manifest.json": "ab51252ed5ed330476b2d8bb1b013a2d132c21fd622d0bb874a6f94e6f489822",
+    "repeat-2/panel.json": "51ac988d0e3e6d7062cafd3a8a3a65000b7ec6a9db397f8434d1ea316dc43156",
+    "repeat-2/report.json": "3677db5b4e5de74c45cb8b50430fd10972061d6bdd771f91436512cedb07eaa3",
+    "runtime-image-inspect.json": "80e4459151bdc9be1e4e210f242aca44658bc2872761021c04b829b964f7e50f"
+  },
+  "source": {
+    "dataset_id": "xiaowu0162/longmemeval-cleaned",
+    "revision": "98d7416c24c778c2fee6e6f3006e7a073259d48f",
+    "filename": "longmemeval_s_cleaned.json",
+    "path": "data/benchmarks/longmemeval/98d7416c24c778c2fee6e6f3006e7a073259d48f/longmemeval_s_cleaned.json",
+    "sha256": "d6f21ea9d60a0d56f34a05b609c79c88a451d2ae03597821ea3d5a9678c3a442",
+    "size_bytes": 277383467,
+    "license": "MIT"
+  },
+  "runtime": {
+    "image_id": "sha256:7c7707bfef3b1740233b2077ffde311145cc3c91a183da8ea88e8087948df918",
+    "image_repo_digest": "cotcodec-gaama-natural-doctor@sha256:7c7707bfef3b1740233b2077ffde311145cc3c91a183da8ea88e8087948df918",
+    "architecture": "arm64",
+    "network_mode": "none",
+    "read_only_root": true,
+    "cap_drop_all": true,
+    "no_new_privileges": true,
+    "container_gpu_count": 0,
+    "model_calls": 0,
+    "embedding_model_calls": 0,
+    "runtime_source_binding": false,
+    "note": "The exact live worktree was mounted read-only into an older pinned doctor image, so this is deterministic development evidence rather than a clean-source publication runtime."
+  },
+  "code_sha256": {
+    "harness/memory_trials/neo4j_natural_parity.py": "2c458b052181d63a253fa447c09fba33db247c0a84bcae43932dee5af8d8745e",
+    "scripts/run_neo4j_natural_retrieval_screen.py": "6354c629ccce415144fefd219d18dfae299b50c290e04c6c198a13b3f7242374",
+    "tests/test_neo4j_natural_parity.py": "c3dfc812ef3898ed909fbb3cb7ea387a1bc08a3eebe65ff9767710829a63d935",
+    "tests/test_neo4j_natural_retrieval_screen.py": "3269230dee8a57a2b12e3f49d1b0405b022047bc9b662594c9a4b453bed19008"
+  },
+  "panel": {
+    "questions": 64,
+    "questions_per_type": 32,
+    "question_types": [
+      "knowledge-update",
+      "temporal-reasoning"
+    ],
+    "panel_seed": 20260815,
+    "top_k": 4,
+    "shuffle_seeds": [
+      42,
+      43,
+      44
+    ],
+    "case_payload_sha256": "20e6c113273bc78fc94b82dc2b90920dd76109c73c19660ec5ec4c16b1752f1c"
+  },
+  "result": {
+    "clean_repetitions": 2,
+    "recall_all_at_4": {
+      "flat_bm25_dense": 0.34375,
+      "true_topology": 0.203125,
+      "shuffled_topology_seed_42": 0.25,
+      "shuffled_topology_seed_43": 0.203125,
+      "shuffled_topology_seed_44": 0.21875
+    },
+    "true_minus_flat": -0.140625,
+    "true_minus_flat_bootstrap_95_ci": [
+      -0.234375,
+      -0.046875
+    ],
+    "true_minus_mean_shuffle": -0.020833333333333343,
+    "all_integrity_gates_passed": true,
+    "all_claim_gates_passed": false
+  },
+  "run_count": 2,
+  "scientific_result": false,
+  "publication_ready": false,
+  "h100_actor_admission": "forbidden",
+  "interpretation": "On this preregistered deterministic 64-question natural-session panel, chronological neighbor expansion materially reduced recall relative to flat BM25+dense and did not beat degree-preserving shuffled chains. This kills the proposed topology-to-actor escalation. It does not test native Neo4j storage, learned extraction, answer generation, or general graph memory."
+}

@@ -1,0 +1,44 @@
+{
+  "artifact_files": {
+    "Dockerfile": "f57a9732c0b2471189d2173c5c2c5bcf8586fdea8f2bf93b2f7712d52430260e",
+    "doctor.py": "f0672a0a8abf9859c61f3db48ddba8b2aa3cc84ff83fa47f5cf380792f7da4c7",
+    "experiment.yaml": "d05c2027198004e6adda6656ee26ae06ecd63a10c251ffd0af5aa82e0f1b4460",
+    "image-inspect.json": "039fe4d1d39cb65080ea850319af459c74722ca7cb88c70544cdf6850143ffba",
+    "manifest.json": "bc509dd443d2da00d077ee16868d65f2fd19b5062deaec344562e1017f1d0d58",
+    "repeat-1.json": "e0bbb65bbc96456e6465f863d068ce0c7f6dd870cae6253f215a7f7cf5c75d1b",
+    "repeat-1.txt": "96a1877ac9d9c79205753cfbc1f4cabccc269eeaf52963b56490a8429d4a308b",
+    "repeat-2.json": "e0bbb65bbc96456e6465f863d068ce0c7f6dd870cae6253f215a7f7cf5c75d1b",
+    "repeat-2.txt": "96a1877ac9d9c79205753cfbc1f4cabccc269eeaf52963b56490a8429d4a308b",
+    "report.json": "a6fb8adef2ed0961768afcec2de167ae3ba45980a036c7b66a124e856f579447",
+    "source-receipt.json": "bb225ee46dbeacc0e2104cff3ab08c94981bd5223c726199c631ae0e8f6e6c8c",
+    "source.tar": "50830e429b65043767f485b5494829715a4c98980f98c1dd4c52c0342e588601"
+  },
+  "artifact_root": "data/results/lightmem-offline-consolidation/2026-08-16-local-docker-v1",
+  "claim_boundary": {
+    "active_inactive_paging_demonstrated": false,
+    "h100_actor_admission": false,
+    "offline_consolidation_quality_measured": false,
+    "persistent_restart_safe": false,
+    "scoped_purge_available": false
+  },
+  "code_files": {
+    "infra/memory-baselines/lightmem/Dockerfile": "f57a9732c0b2471189d2173c5c2c5bcf8586fdea8f2bf93b2f7712d52430260e",
+    "infra/memory-baselines/lightmem/doctor.py": "f0672a0a8abf9859c61f3db48ddba8b2aa3cc84ff83fa47f5cf380792f7da4c7",
+    "scripts/run_lightmem_offline_doctor.py": "7b7228707c853d76ad5dc9f45a78853b091e537cf08966427b22742c5beba095",
+    "scripts/validate_lightmem_offline_evidence.py": "7ed28195429fedc0172154cfb4219fdc3853ca2ddbca5979917507b8a87cd391",
+    "scripts/validate_lightmem_offline_experiment.py": "71e880f86e2ff4c8f4d40a2a3bc5a2d8a59d1d6d5decf516a59d88084feede1d"
+  },
+  "evidence_grade": "local-negative-reproduced",
+  "evidence_kind": "contained-exact-source-consolidation-negative",
+  "publication_ready": false,
+  "run_count": 2,
+  "runtime_lane": "local-arm64-docker-network-none",
+  "schema_version": 1,
+  "scientific_result": false,
+  "source_id": "lightmem",
+  "source_revisions": {
+    "https://github.com/zjunlp/LightMem": "8fc9a9179f9170c4a40fc653fcb410375900f26e"
+  },
+  "stable_projection_sha256": "80a2b06c818ece9fce8319c0121d3e951b7469e456ed636b79d6d02f1aa72b56",
+  "status": "BLOCKED_DESTRUCTIVE_DEFAULT_REOPEN_AND_CONSOLIDATION_CONTRACT_DRIFT"
+}

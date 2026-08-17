@@ -1,0 +1,61 @@
+schema_version: 1
+name: stage3-recmem-consolidation-doctor
+status: registered-cpu-falsification
+scientific_result: false
+publication_ready: false
+
+source:
+  source_id: recmem
+  repository: https://github.com/CaiusDai/RecMem
+  revision: a84252f6e5587fd4a8caac03ec9f6c732b7a7f35
+  tree: 46d131594833547b275cf278db665976dc63b2f1
+  version: 0.1.0
+  license: MIT
+  license_sha256: 761ab33482afa265a75929a9de057b5a2f7d8fd3161fc5ab85ffa62553014537
+  git_archive_tar_sha256: 274aba9567b7f1f3a738d159c873d3cbc2744bc3f6f01f857484fc01ec3076f9
+  uv_lock_sha256: 94803e92d128d5b42849fb179cff798b26a5b3fa5ff0995a05d28e24ad205c40
+
+runtime:
+  containment: docker-network-none
+  runtime_network: none
+  read_only_root: true
+  cap_drop_all: true
+  no_new_privileges: true
+  provider_secrets: forbidden
+  sudo: forbidden
+  gpu_count_inside_container: 0
+  clean_state_repeats: 2
+  base_image: ghcr.io/astral-sh/uv@sha256:d1e005e6f5aac724b7554db95f1c128a77d8d35b59ebe70e188852b4bdad3a3d
+
+intervention:
+  storage: qdrant-local
+  embedding: deterministic-1536d-test-double
+  llm: deterministic-operation-test-double
+  provider_calls: 0
+  model_backend_calls: 0
+  min_consolidation_count: 3
+  minimum_relevant_score: 0.99
+  merge_threshold: 0.99
+  test_duplicate_retry: true
+  test_trigger_lineage: true
+  test_merge_failure_atomicity: true
+  test_conversation_isolation: true
+  test_fresh_process_restart: true
+
+expected_falsification:
+  status: BLOCKED_NON_IDEMPOTENT_WRITE_MERGE_DATA_LOSS_AND_INCOMPLETE_LINEAGE
+  duplicate_retry_creates_second_record: true
+  triggering_message_missing_from_raw_id_lineage: true
+  failed_replacement_embedding_deletes_prior_episode: true
+  fresh_process_preserves_successful_consolidation: true
+  conversation_isolation_preserved: true
+  reproduced_in_two_clean_states: true
+
+admission:
+  h100_actor: forbidden-for-this-revision
+  scientific_claim: forbidden
+  publication_claim: forbidden
+  next_gate: >-
+    Admit only a newer immutable revision or explicit repair arm with caller-owned
+    idempotency keys, atomic replace-or-keep episodic merges, complete source-event
+    lineage including the triggering write, and the same two-clean-state doctor.

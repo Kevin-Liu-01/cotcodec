@@ -1,0 +1,188 @@
+schema_version: 1
+name: causal-memory-policy-kimi
+status: contract
+experiment_kind: causal_memory_policy
+research_question: >-
+  Do discrete memory decisions trained from cross-fitted randomized holdout
+  effects outperform matched controllers trained on next-use or observational
+  future-utility labels, and does that advantage transport from Qwen to Kimi?
+null_hypothesis: >-
+  Causal labels are matched by next-use or observational labels, fail to improve
+  executable agent success, or do not transport across model scale and family.
+portability_claim: >-
+  The action schema, evidence, budgets, and causal target definition are portable;
+  every base model receives a separate LoRA and no weight portability is claimed.
+
+stages:
+  - name: qwen4-interface-smoke
+    role: smoke
+    tinker_id: Qwen/Qwen3.5-4B
+    context_tokens: 65536
+    train_tokens_per_seed: 50000
+    sample_tokens_per_seed: 50000
+    prefill_tokens_per_seed: 100000
+    prices:
+      prefill_per_million: 0.33
+      sample_per_million: 1.005
+      train_per_million: 0.737
+      verified_at: "2026-08-11"
+      source: https://tinker-docs.thinkingmachines.ai/tinker/models/
+  - name: qwen35b-scale-confirmation
+    role: control
+    tinker_id: Qwen/Qwen3.6-35B-A3B
+    context_tokens: 65536
+    train_tokens_per_seed: 100000
+    sample_tokens_per_seed: 100000
+    prefill_tokens_per_seed: 200000
+    prices:
+      prefill_per_million: 0.54
+      sample_per_million: 1.335
+      train_per_million: 1.177
+      verified_at: "2026-08-11"
+      source: https://tinker-docs.thinkingmachines.ai/tinker/models/
+  - name: kimi-target-confirmation
+    role: target
+    tinker_id: moonshotai/Kimi-K2.6
+    context_tokens: 32768
+    train_tokens_per_seed: 100000
+    sample_tokens_per_seed: 100000
+    prefill_tokens_per_seed: 200000
+    prices:
+      prefill_per_million: 2.205
+      sample_per_million: 5.49
+      train_per_million: 4.84
+      verified_at: "2026-08-11"
+      source: https://tinker-docs.thinkingmachines.ai/tinker/models/
+
+lora:
+  rank: 16
+  learning_rate: 0.0001
+  batch_size: 8
+  max_steps: 100
+  train_mlp: true
+  train_attn: true
+  train_unembed: false
+
+seeds: [42, 43, 44]
+
+data:
+  record_schema: rendered-prefix-target-v1
+  renderer_identity: >-
+    pinned tinker-cookbook qwen3_5_disable_thinking and
+    kimi_k26_disable_thinking renderer revisions required before execution
+  train_by_arm:
+    causal-label-lora:
+      source: cross-fitted holdout pseudo-outcomes converted to discrete memory actions
+      identity: family-disjoint training tasks with no replay-audit or sealed-test rows
+      sha256: null
+    next-use-label-lora:
+      source: matched next-reference targets over the identical rendered prefixes
+      identity: same examples capacity search steps and token ceiling as causal labels
+      sha256: null
+    observational-label-lora:
+      source: matched observational future-utility targets over identical prefixes
+      identity: same examples capacity search steps and token ceiling as causal labels
+      sha256: null
+  development:
+    source: disjoint memory task families for checkpoint and decision-threshold selection
+    identity: development templates namespaces graph motifs updates and delays excluded from test
+    sha256: null
+  test:
+    source: sealed generated memory-to-action tasks plus later public external tasks
+    identity: unseen task families and fixed task hashes shared across every label and model arm
+    sha256: null
+    sealed: true
+  contamination_checks:
+    - Split generator template namespace graph update and delay family rather than serialized rows.
+    - Exclude paired replay audits and every sealed outcome from all three training-label datasets.
+    - Hash and compare rendered prefixes so the three learned arms differ only in target labels.
+    - Counterfactually rename entities and swap answer values before external benchmark promotion.
+
+arms:
+  - name: base-no-controller
+    lora: false
+    label_source: none
+    controller_runtime: none
+    purpose: Unmodified base model establishes task and schema competence without a memory controller.
+  - name: frozen-causal-policy
+    lora: false
+    label_source: causal_holdout
+    controller_runtime: frozen_external
+    purpose: External non-LoRA causal gate isolates whether model training adds value beyond the policy.
+  - name: causal-label-lora
+    lora: true
+    label_source: causal_holdout
+    controller_runtime: model_emitted
+    purpose: Model-specific LoRA emits memory actions learned from cross-fitted randomized effects.
+  - name: next-use-label-lora
+    lora: true
+    label_source: next_use
+    controller_runtime: model_emitted
+    purpose: Matched learned control emits memory actions from cheaper future-reference labels.
+  - name: observational-label-lora
+    lora: true
+    label_source: observational_utility
+    controller_runtime: model_emitted
+    purpose: Matched learned control uses nonrandom future-utility labels under identical capacity.
+
+controls:
+  - Match rendered prefixes examples LoRA rank trainable modules steps tokens seeds and checkpoint selection.
+  - Match task IDs frozen actor memory budget tool tape response schema and decision serve rate.
+  - Keep replay-audit and sealed-test rows out of nuisance fitting label construction and LoRA training.
+  - Compare thinking-disabled primary renderers and matched thinking-enabled secondary renderers separately.
+
+primary_endpoint:
+  metric: paired executable success difference between causal-label LoRA and strongest matched learned label control
+  direction: maximize
+  minimum_effect: 0.03
+  unit_of_analysis: sealed task-model episode clustered by generator family and training seed
+  safety_gate: zero cross-session bleed and no five-point safety regression versus base
+
+falsifiers:
+  - Kill if next-use or observational labels match causal labels inside the registered equivalence margin.
+  - Kill if the causal LoRA fails to beat the frozen external causal policy after charging training cost.
+  - Kill portability if the Qwen effect reverses on Kimi or depends on one renderer mode.
+  - Kill on any replay-audit leakage cross-session memory leak or safety red line.
+  - Stop before Kimi if fresh-client optimizer resume or downloaded-weight verification fails on Qwen.
+
+checkpoints:
+  full_state_every_steps: 10
+  sampler_weights_every_steps: 10
+  periodic_ttl_seconds: 7200
+  durable_ttl_seconds: 604800
+  retain_minimum_generations: 2
+  resume_with_optimizer: true
+  download_final_weights: true
+  keep_local_cursor_and_rng: true
+  fresh_client_resume_test: true
+
+budget:
+  max_usd: 18.10
+  max_client_minutes: 360
+  max_checkpoint_storage_gb_month: 5.0
+  storage_per_gb_month: 0.10
+
+execution:
+  enabled: false
+  client_runtime: slurm-cpu-container
+  sdk_version: 0.23.3
+  secret_env: TINKER_API_KEY
+  container_image: null
+  command_argv: null
+  capability_receipt_sha256: null
+  blocked_by:
+    - Obtain Tinker access and inject TINKER_API_KEY through the cluster secret mechanism.
+    - Build and hash the three matched label datasets development split and sealed test.
+    - Pin the tinker-cookbook renderer revision and prove prefix identity across label arms.
+    - Publish a digest-pinned Tinker client image and pass a CPU-only Slurm Pyxis dry run.
+    - Prove full-state save fresh-client optimizer resume and downloaded adapter verification on Qwen 4B.
+
+required_artifacts:
+  - validated contract exact SDK lock and online server capability receipt
+  - split hashes generator hash renderer code hash and contamination report
+  - per-arm prefix identity and target-label difference receipt
+  - Tinker run IDs full-state and sampler checkpoint paths with model arm and seed
+  - downloaded adapter hashes checkpoint lineage and fresh-client continuation proof
+  - per-step token cost loss timing retry and delayed billing ledgers
+  - per-task raw output parsed action memory decision tool result and safety receipts
+  - family-clustered model-by-label analysis with null results and exclusions retained

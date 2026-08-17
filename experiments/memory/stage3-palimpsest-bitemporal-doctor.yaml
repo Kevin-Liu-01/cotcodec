@@ -1,0 +1,96 @@
+schema_version: 1
+name: stage3-palimpsest-bitemporal-doctor
+status: registered-cpu-falsification
+scientific_result: false
+publication_ready: false
+
+source:
+  source_id: palimpsest-bitemporal-memory
+  repository: https://github.com/joe51111jwd/palimpsest
+  revision: 0f83e166b0512a5ca9f38c2559f68749b35e994d
+  tree: fd25cbc074172ad0291f8a46faccaedd5deb2b48
+  version: 0.1.0
+  git_archive_tar_sha256: 752c3fb16c9beae152c833cb0cd5e8ed67a80eba3c5fe544283f6642f9cc2be6
+  license: Apache-2.0
+  license_sha256: 7ecd8ce1d30b8aa26232f5c7c878cca53bc273547ce52f1678f955154746e64f
+  pyproject_sha256: 83d380afe22c2493ef634a3f871eec7b4da1e633dd5604baab6c09d82b33ec74
+
+runtime:
+  containment: docker-network-none
+  local_platform: linux/arm64
+  runtime_network: none
+  read_only_root: true
+  cap_drop_all: true
+  no_new_privileges: true
+  provider_secrets: forbidden
+  sudo: forbidden
+  gpu_count: 0
+  max_gpu_hours: 0
+  clean_state_repeats: 2
+  base_image: ghcr.io/astral-sh/uv@sha256:d1e005e6f5aac724b7554db95f1c128a77d8d35b59ebe70e188852b4bdad3a3d
+  base_image_version: 0.12.5-python3.13-trixie-slim
+  dependency_lock: absent-upstream
+  resolved_discovery_runtime:
+    python: 3.13.15
+    model2vec: 0.9.0
+    numpy: 2.5.2
+    pytest: 9.1.1
+    tiktoken: 0.13.0
+
+upstream_suite:
+  command: [python, -m, pytest, -rA]
+  passed: 274
+  failed: 11
+  skipped: 35
+  expected_failure_classes:
+    - missing-unshipped-locomo-fixture
+    - tokenizer-version-budget-drift
+    - bm25-recency-and-truncation-regressions
+    - stale-episodic-excerpts-reach-context
+  limitation: >-
+    The repository has no dependency lock and omits its raw benchmark files.
+    Under the sealed discovery resolver, eleven upstream tests fail, including
+    stale superseded excerpts reaching the rendered model context.
+
+intervention:
+  phases: [prepare, verify-restart, purge-probe]
+  deterministic_hash_embedder: true
+  static_claims_only: true
+  test_valid_time: true
+  test_transaction_time_knowledge_cutoff: true
+  test_mixed_cardinality_continuation: true
+  test_fresh_process_restart: true
+  test_duplicate_save: true
+  test_native_correction: true
+  test_native_delete_or_purge: true
+  test_plaintext_residue: true
+  model_calls: 0
+  embedding_model_calls: 0
+  external_api_calls: 0
+
+expected_falsification:
+  status: BLOCKED_BITEMPORAL_RESTART_AND_NO_NATIVE_PURGE
+  pre_restart_valid_and_transaction_time_correct: true
+  duplicate_save_row_count_idempotent: true
+  restart_preserves_ordinary_valid_time_and_current_value: true
+  restart_preserves_transaction_time_knowledge_cutoff: false
+  restart_preserves_closed_tx: false
+  restart_preserves_mixed_cardinality_continuation: false
+  uninterrupted_goal_after_continuation: [delta]
+  restored_goal_after_continuation: [gamma, delta]
+  correction_hides_canary_from_current_facts: true
+  native_delete_or_purge_api_available: false
+  plaintext_canary_remains_in_sqlite: true
+  reproduced_in_two_clean_states: true
+
+admission:
+  h100_actor: forbidden-for-this-revision
+  scientific_claim: forbidden
+  publication_claim: forbidden
+  scope: bitemporal-structure-control-only
+  next_gate: >-
+    Require a newer immutable revision or explicit patch arm that persists and
+    restores closed_tx, successor links, cardinality votes/effective state, and
+    source-grounded tenant scope; passes the restart continuation falsifiers;
+    locks dependencies; removes stale rendered excerpts; and proves scoped
+    deletion or cryptographic erasure with zero physical residue.

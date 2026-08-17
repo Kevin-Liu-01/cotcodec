@@ -1,0 +1,22 @@
+ARG BASE_IMAGE
+FROM ${BASE_IMAGE}
+
+USER root
+COPY --from=ghcr.io/astral-sh/uv:python3.13-trixie-slim /usr/local/bin/uv /usr/local/bin/uv
+RUN uv pip install \
+      --python /app/.venv/bin/python \
+      --no-deps \
+      aiohttp-retry==2.9.1 \
+      hindsight-client==0.6.1 \
+ && /app/.venv/bin/python -c \
+      "import importlib.metadata as m; import hindsight_client; assert m.version('hindsight-client') == '0.6.1'; assert m.version('aiohttp-retry') == '2.9.1'"
+
+COPY raw/baselines/hermes-agent/plugins/memory/hindsight /opt/hermes/plugins/memory/hindsight
+COPY infra/memory-baselines/hermes-hindsight/adapter_doctor.py /opt/hermes/adapter_doctor.py
+
+ENV PYTHONPATH=/opt/hermes \
+    PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1
+
+USER 65532:65532
+ENTRYPOINT ["/app/.venv/bin/python", "/opt/hermes/adapter_doctor.py"]

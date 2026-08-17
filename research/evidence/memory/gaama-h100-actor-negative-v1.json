@@ -1,0 +1,80 @@
+{
+  "artifact_files": {
+    "build-job-292/final-image.txt": "8b9fc97e179619910a5d46c11905ea81572c41b30790fa83ea396680105a0458",
+    "build-job-292/image-inspect.json": "1a2f5b715fc4ef21f4ea789a42c6ee8a6df7bbd283058d871a161a5da8b5a287",
+    "build-job-292/registry-inspect.json": "43da61116297835ff3628329d48dc843723ed7a85ada7cc02cc0de48bfa13d6f",
+    "build-job-292/source-validation.json": "38e12bcff32d16b8c4ee468d3736682a8abd4d28a6edfa8a5a6f7242f4700080",
+    "job-295/gaama-actor/checkpoint.json": "a23192495d8bdb976d40ec55b4b713ccf018afd16ecc88886bee654570fcc802",
+    "job-295/gaama-actor/panel.json": "c493bb810973324497daa4a0b05568b4a0e0a669247c19765387bd74355cf062",
+    "job-295/gaama-actor/predictions.jsonl": "75da52fa5c8abc7b6aa59086f32cfa4198572da785e3c593fc6fbf82d2db1a78",
+    "job-295/job.env": "7e97782fb3fdaef9387cac38a7cd273c636489ac8f4d510fdae5fd7a49512373",
+    "job-295/termination.env": "e663c0f6342e158dab2e1021aee52de5a9e19b1c9a380492688eb6cf1e406b2b",
+    "job-297/docker-research.sbatch": "eee81e32e4b077ca056710cdbb1b7bc46401f566a3b46383dd7e06242248cda8",
+    "job-297/gaama-actor/checkpoint.json": "e7d0e14275ac9012fc1c67ebebf50584a5719856567e092cd1aaf43410263a37",
+    "job-297/gaama-actor/manifest.json": "18a95f7e2273d6d9628b09fc10e4ada506819600e7fb49406815350057dc6ab3",
+    "job-297/gaama-actor/panel.json": "c493bb810973324497daa4a0b05568b4a0e0a669247c19765387bd74355cf062",
+    "job-297/gaama-actor/predictions.jsonl": "fadeb050db97416f6c2bd0bd231b23e1a1d599725cc0c542632514b8c51f239d",
+    "job-297/gaama-actor/report.json": "129c59525d7ab4fd72cd87e6f164c0ddb0b039b6f8888db0f70960899f001c1b",
+    "job-297/image-inspect.json": "43da61116297835ff3628329d48dc843723ed7a85ada7cc02cc0de48bfa13d6f",
+    "job-297/job.env": "4069726276aff562fef8527461d6bf57594ff7d8ca51722852eaec8acba2f571",
+    "job-297/manifest.json": "c4ecd8565959d12e9780c484cb15264091a1d1c7126364070ba8f3bfc3a49dd6",
+    "job-297/model-receipt.json": "75ebfc531acdcbc0c39bbf83ee7bf5267a3ddf02c4fafdf6181624612a0d3082",
+    "job-297/resume-receipt.json": "5317327604000f6a810a14c7c376bc25e1eeef6156cdc95c60487bae6951e1e5",
+    "job-297/study-artifact.json": "011a21918946e19255c1118de41ec99131e1cb64c32b50bc68af8da58d84dc79",
+    "job-297/termination.env": "7cf3d74c3c8e42ac8e468bb4c6ce8cad79ff20abe3cbef1ca264fcc54376a25d"
+  },
+  "artifact_root": "data/results/gaama-h100-actor/2026-08-15-jobs295-297-v7",
+  "claim_boundary": {
+    "gaama_larger_model_admission": "forbidden-by-registered-kill-screen",
+    "general_graph_memory_claim": false,
+    "official_locomo_evaluation": false,
+    "retrieval_component_positive_retained": true
+  },
+  "evidence_grade": "local-negative-reproduced",
+  "evidence_kind": "h100-actor-translation-negative",
+  "final_job_id": 297,
+  "image_id": "sha256:791648995f657900f2c66da9f8e7dc357d56d41eab0ebb20bbe3c1a7937a0a4d",
+  "logical_run_count": 1,
+  "model": {
+    "artifact_root_sha256": "3b8a075149bffe4dea784db5b4b37bc0896688cba0b3de7d8d0f6e8ae6157b9e",
+    "model_id": "qwen3.5-4b",
+    "receipt_sha256": "75ebfc531acdcbc0c39bbf83ee7bf5267a3ddf02c4fafdf6181624612a0d3082",
+    "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a"
+  },
+  "outcome": {
+    "flat_evidence_recall_all_at_10": 0.375,
+    "flat_token_f1": 0.2831263115453518,
+    "true_evidence_recall_all_at_10": 0.385,
+    "true_minus_flat_cluster_mean_f1": -0.008817603046325385,
+    "true_minus_flat_clustered_bootstrap_95_ci": [
+      -0.026684549510964772,
+      0.005310533398377233
+    ],
+    "true_minus_mean_shuffled_cluster_mean_f1": -0.0033287562357889357,
+    "true_minus_mean_shuffled_clustered_bootstrap_95_ci": [
+      -0.019722537589752762,
+      0.013014553453438684
+    ],
+    "true_token_f1": 0.27409541700129936
+  },
+  "predecessor_completed_cases": 656,
+  "predecessor_job_id": 295,
+  "prior_retrieval_receipt": {
+    "artifact_path": "research/evidence/memory/gaama-natural-graph-v5.json",
+    "sha256": "011a21918946e19255c1118de41ec99131e1cb64c32b50bc68af8da58d84dc79"
+  },
+  "publication_ready": false,
+  "runtime_lane": "docker-under-slurm-h100-discovery",
+  "schema_version": 1,
+  "scientific_result": false,
+  "source_archive_path": "data/results/infrastructure/gaama-h100-source-2026-08-15-v7/source.tar.gz",
+  "source_archive_sha256": "8bd7a65b78b049dedc6d1c5154d2c97834debd09255aedd9624516ba40c5c753",
+  "source_id": "gaama",
+  "source_receipt_path": "data/results/infrastructure/gaama-h100-source-2026-08-15-v7/source-receipt.json",
+  "source_receipt_sha256": "86224828286b870093b2ab1e39c77f36d1dcb19147024a7a8b0dea9d682d9de2",
+  "source_revisions": {
+    "https://github.com/swarna-kpaul/gaama": "2d992f7f7b97c802bfe4c799878a5477cac1b6ff"
+  },
+  "status": "GAAMA_H100_ACTOR_KILLED",
+  "total_cases": 1000
+}

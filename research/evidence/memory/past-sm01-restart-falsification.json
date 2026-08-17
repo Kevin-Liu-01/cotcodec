@@ -1,0 +1,28 @@
+{
+  "evidence_kind": "negative-discovery-decision-receipt",
+  "external_attestation": false,
+  "mismatch_counts": {
+    "pass_fail": 2,
+    "score": 2,
+    "trace": 7
+  },
+  "publication_ready": false,
+  "registered_experiment": "experiments/memory/stage-b-past-sm01-checkpoint.yaml",
+  "report_artifact_path": "research/past-sm01-qwen36-discovery-2026-08-14.md",
+  "report_artifact_sha256": "9677bddae753fe42b329ac0109c95ab0d54b5a89b9646a2368ca6c2691cd5513",
+  "report_receipt_sha256": "da6f5966e928787b40e63bff662add5bb06e56a4c0551ce826c17cf1aeb326b8",
+  "resume_receipt_sha256": "e23615a0186f8d08f1462e2b3d6ecf6d0cf131ebf054bd99d03721f206490e72",
+  "scheduler_jobs": {
+    "checkpoint": 246,
+    "checkpoint_audit": 248,
+    "determinism_audit": 256,
+    "resume": 250,
+    "resume_audit": 252,
+    "uninterrupted": 254
+  },
+  "schema_version": 1,
+  "scientific_result": false,
+  "source_id": "past-bench",
+  "source_revision": "f8223517ae7491e776b69793d9f11e9d074ab42e",
+  "status": "PAST_SM01_RESTART_EQUIVALENCE_FALSIFIED"
+}

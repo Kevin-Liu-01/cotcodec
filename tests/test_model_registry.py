@@ -19,6 +19,9 @@ from scripts.fetch_open_model import (
 
 def test_live_registry_is_valid_and_contains_kimi() -> None:
     registry = load_registry(DEFAULT_REGISTRY)
+    assert registry["models"]["bge-small-en-v1.5"]["revision"] == (
+        "5c38ec7c405ec4b44b94cc5a9bb96e735b38267a"
+    )
     assert "kimi-linear-48b-a3b-base" in registry["models"]
     assert registry["models"]["kimi-linear-48b-a3b-base"]["trust_remote_code"] is True
     assert registry["models"]["kimi-linear-48b-a3b-base"]["publication_eligible"] is False

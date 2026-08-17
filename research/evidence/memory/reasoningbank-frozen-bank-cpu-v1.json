@@ -1,0 +1,105 @@
+{
+  "evidence_id": "reasoningbank-frozen-bank-cpu-v1",
+  "schema_version": 1,
+  "status": "FROZEN_PROCEDURAL_BANK_CPU_DOCTOR_PASS",
+  "scientific_result": false,
+  "publication_ready": false,
+  "evidence_role": "contained-real-encoder-contract-only",
+  "source": {
+    "repository": "https://github.com/google-research/reasoning-bank",
+    "revision": "ed80611788292ea739f1effd31f16c53823b8a0d",
+    "tree": "7cc5e6e08ee8035cde81f1fb9fd871d32423a3e3",
+    "git_archive_tar_sha256": "d85d169c84f82782cefc50044adc192ab1d28956f36e177de0bf213d48298e09"
+  },
+  "model": {
+    "registry_model_id": "bge-small-en-v1.5",
+    "repository": "BAAI/bge-small-en-v1.5",
+    "revision": "5c38ec7c405ec4b44b94cc5a9bb96e735b38267a",
+    "artifact_root_sha256": "85a178e1c7da2659a137728e9b6794f97a2607adfa315e3ee0eeb0f5cc497883",
+    "model_receipt_sha256": "9d30a2f1646e5e7b1d99db79232ca29ba727ae238736d02f95ea4270ca63926e",
+    "pooling": "cls-l2-normalized-v1",
+    "dimensions": 384,
+    "maximum_tokens": 512
+  },
+  "image": {
+    "image_id": "sha256:d3f7858e55209cd3af46b97e21aafcb8e0675ee59a64a787589ee2679f283430",
+    "architecture": "arm64",
+    "os": "linux",
+    "base_image": "docker.io/library/python:3.12.11-slim-bookworm@sha256:519591d6871b7bc437060736b9f7456b8731f1499a57e22e6c285135ae657bf7",
+    "torch_cpu_wheel_sha256": "70ecb2659af6373b7c5336e692e665605b0201ea21ff51aaea47e1d75ea6b5aa",
+    "code_sha256": "5bcc1cbc873c33fb49d1061daf7b829f872112b3bbb93d4ce9c9db092a920ce8",
+    "image_inspect_sha256": "6e01a55d6bc2a8bbbff787823789c97bc50f717a18474f8693395d849c555266"
+  },
+  "runtime_contract": {
+    "network_mode": "none",
+    "read_only_rootfs": true,
+    "cap_drop": [
+      "ALL"
+    ],
+    "security_opt": [
+      "no-new-privileges"
+    ],
+    "pids_limit": 256,
+    "nano_cpus": 4000000000,
+    "memory_bytes": 4294967296,
+    "device_requests": null,
+    "model_mount_read_only": true,
+    "receipt_mount_read_only": true,
+    "api_calls": 0,
+    "gpus": 0,
+    "sudo": false
+  },
+  "contract_result": {
+    "bank_artifact_sha256": "4d6c4456c2e4c1c95419c14c72bea60f7994fa460cdfa9b994e0e60b605d1f14",
+    "split_manifest_sha256": "e24f57a0279441f26fa863ff854bbd872a6e9bbb1a8ad89d60d23dd7e4fb535c",
+    "train_items": 6,
+    "evaluation_queries": 6,
+    "top_one_correct": 6,
+    "repeated_bank_freeze_exact": true,
+    "repeated_retrieval_exact": true,
+    "retrieval_bank_immutable": true,
+    "train_task_leakage_rejected": true,
+    "task_family_mismatch_rejected": true,
+    "fixture_source_artifacts": 6,
+    "fixture_receipts_only": true,
+    "real_reasoningbank_trajectories_present": false,
+    "document_text_field": "procedural_text"
+  },
+  "retained_artifact_root": "research/evidence/memory/reasoningbank-frozen-bank-cpu-v1-artifacts",
+  "exact_core_files": {
+    "bank.json": "99be19f00089e05463f4a025b57c48ced82e06b4805e1bbbfd11010c1d81f874",
+    "fixture-source-artifacts.jsonl": "2891c295e87564fdd967da30f875d47f9674724b281d1f938e3745ec85e4b12f",
+    "manifest.json": "6270ee3c2687911d44a1cb6b4e76943325f632adeb1bc0b0a6908bd9c6a25c98",
+    "report.json": "b6fcd4450bb62fa58902c3bce94016099ad42a33dfb30ca284078f0caec57c98",
+    "retrievals.jsonl": "3c88c94f65ef8a97ad9b47e7450f515023012b7b7a633a07e6c322e43cc6bbbe"
+  },
+  "runs": [
+    {
+      "run_id": "2026-08-15-cpu-doctor-v9-sealed",
+      "artifact_root": "data/results/reasoningbank-frozen-bank/2026-08-15-cpu-doctor-v9-sealed",
+      "retained_artifact_root": "research/evidence/memory/reasoningbank-frozen-bank-cpu-v1-artifacts/v9",
+      "execution_receipt_file_sha256": "ddcbb0ff2eb5d1087ed0de468fe9c01224b0a69231fd8937c018856d6246e0d5",
+      "execution_receipt_sha256": "f0a2c81c7152e9933b410f3e60b607e0b5aa51e68e8c9c8f005c1b4243dcc769",
+      "container_inspect_sha256": "edbbb919a2c24bd1b339dae99b9a8620b7086b7ce71fd45070c8cac2be223cff"
+    },
+    {
+      "run_id": "2026-08-15-cpu-doctor-v10-sealed",
+      "artifact_root": "data/results/reasoningbank-frozen-bank/2026-08-15-cpu-doctor-v10-sealed",
+      "retained_artifact_root": "research/evidence/memory/reasoningbank-frozen-bank-cpu-v1-artifacts/v10",
+      "execution_receipt_file_sha256": "df2464a1823164bb8693b4c5fbba9f995261521a3d37f1f54117ab45022a1467",
+      "execution_receipt_sha256": "daa726b90613ecc581245a125658fc5ab4fe24350ba20dcdcc7a630ef3e9e706",
+      "container_inspect_sha256": "dea1ed11bc87a1098e1cadc0c47eb6ce435b161bdc41f2e51d2bbec04697ad83"
+    }
+  ],
+  "two_fresh_runs_core_byte_identical": true,
+  "limitations": [
+    "synthetic retrieval fixtures, not agent-task quality evidence",
+    "procedures are fixture text, not regenerated from ReasoningBank trajectories",
+    "no matched actor or procedural-memory control matrix was executed",
+    "local Docker evidence is not external Slurm or publication attestation",
+    "container progress logs are intentionally not byte-identical because throughput text varies",
+    "the host independently validates the exact query roster, frozen-bank lineage, retrieval digests, top-one oracle, and injection budgets",
+    "all trajectory, correctness, and generator receipts are retained hand-authored fixture artifacts; no real ReasoningBank trajectory is represented",
+    "the retrieval index embeds only actor-visible procedural_text; source_query remains lineage metadata and is not embedded"
+  ]
+}

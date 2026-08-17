@@ -1,0 +1,1295 @@
+schema_version: 1
+verified_at: "2026-08-16"
+ledger: research/memory-sources.yaml
+matrix_sha256: 4174f49e61b81429a4aa96efb177b6d4cde0eeb2968b706ede63bc679ef645f2
+portfolio_max_gpu_hours: 108
+scope: >-
+  Selected falsifiers and systems for active/inactive, graph, learned-controller,
+  external-validity, and safety studies. Inclusion is not an endorsement or a
+  reproduced-result claim.
+
+selection_rules:
+  - Every candidate binds a source-ledger entry and explicit scientific role.
+  - Reused upstream code must bind an exact repository role with a resolved license.
+  - Paper-reimplementation never copies or imports unlicensed upstream code.
+  - Model-bearing screens run in Docker under Slurm on H100 with atomic checkpoints.
+  - Paper scores and repository pins never count as local reproduction.
+
+reference_lifecycle_contract:
+  protocol: memory-lifecycle-v1
+  status: completed-development-evidence-not-publication
+  scientific_result: false
+  evidence_role: task-blind-lifecycle-transport-and-mechanism-determinism
+  cases: 192
+  task_families: [active_archive, update_delete, consolidation, feedback]
+  active_capacities: [2, 4, 8]
+  host:
+    manifest_sha256: 92a062233cc173a16a022e8c2d99edccec8db90272a10b53a40f8fb03a8a0d90
+    runtime: Darwin-arm64-CPython-3.13.14
+    publication_attested: false
+  container:
+    manifest_sha256: 2ac7a67c05f4b88540d86361413201438d996ec174f22c4c98bf0ffd947624ac
+    image_id: sha256:359a1766c820f21c020a4130a85bdee5850e2f0410b20dbfdf283e90f310f9a5
+    runtime: Linux-aarch64-CPython-3.12.11
+    network_mode: none
+    read_only_root: true
+    cap_drop_all: true
+    no_new_privileges: true
+    publication_attested: false
+  cross_runtime:
+    comparison_sha256: 906c900abaa5a5814cacc104ed582c90f24784f98ac3325ed6490e3837799d61
+    semantic_artifacts_byte_equal: true
+    experiment_identity_equal: true
+    code_identity_equal: true
+    roots_equal: true
+    aggregate_gates_equal: true
+  limitations:
+    - reference-system-only
+    - no-native-memory-system-reproduced
+    - no-model-quality-effect
+    - dirty-development-source
+    - no-external-slurm-or-trust-root-attestation
+  admission_rule: >-
+    A native system may enter an H100 actor wave only after its lifecycle adapter
+    passes capability refusal, operation ordering, lineage closure, phase-cost
+    accounting, branch isolation, fresh-process restart, purge, and residue gates.
+  next_native_cpu_adapters: []
+  completed_native_cpu_adapters:
+    - source_id: neo4j-agent-memory
+      evidence_role: local-arm64-preference-lifecycle-conformance
+      confirmation_required: cluster-amd64-slurm
+    - source_id: mnemosyne-oss
+      evidence_role: local-arm64-one-way-consolidation-negative
+      status: BLOCKED_CONSOLIDATED_FORGET_AND_NO_REACTIVATION
+      h100_admission: forbidden-for-this-revision
+    - source_id: icarus-memory-infra
+      evidence_role: local-arm64-manual-lifecycle-negative
+      status: BLOCKED_NON_IDEMPOTENT_PROMOTION_AND_NO_NATIVE_PURGE
+      h100_admission: forbidden-for-this-revision
+    - source_id: palimpsest-bitemporal-memory
+      evidence_role: local-arm64-bitemporal-restart-negative
+      status: BLOCKED_BITEMPORAL_RESTART_AND_NO_NATIVE_PURGE
+      h100_admission: forbidden-for-this-revision
+    - source_id: lightmem2
+      evidence_role: local-arm64-context-paging-isolation-negative
+      status: BLOCKED_CROSS_SESSION_DISCLOSURE_ARCHIVE_COLLISION_AND_NO_NATIVE_PURGE
+      h100_admission: forbidden-for-this-revision
+    - source_id: shodh-memory
+      evidence_role: local-arm64-overlapping-tier-and-restart-stranding-negative
+      status: BLOCKED_OVERLAPPING_RESIDENCY_AND_RESTART_STRANDING
+      h100_admission: forbidden-for-this-revision
+    - source_id: mnemosyne-cognitive-os
+      evidence_role: local-arm64-algorithmic-consolidation-and-forget-negative
+      status: MNEMOSYNE_COGNITIVE_ACTIVE_INACTIVE_ADMISSION_KILLED
+      h100_admission: forbidden-for-this-revision
+    - source_id: memforge
+      evidence_role: local-arm64-exact-schema-fresh-install-negative
+      status: MEMFORGE_FRESH_INSTALL_ADMISSION_KILLED
+      h100_admission: forbidden-for-this-revision
+
+provider_conformance_contracts:
+  hermes:
+    source_id: hermes-provider-conformance
+    evidence_role: cpu-provider-contract-only
+    canonical_generation: v2
+    supersedes: v1-memori-executable-absent
+    status: FAIL
+    scientific_result: false
+    publication_ready: false
+    evidence_path: research/evidence/memory/hermes-provider-conformance-v2.json
+    evidence_sha256: b21871b5a471fcd1304f287778ec1d521636fd3634062f7226ffae813164be97
+    experiment_sha256: 1fd5f7620894fac8a4ecfcc9a56552075920747a8c815ecd8ae8b7c570300c23
+    provider_roster: [byterover, hindsight, holographic, honcho, mem0, memori, openviking, retaindb, supermemory]
+    failed_groups: [honcho, hindsight-strict-timeout-probe]
+    native_followups:
+      byterover:
+        source_id: hermes-byterover-cli
+        status: BLOCKED_OFFLINE_DAEMON_AND_PORTABLE_SESSION_LIFECYCLE_REPRODUCED
+        evidence_path: research/evidence/memory/hermes-byterover-offline-v1.json
+        evidence_sha256: 4b51e2f1b63317e7ddaa596d4fb99b0bff16d8d55e5a0147c4c9ce32210ef15a
+      holographic:
+        source_id: hermes-holographic
+        status: BLOCKED_GLOBAL_SESSION_SCOPE_AND_NATIVE_SESSION_PURGE_REPRODUCED
+        evidence_path: research/evidence/memory/hermes-holographic-lifecycle-v1.json
+        evidence_sha256: a532c646f24463a30910959f70c278c816d331a36b79efb1e75980604c31451d
+      hindsight:
+        source_id: hermes-hindsight-native
+        status: BLOCKED_NATIVE_PHYSICAL_PURGE_RESIDUE
+        evidence_path: research/evidence/memory/hermes-hindsight-lifecycle-v1.json
+        evidence_sha256: 68176f77d759be15497203dac3d7e449c609c76507e5d8242af88a2a62064c1b
+      openviking:
+        source_id: openviking
+        status: BLOCKED_NATIVE_PHYSICAL_PURGE_RESIDUE
+        evidence_path: research/evidence/memory/hermes-openviking-lifecycle-v3.json
+        evidence_sha256: a946df0c072cc168a01fd1ec0c3ed7004b84959587762b03618f5a7ad00eb074
+
+native_lifecycle_conformance_contracts:
+  mem0_lifecycle_adapter:
+    source_id: mem0-lifecycle-adapter
+    candidate_source_id: mem0
+    evidence_role: local-arm64-native-lifecycle-adapter-negative
+    status: BLOCKED_ADAPTER_CRASH_RECOVERY
+    scientific_result: false
+    publication_ready: false
+    h100_admission: blocked
+    runtime_lane: local-arm64-docker-network-none
+    source_revision: 71f2ebefa3494da21550fb525216818776cde67f
+    experiment_sha256: f9e77ea6997f1bc716240c0ec6416e54cb026a9ae78d5f8ecf479fcef25d5b42
+    evidence_path: research/evidence/memory/mem0-lifecycle-adapter-v6.json
+    evidence_sha256: 99edcd00d042361c998d9ba9aa18d67c5963534aedcd922d7ef831f7428a2880
+    shared_image_id: sha256:cf96e7828a1e5d2697617deb3d47fcf467bb04bcf3b041347372779b6ef48f9c
+    stable_projection_sha256: 1da1b15e4fba6f2f93b61294c24a6b83a0d6be2acd2e1abf0b3a0b3d49148f98
+    next_gate: Implement and reproduce exact interrupted-operation recovery plus crash-scope plaintext-residue clearance in two fresh contained runs before any Slurm or H100 actor cell.
+  supermemory_local_binary:
+    source_id: supermemory
+    candidate_source_id: supermemory
+    evidence_role: local-arm64-binary-only-native-negative
+    status: BLOCKED_ACKNOWLEDGED_WRITES_LOST_ON_SIGKILL
+    scientific_result: false
+    publication_ready: false
+    h100_admission: blocked
+    runtime_lane: local-arm64-docker-network-none
+    source_revision: 82dae50ef458139823b3bfd3ebaaaac90ffd8a7c
+    release_revision: 39ef7e1e5ea01b34d2cdd1801d0d227d445a985d
+    experiment_sha256: e6b6375de427aefb58f1595cb3d96631924fd89ab1699f8ef688e3fad99593aa
+    evidence_path: research/evidence/memory/supermemory-local-binary-v1.json
+    evidence_sha256: 545791886d57487147d84d2b160f0105eb40ab5450f6802a2c0ec4bfaae0ba61
+    shared_image_id: sha256:a08e414b959d30b08e781e985a4a6ab28272ae335002bd63ccae18bca41532fa
+    manifest_root_sha256: 938dd87f02aa45f9d3d9441793c6bc47661634812e1734bb683795ff6fe3ae39
+    stable_projection_sha256: 8d9f6a55e132099da9b07c9fc32a62fd88b8d04e7cc8f7523ae4d8894c2b72a0
+    next_gate: Do not run the v0.0.3 binary on H100s. Admit only a newer immutable release or source-auditable patch that preserves acknowledged writes across SIGKILL in two fresh contained runs and provides a tenant-scoped physical purge contract.
+  neo4j_agent_memory:
+    source_id: neo4j-agent-memory
+    evidence_role: local-and-cluster-native-lifecycle-plus-designed-traversal-component
+    status: NEO4J_PREFERENCE_LIFECYCLE_CONFORMANCE_PASS
+    scientific_result: false
+    publication_ready: false
+    runtime_lane: cluster-amd64-slurm-h100-allocation-no-container-gpu
+    confirmation_required: false
+    confirmation_lane: cluster-amd64-slurm
+    source_revision: 231d60eac9401ab156ba194b519d89dd644dadb8
+    evidence_path: research/evidence/memory/neo4j-preference-lifecycle-local-arm64-v1.json
+    evidence_sha256: 98a21ee7fcb19d40d9fe55992da80c7fa8e9ebc9b7d858827e545a3a443dcb35
+    experiment_sha256: 8bda38b14edbba0127f452d52ef1a7c46307e20c974d4f3e5f6b139037bc2340
+    report_sha256: 631bf282c6c8aa8cdbb7db6312518a949a693173fe4b927edfca7151dcddcfeb
+    manifest_file_sha256: 9b3dfc9995cc1988313670545bbc75debe241238840974504144ea5ab9620b17
+    manifest_root_sha256: 0bb7d2d5c0d4831f0a3f08401be70f2df57cea7ed88021fb8a3ab6a0972366f6
+    client_image_id: sha256:784063f4359191829873f4cc562226c34dbc5da169d0d9141cc6c69dcd4c6d20
+    execution_state_roots:
+      - 85d9e78ceceeea7f2a2056728078809cfe66f2ee674d423230201a7036f1ad7a
+      - 15966d812bdb5ead052568da58a6d192d1ead3528a665a6148ba9eb6d637623f
+    cluster_evidence_path: research/evidence/memory/neo4j-preference-lifecycle-h100-v1.json
+    cluster_evidence_sha256: dfeaf75011c088d9b34c2a803798f4b237499ddbde653e3459350bdcd36b2350
+    cluster_job_id: 303
+    cluster_client_image_id: sha256:8ec19ef4a4acbbf81205e56148aadfa5e9798d2964175b5b4be8d8644436c382
+    component_evidence_path: research/evidence/memory/neo4j-identical-tuple-flat-parity-h100-v1.json
+    component_evidence_sha256: e09d16388bf084de41b6f37515befb80f111dcb14249c174292ec57f5faa2b8e
+    component_status: NEO4J_IDENTICAL_TUPLE_TRAVERSAL_COMPONENT_PASS
+    component_job_id: 304
+    component_hit_counts:
+      flat_bm25_dense: 0
+      zero_traversal: 0
+      flat_sql_join: 48
+      true_graph: 48
+      shuffled_graph: 0
+    natural_topology_evidence_path: research/evidence/memory/longmemeval-natural-session-topology-negative-v1.json
+    natural_topology_evidence_sha256: 2d2849d1652f0e9e7dffa66e674f177b7f0a5ac8183fbb455fda34b5aa4d556f
+    natural_topology_status: NATURAL_SESSION_TOPOLOGY_RETRIEVAL_KILLED
+    natural_topology_recall_all_at_4:
+      flat_bm25_dense: 0.34375
+      true_topology: 0.203125
+      shuffled_topology_seed_42: 0.25
+      shuffled_topology_seed_43: 0.203125
+      shuffled_topology_seed_44: 0.21875
+    natural_topology_true_minus_flat: -0.140625
+    natural_topology_true_minus_flat_bootstrap_95_ci: [-0.234375, -0.046875]
+    lifecycle_h100_admission_at_collection: blocked-pending-identical-tuple-flat-parity
+    h100_admission: blocked-natural-topology-retrieval-negative
+    next_gate: Do not run the proposed Neo4j natural actor screen. On the frozen 64-question LongMemEval update/temporal panel, chronological topology reduced recall-all@4 by 14.06 points versus flat BM25-dense and did not beat degree-preserving shuffles. A future actor hypothesis requires a materially different graph mechanism, a new preregistered contract, clean source, and complete controls.
+
+killed_revisions:
+  - source_id: agenticow
+    repository_revision: dd4f437b92d2dbbc1f40dfa00023eed6e9c3bd84
+    terminal_status: BLOCKED_BLIND_PROMOTION_LOST_UPDATE_TOMBSTONE_RESIDUE_AND_NO_SCOPED_PURGE
+    evidence_path: research/evidence/memory/agenticow-branch-lifecycle-negative-v1.json
+    evidence_sha256: 87b045a10b1a2fd7649f189f1a71d174dd3b20a81038ad413ae395813ea0a18a
+  - source_id: activegraph-event-sourced-runtime
+    repository_revision: 8aedb1866cf5dce056af97529152ffd6f468a1ed
+    terminal_status: BLOCKED_ARCHIVE_ONLY_RETENTION_NO_SCOPED_PURGE_AND_SHARED_DB_ERASURE
+    evidence_path: research/evidence/memory/activegraph-fork-lifecycle-negative-v1.json
+    evidence_sha256: 69a0a896c9c5139f3d55939af8f3fb40f48e2b07d59116af47b2459be883d52c
+  - source_id: memforge
+    repository_revision: 16e2f15c5881a38911f64ca81b3dc0b25d6207ec
+    terminal_status: MEMFORGE_FRESH_INSTALL_ADMISSION_KILLED
+    evidence_path: research/evidence/memory/memforge-fresh-install-negative-v1.json
+    evidence_sha256: 299d7b9dbdef48b0b603c985f411c3f26abd27c62c5d5d487ce6e5e41c349dfa
+  - source_id: mnemosyne-cognitive-os
+    repository_revision: 5506aae7cec9ada5523099fd5ab858a4eee593b6
+    terminal_status: MNEMOSYNE_COGNITIVE_ACTIVE_INACTIVE_ADMISSION_KILLED
+    evidence_path: research/evidence/memory/mnemosyne-cognitive-lifecycle-negative-v1.json
+    evidence_sha256: 6ee8209b541a8fd103612df9bb3dc90a6b882131e14605e81219194a3034fb9a
+  - source_id: timem
+    repository_revision: 6d279a5f5d40ee229e1995df15c182cb2062c71c
+    terminal_status: TIMEM_CORE_RUNTIME_ADMISSION_KILLED
+    evidence_path: research/evidence/memory/timem-core-runtime-negative-v1.json
+    evidence_sha256: 742f0f6745aeef2599d1bc8a3f52f33b9c8be724aa7797ad34f41b0e247f2f1c
+  - source_id: tokenmizer
+    repository_revision: 131e3d1569de3e8f70c198ade4e791b47f63dc41
+    terminal_status: TOKENMIZER_ACTIVE_INACTIVE_ADMISSION_KILLED
+    evidence_path: research/evidence/memory/tokenmizer-checkpoint-negative-v1.json
+    evidence_sha256: 932bb2c0d897bbea7356ab5a07cd2d436adaecfd394980e9dd5a768072340e1b
+  - source_id: recmem
+    repository_revision: a84252f6e5587fd4a8caac03ec9f6c732b7a7f35
+    terminal_status: BLOCKED_NON_IDEMPOTENT_WRITE_MERGE_DATA_LOSS_AND_INCOMPLETE_LINEAGE
+    evidence_path: research/evidence/memory/recmem-consolidation-negative-v1.json
+    evidence_sha256: d870b8d1b02eb4b5998037c36310c721c8dd9ac4dc094ed34645322b2a0f78b9
+  - source_id: lightmem
+    repository_revision: 8fc9a9179f9170c4a40fc653fcb410375900f26e
+    terminal_status: BLOCKED_DESTRUCTIVE_DEFAULT_REOPEN_AND_CONSOLIDATION_CONTRACT_DRIFT
+    evidence_path: research/evidence/memory/lightmem-offline-negative-v1.json
+    evidence_sha256: 2c99c194c941725ffbf6b52e4f89ba424257a133de993798fb3de801b545d349
+  - source_id: all-mem
+    repository_revision: f5d6912717b0d6c65a19ba2660fb9b6637d4d50e
+    terminal_status: BLOCKED_SPLIT_MERGE_RAW_EVIDENCE_RECOVERY
+    evidence_path: research/evidence/memory/allmem-topology-v1.json
+    evidence_sha256: a715d3c794cfbfc755c4ac2453b4dcb5ea42d7fc5d8edb4a5336a8415c1e7748
+  - source_id: total-recall-oss
+    repository_revision: a2630f671be9b12df8b8ac78df9d26f7053d2fa9
+    terminal_status: BLOCKED_NATIVE_RESTART_DEFECT_REPRODUCED
+    evidence_path: research/evidence/memory/total-recall-restart-v3.json
+    evidence_sha256: b1bc7c003584d6b089da91bafef4ac0ba77452557fc358d97e40b2a16418422d
+  - source_id: past-bench
+    repository_revision: f8223517ae7491e776b69793d9f11e9d074ab42e
+    terminal_status: PAST_SM01_RESTART_EQUIVALENCE_FALSIFIED
+    evidence_path: research/evidence/memory/past-sm01-restart-falsification.json
+    evidence_sha256: 5e96155beafcc2134d1de90986f8162736ee93ec59cff92f77c69afaf283896b
+  - source_id: hippo-memory
+    repository_revision: 4aeb04c68ff079ff1713c977ac4d2a96757cff44
+    terminal_status: BLOCKED_CROSS_TENANT_CONSOLIDATION_AND_PURGE_RESIDUE_REPRODUCED
+    evidence_path: research/evidence/memory/hippo-retention-cross-tenant-v1.json
+    evidence_sha256: 50449ae3afa9b639a7e5ef992b607c6f9fbb36d2f7dfc9fe914e6eff32410cd1
+  - source_id: magic-context
+    repository_revision: 13e1d4c3fa3803ba1f4595029d8c4750dc9bef98
+    terminal_status: BLOCKED_PORTABLE_LIFECYCLE_AND_SECURE_PURGE_REPRODUCED
+    evidence_path: research/evidence/memory/magic-context-paging-v1.json
+    evidence_sha256: 638a5c563ee22305e9cfaa7ca9f09f6fbd459dc5d875b5dfea5dbf6eb0b543d4
+  - source_id: hermes-holographic
+    repository_revision: a90d5369f76c87c98547d2e283aa26d5cfabf322
+    terminal_status: BLOCKED_GLOBAL_SESSION_SCOPE_AND_NATIVE_SESSION_PURGE_REPRODUCED
+    evidence_path: research/evidence/memory/hermes-holographic-lifecycle-v1.json
+    evidence_sha256: a532c646f24463a30910959f70c278c816d331a36b79efb1e75980604c31451d
+  - source_id: hermes-byterover-cli
+    repository_revision: 1f4609c18ca735810860b3ba9178cae2dd8a67b0
+    terminal_status: BLOCKED_OFFLINE_DAEMON_AND_PORTABLE_SESSION_LIFECYCLE_REPRODUCED
+    evidence_path: research/evidence/memory/hermes-byterover-offline-v1.json
+    evidence_sha256: 4b51e2f1b63317e7ddaa596d4fb99b0bff16d8d55e5a0147c4c9ce32210ef15a
+  - source_id: hermes-hindsight-native
+    repository_revision: 5781d28d8fcc717a15818330b12250b311957000
+    terminal_status: BLOCKED_NATIVE_PHYSICAL_PURGE_RESIDUE
+    evidence_path: research/evidence/memory/hermes-hindsight-lifecycle-v1.json
+    evidence_sha256: 68176f77d759be15497203dac3d7e449c609c76507e5d8242af88a2a62064c1b
+  - source_id: openviking
+    repository_revision: eeff5a497360aa4481cf32e18a0d9376f4412f4c
+    terminal_status: BLOCKED_NATIVE_PHYSICAL_PURGE_RESIDUE
+    evidence_path: research/evidence/memory/hermes-openviking-lifecycle-v3.json
+    evidence_sha256: a946df0c072cc168a01fd1ec0c3ed7004b84959587762b03618f5a7ad00eb074
+  - source_id: graphiti-native-lifecycle-adapter
+    source_aliases: [graphiti]
+    repository_revision: 401c59a65bdeb22a44136901ff30231e6998a7fe
+    terminal_status: BLOCKED_FALKORDBLITE_ARM64_MODULE_ARCHITECTURE_MISMATCH
+    evidence_path: research/evidence/memory/graphiti-falkordblite-arm64-v2.json
+    evidence_sha256: 6664df62075c190d9e1a257ddae08a932ac8bad37173826cf6920a6727b66102
+  - source_id: hermes-observational-memory
+    repository_revision: 90d83c1ff768d80f99f4e3ef4d76269f90e1c808
+    terminal_status: BLOCKED_NO_PROVIDER_NATIVE_DELETE_OR_ERASURE
+    evidence_path: research/evidence/memory/hermes-observational-memory-lifecycle-v1.json
+    evidence_sha256: 2b9e2120ae7f3f82e25890ba271c9600af7b087e8915ee49b332b31fceaffb1b
+  - source_id: mnemon
+    repository_revision: 88d2981edeb18a5ebe048af472f6f96527615454
+    terminal_status: MNEMON_STATIC_ROUTING_KILLED
+    evidence_path: research/evidence/memory/mnemon-h100-static-space-negative-v1.json
+    evidence_sha256: e94b3ece8a972d35da0f60b454cf2dbce34916abfdfbcb8152761c68cf399846
+  - source_id: mnemosyne-oss
+    repository_revision: a0e14243e04dbe3fc29287e58126ff5dc0e02b35
+    terminal_status: BLOCKED_CONSOLIDATED_FORGET_AND_NO_REACTIVATION
+    evidence_path: research/evidence/memory/mnemosyne-one-way-consolidation-negative-v1.json
+    evidence_sha256: 3b516fa52f2e5144e30f18563d2f565a250fc939cd84f040974941ee66641587
+  - source_id: icarus-memory-infra
+    repository_revision: 6e348708dcddb7cf1ad47726cb287cd4c9183c40
+    terminal_status: BLOCKED_NON_IDEMPOTENT_PROMOTION_AND_NO_NATIVE_PURGE
+    evidence_path: research/evidence/memory/icarus-manual-lifecycle-negative-v1.json
+    evidence_sha256: 9d476930a05dda1239b38bd35b71388eac3e0030a408a599b2d0b11052b9b6e4
+  - source_id: palimpsest-bitemporal-memory
+    repository_revision: 0f83e166b0512a5ca9f38c2559f68749b35e994d
+    terminal_status: BLOCKED_BITEMPORAL_RESTART_AND_NO_NATIVE_PURGE
+    evidence_path: research/evidence/memory/palimpsest-bitemporal-negative-v1.json
+    evidence_sha256: c0fa0f9830e9155b092fa410682eae08110b2d53c593d9c16b5d8147f9da1a20
+  - source_id: lightmem2
+    repository_revision: dfc67e8bc9373ca5b31bb412298565c9d65b29b6
+    terminal_status: BLOCKED_CROSS_SESSION_DISCLOSURE_ARCHIVE_COLLISION_AND_NO_NATIVE_PURGE
+    evidence_path: research/evidence/memory/lightmem2-context-paging-negative-v1.json
+    evidence_sha256: 1d02c379962b58ed584ad68d9844cba6a5bed9346871c6a12f06c861fa5cb102
+  - source_id: shodh-memory
+    repository_revision: 98c6e4861847a76f75eb880acf9e145d30794a46
+    terminal_status: BLOCKED_OVERLAPPING_RESIDENCY_AND_RESTART_STRANDING
+    evidence_path: research/evidence/memory/shodh-tier-admission-negative-v1.json
+    evidence_sha256: e8805c42e64847eb82858b09d7d56b83b7fd71afd8a1633d840afcf272f278ad
+  - source_id: memorybank-siliconfriend
+    repository_revision: cf61c4196e4cfdb0f2b7a0316249fa40312dc3a9
+    terminal_status: MEMORYBANK_CORRECTED_DECAY_PASS_NO_DECAY_KILLS_SCALING
+    evidence_path: research/evidence/memory/memorybank-h100-actor-v1.json
+    evidence_sha256: bd069e22e2014bf548d23c718a35ea10868213fd343a07814826bf0e0b55aff2
+
+waves:
+  - id: native-system-spine
+    objective: Compare distinct persistent-memory substrates behind one frozen actor.
+    compute_class: contained-h100-screen
+    containment: docker-under-slurm
+    gpu_sku: H100
+    max_gpu_hours_per_candidate: 8
+    max_wave_gpu_hours: 32
+    stop_after_failed_candidates: 2
+    checkpoint_required: true
+    h100_admission: cpu-doctor-pass-required
+    execution_order:
+      - mempalace
+      - fidelis
+      - langmem
+      - sodamem
+      - gbrain
+      - sage-wiki
+      - jiuwen-memory
+      - memforest
+      - infini-memory
+      - mnemo-cortex
+      - memgpt-letta
+    candidates:
+      - source_id: mem0
+        mode: contained-import
+        repository_role: implementation
+        status: cpu-lifecycle-blocked
+        priority: primary
+        scientific_role: Flat fact/profile memory floor.
+        next_gate: The pinned local backend passed bounded native CRUD, restart verification, branch isolation, lineage, idempotency, and purge in two fresh network-disabled containers, but the adapter cannot recover a crash after native mutation. Implement and reproduce exact interrupted-operation recovery before any Slurm or H100 actor cell; extraction and memory quality remain separate estimands.
+      - source_id: graphiti-native-lifecycle-adapter
+        mode: contained-import
+        repository_role: pinned-upstream-runtime
+        status: discovery-killed
+        priority: primary
+        scientific_role: Temporal entity/relation graph baseline.
+        next_gate: Do not submit Graphiti 401c59a to an H100. Host-development lifecycle semantics pass, but two fresh ARM64 network-disabled containers cannot start because FalkorDBLite 0.10.0 packages an x86-64 module beside an AArch64 Redis server. Admit only a newer pin or reviewed architecture-correct patch arm after the same contained lifecycle doctor passes twice on the target Slurm architecture.
+        negative_evidence:
+          artifact_path: research/graphiti-native-lifecycle-audit-2026-08-15.md
+          artifact_sha256: 61b952a378f1ae2993b84d266ee1ca9c37fdc0c4279a8d34da23327deb8f7625
+          receipt_path: research/evidence/memory/graphiti-falkordblite-arm64-v2.json
+          receipt_sha256: 6664df62075c190d9e1a257ddae08a932ac8bad37173826cf6920a6727b66102
+          status: BLOCKED_FALKORDBLITE_ARM64_MODULE_ARCHITECTURE_MISMATCH
+      - source_id: langmem
+        mode: contained-import
+        repository_role: implementation
+        status: existing-interface-smoke
+        priority: primary
+        scientific_role: Agent-managed hot-path/background and procedural memory baseline.
+        next_gate: Enable matched background manager and persistent restart/purge tests.
+      - source_id: hermes-hindsight-native
+        mode: contained-import
+        repository_role: native-memory-service
+        status: discovery-killed
+        priority: primary
+        scientific_role: Exact Hermes-provider lifecycle boundary that passes logical isolation and deletion but retains deleted plaintext in PostgreSQL heap and WAL files.
+        next_gate: Do not run an H100 Hindsight cell for 5781d28. Admit only a newer pin or explicit patch arm with first-class provider purge plus native physical purge or cryptographic erasure; evaluate reflection and mental models separately afterward.
+        negative_evidence:
+          artifact_path: research/hermes-hindsight-lifecycle-audit-2026-08-14.md
+          artifact_sha256: 0d3d3bd52d6b432e2d35f06149fec1e2fe446ef52b3e51268756565803a684bf
+          receipt_path: research/evidence/memory/hermes-hindsight-lifecycle-v1.json
+          receipt_sha256: 68176f77d759be15497203dac3d7e449c609c76507e5d8242af88a2a62064c1b
+          status: BLOCKED_NATIVE_PHYSICAL_PURGE_RESIDUE
+      - source_id: sodamem
+        mode: contained-import
+        repository_role: implementation-and-benchmark-artifacts
+        status: planned
+        priority: primary
+        scientific_role: Evidence-grounded temporal graph with validity and citations.
+        next_gate: Regrade pinned answer/evidence artifacts, then run common-construction actor cell.
+      - source_id: memgpt-letta
+        mode: contained-import
+        repository_role: implementation
+        status: planned
+        priority: boundary
+        scientific_role: Self-managed active core and inactive archive boundary.
+        next_gate: Conformance doctor for paging, mutation, restart, isolation, and cost.
+      - source_id: memforest
+        mode: contained-import
+        repository_role: implementation-benchmark-and-reproducibility-artifacts
+        status: planned
+        priority: secondary
+        scientific_role: Write-efficient localized temporal-tree maintenance.
+        next_gate: Recompute released tables, then run CRUD and write-throughput doctors before any actor cell.
+      - source_id: infini-memory
+        mode: contained-import
+        repository_role: implementation-and-examples
+        status: planned
+        priority: secondary
+        scientific_role: Readable topic-document maintenance and agentic file retrieval.
+        next_gate: Run deterministic CRUD/provenance doctor and charge every rewrite and retrieval call against Markdown/BM25.
+      - source_id: deltamem
+        mode: blocked-license
+        repository_role: implementation-and-benchmark-drivers
+        status: blocked
+        priority: boundary
+        scientific_role: Residual procedural and environment experience trees.
+        next_gate: Resolve repository license before importing code or benchmark drivers.
+        blocked_by: unresolved-license
+      - source_id: mempalace
+        mode: contained-import
+        repository_role: implementation-benchmarks-and-per-question-outputs
+        status: planned
+        priority: primary
+        scientific_role: Verbatim raw-log and no-write-LLM retrieval floor.
+        next_gate: Direct current-lock runs and contained jobs 212/213 already established 500-task port equivalence as dirty-source self-attested discovery evidence. Rebuild from a clean externally attested source/image/SBOM/runtime capsule, freeze the all-task bundle, then run the single-load matched actor matrix before any consolidation comparison.
+      - source_id: gbrain
+        mode: contained-import
+        repository_role: implementation-tests-evals-and-benchmark-fixtures
+        status: planned
+        priority: secondary
+        scientific_role: File-authoritative graph, consolidation, and push-versus-pull harness control.
+        next_gate: Freeze one Markdown/Git source tree and compare pull retrieval with hook injection at equal actor, bytes, calls, and derived-index build cost.
+      - source_id: jiuwen-memory
+        mode: contained-import
+        repository_role: implementation-tests-compose-and-migrations
+        status: planned
+        priority: secondary
+        scientific_role: Multi-level raw, summary, structured, profile, and background-consolidation lifecycle control.
+        next_gate: Run migration, restart, tenancy, and purge doctors; keep its currently independent graph path out of main-pipeline claims.
+      - source_id: sage-wiki
+        mode: contained-import
+        repository_role: implementation-tests-and-benchmark-artifacts
+        status: planned
+        priority: secondary
+        scientific_role: File-authoritative, evidenced, bi-temporal graph retrieval control.
+        next_gate: Regrade committed partial artifacts, then freeze a matched full-task flat-versus-graph bundle at equal top-k, bytes, and actor.
+      - source_id: fidelis
+        mode: contained-import
+        repository_role: implementation-benchmark-drivers-and-per-question-artifacts
+        status: planned
+        priority: primary
+        scientific_role: Zero-write-LLM BM25, dense, and reciprocal-rank-fusion retrieval floor.
+        next_gate: Recompute the 470-question zero-LLM artifact under an immutable embedding/runtime receipt and compare with the existing dense-BGE and raw-log controls.
+      - source_id: mnemo-cortex
+        mode: contained-import
+        repository_role: implementation-tests-dreaming-and-passport-eval
+        status: planned
+        priority: secondary
+        scientific_role: Raw-session versus distilled-note tiers plus scheduled cross-agent consolidation control.
+        next_gate: Lock the Python environment, then separate classification, tier filtering, dreaming, sharing, and profile promotion under one frozen actor and cost ledger.
+      - source_id: openviking
+        mode: contained-import
+        repository_role: implementation-tests-service-and-benchmark-drivers
+        status: discovery-killed
+        priority: boundary
+        scientific_role: Reproduced direct CRUD, fresh restart, and logical tenant-isolation boundary whose native logical forget retains deleted plaintext in LevelDB.
+        next_gate: Do not run an H100 OpenViking cell for eeff5a4. Admit only a newer pin or explicit patch arm with native purge or cryptographic erasure and zero retained plaintext after a fresh restart; then evaluate L0/L1/L2 disclosure separately.
+        negative_evidence:
+          artifact_path: research/hermes-openviking-lifecycle-audit-2026-08-14.md
+          artifact_sha256: 138e1876e4096420af1fb37f70d130290626b120d4e03b055121fa142567fd02
+          receipt_path: research/evidence/memory/hermes-openviking-lifecycle-v3.json
+          receipt_sha256: a946df0c072cc168a01fd1ec0c3ed7004b84959587762b03618f5a7ad00eb074
+          status: BLOCKED_NATIVE_PHYSICAL_PURGE_RESIDUE
+      - source_id: memoria-matrixorigin
+        mode: contained-import
+        repository_role: rust-implementation-tests-benchmarks-and-branch-lifecycle
+        status: discovery-killed
+        priority: primary
+        scientific_role: Reproduced native branch, snapshot, merge, and restart component negative; not a safe isolated transactional-memory system or active/inactive pager.
+        next_gate: Do not run an H100 actor for efd3d65. Admit only a newer immutable revision or explicit repair arm with per-scope branch isolation, physical deletion or cryptographic erasure after restart, truthful purge counts, and atomic crash-injected snapshot restore.
+        negative_evidence:
+          artifact_path: research/memoria-transactional-lifecycle-audit-2026-08-16.md
+          artifact_sha256: d0b79ebd16df3d6c88f91eaa137cbd753188671757f1c1008f596572e0bc8261
+          receipt_path: research/evidence/memory/memoria-transactional-lifecycle-negative-v1.json
+          receipt_sha256: 92c8427e8c6a40e38e958b61c7cca5af935f0a2da793240c10ed3a1d3797a990
+          status: BLOCKED_SHARED_TABLE_BRANCH_EXPOSURE_SOFT_PURGE_RESIDUE_AND_NONATOMIC_ROLLBACK
+      - source_id: agent-recall
+        mode: contained-import
+        repository_role: python-implementation-tests-mcp-and-briefing-runtime
+        status: discovery-killed
+        priority: secondary
+        scientific_role: Reproduced scoped bitemporal precedence and restart positive path whose delete, descendant-cache, and erasure semantics fail lifecycle admission.
+        next_gate: Do not run an H100 actor for dcf21b5. Admit only a newer immutable revision or explicit repair arm with row-level authorization across every affected scope, descendant cache invalidation after inherited parent writes, and physical or cryptographic scoped erasure after restart.
+        negative_evidence:
+          artifact_path: research/agent-recall-scope-lifecycle-audit-2026-08-16.md
+          artifact_sha256: e4e10d6b4904ca5fa6d55aa2ca03ea2b0325dfbb7312e39a10ca8a0841948c18
+          receipt_path: research/evidence/memory/agent-recall-scope-lifecycle-negative-v1.json
+          receipt_sha256: c9695f9f6c9cc87d0be6873bb9a754f76f66f115e39ac25004daba78fbb84c1c
+          status: BLOCKED_CROSS_SCOPE_DESTRUCTIVE_DELETE_STALE_CHILD_BRIEFING_AND_SOFT_DELETE_RESIDUE
+      - source_id: activegraph-event-sourced-runtime
+        mode: contained-import
+        repository_role: python-runtime-tests-packs-and-event-store-backends
+        status: discovery-killed
+        priority: boundary
+        scientific_role: Reproduced event-sourced fork, nested-fork, diff, and restart positive path whose archive-only retention and absent scoped erasure fail lifecycle admission.
+        next_gate: Do not run an H100 actor for 8aedb18. Admit only a newer immutable revision or explicit repair arm with native branch-scoped physical purge or cryptographic erasure after restart while preserving parent and sibling runs.
+        negative_evidence:
+          artifact_path: research/activegraph-fork-lifecycle-audit-2026-08-16.md
+          artifact_sha256: 0005597976e3b6ffaf936739e69ce64d97a394b3d6abc83e3ca1d1bafa4d386d
+          receipt_path: research/evidence/memory/activegraph-fork-lifecycle-negative-v1.json
+          receipt_sha256: 69a0a896c9c5139f3d55939af8f3fb40f48e2b07d59116af47b2459be883d52c
+          status: BLOCKED_ARCHIVE_ONLY_RETENTION_NO_SCOPED_PURGE_AND_SHARED_DB_ERASURE
+      - source_id: agenticow
+        mode: contained-import
+        repository_role: javascript-implementation-tests-lock-benchmarks-and-examples
+        status: discovery-killed
+        priority: boundary
+        scientific_role: Reproduced copy-on-write branch, nested-fork, checkpoint, rollback, tombstone, promotion, and restart behavior whose blind promotion loses newer parent writes and whose deletion leaves retained plaintext without scoped purge.
+        next_gate: Do not run an H100 actor for dd4f437. Admit only a newer immutable revision or explicit repair arm that rejects or audits stale promotion and physically purges or cryptographically erases one branch without changing parent, sibling, or nested-fork state after restart.
+        negative_evidence:
+          artifact_path: research/agenticow-branch-lifecycle-audit-2026-08-16.md
+          artifact_sha256: 3068519347f53b238d189e1ac35ac0b6f6648392d90aa13519c974adf70e524e
+          receipt_path: research/evidence/memory/agenticow-branch-lifecycle-negative-v1.json
+          receipt_sha256: 87b045a10b1a2fd7649f189f1a71d174dd3b20a81038ad413ae395813ea0a18a
+          status: BLOCKED_BLIND_PROMOTION_LOST_UPDATE_TOMBSTONE_RESIDUE_AND_NO_SCOPED_PURGE
+      - source_id: hermes-observational-memory
+        mode: contained-import
+        repository_role: hermes-memory-provider-plugin-and-tests
+        status: discovery-killed
+        priority: secondary
+        scientific_role: Standalone Hermes cross-agent Markdown memory with startup push, retrieval pull, and optional writeback.
+        next_gate: Keep it outside the sealed bundled-provider roster. Slurm job 291 reproduced install, discovery, write, retrieve, restart, isolation, budget refusal, and operator-root cleanup twice, but confirmed no provider-native delete/forget tool or physical-erasure contract. Forbid actor work for this revision; only a newer pin or explicit repair arm that passes the same two-run doctor may re-enter admission.
+        negative_evidence:
+          artifact_path: research/hermes-observational-memory-lifecycle-audit-2026-08-15.md
+          artifact_sha256: 9d7a9dbedd320e9e061649b4440661aab0a9180369b0014e78030fecb0ee8666
+          receipt_path: research/evidence/memory/hermes-observational-memory-lifecycle-v1.json
+          receipt_sha256: 2b9e2120ae7f3f82e25890ba271c9600af7b087e8915ee49b332b31fceaffb1b
+          status: BLOCKED_NO_PROVIDER_NATIVE_DELETE_OR_ERASURE
+
+  - id: active-inactive-controls
+    objective: Falsify claims about activation, consolidation, and residency transitions.
+    compute_class: contained-h100-screen
+    containment: docker-under-slurm
+    gpu_sku: H100
+    max_gpu_hours_per_candidate: 8
+    max_wave_gpu_hours: 16
+    stop_after_failed_candidates: 2
+    checkpoint_required: true
+    h100_admission: cpu-doctor-pass-required
+    execution_order:
+      - astra-working-set
+    candidates:
+      - source_id: lightmem
+        mode: contained-import
+        repository_role: implementation
+        status: discovery-killed
+        priority: primary
+        scientific_role: Reproduced negative sensory-buffer and offline-consolidation control; not an active/inactive pager.
+        next_gate: Do not run an H100 actor for 8fc9a917. Admit only a newer immutable revision or explicit repair arm with non-destructive durable reopen, persisted online writes, corrected automatic consolidation, re-embedding after updates, correct context dispatch, source-event lineage, and scoped restart/idempotency/isolation/purge gates.
+        negative_evidence:
+          artifact_path: research/lightmem-offline-consolidation-audit-2026-08-16.md
+          artifact_sha256: c02e6f507e277eea9a80fcdd53cf51e2a613fed83fbb6212d199d5646f4059c2
+          receipt_path: research/evidence/memory/lightmem-offline-negative-v1.json
+          receipt_sha256: 2c99c194c941725ffbf6b52e4f89ba424257a133de993798fb3de801b545d349
+          status: BLOCKED_DESTRUCTIVE_DEFAULT_REOPEN_AND_CONSOLIDATION_CONTRACT_DRIFT
+      - source_id: recmem
+        mode: contained-import
+        repository_role: implementation
+        status: discovery-killed
+        priority: primary
+        scientific_role: Reproduced negative recurrence-triggered consolidation control with non-idempotent writes, incomplete trigger lineage, and destructive failed replacement.
+        next_gate: Do not run an H100 actor for a84252f. Admit only a newer immutable revision or explicit repair arm with caller-owned idempotency keys, atomic replace-or-keep episodic merges, complete source-event lineage including the triggering write, and the same two-clean-state doctor.
+        negative_evidence:
+          artifact_path: research/recmem-consolidation-audit-2026-08-16.md
+          artifact_sha256: 063b86fc6c5e58e9d2a6d01b4071e1b6c749afc4cb23e62900e31b235079cee7
+          receipt_path: research/evidence/memory/recmem-consolidation-negative-v1.json
+          receipt_sha256: d870b8d1b02eb4b5998037c36310c721c8dd9ac4dc094ed34645322b2a0f78b9
+          status: BLOCKED_NON_IDEMPOTENT_WRITE_MERGE_DATA_LOSS_AND_INCOMPLETE_LINEAGE
+      - source_id: unified-memory-agent
+        mode: blocked-license
+        repository_role: implementation-data-and-evaluation
+        status: blocked
+        priority: primary
+        scientific_role: Learned active/inactive CRUD control.
+        next_gate: Resolve repository license before any code or data reuse.
+        blocked_by: unresolved-license
+      - source_id: agemem
+        mode: blocked-license
+        repository_role: implementation
+        status: blocked
+        priority: primary
+        scientific_role: Unified learned long- and short-term memory actions.
+        next_gate: Resolve license, then reproduce the smallest matched policy cell.
+        blocked_by: unresolved-license
+      - source_id: pm-bench
+        mode: blocked-license
+        repository_role: deterministic-benchmark-and-scoring-runtime
+        status: blocked
+        priority: external-test
+        scientific_role: Intention activation, proactive monitoring, and deactivation test.
+        next_gate: Resolve code/data license before implementing the adapter.
+        blocked_by: unresolved-license
+      - source_id: timem
+        mode: contained-import
+        repository_role: core-engine-only
+        status: discovery-killed
+        priority: secondary
+        scientific_role: Reproduced negative core-runtime boundary for the released five-level temporal hierarchy.
+        next_gate: Do not run an H100 actor for this revision. Admit a newer immutable pin or explicit repair arm only after L1, L2, and L5 construct valid records in the same two-repeat container doctor, a resolved dependency lock is bound, and an offline lifecycle/config admission passes. Hierarchy quality still requires a separate scheduled-hierarchy-versus-fixed-batching contract at equal construction calls and recalled tokens.
+        negative_evidence:
+          artifact_path: research/timem-core-runtime-audit-2026-08-16.md
+          artifact_sha256: ec667809852c7d0d5736a68292c7dff1f92ec7858581e9d581472eb5c07c1e4e
+          receipt_path: research/evidence/memory/timem-core-runtime-negative-v1.json
+          receipt_sha256: 742f0f6745aeef2599d1bc8a3f52f33b9c8be724aa7797ad34f41b0e247f2f1c
+          status: TIMEM_CORE_RUNTIME_ADMISSION_KILLED
+      - source_id: mindmemos
+        mode: blocked-license
+        repository_role: implementation-tests-compose-and-evaluation
+        status: blocked
+        priority: boundary
+        scientific_role: Active/archive graph CRUD, dreaming, and skill-evolution collision.
+        next_gate: Resolve the official repository license before importing any code.
+        blocked_by: unresolved-license
+      - source_id: lightmem2
+        mode: contained-import
+        repository_role: implementation-tests-adapters-and-evaluation-drivers
+        status: discovery-killed
+        priority: primary
+        scientific_role: Reproduced archive-before-stub control whose actual MCP recovery crosses session boundaries, whose same-millisecond archive identities collide, and whose native artifact store has no scoped purge.
+        next_gate: Do not build an H100 adapter for dfc67e8. Admit only a newer immutable pin or explicit patch arm with authenticated session-scoped recovery, collision-safe no-overwrite archives plus content verification, atomic lookup publication, scoped purge or cryptographic erasure, and a repaired MCP dependency graph that passes the same two-state doctor.
+        negative_evidence:
+          artifact_path: research/lightmem2-context-paging-audit-2026-08-16.md
+          artifact_sha256: b9bf43062e7d0610294719e46f50e72abc6e6a73e0c34e67df2fd9b410adf543
+          receipt_path: research/evidence/memory/lightmem2-context-paging-negative-v1.json
+          receipt_sha256: 1d02c379962b58ed584ad68d9844cba6a5bed9346871c6a12f06c861fa5cb102
+          status: BLOCKED_CROSS_SESSION_DISCLOSURE_ARCHIVE_COLLISION_AND_NO_NATIVE_PURGE
+      - source_id: shodh-memory
+        mode: contained-import
+        repository_role: rust-implementation-tests-and-benchmarks
+        status: discovery-killed
+        priority: secondary
+        scientific_role: Reproduced negative control for overlapping process-local tier caches, stale persisted labels, and offline-aged restart stranding.
+        next_gate: Do not build an H100 actor for 98c6e48. Admit only a newer immutable pin or explicit patch arm with one disjoint authoritative residency state, active-cache restart semantics, fresh-process promotion of offline-aged Session items, unique forget accounting, and the same two-clean-state doctor.
+        negative_evidence:
+          artifact_path: research/shodh-tier-admission-audit-2026-08-16.md
+          artifact_sha256: 66f27e733d8480095415daf9005fc19a095c91b4cf1c97db839b27b57e95ae98
+          receipt_path: research/evidence/memory/shodh-tier-admission-negative-v1.json
+          receipt_sha256: e8805c42e64847eb82858b09d7d56b83b7fd71afd8a1633d840afcf272f278ad
+          status: BLOCKED_OVERLAPPING_RESIDENCY_AND_RESTART_STRANDING
+      - source_id: mnemon
+        mode: contained-import
+        repository_role: go-implementation-tests-and-compose
+        status: discovery-killed
+        priority: secondary
+        scientific_role: Killed static host-selected active-space quality hypothesis over isolated deterministic multi-graph stores; retained only as an implementation and no-memory-lift reference.
+        next_gate: Do not escalate this revision. Jobs 313/315 completed the 128-case Qwen3.5-4B panel with byte-exact fresh-allocation resume; lexical routing and all-spaces both scored 1.0 token F1, while the prompt-token ratio was 0.7815 and failed the matched-budget gate. A future routing hypothesis requires a materially different mechanism, a new preregistered panel, and matched prompt budgets.
+        negative_evidence:
+          artifact_path: research/mnemon-active-space-admission-audit-2026-08-16.md
+          artifact_sha256: b2792b3ea87461555f43219818aa812a878fd4a9b68270cce7c30f0a94d3dcdf
+          receipt_path: research/evidence/memory/mnemon-h100-static-space-negative-v1.json
+          receipt_sha256: e94b3ece8a972d35da0f60b454cf2dbce34916abfdfbcb8152761c68cf399846
+          status: MNEMON_STATIC_ROUTING_KILLED
+      - source_id: total-recall-oss
+        mode: contained-import
+        repository_role: implementation-tests-eval-fixtures-and-release
+        status: discovery-killed
+        priority: boundary
+        scientific_role: Reproduced negative control for content/vector atomicity and restart cleanup in an otherwise explicit hot/warm residency system.
+        next_gate: Do not build an H100 adapter for a2630f6. Admit only a newer immutable upstream pin or an explicitly labeled patch arm that atomically preserves content and vector identity, passes crash fault injection and two fresh restarts, enforces hot_count<=K after promotion, and makes configured thresholds govern the MCP path.
+        negative_evidence:
+          artifact_path: research/total-recall-lifecycle-audit-2026-08-14.md
+          artifact_sha256: 942c7dce5ca5cb1fa9d71cf037e8399cab80704a86767da5da4157d8cad5d8e9
+          receipt_path: research/evidence/memory/total-recall-restart-v3.json
+          receipt_sha256: b1bc7c003584d6b089da91bafef4ac0ba77452557fc358d97e40b2a16418422d
+          status: BLOCKED_NATIVE_RESTART_DEFECT_REPRODUCED
+      - source_id: all-mem
+        mode: contained-import
+        repository_role: implementation-graph-optimizer-and-evaluation
+        status: discovery-killed
+        priority: primary
+        scientific_role: Reproduced active-anchor and archived-evidence graph control whose SPLIT and MERGE replacements lose executable typed paths to their archived raw source nodes.
+        next_gate: Do not build an H100 adapter for f5d6912. Admit only a newer immutable pin or explicit patch arm with transitive recovery edges for every derived source, deterministic tenant and session ownership, scoped purge, atomic two-restart recovery, and a frozen-node graph-versus-flat actor cell.
+        negative_evidence:
+          artifact_path: research/allmem-topology-audit-2026-08-15.md
+          artifact_sha256: 4259d6b151ae67fc48fed2d85f966e4e58611744c25e51122c1a026cfcf67881
+          receipt_path: research/evidence/memory/allmem-topology-v1.json
+          receipt_sha256: a715d3c794cfbfc755c4ac2453b4dcb5ea42d7fc5d8edb4a5336a8415c1e7748
+          status: BLOCKED_SPLIT_MERGE_RAW_EVIDENCE_RECOVERY
+      - source_id: mnemosyne-oss
+        mode: contained-import
+        repository_role: sqlite-engine-tests-docker-and-hermes-provider
+        status: discovery-killed
+        priority: primary
+        scientific_role: Reproduced one-way working-to-episodic consolidation control whose recall does not reactivate archived records and whose documented forget leaves the consolidated summary logically and physically present.
+        next_gate: Do not run an H100 actor for a0e1424. Admit only a newer immutable revision or explicit patch arm with source-complete forget or cryptographic erasure, zero residue after a fresh process, and a real archive-to-active transition without cross-session bleed.
+        negative_evidence:
+          artifact_path: research/mnemosyne-lifecycle-audit-2026-08-16.md
+          artifact_sha256: 4cf69ff61555af4ff8b3b4dd6c659497a637de5ef4499ddc948015d8b1b94941
+          receipt_path: research/evidence/memory/mnemosyne-one-way-consolidation-negative-v1.json
+          receipt_sha256: 3b516fa52f2e5144e30f18563d2f565a250fc939cd84f040974941ee66641587
+          status: BLOCKED_CONSOLIDATED_FORGET_AND_NO_REACTIVATION
+      - source_id: mnemosyne-cognitive-os
+        mode: contained-import
+        repository_role: implementation-tests-compose-and-cognitive-pipeline
+        status: discovery-killed
+        priority: boundary
+        scientific_role: Reproduced negative control for non-observational dry-run, non-idempotent repeated consolidation, serving-visible demotion, and restart-stable plaintext tombstones.
+        next_gate: Do not run an H100 actor for 5506aae. Admit only a newer immutable revision or explicit patch arm with non-mutating dry-run, idempotent consolidation, a real inactive serving boundary, scoped physical purge or cryptographic erasure across a fresh database process, and a bounded resident-set invariant.
+        negative_evidence:
+          artifact_path: research/mnemosyne-cognitive-lifecycle-audit-2026-08-16.md
+          artifact_sha256: ea1a133daa3dabd968dbe1b96715d5b4b513be28574724af2bc10853a3bdbb09
+          receipt_path: research/evidence/memory/mnemosyne-cognitive-lifecycle-negative-v1.json
+          receipt_sha256: 6ee8209b541a8fd103612df9bb3dc90a6b882131e14605e81219194a3034fb9a
+          status: MNEMOSYNE_COGNITIVE_ACTIVE_INACTIVE_ADMISSION_KILLED
+      - source_id: memtier
+        mode: collision-reference
+        status: planned
+        priority: boundary
+        scientific_role: Asynchronous tier consolidation and retrieval-weight-learning collision with a published BM25-dominance null.
+        next_gate: Keep literature-only until immutable licensed code exists; use its score-normalization and proxy-attribution failures as mandatory diagnostics.
+      - source_id: hippo-memory
+        mode: contained-import
+        repository_role: implementation-tests-benchmarks-and-client-libraries
+        status: discovery-killed
+        priority: secondary
+        scientific_role: Reproduced negative lifecycle control for fixed retention, default-tenant sleep consolidation, source-lineage loss, and physical purge residue; not an active/inactive pager.
+        next_gate: Do not build an H100 adapter for 4aeb04c. Admit only a newer immutable pin or explicit patch arm that partitions sleep by tenant, preserves transitive source lineage, provides scoped zero-residue purge, exposes configurable K, and demonstrates real active-to-archive and archive-to-active transitions across two fresh restarts.
+        negative_evidence:
+          artifact_path: research/hippo-retention-lifecycle-audit-2026-08-14.md
+          artifact_sha256: cd80de59967d58976d40c27d396fcbc455d828f5a9233d4d77691c66132961d1
+          receipt_path: research/evidence/memory/hippo-retention-cross-tenant-v1.json
+          receipt_sha256: 50449ae3afa9b639a7e5ef992b607c6f9fbb36d2f7dfc9fe914e6eff32410cd1
+          status: BLOCKED_CROSS_TENANT_CONSOLIDATION_AND_PURGE_RESIDUE_REPRODUCED
+      - source_id: magic-context
+        mode: contained-import
+        repository_role: implementation-rust-core-harness-plugins-and-e2e-tests
+        status: discovery-killed
+        priority: boundary
+        scientific_role: Reproduced host-backed chronological prompt-paging boundary plus portable-lifecycle and purge negative; not semantic memory or bidirectional residency.
+        next_gate: Do not run an H100 semantic-memory cell for 13e1d4c. Admit only a newer pin or explicit patch arm that namespaces sessions by harness and tenant, owns or cryptographically binds restorable raw state, preserves registered fields exactly, and passes scoped physical purge plus two fresh restarts.
+        negative_evidence:
+          artifact_path: research/magic-context-paging-audit-2026-08-14.md
+          artifact_sha256: 56313b3e82d548589eb20a6414d3894383e4ced8cc26fc0a98c3e83685ec50b8
+          receipt_path: research/evidence/memory/magic-context-paging-v1.json
+          receipt_sha256: 638a5c563ee22305e9cfaa7ca9f09f6fbd459dc5d875b5dfea5dbf6eb0b543d4
+          status: BLOCKED_PORTABLE_LIFECYCLE_AND_SECURE_PURGE_REPRODUCED
+      - source_id: hermes-holographic
+        mode: contained-import
+        repository_role: bundled-provider-sqlite-store-retrieval-and-tests
+        status: discovery-killed
+        priority: boundary
+        scientific_role: Reproduced negative lifecycle control for a restart-stable but globally shared Hermes SQLite provider without native session purge.
+        next_gate: Do not run a portable H100 memory cell for a90d536. Admit only a newer pin or explicit wrapper/patch arm with session and tenant ownership, scoped purge, restart-stable ownership receipts, and zero cross-session visibility; evaluate HRR separately with a pinned NumPy runtime.
+        negative_evidence:
+          artifact_path: research/hermes-holographic-lifecycle-audit-2026-08-14.md
+          artifact_sha256: 4329fa681c4654ddea8b86c75f5f1d2ee15b40976865a12e80bb24c1fddc7a73
+          receipt_path: research/evidence/memory/hermes-holographic-lifecycle-v1.json
+          receipt_sha256: a532c646f24463a30910959f70c278c816d331a36b79efb1e75980604c31451d
+          status: BLOCKED_GLOBAL_SESSION_SCOPE_AND_NATIVE_SESSION_PURGE_REPRODUCED
+      - source_id: hermes-byterover-cli
+        mode: contained-import
+        repository_role: native-context-tree-cli-daemon-and-package
+        status: discovery-killed
+        priority: boundary
+        scientific_role: Reproduced negative provider boundary showing that neither native lexical search nor Hermes query and curate are offline-executable at the pinned revision, with global profile scope and no session purge.
+        next_gate: Do not run an H100 ByteRover actor cell for v3.16.1. Admit only a newer pin or explicit patch arm that starts under network-none with deterministic search or a pinned local model, namespaces storage by session and tenant, and passes native purge, restart, and residue doctors.
+        negative_evidence:
+          artifact_path: research/hermes-byterover-offline-audit-2026-08-14.md
+          artifact_sha256: b78759cce61f70f3fe9def4378614397b0febb9f6cdfaa83da0ee11ec83d0494
+          receipt_path: research/evidence/memory/hermes-byterover-offline-v1.json
+          receipt_sha256: 4b51e2f1b63317e7ddaa596d4fb99b0bff16d8d55e5a0147c4c9ce32210ef15a
+          status: BLOCKED_OFFLINE_DAEMON_AND_PORTABLE_SESSION_LIFECYCLE_REPRODUCED
+      - source_id: memorybank-siliconfriend
+        mode: paper-reimplementation
+        status: discovery-killed
+        priority: boundary
+        scientific_role: Reproduced boundary showing that a corrected Ebbinghaus-style decay formula repairs the historical upstream precedence bug but is strongly dominated by retaining the same evidence without decay.
+        next_gate: Do not scale this corrected-decay mechanism to a larger model or broader task panel. Preserve jobs 328-330 and exact resumes 333-334 as discovery-only evidence; admit a future forgetting mechanism only if it adds a materially different, preregistered capacity or staleness tradeoff and first beats no-decay at matched bytes, reads, actor, and assignments.
+        negative_evidence:
+          artifact_path: research/memorybank-corrected-decay-audit-2026-08-16.md
+          artifact_sha256: b0145d1d2290fd4405c16bbeae4df2c526951bf2945fc70f1342b2a1168d080f
+          receipt_path: research/evidence/memory/memorybank-h100-actor-v1.json
+          receipt_sha256: bd069e22e2014bf548d23c718a35ea10868213fd343a07814826bf0e0b55aff2
+          status: MEMORYBANK_CORRECTED_DECAY_PASS_NO_DECAY_KILLS_SCALING
+      - source_id: icarus-memory-infra
+        mode: contained-import
+        repository_role: implementation-tests-mcp-and-lifecycle-runtime
+        status: discovery-killed
+        priority: boundary
+        scientific_role: Manual working-to-private-archive-to-shared-wiki lifecycle, provenance, and rollback floor.
+        next_gate: Do not run an H100 actor for this revision. Admit only a newer immutable pin or explicit patch arm with a locked MCP graph, idempotent end_session and promotion, scoped native deletion or cryptographic erasure, zero plaintext residue after restart, and the same archive isolation, supersession, rollback, and restart guarantees.
+        negative_evidence:
+          artifact_path: research/icarus-lifecycle-audit-2026-08-16.md
+          artifact_sha256: ff8aea7c994778afac7344a7dd5f55c77aa1987ca93e51ec08579872e33fa8a7
+          receipt_path: research/evidence/memory/icarus-manual-lifecycle-negative-v1.json
+          receipt_sha256: 9d476930a05dda1239b38bd35b71388eac3e0030a408a599b2d0b11052b9b6e4
+          status: BLOCKED_NON_IDEMPOTENT_PROMOTION_AND_NO_NATIVE_PURGE
+      - source_id: palimpsest-bitemporal-memory
+        mode: contained-import
+        repository_role: bitemporal-store-retrieval-comparators-and-tests
+        status: discovery-killed
+        priority: boundary
+        scientific_role: Reproduced pre-restart bitemporal stale-state control whose native persistence loses transaction closures and cardinality state across restart and has no scoped purge.
+        next_gate: Do not run an H100 actor for this revision. Admit only a newer immutable pin or explicit repair arm that preserves transaction closures and cardinality state over two fresh restarts, provides native scoped physical purge or cryptographic erasure, and passes the same historical-cutoff, continuation, residue, and idempotency falsifiers.
+        negative_evidence:
+          artifact_path: research/palimpsest-bitemporal-audit-2026-08-16.md
+          artifact_sha256: 51c97186a00ae0b87ed36399214bd3f4324ee7145666e3acc2cac5ed61812c6a
+          receipt_path: research/evidence/memory/palimpsest-bitemporal-negative-v1.json
+          receipt_sha256: c0fa0f9830e9155b092fa410682eae08110b2d53c593d9c16b5d8147f9da1a20
+          status: BLOCKED_BITEMPORAL_RESTART_AND_NO_NATIVE_PURGE
+      - source_id: memhop-embedded-go
+        mode: collision-reference
+        status: planned
+        priority: boundary
+        scientific_role: Multilayer Dream consolidation, stale-context demotion, and scene-aware retrieval monitor.
+        next_gate: Keep ledger-only until the same-day release passes an offline API, restart, deterministic demotion, and no-LLM fallback doctor; require archive-to-active evidence before any bidirectional-paging label.
+      - source_id: astra-working-set
+        mode: contained-import
+        repository_role: implementation-tests-lock-and-live-benchmark-script
+        status: runtime-contract-implemented
+        priority: primary
+        scientific_role: Bounded active working-set over durable inactive memories with retrieval-driven re-admission.
+        evidence_path: research/evidence/memory/astra-working-set-core-v1.json
+        evidence_sha256: 3a310140916bd73dc525e5cd2a614978b40b106602411dc22eb7532f5e24258e
+        next_gate: The pure MemoryWindow, retrieval, and guard components passed 26/26 assertions twice. The exact native lifecycle job is now registered at experiments/memory/stage3-astra-native-lifecycle-doctor.yaml with digest-pinned ASTRA/CockroachDB containers, one Slurm-owned H100, a forced database kill, two clean stores, and completed-repeat checkpoints. Execute and seal it; the preregistered purge, idempotency, and all-pinned hard-cap blockers forbid any actor cell for this revision even if ordinary paging and restart pass.
+      - source_id: tokenmizer
+        mode: contained-import
+        repository_role: paper-tag-implementation-tests-and-benchmark-runners
+        status: discovery-killed
+        priority: boundary
+        scientific_role: Reproduced negative checkpoint-lifecycle boundary for a session-graph context-compaction system; this revision is not an active/inactive residency control.
+        next_gate: Do not run the active/inactive H100 cell for this revision. Admit a newer immutable pin or explicit repair arm only after restart preserves incremental diff history, manual checkpoint retries are idempotent, corrupt-store recovery is non-destructive, and scoped native purge passes the same two-clean-state doctor. A future context-compaction actor requires a distinct preregistered rolling-summary-versus-raw-prefix quality contract.
+        negative_evidence:
+          artifact_path: research/tokenmizer-checkpoint-audit-2026-08-16.md
+          artifact_sha256: 89c355d57f0e19788b5247d3eec967f500a0f341c90e2abd66dbf45fe83445ea
+          receipt_path: research/evidence/memory/tokenmizer-checkpoint-negative-v1.json
+          receipt_sha256: 932bb2c0d897bbea7356ab5a07cd2d436adaecfd394980e9dd5a768072340e1b
+          status: TOKENMIZER_ACTIVE_INACTIVE_ADMISSION_KILLED
+      - source_id: memforge
+        mode: contained-import
+        repository_role: typescript-implementation-tests-lock-compose-and-benchmark-runners
+        status: discovery-killed
+        priority: boundary
+        scientific_role: Reproduced exact-schema fresh-install negative; no hot, warm, cold, graph, or memory-quality mechanism executed.
+        next_gate: Do not run an H100 actor for 16e2f15. Admit only a newer immutable revision or a separately preregistered repair arm that fixes both the missing pgvector runtime and the canonical schema ordering, then passes consolidation, demotion, restore, idempotency, restart, isolation, purge, residue, lineage, and cost gates.
+        negative_evidence:
+          artifact_path: research/memforge-fresh-install-audit-2026-08-16.md
+          artifact_sha256: 61b4bfd4bccc2ed297a11d3488c1a3b13ac96adb68514b52acf72ccd37d46ff3
+          receipt_path: research/evidence/memory/memforge-fresh-install-negative-v1.json
+          receipt_sha256: 299d7b9dbdef48b0b603c985f411c3f26abd27c62c5d5d487ce6e5e41c349dfa
+          status: MEMFORGE_FRESH_INSTALL_ADMISSION_KILLED
+
+  - id: graph-mechanism-controls
+    objective: Separate graph representation, construction, traversal, and actor effects.
+    compute_class: contained-h100-screen
+    containment: docker-under-slurm
+    gpu_sku: H100
+    max_gpu_hours_per_candidate: 8
+    max_wave_gpu_hours: 16
+    stop_after_failed_candidates: 2
+    checkpoint_required: true
+    h100_admission: cpu-doctor-pass-required
+    execution_order:
+      - prograph-memhop
+      - sodamem
+      - arigraph
+      - memorygraph-typed-coding-memory
+      - magma-memory
+      - memgraphrag
+    candidates:
+      - source_id: unified-memory-framework
+        mode: blocked-license
+        repository_role: controlled-graph-and-flat-comparison
+        status: blocked
+        priority: primary
+        scientific_role: Mandatory aligned graph-versus-flat component control.
+        next_gate: Resolve license before running the official framework.
+        blocked_by: unresolved-license
+      - source_id: magma-memory
+        mode: contained-import
+        repository_role: implementation
+        status: planned
+        priority: secondary
+        scientific_role: Orthogonal semantic, temporal, causal, and entity graphs.
+        next_gate: Ablate graph construction and traversal under matched bytes and calls.
+      - source_id: prograph-memhop
+        mode: contained-import
+        repository_role: implementation-benchmark-and-baselines
+        status: mechanism-control-implemented
+        priority: primary
+        scientific_role: Graph-free multi-hop profile traversal control.
+        next_gate: Replace the in-tree mechanism approximation with a bounded paper-faithful cell.
+      - source_id: sodamem
+        mode: contained-import
+        repository_role: implementation-and-benchmark-artifacts
+        status: planned
+        priority: primary
+        scientific_role: Temporal validity, contradiction, and evidence-citation graph.
+        next_gate: Compare to flat history and Graphiti with identical extraction outputs.
+      - source_id: memgraphrag
+        mode: contained-import
+        repository_role: implementation
+        status: planned
+        priority: boundary
+        scientific_role: Schema/fact/passage shared memory for corpus graph construction.
+        next_gate: Test only as a document-GraphRAG boundary, not personal memory.
+      - source_id: h-mem
+        mode: collision-reference
+        status: planned
+        priority: boundary
+        scientific_role: Hybrid temporal/semantic tree plus entity graph collision.
+        next_gate: Keep literature-only until licensed code appears; if reimplemented, separate tree, graph, planner, and actor ablations.
+      - source_id: gaama
+        mode: contained-import
+        repository_role: implementation-locomo-data-evaluation-and-graph-edit-learning
+        status: actor-translation-killed
+        priority: primary
+        scientific_role: Retained retrieval-component positive and killed graph-to-answer translation hypothesis.
+        evidence_path: research/evidence/memory/gaama-h100-actor-negative-v1.json
+        evidence_sha256: 7ca80f0a5194d9e1a51ff548d4e70f12916bb70a9a047d80c4820750f301d743
+        next_gate: Jobs 295 and 297 completed the registered 1,000-case Qwen3.5-4B H100 screen with a controlled case-656 checkpoint and byte-exact fresh-job resume. True graph evidence retained a small retrieval advantage but reduced answer F1 versus flat and did not beat the mean of three topology shuffles. Do not escalate this revision to a larger model. Retain the earlier 1,146-question retrieval positive only as a component control; a future graph actor hypothesis requires a materially different mechanism and a new preregistered contract.
+      - source_id: arigraph
+        mode: contained-import
+        repository_role: implementation-textworld-environments-pipelines-and-author-logs
+        status: planned
+        priority: secondary
+        scientific_role: Interactive semantic-plus-episodic graph external-validity and planning-coupling control.
+        next_gate: First pass a Linux TextWorld and decision-point replay doctor, then use one frozen actor and identical tuple/episode materialization for flat, semantic-only, episodic-only, and full-graph arms.
+      - source_id: neo4j-agent-memory
+        mode: contained-import
+        repository_role: python-implementation-tests-eval-harness-and-no-llm-example
+        status: natural-topology-escalation-killed
+        priority: primary
+        scientific_role: One-way preference lifecycle control, a designed traversal component, and a killed natural chronological-topology escalation.
+        evidence_path: research/evidence/memory/longmemeval-natural-session-topology-negative-v1.json
+        evidence_sha256: 2d2849d1652f0e9e7dffa66e674f177b7f0a5ac8183fbb455fda34b5aa4d556f
+        next_gate: Jobs 303/304 retain lifecycle and designed-component evidence, but the two-repeat 64-question natural screen reduced recall-all@4 from 0.34375 flat to 0.203125 true chronology with 95% bootstrap interval [-0.234375, -0.046875] for true-minus-flat and no shuffle advantage. Do not run the planned actor. A future graph actor hypothesis requires a materially different mechanism and a new preregistered contract.
+      - source_id: gam-hierarchical-memory
+        mode: collision-reference
+        status: planned
+        priority: boundary
+        scientific_role: Semantic-shift-triggered active event graph to global topic graph consolidation collision.
+        next_gate: Keep paper-only; a future reimplementation must cross fixed versus semantic boundaries with flat versus graph storage at equal construction calls before any mechanism claim.
+      - source_id: actmem
+        mode: collision-reference
+        status: planned
+        priority: boundary
+        scientific_role: Causal and semantic graph plus counterfactual memory-reasoning prior.
+        next_gate: Keep literature-only until the official repo contains the implementation and the published 327-record dataset; the current dataset-only 247-record draft is not executable evidence.
+      - source_id: memorygraph-typed-coding-memory
+        mode: contained-import
+        repository_role: typescript-implementation-tests-cli-and-backends
+        status: planned
+        priority: secondary
+        scientific_role: Typed coding-memory graph CLI and deterministic graph-lifecycle control.
+        next_gate: Add a dependency lock and run a CPU backend, restart, scope, lineage, and purge doctor; then freeze identical nodes for a flat-versus-traversal comparison before any H100 actor screen.
+
+  - id: learned-controller-controls
+    objective: Compare randomized targets with RL, rerollout, and CRUD policy learning.
+    compute_class: contained-h100-screen
+    containment: docker-under-slurm
+    gpu_sku: H100
+    max_gpu_hours_per_candidate: 8
+    max_wave_gpu_hours: 16
+    stop_after_failed_candidates: 2
+    checkpoint_required: true
+    h100_admission: cpu-doctor-pass-required
+    execution_order:
+      - memory-r2
+      - memrl
+      - memory-r1
+      - tidemark
+      - ael
+      - skillopt
+      - adamem
+      - expel
+      - memfactory
+    candidates:
+      - source_id: memory-r1
+        mode: contained-import
+        repository_role: implementation
+        status: planned
+        priority: primary
+        scientific_role: Reinforcement-learned ADD/UPDATE/DELETE/NOOP control.
+        next_gate: Match model, trajectories, rollouts, and inference cost.
+      - source_id: memory-r2
+        mode: contained-import
+        repository_role: implementation
+        status: planned
+        priority: primary
+        scientific_role: Same-state local rerollout plus global reward control.
+        next_gate: Run bounded local-rerollout comparison on identical episodes.
+      - source_id: memcon
+        mode: blocked-license
+        repository_role: implementation
+        status: blocked
+        priority: secondary
+        scientific_role: Online UCB memory-operation controller.
+        next_gate: Resolve license before reuse.
+        blocked_by: unresolved-license
+      - source_id: verifiable-memory
+        mode: blocked-license
+        repository_role: reference-implementation
+        status: blocked
+        priority: primary
+        scientific_role: Executable local/global verifier and hierarchical credit control.
+        next_gate: Resolve license and supply missing runnable evaluation assets.
+        blocked_by: unresolved-license
+      - source_id: memrl
+        mode: contained-import
+        repository_role: implementation-training-and-evaluation
+        status: planned
+        priority: primary
+        scientific_role: Outcome-updated per-memory utility and runtime-RL control.
+        next_gate: Reproduce the smallest executable-reward cell and preserve its shared-top-k credit limitation.
+      - source_id: u-mem
+        mode: collision-reference
+        status: planned
+        priority: boundary
+        scientific_role: Thompson-sampled service and paired bundle-advantage collision.
+        next_gate: Reimplement only the paper contract because no licensed immutable code artifact is available.
+      - source_id: ael
+        mode: contained-import
+        repository_role: implementation-data-and-result-logs
+        status: planned
+        priority: secondary
+        scientific_role: Bandit selection among no-memory and multi-tier retrieval policies.
+        next_gate: Run a bounded matched non-finance cell and resolve inconsistent result summaries.
+      - source_id: tidemark
+        mode: contained-import
+        repository_role: implementation-and-deterministic-fixtures
+        status: planned
+        priority: primary
+        scientific_role: Receipt-bound observational item-credit control.
+        next_gate: Pass idempotency, delayed-outcome, and selection-confounding doctors before actor evaluation.
+      - source_id: skillopt
+        mode: contained-import
+        repository_role: implementation-training-evaluation-and-sleep-extension
+        status: planned
+        priority: secondary
+        scientific_role: Held-out-gated procedural slow-state and sleep-consolidation control.
+        next_gate: Freeze workflow-family splits and charge optimizer proposals, rejected edits, replay, and validation examples before comparing with one-shot skills.
+      - source_id: adamem
+        mode: contained-import
+        repository_role: implementation-environments-index-builders-and-training-recipes
+        status: planned
+        priority: boundary
+        scientific_role: Raw trajectory versus transient or persistent step-level strategy memory and inference-compute scaling control.
+        next_gate: Seal disjoint train and evaluation task-family fingerprints, keep STEP-MFT out of the first cell, and compare no-memory, raw trajectory, fixed strategy, request-triggered, and every-step arms at matched total inference calls and tokens.
+      - source_id: expel
+        mode: contained-import
+        repository_role: implementation-training-insight-extraction-and-evaluation
+        status: planned
+        priority: boundary
+        scientific_role: Foundational experiential rule extraction and episode-plus-rule procedural-memory prior.
+        next_gate: Cite as prior art first; if executed later, isolate raw episodes, extracted rules, both, shuffled rules, and failure-only rules on disjoint workflow families with equal retrieval tokens and model calls.
+      - source_id: treemem-credit-assignment
+        mode: collision-reference
+        status: planned
+        priority: boundary
+        scientific_role: Tree-branch Monte Carlo credit assignment across builder, summarizer, and retriever agents.
+        next_gate: Keep paper-only and resolve the published memory-length objective ambiguity before any clean reimplementation.
+      - source_id: memfactory
+        mode: contained-import
+        repository_role: implementation-training-evaluation-and-examples
+        status: planned
+        priority: boundary
+        scientific_role: Modular extraction, update, retrieval, and GRPO training substrate.
+        next_gate: Add a lock, container, tests, immutable data/checkpoint receipts, and explicit seeds before treating it as more than a portability substrate.
+      - source_id: rl-memory-curriculum
+        mode: collision-reference
+        status: planned
+        priority: boundary
+        scientific_role: LoCoMo, LongMemEval, and mixed-curriculum memory-policy transfer prior.
+        next_gate: Block reproduction until the nonexistent paper tag and missing 7B checkpoints/predictions are replaced by immutable artifacts; do not substitute committed Phase-1 3B results for paper results.
+      - source_id: memreader
+        mode: collision-reference
+        status: planned
+        priority: boundary
+        scientific_role: Learned add, search, buffer, and ignore memory-admission checkpoint control.
+        next_gate: Vendor and hash the 4B checkpoint, then require a complete pinned evaluation runtime and predictions before any model screen.
+
+  - id: external-validity
+    objective: Test recall, exact action, activation, feedback reuse, and task heterogeneity.
+    compute_class: contained-h100-screen
+    containment: docker-under-slurm
+    gpu_sku: H100
+    max_gpu_hours_per_candidate: 8
+    max_wave_gpu_hours: 12
+    stop_after_failed_candidates: 2
+    checkpoint_required: true
+    h100_admission: cpu-doctor-pass-required
+    execution_order:
+      - longmemeval
+      - memory-stress
+      - omnimemeval
+    candidates:
+      - source_id: longmemeval
+        mode: benchmark-adapter
+        repository_role: benchmark
+        status: source-doctor-implemented
+        priority: primary
+        scientific_role: Conversational update, temporal reasoning, synthesis, and abstention.
+        next_gate: Add official semantic judge and identical actor comparison.
+      - source_id: mem2actbench
+        mode: blocked-license
+        repository_role: benchmark
+        status: blocked
+        priority: primary
+        scientific_role: Exact memory-grounded tool name and argument execution.
+        next_gate: Resolve dataset/code license before adapter implementation.
+        blocked_by: unresolved-license
+      - source_id: streammembench
+        mode: blocked-data
+        repository_role: benchmark-and-evaluation
+        status: blocked
+        priority: primary
+        scientific_role: Observation, feedback incorporation, and later reuse.
+        next_gate: Resolve EgoLife-derived data terms and freeze external evaluation split.
+        blocked_by: unresolved-data-rights
+      - source_id: evomembench
+        mode: blocked-license
+        repository_role: benchmark-and-system-comparison
+        status: blocked
+        priority: secondary
+        scientific_role: In/cross-episode and knowledge/execution heterogeneity.
+        next_gate: Resolve license before using code or benchmark assets.
+        blocked_by: unresolved-license
+      - source_id: qcr-trajectory-reuse
+        mode: collision-reference
+        status: planned
+        priority: boundary
+        scientific_role: Matched downstream no-memory, summary, trajectory, and query-conditioned support control.
+        next_gate: Keep literature-only until an official licensed implementation or complete artifacts appear.
+      - source_id: reasoningbank
+        mode: contained-import
+        repository_role: implementation-and-benchmark-drivers
+        status: source-admission-blocked
+        priority: secondary
+        scientific_role: Success/failure procedural-memory consolidation and test-time scaling control.
+        next_gate: >-
+          Preserve BLOCKED_MUTABLE_EVALUATION_AND_UNPINNED_RETRIEVAL from the
+          source-admission doctor. The additive immutable train-only bank/index
+          contract now passes twice in contained CPU runs at evidence receipt
+          c6f6d628..., with an exact image pin, retained run artifacts,
+          host-recomputed retrieval gates, canonical disjoint task-family
+          splits, actor-visible procedural-text indexing, explicit fixture-only
+          lineage, and pinned local BGE. Keep the
+          CPU-only strict JSONL intake now exists, but no real corpus or split is
+          registered. Keep the candidate blocked until an externally pinned split
+          and real trajectory artifact pass that compiler, two contained generation
+          passes produce identical receipts, a real bank is frozen, and every matched
+          control can run under identical actor, reflection, token, and call budgets.
+      - source_id: past-bench
+        mode: benchmark-adapter
+        repository_role: benchmark-agents-tasks-tests-and-containers
+        status: discovery-killed
+        priority: primary
+        scientific_role: Longitudinal active, inactive, procedural, and update-pathway external validity.
+        next_gate: Preserve audit da6f5966... as a negative result. Jobs 246/248/250/252 proved stop and fresh-job resume, but job 254 plus CPU audit 256 falsified strict restart equivalence with two score/pass and seven trace mismatches. Do not rerun the exact cell or advance families; preregister a dense exactness doctor or a separate repeated-stochastic estimand first.
+        negative_evidence:
+          artifact_path: research/past-sm01-qwen36-discovery-2026-08-14.md
+          artifact_sha256: 9677bddae753fe42b329ac0109c95ab0d54b5a89b9646a2368ca6c2691cd5513
+          receipt_path: research/evidence/memory/past-sm01-restart-falsification.json
+          receipt_sha256: 5e96155beafcc2134d1de90986f8162736ee93ec59cff92f77c69afaf283896b
+          status: PAST_SM01_RESTART_EQUIVALENCE_FALSIFIED
+      - source_id: memory-stress
+        mode: benchmark-adapter
+        repository_role: benchmark-generator-adapters-and-results
+        status: planned
+        priority: secondary
+        scientific_role: Secondary longitudinal contradiction-chain and retention-degradation diagnostic.
+        next_gate: Pin the generated dataset artifact and re-run null plus at least two independent systems; do not promote the authors' own OMEGA-only result to primary evidence.
+      - source_id: omnimemeval
+        mode: benchmark-adapter
+        repository_role: implementation-adapters-pipelines-tests-and-doc-results
+        status: planned
+        priority: secondary
+        scientific_role: Broad user-memory backend and agent-memory lifecycle evaluation spine candidate.
+        next_gate: Vendor mutable dependencies and datasets, freeze the exact OpenClaw/runtime roster, and seal raw outputs before choosing any subset for CoTCodec.
+      - source_id: halumem
+        mode: blocked-license
+        repository_role: evaluation-adapters-generation-pipeline-and-lock
+        status: blocked
+        priority: external-test
+        scientific_role: Operation-level extraction, update, and QA hallucination external test.
+        next_gate: Resolve code and restrictive dataset-license terms and define one uniform adapter protocol before import.
+        blocked_by: unresolved-license
+
+  - id: safety-and-governance
+    objective: Measure authority, deletion, delayed poisoning, and randomized defense.
+    compute_class: contained-h100-screen
+    containment: docker-under-slurm
+    gpu_sku: H100
+    max_gpu_hours_per_candidate: 8
+    max_wave_gpu_hours: 16
+    stop_after_failed_candidates: 2
+    checkpoint_required: true
+    h100_admission: cpu-doctor-pass-required
+    execution_order:
+      - agentpoison
+      - owasp-agent-memory-guard
+      - gatemem
+      - tma-nm
+      - memaudit-antivenom
+      - mpbench
+    candidates:
+      - source_id: gatemem
+        mode: benchmark-adapter
+        repository_role: benchmark-and-evaluation-harness
+        status: planned
+        priority: primary
+        scientific_role: Multi-principal authorization and active forgetting.
+        next_gate: Run deterministic authorization/deletion doctor before model judging.
+      - source_id: tma-nm
+        mode: benchmark-adapter
+        repository_role: benchmark-formal-models-and-checkers
+        status: planned
+        priority: primary
+        scientific_role: Origin-bound non-malleable authority control.
+        next_gate: Map formal principals and trusted tools to the harness threat model.
+      - source_id: smsr
+        mode: blocked-license
+        repository_role: implementation-and-certificate-harness
+        status: blocked
+        priority: primary
+        scientific_role: Randomized-ablation poison certificate control.
+        next_gate: Resolve license before using the certificate harness.
+        blocked_by: unresolved-license
+      - source_id: sleeper-memory-poisoning
+        mode: blocked-license
+        repository_role: attack-datasets-and-evaluation
+        status: blocked
+        priority: primary
+        scientific_role: Delayed write-retrieve-trigger-action poisoning test.
+        next_gate: Resolve license before reusing attack data or evaluation code.
+        blocked_by: unresolved-license
+      - source_id: agentpoison
+        mode: contained-import
+        repository_role: attack-evaluation
+        status: planned
+        priority: primary
+        scientific_role: Licensed persistent-memory poisoning attack fixture.
+        next_gate: Port the smallest trigger-write-retrieve-action cell and remeasure every system.
+      - source_id: memaudit-antivenom
+        mode: contained-import
+        repository_role: executable-counterfactual-replay-extension
+        status: planned
+        priority: primary
+        scientific_role: Post-harm counterfactual replay, provenance repair, and descendant-removal control.
+        next_gate: Separate one-item ablation from descendant deletion and bind deterministic replay receipts.
+      - source_id: mpbench
+        mode: benchmark-adapter
+        repository_role: adversarial-and-benign-dataset
+        status: planned
+        priority: secondary
+        scientific_role: Memory-poisoning write, retrieval, and later-action corpus.
+        next_gate: Preserve raw bytes, canonicalize count and label discrepancies, and build deterministic evaluators before any model or defense comparison.
+      - source_id: owasp-agent-memory-guard
+        mode: contained-import
+        repository_role: implementation-tests-integrations-and-microbenchmark-results
+        status: planned
+        priority: primary
+        scientific_role: Local write-path integrity and poisoning-filter control.
+        next_gate: Re-run the current package against the 55-case microbenchmark, then add persistent multi-session, delayed-action, retrieval-competition, utility, and false-positive tests.
+      - source_id: memory-contagion
+        mode: collision-reference
+        status: planned
+        priority: boundary
+        scientific_role: Cross-temporal evaluator-bias propagation and model-generation interaction control.
+        next_gate: Keep paper-only until official code/data appear; preserve its length-bias model interaction and authority-bias null rather than claiming universal contagion.

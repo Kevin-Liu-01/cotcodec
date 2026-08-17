@@ -110,10 +110,13 @@ def compute_pareto_frontier(
         for q in points:
             if q["condition"] == p["condition"]:
                 continue
-            if q[cost_col] <= p[cost_col] and q[success_col] >= p[success_col]:
-                if q[cost_col] < p[cost_col] or q[success_col] > p[success_col]:
-                    dominated = True
-                    break
+            if (
+                q[cost_col] <= p[cost_col]
+                and q[success_col] >= p[success_col]
+                and (q[cost_col] < p[cost_col] or q[success_col] > p[success_col])
+            ):
+                dominated = True
+                break
         if not dominated:
             pareto.append(p)
 

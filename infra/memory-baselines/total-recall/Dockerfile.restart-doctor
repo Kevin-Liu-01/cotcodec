@@ -1,0 +1,28 @@
+FROM node:20.19.4-bookworm-slim@sha256:ea5377506163eeea3b3b163b10d74d7e82d735dc89435d3f54f1a783afc83d89 AS node-runtime
+
+FROM mcr.microsoft.com/dotnet/sdk:10.0.100@sha256:4c85fffe3c700195278ea4f86ca47ecac394da6d91b8fd3282fde63807e26659 AS build
+COPY --from=node-runtime /usr/local/ /usr/local/
+WORKDIR /source
+COPY package.json package-lock.json ./
+RUN npm ci --ignore-scripts --no-audit --no-fund
+COPY src/ src/
+COPY global.json ./
+COPY doctor/ doctor/
+RUN dotnet restore doctor/TotalRecall.RestartDoctor.csproj --locked-mode \
+    && dotnet publish doctor/TotalRecall.RestartDoctor.csproj \
+      --configuration Release \
+      --no-restore \
+      --output /opt/doctor
+
+FROM mcr.microsoft.com/dotnet/sdk:10.0.100@sha256:4c85fffe3c700195278ea4f86ca47ecac394da6d91b8fd3282fde63807e26659
+ARG COTCODEC_TOTAL_RECALL_GIT_SHA
+ARG COTCODEC_TOTAL_RECALL_SOURCE_SHA256
+LABEL org.opencontainers.image.revision=${COTCODEC_TOTAL_RECALL_GIT_SHA} \
+      org.cotcodec.total-recall-source-sha256=${COTCODEC_TOTAL_RECALL_SOURCE_SHA256} \
+      org.cotcodec.study=total-recall-native-auto-demotion-restart-v1 \
+      org.cotcodec.publication-ready=false
+WORKDIR /opt/doctor
+COPY --from=build /opt/doctor/ /opt/doctor/
+COPY --from=build /source/doctor/packages.lock.json /opt/doctor/provenance/packages.lock.json
+USER 65532:65532
+ENTRYPOINT ["dotnet", "/opt/doctor/TotalRecall.RestartDoctor.dll"]

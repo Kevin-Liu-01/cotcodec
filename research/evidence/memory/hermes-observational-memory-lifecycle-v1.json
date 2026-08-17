@@ -1,0 +1,40 @@
+{
+  "artifact_files": {
+    "gpu-inventory-291.txt": "dbe37ac040ce9ac7183cfd7b0a2a8fd6fed93ac08626db23613c7342ff6c363f",
+    "image-inspect-291.json": "18b1bac4897813cd89cfca0d70595117c4d80a218fd109eb97aca4f242d82081",
+    "job-291.receipt.json": "01bb394adf93147ee6a6240b7831b6bf4c6183dd4eb6fd500a5f19ee2a337142",
+    "lifecycle-291/manifest.json": "dc52dde2feb0548a568c9cc8545d7a45f611aee4515304e47f7ee4d58d9f3c8e",
+    "lifecycle-291/report.json": "1b828fcc043428b90d5bbb7c8c1a2260f3ba79878b89dd71068b11796dfb4325",
+    "sbom-291/sbom.spdx.json": "96bcdc392d46eaa0b973ecb77fe480c6a34df40b0f422d5a2b83dff728ceb833",
+    "source-receipt.json": "af0b00e8fa9773e9850c35f1413281ace59e04f72816dc33637bed510345a838"
+  },
+  "artifact_root": "data/results/hermes-observational-memory-lifecycle/2026-08-15-job291-v13",
+  "claim_boundary": {
+    "h100_actor_admission": "forbidden-for-this-revision",
+    "memory_quality_evaluated": false,
+    "native_deletion_evaluated": true,
+    "operator_root_deletion_is_native_erasure": false
+  },
+  "evidence_grade": "local-negative-reproduced",
+  "evidence_kind": "standalone-hermes-provider-lifecycle-negative",
+  "image_archive_sha256": "bd66a9816f964afc114c89de9e0ee20363203f95800c4b50ac830113c590d6b9",
+  "image_id": "sha256:fe460e1ead89420b7fb2d53c36b2a5149b1448c773988f05599fbbb32deaa1e1",
+  "projection_sha256s": [
+    "3d2af80275a690e1acfc9455a37b8b60c81bae7e37011c3597e9b1ece8cd4c67",
+    "3d2af80275a690e1acfc9455a37b8b60c81bae7e37011c3597e9b1ece8cd4c67"
+  ],
+  "publication_ready": false,
+  "run_count": 2,
+  "runtime_lane": "docker-under-slurm-h100-allocation-no-container-gpu",
+  "schema_version": 1,
+  "scientific_result": false,
+  "slurm_job_id": 291,
+  "source_archive_path": "data/results/infrastructure/hermes-observational-memory-h100-source-2026-08-15-v13/cotcodec-source.tar.gz",
+  "source_archive_sha256": "911b7478bae9dc42de3dd1522e04f7604c5e2023c52bded32d082503354ac805",
+  "source_id": "hermes-observational-memory",
+  "source_revisions": {
+    "https://github.com/intertwine/hermes-observational-memory": "90d83c1ff768d80f99f4e3ef4d76269f90e1c808",
+    "https://github.com/intertwine/observational-memory": "6bbc16e81ad1258ee1e8ba37c9efcc6ce36a0208"
+  },
+  "status": "BLOCKED_NO_PROVIDER_NATIVE_DELETE_OR_ERASURE"
+}

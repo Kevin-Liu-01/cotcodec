@@ -1,0 +1,43 @@
+{
+  "artifact_files": {
+    "experiment.yaml": "044db55096774d835e5e6b78069f1c63a5022ef5d7f71b5d705ae80780debbf8",
+    "image-inspect-official-compose-postgres.json": "5c34f5ef0f5cc3054b0e7cbe7e1115ae15173d66c00105c664d2a6a842c91270",
+    "image-inspect-pgvector-enabled-control.json": "4a5976c0e3fff7e9109d6969ab45809bff9431db413ff66c39cf63911739adf5",
+    "manifest.json": "54a38606c4f8a315004f346e458b7057fd578b76286dda2ce65526f3ba6669a5",
+    "repeat-1-official-compose-postgres.json": "1b02900b3232805057c1cff3b6222dca726b1ce02e75d0f982258afaf193dccd",
+    "repeat-1-official-compose-postgres.log": "e0607b4de7908d3fbec6c9dd886b497524c7d1dbac046e16cce8b04211286626",
+    "repeat-1-pgvector-enabled-control.json": "b641c16d7227626aeac93c93a26c173cf50e24014c7e1ee486f2ec1aad7f0c39",
+    "repeat-1-pgvector-enabled-control.log": "91387d912caa3547abcc5e16d4549a7d4cc74992f43e5fd1b740394f7dd2b51e",
+    "repeat-2-official-compose-postgres.json": "6f815a020fefcad7afca7af6f351c73b03848b453db11b83c91b035beaf2a2cc",
+    "repeat-2-official-compose-postgres.log": "801c7db299e46c6720f179a9d98807bdfb0b66341567501b679458c4d13d25b2",
+    "repeat-2-pgvector-enabled-control.json": "3666951b425ff11dd182e940fee69244597fe41d8748e92cd3e87c4ad8ed6d29",
+    "repeat-2-pgvector-enabled-control.log": "d434c24cfdcfae09502fdf4849080e7471ae18dce9ba46e7c6a0dcac1a75bf32",
+    "report.json": "4b01d24baa73c69a741343410081018ba9ecc77a67eb14e893a921cb7e2e3cf8",
+    "schema.sql": "95ee46167dcbaf7617669e7720680978f640f6ae7cf4b37cad32f5d5db82779f",
+    "source-receipt.json": "123733d9800ff5911653accea661d53c6218a1d9e289a43f400153290ac8c4b9",
+    "source.tar": "e2f588676aa06e95cb07cc20224e336a1ce7ff1b9b5757fa808f57323b4b0b93"
+  },
+  "artifact_root": "data/results/memforge-fresh-install/2026-08-16-local-docker-v1",
+  "claim_boundary": {
+    "graph_quality_evaluated": false,
+    "hot_warm_cold_lifecycle_evaluated": false,
+    "memory_quality_evaluated": false,
+    "repair_arm_evaluated": false
+  },
+  "code_files": {
+    "experiments/memory/stage3-memforge-fresh-install-doctor.yaml": "044db55096774d835e5e6b78069f1c63a5022ef5d7f71b5d705ae80780debbf8",
+    "scripts/run_memforge_fresh_install_doctor.py": "db60f1efc9731889848046134208c912d01a94ca00035c6d501ec3058466b80a",
+    "scripts/validate_memforge_fresh_install_experiment.py": "1152c07eded3d3488b7049f45bf5d437b9df99fc11057307f4d291a0a5fc1a00"
+  },
+  "evidence_grade": "local-negative-reproduced",
+  "evidence_kind": "native-negative-reproduction",
+  "publication_ready": false,
+  "run_count": 2,
+  "schema_version": 1,
+  "scientific_result": false,
+  "source_id": "memforge",
+  "source_revisions": {
+    "https://github.com/salishforge/memforge": "16e2f15c5881a38911f64ca81b3dc0b25d6207ec"
+  },
+  "status": "MEMFORGE_FRESH_INSTALL_ADMISSION_KILLED"
+}

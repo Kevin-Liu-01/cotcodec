@@ -1,0 +1,92 @@
+schema_version: 1
+name: stage3-neo4j-identical-tuple-flat-parity
+study_id: neo4j-identical-tuple-flat-parity-v1
+status: registered-cluster-component-falsifier
+scientific_result: false
+publication_ready: false
+description: >-
+  Compare Neo4j traversal with a flat SQLite BM25+dense retriever over exactly
+  the same pre-extracted tuple texts and deterministic vectors. A shuffled
+  topology control identifies structural lift; an exact SQLite relational join
+  ceiling prevents attributing generic join capability uniquely to graph storage.
+
+source:
+  source_id: neo4j-agent-memory
+  repository: https://github.com/neo4j-labs/agent-memory
+  revision: 231d60eac9401ab156ba194b519d89dd644dadb8
+  tree: 73fe15a4e085a2735aa74787feda4724a8e0900d
+  git_archive_tar_sha256: 64af30347f10998250de67f867f5f036415b8cce5cc7af6c17f9cf7173a47479
+  license: Apache-2.0
+  license_sha256: bb86acebd6ee912a2cc0fab21af9861ca80813025ef5deca1f3d232059267226
+  uv_lock_sha256: 6b9c946cab136d0adae002d31abce07ae88da1f47986621c231ff937ca945d76
+
+runtime:
+  lane: cluster-amd64-slurm
+  platform: linux/amd64
+  containment: docker-private-internal-network
+  client_image: cotcodec-neo4j-preference-doctor:231d60e-cluster-amd64-slurm-v1
+  client_image_id: sha256:8ec19ef4a4acbbf81205e56148aadfa5e9798d2964175b5b4be8d8644436c382
+  neo4j_image: neo4j:5.26.29-community@sha256:865213f53381e8d2ef3eec08b11741a6722d388a5e70b134135186a9b5cb27a6
+  network: private-internal-only
+  external_network: forbidden
+  read_only_client_root: true
+  cap_drop_all: true
+  no_new_privileges: true
+  container_gpu_count: 0
+  slurm_h100_count: 1
+  max_h100_hours: 0.5
+  max_cpu_cores: 16
+  max_memory_gib: 64
+  wall_clock_minutes: 30
+  clean_repetitions: 2
+  sudo: forbidden
+
+contract:
+  fixture_version: neo4j-identical-tuple-fixture-v1
+  case_count: 48
+  tuples_per_case: 14
+  vector_dimensions: 16
+  vector_source: deterministic-visible-text-hash
+  model_calls: 0
+  embedding_model_calls: 0
+  external_network_calls: 0
+  top_k: 2
+  max_injected_bytes: 256
+  logical_retrieval_calls_per_arm_per_case: 1
+  arms:
+    - flat-bm25-dense
+    - zero-traversal
+    - flat-sql-join-ceiling
+    - true-graph
+    - object-degree-preserving-shuffled-graph
+  require_identical_tuple_text_and_vector_payload: true
+  charge_topology_bytes_separately: true
+  require_flat_sql_join_equal_true_graph: true
+
+gates:
+  exact_two_clean_repetitions: true
+  identical_tuple_payload: true
+  zero_traversal_equals_flat: true
+  true_graph_equals_flat_sql_join: true
+  true_graph_lift_over_bm25_dense_minimum_points: 25
+  true_graph_lift_over_shuffled_minimum_points: 25
+  matched_top_k_byte_and_logical_call_budget: true
+  zero_model_embedding_and_external_network_calls: true
+  purge_zero_nodes_and_edges: true
+
+kill_criteria:
+  - tuple text or deterministic vector differs between storage arms
+  - true topology fails to beat flat BM25+dense by 25 points
+  - true topology fails to beat shuffled topology by 25 points
+  - true graph differs from the same-tuple SQLite relational join ceiling
+  - retrieval call, top-k, injected-byte, source, image, or containment drift
+  - any model, embedding model, external network, container GPU, or sudo use
+  - clean repetitions differ
+
+forbidden_claims:
+  - Neo4j uniquely enables relational traversal
+  - Neo4j improves agent or answer quality
+  - the designed fixture is natural-data graph efficacy
+  - the H100 allocation performed model inference
+  - scientific result
+  - publication ready

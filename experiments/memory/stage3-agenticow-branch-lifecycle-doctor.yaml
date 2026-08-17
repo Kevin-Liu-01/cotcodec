@@ -1,0 +1,60 @@
+schema_version: 1
+name: stage3-agenticow-branch-lifecycle-doctor
+status: registered-cpu-falsification
+scientific_result: false
+publication_ready: false
+
+source:
+  source_id: agenticow
+  repository: https://github.com/ruvnet/agenticow
+  revision: dd4f437b92d2dbbc1f40dfa00023eed6e9c3bd84
+  tree: b64b6fae03aac0491e3d3b78281b5c6997516ebf
+  version: 0.2.4
+  license: MIT
+  license_sha256: 631f94984f626818d42ecf717aa6e8e0afd4f9f355ca706bd2effafbd1416d06
+  package_lock_sha256: 3a567fe53f577b56101b5410398b181c4ed2750fd29708ac36dc2f6189982129
+  git_archive_tar_sha256: a563784a4c7645f51a45ab430c7c8d3aec77b61cad609585389173da21bdfeac
+
+runtime:
+  containment: docker-network-none
+  provider_secrets: forbidden
+  sudo: forbidden
+  gpu_count: 0
+  node_image: node:22.21.1-bookworm-slim@sha256:25b3eb23a00590b7499f2a2ce939322727fcce1b15fdd69754fcd09536a3ae2c
+  node_version: 22.21.1
+  rvf_node_version: 0.2.0
+  rvf_linux_arm64_version: 0.1.7
+  clean_state_repeats: 2
+  fresh_process_restarts_per_repeat: 1
+
+intervention:
+  exact_source_modules: [src/index.js]
+  model_backend_calls: 0
+  provider_calls: 0
+  test_parent_and_nested_branch_isolation: true
+  test_checkpoint_rollback: true
+  test_save_load_restart: true
+  test_promotion_conflict: true
+  test_repeated_promotion_idempotency: true
+  test_tombstone_plaintext_residue: true
+  test_native_scoped_purge_surface: true
+
+expected_falsification:
+  status: BLOCKED_BLIND_PROMOTION_LOST_UPDATE_TOMBSTONE_RESIDUE_AND_NO_SCOPED_PURGE
+  branch_checkpoint_restart_positive_path: true
+  promotion_overwrites_later_target_update_without_conflict: true
+  repeated_promotion_logically_idempotent: true
+  tombstoned_plaintext_survives_restart: true
+  native_scoped_purge_absent: true
+  reproduced_in_two_clean_states: true
+
+admission:
+  h100_actor: forbidden-for-this-revision
+  scientific_claim: forbidden
+  publication_claim: forbidden
+  next_gate: >-
+    Admit only a newer immutable revision or explicit reviewed repair arm with
+    compare-and-swap or three-way conflict detection, idempotent receipt-bound
+    promotion, and native branch-scoped physical or cryptographic erasure that
+    clears tombstoned and abandoned plaintext after restart without changing
+    parent or sibling branches.

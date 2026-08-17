@@ -1,0 +1,78 @@
+schema_version: 1
+name: stage3-mnemon-static-space-h100-actor
+study_id: mnemon-static-space-h100-actor-v1
+description: >-
+  Discovery-only H100 screen of a frozen provider-backed Mnemon panel. It asks
+  whether selecting the explicitly named active store helps versus searching
+  all four stores under a fixed four-slot context contract.
+
+input:
+  panel_path: data/results/mnemon-static-space-panel/2026-08-16-local-docker-v1/panel.json
+  panel_sha256: 43a416c62be619de641aa60ecefc83ad0efdd605f7f13fd8821936704acacee5
+  panel_status: MNEMON_STATIC_SPACE_PANEL_FROZEN
+  admission_evidence_path: research/evidence/memory/mnemon-active-space-admission-v1.json
+  admission_evidence_sha256: 27d7d55c664748bf7bc5fb6e1ad53d17cb35a50d9497329851dc1eaa4155debb
+  admission_status: ADMITTED_STATIC_ACTIVE_SPACE_CONTROL_WITH_SOFT_DELETE_BOUNDARY
+  mnemon_revision: 88d2981edeb18a5ebe048af472f6f96527615454
+  dsh_mnemon_revision: 1889c68400e52a391ee9a6eedf15bf44bc39dd06
+
+panel:
+  tasks: 32
+  groups: 32
+  arms: [no_memory, all_spaces, lexical_router, oracle_space]
+  retrieval_top_k: 4
+  fixed_slot_characters: 160
+  aa_tasks: 8
+  router_inputs: [question]
+  answer_labels_available_to_router: false
+
+model:
+  model_id: qwen3.5-4b
+  revision: 851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a
+  artifact_root_sha256: 3b8a075149bffe4dea784db5b4b37bc0896688cba0b3de7d8d0f6e8ae6157b9e
+  dtype: bfloat16
+  max_new_tokens: 32
+  use_chat_template: true
+  do_sample: false
+  deterministic_algorithms: true
+  attention_implementation: eager
+  cublas_workspace_config: ":4096:8"
+
+gates:
+  actor_aa_exact: true
+  completion_nonempty: true
+  lexical_equals_oracle: true
+  lexical_exact_minimum: 0.80
+  lexical_minus_all_token_f1_minimum: 0.03
+  lexical_minus_no_memory_token_f1_minimum: 0.20
+  matched_nonempty_prompt_token_ratio: [0.85, 1.15]
+  valid_statuses: [MNEMON_STATIC_ROUTING_PASS, MNEMON_STATIC_ROUTING_KILLED]
+
+execution:
+  runtime: docker-single-node-discovery-v1
+  scheduler: slurm
+  gpu_type: h100
+  gpus: 1
+  cpus: 16
+  memory_gb: 64
+  minutes: 60
+  max_gpu_hours: 1
+  network_mode: none
+  checkpoint_every_completed_case: true
+  checkpoint_on_preemption: true
+  prove_fresh_job_resume: true
+  persistent_output_required: true
+  login_node_compute_forbidden: true
+  sudo_forbidden: true
+  cluster_lane: discovery-only-slurm21-cgroupv1
+
+claims:
+  scientific_result: false
+  publication_ready: false
+  discovery_only: true
+  supports: >-
+    A bounded model-mediated check of whether static named-store selection helps
+    over all-store retrieval on this provider-backed synthetic panel.
+  does_not_support: >-
+    Learned paging, access control, physical erasure, native memory quality,
+    public-benchmark quality, publication evidence, or larger-model conclusions.

@@ -1,0 +1,67 @@
+schema_version: 1
+source_id: past-bench
+status: LOCKED_BUILD_INPUTS_NOT_EXECUTION
+scientific_result: false
+
+scope: >-
+  CoTCodec build-input admission for the exact PAST-Bench plus Hermes+ lane.
+  This contract locks Python dependencies, an amd64 base-image manifest, the
+  Dockerfile, and the context compiler. It is not an image digest, SBOM, Slurm
+  receipt, model receipt, benchmark result, or publication attestation.
+
+source_contract:
+  path: research/source-contracts/past-bench.yaml
+  sha256: 51e44fd08f7ff37debbba509340d2a39847591f9873e524cd78b56ed9d51c043
+  revision: f8223517ae7491e776b69793d9f11e9d074ab42e
+  upstream_dependency_lock_status: unresolved-upstream
+
+admission:
+  source_receipt_sha256: 5e686206db8d1447d1b18d27bfffdd792f45c9d3418aedc7c15a5d134d6a6a5c
+  runtime_receipt_sha256: 27fb11233ecb18bbdc60ca1c7c0100284b93c87b9fb5d07eb461d028bfd4a64d
+
+execution:
+  platform: linux/amd64
+  python_version: 3.11.15
+  glibc_wheel_floor: manylinux_2_28
+  base_image: docker.io/library/python@sha256:77923445c077d8eb971b14b2b114a1d9cd4a87edb4c75654820ca4832ee8cb15
+  base_tag_observed: python:3.11.15-slim-bookworm
+  base_index_digest: sha256:d29f48a31a8b408ed19272ca1e7b10ebae13b240a27e862d3d4217c528e2e0c3
+  runtime_scope: benchmark-harness-hermes-plus-mock-services-and-tests
+  runtime_mode: whole-process-local-inside-docker
+  upstream_nested_runtime_container_supported: false
+  model_transport: not-implemented
+  containment: docker-under-slurm
+  gpu_sku_for_model_cells: H100
+  network_policy_at_runtime: none
+  publication_ready: false
+
+lock:
+  uv_version: 0.11.30
+  exclude_newer: 2026-08-14T00:00:00Z
+  python_requires: ==3.11.*
+  package_count: 106
+  upstream_requirement_count: 31
+  upstream_test_file_count: 36
+  install_policy:
+    - require every downloaded distribution hash
+    - require binary wheels on linux/amd64 manylinux_2_28
+    - install PAST-Bench and Hermes+ from the admitted source with --no-deps
+    - disable PEP 517 build isolation after installing locked build tooling
+
+runtime_files:
+  infra/research/past-bench/Dockerfile: 0782bc16d1f30bba9ae312ebcc818e193593897e84fa450e7a985f53b3b2da20
+  infra/research/past-bench/apply_checkpoint_overlay.py: 55b5fee6ba00afad0e204ce339926b37b872a0c8e41088c558d212a961b77d35
+  infra/research/past-bench/checkpoint_runtime.py: e237e357e82a9e9a1b0166c460af084721c81dc3f3e689480860e4ecb538cb29
+  infra/research/past-bench/checkpoint_runtime_selftest.py: 0d4a87abb9d2f20abbb1b6b762208a62e4709db429f571697a7c6492e9054fe4
+  infra/research/past-bench/pyproject.toml: 2b84af2a4cb9b862749ef8cf262e9700912f15a90ecf1444babbb01e46d2df61
+  infra/research/past-bench/requirements.lock: cf36cf5574c852f4195256266db92b194cf4b2b4d6eb062f06b22283dc80d7db
+  infra/research/past-bench/uv.lock: 9c0eefcf3b38be1f4d08f1c63dd3332bd1831cff3c8ba959ae06fa710574dfbb
+  scripts/prepare_past_bench_runtime.py: 6c1b34609cf530e106279b51aec02034c29898950788a469e3f20084dfbb1276
+
+remaining_gates:
+  - rebuild the exact context and image after the registered checkpoint overlay
+  - repeat live OCI, layer/config, scanner-produced SBOM, test-roster, and containment receipts for that derived image
+  - prove atomic episode-boundary stop and fresh-job resume equivalence on the derived image
+  - add a contained same-job model transport without opening external egress
+  - bind the pinned Qwen model artifact and exact SM01 persistence-on/off task bundle
+  - execute only through the registered Docker-under-Slurm discovery lane

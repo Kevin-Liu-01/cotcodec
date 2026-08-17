@@ -1,0 +1,85 @@
+schema_version: 1
+name: stage3-total-recall-lifecycle-doctor
+status: registered-native-negative-cpu-doctor
+scientific_result: false
+protocol: memory-lifecycle-v1
+description: >-
+  Falsify restart persistence for Total Recall v4.0.4's native automatic
+  hot-to-warm transition. The doctor uses the real SqliteStore,
+  HotTierCompactor, sqlite-vec tables, and startup orphan cleanup. A separate
+  MoveAndReEmbed record is the positive control. Reproducing the defect blocks
+  this pin from active/inactive H100 experiments; it is not a quality result.
+
+source:
+  source_id: total-recall-oss
+  repository: https://github.com/strvmarv/total-recall
+  revision: a2630f671be9b12df8b8ac78df9d26f7053d2fa9
+  git_tree: 6d62153e3db4026d2146a80251146f9bc3efca68
+  git_archive_sha256: 19c7e803e6887c740b841043d6a86980f59947b51e6b282a155c477fc37a1338
+  license: MIT
+  license_sha256: d97ac8afe40f62ed6f5bffe8dd941a1fac3543b6c68475f6f4e5923f7c128f15
+  release: v4.0.4
+
+native_paths:
+  automatic_transition: HotTierCompactor.Compact_then_SqliteStore.Move
+  positive_control: MoveHelpers.MoveAndReEmbed
+  restart_cleanup: SqliteStore_constructor_then_MigrationRunner.CleanupOrphanRows
+  dimensions: 384
+  database: sqlite_with_sqlite_vec
+
+expected_negative_finding:
+  automatic_content_before_restart: 1
+  automatic_vectors_before_restart: 0
+  automatic_content_after_restart: 0
+  control_content_before_restart: 1
+  control_vectors_before_restart: 1
+  control_content_after_restart: 1
+  control_vectors_after_restart: 1
+  status: BLOCKED_NATIVE_RESTART_DEFECT_REPRODUCED
+
+execution:
+  container_required: true
+  build_network: dependency-acquisition-only
+  runtime_network: none
+  read_only_root: true
+  cap_drop_all: true
+  no_new_privileges: true
+  sudo: forbidden
+  gpus: 0
+  max_gpu_hours: 0
+  cpu_time_limit_minutes: 10
+  platform: linux/arm64
+  dotnet_image: mcr.microsoft.com/dotnet/sdk:10.0.100@sha256:4c85fffe3c700195278ea4f86ca47ecac394da6d91b8fd3282fde63807e26659
+  node_image: node:20.19.4-bookworm-slim@sha256:ea5377506163eeea3b3b163b10d74d7e82d735dc89435d3f54f1a783afc83d89
+  nuget_lock_sha256: 615a3f37e6d494f6fae7e293dd6fefdd2464780701ef318fa02cbb694ab10d67
+  nuget_restore: locked-mode
+
+gates:
+  exact_source_commit_tree_archive_and_license: true
+  source_checkout_clean: true
+  actual_sqlite_vec_content_and_vector_rows: true
+  positive_control_survives_same_restart: true
+  automatic_transition_defect_reproduced: true
+  runtime_container_network_none: true
+  h100_admission_blocked: true
+
+artifacts:
+  - experiment.yaml
+  - source-receipt.json
+  - input-receipt.json
+  - runtime-receipt.json
+  - native-report.json
+  - report.json
+  - manifest.json
+
+next_gate:
+  acceptable:
+    - newer upstream commit with an exact source pin and passing native restart doctor
+    - explicitly labeled patch arm with atomic content-plus-vector transition and fault injection
+  required_before_h100: true
+
+forbidden_claims:
+  - Total Recall reproduced as a persistent active inactive control
+  - automatic demotion is restart safe
+  - active inactive memory improves agent quality
+  - publication ready

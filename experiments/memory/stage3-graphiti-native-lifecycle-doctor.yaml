@@ -1,0 +1,95 @@
+schema_version: 1
+name: stage3-graphiti-native-lifecycle-doctor
+status: registered-native-cpu-lifecycle-doctor
+scientific_result: false
+protocol: memory-lifecycle-v1
+description: >-
+  Exercise Graphiti 0.29.3 over the pinned FalkorDBLite 0.10.0 embedded
+  backend as an explicit-triplet inactive archive. Test task-blind CRUD,
+  hybrid retrieval, fresh-process checkpoint verification, physically
+  separated branches, adapter-scoped purge, lineage, and phase costs without
+  an extraction LLM. This is lifecycle evidence, not graph-quality evidence.
+
+source:
+  source_id: graphiti
+  repository: https://github.com/getzep/graphiti
+  revision: 401c59a65bdeb22a44136901ff30231e6998a7fe
+  version: 0.29.3
+  git_archive_tar_sha256: 9cfbc01e90f4e6dfbf61fefe86e7f04b15c57c08a7ff8298f873d6f5696d0303
+  adapter: graphiti-explicit-triplet-lifecycle-v1
+  construction: explicit-triplet-no-extraction-llm
+  backend: falkordblite-0.10.0-per-scope-persistent
+  embedding: deterministic-loopback-interface-doctor-v1
+
+mechanism_scope:
+  representation: temporal-entity-relation-edge
+  residency: inactive-archive-only
+  supported_operations: [apply, query, checkpoint, restore, inspect, purge]
+  unsupported_operations: [maintain, feedback]
+  active_inactive_paging_claim: forbidden
+  extraction_quality_claim: forbidden
+  branch_isolation: one-physical-falkordblite-file-per-session
+  native_shared-database-group-isolation: diagnostic-only
+
+cases:
+  fresh_process_restart: true
+  write_update_delete: true
+  native_hybrid_query: true
+  branch_isolation: true
+  idempotent_retry: true
+  divergent_retry_rejection: true
+  scoped_purge_and_plaintext_residue: true
+  falkordblite_group_filter_after_restart: true
+
+gates:
+  exact_source_adapter_and_dependency_receipts: true
+  all_resident_records_reported_as_archive: true
+  checkpoint_verifies_persisted_state_without_reconstruction: true
+  restart_evidence_identity_exact: true
+  update_preserves_transitive_source_lineage: true
+  delete_removes_native_and_logical_record: true
+  equal_prefix_branch_roots_match: true
+  branch_mutation_does_not_change_sibling: true
+  idempotent_retry_receipt_exact: true
+  divergent_retry_rejected: true
+  maintain_and_feedback_capabilities_absent: true
+  adapter_scoped_purge_removes_plaintext_canary: true
+
+expected_diagnostic:
+  falkordblite_literal_group_filter_matches_unfiltered_after_restart: false
+  implication: >-
+    Shared-database Graphiti group isolation is not admitted at this pin.
+    The doctor uses one physical database per session and records the defect.
+
+execution:
+  container_required: true
+  runtime_network: none
+  loopback_embedding_server_only: true
+  gpus: 0
+  max_gpu_hours: 0
+  cpu_time_limit_minutes: 15
+  clean_state_repetitions: 2
+  sudo: forbidden
+  h100_admission: blocked-until-contained-evidence-crash-recovery-and-group-filter-resolution
+
+artifacts:
+  - dockerfile
+  - experiment.yaml
+  - image-inspect.json
+  - infra/memory-baselines/graphiti_lifecycle_sidecar.py
+  - run-1/manifest.json
+  - run-1/report.json
+  - run-2/manifest.json
+  - run-2/report.json
+  - scripts/run_graphiti_lifecycle_doctor.py
+  - scripts/validate_graphiti_lifecycle_experiment.py
+  - source-context.json
+
+forbidden_claims:
+  - Graphiti extraction quality improved
+  - graph memory beats a flat same-information control
+  - Graphiti is an active inactive pager
+  - Graphiti maintenance or feedback was tested
+  - native shared-database group isolation passed
+  - crash-safe continuation passed
+  - publication ready

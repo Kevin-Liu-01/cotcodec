@@ -10,13 +10,13 @@ Implements the routing decision tree from the proposal:
 from __future__ import annotations
 
 from dataclasses import dataclass
-from enum import Enum
+from enum import StrEnum
 
 from harness.config import MessageType
 from harness.routing.features import MessageFeatures, extract_features
 
 
-class LanguageDirective(str, Enum):
+class LanguageDirective(StrEnum):
     ENGLISH = "english"
     CHINESE = "chinese"
     STRUCTURED_ENGLISH = "structured_english"
@@ -67,7 +67,10 @@ class RoutingPolicy:
         if features.is_schema_adjacent:
             return RoutingDecision(
                 directive=LanguageDirective.ENGLISH,
-                reason=f"schema proximity {features.schema_proximity:.2f} > {self.schema_threshold}",
+                reason=(
+                    f"schema proximity {features.schema_proximity:.2f} "
+                    f"> {self.schema_threshold}"
+                ),
                 features=features,
             )
 

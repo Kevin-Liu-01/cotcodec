@@ -1,0 +1,79 @@
+{
+  "schema_version": 1,
+  "source_id": "neo4j-agent-memory",
+  "study": "neo4j-identical-tuple-flat-parity-v1",
+  "status": "NEO4J_IDENTICAL_TUPLE_TRAVERSAL_COMPONENT_PASS",
+  "evidence_role": "cluster-amd64-designed-traversal-component",
+  "scientific_result": false,
+  "publication_ready": false,
+  "slurm_job_id": 304,
+  "slurm_h100_count": 1,
+  "container_gpu_count": 0,
+  "model_calls": 0,
+  "artifact_root": "data/results/neo4j-flat-parity/2026-08-15-h100-job304-v1",
+  "source_archive": {
+    "path": "data/results/infrastructure/neo4j-flat-parity-h100-source-2026-08-15-v1/source.tar.gz",
+    "sha256": "0dca96f552c12ab4b50d2b94f50a2e4eb4caaf27686c4ea01477f9a0fdcf4dd6",
+    "receipt_path": "data/results/infrastructure/neo4j-flat-parity-h100-source-2026-08-15-v1/source-receipt.json",
+    "receipt_sha256": "8db051322ab788bb6c6180931899154030ced688cd9b60630136034a9d5a566c",
+    "git_sha": "581ded8df71564b0212d8af5dcd401257aa6a28f",
+    "git_tree": "5a83330044fda59e998e09c18266ad6f99a84bce",
+    "worktree_clean": false
+  },
+  "runtime_inputs": {
+    "client_image_archive_path": "data/results/neo4j-preference-lifecycle/2026-08-15-h100-job303-v1/client-image-303.tar",
+    "client_image_archive_sha256": "52375c64d9d136c7529fb0aa28af218ea289077f2b6241638302d8b343b1041c",
+    "client_sbom_path": "data/results/neo4j-preference-lifecycle/2026-08-15-h100-job303-v1/sbom-303/client.spdx.json",
+    "client_sbom_sha256": "f6f8a278d7886b7d58b018cc5e0590025961c73573ac5bb23c682558148d4c27",
+    "client_image_id": "sha256:8ec19ef4a4acbbf81205e56148aadfa5e9798d2964175b5b4be8d8644436c382",
+    "neo4j_image_id": "sha256:19dfa5a7e5c40fc28a7486616deeb21caac9a6a6350e1a34665392b65b6e1c59",
+    "batch_sha256": "72db6614eb808e8057393e0218e76536d6f469c4498a554e573abd16d2dcf4af"
+  },
+  "artifact_sha256": {
+    "parity-304/report.json": "b09978e269c887b5f3f23b11b222d8fb3a0292aa42ecba7acf5de909552e0479",
+    "parity-304/manifest.json": "9a9af7cbb26f51cb2fc260a2a851a921af2640ca20de5026ff66711186f8738d",
+    "parity-304/experiment.yaml": "4083b16648eec4c253c8053feb77377dab95cea7f2598dc7152d8969bc2d3245",
+    "job-304.receipt.json": "dfa3414bebb7bdeded5e2c42e2e4aa6c72f675657b6b6549e078817272b94c78",
+    "gpu-inventory-304.txt": "dbe37ac040ce9ac7183cfd7b0a2a8fd6fed93ac08626db23613c7342ff6c363f",
+    "client-image-inspect-304.json": "0e93d6bf4a4d652feed4207af293b76652aca08028872f2e5bfe73afa0cd7944",
+    "neo4j-image-inspect-304.json": "8cf856f0fc48aa7daab7ded95067b8580166164fe340defe52f707d591ffae6e",
+    "sacct-304.txt": "6e7b6669c47d3e41740c1293da303c51dd86542af165aa9da2c4e5e4ebdb6e74",
+    "scontrol-304.txt": "dbce8ff00c91d54b05e88c6e61fd5c60cf7b6d968b5a6efc97897d59fa54b32a",
+    "slurm-304.out": "d50a81d64e49c66f0857a8823457eecd9e691e9111219602cc453a6167e85d22",
+    "parity-304.stdout.json": "b09978e269c887b5f3f23b11b222d8fb3a0292aa42ecba7acf5de909552e0479"
+  },
+  "component": {
+    "case_count": 48,
+    "tuple_count": 672,
+    "top_k": 2,
+    "max_injected_bytes": 256,
+    "tuple_payload_sha256": "7d2f8a690aa754a559cb69165d34b9c866eb5aba9d226519f4ae79475b67496c",
+    "hit_counts": {
+      "flat_bm25_dense": 0,
+      "zero_traversal": 0,
+      "flat_sql_join": 48,
+      "true_graph": 48,
+      "shuffled_graph": 0
+    },
+    "clean_repetitions": 2,
+    "all_gates_pass": true
+  },
+  "scheduler": {
+    "state": "COMPLETED",
+    "exit_code": "0:0",
+    "runtime": "00:01:03",
+    "node": "fal-h100-01",
+    "allocated_h100": 1,
+    "sacct_available": false
+  },
+  "interpretation": "The designed fixture isolates traversal: true topology and an exact flat SQL join both recover 48/48, while flat BM25+dense and object-degree-preserving shuffled topology recover 0/48. This supports traversal over unstructured retrieval on this fixture and explicitly forbids a claim that Neo4j uniquely enables relational joins.",
+  "next_gate": "Freeze a natural identical-evidence task set and run one matched frozen-actor screen only after a clean source and complete actor-control admission; do not scale from this designed component result.",
+  "forbidden_claims": [
+    "Neo4j uniquely enables joins",
+    "Neo4j improves natural-data memory quality",
+    "Neo4j improves agent or answer quality",
+    "the H100 executed model inference",
+    "scientific result",
+    "publication ready"
+  ]
+}

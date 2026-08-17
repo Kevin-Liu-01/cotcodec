@@ -1,0 +1,466 @@
+#!/usr/bin/env python3
+"""Run Magic Context's zero-model paging falsification in isolated Docker."""
+
+from __future__ import annotations
+
+import argparse
+import hashlib
+import io
+import json
+import os
+import secrets
+import shutil
+import subprocess
+import sys
+import tarfile
+import tempfile
+from pathlib import Path, PurePosixPath
+from typing import Any
+
+PROJECT_ROOT = Path(__file__).resolve().parents[1]
+if str(PROJECT_ROOT) not in sys.path:
+    sys.path.insert(0, str(PROJECT_ROOT))
+
+from scripts.validate_magic_context_paging_experiment import (  # noqa: E402
+    DEFAULT_EXPERIMENT,
+    EXPECTED_STATUS,
+    validate_experiment_contract,
+)
+
+DOCTOR_ROOT = PROJECT_ROOT / "infra" / "memory-baselines" / "magic-context"
+DEFAULT_OUTPUT = (
+    PROJECT_ROOT / "data" / "results" / "magic-context" / "2026-08-14-doctor-v1"
+)
+DEFAULT_IMAGE_TAG = "cotcodec-magic-context-paging-doctor:13e1d4c3-arm64-v1"
+MAX_ARCHIVE_MEMBERS = 20_000
+MAX_ARCHIVE_BYTES = 1024 * 1024 * 1024
+
+
+class DoctorError(RuntimeError):
+    """Raised when provenance, containment, or falsification drifts."""
+
+
+def _sha(data: bytes) -> str:
+    return hashlib.sha256(data).hexdigest()
+
+
+def _sha_path(path: Path) -> str:
+    if not path.is_file() or path.is_symlink():
+        raise DoctorError(f"expected regular file: {path}")
+    return _sha(path.read_bytes())
+
+
+def _json_bytes(value: Any) -> bytes:
+    return (json.dumps(value, indent=2, sort_keys=True) + "\n").encode()
+
+
+def _run(
+    argv: list[str], *, cwd: Path | None = None, timeout: int = 1800
+) -> subprocess.CompletedProcess[bytes]:
+    completed = subprocess.run(
+        argv,
+        cwd=cwd,
+        check=False,
+        capture_output=True,
+        timeout=timeout,
+    )
+    if completed.returncode != 0:
+        raise DoctorError(
+            f"command failed ({completed.returncode}): {argv!r}\n"
+            f"stdout={completed.stdout.decode(errors='replace')}\n"
+            f"stderr={completed.stderr.decode(errors='replace')}"
+        )
+    return completed
+
+
+def _strict_json(data: bytes, label: str) -> dict[str, Any]:
+    def reject_constant(value: str) -> None:
+        raise DoctorError(f"{label} contains non-finite value: {value}")
+
+    try:
+        payload = json.loads(data, parse_constant=reject_constant)
+    except (UnicodeDecodeError, json.JSONDecodeError) as exc:
+        raise DoctorError(f"{label} is not strict JSON") from exc
+    if not isinstance(payload, dict):
+        raise DoctorError(f"{label} must be a JSON object")
+    return payload
+
+
+def _write_once(path: Path, data: bytes) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    flags = os.O_WRONLY | os.O_CREAT | os.O_EXCL
+    if hasattr(os, "O_NOFOLLOW"):
+        flags |= os.O_NOFOLLOW
+    descriptor = os.open(path, flags, 0o600)
+    try:
+        view = memoryview(data)
+        while view:
+            written = os.write(descriptor, view)
+            if written <= 0:
+                raise DoctorError(f"short write: {path}")
+            view = view[written:]
+        os.fsync(descriptor)
+    finally:
+        os.close(descriptor)
+
+
+def _extract_archive(archive: bytes, destination: Path) -> None:
+    total = 0
+    seen: set[str] = set()
+    with tarfile.open(fileobj=io.BytesIO(archive), mode="r:") as bundle:
+        members = bundle.getmembers()
+        if not members or len(members) > MAX_ARCHIVE_MEMBERS:
+            raise DoctorError("Magic Context archive member count is invalid")
+        for member in members:
+            relative = PurePosixPath(member.name)
+            if relative.is_absolute() or ".." in relative.parts or not relative.parts:
+                raise DoctorError(f"unsafe archive path: {member.name}")
+            name = relative.as_posix()
+            if name in seen:
+                raise DoctorError(f"duplicate archive path: {name}")
+            seen.add(name)
+            target = destination / name
+            if member.isdir():
+                target.mkdir(parents=True, exist_ok=True)
+                continue
+            if not member.isfile():
+                raise DoctorError(f"unsupported archive member: {name}")
+            total += member.size
+            if total > MAX_ARCHIVE_BYTES:
+                raise DoctorError("Magic Context archive exceeds the byte ceiling")
+            source = bundle.extractfile(member)
+            if source is None:
+                raise DoctorError(f"archive member has no bytes: {name}")
+            target.parent.mkdir(parents=True, exist_ok=True)
+            with target.open("xb") as output:
+                shutil.copyfileobj(source, output)
+            target.chmod(member.mode & 0o777)
+
+
+def _prepare_context(root: Path, experiment: dict[str, Any]) -> dict[str, Any]:
+    source = experiment["source"]
+    checkout = root / "checkout"
+    _run(
+        [
+            "git",
+            "clone",
+            "--filter=blob:none",
+            "--no-checkout",
+            source["repository"],
+            str(checkout),
+        ]
+    )
+    _run(["git", "checkout", "--detach", source["revision"]], cwd=checkout)
+    revision = _run(["git", "rev-parse", "HEAD"], cwd=checkout).stdout.decode().strip()
+    tree = _run(["git", "rev-parse", "HEAD^{tree}"], cwd=checkout).stdout.decode().strip()
+    if revision != source["revision"] or tree != source["tree"]:
+        raise DoctorError("Magic Context Git identity drifted")
+    if _run(["git", "status", "--porcelain"], cwd=checkout).stdout.strip():
+        raise DoctorError("Magic Context checkout is dirty")
+    archive = _run(["git", "archive", "--format=tar", "HEAD"], cwd=checkout).stdout
+    if _sha(archive) != source["git_archive_tar_sha256"]:
+        raise DoctorError("Magic Context source archive drifted")
+    if _sha_path(checkout / "LICENSE") != source["license_sha256"]:
+        raise DoctorError("Magic Context license drifted")
+    if _sha_path(checkout / "bun.lock") != source["bun_lock_sha256"]:
+        raise DoctorError("Magic Context lock drifted")
+
+    context = root / "context"
+    upstream = context / "upstream"
+    upstream.mkdir(parents=True)
+    _extract_archive(archive, upstream)
+    shutil.copy2(DOCTOR_ROOT / "Dockerfile", context / "Dockerfile")
+    shutil.copy2(DOCTOR_ROOT / "doctor.ts", context / "doctor.ts")
+    return {
+        "context": context,
+        "repository": source["repository"],
+        "revision": revision,
+        "tree": tree,
+        "git_archive_tar_sha256": _sha(archive),
+        "license_sha256": _sha_path(checkout / "LICENSE"),
+        "bun_lock_sha256": _sha_path(checkout / "bun.lock"),
+        "dockerfile_sha256": _sha_path(DOCTOR_ROOT / "Dockerfile"),
+        "doctor_sha256": _sha_path(DOCTOR_ROOT / "doctor.ts"),
+        "archive_bytes": len(archive),
+        "worktree_clean": True,
+    }
+
+
+def _build_image(
+    experiment: dict[str, Any], source: dict[str, Any], image_tag: str
+) -> dict[str, Any]:
+    runtime = experiment["runtime"]
+    _run(
+        [
+            "docker",
+            "build",
+            "--platform",
+            runtime["local_platform"],
+            "--build-arg",
+            f"BASE_IMAGE={runtime['local_base_image']}",
+            "--build-arg",
+            f"COTCODEC_MAGIC_CONTEXT_GIT_SHA={experiment['source']['revision']}",
+            "--build-arg",
+            "COTCODEC_MAGIC_CONTEXT_SOURCE_SHA256="
+            f"{experiment['source']['git_archive_tar_sha256']}",
+            "--tag",
+            image_tag,
+            str(source["context"]),
+        ],
+        timeout=1800,
+    )
+    raw = _run(["docker", "image", "inspect", image_tag]).stdout
+    rows = json.loads(raw)
+    if not isinstance(rows, list) or len(rows) != 1 or not isinstance(rows[0], dict):
+        raise DoctorError("Docker inspect must return one image")
+    inspect = rows[0]
+    labels = inspect.get("Config", {}).get("Labels", {})
+    if (
+        labels.get("org.opencontainers.image.revision") != experiment["source"]["revision"]
+        or labels.get("org.cotcodec.source-archive-sha256")
+        != experiment["source"]["git_archive_tar_sha256"]
+        or inspect.get("Architecture") != "arm64"
+        or inspect.get("Os") != "linux"
+        or inspect.get("Config", {}).get("User") != "65532:65532"
+    ):
+        raise DoctorError("Magic Context image contract drifted")
+    image_id = inspect.get("Id")
+    if not isinstance(image_id, str) or not image_id.startswith("sha256:"):
+        raise DoctorError("Magic Context image ID is invalid")
+    return {"image_id": image_id, "inspect": inspect, "inspect_sha256": _sha(raw)}
+
+
+def _initialize_volume(*, image_id: str, volume: str) -> None:
+    _run(
+        [
+            "docker",
+            "run",
+            "--rm",
+            "--pull=never",
+            "--network",
+            "none",
+            "--read-only",
+            "--cap-drop",
+            "ALL",
+            "--cap-add",
+            "CHOWN",
+            "--security-opt",
+            "no-new-privileges",
+            "--user",
+            "0:0",
+            "-v",
+            f"{volume}:/state:rw",
+            "--entrypoint",
+            "/bin/chown",
+            image_id,
+            "65532:65532",
+            "/state",
+        ]
+    )
+
+
+def _run_phase(*, image_id: str, volume: str, phase: str) -> dict[str, Any]:
+    argv = [
+        "docker",
+        "run",
+        "--rm",
+        "--pull=never",
+        "--network",
+        "none",
+        "--read-only",
+        "--cap-drop",
+        "ALL",
+        "--security-opt",
+        "no-new-privileges",
+        "--pids-limit",
+        "128",
+        "--memory",
+        "768m",
+        "--cpus",
+        "1",
+        "--user",
+        "65532:65532",
+        "--tmpfs",
+        "/tmp:rw,noexec,nosuid,nodev,size=128m",
+        "-e",
+        "HOME=/tmp",
+        "-e",
+        "XDG_DATA_HOME=/state/xdg",
+        "-e",
+        "XDG_CACHE_HOME=/tmp/cache",
+        "-e",
+        "MAGIC_CONTEXT_LOG_PATH=/tmp/magic-context.log",
+        "-v",
+        f"{volume}:/state:rw",
+        image_id,
+        phase,
+    ]
+    completed = _run(argv)
+    return {
+        "argv": argv,
+        "stdout": completed.stdout,
+        "stderr": completed.stderr,
+        "result": _strict_json(completed.stdout, f"Magic Context {phase}"),
+    }
+
+
+def _stable_projection(run: dict[str, Any]) -> dict[str, Any]:
+    prepare = run["prepare"]["result"]
+    alias = run["alias"]["result"]
+    purge = run["purge"]["result"]
+    return {
+        "paging": prepare["projection"]["paging"],
+        "expansion": prepare["projection"]["expansion"],
+        "raw_db_unchanged": prepare["projection"]["raw_db_unchanged"],
+        "alias": alias,
+        "purge": {
+            "plugin_logical_session_a_rows": purge["plugin_logical_session_a_rows"],
+            "session_b_rows": purge["session_b_rows"],
+            "host_row_deletion_makes_expansion_unrecoverable": purge[
+                "host_row_deletion_makes_expansion_unrecoverable"
+            ],
+            "native_secure_purge_supported": purge["native_secure_purge_supported"],
+            "physical_zero_residue": purge["physical_zero_residue"],
+            "physical_hits": purge["physical_hits"],
+        },
+    }
+
+
+def _execute_once(*, image_id: str, volume: str) -> dict[str, Any]:
+    phases = {
+        phase: _run_phase(image_id=image_id, volume=volume, phase=phase)
+        for phase in ("prepare", "restart", "alias", "purge")
+    }
+    if phases["prepare"]["result"]["projection_sha256"] != phases["restart"]["result"][
+        "projection_sha256"
+    ]:
+        raise DoctorError("Magic Context projection changed after fresh-process restart")
+    phases["stable_projection"] = _stable_projection(phases)
+    phases["stable_projection_sha256"] = _sha(
+        _json_bytes(phases["stable_projection"])
+    )
+    return phases
+
+
+def run_doctor(output: Path, image_tag: str) -> dict[str, Any]:
+    experiment = validate_experiment_contract(DEFAULT_EXPERIMENT)
+    if output.exists():
+        raise DoctorError(f"output path already exists: {output}")
+    output.parent.mkdir(parents=True, exist_ok=True)
+    with tempfile.TemporaryDirectory(prefix="cotcodec-magic-context-build-") as build_tmp:
+        source = _prepare_context(Path(build_tmp), experiment)
+        image = _build_image(experiment, source, image_tag)
+        source_receipt = {key: value for key, value in source.items() if key != "context"}
+        volumes = [f"cotcodec-magic-context-{secrets.token_hex(8)}" for _ in range(2)]
+        try:
+            for volume in volumes:
+                _run(
+                    [
+                        "docker",
+                        "volume",
+                        "create",
+                        "--label",
+                        "org.cotcodec.study=magic-context-paging-doctor-v1",
+                        volume,
+                    ]
+                )
+                _initialize_volume(image_id=image["image_id"], volume=volume)
+            runs = [
+                _execute_once(image_id=image["image_id"], volume=volume)
+                for volume in volumes
+            ]
+        finally:
+            for volume in volumes:
+                subprocess.run(
+                    ["docker", "volume", "rm", volume],
+                    check=False,
+                    capture_output=True,
+                )
+        projection_hashes = [run["stable_projection_sha256"] for run in runs]
+        if len(set(projection_hashes)) != 1:
+            raise DoctorError("Magic Context result changed across clean states")
+        report = {
+            "schema_version": 1,
+            "study": "magic-context-paging-falsification-v1",
+            "status": EXPECTED_STATUS,
+            "scientific_result": False,
+            "publication_ready": False,
+            "source": source_receipt,
+            "image": {
+                "image_id": image["image_id"],
+                "inspect_sha256": image["inspect_sha256"],
+            },
+            "run_count": 2,
+            "stable_projection_sha256": projection_hashes[0],
+            "findings": {
+                "chronological_prompt_paging_supported": True,
+                "semantic_item_paging_supported": False,
+                "supported_projection_restart_stable": True,
+                "exact_raw_json_recovery_supported": False,
+                "host_raw_storage_required": True,
+                "same_session_id_cross_harness_alias_reproduced": True,
+                "native_secure_purge_supported": False,
+                "plaintext_residue_reproduced": True,
+            },
+            "admission": {
+                "chronological_prompt_paging_boundary": "supported-cpu-conformance-only",
+                "portable_lifecycle": "blocked",
+                "semantic_memory_h100": "forbidden-for-this-mechanism",
+                "cluster_confirmation": "not-run",
+            },
+        }
+        staging = Path(tempfile.mkdtemp(prefix=f".{output.name}.", dir=output.parent))
+        try:
+            _write_once(staging / "experiment.yaml", DEFAULT_EXPERIMENT.read_bytes())
+            _write_once(staging / "source-receipt.json", _json_bytes(source_receipt))
+            _write_once(staging / "image-inspect.json", _json_bytes(image["inspect"]))
+            for index, run in enumerate(runs, start=1):
+                run_root = staging / f"run-{index}"
+                for phase in ("prepare", "restart", "alias", "purge"):
+                    record = run[phase]
+                    _write_once(run_root / f"{phase}.json", _json_bytes(record["result"]))
+                    _write_once(run_root / f"{phase}.stderr", record["stderr"])
+                    _write_once(run_root / f"{phase}.argv.json", _json_bytes(record["argv"]))
+                _write_once(
+                    run_root / "stable-projection.json",
+                    _json_bytes(run["stable_projection"]),
+                )
+            _write_once(staging / "report.json", _json_bytes(report))
+            files = {}
+            for path in sorted(staging.rglob("*")):
+                if path.is_file() and path.name != "manifest.json":
+                    relative = path.relative_to(staging).as_posix()
+                    files[relative] = {
+                        "bytes": path.stat().st_size,
+                        "sha256": _sha_path(path),
+                    }
+            manifest = {
+                "schema_version": 1,
+                "status": EXPECTED_STATUS,
+                "files": files,
+                "root_sha256": _sha(_json_bytes(files)),
+            }
+            _write_once(staging / "manifest.json", _json_bytes(manifest))
+            os.rename(staging, output)
+        except Exception:
+            shutil.rmtree(staging, ignore_errors=True)
+            raise
+    return report
+
+
+def parse_args() -> argparse.Namespace:
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--output", type=Path, default=DEFAULT_OUTPUT)
+    parser.add_argument("--image-tag", default=DEFAULT_IMAGE_TAG)
+    return parser.parse_args()
+
+
+def main() -> int:
+    args = parse_args()
+    report = run_doctor(args.output.resolve(), args.image_tag)
+    print(json.dumps(report, indent=2, sort_keys=True))
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

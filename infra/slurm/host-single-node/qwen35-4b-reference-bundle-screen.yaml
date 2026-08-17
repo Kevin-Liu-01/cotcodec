@@ -1,0 +1,43 @@
+runtime: docker-single-node-discovery-v1
+name: qwen35-reference-screen
+image_id: sha256:ba360ea13ea50e77e4900cb258c4dc73156060295abd381899f90f9991cedd10
+git_sha: 581ded8df71564b0212d8af5dcd401257aa6a28f
+source_sha256: 8c51687b22ea710b6d478c65d831dacd3da89b88092328e32e6009ebfa2b841a
+run_root: /home/kevin/cotcodec-runs/docker-research
+command:
+  - python
+  - scripts/run_memory_model_screen.py
+  - experiments/memory/stage1-model-transport.yaml
+  - --model-id
+  - qwen3.5-4b
+  - --model-root
+  - /model-cache/cotcodec-models
+  - --receipt-root
+  - /model-cache/cotcodec-receipts
+  - --output-dir
+  - /outputs/screen
+  - --memory-bundle
+  - /inputs/memory-selection-bundle.json
+  - --memory-treatment-mode
+  - storage_and_service
+  - --assignment-seed
+  - "42"
+  - --require-gates
+model:
+  cache_host_path: /home/kevin/cotcodec-runs/hf-cache
+  model_id: qwen3.5-4b
+  revision: 851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a
+  receipt_sha256: 75ebfc531acdcbc0c39bbf83ee7bf5267a3ddf02c4fafdf6181624612a0d3082
+  artifact_root_sha256: 3b8a075149bffe4dea784db5b4b37bc0896688cba0b3de7d8d0f6e8ae6157b9e
+memory_bundle:
+  host_path: /home/kevin/cotcodec-runs/docker-research/40/frozen-reference-200.json
+  sha256: 6a634c470635fa4a318c78917538cde977f0ffad9a68c56938fc53818b8bb41b
+seeds: [42, 43, 44]
+resources:
+  gpu_type: h100
+  gpus: 1
+  cpus: 16
+  memory_gb: 32
+  minutes: 60
+budget:
+  max_gpu_hours: 1

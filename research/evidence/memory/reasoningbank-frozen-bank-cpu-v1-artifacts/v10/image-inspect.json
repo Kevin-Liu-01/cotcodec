@@ -1,0 +1,71 @@
+{
+  "Architecture": "arm64",
+  "Config": {
+    "Entrypoint": [
+      "python",
+      "/opt/cotcodec/scripts/run_reasoningbank_frozen_bank_doctor.py"
+    ],
+    "Env": [
+      "PATH=/usr/local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+      "LANG=C.UTF-8",
+      "GPG_KEY=7169605F62C751356D054A26A821E680E5FA6305",
+      "PYTHON_VERSION=3.12.11",
+      "PYTHON_SHA256=c30bb24b7f1e9a19b11b55a546434f74e739bb4c271a3e3a80ff4380d49f7adb",
+      "HOME=/tmp",
+      "HF_HOME=/tmp/huggingface",
+      "PYTHONDONTWRITEBYTECODE=1",
+      "PYTHONUNBUFFERED=1",
+      "PYTHONPATH=/opt/cotcodec"
+    ],
+    "Labels": {
+      "org.opencontainers.image.cotcodec-base-image": "docker.io/library/python:3.12.11-slim-bookworm@sha256:519591d6871b7bc437060736b9f7456b8731f1499a57e22e6c285135ae657bf7",
+      "org.opencontainers.image.cotcodec-code-sha256": "5bcc1cbc873c33fb49d1061daf7b829f872112b3bbb93d4ce9c9db092a920ce8",
+      "org.opencontainers.image.cotcodec-scientific-result": "false",
+      "org.opencontainers.image.cotcodec-torch-cpu-wheel-sha256": "70ecb2659af6373b7c5336e692e665605b0201ea21ff51aaea47e1d75ea6b5aa",
+      "org.opencontainers.image.source": "https://github.com/Kevin-Liu-01/cotcodec",
+      "org.opencontainers.image.title": "cotcodec-reasoningbank-frozen-bank-doctor"
+    },
+    "WorkingDir": "/opt/cotcodec"
+  },
+  "Created": "2026-08-15T05:15:59.260435667-07:00",
+  "Descriptor": {
+    "digest": "sha256:d3f7858e55209cd3af46b97e21aafcb8e0675ee59a64a787589ee2679f283430",
+    "mediaType": "application/vnd.oci.image.manifest.v1+json",
+    "size": 4049
+  },
+  "Id": "sha256:d3f7858e55209cd3af46b97e21aafcb8e0675ee59a64a787589ee2679f283430",
+  "Metadata": {
+    "LastTagTime": "2026-08-15T12:15:59.301551568Z"
+  },
+  "Os": "linux",
+  "Parent": "sha256:69ff80023f57a0869066ccc7732efa050b1855ee589669032e6f5380e7cd8a6f",
+  "RepoDigests": [
+    "cotcodec-reasoningbank-frozen-doctor@sha256:d3f7858e55209cd3af46b97e21aafcb8e0675ee59a64a787589ee2679f283430"
+  ],
+  "RepoTags": [
+    "cotcodec-reasoningbank-frozen-doctor:ed80611-arm64-v6"
+  ],
+  "RootFS": {
+    "Layers": [
+      "sha256:3e5d01a55aea2c9ea64c3cfef2bb870df4b01c7e206103a970d4c3dc6caed96b",
+      "sha256:62750a0d4afa47971eda307d875c99fc4a7292beb47970df9c18647609d86e88",
+      "sha256:3603fa54c00d0cb83e3070b70cd08bc24ca60844986408ade6c1b80ef7b0f532",
+      "sha256:4882eb1c66d54726bda0140b368f4388ceca8351cdcc6d10fe29bdcddb0b6f59",
+      "sha256:1424db2ebfda99df8ce5a63c35f72a7b86edc0496edabb4993961e454f59da92",
+      "sha256:978d459a11ea5e15e6d20d8e69a6c824c65f1626dbe80286709e5e1794682367",
+      "sha256:62b24ab0adf1083093c7f627940b503410a0c126e60f6159c5a5ff1059c78f9a",
+      "sha256:700fa12cc71c2dc2c92913844f4964639474cc99905349c27dad41f37d5151a0",
+      "sha256:27346290d5698ca942280c3eef5711e32abe4da576cbe0da3c7fadc23abf1e0b",
+      "sha256:2208d65868bc2f371b5262ca9731d425558e5e1baa59ac5c16a933162c084069",
+      "sha256:8a7952f909a19f828ed68763adbda4a86f320ab790a928c0f83410f36c26fbab",
+      "sha256:83a57c4fe622d3c62125e6ff860b2f7830760fd279ff3855578ad6dadaf5a960",
+      "sha256:ecd8654c9c385ad0faadda4952456cde6a8562548c4861644442ba674133108a",
+      "sha256:43a6a3bce00f586762d1ab861295aaaa64a50399f6849f9e546ba3bae37a276f",
+      "sha256:a9f1a806b98a6c80a6adcf0fee4ee3cce3e3531bdaaef467a6192cfc7d17090f",
+      "sha256:a56f8b849535ae29a698d08dd3e601a6e673e55f0edf5d41b938282a8ca04698",
+      "sha256:0d946e1d7a502125f97d0eeeeb1c8a29b35a3e9cb629326a26e358912ffd5b09"
+    ],
+    "Type": "layers"
+  },
+  "Size": 306939935
+}

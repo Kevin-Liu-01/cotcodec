@@ -1,0 +1,106 @@
+schema_version: 1
+name: neo4j-preference-supersession-lifecycle-v1
+status: registered-cpu-lifecycle-conformance
+scientific_result: false
+description: >-
+  Test the pinned Neo4j Agent Memory preference-supersession and historical-view
+  lifecycle with pre-extracted tuples and all model calls disabled. Passing is
+  one-way graph version-lifecycle conformance, not graph efficacy, autonomous
+  consolidation, or bidirectional active/inactive paging.
+
+source:
+  source_id: neo4j-agent-memory
+  repository: https://github.com/neo4j-labs/agent-memory
+  revision: 231d60eac9401ab156ba194b519d89dd644dadb8
+  tree: 73fe15a4e085a2735aa74787feda4724a8e0900d
+  git_archive_tar_sha256: 64af30347f10998250de67f867f5f036415b8cce5cc7af6c17f9cf7173a47479
+  license: Apache-2.0
+  license_sha256: bb86acebd6ee912a2cc0fab21af9861ca80813025ef5deca1f3d232059267226
+  uv_lock_sha256: 6b9c946cab136d0adae002d31abce07ae88da1f47986621c231ff937ca945d76
+
+runtime:
+  containment: docker-private-internal-network
+  default_lane: local-arm64
+  required_confirmation_lane: cluster-amd64-slurm
+  client_extras:
+    - nams
+  client_extra_reason: bolt-imports-nams-package-initializer-and-requires-httpx
+  lanes:
+    local-arm64:
+      platform: linux/arm64
+      client_base_image: ghcr.io/astral-sh/uv:0.11.6-python3.13-trixie@sha256:87d40bca523b5a0e9dc25babfd93f7b485764b10fd63ca165588814035a5167a
+      neo4j_image: neo4j:5.26.29-community@sha256:1184ab86519418c5a08f6abc06290afddea24a9ef86591379c33d082224cb8de
+      evidence_role: local-contained-conformance
+    cluster-amd64-slurm:
+      platform: linux/amd64
+      client_base_image: ghcr.io/astral-sh/uv:0.11.6-python3.13-trixie@sha256:b52141530349f059326aea9731e576e7937c554a27393366f671db38a62fbbd8
+      neo4j_image: neo4j:5.26.29-community@sha256:865213f53381e8d2ef3eec08b11741a6722d388a5e70b134135186a9b5cb27a6
+      evidence_role: cluster-confirmation
+  runtime_network: private-internal-only
+  external_network: forbidden
+  read_only_client_root: true
+  cap_drop_all: true
+  server_user: "7474:7474"
+  server_capabilities: []
+  volume_initializer_capabilities:
+    - CHOWN
+  no_new_privileges: true
+  sudo: forbidden
+  gpu_count: 0
+  max_cpu_cores: 2
+  max_memory_gib: 4
+  wall_clock_minutes: 15
+  clean_volume_repeats: 2
+
+intervention:
+  input: identical-pre-extracted-preference-tuples
+  embedding: fail-on-call
+  extraction: none
+  llm: none
+  sequence:
+    - write-old-preference-user-a
+    - snapshot-as-of-time
+    - write-new-preference-user-a
+    - write-independent-preference-user-b
+    - supersede-old-with-new-twice
+    - inspect-current-history-and-past
+    - restart-client-and-neo4j-volume
+    - re-inspect-current-history-and-past
+    - purge-dedicated-database
+    - restart-and-prove-zero-residue
+
+gates:
+  exact_source_revision: true
+  zero_llm_calls: true
+  zero_embedding_calls: true
+  one_superseded_by_edge: true
+  old_valid_until_set_once: true
+  exactly_one_current_preference_for_user_a: true
+  old_and_new_present_in_history: true
+  old_present_in_pre_supersession_as_of_view: true
+  repeated_supersession_idempotent: true
+  retained_volume_restart_state_hash_exact: true
+  cross_user_isolation: true
+  event_lineage_complete: true
+  purge_zero_nodes_and_edges_after_restart: true
+  two_clean_volume_repeats_identical_semantics: true
+
+kill_criteria:
+  - any model or embedding call
+  - tuple or source-lineage drift
+  - active and superseded preferences overlap
+  - historical or as-of version is missing
+  - duplicate supersession edge or changed valid-until on retry
+  - state hash changes after client or retained-volume restart
+  - cross-user visibility
+  - graph residue after purge and restart
+  - mutable source or image identity
+  - CPU, memory, wall-clock, network, or GPU budget breach
+
+forbidden_claims:
+  - graph memory improves task quality
+  - Neo4j beats flat retrieval
+  - preferences implement general bitemporal truth
+  - this is autonomous consolidation
+  - this is bidirectional active-inactive paging
+  - publication ready

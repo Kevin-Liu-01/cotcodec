@@ -1,0 +1,13 @@
+[project]
+name = "cotcodec-hindsight-runtime"
+version = "0.1.0"
+description = "Isolated dependency runtime for the reviewed Hindsight baseline"
+requires-python = ">=3.11"
+dependencies = [
+    "hindsight-api-slim[embedded-db]==0.9.0",
+    "hindsight-client==0.9.0",
+    "hindsight-embed==0.9.0",
+]
+
+[tool.uv]
+package = false

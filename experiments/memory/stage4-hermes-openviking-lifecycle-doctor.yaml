@@ -1,0 +1,95 @@
+schema_version: 1
+name: stage4-hermes-openviking-lifecycle-doctor
+description: >-
+  Native OpenViking lifecycle and exact Hermes-provider falsifier. Exercise
+  direct write, search, read, logical forget, two fresh backend restarts, and
+  two-tenant isolation with deterministic local model stubs, then scan the
+  retained state for plaintext residue. This is not a memory-quality study.
+
+sources:
+  openviking:
+    repository: https://github.com/volcengine/OpenViking
+    revision: eeff5a497360aa4481cf32e18a0d9376f4412f4c
+    tree: ba1585c175c9ce77a7c7438d2ae9bd82978f32f3
+    git_archive_tar_sha256: 4b49f3cca288720e7f77011b8f0fec13019b182c313e8fd5835ce54a60e983e0
+    license: AGPL-3.0
+    license_sha256: 1bd87fa6d9a5c79daf0c2af042b6725c9773bf095cc3d1bdf3656e66d1c3e5b1
+    pyproject_sha256: 1f25d7d824e7146954132e87714782f3824296a609e0caa52cae16d665ae6c20
+    uv_lock_sha256: 6ffe23da1d6bb3ee8e80d3947505af2087cedabac1ba187c3d436f59fc8251fa
+  hermes:
+    repository: https://github.com/NousResearch/hermes-agent
+    revision: a90d5369f76c87c98547d2e283aa26d5cfabf322
+    tree: 963eb136bfb21fd0b296a40529cbb3575c610874
+    git_archive_tar_sha256: 2a2934d3c8379816b2e3919f4cf1191f04e93f136da6f2128246d368644a9514
+    license: MIT
+    provider_sha256: 58c7675588ff893ce1418eab008ae116215ce3cf3efccd85f81a6bdb5b5cbb6e
+
+runtime:
+  platform: linux/arm64
+  network: internal-only
+  external_api_access: false
+  rootfs_read_only: true
+  cap_drop_all: true
+  no_new_privileges: true
+  backend_user: host-uid-gid-for-private-bind-mount
+  adapter_user: "65532:65532"
+  stub_user: "65532:65532"
+  gpu_count: 0
+  images:
+    openviking: sha256:4b917e25cce8d71a35f6a50f67ff235f0805c179f786c72b71601f26050bca51
+    model_stub: sha256:6136cd68a7bed538b224756278fb15344e79e2c19b9640d9b942e41170ade440
+    hermes_adapter: sha256:ac1f3e164a6751ee42f225456880231b392ac383b071b71c22c989ea5292274d
+  controls:
+    embedding: deterministic-16-dimensional-token-hash
+    vlm: deterministic-empty-json-not-used-by-direct-tools
+    openviking_config_sha256: afa7f0e0f089801b4a78c6adc80a229002bfb5a51da1ba05be685cc254eab741
+    model_stub_sha256: 6952793d45d1891b7c1739a5d53a8779c126f32032405dab8b7af4ff8a1702ab
+    adapter_doctor_sha256: a3f1c0d34f2b1355d47de5f6b7e103814d2cdca636de50e509eb5e56f90e36c1
+    source_dockerfile_sha256: 4d3bab26fc53b675968e79f96e75c9a639c5f77eada3d327490df69bf6665c64
+    stub_dockerfile_sha256: 4a933ff98460c36ed89f718d4cf046ca5ec0da8831ca4b5bcddbf896a79c4366
+    adapter_dockerfile_sha256: d9832dd0e617ba32efc97be96650bc24e42420f4df8d80f0fce1e027ac409f3a
+    doctor_sha256: 1a1508e69bf1dd9b999938a2d4ccfdc48ef79d476f9773a1b701db5dd3bd252a
+
+contract:
+  provider_path: exact-hermes-openviking-provider
+  tenant_count: 2
+  restart_count: 2
+  operation_sequence:
+    - tenant-a-write
+    - tenant-a-restart-search
+    - tenant-b-cannot-see-a
+    - tenant-b-write
+    - tenant-a-cannot-see-b
+    - tenant-a-restart-read
+    - tenant-a-forget
+    - tenant-b-forget
+    - tenant-a-delete-survives-restart
+    - tenant-b-delete-survives-restart
+  require_prompt_integration_active: true
+  require_restart_persistence: true
+  require_tenant_isolation: true
+  require_logical_delete_survives_restart: true
+  scan_all_retained_files_for_plaintext: true
+  model_calls: 0
+  external_network_calls: 0
+
+expected_falsification:
+  status: BLOCKED_NATIVE_PHYSICAL_PURGE_RESIDUE
+  restart_persistence_supported: true
+  tenant_isolation_supported: true
+  logical_delete_survives_restart: true
+  physical_zero_plaintext_residue: false
+
+admission:
+  provider_contract: local-negative-only
+  memory_quality_h100: forbidden-for-this-revision
+  unblock_requires:
+    - native-physical-purge-or-crypto-erasure
+    - zero-plaintext-residue-after-fresh-restart
+    - separate-matched-quality-cell-after-lifecycle-pass
+
+claims:
+  scientific_result: false
+  publication_ready: false
+  supports: native CRUD, restart persistence, logical tenant isolation, and logical deletion
+  does_not_support: physical erasure, memory quality, agent improvement, or publication claims

@@ -1,0 +1,48 @@
+schema_version: 1
+source_id: past-bench
+repository_role: benchmark-agents-tasks-tests-and-containers
+url: https://github.com/Gen-Verse/PAST-Bench
+revision: f8223517ae7491e776b69793d9f11e9d074ab42e
+tree_sha: da949dede2557704126e74db0927e6240882f2d8
+source_archive_sha256: be99fad4156bf030f8d3ac9385842099e4d295ec0845d4a46ab5ad5c2bcb88f4
+license: Apache-2.0
+scientific_result: false
+dependency_lock_status: unresolved-upstream
+
+scope: >-
+  Source admission only. This contract binds the declarative PAST-Bench family,
+  task, fresh-session, persistence-control, grader-input, fixture, and reference
+  manifest surface without importing or executing upstream Python. It is not a
+  model result, runtime attestation, or containment receipt.
+
+expected:
+  category_family_counts:
+    memory_ability: 5
+    proactive_information_gathering: 6
+    procedural_ability: 8
+    update_ability: 7
+  category_episode_counts:
+    memory_ability: 41
+    proactive_information_gathering: 48
+    procedural_ability: 64
+    update_ability: 51
+  family_count: 26
+  declared_episode_count: 204
+  unreferenced_task_count: 7
+  family_roster_sha256: 58ff71bacf518fd0bfb78b252918462288b4f373acbab9603e6d1488879c08d6
+  task_manifest_sha256: b45a4fa81d70e742f48544c65c841472077aa1e860f5854724beb36429760a9a
+  unreferenced_task_manifest_sha256: 8a3fb9d5931b2545ee4fc32454ed5d24f3e65f19949bdf910870d8d3c1249f53
+  required_files_sha256: 3640436c31a7befd6792e0fa39cef5373ceb54464f4aafd724834886640e6f0b
+  dependency_lock_files: []
+
+execution_gate:
+  containment: docker-under-slurm
+  gpu_sku_for_local_model_cells: H100
+  source_doctor_compute: cpu
+  checkpoint_required: true
+  maximum_gpu_hours_per_pilot: 8
+  blockers:
+    - no resolved upstream dependency lock
+    - mutable base images and latest CLI build arguments in upstream Dockerfiles
+    - no CoTCodec image, SBOM, runtime, checkpoint-resume, or Slurm attestation
+    - no frozen provider, agent, family subset, or persistence-on/off result bundle

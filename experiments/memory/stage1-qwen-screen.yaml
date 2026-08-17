@@ -1,0 +1,96 @@
+schema_version: 1
+study_id: memory-stage1-qwen-screen
+stage: frozen_screen
+description: >-
+  First decisive frozen open-model memory-policy screen. The first submission
+  is exactly 100 episodes and the entire discovery stage is capped at 8 H100-hours.
+
+source:
+  type: generated
+  generator_version: memory-events-v3
+  implemented_history_modes: [plain, supersession, deletion-recreate]
+  screen_episodes: 100
+  confirm_episodes_per_propensity: 2400
+  step_range: [20, 40]
+  strata: [active_core, inactive_archive, temporal_graph, proactive_tool]
+  sealed_external_tests:
+    - source_id: longmemeval-v2
+      use: deferred_external_validity
+    - source_id: memoryagentbench
+      use: capability_decomposition
+    - source_id: mem2actbench
+      use: memory_dependent_tool_action
+
+model:
+  model_id: qwen3-0.6b-base
+  dtype: bfloat16
+  eval_mode: true
+  decoding:
+    do_sample: false
+    max_new_tokens: 64
+    constrained_schema: answer_or_tool_json
+
+memory_budget:
+  primary_active_slots: 4
+  diagnostic_active_slots: [2, 8]
+  max_archive_reads_per_opportunity: 1
+  max_retrieval_top_k: 4
+  max_injected_tokens: 256
+  charge_serialized_bytes: true
+  charge_construction_calls: true
+
+causal_design:
+  serve_propensities: [0.50, 0.25, 0.10]
+  paired_replay_fraction: 0.25
+  candidates_per_episode: 1
+  estimator: cross_fitted_aipw
+  folds: 5
+  assignment_before_continuation: true
+  prefix_only_features: true
+
+controls:
+  matrix_execution: false
+  executed_by_runner: [engine-direct-records]
+  implementation_available:
+    - bm25
+    - dense-bge-retrieval
+    - full-prefix-ceiling
+    - raw-log-rrf
+    - profile-expansion
+    - lru
+    - no-memory
+    - recency
+    - lexical
+    - learned-next-use
+    - temporal-graph
+    - reference
+  planned_controls:
+    - observational-utility
+    - query-time-causal-intervention
+  primary_claim_enabled: false
+
+gates:
+  minimum_primary_lift_points: 3.0
+  family_clustered_ci_excludes_zero: true
+  maximum_aipw_oracle_ate_gap: 0.05
+  minimum_aipw_oracle_spearman: 0.20
+  minimum_policy_oracle_spearman: 0.20
+  minimum_total_effective_sample_size: 400
+  minimum_arm_effective_sample_size: 100
+  require_zero_replay_mismatch: true
+  require_zero_feature_leakage: true
+  require_zero_session_bleed: true
+  require_zero_checkpoint_mismatch: true
+  maximum_safety_failure_increase_points: 5.0
+  maximum_tool_correctness_drop_points: 10.0
+
+execution:
+  seeds: [42, 43, 44]
+  seed_semantics: assignment-sensitivity-not-independent-task-replication
+  container_required: true
+  scheduler_required: true
+  gpus: 1
+  max_gpu_hours: 8
+  checkpoint_interval_minutes: 10
+  checkpoint_on_preemption: true
+  prove_fresh_job_resume: true

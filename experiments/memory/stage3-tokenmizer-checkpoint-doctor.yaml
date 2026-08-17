@@ -1,0 +1,55 @@
+schema_version: 1
+name: stage3-tokenmizer-checkpoint-doctor
+status: registered-cpu-falsification
+scientific_result: false
+publication_ready: false
+
+source:
+  source_id: tokenmizer
+  repository: https://github.com/Shweta-Mishra-ai/tokenmizer
+  revision: 131e3d1569de3e8f70c198ade4e791b47f63dc41
+  tree: cc5e934078e91b8265d2ac398d35bcef71cf4a3f
+  version: 0.3.1
+  license: MIT
+  license_sha256: abe0de99b2a77c4023114d7291919adebcfc99944b0efaf157a8e945980b1bb0
+  git_archive_tar_sha256: a0f8ad511b796264c706c3df261d31c5ada04ecc14c2701b8d9f016d29682166
+  dependency_lock: absent-upstream
+
+runtime:
+  containment: docker-network-none
+  runtime_network: none
+  read_only_root: true
+  cap_drop_all: true
+  no_new_privileges: true
+  provider_secrets: forbidden
+  sudo: forbidden
+  gpu_count_inside_container: 0
+  clean_state_repeats: 2
+  base_image: ghcr.io/astral-sh/uv@sha256:d1e005e6f5aac724b7554db95f1c128a77d8d35b59ebe70e188852b4bdad3a3d
+  tiktoken_asset: o200k_base-build-prefetched-with-upstream-expected-sha256
+
+intervention:
+  subsystem: checkpoint-manager-and-sqlite-graph
+  provider_calls: 0
+  model_backend_calls: 0
+  test_fresh_process_resume: true
+  test_restart_diff: true
+  test_manual_retry: true
+  test_corrupt_database_recovery: true
+  test_session_isolation: true
+  test_native_scoped_purge: true
+
+expected_falsification:
+  status: TOKENMIZER_ACTIVE_INACTIVE_ADMISSION_KILLED
+  restart_diff_relabels_existing_nodes_as_added: true
+  manual_retry_creates_duplicate_checkpoint: true
+  corrupt_recovery_deletes_all_checkpoints: true
+  native_scoped_purge_absent: true
+  fresh_process_resume_text_preserved: true
+  conversation_isolation_preserved: true
+
+admission:
+  active_inactive_h100_actor: forbidden-for-this-revision
+  context_compaction_actor: requires-separate-quality-contract
+  scientific_claim: forbidden
+  publication_claim: forbidden

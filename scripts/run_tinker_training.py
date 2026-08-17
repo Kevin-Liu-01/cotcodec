@@ -145,13 +145,17 @@ async def save_checkpoint(
     contract: TinkerExperimentContract,
     stage: TinkerStage,
     seed: int,
+    arm_name: str,
     step: int,
     kind: str,
     ttl_seconds: int | None,
     state: dict[str, Any],
     state_path: Path,
 ) -> dict[str, Any]:
-    stem = f"{contract.name}-{stage.name}-seed-{seed}-step-{step:06d}-{kind}"
+    stem = (
+        f"{contract.name}-{stage.name}-{arm_name}-seed-{seed}-"
+        f"step-{step:06d}-{kind}"
+    )
     state_future = await training_client.save_state_async(
         f"{stem}-state", ttl_seconds=ttl_seconds
     )
@@ -193,6 +197,7 @@ def download_checkpoint(service_client: Any, tinker_path: str, output: Path) -> 
 def base_state(
     contract_hash: str,
     stage: TinkerStage,
+    arm_name: str,
     seed: int,
     epoch: int,
     cursor: int,
@@ -202,6 +207,7 @@ def base_state(
         "schema_version": 1,
         "contract_sha256": contract_hash,
         "stage": stage.name,
+        "arm": arm_name,
         "model": stage.tinker_id,
         "seed": seed,
         "epoch": epoch,
@@ -218,6 +224,26 @@ async def run(args: argparse.Namespace) -> int:
         raise ValueError(f"unknown stage {args.stage!r}")
     if args.seed not in contract.seeds:
         raise ValueError(f"seed {args.seed} is not registered")
+    default_arm = (
+        "capsule-aware-lora"
+        if contract.experiment_kind == "portable_capsule"
+        else None
+    )
+    arm_name = args.arm or default_arm
+    if arm_name is None:
+        raise ValueError("--arm is required for causal memory policy training")
+    arm = next((item for item in contract.arms if item.name == arm_name), None)
+    if arm is None:
+        raise ValueError(f"unknown arm {arm_name!r}")
+    if not arm.lora:
+        raise ValueError(f"arm {arm_name!r} is not a trainable LoRA arm")
+    train_split = (
+        contract.data.train
+        if contract.data.train is not None
+        else (contract.data.train_by_arm or {}).get(arm_name)
+    )
+    if train_split is None:
+        raise ValueError(f"arm {arm_name!r} has no registered training split")
     if args.dry_run:
         print(
             json.dumps(
@@ -226,6 +252,7 @@ async def run(args: argparse.Namespace) -> int:
                     "contract": str(contract_path),
                     "stage": stage.name,
                     "model": stage.tinker_id,
+                    "arm": arm_name,
                     "seed": args.seed,
                     "execution_enabled": contract.execution.enabled,
                     "train_token_ceiling": stage.train_tokens_per_seed,
@@ -240,7 +267,7 @@ async def run(args: argparse.Namespace) -> int:
     if not os.environ.get(contract.execution.secret_env):
         raise ValueError(f"{contract.execution.secret_env} is not set")
     train_path = args.train_jsonl.resolve()
-    expected_hash = contract.data.train.sha256
+    expected_hash = train_split.sha256
     if expected_hash is None or sha256_file(train_path) != expected_hash:
         raise ValueError("training dataset does not match the registered SHA-256")
     examples = load_examples(train_path)
@@ -256,6 +283,7 @@ async def run(args: argparse.Namespace) -> int:
             "project": "cotcodec",
             "contract_sha256": contract_hash,
             "stage": stage.name,
+            "arm": arm_name,
             "seed": str(args.seed),
         }
     )
@@ -264,6 +292,7 @@ async def run(args: argparse.Namespace) -> int:
         expected = {
             "contract_sha256": contract_hash,
             "stage": stage.name,
+            "arm": arm_name,
             "seed": args.seed,
         }
         if any(state.get(key) != value for key, value in expected.items()):
@@ -285,7 +314,7 @@ async def run(args: argparse.Namespace) -> int:
             train_mlp=contract.lora.train_mlp,
             train_attn=contract.lora.train_attn,
             train_unembed=contract.lora.train_unembed,
-            user_metadata={"arm": "capsule-aware-lora"},
+            user_metadata={"arm": arm_name, "label_source": str(arm.label_source)},
         )
         next_step, epoch, cursor, cumulative_tokens = 1, 0, 0, 0
         state = {}
@@ -343,6 +372,7 @@ async def run(args: argparse.Namespace) -> int:
                 contract,
                 stage,
                 args.seed,
+                arm_name,
                 step,
                 "interrupt" if stopper.requested else "periodic",
                 (
@@ -351,7 +381,13 @@ async def run(args: argparse.Namespace) -> int:
                     else contract.checkpoints.periodic_ttl_seconds
                 ),
                 base_state(
-                    contract_hash, stage, args.seed, epoch, cursor, cumulative_tokens
+                    contract_hash,
+                    stage,
+                    arm_name,
+                    args.seed,
+                    epoch,
+                    cursor,
+                    cumulative_tokens,
                 ),
                 state_path,
             )
@@ -370,10 +406,19 @@ async def run(args: argparse.Namespace) -> int:
         contract,
         stage,
         args.seed,
+        arm_name,
         completed_step,
         "final",
         contract.checkpoints.durable_ttl_seconds,
-        base_state(contract_hash, stage, args.seed, epoch, cursor, cumulative_tokens),
+        base_state(
+            contract_hash,
+            stage,
+            arm_name,
+            args.seed,
+            epoch,
+            cursor,
+            cumulative_tokens,
+        ),
         state_path,
     )
     archive = output_dir / "final-sampler-checkpoint.tar.gz"
@@ -396,6 +441,7 @@ def main() -> int:
     parser.add_argument("contract", type=Path)
     parser.add_argument("--stage", required=True)
     parser.add_argument("--seed", required=True, type=int)
+    parser.add_argument("--arm")
     parser.add_argument("--train-jsonl", type=Path)
     parser.add_argument("--output-dir", type=Path, default=Path("data/tinker-runs"))
     parser.add_argument("--resume-state", type=Path)

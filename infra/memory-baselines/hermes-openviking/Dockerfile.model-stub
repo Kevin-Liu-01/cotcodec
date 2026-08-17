@@ -1,0 +1,7 @@
+FROM python:3.13-slim-trixie
+
+COPY model_stub.py /opt/model_stub.py
+
+USER 65532:65532
+EXPOSE 8080
+ENTRYPOINT ["python", "/opt/model_stub.py"]

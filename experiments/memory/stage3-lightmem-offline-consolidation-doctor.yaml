@@ -1,0 +1,64 @@
+schema_version: 1
+name: stage3-lightmem-offline-consolidation-doctor
+status: registered-cpu-falsification
+scientific_result: false
+publication_ready: false
+
+source:
+  source_id: lightmem
+  repository: https://github.com/zjunlp/LightMem
+  revision: 8fc9a9179f9170c4a40fc653fcb410375900f26e
+  tree: 343831b5f0aa1d6dec62cb1c12ed71d9c7ab4a62
+  version: 0.1.0
+  license: MIT
+  license_sha256: 5ec1877dbe08c6d6ee2213e44a64bc011bd21819b50b4172e3bca4acab4bf4e8
+  package_metadata_license: Apache-2.0
+  pyproject_sha256: 632334023335283070abb2eebfc5bece3eea11387724eaccb7aeda40732b97bb
+  git_archive_tar_sha256: 50830e429b65043767f485b5494829715a4c98980f98c1dd4c52c0342e588601
+  root_dependency_lock: absent
+
+runtime:
+  containment: docker-network-none
+  runtime_network: none
+  read_only_root: true
+  cap_drop_all: true
+  no_new_privileges: true
+  provider_secrets: forbidden
+  sudo: forbidden
+  gpu_count_inside_container: 0
+  clean_state_repeats: 2
+  base_image: python@sha256:ecb0ac954790dd64a0d518d699b9c61a91780c42b0d877c802dbaffd04db66f9
+
+intervention:
+  exact_source_methods: true
+  dependency_adapters: deterministic-test-doubles
+  provider_calls: 0
+  model_backend_calls: 0
+  test_online_update_noop: true
+  test_default_qdrant_reopen: true
+  test_offline_trigger_api: true
+  test_consolidation_embedding_consistency: true
+  test_context_retrieval_dispatch: true
+  test_lineage_and_purge_surface: true
+
+expected_falsification:
+  status: BLOCKED_DESTRUCTIVE_DEFAULT_REOPEN_AND_CONSOLIDATION_CONTRACT_DRIFT
+  default_qdrant_reopen_deletes_existing_state: true
+  official_offline_script_omits_persistence_flag: true
+  online_update_is_noop: true
+  automatic_offline_trigger_raises_keyword_typeerror: true
+  offline_update_leaves_embedding_stale: true
+  context_only_retrieval_is_broken: true
+  source_lineage_and_scoped_purge_absent: true
+  reproduced_in_two_clean_states: true
+
+admission:
+  h100_actor: forbidden-for-this-revision
+  scientific_claim: forbidden
+  publication_claim: forbidden
+  next_gate: >-
+    Admit only a newer immutable revision or an explicitly labeled repair arm that
+    defaults durable stores to non-destructive reopen, persists online writes,
+    fixes the automatic offline trigger, re-embeds updated memory text, dispatches
+    context retrieval correctly, and passes scoped lineage, restart, idempotency,
+    and purge tests twice in clean contained states.

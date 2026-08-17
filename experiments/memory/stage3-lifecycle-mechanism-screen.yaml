@@ -1,0 +1,125 @@
+schema_version: 1
+name: stage3-lifecycle-mechanism-screen
+status: registered-cpu-transport-and-mechanism-contract
+scientific_result: false
+protocol: memory-lifecycle-v1
+study_version: memory-lifecycle-study-v1
+description: >-
+  Prove the additive task-blind lifecycle spine before importing native memory
+  systems or spending model compute. The reference sidecar exercises active
+  and archive residency, update/delete, deterministic consolidation,
+  receipt-bound feedback, fresh-process checkpoint continuation, isolation,
+  cost accounting, and purge. Passing is transport and mechanism evidence
+  only; it is not a memory-quality or native-system result.
+
+source:
+  generator: memory-lifecycle-episodes-v1
+  seed: 42
+  episodes_per_active_slot_cell: 64
+  total_trace_count: 192
+  families:
+    - active_archive
+    - update_delete
+    - consolidation
+    - feedback
+  cases_per_family_per_cell: 16
+  queries_per_episode: 2
+  one_session_per_episode: true
+  task_blind_event_streams: true
+  future_oracle_fields_in_commands: false
+
+budget:
+  primary_active_slots: 4
+  diagnostic_active_slots: [2, 8]
+  retrieval_top_k_max: 4
+  archive_reads_per_query_max: 1
+  injected_tokens_per_query_max: 256
+  charge_serialized_input_bytes: true
+  charge_serialized_output_bytes: true
+  charge_reads_and_writes: true
+  charge_embedding_calls: true
+  charge_llm_calls: true
+  charge_phase_latency: true
+
+operations:
+  - begin
+  - apply
+  - query
+  - maintain
+  - feedback
+  - checkpoint
+  - restore
+  - inspect
+  - purge
+
+systems:
+  executed:
+    system_id: reference-active-archive-lifecycle-v1
+    implementation: deterministic-reference-sidecar-v1
+    subprocess_required: true
+    publication_ready: false
+  planned_not_executed:
+    - no-memory-lifecycle-control
+    - bm25-flat-lifecycle-control
+    - same-facts-temporal-graph-control
+    - fixed-tier-lru-active-archive-control
+    - fixed-schedule-dedupe-consolidation-control
+    - receipt-bound-procedural-rule-control
+    - native-oss-lifecycle-adapters
+
+gates:
+  exact_case_and_family_counts: true
+  exactly_two_queries_per_episode: true
+  active_slot_archive_read_top_k_and_token_budgets: true
+  active_archive_promotes_then_serves_active: true
+  update_visible_before_delete_and_absent_after_delete: true
+  consolidation_preserves_transitive_source_lineage: true
+  receipt_bound_feedback_changes_equal_overlap_ranking: true
+  logical_and_durable_state_chains_complete: true
+  phase_cost_totals_recompute_exactly: true
+  fresh_process_suffix_operation_receipts_byte_equal: true
+  cross_session_canary_visibility_zero: true
+  purge_leaves_zero_records_and_blocks_session_reuse: true
+  all_artifacts_content_addressed_and_no_overwrite: true
+
+execution:
+  container_required: true
+  runtime_network: none
+  scheduler_required_for_gpu_calls: true
+  gpus: 0
+  max_gpu_hours: 0
+  cpu_time_limit_minutes: 30
+  sudo: forbidden
+  one_persistent_sidecar_per_active_slot_cell: true
+  fresh_sidecar_per_checkpoint_restore: true
+  host_development_run_is_scientific_evidence: false
+  h100_actor_wave_status: blocked-until-reference-and-publication-gates-pass
+
+future_actor_pilot:
+  status: not-executed
+  model: qwen3.6-35b-a3b
+  gpus: 2
+  gpu: H100
+  max_gpu_hours: 2
+  held_out_episodes: 32
+  intervention: frozen-lifecycle-bundles-only
+
+artifacts:
+  - experiment.yaml
+  - plans.jsonl
+  - traces.jsonl
+  - restore-traces.jsonl
+  - case-results.jsonl
+  - checkpoint-audit.json
+  - isolation-purge-audit.json
+  - costs-by-phase.json
+  - report.json
+  - manifest.json
+
+forbidden_claims:
+  - native memory system reproduced
+  - memory quality improved
+  - active inactive paging beats a matched control
+  - graph memory beats flat memory
+  - consolidation or feedback improves agent outcomes
+  - publication ready

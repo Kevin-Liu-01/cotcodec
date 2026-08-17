@@ -1,0 +1,57 @@
+schema_version: 1
+name: stage3-agent-recall-scope-lifecycle-doctor
+status: registered-cpu-falsification
+scientific_result: false
+publication_ready: false
+
+source:
+  source_id: agent-recall
+  repository: https://github.com/mnardit/agent-recall
+  revision: dcf21b5cc9691e1371299917e2e474fb82e07cab
+  tree: 1c0395b24d2d9f45d04443f7f187b026ce41f43b
+  version: 0.4.0
+  license: MIT
+  license_sha256: 0c51e5594c40bfe9e039ff0925d3efff5cb83402f21e5d466250958e724ff6c6
+  pyproject_sha256: 9272395436cbcba0b6e537bf26d45c4cbe7593560bfb83309c46fb963acfc70f
+  git_archive_tar_sha256: f1412268b653e971df41c730bd4d1aa19cb0e20e79f358c4c41c8ec80350a06a
+
+runtime:
+  containment: docker-network-none
+  provider_secrets: forbidden
+  sudo: forbidden
+  gpu_count: 0
+  python_image: python@sha256:9bb659dc6d5218917236f3711e866a5634bb4c2f208de9d4533aa4863f57c1d3
+  python_version: 3.12.11
+  pyyaml_version: 6.0.2
+  clean_state_repeats: 2
+  fresh_process_restarts_per_repeat: 1
+
+intervention:
+  exact_source_modules: [store, hierarchy, mcp_bridge, context_gen.cache]
+  model_backend_calls: 0
+  provider_calls: 0
+  test_scope_precedence: true
+  test_bitemporal_correction_restart: true
+  test_cross_scope_entity_delete: true
+  test_parent_scope_cache_invalidation: true
+  test_soft_observation_delete_residue: true
+  test_native_scoped_purge_surface: true
+
+expected_falsification:
+  status: BLOCKED_CROSS_SCOPE_DESTRUCTIVE_DELETE_STALE_CHILD_BRIEFING_AND_SOFT_DELETE_RESIDUE
+  scope_precedence_and_restart_positive_path: true
+  cross_scope_delete_cascades_other_scope: true
+  parent_change_leaves_child_cache_fresh: true
+  delete_observations_retains_plaintext: true
+  native_scoped_purge_absent: true
+  reproduced_in_two_clean_states: true
+
+admission:
+  h100_actor: forbidden-for-this-revision
+  scientific_claim: forbidden
+  publication_claim: forbidden
+  next_gate: >-
+    Admit only a newer revision or explicit reviewed patch arm with row-level
+    write/delete authorization across every affected scope, descendant cache
+    invalidation for inherited parent writes, physical or cryptographic scoped
+    erasure, and the same two-clean-state restart doctor.

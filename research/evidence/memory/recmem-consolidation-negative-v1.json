@@ -1,0 +1,44 @@
+{
+  "artifact_files": {
+    "Dockerfile": "cc59a100d1a29ba60551939e8cd0bd086beb1f8968711519e18c8db4b1a2660c",
+    "doctor.py": "22b58ece4dfc70933f4b4ee5edf44d12b7633209e762207dcf68b5b3dcca675c",
+    "experiment.yaml": "1e219ee4adcceef8385f70f95b0cef4f7cc0e9f607485de6913736cbae9d2ded",
+    "image-inspect.json": "502e8c82dc025b478f5cca9e9fa0307e8eb2f3833c304da4b851af4310986605",
+    "manifest.json": "789fe6f781e2f4f79bd374e38171bad5243239d801c3f6ab5181c177afe4597b",
+    "repeat-1.json": "523fd3caa06f72f87d8467b6835900c8e87e336ec010dfaac0b98c7a6699e536",
+    "repeat-1.txt": "09652253bdad996c83719d21bef01a81fab9555415b3c294d0081fe9f2702352",
+    "repeat-2.json": "523fd3caa06f72f87d8467b6835900c8e87e336ec010dfaac0b98c7a6699e536",
+    "repeat-2.txt": "09652253bdad996c83719d21bef01a81fab9555415b3c294d0081fe9f2702352",
+    "report.json": "43bc9866b4e2d66577484332cbb46f1ca35226425f3fd29bb509e8a536f24a25",
+    "source-receipt.json": "f4d417b43bc5dbc43f917b2965e98fbb4bd77f2fffdb865da82704766c634367",
+    "source.tar": "274aba9567b7f1f3a738d159c873d3cbc2744bc3f6f01f857484fc01ec3076f9"
+  },
+  "artifact_root": "data/results/recmem-consolidation/2026-08-16-local-docker-v1",
+  "claim_boundary": {
+    "conversation_isolation_preserved": true,
+    "duplicate_retry_non_idempotent": true,
+    "failed_merge_loses_prior_episode": true,
+    "h100_actor_admission": "forbidden-for-this-revision",
+    "recurrence_quality_evaluated": false,
+    "successful_consolidation_restart_stable": true,
+    "trigger_lineage_incomplete": true
+  },
+  "code_files": {
+    "infra/memory-baselines/recmem/Dockerfile": "cc59a100d1a29ba60551939e8cd0bd086beb1f8968711519e18c8db4b1a2660c",
+    "infra/memory-baselines/recmem/doctor.py": "22b58ece4dfc70933f4b4ee5edf44d12b7633209e762207dcf68b5b3dcca675c",
+    "scripts/run_recmem_consolidation_doctor.py": "b1856e4cb6f0b5f213cd3fb8158c560db5a9416e5ab217b4cf91095da8235004",
+    "scripts/validate_recmem_consolidation_experiment.py": "b454ccae3d6072414362bf0208b0887e6135772e6ba188a90950ea0e9f035924"
+  },
+  "evidence_grade": "local-negative-reproduced",
+  "evidence_kind": "contained-recurrence-consolidation-lifecycle-negative",
+  "publication_ready": false,
+  "runtime_lane": "local-arm64-docker-network-none",
+  "schema_version": 1,
+  "scientific_result": false,
+  "source_id": "recmem",
+  "source_revisions": {
+    "https://github.com/CaiusDai/RecMem": "a84252f6e5587fd4a8caac03ec9f6c732b7a7f35"
+  },
+  "stable_projection_sha256": "6c25871f30b3cf9a2cfcf84b95041c5b59642315e105a783125dd5d9f6e12fcc",
+  "status": "BLOCKED_NON_IDEMPOTENT_WRITE_MERGE_DATA_LOSS_AND_INCOMPLETE_LINEAGE"
+}

@@ -1,0 +1,75 @@
+{
+  "artifact_files": {
+    "client-image-303.tar": "52375c64d9d136c7529fb0aa28af218ea289077f2b6241638302d8b343b1041c",
+    "client-image-inspect-303.json": "0e93d6bf4a4d652feed4207af293b76652aca08028872f2e5bfe73afa0cd7944",
+    "gpu-inventory-303.txt": "dbe37ac040ce9ac7183cfd7b0a2a8fd6fed93ac08626db23613c7342ff6c363f",
+    "job-303.receipt.json": "3a8cf17257857d94d73d801837a53c5678b6a575798cdec80401be8078747b89",
+    "lifecycle-303.stdout.json": "55e14e9096bc7374f0d4f32655c4ebf541e70bafb422dcbc24ceabee2a2c4307",
+    "lifecycle-303/experiment.yaml": "8bda38b14edbba0127f452d52ef1a7c46307e20c974d4f3e5f6b139037bc2340",
+    "lifecycle-303/manifest.json": "b3c06cc00cb3ce1b1180f0d85b0083b9f68d1f03bef3c42a4cf22e8fdbec91d8",
+    "lifecycle-303/report.json": "1523a6b43d3b26d3dadb2591320568bf4945dae295ee4b72275ab435b9a6ca58",
+    "neo4j-image-inspect-303.json": "8cf856f0fc48aa7daab7ded95067b8580166164fe340defe52f707d591ffae6e",
+    "sbom-303/client.spdx.json": "f6f8a278d7886b7d58b018cc5e0590025961c73573ac5bb23c682558148d4c27",
+    "slurm-298.out": "584cee1cd4256a5a4e3a97ef40aedf2ed6daa9c121116ac1ff5dea672ce713f2",
+    "slurm-299.out": "aaa50eba8cf808c6bd71087681040016b9ac241f7b3ad72ceb4dd7d20932cf3a",
+    "slurm-300.out": "d3b0c822b73e8e4ce300cc94fe84d9cf5047690ef86d651796692569df3f653d",
+    "slurm-301.out": "6ac51805beec16ef07b3c946a1f6d52ee0739871004b9a9e9843311c9a6a5e6c",
+    "slurm-302.out": "80dce3cfc40a35a4a52e06d82df0cb9ff67cce4bc7540ecadb4fc64d084fa1da",
+    "slurm-303.out": "c9d941605ec2cbec94f9a9e3d1efc866d34d596946aa5594ab3714bbdbcaace0",
+    "submitted-job-id-v3.txt": "38c62c0e8256ed8bcb1b23a308d84d8271d6d77121b6e739a993139ee42fa950"
+  },
+  "artifact_root": "data/results/neo4j-preference-lifecycle/2026-08-15-h100-job303-v1",
+  "claim_boundary": {
+    "graph_efficacy_evaluated": false,
+    "h100_actor_admission": "blocked-pending-identical-tuple-flat-parity",
+    "native_lifecycle_confirmed": true,
+    "publication_claim": false
+  },
+  "cluster_resaved_image_sha256": "52375c64d9d136c7529fb0aa28af218ea289077f2b6241638302d8b343b1041c",
+  "cluster_resaved_oci_manifest_digest": "sha256:86334d8a42e969b6ff9e9ea748881d23c4a390f46674a33df428752937672534",
+  "container_gpu_count": 0,
+  "evidence_grade": "local-conformance-reproduced",
+  "evidence_kind": "cluster-amd64-lifecycle-confirmation",
+  "h100_allocation_count": 1,
+  "image_config_digest": "sha256:8ec19ef4a4acbbf81205e56148aadfa5e9798d2964175b5b4be8d8644436c382",
+  "input_client_image_archive_path": "data/results/infrastructure/neo4j-h100-client-image-2026-08-15-v1/client-image.tar",
+  "input_client_image_sha256": "42f0b87c8c5ff2ca52757b16d8f75a8fc155d599b4624faeaf387cd64db12622",
+  "oci_manifest_digest": "sha256:59a02e177a32eed32ca4faf015fe91e17d936b9ef2e4cd94fce53268162ea0cb",
+  "preflight_attempts": [
+    {
+      "job_id": 298,
+      "terminal_reason": "configured-python-unavailable"
+    },
+    {
+      "job_id": 299,
+      "terminal_reason": "operator-cancelled-prematurely"
+    },
+    {
+      "job_id": 300,
+      "terminal_reason": "docker-build-dns-failure"
+    },
+    {
+      "job_id": 301,
+      "terminal_reason": "docker-image-identity-convention"
+    },
+    {
+      "job_id": 302,
+      "terminal_reason": "redundant-docker-build-dns-failure"
+    }
+  ],
+  "publication_ready": false,
+  "runtime_lane": "docker-under-slurm-h100-allocation-no-container-gpu",
+  "scheduler_accounting": "sacct-disabled-on-host",
+  "schema_version": 1,
+  "scientific_result": false,
+  "slurm_job_id": 303,
+  "source_archive_path": "data/results/infrastructure/neo4j-h100-source-2026-08-15-v3/source.tar.gz",
+  "source_archive_sha256": "723d7a653a3c1eebf35d8dacf55a032edd55a93a30dd88c95d79324f4dfc0499",
+  "source_id": "neo4j-agent-memory",
+  "source_receipt_path": "data/results/infrastructure/neo4j-h100-source-2026-08-15-v3/source-receipt.json",
+  "source_receipt_sha256": "793fb5f91991d5f9b0a9f77584727bd9183ebac186927708b57e132f5dddb3e2",
+  "source_revisions": {
+    "https://github.com/neo4j-labs/agent-memory": "231d60eac9401ab156ba194b519d89dd644dadb8"
+  },
+  "status": "NEO4J_PREFERENCE_LIFECYCLE_CONFORMANCE_PASS"
+}

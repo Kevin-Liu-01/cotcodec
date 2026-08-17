@@ -1,0 +1,57 @@
+schema_version: 1
+name: stage3-activegraph-fork-lifecycle-doctor
+status: registered-cpu-falsification
+scientific_result: false
+publication_ready: false
+
+source:
+  source_id: activegraph-event-sourced-runtime
+  repository: https://github.com/yoheinakajima/activegraph
+  revision: 8aedb1866cf5dce056af97529152ffd6f468a1ed
+  tree: 8f101d35376f5ef12f197b34a27a2c5aa80ac584
+  version: 1.10.0
+  license: Apache-2.0
+  license_sha256: fbb7ac8857b6ce4b826937908e73d96bdc20cbdbbcbad1836f20c6543266b36f
+  pyproject_sha256: a1ee2296e45138abacb1a6c557fc2f1f9e39c7b63a2e95364d84a5fbc8f90768
+  git_archive_tar_sha256: 91e0f4099336d34fdb60aee6d9c134ba8f91a2b358d1f46548501353e448461a
+
+runtime:
+  containment: docker-network-none
+  provider_secrets: forbidden
+  sudo: forbidden
+  gpu_count: 0
+  python_image: python@sha256:9bb659dc6d5218917236f3711e866a5634bb4c2f208de9d4533aa4863f57c1d3
+  python_version: 3.12.11
+  click_version: 8.2.1
+  pydantic_version: 2.11.7
+  clean_state_repeats: 2
+  fresh_process_restarts_per_repeat: 1
+
+intervention:
+  exact_source_modules: [core.graph, runtime.runtime, runtime.diff, store.sqlite, store.retention]
+  model_backend_calls: 0
+  provider_calls: 0
+  test_parent_fork_divergence: true
+  test_nested_fork_restart: true
+  test_run_isolation: true
+  test_retire_idempotency: true
+  test_rejected_branch_plaintext_residue: true
+  test_native_scoped_purge_surface: true
+
+expected_falsification:
+  status: BLOCKED_ARCHIVE_ONLY_RETENTION_NO_SCOPED_PURGE_AND_SHARED_DB_ERASURE
+  fork_replay_restart_positive_path: true
+  rejected_run_moves_to_archive: true
+  rejected_run_plaintext_survives_restart: true
+  native_scoped_purge_absent: true
+  reproduced_in_two_clean_states: true
+
+admission:
+  h100_actor: forbidden-for-this-revision
+  scientific_claim: forbidden
+  publication_claim: forbidden
+  next_gate: >-
+    Admit only a newer revision or explicit reviewed patch arm with a native
+    branch-scoped physical or cryptographic erasure operation whose deletion
+    survives restart without altering parent or sibling runs, followed by the
+    same two-clean-state fork, replay, isolation, and residue doctor.

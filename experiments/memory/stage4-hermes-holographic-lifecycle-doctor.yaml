@@ -1,0 +1,72 @@
+schema_version: 1
+name: stage4-hermes-holographic-lifecycle-doctor
+description: >-
+  Zero-model native SQLite/FTS lifecycle falsifier for the Holographic provider
+  bundled with Hermes. Test restart, duplicate idempotence, update, feedback,
+  global-session visibility, logical deletion, and plaintext residue without
+  claiming HRR quality or agent-memory efficacy.
+
+source:
+  repository: https://github.com/NousResearch/hermes-agent
+  revision: a90d5369f76c87c98547d2e283aa26d5cfabf322
+  tree: 963eb136bfb21fd0b296a40529cbb3575c610874
+  git_archive_tar_sha256: 2a2934d3c8379816b2e3919f4cf1191f04e93f136da6f2128246d368644a9514
+  license: MIT
+  license_sha256: 821556e6336796450ab852d375117b48a4887e71d255794fd6318d99982a5ab6
+  hermes_state_sha256: e714b973bfd43b645208ad7ce75a1ae2d79f64c9afb1857a3b9add6e58e893b7
+  store_sha256: 696dc3f8e683362d857e38e87fd7bd8dcc491cfa8f25ba31818e041d91695e74
+  retrieval_sha256: 4baf74635793c41ee5d39f422785640c4f7881a50ced968e8a820ebc4e33e4e9
+  holographic_sha256: 5433a0bcdbe13c7ba4a4e086d2610091d4244d0c79ddf7d163ecdc9614c81d30
+  provider_sha256: 1bbc118d00c58e982c2ac20edbde965fcaf098cc7218434fd8bc93a44dc1bf6e
+
+runtime:
+  base_image: docker.io/library/python:3.12.11-slim-bookworm@sha256:519591d6871b7bc437060736b9f7456b8731f1499a57e22e6c285135ae657bf7
+  local_platform: linux/arm64
+  network_mode: none
+  read_only_root: true
+  cap_drop_all: true
+  no_new_privileges: true
+  user: "65532:65532"
+  cpu_limit: 1
+  memory_limit: 768m
+  gpu_count: 0
+  timeout_seconds: 300
+  clean_repetitions: 2
+
+contract:
+  backend: native-sqlite-fts5
+  hrr_mode: disabled-no-numpy
+  logical_fact_count: 3
+  phases: [prepare, restart, purge]
+  require_fresh_process_per_phase: true
+  require_duplicate_add_same_id: true
+  require_update_and_feedback_persist: true
+  require_restart_retrieval: true
+  probe_global_session_visibility: true
+  require_logical_zero_after_remove: true
+  scan_sqlite_db_wal_shm_for_plaintext: true
+  model_calls: 0
+  embedding_calls: 0
+  network_calls: 0
+
+expected_falsification:
+  status: BLOCKED_GLOBAL_SESSION_SCOPE_AND_NATIVE_SESSION_PURGE_REPRODUCED
+  restart_persistence_supported: true
+  session_scoped_isolation_supported: false
+  native_session_purge_supported: false
+  physical_zero_residue_after_logical_delete: runtime-diagnostic-not-gate
+
+admission:
+  provider_contract: local-negative-only
+  memory_lifecycle_h100: forbidden-for-this-revision
+  unblock_requires:
+    - explicit-session-or-tenant-scope
+    - native-session-purge-or-crypto-erasure
+    - physical-residue-proof
+    - separate-hrr-quality-cell-with-pinned-numpy
+
+claims:
+  scientific_result: false
+  publication_ready: false
+  supports: native SQLite and FTS lifecycle boundary only
+  does_not_support: HRR quality, memory quality, multi-user safety, or agent improvement

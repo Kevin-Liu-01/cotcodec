@@ -94,7 +94,8 @@ class DataSplit(StrictModel):
 class TinkerData(StrictModel):
     record_schema: Literal["rendered-prefix-target-v1"]
     renderer_identity: str = Field(min_length=10)
-    train: DataSplit
+    train: DataSplit | None = None
+    train_by_arm: dict[str, DataSplit] | None = None
     development: DataSplit
     test: DataSplit
     contamination_checks: tuple[str, ...] = Field(min_length=2)
@@ -103,16 +104,27 @@ class TinkerData(StrictModel):
     def sealed_test(self) -> Self:
         if not self.test.sealed:
             raise ValueError("test split must be sealed")
+        if (self.train is None) == (self.train_by_arm is None):
+            raise ValueError("provide exactly one of data.train or data.train_by_arm")
+        if self.train_by_arm is not None:
+            if not self.train_by_arm:
+                raise ValueError("data.train_by_arm cannot be empty")
+            if any(not SLUG_RE.fullmatch(name) for name in self.train_by_arm):
+                raise ValueError("data.train_by_arm keys must be arm slugs")
         return self
 
 
 class ExperimentArm(StrictModel):
     name: str = Field(pattern=SLUG_RE.pattern)
-    capsule: bool
     lora: bool
-    prompt_policy: bool
-    native_host_policy: bool
     purpose: str = Field(min_length=15)
+    capsule: bool | None = None
+    prompt_policy: bool | None = None
+    native_host_policy: bool | None = None
+    label_source: Literal[
+        "none", "causal_holdout", "next_use", "observational_utility"
+    ] | None = None
+    controller_runtime: Literal["none", "frozen_external", "model_emitted"] | None = None
 
 
 class CheckpointPolicy(StrictModel):
@@ -189,6 +201,7 @@ class TinkerExperimentContract(StrictModel):
     schema_version: Literal[1]
     name: str = Field(pattern=SLUG_RE.pattern)
     status: Literal["contract", "pilot-ready"]
+    experiment_kind: Literal["portable_capsule", "causal_memory_policy"]
     research_question: str = Field(min_length=40)
     null_hypothesis: str = Field(min_length=30)
     portability_claim: str = Field(min_length=30)
@@ -220,25 +233,78 @@ class TinkerExperimentContract(StrictModel):
         arm_names = [arm.name for arm in self.arms]
         if len(set(arm_names)) != len(arm_names):
             raise ValueError("arm names must be distinct")
-        if not any(arm.capsule and arm.lora for arm in self.arms):
-            raise ValueError("at least one arm must combine a capsule with LoRA")
-        if not any(not arm.capsule and not arm.lora for arm in self.arms):
-            raise ValueError("at least one arm must be an unmodified-base control")
+        if self.experiment_kind == "portable_capsule":
+            if not all(
+                arm.capsule is not None
+                and arm.prompt_policy is not None
+                and arm.native_host_policy is not None
+                for arm in self.arms
+            ):
+                raise ValueError("portable capsule arms require capsule policy fields")
+            if not any(arm.capsule and arm.lora for arm in self.arms):
+                raise ValueError("at least one arm must combine a capsule with LoRA")
+            if not any(not arm.capsule and not arm.lora for arm in self.arms):
+                raise ValueError("at least one arm must be an unmodified-base control")
+            if self.data.train is None:
+                raise ValueError("portable capsule experiments require data.train")
+        else:
+            if not all(
+                arm.label_source is not None and arm.controller_runtime is not None
+                for arm in self.arms
+            ):
+                raise ValueError(
+                    "causal memory arms require label_source and controller_runtime"
+                )
+            learned_labels = {
+                arm.label_source for arm in self.arms if arm.lora
+            }
+            required_labels = {"causal_holdout", "next_use", "observational_utility"}
+            if not required_labels.issubset(learned_labels):
+                raise ValueError("causal memory requires three matched learned label arms")
+            if not any(
+                not arm.lora
+                and arm.label_source == "none"
+                and arm.controller_runtime == "none"
+                for arm in self.arms
+            ):
+                raise ValueError("causal memory requires an unmodified base control")
+            expected_train_arms = {arm.name for arm in self.arms if arm.lora}
+            if self.data.train_by_arm is None or set(self.data.train_by_arm) != expected_train_arms:
+                raise ValueError("data.train_by_arm must exactly match LoRA arm names")
         if self.cost_ceiling_usd() > self.budget.max_usd + 1e-9:
             raise ValueError(
                 f"declared Tinker token ceiling costs ${self.cost_ceiling_usd():.4f}, "
                 f"above max_usd ${self.budget.max_usd:.4f}"
             )
         if self.execution.enabled:
-            for split_name in ("train", "development", "test"):
-                if getattr(self.data, split_name).sha256 is None:
+            train_splits = (
+                {"train": self.data.train}
+                if self.data.train is not None
+                else self.data.train_by_arm or {}
+            )
+            all_splits = {
+                **train_splits,
+                "development": self.data.development,
+                "test": self.data.test,
+            }
+            for split_name, split in all_splits.items():
+                if split is None or split.sha256 is None:
                     raise ValueError(f"enabled Tinker runs require data.{split_name}.sha256")
         if self.status == "pilot-ready" and not self.execution.enabled:
             raise ValueError("pilot-ready Tinker contracts must be enabled")
         return self
 
     def cost_ceiling_usd(self) -> float:
-        token_cost = len(self.seeds) * sum(stage.cost_per_seed() for stage in self.stages)
+        trainable_arms = (
+            sum(arm.lora for arm in self.arms)
+            if self.experiment_kind == "causal_memory_policy"
+            else 1
+        )
+        token_cost = (
+            len(self.seeds)
+            * trainable_arms
+            * sum(stage.cost_per_seed() for stage in self.stages)
+        )
         storage_cost = (
             self.budget.max_checkpoint_storage_gb_month
             * self.budget.storage_per_gb_month

@@ -1,0 +1,121 @@
+schema_version: 1
+name: stage3-reasoningbank-frozen-bank-cpu-doctor
+status: contained-cpu-contract-pass
+scientific_result: false
+publication_ready: false
+protocol: frozen-procedural-bank-v1
+description: >-
+  Validate a framework-owned, immutable ReasoningBank-style procedural bank
+  with an exact train/dev/test task-to-family manifest and the pinned local BGE
+  encoder. This proves split enforcement, deterministic freezing/retrieval,
+  model binding, containment, and accounting surfaces. It does not reproduce
+  ReasoningBank quality or authorize an H100 actor study.
+
+source:
+  source_id: reasoningbank
+  repository: https://github.com/google-research/reasoning-bank
+  revision: ed80611788292ea739f1effd31f16c53823b8a0d
+  tree: 7cc5e6e08ee8035cde81f1fb9fd871d32423a3e3
+  git_archive_tar_sha256: d85d169c84f82782cefc50044adc192ab1d28956f36e177de0bf213d48298e09
+  license: Apache-2.0
+
+model:
+  model_id: bge-small-en-v1.5
+  repository: BAAI/bge-small-en-v1.5
+  revision: 5c38ec7c405ec4b44b94cc5a9bb96e735b38267a
+  artifact_root_sha256: 85a178e1c7da2659a137728e9b6794f97a2607adfa315e3ee0eeb0f5cc497883
+  model_receipt_sha256: 9d30a2f1646e5e7b1d99db79232ca29ba727ae238736d02f95ea4270ca63926e
+  pooling: cls-l2-normalized-v1
+  dimensions: 384
+  maximum_tokens: 512
+  trust_remote_code: false
+
+contract:
+  source_labels: train-only
+  split_identity: exact-task-to-family-content-addressed-manifest
+  workflow_family_overlap: forbidden
+  train_task_retrieval: forbidden
+  bank_mutation_after_freeze: forbidden
+  document_embedding_phase: construction-only
+  document_embedding_field: procedural_text
+  query_embedding_phase: retrieval-only
+  actor_visible_fields:
+    - procedural_text
+    - outcome
+    - source_task_id
+    - source_family_id
+    - source_receipts
+  matched_controls_required_before_quality_claim:
+    - no-memory
+    - raw-success-trajectory
+    - raw-failure-trajectory
+    - success-only-procedural-items
+    - failure-only-procedural-items
+    - shuffled-procedural-items
+    - reasoningbank-success-and-failure
+
+runtime:
+  image_id: sha256:d3f7858e55209cd3af46b97e21aafcb8e0675ee59a64a787589ee2679f283430
+  image_code_sha256: 5bcc1cbc873c33fb49d1061daf7b829f872112b3bbb93d4ce9c9db092a920ce8
+  base_image: docker.io/library/python:3.12.11-slim-bookworm@sha256:519591d6871b7bc437060736b9f7456b8731f1499a57e22e6c285135ae657bf7
+  torch_cpu_wheel_sha256: 70ecb2659af6373b7c5336e692e665605b0201ea21ff51aaea47e1d75ea6b5aa
+  architecture: arm64
+  os: linux
+  network: none
+  read_only_rootfs: true
+  cap_drop: [ALL]
+  security_opt: [no-new-privileges]
+  model_mount: read-only
+  receipt_mount: read-only
+  pids_limit: 256
+  cpus: 4
+  memory_bytes: 4294967296
+  gpus: 0
+  api_calls: 0
+  sudo: forbidden
+
+gates:
+  required_status: FROZEN_PROCEDURAL_BANK_CPU_DOCTOR_PASS
+  train_items: 6
+  evaluation_queries: 6
+  top_one_correct: 6
+  repeated_bank_freeze_exact: true
+  repeated_retrieval_exact: true
+  retrieval_bank_immutable: true
+  train_task_leakage_rejected: true
+  task_family_mismatch_rejected: true
+  two_fresh_runs_core_byte_identical: true
+
+evidence:
+  path: research/evidence/memory/reasoningbank-frozen-bank-cpu-v1.json
+  sha256: c6f6d6284bcbd9afd8bb0d5e4658b2b892d9679a3614fa4a10169a878c98c994
+  retained_artifact_root: research/evidence/memory/reasoningbank-frozen-bank-cpu-v1-artifacts
+  bank_artifact_sha256: 4d6c4456c2e4c1c95419c14c72bea60f7994fa460cdfa9b994e0e60b605d1f14
+  split_manifest_sha256: e24f57a0279441f26fa863ff854bbd872a6e9bbb1a8ad89d60d23dd7e4fb535c
+  core_files:
+    bank.json: 99be19f00089e05463f4a025b57c48ced82e06b4805e1bbbfd11010c1d81f874
+    fixture-source-artifacts.jsonl: 2891c295e87564fdd967da30f875d47f9674724b281d1f938e3745ec85e4b12f
+    manifest.json: 6270ee3c2687911d44a1cb6b4e76943325f632adeb1bc0b0a6908bd9c6a25c98
+    report.json: b6fcd4450bb62fa58902c3bce94016099ad42a33dfb30ca284078f0caec57c98
+    retrievals.jsonl: 3c88c94f65ef8a97ad9b47e7450f515023012b7b7a633a07e6c322e43cc6bbbe
+
+admission:
+  patch_contract: pass
+  release_driver: BLOCKED_MUTABLE_EVALUATION_AND_UNPINNED_RETRIEVAL
+  h100_admission: blocked
+  next_gate: >-
+    train-only JSONL procedure induction with deterministic generator receipts,
+    frozen real-task bank/index, matched controls, and a contained held-out
+    workflow-family actor smoke
+  reason: >-
+    Current procedures and tasks are deterministic fixtures. No real
+    ReasoningBank trajectory induction, matched actor, public benchmark, Slurm
+    attestation, or quality comparison has executed.
+
+forbidden_claims:
+  - ReasoningBank quality was reproduced
+  - the released ReasoningBank driver is held out
+  - procedural memory improves agent success
+  - this is a persistent lifecycle provider
+  - H100 or Slurm admission passed
+  - publication evidence exists

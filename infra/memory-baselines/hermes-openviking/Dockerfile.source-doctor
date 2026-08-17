@@ -1,0 +1,83 @@
+# syntax=docker/dockerfile:1
+
+# Discovery-only source build for Docker engines without the buildx plugin.
+# The source context must be the exact pinned OpenViking checkout. This keeps
+# upstream's locked dependency install but intentionally drops only BuildKit
+# cache mounts; it does not alter the installed source or dependency graph.
+FROM rust:1.91.1-trixie AS rust-toolchain
+
+FROM ghcr.io/astral-sh/uv:python3.13-trixie-slim AS py-builder
+
+COPY --from=rust-toolchain /usr/local/cargo /usr/local/cargo
+COPY --from=rust-toolchain /usr/local/rustup /usr/local/rustup
+COPY --from=node:24-trixie-slim /usr/local/bin/node /usr/local/bin/
+COPY --from=node:24-trixie-slim /usr/local/lib/node_modules/ /usr/local/lib/node_modules/
+RUN ln -sf ../lib/node_modules/npm/bin/npm-cli.js /usr/local/bin/npm \
+ && ln -sf ../lib/node_modules/npm/bin/npx-cli.js /usr/local/bin/npx
+
+ENV CARGO_HOME=/usr/local/cargo \
+    RUSTUP_HOME=/usr/local/rustup \
+    PATH="/app/.venv/bin:/usr/local/cargo/bin:/usr/lib/ccache:${PATH}" \
+    CCACHE_DIR=/root/.ccache \
+    CARGO_TARGET_DIR=/cargo-target \
+    UV_COMPILE_BYTECODE=1 \
+    UV_LINK_MODE=copy \
+    UV_NO_DEV=1
+
+ARG OPENVIKING_VERSION
+ARG UV_LOCK_STRATEGY=locked
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    build-essential \
+    ccache \
+    cmake \
+    git \
+ && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /app
+
+COPY Cargo.toml Cargo.lock ./
+COPY pyproject.toml uv.lock setup.py README.md ./
+COPY build_support/ build_support/
+COPY bot/ bot/
+COPY crates/ crates/
+COPY openviking/ openviking/
+COPY openviking_cli/ openviking_cli/
+COPY src/ src/
+COPY third_party/ third_party/
+COPY web-studio/ web-studio/
+
+RUN test -n "${OPENVIKING_VERSION}" \
+ && export SETUPTOOLS_SCM_PRETEND_VERSION_FOR_OPENVIKING="${OPENVIKING_VERSION}" \
+ && test "${UV_LOCK_STRATEGY}" = locked \
+ && uv sync --locked --no-editable --extra bot --extra gemini
+
+FROM python:3.13-slim-trixie
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    ca-certificates \
+    curl \
+    git \
+    libstdc++6 \
+    ripgrep \
+ && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /app
+
+COPY --from=py-builder /app/.venv /app/.venv
+COPY docker/openviking-entrypoint.sh /usr/local/bin/openviking-entrypoint
+COPY docker/pending_health_server.py /usr/local/bin/openviking-pending-health
+RUN mkdir -p /app/.openviking \
+ && chmod +x /usr/local/bin/openviking-entrypoint /usr/local/bin/openviking-pending-health
+
+ENV HOME=/app \
+    PATH="/app/.venv/bin:${PATH}" \
+    OPENVIKING_CONFIG_FILE=/app/.openviking/ov.conf \
+    OPENVIKING_CLI_CONFIG_FILE=/app/.openviking/ovcli.conf
+
+EXPOSE 1933
+
+HEALTHCHECK --interval=30s --timeout=5s --start-period=30s --retries=3 \
+    CMD ["openviking-entrypoint", "--healthcheck"]
+
+ENTRYPOINT ["openviking-entrypoint"]

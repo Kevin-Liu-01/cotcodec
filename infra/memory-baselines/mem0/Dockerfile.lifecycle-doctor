@@ -1,0 +1,48 @@
+# syntax=docker/dockerfile:1
+ARG COTCODEC_LIFECYCLE_BASE
+FROM ${COTCODEC_LIFECYCLE_BASE}
+
+ARG COTCODEC_MEM0_LIFECYCLE_SIDECAR_SHA256
+ARG COTCODEC_MEM0_LIFECYCLE_DOCTOR_SHA256
+ARG COTCODEC_MEM0_LIFECYCLE_EXPERIMENT_SHA256
+
+USER root
+COPY mem0-source/ /opt/mem0-source/
+COPY cotcodec-overrides/infra/memory-baselines/mem0_lifecycle_sidecar.py \
+     /workspace/cotcodec/infra/memory-baselines/mem0_lifecycle_sidecar.py
+COPY cotcodec-overrides/scripts/run_mem0_lifecycle_doctor.py \
+     /workspace/cotcodec/scripts/run_mem0_lifecycle_doctor.py
+COPY cotcodec-overrides/scripts/validate_mem0_lifecycle_experiment.py \
+     /workspace/cotcodec/scripts/validate_mem0_lifecycle_experiment.py
+COPY cotcodec-overrides/experiments/memory/stage3-mem0-native-lifecycle-doctor.yaml \
+     /workspace/cotcodec/experiments/memory/stage3-mem0-native-lifecycle-doctor.yaml
+
+WORKDIR /workspace/cotcodec
+RUN test "$(sha256sum infra/memory-baselines/mem0_lifecycle_sidecar.py | cut -d' ' -f1)" = "$COTCODEC_MEM0_LIFECYCLE_SIDECAR_SHA256" \
+    && test "$(sha256sum scripts/run_mem0_lifecycle_doctor.py | cut -d' ' -f1)" = "$COTCODEC_MEM0_LIFECYCLE_DOCTOR_SHA256" \
+    && test "$(sha256sum experiments/memory/stage3-mem0-native-lifecycle-doctor.yaml | cut -d' ' -f1)" = "$COTCODEC_MEM0_LIFECYCLE_EXPERIMENT_SHA256" \
+    && uv sync --frozen --no-dev --extra memory-mem0 --no-install-package mem0ai \
+    && uv pip install \
+       --python /workspace/cotcodec/.venv/bin/python \
+       --no-deps /opt/mem0-source \
+    && /workspace/cotcodec/.venv/bin/python -c \
+       "import importlib.metadata; assert importlib.metadata.version('mem0ai') == '2.0.18'" \
+    && python scripts/validate_mem0_lifecycle_experiment.py \
+       experiments/memory/stage3-mem0-native-lifecycle-doctor.yaml
+
+LABEL org.opencontainers.image.source="https://github.com/mem0ai/mem0" \
+      org.opencontainers.image.revision="71f2ebefa3494da21550fb525216818776cde67f" \
+      org.cotcodec.source-archive-sha256="c577ecf9a460b0fa581032037ccbfd887f7a7d0afa0fc091d13fd8b692089b12" \
+      org.cotcodec.memory-lifecycle-adapter="mem0-native-lifecycle-v1" \
+      org.cotcodec.mem0-lifecycle-sidecar-sha256="$COTCODEC_MEM0_LIFECYCLE_SIDECAR_SHA256" \
+      org.cotcodec.mem0-lifecycle-doctor-sha256="$COTCODEC_MEM0_LIFECYCLE_DOCTOR_SHA256" \
+      org.cotcodec.mem0-lifecycle-experiment-sha256="$COTCODEC_MEM0_LIFECYCLE_EXPERIMENT_SHA256" \
+      org.cotcodec.scientific-result="false"
+
+ENV MEM0_TELEMETRY=false \
+    HOME=/state \
+    PYTHONPATH=/workspace/cotcodec \
+    PYTHONUNBUFFERED=1
+
+USER 65532:65532
+ENTRYPOINT ["/workspace/cotcodec/.venv/bin/python", "/workspace/cotcodec/scripts/run_mem0_lifecycle_doctor.py"]

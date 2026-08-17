@@ -1,0 +1,60 @@
+{
+  "artifact_files": {
+    "Dockerfile": "d794f11baec5618d051bd5cadf1e6826dc6d382b232ce7c8fb7df88f65f83fca",
+    "doctor-image-inspect.json": "78cf86dc47a126da7ed9af7a9b19f88cf616a0dd92087ed319e6d60f0036c310",
+    "doctor.py": "8ed8aafe507336c609a47dd7e217a31332e3b1450c01d4f68f51e129f89dfb98",
+    "experiment.yaml": "41eb7dfef812a094c4f7ecab1ff08aa4d87e777b8d27b6f40489e963f8aeac0b",
+    "manifest.json": "01ba04f0c6b40085eecd648a75408017b7e0a37116a869204975eac6b2f09d2b",
+    "repeat-1-phase-1.txt": "0bfe730e2efa5318c6b563547582592649fb282afefbca8224ef10f2f62c99d7",
+    "repeat-1-phase-2.txt": "0215497277fa07c5e793062b992d8221e3e8eaf8b9dd7b1942eb8b26a6841f15",
+    "repeat-1.json": "61d35d6ec67369c4fc1327e702cf91c8c78ee7044fbaa85aacc2b7884f49c317",
+    "repeat-2-phase-1.txt": "0bfe730e2efa5318c6b563547582592649fb282afefbca8224ef10f2f62c99d7",
+    "repeat-2-phase-2.txt": "0215497277fa07c5e793062b992d8221e3e8eaf8b9dd7b1942eb8b26a6841f15",
+    "repeat-2.json": "1a8a9d41f77a2c631623a7c5559181fe03d807ffad8ec997846212f1a061d04b",
+    "report.json": "65bc4d61623a574b725a897295f501809380bf08d017827aa1f604ddc6d3ede2",
+    "source-receipt.json": "3e39f2a25aace623f7d34d972121770240ef83e2aa5749c253598dc7f24cf003",
+    "source.tar": "f1412268b653e971df41c730bd4d1aa19cb0e20e79f358c4c41c8ec80350a06a"
+  },
+  "artifact_root": "data/results/agent-recall-scope-lifecycle/2026-08-16-local-docker-v1",
+  "claim_boundary": "Exact pinned native scope precedence, bitemporal correction, delete, cache-invalidation, and restart behavior; not retrieval quality, active/inactive paging, model-effect, H100-actor, or publication evidence.",
+  "code_files": {
+    "experiments/memory/stage3-agent-recall-scope-lifecycle-doctor.yaml": "41eb7dfef812a094c4f7ecab1ff08aa4d87e777b8d27b6f40489e963f8aeac0b",
+    "infra/memory-baselines/agent-recall/Dockerfile": "d794f11baec5618d051bd5cadf1e6826dc6d382b232ce7c8fb7df88f65f83fca",
+    "infra/memory-baselines/agent-recall/doctor.py": "8ed8aafe507336c609a47dd7e217a31332e3b1450c01d4f68f51e129f89dfb98",
+    "scripts/run_agent_recall_lifecycle_doctor.py": "661270bf96cce44f65bb0576b25a107d16cc1c7904ae8b080c11571996a78394",
+    "scripts/validate_agent_recall_lifecycle_evidence.py": "f75ef10ec967be32ab77f4b0d435ffcd0c04b3d8e897e39b801394dba097fdfb",
+    "scripts/validate_agent_recall_lifecycle_experiment.py": "805b50f400df124403164185edc837eb15d473e2d5d1aca3f9612b1b392f275d"
+  },
+  "evidence_grade": "local-negative-reproduced",
+  "evidence_kind": "contained-native-scoped-lifecycle-negative",
+  "findings": {
+    "bitemporal_history_survived_restart": true,
+    "bitemporal_history_written": true,
+    "child_inherits_parent_scope": true,
+    "cross_scope_delete_cascades_other_scope": true,
+    "cross_scope_delete_survived_restart": true,
+    "delete_observations_archives_plaintext": true,
+    "entity_delete_is_unscoped_row_delete": true,
+    "native_scoped_purge_absent": true,
+    "observation_delete_is_soft_archive": true,
+    "parent_change_leaves_child_cache_fresh": true,
+    "parent_scope_invalidation_omits_descendants": true,
+    "scope_precedence_local_wins": true,
+    "scope_precedence_survived_restart": true,
+    "soft_deleted_observation_survived_restart": true,
+    "soft_deleted_plaintext_in_database": true
+  },
+  "fresh_process_restart_count_per_run": 1,
+  "h100_actor_admission": "forbidden-for-this-revision",
+  "publication_ready": false,
+  "run_count": 2,
+  "runtime_lane": "local-arm64-docker-network-none",
+  "schema_version": 1,
+  "scientific_result": false,
+  "source_id": "agent-recall",
+  "source_revisions": {
+    "https://github.com/mnardit/agent-recall": "dcf21b5cc9691e1371299917e2e474fb82e07cab"
+  },
+  "stable_phase_projection_sha256": "2fed18f7943ef6e96ce343ee665c31b90c03f1115eb6ddf0a807989abddcc5a3",
+  "status": "BLOCKED_CROSS_SCOPE_DESTRUCTIVE_DELETE_STALE_CHILD_BRIEFING_AND_SOFT_DELETE_RESIDUE"
+}

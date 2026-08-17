@@ -1,0 +1,5 @@
+runtime:
+  mode: local
+  temperature: 0.0
+  cache_dir: /state/runtime_cache
+  registry_path: configs/agents.yaml

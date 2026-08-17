@@ -1,3 +1,3 @@
 """Benchmark adapters for CoTCodec evaluation."""
 
-from harness.benchmarks.base import BenchmarkAdapter
+from harness.benchmarks.base import BenchmarkAdapter as BenchmarkAdapter

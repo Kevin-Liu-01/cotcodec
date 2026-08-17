@@ -1,0 +1,58 @@
+schema_version: 1
+name: stage3-gaama-graph-component-doctor
+description: >-
+  Zero-model matched-candidate falsifier for GAAMA-style graph PPR versus flat
+  cosine, degree/type-preserving shuffled graph, and PPR-weight-zero A/A.
+study_id: gaama-matched-graph-component-doctor-v1
+
+source:
+  repository: https://github.com/swarna-kpaul/gaama
+  revision: 2d992f7f7b97c802bfe4c799878a5477cac1b6ff
+  tree: 0227970b58617696afd53d27f920a10e3c401ece
+  git_archive_tar_sha256: d9aec03fe4a268bf091dc2c419e270720e5cfffcdcbdfdd9e43b62bec00a4e9d
+  license: MIT
+  license_sha256: 59919d6d9afe4d7525ecfd24f2bd22d54f9184044d55a9f87044816f5f5dc131
+  pagerank_sha256: 07ff41e2dea5a778dc8a1326a73c5d76396c22ddec088faa7fbe0174bbe499e4
+  retriever_sha256: 682527f82409bdf5ccd4d4261a131c7ded38d96475df71ffa1038ba868221e41
+  locomo10_sha256: 79fa87e90f04081343b8c8debecb80a9a6842b76a7aa537dc9fdf651ea698ff4
+  locomo10_license: CC-BY-NC-4.0
+
+runtime:
+  base_image: docker.io/library/python:3.12.11-slim-bookworm@sha256:519591d6871b7bc437060736b9f7456b8731f1499a57e22e6c285135ae657bf7
+  local_platform: linux/arm64
+  network_mode: none
+  read_only_root: true
+  cap_drop_all: true
+  no_new_privileges: true
+  user: "65532:65532"
+  cpu_limit: 2
+  memory_limit: 4g
+  gpu_count: 0
+  timeout_seconds: 600
+  clean_repetitions: 2
+
+contract:
+  case_count: 24
+  candidate_count_per_case: 5
+  top_k: 3
+  ppr_weight: 0.1
+  sim_weight: 1.0
+  model_calls: 0
+  embedding_calls: 0
+  graph_arms: [flat, ppr-weight-zero, true-graph, degree-type-shuffled-graph]
+  require_identical_candidate_pool: true
+  require_ppr_zero_equal_flat: true
+  require_no_cross_task_edges: true
+  expose_hub_dampening_noop: true
+
+gates:
+  required_status: GAAMA_COMPONENT_CONTRACT_PASS
+  true_graph_must_exceed_flat: true
+  true_graph_must_exceed_shuffled: true
+  h100_admission: blocked-until-natural-heldout-cpu-component-pass
+
+claims:
+  scientific_result: false
+  publication_ready: false
+  supports: matched graph-ranking component and accounting contract only
+  does_not_support: GAAMA quality, graph-memory efficacy, GEL, or agent-memory quality

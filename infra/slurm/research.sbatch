@@ -31,6 +31,45 @@ if [[ ! "${COTCODEC_SOURCE_SHA256}" =~ ^[0-9a-f]{64}$ ]]; then
   echo "COTCODEC_SOURCE_SHA256 must be a 64-hex archive digest" >&2
   exit 2
 fi
+memory_bundle_host=""
+memory_bundle_mount=""
+if [[ -n "${COTCODEC_MEMORY_BUNDLE_HOST_HEX:-}" \
+  || -n "${COTCODEC_MEMORY_BUNDLE_SHA256:-}" ]]; then
+  if [[ ! "${COTCODEC_MEMORY_BUNDLE_HOST_HEX:-}" =~ ^[0-9a-f]+$ ]] \
+    || (( ${#COTCODEC_MEMORY_BUNDLE_HOST_HEX} % 2 != 0 )); then
+    echo "COTCODEC_MEMORY_BUNDLE_HOST_HEX must be nonempty even-length hex" >&2
+    exit 2
+  fi
+  if [[ ! "${COTCODEC_MEMORY_BUNDLE_SHA256:-}" =~ ^[0-9a-f]{64}$ ]]; then
+    echo "COTCODEC_MEMORY_BUNDLE_SHA256 must be a 64-hex digest" >&2
+    exit 2
+  fi
+  memory_bundle_host="$(python - "${COTCODEC_MEMORY_BUNDLE_HOST_HEX}" <<'PY'
+import sys
+
+try:
+    value = bytes.fromhex(sys.argv[1]).decode("utf-8")
+except (ValueError, UnicodeDecodeError) as exc:
+    raise SystemExit("memory bundle host path is not valid UTF-8 hex") from exc
+print(value, end="")
+PY
+)"
+  if [[ ! "${memory_bundle_host}" =~ ^/[A-Za-z0-9._/-]{1,511}$ ]] \
+    || [[ "/${memory_bundle_host}/" == *"/../"* ]]; then
+    echo "decoded memory bundle host path is unsafe" >&2
+    exit 2
+  fi
+  if [[ ! -f "${memory_bundle_host}" || -L "${memory_bundle_host}" ]]; then
+    echo "memory bundle must be a regular non-symlink file" >&2
+    exit 2
+  fi
+  actual_memory_bundle_sha256="$(sha256sum "${memory_bundle_host}" | cut -d' ' -f1)"
+  if [[ "${actual_memory_bundle_sha256}" != "${COTCODEC_MEMORY_BUNDLE_SHA256}" ]]; then
+    echo "memory bundle digest mismatch" >&2
+    exit 2
+  fi
+  memory_bundle_mount=",${memory_bundle_host}:/inputs/memory-selection-bundle.json:ro"
+fi
 if ! srun --help 2>&1 | grep -q -- '--container-image'; then
   echo "Slurm Pyxis support is required to run the OCI image" >&2
   exit 2
@@ -39,6 +78,80 @@ fi
 run_dir="${COTCODEC_RUN_ROOT}/${SLURM_JOB_ID}"
 hf_cache="${COTCODEC_HF_CACHE:-${COTCODEC_RUN_ROOT}/hf-cache}"
 mkdir -p "${run_dir}" "${hf_cache}"
+
+if [[ -n "${COTCODEC_PREDECESSOR_JOB_ID:-}" ]]; then
+  if [[ ! "${COTCODEC_PREDECESSOR_JOB_ID}" =~ ^[1-9][0-9]{0,19}$ ]]; then
+    echo "COTCODEC_PREDECESSOR_JOB_ID must be a positive Slurm job id" >&2
+    exit 2
+  fi
+  if [[ ! "${COTCODEC_RESUME_SUBPATH:-}" =~ ^[A-Za-z0-9][A-Za-z0-9._/-]{0,127}$ ]] \
+    || [[ "/${COTCODEC_RESUME_SUBPATH}/" == *"/../"* ]]; then
+    echo "COTCODEC_RESUME_SUBPATH must be a safe relative directory" >&2
+    exit 2
+  fi
+  python - "${COTCODEC_RUN_ROOT}" "${run_dir}" \
+    "${COTCODEC_PREDECESSOR_JOB_ID}" "${COTCODEC_RESUME_SUBPATH}" <<'PY'
+import json
+import os
+import pathlib
+import shutil
+import sys
+
+run_root = pathlib.Path(sys.argv[1]).resolve()
+run_dir = pathlib.Path(sys.argv[2]).resolve()
+predecessor_id = sys.argv[3]
+subpath = pathlib.Path(sys.argv[4])
+predecessor = (run_root / predecessor_id).resolve()
+if predecessor.parent != run_root or run_dir.parent != run_root:
+    raise SystemExit("resume directories escaped the registered run root")
+job_env = predecessor / "job.env"
+if not job_env.is_file():
+    raise SystemExit("predecessor job.env is missing")
+receipt = {}
+for line in job_env.read_text(encoding="utf-8").splitlines():
+    key, separator, value = line.partition("=")
+    if separator and value != "none" and key in {
+        "git_sha",
+        "source_sha256",
+        "image",
+        "memory_bundle_sha256",
+    }:
+        receipt[key] = value
+expected = {
+    "git_sha": os.environ["COTCODEC_GIT_SHA"],
+    "source_sha256": os.environ["COTCODEC_SOURCE_SHA256"],
+    "image": os.environ["COTCODEC_IMAGE"],
+}
+if bundle_sha256 := os.environ.get("COTCODEC_MEMORY_BUNDLE_SHA256"):
+    expected["memory_bundle_sha256"] = bundle_sha256
+if receipt != expected:
+    raise SystemExit("predecessor provenance does not match this job")
+source_candidate = predecessor / subpath
+destination_candidate = run_dir / subpath
+if source_candidate.is_symlink():
+    raise SystemExit("resume artifact source must not be a symbolic link")
+source = source_candidate.resolve()
+destination = destination_candidate.resolve()
+if predecessor not in source.parents or run_dir not in destination.parents:
+    raise SystemExit("resume artifact path escaped its job directory")
+if not source.is_dir() or destination.exists():
+    raise SystemExit("resume artifact source is missing or destination already exists")
+if any(path.is_symlink() for path in source.rglob("*")):
+    raise SystemExit("resume artifact tree must not contain symbolic links")
+destination.parent.mkdir(parents=True, exist_ok=True)
+shutil.copytree(source, destination)
+resume_receipt = {
+    "schema_version": 1,
+    "predecessor_job_id": predecessor_id,
+    "resume_subpath": subpath.as_posix(),
+    **expected,
+}
+(run_dir / "resume-receipt.json").write_text(
+    json.dumps(resume_receipt, indent=2, sort_keys=True) + "\n",
+    encoding="utf-8",
+)
+PY
+fi
 
 checkpoint_marker="${run_dir}/checkpoint.ready"
 termination_file="${run_dir}/termination.env"
@@ -105,6 +218,7 @@ trap on_exit EXIT
   echo "git_sha=${COTCODEC_GIT_SHA}"
   echo "source_sha256=${COTCODEC_SOURCE_SHA256}"
   echo "image=${COTCODEC_IMAGE}"
+  echo "memory_bundle_sha256=${COTCODEC_MEMORY_BUNDLE_SHA256:-none}"
   echo "command_sha256=$(printf %s "${COTCODEC_COMMAND_JSON_HEX}" | sha256sum | cut -d' ' -f1)"
   echo "started_at=$(date -u +%Y-%m-%dT%H:%M:%SZ)"
   echo "nodelist=${SLURM_JOB_NODELIST}"
@@ -146,7 +260,7 @@ export PYTHONUNBUFFERED=1
 srun \
   --kill-on-bad-exit=1 \
   --container-image="docker://${image_ref}" \
-  --container-mounts="${run_dir}:/outputs,${hf_cache}:/cache/huggingface" \
+  --container-mounts="${run_dir}:/outputs,${hf_cache}:/cache/huggingface${memory_bundle_mount}" \
   --container-workdir=/workspace/cotcodec \
   bash -lc 'python scripts/verify_compute_provenance.py > /outputs/provenance-verification.txt && bash scripts/check_compute_env.sh container && exec python scripts/exec_research_workload.py' &
 child_pid="$!"

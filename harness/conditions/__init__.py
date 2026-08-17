@@ -1,18 +1,18 @@
 """Language condition implementations for CoTCodec."""
 
 from harness.conditions.base import LanguageCondition
+from harness.conditions.chinese import InternalChineseCondition
+from harness.conditions.compressed import CompressedEnglishCondition
+from harness.conditions.controlled import ControlledChineseCondition
 from harness.conditions.degraded import (
     EnglishOnly25WordLimitCondition,
     EnglishOnlyLowEffortCondition,
     EnglishOnlyNoThinkingCacheCondition,
 )
 from harness.conditions.english import EnglishOnlyCondition
-from harness.conditions.chinese import InternalChineseCondition
-from harness.conditions.controlled import ControlledChineseCondition
-from harness.conditions.compressed import CompressedEnglishCondition
-from harness.conditions.structured import StructuredEnglishCondition
-from harness.conditions.router import DynamicRouterCondition
 from harness.conditions.polish import PolishStressCondition
+from harness.conditions.router import DynamicRouterCondition
+from harness.conditions.structured import StructuredEnglishCondition
 from harness.config import ConditionID
 
 CONDITION_REGISTRY: dict[ConditionID, type[LanguageCondition]] = {

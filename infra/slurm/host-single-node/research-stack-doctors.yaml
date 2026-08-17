@@ -1,0 +1,25 @@
+schema_version: 1
+runtime: docker-single-node-discovery-v1
+name: research-stack-doctors
+image_id: sha256:27d69bcdf89f456bd059e243bcb6f7c3e3358e9ea193f1e58efad2754cf289d3
+git_sha: 581ded8df71564b0212d8af5dcd401257aa6a28f
+source_sha256: e258739d5649197948f320789528af5a6eb6523df5b2a91445282edc7394867b
+run_root: /home/kevin/cotcodec-runs
+command:
+  - python
+  - scripts/run_memory_doctors.py
+resources:
+  gpu_type: h100
+  gpus: 1
+  cpus: 8
+  memory_gb: 16
+  minutes: 10
+budget:
+  max_gpu_hours: 0.17
+seeds: [42, 43, 44]
+model:
+  cache_host_path: /home/kevin/cotcodec-runs/hf-cache
+  model_id: qwen3.5-4b
+  revision: 851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a
+  receipt_sha256: 75ebfc531acdcbc0c39bbf83ee7bf5267a3ddf02c4fafdf6181624612a0d3082
+  artifact_root_sha256: 3b8a075149bffe4dea784db5b4b37bc0896688cba0b3de7d8d0f6e8ae6157b9e

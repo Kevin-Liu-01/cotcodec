@@ -1,0 +1,94 @@
+schema_version: 1
+name: stage3-lightmem2-context-paging-doctor
+status: registered-cpu-falsification
+scientific_result: false
+publication_ready: false
+
+source:
+  source_id: lightmem2
+  repository: https://github.com/zjunlp/LightMem2
+  revision: dfc67e8bc9373ca5b31bb412298565c9d65b29b6
+  tree: 559fbe66aec30fc8920a8d1217712f5673837116
+  version: 0.1.0-beta.1
+  git_archive_tar_sha256: 973b68b4cf35dcf7fcc29f2c813e8d61f820d71decb391bae9b0bde314f58169
+  license: MIT
+  license_sha256: 82ae945b07c46324863ffea0c5b269d2cebf724bbb3377e2b2786219430bd02d
+  package_json_sha256: c2f6ab4250b3bd2ce6b2e464c94d649bbc35c270536c77d690f3033ae749160a
+  pnpm_lock_sha256: c4f920b7aca698dc3b922ec0e4be4a8f5f91a6a1ab49530a73c7bace8fa16235
+  archive_source_sha256: a7a812e00a0ca67fcfafea04d5296972318e0ae97e950271073f72b5aded5061
+  mcp_source_sha256: 58be265fa07a3fbbe586fe2856778e36dc6f1fd9352becb66129aa51991fb568
+  eviction_source_sha256: ce6782b5285da06c56e2a49ef44bccb97a7637b8ad42d16cfe0a9dfdf737e698
+
+runtime:
+  containment: docker-network-none
+  local_platform: linux/arm64
+  runtime_network: none
+  read_only_root: true
+  cap_drop_all: true
+  no_new_privileges: true
+  provider_secrets: forbidden
+  sudo: forbidden
+  gpu_count: 0
+  max_gpu_hours: 0
+  clean_state_repeats: 2
+  base_image: node@sha256:0711b541c1c33a8a530ac4f0d391baa9a15b3d804695b1b24a47daa5fb60e74d
+  node_version: 24.19.0
+  package_manager: pnpm@10.32.1
+  dependency_lock: pnpm-lock.yaml
+
+upstream_relevant_suite:
+  scope:
+    - artifact-store
+    - eviction
+    - mcp
+    - claude-code-archive
+  tests: 49
+  passed: 47
+  failed: 2
+  skipped: 0
+  expected_failure_class: undeclared-product-surface-kernel-dependency-breaks-mcp-tests
+  limitation: >-
+    The direct pinned MCP package tests cannot load because product-surface
+    imports @lightmem2/kernel without declaring it. The broader recursive suite
+    also stops on three unbuilt visual CLI entrypoint failures, so neither run is
+    evidence that every workspace package is healthy.
+
+intervention:
+  phases: [prepare, verify-restart, purge-probe]
+  archive_before_pointer_stub: true
+  strict_session_lookup_control: true
+  unscoped_mcp_resolver_probe: true
+  fixed_millisecond_archive_collision_probe: true
+  fresh_process_restart: true
+  native_scoped_purge_probe: true
+  physical_plaintext_residue_probe: true
+  model_calls: 0
+  embedding_model_calls: 0
+  external_api_calls: 0
+
+expected_falsification:
+  status: BLOCKED_CROSS_SESSION_DISCLOSURE_ARCHIVE_COLLISION_AND_NO_NATIVE_PURGE
+  archive_before_stub_succeeded: true
+  strict_session_lookup_rejected_other_session: true
+  unscoped_mcp_resolver_recovered_other_session: true
+  archive_filename_collision_reused_path: true
+  first_key_resolved_to_second_payload: true
+  restart_preserved_session_a_archive: true
+  restart_unscoped_mcp_resolver_disclosed_b_to_any_caller: true
+  recovery_api_accepts_session_scope: false
+  native_scoped_purge_api_available: false
+  plaintext_a_remains: true
+  plaintext_b_remains: true
+  reproduced_in_two_clean_states: true
+
+admission:
+  h100_actor: forbidden-for-this-revision
+  scientific_claim: forbidden
+  publication_claim: forbidden
+  scope: context-paging-and-recovery-lifecycle-control-only
+  next_gate: >-
+    Require an immutable revision that binds recovery to the authenticated
+    current session or tenant, uses collision-safe no-overwrite archive
+    identities with content verification and atomic lookup updates, declares a
+    native scoped purge or cryptographic erasure contract with zero residue,
+    and repairs the MCP package dependency graph before any actor-quality run.

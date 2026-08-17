@@ -1,0 +1,49 @@
+schema_version: 1
+name: stage3-memorybank-corrected-decay-doctor
+status: registered-cpu-control
+scientific_result: false
+publication_ready: false
+
+source:
+  source_id: memorybank-siliconfriend
+  paper: arXiv:2305.10250
+  repository: https://github.com/zhongwanjun/MemoryBank-SiliconFriend
+  revision: cf61c4196e4cfdb0f2b7a0316249fa40312dc3a9
+  license: MIT
+  implementation_mode: clean-room-reimplementation
+  upstream_code_imported: false
+
+method:
+  corrected_formula: exp(-elapsed / (5 * strength))
+  upstream_precedence_negative: exp(-(elapsed / 5) * strength)
+  strength: 1 + prior_access_count
+  ranking: (1 + query_token_overlap) * retention_probability
+  online_features: [elapsed_steps, prior_access_count, query_token_overlap]
+  stochastic_deletion: false
+  future_fields: forbidden
+
+runtime:
+  containment: docker-network-none
+  image: docker.io/library/python:3.12.11-slim-bookworm@sha256:519591d6871b7bc437060736b9f7456b8731f1499a57e22e6c285135ae657bf7
+  architecture: arm64
+  clean_state_repeats: 2
+  read_only_root: true
+  cap_drop_all: true
+  no_new_privileges: true
+  nonroot_uid: 65534
+  gpu_count: 0
+  provider_calls: 0
+  model_calls: 0
+
+expected:
+  status: MEMORYBANK_CORRECTED_DECAY_CONTRACT_PASS
+  corrected_monotonic_time: true
+  corrected_monotonic_strength: true
+  upstream_precedence_reverses_strength: true
+  ranking_falsifier_changes_winner: true
+
+admission:
+  h100_actor: blocked-pending-frozen-system-integration
+  quality_claim: forbidden
+  upstream_reproduction_claim: forbidden
+  next_gate: frozen matched corrected-vs-upstream-vs-no-decay system contract
