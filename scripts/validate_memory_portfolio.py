@@ -17,6 +17,10 @@ if __package__:
         GBrainEvidenceError,
         validate_gbrain_brainbench_evidence,
     )
+    from scripts.seal_memforest_artifact_evidence import (
+        MemForestArtifactEvidenceError,
+        validate_memforest_artifact_evidence,
+    )
     from scripts.seal_sage_wiki_artifact_evidence import (
         SageWikiArtifactEvidenceError,
         validate_sage_wiki_artifact_evidence,
@@ -39,6 +43,10 @@ else:
     from seal_gbrain_brainbench_evidence import (  # type: ignore[no-redef]
         GBrainEvidenceError,
         validate_gbrain_brainbench_evidence,
+    )
+    from seal_memforest_artifact_evidence import (  # type: ignore[no-redef]
+        MemForestArtifactEvidenceError,
+        validate_memforest_artifact_evidence,
     )
     from seal_sage_wiki_artifact_evidence import (  # type: ignore[no-redef]
         SageWikiArtifactEvidenceError,
@@ -1791,7 +1799,7 @@ def load_and_validate_portfolio(
                 source = sources[source_id]
                 receipt = source.get("reproduction_receipt")
                 if (
-                    source_id not in {"sodamem", "sage-wiki"}
+                    source_id not in {"sodamem", "sage-wiki", "memforest"}
                     or source.get("evidence_grade") != "local-artifact-audited"
                     or not isinstance(receipt, dict)
                     or candidate.get("evidence_path") != receipt.get("artifact_path")
@@ -1813,8 +1821,12 @@ def load_and_validate_portfolio(
                         validate_sodamem_artifact_evidence(
                             payload, project_root=PROJECT_ROOT
                         )
-                    else:
+                    elif source_id == "sage-wiki":
                         validate_sage_wiki_artifact_evidence(
+                            payload, project_root=PROJECT_ROOT
+                        )
+                    else:
+                        validate_memforest_artifact_evidence(
                             payload, project_root=PROJECT_ROOT
                         )
                 except (json.JSONDecodeError, UnicodeDecodeError, TypeError) as exc:
@@ -1824,6 +1836,8 @@ def load_and_validate_portfolio(
                 except SodaMemArtifactEvidenceError as exc:
                     raise MemoryPortfolioError(f"{candidate_owner}: {exc}") from exc
                 except SageWikiArtifactEvidenceError as exc:
+                    raise MemoryPortfolioError(f"{candidate_owner}: {exc}") from exc
+                except MemForestArtifactEvidenceError as exc:
                     raise MemoryPortfolioError(f"{candidate_owner}: {exc}") from exc
             if status == "actor-translation-killed":
                 source = sources[source_id]

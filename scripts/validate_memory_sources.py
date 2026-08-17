@@ -48,6 +48,10 @@ if __package__:
     from scripts.seal_lightmem2_context_paging_evidence import (
         validate_evidence as validate_lightmem2_evidence,
     )
+    from scripts.seal_memforest_artifact_evidence import (
+        MemForestArtifactEvidenceError,
+        validate_memforest_artifact_evidence,
+    )
     from scripts.seal_memory_evidence import (
         PROVIDER_ROSTER,
         EvidenceError,
@@ -204,6 +208,10 @@ else:
     )
     from seal_lightmem2_context_paging_evidence import (  # type: ignore[no-redef]
         validate_evidence as validate_lightmem2_evidence,
+    )
+    from seal_memforest_artifact_evidence import (  # type: ignore[no-redef]
+        MemForestArtifactEvidenceError,
+        validate_memforest_artifact_evidence,
     )
     from seal_memory_evidence import (  # type: ignore[no-redef]
         PROVIDER_ROSTER,
@@ -511,6 +519,11 @@ def _validate_local_evidence_bundle(
             try:
                 validate_sage_wiki_artifact_evidence(bundle, project_root=PROJECT_ROOT)
             except SageWikiArtifactEvidenceError as exc:
+                raise MemorySourceError(f"{entry_id}: {exc}") from exc
+        elif entry_id == "memforest":
+            try:
+                validate_memforest_artifact_evidence(bundle, project_root=PROJECT_ROOT)
+            except MemForestArtifactEvidenceError as exc:
                 raise MemorySourceError(f"{entry_id}: {exc}") from exc
         else:
             raise MemorySourceError(

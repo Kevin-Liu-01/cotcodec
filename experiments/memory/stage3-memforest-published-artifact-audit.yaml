@@ -1,0 +1,113 @@
+schema_version: 1
+name: stage3-memforest-published-artifact-audit
+status: registered-cpu-artifact-audit
+scientific_result: false
+publication_ready: false
+description: >-
+  Audit MemForest's exact submitted benchmark snapshot and VLDB revision
+  package without API, model, retriever, or GPU calls. Bind the source tree,
+  verify every declared revision checksum, independently recompute all 336
+  public-judge summary rows and the submitted eight-sample tables, and preserve
+  incomplete submitted baselines and heterogeneous write-rate scopes as claim
+  boundaries.
+
+source:
+  source_id: memforest
+  repository: https://github.com/Concyclics/MemForest
+  revision: fb4320a84d296bf7b0752d7ef1f2ad0726ae0b22
+  tree: 2e30793c77ef0b7fc8b36bd6d3648a1d9f2fecb2
+  license: MIT
+  license_sha256: f91f1d776c397faf0e8f2b87e23e7e7f9bd312ec0751397ab183752b1b217efc
+  requirements_sha256: e596f2354b4f732fd45bd3e8f958650bf2309bd1511fbc4f69a405ab236b57f4
+  git_archive_tar_sha256: 3809857bcd1f2fb799038a604149a1354277f80dd87893c7f2e3949c743211e0
+
+submitted_artifacts:
+  locomo_30b:
+    path: benchmark/locomo_per_question_30b.csv
+    sha256: 762d62aa33eccdbcbe229cf8c15c06063dde18778e16d8001b7b4773bee08487
+    size: 42161963
+    expected_method_rows: 11916
+  locomo_4b:
+    path: benchmark/locomo_per_question_4b.csv
+    sha256: 2d79981b7960093f2e2393ea3dd4bfc98c9a447b7209f01e9aa37b29c8449689
+    size: 47316325
+    expected_method_rows: 11916
+  longmemeval_30b:
+    path: benchmark/longmemeval_per_question_30b.csv
+    sha256: b9798fe18acf61e62bef51db3097cfda7bf0aa0c9c3831f72f8f124d82ee856f
+    size: 24573434
+    expected_method_rows: 2974
+  longmemeval_4b:
+    path: benchmark/longmemeval_per_question_4b.csv
+    sha256: 03aa56f9d908a8925b86f0b4ac1cb09350944a3b307b767352a6dae9b9e3d9a8
+    size: 29277419
+    expected_method_rows: 2985
+
+revision_package:
+  checksum_manifest: reproducibility/SHA256SUMS
+  checksum_manifest_sha256: d7502c9be9588a7699a7a198bd03dac02de80a2a71cbc7cdc089f3b2c4f197ef
+  declared_files: 154
+  verifier: reproducibility/scripts/verify_release.py
+  verifier_sha256: 0e7ac23ab60694a468439e0e47bd97d854c14cee14caf92c0381a2315b669020
+  public_judge_rows: 59664
+  public_summary_rows: 336
+  write_rate_rows: 10
+
+runtime:
+  lane: local-darwin-arm64-read-only-artifact-audit
+  platform: macos-26.4-arm64
+  python: 3.13.14
+  uv: 0.11.30
+  project_lock_sha256: 6bd99e8e302585a9c186ec03a3621983ce3a677987c6fdf0bcb71fe3709a3765
+  external_network_required: false
+  source_mutation: forbidden
+
+cases:
+  exact_source_and_artifact_receipts: true
+  all_revision_manifest_checksums_verified: 154
+  upstream_api_free_release_verifier_passes: true
+  submitted_eight_sample_tables_recomputed: true
+  submitted_memforest_30b_longmemeval_pass1: 0.798
+  submitted_incomplete_baseline_coverage_preserved: true
+  all_public_judge_summary_rows_recomputed: 336
+  public_judge_label_rows_complete: 59664
+  write_rate_coordinates_recomputed: 10
+  byte_identical_repeat: true
+
+gates:
+  submitted_memforest_30b_longmemeval_correct: 399
+  submitted_memforest_30b_longmemeval_total: 500
+  submitted_evermemos_30b_longmemeval_total: 474
+  submitted_mem0_4b_longmemeval_total: 485
+  unresolved_public_judge_rows: 0
+  independent_rejudge_completed: false
+  retrieval_or_construction_reproduced: false
+  sustained_concurrent_throughput_reproduced: false
+  scientific_result_must_remain_false: true
+  h100_admission_must_remain_ungranted: true
+
+execution:
+  repetitions: 2
+  external_api_calls: 0
+  llm_calls: 0
+  gpus: 0
+  max_gpu_hours: 0
+  cpu_time_limit_minutes: 5
+  h100_admission: not-granted-by-artifact-audit
+
+claim_boundary: >-
+  Exact pinned submitted-CSV integrity and score recomputation, revision-package
+  checksum integrity, API-free verifier execution, public-judge summary
+  recomputation, and write-rate coordinate arithmetic; not an independent
+  regrade, retrieval or construction reproduction, sustained throughput
+  reproduction, localized-maintenance mechanism effect, memory-quality result,
+  H100 actor admission, or publication evidence.
+
+forbidden_claims:
+  - MemForest's benchmark scores were independently reproduced
+  - the released answers were independently regraded
+  - the submitted baseline rows all cover the full benchmark
+  - the write-rate coordinates measure sustained concurrent throughput
+  - localized temporal-tree maintenance caused the stored scores
+  - H100 actor admission passed
+  - publication ready

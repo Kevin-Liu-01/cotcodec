@@ -196,6 +196,32 @@ def test_sage_wiki_artifact_audit_requires_bound_non_reproduction_evidence(
         load_and_validate_portfolio(_write_portfolio(tmp_path, payload))
 
 
+def test_memforest_artifact_audit_requires_bound_non_reproduction_evidence(
+    tmp_path,
+) -> None:
+    result = load_and_validate_portfolio(DEFAULT_PORTFOLIO)
+    candidate = next(
+        candidate
+        for wave in result["portfolio"]["waves"]
+        for candidate in wave["candidates"]
+        if candidate["source_id"] == "memforest"
+    )
+    assert candidate["status"] == "artifact-audited-not-reproduced"
+
+    payload = copy.deepcopy(result["portfolio"])
+    candidate = next(
+        candidate
+        for wave in payload["waves"]
+        for candidate in wave["candidates"]
+        if candidate["source_id"] == "memforest"
+    )
+    candidate["evidence_sha256"] = "0" * 64
+    with pytest.raises(
+        MemoryPortfolioError, match="artifact audit differs from source receipt"
+    ):
+        load_and_validate_portfolio(_write_portfolio(tmp_path, payload))
+
+
 def test_gbrain_conformance_requires_bound_non_actor_evidence(tmp_path) -> None:
     result = load_and_validate_portfolio(DEFAULT_PORTFOLIO)
     candidate = next(

@@ -51,6 +51,7 @@ from scripts import (  # noqa: E402
     validate_lightmem_offline_experiment,
     validate_magic_context_paging_experiment,
     validate_mem0_lifecycle_experiment,
+    validate_memforest_artifact_experiment,
     validate_memforge_fresh_install_experiment,
     validate_memoria_lifecycle_experiment,
     validate_memory_lifecycle_experiment,
@@ -155,6 +156,9 @@ EXTERNAL_EXPERIMENT_VALIDATORS = {
     ),
     "stage3-mem0-native-lifecycle-doctor": (
         validate_mem0_lifecycle_experiment.validate_experiment_contract
+    ),
+    "stage3-memforest-published-artifact-audit": (
+        validate_memforest_artifact_experiment.validate_experiment_contract
     ),
     "stage3-icarus-lifecycle-doctor": (
         validate_icarus_lifecycle_experiment.validate_experiment_contract

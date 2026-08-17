@@ -3098,3 +3098,34 @@ v3. V1/v2 remain superseded development history.
   conformance reproductions, 34 negative findings, and two artifact audits. The
   93-candidate portfolio remains capped at 84 H100-hours with matrix
   `8b8d459c...`.
+
+## 2026-08-17 — MemForest released artifacts audited, lifecycle gate pending
+
+- Pinned MemForest `fb4320a...` / tree `2e30793...`, its MIT license, exact
+  source archive, direct dependency pins, four submitted benchmark CSVs, and
+  the complete VLDB revision package.
+- Two byte-identical, read-only, zero-API CPU audits verified all 154 files in
+  the revision checksum manifest and reran the upstream API-free release
+  verifier. The submitted MemForest Qwen3-30B LongMemEval row recomputes to
+  399/500 (79.8%) pass@1 and 3,167/4,000 (79.175%) across eight samples.
+- Independently recomputed all 336 released public-judge summary rows from
+  59,664 resolved labels. Preserved the paired-judge boundary: 11,592 rows have
+  no strict label and therefore do not enter strict-paired diagnostics.
+- Preserved incomplete submitted baselines instead of imputing them: EverMemOS
+  Qwen3-30B covers 474/500 LongMemEval questions and Mem0 Qwen3-4B covers
+  485/500.
+- Recomputed all ten released write-rate coordinates. Their manifest mixes
+  per-instance and benchmark-harness scopes and explicitly says they are not
+  sustained multi-instance serving throughput.
+- Sealed `MEMFOREST_RELEASED_ARTIFACTS_AUDITED_NOT_REPRODUCED` at
+  `research/evidence/memory/memforest-published-artifact-audit-v1.json`
+  (`fb571ffe...`) as non-scientific `local-artifact-audited` evidence.
+- This is not an independent regrade, retrieval or construction reproduction,
+  localized-maintenance mechanism effect, memory-quality result, or actor
+  admission. MemForest is removed from H100 execution order pending an
+  exact-source CRUD, restart, deletion, tenant-path, and matched
+  write-throughput doctor.
+- The ledger still records one scientific reproduction, three conformance
+  reproductions, and 34 negative findings, now with three artifact audits. The
+  93-candidate portfolio remains capped at 84 H100-hours with matrix
+  `7ffc4b4f...`.
