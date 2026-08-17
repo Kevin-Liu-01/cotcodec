@@ -1,0 +1,87 @@
+schema_version: 1
+name: stage3-jiuwen-memory-file-lifecycle-doctor
+status: registered-cpu-falsification
+scientific_result: false
+publication_ready: false
+description: >-
+  Exercise JiuwenMemory's exact-source FileMemoryIndex and IndexVersionMigrator
+  in two clean, network-disabled ARM64 containers. Unique-ID controls bound the
+  result while duplicate IDs probe tenant isolation, a fresh process probes
+  persisted migration state, and native scoped deletion is followed by a
+  bounded plaintext scan of the retained SQLite files.
+
+source:
+  source_id: jiuwen-memory
+  repository: https://github.com/openJiuwen-ai/agent-memory
+  revision: 600432b55e480bec5948ee40089884ccf15a7c5d
+  tree: 1b6518ba4f0d89d99cb7febd3e3d7a27b2e8347c
+  version: 2.1.0
+  license: Apache-2.0
+  license_sha256: cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30
+  pyproject_sha256: 7dae9369fcd9a30857aa445e1f41d06932ebd6969e51ec82fa770a8272dc98db
+  uv_lock_sha256: e2a62926d1fd01ad9ecf4a8b305791146bace9ddac5ed941a95490ab66a85d0c
+  git_archive_tar_sha256: 38c6868fe7a707d1912c0b10a64a5661571b0ed6e341464fea65463d83842c3e
+
+runtime:
+  containment: docker-network-none
+  provider_secrets: forbidden
+  sudo: forbidden
+  gpu_count: 0
+  base_image: >-
+    ghcr.io/astral-sh/uv:python3.13-trixie-slim@sha256:d1e005e6f5aac724b7554db95f1c128a77d8d35b59ebe70e188852b4bdad3a3d
+  python_version: 3.13
+  clean_state_repeats: 2
+  fresh_process_restarts_per_repeat: 1
+  python_hash_seeds: [1, 7]
+  frozen_lock_install: JiuwenMemory[sqlite]
+  disclosed_overlay:
+    gmssl: 3.2.2
+    pycryptodomex: 3.23.0
+    sqlite-vec: 0.1.9
+
+intervention:
+  exact_source_modules:
+    - jiuwen_memory/foundation/store/index/file_index/file_memory_index.py
+    - jiuwen_memory/foundation/store/index/file_index/_vector_index.py
+    - jiuwen_memory/memory_core/migration/migrator/index_version_migrator.py
+  model_backend_calls: 0
+  provider_calls: 0
+  deterministic_embedding_only: true
+  test_unique_id_restart_control: true
+  test_duplicate_id_tenant_isolation: true
+  test_migration_version_restart: true
+  test_native_user_scope_delete: true
+  test_post_delete_plaintext_residue: true
+  test_committed_lock_conformance: true
+  graph_subsystem_excluded: true
+
+expected_falsification:
+  status: >-
+    JIUWEN_FILE_BACKEND_ADMISSION_KILLED_GLOBAL_ID_AND_MIGRATION_RESET
+  unique_ids_survive_restart_and_remain_isolated: true
+  duplicate_id_overwrites_sibling_tenant_index_row: true
+  duplicate_id_defect_survives_restart: true
+  migration_index_owner_depends_on_process_hash_order: true
+  migration_version_resets_on_restart_and_replays: true
+  native_scoped_delete_is_logically_effective: true
+  contained_linux_plaintext_residue_scan_completed: true
+  committed_lock_is_stale: true
+  reproduced_in_two_clean_states: true
+
+admission:
+  h100_actor: forbidden-for-this-revision
+  scientific_claim: forbidden
+  publication_claim: forbidden
+  next_gate: >-
+    Admit only a newer immutable revision or explicit repair arm with a
+    tenant-composite index key, durable migration metadata, a self-consistent
+    lock, and a cross-platform physical-purge or cryptographic-erasure contract,
+    followed by the same two-clean-state doctor. Evaluate extraction, dreaming,
+    graph, and retrieval quality only after lifecycle admission.
+
+claim_boundary: >-
+  Exact pinned FileMemoryIndex CRUD, duplicate-ID tenancy, index migration under
+  two fixed process hash seeds, fresh-process restart, native user-scope deletion, committed-lock
+  conformance, and SQLite plaintext residue; not extraction, dreaming, graph,
+  semantic retrieval quality, model effects, H100 actor quality, or publication
+  evidence.

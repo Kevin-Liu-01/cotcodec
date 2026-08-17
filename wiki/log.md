@@ -3064,3 +3064,37 @@ v3. V1/v2 remain superseded development history.
   matrix is now `9528d123...`; the ledger has one scientific reproduction,
   three conformance reproductions, 33 negative findings, and two artifact
   audits.
+
+## 2026-08-17 — JiuwenMemory file-index tenancy and migration admission killed
+
+- Pinned JiuwenMemory `600432b...` / tree `1b6518b...`, its Apache-2.0
+  license, exact 6.36 MB source archive, committed `uv.lock`, and a non-root
+  network-disabled Linux ARM64 doctor image. The committed lock fails
+  `uv lock --check`, omits the declared `file-index` extra, and cannot import
+  the base package without `gmssl`; the doctor used only a disclosed minimal
+  overlay and did not modify the source.
+- Added unique-ID positive controls beside one duplicate ID across two tenant
+  scopes. The second insert overwrote the first tenant's searchable SQLite row
+  because `mem_id` is the sole primary key, while both tenant Markdown copies
+  remained readable through scoped filesystem fallback.
+- Fixed `PYTHONHASHSEED` to `1` and `7` across two clean repetitions. Migration
+  left `user-a` as the sole indexed duplicate owner under seed 1 and `user-b`
+  under seed 7. A fresh process reset the schema version to zero and replayed
+  the version-1 migration.
+- Native user-scope deletion was logically effective, every Markdown source was
+  absent, and both contained Linux scans found zero plaintext proof windows
+  with `PRAGMA secure_delete=1`. This positive result is retained explicitly;
+  no contained Linux residue failure or cross-platform erasure claim is made.
+- The auxiliary exact-source suite passed 1,327 tests with 49 skips after the
+  disclosed overlay. It does not cover the reproduced duplicate-ID tenancy or
+  durable migration metadata defects.
+- Sealed
+  `JIUWEN_FILE_BACKEND_ADMISSION_KILLED_GLOBAL_ID_AND_MIGRATION_RESET` at
+  `research/evidence/memory/jiuwen-memory-file-lifecycle-negative-v1.json`
+  (`7e1d06c9...`) and recorded the bounded audit at
+  `research/jiuwen-memory-file-lifecycle-audit-2026-08-17.md`.
+- Removed JiuwenMemory from execution order and forbade H100 actor admission for
+  this revision. The ledger now records one scientific reproduction, three
+  conformance reproductions, 34 negative findings, and two artifact audits. The
+  93-candidate portfolio remains capped at 84 H100-hours with matrix
+  `8b8d459c...`.

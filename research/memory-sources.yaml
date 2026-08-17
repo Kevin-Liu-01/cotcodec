@@ -3349,11 +3349,48 @@ sources:
       background dreaming, migrations, tenancy controls, and a separate graph
       subsystem.
     use_as: [multi-level-lifecycle-reference, background-consolidation-control, migration-and-tenancy-doctor]
-    evidence_grade: mechanism-only
+    evidence_grade: local-negative-reproduced
+    reproduction_receipt:
+      artifact_path: research/evidence/memory/jiuwen-memory-file-lifecycle-negative-v1.json
+      receipt_sha256: 7e1d06c90f965678ca6395c5b36e7a5c15c4699727b0df4482750237cfe95858
     limitations:
       - The graph subsystem is independent and is not wired into the main LongTermMemory.add_messages path at the audited revision.
       - No sealed benchmark output was located in the pinned repository.
       - The broad runtime surface needs mechanism-specific ablations rather than a bundled brand comparison.
+      - >-
+        Pinned source identity is tree 1b6518ba4f0d89d99cb7febd3e3d7a27b2e8347c,
+        git-archive SHA-256 38c6868fe7a707d1912c0b10a64a5661571b0ed6e341464fea65463d83842c3e,
+        Apache-2.0 license SHA-256 cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30,
+        and committed uv.lock SHA-256 e2a62926d1fd01ad9ecf4a8b305791146bace9ddac5ed941a95490ab66a85d0c.
+      - >-
+        The committed lock fails uv lock --check, does not define the declared
+        file-index extra, and omits the base gmssl import dependency. The contained
+        doctor used only the disclosed gmssl 3.2.2, pycryptodomex 3.23.0, and
+        sqlite-vec 0.1.9 overlay without modifying the pinned source.
+      - >-
+        Two network-disabled Linux ARM64 repetitions with fixed Python hash seeds 1
+        and 7 reproduced a global mem_id primary-key collision: only one duplicate
+        tenant remains in the searchable SQLite index while both tenant Markdown
+        copies remain readable by scoped fallback.
+      - >-
+        Migration scope traversal changed the indexed duplicate owner from user-a
+        under hash seed 1 to user-b under hash seed 7. A fresh process reset the
+        in-memory schema version to zero and replayed the version-1 migration.
+      - >-
+        Native scoped deletion was logically effective, removed every Markdown
+        source, and left zero bounded plaintext proof windows under contained Linux
+        with PRAGMA secure_delete=1. This positive result is not a cross-platform
+        physical-erasure claim; an unsealed macOS exploratory probe is excluded
+        from the sealed finding.
+      - >-
+        The pinned auxiliary upstream suite completed with 1,327 passed and 49
+        skipped after the disclosed overlay, but it does not cover duplicate-ID
+        tenancy or durable migration metadata.
+      - >-
+        This exact revision is killed before H100 admission. Admit only a newer
+        immutable pin or explicit repair arm with a tenant-composite key, durable
+        migration metadata, a self-consistent lock, and a cross-platform purge or
+        cryptographic-erasure contract, followed by the same two-clean-state doctor.
 
   shodh-memory:
     kind: deterministic-tiered-graph-memory
