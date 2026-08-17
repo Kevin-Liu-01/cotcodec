@@ -1,7 +1,7 @@
 schema_version: 1
 verified_at: "2026-08-17"
 ledger: research/memory-sources.yaml
-matrix_sha256: 8b8d459c822cb343093c9103b49d50d9cabe57fde8d9116aa30844d7044a1550
+matrix_sha256: 7ffc4b4ffea6fc5050a5e1beafd1f8f390e7b67df379fa725624115b16ffce58
 portfolio_max_gpu_hours: 84
 scope: >-
   Selected falsifiers and systems for active/inactive, graph, learned-controller,
@@ -373,7 +373,6 @@ waves:
     execution_order:
       - mempalace
       - fidelis
-      - memforest
       - infini-memory
       - mnemo-cortex
       - memgpt-letta
@@ -443,10 +442,12 @@ waves:
       - source_id: memforest
         mode: contained-import
         repository_role: implementation-benchmark-and-reproducibility-artifacts
-        status: planned
+        status: artifact-audited-not-reproduced
         priority: secondary
-        scientific_role: Write-efficient localized temporal-tree maintenance.
-        next_gate: Recompute released tables, then run CRUD and write-throughput doctors before any actor cell.
+        scientific_role: Write-efficient localized temporal-tree maintenance whose submitted and revision tables are now checksum-bound and recomputed without reproducing the system.
+        next_gate: Run exact-source contained CRUD, restart, deletion, tenant-path, and matched write-throughput doctors. Do not admit an actor cell from artifact evidence alone.
+        evidence_path: research/evidence/memory/memforest-published-artifact-audit-v1.json
+        evidence_sha256: fb571ffe136f669d8da30314ae12ed5022693a89db06d38697da7be7aee01f1d
       - source_id: infini-memory
         mode: contained-import
         repository_role: implementation-and-examples

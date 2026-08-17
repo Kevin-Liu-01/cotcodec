@@ -2663,16 +2663,24 @@ sources:
       then browses interval summaries down to leaf evidence; merge, deletion,
       and migration regenerate only affected derived artifacts.
     use_as: [write-path-efficiency-control, hierarchical-temporal-index-control, localized-maintenance-control]
-    evidence_grade: paper-reported
+    evidence_grade: local-artifact-audited
+    reproduction_receipt:
+      artifact_path: research/evidence/memory/memforest-published-artifact-audit-v1.json
+      receipt_sha256: fb571ffe136f669d8da30314ae12ed5022693a89db06d38697da7be7aee01f1d
     benchmark_claims:
       - benchmark: LongMemEval-S
         result: "79.8% pass@1 and approximately 6x memory-construction throughput versus reported stateful baselines"
         source_url: https://arxiv.org/abs/2605.23986
         evidence_grade: paper-reported
     limitations:
-      - No result has been independently reproduced in this repository.
+      - Two byte-identical, read-only local CPU audits verified all 154 revision-manifest files, reran the API-free upstream verifier, recomputed every submitted eight-sample score, and independently recomputed all 336 released public-judge summary rows. This is artifact archaeology, not an independent judge or system reproduction.
+      - The submitted 30B LongMemEval snapshot recomputes MemForest at 399/500 (79.8%) pass@1, but the submitted EverMemOS 30B lane covers only 474/500 questions and the submitted Mem0 4B lane covers only 485/500. Missing rows were not imputed.
+      - All 59,664 revised public-judge labels are resolved, while 11,592 lack paired strict-judge labels; full public coverage and strict-paired diagnostics are separate estimands.
       - Full runs require separate chat, embedding, and judge models plus external benchmark data; released per-question outputs permit table recomputation but not end-to-end reproduction.
       - Throughput, retrieval, maintenance locality, and actor quality are coupled in the headline comparison and need separate matched cells.
+      - The ten released write-rate coordinates recompute arithmetically, but their manifest mixes per-instance and benchmark-harness scopes and explicitly forbids interpreting them as sustained multi-instance throughput.
+      - requirements.txt pins direct dependencies but no transitive lockfile is committed, so a byte-identical runtime reconstruction remains unavailable.
+      - H100 admission is not granted. Run exact-source CRUD, restart, deletion, tenant-path, and matched write-throughput doctors before any actor cell.
 
   infini-memory:
     kind: topic-document-memory-system

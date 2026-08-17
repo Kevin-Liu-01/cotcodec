@@ -50,6 +50,7 @@ def test_live_memory_experiment_contracts_are_valid() -> None:
         "stage3-memorybank-corrected-decay-doctor.yaml",
         "stage3-memorybank-corrected-decay-h100-screen.yaml",
         "stage3-mem0-native-lifecycle-doctor.yaml",
+        "stage3-memforest-published-artifact-audit.yaml",
         "stage3-mnemosyne-lifecycle-doctor.yaml",
         "stage3-mnemosyne-cognitive-lifecycle-doctor.yaml",
         "stage3-mnemon-active-space-admission-doctor.yaml",
@@ -146,6 +147,19 @@ def test_routed_sage_wiki_artifact_contract_fails_closed(tmp_path: Path) -> None
     payload["gates"]["binary_bound_to_revision"] = True
     valid_path.write_text(yaml.safe_dump(payload, sort_keys=False), encoding="utf-8")
     with pytest.raises(MemoryExperimentError, match="Sage Wiki gates contract drifted"):
+        validate_directory(tmp_path)
+
+
+def test_routed_memforest_artifact_contract_fails_closed(tmp_path: Path) -> None:
+    source = DEFAULT_EXPERIMENT_DIR / "stage3-memforest-published-artifact-audit.yaml"
+    valid_path = tmp_path / source.name
+    valid_path.write_bytes(source.read_bytes())
+    assert validate_directory(tmp_path) == [valid_path]
+
+    payload = yaml.safe_load(source.read_text(encoding="utf-8"))
+    payload["gates"]["independent_rejudge_completed"] = True
+    valid_path.write_text(yaml.safe_dump(payload, sort_keys=False), encoding="utf-8")
+    with pytest.raises(MemoryExperimentError, match="MemForest gates contract drifted"):
         validate_directory(tmp_path)
 
 
