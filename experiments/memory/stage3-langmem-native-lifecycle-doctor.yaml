@@ -2,6 +2,7 @@ schema_version: 1
 name: stage3-langmem-native-lifecycle-doctor
 status: registered-native-cpu-lifecycle-doctor
 scientific_result: false
+publication_ready: false
 description: >-
   Exercise the exact LangMem hot-path tools and background MemoryStoreManager
   against the official persistent PostgreSQL store. Deterministic background

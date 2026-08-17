@@ -1,8 +1,8 @@
 schema_version: 1
 verified_at: "2026-08-17"
 ledger: research/memory-sources.yaml
-matrix_sha256: 90ac96272dbe08de330d6f5e06dc164190942900ce81c3c3c86063850d08cdba
-portfolio_max_gpu_hours: 100
+matrix_sha256: 3b19dba06da6a71f15b7c81e0ff98b7c99b52dc5be4c3f7343aa1993caed6f9e
+portfolio_max_gpu_hours: 84
 scope: >-
   Selected falsifiers and systems for active/inactive, graph, learned-controller,
   external-validity, and safety studies. Inclusion is not an endorsement or a
@@ -212,7 +212,7 @@ killed_revisions:
     repository_revision: 29cbe41e58528f92e9efa773c12e15c47be3808c
     terminal_status: BLOCKED_NO_FIRST_CLASS_SCOPED_PURGE_AND_POSTGRES_PLAINTEXT_RESIDUE
     evidence_path: research/evidence/memory/langmem-native-lifecycle-negative-v1.json
-    evidence_sha256: 76f8b3d8ae7db854b0cd2d77578aef09a82a1f450af75d86bdcaccf092bc0d8a
+    evidence_sha256: ffc7e656429eeecfe9673ab890b36eca5fb0877c7d4dc960b69abbcc8934b612
   - source_id: astra-working-set
     repository_revision: 644f9d4e65f4e725996025834c91531592ab6166
     terminal_status: BLOCKED_NONDETERMINISTIC_RECALL_ACCESS_ACCOUNTING
@@ -357,14 +357,13 @@ waves:
     containment: docker-under-slurm
     gpu_sku: H100
     max_gpu_hours_per_candidate: 8
-    max_wave_gpu_hours: 24
+    max_wave_gpu_hours: 16
     stop_after_failed_candidates: 2
     checkpoint_required: true
     h100_admission: cpu-doctor-pass-required
     execution_order:
       - mempalace
       - fidelis
-      - sodamem
       - gbrain
       - sage-wiki
       - jiuwen-memory
@@ -404,7 +403,7 @@ waves:
           artifact_path: research/langmem-native-lifecycle-audit-2026-08-17.md
           artifact_sha256: b264a5402f4df75f8950c2a70c337a58a3d1f153806c36448f2831e4d5db32cc
           receipt_path: research/evidence/memory/langmem-native-lifecycle-negative-v1.json
-          receipt_sha256: 76f8b3d8ae7db854b0cd2d77578aef09a82a1f450af75d86bdcaccf092bc0d8a
+          receipt_sha256: ffc7e656429eeecfe9673ab890b36eca5fb0877c7d4dc960b69abbcc8934b612
           status: BLOCKED_NO_FIRST_CLASS_SCOPED_PURGE_AND_POSTGRES_PLAINTEXT_RESIDUE
       - source_id: hermes-hindsight-native
         mode: contained-import
@@ -422,10 +421,12 @@ waves:
       - source_id: sodamem
         mode: contained-import
         repository_role: implementation-and-benchmark-artifacts
-        status: planned
+        status: artifact-audited-not-reproduced
         priority: primary
-        scientific_role: Evidence-grounded temporal graph with validity and citations.
-        next_gate: Regrade pinned answer/evidence artifacts, then run common-construction actor cell.
+        scientific_role: Evidence-grounded temporal graph with validity and citations whose released answer and retrieval artifacts have been audited without reproducing the system.
+        next_gate: Run a provider-distinct judge over the sealed official-prompt cases, then build a common-construction SodaMem versus flat-history and temporal-graph control before any H100 actor or mechanism claim.
+        evidence_path: research/evidence/memory/sodamem-published-artifact-audit-v1.json
+        evidence_sha256: a9e914b2f64a163796d43f5b86755feff1a7cf9504be86d15aef6b5009ba1473
       - source_id: memgpt-letta
         mode: contained-import
         repository_role: implementation
@@ -900,13 +901,12 @@ waves:
     containment: docker-under-slurm
     gpu_sku: H100
     max_gpu_hours_per_candidate: 8
-    max_wave_gpu_hours: 16
+    max_wave_gpu_hours: 8
     stop_after_failed_candidates: 2
     checkpoint_required: true
     h100_admission: cpu-doctor-pass-required
     execution_order:
       - prograph-memhop
-      - sodamem
       - arigraph
       - memorygraph-typed-coding-memory
       - magma-memory
@@ -937,10 +937,12 @@ waves:
       - source_id: sodamem
         mode: contained-import
         repository_role: implementation-and-benchmark-artifacts
-        status: planned
+        status: artifact-audited-not-reproduced
         priority: primary
         scientific_role: Temporal validity, contradiction, and evidence-citation graph.
-        next_gate: Compare to flat history and Graphiti with identical extraction outputs.
+        next_gate: Run a provider-distinct judge over the sealed official-prompt cases, then compare SodaMem to flat history and Graphiti with identical extraction outputs before any H100 actor or mechanism claim.
+        evidence_path: research/evidence/memory/sodamem-published-artifact-audit-v1.json
+        evidence_sha256: a9e914b2f64a163796d43f5b86755feff1a7cf9504be86d15aef6b5009ba1473
       - source_id: memgraphrag
         mode: contained-import
         repository_role: implementation

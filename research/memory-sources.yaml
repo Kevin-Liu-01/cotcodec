@@ -25,6 +25,7 @@ controlled_vocabulary:
     - local-reproduced
     - local-conformance-reproduced
     - local-negative-reproduced
+    - local-artifact-audited
   evidence_grade_definitions:
     mechanism-only: "Code or specification inspected; no result artifact is admitted."
     paper-reported: "Empirical claim appears in a paper but is not independently reproduced here."
@@ -34,6 +35,7 @@ controlled_vocabulary:
     local-reproduced: "CoTCodec reproduction is bound by a receipt."
     local-conformance-reproduced: "CoTCodec reproduced an interface, transport, or lifecycle conformance result, not a scientific quality result."
     local-negative-reproduced: "CoTCodec reproduced a bounded negative invariant or falsifier, not a scientific quality result."
+    local-artifact-audited: "CoTCodec audited exact released artifacts and recomputed bounded stored metrics without reproducing the underlying system result."
   residency_transitions:
     - not-reviewed
     - none
@@ -156,7 +158,10 @@ sources:
       and retrieves citable evidence through a planner-reader loop over hybrid
       lexical, dense, and graph indexes.
     use_as: [evidence-grounded-temporal-graph-control, provenance-and-validity-control, native-system-candidate]
-    evidence_grade: paper-reported
+    evidence_grade: local-artifact-audited
+    reproduction_receipt:
+      artifact_path: research/evidence/memory/sodamem-published-artifact-audit-v1.json
+      receipt_sha256: a9e914b2f64a163796d43f5b86755feff1a7cf9504be86d15aef6b5009ba1473
     benchmark_claims:
       - benchmark: LongMemEval-S
         result: "92.8% (464/500), reported best of three runs with deepseek-v4-flash"
@@ -165,7 +170,12 @@ sources:
     limitations:
       - The reported best-of-three result uses the same Flash model as reader and judge, so self-grading and selection effects remain.
       - Reported cost excludes ingestion and judging; cross-system points are compiled estimates rather than one matched bake-off.
-      - LongMemEval answers and evidence rows are present inside the pinned repository, but the result has not been independently rerun here.
+      - The exact released artifacts align to all 500 rows of pinned LongMemEval-S and deterministically recompute the stored 464/500 self-judge verdict across two byte-identical local CPU audits; this is artifact archaeology, not an independent regrade or system reproduction.
+      - The retrieval artifact contains 8,427 nonempty rows with nonempty source_trace_ids, but the raw source spans and 12 GB frozen store are not distributed, so provenance cannot be independently dereferenced and retrieval cannot be regenerated.
+      - The judged artifact stores evidence_ids as boolean true on all 500 rows rather than evidence-ID lists; cross-file linkage depends on synthetic q001-q500 IDs.
+      - Full normalized reference text appears in 314/500 hypotheses and 239/470 non-abstention retrieval unions. These are deterministic containment diagnostics, not semantic accuracy or support metrics.
+      - The upstream documented dev-only environment omits the chroma, llm, and server extras required by collected tests. With those declared extras added, the exact pin passed 737 tests with 19 skips locally.
+      - H100 admission is not granted. A provider-distinct judge and common-construction comparison against matched flat-history and temporal-graph controls remain required.
 
   hindsight:
     kind: system
@@ -288,7 +298,7 @@ sources:
     evidence_grade: local-negative-reproduced
     reproduction_receipt:
       artifact_path: research/evidence/memory/langmem-native-lifecycle-negative-v1.json
-      receipt_sha256: 76f8b3d8ae7db854b0cd2d77578aef09a82a1f450af75d86bdcaccf092bc0d8a
+      receipt_sha256: ffc7e656429eeecfe9673ab890b36eca5fb0877c7d4dc960b69abbcc8934b612
     limitations:
       - Framework integration and storage policy are coupled in the reference implementation.
       - Exact source identity is tree d85d1f815fb2b54bbc0a85c18453b7a7953ca38c, git-archive SHA-256 24c85c514c80bb263a16626971e8ef53978fd1bc7f9319e47d8a5a0bf4956521, and MIT license SHA-256 98af1351ea856e008c835bc89a312905960a318072f950732bf346c741027c7d.

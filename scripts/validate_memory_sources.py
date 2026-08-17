@@ -80,6 +80,10 @@ if __package__:
     from scripts.seal_shodh_tier_evidence import (
         validate_evidence as validate_shodh_evidence,
     )
+    from scripts.seal_sodamem_artifact_evidence import (
+        SodaMemArtifactEvidenceError,
+        validate_sodamem_artifact_evidence,
+    )
     from scripts.validate_activegraph_lifecycle_evidence import (
         ActiveGraphEvidenceError,
         validate_activegraph_lifecycle_evidence,
@@ -221,6 +225,10 @@ else:
     from seal_shodh_tier_evidence import (  # type: ignore[no-redef]
         validate_evidence as validate_shodh_evidence,
     )
+    from seal_sodamem_artifact_evidence import (  # type: ignore[no-redef]
+        SodaMemArtifactEvidenceError,
+        validate_sodamem_artifact_evidence,
+    )
     from validate_activegraph_lifecycle_evidence import (  # type: ignore[no-redef]
         ActiveGraphEvidenceError,
         validate_activegraph_lifecycle_evidence,
@@ -313,12 +321,14 @@ EVIDENCE_GRADES = {
     "local-reproduced",
     "local-conformance-reproduced",
     "local-negative-reproduced",
+    "local-artifact-audited",
 }
 RECEIPT_GRADES = {
     "externally-reproduced",
     "local-reproduced",
     "local-conformance-reproduced",
     "local-negative-reproduced",
+    "local-artifact-audited",
 }
 SCIENTIFIC_REPRODUCED_GRADES = {"externally-reproduced", "local-reproduced"}
 RESIDENCY_TRANSITIONS = {
@@ -463,6 +473,16 @@ def _validate_local_evidence_bundle(
     }
     if bundle.get("source_revisions") != expected_revisions:
         raise MemorySourceError(f"{entry_id}: local evidence source revisions drifted")
+    if entry["evidence_grade"] == "local-artifact-audited":
+        if entry_id != "sodamem":
+            raise MemorySourceError(
+                f"{entry_id}: no exact local artifact-audit validator is registered"
+            )
+        try:
+            validate_sodamem_artifact_evidence(bundle, project_root=PROJECT_ROOT)
+        except SodaMemArtifactEvidenceError as exc:
+            raise MemorySourceError(f"{entry_id}: {exc}") from exc
+        return
     if entry["evidence_grade"] == "local-negative-reproduced":
         if entry_id == "langmem":
             try:
@@ -1193,6 +1213,7 @@ def validate_source(
             if evidence_grade in {
                 "local-conformance-reproduced",
                 "local-negative-reproduced",
+                "local-artifact-audited",
             }:
                 _validate_local_evidence_bundle(entry_id, entry, artifact_bytes)
             elif evidence_grade == "local-reproduced" and entry_id == "fidelis":

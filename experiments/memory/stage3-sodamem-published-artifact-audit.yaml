@@ -1,0 +1,99 @@
+schema_version: 1
+name: stage3-sodamem-published-artifact-audit
+status: registered-cpu-artifact-audit
+scientific_result: false
+publication_ready: false
+description: >-
+  Audit SodaMem's exact published LongMemEval answer and retrieval artifacts
+  without an LLM, API, retriever, or GPU. Bind the released rows to the pinned
+  public dataset, recompute the stored self-judge score, inspect evidence and
+  provenance schema, and prepare content-addressed official-prompt cases for a
+  future provider-distinct judge.
+
+source:
+  source_id: sodamem
+  repository: https://github.com/SodaMem/SodaMem
+  revision: b182c1a603e47d82ee6e99190aa5022db28077b5
+  tree: 2c6f29b5bcf3a570d7f9d381ce79b8050b7d94d3
+  license: Apache-2.0
+  license_sha256: cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30
+  git_archive_tar_sha256: 2abd4be8e9af9e3d05d351b5585b5d4c27adee2b93ad9b7af9ca8acfeea170bc
+
+artifacts:
+  judged:
+    path: benchmarking/artifacts/sodamem_lme_judged.json
+    sha256: a5f4208b544d28396e38bf0dd3784366f80a6f743194a8f670ac7afbe658df51
+    size: 783441
+    rows: 500
+  retrieved_context:
+    path: benchmarking/artifacts/sodamem_lme_retrieved_context.json
+    sha256: c7000364da353ba91ebb491dcd9dfccc610a4bb17360db60800b7685fcefe168
+    size: 12039568
+    rows: 500
+
+dataset:
+  repository_revision: 9e0b455f4ef0e2ab8f2e582289761153549043fc
+  dataset_revision: 98d7416c24c778c2fee6e6f3006e7a073259d48f
+  sha256: d6f21ea9d60a0d56f34a05b609c79c88a451d2ae03597821ea3d5a9678c3a442
+  size: 277383467
+  rows: 500
+  abstention_rows: 30
+
+runtime:
+  lane: local-arm64-read-only-artifact-audit
+  platform: macos-26.4-arm64
+  python: 3.13.14
+  uv: 0.11.30
+  project_lock_sha256: 6bd99e8e302585a9c186ec03a3621983ce3a677987c6fdf0bcb71fe3709a3765
+  external_network_required: false
+  source_and_dataset_mutation: forbidden
+
+cases:
+  exact_source_artifact_and_dataset_receipts: true
+  exact_500_row_dataset_alignment: true
+  stored_self_judge_score_recomputation: true
+  answer_context_cross_file_alignment: true
+  evidence_schema_and_source_trace_id_completeness: true
+  official_prompt_case_hashes: true
+  deterministic_reference_containment_diagnostic: true
+  byte_identical_repeat: true
+
+gates:
+  stored_self_judge_correct: 464
+  stored_self_judge_total: 500
+  retrieved_evidence_rows: 8427
+  empty_evidence_questions: 0
+  duplicate_evidence_id_questions: 0
+  evidence_rows_without_source_trace_ids: 0
+  answer_rows_with_evidence_id_lists: 0
+  answer_rows_with_boolean_evidence_sentinel: 500
+  official_prompt_cases: 500
+  repetitions_byte_identical: true
+  scientific_result_must_remain_false: true
+  h100_admission_must_remain_ungranted: true
+
+execution:
+  repetitions: 2
+  external_api_calls: 0
+  llm_calls: 0
+  gpus: 0
+  max_gpu_hours: 0
+  cpu_time_limit_minutes: 5
+  h100_admission: not-granted-by-artifact-audit
+
+claim_boundary: >-
+  Exact pinned released-artifact integrity, dataset alignment, stored
+  deepseek-v4-flash self-judge score recomputation, evidence-schema diagnostics,
+  deterministic reference-containment diagnostics, and official-prompt case
+  preparation; not an independent regrade, retrieval reproduction, ingest or
+  construction reproduction, temporal-graph mechanism effect, memory-quality
+  result, H100 actor admission, or publication evidence.
+
+forbidden_claims:
+  - SodaMem independently reproduces 92.8 percent
+  - the released retrieval was regenerated
+  - source_trace_ids were independently dereferenced
+  - normalized reference containment is semantic accuracy
+  - SodaMem temporal graphs caused the stored score
+  - H100 actor admission passed
+  - publication ready
