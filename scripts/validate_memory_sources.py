@@ -22,6 +22,10 @@ if __package__:
         AstraEvidenceError,
         validate_astra_native_lifecycle_evidence,
     )
+    from scripts.seal_gbrain_brainbench_evidence import (
+        GBrainEvidenceError,
+        validate_gbrain_brainbench_evidence,
+    )
     from scripts.seal_icarus_lifecycle_evidence import (
         EvidenceError as IcarusEvidenceError,
     )
@@ -75,6 +79,10 @@ if __package__:
     )
     from scripts.seal_palimpsest_bitemporal_evidence import (
         validate_evidence as validate_palimpsest_evidence,
+    )
+    from scripts.seal_sage_wiki_artifact_evidence import (
+        SageWikiArtifactEvidenceError,
+        validate_sage_wiki_artifact_evidence,
     )
     from scripts.seal_shodh_tier_evidence import EvidenceError as ShodhEvidenceError
     from scripts.seal_shodh_tier_evidence import (
@@ -165,6 +173,10 @@ else:
         AstraEvidenceError,
         validate_astra_native_lifecycle_evidence,
     )
+    from seal_gbrain_brainbench_evidence import (  # type: ignore[no-redef]
+        GBrainEvidenceError,
+        validate_gbrain_brainbench_evidence,
+    )
     from seal_icarus_lifecycle_evidence import (  # type: ignore[no-redef]
         EvidenceError as IcarusEvidenceError,
     )
@@ -218,6 +230,10 @@ else:
     )
     from seal_palimpsest_bitemporal_evidence import (  # type: ignore[no-redef]
         validate_evidence as validate_palimpsest_evidence,
+    )
+    from seal_sage_wiki_artifact_evidence import (  # type: ignore[no-redef]
+        SageWikiArtifactEvidenceError,
+        validate_sage_wiki_artifact_evidence,
     )
     from seal_shodh_tier_evidence import (  # type: ignore[no-redef]
         EvidenceError as ShodhEvidenceError,
@@ -474,14 +490,20 @@ def _validate_local_evidence_bundle(
     if bundle.get("source_revisions") != expected_revisions:
         raise MemorySourceError(f"{entry_id}: local evidence source revisions drifted")
     if entry["evidence_grade"] == "local-artifact-audited":
-        if entry_id != "sodamem":
+        if entry_id == "sodamem":
+            try:
+                validate_sodamem_artifact_evidence(bundle, project_root=PROJECT_ROOT)
+            except SodaMemArtifactEvidenceError as exc:
+                raise MemorySourceError(f"{entry_id}: {exc}") from exc
+        elif entry_id == "sage-wiki":
+            try:
+                validate_sage_wiki_artifact_evidence(bundle, project_root=PROJECT_ROOT)
+            except SageWikiArtifactEvidenceError as exc:
+                raise MemorySourceError(f"{entry_id}: {exc}") from exc
+        else:
             raise MemorySourceError(
                 f"{entry_id}: no exact local artifact-audit validator is registered"
             )
-        try:
-            validate_sodamem_artifact_evidence(bundle, project_root=PROJECT_ROOT)
-        except SodaMemArtifactEvidenceError as exc:
-            raise MemorySourceError(f"{entry_id}: {exc}") from exc
         return
     if entry["evidence_grade"] == "local-negative-reproduced":
         if entry_id == "langmem":
@@ -967,7 +989,19 @@ def _validate_local_evidence_bundle(
             )
     elif entry["evidence_grade"] == "local-conformance-reproduced":
         evidence_kind = bundle.get("evidence_kind")
-        if evidence_kind == "native-control-admission":
+        if evidence_kind == "brainbench-cross-harness-conformance-reproduction":
+            if entry_id != "gbrain":
+                raise MemorySourceError(
+                    f"{entry_id}: BrainBench conformance source identity drifted"
+                )
+            try:
+                validate_gbrain_brainbench_evidence(
+                    bundle,
+                    project_root=PROJECT_ROOT,
+                )
+            except GBrainEvidenceError as exc:
+                raise MemorySourceError(f"{entry_id}: {exc}") from exc
+        elif evidence_kind == "native-control-admission":
             if entry_id != "mnemon":
                 raise MemorySourceError(
                     f"{entry_id}: active-space admission source identity drifted"

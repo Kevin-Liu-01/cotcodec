@@ -13,6 +13,14 @@ from typing import Any
 
 if __package__:
     from scripts.compile_memory_landscape import compile_landscape
+    from scripts.seal_gbrain_brainbench_evidence import (
+        GBrainEvidenceError,
+        validate_gbrain_brainbench_evidence,
+    )
+    from scripts.seal_sage_wiki_artifact_evidence import (
+        SageWikiArtifactEvidenceError,
+        validate_sage_wiki_artifact_evidence,
+    )
     from scripts.seal_sodamem_artifact_evidence import (
         SodaMemArtifactEvidenceError,
         validate_sodamem_artifact_evidence,
@@ -28,6 +36,14 @@ if __package__:
     )
 else:
     from compile_memory_landscape import compile_landscape
+    from seal_gbrain_brainbench_evidence import (  # type: ignore[no-redef]
+        GBrainEvidenceError,
+        validate_gbrain_brainbench_evidence,
+    )
+    from seal_sage_wiki_artifact_evidence import (  # type: ignore[no-redef]
+        SageWikiArtifactEvidenceError,
+        validate_sage_wiki_artifact_evidence,
+    )
     from seal_sodamem_artifact_evidence import (  # type: ignore[no-redef]
         SodaMemArtifactEvidenceError,
         validate_sodamem_artifact_evidence,
@@ -1676,6 +1692,38 @@ def load_and_validate_portfolio(
                 raise MemoryPortfolioError(
                     f"{candidate_owner}: paper-reimplementation cannot bind upstream code"
                 )
+            if source_id == "gbrain":
+                source = sources[source_id]
+                receipt = source.get("reproduction_receipt")
+                if (
+                    status != "source-admission-blocked"
+                    or source.get("evidence_grade") != "local-conformance-reproduced"
+                    or not isinstance(receipt, dict)
+                    or candidate.get("evidence_path") != receipt.get("artifact_path")
+                    or candidate.get("evidence_sha256") != receipt.get("receipt_sha256")
+                ):
+                    raise MemoryPortfolioError(
+                        f"{candidate_owner}: GBrain conformance differs from source receipt"
+                    )
+                evidence = _bound_artifact(
+                    f"{candidate_owner}.gbrain_conformance",
+                    candidate.get("evidence_path"),
+                    candidate.get("evidence_sha256"),
+                )
+                try:
+                    payload = json.loads(evidence)
+                    if not isinstance(payload, dict):
+                        raise TypeError
+                    validate_gbrain_brainbench_evidence(
+                        payload,
+                        project_root=PROJECT_ROOT,
+                    )
+                except (json.JSONDecodeError, UnicodeDecodeError, TypeError) as exc:
+                    raise MemoryPortfolioError(
+                        f"{candidate_owner}: GBrain conformance evidence is invalid JSON"
+                    ) from exc
+                except GBrainEvidenceError as exc:
+                    raise MemoryPortfolioError(f"{candidate_owner}: {exc}") from exc
             if status == "natural-retrieval-component-passed":
                 source = sources[source_id]
                 receipt = source.get("reproduction_receipt")
@@ -1740,7 +1788,7 @@ def load_and_validate_portfolio(
                 source = sources[source_id]
                 receipt = source.get("reproduction_receipt")
                 if (
-                    source_id != "sodamem"
+                    source_id not in {"sodamem", "sage-wiki"}
                     or source.get("evidence_grade") != "local-artifact-audited"
                     or not isinstance(receipt, dict)
                     or candidate.get("evidence_path") != receipt.get("artifact_path")
@@ -1758,14 +1806,21 @@ def load_and_validate_portfolio(
                     payload = json.loads(evidence)
                     if not isinstance(payload, dict):
                         raise TypeError
-                    validate_sodamem_artifact_evidence(
-                        payload, project_root=PROJECT_ROOT
-                    )
+                    if source_id == "sodamem":
+                        validate_sodamem_artifact_evidence(
+                            payload, project_root=PROJECT_ROOT
+                        )
+                    else:
+                        validate_sage_wiki_artifact_evidence(
+                            payload, project_root=PROJECT_ROOT
+                        )
                 except (json.JSONDecodeError, UnicodeDecodeError, TypeError) as exc:
                     raise MemoryPortfolioError(
                         f"{candidate_owner}: artifact audit evidence is invalid JSON"
                     ) from exc
                 except SodaMemArtifactEvidenceError as exc:
+                    raise MemoryPortfolioError(f"{candidate_owner}: {exc}") from exc
+                except SageWikiArtifactEvidenceError as exc:
                     raise MemoryPortfolioError(f"{candidate_owner}: {exc}") from exc
             if status == "actor-translation-killed":
                 source = sources[source_id]

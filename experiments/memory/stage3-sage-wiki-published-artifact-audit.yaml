@@ -1,0 +1,97 @@
+schema_version: 1
+name: stage3-sage-wiki-published-artifact-audit
+status: registered-cpu-artifact-audit
+scientific_result: false
+publication_ready: false
+description: >-
+  Audit Sage Wiki's ten exact committed BEAM, LoCoMo, and LongMemEval result
+  artifacts without API, model, retriever, or GPU calls. Recompute every stored
+  aggregate, verify the annotated report, align independently pinned LoCoMo and
+  LongMemEval rosters, and preserve the missing binary, retrieval, provider,
+  and construction provenance as admission blockers.
+
+source:
+  source_id: sage-wiki
+  repository: https://github.com/xoai/sage-wiki
+  revision: 78b71575834750962d14265550a099ac64426d91
+  tree: f04621c7f2821bd70fa2da27f5736473d1662a42
+  tag: v0.2.9
+  license: MIT
+  license_sha256: a0488807e16c1976de2d2408e793af5cd5e889de35f7fa4a11086c1da4683615
+  git_archive_tar_sha256: 1f9c349efb2fac7a20b790b8e6dee66f03c773522e5cd36905c07b06cbfbcf44
+
+artifacts:
+  beam_full: {path: eval/benchmarks/results/beam_full.json, sha256: c2b54f558dc43dcc6d4106383dc3556d72bc0226feab53405eeb36fee3655e34, size: 171908, rows: 60}
+  beam_gpt5: {path: eval/benchmarks/results/beam_gpt5.json, sha256: ce9ac0157de5569e29f86433501503d640595c9f885a3a7caa561d0192eb299d, size: 811282, rows: 60}
+  beam_smoke: {path: eval/benchmarks/results/beam_smoke.json, sha256: 7c485a02b63adcf6ecf19d9f2a2efd8f0f8a03bc14e7e9cb5f0d026460c4ef79, size: 5396, rows: 2}
+  locomo_full: {path: eval/benchmarks/results/locomo_full.json, sha256: f35b4fc0aba55ef8c7a7763937f8e1f4c9e95a338ee2ad2997cb8ed137d6d5af, size: 1077842, rows: 1540}
+  locomo_gpt5_150: {path: eval/benchmarks/results/locomo_gpt5-150.json, sha256: a9052b90b056b55274851b4efbb034197c6914fbbcaca337a67c5022fc55f7cd, size: 235935, rows: 150}
+  locomo_parity: {path: eval/benchmarks/results/locomo_parity.json, sha256: d005e27b36ed0c0fd87521c884226f4df243415361b9f9c5777a259687c256d2, size: 1466418, rows: 1540}
+  locomo_smoke: {path: eval/benchmarks/results/locomo_smoke.json, sha256: 5800fedab30760d43363066c9ecab86ddcac33126845312623913a625d2a9080, size: 4756, rows: 5}
+  longmemeval_full: {path: eval/benchmarks/results/longmemeval_full.json, sha256: c9e758c301b16a23eece0b94bbb6c2ca7f67bbf73fe3a9407761f35264bcf94f, size: 23534, rows: 30}
+  longmemeval_gpt5: {path: eval/benchmarks/results/longmemeval_gpt5.json, sha256: e78139d9381b8faf71dbb8397233c401d4ad86c3150fbe9c9c41b951f4dc5421, size: 51367, rows: 30}
+  longmemeval_smoke: {path: eval/benchmarks/results/longmemeval_smoke.json, sha256: cff8dbc70aa620daee63a99ff0139db5189d2cfc19df19f54ca18e5731ee1af9, size: 1714, rows: 1}
+
+datasets:
+  longmemeval_s: {sha256: d6f21ea9d60a0d56f34a05b609c79c88a451d2ae03597821ea3d5a9678c3a442, size: 277383467, rows: 500}
+  locomo10: {sha256: 79fa87e90f04081343b8c8debecb80a9a6842b76a7aa537dc9fdf651ea698ff4, size: 2805274, conversations: 10}
+  beam: {immutable_source_bound: false, reason: mutable-huggingface-loader-without-revision}
+
+runtime:
+  lane: local-darwin-arm64-read-only-artifact-audit
+  go_version: go1.26.6
+  go_toolchain_module_zip_sha256: e7d0678e7861d22c375ce7f55713d4a783b9771a1a0fc5d0542aac64e02e491b
+  go_binary_sha256: a1c83801d1756c3eca78366c6b585f2c21c20694fb1c7eb92c446a0580420412
+  python_tests: 158
+  focused_go_tests: 359
+  focused_go_skips: 18
+  external_network_required: false
+  source_and_datasets_mutation: forbidden
+
+cases:
+  exact_source_and_artifact_receipts: true
+  all_stored_aggregates_recomputed: true
+  all_stored_cutoff_aggregates_recomputed: true
+  all_stored_latency_aggregates_recomputed: true
+  report_annotations_verified: 45
+  longmemeval_artifact_rows_aligned: 61
+  locomo_artifact_rows_aligned: 3235
+  byte_identical_repeat: true
+
+gates:
+  committed_artifacts: 10
+  binary_bound_to_revision: false
+  retrieval_ids_or_text_retained: false
+  compiled_projects_or_databases_retained: false
+  provider_snapshots_bound: false
+  independent_rejudge_completed: false
+  matched_flat_vs_graph_arm_present: false
+  scientific_result_must_remain_false: true
+  h100_admission_must_remain_ungranted: true
+
+execution:
+  repetitions: 2
+  external_api_calls: 0
+  llm_calls: 0
+  gpus: 0
+  max_gpu_hours: 0
+  cpu_time_limit_minutes: 5
+  h100_admission: not-granted-by-artifact-audit
+
+claim_boundary: >-
+  Exact committed-artifact integrity, source-test conformance, stored aggregate
+  recomputation, report-annotation verification, and independently pinned
+  LoCoMo and LongMemEval roster alignment; not a binary-bound rerun, retrieval
+  reproduction, independent regrade, BEAM source reproduction, construction
+  reproduction, graph mechanism effect, memory-quality result, H100 actor
+  admission, or publication evidence.
+
+forbidden_claims:
+  - Sage Wiki benchmark scores were independently reproduced
+  - the committed retrieval was regenerated
+  - the published binary was bound to revision 78b7157
+  - BEAM rows were aligned to an immutable source dataset
+  - GPT-5 identifies an immutable provider snapshot
+  - graph retrieval caused the stored scores
+  - H100 actor admission passed
+  - publication ready

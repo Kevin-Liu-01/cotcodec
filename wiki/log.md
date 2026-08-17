@@ -3008,3 +3008,59 @@ v3. V1/v2 remain superseded development history.
   84 H100-hours with matrix `3b19dba0...`; the ledger still records one
   scientific reproduction, two conformance reproductions, and 33 negative
   findings, plus one artifact audit.
+
+## 2026-08-17 — GBrain exact-source BrainBench conformance reproduced
+
+- Pinned GBrain `d941e9f...` / tree `4d7960c...`, its MIT license,
+  exact source archive, `bun.lock`, and official Bun 1.3.13 Darwin ARM64
+  release and binary.
+- Installed the frozen dependency graph with machine-global lifecycle scripts
+  disabled, then passed 146 focused upstream tests and 725 assertions across
+  12 source files.
+- Two provider-credential-free BrainBench runs passed the committed same-hash
+  gate with no breaches or seed failures. The stable semantic projection covers
+  12 harness/suite cells and 786 turn rows and hashes to `8e4ebad2...`; all
+  source-isolation violation counts were zero.
+- Preserved the seam boundary: OpenClaw is the only shipped production seam.
+  Claude Code and Codex are GBrain-owned contract adapters, not reproduced
+  third-party production integrations.
+- BrainBench has no matched pull-retrieval arm, so this does not answer the
+  registered push-versus-pull question and is not a live-agent, memory-quality,
+  model-quality, or publication result.
+- Sealed `GBRAIN_BRAINBENCH_CONFORMANCE_PASS_PULL_COMPARISON_MISSING` at
+  `research/evidence/memory/gbrain-brainbench-conformance-v1.json`
+  (`4c6f6d5f...`) as `local-conformance-reproduced` evidence. Removed GBrain
+  from H100 execution order and marked it `source-admission-blocked` until a
+  matched production OpenClaw push-versus-pull cell exists.
+- The live ledger now records one scientific reproduction, three conformance
+  reproductions, 33 negative findings, and one artifact audit. The validated
+  93-candidate portfolio remains capped at 84 H100-hours with matrix
+  `70b38eee...`.
+
+## 2026-08-17 — Sage Wiki released artifacts audited, provenance gate blocked
+
+- Pinned Sage Wiki `78b7157...` / tree `f04621c...`, tag `v0.2.9`, its MIT
+  license, exact source archive, Go lock, ten committed benchmark artifacts,
+  and independently pinned LongMemEval-S and LoCoMo-10 datasets.
+- The exact source passed 158 Python evaluation tests and 359 focused Go tests
+  with 18 skips and zero failures under Go 1.26.6.
+- Two byte-identical zero-API audits recomputed every stored overall, group,
+  cutoff, and latency aggregate; verified all 45 report annotations; and
+  aligned 61 LongMemEval plus 3,235 LoCoMo artifact rows to the pinned datasets
+  and committed deterministic sample policies.
+- Preserved the hard boundary: every result names an unbound dev binary,
+  retrieval IDs/text and compiled stores are absent, provider aliases are not
+  immutable snapshots, BEAM is not revision-pinned, `locomo_full` has stitched
+  usage metadata, and `locomo_parity` contains 1,011 infrastructure errors.
+- No matched flat arm exists and retrieval, actor, judge, depth, prompts, and
+  samples changed together across result generations. The artifacts do not
+  identify a graph mechanism effect or reproduce benchmark quality.
+- Sealed
+  `SAGE_WIKI_RELEASED_ARTIFACTS_AUDITED_BINARY_AND_RETRIEVAL_PROVENANCE_MISSING`
+  at `research/evidence/memory/sage-wiki-published-artifact-audit-v1.json`
+  (`eeb7f14c...`) as non-scientific `local-artifact-audited` evidence.
+- Marked Sage Wiki `artifact-audited-not-reproduced`, removed it from H100
+  execution order, and retained the 84-H100-hour ceiling. The 93-candidate
+  matrix is now `9528d123...`; the ledger has one scientific reproduction,
+  three conformance reproductions, 33 negative findings, and two artifact
+  audits.
