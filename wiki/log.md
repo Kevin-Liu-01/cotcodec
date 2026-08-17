@@ -2910,3 +2910,31 @@ v3. V1/v2 remain superseded development history.
   conformance reproductions, and 32 bounded negative findings. The 93-candidate
   portfolio remains capped at 108 H100-hours with matrix `be14faf7...`; the
   active/inactive wave has no executable admitted candidate.
+
+## 2026-08-17 — LangMem persistent lifecycle positive, erasure admission negative
+
+- Pinned LangMem `29cbe41...` / tree `d85d1f81...`, added the official
+  `langgraph-checkpoint-postgres==3.1.0` persistent store path, and ran two
+  clean ARM64 Docker repetitions over an internal bridge with one clean
+  PostgreSQL plus fresh-process restart per repeat.
+- Public hot-path create/update/search/delete, deterministic background-manager
+  persistence, user namespace isolation, logical deletion, and restart all
+  passed with stable semantic projection `96602010...`. Deterministic
+  extraction isolated lifecycle plumbing from model quality; vector search was
+  intentionally outside the contract.
+- The exact `PostgresStore` surface exposes record deletion but no first-class
+  namespace purge. Enumerate-then-delete made all tested scopes logically
+  empty, but every original, updated, isolated, and background plaintext
+  canary remained in both PostgreSQL heap and WAL after clean shutdown in both
+  repetitions. Each hit is retained as a bounded, self-verifying proof window.
+- Sealed terminal status
+  `BLOCKED_NO_FIRST_CLASS_SCOPED_PURGE_AND_POSTGRES_PLAINTEXT_RESIDUE` at
+  `research/evidence/memory/langmem-native-lifecycle-negative-v1.json`
+  (`76f8b3d8...`) with audit
+  `research/langmem-native-lifecycle-audit-2026-08-17.md`. H100 actor admission
+  is forbidden for this revision; extraction, semantic retrieval, procedural
+  prompt quality, model effects, and managed-service behavior remain untested.
+- The live ledger now records 229 sources, 182 pinned repositories, two
+  conformance reproductions, and 33 bounded negative findings. Removing this
+  killed candidate from the first wave lowers the 93-candidate portfolio
+  ceiling to 100 H100-hours with matrix `691956fb...`.

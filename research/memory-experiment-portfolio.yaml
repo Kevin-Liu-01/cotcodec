@@ -1,8 +1,8 @@
 schema_version: 1
 verified_at: "2026-08-16"
 ledger: research/memory-sources.yaml
-matrix_sha256: be14faf7610649a62cfd0ad3ca5ed89ceb1afd559aac72e6a08d6cd452c4e15d
-portfolio_max_gpu_hours: 108
+matrix_sha256: 691956fbf5b56852f7d272af09ca5eb3547e3a0a046e7c15dc78c964e46cc024
+portfolio_max_gpu_hours: 100
 scope: >-
   Selected falsifiers and systems for active/inactive, graph, learned-controller,
   external-validity, and safety studies. Inclusion is not an endorsement or a
@@ -208,6 +208,11 @@ native_lifecycle_conformance_contracts:
     next_gate: Do not run the proposed Neo4j natural actor screen. On the frozen 64-question LongMemEval update/temporal panel, chronological topology reduced recall-all@4 by 14.06 points versus flat BM25-dense and did not beat degree-preserving shuffles. A future actor hypothesis requires a materially different graph mechanism, a new preregistered contract, clean source, and complete controls.
 
 killed_revisions:
+  - source_id: langmem
+    repository_revision: 29cbe41e58528f92e9efa773c12e15c47be3808c
+    terminal_status: BLOCKED_NO_FIRST_CLASS_SCOPED_PURGE_AND_POSTGRES_PLAINTEXT_RESIDUE
+    evidence_path: research/evidence/memory/langmem-native-lifecycle-negative-v1.json
+    evidence_sha256: 76f8b3d8ae7db854b0cd2d77578aef09a82a1f450af75d86bdcaccf092bc0d8a
   - source_id: astra-working-set
     repository_revision: 644f9d4e65f4e725996025834c91531592ab6166
     terminal_status: BLOCKED_NONDETERMINISTIC_RECALL_ACCESS_ACCOUNTING
@@ -352,14 +357,13 @@ waves:
     containment: docker-under-slurm
     gpu_sku: H100
     max_gpu_hours_per_candidate: 8
-    max_wave_gpu_hours: 32
+    max_wave_gpu_hours: 24
     stop_after_failed_candidates: 2
     checkpoint_required: true
     h100_admission: cpu-doctor-pass-required
     execution_order:
       - mempalace
       - fidelis
-      - langmem
       - sodamem
       - gbrain
       - sage-wiki
@@ -392,10 +396,16 @@ waves:
       - source_id: langmem
         mode: contained-import
         repository_role: implementation
-        status: existing-interface-smoke
+        status: discovery-killed
         priority: primary
-        scientific_role: Agent-managed hot-path/background and procedural memory baseline.
-        next_gate: Enable matched background manager and persistent restart/purge tests.
+        scientific_role: Reproduced public hot-path and deterministic background-manager persistence control whose official PostgreSQL path lacks first-class scoped purge and retains purged plaintext in heap and WAL.
+        next_gate: Do not run an H100 actor for 29cbe41. Admit only a newer immutable pin or explicit repair arm with first-class tenant-scoped purge plus physical purge or cryptographic erasure, followed by the same two-clean-state restart, isolation, logical-delete, and post-shutdown residue doctor. Evaluate extraction and retrieval quality separately afterward.
+        negative_evidence:
+          artifact_path: research/langmem-native-lifecycle-audit-2026-08-17.md
+          artifact_sha256: b264a5402f4df75f8950c2a70c337a58a3d1f153806c36448f2831e4d5db32cc
+          receipt_path: research/evidence/memory/langmem-native-lifecycle-negative-v1.json
+          receipt_sha256: 76f8b3d8ae7db854b0cd2d77578aef09a82a1f450af75d86bdcaccf092bc0d8a
+          status: BLOCKED_NO_FIRST_CLASS_SCOPED_PURGE_AND_POSTGRES_PLAINTEXT_RESIDUE
       - source_id: hermes-hindsight-native
         mode: contained-import
         repository_role: native-memory-service

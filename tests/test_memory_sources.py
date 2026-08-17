@@ -252,6 +252,7 @@ def test_reproducibility_audit_exposes_paper_and_license_gaps() -> None:
         "hermes-observational-memory",
         "hippo-memory",
         "icarus-memory-infra",
+        "langmem",
         "lightmem",
         "lightmem2",
         "longmemeval-natural-session-topology",

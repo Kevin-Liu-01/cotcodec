@@ -80,6 +80,9 @@ NEGATIVE_TERMINAL_STATUSES = {
     "hermes-observational-memory": "BLOCKED_NO_PROVIDER_NATIVE_DELETE_OR_ERASURE",
     "hippo-memory": "BLOCKED_CROSS_TENANT_CONSOLIDATION_AND_PURGE_RESIDUE_REPRODUCED",
     "icarus-memory-infra": "BLOCKED_NON_IDEMPOTENT_PROMOTION_AND_NO_NATIVE_PURGE",
+    "langmem": (
+        "BLOCKED_NO_FIRST_CLASS_SCOPED_PURGE_AND_POSTGRES_PLAINTEXT_RESIDUE"
+    ),
     "lightmem": (
         "BLOCKED_DESTRUCTIVE_DEFAULT_REOPEN_AND_CONSOLIDATION_CONTRACT_DRIFT"
     ),
@@ -245,6 +248,31 @@ def _validate_negative_receipt(
         ):
             raise MemoryPortfolioError(
                 f"{owner}: ASTRA native lifecycle receipt semantics drifted"
+            )
+    elif source_id == "langmem":
+        findings = receipt.get("findings", {})
+        if (
+            receipt.get("evidence_kind")
+            != "contained-native-postgres-lifecycle-negative"
+            or receipt.get("source_revisions", {}).get(
+                "https://github.com/langchain-ai/langmem"
+            )
+            != revision
+            or receipt.get("runtime_lane")
+            != "local-arm64-docker-internal-bridge"
+            or receipt.get("run_count") != 2
+            or receipt.get("stable_projection_sha256")
+            != "96602010adaf5b90c706c9be759d4790464ccd7a2ee4eea302011ce76cbdac61"
+            or findings.get("database_and_fresh_process_restart_passed")
+            is not True
+            or findings.get("first_class_namespace_purge_absent") is not True
+            or findings.get("purged_plaintext_remains_in_postgresql_heap")
+            is not True
+            or findings.get("purged_plaintext_remains_in_postgresql_wal")
+            is not True
+        ):
+            raise MemoryPortfolioError(
+                f"{owner}: LangMem native lifecycle receipt semantics drifted"
             )
     elif source_id == "total-recall-oss":
         if (
@@ -1331,6 +1359,7 @@ def _validate_killed_revisions(
             "hermes-holographic",
             "hippo-memory",
             "icarus-memory-infra",
+            "langmem",
             "lightmem",
             "lightmem2",
             "magic-context",

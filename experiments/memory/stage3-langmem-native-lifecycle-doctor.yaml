@@ -1,0 +1,69 @@
+schema_version: 1
+name: stage3-langmem-native-lifecycle-doctor
+status: registered-native-cpu-lifecycle-doctor
+scientific_result: false
+description: >-
+  Exercise the exact LangMem hot-path tools and background MemoryStoreManager
+  against the official persistent PostgreSQL store. Deterministic background
+  extraction isolates lifecycle plumbing from model quality. Two clean-state
+  repetitions test database plus process restart, user isolation, logical
+  deletion, namespace purge availability, and post-shutdown plaintext residue.
+
+source:
+  source_id: langmem
+  repository: https://github.com/langchain-ai/langmem
+  revision: 29cbe41e58528f92e9efa773c12e15c47be3808c
+  tree: d85d1f815fb2b54bbc0a85c18453b7a7953ca38c
+  version: 0.0.30
+  license: MIT
+  license_sha256: 98af1351ea856e008c835bc89a312905960a318072f950732bf346c741027c7d
+  git_archive_tar_sha256: 24c85c514c80bb263a16626971e8ef53978fd1bc7f9319e47d8a5a0bf4956521
+
+runtime:
+  app_base_image: ghcr.io/astral-sh/uv:python3.13-trixie-slim@sha256:d1e005e6f5aac724b7554db95f1c128a77d8d35b59ebe70e188852b4bdad3a3d
+  database_image: postgres@sha256:ef257d85f76e48da1c64832459b59fcaba1a4dac97bf5d7450c77753542eee94
+  langgraph_checkpoint_postgres: 3.1.0
+  psycopg: 3.3.4
+  vector_index: disabled
+  reason_vector_index_disabled: Lifecycle semantics do not require semantic ranking or pgvector.
+
+cases:
+  public_hot_path_create_update_delete: true
+  deterministic_background_manager: true
+  database_and_fresh_process_restart: true
+  user_namespace_isolation: true
+  first_class_namespace_purge_probe: true
+  enumerate_then_delete_fallback: true
+  clean_shutdown_plaintext_heap_and_wal_scan: true
+
+gates:
+  exact_source_and_image_receipts: true
+  acknowledged_state_survives_database_restart: true
+  hot_path_and_background_records_survive_restart: true
+  user_namespace_isolation: true
+  logical_delete_succeeds: true
+  first_class_scoped_purge_required: true
+  no_plaintext_after_purge_and_clean_shutdown: true
+
+execution:
+  repetitions: 2
+  runtime_network: private-ephemeral-bridge
+  external_network: forbidden
+  gpus: 0
+  max_gpu_hours: 0
+  cpu_time_limit_minutes: 15
+  h100_admission: blocked-until-all-lifecycle-and-physical-purge-gates-pass
+
+claim_boundary: >-
+  Exact pinned LangMem public tool, deterministic background-manager transport,
+  official PostgresStore lifecycle, logical deletion, namespace-purge surface,
+  and physical plaintext residue; not extraction quality, semantic retrieval,
+  procedural prompt quality, model effect, managed LangGraph service behavior,
+  H100 actor quality, or publication evidence.
+
+forbidden_claims:
+  - LangMem memory quality improved
+  - semantic retrieval was evaluated
+  - deterministic extraction represents a language model
+  - managed LangGraph service purge semantics were evaluated
+  - publication ready
