@@ -15,8 +15,8 @@ def test_live_landscape_is_complete_and_content_addressed() -> None:
     assert matrix["source_count"] == len(rows) == 229
     assert len(matrix["matrix_sha256"]) == 64
     assert matrix["reproduced_source_count"] == 0
-    assert matrix["conformance_reproduced_source_count"] == 3
-    assert matrix["negative_finding_reproduced_source_count"] == 31
+    assert matrix["conformance_reproduced_source_count"] == 2
+    assert matrix["negative_finding_reproduced_source_count"] == 32
     assert matrix["access_class_counts"]["paper-or-page-only"] == 60
 
 

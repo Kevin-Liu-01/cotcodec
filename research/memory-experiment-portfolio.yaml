@@ -1,7 +1,7 @@
 schema_version: 1
 verified_at: "2026-08-16"
 ledger: research/memory-sources.yaml
-matrix_sha256: 4174f49e61b81429a4aa96efb177b6d4cde0eeb2968b706ede63bc679ef645f2
+matrix_sha256: be14faf7610649a62cfd0ad3ca5ed89ceb1afd559aac72e6a08d6cd452c4e15d
 portfolio_max_gpu_hours: 108
 scope: >-
   Selected falsifiers and systems for active/inactive, graph, learned-controller,
@@ -208,6 +208,11 @@ native_lifecycle_conformance_contracts:
     next_gate: Do not run the proposed Neo4j natural actor screen. On the frozen 64-question LongMemEval update/temporal panel, chronological topology reduced recall-all@4 by 14.06 points versus flat BM25-dense and did not beat degree-preserving shuffles. A future actor hypothesis requires a materially different graph mechanism, a new preregistered contract, clean source, and complete controls.
 
 killed_revisions:
+  - source_id: astra-working-set
+    repository_revision: 644f9d4e65f4e725996025834c91531592ab6166
+    terminal_status: BLOCKED_NONDETERMINISTIC_RECALL_ACCESS_ACCOUNTING
+    evidence_path: research/evidence/memory/astra-native-lifecycle-negative-v1.json
+    evidence_sha256: 8bf14f32867248921fc9a367ee26de22389c7f3c7cf2b959a52c48dae7977c6a
   - source_id: agenticow
     repository_revision: dd4f437b92d2dbbc1f40dfa00023eed6e9c3bd84
     terminal_status: BLOCKED_BLIND_PROMOTION_LOST_UPDATE_TOMBSTONE_RESIDUE_AND_NO_SCOPED_PURGE
@@ -571,8 +576,7 @@ waves:
     stop_after_failed_candidates: 2
     checkpoint_required: true
     h100_admission: cpu-doctor-pass-required
-    execution_order:
-      - astra-working-set
+    execution_order: []
     candidates:
       - source_id: lightmem
         mode: contained-import
@@ -841,12 +845,16 @@ waves:
       - source_id: astra-working-set
         mode: contained-import
         repository_role: implementation-tests-lock-and-live-benchmark-script
-        status: runtime-contract-implemented
+        status: discovery-killed
         priority: primary
-        scientific_role: Bounded active working-set over durable inactive memories with retrieval-driven re-admission.
-        evidence_path: research/evidence/memory/astra-working-set-core-v1.json
-        evidence_sha256: 3a310140916bd73dc525e5cd2a614978b40b106602411dc22eb7532f5e24258e
-        next_gate: The pure MemoryWindow, retrieval, and guard components passed 26/26 assertions twice. The exact native lifecycle job is now registered at experiments/memory/stage3-astra-native-lifecycle-doctor.yaml with digest-pinned ASTRA/CockroachDB containers, one Slurm-owned H100, a forced database kill, two clean stores, and completed-repeat checkpoints. Execute and seal it; the preregistered purge, idempotency, and all-pinned hard-cap blockers forbid any actor cell for this revision even if ordinary paging and restart pass.
+        scientific_role: Reproduced bounded active working-set shape whose durable recall accounting is nondeterministic across clean stores and whose purge, idempotency, and pin-saturation gates fail actor admission.
+        next_gate: Do not run an actor cell for 644f9d4. Admit only a newer immutable revision or explicit repair arm with deterministic recall tie-breaking, physical purge, idempotency-keyed writes, a hard pin-saturation cap, and the same two-clean-store lifecycle gate.
+        negative_evidence:
+          artifact_path: research/astra-working-set-audit-2026-08-15.md
+          artifact_sha256: 3037703daf47b8926978dec55c1aef91892459c86e4e510ac0016123f172dace
+          receipt_path: research/evidence/memory/astra-native-lifecycle-negative-v1.json
+          receipt_sha256: 8bf14f32867248921fc9a367ee26de22389c7f3c7cf2b959a52c48dae7977c6a
+          status: BLOCKED_NONDETERMINISTIC_RECALL_ACCESS_ACCOUNTING
       - source_id: tokenmizer
         mode: contained-import
         repository_role: paper-tag-implementation-tests-and-benchmark-runners

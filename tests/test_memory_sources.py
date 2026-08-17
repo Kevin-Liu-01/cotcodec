@@ -235,7 +235,6 @@ def test_reproducibility_audit_exposes_paper_and_license_gaps() -> None:
     assert audit["scientific_result_reproduced_source_count"] == 0
     assert audit["scientific_result_reproduced_sources"] == []
     assert audit["local_conformance_reproduced_sources"] == [
-        "astra-working-set",
         "hermes-provider-conformance",
         "neo4j-agent-memory",
     ]
@@ -244,6 +243,7 @@ def test_reproducibility_audit_exposes_paper_and_license_gaps() -> None:
         "agent-recall",
         "agenticow",
         "all-mem",
+        "astra-working-set",
         "gaama",
         "graphiti-native-lifecycle-adapter",
         "hermes-byterover-cli",
