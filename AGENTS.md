@@ -592,3 +592,48 @@ Use `memory.json` → `infrastructure.compute.api_budget` to track.
 | `pyyaml` | Experiment configs |
 | `rich` | Terminal output |
 | `tailscale` | Remote access to Mac Mini |
+
+## Agent-docs (auto-maintained)
+
+> Machine-derived facts maintained by `agent-docs`; do not hand-edit inside the markers.
+
+<!-- agent-docs:auto:stack start -->
+- **Name:** cotcodec
+- **Package manager:** unknown
+- **Languages:** n/a
+- **Framework:** n/a
+<!-- agent-docs:auto:stack end -->
+
+<!-- agent-docs:auto:commands start -->
+- (no package.json scripts detected)
+<!-- agent-docs:auto:commands end -->
+
+<!-- agent-docs:auto:dirmap start -->
+| Directory | Skill | Purpose |
+|---|---|---|
+| `harness/` | [`harness/SKILL.md`](harness/SKILL.md) | Procedure for CoTCodec's deterministic experiment runner, live agent loops, traces, checkpoints, and provider boundaries. |
+| `harness/benchmarks/` | [`harness/benchmarks/SKILL.md`](harness/benchmarks/SKILL.md) | Procedure for benchmark adapters, task specifications, deterministic oracles, and benchmark readiness claims. |
+| `harness/capsules/` | [`harness/capsules/SKILL.md`](harness/capsules/SKILL.md) | Procedure for fail-closed portable execution capsules, schema verification, and memory-graph instrumentation. |
+| `harness/conditions/` | [`harness/conditions/SKILL.md`](harness/conditions/SKILL.md) | Procedure for language, compression, structure, degradation, and routing conditions applied to visible agent messages. |
+| `harness/memory_trials/` | [`harness/memory_trials/SKILL.md`](harness/memory_trials/SKILL.md) | Procedure for frozen memory controls, lifecycle studies, causal holdouts, provider adapters, and matched memory-system trials. |
+| `harness/metrics/` | [`harness/metrics/SKILL.md`](harness/metrics/SKILL.md) | Procedure for deterministic metric collection, paired degradation tests, safety gates, fertility, and Pareto analysis. |
+| `harness/routing/` | [`harness/routing/SKILL.md`](harness/routing/SKILL.md) | Procedure for past-only message feature extraction and dynamic orchestration policy selection. |
+| `infra/memory-baselines/` | [`infra/memory-baselines/SKILL.md`](infra/memory-baselines/SKILL.md) | Procedure for exact-source, contained, CPU-first lifecycle doctors for external memory systems. |
+| `scripts/` | [`scripts/SKILL.md`](scripts/SKILL.md) | Procedure for CoTCodec validators, runners, sealers, compilers, analyzers, and remote workload entry points. |
+| `tests/` | [`tests/SKILL.md`](tests/SKILL.md) | Procedure for focused unit, contract-tamper, lifecycle, evidence, and integration tests. |
+<!-- agent-docs:auto:dirmap end -->
+
+<!-- agent-docs:auto:env start -->
+- (none detected)
+<!-- agent-docs:auto:env end -->
+
+<!-- agent-docs:auto:repo-graph start -->
+- Use Graphify for repo topology, path/explain/affected questions, PR risk, and unfamiliar codebase orientation.
+- Use `rg` for exact strings; use Kevin-Wiki `qmd` for people, tools, decisions, and compiled wiki knowledge.
+- Use `agent-browser` for browser/UI work; use Playwright only for committed regression tests.
+- Runtime memories (Hermes/Hindsight/Honcho) are not project truth until written back to AGENTS.md, SKILL.md, or the wiki.
+- Status: `cd ~/Documents/GitHub/kevin-wiki && npm run graphify:sidecar -- status --run outputs/graphify/cotcodec`
+- Build from this repo: `PROJECT_ROOT="$(pwd)" && cd ~/Documents/GitHub/kevin-wiki && npm run graphify:sidecar -- build "$PROJECT_ROOT" --run outputs/graphify/cotcodec --no-viz`
+- Query after build: `cd ~/Documents/GitHub/kevin-wiki && npm run graphify:sidecar -- query "what should I inspect first?" --run outputs/graphify/cotcodec`
+- Never run Graphify installers/hooks or commit generated `graphify-out/` artifacts.
+<!-- agent-docs:auto:repo-graph end -->
