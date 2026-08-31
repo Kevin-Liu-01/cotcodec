@@ -20,6 +20,12 @@ data/model-metadata-receipts/
 data/models/
 data/model-receipts/
 data/source-archives/
+data/build-artifacts/
+data/cache/
+data/magic-context-build.*/
+data/magic-context-doctor.*/
+data/magic-context-state.*/
+data/runtimes/
 
 # Raw benchmark data
 raw/baselines/
