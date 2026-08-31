@@ -23,8 +23,8 @@ splits it across:
 | Tool observations | 10-30% | Yes (can truncate or summarize) |
 | Safety buffer | 5-10% | No |
 
-Most systems allocate these implicitly. The MCP SDK at Dedalus, for example,
-includes all tool schemas in every call — even tools unlikely to be used.
+Most systems allocate these implicitly. One production MCP SDK, for example,
+included all tool schemas in every call — even tools unlikely to be used.
 That's a context allocation decision nobody made consciously.
 
 ## Conditions to Test

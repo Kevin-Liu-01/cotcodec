@@ -3,7 +3,7 @@
 **A research harness for measuring the hidden design choices inside tool-using
 LLM agents.**
 
-Kevin Liu — Princeton University / Dedalus Labs — 2026<br>
+Kevin Liu — Princeton University — 2026<br>
 Advisor: Professor Danqi Chen, Princeton NLP Group
 
 [![Python 3.11+](https://img.shields.io/badge/python-3.11%2B-3776AB)](pyproject.toml)
@@ -36,6 +36,8 @@ thought.
 | Understand what is true now | [Current research state](docs/current-state.md) |
 | Understand the code | [Harness architecture](harness/README.md) |
 | Understand the scientific gates | [Evidence and claim model](docs/evidence-model.md) |
+| Continue memory research | [Memory handoff](docs/memory-handoff.md) |
+| Use the H100 host | [H100 operator runbook](docs/h100-operator-runbook.md) |
 | Find a directory or owner | [Repository map](docs/repository-map.md) |
 | Run or resume work | [Research operations](docs/research-operations.md) |
 | Continue as an agent | [Handoff](HANDOFF.md), then [AGENTS.md](AGENTS.md) |
