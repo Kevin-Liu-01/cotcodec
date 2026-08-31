@@ -21,7 +21,11 @@ def test_committed_memforest_artifact_evidence_is_self_contained() -> None:
     )
     assert bundle["scientific_result"] is False
     assert bundle["h100_actor_admission"] == "not-granted-by-artifact-audit"
-    assert ledger["sources"]["memforest"]["evidence_grade"] == "local-artifact-audited"
+    memforest = ledger["sources"]["memforest"]
+    assert memforest["evidence_grade"] == "local-negative-reproduced"
+    assert memforest["prior_artifact_audit"]["artifact_path"] == str(
+        DEFAULT_OUTPUT.relative_to(PROJECT_ROOT)
+    )
 
 
 def test_memforest_artifact_evidence_fails_closed_on_status_drift() -> None:

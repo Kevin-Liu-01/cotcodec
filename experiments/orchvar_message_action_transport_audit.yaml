@@ -1,0 +1,42 @@
+name: orchvar_message_action_transport_audit
+description: >-
+  Zero-model-call audit of whether variable research messages and fixed
+  executable actions should share one completion contract.
+
+inputs:
+  - research/evidence/harness/orchvar-qwen35-iterative-live-protocol-negative-v1.json
+  - research/evidence/harness/orchvar-qwen35-iterative-structural-live-negative-v2.json
+
+candidates:
+  - coupled_required
+  - coupled_optional_messages
+  - action_then_message
+  - message_then_action_two_stage
+
+invariants:
+  action_contract_cannot_require_variable_messages: true
+  planner_message_must_precede_action_to_be_a_treatment: true
+  missing_research_message_is_noncompliance: true
+  missing_research_message_cannot_be_synthesized: true
+  action_arguments_cannot_be_coerced: true
+  tool_and_final_interfaces_remain_english: true
+  exact_tool_results_must_condition_later_messages_and_actions: true
+  message_and_action_calls_need_separate_receipts_and_budgets: true
+
+budgets:
+  external_model_calls: 0
+  local_tool_calls: 0
+  gpu_hours: 0
+
+claim_boundary:
+  scientific_claim: false
+  publication_evidence: false
+  model_quality_claim: false
+  language_effect_claim: false
+  purpose: select_a_cpu_candidate_transport_contract_only
+
+admission_rule: >-
+  A candidate may advance only if fixed action parsing is independent of
+  variable-message presence, variable messages causally precede the action,
+  missing messages remain explicit noncompliance, and no action argument or
+  research message is synthesized or coerced.

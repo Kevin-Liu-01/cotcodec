@@ -1,0 +1,6 @@
+# PEP 517 build requirements declared by Mnemo Cortex at
+# 8a0cff9492f010f73d722688924b09938b2dd682. Keep this file separate from the
+# runtime project metadata so the offline Docker build can bootstrap the exact
+# same build backend without reaching a package index.
+setuptools>=68.0
+wheel

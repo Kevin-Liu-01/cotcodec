@@ -35,6 +35,7 @@ def test_live_memory_experiment_contracts_are_valid() -> None:
         "stage3-lifecycle-mechanism-screen.yaml",
         "stage3-hippo-retention-cross-tenant-doctor.yaml",
         "stage3-icarus-lifecycle-doctor.yaml",
+        "stage3-infini-memory-lifecycle-provenance-doctor.yaml",
         "stage3-jiuwen-memory-file-lifecycle-doctor.yaml",
         "stage3-langmem-native-lifecycle-doctor.yaml",
         "stage3-lightmem2-context-paging-doctor.yaml",
@@ -50,7 +51,10 @@ def test_live_memory_experiment_contracts_are_valid() -> None:
         "stage3-memorybank-corrected-decay-doctor.yaml",
         "stage3-memorybank-corrected-decay-h100-screen.yaml",
         "stage3-mem0-native-lifecycle-doctor.yaml",
+        "stage3-memforest-native-lifecycle-doctor.yaml",
         "stage3-memforest-published-artifact-audit.yaml",
+        "stage3-memgpt-letta-native-lifecycle-doctor.yaml",
+        "stage3-mnemo-cortex-native-lifecycle-doctor.yaml",
         "stage3-mnemosyne-lifecycle-doctor.yaml",
         "stage3-mnemosyne-cognitive-lifecycle-doctor.yaml",
         "stage3-mnemon-active-space-admission-doctor.yaml",
@@ -160,6 +164,51 @@ def test_routed_memforest_artifact_contract_fails_closed(tmp_path: Path) -> None
     payload["gates"]["independent_rejudge_completed"] = True
     valid_path.write_text(yaml.safe_dump(payload, sort_keys=False), encoding="utf-8")
     with pytest.raises(MemoryExperimentError, match="MemForest gates contract drifted"):
+        validate_directory(tmp_path)
+
+
+def test_routed_memforest_lifecycle_contract_fails_closed(tmp_path: Path) -> None:
+    source = DEFAULT_EXPERIMENT_DIR / "stage3-memforest-native-lifecycle-doctor.yaml"
+    valid_path = tmp_path / source.name
+    valid_path.write_bytes(source.read_bytes())
+    assert validate_directory(tmp_path) == [valid_path]
+
+    payload = yaml.safe_load(source.read_text(encoding="utf-8"))
+    payload["intervention"]["test_interrupted_multifile_save_restart"] = False
+    valid_path.write_text(yaml.safe_dump(payload, sort_keys=False), encoding="utf-8")
+    with pytest.raises(MemoryExperimentError, match="MemForest lifecycle intervention drifted"):
+        validate_directory(tmp_path)
+
+
+def test_routed_mnemo_cortex_lifecycle_contract_fails_closed(tmp_path: Path) -> None:
+    source = DEFAULT_EXPERIMENT_DIR / "stage3-mnemo-cortex-native-lifecycle-doctor.yaml"
+    valid_path = tmp_path / source.name
+    valid_path.write_bytes(source.read_bytes())
+    assert validate_directory(tmp_path) == [valid_path]
+
+    payload = yaml.safe_load(source.read_text(encoding="utf-8"))
+    payload["intervention"]["test_passport_missing_git_partial_write"] = False
+    valid_path.write_text(yaml.safe_dump(payload, sort_keys=False), encoding="utf-8")
+    with pytest.raises(
+        MemoryExperimentError, match="Mnemo Cortex lifecycle intervention drifted"
+    ):
+        validate_directory(tmp_path)
+
+
+def test_routed_memgpt_letta_lifecycle_contract_fails_closed(
+    tmp_path: Path,
+) -> None:
+    source = DEFAULT_EXPERIMENT_DIR / "stage3-memgpt-letta-native-lifecycle-doctor.yaml"
+    valid_path = tmp_path / source.name
+    valid_path.write_bytes(source.read_bytes())
+    assert validate_directory(tmp_path) == [valid_path]
+
+    payload = yaml.safe_load(source.read_text(encoding="utf-8"))
+    payload["intervention"]["test_failed_block_rebuild_partial_mutation"] = False
+    valid_path.write_text(yaml.safe_dump(payload, sort_keys=False), encoding="utf-8")
+    with pytest.raises(
+        MemoryExperimentError, match="MemGPT/Letta lifecycle intervention drifted"
+    ):
         validate_directory(tmp_path)
 
 

@@ -1,0 +1,102 @@
+name: orchvar_qwen35_iterative_live_smoke
+description: >-
+  First bounded live-model check of the strict iterative action protocol. Each
+  model step may call one tool or finish; every executed SQLite result is
+  injected into the next step. CPU signal/recovery and safety admission passed
+  before this experiment was registered.
+
+benchmark: orchvar_canary
+model: qwen3.5-4b
+conditions: [english_only]
+task_variant: live_self_contained_v2
+
+tasks:
+  - canary-reasoning-depth-01
+  - canary-context-recall-01
+  - canary-verbosity-sensitive-01
+  - canary-multi-turn-memory-01
+  - canary-tool-argument-precision-01
+  - canary-safety-01
+
+seeds: [42]
+metrics:
+  - task_success_rate
+  - tool_call_exact_match
+  - safety_failures
+  - model_decisions
+  - prompt_tokens
+  - completion_tokens
+  - wall_clock_latency_ms
+
+actor:
+  type: transformers_iterative_json_v1
+  registry_model_id: qwen3.5-4b
+  registry_path: models/registry.yaml
+  repo_id: Qwen/Qwen3.5-4B
+  revision: 851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a
+  artifact_root_sha256: 3b8a075149bffe4dea784db5b4b37bc0896688cba0b3de7d8d0f6e8ae6157b9e
+  model_receipt_sha256: 75ebfc531acdcbc0c39bbf83ee7bf5267a3ddf02c4fafdf6181624612a0d3082
+  max_new_tokens: 512
+  dtype: bfloat16
+  device_map: auto
+  use_chat_template: true
+  deterministic: true
+  attention_implementation: eager
+
+tools:
+  type: sqlite_canary_v1
+  persistence: isolated_in_memory_per_task
+
+task_manifest_sha256: 325df3670e69539e857784e4184f3b36e62ff11dfc5701773c75c7af457b42b0
+
+iterative_cpu_admission:
+  status: ORCHVAR_ITERATIVE_TOOL_RESULT_CPU_ADMISSION_PASS
+  evidence: research/evidence/harness/orchvar-iterative-tool-result-cpu-admission-v2.json
+  evidence_sha256: dd66f56ed1c58fb6e673a6b755eadf5cf2503ebfadd8b32048b6fa4820365706
+  evidence_root_sha256: 7723d5da86dff2bc216bddb0e318f763867397a436c0271503692b65cd2c3ddd
+  projection_sha256: a59562811e5af0ba93c6793e339d69f43a26bb983f6c0676b17a5c462ad8ca83
+  external_model_calls: 0
+  deterministic_task_successes: 6
+  sqlite_tool_operations: 9
+  actual_usr1_acknowledged_cells: 2
+  safety_gate_passed: true
+
+budgets:
+  max_decisions_per_task: 5
+  max_steps_per_task: 12
+  max_tool_calls_per_task: 4
+  max_external_model_calls: 30
+  max_local_tool_calls: 12
+  max_cost_usd: 0
+  max_gpu_hours: 0.5
+
+execution:
+  run_id: orchvar-qwen35-iterative-live-v1
+  checkpoint_after_each_cell: true
+  checkpoint_on_usr1: true
+
+containment:
+  scheduler: slurm
+  accelerator: h100
+  gpu_count: 1
+  container_runtime: docker
+  image_id: sha256:785f16e880d8c38acef02254adaccfb48dfd3a374af12115ec88590f036bf81a
+  image_registry_digest: 127.0.0.1:5000/cotcodec-research@sha256:3f58e5256dff74ed3017a00af125e6ee2b6e4745208b9ea8a3668633760dfb00
+  network: none
+  root_filesystem: read_only
+  capabilities: drop_all
+  no_new_privileges: true
+  source_mount: read_only_content_addressed_capsule
+  model_mount: read_only_pinned_snapshot
+
+claim_boundary:
+  scientific_claim: false
+  publication_evidence: false
+  language_effect_claim: false
+  benchmark_validity_claim: false
+  model_quality_claim: false
+  purpose: iterative_tool_result_conditioning_transport_and_safety_check_only
+  limitation: >-
+    This is one model, one seed, six repaired smoke tasks, and a maximum of five
+    deterministic decisions per task. It is not a comparative or multiturn
+    study and cannot estimate general capability or language effects.

@@ -7,16 +7,26 @@ Usage:
 from __future__ import annotations
 
 import asyncio
-import json
+import hashlib
 import os
+import re
+import signal
 import sys
-import uuid
-from datetime import datetime
+from dataclasses import asdict, replace
 from pathlib import Path
+from typing import Any
 
+from harness.agent_loop import (
+    AgentLoopError,
+    DeterministicCanaryActor,
+    DeterministicToolRuntime,
+    ExecutedMessage,
+    execute_agent_task,
+)
+from harness.benchmarks.base import BenchmarkTask, TaskResult
 from harness.conditions import get_condition
-from harness.config import ExperimentConfig
-from harness.metrics.collector import MetricCollector
+from harness.config import ExperimentConfig, ExperimentRunSpec
+from harness.run_state import ExecutionJournal, canonical_json
 
 try:
     from rich.console import Console
@@ -74,12 +84,10 @@ def _load_benchmark(name: str):
 async def run_experiment(config: ExperimentConfig) -> dict:
     """Run a complete experiment across all conditions and tasks.
 
-    For each (condition, task, seed) triple:
-    1. Load the benchmark adapter
-    2. Apply the language condition to the system prompt
-    3. Execute the agent loop (TODO: integrate with model APIs)
-    4. Collect traces and metrics
-    5. Write results to disk
+    The first admitted execution backend is a deterministic local canary actor.
+    Unknown or live-provider actor types fail closed until their adapters exist.
+    Every cell is journaled before the next cell begins, and resume validates an
+    exact contiguous plan prefix.
     """
     expected_seeds = os.environ.get("COTCODEC_SEEDS")
     if expected_seeds is not None:
@@ -92,10 +100,17 @@ async def run_experiment(config: ExperimentConfig) -> dict:
                 f"experiment seeds {config.seeds} do not match manifest seeds {manifest_seeds}"
             )
 
-    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-    experiment_id = f"{config.name}_{timestamp}_{uuid.uuid4().hex[:6]}"
+    run_id = os.environ.get("COTCODEC_RUN_ID") or str(
+        _mapping(config.extra.get("execution"), "execution").get("run_id", "")
+    )
+    if not re.fullmatch(r"[a-z0-9]+(?:-[a-z0-9]+)*", run_id):
+        raise ValueError(
+            "deterministic execution requires a kebab-case COTCODEC_RUN_ID "
+            "or execution.run_id"
+        )
+    experiment_id = run_id
     output_root = Path(os.environ.get("COTCODEC_OUTPUT_DIR", "data"))
-    output_dir = output_root / "traces"
+    resume = os.environ.get("COTCODEC_RESUME") == "1"
 
     console.print(f"\n[bold]Experiment: {config.name}[/bold]")
     console.print(f"ID: {experiment_id}")
@@ -106,85 +121,380 @@ async def run_experiment(config: ExperimentConfig) -> dict:
 
     benchmark = _load_benchmark(config.benchmark)
     base_prompt = benchmark.get_system_prompt()
+    loaded_tasks = await benchmark.load_tasks(count=None)
+    tasks = _select_tasks(loaded_tasks, config.tasks)
+    _validate_task_manifest(config)
+    actor = _load_actor(config)
+    budgets = _mapping(config.extra.get("budgets"), "budgets")
+    max_steps = _positive_int(budgets.get("max_steps_per_task"), "max_steps_per_task")
+    max_tool_calls = _positive_int(
+        budgets.get("max_tool_calls_per_task"), "max_tool_calls_per_task"
+    )
+    plan = _build_plan(config.iter_run_specs(), tasks, config.seeds)
+    contract = _execution_contract(config, tasks, base_prompt, actor.identity)
+    journal = ExecutionJournal(
+        output_root / "run-state" / run_id,
+        contract=contract,
+        plan_keys=plan,
+        resume=resume,
+    )
 
-    summaries = []
+    stop_requested = False
 
-    tasks_count = None
-    if isinstance(config.tasks, int) and config.tasks >= 0:
-        tasks_count = config.tasks
+    def request_stop(_signum: int, _frame: object) -> None:
+        nonlocal stop_requested
+        stop_requested = True
 
-    for run_spec in config.iter_run_specs():
-        console.print(f"[cyan]Run group: {run_spec.group}[/cyan]")
-        console.print(f"  Model: {run_spec.model}")
-        console.print(f"  Conditions: {[condition.value for condition in run_spec.conditions]}")
+    previous_handler = None
+    if hasattr(signal, "SIGUSR1"):
+        previous_handler = signal.getsignal(signal.SIGUSR1)
+        signal.signal(signal.SIGUSR1, request_stop)
 
-        for condition_id in run_spec.conditions:
+    delay_ms = float(os.environ.get("COTCODEC_CELL_DELAY_MS", "0"))
+    task_by_id = {task.task_id: task for task in tasks}
+    run_spec_by_key = {
+        (run.group, run.model): run for run in config.iter_run_specs()
+    }
+    try:
+        for key in plan[journal.completed :]:
+            if delay_ms > 0:
+                await asyncio.sleep(delay_ms / 1000)
+            if stop_requested:
+                journal.acknowledge_interrupt("SIGUSR1")
+                return _interrupted_result(journal, run_id)
+            task = task_by_id[str(key["task_id"])]
+            run_spec = run_spec_by_key[(str(key["run_group"]), str(key["model"]))]
+            condition_id = next(
+                condition
+                for condition in run_spec.conditions
+                if condition.value == key["condition"]
+            )
             condition = get_condition(condition_id)
             system_prompt = condition.transform_system_prompt(base_prompt)
-
-            collector = MetricCollector(
-                experiment_id=experiment_id,
-                benchmark=config.benchmark,
-                condition=condition_id,
-                model=run_spec.model,
-                run_group=run_spec.group,
+            try:
+                execution = await execute_agent_task(
+                    task,
+                    actor=actor,
+                    tools=DeterministicToolRuntime(),
+                    condition=condition,
+                    system_prompt=system_prompt,
+                    seed=int(key["seed"]),
+                    max_steps=max_steps,
+                    max_tool_calls=max_tool_calls,
+                )
+                evaluation = await benchmark.evaluate(task, execution.result)
+                result = replace(
+                    execution.result,
+                    success=bool(evaluation["success"]),
+                    tool_calls_correct=int(evaluation["tool_calls_correct"]),
+                    tool_calls_total=int(evaluation["tool_calls_total"]),
+                    safety_failures=int(evaluation["safety_failures"]),
+                    metadata={
+                        **(execution.result.metadata or {}),
+                        "terminal_status": "complete",
+                    },
+                )
+                payload = _cell_payload(
+                    key,
+                    task,
+                    result,
+                    execution.messages,
+                    evaluation,
+                    system_prompt,
+                )
+            except AgentLoopError as exc:
+                payload = _error_cell_payload(key, task, exc)
+                journal.append(key, payload)
+                raise RuntimeError(
+                    f"{task.task_id}: agent loop failed closed: {exc.code}: {exc.detail}"
+                ) from exc
+            journal.append(key, payload)
+            console.print(
+                f"  {key['condition']} {task.task_id} seed={key['seed']} - "
+                f"{'PASS' if payload['trace']['outcome']['success'] else 'FAIL'}"
             )
+            if stop_requested:
+                journal.acknowledge_interrupt("SIGUSR1")
+                return _interrupted_result(journal, run_id)
+    finally:
+        if previous_handler is not None:
+            signal.signal(signal.SIGUSR1, previous_handler)
 
-            console.print(f"[yellow]Condition: {condition_id.value}[/yellow]")
-            console.print(f"  Target language: {condition.target_language}")
-            console.print(f"  System prompt length: {len(system_prompt)} chars")
+    journal.complete()
+    result = _materialize_outputs(
+        output_root,
+        run_id,
+        config,
+        journal,
+    )
+    _print_summary_table(result["summaries"])
+    return result
 
-            tasks = await benchmark.load_tasks(count=tasks_count)
 
-            for task in tasks:
-                for seed in config.seeds:
-                    collector.start_task(task.task_id, seed)
+def _mapping(value: Any, label: str) -> dict[str, Any]:
+    if not isinstance(value, dict):
+        raise ValueError(f"{label} must be a mapping")
+    return value
 
-                    # TODO: Execute agent loop with model API
-                    # This is where the actual LLM calls happen.
-                    # For now, we just demonstrate the harness structure.
-                    console.print(
-                        f"  Task {task.task_id} seed={seed} - "
-                        f"[dim]agent loop not yet implemented[/dim]"
-                    )
 
-                    collector.end_task(success=False)
+def _positive_int(value: Any, label: str) -> int:
+    if isinstance(value, bool) or not isinstance(value, int) or value <= 0:
+        raise ValueError(f"{label} must be a positive integer")
+    return value
 
-            trace_path = collector.flush(output_dir)
-            summary = collector.summary()
-            summaries.append(summary)
 
-            console.print(f"  Traces written to: {trace_path}")
-            console.print()
+def _select_tasks(
+    loaded: list[BenchmarkTask], selection: int | list[str]
+) -> list[BenchmarkTask]:
+    if isinstance(selection, int):
+        return loaded if selection < 0 else loaded[:selection]
+    by_id = {task.task_id: task for task in loaded}
+    if len(by_id) != len(loaded):
+        raise ValueError("benchmark returned duplicate task IDs")
+    missing = [task_id for task_id in selection if task_id not in by_id]
+    if missing:
+        raise ValueError(f"configured task IDs are missing: {missing}")
+    if len(set(selection)) != len(selection):
+        raise ValueError("configured task roster contains duplicates")
+    return [by_id[task_id] for task_id in selection]
 
+
+def _load_actor(config: ExperimentConfig) -> DeterministicCanaryActor:
+    actor = _mapping(config.extra.get("actor"), "actor")
+    if actor != {"type": "deterministic_canary_v1"}:
+        raise ValueError(
+            "unsupported actor contract; only deterministic_canary_v1 is admitted"
+        )
+    return DeterministicCanaryActor()
+
+
+def _validate_task_manifest(config: ExperimentConfig) -> None:
+    expected = config.extra.get("task_manifest_sha256")
+    if not isinstance(expected, str) or not re.fullmatch(r"[0-9a-f]{64}", expected):
+        raise ValueError("task_manifest_sha256 is required")
+    if config.benchmark != "orchvar_canary":
+        raise ValueError("deterministic canary actor requires orchvar_canary")
+    task_path = Path("harness/benchmarks/specs/orchvar_canary_tasks.yaml")
+    actual = hashlib.sha256(task_path.read_bytes()).hexdigest()
+    if actual != expected:
+        raise ValueError("OrchVar-Canary task manifest hash drifted")
+
+
+def _build_plan(
+    run_specs: list[ExperimentRunSpec],
+    tasks: list[BenchmarkTask],
+    seeds: list[int],
+) -> list[dict[str, Any]]:
+    return [
+        {
+            "run_group": run.group,
+            "model": run.model,
+            "condition": condition.value,
+            "task_id": task.task_id,
+            "seed": seed,
+        }
+        for run in run_specs
+        for condition in run.conditions
+        for task in tasks
+        for seed in seeds
+    ]
+
+
+def _execution_contract(
+    config: ExperimentConfig,
+    tasks: list[BenchmarkTask],
+    base_prompt: str,
+    actor_identity: str,
+) -> dict[str, Any]:
+    return {
+        "schema_version": 1,
+        "name": config.name,
+        "benchmark": config.benchmark,
+        "actor_identity": actor_identity,
+        "run_specs": [
+            {
+                "group": run.group,
+                "model": run.model,
+                "conditions": [condition.value for condition in run.conditions],
+            }
+            for run in config.iter_run_specs()
+        ],
+        "tasks": [asdict(task) for task in tasks],
+        "seeds": config.seeds,
+        "metrics": config.metrics,
+        "extra": config.extra,
+        "base_prompt_sha256": hashlib.sha256(base_prompt.encode()).hexdigest(),
+    }
+
+
+def _message_payload(message: ExecutedMessage) -> dict[str, Any]:
+    tokens = len(message.content.split())
+    return {
+        "step": message.step,
+        "role": message.role,
+        "type": message.message_type.value,
+        "language": message.language,
+        "content": message.content,
+        "token_count_input": 0,
+        "token_count_output": tokens,
+        "latency_ms": 0.0,
+        "metadata": message.metadata,
+    }
+
+
+def _cell_payload(
+    key: dict[str, Any],
+    task: BenchmarkTask,
+    result: TaskResult,
+    messages: tuple[ExecutedMessage, ...],
+    evaluation: dict[str, Any],
+    system_prompt: str,
+) -> dict[str, Any]:
+    message_payloads = [_message_payload(message) for message in messages]
+    total_tokens = sum(message["token_count_output"] for message in message_payloads)
+    return {
+        "terminal_status": "complete",
+        "trace": {
+            "experiment_id": None,
+            "benchmark": "orchvar_canary",
+            "condition": key["condition"],
+            "model": key["model"],
+            "task_id": key["task_id"],
+            "seed": key["seed"],
+            "run_group": key["run_group"],
+            "pair_key": key,
+            "system_prompt_sha256": hashlib.sha256(system_prompt.encode()).hexdigest(),
+            "messages": message_payloads,
+            "task_result": asdict(result),
+            "benchmark_evaluation": evaluation,
+            "task_metadata": task.metadata or {},
+            "outcome": {
+                "success": result.success,
+                "tool_calls_correct": result.tool_calls_correct,
+                "tool_calls_total": result.tool_calls_total,
+                "retries": result.retries,
+                "safety_failures": result.safety_failures,
+                "total_tokens": total_tokens,
+                "total_latency_ms": 0.0,
+                "cost_usd": 0.0,
+            },
+        },
+    }
+
+
+def _error_cell_payload(
+    key: dict[str, Any], task: BenchmarkTask, error: AgentLoopError
+) -> dict[str, Any]:
+    return {
+        "terminal_status": "failed_closed",
+        "trace": {
+            "experiment_id": None,
+            "benchmark": "orchvar_canary",
+            "condition": key["condition"],
+            "model": key["model"],
+            "task_id": task.task_id,
+            "seed": key["seed"],
+            "run_group": key["run_group"],
+            "pair_key": key,
+            "messages": [],
+            "outcome": {"success": False},
+            "error_receipt": error.to_dict(),
+        },
+    }
+
+
+def _interrupted_result(journal: ExecutionJournal, run_id: str) -> dict[str, Any]:
+    return {
+        "status": "INTERRUPTED_CHECKPOINTED",
+        "experiment_id": run_id,
+        "completed_cells": journal.completed,
+        "total_cells": len(journal.plan_keys),
+        "contract_sha256": journal.contract_sha256,
+        "journal_root_sha256": journal.journal_root_sha256,
+    }
+
+
+def _materialize_outputs(
+    output_root: Path,
+    run_id: str,
+    config: ExperimentConfig,
+    journal: ExecutionJournal,
+) -> dict[str, Any]:
+    grouped: dict[tuple[str, str, str], list[dict[str, Any]]] = {}
+    for payload in journal.payloads():
+        if payload.get("terminal_status") != "complete":
+            raise RuntimeError("cannot materialize failed-closed experiment cells")
+        trace = dict(payload["trace"])
+        trace["experiment_id"] = run_id
+        key = (trace["run_group"], trace["model"], trace["condition"])
+        grouped.setdefault(key, []).append(trace)
+
+    trace_artifacts: list[dict[str, Any]] = []
+    summaries: list[dict[str, Any]] = []
+    for (run_group, model, condition), traces in sorted(grouped.items()):
+        safe_model = re.sub(r"[^a-z0-9]+", "-", model.casefold()).strip("-")
+        path = (
+            output_root
+            / "traces"
+            / config.benchmark
+            / condition
+            / f"{run_id}__{run_group}__{safe_model}.jsonl"
+        )
+        path.parent.mkdir(parents=True, exist_ok=True)
+        encoded = "".join(canonical_json(trace) + "\n" for trace in traces)
+        path.write_text(encoded, encoding="utf-8")
+        trace_artifacts.append(
+            {
+                "path": str(path.relative_to(output_root)),
+                "sha256": hashlib.sha256(encoded.encode()).hexdigest(),
+                "rows": len(traces),
+            }
+        )
+        outcomes = [trace["outcome"] for trace in traces]
+        total_calls = sum(outcome["tool_calls_total"] for outcome in outcomes)
+        summaries.append(
+            {
+                "experiment_id": run_id,
+                "benchmark": config.benchmark,
+                "condition": condition,
+                "model": model,
+                "run_group": run_group,
+                "task_count": len(traces),
+                "success_rate": sum(outcome["success"] for outcome in outcomes)
+                / len(outcomes),
+                "avg_tokens": sum(outcome["total_tokens"] for outcome in outcomes)
+                / len(outcomes),
+                "avg_latency_ms": 0.0,
+                "total_retries": sum(outcome["retries"] for outcome in outcomes),
+                "total_safety_failures": sum(
+                    outcome["safety_failures"] for outcome in outcomes
+                ),
+                "tool_correctness": sum(
+                    outcome["tool_calls_correct"] for outcome in outcomes
+                )
+                / max(1, total_calls),
+            }
+        )
     result = {
-        "experiment_id": experiment_id,
+        "schema_version": 1,
+        "status": "COMPLETE",
+        "experiment_id": run_id,
+        "contract_sha256": journal.contract_sha256,
+        "plan_sha256": journal.plan_sha256,
+        "journal_root_sha256": journal.journal_root_sha256,
+        "completed_cells": journal.completed,
         "config": {
             "name": config.name,
             "benchmark": config.benchmark,
-            "models": [run.model for run in config.iter_run_specs()],
-            "run_specs": [
-                {
-                    "group": run.group,
-                    "model": run.model,
-                    "conditions": [condition.value for condition in run.conditions],
-                }
-                for run in config.iter_run_specs()
-            ],
             "tasks": config.tasks,
             "seeds": config.seeds,
         },
+        "trace_artifacts": trace_artifacts,
         "summaries": summaries,
-        "timestamp": datetime.now().isoformat(),
     }
-
-    result_path = output_root / "results" / f"{experiment_id}_summary.json"
+    result_path = output_root / "results" / f"{run_id}_summary.json"
     result_path.parent.mkdir(parents=True, exist_ok=True)
-    with open(result_path, "w") as f:
-        json.dump(result, f, indent=2)
-
-    _print_summary_table(summaries)
-
+    result_path.write_text(canonical_json(result) + "\n", encoding="utf-8")
     return result
 
 

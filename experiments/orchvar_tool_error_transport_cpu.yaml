@@ -1,0 +1,75 @@
+name: orchvar_tool_error_transport_cpu
+description: >-
+  CPU-only admission of deterministic tool-error observations and failed-attempt
+  receipts after the unjournaled uniqueness failure in live job 341.
+
+trigger_evidence:
+  status: ORCHVAR_QWEN35_TWO_STAGE_LIVE_PARTIAL_NEGATIVE_TOOL_ERROR_UNRECEIPTED
+  path: research/evidence/harness/orchvar-qwen35-two-stage-live-partial-negative-job341.json
+  sha256: efcd668d773eda3a79d1e4f084f7eefd9deb87b710e2f56d9fb5ff392b61d3ae
+  evidence_root_sha256: 4617670cb136242c1ea28c2545b69a0bf9e07aba572cf56aac939ae581e74cc6
+  projection_sha256: 6ca0441dbde6584b6cdceb0c1963f94f4475dff8382b98b2ab030075ee8d4444
+  slurm_job_id: 341
+  completed_cells: 2
+  planned_cells: 6
+  next_unjournaled_task_id: canary-verbosity-sensitive-01
+  safety_gate_evaluated: false
+
+selected_design:
+  identity: sqlite-canary-tools-receipted-errors-v2
+  success_result_policy: preserve_native_result
+  caught_exception_classes: [sqlite3.IntegrityError]
+  rollback_before_error_result: true
+  error_result_schema:
+    ok: false
+    error:
+      code: sqlite_constraint_violation
+      tool: create_handoff_note
+      message: tool mutation violated a uniqueness constraint
+      retryable: false
+  receipt_policy:
+    record_every_attempt: true
+    distinguish_success_and_error: true
+    preserve_arguments: true
+    bind_delegate_final_state: true
+  no_implicit_retry: true
+  no_idempotent_success_rewrite: true
+  unexpected_exception_policy: propagate
+
+rejected_designs:
+  - candidate: process_abort
+    reason: loses the active cell and backend receipts before the journal boundary
+  - candidate: duplicate_as_success
+    reason: hides repeated model actions and changes benchmark semantics
+  - candidate: catch_all_exception
+    reason: misclassifies infrastructure failures as model-visible tool results
+
+cpu_admission:
+  baseline_tasks: 6
+  duplicate_mutation_scenarios: 1
+  required_baseline_successes: 6
+  required_duplicate_attempts: 2
+  required_duplicate_successes: 1
+  required_duplicate_errors: 1
+  require_error_observed_before_final_action: true
+  require_unexpected_exception_propagation: true
+  require_byte_identical_usr1_resume: true
+  usr1_after_cells: 3
+
+budgets:
+  external_model_calls: 0
+  max_cells: 7
+  max_tool_attempts: 12
+  max_wall_clock_seconds: 60
+  max_cost_usd: 0
+  max_gpu_hours: 0
+
+claim_boundary:
+  scientific_claim: false
+  publication_evidence: false
+  live_model_claim: false
+  benchmark_validity_claim: false
+  purpose: tool_error_transport_and_durability_admission_only
+  next_gate: >-
+    Bind a passing exact-source CPU seal into any future live runner before
+    deciding whether a new H100 run is warranted. Never resume or rerun job 341.

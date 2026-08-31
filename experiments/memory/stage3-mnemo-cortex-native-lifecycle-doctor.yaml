@@ -1,0 +1,125 @@
+schema_version: 1
+name: stage3-mnemo-cortex-native-lifecycle-doctor
+status: registered-cpu-falsification
+scientific_result: false
+publication_ready: false
+description: >-
+  Exercise Mnemo Cortex's exact pinned two-tier memory, Analyst lineage,
+  deterministic cross-agent dream rollup, Passport promotion boundary, and
+  fresh-process persistence in two clean network-disabled Linux containers.
+  Positive controls establish smart-note classification, default raw-log
+  hiding, explicit drill-down, derived-note lineage, and restart behavior.
+  Kill tests preserve the official container's absent Git executable, observe
+  whether Passport mutates pending state before its Git-backed acknowledgement,
+  retry the same failed observation, inspect the primary memory purge surface,
+  and bind the unpinned dependency/base-image provenance.
+
+source:
+  source_id: mnemo-cortex
+  repository: https://github.com/GuyMannDude/mnemo-cortex
+  revision: 8a0cff9492f010f73d722688924b09938b2dd682
+  tree: 5a87d92d70052717a928c3c109b138da4d8af723
+  license: MIT
+  license_sha256: df032f3c7f49dd0beadea14663257ba3714450a06f6314d6274bc5afb2309233
+  pyproject_sha256: b3fed8d9348ca5612a79cb6d2ea552563941651f55cc21440847a038a8df192e
+  upstream_dockerfile_sha256: f565b1ed62e47b0124786f58f8ff7c9e73e7d47129f3fd0c83bcc16b256087d7
+  git_archive_tar_sha256: 6b6e7709a85f9f949f2a7820ee4c2a7e60112671297fa5229919a266f014c113
+  git_archive_tar_bytes: 18810880
+  exact_source_files:
+    agentb/classify.py: f600c7c797f561987a4558de8161cff9b4b6bbe12554b6a6e6a5a298c71e57d4
+    agentb/analyst.py: eb9d355234931eedbdb7f0a909ecb12d813e082c27b8b319a4538333fbb5b6fd
+    agentb/server.py: 62cc55798590f2229a004f927d477b91e1e9c44974260a3892491ee5f822e8ca
+    agentb/config.py: c75326bb1c8e1fc4b9c8fdf719297b21b67578dd44238ef47c0492771a109711
+    agentb/sessions.py: 72bbd9ef837a5880eec28c938f485718e6e3a44b8909927d257cf9651bb8d5cc
+    passport/api.py: c3b934065baaa08b854183b1176dfb4e740a20daa93419b34da3841adb9ec73e
+    passport/promotion.py: 3540b97448f5fd7ddf139ec1b1ca66b318b1ed9894df65542f9b505ed49b52d4
+    passport/override.py: 7928b9109374ab203ae1d0a3a05bc22a2336a4b49897b46499f342e5a0e2a4f5
+    passport/storage.py: 1a19fab2faba8d298519344febb4821e5f43b43d601a510d11d1d22170457b9a
+    mnemo-dream.py: 5f94151c917a7de0b6ca9d11aad921df85b1f80e622c618ebacb282edb426b9f
+
+runtime:
+  containment: docker-under-slurm-network-none
+  provider_secrets: forbidden
+  sudo: forbidden
+  gpu_count: 0
+  base_image: >-
+    docker.io/library/python:3.12.11-slim-bookworm@sha256:519591d6871b7bc437060736b9f7456b8731f1499a57e22e6c285135ae657bf7
+  python_version: 3.12.11
+  clean_state_repeats: 2
+  fresh_process_restarts_per_repeat: 1
+  dependency_install: exact-pyproject-lower-bounds-no-transitive-lock
+  official_container_git_install: absent
+
+intervention:
+  public_api:
+    - POST /writeback
+    - POST /context
+    - POST /passport/observe
+    - POST /passport/pending
+  executable_mechanism_seams:
+    - app.state.maintenance_cycle
+    - mnemo-dream.synthesize
+  external_model_calls: 0
+  provider_calls: 0
+  deterministic_reasoning_double: true
+  deterministic_embedding_double: true
+  test_smart_note_classification: true
+  test_default_session_log_hiding: true
+  test_explicit_session_log_drilldown: true
+  test_analyst_derived_from_lineage: true
+  test_cross_agent_map_reduce: true
+  test_fresh_process_restart: true
+  test_native_primary_memory_purge_surface: true
+  test_passport_missing_git_partial_write: true
+  test_passport_failed_retry_idempotency: true
+  test_current_file_plaintext_residue: true
+
+expected_falsification:
+  status: MNEMO_CORTEX_ADMISSION_KILLED_NO_GIT_PARTIAL_WRITES_NO_NATIVE_PURGE_AND_UNPINNED_DEPS
+  smart_note_classification_passes: true
+  default_recall_hides_session_log: true
+  explicit_drilldown_recalls_session_log: true
+  analyst_note_has_source_lineage: true
+  analyst_retains_raw_source_log: true
+  deterministic_two_agent_rollup_passes: true
+  normal_state_survives_fresh_process: true
+  official_container_has_no_git: true
+  passport_observe_returns_server_error_after_pending_mutation: true
+  repeated_failed_observe_creates_duplicate_pending_rows: true
+  duplicate_pending_rows_survive_fresh_process: true
+  native_primary_memory_purge_absent: true
+  current_file_plaintext_residue_present: true
+  reproduced_in_two_clean_states: true
+
+execution:
+  repetitions: 2
+  phases_per_repeat: 2
+  external_api_calls: 0
+  llm_calls: 0
+  simulated_reasoning_stage_calls: 5
+  gpus: 0
+  max_gpu_hours: 0
+  wall_clock_limit_minutes: 30
+  slurm_cpus: 4
+  slurm_memory_gb: 16
+
+admission:
+  h100_actor: forbidden-for-this-revision-if-falsified
+  scientific_claim: forbidden
+  publication_claim: forbidden
+  next_gate: >-
+    Admit only a newer immutable revision or an explicitly reviewed repair arm
+    with an exact Python lock and digest-pinned base, a complete Passport runtime
+    dependency surface, idempotent transaction recovery across pending, stable,
+    Git, and audit state, and a native tenant-scoped primary-memory purge or
+    cryptographic-erasure contract. Repeat the same doctor before any matched
+    actor or consolidation-quality cell.
+
+claim_boundary: >-
+  Exact pinned Mnemo Cortex smart-note classification, session-log filtering,
+  Analyst source lineage, deterministic map-reduce dream topology, Passport
+  observe failure semantics in the official no-Git container surface,
+  fresh-process persistence, native primary-memory purge surface, current-file
+  plaintext scan, and dependency provenance; not semantic extraction quality,
+  real-provider dream quality, secure filesystem erasure, concurrent serving,
+  sustained throughput, H100 actor quality, or publication evidence.

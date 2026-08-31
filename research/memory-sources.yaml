@@ -1,5 +1,5 @@
 schema_version: 1
-verified_at: "2026-08-17"
+verified_at: "2026-08-31"
 scope: >-
   Primary-source and official-code ledger for long-lived memory in tool-using
   language-model agents. Reported benchmark numbers are evidence about a
@@ -58,7 +58,7 @@ sources:
   memgpt-letta:
     kind: system
     title: "MemGPT / Letta"
-    observed_on: "2026-08-11"
+    observed_on: "2026-08-31"
     primary_sources:
       - https://arxiv.org/abs/2310.08560
       - https://github.com/letta-ai/letta
@@ -78,11 +78,20 @@ sources:
       Virtual-context paging: a small always-visible core memory is edited by
       the agent while recall and archival stores remain outside the prompt and
       are accessed through explicit tools.
-    use_as: [active-inactive-baseline, self-managed-memory-baseline]
-    evidence_grade: mechanism-only
+    use_as: [active-inactive-baseline, self-managed-memory-baseline, split-transaction-negative-control, non-idempotent-archive-retry-control]
+    evidence_grade: local-negative-reproduced
+    reproduction_receipt:
+      artifact_path: research/evidence/memory/memgpt-letta-native-lifecycle-negative-v1.json
+      receipt_sha256: 81bee6fa8115d62c527e6972d8c5ae0880de65a1743c6feb445f78ce6537a117
     limitations:
       - Self-directed paging can spend model calls on memory administration.
       - Storage and retrieval do not by themselves solve deduplication, temporal validity, or consolidation.
+      - The exact legacy V1 source files hash-match the digest-pinned official 0.16.8 image. Two clean Slurm CPU states passed provider-free construction, normal core/archive mutation, organization isolation, fresh-process restart, and explicit logical-deletion controls.
+      - An injected compiled-message rebuild failure returned HTTP 500 after the core block mutation had become durable; the split state survived restart until an explicit retry repaired the compiled prompt.
+      - Payload-equivalent archival retry created a second durable passage. Agent deletion retained its archive, passages, and core blocks until those resources were explicitly deleted.
+      - After logical passage, archive, and block deletion reached zero current rows, every canary remained in stopped PostgreSQL heap and WAL files in both clean states. This is bounded plaintext-residue evidence, not secure media-erasure evidence.
+      - Current Letta Code was pinned only as provenance context. Its different local MemFS mechanism was not executed or treated as a repair for the legacy server.
+      - This is lifecycle and storage evidence, not semantic memory quality, autonomous paging, concurrency, throughput, managed-cloud, H100-quality, or publication evidence. H100 admission is forbidden for this revision.
 
   graphiti:
     kind: system
@@ -2663,8 +2672,11 @@ sources:
       then browses interval summaries down to leaf evidence; merge, deletion,
       and migration regenerate only affected derived artifacts.
     use_as: [write-path-efficiency-control, hierarchical-temporal-index-control, localized-maintenance-control]
-    evidence_grade: local-artifact-audited
+    evidence_grade: local-negative-reproduced
     reproduction_receipt:
+      artifact_path: research/evidence/memory/memforest-native-lifecycle-negative-v1.json
+      receipt_sha256: 2fe55ccae8eb0633db4d5be6c1ceb116a52cf4402c8b2cfb1ab78901ffeb658f
+    prior_artifact_audit:
       artifact_path: research/evidence/memory/memforest-published-artifact-audit-v1.json
       receipt_sha256: fb571ffe136f669d8da30314ae12ed5022693a89db06d38697da7be7aee01f1d
     benchmark_claims:
@@ -2680,7 +2692,11 @@ sources:
       - Throughput, retrieval, maintenance locality, and actor quality are coupled in the headline comparison and need separate matched cells.
       - The ten released write-rate coordinates recompute arithmetically, but their manifest mixes per-instance and benchmark-harness scopes and explicitly forbids interpreting them as sustained multi-instance throughput.
       - requirements.txt pins direct dependencies but no transitive lockfile is committed, so a byte-identical runtime reconstruction remains unavailable.
-      - H100 admission is not granted. Run exact-source CRUD, restart, deletion, tenant-path, and matched write-throughput doctors before any actor cell.
+      - Two clean, network-disabled Linux ARM64 repeats reproduced unconfined tenant paths. Relative and absolute user IDs escaped the configured snapshot root, and an alias-equivalent ID shared storage with the canonical tenant.
+      - A forced exception after new facts and trees were written but before registry, cell-store, and metadata persistence loaded as a mixed component generation across two fresh-process restarts. The loader neither rejected nor repaired it.
+      - Normal restart and saved session deletion passed. A bounded scan of retained current files found no deleted plaintext canary in either repeat; this is not secure filesystem-erasure evidence.
+      - The synthetic write diagnostic used deterministic local doubles and five sessions. It is operation-count and wall-clock diagnostic evidence only, not sustained throughput or a localized-maintenance causal estimate.
+      - This exact revision is forbidden from H100 actor work. Admit only a newer immutable revision or explicit repair arm with canonical tenant-ID validation, snapshot-root confinement, a native tenant purge, and atomic generation or journal recovery, followed by the same doctor.
 
   infini-memory:
     kind: topic-document-memory-system
@@ -2702,14 +2718,22 @@ sources:
       reader iteratively lists, searches, greps, and reads evidence, with BM25
       partition fallback when the selected context is insufficient.
     use_as: [plain-text-topic-control, buffered-consolidation-control, agentic-file-retrieval-control]
-    evidence_grade: paper-reported
+    evidence_grade: local-negative-reproduced
+    reproduction_receipt:
+      artifact_path: research/evidence/memory/infini-memory-lifecycle-negative-v1.json
+      receipt_sha256: 83c0a970811278d0b4b81f54d2c1a0651981bca9ca9e858a4ca427bd744ca6ba
     benchmark_claims:
       - benchmark: MemoryAgentBench
         result: "64.7% overall score, paper-reported"
         source_url: https://arxiv.org/abs/2606.10677
         evidence_grade: paper-reported
     limitations:
-      - No result has been independently reproduced in this repository.
+      - Two clean, network-disabled, non-root Linux ARM64 Docker repetitions passed normal public add, BM25 search, update, document deletion, user deletion, and three fresh-process restarts, but reproduced relative and absolute user-path escape plus alias-equivalent storage collision.
+      - Public delete_user reused the unvalidated path join and recursively removed the contained escaped user tree outside the configured data root.
+      - Forced failures after Markdown update or deletion but before index persistence produced a restart-stable old-index/new-Markdown mismatch and a restart-stable dangling index entry. A truncated index silently loaded as an empty public view while its Markdown remained present.
+      - The bounded retained-current-file scan found no deleted plaintext canary in either repetition; this is not secure filesystem-erasure evidence.
+      - The exact committed uv.lock was installed frozen. Deterministic rewrite, BM25, and direct-Markdown work was counted, but the timings remain synthetic diagnostics rather than sustained throughput or semantic retrieval-quality evidence.
+      - This exact revision is forbidden from H100 actor work. Admit only a newer immutable revision or explicit repair arm with canonical user-ID validation, root confinement for reads and recursive deletion, and atomic generation or journal recovery across Markdown, index, and event state, followed by the same doctor.
       - Rewrite, split, merge, and agentic retrieval add model calls whose latency and cost must be charged against simple Markdown and BM25 controls.
       - Topic documents are a maintenance representation, not evidence that the correct memory becomes active before an agent knows to search.
 
@@ -4111,11 +4135,18 @@ sources:
       lineage to raw messages, and maintains a separate confidence-gated facts
       store and candidate-to-profile promotion queue.
     use_as: [raw-versus-distilled-tier-control, scheduled-consolidation-control, cross-agent-synthesis-control]
-    evidence_grade: mechanism-only
+    evidence_grade: local-negative-reproduced
+    reproduction_receipt:
+      artifact_path: research/evidence/memory/mnemo-cortex-native-lifecycle-negative-v1.json
+      receipt_sha256: cf288154955ffb701345ea5b1484118057c5f3dfcf0e04b7e9e2506160173aff
     limitations:
       - The current pin has a scoring harness and author-reported 200-item Passport results, but the evaluated corpus is gitignored and unavailable at the pin.
-      - The top-level Python dependencies are lower-bounded rather than lock-resolved, and dreaming depends on a separately configured reasoning model.
-      - Smart-note classification, default tier filtering, nightly synthesis, cross-agent sharing, and profile promotion must be evaluated as distinct interventions.
+      - Two clean Slurm CPU states reproduced smart-note classification, exact raw-memory-ID filtering and drill-down, Analyst lineage with raw retention, deterministic two-agent map-reduce topology, and fresh-process persistence; this is component lifecycle evidence, not real-provider quality.
+      - In the official no-Git container surface, Passport observe returned HTTP 500 after adding pending state; retry created a second durable pending observation with the same proposed claim, and both duplicates survived restart.
+      - The primary memory route surface exposes no native delete, forget, or tenant-scoped purge operation. All smart, raw, Analyst, and Passport canaries remained in current files after restart because no native erasure operation was available to test.
+      - The top-level Python dependencies are lower-bounded and the upstream Docker base is mutable. The reproduced run used a separate 26-wheel hash-locked offline closure and digest-pinned base; that makes the run replayable but does not repair upstream provenance.
+      - Dreaming depends on a separately configured reasoning model. Smart-note classification, tier filtering, nightly synthesis, cross-agent sharing, and profile promotion remain distinct quality interventions and were not measured here.
+      - The exact revision is forbidden from H100 actor work. Re-entry requires a complete Passport dependency surface, idempotent transaction recovery, native primary-memory purge or cryptographic erasure, and the same two-state doctor on a newer pin or reviewed repair arm.
 
   memtier:
     kind: paper-only-tiered-retrieval-system

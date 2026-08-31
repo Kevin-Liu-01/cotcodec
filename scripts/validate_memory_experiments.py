@@ -45,6 +45,7 @@ from scripts import (  # noqa: E402
     validate_hermes_provider_experiment,
     validate_hippo_retention_experiment,
     validate_icarus_lifecycle_experiment,
+    validate_infini_memory_lifecycle_experiment,
     validate_jiuwen_memory_lifecycle_experiment,
     validate_langmem_lifecycle_experiment,
     validate_lightmem2_context_paging_experiment,
@@ -52,11 +53,14 @@ from scripts import (  # noqa: E402
     validate_magic_context_paging_experiment,
     validate_mem0_lifecycle_experiment,
     validate_memforest_artifact_experiment,
+    validate_memforest_lifecycle_experiment,
     validate_memforge_fresh_install_experiment,
+    validate_memgpt_letta_lifecycle_experiment,
     validate_memoria_lifecycle_experiment,
     validate_memory_lifecycle_experiment,
     validate_memorybank_decay_experiment,
     validate_memorybank_h100_experiment,
+    validate_mnemo_cortex_lifecycle_experiment,
     validate_mnemon_active_space_experiment,
     validate_mnemon_actor_experiment,
     validate_mnemosyne_cognitive_experiment,
@@ -160,8 +164,20 @@ EXTERNAL_EXPERIMENT_VALIDATORS = {
     "stage3-memforest-published-artifact-audit": (
         validate_memforest_artifact_experiment.validate_experiment_contract
     ),
+    "stage3-memforest-native-lifecycle-doctor": (
+        validate_memforest_lifecycle_experiment.validate_experiment_contract
+    ),
+    "stage3-memgpt-letta-native-lifecycle-doctor": (
+        validate_memgpt_letta_lifecycle_experiment.validate_experiment_contract
+    ),
+    "stage3-mnemo-cortex-native-lifecycle-doctor": (
+        validate_mnemo_cortex_lifecycle_experiment.validate_experiment_contract
+    ),
     "stage3-icarus-lifecycle-doctor": (
         validate_icarus_lifecycle_experiment.validate_experiment_contract
+    ),
+    "stage3-infini-memory-lifecycle-provenance-doctor": (
+        validate_infini_memory_lifecycle_experiment.validate_experiment_contract
     ),
     "stage3-jiuwen-memory-file-lifecycle-doctor": (
         validate_jiuwen_memory_lifecycle_experiment.validate_experiment_contract
