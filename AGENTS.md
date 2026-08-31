@@ -2,10 +2,10 @@
 
 A research program studying **orchestration variables** for tool-using LLM agents.
 Language is Paper 1. The broader program covers the full space of choices that
-agent systems make implicitly and never measure. Princeton / Dedalus Labs, Fall 2026.
+agent systems make implicitly and never measure. Princeton, Fall 2026.
 
 **Advisor:** Professor Danqi Chen (Princeton NLP Group)
-**Author:** Kevin Liu (Princeton CS '28, Dedalus Labs founding engineer)
+**Author:** Kevin Liu (Princeton CS '28)
 
 ## The Mental Model
 

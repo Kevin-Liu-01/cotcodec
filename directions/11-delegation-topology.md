@@ -1,6 +1,6 @@
 # Variable 11: Delegation Topology
 
-**Status:** Unexplored. Connects to Kevin's Dedalus work (multi-agent orchestration). Paper 4+ candidate.
+**Status:** Unexplored. Connects to Kevin's production multi-agent orchestration work. Paper 4+ candidate.
 
 ## The Variable
 
@@ -10,7 +10,7 @@ How should work be distributed across agents?
 
 ## Why It Matters
 
-AutoGen, CrewAI, and Kevin's MCP SDK at Dedalus all enable multi-agent
+AutoGen, CrewAI, and production MCP SDKs all enable multi-agent
 systems. But the choice of topology is usually made once at design time
 and never varied. The research question: is there an optimal topology
 for different task structures?

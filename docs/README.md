@@ -7,6 +7,8 @@ inside task transcripts or repeated across stale README files.
 |---|---|---|
 | Human entry point | [`../README.md`](../README.md) | Why the project exists and where to start |
 | Current compiled state | [`current-state.md`](current-state.md) | Latest admitted/killed gates and next action |
+| Memory continuation | [`memory-handoff.md`](memory-handoff.md) | Exact pins, sealed results, next lifecycle falsifiers, and stop rules |
+| H100 operation | [`h100-operator-runbook.md`](h100-operator-runbook.md) | Live host state, admitted submission lane, and publication blockers |
 | Scientific semantics | [`evidence-model.md`](evidence-model.md) | What each evidence level can and cannot claim |
 | Code ownership | [`repository-map.md`](repository-map.md) | Directory responsibilities and dependency flow |
 | Operations | [`research-operations.md`](research-operations.md) | Local, SSH, Slurm, rerun, and writeback procedure |

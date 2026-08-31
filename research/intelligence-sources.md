@@ -110,11 +110,6 @@
 | `@KingBootoshi` | — | Agentic engineer. | 1 (1.1K bm). Custom ESLint anti-slop. Verification cadence. |
 | `@andrewfarah` | Andrew Farah | fieldtheory creator. Density CEO. | 2. Our X bookmark sync tool. |
 
-### Dedalus Team (10 following)
-
-`@itsCathyDi`, `@WindsorNguyen`, `@SMLIANG0`, `@zhou963759`, `@VitusDoesThings`,
-`@NickyHeC01`, `@Tsionhgk`, `@supermistyx`, `@itsaryanmahajan`, `@dedaluslabs`
-
 ### Design Engineers (31 following — Kevin's creative intersection)
 
 `@emilkowalski` (Linear), `@joshpuckett` (Iteration Design), `@raphaelsalaja` (Warp),

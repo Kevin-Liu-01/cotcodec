@@ -76,6 +76,12 @@ erasure.
    source archive, immutable OCI image and SBOM, complete controls, protected
    external attestation, and validated checkpoint/resume.
 
+The exact memory continuation, source archive locations, and preregistered
+falsifiers are in [`memory-handoff.md`](memory-handoff.md). The verified live
+H100 state and operator/admin split are in
+[`h100-operator-runbook.md`](h100-operator-runbook.md). No new memory H100 job
+is admitted at this snapshot.
+
 ## Refresh commands
 
 ```bash

@@ -3,7 +3,7 @@
     "name": "CoTCodec",
     "full_title": "Language Choice as an Orchestration Variable for Tool-Using LLM Agents",
     "author": "Kevin Liu",
-    "affiliation": "Princeton University / Dedalus Labs",
+    "affiliation": "Princeton University",
     "repo": "~/Documents/GitHub/cotcodec",
     "wiki_mirror": "~/Documents/GitHub/my-wiki/wiki/research/cotcodec-paper.md",
     "latex_source": "~/Documents/GitHub/my-wiki/raw/research/language-orchestration-research-spec.tex",
@@ -129,7 +129,7 @@
         "file": "directions/11-delegation-topology.md",
         "tractability": "low",
         "status": "unexplored",
-        "note": "Connects to Kevin's MCP SDK and multi-agent work at Dedalus"
+        "note": "Connects to Kevin's prior MCP SDK and multi-agent work"
       },
       {
         "variable": "instruction_hierarchy",
@@ -687,11 +687,10 @@
       "categories": {
         "ai_ml_research": 80,
         "design_engineering": 31,
-        "dedalus_team": 10,
         "infrastructure": 11,
         "founders_builders": 8,
         "agent_builders": 4,
-        "other": 28
+        "other": 38
       },
       "follow_and_bookmark_overlap": 41
     },
@@ -1016,16 +1015,18 @@
     "compute": {
       "h100_host": {
         "host": "fal-h100-01",
-        "audited": "2026-08-13",
+      "audited": "2026-08-31",
         "hardware": "8x NVIDIA H100 80GB HBM3; 208 CPU threads; 1.7 TiB RAM; 22 TB disk",
         "container_runtime": "Docker GPU execution is available inside Slurm allocations. SmolVM 1.7.7 passes CPU containment but its CUDA path fails with invalid device pointer on this host, so GPU experiments use the validated Docker path without sudo.",
-        "scheduler_status": "single_node_discovery_operational",
-        "blocker": "Slurm 21.08.5 is a permissive single-node discovery setup without cgroup-v2 device isolation or Pyxis/Enroot. Publication and multi-user execution still require administrator-hardened scheduler/container isolation.",
+      "scheduler_status": "single_node_discovery_operational_live_verified",
+      "blocker": "The reachable idle host still runs Slurm 21.08.5 on unified cgroup v2 without scheduler device constraints, and srun does not expose the Pyxis --container-image interface. Publication and multi-user execution require an upgraded cgroup-v2 Slurm build, constrained GPU GRES, reviewed Enroot/Pyxis integration, and fresh isolation doctors.",
         "container_smoke": "One- and two-H100 Slurm/Docker doctors pass exact GPU visibility, digest-pinned image/source verification, network disablement, read-only root, no capabilities, no-new-privileges, UID mapping, resource ceilings, and persistent artifact mounts.",
         "operator_session": "Persistent tmux session cotcodec on fal-h100-01 has a dedicated memory-research window. Use it for editors, submission, monitoring, logs, and interactive clients; scheduler jobs remain scheduler-owned after disconnect.",
         "durability_contract": "tmux covers SSH/laptop disconnect only. Atomic versioned checkpoints must live on persistent storage and pass a fresh-job restore test; reboots, shutdowns, drains, time limits, and cancellations are not covered by tmux",
         "required_action": "Before publication or shared use, harden Slurm with cgroup-v2 device isolation and a reviewed Pyxis/Enroot or equivalent OCI integration; retain the current launcher for single-user discovery only.",
-        "publication_contract": "Digest-pinned OCI image under hardened Slurm isolation; current single-node Docker jobs are reproducible discovery evidence, not publication attestations."
+      "publication_contract": "Digest-pinned OCI image under hardened Slurm isolation; current single-node Docker jobs are reproducible discovery evidence, not publication attestations.",
+      "operator_runbook": "docs/h100-operator-runbook.md",
+      "memory_handoff": "docs/memory-handoff.md"
       },
       "tinker": {
         "status": "contract_valid_access_and_live_adapters_blocked",

@@ -63,6 +63,16 @@ cancellation. Submitted jobs continue under Slurm. Scientific recovery comes
 from atomic, validated checkpoints on persistent storage, never from an
 attached terminal or node-local `/tmp`.
 
+## Current H100 host boundary
+
+The dedicated host currently has eight H100 80GB GPUs and a working bounded
+Docker lane, but Slurm 21.08.5 cannot enforce the host's unified cgroup-v2
+device boundary and Pyxis is absent. Treat
+`scripts/submit_docker_research_job.py` as discovery-only and do not use the
+generic `scripts/submit_research_job.py` publication path until the upgrade and
+isolation doctors in
+[`docs/h100-operator-runbook.md`](../docs/h100-operator-runbook.md) pass.
+
 ## Outputs
 
 Raw runs remain in versioned local or remote result directories. A complete run

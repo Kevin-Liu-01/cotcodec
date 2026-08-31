@@ -7,29 +7,13 @@
 
 ## Distribution
 
-- **dedalus_team**: 10 accounts
 - **ai_ml_research**: 80 accounts
 - **agent_builders**: 4 accounts
 - **infrastructure**: 11 accounts
 - **design_engineering**: 31 accounts
 - **founders_builders**: 8 accounts
 - **developer_tools**: 0 accounts
-- **other**: 28 accounts
-
----
-
-## Dedalus Team (10 accounts)
-
-- **@SMLIANG0** — Building Dedalus | Stanford Math&CS
-- **@zhou963759** — Building 🪽@dedaluslabs (yc s25) | prev @PrincetonHCI @UCBerkeley | ex-Adobe, ex-TTD | adventures in 
-- **@VitusDoesThings** — Helpful @ Dedalus  https://t.co/Okc0sHriK2
-- **@NickyHeC01** — entropy control @dedaluslabs (yc s25)
-- **@Tsionhgk** — founding eng @dedaluslabs
-- **@supermistyx** — head of design & creative shenanigans @dedaluslabs
-- **@dedaluslabs** [also bookmarked] — Build, deploy, and monetize production-grade agents in minutes. @ycombinator S25
-- **@itsaryanmahajan** [also bookmarked] — founding eng @dedaluslabs (yc s25) · cs @columbia · nyc & sf
-- **@WindsorNguyen** — Co-Founder & CTO @DedalusLabs Previously @PrincetonCS, @ptonaialignment   Move electrons.
-- **@itsCathyDi** [also bookmarked] — Co-Founder & CEO @dedaluslabs · prev @PrincetonCS @ptonaialignment · we build wings so your agents c
+- **other**: 38 accounts
 
 ---
 
@@ -229,9 +213,7 @@
 
 These accounts Kevin both follows AND bookmarks — highest signal.
 
-- **@itsCathyDi** (17 bookmarks) — Co-Founder & CEO @dedaluslabs · prev @PrincetonCS @ptonaialignment · we build wi
 - **@garrytan** (14 bookmarks) — President & CEO @ycombinator —Founder @garryslist—Creator of GStack & GBrain—des
-- **@dedaluslabs** (13 bookmarks) — Build, deploy, and monetize production-grade agents in minutes. @ycombinator S25
 - **@om_patel5** (6 bookmarks) — 16 year old saas dev   growing https://t.co/Tr6rRuOdX9 ($10k/m) + https://t.co/K
 - **@AliGrids** (6 bookmarks) — Product / UX Designer. Carefully collecting & sharing UI/UX, dev & creative insp
 - **@tom_doerr** (6 bookmarks) — Follow for posts about GitHub repos, DSPy, and agents Subscribe for top posts DM
@@ -269,7 +251,6 @@ These accounts Kevin both follows AND bookmarks — highest signal.
 - **@EXM7777** (1 bookmarks) — running ai-powered agencies | https://t.co/fMOmHWBgHG
 - **@vercel_dev** (1 bookmarks) — For developers building on @vercel.
 - **@orcdev** (1 bookmarks) — true web dev warrior ⚔️ https://t.co/FFxoqmjFv4 https://t.co/iteijarTva
-- **@itsaryanmahajan** (1 bookmarks) — founding eng @dedaluslabs (yc s25) · cs @columbia · nyc & sf
 
 ---
 

@@ -81,8 +81,8 @@ Full audit of all Kevin's data sources:
 
 **X Following (172):**
 - Full list pulled via `twitter following kevskgs --json`
-- Classified: ai_ml_research (80), design (31), dedalus (10), infra (11),
-  founders (8), agent_builders (4), other (28)
+- Classified: ai_ml_research (80), design (31), infra (11), founders (8),
+  agent_builders (4), other (38)
 - 41 accounts overlap between following and bookmarks (highest signal)
 - Key followed accounts not in bookmarks identified as monitoring gaps
 
@@ -3594,3 +3594,23 @@ v3. V1/v2 remain superseded development history.
   CPU lifecycle doctor. The ledger now records 38 negative findings and the
   93-candidate portfolio remains capped at 84 H100-hours with matrix
   `a0cb79fb0e80aee8e0efd106150fb9ac94bdc85262e4570a60d97b204a7e193f`.
+## 2026-08-31 — Exact memory and H100 handoff
+
+- Removed the company affiliation and company-specific social-intelligence rows
+  from every current repository surface. Git history was not rewritten.
+- Added `docs/memory-handoff.md` as the exact continuation owner for the memory
+  program: 229 sources, 182 pinned repositories, one scientific reproduction,
+  three conformance reproductions, 38 reproduced negatives, six waves, 93
+  candidates, and matrix `a0cb79fb...`.
+- Bound the next distinct mechanism to Letta Code revision `a575e117...`, tree
+  `9bb2cadf...`, source archive `d81b2104...`, including local and remote archive
+  locations. The symlink, failed-commit, retry, restart, agent-delete, purge,
+  residue, and matched-cost checks are preregistration inputs from source
+  inspection, not observed results.
+- Verified `fal-h100-01` live: the `research` partition was idle with eight H100
+  80GB devices and Docker 28.3.1. The host remains on Slurm 21.08.5 with unified
+  cgroup v2 and no `srun --container-image` Pyxis interface.
+- Added `docs/h100-operator-runbook.md`. The current Docker-under-Slurm path is
+  discovery-only. No new memory H100 job is admitted; publication use remains
+  blocked on scheduler cgroup-v2 device constraints, reviewed Enroot/Pyxis,
+  isolation doctors, exact provenance, and fresh-allocation resume proof.

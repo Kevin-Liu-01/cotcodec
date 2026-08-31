@@ -11,21 +11,21 @@ updated: 2026-04-28
 
 ## Identity
 
-**Kevin B. Liu** — Princeton CS '28. Founding engineer at Dedalus Labs (YC S25).
-Independent research with Professor Danqi Chen on agent orchestration.
+**Kevin B. Liu** — Princeton CS '28. Independent research with Professor Danqi
+Chen on agent orchestration.
 
 ## Research Context
 
 - First research project with Danqi Chen at Princeton NLP Group
-- Intersection of Kevin's production agent experience (Dedalus: MCP SDK,
-  multi-tenant auth, microVM workspaces) and multilingual NLP research
+- Intersection of Kevin's production agent experience (MCP SDK, multi-tenant
+  auth, microVM workspaces) and multilingual NLP research
 - The proposal originated from a production observation: Polish text consumed
-  62% more tokens than English under Anthropic's tokenizer at Dedalus
+  62% more tokens than English under Anthropic's tokenizer
 
 ## Strengths (Research-Relevant)
 
 - **Production agent systems experience** — built real MCP-powered tool-using
-  agents at Dedalus. Understands orchestration overhead firsthand.
+  agents and understands orchestration overhead firsthand.
 - **Infrastructure builder** — maintains a 218-page personal wiki with 14
   automations, search infrastructure, and automated radar systems
 - **Harness-minded** — thinks in terms of eval harnesses, not prompts.
