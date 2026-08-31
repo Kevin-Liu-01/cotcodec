@@ -1,7 +1,7 @@
 schema_version: 1
-verified_at: "2026-08-17"
+verified_at: "2026-08-31"
 ledger: research/memory-sources.yaml
-matrix_sha256: 7ffc4b4ffea6fc5050a5e1beafd1f8f390e7b67df379fa725624115b16ffce58
+matrix_sha256: a0cb79fb0e80aee8e0efd106150fb9ac94bdc85262e4570a60d97b204a7e193f
 portfolio_max_gpu_hours: 84
 scope: >-
   Selected falsifiers and systems for active/inactive, graph, learned-controller,
@@ -89,6 +89,18 @@ reference_lifecycle_contract:
     - source_id: jiuwen-memory
       evidence_role: local-arm64-file-index-tenancy-and-migration-negative
       status: JIUWEN_FILE_BACKEND_ADMISSION_KILLED_GLOBAL_ID_AND_MIGRATION_RESET
+      h100_admission: forbidden-for-this-revision
+    - source_id: infini-memory
+      evidence_role: local-arm64-file-lifecycle-and-confinement-negative
+      status: INFINI_MEMORY_ADMISSION_KILLED_UNCONFINED_USER_PATH_DESTRUCTIVE_DELETE_AND_NONATOMIC_INDEX
+      h100_admission: forbidden-for-this-revision
+    - source_id: mnemo-cortex
+      evidence_role: slurm-cpu-amd64-tier-passport-and-restart-negative
+      status: MNEMO_CORTEX_ADMISSION_KILLED_NO_GIT_PARTIAL_WRITES_NO_NATIVE_PURGE_AND_UNPINNED_DEPS
+      h100_admission: forbidden-for-this-revision
+    - source_id: memgpt-letta
+      evidence_role: slurm-cpu-amd64-core-archive-transaction-and-erasure-negative
+      status: MEMGPT_LETTA_ADMISSION_KILLED_PARTIAL_CORE_UPDATE_DUPLICATE_ARCHIVE_RETRY_AGENT_DELETE_ORPHANS_AND_POSTGRES_RESIDUE
       h100_admission: forbidden-for-this-revision
 
 provider_conformance_contracts:
@@ -232,6 +244,26 @@ killed_revisions:
     terminal_status: BLOCKED_ARCHIVE_ONLY_RETENTION_NO_SCOPED_PURGE_AND_SHARED_DB_ERASURE
     evidence_path: research/evidence/memory/activegraph-fork-lifecycle-negative-v1.json
     evidence_sha256: 69a0a896c9c5139f3d55939af8f3fb40f48e2b07d59116af47b2459be883d52c
+  - source_id: memforest
+    repository_revision: fb4320a84d296bf7b0752d7ef1f2ad0726ae0b22
+    terminal_status: MEMFOREST_LIFECYCLE_ADMISSION_KILLED_UNCONFINED_TENANT_PATH_AND_TORN_SNAPSHOT
+    evidence_path: research/evidence/memory/memforest-native-lifecycle-negative-v1.json
+    evidence_sha256: 2fe55ccae8eb0633db4d5be6c1ceb116a52cf4402c8b2cfb1ab78901ffeb658f
+  - source_id: infini-memory
+    repository_revision: ddac08ec468e0382e4f14239d94991ab19ae981a
+    terminal_status: INFINI_MEMORY_ADMISSION_KILLED_UNCONFINED_USER_PATH_DESTRUCTIVE_DELETE_AND_NONATOMIC_INDEX
+    evidence_path: research/evidence/memory/infini-memory-lifecycle-negative-v1.json
+    evidence_sha256: 83c0a970811278d0b4b81f54d2c1a0651981bca9ca9e858a4ca427bd744ca6ba
+  - source_id: mnemo-cortex
+    repository_revision: 8a0cff9492f010f73d722688924b09938b2dd682
+    terminal_status: MNEMO_CORTEX_ADMISSION_KILLED_NO_GIT_PARTIAL_WRITES_NO_NATIVE_PURGE_AND_UNPINNED_DEPS
+    evidence_path: research/evidence/memory/mnemo-cortex-native-lifecycle-negative-v1.json
+    evidence_sha256: cf288154955ffb701345ea5b1484118057c5f3dfcf0e04b7e9e2506160173aff
+  - source_id: memgpt-letta
+    repository_revision: ff19ffeafeb54bd2a7dc5d4a552f10191732a235
+    terminal_status: MEMGPT_LETTA_ADMISSION_KILLED_PARTIAL_CORE_UPDATE_DUPLICATE_ARCHIVE_RETRY_AGENT_DELETE_ORPHANS_AND_POSTGRES_RESIDUE
+    evidence_path: research/evidence/memory/memgpt-letta-native-lifecycle-negative-v1.json
+    evidence_sha256: 81bee6fa8115d62c527e6972d8c5ae0880de65a1743c6feb445f78ce6537a117
   - source_id: memforge
     repository_revision: 16e2f15c5881a38911f64ca81b3dc0b25d6207ec
     terminal_status: MEMFORGE_FRESH_INSTALL_ADMISSION_KILLED
@@ -373,9 +405,6 @@ waves:
     execution_order:
       - mempalace
       - fidelis
-      - infini-memory
-      - mnemo-cortex
-      - memgpt-letta
     candidates:
       - source_id: mem0
         mode: contained-import
@@ -435,26 +464,42 @@ waves:
       - source_id: memgpt-letta
         mode: contained-import
         repository_role: implementation
-        status: planned
+        status: discovery-killed
         priority: boundary
-        scientific_role: Self-managed active core and inactive archive boundary.
-        next_gate: Conformance doctor for paging, mutation, restart, isolation, and cost.
+        scientific_role: Exact legacy V1 active-core and inactive-archive lifecycle whose split core update, non-idempotent archive retry, resource retention after agent deletion, and stopped-PostgreSQL residue fail actor admission.
+        next_gate: Do not run an H100 actor for ff19ffe. Admit only a newer immutable legacy V1 revision or reviewed repair arm with transactional block-and-prompt recovery, archive idempotency keys, explicit resource teardown, and physical purge or cryptographic erasure, followed by the same doctor. Evaluate Letta Code MemFS separately.
+        negative_evidence:
+          artifact_path: research/memgpt-letta-native-lifecycle-audit-2026-08-31.md
+          artifact_sha256: fcf3bb92161f5aa5a669a2ec5ba93c976db0831595d2b573133c229e50cc2b9c
+          receipt_path: research/evidence/memory/memgpt-letta-native-lifecycle-negative-v1.json
+          receipt_sha256: 81bee6fa8115d62c527e6972d8c5ae0880de65a1743c6feb445f78ce6537a117
+          status: MEMGPT_LETTA_ADMISSION_KILLED_PARTIAL_CORE_UPDATE_DUPLICATE_ARCHIVE_RETRY_AGENT_DELETE_ORPHANS_AND_POSTGRES_RESIDUE
       - source_id: memforest
         mode: contained-import
         repository_role: implementation-benchmark-and-reproducibility-artifacts
-        status: artifact-audited-not-reproduced
-        priority: secondary
-        scientific_role: Write-efficient localized temporal-tree maintenance whose submitted and revision tables are now checksum-bound and recomputed without reproducing the system.
-        next_gate: Run exact-source contained CRUD, restart, deletion, tenant-path, and matched write-throughput doctors. Do not admit an actor cell from artifact evidence alone.
-        evidence_path: research/evidence/memory/memforest-published-artifact-audit-v1.json
-        evidence_sha256: fb571ffe136f669d8da30314ae12ed5022693a89db06d38697da7be7aee01f1d
+        status: discovery-killed
+        priority: boundary
+        scientific_role: Exact public lifecycle with positive restart and saved-deletion controls whose unconfined tenant paths and torn multi-file snapshots fail actor admission.
+        next_gate: Do not run an H100 actor for fb4320a. Admit only a newer immutable revision or explicit repair arm with canonical tenant-ID validation, snapshot-root confinement, native tenant purge, and atomic generation or journal recovery, followed by the same doctor.
+        negative_evidence:
+          artifact_path: research/memforest-native-lifecycle-audit-2026-08-17.md
+          artifact_sha256: fc5fb9ba6248e09e2b7933a431ec96bddc742d1d1e752f706e8ccde1de0ea56f
+          receipt_path: research/evidence/memory/memforest-native-lifecycle-negative-v1.json
+          receipt_sha256: 2fe55ccae8eb0633db4d5be6c1ceb116a52cf4402c8b2cfb1ab78901ffeb658f
+          status: MEMFOREST_LIFECYCLE_ADMISSION_KILLED_UNCONFINED_TENANT_PATH_AND_TORN_SNAPSHOT
       - source_id: infini-memory
         mode: contained-import
         repository_role: implementation-and-examples
-        status: planned
+        status: discovery-killed
         priority: secondary
-        scientific_role: Readable topic-document maintenance and agentic file retrieval.
-        next_gate: Run deterministic CRUD/provenance doctor and charge every rewrite and retrieval call against Markdown/BM25.
+        scientific_role: Exact public topic-document lifecycle with positive CRUD and restart controls whose unconfined user paths, destructive recursive deletion, and non-atomic index/file updates fail actor admission.
+        next_gate: Do not run an H100 actor for ddac08e. Admit only a newer immutable revision or explicit repair arm with canonical user-ID validation, root confinement for reads and recursive deletion, and atomic generation or journal recovery across Markdown, index, and event state, followed by the same doctor.
+        negative_evidence:
+          artifact_path: research/infini-memory-lifecycle-audit-2026-08-26.md
+          artifact_sha256: 019f77c35891d1d8bb609bb80dccde2217efaff5e694973c46200b5805689986
+          receipt_path: research/evidence/memory/infini-memory-lifecycle-negative-v1.json
+          receipt_sha256: 83c0a970811278d0b4b81f54d2c1a0651981bca9ca9e858a4ca427bd744ca6ba
+          status: INFINI_MEMORY_ADMISSION_KILLED_UNCONFINED_USER_PATH_DESTRUCTIVE_DELETE_AND_NONATOMIC_INDEX
       - source_id: deltamem
         mode: blocked-license
         repository_role: implementation-and-benchmark-drivers
@@ -513,10 +558,16 @@ waves:
       - source_id: mnemo-cortex
         mode: contained-import
         repository_role: implementation-tests-dreaming-and-passport-eval
-        status: planned
+        status: discovery-killed
         priority: secondary
-        scientific_role: Raw-session versus distilled-note tiers plus scheduled cross-agent consolidation control.
-        next_gate: Lock the Python environment, then separate classification, tier filtering, dreaming, sharing, and profile promotion under one frozen actor and cost ledger.
+        scientific_role: Exact-source smart-note, raw-log, Analyst, deterministic dream, and restart control whose official no-Git Passport boundary creates durable duplicate pending writes and whose primary memory surface has no native purge.
+        next_gate: Do not run an H100 actor for 8a0cff9. Admit only a newer immutable revision or reviewed repair arm with an exact Python lock and digest-pinned base, complete Passport runtime dependencies, idempotent recovery across pending, stable, Git, and audit state, and native tenant-scoped primary-memory purge or cryptographic erasure, followed by the same two-clean-state doctor.
+        negative_evidence:
+          artifact_path: research/mnemo-cortex-native-lifecycle-audit-2026-08-26.md
+          artifact_sha256: d932f4b2b5e3265a060cf63a5e9a58d9a154325eebd18896e99aa18f689027b4
+          receipt_path: research/evidence/memory/mnemo-cortex-native-lifecycle-negative-v1.json
+          receipt_sha256: cf288154955ffb701345ea5b1484118057c5f3dfcf0e04b7e9e2506160173aff
+          status: MNEMO_CORTEX_ADMISSION_KILLED_NO_GIT_PARTIAL_WRITES_NO_NATIVE_PURGE_AND_UNPINNED_DEPS
       - source_id: openviking
         mode: contained-import
         repository_role: implementation-tests-service-and-benchmark-drivers

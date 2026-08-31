@@ -17,9 +17,33 @@ if __package__:
         GBrainEvidenceError,
         validate_gbrain_brainbench_evidence,
     )
+    from scripts.seal_infini_memory_lifecycle_evidence import (
+        InfiniMemoryLifecycleEvidenceError,
+    )
+    from scripts.seal_infini_memory_lifecycle_evidence import (
+        validate_evidence as validate_infini_memory_lifecycle_evidence,
+    )
     from scripts.seal_memforest_artifact_evidence import (
         MemForestArtifactEvidenceError,
         validate_memforest_artifact_evidence,
+    )
+    from scripts.seal_memforest_lifecycle_evidence import (
+        MemForestLifecycleEvidenceError,
+    )
+    from scripts.seal_memforest_lifecycle_evidence import (
+        validate_evidence as validate_memforest_lifecycle_evidence,
+    )
+    from scripts.seal_memgpt_letta_lifecycle_evidence import (
+        MemgptLettaLifecycleEvidenceError,
+    )
+    from scripts.seal_memgpt_letta_lifecycle_evidence import (
+        validate_evidence as validate_memgpt_letta_lifecycle_evidence,
+    )
+    from scripts.seal_mnemo_cortex_lifecycle_evidence import (
+        MnemoCortexLifecycleEvidenceError,
+    )
+    from scripts.seal_mnemo_cortex_lifecycle_evidence import (
+        validate_evidence as validate_mnemo_cortex_lifecycle_evidence,
     )
     from scripts.seal_sage_wiki_artifact_evidence import (
         SageWikiArtifactEvidenceError,
@@ -44,9 +68,33 @@ else:
         GBrainEvidenceError,
         validate_gbrain_brainbench_evidence,
     )
+    from seal_infini_memory_lifecycle_evidence import (  # type: ignore[no-redef]
+        InfiniMemoryLifecycleEvidenceError,
+    )
+    from seal_infini_memory_lifecycle_evidence import (  # type: ignore[no-redef]
+        validate_evidence as validate_infini_memory_lifecycle_evidence,
+    )
     from seal_memforest_artifact_evidence import (  # type: ignore[no-redef]
         MemForestArtifactEvidenceError,
         validate_memforest_artifact_evidence,
+    )
+    from seal_memforest_lifecycle_evidence import (  # type: ignore[no-redef]
+        MemForestLifecycleEvidenceError,
+    )
+    from seal_memforest_lifecycle_evidence import (
+        validate_evidence as validate_memforest_lifecycle_evidence,
+    )
+    from seal_memgpt_letta_lifecycle_evidence import (  # type: ignore[no-redef]
+        MemgptLettaLifecycleEvidenceError,
+    )
+    from seal_memgpt_letta_lifecycle_evidence import (  # type: ignore[no-redef]
+        validate_evidence as validate_memgpt_letta_lifecycle_evidence,
+    )
+    from seal_mnemo_cortex_lifecycle_evidence import (  # type: ignore[no-redef]
+        MnemoCortexLifecycleEvidenceError,
+    )
+    from seal_mnemo_cortex_lifecycle_evidence import (  # type: ignore[no-redef]
+        validate_evidence as validate_mnemo_cortex_lifecycle_evidence,
     )
     from seal_sage_wiki_artifact_evidence import (  # type: ignore[no-redef]
         SageWikiArtifactEvidenceError,
@@ -136,7 +184,22 @@ NEGATIVE_TERMINAL_STATUSES = {
     "memorybank-siliconfriend": (
         "MEMORYBANK_CORRECTED_DECAY_PASS_NO_DECAY_KILLS_SCALING"
     ),
+    "memforest": (
+        "MEMFOREST_LIFECYCLE_ADMISSION_KILLED_UNCONFINED_TENANT_PATH_AND_TORN_SNAPSHOT"
+    ),
+    "memgpt-letta": (
+        "MEMGPT_LETTA_ADMISSION_KILLED_PARTIAL_CORE_UPDATE_DUPLICATE_ARCHIVE_RETRY_"
+        "AGENT_DELETE_ORPHANS_AND_POSTGRES_RESIDUE"
+    ),
+    "infini-memory": (
+        "INFINI_MEMORY_ADMISSION_KILLED_UNCONFINED_USER_PATH_"
+        "DESTRUCTIVE_DELETE_AND_NONATOMIC_INDEX"
+    ),
     "memforge": "MEMFORGE_FRESH_INSTALL_ADMISSION_KILLED",
+    "mnemo-cortex": (
+        "MNEMO_CORTEX_ADMISSION_KILLED_NO_GIT_PARTIAL_WRITES_NO_NATIVE_PURGE_"
+        "AND_UNPINNED_DEPS"
+    ),
     "memoria-matrixorigin": (
         "BLOCKED_SHARED_TABLE_BRANCH_EXPOSURE_SOFT_PURGE_RESIDUE_AND_NONATOMIC_ROLLBACK"
     ),
@@ -264,6 +327,153 @@ def _validate_negative_receipt(
             raise MemoryPortfolioError(
                 f"{owner}: agenticow receipt semantics drifted"
             )
+    elif source_id == "memforest":
+        findings = receipt.get("findings", {})
+        if (
+            receipt.get("evidence_kind") != "contained-native-lifecycle-negative"
+            or receipt.get("source_revisions", {}).get(
+                "https://github.com/Concyclics/MemForest"
+            )
+            != revision
+            or receipt.get("runtime_lane") != "local-arm64-docker-network-none"
+            or receipt.get("run_count") != 2
+            or receipt.get("fresh_process_restart_count_per_run") != 3
+            or receipt.get("stable_projection_sha256")
+            != "ad833d7d60e6ff0e2590d2be2890a98f4fb656499314cc1a5e268965acc3d08b"
+            or findings.get("relative_user_id_escapes_snapshot_root") is not True
+            or findings.get("absolute_user_id_overrides_snapshot_root") is not True
+            or findings.get("alias_equivalent_user_ids_share_storage") is not True
+            or findings.get("interrupted_save_exposes_mixed_component_generations")
+            is not True
+            or findings.get("saved_session_delete_survives_restart") is not True
+            or receipt.get("post_delete_plaintext_residue_paths") != [[], []]
+        ):
+            raise MemoryPortfolioError(
+                f"{owner}: MemForest lifecycle receipt semantics drifted"
+            )
+        try:
+            validate_memforest_lifecycle_evidence(receipt, project_root=PROJECT_ROOT)
+        except MemForestLifecycleEvidenceError as exc:
+            raise MemoryPortfolioError(f"{owner}: {exc}") from exc
+    elif source_id == "memgpt-letta":
+        findings = receipt.get("findings", {})
+        revisions = receipt.get("source_revisions", {})
+        if (
+            receipt.get("evidence_kind") != "contained-native-lifecycle-negative"
+            or revisions.get("https://github.com/letta-ai/letta") != revision
+            or revisions.get("https://github.com/letta-ai/letta-code")
+            != "a575e11753943d9a4e18373a8817eb16a5b76b47"
+            or receipt.get("runtime_lane")
+            != "slurm-cpu-amd64-official-image-network-none"
+            or receipt.get("slurm_job_id") != "351"
+            or receipt.get("run_count") != 2
+            or receipt.get("fresh_process_restart_count_per_run") != 1
+            or receipt.get("stable_projection_sha256")
+            != "25b09cf3288e045afcb71908b03af97f898dab2ea8921e64506ba8d5234a8f3a"
+            or findings.get(
+                "failed_core_update_returns_server_error_after_block_mutation"
+            )
+            is not True
+            or findings.get("failed_core_update_mutation_survives_fresh_process")
+            is not True
+            or findings.get("identical_archive_retry_creates_duplicate_rows")
+            is not True
+            or findings.get("duplicate_archive_rows_survive_fresh_process") is not True
+            or findings.get("deleting_agent_retains_owner_archive_and_core_blocks")
+            is not True
+            or findings.get("stopped_postgres_plaintext_residue_present") is not True
+        ):
+            raise MemoryPortfolioError(
+                f"{owner}: MemGPT/Letta lifecycle receipt semantics drifted"
+            )
+        try:
+            validate_memgpt_letta_lifecycle_evidence(
+                receipt, project_root=PROJECT_ROOT
+            )
+        except MemgptLettaLifecycleEvidenceError as exc:
+            raise MemoryPortfolioError(f"{owner}: {exc}") from exc
+    elif source_id == "infini-memory":
+        findings = receipt.get("findings", {})
+        residue = receipt.get("post_delete_plaintext_residue_paths")
+        if (
+            receipt.get("evidence_kind") != "contained-native-lifecycle-negative"
+            or receipt.get("source_revisions", {}).get(
+                "https://github.com/infinigence/Infini-Memory"
+            )
+            != revision
+            or receipt.get("runtime_lane") != "local-arm64-docker-network-none"
+            or receipt.get("run_count") != 2
+            or receipt.get("fresh_process_restart_count_per_run") != 3
+            or receipt.get("stable_projection_sha256")
+            != "a431ee72891d0d107360b34f62108174cf0d05fa3bd2749aa0d5414db6ca9027"
+            or findings.get("relative_user_id_escapes_data_root") is not True
+            or findings.get("absolute_user_id_overrides_data_root") is not True
+            or findings.get("alias_equivalent_user_ids_share_storage") is not True
+            or findings.get("escaped_delete_user_removes_path_outside_data_root")
+            is not True
+            or findings.get("interrupted_update_exposes_markdown_index_mismatch")
+            is not True
+            or findings.get("interrupted_delete_exposes_dangling_index_entry")
+            is not True
+            or findings.get(
+                "truncated_index_silently_loads_empty_with_markdown_present"
+            )
+            is not True
+            or not isinstance(residue, list)
+            or len(residue) != 2
+            or any(
+                not isinstance(row, dict)
+                or len(row) != 3
+                or any(paths != [] for paths in row.values())
+                for row in residue
+            )
+        ):
+            raise MemoryPortfolioError(
+                f"{owner}: Infini Memory lifecycle receipt semantics drifted"
+            )
+        try:
+            validate_infini_memory_lifecycle_evidence(
+                receipt, project_root=PROJECT_ROOT
+            )
+        except InfiniMemoryLifecycleEvidenceError as exc:
+            raise MemoryPortfolioError(f"{owner}: {exc}") from exc
+    elif source_id == "mnemo-cortex":
+        findings = receipt.get("findings", {})
+        if (
+            receipt.get("evidence_kind") != "contained-native-lifecycle-negative"
+            or receipt.get("source_revisions", {}).get(
+                "https://github.com/GuyMannDude/mnemo-cortex"
+            )
+            != revision
+            or receipt.get("runtime_lane")
+            != "slurm-cpu-amd64-docker-network-none"
+            or receipt.get("slurm_job_id") != "347"
+            or receipt.get("run_count") != 2
+            or receipt.get("fresh_process_restart_count_per_run") != 1
+            or receipt.get("stable_projection_sha256")
+            != "f07a317a4dfa6cea1ccf2b33364a607ca279dcabf4feb33fea014786f1cd2779"
+            or findings.get(
+                "passport_observe_returns_server_error_after_pending_mutation"
+            )
+            is not True
+            or findings.get("repeated_failed_observe_creates_duplicate_pending_rows")
+            is not True
+            or findings.get("duplicate_pending_rows_survive_fresh_process")
+            is not True
+            or findings.get("native_primary_memory_purge_absent") is not True
+            or findings.get("official_container_has_no_git") is not True
+            or receipt.get("wheelhouse_manifest_sha256")
+            != "95395024deabd10961d58ca20fd2b19afad9b4c654207e243e9edf35796dcd9a"
+        ):
+            raise MemoryPortfolioError(
+                f"{owner}: Mnemo Cortex lifecycle receipt semantics drifted"
+            )
+        try:
+            validate_mnemo_cortex_lifecycle_evidence(
+                receipt, project_root=PROJECT_ROOT
+            )
+        except MnemoCortexLifecycleEvidenceError as exc:
+            raise MemoryPortfolioError(f"{owner}: {exc}") from exc
     elif source_id == "astra-working-set":
         findings = receipt.get("claim_boundary", {})
         if (
@@ -1410,6 +1620,7 @@ def _validate_killed_revisions(
             "magic-context",
             "memorybank-siliconfriend",
             "mnemon",
+            "mnemo-cortex",
             "mnemosyne-oss",
             "openviking",
             "palimpsest-bitemporal-memory",

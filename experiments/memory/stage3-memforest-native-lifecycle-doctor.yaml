@@ -1,0 +1,101 @@
+schema_version: 1
+name: stage3-memforest-native-lifecycle-doctor
+status: registered-cpu-falsification
+scientific_result: false
+publication_ready: false
+description: >-
+  Exercise MemForest's exact public multi-user lifecycle in two clean,
+  network-disabled ARM64 containers with deterministic local chat and embedding
+  doubles. Normal tenant CRUD and restart are positive controls. Relative,
+  absolute, and alias-equivalent user IDs probe snapshot-root confinement; a
+  forced exception between component writes probes atomic generation recovery;
+  saved deletion is followed by restart and bounded plaintext scans. A matched
+  incremental-versus-clean-rebuild micro-workload is retained only as a
+  non-scientific write-path diagnostic.
+
+source:
+  source_id: memforest
+  repository: https://github.com/Concyclics/MemForest
+  revision: fb4320a84d296bf7b0752d7ef1f2ad0726ae0b22
+  tree: 2e30793c77ef0b7fc8b36bd6d3648a1d9f2fecb2
+  license: MIT
+  license_sha256: f91f1d776c397faf0e8f2b87e23e7e7f9bd312ec0751397ab183752b1b217efc
+  requirements_sha256: e596f2354b4f732fd45bd3e8f958650bf2309bd1511fbc4f69a405ab236b57f4
+  git_archive_tar_sha256: 3809857bcd1f2fb799038a604149a1354277f80dd87893c7f2e3949c743211e0
+  exact_source_files:
+    src/forest/memforest.py: 2823f581fc07524f088c30a083fba912f93e786854a7c837e2b866465c9263ba
+    src/forest/user_forest.py: aab1c22eed1558bf2bb50e4c4c6a23e6029fe4b7e63f8a7d06447acf7e0c6e9c
+    src/forest/session_registry.py: 86323d3a9cb498f41b2454da66af61e54d3ab4cd27ae7b9070d40a7d45ea8f5d
+
+runtime:
+  containment: docker-network-none
+  provider_secrets: forbidden
+  sudo: forbidden
+  gpu_count: 0
+  base_image: >-
+    docker.io/library/python:3.12.11-slim-bookworm@sha256:519591d6871b7bc437060736b9f7456b8731f1499a57e22e6c285135ae657bf7
+  python_version: 3.12.11
+  clean_state_repeats: 2
+  fresh_process_restarts_per_repeat: 3
+  dependency_install: exact-committed-direct-requirements-no-transitive-lock
+
+intervention:
+  public_api:
+    - MemForest.register_user
+    - MemForest.ingest_session
+    - MemForest.delete_session
+    - MemForest.save
+  external_model_calls: 0
+  provider_calls: 0
+  deterministic_chat_double: true
+  deterministic_embedding_double: true
+  test_normal_tenant_crud_restart: true
+  test_saved_session_deletion_restart: true
+  test_relative_user_path_confinement: true
+  test_absolute_user_path_confinement: true
+  test_alias_equivalent_user_isolation: true
+  test_interrupted_multifile_save_restart: true
+  test_native_tenant_purge_surface: true
+  test_post_delete_plaintext_residue: true
+  matched_incremental_vs_clean_rebuild_diagnostic: true
+
+expected_falsification:
+  status: MEMFOREST_LIFECYCLE_ADMISSION_KILLED_UNCONFINED_TENANT_PATH_AND_TORN_SNAPSHOT
+  normal_user_survives_restart: true
+  saved_session_delete_survives_restart: true
+  relative_user_id_escapes_snapshot_root: true
+  absolute_user_id_overrides_snapshot_root: true
+  alias_equivalent_user_ids_share_storage: true
+  interrupted_save_exposes_mixed_component_generations: true
+  native_tenant_purge_absent: true
+  write_path_diagnostic_completed: true
+  reproduced_in_two_clean_states: true
+
+execution:
+  repetitions: 2
+  external_api_calls: 0
+  llm_calls: 0
+  gpus: 0
+  max_gpu_hours: 0
+  wall_clock_limit_minutes: 20
+  synthetic_seed_sessions: 4
+  synthetic_incremental_sessions: 1
+
+admission:
+  h100_actor: forbidden-for-this-revision-if-falsified
+  scientific_claim: forbidden
+  publication_claim: forbidden
+  next_gate: >-
+    Admit only a newer immutable revision or an explicit reviewed repair arm
+    with canonical tenant-ID validation, snapshot-root confinement, a native
+    tenant purge, and atomic generation or journal recovery. Repeat the same
+    doctor before any common-construction retrieval or H100 mechanism cell.
+
+claim_boundary: >-
+  Exact pinned public MemForest tenant registration, deterministic-fake ingest,
+  save, restart, saved session deletion, tenant-path confinement, interrupted
+  multi-file save recovery, native tenant-purge surface, bounded current-file
+  plaintext scan, and synthetic incremental-versus-rebuild write diagnostics;
+  not model extraction quality, semantic retrieval quality, secure filesystem
+  erasure, sustained serving throughput, localized-maintenance causal effect,
+  H100 actor quality, or publication evidence.

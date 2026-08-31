@@ -1,0 +1,131 @@
+name: orchvar_qwen35_two_stage_live_smoke
+description: >-
+  First bounded live check of required plain research-message calls followed by
+  separately receipted strict action-only JSON calls. No coupled protocol is rerun.
+
+benchmark: orchvar_canary
+model: qwen3.5-4b
+conditions: [english_only]
+task_variant: live_self_contained_v2
+
+tasks:
+  - canary-reasoning-depth-01
+  - canary-context-recall-01
+  - canary-verbosity-sensitive-01
+  - canary-multi-turn-memory-01
+  - canary-tool-argument-precision-01
+  - canary-safety-01
+seeds: [42]
+
+metrics:
+  - task_success_rate
+  - tool_call_exact_match
+  - safety_failures
+  - message_compliance
+  - planner_stage_calls
+  - memory_stage_calls
+  - action_stage_calls
+  - prompt_tokens
+  - completion_tokens
+  - wall_clock_latency_ms
+
+actor:
+  type: transformers_two_stage_plain_action_json_v1
+  registry_model_id: qwen3.5-4b
+  registry_path: models/registry.yaml
+  repo_id: Qwen/Qwen3.5-4B
+  revision: 851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a
+  artifact_root_sha256: 3b8a075149bffe4dea784db5b4b37bc0896688cba0b3de7d8d0f6e8ae6157b9e
+  model_receipt_sha256: 75ebfc531acdcbc0c39bbf83ee7bf5267a3ddf02c4fafdf6181624612a0d3082
+  max_new_tokens: 256
+  dtype: bfloat16
+  device_map: auto
+  use_chat_template: true
+  deterministic: true
+  attention_implementation: eager
+  planner_cadence: every_decision
+  memory_cadence: first_decision_only
+  message_fallback: none
+  action_fallback: none
+
+tools:
+  type: sqlite_canary_v1
+  persistence: isolated_in_memory_per_task
+
+task_manifest_sha256: 325df3670e69539e857784e4184f3b36e62ff11dfc5701773c75c7af457b42b0
+
+transport_audit:
+  status: ORCHVAR_MESSAGE_ACTION_TRANSPORT_TWO_STAGE_SELECTED_CPU_REQUIRED
+  evidence: research/evidence/harness/orchvar-message-action-transport-audit-v1.json
+  evidence_sha256: d22f4434f6fa15c7010cee6a4517d3492c41a0a4c7773a798d02ea88fe4d6eaa
+  projection_sha256: 8660f4aaf6e60bcb8d91febc44daaf654418defce128b64e4f56d351e96ef070
+  selected_candidate: message_then_action_two_stage
+  external_model_calls: 0
+
+two_stage_cpu_admission:
+  status: ORCHVAR_TWO_STAGE_MESSAGE_ACTION_CPU_ADMISSION_PASS
+  evidence: research/evidence/harness/orchvar-two-stage-message-action-cpu-admission-v3.json
+  evidence_sha256: 3a51067a2bb29c5a0ed99f4b0408421555f652d93e87950945236b56c88a507a
+  evidence_root_sha256: 5087024c699f0e7008ff6b7526f4329aad00ab8b7644bba0303fa8da632a8d85
+  projection_sha256: 00ff222140326abe9aaeb2660a40c9dfcc64f53651be64f6f81ea3be6b5dbd1f
+  external_model_calls: 0
+  task_successes: 6
+  message_stages: 15
+  action_stages: 15
+  sqlite_tool_operations: 9
+  actual_usr1_acknowledged_cells: 2
+  safety_gate_passed: true
+
+budgets:
+  max_decisions_per_task: 5
+  max_steps_per_task: 12
+  max_tool_calls_per_task: 4
+  max_planner_stage_calls: 30
+  max_memory_stage_calls: 6
+  max_message_stage_calls: 36
+  max_action_stage_calls: 30
+  max_external_model_calls: 66
+  expected_success_path_external_model_calls: 36
+  max_local_tool_calls: 12
+  max_prompt_tokens: 40000
+  max_completion_tokens: 16896
+  max_cost_usd: 0
+  max_gpu_hours: 0.5
+
+compliance:
+  required_message_compliance_rate: 1.0
+  missing_message_policy: stop_cell_before_action
+  invalid_action_policy: stop_cell_before_tool
+  retry_count: 0
+  synthesize_missing_messages: false
+  coerce_action_arguments: false
+
+execution:
+  run_id: orchvar-qwen35-two-stage-live-v1
+  checkpoint_after_each_cell: true
+  checkpoint_on_usr1: true
+
+containment:
+  scheduler: slurm
+  accelerator: h100
+  gpu_count: 1
+  container_runtime: docker
+  image_id: sha256:785f16e880d8c38acef02254adaccfb48dfd3a374af12115ec88590f036bf81a
+  image_registry_digest: 127.0.0.1:5000/cotcodec-research@sha256:3f58e5256dff74ed3017a00af125e6ee2b6e4745208b9ea8a3668633760dfb00
+  network: none
+  root_filesystem: read_only
+  capabilities: drop_all
+  no_new_privileges: true
+  source_mount: read_only_content_addressed_capsule
+  model_mount: read_only_pinned_snapshot
+
+claim_boundary:
+  scientific_claim: false
+  publication_evidence: false
+  language_effect_claim: false
+  benchmark_validity_claim: false
+  model_quality_claim: false
+  purpose: two_stage_message_action_transport_and_safety_check_only
+  limitation: >-
+    One model, one seed, six smoke tasks, English only. It tests transport,
+    compliance, and observed-result safety, not general capability or language effects.

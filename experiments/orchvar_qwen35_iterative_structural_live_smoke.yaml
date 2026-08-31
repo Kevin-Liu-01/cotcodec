@@ -1,0 +1,101 @@
+name: orchvar_qwen35_iterative_structural_live_smoke
+description: >-
+  First bounded live-model check of structural JSON protocol v2. Tool actions
+  contain exactly name and arguments; final actions contain exactly response.
+  The previous explicit-type protocol is sealed as a negative and is not rerun.
+
+benchmark: orchvar_canary
+model: qwen3.5-4b
+conditions: [english_only]
+task_variant: live_self_contained_v2
+
+tasks:
+  - canary-reasoning-depth-01
+  - canary-context-recall-01
+  - canary-verbosity-sensitive-01
+  - canary-multi-turn-memory-01
+  - canary-tool-argument-precision-01
+  - canary-safety-01
+
+seeds: [42]
+metrics:
+  - task_success_rate
+  - tool_call_exact_match
+  - safety_failures
+  - model_decisions
+  - prompt_tokens
+  - completion_tokens
+  - wall_clock_latency_ms
+
+actor:
+  type: transformers_iterative_structural_json_v2
+  registry_model_id: qwen3.5-4b
+  registry_path: models/registry.yaml
+  repo_id: Qwen/Qwen3.5-4B
+  revision: 851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a
+  artifact_root_sha256: 3b8a075149bffe4dea784db5b4b37bc0896688cba0b3de7d8d0f6e8ae6157b9e
+  model_receipt_sha256: 75ebfc531acdcbc0c39bbf83ee7bf5267a3ddf02c4fafdf6181624612a0d3082
+  max_new_tokens: 512
+  dtype: bfloat16
+  device_map: auto
+  use_chat_template: true
+  deterministic: true
+  attention_implementation: eager
+
+tools:
+  type: sqlite_canary_v1
+  persistence: isolated_in_memory_per_task
+
+task_manifest_sha256: 325df3670e69539e857784e4184f3b36e62ff11dfc5701773c75c7af457b42b0
+
+iterative_cpu_admission:
+  status: ORCHVAR_ITERATIVE_STRUCTURAL_JSON_V2_CPU_ADMISSION_PASS
+  evidence: research/evidence/harness/orchvar-iterative-structural-json-v2-cpu-admission.json
+  evidence_sha256: 2f538b4057276f61ab3ab7ea29bb2bd53dc68d2487b2eaec7380206f39c9e15f
+  evidence_root_sha256: 8dc084bb24b54e15fe0d6d301a5268c3c9028e1fb16044097c8428a93b751dbc
+  projection_sha256: c15a7f8a44fdf46ae43a3dd998f11b1f4c3ddc0409567c83592b0b4cb80be6c9
+  external_model_calls: 0
+  deterministic_task_successes: 6
+  sqlite_tool_operations: 9
+  actual_usr1_acknowledged_cells: 2
+  safety_gate_passed: true
+
+budgets:
+  max_decisions_per_task: 5
+  max_steps_per_task: 12
+  max_tool_calls_per_task: 4
+  max_external_model_calls: 30
+  max_local_tool_calls: 12
+  max_cost_usd: 0
+  max_gpu_hours: 0.5
+
+execution:
+  run_id: orchvar-qwen35-iterative-structural-live-v2
+  checkpoint_after_each_cell: true
+  checkpoint_on_usr1: true
+
+containment:
+  scheduler: slurm
+  accelerator: h100
+  gpu_count: 1
+  container_runtime: docker
+  image_id: sha256:785f16e880d8c38acef02254adaccfb48dfd3a374af12115ec88590f036bf81a
+  image_registry_digest: 127.0.0.1:5000/cotcodec-research@sha256:3f58e5256dff74ed3017a00af125e6ee2b6e4745208b9ea8a3668633760dfb00
+  network: none
+  root_filesystem: read_only
+  capabilities: drop_all
+  no_new_privileges: true
+  source_mount: read_only_content_addressed_capsule
+  model_mount: read_only_pinned_snapshot
+
+claim_boundary:
+  scientific_claim: false
+  publication_evidence: false
+  language_effect_claim: false
+  benchmark_validity_claim: false
+  model_quality_claim: false
+  purpose: structural_iterative_tool_result_conditioning_and_safety_check_only
+  limitation: >-
+    This is one model, one seed, six repaired smoke tasks, and a maximum of five
+    deterministic decisions per task. It tests one new action protocol only and
+    cannot estimate general capability or language effects.

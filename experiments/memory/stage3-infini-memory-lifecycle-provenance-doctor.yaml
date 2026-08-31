@@ -1,0 +1,120 @@
+schema_version: 1
+name: stage3-infini-memory-lifecycle-provenance-doctor
+status: registered-cpu-falsification
+scientific_result: false
+publication_ready: false
+description: >-
+  Exercise Infini Memory's exact public file-backed lifecycle in two clean,
+  network-disabled ARM64 containers with a deterministic local LLM double.
+  Normal CRUD, BM25 retrieval, restart, document deletion, and user deletion
+  are positive controls. Relative, absolute, and alias-equivalent user IDs
+  probe storage-root confinement; contained escaped-user deletion probes the
+  recursive-delete boundary. Forced failures between Markdown and index writes
+  plus a truncated-index restart probe generation recovery. Rewrite, LLM, BM25,
+  and direct-Markdown work is counted only as a non-scientific diagnostic.
+
+source:
+  source_id: infini-memory
+  repository: https://github.com/infinigence/Infini-Memory
+  revision: ddac08ec468e0382e4f14239d94991ab19ae981a
+  tree: 6cb81be142780eaf7cce36bcd8a64e20ca582042
+  license: Apache-2.0
+  license_sha256: 4309c5d4903cb324a4e6920eb83f5958e86f8270d3fd6ce3e83d7f1db9935aeb
+  pyproject_sha256: 7eb0deb0fed8b8e70358760c5b72a4e6a85f74159b4d037c62c3f6c5561df789
+  uv_lock_sha256: e9bd321ddab3fbe925b81d8ccf2467dcce42256028ad75091adb36e44c77247f
+  git_archive_tar_sha256: 9da66f63e1c60230d74c2da320fa711c1afe759bbd28058032c8fc78b51bb506
+  exact_source_files:
+    src/infini_memory/manager.py: e5387ecc866cd966cbd7020e7ea43330ee81687c4e47274950a4c322b4a8b5d5
+    src/infini_memory/convenience.py: bb267dba8dfa9b97c1f149060035498da62c9dec9a77bdbd249ede66fb005f43
+    src/infini_memory/memory.py: 57f20cd4caa06a7c9f895d0883df0f235ba4f831dc2c1c9c8fd5c1872995f0cd
+    src/infini_memory/config.py: 3752b35fc0470d5a335dcbcff044a30d47caa5baa447807984d5b3a772b5528b
+
+runtime:
+  containment: docker-network-none
+  provider_secrets: forbidden
+  sudo: forbidden
+  gpu_count: 0
+  base_image: >-
+    ghcr.io/astral-sh/uv:python3.13-trixie-slim@sha256:d1e005e6f5aac724b7554db95f1c128a77d8d35b59ebe70e188852b4bdad3a3d
+  python_version: "3.13"
+  clean_state_repeats: 2
+  fresh_process_restarts_per_repeat: 3
+  dependency_install: exact-committed-uv-lock-frozen
+  upstream_test_preflight: 38-passed
+
+intervention:
+  public_api:
+    - Memory.add
+    - Memory.search
+    - Memory.get
+    - Memory.list
+    - Memory.update
+    - Memory.delete
+    - Memory.delete_all
+    - Memory.list_users
+    - Memory.delete_user
+    - Memory.reset
+  fixture_and_fault_seam:
+    - MemoryManager.add_doc
+    - MemoryManager._save_index
+  external_model_calls: 0
+  provider_calls: 0
+  deterministic_llm_double: true
+  test_normal_crud_restart: true
+  test_document_and_user_delete_restart: true
+  test_relative_user_path_confinement: true
+  test_absolute_user_path_confinement: true
+  test_alias_equivalent_user_isolation: true
+  test_escaped_recursive_delete_confinement: true
+  test_interrupted_update_restart: true
+  test_interrupted_delete_restart: true
+  test_truncated_index_restart: true
+  test_post_delete_current_file_plaintext_residue: true
+  charge_rewrite_and_retrieval_calls: true
+  matched_bm25_vs_direct_markdown_diagnostic: true
+
+expected_falsification:
+  status: INFINI_MEMORY_ADMISSION_KILLED_UNCONFINED_USER_PATH_DESTRUCTIVE_DELETE_AND_NONATOMIC_INDEX
+  normal_user_survives_restart: true
+  normal_document_delete_survives_restart: true
+  normal_user_delete_survives_restart: true
+  relative_user_id_escapes_data_root: true
+  absolute_user_id_overrides_data_root: true
+  alias_equivalent_user_ids_share_storage: true
+  escaped_delete_user_removes_path_outside_data_root: true
+  interrupted_update_exposes_markdown_index_mismatch: true
+  interrupted_delete_exposes_dangling_index_entry: true
+  truncated_index_silently_loads_empty_with_markdown_present: true
+  rewrite_and_retrieval_accounting_completed: true
+  reproduced_in_two_clean_states: true
+
+execution:
+  repetitions: 2
+  external_api_calls: 0
+  provider_calls: 0
+  gpus: 0
+  max_gpu_hours: 0
+  wall_clock_limit_minutes: 20
+  max_deterministic_llm_calls_per_repeat: 16
+  synthetic_bm25_documents: 4
+  synthetic_queries: 3
+
+admission:
+  h100_actor: forbidden-for-this-revision-if-falsified
+  scientific_claim: forbidden
+  publication_claim: forbidden
+  next_gate: >-
+    Admit only a newer immutable revision or an explicit reviewed repair arm
+    with canonical user-ID validation, data-root confinement for reads and
+    recursive deletion, and atomic generation or journal recovery for Markdown,
+    index, and event state. Repeat the same doctor before any common-construction
+    retrieval, rewrite-quality, or H100 mechanism cell.
+
+claim_boundary: >-
+  Exact pinned Infini Memory public add/search/CRUD/user lifecycle, deterministic
+  LLM rewrite accounting, BM25 and direct-Markdown diagnostics, fresh-process
+  restart, user-path and recursive-delete confinement, injected Markdown/index
+  interruption, truncated-index handling, and bounded retained-current-file
+  plaintext scans; not extraction quality, topic-rewrite quality, semantic
+  retrieval quality, secure filesystem erasure, sustained throughput, concurrent
+  multi-process correctness, H100 actor quality, or publication evidence.

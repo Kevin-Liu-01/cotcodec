@@ -32,6 +32,12 @@ if __package__:
     from scripts.seal_icarus_lifecycle_evidence import (
         validate_evidence as validate_icarus_evidence,
     )
+    from scripts.seal_infini_memory_lifecycle_evidence import (
+        InfiniMemoryLifecycleEvidenceError,
+    )
+    from scripts.seal_infini_memory_lifecycle_evidence import (
+        validate_evidence as validate_infini_memory_lifecycle_evidence,
+    )
     from scripts.seal_jiuwen_memory_lifecycle_evidence import (
         JiuwenEvidenceError,
     )
@@ -52,6 +58,18 @@ if __package__:
         MemForestArtifactEvidenceError,
         validate_memforest_artifact_evidence,
     )
+    from scripts.seal_memforest_lifecycle_evidence import (
+        MemForestLifecycleEvidenceError,
+    )
+    from scripts.seal_memforest_lifecycle_evidence import (
+        validate_evidence as validate_memforest_lifecycle_evidence,
+    )
+    from scripts.seal_memgpt_letta_lifecycle_evidence import (
+        MemgptLettaLifecycleEvidenceError,
+    )
+    from scripts.seal_memgpt_letta_lifecycle_evidence import (
+        validate_evidence as validate_memgpt_letta_lifecycle_evidence,
+    )
     from scripts.seal_memory_evidence import (
         PROVIDER_ROSTER,
         EvidenceError,
@@ -71,6 +89,12 @@ if __package__:
         validate_openviking_files,
         validate_supermemory_files,
         validate_total_recall_files,
+    )
+    from scripts.seal_mnemo_cortex_lifecycle_evidence import (
+        MnemoCortexLifecycleEvidenceError,
+    )
+    from scripts.seal_mnemo_cortex_lifecycle_evidence import (
+        validate_evidence as validate_mnemo_cortex_lifecycle_evidence,
     )
     from scripts.seal_mnemon_active_space_evidence import (
         EvidenceError as MnemonEvidenceError,
@@ -193,6 +217,12 @@ else:
     from seal_icarus_lifecycle_evidence import (  # type: ignore[no-redef]
         validate_evidence as validate_icarus_evidence,
     )
+    from seal_infini_memory_lifecycle_evidence import (  # type: ignore[no-redef]
+        InfiniMemoryLifecycleEvidenceError,
+    )
+    from seal_infini_memory_lifecycle_evidence import (  # type: ignore[no-redef]
+        validate_evidence as validate_infini_memory_lifecycle_evidence,
+    )
     from seal_jiuwen_memory_lifecycle_evidence import (  # type: ignore[no-redef]
         JiuwenEvidenceError,
     )
@@ -213,6 +243,18 @@ else:
         MemForestArtifactEvidenceError,
         validate_memforest_artifact_evidence,
     )
+    from seal_memforest_lifecycle_evidence import (  # type: ignore[no-redef]
+        MemForestLifecycleEvidenceError,
+    )
+    from seal_memforest_lifecycle_evidence import (
+        validate_evidence as validate_memforest_lifecycle_evidence,
+    )
+    from seal_memgpt_letta_lifecycle_evidence import (  # type: ignore[no-redef]
+        MemgptLettaLifecycleEvidenceError,
+    )
+    from seal_memgpt_letta_lifecycle_evidence import (  # type: ignore[no-redef]
+        validate_evidence as validate_memgpt_letta_lifecycle_evidence,
+    )
     from seal_memory_evidence import (  # type: ignore[no-redef]
         PROVIDER_ROSTER,
         EvidenceError,
@@ -232,6 +274,12 @@ else:
         validate_openviking_files,
         validate_supermemory_files,
         validate_total_recall_files,
+    )
+    from seal_mnemo_cortex_lifecycle_evidence import (  # type: ignore[no-redef]
+        MnemoCortexLifecycleEvidenceError,
+    )
+    from seal_mnemo_cortex_lifecycle_evidence import (  # type: ignore[no-redef]
+        validate_evidence as validate_mnemo_cortex_lifecycle_evidence,
     )
     from seal_mnemon_active_space_evidence import (  # type: ignore[no-redef]
         EvidenceError as MnemonEvidenceError,
@@ -531,6 +579,36 @@ def _validate_local_evidence_bundle(
             )
         return
     if entry["evidence_grade"] == "local-negative-reproduced":
+        if entry_id == "memgpt-letta":
+            try:
+                validate_memgpt_letta_lifecycle_evidence(
+                    bundle, project_root=PROJECT_ROOT
+                )
+            except MemgptLettaLifecycleEvidenceError as exc:
+                raise MemorySourceError(f"{entry_id}: {exc}") from exc
+            return
+        if entry_id == "memforest":
+            try:
+                validate_memforest_lifecycle_evidence(bundle, project_root=PROJECT_ROOT)
+            except MemForestLifecycleEvidenceError as exc:
+                raise MemorySourceError(f"{entry_id}: {exc}") from exc
+            return
+        if entry_id == "infini-memory":
+            try:
+                validate_infini_memory_lifecycle_evidence(
+                    bundle, project_root=PROJECT_ROOT
+                )
+            except InfiniMemoryLifecycleEvidenceError as exc:
+                raise MemorySourceError(f"{entry_id}: {exc}") from exc
+            return
+        if entry_id == "mnemo-cortex":
+            try:
+                validate_mnemo_cortex_lifecycle_evidence(
+                    bundle, project_root=PROJECT_ROOT
+                )
+            except MnemoCortexLifecycleEvidenceError as exc:
+                raise MemorySourceError(f"{entry_id}: {exc}") from exc
+            return
         if entry_id == "langmem":
             try:
                 validate_langmem_native_lifecycle_evidence(bundle, project_root=PROJECT_ROOT)

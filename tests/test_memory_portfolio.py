@@ -196,7 +196,7 @@ def test_sage_wiki_artifact_audit_requires_bound_non_reproduction_evidence(
         load_and_validate_portfolio(_write_portfolio(tmp_path, payload))
 
 
-def test_memforest_artifact_audit_requires_bound_non_reproduction_evidence(
+def test_memforest_lifecycle_negative_requires_bound_admission_evidence(
     tmp_path,
 ) -> None:
     result = load_and_validate_portfolio(DEFAULT_PORTFOLIO)
@@ -206,7 +206,10 @@ def test_memforest_artifact_audit_requires_bound_non_reproduction_evidence(
         for candidate in wave["candidates"]
         if candidate["source_id"] == "memforest"
     )
-    assert candidate["status"] == "artifact-audited-not-reproduced"
+    assert candidate["status"] == "discovery-killed"
+    assert candidate["negative_evidence"]["status"] == (
+        "MEMFOREST_LIFECYCLE_ADMISSION_KILLED_UNCONFINED_TENANT_PATH_AND_TORN_SNAPSHOT"
+    )
 
     payload = copy.deepcopy(result["portfolio"])
     candidate = next(
@@ -215,10 +218,94 @@ def test_memforest_artifact_audit_requires_bound_non_reproduction_evidence(
         for candidate in wave["candidates"]
         if candidate["source_id"] == "memforest"
     )
-    candidate["evidence_sha256"] = "0" * 64
+    candidate["negative_evidence"]["receipt_sha256"] = "0" * 64
     with pytest.raises(
-        MemoryPortfolioError, match="artifact audit differs from source receipt"
+        MemoryPortfolioError, match="artifact SHA-256 drifted"
     ):
+        load_and_validate_portfolio(_write_portfolio(tmp_path, payload))
+
+
+def test_infini_memory_lifecycle_negative_requires_bound_admission_evidence(
+    tmp_path,
+) -> None:
+    result = load_and_validate_portfolio(DEFAULT_PORTFOLIO)
+    candidate = next(
+        candidate
+        for wave in result["portfolio"]["waves"]
+        for candidate in wave["candidates"]
+        if candidate["source_id"] == "infini-memory"
+    )
+    assert candidate["status"] == "discovery-killed"
+    assert candidate["negative_evidence"]["status"] == (
+        "INFINI_MEMORY_ADMISSION_KILLED_UNCONFINED_USER_PATH_"
+        "DESTRUCTIVE_DELETE_AND_NONATOMIC_INDEX"
+    )
+
+    payload = copy.deepcopy(result["portfolio"])
+    candidate = next(
+        candidate
+        for wave in payload["waves"]
+        for candidate in wave["candidates"]
+        if candidate["source_id"] == "infini-memory"
+    )
+    candidate["negative_evidence"]["receipt_sha256"] = "0" * 64
+    with pytest.raises(MemoryPortfolioError, match="artifact SHA-256 drifted"):
+        load_and_validate_portfolio(_write_portfolio(tmp_path, payload))
+
+
+def test_mnemo_cortex_lifecycle_negative_requires_bound_admission_evidence(
+    tmp_path,
+) -> None:
+    result = load_and_validate_portfolio(DEFAULT_PORTFOLIO)
+    candidate = next(
+        candidate
+        for wave in result["portfolio"]["waves"]
+        for candidate in wave["candidates"]
+        if candidate["source_id"] == "mnemo-cortex"
+    )
+    assert candidate["status"] == "discovery-killed"
+    assert candidate["negative_evidence"]["status"] == (
+        "MNEMO_CORTEX_ADMISSION_KILLED_NO_GIT_PARTIAL_WRITES_"
+        "NO_NATIVE_PURGE_AND_UNPINNED_DEPS"
+    )
+
+    payload = copy.deepcopy(result["portfolio"])
+    candidate = next(
+        candidate
+        for wave in payload["waves"]
+        for candidate in wave["candidates"]
+        if candidate["source_id"] == "mnemo-cortex"
+    )
+    candidate["negative_evidence"]["receipt_sha256"] = "0" * 64
+    with pytest.raises(MemoryPortfolioError, match="artifact SHA-256 drifted"):
+        load_and_validate_portfolio(_write_portfolio(tmp_path, payload))
+
+
+def test_memgpt_letta_lifecycle_negative_requires_bound_admission_evidence(
+    tmp_path,
+) -> None:
+    result = load_and_validate_portfolio(DEFAULT_PORTFOLIO)
+    candidate = next(
+        candidate
+        for wave in result["portfolio"]["waves"]
+        for candidate in wave["candidates"]
+        if candidate["source_id"] == "memgpt-letta"
+    )
+    assert candidate["status"] == "discovery-killed"
+    assert candidate["negative_evidence"]["status"] == (
+        "MEMGPT_LETTA_ADMISSION_KILLED_PARTIAL_CORE_UPDATE_DUPLICATE_ARCHIVE_"
+        "RETRY_AGENT_DELETE_ORPHANS_AND_POSTGRES_RESIDUE"
+    )
+
+    payload = copy.deepcopy(result["portfolio"])
+    candidate = next(
+        candidate
+        for wave in payload["waves"]
+        for candidate in wave["candidates"]
+        if candidate["source_id"] == "memgpt-letta"
+    )
+    candidate["negative_evidence"]["receipt_sha256"] = "0" * 64
+    with pytest.raises(MemoryPortfolioError, match="artifact SHA-256 drifted"):
         load_and_validate_portfolio(_write_portfolio(tmp_path, payload))
 
 
@@ -405,6 +492,32 @@ def test_direct_revision_admission_rejects_icarus_killed_pin() -> None:
             result["portfolio"],
             "icarus-memory-infra",
             "6e348708dcddb7cf1ad47726cb287cd4c9183c40",
+        )
+
+
+def test_direct_revision_admission_rejects_infini_memory_pin() -> None:
+    result = load_and_validate_portfolio(DEFAULT_PORTFOLIO)
+    with pytest.raises(
+        MemoryPortfolioError,
+        match="INFINI_MEMORY_ADMISSION_KILLED_UNCONFINED_USER_PATH",
+    ):
+        assert_revision_admitted(
+            result["portfolio"],
+            "infini-memory",
+            "ddac08ec468e0382e4f14239d94991ab19ae981a",
+        )
+
+
+def test_direct_revision_admission_rejects_mnemo_cortex_pin() -> None:
+    result = load_and_validate_portfolio(DEFAULT_PORTFOLIO)
+    with pytest.raises(
+        MemoryPortfolioError,
+        match="MNEMO_CORTEX_ADMISSION_KILLED_NO_GIT_PARTIAL_WRITES",
+    ):
+        assert_revision_admitted(
+            result["portfolio"],
+            "mnemo-cortex",
+            "8a0cff9492f010f73d722688924b09938b2dd682",
         )
 
 

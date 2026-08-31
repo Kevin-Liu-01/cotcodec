@@ -1,0 +1,111 @@
+name: orchvar_two_stage_runner_integration_cpu
+description: >-
+  Zero-model integration doctor for the two-stage journal runner and the admitted
+  receipted SQLite error runtime. It is not a live-run or H100 admission contract.
+
+benchmark: orchvar_canary
+model: deterministic-two-stage-runner-fixture
+conditions: [english_only]
+task_variant: live_self_contained_v2
+
+tasks:
+  - canary-reasoning-depth-01
+  - canary-context-recall-01
+  - canary-verbosity-sensitive-01
+  - canary-multi-turn-memory-01
+  - canary-tool-argument-precision-01
+  - canary-safety-01
+seeds: [42]
+
+metrics:
+  - task_success_rate
+  - tool_call_exact_match
+  - safety_failures
+  - tool_attempts
+  - tool_successes
+  - tool_errors
+  - message_compliance
+  - checkpoint_resume_equivalence
+
+actor:
+  type: deterministic_two_stage_duplicate_injection_fixture_v1
+  external_model_calls: 0
+  simulated_backend_stage_receipts: 38
+  duplicate_task_id: canary-verbosity-sensitive-01
+  duplicate_tool: create_handoff_note
+  require_error_observed_before_final: true
+
+tools:
+  type: sqlite_canary_receipted_errors_v2
+  identity: sqlite-canary-tools-receipted-errors-v2
+  persistence: isolated_in_memory_per_task
+  success_result_policy: preserve_native_result
+  expected_error_class: sqlite3.IntegrityError
+  unexpected_exception_policy: propagate
+
+trigger_live_negative:
+  path: research/evidence/harness/orchvar-qwen35-two-stage-live-partial-negative-job341.json
+  sha256: efcd668d773eda3a79d1e4f084f7eefd9deb87b710e2f56d9fb5ff392b61d3ae
+  evidence_root_sha256: 4617670cb136242c1ea28c2545b69a0bf9e07aba572cf56aac939ae581e74cc6
+  projection_sha256: 6ca0441dbde6584b6cdceb0c1963f94f4475dff8382b98b2ab030075ee8d4444
+  live_run_complete: false
+  safety_gate_evaluated: false
+  forbidden_action: resume_or_rerun_job_341
+
+tool_error_cpu_admission:
+  path: research/evidence/harness/orchvar-tool-error-transport-cpu-admission-v1.json
+  sha256: e1efb182bd635b159d507e826509cc4e0d91136bba9cb960e0ea29f07dc1d78d
+  evidence_root_sha256: 49b7cef87b45dde3497ff4016ad638ed3d7f4b816a9e18ad145255c9026c57e7
+  projection_sha256: 299eeb9afe01d1242f4092415476eed25c1917ac5dc1b1d220cd371667f1c8c0
+  unexpected_exception_propagated: true
+
+budgets:
+  max_decisions_per_task: 5
+  max_steps_per_task: 12
+  max_tool_calls_per_task: 4
+  max_planner_stage_calls: 30
+  max_memory_stage_calls: 6
+  max_message_stage_calls: 36
+  max_action_stage_calls: 30
+  max_external_model_calls: 66
+  max_local_tool_calls: 12
+  max_prompt_tokens: 40000
+  max_completion_tokens: 16896
+  max_wall_clock_seconds: 60
+  max_cost_usd: 0
+  max_gpu_hours: 0
+
+execution:
+  run_id: orchvar-two-stage-runner-tool-errors-cpu-v1
+  claim_status: NON_SCIENTIFIC_TWO_STAGE_RUNNER_CPU_DOCTOR
+  checkpoint_after_each_cell: true
+  checkpoint_on_usr1: true
+  usr1_after_cells: 2
+  require_fresh_process_resume: true
+  require_byte_identical_report: true
+  require_byte_identical_journal: true
+
+expected_projection:
+  completed_cells: 6
+  benchmark_successes: 5
+  benchmark_failures: 1
+  protocol_failures: 0
+  safety_failures: 0
+  simulated_backend_stage_receipts: 38
+  tool_attempts: 10
+  tool_successes: 9
+  tool_errors: 1
+  duplicate_error_observed_before_final: true
+  unexpected_runtime_exception_aborts_before_append: true
+  budget_exhaustion_aborts_before_append: true
+
+claim_boundary:
+  scientific_claim: false
+  publication_evidence: false
+  live_model_claim: false
+  h100_admission: false
+  safety_claim: false
+  purpose: runner_tool_error_integration_and_recovery_doctor_only
+  next_gate: >-
+    After sealing, retain job 341 as incomplete and reassess the untouched research
+    queue. The doctor alone cannot authorize another live OrchVar run.

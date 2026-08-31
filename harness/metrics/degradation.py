@@ -26,6 +26,16 @@ class SampleOutcome:
     treatment_correct: bool
 
 
+@dataclass(frozen=True)
+class TraceOutcomeRecord:
+    """One strictly keyed terminal trace outcome."""
+
+    pair_key: tuple[str, str, str, str, int, str]
+    success: bool
+    category: str
+    condition: str
+
+
 @dataclass
 class DegradationResult:
     """Result of a degradation test between two conditions."""
@@ -201,8 +211,9 @@ class DegradationDetector:
     ) -> dict[str, Any]:
         """Run the OrchVar-Canary suite comparing two trace directories.
 
-        Loads paired traces from baseline and treatment, matches by task_id,
-        and runs McNemar's test on each task category.
+        Loads paired traces from baseline and treatment, requires identical
+        experiment/benchmark/model/task/seed/run-group key sets, and rejects
+        duplicates or partial intersections.
         """
         baseline_path = Path(baseline_traces)
         treatment_path = Path(treatment_traces)
@@ -210,28 +221,44 @@ class DegradationDetector:
         baseline_outcomes = self._load_outcomes(baseline_path)
         treatment_outcomes = self._load_outcomes(treatment_path)
 
-        common_tasks = set(baseline_outcomes.keys()) & set(treatment_outcomes.keys())
-        if not common_tasks:
-            return {"error": "No overlapping task_ids between baseline and treatment"}
+        baseline_keys = set(baseline_outcomes)
+        treatment_keys = set(treatment_outcomes)
+        if baseline_keys != treatment_keys:
+            missing_treatment = sorted(baseline_keys - treatment_keys)
+            missing_baseline = sorted(treatment_keys - baseline_keys)
+            raise ValueError(
+                "paired trace key mismatch: "
+                f"missing treatment={missing_treatment}, missing baseline={missing_baseline}"
+            )
+        if not baseline_keys:
+            raise ValueError("paired trace sets are empty")
 
         outcomes = [
             SampleOutcome(
-                task_id=tid,
-                baseline_correct=baseline_outcomes[tid],
-                treatment_correct=treatment_outcomes[tid],
+                task_id="|".join(map(str, pair_key)),
+                baseline_correct=baseline_outcomes[pair_key].success,
+                treatment_correct=treatment_outcomes[pair_key].success,
             )
-            for tid in common_tasks
+            for pair_key in sorted(baseline_keys)
         ]
+
+        baseline_conditions = {record.condition for record in baseline_outcomes.values()}
+        treatment_conditions = {record.condition for record in treatment_outcomes.values()}
+        if len(baseline_conditions) != 1 or len(treatment_conditions) != 1:
+            raise ValueError("each paired trace set must contain exactly one condition")
+        sample = next(iter(baseline_outcomes.values()))
 
         result = self.compare_conditions(
             outcomes,
-            baseline_condition=str(baseline_path),
-            treatment_condition=str(treatment_path),
+            baseline_condition=next(iter(baseline_conditions)),
+            treatment_condition=next(iter(treatment_conditions)),
+            model=sample.pair_key[2],
+            benchmark=sample.pair_key[1],
         )
 
         return {
             "canary_result": result.to_dict(),
-            "matched_tasks": len(common_tasks),
+            "matched_tasks": len(baseline_keys),
             "alert": result.is_degradation,
             "recommendation": (
                 "BLOCK: significant degradation detected"
@@ -240,18 +267,107 @@ class DegradationDetector:
             ),
         }
 
+    def run_canary_by_category(
+        self,
+        baseline_traces: str | Path,
+        treatment_traces: str | Path,
+    ) -> dict[str, Any]:
+        """Run exact paired McNemar tests independently for every category."""
+        baseline = self._load_outcomes(Path(baseline_traces))
+        treatment = self._load_outcomes(Path(treatment_traces))
+        if set(baseline) != set(treatment):
+            raise ValueError("paired trace key mismatch")
+        categories = sorted({record.category for record in baseline.values()})
+        if not categories or any(not category for category in categories):
+            raise ValueError("canary traces have missing categories")
+        per_category: dict[str, Any] = {}
+        for category in categories:
+            keys = sorted(
+                key for key, record in baseline.items() if record.category == category
+            )
+            if {treatment[key].category for key in keys} != {category}:
+                raise ValueError("paired trace category drifted")
+            outcomes = [
+                SampleOutcome(
+                    task_id="|".join(map(str, key)),
+                    baseline_correct=baseline[key].success,
+                    treatment_correct=treatment[key].success,
+                )
+                for key in keys
+            ]
+            sample = baseline[keys[0]]
+            result = self.compare_conditions(
+                outcomes,
+                baseline_condition=sample.condition,
+                treatment_condition=treatment[keys[0]].condition,
+                model=sample.pair_key[2],
+                benchmark=sample.pair_key[1],
+            )
+            per_category[category] = result.to_dict()
+        return {
+            "matched_pairs": len(baseline),
+            "categories": per_category,
+        }
+
     @staticmethod
-    def _load_outcomes(trace_dir: Path) -> dict[str, bool]:
-        """Load task outcomes from JSONL trace files."""
-        outcomes = {}
-        for jsonl_file in trace_dir.rglob("*.jsonl"):
-            with open(jsonl_file) as f:
-                for line in f:
-                    trace = json.loads(line)
-                    task_id = trace.get("task_id", "")
-                    outcome = trace.get("outcome", {})
-                    if task_id and outcome:
-                        outcomes[task_id] = outcome.get("success", False)
+    def _load_outcomes(
+        trace_dir: Path,
+    ) -> dict[tuple[str, str, str, str, int, str], TraceOutcomeRecord]:
+        """Load terminal outcomes and reject incomplete or duplicate pair keys."""
+        outcomes: dict[
+            tuple[str, str, str, str, int, str], TraceOutcomeRecord
+        ] = {}
+        files = [trace_dir] if trace_dir.is_file() else sorted(trace_dir.rglob("*.jsonl"))
+        if not files:
+            raise ValueError(f"trace directory has no JSONL files: {trace_dir}")
+        for jsonl_file in files:
+            with jsonl_file.open(encoding="utf-8") as handle:
+                for line_number, line in enumerate(handle, start=1):
+                    try:
+                        trace = json.loads(line)
+                    except json.JSONDecodeError as exc:
+                        raise ValueError(
+                            f"{jsonl_file}:{line_number}: malformed JSON"
+                        ) from exc
+                    outcome = trace.get("outcome")
+                    metadata = trace.get("task_metadata")
+                    fields = (
+                        trace.get("experiment_id"),
+                        trace.get("benchmark"),
+                        trace.get("model"),
+                        trace.get("task_id"),
+                        trace.get("seed"),
+                        trace.get("run_group"),
+                    )
+                    if (
+                        not all(isinstance(value, str) and value for value in fields[:4])
+                        or isinstance(fields[4], bool)
+                        or not isinstance(fields[4], int)
+                        or not isinstance(fields[5], str)
+                        or not isinstance(outcome, dict)
+                        or not isinstance(outcome.get("success"), bool)
+                        or not isinstance(metadata, dict)
+                        or not isinstance(metadata.get("category"), str)
+                    ):
+                        raise ValueError(
+                            f"{jsonl_file}:{line_number}: incomplete terminal trace"
+                        )
+                    pair_key = (
+                        str(fields[0]),
+                        str(fields[1]),
+                        str(fields[2]),
+                        str(fields[3]),
+                        int(fields[4]),
+                        str(fields[5]),
+                    )
+                    if pair_key in outcomes:
+                        raise ValueError(f"duplicate paired trace key: {pair_key}")
+                    outcomes[pair_key] = TraceOutcomeRecord(
+                        pair_key=pair_key,
+                        success=outcome["success"],
+                        category=metadata["category"],
+                        condition=str(trace.get("condition", "")),
+                    )
         return outcomes
 
 

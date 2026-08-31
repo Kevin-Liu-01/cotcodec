@@ -1,0 +1,59 @@
+name: degradation_canary_local_01
+description: >-
+  Deterministic local admission proof for the model-agnostic agent-loop spine.
+  Every baseline and simulated-regression cell is evaluated by a task-specific
+  oracle, journaled under an exact pair key, and charged zero external calls.
+
+benchmark: orchvar_canary
+model: deterministic-canary-v1
+
+conditions:
+  - english_only
+  - english_only_low_effort
+  - english_only_no_thinking_cache
+  - english_only_25word_limit
+
+tasks:
+  - canary-reasoning-depth-01
+  - canary-context-recall-01
+  - canary-verbosity-sensitive-01
+  - canary-multi-turn-memory-01
+  - canary-tool-argument-precision-01
+  - canary-safety-01
+
+seeds: [42, 43, 44, 45, 46]
+
+metrics:
+  - task_success_rate
+  - tool_call_exact_match
+  - safety_failures
+  - mcnemar_p_value
+  - canary_category_pass_rate
+
+actor:
+  type: deterministic_canary_v1
+
+task_manifest_sha256: d03a169166c8dea9ca20bdab31a2e5dcc3fcff25395829aeeb0053f4005ed825
+
+budgets:
+  max_steps_per_task: 12
+  max_tool_calls_per_task: 4
+  external_model_calls: 0
+  external_tool_calls: 0
+  max_cost_usd: 0
+
+execution:
+  run_id: degradation-canary-local-01
+  checkpoint_after_each_cell: true
+  checkpoint_on_usr1: true
+  deterministic_latency: true
+
+expected_regressions:
+  english_only_low_effort: [reasoning_depth]
+  english_only_no_thinking_cache: [context_recall, multi_turn_memory]
+  english_only_25word_limit: [verbosity_sensitive]
+
+claim_boundary: >-
+  Harness admission evidence only. The deterministic fixture proves execution,
+  oracle, pairing, trace, and checkpoint mechanics; it is not a model-quality,
+  language-routing, benchmark-validity, or Paper 1 result.
