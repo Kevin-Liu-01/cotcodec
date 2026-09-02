@@ -211,9 +211,10 @@ pilot-ready; the loop continues under `.claude/rules/research-gauntlet-loop.md`.
    screens, only the General Translation upgrade arms.
 2. Rebuild and digest-pin the research image with `flash-linear-attention`
    0.5.2 — in flight 2026-09-01: `flash-linear-attention==0.5.2` is pinned in the
-   `architecture` extra and lock, and Slurm job 352 rebuilds the base image via
-   `infra/slurm/host-single-node/build-architecture-image.sbatch`; the
-   throughput doctor (`scripts/fla_throughput_doctor.py`) runs next (and `mamba_ssm`/`causal-conv1d` where a contract needs them); the
+   `architecture` extra and lock; Slurm job 353 built
+   `cotcodec-research:999f5583-architecture` (image ID `sha256:9d832a59fe34…`, local-registry digest
+   `bde90daa…`, fla 0.5.2 verified inside); the throughput doctor
+   (`scripts/fla_throughput_doctor.py`) and the pilot-checkpoint fetch run next (and `mamba_ssm`/`causal-conv1d` where a contract needs them); the
    cited image `sha256:15d6abc0…` is the current discovery image and lacks them.
 3. ~~Register the pilot checkpoints~~ — fifteen entries added to
    `models/registry.yaml` on 2026-09-01 (revisions pinned; licenses as stated,
@@ -231,6 +232,53 @@ pilot-ready; the loop continues under `.claude/rules/research-gauntlet-loop.md`.
 5. Measure throughput on the node (one timing job) to replace the assumed MFU in
    every budget ledger.
 
+
+## Gauntlet wave 4 and Stage-0 execution (2026-09-01, later)
+
+| Direction | Wave 3 → 4 | Binding defect now |
+|---|---:|---|
+| `19-icl-rule-distillation-port` | 57 → **65** | no executable Stage-A doctor; attribution-tree power mis-stated |
+| `20-semantic-clock-gate-parity` | 64 → **63** | estimand not headroom-invariant; needs a synthetic-fertility positive control |
+| `21-translation-supervised-sparse-indexer` | 66 → **62** | decision rule derived from an unmeasured noise model; λ_x selection step missing |
+| `22-translation-equivariant-state-writes` | 63 → **60** | pilot not decisive at its own minimum effect; CPU object doctor is prose |
+
+Ledger: `gauntlet/2026-09-01-frontier/wave4-ledger.md`. Every reviewer's binding
+defect is the missing executable pilot (cap 79); wave 5 implements the CPU
+phase-0 doctors as tested code.
+
+Stage-0 execution on `fal-h100-01` (discovery lane, no root, no publication claim):
+
+- **Image rebuilt with fla.** Slurm job 353 built `cotcodec-research:999f5583-architecture`
+  (image ID `sha256:9d832a59fe348d149d2e4587ac6af90223e2956ebb646d7b19295298954ca5ad`,
+  local-registry digest `sha256:bde90daa…`): torch 2.11.0+cu128, transformers
+  5.15.0, flash-linear-attention 0.5.2, triton 3.6.0. The host's default Docker
+  bridge has no DNS; the build uses `--network=host`.
+- **Pilot checkpoints fetched with receipts** (job 356; `/home/kevin/cotcodec-runs/hf-cache/cotcodec-receipts/`):
+
+| registry id | revision | artifact root SHA-256 | size |
+|---|---|---|---|
+| `e2-ttt-mlp-1.3b-15b` | `6bac56e26c2b…` | `8052dbeb590dd63e…` | 3.04 GB |
+| `gdn-1.3b-isp-hybrid-3to1-50b` | `0ced446e7677…` | `34b36f5b54a4f719…` | 5.73 GB |
+| `gdn-340m-isp-hybrid-3to1-10b` | `eec9dbb045dd…` | `1c0150cbb95dd393…` | 1.57 GB |
+| `gla-1.3b-100b` | `46b15820a4df…` | `da4eb9fb3ebb1186…` | 2.73 GB |
+| `gla-340m-15b` | `6e04029dc090…` | `8fff2f27e0de2e80…` | 0.69 GB |
+| `qwen3-1.7b-base` | `ea980cb0a6c2…` | `231d93ceda83766b…` | 3.45 GB |
+| `qwen3.5-4b-base` | `1001bb4d826a…` | `c7fbfd6bd1c73b9a…` | 9.34 GB |
+| `rwkv7-1.5b-world` | `004140baad7a…` | `8c662db05dedb86a…` | 3.06 GB |
+| `transformer-1.3b-100b` | `d6f66f4181fa…` | `7b6675e3f5e9dccd…` | 2.73 GB |
+| `transformer-340m-10b` | `b838e8e11784…` | `8bd8a855c1f85260…` | 0.69 GB |
+
+- **Throughput doctor blocked by a kernel-correctness guard** (job 354):
+  `fla 0.5.2` raises "Triton >= 3.4.0 and < 3.7.1 on Hopper GPUs produces
+  incorrect results for gated chunk_bwd_dqkwg (see fla #640); upgrade Triton
+  to >= 3.7.1 or install tilelang". torch 2.11.0 pins triton 3.6.0, so the
+  supported path is `tilelang`; it is being added to the `architecture` extra
+  and the image rebuilt. Consequence for every proposal: any GDN training
+  number produced with fla 0.5.2 on H100 without tilelang is invalid, and the
+  budget ledgers' MFU stays unmeasured until the doctor runs.
+- **Credentials.** Moonshot's console is signed in (no key exists yet; the
+  create-key dialog needs a human click); Tinker and Hugging Face consoles are
+  signed out. Template: `~/.config/cotcodec/secrets.env` (mode 600).
 
 ## Compute and access boundary (verified 2026-09-01)
 
