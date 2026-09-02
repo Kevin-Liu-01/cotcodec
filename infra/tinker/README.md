@@ -90,3 +90,20 @@ Primary documentation:
 - https://tinker-docs.thinkingmachines.ai/tinker/quickstart/
 - https://tinker-docs.thinkingmachines.ai/tinker/data-model/
 - https://tinker-docs.thinkingmachines.ai/tinker/models/
+
+## 2026-09-01 verification notes
+
+- The pinned client `tinker==0.23.3` is stale: PyPI was at 0.27.0 on 2026-09-01
+  and the service rejects unsupported SDK versions with HTTP 400
+  (tinker-feedback #120 observed this for 0.22.3 in June 2026; whether 0.23.3 is
+  still accepted cannot be checked without a key). Run an SDK-version doctor
+  before any paid step and re-pin deliberately; do not float the version.
+- The `context_tokens: 32768` assumption in the Kimi stages is fragile: the
+  first-party Harbor RL recipe reports 60.6% of SWE-Bench Verified episodes
+  overflowing at 32K with an 8K generation budget. Either budget the 128K tier
+  (about 2.3–3.2× per token) or cap episode length explicitly in the contract.
+- Access boundary (from the SDK source and docs): five LoRA fields, no
+  per-module targeting, no documented rank cap, target-token log-probs only,
+  no hidden states or gradients, AdamW only, no adapter import, INT4
+  dequantize → merge → requantize for merged Kimi-K2.6 exports. Anything that
+  needs internals runs on local open weights instead.

@@ -1,6 +1,6 @@
 # Variable 15: Interpretable Abstract Reasoning
 
-**Status:** New. Motivated by the safety debate around Abstract-CoT (Ramji et al. 2026)
+**Status:** NARROWED on 2026-09-01 — every axis occupied at ≤8B on math/QA; surviving deltas are tool-use × monitorability, translation-equivariant codes, and a controlled Abstract-CoT replication
 and the intersection with CoTCodec's orchestration variable framework.
 
 ## The Core Tension
@@ -157,3 +157,30 @@ is measuring where on this spectrum different agent task types should sit.
 | METR CoT faithfulness code | https://github.com/METR/CoT-faithfulness-and-monitorability |
 | Coconut (continuous latent reasoning) | https://arxiv.org/abs/2412.06769 |
 | KeshavRamji tweet | https://x.com/KeshavRamji/status/2048743883580817620 |
+
+## 2026-09-01 kill-shot update
+
+Verdict from the 2026-09-01 frontier sweep: **NARROWED**. Abstract-CoT has no
+official code and three failed or stalled third-party reproductions; the
+"verbal checkpoint" hybrid exists in stronger form (SELR, ICML 2026);
+DiffusionGemma's interpretable token bottleneck reduces opaque serial depth
+28.6× → 1.1× ([2606.20560](https://arxiv.org/abs/2606.20560)); monitorability is
+filling fast (FACE-Eval [2608.29464](https://arxiv.org/abs/2608.29464), HCDS
+[2608.29956](https://arxiv.org/abs/2608.29956), Intent-as-a-Tool
+[2608.27348](https://arxiv.org/abs/2608.27348)); looped LMs cover single-turn
+compositional tool calling ([2608.18171](https://arxiv.org/abs/2608.18171)).
+
+Surviving deltas: (a) monitorability of latent/abstract media on tool-use agent
+tasks with one fixed monitor across media at matched accuracy, under
+reasoning-rewrite and monitor-awareness attacks; (b) translation-equivariant
+abstract reasoning codes with a monitor trained in one language and tested in
+others (the only cross-lingual datapoint is an n=8 case study,
+[2608.15392](https://arxiv.org/abs/2608.15392); the audio-LLM multilingual
+middle-layer workspace [2608.24958](https://arxiv.org/abs/2608.24958) is the
+existence proof); (c) a controlled Abstract-CoT reproduction with token-necessity
+ablations at 4B–8B. Verification note (2026-09-01): ALCA
+([2026.acl-long.1570](https://aclanthology.org/2026.acl-long.1570/), ACL 2026)
+already moves safety deliberation into a latent space with a restricted
+self-decoding mechanism for supervision, so "interpretable-by-construction
+latents as a monitor channel" is partly occupied; the surviving clause is its
+behaviour on tool-use tasks under obfuscation pressure and across languages.

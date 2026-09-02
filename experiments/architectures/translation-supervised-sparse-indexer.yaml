@@ -1,0 +1,274 @@
+schema_version: 1
+name: translation-supervised-sparse-indexer
+direction: Translation-Supervised Sparse Indexer (Direction 21)
+readiness: contract
+claim_scope: attachment-capability
+research_question: >-
+  Do KL-distilled DSA/QSA-class sparse-attention indexers attached to frozen
+  released checkpoints carry an excess cross-lingual selection gap beyond their
+  own distillation target once both legs of the gap are non-literal queries,
+  and does corpus-given sentence-alignment supervision of the detached indexer
+  remove more of the residual gap on held-out cross-script pairs than the
+  strongest label-free target aggregation, at matched achieved token budget?
+null_hypothesis: >-
+  Any cross-lingual selection gap of a KL-only indexer is either a
+  literal-versus-semantic retrieval effect that is also present monolingually,
+  or an artifact of the head-sum target aggregation that max-pooled or
+  retrieval-head-weighted targets remove with zero labels; alignment
+  supervision adds nothing beyond bilingual exposure, a permuted-label loss of
+  the same form, monolingual semantic supervision, or dense LoRA fine-tuning.
+
+stages:
+  - stage: cpu-doctors
+    gpu_hours: 0
+    promotion_gate: >-
+      bilingual-concatenation builder passes mass-accounting and
+      permutation-sensitivity checks; TR-NIAH builder emits the per-prompt
+      achieved-token ledger and dedup counts for all four query conditions;
+      synthetic permuted-vocabulary toy reproduces an excess gap and its repair;
+      a 20-prompt indexer-versus-target recall smoke run executes inside the
+      rebuilt digest-pinned container under a Slurm dry-run
+  - stage: phase-0a-kill-screen
+    gpu_hours_ceiling: 4
+    promotion_gate: >-
+      indexer-adequacy gate passes (English literal recall within 5 points of
+      the target) on at least one base; non-literal excess gap xi_T at least 10
+      points for at least one target aggregation, base and indexer form; T*
+      frozen on development languages; dense monolingual and cross-lingual
+      TR-NIAH headroom recorded; measured MFU re-verifies the Phase-1 budget
+  - stage: phase-1-identification
+    gpu_hours_ceiling: 10
+    promotion_gate: >-
+      (T*)+L_x recovers at least 60 percent of the residual xi_T* on held-out
+      cross-script pairs with a 99 percent paired passage-cluster bootstrap
+      interval excluding zero; L_perm and L_half are inert and beaten by half
+      of L_x's recovery; L_sem is beaten by half of L_x's recovery; E2 gates
+      G1 and G2 recorded before any E2 contrast is read
+  - stage: phase-0b-production-indexer-probe
+    gpu_hours_ceiling: 2
+    promotion_gate: >-
+      optional external-validity probe of the production QSA indexer in
+      Qwen3.8-Flash-Next (unregistered; 120 prompts; 6 s per-prompt abort
+      threshold); descriptive only; never promotes or kills
+  - stage: phase-2-architecture-causal
+    gpu_hours_ceiling: new contract required (about 30 GPU-h from-scratch hybrid; about 170 GPU-h QSA-style continued pretraining)
+    promotion_gate: phase-1 passage and a separate matched-from-scratch contract with a parity BPE
+
+starting_point:
+  arms:
+    - name: kl-only-indexer-qwen3-0-6b
+      mode: frozen-checkpoint-retrofit
+      model_ids: [qwen3-0.6b-base]
+      is_control: true
+      purpose: >-
+        KL-only indexers on all 28 layers of the frozen 0.6B base for every
+        target aggregation (head-sum, max-pool, retrieval-head-weighted) in
+        token and block form; the best label-free aggregation T* is the primary
+        counterfactual and the head-sum recipe the DSA-style secondary.
+    - name: alignment-supervised-indexer-qwen3-0-6b
+      mode: frozen-checkpoint-retrofit
+      model_ids: [qwen3-0.6b-base]
+      is_control: false
+      purpose: >-
+        (T*)+L_x and head-sum+L_x indexers trained in the same frozen-teacher
+        stream on identical bilingual concatenations; the primary treatment.
+    - name: same-loss-form-controls-qwen3-0-6b
+      mode: frozen-checkpoint-retrofit
+      model_ids: [qwen3-0.6b-base]
+      is_control: true
+      purpose: >-
+        (T*)+L_perm (permuted labels), (T*)+L_half (other-language half) with
+        pre-registered inertness preconditions, and (T*)+L_sem (monolingual
+        TyDi QA question-to-passage supervision in training languages only,
+        iso-token, no parallel data).
+    - name: kl-only-indexer-qwen3-5-4b
+      mode: frozen-checkpoint-retrofit
+      model_ids: [qwen3.5-4b]
+      is_control: true
+      purpose: >-
+        KL-only indexers on the 8 full-attention layers (3, 7, ..., 31) of the
+        frozen hybrid base, the production placement; qwen3.5-4b is the
+        post-trained checkpoint and is labelled as such (Qwen3.5-4B-Base is the
+        preferred but unregistered base).
+    - name: alignment-supervised-indexer-qwen3-5-4b
+      mode: frozen-checkpoint-retrofit
+      model_ids: [qwen3.5-4b]
+      is_control: false
+      purpose: >-
+        Replicate of (T*)+L_x, (T*)+L_perm and (T*)+L_sem on the hybrid base
+        at 2 seeds to test whether the retrofit result survives production
+        placement on a GDN hybrid.
+    - name: dense-lora-pair-qwen3-0-6b
+      mode: checkpoint-finetune
+      model_ids: [qwen3-0.6b-base]
+      is_control: true
+      purpose: >-
+        Rank-16 LoRA on q,k of all layers: (j) LM-loss-only on bilingual
+        concatenations and (k) LM loss plus lambda L_x on head-summed main
+        attention, matched tokens; (k) minus (j) isolates the L_x-specific dense
+        effect against which selection-specificity is judged.
+
+intervention:
+  mechanism: >-
+    A detached top-k indexer I_t(s) = sum_j w_tj ReLU(q_tj . k_s) per sparse
+    layer is distilled by KL from a fixed aggregation T of the frozen layer's
+    full attention (head-sum, max-pool, or retrieval-head-weighted). The
+    translation view concatenates a bilingual document pair with its
+    corpus-given sentence alignment and adds L_x, the negative log of the
+    indexer softmax mass on the aligned sentence's keys, to the KL loss; the
+    backbone, main attention and inference path are untouched. Selection is
+    evaluated on sealed prompts whose four query conditions (mono-literal
+    ceiling, mono-non-literal reference, cross same-script, cross cross-script)
+    share haystack, needle and position and differ only in query language.
+  trainable_components:
+    - indexer query and key projections and per-head weights (4 heads x 128; block form 1 kv head, compress ratio 4)
+    - rank-16 LoRA adapters on q,k in the two dense control arms only
+  frozen_components:
+    - backbone weights, tokenizer and generation config of both bases
+    - target aggregation T* after Phase-0 selection on development languages
+    - corpus-given sentence alignments (ParaDocs, TED2020) and their release filters
+    - evaluation prompts, haystacks, needle positions, passage-id split and achieved-token ledger
+
+data:
+  train:
+    source: >-
+      ParaDocs (HF jhu-clsp/paradocs; en-{de,fr,es,pl} same-script and
+      en-{th,hi,km} cross-script; release filters minimum_size 2,
+      frequency_cutoff 100, lid_cutoff 0.5) plus OPUS TED2020 v1 talk-level
+      documents (en-zh_cn, en-ru, en-ar) as bilingual concatenations, and
+      FineWeb-2 monolingual text in the training languages; TyDi QA GoldP
+      (en/ar/ru/th only) for the L_sem arm
+    identity: >-
+      HF dataset revisions, OPUS corpus version, paradocs filter settings,
+      document and pair hashes, and the 50M/100M-token sequence manifests must
+      be frozen and hashed before enablement; held-out evaluation languages
+      never appear in any training stream
+  development:
+    source: >-
+      Held-out ParaDocs/TED2020 documents in the training language pairs, and
+      Belebele passages from the 25 percent development passage-id split in the
+      in-training cross-script languages (th, hi, km, zh, ar) for T*
+      selection, lambda_x choice and threshold checks
+    identity: >-
+      Passage ids and document ids disjoint from training and from the sealed
+      test split; every language variant of a Belebele passage lives in exactly
+      one split; T* and lambda_x are frozen here before any held-out number is
+      read
+  test:
+    source: >-
+      Sealed Belebele passages (75 percent passage-id split) as needles and
+      questions in held-out languages ja, ko, bn, ta, el, he, ka (cross-script)
+      and id, tr, sw, nl, it (same-script), FineWeb-2 haystacks in the needle
+      language, WMT24++ document-level sets for the second TR-NIAH task,
+      English RULER-style E3 prompts, MLNeedle and OneRuler protocol baselines
+    identity: >-
+      Passage ids, document ids, needle positions, achieved-token counts and
+      prompt hashes stored in the evidence bundle before enablement; untouched
+      by any training or development step
+    sealed: true
+  contamination_checks:
+    - exact 50-gram and MinHash (Jaccard at least 0.8) deduplication of every training and haystack document against every evaluation text, with removal counts in the run receipt
+    - passage-id split keeps all 122 language variants of a Belebele passage in one split; held-out languages excluded from L_x, L_sem and LoRA training; TyDi QA bn/ja/ko/sw/id portions excluded
+    - needle-absent E2 control bounds parametric recall of Belebele/FLORES passages; two-forward-pass prefix-invariance audit on sparse arms
+    - literal-copy ceiling row and literalness gap reported separately so no cross-lingual number rests on a verbatim-match query
+
+controls:
+  - name: kl-only-best-label-free-target-t-star
+    matches: [base, indexer-form, indexer-dim, training-tokens, data-order, achieved-budget]
+  - name: kl-only-head-sum-dsa-recipe
+    matches: [base, indexer-form, training-tokens, data-order, achieved-budget]
+  - name: target-aggregation-ladder-for-k2a
+    matches: [base, indexer-form, training-tokens, data-order]
+  - name: permuted-label-same-loss-form-with-inertness
+    matches: [loss-form, lambda, training-tokens, data-order, target-aggregation]
+  - name: other-language-half-mass-with-inertness
+    matches: [loss-form, lambda, training-tokens, data-order, target-aggregation]
+  - name: monolingual-semantic-supervision-tydiqa
+    matches: [loss-form, supervision-token-count, training-tokens, data-order, target-aggregation]
+  - name: dense-lm-only-lora-and-dense-lm-plus-alignment-lora
+    matches: [lora-rank, training-tokens, data, seeds]
+  - name: spotattention-dual-top-p-mass-matched
+    matches: [selected-mass, achieved-budget, base, prompts]
+  - name: larger-k-at-matched-measured-latency
+    matches: [kernel-latency, base, prompts]
+  - name: pivot-style-query-group-rescoring
+    matches: [achieved-budget, base, prompts]
+  - name: nsa-pooled-key-selection-no-learned-indexer
+    matches: [achieved-budget, block-size, base, prompts]
+  - name: swa-plus-attention-sinks-matched-kv-bytes
+    matches: [kv-bytes, base, prompts]
+  - name: oracle-needle-block-random-fill-and-random-plus-needle
+    matches: [achieved-budget, prompts]
+  - name: needle-absent-parametric-recall
+    matches: [prompts, k, base]
+  - name: mlneedle-and-oneruler-dense-baselines
+    matches: [needle-language, haystack-language, context-length, base]
+  - name: indexer-dim-ladder-64-128-256
+    matches: [parameters-otherwise, training-tokens, data-order, base]
+
+primary_endpoint:
+  metric: >-
+    E1 needle-token selection recall gain of the (T*)+L_x indexer over the (T*)
+    KL-only indexer on held-out cross-script prompt pairs at achieved-budget
+    fraction 12.5 percent, in recall points; must also equal at least 60
+    percent of the residual non-literal excess gap xi_T*
+  direction: maximize
+  minimum_effect: 6.0
+  unit_of_analysis: >-
+    matched prompt (haystack, needle passage and position fixed; query language
+    varied), clustered by Belebele passage id and by seed
+  aggregation: >-
+    paired prompt-level difference, macro-averaged over held-out cross-script
+    language pairs and both query directions, passage-and-seed cluster bootstrap
+
+statistics:
+  seeds: [42, 43, 44]
+  interval: >-
+    paired passage-cluster bootstrap 99 percent interval for the primary
+    contrast and 95 percent for secondaries; per-seed and per-language values
+    reported; closed-form MDE about 5.6 points at three seeds under an assumed
+    2-point seed SD; seed escalation to [42, 43, 44, 45, 46] for block-form
+    arms pre-registered if the Phase-0 seed SD of xi exceeds 2 points
+  multiplicity: >-
+    one primary contrast; Holm correction within the kill-condition family and
+    within per-language secondaries; literal-copy ceiling, literalness gap,
+    Belebele MC and Phase 0b are descriptive and uncorrected
+
+falsifiers:
+  - K1 kill if, with the adequacy gate passed, xi_T is at most 5 points for every target aggregation on both bases and both indexer forms (localization negative).
+  - K2a kill the alignment line if a label-free de-diluted target recovers at least 80 percent of the head-sum gap (xi_T* at most 0.2 xi_hs).
+  - K2b kill if (T*)+L_x recovers under 30 percent of the residual xi_T* on held-out pairs.
+  - K3 kill or re-frame if, with inertness holding, (T*)+L_perm or (T*)+L_half reaches at least 80 percent of (T*)+L_x's recovery; if inertness fails the loss-form question is reported unresolved.
+  - K4 kill if (T*)+L_sem reaches at least 50 percent of (T*)+L_x's recovery on held-out cross-script pairs (generic semantic sharpening).
+  - K5 kill if any training-free control at matched achieved budget recovers at least 80 percent of the E2 gain.
+  - K6 kill if the L_x-specific dense LoRA gain (k) minus (j) reaches at least 80 percent of the sparse E2 gain (not selection-specific).
+  - K7 kill if E1 gains appear without E2 gains, or gains are confined to in-training languages.
+  - K8 kill if any held-out language's non-literal recall drops over 2 points versus (T*) or English E3 drops over 0.5 points.
+  - K9 withdraw the E2 claim if dense cross-lingual TR-NIAH exact match is under 40 percent on both bases; report E2 contrasts as floor-bound on any base where sparse (T*) monolingual recall is under R^T minus 5.
+
+required_artifacts:
+  - model and dataset license receipts with immutable revisions, including the TED usage-policy and TyDi QA confirmations
+  - passage-id split manifest, dedup report, and per-prompt per-language achieved-token ledger for all four query conditions
+  - indexer weights per arm and seed with the frozen T* selection record and lambda_x choice from development languages
+  - E1 recall receipts per prompt, layer, condition and language for indexer and target, with xi_T, literalness gap and recovery tables
+  - E2 TR-NIAH and Belebele MC receipts including needle-absent, oracle-sign and training-free control rows and the G1/G2 gate values
+  - kernel timing logs, measured MFU from the first job, FLOP and byte ledgers per phase
+  - atomic checkpoint and fresh-job continuation equivalence report per phase, plus the Slurm dry-run JSON and container smoke attestation
+
+execution:
+  enabled: false
+  max_gpu_hours: 16
+  gpus: 8
+  checkpoint_to_persistent_storage: true
+  fresh_job_resume_test: true
+  checkpoint_interval_minutes: 15
+  blocked_by:
+    - no implementation exists for the bilingual-concatenation builder, TR-NIAH four-condition builder, indexer trainer, selection-recall probe or the three target aggregations
+    - the only real image (127.0.0.1:5000/cotcodec-research@sha256:15d6abc06fa53ab466087a92107da9c58e469615e2f56a683fefd0a7600277f3, created 2026-08-16) lacks fla, peft and flash-attn; a rebuilt image with fla at least 0.5.2, peft and the new code must be re-pinned by digest
+    - fla parallel_nsa asserts HQ/H at least 16, which both bases fail; a Q-head padding or gather path must be implemented and tested before any E2 number
+    - no container smoke run, 20-prompt model-loop smoke, benchmark adapter or Slurm dry-run has been attested; MFU is assumed at 30 percent, not measured
+    - parallel-data inventory is not in the repository; ParaDocs and TED2020 manifests, pair hashes and the passage-id split must be frozen; the TED usage-policy page and the TyDi QA card were not fetched in this session
+    - Qwen/Qwen3.5-4B-Base (preferred base) is not in the model registry; the qwen3.5-4b arm uses the post-trained checkpoint and must be relabelled in every receipt until the Base is registered
+    - Qwen/Qwen3.8-Flash-Next (Phase 0b probe) is not in the model registry and its qwen-community-1.0 license has not been reviewed
+    - causality and identification doctors (inertness check, adequacy gate, oracle-sign rule, G1/G2 gates) are not written
+    - Tinker API key absent; Tinker is not used by this contract

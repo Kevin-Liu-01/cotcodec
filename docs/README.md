@@ -9,6 +9,7 @@ inside task transcripts or repeated across stale README files.
 | Current compiled state | [`current-state.md`](current-state.md) | Latest admitted/killed gates and next action |
 | Memory continuation | [`memory-handoff.md`](memory-handoff.md) | Exact pins, sealed results, next lifecycle falsifiers, and stop rules |
 | H100 operation | [`h100-operator-runbook.md`](h100-operator-runbook.md) | Live host state, admitted submission lane, and publication blockers |
+| Local model lab | [`local-model-lab.md`](local-model-lab.md) | Open-model import ladder, harness/memory-provider bakeoffs on local models, Tinker/Kimi ladder, tmux and checkpoint durability |
 | Scientific semantics | [`evidence-model.md`](evidence-model.md) | What each evidence level can and cannot claim |
 | Code ownership | [`repository-map.md`](repository-map.md) | Directory responsibilities and dependency flow |
 | Operations | [`research-operations.md`](research-operations.md) | Local, SSH, Slurm, rerun, and writeback procedure |

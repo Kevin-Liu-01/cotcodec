@@ -71,6 +71,10 @@ See individual files in this directory for each variable:
 | **Portable sidecar update dynamics** | `16-portable-learning-dynamics.md` | **Low-medium** | **Architecture-adjacent** |
 | **Causal memory holdout trials** | `17-causal-memory-holdout-trials.md` | **Medium-high** | **Frontier orchestration** |
 | **Translation-aligned byte boundary transport** | `18-translation-equivariant-byte-boundaries.md` | **Medium-low** | **Architecture moonshot** |
+| **ICL rule distillation port** | `19-icl-rule-distillation-port.md` | Medium | Portability protocol (gauntlet 57/100, wave 3) |
+| **Semantic-clock gate parity** | `20-semantic-clock-gate-parity.md` | Medium-high | Architecture-causal (gauntlet 64/100, wave 3) |
+| **Translation-supervised sparse indexer** | `21-translation-supervised-sparse-indexer.md` | Medium-high | Attachment-capability (gauntlet 66/100, wave 3) |
+| **Translation-equivariant state writes** | `22-translation-equivariant-state-writes.md` | Medium | Architecture-causal (gauntlet 63/100, wave 3) |
 
 Variables 13-15 are meta-directions that cut across all other variables:
 - **Harness beats model** tests whether optimizing variables 1-12 on an old

@@ -21,19 +21,19 @@
       "status": "confirmed_for_fall_2026",
       "action_items": [
         "Reach out closer to fall (August 2026) to discuss updated proposal",
-        "Revisit experimental settings \u2014 field moving fast",
+        "Revisit experimental settings — field moving fast",
         "Build infrastructure now so experiments can run immediately when fall starts",
         "Track landscape changes that affect proposal framing"
       ]
     }
   },
   "direction": {
-    "broader_thesis": "Agent orchestration is an underexplored design space. Most systems make orchestration choices implicitly \u2014 hard-coded, never measured, never optimized. Making them explicit, measurable, and optimizable is the research contribution.",
-    "paper_1_thesis": "Internal language choice should be studied as an orchestration policy over explicit agent messages \u2014 not as a claim about hidden cognition.",
-    "generalized_formulation": "For any orchestration variable \u03c3: \u03c0(m_t, x_t) \u2192 \u03c3_t. Language is \u03c3 = \u2113. But \u03c3 can be memory policy, planning depth, retry strategy, verification cadence, context allocation, observation granularity, tool scheduling, delegation topology, instruction hierarchy, or reasoning format.",
-    "optimization_target": "max_\u03c0 U(\u03c0) = Success \u2212 \u03bb_c\u00b7Cost \u2212 \u03bb_t\u00b7Latency \u2212 \u03bb_s\u00b7SafetyRisk \u2212 \u03bb_m\u00b7MonitorabilityCost (applies to ALL orchestration variables. MonitorabilityCost term added after Abstract-CoT + OpenAI CoT monitoring research showed efficiency-monitorability tradeoff is fundamental)",
+    "broader_thesis": "Agent orchestration is an underexplored design space. Most systems make orchestration choices implicitly — hard-coded, never measured, never optimized. Making them explicit, measurable, and optimizable is the research contribution.",
+    "paper_1_thesis": "Internal language choice should be studied as an orchestration policy over explicit agent messages — not as a claim about hidden cognition.",
+    "generalized_formulation": "For any orchestration variable σ: π(m_t, x_t) → σ_t. Language is σ = ℓ. But σ can be memory policy, planning depth, retry strategy, verification cadence, context allocation, observation granularity, tool scheduling, delegation topology, instruction hierarchy, or reasoning format.",
+    "optimization_target": "max_π U(π) = Success − λ_c·Cost − λ_t·Latency − λ_s·SafetyRisk − λ_m·MonitorabilityCost (applies to ALL orchestration variables. MonitorabilityCost term added after Abstract-CoT + OpenAI CoT monitoring research showed efficiency-monitorability tradeoff is fundamental)",
     "key_insight": "Language is Paper 1 because it's the most tractable (easy to manipulate, easy to measure, clear priors). But the harness generalizes to any orchestration variable.",
-    "danqi_caveat": "World is changing fast \u2014 revisit settings, models, benchmarks before fall. Infrastructure and harness should be model-agnostic.",
+    "danqi_caveat": "World is changing fast — revisit settings, models, benchmarks before fall. Infrastructure and harness should be model-agnostic.",
     "current_priorities": [
       "Contact Danqi now for the scheduled August 2026 landscape and proposal review",
       "Integrate the first live model/tool actor behind the admitted agent-loop, oracle, trace, paired-regression, and checkpoint contracts before expensive experiments",
@@ -184,17 +184,17 @@
       }
     ],
     "interaction_hypotheses": [
-      "Language \u00d7 memory: shorter language = more memory budget (multiplicative)",
-      "Language \u00d7 planning: planning text is highest compression target",
-      "Reasoning format \u00d7 verification: structured formats enable automatic verification",
-      "Memory \u00d7 observation: summarized observations are easier to retain",
-      "Planning \u00d7 retry: better plans \u2192 fewer retries \u2192 lower total cost",
-      "Context allocation \u00d7 everything: meta-variable that mediates all others"
+      "Language × memory: shorter language = more memory budget (multiplicative)",
+      "Language × planning: planning text is highest compression target",
+      "Reasoning format × verification: structured formats enable automatic verification",
+      "Memory × observation: summarized observations are easier to retain",
+      "Planning × retry: better plans → fewer retries → lower total cost",
+      "Context allocation × everything: meta-variable that mediates all others"
     ]
   },
   "exploration_strategies": {
     "phase_1_foundation": {
-      "timeline": "Now \u2192 August 2026",
+      "timeline": "Now → August 2026",
       "goals": [
         "Build and validate the evaluation harness on tau-bench, MCP-Atlas, and API-Bank",
         "Implement and validate OrchVar-Canary plus McNemar-style degradation checks",
@@ -205,7 +205,7 @@
       ]
     },
     "phase_2_systematic": {
-      "timeline": "September \u2192 November 2026",
+      "timeline": "September → November 2026",
       "goals": [
         "Full benchmark runs with statistical significance",
         "Message-type decomposition (where do savings arise?)",
@@ -216,7 +216,7 @@
       ]
     },
     "phase_3_writeup": {
-      "timeline": "November \u2192 December 2026",
+      "timeline": "November → December 2026",
       "goals": [
         "Paper draft with all experiments",
         "Negative result documentation (equally valuable)",
@@ -404,7 +404,7 @@
     }
   },
   "landscape_tracking": {
-  "last_radar_run": "2026-08-15",
+    "last_radar_run": "2026-09-01",
     "models_to_track": {
       "frontier": [
         {
@@ -509,8 +509,8 @@
         "url": "https://arxiv.org/abs/2604.22709",
         "date": "2026-04-29",
         "impact": "CRITICAL",
-        "finding": "Learned discrete codebook of 64 abstract tokens achieves 11.6x fewer reasoning tokens than verbal CoT while matching performance. Power-law distribution emerges in abstract vocabulary. Cold-start RL alone fails \u2014 warm-up with verbal CoT guidance is required.",
-        "impact_on_cotcodec": "Changes the landscape fundamentally. Language routing (20-40% savings) is now the best inference-time-only approach; Abstract-CoT (80-92% savings) is the best post-training approach. Must cite, compare, and position against. Abstract CoT has NOT been tested on agent/tool-use tasks \u2014 open question for our benchmarks.",
+        "finding": "Learned discrete codebook of 64 abstract tokens achieves 11.6x fewer reasoning tokens than verbal CoT while matching performance. Power-law distribution emerges in abstract vocabulary. Cold-start RL alone fails — warm-up with verbal CoT guidance is required.",
+        "impact_on_cotcodec": "Changes the landscape fundamentally. Language routing (20-40% savings) is now the best inference-time-only approach; Abstract-CoT (80-92% savings) is the best post-training approach. Must cite, compare, and position against. Abstract CoT has NOT been tested on agent/tool-use tasks — open question for our benchmarks.",
         "variables_affected": [
           1,
           2
@@ -560,6 +560,41 @@
           9
         ],
         "action": "add-mandatory-memory-causality-gates"
+      },
+      {
+        "title": "On the Design of Qwen3.8-Next Architecture",
+        "url": "https://arxiv.org/abs/2608.30320",
+        "date": "2026-08-31",
+        "impact": "HIGH",
+        "finding": "GDN hybrid 53.81 vs SWA hybrid 51.15 vs full attention 49.87 at 25B-A3B; sparse attention swapped for global layers at CPT; NoPE dropped after post-training endless generation (first-party, verified in HTML)"
+      },
+      {
+        "title": "Sliding-window attention with sinks beats post-trained linear attention",
+        "url": "https://arxiv.org/abs/2608.28444",
+        "date": "2026-08-28",
+        "impact": "HIGH",
+        "finding": "SWA+sinks 2-10x post-trained linear attention on NIAH/BABILong; mandatory control"
+      },
+      {
+        "title": "The Mask Is Not the Model",
+        "url": "https://arxiv.org/abs/2608.22876",
+        "date": "2026-08-24",
+        "impact": "HIGH",
+        "finding": "two-forward-pass causality audit localized 192/192 injected faults; found chunked-scan defects in Zamba2/Nemotron-H"
+      },
+      {
+        "title": "Hindsight Memory-PRM",
+        "url": "https://arxiv.org/abs/2608.29605",
+        "date": "2026-08-30",
+        "impact": "HIGH",
+        "finding": "intervention-calibrated per-entry memory credit; narrows D17 to randomized identification"
+      },
+      {
+        "title": "Continuous Interaction Diffusion",
+        "url": "https://arxiv.org/abs/2608.10438",
+        "date": "2026-08-11",
+        "impact": "MEDIUM",
+        "finding": "stakes diffusion-native tool interaction as an architecture; novelty collision for Bidirectional Plan Repair"
       }
     ],
     "provider_changes": [],
@@ -567,7 +602,7 @@
     "notes": "Danqi flagged that the world is changing fast. This section tracks everything that might affect the experimental design.",
     "harness_beats_model_evidence": [
       {
-        "claim": "SWE-bench: 42% \u2192 78% from scaffolding alone, model swap < 1.3pts",
+        "claim": "SWE-bench: 42% → 78% from scaffolding alone, model swap < 1.3pts",
         "url": "https://particula.tech/blog/agent-scaffolding-beats-model-upgrades-swe-bench"
       },
       {
@@ -575,7 +610,7 @@
         "url": "https://victorinollc.com/thinking/harness-difference"
       },
       {
-        "claim": "Vercel agent: 80% \u2192 100% by reducing tools 15 \u2192 2",
+        "claim": "Vercel agent: 80% → 100% by reducing tools 15 → 2",
         "url": "https://victorinollc.com/thinking/harness-difference"
       },
       {
@@ -587,11 +622,11 @@
         "url": "https://www.anthropic.com/engineering/april-23-postmortem"
       },
       {
-        "claim": "Sonnet 4.6: 25\u2192480 errors/week (19x), 1400+ events",
+        "claim": "Sonnet 4.6: 25→480 errors/week (19x), 1400+ events",
         "url": "https://github.com/anthropics/claude-code/issues/46935"
       },
       {
-        "claim": "GPT-5: hallucination 12%\u219223%, code length 187\u219262 lines",
+        "claim": "GPT-5: hallucination 12%→23%, code length 187→62 lines",
         "url": "https://chatgptdisaster.com/gpt-5-problems-2026.html"
       },
       {
@@ -603,7 +638,7 @@
         "url": "https://github.com/deepseek-ai/DeepSeek-V3/issues/1125"
       },
       {
-        "claim": "Cursor shipped Kimi K2.5 as own model \u2014 harness IS the product",
+        "claim": "Cursor shipped Kimi K2.5 as own model — harness IS the product",
         "url": "https://www.theopensourcepress.com/cursor-shipped-kimi-k2-5-as-their-own-model-heres-how-it-unraveled/"
       }
     ],
@@ -893,7 +928,26 @@
         "track": "monthly",
         "tier": 3
       }
-    ]
+    ],
+    "frontier_scan_2026_09_01": {
+      "report": "research/scans/2026-09-01.md",
+      "program": "research/frontier-systems-program-2026-09-01.md",
+      "cells_manifest_sha256": "bebdcf7c365bf77aaf7134a28086d953bb7976c81f131276d476a98831d01957",
+      "method": "14 research cells + 3 arXiv-feed triage cells + synthesis owner + completeness critic + 4 verification cells; 226 arXiv entries since 2026-08-10 pulled via the H100 host (arXiv/S2/Jina block this network)",
+      "headline": "Generic sequence-operator design is closed (three labs ship 3:1 linear/global hybrids; QED/SANE/MARCH, LoGo/Switch/RouteSparse, DASC/Tail-Replay/TreeWY filled the rest in August). The empty region every cell found: language/script as a controlled variable INSIDE the architecture, and portability across operator families / of update rules.",
+      "mandatory_baselines": [
+        "SWA + attention sinks for any linear/hybrid claim (2608.28444)",
+        "tail replay for any compact-state-summary claim (2608.30310)",
+        "QED (2608.13668) and MARCH (2608.12435) for recall/interference claims",
+        "two-forward-pass causality audit (2608.22876) before any recall claim",
+        "MLNeedle (2408.10151) and ONERULER (2503.01996) for cross-lingual retrieval probes"
+      ],
+      "verified_numbers": "16 load-bearing numbers re-read in primary text: 12 VERIFIED, 3 CORRECTED (K2.6 595.2 GB checkpoint vs 640 GB aggregate VRAM; Full AttnRes = GR only without GatedNorm; 256-config figure is one paper), 1 UNVERIFIABLE (Tinker 0.23.3 acceptance)",
+      "patents": [
+        "NVIDIA US20260105282A1 Gated delta networks (pending)",
+        "Google WO2025230701A1 compressive memory"
+      ]
+    }
   },
   "intelligence_tools": {
     "_note": "Full inventory at research/intelligence-sources.md",
@@ -935,6 +989,11 @@
     "bookmark_signals": {
       "count": 160,
       "path": "research/bookmark-signals.md"
+    },
+    "host_relay_search": "scratchpad tools/hostsearch.sh pattern: run curl on fal-h100-01 (arXiv API, OpenReview, Crossref, HF papers, Jina work there; this Mac on AS7018 is blocked by arXiv 429, S2 429, Jina 401; DuckDuckGo bot-blocks both). Recreate under scripts/ if needed; space calls >= 4 s.",
+    "skill_packs": {
+      "kdense_scientific_agent_skills": ".claude/skills (vendored subset, MIT/Apache; provenance in .claude/skills/README.md)",
+      "academic_research_skills": "plugin academic-research-skills@academic-research-skills (CC-BY-NC-4.0) via .claude/settings.json; protocols referenced in .claude/rules/research-gauntlet-loop.md"
     }
   },
   "infrastructure": {
@@ -1015,18 +1074,18 @@
     "compute": {
       "h100_host": {
         "host": "fal-h100-01",
-      "audited": "2026-08-31",
+        "audited": "2026-08-31",
         "hardware": "8x NVIDIA H100 80GB HBM3; 208 CPU threads; 1.7 TiB RAM; 22 TB disk",
         "container_runtime": "Docker GPU execution is available inside Slurm allocations. SmolVM 1.7.7 passes CPU containment but its CUDA path fails with invalid device pointer on this host, so GPU experiments use the validated Docker path without sudo.",
-      "scheduler_status": "single_node_discovery_operational_live_verified",
-      "blocker": "The reachable idle host still runs Slurm 21.08.5 on unified cgroup v2 without scheduler device constraints, and srun does not expose the Pyxis --container-image interface. Publication and multi-user execution require an upgraded cgroup-v2 Slurm build, constrained GPU GRES, reviewed Enroot/Pyxis integration, and fresh isolation doctors.",
+        "scheduler_status": "single_node_discovery_operational_live_verified",
+        "blocker": "The reachable idle host still runs Slurm 21.08.5 on unified cgroup v2 without scheduler device constraints, and srun does not expose the Pyxis --container-image interface. Publication and multi-user execution require an upgraded cgroup-v2 Slurm build, constrained GPU GRES, reviewed Enroot/Pyxis integration, and fresh isolation doctors.",
         "container_smoke": "One- and two-H100 Slurm/Docker doctors pass exact GPU visibility, digest-pinned image/source verification, network disablement, read-only root, no capabilities, no-new-privileges, UID mapping, resource ceilings, and persistent artifact mounts.",
         "operator_session": "Persistent tmux session cotcodec on fal-h100-01 has a dedicated memory-research window. Use it for editors, submission, monitoring, logs, and interactive clients; scheduler jobs remain scheduler-owned after disconnect.",
         "durability_contract": "tmux covers SSH/laptop disconnect only. Atomic versioned checkpoints must live on persistent storage and pass a fresh-job restore test; reboots, shutdowns, drains, time limits, and cancellations are not covered by tmux",
         "required_action": "Before publication or shared use, harden Slurm with cgroup-v2 device isolation and a reviewed Pyxis/Enroot or equivalent OCI integration; retain the current launcher for single-user discovery only.",
-      "publication_contract": "Digest-pinned OCI image under hardened Slurm isolation; current single-node Docker jobs are reproducible discovery evidence, not publication attestations.",
-      "operator_runbook": "docs/h100-operator-runbook.md",
-      "memory_handoff": "docs/memory-handoff.md"
+        "publication_contract": "Digest-pinned OCI image under hardened Slurm isolation; current single-node Docker jobs are reproducible discovery evidence, not publication attestations.",
+        "operator_runbook": "docs/h100-operator-runbook.md",
+        "memory_handoff": "docs/memory-handoff.md"
       },
       "tinker": {
         "status": "contract_valid_access_and_live_adapters_blocked",
@@ -1049,7 +1108,7 @@
           "Continuous frontier research scans on cron",
           "Local model inference via llama.cpp / MLX for open-weight models (DeepSeek, Qwen, Llama)",
           "Host benchmark environments (tau-bench, API-Bank, WebArena docker)",
-          "Serve as experiment queue \u2014 submit jobs from laptop, collect results later",
+          "Serve as experiment queue — submit jobs from laptop, collect results later",
           "Run tokenizer fertility measurements across all models in batch",
           "Store and serve trace data (SQLite or DuckDB for fast analysis)",
           "Run safety evaluation suites that take hours",
@@ -1070,7 +1129,7 @@
         "status": "not_configured"
       },
       "api_budget": {
-        "note": "Experiment cost model \u2014 track per-experiment spend",
+        "note": "Experiment cost model — track per-experiment spend",
         "providers": {
           "anthropic": {
             "models": [
@@ -1115,51 +1174,51 @@
       },
       "local_inference": {
         "purpose": "Import strong open checkpoints before pretraining: local smoke via Ollama/MLX, H100 training via Hugging Face, and diffusion research via Diffusers",
-      "models": [
-        {
-          "name": "smollm2-135m",
-          "note": "Pinned loader and retrofit smoke. Full 272,445,324-byte snapshot and offline CPU generation passed on 2026-08-10."
-        },
-        {
-          "name": "qwen3-0.6b-base",
-          "note": "Pinned Apache-2.0 multilingual Transformer discovery base."
-        },
-        {
-          "name": "qwen3.5-4b / qwen3.5-9b",
-          "note": "Pinned Apache-2.0 post-trained Gated DeltaNet/attention hybrids for competent small-to-medium model transport."
-        },
-        {
-          "name": "qwen3.6-35b-a3b",
-          "note": "Pinned Apache-2.0 large hybrid MoE for open scale transport and the medium Tinker controller cell."
-        },
-        {
-          "name": "gpt-oss-120b",
-          "note": "Pinned Apache-2.0 MXFP4 open MoE control; official model card targets a single 80GB H100."
-        },
-        {
-          "name": "mamba-130m-hf",
-          "note": "Pinned Apache-2.0 recurrent discovery and sidecar-interface base."
-        },
-        {
-          "name": "delta-net-1.3b-8k",
-          "note": "Pinned FLA checkpoint for coded-memory retrofit; model license must be resolved before publication use."
-        },
-        {
-          "name": "kimi-linear-48b-a3b-base",
-          "note": "Pinned official MIT KDA/attention/MoE scale cell. Metadata is hashed; full execution is blocked on custom-code review and 8xH100 tensor-parallel load/restore proof."
-        },
-        {
-          "name": "blt-1b",
-          "note": "Pinned gated CC-BY-NC checkpoint for byte-patch interface work, not commercial use."
-        },
-        {
-          "name": "llada-8b-base",
-          "note": "Pinned masked-diffusion LM for plan repair; custom modeling code must be reviewed and vendored."
-        },
-        {
-          "name": "sdxl-base-1.0",
-          "note": "Pinned Diffusers vision smoke input; not a language-plan baseline."
-        }
+        "models": [
+          {
+            "name": "smollm2-135m",
+            "note": "Pinned loader and retrofit smoke. Full 272,445,324-byte snapshot and offline CPU generation passed on 2026-08-10."
+          },
+          {
+            "name": "qwen3-0.6b-base",
+            "note": "Pinned Apache-2.0 multilingual Transformer discovery base."
+          },
+          {
+            "name": "qwen3.5-4b / qwen3.5-9b",
+            "note": "Pinned Apache-2.0 post-trained Gated DeltaNet/attention hybrids for competent small-to-medium model transport."
+          },
+          {
+            "name": "qwen3.6-35b-a3b",
+            "note": "Pinned Apache-2.0 large hybrid MoE for open scale transport and the medium Tinker controller cell."
+          },
+          {
+            "name": "gpt-oss-120b",
+            "note": "Pinned Apache-2.0 MXFP4 open MoE control; official model card targets a single 80GB H100."
+          },
+          {
+            "name": "mamba-130m-hf",
+            "note": "Pinned Apache-2.0 recurrent discovery and sidecar-interface base."
+          },
+          {
+            "name": "delta-net-1.3b-8k",
+            "note": "Pinned FLA checkpoint for coded-memory retrofit; model license must be resolved before publication use."
+          },
+          {
+            "name": "kimi-linear-48b-a3b-base",
+            "note": "Pinned official MIT KDA/attention/MoE scale cell. Metadata is hashed; full execution is blocked on custom-code review and 8xH100 tensor-parallel load/restore proof."
+          },
+          {
+            "name": "blt-1b",
+            "note": "Pinned gated CC-BY-NC checkpoint for byte-patch interface work, not commercial use."
+          },
+          {
+            "name": "llada-8b-base",
+            "note": "Pinned masked-diffusion LM for plan repair; custom modeling code must be reviewed and vendored."
+          },
+          {
+            "name": "sdxl-base-1.0",
+            "note": "Pinned Diffusers vision smoke input; not a language-plan baseline."
+          }
         ],
         "frameworks": [
           {
@@ -1187,10 +1246,10 @@
             "note": "High-throughput serving for imported open checkpoints."
           }
         ],
-      "advantage": "Avoid foundation pretraining when adapters, sidecars, checkpoint transplant, or continued training can isolate the mechanism. Pin model revisions, weights, tokenizer, config, license, and remote code for every scientific run.",
-      "registry": "models/registry.yaml",
-      "methodology": "research/architecture-experiment-methodologies.md",
-      "validation": "The model registry includes a pinned 0.6B-to-120B open ladder and the provider registry validates six model IDs across five providers. Full Qwen3.5 4B/9B and Qwen3.6 35B-A3B snapshots have independent offline artifact verification; 4B and 9B produced contained real-model memory screens. The earlier 35B full screen failed same-arm replay, but strict job 134 later produced exact prompt, completion, and action signatures across 144 generations on four falsifier tasks under pinned eager deterministic settings. That dirty-tree pass still requires clean-image replication. GPT-OSS 120B, Kimi Linear, and every hosted endpoint still require run-time preflight."
+        "advantage": "Avoid foundation pretraining when adapters, sidecars, checkpoint transplant, or continued training can isolate the mechanism. Pin model revisions, weights, tokenizer, config, license, and remote code for every scientific run.",
+        "registry": "models/registry.yaml",
+        "methodology": "research/architecture-experiment-methodologies.md",
+        "validation": "The model registry includes a pinned 0.6B-to-120B open ladder and the provider registry validates six model IDs across five providers. Full Qwen3.5 4B/9B and Qwen3.6 35B-A3B snapshots have independent offline artifact verification; 4B and 9B produced contained real-model memory screens. The earlier 35B full screen failed same-arm replay, but strict job 134 later produced exact prompt, completion, and action signatures across 144 generations on four falsifier tasks under pinned eager deterministic settings. That dirty-tree pass still requires clean-image replication. GPT-OSS 120B, Kimi Linear, and every hosted endpoint still require run-time preflight."
       }
     },
     "automations": {
@@ -1222,13 +1281,23 @@
         "runner": "mac_mini",
         "status": "not_built"
       }
+    },
+    "compute_2026_09_01": {
+      "host": "fal-h100-01 8xH100 80GB, 208 CPUs, 1.7 TB RAM, 21 TB free; Slurm 21.08.5 discovery-only; tmux session cotcodec alive since 2026-08-11; remote checkout fast-forwarded to 52bac22",
+      "discovery_image": "cotcodec-research:2d960d1a-architecture-overlay id sha256:ca32b5c2... digest 127.0.0.1:5000/cotcodec-research@sha256:15d6abc06fa53ab466087a92107da9c58e469615e2f56a683fefd0a7600277f3 (torch 2.11.0+cu128, transformers 5.15.0; no vllm/peft/fla)",
+      "vllm_image_on_host": "vllm/vllm-openai v0.25.1 commit 752a3a50 (dangling tag)",
+      "publication_lane_pins": "Slurm 25.11.7, Pyxis 0.24.0, Enroot 4.2.1, NVIDIA Container Toolkit 1.20.0, syft 1.51.1, vLLM v0.28.0 digest 61fc8a89... (see research/infrastructure/h100-publication-upgrade-2026-09-01.md; commands marked (U) unverified)"
     }
   },
   "state": {
-    "last_updated": "2026-08-31",
-    "last_session": "2026-08-31",
+    "last_updated": "2026-09-01",
+    "last_session": "2026-09-01",
     "phase": "phase_1_foundation",
     "next_actions": [
+      "Frontier gauntlet 2026-09-01 (three waves, 131 agents, ~31M tokens) produced four preregistered but NOT pilot-ready directions: 21 translation-supervised-sparse-indexer (66/100), 20 semantic-clock-gate-parity (64), 22 translation-equivariant-state-writes (63), 19 icl-rule-distillation-port (57, dipped from 62). Proposals research/proposals/2026-09-01-*.md, contracts experiments/architectures/*.yaml (validator PASS, execution.enabled false), directions/19-22. Doctor status FAIL for all four by construction (no evidence bundle, Compute FAIL, unsigned same-provider reviews). Wave-4 work orders are the reviewers' highest-impact fixes in research/gauntlet/2026-09-01-frontier/wave3-ledger.md; audit log data/research-gauntlet/2026-09-01-frontier.jsonl (3 hash-chained rows). Never spend a GPU-hour on these before: parallel-data inventory, rebuilt fla>=0.5.2 image re-pinned by digest, registry entries for the unregistered pilot checkpoints, compiled job manifests, CPU phase-0 doctors passing twice, one measured-throughput job.",
+      "Kill-shot verdicts from the 2026-09-01 sweep: D16 NARROWED (update-rule portability only; new controls Engram reader transfer 2608.17050, KV translation 2608.30963, E2-TTT, Modular TTT, Falcon rules); D17 NARROWED (Hindsight Memory-PRM 2608.29605 occupies post-hoc deletion credit; only prospective randomized identification survives; controls AdmitOR, noise placebo, reward-SNR); D18 STILL_OPEN with five new control arms (When Tokenizers Fail 2608.27658, Scratchpad compute-matched 2605.09630, parity-aware BPE with fixed regex 2606.15044/2608.26449, entropy byte pruning 2608.15080, romanized input 2608.25904); D15 NARROWED (ALCA 2026.acl-long.1570 partly occupies interpretable-by-construction latents); Coded Delta -> negative-result cell only (QED, SANE, TwinKV); Bidirectional Plan Repair novelty collision with CID 2608.10438; Rollout-Value Operator Scheduling and Rank-Adaptive Edit Summaries largely occupied (LoGo, Switch Attention, RouteSparse; DASC, Tail-Replay, TreeWY, DeltaLog). G19 routing half occupied by SARA 2606.25821 and RA-MoE 2605.28306.",
+      "Blocking inputs only Kevin can supply: (1) General Translation parallel-corpus inventory (language pairs/scripts, segment-length distribution, alignment granularity, sentence-pair and byte volume per language, license/consent) - the repository holds no parallel corpus at all; (2) TINKER_API_KEY and MOONSHOT_API_KEY (absent; Tinker SDK pin 0.23.3 is stale vs PyPI 0.27.0 and its acceptance is unverifiable without a key); (3) a root window on fal-h100-01 for the Slurm 25.11.7 + Pyxis 0.24.0 + Enroot 4.2.1 publication-lane upgrade (research/infrastructure/h100-publication-upgrade-2026-09-01.md).",
+      "Adopted 2026-09-01: .claude/rules/research-gauntlet-loop.md (loop-until-100 rule with Claude-of-Duty ownership contract, blind closest-prior discrimination, refute-first triad, 2026 believability bar, external protocols); vendored K-Dense scientific-agent-skills subset in .claude/skills (MIT/Apache) and enabled the CC-BY-NC Academic Research Skills plugin via .claude/settings.json; docs/local-model-lab.md for open-model import, harness/memory-provider bakeoffs on local models (vLLM-under-Slurm template from PAST-Bench; pin a vLLM release with fix #50729 - v0.28.0 corrupts hybrid outputs with prefix caching + MTP), and the Tinker/Kimi ladder.",
       "Retain legacy Letta V1 ff19ffeafeb54bd2a7dc5d4a552f10191732a235 / tree 675c06071568dd48ca9b16b755041937286b7d95 as a sealed exact-source Slurm CPU lifecycle negative at research/evidence/memory/memgpt-letta-native-lifecycle-negative-v1.json (81bee6fa8115d62c527e6972d8c5ae0880de65a1743c6feb445f78ce6537a117). Job 351 ran two clean Linux AMD64 states with the digest-pinned official 0.16.8 image, exact image/source hash matching, four CPUs, 16 GiB, network none, zero GPUs, and zero provider/model calls. Provider-free construction, normal core/archive mutation, organization isolation, fresh-process restart, and explicit logical deletion passed with stable projection 25b09cf3288e045afcb71908b03af97f898dab2ea8921e64506ba8d5234a8f3a. An injected compiled-message rebuild error returned 500 after a durable block mutation, payload-equivalent archive retry created a second durable passage, agent deletion retained its archive/passages/blocks, and every canary remained in stopped PostgreSQL heap and WAL after explicit logical deletion. Jobs 348-350 are pre-result diagnostics only. This is lifecycle/storage evidence, not semantic memory quality, autonomous paging, secure media erasure, managed Letta Cloud, current Letta Code MemFS, H100 quality, or publication evidence. H100 admission is forbidden. The ledger now has 38 negative findings and the 93-candidate portfolio remains capped at 84 H100-hours with matrix a0cb79fb0e80aee8e0efd106150fb9ac94bdc85262e4570a60d97b204a7e193f. Next preregister an exact-source CPU lifecycle doctor for the separately pinned current Letta Code MemFS mechanism; do not treat it as a legacy-server repair or admit H100 before its own isolation, restart, retry, purge/residue, and cost gates pass.",
       "Retain frozen Qwen3.5-4B H100 job 341 as an incomplete 0/2 two-stage live negative; never resume, rerun, or backfill it, and never claim its unreached safety task. Partial evidence is efcd668d773eda3a79d1e4f084f7eefd9deb87b710e2f56d9fb5ff392b61d3ae with root 4617670cb136242c1ea28c2545b69a0bf9e07aba572cf56aac939ae581e74cc6. Retain both repairs as CPU infrastructure evidence only. Tool-error transport evidence e1efb182bd635b159d507e826509cc4e0d91136bba9cb960e0ea29f07dc1d78d admitted one stable constraint-error observation. Full runner evidence research/evidence/harness/orchvar-two-stage-runner-tool-error-cpu-admission-v1.json hashes to 5e0ba7e14d10b3d48c17ceb48247d46cefcb91710d99d7abc52d1e20ceae0f1d with root 6ee5fff1051683cbd47761d8b89c6224ef9878d871eb723fe1f3e9bef61ace90 and projection 7efcfb330632e89c67a8978a440c134d35e3faaee3803ea1ec40662218de1cb3; it passed duplicate-error preservation, safety reachability, exception and budget falsifiers, and byte-identical SIGUSR1 recovery while explicitly denying live-model and H100 admission. OrchVar H100 is closed. Continue with the first untouched research queue item under a new preregistered contract.",
       "Retain Infini Memory ddac08e / tree 6cb81be as a sealed exact-source local lifecycle negative, not an extraction, topic-rewrite, semantic-retrieval, secure-erasure, sustained-throughput, concurrent-correctness, H100-quality, or publication result. Two clean network-disabled non-root Linux ARM64 repetitions passed normal public add, BM25 search, get, update, document deletion, user deletion, and three fresh-process restarts, while relative and absolute user IDs escaped the configured data root, alias-equivalent IDs shared storage, and public recursive user deletion removed a contained escaped tree outside that root. Injected update and delete failures produced restart-stable Markdown/index divergence, and a truncated index silently loaded empty while Markdown survived. Bounded current-file scans found no deleted plaintext canary; deterministic rewrite, BM25, and direct-read timings remain diagnostics only. Evidence research/evidence/memory/infini-memory-lifecycle-negative-v1.json hashes to 83c0a970811278d0b4b81f54d2c1a0651981bca9ca9e858a4ca427bd744ca6ba with stable projection a431ee72891d0d107360b34f62108174cf0d05fa3bd2749aa0d5414db6ca9027. H100 actor admission is forbidden. Admit only a newer immutable revision or explicit repair arm with canonical user-ID validation, root confinement for reads and recursive deletion, and atomic generation or journal recovery across Markdown, index, and event state that passes the same doctor.",
@@ -1274,7 +1343,7 @@
     ]
   },
   "research_plan": {
-    "last_replan": "2026-08-26",
+    "last_replan": "2026-09-01",
     "latest_orchvar_canary_admission": "Frozen H100 job 341 remains a sealed incomplete 0/2 live negative with safety unevaluated (efcd668d...; root 4617670c...; projection 6ca0441d...). The separate tool-error transport CPU seal is e1efb182... / 49b7cef8... / 299eeb9a.... The now-sealed full runner-integration doctor explicitly selects sqlite-canary-tools-receipted-errors-v2 and completed six deterministic cells: five benchmark successes, the injected duplicate retained as one benchmark failure, zero protocol or safety failures, 38 simulated stage receipts, and ten attempts with one preserved error. Unexpected exceptions propagated, budget exhaustion stopped before append, the safety task was reached and passed, and a real SIGUSR1 at cell 2 yielded byte-identical report, trace, and journal. Evidence research/evidence/harness/orchvar-two-stage-runner-tool-error-cpu-admission-v1.json hashes to 5e0ba7e1... with root 6ee5fff1... and projection 7efcfb33.... It is zero-model, non-scientific CPU infrastructure evidence with live_model_result=false and h100_admission=false. OrchVar H100 stays closed; never resume job 341.",
     "latest_mnemo_cortex_lifecycle_result": "Mnemo Cortex 8a0cff9492f010f73d722688924b09938b2dd682 / tree 5a87d92d70052717a928c3c109b138da4d8af723 now has sealed exact-source Slurm CPU lifecycle evidence at research/evidence/memory/mnemo-cortex-native-lifecycle-negative-v1.json (cf288154955ffb701345ea5b1484118057c5f3dfcf0e04b7e9e2506160173aff). Slurm job 347 ran two clean Linux AMD64 states, each spanning an initial process and fresh-process restart, inside an offline digest-pinned Python 3.12.11 image with no GPU, provider secret, external model call, or build/run network. Smart/raw filtering, exact raw-log drilldown, Analyst lineage with raw retention, deterministic per-agent and rollup dream topology, and restart controls passed with stable projection f07a317a4dfa6cea1ccf2b33364a607ca279dcabf4feb33fea014786f1cd2779. In the official no-Git container, Passport observe persisted a pending observation and then returned 500; identical retry created a duplicate for the same claim, and both survived restart. No native primary-memory delete, forget, or purge route exists, and all canaries remained in current files because no erasure operation was available; this is not a failed secure-erasure claim. The upstream source has no lock, a mutable base, and lower-bounded dependencies, while the executed gate itself was bound to a hash-complete offline wheelhouse. Jobs 342-346 are retained only as pre-result launch diagnostics. This is lifecycle/storage evidence, not memory-quality, model, throughput, concurrency, secure-erasure, H100-quality, or publication evidence. H100 admission is forbidden. The ledger has one scientific reproduction, three conformance reproductions, and 37 negative findings; the 93-candidate portfolio remains capped at 84 H100-hours with matrix b0a1cd0ce864a744f2086ca73fec6f822b6db6f87865e2bebca90cea12da5288. The next untouched native-system item is MemGPT/Letta, beginning with exact-source provenance and a preregistered CPU lifecycle doctor.",
     "latest_memgpt_letta_lifecycle_result": "Legacy Letta V1 ff19ffeafeb54bd2a7dc5d4a552f10191732a235 / tree 675c06071568dd48ca9b16b755041937286b7d95 now has sealed exact-source Slurm CPU lifecycle evidence at research/evidence/memory/memgpt-letta-native-lifecycle-negative-v1.json (81bee6fa8115d62c527e6972d8c5ae0880de65a1743c6feb445f78ce6537a117). Slurm job 351 reproduced the registered projection twice in fresh PostgreSQL states under the digest-pinned official 0.16.8 image with no network, GPU, provider secret, model call, or provider call. Normal construction, core/archive CRUD, organization isolation, fresh-process restart, and explicit logical deletion passed. The public core PATCH returned 500 after persisting the block but before updating the compiled prompt; the mutation survived restart until explicit retry. Payload-equivalent archive retry created a second durable passage. Agent deletion retained its archive, two passages, and two blocks. Explicit public deletion reduced current passage and block counts to zero, but all canaries remained in stopped PostgreSQL heap and WAL files. Jobs 348-350 remain pre-result launch or instrumentation diagnostics. Current Letta Code a575e11753943d9a4e18373a8817eb16a5b76b47 is bound only as provenance context for a different MemFS mechanism. This is lifecycle/storage evidence, not semantic quality, autonomous paging, concurrency, secure media erasure, managed-cloud, Letta Code MemFS, H100-quality, or publication evidence. H100 admission is forbidden. The live ledger has one scientific reproduction, three conformance reproductions, and 38 negative findings; the 93-candidate portfolio remains capped at 84 H100-hours with matrix a0cb79fb0e80aee8e0efd106150fb9ac94bdc85262e4570a60d97b204a7e193f. The next native gate is a separate exact-source CPU lifecycle doctor for current Letta Code MemFS.",
@@ -1371,6 +1440,7 @@
       "Delegation topology before single-agent measurement is trustworthy",
       "Full instruction-hierarchy study beyond the safety subset needed for Paper 1",
       "Broad planning/retry sweeps before the admitted OrchVar-Canary path passes with a bounded live actor"
-    ]
+    ],
+    "frontier_program_2026_09_01": "Ranked after three gauntlet waves: translation-supervised-sparse-indexer 66, semantic-clock-gate-parity 64, translation-equivariant-state-writes 63, icl-rule-distillation-port 57; none pilot-ready; staged path in research/frontier-systems-program-2026-09-01.md (Stage 0 receipts/controls -> Stage 1 language as a controlled variable inside architecture -> Stage 2 portability across operator families -> Stage 3 reproducible-negative lane -> Stage 4 reasoning-media measurement -> Stage 5 D17 randomized identification). Parked: Coded Delta (negative cell), Bidirectional Plan Repair, Rollout-Value Operator Scheduling, Rank-Adaptive Edit Summaries."
   }
 }

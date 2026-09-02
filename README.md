@@ -136,3 +136,11 @@ The complete operating contract is in [`AGENTS.md`](AGENTS.md).
 
 [MIT](LICENSE). Third-party systems, datasets, papers, and model artifacts keep
 their own licenses; their exact provenance is recorded separately.
+
+## Architecture research program (2026-09-01)
+
+The dated frontier scan is [`research/scans/2026-09-01.md`](research/scans/2026-09-01.md); the ranked
+program and staged compute path are in
+[`research/frontier-systems-program-2026-09-01.md`](research/frontier-systems-program-2026-09-01.md);
+the loop every new direction must pass is [`.claude/rules/research-gauntlet-loop.md`](.claude/rules/research-gauntlet-loop.md);
+local-model, harness-bakeoff, and Tinker operations are in [`docs/local-model-lab.md`](docs/local-model-lab.md).

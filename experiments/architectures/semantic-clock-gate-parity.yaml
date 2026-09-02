@@ -1,0 +1,238 @@
+schema_version: 1
+name: semantic-clock-gate-parity
+direction: Semantic-Clock Gate Parity
+readiness: contract
+claim_scope: portability-protocol
+research_question: >-
+  On released gated delta-rule hybrids (Qwen3.5 GDN layers; Kimi-Linear KDA
+  layers as the second base), does the per-token forgetting and write clock
+  charge a high-fertility language proportionally more cumulative gate mass per
+  translated sentence, and does rescaling that clock by the fertility ratio move
+  translation-paired recall through the recurrent state rather than the
+  attention path, with a fertility-specific dose-response that survives
+  partialling out training-resource share?
+null_hypothesis: >-
+  LM-trained gates already realize Tallec-Ollivier time-warp invariance (the
+  cumulative forgetting ratio R_F is within 15 percent of 1 for every
+  high-fertility language), or any recall movement under clock rescaling is
+  carried by the full-attention layers, is uniform across languages ("forget
+  less" helps everyone equally), or tracks Common Crawl resource share rather
+  than tokenizer fertility. Under any of these the per-language gate ledger is
+  a measurement result and no clock-normalization recipe is claimed.
+
+stages:
+  - stage: cpu-hook-and-loss-doctor
+    gpu_hours: 0
+    promotion_gate: >-
+      NumPy GDN simulator reproduces baseline logits at r = 1 to tolerance,
+      token duplication x k scales forgetting mass x k, the attention-blind
+      query mask is verified to remove every attention path from query tokens
+      to fact and distractor positions, and the anchored log-ratio span-parity
+      loss passes gradient check and the global-rescale and per-language-rescale
+      invariance tests
+  - stage: phase-0-ledger-and-clock-surgery
+    gpu_hours_ceiling: 14
+    promotion_gate: >-
+      P1 ledger (R_F at least 0.8 f_L), off-ceiling calibration (attention-blind
+      EM(en) at d = 128 at most 95), and the primary partial-fertility slope
+      with a 95 percent interval excluding 0.2 on both the as-written and the
+      attention-blind readout, replicated in sign on the attention-free subject
+  - stage: phase-1-matched-from-scratch-span-parity
+    parameters: 60M
+    gpu_hours_ceiling: new architecture-causal contract required after phase-0 passage (owner estimate 55 GPU-h)
+    promotion_gate: >-
+      five-seed span-parity arm against the learned per-language constant arm
+      under TOST margin 2, length-matched placebo inert, full-attention and
+      Parity-aware BPE arms reported, no language loses more than 1 percent BPB
+  - stage: kda-and-scale-confirmation
+    gpu_hours_ceiling: new contract and license approval required
+    promotion_gate: phase-1 passage plus a state-size ladder and GDN-2 decoupled erase and write arms
+
+starting_point:
+  arms:
+    - name: gdn-hybrid-subject
+      mode: frozen-checkpoint-retrofit
+      model_ids: [qwen3.5-4b]
+      is_control: false
+      purpose: >-
+        Frozen 24-GDN plus 8-full-attention hybrid carrying the per-language
+        ledger, the constant and span-oracle decay surgery, and the write
+        surgery. The actual subject is Qwen/Qwen3.5-4B-Base at revision
+        1001bb4d826a52d1f399e183466143f4da7b741b, which is not yet registered;
+        qwen3.5-4b is the closest registered id (same architecture and
+        tokenizer, post-trained) and stands in only until the Base is
+        registered.
+    - name: gdn-hybrid-attention-blind
+      mode: frozen-checkpoint-retrofit
+      model_ids: [qwen3.5-4b]
+      is_control: true
+      purpose: >-
+        Same checkpoint, same prefix state and KV cache; at query time the 8
+        full-attention layers are masked from every fact and distractor
+        position so exact-match recall must flow through the GDN state. Every
+        dose-response cell is read out both ways from one shared prefix pass.
+    - name: kda-hybrid-subject
+      mode: frozen-checkpoint-retrofit
+      model_ids: [kimi-linear-48b-a3b-base]
+      is_control: false
+      purpose: >-
+        Second registered base for the portability claim: the ledger and the
+        constant decay surgery applied to channel-wise KDA decay (ledger plus
+        the r grid at d = 32 only, two GPUs, non-publication lane because of
+        trust_remote_code).
+    - name: attention-free-recurrent-subject
+      mode: frozen-checkpoint-retrofit
+      model_ids: [mamba-130m-hf]
+      is_control: true
+      purpose: >-
+        Registered attention-free placeholder used only to smoke the Delta_t
+        clock-surgery hook path on a selective-SSM checkpoint (English-only, so
+        it cannot carry the multilingual readout). The attention-free
+        multilingual subject that phase 0 actually needs is
+        fla-hub/rwkv7-1.5B-world, which must be registered with a pinned
+        revision and license before enablement (see execution.blocked_by).
+
+intervention:
+  mechanism: >-
+    Training-free surgery on the existing gates of frozen checkpoints via
+    forward hooks: constant decay surgery g'_t = g_t / r for every token of a
+    language-L episode with r on the grid {0.5, 1, 2, 4} plus r = fertility(L);
+    span-oracle decay surgery g'_t = g_t / r_s with r_s the aligned NTREX
+    sentence token-count ratio; write surgery beta'_t = 1 - (1 - beta_t)^(1/r).
+    Readout is exact-match recall of script-neutral 4-digit codes after d
+    consecutive n-way parallel distractor sentences, taken as written and with
+    the attention-blind query mask. The primary estimand is the partial slope
+    of log r*(L) - log r*(en) on log fertility(L) controlling for log Common
+    Crawl page share across 15 non-English languages chosen to decorrelate
+    fertility from resourcedness (Russian, Turkish, Malay added). The
+    training-time span-parity loss on gate statistics is reserved for the
+    separately contracted phase 1.
+  trainable_components:
+    - none in phase 0; all checkpoint weights are frozen and only forward hooks on g_t and beta_t change
+    - phase 1 only (separate contract) gate parameters a-projection b-projection A_log and dt_bias under the anchored log-ratio span-parity loss
+  frozen_components:
+    - every checkpoint weight tokenizer and generation setting of all four subjects
+    - NTREX-128 distractor runs episode ids fact templates and code assignment per seed
+    - the r grid the d grid K = 8 and the attention-blind mask definition, fixed before the first GPU job
+    - fertility and Common Crawl share covariates measured and frozen before any recall run
+
+data:
+  train:
+    source: >-
+      no gradient training in phase 0; NTREX-128 (GitHub
+      MicrosoftTranslator/NTREX, CC-BY-SA-4.0) supplies the ledger sentences,
+      per-sentence span ratios and the n-way matched-content distractor runs
+    identity: >-
+      NTREX commit 468c6b69c7f6a75d31d4743d9daba2af566cc18d; 1,997 sentences in
+      each of the 16 languages; probe facts from 12 English templates x 300
+      noun phrases with fresh 4-digit codes per seed, translated with
+      facebook/nllb-200-distilled-600M at a pinned revision
+  development:
+    source: >-
+      NTREX-128 sentence ids 1-997 in every language: EM(en) calibration curve
+      over d, choice of the quadratic fit window, hook and mask debugging
+    identity: >-
+      sentence-id half fixed in the evidence bundle; distractor runs never
+      straddle id 997; development templates and noun phrases disjoint from
+      the sealed half
+  test:
+    source: >-
+      NTREX-128 sentence ids 998-1,997 for every pre-registered phase-0
+      endpoint (P1-P5, K1-K8); FLORES+ devtest
+      (openlanguagedata/flores_plus at 5fec6c13f9e5a4db2f745d4ec0d7c9721ddc4f06)
+      sealed and untouched for the phase-1 held-out endpoint
+    identity: >-
+      sentence-id half and FLORES+ revision hashes stored in the evidence
+      bundle before the first GPU job; a disjoint template and noun-phrase set
+      is drawn for the sealed half
+    sealed: true
+  contamination_checks:
+    - grep every seeded 4-digit code string against all NTREX and FLORES+ text in every language before use and redraw collisions
+    - keep every translation of one NTREX sentence and one probe fact in exactly one split and one episode id
+    - two-forward-pass prefix-invariance audit of the hooks and the attention-blind mask (arXiv 2608.22876) on 200 episodes per subject
+    - report every language and script separately and never only the macro slope
+
+controls:
+  - name: r-equals-1-identity-surgery
+    matches: [checkpoint, tokenizer, episode-ids, decoding]
+  - name: attention-blind-query-mask
+    matches: [checkpoint, prefix-state, episode-ids, surgery-setting]
+  - name: attention-free-multilingual-subject
+    matches: [languages, episode-ids, d-grid, r-grid]
+  - name: english-under-the-same-r-interaction
+    matches: [r, d, episode-ids]
+  - name: fertility-resourcedness-decorrelated-language-grid
+    matches: [content, d, K, decoding]
+  - name: span-oracle-versus-constant-rescale
+    matches: [checkpoint, episode-ids, mean-log-decay-shift]
+  - name: write-only-and-decay-plus-write-surgery
+    matches: [r, episode-ids, checkpoint]
+  - name: bits-per-byte-under-surgery
+    matches: [r, sentences, checkpoint]
+  - name: softmax-cross-lingual-retrieval-baselines
+    matches: [language-set, needle-format]
+
+primary_endpoint:
+  metric: >-
+    partial slope of log r*(L) - log r*(en) on log fertility(L) controlling for
+    log Common Crawl page share, from attention-blind exact-match recall at
+    d = 128 on the sealed NTREX half
+  direction: maximize
+  minimum_effect: 0.5
+  unit_of_analysis: >-
+    language (15 non-English), with r*(L) estimated per language from
+    episode-paired EM curves over 600 episodes per cell (3 seeds x 200)
+  aggregation: >-
+    two-regressor OLS across languages with the 2,000-resample episode
+    bootstrap propagated into r*(L); marginal and partial slopes both reported;
+    kills must replicate in sign on the attention-free subject
+
+statistics:
+  seeds: [42, 43, 44]
+  interval: >-
+    episode-clustered paired bootstrap 95 percent intervals for every EM
+    difference; bootstrap interval for r*(L); bootstrap interval for the
+    partial slope; pooled TOST across languages with margin 3 EM points
+  multiplicity: >-
+    one primary endpoint (partial fertility slope, attention-blind, d = 128);
+    Holm correction across the pre-registered secondary families P1, P2, P4,
+    P5; per-language TOST results are descriptive only
+
+falsifiers:
+  - Kill (K1) if R_F is within 15 percent of 1 for every language with fertility at least 1.5; gates are already warp-invariant and only the ledger is published.
+  - Kill (K2) if the partial fertility slope's 95 percent interval upper bound is below 0.5 on both readouts and the sign replicates on the attention-free subject.
+  - Reclassify (K2b) if the dose-response is present as written but absent under the attention-blind mask; recall is attention-carried and the result is hybrid localization, not a clock effect.
+  - Kill (K3) if the English interaction gain at r = f_L is at most 2 EM points for every high-fertility language; "forget less" helps everyone equally.
+  - Kill (K4) if Thai, Korean, Chinese and Malay recall gaps are within 3 points of the Tamil and Bengali gaps; the gap is script or data, not fertility.
+  - Demote (K5) if pooled TOST shows span-oracle within 3 EM points of the constant rescale; the parallel-view training mechanism is dropped and only the ledger plus per-language recipe survives.
+  - Kill (K6) if the prefix-invariance audit finds the probe, hooks or mask leak.
+  - Hold (K7) if attention-blind EM(en) at d = 128 exceeds 95; the probe is on ceiling and d must be extended before any surgery claim.
+  - Kill (K8) if the marginal fertility slope excludes 0.2 but the partial slope's interval includes 0; the effect is resourcedness, not fertility.
+
+execution:
+  enabled: false
+  max_gpu_hours: 14
+  gpus: 2
+  checkpoint_to_persistent_storage: true
+  fresh_job_resume_test: true
+  checkpoint_interval_minutes: 10
+  blocked_by:
+    - no implementation exists yet for the gate hooks, the attention-blind query mask, the episode builder, the ledger or the doctors
+    - the discovery image (127.0.0.1:5000/cotcodec-research@sha256:15d6abc06fa53ab466087a92107da9c58e469615e2f56a683fefd0a7600277f3) has no fla; a new image with fla 0.5.2 or newer and the new code must be built and re-pinned by digest
+    - register Qwen/Qwen3.5-4B-Base at 1001bb4d826a52d1f399e183466143f4da7b741b (plus the 0.8B and 2B Base ladder) in models/registry.yaml; qwen3.5-4b is only the post-trained placeholder
+    - register fla-hub/rwkv7-1.5B-world with a pinned revision and confirmed license; mamba-130m-hf is an English-only hook-smoke placeholder and cannot carry the multilingual readout
+    - re-measure fertility and Common Crawl share for all 16 languages on every subject tokenizer and freeze them in the evidence bundle before any recall run
+    - write the docker-single-node-discovery-v1 job manifest for scripts/submit_docker_research_job.py and pass its dry run
+    - NLLB-200 probe translations are CC-BY-NC-4.0 (research only) and the rwkv7 card license is unconfirmed; record both decisions
+    - Kimi-Linear custom modeling code must be reviewed and vendored before the KDA arm loads on two GPUs
+    - causality and prefix-invariance doctors are not written; the CPU stage must pass before the first GPU job
+
+required_artifacts:
+  - model revision receipts license decisions and the rebuilt image digest with fla version
+  - per-language fertility Common Crawl share and span-ratio CV table with the measurement scripts
+  - per-layer per-head cumulative forgetting and write ledger for every subject and language with sentence-clustered intervals
+  - episode manifest with seeds codes template ids distractor runs and both readouts per episode
+  - EM(en) calibration curve over d and the full dose-response table with bootstrap intervals for r*(L)
+  - marginal and partial slope fits with the covariate matrix and the attention-free replication
+  - bits-per-byte under every surgery setting per language
+  - hook mask and prefix-invariance doctor outputs plus the checkpoint and fresh-job continuation equivalence report

@@ -19,10 +19,11 @@ import yaml
 from cryptography.exceptions import InvalidSignature
 from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PublicKey
 
-try:
-    from scripts.submit_research_job import validate_manifest
-except ModuleNotFoundError:  # Direct `python scripts/research_direction_doctor.py` execution.
-    from submit_research_job import validate_manifest
+PROJECT_ROOT = Path(__file__).resolve().parents[1]
+if str(PROJECT_ROOT) not in sys.path:  # direct `python scripts/...` execution
+    sys.path.insert(0, str(PROJECT_ROOT))
+
+from scripts.submit_research_job import validate_manifest  # noqa: E402
 
 REQUIRED_HEADINGS = (
     "Claim and Research Question",

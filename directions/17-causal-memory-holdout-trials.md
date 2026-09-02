@@ -1,6 +1,6 @@
 # Direction 17: Causal Memory Holdout Trials
 
-**Status:** frontier candidate; novelty audit passed narrowly; real-model pilot blocked
+**Status:** NARROWED on 2026-09-01 — survives only as prospective randomized identification; real-model pilot blocked
 **Priority:** first new-mechanism pilot after the executable loop
 **Claim scope:** prospective first-service effect estimation for one retained memory item,
 not generic memory credit assignment, a causal write/eviction effect, a database, or a harness
@@ -413,3 +413,27 @@ manifest, atomic checkpoint, and fresh-job resume test all pass. A denylist is
 defense in depth and never substitutes for the positive feature schema.
 Public benchmark code and data licenses must be resolved independently; an
 open repository or paper link is not authorization to reuse derived data.
+
+## 2026-09-01 kill-shot update
+
+Verdict from the 2026-09-01 frontier sweep: **NARROWED**. Hindsight Memory-PRM
+([2608.29605](https://arxiv.org/abs/2608.29605)) occupies intervention-calibrated
+per-entry memory credit via one controlled deletion-and-reanswer per probe as a
+proxy reward (first-party: 8B policy 77.5% LoCoMo vs API teacher 65.1%); SCM
+pathway tracing ([2608.30198](https://arxiv.org/abs/2608.30198)) and MemGauge
+([2608.30177](https://arxiv.org/abs/2608.30177)) occupy causal analysis; AdmitOR
+([2608.15565](https://arxiv.org/abs/2608.15565)), Recuris
+([2608.24876](https://arxiv.org/abs/2608.24876)), HarnessLens, and OpsHarness
+occupy "memory/skill admission gate" — four entries in three weeks. A learned
+gate alone no longer discriminates this direction.
+
+Surviving delta: prospective known-propensity randomization at first service
+with write-time-only covariates and a paired deterministic replay oracle,
+described as randomized identification rather than "a gate". Pre-registered
+controls now required: Hindsight-PRM post-hoc deletion credit, AdmitOR agreement
+gate, matched-moment noise placebo, and a reward-SNR estimate
+([2608.10441](https://arxiv.org/abs/2608.10441) shows a reward-SNR floor can make
+such a gate unlearnable). Borrow the inverted-IFEval verifiable-world oracle
+from catastrophic remembering ([2608.11095](https://arxiv.org/abs/2608.11095))
+for the CPU paired oracle. The 32K Kimi/Tinker context assumption is fragile
+(60.6% SWE-Bench episode overflow in the first-party Harbor recipe).
