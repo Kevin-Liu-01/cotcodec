@@ -3,40 +3,152 @@ name: translation-equivariant-state-writes
 direction: Translation-Equivariant State Writes
 readiness: contract
 claim_scope: architecture-causal
+claim_statement: >-
+  architecture-causal is used in the validator's sense (matched from-scratch arms with
+  from-scratch controls). The causal claim this contract can establish is object-level
+  within a fixed 57M SWA-512 plus GDN hybrid: supervising the recurrence-weighted pure
+  write W(a|c) versus supervising its decay-free projection pooling P(a). No operator-level
+  claim (GDN versus softmax attention) is made unless the conditional arm A4-prime runs.
+  Phase-1 inference is further conditional on gate G1 (instrument above floor at 57M/200M
+  tokens) and gate G2 (W and P numerically distinct on the spans used).
 research_question: >-
   Does supervising the pure recurrent-state write W(a|c) = S(c+a) - S_{v=0}(c,a)
   of half the Gated DeltaNet heads on public bitext, with same-prefix negatives,
   close at least half of a hybrid's cross-lingual recall gap on surface-disjoint
   beyond-window keys at equal monolingual recall and LM loss, and beat the same
-  loss applied to the decay-free projection pooling of the same heads?
+  loss applied to the decay-free projection pooling of the same heads, given that
+  the 57M instrument is above floor (G1) and W and P are distinct (G2)?
 null_hypothesis: >-
   Any cross-lingual recall gain comes from projection alignment, language-marginal
   alignment of the write, bitext exposure, or a surface/copy shortcut rather than
   from aligning the recurrence-weighted write itself; or the frozen hybrid's gap
-  is a readout-interference effect that no write-side loss can address.
+  is a readout-interference effect that no write-side loss can address; or W and P
+  coincide on sentence-length spans so the decisive contrast is empty by construction;
+  or the 57M/200M-token instrument sits at floor so no arm difference is readable.
+
+contract_version: 5
+contract_history: >-
+  Wave 5 (2026-09-01): the CPU object doctor became executable code registered under
+  reference_doctor with a new output path; the phase-0 substrate moved to the registered and
+  receipted qwen3.5-4b-base; the phase-1 promotion and kill rule was re-derived by simulation
+  (wave-4 Reviewer B). The wave-4 rule (every seed pair at least 5 EM points) is kept in the
+  doctor's operating-characteristics table as the comparison and is not erased.
+
+reference_doctor:
+  implementation: harness/translation_equivariant_state_writes.py
+  command_argv:
+    - uv
+    - run
+    - python
+    - scripts/run_translation_equivariant_state_writes_doctor.py
+    - --output
+    - data/results/translation-equivariant-state-writes/phase0-doctor.json
+  runtime: numpy-cpu
+  objects: >-
+    GDN head recurrence S_t = S_{t-1} alpha_t (I - beta_t k_t k_t^T) + beta_t v_t k_t^T in the
+    v k^T convention; pure write W(a|c) = S(c+a) - S_{v=0}(c,a); wave-2 segment delta
+    D = S(c+a) - S(c); A2 pooling P(a) = sum_t beta_t v_t k_t^T; prefix-floor ledger;
+    G2 distinctness statistic mean cos(W, P); write-norm falsifier; TP-MQAR-v2 leakage
+    controls; surface-disjoint filter; promotion-rule simulation
+  substrate: >-
+    seeded two-layer NumPy GDN with a two-language vocabulary (language-B embeddings equal
+    language-A embeddings plus 0.05 Gaussian noise) as a synthetic stand-in; random unit keys
+    and Gaussian values for the G2 regime sweep; integer stand-in keys for TP-MQAR-v2; no
+    checkpoint, corpus, tokenizer, fla kernel or GPU is touched
+  registered_cases:
+    - fp64 identity W == S_{S0=0}(a) per layer and head of the two-layer GDN (positive control)
+    - bitwise-identical S(c) across two passes of the shared prefix; one-token prefix change detected
+    - prefix-floor ledger on 24 synthetic translation pairs behind the shared prefix for W (registered gate), D and P (reported)
+    - shuffled-pairing negative control (anchor paired with another pair's translation) that must fail the W gate
+    - write-shrinkage counterfactual (span values scaled 1, 0.1, 0.01) exposing the wave-2 prefix shortcut in D but not in W, with the mean write-norm falsifier
+    - causality perturbation (tokens after the span cannot change the span-end state; a one-token span edit must change W)
+    - gate G2 regime sweep of mean cos(W, P) over alpha in 0.999 0.99 0.95 0.9 and beta in 0.05 0.3 0.8 at 30-token spans, plus the tiny model's own value
+    - synthetic TP-MQAR-v2 (600 prompts, N=8) with retrieval-impossible and value-permutation controls under an oracle lookup reader and a sealed manifest hash
+    - surface-disjoint key filter on fixed strings (NFKC, casefold, token, digit-string and character-4-gram clauses)
+    - promotion-rule operating characteristics for the wave-4 and wave-5 rules at delta in 0 3 5 8 10 EM points under seed SD 3
+    - degenerate-input rejection (alpha, beta, NaN, length, empty span, state shape, zero-norm cosine, vocabulary, prompt kind, config)
+  gates:
+    - identity residual at most 1e-10 in every layer and head
+    - repeated prefix pass bitwise identical and perturbed prefix detected
+    - W translation-pair cosine exceeds its same-prefix floor by at least 0.05 in at least two thirds of heads
+    - shuffled pairing fails that gate
+    - W head margins invariant to value scaling within 1e-9; D floor at scale 0.01 at least 0.8 and elevated by at least 0.3; write-norm falsifier fires above 30 percent shrinkage and not at scale 1
+    - later-token effect at most 1e-12 and span-edit effect above 1e-6
+    - G2 fires (mean cos above 0.9) at alpha 0.999 beta 0.05 and passes at alpha 0.9 beta 0.8
+    - positive-control EM 1.0; retrieval-impossible and permutation-leak EM at most 0.01 against chance 1e-4
+    - every fixed surface-filter case matches its expected verdict
+    - Monte-Carlo matches the closed form within 0.005; the wave-4 rule promotes a true 5-point effect at most 15 percent of the time; the wave-5 rule at least 45 percent, at most 1 percent at zero effect, at least 90 percent at 8 points
+    - every degenerate input raises StateWriteContractError
+  exclusions:
+    - no claim about any model, checkpoint, corpus or prediction P0a-P2; every number in the receipt is a synthetic-case number
+    - no fla kernel comparison (fla_cross_check is skipped without torch, fla and CUDA and has never been executed)
+    - no cos(W, P) read on the 57M A0 hybrid (its model definition does not exist yet) or on qwen3.5-4b-base (container smoke not run)
+    - no FLORES+ text, no tokenizer-level subword filter, no deduplication against phase-1 streams, no per-arm selection ledger
+  last_run: >-
+    2026-09-01, Mac CPU, seed 42: PHASE0_OBJECT_DOCTOR_PASS, 11 of 11 gates, 0.4 s wall;
+    payload_sha256 e94aefffdc4754e4689cd1a8f8af9629f32ad95ab5b6c3f2559813d833afe373 reproduced
+    bitwise by two further scratchpad runs; implementation sha256
+    eae02f0ee3a6d433c6ee6ce76d7667c55ed62482ec5122b5f0e991696519df79; evidence grade
+    executability-and-gate-semantics-only
 
 stages:
   - stage: cpu-object-doctor
     gpu_hours: 0
+    status: >-
+      executable (reference_doctor) and passed on synthetic inputs on 2026-09-01; the fp64
+      identity, bitwise prefix state, prefix-floor, G2, leakage-control, write-norm and
+      promotion-rule gates run as code; the FLORES+ builder, tokenizer subword filter,
+      deduplication, selection-ledger format and every real-model read remain pending
     promotion_gate: >-
       fp64 identity S_{S0=0}(a) == S(c+a) - S_{v=0}(c,a) to 1e-10 on a 2-layer GDN;
-      S(c) bitwise identical across a bitext pair; TP-MQAR-v2 leakage controls at
-      chance; FLORES+ deduplicated against every phase-1 stream
+      S(c) bitwise identical across a bitext pair; TP-MQAR-v2 (test from FLORES+ devtest,
+      dev from FLORES+ dev) leakage controls at chance; FLORES+ deduplicated against every
+      phase-1 stream; cos(W, P) and cos(W, D) computation plan and per-arm selection
+      ledger format written
   - stage: frozen-within-model-kill-screen
-    parameters: 7B frozen (unregistered allenai/Olmo-Hybrid-7B and allenai/Olmo-3-1025-7B)
-    gpu_hours_ceiling: 4
+    parameters: >-
+      registered and receipted qwen3.5-4b-base (Qwen/Qwen3.5-4B-Base, revision 1001bb4d;
+      base checkpoint, so the post-training confound of wave 4 is removed; layer layout
+      assumed identical to Qwen/Qwen3.5-4B's 24 GDN + 8 full-attention layers until its
+      config.json is read in the container smoke) as the frozen hybrid substrate and
+      registered qwen3-0.6b-base as the dense floor reference; olmo-hybrid-7b and
+      olmo-3-1025-7b are registered without artifact receipts and remain the replication pair
+    gpu_hours_ceiling: 3.4
     promotion_gate: >-
-      language-competence and dense cross-lingual EM floor gates pass for at least one
-      language pair; D-zero exceeds its matched distractor perturbation by more than 10
-      points; G(8) above 3 points and G(128)/G(8) below 2; rank-capped transport closes
-      less than 80 percent of the gap; W translation-pair cosine exceeds its same-prefix floor
+      language-competence gate (hybrid monolingual EM at least 60 percent at N=8) passes for
+      at least one language pair; dense cross-lingual EM floor (qwen3-0.6b-base at least 40
+      percent at N=8 on surface-disjoint keys) recorded, with P0c provisional if it fails;
+      D-zero exceeds its matched distractor perturbation by more than 10 points; G(8) above
+      3 points and G(128)/G(8) below 2; rank-capped transport closes less than 80 percent of
+      the gap; W translation-pair cosine exceeds its same-prefix floor by at least 0.05 in at
+      least two thirds of E heads; mean cos(W, P) over E heads at most 0.9 on bitext spans
+  - stage: phase-1-selection-and-floor-gate
+    parameters: >-
+      57M from-scratch hybrids and dense control, seed 42, 200M-token schedule truncated at
+      60M tokens; A0 LR sweep (4 values), per-arm lambda selection for A1, A2, A3 (2 values
+      each), A4 seed 42 to its 60M checkpoint; winners are resumed as the seed-42 grid runs
+    gpu_hours_ceiling: 1.2
+    promotion_gate: >-
+      G1: best A0 sweep run at 60M tokens has monolingual beyond-window EM at least 60 percent
+      and cross-lingual surface-disjoint EM at least 15 percent at N=8, or the dense A4 seed-42
+      run reaches at least 25 percent cross-lingual EM at the same checkpoint (rescue clause);
+      G2: mean cos(W, P) over E heads at most 0.9 on the 57M A0 at initialization and at 60M
+      tokens; smoke-run throughput at least 90K tok/s/GPU (120M-token floor); lambda selected
+      per arm and LR selected on A0 using the dev TP-MQAR-v2 only; otherwise phase 1 is
+      deferred and revised under a new versioned contract
   - stage: small-model-identifiability
-    parameters: 57M matched from-scratch hybrids and dense control
-    gpu_hours_ceiling: 12
+    parameters: 57M matched from-scratch hybrids and dense control, 3 seeds, 200M tokens per run
+    gpu_hours_ceiling: 11.4
     promotion_gate: >-
-      A1 minus A2 at least 5 EM points same-signed in all three seed pairs with a
-      prompt-clustered CI excluding zero; A3 closes under half of A1; LM loss within
-      1 percent; mean write norm shrinks under 30 percent
+      G1 re-confirmed on A0 seed 42 at 200M tokens before the remaining 17 runs launch;
+      wave-5 decision rule (simulation-derived, reference_doctor case
+      promotion_rule_operating_characteristics): promote if the seed mean of A1 minus A2 is
+      at least 5 EM points, all three seed pairs are positive and the pooled prompt-clustered
+      95 percent CI excludes zero; kill if any seed pair is negative or the seed mean is
+      negative; otherwise the band is underpowered and A0, A1, A2 go to the +2-seed line under
+      a new contract; A3 closes under half of A1; LM loss within 1 percent; mean write norm
+      shrinks under 30 percent; primary endpoint not floor-compressed (A1 and A2 not both
+      below 10 percent cross-lingual EM in every seed)
   - stage: confirmation
     parameters: 5 seeds and conditional dense-plus-loss arm
     gpu_hours_ceiling: new contract required after small-model passage
@@ -46,51 +158,65 @@ starting_point:
   arms:
     - name: frozen-hybrid-state-screen
       mode: frozen-checkpoint-retrofit
-      model_ids: [qwen3.5-4b]
+      model_ids: [qwen3.5-4b-base]
       is_control: false
       purpose: >-
-        Registered stand-in for the unregistered allenai/Olmo-Hybrid-7B
-        (revision 4f1cc566f9fdf3ce68da2ab6a788a83d89896dcf) named in the proposal
-        and direction; phase-0 within-model state interventions (D-zero with matched
-        perturbation, rank-capped transport, swap, N-scaling) run on the Olmo hybrid
-        once it is registered; qwen3.5-4b is instrument-only.
+        Primary registered phase-0 substrate (wave 5): Qwen/Qwen3.5-4B-Base at revision
+        1001bb4d826a52d1f399e183466143f4da7b741b, registered 2026-09-01 and fetched with a
+        receipt (data/model-receipts/qwen3.5-4b-base.json, artifact_root_sha256
+        c7fbfd6bd1c73b9a0080decf794f5e4333c955f2704591affc61b0a9ac850e42, 9.34 GB, on
+        /home/kevin/cotcodec-runs/hf-cache/cotcodec-receipts/ of fal-h100-01). The post-trained
+        Qwen/Qwen3.5-4B (revision 851bf6e8, claim C32) is a 24 GDN + 8 full-attention hybrid
+        (full attention at layers 3, 7, ..., 31; linear key heads 16 x 128, value heads 32 x 128)
+        whose transformers module exposes recurrent_states and initial_state (C33); the base
+        checkpoint is assumed to share that layout until its config.json (sha256 ddc63e1c in the
+        receipt) is read in the container smoke. Every within-model kill (D-zero with matched
+        perturbation, N-scaling, rank-capped transport, swap, W-vs-D prefix floor, W-vs-P
+        distinctness floor) has a runnable arm. Remaining confounds: multimodal wrapper used
+        text-only, no architecture-matched dense sibling. olmo-hybrid-7b (revision 4f1cc566) is
+        registered without a receipt and stays the replication substrate.
     - name: frozen-dense-reference
       mode: frozen-checkpoint-retrofit
       model_ids: [qwen3-0.6b-base]
       is_control: true
       purpose: >-
-        Registered stand-in for the unregistered allenai/Olmo-3-1025-7B
-        (revision a81bae42db3975be1671e27b9c9a56da1a9f980f), the throughput-matched
-        descriptive dense reference that supplies the cross-lingual EM floor gate;
-        no causal use of the pair.
+        Registered dense reference supplying the cross-lingual EM floor gate (a weak floor:
+        passing proves the instrument solvable by a dense model; failing at 0.6B is
+        inconclusive) and the descriptive P0a comparison with confounds listed;
+        olmo-3-1025-7b (revision a81bae42db3975be1671e27b9c9a56da1a9f980f, registered without
+        a receipt) is the throughput-matched dense reference for the Olmo replication;
+        no causal use of any hybrid-dense pair.
     - name: hybrid-baseline-a0
       mode: matched-from-scratch
       model_ids: [delta-net-1.3b-8k]
       is_control: true
       purpose: >-
         57M SWA-512 plus GDN hybrid trained on the bitext-containing mixture with
-        lambda 0, using the registered fla delta-net code lineage without loading weights.
+        lambda 0, using the registered fla delta-net code lineage without loading weights;
+        carries the A0 LR sweep and the G1 instrument-sensitivity reads.
     - name: hybrid-write-equivariance-a1
       mode: matched-from-scratch
       model_ids: [delta-net-1.3b-8k]
       is_control: false
       purpose: >-
         Treatment: cosine plus InfoNCE on the pure write W of half the GDN heads with
-        same-prefix translation positives and same-prefix content negatives.
+        same-prefix translation positives and same-prefix content negatives; lambda in
+        {0.1, 0.3} selected for this arm on the dev TP-MQAR-v2 at 60M tokens.
     - name: hybrid-projection-alignment-a2
       mode: matched-from-scratch
       model_ids: [delta-net-1.3b-8k]
       is_control: true
       purpose: >-
-        Decisive control: identical loss, lambda, tau, negatives, layers and heads on
-        the decay-free erase-free pooling P(a) of the same heads' projections.
+        Decisive control: identical loss, tau, negatives, layers and heads on the decay-free
+        erase-free pooling P(a) of the same heads' projections; own lambda selected by the
+        same per-arm rule; interpretable only if gate G2 (mean cos(W, P) at most 0.9) holds.
     - name: hybrid-language-marginal-placebo-a3
       mode: matched-from-scratch
       model_ids: [delta-net-1.3b-8k]
       is_control: true
       purpose: >-
         Placebo: same loss with a content-independent same-prefix language-B sentence;
-        reads out language-ID removal on the write.
+        own lambda selected by the same per-arm rule; reads out language-ID removal on the write.
     - name: dense-full-attention-a4
       mode: matched-from-scratch
       model_ids: [smollm2-135m]
@@ -98,7 +224,8 @@ starting_point:
       purpose: >-
         Iso-parameter iso-token iso-corpus full-attention transformer with lambda 0,
         using the registered small-transformer config lineage without loading weights;
-        descriptive architecture reference.
+        descriptive architecture reference and the G1 rescue read (dense cross-lingual EM
+        at least 25 percent at the 60M seed-42 checkpoint).
     - name: hybrid-no-bitext-a5
       mode: matched-from-scratch
       model_ids: [delta-net-1.3b-8k]
@@ -124,14 +251,16 @@ intervention:
     add lambda times cosine plus InfoNCE (tau 0.07) between W^A and W^B to the LM
     loss on half the GDN heads, with at least two same-prefix random language-B
     negatives and at least two same-prefix entity-or-number-sharing hard negatives
-    per anchor.
+    per anchor. Lambda is selected per alignment arm (A1, A2, A3) on a dev TP-MQAR-v2
+    built from FLORES+ dev. Pre-registered mediation diagnostic: cosine of the code-position
+    key and the query-position query across the two key languages, per layer, for A0, A1, A2.
   trainable_components:
     - all parameters of the 57M from-scratch hybrid and dense models
     - GDN projections q k v beta alpha of the supervised head subset E receive the alignment gradient
   frozen_components:
-    - Olmo and stand-in checkpoints in phase 0 (read-only state interventions)
+    - qwen3.5-4b, qwen3-0.6b-base and (once registered) Olmo checkpoints in phase 0 (read-only state interventions)
     - tokenizer, data mixture proportions, prompt manifests and evaluation permutations after sealing
-    - lambda and learning rate after selection on FLORES+ dev
+    - lambda (per arm) and learning rate (A0 sweep) after selection on the dev TP-MQAR-v2 from FLORES+ dev
 
 data:
   train:
@@ -144,29 +273,39 @@ data:
       dataset repositories, revisions, shard lists, filters, normalization and pair hashes
       frozen and hashed before enablement; A5 stream replaces bitext with iso-token monolingual text
   development:
-    source: FLORES+ dev split (997 multi-way sentences) for transport fitting, lambda and LR selection
-    identity: dev sentence ids disjoint from devtest; never used for keys
+    source: >-
+      FLORES+ dev split (997 multi-way sentences) for transport fitting and for the dev
+      TP-MQAR-v2 used in per-arm lambda and A0 LR selection
+    identity: dev sentence ids disjoint from devtest; never used for test keys
   test:
     source: >-
       TP-MQAR-v2 prompts built from FLORES+ devtest (1,012 sentences) in En, De, Es with
       surface-disjoint and surface-shared key subsets, N in 8 32 128, digit-only values
-    identity: prompt manifests, key ids, value codes and permutations hashed and sealed before any phase-1 run
+    identity: >-
+      prompt manifests, key ids, value codes and permutations hashed and sealed before any
+      phase-1 run; every pre-grid G1 read of the sealed set (smoke run, four A0 sweep
+      checkpoints, A0 and A4 seed 42 at 60M and 200M) is enumerated and logged
     sealed: true
   contamination_checks:
     - exact and MinHash 5-gram deduplication of every FLORES+ sentence against all training streams
     - retrieval-impossible control at chance 1e-4 and value-permutation control per cell
-    - subword-level surface filter (no shared subword of 4 or more characters) in addition to NFKC casefold token filter
+    - subword-level surface filter (no shared subword of 4 or more characters under both the Qwen3.5 and the 57M tokenizer) in addition to NFKC casefold token filter
     - digit value codes drawn per prompt and never present in the synthetic curriculum
+    - counted and logged sealed-test reads before the grid; any read outside the enumerated list is a leak
 
 controls:
   - name: same-layer-projection-alignment-a2
-    matches: [layers, heads, loss-form, lambda, tau, same-prefix-negatives, pooling-shape, parameters, tokens, data-order, seed]
+    matches: [layers, heads, loss-form, tau, same-prefix-negatives, pooling-shape, parameters, tokens, data-order, seed, per-arm-lambda-selection-rule]
   - name: language-marginal-placebo-a3
-    matches: [loss-form, lambda, prefix, parameters, tokens, data-order, seed]
+    matches: [loss-form, prefix, parameters, tokens, data-order, seed, per-arm-lambda-selection-rule]
   - name: dense-full-attention-a4
     matches: [parameters-within-3-percent, tokens, corpus, tokenizer, seed]
   - name: no-bitext-iso-token-a5
     matches: [tokens, languages, proportions, parameters, seed]
+  - name: phase-1-instrument-floor-gate-g1
+    matches: [prompts, key-type, N, window-position, checkpoint-tokens, tokenizer]
+  - name: w-vs-p-distinctness-floor-g2
+    matches: [heads, spans, prefixes, model, checkpoint-tokens]
   - name: d-zero-matched-distractor-perturbation
     matches: [span-length, position-offset, layers, prompts]
   - name: rank-capped-transport-identity-and-rotation
@@ -178,49 +317,93 @@ controls:
 
 primary_endpoint:
   metric: >-
-    closure of the cross-lingual recall gap on surface-disjoint TP-MQAR-v2 keys at
-    beyond-window positions, A1 minus A2, in EM points
+    A1 minus A2 difference in cross-lingual EM on surface-disjoint TP-MQAR-v2 keys at
+    beyond-window positions, N=8, in EM points (closure fraction relative to A0's gap is
+    a secondary derived quantity)
   direction: maximize
   minimum_effect: 5.0
-  unit_of_analysis: seed-paired arm difference with prompts clustered by FLORES+ key sentence
-  aggregation: paired-by-seed mean difference with prompt-clustered bootstrap 95 percent interval and seed SD
+  unit_of_analysis: seed-paired arm difference (three pairs sharing initialization and data order), with prompts clustered by FLORES+ key sentence within each pair
+  aggregation: >-
+    seed mean of the three seed-pair differences at least 5 EM points with all three pairs
+    positive and the pooled prompt-clustered bootstrap 95 percent interval excluding zero
+    (promote); any negative pair or negative seed mean (kill); otherwise underpowered band
+    sent to the +2-seed line; seed SD and every pair reported
 
 statistics:
   seeds: [42, 43, 44]
   interval: >-
-    paired-by-seed differences with prompt-clustered bootstrap 95 percent interval; three
-    seeds are a kill screen (power 0.37 at 5 points for seed SD 3); plus two seeds under a
-    new line if A0 gap seed SD exceeds 3 points
-  multiplicity: one primary endpoint; Holm correction across the four pre-registered secondaries; phase-0 kills are pre-registered thresholds
+    pooled prompt-clustered bootstrap 95 percent interval on the seed mean plus the sign
+    pattern of the three pairs; simulated operating characteristics under seed SD 3
+    (reference_doctor, 200k draws): the wave-5 rule promotes a true 5-point effect with
+    probability 0.49 (0.95 at 8 points, 0.002 at 0) and kills with 0.14 (0.875 at 0); the
+    wave-4 every-pair rule promoted a true 5-point effect only 0.125 of the time; three seeds
+    remain a kill screen; plus two seeds under a new line when the band is underpowered or
+    the A0 gap seed SD exceeds 3 points
+  multiplicity: one primary endpoint; Holm correction across the five pre-registered secondaries (P2 i-iv, A5 vs A0); phase-0 kills and gates G1/G2 are pre-registered thresholds
 
 falsifiers:
   - Kill if D-zero on the fact span exceeds the matched distractor-span perturbation by at most 10 points (state is not the carrier).
   - Kill if the frozen hybrid's gap G(8) is at most 3 points, or G(128)/G(8) is at least 2 (readout interference dominates).
   - Kill if rank-capped dual-form transport fitted on FLORES+ dev closes at least 80 percent of the gap (training redundant).
-  - Kill if A1 does not beat A2 by at least 5 EM points paired over seeds, or any seed pair is opposite-signed.
+  - Redesign (new contract, phase 1 does not run) if mean cos(W, P) over E heads exceeds 0.9 on the 57M A0 at initialization or at 60M tokens (control equals treatment by construction).
+  - Defer (new versioned contract, not a kill) if gate G1 fails: A0 monolingual beyond-window EM below 60 percent or cross-lingual surface-disjoint EM below 15 percent at N=8, and dense A4 below 25 percent at the same checkpoint (instrument at floor at 57M/200M tokens).
+  - Declare the primary endpoint floor-compressed, with no inference in either direction, if A1 and A2 both sit below 10 percent cross-lingual EM in every seed.
+  - Kill if any seed-pair A1 minus A2 difference is negative or the seed mean is negative (wave-5 rule; simulated kill probability 0.875 at zero effect and 0.14 at a true 5-point effect under seed SD 3).
+  - Promote only if the seed mean of A1 minus A2 is at least 5 EM points, all three pairs are positive and the pooled prompt-clustered 95 percent CI excludes zero (simulated 0.49 at 5 points, 0.95 at 8, 0.002 at 0); any other outcome is an underpowered band sent to the +2-seed line under a new contract, not a kill. The wave-4 rule (every pair at least 5) passed a true 5-point effect 0.125 of the time and is retired.
   - Kill if A3 closes at least half of A1's closure, or closure appears only on surface-shared keys.
   - Kill if held-out LM loss is over 1 percent worse, mean write norm shrinks over 30 percent, or A5 equals A0 within 2 points while A1 beats only A5.
 
 execution:
   enabled: false
+  runtime: docker-single-node-discovery-v1
+  job_manifests:
+    - path: infra/slurm/host-single-node/tesw-phase0-frozen-screen.yaml
+      exists: false
+      template: infra/slurm/host-single-node/qwen35-4b-competence-screen.yaml
+    - path: infra/slurm/host-single-node/tesw-phase1-selection-gate.yaml
+      exists: false
+    - path: infra/slurm/host-single-node/tesw-phase1-grid.yaml
+      exists: false
   max_gpu_hours: 16
   gpus: 2
   checkpoint_to_persistent_storage: true
   fresh_job_resume_test: true
   checkpoint_interval_minutes: 15
+  pilot_image:
+    tag: cotcodec-research:999f5583-architecture
+    image_id: sha256:9d832a59fe348d149d2e4587ac6af90223e2956ebb646d7b19295298954ca5ad
+    digest: 127.0.0.1:5000/cotcodec-research@sha256:bde90daa78c26cd2fb9d05036b0c9f9613c2386b9d7561816b541d2736c79f5d
+    built_by: Slurm job 353 from commit 999f5583 (2026-09-01)
+    contents: torch 2.11.0+cu128, transformers 5.15.0, flash-linear-attention 0.5.2, fla-core 0.5.2, triton 3.6.0
+    pending_rebuild: >-
+      tilelang (pyproject architecture extra, commit 0b3ecef) because fla 0.5.2 guards the gated
+      GDN backward on Hopper under Triton < 3.7.1 (fla #640); the digest above is therefore the
+      phase-0 (forward-only) image and the phase-1 training image must be re-pinned after the
+      tilelang rebuild
+  model_receipts_fetched:
+    host_path: /home/kevin/cotcodec-runs/hf-cache/cotcodec-receipts/
+    job: 356 (2026-09-01)
+    model_ids: [qwen3.5-4b-base, qwen3-1.7b-base, transformer-1.3b-100b, gla-1.3b-100b, transformer-340m-10b, gla-340m-15b, gdn-1.3b-isp-hybrid-3to1-50b, gdn-340m-isp-hybrid-3to1-10b, e2-ttt-mlp-1.3b-15b, rwkv7-1.5b-world]
+    repo_copies: data/model-receipts/<model_id>.json
+    without_receipt: [olmo-hybrid-7b, olmo-3-1025-7b]
   blocked_by:
-    - no implementation of the W object, same-prefix negative sampler, TP-MQAR-v2 builder or CPU doctor exists
-    - discovery image 127.0.0.1:5000/cotcodec-research@sha256:15d6abc06fa53ab466087a92107da9c58e469615e2f56a683fefd0a7600277f3 lacks flash-linear-attention; rebuild with fla>=0.5.2 sentencepiece datasets datasketch and re-pin by digest
-    - allenai/Olmo-Hybrid-7B and allenai/Olmo-3-1025-7B are not in models/registry.yaml; qwen3.5-4b and qwen3-0.6b-base are stand-ins only
-    - no compiled job manifest; scripts/submit_docker_research_job.py dry run not executed
-    - parallel-data inventory absent from the repository; FLORES+ gated terms not yet accepted; FineWeb license not re-verified
-    - throughput planning number 150K tok/s/GPU unmeasured; 50M-token smoke run required before the grid
-    - no signed provider-distinct novelty or design review; blind discrimination against 2608.27115 not rerun
+    - the CPU object doctor exists and passes (reference_doctor) but only on synthetic inputs; the TP-MQAR-v2 builder over FLORES+ text, the same-prefix negative sampler, the tokenizer-level subword filter, the deduplication run and the per-arm selection ledger format are not written, and no W, D or P has been read from any real recurrent state
+    - the 57M A0 hybrid model definition (12 layers, 9 GDN + 3 SWA-512, d 512) does not exist, so the pre-registered cos(W, P) read at initialization cannot run; the doctor's regime sweep shows the G2 gate fires for slow decay at 30-token spans on random projections, which raises the priority of that read
+    - the rebuilt image cotcodec-research:999f5583-architecture carries fla 0.5.2 but no tilelang; fla #640 guards the gated GDN backward on Hopper under Triton 3.6.0, so no training or throughput number is valid until the tilelang rebuild is re-pinned by digest (job 354 stopped on this guard)
+    - no compiled job manifests at the three infra/slurm/host-single-node/tesw-*.yaml paths; scripts/submit_docker_research_job.py consumes a manifest, not this contract (pointing it at this file exits with 'runtime must be docker-single-node-discovery-v1', reproduced 2026-09-01), so no dry run has passed
+    - olmo-hybrid-7b and olmo-3-1025-7b are registered but have no artifact receipts; the Olmo replication waits on fetch_open_model.py fetch/verify
+    - text-only recurrent-state path of the Qwen3.5 transformers module and the base checkpoint's config.json not yet smoke-tested in the rebuilt image
+    - parallel-data inventory exists (research/data/gt-parallel-corpus-inventory-2026-09-01.md: customer translation memory excluded under ToS section 3.1; GT-owned 8-locale docs pairs usable as a small evaluation set); FLORES+ gated terms not yet accepted; FineWeb license not re-verified
+    - throughput planning number 150K tok/s/GPU unmeasured (fla_throughput_doctor.py measures 125M and 350M shapes only, not the 57M SWA-512 + GDN shape); 50M-token smoke run required before the selection stage
+    - no signed provider-distinct novelty or design review; blind discrimination against 2608.27115 and 2605.12770 not rerun
 
 required_artifacts:
-  - model and dataset license and immutable revision receipts including Olmo registry entries
-  - sealed TP-MQAR-v2 prompt manifests with key-type labels, hashes and leakage-control results
-  - prefix-floor tables for W and D on the frozen hybrid and fp64 identity doctor output
+  - phase-0 CPU doctor receipt data/results/translation-equivariant-state-writes/phase0-doctor.json (synthetic-case numbers, executability grade) hashed into the evidence bundle, plus its rerun in the pilot container
+  - model and dataset license and immutable revision receipts (qwen3.5-4b-base and qwen3-0.6b-base receipts exist; Olmo receipts when fetched)
+  - sealed TP-MQAR-v2 prompt manifests (test and dev) with key-type labels, hashes, leakage-control results and the enumerated pre-grid test-read ledger
+  - prefix-floor (W vs D) and distinctness (W vs P) cosine tables on the frozen hybrid and on the 57M A0 at initialization and 60M tokens, plus fp64 identity doctor output
   - phase-0 intervention ledger: D-zero and matched perturbation, transport maps with ranks and controls, swaps, N-scaling EM and margin tables
+  - per-arm lambda and A0 LR selection ledger with dev metrics and the resumed-checkpoint provenance of every seed-42 grid run
+  - G1 gate ledger and mediation-cosine tables
   - per-run configs, throughput smoke ledger, LM-loss and bits-per-byte curves, seed-paired difference tables with clustered intervals
   - atomic checkpoint and fresh-job continuation equivalence report

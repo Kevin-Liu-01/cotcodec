@@ -5,38 +5,110 @@ readiness: contract
 claim_scope: portability-protocol
 research_question: >-
   On released gated delta-rule hybrids (Qwen3.5 GDN layers; Kimi-Linear KDA
-  layers as the second base), does the per-token forgetting and write clock
-  charge a high-fertility language proportionally more cumulative gate mass per
-  translated sentence, and does rescaling that clock by the fertility ratio move
-  translation-paired recall through the recurrent state rather than the
-  attention path, with a fertility-specific dose-response that survives
-  partialling out training-resource share?
+  layers as the second base) and on an attention-free recurrent co-primary
+  subject (RWKV-7), does the per-token forgetting and write clock charge a
+  high-fertility language proportionally more cumulative gate mass per
+  translated sentence, and does a common-dose clock rescale (r = 2 against
+  r = 1) raise translation-paired recall that is forced through the recurrent
+  state (prefix-blind readout: no attention hop crosses a sentence boundary)
+  more for high-fertility languages after partialling out training-resource
+  share?
 null_hypothesis: >-
   LM-trained gates already realize Tallec-Ollivier time-warp invariance (the
   cumulative forgetting ratio R_F is within 15 percent of 1 for every
   high-fertility language), or any recall movement under clock rescaling is
-  carried by the full-attention layers, is uniform across languages ("forget
-  less" helps everyone equally), or tracks Common Crawl resource share rather
-  than tokenizer fertility. Under any of these the per-language gate ledger is
-  a measurement result and no clock-normalization recipe is claimed.
+  carried by the full-attention layers (present as written, absent
+  prefix-blind), is uniform across languages (the common-dose gain G_L does
+  not rise with log fertility), tracks Common Crawl resource share rather
+  than tokenizer fertility, or is not reproduced by re-segmented English at
+  matched token count (the wave-5 headroom-invariant comparator, K11). Under
+  any of these the per-language gate ledger is a measurement result and no
+  clock-normalization recipe is claimed.
+
+reference_doctor:
+  implementation: harness/semantic_clock_gate_parity.py
+  command_argv:
+    - uv
+    - run
+    - python
+    - scripts/run_semantic_clock_gate_parity_doctor.py
+    - --output
+    - data/results/semantic-clock-gate-parity/phase0-doctor.json
+  runtime: numpy-cpu
+  receipt: data/results/semantic-clock-gate-parity/phase0-doctor.json
+  test: tests/test_semantic_clock_gate_parity_doctor.py
+  evidence_grade: executability and gate semantics only; every number is a synthetic-case number
+  objects:
+    - Gated DeltaNet gate parametrization, constant, span-oracle and write clock surgery, batched delta-rule scan
+    - per-language cumulative forgetting and write ledger with parity ratios R_F and R_W
+    - prefix-blind within-sentence attention window and query-only mask with an analytic zero-gradient audit
+    - anchored log-ratio span-parity loss with analytic gradient (phase-1 object)
+    - common-dose estimand on EM-point and logit scales, two-regressor partial fertility slope with episode-clustered paired bootstrap, re-segmented-English tracking residual
+    - registered decision rules P1, K1, P3, K2, K3, K4, K7, K7b, K8, K9, K10, K10b, K11
+  registered_cases:
+    - identity surgery at r = 1 with a future-token causality perturbation
+    - token duplication scales forgetting mass exactly and lowers simulator recall
+    - ledger parity positive control (per-token clock) and warp-invariant negative control
+    - prefix-blind window zero gradient with bitwise perturbation invariance
+    - query-only mask is not prefix-blind (the wave-3 defect made executable)
+    - leaky window tamper detected
+    - span-parity loss gradient check, global rescale invariance, per-language constant rescale
+    - mechanistic recall positive control on the NumPy GDN simulator (fertility changes token count only)
+    - mechanistic identity-noise negative control (token count fixed, language difficulty installed)
+    - parametric clock, headroom, identity and null dose-response worlds with a five-seed classification tally
+    - permuted-fertility negative control
+    - kill, hold and exclusion semantics on hand-built fits
+    - degenerate-input rejection
+  gates:
+    - r = 1 surgery reproduces the unhooked scan to 1e-9 and future tokens never change past outputs
+    - forgetting mass scales exactly with the duplication factor and r = k restores it
+    - P1 holds and K1 stays silent for a per-token clock; K1 fires for self-normalizing gates
+    - gradients from any token to keys and values outside its sentence window are exactly zero and the window is prefix-blind; the query-only mask is not prefix-blind; one leaked pair is detected
+    - analytic span-parity gradient matches central differences to 1e-6 and the log-ratio term is invariant to a global rescale of g
+    - clock worlds classify CLAIM, headroom and identity worlds classify K11 although the EM-point slope alone would have claimed, the null world classifies K2, permuted fertility yields no claim
+    - every degenerate input raises GateContractError
+  exclusions:
+    - no claim about Qwen3.5-4B-Base, rwkv7-1.5B-world, Kimi-Linear, NTREX or any real translation; the doctor never loads a checkpoint, tokenizer or corpus
+    - no compute evidence; the doctor runs on a laptop CPU in seconds and is not a container smoke, Slurm dry run or model loop
+    - no novelty or architecture claim from doctor passage
+    - the simulator readout is an argmax over stored values plus noise, not a language-model head, so its dose-response shape is illustrative only
 
 stages:
-  - stage: cpu-hook-and-loss-doctor
+  - stage: cpu-hook-mask-and-qa-doctor
     gpu_hours: 0
+    status: >-
+      synthetic-object half done on 2026-09-01: scripts/run_semantic_clock_gate_parity_doctor.py
+      passes every registered gate (receipt
+      data/results/semantic-clock-gate-parity/phase0-doctor.json); the
+      real-checkpoint half (hooks on the transformers qwen3_5 and rwkv7
+      modeling code, pass-B window on one d = 8 episode, episode builder,
+      re-segmentation rule, round-trip QA pipeline) is not written
     promotion_gate: >-
-      NumPy GDN simulator reproduces baseline logits at r = 1 to tolerance,
-      token duplication x k scales forgetting mass x k, the attention-blind
-      query mask is verified to remove every attention path from query tokens
-      to fact and distractor positions, and the anchored log-ratio span-parity
-      loss passes gradient check and the global-rescale and per-language-rescale
-      invariance tests
+      the reference doctor passes on its registered synthetic cases (done),
+      and on the real checkpoint the hook path reproduces baseline logits at
+      r = 1 to tolerance, token duplication x k scales forgetting mass x k,
+      the prefix-blind within-sentence window and the query-only mask are
+      verified by exactly zero gradient from every token's logits to attention
+      keys and values outside its permitted window in the 8 full-attention
+      layers on one d = 8 episode, the re-segmentation rule produces the
+      target token counts with the BPB cost reported, and the
+      probe-translation round-trip QA pipeline runs end to end on the
+      development templates
   - stage: phase-0-ledger-and-clock-surgery
-    gpu_hours_ceiling: 14
+    gpu_hours_ceiling: 16
     promotion_gate: >-
-      P1 ledger (R_F at least 0.8 f_L), off-ceiling calibration (attention-blind
-      EM(en) at d = 128 at most 95), and the primary partial-fertility slope
-      with a 95 percent interval excluding 0.2 on both the as-written and the
-      attention-blind readout, replicated in sign on the attention-free subject
+      P1 ledger (R_F at least 0.8 f_L); floor hold K7b (prefix-blind EM(en) at
+      d = 8 at least 60) and ceiling hold K7 (prefix-blind EM(en) at d = 128 at
+      most 95) both clear on the readout that carries the primary; the primary
+      partial fertility slope of the common-dose gain G_L (r = 2 against r = 1,
+      prefix-blind, d = 128) has a 95 percent lower bound above 0 and a point
+      estimate of at least 3 EM points per unit log fertility, re-segmented
+      English at matched token count reproduces it (its own slope clears the
+      same minimum and the tracking residual slope D_L = G_L - G_syn(f_L) has
+      a point estimate inside (-3, 3); K11 otherwise), on both co-primary
+      subjects (Qwen3.5-4B-Base prefix-blind and rwkv7-1.5B-world), with no
+      sign disagreement (K9) and K8 not fired; the logit-scale slopes are
+      reported as headroom sensitivity
   - stage: phase-1-matched-from-scratch-span-parity
     parameters: 60M
     gpu_hours_ceiling: new architecture-causal contract required after phase-0 passage (owner estimate 55 GPU-h)
@@ -52,45 +124,81 @@ starting_point:
   arms:
     - name: gdn-hybrid-subject
       mode: frozen-checkpoint-retrofit
-      model_ids: [qwen3.5-4b]
+      model_ids: [qwen3.5-4b-base]
       is_control: false
       purpose: >-
         Frozen 24-GDN plus 8-full-attention hybrid carrying the per-language
-        ledger, the constant and span-oracle decay surgery, and the write
-        surgery. The actual subject is Qwen/Qwen3.5-4B-Base at revision
-        1001bb4d826a52d1f399e183466143f4da7b741b, which is not yet registered;
-        qwen3.5-4b is the closest registered id (same architecture and
-        tokenizer, post-trained) and stands in only until the Base is
-        registered.
-    - name: gdn-hybrid-attention-blind
+        ledger, the constant and span-oracle decay surgery and the write
+        surgery. Pass A (as written) yields the as-written readout and the
+        query-only-mask readout, both secondary since wave 4. The subject is
+        Qwen/Qwen3.5-4B-Base at revision
+        1001bb4d826a52d1f399e183466143f4da7b741b, registered as
+        qwen3.5-4b-base (models/registry.yaml); an artifact receipt is
+        reported under /home/kevin/cotcodec-runs/hf-cache/cotcodec-receipts/
+        on fal-h100-01 (Slurm job 356) and has not been re-verified by this
+        contract's owner.
+    - name: gdn-hybrid-prefix-blind
       mode: frozen-checkpoint-retrofit
-      model_ids: [qwen3.5-4b]
+      model_ids: [qwen3.5-4b-base]
       is_control: true
       purpose: >-
-        Same checkpoint, same prefix state and KV cache; at query time the 8
-        full-attention layers are masked from every fact and distractor
-        position so exact-match recall must flow through the GDN state. Every
-        dose-response cell is read out both ways from one shared prefix pass.
+        Same checkpoint, second prefix pass (pass B): for every token of the
+        episode (fact block, each distractor sentence, query) the 8
+        full-attention layers attend only within the token's own sentence, so
+        no attention hop crosses a sentence boundary and every cross-sentence
+        dependency, including any rehearsal of a fact during the distractor
+        span, must pass through the GDN recurrent state. Carries the primary
+        readout; subject to the floor hold K7b (EM(en) at d = 8 at least 60)
+        and the ceiling hold K7. Chosen over masking only the fact keys because
+        that leaves an attention relay path across distractor positions.
     - name: kda-hybrid-subject
       mode: frozen-checkpoint-retrofit
       model_ids: [kimi-linear-48b-a3b-base]
       is_control: false
       purpose: >-
         Second registered base for the portability claim: the ledger and the
-        constant decay surgery applied to channel-wise KDA decay (ledger plus
-        the r grid at d = 32 only, two GPUs, non-publication lane because of
-        trust_remote_code).
+        constant decay surgery applied to channel-wise KDA decay at d = 32 with
+        r in {1, 2} on both passes (r in {0.5, 4} on pass B optional), two
+        GPUs, non-publication lane because of trust_remote_code. Portability
+        is scored as P1 replicating on KDA and the sign of the prefix-blind
+        fertility slope at d = 32 agreeing with Qwen; levels are never compared
+        across subjects.
     - name: attention-free-recurrent-subject
       mode: frozen-checkpoint-retrofit
-      model_ids: [mamba-130m-hf]
+      model_ids: [rwkv7-1.5b-world]
       is_control: true
       purpose: >-
-        Registered attention-free placeholder used only to smoke the Delta_t
-        clock-surgery hook path on a selective-SSM checkpoint (English-only, so
-        it cannot carry the multilingual readout). The attention-free
-        multilingual subject that phase 0 actually needs is
-        fla-hub/rwkv7-1.5B-world, which must be registered with a pinned
-        revision and license before enablement (see execution.blocked_by).
+        Attention-free co-primary subject fla-hub/rwkv7-1.5B-world at revision
+        004140baad7a62d49a26d97508ef19cf09672328, registered as
+        rwkv7-1.5b-world (card license apache-2.0, inheritance from
+        BlinkDL/rwkv-7-world unconfirmed; card lists 8 languages, grid
+        coverage unverified; trust_remote_code, so the custom modeling code
+        must be reviewed and vendored before execution). Carries the same
+        primary estimand with fertility re-measured on the RWKV World
+        tokenizer; becomes the sole primary if K7b fires on Qwen, and Qwen
+        prefix-blind becomes the sole primary if rwkv7 loses the 12-of-16
+        floor (K10b, wave-5 symmetric fallback). An artifact receipt is
+        reported under /home/kevin/cotcodec-runs/hf-cache/cotcodec-receipts/
+        on fal-h100-01 (Slurm job 356), not re-verified by this owner.
+    - name: synthetic-fertility-english-control
+      mode: frozen-checkpoint-retrofit
+      model_ids: [qwen3.5-4b-base, rwkv7-1.5b-world]
+      is_control: true
+      purpose: >-
+        Wave-5 repair (both wave-4 reviewers' highest-impact fix): the same
+        English episodes (fact block and NTREX distractors, episode ids fixed)
+        re-segmented so their token count equals f_L times the canonical
+        English count for every non-English grid fertility f_L (forced
+        sub-word or character splitting of a pre-registered fraction of
+        words; rule fixed before the first GPU job), run prefix-blind (pass
+        B) at r in {1, 2} and d = 128 as a never-cut cell on Qwen3.5-4B-Base
+        (all 15 f_L values) and at f in {1.5, 2.0, 2.7} on rwkv7-1.5B-world.
+        Token count is the only manipulated variable: language, tokenizer,
+        script, resource share and translation quality are fixed, so the
+        comparator is headroom-invariant. Delivers G_syn(f), the baseline
+        token-count cost slope of logit EM(r = 1) on log f, the tracking
+        residual D_L = G_L - G_syn(f_L) and the BPB of the re-segmented text
+        (OOD cost visible).
 
 intervention:
   mechanism: >-
@@ -100,21 +208,38 @@ intervention:
     span-oracle decay surgery g'_t = g_t / r_s with r_s the aligned NTREX
     sentence token-count ratio; write surgery beta'_t = 1 - (1 - beta_t)^(1/r).
     Readout is exact-match recall of script-neutral 4-digit codes after d
-    consecutive n-way parallel distractor sentences, taken as written and with
-    the attention-blind query mask. The primary estimand is the partial slope
-    of log r*(L) - log r*(en) on log fertility(L) controlling for log Common
-    Crawl page share across 15 non-English languages chosen to decorrelate
-    fertility from resourcedness (Russian, Turkish, Malay added). The
+    consecutive n-way parallel distractor sentences, taken three ways: as
+    written and with the query-only mask from pass A (secondary), and
+    prefix-blind from pass B (primary: within-sentence attention window for
+    the whole episode). The primary estimand is the partial slope beta_f of the
+    common-dose paired gain G_L = EM_L(r = 2) - EM_L(r = 1) at d = 128 on
+    log fertility(L) controlling for log Common Crawl page share across 16
+    languages (English at log fertility 0) chosen to decorrelate fertility
+    from resourcedness, tested as a conjunction on Qwen3.5-4B-Base
+    prefix-blind and rwkv7-1.5B-world, and (wave 5) identified against
+    headroom and language identity by the synthetic-fertility English
+    comparator: the same English episodes re-segmented to each f_L must show
+    a dose-response slope of their own and the tracking residual
+    D_L = G_L - G_syn(f_L) must have no fertility slope beyond the minimum
+    worthwhile effect (K11 otherwise). Logit-scale slopes are reported as
+    headroom sensitivity, never as a kill, because the doctor's simulator
+    shows the logit gain of a pure per-token clock is form-dependent. The
+    quadratic argmax r*(L) is descriptive with a boundary rule. Probe facts
+    pass a round-trip chrF and code-survival check before use. The
     training-time span-parity loss on gate statistics is reserved for the
-    separately contracted phase 1.
+    separately contracted phase 1. All phase-0 objects exist as CPU code in
+    harness/semantic_clock_gate_parity.py with a passing synthetic-case
+    doctor (reference_doctor); the real-checkpoint hooks are not written.
   trainable_components:
-    - none in phase 0; all checkpoint weights are frozen and only forward hooks on g_t and beta_t change
+    - none in phase 0; all checkpoint weights are frozen and only forward hooks on g_t and beta_t (and the attention window in pass B) change
     - phase 1 only (separate contract) gate parameters a-projection b-projection A_log and dt_bias under the anchored log-ratio span-parity loss
   frozen_components:
-    - every checkpoint weight tokenizer and generation setting of all four subjects
+    - every checkpoint weight tokenizer and generation setting of all subjects
     - NTREX-128 distractor runs episode ids fact templates and code assignment per seed
-    - the r grid the d grid K = 8 and the attention-blind mask definition, fixed before the first GPU job
-    - fertility and Common Crawl share covariates measured and frozen before any recall run
+    - the r grid the d grid {8, 32, 128} K = 8 the within-sentence window definition and the query-only mask definition, fixed before the first GPU job
+    - the K7b floor of 60 the chrF redraw threshold of 50 the 25 percent redraw cap and the 12-of-16 language minimum, fixed before the first GPU job
+    - fertility and Common Crawl share covariates measured and frozen before any recall run on every subject tokenizer
+    - the synthetic-fertility English re-segmentation rule (which words are split, how, per target f_L) and the tracking decision band (minimum worthwhile slope 3 EM points per unit log fertility) fixed before the first GPU job
 
 data:
   train:
@@ -126,11 +251,14 @@ data:
       NTREX commit 468c6b69c7f6a75d31d4743d9daba2af566cc18d; 1,997 sentences in
       each of the 16 languages; probe facts from 12 English templates x 300
       noun phrases with fresh 4-digit codes per seed, translated with
-      facebook/nllb-200-distilled-600M at a pinned revision
+      facebook/nllb-200-distilled-600M at a pinned revision, back-translated
+      with the same checkpoint for the round-trip chrF check, templates held
+      for human verification
   development:
     source: >-
       NTREX-128 sentence ids 1-997 in every language: EM(en) calibration curve
-      over d, choice of the quadratic fit window, hook and mask debugging
+      over d on all three readouts, K7b floor and K7 ceiling checks, hook, mask
+      and QA-pipeline debugging; thresholds are pre-set and not tuned here
     identity: >-
       sentence-id half fixed in the evidence bundle; distractor runs never
       straddle id 997; development templates and noun phrases disjoint from
@@ -138,7 +266,7 @@ data:
   test:
     source: >-
       NTREX-128 sentence ids 998-1,997 for every pre-registered phase-0
-      endpoint (P1-P5, K1-K8); FLORES+ devtest
+      endpoint (P1-P5, K1-K10); FLORES+ devtest
       (openlanguagedata/flores_plus at 5fec6c13f9e5a4db2f745d4ec0d7c9721ddc4f06)
       sealed and untouched for the phase-1 held-out endpoint
     identity: >-
@@ -149,20 +277,27 @@ data:
   contamination_checks:
     - grep every seeded 4-digit code string against all NTREX and FLORES+ text in every language before use and redraw collisions
     - keep every translation of one NTREX sentence and one probe fact in exactly one split and one episode id
-    - two-forward-pass prefix-invariance audit of the hooks and the attention-blind mask (arXiv 2608.22876) on 200 episodes per subject
+    - two-forward-pass prefix-invariance audit of the hooks, the prefix-blind window and the query-only mask (arXiv 2608.22876) on 200 episodes per subject
+    - round-trip chrF and code-survival check on every translated probe fact with the redraw log archived; per-language redraw rate reported
     - report every language and script separately and never only the macro slope
 
 controls:
   - name: r-equals-1-identity-surgery
     matches: [checkpoint, tokenizer, episode-ids, decoding]
-  - name: attention-blind-query-mask
+  - name: prefix-blind-within-sentence-window
+    matches: [checkpoint, episode-ids, surgery-setting, d, decoding]
+  - name: attention-blind-query-mask-secondary
     matches: [checkpoint, prefix-state, episode-ids, surgery-setting]
-  - name: attention-free-multilingual-subject
+  - name: attention-free-co-primary-subject
     matches: [languages, episode-ids, d-grid, r-grid]
   - name: english-under-the-same-r-interaction
-    matches: [r, d, episode-ids]
+    matches: [r, d, episode-ids, readout]
+  - name: synthetic-fertility-english-resegmentation
+    matches: [language, content, episode-ids, tokenizer, resource-share, translation-quality, d, r, readout]
   - name: fertility-resourcedness-decorrelated-language-grid
     matches: [content, d, K, decoding]
+  - name: probe-translation-round-trip-qa
+    matches: [templates, noun-phrases, codes, chrf-threshold]
   - name: span-oracle-versus-constant-rescale
     matches: [checkpoint, episode-ids, mean-log-decay-shift]
   - name: write-only-and-decay-plus-write-surgery
@@ -174,65 +309,102 @@ controls:
 
 primary_endpoint:
   metric: >-
-    partial slope of log r*(L) - log r*(en) on log fertility(L) controlling for
-    log Common Crawl page share, from attention-blind exact-match recall at
-    d = 128 on the sealed NTREX half
+    partial slope beta_f of the common-dose paired EM gain
+    G_L = EM_L(r = 2) - EM_L(r = 1) at d = 128 on the prefix-blind readout,
+    regressed on log fertility(L) controlling for log Common Crawl page share
+    across 16 languages (English at log fertility 0), on the sealed NTREX
+    half, together with its reproduction by re-segmented English at matched
+    token count (slope of G_syn on log f and the tracking residual
+    D_L = G_L - G_syn(f_L)); conjunction across the two co-primary subjects
   direction: maximize
-  minimum_effect: 0.5
+  minimum_effect: 3
   unit_of_analysis: >-
-    language (15 non-English), with r*(L) estimated per language from
-    episode-paired EM curves over 600 episodes per cell (3 seeds x 200)
+    language (16, English included) per co-primary subject, with G_L estimated
+    per language from episode-paired EM over 600 episodes per cell (3 seeds x
+    200); minimum_effect is in EM points per unit log fertility
   aggregation: >-
-    two-regressor OLS across languages with the 2,000-resample episode
-    bootstrap propagated into r*(L); marginal and partial slopes both reported;
-    kills must replicate in sign on the attention-free subject
+    two-regressor OLS across languages with the 2,000-resample
+    episode-clustered bootstrap propagated into G_L; per subject; the claim
+    requires both subjects' 95 percent lower bounds above 0 with estimates at
+    least 3; the kill uses the inverse-variance pooled slope with Cochran's Q
+    heterogeneity reported; marginal and partial slopes both reported;
+    leave-one-out over mya and the logit-EM re-fit reported as sensitivity;
+    the claim additionally requires the synthetic-fertility English slope to
+    clear the same minimum with its lower bound above 0 and the tracking
+    residual slope to have a point estimate inside (-3, 3) EM points per unit
+    log fertility (a residual whose interval lies entirely outside that band
+    is K11; a residual estimate outside the band whose interval reaches it is
+    the pre-registered inconclusive band that triggers the second episode
+    block); the decision interval for every slope is the union of the
+    analytic OLS t-interval and the episode-clustered bootstrap interval, as
+    implemented in harness/semantic_clock_gate_parity.py
 
 statistics:
   seeds: [42, 43, 44]
   interval: >-
     episode-clustered paired bootstrap 95 percent intervals for every EM
-    difference; bootstrap interval for r*(L); bootstrap interval for the
-    partial slope; pooled TOST across languages with margin 3 EM points
+    difference and for G_L; bootstrap interval for the partial slope per
+    subject and pooled; bootstrap interval for the descriptive r*(L) with
+    boundary censoring; pooled TOST across languages with margin 3 EM points
   multiplicity: >-
-    one primary endpoint (partial fertility slope, attention-blind, d = 128);
-    Holm correction across the pre-registered secondary families P1, P2, P4,
-    P5; per-language TOST results are descriptive only
+    one primary estimand (partial fertility slope of G_L, prefix-blind,
+    d = 128, with its token-count reproduction) tested as a conjunction on
+    two co-primary subjects, so no alpha inflation for the claim; Holm
+    correction across the pre-registered secondary families P1, P2, P4, P5;
+    descriptive analyses (quadratic r*(L), linear dEM/dlog r over
+    {0.5, 1, 2}, query-only-mask readout, d = 32 cells, chrF third-covariate
+    fit, logit-scale slopes and logit-scale tracking residual) are never
+    decision-bearing
 
 falsifiers:
   - Kill (K1) if R_F is within 15 percent of 1 for every language with fertility at least 1.5; gates are already warp-invariant and only the ledger is published.
-  - Kill (K2) if the partial fertility slope's 95 percent interval upper bound is below 0.5 on both readouts and the sign replicates on the attention-free subject.
-  - Reclassify (K2b) if the dose-response is present as written but absent under the attention-blind mask; recall is attention-carried and the result is hybrid localization, not a clock effect.
-  - Kill (K3) if the English interaction gain at r = f_L is at most 2 EM points for every high-fertility language; "forget less" helps everyone equally.
+  - Kill (K2) if the inverse-variance pooled partial fertility slope of G_L across the two co-primary subjects has a 95 percent upper bound below 3 EM points per unit log fertility and neither subject's own interval excludes 0 with a positive estimate; the clock is not the recall bottleneck.
+  - Reclassify (K2b) if the as-written fertility slope of G_L excludes 0 but the prefix-blind pooled upper bound is below 3; recall is attention-carried and the result is hybrid localization, not a clock effect.
+  - Kill (K3) if G_L minus G_en at r = 2 and the r = f_L interaction against English are both at most 2 EM points for every high-fertility language; "forget less" helps everyone equally.
   - Kill (K4) if Thai, Korean, Chinese and Malay recall gaps are within 3 points of the Tamil and Bengali gaps; the gap is script or data, not fertility.
   - Demote (K5) if pooled TOST shows span-oracle within 3 EM points of the constant rescale; the parallel-view training mechanism is dropped and only the ledger plus per-language recipe survives.
-  - Kill (K6) if the prefix-invariance audit finds the probe, hooks or mask leak.
-  - Hold (K7) if attention-blind EM(en) at d = 128 exceeds 95; the probe is on ceiling and d must be extended before any surgery claim.
-  - Kill (K8) if the marginal fertility slope excludes 0.2 but the partial slope's interval includes 0; the effect is resourcedness, not fertility.
+  - Kill (K6) if the prefix-invariance audit finds the probe, hooks, window or mask leak.
+  - Hold (K7) if prefix-blind EM(en) at d = 128 exceeds 95; the probe is on ceiling and d must be extended before any surgery claim.
+  - Hold (K7b) if prefix-blind EM(en) at d = 8 and r = 1 is below 60 on Qwen3.5-4B-Base; the Qwen prefix-blind cells become secondary and rwkv7-1.5B-world is the sole primary subject with no GDN-KDA portability claim; if rwkv7 is also below 60 the probe is redesigned before any surgery claim.
+  - Hold (K10b, wave 5, symmetric to K7b) if rwkv7-1.5B-world retains fewer than 12 of 16 languages under K10 while Qwen3.5-4B-Base clears K7b; Qwen prefix-blind is the sole primary subject with no GDN-RWKV-7 portability claim; if both subjects lose their floor the probe is redesigned before any surgery claim.
+  - Kill (K8) if the marginal fertility slope excludes 0 but the partial slope's interval includes 0; the effect is resourcedness, not fertility.
+  - No-claim (K9) if the two co-primary subjects' slope intervals exclude 0 with opposite signs; the result is subject-specific and no portable recipe is claimed.
+  - Exclude (K10) any language whose probe redraw rate exceeds 25 percent or whose prefix-blind EM at d = 8 is below 60 on a subject, with the count reported; if fewer than 12 of 16 languages remain on a subject, that subject cannot carry the primary.
+  - Kill (K11, wave 5) if the partial fertility slope of G_L clears its minimum but re-segmented English at matched token count does not reproduce it: the slope of G_syn on log f fails to clear 3 EM points per unit log fertility with its lower bound above 0, or the tracking residual slope of D_L = G_L - G_syn(f_L) has a 95 percent interval lying entirely outside (-3, 3); the fertility slope is language identity or headroom, not the per-token clock, and the outcome is K2-class with no claim.
+  - Hold (inconclusive tracking band, wave 5) if the cross-language and synthetic-English slopes both clear but the tracking residual estimate lies outside (-3, 3) with an interval that still reaches the band; the second episode block (contract amendment, about 3.6 GPU-h) is the pre-registered remedy and no claim is made meanwhile.
 
 execution:
   enabled: false
-  max_gpu_hours: 14
+  max_gpu_hours: 16
   gpus: 2
   checkpoint_to_persistent_storage: true
   fresh_job_resume_test: true
   checkpoint_interval_minutes: 10
   blocked_by:
-    - no implementation exists yet for the gate hooks, the attention-blind query mask, the episode builder, the ledger or the doctors
-    - the discovery image (127.0.0.1:5000/cotcodec-research@sha256:15d6abc06fa53ab466087a92107da9c58e469615e2f56a683fefd0a7600277f3) has no fla; a new image with fla 0.5.2 or newer and the new code must be built and re-pinned by digest
-    - register Qwen/Qwen3.5-4B-Base at 1001bb4d826a52d1f399e183466143f4da7b741b (plus the 0.8B and 2B Base ladder) in models/registry.yaml; qwen3.5-4b is only the post-trained placeholder
-    - register fla-hub/rwkv7-1.5B-world with a pinned revision and confirmed license; mamba-130m-hf is an English-only hook-smoke placeholder and cannot carry the multilingual readout
-    - re-measure fertility and Common Crawl share for all 16 languages on every subject tokenizer and freeze them in the evidence bundle before any recall run
+    - the phase-0 objects exist as CPU code with a passing synthetic-case doctor (harness/semantic_clock_gate_parity.py; reference_doctor), but the real-checkpoint hook path on the transformers qwen3_5 and rwkv7 modeling code, the pass-B within-sentence window on the real model, the episode builder, the re-segmentation rule for synthetic-fertility English, the round-trip QA pipeline and the ledger extraction are not written
+    - the fla-bearing image exists (cotcodec-research:999f5583-architecture, image ID sha256:9d832a59fe348d149d2e4587ac6af90223e2956ebb646d7b19295298954ca5ad, repo digest 127.0.0.1:5000/cotcodec-research@sha256:bde90daa78c26cd2fb9d05036b0c9f9613c2386b9d7561816b541d2736c79f5d; torch 2.11.0+cu128, transformers 5.15.0, fla 0.5.2, triton 3.6.0) but predates every hook; the pilot image must be rebuilt from the code that contains them and re-pinned by digest; tilelang is being added to the architecture extra because fla 0.5.2 guards the gated GDN backward on Hopper under Triton < 3.7.1 (fla issue 640), which binds the phase-1 training but not the forward-only phase 0
+    - qwen3.5-4b-base and rwkv7-1.5b-world are registered at the pinned revisions and artifact receipts are reported under /home/kevin/cotcodec-runs/hf-cache/cotcodec-receipts/ on fal-h100-01 (Slurm job 356, research/frontier-systems-program-2026-09-01.md); this owner has not opened the receipts; the kimi-linear-48b-a3b-base receipt is pending; the Qwen3.5-0.8B and 2B Base ledger-only ladder is unregistered and optional
+    - rwkv7-1.5b-world is trust_remote_code: its custom modeling code must be reviewed and vendored before execution, and the card's apache-2.0 license inheritance from BlinkDL/rwkv-7-world is unconfirmed
+    - measure fertility on the RWKV World tokenizer and re-measure fertility and Common Crawl share for all 16 languages on every subject tokenizer; freeze them in the evidence bundle before any recall run
+    - archive fert.py fert2.py fert3.py and the feasibility fert.py at the SHA-256 values recorded in the proposal claim registry (CR-05) plus an HTTP-receipted snapshot of the Common Crawl language statistics page; until then CR-05 to CR-08 are not re-derivable from the repository
+    - human verification of the 12 probe templates in each of the 15 non-English languages (180 translations) before the sealed run; General Translation is the optional resource and nothing has been verified
+    - blind discrimination against Hirschi 2604.02474 and DeciMamba 2406.14528 has not been run; the existing 0.9 was against the GDN substrate and the Novelty doctor cannot PASS before the rerun
     - write the docker-single-node-discovery-v1 job manifest for scripts/submit_docker_research_job.py and pass its dry run
-    - NLLB-200 probe translations are CC-BY-NC-4.0 (research only) and the rwkv7 card license is unconfirmed; record both decisions
+    - NLLB-200 probe translations are CC-BY-NC-4.0 (research only); record the decision
     - Kimi-Linear custom modeling code must be reviewed and vendored before the KDA arm loads on two GPUs
-    - causality and prefix-invariance doctors are not written; the CPU stage must pass before the first GPU job
+    - causality, prefix-invariance, prefix-blind window and QA doctors are not written; the CPU stage must pass before the first GPU job
+    - a second episode block for an inconclusive primary or an inconclusive tracking band (about 3.6 GPU-h) exceeds the 16 GPU-h ceiling and needs a contract amendment before it can run
+    - the synthetic-fertility English re-segmentation rule (fraction of words split, split method per target f_L) and its BPB cost are specified only in prose; the rule must be frozen and its token counts verified on both subject tokenizers before the first GPU job
 
 required_artifacts:
   - model revision receipts license decisions and the rebuilt image digest with fla version
-  - per-language fertility Common Crawl share and span-ratio CV table with the measurement scripts
+  - per-language fertility (per subject tokenizer) Common Crawl share and span-ratio CV table with the archived measurement scripts and their SHA-256 values
   - per-layer per-head cumulative forgetting and write ledger for every subject and language with sentence-clustered intervals
-  - episode manifest with seeds codes template ids distractor runs and both readouts per episode
-  - EM(en) calibration curve over d and the full dose-response table with bootstrap intervals for r*(L)
-  - marginal and partial slope fits with the covariate matrix and the attention-free replication
+  - episode manifest with seeds codes template ids distractor runs and all three readouts per episode
+  - probe-translation QA table with per-fact round-trip chrF code survival the redraw log and per-language redraw rates plus the human-verification record for the templates
+  - EM(en) calibration curve over d on every readout with the K7b floor and K7 ceiling report and the full dose-response table with bootstrap intervals for G_L and the censored descriptive r*(L)
+  - marginal and partial slope fits per subject and pooled with the covariate matrix heterogeneity statistic leave-one-out and logit-scale sensitivity fits
   - bits-per-byte under every surgery setting per language
-  - hook mask and prefix-invariance doctor outputs plus the checkpoint and fresh-job continuation equivalence report
+  - hook window mask and prefix-invariance doctor outputs plus the checkpoint and fresh-job continuation equivalence report
+  - phase-0 object doctor receipt (data/results/semantic-clock-gate-parity/phase0-doctor.json, status PHASE0_OBJECT_DOCTOR_PASS) re-run inside the pilot image with its payload hash recorded
+  - synthetic-fertility English table per subject: re-segmentation rule, achieved token count per target f_L, BPB of the re-segmented text, EM at r in {1, 2}, G_syn(f), the baseline token-count cost slope, the tracking residual fits D_L with intervals and the K11 or inconclusive-band verdict

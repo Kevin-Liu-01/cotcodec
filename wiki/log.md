@@ -3682,3 +3682,16 @@ v3. V1/v2 remain superseded development history.
   all four: no executable pilot. Wave 5 (executable CPU doctors) launched.
 - `sudo -n` requires a password on the host; the Slurm/Pyxis upgrade stays
   admin work.
+## 2026-09-01 (close) — Measured throughput, gauntlet wave 5, honest exit
+
+- Throughput doctor on the tilelang image (job 359, one H100, eager): 134M GDN
+  3:1 hybrid 282,501 tok/s (24.6% MFU), 422M 73,045 tok/s (19.8% MFU); the
+  default-geometry run (job 358) gave 104k tok/s / 7.5% MFU and is superseded.
+  Sealed as `research/evidence/infrastructure/fla-throughput-h100-2026-09-01.json`.
+  Budget ledgers must use 20–25% eager MFU, not the assumed 40%.
+- Wave 5 implemented executable CPU phase-0 doctors for directions 19–22 (61 new
+  tests; 80 pass suite-wide; Ruff clean; 9/9 contracts PASS with
+  `reference_doctor`). Scores 65 / 64 / 63 / 62. Best per wave 66 → 65 → 65: the
+  gauntlet's exit 5 fires and the loop closes for this session at five
+  hash-chained audit rows. Remaining binding defect for every direction: the
+  decisive GPU screen has no compiled discovery manifest yet.
