@@ -22,10 +22,16 @@ if [[ ! "${COTCODEC_IMAGE_ID}" =~ ^sha256:[0-9a-f]{64}$ ]]; then
 fi
 out="/home/kevin/cotcodec-runs/throughput/${SLURM_JOB_ID}"
 mkdir -m 0755 -p "${out}"
+# Discovery-lane overlay: run the checkout's doctor script (read-only) over the
+# image's copy so a script fix does not require an image rebuild; record it.
+repo="${COTCODEC_REPO:-/home/kevin/cotcodec}"
+script_sha="$(sha256sum "${repo}/scripts/fla_throughput_doctor.py" | cut -d' ' -f1)"
+echo "{\"image_id\": \"${COTCODEC_IMAGE_ID}\", \"script_overlay\": \"${repo}/scripts/fla_throughput_doctor.py\", \"script_sha256\": \"${script_sha}\", \"checkout\": \"$(git -C "${repo}" rev-parse HEAD)\"}" > "${out}/provenance.json"
 for shape in gdn-hybrid-125m gdn-hybrid-350m; do
   docker run --rm --network=none \
     --gpus "\"device=${CUDA_VISIBLE_DEVICES}\"" \
     -v "${out}:/outputs" \
+    -v "${repo}/scripts/fla_throughput_doctor.py:/workspace/cotcodec/scripts/fla_throughput_doctor.py:ro" \
     "${COTCODEC_IMAGE_ID}" \
     python scripts/fla_throughput_doctor.py --shape "${shape}" --seq-len 2048 \
       --output "/outputs/${shape}.json" | tail -20

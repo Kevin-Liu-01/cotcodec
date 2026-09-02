@@ -84,7 +84,9 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser.add_argument("--shape", choices=sorted(SHAPES), default="gdn-hybrid-125m")
     parser.add_argument("--seq-len", type=int, default=2048)
     parser.add_argument("--batch", type=int, default=0, help="0 = the shape's registered batch")
-    parser.add_argument("--head-dim", type=int, default=0, help="0 = hidden // heads (fla default is 256)")
+    parser.add_argument(
+        "--head-dim", type=int, default=0, help="0 = hidden // heads (fla default is 256)"
+    )
     parser.add_argument("--expand-v", type=int, default=1)
     parser.add_argument("--warmup-steps", type=int, default=5)
     parser.add_argument("--timed-steps", type=int, default=20)
@@ -168,7 +170,8 @@ def measure(plan: Plan, head_dim: int, expand_v: int) -> dict[str, object]:  # p
     torch.manual_seed(0)
     model = _build_model(plan, head_dim, expand_v).to(device=device, dtype=torch.bfloat16)
     actual_params = sum(p.numel() for p in model.parameters())
-    actual_flops_per_token = 6 * actual_params + (plan.flops_per_token - 6 * plan.params_millions * 1e6)
+    attention_flops = plan.flops_per_token - 6 * plan.params_millions * 1e6
+    actual_flops_per_token = 6 * actual_params + attention_flops
     optimizer = torch.optim.AdamW(model.parameters(), lr=1e-4)
     tokens = torch.randint(0, plan.vocab, (plan.batch, plan.seq_len), device=device)
 
