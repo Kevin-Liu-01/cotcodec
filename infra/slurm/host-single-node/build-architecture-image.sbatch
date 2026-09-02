@@ -30,8 +30,10 @@ tag="cotcodec-research:${git_sha:0:8}-architecture"
 build_root="/home/kevin/cotcodec-runs/builds/${git_sha:0:8}-architecture-${SLURM_JOB_ID}"
 mkdir -m 0755 -p "${build_root}"
 
+# The host's default bridge network has no DNS; BuildKit RUN steps need host networking.
 docker build \
   --pull=false \
+  --network=host \
   --progress=plain \
   --build-arg "GIT_SHA=${git_sha}" \
   --build-arg "SOURCE_TREE_SHA256=${source_sha}" \
