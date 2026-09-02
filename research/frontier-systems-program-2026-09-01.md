@@ -268,12 +268,14 @@ Stage-0 execution on `fal-h100-01` (discovery lane, no root, no publication clai
 | `transformer-1.3b-100b` | `d6f66f4181fa…` | `7b6675e3f5e9dccd…` | 2.73 GB |
 | `transformer-340m-10b` | `b838e8e11784…` | `8bd8a855c1f85260…` | 0.69 GB |
 
-- **Throughput doctor blocked by a kernel-correctness guard** (job 354):
+- **First measured throughput** (job 358, image `cotcodec-research:0b3ecef0-architecture` = `sha256:3804466639c13f132be4b0369de4d3395b9d5ea2d3dc100cd38884c75197fe29`, local-registry digest `sha256:02965f3d…`, fla 0.5.2 + tilelang 0.1.13, one H100 80GB): the 125M-planned GDN 3:1 hybrid (109.5M planned parameters; fla default 256-dim heads inflate the real count) trains at **104,185 tokens/s**, 0.314 s/step at batch 16 × 2048, 74 TFLOPS achieved, **7.5% MFU** against the dense BF16 peak, 48 GiB peak memory, eager mode, no compile, no fused cross-entropy. The 350M shape ran out of memory at batch 16. Consequence: every 2026-09-01 budget ledger assumed ~40% MFU ("125M to 1000N tokens ≈ 8 h at 40% MFU"); at the measured rate 1000N tokens for 125M is ≈ 330 GPU-hours on one H100 (≈ 42 h on eight at perfect scaling), a 5× shortfall before any optimisation. A corrected geometry (head_dim = hidden/heads, expand_v 1, batch 8 for 350M) is being re-measured; until an optimised number exists, proposals must budget from the measured 7.5%, not the assumed 40%.
+- **Throughput doctor blocked by a kernel-correctness guard** (job 354, before tilelang):
   `fla 0.5.2` raises "Triton >= 3.4.0 and < 3.7.1 on Hopper GPUs produces
   incorrect results for gated chunk_bwd_dqkwg (see fla #640); upgrade Triton
   to >= 3.7.1 or install tilelang". torch 2.11.0 pins triton 3.6.0, so the
-  supported path is `tilelang`; it is being added to the `architecture` extra
-  and the image rebuilt. Consequence for every proposal: any GDN training
+  supported path is `tilelang`; it was added to the `architecture` extra and
+  the image rebuilt as `cotcodec-research:0b3ecef0-architecture` (job 357),
+  after which the gated backward ran. Consequence for every proposal: any GDN training
   number produced with fla 0.5.2 on H100 without tilelang is invalid, and the
   budget ledgers' MFU stays unmeasured until the doctor runs.
 - **Credentials.** Moonshot's console is signed in (no key exists yet; the

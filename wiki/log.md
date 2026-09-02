@@ -3658,3 +3658,27 @@ v3. V1/v2 remain superseded development history.
   `research/infrastructure/h100-publication-upgrade-2026-09-01.md`.
 - Compute: `fal-h100-01` fast-forwarded to `52bac22`; eight H100s idle; nothing
   was executed on the GPUs and no Tinker call was made (no key present).
+## 2026-09-01 (later) — Accounts, data governance, Stage-0 execution, gauntlet wave 4
+
+- Used Kevin's authenticated GitHub access to inventory the `generaltranslation`
+  organization: ToS §3.1 licenses customer data only to provide the Service and
+  generate Outputs; the internal privacy policy forbids repurposing without a
+  new lawful basis and notice; the Records of Processing Activities record no
+  research purpose. Customer translation memory is therefore excluded from
+  every pilot; GT-owned 8-locale site/docs translations (99 pages × 8 locales)
+  remain usable. Inventory: `research/data/gt-parallel-corpus-inventory-2026-09-01.md`.
+- Browser sessions: Moonshot console signed in (no key; creating one needs a
+  human click), Tinker and Hugging Face signed out. No password, sign-in, or
+  key entry was performed. `~/.config/cotcodec/secrets.env` template created.
+- Registered fifteen pilot checkpoints with pinned revisions; fetched ten with
+  receipts on `fal-h100-01` (job 356). Rebuilt the architecture image with
+  `flash-linear-attention` 0.5.2 (job 353, `cotcodec-research:999f5583-architecture`;
+  the Docker bridge lacks DNS, so `--network=host`). The throughput doctor
+  (job 354) was stopped by fla's Hopper guard for gated `chunk_bwd_dqkwg` under
+  Triton 3.6.0 (fla #640); `tilelang` was added and the image rebuild resubmitted
+  (job 357). Nothing scientific ran on a GPU.
+- Gauntlet wave 4: repair owners applied the wave-3 fixes; fresh reviewers
+  scored 65 / 63 / 62 / 60 (one gain, three dips, recorded). Binding defect for
+  all four: no executable pilot. Wave 5 (executable CPU doctors) launched.
+- `sudo -n` requires a password on the host; the Slurm/Pyxis upgrade stays
+  admin work.
