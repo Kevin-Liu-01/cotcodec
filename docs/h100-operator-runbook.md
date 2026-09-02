@@ -114,6 +114,24 @@ state. A SIGUSR1 checkpoint is not enough: submit a fresh successor job using
 `resume_from_job_id` and `resume_subpath`, then compare it with an uninterrupted
 continuation before scaling.
 
+## Stage-0 entry points added 2026-09-01 (discovery lane, no root)
+
+| Job | Script | Needs | Produces |
+|---|---|---|---|
+| Rebuild the architecture base image with `flash-linear-attention` 0.5.2 | `infra/slurm/host-single-node/build-architecture-image.sbatch` (CPU, network on) | clean checkout at the target commit; local registry `127.0.0.1:5000` | `cotcodec-research:<sha8>-architecture`, receipt with image ID and repo digest under `/home/kevin/cotcodec-runs/builds/` |
+| Measure training throughput / MFU for the small hybrid shapes | `infra/slurm/host-single-node/fla-throughput-doctor.sbatch` (1 H100) | `COTCODEC_IMAGE_ID` | JSON receipts under `/home/kevin/cotcodec-runs/throughput/<job>/` |
+| Fetch pilot checkpoints with receipts | `infra/slurm/host-single-node/fetch-pilot-models.sbatch` (1 H100, network on) | `COTCODEC_IMAGE_ID`, `COTCODEC_MODEL_IDS` | artifacts and receipts under `/home/kevin/cotcodec-runs/hf-cache/` |
+
+```bash
+sbatch infra/slurm/host-single-node/build-architecture-image.sbatch
+COTCODEC_IMAGE_ID=sha256:<id> sbatch infra/slurm/host-single-node/fla-throughput-doctor.sbatch
+COTCODEC_IMAGE_ID=sha256:<id> COTCODEC_MODEL_IDS="qwen3.5-4b-base gla-1.3b-100b"   sbatch infra/slurm/host-single-node/fetch-pilot-models.sbatch
+```
+
+These are infrastructure receipts. They do not admit any contract; a pilot
+still needs its compiled manifest, CPU doctors passing twice, and the checks in
+`.claude/rules/research-gauntlet-loop.md`.
+
 ## Publication-grade lane: administrator work still required
 
 Researched pins and an ordered upgrade recipe (Slurm 25.11.7 with cgroup/v2

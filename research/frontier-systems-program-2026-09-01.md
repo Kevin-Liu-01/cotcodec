@@ -21,7 +21,9 @@ collision risk. Every promoted direction must still pass the loop in
    Mixture of Sequence Operators" is now occupied on the layer, token, head,
    block, and serving axes.
 2. **The unique-asset bet is language as a controlled variable inside the
-   architecture.** Every cell independently found this region empty:
+   architecture** — with the 2026-09-01 correction that the asset is parallel
+   data GT can lawfully use (public corpora plus GT-owned content), not
+   customer translation memory. Every cell independently found this region empty:
    recurrent-state recall and hybrid-ratio behaviour with content held fixed
    across translations; learned-indexer selection across translations;
    parallel-data-supervised byte boundaries; translation-equivariant abstract
@@ -208,9 +210,17 @@ pilot-ready; the loop continues under `.claude/rules/research-gauntlet-loop.md`.
    written to run on named public corpora so this does not block the kill
    screens, only the General Translation upgrade arms.
 2. Rebuild and digest-pin the research image with `flash-linear-attention`
-   0.5.2 (and `mamba_ssm`/`causal-conv1d` where a contract needs them); the
+   0.5.2 — in flight 2026-09-01: `flash-linear-attention==0.5.2` is pinned in the
+   `architecture` extra and lock, and Slurm job 352 rebuilds the base image via
+   `infra/slurm/host-single-node/build-architecture-image.sbatch`; the
+   throughput doctor (`scripts/fla_throughput_doctor.py`) runs next (and `mamba_ssm`/`causal-conv1d` where a contract needs them); the
    cited image `sha256:15d6abc0…` is the current discovery image and lacks them.
-3. Register the unregistered pilot checkpoints named in directions 19–22
+3. ~~Register the pilot checkpoints~~ — fifteen entries added to
+   `models/registry.yaml` on 2026-09-01 (revisions pinned; licenses as stated,
+   `unresolved` for three fla-hub repos; all blocked pending receipts). Still
+   needed: `fetch_open_model.py fetch/verify` receipts on persistent storage and
+   a compiled job manifest per contract for `scripts/submit_docker_research_job.py`.
+   Original item: register the unregistered pilot checkpoints named in directions 19–22
    (fla-hub 340M/1.3B/2.7B ladders, startlux GDN hybrids, Qwen3-1.7B-Base,
    Qwen3.5-4B-Base, RWKV-7, Olmo checkpoints) in `models/registry.yaml` with
    receipts; compile a job manifest per contract for
@@ -247,7 +257,7 @@ pilot-ready; the loop continues under `.claude/rules/research-gauntlet-loop.md`.
 
 | Input | Why it blocks | Owner |
 |---|---|---|
-| Parallel translation corpus inventory: language pairs and scripts, segment-length distribution, alignment granularity, sentence-pair and byte volume per language, license and consent for research use | Nine cell notes and every Stage-1 direction treat it as the defining asset; the repository contains no parallel corpus at all | Kevin / General Translation |
+| Parallel translation corpus inventory | **Resolved 2026-09-01** in [`data/gt-parallel-corpus-inventory-2026-09-01.md`](data/gt-parallel-corpus-inventory-2026-09-01.md): customer translation memory is excluded by ToS §3.1 purpose limitation and the internal purpose-limitation policy (no research processing activity recorded); GT-owned 8-locale site/docs translations (99 pages × 8 locales) and 473 English doc pages remain usable as a small evaluation set. All phase-0 pilots already run on public corpora. | Decision on a research processing activity for de-identified customer data rests with GT, not this repository |
 | `TINKER_API_KEY` (and `MOONSHOT_API_KEY` for live Kimi cells) | Tinker capability doctor, SDK-version check, and any Kimi-K2.6 rung cannot run | Kevin |
 | Root access window on `fal-h100-01` for the Slurm/Pyxis/Enroot upgrade | Publication lane; discovery lane is unaffected | Kevin / host admin |
 | Full-text reads of the K3, Qwen3.8-Next, DeepSeek-V4, and LLaDA2.2 reports | Several verdict numbers rest on abstracts or snippets | next session |
