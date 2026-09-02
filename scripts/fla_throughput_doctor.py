@@ -28,8 +28,8 @@ H100_BF16_DENSE_TFLOPS = 989.0  # NVIDIA H100 SXM dense BF16 peak, no sparsity
 # Shapes follow the from-scratch arms in experiments/architectures/*.yaml:
 # 3 GDN layers per 1 full-attention layer, tied embeddings, SwiGLU 8/3 ratio.
 SHAPES: dict[str, dict[str, int]] = {
-    "gdn-hybrid-125m": {"layers": 12, "hidden": 768, "heads": 12, "vocab": 32000},
-    "gdn-hybrid-350m": {"layers": 24, "hidden": 1024, "heads": 16, "vocab": 32000},
+    "gdn-hybrid-125m": {"layers": 12, "hidden": 768, "heads": 12, "vocab": 32000, "batch": 16},
+    "gdn-hybrid-350m": {"layers": 24, "hidden": 1024, "heads": 16, "vocab": 32000, "batch": 8},
 }
 
 
@@ -83,17 +83,23 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--shape", choices=sorted(SHAPES), default="gdn-hybrid-125m")
     parser.add_argument("--seq-len", type=int, default=2048)
-    parser.add_argument("--batch", type=int, default=16)
+    parser.add_argument("--batch", type=int, default=0, help="0 = the shape's registered batch")
+    parser.add_argument("--head-dim", type=int, default=0, help="0 = hidden // heads (fla default is 256)")
+    parser.add_argument("--expand-v", type=int, default=1)
     parser.add_argument("--warmup-steps", type=int, default=5)
     parser.add_argument("--timed-steps", type=int, default=20)
     parser.add_argument("--dry-run", action="store_true")
     args = parser.parse_args(argv)
-    if args.seq_len < 128 or args.batch < 1 or args.timed_steps < 1:
-        parser.error("seq-len must be >=128, batch and timed-steps must be >=1")
+    if args.batch == 0:
+        args.batch = SHAPES[args.shape]["batch"]
+    if args.head_dim == 0:
+        args.head_dim = SHAPES[args.shape]["hidden"] // SHAPES[args.shape]["heads"]
+    if args.seq_len < 128 or args.batch < 1 or args.timed_steps < 1 or args.expand_v < 1:
+        parser.error("seq-len must be >=128; batch, timed-steps, expand-v must be >=1")
     return args
 
 
-def _build_model(plan: Plan):  # pragma: no cover - requires torch and a GPU
+def _build_model(plan: Plan, head_dim: int, expand_v: int):  # pragma: no cover - GPU only
     import torch
     from fla.layers import GatedDeltaNet
     from torch import nn
@@ -109,7 +115,11 @@ def _build_model(plan: Plan):  # pragma: no cover - requires torch and a GPU
                 )
             else:
                 self.mixer = GatedDeltaNet(
-                    hidden_size=plan.hidden, num_heads=plan.heads, mode="chunk"
+                    hidden_size=plan.hidden,
+                    num_heads=plan.heads,
+                    head_dim=head_dim,
+                    expand_v=expand_v,
+                    mode="chunk",
                 )
             self.use_attention = use_attention
             inner = 8 * plan.hidden // 3
@@ -149,14 +159,16 @@ def _build_model(plan: Plan):  # pragma: no cover - requires torch and a GPU
     return Model()
 
 
-def measure(plan: Plan) -> dict[str, object]:  # pragma: no cover - GPU only
+def measure(plan: Plan, head_dim: int, expand_v: int) -> dict[str, object]:  # pragma: no cover
     import torch
 
     if not torch.cuda.is_available():
         raise SystemExit("fla_throughput_doctor requires a CUDA device")
     device = torch.device("cuda")
     torch.manual_seed(0)
-    model = _build_model(plan).to(device=device, dtype=torch.bfloat16)
+    model = _build_model(plan, head_dim, expand_v).to(device=device, dtype=torch.bfloat16)
+    actual_params = sum(p.numel() for p in model.parameters())
+    actual_flops_per_token = 6 * actual_params + (plan.flops_per_token - 6 * plan.params_millions * 1e6)
     optimizer = torch.optim.AdamW(model.parameters(), lr=1e-4)
     tokens = torch.randint(0, plan.vocab, (plan.batch, plan.seq_len), device=device)
 
@@ -179,10 +191,15 @@ def measure(plan: Plan) -> dict[str, object]:  # pragma: no cover - GPU only
     elapsed = time.perf_counter() - start
     tokens_per_step = plan.batch * (plan.seq_len - 1)
     tokens_per_second = tokens_per_step * plan.timed_steps / elapsed
-    achieved_tflops = tokens_per_second * plan.flops_per_token / 1e12
+    achieved_tflops = tokens_per_second * actual_flops_per_token / 1e12
     import fla
 
     return {
+        "mode": "eager, bf16 params, fp32 loss, no compile, no fused cross-entropy",
+        "head_dim": head_dim,
+        "expand_v": expand_v,
+        "actual_params_millions": round(actual_params / 1e6, 2),
+        "flops_per_token_used": actual_flops_per_token,
         "tokens_per_second": round(tokens_per_second, 1),
         "seconds_per_step": round(elapsed / plan.timed_steps, 4),
         "achieved_tflops": round(achieved_tflops, 2),
@@ -205,8 +222,9 @@ def main(argv: list[str] | None = None) -> int:
         "python": platform.python_version(),
         "dry_run": bool(args.dry_run),
     }
+    receipt["geometry"] = {"head_dim": args.head_dim, "expand_v": args.expand_v}
     if not args.dry_run:
-        receipt["measurement"] = measure(plan)
+        receipt["measurement"] = measure(plan, args.head_dim, args.expand_v)
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(json.dumps(receipt, indent=2, sort_keys=True) + "\n")
     print(json.dumps(receipt, indent=2, sort_keys=True))

@@ -27,7 +27,7 @@ for shape in gdn-hybrid-125m gdn-hybrid-350m; do
     --gpus "\"device=${CUDA_VISIBLE_DEVICES}\"" \
     -v "${out}:/outputs" \
     "${COTCODEC_IMAGE_ID}" \
-    python scripts/fla_throughput_doctor.py --shape "${shape}" --seq-len 2048 --batch 16 \
+    python scripts/fla_throughput_doctor.py --shape "${shape}" --seq-len 2048 \
       --output "/outputs/${shape}.json" | tail -20
 done
 nvidia-smi -i "${CUDA_VISIBLE_DEVICES}" --query-gpu=name,uuid,driver_version --format=csv,noheader > "${out}/gpu.txt"
