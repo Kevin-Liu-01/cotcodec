@@ -56,6 +56,8 @@ and LoRA ≈ 1.1 × frozen bf16 weights.
 | `moonshotai/Kimi-K2.6` | `7eb5002f6aadc958aed6a9177b7ed26bb94011bb` | modified-MIT | yes (`kimi_k25`) | not viable locally (595.2 GB INT4 safetensors; vLLM recipe requires ~640 GB aggregate VRAM, 8 × H200) | Tinker LoRA only |
 | `moonshotai/Kimi-K3` | `a590ce090cb049c93a33dfe8c208ec652aa20503` | Kimi K3 License | no (PR draft) | impossible (1.56 TB MXFP4) | read the report; do not register for execution |
 
+Fifteen of these pilot checkpoints were registered on 2026-09-01 (`models/registry.yaml`, keys such as `qwen3.5-4b-base`, `transformer-1.3b-100b`, `gla-1.3b-100b`, `gdn-1.3b-isp-hybrid-3to1-50b`, `olmo-hybrid-7b`, `e2-ttt-mlp-1.3b-15b`, `rwkv7-1.5b-world`); each carries a `blocker` until its receipt exists.
+
 No sub-10B open KDA base with native transformers support exists, and no 2026
 KDA/QSA hybrid ships a public base checkpoint (`Kimi-K3-Base`,
 `GLM-5.3-Flash-Base`, `Qwen3.8-*-Base` all return 401). Kimi-Linear-48B-A3B-Base
