@@ -81,6 +81,7 @@ Verified images on the host (2026-09-01):
 | Image | Identity | Contents that matter |
 |---|---|---|
 | `cotcodec-research:*-architecture-overlay` | built from `infra/research/Dockerfile`, CUDA 12.8.1 base pinned by digest | torch 2.11.0+cu128, transformers 5.15.0, accelerate, triton; **no** vllm, peft, flash-attn, fla, diffusers, datasets |
+| `cotcodec-research:999f5583-architecture` (built 2026-09-01 by Slurm job 353 from commit `999f5583`, `build-architecture-image.sbatch`) | image ID `sha256:9d832a59fe348d149d2e4587ac6af90223e2956ebb646d7b19295298954ca5ad`; repo digest `127.0.0.1:5000/cotcodec-research@sha256:bde90daa78c26cd2fb9d05036b0c9f9613c2386b9d7561816b541d2736c79f5d` | torch 2.11.0+cu128, transformers 5.15.0, **flash-linear-attention 0.5.2**, fla-core 0.5.2, triton 3.6.0; built with host networking because the bridge has no DNS |
 | `vllm/vllm-openai` (dangling tag) | label `ai.vllm.image.tag=vllm/vllm-openai:v0.25.1`, commit `752a3a504485790a2e8491cacbb35c137339ad34` | OpenAI-compatible server for the actor endpoint; re-pull by `docker.io/vllm/vllm-openai@sha256:<digest>` and record the digest in the manifest. Do not serve GDN/Mamba hybrids from v0.28.0 with prefix caching plus MTP: outputs are corrupted by a host/device race ([vllm #53912](https://github.com/vllm-project/vllm/issues/53912)); pin a release containing fix #50729 and run the A/A repeat gate |
 
 Bakeoff contract shape (one YAML per harness × model × task family; validator
