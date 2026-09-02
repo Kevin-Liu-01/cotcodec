@@ -28,10 +28,16 @@ This file is a stable continuation pointer, not a duplicate operating manual.
   is pilot-ready (best 66/100; doctor FAIL by construction). Wave-4 work orders
   are the reviewers' fixes in `wave3-ledger.md`. Follow
   `.claude/rules/research-gauntlet-loop.md`.
-- Blocking inputs: the General Translation parallel-corpus inventory,
-  `TINKER_API_KEY`/`MOONSHOT_API_KEY`, and a root window for the Slurm/Pyxis
-  upgrade. Every phase-0 pilot is written to run on named public corpora, so
-  only the upgrade arms wait on the inventory.
+- Inputs resolved or re-scoped 2026-09-01: the parallel-corpus inventory is
+  sealed (`research/data/gt-parallel-corpus-inventory-2026-09-01.md`; customer
+  translation memory excluded by ToS §3.1; pilots run on public corpora);
+  `TINKER_API_KEY`/`MOONSHOT_API_KEY`/`HF_TOKEN` still need Kevin's clicks
+  (`~/.config/cotcodec/secrets.env`); root for the Slurm/Pyxis upgrade still
+  needs a password.
+- Stage 0 on `fal-h100-01`: image `cotcodec-research:999f5583-architecture`
+  (fla 0.5.2) built; ten pilot checkpoints fetched with receipts; the
+  throughput doctor waits on the `tilelang` rebuild (fla Hopper guard, #640).
+  Entry points: `infra/slurm/host-single-node/{build-architecture-image,fla-throughput-doctor,fetch-pilot-models}.sbatch`.
 - Before any GPU-hour on directions 19–22: rebuild and digest-pin the image
   with `flash-linear-attention` 0.5.2, register the pilot checkpoints, compile
   job manifests, write and pass the CPU phase-0 doctors twice, and run one
