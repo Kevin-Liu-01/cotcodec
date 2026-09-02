@@ -268,7 +268,23 @@ Stage-0 execution on `fal-h100-01` (discovery lane, no root, no publication clai
 | `transformer-1.3b-100b` | `d6f66f4181fa…` | `7b6675e3f5e9dccd…` | 2.73 GB |
 | `transformer-340m-10b` | `b838e8e11784…` | `8bd8a855c1f85260…` | 0.69 GB |
 
-- **First measured throughput** (job 358, image `cotcodec-research:0b3ecef0-architecture` = `sha256:3804466639c13f132be4b0369de4d3395b9d5ea2d3dc100cd38884c75197fe29`, local-registry digest `sha256:02965f3d…`, fla 0.5.2 + tilelang 0.1.13, one H100 80GB): the 125M-planned GDN 3:1 hybrid (109.5M planned parameters; fla default 256-dim heads inflate the real count) trains at **104,185 tokens/s**, 0.314 s/step at batch 16 × 2048, 74 TFLOPS achieved, **7.5% MFU** against the dense BF16 peak, 48 GiB peak memory, eager mode, no compile, no fused cross-entropy. The 350M shape ran out of memory at batch 16. Consequence: every 2026-09-01 budget ledger assumed ~40% MFU ("125M to 1000N tokens ≈ 8 h at 40% MFU"); at the measured rate 1000N tokens for 125M is ≈ 330 GPU-hours on one H100 (≈ 42 h on eight at perfect scaling), a 5× shortfall before any optimisation. A corrected geometry (head_dim = hidden/heads, expand_v 1, batch 8 for 350M) is being re-measured; until an optimised number exists, proposals must budget from the measured 7.5%, not the assumed 40%.
+- **Measured throughput, corrected geometry** (job 359; image `cotcodec-research:0b3ecef0-architecture`
+  = `sha256:38044666…`, fla 0.5.2 + tilelang 0.1.13; one H100 80GB; eager, no compile, no fused
+  cross-entropy; head_dim = hidden/heads, expand_v 1; receipts sealed in
+  `evidence/infrastructure/fla-throughput-h100-2026-09-01.json`):
+
+  | shape (actual params) | batch × seq | tokens/s | s/step | achieved TFLOPS | MFU (dense BF16 peak) | peak GiB |
+  |---|---|---:|---:|---:|---:|---:|
+  | gdn-hybrid-125m (134M) | 16 × 2048 | **282,501** | 0.116 | 243 | **24.6%** | 27.7 |
+  | gdn-hybrid-350m (422M) | 8 × 2048 | **73,045** | 0.224 | 196 | **19.8%** | 26.9 |
+
+  An earlier run with fla's default 256-dim heads (job 358) gave 104,185 tok/s and 7.5% MFU for the
+  same 125M plan and ran out of memory at 350M — geometry, not kernels, explained most of that gap.
+  Consequence for every budget ledger: the assumed 40% MFU is replaced by 20–25% eager; 1000N tokens
+  for the 134M model costs ≈ 132 GPU-hours on one H100 (≈ 2× the assumed 8 h on eight at perfect
+  scaling), 1000N for 422M ≈ 1,600 GPU-hours, and a 16 GPU-hour pilot buys ≈ 16 B tokens for the 134M
+  model (≈ 120N) — a training-speed regime, which each proposal must state explicitly (believability
+  bar item 3). torch.compile, fused cross-entropy, and larger batches are untested upside.
 - **Throughput doctor blocked by a kernel-correctness guard** (job 354, before tilelang):
   `fla 0.5.2` raises "Triton >= 3.4.0 and < 3.7.1 on Hopper GPUs produces
   incorrect results for gated chunk_bwd_dqkwg (see fla #640); upgrade Triton
