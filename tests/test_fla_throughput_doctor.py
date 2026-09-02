@@ -22,6 +22,11 @@ def test_dry_run_writes_receipt_without_torch(tmp_path) -> None:
     assert receipt["evidence_grade"].startswith("infrastructure-only")
 
 
+def test_defaults_resolve_head_geometry_and_batch() -> None:
+    args = doctor.parse_args(["--output", "x.json", "--shape", "gdn-hybrid-350m"])
+    assert args.batch == 8 and args.head_dim == 64 and args.expand_v == 1
+
+
 def test_rejects_degenerate_arguments() -> None:
     with pytest.raises(SystemExit):
         doctor.parse_args(["--output", "x.json", "--seq-len", "16"])
