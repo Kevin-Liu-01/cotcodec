@@ -1,0 +1,153 @@
+{
+  "claim_boundary": "Measured eager-mode training throughput of two registered synthetic GDN 3:1 hybrid shapes on one H100 80GB inside the digest-pinned architecture image. Random tokens, no pretrained weights, no compile, no fused cross-entropy, no quality claim, no architecture claim.",
+  "derived": {
+    "gpu_hours_for_1000N_tokens_134m_single_h100": 131.8,
+    "gpu_hours_for_1000N_tokens_422m_single_h100": 1604.8,
+    "note": "MFU is achieved TFLOPS over the 989 TFLOPS dense BF16 H100 peak using 6*N*tokens + attention FLOPs with the actual parameter count",
+    "tokens_bought_by_16_gpu_hours_134m": 16272080640
+  },
+  "evidence_kind": "infrastructure-throughput",
+  "gpu": "NVIDIA H100 80GB HBM3 GPU-b23c3b4d-5413-4d75-cad3-74be85f8d058 driver 570.148.08",
+  "host": "fal-h100-01",
+  "image": {
+    "built_by_slurm_job": 357,
+    "contents": "torch 2.11.0+cu128, transformers 5.15.0, flash-linear-attention 0.5.2, fla-core 0.5.2, triton 3.6.0, tilelang 0.1.13",
+    "image_id": "sha256:3804466639c13f132be4b0369de4d3395b9d5ea2d3dc100cd38884c75197fe29",
+    "repo_digest": "127.0.0.1:5000/cotcodec-research@sha256:02965f3d696d4e516a7cd6d5c03434e9098139738748ae778ed967215db7be6d",
+    "tag": "cotcodec-research:0b3ecef0-architecture"
+  },
+  "known_failures": [
+    {
+      "error": "fla 0.5.2 guard: Triton >= 3.4.0 and < 3.7.1 on Hopper produces incorrect results for gated chunk_bwd_dqkwg (fla #640)",
+      "image": "cotcodec-research:999f5583-architecture (no tilelang)",
+      "slurm_job": 354
+    },
+    {
+      "error": "torch.OutOfMemoryError at batch 16 x 2048 with fla default head_dim 256 / expand_v 2",
+      "shape": "gdn-hybrid-350m",
+      "slurm_job": 358
+    }
+  ],
+  "runs": [
+    {
+      "doctor": "fla_throughput_doctor",
+      "dry_run": false,
+      "evidence_grade": "infrastructure-only; no quality or architecture claim",
+      "geometry_note": "fla default head_dim 256 / expand_v 2; superseded geometry",
+      "measurement": {
+        "achieved_tflops": 74.37,
+        "cuda_version": "12.8",
+        "fla_version": "0.5.2",
+        "gpu_name": "NVIDIA H100 80GB HBM3",
+        "mfu_vs_h100_bf16_dense": 0.0752,
+        "peak_memory_gib": 48.38,
+        "seconds_per_step": 0.3144,
+        "tokens_per_second": 104185.0,
+        "torch_version": "2.11.0+cu128"
+      },
+      "plan": {
+        "batch": 16,
+        "flops_per_token": 713811456.0,
+        "heads": 12,
+        "hidden": 768,
+        "layers": 12,
+        "params_millions": 109.53,
+        "seq_len": 2048,
+        "shape": "gdn-hybrid-125m",
+        "timed_steps": 20,
+        "vocab": 32000,
+        "warmup_steps": 5
+      },
+      "python": "3.12.3",
+      "slurm_job": 358
+    },
+    {
+      "doctor": "fla_throughput_doctor",
+      "dry_run": false,
+      "evidence_grade": "infrastructure-only; no quality or architecture claim",
+      "geometry": {
+        "expand_v": 1,
+        "head_dim": 64
+      },
+      "geometry_note": "head_dim 64, expand_v 1",
+      "measurement": {
+        "achieved_tflops": 243.07,
+        "actual_params_millions": 133.96,
+        "cuda_version": "12.8",
+        "expand_v": 1,
+        "fla_version": "0.5.2",
+        "flops_per_token_used": 860405039.9999999,
+        "gpu_name": "NVIDIA H100 80GB HBM3",
+        "head_dim": 64,
+        "mfu_vs_h100_bf16_dense": 0.2458,
+        "mode": "eager, bf16 params, fp32 loss, no compile, no fused cross-entropy",
+        "peak_memory_gib": 27.74,
+        "seconds_per_step": 0.1159,
+        "tokens_per_second": 282501.4,
+        "torch_version": "2.11.0+cu128"
+      },
+      "plan": {
+        "batch": 16,
+        "flops_per_token": 713811456.0,
+        "heads": 12,
+        "hidden": 768,
+        "layers": 12,
+        "params_millions": 109.53,
+        "seq_len": 2048,
+        "shape": "gdn-hybrid-125m",
+        "timed_steps": 20,
+        "vocab": 32000,
+        "warmup_steps": 5
+      },
+      "python": "3.12.3",
+      "slurm_job": 359
+    },
+    {
+      "doctor": "fla_throughput_doctor",
+      "dry_run": false,
+      "evidence_grade": "infrastructure-only; no quality or architecture claim",
+      "geometry": {
+        "expand_v": 1,
+        "head_dim": 64
+      },
+      "geometry_note": "head_dim 64, expand_v 1, batch 8",
+      "measurement": {
+        "achieved_tflops": 195.78,
+        "actual_params_millions": 421.54,
+        "cuda_version": "12.8",
+        "expand_v": 1,
+        "fla_version": "0.5.2",
+        "flops_per_token_used": 2680250112.0,
+        "gpu_name": "NVIDIA H100 80GB HBM3",
+        "head_dim": 64,
+        "mfu_vs_h100_bf16_dense": 0.198,
+        "mode": "eager, bf16 params, fp32 loss, no compile, no fused cross-entropy",
+        "peak_memory_gib": 26.9,
+        "seconds_per_step": 0.2242,
+        "tokens_per_second": 73045.2,
+        "torch_version": "2.11.0+cu128"
+      },
+      "plan": {
+        "batch": 8,
+        "flops_per_token": 2159579136.0,
+        "heads": 16,
+        "hidden": 1024,
+        "layers": 24,
+        "params_millions": 334.76,
+        "seq_len": 2048,
+        "shape": "gdn-hybrid-350m",
+        "timed_steps": 20,
+        "vocab": 32000,
+        "warmup_steps": 5
+      },
+      "python": "3.12.3",
+      "slurm_job": 359
+    }
+  ],
+  "schema_version": 1,
+  "script_overlay": {
+    "checkout": "4492c25098bf3fac468e110e3bebb91ab1e218a2",
+    "path": "/home/kevin/cotcodec/scripts/fla_throughput_doctor.py",
+    "sha256": "685bf8849a0c4a3252470710b61e05d60fd880e175831af14d16fce50bcfbbcc"
+  }
+}
