@@ -298,6 +298,40 @@ Stage-0 execution on `fal-h100-01` (discovery lane, no root, no publication clai
   create-key dialog needs a human click); Tinker and Hugging Face consoles are
   signed out. Template: `~/.config/cotcodec/secrets.env` (mode 600).
 
+## Gauntlet wave 5 and honest exit (2026-09-01, later)
+
+| Direction | Wave 4 → 5 | Executable CPU doctor (tests) |
+|---|---:|---|
+| `19-icl-rule-distillation-port` | 65 → **65** | `scripts/run_icl_rule_distillation_doctor.py` (17) — rule ladder with analytic BPTT gradients, dMMSE-regime positive control, two-pass causality audit, attribution-tree Monte-Carlo |
+| `20-semantic-clock-gate-parity` | 63 → **64** | `scripts/run_semantic_clock_gate_parity_doctor.py` (12) — GDN gate ledger, warp-invariant negative, prefix-blind window, K7b/K9/K10 semantics |
+| `21-translation-supervised-sparse-indexer` | 62 → **63** | `scripts/run_translation_supervised_indexer_doctor.py` (16) — detached indexer statistic, fixed reference, decision-rule derivation |
+| `22-translation-equivariant-state-writes` | 60 → **62** | `scripts/run_translation_equivariant_state_writes_doctor.py` (16) — pure-write object W with decay/erase counterfactual, fp64 identity, prefix-floor ledger |
+
+Suite after wave 5: 80 tests pass, Ruff clean, 9/9 contracts PASS with
+`reference_doctor` blocks, docs doctor PASS. Every doctor states that it proves
+executability and gate semantics on synthetic cases only.
+
+**Exit.** Best lower-total per wave: 66 (w3) → 65 (w4) → 65 (w5). The
+gauntlet's exit 5 (under two points of gain across three waves) fires; the loop
+stops for this session at five waves (ledgers and five hash-chained audit rows
+in `gauntlet/2026-09-01-frontier/` and `data/research-gauntlet/2026-09-01-frontier.jsonl`).
+No direction is pilot-ready; the reviewers' remaining binding defect is uniform:
+the decisive GPU screen is not executable until a discovery manifest is
+compiled and its fresh-job resume proven.
+
+### Next executable steps (in order)
+
+1. Compile the discovery manifest for the `qwen3.5-4b-base` phase-0 screens of
+   directions 20 and 22 from `infra/slurm/host-single-node/qwen35-4b-competence-screen.yaml`,
+   binding image `sha256:38044666…` (0b3ecef0-architecture), the fetched receipt,
+   and the doctor outputs; `--dry-run`, `--test-only`, then a bounded submit;
+   prove fresh-job resume before any treatment comparison.
+2. Seed-sweep the sparse-indexer doctor and add the icl-rule null-control gates
+   as new versioned doctor outputs (never retune to pass).
+3. Re-derive every budget ledger from the measured 20–25% eager MFU.
+4. Credentials still yours: Tinker sign-in, Hugging Face login, Moonshot
+   "Create API Key" → `~/.config/cotcodec/secrets.env`.
+
 ## Compute and access boundary (verified 2026-09-01)
 
 - **Local (fal-h100-01, 8 × H100 80GB, 208 CPUs, 1.7 TB RAM):** full

@@ -16,7 +16,7 @@ publication claim.
 | Frozen OrchVar live job 341 | Incomplete at 2/6, 0/2 completed-cell success, safety unreached | Never resume, rerun, or backfill |
 | Memory source ledger | 229 sources, 182 pinned repositories, 1 scientific reproduction, 3 conformance reproductions, 38 reproduced negatives | Matrix `a0cb79fb…` is current |
 | Memory portfolio | 93 candidates, six waves, 84 maximum H100-hours | Killed revisions are excluded from execution order |
-| Architecture program | Four gauntlet-preregistered directions (19–22) with proposals and validator-passing contracts; best score 66/100; none pilot-ready | Wave-4 fixes in `research/gauntlet/2026-09-01-frontier/wave3-ledger.md`; GPU work blocked on Stage 0 receipts |
+| Architecture program | Four gauntlet-preregistered directions (19–22) with proposals, validator-passing contracts, and executable CPU doctors; five waves, best 66/100, exit 5 fired; none pilot-ready | Compile the `qwen3.5-4b-base` discovery manifest (image `0b3ecef0-architecture`, receipts fetched, throughput measured) before any treatment GPU-hour |
 | Frontier radar | Dated scan `research/scans/2026-09-01.md` sealed (14 cells + 3 triage + 4 verification, 22 hashed notes) | Program re-ranked in `research/frontier-systems-program-2026-09-01.md`; D16/D17/D15 NARROWED, D18 STILL_OPEN, Coded Delta negative-only |
 
 ## Latest completed gate: legacy Letta V1

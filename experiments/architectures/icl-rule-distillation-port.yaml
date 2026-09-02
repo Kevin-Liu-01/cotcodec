@@ -7,51 +7,133 @@ research_question: >-
   Can the content-dependent part of a frozen softmax transformer's in-context
   update be distilled into an explicit rank-8 fast-weight write rule at a
   canonical 64-d interface that reproduces the teacher's own held-out 8-shot
-  predictions more faithfully than a dense-preconditioned-GD superset rule
-  trained at the same interface, episode mix and compute, and does that frozen
-  rule keep a measurable fraction of its fidelity when ported through label-free
-  maps to pure-recurrent bases trained on the same corpus, tokenizer and budget?
+  predictions more faithfully than an iso-parameter gradient-form rule (same
+  MLP width and parameter count within 1 percent, update direction constrained
+  to the key, w_i = k_i) trained at the same interface, episode mix,
+  hyperparameter-search budget and compute, with the win carried by the free
+  write direction under a post-hoc clamp ablation; and does that frozen rule
+  keep a measurable fraction of its fidelity when ported through label-free
+  maps to licensed pure-recurrent bases trained on the same corpus, tokenizer
+  and budget?
 null_hypothesis: >-
-  At a 64-d rank-8 interface the teacher's content-dependent in-context update
-  is behaviourally indistinguishable from preconditioned gradient descent, or
-  any fidelity advantage of the distilled rule is explained by an unmatched
-  placebo, by a generic learned associative rule, by a random reservoir with
-  fitted ports, or by softmax attention downstream of the injection site
-  rather than by a portable write rule.
+  At a 64-d rank-8 interface and matched capacity the teacher's
+  content-dependent in-context update is behaviourally a gradient-form
+  (key-directed) rule, or any fidelity advantage of the distilled rule is
+  explained by an unmatched placebo, by capacity, by an under-searched
+  baseline, by a generic KL-distilled ICL emulator that any transformer teacher
+  would yield, by a random reservoir with fitted ports, or by softmax attention
+  downstream of the injection site rather than by a portable write rule.
+
+reference_doctor:
+  implementation: harness/icl_rule_distillation.py
+  command_argv:
+    - uv
+    - run
+    - python
+    - scripts/run_icl_rule_distillation_doctor.py
+    - --output
+    - data/results/icl-rule-distillation-port/phase0-doctor.json
+  runtime: numpy-cpu
+  tests: tests/test_icl_rule_distillation_doctor.py
+  evidence_grade: >-
+    SYNTHETIC_EXECUTABILITY_AND_GATE_SEMANTICS_ONLY; every number in the receipt
+    is a synthetic-case number; no pretrained model, no pilot endpoint, no
+    novelty, portability or architecture claim
+  synthetic_regime: >-
+    16-d finite-task-prior linear regression (4 tasks, sigma 0.25, 8
+    demonstrations, 8 probes) whose Bayes predictor is the discrete posterior
+    mean (dMMSE) rather than ridge, after Raventos et al. 2023; the fixed-variance
+    Gaussian predictive makes the squared prediction gap equal to the KL objective
+    up to a constant
+  registered_cases:
+    - parameter-count doctor at the pilot interface (R_theta 101762; R_gf hidden 305 gives 101631; R_adapt hidden 293 gives 101731; R_lin 4100)
+    - rank-truncation algebra (Pi_8 inert for eight rank-one writes from M = 0, active on a ninth)
+    - dMMSE-regime positive control (R_theta, R_gf, R_adapt, R_lin distilled by truncated BPTT at equal budget after the written 4-point search)
+    - Gaussian-prior negative control (teacher = ridge, inside the key span; the gradient-form null is true by construction)
+    - permuted-teacher control (query-content link destroyed within each episode)
+    - two-pass causality audit with a leaked-probe tamper case
+    - attribution-tree routing on crafted inputs and Monte-Carlo power under the assumed noise model
+    - degenerate-input rejection (eighteen contract violations)
+  gates:
+    - regime separation (teacher versus ridge) and the exact key-span ceiling gap both at least 0.25, with both ceilings realised through the write code path by oracle rules
+    - R_gf and R_adapt parameter counts within 1 percent of R_theta
+    - F(R_theta) minus F(R_gf) at least 0.10 on the synthetic teacher; R_theta closer to dMMSE than to ridge; every key-directed rung closer to ridge than to dMMSE and at or under the key-span ceiling
+    - w-clamp of the trained R_theta costs at least 0.05 and confines the readout to the key span; the clamp reproduces the w-head-dropped R_gf network at fp64 tolerance
+    - negative control flagged non-separating with the teacher inside the key span; the trained gap is reported as optimisation-only and never attributed to structure
+    - permuted-teacher fidelity at most 0.05 for every rule
+    - probe absence, prefix invariance, zero-state read and reset attestation pass, and the leaked-probe tamper is detected
+    - null false-CONFIRMED at most 0.05; a class-level miss never routes to K1; three class families never confirm
+    - every registered contract violation raises RuleContractError
+  exclusions:
+    - no claim about any pretrained base, the held-out-family teacher-fidelity endpoint, or the P/Q port
+    - no throughput, MFU, loader, tokenizer or container evidence
+    - no novelty, portability or architecture claim from doctor passage
+  last_run:
+    date: 2026-09-01
+    output: data/results/icl-rule-distillation-port/phase0-doctor.json
+    status: PHASE0_DOCTOR_PASS
+    gates_passed: 66 of 66
+    elapsed_seconds: 15.4
+    note: payload and implementation sha256 are inside the receipt
 
 stages:
   - stage: cpu-algebra-causality-doctors
     gpu_hours: 0
     promotion_gate: >-
-      dMMSE-regime synthetic distillation has R_theta tracking dMMSE while R_GD
-      tracks ridge; two-forward-pass prefix-invariance audit identical at fp32
-      tolerance; TR-fidelity gate code path passes on synthetic gold-plus-shuffled
-      episodes; tokenizer piece-id identity across the fla-hub ladder; rank and
-      P/Q algebra doctors pass; registered loader smoke and a 10-minute throughput
-      smoke measure MFU on one GPU
+      EXECUTED in wave 5 on CPU with NumPy/SciPy only (reference_doctor above;
+      receipt data/results/icl-rule-distillation-port/phase0-doctor.json,
+      PHASE0_DOCTOR_PASS, 66 of 66 gates, about 15 s): dMMSE-regime synthetic
+      distillation has R_theta tracking dMMSE while R_lin, R_adapt and R_gf
+      track ridge at or under the exact key-span ceiling; parameter-count
+      doctor confirms R_gf (hidden 305) and R_adapt (hidden 293) match R_theta
+      (101762) within 1 percent; the w-clamp code path reproduces the
+      w-head-dropped R_gf network at fp64 tolerance and costs fidelity; the
+      two-pass probe-absence and prefix-invariance audit passes and detects a
+      leaked probe; Pi_8 rank doctor passes; attribution-tree routing and
+      power pass. STILL REQUIRED before Stage B, because each needs a model or
+      the node: the TR-fidelity gate on real gold-plus-shuffled episodes,
+      tokenizer piece-id identity across the fla-hub ladder, the P/Q
+      factorisation doctor on real residuals, the registered loader smoke and
+      a 10-minute throughput smoke measuring MFU on one GPU inside the rebuilt
+      image
   - stage: source-identifiability-screen
     parameters: 1.3B frozen source
-    gpu_hours_ceiling: 4
+    gpu_hours_ceiling: 6
     promotion_gate: >-
       at least 8 eligible held-out families; every arm passes the TR-fidelity
-      gate; F(R_theta) minus F(R_GD) at least 0.10 with the family-clustered 95
-      percent bootstrap interval excluding 0; R_theta beats the label-trained
-      sibling by at least 0.05; random-theta at most half of R_theta
+      gate; per-arm hyperparameter search completed at equal development
+      budget; F(R_theta) minus F(R_gf) at least 0.10 with the two-sided 95
+      percent t-interval on family-level means excluding 0 (the primary leaf);
+      w-clamp ablation of R_theta costs at least 0.05 fidelity; R_theta beats
+      the cross-teacher sibling by at least 0.05 on families where the two
+      teachers disagree on at least 0.10 of queries; random-theta at most half
+      of R_theta; class co-condition (re-tiered in wave 5): at least 4 eligible
+      function-induction families with a class point estimate at least 0.10
+      and a one-sided 80 percent lower bound above 0; a gap of 0.05 to 0.10 is
+      INCONCLUSIVE, a gap without the clamp co-condition is UNATTRIBUTED, and a
+      passing primary leaf with a failed or unmeasurable class co-condition is
+      CLASS_UNRESOLVED, none of which promotes; K1 fires only on the primary
+      leaf
   - stage: iso-ladder-port
-    parameters: six 1.3B pure-recurrent targets plus one 2.7B same-family reference and one hybrid
+    parameters: four licensed plus two discovery-only 1.3B pure-recurrent targets, one 2.7B same-family reference and one hybrid
     gpu_hours_ceiling: 2.5
     promotion_gate: >-
-      ported F(R_theta) exceeds ported F(R_GD) by at least 0.05 on at least 4 of
-      6 pure-recurrent targets under per-base eligibility; downstream-attention
-      read-path ablation retains at least 0.7 of unpatched fidelity on the hybrid
+      ported F(R_theta) exceeds ported F(R_gf) by at least 0.05 on at least 3
+      of the 4 licensed pure-recurrent targets (gla, retnet, hgrn2, gsa) that
+      pass the per-base eligibility gate, with at least 3 eligible; exactly 2
+      of 4 is the pre-registered MIXED outcome and does not promote;
+      delta_net and mamba are reported as discovery-only and never counted;
+      downstream-attention read-path ablation retains at least 0.7 of
+      unpatched fidelity on the hybrid
   - stage: cross-lingual-content-probe
     parameters: 1.7B multilingual base
     gpu_hours_ceiling: 3.3
     promotion_gate: >-
       held-out-language write-A/read-B gap shrinks by at least 0.15 under
-      lambda_eq at most 0.05 monolingual fidelity cost, with R_GD plus lambda_eq
-      run as the encoder-invariance control; pre-registered null if the
-      lambda_eq = 0 gap is already at most 0.05
+      lambda_eq at most 0.05 monolingual fidelity cost, with R_gf plus
+      lambda_eq run as the encoder-invariance control at the Stage-B selected
+      hyperparameters; pre-registered null if the lambda_eq = 0 gap is already
+      at most 0.05
   - stage: independent-ladder-replication
     parameters: 2.7B Pile triplet
     gpu_hours_ceiling: 3.3
@@ -66,56 +148,95 @@ starting_point:
   arms:
     - name: distilled-write-rule-source
       mode: frozen-checkpoint-retrofit
-      model_ids: [qwen3-0.6b-base]
+      model_ids: [transformer-1.3b-100b, qwen3-1.7b-base]
       is_control: false
       purpose: >-
-        Distil R_theta from the frozen source transformer on gold-plus-shuffled
-        episodes. qwen3-0.6b-base is the closest registered transformer and is
-        used for the loader and throughput smoke; the pilot source
-        fla-hub/transformer-1.3B-100B (revision d6f66f4181fa669e5863327815b44533e3a395e7)
-        must be registered before enablement.
+        Distil R_theta (266 inputs, hidden 256, outputs rho, eta, u, w; 101762
+        parameters, asserted by the phase-0 doctor) from the frozen Stage-B
+        source fla-hub/transformer-1.3B-100B, registered as
+        transformer-1.3b-100b (revision d6f66f4181fa669e5863327815b44533e3a395e7,
+        MIT, receipt on fal-h100-01), on gold-plus-shuffled episodes after the
+        written 4-point search; Stage D distils on the registered
+        qwen3-1.7b-base (revision ea980cb0a6c2ae4b936e82123acc929f1cec04c1,
+        Apache-2.0, receipt on fal-h100-01).
     - name: distilled-write-rule-port
       mode: frozen-checkpoint-retrofit
-      model_ids: [delta-net-1.3b-8k, mamba-130m-hf]
+      model_ids: [gla-1.3b-100b, delta-net-1.3b-100b, mamba-1.3b-100b, gdn-1.3b-isp-hybrid-3to1-50b]
       is_control: false
       purpose: >-
         Freeze R_theta and port it through label-free P/Q maps to recurrent
-        bases at sites strictly after recurrent sublayers. delta-net-1.3b-8k is
-        the closest registered recurrent base (license unresolved, discovery
-        only) and mamba-130m-hf is the loader smoke; the pilot targets are the
-        six fla-hub 1.3B-100B recurrent checkpoints named in the direction file.
-    - name: preconditioned-gd-superset-rule
+        bases at sites strictly after recurrent sublayers. gla-1.3b-100b is the
+        one registered licensed P2/K3 target (MIT, receipt on fal-h100-01);
+        delta-net-1.3b-100b and mamba-1.3b-100b are registered with license
+        unresolved and are run as discovery-only, never counted;
+        gdn-1.3b-isp-hybrid-3to1-50b (Apache-2.0, receipt) carries the
+        downstream-attention read-path ablation. The other three licensed
+        P2/K3 targets, fla-hub retnet, hgrn2 and gsa 1.3B-100B, are not yet in
+        models/registry.yaml and block Stage C (blocked_by).
+    - name: iso-parameter-gradient-form-rule
       mode: frozen-checkpoint-retrofit
-      model_ids: [qwen3-0.6b-base, delta-net-1.3b-8k]
+      model_ids: [transformer-1.3b-100b, gla-1.3b-100b]
       is_control: true
       purpose: >-
-        Decisive control: dense-preconditioned GD with a learned schedule at the
-        same interface, distillation loss, episode mix, P/Q co-fitting and
-        compute, containing delta, Kaczmarz, OSDN-diagonal, Falcon and FAAST
-        rules as special cases, distilled and ported by the identical procedure.
-    - name: label-trained-sibling-rule
+        Decisive control R_gf (wave 4): the R_theta network with the w head
+        removed and hidden width about 305 so that the parameter count matches
+        R_theta within 1 percent; emits rho, eta and a nonlinear error map u_i
+        with w_i = k_i, so the update stays in gradient form. Same interface,
+        distillation loss, episode mix, P/Q co-fitting, search grid, development
+        budget and compute as R_theta; distilled and ported by the identical
+        procedure. A P1 win over it isolates the free write direction.
+    - name: adaptive-preconditioned-gd-rule
       mode: frozen-checkpoint-retrofit
-      model_ids: [qwen3-0.6b-base, delta-net-1.3b-8k]
+      model_ids: [transformer-1.3b-100b]
       is_control: true
       purpose: >-
-        Same interface and episodes, cross-entropy on labels instead of KL to
-        the teacher; separates a distilled write rule from any learned rule
-        (pre-registered collapse into Fast Weight Layers / SRWM on a tie).
+        Attribution rung R_adapt (wave 4): iso-parameter MLP (hidden about 293
+        plus a learned dense W_0) emitting rho, eta and a diagonal content
+        preconditioner d_i with u_i = (W_0 + diag(d_i)) e_i and w_i = k_i;
+        linear in the error given the context. Read together with R_lin and
+        R_gf it says whether a K1 tie means linear GD suffices, an adaptive
+        preconditioner is needed, or the error map must be nonlinear. Two
+        seeds; source stage only.
+    - name: linear-preconditioned-gd-rule
+      mode: frozen-checkpoint-retrofit
+      model_ids: [transformer-1.3b-100b, gla-1.3b-100b]
+      is_control: true
+      purpose: >-
+        R_lin, the wave-3 R_GD (about 4.1e3 parameters): u_i = W e_i, w_i = k_i,
+        scheduled eta and constant rho, containing delta, Kaczmarz,
+        OSDN-diagonal, Falcon and FAAST rules as special cases run on a
+        16-point scalar grid. Secondary comparator after wave 4 (two seeds);
+        ported to targets as a secondary reference.
+    - name: cross-teacher-distilled-sibling
+      mode: frozen-checkpoint-retrofit
+      model_ids: [transformer-1.3b-100b, transformer-2.7b-100b]
+      is_control: true
+      purpose: >-
+        S_x (wave 4): the same student base, interface, episodes, mix, search
+        budget and compute as R_theta, distilled by the same KL objective from
+        a different transformer teacher, the registered transformer-2.7b-100b
+        (fla-hub/transformer-2.7B-100B, revision
+        e29b06c913e05827bfb534844267c8d9f673feda, MIT, no receipt yet) as
+        teacher for the 1.3B student (iso-tokenizer). Fidelity is measured
+        against the 1.3B teacher; a tie within 0.05 where the two teachers
+        disagree on at least 0.10 of queries is the K6 collapse (any
+        KL-distilled ICL rule). Replaces the wave-3 cross-entropy sibling,
+        which both wave-3 reviewers found unable to tie on a fidelity endpoint.
     - name: random-theta-reservoir
       mode: frozen-checkpoint-retrofit
-      model_ids: [qwen3-0.6b-base, delta-net-1.3b-8k]
+      model_ids: [transformer-1.3b-100b, gla-1.3b-100b]
       is_control: true
       purpose: >-
-        Randomly initialised rule with fitted P/Q; kills the claim if it reaches
-        half of the distilled rule's fidelity.
+        Randomly initialised rule with fitted P/Q (4-point ridge grid); kills
+        the claim if it reaches half of the distilled rule's fidelity.
     - name: same-family-port-reference
       mode: frozen-checkpoint-retrofit
-      model_ids: [qwen3-0.6b-base, smollm2-135m]
+      model_ids: [transformer-1.3b-100b, transformer-2.7b-100b]
       is_control: false
       purpose: >-
-        Port-fidelity upper reference between two transformers; the pilot pair
-        is fla-hub/transformer-1.3B-100B to transformer-2.7B-100B (iso-tokenizer),
-        which the registered stand-ins are not.
+        Port-fidelity upper reference between two registered transformers of
+        the same family, fla-hub/transformer-1.3B-100B to
+        transformer-2.7B-100B (iso-tokenizer, iso-corpus).
     - name: multilingual-cross-operator-upgrade
       mode: frozen-checkpoint-retrofit
       model_ids: [kimi-linear-48b-a3b-base]
@@ -131,22 +252,30 @@ intervention:
     demonstration alone, pools residuals at four sites (after recurrent
     sublayers on non-transformer bases), maps them through base-specific rank-8
     P maps into a canonical 64-d key/value/error, and a shared 2-layer MLP rule
-    R_theta emits decay rho, step eta and a rank-1 update into a rank-8 64x64
-    memory M. Pass R reads M through Q maps into the residual stream for probes
-    that never enter Pass W. R_theta is distilled by KL to the frozen teacher's
-    8-shot predictions on gold and shuffled-label episodes at a 2:1 ratio on
-    distillation families only; the rule is then frozen and ported to other
-    bases by fitting only P/Q label-free on FineWeb-Edu text. A TR-fidelity gate
-    and a downstream-attention read-path ablation are part of the protocol.
+    R_theta emits decay rho, step eta and a rank-1 update u w^T into a rank-8
+    64x64 memory M. Pass R reads M through Q maps into the residual stream for
+    probes that never enter Pass W. R_theta is distilled by KL to the frozen
+    teacher's 8-shot predictions on gold and shuffled-label episodes at a 2:1
+    ratio on distillation families only, after a written 4-point
+    hyperparameter search at equal development budget shared by every rule
+    family; the rule is then frozen and ported to other bases by fitting only
+    P/Q label-free on FineWeb-Edu text. A nested gradient-form ladder R_lin,
+    R_adapt, R_gf (all with w_i = k_i; R_adapt and R_gf iso-parameter with
+    R_theta) is trained by the identical procedure, and post-hoc clamp
+    ablations (w := k, rho := mean, eta := mean) on the trained R_theta locate
+    which degree of freedom carries any fidelity gap. A TR-fidelity gate, a
+    per-base eligibility gate and a downstream-attention read-path ablation
+    are part of the protocol.
   trainable_components:
-    - shared write rule R_theta (2-layer MLP, width 256) or the R_GD preconditioner W and four scalars
+    - shared write rule R_theta (2-layer MLP, hidden 256, about 1.02e5 parameters), or the ladder rungs R_gf (hidden about 305), R_adapt (hidden about 293 plus dense W_0) and R_lin (W and four scalars)
     - base-specific rank-8 P and Q port maps (co-fitted on the source; ridge and functional matching on targets)
     - lambda_eq equivariance term on training language pairs in the cross-lingual stage only
   frozen_components:
-    - every base checkpoint (source, targets, references) and its tokenizer
-    - the rule weights after source distillation, during every port
+    - every base checkpoint (source, targets, references, the 2.7B sibling teacher) and its tokenizer
+    - the rule weights after source distillation, during every port and every clamp ablation
+    - the selected hyperparameter configuration per rule after the Stage-B search, carried into Stages D and E without re-search
     - held-out families, held-out formats, held-out languages, and the sealed test manifest
-    - the eligibility, TR-fidelity and prefix-invariance gates and their thresholds
+    - the eligibility, TR-fidelity, prefix-invariance and parameter-count gates and their thresholds
 
 data:
   train:
@@ -160,35 +289,45 @@ data:
       frozen and hashed before enablement; FineWeb-Edu sequence ids recorded
   development:
     source: >-
-      held-out episodes from the distillation families only, for hyperparameter
-      search and the derived-rule scalar grid
+      held-out episodes from the distillation families only, for the written
+      per-arm hyperparameter search (4 configurations x 1,500 episodes x 1
+      epoch per rule family, selection by development KL) and the derived-rule
+      scalar grid
     identity: >-
       episode ids disjoint from train; no held-out family or held-out language is
-      ever used for development
+      ever used for development; the selected configuration per rule is written
+      to the run manifest before the seeded runs start
   test:
     source: >-
-      held-out families H disjoint from D by task identity and format template;
+      held-out families H disjoint from D by task identity and format template,
+      tagged by family class (binding, function induction, classification);
       SIB-200 and MASSIVE held-out languages (sw, hi, th, ar, tr, id, vi, ja) for
       the write-A/read-B probe
     identity: >-
-      task list, query ids, demonstration permutations and language list hashed
-      into a sealed manifest before any GPU run
+      task list, family-class tags, query ids, demonstration permutations and
+      language list hashed into a sealed manifest before any GPU run
     sealed: true
   contamination_checks:
     - held-out families disjoint from distillation families by task identity and by format template (separator, template, label space)
     - n-gram overlap check of every held-out query against every demonstration in any training episode
     - FineWeb-Edu alignment sequences filtered for held-out task strings; held-out languages excluded from lambda_eq training
-    - per-family and per-language reporting, never only a macro mean
+    - per-family, per-family-class and per-language reporting, never only a macro mean
 
 controls:
   - name: native-icl-gold-and-shuffled-teacher
     matches: [base, episodes, queries, prompt-format]
-  - name: preconditioned-gd-superset-rule
-    matches: [interface, distillation-loss, episode-mix, compute, pq-cofitting, seeds]
-  - name: label-trained-sibling-rule
-    matches: [interface, episode-mix, compute, seeds]
+  - name: iso-parameter-gradient-form-rule
+    matches: [interface, parameter-count, distillation-loss, episode-mix, hyperparameter-search-budget, compute, pq-cofitting, seeds]
+  - name: adaptive-preconditioned-gd-rule
+    matches: [interface, parameter-count, distillation-loss, episode-mix, hyperparameter-search-budget, compute]
+  - name: linear-preconditioned-gd-rule-and-derived-grid
+    matches: [interface, distillation-loss, episode-mix, hyperparameter-search-budget, compute, pq-cofitting]
+  - name: cross-teacher-distilled-sibling
+    matches: [interface, student-base, distillation-loss, episode-mix, hyperparameter-search-budget, compute, seeds]
   - name: random-theta-reservoir
     matches: [interface, pq-fit-procedure, compute]
+  - name: write-direction-clamp-ablation
+    matches: [rule-weights, base, sites, episodes, queries]
   - name: contextual-calibration-zero-shot
     matches: [base, queries, label-space]
   - name: same-family-port-reference
@@ -197,38 +336,64 @@ controls:
     matches: [base, sites, rule-weights, episodes]
   - name: no-update-code-path-check
     matches: [base, sites, queries]
-  - name: encoder-invariance-gd-with-lambda-eq
+  - name: encoder-invariance-gradient-form-with-lambda-eq
     matches: [base, language-pairs, episode-mix, compute]
 
 primary_endpoint:
   metric: >-
-    held-out-family teacher fidelity gain of the distilled rule over the
-    preconditioned-GD superset rule on the source: agreement with the teacher's
-    own 8-shot argmax prediction on gold and shuffled episodes minus the M = 0
-    agreement, admitted only for arms passing the TR-fidelity gate
+    held-out-family teacher fidelity gain of the distilled rule R_theta over
+    the iso-parameter gradient-form rule R_gf on the source: agreement with the
+    teacher's own 8-shot argmax prediction on gold and shuffled episodes minus
+    the M = 0 agreement, admitted only for arms passing the TR-fidelity gate,
+    after both rules received the identical written 4-point hyperparameter
+    search at equal development budget. Decision through the pre-registered
+    attribution tree (harness/icl_rule_distillation.py attribution_tree; order
+    K2, K4, K1, K6, INCONCLUSIVE, UNATTRIBUTED, class): CONFIRMED requires the
+    primary leaf (gain at least 0.10 with the two-sided 95 percent t-interval
+    on family-level means excluding 0), the w-clamp ablation of R_theta
+    costing at least 0.05 fidelity, a margin of at least 0.05 over the
+    cross-teacher sibling where the teachers disagree, random-theta at most
+    half of R_theta, and the re-tiered class co-condition (at least 4 eligible
+    function-induction families with a class point estimate at least 0.10 and
+    a one-sided 80 percent lower bound above 0); a gain without the clamp
+    co-condition is UNATTRIBUTED, a gain between 0.05 and 0.10 is INCONCLUSIVE,
+    and a passing primary leaf with a failed or unmeasurable class co-condition
+    is CLASS_UNRESOLVED; none of the three counts as a win and none is a kill
   direction: maximize
   minimum_effect: 0.10
-  unit_of_analysis: eligible held-out task family by seed, clustered by family
-  aggregation: paired family-clustered bootstrap on family-level means with a 95 percent interval
+  unit_of_analysis: eligible held-out task family by seed, clustered by family; family class reported separately
+  aggregation: two-sided 95 percent t-interval on family-level paired mean differences (df = families minus 1); lower bound above 0 and point estimate at threshold
 
 statistics:
   seeds: [42, 43, 44]
   interval: >-
-    paired family-clustered bootstrap 95 percent interval on family-level means
-    plus per-family, per-seed and per-family-class effects, paired d_z and exact
-    bootstrap p-values; power sensitivity table over assumed noise SDs
+    two-sided 95 percent t-interval on family-level paired mean differences is
+    decision-bearing (simulated power 0.78 at a 0.10 effect with 8 families
+    and 3 seeds, one-directional Type-I 0.028); wild-cluster Rademacher
+    bootstrap and family-clustered percentile bootstrap reported as
+    sensitivities only (the percentile bootstrap's simulated one-directional
+    Type-I is 0.060 at 8 clusters); full-tree Monte-Carlo (wave 5,
+    simulate_attribution_tree_power, 4,000 draws, seed 42, same assumed SDs,
+    clamp, sibling and audit gates assumed to pass) at a true 0.10 effect with
+    8 families and 4 function-induction families: CONFIRMED 0.39,
+    CLASS_UNRESOLVED 0.12, INCONCLUSIVE 0.28, K1 0.21; at a true 0.15 effect
+    CONFIRMED 0.85, K1 0.02; under the null CONFIRMED 0.001, K1 0.978;
+    per-family, per-seed and per-family-class effects, paired d_z and exact
+    p-values; power sensitivity table over 0.5x to 2x of each assumed noise SD
   multiplicity: >-
-    one primary endpoint on the source; Holm correction over the secondary family
-    (r_TL gap, error-agreement kappa, per-step curve distance, order-sensitivity
-    agreement, per-target ported fidelity, hybrid patched ratio, cross-lingual gap)
+    one primary endpoint on the source; Holm correction over the secondary
+    family (ladder readings R_gf versus R_lin and R_gf versus R_adapt, r_TL gap,
+    error-agreement kappa, per-step curve distance, order-sensitivity
+    agreement, rho- and eta-clamp costs, per-target ported fidelity, hybrid
+    patched ratio, cross-lingual gap)
 
 falsifiers:
-  - Kill if F(R_theta) minus F(R_GD) is below 0.05 or its interval includes 0 on the source (behaviourally preconditioned GD at this interface; bounded negative).
-  - Kill if fewer than 8 held-out families pass the eligibility gate on the source (unmeasurable at this scale).
-  - Kill if ported R_theta fails to exceed ported R_GD on every pure-recurrent target, or if the downstream-attention patch removes at least half of the after-recurrent fidelity on the hybrid.
-  - Kill if any audit fails: prefix-invariance not identical, poisoned demonstration persisting after reset, random-theta at least half of R_theta, or any arm failing the TR-fidelity gate on more than half of the eligible families.
-  - Kill the cross-lingual stage if lambda_eq costs more than 0.10 monolingual fidelity or fails to shrink the held-out-language gap.
-  - Collapse if R_theta ties the label-trained sibling within 0.05; report as a Fast Weight Layers / SRWM instance.
+  - Kill (K1) only if the primary leaf fails, F(R_theta) minus F(R_gf) below 0.05 or its t-interval including 0 on the source (at this interface and capacity the teacher's update is behaviourally a gradient-form rule; the ladder readings R_gf versus R_lin and R_gf versus R_adapt give the bounded sub-reading; report per family class); a class-level miss with a passing primary leaf is CLASS_UNRESOLVED, never K1 (wave 5).
+  - Kill (K2) if fewer than 8 held-out families pass the eligibility gate on the source (unmeasurable at this scale).
+  - Kill (K3) if ported F(R_theta) exceeds ported F(R_gf) by at least 0.05 on fewer than 2 of the 4 licensed pure-recurrent targets (exactly 2 is the pre-registered MIXED outcome, not a kill), or (K3b) if the downstream-attention patch removes at least half of the after-recurrent fidelity on the hybrid.
+  - Kill (K4) if any audit fails: prefix-invariance not identical, poisoned demonstration persisting after reset, random-theta at least half of R_theta, any arm failing the TR-fidelity gate on more than half of the eligible families, the parameter-count doctor finding R_gf or R_adapt outside 1 percent of R_theta, or the phase-0 doctor (reference_doctor) failing any registered gate on the implementation at its frozen hash.
+  - Kill (K5) the cross-lingual stage if lambda_eq costs more than 0.10 monolingual fidelity or fails to shrink the held-out-language gap.
+  - Collapse (K6) if R_theta ties the cross-teacher sibling within 0.05 on families where the two teachers disagree on at least 0.10 of queries; report as a Fast Weight Layers / SRWM-class learned ICL rule that is not teacher-specific; if the teachers disagree on fewer than 0.10 of queries everywhere, report K6 as UNINFORMATIVE.
 
 execution:
   enabled: false
@@ -238,18 +403,22 @@ execution:
   fresh_job_resume_test: true
   checkpoint_interval_minutes: 10
   blocked_by:
-    - no implementation of the two-pass write/read harness, the rules, the P/Q fits or the Stage-A doctors exists yet
-    - the discovery image (127.0.0.1:5000/cotcodec-research@sha256:15d6abc06fa53ab466087a92107da9c58e469615e2f56a683fefd0a7600277f3) lacks flash-linear-attention; a pilot image with fla 0.5.2 (and mamba_ssm plus causal-conv1d for the replication stage) must be built and digest-pinned
-    - pilot checkpoints are not registered; the arms use the closest registered ids (qwen3-0.6b-base, delta-net-1.3b-8k, mamba-130m-hf, smollm2-135m) as stand-ins for fla-hub/transformer-1.3B-100B, the six fla-hub 1.3B-100B recurrent targets, fla-hub/transformer-2.7B-100B, startlux-models/gdn-1.3b-isp-hybrid-3to1-50b, Qwen/Qwen3-1.7B-Base and the state-spaces 2.7B triplet, whose 40-hex revisions are listed in directions/19-icl-rule-distillation-port.md
-    - fla-hub delta_net and mamba model cards state no license; the registered delta-net-1.3b-8k carries the same unresolved-license blocker; discovery only until resolved
-    - no container smoke run, Slurm dry-run, throughput measurement or fresh-job resume receipt exists; MFU is assumed at 25 percent
-    - no causality doctor, TR-fidelity gate or analysis script has been written or hash-frozen
+    - only the CPU phase-0 doctor exists (harness/icl_rule_distillation.py, executed in wave 5 on a synthetic regime); the model-side two-pass write/read harness with residual hooks at four sites on real bases, the P/Q fits, the per-arm GPU search, the TR-fidelity gate on real gold-plus-shuffled episodes and the tokenizer, loader and MFU doctors do not exist yet
+    - the rebuilt image cotcodec-research:999f5583-architecture (127.0.0.1:5000/cotcodec-research@sha256:bde90daa78c26cd2fb9d05036b0c9f9613c2386b9d7561816b541d2736c79f5d; torch 2.11.0+cu128, transformers 5.15.0, flash-linear-attention 0.5.2, fla-core 0.5.2, triton 3.6.0) exists but tilelang is still being added (fla guards the gated GDN backward on Hopper under Triton below 3.7.1, fla issue 640), mamba_ssm and causal-conv1d for the replication stage are not in it, and no container smoke, sbatch dry-run or fresh-job resume receipt exists for this contract; the discovery image 15d6abc0 is superseded and no longer cited for pilots
+    - registry sync (wave 5): transformer-1.3b-100b, transformer-2.7b-100b, gla-1.3b-100b, delta-net-1.3b-100b, mamba-1.3b-100b, gdn-1.3b-isp-hybrid-3to1-50b and qwen3-1.7b-base are registered (models/registry.yaml commit 53773c3) and the arms now name them; receipts exist on fal-h100-01 for transformer-1.3b-100b, gla-1.3b-100b, gdn-1.3b-isp-hybrid-3to1-50b and qwen3-1.7b-base but not yet for transformer-2.7b-100b, delta-net-1.3b-100b or mamba-1.3b-100b; fla-hub retnet, hgrn2 and gsa 1.3B-100B (three of the four licensed P2/K3 targets), the state-spaces 2.7B triplet and pythia-2.8b are not registered, so Stages C and E cannot be enabled
+    - fla-hub delta_net and mamba model cards state no license (re-checked through the Hugging Face API on 2026-09-02 UTC); the registered delta-net-1.3b-100b and mamba-1.3b-100b carry license unresolved, are discovery-only and are excluded from P2/K3
+    - no container smoke run, Slurm dry-run, throughput measurement or fresh-job resume receipt exists; MFU is assumed at 25 percent; the wave-4 program estimate is 14.6 of 16 GPU-h with 1.4 GPU-h of slack
+    - the analysis script for real runs (family-level t-interval, wild-cluster bootstrap, attribution tree on measured fidelities, hash-frozen) is not written; the tree decision function and its power simulation now live in harness/icl_rule_distillation.py and are exercised by the phase-0 doctor, superseding the wave-4 scratchpad power_sim.py
+    - the three noise SDs behind the power table are assumptions until Stage B measures them
     - General Translation parallel data is excluded from the pilot; its research-use license is unknown and must be cleared in writing before the optional upgrade
 
 required_artifacts:
-  - model and data license receipts with immutable revisions for every base, dataset and kernel package
-  - sealed test manifest hash, distillation and held-out family lists, format templates and shuffled-label permutations
+  - model and data license receipts with immutable revisions for every base, dataset and kernel package, including the 2.7B sibling teacher
+  - sealed test manifest hash, distillation and held-out family lists with family-class tags, format templates and shuffled-label permutations
+  - per-arm hyperparameter-search logs (4 configurations per rule family, development KL, selected configuration, grid-edge flags) and the parameter-count doctor output
+  - the phase-0 doctor receipt (data/results/icl-rule-distillation-port/phase0-doctor.json, a git-ignored path) with its payload and implementation sha256, re-run on the implementation at its frozen hash before enablement and copied hashed into the evidence bundle
   - hash-chained write logs, reset attestations, prefix-invariance and TR-fidelity gate outputs for every arm
-  - per-query prediction tables for every rule and the teacher on every held-out family and language, with fidelity, kappa, per-step and order-sensitivity computations
+  - per-query prediction tables for every rule, every clamp ablation and both teachers on every held-out family and language, with fidelity, kappa, per-step, order-sensitivity and teacher-teacher agreement computations
+  - attribution-tree decision record with the family-level t-intervals and both bootstrap sensitivities
   - P/Q fit diagnostics, tokens, FLOPs, wall-time and measured-MFU ledgers per arm and stage
   - atomic checkpoint and fresh-job continuation equivalence report for every truncated-BPTT run

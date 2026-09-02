@@ -19,14 +19,16 @@ This file is a stable continuation pointer, not a duplicate operating manual.
 
 ## Current continuation
 
-- The 2026-09-01 frontier sweep and three research-gauntlet waves are sealed:
+- The 2026-09-01 frontier sweep and five research-gauntlet waves are sealed (exit 5 fired at 66 → 65 → 65):
   scan `research/scans/2026-09-01.md`, program
   `research/frontier-systems-program-2026-09-01.md`, ledgers
   `research/gauntlet/2026-09-01-frontier/`, audit
   `data/research-gauntlet/2026-09-01-frontier.jsonl`. Four preregistered
-  directions (19–22) exist with proposals and validator-passing contracts; none
-  is pilot-ready (best 66/100; doctor FAIL by construction). Wave-4 work orders
-  are the reviewers' fixes in `wave3-ledger.md`. Follow
+  directions (19–22) exist with proposals, validator-passing contracts, and
+  executable CPU phase-0 doctors (`scripts/run_*_doctor.py`); none is
+  pilot-ready (best 66/100; doctor FAIL by construction). The next executable
+  step is the compiled `qwen3.5-4b-base` discovery manifest (see the program's
+  "Next executable steps"). Follow
   `.claude/rules/research-gauntlet-loop.md`.
 - Inputs resolved or re-scoped 2026-09-01: the parallel-corpus inventory is
   sealed (`research/data/gt-parallel-corpus-inventory-2026-09-01.md`; customer
@@ -35,8 +37,9 @@ This file is a stable continuation pointer, not a duplicate operating manual.
   (`~/.config/cotcodec/secrets.env`); root for the Slurm/Pyxis upgrade still
   needs a password.
 - Stage 0 on `fal-h100-01`: image `cotcodec-research:999f5583-architecture`
-  (fla 0.5.2) built; ten pilot checkpoints fetched with receipts; the
-  throughput doctor waits on the `tilelang` rebuild (fla Hopper guard, #640).
+  (fla 0.5.2) built; ten pilot checkpoints fetched with receipts; measured
+  eager throughput 282k tok/s (134M) / 73k tok/s (422M) on the tilelang image
+  `0b3ecef0-architecture` (`research/evidence/infrastructure/fla-throughput-h100-2026-09-01.json`).
   Entry points: `infra/slurm/host-single-node/{build-architecture-image,fla-throughput-doctor,fetch-pilot-models}.sbatch`.
 - Before any GPU-hour on directions 19–22: rebuild and digest-pin the image
   with `flash-linear-attention` 0.5.2, register the pilot checkpoints, compile
