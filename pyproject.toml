@@ -25,6 +25,7 @@ dependencies = [
 [project.optional-dependencies]
 architecture = [
     "accelerate",
+    "flash-linear-attention==0.5.2",
     "safetensors",
     "torch==2.11.0",
     "transformers",

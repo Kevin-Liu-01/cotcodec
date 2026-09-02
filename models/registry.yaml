@@ -1,5 +1,5 @@
 schema_version: 1
-verified_at: "2026-08-11"
+verified_at: '2026-08-11'
 models:
   bge-small-en-v1.5:
     backend: huggingface
@@ -11,19 +11,20 @@ models:
     access: public
     trust_remote_code: false
     publication_eligible: true
-    roles: [shared-memory-embedding, retrieval-equivalence]
+    roles:
+    - shared-memory-embedding
+    - retrieval-equivalence
     metadata_files:
-      - README.md
-      - config.json
-      - modules.json
-      - tokenizer_config.json
+    - README.md
+    - config.json
+    - modules.json
+    - tokenizer_config.json
     required_files:
-      - README.md
-      - config.json
-      - model.safetensors
-      - tokenizer.json
+    - README.md
+    - config.json
+    - model.safetensors
+    - tokenizer.json
     source_url: https://huggingface.co/BAAI/bge-small-en-v1.5
-
   smollm2-135m:
     backend: huggingface
     repo_id: HuggingFaceTB/SmolLM2-135M
@@ -34,18 +35,20 @@ models:
     access: public
     trust_remote_code: false
     publication_eligible: true
-    roles: [loader-smoke, retrofit-smoke, small-transformer-control]
+    roles:
+    - loader-smoke
+    - retrofit-smoke
+    - small-transformer-control
     metadata_files:
-      - README.md
-      - config.json
-      - generation_config.json
-      - tokenizer_config.json
+    - README.md
+    - config.json
+    - generation_config.json
+    - tokenizer_config.json
     required_files:
-      - config.json
-      - model.safetensors
-      - tokenizer.json
+    - config.json
+    - model.safetensors
+    - tokenizer.json
     source_url: https://huggingface.co/HuggingFaceTB/SmolLM2-135M
-
   qwen3-0.6b-base:
     backend: huggingface
     repo_id: Qwen/Qwen3-0.6B-Base
@@ -56,20 +59,22 @@ models:
     access: public
     trust_remote_code: false
     publication_eligible: true
-    roles: [multilingual-base, transformer-sidecar-base, agent-smoke]
+    roles:
+    - multilingual-base
+    - transformer-sidecar-base
+    - agent-smoke
     metadata_files:
-      - LICENSE
-      - README.md
-      - config.json
-      - generation_config.json
-      - tokenizer_config.json
+    - LICENSE
+    - README.md
+    - config.json
+    - generation_config.json
+    - tokenizer_config.json
     required_files:
-      - LICENSE
-      - config.json
-      - model.safetensors
-      - tokenizer.json
+    - LICENSE
+    - config.json
+    - model.safetensors
+    - tokenizer.json
     source_url: https://huggingface.co/Qwen/Qwen3-0.6B-Base
-
   qwen3.5-4b:
     backend: huggingface
     repo_id: Qwen/Qwen3.5-4B
@@ -80,21 +85,23 @@ models:
     access: public
     trust_remote_code: false
     publication_eligible: true
-    roles: [small-competent-agent, scale-transport, tinker-controller-smoke]
+    roles:
+    - small-competent-agent
+    - scale-transport
+    - tinker-controller-smoke
     metadata_files:
-      - LICENSE
-      - README.md
-      - chat_template.jinja
-      - config.json
-      - tokenizer_config.json
+    - LICENSE
+    - README.md
+    - chat_template.jinja
+    - config.json
+    - tokenizer_config.json
     required_files:
-      - LICENSE
-      - chat_template.jinja
-      - config.json
-      - model.safetensors.index.json
-      - tokenizer.json
+    - LICENSE
+    - chat_template.jinja
+    - config.json
+    - model.safetensors.index.json
+    - tokenizer.json
     source_url: https://huggingface.co/Qwen/Qwen3.5-4B
-
   qwen3.5-9b:
     backend: huggingface
     repo_id: Qwen/Qwen3.5-9B
@@ -105,21 +112,22 @@ models:
     access: public
     trust_remote_code: false
     publication_eligible: true
-    roles: [medium-open-agent, within-family-scale-transport]
+    roles:
+    - medium-open-agent
+    - within-family-scale-transport
     metadata_files:
-      - LICENSE
-      - README.md
-      - chat_template.jinja
-      - config.json
-      - tokenizer_config.json
+    - LICENSE
+    - README.md
+    - chat_template.jinja
+    - config.json
+    - tokenizer_config.json
     required_files:
-      - LICENSE
-      - chat_template.jinja
-      - config.json
-      - model.safetensors.index.json
-      - tokenizer.json
+    - LICENSE
+    - chat_template.jinja
+    - config.json
+    - model.safetensors.index.json
+    - tokenizer.json
     source_url: https://huggingface.co/Qwen/Qwen3.5-9B
-
   qwen3.6-35b-a3b:
     backend: huggingface
     repo_id: Qwen/Qwen3.6-35B-A3B
@@ -130,22 +138,24 @@ models:
     access: public
     trust_remote_code: false
     publication_eligible: true
-    roles: [large-open-agent, moe-scale-transport, tinker-controller-medium]
+    roles:
+    - large-open-agent
+    - moe-scale-transport
+    - tinker-controller-medium
     metadata_files:
-      - LICENSE
-      - README.md
-      - chat_template.jinja
-      - config.json
-      - generation_config.json
-      - tokenizer_config.json
+    - LICENSE
+    - README.md
+    - chat_template.jinja
+    - config.json
+    - generation_config.json
+    - tokenizer_config.json
     required_files:
-      - LICENSE
-      - chat_template.jinja
-      - config.json
-      - model.safetensors.index.json
-      - tokenizer.json
+    - LICENSE
+    - chat_template.jinja
+    - config.json
+    - model.safetensors.index.json
+    - tokenizer.json
     source_url: https://huggingface.co/Qwen/Qwen3.6-35B-A3B
-
   gpt-oss-120b:
     backend: huggingface
     repo_id: openai/gpt-oss-120b
@@ -156,25 +166,27 @@ models:
     access: public
     trust_remote_code: false
     publication_eligible: true
-    roles: [large-open-frontier-control, architecture-transport, single-h100-scale]
+    roles:
+    - large-open-frontier-control
+    - architecture-transport
+    - single-h100-scale
     metadata_files:
-      - LICENSE
-      - README.md
-      - USAGE_POLICY
-      - chat_template.jinja
-      - config.json
-      - generation_config.json
-      - tokenizer_config.json
+    - LICENSE
+    - README.md
+    - USAGE_POLICY
+    - chat_template.jinja
+    - config.json
+    - generation_config.json
+    - tokenizer_config.json
     required_files:
-      - LICENSE
-      - USAGE_POLICY
-      - chat_template.jinja
-      - config.json
-      - model.safetensors.index.json
-      - tokenizer.json
+    - LICENSE
+    - USAGE_POLICY
+    - chat_template.jinja
+    - config.json
+    - model.safetensors.index.json
+    - tokenizer.json
     source_url: https://huggingface.co/openai/gpt-oss-120b
     code_url: https://github.com/openai/gpt-oss
-
   mamba-130m-hf:
     backend: huggingface
     repo_id: state-spaces/mamba-130m-hf
@@ -185,19 +197,20 @@ models:
     access: public
     trust_remote_code: false
     publication_eligible: true
-    roles: [recurrent-control, sidecar-interface-smoke]
+    roles:
+    - recurrent-control
+    - sidecar-interface-smoke
     metadata_files:
-      - README.md
-      - config.json
-      - generation_config.json
-      - tokenizer_config.json
+    - README.md
+    - config.json
+    - generation_config.json
+    - tokenizer_config.json
     required_files:
-      - config.json
-      - model.safetensors
-      - tokenizer.json
+    - config.json
+    - model.safetensors
+    - tokenizer.json
     source_url: https://huggingface.co/state-spaces/mamba-130m-hf
     code_url: https://github.com/state-spaces/mamba
-
   delta-net-1.3b-8k:
     backend: huggingface
     repo_id: fla-hub/delta_net-1.3B-8K-100B
@@ -208,20 +221,21 @@ models:
     access: public
     trust_remote_code: false
     publication_eligible: false
-    roles: [coded-memory-retrofit, recurrent-base]
+    roles:
+    - coded-memory-retrofit
+    - recurrent-base
     metadata_files:
-      - README.md
-      - config.json
-      - generation_config.json
-      - tokenizer_config.json
+    - README.md
+    - config.json
+    - generation_config.json
+    - tokenizer_config.json
     required_files:
-      - config.json
-      - model.safetensors
-      - tokenizer.json
+    - config.json
+    - model.safetensors
+    - tokenizer.json
     source_url: https://huggingface.co/fla-hub/delta_net-1.3B-8K-100B
     code_url: https://github.com/fla-org/flash-linear-attention
     blocker: Resolve the checkpoint license independently of the MIT code license.
-
   kimi-linear-48b-a3b-base:
     backend: huggingface
     repo_id: moonshotai/Kimi-Linear-48B-A3B-Base
@@ -232,29 +246,29 @@ models:
     access: public
     trust_remote_code: true
     publication_eligible: false
-    roles: [kda-hybrid-control, sidecar-scale-base, long-context-memory-diagnostic]
+    roles:
+    - kda-hybrid-control
+    - sidecar-scale-base
+    - long-context-memory-diagnostic
     metadata_files:
-      - README.md
-      - config.json
-      - configuration_kimi.py
-      - generation_config.json
-      - modeling_kimi.py
-      - tokenization_kimi.py
-      - tokenizer_config.json
+    - README.md
+    - config.json
+    - configuration_kimi.py
+    - generation_config.json
+    - modeling_kimi.py
+    - tokenization_kimi.py
+    - tokenizer_config.json
     required_files:
-      - config.json
-      - configuration_kimi.py
-      - modeling_kimi.py
-      - model.safetensors.index.json
-      - tokenization_kimi.py
-      - tiktoken.model
+    - config.json
+    - configuration_kimi.py
+    - modeling_kimi.py
+    - model.safetensors.index.json
+    - tokenization_kimi.py
+    - tiktoken.model
     source_url: https://huggingface.co/moonshotai/Kimi-Linear-48B-A3B-Base
     code_url: https://github.com/MoonshotAI/Kimi-Linear
-    blocker: >-
-      Review and vendor the custom modeling/tokenizer code, then prove an
-      8xH100 tensor-parallel load and checkpoint-resume path; this is a scale
-      cell, not a laptop smoke model.
-
+    blocker: Review and vendor the custom modeling/tokenizer code, then prove an 8xH100 tensor-parallel
+      load and checkpoint-resume path; this is a scale cell, not a laptop smoke model.
   blt-1b:
     backend: huggingface
     repo_id: facebook/blt-1b
@@ -265,21 +279,22 @@ models:
     access: gated-manual
     trust_remote_code: false
     publication_eligible: false
-    roles: [byte-patch-retrofit, byte-patch-reference]
+    roles:
+    - byte-patch-retrofit
+    - byte-patch-reference
     metadata_files:
-      - LICENSE
-      - README.md
-      - config.json
-      - train_args.json
+    - LICENSE
+    - README.md
+    - config.json
+    - train_args.json
     required_files:
-      - LICENSE
-      - config.json
-      - model.safetensors
-      - train_args.json
+    - LICENSE
+    - config.json
+    - model.safetensors
+    - train_args.json
     source_url: https://huggingface.co/facebook/blt-1b
     code_url: https://github.com/facebookresearch/blt
     blocker: Non-commercial license and manual Hub access require explicit approval.
-
   llada-8b-base:
     backend: huggingface
     repo_id: GSAI-ML/LLaDA-8B-Base
@@ -290,24 +305,24 @@ models:
     access: public
     trust_remote_code: true
     publication_eligible: false
-    roles: [bidirectional-plan-repair]
+    roles:
+    - bidirectional-plan-repair
     metadata_files:
-      - README.md
-      - config.json
-      - configuration_llada.py
-      - generation_config.json
-      - modeling_llada.py
-      - tokenizer_config.json
+    - README.md
+    - config.json
+    - configuration_llada.py
+    - generation_config.json
+    - modeling_llada.py
+    - tokenizer_config.json
     required_files:
-      - config.json
-      - configuration_llada.py
-      - modeling_llada.py
-      - model.safetensors.index.json
-      - tokenizer.json
+    - config.json
+    - configuration_llada.py
+    - modeling_llada.py
+    - model.safetensors.index.json
+    - tokenizer.json
     source_url: https://huggingface.co/GSAI-ML/LLaDA-8B-Base
     code_url: https://github.com/ML-GSAI/LLaDA
     blocker: Review and pin the custom modeling code before execution; never pass trust_remote_code blindly.
-
   sdxl-base-1.0:
     backend: huggingface
     repo_id: stabilityai/stable-diffusion-xl-base-1.0
@@ -318,21 +333,22 @@ models:
     access: public
     trust_remote_code: false
     publication_eligible: true
-    roles: [diffusers-loader-smoke, vision-pipeline-control]
+    roles:
+    - diffusers-loader-smoke
+    - vision-pipeline-control
     metadata_files:
-      - LICENSE.md
-      - README.md
-      - model_index.json
-      - scheduler/scheduler_config.json
-      - unet/config.json
-      - vae/config.json
+    - LICENSE.md
+    - README.md
+    - model_index.json
+    - scheduler/scheduler_config.json
+    - unet/config.json
+    - vae/config.json
     required_files:
-      - LICENSE.md
-      - model_index.json
-      - unet/diffusion_pytorch_model.safetensors
-      - vae/diffusion_pytorch_model.safetensors
+    - LICENSE.md
+    - model_index.json
+    - unet/diffusion_pytorch_model.safetensors
+    - vae/diffusion_pytorch_model.safetensors
     source_url: https://huggingface.co/stabilityai/stable-diffusion-xl-base-1.0
-
   ollama-qwen3-0.6b:
     backend: ollama
     model_ref: qwen3:0.6b
@@ -342,10 +358,10 @@ models:
     access: public
     trust_remote_code: false
     publication_eligible: false
-    roles: [local-agent-smoke]
+    roles:
+    - local-agent-smoke
     source_url: https://ollama.com/library/qwen3
     blocker: Ollama tags are mutable exploration aliases, not publication artifacts.
-
   ollama-deepseek-r1-8b:
     backend: ollama
     model_ref: deepseek-r1:8b
@@ -355,6 +371,417 @@ models:
     access: public
     trust_remote_code: false
     publication_eligible: false
-    roles: [local-reasoning-smoke]
+    roles:
+    - local-reasoning-smoke
     source_url: https://ollama.com/library/deepseek-r1
     blocker: Ollama tags are mutable exploration aliases, not publication artifacts.
+  qwen3.5-4b-base:
+    backend: huggingface
+    repo_id: Qwen/Qwen3.5-4B-Base
+    revision: 1001bb4d826a52d1f399e183466143f4da7b741b
+    runtime: transformers
+    architecture_family: gated-deltanet-attention-hybrid
+    license: apache-2.0
+    access: public
+    trust_remote_code: false
+    publication_eligible: true
+    roles:
+    - gdn-hybrid-base
+    - direction-20-subject
+    - direction-21-subject
+    metadata_files:
+    - README.md
+    - LICENSE
+    - config.json
+    - tokenizer_config.json
+    required_files:
+    - config.json
+    - model.safetensors-00001-of-00002.safetensors
+    - model.safetensors-00002-of-00002.safetensors
+    - tokenizer.json
+    source_url: https://huggingface.co/Qwen/Qwen3.5-4B-Base
+    registered_at: '2026-09-01'
+    registered_for: directions 19-22 phase-0 pilots (gauntlet 2026-09-01)
+    blocker: 'no artifact receipt yet: run fetch_open_model.py fetch --metadata-only then fetch/verify
+      on persistent storage'
+  qwen3-1.7b-base:
+    backend: huggingface
+    repo_id: Qwen/Qwen3-1.7B-Base
+    revision: ea980cb0a6c2ae4b936e82123acc929f1cec04c1
+    runtime: transformers
+    architecture_family: transformer
+    license: apache-2.0
+    access: public
+    trust_remote_code: false
+    publication_eligible: true
+    roles:
+    - direction-19-stage-d-source
+    metadata_files:
+    - README.md
+    - LICENSE
+    - config.json
+    - generation_config.json
+    - tokenizer_config.json
+    required_files:
+    - config.json
+    - model.safetensors
+    - tokenizer.json
+    source_url: https://huggingface.co/Qwen/Qwen3-1.7B-Base
+    registered_at: '2026-09-01'
+    registered_for: directions 19-22 phase-0 pilots (gauntlet 2026-09-01)
+    blocker: 'no artifact receipt yet: run fetch_open_model.py fetch --metadata-only then fetch/verify
+      on persistent storage'
+  transformer-1.3b-100b:
+    backend: huggingface
+    repo_id: fla-hub/transformer-1.3B-100B
+    revision: d6f66f4181fa669e5863327815b44533e3a395e7
+    runtime: transformers
+    architecture_family: transformer
+    license: mit
+    access: public
+    trust_remote_code: false
+    publication_eligible: true
+    roles:
+    - direction-19-source-transformer
+    - iso-corpus-ladder
+    metadata_files:
+    - README.md
+    - config.json
+    - generation_config.json
+    - tokenizer_config.json
+    required_files:
+    - config.json
+    - model.safetensors
+    - tokenizer.json
+    - tokenizer.model
+    source_url: https://huggingface.co/fla-hub/transformer-1.3B-100B
+    registered_at: '2026-09-01'
+    registered_for: directions 19-22 phase-0 pilots (gauntlet 2026-09-01)
+    blocker: 'no artifact receipt yet: run fetch_open_model.py fetch --metadata-only then fetch/verify
+      on persistent storage'
+  transformer-2.7b-100b:
+    backend: huggingface
+    repo_id: fla-hub/transformer-2.7B-100B
+    revision: e29b06c913e05827bfb534844267c8d9f673feda
+    runtime: transformers
+    architecture_family: transformer
+    license: mit
+    access: public
+    trust_remote_code: false
+    publication_eligible: true
+    roles:
+    - direction-19-same-family-port-target
+    metadata_files:
+    - README.md
+    - config.json
+    - generation_config.json
+    - tokenizer_config.json
+    required_files:
+    - config.json
+    - model-00001-of-00002.safetensors
+    - model-00002-of-00002.safetensors
+    - tokenizer.json
+    - tokenizer.model
+    source_url: https://huggingface.co/fla-hub/transformer-2.7B-100B
+    registered_at: '2026-09-01'
+    registered_for: directions 19-22 phase-0 pilots (gauntlet 2026-09-01)
+    blocker: 'no artifact receipt yet: run fetch_open_model.py fetch --metadata-only then fetch/verify
+      on persistent storage'
+  gla-1.3b-100b:
+    backend: huggingface
+    repo_id: fla-hub/gla-1.3B-100B
+    revision: 46b15820a4df269e99aed9d709e017677c15d24b
+    runtime: transformers
+    architecture_family: gated-linear-attention
+    license: mit
+    access: public
+    trust_remote_code: false
+    publication_eligible: true
+    roles:
+    - direction-19-recurrent-target
+    - iso-corpus-ladder
+    metadata_files:
+    - README.md
+    - config.json
+    - generation_config.json
+    - tokenizer_config.json
+    required_files:
+    - config.json
+    - model.safetensors
+    - tokenizer.json
+    - tokenizer.model
+    source_url: https://huggingface.co/fla-hub/gla-1.3B-100B
+    registered_at: '2026-09-01'
+    registered_for: directions 19-22 phase-0 pilots (gauntlet 2026-09-01)
+    blocker: 'no artifact receipt yet: run fetch_open_model.py fetch --metadata-only then fetch/verify
+      on persistent storage'
+  delta-net-1.3b-100b:
+    backend: huggingface
+    repo_id: fla-hub/delta_net-1.3B-100B
+    revision: b4dcbbafd4fde802717bdec3008d4aba9cb3a1f8
+    runtime: transformers
+    architecture_family: delta-net
+    license: unresolved
+    access: public
+    trust_remote_code: false
+    publication_eligible: false
+    roles:
+    - direction-19-recurrent-target
+    metadata_files:
+    - README.md
+    - config.json
+    - generation_config.json
+    - tokenizer_config.json
+    required_files:
+    - config.json
+    - model.safetensors
+    - tokenizer.json
+    - tokenizer.model
+    source_url: https://huggingface.co/fla-hub/delta_net-1.3B-100B
+    registered_at: '2026-09-01'
+    registered_for: directions 19-22 phase-0 pilots (gauntlet 2026-09-01)
+    blocker: 'model card states no license; resolve before any publication use; no artifact receipt yet:
+      run fetch_open_model.py fetch --metadata-only then fetch/verify on persistent storage'
+  mamba-1.3b-100b:
+    backend: huggingface
+    repo_id: fla-hub/mamba-1.3B-100B
+    revision: 49d177eaa9fedd6ff74aab256a02140299df5e99
+    runtime: transformers
+    architecture_family: mamba
+    license: unresolved
+    access: public
+    trust_remote_code: false
+    publication_eligible: false
+    roles:
+    - direction-19-recurrent-target
+    metadata_files:
+    - config.json
+    - generation_config.json
+    - tokenizer_config.json
+    required_files:
+    - config.json
+    - model.safetensors
+    - tokenizer.json
+    - tokenizer.model
+    source_url: https://huggingface.co/fla-hub/mamba-1.3B-100B
+    registered_at: '2026-09-01'
+    registered_for: directions 19-22 phase-0 pilots (gauntlet 2026-09-01)
+    blocker: 'model card states no license; resolve before any publication use; no artifact receipt yet:
+      run fetch_open_model.py fetch --metadata-only then fetch/verify on persistent storage'
+  transformer-340m-10b:
+    backend: huggingface
+    repo_id: fla-hub/transformer-340M-10B
+    revision: b838e8e117845a79efb99339be042e389dd7b38b
+    runtime: transformers
+    architecture_family: transformer
+    license: unresolved
+    access: public
+    trust_remote_code: false
+    publication_eligible: false
+    roles:
+    - iso-corpus-ladder-340m
+    metadata_files:
+    - README.md
+    - config.json
+    - generation_config.json
+    - tokenizer_config.json
+    required_files:
+    - config.json
+    - model.safetensors
+    - tokenizer.json
+    - tokenizer.model
+    source_url: https://huggingface.co/fla-hub/transformer-340M-10B
+    registered_at: '2026-09-01'
+    registered_for: directions 19-22 phase-0 pilots (gauntlet 2026-09-01)
+    blocker: 'model card states no license; resolve before any publication use; no artifact receipt yet:
+      run fetch_open_model.py fetch --metadata-only then fetch/verify on persistent storage'
+  gla-340m-15b:
+    backend: huggingface
+    repo_id: fla-hub/gla-340M-15B
+    revision: 6e04029dc090a2c55df712f18814db80aa39894f
+    runtime: transformers
+    architecture_family: gated-linear-attention
+    license: mit
+    access: public
+    trust_remote_code: false
+    publication_eligible: true
+    roles:
+    - iso-corpus-ladder-340m
+    metadata_files:
+    - README.md
+    - config.json
+    - generation_config.json
+    - tokenizer_config.json
+    required_files:
+    - config.json
+    - model.safetensors
+    - tokenizer.json
+    - tokenizer.model
+    source_url: https://huggingface.co/fla-hub/gla-340M-15B
+    registered_at: '2026-09-01'
+    registered_for: directions 19-22 phase-0 pilots (gauntlet 2026-09-01)
+    blocker: 'no artifact receipt yet: run fetch_open_model.py fetch --metadata-only then fetch/verify
+      on persistent storage'
+  gdn-1.3b-isp-hybrid-3to1-50b:
+    backend: huggingface
+    repo_id: startlux-models/gdn-1.3b-isp-hybrid-3to1-50b
+    revision: 0ced446e767709a15cbe2004948eac1fdea443db
+    runtime: transformers
+    architecture_family: gated-deltanet-attention-hybrid
+    license: apache-2.0
+    access: public
+    trust_remote_code: false
+    publication_eligible: true
+    roles:
+    - gdn-hybrid-control
+    - direction-19-hybrid-site-factor
+    - direction-22-control
+    metadata_files:
+    - README.md
+    - LICENSE
+    - config.json
+    - generation_config.json
+    - tokenizer_config.json
+    required_files:
+    - config.json
+    - model-00001-of-00002.safetensors
+    - model-00002-of-00002.safetensors
+    - tokenizer.json
+    source_url: https://huggingface.co/startlux-models/gdn-1.3b-isp-hybrid-3to1-50b
+    registered_at: '2026-09-01'
+    registered_for: directions 19-22 phase-0 pilots (gauntlet 2026-09-01)
+    blocker: 'no artifact receipt yet: run fetch_open_model.py fetch --metadata-only then fetch/verify
+      on persistent storage'
+  gdn-340m-isp-hybrid-3to1-10b:
+    backend: huggingface
+    repo_id: startlux-models/gdn-340m-isp-hybrid-3to1-10b
+    revision: eec9dbb045ddeb90bc53750ac1c68a493af1aa0f
+    runtime: transformers
+    architecture_family: gated-deltanet-attention-hybrid
+    license: apache-2.0
+    access: public
+    trust_remote_code: false
+    publication_eligible: true
+    roles:
+    - gdn-hybrid-control-340m
+    - direction-22-retrofit-base
+    metadata_files:
+    - README.md
+    - LICENSE
+    - config.json
+    - generation_config.json
+    - tokenizer_config.json
+    required_files:
+    - config.json
+    - model.safetensors
+    - tokenizer.json
+    source_url: https://huggingface.co/startlux-models/gdn-340m-isp-hybrid-3to1-10b
+    registered_at: '2026-09-01'
+    registered_for: directions 19-22 phase-0 pilots (gauntlet 2026-09-01)
+    blocker: 'no artifact receipt yet: run fetch_open_model.py fetch --metadata-only then fetch/verify
+      on persistent storage'
+  olmo-hybrid-7b:
+    backend: huggingface
+    repo_id: allenai/Olmo-Hybrid-7B
+    revision: 4f1cc566f9fdf3ce68da2ab6a788a83d89896dcf
+    runtime: transformers
+    architecture_family: olmo-hybrid
+    license: apache-2.0
+    access: public
+    trust_remote_code: false
+    publication_eligible: true
+    roles:
+    - direction-22-hybrid-subject
+    - open-data-hybrid
+    metadata_files:
+    - README.md
+    - config.json
+    - tokenizer_config.json
+    required_files:
+    - config.json
+    - model.safetensors
+    - tokenizer.json
+    source_url: https://huggingface.co/allenai/Olmo-Hybrid-7B
+    registered_at: '2026-09-01'
+    registered_for: directions 19-22 phase-0 pilots (gauntlet 2026-09-01)
+    blocker: 'no artifact receipt yet: run fetch_open_model.py fetch --metadata-only then fetch/verify
+      on persistent storage'
+  olmo-3-1025-7b:
+    backend: huggingface
+    repo_id: allenai/Olmo-3-1025-7B
+    revision: a81bae42db3975be1671e27b9c9a56da1a9f980f
+    runtime: transformers
+    architecture_family: transformer
+    license: apache-2.0
+    access: public
+    trust_remote_code: false
+    publication_eligible: true
+    roles:
+    - direction-22-dense-control
+    metadata_files:
+    - README.md
+    - config.json
+    - generation_config.json
+    - tokenizer_config.json
+    required_files:
+    - config.json
+    - model-00001-of-00003.safetensors
+    - model-00002-of-00003.safetensors
+    - tokenizer.json
+    source_url: https://huggingface.co/allenai/Olmo-3-1025-7B
+    registered_at: '2026-09-01'
+    registered_for: directions 19-22 phase-0 pilots (gauntlet 2026-09-01)
+    blocker: 'no artifact receipt yet: run fetch_open_model.py fetch --metadata-only then fetch/verify
+      on persistent storage'
+  e2-ttt-mlp-1.3b-15b:
+    backend: huggingface
+    repo_id: zeyun-zhong/e2-ttt-mlp-1.3B-15B
+    revision: 6bac56e26c2bf5ba65530a75d2adf7b79ff918ad
+    runtime: transformers
+    architecture_family: e2-ttt-mlp
+    license: mit
+    access: public
+    trust_remote_code: false
+    publication_eligible: true
+    roles:
+    - ttt-recall-audit-subject
+    metadata_files:
+    - README.md
+    - config.json
+    - generation_config.json
+    - tokenizer_config.json
+    required_files:
+    - config.json
+    - model-00001-of-00002.safetensors
+    - model-00002-of-00002.safetensors
+    - tokenizer.json
+    source_url: https://huggingface.co/zeyun-zhong/e2-ttt-mlp-1.3B-15B
+    registered_at: '2026-09-01'
+    registered_for: directions 19-22 phase-0 pilots (gauntlet 2026-09-01)
+    blocker: 'no artifact receipt yet: run fetch_open_model.py fetch --metadata-only then fetch/verify
+      on persistent storage'
+  rwkv7-1.5b-world:
+    backend: huggingface
+    repo_id: fla-hub/rwkv7-1.5B-world
+    revision: 004140baad7a62d49a26d97508ef19cf09672328
+    runtime: custom-transformers
+    architecture_family: rwkv7
+    license: apache-2.0
+    access: public
+    trust_remote_code: true
+    publication_eligible: false
+    roles:
+    - direction-20-attention-free-subject
+    metadata_files:
+    - README.md
+    - config.json
+    - generation_config.json
+    - tokenizer_config.json
+    required_files:
+    - config.json
+    - model.safetensors
+    source_url: https://huggingface.co/fla-hub/rwkv7-1.5B-world
+    registered_at: '2026-09-01'
+    registered_for: directions 19-22 phase-0 pilots (gauntlet 2026-09-01)
+    blocker: 'custom modeling code must be reviewed and vendored before execution; no artifact receipt
+      yet: run fetch_open_model.py fetch --metadata-only then fetch/verify on persistent storage'
