@@ -33,7 +33,8 @@ This file is a stable continuation pointer, not a duplicate operating manual.
 - Inputs resolved or re-scoped 2026-09-01: the parallel-corpus inventory is
   sealed (`research/data/gt-parallel-corpus-inventory-2026-09-01.md`; customer
   translation memory excluded by ToS §3.1; pilots run on public corpora);
-  `TINKER_API_KEY`/`MOONSHOT_API_KEY`/`HF_TOKEN` still need Kevin's clicks
+  `MOONSHOT_API_KEY` is set locally (kimi-k2.6 served; balance 0 → recharge
+  before any Kimi cell); `TINKER_API_KEY`/`HF_TOKEN` still need Kevin's clicks
   (`~/.config/cotcodec/secrets.env`); root for the Slurm/Pyxis upgrade still
   needs a password.
 - Stage 0 on `fal-h100-01`: image `cotcodec-research:999f5583-architecture`

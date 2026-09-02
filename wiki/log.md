@@ -3695,3 +3695,7 @@ v3. V1/v2 remain superseded development history.
   gauntlet's exit 5 fires and the loop closes for this session at five
   hash-chained audit rows. Remaining binding defect for every direction: the
   decisive GPU screen has no compiled discovery manifest yet.
+- Moonshot API key received from Kevin and stored only in
+  `~/.config/cotcodec/secrets.env` (mode 600). Read-only verification:
+  `/v1/models` lists `kimi-k2.6` and `kimi-k2.7-code`; balance is 0/0/0, so no
+  Kimi completion can run until the org is recharged. No completion attempted.
