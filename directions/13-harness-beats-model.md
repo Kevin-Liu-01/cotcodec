@@ -1,6 +1,6 @@
 # Variable 13: Harness Beats Model
 
-**Status:** New research direction. The most provocative hypothesis in the project.
+**Status:** Confirmed as mainstream by 2026-09-01 — the residual contribution is measurement (factorial attribution on real open models, multilingual harness effects)
 
 ## The Hypothesis
 
@@ -245,3 +245,18 @@ that justifies the entire research program.
 | Best AI benchmarks 2026 | Awesome Agents | https://awesomeagents.ai/tools/best-ai-benchmarks-2026/ |
 | Frontier model comparison (Apr 2026) | BenchLM.ai | https://benchlm.ai/blog/posts/deepseek-v4-vs-claude-opus-4-7-vs-gpt-5-5 |
 | LLM quality degradation causes | BSWEN | https://docs.bswen.com/blog/2026-03-25-llm-quality-degradation |
+
+## 2026-09-01 update
+
+The 2026-09-01 sweep found harness-beats-model established at production scale
+(mechanical context policy alone moves F2PF 28% → 49%; same-model harness
+spreads of 5–24 points on Terminal-Bench 2.1 are reported in secondaries and
+still need primary confirmation) and automated harness evolution crowded
+(HarnessLens, StarHarness with cross-model-family portability, PILOT,
+OpsHarness, Aspire). What remains unmeasured: randomized factorial harness
+attribution on real open models (existing factorials use simulated tiers),
+natural-language multilingual harness effects, harness-invariance as a trained
+model property, and heavy→minimal harness distillation with a parity endpoint.
+Any bakeoff must follow the 2026 protocol mandates recorded in
+`docs/local-model-lab.md` (paired passes with token/dollar ledgers, all-k-of-k
+reliability, false-completion rates, environment noise floor first).

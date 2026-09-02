@@ -1,0 +1,175 @@
+---
+description: Loop-until-100 rule for proposing, auditing, and promoting research directions. Borrowed from Claude-of-Duty's contract/critic loop and adapted to falsifiable research.
+paths:
+  - "research/proposals/**"
+  - "research/scans/**"
+  - "research/frontier-*.md"
+  - "directions/**"
+  - "experiments/architectures/**"
+  - "experiments/tinker/**"
+---
+
+# Research Gauntlet Loop
+
+Applies whenever a task proposes a research direction, a new mechanism or
+architecture, or an experiment that could consume more than 8 GPU-hours.
+The full procedure is `skills/research-direction-improve.md`; this rule is the
+short contract every agent must obey while running it.
+
+## The loop
+
+```
+preflight doctors → independent discovery cells → single-owner synthesis
+  → candidate contract → blind closest-prior discrimination → refute-first triad
+  → two provider-distinct reviewers → hash-chained wave record
+  → fix the single largest defect → repeat until 100 or an honest exit
+```
+
+The lower of the two reviewer totals is the score. `100/100` means
+pilot-ready — not true, not globally novel, not perfect.
+
+## Hard rules
+
+1. Never write "completely novel". Write: "No direct prior art found through
+   `<YYYY-MM-DD>` under `<coverage>`."
+2. Every quantitative claim carries a primary-source URL and a date. A number
+   from a blog, README, or X post is labeled **first-party** until replicated.
+3. Never edit a contract, YAML, or doctor to make an existing output pass. A
+   material change is a new versioned attempt with a new output path.
+4. Never erase a score dip, a rejected candidate, or a negative finding.
+   Claude-of-Duty reported 3.59 → 4.14 → 4.05 → 5.05, dip included. So do we.
+5. The bar is the strongest 2026 prior work, not the previous wave.
+6. Every loop declares finite budgets before it starts: queries, wall-clock,
+   tokens, dollars, waves, GPU-hours. Every experiment declares seeds
+   (`[42, 43, 44]` minimum). No unseeded randomness anywhere.
+7. Every GPU run: digest-pinned Docker image, Slurm `sbatch`, persistent
+   checkpoints, and a fresh-job resume that matches an uninterrupted
+   continuation. `tmux` owns the operator session; Slurm owns the workload.
+8. A retrofit win on a pretrained checkpoint is never an architecture claim.
+   `architecture-causal` requires a matched from-scratch arm and control
+   (iso-parameter, iso-FLOP, and iso-wall-time views all reported).
+
+## Ownership contract
+
+Borrowed from Claude-of-Duty's `ARCHITECTURE.md` ("You own your directory.
+Never edit files outside it."):
+
+- **Independent cells may fan out**: frontier scout, kill-shot scout,
+  cross-domain scout, experimentalist, bookmark miner. Each returns evidence
+  with URLs; none edits a proposal.
+- **Coupled concerns have exactly one owner**: synthesis, mechanism statement,
+  identification strategy, contract writing, reviewer-defect repair. Evidence:
+  parallel directory waves moved the CoD critic score +0.46 with 66 defects;
+  one sequential owner moved it +1.00 and cut defects to 26.
+- **Shared vocabulary is fixed**: claim scopes `attachment-capability |
+  architecture-causal | portability-protocol | systems-pipeline`; evidence
+  levels from `docs/evidence-model.md`; kill-shot verdicts
+  `STILL_OPEN | NARROWED | OCCUPIED`.
+
+## Blind closest-prior discrimination
+
+Claude-of-Duty's critics compared frames against real Call of Duty frames blind.
+The research analog: for each proposed mechanism, strip names, randomize order,
+and give a fresh critic (a) the proposal's mechanism paragraph and (b) the
+closest prior's mechanism paragraph. The critic must answer: same mechanism?
+which is the stronger contribution? what is the delta in one sentence? If the
+critic cannot tell them apart, or judges the prior strictly dominant, Novelty is
+FAIL and the score is capped at 74.
+
+## Refute-first triad
+
+Before reviewers, three fresh refuters with distinct lenses, each told to
+default to `refuted=true` when uncertain:
+
+| Lens | Tries to prove |
+|---|---|
+| Novelty | the mechanism is already published or a trivial recombination |
+| Identification | the predicted effect is confounded, leaks, or is not caused by the mechanism |
+| Feasibility | the pilot is not decisive, or cannot run on 8×H100 inside the budget |
+
+At least two of three must fail to refute for the candidate to proceed.
+
+## Question yourself every wave
+
+- What single result would kill this? Is that result the pilot?
+- Which claim did I not open the primary source for?
+- Which asset (parallel translation data, 8×H100, Tinker/Kimi, the harness)
+  did I assume without checking feasibility?
+- Is the control matched? Could a retrofit win be mistaken for an
+  architecture claim?
+- Am I grading against the previous wave instead of the frontier?
+- What did I not search (live X, Reddit, OpenReview, ACL Anthology, patents,
+  Chinese-language sources)? Record it under coverage limits.
+
+## Believability bar for a 0.1B–1B architecture claim (2026 norms)
+
+The Design doctor fails an `architecture-causal` proposal that lacks any of:
+
+1. per-arm hyperparameter search (an undertuned baseline is a kill-shot);
+2. a scaling ladder of at least three sizes spanning at least 10× compute, with
+   iso-parameter, iso-FLOP, and iso-wall-time views and a named primary view;
+3. token budgets long enough to reach the asymptote (an advantage that appears
+   only at short budgets is a training-speed claim, not a capability claim);
+4. at least three seeds for interpretation and five near a claim, with paired,
+   clustered standard errors;
+5. length-dependent capability curves rather than one context length;
+6. recall diagnostics beyond vanilla MQAR: out-of-distribution length,
+   repeated-key overwrite, state-size-matched controls, a real-data arm;
+7. contamination by construction (fully known pretraining data, per-eval
+   overlap statistics) and disclosure;
+8. wall-time honesty: kernel maturity, warm-up, repeats, and fallbacks
+   reported per arm;
+9. artifact-level release: per-example predictions, configs, trajectories;
+10. mandatory 2026 baselines where relevant: SWA + attention sinks for any
+    linear or hybrid claim; tail replay for any compact-state-summary claim;
+    QED and MARCH for any recall or interference claim.
+
+## External protocols (adopted 2026-09-01)
+
+Two skill packs supply checklists the doctors now require. Cite the file you
+followed in the proposal's Preflight Doctors table.
+
+| Doctor / stage | Protocol | Source |
+|---|---|---|
+| Citation | claim registry → source tracing → cross-referencing; every quantitative or causal claim gets a `claim_id`, a locator, and a verdict; paywalled or unreachable sources are `UNVERIFIABLE_ACCESS`, never silently accepted | ARS `academic-pipeline/references/claim_verification_protocol.md` |
+| Design | choose design before data (randomization, blocking of seeds and data order, DOE for multi-factor ablations); justify seed count from a stated minimum effect via power or simulation, not habit | K-Dense `experimental-design`, `statistical-power` (vendored in `.claude/skills/`) |
+| Evaluation | effect sizes with CIs, paired and clustered SEs, assumption checks, missing-data handling; p-hacking and HARKing red flags | ARS `academic-paper-reviewer/references/statistical_reporting_standards.md`; K-Dense `statistical-analysis` |
+| Novelty / Source | PRISMA-style screening counts (identified → screened → included) recorded in every scan; provenance-first retrieval with line-pinned citations | K-Dense `literature-review`, `paper-lookup`, `paperclip`; ARS `deep-research` systematic-review mode |
+| Refute-first triad | the devil's-advocate checkpoints (after scoping, after analysis, final) with a strongest-counter-argument section and the concession-threshold protocol: a rebuttal must score before an objection is dropped | ARS `deep-research/agents/devils_advocate_agent.md` |
+| Integrity gate (before any pilot and before any claim) | the seven AI-research failure modes: implementation bug passing self-review; hallucinated citation; hallucinated experimental result; shortcut reliance; bug reframed as insight; methodology fabrication; frame-lock at an early stage — each answered explicitly | ARS `academic-pipeline/references/ai_research_failure_modes.md` |
+| Reviewers / judges | numeric gauntlet scores are accompanied by the criterion-bound form (EXCEEDS / MEETS / PARTLY_MEETS / DOES_NOT_MEET / NOT_ASSESSED with evidence anchors); judgements are non-compensatory — a strong score cannot cancel a failed criterion; calibration state is `NOT_CALIBRATED` unless measured | ARS `academic-paper-reviewer/references/quality_rubrics.md`; K-Dense `peer-review`, `scholar-evaluation` |
+
+ARS is CC-BY-NC-4.0 and is enabled per user through the plugin marketplace
+(`.claude/settings.json`; `claude plugin marketplace add Imbad0202/academic-research-skills`,
+`claude plugin install academic-research-skills@academic-research-skills`); its
+files are referenced, not copied into this MIT repository. The K-Dense skills
+(MIT/Apache-2.0) are vendored with provenance in `.claude/skills/README.md`.
+
+## Caps you cannot talk past
+
+| Defect | Cap |
+|---|---:|
+| missing falsifier | 59 |
+| incomplete novelty coverage or failed blind discrimination | 74 |
+| missing executable pilot | 79 |
+| missing independent provider-distinct review | 89 |
+| direct-prior match, fatal leakage, safety red line | reject |
+
+Compute stays FAIL until a real model loop, a non-stub benchmark adapter, a
+container smoke run, and a Slurm dry-run are attested in the evidence bundle.
+Markdown PASS rows are summaries, not proof.
+
+## Eight honest exits
+
+all doctors pass and both reviewers score 100 · wave cap · token or dollar cap ·
+wall-clock cap · under two points of gain across three waves · human interrupt ·
+the same fatal defect survives three waves · novelty invalidation, external
+completion, or safety failure.
+
+## Commands
+
+```bash
+uv run python scripts/research_direction_doctor.py research/proposals/<slug>.md
+uv run python scripts/research_gauntlet_record.py data/research-gauntlet/<slug>.jsonl <record.json>
+uv run python scripts/validate_architecture_experiments.py
+```

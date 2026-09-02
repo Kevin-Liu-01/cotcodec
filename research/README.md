@@ -13,6 +13,7 @@ project claims.
 | `*-audit-*.md` | Human-readable interpretation of sealed results |
 | `scans/` | Dated frontier-research scans |
 | `frontier-research-spec.md` | Coverage, cadence, and escalation rules |
+| `frontier-systems-program-*.md` | Dated direction rankings, occupied maps, kill-shot verdicts, staged compute path |
 | proposal/evidence directories | Gauntlet contracts and hashed review bundles |
 
 ## Evidence discipline

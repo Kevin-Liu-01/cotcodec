@@ -72,6 +72,31 @@ optimizer, scheduler, scaler, RNG states, data cursor, step, config, source and
 model hashes, and parent job ID. A workload is not queue-ready until a fresh job
 restores the checkpoint and matches an uninterrupted continuation.
 
+## Research skill packs
+
+Two external packs back the research gauntlet's doctors (see
+`.claude/rules/research-gauntlet-loop.md`, "External protocols"):
+
+- **K-Dense scientific-agent-skills** (MIT/Apache-2.0) — a curated subset is
+  vendored in `.claude/skills/` with provenance in `.claude/skills/README.md`
+  and bridged from `.agents/skills/`. Re-vendor from upstream rather than
+  editing in place.
+- **Academic Research Skills** (Imbad0202, CC-BY-NC-4.0) — not vendored;
+  enabled per user through the plugin marketplace declared in
+  `.claude/settings.json`. First-time setup:
+
+```bash
+claude plugin marketplace add Imbad0202/academic-research-skills
+```
+
+```bash
+claude plugin install academic-research-skills@academic-research-skills
+```
+
+  Modes used here: `/ars-fact-check` and `/ars-cite-check` for claim
+  verification, `/ars-systematic-review` for PRISMA-style scans,
+  `/ars-review-full` and `/ars-methodology` for proposal review.
+
 ## Closeout
 
 1. Verify every manifest member and code hash.

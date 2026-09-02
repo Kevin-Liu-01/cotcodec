@@ -116,6 +116,15 @@ continuation before scaling.
 
 ## Publication-grade lane: administrator work still required
 
+Researched pins and an ordered upgrade recipe (Slurm 25.11.7 with cgroup/v2
+device constraints, Pyxis 0.24.0, Enroot 4.2.1, NVIDIA Container Toolkit
+1.20.0, syft 1.51.1, vLLM v0.28.0 digest) are in
+[`research/infrastructure/h100-publication-upgrade-2026-09-01.md`](../research/infrastructure/h100-publication-upgrade-2026-09-01.md).
+Commands marked (U) there are assembled, not verified in official docs; none
+has been executed on the host. Known open questions: SIGUSR1 propagation through
+Pyxis/Enroot is undocumented, and Slurm 25.11.x + Pyxis 0.24.0 compatibility
+has unresolved issue reports (#175, #176).
+
 Do not submit through `scripts/submit_research_job.py` yet. Its batch contract
 requires Pyxis and exits when `srun --container-image` is unavailable.
 

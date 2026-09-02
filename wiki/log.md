@@ -3614,3 +3614,47 @@ v3. V1/v2 remain superseded development history.
   discovery-only. No new memory H100 job is admitted; publication use remains
   blocked on scheduler cgroup-v2 device constraints, reviewed Enroot/Pyxis,
   isolation doctors, exact provenance, and fresh-allocation resume proof.
+## 2026-09-01 — Frontier sweep, research gauntlet waves 1–3, and skill-pack adoption
+
+- Ran a 14-cell frontier sweep plus 3 arXiv-feed triage cells, a synthesis owner,
+  a completeness critic, and 4 verification cells (arXiv, Semantic Scholar, and
+  anonymous Jina block this network; arXiv and Jina were reached through the
+  H100 host). 226 arXiv entries since 2026-08-10 were triaged; 16 load-bearing
+  numbers were re-read in primary text (12 verified, 3 corrected, 1
+  unverifiable). Scan: `research/scans/2026-09-01.md` with 22 hashed cell notes
+  (manifest `bebdcf7c…`); program: `research/frontier-systems-program-2026-09-01.md`.
+- Verdict: generic sequence-operator design is closed (Kimi K3, Qwen3.8-Next,
+  GLM-5.3-Flash converge on 3:1 linear/global hybrids; August filled gate
+  geometry, operator routing, and hybrid serving state algebra). The empty region
+  every cell found is language/script as a controlled variable inside the
+  architecture, plus portability across operator families or of update rules.
+- Kill-shots: D16 and D17 NARROWED, D18 STILL_OPEN with five new control arms,
+  D15 NARROWED (ALCA), Coded Delta reduced to a negative-result cell,
+  Bidirectional Plan Repair collides with CID, Rollout-Value Operator Scheduling
+  and Rank-Adaptive Edit Summaries largely occupied; G19's routing half is
+  occupied by SARA and RA-MoE. Direction files 13, 15–18 carry dated updates.
+- Gauntlet wave 1: 27 inventor candidates → 16 canonical → all 16 refuted before
+  judging (identification 0.8, feasibility 0.7–0.9; novelty survived for 8).
+  Wave 2: 8 repair owners → 4 judged (62/61/61/57), 4 killed. Wave 3: proposals,
+  validator-passing contracts, and directions 19–22 written; fresh reviewers
+  scored 66/64/63/57 (one dip recorded). Doctor status FAIL for all four by
+  construction (no evidence bundle, Compute FAIL, unsigned same-provider
+  reviews). Ledgers in `research/gauntlet/2026-09-01-frontier/`; three
+  hash-chained rows in `data/research-gauntlet/2026-09-01-frontier.jsonl`.
+- Repo corrections: `tinker==0.23.3` is stale (PyPI 0.27.0; acceptance
+  unverifiable without a key); the 32K Kimi context assumption overflows 60.6% of
+  SWE-Bench episodes in the first-party Harbor recipe; portallib has open
+  evaluation defects (#27, #28) and closed ones (#9, #17); vLLM v0.28.0 corrupts
+  hybrid outputs under prefix caching + MTP (#53912); the repository holds no
+  parallel corpus.
+- Fixed `scripts/research_direction_doctor.py` so direct invocation finds the
+  repo root (it previously required `PYTHONPATH=.`).
+- Adopted `.claude/rules/research-gauntlet-loop.md` (Claude-of-Duty ownership
+  contract, blind closest-prior discrimination, refute-first triad, 2026
+  believability bar, external protocols), vendored a K-Dense
+  scientific-agent-skills subset (MIT/Apache) under `.claude/skills/`, enabled
+  the CC-BY-NC Academic Research Skills plugin through `.claude/settings.json`,
+  and added `docs/local-model-lab.md` plus
+  `research/infrastructure/h100-publication-upgrade-2026-09-01.md`.
+- Compute: `fal-h100-01` fast-forwarded to `52bac22`; eight H100s idle; nothing
+  was executed on the GPUs and no Tinker call was made (no key present).

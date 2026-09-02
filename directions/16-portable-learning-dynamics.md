@@ -1,6 +1,6 @@
 # Direction 16: Portable Sidecar Update Dynamics
 
-**Status:** architecture-adjacent hypothesis; 43/100 then 66/100 in adversarial review
+**Status:** NARROWED on 2026-09-01 — only update-rule portability survives; formal collision/interface work before any claim pilot
 **Priority:** formal collision/interface work before a claim pilot
 **Detailed program:** `research/frontier-systems-program-2026-08-10.md`
 **Executable methodology:** `research/architecture-experiment-methodologies.md`
@@ -164,3 +164,30 @@ official Kimi Linear 48B-A3B Base checkpoint is a later scale-only target base
 after the small-base missing-cell result passes. It requires reviewed/vendored
 custom code and a measured 8-H100 tensor-parallel load/checkpoint/restore test;
 it is not part of the cheap discovery claim.
+
+## 2026-09-01 kill-shot update
+
+Verdict from the 2026-09-01 frontier sweep (`research/scans/2026-09-01.md`,
+cell `killshot-current`): **NARROWED**. The "portable object + thin target-side
+alignment" factorization is now occupied for state: Cross-Model Memory Transfer
+freezes an Engram memory and adapts only a reader
+([2608.17050](https://arxiv.org/abs/2608.17050)); MentorPulse ports refreshed
+latent guidance from a frozen mentor ([2608.20927](https://arxiv.org/abs/2608.20927));
+KV-translation layers port activations across families
+([2608.30963](https://arxiv.org/abs/2608.30963), [2608.03893](https://arxiv.org/abs/2608.03893)).
+Fast-weight update-rule families are systematized (Falcon-1/2/3,
+[2608.27763](https://arxiv.org/abs/2608.27763)); Modular TTT
+([2608.07110](https://arxiv.org/abs/2608.07110)) is the natural implementation
+substrate and a required citation; E²-TTT ([2608.21308](https://arxiv.org/abs/2608.21308))
+is a stronger native-TTT control with released 340M/1.3B checkpoints; UpgradeBench
+([2608.20918](https://arxiv.org/abs/2608.20918)) is the external-validity ladder.
+
+Surviving delta: a task-conditioned **online update rule** ported with a
+task-blind alignment onto a held-out task × base cell, ideally across operator
+families (softmax transformer → GDN/KDA hybrid → masked-diffusion denoiser).
+New mandatory controls: frozen memory + reader (Engram), KV translation, Modular
+TTT primitives, derived rules (Kaczmarz, OSDN, Preconditioned DeltaNet), Falcon
+rules. Feasibility caveat: Tinker exposes AdamW only, so rule-level work is local.
+PorTAL's task suite has gold_idx == 0 on TruthfulQA and SciQ
+([issue #28](https://github.com/ramp-public/portallib/issues/28)); any
+static-PorTAL baseline must shuffle choices or drop those tasks.

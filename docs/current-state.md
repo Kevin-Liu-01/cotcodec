@@ -1,6 +1,6 @@
 # Current research state
 
-Snapshot: 2026-08-31
+Snapshot: 2026-09-01
 
 ## Program status
 
@@ -16,7 +16,8 @@ publication claim.
 | Frozen OrchVar live job 341 | Incomplete at 2/6, 0/2 completed-cell success, safety unreached | Never resume, rerun, or backfill |
 | Memory source ledger | 229 sources, 182 pinned repositories, 1 scientific reproduction, 3 conformance reproductions, 38 reproduced negatives | Matrix `a0cb79fb…` is current |
 | Memory portfolio | 93 candidates, six waves, 84 maximum H100-hours | Killed revisions are excluded from execution order |
-| Frontier radar | Last durable scan predates this checkpoint | Run the next dated scan before revising the proposal landscape |
+| Architecture program | Four gauntlet-preregistered directions (19–22) with proposals and validator-passing contracts; best score 66/100; none pilot-ready | Wave-4 fixes in `research/gauntlet/2026-09-01-frontier/wave3-ledger.md`; GPU work blocked on Stage 0 receipts |
+| Frontier radar | Dated scan `research/scans/2026-09-01.md` sealed (14 cells + 3 triage + 4 verification, 22 hashed notes) | Program re-ranked in `research/frontier-systems-program-2026-09-01.md`; D16/D17/D15 NARROWED, D18 STILL_OPEN, Coded Delta negative-only |
 
 ## Latest completed gate: legacy Letta V1
 
@@ -70,8 +71,9 @@ erasure.
    before considering an actor.
 2. Preserve the closed OrchVar H100 state. A CPU repair does not rescue frozen
    job 341; the next live hypothesis requires a new preregistered contract.
-3. Run the overdue dated frontier scan and brief the advisor on material August
-   changes before revising Paper 1 settings.
+3. Frontier scan done 2026-09-01 (`research/scans/2026-09-01.md`); brief the
+   advisor on the pivot to language as a controlled variable inside architecture
+   and on the blocking parallel-data inventory before revising Paper 1 settings.
 4. Before any larger claim wave, replace dirty discovery provenance with a clean
    source archive, immutable OCI image and SBOM, complete controls, protected
    external attestation, and validated checkpoint/resume.

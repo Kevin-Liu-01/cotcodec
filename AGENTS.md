@@ -117,6 +117,10 @@ publishes on our question, brief Danqi within 24 hours.
 
 Every new research direction must pass the gauntlet in
 `skills/research-direction-improve.md` before it is promoted into the roadmap.
+The short, always-on contract is `.claude/rules/research-gauntlet-loop.md`
+(mirrored at `.cursor/rules/research-gauntlet-loop.mdc`): hard rules, the
+ownership contract, blind closest-prior discrimination, the refute-first triad,
+and the self-interrogation checklist run every wave.
 The loop is required when a task asks for novel directions, a new mechanism,
 or an experiment that could consume more than 8 GPU-hours.
 

@@ -1,6 +1,6 @@
 # CoTCodec handoff
 
-Updated: 2026-08-31
+Updated: 2026-09-01
 
 This file is a stable continuation pointer, not a duplicate operating manual.
 
@@ -10,12 +10,32 @@ This file is a stable continuation pointer, not a duplicate operating manual.
    [`wiki/HEARTBEAT.md`](wiki/HEARTBEAT.md)
 2. [`memory.json`](memory.json)
 3. [`docs/current-state.md`](docs/current-state.md)
-4. [`docs/memory-handoff.md`](docs/memory-handoff.md) for memory work or
-   [`docs/h100-operator-runbook.md`](docs/h100-operator-runbook.md) for compute
+4. [`docs/memory-handoff.md`](docs/memory-handoff.md) for memory work,
+   [`docs/h100-operator-runbook.md`](docs/h100-operator-runbook.md) for compute, or
+   [`research/frontier-systems-program-2026-09-01.md`](research/frontier-systems-program-2026-09-01.md)
+   and [`docs/local-model-lab.md`](docs/local-model-lab.md) for the architecture program
 5. [`AGENTS.md`](AGENTS.md) and the nearest directory `SKILL.md`
 6. The exact experiment, evidence bundle, and validator for the next queue item
 
 ## Current continuation
+
+- The 2026-09-01 frontier sweep and three research-gauntlet waves are sealed:
+  scan `research/scans/2026-09-01.md`, program
+  `research/frontier-systems-program-2026-09-01.md`, ledgers
+  `research/gauntlet/2026-09-01-frontier/`, audit
+  `data/research-gauntlet/2026-09-01-frontier.jsonl`. Four preregistered
+  directions (19–22) exist with proposals and validator-passing contracts; none
+  is pilot-ready (best 66/100; doctor FAIL by construction). Wave-4 work orders
+  are the reviewers' fixes in `wave3-ledger.md`. Follow
+  `.claude/rules/research-gauntlet-loop.md`.
+- Blocking inputs: the General Translation parallel-corpus inventory,
+  `TINKER_API_KEY`/`MOONSHOT_API_KEY`, and a root window for the Slurm/Pyxis
+  upgrade. Every phase-0 pilot is written to run on named public corpora, so
+  only the upgrade arms wait on the inventory.
+- Before any GPU-hour on directions 19–22: rebuild and digest-pin the image
+  with `flash-linear-attention` 0.5.2, register the pilot checkpoints, compile
+  job manifests, write and pass the CPU phase-0 doctors twice, and run one
+  throughput job to replace the assumed MFU.
 
 - The deterministic OrchVar execution, tool-error transport, full runner
   integration, and resume gates are admitted. Frozen live job 341 remains an

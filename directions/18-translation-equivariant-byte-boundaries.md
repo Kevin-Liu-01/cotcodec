@@ -1,6 +1,6 @@
 # Direction 18: Translation-Aligned Byte Boundary Transport
 
-**Status:** architecture moonshot; direct boundary-transport prior not found; audit incomplete
+**Status:** STILL_OPEN on 2026-09-01 — mechanism unclaimed; five new control arms required before the 20M identifiability screen
 **Priority:** CPU/20M-model identifiability screen before any 1B run
 **Experiment contract:** `experiments/architectures/translation-equivariant-byte-patches.yaml`
 
@@ -116,3 +116,29 @@ Use the reviewed open BLT/Hugging Face implementation and train the boundary
 head or small model directly. Tinker is LoRA-only and cannot alter byte patch
 formation. Kimi may generate adversarial terminology/tool tasks or serve as a
 downstream evaluator, but it is not evidence for the architecture claim.
+
+## 2026-09-01 kill-shot update
+
+Verdict from the 2026-09-01 frontier sweep: **STILL_OPEN**. Four cells searched
+independently; no source transports boundary probability across translation
+alignments. Nearest neighbours and new mandatory control arms:
+
+| Control arm | Source | Why required |
+|---|---|---|
+| Externally supervised monolingual boundaries (POS/subword targets on a frozen subword LM) | When Tokenizers Fail, [2608.27658](https://arxiv.org/abs/2608.27658) (EMNLP 2026 self-reported) | closest collision; boundary-only delta must beat it |
+| Compute-matched within-patch redistribution | Scratchpad Patching, [2605.09630](https://arxiv.org/abs/2605.09630) | patchifier choice stops mattering once within-patch compute is redistributed |
+| Parity-aware BPE with the `\p{L}+` regex fixed | [2606.15044](https://arxiv.org/abs/2606.15044), Vowel Signs [2608.26449](https://arxiv.org/abs/2608.26449) | unpatched BPE controls are invalid on the 17 abugidas |
+| Entropy/predictability byte pruning on the same MT pairs | Autocompleting Tokenizers, [2608.15080](https://arxiv.org/abs/2608.15080) | monolingual byte pruning already evaluated on MT |
+| Romanized-input arm | One Form to Transfer Them All, [2608.25904](https://arxiv.org/abs/2608.25904) | cheap cross-lingual parity baseline |
+
+Add MAGNET per-script predictors ([2407.08818](https://arxiv.org/abs/2407.08818))
+to the collision list; use OmniAlign ([2608.18474](https://arxiv.org/abs/2608.18474))
+or CTFAlign/MDPAlign ([2608.21023](https://arxiv.org/abs/2608.21023)) as the
+frozen aligner; prefer Bolmo-1B (Apache-2.0) over CC-BY-NC BLT-1B as the retrofit
+base; keep the delta to boundary formation and ablate the patch-state term. Kill
+risks to pre-register: representation alignment barely moves with parallel data
+([2603.29026](https://arxiv.org/abs/2603.29026)); nested byte vocabularies are a
+pre-registered negative ([2608.28151](https://arxiv.org/abs/2608.28151)). The
+parallel corpus this direction assumes does not exist in the repository; its
+inventory (languages, scripts, segment lengths, volume, license) is a blocking
+input.
