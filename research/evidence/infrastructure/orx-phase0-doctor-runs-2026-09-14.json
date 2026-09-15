@@ -1,0 +1,60 @@
+{
+  "backend": "local (macOS, CPython 3.13.14, uv 0.11.30, fresh locked venv per snapshot)",
+  "claim_boundary": "Executability of the four phase-0 CPU doctors as OpenResearch runs over immutable snapshots of their node commits. Synthetic-case gates only; no model, corpus, or GPU number.",
+  "evidence_kind": "orx-run-ledger",
+  "orx": "v0.2.2 source build, telemetry off",
+  "project_id": "595ba408-91e5-44d0-a7f2-0b7ebf565191",
+  "recorded_at": "2026-09-14",
+  "run_command": "uv run --locked python scripts/orx_run.py",
+  "runs": [
+    {
+      "direction": "semantic-clock-gate-parity",
+      "doctor_status": "PHASE0_OBJECT_DOCTOR_PASS",
+      "exit_code": "0",
+      "experiment_id": "41f5d3b0-1424-43ec-9303-6983c31fc790",
+      "log_sha256": "f9664db5cb4ad7d383978ddd5f775b77f971fdfd7d761032d6a75b4922513e0f",
+      "node_commit": "caf9d9f467901661b833c2f48a5c70ea7dfc654d",
+      "note": "17 registered cases; exit 0; 1m20s",
+      "receipt_path_in_snapshot": "repo/data/results/orx/semantic-clock-gate-parity-orx-local.json",
+      "receipt_sha256": "065a454fe5821b8a08f991876f6535c9cd709395c82789235aedf75f46a810e8",
+      "run_id": "0c4bb3f1-1f47-4ba2-b016-a8d61b5865e9"
+    },
+    {
+      "direction": "translation-supervised-sparse-indexer",
+      "doctor_status": "PHASE0_DOCTOR_PASS",
+      "exit_code": "0",
+      "experiment_id": "9a0f98a2-d44c-42e6-bb81-c698a3453911",
+      "log_sha256": "07802f0b22f5e5588be86c20fc003a092c21a797fc3e61859dbb9b661904bc85",
+      "node_commit": "011237acf800ac2936eb6ba994f770e4949c4ea3",
+      "note": "10 registered cases all PASS; exit 0; 2m05s",
+      "receipt_path_in_snapshot": "repo/data/results/orx/translation-supervised-sparse-indexer-orx-local.json",
+      "receipt_sha256": "79e729ce0a212e07a23f9c6821f4277ce1bf25e551e93ce0ce3188abe0cba7cb",
+      "run_id": "c4e6988a-e59b-4ca9-9c49-9ccae5fecb66"
+    },
+    {
+      "direction": "translation-equivariant-state-writes",
+      "doctor_status": "PHASE0_OBJECT_DOCTOR_PASS",
+      "exit_code": "0",
+      "experiment_id": "1bcd752d-02a1-451d-a997-8e765912165b",
+      "log_sha256": "6e9e4b2297f5adb4b9110f7637605c30fc33307aca6ca8f89d78921b4a54fd8b",
+      "node_commit": "bb1eacd7ea9351489a4cc8128e75124c71877a3c",
+      "note": "11/11 cases; exit 0; 1m10s",
+      "receipt_path_in_snapshot": "repo/data/results/orx/translation-equivariant-state-writes-orx-local.json",
+      "receipt_sha256": "675ccbd6fa17501b131d9fa1ef9f6126bb2c9c5180fc35a811dc7ee7668abab6",
+      "run_id": "bc04fb03-da40-4ec3-a56f-15f419bfdda4"
+    },
+    {
+      "direction": "icl-rule-distillation-port",
+      "doctor_status": "PHASE0_DOCTOR_PASS",
+      "exit_code": "0",
+      "experiment_id": "c8ef9a1e-211b-4ccb-9a65-0dbbdd47ca7a",
+      "log_sha256": "6e8c7d6b11a4f75a02c48cdba885bde2334b9ed4ba17ddcabac9583be7609974",
+      "node_commit": "bc05cc496bcf98445b61db12a35f3a2b8de20f55",
+      "note": "8 registered cases all PASS; 33.6 s doctor; exit 0; 1m40s",
+      "receipt_path_in_snapshot": "repo/data/results/orx/icl-rule-distillation-port-orx-local.json",
+      "receipt_sha256": "d05f0cc93e70915e4135b6850a3eaa9b9139af3a31d6ce7fc896106bebe1babd",
+      "run_id": "e20eeccb-8c51-42de-891b-007e52282bf4"
+    }
+  ],
+  "schema_version": 1
+}

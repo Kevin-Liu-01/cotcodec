@@ -321,6 +321,10 @@ compiled and its fresh-job resume proven.
 
 ### Next executable steps (in order)
 
+0. Done 2026-09-14: the repository is an OpenResearch (`orx`) project; the four
+   CPU phase-0 doctors ran as frozen root nodes (run ids in
+   `gauntlet/2026-09-01-frontier/orx-runs.md`), and `orx discover`/`orx paper`
+   are the required novelty-retrieval modality (`.claude/rules/research-gauntlet-loop.md`).
 1. Compile the discovery manifest for the `qwen3.5-4b-base` phase-0 screens of
    directions 20 and 22 from `infra/slurm/host-single-node/qwen35-4b-competence-screen.yaml`,
    binding image `sha256:38044666…` (0b3ecef0-architecture), the fetched receipt,

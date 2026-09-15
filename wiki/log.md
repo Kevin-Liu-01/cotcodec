@@ -3714,8 +3714,11 @@ v3. V1/v2 remain superseded development history.
   reads the committed `experiments/orx/node.yaml` and admits only registered
   CPU doctors or Slurm manifests routed through `submit_docker_research_job.py`.
   Four root nodes (directions 19–22) were committed on `orx/*` branches and
-  launched on the `local` backend; run ids and outcomes are recorded in
-  `research/gauntlet/2026-09-01-frontier/orx-runs.md`.
+  launched on the `local` backend; all four answered with exit 0 and doctor
+  status PASS in one to two minutes each (`research/gauntlet/2026-09-01-frontier/orx-runs.md`,
+  bundle `research/evidence/infrastructure/orx-phase0-doctor-runs-2026-09-14.json`).
+  The dispatcher's summary line under-counted `status: PASS` cases in these
+  logs; fixed on `main` afterwards, roots left frozen.
 - Gauntlet rule, frontier spec, research-operations, and AGENTS.md updated;
   the twelve `orx-*` skills vendored project-scoped in `.claude/skills/`.
 - Radar addendum `research/scans/2026-09-14-addendum.md`: 2609.06872 shows
