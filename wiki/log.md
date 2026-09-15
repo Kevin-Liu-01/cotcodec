@@ -3699,3 +3699,27 @@ v3. V1/v2 remain superseded development history.
   `~/.config/cotcodec/secrets.env` (mode 600). Read-only verification:
   `/v1/models` lists `kimi-k2.6` and `kimi-k2.7-code`; balance is 0/0/0, so no
   Kimi completion can run until the org is recharged. No completion attempted.
+## 2026-09-14 — OpenResearch (orx) adopted as retrieval modality and experiment-tree ledger
+
+- Built alphaXiv/OpenResearch `orx` v0.2.2 from source (cargo, `--locked`;
+  analytics off by construction) rather than the `curl | sh` installer;
+  installed at `~/.cargo/bin/orx`. Smoke test from this Mac: `orx discover
+  keyword` ranked QED (2608.13668) first, `orx discover openalex` ranked
+  Tail-Replay (2608.30310) first, `orx discover embedding` on gap G13 returned
+  our preregistered pre-kill (2603.29026); `orx paper --full` returned 24 KB of
+  full text. alphaXiv/OpenAlex/arXiv PDFs are reachable where the arXiv API and
+  Semantic Scholar are not.
+- Registered the repository as orx project `595ba408…` with the single fixed
+  run command `uv run --locked python scripts/orx_run.py`, a dispatcher that
+  reads the committed `experiments/orx/node.yaml` and admits only registered
+  CPU doctors or Slurm manifests routed through `submit_docker_research_job.py`.
+  Four root nodes (directions 19–22) were committed on `orx/*` branches and
+  launched on the `local` backend; run ids and outcomes are recorded in
+  `research/gauntlet/2026-09-01-frontier/orx-runs.md`.
+- Gauntlet rule, frontier spec, research-operations, and AGENTS.md updated;
+  the twelve `orx-*` skills vendored project-scoped in `.claude/skills/`.
+- Radar addendum `research/scans/2026-09-14-addendum.md`: 2609.06872 shows
+  transported per-record receipts do not reach exact omission in delta
+  attention (Kimi Linear 48B: ≈4.5% state-norm imprint after 4,096 tokens) while
+  checkpoint replay does — a new mandatory citation for any exact-state-surgery
+  claim; 2607.21692 is an uncited closest-prior candidate for direction 21.
