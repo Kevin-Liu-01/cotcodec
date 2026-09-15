@@ -358,3 +358,16 @@ When this project's radar finds something, update both:
 - `research/scans/YYYY-MM-DD.md` (this repo)
 - `my-wiki/wiki/research/cotcodec-paper.md` (if it affects the proposal)
 - `my-wiki/wiki/research/language-orchestration.md` (if it's language-specific)
+
+## Retrieval modalities (updated 2026-09-14)
+
+| Modality | Command | Reachable from the Mac | Notes |
+|---|---|---|---|
+| alphaXiv full-text keyword search | `orx discover keyword "<exact terms>" [--published-after YYYY-MM-DD] [--prioritize recency]` | yes | match snippets explain each hit; fixed server-side pool |
+| alphaXiv semantic search | `orx discover embedding "<question in plain words>"` | yes | reranks titles/abstracts; thin results under narrow date bounds are not evidence of absence |
+| OpenAlex scholarly graph | `orx discover openalex "<query>"` | yes | venue and citation context; covers non-arXiv venues |
+| Paper read | `orx paper <arxiv-id|doi> [--full]` | yes | alphaXiv report with full-text fallback; `--full` forces raw text |
+| arXiv API, Semantic Scholar, anonymous Jina | via the H100 host relay only | no (429/401 from this network) | see `research/scans/2026-09-01.md` coverage limits |
+
+Every dated scan records the exact `orx discover` queries per thread alongside
+the WebSearch/WebFetch queries, and opens closest priors with `orx paper --full`.
