@@ -30,6 +30,13 @@ This file is a stable continuation pointer, not a duplicate operating manual.
   step is the compiled `qwen3.5-4b-base` discovery manifest (see the program's
   "Next executable steps"). Follow
   `.claude/rules/research-gauntlet-loop.md`.
+- OpenResearch `orx` (2026-09-14) is the retrieval modality and the
+  experiment-tree ledger: project `595ba408…`, fixed run command
+  `uv run --locked python scripts/orx_run.py`, node contracts on `orx/*`
+  branches, run ledger in `research/gauntlet/2026-09-01-frontier/orx-runs.md`.
+  Start with `orx up --no-browser --no-agent`; rules in
+  `.claude/rules/research-gauntlet-loop.md`; commands in
+  `docs/research-operations.md`.
 - Inputs resolved or re-scoped 2026-09-01: the parallel-corpus inventory is
   sealed (`research/data/gt-parallel-corpus-inventory-2026-09-01.md`; customer
   translation memory excluded by ToS §3.1; pilots run on public corpora);
