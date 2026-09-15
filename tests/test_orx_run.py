@@ -85,6 +85,16 @@ def test_dry_run_prints_plan(capsys) -> None:
     assert "--output" in plan["plan_argv"]
 
 
+def test_receipt_summary_counts_status_pass_cases() -> None:
+    receipt = {
+        "status": "PHASE0_DOCTOR_PASS",
+        "cases": [{"status": "PASS"}, {"status": "FAIL"}, {"status": "skipped"}],
+    }
+    assert orx_run.summarize_receipt(receipt)["cases"] == {"total": 3, "passed": 1}
+    mapping = {"cases": {"a": "PASS", "b": {"status": "pass"}, "c": {"passed": False}}}
+    assert orx_run.summarize_receipt(mapping)["cases"] == {"total": 3, "passed": 2}
+
+
 def test_receipt_summary_counts_cases() -> None:
     receipt = {
         "status": "PASS",

@@ -106,13 +106,27 @@ def summarize_receipt(receipt: dict[str, Any]) -> dict[str, Any]:
         if key in receipt:
             summary[key] = receipt[key]
     cases = receipt.get("cases")
+    entries: list[Any] = []
     if isinstance(cases, list):
-        passed = sum(1 for c in cases if isinstance(c, dict) and c.get("passed") is True)
-        summary["cases"] = {"total": len(cases), "passed": passed}
+        entries = cases
     elif isinstance(cases, dict):
-        passed = sum(1 for c in cases.values() if isinstance(c, dict) and c.get("passed") is True)
-        summary["cases"] = {"total": len(cases), "passed": passed}
+        entries = list(cases.values())
+    if entries:
+        passed = sum(1 for c in entries if case_passed(c))
+        summary["cases"] = {"total": len(entries), "passed": passed}
     return summary
+
+
+def case_passed(case: Any) -> bool:
+    """Doctors report a case as ``passed: true`` or ``status: PASS``; accept both."""
+    if isinstance(case, str):
+        return case.upper() == "PASS"
+    if not isinstance(case, dict):
+        return False
+    if case.get("passed") is True:
+        return True
+    status = case.get("status")
+    return isinstance(status, str) and status.upper() == "PASS"
 
 
 def run_cpu_doctor(node: dict[str, Any], out_dir: Path, run_id: str) -> int:

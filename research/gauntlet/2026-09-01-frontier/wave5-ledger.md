@@ -14,3 +14,5 @@ Honest reviewer findings to carry forward: the sparse-indexer doctor passes at i
 Score trajectories (lower reviewer total): sparse-indexer 61 → 66 → 62 → 63; clock-parity 61 → 64 → 63 → 64; state-writes 57 → 63 → 60 → 62; icl-rule 62 → 57 → 65 → 65. Best per wave: 66 (w3), 65 (w4), 65 (w5).
 
 **Exit.** The gauntlet's fifth exit fires: under two points of gain across three waves (66 → 65 → 65). The loop stops for this session with the wave-5 work orders recorded. Resuming requires the decisive GPU screen to become executable (compiled manifest + fresh-job resume proof), not another prose wave.
+
+Update 2026-09-14: all four doctors ran as OpenResearch experiment nodes over immutable snapshots (exit 0, doctor status PASS); run ids, node commits, and receipt hashes are in `orx-runs.md` and `research/evidence/infrastructure/orx-phase0-doctor-runs-2026-09-14.json`. The executable-pilot evidence the wave-5 reviewers asked for now exists as tracked runs for the CPU phase; the GPU screen still needs its compiled manifest.
