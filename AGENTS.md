@@ -156,6 +156,16 @@ invalidated, safety fails, the same fatal defect survives three waves, or the
 score improves by less than two points across three waves. Never force a score
 upward and never erase negative evidence.
 
+## OpenResearch experiment tree
+
+The repository is an OpenResearch (`orx`) project. Every experiment node runs
+the single fixed command `uv run --locked python scripts/orx_run.py` over the
+committed `experiments/orx/node.yaml` on its `orx/<slug>` branch; node kinds are
+`cpu-doctor` (registered doctors) and `slurm-manifest` (through
+`scripts/submit_docker_research_job.py`). `orx discover` / `orx paper` are the
+required novelty-retrieval modality. Rules and daily commands:
+`.claude/rules/research-gauntlet-loop.md` and `docs/research-operations.md`.
+
 ## Directory Structure
 
 ```

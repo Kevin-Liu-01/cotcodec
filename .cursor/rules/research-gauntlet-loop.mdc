@@ -140,6 +140,46 @@ ARS is CC-BY-NC-4.0 and is enabled per user through the plugin marketplace
 files are referenced, not copied into this MIT repository. The K-Dense skills
 (MIT/Apache-2.0) are vendored with provenance in `.claude/skills/README.md`.
 
+## Retrieval and run ledger: OpenResearch `orx` (adopted 2026-09-14)
+
+`orx` (alphaXiv/OpenResearch CLI, MIT, built from source at tag `v0.2.2`;
+source builds send no analytics) is the required retrieval modality and the
+experiment-tree ledger. It does not replace any validator, receipt, or admission
+gate.
+
+Novelty doctor and every refuter:
+
+1. Run at least six `orx discover` queries per candidate: `keyword` with the
+   mechanism's exact terms and each closest prior's title phrase, `embedding`
+   with the mechanism paragraph in plain words, and `openalex` for venue and
+   citation context; add `--published-after` bounds when the question is about
+   recent work and say so.
+2. Read every closest prior with `orx paper <id> --full` before writing its
+   delta row; abstracts alone do not close a novelty ledger row.
+3. Record the exact queries and the ids they returned in the proposal's
+   Novelty section. "No direct prior art found through <date> under <coverage>"
+   must list the orx queries in that coverage.
+4. alphaXiv, OpenAlex, and `export.arxiv.org` PDFs are reachable from the
+   development Mac; the arXiv API and Semantic Scholar are not (use the H100
+   host relay for those).
+
+Compute doctor and the executable-pilot cap (79):
+
+1. Every executable pilot is an orx experiment node whose run used the
+   project's single fixed run command (`uv run --locked python
+   scripts/orx_run.py`) over the committed `experiments/orx/node.yaml` on that
+   node's branch. The orx run id and the `ORX_RECEIPT_SUMMARY` /
+   `ORX_RESULT` lines of its log are the executable-pilot evidence; a receipt
+   file alone is not.
+2. `kind: cpu-doctor` nodes run registered `scripts/run_*_doctor.py` doctors
+   on the `local` backend. `kind: slurm-manifest` nodes run only through
+   `scripts/submit_docker_research_job.py` (dry-run, test-only, submit) from
+   an `ssh` backend node on the H100 login host. Never launch a GPU run with
+   `--backend slurm`: it stages a plain checkout and bypasses the
+   digest-pinned image, the receipts, and the checkpoint contract.
+3. A node that has answered is frozen; a repair is a new node. Score dips and
+   killed nodes stay in the tree and in the gauntlet ledger.
+
 ## Caps you cannot talk past
 
 | Defect | Cap |

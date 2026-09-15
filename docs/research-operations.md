@@ -97,6 +97,50 @@ claude plugin install academic-research-skills@academic-research-skills
   verification, `/ars-systematic-review` for PRISMA-style scans,
   `/ars-review-full` and `/ars-methodology` for proposal review.
 
+## Experiment tree and retrieval: OpenResearch (`orx`)
+
+[alphaXiv/OpenResearch](https://github.com/alphaXiv/OpenResearch) (MIT) is
+installed as `~/.cargo/bin/orx`, built from source at tag `v0.2.2`
+(`cargo build --release --locked`; source builds send no analytics —
+`orx telemetry status` reports "off (development build)"). Rebuild from a newer
+tag deliberately; never use the `curl | sh` installer on a research machine.
+
+What it is here:
+
+- **Retrieval modality.** `orx discover keyword|embedding|openalex` and
+  `orx paper <id> [--full]` reach alphaXiv, OpenAlex, and arXiv PDFs from the
+  development Mac, where the arXiv API and Semantic Scholar are blocked. The
+  gauntlet rule requires them for every novelty ledger.
+- **Experiment-tree ledger.** The repository is registered as an orx project
+  (`orx projects`). Every node runs the single fixed command
+  `uv run --locked python scripts/orx_run.py` over the committed
+  `experiments/orx/node.yaml` on its own `orx/<slug>` branch. Runs execute an
+  immutable snapshot of the recorded commit; uncommitted files never run. The
+  run log (`orx logs <runId>`) is the evidence channel.
+- **Not a bypass.** `node.yaml` admits two kinds only: `cpu-doctor`
+  (a registered `scripts/run_*_doctor.py`) and `slurm-manifest` (a committed
+  `experiments/**.yaml` submitted through `scripts/submit_docker_research_job.py`
+  with dry-run, test-only, then submit). GPU work is never launched with
+  `--backend slurm`, which stages a plain checkout outside the digest-pinned
+  image and the receipt contract.
+
+Daily use:
+
+```bash
+orx up --no-browser --no-agent          # local server + dashboard at http://127.0.0.1:4791
+orx projects                             # project id
+orx project view <projectId>             # tree, experiment ids
+orx create-experiment <projectId> --title "<direction> phase-0 doctor" --baseline
+git worktree add /tmp/orx-wt/<slug> orx/<slug> && $EDITOR /tmp/orx-wt/<slug>/experiments/orx/node.yaml
+git -C /tmp/orx-wt/<slug> commit -am "orx node: <what this node tests>"
+orx exp run <expId> --backend local      # CPU doctors; --backend ssh --host kevin@207.241.191.91 for slurm-manifest nodes
+orx exp wait <expId> && orx logs <runId>
+```
+
+Cardinal rules (from the tool, adopted verbatim): never edit a node once a run
+has answered it; the run command and environment are a fixed contract; vary
+committed code, not knobs in the command; grow the tree downward onto winners.
+
 ## Closeout
 
 1. Verify every manifest member and code hash.
