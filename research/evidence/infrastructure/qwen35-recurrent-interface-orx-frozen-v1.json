@@ -1,0 +1,107 @@
+{
+  "schema_version": 1,
+  "status": "QWEN35_RECURRENT_INTERFACE_ORX_NODE_FROZEN_INFRASTRUCTURE_FAILURE",
+  "evidence_grade": "infrastructure-negative-only",
+  "scientific_result": false,
+  "publication_ready": false,
+  "recorded_at": "2026-09-23",
+  "claim_boundary": "Two bounded OpenResearch attempts exercised launch, provenance, model-artifact, container, and direct-entrypoint infrastructure. Neither attempt executed a checkpoint forward pass or produced recurrent-state metrics. This is not evidence about Qwen cache topology, state shape, numerical parity, task quality, language, memory, or a research mechanism.",
+  "experiment": {
+    "id": "f39c63d2-7ea1-4c00-a5c4-1b682c3744ba",
+    "title": "Qwen3.5-4B-Base recurrent-state interface",
+    "branch": "orx/qwen3-5-4b-base-recurrent-state-interface",
+    "command": "uv run --locked python scripts/orx_run.py",
+    "attempt_cap": 2,
+    "attempts_used": 2,
+    "terminal_decision": "freeze this node; no third run"
+  },
+  "frozen_bindings": {
+    "source_git_sha": "f10a85719710dbc0cf1405e412dbbda33a084b61",
+    "source_sha256": "107692771430a6cdf9e5f64ad9e0453b28be5e97a1da4fd5dbcdefe725f433d9",
+    "image_id": "sha256:65feae8f044a98303b862fe9bf4b0fefceae8bec356b473a2fff70f8949e34e6",
+    "model_id": "qwen3.5-4b-base",
+    "model_revision": "1001bb4d826a52d1f399e183466143f4da7b741b",
+    "model_receipt_sha256": "253a14185bcff0762b8a43944635a550055d3346fe16c416d6bcfe4460793cfe",
+    "model_artifact_root_sha256": "c7fbfd6bd1c73b9a0080decf794f5e4333c955f2704591affc61b0a9ac850e42",
+    "maximum_h100_hours_per_attempt": 0.3333333333333333
+  },
+  "attempts": [
+    {
+      "attempt": 1,
+      "orx_run_id": "3afd5853-0e7b-49f0-b0f5-15b6b5b14d22",
+      "node_commit": "18b2e5c67f1948848550db0c41696cb1dd4dd8fc",
+      "slurm_job_id": "362",
+      "slurm_state": "FAILED",
+      "slurm_exit_code": "1:0",
+      "slurm_runtime": "00:00:00",
+      "orx_exit_code_observed_before_dispatcher_repair": 0,
+      "failure": "Slurm could not open the configured output file because the persistent run-root parent did not yet exist.",
+      "gpu_workload_started": false,
+      "scientific_output": false,
+      "remote_orx_log": {
+        "bytes": 6502,
+        "sha256": "e9eb871753ab100b83423f082e831379a3ff35f6dc15ab83283dc3bd184702a2"
+      },
+      "remote_orx_exit_code_file": {
+        "value": 0,
+        "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+      },
+      "repair": "The submitter now creates only validated non-symlink persistent run roots before sbatch, and the dispatcher requires terminal Slurm state COMPLETED with ExitCode 0:0."
+    },
+    {
+      "attempt": 2,
+      "orx_run_id": "9b368801-105b-4bf2-ab78-ec845da5aa77",
+      "node_commit": "e74ba507b8ab04cfd64da1ddef6ccc8afffaa478",
+      "slurm_job_id": "364",
+      "slurm_state": "FAILED",
+      "slurm_exit_code": "1:0",
+      "slurm_runtime": "00:00:08",
+      "orx_exit_code": 5,
+      "visible_gpu": "NVIDIA H100 80GB HBM3",
+      "failure": "The direct Python file entrypoint could not resolve the repository scripts package and raised ModuleNotFoundError before model loading.",
+      "checkpoint_forward_pass_started": false,
+      "scientific_output": false,
+      "verified_before_failure": {
+        "source_provenance": true,
+        "model_artifact": true,
+        "container_doctor": true,
+        "exactly_one_visible_gpu": true
+      },
+      "remote_orx_log": {
+        "bytes": 5765,
+        "sha256": "b50f37b4c6249a064fca2f31693bbfe25725228b2a3327ba992a17c277b10881"
+      },
+      "remote_orx_exit_code_file": {
+        "value": 5,
+        "sha256": "f0b5c2c2211c8d67ed15e75e656c7862d086e9245420892a7de62cd9ec582a06"
+      },
+      "remote_run_root": "/home/kevin/cotcodec-runs/qwen35-state-interface/364",
+      "remote_artifacts": {
+        "slurm-364.out": {"bytes": 579, "sha256": "10f5d468946f50dc1813c6f153741b59697292569db2048946ce303a3232701b"},
+        "command.json": {"bytes": 239, "sha256": "74711ac02b15a53f182e36797875ff10752e1b743423c8615d69deccfff9ecbd"},
+        "container-created-inspect.json": {"bytes": 17337, "sha256": "96a65097e3be3869d1af6a233869e8e1d4836dcbe68e7aa7b08e85509f2bd425"},
+        "container-doctor.txt": {"bytes": 735, "sha256": "ebfdcfce3de46fbe6629f255a8ad3cf91957c5b51babb085e76d96500e282198"},
+        "container-final-inspect.json": {"bytes": 17898, "sha256": "8158c3bbe1560a8faf853349f6899adf893443aba1d86b6a83dd6556295bee08"},
+        "container.log": {"bytes": 579, "sha256": "10f5d468946f50dc1813c6f153741b59697292569db2048946ce303a3232701b"},
+        "docker-research.sbatch": {"bytes": 36390, "sha256": "eee81e32e4b077ca056710cdbb1b7bc46401f566a3b46383dd7e06242248cda8"},
+        "image-inspect.json": {"bytes": 11300, "sha256": "c225b16d3e16f7c8e13d8589240aaea3f35599cb0de844bdd8424318cfb92488"},
+        "job.env": {"bytes": 1296, "sha256": "a773d714a049e7ed82bc145852a19f8e5f13afa8c3ca07324ff15ffd2711c930"},
+        "manifest.json": {"bytes": 1323, "sha256": "131eb59b30a361a370901c4e61f554874e0cb12362e2ffa6601a651c76c1f635"},
+        "model-receipt.json": {"bytes": 2535, "sha256": "253a14185bcff0762b8a43944635a550055d3346fe16c416d6bcfe4460793cfe"},
+        "model-verification.txt": {"bytes": 295, "sha256": "4d822316629e472fd41a7668c337c364e84bf6fc112f862d4c6f602a646c4119"},
+        "provenance-verification.txt": {"bytes": 159, "sha256": "95e1514dc0a4630af3440cdf3c0336e829829ccea5d43044acf859e7158ae2ad"},
+        "system.txt": {"bytes": 3953, "sha256": "343c4538b5e8b859e6f2a690ce9f585ac1b2779822a3f437a1b18a7e65756cf1"},
+        "termination.env": {"bytes": 102, "sha256": "b06dd14f2baa1d90255a5d7aabd7cb5b60873b21910f3c4c718d33be4be51987"}
+      }
+    }
+  ],
+  "next_gate": {
+    "old_node_retry_allowed": false,
+    "required_before_new_child": [
+      "direct file-entrypoint import regression passes from a working directory outside the repository",
+      "new clean source capsule and immutable image include the repaired entrypoint",
+      "new manifest binds the repaired source, image, model receipt, budget, and a new output root",
+      "dry-run and Slurm test-only pass before a new bounded child node is created"
+    ]
+  }
+}

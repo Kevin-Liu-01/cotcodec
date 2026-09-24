@@ -1,6 +1,6 @@
 # CoTCodec handoff
 
-Updated: 2026-09-01
+Updated: 2026-09-23
 
 This file is a stable continuation pointer, not a duplicate operating manual.
 
@@ -12,6 +12,8 @@ This file is a stable continuation pointer, not a duplicate operating manual.
 3. [`docs/current-state.md`](docs/current-state.md)
 4. [`docs/memory-handoff.md`](docs/memory-handoff.md) for memory work,
    [`docs/h100-operator-runbook.md`](docs/h100-operator-runbook.md) for compute, or
+   [`docs/daybreak-blue-runbook.md`](docs/daybreak-blue-runbook.md) for the approved
+   defensive-cyber capability boundary, or
    [`research/frontier-systems-program-2026-09-01.md`](research/frontier-systems-program-2026-09-01.md)
    and [`docs/local-model-lab.md`](docs/local-model-lab.md) for the architecture program
 5. [`AGENTS.md`](AGENTS.md) and the nearest directory `SKILL.md`
@@ -26,9 +28,7 @@ This file is a stable continuation pointer, not a duplicate operating manual.
   `data/research-gauntlet/2026-09-01-frontier.jsonl`. Four preregistered
   directions (19–22) exist with proposals, validator-passing contracts, and
   executable CPU phase-0 doctors (`scripts/run_*_doctor.py`); none is
-  pilot-ready (best 66/100; doctor FAIL by construction). The next executable
-  step is the compiled `qwen3.5-4b-base` discovery manifest (see the program's
-  "Next executable steps"). Follow
+  pilot-ready (best 66/100; doctor FAIL by construction). Follow
   `.claude/rules/research-gauntlet-loop.md`.
 - OpenResearch `orx` (2026-09-14) is the retrieval modality and the
   experiment-tree ledger: project `595ba408…`, fixed run command
@@ -44,22 +44,40 @@ This file is a stable continuation pointer, not a duplicate operating manual.
   before any Kimi cell); `TINKER_API_KEY`/`HF_TOKEN` still need Kevin's clicks
   (`~/.config/cotcodec/secrets.env`); root for the Slurm/Pyxis upgrade still
   needs a password.
-- Stage 0 on `fal-h100-01`: image `cotcodec-research:999f5583-architecture`
-  (fla 0.5.2) built; ten pilot checkpoints fetched with receipts; measured
-  eager throughput 282k tok/s (134M) / 73k tok/s (422M) on the tilelang image
-  `0b3ecef0-architecture` (`research/evidence/infrastructure/fla-throughput-h100-2026-09-01.json`).
-  Entry points: `infra/slurm/host-single-node/{build-architecture-image,fla-throughput-doctor,fetch-pilot-models}.sbatch`.
-- Before any GPU-hour on directions 19–22: rebuild and digest-pin the image
-  with `flash-linear-attention` 0.5.2, register the pilot checkpoints, compile
-  job manifests, write and pass the CPU phase-0 doctors twice, and run one
-  throughput job to replace the assumed MFU.
+- The real Qwen recurrent-state interface node is frozen after using both
+  allowed attempts. ORX experiment `f39c63d2-7ea1-4c00-a5c4-1b682c3744ba`
+  sent jobs `362` and `364`: job 362 failed at zero seconds because Slurm could
+  not open an output path whose parent did not exist; job 364 verified source,
+  image, exact checkpoint, container health, and one visible H100, then failed
+  in eight seconds on the doctor's direct-file `scripts` import. Neither loaded
+  the model or produced interface metrics. Evidence:
+  `research/evidence/infrastructure/qwen35-recurrent-interface-orx-frozen-v1.json`.
+  Never run that node a third time.
+- The launch path now precreates only validated persistent output roots and
+  fails closed on terminal Slurm state plus exit code. The direct-file import
+  regression also passes locally. The next architecture action is a **new ORX
+  child**, but only after a clean source capsule and rebuilt immutable image
+  contain the repair, a new manifest binds them, and dry-run plus `--test-only`
+  pass.
+- Stage 0 on `fal-h100-01`: exact Qwen checkpoint revision
+  `1001bb4d…`, artifact root `c7fbfd6b…`, architecture image
+  `sha256:65feae8f…`, and build receipt job `360` exist. All eight H100s were
+  idle after job 364. Historical measured eager throughput remains 282k tok/s
+  (134M) / 73k tok/s (422M).
+- Kevin reports Daybreak Blue approval, but local capability is still closed:
+  the prior node reached OpenAI and received HTTP 401 `invalid_api_key`, and
+  `~/.config/cotcodec/secrets.env` currently has no `OPENAI_API_KEY`. Create a
+  key in the approved API project, store it only in that mode-600 file, then
+  create one new versioned capability node. A pass must echo
+  `access_programs.cyber=daybreak_blue`; approval alone is not a receipt.
 
 - The deterministic OrchVar execution, tool-error transport, full runner
   integration, and resume gates are admitted. Frozen live job 341 remains an
   incomplete negative and must not be repaired or backfilled in place.
 - The memory-system queue is CPU-first and revision-specific. MemForest,
-  Infini-memory, Mnemo Cortex, and legacy Letta V1 have sealed lifecycle
-  negatives.
+  Infini-memory, Mnemo Cortex, legacy Letta V1, and LangMem have sealed
+  lifecycle negatives. LangMem's active v2 receipt independently reproduced
+  its exact prior negative after dependency drift invalidated v1.
 - Legacy Letta V1 job 351 is the complete two-state result. Jobs 348-350 remain
   pre-result diagnostics and must not be relabeled or overwritten. The receipt
   is `research/evidence/memory/memgpt-letta-native-lifecycle-negative-v1.json`.

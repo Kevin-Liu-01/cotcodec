@@ -1,23 +1,43 @@
 # H100 operator runbook
 
-Verified live state: 2026-08-31 21:29 PDT
+Verified live state: 2026-09-23 18:44 PDT
 
 ## What is available now
 
 | Item | Observed state | Consequence |
 |---|---|---|
 | Host | `kevin@207.241.191.91` / `fal-h100-01` | Reachable over SSH |
-| GPUs | 8 × NVIDIA H100 80GB HBM3 | Idle at verification time |
+| GPUs | 8 × NVIDIA H100 80GB HBM3 | All eight idle with zero reported memory use after job 364 |
 | Scheduler | Slurm 21.08.5, `research` partition | Scheduler owns jobs |
 | Containers | Docker 28.3.1 | Discovery lane works |
 | Host cgroups | Unified cgroup v2 | Current Slurm package cannot enforce it |
 | Pyxis | Absent; `srun --container-image` unavailable | Generic publication lane fails closed |
-| Remote repo | `/home/kevin/cotcodec`, clean but stale at `581ded8` when checked | Fast-forward before use |
+| Remote repo | `/home/kevin/cotcodec`, clean but stale at `f10a857` when checked | Fast-forward before manual use; ORX SSH runs use immutable per-run snapshots |
 | Persistent runs | `/home/kevin/cotcodec-runs` | Never use node-local `/tmp` for results |
 
 The hardware is usable today only for bounded, single-user, discovery-only
 jobs through `scripts/submit_docker_research_job.py`. It is not currently a
 publication-grade multi-user Slurm runtime.
+
+## Latest bounded H100 gate
+
+The Qwen3.5-4B-Base recurrent-state interface node is frozen. ORX experiment
+`f39c63d2-7ea1-4c00-a5c4-1b682c3744ba` used its two-attempt cap:
+
+- job `362` failed at zero seconds because the configured Slurm output parent
+  did not exist; no run directory, container, GPU workload, or result existed;
+- after the submitter and dispatcher repair, job `364` verified the exact
+  source capsule, immutable image, pinned 9.34 GB model artifact, container
+  doctor, and one visible H100, then failed after eight seconds because the
+  doctor invoked by file path could not resolve the repository `scripts`
+  package; and
+- neither job loaded the checkpoint or produced recurrent-state metrics.
+
+The exact infrastructure-negative receipt is
+[`research/evidence/infrastructure/qwen35-recurrent-interface-orx-frozen-v1.json`](../research/evidence/infrastructure/qwen35-recurrent-interface-orx-frozen-v1.json).
+Do not rerun this node. A future attempt must be a new child with a clean source
+capsule and rebuilt image containing the direct-entrypoint repair, a new
+manifest and output root, and fresh dry-run plus Slurm test-only evidence.
 
 ## First: synchronize the exact repository
 
@@ -110,7 +130,9 @@ tail -F <registered-run-root>/slurm-<job-id>.out
 
 The job must record allocation identity, one visible logical GPU per requested
 GPU, image/model/source receipts, exact argv, output manifest, and termination
-state. A SIGUSR1 checkpoint is not enough: submit a fresh successor job using
+state. Disappearance from `squeue` is not success: the dispatcher now requires
+terminal `JobState=COMPLETED` and `ExitCode=0:0` from `scontrol`. A SIGUSR1
+checkpoint is not enough: submit a fresh successor job using
 `resume_from_job_id` and `resume_subpath`, then compare it with an uninterrupted
 continuation before scaling.
 

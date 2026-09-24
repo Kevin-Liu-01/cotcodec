@@ -3744,3 +3744,33 @@ v3. V1/v2 remain superseded development history.
   `research/evidence/memory/langmem-native-lifecycle-negative-v2.json`
   (`790a3f86...`). This remains non-scientific lifecycle/storage evidence, and
   H100 actor admission remains forbidden for LangMem revision `29cbe41...`.
+
+## 2026-09-23 — Qwen interface node frozen; Slurm lifecycle hardened
+
+- Compiled and pushed the exact Qwen3.5-4B-Base recurrent-state interface
+  manifest, source capsule, model receipt, and architecture image, then created
+  ORX experiment `f39c63d2-7ea1-4c00-a5c4-1b682c3744ba` with a two-attempt cap.
+- Attempt 1 (`3afd5853...`, Slurm job 362) failed before execution at zero
+  seconds because Slurm could not open its output file under an absent run-root
+  parent. The old dispatcher incorrectly treated disappearance from `squeue` as
+  success. No run directory, container, GPU workload, or result existed.
+- Repaired the submitter to create only validated non-symlink persistent run
+  roots before `sbatch`, and repaired the ORX dispatcher to require terminal
+  `JobState=COMPLETED` plus `ExitCode=0:0`. The focused suite passed 38 tests.
+- Attempt 2 (`9b368801...`, job 364) verified source provenance, image identity,
+  the exact 9.34 GB checkpoint artifact, container health, and one visible H100.
+  It then failed after eight seconds because direct file invocation could not
+  resolve the repository `scripts` package. The checkpoint was never loaded and
+  no interface metric or scientific result exists. The repaired dispatcher
+  returned ORX exit 5.
+- Added a direct-file CPU regression that now reaches model-receipt validation
+  from outside the repository working directory. The original node is frozen;
+  no third run is allowed. A future child requires a clean repaired source
+  capsule, rebuilt immutable image, new manifest/output root, and fresh dry-run
+  plus Slurm test-only validation. Infrastructure-negative receipt:
+  `research/evidence/infrastructure/qwen35-recurrent-interface-orx-frozen-v1.json`.
+- Kevin reported Daybreak Blue approval. Capability is still unverified: the
+  earlier two-attempt ORX node ended at HTTP 401 `invalid_api_key`, and the local
+  mode-600 secrets file currently contains no `OPENAI_API_KEY`. The next action
+  is a key created in the approved API project followed by one new versioned
+  capability node whose receipt explicitly selects `daybreak_blue`.

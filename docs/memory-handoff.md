@@ -1,6 +1,6 @@
 # Memory research handoff
 
-Snapshot: 2026-08-31
+Snapshot: 2026-09-23
 
 This is the exact continuation point for CoTCodec's memory-policy program. It
 separates executed evidence from source-derived hypotheses so the next operator
@@ -23,6 +23,25 @@ The authoritative machine-readable owners are
 Run both validators before trusting the counts.
 
 ## Latest sealed result
+
+LangMem revision `29cbe41…` has an active v2 exact-source lifecycle receipt.
+Architecture dependency changes invalidated v1, so the contained ARM64 image
+was rebuilt and two fresh PostgreSQL lifecycles independently reproduced the
+same stable projection `96602010…`. Normal CRUD, deterministic background
+persistence, isolation, logical deletion, and restart passed; no first-class
+namespace purge exists, and all four deleted canaries remained recoverable
+from both stopped-database heap and WAL.
+
+- Portable receipt:
+  [`research/evidence/memory/langmem-native-lifecycle-negative-v2.json`](../research/evidence/memory/langmem-native-lifecycle-negative-v2.json)
+  (`790a3f86…`)
+- Local raw run:
+  `data/results/langmem-native-lifecycle/2026-09-23-local-docker-v2/`
+
+This is a provenance repair that reproduced the prior negative, not a new
+semantic-memory result. LangMem remains actor-blocked.
+
+## Prior complete result: legacy Letta V1
 
 Legacy Letta V1 revision
 `ff19ffeafeb54bd2a7dc5d4a552f10191732a235`, tree
