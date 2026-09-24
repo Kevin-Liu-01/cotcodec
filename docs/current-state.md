@@ -1,6 +1,6 @@
 # Current research state
 
-Snapshot: 2026-09-01
+Snapshot: 2026-09-23
 
 ## Program status
 
@@ -16,10 +16,28 @@ publication claim.
 | Frozen OrchVar live job 341 | Incomplete at 2/6, 0/2 completed-cell success, safety unreached | Never resume, rerun, or backfill |
 | Memory source ledger | 229 sources, 182 pinned repositories, 1 scientific reproduction, 3 conformance reproductions, 38 reproduced negatives | Matrix `a0cb79fb…` is current |
 | Memory portfolio | 93 candidates, six waves, 84 maximum H100-hours | Killed revisions are excluded from execution order |
-| Architecture program | Four gauntlet-preregistered directions (19–22) with proposals, validator-passing contracts, and executable CPU doctors; five waves, best 66/100, exit 5 fired; none pilot-ready | Compile the `qwen3.5-4b-base` discovery manifest (image `0b3ecef0-architecture`, receipts fetched, throughput measured) before any treatment GPU-hour |
+| Architecture program | Four gauntlet-preregistered directions (19–22); none pilot-ready. The Qwen recurrent-interface ORX node exhausted its two-run cap on infrastructure failures before any model forward pass | Keep node `f39c63d2…` frozen; admit only a new child after the direct-entrypoint CPU regression, clean source/image rebuild, and a new bound manifest |
+| Daybreak Blue | Kevin reports program approval; the exact API capability is not established. Two capability-node attempts ended at an invalid-key HTTP 401, and the local secrets file currently has no `OPENAI_API_KEY` | Create a key in the approved API project, store it only in the local mode-600 secrets file, then run one new versioned capability node and require a returned `daybreak_blue` receipt |
 | Frontier radar | Dated scan `research/scans/2026-09-01.md` sealed (14 cells + 3 triage + 4 verification, 22 hashed notes) | Program re-ranked in `research/frontier-systems-program-2026-09-01.md`; D16/D17/D15 NARROWED, D18 STILL_OPEN, Coded Delta negative-only |
 
-## Latest completed gate: legacy Letta V1
+## Latest sealed memory gate: LangMem provenance repair
+
+LangMem revision `29cbe41…` remains actor-blocked. Architecture dependency
+changes correctly invalidated its original code receipt, so the exact-source
+doctor was rebuilt and rerun in two fresh contained PostgreSQL states. The v2
+run reproduced the prior stable projection `96602010…`: normal CRUD,
+deterministic background persistence, user isolation, logical deletion, and
+fresh-process restart passed, while no first-class namespace purge exists and
+all four logically purged canaries remained recoverable from both heap and WAL
+after clean shutdown.
+
+The active portable receipt is
+[`research/evidence/memory/langmem-native-lifecycle-negative-v2.json`](../research/evidence/memory/langmem-native-lifecycle-negative-v2.json)
+(`790a3f86…`). This remains lifecycle/storage evidence only; no extraction,
+semantic retrieval, model-effect, managed-service, or H100 quality claim is
+admitted.
+
+## Prior complete gate: legacy Letta V1
 
 Legacy Letta V1 revision
 `ff19ffeafeb54bd2a7dc5d4a552f10191732a235` / tree
@@ -57,6 +75,7 @@ are not included in the decision.
 | Infini Memory `ddac08e` | Unconfined/destructive user path plus non-atomic Markdown/index lifecycle | Forbidden |
 | Mnemo Cortex `8a0cff9` | Partial Passport writes, duplicate retry, no native primary-memory purge, unlocked upstream | Forbidden |
 | Legacy Letta V1 `ff19ffe` | Split core update, duplicate archive retry, agent-delete retention, stopped-PostgreSQL residue | Forbidden |
+| LangMem `29cbe41` | No first-class namespace purge; deleted plaintext reproduced in PostgreSQL heap and WAL after restart | Forbidden |
 
 These are lifecycle, storage, and component observations. None measures semantic
 memory quality, autonomous paging value, live-model behavior, or secure media
@@ -69,12 +88,21 @@ erasure.
    Do not treat it as a legacy-server repair. Bind construction, scope/isolation,
    restart, retry/idempotency, delete/purge/residue, and matched cost surfaces
    before considering an actor.
-2. Preserve the closed OrchVar H100 state. A CPU repair does not rescue frozen
+2. Keep Qwen recurrent-interface ORX node `f39c63d2…` frozen. Jobs `362` and
+   `364` produced no model-interface result. The direct-file import regression
+   now passes locally, but a new child still requires a clean source capsule,
+   rebuilt immutable architecture image, new manifest/output root, and fresh
+   dry-run plus Slurm test-only validation.
+3. Preserve the closed OrchVar H100 state. A CPU repair does not rescue frozen
    job 341; the next live hypothesis requires a new preregistered contract.
-3. Frontier scan done 2026-09-01 (`research/scans/2026-09-01.md`); brief the
+4. Materialize Daybreak approval as a project-bound key. Put `OPENAI_API_KEY`
+   in `~/.config/cotcodec/secrets.env` with mode 600; never paste or commit it.
+   A new capability node must echo `access_programs.cyber=daybreak_blue` before
+   any defensive-safety contract is admitted.
+5. Frontier scan done 2026-09-01 (`research/scans/2026-09-01.md`); brief the
    advisor on the pivot to language as a controlled variable inside architecture
    and on the blocking parallel-data inventory before revising Paper 1 settings.
-4. Before any larger claim wave, replace dirty discovery provenance with a clean
+6. Before any larger claim wave, replace dirty discovery provenance with a clean
    source archive, immutable OCI image and SBOM, complete controls, protected
    external attestation, and validated checkpoint/resume.
 
@@ -90,7 +118,7 @@ is admitted at this snapshot.
 uv run python scripts/validate_memory_experiments.py
 uv run python scripts/validate_memory_sources.py
 uv run python scripts/validate_memory_portfolio.py
-uv run python scripts/seal_memgpt_letta_lifecycle_evidence.py --validate-only
+uv run pytest -q tests/test_langmem_lifecycle_evidence.py
 uv run pytest -q
 uv run ruff check harness scripts tests
 node scripts/run-agent-docs.ts doctor .

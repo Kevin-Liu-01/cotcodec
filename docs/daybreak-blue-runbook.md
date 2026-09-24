@@ -6,6 +6,34 @@ Daybreak Blue is a separately approved OpenAI API access program for defensive
 cybersecurity work. It is not a general research credit, a model snapshot, a
 tool authorization, or an H100 entitlement.
 
+## Current access state
+
+Kevin reports that the account has been approved for Daybreak Blue. The exact
+API capability is **not yet verified**:
+
+- ORX experiment `4019afe4-94a4-475c-abfd-64dfcdc15e35` used its two-attempt
+  cap. Run `c02e9981…` exposed a source-snapshot assumption; repaired run
+  `6661f1f5…` reached OpenAI but received HTTP 401 `invalid_api_key`.
+- The node is frozen. Do not run it a third time or relabel approval as a
+  capability pass.
+- As checked on 2026-09-23, `~/.config/cotcodec/secrets.env` exists with mode
+  600 but contains no `OPENAI_API_KEY`.
+
+### Kevin's one required setup action
+
+In the OpenAI Platform, select the API project to which Daybreak Blue was
+approved and create a new API key for that exact project. Add it locally as:
+
+```text
+OPENAI_API_KEY=<new project key>
+```
+
+in `~/.config/cotcodec/secrets.env`, keep the file at mode 600, and never paste
+the key into chat, shell history, Git, experiment YAML, or an evidence receipt.
+After that, create a new versioned ORX capability node rather than reusing the
+frozen one. Its single bounded request must return a receipt selecting
+`access_programs.cyber=daybreak_blue`; a valid standard API call is not enough.
+
 ## CoTCodec policy
 
 - Use the pinned underlying model `gpt-5.6-sol`, not the mutable
@@ -29,9 +57,15 @@ It records the requested and returned model, requested and selected access
 program, SDK and runtime versions, token counts, request/output hashes, source
 commit, and four pass/fail gates. Raw response text and credentials are omitted.
 
+For a new versioned node, first load the local secret into that shell and use a
+new output path; never overwrite `capability-v1.json`:
+
 ```bash
+set -a
+source ~/.config/cotcodec/secrets.env
+set +a
 uv run --locked python scripts/run_openai_daybreak_blue_doctor.py \
-  --output data/results/openai-daybreak-blue/capability-v1.json
+  --output data/results/openai-daybreak-blue/capability-v2.json
 ```
 
 `DAYBREAK_BLUE_CAPABILITY_PASS` establishes only that the current API key's

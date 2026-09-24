@@ -404,8 +404,12 @@ models:
     registered_for: directions 19-22 phase-0 pilots (gauntlet 2026-09-01)
     blocker: >-
       Full artifact receipt exists at data/model-receipts/qwen3.5-4b-base.json and on
-      fal-h100-01 (artifact root c7fbfd6b..., 9.34 GB). Run and seal the real recurrent-state
-      interface doctor before any direction-20 or direction-22 treatment cell.
+      fal-h100-01 (artifact root c7fbfd6b..., 9.34 GB). Recurrent-interface ORX node
+      f39c63d2... is frozen after jobs 362 and 364 exhausted its two-run cap on
+      infrastructure failures before model loading. A local direct-file import regression
+      now passes, but a new child requires a clean repaired source capsule, rebuilt immutable
+      image, new manifest/output root, and fresh dry-run plus Slurm test-only validation.
+      No direction-20 or direction-22 treatment cell is admitted.
   qwen3-1.7b-base:
     backend: huggingface
     repo_id: Qwen/Qwen3-1.7B-Base
