@@ -107,3 +107,14 @@ def test_receipt_summary_counts_cases() -> None:
 def test_parse_job_id() -> None:
     assert orx_run.parse_job_id("Submitted batch job 361\n") == "361"
     assert orx_run.parse_job_id("nothing here") is None
+
+
+def test_parse_slurm_terminal_fails_closed() -> None:
+    completed = "JobId=361 JobState=COMPLETED ExitCode=0:0 NodeList=fal-h100-01"
+    failed = "JobId=362 JobState=FAILED Reason=NonZeroExitCode ExitCode=1:0"
+    assert orx_run.parse_slurm_terminal(completed) == ("COMPLETED", "0:0")
+    assert orx_run.parse_slurm_terminal(failed) == ("FAILED", "1:0")
+    assert orx_run.parse_slurm_terminal("") == ("UNKNOWN", "UNKNOWN")
+    assert orx_run.slurm_succeeded("COMPLETED", "0:0") is True
+    assert orx_run.slurm_succeeded("FAILED", "1:0") is False
+    assert orx_run.slurm_succeeded("UNAVAILABLE", "UNAVAILABLE") is False

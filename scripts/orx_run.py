@@ -162,6 +162,33 @@ def squeue_state(job_id: str) -> str:
     return out.stdout.strip()
 
 
+def parse_slurm_terminal(stdout: str) -> tuple[str, str]:
+    """Extract the terminal scheduler state and exit code from ``scontrol -o``."""
+
+    fields = {}
+    for token in stdout.split():
+        if "=" in token:
+            key, value = token.split("=", 1)
+            fields[key] = value
+    return fields.get("JobState", "UNKNOWN"), fields.get("ExitCode", "UNKNOWN")
+
+
+def slurm_terminal(job_id: str) -> tuple[str, str]:
+    completed = subprocess.run(
+        ["scontrol", "show", "job", "-o", job_id],
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    if completed.returncode != 0:
+        return "UNAVAILABLE", "UNAVAILABLE"
+    return parse_slurm_terminal(completed.stdout)
+
+
+def slurm_succeeded(state: str, exit_code: str) -> bool:
+    return state == "COMPLETED" and exit_code == "0:0"
+
+
 def run_slurm_manifest(node: dict[str, Any], poll_seconds: int) -> int:
     print("ORX_NODE", json.dumps(node, sort_keys=True), flush=True)
     for stage in ("--dry-run", "--test-only"):
@@ -192,6 +219,18 @@ def run_slurm_manifest(node: dict[str, Any], poll_seconds: int) -> int:
             break
         print(f"ORX_SLURM_STATE {job_id} {state}", flush=True)
         time.sleep(poll_seconds)
+    terminal_state, exit_code = slurm_terminal(job_id)
+    print(
+        f"ORX_SLURM_TERMINAL {job_id} state={terminal_state} exit_code={exit_code}",
+        flush=True,
+    )
+    if not slurm_succeeded(terminal_state, exit_code):
+        print(
+            f"ORX_RESULT kind=slurm-manifest direction={node['direction']} "
+            f"job={job_id} exit=5",
+            flush=True,
+        )
+        return 5
     print(
         f"ORX_RESULT kind=slurm-manifest direction={node['direction']} job={job_id} exit=0",
         flush=True,
