@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import subprocess
+import sys
 from pathlib import Path
 
 import yaml
@@ -71,3 +73,25 @@ def test_h100_manifest_is_bounded_and_exactly_bound() -> None:
     assert manifest["randomness_contract"] == "deterministic-all-serve"
     assert manifest["max_gpu_hours"] == 1 / 3
     assert "memory_source_admission" not in manifest
+
+
+def test_direct_file_entrypoint_resolves_repo_imports(tmp_path: Path) -> None:
+    completed = subprocess.run(
+        [
+            sys.executable,
+            str(PROJECT_ROOT / "scripts" / "run_qwen35_recurrent_state_interface_doctor.py"),
+            "--model-root",
+            str(tmp_path / "models"),
+            "--receipt-root",
+            str(tmp_path / "receipts"),
+            "--output",
+            str(tmp_path / "result.json"),
+        ],
+        cwd=tmp_path,
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    assert completed.returncode != 0
+    assert "No module named 'scripts'" not in completed.stderr
+    assert "qwen3.5-4b-base.json" in completed.stderr
