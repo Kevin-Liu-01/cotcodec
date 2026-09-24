@@ -60,6 +60,21 @@ def _sha256(payload: Any) -> str:
 
 
 def _git_receipt() -> dict[str, Any]:
+    bound_paths = (
+        Path(__file__).resolve(),
+        PROJECT_ROOT / "experiments" / "orx" / "node.yaml",
+        PROJECT_ROOT / "uv.lock",
+    )
+    receipt: dict[str, Any] = {
+        "doctor_sha256": hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
+        "bound_files": {
+            str(path.relative_to(PROJECT_ROOT)): hashlib.sha256(path.read_bytes()).hexdigest()
+            for path in bound_paths
+        },
+    }
+    if not (PROJECT_ROOT / ".git").exists():
+        receipt.update({"git_sha": None, "dirty": None, "snapshot_without_git": True})
+        return receipt
     sha = subprocess.run(
         ["git", "rev-parse", "HEAD"],
         cwd=PROJECT_ROOT,
@@ -74,11 +89,8 @@ def _git_receipt() -> dict[str, Any]:
         capture_output=True,
         text=True,
     ).stdout
-    return {
-        "git_sha": sha,
-        "dirty": bool(status),
-        "doctor_sha256": hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
-    }
+    receipt.update({"git_sha": sha, "dirty": bool(status), "snapshot_without_git": False})
+    return receipt
 
 
 def build_request() -> dict[str, Any]:
