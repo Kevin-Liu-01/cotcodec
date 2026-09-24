@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "evidence_grade": "infrastructure-only",
+  "scientific_result": false,
+  "publication_ready": false,
+  "runtime_lane": "fal-h100-01-slurm-research-cpu-build",
+  "claim_boundary": "Sealed container build and local-registry availability only; no GPU, checkpoint, recurrent state, language, memory, mechanism, or task-quality result.",
+  "slurm_job_id": "360",
+  "git_sha": "f10a85719710dbc0cf1405e412dbbda33a084b61",
+  "git_tree": "6a58a4d2e618b9abfc78105b4d3ef0cd5c52481c",
+  "source_tar_sha256": "107692771430a6cdf9e5f64ad9e0453b28be5e97a1da4fd5dbcdefe725f433d9",
+  "tag": "cotcodec-research:f10a8571-architecture",
+  "image_id": "sha256:65feae8f044a98303b862fe9bf4b0fefceae8bec356b473a2fff70f8949e34e6",
+  "repo_digest": "127.0.0.1:5000/cotcodec-research@sha256:39a0c992cd6098b107490fe117dea07b5363bd173b392c03580ed6b5f5fbe5cb",
+  "runtime_profile": "architecture",
+  "network_during_build": true,
+  "versions": {
+    "torch": "2.11.0+cu128",
+    "transformers": "5.15.0",
+    "flash-linear-attention": "0.5.2",
+    "fla-core": "0.5.2",
+    "triton": "3.6.0"
+  },
+  "remote_artifacts": {
+    "receipt.json": {
+      "bytes": 599,
+      "sha256": "f5907942b559f0d5053fefe972e0c3ef245a297186adb4b1ffd405ab76d1e5df"
+    },
+    "versions.txt": {
+      "bytes": 874,
+      "sha256": "018c9cb9ceac06a22bd84a9e7cc31e03ffc75356c50fc94edcf2c42fd26beb10"
+    },
+    "docker-build.log": {
+      "bytes": 36563,
+      "sha256": "a70e23ad225975ca176d7a5af483bbe3193de4a61181136e99b0dc90b9e4d2c3"
+    },
+    "docker-push.log": {
+      "bytes": 1577,
+      "sha256": "4925d3d53d93729b9f477fbc1671917a081e0f48ca74a13f7d30b94e1c0806aa"
+    },
+    "slurm-output": {
+      "bytes": 1473,
+      "sha256": "6ca0bfaaa137f239d1a13c69a70d0f9ce13deb61b3de8d96e6c9c9fc3746b40c"
+    }
+  }
+}

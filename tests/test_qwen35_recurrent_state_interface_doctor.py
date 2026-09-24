@@ -1,6 +1,19 @@
 from __future__ import annotations
 
+from pathlib import Path
+
+import yaml
+
 from scripts.run_qwen35_recurrent_state_interface_doctor import judge_interface
+from scripts.submit_docker_research_job import validate_manifest
+
+PROJECT_ROOT = Path(__file__).resolve().parents[1]
+MANIFEST = (
+    PROJECT_ROOT
+    / "experiments"
+    / "architectures"
+    / "qwen35-4b-recurrent-state-interface.yaml"
+)
 
 
 def passing_metrics() -> dict:
@@ -48,3 +61,13 @@ def test_interface_gates_reject_nonfinite_logit_metrics() -> None:
     gates = judge_interface(metrics)
     assert gates["cached_vs_one_shot_cosine"] is False
     assert gates["cached_vs_one_shot_max_abs"] is False
+
+
+def test_h100_manifest_is_bounded_and_exactly_bound() -> None:
+    raw = yaml.safe_load(MANIFEST.read_text(encoding="utf-8"))
+    manifest = validate_manifest(raw)
+    assert manifest["git_sha"] == "f10a85719710dbc0cf1405e412dbbda33a084b61"
+    assert manifest["model"]["model_id"] == "qwen3.5-4b-base"
+    assert manifest["randomness_contract"] == "deterministic-all-serve"
+    assert manifest["max_gpu_hours"] == 1 / 3
+    assert "memory_source_admission" not in manifest
