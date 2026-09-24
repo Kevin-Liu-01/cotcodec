@@ -5,6 +5,6 @@
 #   kind: slurm-manifest -> manifest: experiments/<...>.yaml submitted only via
 #                           scripts/submit_docker_research_job.py (dry-run, test-only, submit)
 kind: cpu-doctor
-direction: semantic-clock-gate-parity
-doctor: scripts/run_semantic_clock_gate_parity_doctor.py
+direction: openai-daybreak-blue-capability
+doctor: scripts/run_openai_daybreak_blue_doctor.py
 args: []
