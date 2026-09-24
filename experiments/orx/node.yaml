@@ -4,7 +4,6 @@
 #   kind: cpu-doctor     -> doctor: scripts/run_<name>_doctor.py, optional args (no --output)
 #   kind: slurm-manifest -> manifest: experiments/<...>.yaml submitted only via
 #                           scripts/submit_docker_research_job.py (dry-run, test-only, submit)
-kind: cpu-doctor
-direction: semantic-clock-gate-parity
-doctor: scripts/run_semantic_clock_gate_parity_doctor.py
-args: []
+kind: slurm-manifest
+direction: qwen35-recurrent-state-interface
+manifest: experiments/architectures/qwen35-4b-recurrent-state-interface.yaml
