@@ -10,7 +10,7 @@ from scripts.seal_langmem_native_lifecycle_evidence import (
 )
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
-EVIDENCE = PROJECT_ROOT / "research/evidence/memory/langmem-native-lifecycle-negative-v1.json"
+EVIDENCE = PROJECT_ROOT / "research/evidence/memory/langmem-native-lifecycle-negative-v2.json"
 
 
 def test_langmem_native_lifecycle_evidence_is_self_contained() -> None:
