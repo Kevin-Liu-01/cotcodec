@@ -13,6 +13,8 @@ import tempfile
 from pathlib import Path, PurePosixPath
 from typing import Any
 
+import yaml
+
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
@@ -73,14 +75,27 @@ def prepare_context(
     contract_path: Path = DEFAULT_CONTRACT,
     ledger_path: Path = DEFAULT_LEDGER,
 ) -> dict[str, Any]:
-    contract = load_contract(contract_path, ledger_path)
+    raw_contract = yaml.safe_load(contract_path.read_text(encoding="utf-8"))
+    raw_systems = raw_contract.get("systems") if isinstance(raw_contract, dict) else None
+    raw_system = raw_systems.get(system_id) if isinstance(raw_systems, dict) else None
+    repair_source_id = raw_system.get("source_id") if isinstance(raw_system, dict) else None
+    if not isinstance(repair_source_id, str) or not repair_source_id:
+        raise SourceContextError(f"unknown memory system: {system_id}")
+    contract = load_contract(
+        contract_path,
+        ledger_path,
+        evidence_repair_source_id=repair_source_id,
+    )
     if system_id not in contract["systems"]:
         raise SourceContextError(f"unknown memory system: {system_id}")
     output_dir = output_dir.resolve()
     if output_dir.exists():
         raise SourceContextError(f"output path already exists: {output_dir}")
     system = contract["systems"][system_id]
-    ledger = load_and_validate(ledger_path)
+    ledger = load_and_validate(
+        ledger_path,
+        evidence_repair_source_id=repair_source_id,
+    )
     source = ledger["sources"][system["source_id"]]
     source_receipt = verify_checkout(system_id, system, source)
     checkout = (PROJECT_ROOT / system["checkout"]).resolve()

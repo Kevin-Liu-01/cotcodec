@@ -1278,6 +1278,7 @@ def validate_source(
     entry: dict[str, Any],
     *,
     allowed_layers: set[str],
+    skip_local_evidence: bool = False,
 ) -> None:
     if not ID_RE.fullmatch(entry_id):
         raise MemorySourceError(f"invalid source id: {entry_id!r}")
@@ -1355,7 +1356,7 @@ def validate_source(
                 "local-conformance-reproduced",
                 "local-negative-reproduced",
                 "local-artifact-audited",
-            }:
+            } and not skip_local_evidence:
                 _validate_local_evidence_bundle(entry_id, entry, artifact_bytes)
             elif evidence_grade == "local-reproduced" and entry_id == "fidelis":
                 try:
@@ -1494,7 +1495,11 @@ def validate_source(
                 )
 
 
-def load_and_validate(path: Path = DEFAULT_LEDGER) -> dict[str, Any]:
+def load_and_validate(
+    path: Path = DEFAULT_LEDGER,
+    *,
+    evidence_repair_source_id: str | None = None,
+) -> dict[str, Any]:
     payload = load_unique_yaml(path)
     if not isinstance(payload, dict) or payload.get("schema_version") != 1:
         raise MemorySourceError("ledger must be a schema_version: 1 mapping")
@@ -1530,8 +1535,15 @@ def load_and_validate(path: Path = DEFAULT_LEDGER) -> dict[str, Any]:
     sources = payload.get("sources")
     if not isinstance(sources, dict) or not sources:
         raise MemorySourceError("sources must be a non-empty mapping")
+    if evidence_repair_source_id is not None and evidence_repair_source_id not in sources:
+        raise MemorySourceError("evidence repair source is absent from the ledger")
     for entry_id, entry in sources.items():
-        validate_source(entry_id, entry, allowed_layers=allowed_layers)
+        validate_source(
+            entry_id,
+            entry,
+            allowed_layers=allowed_layers,
+            skip_local_evidence=entry_id == evidence_repair_source_id,
+        )
     return payload
 
 

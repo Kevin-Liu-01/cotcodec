@@ -3726,3 +3726,21 @@ v3. V1/v2 remain superseded development history.
   attention (Kimi Linear 48B: ≈4.5% state-norm imprint after 4,096 tokens) while
   checkpoint replay does — a new mandatory citation for any exact-state-surgery
   claim; 2607.21692 is an uncited closest-prior candidate for direction 21.
+## 2026-09-23 — LangMem provenance repair reproduced the negative
+
+- Architecture-only dependency additions changed `pyproject.toml` and `uv.lock`,
+  correctly invalidating LangMem's v1 code receipt. Source-context preparation
+  also exposed a bootstrap defect: it validated the stale evidence it needed to
+  rebuild. The repair escape now skips semantic validation for exactly the one
+  registered source being regenerated while preserving the artifact hash,
+  ledger metadata, immutable source pin, checkout, archive, license, and all
+  other source validations.
+- A new ARM64 image (`sha256:feb8bfec...`) and two clean contained PostgreSQL
+  lifecycles reproduced the exact stable projection `96602010...`: normal CRUD,
+  deterministic background persistence, isolation, logical deletion, and
+  restart passed; no first-class namespace purge exists; all four purged
+  plaintext canaries remained in both heap and WAL after clean shutdown.
+- The active self-contained receipt is
+  `research/evidence/memory/langmem-native-lifecycle-negative-v2.json`
+  (`790a3f86...`). This remains non-scientific lifecycle/storage evidence, and
+  H100 actor admission remains forbidden for LangMem revision `29cbe41...`.

@@ -227,8 +227,8 @@ killed_revisions:
   - source_id: langmem
     repository_revision: 29cbe41e58528f92e9efa773c12e15c47be3808c
     terminal_status: BLOCKED_NO_FIRST_CLASS_SCOPED_PURGE_AND_POSTGRES_PLAINTEXT_RESIDUE
-    evidence_path: research/evidence/memory/langmem-native-lifecycle-negative-v1.json
-    evidence_sha256: ffc7e656429eeecfe9673ab890b36eca5fb0877c7d4dc960b69abbcc8934b612
+    evidence_path: research/evidence/memory/langmem-native-lifecycle-negative-v2.json
+    evidence_sha256: 790a3f86f503ed2da7092ff4641378817457fd8d0eb2a19e27ff31d525c16e9c
   - source_id: astra-working-set
     repository_revision: 644f9d4e65f4e725996025834c91531592ab6166
     terminal_status: BLOCKED_NONDETERMINISTIC_RECALL_ACCESS_ACCOUNTING
@@ -436,8 +436,8 @@ waves:
         negative_evidence:
           artifact_path: research/langmem-native-lifecycle-audit-2026-08-17.md
           artifact_sha256: b264a5402f4df75f8950c2a70c337a58a3d1f153806c36448f2831e4d5db32cc
-          receipt_path: research/evidence/memory/langmem-native-lifecycle-negative-v1.json
-          receipt_sha256: ffc7e656429eeecfe9673ab890b36eca5fb0877c7d4dc960b69abbcc8934b612
+          receipt_path: research/evidence/memory/langmem-native-lifecycle-negative-v2.json
+          receipt_sha256: 790a3f86f503ed2da7092ff4641378817457fd8d0eb2a19e27ff31d525c16e9c
           status: BLOCKED_NO_FIRST_CLASS_SCOPED_PURGE_AND_POSTGRES_PLAINTEXT_RESIDUE
       - source_id: hermes-hindsight-native
         mode: contained-import

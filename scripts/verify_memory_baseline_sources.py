@@ -89,6 +89,8 @@ def _implementation_repository(source: dict[str, Any], role: str) -> dict[str, A
 def load_contract(
     contract_path: Path = DEFAULT_CONTRACT,
     ledger_path: Path = DEFAULT_LEDGER,
+    *,
+    evidence_repair_source_id: str | None = None,
 ) -> dict[str, Any]:
     contract = yaml.safe_load(contract_path.read_text(encoding="utf-8"))
     if not isinstance(contract, dict) or contract.get("schema_version") != 1:
@@ -175,7 +177,10 @@ def load_contract(
         raise BaselineSourceError("lifecycle branch isolation is required")
     if lifecycle_protocol.get("deterministic_restart_required_for_deterministic_arms") is not True:
         raise BaselineSourceError("deterministic lifecycle arms require restart proof")
-    ledger = load_and_validate(ledger_path)
+    ledger = load_and_validate(
+        ledger_path,
+        evidence_repair_source_id=evidence_repair_source_id,
+    )
     seen_revisions: set[str] = set()
     for system_id, system in systems.items():
         if not isinstance(system, dict):

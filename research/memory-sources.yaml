@@ -306,12 +306,13 @@ sources:
     use_as: [hot-path-vs-background-baseline, procedural-memory-baseline]
     evidence_grade: local-negative-reproduced
     reproduction_receipt:
-      artifact_path: research/evidence/memory/langmem-native-lifecycle-negative-v1.json
-      receipt_sha256: ffc7e656429eeecfe9673ab890b36eca5fb0877c7d4dc960b69abbcc8934b612
+      artifact_path: research/evidence/memory/langmem-native-lifecycle-negative-v2.json
+      receipt_sha256: 790a3f86f503ed2da7092ff4641378817457fd8d0eb2a19e27ff31d525c16e9c
     limitations:
       - Framework integration and storage policy are coupled in the reference implementation.
       - Exact source identity is tree d85d1f815fb2b54bbc0a85c18453b7a7953ca38c, git-archive SHA-256 24c85c514c80bb263a16626971e8ef53978fd1bc7f9319e47d8a5a0bf4956521, and MIT license SHA-256 98af1351ea856e008c835bc89a312905960a318072f950732bf346c741027c7d.
       - Two clean ARM64 Docker repetitions passed public hot-path CRUD, deterministic background-manager persistence, user isolation, logical deletion, and PostgreSQL plus fresh-process restart with stable semantic projection 96602010adaf5b90c706c9be759d4790464ccd7a2ee4eea302011ce76cbdac61.
+      - The 2026-09-23 v2 seal rebuilt the contained image after dependency-lock drift and reproduced the same two-clean-state projection and terminal negative; the earlier v1 seal remains historical and is no longer the active receipt.
       - The exact official PostgresStore path exposes per-record delete but no first-class namespace purge. Enumerate-then-delete made the tested scopes logically empty, yet all four purged plaintext canaries remained recoverable from both the PostgreSQL heap and WAL after clean shutdown.
       - Deterministic extraction isolated lifecycle transport from model quality, and vector indexing was disabled. Extraction quality, semantic retrieval, procedural prompt quality, managed LangGraph service behavior, active/inactive paging, and actor quality were not evaluated.
       - This exact revision is killed before H100 admission. A newer pin or explicit repair arm must supply first-class scoped purge plus physical purge or cryptographic erasure and pass the same two-clean-state lifecycle doctor.

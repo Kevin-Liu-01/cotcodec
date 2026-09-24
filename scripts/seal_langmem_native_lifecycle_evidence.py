@@ -13,13 +13,13 @@ from pathlib import Path
 from typing import Any
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
-DEFAULT_ROOT = PROJECT_ROOT / "data/results/langmem-native-lifecycle/2026-08-17-local-docker-v1"
-DEFAULT_OUTPUT = PROJECT_ROOT / "research/evidence/memory/langmem-native-lifecycle-negative-v1.json"
+DEFAULT_ROOT = PROJECT_ROOT / "data/results/langmem-native-lifecycle/2026-09-23-local-docker-v2"
+DEFAULT_OUTPUT = PROJECT_ROOT / "research/evidence/memory/langmem-native-lifecycle-negative-v2.json"
 STATUS = "BLOCKED_NO_FIRST_CLASS_SCOPED_PURGE_AND_POSTGRES_PLAINTEXT_RESIDUE"
 REVISION = "29cbe41e58528f92e9efa773c12e15c47be3808c"
 TREE = "d85d1f815fb2b54bbc0a85c18453b7a7953ca38c"
 SOURCE_ARCHIVE = "24c85c514c80bb263a16626971e8ef53978fd1bc7f9319e47d8a5a0bf4956521"
-IMAGE_ID = "sha256:2571173b00e1774bb3d4a0ac3f8f945d6b6d044840cf6951e35d77fc0c08520f"
+IMAGE_ID = "sha256:feb8bfecd74510c4be727149c25c8e65869241fd45589c7f89309165d5622dcf"
 PROJECTION_SHA256 = "96602010adaf5b90c706c9be759d4790464ccd7a2ee4eea302011ce76cbdac61"
 CLAIM_BOUNDARY = (
     "Exact pinned LangMem public tool, deterministic background-manager transport, "
