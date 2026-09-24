@@ -54,6 +54,10 @@ PUBLIC_BENCHMARK_COMMAND_OPTIONS = (
 )
 MAX_PUBLIC_BENCHMARK_BYTES = 100 * 1024**3
 MAX_STUDY_ARTIFACT_BYTES = 512 * 1024**2
+ALLOWED_RUN_ROOTS = (
+    Path("/home/kevin/cotcodec-runs"),
+    Path("/shared/cotcodec/runs"),
+)
 
 
 def _verify_claim_admission_files(
@@ -120,6 +124,35 @@ def _safe_absolute_path(value: Any, field: str) -> str:
     if not isinstance(value, str) or not PATH_RE.fullmatch(value) or ".." in Path(value).parts:
         raise ValueError(f"{field} must be a simple absolute path without traversal")
     return value
+
+
+def prepare_run_root(
+    manifest: dict[str, Any],
+    *,
+    allowed_roots: tuple[Path, ...] = ALLOWED_RUN_ROOTS,
+) -> Path:
+    """Create the validated persistent root before Slurm opens its output file."""
+
+    requested = Path(manifest["run_root"])
+    matches = [
+        base
+        for base in allowed_roots
+        if requested == base or requested.is_relative_to(base)
+    ]
+    if len(matches) != 1:
+        raise ValueError("run_root is outside the dedicated persistent run roots")
+    base = matches[0]
+    if not base.is_dir() or base.is_symlink():
+        raise ValueError("persistent run-root base is missing, not a directory, or a symlink")
+    current = base
+    for part in requested.relative_to(base).parts:
+        current = current / part
+        if current.exists():
+            if not current.is_dir() or current.is_symlink():
+                raise ValueError("run_root contains a non-directory or symlink component")
+        else:
+            current.mkdir(mode=0o750)
+    return requested
 
 
 def _validate_command(value: Any) -> list[str]:
@@ -808,6 +841,11 @@ def main() -> None:
             except FileExistsError as exc:
                 raise SystemExit("--dry-run-output already exists") from exc
         return
+    if not args.test_only:
+        try:
+            prepare_run_root(manifest)
+        except ValueError as exc:
+            raise SystemExit(str(exc)) from exc
     completed = subprocess.run(argv, check=True, capture_output=True, text=True)
     print(completed.stdout.strip())
 
