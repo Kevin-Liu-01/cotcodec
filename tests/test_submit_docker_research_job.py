@@ -12,6 +12,7 @@ from scripts.memory_job_admission import build_memory_job_admission
 from scripts.submit_docker_research_job import (
     BATCH_SCRIPT,
     RUNTIME,
+    prepare_run_root,
     sbatch_argv,
     validate_manifest,
 )
@@ -120,6 +121,25 @@ def test_submitter_can_seal_dry_run_without_shell_redirection(tmp_path: Path) ->
     )
     assert repeated.returncode != 0
     assert "already exists" in repeated.stderr
+
+
+def test_submitter_precreates_only_a_nonsymlink_persistent_run_root(tmp_path: Path) -> None:
+    base = tmp_path / "runs"
+    base.mkdir()
+    manifest = {"run_root": str(base / "nested" / "experiment")}
+    created = prepare_run_root(manifest, allowed_roots=(base,))
+    assert created.is_dir()
+    assert not created.is_symlink()
+
+    outside = tmp_path / "outside"
+    outside.mkdir()
+    with pytest.raises(ValueError, match="outside the dedicated"):
+        prepare_run_root({"run_root": str(outside)}, allowed_roots=(base,))
+
+    link = base / "link"
+    link.symlink_to(outside, target_is_directory=True)
+    with pytest.raises(ValueError, match="symlink component"):
+        prepare_run_root({"run_root": str(link / "child")}, allowed_roots=(base,))
 
 
 def test_real_submitter_rejects_killed_memory_revision() -> None:
