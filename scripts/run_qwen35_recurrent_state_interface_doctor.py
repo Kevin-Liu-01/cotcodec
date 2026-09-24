@@ -9,12 +9,15 @@ import json
 import math
 import os
 import platform
+import sys
 import time
 from collections.abc import Mapping
 from pathlib import Path
 from typing import Any
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
+if str(PROJECT_ROOT) not in sys.path:
+    sys.path.insert(0, str(PROJECT_ROOT))
 MODEL_ID = "qwen3.5-4b-base"
 EXPECTED_REVISION = "1001bb4d826a52d1f399e183466143f4da7b741b"
 EXPECTED_ARTIFACT_ROOT = "c7fbfd6bd1c73b9a0080decf794f5e4333c955f2704591affc61b0a9ac850e42"
