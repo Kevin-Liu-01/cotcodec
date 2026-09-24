@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from types import SimpleNamespace
 
+import scripts.run_openai_daybreak_blue_doctor as doctor_module
 from scripts.run_openai_daybreak_blue_doctor import (
     ACCESS_PROGRAM,
     MODEL_ID,
@@ -89,3 +90,24 @@ def test_access_denial_is_a_sanitized_decision_result() -> None:
         "type": "FakeAccessError",
     }
     assert "message" not in receipt["error"]
+
+
+def test_source_receipt_supports_orx_snapshot_without_git(
+    tmp_path, monkeypatch
+) -> None:
+    (tmp_path / "experiments" / "orx").mkdir(parents=True)
+    (tmp_path / "scripts").mkdir()
+    doctor_path = tmp_path / "scripts" / "run_openai_daybreak_blue_doctor.py"
+    doctor_path.write_text("# snapshot doctor\n")
+    (tmp_path / "experiments" / "orx" / "node.yaml").write_text("kind: cpu-doctor\n")
+    (tmp_path / "uv.lock").write_text("version = 1\n")
+    monkeypatch.setattr(doctor_module, "PROJECT_ROOT", tmp_path)
+    monkeypatch.setattr(doctor_module, "__file__", str(doctor_path))
+    receipt = doctor_module._git_receipt()
+    assert receipt["snapshot_without_git"] is True
+    assert receipt["git_sha"] is None
+    assert set(receipt["bound_files"]) == {
+        "scripts/run_openai_daybreak_blue_doctor.py",
+        "experiments/orx/node.yaml",
+        "uv.lock",
+    }
