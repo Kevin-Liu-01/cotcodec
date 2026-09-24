@@ -402,8 +402,10 @@ models:
     source_url: https://huggingface.co/Qwen/Qwen3.5-4B-Base
     registered_at: '2026-09-01'
     registered_for: directions 19-22 phase-0 pilots (gauntlet 2026-09-01)
-    blocker: 'no artifact receipt yet: run fetch_open_model.py fetch --metadata-only then fetch/verify
-      on persistent storage'
+    blocker: >-
+      Full artifact receipt exists at data/model-receipts/qwen3.5-4b-base.json and on
+      fal-h100-01 (artifact root c7fbfd6b..., 9.34 GB). Run and seal the real recurrent-state
+      interface doctor before any direction-20 or direction-22 treatment cell.
   qwen3-1.7b-base:
     backend: huggingface
     repo_id: Qwen/Qwen3-1.7B-Base
