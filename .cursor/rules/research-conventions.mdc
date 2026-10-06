@@ -1,29 +1,25 @@
+---
+description: Research conventions for CoTCodec experiments
+alwaysApply: true
+---
+
 # Research Conventions
 
-## Experiment Discipline
+## Experiment discipline
 
-- NEVER modify collected traces after collection
-- NEVER re-run an experiment with modified parameters under the same name
-- ALWAYS create a new experiment YAML for parameter changes
-- ALWAYS validate harness on pilot (3-5 tasks) before full runs
-- ALWAYS include safety evaluation in every experiment
+- Never modify collected traces, receipts or results after collection.
+- Never rerun an experiment with changed parameters under the same name. A
+  material change is a new versioned attempt with a new output path.
+- Every GPU run uses a digest-pinned Docker image submitted through Slurm.
+- Seeds are explicit (`[42, 43, 44]` minimum) and recorded.
+- Negative results are recorded with the same care as positive ones.
 
-## Code Style
+## Code style
 
-- Python 3.11+, type hints on all functions
-- Async where API calls are involved
-- Ruff for formatting and linting
-- Dataclasses for structured data, Pydantic for validation
+- Python 3.11+, type hints on public functions, ruff for lint and format.
 
-## Memory Protocol
+## State protocol
 
-- Update memory.json after every session with new findings
-- Append to wiki/log.md for every significant action
-- Track landscape changes (new papers, models, API pricing)
-
-## Reproducibility
-
-- Every experiment must be rerunnable from its YAML definition
-- Random seeds are explicit and recorded in traces
-- Model versions recorded in every trace
-- API request/response pairs logged for debugging
+- Current state lives in `program/state.json`; update it when a stage changes.
+- Append significant actions to `program/log.md`.
+- Old work is read-only under `legacy/` (see `legacy/INDEX.md`).

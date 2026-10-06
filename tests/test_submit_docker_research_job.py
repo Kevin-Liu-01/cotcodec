@@ -8,7 +8,6 @@ from pathlib import Path
 import pytest
 import yaml
 
-from scripts.memory_job_admission import build_memory_job_admission
 from scripts.submit_docker_research_job import (
     BATCH_SCRIPT,
     RUNTIME,
@@ -25,13 +24,9 @@ def _manifest() -> dict:
         "image_id": "sha256:" + "a" * 64,
         "command": [
             "python",
-            "scripts/run_memory_model_screen.py",
-            "--output-dir",
-            "/outputs",
-            "--assignment-seeds",
-            "42",
-            "43",
-            "44",
+            "scripts/run_translation_supervised_indexer_doctor.py",
+            "--output",
+            "/outputs/receipt.json",
         ],
         "run_root": "/home/kevin/cotcodec-runs/research",
         "git_sha": "b" * 40,
@@ -52,7 +47,6 @@ def _manifest() -> dict:
             "minutes": 30,
         },
         "budget": {"max_gpu_hours": 0.5},
-        "memory_source_admission": build_memory_job_admission(),
     }
 
 
@@ -142,37 +136,6 @@ def test_submitter_precreates_only_a_nonsymlink_persistent_run_root(tmp_path: Pa
         prepare_run_root({"run_root": str(link / "child")}, allowed_roots=(base,))
 
 
-def test_real_submitter_rejects_killed_memory_revision() -> None:
-    raw = _manifest()
-    admission = build_memory_job_admission()
-    admission["scope"] = "external-sources"
-    admission["sources"] = [
-        {
-            "source_id": "total-recall-oss",
-            "revision": "a2630f671be9b12df8b8ac78df9d26f7053d2fa9",
-        }
-    ]
-    raw["memory_source_admission"] = admission
-    with pytest.raises(ValueError, match="BLOCKED_NATIVE_RESTART"):
-        validate_manifest(raw)
-
-
-def test_real_submitter_rejects_unbound_memory_workload() -> None:
-    raw = _manifest()
-    raw.pop("memory_source_admission")
-    with pytest.raises(ValueError, match="requires memory_source_admission"):
-        validate_manifest(raw)
-
-
-def test_real_submitter_admits_registered_neo4j_revision() -> None:
-    raw = _manifest()
-    raw["memory_source_admission"] = build_memory_job_admission(
-        [("neo4j-agent-memory", "231d60eac9401ab156ba194b519d89dd644dadb8")]
-    )
-    manifest = validate_manifest(raw)
-    assert manifest["memory_source_admission"]["scope"] == "external-sources"
-
-
 def test_docker_manifest_rejects_export_injection_and_paths() -> None:
     raw = _manifest()
     raw["image_id"] = "sha256:" + "a" * 63 + ","
@@ -197,23 +160,6 @@ def test_docker_manifest_rejects_allocation_above_budget() -> None:
     raw["resources"]["gpus"] = 8
     with pytest.raises(ValueError, match="above budget"):
         validate_manifest(raw)
-
-
-def test_docker_manifest_hash_binds_optional_inputs_and_resume() -> None:
-    raw = _manifest()
-    raw["memory_bundle"] = {
-        "host_path": "/home/kevin/cotcodec-runs/frozen-memory.json",
-        "sha256": "1" * 64,
-    }
-    raw["resume_from_job_id"] = 23
-    raw["resume_subpath"] = "screen"
-    manifest = validate_manifest(raw)
-    argv = sbatch_argv(manifest, test_only=False)
-    export = next(argument for argument in argv if argument.startswith("--export="))
-    assert "COTCODEC_MEMORY_BUNDLE_HOST_HEX=" in export
-    assert "COTCODEC_MEMORY_BUNDLE_SHA256=" + "1" * 64 in export
-    assert "COTCODEC_PREDECESSOR_JOB_ID=23" in export
-    assert "COTCODEC_RESUME_SUBPATH=screen" in export
 
 
 def test_docker_manifest_binds_public_benchmark_provenance_and_mount() -> None:
@@ -319,66 +265,6 @@ def test_docker_manifest_rejects_unbound_or_mislabeled_study_artifact() -> None:
     with pytest.raises(ValueError, match="differs from the claim admission contract"):
         validate_manifest(raw)
 
-def test_docker_manifest_rejects_decorative_seed_list() -> None:
-    raw = _manifest()
-    raw["command"] = [
-        "python",
-        "scripts/run_memory_model_screen.py",
-        "--assignment-seed",
-        "42",
-    ]
-    with pytest.raises(ValueError, match="execute every manifest seed"):
-        validate_manifest(raw)
-
-    raw["command"] = [
-        "python",
-        "scripts/run_memory_model_screen.py",
-        "--assignment-seeds",
-        "42",
-        "43",
-        "45",
-    ]
-    with pytest.raises(ValueError, match="do not match manifest seeds"):
-        validate_manifest(raw)
-
-
-def test_deterministic_all_serve_contract_forbids_assignment_seeds() -> None:
-    raw = _manifest()
-    raw["randomness_contract"] = "deterministic-all-serve"
-    raw["seeds"] = []
-    raw["command"] = [
-        "python",
-        "scripts/run_memory_model_screen.py",
-        "--evaluation-mode",
-        "all-serve-benchmark",
-        "--output-dir",
-        "/outputs",
-    ]
-    manifest = validate_manifest(raw)
-    assert manifest["seeds"] == []
-    assert manifest["randomness_contract"] == "deterministic-all-serve"
-    export = next(
-        value for value in sbatch_argv(manifest, test_only=True) if value.startswith("--export=")
-    )
-    assert "COTCODEC_RANDOMNESS_CONTRACT=deterministic-all-serve" in export
-    assert "COTCODEC_SEEDS=none" in export
-
-    raw["command"].extend(["--assignment-seeds", "42", "43", "44"])
-    with pytest.raises(ValueError, match="cannot execute seed options"):
-        validate_manifest(raw)
-
-    raw = _manifest()
-    raw["command"] = [
-        "python",
-        "scripts/run_memory_model_replay_doctor.py",
-        "--seeds",
-        "42",
-        "43",
-        "45",
-    ]
-    with pytest.raises(ValueError, match="do not match manifest seeds"):
-        validate_manifest(raw)
-
 
 def test_docker_batch_reverifies_and_read_only_mounts_public_benchmark() -> None:
     content = BATCH_SCRIPT.read_text(encoding="utf-8")
@@ -389,156 +275,15 @@ def test_docker_batch_reverifies_and_read_only_mounts_public_benchmark() -> None
     assert 'echo "randomness_contract=${COTCODEC_RANDOMNESS_CONTRACT}"' in content
 
 
-def _claim_manifest() -> dict:
+def test_archived_memory_workloads_fail_closed() -> None:
     raw = _manifest()
-    raw["randomness_contract"] = "deterministic-all-serve"
-    raw["seeds"] = []
-    raw["command"] = [
-        "python",
-        "scripts/run_memory_model_screen.py",
-        "experiments/memory/stage1-longmemeval-screen.yaml",
-        "--model-root",
-        "/model-cache/cotcodec-models",
-        "--receipt-root",
-        "/model-cache/cotcodec-receipts",
-        "--output-dir",
-        "/outputs/screen",
-        "--memory-bundle",
-        "/inputs/memory-selection-bundle.json",
-        "--memory-treatment-mode",
-        "storage_and_service",
-        "--expected-memory-system-id",
-        "bm25-memory-v1",
-        "--evaluation-mode",
-        "all-serve-benchmark",
-        "--public-benchmark-path",
-        "/inputs/longmemeval_s_cleaned.json",
-        "--require-gates",
-        "--publication-capsule",
-        "/inputs/publication-capsule.json",
-        "--publication-capsule-attestation",
-        "/inputs/publication-capsule-attestation.json",
-        "--publication-trust-store",
-        "/etc/cotcodec/trust/publication-attestors.json",
-        "--expected-publication-trust-sha256",
-        "a" * 64,
-        "--control-matrix-manifest",
-        "/inputs/control-matrix-manifest.json",
-        "--publication-wave-contract",
-        "/inputs/publication-wave-contract.json",
-        "--expected-wave-sha256",
-        "7" * 64,
-        "--expected-control-id",
-        "bm25",
-        "--expected-system-id",
-        "bm25-memory-v1",
-    ]
-    raw["memory_bundle"] = {
-        "host_path": "/shared/matrix/bundles/bm25.json",
-        "sha256": "1" * 64,
-    }
-    raw["public_benchmark"] = {
-        "source_id": "longmemeval-s-cleaned",
-        "revision": "2" * 40,
-        "license": "MIT",
-        "host_path": "/shared/inputs/longmemeval_s_cleaned.json",
-        "sha256": "3" * 64,
-        "size_bytes": 15_388_478,
-    }
-    raw["claim_admission"] = {
-        "publication_capsule": {
-            "host_path": "/shared/publication/capsule.json",
-            "file_sha256": "4" * 64,
-            "capsule_sha256": "5" * 64,
-            "image_id": raw["image_id"],
-            "git_sha": raw["git_sha"],
-            "source_sha256": raw["source_sha256"],
-        },
-        "publication_attestation": {
-            "host_path": "/shared/publication/capsule-attestation.json",
-            "file_sha256": "b" * 64,
-            "trust_store_host_path": ("/etc/cotcodec/trust/publication-attestors.json"),
-            "trust_store_sha256": "a" * 64,
-            "key_id": "publication-ci-1",
-        },
-        "control_matrix": {
-            "host_path": "/shared/matrix/manifest.json",
-            "file_sha256": "6" * 64,
-            "matrix_sha256": "8" * 64,
-            "task_manifest_sha256": "9" * 64,
-        },
-        "wave": {
-            "host_path": "/shared/publication/wave-contract.json",
-            "file_sha256": "c" * 64,
-            "wave_sha256": "7" * 64,
-            "control_id": "bm25",
-            "system_id": "bm25-memory-v1",
-            "eligible_for_primary": True,
-            "bundle_file_sha256": "1" * 64,
-            "bundle_semantic_sha256": "2" * 64,
-        },
-    }
-    return raw
-
-
-def test_claim_admission_binds_capsule_matrix_wave_and_control(
-    monkeypatch: pytest.MonkeyPatch,
-) -> None:
-    monkeypatch.setattr(
-        "scripts.submit_docker_research_job._verify_claim_admission_files",
-        lambda _claim, _command: {"status": "verified"},
-    )
-    manifest = validate_manifest(_claim_manifest())
-    claim = manifest["claim_admission"]
-    assert claim["wave"]["control_id"] == "bm25"
-    assert claim["publication_capsule"]["container_path"] == ("/inputs/publication-capsule.json")
-    export = next(
-        value for value in sbatch_argv(manifest, test_only=True) if value.startswith("--export=")
-    )
-    assert "COTCODEC_PUBLICATION_CAPSULE_HOST_HEX=" in export
-    assert "COTCODEC_PUBLICATION_ATTESTATION_HOST_HEX=" in export
-    assert "COTCODEC_CONTROL_MATRIX_HOST_HEX=" in export
-    assert "COTCODEC_CLAIM_WAVE_SHA256=" + "7" * 64 in export
-    assert "COTCODEC_MEMORY_CONTROL_ID=bm25" in export
-    batch = BATCH_SCRIPT.read_text(encoding="utf-8")
-    assert 'sha256sum "${publication_capsule_host}"' in batch
-    assert 'sha256sum "${control_matrix_host}"' in batch
-    assert 'sha256sum "${publication_wave_host}"' in batch
-    assert '"${publication_capsule_host}:/inputs/publication-capsule.json:ro"' in batch
-    assert '"${control_matrix_host}:/inputs/control-matrix-manifest.json:ro"' in batch
-    assert "control matrix semantic root is invalid" in batch
-    assert "claim control identity or eligibility differs" in batch
-    assert 'wave.get("batch_script_sha256")' in batch
-    assert 'capsule.get("runtime", {}).get("batch_script_sha256")' in batch
-
-
-def test_claim_admission_rejects_mislabeled_or_cherry_picked_cell() -> None:
-    raw = _claim_manifest()
-    raw["claim_admission"]["wave"]["eligible_for_primary"] = False
-    with pytest.raises(ValueError, match="primary-eligible"):
-        validate_manifest(raw)
-    raw = _claim_manifest()
-    raw["claim_admission"]["wave"]["bundle_file_sha256"] = "0" * 64
-    with pytest.raises(ValueError, match="file digest differs"):
-        validate_manifest(raw)
-    raw = _claim_manifest()
-    option = raw["command"].index("--expected-control-id")
-    raw["command"][option + 1] = "recency"
-    with pytest.raises(ValueError, match="differs from the claim"):
+    raw["command"] = ["python", "scripts/run_memory_model_screen.py", "--output-dir", "/outputs"]
+    with pytest.raises(ValueError, match="archived under legacy"):
         validate_manifest(raw)
 
 
-@pytest.mark.parametrize(
-    "extra",
-    [
-        ["--evaluation-mode", "matrix-cell"],
-        ["--model-id", "qwen3.5-4b"],
-    ],
-)
-def test_claim_admission_rejects_duplicate_or_unregistered_actor_options(
-    extra: list[str],
-) -> None:
-    raw = _claim_manifest()
-    raw["command"].extend(extra)
-    with pytest.raises(ValueError, match="exact registered argv schema"):
+def test_memory_admission_block_fails_closed_even_for_other_commands() -> None:
+    raw = _manifest()
+    raw["memory_source_admission"] = {"scope": "external-sources"}
+    with pytest.raises(ValueError, match="archived under legacy"):
         validate_manifest(raw)

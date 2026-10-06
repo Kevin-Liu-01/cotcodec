@@ -24,12 +24,17 @@ flowchart LR
 
 ## Layout
 
-- `infra/slurm/host-single-node/` contains resource-specific batch entry points.
-- `infra/memory-baselines/` contains exact-source lifecycle doctor surfaces.
-- `infra/h100/` and related directories contain GPU-specific execution assets
-  only where a contract has passed admission.
+- `infra/research/` holds the research image Dockerfiles and the provenance
+  writer baked into every image.
+- `infra/slurm/host-single-node/` holds the discovery-lane batch entry points:
+  image build, CUDA doctor, model fetch, throughput doctor and the Docker
+  research job.
+- `infra/slurm/research.sbatch` is the Pyxis publication-lane entry point. It
+  stays unused until the host has Pyxis and cgroup device isolation.
 - `scripts/tmux-research-session.sh` creates a durable operator shell; it is not
   a compute checkpoint.
+- Memory-baseline doctors and Tinker assets from the old program are in
+  `legacy/infra/`.
 
 ## Slurm rules
 
@@ -70,12 +75,12 @@ Docker lane, but Slurm 21.08.5 cannot enforce the host's unified cgroup-v2
 device boundary and Pyxis is absent. Treat
 `scripts/submit_docker_research_job.py` as discovery-only and do not use the
 generic `scripts/submit_research_job.py` publication path until the upgrade and
-isolation doctors in
-[`docs/h100-operator-runbook.md`](../docs/h100-operator-runbook.md) pass.
+isolation items in [`docs/h100-node.md`](../docs/h100-node.md) are done.
 
 ## Outputs
 
 Raw runs remain in versioned local or remote result directories. A complete run
 contains its contract, executed code, source/image/runtime receipts, phase
 outputs, logs, report, and manifest. Only a validated bounded projection is
-sealed under `research/evidence/`; see [`docs/data-policy.md`](../docs/data-policy.md).
+sealed under `program/evidence/`. The old data policy is
+[`legacy/docs/data-policy.md`](../legacy/docs/data-policy.md).

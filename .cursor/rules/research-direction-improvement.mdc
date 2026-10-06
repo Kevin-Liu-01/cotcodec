@@ -1,13 +1,13 @@
 ---
 description: Required adversarial loop for proposing or promoting research directions
-globs: "research/proposals/**/*.md,directions/**/*.md,research/scans/**/*.md"
+globs: "program/proposals/**/*.md,program/questions/**/*.md,program/scans/**/*.md"
 alwaysApply: false
 ---
 
 # Research Direction Improvement
 
 For novel mechanisms or experiments over 8 GPU-hours, use
-`skills/research-direction-improve.md` and run:
+`docs/gauntlet-procedure.md` and run:
 
 ```bash
 uv run python scripts/research_direction_doctor.py <proposal.md>

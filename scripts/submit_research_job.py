@@ -13,10 +13,17 @@ from typing import Any
 
 import yaml
 
-if __package__:
-    from scripts.memory_job_admission import validate_memory_job_admission
-else:
-    from memory_job_admission import validate_memory_job_admission
+
+def validate_memory_job_admission(admission, *, command, has_memory_bundle):
+    """Memory workloads were archived to legacy/ on 2026-10-06; fail closed for them."""
+    memory_command = any("memory" in str(part) for part in command)
+    if admission is None and not has_memory_bundle and not memory_command:
+        return None
+    raise ValueError(
+        "memory workloads were archived under legacy/ on 2026-10-06; "
+        "restore them from tag legacy-2026-10-06 to submit memory jobs"
+    )
+
 
 OCI_RE = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._:/-]*@sha256:[0-9a-f]{64}$")
 SHA_RE = re.compile(r"^[0-9a-f]{64}$")

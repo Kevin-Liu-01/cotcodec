@@ -50,7 +50,7 @@ def test_rejects_args_that_hijack_output(tmp_path: Path) -> None:
                 {
                     "kind": "cpu-doctor",
                     "direction": "x",
-                    "doctor": "scripts/run_semantic_clock_gate_parity_doctor.py",
+                    "doctor": "scripts/run_translation_supervised_indexer_doctor.py",
                     "args": ["--output", "/tmp/evil.json"],
                 },
             )
@@ -64,7 +64,7 @@ def test_slurm_manifest_requires_committed_experiments_yaml(tmp_path: Path) -> N
             {
                 "kind": "slurm-manifest",
                 "direction": "x",
-                "manifest": "experiments/architectures/semantic-clock-gate-parity.yaml",
+                "manifest": "experiments/architectures/translation-supervised-sparse-indexer.yaml",
             },
         )
     )

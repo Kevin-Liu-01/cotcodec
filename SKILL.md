@@ -8,58 +8,50 @@ description: Repository-wide procedure for CoTCodec research, experiments, evide
 ## Purpose
 <!-- agent-docs:fill:purpose -->
 
-CoTCodec is a research program and executable evaluation harness for making
-agent-orchestration choices explicit, measurable, and optimizable. Paper 1
-studies language; the shared harness and evidence ledger cover the broader
-orchestration-variable program.
+CoTCodec is a research program on checker adequacy and calibrated measurement
+for verifiable machine work: GPU kernels and desktop computer use, run on an
+8 x H100 node. The harness and its receipts are the product.
 
 ## Mental model & key files
 <!-- agent-docs:fill:model -->
 
-- `memory.json` is compiled project state and the active priority ledger.
-- `wiki/log.md` is the append-only operational timeline.
-- `directions/` owns research hypotheses; `experiments/` owns preregistered runs.
-- `harness/` executes conditions and benchmarks; `scripts/` validates and seals.
-- `research/evidence/` contains portable decision bundles. Raw/local exhaust
-  belongs under ignored `data/`, never in Git by accident.
-- `README.md` is the human entry point; `AGENTS.md` is the complete operating
-  reference; directory `SKILL.md` files own local procedures.
+- `program/PROGRAM.md` is the research program; `program/state.json` is the
+  machine-readable state; `program/log.md` is the append-only timeline.
+- `program/questions/` holds one file per live question; `program/backlog.md`
+  holds the ordered backfill queue and dropped lines.
+- `experiments/` holds preregistered contracts; `harness/` holds mechanisms;
+  `scripts/` validates, submits and attests; `infra/` holds images and Slurm.
+- `docs/` holds the node facts, operations, gauntlet procedure and evidence model.
+- `legacy/` is the frozen previous program; see `legacy/INDEX.md`.
 
 ## Patterns to follow / invariants
 <!-- agent-docs:fill:patterns -->
 
-- Read `wiki/SOUL.md`, `wiki/USER.md`, `wiki/HEARTBEAT.md`, and `memory.json`
-  before substantive work.
-- Preregister falsifiers, budgets, claim boundaries, and stop conditions before
-  observing treatment results. Never rewrite a completed experiment contract.
-- Preserve negative and pre-result evidence. Create versioned reruns instead of
-  overwriting failed output directories.
-- Separate deterministic infrastructure admission from live-model or scientific
-  claims. CPU conformance never implies H100 admission or memory quality.
-- Bind source revision, tree, license, dependencies, image/model identity, and
-  execution hashes for any result used in a research decision.
-- Keep `memory.json` compiled truth and `wiki/log.md` timeline synchronized.
+- Preregister falsifiers, budgets, seeds, claim boundaries and stop conditions
+  before observing treatment results. Never rewrite a completed contract.
+- Preserve negative and pre-result evidence. Version reruns; never overwrite.
+- Every GPU run: digest-pinned image, Slurm, persistent checkpoints, fresh-job
+  resume test. No model-generated code with GPU access on the R570 driver.
+- New mechanisms and runs over 8 GPU-hours go through the research gauntlet.
+- The repository is public: no secrets, host addresses, employer-internal
+  material or private datasets.
 
 ## Common tasks → first action
 <!-- agent-docs:fill:tasks -->
 
 | Task | First action |
 |---|---|
-| Continue research | Read `memory.json` priorities and the latest `wiki/log.md` entry. |
-| Run an experiment | Read `skills/run-experiment.md`, then its YAML contract. |
-| Add a benchmark | Read `harness/benchmarks/SKILL.md` and the base adapter. |
-| Change orchestration logic | Read the nearest `harness/**/SKILL.md` and paired tests. |
-| Add a memory system | Read `infra/memory-baselines/SKILL.md` and portfolio/source validators. |
-| Ship evidence | Run the source, experiment, evidence, and portfolio validators that route the artifact. |
-| Update docs | Refresh Agent-Docs, README/current-state pages, `memory.json`, and `wiki/log.md`. |
+| Continue research | Read `program/state.json` and the latest `program/log.md` entry. |
+| Work on a question | Read its file in `program/questions/` and the dossier entry it names. |
+| Run a GPU job | Read `docs/operations.md`, then dry-run the manifest. |
+| Propose a new direction | Follow `.claude/rules/research-gauntlet-loop.md`. |
+| Revive old work | Read `legacy/INDEX.md`, then `git mv` it back and rerun its doctor. |
 
 ## Gotchas
 <!-- agent-docs:fill:gotchas -->
 
-- Many benchmark adapters are intentionally stubs; presence is not readiness.
-- `data/` can contain multi-gigabyte models, databases, source trees, and Docker
-  artifacts. Inspect ignored/untracked files before staging.
-- Exact-source lifecycle jobs often use CPU allocations on GPU hosts. A host name
-  containing `h100` does not prove that a GPU was requested or used.
-- The historical `~/Documents/GitHub/kevin-wiki` path may be absent locally;
-  set `KEVIN_WIKI_ROOT` for `scripts/run-agent-docs.ts` when needed.
+- `data/` and `raw/` are ignored and can hold many gigabytes. Inspect before staging.
+- The local laptop can be heavily loaded; a timing assertion that fails locally
+  may pass on the H100 host. Compare CPU time with wall time before debugging.
+- Old tests under `legacy/tests/` are not collected and may not pass.
+- Set `KEVIN_WIKI_ROOT` for `scripts/run-agent-docs.ts` when the wiki is elsewhere.

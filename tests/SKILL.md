@@ -1,6 +1,6 @@
 ---
 name: tests-skill
-description: Procedure for focused unit, contract-tamper, lifecycle, evidence, and integration tests.
+description: Procedure for focused unit, contract-tamper, doctor and submitter tests.
 ---
 
 # cotcodec / tests
@@ -8,37 +8,36 @@ description: Procedure for focused unit, contract-tamper, lifecycle, evidence, a
 ## Purpose
 <!-- agent-docs:fill:purpose -->
 
-Tests enforce both software behavior and scientific fail-closed boundaries. Each
-experiment family should prove valid inputs pass and decision-bearing drift fails.
+Tests enforce both software behavior and scientific fail-closed boundaries.
+Each contract proves valid inputs pass and decision-bearing drift fails.
 
 ## Mental model & key files
 <!-- agent-docs:fill:model -->
 
-- Test modules mirror harness and script names.
-- `test_memory_experiments.py`, `test_memory_sources.py`, and
-  `test_memory_portfolio.py` are directory/ledger routing gates.
-- `*_evidence.py` tests validate sealed bundles; `*_doctor.py` tests the contained
-  observation logic without requiring the full external runtime.
+- Test modules mirror script and harness names.
+- `test_architecture_contracts.py` tampers with the live D21 contract.
+- `test_submit_*` cover manifest validation, sbatch rendering and the
+  fail-closed rejection of archived memory workloads.
+- Pre-restart tests are in `legacy/tests/` and are not collected.
 
 ## Patterns to follow / invariants
 <!-- agent-docs:fill:patterns -->
 
-- Add focused behavior tests, contract tamper tests, and routing tests together.
-- Use temporary directories and synthetic canaries; do not mutate sealed evidence.
-- Assert incomplete, duplicate, corrupt, or mismatched evidence fails closed.
-- Keep remote/container requirements out of default unit tests unless explicitly marked.
+- Add behavior, tamper and routing tests together.
+- Use temporary directories and synthetic canaries; never mutate sealed evidence.
+- Keep remote or container requirements out of default unit tests.
 
 ## Common tasks → first action
 <!-- agent-docs:fill:tasks -->
 
-- Bug fix: reproduce with the narrowest failing test before patching.
-- New lifecycle gate: test normal projection, each falsifier, two-repeat agreement,
-  source/image mismatch, and unexpected status.
-- Before commit: run focused tests first, then the relevant directory validators,
-  followed by the full suite when feasible.
+| Task | First action |
+|---|---|
+| Run everything | `uv run pytest -q tests` |
+| Run one doctor's tests | `uv run pytest -q tests/test_<name>_doctor.py` |
 
 ## Gotchas
 <!-- agent-docs:fill:gotchas -->
 
-- Do not weaken expected hashes/statuses to make an observed run pass.
-- A test over a portable bundle does not replace checking the raw run manifest.
+- `test_doctor_runs_end_to_end_and_refuses_to_overwrite` asserts wall time
+  under 60 s. On a heavily loaded laptop it can fail with low CPU time; rerun
+  on an idle machine before debugging.

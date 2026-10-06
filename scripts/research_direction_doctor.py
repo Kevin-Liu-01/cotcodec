@@ -82,7 +82,7 @@ TRUST_STORE_EXPECTED_SHA256 = os.environ.get("COTCODEC_TRUSTED_ATTESTORS_SHA256"
 TRUST_STORE_PATH = (
     Path(_external_trust_store).expanduser().resolve()
     if _external_trust_store
-    else REPO_ROOT / "research/proposals/trusted-attestors.json"
+    else REPO_ROOT / "program/proposals/trusted-attestors.json"
 )
 TRUST_STORE_PROTECTED = (
     _external_trust_store is not None and os.environ.get("COTCODEC_PROTECTED_CI") == "1"
