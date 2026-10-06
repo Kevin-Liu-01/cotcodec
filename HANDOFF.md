@@ -1,121 +1,54 @@
-# CoTCodec handoff
+# Handoff — 2026-10-06
 
-Updated: 2026-09-23
+## What happened
 
-This file is a stable continuation pointer, not a duplicate operating manual.
+The research program restarted. The previous program moved to `legacy/` with
+its history intact (`git mv`), and git tag `legacy-2026-10-06` marks the last
+pre-restart commit. The new program is in `program/PROGRAM.md`, chosen from 18
+verified candidates. It covers kernel correctness-gate strength,
+a calibrated computer-use instrument, and cross-script sparse-indexer recall as
+backfill.
 
-## Read order
+Codex's uncommitted work on the H100 host was captured before the restart. Its
+three 2026-10-06 documents are in `program/evidence/2026-10-06/codex/`. The
+host checkout itself was not touched.
 
-1. [`wiki/SOUL.md`](wiki/SOUL.md), [`wiki/USER.md`](wiki/USER.md), and
-   [`wiki/HEARTBEAT.md`](wiki/HEARTBEAT.md)
-2. [`memory.json`](memory.json)
-3. [`docs/current-state.md`](docs/current-state.md)
-4. [`docs/memory-handoff.md`](docs/memory-handoff.md) for memory work,
-   [`docs/h100-operator-runbook.md`](docs/h100-operator-runbook.md) for compute, or
-   [`docs/daybreak-blue-runbook.md`](docs/daybreak-blue-runbook.md) for the approved
-   defensive-cyber capability boundary, or
-   [`research/frontier-systems-program-2026-09-01.md`](research/frontier-systems-program-2026-09-01.md)
-   and [`docs/local-model-lab.md`](docs/local-model-lab.md) for the architecture program
-5. [`AGENTS.md`](AGENTS.md) and the nearest directory `SKILL.md`
-6. The exact experiment, evidence bundle, and validator for the next queue item
+## State
 
-## Current continuation
+- Stage 0 for all three questions. No GPU job has run in the new program.
+- All 99 live tests pass in a fresh clone on the H100 host. One doctor test
+  asserts wall time and can fail on a heavily loaded laptop.
+- The node is on the R570 driver, which blocks Q1's on-policy audit.
 
-- The 2026-09-01 frontier sweep and five research-gauntlet waves are sealed (exit 5 fired at 66 → 65 → 65):
-  scan `research/scans/2026-09-01.md`, program
-  `research/frontier-systems-program-2026-09-01.md`, ledgers
-  `research/gauntlet/2026-09-01-frontier/`, audit
-  `data/research-gauntlet/2026-09-01-frontier.jsonl`. Four preregistered
-  directions (19–22) exist with proposals, validator-passing contracts, and
-  executable CPU phase-0 doctors (`scripts/run_*_doctor.py`); none is
-  pilot-ready (best 66/100; doctor FAIL by construction). Follow
-  `.claude/rules/research-gauntlet-loop.md`.
-- OpenResearch `orx` (2026-09-14) is the retrieval modality and the
-  experiment-tree ledger: project `595ba408…`, fixed run command
-  `uv run --locked python scripts/orx_run.py`, node contracts on `orx/*`
-  branches, run ledger in `research/gauntlet/2026-09-01-frontier/orx-runs.md`.
-  Start with `orx up --no-browser --no-agent`; rules in
-  `.claude/rules/research-gauntlet-loop.md`; commands in
-  `docs/research-operations.md`.
-- Inputs resolved or re-scoped 2026-09-01: the parallel-corpus inventory is
-  sealed (`research/data/gt-parallel-corpus-inventory-2026-09-01.md`; customer
-  translation memory excluded by ToS §3.1; pilots run on public corpora);
-  `MOONSHOT_API_KEY` is set locally (kimi-k2.6 served; balance 0 → recharge
-  before any Kimi cell); `TINKER_API_KEY`/`HF_TOKEN` still need Kevin's clicks
-  (`~/.config/cotcodec/secrets.env`); root for the Slurm/Pyxis upgrade still
-  needs a password.
-- The real Qwen recurrent-state interface node is frozen after using both
-  allowed attempts. ORX experiment `f39c63d2-7ea1-4c00-a5c4-1b682c3744ba`
-  sent jobs `362` and `364`: job 362 failed at zero seconds because Slurm could
-  not open an output path whose parent did not exist; job 364 verified source,
-  image, exact checkpoint, container health, and one visible H100, then failed
-  in eight seconds on the doctor's direct-file `scripts` import. Neither loaded
-  the model or produced interface metrics. Evidence:
-  `research/evidence/infrastructure/qwen35-recurrent-interface-orx-frozen-v1.json`.
-  Never run that node a third time.
-- The launch path now precreates only validated persistent output roots and
-  fails closed on terminal Slurm state plus exit code. The direct-file import
-  regression also passes locally. The next architecture action is a **new ORX
-  child**, but only after a clean source capsule and rebuilt immutable image
-  contain the repair, a new manifest binds them, and dry-run plus `--test-only`
-  pass.
-- Stage 0 on `fal-h100-01`: exact Qwen checkpoint revision
-  `1001bb4d…`, artifact root `c7fbfd6b…`, architecture image
-  `sha256:65feae8f…`, and build receipt job `360` exist. All eight H100s were
-  idle after job 364. Historical measured eager throughput remains 282k tok/s
-  (134M) / 73k tok/s (422M).
-- Kevin reports Daybreak Blue approval, but local capability is still closed:
-  the prior node reached OpenAI and received HTTP 401 `invalid_api_key`, and
-  `~/.config/cotcodec/secrets.env` currently has no `OPENAI_API_KEY`. Create a
-  key in the approved API project, store it only in that mode-600 file, then
-  create one new versioned capability node. A pass must echo
-  `access_programs.cyber=daybreak_blue`; approval alone is not a receipt.
+## Next actions
 
-- The deterministic OrchVar execution, tool-error transport, full runner
-  integration, and resume gates are admitted. Frozen live job 341 remains an
-  incomplete negative and must not be repaired or backfilled in place.
-- The memory-system queue is CPU-first and revision-specific. MemForest,
-  Infini-memory, Mnemo Cortex, legacy Letta V1, and LangMem have sealed
-  lifecycle negatives. LangMem's active v2 receipt independently reproduced
-  its exact prior negative after dependency drift invalidated v1.
-- Legacy Letta V1 job 351 is the complete two-state result. Jobs 348-350 remain
-  pre-result diagnostics and must not be relabeled or overwritten. The receipt
-  is `research/evidence/memory/memgpt-letta-native-lifecycle-negative-v1.json`.
-- The next native gate is a distinct exact-source CPU lifecycle contract for
-  current Letta Code MemFS. It is not a repair arm for the legacy V1 server.
-- No memory lifecycle result admits semantic quality, autonomous paging, or H100.
-- No new memory H100 job is admitted. The eight-GPU host is reachable and idle,
-  but its current Slurm 21.08.5/cgroup-v2 configuration is discovery-only and
-  lacks the Pyxis interface required by the publication batch contract.
+1. Q2: build the OSWorld-Verified evaluator mutation kit (CPU only).
+2. Q2: port the cua-speedrun action-path suite to the nested-KVM runtime.
+3. Q1: implement gates (a), (b), (c) and the independent audit; validate them on
+   reference kernels and deterministic mutants.
+4. Q3: write `scripts/run_sparse_indexer_phase0a.py`, rebuild the image with
+   tilelang and peft, fetch the `qwen3-0.6b-base` receipt, run K1.
+5. Run the 0.5 GPU-h vLLM throughput probe before freezing any GPU budget.
 
-## Exact operator routes
+## Waiting on Kevin
 
-- Memory evidence and the next falsifiers:
-  [`docs/memory-handoff.md`](docs/memory-handoff.md)
-- Current H100 state, discovery submission, and publication upgrade work:
-  [`docs/h100-operator-runbook.md`](docs/h100-operator-runbook.md)
-- Raw-data retention and portable-evidence boundaries:
-  [`docs/data-policy.md`](docs/data-policy.md)
+- Ask the host administrator for the R580 driver upgrade, or give written risk
+  acceptance for Q1's audit of model-generated kernels.
+- Approve the ~14.9 GB Holo3 trajectory download for Q2.
+- Approve disclosing the Letta symlink and deletion-residue findings to
+  letta-ai.
+- Decide whether to purge the old host address and the internal corpus
+  inventory from public git history. That needs a force-push.
+- Rotate the Moonshot API key that was pasted into a chat session.
 
-## Before changing anything
+## Sync the host checkout
+
+The host checkout has Codex's uncommitted edits. They are preserved in a
+private archive outside this repository. When Codex is no longer using it:
 
 ```bash
-git status --short --branch
-uv run python scripts/check_harness_env.py
-uv run python scripts/validate_memory_experiments.py
+cd ~/cotcodec
+git stash push -u -m "codex-uncommitted-2026-10-06"
+git fetch origin main
+git merge --ff-only origin/main
 ```
-
-Do not reset, restore, or delete work you did not create. Local `data/` contains
-large ignored models, source trees, databases, and build artifacts; it is not a
-Git staging target.
-
-## Writeback
-
-When a result changes project truth:
-
-1. Seal the portable evidence and validate it independently.
-2. Update `research/memory-sources.yaml` and the portfolio when applicable.
-3. Update compiled state in `memory.json`.
-4. Append the immutable observation to `wiki/log.md`.
-5. Refresh `docs/current-state.md` and Agent-Docs.
-6. Report exactly what passed, failed, and remains out of scope.

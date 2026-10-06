@@ -1,0 +1,35 @@
+{
+  "schema": "cotcodec-frontier-review-receipt-v1",
+  "verified_at_utc": "2026-10-06T18:37:06.895040+00:00",
+  "host": "fal-h100-01",
+  "source_base_commit": "2e5d695b16a36edccc929ef65756ab59e64edb56",
+  "status": "PASS_DOCUMENT_AND_ARCHIVE_CHECKS",
+  "checks": [
+    "six successful ORX discovery queries",
+    "30 raw records",
+    "28 unique candidate titles",
+    "ranked IDs were retrieved",
+    "five selected main-text reads",
+    "PDF header and SHA256 2609.34227",
+    "PDF header and SHA256 2610.03136",
+    "PDF header and SHA256 2610.06750",
+    "PDF header and SHA256 2610.03020",
+    "PDF header and SHA256 2610.04991",
+    "five new paper entries; all old entries preserved",
+    "all other memory state preserved",
+    "no experiment or execution source changed",
+    "git diff whitespace check"
+  ],
+  "sha256": {
+    "research/scans/2026-10-06.md": "473be2a4d9af1913f4c58c85a46efc8883c3084d47b2a98c5f24bb269df29d02",
+    "research/scans/2026-10-06.sources.json": "68ee85596b56577649d3f556409fcf194d10b126c895493b759d55760f3d63ec",
+    "AGENTS.md": "8159f4650bd1cc98b1b29811abeb342e759967b11acd30d857e2de318e7f3c55",
+    "directions/01-language.md": "d55dc36fac8b6c101c538778054777eeefabca5bf866e21bd950636cd1ea52ce",
+    "directions/03-memory-policy.md": "fa0458ed89768f2d5574b49bb1ada2da12157118259e35d458d3bec6818098f0",
+    "directions/17-causal-memory-holdout-trials.md": "5d9aea40929c70e410ba320fb0af83387f3db4db7f14cc919594b9bf448bc046",
+    "directions/22-translation-equivariant-state-writes.md": "13c7df05fb3203eb5208f7716947c785d39ca78f82c04577e5648d29f40278df",
+    "memory.json": "6b658a980f05e9e3e49cb5c96344ffe28108fb79d2ffa4cf3162e8514bbd5907",
+    "wiki/log.md": "9e3cd51b3b1841f8efd7ed01478b63d4ed86289db7e26271b2e0a6b29d7a0982"
+  },
+  "boundary": "No scientific reproduction, model inference, GPU job or publication-grade isolation was tested."
+}

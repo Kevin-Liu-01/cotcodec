@@ -256,6 +256,8 @@ def _build_valid_fixture(root: Path, monkeypatch) -> tuple[Path, Path]:
     trust_path.write_text(
         json.dumps({"schema_version": 1, "attestors": trust_records}), encoding="utf-8"
     )
+    # The doctor rejects group- or world-writable stores; do not inherit the umask.
+    trust_path.chmod(0o644)
     monkeypatch.setattr(doctor, "TRUST_STORE_PATH", trust_path)
     monkeypatch.setattr(doctor, "TRUST_STORE_PROTECTED", True)
     monkeypatch.setattr(doctor, "TRUST_STORE_EXPECTED_SHA256", _digest(trust_path))

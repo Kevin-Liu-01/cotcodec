@@ -63,6 +63,7 @@ dev = [
 ]
 
 [tool.ruff]
+extend-exclude = ["legacy", ".claude/skills", ".agents"]
 line-length = 100
 target-version = "py311"
 

@@ -1,0 +1,52 @@
+{
+  "schema_version": 1,
+  "updated": "2026-10-06",
+  "program": "Checker adequacy and calibrated measurement for verifiable machine work",
+  "program_doc": "program/PROGRAM.md",
+  "stage": "stage-0",
+  "legacy": {
+    "path": "legacy/",
+    "git_tag": "legacy-2026-10-06",
+    "index": "legacy/INDEX.md"
+  },
+  "questions": [
+    {
+      "id": "Q1",
+      "title": "Kernel correctness-gate strength",
+      "doc": "program/questions/q1-kernel-gate-strength.md",
+      "dossier_key": "C2-kernel-verification-rl",
+      "status": "stage-0",
+      "next_action": "Build gates (a), (b), (c) and the independent audit; validate on reference kernels and deterministic mutants",
+      "first_gpu_experiment": {"name": "on-policy false-accept audit", "estimated_gpu_hours": 12, "gauntlet_required": true},
+      "blocked_by": ["R580 driver upgrade or written risk acceptance from Kevin"]
+    },
+    {
+      "id": "Q2",
+      "title": "Calibrated computer-use instrument",
+      "doc": "program/questions/q2-calibrated-cua-instrument.md",
+      "dossier_key": "S1-calibrated-cua-instrument",
+      "status": "stage-0",
+      "next_action": "Evaluator mutation kit on OSWorld-Verified checkers; port the cua-speedrun action-path suite",
+      "first_gpu_experiment": {"name": "Qwen3.5 four-size ladder", "estimated_gpu_hours": 60, "gauntlet_required": true},
+      "blocked_by": ["Kevin's OK for the ~14.9 GB Holo3 trajectory download", "action-path suite at 100%"]
+    },
+    {
+      "id": "Q3",
+      "title": "Cross-script sparse-indexer recall",
+      "doc": "program/questions/q3-cross-script-indexer.md",
+      "dossier_key": "E6-d21-translation-supervised-indexer",
+      "status": "stage-0",
+      "next_action": "Write scripts/run_sparse_indexer_phase0a.py; rebuild image with tilelang and peft; fetch qwen3-0.6b-base receipt",
+      "first_gpu_experiment": {"name": "K1 localization screen", "estimated_gpu_hours": 1.5, "gauntlet_required": false},
+      "blocked_by": ["GPU entry point", "rebuilt digest-pinned image", "checkpoint receipt"]
+    }
+  ],
+  "pending_decisions_for_kevin": [
+    "Approve or decline the R580 driver upgrade request to the host administrator, or give written risk acceptance for Q1",
+    "Approve the ~14.9 GB Holo3 trajectory archive download for Q2 Stage 0",
+    "Approve disclosure of the Letta symlink and deletion-residue findings to letta-ai",
+    "Decide whether to purge sensitive files from public git history (requires a force-push)",
+    "Rotate the Moonshot API key that was shared in a chat session"
+  ],
+  "gpu_hours_spent_this_program": 0
+}

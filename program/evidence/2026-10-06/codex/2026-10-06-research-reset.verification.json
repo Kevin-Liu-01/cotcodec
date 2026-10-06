@@ -1,0 +1,33 @@
+{
+  "schema": "cotcodec-research-reset-document-receipt-v1",
+  "verified_at_utc": "2026-10-06T18:58:52.286315+00:00",
+  "status": "PASS_DOCUMENT_AND_PRESERVATION_CHECKS_ONLY",
+  "checks": [
+    "14 successful archived ORX queries",
+    "84 records and 70 normalized identifiers",
+    "8 paper text/receipt hashes match",
+    "report links all 8 inspected papers",
+    "unrelated tracked content unchanged since integration snapshot",
+    "only one memory field added",
+    "git diff whitespace check",
+    "no em dash in report",
+    "common key-pattern screening of report"
+  ],
+  "sha256": {
+    "AGENTS.md": "49777b297066f68119c5075bbdf9b7ae424003e330eed12606d55a41fca22d3d",
+    "directions/08-verification-cadence.md": "62e72c16c4e956becb17e868f4bdb53ee1856a579d683902a9f8fe00f6c7e937",
+    "directions/10-tool-scheduling.md": "709c0f44c972558df63c17d40f6399c12ff96ebf864dcd451d29148dcdefd83d",
+    "memory.json": "77284fc6674880ed6f2e2c8e794871ef66329f9f5adf1441f4dcc910b0580fdd",
+    "research/scans/2026-10-06-research-reset.md": "48c1d8a53273549810e41aced4351d5d9c28bace044f9bea104a7f6690099a09",
+    "wiki/log.md": "8b8623e466340076daf06046e1443bb8ec39245a04153704b073e9f96ed0b7a5"
+  },
+  "sources_sha256": "7254aae59a624c7384ddc614a0f27db34c6f2cd303b840e827365b1336823b2a",
+  "not_verified": [
+    "scientific claims by replication",
+    "desktop guest behavior",
+    "isolation guarantees",
+    "model fit",
+    "pilot readiness",
+    "global novelty"
+  ]
+}

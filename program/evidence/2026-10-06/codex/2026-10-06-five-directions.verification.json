@@ -1,0 +1,14 @@
+{
+  "query_count_within_cap": true,
+  "all_orx_queries_successful": true,
+  "all_retrieved_texts_successful": true,
+  "every_report_paper_has_archived_text": true,
+  "report_secret_pattern_screen": true,
+  "gpu_count": 8,
+  "no_new_gpu_jobs": true,
+  "report_sha256": "02d58f1813786a8d53efa28b46e91e124914e94a4f7f5c756073a971f49c48f0",
+  "sources_sha256": "03807529599f061dbff96a10214869bf6d85c59b62bc1e29fae535eae8c24ff3",
+  "scientific_replication": false,
+  "novelty_admission": false,
+  "boundary": "artifact consistency checks only; not proof of scientific correctness"
+}

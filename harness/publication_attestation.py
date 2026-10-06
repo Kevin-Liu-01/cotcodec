@@ -12,7 +12,13 @@ from typing import Any
 from cryptography.exceptions import InvalidSignature
 from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PublicKey
 
-from harness.memory_trials.schema import canonical_json, sha256_text
+
+def canonical_json(value: Any) -> str:
+    return json.dumps(value, sort_keys=True, separators=(",", ":"), ensure_ascii=False)
+
+
+def sha256_text(value: str) -> str:
+    return hashlib.sha256(value.encode()).hexdigest()
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 PUBLICATION_TRUST_ROOT = Path("/etc/cotcodec/trust")

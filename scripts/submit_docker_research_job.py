@@ -24,10 +24,17 @@ from harness.publication_attestation import (  # noqa: E402
     verify_publication_claim_attestation,
 )
 
-if __package__:
-    from scripts.memory_job_admission import validate_memory_job_admission
-else:
-    from memory_job_admission import validate_memory_job_admission
+
+def validate_memory_job_admission(admission, *, command, has_memory_bundle):
+    """Memory workloads were archived to legacy/ on 2026-10-06; fail closed for them."""
+    memory_command = any("memory" in str(part) for part in command)
+    if admission is None and not has_memory_bundle and not memory_command:
+        return None
+    raise ValueError(
+        "memory workloads were archived under legacy/ on 2026-10-06; "
+        "restore them from tag legacy-2026-10-06 to submit memory jobs"
+    )
+
 
 BATCH_SCRIPT = PROJECT_ROOT / "infra/slurm/host-single-node/docker-research.sbatch"
 RUNTIME = "docker-single-node-discovery-v1"
@@ -394,6 +401,13 @@ def validate_manifest(
         normalized_subpath = resume_subpath
 
     command = _validate_command(raw.get("command"))
+    # Memory workloads were archived on 2026-10-06; reject them before any
+    # memory-specific seed or bundle checks can produce a misleading error.
+    validate_memory_job_admission(
+        raw.get("memory_source_admission"),
+        command=command,
+        has_memory_bundle=raw.get("memory_bundle") is not None,
+    )
     _validate_seed_execution(command, seeds, randomness_contract)
     manifest: dict[str, Any] = {
         "schema_version": 1,
@@ -441,13 +455,6 @@ def validate_manifest(
             "sha256": bundle_sha256,
             "container_path": "/inputs/memory-selection-bundle.json",
         }
-    admission = validate_memory_job_admission(
-        raw.get("memory_source_admission"),
-        command=command,
-        has_memory_bundle=memory_bundle is not None,
-    )
-    if admission is not None:
-        manifest["memory_source_admission"] = admission
 
     public_benchmark = raw.get("public_benchmark")
     if public_benchmark is not None:

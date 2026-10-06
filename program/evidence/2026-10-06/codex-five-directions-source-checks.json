@@ -1,0 +1,419 @@
+[
+ {
+  "name": "KernelPro",
+  "id": "2606.26453",
+  "exists": true,
+  "title_found": "Optimizing CUDA like a Human: Micro-Profiling Tools as Expert Surrogates for LLM-Based GPU Kernel Optimization (Gai, Zhang, Bostrom, Huang, Patil, Fang, Wang, Rangwala, Karypis; AWS)",
+  "date_found": "v1 Wed, 24 Jun 2026 23:28:09 UTC; v2 Sat, 8 Aug 2026 19:47:03 UTC (arXiv abs page submission history). The ID prefix 2606 implies June 2026, which matches v1. The orx full text is v2 (stamp \"arXiv:2606.26453v2 [cs.LG] 8 Aug 2026\").",
+  "claims": [
+   {
+    "claim": "First submitted 2026-06-24",
+    "verdict": "VERIFIED",
+    "quote": "[v1] Wed, 24 Jun 2026 23:28:09 UTC (74 KB)",
+    "location": "arxiv.org/abs/2606.26453 submission history. v2 is dated Sat, 8 Aug 2026. The 2606 ID prefix matches June 2026."
+   },
+   {
+    "claim": "Section 5.4: the 1.23x H100 result is an MoE weight-gradient grouped-GEMM case",
+    "verdict": "VERIFIED",
+    "quote": "We target the dW1 weight-gradient kernel (group_gemm_same_mn) from GPT-OSS-120B's gate_up_proj backward pass",
+    "location": "Section 5.4 'Production Validation: VeOmni MoE' (p.16). The same section says VeOmni's 'grouped-GEMM kernels are hand-optimized in Triton' and 'On a single H100, KernelPro achieved a 1.23x speedup over the expert-tuned Triton baseline'. Table 10 caption: 'VeOmni dW1 weight-gradient kernel (H100)'. Caveat: per-expert load comes from a 'measured-routing imbalance model, Appendix H', so it is not a live training trace."
+   },
+   {
+    "claim": "The improvement is traced through 18 optimization iterations",
+    "verdict": "VERIFIED",
+    "quote": "Table 10 traces the MCTS search climbing from a 0.07x first attempt to 1.23x over 18 iterations",
+    "location": "Section 5.4, text right after Table 10 (p.17). Table 10 lists milestone iterations 0 (0.07x), 8 (0.78x), 14 (0.97x), 16 (1.15x) and 18 (1.23x). The table shows these milestones only, not every one of the 18 iterations."
+   }
+  ]
+ },
+ {
+  "name": "CAKE",
+  "id": "2608.12629",
+  "exists": true,
+  "title_found": "CAKE: Compiler-Agent Co-Design for Frontier Kernel Evolution (Ye, Huang, Jin, Hou, Shao, Yu, Chen, Cowan, Cao, Xing, Chen, Grover, Chen, Ceze; NVIDIA + CMU)",
+  "date_found": "2026-08-12 (v1 only: \"[v1] Wed, 12 Aug 2026 22:31:32 UTC (623 KB)\"). This matches the arXiv ID's implied month of 2608 = August 2026.",
+  "claims": [
+   {
+    "claim": "Clean-start representation comparison uses three runs per representation",
+    "verdict": "VERIFIED",
+    "quote": "Abstract: \"Across matched implementation-hidden Flash-KMeans clean starts on B200 (three runs per representation), the best candidate at an 80-million-token budget reaches a median 1.144\u00d7 the tuned FlashML baseline with Cake IR, versus 0.928\u00d7 for direct CUDA/PTX.\" Sec. 5 Protocol: \"Table 2 summarizes three matched runs per arm at the 80-million-token budget\"",
+    "location": "Abstract; Section 5 (Evaluation, Protocol paragraph); Table 2 caption \"Matched three-run Flash-KMeans clean-start comparison on B200.\" Scope note: this is n=3 per arm on one workload (the Flash-KMeans assign kernel), one shape (B=32, N=65,536, K=1024, D=128), on B200 with GPT-5.6-sol at xhigh effort. Results are median [min, max]: Cake IR 1.144 [1.041,1.205] vs CUDA/PTX 0.928 [0.852,1.151]. The ranges overlap."
+   },
+   {
+    "claim": "Co-designs a typed scheduling IR with localized compiler and verifier feedback",
+    "verdict": "VERIFIED",
+    "quote": "\"We present Cake, which co-designs the two. Agents author Cake IR, a typed, hardware-explicit schedule representation that gives fine-grained control without a layout algebra and carries enough information for a verifier and cost model to reason about a program before it is compiled; the harness answers with localized correctness and performance diagnostics\"",
+    "location": "Abstract. Also Section 1 (Introduction): \"the compiler returns localized correctness and performance diagnostics rather than a pass/fail bit\". Section 4 / Table 1: \"blocking checks reject candidates with a localized reason\". Nuance: what the paper says it co-designs is the agent and the compiler/language (\"Compiler\u2013Agent Co-Design\"). The typed IR and the localized verifier/compiler diagnostics are the parts of that co-design. The paper calls the IR a \"schedule representation\". The paraphrase is faithful."
+   },
+   {
+    "claim": "Dated 2026-08-12",
+    "verdict": "VERIFIED",
+    "quote": "\"[v1] Wed, 12 Aug 2026 22:31:32 UTC (623 KB)\"; PDF margin stamp: \"arXiv:2608.12629v1 [cs.LG] 12 Aug 2026\"",
+    "location": "arXiv abs page submission history (https://arxiv.org/abs/2608.12629); first page of PDF full text via orx. There is only one version, and the ID prefix 2608 matches August 2026."
+   }
+  ]
+ },
+ {
+  "name": "KernelZero",
+  "id": "2609.33074",
+  "exists": true,
+  "title_found": "KernelZero: Co-Evolving Proposer and Coder for Continuously Improved GPU Kernel Generation",
+  "date_found": "v1 Sun, 27 Sep 2026 01:09:18 UTC (only version; 59 pages, 7 figures). The arXiv ID prefix 2609 means September 2026, which matches.",
+  "claims": [
+   {
+    "claim": "Uses a co-evolving proposer",
+    "verdict": "VERIFIED",
+    "quote": "we propose KernelZero, a co-evolution framework that continuously improves GPU kernel generation through two specialized models: a Proposer that generates Torch modules from API sets and a Coder that translates them into CUDA or Triton kernels",
+    "location": "Abstract (also the title: 'Co-Evolving Proposer and Coder'; Sec 2.1: 'adopts an alternating optimization strategy for co-evolving the two' models)"
+   },
+   {
+    "claim": "Coder update uses eight A100-80GB GPUs across optimization and validation (sections 3-4, appendix C)",
+    "verdict": "CORRECTED",
+    "quote": "Each Proposer or Coder optimization job uses four A100-80GB GPUs on one node. ... During a Coder update, Keck runs as a separate four-GPU service, resulting in eight GPUs in total.",
+    "location": "Appendix C (Experiment Details), paragraph 'Training Infrastructure and Runtime', pp. 17-18; Table 2 lists 'Training GPUs 4xA100-80GB' for the Coder. The count is right: 4 GPUs for optimization plus 4 for Keck validation makes 8 A100-80GB. The location is wrong. Sections 3-4 never give this GPU count: Sec 3.1.1 (Training Details) has no hardware, and Sec 4 is Related Work. The only 'H100' mentions in Secs 1 and 3.1 refer to cudaLLM's 128 H100s. The citation should be Appendix C only."
+   },
+   {
+    "claim": "Proposer update uses twelve GPUs",
+    "verdict": "VERIFIED",
+    "quote": "During a Proposer update, the fixed Coder and Keck are deployed as two independent services, each using another four A100-80GB GPUs. Thus, a Proposer update occupies 12 GPUs in total, including the optimization, Coder inference, and execution-validation services.",
+    "location": "Appendix C, paragraph 'Training Infrastructure and Runtime', pp. 17-18. The 12 are A100-80GB GPUs: 4 for optimization, 4 for Coder inference and 4 for Keck. One 20-step Proposer update takes about 3.1 hours, and one Coder update about 4.5 hours."
+   },
+   {
+    "claim": "Dated 2026-09-27",
+    "verdict": "VERIFIED",
+    "quote": "[v1] Sun, 27 Sep 2026 01:09:18 UTC (1,815 KB)",
+    "location": "arXiv abs page submission history (https://arxiv.org/abs/2609.33074). This is the only version, and the 2609 ID prefix matches September 2026."
+   }
+  ]
+ },
+ {
+  "name": "CUDA-Harness",
+  "id": "2609.00058",
+  "exists": true,
+  "title_found": "CUDA-Harness: Harnessing Agentic CUDA Kernel Generation and Optimization from Natural Language (Qi Fan, An Zou, Yehan Ma; Shanghai Jiao Tong University; cs.CL)",
+  "date_found": "v1 submitted Sun, 30 Aug 2026 13:51:43 UTC (only version). The 2609 ID implies September 2026, but that is only the announcement/ID month for a weekend submission. The submission date really is 2026-08-30.",
+  "claims": [
+   {
+    "claim": "Dated 2026-08-30",
+    "verdict": "VERIFIED",
+    "quote": "[v1] Sun, 30 Aug 2026 13:51:43 UTC (356 KB)",
+    "location": "arxiv.org/abs/2609.00058, Submission history. Also in the full-text margin stamp on page 1: 'arXiv:2609.00058v1 [cs.CL] 30 Aug 2026'. The 2609 ID (September) does not match the August date only because of when arXiv announced it. The 30 Aug 2026 date is correct."
+   },
+   {
+    "claim": "Uses isolated, synthesized tests and progressive verification to reduce fixed-input reward hacking (sections 1 and 3)",
+    "verdict": "VERIFIED",
+    "quote": "We construct Synthesis-Based Verification, providing isolated test data synthesis and progressive validation to dilute reward hacking in Text2CUDA.",
+    "location": "Section 1 (Introduction), contributions bullet 2. The abstract frames the problem as 'vulnerable to reward hacking due to reliance on predefined test inputs'. Section 3.2 restates it: 'Synthesis-Based Verification decouples test data synthesis from kernel generation, allowing the agent to construct test inputs in an isolated environment for validation. Based on the feedback from the progressive validation...' Caveats: (a) The mechanism itself is described in Section 4.2. Section 4.2.1 covers context-isolated synthesis with NumPy/PyTorch and broad-range inputs, e.g. Gaussian with mean 5, std 10, to defeat the atol-dominated pass rule. Section 4.2.2 covers fail-fast checks in the order compile, then correctness, then profiling. Section 4.1 has the scaffold that hides test inputs from the kernel author. (b) The paper hedges: 'Rather than theoretically eliminating the risk of reward hacking, the purpose of Synthesis-Based Verification is to provide a trustworthy correctness signal'. (c) The setting is Text2CUDA, meaning natural language to CUDA, not Torch2CUDA. Once synthesized, the test inputs are still held fixed during evolution (Sec 4.3.2: 'test inputs x, and reference outputs y fixed'). (d) Measured agreement with the benchmark (Table 2) is 84.4% accuracy, with an 8.7% false-positive rate. So the method reduces the problem but does not eliminate it."
+   }
+  ]
+ },
+ {
+  "name": "AI as a Compiler",
+  "id": "2609.36800",
+  "exists": true,
+  "title_found": "AI as a Compiler: Compiling Triton kernels without the Triton compiler (Costa, Castes, Bourgeat, Mirhoseini; Stanford/EPFL)",
+  "date_found": "v1 submitted Tue, 29 Sep 2026 06:13:10 UTC (only version). This matches the September 2026 month implied by arXiv ID 2609.",
+  "claims": [
+   {
+    "claim": "Unsupported cases include atomics, input-dependent control flow, and bit-level value manipulation",
+    "verdict": "VERIFIED",
+    "quote": "Three classes of constructs remain unsupported: atomics, input-dependent control flow, and bit-level value manipulation.",
+    "location": "Section 4.5 'Formal Verification in the Loop', p.9. Appendix B, p.14-15, says the same thing: 'Volta does not support data-dependent control flow' ... 'Atomic operations are also out of scope' ... kernels relying on the bit layout of floating-point numbers 'might be rejected by Volta'. Even the extended Volta cannot verify reduction sum or softmax, or 4 of the 10 recent-paper kernels (BitDelta x2, FlashSinkhorn, Dion)."
+   },
+   {
+    "claim": "The original verifier excludes optimizations that improve performance; the paper expands the verifier and its trusted code base",
+    "verdict": "VERIFIED",
+    "quote": "Restricting AI lowering to the verifier-supported subset erases its performance advantage ... This support is not free: Volta's trusted computing base grows from 42 kLoC to 60 kLoC, and every newly modeled instruction introduces an additional risk of unsoundness.",
+    "location": "First sentence: Section 1, p.2. Second sentence: Section 4.5, p.9. Table 2 (B200 FP16, original Volta) backs this up: GEMM is 0.24x when provably verified vs 1.03x when numerically verified, FlashAttention 0.78x vs 1.37x, Conv2D 0.77x vs 1.35x. Nuances: the paper's term is 'trusted computing base', not 'code base'. Appendix B says 'We do not claim our extensions to be sound or complete' and that formalizing them is future work."
+   },
+   {
+    "claim": "3.34x is the maximum reported improvement, not a typical H100 gain (sections 3, 4.5, appendix B)",
+    "verdict": "CORRECTED",
+    "quote": "Under a $15 budget, AI lowering substantially outperforms Triton on several workloads, most notably the two BitDelta variants (3.34x and 2.51x) ... Figure 5: Best numerically validated LLM-generated kernels on NVIDIA B200.",
+    "location": "It is right that 3.34x is the maximum: the Abstract range is '0.83x-3.34x'. Two parts are wrong. (1) It is not an H100 number. It is BitDelta on B200 (Blackwell), and all ten recent-paper kernels were run only on B200. (2) The cited sections are wrong. 3.34x appears in the Abstract, Section 1 (p.2-3), Section 4.4 / Figure 5 (p.8-9) and Appendix A.2 (p.13-14). It does not appear in Section 3, Section 4.5 or Appendix B. H100 results reported in the paper: 0.83x FP16 GEMM, 1.61x FP8 GEMM, 0.96x/1.72x GEMM-SiLU FP16/FP8 (Sec 4.2), 1.90x FP16 convolution and 1.09x FP8 reduction sum (App. A.1). The 3.34x BitDelta kernel is also only numerically verified: it is not among the six recent kernels the extended Volta can verify (Sec 4.5). The suite claim in Sec 1 is '0.83x-2.23x Triton performance on our twelve-kernel suite'."
+   }
+  ]
+ },
+ {
+  "name": "When More Sampling Hurts",
+  "id": "2606.28661",
+  "exists": true,
+  "title_found": "When More Sampling Hurts: The Modal Ceiling and Correlation Ceiling of Test-Time Scaling (Yong Yi Bay, Kathleen A. Yearick)",
+  "date_found": "v1 submitted Sat, 27 Jun 2026 00:37:33 UTC (only version; consistent with arXiv ID 2606 = June 2026)",
+  "claims": [
+   {
+    "claim": "Section 4.2: a perfect verifier can recover coverage, whereas a frequency-like scorer inherits the modal ceiling",
+    "verdict": "VERIFIED",
+    "quote": "Best-of-n with a learned reward model is bounded instead by how well that scorer ranks answers: a perfect verifier lifts it to coverage, a frequency-like scorer collapses it to the modal ceiling, and real reward models fall between.",
+    "location": "Section 4.2 'Selection and the modal answer', closing sentences of the paragraph after Corollary 3 (Anti-scaling of selection), page 11, just before Figure 7. Context: 'it' is best-of-n reward-model selection. Self-consistency and plurality voting are said to 'meet this modal ceiling exactly' (Proposition 5). Section 2.1 also says the verifier is assumed accurate there, and that an imperfect verifier adds a second, independent ceiling."
+   }
+  ]
+ },
+ {
+  "name": "Thinking Hard, Not Smart",
+  "id": "2608.07968",
+  "exists": true,
+  "title_found": "Thinking Hard, Not Smart: Reasoning Models Fail to Ration Test-Time Compute Across Questions (Fan, Cheng, Li, Liang, Zhou, Feizi; UMD + MBZUAI; code at github.com/Fcr09/thinking-hard-not-smart)",
+  "date_found": "v1 Sat, 8 Aug 2026 07:04:28 UTC; v2 Tue, 11 Aug 2026 02:23:08 UTC (arXiv ID prefix 2608 = August 2026, consistent)",
+  "claims": [
+   {
+    "claim": "Submitted 2026-08-08",
+    "verdict": "VERIFIED",
+    "quote": "[v1] Sat, 8 Aug 2026 07:04:28 UTC (2,647 KB)",
+    "location": "arxiv.org/abs/2608.07968 submission history. A v2 followed on Tue, 11 Aug 2026 02:23:08 UTC. The 2608 ID prefix matches August 2026."
+   },
+   {
+    "claim": "Studies exam-style shared budgets",
+    "verdict": "VERIFIED",
+    "quote": "a model must distribute one shared token budget across questions",
+    "location": "Abstract (arXiv abs page and orx full text): the paper introduces an 'exam-style evaluation framework'. Section 3.1 says one reasoning trace for the whole exam is capped at B generated tokens. Figure 1(c) shows N scored questions competing for one global budget."
+   },
+   {
+    "claim": "The full factorial evaluation is on mathematics, with narrower code-reasoning coverage",
+    "verdict": "VERIFIED",
+    "quote": "Omni-MATH is the only domain in which we run the full factorial design.",
+    "location": "Limitations, 'Scope' paragraph. The same paragraph says CRUXEval-O covers two exam lengths, four models and two scoring schemes, with no difficulty axis and no ordering or repricing manipulations. Section 4.5 and Table 5 give the details: N in {10,20}, QW-14/DQ-14/DSV4-F/DSV4-P, B=3,000. Note that the code task is CRUXEval-O output prediction, not code generation. Section 4.5 also contradicts itself on scoring: it says 'fixed and random scoring' and then 'we only use fixed scoring'."
+   }
+  ]
+ },
+ {
+  "name": "ReProbe",
+  "id": "2511.06209",
+  "exists": true,
+  "title_found": "ReProbe: Efficient Test-Time Scaling of Multi-Step Reasoning by Probing Internal States of Large Language Models (Ni, Fadeeva, Wu, Akhtar, Zhang, Ash, Leippold, Baldwin, Ng, Shelmanov, Sachan; ETH Zurich / NUS / MBZUAI / UZH / Melbourne; arXiv comments: \"ACL 2026 Main\")",
+  "date_found": "v1 Sun, 9 Nov 2025 03:38:29 UTC; v2 11 Nov 2025; v3 14 Jan 2026; v4 22 Apr 2026; v5 23 Apr 2026 (latest). The 2511 ID matches November 2025. The full text was read via orx/alphaXiv, which is most likely the latest version (v5). The quotes below come from that text.",
+  "claims": [
+   {
+    "claim": "First submitted 2025-11-09",
+    "verdict": "VERIFIED",
+    "quote": "[v1] Sun, 9 Nov 2025 03:38:29 UTC (441 KB)",
+    "location": "arXiv abs page https://arxiv.org/abs/2511.06209, Submission history. The ID prefix 2511 = Nov 2025 and is consistent. Later revisions run to v5 on 23 Apr 2026, and the paper is listed as ACL 2026 Main."
+   },
+   {
+    "claim": "Limitations state a probe cannot be applied directly to a different underlying model",
+    "verdict": "VERIFIED",
+    "quote": "ReProbes need to be trained on the internal states of the target LLMs they supervise. Therefore, contrary to PRMs, they cannot be directly applied to another LLM since they depend on model-specific internal states.",
+    "location": "Limitations section (unnumbered, after Conclusion), second paragraph. The same paragraph says training a probe is cheap and suggests that future work could fine-tune ReProbes for customized or fine-tuned versions of target LLMs."
+   },
+   {
+    "claim": "An appendix notes that collecting attention-map features disables efficient attention implementations",
+    "verdict": "VERIFIED",
+    "quote": "The training of the Attn+Logit ReProbe is slower since extracting attention maps prohibits the use of efficient attention implementations (e.g., Flash Attention).",
+    "location": "Appendix B.3 Training Cost. Nuance: the statement explains why training is slower. Training with Attn+Logit features takes about 32 GH200 GPU-hours, compared with about 4 GH200 GPU-hours for Hidden States features. It applies to the Attn+Logit feature variant only, not to the hidden-state probe."
+   }
+  ]
+ },
+ {
+  "name": "Automating Formal Verification (thesis)",
+  "id": "2605.30914",
+  "exists": true,
+  "title_found": "Automating Formal Verification with Reinforcement Learning and Recursive Inference",
+  "date_found": "arXiv v1 submitted Fri, 29 May 2026 06:59:28 UTC (only version). The thesis was submitted to MIT EECS on May 22, 2026 for the May 2026 degree. The arXiv ID prefix 2605 means May 2026, which matches. arXiv comments: \"Master's thesis, 140 pages, 16 figures, 17 tables\".",
+  "claims": [
+   {
+    "claim": "Author Max Tan, May 2026",
+    "verdict": "VERIFIED",
+    "quote": "Automating Formal Verification with Reinforcement Learning and Recursive Inference by Max Tan ... MASSACHUSETTS INSTITUTE OF TECHNOLOGY May 2026 ... Authored by: Max Tan ... May 22, 2026 ... arXiv:2605.30914v1 [cs.LG] 29 May 2026",
+    "location": "Title page of the full text (orx paper 2605.30914 --full). The arXiv abs page lists Authors as Max Tan, with submission history '[v1] Fri, 29 May 2026 06:59:28 UTC (5,934 KB)'. It is a sole-author MIT MEng thesis supervised by Max Tegmark."
+   },
+   {
+    "claim": "Title: Automating Formal Verification with Reinforcement Learning and Recursive Inference",
+    "verdict": "VERIFIED",
+    "quote": "Automating Formal Verification with Reinforcement Learning and Recursive Inference",
+    "location": "arXiv abs page title (https://arxiv.org/abs/2605.30914) and the title page and abstract page of the full text. The title matches exactly."
+   }
+  ]
+ },
+ {
+  "name": "Goedel-Code-Prover",
+  "id": "2603.19329",
+  "exists": true,
+  "title_found": "Goedel-Code-Prover: Hierarchical Proof Search for Open State-of-the-Art Code Verification (Zenan Li, Ziran Yang, Deyuan He, Haoyu Zhao, Andrew Zhao, Shange Tang, Kaiyu Yang, Aarti Gupta, Zhendong Su, Chi Jin; ETH Zurich / Princeton; v3 header says \"Published as a conference paper at COLM 2026\")",
+  "date_found": "v1 2026-03-18 18:42:04 UTC; v2 2026-03-27 10:42:38 UTC; v3 2026-08-10 08:34:04 UTC (arXiv ID 2603 = March 2026, which matches)",
+  "claims": [
+   {
+    "claim": "First submitted 2026-03-18",
+    "verdict": "VERIFIED",
+    "quote": "[v1] Wed, 18 Mar 2026 18:42:04 UTC (255 KB)",
+    "location": "arxiv.org/abs/2603.19329, Submission history. Later versions: v2 Fri 27 Mar 2026 and v3 Mon 10 Aug 2026 (the full text from orx is v3: 'arXiv:2603.19329v3 [cs.SE] 10 Aug 2026'). The ID prefix 2603 matches March 2026."
+   },
+   {
+    "claim": "Reports 62.0% proof success over 427 tasks across three Lean code-verification benchmarks",
+    "verdict": "VERIFIED",
+    "quote": "On three Lean-based code verification benchmarks comprising 427 tasks, our 8B-parameter model achieves a 62.0% prove success rate, a 2.6\u00d7 improvement over the strongest baseline under the reported inference settings.",
+    "location": "Abstract (v3; the v1 abstract gives the same 62.0% / 427 / three-benchmark figures). Sec. 4.2: 'prove success rates of 68.8%, 54.0%, and 62.3% on Verina, Clever, and AlgoVeri, respectively, yielding an overall rate of 62.0% across all 427 tasks.' Sec. 4.1 gives the split Verina 189 + Clever 161 + AlgoVeri 77. Caveats: the result is for Goedel-Code-Prover-8B (Qwen-3-8B backbone); GPT-5.2 wrote the implementations for Clever and AlgoVeri ('Clever and AlgoVeri only release specifications without reference implementations; we therefore prompt GPT-5.2 to generate the code and manually verify the results'); baselines are at pass@128 and 'These comparisons are not compute-matched'."
+   },
+   {
+    "claim": "Proof is relative to supplied specifications under a hierarchical inference setup",
+    "verdict": "VERIFIED",
+    "quote": "We assume that the program C and its associated predicates P and Q are already formalized in Lean; translating informal specifications into Lean is out of scope.",
+    "location": "Sec. 2 (Lean-based Code Verification). The hierarchical inference setup is confirmed in the Fig. 3 caption ('our method operates under a search-based inference setting using Goedel-Code-Prover-8B') and in Appendix Algorithm 2 'Hierarchical Inference (Single Run)': up to 128 decomposition iterations, at most 32 open lemmas, up to 128 completion iterations per lemma, and a 30-minute wall-clock budget per problem (Appendix G). Sec. 6 lists 'pre-formalized programs' as a limitation. For 2 of the 3 benchmarks the implementations are also supplied, but by GPT-5.2 rather than by the benchmark authors."
+   }
+  ]
+ },
+ {
+  "name": "SpecRL",
+  "id": "2604.05820",
+  "exists": true,
+  "title_found": "SpecRL: Reinforcement Learning with Test-Based Completeness Rewards for Formal Specification Synthesis (v2, current). v1 was titled \"Reinforcement Learning with Negative Tests as Completeness Signal for Formal Specification Synthesis\". Authors: Zhechong Huang, Zhao Zhang, Zeyu Sun, Huifeng Sun, Yingfei Xiong (Peking University / ISCAS / Tencent). cs.SE; marked IEEE TSE 2026.",
+  "date_found": "v1: Tue, 7 Apr 2026 12:53:42 UTC (497 KB); v2: Tue, 14 Jul 2026 09:49:12 UTC (1,107 KB). The ID prefix 2604 matches April 2026.",
+  "claims": [
+   {
+    "claim": "First submitted 2026-04-07",
+    "verdict": "VERIFIED",
+    "quote": "[v1] Tue, 7 Apr 2026 12:53:42 UTC (497 KB)",
+    "location": "arxiv.org/abs/2604.05820, Submission history (v2 was submitted Tue, 14 Jul 2026 09:49:12 UTC). The 2604 ID prefix fits April 2026. The full-text footer reads 'arXiv:2604.05820v2 [cs.SE] 14 Jul 2026'. Note that the 'SpecRL' name and title appear only in v2. v1 was titled 'Reinforcement Learning with Negative Tests as Completeness Signal for Formal Specification Synthesis'."
+   },
+   {
+    "claim": "Trains against impossible input-output pairs admitted by weak specifications",
+    "verdict": "VERIFIED",
+    "quote": "SpecRL constructs negative tests, or spectests, from implementation-impossible input-output pairs that weak specifications such as ensures true may still admit. During training, SpecRL rewards verified candidates according to the fraction of spectests their specifications reject",
+    "location": "Abstract (v2), confirmed in the alphaXiv full text and on the arXiv abs page. Section 1 adds: 'The resulting input-output pairs are impossible for the deterministic implementation: an accurate specification should reject them, while a weak specification may still admit them.' Nuances: the spectest rejection rate is a GRPO reward that applies only after a candidate compiles and verifies (a progressive reward). The setting is Dafny with deterministic methods. The pairs are built by running the implementation and mutating only the outputs. The headline result is that the 7B model improves verification success by 49.96% and completeness by 26.46% over SFT on the out-of-distribution DafnyComp-Spec benchmark. These are relative gains."
+   }
+  ]
+ },
+ {
+  "name": "Spec-Harness",
+  "id": "2604.00280",
+  "exists": true,
+  "title_found": "Spec-Harness: Measuring and Improving Behavioral Adequacy of LLM-Synthesized Formal Specifications (v2, current). Authors: Md Rakib Hossain Misu, Iris Ma, Cristina V. Lopes (UC Irvine). Note that v1 had a different title: \"VeriAct: Beyond Verifiability -- Agentic Synthesis of Correct and Complete Formal Specifications\". The v1 abstract already proposed Spec-Harness as an evaluation framework.",
+  "date_found": "v1: Tue, 31 Mar 2026 22:12:15 UTC (260 KB). v2: Tue, 8 Sep 2026 22:53:51 UTC (768 KB). The 2604 ID matches an April 2026 announcement for a submission made late on Mar 31. The full-text stamp reads \"arXiv:2604.00280v2 [cs.SE] 8 Sep 2026\".",
+  "claims": [
+   {
+    "claim": "First submitted 2026-03-31",
+    "verdict": "VERIFIED",
+    "quote": "[v1] Tue, 31 Mar 2026 22:12:15 UTC (260 KB)",
+    "location": "arXiv abs page https://arxiv.org/abs/2604.00280, submission history. A v2 followed on Tue, 8 Sep 2026 22:53:51 UTC. v1 used a different title ('VeriAct: Beyond Verifiability -- Agentic Synthesis of Correct and Complete Formal Specifications'), and v2 renamed the paper to 'Spec-Harness: ...'. Citing it by the Spec-Harness title is correct for the current version, but the 2026-03-31 date belongs to the VeriAct-titled v1."
+   },
+   {
+    "claim": "Measures behavioral adequacy beyond verifier pass rate",
+    "verdict": "VERIFIED",
+    "quote": "We then introduce Spec-Harness, a framework that measures the behavioral adequacy of a specification along four dimensions of precondition and postcondition correctness and completeness, using Hoare-triple based symbolic verification and input/output mutation.",
+    "location": "Abstract (v2, orx full text). Section I lists the need for 'an automated way to measure how much behavior a specification actually captures, beyond a verifier's binary pass or fail.' Scope caveats: (1) the domain is LLM-synthesized JML specs for Java, checked with OpenJML on SpecGenBench and FormalBench; (2) the authors call the metrics 'test- and mutation-based approximations, not formal guarantees' (Section I, contributions); (3) it is also used as a feedback signal for coding agents (Codex CLI, Claude Code, VeriAct) in RQ4."
+   }
+  ]
+ },
+ {
+  "name": "UFP4",
+  "id": "2606.20381",
+  "exists": true,
+  "title_found": "Rethinking Shrinkage Bias in LLM FP4 Pretraining: Geometric Origin, Systemic Impact, and UFP4 Recipe (Qian Zhao et al., Ling Team, Ant Group)",
+  "date_found": "v1 submitted Thu, 18 Jun 2026 15:40:51 UTC (the only version). The PDF's own date line reads \"June 19, 2026\". The arXiv ID prefix 2606 matches June 2026.",
+  "claims": [
+   {
+    "claim": "Submitted 2026-06-18",
+    "verdict": "VERIFIED",
+    "quote": "[v1] Thu, 18 Jun 2026 15:40:51 UTC (1,734 KB)",
+    "location": "Submission history at arxiv.org/abs/2606.20381. The PDF margin stamp agrees: \"arXiv:2606.20381v1 [cs.AI] 18 Jun 2026\". The PDF title page shows a different date, \"Date: June 19, 2026\", but the arXiv submission date is 18 Jun."
+   },
+   {
+    "claim": "Studies rounding-bin geometry and its interaction with training recipes",
+    "verdict": "VERIFIED",
+    "quote": "the local interaction between FP4 grid geometry and RHT scope observed in Q1 persists in long-run training",
+    "location": "Section 5.3 (Q2). The geometry side is Section 3.1, \"Geometric Origin: Shrinkage Bias from Asymmetric RTNE Bins\". The recipe interaction is Section 3.2, \"Propagation and RHT Exacerbation\", and Section 5.5, \"Which recipe components matter\" (RHT scope and stochastic-rounding scope)."
+   },
+   {
+    "claim": "Evaluates uniform-grid recipes with long-run dense and MoE experiments",
+    "verdict": "VERIFIED",
+    "quote": "We compare BF16, the E2M1 reference, and the E1M2-based UFP4 recipe on Dense 1.5B, MoE 7.9B, and MoE 124B long-run pretraining",
+    "location": "Section 5.3 (Q2) and the abstract. The paper evaluates one uniform-grid recipe, UFP4 (E1M2/INT4-style), against a tuned E2M1 reference, so \"recipes\" in the plural is a little loose. Results: the last-1000-step BF16-relative error falls from 1.2570% to 0.9673% (Dense 1.5B), from 2.3596% to 1.8469% (MoE 7.9B) and from 1.7308% to 1.3863% (MoE 124B)."
+   }
+  ]
+ },
+ {
+  "name": "HiFloat4 pretraining",
+  "id": "2604.08826",
+  "exists": true,
+  "title_found": "HiFloat4 Format for Language Model Pre-training on Ascend NPUs",
+  "date_found": "v1 submitted Thu 9 Apr 2026 23:50:56 UTC (1,294 KB); v2 Fri 25 Sep 2026 19:17:30 UTC (1,552 KB). The arXiv ID 2604 implies April 2026, which matches v1. The full text read with orx is v2 (footer \"arXiv:2604.08826v2 [cs.LG] 25 Sep 2026\"). The authors are Taghian, Peng et al. at Huawei, with 25 authors in total.",
+  "claims": [
+   {
+    "claim": "First submitted 2026-04-09, revised 2026-09-25",
+    "verdict": "VERIFIED",
+    "quote": "[v1] Thursday, 9 April 2026 23:50:56 UTC (1,294 KB) ... [v2] Friday, 25 September 2026 19:17:30 UTC (1,552 KB)",
+    "location": "Submission history on the arxiv.org/abs/2604.08826 page; the v2 PDF footer reads 'arXiv:2604.08826v2 [cs.LG] 25 Sep 2026'"
+   },
+   {
+    "claim": "Section 1: experiments simulate quantization around BF16 GEMMs and do not measure native throughput, latency or energy",
+    "verdict": "VERIFIED",
+    "quote": "All experiments run on Ascend hardware, but not on FP4 kernels: no Ascend NPU supports HiF4 or MXFP4 natively yet, so every GEMM executes in BF16 with quantization simulated around it, bit-exactly. We therefore measure the numerical behaviour native kernels would produce, but no throughput, latency or energy.",
+    "location": "Section 1 (Introduction), paragraph beginning 'Beyond format comparison', p.2. Section 5 says the same in its 'Emulation' paragraph: 'All GEMMs execute in BF16 on Ascend 910B3 NPUs with quantization and dequantization emulated around them at bit-exact precision ... we report no throughput, latency or energy figures.' Section 4 adds: 'we measure no area, power or throughput anywhere in this paper.'"
+   },
+   {
+    "claim": "Its NVFP4 failure is conditional on recipe choices, particularly the absence of per-tensor scaling",
+    "verdict": "VERIFIED",
+    "quote": "PTS is the one it cannot do without: plain NVFP4 diverges, and so do +SR, +RHT and +SR+RHT. ... With PTS applied, the usual ordering returns: RHT does most of the remaining work (2.00 \u2192 1.42%) and SR adds a little more (1.42 \u2192 1.27%).",
+    "location": "Section 5.3 (Sensitivity Analysis) and Figure 4 caption ('NVFP4 diverges without PTS'), pp.9-10. Section 3 also says 'PTS is part of NVFP4's training formulation rather than an optional addition.' Section 5 ('FP4 coverage') says the setup is stricter than NVIDIA's, which keeps about 15% of linear layers in higher precision: 'our NVFP4 results are measured under a harsher regime than that work uses.' The Limitations name the omission of 2D weight quantization as 'an untested deviation from the NVIDIA recipe'. Caveat: NVFP4 diverges only without PTS. With PTS it trains to 1.27% best on OpenPangu-1B (HiF4: 1.19%) and stays within 0.08-0.14 points of HiF4 downstream. So calling it a 'failure' only holds for the no-PTS setting, which is what the claim says."
+   }
+  ]
+ },
+ {
+  "name": "LLaDA-Hybrid",
+  "id": "2608.06628",
+  "exists": true,
+  "title_found": "Retrofitting Linear Attention into Diffusion Language Models (Jinha Kim, Younghun Roh, Jaeyeon Kim; workshop paper at NonAR-LM; method named LLaDA-Hybrid; code at github.com/Diuven/LLaDA-Hybrid)",
+  "date_found": "v1 submitted 2026-08-06 22:34:20 UTC (the only version). This matches the 2608 ID, which implies August 2026. The PDF footer reads \"arXiv:2608.06628v1 [cs.LG] 6 Aug 2026\".",
+  "claims": [
+   {
+    "claim": "Replaces 6 of 20 layers in a 16B diffusion model",
+    "verdict": "VERIFIED",
+    "quote": "LLADA-HYBRID replaces 6 of the 20 attention layers in LLaDA 2.1 (Bie et al., 2026), a 16B open-source dLLM",
+    "location": "Abstract. Section 4 adds: \"We retrofit the pretrained 16B LLaDA 2.1-mini ... Of its 20 attention layers, we linearize a strided subset of six layers with zero-indexed layer indices S = {0, 4, 8, 12, 16, 18}.\" The base model is specifically LLaDA 2.1-mini, and the 6 replaced layers are attention layers."
+   },
+   {
+    "claim": "Abstract says approximately 60 hours; section 4 specifies 24 plus 6 elapsed hours on two L40S GPUs (60 GPU-hours)",
+    "verdict": "VERIFIED",
+    "quote": "Attention transfer processes approximately 17 million tokens and requires approximately 24 hours on two NVIDIA L40S GPUs.",
+    "location": "Section 4 (Experiments), Stage 1 training details. The abstract says \"The conversion takes only approximately 60 hours\". Stage 2 in Section 4 says \"roughly 5 million tokens and six hours of training on two L40S GPUs\". The paper never uses the words \"elapsed\" or \"GPU-hours\". Reading the total as 60 GPU-hours ((24+6) h x 2 GPUs) is the claimant's arithmetic. It is consistent with the numbers but is not stated in the paper."
+   },
+   {
+    "claim": "Serving measured on an H200",
+    "verdict": "VERIFIED",
+    "quote": "For serving evaluation, we measure end-to-end decoding throughput using SGLang continuous batching on a single NVIDIA H200 GPU.",
+    "location": "Section 4, Evaluation protocol. The Table 2 caption also says \"under SGLang continuous batching on one H200\". The appendix kernel microbenchmark (Table 3) and the concurrency test (Table 4) were also run on one H200."
+   },
+   {
+    "claim": "Reports an 8.1-point GPQA-Diamond drop",
+    "verdict": "VERIFIED",
+    "quote": "The largest degradation occurs on GPQA-Diamond, where the hybrid model trails the teacher by 8.1 points.",
+    "location": "Section 4, Quality Retention paragraph. In Table 1, GPQA-Diamond is 38.9 for the teacher and 30.8 for LLaDA-Hybrid."
+   }
+  ]
+ },
+ {
+  "name": "Oryx / Multi-Mixer Models",
+  "id": "2605.28769",
+  "exists": true,
+  "title_found": "Multi-Mixer Models: Flexible Sequence Modeling with Shared Representations (Kevin Y. Li, Asher Trockman, Ananda Theertha Suresh, Ziteng Sun; CMU / Google Research). \"Oryx\" is the name of the proposed model, not the paper title.",
+  "date_found": "2026-05-27 (arXiv v1: Wed, 27 May 2026 17:26:09 UTC; the only version). The ID prefix 2605 means May 2026, which matches. The alphaXiv full-text header shows 2026-05-28, which is probably the listing date.",
+  "claims": [
+   {
+    "claim": "Submitted 2026-05-27",
+    "verdict": "VERIFIED",
+    "quote": "[Submitted on 27 May 2026] ... [v1] Wed, 27 May 2026 17:26:09 UTC (3,345 KB)",
+    "location": "arXiv abstract page https://arxiv.org/abs/2605.28769, submission history (fetched with WebFetch). There is only v1. The ID month (2605 = May 2026) matches. The alphaXiv text header says 2026-05-28, one day later, which is probably the announcement or listing date and not the submission date."
+   },
+   {
+    "claim": "Reports retrieval using attention on fewer than 10% of tokens",
+    "verdict": "VERIFIED",
+    "quote": "On retrieval tasks, Oryx achieves performance comparable to the Transformer baseline even when processing only a tiny fraction (<10%) of the tokens in the attention mode.",
+    "location": "Abstract. Repeated in Section 1 (Introduction): 'Oryx is able to achieve comparable performance compared to the Transformer baseline with <10% of the tokens processed in the attention mode.' The evidence is Section 4.2 / Table 3 (cross-mode retrieval). Caveats that matter when citing this: (a) the setup is 1.4B models at 2K context only. (b) The context is prefilled in linear mode, and only the prompt and generation run in attention mode. For real-world cloze tasks the paper designates 'the first 97.5% of tokens as the context', so attention covers only the last ~2.5%. (c) The paper says that 'processing' those tokens in attention mode means mode-switched models 'require the storage of both the KV cache and linear RNN state'. So this is not attention that sees only <10% of the context; KV for the context is still kept. (d) 'Comparable' is not uniform. In Table 3, Oryx-TM (Mamba-2) with a linear-mode context scores 58.0 on NIAH-3, against 95.0 for the Transformer baseline. Its real-world average is 43.9 vs 42.6, and Oryx-TG averages 41.4 real-world and 97.5 NIAH."
+   }
+  ]
+ },
+ {
+  "name": "NVIDIA H100 page and HGX components doc",
+  "id": "https://www.nvidia.com/en-sg/data-center/h100/ ; https://docs.nvidia.com/enterprise-reference-architectures/hgx-ai-factory-h100-h200-b200/latest/components.html",
+  "exists": true,
+  "title_found": "\"H100 GPU | NVIDIA\" (nvidia.com/en-sg, HTTP 200, headline \"NVIDIA H100 GPU\") ; \"Components \u2014 NVIDIA HGX AI Factory (HGX H100, H200, B200)\" (docs.nvidia.com Enterprise Reference Architecture, HTTP 200)",
+  "date_found": "H100 product page: no publication or update date shown (only a 2026 copyright footer). HGX components doc: \"Last updated on Aug 31, 2026.\" Fetched 2026-10-06.",
+  "claims": [
+   {
+    "claim": "Both URLs resolve to official NVIDIA pages describing H100 / HGX hardware",
+    "verdict": "VERIFIED",
+    "quote": "H100 page, spec table: \"Form Factor SXM PCIe dual-slot air-cooled Interconnect NVIDIA NVLink\u2122: 900GB/s ... Server Options NVIDIA HGX H100 Partner and NVIDIA- Certified Systems \u2122 with 4 or 8 GPUs\"; HGX doc: \"HGX H100 and H200 8-GPU Baseboards use a combination of third generation NVSwitch and fourth generation NVLink \u2022 Total Aggregate Bandwidth 7.2TB/s \u2022 GPU-to-GPU Bandwidth 900GB/s\"",
+    "location": "nvidia.com/en-sg/data-center/h100/ 'Product Specifications' table (H100 SXM column: GPU Memory 80GB, 3.35TB/s, up to 700W); docs.nvidia.com HGX AI Factory 'Components' page, 'NVIDIA\u00ae NVLink\u2122 and NVSwitch\u2122' section, plus Table 1 'HGX H100, H200 or B200 GPU and per Node specifications' (H100 SXM: 80GB HBM3 per GPU, 640GB HBM3 per 8-GPU node). Both returned HTTP 200 at the exact URLs with no redirect (curl), on NVIDIA's own domains."
+   }
+  ]
+ }
+]

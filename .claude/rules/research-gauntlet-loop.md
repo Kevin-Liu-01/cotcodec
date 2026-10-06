@@ -1,10 +1,10 @@
 ---
 description: Loop-until-100 rule for proposing, auditing, and promoting research directions. Borrowed from Claude-of-Duty's contract/critic loop and adapted to falsifiable research.
 paths:
-  - "research/proposals/**"
-  - "research/scans/**"
-  - "research/frontier-*.md"
-  - "directions/**"
+  - "program/proposals/**"
+  - "program/scans/**"
+  - "program/*.md"
+  - "program/questions/**"
   - "experiments/architectures/**"
   - "experiments/tinker/**"
 ---
@@ -13,7 +13,7 @@ paths:
 
 Applies whenever a task proposes a research direction, a new mechanism or
 architecture, or an experiment that could consume more than 8 GPU-hours.
-The full procedure is `skills/research-direction-improve.md`; this rule is the
+The full procedure is `docs/gauntlet-procedure.md`; this rule is the
 short contract every agent must obey while running it.
 
 ## The loop
@@ -209,7 +209,7 @@ completion, or safety failure.
 ## Commands
 
 ```bash
-uv run python scripts/research_direction_doctor.py research/proposals/<slug>.md
-uv run python scripts/research_gauntlet_record.py data/research-gauntlet/<slug>.jsonl <record.json>
+uv run python scripts/research_direction_doctor.py program/proposals/<slug>.md
+uv run python scripts/research_gauntlet_record.py program/gauntlet/<slug>.jsonl <record.json>
 uv run python scripts/validate_architecture_experiments.py
 ```

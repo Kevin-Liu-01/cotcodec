@@ -1,0 +1,589 @@
+[
+ {
+  "name": "HEAR",
+  "id": "arXiv:2610.06597",
+  "title": "Can Agent Harnesses and Inference Engines Hear Each Other? The HEAR Protocol for Agentic LLM Serving",
+  "date": "2026-10-05. arXiv abs page: \"[v1] Monday, October 5, 2026, 1",
+  "claims": [
+   {
+    "claim": "Dated Oct 5 2026",
+    "verdict": "VERIFIED",
+    "quote": "[v1] Monday, October 5, 2026, 16:07:33 UTC (935 KB)  /  PDF stamp: \"arXiv:2610.06597v1 [cs.AI] 5 Oct 2026\""
+   },
+   {
+    "claim": "A protocol connects harness intent, engine state, execution constraints and outcomes",
+    "verdict": "VERIFIED",
+    "quote": "We introduce HEAR, a bidirectional Harness\u2013Engine protocol that connects workflow intent and requirements with engine state, capabilities, and outcomes while preserving workflow and model semantics."
+   },
+   {
+    "claim": "Its experiments include cache-aware scheduling and role-specific inference configurations",
+    "verdict": "VERIFIED",
+    "quote": "We instantiate HEAR for cache-aware runtime coordination and role-specific inference configuration."
+   }
+  ],
+  "caveats": "1. Status: this is a brand-new arXiv v1 preprint (cs.AI) posted 2026-10-05, one day before this check. It is not peer-reviewed. The code link is an anonymous mirror (anonymous.4open.science/r/hear-3D1E), which suggests the paper is under double-blind review. The paper includes an AI-use statement covering methodology refinement, code, result interpretation and writing.\n2. Possible conflict of interest: co-authors Jitai Hao and Jun Yu are authors of OmniKV (ref [10]). OmniKV is one of the evaluated execution modes, and it is in the selected DeepResearchBench mapping (OmniKV\u2013H2O).\n3. Hardware and scale are small and mixed. SCBench ran Qwen3-8B on a single RTX PRO 6000 (not an H100). Mooncake ran Qwen3-8B on a single H100. Both used a 96-GiB L2 KV cache. BrowseComp-Plus and DeepResearchBench ran GLM-4.7-Flash, with Main and Reader/sub-agent each on its own H100. Dense mode used vLLM 0.26.0;"
+ },
+ {
+  "name": "ThunderAgent",
+  "id": "arXiv:2602.13692",
+  "title": "ThunderAgent: A Simple, Fast and Program-Aware Agentic Inference System",
+  "date": "v1 2026-02-14 (Sat, 14 Feb 2026 09:26:41 UTC); v2 2026-03-10",
+  "claims": [
+   {
+    "claim": "Dated Feb 14 2026",
+    "verdict": "VERIFIED",
+    "quote": "[v1] Sat, 14 Feb 2026 09:26:41 UTC (656 KB) ... [v2] Tue, 10 Mar 2026 ... [v3] Tue, 30 Jun 2026 17:19:18 UTC (1,413 KB)"
+   },
+   {
+    "claim": "Program-aware admission and worker placement for agent workloads",
+    "verdict": "VERIFIED",
+    "quote": "Restore. This operation admits a program into active execution. ... Restore(P) assigns P to a backend L' with available capacity"
+   },
+   {
+    "claim": "A current implementation exists in NVIDIA Dynamo docs at https://docs.dynamo.nvidia.com/dynamo/dev/agents/thunder-agent-program-scheduler",
+    "verdict": "VERIFIED",
+    "quote": "Experimental. NVIDIA Dynamo includes a native ThunderAgent plugin for program-aware admission and worker placement. It runs inside the frontend and is enabled through router-policy YAML."
+   }
+  ],
+  "caveats": "1) This is an arXiv preprint (cs.OS, cs.MA) with no venue listed, so it has not been peer reviewed, and all of its performance results come from the authors' own evaluation. Cite a specific version. v1 is from 14 Feb 2026, but v3 (30 Jun 2026) is much larger (656 KB grew to 1,413 KB). v3 adds Appendix A.3 (scaling to 64 H100s), A.4 (KV offloading) and A.6 (adoption by SkyRL and Dynamo). v1 and v2 do not mention Dynamo at all. The author order changes between versions: the v2 PDF lists Kang, Li, Yang, Xu, while the abs page and v3 list Kang, Li, Xu, Yang. The repo URL also changes between versions: HaoKang-Timmy/ThunderAgent, then ThunderAgent-org/ThunderAgent, then Agentic-Kinetics/ThunderAgent on the abs page.\n2) Scope of the headline numbers (1.5-3.6x serving throughput, 1.8-3.9x RL rollout, up to 4.2x disk savings):\n- Models: GLM-4.6 (355B) and Qwen3-235B, quantized to FP8 and run wit"
+ },
+ {
+  "name": "CUA-Sandbox",
+  "id": "arXiv:2609.32750",
+  "title": "CUA-Sandbox: Efficient Environments for Computer-Use Agent Reinforcement Learning",
+  "date": "2026-09-26 (v1 only; arXiv abs page \"[v1] Submitted Septembe",
+  "claims": [
+   {
+    "claim": "Dated Sep 26 2026",
+    "verdict": "VERIFIED",
+    "quote": "arXiv:2609.32750v1 [cs.AI] 26 Sep 2026"
+   },
+   {
+    "claim": "Shares initialized runtimes while keeping mutable environment state private",
+    "verdict": "VERIFIED",
+    "quote": "CUA-Sandbox shares initialized processes while storing each environment's mutable resources in a private state capsule."
+   },
+   {
+    "claim": "OSWorld rollout comparison reports 3.08x throughput at eight concurrent environments",
+    "verdict": "VERIFIED",
+    "quote": "Throughput also increases by 2.22\u00d7 on WebArena and 3.08\u00d7 on OSWorld."
+   }
+  ],
+  "caveats": "1) The paper is a v1 arXiv preprint (cs.AI) posted 10 days before 2026-10-06 and is not peer reviewed. Code exists: windskyyx/Cua-Sandbox (MIT, about 24 stars).\n2) The 3.08x is against the conventional Docker-based official sandbox. The paper does not compare against snapshot/CoW or microVM systems such as WebServ, Firecracker or Crab; Table 4 gives only absolute WebServ Incus costs. Throughput is env/s over a full batch, including preparation.\n3) The factor depends on concurrency and holds only at 8-way. Table 7 gives about 2.88x at 4-way OSWorld (0.481 vs 0.167 env/s) and 5.14x at 16-way (1.517 vs 0.295). The authors write that \"maximum density remains unmeasured\".\n4) The paper contradicts itself on VisualWebArena. Table 6 says it \"provides the measurements underlying Figure 3\", but its VWA values differ from the main text and Figure 3:\n   - prep: 6.964\u21920.633 vs 10.404\u21920.504\n   - batch"
+ },
+ {
+  "name": "cua-speedrun",
+  "id": "arXiv:2609.40284",
+  "title": "cua-speedrun: Standardized Benchmarking of the Speed of Computer-Use Agents",
+  "date": "arXiv v1 submitted Wed, 30 Sep 2026 17:48:06 UTC (only versi",
+  "claims": [
+   {
+    "claim": "Dated Sep 30 2026",
+    "verdict": "VERIFIED",
+    "quote": "[v1] Submitted on Wed, 30 Sep 2026 17:48:06 UTC"
+   },
+   {
+    "claim": "In a five-seed comparison faster I/O reduced environment processing from 12.68 to 0.34 seconds per task",
+    "verdict": "VERIFIED",
+    "quote": "Fig. 5 compares GPT-6 Astra (low) with the normal input-output mode and our faster input-output mode, FastCUA (Sec. 2.3 and Appendix B.3) across five seeds per setting. Interestingly, while the mean environment processing time falls from 12.68 s to 0.34 s per task"
+   },
+   {
+    "claim": "Total task time rose from 89.5 to 99.0 seconds",
+    "verdict": "VERIFIED",
+    "quote": "total task time increases from 89.5 s to 99.0 s. We also find that the number of steps per trajectory increases in FastCUA."
+   },
+   {
+    "claim": "Cause: screenshots were captured before the application had updated",
+    "verdict": "VERIFIED",
+    "quote": "This is because fast I/O can return screenshots before an application has updated its interface. For example, after opening Save As, the agent receives a screenshot without the dialog and requests another screenshot 5.8 s later, which shows it open."
+   }
+  ],
+  "caveats": "1) First-party, single-lab arXiv preprint (CMU, the cua-speedrun authors), v1 from 30 Sep 2026. It has not been peer reviewed. The fast I/O system (FastCUA) is the authors' own.\n2) The I/O finding covers one configuration only: GPT-6 Astra at low reasoning effort, run through the Codex harness, on the 50-task representative OSWorld subset. It uses 5 seeds per I/O setting, and only the task seed changes between runs. No other model, effort level or benchmark was tested with fast I/O. Do not generalize it to \"CUAs\" broadly.\n3) Infrastructure: serverless Modal sandboxes with the agent and environment both in New York, QEMU VMs and closed API models. This is not local hardware, so it says nothing about GPU or H100 throughput.\n4) The 12.68 -> 0.34 s figures are environment time excluding agent-requested waits. Total environment time fell from 13.80 to 5.08 s, because agent-requested waits ros"
+ },
+ {
+  "name": "AsyncLLM",
+  "id": "arXiv:2609.35427",
+  "title": "LLMs are General Asynchronous Agents",
+  "date": "2026-09-28 (v1, Mon 28 Sep 2026 15:35:26 UTC; the only versi",
+  "claims": [
+   {
+    "claim": "Dated Sep 28 2026",
+    "verdict": "VERIFIED",
+    "quote": "[Submitted on 28 Sep 2026] ... [v1] Mon, 28 Sep 2026 15:35:26 UTC (2,417 KB)  /  PDF margin stamp: \"arXiv:2609.35427v1 [cs.LG] 28 Sep 2026\""
+   },
+   {
+    "claim": "Concurrent inference coroutines share model memory views",
+    "verdict": "CORRECTED",
+    "quote": "\"Each coroutine writes to its own 'memory block' and can access other coroutines' outputs using attention 'views'.\" and \"...efficient batched GPU inference with shared memory, where every coroutine has its own view on the same cache blocks.\" (abstract: \"define inference coroutines with overlapping m"
+   },
+   {
+    "claim": "Supports changing input, video and monitoring without task-specific training",
+    "verdict": "VERIFIED",
+    "quote": "\"We showcase that Qwen 3.x models are capable of asynchronous operation for streaming video understanding, videogames, and monitoring, without task-specific training.\" and \"Our experiments demonstrate that AsyncLLM agents can generalize to asynchronous text and visual updates, streaming video unders"
+   }
+  ],
+  "caveats": "1. The source is very new and has not been peer reviewed. It is an arXiv v1 posted 28 Sep 2026, 8 days before this check, with \"Comments: Preprint\" (cs.LG, cs.CL). It has had no review and there are no independent replications yet.\n\n2. Claim 2 needs rewording. A citer should not write that coroutines \"share memory views\". What they share are CacheBlocks. A CacheBlock holds references to paged attention KV entries and GDN affine state transitions for a slice of tokens. Each coroutine writes to its own block and reads through its own cache_view, an ordered list of blocks. So the views are per-coroutine and the blocks are shared. \"Memory\" here means KV/recurrent state, not model weights. The paper also says that concurrent updates give a state that \"is not equivalent to any sequential inference\" (Sec 3.1). That the model can still read this state is shown only by experiment.\n\n3. Claim 3, \"t"
+ },
+ {
+  "name": "HybridCUA",
+  "id": "arXiv:2609.38008",
+  "title": "HybridCUA: Learning to Orchestrate GUI and CLI for Computer-Use Agents",
+  "date": "2026-09-29 (arXiv v1, Tue 29 Sep 2026 16:57:25 UTC; the only",
+  "claims": [
+   {
+    "claim": "Dated Sep 29 2026",
+    "verdict": "VERIFIED",
+    "quote": "[v1] Tue, 29 Sep 2026 16:57:25 UTC (18,469 KB)"
+   },
+   {
+    "claim": "Merely adding CLI access reduced the base model's OSWorld accuracy from 38.8% to 18.4%",
+    "verdict": "VERIFIED",
+    "quote": "Merely exposing the CLI is instead harmful: steps fall by 9.5 but accuracy drops from 38.8% to 18.4%"
+   },
+   {
+    "claim": "The trained GUI/CLI hybrid reached 53.6%",
+    "verdict": "VERIFIED",
+    "quote": "Experiments show that HybridCUA-9B achieves 53.6% accuracy on OSWorld, improving over the base model by 14.8 percentage points"
+   }
+  ],
+  "caveats": "1) The paper is a preprint (the header says 'Preprint'): one version, posted 7 days before 2026-10-06, and not peer-reviewed. 2) The results come from a single run on one model family. The base is Qwen3.5-9B, App. E says 'each reported number comes from a single evaluation run per model and benchmark', random seed 1, and no variance or CI is reported. 3) The 38.8 -> 18.4 drop applies to one model in the authors' unified-bash harness, where GUI actions run as pyautogui heredocs inside bash (App. G.1). It is the extreme case: Sec. 1/Fig. 2a reports that four other representative agents 'lose 2.5 to 11.5 percentage points' when the CLI is exposed. Do not present -20 pp as a general effect. 4) The schema strongly affects results. In Table 4, the 'Separate GUI/CLI tools' schema scores 38.8 after SFT, against 46.0 for unified bash. 5) Most of the 53.6 gain comes from training, not from the int"
+ },
+ {
+  "name": "Before Agents Act (AAS)",
+  "id": "arXiv:2609.34376",
+  "title": "Before Agents Act: Assurance-Aware Semantic Scheduling for Evidence Acquisition in Distributed Systems",
+  "date": "2026-09-28 (v1 submitted Mon, 28 Sep 2026 05:50:19 UTC per t",
+  "claims": [
+   {
+    "claim": "Dated Sep 28 2026",
+    "verdict": "VERIFIED",
+    "quote": "arXiv:2609.34376v1 [cs.DC] 28 Sep 2026"
+   },
+   {
+    "claim": "Explicitly schedules evidence under freshness, deadline and resource constraints",
+    "verdict": "VERIFIED",
+    "quote": "We formulate evidence acquisition as joint witness selection and scheduling under quorum, diversity, freshness, deadline, and resource constraints."
+   },
+   {
+    "claim": "Evaluation uses generated infrastructure scenarios, not a deployed desktop/GPU system",
+    "verdict": "VERIFIED",
+    "quote": "These are controlled simulation results; the bounded oracle shares a temporal search component, and transfer to deployed systems remains untested."
+   }
+  ],
+  "caveats": "1. Simulation only. Every result comes from a Python simulator on generated or constructed instances. Latency follows an assumed log-normal distribution (\u03c3 = 0.35), which Sec 9.1 calls \"a simulator assumption, not a measured cloud model\". There are no live gateway integrations and no production measurements. The authors say transfer to deployed systems is untested.\n2. Not peer reviewed and very new. It is a v1 arXiv preprint posted 2026-09-28, eight days before today. It belongs to a series from one two-author company (OpenKedge.io): it self-cites CAC (arXiv:2609.16313) and EFD (arXiv:2609.02925), both also September 2026 and not independently validated. The AI-use disclosure says OpenAI Codex and Google Antigravity helped with drafting, implementation debugging, experiment auditing and figures.\n3. Small samples. The sensitivity and ablation studies use 30 instances. The timeout-repair s"
+ },
+ {
+  "name": "Tracking State Footprints",
+  "id": "arXiv:2610.03140",
+  "title": "Tracking State Footprints: How Agents Can Transact",
+  "date": "2026-10-02 (arXiv v1 only, cs.DB; the ID prefix 2610 means O",
+  "claims": [
+   {
+    "claim": "Dated Oct 2 2026",
+    "verdict": "VERIFIED",
+    "quote": "[Submitted on 2 Oct 2026]  /  arXiv:2610.03140v1 [cs.DB] 2 Oct 2026"
+   },
+   {
+    "claim": "Relates agent coordination to read/write conflicts and transactions",
+    "verdict": "VERIFIED",
+    "quote": "We frame MAS coordination as a data management problem and propose to describe agents by their state footprint: the state they read and write across their own local context and state, as well as the state of the orchestrator and external systems."
+   },
+   {
+    "claim": "Includes a small four-task coding study and a broader research vision",
+    "verdict": "VERIFIED",
+    "quote": "We empirically evaluate how the MAS coordination issues in \u00a73 manifest on four agentic coding tasks originating from SWE-Bench [30] using two LLMs and four execution topologies. To account for LLM nondeterminism, we report the averages over five runs."
+   }
+  ],
+  "caveats": "- This is a vision paper, not an empirical systems paper. It is about 6 pages, in PVLDB template format (\"PVLDB, 20(1): XXX-XXX, 2027\", DOI placeholder XX.XX/XXX.XX). Acceptance or publication at VLDB is not confirmed, so cite it as an arXiv preprint (v1, cs.DB, 2 Oct 2026).\n- The empirical study is very small: 4 SWE-bench-derived coding tasks, 5 runs each, averages only, no confidence intervals or significance tests.\n- Task 4 (the Django providing_args refactor) uses a human-authored plan. Its \"repaired\" conflict-ordered plan came from feeding the failed plan back to the planner. It is not an automatic footprint-tracking system.\n- No implemented orchestrator that tracks footprints is evaluated. The \"Conflict-Ordered\" topology is a predefined or hand-repaired plan, not the proposed mechanism.\n- Dynamic replanning is disabled. The authors only \"expect\" the anomalies to carry over to dynam"
+ },
+ {
+  "name": "ReSync",
+  "id": "arXiv:2609.33944",
+  "title": "ReSync: Re-Aligning the Two Clocks of Asynchronous World-Action Models",
+  "date": "2026-09-27 (v1, Sun 27 Sep 2026 21:38:44 UTC; only version a",
+  "claims": [
+   {
+    "claim": "Dated Sep 28 2026",
+    "verdict": "CORRECTED",
+    "quote": "[v1] Sun, 27 Sep 2026 21:38:44 UTC (30,366 KB)\" / PDF footer: \"arXiv:2609.33944v1 [cs.RO] 27 Sep 2026"
+   },
+   {
+    "claim": "Studies the timing gap between action commitment and useful world evidence in asynchronous robot world-action models",
+    "verdict": "VERIFIED",
+    "quote": "an action can become executable before the world evidence that should justify it has resolved. We use the commitment\u2013evidence gap to diagnose this mismatch."
+   },
+   {
+    "claim": "Uses equal-compute controls",
+    "verdict": "VERIFIED",
+    "quote": "Every 3.40\u00d7 row uses 34 shared-DiT forwards; Sync-50 is shown as a higher-cost reference."
+   }
+  ],
+  "caveats": "1. This is a v1 arXiv preprint under review at ICLR 2027 and has not been peer-reviewed. Cite the date as 27 Sep 2026, not 28 Sep.\n2. The domain is robot manipulation with diffusion/flow world-action models: X-WAM (frozen single checkpoint) and Cosmos Policy. Any carry-over to LLMs, recurrent/GDN models or CoT is only an analogy. The paper makes no such claim.\n3. \"Equal compute\" means an equal count of shared-DiT forwards (3.40\u00d7, 34 forwards), not equal wall-clock time. On one H800, latency per policy decision is 2.68 s native vs 8.97 s for ReSync, about 0.11 Hz.\n4. The headline result comes from one frozen 960-rollout RoboCasa panel (192 physical-state clusters \u00d7 5 noise replicates, 24 tasks). The ReSync gain is +4.48 pp, CI [+2.17, +6.74]. The margin over the strongest equal-budget control (world warm-start) is only +1.87 pp, CI [+0.09, +3.68], which barely excludes zero. Several contr"
+ },
+ {
+  "name": "Desktop-Delta Bench",
+  "id": "arXiv:2607.26041",
+  "title": "Desktop-Delta Bench: Do Computer-Use Models Understand Desktop GUI Transitions?",
+  "date": "arXiv v1 submitted 28 Jul 2026, revised v2 29 Jul 2026. This",
+  "claims": [
+   {
+    "claim": "Diagnoses GUI transitions (abstract level)",
+    "verdict": "VERIFIED",
+    "quote": "Abstract: \"Neither isolates whether a model can reconstruct the causal, task-relevant transition produced by an action\" ... \"DDB complements, rather than replaces, end-to-end benchmarks by filling the missing diagnostic layer between GUI grounding and final task success\". Title: \"Do Computer-Use Mod"
+   }
+  ],
+  "caveats": "1) It is a preprint and has not been peer reviewed. The paper uses an ACM reference format but names no venue. arXiv v1 is dated 28 Jul 2026 and v2 29 Jul 2026, in cs.AI and cs.CV.\n2) It is a diagnostic benchmark only. It does not propose a method that fixes transition understanding, and it scores the VLM offline, not the agent system. Section 10 says evaluation \"is offline and cannot execute predicted actions.\" Section 8 says it does \"not measure long-horizon context accumulation\" or closed-loop episodes.\n3) Scope:\n- 2,013 human-verified instances: 463 three-frame temporal-ordering triples, 105 of them with a decoy, plus 1,550 before/after single-action pairs.\n- About 15 office-oriented apps across 50 task domains.\n- Ubuntu 24.04 GNOME VM only. Windows and macOS are named as future work.\n- Five action families: click, drag, scroll, text entry, and key command.\n- The data is skewed towar"
+ },
+ {
+  "name": "TRACE",
+  "id": "arXiv:2609.33517",
+  "title": "TRACE: Governing Memory Validity in Evolving Multi-Agent Systems (acronym expanded in Sec. 1 as \"Temporal Return Admission under Context Evolution\")",
+  "date": "v1 submitted Sun, 27 Sep 2026 (arXiv abs page; PDF stamp \"ar",
+  "claims": [
+   {
+    "claim": "Governs whether old memory is admitted/trusted on return (stale-memory admission)",
+    "verdict": "VERIFIED",
+    "quote": "We formalize this as temporal memory admission and present TRACE, a training-free layer that treats re-entry as an eligibility decision rather than a storage or retrieval operation"
+   },
+   {
+    "claim": "Interpretive check on the word 'trusted': does TRACE decide trust in an adversarial or poisoning sense? (This sub-claim is implied by the wording; the paper does not make it.)",
+    "verdict": "REFUTED",
+    "quote": "TRACE assumes trustworthy lifecycle identity and source bindings. Its evaluation addresses explicit updates, implicit invalidation, and propagated wrong state; it does not establish resistance to arbitrary memory poisoning or forged evidence."
+   },
+   {
+    "claim": "Research-reset doc paraphrase: TRACE 'governs whether old memory remains usable after shared state changes'",
+    "verdict": "VERIFIED",
+    "quote": "what may a returning agent still act on once the shared state has changed?"
+   }
+  ],
+  "caveats": "1. Unreviewed preprint. Every page carries the \"Preprint\" header, v1 is dated 27 Sep 2026 and no venue is listed. The first author was an industry intern at MemTensor, a memory-systems company.\n2. Narrow setting. This is a multi-agent text-memory setting, not single-agent session memory, KV cache or desktop/application state. One returning agent rejoins four active agents, and the active agents run one after another before the return (App. D.2). The benchmarks are recast \"return episodes\" (Memora, STALE Type II, ManBench-Return). The authors built ManBench-Return themselves and report it apart from the original (\"ManBench-Return is derived\", Sec. 6).\n3. Training-free LLM pipeline. TRACE is a gating layer of LLM calls (reconcile, invalidate, gate, select, sign) with three actor models: Qwen3.5-122B-A10B, Gemini-3-flash and DeepSeek-v4-flash-0731. Its admission verifier uses the actor's ow"
+ },
+ {
+  "name": "KernelAgent",
+  "id": "https://github.com/meta-pytorch/KernelAgent",
+  "title": "meta-pytorch/KernelAgent. The GitHub description reads \"Autonomous GPU Kernel Generation & Optimization via Deep Agents\" and the README H1 reads \"KernelAgent \u2014 Multi-Agent GPU Kernel Synthesis and Optimization\". The repo has two companion PyTorch Blog posts: \"KernelFalcon: Autonomous GPU Kernel Generation via Deep Agents\" (generation, 2025-11-05) and \"KernelAgent: Hardware-Guided GPU Kernel Optimization via Multi-Agent Orchestration\" (optimization, 2026-03-06).",
+  "date": "The repo was created 2025-07-10T20:02:09Z (gh api created_at",
+  "claims": [
+   {
+    "claim": "Meta's KernelAgent integrates kernel generation, profiling, verification and optimization",
+    "verdict": "VERIFIED",
+    "quote": "README intro: \"KernelAgent turns PyTorch programs into verified Triton kernels and optimize its performance.\" Optimization steps: \"Profile \u2014 NCU collects 28 hardware metrics\"; \"Verification \u2014 The optimized kernel is tested for numerical correctness\""
+   }
+  ],
+  "caveats": "1. Source type: the evidence is a GitHub repo plus two PyTorch Blog posts. There is no peer-reviewed or arXiv paper, so cite the repo and the blogs (Wang et al., Nov 2025; Cheng et al., Mar 2026).\n2. \"Integrates\" means two pipelines in one repo, not one automatic flow. Generation lives in Fuser/ and TritonKernelAgent, and its artifacts go to .fuse/. Optimization lives in opt_worker_component and its artifacts go to .optimize/. The optimization loop takes an already-verified Triton kernel as input (for example `run_opt_manager.py --kernel-dir`). The artifacts repo describes the initial kernel as coming from an earlier KernelAgent run.\n3. Naming: the generation system is branded \"KernelFalcon\" in its blog, while the repo and the optimization system are called \"KernelAgent\".\n4. Scope: the system emits Triton only and targets forward-pass (inference) kernels, according to the optimization bl"
+ },
+ {
+  "name": "vLLM AgentX blog",
+  "id": "https://vllm-project.github.io/2026/09/08/vllm-agentx.html",
+  "title": "vLLM x AgentX: Optimizing for Real-World Agentic Serving",
+  "date": "2026-09-08 (page shows \"Sep 8, 2026\"; <time datetime=\"2026-0",
+  "claims": [
+   {
+    "claim": "Published 2026-09-08",
+    "verdict": "VERIFIED",
+    "quote": "Sep 8, 2026 \u2022 vLLM Team and Inferact  [HTML: <time class=\"dt-published\" datetime=\"2026-09-08T23:00:00+00:00\" itemprop=\"datePublished\">; meta article:published_time content=\"2026-09-08T23:00:00+00:00\"]"
+   },
+   {
+    "claim": "Headline hardware is B300/GB300, not H100",
+    "verdict": "VERIFIED",
+    "quote": "DeepSeek V4 Pro 1.6T | 12 GB300s / 256 | 83K TPGS ... MiniMax M3 428B | 2 B300s / 24 | 70K TPGS ... Kimi K3 2.8T | 16 GB300s / 48 | 11.8K TPGS"
+   }
+  ],
+  "caveats": "1) This is a first-party vendor/engineering blog by \"vLLM Team and Inferact\", not peer-reviewed and with no named individual authors. Cite it as \"vLLM Team and Inferact, 2026-09-08 blog\". 2) It has no H100/Hopper results at all. Every reported number is on Blackwell-class B300/GB300, including GB300 NVL72. Figure 11 links a dashboard that also covers B200, GB200 and AMD MI355X. Nothing in it shows these gains carry over to 8x H100 SXM. Several techniques depend on Blackwell or the topology: the MXFP4/FP4 indexer (H100 has no native FP4), the CuteDSL GB300 indexer kernel, the symmetric-memory multicast DCP path, and NVL72-scale DEP16 or wide EP. 3) The models are DeepSeek V4 Pro 1.6T, MiniMax M3 428B and Kimi K3 2.8T, at deployment sizes of 2-16 GPUs. The post itself says Kimi K3 is \"too large for a conventional single-server deployment\". None of these configs can be reproduced on an 8x H"
+ },
+ {
+  "name": "SGLang System One route",
+  "id": "https://github.com/sgl-project/sglang/pull/41208",
+  "title": "[Feature] Add a System One compatible /v1/systemone route",
+  "date": "Opened 2026-09-25T02:59:45Z; merged into main 2026-09-25T04:",
+  "claims": [
+   {
+    "claim": "SGLang has a merged System One-compatible route for typed decisions over state",
+    "verdict": "VERIFIED",
+    "quote": "The System One API asks a model typed questions (`noul`, `choice`, and `score`) about a state and returns one answer per question id ... This PR serves it from the `/v1/decisions` core of #40992\" / \"`POST /v1/systemone` takes a `state` and a map of questions keyed by caller ids and returns one answe"
+   }
+  ],
+  "caveats": "(1) The source is an engineering PR, not peer-reviewed research. Its validation is the author's own run (Qwen3.8-27B and Qwen3.5-35B-A3B in BF16, one H200 each), and the PR gives one latency trial that it labels \"not a performance claim\". Conformance comes from an unofficial tool: \"The unofficial jevcompat tool reports the 27B server conformant on all 32 MUST checks it tests.\" (2) \"System One\" is the third-party TypeSafe API, not an SGLang or OpenAI standard. The route is compatible \"with the exceptions listed below\": `models.list()` and `request_id` are unsupported, some inputs the System One schema allows (such as more than 10 score levels) are refused with 422, and the SDKs' 10 s timeout and retries can repeat encoding work. (3) The mechanism is label next-token log-probabilities from an ordinary chat model at the answer position, with no generation and no special checkpoint. `confide"
+ },
+ {
+  "name": "KernelPro",
+  "id": "arXiv:2606.26453",
+  "title": "Optimizing CUDA like a Human: Micro-Profiling Tools as Expert Surrogates for LLM-Based GPU Kernel Optimization",
+  "date": "v1 submitted 24 Jun 2026 (matches the 2606 ID month); v2 sub",
+  "claims": [
+   {
+    "claim": "Reports a 1.23x improvement on H100",
+    "verdict": "VERIFIED",
+    "quote": "On a single H100, KernelPro achieved a 1.23\u00d7 speedup over the expert-tuned Triton baseline; beyond this best kernel, it found 16 other distinct correct kernels that also beat the baseline."
+   },
+   {
+    "claim": "The 1.23x is a specific MoE weight-gradient kernel case, not a general improvement across MoE workloads",
+    "verdict": "VERIFIED",
+    "quote": "We target the dW1 weight-gradient kernel (group_gemm_same_mn) from GPT-OSS-120B's gate_up_proj backward pass: per expert e it computes dW1_e = X_e^T G_e (M=2880, N=5760, E=128), with a ragged contraction K_e that varies per expert under top-4 routing (total R = 57,768 rows...)"
+   }
+  ],
+  "caveats": "1) Single kernel and single shape. The 1.23x comes from one kernel: VeOmni's dW1 grouped-GEMM weight gradient (group_gemm_same_mn) for GPT-OSS-120B gate_up_proj, with M=2880, N=5760, E=128, top-4 routing and R=57,768 routed rows. The abstract's plural \"MoE training kernels\" overstates this. Do not describe it as an MoE-wide or training-step speedup.\n2) It is a kernel microbenchmark, not end-to-end training. The paper reports no MoE training throughput or step-time result.\n3) The routing input is synthetic. Expert loads are sampled from a fitted Dirichlet-Multinomial (alpha=0.24), which was fit to GPT-OSS-120B routing on 30 LongBench-v2 samples x 36 layers. The paper says the speedup depends on the per-expert load distribution, so it may not hold for other routing patterns.\n4) No statistics for this result. The case study states no timing protocol, repetition count, variance or confidence"
+ },
+ {
+  "name": "CAKE",
+  "id": "arXiv:2608.12629",
+  "title": "CAKE: Compiler-Agent Co-Design for Frontier Kernel Evolution",
+  "date": "2026-08-12 (v1 submitted Wed 12 Aug 2026 22:31:32 UTC; only ",
+  "claims": [
+   {
+    "claim": "Main clean-start comparison uses B200",
+    "verdict": "VERIFIED",
+    "quote": "Table 2: Matched three-run Flash-KMeans clean-start comparison on B200.\" Also: \"The Flash-KMeans runs use an isolated B200 clean-start environment that provides the task specification, correctness oracle, and benchmark interface while withholding low-level target implementations."
+   },
+   {
+    "claim": "Uses an 80-million-token search budget",
+    "verdict": "VERIFIED",
+    "quote": "Table 2 summarizes three matched runs per arm at the 80-million-token budget, while Figure 5 shows their eligible performance checkpoints."
+   }
+  ],
+  "caveats": "Hardware: all clean-start numbers and most other performance numbers come from B200 (Blackwell, sm_100a), not H100. The paper says: \"Coverage is uneven: most performance evidence is B200, and the timing model is calibrated only for B200 and H100\". It reports no H100 clean-start result, so any H100 replication would be new work. Scale and sample size: the result covers only 3 runs per arm, on one workload (the Flash-KMeans assign kernel), at one fixed shape (B=32, N=65,536, K=1024, D=128, BF16). Results are reported as median [min, max] with no significance test. The ranges overlap: Cake IR 1.144 [1.041, 1.205] vs direct CUDA/PTX 0.928 [0.852, 1.151]. Budget: 80M is a cap on provider tokens per run, not a compute or GPU-hour budget. Model: every run uses one proprietary model, GPT-5.6-sol at reasoning effort xhigh (an OpenAI paid API). Results are not shown for other models, and reproduci"
+ },
+ {
+  "name": "KernelZero",
+  "id": "arXiv:2609.33074",
+  "title": "KernelZero: Co-Evolving Proposer and Coder for Continuously Improved GPU Kernel Generation",
+  "date": "v1 submitted Sun, 27 Sep 2026 01:09:18 UTC (arxiv.org/abs li",
+  "claims": [
+   {
+    "claim": "Trains a 7B coder with correctness-aware GRPO",
+    "verdict": "VERIFIED",
+    "quote": "Both the Proposer and the Coder are initialized from Qwen2.5-Coder-7B [13]. ... followed by the Coder being updated for 20 steps using the CA-GRPO reward R_G."
+   },
+   {
+    "claim": "Reported coder update uses eight A100s across training and validation",
+    "verdict": "VERIFIED",
+    "quote": "During a Coder update, Keck runs as a separate four-GPU service, resulting in eight GPUs in total."
+   },
+   {
+    "claim": "Proposer update uses twelve (A100s)",
+    "verdict": "VERIFIED",
+    "quote": "Thus, a Proposer update occupies 12 GPUs in total, including the optimization, Coder inference, and execution-validation services."
+   }
+  ],
+  "caveats": "1) Hardware. The GPUs are A100-80GB (Ampere), not H100. The kernels target A100: the prompt says \"Target hardware: NVIDIA A100-80GB\" (App. D), and the speedups are \"relative to PyTorch Eager on an NVIDIA A100-80GB GPU\" (App. F). Speedup numbers will not carry over to H100 as they are.\n2) The GPU counts are totals for each phase, not training GPUs. Each optimization job uses 4 GPUs (Table 2: \"Training GPUs 4xA100-80GB\"). The 8 for the Coder and 12 for the Proposer include the inference and validation services. A citer should write \"8 / 12 A100s in total, including inference and validation services\".\n3) The 12-GPU Proposer phase does not fit one 8-GPU node as described. The paper puts only the 4-GPU optimization job explicitly \"on one node\". Reproducing on an 8x H100 node would mean co-locating or shrinking services, which the paper does not describe.\n4) Runtime covers RL only. The paper r"
+ },
+ {
+  "name": "AI as a Compiler",
+  "id": "arXiv:2609.36800",
+  "title": "AI as a Compiler: Compiling Triton kernels without the Triton compiler",
+  "date": "2026-09-29 (arXiv v1 only, submitted Tue Sep 29 2026 06:13 U",
+  "claims": [
+   {
+    "claim": "Section 4.5: the PTX/SASS equivalence verifier abstracts floating-point operations as real arithmetic",
+    "verdict": "CORRECTED",
+    "quote": "Volta abstracts floating-point operations as real arithmetic, so it cannot reason about code that computes a function by operating directly on the bit-level encoding."
+   },
+   {
+    "claim": "Has unsupported constructs including atomics and input-dependent control flow",
+    "verdict": "VERIFIED",
+    "quote": "Three classes of constructs remain unsupported: atomics, input-dependent control flow, and bit-level value manipulation."
+   }
+  ],
+  "caveats": "1) The paper is a single-version arXiv preprint (v1, 2026-09-29, cs.AI) with no stated venue and no peer review. The 'ICLR 2025' strings in the text are labels in Figure 5 giving the venues of the benchmarked kernels' source papers, not this paper's venue.\n2) Attribute the verifier correctly. Volta, including its real-arithmetic floating-point abstraction, is by Driscoll et al. (arXiv:2511.12638; v1 Nov 2025, v3 Aug 2026). Costa et al. only extend it to handle Hopper/Blackwell features: tcgen05, wgmma, ldmatrix, cp.async, more barriers, shuffle reductions and packed formats. It is a PTX verifier, not SASS.\n3) The extensions are an unproven prototype. Appendix B says: 'We do not claim our extensions to be sound or complete' and their 'formalization is left as future work'. The trusted computing base grows from 42 to 60 kLoC, and 'every newly modeled instruction introduces an additional ri"
+ },
+ {
+  "name": "ReProbe",
+  "id": "arXiv:2511.06209",
+  "title": "ReProbe: Efficient Test-Time Scaling of Multi-Step Reasoning by Probing Internal States of Large Language Models",
+  "date": "v1 submitted 2025-11-09 (matches arXiv ID month 2511 = Nov 2",
+  "claims": [
+   {
+    "claim": "Implements lightweight internal-state verification",
+    "verdict": "VERIFIED",
+    "quote": "We propose a lightweight alternative for step-level reasoning verification based on probing the internal states of LLMs. ... The probes are lightweight, containing fewer than 10M parameters."
+   },
+   {
+    "claim": "Its probes are model-specific",
+    "verdict": "VERIFIED",
+    "quote": "ReProbes need to be trained on the internal states of the target LLMs they supervise. Therefore, contrary to PRMs, they cannot be directly applied to another LLM since they depend on model-specific internal states."
+   },
+   {
+    "claim": "Some feature choices introduce substantial extraction overhead",
+    "verdict": "VERIFIED",
+    "quote": "Training one ReProbe on 32K datapoints with Hidden States as features takes ~4 GH200 GPU hours, while the variant with Attn+Logit as features takes ~32 GH200 GPU hours. The training of the Attn+Logit ReProbe is slower since extracting attention maps prohibits the use of efficient attention implement"
+   }
+  ],
+  "caveats": "1) Model-specific and white-box. A probe is trained per target LLM on that model's hidden states, or on its attention and logits. Tested targets are Qwen3-8B (non-thinking), Qwen3-1.7B and Qwen3-32B (native thinking), and Phi-4. There is no cross-model transfer, and the method needs access to internals at every layer.\n2) Supervised, not training-free. Step labels come from an LLM judge (DeepSeek-R1 or the model itself) on about 32K trajectories from 10.8K PRM800K math problems. Planning and QA are only out-of-domain evaluations.\n3) The extraction-overhead figure is a training-time cost: about 32 vs about 4 GH200 GPU-hours, because attention-map extraction rules out FlashAttention. The runtime benchmark (Table 13, A.6) covers only the Hidden States variants. It excludes LLM generation and step extraction, uses batch size 1, and runs ReProbe on the authors' own code against official Huggin"
+ },
+ {
+  "name": "Thinking Hard, Not Smart",
+  "id": "arXiv:2608.07968",
+  "title": "Thinking Hard, Not Smart: Reasoning Models Fail to Ration Test-Time Compute Across Questions",
+  "date": "v1 submitted 8 Aug 2026 (07:04:28 UTC); v2 revised 11 Aug 20",
+  "claims": [
+   {
+    "claim": "Under a shared budget, tested models often allocated effort according to question order rather than value or difficulty. CORRECTED wording: under one shared token budget, the tested models mostly worked through questions in presentation order and chose which questions to work on by early position, not by point value or value density. Effort fell with position and ignored point value. Effort did rise with difficulty, but reactively, and that effect weakened as N grew. So 'rather than difficulty' holds for order and selection but not for the amount of effort.",
+    "verdict": "CORRECTED",
+    "quote": "Abstract: \"they prioritize questions by presentation order, front-load effort on early questions, and remain insensitive to value\". Contradicting the 'rather than difficulty' part for effort, \u00a74.1: \"Harder questions do receive more tokens, but the effect decays exactly as the budget grows tighter: +"
+   },
+   {
+    "claim": "Does not establish which external scheduler fixes that behavior",
+    "verdict": "VERIFIED",
+    "quote": "\u00a74.3: \"We test four instructions that do: plan the allocation before solving, hint that questions may be skipped, hint that answers should be rechecked, and all three combined.\" Appendix B, on the only externally imposed allocation (a uniform B/N split): \"This condition should also not be treated as"
+   }
+  ],
+  "caveats": "1) arXiv preprint (v2, 11 Aug 2026, cs.CL) with no stated venue, so it is not peer reviewed. 2) Model family and scale: five open-weight models served with vLLM (DeepSeek-R1-Distill-Qwen-7B/14B and Qwen3-8B/14B/32B, all 32B or smaller) plus the preview API versions of DeepSeek-V4 Flash and Pro. The abstract's word 'frontier' means only the DeepSeek-V4 preview models. No OpenAI, Anthropic or Google models were tested. The prompting results in Table 3 average only the five open models. 3) Setting: a single prompted reasoning trace covers the whole exam and is hard-capped at B generated tokens. Answer extraction happens in a separate turn that does not count toward the budget. The paper does not study agentic, multi-call or system-level scheduling. 4) Scope: the full factorial design runs only on Omni-MATH (difficulty label 5 or lower, N in {5,10,20}, 50 base exams per N). CRUXEval-O covers"
+ },
+ {
+  "name": "When More Sampling Hurts",
+  "id": "arXiv:2606.28661",
+  "title": "When More Sampling Hurts: The Modal Ceiling and Correlation Ceiling of Test-Time Scaling",
+  "date": "2026-06-27 (v1 only; arXiv abs page: \"[v1] Sat, 27 Jun 2026 ",
+  "claims": [
+   {
+    "claim": "Dated June 2026",
+    "verdict": "VERIFIED",
+    "quote": "arXiv:2606.28661v1 [cs.LG] 27 Jun 2026"
+   },
+   {
+    "claim": "Section 4.2: its modal ceiling applies to plurality voting under a fixed answer distribution",
+    "verdict": "VERIFIED",
+    "quote": "Fix a problem q and let the model induce a distribution p_q(a) over candidate answers a, with correct answer c_q and a unique most common answer, the mode ... A plurality vote among n attempts returns the empirical mode. ... Self-consistency and plurality voting meet this modal ceiling exactly."
+   },
+   {
+    "claim": "It explicitly distinguishes stronger learned verifiers; not a universal ceiling on best-of-n",
+    "verdict": "VERIFIED",
+    "quote": "Best-of-n with a learned reward model is bounded instead by how well that scorer ranks answers: a perfect verifier lifts it to coverage, a frequency-like scorer collapses it to the modal ceiling, and real reward models fall between."
+   }
+  ],
+  "caveats": "1) Not peer reviewed. This is a single-version arXiv preprint (v1, 27 Jun 2026), about 3 months old on 2026-10-06. It has two equal-contribution authors who give personal gmail contacts, and the only affiliation line ('PhD, University of Illinois at Urbana-Champaign') is ambiguous. The paper calls itself 'a citable derivation, not a new algorithm'. 2) The modal ceiling (Proposition 5) is an asymptotic n->infinity, almost-sure result. It is essentially the law of large numbers for plurality vote, under these conditions: a fixed model, a fixed decoding configuration, a fixed per-problem answer distribution p_q, and a unique mode. The 'within a few dozen draws' stopping point is an empirical observation (the plateau by about n=64 on one log), not a theorem. 3) The evidence is narrow. There is no new model inference; the paper only reanalyzes public logs. Brown et al. (Large Language Monkeys"
+ },
+ {
+  "name": "Automating Formal Verification (thesis)",
+  "id": "arXiv:2605.30914",
+  "title": "Automating Formal Verification with Reinforcement Learning and Recursive Inference",
+  "date": "arXiv v1 posted 29 May 2026 (cs.LG). The thesis is dated May",
+  "claims": [
+   {
+    "claim": "Dafny: initial increase from 2.2% to 58.1% included specification hacking",
+    "verdict": "VERIFIED",
+    "quote": "Initial experiments on an APPS-derived Dafny dataset increased verified reward from 2.2% to 58.1%, but revealed specification hacking, where models exploit weak formal specifications instead of implementing the intended solutions."
+   },
+   {
+    "claim": "After filtering vulnerable tasks, a separate improvement from 9.7% to 31.1%",
+    "verdict": "CORRECTED",
+    "quote": "After filtering toward faithful, low-leakage, nontrivial specifications in Section 4.5, single-turn RLVR became much harder and ended at 9.7% held-out reward. The multi-turn verifier-feedback setup recovered to 31.1% verify@\u2264 4 on the hard subset"
+   }
+  ],
+  "caveats": "1. This is a single-author MIT Master of Engineering thesis on arXiv. It is not peer-reviewed. Code and benchmarks are 'available on request', so nothing can be independently reproduced. 2. 2.2%\u219258.1% is a staged aggregate reward with 0.1 partial credit for build-only outputs, not a verification pass rate, even though the abstract calls it 'verified reward'. 58.1% is the best checkpoint (step 430); the final checkpoint is 53.9%, and Sec 4.7/Table 4.10 report 53.9%. Each validation prompt (265 prompts) was scored on a single sample. 3. Specification hacking was found by qualitative inspection of only 5 logged validation prompts per checkpoint ('diagnostic rather than exhaustive'). Its share of the 58.1% was never measured. 4. 9.7%\u219231.1% compares two systems that differ in several ways: base model (Qwen2.5-7B-Instruct full RL on verl vs Qwen3-30B-A3B-Instruct-2507 rank-16 LoRA on Tinker), "
+ },
+ {
+  "name": "SpecRL",
+  "id": "2604.05820",
+  "title": "SpecRL: Reinforcement Learning with Test-Based Completeness Rewards for Formal Specification Synthesis",
+  "date": "v1 submitted 2026-04-07, which matches the 2604 arXiv ID. v2",
+  "claims": [
+   {
+    "claim": "Rewards specifications for rejecting impossible input-output pairs",
+    "verdict": "VERIFIED",
+    "quote": "SpecRL rewards verified candidates according to the fraction of spectests their specifications reject"
+   }
+  ],
+  "caveats": "1) \"Impossible\" means impossible for the given implementation. SpecRL runs the deterministic implementation on LLM-proposed inputs and mutates only the output. Spectests therefore measure completeness relative to the implementation's own behavior (the GT set in Sec. 3.3.8), not relative to intended behavior. If the implementation is buggy, an accurate spec reproduces the bug. This matters for C4, which concerns fixed intended behavior and incorrect programs.\n2) The paper mutates input-output pairs, not programs. It never searches for incorrect programs that a spec admits. It is not adversarial or online either: suites are built once offline (DeepSeek-V3 for construction, GPT-5.1 for iterative enhancement, about $250 in API cost) and stay fixed during RL. Cite it as prior work on test-based completeness rewards, not as an adversarial spec-robustness evaluator.\n3) The reward is partial and"
+ },
+ {
+  "name": "Spec-Harness",
+  "id": "arXiv:2604.00280",
+  "title": "Spec-Harness: Measuring and Improving Behavioral Adequacy of LLM-Synthesized Formal Specifications (current v2 title). The v1 title was different: \"VeriAct: Beyond Verifiability -- Agentic Synthesis of Correct and Complete Formal Specifications\".",
+  "date": "v1 was submitted 2026-03-31 22:12 UTC. That is consistent wi",
+  "claims": [
+   {
+    "claim": "Measures behavioral adequacy of specifications beyond simply passing a verifier",
+    "verdict": "VERIFIED",
+    "quote": "passing a verifier only confirms that an implementation is consistent with a specification, not that the specification is meaningful. ... We then introduce Spec-Harness, a framework that measures the behavioral adequacy of a specification along four dimensions of precondition and postcondition corre"
+   }
+  ],
+  "caveats": "1) Version and title: the name \"Spec-Harness\" is only the title of v2 (2026-09-08). v1 (2026-03-31) was titled \"VeriAct: Beyond Verifiability...\" and presented VeriAct as the main contribution, claiming specs that are \"correct and complete\". Cite v2 explicitly. v2 softens that to \"behavioral adequacy\" and \"fewer but stronger\" specs.\n2) The core idea is not new. Sec. V says prior Dafny/Rust work ([12]-[14], [30], [31]) \"studies this same gap with test- and mutation-based metrics\". The paper's novelty claim is narrower: it is the first to apply input/output-mutation symbolic checks to JML and to evaluate preconditions. Do not credit it as the first to measure adequacy beyond verifier pass.\n3) The metrics are approximations. Sec. VII (Construct Validity) says they are \"test- and mutation-based approximations, not formal guarantees\". They depend on the test pairs and mutants used, and they d"
+ },
+ {
+  "name": "UFP4",
+  "id": "2606.20381",
+  "title": "Rethinking Shrinkage Bias in LLM FP4 Pretraining: Geometric Origin, Systemic Impact, and UFP4 Recipe",
+  "date": "arXiv v1 was submitted 18 Jun 2026, and the stamp reads \"arX",
+  "claims": [
+   {
+    "claim": "Studies uniform FP4 grids and training-recipe interactions at much larger scales than a small grid sweep",
+    "verdict": "VERIFIED",
+    "quote": "On Dense 1.5B, MoE 7.9B, and MoE 124B long-run pretraining, UFP4 consistently achieves lower BF16-relative loss degradation than strong E2M1-based baselines, supported by scaling-law analysis and ablation studies."
+   }
+  ],
+  "caveats": "1. The \"recipe interactions\" are narrow. The paper studies the 4-bit value grid (E2M1 vs E1M2/INT4) crossed with RHT scope (fwd_y/bwd_dx/bwd_dw) and stochastic-rounding scope. It does not vary block size or scale representation. Table 1 fixes both recipes at \"FP32 single-level\" scale with matched block size (16), and Sec. 4 says \"Scale hierarchy design remains orthogonal to this format-level solution\". A study that factors grid x scale x block size x rounding (candidate C5) is therefore not already covered by UFP4. UFP4 should be cited for the grid x RHT x SR axis only.\n2. The headline comparison is confounded. UFP4 changes the grid and the RHT scope together (E1M2 + full RHT vs E2M1 + WGRAD-only RHT). Sec. 4 says the two recipes differ in \"two structural choices\". The paper's justification is that full RHT hurts under E2M1 (Appendix B), and that E2M1 with a restricted range (max_fpx 2-4"
+ },
+ {
+  "name": "HiFloat4 pretraining",
+  "id": "arXiv:2604.08826",
+  "title": "HiFloat4 Format for Language Model Pre-training on Ascend NPUs",
+  "date": "v1 was submitted on 9 April 2026, which matches the 2604 ID.",
+  "claims": [
+   {
+    "claim": "Simulates quantization around BF16 GEMMs. True in v2. The hardware is Ascend 910B3 NPUs, not GPUs. The paper says the emulation is bit-exact but never checks it against native silicon, because no HiF4 silicon exists. v1 said the opposite: that GEMMs were 'performed entirely in FP4 precision'.",
+    "verdict": "VERIFIED",
+    "quote": "every GEMM executes in BF16 with quantization simulated around it, bit-exactly"
+   },
+   {
+    "claim": "Does not measure native throughput, latency or energy. True, and the paper goes further: it measures no throughput, latency, energy, area or power at all, native or emulated. The power and area advantages it mentions (about 10% less power, six fewer multipliers) come from Luo et al. 2026 (arXiv:2602.11287), not from this paper's measurements.",
+    "verdict": "VERIFIED",
+    "quote": "we report no throughput, latency or energy figures"
+   },
+   {
+    "claim": "NVFP4 instability is conditional on the tested recipe. Supported, with specifics. NVFP4 diverges only without per-tensor scaling (PTS), and the paper itself calls PTS part of NVFP4's training formulation. With PTS it trains: 2.00% (PTS alone), 1.42% (PTS+RHT) and 1.27% (PTS+SR+RHT) on OpenPangu-1B, and 0.99% on Llama3-8B and Qwen3-MoE-30B (Table 3). The paper's regime is harsher than NVIDIA's: every linear layer except output and embedding runs in FP4, 2D weight quantization is left out, and runs stop at 50B tokens. One caveat: the authors themselves say the divergence without PTS comes from the format's range, not from rounding, so 'conditional on recipe' is the citer's reading, though the paper's own caveats support it.",
+    "verdict": "VERIFIED",
+    "quote": "our NVFP4 results are measured under a harsher regime than that work uses"
+   }
+  ],
+  "caveats": "1. Cite v2 explicitly (arXiv:2604.08826v2, 25 Sep 2026). v1 (9 Apr 2026) is a different paper on the points that matter. It trained no NVFP4 model: Section 4 of v1 says the authors \"do not consider the NVFP4 format in our experiments\". It did not disclose emulation and said GEMMs were \"performed entirely in FP4 precision\". Its conclusion also claimed \"substantial improvements in computational efficiency\". Citing v1 would get all three claims wrong.\n\n2. Hardware: everything ran on Huawei Ascend 910B3 NPUs (64 nodes x 8 NPUs, 65 GB each). No NVIDIA hardware was used, so NVFP4 was emulated too, not run on Blackwell. Nothing here measures or carries over to H100 or Blackwell FP4 performance.\n\n3. Conflict of interest: all authors are Huawei, and they are testing Huawei's own HiF4 format. Several also wrote the HiF4 inference paper (Luo et al. 2026, arXiv:2602.11287), including Yuanyong Luo, Y"
+ },
+ {
+  "name": "Oryx",
+  "id": "arXiv:2605.28769",
+  "title": "Multi-Mixer Models: Flexible Sequence Modeling with Shared Representations",
+  "date": "2026-05-27 (arXiv v1, Wed 27 May 2026 17:26 UTC; the only ve",
+  "claims": [
+   {
+    "claim": "Section 6: switching requires maintaining both the KV cache and recurrent state",
+    "verdict": "VERIFIED",
+    "quote": "One consideration to highlight is that our design requires the model to keep and update both the KV cache and state memory at each timestep throughout generation if mode switching is used, but for longer context, the memory cost is dominated by the KV cache."
+   },
+   {
+    "claim": "So attention on fewer than 10% of tokens does not mean 10% of the memory",
+    "verdict": "VERIFIED",
+    "quote": "Oryx computes shared key and value representations and uses them to update both the attention KV cache and linear recurrent state. ... only the updated state of the selected mixer is needed for output computation."
+   },
+   {
+    "claim": "Current assignment is static; learned routing is a proposed extension",
+    "verdict": "VERIFIED",
+    "quote": "While our current work relies on static assignment, there exist many approaches to learnable mode-switching, e.g., using RL to train routers that dynamically route tokens using FLOPs saved as the reward."
+   }
+  ],
+  "caveats": "- Preprint only: arXiv v1, 27 May 2026, with no venue or journal listed. Industrial-lab work from Google Research; the first author is now at CMU.\n- Scale is small: four model sizes up to 1.4B, each pretrained on 100B FineWeb-Edu tokens with the GPT-2 tokenizer at 2K context. All retrieval and switching results (Table 3, Figure 3) are at 2K context. The claim that \"memory is dominated by the KV cache at longer context\" is the authors' reasoning, not a measurement. The paper reports no memory or latency figures.\n- Only two linear mixers are tested: Mamba-2 (Oryx-TM) and Gated DeltaNet (Oryx-TG). Both use an MHA head structure forced to match attention, with head dim 128. Saying it generalizes to other mixers is an assertion, not a result.\n- The \"<10% of tokens in attention mode\" result needs context. It is a context-vs-prompt split: the linear mixer prefills the context, and attention han"
+ },
+ {
+  "name": "LLaDA-Hybrid",
+  "id": "arXiv:2608.06628",
+  "title": "Retrofitting Linear Attention into Diffusion Language Models",
+  "date": "2026-08-06 (arXiv v1, submitted Thu 6 Aug 2026 22:34 UTC, cs",
+  "claims": [
+   {
+    "claim": "A conversion result for diffusion LMs",
+    "verdict": "VERIFIED",
+    "quote": "We show that this hybrid attention can be retrofitted into a pre-trained dLLM with minimal post-training: LLADA-HYBRID replaces 6 of the 20 attention layers in LLaDA 2.1 (Bie et al., 2026), a 16B open-source dLLM, largely following LoLCAT (Zhang et al., 2025). The conversion takes only approximately"
+   },
+   {
+    "claim": "Serving measured on H200",
+    "verdict": "VERIFIED",
+    "quote": "For serving evaluation, we measure end-to-end decoding throughput using SGLang continuous batching on a single NVIDIA H200 GPU."
+   },
+   {
+    "claim": "Reports some quality regressions",
+    "verdict": "VERIFIED",
+    "quote": "The largest degradation occurs on GPQA-Diamond, where the hybrid model trails the teacher by 8.1 points."
+   }
+  ],
+  "caveats": "1. Venue: this is a workshop paper (\"Published as a workshop paper at NonAR-LM\") and an arXiv preprint (v1 only). It is not a main-conference, peer-reviewed result.\n2. The conversion is partial. Only 6 of 20 attention layers become block-hybrid (exact softmax inside the active block, Hedgehog linear state across committed blocks), and 14 layers keep full softmax and a KV cache that grows with sequence length. Do not describe it as \"linearizing a dLLM\".\n3. The \"approximately 60 hours\" figure needs context. Section 4 gives about 24 h (Stage 1) plus about 6 h (Stage 2), both on two L40S GPUs. That is about 30 h wall-clock, or about 60 GPU-hours. The paper's \"60 hours\" figure is therefore most likely GPU-hours on L40S, not H100 or H200. Training used about 17M + 5M tokens of Tulu-3 SFT data, truncated to 2,048 tokens.\n4. Hardware: all serving and kernel numbers come from one H200 inside SGLa"
+ }
+]

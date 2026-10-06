@@ -4,7 +4,6 @@ from pathlib import Path
 
 import pytest
 
-from scripts.memory_job_admission import build_memory_job_admission
 from scripts.submit_research_job import sbatch_argv, validate_manifest
 
 BATCH_SCRIPT = Path("infra/slurm/research.sbatch")
@@ -94,34 +93,6 @@ def test_resume_exports_bounded_predecessor_and_subpath() -> None:
     export_arg = next(argument for argument in argv if argument.startswith("--export="))
     assert "COTCODEC_PREDECESSOR_JOB_ID=12345" in export_arg
     assert "COTCODEC_RESUME_SUBPATH=screen" in export_arg
-
-
-def test_memory_bundle_mount_is_hash_bound_and_hex_exported() -> None:
-    raw = _manifest()
-    raw["memory_bundle"] = {
-        "host_path": "/shared/cotcodec/inputs/frozen-memory.json",
-        "sha256": "c" * 64,
-    }
-    raw["memory_source_admission"] = build_memory_job_admission()
-    manifest = validate_manifest(raw)
-    assert manifest["memory_bundle"]["container_path"] == (
-        "/inputs/memory-selection-bundle.json"
-    )
-    argv = sbatch_argv(manifest, test_only=False)
-    export_arg = next(argument for argument in argv if argument.startswith("--export="))
-    assert "COTCODEC_MEMORY_BUNDLE_HOST_HEX=" in export_arg
-    assert "COTCODEC_MEMORY_BUNDLE_SHA256=" + "c" * 64 in export_arg
-
-
-@pytest.mark.parametrize(
-    "host_path",
-    ["relative/file.json", "/shared/../secret", "/shared/file,ALL", "/shared/a:b"],
-)
-def test_memory_bundle_rejects_unsafe_host_path(host_path: str) -> None:
-    raw = _manifest()
-    raw["memory_bundle"] = {"host_path": host_path, "sha256": "c" * 64}
-    with pytest.raises(ValueError, match="simple absolute path"):
-        validate_manifest(raw)
 
 
 @pytest.mark.parametrize("subpath", ["../screen", "/screen", "screen,ALL", "screen\nX"])

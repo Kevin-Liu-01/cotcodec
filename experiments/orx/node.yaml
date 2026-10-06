@@ -5,6 +5,6 @@
 #   kind: slurm-manifest -> manifest: experiments/<...>.yaml submitted only via
 #                           scripts/submit_docker_research_job.py (dry-run, test-only, submit)
 kind: cpu-doctor
-direction: semantic-clock-gate-parity
-doctor: scripts/run_semantic_clock_gate_parity_doctor.py
+direction: translation-supervised-sparse-indexer
+doctor: scripts/run_translation_supervised_indexer_doctor.py
 args: []

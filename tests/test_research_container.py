@@ -13,7 +13,6 @@ SOURCE_OVERLAY_DOCKERFILE = (
     PROJECT_ROOT / "infra" / "research" / "Dockerfile.source-overlay"
 )
 SOURCE_OVERLAY_BUILDER = PROJECT_ROOT / "scripts" / "build_source_overlay_on_h100.sh"
-MEM0_OVERLAY_BUILDER = PROJECT_ROOT / "scripts" / "build_mem0_overlay_on_h100.sh"
 
 
 def test_research_image_accepts_normal_json_argv() -> None:
@@ -48,7 +47,7 @@ def test_source_overlay_records_profile_and_dev_dependency_contract() -> None:
 
 
 def test_overlay_builders_make_normalized_archive_readable_to_container_uid() -> None:
-    for path in (SOURCE_OVERLAY_BUILDER, MEM0_OVERLAY_BUILDER):
+    for path in (SOURCE_OVERLAY_BUILDER,):
         content = path.read_text(encoding="utf-8")
         assert '${SLURM_JOB_ID:?Run this build through Slurm}' in content
         assert 'chmod -R a+rX "${context}"' in content

@@ -28,21 +28,22 @@ def test_all_architecture_contracts_validate() -> None:
         assert validate_contract(payload, known_models()) == [], path
 
 
+LIVE_CONTRACT = "translation-supervised-sparse-indexer.yaml"
+
+
 def test_causal_claim_requires_matched_from_scratch_arm() -> None:
-    payload = copy.deepcopy(load_contract("coded-delta-memory.yaml"))
-    payload["starting_point"]["arms"] = [
-        arm
-        for arm in payload["starting_point"]["arms"]
-        if arm["mode"] != "matched-from-scratch"
-    ]
+    payload = copy.deepcopy(load_contract(LIVE_CONTRACT))
+    payload["claim_scope"] = "architecture-causal"
     errors = validate_contract(payload, known_models())
     assert "architecture-causal claims require a matched-from-scratch arm" in errors
 
 
 def test_disabled_contract_cannot_masquerade_as_runnable() -> None:
-    payload = copy.deepcopy(load_contract("portable-sidecar-update.yaml"))
+    payload = copy.deepcopy(load_contract(LIVE_CONTRACT))
     payload["readiness"] = "pilot-ready"
     payload["execution"]["enabled"] = True
+    for field in ("container_image", "command_argv", "model_receipts"):
+        payload["execution"].pop(field, None)
     errors = validate_contract(payload, known_models())
     assert any("digest-pinned container_image" in error for error in errors)
     assert any("require command_argv" in error for error in errors)
@@ -50,7 +51,7 @@ def test_disabled_contract_cannot_masquerade_as_runnable() -> None:
 
 
 def test_reference_doctor_must_bind_real_implementation_and_command() -> None:
-    payload = copy.deepcopy(load_contract("translation-equivariant-byte-patches.yaml"))
+    payload = copy.deepcopy(load_contract(LIVE_CONTRACT))
     payload["reference_doctor"]["implementation"] = "harness/does-not-exist.py"
     payload["reference_doctor"]["command_argv"] = []
     errors = validate_contract(payload, known_models())
@@ -58,8 +59,8 @@ def test_reference_doctor_must_bind_real_implementation_and_command() -> None:
     assert "reference_doctor.command_argv must be a non-empty argv list" in errors
 
 
-def test_stage0_reference_command_script_must_exist() -> None:
-    payload = copy.deepcopy(load_contract("causal-memory-holdout.yaml"))
-    payload["stage0_reference"]["command_argv"][3] = "scripts/missing.py"
+def test_reference_doctor_command_script_must_exist() -> None:
+    payload = copy.deepcopy(load_contract(LIVE_CONTRACT))
+    payload["reference_doctor"]["command_argv"][3] = "scripts/missing.py"
     errors = validate_contract(payload, known_models())
-    assert "stage0_reference.command_argv script must exist" in errors
+    assert "reference_doctor.command_argv script must exist" in errors
