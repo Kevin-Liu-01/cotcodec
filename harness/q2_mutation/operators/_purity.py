@@ -11,6 +11,7 @@ the saved mutant, both written by the same LibreOffice save path.
 from __future__ import annotations
 
 import fnmatch
+import hashlib
 import json
 from dataclasses import dataclass, field
 from typing import Any
@@ -267,11 +268,12 @@ def check(base: dict, actual: dict, expectation: Expectation) -> list[PurityChec
     changes = diff(base, actual)
     results: list[PurityCheck] = []
 
+    digest = snapshot_digest(actual)
     results.append(
         PurityCheck(
             "survived_save",
             bool(changes),
-            "mutant differs from the saved base"
+            f"mutant differs from the reference; snapshot sha256 {digest}"
             if changes
             else "no difference after the save: the edit was normalized away",
         )
@@ -445,6 +447,11 @@ def normalize_formula(formula: str | None) -> str | None:
             continue
         out.append(char if in_string else char.upper())
     return "".join(out)
+
+
+def snapshot_digest(snap: dict) -> str:
+    """Content identity of a document: its canonical snapshot (no volatile fields)."""
+    return hashlib.sha256(json.dumps(snap, sort_keys=True).encode("utf-8")).hexdigest()
 
 
 def admitted(results: list[PurityCheck]) -> bool:

@@ -178,6 +178,35 @@ def verify(
     return out
 
 
+def content_digest(record: dict) -> str | None:
+    """The mutant's snapshot digest recorded by the ``survived_save`` check."""
+    for check_row in record.get("purity_checks", []):
+        if check_row["name"] == "survived_save" and "snapshot sha256 " in check_row["detail"]:
+            return check_row["detail"].rsplit("snapshot sha256 ", 1)[1].strip()
+    return None
+
+
+def dedupe_admitted(records: list[dict]) -> tuple[list[dict], list[dict]]:
+    """Keep the lowest-seed admitted mutant per (task, operator, content digest).
+
+    Two recipes can produce the same document; only one may count. Returns
+    (kept, dropped); non-admitted records are kept for the exclusion counts.
+    """
+    kept: list[dict] = []
+    dropped: list[dict] = []
+    seen: set[tuple[str, str, str]] = set()
+    for record in sorted(records, key=lambda r: (r["task_id"], r["operator"],
+                                                 r["recipe"]["seed"])):
+        digest = content_digest(record) if is_admitted(record) else None
+        key = (record["task_id"], record["operator"], digest or record["mutant_id"])
+        if digest is not None and key in seen:
+            dropped.append(record)
+            continue
+        seen.add(key)
+        kept.append(record)
+    return kept, dropped
+
+
 def is_admitted(record: dict) -> bool:
     return bool(record["purity_checks"]) and admitted(
         [PurityCheck(c["name"], c["passed"], c["detail"]) for c in record["purity_checks"]]
