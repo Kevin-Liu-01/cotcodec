@@ -68,10 +68,10 @@
     "Approve telling xlang-ai about OSWorld checker defects found in Q2 Stage 0a, and about the hardcoded Surfer-H API key in public OSWorld source",
     "Approve asking the Dr. Kernel and KernelGYM authors to add licenses, or choose another licensed Q1 policy",
     "Decide whether to purge the old host address and the internal corpus inventory from public git history (requires a force-push)",
-    "Rotate the Moonshot API key that was pasted into a chat session",
-    "Spot-check a sample of the Q2 checker-mutation audit as the human rater (decision D9)"
+    "Spot-check a sample of the Q2 checker-mutation audit as the human rater (decision D9)",
+    "Moonshot (Kimi) account is suspended for insufficient balance; recharge it if a Kimi model should be a rater or reviewer (rotate the exposed key at the same time)"
   ],
-  "gpu_hours_spent_this_program": 1.1916,
+  "gpu_hours_spent_this_program": 1.196,
   "frozen_registrations": [
     "q3-k1-localization-screen-v1",
     "q2-holo3-rerun-audit-v1-posthoc",
@@ -110,6 +110,15 @@
         "466 job A"
       ],
       "outcome": "X1 pass on identical prompts; Q2 Stage 1 as designed projects to 431.5 GPU-h (4B+9B alone 110.6) against the 90 GPU-h rescope line: rescope-before-gauntlet"
+    },
+    {
+      "experiment": "k1-v2 GPU equivalence pre-check (D22)",
+      "gpu_hours": 0.0044,
+      "jobs": [
+        "502 image build (CPU)",
+        "516 GPU tests"
+      ],
+      "outcome": "3/3 passed; largest observed/tolerance ratio 7.9e-3"
     }
   ],
   "results": [

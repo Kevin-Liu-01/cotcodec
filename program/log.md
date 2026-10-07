@@ -247,3 +247,14 @@ Append-only. Newest entries at the bottom.
   expected, so P3 and P4 are pooled-only. The dependency-sensitivity arm is
   disclosed as not leaderboard-era. Still not frozen: second review and
   Kevin's D2/D9 confirmation pending.
+
+## 2026-10-07 — K1 v2 throughput probe frozen
+
+- The K1 v2 batched-bank GPU equivalence pre-check passed on the H100 (Slurm
+  516, 0.004 GPU-h): every gated deviation more than 100 times inside its
+  TF32 tolerance; Adam steps bitwise.
+- A pre-freeze audit found the probe's manifest filler did not enforce the
+  probe's GPU count, limit and 0.15 GPU-h cap or the image commit; fixed with
+  tests. Froze `q3-k1-throughput-probe-v1` (D20, D22). Projected v2 totals
+  under D22's counting rule: about 6.6 GPU-h central, 9.5 conservative; the
+  probe's measurement decides between freezing v2 and the gauntlet.
