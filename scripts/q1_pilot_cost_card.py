@@ -156,7 +156,6 @@ def main(argv: list[str] | None = None) -> int:
     )
     parser.add_argument("--timing-floor-gpu-hours", type=float, default=0.5)
     parser.add_argument("--replay-gpu-hours", type=float, default=0.5)
-    parser.add_argument("--caps", default="40,24,16,12,8,6,4")
     parser.add_argument("--resamples", type=int, default=1000)
     parser.add_argument(
         "--witness-rate",
@@ -195,7 +194,10 @@ def main(argv: list[str] | None = None) -> int:
     }
     if ratio["median_c_cumulative_over_b_cumulative"] is not None:
         ratio["c_lite_trigger_2x"] = ratio["median_c_cumulative_over_b_cumulative"] > 2.0
-    all_scored = [i for i in pilot["items"] if i["phase"] in {"scoring", "smoke"}] + smoke_items
+    # The size model uses the pilot job's scored items only: job 1's smoke items ran
+    # the pre-fix reductions (host fp64 copies) and were cut by the fixed 180 s watchdog,
+    # so they are reported (per_gate_smoke_identity) but not used for the projection.
+    all_scored = [i for i in pilot["items"] if i["phase"] in {"scoring", "smoke"}]
     fits = cc.fit_item_costs(all_scored)
 
     def model(gate: str, problem_id: str) -> float:
@@ -231,59 +233,106 @@ def main(argv: list[str] | None = None) -> int:
         "audit_hole_replay_cap": args.replay_gpu_hours,
     }
     fixed_total = sum(fixed_hours.values())
+    rules = [
+        {"name": "as-drafted", "scope": "all", "cap": 40},
+        {"name": "all-cap40-m1", "scope": "all", "cap": 40, "mutant_seeds": 1},
+        {"name": "all-cap8-m1-c1", "scope": "all", "cap": 8, "mutant_seeds": 1, "control_seeds": 1},
+        {"name": "shared-cap40", "scope": "shared", "cap": 40},
+        {"name": "shared-cap40-m1", "scope": "shared", "cap": 40, "mutant_seeds": 1},
+        {"name": "shared-cap16-m1", "scope": "shared", "cap": 16, "mutant_seeds": 1},
+        {"name": "shared-cap8-m1", "scope": "shared", "cap": 8, "mutant_seeds": 1},
+        {
+            "name": "shared-cap8-m1-c1",
+            "scope": "shared",
+            "cap": 8,
+            "mutant_seeds": 1,
+            "control_seeds": 1,
+        },
+        {
+            "name": "shared-cap8-m1-c1-h25",
+            "scope": "shared",
+            "cap": 8,
+            "mutant_seeds": 1,
+            "control_seeds": 1,
+            "hack_fraction": 0.25,
+        },
+        {
+            "name": "shared-cap4-m1-c1-h25",
+            "scope": "shared",
+            "cap": 4,
+            "mutant_seeds": 1,
+            "control_seeds": 1,
+            "hack_fraction": 0.25,
+        },
+        {
+            "name": "shared-cap2-m1-c1-h25",
+            "scope": "shared",
+            "cap": 2,
+            "mutant_seeds": 1,
+            "control_seeds": 1,
+            "hack_fraction": 0.25,
+        },
+    ]
     scenarios = []
-    for cap in (int(c) for c in args.caps.split(",")):
-        for mutant_seeds in (3, 1):
-            projection = cc.project_scoring(
-                counts, fits, cap=cap, survival=survival["survival"], mutant_seeds=mutant_seeds
-            )
-            interval = cc.bootstrap_projection(
-                all_scored,
-                kinds,
-                counts,
-                cap=cap,
-                survival=survival["survival"],
-                mutant_seeds=mutant_seeds,
-                resamples=args.resamples,
-            )
-            witnessed_test = {
-                family: round(n * args.witness_rate * 0.5)
-                for family, n in projection["mutants_per_family"].items()
+    for rule in rules:
+        options = {k: v for k, v in rule.items() if k not in {"name", "cap"}}
+        projection = cc.project_scoring(
+            counts, fits, cap=rule["cap"], survival=survival["survival"], **options
+        )
+        mutant_seeds = options.pop("mutant_seeds", None)
+        interval = cc.bootstrap_projection(
+            all_scored,
+            kinds,
+            counts,
+            cap=rule["cap"],
+            survival=survival["survival"],
+            mutant_seeds=mutant_seeds,
+            resamples=args.resamples,
+            **options,
+        )
+        witnessed_test = {
+            family: round(n * args.witness_rate * 0.5)
+            for family, n in projection["mutants_per_family"].items()
+        }
+        pooled = sum(witnessed_test.values())
+        total = round(fixed_total + projection["gpu_hours"], 3)
+        high = None if interval["high"] is None else round(fixed_total + interval["high"], 3)
+        scenarios.append(
+            {
+                "name": rule["name"],
+                **projection,
+                "scoring_gpu_hours_95": interval,
+                "fixed_gpu_hours": round(fixed_total, 3),
+                "total_gpu_hours": total,
+                "total_gpu_hours_high": high,
+                "fits_8_gpu_h": (high if high is not None else total) <= cc.CAP_GPU_HOURS,
+                "witnessed_test_mutants": witnessed_test,
+                "precision": {
+                    family: {
+                        "n": n,
+                        "half_width_pp": None if not n else round(100 * cc.half_width(n), 1),
+                    }
+                    for family, n in witnessed_test.items()
+                },
+                "families_with_30_witnessed_test": sum(
+                    1 for n in witnessed_test.values() if n >= 30
+                ),
+                "pooled_witnessed_test": pooled,
+                "pooled_half_width_pp": None
+                if not pooled
+                else round(100 * cc.half_width(pooled, p=0.17), 1),
+                "detectable_difference_pp": None
+                if not pooled
+                else round(100 * cc.detectable_difference(pooled), 1),
             }
-            pooled = sum(witnessed_test.values())
-            scenarios.append(
-                {
-                    **projection,
-                    "scoring_gpu_hours_95": interval,
-                    "fixed_gpu_hours": round(fixed_total, 3),
-                    "total_gpu_hours": round(fixed_total + projection["gpu_hours"], 3),
-                    "total_gpu_hours_high": None
-                    if interval["high"] is None
-                    else round(fixed_total + interval["high"], 3),
-                    "witnessed_test_mutants": witnessed_test,
-                    "precision": {
-                        family: {
-                            "n": n,
-                            "half_width_pp": None if not n else round(100 * cc.half_width(n), 1),
-                        }
-                        for family, n in witnessed_test.items()
-                    },
-                    "pooled_witnessed_test": pooled,
-                    "pooled_half_width_pp": None
-                    if not pooled
-                    else round(100 * cc.half_width(pooled, p=0.17), 1),
-                    "detectable_difference_pp": None
-                    if not pooled
-                    else round(100 * cc.detectable_difference(pooled), 1),
-                }
-            )
+        )
     card = {
         "schema": "q1-pilot-cost-card/1",
         "spent_gpu_hours": args.spent_gpu_hours,
         "smoke_job": str(args.smoke_job),
         "pilot_job": str(args.pilot_job),
         "per_gate_scoring": cc.gate_stats(scoring_items),
-        "per_gate_smoke_identity": cc.gate_stats(smoke_items),
+        "per_gate_job1_smoke_prefix": cc.gate_stats(smoke_items),
         "kernel_replicates_complete": len(kernel_rows),
         "kernel_replicate_cost_by_class": {
             klass: cc.summarize([r["total"] for r in kernel_rows if r["cost_class"] == klass])
@@ -317,16 +366,17 @@ def main(argv: list[str] | None = None) -> int:
         lines.append(f"| {gate} | {g['n']} | {g['median']} | {g['p95']} | {g['mean']} |")
     lines += [
         "",
-        "| cap | mutant replicates | scoring GPU-h | 95% | fixed GPU-h | total GPU-h | high |",
-        "|---:|---:|---:|---|---:|---:|---:|",
+        "| rule | scoring GPU-h | 95% | fixed GPU-h | total GPU-h | high | fits | units |",
+        "|---|---:|---|---:|---:|---:|---|---:|",
     ]
     for sc in scenarios:
         band = sc["scoring_gpu_hours_95"]
         low = None if band["low"] is None else round(band["low"], 2)
         high = None if band["high"] is None else round(band["high"], 2)
         lines.append(
-            f"| {sc['cap']} | {sc['mutant_seeds']} | {sc['gpu_hours']} | {low}-{high} | "
-            f"{sc['fixed_gpu_hours']} | {sc['total_gpu_hours']} | {sc['total_gpu_hours_high']} |"
+            f"| {sc['name']} | {sc['gpu_hours']} | {low}-{high} | {sc['fixed_gpu_hours']} | "
+            f"{sc['total_gpu_hours']} | {sc['total_gpu_hours_high']} | {sc['fits_8_gpu_h']} | "
+            f"{sc['n_eval_independent']} |"
         )
     (args.out / "cost_card.md").write_text("\n".join(lines) + "\n")
     print("\n".join(lines))

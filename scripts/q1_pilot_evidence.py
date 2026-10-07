@@ -146,10 +146,18 @@ def main(argv: list[str] | None = None) -> int:
             "upstream": up_a,
             "agree": None if None in (ours_a, up_a) else ours_a == up_a,
         }
+        head_row = table.get((kernel, "a_head_1e-4", 42))
+        listed = (
+            ours_h == "error"
+            and head_row is not None
+            and head_row["details"].get("reason") == "reference-raised"
+            and up_h == "reject"
+        )
         entry["a_head_1e-4_vs_423217d9"] = {
             "ours": ours_h,
             "upstream": up_h,
             "agree": None if None in (ours_h, up_h) else ours_h == up_h,
+            "listed_in_advance": listed,
         }
         b1, b2 = verdict(table, kernel, "b1"), verdict(table, kernel, "b2")
         native = table.get((kernel, "b_native", 42))
@@ -164,9 +172,16 @@ def main(argv: list[str] | None = None) -> int:
                 "upstream_b0_correct": d.get("b0_correctness"),
                 "ours_a": ours_a,
                 "upstream_verdict": native["verdict"],
+                # KernelGYM runs b1 only after b0 passes and b2 only when b1 found no
+                # decoy, so detection is comparable only on b0-correct items.
                 "decoy_agree": None
-                if ours_decoy is None or d.get("decoy_kernel") is None
+                if ours_decoy is None
+                or d.get("decoy_kernel") is None
+                or not d.get("b0_correctness")
                 else ours_decoy == bool(d.get("decoy_kernel")),
+                "decoy_not_comparable": "upstream skips detection when b0 fails"
+                if d.get("b0_correctness") is False
+                else None,
                 "b0_vs_a_agree": None
                 if ours_a is None or d.get("b0_correctness") is None
                 else (ours_a == "accept") == bool(d.get("b0_correctness")),
@@ -177,12 +192,12 @@ def main(argv: list[str] | None = None) -> int:
             for r in rows["fidelity"]
             if r["kernel_id"] == kernel and r["gate"] == "c1_kbv_compat"
         }
-        compat_raw = next(
+        raw_aggregate = next(
             (
-                r["details"]
+                r["verdict"]
                 for r in rows["fidelity"]
                 if r["kernel_id"] == kernel
-                and r["gate"] == "c1_kbv_compat"
+                and r["gate"] == "c1_kbv_compat_raw"
                 and r["config_id"] == "aggregate"
             ),
             None,
@@ -191,11 +206,6 @@ def main(argv: list[str] | None = None) -> int:
             r for r in rows["fidelity"] if r["kernel_id"] == kernel and r["gate"] == "c1_kbv_native"
         ]
         if compat and native_rows:
-            ours_configs = [
-                "accept" if v in {"accept", "error"} else v
-                for cid, v in sorted(compat.items(), key=lambda kv: kv[0])
-                if cid != "aggregate"
-            ]
             ordered_ours = [
                 r
                 for r in rows["fidelity"]
@@ -215,13 +225,13 @@ def main(argv: list[str] | None = None) -> int:
                 "ours_per_config": ours_list,
                 "kbv_per_config": theirs,
                 "agree_per_config": ours_list == theirs,
-                "ours_aggregate": compat.get("aggregate"),
+                "ours_aggregate_validity_filtered": compat.get("aggregate"),
+                "ours_aggregate_kbv_raw": raw_aggregate,
                 "kbv_aggregate": None if native_agg is None else native_agg["verdict"],
                 "kbv_problem_equals_ours": None
                 if native_agg is None
                 else native_agg["details"].get("kbv_problem_equals_ours_after_header"),
                 "kbv_reason": None if native_agg is None else native_agg["details"].get("reason"),
-                "unused": bool(ours_configs) and compat_raw is None,
             }
         fidelity.append(entry)
 
@@ -238,7 +248,10 @@ def main(argv: list[str] | None = None) -> int:
     agreements = Counter()
     for entry in fidelity:
         for key in ("a_vs_44130946", "a_head_1e-4_vs_423217d9"):
-            agreements[f"{key}:{entry[key]['agree']}"] += 1
+            label = entry[key]["agree"]
+            if entry[key].get("listed_in_advance"):
+                label = "listed-in-advance"
+            agreements[f"{key}:{label}"] += 1
         if "b_vs_kernelgym" in entry:
             agreements[f"b_decoy:{entry['b_vs_kernelgym']['decoy_agree']}"] += 1
             agreements[f"b0_vs_a:{entry['b_vs_kernelgym']['b0_vs_a_agree']}"] += 1

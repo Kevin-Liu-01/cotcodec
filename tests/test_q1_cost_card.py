@@ -129,6 +129,8 @@ def test_size_model_fits_and_falls_back_to_the_per_draw_slope() -> None:
         "evaluation_substrates": [
             {
                 "problem_id": big,
+                "substrate_id": "s1-inductor-L1-19_ReLU",
+                "source_kind": "inductor",
                 "exclusive": True,
                 "hack_controls": 0,
                 "cpu_distinct_by_family": {"arithmetic": 4},
@@ -144,3 +146,6 @@ def test_size_model_fits_and_falls_back_to_the_per_draw_slope() -> None:
     assert trimmed["kernels"] == {"substrate": 1, "mutant": 2}
     assert trimmed["gpu_hours"] < full["gpu_hours"]
     assert set(full["missing_gates"]) == set(cc.SCORING_GATES) - {"a", "A2"}
+    assert full["n_eval_independent"] == 1
+    shared = cc.project_scoring(counts, fits, cap=40, survival=1.0, scope="shared")
+    assert shared["gpu_hours"] == 0 and shared["n_eval_independent"] == 0
