@@ -46,9 +46,9 @@
       ],
       "action_path_suite": {
         "registration": "q2-action-path-v1 (+ -inputs, -executor addenda)",
-        "status": "development complete, ready to freeze (nothing frozen)",
+        "status": "development complete; ready to freeze after the owner's A4 decision on guest-server restarts (nothing frozen)",
         "branch": "stage0/q2-action-path",
-        "development_jobs": "482-622 (seed 42, CPU only, never evidence)"
+        "development_jobs": "482-637 (seed 42, CPU only, never evidence)"
       }
     },
     {
@@ -75,7 +75,8 @@
     "Approve asking the Dr. Kernel and KernelGYM authors to add licenses, or choose another licensed Q1 policy",
     "Decide whether to purge the old host address and the internal corpus inventory from public git history (requires a force-push)",
     "Spot-check a sample of the Q2 checker-mutation audit as the human rater (decision D9)",
-    "Moonshot (Kimi) account is suspended for insufficient balance; recharge it if a Kimi model should be a rater or reviewer (rotate the exposed key at the same time)"
+    "Moonshot (Kimi) account is suspended for insufficient balance; recharge it if a Kimi model should be a rater or reviewer (rotate the exposed key at the same time)",
+    "Before freezing q2-action-path-v1: decide how A4 treats OSWorld guest-server restarts inside /accessibility (1 in 7,969 calls in development; A4 as registered would very likely fail on them); options in program/preregistrations/q2-action-path-v1-inputs.md section 6"
   ],
   "gpu_hours_spent_this_program": 1.196,
   "frozen_registrations": [

@@ -551,12 +551,23 @@ action" was wrong: they bound only the uniform-mixture rate.
 20 A1 repetitions per entry detect a 10% rate with probability 1 − 0.9^20 =
 87.8%.
 
-**Cost.** One entry trial takes about 1-3 s of VM time (measured `/execute`
-no-op 15 ms, `/screenshot` 0.56 s, `/accessibility` 1.3 s median in job 374);
-a session adds a cold boot of about 20 s plus settling and probe start, under
-45 s. A1 + A2 + A3 + A4 total about 74,000 trials in about 1,250 sessions,
-roughly 40-80 VM-hours, CPU only (no GPU is used anywhere in this
-experiment).
+**Cost.** Sized in `vm_hours.json` (`vm_hours.py`, design decision 33) from
+the measured times of the final development runs at the candidate executor
+(jobs 609, 633, 611, 635, 612, 636, 620, 637; job 374 for the boot-reset
+cycle). VM-hours count the time one VM is occupied; at concurrency N the
+wall-clock time is about VM-hours / N when per-trial time does not grow with N
+(the same 14 sessions had step p95 2.98 s on 8 VMs, job 610, and 2.83 s on
+one, job 609). A session costs 24.6 s beyond its trials (cold boot to settled
+screen, probe and tap, warm-up, reset observation, teardown) and a job 37 s.
+A4's 64,028 trials average 2.06 s in its mix of entries and settings, so A4
+needs 44.0 VM-hours: about 44 hours of wall-clock time at N = 1, 5.5 at N = 8
+and 1.1 at N = 40; whenever one job's worst-case budget exceeds the lane's
+24-hour limit, A4 runs as several jobs over consecutive session ranges. The
+other campaigns: A1 1.5, A2 1.6, A3 4.8, A5 0.3, A6 0.9, C1 0.12, C2 0.25, C3
+2.8 (44 mutants and three reference runs) and the five ladder rungs 11.0; in
+all 67.3 VM-hours, CPU only (no GPU is used anywhere in this experiment).
+Replaced before the freeze: the draft estimated 40-80 VM-hours for A1-A4 from
+per-call latencies.
 
 **Concurrency rule.** The ladder has rungs N = 8, 16, 24, 32 and 40; at N = 1
 the reference is A1 (both shuffles, 36 cold boots). Rung N runs L0-fixed on N
@@ -800,9 +811,10 @@ here with its reason.
     compositor) repaints nothing while it rebuilds its keymap (runs 486-499:
     screenshots after Unicode typing showed only the first character). Without
     the repaint request, the probe's last drawing never reached the screen in
-    about 4% of typing trials (runs 504-541, where the quiet wait saw no change
+    31 of 941 typing trials (runs 504-541, where the quiet wait saw no change
     for 0.3 s and the drawing was still missing 2 s later); with it, none of
-    the typing trials of runs 545 onward did.
+    the 2,114 typing trials of runs 545-637 did (one-sided 95% upper bound
+    0.14%).
 25. **Build order.** The inputs addendum's components were written in the same
     development pass as L0-fixed, before any freeze, not before it as the
     first draft said. The protection that remains is the one the controls
@@ -899,7 +911,7 @@ disposition:
 
 ## 16. Changes found while finishing development (2026-10-07)
 
-Development runs 486-622 (seed 42, never evidence; listed with their outcomes
+Development runs 486-637 (seed 42, never evidence; listed with their outcomes
 in `program/evidence/2026-10-07/q2-action-path-stage0b/README.md`) and the
 work of writing the acceptance code found these, all before any freeze:
 
@@ -912,8 +924,9 @@ work of writing the acceptance code found these, all before any freeze:
    can strip a chord's modifier (runs 549 and 574): every session now warms
    the keyboard up first (decision 31).
 4. The compositor sometimes never painted the probe's last drawing after
-   typing (about 4% of typing trials, runs 504-541): L0-fixed now re-damages
-   the top-level windows after every action (decision 24, executor addendum).
+   typing (31 of 941 typing trials, runs 504-541): L0-fixed now re-damages
+   the top-level windows after every action (decision 24, executor addendum;
+   0 of 2,114 typing trials since).
 5. Chrome's "Can't update Chrome" bubble opened mid-trial and took the
    keyboard (run 522): `canary.yaml` starts Chrome with a flag that keeps it
    closed (A6).
@@ -935,13 +948,16 @@ work of writing the acceptance code found these, all before any freeze:
    484-622 (one later session charged with 55 failed trials, its tap gone).
    A restart during an entry is now an infrastructure failure of its own
    type (section 6.1; the guard reports the server's process id). With that
-   rate, A4's 64,028 zero-failure trials (about 42,000 accessibility calls)
-   would expect about five restarts, so A4 as registered would very likely
-   fail on this alone. The rule is left as registered; whether to change the
+   rate, A4's 64,028 zero-failure trials (36,550 accessibility calls)
+   would expect about 4.6 restarts, so A4 as registered would pass with
+   probability about 0.01 on this alone. The rule is left as registered; whether to change the
    runtime, the observation settings or the criterion is the owner's decision
    before the freeze (the inputs addendum lists the options).
-10. Writer once read back `done🎉 ` for `done 🎉` (run 620, a loaded host):
-    a space and the emoji typed after it arrived in Writer in the other order,
-    although the X server's event order was right. In 1 of the WRITER_TRIALS Writer
-    trials of runs 501-632 that typed text; GNOME's input-method daemon
-    (IBus) stands between X and GTK applications. Reported, not changed.
+10. Writer once read back "done", the emoji, then a space, for "done", a
+    space, then the emoji (run 620, on a loaded host): the two arrived in
+    Writer in the other order although the executor typed them in order. That
+    is 1 of the 336 Writer trials of the canary runs 501-632 (the 160 of jobs
+    631 and 632, which typed each Writer entry five times, all passed). GNOME's
+    input-method daemon (IBus) sits between X and GTK applications. Reported,
+    not changed; at that rate A6's 80 Writer trials would see it with
+    probability about 0.2.

@@ -21,8 +21,15 @@ GPU-hours spent by the program are in `program/state.json`
 
 - `stage0/k1-v2`: batched K1 engineering, a synthetic throughput probe and
   draft v2 registrations (D20).
-- `stage0/q2-action-path`: VM runtime validated (22 boots, resets pristine);
-  remaining suite components being written.
+- `stage0/q2-action-path`: every suite component written and validated in
+  development (seed 42, jobs 482-637, CPU only; nothing frozen). Development
+  found and fixed a compositor repaint loss, a first-key modifier loss, Chrome
+  and VS Code readiness issues and a ladder that could never qualify a rung;
+  the 44 development mutants behave as predicted. One decision is Kevin's
+  before the freeze: the OSWorld guest server crashed once in 7,969
+  `/accessibility` calls, which would very likely fail A4 as registered
+  (options in `program/preregistrations/q2-action-path-v1-inputs.md`,
+  section 6).
 - `stage0/q1-gates`: gates, audit, mutator and substrates integrated; GPU
   smoke and pilot cost card next. Projected Stage 0 total 9-10 GPU-h.
 - `stage0/q2-evaluator-mutation`: faithful-save harness, blind specs for 205
@@ -31,7 +38,11 @@ GPU-hours spent by the program are in `program/state.json`
 ## Next actions
 
 1. Freeze and run the K1 throughput probe, then set K1 v2 limits from it.
-2. Finish and freeze the action-path suite; run its acceptance trials.
+2. After Kevin's A4 decision, freeze `q2-action-path-v1`, then `-inputs`,
+   then `-executor` (`scripts/preregister.py freeze`); score C2, then C1 and
+   C3, then run A1-A6 and the ladder (manifests:
+   `scripts/render_q2_action_path_manifest.py`; verdicts:
+   `harness/q2/action_path/acceptance.py`).
 3. Run the Q1 pilot cost card; trim under 8 GPU-h with a registered rule or
    run the gauntlet.
 4. Freeze and run the checker-mutation campaign.
