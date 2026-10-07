@@ -574,23 +574,28 @@ def score_once(
     process = ctx.Process(target=_score_in_worker, args=(payload, queue))
     started = time.monotonic()
     process.start()
-    process.join(timeout)
+    # Read the result before joining: a child whose queue feeder still holds
+    # data cannot exit, so join-then-get can stall until the timeout.
+    try:
+        out = queue.get(timeout=timeout)
+    except Exception:  # noqa: BLE001 - empty queue at the deadline
+        out = None
+    process.join(10)
     if process.is_alive():
         process.kill()
         process.join()
+    if out is None:
+        timed_out = time.monotonic() - started >= timeout
         return {
             "score": None,
-            "error": f"Timeout after {timeout}s",
+            "error": (
+                f"Timeout after {timeout}s"
+                if timed_out
+                else f"worker exit {process.exitcode} without result"
+            ),
+            "infra_timeout": timed_out,
             "notes": {},
-            "seconds": timeout,
-        }
-    try:
-        out = queue.get(timeout=5)
-    except Exception:  # noqa: BLE001
-        out = {
-            "score": None,
-            "error": f"worker exit {process.exitcode} without result",
-            "notes": {},
+            "seconds": round(time.monotonic() - started, 3),
         }
     out["seconds"] = round(time.monotonic() - started, 3)
     return out
@@ -610,9 +615,17 @@ def score_job(
 ) -> tuple[VerdictRow, dict[str, Any]]:
     """Score one job ``repeat`` times in fresh processes; return the row and notes."""
     raw = load_task(osworld, job.task_id)
-    runs = [
-        score_once(job, osworld, file_cache, timeout, vm_baseline) for _ in range(max(1, repeat))
-    ]
+    runs = []
+    infra_timeouts = 0
+    for _ in range(max(1, repeat)):
+        # A timeout is an infrastructure failure, not a checker verdict: retry
+        # it up to twice and count it; a checker exception is never retried.
+        for _attempt in range(3):
+            run = score_once(job, osworld, file_cache, timeout, vm_baseline)
+            if not run.get("infra_timeout"):
+                break
+            infra_timeouts += 1
+        runs.append(run)
     first = runs[0]
     nondeterministic = any(
         (run["score"], run["error"] is None) != (first["score"], first["error"] is None)
@@ -643,6 +656,7 @@ def score_job(
     notes = {
         "mutant_id": job.mutant_id,
         "thread_env": THREAD_ENV,
+        "infra_timeouts": infra_timeouts,
         "nondeterministic": nondeterministic,
         "repeat_scores": [run["score"] for run in runs],
         "repeat_errors": [run["error"] for run in runs],

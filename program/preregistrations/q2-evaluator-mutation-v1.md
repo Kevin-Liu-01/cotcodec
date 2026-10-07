@@ -158,7 +158,8 @@ three mutants per task and operator, site seeds 42, 43, 44).
 
 ## 8. Infrastructure failures (excluded and counted, never relabeled)
 
-LibreOffice open, activation or save failure or timeout; a container failure;
+LibreOffice open, activation or save failure or timeout; a scoring process
+that exceeds 300 s (retried at most twice, every retry counted); a container failure;
 a candidate whose repeated scorings disagree (it moves to S5); a setup or
 postconfig step the harness cannot emulate that writes a file the checker
 reads (the whole task is excluded and listed). A checker exception is not an
