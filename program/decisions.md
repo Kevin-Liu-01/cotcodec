@@ -78,3 +78,24 @@ agent configuration is server-side and cannot be rerun, so "Holo3 rerun within
 in the OSWorld repository, and six public three-run sets. The Stage 1
 criterion is reworded before the gauntlet. Reversal: Kevin prefers a
 self-hosted Holo3 contrast (70 GB weights and GPU time, gauntlet required).
+
+**D12. VM campaigns run as CPU-only Slurm jobs.** The Docker submitter
+requires at least one GPU, but desktop VMs need none. VM work runs through a
+dedicated CPU-only batch script that requests no GPU, launches pinned
+containers without `--gpus`, and asserts in its receipt that no
+`/dev/nvidia*` device is visible. The GPU device files are world-writable on
+this host, so every runner, harness and executor container must be GPU-less.
+
+**D13. No new Docker networks.** Creating a user-defined Docker network adds
+dockerd-managed iptables state, which is close to the host configuration
+reserved in D2. VM containers run without published ports. The runner joins
+the VM container's network namespace. If that proves infeasible, ports bind
+to 127.0.0.1 only, and the remaining exposure to other local containers is
+recorded. This host is single-user.
+
+**D14. Q1 Stage 0 TF32 policy and contract tier.** The speed baseline is
+TF32, so the primary audit is TF32-admissible, with a strict-fp32 audit
+reported as a secondary. The primary contract tier is "never silently wrong
+at held-out shapes". A kernel that refuses an unsupported shape is not
+counted as silently wrong. Both are fixed in the Stage 0 preregistration
+before any mutant is scored.
