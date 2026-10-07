@@ -1,0 +1,16 @@
+{
+  "domain": "libreoffice_writer",
+  "initial_files": [
+    {
+      "path_in_vm": "/home/user/Desktop/CCCH9003_Tutorial_guidelines.docx",
+      "sha256": "b0753ca50e8806130c56d3cc3ec607ba58bb9cf2c77d3d384c71afb582a3bfce",
+      "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/1e112283c4ecb08d6fed8069bca7de74fa2f12aa/libreoffice_writer/88fe4b2d-3040-4c70-9a70-546a47764b48/CCCH9003_Tutorial_guidelines.docx"
+    }
+  ],
+  "instruction": "I am making a guideline for students of my course and would like to separate each sentence in the the first paragraph to improve readability. Please separate each sentence by creating one empty line space after each of them, as I am having hard time separating them one by one.",
+  "related_apps": [
+    "libreoffice_writer"
+  ],
+  "snapshot": "libreoffice_writer",
+  "task_id": "88fe4b2d-3040-4c70-9a70-546a47764b48"
+}

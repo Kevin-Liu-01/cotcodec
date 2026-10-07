@@ -1,0 +1,16 @@
+{
+  "domain": "libreoffice_writer",
+  "initial_files": [
+    {
+      "path_in_vm": "/home/user/Desktop/GEOG2169_Course_Outline_2022-23.docx",
+      "sha256": "6c960a6d9e4983b410eb3e27b610b1569649a20c5b470116e3db52ca9220dd50",
+      "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/1e112283c4ecb08d6fed8069bca7de74fa2f12aa/libreoffice_writer/72b810ef-4156-4d09-8f08-a0cf57e7cefe/GEOG2169_Course_Outline_2022-23.docx"
+    }
+  ],
+  "instruction": "I am peer-reviewing my friend's course outline. I think the last paragraph is redundant so I want to add strike-through on words in the last paragraph. Can you do this for me?",
+  "related_apps": [
+    "libreoffice_writer"
+  ],
+  "snapshot": "libreoffice_writer",
+  "task_id": "72b810ef-4156-4d09-8f08-a0cf57e7cefe"
+}

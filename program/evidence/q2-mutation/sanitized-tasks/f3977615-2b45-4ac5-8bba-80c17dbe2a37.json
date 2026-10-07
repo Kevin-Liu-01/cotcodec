@@ -1,0 +1,10 @@
+{
+  "domain": "vlc",
+  "initial_files": [],
+  "instruction": "I want to watch two or more videos in same time on VLC. I tried to run multiple instances of VLC. It worked but can't play videos on those new instances. When I play video it plays on first instance instead of new instance.\nIs there any way to solve this problem?",
+  "related_apps": [
+    "vlc"
+  ],
+  "snapshot": "chrome",
+  "task_id": "f3977615-2b45-4ac5-8bba-80c17dbe2a37"
+}

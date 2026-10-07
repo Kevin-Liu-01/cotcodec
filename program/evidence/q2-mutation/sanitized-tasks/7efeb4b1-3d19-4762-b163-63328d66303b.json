@@ -1,0 +1,16 @@
+{
+  "domain": "libreoffice_calc",
+  "initial_files": [
+    {
+      "path_in_vm": "/home/user/Order_Sales_Serial#.xlsx",
+      "sha256": "d0d3cfbb42f4d94b2ecff4adf6b21ae76c6eb4bc83f1c385b60f57750f0cf5cf",
+      "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/1e112283c4ecb08d6fed8069bca7de74fa2f12aa/libreoffice_calc/7efeb4b1-3d19-4762-b163-63328d66303b/Order_Sales_Serial%23.xlsx"
+    }
+  ],
+  "instruction": "Fill the Sequence Numbers as \"No. #\" in the \"Seq No.\" column. Finish the work and don't touch irrelevant regions, even if they are blank.",
+  "related_apps": [
+    "libreoffice calc"
+  ],
+  "snapshot": "libreoffice_calc",
+  "task_id": "7efeb4b1-3d19-4762-b163-63328d66303b"
+}

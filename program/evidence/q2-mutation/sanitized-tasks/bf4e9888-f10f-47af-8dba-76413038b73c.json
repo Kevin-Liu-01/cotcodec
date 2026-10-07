@@ -1,0 +1,46 @@
+{
+  "domain": "libreoffice_impress",
+  "initial_files": [
+    {
+      "path_in_vm": "/home/user/Desktop/4.3-Template_4.29.2016.pptx",
+      "sha256": "f8aafd10d06413f62c9b0a2cc9829311cad1bd7b532af6a95af3299ee754f206",
+      "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/1e112283c4ecb08d6fed8069bca7de74fa2f12aa/libreoffice_impress/bf4e9888-f10f-47af-8dba-76413038b73c/4.3-Template_4.29.2016.pptx"
+    },
+    {
+      "path_in_vm": "/home/user/Desktop/pic1.png",
+      "sha256": "74d65fc57740264c7490318e2e2696eb8f681645755169cd607e189a048bda71",
+      "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/1e112283c4ecb08d6fed8069bca7de74fa2f12aa/libreoffice_impress/bf4e9888-f10f-47af-8dba-76413038b73c/pic1.png"
+    },
+    {
+      "path_in_vm": "/home/user/Desktop/pic2.png",
+      "sha256": "5e51e20a87a96df79e767131cf3cd61e9cf79e8c327073bb7c06eb598e8db6c1",
+      "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/1e112283c4ecb08d6fed8069bca7de74fa2f12aa/libreoffice_impress/bf4e9888-f10f-47af-8dba-76413038b73c/pic2.png"
+    },
+    {
+      "path_in_vm": "/home/user/Desktop/pic3.png",
+      "sha256": "279df468773204169e12044d096a26f54b9cdf3c5c6e84c63176d5e32c2ffa88",
+      "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/1e112283c4ecb08d6fed8069bca7de74fa2f12aa/libreoffice_impress/bf4e9888-f10f-47af-8dba-76413038b73c/pic3.png"
+    },
+    {
+      "path_in_vm": "/home/user/Desktop/pic4.png",
+      "sha256": "154b9f093efdb1bdd11bb17b20e6608198b3350e2b2aace67d3cc80901eb9ee1",
+      "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/1e112283c4ecb08d6fed8069bca7de74fa2f12aa/libreoffice_impress/bf4e9888-f10f-47af-8dba-76413038b73c/pic4.png"
+    },
+    {
+      "path_in_vm": "/home/user/Desktop/pic5.png",
+      "sha256": "f158d4dbf9665b54203887b3b0a97d7fbfb2eebcffd078276223deb0170c9ec9",
+      "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/1e112283c4ecb08d6fed8069bca7de74fa2f12aa/libreoffice_impress/bf4e9888-f10f-47af-8dba-76413038b73c/pic5.png"
+    },
+    {
+      "path_in_vm": "/home/user/Desktop/pic6.png",
+      "sha256": "bb4728b23f6f5ca2a1e3c7eb46816ad9ba97be2f7f44aaa2a35d0b63db79dca1",
+      "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/1e112283c4ecb08d6fed8069bca7de74fa2f12aa/libreoffice_impress/bf4e9888-f10f-47af-8dba-76413038b73c/pic6.png"
+    }
+  ],
+  "instruction": "I have a series of .png images named pic1.png to pic6.png saved on the Desktop. I want to work on the currently open presentation template and create six blank slides(which means no textbox or any other stuff on the page), and insert one image per slide in order—pic1.png on the first slide, pic2.png on the second, and so on—following the numerical order. The goal is to prepare a presentation suitable for continuous playback in a kiosk or multimedia show. Save the new presentation as /home/user/Desktop/4.3-Template_4.29.2016.pptx. Could you help me with that?",
+  "related_apps": [
+    "libreoffice_impress"
+  ],
+  "snapshot": "libreoffice_impress",
+  "task_id": "bf4e9888-f10f-47af-8dba-76413038b73c"
+}

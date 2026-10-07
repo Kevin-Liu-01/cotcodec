@@ -1,0 +1,16 @@
+{
+  "domain": "libreoffice_writer",
+  "initial_files": [
+    {
+      "path_in_vm": "/home/user/Desktop/Novels_Intro_Packet.docx",
+      "sha256": "9e615941ced6d491c595f9904d50213c6b6447a8bc6391f052d3745104ded5ed",
+      "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/1e112283c4ecb08d6fed8069bca7de74fa2f12aa/libreoffice_writer/0810415c-bde4-4443-9047-d5f70165a697/Novels_Intro_Packet.docx"
+    }
+  ],
+  "instruction": "Make the line spacing of first two paragraph into double line spacing",
+  "related_apps": [
+    "libreoffice_writer"
+  ],
+  "snapshot": "libreoffice_writer",
+  "task_id": "0810415c-bde4-4443-9047-d5f70165a697"
+}

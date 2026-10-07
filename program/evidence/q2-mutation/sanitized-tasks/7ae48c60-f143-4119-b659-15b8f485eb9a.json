@@ -1,0 +1,16 @@
+{
+  "domain": "libreoffice_impress",
+  "initial_files": [
+    {
+      "path_in_vm": "/home/user/Desktop/30_1.pptx",
+      "sha256": "0bcf7b2da2eb4f202f87d4627a939dcbc8a07708317364a8b6dc940dafb1ef6a",
+      "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/1e112283c4ecb08d6fed8069bca7de74fa2f12aa/libreoffice_impress/7ae48c60-f143-4119-b659-15b8f485eb9a/30_1.pptx"
+    }
+  ],
+  "instruction": "Change picture's height to 20, 30, 25cm on slide 3, 4, 6 respectively.",
+  "related_apps": [
+    "libreoffice_impress"
+  ],
+  "snapshot": "libreoffice_impress",
+  "task_id": "7ae48c60-f143-4119-b659-15b8f485eb9a"
+}

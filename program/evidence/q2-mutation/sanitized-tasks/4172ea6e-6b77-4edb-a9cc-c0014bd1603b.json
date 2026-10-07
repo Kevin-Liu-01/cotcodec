@@ -1,0 +1,16 @@
+{
+  "domain": "libreoffice_calc",
+  "initial_files": [
+    {
+      "path_in_vm": "/home/user/MaturityDate.xlsx",
+      "sha256": "7e36c0099cf96f45ef92d59b6a8441541700d467e9af5fa7c33318df3e09ef83",
+      "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/1e112283c4ecb08d6fed8069bca7de74fa2f12aa/libreoffice_calc/4172ea6e-6b77-4edb-a9cc-c0014bd1603b/MaturityDate.xlsx"
+    }
+  ],
+  "instruction": "I want to work out the maturity date for all the loans. Please do it for me in a new column with header \"Maturity Date\".",
+  "related_apps": [
+    "libreoffice_calc"
+  ],
+  "snapshot": "libreoffice_calc",
+  "task_id": "4172ea6e-6b77-4edb-a9cc-c0014bd1603b"
+}

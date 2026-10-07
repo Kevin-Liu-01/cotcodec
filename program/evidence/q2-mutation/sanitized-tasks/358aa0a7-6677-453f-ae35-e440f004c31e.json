@@ -1,0 +1,16 @@
+{
+  "domain": "libreoffice_impress",
+  "initial_files": [
+    {
+      "path_in_vm": "/home/user/Desktop/note-taking-strategies.pptx",
+      "sha256": "9928b7d3de0cf049a5c7b23c8d81c48287478b3ec82d49aa59a9ec404cc1a23c",
+      "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/1e112283c4ecb08d6fed8069bca7de74fa2f12aa/libreoffice_impress/358aa0a7-6677-453f-ae35-e440f004c31e/note-taking-strategies.file"
+    }
+  ],
+  "instruction": "Do you have any suggestions on how to modify the font for all text boxes in an Impress presentation? I want to standardize the font to 'Liberation Sans Narrow', but I don't want to manually select each individual text box.",
+  "related_apps": [
+    "libreoffice_impress"
+  ],
+  "snapshot": "libreoffice_impress",
+  "task_id": "358aa0a7-6677-453f-ae35-e440f004c31e"
+}

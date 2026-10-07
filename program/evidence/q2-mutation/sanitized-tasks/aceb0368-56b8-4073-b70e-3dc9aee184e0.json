@@ -1,0 +1,17 @@
+{
+  "domain": "multi_apps",
+  "initial_files": [
+    {
+      "path_in_vm": "/home/user/exam.zip",
+      "sha256": "10d6ef9c161b2bbb6eb6515f0e0c1717c39f675d7b569fcac55477f176b1c7c1",
+      "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/1e112283c4ecb08d6fed8069bca7de74fa2f12aa/multi_apps/aceb0368-56b8-4073-b70e-3dc9aee184e0/exam.zip"
+    }
+  ],
+  "instruction": "I am grading students' English exam papers, but the test consists only of multiple-choice questions. It's too exhausting to check each question one by one and record the detailed scores. Can you help me compare the remaining students' answers with the answer key and record the detailed scoring in the opened spreadsheet?",
+  "related_apps": [
+    "thunderbird",
+    "os"
+  ],
+  "snapshot": "libreoffice_calc",
+  "task_id": "aceb0368-56b8-4073-b70e-3dc9aee184e0"
+}

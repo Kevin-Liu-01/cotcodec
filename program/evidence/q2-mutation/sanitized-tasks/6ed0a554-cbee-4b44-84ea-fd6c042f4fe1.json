@@ -1,0 +1,16 @@
+{
+  "domain": "vs_code",
+  "initial_files": [
+    {
+      "path_in_vm": "/home/user/project.code-workspace",
+      "sha256": "25d9dcf1877632b737457d80ddbec2d9e89dcba4c8a5398f91c1e1d8984fe7bf",
+      "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/1e112283c4ecb08d6fed8069bca7de74fa2f12aa/vs_code/6ed0a554-cbee-4b44-84ea-fd6c042f4fe1/project.code-workspace"
+    }
+  ],
+  "instruction": "Please help me add folder \"/home/user/data1\" and folder \"/home/user/data2\" to the current workspace.",
+  "related_apps": [
+    "vscode"
+  ],
+  "snapshot": "vscode",
+  "task_id": "6ed0a554-cbee-4b44-84ea-fd6c042f4fe1"
+}

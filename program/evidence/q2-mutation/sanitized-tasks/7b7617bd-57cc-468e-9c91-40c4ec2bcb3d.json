@@ -1,0 +1,10 @@
+{
+  "domain": "gimp",
+  "initial_files": [],
+  "instruction": "Set the minimum number of undo steps to 100.",
+  "related_apps": [
+    "gimp"
+  ],
+  "snapshot": "gimp",
+  "task_id": "7b7617bd-57cc-468e-9c91-40c4ec2bcb3d"
+}
