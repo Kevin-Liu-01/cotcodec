@@ -433,7 +433,14 @@ def _run_cpu_check(args: argparse.Namespace, check: str) -> int:
                 ),
                 flush=True,
             )
-    _write_json(root / f"check_{check.replace('-', '_')}.json", {"rows": rows})
+    target = root / f"check_{check.replace('-', '_')}.json"
+    if args.only and target.exists():
+        # A partial rerun replaces only its own rows.
+        rerun = {row["substrate_id"] for row in rows}
+        previous = json.loads(target.read_text(encoding="utf-8"))["rows"]
+        rows = [row for row in previous if row["substrate_id"] not in rerun] + rows
+        rows.sort(key=lambda row: row["substrate_id"])
+    _write_json(target, {"rows": rows})
     summary: dict[str, int] = {}
     for row in rows:
         summary[row["verdict"]] = summary.get(row["verdict"], 0) + 1

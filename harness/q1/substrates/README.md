@@ -122,6 +122,31 @@ python scripts/q1_build_substrates.py manifest --root S --split S/split.json --o
 `K` is a KernelBench checkout or the vendored problem tree
 (`harness/q1/third_party/kernelbench/problems`); both layouts are accepted.
 
+## CPU dry run, 2026-10-07 (infrastructure validation, not data)
+
+GPU-less containers, mock-H100 codegen; per-substrate results in
+`program/evidence/2026-10-07/q1-substrate-cpu-dry-run.json`.
+
+- Codegen: 191 of 196 admissible problems. Mock-only failures: L2/58 and L2/92
+  (Inductor folds a CUDA scalar eagerly), L2/93 (the model calls
+  `torch.tensor(..., device=x.device)` eagerly), L2/25 (Inductor assertion, to
+  retry on the device); L2/28 is a real graph break (`warnings.warn` in
+  InstanceNorm). 13 problems needed the constant-folding retry.
+- Conversion: 156 S1 substrates (81 in the evaluation half, 75 in calibration;
+  98 Triton-only, 58 with a library call); 35 problems have no Triton kernel
+  (L1 convolutions on cuDNN, L1/46 3D average pooling). No other refusal code
+  fired. 51 S1 substrates use Triton GEMM templates.
+- S2: 25 of 25 built.
+- `check-static`: 181 of 181 pass.
+- `check-compile-native` (sm_90, native shapes): 178 pass; the 3 failures are
+  the two predicted LayerNorm refusals and Liger cross-entropy's `.item()` on
+  the meta device.
+- `check-interp`: 165 pass, 0 numerical mismatches; 7 S1 timeouts (BatchNorm
+  and large-K GEMM templates are slow under the interpreter), 8 without a small
+  admissible shape, and FlagGems cumsum crashes under the interpreter because
+  Python `and` on tensors masks only the second operand there (compiled Triton
+  lowers it to a logical and).
+
 ## NOTICE
 
 Third-party material used by this directory, all read at the pinned revisions:
