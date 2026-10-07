@@ -33,6 +33,7 @@ import time
 from pathlib import Path
 from typing import Any
 
+from harness.q2.action_path import order as run_order
 from harness.q2.action_path.rdev import summarize_capture
 from harness.q2.vm.manifest import (
     ManifestError,
@@ -46,6 +47,8 @@ DOCKER = "docker"
 RUNNER_TIMEOUT_SLACK_S = 900
 FALLBACK_MARKER = "falling back to usermode"
 RDEV_PLAN = "harness/q2/action_path/rdev_plan.json"
+CELLS = "harness/q2/action_path/suite_cells.json"
+SESSION_KINDS = ("inputs-validation", "suite-development", "canary-development")
 SENTINEL_BLINK = "1777"  # harness/q2/vm/guest/sentinel.py writes this gsettings value
 
 
@@ -480,6 +483,33 @@ def percentile(values: list[float], q: float) -> float | None:
     return ordered[rank - 1]
 
 
+def session_plan(manifest: dict[str, Any], cells: dict[str, Any]) -> list[dict[str, Any]]:
+    """The sessions a session workload runs, in order (each one cold boot)."""
+    workload = manifest["workload"]
+    kind = workload["kind"]
+    if kind == "inputs-validation":
+        return [
+            {"setting": "screenshot", "index": i, "trials": []} for i in range(workload["cycles"])
+        ]
+    seed = manifest["randomness"]["seeds"][0]
+    if kind == "suite-development":
+        layer_cells = [c["id"] for c in cells["layers"][workload["layer"]]]
+        wanted = layer_cells if workload["cells"] == "all" else workload["cells"]
+        unknown = sorted(set(wanted) - set(layer_cells))
+        if unknown:
+            raise DriverError(f"unknown cells for {workload['layer']}: {unknown}")
+        ids = [c for c in layer_cells if c in set(wanted)]
+        return run_order.plan(ids, seed, workload["reps"], workload["settings"],
+                              workload["session_trials"])  # fmt: skip
+    canary = cells["canary"]
+    pairs = []
+    for app in workload["apps"]:
+        for entry in canary["apps"][app]["entries"]:
+            if workload["entries"] == "all" or entry in workload["entries"]:
+                pairs.append(f"{app}:{entry}")
+    return run_order.plan(pairs, seed, workload["reps"], ["screenshot"], workload["session_trials"])
+
+
 def run_cycle(
     manifest: dict[str, Any],
     job_id: str,
@@ -488,6 +518,7 @@ def run_cycle(
     run_dir: Path,
     source_dir: str,
     cpus: dict[str, Any],
+    session: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
     workload = manifest["workload"]
     vm = manifest["vm"]
@@ -525,12 +556,28 @@ def run_cycle(
                 tap_selftest=workload.get("tap_selftest", False),
                 full_facts=cycle == 0,
             )
-        else:
+        elif workload["kind"] == "rdev-capture":
             subcommand = "rdev-capture"
             config.update(
                 plan_path="/src/" + RDEV_PLAN,
                 plan_sha256=workload["plan_sha256"],
                 reps=workload["reps"],
+            )
+        else:
+            subcommand = "session"
+            assert session is not None
+            config.update(
+                kind=workload["kind"],
+                cells_path="/src/" + CELLS,
+                plan_path="/src/" + RDEV_PLAN,
+                setting=session["setting"],
+                session_index=session["index"],
+                trials=session["trials"],
+                layer=workload.get("layer"),
+                reps=workload.get("reps"),
+                canary_readback=workload.get("canary_readback", False),
+                measure_targets=workload.get("measure_targets", False),
+                tap_duration_s=600 + len(session["trials"]) * workload["max_trial_s"],
             )
         config_path = cycles_dir / f"config-{cycle:02d}.json"
         config_path.write_text(json.dumps(config, indent=2, sort_keys=True), encoding="utf-8")
@@ -549,6 +596,10 @@ def run_cycle(
         budget = workload["boot_timeout_s"] + workload["settle_timeout_s"] + RUNNER_TIMEOUT_SLACK_S
         if subcommand == "rdev-capture":
             budget += workload["reps"] * 60 * 6
+        if subcommand == "session":
+            budget += 240 + len(session["trials"]) * workload["max_trial_s"]
+            if workload["kind"] == "inputs-validation":
+                budget += workload["reps"] * 40 * workload["max_trial_s"]
         try:
             completed = run(runner_argv, timeout=budget, check=False)
             record["runner_rc"] = completed.returncode
@@ -690,6 +741,62 @@ def summarize(verdicts: list[dict[str, Any]], records: list[dict[str, Any]]) -> 
     }
 
 
+def session_summary(records: list[dict[str, Any]]) -> dict[str, Any]:
+    """Per-cell outcome over every session, infrastructure failures by type, and timings."""
+    by_cell: dict[str, list[bool]] = {}
+    infra: dict[str, int] = {}
+    totals: list[float] = []
+    steps: list[float] = []
+    runner_errors = []
+    sessions = []
+    for record in records:
+        result = record.get("runner_result") or {}
+        if result.get("error"):
+            runner_errors.append({"cycle": record["cycle"], "error": str(result["error"])[:300]})
+        session_trials = result.get("trials") or []
+        for trial in session_trials:
+            key = f"{result.get('setting')}|{trial.get('cell')}"
+            judged = trial.get("verdict") or trial
+            by_cell.setdefault(key, []).append(bool(judged.get("pass")))
+            for kind in judged.get("infra") or []:
+                infra[kind] = infra.get(kind, 0) + 1
+            timing = trial.get("timing_s")
+            if isinstance(timing, dict):
+                totals.append(float(timing.get("total", 0)))
+                steps += [float(v) for v in timing.get("steps") or []]
+            elif isinstance(timing, int | float):
+                totals.append(float(timing))
+        sessions.append(
+            {
+                "cycle": record["cycle"],
+                "setting": result.get("setting"),
+                "trials": len(session_trials),
+                "passed": sum(1 for t in session_trials if (t.get("verdict") or t).get("pass")),
+                "wall_s": result.get("session_wall_s"),
+            }
+        )
+    cells = {}
+    for key, results in sorted(by_cell.items()):
+        passed = sum(results)
+        cells[key] = "PASS" if passed == len(results) else ("FAIL" if passed == 0 else "FLAKY")
+    return {
+        "cells": cells,
+        "cell_counts": {
+            s: sum(1 for v in cells.values() if v == s) for s in ("PASS", "FLAKY", "FAIL")
+        },
+        "infra_failures": infra,
+        "trial_s": {
+            "n": len(totals),
+            "p50": percentile(totals, 50),
+            "p95": percentile(totals, 95),
+            "sum": round(sum(totals), 2),
+        },
+        "step_s": {"n": len(steps), "p50": percentile(steps, 50), "p95": percentile(steps, 95)},
+        "sessions": sessions,
+        "runner_errors": runner_errors,
+    }
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     parser.add_argument("--manifest", type=Path, required=True)
@@ -758,18 +865,38 @@ def main(argv: list[str] | None = None) -> int:
     receipt["dangling_volumes_before"] = len(dangling_before.stdout.split())
 
     workload = manifest["workload"]
-    if workload["kind"] == "rdev-capture":
+    if workload["kind"] in ("rdev-capture", "inputs-validation"):
         plan_path = Path(args.source_dir) / RDEV_PLAN
         if hashlib.sha256(plan_path.read_bytes()).hexdigest() != workload["plan_sha256"]:
             raise DriverError("R-dev plan digest does not match the manifest")
     cycles = workload.get("cycles", 1)
+    plan: list[dict[str, Any]] = []
+    if workload["kind"] in SESSION_KINDS:
+        cells_path = Path(args.source_dir) / CELLS
+        if hashlib.sha256(cells_path.read_bytes()).hexdigest() != workload["cells_sha256"]:
+            raise DriverError("suite_cells.json digest does not match the manifest")
+        plan = session_plan(manifest, json.loads(cells_path.read_text(encoding="utf-8")))
+        trials = sum(len(s["trials"]) for s in plan)
+        if workload["kind"] != "inputs-validation" and (
+            len(plan) != workload["sessions"] or trials != workload["trials"]
+        ):
+            raise DriverError(
+                f"plan has {len(plan)} sessions and {trials} trials; the manifest declares "
+                f"{workload['sessions']} and {workload['trials']}"
+            )
+        receipt["session_plan_sha256"] = run_order.order_sha256(plan)
+        (run_dir / "session_plan.json").write_text(json.dumps(plan, indent=1), encoding="utf-8")
+        cycles = len(plan)
 
     records: list[dict[str, Any]] = []
     verdicts: list[dict[str, Any]] = []
     tokens: list[str] = []
     prev = None
     for cycle in range(cycles):
-        record = run_cycle(manifest, args.job_id, cycle, prev, run_dir, args.source_dir, cpus)
+        record = run_cycle(
+            manifest, args.job_id, cycle, prev, run_dir, args.source_dir, cpus,
+            session=plan[cycle] if plan else None,
+        )  # fmt: skip
         verdict = cycle_verdict(record, tokens)
         records.append(record)
         verdicts.append(verdict)
@@ -840,6 +967,19 @@ def main(argv: list[str] | None = None) -> int:
         else:
             infra_ok = False
             summary["rdev"] = {"error": capture.get("error", "no capture trials")}
+    if workload["kind"] in SESSION_KINDS:
+        # Cold boots and isolation only; the sentinel is not part of a session run.
+        infra_ok = (
+            summary["boots_ok"] == summary["cycles"]
+            and summary["no_gpu_all"]
+            and summary["no_published_ports_all"]
+            and summary["containers_removed_all"]
+            and not summary["leaked_volumes"]
+            and receipt["qcow2_unchanged"]
+            and not receipt["labelled_containers_left"]
+        )
+        summary["sessions"] = session_summary(records)
+        infra_ok = infra_ok and not summary["sessions"]["runner_errors"]
     summary["infra_gates_pass"] = infra_ok
     receipt["summary"] = summary
     receipt["verdicts"] = verdicts

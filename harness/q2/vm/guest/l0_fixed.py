@@ -1,0 +1,439 @@
+"""L0-fixed: the action-path suite's executor (runs inside the guest; python-xlib XTest).
+
+One canonical IR action per process, sent as a base64-transported script through
+OSWorld ``DesktopEnv.step`` (preregistration section 3). Every device event is
+an XTest request on the guest's X server followed by a round trip, so the
+server has processed it before the process exits.
+
+* ``move``: one absolute motion.
+* ``click``: motion to (x, y) if given; modifiers pressed in order; ``count``
+  press/release pairs of the X button (1, 2, 3, 8 or 9), successive presses
+  ``CLICK_GAP_S`` apart; modifiers released in reverse order.
+* ``button_down`` / ``button_up``: motion if given, then one press or one
+  release (the hold spans actions, so nothing releases it here).
+* ``drag``: modifiers; motion to the first point (unless ``from_current``);
+  press; motion along the path in ``DRAG_STEP_S`` steps over ``duration_ms``
+  (consecutive identical integer points are skipped, since they move
+  nothing); release at the last point; modifiers released.
+* ``scroll``: motion if given; modifiers; one press/release of button 5 (down)
+  or 4 (up) per ``wheel_y`` tick, then 7 (right) or 6 (left) per ``wheel_x``
+  tick; modifiers released.
+* ``key``: keys pressed in order and released in reverse order.
+  ``key_down`` / ``key_up`` press or release the listed keys and nothing else.
+* ``type``: code points in order. ``\\n`` is Return and ``\\t`` is Tab. A code
+  point whose keysym (Latin-1 value, else ``0x01000000 + cp``) is at index 0
+  of a layout keycode is that key; at index 1, that key with Shift_L held.
+  Any other code point goes through an executor-owned spare keycode remapped
+  to ``[keysym, keysym]`` with a core ``ChangeKeyboardMapping`` before the
+  press. Owned keycodes keep their mapping after the action (least recently
+  used first when one must be reused; a keycode pressed less than
+  ``REMAP_SETTLE_S`` ago is waited on before it is remapped), so no client
+  can see a key event whose mapping has already been changed back.
+* ``wait``: sleep. ``screenshot``: nothing. ``terminate`` never reaches the
+  device.
+
+Keysyms resolve to keycodes through the server's keyboard mapping read at the
+start of each action, under the core protocol's keysym-list rules: a keysym at
+index 0 of a keycode is that keycode; at index 1, that keycode with Shift_L;
+otherwise an owned spare keycode. Unknown keysym names cannot reach here (the
+IR rejects them), and zero spare keycodes raises when one is needed.
+Modifiers this action pressed for a pointer action, and keys of a ``key``
+chord, are released in ``finally`` if anything fails.
+
+Owned spare keycodes are recorded in ``STATE_DIR/spares.json`` (keycode,
+assigned keysym, last use); a keycode whose server row no longer matches its
+record is treated as unassigned. The probe's reserved keycode is never empty
+while it runs, so it is never owned.
+
+Written for this repository; the spare-keycode technique follows gym-anything's
+``_KEYBOARD_XLIB_PREAMBLE`` (MIT, Copyright (c) 2026 cmu-l3) in idea, not in
+code. Everything above ``Executor`` is pure Python.
+"""
+
+import json
+import os
+import sys
+import time
+
+STATE_DIR = "/tmp/q2ap_l0"
+KEY_GAP_S = 0.01
+TYPE_GAP_S = 0.004
+CLICK_HOLD_S = 0.02
+CLICK_GAP_S = 0.06
+MOTION_SETTLE_S = 0.02
+DRAG_STEP_S = 0.016
+DRAG_PRESS_SETTLE_S = 0.05
+SCROLL_GAP_S = 0.03
+REMAP_SETTLE_S = 0.3
+SHIFT_L = 0xFFE1
+RETURN, TAB = 0xFF0D, 0xFF09
+
+
+def char_keysym(ch):
+    """The keysym for one code point: its Latin-1 value, else 0x01000000 + cp."""
+    cp = ord(ch)
+    if ch == "\n":
+        return RETURN
+    if ch == "\t":
+        return TAB
+    if cp < 0x20 or 0x7F <= cp < 0xA0:
+        raise ValueError(f"control character U+{cp:04X} cannot be typed")
+    return cp if cp <= 0xFF else cp | 0x01000000
+
+
+def core_group(row):
+    """Index 0 and index 1 keysyms of group 1 under the core protocol's list rules."""
+    keys = list(row)
+    while keys and not keys[-1]:
+        keys.pop()
+    if len(keys) == 1:
+        keys = [keys[0], 0]
+    keys = (keys + [0, 0])[:2]
+    first, second = keys
+    if not second:
+        if 0x61 <= first <= 0x7A or 0xE0 <= first <= 0xFE and first != 0xF7:
+            return first, first - 0x20
+        if 0x41 <= first <= 0x5A or 0xC0 <= first <= 0xDE and first != 0xD7:
+            return first + 0x20, first
+        return first, first
+    return first, second
+
+
+def find_keycode(keymap, keysym, exclude=()):
+    """(keycode, shift) with ``keysym`` at index 0 (preferred) or 1 of a keycode, else None."""
+    shifted = None
+    for keycode in sorted(keymap):
+        if keycode in exclude:
+            continue
+        first, second = core_group(keymap[keycode])
+        if first == keysym:
+            return keycode, False
+        if second == keysym and shifted is None:
+            shifted = (keycode, True)
+    return shifted
+
+
+def drag_points(start, path, duration_ms, step_s=DRAG_STEP_S):
+    """Integer motion points along ``path`` after ``start``, with their times (s).
+
+    Each segment gets time in proportion to its length and steps of about
+    ``step_s``; every path vertex is hit exactly; consecutive duplicates are
+    dropped (they would move nothing).
+    """
+    points = [tuple(start)] + [tuple(p) for p in path]
+    segments = list(zip(points, points[1:], strict=False))
+    lengths = [((b[0] - a[0]) ** 2 + (b[1] - a[1]) ** 2) ** 0.5 for a, b in segments]
+    total = sum(lengths)
+    duration = max(duration_ms, 0) / 1000.0
+    out = []
+    last = tuple(start)
+    elapsed = 0.0
+    for (a, b), length in zip(segments, lengths, strict=False):
+        seg_time = duration * length / total if total else duration / max(1, len(segments))
+        steps = max(1, int(round(seg_time / step_s)))
+        for i in range(1, steps + 1):
+            f = i / steps
+            point = (int(round(a[0] + (b[0] - a[0]) * f)), int(round(a[1] + (b[1] - a[1]) * f)))
+            if point != last:
+                out.append((point, elapsed + seg_time * f))
+                last = point
+        elapsed += seg_time
+    return out
+
+
+class SparePool:
+    """Executor-owned spare keycodes, persisted between action processes."""
+
+    def __init__(self, keymap, path):
+        self.path = path
+        self.state = {"keycodes": [], "assigned": {}, "last_used": {}, "counter": 0}
+        if os.path.exists(path):
+            with open(path, encoding="utf-8") as handle:
+                self.state = json.load(handle)
+        else:
+            self.state["keycodes"] = [kc for kc in sorted(keymap) if not any(keymap[kc])]
+        for kc in list(self.state["assigned"]):
+            keysym = self.state["assigned"][kc]
+            if core_group(keymap.get(int(kc)) or [])[0] != keysym:
+                del self.state["assigned"][kc]
+        self.state["keycodes"] = [
+            kc
+            for kc in self.state["keycodes"]
+            if not any(keymap.get(kc) or []) or str(kc) in self.state["assigned"]
+        ]
+
+    def owned(self):
+        return set(self.state["keycodes"])
+
+    def lookup(self, keysym):
+        for kc, assigned in self.state["assigned"].items():
+            if assigned == keysym:
+                return int(kc)
+        return None
+
+    def allocate(self, keysym):
+        if not self.state["keycodes"]:
+            raise RuntimeError("zero spare keycodes: cannot type this code point")
+        last = self.state["last_used"]
+        keycode = min(self.state["keycodes"], key=lambda kc: (last.get(str(kc), [-1, 0])[0], kc))
+        used_at = last.get(str(keycode), [-1, 0])[1]
+        wait = REMAP_SETTLE_S - (time.time() - used_at)
+        self.state["assigned"][str(keycode)] = keysym
+        return keycode, max(0.0, wait)
+
+    def touch(self, keycode):
+        self.state["counter"] += 1
+        self.state["last_used"][str(keycode)] = [self.state["counter"], time.time()]
+
+    def save(self):
+        os.makedirs(os.path.dirname(self.path), exist_ok=True)
+        tmp = self.path + ".tmp"
+        with open(tmp, "w", encoding="utf-8") as handle:
+            json.dump(self.state, handle)
+        os.replace(tmp, self.path)
+
+
+class Executor:
+    def __init__(self):
+        from Xlib import X, display
+        from Xlib.ext import xtest
+
+        self.X, self.xtest = X, xtest
+        self.d = display.Display()
+        info = self.d.display.info
+        first, last = info.min_keycode, info.max_keycode
+        rows = self.d.get_keyboard_mapping(first, last - first + 1)
+        self.keymap = {first + i: list(row) for i, row in enumerate(rows)}
+        self.pool = SparePool(self.keymap, os.path.join(STATE_DIR, "spares.json"))
+        self.held_keys = []
+        self.held_buttons = []
+        self.log = {"events": 0, "remaps": []}
+
+    # --- primitives --------------------------------------------------------------------
+    def _fake(self, kind, detail=0, x=0, y=0):
+        if kind == self.X.MotionNotify:
+            self.xtest.fake_input(self.d, kind, x=x, y=y)
+        else:
+            self.xtest.fake_input(self.d, kind, detail)
+        self.d.sync()
+        self.log["events"] += 1
+
+    def motion(self, x, y):
+        self._fake(self.X.MotionNotify, x=x, y=y)
+
+    def key_press(self, keycode):
+        self._fake(self.X.KeyPress, keycode)
+        self.held_keys.append(keycode)
+
+    def key_release(self, keycode):
+        self._fake(self.X.KeyRelease, keycode)
+        if keycode in self.held_keys:
+            self.held_keys.remove(keycode)
+
+    def button_press(self, button):
+        self._fake(self.X.ButtonPress, button)
+        self.held_buttons.append(button)
+
+    def button_release(self, button):
+        self._fake(self.X.ButtonRelease, button)
+        if button in self.held_buttons:
+            self.held_buttons.remove(button)
+
+    def remap(self, keycode, keysym):
+        self.d.change_keyboard_mapping(keycode, [[keysym, keysym]])
+        self.d.sync()
+        self.keymap[keycode] = [keysym, keysym]
+        self.log["remaps"].append([keycode, keysym])
+
+    def resolve(self, keysym):
+        """(keycode, shift) for a keysym, remapping an owned spare keycode if needed."""
+        found = find_keycode(self.keymap, keysym, exclude=self.pool.owned())
+        if found is not None:
+            return found
+        keycode = self.pool.lookup(keysym)
+        if keycode is None:
+            keycode, wait = self.pool.allocate(keysym)
+            if wait:
+                time.sleep(wait)
+            self.remap(keycode, keysym)
+        return keycode, False
+
+    def shift_keycode(self):
+        found = find_keycode(self.keymap, SHIFT_L)
+        if found is None or found[1]:
+            raise RuntimeError("no keycode carries Shift_L at index 0")
+        return found[0]
+
+    # --- IR ops ------------------------------------------------------------------------
+    def press_keys(self, keysyms):
+        """Press keysyms in order (Shift_L first for any shifted one); returns keycodes pressed."""
+        pressed = []
+        resolved = [self.resolve(k) for k in keysyms]
+        if any(shift for _, shift in resolved) and SHIFT_L not in keysyms:
+            shift = self.shift_keycode()
+            self.key_press(shift)
+            pressed.append(shift)
+            time.sleep(KEY_GAP_S)
+        for keycode, _ in resolved:
+            self.key_press(keycode)
+            pressed.append(keycode)
+            if keycode in self.pool.owned():
+                self.pool.touch(keycode)
+            time.sleep(KEY_GAP_S)
+        return pressed
+
+    def release_keys(self, keycodes):
+        for keycode in reversed(keycodes):
+            self.key_release(keycode)
+            time.sleep(KEY_GAP_S)
+
+    def with_modifiers(self, modifiers, body):
+        pressed = self.press_keys(modifiers) if modifiers else []
+        try:
+            body()
+        finally:
+            self.release_keys(pressed)
+
+    def click(self, action):
+        if action.get("x") is not None:
+            self.motion(action["x"], action["y"])
+            time.sleep(MOTION_SETTLE_S)
+        button = action.get("button", 1)
+        count = action.get("count", 1)
+
+        def body():
+            for index in range(count):
+                self.button_press(button)
+                time.sleep(CLICK_HOLD_S)
+                self.button_release(button)
+                if index < count - 1:
+                    time.sleep(CLICK_GAP_S)
+
+        self.with_modifiers(action.get("modifiers") or [], body)
+
+    def drag(self, action):
+        path = [tuple(p) for p in action["path"]]
+        button = action.get("button", 1)
+
+        def body():
+            if action.get("from_current"):
+                pointer = self.d.screen().root.query_pointer()
+                start = (pointer.root_x, pointer.root_y)
+                rest = path
+            else:
+                start, rest = path[0], path[1:]
+                self.motion(start[0], start[1])
+                time.sleep(MOTION_SETTLE_S)
+            self.button_press(button)
+            time.sleep(DRAG_PRESS_SETTLE_S)
+            began = time.monotonic()
+            for (x, y), at in drag_points(start, rest, action.get("duration_ms", 500)):
+                delay = began + at - time.monotonic()
+                if delay > 0:
+                    time.sleep(delay)
+                self.motion(x, y)
+            time.sleep(DRAG_PRESS_SETTLE_S)
+            self.button_release(button)
+
+        self.with_modifiers(action.get("modifiers") or [], body)
+
+    def scroll(self, action):
+        if action.get("x") is not None:
+            self.motion(action["x"], action["y"])
+            time.sleep(MOTION_SETTLE_S)
+
+        def body():
+            wheel_y = action.get("wheel_y") or 0
+            wheel_x = action.get("wheel_x") or 0
+            for button, ticks in (
+                (5 if wheel_y > 0 else 4, abs(wheel_y)),
+                (7 if wheel_x > 0 else 6, abs(wheel_x)),
+            ):
+                for _ in range(ticks):
+                    self.button_press(button)
+                    self.button_release(button)
+                    time.sleep(SCROLL_GAP_S)
+
+        self.with_modifiers(action.get("modifiers") or [], body)
+
+    def key(self, keysyms):
+        pressed = []
+        try:
+            pressed = self.press_keys(keysyms)
+        finally:
+            self.release_keys(pressed)
+
+    def type_text(self, text):
+        shift = None
+        for ch in text:
+            keycode, shifted = self.resolve(char_keysym(ch))
+            if shifted:
+                shift = shift or self.shift_keycode()
+                self.key_press(shift)
+            self.key_press(keycode)
+            self.key_release(keycode)
+            if shifted:
+                self.key_release(shift)
+            if keycode in self.pool.owned():
+                self.pool.touch(keycode)
+            time.sleep(TYPE_GAP_S)
+
+    def run(self, action):
+        op = action["op"]
+        try:
+            if op == "move":
+                self.motion(action["x"], action["y"])
+            elif op == "click":
+                self.click(action)
+            elif op == "button_down":
+                if action.get("x") is not None:
+                    self.motion(action["x"], action["y"])
+                    time.sleep(MOTION_SETTLE_S)
+                self.button_press(action["button"])
+                self.held_buttons = []
+            elif op == "button_up":
+                if action.get("x") is not None:
+                    self.motion(action["x"], action["y"])
+                    time.sleep(MOTION_SETTLE_S)
+                self.button_release(action["button"])
+            elif op == "drag":
+                self.drag(action)
+            elif op == "scroll":
+                self.scroll(action)
+            elif op == "key":
+                self.key([int(k) for k in action["keysyms"]])
+            elif op == "key_down":
+                self.press_keys([int(k) for k in action["keysyms"]])
+                self.held_keys = []
+            elif op == "key_up":
+                for keysym in action["keysyms"]:
+                    keycode, _ = self.resolve(int(keysym))
+                    self.key_release(keycode)
+                    time.sleep(KEY_GAP_S)
+            elif op == "type":
+                self.type_text(action["text"])
+            elif op == "wait":
+                time.sleep(action["ms"] / 1000.0)
+            elif op == "screenshot":
+                pass
+            else:
+                raise ValueError(f"L0-fixed has no device action for {op!r}")
+        finally:
+            for keycode in list(reversed(self.held_keys)):
+                self.key_release(keycode)
+            for button in list(reversed(self.held_buttons)):
+                self.button_release(button)
+            self.pool.save()
+        return self.log
+
+
+def run_action(action):
+    started = time.time()
+    log = Executor().run(action)
+    log["op"] = action["op"]
+    log["elapsed_s"] = round(time.time() - started, 4)
+    print(json.dumps(log, sort_keys=True))
+
+
+if __name__ == "__main__":
+    run_action(json.loads(sys.argv[1]))

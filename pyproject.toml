@@ -66,7 +66,16 @@ dev = [
 
 [tool.ruff]
 # program/evidence holds recorded artifacts (including analysis scripts) verbatim.
-extend-exclude = ["legacy", ".claude/skills", ".agents", "program/evidence"]
+extend-exclude = [
+  "legacy",
+  ".claude/skills",
+  ".agents",
+  "program/evidence",
+  # Upstream parsers vendored byte for byte (harness/q2/action_path/upstream/vendor.py)
+  # and the marked, patched H-OSW-fixed copy keep their upstream style.
+  "harness/q2/action_path/upstream/osworld_*.py",
+  "harness/q2/action_path/upstream/gym_anything_*.py",
+]
 line-length = 100
 target-version = "py311"
 
