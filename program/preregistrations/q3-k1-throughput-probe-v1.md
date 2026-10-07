@@ -75,9 +75,11 @@ does.
 
 Synthetic token ids only, from NumPy's `default_rng`: uniform over the regular
 vocabulary (ids below 151643), every training and evaluation sequence opening
-with the registered sink token 151643, seed 42 for the training batches and
-the stream-dev sequences, 43 for the evaluation units, 44 for the capture
-check, and 52 to 55 for the four concurrent workers. No Belebele text, no K1
+with the registered sink token 151643 (the options of the multiple-choice
+units do not), seed 42 for the tolerance sequence and, in one stream, the
+training batches, the stream-dev sequences and the solo workers; 43 for the
+evaluation units, 44 for the capture check, 45 for the component split and 52
+to 55 for the four concurrent workers. No Belebele text, no K1
 bundle, no FineWeb or ParaDocs text and no partition is read. The seeds 42, 43
 and 44 passed with `--seeds` are the registered indexer initialisation seeds
 (each indexer is initialised by v1's `BlockIndexer.initialised` from SHA-256
