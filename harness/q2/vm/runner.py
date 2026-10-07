@@ -10,7 +10,8 @@ Subcommands:
 
 * ``boot-cycle --config FILE``: measure one cold boot (container start to the
   first valid ``/screenshot``), record guest facts, run the reset sentinel,
-  time the observation endpoints, and check that HMP input reaches X.
+  time the observation endpoints, check that HMP input reaches X and,
+  optionally, run the XRecord tap's oracle self-test (keyboard remaps).
 * ``tcp-probe``: from a separate container, test whether a VM's guest server
   is reachable over Docker's bridge (documents the exposure of the
   bridge-unpublished fallback; decision D13).
@@ -341,6 +342,64 @@ def hmp_input_check(client: GuestClient, hmp_port: int, token: str) -> dict[str,
     }
 
 
+def tap_selftest(client: GuestClient, token: str) -> dict[str, Any]:
+    """Oracle validation: the tap must follow keyboard-mapping changes in stream order.
+
+    Runs ``guest/tap_selftest.py`` (remap one spare keycode three times, press
+    it after each change) under the tap and compares the tap's key events on
+    that keycode with the expected keysyms. Also reports what a keymap frozen
+    at tap start would have given, which is what the previous tap did.
+    """
+    from harness.q2.vm.guest.xrecord_tap import mapping_check
+
+    tap_path = f"/tmp/q2ap_tapself_{token}.jsonl"
+    stop_path = f"/tmp/q2ap_tapself_{token}.stop"
+    status, text = client.launch_script(
+        _guest_script("xrecord_tap.py"), [tap_path, "60", stop_path]
+    )
+    if status != 200:
+        return {"ok": False, "error": f"tap launch failed: {status} {text}"}
+    ready = None
+    for _ in range(40):
+        ready = next((r for r in read_tap(client, tap_path) if r.get("kind") == "ready"), None)
+        if ready:
+            break
+        time.sleep(0.25)
+    if not ready:
+        return {"ok": False, "error": "tap never became ready"}
+    fixture = client.run_script(_guest_script("tap_selftest.py"))
+    time.sleep(0.8)
+    client.execute(["touch", stop_path], timeout=30.0)
+    records: list[dict[str, Any]] = []
+    for _ in range(40):
+        records = read_tap(client, tap_path)
+        if any(r.get("kind") == "stop" for r in records):
+            break
+        time.sleep(0.25)
+    client.execute(["rm", "-f", tap_path, stop_path], timeout=30.0)
+    if "error" in fixture:
+        return {"ok": False, "error": fixture["error"]}
+    keycode = int(fixture["keycode"])
+    observed = [
+        [r["kind"], r["detail"], r.get("keysym0")]
+        for r in records
+        if r.get("kind") in ("KeyPress", "KeyRelease") and r.get("detail") == keycode
+    ]
+    snapshot_row = (ready.get("keymap") or [])[keycode - int(ready.get("min_keycode", 0))]
+    frozen = [[kind, code, snapshot_row[0] if snapshot_row else 0] for kind, code, _ in observed]
+    check = mapping_check(records)
+    stop = next((r for r in records if r.get("kind") == "stop"), {})
+    return {
+        "ok": observed == fixture["expected"] and check["ok"] and check["requests"] >= 3,
+        "keycode": keycode,
+        "expected": fixture["expected"],
+        "observed": observed,
+        "frozen_keymap_would_give": frozen,
+        "mapping_check": check,
+        "map_gen_at_stop": stop.get("map_gen"),
+    }
+
+
 def read_guard(client: GuestClient) -> dict[str, Any]:
     result = client.execute(["python3", "-c", GUARD_SNIPPET], timeout=30.0)
     try:
@@ -526,6 +585,11 @@ def boot_cycle(config: dict[str, Any]) -> dict[str, Any]:
             result["hmp_input"] = hmp_input_check(client, config["hmp_port"], config["token"])
         except (OSError, HmpError, GuestError, KeyError, ValueError) as exc:
             result["hmp_input"] = {"ok": False, "error": repr(exc)[:500]}
+    if config.get("tap_selftest"):
+        try:
+            result["tap_selftest"] = tap_selftest(client, config["token"])
+        except (OSError, GuestError, KeyError, ValueError, IndexError) as exc:
+            result["tap_selftest"] = {"ok": False, "error": repr(exc)[:500]}
     return result
 
 
