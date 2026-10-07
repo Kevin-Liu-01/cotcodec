@@ -189,6 +189,58 @@ def _train_records(torch: Any, teacher: Any, layers: list[int], banks: Any, step
     return records
 
 
+def _components(torch: Any, teacher: Any, layers: list[int], banks: Any, shapes: Shapes,
+                scaling: float, device: Any, repeats: int = 3) -> dict[str, Any]:
+    """Descriptive split of one layer and one sequence (the last of ``repeats`` runs):
+    targets alone, targets plus bank forward and backward, the host's enqueue time of
+    the latter (close to its wall time means launch-bound), and clipping plus Adam."""
+
+    from harness import sparse_indexer_bank as skb
+    from harness import sparse_indexer_torch as sit
+
+    def sync() -> None:
+        if device.type == "cuda":
+            torch.cuda.synchronize(device)
+
+    layer = layers[0]
+    vocab = int(teacher.config.vocab_size)
+    tokens = torch.as_tensor(synthetic_tokens(np.random.default_rng(DATA_SEED + 3), 1,
+                                              shapes.sequence, vocab), device=device)
+    with sit.CaptureSession(teacher, [layer]) as cap, torch.no_grad():
+        teacher.model(input_ids=tokens, use_cache=False)
+        q, k, hidden = cap.query[layer][0], cap.key[layer][0], cap.hidden[layer][0]
+    bank = banks.banks[layer]
+    provide = skb.truncated_targets(q, k, scaling)
+    bounds = skb.chunk_bounds(hidden.shape[0], skb.ROW_CHUNK, bank.spec.block_size)
+    record: dict[str, Any] = {"layer": layer, "slots": bank.slots}
+    for _ in range(repeats):
+        sync()
+        started = time.perf_counter()
+        with torch.no_grad():
+            for first, end in bounds:
+                provide(first, end)
+        sync()
+        record["targets_s"] = time.perf_counter() - started
+        params = bank.working_params()
+        sync()
+        started = time.perf_counter()
+        bank.accumulate_sequence(params, hidden, provide, grad_scale=1.0)
+        record["enqueue_s"] = time.perf_counter() - started
+        sync()
+        record["targets_plus_bank_s"] = time.perf_counter() - started
+        bank.adopt_grads(params)
+        del params
+        sync()
+        started = time.perf_counter()
+        bank.clip_()
+        for optimiser in bank.optimisers:
+            optimiser.zero_grad(set_to_none=True)
+        sync()
+        record["clip_s"] = time.perf_counter() - started
+    record["bank_s"] = record["targets_plus_bank_s"] - record["targets_s"]
+    return record
+
+
 def arm_train(spec: dict[str, Any]) -> dict[str, Any]:
     torch, device, shapes, profile = _setup(spec)
     from harness import sparse_indexer_bank as skb
@@ -210,11 +262,13 @@ def arm_train(spec: dict[str, Any]) -> dict[str, Any]:
     records = _train_records(torch, teacher, layers, banks, shapes.train_steps, rng, shapes,
                              profile, scaling, device, out / "probe-train-loss.jsonl")
     store = rt.CheckpointStore(out / "probe-checkpoint" / "worker-0")
+    state_before = banks.state_tensors()
     started = time.perf_counter()
     store.save(shapes.train_steps, banks.state_tensors(), {"probe": EXPERIMENT_ID})
     save_s = time.perf_counter() - started
     shutil.rmtree(out / "probe-checkpoint")
-    state = banks.state_tensors()
+    components = _components(torch, teacher, layers, banks, shapes, scaling, device)
+    state = state_before  # the extension and stream-dev arms start from the 8-step state
     peak_main = _peak(torch, device)
     del banks
     ext_keys = [rt.indexer_key(t, EXTENSION_LR, s) for t in sit.TRAINED_TARGETS for s in SEEDS]
@@ -237,7 +291,8 @@ def arm_train(spec: dict[str, Any]) -> dict[str, Any]:
             "startup_s": startup_s, "save_s": save_s,
             "steps": rt2.summarise_steps(records, budget.STEADY_SKIP_STEPS),
             "extension": rt2.summarise_steps(ext_records, budget.STEADY_SKIP_STEPS),
-            "devkl": devkl, "peak_memory_bytes": _peak(torch, device),
+            "devkl": devkl, "components_descriptive": components,
+            "peak_memory_bytes": _peak(torch, device),
             "peak_memory_bytes_main_bank": peak_main}
 
 

@@ -38,7 +38,7 @@ needed.
 
 | File | SHA-256 |
 |---|---|
-| scripts/probe_sparse_indexer_k1_throughput.py | d776765835f0fd737f7014686ab17cac187c88a329be3a5dda72552b5f61258d |
+| scripts/probe_sparse_indexer_k1_throughput.py | a3207e10ea1662a3111c43d1378eb4d58cd166c96644bc7f4bd4af66a756115f |
 | harness/sparse_indexer_bank.py | e96653eb3eb5b9876201347c2fa8d452efc3ebb1043a516ac03c366ff8b89f88 |
 | harness/sparse_indexer_k1_budget_v2.py | c86568a62fe12cbcb5ad91eed25fc0afd9e9a09078a43345b18277e6922ea4fe |
 | harness/sparse_indexer_k1_equivalence_v2.py | 8117734933c10ff5027b5b1d3a15289d1bd45452c6bac2a2214a89daccd33d78 |
@@ -121,7 +121,12 @@ determinism settings (deterministic algorithms, TF32 matmuls allowed, no
    (the first excluded). Every step is timed as the training worker times it:
    the teacher capture, each layer (targets, bank forward and backward,
    clipping and Adam for the 4 sequences), each closed by a device
-   synchronisation, and the whole step including the loss copy and log.
+   synchronisation, and the whole step including the loss copy and log. A
+   descriptive split of one layer and one sequence follows the 8 steps (the
+   targets alone, the targets plus the bank's forward and backward, the
+   host's time to enqueue the latter, and the clipping; three repeats, the
+   last reported): an enqueue time close to the wall time would show the
+   bank launch-bound, which no rate depends on.
 3. **eval** (150 s). One worker with 6 indexers per layer on all 28 layers
    (the frozen-learning-rate layout of the audit evaluation): 13 selection-only,
    13 selection plus multiple-choice and 13 multiple-choice-only units at 34
@@ -209,7 +214,8 @@ is reported with its receipt; a rerun is a new id.
   and CUDA versions) and the failures.
 - When complete: the rates, the derived limits and caps per job, the total with
   the probe and whether the gauntlet applies.
-- The 220-row unit time against the 34-row time (descriptive).
+- The 220-row unit time against the 34-row time and the per-layer component
+  split (descriptive).
 
 ## Design decisions
 
