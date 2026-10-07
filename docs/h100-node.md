@@ -31,9 +31,12 @@ probe on one VLM and one LLM comes before any budget is frozen.
 
 - Workloads run only as Slurm jobs, inside a digest-pinned image, through
   `scripts/submit_docker_research_job.py`. See `operations.md`.
-- No model-generated code (kernels, agent-written programs) runs with GPU
-  access on the R570 stack. Deterministic mutants of benchmark code are not
-  model-generated and may run.
+- No untrusted model-generated code runs with GPU access on the R570 stack.
+  Untrusted means code produced by a model as the object of study and not
+  reviewed: sampled kernels, policy rollouts, programs an agent writes during
+  an experiment. Harness code that is reviewed, tested and committed to this
+  repository is project code, whoever drafted it. Deterministic mutants of
+  benchmark or human-written kernels are derived by that harness and may run.
 - Membership in the `docker` group is root-equivalent. Never use it to change
   host configuration, read other users' data, or work around the admin list.
 - The Docker/Slurm 21.08.5 lane is for discovery. Results meant for

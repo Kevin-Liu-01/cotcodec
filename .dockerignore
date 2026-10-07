@@ -24,4 +24,5 @@ raw/baselines/hermes-agent/plugins/memory/*
 raw/baselines/hermes-agent/plugins/memory/byterover/*
 !raw/baselines/hermes-agent/plugins/memory/byterover/__init__.py
 slurm-*.out
+legacy
 .DS_Store

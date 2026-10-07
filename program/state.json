@@ -17,8 +17,14 @@
       "dossier_key": "C2-kernel-verification-rl",
       "status": "stage-0",
       "next_action": "Build gates (a), (b), (c) and the independent audit; validate on reference kernels and deterministic mutants",
-      "first_gpu_experiment": {"name": "on-policy false-accept audit", "estimated_gpu_hours": 12, "gauntlet_required": true},
-      "blocked_by": ["R580 driver upgrade or written risk acceptance from Kevin"]
+      "first_gpu_experiment": {
+        "name": "on-policy false-accept audit",
+        "estimated_gpu_hours": 12,
+        "gauntlet_required": true
+      },
+      "blocked_by": [
+        "R580 driver upgrade or written risk acceptance from Kevin"
+      ]
     },
     {
       "id": "Q2",
@@ -27,8 +33,15 @@
       "dossier_key": "S1-calibrated-cua-instrument",
       "status": "stage-0",
       "next_action": "Evaluator mutation kit on OSWorld-Verified checkers; port the cua-speedrun action-path suite",
-      "first_gpu_experiment": {"name": "Qwen3.5 four-size ladder", "estimated_gpu_hours": 60, "gauntlet_required": true},
-      "blocked_by": ["Kevin's OK for the ~14.9 GB Holo3 trajectory download", "action-path suite at 100%"]
+      "first_gpu_experiment": {
+        "name": "Qwen3.5 four-size ladder",
+        "estimated_gpu_hours": 60,
+        "gauntlet_required": true
+      },
+      "blocked_by": [
+        "Kevin's OK for the ~14.9 GB Holo3 trajectory download",
+        "action-path suite at 100%"
+      ]
     },
     {
       "id": "Q3",
@@ -37,16 +50,26 @@
       "dossier_key": "E6-d21-translation-supervised-indexer",
       "status": "stage-0",
       "next_action": "Write scripts/run_sparse_indexer_phase0a.py; rebuild image with tilelang and peft; fetch qwen3-0.6b-base receipt",
-      "first_gpu_experiment": {"name": "K1 localization screen", "estimated_gpu_hours": 1.5, "gauntlet_required": false},
-      "blocked_by": ["GPU entry point", "rebuilt digest-pinned image", "checkpoint receipt"]
+      "first_gpu_experiment": {
+        "name": "K1 localization screen",
+        "estimated_gpu_hours": 1.5,
+        "gauntlet_required": false
+      },
+      "blocked_by": [
+        "GPU entry point",
+        "rebuilt digest-pinned image",
+        "checkpoint receipt"
+      ]
     }
   ],
   "pending_decisions_for_kevin": [
-    "Approve or decline the R580 driver upgrade request to the host administrator, or give written risk acceptance for Q1",
-    "Approve the ~14.9 GB Holo3 trajectory archive download for Q2 Stage 0",
-    "Approve disclosure of the Letta symlink and deletion-residue findings to letta-ai",
-    "Decide whether to purge sensitive files from public git history (requires a force-push)",
-    "Rotate the Moonshot API key that was shared in a chat session"
+    "Approve or decline the R580 driver upgrade request to the host administrator, or give written risk acceptance for scoring Q1 policy kernels",
+    "Approve disclosure of the Letta findings to letta-ai once the current-main recheck is complete (draft kept privately)",
+    "Approve telling xlang-ai about OSWorld checker defects found in Q2 Stage 0a, and about the hardcoded Surfer-H API key in public OSWorld source",
+    "Approve asking the Dr. Kernel and KernelGYM authors to add licenses, or choose another licensed Q1 policy",
+    "Decide whether to purge the old host address and the internal corpus inventory from public git history (requires a force-push)",
+    "Rotate the Moonshot API key that was pasted into a chat session",
+    "Spot-check a sample of the Q2 checker-mutation audit as the human rater (decision D9)"
   ],
   "gpu_hours_spent_this_program": 0
 }
