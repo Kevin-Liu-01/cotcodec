@@ -50,11 +50,21 @@ python -m harness.q2_mutation.report runs/dev-controls-vN --out summary.json
 
 ## Scoring a mutant set (operators branch output)
 
-Write one `ScoreJob` per mutant (JSONL: `mutant_id`, `task_id`, `files` mapping
-VM path to a path inside the container), run `reach.sh` in the LO-VM image,
-`controls.py merge-lo`, then `score.sh` in the metric image. Office mutants of
-the `document_model` stratum always go through the save stage; the
-`script_writer` stratum is scored raw with `saved_via: none`.
+The operators branch writes `MutationResult` rows (schema v1, with
+`target_path_in_vm` and `output_sha256`) and each mutant file at
+`<files_root>/<mutant_id>/<VM path without the leading slash>` on the host.
+
+```bash
+python -m harness.q2_mutation.controls mutation-jobs \
+  --mutations mutations.jsonl --files-root /ro/mutants --out /out/jobs.jsonl
+```
+
+Then run `reach.sh` (LO-VM image), `controls.py merge-lo`, and `score.sh`
+(metric image), as `submit_controls.sh` does for the controls. Office mutants
+of the `document_model` stratum go through the save stage; `script_writer`
+mutants carry `skip_reachability` and reach the checker unsaved
+(`saved_via: none`). Confirm-split mutants are scored only after the
+preregistration freeze.
 
 ## Invariants
 
