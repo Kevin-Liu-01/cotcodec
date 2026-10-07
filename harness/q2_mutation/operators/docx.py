@@ -54,7 +54,8 @@ HIGHLIGHT_HEX = {
     "darkYellow": "808000", "darkGray": "808080", "lightGray": "C0C0C0", "black": "000000",
     "white": "FFFFFF",
 }
-DEFAULT_PARA_STYLES = {"", "Normal", "Default Paragraph Style", "Standard", "Default"}
+DEFAULT_PARA_STYLES = {"", "Normal", "Default Paragraph Style", "Standard", "Default",
+                       "LO-normal"}
 
 
 def address(unit: str) -> dict:
