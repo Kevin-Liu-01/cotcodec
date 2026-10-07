@@ -49,7 +49,6 @@ from harness.q1.schema import (
     KERNELBENCH_PROBLEMS_REVISION,
     SCHEMA_VERSION,
     parse_problem_id,
-    problem_relpath,
     validate_substrate,
 )
 from harness.q1.substrates.inductor_convert import (
@@ -57,7 +56,7 @@ from harness.q1.substrates.inductor_convert import (
     forward_signature,
     sha256_text,
 )
-from harness.q1.substrates.sources import SOURCES
+from harness.q1.substrates.sources import SOURCES, VENDORED_SOURCES_ROOT, problem_file
 
 S2_BUILD_VERSION = "q1-s2-build/1"
 
@@ -679,9 +678,7 @@ def build_entry(item: S2Entry, sources_root: Path, kernelbench_root: Path) -> di
     """Build one S2 substrate; return {substrate_id, files, substrate_json, build_json}."""
     upstream = read_upstream(sources_root, item.source, item.path)
     normalised, steps = _apply_edits(item, upstream, sources_root)
-    problem_source = (
-        Path(kernelbench_root) / "KernelBench" / problem_relpath(item.problem_id)
-    ).read_text(encoding="utf-8")
+    problem_source = problem_file(kernelbench_root, item.problem_id).read_text(encoding="utf-8")
     reference, forward = _reference_for_s2(problem_source)
     signature, arg_names = forward_signature(forward)
     body_names = {n.id for n in ast.walk(ast.parse(item.forward_body)) if isinstance(n, ast.Name)}
@@ -829,3 +826,12 @@ def build_all(
             }
         )
     return rows
+
+
+def verify_vendored_sources(root: Path = VENDORED_SOURCES_ROOT) -> list[str]:
+    """Check every pinned upstream file in ``root``; return the paths that verified."""
+    verified = []
+    for source, path in sorted(UPSTREAM_FILES):
+        read_upstream(root, source, path)
+        verified.append(f"{SOURCE_DIRS[source]}/{path}")
+    return verified

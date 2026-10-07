@@ -34,7 +34,9 @@ Inductor settings (recorded per problem):
   config, the one Inductor would launch.
 - ``force_disable_caches = True``: no FX-graph, AOT or autotune cache reuse.
 - Dynamo: ``assume_static_by_default = False`` and duck sizing off, so equal
-  example sizes do not share a symbol.
+  example sizes do not share a symbol; ``specialize_float = True``, so Python
+  float inputs and attributes are compile-time constants (the substrate refuses
+  a scalar input that differs from its native value).
 - Matmul problems: optionally ``max_autotune=True`` with
   ``max_autotune_gemm_backends="TRITON"``. In deterministic mode Inductor picks
   the template with ``AlgorithmSelectorCache.pick_deterministic_choice``, without
@@ -550,6 +552,7 @@ def _inductor_settings(max_autotune_gemm: bool, constant_folding: bool = True):
         "max_autotune": inductor_config.max_autotune,
         "max_autotune_gemm_backends": inductor_config.max_autotune_gemm_backends,
         "assume_static_by_default": torch._dynamo.config.assume_static_by_default,
+        "specialize_float": torch._dynamo.config.specialize_float,
         "use_duck_shape": fx_config.use_duck_shape,
         "joint_graph_constant_folding": inductor_config.joint_graph_constant_folding,
     }
@@ -560,6 +563,7 @@ def _inductor_settings(max_autotune_gemm: bool, constant_folding: bool = True):
         inductor_config.max_autotune = True
         inductor_config.max_autotune_gemm_backends = "TRITON"
     torch._dynamo.config.assume_static_by_default = False
+    torch._dynamo.config.specialize_float = True
     fx_config.use_duck_shape = False
     inductor_config.joint_graph_constant_folding = constant_folding
     try:
@@ -572,6 +576,7 @@ def _inductor_settings(max_autotune_gemm: bool, constant_folding: bool = True):
             if max_autotune_gemm
             else saved["max_autotune_gemm_backends"],
             "dynamo.assume_static_by_default": False,
+            "dynamo.specialize_float": True,
             "fx.use_duck_shape": False,
             "joint_graph_constant_folding": constant_folding,
             "dynamic": True,
@@ -585,6 +590,7 @@ def _inductor_settings(max_autotune_gemm: bool, constant_folding: bool = True):
         inductor_config.max_autotune = saved["max_autotune"]
         inductor_config.max_autotune_gemm_backends = saved["max_autotune_gemm_backends"]
         torch._dynamo.config.assume_static_by_default = saved["assume_static_by_default"]
+        torch._dynamo.config.specialize_float = saved["specialize_float"]
         fx_config.use_duck_shape = saved["use_duck_shape"]
         inductor_config.joint_graph_constant_folding = saved["joint_graph_constant_folding"]
 

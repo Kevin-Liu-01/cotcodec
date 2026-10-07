@@ -9,8 +9,12 @@ clones; Triton from the tutorials' repository root at the pinned commit).
 from __future__ import annotations
 
 from dataclasses import dataclass
+from pathlib import Path
 
-from harness.q1.schema import KERNELBENCH_PROBLEMS_REVISION, parse_problem_id
+from harness.q1.schema import KERNELBENCH_PROBLEMS_REVISION, parse_problem_id, problem_relpath
+
+#: Verbatim copies of the pinned S2 upstream files (Apache-2.0, BSD-2-Clause, MIT).
+VENDORED_SOURCES_ROOT = Path(__file__).resolve().parent / "third_party"
 
 
 @dataclass(frozen=True)
@@ -114,3 +118,23 @@ def source(key: str) -> UpstreamSource:
         return SOURCES[key]
     except KeyError as exc:
         raise KeyError(f"unknown upstream source {key!r}; known: {sorted(SOURCES)}") from exc
+
+
+def level_dir(kernelbench_root: Path, level: int) -> Path:
+    """``levelN`` directory of a KernelBench checkout (``<root>/KernelBench/levelN``) or of
+    a vendored problem tree (``<root>/levelN``, as in ``harness/q1/third_party``)."""
+    root = Path(kernelbench_root)
+    for candidate in (root / "KernelBench" / f"level{level}", root / f"level{level}"):
+        if candidate.is_dir():
+            return candidate
+    raise FileNotFoundError(f"no level{level} directory under {root}")
+
+
+def problem_file(kernelbench_root: Path, problem_id: str) -> Path:
+    """Path of ``problem_id`` under either layout accepted by :func:`level_dir`."""
+    root = Path(kernelbench_root)
+    relative = problem_relpath(problem_id)
+    for candidate in (root / "KernelBench" / relative, root / relative):
+        if candidate.is_file():
+            return candidate
+    raise FileNotFoundError(f"{problem_id} not found under {root}")

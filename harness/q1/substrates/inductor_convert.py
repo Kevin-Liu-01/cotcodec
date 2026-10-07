@@ -653,12 +653,26 @@ def convert_record(record: dict[str, Any]) -> ConvertedSubstrate:
     modules = record.get("module_types", [])
     training_guard = sorted({m for m in modules if m in TRAINING_DEPENDENT_MODULES})
 
+    scalar_guards: list[str] = []
     mapping = ", ".join([f'"{name}": {name}' for name in forward_args] + ['"self": self'])
     forward_lines = [
         f"    def forward({signature_text}):",
         '        """Bind the Dynamo graph inputs from their guard sources and run the wrapper."""',
         f"        L = {{{mapping}}}",
     ]
+    for index, value in enumerate(record.get("inputs", [])):
+        if value.get("kind") == "tensor" or index >= len(forward_args):
+            continue
+        name = forward_args[index]
+        constant = value.get("value")
+        if not isinstance(constant, int | float) or isinstance(constant, bool):
+            raise ConversionError("unsupported-scalar-input", f"{name}={constant!r}")
+        forward_lines += [
+            f"        if L[{name!r}] != {constant!r}:",
+            f"            raise SubstrateRefusal('scalar input {name} differs from the compiled "
+            f"constant {constant!r}')",
+        ]
+        scalar_guards.append(name)
     if training_guard:
         forward_lines += [
             "        if not self.training:",
@@ -802,7 +816,12 @@ def convert_record(record: dict[str, Any]) -> ConvertedSubstrate:
             "detail": f"{len(record.get('guards', {}).get('expressions', []))} shape guards and "
             f"{len(tensor_checks)} tensor dtype/rank/device checks raise SubstrateRefusal "
             "before any launch"
-            + (f"; training-mode guard for {', '.join(training_guard)}" if training_guard else ""),
+            + (f"; training-mode guard for {', '.join(training_guard)}" if training_guard else "")
+            + (
+                f"; scalar inputs pinned to native values: {', '.join(scalar_guards)}"
+                if scalar_guards
+                else ""
+            ),
         },
         {
             "name": "modelnew-wrapper",
