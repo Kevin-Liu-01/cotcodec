@@ -1,4 +1,5 @@
 import io
+import json
 import tarfile
 import zipfile
 from pathlib import Path
@@ -510,3 +511,25 @@ def test_file_only_postconfig_is_metric_side() -> None:
     )
     assert plan["metric_side"] == ["postconfig download", "diff a b"]
     assert plan["unemulated"] == ["postconfig close_window"]
+
+
+def test_packet_artifacts_for_text_and_binary(tmp_path: Path) -> None:
+    from harness.q2_mutation import packets
+
+    before = tmp_path / "a.json"
+    before.write_text('{"x": 1}\n')
+    after = tmp_path / "b.json"
+    after.write_text('{"x": 2}\n')
+    blob = tmp_path / "c.png"
+    blob.write_bytes(b"\x89PNG")
+    out = packets.artifacts(
+        {"/home/user/a.json": str(before)},
+        {"/home/user/a.json": str(after), "/home/user/c.png": str(blob), "/home/user/gone": None},
+    )
+    assert '-{"x": 1}' in out["/home/user/a.json"]["diff_vs_initial"]
+    assert out["/home/user/c.png"]["diff_vs_initial"] == ["new file"]
+    assert out["/home/user/c.png"]["structure"][0].startswith("binary .png: 4 bytes")
+    assert out["/home/user/gone"]["structure"] == ["file absent in the end state"]
+    assert "gold" not in json.dumps(out)
+    cmds = packets.render_command("/w/x.docx", "/w/r", "/w/h")
+    assert cmds[0][-1] == "/w/x.docx" and cmds[1][0] == "pdftoppm"
