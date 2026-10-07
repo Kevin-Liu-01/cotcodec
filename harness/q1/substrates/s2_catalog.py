@@ -747,6 +747,7 @@ def build_entry(item: S2Entry, sources_root: Path, kernelbench_root: Path) -> di
         "s2_build_version": S2_BUILD_VERSION,
         "key": item.key,
         "problem_id": item.problem_id,
+        "problem_sha256": sha256_text(problem_source),
         "source": item.source,
         "upstream_path": item.path,
         "upstream_sha256": UPSTREAM_FILES[(item.source, item.path)][1],

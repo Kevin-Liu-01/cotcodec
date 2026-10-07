@@ -850,6 +850,7 @@ def convert_record(record: dict[str, Any]) -> ConvertedSubstrate:
         "converter_version": CONVERTER_VERSION,
         "codegen_record_version": record.get("record_version"),
         "problem_id": problem_id,
+        "problem_sha256": sha256_text(record["problem_source"]),
         "mode": record.get("mode"),
         "settings": settings,
         "gemm_choice_rule": record.get("gemm_choice_rule"),

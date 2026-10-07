@@ -395,6 +395,9 @@ def _run_cpu_check(args: argparse.Namespace, check: str) -> int:
             str(args.kernelbench_root),
         ]
         env = dict(os.environ)
+        # One busy thread per check; the pool supplies the parallelism.
+        for var in ("OMP_NUM_THREADS", "MKL_NUM_THREADS", "OPENBLAS_NUM_THREADS"):
+            env.setdefault(var, "1")
         if check == "interp":
             env["TRITON_INTERPRET"] = "1"
         else:
