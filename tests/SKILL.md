@@ -41,6 +41,9 @@ Each contract proves valid inputs pass and decision-bearing drift fails.
   bookkeeping for the serving-probe tests.
 - `serving_probe_v2_fakes.py` (not collected) adds the v2 fakes: a server that
   streams prompt token ids, and device and compute-process timelines.
+- `test_open_weight_review.py` runs the reviewer on a scripted fake engine
+  (retry, replicates, signals, receipts) and the vLLM adapter and doctor on
+  fake `vllm`, `transformers` and `torch` modules; no GPU or vLLM needed.
 
 ## Patterns to follow / invariants
 <!-- agent-docs:fill:patterns -->
