@@ -1,0 +1,233 @@
+schema_version: 1
+name: translation-supervised-sparse-indexer-k1-screen
+direction: Translation-Supervised Sparse Indexer (Direction 21), Q3 K1 localization screen
+readiness: contract
+claim_scope: attachment-capability
+research_question: >-
+  On frozen Qwen3-0.6B-Base, do block-form (compress ratio 4) KL-distilled
+  sparse-attention indexers trained without the evaluation languages lose more
+  needle-selection recall than the dense block top-k of their own distillation
+  target when the query is a human translation in a different script from the
+  needle passage, compared with a same-language non-literal query, at a matched
+  achieved budget of 1,024 tokens in an 8,192-token context?
+null_hypothesis: >-
+  The indexer's cross-lingual gap equals its target's gap within 5 recall
+  points for both registered targets (head-sum hs and QSA Eq. 17 max-pool mp),
+  with the combined 99 percent interval excluding 10 points and the scale-free
+  retention difference xi_rel at most 0.1 with its interval excluding 0.2.
+
+# A material narrowing of the D21 contract's Phase 0a (one base, block form
+# only, targets hs and mp, 20M distillation tokens, 8K only, new headroom gates,
+# an equivalence-style negative and a scale-free co-statistic). Statistic
+# definitions are inherited from translation-supervised-sparse-indexer.yaml;
+# scope comes from program/PROGRAM.md, program/questions/q3-cross-script-indexer.md
+# and dossier entry E6. A negative here is reported as "K1-screen negative
+# (0.6B, block, hs/mp)", never as the D21 contract's two-base, two-form K1.
+inherits_definitions_from: experiments/architectures/translation-supervised-sparse-indexer.yaml
+preregistration:
+  experiment_id: q3-k1-localization-screen-v1
+  path: program/preregistrations/q3-k1-localization-screen-v1.md
+  status: draft until frozen with scripts/preregister.py by the program owner
+
+k1_model:
+  model_id: qwen3-0.6b-base
+  revision: da87bfb608c14b7cf20ba1ce41287e8de496c0cd
+  receipt_sha256: e7f36f05e6c87ec50b3736cf133fda60775abccb38f60fa9d3c134c432cf46df
+  artifact_root_sha256: 7040f418762c61dd00b540e482527e0d8c8a916cce80eee56408bd10a6179ae0
+
+reference_doctor:
+  implementation: harness/sparse_indexer_torch.py
+  command_argv:
+    - uv
+    - run
+    - python
+    - scripts/run_sparse_indexer_k1_doctor.py
+    - --output
+    - data/results/translation-supervised-sparse-indexer/k1-doctor.json
+  runtime: torch-cpu (tiny random Qwen3 model)
+  evidence_grade: >-
+    EXECUTABILITY_AND_GATE_SEMANTICS_ONLY; a tiny randomly initialised Qwen3
+    model and a synthetic bundle built by the real builder code; proves that
+    capture equals eager attention, targets equal the NumPy reference,
+    selection equals brute force, gradients match finite differences, the
+    resume path is bitwise, the signal marker semantics hold and the verdict
+    rules fire in their registered direction; no claim about the real model
+  objects:
+    - capture session on the SDPA path (post-norm, post-RoPE queries and keys, attention inputs) and exact per-row probabilities
+    - block targets hs and mp (QSA Eq. 17) over complete blocks, plus the descriptive dense hm row
+    - block-form indexer (QSA Eq. 12-16 with the DSA per-head gate) and the KL loss
+    - stable lower-index block selection, needle recall, union references U and U_k, the analytic random baseline
+    - xi_T, xi_rel_T, the seed-plus-cluster decision interval and the K1-screen verdict
+    - ParaDocs filter reimplementation, script and Latin function-word filters, 50-gram and MinHash dedup, packing, contexts, the bundle codec
+    - PID-1 parent with layer-sharded subprocess workers, atomic checkpoints, signal-triggered saves and the checkpoint marker
+  gates:
+    - capture probabilities equal eager attention within 1e-5 (fp32) on every layer, including a KV-cache continuation
+    - torch hs and mp targets equal the NumPy reference within 1e-9 (float64)
+    - block selection and the union reference equal brute force on every case
+    - indexer KL gradient within 1e-4 relative error of central finite differences (float64)
+    - a resumed run equals an uninterrupted run bit for bit; a signal save writes the marker only after every worker acknowledged; a stale marker is deleted
+    - the verdict classifier returns GO, NEGATIVE, INCONCLUSIVE, UNINTERPRETABLE, HOLD and VOID on hand-made tables in the registered direction
+    - a bundle digest mismatch exits 2 and a read outside the declared partition raises IndexerContractError
+  receipt: data/results/translation-supervised-sparse-indexer/k1-doctor.json
+
+stages:
+  - stage: cpu-doctor
+    gpu_hours: 0
+    promotion_gate: the K1 doctor passes and every K1 test passes on the commit that builds image A
+  - stage: k1-bundle
+    gpu_hours: 0
+    promotion_gate: >-
+      the bundle is built in image A with no network from a raw directory whose
+      every file is hashed; its SHA-256 and size are written into the frozen
+      preregistration
+  - stage: k1-smoke-and-headroom
+    gpu_hours_ceiling: 0.22
+    promotion_gate: >-
+      smoke gates pass (capture reconstruction, eager sanity, finite recall,
+      budget) and the dense development pre-check passes H1, H2a and H2b
+  - stage: k1-resume-test
+    gpu_hours_ceiling: 0.43
+    promotion_gate: >-
+      R2 (resumed from R1's signal checkpoint) equals R0 (uninterrupted) bit
+      for bit and R1 terminated with signal_USR1_checkpoint_confirmed
+  - stage: k1-main
+    gpu_hours_ceiling: 2.0
+    promotion_gate: the registered verdict, read once on the audit partition
+
+starting_point:
+  arms:
+    - name: kl-only-block-hs-qwen3-0-6b
+      mode: frozen-checkpoint-retrofit
+      model_ids: [qwen3-0.6b-base]
+      is_control: true
+      purpose: >-
+        Block-form indexers on all 28 layers distilled by KL from the head-sum
+        target (head-sum, L1, sum within each 4-token block, renormalised over
+        complete blocks), the DSA-style recipe; LR {3e-4, 1e-3, 3e-3} x seeds
+        {42, 43, 44}; the LR is frozen on stream-dev KL before any audit read.
+    - name: kl-only-block-mp-qwen3-0-6b
+      mode: frozen-checkpoint-retrofit
+      model_ids: [qwen3-0.6b-base]
+      is_control: true
+      purpose: >-
+        The same design distilled from QSA Eq. 17 (head-sum, L1, max within
+        each 4-token block, L1 over complete blocks).
+
+intervention:
+  mechanism: >-
+    A detached block-form indexer I_{i,b} = sum_j w_ij ReLU(<q_i^j, kbar_b>) /
+    sqrt(128) with four 128-dimensional RMS-normalised query heads, one
+    average-pooled RMS-normalised key per complete 4-token block, rotary
+    position on all 128 dimensions (theta 1e6; query at i, key at 4b) and the
+    gate w_ij = b_j + x_i W_w (b = 1, W_w = 0 at init) is trained by KL to a
+    frozen target aggregation of the frozen layer's exact attention. Selection
+    keeps the top 256 complete blocks plus the incomplete tail block. Recall is
+    read offline against captured dense attention; no sparse kernel runs.
+  trainable_components:
+    - indexer query and key projections, the two RMSNorm gains and the per-head gate (659,716 parameters per indexer)
+  frozen_components:
+    - Qwen3-0.6B-Base weights, tokenizer and attention (receipt e7f36f05...46df)
+    - target definitions hs and mp, the budget (k = 1,024 tokens, 256 blocks) and the tie-break
+    - the frozen learning rate per target after the stream-dev KL rule
+    - the passage-id partition, prompts, haystacks, needle positions and the bundle digest
+
+data:
+  train:
+    source: >-
+      2,441 training sequences of 8,192 tokens (20.0M tokens) plus 64
+      stream-dev sequences, half bilingual (ParaDocs en-th, en-hi, en-km from
+      all/paracrawl and en-de, en-fr, en-es, en-pl from the authors' strict
+      split, through one reimplemented filter with minimum_size 2,
+      frequency_cutoff 100, lid_cutoff 0.5) and half monolingual FineWeb-2 test
+      text in deu, fra, spa, pol, tha, hin, khm, cmn, arb, rus. TED2020 is
+      excluded (decision D4).
+    identity: >-
+      HF revisions jhu-clsp/paradocs@f80095af, HuggingFaceFW/fineweb-2@af9c1333;
+      per-file LFS ids, compressed bytes and lines consumed, the filtered-file
+      SHA-256 and the packed-stream array digests are inside the bundle
+  development:
+    source: >-
+      the 64 stream-dev sequences (LR selection by mean KL) and the Belebele
+      development partition (122 passages, 224 questions) for the dense
+      headroom pre-check only
+    identity: bundle split section (seed 42) and stream digests
+  test:
+    source: >-
+      Belebele audit partition (122 passages, 230 questions; facebook/belebele@
+      7899cdfa) crossed with 14 cross-script pairs (needle X, query en) and
+      (needle en, query X) for X in {ja, ko, bn, ta, el, he, ka} and 10
+      same-script descriptive pairs for X in {id, tr, sw, nl, it}; haystacks
+      from FineWeb-2 test splits (X) and FineWeb CC-MAIN-2025-26/004_00046
+      (en); the primary partition is never read
+    identity: >-
+      the bundle's prompt ledger (context, query and option token digests) and
+      split; reads outside the audit partition fail closed
+    sealed: true
+  contamination_checks:
+    - exact 50-gram and MinHash (128 permutations, token 5-gram shingles, Jaccard at least 0.8) deduplication of every training and haystack document against every Belebele passage, question and option in 18 languages, with removal counts in the bundle
+    - documents with more than 0.5 percent held-out cross-script characters and Latin-script text whose function words read as it, nl, tr, id or sw are removed from training
+    - needle-absent CX twins (300) bound parametric answering; no-haystack passage-plus-question accuracy is reported on development
+
+controls:
+  - name: dense-own-target-block-top-k
+    matches: [prompts, layer, achieved-budget, target-aggregation]
+  - name: union-of-per-head-top-k-reference-and-budget-matched-u-k
+    matches: [prompts, layer, k-per-head]
+  - name: analytic-random-block-selection
+    matches: [prompts, achieved-budget]
+  - name: same-script-descriptive-pairs
+    matches: [items, haystack-source, positions, indexers]
+  - name: needle-absent-cx-twins
+    matches: [query, haystack-language, context-length]
+
+primary_endpoint:
+  metric: >-
+    xi_T = macro over the 14 cross-script pairs of the family mean of
+    [R_ind(MN) - R_ind(CX)] - [R_T(MN) - R_T(CX)] in recall points, R the mean
+    over question tokens and 28 layers of |S intersect N| / |N| x 100, R_ind the
+    3-seed mean at the frozen LR, R_T the dense block top-256 of target T
+  direction: maximize
+  minimum_effect: 10.0
+  unit_of_analysis: matched family (pair x Belebele question), clustered by passage link
+  aggregation: >-
+    macro over pairs; decision interval = point +/- 2.576 x sqrt(se_cluster^2 +
+    s_seed^2 / 3) with se_cluster from a passage-cluster bootstrap (B = 10,000,
+    seed 42) and s_seed the SD of the per-seed xi_T
+
+statistics:
+  seeds: [42, 43, 44]
+  interval: >-
+    combined seed-plus-cluster 99 percent interval for xi_T and xi_rel_T; the
+    percentile cluster-bootstrap interval and the per-seed values are reported
+    alongside; H2a and H2b use percentile cluster-bootstrap 99 percent intervals
+  multiplicity: >-
+    two targets, each read at 99 percent; same-script rows, Lambda, hm, U, U_k,
+    per-language, per-direction, per-layer and per-position tables are
+    descriptive and uncorrected
+
+falsifiers:
+  - K1-screen NEGATIVE when, for both targets, xi_T is at most 5 with the combined 99 percent upper bound below 10 and half-width at most 5, and xi_rel_T is at most 0.1 with its upper bound below 0.2, with V1-V3, H1 at least 20, H2a and H2b passing
+  - GO (localization holds) when some target has xi_T at least 10 with the combined 99 percent lower bounds of xi_T and xi_rel_T above 0, with V1-V3, H1 at least 10, H2a and H2b passing
+  - UNINTERPRETABLE when H1 is below 10 or H2a or H2b fails on audit; HOLD on a V2 bug tell; VOID on a V3 integrity failure; INCONCLUSIVE otherwise
+
+required_artifacts:
+  - frozen preregistration q3-k1-localization-screen-v1 and its ledger row, verified in-image at startup
+  - k1 bundle with per-source licence manifest (LicenseRef-cotcodec-k1-bundle-v1), dedup, quota and shortfall reports
+  - smoke receipt with capture reconstruction, eager sanity and timing projections; dev headroom receipt
+  - resume equivalence report (R2 versus R0 bit for bit) and R1 termination receipt with signal_USR1_checkpoint_confirmed
+  - main receipt with V1-V3, H1, H2a, H2b, xi_T and xi_rel_T intervals, per-seed values, verdict, seed SD (df 4), stream-dev KL for all 18 indexers, LR freeze and its SHA-256, descriptive tables and timings
+  - K1 CPU doctor receipt data/results/translation-supervised-sparse-indexer/k1-doctor.json
+
+execution:
+  enabled: false
+  max_gpu_hours: 2.65
+  gpus: 4
+  checkpoint_to_persistent_storage: true
+  fresh_job_resume_test: true
+  checkpoint_interval_minutes: 10
+  blocked_by:
+    - the preregistration q3-k1-localization-screen-v1 is a draft; the program owner freezes it after the bundle is built so its SHA-256 can be stated
+    - no image contains this code yet; image A (from this commit) builds the bundle, image B (A plus the frozen preregistration and ledger) runs every GPU job
+    - the K1 bundle has not been built; the ParaDocs yield probe (2026-10-06) projects 5.3 GB (en-th), 7.1 GB (en-hi) and all 4.10 GB of en-km streamed reads, with en-km about 7 percent short of its quota
+    - the discovery-lane submitter changes on stage0/lane (container_profile, model kind, seed_binding, memory mapping, signal marker semantics) must merge before the manifests under experiments/manifests/ validate
+    - no orx node, accepted dry-run, smoke run or resume test exists for this code path

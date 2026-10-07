@@ -26,6 +26,8 @@ dependencies = [
 architecture = [
     "accelerate",
     "flash-linear-attention==0.5.2",
+    "peft",
+    "pyarrow",
     "safetensors",
     "tilelang>=0.1.13",
     "torch==2.11.0",
