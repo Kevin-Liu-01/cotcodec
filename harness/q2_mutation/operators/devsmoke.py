@@ -16,8 +16,10 @@ harness's control jobs), it:
 4. applies the recipes and runs the purity checks against the null mutant.
 
 It reports per operator how many recipes applied and passed purity, and the
-snapshot-level drift between base and null mutant. It never runs a checker and
-never reports labels: without the blind author's spec the labels mean nothing.
+snapshot-level drift between base and null mutant. It never runs a checker.
+Without the blind author's spec (the default) labels mean nothing and are not
+reported; with ``--specs-dir`` it plans every operator against the real specs
+and reports labels, witness rules and requirement bindings for the dev split.
 The task ids it touched are listed so the confirmatory analysis can mark them.
 
 Usage (inside the LO-VM image)::
@@ -108,6 +110,8 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--timeout", type=int, default=240)
     parser.add_argument("--delta-requirements", action="store_true",
                         help="also smoke requirement-targeted operators on delta sites")
+    parser.add_argument("--specs-dir", default=None,
+                        help="blind specs as <task_id>.json; plan every operator with them")
     args = parser.parse_args(argv)
     root = Path(args.out)
     root.mkdir(parents=True, exist_ok=True)
@@ -139,10 +143,13 @@ def main(argv: list[str] | None = None) -> int:
     nulls = run_uno(root, null_rows, "null", args)
 
     ops = registry()
-    targets = {"document", "outside"} | ({"requirement"} if args.delta_requirements else set())
+    real_specs = args.specs_dir is not None
+    with_requirements = args.delta_requirements or real_specs
+    targets = {"document", "outside"} | ({"requirement"} if with_requirements else set())
     wanted = [name for name, cls in ops.items() if cls.target in targets]
     summary: dict = {"tasks": [], "rejected_hash": [p["task_id"] for p in rejected],
-                     "null_drift": {}, "operators": {}}
+                     "null_drift": {}, "operators": {}, "bindings": {},
+                     "mode": "real-specs" if real_specs else "smoke"}
     plans = []
     for p in pairs:
         task_id = p["task_id"]
@@ -154,8 +161,21 @@ def main(argv: list[str] | None = None) -> int:
         try:
             drift = diff(snapshot(base, p["family"]), snapshot(root / rel("null", task_id),
                                                               p["family"]))
-            spec = smoke_spec(task_id, p["family"], args.delta_requirements)
+            if real_specs:
+                spec_path = Path(args.specs_dir) / f"{task_id}.json"
+                if not spec_path.exists():
+                    summary["tasks"].append({"task_id": task_id, "status": "no-spec"})
+                    continue
+                spec = RequirementSpec.from_dict(json.loads(spec_path.read_text()))
+            else:
+                spec = smoke_spec(task_id, p["family"], args.delta_requirements)
             ctx = make_context(task_id, spec, base, initial, p["family"], p["vm_path"])
+            kinds = {r.req_id: r.check_kind for r in spec.requirements}
+            summary["bindings"][task_id] = {
+                rid: {"check_kind": kinds[rid], "method": b.method,
+                      "confidence": b.confidence, "units": len(b.units)}
+                for rid, b in ctx.bindings.items()
+            }
             records, _skips = plan_task(ctx, operators=wanted)
         except (SnapshotError, ValueError, KeyError) as exc:
             summary["tasks"].append({"task_id": task_id, "status": f"snapshot: {exc}"[:300]})
@@ -184,6 +204,10 @@ def main(argv: list[str] | None = None) -> int:
             per_op[op]["planned"] += 1
             per_op[op]["applied"] += int(bool(log and log.get("status") == "ok"))
             per_op[op]["admitted"] += int(is_admitted(done))
+            if real_specs:
+                per_op[op][f"label:{record['label']}"] += 1
+                if is_admitted(done):
+                    per_op[op][f"admitted:{record['label']}"] += 1
             for item in done["purity_checks"]:
                 if not item["passed"]:
                     failures[op][item["name"]] += 1
@@ -193,6 +217,10 @@ def main(argv: list[str] | None = None) -> int:
     for op in sorted(per_op):
         summary["operators"][op] = {**per_op[op], "failed_checks": dict(failures[op]),
                                     "examples": examples[op][:5]}
+    if real_specs:
+        summary["witness_rules"] = dict(Counter(
+            r["witness"]["argument"].split(":", 1)[0] for r in results
+        ))
     summary["touched_task_ids"] = sorted(p["task_id"] for p, _b, _r in plans)
     (root / "summary.json").write_text(json.dumps(summary, indent=2, sort_keys=True))
     for op, info in sorted(summary["operators"].items()):

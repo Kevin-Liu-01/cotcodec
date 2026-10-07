@@ -204,7 +204,18 @@ _CELL_REF = re.compile(
     r"(?:(?:'([^']+)'|([A-Za-z_][A-Za-z0-9_]*))!)?\b(\$?[A-Z]{1,3}\$?[1-9][0-9]{0,6})"
     r"(?::(\$?[A-Z]{1,3}\$?[1-9][0-9]{0,6}))?\b"
 )
-_COLUMN = re.compile(r"\bcolumns?\s+([A-Z]{1,3})\b")
+_COLUMN = re.compile(r"\b[Cc]olumns?\s+([A-Z]{1,3})\b")
+# A reference right after one of these words names cells the requirement excludes
+# ("cells outside B1:E30 are not touched"), so it binds nothing.
+_EXCLUDING = re.compile(
+    r"(outside|except|other than|apart from|beyond|besides|not in|excluding)"
+    r"(\s+(of|the|range|cells?|columns?|rows?))*\s*$",
+    re.IGNORECASE,
+)
+
+
+def _excluded(text: str, start: int) -> bool:
+    return _EXCLUDING.search(text[max(0, start - 40):start]) is not None
 _SLIDE = re.compile(r"\bslides?\s+(\d{1,3})\b", re.IGNORECASE)
 _ORDINAL = {
     "first": 1, "second": 2, "third": 3, "fourth": 4, "fifth": 5, "sixth": 6,
@@ -230,8 +241,11 @@ def _xlsx_hint_units(req: Requirement, snap: dict) -> tuple[list[str], list[str]
         (s for s in sheets if snap["sheets"][s].get("view", {}).get("tab_selected")),
         sheets[0] if sheets else "",
     )
-    mentioned_sheets = [s for s in sheets if re.search(rf"\b{re.escape(s)}\b", req_text(req))]
-    for match in _CELL_REF.finditer(req_text(req)):
+    text = req_text(req)
+    mentioned_sheets = [s for s in sheets if re.search(rf"\b{re.escape(s)}\b", text)]
+    for match in _CELL_REF.finditer(text):
+        if _excluded(text, match.start()):
+            continue
         sheet = match.group(1) or match.group(2)
         if sheet is not None and sheet not in snap["sheets"]:
             continue
@@ -244,7 +258,9 @@ def _xlsx_hint_units(req: Requirement, snap: dict) -> tuple[list[str], list[str]
         hints.append(match.group(0))
         for row, col in cells:
             units.append(f"sheets/{seg(sheet)}/cells/{seg(fx.make_address(row, col))}")
-    for match in _COLUMN.finditer(req_text(req)):
+    for match in _COLUMN.finditer(text):
+        if _excluded(text, match.start()):
+            continue
         letters = match.group(1)
         hints.append(match.group(0))
         targets = mentioned_sheets or [default_sheet]
