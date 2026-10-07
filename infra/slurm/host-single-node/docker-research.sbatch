@@ -813,6 +813,64 @@ if nvidia-smi -i "${gpu_devices}" --query-gpu=name --format=csv,noheader \
   exit 2
 fi
 
+# Container lifetime. The container is a child of the Docker daemon, not of this
+# job, so Slurm cannot end it. When Slurm ends a job (time limit, scancel,
+# preemption) it sends TERM to the job's processes and KILL KillWait seconds
+# later; a container still running when this script is killed outlives the job
+# and keeps its GPU (Slurm 617: 74 GB of GPU 0 for 88 s after the time limit).
+# So this script bounds the container's life itself:
+#   * a hard-stop timer SIGKILLs the container hard_stop_margin_seconds before
+#     the time limit. USR1 comes 180 s before the limit and its checkpoint wait
+#     is checkpoint_wait_seconds, so the hard stop falls after that window;
+#   * on TERM it forwards TERM, waits at most term_grace_seconds (KillWait minus
+#     term_kill_reserve_seconds) for a signal-triggered checkpoint or the
+#     container's exit, then SIGKILLs and removes the container before Slurm's
+#     KILL. It uses `docker kill`, never `docker stop`, which would wait;
+#   * no container is created past the hard stop or after a TERM.
+checkpoint_wait_seconds=120
+hard_stop_margin_seconds=30
+term_kill_reserve_seconds=20
+time_left_queried_at="$(date +%s)"
+slurm_time_left="$(squeue -h -j "${SLURM_JOB_ID}" -o %L 2>/dev/null || true)"
+if ! time_left_seconds="$(python - "${slurm_time_left}" "${hard_stop_margin_seconds}" <<'PY'
+import json
+import os
+import re
+import sys
+
+# squeue %L is [days-][hours:]minutes:seconds, or UNLIMITED, NOT_SET or INVALID.
+match = re.fullmatch(r"(?:([0-9]+)-)?(?:([0-9]+):)?([0-9]+):([0-9]{2})", sys.argv[1].strip())
+if match is None:
+    raise SystemExit("Slurm did not report a finite time left for this job; refusing to guess")
+days, hours, minutes, seconds = (int(value or 0) for value in match.groups())
+left = ((days * 24 + hours) * 60 + minutes) * 60 + seconds
+manifest = json.loads(bytes.fromhex(os.environ["COTCODEC_MANIFEST_JSON_HEX"]))
+if left > manifest["minutes"] * 60:
+    raise SystemExit("Slurm's time left exceeds the manifest minutes")
+if left <= int(sys.argv[2]):
+    raise SystemExit("the time left does not reach past the container hard stop")
+print(left)
+PY
+)"; then
+  exit 2
+fi
+hard_stop_epoch=$((time_left_queried_at + time_left_seconds - hard_stop_margin_seconds))
+hard_stop_at="$(date -u -d "@${hard_stop_epoch}" +%Y-%m-%dT%H:%M:%SZ)"
+slurm_kill_wait="$(scontrol show config 2>/dev/null \
+  | awk '$1 == "KillWait" {print $3; exit}' || true)"
+if [[ "${slurm_kill_wait}" =~ ^[0-9]{1,5}$ ]]; then
+  term_grace_seconds=$((10#${slurm_kill_wait} - term_kill_reserve_seconds))
+  if [[ "${term_grace_seconds}" -lt 0 ]]; then
+    term_grace_seconds=0
+  elif [[ "${term_grace_seconds}" -gt "${checkpoint_wait_seconds}" ]]; then
+    term_grace_seconds="${checkpoint_wait_seconds}"
+  fi
+else
+  echo "could not read Slurm's KillWait; a TERM will kill the container at once" >&2
+  slurm_kill_wait=unknown
+  term_grace_seconds=0
+fi
+
 if [[ -n "${COTCODEC_PREDECESSOR_JOB_ID:-}" ]]; then
   if [[ ! "${COTCODEC_PREDECESSOR_JOB_ID}" =~ ^[1-9][0-9]{0,19}$ \
     || ! "${COTCODEC_RESUME_SUBPATH:-}" =~ ^[A-Za-z0-9][A-Za-z0-9._/-]{0,127}$ \
@@ -1025,14 +1083,25 @@ docker image inspect "${COTCODEC_IMAGE_ID}" > "${run_dir}/image-inspect.json"
   echo "started_at=$(date -u +%Y-%m-%dT%H:%M:%SZ)"
   echo "nodelist=${SLURM_JOB_NODELIST}"
   echo "gpu_devices=${gpu_devices}"
+  echo "slurm_time_left_seconds=${time_left_seconds}"
+  echo "hard_stop_at=${hard_stop_at}"
+  echo "slurm_kill_wait_seconds=${slurm_kill_wait}"
+  echo "term_grace_seconds=${term_grace_seconds}"
 } > "${run_dir}/job.env"
 
 checkpoint_marker="${run_dir}/checkpoint.ready"
-checkpoint_wait_seconds=120
 termination_file="${run_dir}/termination.env"
+hard_stop_file="${run_dir}/hard-stop.env"
 container_name="cotcodec-${SLURM_JOB_ID}"
 container_created=false
+docker_client_pid=""
+hard_stop_timer_pid=""
 termination_reason="starting"
+# Who sent the container SIGKILL: none, hard_stop, signal_TERM or exit (the
+# exit trap found it still running). The first killer is recorded.
+container_killed_by=none
+container_killed_at=none
+exited_state_re='^exited ([0-9]+)$'
 # true only after forward_signal confirmed a fresh, signal-triggered marker in
 # this job. A marker that merely exists (stale, periodic or copied) never sets it.
 signal_checkpoint_confirmed=false
@@ -1047,6 +1116,9 @@ write_termination() {
     echo "finished_at=$(date -u +%Y-%m-%dT%H:%M:%SZ)"
     echo "checkpoint_ready=${signal_checkpoint_confirmed}"
     echo "checkpoint_marker_present=$([[ -f "${checkpoint_marker}" ]] && echo true || echo false)"
+    echo "hard_stop_at=${hard_stop_at}"
+    echo "container_killed_by=${container_killed_by}"
+    echo "container_killed_at=${container_killed_at}"
   } > "${termination_file}"
 }
 
@@ -1094,9 +1166,11 @@ checkpoint_marker_is_fresh() {
   [[ $'\n'"${content}"$'\n' == *$'\n'"trigger=SIG${signal_name}"$'\n'* ]]
 }
 
+# Forward SIG<name> to the container and wait up to wait_seconds for a
+# confirming marker or the container's exit; then send TERM if it still runs.
 # shellcheck disable=SC2329  # reached through the signal and EXIT traps
 forward_signal() {
-  local signal_name="$1" marker_before requested_ns waited=0
+  local signal_name="$1" wait_seconds="$2" marker_before requested_ns deadline
   if ! container_running; then
     # Keep an earlier confirmation: the container is gone because of it.
     if [[ "${signal_checkpoint_confirmed}" != true ]]; then
@@ -1114,6 +1188,7 @@ forward_signal() {
     termination_reason="signal_${signal_name}_not_forwarded"
     return 0
   fi
+  deadline=$(($(date +%s) + wait_seconds))
   while true; do
     if checkpoint_marker_is_fresh "${marker_before}" "${requested_ns}" "${signal_name}"; then
       signal_checkpoint_confirmed=true
@@ -1129,29 +1204,125 @@ forward_signal() {
       fi
       break
     fi
-    if [[ "${waited}" -ge "${checkpoint_wait_seconds}" ]]; then
+    if [[ "$(date +%s)" -ge "${deadline}" ]]; then
       termination_reason="signal_${signal_name}_checkpoint_timeout"
       break
     fi
-    sleep 2
-    waited=$((waited + 2))
+    sleep 1
   done
   if container_running; then
     docker kill --signal TERM "${container_name}" >/dev/null 2>&1 || true
   fi
 }
 
+# SIGKILL the container if it runs. `docker kill`, not `docker stop`: a stop
+# sends TERM and waits, and the workload may ignore TERM.
+# shellcheck disable=SC2329  # reached through the signal and EXIT traps
+kill_container() {
+  local cause="$1"
+  if container_running; then
+    if [[ "${container_killed_by}" == none ]]; then
+      container_killed_by="${cause}"
+      container_killed_at="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+    fi
+    docker kill --signal KILL "${container_name}" >/dev/null 2>&1 || true
+  fi
+}
+
+# Print the container's exit code once Docker records it as exited, polling for
+# up to $1 seconds; fail when it has not exited by then.
+# shellcheck disable=SC2329  # reached through the signal and EXIT traps
+container_exit_code() {
+  local deadline state
+  deadline=$(($(date +%s) + $1))
+  while true; do
+    state="$(docker inspect --format '{{.State.Status}} {{.State.ExitCode}}' \
+      "${container_name}" 2>/dev/null || echo unknown)"
+    if [[ "${state}" =~ ${exited_state_re} ]]; then
+      echo "${BASH_REMATCH[1]}"
+      return 0
+    fi
+    if [[ "$(date +%s)" -ge "${deadline}" ]]; then
+      echo "the container has not exited (${state})" >&2
+      return 1
+    fi
+    sleep 0.5
+  done
+}
+
+# The hard stop. Runs as a background subshell from just after docker create
+# until on_exit stops it: at hard_stop_epoch it SIGKILLs the container and keeps
+# doing so while Docker still reports it running. It ignores USR1 (that signal
+# belongs to the checkpoint protocol) and dies on TERM, which Slurm sends to
+# every process of an ending job; the TERM trap then owns the container.
+# shellcheck disable=SC2329  # reached through the background hard-stop timer
+hard_stop_timer() {
+  local now
+  trap '' USR1
+  while printf -v now '%(%s)T' -1 && [[ "${now}" -lt "${hard_stop_epoch}" ]]; do
+    if [[ $((hard_stop_epoch - now)) -lt 5 ]]; then
+      sleep $((hard_stop_epoch - now))
+    else
+      sleep 5
+    fi
+  done
+  while true; do
+    if container_running; then
+      if [[ ! -e "${hard_stop_file}" ]]; then
+        {
+          echo "hard_stop_at=${hard_stop_at}"
+          echo "killed_at=$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+        } > "${hard_stop_file}"
+      fi
+      docker kill --signal KILL "${container_name}" >/dev/null 2>&1 || true
+    fi
+    sleep 1
+  done
+}
+
+# Slurm is ending the job and sends KILL KillWait seconds after this TERM, which
+# no trap survives. Give the workload term_grace_seconds for a TERM-triggered
+# checkpoint, SIGKILL the container, and exit so on_exit removes it in time.
+# shellcheck disable=SC2329  # reached through the TERM trap
+on_term() {
+  local status=143
+  trap '' USR1 TERM
+  forward_signal TERM "${term_grace_seconds}"
+  kill_container signal_TERM
+  if [[ -n "${docker_client_pid}" ]]; then
+    status="$(container_exit_code 10)" || status=143
+  fi
+  exit "${status}"
+}
+
 # shellcheck disable=SC2329  # reached through the signal and EXIT traps
 on_exit() {
   local exit_code="$?"
+  trap '' USR1 TERM
+  if [[ -n "${hard_stop_timer_pid}" ]]; then
+    kill "${hard_stop_timer_pid}" 2>/dev/null || true
+  fi
+  if [[ -f "${hard_stop_file}" && "${container_killed_by}" == none ]]; then
+    container_killed_by=hard_stop
+    container_killed_at="$(sed -n 's/^killed_at=//p' "${hard_stop_file}")"
+    container_killed_at="${container_killed_at:-unknown}"
+  fi
+  # A TERM can interrupt the script between docker create and the line that
+  # records it; the printed container ID shows that the container exists.
+  if [[ -s "${run_dir}/container-id.txt" ]]; then
+    container_created=true
+  fi
   if [[ "${container_created}" == true ]]; then
+    kill_container exit
     docker inspect "${container_name}" > "${run_dir}/container-final-inspect.json" \
       2>/dev/null || true
     docker logs "${container_name}" > "${run_dir}/container.log" 2>&1 || true
     docker rm --force "${container_name}" >/dev/null 2>&1 || true
   fi
   if [[ "${termination_reason}" == running ]]; then
-    if [[ "${exit_code}" -eq 0 ]]; then
+    if [[ "${container_killed_by}" == hard_stop ]]; then
+      termination_reason="hard_stop"
+    elif [[ "${exit_code}" -eq 0 ]]; then
       termination_reason="completed"
     else
       termination_reason="workload_failed"
@@ -1160,8 +1331,8 @@ on_exit() {
   write_termination "${exit_code}"
 }
 
-trap 'forward_signal USR1' USR1
-trap 'forward_signal TERM' TERM
+trap 'forward_signal USR1 "${checkpoint_wait_seconds}"' USR1
+trap on_term TERM
 trap on_exit EXIT
 
 cpu_list="$(awk '/Cpus_allowed_list/ {print $2}' /proc/self/status)"
@@ -1257,8 +1428,16 @@ if [[ "${gpu_prolog_decision}" == refused ]]; then
   exit "${foreign_gpu_process_exit_code}"
 fi
 
+if [[ "$(date +%s)" -ge "${hard_stop_epoch}" ]]; then
+  termination_reason="hard_stop_before_start"
+  echo "the container hard stop (${hard_stop_at}) has passed; refusing to start" >&2
+  exit 2
+fi
+# --stop-timeout gives a `docker stop` (by an operator, or by dockerd shutting
+# down) the same TERM-then-KILL bound as this script's TERM path.
 docker create \
   --name "${container_name}" \
+  --stop-timeout "${term_grace_seconds}" \
   --entrypoint /bin/bash \
   --gpus "${docker_gpu_request}" \
   --network none \
@@ -1304,6 +1483,8 @@ docker create \
   > "${run_dir}/container-id.txt"
 container_created=true
 docker inspect "${container_name}" > "${run_dir}/container-created-inspect.json"
+hard_stop_timer &
+hard_stop_timer_pid=$!
 
 termination_reason="running"
 # Bash runs a trap only after the foreground command returns, so a foreground
@@ -1321,17 +1502,14 @@ while true; do
 done
 # The container's recorded exit code is authoritative; the client's status
 # may be a signal-interrupted `wait`.
-exited_state_re='^exited ([0-9]+)$'
-container_state="$(docker inspect --format '{{.State.Status}} {{.State.ExitCode}}' \
-  "${container_name}" 2>/dev/null || echo unknown)"
-if [[ "${container_state}" =~ ${exited_state_re} ]]; then
-  workload_exit_code="${BASH_REMATCH[1]}"
-else
-  echo "the Docker client returned before the container exited (${container_state})" >&2
+if ! workload_exit_code="$(container_exit_code 5)"; then
+  echo "the Docker client returned before the container exited" >&2
   workload_exit_code=1
 fi
 if [[ "${termination_reason}" == running ]]; then
-  if [[ "${workload_exit_code}" -eq 0 ]]; then
+  if [[ -f "${hard_stop_file}" ]]; then
+    termination_reason="hard_stop"
+  elif [[ "${workload_exit_code}" -eq 0 ]]; then
     termination_reason="completed"
   else
     termination_reason="workload_failed"

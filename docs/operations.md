@@ -135,7 +135,7 @@ the result. This is a check at one moment, not isolation.
 
 Slurm sends SIGUSR1 to the batch script 180 s before the time limit. The
 script forwards it to the running container at once (and forwards SIGTERM the
-same way). The workload must:
+same way, with a shorter wait; see below). The workload must:
 
 1. On SIGUSR1, finish a complete checkpoint save to `/outputs`.
 2. Only after that save is complete, write `/outputs/checkpoint.ready`
@@ -157,10 +157,46 @@ It waits up to 120 s or until the container exits, then sends SIGTERM if the
 container is still running. `termination.env` records the outcome as
 `reason=signal_USR1_checkpoint_confirmed`, `_missing` (container exited
 without a confirming marker), `_timeout` or `_not_forwarded` (container not
-running). Other reasons are `completed`, `workload_failed`,
-`foreign_gpu_process` and `gpu_prolog_unavailable`. `checkpoint_ready=true`
-means a signal-triggered checkpoint was confirmed in this job;
-`checkpoint_marker_present` only says whether the file exists at the end.
+running). Other reasons are `completed`, `workload_failed`, `hard_stop`,
+`hard_stop_before_start`, `foreign_gpu_process` and `gpu_prolog_unavailable`.
+`checkpoint_ready=true` means a signal-triggered checkpoint was confirmed in
+this job; `checkpoint_marker_present` only says whether the file exists at the
+end.
+
+### Container lifetime
+
+The container is a child of the Docker daemon, not of the job, so Slurm cannot
+end it. When Slurm ends a job (time limit, `scancel`, preemption) it sends
+SIGTERM and, `KillWait` (30 s on this host) later, SIGKILL, which no trap
+survives. Before this guarantee, the container was removed only by the exit
+trap: in Slurm 617 a workload that ignored TERM outlived its timed-out job by
+88 s, holding 74 GB of GPU 0. The batch script now bounds the container's life:
+
+- **Time limit.** At start it reads the time left (`squeue -o %L`) and refuses
+  with exit 2 when Slurm reports no finite limit, more time than the manifest's
+  minutes, or no more than the 30 s hard-stop margin. `job.env` records
+  `slurm_time_left_seconds` and `hard_stop_at`.
+- **Hard stop.** A background timer SIGKILLs the container (`docker kill`) 30 s
+  before the time limit. A USR1 sent on time (180 s before) gets its whole
+  120 s checkpoint wait first, so the hard stop only reaches a workload that
+  ignored the USR1 protocol and the TERM that follows it. No container is
+  created after the hard stop has passed (`hard_stop_before_start`, exit 2).
+- **SIGTERM.** The script forwards TERM and waits at most
+  `term_grace_seconds` (Slurm's `KillWait` minus 20 s, at most 120 s, and 0 if
+  `KillWait` cannot be read; 10 s here) for a `trigger=SIGTERM` marker or the
+  container's exit. It then SIGKILLs the container, never `docker stop`, and
+  exits so the exit trap removes it before Slurm's SIGKILL. A TERM that arrives
+  before the container is started means no container is started.
+- `docker create` gets `--stop-timeout <term_grace_seconds>`, so an operator's
+  `docker stop` (or dockerd shutting down) has the same TERM-then-KILL bound.
+
+`termination.env` adds `hard_stop_at`, `container_killed_by` (`none`,
+`hard_stop`, `signal_TERM`, or `exit` when the exit trap found it still
+running) and `container_killed_at`; a hard stop also leaves `hard-stop.env`. A
+job ended by the hard stop exits 137 (`JobState=FAILED`), never success. A
+container can still outlive its job if Slurm sends SIGKILL without a preceding
+SIGTERM (a node or `slurmd` failure, `scancel --signal=KILL`); after any such
+event check `docker ps -a --filter name=cotcodec-<job-id>`.
 
 ### Open-weight reviewer jobs
 
