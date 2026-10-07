@@ -24,9 +24,10 @@ manifest). Infeasible tasks and tasks scored on live VM or browser state are
 out of scope.
 
 Relative download targets are resolved the way the OSWorld server does it:
-`expanduser`/`expandvars` and `WorkingDirectory=/home/user`
-(`desktop_env/server/osworld_server.service:11`, `server/main.py:1166`). This
-is to be confirmed against the VM image.
+`expanduser`/`expandvars` (`desktop_env/server/main.py:1166`) with
+`WorkingDirectory=/home/user`, confirmed in the VM image's
+`/etc/systemd/system/osworld.service` (`User=user`,
+`ExecStart=/usr/bin/python /home/user/server/main.py`).
 
 ## Rules for the blind requirement-spec author
 
