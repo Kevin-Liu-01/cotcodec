@@ -27,9 +27,10 @@ from QEMU's PS/2 keyboard to the XTest keyboard) and copies that device's
 keymap, or when the mapping changes through XKB requests, which the tap does
 not decode. ``mapping_check`` therefore compares each keyboard MappingNotify
 that no recorded core request explains with the tap's own table at that point
-of the stream: equal means the keymap did not change (a device switch, job
-467); different means the server's keymap left the tap's table, and every
-later key event on that range is unverified. The suite treats an unverified
+of the stream, row by row under the core protocol's keysym-list rules
+(``core_groups``): equal means the keymap did not change (the device-switch
+re-send seen in jobs 467-470); different means the server's keymap left the
+tap's table, and every later key event on that range is unverified. The suite treats an unverified
 key event inside an entry's window as an infrastructure failure of the oracle
 (preregistration section 6.1).
 
@@ -161,12 +162,32 @@ def _trimmed(row):
     return row
 
 
+def core_groups(row):
+    """The keysym list as the X11 core protocol interprets it: two groups of two.
+
+    Trailing NoSymbol entries are ignored; a single keysym K means
+    (K, NoSymbol, K, NoSymbol), a pair (K1, K2) means (K1, K2, K1, K2), a
+    triple gains a NoSymbol; only the first four columns are interpreted; and a
+    group whose second keysym is NoSymbol repeats its first. (The protocol's
+    alphabetic case rule is the same on both sides of any comparison, so it is
+    left out.) XKB rewrites a remapped row into this form: job 470 read back
+    ``[eacute] * 4 + [0] * 3`` for a row the tap had written as ``[eacute] * 7``.
+    """
+    keys = _trimmed(row)
+    if len(keys) == 1:
+        keys = [keys[0], 0, keys[0], 0]
+    elif len(keys) == 2:
+        keys = keys + keys
+    keys = (keys + [0, 0, 0, 0])[:4]
+    return (keys[0], keys[1] or keys[0], keys[2], keys[3] or keys[2])
+
+
 def _rows_differ(keymap, first, rows):
-    """Keycodes in [first, first + len(rows)) where rows disagree with the keymap."""
+    """Keycodes in [first, first + len(rows)) whose core meaning differs from the keymap."""
     return [
         first + i
         for i, row in enumerate(rows)
-        if _trimmed(row) != _trimmed(keymap.rows.get(first + i) or [])
+        if core_groups(row) != core_groups(keymap.rows.get(first + i) or [])
     ]
 
 
