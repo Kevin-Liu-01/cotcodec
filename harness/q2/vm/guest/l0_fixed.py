@@ -442,9 +442,14 @@ class Executor:
         missing 1.9 s later, when the next entry's drawing finally showed it), in
         about 4% of typing trials, always exactly the last draw: the compositor
         consumed that damage without repainting it. A Stage-1 screenshot would be
-        stale the same way. XDamage DamageAdd marks the windows damaged again;
-        XFixes CreateRegion supplies the region (python-xlib has no binding, so
-        the two requests are encoded here from the protocol).
+        stale the same way. XDamage DamageAdd (DAMAGE minor opcode 4: drawable,
+        region) marks each window damaged again over a region made with XFixes
+        CreateRegion (minor 5) and freed with DestroyRegion (minor 10). The three
+        requests are encoded here from the protocol specifications, so nothing
+        depends on how a python-xlib version binds them; the extensions'
+        QueryVersion requests are sent first, as both protocols require. A nudge
+        that cannot be sent raises (the action then fails): no screenshot is
+        taken from an action path other than the frozen one.
         """
         from Xlib import X
         from Xlib.protocol import rq, structs
@@ -460,10 +465,17 @@ class Executor:
                 rq.Card8("opcode"), rq.Opcode(10), rq.RequestLength(), rq.Card32("region")
             )
 
+        class DamageAdd(rq.Request):
+            _request = rq.Struct(
+                rq.Card8("opcode"), rq.Opcode(4), rq.RequestLength(), rq.Window("drawable"),
+                rq.Card32("region"),
+            )  # fmt: skip
+
         try:
             self.d.xfixes_query_version()
             self.d.damage_query_version()
-            xfixes = self.d.get_extension_major("XFIXES")
+            xfixes = self.d.display.get_extension_major("XFIXES")
+            damage = self.d.display.get_extension_major("DAMAGE")
             nudged = 0
             for window in self.d.screen().root.query_tree().children:
                 try:
@@ -478,15 +490,14 @@ class Executor:
                     rectangles=[{"x": 0, "y": 0, "width": geometry.width,
                                  "height": geometry.height}],
                 )  # fmt: skip
-                # python-xlib's DamageAdd fields are misnamed: the protocol's
-                # (drawable, region) travel as (repair, parts).
-                window.damage_add(window.id, region)
+                DamageAdd(display=self.d.display, opcode=damage, drawable=window, region=region)
                 DestroyRegion(display=self.d.display, opcode=xfixes, region=region)
                 nudged += 1
             self.d.sync()
-            self.log["nudged"] = nudged
-        except Exception as exc:  # noqa: BLE001 - recorded; the quiet wait still runs
+        except Exception as exc:  # noqa: BLE001 - recorded, then the action fails
             self.log["nudged"] = repr(exc)[:200]
+            raise RuntimeError(f"compositor nudge failed: {exc!r}") from exc
+        self.log["nudged"] = nudged
 
     def screen_quiet(self, started):
         """Return once the screen has been unchanged for QUIET_S, as a screenshot reads it.
