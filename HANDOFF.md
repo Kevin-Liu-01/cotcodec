@@ -5,7 +5,7 @@
 The restarted program is in Stage 0. Everything runs through frozen
 preregistrations in `program/preregistrations/ledger.jsonl` (hash-chained;
 `uv run python scripts/preregister.py check-chain`). Decisions taken on
-Kevin's behalf are D1-D21 in `program/decisions.md`. Results so far:
+Kevin's behalf are D1-D25 in `program/decisions.md`. Results so far:
 
 | Registration | Outcome | Evidence |
 |---|---|---|
@@ -26,18 +26,22 @@ GPU-hours spent by the program are in `program/state.json`
 - `stage0/q1-gates`: gates, audit, mutator and substrates integrated; GPU
   smoke and pilot cost card next. Projected Stage 0 total 9-10 GPU-h.
 - `stage0/q2-evaluator-mutation`: faithful-save harness, blind specs for 205
-  tasks, operator catalog, campaign driver. Second review (55/100) answered
-  in the third draft of `q2-evaluator-mutation-v1`: rater runner in the
-  pinned tree (D23 raters; one call per item, hashed receipts), audit
-  packets, registered headline analysis (`harness/q2_mutation/analysis.py`),
-  K2 sample and fallback label, P3 at the cell-level rule, probe-informed
-  operators exploratory in code, P1 a replication on 92 save-exposed golds.
-  Open-weight rater smoke on 133 dev packets passed (0.110 GPU-h); it
-  rejected 25 of 60 equivalence mutants, mostly over save-stage changes
-  visible in the packet difference, so K3 may fire on confirm. The Anthropic
-  arm is blocked: the API key in the agent environment returns 401. Awaits
-  a third review, a working key and Kevin's D2/D23 sign-offs (prereg
-  section 17).
+  tasks, operator catalog, campaign driver, rater runner and registered
+  analysis. Fourth draft of `q2-evaluator-mutation-v1` answers the third
+  review (62/100): packets compare with the starting file saved through the
+  same LibreOffice steps; violations audited as a census (K3 operating
+  characteristics simulated, `integration/audit-design-v1/`); P1/K6 over
+  confirm plus reserve control runs; per-shard call files merged; token
+  budget per packet; malformed-body and receipt hardening; K2 drop
+  recomputation; S1/S5 rule; the D25 agent-harness Claude rater path
+  (`rater_runner export-harness` / `ingest-harness`). Second open-weight
+  smoke (0.095 GPU-h, 90 of 133 dev items rated before the lane's checkpoint
+  signal): the saved start removes save noise but the 9B rater still
+  disagrees with labels on 24% of items, mostly by rejecting golds, so the
+  kappa rule is expected to fire unless the Claude rater's dev answers say
+  otherwise. Dev packets for the Claude rater are exported (outside the
+  repo); its answers, a fourth review and Kevin's sign-offs (prereg section
+  17) are pending.
 
 ## Next actions
 

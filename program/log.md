@@ -316,3 +316,38 @@ Append-only. Newest entries at the bottom.
 - Not frozen: a third review, a working Anthropic key and Kevin's D2/D23
   sign-offs (prereg section 17) are pending. No confirm or reserve item was
   sampled, packed, rated, built or scored.
+
+## 2026-10-07 — Q2 evaluator-mutation: third review answered (fourth draft, not frozen)
+
+- The re-audit of the third draft (62/100) closed the second review's seven
+  defects and found two blocking ones plus eight others. Fixed on
+  `stage0/q2-evaluator-mutation` after merging main (D24, D25, the K1 probe
+  ledger row): audit packets now compare an end state with the starting
+  file saved through the same LibreOffice steps (UNO save then the
+  GUI-faithful save stage for mutants and gold shams; the control run's
+  saved do-nothing for P1 flips and do-nothing shams); violations are a
+  census stratum, and the sampler and K3 rule were simulated at confirm
+  scale (`integration/audit-design-v1/`: the violation group at 17 tasks
+  fires with P 0.00 / 0.065 / 0.55 at 1 / 2 / 5% label error, against 0.60 /
+  0.72 / 0.91 before; raters each right 90% fire the kappa rule in 0.11-0.27
+  of replicates); P1/K6 over the confirm and reserve control runs in code,
+  K1 confirm-only; the summary merges one calls file per shard and rater;
+  a registered token budget fits packets to the 9B rater's window; non-JSON
+  200 bodies are `unsure` and hashed, and the Anthropic receipt is written in
+  `finally`; a K2-dropped family leaves P2-P5, which are recomputed; S1
+  candidates unstable at five scorings are S5 and leave P2-P5; the D25
+  agent-harness Claude rater path (`rater_runner export-harness` /
+  `ingest-harness`) is registered with its disclosure; adjudication
+  workload estimated at about 60-90 confirm items.
+- Dev rerun of the audit with saved-start packets (Slurm 644, CPU) and of
+  the open-weight rater (overlay 646, args doctor 647, lane job 650; 0.095
+  GPU-h of the 0.15 allowed): 90 of 133 items rated before the lane's USR1
+  checkpoint signal (180 s before the 8-minute limit). Save noise is gone
+  from the packets (difference lines 21,842 to 7,705), but the rater's
+  disagreement with labels barely moved (22 vs 24 of the 90 paired items);
+  it rejects golds, e.g. 01b269ae's gold carries a zh-CN language and CJK
+  default font that the saved start does not (a gold artifact, not the save
+  stage as the first smoke read it). If Claude agreed with every label,
+  kappa would be 0.48. Dev packets exported for the Claude rater (outside
+  the repository); its answers, a fourth review and Kevin's sign-offs are
+  pending. Not frozen.

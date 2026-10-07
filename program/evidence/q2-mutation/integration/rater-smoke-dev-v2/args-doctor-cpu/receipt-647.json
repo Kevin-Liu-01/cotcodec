@@ -1,0 +1,15 @@
+{
+  "job_id": "647",
+  "mode": "run",
+  "image_id": "sha256:0fe3f4523b9c8fe59173e9f4d1e2ae531cc3bbd021cda768f22235078626316f",
+  "argv_json_hex_sha256": "ce17d4839a6c07a3f8c34c8b874bff93670d0030e94d23f0f8e731a1bfb5aa18",
+  "argv_json_hex": "5b227368222c20222d63222c20226364202f776f726b73706163652f636f74636f64656320262620484f4d453d2f746d702f686f6d6520707974686f6e202d6d206861726e6573732e71325f6d75746174696f6e2e72617465725f72756e6e657220617267732d646f63746f72202d2d6f7574202f6f75742f617267732d646f63746f722e6a736f6e225d",
+  "mounts": "/home/kevin/cotcodec-runs/stage0/q2-evaluator-mutation/src/4b9b45defbdbbc81e100026dbf2b42d60fd95173:/src:ro /home/kevin/cotcodec-runs/stage0/q2-evaluator-mutation/raters/args-doctor-4b9b45d:/out:rw",
+  "network": "none",
+  "gpus_requested": 0,
+  "container_dev_nvidia": [],
+  "batch_sha256": "f97d3af96418fb4fa806f39456e4117f306cbf04b14e08533d77a95349b37443",
+  "exit_status": 0,
+  "started_at": "2026-10-07T21:49:57Z",
+  "finished_at": "2026-10-07T21:50:05Z"
+}
