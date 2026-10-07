@@ -78,3 +78,11 @@ Append-only. Newest entries at the bottom.
   registered SHA-256 `919d016b...` byte for byte.
 - Froze `q3-k1-localization-screen-v1` (ledger row `c50540e9...`,
   `git_head_at_freeze` = commit A). Sign-offs are decision D16.
+
+## 2026-10-07 — Holo3 audit registered
+
+- Merged the Holo3 rerun audit (branch `stage0/q2-holo3-diff`). Froze
+  `q2-holo3-rerun-audit-v1-posthoc` (the original v1 registration, recorded
+  verbatim and labelled post-hoc per D10) and `q2-holo3-rerun-audit-v2`
+  (confirmatory rules on data nobody has read; sign-offs in D15). The v2
+  rules run within 14 days of the freeze, under Python 3.14 with scipy 1.18.0.
