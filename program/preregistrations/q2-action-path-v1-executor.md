@@ -32,10 +32,10 @@ Frozen with this file (SHA-256 of the committed bytes):
 | `harness/q2/action_path/harness_design_diffs.md` | `245dcfcf7b9393bd1c7f03a57360d9443c6478fb8c513bf64835196c4e59b61f` |
 | `harness/q2/action_path/canary_targets.json` | `a49782274cf7c3dec0b6ceca64564207824220b2dc1572387f98339b0d4805f6` |
 | `harness/q2/vm/guest/canary_targets.py` | `8b7233391b1da78092326c11d394f0385ee42052835a83554c76260e4201aab3` |
-| `harness/q2/action_path/vm_hours.py` | `757981ef219f62f7f423d1ff9d02f75fd042c5c0063669f724337d2a96c270ab` |
+| `harness/q2/action_path/vm_hours.py` | `58b7379377ae87a72c85076ee87441fbb2da12042a15e9ae4aa62f67365074b1` |
 | `harness/q2/action_path/trial_times.json` | `a33ca2e024d6f24a31a60ff62053be1fb197af48c996ae99fb75aff4d20217e5` |
-| `harness/q2/action_path/vm_hours.json` | `fbe10c0f7c0f31c0a0db9ce3e626209f7746505320e835b0b79277d20e8ec011` |
-| `harness/q2/action_path/acceptance.py` | `f8c8e8ea0cb1595d25a65cb40da8ab635b2b34274c048f591fa4cd63a656813b` |
+| `harness/q2/action_path/vm_hours.json` | `5fc0617303a2782c02e67888be4584261239e5f90268e4e39d7524aff625636e` |
+| `harness/q2/action_path/acceptance.py` | `20338743f50a358fd37c473397d91c71fd3b2cbafb9a7ac40b035a05f61d0d0f` |
 | `scripts/render_q2_action_path_manifest.py` | `a1a25e43d0f749313b67842d9d34a9011f180b0b3624de587a57cbcb8040382f` |
 | `experiments/manifests/q2-action-path/dev-l0-fixed-v10.yaml` | `0a4f908e67631483687740cfba3266b829f3c5d2577b08b676a5fa022186ad92` |
 | `harness/q2/vm/guest/probe.py` | `ba5c0f1d364c80d5f8190f3c357b915cd504d754891285c3772ba959a804efeb` |
@@ -43,11 +43,11 @@ Frozen with this file (SHA-256 of the committed bytes):
 | `harness/q2/vm/guest/canary.py` | `32742019db56b4f09905c50c71159c2ef3fe024a044d07f4bffb31cd41fcea1e` |
 | `harness/q2/vm/marker.py` | `b786b347fc5573425f14090bd67621294ac5c84671bf67f47e663d693ab17fb9` |
 | `harness/q2/vm/canary_run.py` | `295bdd0916869adf79015bc6da6cba4aff2a0ab9f0dab089e4ed3a3565abb119` |
-| `harness/q2/vm/suite.py` | `bb6691e6f5adbdfa30614111c4229e91d5deeefb99713d1177e9d7a2de3d6488` |
+| `harness/q2/vm/suite.py` | `082921da1a98825087384298aee53b91981062e38a58e0cad293175d7f5d1aae` |
 | `harness/q2/vm/desktop.py` | `67030d6b5d79753e2db65b33bc12af2b5faaee2eacbaa5e49b4eb2de0a31c188` |
-| `harness/q2/vm/runner.py` | `fe055443652b5d58c654bcd5cb90dcc48d3a3dab6806bd3b2c7c7de1cb56b2ca` |
-| `harness/q2/vm/driver.py` | `05402b4405bd8e08debc61aa164b699b742e1aec9cccfb8f529da23debc7f142` |
-| `harness/q2/vm/manifest.py` | `075791bc9bb5c96db337a3d387d0f856c082477e58b41a85cb73ab3f4bebb5bb` |
+| `harness/q2/vm/runner.py` | `0b20f70d9681c7772223d0ecb4d449743a9be3260a1054a99bc9849241a82c9f` |
+| `harness/q2/vm/driver.py` | `7a4b1d685954fa42915259025bca6a66d3b5ba5070949ff46ccdba1512ae24b2` |
+| `harness/q2/vm/manifest.py` | `3111ace40ea8fabb639dcdeccfde873d5afb1fe1d329d4d4675122762dcae1d1` |
 | `infra/slurm/host-single-node/vm-campaign.sbatch` | `3d86820d176e3a9f0699814a19f62154cde00f88da1777a33c804e884288ac8a` |
 | `scripts/submit_vm_campaign.py` | `f08aafc8bc693cd6eb6850ff972a3401f3bddc99f3c14e03187b4d313fcc5917` |
 
