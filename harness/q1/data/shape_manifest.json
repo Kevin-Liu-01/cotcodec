@@ -7,7 +7,7 @@
  },
  "generator_sha256": {
   "harness/q1/problems.py": "5c07653bab479d289d4ae0d42a1dabf88e2b8a9ab1652d1580eba0b477804b67",
-  "harness/q1/shapes.py": "5e5d24dee729c3eaa0a043f1e467f6a54685c0cf1e802ce1679d2f4e27acae7e",
+  "harness/q1/shapes.py": "df4c3c56ab80841b2375479e1fbb545f0d2e2a7894b785bc035123452912317d",
   "scripts/build_q1_shape_manifest.py": "b4a1fafe6a6503b118f910d150834ed7f73d7f70f1fadd1474e471baf57dafed"
  },
  "kernelbench_revision": "423217d9fda91e0c2d67e4a43bf62f96f6d104f1",
@@ -201,7 +201,7 @@
      }
     },
     {
-     "config_id": "c3/U1/input_shape[0]",
+     "config_id": "c3/U1/input_shape.0",
      "init_inputs_unchanged": true,
      "input_bytes": 4295229440,
      "input_shapes": [
@@ -219,7 +219,7 @@
      }
     },
     {
-     "config_id": "c3/U2/input_shape[0]",
+     "config_id": "c3/U2/input_shape.0",
      "init_inputs_unchanged": true,
      "input_bytes": 4297326592,
      "input_shapes": [
@@ -25973,7 +25973,7 @@
      }
     },
     {
-     "config_id": "c3/U1/input_shape[0]",
+     "config_id": "c3/U1/input_shape.0",
      "init_inputs_unchanged": true,
      "input_bytes": 4295098368,
      "input_shapes": [
@@ -25988,7 +25988,7 @@
      }
     },
     {
-     "config_id": "c3/U2/input_shape[0]",
+     "config_id": "c3/U2/input_shape.0",
      "init_inputs_unchanged": true,
      "input_bytes": 4297195520,
      "input_shapes": [
@@ -26579,7 +26579,7 @@
      }
     },
     {
-     "config_id": "c3/U1/input_shape[0]",
+     "config_id": "c3/U1/input_shape.0",
      "init_inputs_unchanged": true,
      "input_bytes": 4295098368,
      "input_shapes": [
@@ -26594,7 +26594,7 @@
      }
     },
     {
-     "config_id": "c3/U2/input_shape[0]",
+     "config_id": "c3/U2/input_shape.0",
      "init_inputs_unchanged": true,
      "input_bytes": 4297195520,
      "input_shapes": [
@@ -26813,7 +26813,7 @@
      }
     },
     {
-     "config_id": "c3/U1/input_shape[0]",
+     "config_id": "c3/U1/input_shape.0",
      "init_inputs_unchanged": true,
      "input_bytes": 4295098368,
      "input_shapes": [
@@ -26828,7 +26828,7 @@
      }
     },
     {
-     "config_id": "c3/U2/input_shape[0]",
+     "config_id": "c3/U2/input_shape.0",
      "init_inputs_unchanged": true,
      "input_bytes": 4297195520,
      "input_shapes": [
@@ -27047,7 +27047,7 @@
      }
     },
     {
-     "config_id": "c3/U1/input_shape[0]",
+     "config_id": "c3/U1/input_shape.0",
      "init_inputs_unchanged": true,
      "input_bytes": 4295098368,
      "input_shapes": [
@@ -27062,7 +27062,7 @@
      }
     },
     {
-     "config_id": "c3/U2/input_shape[0]",
+     "config_id": "c3/U2/input_shape.0",
      "init_inputs_unchanged": true,
      "input_bytes": 4297195520,
      "input_shapes": [
@@ -27321,7 +27321,7 @@
      }
     },
     {
-     "config_id": "c3/U1/input_shape[0]",
+     "config_id": "c3/U1/input_shape.0",
      "init_inputs_unchanged": true,
      "input_bytes": 5368872960,
      "input_shapes": [
@@ -27340,7 +27340,7 @@
      }
     },
     {
-     "config_id": "c3/U2/input_shape[0]",
+     "config_id": "c3/U2/input_shape.0",
      "init_inputs_unchanged": true,
      "input_bytes": 5371494400,
      "input_shapes": [
@@ -27611,7 +27611,7 @@
      }
     },
     {
-     "config_id": "c3/U1/input_shape[0]",
+     "config_id": "c3/U1/input_shape.0",
      "init_inputs_unchanged": true,
      "input_bytes": 8590196736,
      "input_shapes": [
@@ -27630,7 +27630,7 @@
      }
     },
     {
-     "config_id": "c3/U2/input_shape[0]",
+     "config_id": "c3/U2/input_shape.0",
      "init_inputs_unchanged": true,
      "input_bytes": 8594391040,
      "input_shapes": [
@@ -28173,7 +28173,7 @@
      }
     },
     {
-     "config_id": "c3/U1/input_shape[0]",
+     "config_id": "c3/U1/input_shape.0",
      "init_inputs_unchanged": true,
      "input_bytes": 8590196736,
      "input_shapes": [
@@ -28192,7 +28192,7 @@
      }
     },
     {
-     "config_id": "c3/U2/input_shape[0]",
+     "config_id": "c3/U2/input_shape.0",
      "init_inputs_unchanged": true,
      "input_bytes": 8594391040,
      "input_shapes": [
@@ -29013,7 +29013,7 @@
      }
     },
     {
-     "config_id": "c3/U1/input_shape[0]",
+     "config_id": "c3/U1/input_shape.0",
      "init_inputs_unchanged": true,
      "input_bytes": 2147614720,
      "input_shapes": [
@@ -29032,7 +29032,7 @@
      }
     },
     {
-     "config_id": "c3/U2/input_shape[0]",
+     "config_id": "c3/U2/input_shape.0",
      "init_inputs_unchanged": true,
      "input_bytes": 2149711872,
      "input_shapes": [
@@ -29341,7 +29341,7 @@
      }
     },
     {
-     "config_id": "c3/U1/input_shape[0]",
+     "config_id": "c3/U1/input_shape.0",
      "init_inputs_unchanged": true,
      "input_bytes": 3221618688,
      "input_shapes": [
@@ -29364,7 +29364,7 @@
      }
     },
     {
-     "config_id": "c3/U2/input_shape[0]",
+     "config_id": "c3/U2/input_shape.0",
      "init_inputs_unchanged": true,
      "input_bytes": 3227910144,
      "input_shapes": [

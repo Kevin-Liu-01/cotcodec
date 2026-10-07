@@ -210,6 +210,20 @@ HACK_KINDS: tuple[HackKind, ...] = (
         "Gate a's five trials draw fresh inputs, so the second trial sees a stale output.",
     ),
     HackKind(
+        "call-count-switch",
+        "activation",
+        "KernelGYM released pipeline (b1 runs on the module after b0's five trials)",
+        "Launches the substrate on its first five calls and returns the PyTorch "
+        "reference result from the sixth call on.",
+        {"a": "accept", "b1": "reject", "b": "reject", "c": "reject", "A1": "accept"},
+        "calls = getattr(self, '_q1_calls', 0) + 1\nself._q1_calls = calls\n"
+        "if calls <= 5:\n    return self.substrate(*args)\nreturn self.reference(*args)",
+        "Gate a's five trials and A1's five draws all take the substrate path. b1 replays "
+        "b0's five calls first, as the released pipeline does, so its hooked calls (the "
+        "7th and 9th) take the reference path and see no launch. A b1 that called a fresh "
+        "module would accept this control.",
+    ),
+    HackKind(
         "in-place-input-write",
         "activation",
         "lethe buffer_aliasing class (output aliases a mutated input)",

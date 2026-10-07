@@ -12,13 +12,14 @@ CPU doctor. The preregistration draft is
 | `schema.py` | core (binding, copied verbatim by all owners) | substrate / mutant / control layouts, verdict rows, pinned revisions |
 | `problems.py`, `shapes.py` | core | pinned KernelBench problems, constant scope analysis, c2/c3/A3 shape rules |
 | `gates/gate_a.py` | core | KernelBench@44130946 check and HEAD/tolerance variants, upstream fidelity entry points |
-| `gates/gate_b.py`, `gates/KERNELGYM_SPEC.md` | core | b1 launch hook and b2 profiler coverage, from the behavioral spec |
+| `gates/gate_b.py`, `gates/KERNELGYM_SPEC.md` | core (rewritten in the fix pass) | b1 launch hook and b2 profiler coverage, from the behavioral spec; b1/b2 replay b0's five calls first |
 | `gates/b_native.py` | core | runs an unmodified KernelGYM clone (fidelity only) |
 | `gates/gate_c.py` | core | KBV values (c1), shapes (c2), unaligned remainders (c3), validity gate |
 | `audit/` | core | A1 fp64 oracle (D14 dual TF32 policy, calibration), A2 values, A3 shapes with refusal classification, A4 contracts and dual-poison allocator, A5 lethe-style checks, tiers |
 | `runner.py`, `worker.py`, `journal.py` | core | one subprocess per item, phase watchdog, kill-and-resume journal, signal checkpoint |
 | `timing.py` | core | randomized paired timing with L2 flush and CUDA events |
-| `analysis.py` | core | ladder composition, tiers, preregistered splits, MS/FAR/FRR/FA-share, cost |
+| `analysis.py` | core, integration | ladder composition with vacuous unrefereeable components, tiers, splits, parent filter and mutant scope, MS (weighted and unweighted)/FAR/FRR/FRR_independent/FA-share on one kernel set, paired differences, breakdowns, precision-only class, audit-hole candidates and summary, c-lite set cover, marginal and amortized cost |
+| `audit/calibration.py`, `audit/replay.py` | integration | M calibration driver (members, fault ceiling, exact references) and the audit-hole replay (`scripts/q1_calibrate_audit.py`, `scripts/q1_audit_hole_replay.py`) |
 | `doctor_fixtures.py` | core | CPU-only synthetic fixtures for the doctor and tests |
 | `data/` | core | problem hashes, KBV configuration table, shape manifest |
 | `third_party/kernelbench/` | core | verbatim KernelBench files (MIT), see NOTICE |
@@ -70,11 +71,30 @@ substrates (S1 convert, S2 build, admission) -> mutate (pool, compile, select, c
   the mutator on them, and checks every hand-off, the splits, the control
   gate ids, the job manifests and the preregistration's version table.
 - `tests/test_q1_integration_cpu.py` (torch, Triton interpreter, no GPU) runs
-  an S1 and an S2 substrate, five mutants and 15 controls through the real
+  an S1 and an S2 substrate, five mutants and 16 controls through the real
   runner and checks verdict rows, ladder, tiers, metrics and every control
   expectation that does not need `b2`.
 - `scripts/q1_version_card.py --markdown` prints the table the
   preregistration must name; rerun it after any change to Q1 code or data.
+
+### Fix pass after the adversarial review
+
+- Config ids are schema-safe where they are made (`shapes.root_label`:
+  `input_shape[0]` is written `input_shape.0`; overrides keep the real name),
+  `gate_c.c_configs` refuses an invalid id before any candidate loads, and the
+  worker writes one `error` row (`infra_failure-harness-row`) when building or
+  serialising rows fails, so a harness fault is never a candidate rejection.
+  The runner retries an infrastructure-failed item once.
+- `analysis.py`: unrefereeable gate (c) families and A2/A3 channels are
+  vacuous per problem; mutants are scored only when the same audit tier
+  accepts their parent; primary mutant metrics use evaluation-set parents
+  (S1-cal parents are a labelled secondary); every gate is compared on the
+  kernels a, b and c all referee; FRR for criterion 3 is over independent
+  units; bootstrap clusters link problems that share a kernel family.
+- `gates/gate_b.py` was rewritten from `KERNELGYM_SPEC.md` (see NOTICE) and
+  now replays b0's five candidate calls before b1/b2, plus b2's empty-profile
+  retry; `relu_call_count_switch` (doctor) and `call-count-switch` (hack
+  control) check it.
 
 ## NOTICE
 
@@ -102,10 +122,30 @@ evaluation never calls; the stand-ins contain only `read_file` and
 ### Reimplemented from behavior, not vendored
 
 - **hkust-nlp/KernelGYM @3a84417f8c0efaadb215ef638b37d12e71ed20f3**: no LICENSE
-  file (the README claims Apache-2.0), so no code is copied (decision D6). Its
-  released hacking check was read on the host from a scratch clone (pack size
-  1.85 MiB) and described in `gates/KERNELGYM_SPEC.md`; `gates/gate_b.py`
-  implements that spec. Files read (bytes, SHA-256):
+  file (the README claims Apache-2.0), so its code may not be copied here
+  (decision D6). Its released hacking check was read on the host from a
+  scratch clone (pack size 1.85 MiB) and described in `gates/KERNELGYM_SPEC.md`.
+  **Licence-risk history.** The adversarial review of `stage0/q1-gates@acb3bc8`
+  found that the first `gates/gate_b.py`, although it said "No KernelGYM code
+  is copied", transliterated parts of `triton_detect.py` statement by
+  statement (kernel-name resolution, the capture record, the `__getitem__`
+  wrapper, the grid-attribute and resolver lists): token similarity of
+  `kernel_name` to `_get_kernel_name` was 0.84 raw and 0.96 with identifiers
+  normalised, with 7 shared string literals. That version was never pushed.
+  In the fix pass `gates/gate_b.py` was rewritten from `KERNELGYM_SPEC.md` by
+  an agent that had read neither the KernelGYM source nor the earlier hook
+  code. Where the spec was silent (which object a capture names; the
+  `unknown` fall-through), behavior was measured black-box against the
+  unmodified clone on 40 controlled objects and 5 interpreter kernels (all
+  equal) and is pinned by
+  `tests/test_q1_gates.py::test_capture_names_match_kernelgym`. After the
+  rewrite the largest similarities are 0.49 raw / 0.58 normalised
+  (`_resolve_name` vs `_get_kernel_name`, longest common run 7 tokens; the 6
+  shared literals are the attribute names the spec requires) and 0.45 / 0.57
+  (`capture_text` vs `_append_capture`). This is weaker separation than a
+  two-person clean room (one agent wrote the spec, another implemented it
+  only for this rewrite); a licence from the authors (an outward action, D2)
+  would remove the residual risk. Files read for the spec (bytes, SHA-256):
   `kernelgym/toolkit/kernelbench/triton_detect.py` (31,846,
   `426c415e8518f001b15acad7acb5e2d601fb9dcb09c9098e54969bd6b4b16502`),
   `pipeline.py` (25,633, `80298b9ea21ce45ca2346ba60c12e417780cee6b0778e4abe59ad4b606d77bf2`),

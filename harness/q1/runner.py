@@ -15,9 +15,17 @@
   phase: the first timeout ends that item.
 - **Crashes.** A child that dies without writing rows gets one row: ``reject``
   if it died after the candidate loaded (``correctness``/``timing`` phase),
-  otherwise ``error``. After any crash or timeout on a GPU slot a health check
-  runs in a fresh process; a failed check marks the item ``error``
-  (``infra_failure``) and retires the slot.
+  otherwise ``error``. The worker runs candidate code only before it builds
+  rows; a failure while building, validating or serialising rows is written
+  by the worker itself as one ``error`` row (``infra_failure-harness-row``),
+  so a harness fault after the candidate ran is never charged to it. After
+  any crash or timeout on a GPU slot a health check runs in a fresh process;
+  a failed check marks the item ``error`` (``infra_failure``) and retires the
+  slot.
+- **Infrastructure retries.** An item whose rows carry an ``infra_failure``
+  reason is queued once more as the next attempt (the journal keeps both
+  attempts; analyses read the final one). A second infrastructure failure is
+  final and is excluded and listed by the analysis.
 - **Journal.** Rows are appended to the append-only journal
   (``journal.py``); resume skips finished items and reruns the rest with the
   next attempt number.
@@ -58,6 +66,17 @@ from harness.q1.versions import row_code_sha256
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 DEFAULT_TIMEOUTS = {"compile": 120.0, "correctness": 180.0, "timing": 300.0}
 PHASE_ORDER = ("compile", "correctness", "timing")
+#: An infrastructure-failed item runs at most this many attempts (prereg section 10).
+MAX_INFRA_ATTEMPTS = 2
+
+
+def is_infra_failure(rows: Sequence[Mapping[str, Any]]) -> bool:
+    """True when the item's rows record an infrastructure failure, not a verdict."""
+    return any(
+        row["verdict"] == "error"
+        and str(row["details"].get("reason", "")).startswith("infra_failure")
+        for row in rows
+    )
 
 
 @dataclass
@@ -204,10 +223,18 @@ class Runner:
             rows, healthy = self.execute(item, attempt, slot)
             if self.stopped.is_set():
                 return  # an interrupted item is not journaled; it reruns on resume
+            infra = is_infra_failure(rows)
+            if infra and attempt < MAX_INFRA_ATTEMPTS:
+                for row in rows:  # journaled for the record, but not final
+                    row["details"]["item_final"] = False
             with self._lock:
                 self.journal.append(rows)
                 self.summary["run"] += 1
+                if infra:
+                    self.summary["infra_failures"] = self.summary.get("infra_failures", 0) + 1
                 self.write_progress()
+            if infra and attempt < MAX_INFRA_ATTEMPTS:
+                work.put((item, attempt + 1))
             if not healthy:
                 with self._lock:
                     self.retired_slots.append(slot)

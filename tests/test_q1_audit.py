@@ -251,3 +251,154 @@ def test_sanitizer_wrapping() -> None:
     assert contracts.interpret_sanitizer(0).passed is True
     assert contracts.interpret_sanitizer(contracts.SANITIZER_EXIT_CODE).passed is False
     assert contracts.interpret_sanitizer(1).passed is None
+
+
+def test_tiers_drop_vacuous_channels_only_for_a2_and_a3() -> None:
+    channels = {"A1": "accept", "A2": "error", "A3": "error", "A4": "accept"}
+    assert tiers.tier_verdicts(channels)["G"] == "error"
+    assert tiers.tier_verdicts(channels, vacuous=("A2", "A3")) == {
+        "N": "accept",
+        "G": "accept",
+        "G-strict": "accept",
+        "c-disjoint": "accept",
+    }
+    rejecting = {**channels, "A1": "reject"}
+    assert tiers.tier_verdicts(rejecting, vacuous=("A2", "A3"))["G"] == "reject"
+    with pytest.raises(ValueError):
+        tiers.tier_verdicts(channels, vacuous=("A1",))
+
+
+def test_required_multiplier_is_defined_for_exact_references() -> None:
+    """Review finding: e / max(e_r32) was undefined when the fp32 reference is exact."""
+    from harness.q1.audit.calibration import FAULT_CEILING, required_multiplier
+
+    assert required_multiplier(0.0, [0.0, 0.0]) == 0.0  # exact candidate, exact reference
+    assert required_multiplier(oracle.T_FLOOR / 2, [0.0]) == 0.0  # inside the floor
+    assert math.isinf(required_multiplier(1e-3, [0.0, 0.0]))  # no M can pass it
+    assert required_multiplier(8e-6, [1e-7, 4e-7]) == pytest.approx(20.0)
+    assert required_multiplier(1.0, [None, math.inf]) == 0.0  # T is infinite
+    assert math.isinf(required_multiplier(None, [1e-7]))
+    assert FAULT_CEILING == 1024.0
+
+
+def _a1_rows(kernel: str, draws: list[dict]) -> list[dict]:
+    from harness.q1.schema import make_verdict_row
+
+    rows = []
+    for index, extra in enumerate(draws):
+        details = {
+            "admissible": True,
+            "candidate_raised": False,
+            "e_r32_device": 1e-7,
+            "e_r32_cpu": 1e-7,
+            "e_r32_tf32": None,
+            "tf32-admissible": {"e": 1e-7, "tf32_applied": False, "reason": ""},
+            **extra,
+        }
+        rows.append(
+            make_verdict_row(
+                kernel_id=kernel,
+                gate="A1",
+                config_id=f"A1/native/seed-{6042 + index}",
+                verdict="accept",
+                tf32_policy="tf32-admissible",
+                gpu_seconds=0.0,
+                details=details,
+                seed=42,
+            )
+        )
+    return rows
+
+
+def test_calibration_driver_classifies_and_raises_m_once() -> None:
+    from harness.q1.audit.calibration import calibrate
+
+    table = {
+        name: {"kind": "substrate", "source_kind": "inductor", "problem_id": f"L1/{i}_P"}
+        for i, name in enumerate(("ok", "precision", "exact", "fault", "raised", "unref"))
+    }
+    table["s2"] = {"kind": "substrate", "source_kind": "liger", "problem_id": "L1/0_P"}
+    rows = _a1_rows("ok", [{}])
+    rows += _a1_rows(
+        "precision",
+        [{"tf32-admissible": {"e": 3e-6, "tf32_applied": False, "reason": "exceeds-T"}}],
+    )
+    rows += _a1_rows(
+        "exact",
+        [
+            {
+                "e_r32_device": 0.0,
+                "e_r32_cpu": 0.0,
+                "tf32-admissible": {"e": 0.0, "tf32_applied": False, "reason": ""},
+            }
+        ],
+    )
+    rows += _a1_rows(
+        "fault", [{"tf32-admissible": {"e": 1e-3, "tf32_applied": False, "reason": "exceeds-T"}}]
+    )
+    rows += _a1_rows("raised", [{"candidate_raised": True}])
+    rows += _a1_rows("unref", [{"admissible": False}])
+    result = calibrate(rows, table, [f"L1/{i}_P" for i in range(6)])
+    status = {k: v["status"] for k, v in result["kernels"].items()}
+    assert status == {
+        "ok": "member",
+        "precision": "member",
+        "exact": "member",
+        "fault": "fault-candidate-error",
+        "raised": "fault-candidate-raised",
+        "unref": "excluded-unrefereeable",
+    }
+    assert result["kernels"]["precision"]["required_multiplier"] == pytest.approx(30.0)
+    assert (result["multiplier"], result["multiplier_raised"]) == (32, True)
+    assert result["fault_candidates"] == ["fault", "raised"]
+    assert result["audit_version"]["multiplier"] == 32
+
+
+def test_audit_hole_replay_classifies_gate_rejections() -> None:
+    from harness.q1 import problems as problem_lib
+    from harness.q1 import shapes
+    from harness.q1.audit import replay
+    from harness.q1.gates import gate_c
+
+    problem_id = "L1/9001_SyntheticReLU"
+    source = fx.PROBLEMS[problem_id]
+    analysis = problem_lib.analyze_problem(problem_id, source)
+
+    def input_bytes(overrides: dict[str, int]) -> int:
+        variant = problem_lib.override_constants(source, analysis, overrides)
+        return int(problem_lib.meta_input_summary(variant)["input_bytes"])
+
+    manifest = {
+        "problems": {
+            problem_id: shapes.build_problem_manifest(
+                analysis, problem_sha256="0" * 64, input_bytes=input_bytes
+            )
+        }
+    }
+    specs = gate_c.c_configs(problem_id, families=("c2",), manifest=manifest)
+    double = next(s.config_id for s in specs if "S-double/D1" in s.config_id)
+    requests = [
+        {"gate": "c2", "config_id": double},
+        {"gate": "a", "config_id": "native/trials-5/seed-42", "trials": [0]},
+    ]
+
+    def classify(name: str) -> dict[str, str]:
+        import json
+        import tempfile
+
+        with tempfile.NamedTemporaryFile("w", suffix=".json", delete=False) as handle:
+            json.dump(manifest, handle)
+        outcomes = replay.run_replays(
+            problem_id,
+            source,
+            str(fx.KERNELS[name]["source"]),
+            replicate_seed=42,
+            device=torch.device("cpu"),
+            rejections=requests,
+            manifest_path=handle.name,
+        )
+        return {o.details["rejecting_gate"]: o.details["classification"] for o in outcomes}
+
+    assert classify("relu_correct") == {"c2": "false-reject-by-gate", "a": "false-reject-by-gate"}
+    assert classify("relu_native_only")["c2"] == "audit-hole"
+    assert classify("relu_refuses_shapes")["c2"] == "false-reject-by-gate"  # refusal (D14)

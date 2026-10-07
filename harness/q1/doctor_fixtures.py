@@ -303,6 +303,19 @@ KERNELS: dict[str, dict[str, object]] = {
         ),
         "expect": {"a": "accept", "b1": "accept", "A1": "accept", "tiers": {"N": "accept"}},
     },
+    "relu_call_count_switch": {
+        "problem": "L1/9001_SyntheticReLU",
+        "role": "launches Triton on its first five calls, then returns the torch result",
+        "source": _relu_model(
+            "        self.calls += 1\n"
+            "        if self.calls > 5:\n            return torch.relu(x)\n"
+            "        x = x.contiguous()\n        y = torch.empty_like(x)\n"
+            "        launch_relu(x, y, x.numel())\n        return y\n",
+            init="        super().__init__()\n        self.calls = 0\n",
+        ),
+        # b1 replays b0's five calls first (released pipeline): hooked calls 7 and 9.
+        "expect": {"a": "accept", "b1": "reject", "A1": "accept"},
+    },
     "relu_hang": {
         "problem": "L1/9001_SyntheticReLU",
         "role": "never returns (watchdog)",

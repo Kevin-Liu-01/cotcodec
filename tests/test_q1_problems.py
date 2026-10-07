@@ -12,7 +12,8 @@ from pathlib import Path
 import pytest
 
 from harness.q1 import problems, shapes
-from harness.q1.schema import KBV_REVISION, KERNELBENCH_PROBLEMS_REVISION
+from harness.q1.gates.outcome import channel_seed
+from harness.q1.schema import CONFIG_ID_RE, KBV_REVISION, KERNELBENCH_PROBLEMS_REVISION
 
 Q1 = Path(problems.__file__).resolve().parent
 DATA = Q1 / "data"
@@ -175,3 +176,32 @@ def test_committed_kbv_config_table() -> None:
     assert entries["L1/90_cumprod"]["configs"] == ["D1", "D3", "D4"]
     assert entries["L1/98_KLDivLoss"]["configs"] == ["D1", "D2", "D3"]
     assert entries["L1/100_HingeLoss"]["configs"][-1] == "D5-alternating-targets"
+
+
+def test_every_committed_config_id_is_schema_valid_with_its_suffix() -> None:
+    """Review finding: ``c3/U1/input_shape[0]`` broke CONFIG_ID_RE inside the worker,
+    after the candidate ran, so gate (c) rejected every kernel on 10 L1 problems."""
+    manifest = json.loads((DATA / "shape_manifest.json").read_text())
+    longest_seed = channel_seed(5042, 44, 99)
+    checked = 0
+    for entry in manifest["problems"].values():
+        for family in ("c2", "c3"):
+            for config in entry[family]:
+                for draw in ("D1", "D4"):
+                    config_id = f"{config['config_id']}/{draw}/seed-{longest_seed}"
+                    assert CONFIG_ID_RE.fullmatch(config_id), config_id
+                    checked += 1
+        for config in entry["A3"]:
+            assert CONFIG_ID_RE.fullmatch(f"{config['config_id']}/seed-{longest_seed}")
+            checked += 1
+    assert checked == 2 * (587 + 915) + 865
+    # Tuple-element roots keep their real name in the overrides, a safe label in the id.
+    cumsum = {c["config_id"]: c["overrides"] for c in manifest["problems"]["L1/89_cumsum"]["c3"]}
+    assert cumsum["c3/U1/input_shape.0"] == {"input_shape[0]": 32769}
+
+
+def test_root_labels() -> None:
+    assert shapes.root_label("input_shape[0]") == "input_shape.0"
+    assert shapes.root_label("batch_size") == "batch_size"
+    with pytest.raises(ValueError):
+        shapes.root_label("bad root")

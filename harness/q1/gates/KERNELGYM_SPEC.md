@@ -9,9 +9,12 @@ own words; `gate_b.py` is written from this file, and `b_native.py` runs the
 unmodified clone for fidelity only.
 
 Process note: the reviewed plan asked for one agent to write this spec and a
-second to implement it. In this build one agent did both, in that order, with
-the implementation written against this file. That is weaker separation than
-planned and is listed as an open issue.
+second to implement it. In the first build one agent did both, and the review
+found parts of that implementation transliterated from `triton_detect.py`.
+In the fix pass (2026-10-07) `gate_b.py` was rewritten from this file by a
+second agent that had not read the KernelGYM source or the earlier hook
+code. Two behaviors this spec leaves open were measured black-box against
+the unmodified clone and are recorded in "Capture record" below.
 
 ## Where the check sits in the released pipeline
 
@@ -109,6 +112,31 @@ Each capture is the string `"<name> grid=<grid><extra>"` where:
   grid positionally or the launcher caches it) that value, else `None`.
 - `extra` is ` module=<m>` and/or ` file=<f>` when the recorded object has a
   `__module__` / `__code__.co_filename`.
+
+Measured black-box (fix pass; 40 controlled objects and 5 kernels, Triton
+interpreter):
+
+- **Which object a capture describes.** The capture's `extra`, and except for
+  `JITFunction.__getitem__` and `JITFunction.__call__` also its name, describe
+  the called object's `fn` attribute when it has one (even `None`), else the
+  object itself. So a plain `JITFunction.run` capture is named `function`
+  (the class of the raw Python function), and `kernel[grid](...)` on a
+  `@triton.jit` function records two captures: `<kernel name>` (subscript)
+  and `function` (run).
+- **Name fall-through.** The nested `kernel` lookup returns whatever it finds,
+  including the nested object's class name; only the result `unknown` falls
+  through to the string attributes.
+- **Lookup.** Methods are found by ordinary attribute lookup on the class, so
+  a class without its own `__call__` gets one (its metaclass's) wrapped while
+  the hook is active.
+
+## Call history (pipeline)
+
+Because b1 runs on the module after b0, the hooked calls are the module's
+7th and 9th calls (five b0 trials, then warm-up and hooked call per mode).
+Q1 runs each item in a fresh process, so `gate_b.kernelgym_b0_calls` replays
+b0's five candidate calls (KernelBench trial seeds, `.cuda()` inputs,
+`no_grad`) before b1 and b2.
 
 ## b2: profiler coverage
 

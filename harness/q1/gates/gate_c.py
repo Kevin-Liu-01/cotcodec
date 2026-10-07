@@ -53,6 +53,7 @@ from harness.q1.gates.common import (
     set_seed,
     synchronize,
 )
+from harness.q1.schema import CONFIG_ID_RE
 
 DATA_ROOT = Path(__file__).resolve().parents[1] / "data"
 C1_BASE, C2_BASE, C3_BASE = 1042, 2042, 3042
@@ -116,6 +117,12 @@ def c_configs(
                     )
                 )
                 index += 1
+    # Fail closed before any candidate is loaded: a config id the verdict schema
+    # refuses would otherwise crash the worker after the candidate ran, and the
+    # runner would charge that harness fault to the candidate.
+    bad = [spec.config_id for spec in specs if not CONFIG_ID_RE.fullmatch(spec.config_id)]
+    if bad:
+        raise ValueError(f"{problem_id}: config ids not allowed by schema.CONFIG_ID_RE: {bad[:5]}")
     return specs
 
 

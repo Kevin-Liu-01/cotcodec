@@ -126,13 +126,13 @@ def test_mutants_and_controls_load_under_the_shared_schema(pipeline: dict) -> No
     # A hack-emulating mutant control exists for the S1 ReLU removal (KBV H.1 analogue).
     mutant_controls = [k for k in kinds["control"] if k.endswith(".control")]
     assert any(".relu-" in k for k in mutant_controls), mutant_controls
-    # Every substrate gets the four "any" wrappers; L1/19 gets all ten kinds.
+    # Every substrate gets the four "any" wrappers; L1/19 gets all eleven kinds.
     hack_ids = {row["control_id"] for row in pipeline["hacks"]["controls"]}
     assert pipeline["hacks"]["kernelbench_source"] == "vendored-hash-checked"
     for substrate_id in substrate_ids:
         assert f"{substrate_id}.hack.decoy-defined-unused" in hack_ids
     relu = [k for k in hack_ids if k.startswith("s1-inductor-L1-19_ReLU.hack.")]
-    assert len(relu) == 10, relu
+    assert len(relu) == 11, relu
 
 
 def test_every_control_expectation_names_a_composable_gate(pipeline: dict) -> None:
@@ -235,6 +235,7 @@ Q1_MANIFESTS = (
     "experiments/manifests/q1-mutate/specializations-v1.yaml",
     "experiments/manifests/q1-core/q1-gate-gpu-smoke.yaml",
     "experiments/manifests/q1-core/q1-stage0-pilot.yaml",
+    "experiments/manifests/q1-core/q1-audit-hole-replay.yaml",
 )
 
 

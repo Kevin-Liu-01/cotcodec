@@ -13,8 +13,8 @@ identifiers its own owner already records:
   :func:`~harness.q1.audit.tiers.audit_version_hash` freezes as audit v1 after
   calibration (that hash also folds in the calibrated multiplier, so it can only
   be computed at calibration time);
-- ``analysis``: the analysis module and the report script that compute every
-  preregistered metric;
+- ``analysis``: the analysis module, the report script that computes every
+  preregistered metric, and the audit-hole replay and calibration drivers;
 - ``mutator``: the mutator's own ``package_sha256`` and operator
   ``registry_fingerprint`` (both recorded in every corpus manifest);
 - ``substrates``: the substrate package with its vendored S2 sources, the
@@ -54,7 +54,12 @@ GATE_CODE_PATHS = (
 #: Data the gates read: vendored KernelBench, problem hashes, KBV and shape tables.
 GATE_DATA_PATHS = ("data", "third_party")
 #: Metric definitions (relative to the project root).
-ANALYSIS_PATHS = ("harness/q1/analysis.py", "scripts/report_q1_stage0.py")
+ANALYSIS_PATHS = (
+    "harness/q1/analysis.py",
+    "scripts/report_q1_stage0.py",
+    "scripts/q1_audit_hole_replay.py",
+    "scripts/q1_calibrate_audit.py",
+)
 #: Substrate builders and their vendored upstream sources.
 SUBSTRATE_PATHS = ("substrates",)
 
@@ -100,8 +105,11 @@ def audit_code_sha256() -> str:
 
 @lru_cache(maxsize=4)
 def row_code_sha256(gate: str) -> str:
-    """``code_sha256`` for a verdict row: audit code for audit channels, else gate code."""
-    return audit_code_sha256() if gate.startswith("A") else gate_code_sha256()
+    """``code_sha256`` for a verdict row: audit code for audit channels and the
+    audit-hole replay, else gate code."""
+    return (
+        audit_code_sha256() if gate.startswith("A") or gate == "audit_hole" else gate_code_sha256()
+    )
 
 
 def version_card() -> dict[str, Any]:

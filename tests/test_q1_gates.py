@@ -106,6 +106,42 @@ def test_b1_launch_detection() -> None:
     )
 
 
+def test_b1_replays_the_released_call_history() -> None:
+    """Review finding: released b1 hooks the module's 7th and 9th calls (after b0's five
+    trials); a fresh module's 2nd and 4th calls let a call-count switch pass."""
+    problem, kernel = _problem("relu_call_count_switch"), _kernel("relu_call_count_switch")
+    outcome = gate_b.run_gate_b1(problem, kernel, device="cpu")
+    assert outcome.verdict == "reject", outcome.details
+    assert outcome.details["per_mode"] == {"inference_mode": False, "enable_grad": False}
+    assert outcome.details["b0_calls_replayed"] == gate_b.B0_TRIALS
+    from harness.q1.gates.common import load_candidate, load_reference, set_seed
+
+    _, get_init, get_inputs = load_reference(problem)
+    loaded = load_candidate(kernel)
+    try:
+        set_seed(42)
+        fresh = loaded.model_class(*get_init())
+        used, _, _ = gate_b.detect_launches(fresh, get_inputs(), device=torch.device("cpu"))
+    finally:
+        loaded.cleanup()
+    assert used  # the same detection on a module with no history is fooled
+
+
+def test_b2_retries_an_empty_profile_once() -> None:
+    class Counting(torch.nn.Module):
+        calls = 0
+
+        def forward(self, x):
+            Counting.calls += 1
+            return x + 1
+
+    x = torch.ones(4)
+    for retries, expected in ((0, 3 + 10 + 10), (1, 3 + 10 + 10 + 10)):
+        Counting.calls = 0
+        rows = gate_b.profiler_rows(Counting(), [x], device=torch.device("cpu"), retries=retries)
+        assert rows == [] and Counting.calls == expected  # CPU rows carry no device time
+
+
 def test_launch_hook_restores_triton_classes() -> None:
     from triton.runtime.jit import JITFunction, KernelInterface
 
@@ -173,6 +209,87 @@ def test_b1_and_b2_agree_with_unmodified_kernelgym() -> None:
         ours = gate_b.coverage(captures, rows)
         assert ours["num_custom_kernels"] == theirs["num_custom_kernels"]
         assert ours["num_total_kernels"] == theirs["num_total_kernels"]
+
+
+@pytest.mark.skipif(not (KERNELGYM / "kernelgym").is_dir(), reason="no KernelGYM clone")
+def test_capture_names_match_kernelgym() -> None:
+    """Black-box parity of capture records with the unmodified clone (gate_b.py was
+    rewritten from the spec without reading KernelGYM's source)."""
+    from triton.runtime.autotuner import Autotuner
+    from triton.runtime.jit import JITFunction, KernelInterface
+
+    from harness.q1.gates import b_native
+
+    upstream = b_native.load_triton_detect_standalone(b_native.resolve_clone(KERNELGYM))
+
+    def raw(name):
+        def f():
+            return None
+
+        f.__name__ = name
+        return f
+
+    class Named:
+        def __init__(self, **attrs):
+            for key, value in attrs.items():
+                setattr(self, key, value)
+
+    def make(base, **attrs):
+        class Probe(base):
+            def __init__(self):
+                pass
+
+        obj = Probe()
+        for key, value in attrs.items():
+            object.__setattr__(obj, key, value)
+        return obj
+
+    class Call(torch.nn.Module):
+        def __init__(self, obj, path):
+            super().__init__()
+            self.obj, self.path = obj, path
+
+        def forward(self, x):
+            try:
+                if self.path == "getitem":
+                    self.obj[(3,)](x)
+                else:
+                    getattr(self.obj, self.path)(x, grid=(5,))
+            except Exception:
+                pass
+            return x
+
+    cases = [
+        (KernelInterface, "getitem", {"fn": raw("fa")}),
+        (KernelInterface, "getitem", {"fn": Named(kernel_name="fk")}),
+        (KernelInterface, "getitem", {"kernel": Named(fn=raw("fc"))}),
+        (KernelInterface, "getitem", {"kernel": Named(kernel=Named(kernel=Named(fn=raw("x"))))}),
+        (KernelInterface, "getitem", {"kernel": Named(name="unknown"), "name": "top"}),
+        (KernelInterface, "getitem", {"fn": None, "name": "nm"}),
+        (KernelInterface, "getitem", {"name": 5, "kernel_name": "kn"}),
+        (KernelInterface, "run", {"fn": raw("q")}),
+        (KernelInterface, "__call__", {"fn": raw("q")}),
+        (JITFunction, "getitem", {"fn": raw("jf")}),
+        (JITFunction, "getitem", {"fn": Named(), "kernel": Named(name="kk")}),
+        (JITFunction, "run", {"fn": Named(name="fobj")}),
+        (JITFunction, "__call__", {"fn": raw("jcall")}),
+        (Autotuner, "getitem", {"fn": raw("atk")}),
+        (Autotuner, "run", {"fn": Named(kernel_name="atn")}),
+    ]
+    x = torch.zeros(4)
+    for base, path, attrs in cases:
+        _, theirs = upstream.detect_triton_usage_for_module(
+            Call(make(base, **attrs), path),
+            x,
+            warmup=0,
+            steps=1,
+            use_cuda=False,
+            return_matches=True,
+        )
+        _, ours, _ = gate_b.detect_launches(
+            Call(make(base, **attrs), path), [x], warmup=0, device=torch.device("cpu")
+        )
+        assert sorted(set(theirs or [])) == ours, (base.__name__, path, attrs)
 
 
 def test_gate_c_ladder_on_fixtures() -> None:

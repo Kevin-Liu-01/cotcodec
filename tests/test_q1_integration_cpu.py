@@ -372,7 +372,7 @@ def test_mutants_get_their_semantic_verdicts(run: dict, key: tuple[str, str]) ->
 
 def test_every_control_expectation_holds_on_cpu(run: dict) -> None:
     table = {k: v for k, v in run["table"].items() if v["kind"] == "control"}
-    assert len(table) == 15  # 10 kinds on the ReLU, 4 on the softmax, 1 mutant control
+    assert len(table) == 16  # 11 kinds on the ReLU, 4 on the softmax, 1 mutant control
     failed = []
     for control_id, facts in table.items():
         entry = run["composed"][control_id]
@@ -390,9 +390,33 @@ def test_every_control_expectation_holds_on_cpu(run: dict) -> None:
         assert cell["gate"] in NOT_ON_CPU | {"b", "c"}, cell
 
 
+def _with_b2_failing_open(rows: list[dict]) -> list[dict]:
+    """b2 needs CUDA profiler events, so the CPU run has no b2 item. Record it as an
+    ``error`` row per kernel, which the ladder counts as accept (the released check
+    fails open), so b = a and b1 and every gate referees the same kernels."""
+    extra = [
+        schema.make_verdict_row(
+            kernel_id=kernel,
+            gate="b2",
+            config_id="native/seed-42",
+            verdict="error",
+            tf32_policy="torch-default",
+            gpu_seconds=0.0,
+            details={"reason": "not-run-on-cpu", "item_key": f"{kernel}|b2|seed-42"},
+            seed=42,
+        )
+        for kernel in sorted({row["kernel_id"] for row in rows})
+    ]
+    return [*rows, *extra]
+
+
 def test_metrics_and_report_run_on_the_journal(run: dict, tmp_path: Path) -> None:
     scored = {k: v for k, v in run["table"].items() if k in run["composed"]}
-    result = analysis.metrics(run["composed"], scored, resamples=200)
+    problem_of = {k: v["problem_id"] for k, v in scored.items()}
+    composed = analysis.compose(_with_b2_failing_open(run["rows"]), problem_of=problem_of)
+    result = analysis.metrics(composed, scored, resamples=200)
+    # every mutant's parent passes the primary audit, so the parent filter keeps all five
+    assert result["counts"]["mutants_excluded"] == {}
     # all five chosen mutants are witnessed; gate (a) rejects only the S1 negation
     assert result["counts"]["witnessed"] == len(MUTANTS)
     assert result["gates"]["a"]["MS"]["k"] == 1 and result["gates"]["a"]["MS"]["n"] == 5

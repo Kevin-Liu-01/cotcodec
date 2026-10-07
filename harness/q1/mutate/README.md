@@ -123,6 +123,7 @@ state after construction is the substrate's.
 | `shape-locked-silent` | lethe `shape_specific`, KBV App. L | elementwise activations | a, b, audit_N accept; c2, c, A3, audit_G reject |
 | `shape-locked-refusal` | D14 refusal | elementwise activations | a, b, audit_N accept; A3 refuse; audit_G_strict reject |
 | `cached-output` | lethe `returns_cached`, KernelBench result reuse | elementwise activations | a, b, c reject |
+| `call-count-switch` | KernelGYM call history (b1 runs after b0's five calls; added in the integration fix pass) | elementwise activations | a, A1 accept; b1, b, c reject |
 | `in-place-input-write` | lethe `buffer_aliasing` | elementwise activations | a, b accept; A4, audit_N reject |
 
 Hack-emulating mutants (from `select --controls-root`): ReLU removal on
