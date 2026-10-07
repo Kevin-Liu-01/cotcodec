@@ -173,3 +173,18 @@ research gauntlet. A one-GPU job of at most 0.1 GPU-h is pre-approved to run
 the batched-bank GPU equivalence tests before the probe is frozen, so the TF32
 tolerances are checked on the H100 first; it reads no evaluation data. Probe
 design decisions 1-12 and v2 design decisions 32-46 are accepted.
+
+**D23. Checker-mutation raters: Claude plus a self-hosted open-weight model.**
+D9 called for two provider-distinct model raters. No OpenAI key is available
+and the Moonshot account is suspended for insufficient balance (recharging is
+Kevin's call). The raters are therefore a Claude model through the Anthropic
+API and an open-weight vision-language model served on the H100s with the
+cu129 vLLM overlay already validated by the serving probes (a Qwen3.5
+checkpoint with a receipt; different developer and training lineage). The
+spec author is also a Claude model, so the open-weight rater is the
+independent one: each rater's verdicts are reported separately, and an item
+on which the open-weight rater dissents is either adjudicated in Kevin's
+human spot check or counted as a label error, never dropped. Rater inputs are
+documents, diffs and renders, not code, so serving them on GPUs is outside
+the untrusted-code rule (D7). GPU time for the rater is bounded in the
+registration.
