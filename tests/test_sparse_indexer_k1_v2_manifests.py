@@ -409,31 +409,82 @@ def test_probe_template_reads_no_study_artifact_and_fits_its_cap() -> None:
     assert command[command.index("--seeds") + 1 :] == ["42", "43", "44"]
 
 
-def _probe_repo(root: Path, table: dict[str, str]) -> Path:
+def _probe_repo(root: Path, table: dict[str, str], *, commit: bool = True) -> tuple[Path, str]:
+    """A real git repo holding the frozen probe row and the tabled files at their digests."""
+    import shutil
+    import subprocess
+
     repo = root / "repo"
     prereg = repo / "program" / "preregistrations" / f"{probe_filler.EXPERIMENT_ID}.md"
     prereg.parent.mkdir(parents=True)
     rows = "".join(f"| {path} | {digest} |\n" for path, digest in table.items())
     prereg.write_text(f"# probe\n\n| File | SHA-256 |\n|---|---|\n{rows}")
+    for path in table:
+        target = repo / path
+        target.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copyfile(PROJECT_ROOT / path, target)
     preregister.freeze(prereg, probe_filler.EXPERIMENT_ID,
                        ledger=repo / "program" / "preregistrations" / "ledger.jsonl", root=repo)
-    return repo
+    git = ["git", "-C", str(repo), "-c", "user.name=t", "-c", "user.email=t@example.invalid",
+           "-c", "commit.gpgsign=false"]
+    subprocess.run([*git, "init", "-q"], check=True)
+    if not commit:
+        subprocess.run([*git, "commit", "-q", "--allow-empty", "-m", "empty"], check=True)
+    else:
+        subprocess.run([*git, "add", "-A"], check=True)
+        subprocess.run([*git, "commit", "-q", "-m", "frozen probe"], check=True)
+    sha = subprocess.run([*git, "rev-parse", "HEAD"], check=True, capture_output=True,
+                         text=True).stdout.strip()
+    return repo, sha
+
+
+def _image(tmp_path: Path, git_sha: str) -> Path:
+    image = tmp_path / f"image-{git_sha[:8]}.json"
+    image.write_text(json.dumps({**IMAGE, "git_sha": git_sha}))
+    return image
+
+
+def _probe_table() -> dict[str, str]:
+    return {path: preregister.sha256_file(PROJECT_ROOT / path) for path in (
+        probe_filler.SELF_PATH, "scripts/probe_sparse_indexer_k1_throughput.py")}
 
 
 def test_probe_filler_binds_the_registered_probe_code(tmp_path) -> None:
-    image = tmp_path / "image.json"
-    image.write_text(json.dumps(IMAGE))
-    table = {path: preregister.sha256_file(PROJECT_ROOT / path) for path in (
-        probe_filler.SELF_PATH, "scripts/probe_sparse_indexer_k1_throughput.py")}
-    repo = _probe_repo(tmp_path / "ok", table)
-    assert probe_filler.main(["--image-receipt", str(image), "--repo-root", str(repo),
-                              "--output", str(tmp_path / "out")]) == 0
+    table = _probe_table()
+    repo, sha = _probe_repo(tmp_path / "ok", table)
+    assert probe_filler.main(["--image-receipt", str(_image(tmp_path, sha)), "--repo-root",
+                              str(repo), "--output", str(tmp_path / "out")]) == 0
     filled = validate_manifest(load(tmp_path / "out" / PROBE_TEMPLATE.name))
     assert filled["image_id"] == IMAGE["image_id"] and filled["minutes"] == 9
-    bad = _probe_repo(tmp_path / "bad", {**table,
-                                         "scripts/probe_sparse_indexer_k1_throughput.py": "0" * 64})
-    assert probe_filler.main(["--image-receipt", str(image), "--repo-root", str(bad),
-                              "--output", str(tmp_path / "out2")]) == 2
+    bad, bad_sha = _probe_repo(tmp_path / "bad", {
+        **table, "scripts/probe_sparse_indexer_k1_throughput.py": "0" * 64})
+    assert probe_filler.main(["--image-receipt", str(_image(tmp_path, bad_sha)), "--repo-root",
+                              str(bad), "--output", str(tmp_path / "out2")]) == 2
+
+
+def test_probe_filler_refuses_an_image_commit_without_the_frozen_row(tmp_path) -> None:
+    repo, sha = _probe_repo(tmp_path / "nocommit", _probe_table(), commit=False)
+    assert probe_filler.main(["--image-receipt", str(_image(tmp_path, sha)), "--repo-root",
+                              str(repo), "--output", str(tmp_path / "out")]) == 2
+    repo2, _sha2 = _probe_repo(tmp_path / "unknown", _probe_table())
+    assert probe_filler.main(["--image-receipt", str(_image(tmp_path, "b" * 40)), "--repo-root",
+                              str(repo2), "--output", str(tmp_path / "out2")]) == 2
+
+
+@pytest.mark.parametrize("edit", [
+    ("  minutes: 9", "  minutes: 20"),
+    ("  max_gpu_hours: 0.15", "  max_gpu_hours: 0.34"),
+    ("  gpus: 1", "  gpus: 2"),
+])
+def test_probe_filler_refuses_a_template_with_another_limit_or_cap(tmp_path, edit) -> None:
+    repo, sha = _probe_repo(tmp_path / "ok", _probe_table())
+    text = PROBE_TEMPLATE.read_text(encoding="utf-8")
+    assert edit[0] in text
+    template = tmp_path / PROBE_TEMPLATE.name
+    template.write_text(text.replace(edit[0], edit[1]))
+    assert probe_filler.main(["--image-receipt", str(_image(tmp_path, sha)), "--repo-root",
+                              str(repo), "--template", str(template),
+                              "--output", str(tmp_path / "out")]) == 2
 
 
 def test_derive_script_applies_only_complete_registered_receipts(tmp_path, capsys) -> None:
