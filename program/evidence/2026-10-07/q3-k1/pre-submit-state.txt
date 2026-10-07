@@ -1,0 +1,13 @@
+## pre-submit smoke 2026-10-07T11:53:46Z
+438 holo3-v2 RUNNING 13:57 N/A
+442 stp-v1-a-q2-qwen35-9b RUNNING 5:19 gres:gpu:h100:1
+446 stp-v1-b-q1-qwen3-8b-dummy RUNNING 4:42 gres:gpu:h100:1
+index, utilization.gpu [%], memory.used [MiB]
+0, 100 %, 76611 MiB
+1, 100 %, 74401 MiB
+2, 0 %, 0 MiB
+3, 0 %, 0 MiB
+4, 0 %, 0 MiB
+5, 0 %, 0 MiB
+6, 0 %, 0 MiB
+7, 0 %, 0 MiB
