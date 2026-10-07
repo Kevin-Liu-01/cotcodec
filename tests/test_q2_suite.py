@@ -70,16 +70,26 @@ def test_click_passes_and_each_condition_can_fail_it():
 
 def test_double_click_gap_bound_and_modifier_mask():
     cell = _cell("L0-fixed", "click_double_left")
-    events = [_ev(k, 1, 960, 700, time=t) for k, t in (("ButtonPress", 0), ("ButtonRelease", 20),
-              ("ButtonPress", 80), ("ButtonRelease", 100))]  # fmt: skip
+    events = [
+        _ev(k, 1, 960, 700, time=t)
+        for k, t in (
+            ("ButtonPress", 0),
+            ("ButtonRelease", 20),
+            ("ButtonPress", 80),
+            ("ButtonRelease", 100),
+        )
+    ]
     assert verdict.judge(cell, _obs(events, end_pointer=None))["pass"]
     slow = copy.deepcopy(events)
     slow[2]["time"] = slow[3]["time"] = 400
     assert not verdict.judge(cell, _obs(slow, end_pointer=None))["pass"]
     ctrl = _cell("L0-fixed", "click_ctrl_left")
-    events = [_ev("KeyPress", 37, keysym0=0xFFE3), _ev("ButtonPress", 1, 500, 300, state=4),
-              _ev("ButtonRelease", 1, 500, 300, state=4 | 256),
-              _ev("KeyRelease", 37, state=4, keysym0=0xFFE3)]  # fmt: skip
+    events = [
+        _ev("KeyPress", 37, keysym0=0xFFE3),
+        _ev("ButtonPress", 1, 500, 300, state=4),
+        _ev("ButtonRelease", 1, 500, 300, state=4 | 256),
+        _ev("KeyRelease", 37, state=4, keysym0=0xFFE3),
+    ]
     assert verdict.judge(ctrl, _obs(events))["pass"]
     events[1]["state"] = 0
     assert not verdict.judge(ctrl, _obs(events))["pass"]
@@ -87,9 +97,12 @@ def test_double_click_gap_bound_and_modifier_mask():
 
 def test_rdev_projection_text_and_no_action_control():
     chord = _cell("L0-fixed", "chord_ctrl_c")
-    ok = [_ev("KeyPress", 37, state=0, keysym0=0xFFE3), _ev("KeyPress", 54, state=4, keysym0=0x63),
-          _ev("KeyRelease", 54, state=4, keysym0=0x63),
-          _ev("KeyRelease", 37, state=4, keysym0=0xFFE3)]  # fmt: skip
+    ok = [
+        _ev("KeyPress", 37, state=0, keysym0=0xFFE3),
+        _ev("KeyPress", 54, state=4, keysym0=0x63),
+        _ev("KeyRelease", 54, state=4, keysym0=0x63),
+        _ev("KeyRelease", 37, state=4, keysym0=0xFFE3),
+    ]
     assert verdict.judge(chord, _obs(ok))["pass"]
     assert verdict.rdev_agreement(chord["expect"], ok) is True
     swapped = [ok[0], ok[1], ok[3], ok[2]]
@@ -108,8 +121,11 @@ def test_rdev_projection_text_and_no_action_control():
 
 
 def test_summarize_marks_mixed_results_flaky():
-    trials = [{"cell": "a", "verdict": {"pass": True}}, {"cell": "a", "verdict": {"pass": False}},
-              {"cell": "b", "verdict": {"pass": True}}]  # fmt: skip
+    trials = [
+        {"cell": "a", "verdict": {"pass": True}},
+        {"cell": "a", "verdict": {"pass": False}},
+        {"cell": "b", "verdict": {"pass": True}},
+    ]
     out = verdict.summarize(trials)
     assert out["cells"]["a"]["status"] == "FLAKY" and out["cells"]["b"]["status"] == "PASS"
 
@@ -234,7 +250,11 @@ def test_perturbations_parse_to_the_plain_ir_on_every_in_spec_cell():
                 continue
             plain = [adapters.turn_ir(layer, t) for t in cell["turns"]]
             for variant, turns in cell["variants"].items():
-                assert [adapters.turn_ir(layer, t) for t in turns] == plain, (layer, cell["id"], variant)
+                assert [adapters.turn_ir(layer, t) for t in turns] == plain, (
+                    layer,
+                    cell["id"],
+                    variant,
+                )
 
 
 def test_rendered_catalog_cells_stay_within_one_pixel_of_the_catalog():
@@ -316,11 +336,16 @@ def test_render_turn_matches_the_chat_template():
 
     env.globals["raise_exception"] = raise_exception
     template = env.from_string(data.decode("utf-8"))
-    calls = [{"action": "left_click", "coordinate": [500, 300], "text": "ctrl"},
-             {"action": "key", "keys": ["ctrl", "c"]}]  # fmt: skip
+    calls = [
+        {"action": "left_click", "coordinate": [500, 300], "text": "ctrl"},
+        {"action": "key", "keys": ["ctrl", "c"]},
+    ]
     for content in ("", corpus.ACTION_SENTENCE):
-        message = {"role": "assistant", "content": content,
-                   "tool_calls": [{"function": {"name": "computer_use", "arguments": c}} for c in calls]}  # fmt: skip
+        message = {
+            "role": "assistant",
+            "content": content,
+            "tool_calls": [{"function": {"name": "computer_use", "arguments": c}} for c in calls],
+        }
         rendered = template.render(messages=[{"role": "user", "content": "go"}, message])
         body = rendered.split("<|im_start|>assistant\n", 1)[1].split("<|im_end|>", 1)[0]
         body = body.split("</think>\n\n", 1)[1] if "</think>" in body else body

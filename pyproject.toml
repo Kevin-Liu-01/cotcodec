@@ -82,6 +82,10 @@ target-version = "py311"
 [tool.ruff.lint]
 select = ["E", "F", "I", "UP", "B", "SIM"]
 
+[tool.ruff.lint.per-file-ignores]
+# Mutation patches quote whole lines of the frozen sources as anchors.
+"harness/q2/action_path/mutants.py" = ["E501"]
+
 [tool.pytest.ini_options]
 asyncio_mode = "auto"
 pythonpath = ["."]
