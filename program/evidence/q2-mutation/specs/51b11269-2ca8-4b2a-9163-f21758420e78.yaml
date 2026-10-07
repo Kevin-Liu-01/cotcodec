@@ -1,0 +1,13 @@
+task_id: 51b11269-2ca8-4b2a-9163-f21758420e78
+author: blind-model-author-v1
+requirements:
+  - req_id: R0
+    statement: (implicit) The workbook is persisted at /home/user/Arrang_Value_min_to_max.xlsx; header row unchanged.
+    check_kind: file_exists
+    observable: File loads; A1:D1 == Date, Customer, Product, Amount.
+  - req_id: R1
+    statement: Records (rows 2-19, all four columns together) are sorted by Amount ascending.
+    check_kind: cell_value
+    observable: D2:D19 == 442, 467, 662, 712, 1107, 1127, 1246, 1339, 4388, 4529, 6039, 6285, 6311, 7209, 7906, 8103, 8763, 9444; each row's (Date, Customer, Product, Amount) tuple exists in the initial data (records not scrambled).
+allowed_variations:
+  - Formatting is expected to travel with the records; number formats are not otherwise constrained.

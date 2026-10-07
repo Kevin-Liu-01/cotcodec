@@ -1,0 +1,22 @@
+task_id: 12382c62-0cd1-4bf2-bdc8-1d20bf9b2371
+author: blind-model-author-v1
+requirements:
+  - req_id: R0
+    statement: (implicit) The workbook is persisted at /home/user/WeeklySales.xlsx with Sheet1 A1:C11 unchanged.
+    check_kind: file_exists
+    observable: File loads; Sheet1 values equal initial values.
+  - req_id: R1
+    statement: A new sheet named "Sheet2" exists.
+    check_kind: other
+    observable: Sheet names include "Sheet2".
+  - req_id: R2
+    statement: Sheet2 contains a clustered column chart with two series, Sales and COGS, one cluster per week.
+    check_kind: other
+    observable: The chart anchored on Sheet2 has c:barChart with c:barDir val="col" and c:grouping val="clustered"; two series whose values reference Sales (Sheet1 B2:B11) and COGS (Sheet1 C2:C11) or an identical copy, categories Week 1..Week 10.
+  - req_id: R3
+    statement: The chart title is "Sales & COGS".
+    check_kind: other
+    observable: Chart title text is exactly "Sales & COGS".
+allowed_variations:
+  - Series may reference Sheet1 or a copy of the data placed on Sheet2.
+  - Series names (from headers or absent), legend, colors, chart size and anchor position are not constrained.

@@ -1,0 +1,36 @@
+task_id: 30e3e107-1cfb-46ee-a755-2cd080d7ba6a
+author: blind-model-author-v1
+requirements:
+  - req_id: R0
+    statement: (implicit) The workbook is persisted at /home/user/DemographicProfile.xlsx with Sheet1 A1:D41 unchanged.
+    check_kind: file_exists
+    observable: File loads; Sheet1 values equal initial values.
+  - req_id: R1
+    statement: A new sheet exists and is named "Sheet2".
+    check_kind: other
+    observable: Sheet names include "Sheet2".
+  - req_id: R2
+    statement: On Sheet2, A1:C1 is merged and contains "Demographic Profile".
+    check_kind: cell_format
+    observable: Merged ranges include A1:C1; A1 == "Demographic Profile".
+  - req_id: R3
+    statement: The merged header has blue (#0000FF) fill and bold white text.
+    check_kind: cell_format
+    observable: A1 fill is solid with fgColor FF0000FF; A1 font bold == true and font color FFFFFFFF.
+  - req_id: R4
+    statement: Sheet2 contains three pivot tables, one each for Sex, Civil Status and Highest Educational Attainment, each showing the share (percentage) of each category.
+    check_kind: other
+    observable: Three pivotTable parts located on Sheet2 with row fields Sex, Civil Status, Highest Educational Attainment respectively; the data field is shown as percentage of total (showDataAs percentOfTotal/percentOfCol) or otherwise renders percentages.
+  - req_id: R5
+    statement: The percentages are correct.
+    check_kind: cell_value
+    observable: Sex Female 42.5%, Male 57.5%; Civil Status Married 27.5%, Single 30%, Widow 42.5%; Education Elementary 32.5%, Junior High School 37.5%, Senior High School 30% (grand totals 100% if shown).
+  - req_id: R6
+    statement: The three pivot tables are stacked vertically in the order Sex, Civil Status, Highest Educational Attainment, separated by exactly one blank row each.
+    check_kind: other
+    observable: Pivot location ranges on Sheet2 share the same left column and each next pivot's first row == previous pivot's last row + 2.
+allowed_variations:
+  - '[AMBIGUOUS] Whether a blank row separates the title row from the first pivot table is not stated.'
+  - '[AMBIGUOUS] Percentages may be pivot "% of total" display of a count, or a count presented with % format; decimal places not specified.'
+  - The order of the three pivot tables follows the instruction's listing; a different order is a gray zone.
+  - Header alignment, column widths and pivot styles are not constrained.

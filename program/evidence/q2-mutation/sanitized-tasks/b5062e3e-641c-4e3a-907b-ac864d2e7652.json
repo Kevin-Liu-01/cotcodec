@@ -1,0 +1,32 @@
+{
+  "domain": "multi_apps",
+  "initial_files": [
+    {
+      "path_in_vm": "/home/user/Documents/Papers/zhang_appagent.pdf",
+      "sha256": "ce9840204e13889f899e326def62005ed9871a0a6ab5d44f716343c4142ef045",
+      "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/1e112283c4ecb08d6fed8069bca7de74fa2f12aa/multi_apps/b5062e3e-641c-4e3a-907b-ac864d2e7652/2312.13771.pdf"
+    },
+    {
+      "path_in_vm": "/home/user/Documents/Papers/niu_screenagent.pdf",
+      "sha256": "a44180f3bad8ce54553007e721deb8bbb31be6779e1ee6bf80ab257765e7bff4",
+      "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/1e112283c4ecb08d6fed8069bca7de74fa2f12aa/multi_apps/b5062e3e-641c-4e3a-907b-ac864d2e7652/2402.07945.pdf"
+    },
+    {
+      "path_in_vm": "/home/user/Documents/Papers/koh_visualwebarena.pdf",
+      "sha256": "8674b4ae17290bb797e5988706f765c75a3310a4e9d14cbd32497e40235ff795",
+      "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/1e112283c4ecb08d6fed8069bca7de74fa2f12aa/multi_apps/b5062e3e-641c-4e3a-907b-ac864d2e7652/2401.13649.pdf"
+    },
+    {
+      "path_in_vm": "/home/user/Documents/Papers/deng_mind2web.pdf",
+      "sha256": "c281b1c4460c807c33cc242d2c1d0d175c3454e01abc9c2ec03aff761c0c0a57",
+      "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/1e112283c4ecb08d6fed8069bca7de74fa2f12aa/multi_apps/b5062e3e-641c-4e3a-907b-ac864d2e7652/5950bf290a1570ea401bf98882128160-Paper-Datasets_and_Benchmarks.pdf"
+    }
+  ],
+  "instruction": "Please help me to extract the name, e-mail, and affiliation of the first author from each paper in the folder and organize them in an Excel table. Include headers for each field. Sort the authors by their full names alphabetically and save the table as \"~/authors.xlsx\".",
+  "related_apps": [
+    "libreoffice_calc",
+    "os"
+  ],
+  "snapshot": "libreoffice_calc",
+  "task_id": "b5062e3e-641c-4e3a-907b-ac864d2e7652"
+}

@@ -1,0 +1,16 @@
+{
+  "domain": "libreoffice_impress",
+  "initial_files": [
+    {
+      "path_in_vm": "/home/user/Desktop/multimedia_classroom_podium-2020.pptx",
+      "sha256": "65942ad27f8105b2c4eafa8090805c8dd9a6355fa57bfb532200c6658f7db560",
+      "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/1e112283c4ecb08d6fed8069bca7de74fa2f12aa/libreoffice_impress/0f84bef9-9790-432e-92b7-eece357603fb/multimedia_classroom_podium-2020.pptx"
+    }
+  ],
+  "instruction": "On it Whenever I launch a LibreOffice Impress, it uses both screens, one for current slide and next slide and another for actual presentation. What I want is to use only one monitor which shows presentation. I dont want the screen with Current slide and Next slide so that it can be used for other purposes. How should I achieve this?",
+  "related_apps": [
+    "libreoffice_impress"
+  ],
+  "snapshot": "libreoffice_impress",
+  "task_id": "0f84bef9-9790-432e-92b7-eece357603fb"
+}

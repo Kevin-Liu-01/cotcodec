@@ -1,0 +1,16 @@
+{
+  "domain": "libreoffice_writer",
+  "initial_files": [
+    {
+      "path_in_vm": "/home/user/Desktop/loa-one-time-submission-sealand.docx",
+      "sha256": "81c40f540211de5408329eae55e4409766f0fba09dbb4d7e640ac0e2f7669b47",
+      "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/1e112283c4ecb08d6fed8069bca7de74fa2f12aa/libreoffice_writer/f178a4a9-d090-4b56-bc4c-4b72a61a035d/loa-one-time-submission-sealand.docx"
+    }
+  ],
+  "instruction": "Make Times New Roman the default Font",
+  "related_apps": [
+    "libreoffice_writer"
+  ],
+  "snapshot": "libreoffice_writer",
+  "task_id": "f178a4a9-d090-4b56-bc4c-4b72a61a035d"
+}

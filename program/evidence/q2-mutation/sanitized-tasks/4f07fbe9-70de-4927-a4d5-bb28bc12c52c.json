@@ -1,0 +1,16 @@
+{
+  "domain": "libreoffice_calc",
+  "initial_files": [
+    {
+      "path_in_vm": "/home/user/Padding_Decimals_In_Formular.xlsx",
+      "sha256": "c9283c55bccdac033a2979700e92c679367520536331be9bf4c1b4dea315dca3",
+      "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/1e112283c4ecb08d6fed8069bca7de74fa2f12aa/libreoffice_calc/4f07fbe9-70de-4927-a4d5-bb28bc12c52c/Padding_Decimals_In_Formular.xlsx"
+    }
+  ],
+  "instruction": "Here I want to use the numerical value from a cell in the text. I can set its number of decimal digits to 2 in the original value cell but don't know how to fix it in the text as well. Please help me to do this. Finish the work and don't touch irrelevant regions, even if they are blank.",
+  "related_apps": [
+    "libreoffice_calc"
+  ],
+  "snapshot": "libreoffice_calc",
+  "task_id": "4f07fbe9-70de-4927-a4d5-bb28bc12c52c"
+}

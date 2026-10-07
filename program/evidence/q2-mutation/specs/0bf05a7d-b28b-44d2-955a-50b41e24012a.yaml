@@ -1,0 +1,23 @@
+task_id: 0bf05a7d-b28b-44d2-955a-50b41e24012a
+author: blind-model-author-v1
+requirements:
+  - req_id: R0
+    statement: (implicit) The workbook is persisted at /home/user/Customers_New_7digit_Id.xlsx.
+    check_kind: file_exists
+    observable: File exists and loads.
+  - req_id: R1
+    statement: For every row with an Old ID (rows 2-30), the "New 7 Digit ID" column (D) shows the Old ID left-padded with zeros to exactly seven digits.
+    check_kind: cell_value
+    observable: Displayed text of D2:D30 equals str(int(C)).zfill(7) for the same row, e.g. D2 "0000076", D4 "0003604", D12 "0013500", D15 "0021540", D30 "0002420".
+  - req_id: R2
+    statement: The Old ID column and all other existing content are unchanged.
+    check_kind: cell_value
+    observable: B1:D1 headers and B2:C30 values equal the initial file.
+  - req_id: R3
+    statement: No irrelevant cells are touched, including blank ones (explicit instruction).
+    check_kind: cell_value
+    observable: Column A, columns E onward and rows 31+ (including D31:D32) are empty as in the initial file.
+allowed_variations:
+  - '[AMBIGUOUS] D2:D30 may be stored as text strings ("0000076") or as numbers with a "0000000" number format; the instruction specifies only the padded appearance. Record which.'
+  - D cells may be formulas (e.g. =TEXT(C2;"0000000")) or constants.
+  - Font, alignment and column width are not constrained.

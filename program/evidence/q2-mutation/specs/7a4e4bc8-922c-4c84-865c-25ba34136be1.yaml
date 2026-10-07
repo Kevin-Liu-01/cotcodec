@@ -1,0 +1,21 @@
+task_id: 7a4e4bc8-922c-4c84-865c-25ba34136be1
+author: blind-model-author-v1
+requirements:
+  - req_id: R0
+    statement: (implicit) The workbook is persisted at /home/user/Name_Order_Id_move_column.xlsx.
+    check_kind: file_exists
+    observable: File exists and loads.
+  - req_id: R1
+    statement: The table occupying B1:F23 has its columns in the order Date, First Name, Last Name, Order ID, Sales.
+    check_kind: cell_value
+    observable: B1:F1 == "Date", "First Name", "Last Name", "Order ID", "Sales".
+  - req_id: R2
+    statement: Each record's values move with their column (rows stay aligned).
+    check_kind: cell_value
+    observable: For r in 2..23, (B,C,D,E,F) == (initial E, initial B, initial D, initial C, initial F); e.g. row 2 == (2022-09-11, "Benedict", "Cucumberbatch", 76, 2492).
+  - req_id: R3
+    statement: No irrelevant regions are touched, including blank ones (explicit).
+    check_kind: cell_value
+    observable: Column A, columns G+ and rows 24+ are empty as in the initial file.
+allowed_variations:
+  - Number formats are expected to travel with their data (Date keeps a date format); column widths are not constrained.
