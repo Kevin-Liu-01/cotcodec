@@ -150,3 +150,11 @@ Append-only. Newest entries at the bottom.
 - Implication for Q2 Stage 1: same-day, same-operator reruns can shift by
   4.4 points with no visible cause, so the variance model needs a session
   random effect and more than one session per cell.
+
+## 2026-10-07 — Serving probe v2 frozen
+
+- Merged and froze `serving-throughput-probe-v2` (sign-offs D19, D21). It
+  attributes GPU memory by process, compares real and dummy weights on
+  identical prompt token sequences, reserves launch time for required points,
+  and reruns only job A's points that v1 lost. Full suite on the host: 1,029
+  passed.
