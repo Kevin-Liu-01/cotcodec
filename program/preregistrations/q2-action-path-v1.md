@@ -50,7 +50,7 @@ both ledger entries and every listed digest.
 
 | File | Content at drafting time |
 |---|---|
-| `harness/q2/action_path/catalog.yaml` | 100 entries, status draft; the 35 key, chord and Caps Lock entries wait for their R-dev reference streams (section 4.3) |
+| `harness/q2/action_path/catalog.yaml` | 100 entries, status draft; the 35 key, chord and Caps Lock entries carry the R-dev streams of job 393 (section 4.3); it already validates as frozen |
 | `harness/q2/action_path/gating_set.json` | G = 86 entries, 14 non-gating with reasons |
 | `harness/q2/action_path/expressible_entries.json` | per-harness expressible sets (H-OSW 85, H-GA 80) with exclusion reasons |
 | `harness/q2/action_path/rdev_plan.json`, `rdev.py` | the HMP chords per key entry and the projection and stability rules |
@@ -171,7 +171,11 @@ They run in every pass and are reported; they do not gate.
 - The R-dev capture is a reference measurement on the input device, not a
   trial of any system under test. It runs before any L0-fixed code exists, and
   the catalog with its references is frozen in `q2-action-path-v1-inputs`
-  before development of L0-fixed starts.
+  before development of L0-fixed starts. Job 393 captured all 35 entries:
+  every one stable over 5 repetitions, balanced, with a clean guard, and the
+  Caps Lock LED toggling on and back off in 5 of 5. An earlier capture (job
+  387) let the first recovery press of four side-effect entries fall inside
+  their windows; it is superseded and kept on the host.
 
 ## 5. Unit and verdict
 
@@ -378,6 +382,8 @@ Allowed before the freeze and reported as infrastructure validation only:
   layout with boot time, settle time, guest facts, reset sentinel (file, dconf
   key, gsettings key), latency of `/screenshot`, `/accessibility` and
   `/execute`, and HMP input reachability (section 4.3).
+- Jobs 387 and 393: the R-dev reference capture (section 4.3); oracle
+  construction, no system under test.
 - Job 372 (2 cycles): the bridge-unpublished fallback. A separate container
   on Docker's default bridge reached the guest's `/platform` through the
   image's DNAT (HTTP 200), which is the exposure decision D13 records; the

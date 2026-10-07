@@ -52,18 +52,29 @@ def test_unicode_entries_keep_exact_code_points(catalog):
     assert len(entries["type_long_500"]["expect"]["text"]) == 500
 
 
-def test_rdev_entries_cover_every_key_entry_and_are_pending(catalog):
+def test_rdev_entries_carry_the_captured_reference(catalog):
     summary = cat.validate(catalog)
-    keys = set(cat.PUBLIC_GROUPS["keys_chords"]) | {"caps_lock_roundtrip"}
-    assert set(summary["rdev_pending"]) == keys
+    assert summary["rdev_pending"] == []
     entries = {e["id"]: e for e in catalog["entries"]}
+    keys = set(cat.PUBLIC_GROUPS["keys_chords"]) | {"caps_lock_roundtrip"}
+    assert {e for e, v in entries.items() if v["expect"]["oracle"] == "rdev"} == keys
     assert entries["key_menu"]["expect"]["rdev_input"] == [["compose"]]
+    assert entries["key_menu"]["expect"]["events"] == [
+        ["KeyPress", "Menu", []],
+        ["KeyRelease", "Menu", []],
+    ]
     assert entries["chord_ctrl_shift_t"]["expect"]["rdev_input"] == [["ctrl", "shift", "t"]]
+    reference = json.loads((HERE / "rdev_reference.json").read_text(encoding="utf-8"))
+    for entry_id in keys:
+        assert reference["entries"][entry_id]["stable"] is True
+        assert entries[entry_id]["expect"]["events"] == reference["entries"][entry_id]["events"]
 
 
 def test_frozen_catalog_refuses_pending_references(catalog):
     frozen = copy.deepcopy(catalog)
     frozen["status"] = "frozen"
+    cat.validate(frozen)
+    frozen["entries"][29]["expect"]["events"] = None
     with pytest.raises(cat.CatalogError, match="pending R-dev"):
         cat.validate(frozen)
 

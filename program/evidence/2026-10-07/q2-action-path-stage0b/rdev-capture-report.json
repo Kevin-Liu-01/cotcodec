@@ -1,0 +1,515 @@
+{
+  "jobs": {
+    "387": {
+      "baseline_guard": {
+        "buttons": 0,
+        "keys": [],
+        "led_mask": 2
+      },
+      "boot_s": 17.9,
+      "campaign_id": "q2ap-rdev-capture-v1",
+      "clock_offset_s": [
+        -0.9122,
+        -0.9057
+      ],
+      "entries": {
+        "caps_lock_roundtrip": {
+          "caps_led_ok": 5,
+          "distinct_projections": 1,
+          "guard_clean": 5,
+          "stable": true
+        },
+        "chord_alt_f4": {
+          "caps_led_ok": null,
+          "distinct_projections": 1,
+          "guard_clean": 5,
+          "stable": true
+        },
+        "chord_alt_tab": {
+          "caps_led_ok": null,
+          "distinct_projections": 1,
+          "guard_clean": 5,
+          "stable": true
+        },
+        "chord_ctrl_a": {
+          "caps_led_ok": null,
+          "distinct_projections": 1,
+          "guard_clean": 5,
+          "stable": true
+        },
+        "chord_ctrl_alone": {
+          "caps_led_ok": null,
+          "distinct_projections": 1,
+          "guard_clean": 5,
+          "stable": true
+        },
+        "chord_ctrl_alt_shift_r": {
+          "caps_led_ok": null,
+          "distinct_projections": 1,
+          "guard_clean": 5,
+          "stable": true
+        },
+        "chord_ctrl_c": {
+          "caps_led_ok": null,
+          "distinct_projections": 1,
+          "guard_clean": 5,
+          "stable": true
+        },
+        "chord_ctrl_home": {
+          "caps_led_ok": null,
+          "distinct_projections": 1,
+          "guard_clean": 5,
+          "stable": true
+        },
+        "chord_ctrl_shift_arrow": {
+          "caps_led_ok": null,
+          "distinct_projections": 1,
+          "guard_clean": 5,
+          "stable": true
+        },
+        "chord_ctrl_shift_t": {
+          "caps_led_ok": null,
+          "distinct_projections": 1,
+          "guard_clean": 5,
+          "stable": true
+        },
+        "chord_shift_alone": {
+          "caps_led_ok": null,
+          "distinct_projections": 1,
+          "guard_clean": 5,
+          "stable": true
+        },
+        "chord_shift_arrow_left": {
+          "caps_led_ok": null,
+          "distinct_projections": 1,
+          "guard_clean": 5,
+          "stable": true
+        },
+        "chord_shift_tab": {
+          "caps_led_ok": null,
+          "distinct_projections": 1,
+          "guard_clean": 5,
+          "stable": true
+        },
+        "chord_super_d": {
+          "caps_led_ok": null,
+          "distinct_projections": 1,
+          "guard_clean": 5,
+          "stable": true
+        },
+        "key_arrow_down": {
+          "caps_led_ok": null,
+          "distinct_projections": 1,
+          "guard_clean": 5,
+          "stable": true
+        },
+        "key_arrow_left": {
+          "caps_led_ok": null,
+          "distinct_projections": 1,
+          "guard_clean": 5,
+          "stable": true
+        },
+        "key_arrow_right": {
+          "caps_led_ok": null,
+          "distinct_projections": 1,
+          "guard_clean": 5,
+          "stable": true
+        },
+        "key_arrow_up": {
+          "caps_led_ok": null,
+          "distinct_projections": 1,
+          "guard_clean": 5,
+          "stable": true
+        },
+        "key_delete": {
+          "caps_led_ok": null,
+          "distinct_projections": 1,
+          "guard_clean": 5,
+          "stable": true
+        },
+        "key_end": {
+          "caps_led_ok": null,
+          "distinct_projections": 1,
+          "guard_clean": 5,
+          "stable": true
+        },
+        "key_enter": {
+          "caps_led_ok": null,
+          "distinct_projections": 1,
+          "guard_clean": 5,
+          "stable": true
+        },
+        "key_esc": {
+          "caps_led_ok": null,
+          "distinct_projections": 1,
+          "guard_clean": 5,
+          "stable": true
+        },
+        "key_f1": {
+          "caps_led_ok": null,
+          "distinct_projections": 1,
+          "guard_clean": 5,
+          "stable": true
+        },
+        "key_f12": {
+          "caps_led_ok": null,
+          "distinct_projections": 1,
+          "guard_clean": 5,
+          "stable": true
+        },
+        "key_f5": {
+          "caps_led_ok": null,
+          "distinct_projections": 1,
+          "guard_clean": 5,
+          "stable": true
+        },
+        "key_f9": {
+          "caps_led_ok": null,
+          "distinct_projections": 1,
+          "guard_clean": 5,
+          "stable": true
+        },
+        "key_home": {
+          "caps_led_ok": null,
+          "distinct_projections": 1,
+          "guard_clean": 5,
+          "stable": true
+        },
+        "key_insert": {
+          "caps_led_ok": null,
+          "distinct_projections": 1,
+          "guard_clean": 5,
+          "stable": true
+        },
+        "key_kp_add": {
+          "caps_led_ok": null,
+          "distinct_projections": 1,
+          "guard_clean": 5,
+          "stable": true
+        },
+        "key_kp_enter": {
+          "caps_led_ok": null,
+          "distinct_projections": 1,
+          "guard_clean": 5,
+          "stable": true
+        },
+        "key_menu": {
+          "caps_led_ok": null,
+          "distinct_projections": 1,
+          "guard_clean": 5,
+          "stable": true
+        },
+        "key_pagedown": {
+          "caps_led_ok": null,
+          "distinct_projections": 1,
+          "guard_clean": 5,
+          "stable": true
+        },
+        "key_pageup": {
+          "caps_led_ok": null,
+          "distinct_projections": 1,
+          "guard_clean": 5,
+          "stable": true
+        },
+        "key_space_chord": {
+          "caps_led_ok": null,
+          "distinct_projections": 1,
+          "guard_clean": 5,
+          "stable": true
+        },
+        "key_tab": {
+          "caps_led_ok": null,
+          "distinct_projections": 1,
+          "guard_clean": 5,
+          "stable": true
+        }
+      },
+      "events_total": 590,
+      "git_sha": "d7fb1100b6d45ce42a3814bff1e2b24d3d567a71",
+      "guard_clean_trials": 175,
+      "labelled_containers_left": [],
+      "no_gpu_all": true,
+      "qcow2_unchanged": true,
+      "qemu": "9.1.0Debian 1:9.1.0+ds-8",
+      "rdev_reference_sha256": "400966fc61892cc55e56ef549b2ea966dccb215edc96167526d167e9ca1e288e",
+      "receipt_sha256": "c9a947ff1947341f2623c08f0977619ea0a82bfa8b34adabce2c0c7ad413334a",
+      "slurm": "COMPLETED ExitCode=0:0 (scontrol)",
+      "status": "superseded: the first recovery press of key_f1, key_menu, chord_super_d and chord_ctrl_alt_shift_r fell inside the entry window",
+      "trials": 175
+    },
+    "393": {
+      "baseline_guard": {
+        "buttons": 0,
+        "keys": [],
+        "led_mask": 2
+      },
+      "boot_s": 19.517,
+      "campaign_id": "q2ap-rdev-capture-v2",
+      "clock_offset_s": [
+        -1.0399,
+        -1.0264
+      ],
+      "entries": {
+        "caps_lock_roundtrip": {
+          "balanced": true,
+          "caps_led_ok": 5,
+          "distinct_projections": 1,
+          "guard_clean": 5,
+          "stable": true
+        },
+        "chord_alt_f4": {
+          "balanced": true,
+          "caps_led_ok": null,
+          "distinct_projections": 1,
+          "guard_clean": 5,
+          "stable": true
+        },
+        "chord_alt_tab": {
+          "balanced": true,
+          "caps_led_ok": null,
+          "distinct_projections": 1,
+          "guard_clean": 5,
+          "stable": true
+        },
+        "chord_ctrl_a": {
+          "balanced": true,
+          "caps_led_ok": null,
+          "distinct_projections": 1,
+          "guard_clean": 5,
+          "stable": true
+        },
+        "chord_ctrl_alone": {
+          "balanced": true,
+          "caps_led_ok": null,
+          "distinct_projections": 1,
+          "guard_clean": 5,
+          "stable": true
+        },
+        "chord_ctrl_alt_shift_r": {
+          "balanced": true,
+          "caps_led_ok": null,
+          "distinct_projections": 1,
+          "guard_clean": 5,
+          "stable": true
+        },
+        "chord_ctrl_c": {
+          "balanced": true,
+          "caps_led_ok": null,
+          "distinct_projections": 1,
+          "guard_clean": 5,
+          "stable": true
+        },
+        "chord_ctrl_home": {
+          "balanced": true,
+          "caps_led_ok": null,
+          "distinct_projections": 1,
+          "guard_clean": 5,
+          "stable": true
+        },
+        "chord_ctrl_shift_arrow": {
+          "balanced": true,
+          "caps_led_ok": null,
+          "distinct_projections": 1,
+          "guard_clean": 5,
+          "stable": true
+        },
+        "chord_ctrl_shift_t": {
+          "balanced": true,
+          "caps_led_ok": null,
+          "distinct_projections": 1,
+          "guard_clean": 5,
+          "stable": true
+        },
+        "chord_shift_alone": {
+          "balanced": true,
+          "caps_led_ok": null,
+          "distinct_projections": 1,
+          "guard_clean": 5,
+          "stable": true
+        },
+        "chord_shift_arrow_left": {
+          "balanced": true,
+          "caps_led_ok": null,
+          "distinct_projections": 1,
+          "guard_clean": 5,
+          "stable": true
+        },
+        "chord_shift_tab": {
+          "balanced": true,
+          "caps_led_ok": null,
+          "distinct_projections": 1,
+          "guard_clean": 5,
+          "stable": true
+        },
+        "chord_super_d": {
+          "balanced": true,
+          "caps_led_ok": null,
+          "distinct_projections": 1,
+          "guard_clean": 5,
+          "stable": true
+        },
+        "key_arrow_down": {
+          "balanced": true,
+          "caps_led_ok": null,
+          "distinct_projections": 1,
+          "guard_clean": 5,
+          "stable": true
+        },
+        "key_arrow_left": {
+          "balanced": true,
+          "caps_led_ok": null,
+          "distinct_projections": 1,
+          "guard_clean": 5,
+          "stable": true
+        },
+        "key_arrow_right": {
+          "balanced": true,
+          "caps_led_ok": null,
+          "distinct_projections": 1,
+          "guard_clean": 5,
+          "stable": true
+        },
+        "key_arrow_up": {
+          "balanced": true,
+          "caps_led_ok": null,
+          "distinct_projections": 1,
+          "guard_clean": 5,
+          "stable": true
+        },
+        "key_delete": {
+          "balanced": true,
+          "caps_led_ok": null,
+          "distinct_projections": 1,
+          "guard_clean": 5,
+          "stable": true
+        },
+        "key_end": {
+          "balanced": true,
+          "caps_led_ok": null,
+          "distinct_projections": 1,
+          "guard_clean": 5,
+          "stable": true
+        },
+        "key_enter": {
+          "balanced": true,
+          "caps_led_ok": null,
+          "distinct_projections": 1,
+          "guard_clean": 5,
+          "stable": true
+        },
+        "key_esc": {
+          "balanced": true,
+          "caps_led_ok": null,
+          "distinct_projections": 1,
+          "guard_clean": 5,
+          "stable": true
+        },
+        "key_f1": {
+          "balanced": true,
+          "caps_led_ok": null,
+          "distinct_projections": 1,
+          "guard_clean": 5,
+          "stable": true
+        },
+        "key_f12": {
+          "balanced": true,
+          "caps_led_ok": null,
+          "distinct_projections": 1,
+          "guard_clean": 5,
+          "stable": true
+        },
+        "key_f5": {
+          "balanced": true,
+          "caps_led_ok": null,
+          "distinct_projections": 1,
+          "guard_clean": 5,
+          "stable": true
+        },
+        "key_f9": {
+          "balanced": true,
+          "caps_led_ok": null,
+          "distinct_projections": 1,
+          "guard_clean": 5,
+          "stable": true
+        },
+        "key_home": {
+          "balanced": true,
+          "caps_led_ok": null,
+          "distinct_projections": 1,
+          "guard_clean": 5,
+          "stable": true
+        },
+        "key_insert": {
+          "balanced": true,
+          "caps_led_ok": null,
+          "distinct_projections": 1,
+          "guard_clean": 5,
+          "stable": true
+        },
+        "key_kp_add": {
+          "balanced": true,
+          "caps_led_ok": null,
+          "distinct_projections": 1,
+          "guard_clean": 5,
+          "stable": true
+        },
+        "key_kp_enter": {
+          "balanced": true,
+          "caps_led_ok": null,
+          "distinct_projections": 1,
+          "guard_clean": 5,
+          "stable": true
+        },
+        "key_menu": {
+          "balanced": true,
+          "caps_led_ok": null,
+          "distinct_projections": 1,
+          "guard_clean": 5,
+          "stable": true
+        },
+        "key_pagedown": {
+          "balanced": true,
+          "caps_led_ok": null,
+          "distinct_projections": 1,
+          "guard_clean": 5,
+          "stable": true
+        },
+        "key_pageup": {
+          "balanced": true,
+          "caps_led_ok": null,
+          "distinct_projections": 1,
+          "guard_clean": 5,
+          "stable": true
+        },
+        "key_space_chord": {
+          "balanced": true,
+          "caps_led_ok": null,
+          "distinct_projections": 1,
+          "guard_clean": 5,
+          "stable": true
+        },
+        "key_tab": {
+          "balanced": true,
+          "caps_led_ok": null,
+          "distinct_projections": 1,
+          "guard_clean": 5,
+          "stable": true
+        }
+      },
+      "events_total": 590,
+      "git_sha": "5cb9056d2a496b297e58ab7262b87d687fc300b8",
+      "guard_clean_trials": 175,
+      "labelled_containers_left": [],
+      "no_gpu_all": true,
+      "qcow2_unchanged": true,
+      "qemu": "9.1.0Debian 1:9.1.0+ds-8",
+      "rdev_reference_sha256": "5cc48d5177a7f07baed36b90ab76ce3e10de835b42596fc6a53427add49b518a",
+      "receipt_sha256": "9f76abbedcf6283ab8d5cb48c8eb0f0c8fcdf9493b82a68bb1cc168c79c2bd2b",
+      "slurm": "COMPLETED ExitCode=0:0 (scontrol)",
+      "status": "reference: copied to harness/q2/action_path/rdev_reference.json",
+      "trials": 175
+    }
+  },
+  "note": "Reference capture for the oracle; no system under test ran.",
+  "schema": "cotcodec-q2-rdev-capture-report-v1"
+}
