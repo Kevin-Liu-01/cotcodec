@@ -25,6 +25,10 @@ provenance.
   `fla_throughput_doctor.py` measures training throughput on the node.
 - `create_source_archive.py`, `verify_compute_provenance.py` and
   `verify_publication_attestation.py` bind source, image and claims.
+- `run_vllm_throughput_probe.py` is the serving-throughput probe
+  (serving-throughput-probe-v1): `plan`, `run`, `vllm-args-doctor`, `project`.
+  `build_vllm_overlay_on_h100.sh` builds its vLLM overlay image and
+  `render_serving_probe_manifest.py` fills its manifest templates from receipts.
 
 ## Patterns to follow / invariants
 <!-- agent-docs:fill:patterns -->

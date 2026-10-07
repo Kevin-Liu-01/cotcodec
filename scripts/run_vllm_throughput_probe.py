@@ -1,0 +1,2086 @@
+#!/usr/bin/env python3
+"""Run the vLLM serving-throughput probe (experiment serving-throughput-probe-v1).
+
+Subcommands:
+
+* ``plan``: resolve the contract for one job and print it (CPU only, no vLLM).
+* ``run``: execute one job inside the vLLM overlay image under the docker
+  research lane: gates G0.0-G0.8, engine lifecycle, the job's points in their
+  preregistered priority order, stop rules, and atomic per-point JSON.
+* ``cuda-doctor``: internal child process for gates G0.2-G0.4.
+* ``project``: apply the preregistered budget rules to finished job outputs.
+
+The workload is PID 1 in its container: it installs its own USR1/TERM handlers,
+writes ``COTCODEC_CHECKPOINT_MARKER`` only after the progress it describes is on
+disk, and reaps orphaned children. Generated text is never executed or stored.
+Exit codes: 0 finished, 1 crash, 2 pre-result (a gate failed), 3 interrupted.
+"""
+
+from __future__ import annotations
+
+import argparse
+import asyncio
+import contextlib
+import hashlib
+import json
+import os
+import signal
+import subprocess
+import sys
+import threading
+import time
+from collections.abc import Callable, Mapping, Sequence
+from concurrent.futures import ThreadPoolExecutor
+from datetime import UTC, datetime
+from pathlib import Path
+from typing import Any
+
+PROJECT_ROOT = Path(__file__).resolve().parents[1]
+if str(PROJECT_ROOT) not in sys.path:
+    sys.path.insert(0, str(PROJECT_ROOT))
+
+import httpx  # noqa: E402
+import numpy as np  # noqa: E402
+
+from harness.serving_probe import budget as budget_rules  # noqa: E402
+from harness.serving_probe.client import (  # noqa: E402
+    ChatRequest,
+    EpisodePlan,
+    RequestResult,
+    StopToken,
+    aa_agreement,
+    run_aa,
+    run_open_loop,
+    run_replay,
+    summarize_replay,
+    summarize_requests,
+)
+from harness.serving_probe.config import (  # noqa: E402
+    EngineSpec,
+    JobSpec,
+    PhaseSpec,
+    PointSpec,
+    ProbeConfig,
+    ProbeConfigError,
+    bind_seeds,
+    check_pins,
+    load_config,
+    parse_weight_pins,
+)
+from harness.serving_probe.images import data_url, make_image  # noqa: E402
+from harness.serving_probe.metrics import (  # noqa: E402
+    GpuSample,
+    GpuSampler,
+    baseline_verdict,
+    check_counters,
+    cpu_percent,
+    metrics_from_offline,
+    orphan_zombies,
+    parse_engine_log,
+    parse_prometheus,
+    point_counter_deltas,
+    process_tree,
+    read_cpu_ticks,
+    summarize_gpu,
+    tmp_mapped_files,
+)
+from harness.serving_probe.prompts import (  # noqa: E402
+    allowed_token_ids,
+    h1_messages,
+    h2_messages,
+    image_seed,
+    open_loop_messages,
+    random_text,
+    random_token_ids,
+    text_rng,
+)
+
+DEFAULT_CONFIG = PROJECT_ROOT / "experiments" / "serving" / "serving-throughput-probe-v1.yaml"
+EXIT_OK, EXIT_CRASH, EXIT_PRE_RESULT, EXIT_INTERRUPTED = 0, 1, 2, 3
+TERMINAL_STATUSES = {"valid", "valid-flagged", "invalid", "truncated"}
+RERUNNABLE_STATUSES = {"interrupted", "failed-infra", "not-run"}
+MEMORY_RELEASED_MIB = 1024.0
+
+#: Every JIT, compile and scratch location is redirected under <output>/cache, because
+#: the lane's /tmp tmpfs is noexec in the default container profile.
+CACHE_DIRS = {
+    "HOME": "home",
+    "XDG_CACHE_HOME": "xdg-cache",
+    "XDG_CONFIG_HOME": "xdg-config",
+    "VLLM_CACHE_ROOT": "vllm",
+    "VLLM_CONFIG_ROOT": "vllm-config",
+    "VLLM_RPC_BASE_PATH": "rpc",
+    "TRITON_CACHE_DIR": "triton",
+    "TRITON_HOME": "triton-home",
+    "TORCHINDUCTOR_CACHE_DIR": "inductor",
+    "TORCH_HOME": "torch",
+    "CUDA_CACHE_PATH": "cuda",
+    "FLASHINFER_WORKSPACE_BASE": "flashinfer",
+    "VLLM_FLASHINFER_AUTOTUNE_CACHE_DIR": "flashinfer-autotune",
+    "DG_JIT_CACHE_DIR": "deepgemm",
+    "HF_HOME": "hf",
+    "MPLCONFIGDIR": "matplotlib",
+    "TMPDIR": "tmp",
+}
+FIXED_ENV = {
+    "VLLM_NO_USAGE_STATS": "1",
+    "DO_NOT_TRACK": "1",
+    "VLLM_DO_NOT_TRACK": "1",
+    "VLLM_HOST_IP": "127.0.0.1",
+    "VLLM_SERVER_DEV_MODE": "1",
+    "HF_HUB_OFFLINE": "1",
+    "TRANSFORMERS_OFFLINE": "1",
+    "PYTHONUNBUFFERED": "1",
+    "VLLM_LOGGING_LEVEL": "INFO",
+}
+
+
+class GateFailure(RuntimeError):
+    """A step-0 gate failed; the job outcome is a pre-result."""
+
+
+class ProbeInterrupted(BaseException):
+    """Raised inside a blocking offline call when USR1/TERM arrives."""
+
+
+class ProbeDeadline(BaseException):
+    """Raised inside a blocking offline call when the point deadline passes."""
+
+
+def utc_now() -> str:
+    return datetime.now(UTC).strftime("%Y-%m-%dT%H:%M:%SZ")
+
+
+def sha256_file(path: Path) -> str:
+    digest = hashlib.sha256()
+    with path.open("rb") as handle:
+        for chunk in iter(lambda: handle.read(1 << 20), b""):
+            digest.update(chunk)
+    return digest.hexdigest()
+
+
+def atomic_write_json(path: Path, payload: Any) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    temporary = path.with_name(f".{path.name}.{os.getpid()}.tmp")
+    with temporary.open("w", encoding="utf-8") as handle:
+        json.dump(payload, handle, indent=2, sort_keys=True, default=str)
+        handle.write("\n")
+        handle.flush()
+        os.fsync(handle.fileno())
+    os.replace(temporary, path)
+
+
+def cache_environment(output_dir: Path, variant_env: Mapping[str, str]) -> dict[str, str]:
+    cache = output_dir / "cache"
+    env = {key: str(cache / sub) for key, sub in CACHE_DIRS.items()}
+    env.update(FIXED_ENV)
+    env.update(variant_env)
+    return env
+
+
+def allocation_start_perf(job_env: Path, *, now_wall: float, now_perf: float) -> tuple[float, str]:
+    """Anchor the allocation clock at the lane's ``started_at`` (written before the container)."""
+    try:
+        for line in job_env.read_text(encoding="utf-8").splitlines():
+            key, _, value = line.partition("=")
+            if key == "started_at":
+                started = datetime.strptime(value.strip(), "%Y-%m-%dT%H:%M:%SZ").replace(tzinfo=UTC)
+                lag = max(0.0, now_wall - started.timestamp())
+                return now_perf - lag, "job.env started_at"
+    except (OSError, ValueError):
+        pass
+    return now_perf, "driver start (job.env unavailable)"
+
+
+class Deadlines:
+    """Soft (no new point), phase (reserve for later phases) and hard (truncate) deadlines."""
+
+    def __init__(
+        self,
+        *,
+        start: float,
+        allocation_minutes: float,
+        soft_fraction: float,
+        hard_margin_minutes: float,
+        reserves_after: Sequence[float],
+    ) -> None:
+        self.start = start
+        self.soft = start + soft_fraction * allocation_minutes * 60.0
+        self.hard = start + (allocation_minutes - hard_margin_minutes) * 60.0
+        self.reserves_after = list(reserves_after)
+
+    def phase_launch_deadline(self, index: int) -> float:
+        return self.soft - 60.0 * self.reserves_after[index]
+
+    def phase_hard_deadline(self, index: int) -> float:
+        if self.reserves_after[index] > 0:
+            return self.phase_launch_deadline(index)
+        return self.hard
+
+    def describe(self) -> dict[str, Any]:
+        return {
+            "soft_after_start_s": self.soft - self.start,
+            "hard_after_start_s": self.hard - self.start,
+            "phase_reserves_after_minutes": self.reserves_after,
+        }
+
+
+# ---------------------------------------------------------------------------
+# Engines
+# ---------------------------------------------------------------------------
+
+
+class ServerEngine:
+    """``vllm serve`` in its own session; the driver is its only client."""
+
+    mode = "server"
+
+    def __init__(
+        self,
+        spec: EngineSpec,
+        model_dir: str,
+        config: ProbeConfig,
+        env: Mapping[str, str],
+        log_path: Path,
+    ) -> None:
+        server = config.section("server")
+        self.spec = spec
+        self.model_dir = model_dir
+        self.host = str(server["host"])
+        self.port = int(server["port"])
+        self.served_name = str(server["served_model_name"])
+        self.env = {**os.environ, **env}
+        self.log_path = log_path
+        self.base_url = f"http://{self.host}:{self.port}"
+        self.process: subprocess.Popen[bytes] | None = None
+        self._log_handle: Any = None
+
+    def argv(self, eager: bool) -> list[str]:
+        argv = self.spec.server_argv(
+            self.model_dir, host=self.host, port=self.port, served_name=self.served_name
+        )
+        return [*argv, "--enforce-eager"] if eager else argv
+
+    @property
+    def pid(self) -> int | None:
+        return None if self.process is None else self.process.pid
+
+    def start(self, eager: bool) -> None:
+        self.log_path.parent.mkdir(parents=True, exist_ok=True)
+        self._log_handle = self.log_path.open("ab")
+        self.process = subprocess.Popen(
+            self.argv(eager),
+            stdout=self._log_handle,
+            stderr=subprocess.STDOUT,
+            env=self.env,
+            start_new_session=True,
+            cwd=self.env.get("TMPDIR"),
+        )
+
+    def alive(self) -> bool:
+        return self.process is not None and self.process.poll() is None
+
+    def wait_ready(self, timeout_s: float, should_stop: Callable[[], bool] | None = None) -> bool:
+        end = time.perf_counter() + timeout_s
+        with httpx.Client(base_url=self.base_url, timeout=5.0, trust_env=False) as client:
+            while time.perf_counter() < end:
+                if not self.alive() or (should_stop is not None and should_stop()):
+                    return False
+                with contextlib.suppress(httpx.HTTPError):
+                    if client.get("/health").status_code == 200:
+                        return True
+                time.sleep(2.0)
+        return False
+
+    def metrics(self) -> dict[str, float]:
+        with httpx.Client(base_url=self.base_url, timeout=30.0, trust_env=False) as client:
+            response = client.get("/metrics")
+            response.raise_for_status()
+            return parse_prometheus(response.text)
+
+    def reset_caches(self) -> dict[str, Any]:
+        outcome: dict[str, Any] = {"prefix": False, "attempts": 0}
+        with httpx.Client(base_url=self.base_url, timeout=30.0, trust_env=False) as client:
+            for attempt in range(1, 31):
+                outcome["attempts"] = attempt
+                response = client.post("/reset_prefix_cache")
+                if response.status_code == 200 and response.json().get("success") is True:
+                    outcome["prefix"] = True
+                    break
+                time.sleep(1.0)
+            outcome["mm"] = client.post("/reset_mm_cache").status_code == 200
+            outcome["encoder"] = client.post("/reset_encoder_cache").status_code == 200
+        return outcome
+
+    def async_client(self) -> httpx.AsyncClient:
+        return httpx.AsyncClient(
+            base_url=self.base_url,
+            timeout=None,
+            trust_env=False,
+            limits=httpx.Limits(max_connections=512, max_keepalive_connections=512),
+        )
+
+    def log_text(self) -> str:
+        try:
+            return self.log_path.read_text(encoding="utf-8", errors="replace")
+        except OSError:
+            return ""
+
+    def tmp_maps(self) -> dict[str, list[str]]:
+        if self.pid is None:
+            return {}
+        maps = {str(pid): tmp_mapped_files(pid) for pid in process_tree(self.pid)}
+        return {pid: paths for pid, paths in maps.items() if paths}
+
+    def stop(self, timeout_s: float = 30.0) -> dict[str, Any]:
+        outcome: dict[str, Any] = {"returncode": None, "killed": False}
+        if self.process is not None:
+            if self.process.poll() is None:
+                with contextlib.suppress(ProcessLookupError):
+                    os.killpg(self.process.pid, signal.SIGTERM)
+                try:
+                    self.process.wait(timeout=timeout_s)
+                except subprocess.TimeoutExpired:
+                    with contextlib.suppress(ProcessLookupError):
+                        os.killpg(self.process.pid, signal.SIGKILL)
+                    self.process.wait(timeout=30)
+                    outcome["killed"] = True
+            outcome["returncode"] = self.process.returncode
+        if self._log_handle is not None:
+            self._log_handle.close()
+        return outcome
+
+
+class OfflineEngine:
+    """In-process ``vllm.LLM``; stdout/stderr (and the EngineCore child) go to the engine log."""
+
+    mode = "offline"
+    served_name = "offline"
+
+    def __init__(
+        self,
+        spec: EngineSpec,
+        model_dir: str,
+        config: ProbeConfig,
+        env: Mapping[str, str],
+        log_path: Path,
+    ) -> None:
+        self.spec = spec
+        self.model_dir = model_dir
+        self.env = dict(env)
+        self.log_path = log_path
+        self.llm: Any = None
+        self._saved_fds: tuple[int, int] | None = None
+
+    @property
+    def pid(self) -> int:
+        return os.getpid()
+
+    def _redirect(self) -> None:
+        self.log_path.parent.mkdir(parents=True, exist_ok=True)
+        log_fd = os.open(self.log_path, os.O_WRONLY | os.O_CREAT | os.O_APPEND, 0o640)
+        self._saved_fds = (os.dup(1), os.dup(2))
+        sys.stdout.flush()
+        sys.stderr.flush()
+        os.dup2(log_fd, 1)
+        os.dup2(log_fd, 2)
+        os.close(log_fd)
+
+    def _restore(self) -> None:
+        if self._saved_fds is not None:
+            sys.stdout.flush()
+            sys.stderr.flush()
+            os.dup2(self._saved_fds[0], 1)
+            os.dup2(self._saved_fds[1], 2)
+            os.close(self._saved_fds[0])
+            os.close(self._saved_fds[1])
+            self._saved_fds = None
+
+    def start(self, eager: bool) -> None:
+        os.environ.update(self.env)
+        self._redirect()
+        from vllm import LLM
+
+        kwargs = self.spec.offline_kwargs()
+        kwargs["enforce_eager"] = eager
+        self.llm = LLM(model=self.model_dir, tokenizer=self.model_dir, **kwargs)
+
+    def alive(self) -> bool:
+        return self.llm is not None
+
+    def wait_ready(self, timeout_s: float, should_stop: Callable[[], bool] | None = None) -> bool:
+        return self.llm is not None
+
+    def tokenizer(self) -> Any:
+        return self.llm.get_tokenizer()
+
+    def metrics(self) -> dict[str, float]:
+        return metrics_from_offline(self.llm.get_metrics())
+
+    def reset_caches(self) -> dict[str, Any]:
+        return {"prefix": bool(self.llm.reset_prefix_cache())}
+
+    def generate(
+        self,
+        prompt_ids: Sequence[Sequence[int]],
+        *,
+        n: int,
+        temperature: float,
+        top_p: float,
+        max_tokens: int,
+    ) -> list[list[int]]:
+        from vllm import SamplingParams
+        from vllm.inputs import TokensPrompt
+
+        prompts = [TokensPrompt(prompt_token_ids=list(ids)) for ids in prompt_ids]
+        params = SamplingParams(
+            n=n,
+            temperature=temperature,
+            top_p=top_p,
+            max_tokens=max_tokens,
+            min_tokens=max_tokens,
+            ignore_eos=True,
+        )
+        outputs = self.llm.generate(prompts, params, use_tqdm=False)
+        return [[len(choice.token_ids) for choice in output.outputs] for output in outputs]
+
+    def log_text(self) -> str:
+        try:
+            return self.log_path.read_text(encoding="utf-8", errors="replace")
+        except OSError:
+            return ""
+
+    def tmp_maps(self) -> dict[str, list[str]]:
+        maps = {str(pid): tmp_mapped_files(pid) for pid in process_tree(os.getpid())}
+        return {pid: paths for pid, paths in maps.items() if paths}
+
+    def stop(self, timeout_s: float = 30.0) -> dict[str, Any]:
+        outcome: dict[str, Any] = {"returncode": 0}
+        if self.llm is not None:
+            with contextlib.suppress(Exception):
+                self.llm.llm_engine.engine_core.shutdown()
+            self.llm = None
+        import gc
+
+        gc.collect()
+        self._restore()
+        return outcome
+
+
+# ---------------------------------------------------------------------------
+# Request builders
+# ---------------------------------------------------------------------------
+
+
+def _images(
+    kind: str, width: int, height: int, seeds: Sequence[tuple[int, ...]], pool: ThreadPoolExecutor
+) -> list[str]:
+    return [
+        data_url(blob) for blob in pool.map(lambda s: make_image(kind, width, height, s), seeds)
+    ]
+
+
+def build_open_loop_requests(
+    point: PointSpec,
+    tokenizer: Any,
+    allowed: np.ndarray,
+    size: tuple[int, int],
+    pool: ThreadPoolExecutor,
+    collect_token_ids: bool = False,
+) -> list[ChatRequest]:
+    """Shared prefix per point; per-request body and images; text never depends on images."""
+    width, height = size
+    prefix = random_text(tokenizer, allowed, text_rng(point.seed), int(point["prefix_tokens"]))
+    count, images = int(point["requests"]), int(point["images"])
+    seeds = [image_seed(point.seed, index, k) for index in range(count) for k in range(images)]
+    all_urls = _images(str(point["image_kind"]), width, height, seeds, pool)
+    requests = []
+    for index in range(count):
+        body = random_text(
+            tokenizer, allowed, text_rng(point.seed, index), int(point["body_tokens"])
+        )
+        urls = all_urls[index * images : (index + 1) * images]
+        requests.append(
+            ChatRequest(
+                messages=open_loop_messages(prefix, body, urls),
+                max_tokens=int(point["output_tokens"]),
+                thinking=bool(point["thinking"]),
+                tag=(index,),
+                collect_token_ids=collect_token_ids,
+            )
+        )
+    return requests
+
+
+def build_smoke_requests(
+    point: PointSpec,
+    tokenizer: Any,
+    allowed: np.ndarray,
+    size: tuple[int, int],
+    pool: ThreadPoolExecutor,
+) -> list[ChatRequest]:
+    """Request 0 has no image and request 1 the same text with one image (G0.6 differential)."""
+    requests = build_open_loop_requests(point, tokenizer, allowed, size, pool)
+    if len(requests) < 2:
+        raise ProbeConfigError("the smoke needs at least two requests")
+    with_image = requests[1]
+    text_only = [message for message in with_image.messages]
+    user = dict(text_only[-1])
+    user["content"] = [part for part in user["content"] if part.get("type") == "text"]
+    text_only[-1] = user
+    requests[0] = ChatRequest(text_only, with_image.max_tokens, with_image.thinking, (0,))
+    return requests
+
+
+def build_replay_plans(
+    point: PointSpec,
+    tokenizer: Any,
+    allowed: np.ndarray,
+    size: tuple[int, int],
+    pool: ThreadPoolExecutor,
+) -> list[EpisodePlan]:
+    width, height = size
+    params = point.params
+    episodes = int(params["episodes"])
+    depth = int(params["start_depth"])
+    total = depth + int(params["steps"])
+    measured = list(range(depth + 1, total + 1))
+    system = random_text(tokenizer, allowed, text_rng(point.seed), int(params["system_tokens"]))
+    all_screens = _images(
+        "png-rendered",
+        width,
+        height,
+        [image_seed(point.seed, e, step) for e in range(episodes) for step in range(1, total + 1)],
+        pool,
+    )
+    plans: list[EpisodePlan] = []
+    for episode in range(episodes):
+        task = random_text(
+            tokenizer, allowed, text_rng(point.seed, episode, 0), int(params["task_tokens"])
+        )
+        screens = all_screens[episode * total : (episode + 1) * total]
+        actions = [
+            random_text(
+                tokenizer,
+                allowed,
+                text_rng(point.seed, episode, 1, step),
+                int(params["action_tokens"]),
+            )
+            for step in range(1, total + 1)
+        ]
+        a11y = (
+            {
+                step: random_text(
+                    tokenizer,
+                    allowed,
+                    text_rng(point.seed, episode, 2, step),
+                    int(params["a11y_tokens"]),
+                )
+                for step in measured
+            }
+            if int(params["a11y_tokens"]) > 0
+            else {}
+        )
+        prebuilt = [
+            random_text(
+                tokenizer,
+                allowed,
+                text_rng(point.seed, episode, 3, step),
+                int(params["prebuilt_response_tokens"]),
+            )
+            for step in range(1, depth + 1)
+        ]
+
+        def build(
+            step: int,
+            responses: list[str],
+            *,
+            _screens=screens,
+            _actions=actions,
+            _a11y=a11y,
+            _task=task,
+        ) -> list[dict[str, Any]]:
+            common = {
+                "system": system,
+                "task": _task,
+                "screenshots": _screens[:step],
+                "responses": responses[: step - 1],
+                "actions": _actions[: step - 1],
+                "history_n": int(params["history_n"]),
+                "a11y": _a11y.get(step, ""),
+            }
+            if params["harness"] == "h1":
+                return h1_messages(**common)
+            return h2_messages(
+                **common, image_max=int(params["image_max"]), fold_size=int(params["fold_size"])
+            )
+
+        plans.append(
+            EpisodePlan(
+                episode=episode,
+                start_offset_s=float(params["stagger_s"]) * episode / episodes,
+                steps=measured,
+                prebuilt_responses=prebuilt,
+                build=build,
+                output_tokens=int(params["output_tokens"]),
+                thinking=bool(params["thinking"]),
+                t_env_s=float(params["t_env_s"]),
+            )
+        )
+    return plans
+
+
+def build_offline_prompts(point: PointSpec, allowed: np.ndarray) -> list[list[int]]:
+    return [
+        random_token_ids(allowed, text_rng(point.seed, index), int(point["input_tokens"]))
+        for index in range(int(point["prompts"]))
+    ]
+
+
+# ---------------------------------------------------------------------------
+# Assessment
+# ---------------------------------------------------------------------------
+
+
+def assess_point(
+    result: Mapping[str, Any],
+    *,
+    counters: Mapping[str, Any],
+    gpu: Mapping[str, Any],
+    reservation_mib: float | None,
+    margin_mib: float,
+    api_cpu_pct: float | None,
+    client_cpu_pct: float | None,
+    flag_pct: float,
+    stop_reason: str | None,
+    ran_to_end: bool,
+) -> tuple[str, list[str], dict[str, bool]]:
+    peak = gpu.get("peak_memory_used_mib")
+    checks = {
+        "no_failures": result["failed"] == 0,
+        "all_completed": result["completed"] == result["planned"],
+        "fixed_output_lengths": result.get("short_outputs", 0) == 0,
+        "counters_match": bool(counters.get("pass")),
+        "no_contamination": reservation_mib is None
+        or peak is None
+        or peak <= reservation_mib + margin_mib,
+    }
+    flags = []
+    if api_cpu_pct is not None and api_cpu_pct >= flag_pct:
+        flags.append("front-end-bound")
+    if client_cpu_pct is not None and client_cpu_pct >= flag_pct:
+        flags.append("client-bound")
+    if not ran_to_end and stop_reason == "signal":
+        return "interrupted", flags, checks
+    if not ran_to_end:
+        return "truncated", flags, checks
+    if all(checks.values()):
+        return ("valid-flagged" if flags else "valid"), flags, checks
+    return "invalid", flags, checks
+
+
+def image_differential(
+    results: Sequence[RequestResult], expected: int, tolerance: float
+) -> dict[str, Any]:
+    by_tag = {result.tag: result for result in results if result.ok}
+    text_only, with_image = by_tag.get((0,)), by_tag.get((1,))
+    if text_only is None or with_image is None:
+        return {"pass": False, "reason": "differential pair did not complete"}
+    delta = with_image.prompt_tokens - text_only.prompt_tokens
+    return {
+        "pass": abs(delta - expected) <= tolerance * expected,
+        "image_tokens": delta,
+        "expected": expected,
+        "relative_tolerance": tolerance,
+    }
+
+
+# ---------------------------------------------------------------------------
+# Lane and receipt checks (G0.0, G0.1)
+# ---------------------------------------------------------------------------
+
+
+def verify_preregistration(config: ProbeConfig, ledger: Path | None = None) -> dict[str, Any]:
+    from scripts.preregister import DEFAULT_LEDGER, PreregistrationError, verify
+
+    try:
+        row = verify(config.experiment_id, ledger=ledger or DEFAULT_LEDGER, root=PROJECT_ROOT)
+    except PreregistrationError as exc:
+        raise GateFailure(f"G0.0 preregistration is not frozen: {exc}") from exc
+    if row.get("path") != config.preregistration:
+        raise GateFailure("G0.0 the frozen preregistration path differs from the contract")
+    return dict(row)
+
+
+def check_lane_outputs(outputs_root: Path, config: ProbeConfig, job: JobSpec) -> dict[str, Any]:
+    """G0.1: the lane's provenance, container doctor and bound-model verification passed."""
+    report: dict[str, Any] = {}
+    try:
+        provenance = json.loads(
+            (outputs_root / "provenance-verification.txt").read_text(encoding="utf-8")
+        )
+    except (OSError, json.JSONDecodeError) as exc:
+        raise GateFailure(f"G0.1 provenance verification is unreadable: {exc}") from exc
+    if provenance.get("status") != "PASS":
+        raise GateFailure("G0.1 provenance verification did not pass")
+    report["provenance"] = provenance
+    try:
+        doctor = (outputs_root / "container-doctor.txt").read_text(encoding="utf-8")
+    except OSError as exc:
+        raise GateFailure(f"G0.1 container doctor output is unreadable: {exc}") from exc
+    if "STATUS PASS" not in doctor:
+        raise GateFailure("G0.1 container doctor did not pass")
+    try:
+        verification = json.loads(
+            (outputs_root / "model-verification.txt").read_text(encoding="utf-8")
+        )
+    except (OSError, json.JSONDecodeError) as exc:
+        raise GateFailure(f"G0.1 model verification is unreadable: {exc}") from exc
+    pinned = config.models[job.lane_model]
+    expected = {
+        "model_id": job.lane_model,
+        "revision": pinned["revision"],
+        "artifact_root_sha256": pinned["artifact_root_sha256"],
+        "mode": "full",
+    }
+    for key, value in expected.items():
+        if verification.get(key) != value:
+            raise GateFailure(f"G0.1 lane-verified model field {key} is {verification.get(key)!r}")
+    if os.environ.get("COTCODEC_MODEL_ID", job.lane_model) != job.lane_model:
+        raise GateFailure("G0.1 the lane bound a different model than the contract names")
+    report["lane_model"] = verification
+    return report
+
+
+def verify_metadata_pin(
+    model_id: str, pin: tuple[str, str], config: ProbeConfig, model_root: Path, receipt_root: Path
+) -> dict[str, Any]:
+    """G0.1 for dummy-weight configs: the lane mounts but never verifies these snapshots."""
+    from scripts.fetch_open_model import ModelRegistryError, load_registry, verify_receipt
+
+    receipt_sha, root_sha = pin
+    path = receipt_root / f"{model_id}.json"
+    if not path.is_file() or path.is_symlink():
+        raise GateFailure(f"G0.1 metadata receipt for {model_id} is missing")
+    actual = sha256_file(path)
+    if actual != receipt_sha:
+        raise GateFailure(f"G0.1 metadata receipt digest for {model_id} is {actual}")
+    receipt = json.loads(path.read_text(encoding="utf-8"))
+    entry = config.models[model_id]
+    if receipt.get("mode") != "metadata":
+        raise GateFailure(f"G0.1 {model_id} receipt mode is {receipt.get('mode')!r}, not metadata")
+    if receipt.get("revision") != entry["revision"] or receipt.get("repo_id") != entry["repo_id"]:
+        raise GateFailure(f"G0.1 {model_id} receipt identity differs from the contract")
+    if receipt.get("artifact_root_sha256") != root_sha:
+        raise GateFailure(f"G0.1 {model_id} artifact root differs from the pin")
+    registry = load_registry()
+    if model_id not in registry["models"]:
+        raise GateFailure(f"G0.1 {model_id} is not in the registry")
+    try:
+        verify_receipt(model_id, registry["models"][model_id], model_root, receipt_root)
+    except ModelRegistryError as exc:
+        raise GateFailure(f"G0.1 {model_id} snapshot does not match its receipt: {exc}") from exc
+    return {
+        "model_id": model_id,
+        "receipt_sha256": actual,
+        "artifact_root_sha256": root_sha,
+        "total_bytes": receipt.get("total_bytes"),
+        "files": len(receipt.get("files", [])),
+    }
+
+
+# ---------------------------------------------------------------------------
+# Runner
+# ---------------------------------------------------------------------------
+
+
+EngineFactory = Callable[[PhaseSpec, str, Path], Any]
+
+
+class ProbeRunner:
+    """Owns one job: gates, engine lifecycle, the point loop, stop rules and persistence."""
+
+    def __init__(
+        self,
+        *,
+        config: ProbeConfig,
+        job: JobSpec,
+        output_dir: Path,
+        outputs_root: Path,
+        model_root: Path,
+        receipt_root: Path,
+        pins: Mapping[str, tuple[str, str]],
+        image_variant: str,
+        seeds: Sequence[int],
+        argv: Sequence[str],
+        engine_factory: EngineFactory | None = None,
+        sampler_factory: Callable[[Path], Any] | None = None,
+        doctor: Callable[[Path, Mapping[str, str]], dict[str, Any]] | None = None,
+        tokenizer_loader: Callable[[str], Any] | None = None,
+        prereg_check: Callable[[ProbeConfig], dict[str, Any]] | None = None,
+        marker_path: Path | None = None,
+        sleep: Callable[[float], None] = time.sleep,
+    ) -> None:
+        self.config = config
+        self.job = job
+        self.output_dir = output_dir
+        self.outputs_root = outputs_root
+        self.model_root = model_root
+        self.receipt_root = receipt_root
+        self.pins = dict(pins)
+        self.variant = image_variant
+        self.seeds = list(seeds)
+        self.argv = list(argv)
+        variants = config.section("vllm")["image_variants"]
+        if image_variant not in variants:
+            raise ProbeConfigError(f"unknown image variant {image_variant!r}")
+        self.env = cache_environment(output_dir, variants[image_variant]["env"])
+        interval = int(config.section("sampling")["gpu_interval_ms"])
+        self.engine_factory = engine_factory or self._default_engine
+        self.sampler_factory = sampler_factory or (lambda path: GpuSampler(path, interval))
+        self.doctor = doctor or self._default_doctor
+        self.tokenizer_loader = tokenizer_loader or self._default_tokenizer
+        self.prereg_check = prereg_check or verify_preregistration
+        self.marker_path = marker_path
+        self.sleep = sleep
+        self.stop_event = threading.Event()
+        self.signal_name: str | None = None
+        self.blocking = False
+        self.eager = False
+        self.points_dir = output_dir / "points"
+        self.summary: dict[str, Any] = {}
+        self.point_status: dict[str, str] = {}
+        self.sampler: Any = None
+        self.deadlines: Deadlines | None = None
+        self._console_fd: int | None = None
+        self._reaper_stop = threading.Event()
+        self._reaper_paused = threading.Event()
+        self._tracked: set[int] = set()
+        self._signal_checkpointed = False
+
+    # -- infrastructure -------------------------------------------------
+
+    def log(self, message: str) -> None:
+        line = f"[{utc_now()}] {message}\n"
+        with (self.output_dir / "driver.log").open("a", encoding="utf-8") as handle:
+            handle.write(line)
+        if self._console_fd is not None:
+            with contextlib.suppress(OSError):
+                os.write(self._console_fd, line.encode())
+
+    def _default_engine(self, phase: PhaseSpec, model_dir: str, log_path: Path) -> Any:
+        engine_class = ServerEngine if phase.engine.mode == "server" else OfflineEngine
+        return engine_class(phase.engine, model_dir, self.config, self.env, log_path)
+
+    def _default_doctor(self, output: Path, env: Mapping[str, str]) -> dict[str, Any]:
+        gates = self.config.section("gates")
+        vllm = self.config.section("vllm")
+        command = [
+            sys.executable,
+            str(Path(__file__).resolve()),
+            "cuda-doctor",
+            "--output",
+            str(output),
+            "--matmul-size",
+            str(gates["matmul_size"]),
+            "--max-error",
+            str(gates["matmul_max_normalized_error"]),
+            "--expected-gpus",
+            os.environ.get("COTCODEC_EXPECTED_GPUS", "1"),
+            "--expected-vllm-version",
+            str(vllm["version"]),
+            "--expected-vllm-commit",
+            str(vllm["commit"]),
+            "--cache-root",
+            str(self.output_dir / "cache"),
+        ]
+        with (output.parent / "cuda-doctor.log").open("ab") as log:
+            process = subprocess.Popen(
+                command, env={**os.environ, **env}, stdout=log, stderr=subprocess.STDOUT
+            )
+            self._tracked.add(process.pid)
+            try:
+                returncode = process.wait(timeout=float(gates["doctor_timeout_s"]))
+            except subprocess.TimeoutExpired:
+                process.kill()
+                process.wait()
+                return {"pass": False, "error": "cuda doctor timed out"}
+        try:
+            report = json.loads(output.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError):
+            report = {"pass": False, "error": "cuda doctor wrote no report"}
+        report["returncode"] = returncode
+        return report
+
+    @staticmethod
+    def _default_tokenizer(model_dir: str) -> Any:
+        from transformers import AutoTokenizer
+
+        return AutoTokenizer.from_pretrained(model_dir)
+
+    def _install_signals(self) -> None:
+        def handle(signum: int, _frame: Any) -> None:
+            self.signal_name = signal.Signals(signum).name
+            self.stop_event.set()
+            if self.blocking:
+                raise ProbeInterrupted(self.signal_name)
+
+        def alarm(_signum: int, _frame: Any) -> None:
+            if self.blocking:
+                raise ProbeDeadline("point deadline")
+
+        for name in ("SIGUSR1", "SIGTERM", "SIGINT"):
+            signal.signal(getattr(signal, name), handle)
+        signal.signal(signal.SIGALRM, alarm)
+
+    def _reap_once(self) -> None:
+        for pid in orphan_zombies(os.getpid(), self._tracked):
+            with contextlib.suppress(ChildProcessError, OSError):
+                os.waitpid(pid, os.WNOHANG)
+
+    def _reaper(self) -> None:
+        while not self._reaper_stop.wait(2.0):
+            if not self._reaper_paused.is_set():
+                self._reap_once()
+
+    def _write_progress(self, state: str) -> None:
+        atomic_write_json(
+            self.output_dir / "progress.json",
+            {
+                "state": state,
+                "updated_at": utc_now(),
+                "points": dict(self.point_status),
+                "config_sha256": self.config.sha256,
+                "job": self.job.job_id,
+                "signal": self.signal_name,
+            },
+        )
+
+    def _write_marker(self, reason: str) -> None:
+        """Create the lane's checkpoint marker; always after progress.json is on disk."""
+        if self.marker_path is None:
+            return
+        progress = self.output_dir / "progress.json"
+        atomic_write_json(
+            self.marker_path,
+            {
+                "reason": reason,
+                "written_at": utc_now(),
+                "progress_sha256": sha256_file(progress) if progress.is_file() else None,
+                "points": dict(self.point_status),
+            },
+        )
+
+    def _checkpoint_after_signal(self) -> None:
+        """On USR1/TERM: persist progress first, then (and only then) the marker."""
+        if self._signal_checkpointed or not self.stop_event.is_set():
+            return
+        self._write_progress("signal-checkpoint")
+        self._write_marker("signal-checkpoint")
+        self._signal_checkpointed = True
+        self.log(f"signal {self.signal_name}: progress saved, checkpoint marker written")
+
+    def _record(self, point: PointSpec, record: dict[str, Any]) -> None:
+        atomic_write_json(self.points_dir / f"{point.point_id}.json", record)
+        self.point_status[point.point_id] = record["status"]
+        self._write_progress("running")
+
+    # -- resume ---------------------------------------------------------
+
+    def _load_existing(self) -> dict[str, dict[str, Any]]:
+        existing: dict[str, dict[str, Any]] = {}
+        if not self.points_dir.is_dir():
+            return existing
+        for path in sorted(self.points_dir.glob("*.json")):
+            record = json.loads(path.read_text(encoding="utf-8"))
+            if record.get("config_sha256") != self.config.sha256:
+                raise GateFailure(f"resume refused: {path.name} was produced by another contract")
+            if record.get("job") != self.job.job_id:
+                raise GateFailure(f"resume refused: {path.name} belongs to job {record.get('job')}")
+            existing[record["point_id"]] = record
+        return existing
+
+    # -- gates ----------------------------------------------------------
+
+    def _baseline(self) -> dict[str, Any]:
+        gates = self.config.section("gates")
+        self.sleep(float(gates["baseline_settle_s"]))
+        start = time.perf_counter()
+        self.sleep(float(gates["baseline_duration_s"]))
+        samples = self.sampler.window(start, time.perf_counter())
+        return baseline_verdict(
+            samples,
+            max_memory_mib=float(gates["baseline_max_memory_used_mib"]),
+            max_utilization_pct=float(gates["baseline_max_utilization_pct"]),
+        )
+
+    def _wait_memory_released(self) -> dict[str, Any]:
+        timeout = float(self.config.section("gates")["gpu_release_timeout_s"])
+        end = time.perf_counter() + timeout
+        latest: GpuSample | None = None
+        while time.perf_counter() < end and not self.stop_event.is_set():
+            now = time.perf_counter()
+            window = self.sampler.window(now - 2.0, now)
+            if window:
+                latest = window[-1]
+                if latest.memory_used_mib < MEMORY_RELEASED_MIB:
+                    return {"released": True, "memory_used_mib": latest.memory_used_mib}
+            self.sleep(1.0)
+        return {
+            "released": False,
+            "memory_used_mib": None if latest is None else latest.memory_used_mib,
+        }
+
+    # -- main -----------------------------------------------------------
+
+    def run(self) -> int:
+        self.output_dir.mkdir(parents=True, exist_ok=True)
+        for sub in ("points", "engines", "doctor", "samples"):
+            (self.output_dir / sub).mkdir(exist_ok=True)
+        for path in self.env.values():
+            if path.startswith(str(self.output_dir)):
+                Path(path).mkdir(parents=True, exist_ok=True)
+        self._console_fd = os.dup(2)
+        self._install_signals()
+        if os.getpid() == 1:
+            threading.Thread(target=self._reaper, name="reaper", daemon=True).start()
+        self.summary = {
+            "experiment_id": self.config.experiment_id,
+            "job": self.job.job_id,
+            "config_path": _display_path(self.config.path),
+            "config_sha256": self.config.sha256,
+            "argv": self.argv,
+            "seeds": self.seeds,
+            "image_variant": self.variant,
+            "started_at": utc_now(),
+            "gates": {},
+            "phases": {},
+            "eager": False,
+        }
+        atomic_write_json(
+            self.output_dir / "plan.json",
+            {
+                **plan_payload(self.config, self.job, str(self.model_root)),
+                "env": self.env,
+                "argv": self.argv,
+                "pins": self.pins,
+            },
+        )
+        exit_code, status = EXIT_CRASH, "crashed"
+        try:
+            exit_code, status = self._run_job()
+        except GateFailure as exc:
+            self.log(f"pre-result: {exc}")
+            self.summary["pre_result_reason"] = str(exc)
+            exit_code, status = EXIT_PRE_RESULT, "pre-result"
+        except ProbeInterrupted:
+            exit_code, status = EXIT_INTERRUPTED, "interrupted"
+        except Exception as exc:  # noqa: BLE001 - recorded in the summary, exit code 1
+            self.log(f"crash: {type(exc).__name__}: {exc}")
+            self.summary["crash"] = f"{type(exc).__name__}: {exc}"[:2000]
+            exit_code, status = EXIT_CRASH, "crashed"
+        finally:
+            if self.stop_event.is_set() and status != "pre-result":
+                exit_code, status = EXIT_INTERRUPTED, "interrupted"
+            self._finalize(status, exit_code)
+        return exit_code
+
+    def _run_job(self) -> tuple[int, str]:
+        self.summary["gates"]["G0.0"] = {"pass": True, "ledger_row": self.prereg_check(self.config)}
+        existing = self._load_existing()
+        for point_id, record in existing.items():
+            self.point_status[point_id] = record["status"]
+        self.summary["resumed_terminal_points"] = sorted(
+            point for point, record in existing.items() if record["status"] in TERMINAL_STATUSES
+        )
+        lane = check_lane_outputs(self.outputs_root, self.config, self.job)
+        check_pins(self.job, self.pins)
+        lane["metadata_pins"] = [
+            verify_metadata_pin(
+                model, self.pins[model], self.config, self.model_root, self.receipt_root
+            )
+            for model in self.job.pinned_models()
+        ]
+        self.summary["gates"]["G0.1"] = {"pass": True, **lane}
+
+        now_perf = time.perf_counter()
+        start, anchor = allocation_start_perf(
+            self.outputs_root / "job.env", now_wall=time.time(), now_perf=now_perf
+        )
+        stop = self.config.section("stop")
+        reserves = [
+            sum(phase.reserve_minutes for phase in self.job.phases[index + 1 :])
+            for index in range(len(self.job.phases))
+        ]
+        self.deadlines = Deadlines(
+            start=start,
+            allocation_minutes=self.job.allocation_minutes,
+            soft_fraction=float(stop["soft_fraction"]),
+            hard_margin_minutes=float(stop["hard_margin_minutes"]),
+            reserves_after=reserves,
+        )
+        self.summary["deadlines"] = {
+            "anchor": anchor,
+            "elapsed_at_driver_start_s": now_perf - start,
+            **self.deadlines.describe(),
+        }
+        self._write_progress("gates")
+
+        doctor_report = self.doctor(self.output_dir / "doctor" / "cuda-doctor.json", self.env)
+        for gate in ("G0.2", "G0.3", "G0.4"):
+            self.summary["gates"][gate] = doctor_report.get(gate, {"pass": False})
+        if not doctor_report.get("pass"):
+            raise GateFailure("G0.2-G0.4 CUDA doctor failed; see doctor/cuda-doctor.json")
+
+        self.sampler = self.sampler_factory(self.output_dir / "samples" / "nvidia-smi.csv")
+        self.sampler.start()
+        process = getattr(self.sampler, "_process", None)
+        if process is not None and getattr(process, "pid", None):
+            self._tracked.add(int(process.pid))
+        cut = False
+        for index, phase in enumerate(self.job.phases):
+            if self.stop_event.is_set():
+                break
+            outcome = self._run_phase(index, phase, existing)
+            self.summary["phases"][phase.phase_id] = outcome
+            cut = cut or bool(outcome.get("cut"))
+            if self.stop_event.is_set():
+                break
+            gate = outcome.get("gate_failed")
+            if gate and (phase.role == "primary" or len(self.job.phases) == 1):
+                raise GateFailure(f"{gate} failed in phase {phase.phase_id}")
+        return EXIT_OK, ("complete-with-cuts" if cut else "complete")
+
+    def _start_engine(
+        self, phase: PhaseSpec, engine_dir: Path, launch_deadline: float
+    ) -> tuple[Any, list[dict[str, Any]]]:
+        """G0.5: default compile + CUDA-graph mode first, one eager fallback, then sticky eager.
+
+        Each ready wait is capped by the gate timeout and by the phase launch deadline.
+        """
+        model_dir = str(self.model_root / phase.engine.model)
+        gate_timeout = float(self.config.section("gates")["engine_ready_timeout_s"])
+        attempts: list[dict[str, Any]] = []
+        for eager in [True] if self.eager else [False, True]:
+            timeout = min(gate_timeout, max(1.0, launch_deadline - time.perf_counter()))
+            suffix = "-eager" if eager else ""
+            engine = self.engine_factory(phase, model_dir, engine_dir / f"engine{suffix}.log")
+            attempt: dict[str, Any] = {"eager": eager, "ready": False}
+            if engine.mode == "server":
+                attempt["argv"] = engine.argv(eager)
+            started = time.perf_counter()
+            offline = engine.mode == "offline"
+            if offline:
+                self._reaper_paused.set()
+            try:
+                self.blocking = offline
+                if offline:
+                    signal.setitimer(signal.ITIMER_REAL, timeout)
+                engine.start(eager)
+                attempt["ready"] = bool(engine.wait_ready(timeout, self.stop_event.is_set))
+                attempt["ready_timeout_s"] = timeout
+            except ProbeDeadline:
+                attempt["error"] = "engine start exceeded the ready timeout"
+            except ProbeInterrupted:
+                engine.stop()
+                raise
+            except Exception as exc:  # noqa: BLE001 - a failed start is a G0.5 outcome
+                attempt["error"] = f"{type(exc).__name__}: {exc}"[:500]
+            finally:
+                signal.setitimer(signal.ITIMER_REAL, 0)
+                self.blocking = False
+            attempt["seconds"] = time.perf_counter() - started
+            pid = getattr(engine, "pid", None)
+            if pid and engine.mode == "server":
+                self._tracked.add(int(pid))
+            attempts.append(attempt)
+            if attempt["ready"]:
+                return engine, attempts
+            engine.stop()
+            self._reaper_paused.clear()
+            if self.stop_event.is_set() or time.perf_counter() >= launch_deadline:
+                break
+        return None, attempts
+
+    def _run_phase(
+        self, index: int, phase: PhaseSpec, existing: Mapping[str, dict[str, Any]]
+    ) -> dict[str, Any]:
+        assert self.deadlines is not None
+        outcome: dict[str, Any] = {"engine": phase.engine.engine_id, "role": phase.role}
+        smoke_kinds = {"smoke-server", "smoke-offline"}
+        pending = [
+            point
+            for point in phase.points
+            if point.kind not in smoke_kinds
+            and existing.get(point.point_id, {}).get("status") not in TERMINAL_STATUSES
+        ]
+        if not pending:
+            outcome["skipped"] = "every point is already terminal (resume)"
+            return outcome
+        launch_deadline = self.deadlines.phase_launch_deadline(index)
+        hard_deadline = self.deadlines.phase_hard_deadline(index)
+        if time.perf_counter() >= launch_deadline:
+            self._mark_not_run(phase.points, "stop rule: phase deadline passed before start")
+            outcome.update({"cut": True, "skipped": "phase deadline passed before start"})
+            return outcome
+
+        if self.stop_event.is_set():
+            return outcome
+        baseline = self._baseline()
+        outcome["G0.8"] = baseline
+        self.summary["gates"].setdefault("G0.8", {})[phase.phase_id] = baseline
+        if not baseline["pass"]:
+            self._mark_not_run(phase.points, "G0.8 device baseline failed")
+            outcome["gate_failed"] = "G0.8"
+            return outcome
+
+        if self.stop_event.is_set():
+            return outcome
+        engine_dir = self.output_dir / "engines" / phase.phase_id
+        engine_dir.mkdir(parents=True, exist_ok=True)
+        engine, attempts = self._start_engine(phase, engine_dir, launch_deadline)
+        default_mode = engine is not None and not any(
+            a.get("eager") for a in attempts if a["ready"]
+        )
+        verdict = {
+            "pass": bool(default_mode),
+            "eager_fallback": engine is not None and not default_mode,
+            "attempts": attempts,
+        }
+        outcome["G0.5"] = verdict
+        self.summary["gates"].setdefault("G0.5", {})[phase.phase_id] = verdict
+        if engine is None:
+            self._mark_not_run(phase.points, "G0.5 engine did not start")
+            outcome["gate_failed"] = "G0.5"
+            if not self.stop_event.is_set():
+                outcome["memory_release"] = self._wait_memory_released()
+            return outcome
+        if not default_mode:
+            self.eager = True
+            self.summary["eager"] = True
+        facts = parse_engine_log(engine.log_text())
+        facts["tmp_mapped_files"] = engine.tmp_maps()
+        outcome["engine_facts"] = facts
+        try:
+            outcome.update(
+                self._run_points(phase, engine, existing, launch_deadline, hard_deadline)
+            )
+        finally:
+            self._checkpoint_after_signal()
+            outcome["engine_facts_final"] = parse_engine_log(engine.log_text())
+            outcome["engine_stop"] = engine.stop()
+            self._reaper_paused.clear()
+            if not self.stop_event.is_set():
+                outcome["memory_release"] = self._wait_memory_released()
+        return outcome
+
+    def _mark_not_run(self, points: Sequence[PointSpec], reason: str) -> None:
+        for point in points:
+            if self.point_status.get(point.point_id) in TERMINAL_STATUSES:
+                continue
+            record = self._base_record(point, attempt=0)
+            record.update({"status": "not-run", "reason": reason})
+            self._record(point, record)
+
+    def _base_record(self, point: PointSpec, attempt: int) -> dict[str, Any]:
+        return {
+            "experiment_id": self.config.experiment_id,
+            "config_sha256": self.config.sha256,
+            "job": self.job.job_id,
+            "point_id": point.point_id,
+            "kind": point.kind,
+            "seed": point.seed,
+            "params": dict(point.params),
+            "attempt": attempt,
+            "eager": self.eager,
+        }
+
+    def _run_points(
+        self,
+        phase: PhaseSpec,
+        engine: Any,
+        existing: Mapping[str, dict[str, Any]],
+        launch_deadline: float,
+        hard_deadline: float,
+    ) -> dict[str, Any]:
+        outcome: dict[str, Any] = {"cut": False}
+        validity = self.config.section("validity")
+        screenshot = self.config.section("screenshot")
+        size = (int(screenshot["width"]), int(screenshot["height"]))
+        if engine.mode == "offline":
+            tokenizer = engine.tokenizer()
+        else:
+            tokenizer = self.tokenizer_loader(engine.model_dir)
+        allowed = allowed_token_ids(tokenizer)
+        reservation: float | None = None
+        reruns = int(validity["reruns_per_invalid_point"])
+        with ThreadPoolExecutor(max_workers=8) as pool:
+            for point in phase.points:
+                smoke = point.kind in {"smoke-server", "smoke-offline"}
+                if (
+                    existing.get(point.point_id, {}).get("status") in TERMINAL_STATUSES
+                    and not smoke
+                ):
+                    continue
+                if self.stop_event.is_set():
+                    break
+                if time.perf_counter() >= launch_deadline:
+                    left = [
+                        p
+                        for p in phase.points
+                        if self.point_status.get(p.point_id) not in TERMINAL_STATUSES
+                    ]
+                    self._mark_not_run(left, "stop rule: launch deadline")
+                    outcome["cut"] = True
+                    break
+                attempts: list[dict[str, Any]] = []
+                record: dict[str, Any] = {}
+                for attempt in range(1, 2 + reruns):
+                    if attempt > 1 and (
+                        time.perf_counter() >= launch_deadline or self.stop_event.is_set()
+                    ):
+                        break
+                    deadline = min(time.perf_counter() + 60.0 * point.max_minutes, hard_deadline)
+                    record = self._execute(
+                        point,
+                        attempt,
+                        engine,
+                        tokenizer,
+                        allowed,
+                        size,
+                        pool,
+                        deadline,
+                        reservation,
+                    )
+                    attempts.append(
+                        {key: record.get(key) for key in ("attempt", "status", "checks", "error")}
+                    )
+                    if record["status"] != "invalid":
+                        break
+                record["attempts"] = attempts
+                self._record(point, record)
+                self.log(f"{phase.phase_id}/{point.point_id}: {record['status']}")
+                if record["status"] == "interrupted" or self.stop_event.is_set():
+                    self._checkpoint_after_signal()
+                    break
+                if record["status"] == "failed-infra" or not engine.alive():
+                    left = [
+                        p
+                        for p in phase.points
+                        if self.point_status.get(p.point_id) not in TERMINAL_STATUSES
+                        and p.point_id != point.point_id
+                    ]
+                    self._mark_not_run(left, "engine failed")
+                    outcome["engine_failed"] = True
+                    if smoke:
+                        outcome["gate_failed"] = "G0.6"
+                    break
+                if smoke:
+                    gates = record.get("gates", {})
+                    outcome.update(gates)
+                    for gate, verdict in gates.items():
+                        self.summary["gates"].setdefault(gate, {})[phase.phase_id] = verdict
+                    if record["status"] not in {"valid", "valid-flagged"}:
+                        failed = [g for g, v in gates.items() if not v.get("pass")]
+                        outcome["gate_failed"] = failed[0] if failed else "G0.6"
+                        rest = [p for p in phase.points if p is not point]
+                        self._mark_not_run(rest, f"{outcome['gate_failed']} failed in the smoke")
+                        break
+                    window_s = float(validity["reservation_window_s"])
+                    self.sleep(window_s)
+                    now = time.perf_counter()
+                    window = self.sampler.window(now - window_s, now)
+                    reservation = max((s.memory_used_mib for s in window), default=None)
+                    outcome["reservation_mib"] = reservation
+        return outcome
+
+    def _execute(
+        self,
+        point: PointSpec,
+        attempt: int,
+        engine: Any,
+        tokenizer: Any,
+        allowed: np.ndarray,
+        size: tuple[int, int],
+        pool: ThreadPoolExecutor,
+        deadline: float,
+        reservation: float | None,
+    ) -> dict[str, Any]:
+        record = self._base_record(point, attempt)
+        record["started_at"] = utc_now()
+        try:
+            if engine.mode == "server":
+                body = self._server_point(point, engine, tokenizer, allowed, size, pool, deadline)
+            else:
+                body = self._offline_point(point, engine, allowed, deadline)
+        except ProbeInterrupted:
+            record.update({"status": "interrupted", "reason": self.signal_name})
+            return record
+        except (httpx.HTTPError, OSError, RuntimeError, ValueError, KeyError) as exc:
+            record.update({"status": "failed-infra", "error": f"{type(exc).__name__}: {exc}"[:500]})
+            return record
+        record.update(body)
+        validity = self.config.section("validity")
+        status, flags, checks = assess_point(
+            body["result"],
+            counters=body["counter_check"],
+            gpu=body["gpu"],
+            reservation_mib=reservation,
+            margin_mib=float(validity["contamination_margin_mib"]),
+            api_cpu_pct=body.get("api_server_cpu_pct"),
+            client_cpu_pct=body.get("client_cpu_pct"),
+            flag_pct=float(validity["frontend_cpu_flag_pct"]),
+            stop_reason=body.get("stop_reason"),
+            ran_to_end=body["ran_to_end"],
+        )
+        gates = body.get("gates")
+        gates_failed = gates and not all(verdict.get("pass") for verdict in gates.values())
+        if gates_failed and status in {"valid", "valid-flagged"}:
+            status = "invalid"
+        record.update(
+            {"status": status, "flags": flags, "checks": checks, "finished_at": utc_now()}
+        )
+        return record
+
+    # -- server points ----------------------------------------------------
+
+    def _server_point(
+        self,
+        point: PointSpec,
+        engine: Any,
+        tokenizer: Any,
+        allowed: np.ndarray,
+        size: tuple[int, int],
+        pool: ThreadPoolExecutor,
+        deadline: float,
+    ) -> dict[str, Any]:
+        timeout_s = float(self.config.section("server")["request_timeout_s"])
+        gates_cfg = self.config.section("gates")
+        prep_start = time.perf_counter()
+        payload: Any
+        if point.kind == "replay":
+            payload = build_replay_plans(point, tokenizer, allowed, size, pool)
+        elif point.kind == "smoke-server":
+            payload = build_smoke_requests(point, tokenizer, allowed, size, pool)
+        else:
+            payload = build_open_loop_requests(
+                point, tokenizer, allowed, size, pool, collect_token_ids=point.kind == "aa"
+            )
+        prep_s = time.perf_counter() - prep_start
+        reset = engine.reset_caches()
+        before = engine.metrics()
+        api_start = read_cpu_ticks(engine.pid) if engine.pid else None
+        me_start = read_cpu_ticks(os.getpid())
+        stop = StopToken(
+            deadline=max(deadline, time.perf_counter() + 1.0),
+            external=self.stop_event,
+            grace_s=float(self.config.section("stop")["in_flight_grace_s"]),
+        )
+        kv: list[tuple[float, float | None, float | None, float | None]] = []
+        started = time.perf_counter()
+        body = asyncio.run(self._server_coroutine(point, engine, payload, stop, kv, timeout_s))
+        finished = time.perf_counter()
+        after = engine.metrics()
+        wall = finished - started
+        api_end = read_cpu_ticks(engine.pid) if engine.pid else None
+        result = body["result"]
+        deltas = point_counter_deltas(before, after)
+        counters = check_counters(
+            deltas,
+            client_prompt_tokens=int(result["prompt_tokens"]),
+            client_output_tokens=int(result["output_tokens"]),
+            prompt_tolerance=float(gates_cfg["prompt_counter_relative_tolerance"]),
+        )
+        self._write_kv_trace(point.point_id, kv)
+        out: dict[str, Any] = {
+            "prep_s": prep_s,
+            "cache_reset": reset,
+            "result": result,
+            "counters": deltas,
+            "counter_check": counters,
+            "gpu": summarize_gpu(self.sampler.window(started, finished)),
+            "api_server_cpu_pct": cpu_percent(api_start, api_end, wall),
+            "client_cpu_pct": cpu_percent(me_start, read_cpu_ticks(os.getpid()), wall),
+            "kv_cache_usage_peak": max((r[1] for r in kv if r[1] is not None), default=None),
+            "num_requests_waiting_peak": max((r[3] for r in kv if r[3] is not None), default=None),
+            "ran_to_end": body["ran_to_end"],
+            "stop_reason": body["stop_reason"],
+        }
+        if "agreement" in body:
+            out["agreement"] = body["agreement"]
+        if point.kind == "smoke-server":
+            differential = image_differential(
+                body["results"],
+                int(gates_cfg["image_tokens_expected"]),
+                float(gates_cfg["image_tokens_relative_tolerance"]),
+            )
+            smoke_ok = (
+                result["failed"] == 0
+                and result["completed"] == result["planned"]
+                and result["short_outputs"] == 0
+            )
+            out["gates"] = {
+                "G0.6": {
+                    "pass": bool(smoke_ok and differential["pass"]),
+                    "smoke_ok": smoke_ok,
+                    "image_differential": differential,
+                },
+                "G0.7": counters,
+            }
+        return out
+
+    async def _server_coroutine(
+        self,
+        point: PointSpec,
+        engine: Any,
+        payload: Any,
+        stop: StopToken,
+        kv: list[Any],
+        timeout_s: float,
+    ) -> dict[str, Any]:
+        done = asyncio.Event()
+        interval = float(self.config.section("sampling")["kv_poll_interval_s"])
+
+        async def poll(client: httpx.AsyncClient) -> None:
+            while not done.is_set():
+                with contextlib.suppress(httpx.HTTPError):
+                    snapshot = parse_prometheus((await client.get("/metrics")).text)
+                    kv.append(
+                        (
+                            time.perf_counter(),
+                            snapshot.get("vllm:kv_cache_usage_perc"),
+                            snapshot.get("vllm:num_requests_running"),
+                            snapshot.get("vllm:num_requests_waiting"),
+                        )
+                    )
+                with contextlib.suppress(TimeoutError):
+                    await asyncio.wait_for(done.wait(), timeout=interval)
+
+        output_tokens = int(point["output_tokens"])
+        async with engine.async_client() as client:
+            poller = asyncio.create_task(poll(client))
+            try:
+                if point.kind == "replay":
+                    records, start, end, spans = await run_replay(
+                        client, payload, model=engine.served_name, timeout_s=timeout_s, stop=stop
+                    )
+                    planned_steps = payload[0].steps if payload else []
+                    result = summarize_replay(
+                        records,
+                        episodes=len(payload),
+                        planned_steps=planned_steps,
+                        start=start,
+                        end=end,
+                        spans=spans,
+                        expected_output=output_tokens,
+                    )
+                    ran_to_end = len(records) == len(payload) * len(planned_steps)
+                    return {
+                        "result": result,
+                        "ran_to_end": ran_to_end,
+                        "stop_reason": None if ran_to_end else stop.reason(),
+                    }
+                if point.kind == "aa":
+
+                    async def between() -> None:
+                        await asyncio.to_thread(engine.reset_caches)
+
+                    started = stop.clock()
+                    arms = await run_aa(
+                        client,
+                        payload,
+                        arms=point["arms"],
+                        model=engine.served_name,
+                        timeout_s=timeout_s,
+                        stop=stop,
+                        between_arms=between,
+                    )
+                    flat = [result for arm in arms for result in arm]
+                    planned = len(payload) * len(point["arms"])
+                    result = summarize_requests(
+                        flat,
+                        planned=planned,
+                        start=started,
+                        end=stop.clock(),
+                        expected_output=output_tokens,
+                    )
+                    ran_to_end = len(flat) == planned
+                    return {
+                        "result": result,
+                        "agreement": aa_agreement(arms),
+                        "ran_to_end": ran_to_end,
+                        "stop_reason": None if ran_to_end else stop.reason(),
+                    }
+                results, start, end, unlaunched = await run_open_loop(
+                    client,
+                    payload,
+                    concurrency=int(point["concurrency"]),
+                    model=engine.served_name,
+                    timeout_s=timeout_s,
+                    stop=stop,
+                )
+                result = summarize_requests(
+                    results,
+                    planned=len(payload),
+                    start=start,
+                    end=end,
+                    expected_output=output_tokens,
+                )
+                ran_to_end = unlaunched == 0 and len(results) == len(payload)
+                return {
+                    "result": result,
+                    "results": results,
+                    "ran_to_end": ran_to_end,
+                    "stop_reason": None if ran_to_end else stop.reason(),
+                }
+            finally:
+                done.set()
+                await poller
+
+    def _write_kv_trace(self, point_id: str, rows: Sequence[Any]) -> None:
+        path = self.output_dir / "samples" / f"kv-{point_id}.csv"
+        with path.open("w", encoding="utf-8") as handle:
+            handle.write("t,kv_cache_usage_perc,num_requests_running,num_requests_waiting\n")
+            for row in rows:
+                handle.write(",".join("" if value is None else f"{value}" for value in row) + "\n")
+
+    # -- offline points ---------------------------------------------------
+
+    def _offline_point(
+        self, point: PointSpec, engine: Any, allowed: np.ndarray, deadline: float
+    ) -> dict[str, Any]:
+        prompts = build_offline_prompts(point, allowed)
+        n = int(point["n"])
+        output_tokens = int(point["output_tokens"])
+        input_tokens = int(point["input_tokens"])
+        planned = len(prompts) * n
+        reset = engine.reset_caches()
+        before = engine.metrics()
+        started = time.perf_counter()
+        lengths: list[list[int]] = []
+        stop_reason = None
+        self.blocking = True
+        signal.setitimer(signal.ITIMER_REAL, max(1.0, deadline - started))
+        try:
+            lengths = engine.generate(
+                prompts,
+                n=n,
+                temperature=float(point["temperature"]),
+                top_p=float(point.get("top_p", 1.0)),
+                max_tokens=output_tokens,
+            )
+        except ProbeDeadline:
+            stop_reason = "deadline"
+        finally:
+            signal.setitimer(signal.ITIMER_REAL, 0)
+            self.blocking = False
+        finished = time.perf_counter()
+        after = engine.metrics()
+        completions = sum(len(choice) for choice in lengths)
+        generated = sum(sum(choice) for choice in lengths)
+        duration = finished - started
+        result = {
+            "planned": planned,
+            "completed": completions,
+            "completions": completions,
+            "failed": planned - completions,
+            "duration_s": duration,
+            "prompt_tokens": len(prompts) * input_tokens,
+            "output_tokens": generated,
+            "short_outputs": sum(1 for c in lengths for length in c if length != output_tokens),
+            "output_throughput": generated / duration if duration > 0 else None,
+            "completions_per_s": completions / duration if duration > 0 else None,
+            "gpu_s_per_completion": duration / completions if completions else None,
+        }
+        deltas = point_counter_deltas(before, after)
+        counters = check_counters(
+            deltas,
+            client_prompt_tokens=len(prompts) * input_tokens,
+            client_output_tokens=generated,
+            prompt_tolerance=float(
+                self.config.section("gates")["prompt_counter_relative_tolerance"]
+            ),
+            alternative_prompt_tokens=[len(prompts) * n * input_tokens],
+        )
+        ran_to_end = stop_reason is None and completions == planned
+        out: dict[str, Any] = {
+            "cache_reset": reset,
+            "result": result,
+            "counters": deltas,
+            "counter_check": counters,
+            "gpu": summarize_gpu(self.sampler.window(started, finished)),
+            "ran_to_end": ran_to_end,
+            "stop_reason": stop_reason,
+        }
+        if point.kind == "smoke-offline":
+            smoke_ok = completions == planned and result["short_outputs"] == 0
+            out["gates"] = {"G0.6": {"pass": smoke_ok, "smoke_ok": smoke_ok}, "G0.7": counters}
+        return out
+
+    # -- finalize -----------------------------------------------------------
+
+    def _finalize(self, status: str, exit_code: int) -> None:
+        with contextlib.suppress(Exception):
+            if self.sampler is not None:
+                self.sampler.stop()
+        points: dict[str, dict[str, Any]] = {}
+        if self.points_dir.is_dir():
+            for path in sorted(self.points_dir.glob("*.json")):
+                record = json.loads(path.read_text(encoding="utf-8"))
+                points[record["point_id"]] = record
+        self.summary["points"] = {name: record.get("status") for name, record in points.items()}
+        validity = self.config.section("validity")
+        limit = float(validity["unstable_relative_range"])
+        if self.job.job_id == "a":
+            self.summary["x1"] = budget_rules.evaluate_x1(
+                points,
+                max_relative_delta=float(
+                    self.config.section("dummy_admissibility")["max_relative_delta"]
+                ),
+            )
+            self.summary["a1_stability"] = budget_rules.stability(
+                points, ("a1a", "a1b", "a1c"), limit
+            )
+            agreement = points.get("d8", {}).get("agreement")
+            if agreement:
+                self.summary["aa_agreement_rate"] = agreement.get("agreement_rate")
+        if self.job.job_id == "b":
+            self.summary["b1_stability"] = budget_rules.stability(
+                points, ("b1a", "b1b", "b1c"), limit, metric="completions_per_s"
+            )
+        self.summary.update(
+            {
+                "status": status,
+                "exit_code": exit_code,
+                "finished_at": utc_now(),
+                "signal": self.signal_name,
+            }
+        )
+        self.output_dir.mkdir(parents=True, exist_ok=True)
+        atomic_write_json(self.output_dir / "summary.json", self.summary)
+        self._write_progress(status)
+        self._write_marker("signal-checkpoint" if self.signal_name else "final")
+        self._reaper_stop.set()
+        if os.getpid() == 1:
+            self._reap_once()
+
+
+# ---------------------------------------------------------------------------
+# CLI
+# ---------------------------------------------------------------------------
+
+
+def resolve_config_path(path: Path) -> Path:
+    """Absolute paths as given; relative ones from the working directory, else the repo root."""
+    if path.is_absolute():
+        return path
+    candidate = Path.cwd() / path
+    return candidate.resolve() if candidate.exists() else (PROJECT_ROOT / path).resolve()
+
+
+def _display_path(path: Path) -> str:
+    resolved = path.resolve()
+    if resolved.is_relative_to(PROJECT_ROOT):
+        return resolved.relative_to(PROJECT_ROOT).as_posix()
+    return str(resolved)
+
+
+PARSED_FLAG_CHECKS = (
+    "load_format",
+    "max_model_len",
+    "gpu_memory_utilization",
+    "max_num_seqs",
+    "max_num_batched_tokens",
+    "enable_prefix_caching",
+    "generation_config",
+    "tensor_parallel_size",
+    "seed",
+    "dtype",
+)
+
+
+def compare_parsed_flags(engine: EngineSpec, parsed: Mapping[str, Any]) -> list[str]:
+    """Differences between the contract and what vLLM's own parser produced."""
+    expected = {**dict(engine.flags), "load_format": engine.load_format}
+    problems = [
+        f"{key}: contract {expected[key]!r} parsed {parsed.get(key)!r}"
+        for key in PARSED_FLAG_CHECKS
+        if key in expected and parsed.get(key) != expected[key]
+    ]
+    if parsed.get("speculative_config") not in (None, {}):
+        problems.append("speculative decoding is configured")
+    if parsed.get("enforce_eager"):
+        problems.append("eager mode is forced")
+    return problems
+
+
+def vllm_args_doctor(config: ProbeConfig) -> dict[str, Any]:
+    """CPU-only build check: vLLM's parsers accept every engine flag and request payload.
+
+    Pins vLLM's CPU platform so argument parsing needs no GPU; nothing is executed
+    on a device and no model is loaded.
+    """
+    import vllm.platforms
+    from vllm.platforms.cpu import CpuPlatform
+
+    vllm.platforms._current_platform = CpuPlatform()  # parse-only; see docstring
+    from vllm.engine.arg_utils import EngineArgs
+    from vllm.entrypoints.launchers.cli_args import make_arg_parser, validate_parsed_serve_args
+    from vllm.entrypoints.openai.chat_completion.protocol import ChatCompletionRequest
+    from vllm.utils.argparse_utils import FlexibleArgumentParser
+
+    from harness.serving_probe.client import build_payload
+
+    server = config.section("server")
+    report: dict[str, Any] = {"engines": {}, "pass": True}
+    for engine_id, engine in config.engines.items():
+        if engine.mode == "server":
+            argv = engine.server_argv(
+                f"/model-cache/cotcodec-models/{engine.model}",
+                host=str(server["host"]),
+                port=int(server["port"]),
+                served_name=str(server["served_model_name"]),
+            )
+            parsed = make_arg_parser(FlexibleArgumentParser()).parse_args(argv[2:])
+            validate_parsed_serve_args(parsed)
+            problems = compare_parsed_flags(engine, vars(parsed))
+        else:
+            kwargs = engine.offline_kwargs()
+            kwargs.pop("disable_log_stats", None)
+            parsed = EngineArgs(model=f"/model-cache/cotcodec-models/{engine.model}", **kwargs)
+            problems = compare_parsed_flags(engine, vars(parsed))
+        report["engines"][engine_id] = {"problems": problems}
+        report["pass"] = report["pass"] and not problems
+    image = {"type": "image_url", "image_url": {"url": "data:image/png;base64,AA=="}}
+    message = [{"role": "user", "content": [{"type": "text", "text": "x"}, image]}]
+    for thinking in (False, True):
+        payload = build_payload(
+            ChatRequest(message, 300, thinking, collect_token_ids=True), model="m"
+        )
+        request = ChatCompletionRequest(**payload)
+        ok = (
+            request.ignore_eos is True
+            and request.min_tokens == 300
+            and request.return_token_ids is True
+            and request.chat_template_kwargs == {"enable_thinking": thinking}
+            and request.stream is True
+        )
+        report[f"payload_thinking_{thinking}"] = ok
+        report["pass"] = report["pass"] and ok
+    return report
+
+
+def plan_payload(config: ProbeConfig, job: JobSpec, model_root: str) -> dict[str, Any]:
+    server = config.section("server")
+    phases = []
+    for phase in job.phases:
+        model_dir = f"{model_root}/{phase.engine.model}"
+        entry: dict[str, Any] = {
+            "phase": phase.phase_id,
+            "engine": phase.engine.engine_id,
+            "mode": phase.engine.mode,
+            "model": phase.engine.model,
+            "load_format": phase.engine.load_format,
+            "reserve_minutes": phase.reserve_minutes,
+            "points": [
+                {
+                    "point_id": p.point_id,
+                    "kind": p.kind,
+                    "seed": p.seed,
+                    "max_minutes": p.max_minutes,
+                    **dict(p.params),
+                }
+                for p in phase.points
+            ],
+        }
+        if phase.engine.mode == "server":
+            entry["argv"] = phase.engine.server_argv(
+                model_dir,
+                host=str(server["host"]),
+                port=int(server["port"]),
+                served_name=str(server["served_model_name"]),
+            )
+        else:
+            entry["llm_kwargs"] = phase.engine.offline_kwargs()
+        phases.append(entry)
+    return {
+        "experiment_id": config.experiment_id,
+        "config_sha256": config.sha256,
+        "job": job.job_id,
+        "title": job.title,
+        "allocation_minutes": job.allocation_minutes,
+        "lane_model": job.lane_model,
+        "pinned_models": job.pinned_models(),
+        "primary_seeds": list(config.primary_seeds),
+        "phases": phases,
+        "cache_env": sorted(CACHE_DIRS),
+    }
+
+
+def _load_points(directory: Path) -> dict[str, dict[str, Any]]:
+    points = {}
+    for path in sorted((directory / "points").glob("*.json")):
+        record = json.loads(path.read_text(encoding="utf-8"))
+        points[record["point_id"]] = record
+    return points
+
+
+def project(
+    config: ProbeConfig, *, job_a: Path, job_b: Path | None, job_c: Path | None
+) -> dict[str, Any]:
+    budget = config.section("budget")
+    points_a = _load_points(job_a)
+    x1 = budget_rules.evaluate_x1(
+        points_a,
+        max_relative_delta=float(config.section("dummy_admissibility")["max_relative_delta"]),
+    )
+    out: dict[str, Any] = {
+        "experiment_id": config.experiment_id,
+        "config_sha256": config.sha256,
+        "x1": x1,
+        "a1_stability": budget_rules.stability(
+            points_a,
+            ("a1a", "a1b", "a1c"),
+            float(config.section("validity")["unstable_relative_range"]),
+        ),
+    }
+    try:
+        out["q2"] = budget_rules.project_q2(
+            budget,
+            job_a=points_a,
+            job_c=_load_points(job_c) if job_c else None,
+            x1_outcome=x1["outcome"],
+        )
+    except budget_rules.BudgetError as exc:
+        out["q2"] = {"decision": "incomplete-re-probe", "reason": str(exc)}
+    if job_b is not None:
+        try:
+            out["q1"] = budget_rules.project_q1(
+                budget, job_b=_load_points(job_b), x1_outcome=x1["outcome"]
+            )
+        except budget_rules.BudgetError as exc:
+            out["q1"] = {"decision": "incomplete-re-probe", "reason": str(exc)}
+    return out
+
+
+def build_parser() -> argparse.ArgumentParser:
+    parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
+    commands = parser.add_subparsers(dest="command", required=True)
+
+    plan = commands.add_parser("plan")
+    plan.add_argument("--config", type=Path, default=DEFAULT_CONFIG)
+    plan.add_argument("--job", required=True)
+    plan.add_argument("--model-root", default="/model-cache/cotcodec-models")
+
+    run = commands.add_parser("run")
+    run.add_argument("--config", type=Path, required=True)
+    run.add_argument("--job", required=True)
+    run.add_argument("--output-dir", type=Path, required=True)
+    run.add_argument("--model-root", type=Path, default=Path("/model-cache/cotcodec-models"))
+    run.add_argument("--receipt-root", type=Path, default=Path("/model-cache/cotcodec-receipts"))
+    run.add_argument("--allocation-minutes", type=int, required=True)
+    run.add_argument("--image-variant", default="cu129")
+    run.add_argument("--weights-pin", action="append", default=[])
+    run.add_argument("--seeds", type=int, nargs="+", required=True)
+
+    doctor = commands.add_parser("cuda-doctor")
+    doctor.add_argument("--output", type=Path, required=True)
+    doctor.add_argument("--matmul-size", type=int, required=True)
+    doctor.add_argument("--max-error", type=float, required=True)
+    doctor.add_argument("--seed", type=int, default=42)
+    doctor.add_argument("--expected-gpus", type=int, default=1)
+    doctor.add_argument("--expected-vllm-version", required=True)
+    doctor.add_argument("--expected-vllm-commit", required=True)
+    doctor.add_argument("--cache-root", type=Path, required=True)
+
+    args_doctor = commands.add_parser("vllm-args-doctor")
+    args_doctor.add_argument("--config", type=Path, default=DEFAULT_CONFIG)
+
+    proj = commands.add_parser("project")
+    proj.add_argument("--config", type=Path, default=DEFAULT_CONFIG)
+    proj.add_argument("--job-a", type=Path, required=True)
+    proj.add_argument("--job-b", type=Path)
+    proj.add_argument("--job-c", type=Path)
+    proj.add_argument("--output", type=Path, required=True)
+    return parser
+
+
+def main(argv: Sequence[str] | None = None) -> int:
+    args = build_parser().parse_args(argv)
+    if args.command == "cuda-doctor":
+        from harness.serving_probe.cuda_doctor import run_cuda_doctor
+
+        report = run_cuda_doctor(
+            output=args.output,
+            matmul_size=args.matmul_size,
+            max_error=args.max_error,
+            seed=args.seed,
+            expected_gpus=args.expected_gpus,
+            expected_vllm_version=args.expected_vllm_version,
+            expected_vllm_commit=args.expected_vllm_commit,
+            cache_root=args.cache_root,
+        )
+        return 0 if report["pass"] else EXIT_PRE_RESULT
+    config = load_config(resolve_config_path(args.config))
+    if args.command == "vllm-args-doctor":
+        report = vllm_args_doctor(config)
+        print(json.dumps(report, indent=2, sort_keys=True))
+        return 0 if report["pass"] else EXIT_PRE_RESULT
+    if args.command == "plan":
+        print(
+            json.dumps(
+                plan_payload(config, config.job(args.job), args.model_root),
+                indent=2,
+                sort_keys=True,
+            )
+        )
+        return 0
+    if args.command == "project":
+        if args.output.exists():
+            raise SystemExit(f"refusing to overwrite {args.output}")
+        payload = project(config, job_a=args.job_a, job_b=args.job_b, job_c=args.job_c)
+        atomic_write_json(args.output, payload)
+        print(
+            json.dumps(
+                {
+                    "q2": payload.get("q2", {}).get("decision"),
+                    "q1": payload.get("q1", {}).get("decision"),
+                    "x1": payload["x1"]["outcome"],
+                },
+                sort_keys=True,
+            )
+        )
+        return 0
+    try:
+        job = config.job(args.job)
+        seeds = bind_seeds(config, args.seeds)
+        if args.allocation_minutes != job.allocation_minutes:
+            raise ProbeConfigError(
+                f"--allocation-minutes {args.allocation_minutes} differs from the contract's "
+                f"{job.allocation_minutes}"
+            )
+        pins = parse_weight_pins(args.weights_pin)
+        check_pins(job, pins)
+    except ProbeConfigError as exc:
+        print(f"pre-result: {exc}", file=sys.stderr)
+        return EXIT_PRE_RESULT
+    marker = os.environ.get("COTCODEC_CHECKPOINT_MARKER")
+    outputs_root = Path(os.environ.get("COTCODEC_OUTPUT_DIR", str(args.output_dir.parent)))
+    runner = ProbeRunner(
+        config=config,
+        job=job,
+        output_dir=args.output_dir,
+        outputs_root=outputs_root,
+        model_root=args.model_root,
+        receipt_root=args.receipt_root,
+        pins=pins,
+        image_variant=args.image_variant,
+        seeds=seeds,
+        argv=list(argv) if argv is not None else list(sys.argv),
+        marker_path=Path(marker) if marker else None,
+    )
+    return runner.run()
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
