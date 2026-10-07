@@ -27,17 +27,24 @@ spawn, separately from the steady-state times:
    the 15 percent headroom slower than composed).
 3. ``eval``       one worker with 6 indexers per layer on all 28 layers: 13
    selection-only, 13 selection plus multiple-choice and 13 multiple-choice-only
-   units at 34 query rows (the audit mean is 33.2), and 5 selection-only units
+   units at 34 query rows (the audit mean is 33.2), and 3 selection-only units
    at 220 rows (the audit maximum, descriptive); the first unit of each kind is
    excluded.
 4. ``capture``    v1's smoke capture and eager check on a synthetic prompt.
 5. ``concurrent`` the four registered shards as four workers sharing the one
-   GPU (the resume legs' layout): 6 steps each (steps 0 and 1 excluded), and
+   GPU (the resume legs' layout): 5 steps each (steps 0 and 1 excluded), and
    each worker's start-up and peak memory. If this last arm is cut by the time
-   limit (timeout or USR1), the resume legs are priced by the registered bound
-   (1.25 x the sum of the four solo steps, 2 x the solo start-up) and the
-   receipt says so; if it fails otherwise (for example out of memory), the
-   probe is incomplete.
+   limit (its timeout, the probe deadline or USR1), the resume legs are priced
+   by the registered bound (1.25 x the sum of the four solo steps, 2 x the solo
+   start-up) and the receipt says so; if it fails otherwise (for example out of
+   memory), the probe is incomplete.
+
+Every arm's timeout is also cut to the time left before the probe deadline,
+330 s after the probe starts (Slurm's USR1 comes 360 s after the job starts),
+so the probe writes its own receipt before USR1. ``planned_wall_s`` is the
+registered sizing model: in every design scenario slowed by 25 percent the
+arms the outcome depends on end at least 60 s before USR1, and slowed by 15
+percent the whole probe ends before its deadline.
 
 The receipt holds the measured ``Rates`` and, for the v2 registration to adopt,
 the limits ``harness/sparse_indexer_k1_budget_v2.derive_limits`` computes from
@@ -85,6 +92,22 @@ EXTENSION_LR = 1e-3  # the 6 trainable indexers' learning rate does not change t
 # 1.25 x the sum bounds the shared step, and two solo start-ups the shared one.
 CONCURRENT_BOUND_FACTOR = 1.25
 CONCURRENT_STARTUP_BOUND_FACTOR = 2.0
+# Time window (registered): a 9-minute limit, Slurm's USR1 180 s before it. The
+# probe stops starting or continuing arms at its deadline, measured from its
+# own start; the lane allowance covers job start to probe start (smoke job 452:
+# 2 s to the container, 1.9 s of start-up checks) and the receipt after the
+# deadline.
+LIMIT_S = 540.0
+USR1_AT_S = LIMIT_S - 180.0
+LANE_ALLOWANCE_S = 15.0
+DEADLINE_S = USR1_AT_S - LANE_ALLOWANCE_S - 15.0
+# Sizing model (estimates, for the arm sizes only): the tolerance arm's work
+# after its teacher load, the descriptive per-layer split, and the margins the
+# registration requires.
+TOLERANCE_WORK_S = 30.0
+COMPONENTS_S = 3.0
+REQUIRED_MARGIN_S = 60.0
+SLOW_REQUIRED, SLOW_ALL = 1.25, 1.15
 EXIT_OK, EXIT_CONTRACT, EXIT_INCOMPLETE = 0, 2, 3
 CODE_FILES = (
     "scripts/probe_sparse_indexer_k1_throughput.py",
@@ -125,19 +148,56 @@ class Shapes:
     concurrent_steps: int
     tolerance_sequence: int
     solo_steps: int
-    timeouts_s: dict[str, float]
+    timeouts_s: dict[str, float]  # hang guards; the deadline governs
+    deadline_s: float  # from the probe's start; every arm stops by then
 
     @classmethod
     def registered(cls) -> Shapes:
-        return cls("registered", 8192, 4, 2, 8, 6, 4, 13, 34, 5, 220, 8192, 150, 24, 6, 8192, 4,
+        return cls("registered", 8192, 4, 2, 8, 6, 4, 13, 34, 3, 220, 8192, 150, 24, 5, 8192, 4,
                    {"tolerance": 150.0, "train": 210.0, "eval": 150.0, "capture": 120.0,
-                    "concurrent": 240.0})
+                    "concurrent": 240.0}, DEADLINE_S)
 
     @classmethod
     def tiny(cls) -> Shapes:
         return cls("tiny", 64, 2, 2, 4, 3, 2, 3, 5, 2, 9, 120, 6, 3, 3, 128, 3,
                    {"tolerance": 600.0, "train": 600.0, "eval": 600.0, "capture": 600.0,
-                    "concurrent": 900.0})
+                    "concurrent": 900.0}, 3600.0)
+
+
+def planned_wall_s(rates: budget.Rates, shapes: Shapes | None = None) -> dict[str, float]:
+    """The registered sizing model: each arm's wall time from spawn, for given rates.
+
+    Arms are priced with the same per-layer composition the limits use (start-up
+    from the spawn, every step and unit including the excluded ones); the
+    tolerance arm is a teacher load plus ``TOLERANCE_WORK_S`` and the capture
+    arm a spawn plus v1's capture check. Used to size the arms (tests), and
+    reported next to the measured arm times.
+    """
+
+    shapes = shapes or Shapes.registered()
+    shards = budget.SHARDS
+    binding = shards[shapes.binding_shard]
+    prefix = max(binding) + 1
+    devkl = shapes.devkl_sequences * (prefix * rates.devkl_teacher_layer_seq_s
+                                      + len(binding) * rates.devkl_layer_seq_s)
+    solo = sum(shapes.solo_steps * budget.shard_step_s(rates, layers)
+               for worker, layers in enumerate(shards) if worker != shapes.binding_shard)
+    train = (rates.train_startup_s + shapes.train_steps * budget.shard_step_s(rates, binding)
+             + len(binding) * rates.save_layer_s + COMPONENTS_S
+             + shapes.extension_steps * budget.shard_step_s(rates, binding, extension=True)
+             + devkl + solo)
+    long_factor = shapes.long_rows / shapes.unit_rows
+    evaluation = (rates.eval_startup_s + shapes.units_per_kind * (
+        rates.eval_select_s + rates.eval_select_mc_s + rates.eval_mc_only_s)
+        + shapes.long_units * long_factor * rates.eval_select_s)
+    if rates.concurrent_step_s is None or rates.concurrent_startup_s is None:
+        raise budget.BudgetContractError("the sizing model needs the concurrent rates")
+    arms = {"tolerance": rates.eval_startup_s + TOLERANCE_WORK_S, "train": train,
+            "eval": evaluation, "capture": rates.train_startup_s + rates.capture_check_s,
+            "concurrent": rates.concurrent_startup_s
+            + shapes.concurrent_steps * rates.concurrent_step_s}
+    required = sum(value for arm, value in arms.items() if arm != "concurrent")
+    return {**arms, "required": required, "all": required + arms["concurrent"]}
 
 
 def shards_for(n_layers: int) -> list[list[int]]:
@@ -564,23 +624,28 @@ class Probe:
         codes = [p.returncode for p in processes]
         return None if all(code == 0 for code in codes) else f"exit codes {codes}"
 
-    def run_arm(self, arm: str) -> None:
+    def run_arm(self, arm: str, deadline: float) -> None:
         base = {"model_dir": str(self.args.model_dir), "device": self.args.device,
                 "profile": self.args.profile, "out_dir": str(self.out)}
         started = time.perf_counter()
+        timeout = min(self.shapes.timeouts_s[arm], deadline - time.monotonic())
+        if timeout <= 0:
+            self.failures[arm] = "not run: the probe deadline passed"
+            self.timed_out.add(arm)
+            return
         if arm == "concurrent":
             n_layers = int(json.loads((self.args.model_dir / "config.json").read_text())[
                 "num_hidden_layers"])
             spawned = [self._spawn("concurrent-worker", {**base, "worker": w, "layers": layers},
                                    f"concurrent-{w}")
                        for w, layers in enumerate(shards_for(n_layers))]
-            failure = self._wait([p for p, _ in spawned], self.shapes.timeouts_s[arm])
+            failure = self._wait([p for p, _ in spawned], timeout)
             if failure is None:
                 self.results[arm] = [json.loads(path.with_suffix(".result.json").read_text())
                                      for _, path in spawned]
         else:
             process, path = self._spawn(arm, base, arm)
-            failure = self._wait([process], self.shapes.timeouts_s[arm])
+            failure = self._wait([process], timeout)
             if failure is None:
                 self.results[arm] = json.loads(path.with_suffix(".result.json").read_text())
         self.arm_wall_s[arm] = time.perf_counter() - started
@@ -629,6 +694,7 @@ class Probe:
             raise StartupError(f"{receipt_path} exists; a rerun needs a new output directory")
         self.out.mkdir(parents=True, exist_ok=True)
         started = time.perf_counter()
+        deadline = time.monotonic() + self.shapes.deadline_s
         hashes = startup_checks(self.args)
         startup_s = time.perf_counter() - started
         for arm in ARM_ORDER:
@@ -638,7 +704,7 @@ class Probe:
             if arm != "tolerance" and "tolerance" in self.failures:
                 self.failures[arm] = "not run: the tolerance arm failed"
                 continue
-            self.run_arm(arm)
+            self.run_arm(arm, deadline)
             if arm == "tolerance" and "tolerance" in self.results and not self.results[
                     "tolerance"]["passed"]:
                 self.failures["tolerance"] = "registered device tolerance gates failed"
@@ -662,6 +728,7 @@ class Probe:
         if status == "PROBE_COMPLETE":
             rates = self.rates()
             payload["rates"] = rates.as_dict()
+            payload["planned_wall_s_descriptive"] = planned_wall_s(rates, self.shapes)
             payload["composition_check"] = composition_check(rates, self.results["train"])
             if not payload["composition_check"]["passed"] and self.args.profile == "registered":
                 status = "PROBE_INCONSISTENT"  # the tiny CPU profile reports it only

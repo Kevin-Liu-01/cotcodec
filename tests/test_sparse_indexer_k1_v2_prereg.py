@@ -47,9 +47,46 @@ VERBATIM = ("Arms", "Training stream", "Learning-rate freeze", "Evaluation (audi
             "Seeds, sample sizes and sensitivity")
 
 
+# Disclosed replacements inside a copied section ("Relation to v1"): the text
+# describes v1's smoke, which v2 changed (review finding: the frozen v2 file
+# would otherwise describe the wrong smoke). Compared with whitespace collapsed.
+REPLACED = {
+    "Validity gates (evaluated before any verdict)": (
+        "(the smoke's 4-step training and 20-unit development recall check run first;",
+        "(the smoke's 12-step training, 6-step extension timing run, 4 stream-dev timing "
+        "sequences and 72 development units (24 of each kind; the multiple-choice scores of "
+        "48 of them are timed, never summarised or read) run first;"),
+}
+
+
+def _flat(text: str) -> str:
+    return " ".join(text.split())
+
+
 @pytest.mark.parametrize("name", VERBATIM)
 def test_v2_copies_v1s_science_verbatim(name) -> None:
-    assert section(V1, name) in section(V2, name)
+    if name not in REPLACED:
+        assert section(V1, name) in section(V2, name)
+        return
+    old, new = REPLACED[name]
+    assert _flat(section(V1, name)).count(old) == 1
+    assert _flat(section(V1, name)).replace(old, new) in _flat(section(V2, name))
+    assert old not in _flat(section(V2, name))
+
+
+def test_v2_describes_its_own_smoke_and_discloses_the_replacement() -> None:
+    from harness import sparse_indexer_k1_budget_v2 as budget_v2
+
+    _, new = REPLACED["Validity gates (evaluated before any verdict)"]
+    assert f"{budget_v2.SMOKE_TRAIN_STEPS}-step training" in new
+    assert f"{budget_v2.SMOKE_EXTENSION_STEPS}-step extension timing run" in new
+    assert f"{budget_v2.SMOKE_DEVKL_SEQUENCES} stream-dev timing sequences" in new
+    assert f"{3 * budget_v2.SMOKE_UNITS_PER_KIND} development units" in new
+    assert f"{2 * budget_v2.SMOKE_UNITS_PER_KIND} of them" in new
+    relation = _flat(section(V2, "Relation to v1"))
+    assert "One parenthesis of the copied validity gates is replaced" in relation
+    assert "the smoke's 4-step training and 20-unit development recall check run first" \
+        in relation
 
 
 def test_v2_copies_the_question_model_sources_bundle_and_decisions() -> None:
@@ -220,3 +257,37 @@ def test_probe_registration_reads_as_frozen_text() -> None:
     numbers = [int(n) for n in re.findall(r"^(\d+)\. ", section(PROBE, "Design decisions"),
                                           re.M)]
     assert numbers == list(range(1, len(numbers) + 1))
+
+
+def test_the_gauntlet_counting_rule_is_registered_before_the_probe() -> None:
+    # Review finding (major): the 8 GPU-h counting rule must be fixed before any
+    # measurement exists; the probe's file is frozen before the probe runs.
+    probe_budget = _flat(section(PROBE, "Budget"))
+    for clause in ("the sum of the registered caps (GPUs x limit)", "never their expected use",
+                   "counted at its worst-case cap", "whatever its outcome",
+                   "are not changed after its result is known",
+                   "the research gauntlet applies to v2 before any freeze"):
+        assert clause in probe_budget, clause
+    compute = _flat(section(V2, "Compute"))
+    assert "never expected use" in compute and "worst-case cap" in compute
+    assert budget.PROBE_RUNS_GPU_HOURS == {probe_filler.EXPERIMENT_ID: budget.PROBE_GPU_HOURS}
+    assert "expected use never replaces a cap" in budget.COUNTING_RULE
+
+
+def test_probe_registration_states_the_sizing_model_and_deadline() -> None:
+    pytest.importorskip("torch")
+    from scripts import probe_sparse_indexer_k1_throughput as probe
+
+    flat = _flat(PROBE)
+    assert f"{probe.DEADLINE_S:.0f} s after the probe starts" in flat
+    assert f"{probe.USR1_AT_S:.0f} s after the job starts" in flat
+    plans = {name: probe.planned_wall_s(budget.scenario_rates(name))
+             for name in budget.SCENARIO_INPUTS}
+    assert (f"total {plans['central']['all'] / 60:.1f} minutes (central), "
+            f"{plans['conservative']['all'] / 60:.1f} (conservative) and "
+            f"{plans['batching-only']['all'] / 60:.1f} (batching-only)") in flat
+    slow = plans["batching-only"]
+    end = probe.USR1_AT_S - probe.LANE_ALLOWANCE_S - slow["all"]
+    assert f"the last ending {end:.0f} s before USR1" in flat
+    required = probe.USR1_AT_S - probe.LANE_ALLOWANCE_S - probe.SLOW_REQUIRED * slow["required"]
+    assert f"({required:.0f} s in the batching-only scenario)" in flat

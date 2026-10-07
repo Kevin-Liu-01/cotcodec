@@ -293,3 +293,27 @@ def test_cells_require_contiguous_keys() -> None:
         bank_mod.cells_of(["hs|1e-3|42", "mp|1e-3|42", "hs|1e-3|43"])
     with pytest.raises(bank_mod.BankContractError, match="repeated"):
         bank_mod.cells_of(["hs|1e-3|42", "hs|1e-3|42"])
+
+
+def test_stream_dev_kl_sums_in_float64_exactly_as_v1() -> None:
+    # Review finding: v2 summed the 64 per-sequence float32 losses in float32 on the
+    # device; v1 adds float(loss) in Python floats. Widening before the sum gives
+    # v1's float64 sums and means bit for bit, so a 1 percent LR tie cannot flip.
+    from harness import sparse_indexer_k1_runtime_v2 as rt2
+
+    generator = torch.Generator().manual_seed(11)
+    sequences = [torch.tensor([1.0, 3.0, 0.5], dtype=torch.float32)]
+    sequences += [(torch.rand(3, generator=generator) * 1e-7).to(torch.float32)
+                  for _ in range(63)]
+    sums: dict = {7: None}
+    for values in sequences:
+        rt2.add_sequence_kl(sums, {7: values})
+    v1 = [0.0, 0.0, 0.0]
+    for values in sequences:
+        for index, loss in enumerate(values):
+            v1[index] += float(loss)
+    means = rt2.mean_sequence_kl(sums[7], len(sequences))
+    assert means == [value / len(sequences) for value in v1]  # exactly, not approximately
+    narrow = torch.stack(sequences).cumsum(0, dtype=torch.float32)[-1]  # the old fp32 sum
+    assert [float(v) for v in narrow / len(sequences)] != means
+    assert rt2.mean_sequence_kl(None, 4) == []

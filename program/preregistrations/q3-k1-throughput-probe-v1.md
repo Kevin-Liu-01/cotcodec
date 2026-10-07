@@ -38,11 +38,11 @@ needed.
 
 | File | SHA-256 |
 |---|---|
-| scripts/probe_sparse_indexer_k1_throughput.py | 8d854319d92798609ca8f7cb4ee6a54fa8359c6124af6bea70fbab1c688dfc5c |
+| scripts/probe_sparse_indexer_k1_throughput.py | 92635b211fdf4e58336dd50142e879d3fd4caf586749146b21ede89967917138 |
 | harness/sparse_indexer_bank.py | e96653eb3eb5b9876201347c2fa8d452efc3ebb1043a516ac03c366ff8b89f88 |
-| harness/sparse_indexer_k1_budget_v2.py | c86568a62fe12cbcb5ad91eed25fc0afd9e9a09078a43345b18277e6922ea4fe |
+| harness/sparse_indexer_k1_budget_v2.py | ffc0e758a373f0c92ac3a44e76736453f698d61eb39b1709d66cee1e7aebce7b |
 | harness/sparse_indexer_k1_equivalence_v2.py | 3c8b6caf8dc14fb62096cfa205e2e459f774227a73229e5d62e72bdb6ff3e9a1 |
-| harness/sparse_indexer_k1_runtime_v2.py | 5bd8cb0a5e05fa49c82da1154d7ae7bb335741a0da84d78953ac36377f2a8547 |
+| harness/sparse_indexer_k1_runtime_v2.py | 2c77c4bdc2e33786c8df968380b94458aed89ada633140abe0f5c5c2c9d96d76 |
 | harness/sparse_indexer_torch.py | f21301a49634af07d5ae0385c34011400c83af15b984a96238dc6fe1d4ee9457 |
 | harness/sparse_indexer_k1_runtime.py | 6fbddc91b6f7224f909901edb82278a68f68a208b558526c1a778ec9da6812fd |
 | harness/sparse_indexer_k1_marker.py | 7bc69aa4d27a7d6de92f69a2f7b8e71d98b32101a2f34709fbaef2bdf84c3f1a |
@@ -92,7 +92,9 @@ spawned the way the v2 entry point spawns its workers, so start-up (process
 start, imports, teacher load, indexer initialisation) is measured from the
 spawn, apart from the steady-state times. All arms use the registered
 determinism settings (deterministic algorithms, TF32 matmuls allowed, no
-`torch.compile`). Arms run in this order, each with a timeout:
+`torch.compile`). Arms run in this order, each with a timeout (a hang guard)
+that is cut to the time left before the probe's deadline, 330 s after the
+probe starts (see "Outcomes"):
 
 1. **tolerance** (150 s). The device gates of
    `harness/sparse_indexer_k1_equivalence_v2.py` on one synthetic
@@ -136,7 +138,7 @@ determinism settings (deterministic algorithms, TF32 matmuls allowed, no
    (the frozen-learning-rate layout of the audit evaluation): 13 selection-only,
    13 selection plus multiple-choice and 13 multiple-choice-only units at 34
    query rows in contexts of 8,192 tokens (needle of 150 tokens at depth 0.5;
-   four options of 24 tokens), interleaved, and 5 selection-only units at 220
+   four options of 24 tokens), interleaved, and 3 selection-only units at 220
    query rows. The first unit of each kind is excluded. The 220-row units are
    descriptive (the per-row slope).
 4. **capture** (120 s). v1's smoke capture and eager check
@@ -145,10 +147,10 @@ determinism settings (deterministic algorithms, TF32 matmuls allowed, no
    v2 smoke gates the real check).
 5. **concurrent** (240 s). The four registered shards ([0-7], [8-14],
    [15-21], [22-27]) as four workers started together on the one GPU (the
-   resume legs' layout), 6 steps each of the 18-indexer bank (steps 0 and 1
+   resume legs' layout), 5 steps each of the 18-indexer bank (steps 0 and 1
    excluded); each worker's start-up, steady step time and peak memory. If
-   this last arm is cut by its timeout or by Slurm's USR1, the resume legs are
-   priced by a registered bound instead (`concurrent_step_s` = 1.25 x the sum
+   this last arm is cut by its timeout, by the probe's deadline or by Slurm's
+   USR1, the resume legs are priced by a registered bound instead (`concurrent_step_s` = 1.25 x the sum
    of the four workers' solo steps, `concurrent_startup_s` = 2 x the training
    start-up; v1 measured four workers sharing a GPU at 15.07 s per step
    against 15.06 s for the sum of their solo steps), and the receipt sets
@@ -209,21 +211,58 @@ differ.
   or its projection must change before a new probe id.
 - `PROBE_INCOMPLETE` (exit 3): an arm failed, timed out or was stopped by a
   signal. No rate is reported. A rerun needs a new id and a new budget line
-  from the program owner (D20 gives this probe 0.15 GPU-h).
+  from the program owner (D20 gives this probe 0.15 GPU-h), and this run's
+  0.15 GPU-h still counts in the total (see "Budget").
 - A start-up check that fails (seeds other than [42, 43, 44], a preregistration
   or model receipt digest that differs, a ledger row that does not match, a
   study artifact in the manifest, more than one GPU) exits 2 before any work.
 
-Slurm's USR1 (180 s before the 9-minute limit) or a SIGTERM stops the probe at
-once: it kills the running arm and writes its receipt, `PROBE_INCOMPLETE`
-(exit 3) unless only the concurrent arm was cut (then the bound applies). The probe holds no state worth saving, so it writes no checkpoint marker
-(the lane records `signal_USR1_checkpoint_missing`). The expected wall time is
-3 to 5 minutes (central and conservative design scenarios).
+Time window. The job's limit is 9 minutes and Slurm's USR1 comes 180 s
+before it, 360 s after the job starts. The probe's deadline is 330 s after the
+probe itself starts (15 s are allowed from the job's start to the probe's,
+a few seconds in v1's smoke job 452, and 15 s for the receipt): no arm
+starts after it and the running arm is stopped at it, so the probe writes its
+own receipt before USR1. An arm stopped by the deadline counts as cut by the
+time limit. Slurm's USR1 or a SIGTERM, should either still come, stops the
+probe at once: it kills the running arm and writes its receipt,
+`PROBE_INCOMPLETE` (exit 3) unless only the concurrent arm was cut (then the
+bound applies). The probe holds no state worth saving, so it writes no
+checkpoint marker (the lane records `signal_USR1_checkpoint_missing` if USR1
+comes).
+
+Sizing. The arm sizes are set by a registered model
+(`planned_wall_s` in the probe script: each arm from its spawn, priced with
+the same per-layer composition as the limits, the tolerance arm as a teacher
+load plus 30 s, the capture arm as a spawn plus v1's capture check), applied
+to the design analysis's scenarios. Its arm times total 3.4 minutes (central),
+4.2 (conservative) and 4.4 (batching-only), the last ending 81 s before USR1.
+The sizes are checked by a test to leave three margins in every scenario: the
+whole probe ends at least 60 s before USR1; slowed by 25 percent, the four
+arms the outcome depends on (tolerance, train, eval, capture) still end at
+least 60 s before USR1 (101 s in the batching-only scenario); and slowed by 15
+percent, the whole probe still ends before its deadline, so in that case the
+concurrent arm is measured rather than bounded. The receipt reports the
+model's arm times for the measured rates next to the measured ones
+(descriptive).
 
 ## Budget
 
-1 GPU x 9 minutes = 0.15 GPU-h, the cap D20 sets. It is counted in the K1
-successor's total that the 8 GPU-hour gauntlet threshold applies to.
+1 GPU x 9 minutes = 0.15 GPU-h, the cap D20 sets.
+
+Counting rule for the K1 successor's 8 GPU-hour threshold (program decision
+D20), fixed by this file before any rate is measured: the total is the sum of
+the registered caps (GPUs x limit) of every `q3-k1-localization-screen-v2`
+job, never their expected use, with the conditional V1 extension counted at
+its worst-case cap (both targets extended) and the main job's one
+continuation inside the main cap, plus this probe's 0.15 GPU-h and the cap of
+any other throughput-probe run for v2, whatever its outcome (a complete,
+incomplete or void run counts in full; a rerun is a new id and adds its own
+cap). The limit formula and its factors (1.2, 1.15, the 3-minute USR1 lead,
+the 5-minute minimum) are fixed before the probe and are not changed after
+its result is known. If the total exceeds 8 GPU-hours, the research gauntlet
+applies to v2 before any freeze (D20) and the design is not cut to fit.
+`harness/sparse_indexer_k1_budget_v2.derive_limits` computes exactly this
+total (`PROBE_RUNS_GPU_HOURS` lists the probe runs).
 
 ## Infrastructure failures and exclusions
 
@@ -297,11 +336,23 @@ is reported with its receipt; a rerun is a new id.
    capture path that would need its own capture gate) and several prompts per
    forward (at most about 5 percent). If the probe's caps exceed 8 GPU-hours,
    the gauntlet decides what happens next, not a silent change of code.
-10. One GPU and 9 minutes (0.15 GPU-h, D20), with per-arm timeouts and the
-    concurrent arm last, so a slow probe loses the least important arm first:
-    that arm alone may be replaced by a registered, conservative bound
-    computed from measured solo steps; any other missing arm leaves
-    `PROBE_INCOMPLETE` rather than a partial rate.
+10. One GPU and 9 minutes (0.15 GPU-h, D20), with the concurrent arm last,
+    so a slow probe loses the least important arm first: that arm alone may
+    be replaced by a registered, conservative bound computed from measured
+    solo steps; any other missing arm leaves `PROBE_INCOMPLETE` rather than a
+    partial rate. The pre-freeze review found the per-arm timeouts summing to
+    870 s against a 360 s USR1, with only that one arm protected; D20 caps the
+    probe at 0.15 GPU-h, so instead of a longer limit the probe has its own
+    deadline before USR1, and the descriptive work was trimmed (3 instead of 5
+    long units, 5 instead of 6 concurrent steps) until the registered sizing
+    model leaves the margins stated in "Outcomes".
 11. The probe binds the code it measured: its receipt records the digests and
     the v2 manifest filler refuses limits from a probe that measured other
     code.
+12. The counting rule of the 8 GPU-hour threshold (see "Budget") is registered
+    here, before the measurement, because the design analysis's conservative
+    scenario puts the summed caps at 9.42 GPU-h while expected use is lower:
+    choosing between caps and expected use after seeing the probe would be a
+    decision informed by its result. Summed caps, the conditional extension
+    included, is how program decision D16 counted v1's budget (2.65 GPU-h
+    plus the conditional 1.5 GPU-h extension).

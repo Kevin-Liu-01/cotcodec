@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import math
 import shutil
 import signal
 import subprocess
@@ -94,6 +95,13 @@ def test_smoke_measures_rates_and_gates_main_and_extension(tiny, tmp_path) -> No
     assert all(units[k]["measured"] == units[k]["units"] - 1
                for k in ("select_only", "select_mc", "mc_only"))
     assert timings["train_startup_s"] > 0 and timings["eval_startup_s"] > 0
+    # The checkpoint read is timed apart and left out of the start-up rate (the probe
+    # loads nothing); the budget prices it at the save rate.
+    assert 0 < timings["eval_load_s"] < timings["eval_startup_s"]
+    assert projection["rates"]["eval_startup_s"] == pytest.approx(
+        timings["eval_startup_s"] - timings["eval_load_s"])
+    assert projection["main"]["projection"]["eval_load_s"] == pytest.approx(
+        budget.eval_load_s(rates))
     assert receipt["recall_smoke"]["finite"] and receipt["engine"] == "k1-batched-bank-v2"
     # The extension timing run trained only the 6 LR-1e-3 indexers.
     log = (tmp_path / "smoke" / "phase-0a-k1" / "train-loss-worker-0.jsonl").read_text()
@@ -226,3 +234,42 @@ def test_a_checkpoint_from_another_engine_is_refused(tiny, tmp_path) -> None:
     run = tiny.run("resume-test", tmp_path / "b", "--stop-after-step", "4",
                    "--checkpoint-every", "2")
     assert run.returncode == 3 and "different configuration" in run.stderr
+
+
+class _Staged:
+    def __init__(self, prompts: list[dict], query_meta: list[dict]) -> None:
+        self.meta = {"prompts": prompts, "query_meta": query_meta}
+
+
+def test_smoke_units_are_matched_to_the_audit_rows_and_haystack_contexts() -> None:
+    # Review finding: the first units of each kind measured 42 / 29 mean rows against
+    # the audit's 33.2 and half the multiple-choice-only units were no-haystack
+    # prompts; the smoke now times units at the rows and contexts it projects.
+    from scripts import probe_sparse_indexer_k1_throughput as probe
+    from scripts import run_sparse_indexer_phase0a_v2 as entry
+
+    rows = [140, 3, 33, 34, 60, 21, 32, 35, 33, 90]
+    prompts, query_meta, units = [], [], []
+    for index, count in enumerate(rows):
+        query_meta.append({"row_start": 0, "row_end": count})
+        prompts.append({"prompt_id": f"p{index}", "role": "dev", "query_index": index})
+        units.append({"unit": f"c{index:02d}-q{index}", "prompt_id": f"p{index}",
+                      "select": True, "mc": index % 2 == 1})
+    for index in range(6):
+        role = "dev-nohaystack" if index < 3 else "dev-absent"
+        prompts.append({"prompt_id": f"m{index}", "role": role, "query_index": index})
+        units.append({"unit": f"c{20 + index}-q{index}", "prompt_id": f"m{index}",
+                      "select": False, "mc": True})
+    chosen = entry.smoke_units(units, 3, _Staged(prompts, query_meta))
+    by_id = {unit["unit"]: unit for unit in chosen}
+    select_only = sorted(rows[int(u["prompt_id"][1:])] for u in chosen
+                         if u["select"] and not u["mc"])
+    select_mc = sorted(rows[int(u["prompt_id"][1:])] for u in chosen if u["select"] and u["mc"])
+    assert select_only == [32, 33, 33] and select_mc == [21, 34, 35]
+    assert all(abs(sum(kind) / 3 - budget.TIMED_UNIT_ROWS) < 5
+               for kind in (select_only, select_mc))
+    assert probe.Shapes.registered().unit_rows == budget.TIMED_UNIT_ROWS
+    assert math.ceil(budget.AUDIT_MIX.mean_rows) == budget.TIMED_UNIT_ROWS
+    mc_only = [unit["prompt_id"] for unit in chosen if not unit["select"]]
+    assert mc_only == ["m3", "m4", "m5"]  # haystack contexts before no-haystack ones
+    assert list(by_id) == sorted(by_id)  # evaluated in v1's unit order

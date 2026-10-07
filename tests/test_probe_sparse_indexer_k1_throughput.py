@@ -168,3 +168,50 @@ def test_a_cut_concurrent_arm_is_replaced_by_its_registered_bound(probe, tmp_pat
     assert receipt["rates"]["concurrent_step_s"] == pytest.approx(
         module.CONCURRENT_BOUND_FACTOR * sum(e["steps"]["step_s"] for e in solo.values()))
     assert set(receipt["failures"]) == {"concurrent"}
+
+
+def test_registered_sizing_leaves_every_arm_the_outcome_needs_60_s_before_usr1() -> None:
+    # Review finding: per-arm timeouts summed past the 9-minute limit and only the
+    # concurrent arm has a fallback. The registered sizes must leave the margins
+    # the registration states, in every design scenario.
+    import yaml
+
+    from scripts import probe_sparse_indexer_k1_throughput as probe
+
+    manifest = yaml.safe_load((PROJECT_ROOT / "experiments" / "manifests"
+                               / "q3-k1-throughput-probe-v1" / "q3-k1-throughput-probe.yaml"
+                               ).read_text())
+    assert 60 * manifest["resources"]["minutes"] == probe.LIMIT_S
+    assert manifest["budget"]["max_gpu_hours"] == budget.PROBE_GPU_HOURS
+    assert probe.USR1_AT_S == probe.LIMIT_S - 60 * budget.SIGNAL_LEAD_MINUTES
+    shapes = probe.Shapes.registered()
+    assert shapes.deadline_s == probe.DEADLINE_S
+    assert probe.LANE_ALLOWANCE_S + shapes.deadline_s < probe.USR1_AT_S  # receipt before USR1
+    for name in budget.SCENARIO_INPUTS:
+        plan = probe.planned_wall_s(budget.scenario_rates(name), shapes)
+        usr1 = probe.USR1_AT_S - probe.REQUIRED_MARGIN_S
+        assert probe.LANE_ALLOWANCE_S + plan["all"] <= usr1, name
+        assert probe.LANE_ALLOWANCE_S + probe.SLOW_REQUIRED * plan["required"] <= usr1, name
+        assert probe.SLOW_ALL * plan["all"] <= shapes.deadline_s, name
+
+
+def test_the_deadline_cuts_an_arm_and_counts_it_as_timed_out(tmp_path, monkeypatch) -> None:
+    from scripts import probe_sparse_indexer_k1_throughput as probe
+
+    runner = probe.Probe.__new__(probe.Probe)
+    runner.args = type("Args", (), {"model_dir": tmp_path, "device": "cpu",
+                                    "profile": "registered"})()
+    runner.out, runner.shapes = tmp_path, probe.Shapes.registered()
+    runner.results, runner.failures, runner.timed_out, runner.arm_wall_s = {}, {}, set(), {}
+    seen: list[float] = []
+    monkeypatch.setattr(runner, "_spawn", lambda arm, spec, label: (None, tmp_path / label),
+                        raising=False)
+    monkeypatch.setattr(runner, "_wait", lambda processes, timeout: seen.append(timeout)
+                        or "timed out", raising=False)
+    runner.run_arm("eval", time.monotonic() + 40.0)  # the arm's own timeout is 150 s
+    assert len(seen) == 1 and 0 < seen[0] <= 40.0
+    assert runner.failures["eval"] == "timed out" and "eval" in runner.timed_out
+    runner.run_arm("concurrent", time.monotonic() - 1.0)
+    assert len(seen) == 1  # nothing spawned after the deadline
+    assert runner.failures["concurrent"] == "not run: the probe deadline passed"
+    assert "concurrent" in runner.timed_out

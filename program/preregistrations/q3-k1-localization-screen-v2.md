@@ -40,7 +40,13 @@ nothing) and 31 (the bundle rebuild in image A) are replaced by this file's
 decisions 32 to 46; the rest of v1's decisions apply as written. v1's
 registration, contract, manifests and code are unchanged and v1 stays in the
 ledger. In the copied text, "this experiment id", "this file", "image B" and
-"the tabled code" mean this experiment's.
+"the tabled code" mean this experiment's. One parenthesis of the copied
+validity gates is replaced, because it describes the smoke, which changed: v1's
+"the smoke's 4-step training and 20-unit development recall check run first"
+reads here as v2's smoke (12-step training, a 6-step extension timing run, 4
+stream-dev timing sequences and 72 development units; decision 39). It is a
+description of plumbing and timing, not a rule; the rest of that section is
+v1's text.
 
 ## Question
 
@@ -81,13 +87,13 @@ table's.
 | File | SHA-256 |
 |---|---|
 | harness/sparse_indexer_bank.py | e96653eb3eb5b9876201347c2fa8d452efc3ebb1043a516ac03c366ff8b89f88 |
-| harness/sparse_indexer_k1_budget_v2.py | c86568a62fe12cbcb5ad91eed25fc0afd9e9a09078a43345b18277e6922ea4fe |
+| harness/sparse_indexer_k1_budget_v2.py | ffc0e758a373f0c92ac3a44e76736453f698d61eb39b1709d66cee1e7aebce7b |
 | harness/sparse_indexer_k1_equivalence_v2.py | 3c8b6caf8dc14fb62096cfa205e2e459f774227a73229e5d62e72bdb6ff3e9a1 |
-| harness/sparse_indexer_k1_runtime_v2.py | 5bd8cb0a5e05fa49c82da1154d7ae7bb335741a0da84d78953ac36377f2a8547 |
-| scripts/run_sparse_indexer_phase0a_v2.py | 0848c071f517ec1eb3b16a948b20e05d16221ccd046a88b36cdfbf697f3ec721 |
+| harness/sparse_indexer_k1_runtime_v2.py | 2c77c4bdc2e33786c8df968380b94458aed89ada633140abe0f5c5c2c9d96d76 |
+| scripts/run_sparse_indexer_phase0a_v2.py | e85d2376e8030167fbed5244a2d251fcc00d81945065516abc869fdd8e228477 |
 | scripts/run_sparse_indexer_k1_v2_doctor.py | 78b9644faa542e8b44453e21e5fed433b8dd88fc83461ab83e5157f31aa6502e |
-| scripts/probe_sparse_indexer_k1_throughput.py | 8d854319d92798609ca8f7cb4ee6a54fa8359c6124af6bea70fbab1c688dfc5c |
-| scripts/derive_sparse_indexer_k1_v2_limits.py | d3df879c98e5f7d3899508e95dd0a8f5acc65ac202f610e44823ddc8dd8b13f3 |
+| scripts/probe_sparse_indexer_k1_throughput.py | 92635b211fdf4e58336dd50142e879d3fd4caf586749146b21ede89967917138 |
+| scripts/derive_sparse_indexer_k1_v2_limits.py | 8318f73b36cb577cef00958a4f6882e33790f81f0e653110eae32dfef690ed85 |
 | scripts/fill_sparse_indexer_k1_v2_manifests.py | 7df1d609f4cfb7c04c1c34ab857d76ea023b3af3b0f0b782011f408b65af0efb |
 | harness/sparse_indexer_torch.py | f21301a49634af07d5ae0385c34011400c83af15b984a96238dc6fe1d4ee9457 |
 | harness/sparse_indexer_k1_stats.py | b9949b4b24502ad30d576938e88cd39d0fdcfc2be90eeedf52a68c76430f36b8 |
@@ -99,7 +105,7 @@ table's.
 | scripts/run_sparse_indexer_k1_doctor.py | 1444b0635289a477d265b82f90e7b43d4fb913aff6639c3160d887f6ec25fcb7 |
 | scripts/build_sparse_indexer_k1_bundle.py | 6ee842651372ce45827d612539e14e97383493fa162fd29482a99202708502d6 |
 | scripts/compare_sparse_indexer_resume.py | 75289c34d48e123cb9221c0d980b202c5c8e66750b607a9ae0715375836092bb |
-| experiments/architectures/translation-supervised-sparse-indexer-k1-screen-v2.yaml | e60cd1fe7b5285e584807640d5a12bc5ba4385ee422bf2b394869566aa6b5777 |
+| experiments/architectures/translation-supervised-sparse-indexer-k1-screen-v2.yaml | d3fa50678356bcc022a28c9fd782107829c9915926b28c34655c62978236559e |
 
 The v1 files in the table (`harness/sparse_indexer_torch.py` to
 `scripts/compare_sparse_indexer_resume.py`) are
@@ -365,8 +371,10 @@ index.
 
 Pre-step: H1, H2a and H2b (and the no-haystack reference) are evaluated on the
 development pre-check with the dense model only, before any registered indexer
-is trained (the smoke's 4-step training and 20-unit development recall check
-run first; they are plumbing and timing checks whose indexers are never used
+is trained (the smoke's 12-step training, 6-step extension timing run, 4
+stream-dev timing sequences and 72 development units (24 of each kind; the
+multiple-choice scores of 48 of them are timed, never summarised or read) run
+first; they are plumbing and timing checks whose indexers are never used
 again). If any of the three fails, the pre-check decision is ESCALATE_OR_STOP
 and K1 does not run on 0.6B; the next step is Qwen3.5-4B-Base under a new
 contract version and preregistration, or stop. If the resume test is not valid,
@@ -539,6 +547,9 @@ to 36).
   in no bank: their parameters and Adam moments are carried through every
   checkpoint bit for bit.
 - Stream-dev KL. The same chunked KL without gradients, 18 indexers at once.
+  Each sequence's float32 loss is widened to float64 before it is added, in
+  sequence order, so the sums and means are v1's (which adds `float(loss)`)
+  bit for bit given the same per-sequence losses.
 - Evaluation. One teacher forward per unit as in v1. Per layer the dense
   probabilities and the hs, mp and hm targets are v1's own functions (the
   probabilities without v1's host-synchronising range check, same operations
@@ -578,19 +589,21 @@ registered counts (the registered layer shards [0-7], [8-14], [15-21],
 the layer-step rate + the step overhead):
 
 - main (4 GPUs): a 300 s allowance (v1's) + two training start-ups (training,
-  stream-dev KL) + one evaluation start-up + the slowest shard's 610 steps
-  and 7 checkpoint saves + the slowest shard's 64 stream-dev sequences + the
-  audit evaluation / 4. The audit evaluation is 3,650 selection-only, 5,060
+  stream-dev KL) + one evaluation start-up + the evaluation worker's read of
+  the 28-layer generation (28 x the save rate per layer) + the slowest shard's
+  610 steps and 7 checkpoint saves + the slowest shard's 64 stream-dev
+  sequences + the audit evaluation / 4. The audit evaluation is 3,650 selection-only, 5,060
   selection plus multiple-choice and 300 multiple-choice-only units (bundle
   metadata, 289,330 selection query rows), the selection part scaled up by
   max(1, 33.2 / the measured mean rows).
 - extension (4 GPUs; worst case: both targets fail V1, so 6 trainable
   indexers per layer): 300 s + one training and one evaluation start-up + the
-  slowest shard's 1,220 steps, 13 saves and one load + the audit
-  evaluation / 4.
+  evaluation worker's read of the 28-layer generation + the slowest shard's
+  1,220 steps, 13 saves and one load + the audit evaluation / 4.
 - smoke (1 GPU): 120 s + the capture check + three training start-ups and one
-  evaluation start-up + 12 steps of all 28 layers (18 indexers) + 6 steps of
-  all 28 layers (6 trainable indexers) + two saves of 28 layers + 4 stream-dev
+  evaluation start-up + the evaluation worker's read of the 28-layer
+  generation + 12 steps of all 28 layers (18 indexers) + 6 steps of all 28
+  layers (6 trainable indexers) + two saves of 28 layers + 4 stream-dev
   sequences of 28 layers + 24 units of each kind (selection part scaled by
   38.6 / the measured rows, the development mean).
 - headroom-dev (1 GPU): 120 s + one evaluation start-up + the development
@@ -627,7 +640,19 @@ excluded) gives the teacher, layer-step and overhead rates; a 6-step timing
 run with the extension's 6 trainable indexers (steps 0 and 1 excluded) the
 extension's layer step; 4 stream-dev sequences (the first excluded) the
 stream-dev rates; 24 development units of each kind (the first of each
-excluded) the per-unit times; start-up and the save are measured apart. It
+excluded) the per-unit times; start-up and the save are measured apart, and
+the evaluation start-up excludes the worker's checkpoint read, which is timed
+apart and priced at the save rate, as with the probe (which reads none). The
+timed units are matched to what the projection prices, from bundle metadata
+only (roles and query spans): the selection units of each kind are the 24
+whose query rows are closest to 34, the audit mean of 33.2 rounded up and the
+rows of the probe's units (ties to v1's unit order; on the development
+metadata their measured units average 33.9 rows in both kinds, where the
+first 24 of each kind averaged 42.0 and 29.0), and the multiple-choice-only
+units are haystack contexts like the audit's needle-absent ones (the shorter
+`dev-nohaystack` contexts only if too few remain; the first 24 included 12),
+so neither the rows nor the context length bias the re-measurement against
+the probe's 34-row, 8,192-token units. It
 computes the main and extension projections with the same functions and
 reports SMOKE_PASS only if every smoke gate passes and 1.2 x the projected
 wall minutes + 3 is at most the registered limit for the main job and for the
@@ -653,8 +678,16 @@ filler fills `q3-k1-v2-main-resume` only while the main run root holds no
 continuation job. Training and evaluation are deterministic, so a
 continuation changes the cost, never the outcome.
 
-Gauntlet. If the caps with the probe total more than 8 GPU-hours, this file is
-not frozen: the research gauntlet applies (program decision D20), and the
+Gauntlet. The total that the 8 GPU-hour threshold applies to is counted one
+way, fixed before the probe measures anything (here, in the probe's
+registration and in `harness/sparse_indexer_k1_budget_v2.py`): the sum of the
+registered caps (GPUs x limit) of every job in the table, never expected use,
+with the conditional extension counted at its worst-case cap and the main
+job's one continuation inside the main cap, plus the cap of every
+throughput-probe run, whatever its outcome (a rerun under a new id adds its
+own cap). The factors 1.2 and 1.15, the 3-minute lead and the 5-minute minimum
+are not changed after the probe. If that total exceeds 8 GPU-hours, this file
+is not frozen: the research gauntlet applies (program decision D20), and the
 design is not cut to fit (the learning-rate grid stays; the review's
 single-learning-rate fallback is not registered). The derivation script and
 the filler both refuse such limits. Sensitivity, from the design analysis's
@@ -665,9 +698,9 @@ teacher, saves and start-ups):
 
 | Scenario | Inputs | Main projected / limit (min) | Extension projected / limit (min) | Caps with the probe (GPU-h) |
 |---|---|---|---|---|
-| central | 1.3 ms, 10 ms, 0.16 s | 25.4 / 39 | 28.9 / 43 | 6.50 |
-| conservative | 2.8 ms, 16 ms, 0.30 s | 41.1 / 60 | 42.5 / 62 | 9.35 |
-| batching-only | 3.2 ms, 20 ms, 0.30 s | 44.8 / 65 | 46.2 / 67 | 10.06 |
+| central | 1.3 ms, 10 ms, 0.16 s | 25.7 / 39 | 29.1 / 44 | 6.57 |
+| conservative | 2.8 ms, 16 ms, 0.30 s | 41.3 / 61 | 42.7 / 62 | 9.42 |
+| batching-only | 3.2 ms, 20 ms, 0.30 s | 45.0 / 66 | 46.4 / 68 | 10.21 |
 
 In the conservative scenario the caps exceed 8 GPU-hours, so the gauntlet
 would apply before any v2 freeze. Interpolating the inputs between the central
@@ -1113,7 +1146,17 @@ a defect in the plan review's list.
     multiple-choice units measured (v1's smoke had none), the extension's
     6-indexer step measured, not scaled. The registered unit counts and rows
     are checked against the staged metadata, so the projection cannot use
-    another unit mix.
+    another unit mix. The timed units are matched to the audit's per-unit cost
+    (selection rows closest to 34, the audit mean rounded up and the probe's
+    unit rows; haystack contexts for the multiple-choice-only units) and the evaluation worker's checkpoint read is
+    timed apart and priced at the save rate in both the probe's and the
+    smoke's projections. Reason (pre-freeze review): the first 24 units of
+    each kind measured 42 and 29 mean rows against the audit's 33.2, half the
+    multiple-choice-only units were no-haystack prompts of about half the
+    context, and only the smoke's start-up included the 4 GB read; together
+    these used an estimated 2 to 4 percent of the 15 percent headroom. The
+    row factor still scales up only (a fixed per-unit cost is not
+    proportional to rows).
 40. Resume legs and the pre-check are sized by the same formula from the
     probe: the four-shards-on-one-GPU step time (measured, not summed), the
     saves of four workers counted as serialised, R1 sized to its hold, and
@@ -1122,7 +1165,12 @@ a defect in the plan review's list.
     minutes used (v1's rule with the probe-derived limit).
 42. Gauntlet, not a cut (program decision D20): if the caps with the probe
     exceed 8 GPU-hours this file is not frozen and the research gauntlet
-    applies. The review's fallback of a single learning rate is not
+    applies. The total is the sum of the caps of every job (the conditional
+    extension at its worst-case cap) and of every probe run, never expected
+    use; this counting is registered in the probe's file, which is frozen
+    before the probe runs, so it cannot be chosen after the measurement (the
+    pre-freeze review's major finding: in the conservative scenario the caps
+    total 9.42 GPU-h while the expected use is lower). The review's fallback of a single learning rate is not
     registered: it would give up decision 11's guard against an undertrained
     indexer that matches English literal prompts (passes V1) and loses more
     recall on cross-script queries, a bias toward GO.
