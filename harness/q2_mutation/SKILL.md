@@ -33,8 +33,10 @@ scores it. Runbook: `README.md` in this directory.
   adjudication and the K3 bound; `audit.py` builds samples, saved-start
   baselines, packets fitted to the token budget and the summary (one calls
   file per shard and rater); `rater_runner.py` makes the model calls (one per
-  rater per item, hashed receipts) and exports/ingests the agent-harness
-  Claude rater (D25); `analysis.py` is the registered headline.
+  rater per item, hashed receipts), runs the open-weight rater
+  (Qwen3.6-35B-A3B, D27) and exports/ingests the agent-harness Claude rater
+  one item per directory with a transcript audit (D25, D27); `analysis.py`
+  is the registered headline.
 
 ## Patterns to follow / invariants
 <!-- agent-docs:fill:patterns -->
@@ -67,3 +69,10 @@ scores it. Runbook: `README.md` in this directory.
   runs while sites, labels and outcomes reproduce.
 - The GPU device files on the host are world-writable: every container runs
   without `--gpus` through `q2-mutation-cpu.sbatch`.
+- A rater lane job must end before the lane's USR1 (180 s before its limit)
+  or stop on it: `rater_runner open` gives requests in flight 60 s, stops
+  the engine and leaves with `os._exit`. Size the limit from the measured
+  rate, and read the GPU cap from the ledger (`render_rater_manifest.py
+  --gpu-ledger`), never by hand.
+- Isolated Claude rater: never put an index, label, sample or other item
+  under the isolation root; the manifest lives outside it.
