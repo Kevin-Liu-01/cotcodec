@@ -108,3 +108,33 @@ Append-only. Newest entries at the bottom.
   (cap 0.333). The capsule omitted the 27 tracked `.agents/skills` symlinks,
   which the discovery archiver refuses. Evidence:
   `program/evidence/2026-10-07/serving-throughput-probe-v1/`.
+
+## 2026-10-07 — Q3 K1 screen stops at the smoke gate
+
+- Image B (`sha256:5dc3025b...`, Slurm job 437, CPU only) was built from a
+  clean clone at commit B (`d36cbbe`). Its revision label and source-tar
+  SHA-256 match the clone.
+- The K1 CPU doctor passed all seven cases in image B (Slurm job 443, `srun`,
+  network none, no GPU). Its receipt's code digests equal the registration's
+  table.
+- The manifest filler (run from the clean clone) filled smoke, headroom-dev,
+  R0 and R1. The smoke ran as orx node `66f7d302` (run `01692785`, branch
+  `orx/q3-k1-smoke-q3-k1-localization-screen-v1` on commit B) as Slurm job 452.
+  Terminal state COMPLETED, exit 0:0, `ORX_RESULT ... exit=0`, 2 min 25 s on
+  one GPU.
+- Smoke receipt: **SMOKE_PASS_OVER_BUDGET**. All four smoke gates passed, but
+  the projected main wall time is 98.8 minutes (training about 43 minutes
+  per worker, audit evaluation 51 minutes, 5 minutes start-up). That makes
+  1.2 x 98.8 + 3 = 121.6 minutes against the fixed 30-minute limit (about
+  6.6 GPU-h against the 2.0 GPU-h cap). The filler, re-run with the smoke run
+  root, holds back the main job, its continuation and the extension for this
+  reason.
+- Under the registration and D16 the main job does not run under this id.
+  Headroom-dev, the resume test and the main read were not run. No audit
+  statistic exists and there is no K1 verdict. The tabled filler hard-codes
+  the 30-minute rule, so any rescoping needs a new experiment id and
+  preregistration. At the projected cost (about 6.6 GPU-h for the main job
+  plus up to about 6.4 GPU-h for the extension) it would cross the 8 GPU-h
+  gauntlet threshold. That is Kevin's decision.
+- GPU-hours spent by this experiment: 0.04. Evidence:
+  `program/evidence/2026-10-07/q3-k1/`.
