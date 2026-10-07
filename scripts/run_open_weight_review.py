@@ -40,6 +40,7 @@ import re
 import signal
 import subprocess
 import sys
+import threading
 import time
 from collections.abc import Callable, Mapping, Sequence
 from dataclasses import asdict, dataclass, field
@@ -73,6 +74,8 @@ MAX_NUM_SEQS = 8
 MAX_PROMPT_BYTES = 1024 * 1024
 MAX_SCHEMA_BYTES = 256 * 1024
 MAX_ERROR_CHARS = 1500
+#: Upper bound on the engine's graceful shutdown before the process exits anyway.
+ENGINE_CLOSE_TIMEOUT_S = 30.0
 
 LANE_EVIDENCE_PATH = "/inputs/study-artifact.json"
 LANE_OUTPUT_DIR = "/outputs/review"
@@ -721,6 +724,8 @@ class ReviewEngine(Protocol):
 
     def facts(self) -> dict[str, Any]: ...
 
+    def close(self) -> None: ...
+
 
 EngineFactory = Callable[[EngineSettings, Path], ReviewEngine]
 
@@ -797,6 +802,36 @@ class VllmReviewEngine:
         except Exception as exc:  # noqa: BLE001 - record, never fail the review on it
             facts["resolved_error"] = f"{type(exc).__name__}: {exc}"[:300]
         return facts
+
+    def close(self) -> None:
+        """Ask the engine-core process to exit (the v1 client's own shutdown)."""
+        self.llm.llm_engine.engine_core.shutdown()
+
+
+def close_engine(engine: Any, timeout_s: float) -> str:
+    """Shut the engine down in a daemon thread and give up after ``timeout_s``.
+
+    Smoke job 617 showed why: after a complete review the process hung in
+    interpreter shutdown (vLLM teardown) and, as PID 1, outlived its Slurm job.
+    The process now exits with ``os._exit`` after this bounded close.
+    """
+
+    close = getattr(engine, "close", None)
+    if close is None:
+        return "no-close"
+    outcome: list[str] = []
+
+    def target() -> None:
+        try:
+            close()
+            outcome.append("closed")
+        except Exception as exc:  # noqa: BLE001 - recorded in the receipt
+            outcome.append(f"error: {type(exc).__name__}: {exc}"[:300])
+
+    thread = threading.Thread(target=target, name="owr-engine-close", daemon=True)
+    thread.start()
+    thread.join(timeout_s)
+    return outcome[0] if outcome else f"timeout after {timeout_s:g} s"
 
 
 def gpu_names() -> list[str] | str:
@@ -962,6 +997,7 @@ class ReviewRun:
         self._write("prompt.txt", self.request.prompt.encode("utf-8"))
         self._write("schema.json", self.request.schema_text.encode("utf-8"))
         code = EXIT_ENGINE
+        engine: ReviewEngine | None = None
         try:
             self.signals.blocking = True
             if self.signals.received:
@@ -987,6 +1023,9 @@ class ReviewRun:
             code = EXIT_ENGINE
         finally:
             self.signals.blocking = False
+        if engine is not None and code != EXIT_SIGNAL:
+            # After a signal the lane is waiting for the marker: do not spend time on it.
+            self.receipt["engine_close"] = close_engine(engine, ENGINE_CLOSE_TIMEOUT_S)
         self._finish()
         return code
 
@@ -1490,12 +1529,11 @@ def command_run(
     engine_factory: EngineFactory = VllmReviewEngine,
     signals: SignalState | None = None,
 ) -> int:
+    # The handlers stay installed until the process exits: as PID 1 in the lane
+    # container, a default disposition would ignore the lane's USR1 and TERM.
     signals = signals or SignalState()
     signals.install()
-    try:
-        return _run(args, engine_factory=engine_factory, signals=signals)
-    finally:
-        signals.restore()
+    return _run(args, engine_factory=engine_factory, signals=signals)
 
 
 def _run(args: argparse.Namespace, *, engine_factory: EngineFactory, signals: SignalState) -> int:
@@ -1611,13 +1649,22 @@ def main(
         return EXIT_INPUT
 
 
-if __name__ == "__main__":
-    exit_code = main()
+def entrypoint(
+    argv: Sequence[str] | None = None, *, engine_factory: EngineFactory = VllmReviewEngine
+) -> None:
+    """Run the CLI and leave with ``os._exit``, never through interpreter shutdown.
+
+    Every output is written and closed before ``main`` returns. Interpreter
+    shutdown would join vLLM's threads and processes, which hung smoke job 617
+    for the rest of its allocation; as PID 1 the exit ends the container and
+    with it every process the engine started.
+    """
+
+    code = main(argv, engine_factory=engine_factory)
     sys.stdout.flush()
     sys.stderr.flush()
-    if exit_code in (EXIT_SIGNAL, EXIT_ENGINE):
-        # Stopped or failed mid-load or mid-generation; the receipt (and after a
-        # signal, the marker) is on disk. Do not wait on vLLM's shutdown hooks
-        # for an engine that may be gone; as PID 1 our exit ends the container.
-        os._exit(exit_code)
-    raise SystemExit(exit_code)
+    os._exit(code)
+
+
+if __name__ == "__main__":
+    entrypoint()

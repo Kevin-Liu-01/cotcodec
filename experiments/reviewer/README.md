@@ -32,7 +32,12 @@ D7's untrusted-code rule.
    (`cotcodec-json-schema-subset-v1`: a schema using any other keyword is
    refused at `pack` time, never silently ignored).
 5. If that fails, one retry of seed 42 with the error appended to the prompt.
-6. Writes everything to a fresh directory and `SHA256SUMS` over it.
+6. Writes everything to a fresh directory and `SHA256SUMS` over it, asks the
+   engine to shut down (bounded at 30 s, outcome in `engine_close`) and leaves
+   with `os._exit`. Smoke job 617 showed why: after a complete review the
+   process hung in interpreter shutdown, and because the signal handlers had
+   been reset, PID 1 ignored the lane's USR1 and TERM; the job hit its time limit
+   and the container outlived it. The handlers now stay installed until exit.
 
 | Output | Content |
 |---|---|

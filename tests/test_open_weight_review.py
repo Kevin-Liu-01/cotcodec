@@ -5,8 +5,11 @@ from __future__ import annotations
 import dataclasses
 import hashlib
 import json
+import os
 import signal
+import subprocess
 import sys
+import time
 import types
 from pathlib import Path
 from typing import Any
@@ -19,6 +22,7 @@ from scripts.submit_docker_research_job import validate_manifest
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 REVIEWER = PROJECT_ROOT / "experiments" / "reviewer"
+EXIT_DRIVER = PROJECT_ROOT / "tests" / "open_weight_review_exit_driver.py"
 SMOKE_SCHEMA = json.loads((REVIEWER / "smoke-schema.json").read_text(encoding="utf-8"))
 GOOD = {
     "falsifiability_score": 7,
@@ -67,6 +71,9 @@ class FakeEngine:
 
     def facts(self) -> dict[str, Any]:
         return {"vllm_version": "0.31.0", "chat_template_sha256": "c" * 64}
+
+    def close(self) -> None:
+        self.closed = True
 
 
 @pytest.fixture
@@ -120,9 +127,14 @@ def bundle(tmp_path: Path) -> tuple[Path, str]:
 
 
 @pytest.fixture(autouse=True)
-def lane_env(monkeypatch: pytest.MonkeyPatch) -> None:
+def lane_env(monkeypatch: pytest.MonkeyPatch) -> Any:
     for key in ("COTCODEC_EXPECTED_GPUS", "COTCODEC_MODEL_ID", "COTCODEC_CHECKPOINT_MARKER"):
         monkeypatch.delenv(key, raising=False)
+    # run keeps its handlers for the life of the process; give pytest its own back.
+    saved = {name: signal.getsignal(getattr(signal, name)) for name in owr.STOP_SIGNALS}
+    yield
+    for name, handler in saved.items():
+        signal.signal(getattr(signal, name), handler)
 
 
 def run_args(model: dict[str, Any], bundle: tuple[Path, str], out: Path, *extra: str) -> list[str]:
@@ -394,6 +406,7 @@ def test_run_writes_review_receipt_and_replicates(
     assert data["replicates_identical"] is True
     assert [row["seed"] for row in data["replicates"]] == [43, 44]
     assert data["attempts"][0]["parse"] == {"ok": True, "extraction": "bare"}
+    assert data["engine_close"] == "closed" and engine.closed
     assert (out / "prompt.txt").read_bytes() == (REVIEWER / "smoke-prompt.txt").read_bytes()
     report = owr.verify_output(out)
     assert report["ok"] and report["status"] == "PARSED"
@@ -445,8 +458,7 @@ def test_signal_while_generating_writes_receipt_then_marker(
     monkeypatch.setenv("COTCODEC_CHECKPOINT_MARKER", str(marker))
     out = tmp_path / "review"
     signals = owr.SignalState()
-    before = signal.getsignal(signal.SIGUSR1)
-    code, _ = run_with(
+    code, engine = run_with(
         [[thought(json.dumps(GOOD))] * 3],
         model,
         bundle,
@@ -455,9 +467,11 @@ def test_signal_while_generating_writes_receipt_then_marker(
         signals=signals,
     )
     assert code == owr.EXIT_SIGNAL
-    assert signal.getsignal(signal.SIGUSR1) is before
+    # Kept for the life of the process: PID 1 would otherwise ignore the lane's TERM.
+    assert signal.getsignal(signal.SIGTERM) == signals.handle
     data = receipt(out)
     assert data["status"] == "INTERRUPTED" and data["signals_received"] == ["SIGUSR1"]
+    assert "engine_close" not in data and not hasattr(engine, "closed")
     lines = marker.read_text(encoding="utf-8").splitlines()
     assert lines[0] == "trigger=SIGUSR1"
     assert f"receipt_sha256={sha((out / 'receipt.json').read_bytes())}" in lines
@@ -791,3 +805,76 @@ def test_plan_prints_settings(bundle: tuple[Path, str], capsys: pytest.CaptureFi
     plan = json.loads(capsys.readouterr().out)
     assert plan["sampling"][0] == {"temperature": 0.0, "max_tokens": 16384, "seed": 42, "n": 1}
     assert plan["llm_kwargs"]["max_num_seqs"] == owr.MAX_NUM_SEQS
+
+
+# ---------------------------------------------------------------------------
+# Exit path (smoke job 617 hung in interpreter shutdown after a complete review)
+# ---------------------------------------------------------------------------
+
+
+def test_close_engine_is_bounded() -> None:
+    class Stuck:
+        def close(self) -> None:
+            time.sleep(30)
+
+    class Broken:
+        def close(self) -> None:
+            raise RuntimeError("engine core already gone")
+
+    started = time.monotonic()
+    assert owr.close_engine(Stuck(), 0.2) == "timeout after 0.2 s"
+    assert time.monotonic() - started < 5
+    assert owr.close_engine(Broken(), 1.0).startswith("error: RuntimeError")
+    assert owr.close_engine(object(), 1.0) == "no-close"
+
+
+def driver_env(tmp_path: Path) -> dict[str, str]:
+    env = {k: v for k, v in os.environ.items() if not k.startswith("COTCODEC_")}
+    env["COTCODEC_CHECKPOINT_MARKER"] = str(tmp_path / "checkpoint.ready")
+    return env
+
+
+def test_process_exits_despite_hanging_threads_and_close(tmp_path: Path) -> None:
+    started = time.monotonic()
+    completed = subprocess.run(
+        [sys.executable, str(EXIT_DRIVER), "hang-exit", str(tmp_path)],
+        env=driver_env(tmp_path),
+        capture_output=True,
+        text=True,
+        timeout=120,
+    )
+    assert completed.returncode == owr.EXIT_OK, completed.stderr
+    assert time.monotonic() - started < 60
+    data = receipt(tmp_path / "review")
+    assert data["status"] == "PARSED"
+    assert data["engine_close"] == "timeout after 1 s"
+    assert not (tmp_path / "checkpoint.ready").exists()
+    assert owr.verify_output(tmp_path / "review")["ok"]
+
+
+@pytest.mark.parametrize("signum", [signal.SIGUSR1, signal.SIGTERM])
+def test_lane_signal_ends_a_generating_process(tmp_path: Path, signum: int) -> None:
+    process = subprocess.Popen(
+        [sys.executable, str(EXIT_DRIVER), "block", str(tmp_path)],
+        env=driver_env(tmp_path),
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        text=True,
+    )
+    try:
+        deadline = time.monotonic() + 60
+        while not (tmp_path / "generating").exists():
+            assert process.poll() is None, process.communicate()
+            assert time.monotonic() < deadline
+            time.sleep(0.05)
+        process.send_signal(signum)
+        process.wait(timeout=60)
+    finally:
+        if process.poll() is None:
+            process.kill()
+    assert process.returncode == owr.EXIT_SIGNAL
+    name = signal.Signals(signum).name
+    data = receipt(tmp_path / "review")
+    assert data["status"] == "INTERRUPTED" and data["signals_received"] == [name]
+    marker = (tmp_path / "checkpoint.ready").read_text(encoding="utf-8").splitlines()
+    assert marker[0] == f"trigger={name}"
