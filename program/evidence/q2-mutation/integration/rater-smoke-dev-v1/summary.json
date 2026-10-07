@@ -1,0 +1,136 @@
+{
+ "answers_by_label_class": {
+  "p1_flip": {
+   "accept": 1
+  },
+  "sham_do_nothing": {
+   "reject": 6
+  },
+  "sham_gold": {
+   "accept": 4,
+   "reject": 2
+  },
+  "should_fail_extra_change": {
+   "reject": 6
+  },
+  "should_fail_violation": {
+   "accept": 8,
+   "reject": 18
+  },
+  "should_pass_alt_solution": {
+   "accept": 25,
+   "reject": 3
+  },
+  "should_pass_equiv": {
+   "accept": 35,
+   "reject": 25
+  }
+ },
+ "answers_by_operator": {
+  "docx.alt.char_style_for_direct": {
+   "accept": 3
+  },
+  "docx.alt.highlight_as_shading": {
+   "reject": 3
+  },
+  "docx.alt.para_direct_for_style": {
+   "accept": 1
+  },
+  "docx.eq.view_zoom": {
+   "accept": 6,
+   "reject": 6
+  },
+  "docx.viol.delete_bound_paragraph": {
+   "accept": 3,
+   "reject": 5
+  },
+  "docx.viol.drop_char_format": {
+   "reject": 3
+  },
+  "docx.viol.text_edit": {
+   "accept": 2,
+   "reject": 7
+  },
+  "pptx.eq.subvisible_nudge": {
+   "accept": 6,
+   "reject": 6
+  },
+  "pptx.eq.zorder_nonoverlap": {
+   "accept": 6,
+   "reject": 3
+  },
+  "pptx.extra.add_textbox": {
+   "reject": 3
+  },
+  "pptx.viol.delete_bound_shape": {
+   "accept": 3,
+   "reject": 3
+  },
+  "xlsx.alt.absolute_refs": {
+   "accept": 6
+  },
+  "xlsx.alt.literal_for_formula": {
+   "accept": 6
+  },
+  "xlsx.alt.named_style_for_direct": {
+   "accept": 6
+  },
+  "xlsx.alt.plus_chain_to_sum": {
+   "accept": 3
+  },
+  "xlsx.eq.active_sheet": {
+   "accept": 1
+  },
+  "xlsx.eq.view_selection": {
+   "accept": 10,
+   "reject": 8
+  },
+  "xlsx.eq.view_zoom": {
+   "accept": 6,
+   "reject": 2
+  },
+  "xlsx.extra.edit_unrelated_value": {
+   "reject": 3
+  }
+ },
+ "anthropic_rater": "not run: the ANTHROPIC_API_KEY in the agent environment is rejected by the API (HTTP 401 authentication_error 'API key is invalid') on GET /v1/models/claude-opus-5-5; no packet was sent",
+ "attempts_per_call": {
+  "1": 133
+ },
+ "audit": "dev-audit-smoke-v1 (Slurm 559, LO-VM image, code ba840b4) on dev-mutants-v4 and dev-controls-v7",
+ "completion_tokens": {
+  "max": 256,
+  "median": 44
+ },
+ "gpu_hours": {
+  "caps": {
+   "overlay_build": 0.167,
+   "smoke": 0.2
+  },
+  "overlay_build_slurm_566": 0.0125,
+  "rater_smoke_slurm_582": 0.1103,
+  "total": 0.1228
+ },
+ "items": 133,
+ "outcomes": {
+  "ok": 133
+ },
+ "parse_status": {
+  "ok": 133
+ },
+ "prompt_tokens": {
+  "max": 120678,
+  "median": 46294,
+  "total": 7756613
+ },
+ "seconds_per_call": {
+  "max": 55.2,
+  "median": 14.7
+ },
+ "split": "dev",
+ "stop_reasons": {
+  "length": 3,
+  "stop": 130
+ },
+ "what": "open-weight rater development smoke on the dev audit packets (exploratory; not a rating of any confirm item)"
+}

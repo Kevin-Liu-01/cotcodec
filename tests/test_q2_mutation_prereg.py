@@ -137,3 +137,28 @@ def test_build_default_matches_the_registered_application_mode() -> None:
     source = (ROOT / "harness" / "q2_mutation" / "campaign.py").read_text(encoding="utf-8")
     assert re.search(r'"--apply-to",\s*choices=\["base", "gold"\],\s*default="gold"', source)
     assert 'apply_to="${7:-gold}"' in SUBMIT.read_text(encoding="utf-8")
+
+
+def test_prereg_rater_pins_match_the_runner() -> None:
+    from harness.q2_mutation import rater_runner, raters
+
+    declared = campaign.prereg_pins(_text())["raters"]
+    open_weight = raters.RATERS[1]
+    assert declared["anthropic_model"] == raters.RATERS[0]["registry_id"]
+    assert declared["anthropic_model"] == rater_runner.ANTHROPIC["model"]
+    assert declared["open_weight_model_id"] == open_weight["registry_id"]
+    assert (
+        declared["open_weight_repo"]
+        == open_weight["repo_id"]
+        == rater_runner.OPEN_WEIGHT["repo_id"]
+    )
+    assert declared["open_weight_revision"] == open_weight["revision"]
+    assert declared["open_weight_revision"] == rater_runner.OPEN_WEIGHT["revision"]
+    assert declared["open_weight_receipt_sha256"] == open_weight["receipt_sha256"]
+    assert declared["open_weight_receipt_sha256"] == rater_runner.OPEN_WEIGHT["receipt_sha256"]
+    sys.path.insert(0, str(ROOT / "infra" / "q2-mutation" / "run"))
+    import render_rater_manifest
+
+    assert declared["open_weight_gpu_hours_cap"] == render_rater_manifest.AUDIT_GPU_HOURS
+    builder = (ROOT / "scripts" / "build_vllm_overlay_on_h100.sh").read_text(encoding="utf-8")
+    assert f'base_id="{declared["vllm_base_image_id"]}"' in builder
