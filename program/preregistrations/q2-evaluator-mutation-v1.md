@@ -91,7 +91,7 @@ differ from the pins:
 {
  "q2m_pins": 1,
  "experiment_id": "q2-evaluator-mutation-v1",
- "code_tree_sha256": "2d02cebabab7eb0b3e6850c723cfd481ba6d509ecbd8626e3adc71e10f096b18",
+ "code_tree_sha256": "8123ed7f72b72365f7f7658957ea7ea0a5cf4b00becfc777e5dd60ce052ba7ff",
  "operator_catalog_sha256": "7f6d44f5cc848188bc7f6c5bd4d98846505f9a97a10d8ed75510155758fbb46a",
  "operator_catalog_version": "q2-mut-operators-v1",
  "operators": 64,
@@ -204,8 +204,11 @@ one non-FAIL action, the offline file-cache shim for `get_cloud_file` (other
 URLs refused), live getters refused. Each candidate is scored in fresh
 processes twice (`score.sh`, `--repeat 2`); a candidate whose two scorings
 disagree is `nondeterministic` (S5) and leaves P2-P5. A candidate whose
-verdicts differ between the venvs counts for S1 only if each venv's two
-scorings agree (no further rescoring).
+verdicts differ between the venvs while each venv's two scorings agree is
+rescored five times in fresh processes in each venv in the same Slurm job
+(`harness/q2_mutation/dependency_flips.py`, wired into job 3 of a mutation
+run and jobs 1 and 3 of a control run); it counts for S1 only if all five
+agree within each venv.
 
 **Verdicts.** `pass` iff score == 1.0; `fail` otherwise; `error` iff
 `evaluate()` raised (OSWorld's `run.py` logs and skips such a task, so an
@@ -285,10 +288,13 @@ percentile bootstrap (10,000 resamples, seed 42, two-sided 95%).
 
 ## 5. Secondary metrics
 
-- S1 Dependency flips: candidates whose verdict differs between the two venvs,
-  counted only when each venv's two fresh-process scorings agree
-  (`campaign.build_report` `venv_disagreements`, `report.aggregate`
-  `dependency_flips`). Its scope is the package differences of section 2
+- S1 Dependency flips: candidates whose verdict differs between the two venvs
+  while each venv's two fresh-process scorings agree (`campaign.build_report`
+  `venv_disagreements`, `report.aggregate` `dependency_flips`), counted only
+  when five further fresh-process scorings in each venv all agree
+  (`dependency_flips.py`; `report.json` `s1`, `confirmed_at_repeat_5`);
+  candidates that fail the confirmation are reported as unstable (S5). Its
+  scope is the package differences of section 2
   (pandas 3.0.1 vs 2.3.3, opencv-python-headless, chardet, beautifulsoup4 and
   59 others); it is not a measurement of leaderboard-era drift.
 - S2 Script-writer stratum rates (P2-P4 on that stratum; empty for this

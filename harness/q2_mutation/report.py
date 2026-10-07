@@ -116,7 +116,27 @@ def summarize_run(run: Path) -> dict[str, Any]:
             "unemulated": row.get("plan", {}).get("unemulated", []),
             "derived_outputs": sorted(row.get("outputs", {})),
         }
-    return {"tasks": dict(sorted(tasks.items())), "aggregate": aggregate(tasks)}
+    agg = aggregate(tasks)
+    s1 = {
+        source: json.loads(path.read_text(encoding="utf-8"))
+        for source, path in (
+            ("raw", run / "raw" / "raw-s1.json"),
+            ("saved", run / "saved" / "saved-s1.json"),
+        )
+        if path.is_file()
+    }
+    if s1:
+        # S1 counts a flip only when five fresh-process scorings per venv
+        # confirm it (harness/q2_mutation/dependency_flips.py).
+        confirmed = {
+            (_key(row["mutant_id"])[0], f"{_key(row['mutant_id'])[1]}_{source}")
+            for source, data in s1.items()
+            for row in data.get("confirmed", [])
+        }
+        for flip in agg["dependency_flips"]:
+            flip["confirmed_at_repeat_5"] = (flip["task_id"], flip["candidate"]) in confirmed
+        agg["s1"] = s1
+    return {"tasks": dict(sorted(tasks.items())), "aggregate": agg}
 
 
 def unemulated_task(t: Mapping[str, Any]) -> bool:

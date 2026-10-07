@@ -34,7 +34,9 @@ py=/opt/venv-lock/bin/python
 guard="cd /src && ${py} -m harness.q2_mutation.campaign guard --split ${split} --src /src --inputs /inputs"
 
 a1=$(hex "${frozen_env[@]}" sh -c "${guard} && /src/infra/q2-mutation/run/make_jobs.sh ${split} /out/jobs.jsonl \
-  && /src/infra/q2-mutation/run/score.sh /out/jobs.jsonl /out/raw ${workers} 2")
+  && /src/infra/q2-mutation/run/score.sh /out/jobs.jsonl /out/raw ${workers} 2 \
+  && ${py} -m harness.q2_mutation.dependency_flips --jobs /out/jobs.jsonl --prefix /out/raw \
+     --workers ${workers}")
 j1=$(sbatch --parsable --cpus-per-task="${workers}" --mem=96G --time=03:00:00 \
   --export=ALL,Q2M_MODE=run,Q2M_IMAGE_ID="${metric}",Q2M_ARGV_JSON_HEX="${a1}",Q2M_SOURCE="${src}",Q2M_RUN_DIR="${run}/raw",Q2M_INPUTS="${root}/inputs",Q2M_TMPFS_SIZE=32g \
   "${batch}")
@@ -47,7 +49,9 @@ j2=$(sbatch --parsable --dependency=afterok:"${j1}" --cpus-per-task="${workers}"
 a3=$(hex "${frozen_env[@]}" sh -c "${guard} && /opt/venv-lock/bin/python -m harness.q2_mutation.controls merge-lo \
   --jobs /ro/raw/jobs.jsonl --lo-rows \$(ls /ro/lo/reachability-*.jsonl) --out /out/jobs-saved.jsonl \
   && sed 's#\"/out/files/#\"/ro/lo/files/#g' /out/jobs-saved.jsonl > /out/jobs-saved-mounted.jsonl \
-  && /src/infra/q2-mutation/run/score.sh /out/jobs-saved-mounted.jsonl /out/saved ${workers} 2")
+  && /src/infra/q2-mutation/run/score.sh /out/jobs-saved-mounted.jsonl /out/saved ${workers} 2 \
+  && ${py} -m harness.q2_mutation.dependency_flips --jobs /out/jobs-saved-mounted.jsonl \
+     --prefix /out/saved --workers ${workers}")
 j3=$(sbatch --parsable --dependency=afterok:"${j2}" --cpus-per-task="${workers}" --mem=96G --time=03:00:00 \
   --export=ALL,Q2M_MODE=run,Q2M_IMAGE_ID="${metric}",Q2M_ARGV_JSON_HEX="${a3}",Q2M_SOURCE="${src}",Q2M_RUN_DIR="${run}/saved",Q2M_INPUTS="${root}/inputs",Q2M_EXTRA_RO="${run}/raw:/ro/raw+${run}/lo:/ro/lo",Q2M_TMPFS_SIZE=32g \
   "${batch}")
