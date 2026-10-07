@@ -31,12 +31,12 @@ Frozen with this file (SHA-256 of the committed bytes):
 |---|---|
 | `harness/q2/vm/guest/probe.py` | `6f72a9a87327f5e7a8039f671b5989e28e6eca90232cb66bf979d770416df808` |
 | `harness/q2/vm/guest/guard.py` | `129b93d7ab7cccf91469ce56b4f4a3aefc3ed3697b4d169c96219c423cdfa984` |
-| `harness/q2/vm/guest/canary.py` | `2c1c063f04f8bc7c158ef147461957112c6fd0c85c2c259f36a8375bf571d3f2` |
+| `harness/q2/vm/guest/canary.py` | `547a0755733a1f2d65009081c3e7ae0c9d79cf80f23c232c5ced95f92e7ba9c3` |
 | `harness/q2/vm/guest/facts.py` | `4a071a39d4586a58b62419796a57b678568bdbc3bfd77ec6d50e841414dcd255` |
 | `harness/q2/vm/guest/sentinel.py` | `98f46a7faafc58e9c65466b19ae3547288fc8829378ad7aa169b09a17161b18b` |
 | `harness/q2/vm/guest/tap_selftest.py` | `7e051c0bcb45ba81c2b1fb855a9dc70115957fafa3ec7f333c8b3be5ab3bf835` |
 | `harness/q2/vm/marker.py` | `b786b347fc5573425f14090bd67621294ac5c84671bf67f47e663d693ab17fb9` |
-| `harness/q2/vm/canary_run.py` | `82c19fd62ff54982f425570b7193c39adc77dc02e86ddc1a2128632f934b8b77` |
+| `harness/q2/vm/canary_run.py` | `8ebb89e4d0141173d633756a020495ffa28c1d7f2984baf59b733a3db1f54ebc` |
 | `harness/q2/vm/suite.py` | `030690b601ca75bd855ef0d95f99537ef6b4f3801e44cc20695675c5a6b52baf` |
 | `harness/q2/vm/desktop.py` | `0076eca035ecd3944e41d999c3c3eafe4bc5b0735d2313864c5a58638797aed4` |
 | `harness/q2/vm/validation.py` | `2ab5508e5a42269d447312e481b58c9f491d815d73e4977ba9c55d235231116f` |

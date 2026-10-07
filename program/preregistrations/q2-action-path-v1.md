@@ -50,19 +50,30 @@ SHA-256 (table below), so freezing this file freezes them; the ledger row adds
 the repository's git head. Inputs that cannot exist yet are frozen in two
 addenda, each its own ledger entry made with `scripts/preregister.py`:
 
-- **`q2-action-path-v1-inputs`**, frozen after this file and before any
-  L0-fixed code is written: the guest probe (event log, text buffer, marker
-  block), the marker decoder, the entry guard, the canary driver (app launch,
-  fixture writing and read-back for `canary.yaml`), and the two detection
-  controls' translators (H-OSW-up's PyAutoGUI strings to IR, H-GA-buggy's
-  action dicts to IR). Its own validation is infrastructure only (HMP input
-  into the probe, no-input canary read-back).
-- **`q2-action-path-v1-executor`**, frozen when development ends and before
-  the scored C1 and C3 runs and the first acceptance trial: the git SHA and file
-  digests of L0-fixed, the H-OSW-fixed and H-GA adapters, the acceptance
-  workload code (`harness/q2/vm/*.py` and the batch script), the regression
-  corpus, `harness_design_diffs.md`, and the canary target coordinates
-  (`canary.yaml`, `targeting`).
+- **`q2-action-path-v1-inputs`** (`program/preregistrations/q2-action-path-v1-inputs.md`),
+  frozen after this file and before C2 is scored: the guest probe (event log,
+  text buffer, marker block, entry delimiters), the marker decoder, the entry
+  guard, the canary driver (app launch, fixture writing and read-back for
+  `canary.yaml`), the two detection controls' translators (H-OSW-up's
+  PyAutoGUI strings to IR, H-GA-buggy's action dicts to IR) with the
+  unmodified upstream parsers they read, the code that judges a trial, and
+  the VM lane every scored campaign runs on. Its own validation is
+  infrastructure only (HMP input into the probe, no-input canary read-back;
+  job 484).
+- **`q2-action-path-v1-executor`** (`program/preregistrations/q2-action-path-v1-executor.md`),
+  frozen when development ends and before the scored C1 and C3 runs and the
+  first acceptance trial: the file digests of L0-fixed, the H-OSW-fixed and
+  H-GA adapters, the acceptance workload code (`harness/q2/vm/*.py` and the
+  batch script, pinned again), the regression corpus (`suite_cells.json` and
+  its generator), the mutation kit, `harness_design_diffs.md`, and the canary
+  target coordinates (`canary_targets.json`); its ledger row's git head is the
+  executor SHA.
+
+Both addenda were written in one development pass with L0-fixed, before any
+freeze, not in the order the first draft gave (design decision 25).
+Acceptance and scored-control campaigns are admitted by `manifest.py` only
+when the ledger freezes this file and the addenda they need (C2: inputs;
+C1, C3 and A1-A6: both), checked by the submitter and again inside the job.
 
 Every acceptance and scored-control receipt verifies this file, every
 addendum frozen by then, and the runner image ID.
@@ -109,7 +120,7 @@ the L0-raw control.
 | L0-raw (control) | each IR action as its natural PyAutoGUI 0.9.54 call, one `DesktopEnv.step` per IR action, built by `l0_raw.py` (frozen with this file) |
 | H-OSW-up (control) | OSWorld `bfd62bdc` `Qwen35VLAgent.parse_response`, unmodified; its PyAutoGUI strings are mapped call-for-call to IR by a fixed translator (inputs addendum), then run on L0-fixed |
 | H-GA-buggy (control) | gym-anything `bf965cde0` `agents/agents/qwen35vl.py` with `agents/shared/qwen_computer_use.py`, unmodified; its action dicts are mapped to IR by a fixed translator (inputs addendum) |
-| H-OSW-fixed (Stage-1 harness) | `bfd62bdc` with its emit boundary patched to IR and only its own-spec bugs fixed: terminate(status=failure) becomes FAIL; key names go through an explicit map and unknown names raise; text goes through the IR `type` action. Changes are marked under Apache-2.0 §4 |
+| H-OSW-fixed (Stage-1 harness) | `bfd62bdc` with its emit boundary patched to IR and only its own-spec bugs fixed: terminate(status=failure) becomes FAIL; key names go through an explicit map and unknown names raise; text goes through the IR `type` action exactly (edge whitespace kept); `wait` waits its `time` (decision 23). Changes are marked under Apache-2.0 §4 |
 | H-GA (Stage-1 harness) | gym-anything `aae6f7607`, unmodified; an adapter maps its action dicts to IR and `metadata.status == "failure"` to terminate(failure) |
 
 **IR boundary rules (both Stage-1 harnesses, frozen here).** (1) Every pointer
@@ -163,11 +174,16 @@ by width/1000 instead of /999 (mutation operator M24) moves the corner by one
 or two pixels, inside the usual tolerance.
 
 **Corpus.** Each harness-expressible catalog entry and each R case is rendered
-as a model response with the official template of `Qwen/Qwen3.5-9B` at
+as model responses with the official template of `Qwen/Qwen3.5-9B` at
 `c202236235762e1c871ad0ccb60c8ee5ba337b9a` (`chat_template.jinja`, XML tool
-calls, list values rendered as JSON), plus three perturbations: an
-`Action:` sentence before the calls, a closed think block before the calls,
-and (H-GA only, which documents it) the JSON tool-call fallback. A catalog
+calls, list values rendered as JSON), one tool call per turn (both prompts
+ask for a single call per step; a positioned H-OSW scroll and a two-point
+H-OSW drag take a `mouse_move` turn first), multi-call turns only in R05-R07,
+plus three perturbations: an `Action:` sentence before the calls, a closed
+think block before the calls, and (H-GA only, which documents it) the JSON
+tool-call fallback. A2 runs the plain renderings; every perturbation must
+parse to exactly the plain rendering's IR on every gating and declared cell
+(decision 22). A catalog
 pixel is rendered as the 0-999 grid value whose scaled pixel is nearest to it
 (ties to the smaller value); the rendering error is at most one pixel, inside
 the ±2 px tolerance. Real model responses enter only in a later
@@ -275,10 +291,16 @@ only if all of these hold:
 1. The entry guard is clean before and after it (section 6.2).
 2. The event channel matches the oracle exactly as in section 4.3, judged on
    the probe's own event log for `observable: app` entries and on the XRecord
-   stream for `raw-only` entries (desktop shortcuts).
+   stream for `raw-only` entries (desktop shortcuts). Each entry's window on
+   both channels runs from the probe's begin delimiter to its end delimiter
+   (two core `ChangeKeyboardMapping` requests on a reserved spare keycode,
+   which both channels see in the X server's own order; design decision 19).
 3. For `observable: app` entries, the screenshot returned by the
    `DesktopEnv.step` of the entry's last action decodes to the probe's final
-   marker (sequence number and CRC-16 of the text buffer).
+   marker (sequence number and CRC-16 of the text buffer). The screenshot
+   includes the compositor's latency; an entry with no action is judged on a
+   screenshot taken after the probe's begin, which returns only once the screen
+   shows the entry's sequence number (decision 21).
 4. `no_action_control` records zero key, button and motion events on every
    channel.
 5. For harness layers, the terminal action matches (terminate success or
@@ -316,12 +338,17 @@ the catalog's `guard.park_pointer` (1234, 777), a point no entry uses (a test
 checks it), so an entry that moves the pointer always produces motion:
 `move_only` ends where `drag_vertical` ends, and without the park it would see
 no motion after it. After an entry with a declared side effect the guard first
-runs that effect's restoration (screencast: the chord again, until no file
-grows; closes_window: relaunch the probe; shows_desktop and switches_window:
-re-activate the probe; hot_corner: Escape; lock_state: none, the entry must
-leave the LED at baseline) and then requires a clean state. Any violation is
-charged as a failure to the preceding entry, and the guard restores state
-(releases every key and button, relaunches the probe).
+runs that effect's restoration (screencast: the chord again while a file
+grows, at most three times, then Escape; closes_window: relaunch the probe;
+shows_desktop and switches_window: re-activate the probe; hot_corner: Escape;
+lock_state: none, the entry must leave the LED at baseline; after a
+screencast, closed, shown or switched window and the hot corner the probe is
+re-activated) and then requires a clean state. R13's Super key opens the
+shell's overview and is restored as the hot corner. Any violation is charged
+as a failure to the preceding entry, and the guard restores state (releases
+every key and button, toggles the LEDs back, presses Escape, re-activates or
+relaunches the probe). The implementation is frozen in the inputs addendum
+(`harness/q2/vm/guest/guard.py`).
 
 ## 7. Acceptance criteria (gate Stage-1 GPU episodes)
 
@@ -514,10 +541,13 @@ program kill criterion applies: cut the Stage-1 task count before adding GPUs.
   goes into each receipt. The order is cut into sessions as in section 7.
 - **Seed 42: development, never evidence.** Catalog order and the seed-42
   shuffle; L0-fixed, the adapters and the canary target coordinates may be
-  iterated freely. The probe, guard, marker, canary driver and control
-  translators are frozen in the inputs addendum before development starts.
-  C2 is scored once at seed 42 after the inputs addendum; C1 and C3 are scored
-  once after the executor addendum (section 8).
+  iterated freely. Only L0-fixed, H-OSW-fixed, H-GA and the canary run in
+  development; L0-raw and the detection controls never do (`manifest.py`
+  refuses them). The inputs addendum lists every change to its components
+  made after an L0-fixed development run. C2 is scored once at seed 42 after
+  the inputs addendum; C1 and C3 are scored once after the executor addendum
+  (section 8). Seeds 43 and 44 are refused for every campaign until the
+  ledger admits acceptance.
 - **Freeze of the executor.** When development ends, the git SHA of L0-fixed
   and the adapters is frozen in `q2-action-path-v1-executor`.
 - **Seeds 43 and 44: acceptance.** Fresh VMs (every session is a cold boot of
