@@ -591,11 +591,13 @@ where it departs from the plan. Decisions 1-14 are accepted in D15
     and tarball (section 4). Without this, a feature file from edited
     scanning code or written by hand could carry a confirmatory label.
 17. **Rule (a) gets a concordant-task sensitivity and power by direction.**
-    The known 23 vs 9 discordance pairs passing with longer failing
-    episodes, which offsets m towards run2 being longer and makes power
-    depend on the direction. The primary rule stays on all clean tasks; the
-    concordant-task sensitivity has no such offset, and section 6 states
-    power given the known outcomes.
+    Each of the 23 run1-only and 9 run2-only clean tasks pairs a passing
+    episode with a longer failing one, so the known imbalance offsets m
+    towards run2 being longer (-0.017 under the design model) and makes
+    power depend on the direction. The primary rule stays on all clean
+    tasks; the concordant-task sensitivity has no such offset, and a primary
+    decision it does not reproduce is labelled not robust (section 5).
+    Section 6 states power given the known outcomes.
 18. **Rule (d) outputs carry their limits.** Every output states that
     blinding to the class-outcome join is self-attested and the largest net
     share its L allocation could carry, and a checker-side label not
