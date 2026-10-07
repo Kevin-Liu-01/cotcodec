@@ -58,8 +58,8 @@ A test (`tests/test_q2_prereg_inputs.py`) recomputes every digest.
 ## 2. L0-fixed (`guest/l0_fixed.py`, `executor.py`)
 
 One IR action is one `DesktopEnv.step` (OSWorld `b138d348`, `pause=0.0`): a
-command that base64-decodes the executor's source with the action appended,
-so no typed text is ever quoted. In the guest, every device event is an XTest
+command that base64-decodes the executor's source with the action appended, so
+no typed text is ever quoted. In the guest, every device event is an XTest
 request followed by a round trip. Pointer actions move first and hold their
 modifiers across the action (released in `finally`); clicks are 20 ms press
 and release, 60 ms between the clicks of a double or triple click; drags press
@@ -68,30 +68,29 @@ at the first point, move along every path vertex in 16 ms steps over
 release of button 5/4 per vertical notch, then 7/6 per horizontal notch; keys
 are pressed in order, held 0.1 s and released in reverse order. Text: a code
 point whose keysym is at index 0 of a layout keycode is that key, at index 1
-that key with Shift_L; any other code point is typed through an
-executor-owned spare keycode remapped to `[keysym, keysym]` (Latin-1 value or
-`0x01000000 + cp`), left mapped after use (least recently used first when one
-is reused, never within 0.3 s of its last press), so no client sees a key
-whose mapping has changed back; zero spare keycodes raises. A `type` action
-that changes the keymap remaps every code point it needs in one burst, then
-waits until GNOME Shell (the compositor) answers a D-Bus property read twice
-within 50 ms, since it repaints nothing while it rebuilds its keymap. Every
-action but `wait` then ends in four steps: the same D-Bus round trip (the
-shell has processed the action's events); an XDamage `DamageAdd` of each
-viewable InputOutput top-level window's full area, so the compositor repaints
-every window from its current contents (InputOnly windows have no contents,
-and `DamageAdd` on one is a `BadMatch` error that the X server reported on
-almost every action of runs 545-632 until they were skipped; the XFixes region
-requests and `DamageAdd` are
-encoded from the protocol specifications, and a nudge that cannot be sent
-fails the action); a wait until the root window's image (read every 50 ms, as
-`/screenshot` reads it) has been unchanged for 0.25 s; at least 0.1 s
-(PyAutoGUI's default `PAUSE`, which ends every upstream PyAutoGUI call) and at
-most 2 s after the action's device events. Development runs 486-499 showed
-screenshots one compositor frame behind without the quiet wait, runs 486-493
-the screen frozen during keymap rebuilds without the shell wait, and runs
-504-541 the last drawing of about 4% of typing trials never painted without
-the repaint request (runs 537-541 ran with a nudge that raised and was
+that key with Shift_L; any other code point is typed through an executor-owned
+spare keycode remapped to `[keysym, keysym]` (Latin-1 value or `0x01000000 +
+cp`), left mapped after use (least recently used first when one is reused,
+never within 0.3 s of its last press), so no client sees a key whose mapping
+has changed back; zero spare keycodes raises. A `type` action that changes the
+keymap remaps every code point it needs in one burst, then waits until GNOME
+Shell (the compositor) answers a D-Bus property read twice within 50 ms, since
+it repaints nothing while it rebuilds its keymap. Every action but `wait` then
+ends in four steps: the same D-Bus round trip (the shell has processed the
+action's events); an XDamage `DamageAdd` of each viewable InputOutput
+top-level window's full area, so the compositor repaints every window from its
+current contents (InputOnly windows have no contents, and `DamageAdd` on one
+is a `BadMatch` error that the X server reported on almost every action of
+runs 545-632 until they were skipped; the XFixes region requests and
+`DamageAdd` are encoded from the protocol specifications, and a nudge that
+cannot be sent fails the action); a wait until the root window's image (read
+every 50 ms, as `/screenshot` reads it) has been unchanged for 0.25 s; at
+least 0.1 s (PyAutoGUI's default `PAUSE`, which ends every upstream PyAutoGUI
+call) and at most 2 s after the action's device events. Development runs
+486-499 showed screenshots one compositor frame behind without the quiet wait,
+runs 486-493 the screen frozen during keymap rebuilds without the shell wait,
+and runs 504-541 the last drawing of 31 of 941 typing trials never painted
+without the repaint request (runs 537-541 ran with a nudge that raised and was
 skipped, a control: their typing trials failed the same way); from run 545 on,
 with the repaint request working, none of 2,114 typing trials did (the reason
 for each step is in the executor's source).
