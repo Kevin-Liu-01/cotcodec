@@ -1,0 +1,940 @@
+{
+  "a1_stability": {
+    "basis": "stable",
+    "complete": true,
+    "limit": 0.1,
+    "max": 2.5693637592691316,
+    "mean": 2.5508837379032645,
+    "metric": "request_throughput",
+    "min": 2.5230140669667356,
+    "noise_multiplier": 1.0,
+    "points": [
+      "a1a",
+      "a1b",
+      "a1c"
+    ],
+    "relative_range": 0.01817005283843075,
+    "unstable": false,
+    "valid": 3
+  },
+  "acceptance": {
+    "accepted": true,
+    "eager": false,
+    "eager_phases": [],
+    "job_gate_failures": [],
+    "phase_gate_failures": {},
+    "status": "complete"
+  },
+  "argv": [
+    "scripts/run_vllm_throughput_probe_v2.py",
+    "run",
+    "--config",
+    "experiments/serving/serving-throughput-probe-v2.yaml",
+    "--job",
+    "a",
+    "--output-dir",
+    "/outputs/probe",
+    "--allocation-minutes",
+    "60",
+    "--image-variant",
+    "cu129",
+    "--seeds",
+    "42",
+    "43",
+    "44"
+  ],
+  "config_path": "experiments/serving/serving-throughput-probe-v2.yaml",
+  "config_sha256": "9224ccdcfc9c2667f28860f8f4c5c94f4e2121b3d7dd47c8b68acd4bde26257a",
+  "eager": false,
+  "exit_code": 0,
+  "experiment_id": "serving-throughput-probe-v2",
+  "finished_at": "2026-10-07T15:35:13Z",
+  "gates": {
+    "G0.0": {
+      "ledger_row": {
+        "contract_sha256": "9224ccdcfc9c2667f28860f8f4c5c94f4e2121b3d7dd47c8b68acd4bde26257a",
+        "experiment_id": "serving-throughput-probe-v2",
+        "frozen_at": "2026-10-07T15:01:46.227869+00:00",
+        "git_head_at_freeze": "1422b2bcf5e0ed1a69e76cb2a96ea7c298ebaa91",
+        "hash": "52cd6a84c73bda00f1dfff5d49752d7adb211e527f49c121a259f5d1a385df44",
+        "path": "program/preregistrations/serving-throughput-probe-v2.md",
+        "previous_hash": "13c72ac3259c8c0a886bad66e5368a37a11f6dd0afb8ad3119a33791bdd47803",
+        "probe_code_digest": "64493671bed78f0633a01b67dc28d8e47da7d9bc7a7ec90b6efb7a9920012af6",
+        "probe_code_files": {
+          "harness/serving_probe/__init__.py": "90ad4c36aadfc9d12edbe853a3d3a177cb596c4b7314c43b08798269a93c4235",
+          "harness/serving_probe/budget.py": "cdb75646eafe47148a2b52148e24493bdd07f1c1c05dcec8211c55d9ea75ceb1",
+          "harness/serving_probe/client.py": "eceed26a7173ff94b489f58372e87986d9b20b9bddfda54a7ca26c94c6352ac6",
+          "harness/serving_probe/config.py": "58dd7030e63f06feb53ab72dea04b2a5c34fe86446521aa38a612f3ab40030d3",
+          "harness/serving_probe/cuda_doctor.py": "4751a871de5ab1503f7360333a2194feeb1dfc41fedf2e7720d7bacae5902ffb",
+          "harness/serving_probe/images.py": "c57dcf6e4f2d25d99d2c58fad1860c7430a272c60bb4303e43a1bb9e02645571",
+          "harness/serving_probe/metrics.py": "7ab76754c4577dd95a3cc226ab436fdd65b9fad74ed345c5c728526607a45c08",
+          "harness/serving_probe/prompts.py": "d74dc109b6486faaa665826c74c94882fa82fcb30a87979366d8fe05d2f37077",
+          "harness/serving_probe/triton_kernels.py": "fce17daf8e503b8e2a0504aead760e3d8da7444029fb7b5b6cc02407793dd61b",
+          "harness/serving_probe_v2/__init__.py": "c478673eed78fa0f9a75a3a1d01eb9bee8a952ba393421a4749bee64df0e8e9d",
+          "harness/serving_probe_v2/client.py": "29761c1d01e4170843252223c5e32999fbb4a26ffd98a58191a81b13dd751e4e",
+          "harness/serving_probe_v2/config.py": "413756a5d07dc62f25b10a099e19947c58aa7b8eab3823a875c957e227ad5600",
+          "harness/serving_probe_v2/contamination.py": "5a8469e7d1e19920768ca659ab36b6106b46b93f36d42a8edfdead9add505720",
+          "harness/serving_probe_v2/requests.py": "493334ea491bd8f3870934df7bbc504f128c46804330e9fddecb18ffe09196e1",
+          "harness/serving_probe_v2/schedule.py": "2cde58c72558632268983d6a85e6d69e07aa1f4e4b186550ea70c4455c75000a",
+          "harness/serving_probe_v2/x1.py": "1af4c41579f7b569647bc1cc08b1704ac0d0493211fb36f97e3857dde90e8bc5",
+          "scripts/run_vllm_throughput_probe.py": "8e9959857127795e872111346daecaa57fd9ecd350d78d7b4b670c5480153810",
+          "scripts/run_vllm_throughput_probe_v2.py": "1cdf8f47b89ac9b7379afcc20624901c5a8708c59ba3157dfd46caa815c4ae32"
+        },
+        "sha256": "19a9f5b5960507fff4561a0051de0417b54bbb9a936ceae53336e3f3043dd4d9"
+      },
+      "pass": true
+    },
+    "G0.1": {
+      "lane_model": {
+        "artifact_root_sha256": "9845026dbe255e24b105224eebbb5436d315713b9a5c53c434137896b160c5b1",
+        "backend": "huggingface",
+        "mode": "full",
+        "model_id": "qwen3.5-9b",
+        "publication_eligible": true,
+        "revision": "c202236235762e1c871ad0ccb60c8ee5ba337b9a",
+        "total_bytes": 19329393661
+      },
+      "pass": true,
+      "provenance": {
+        "git_sha": "1141d9442b9c78233176f558fe8870046ab2fb8f",
+        "source_sha256": "0e9c210c92b3e5b1cc363588f23e6532d08344b2203ac76ba2b27f6e77844516",
+        "status": "PASS"
+      }
+    },
+    "G0.2": {
+      "pass": true
+    },
+    "G0.3": {
+      "finite": true,
+      "normalized_max_error": 0.002808088669553399,
+      "pass": true
+    },
+    "G0.4": {
+      "correct": true,
+      "pass": true,
+      "tmp_mapped_files": [],
+      "triton_cache_dir": "/outputs/probe/cache/triton",
+      "triton_cache_populated": true,
+      "triton_cache_under_outputs": true
+    },
+    "G0.5": {
+      "dummy-control": {
+        "attempts": [
+          {
+            "argv": [
+              "vllm",
+              "serve",
+              "/model-cache/cotcodec-models/qwen3.5-9b",
+              "--served-model-name",
+              "probe-model",
+              "--host",
+              "127.0.0.1",
+              "--port",
+              "8000",
+              "--load-format",
+              "dummy",
+              "--disable-uvicorn-access-log",
+              "--tensor-parallel-size",
+              "1",
+              "--dtype",
+              "bfloat16",
+              "--seed",
+              "42",
+              "--max-model-len",
+              "131072",
+              "--gpu-memory-utilization",
+              "0.9",
+              "--max-num-seqs",
+              "256",
+              "--max-num-batched-tokens",
+              "8192",
+              "--enable-prefix-caching",
+              "--generation-config",
+              "vllm",
+              "--limit-mm-per-prompt",
+              "{\"image\":{\"count\":20,\"height\":1080,\"width\":1920},\"video\":0}"
+            ],
+            "eager": false,
+            "ready": true,
+            "ready_timeout_s": 900.0,
+            "seconds": 62.04014639556408
+          }
+        ],
+        "eager_fallback": false,
+        "pass": true
+      },
+      "real": {
+        "attempts": [
+          {
+            "argv": [
+              "vllm",
+              "serve",
+              "/model-cache/cotcodec-models/qwen3.5-9b",
+              "--served-model-name",
+              "probe-model",
+              "--host",
+              "127.0.0.1",
+              "--port",
+              "8000",
+              "--load-format",
+              "auto",
+              "--disable-uvicorn-access-log",
+              "--tensor-parallel-size",
+              "1",
+              "--dtype",
+              "bfloat16",
+              "--seed",
+              "42",
+              "--max-model-len",
+              "131072",
+              "--gpu-memory-utilization",
+              "0.9",
+              "--max-num-seqs",
+              "256",
+              "--max-num-batched-tokens",
+              "8192",
+              "--enable-prefix-caching",
+              "--generation-config",
+              "vllm",
+              "--limit-mm-per-prompt",
+              "{\"image\":{\"count\":20,\"height\":1080,\"width\":1920},\"video\":0}"
+            ],
+            "eager": false,
+            "ready": true,
+            "ready_timeout_s": 900.0,
+            "seconds": 104.09249596577138
+          }
+        ],
+        "eager_fallback": false,
+        "pass": true
+      }
+    },
+    "G0.6": {
+      "dummy-control": {
+        "image_differential": {
+          "expected": 2040,
+          "image_tokens": 2042,
+          "pass": true,
+          "relative_tolerance": 0.02
+        },
+        "pass": true,
+        "smoke_ok": true
+      },
+      "real": {
+        "image_differential": {
+          "expected": 2040,
+          "image_tokens": 2042,
+          "pass": true,
+          "relative_tolerance": 0.02
+        },
+        "pass": true,
+        "smoke_ok": true
+      }
+    },
+    "G0.7": {
+      "dummy-control": {
+        "client_output_tokens": 1024,
+        "client_prompt_tokens": 63699,
+        "generation_delta": 1024.0,
+        "pass": true,
+        "prompt_delta": 63699.0,
+        "prompt_matched": 63699
+      },
+      "real": {
+        "client_output_tokens": 1024,
+        "client_prompt_tokens": 63699,
+        "generation_delta": 1024.0,
+        "pass": true,
+        "prompt_delta": 63699.0,
+        "prompt_matched": 63699
+      }
+    },
+    "G0.8": {
+      "dummy-control": {
+        "compute_apps": {
+          "names": [],
+          "pass": true,
+          "pids": [],
+          "status": "empty"
+        },
+        "max_memory_used_mib": 0.0,
+        "max_utilization_pct": 0.0,
+        "pass": true,
+        "samples": 20
+      },
+      "real": {
+        "compute_apps": {
+          "names": [],
+          "pass": true,
+          "pids": [],
+          "status": "empty"
+        },
+        "max_memory_used_mib": 1.0,
+        "max_utilization_pct": 0.0,
+        "pass": true,
+        "samples": 20
+      }
+    },
+    "G0.9": {
+      "dummy-control": {
+        "appearances": [],
+        "basis": "container-namespace PIDs in the engine's process tree",
+        "device_mib": 75325.0,
+        "device_samples": 146,
+        "foreign_process_detection": "a listed foreign process at any size; one NVML does not list (it may omit other PID namespaces) only through unattributed memory above the reservation's plus the margin",
+        "mode": "pid",
+        "origins": [
+          "engine"
+        ],
+        "own_mib": 75314.0,
+        "own_pids": [
+          3764
+        ],
+        "pass": true,
+        "pid_check": true,
+        "readable_snapshots": 36,
+        "snapshots": 36,
+        "unattributed_mib": 11.0,
+        "warmup_prompt_tokens_max": 48540
+      },
+      "real": {
+        "appearances": [],
+        "basis": "container-namespace PIDs in the engine's process tree",
+        "device_mib": 75653.0,
+        "device_samples": 147,
+        "foreign_process_detection": "a listed foreign process at any size; one NVML does not list (it may omit other PID namespaces) only through unattributed memory above the reservation's plus the margin",
+        "mode": "pid",
+        "origins": [
+          "engine"
+        ],
+        "own_mib": 75642.0,
+        "own_pids": [
+          481
+        ],
+        "pass": true,
+        "pid_check": true,
+        "readable_snapshots": 36,
+        "snapshots": 36,
+        "unattributed_mib": 11.0,
+        "warmup_prompt_tokens_max": 48540
+      }
+    }
+  },
+  "image_variant": "cu129",
+  "job": "a",
+  "launch_decisions": [
+    {
+      "at_s": 141.159,
+      "bound_s": 2400.0,
+      "kind": "required-first-attempt",
+      "launched": true,
+      "needed_s": 0.0,
+      "phase": "real",
+      "point": "a-smoke"
+    },
+    {
+      "at_s": 144.556,
+      "bound_s": 2400.0,
+      "kind": "required-first-attempt",
+      "launched": true,
+      "needed_s": 0.0,
+      "phase": "real",
+      "point": "a-warmup"
+    },
+    {
+      "at_s": 223.215,
+      "bound_s": 2400.0,
+      "kind": "required-first-attempt",
+      "launched": true,
+      "needed_s": 0.0,
+      "phase": "real",
+      "point": "a1a"
+    },
+    {
+      "at_s": 265.567,
+      "bound_s": 2400.0,
+      "kind": "required-first-attempt",
+      "launched": true,
+      "needed_s": 0.0,
+      "phase": "real",
+      "point": "r1"
+    },
+    {
+      "at_s": 353.364,
+      "bound_s": 2400.0,
+      "kind": "required-first-attempt",
+      "launched": true,
+      "needed_s": 0.0,
+      "phase": "real",
+      "point": "r3"
+    },
+    {
+      "at_s": 849.22,
+      "bound_s": 2400.0,
+      "kind": "required-first-attempt",
+      "launched": true,
+      "needed_s": 0.0,
+      "phase": "real",
+      "point": "r4"
+    },
+    {
+      "at_s": 994.819,
+      "bound_s": 2400.0,
+      "kind": "required-first-attempt",
+      "launched": true,
+      "needed_s": 0.0,
+      "phase": "real",
+      "point": "a1b"
+    },
+    {
+      "at_s": 1036.293,
+      "bound_s": 2400.0,
+      "kind": "required-first-attempt",
+      "launched": true,
+      "needed_s": 0.0,
+      "phase": "real",
+      "point": "a1c"
+    },
+    {
+      "at_s": 1077.561,
+      "bound_s": 2400.0,
+      "kind": "required-first-attempt",
+      "launched": true,
+      "needed_s": 0.0,
+      "phase": "real",
+      "point": "f1"
+    },
+    {
+      "at_s": 1118.282,
+      "bound_s": 2400.0,
+      "kind": "optional",
+      "launched": true,
+      "needed_s": 210.0,
+      "phase": "real",
+      "point": "r2"
+    },
+    {
+      "at_s": 1270.549,
+      "bound_s": 2400.0,
+      "kind": "optional",
+      "launched": true,
+      "needed_s": 120.0,
+      "phase": "real",
+      "point": "a2"
+    },
+    {
+      "at_s": 1327.541,
+      "bound_s": 2400.0,
+      "kind": "optional",
+      "launched": true,
+      "needed_s": 150.0,
+      "phase": "real",
+      "point": "r1b"
+    },
+    {
+      "at_s": 1490.662,
+      "bound_s": 3060.0,
+      "kind": "required-first-attempt",
+      "launched": true,
+      "needed_s": 0.0,
+      "phase": "dummy-control",
+      "point": "x1-smoke"
+    },
+    {
+      "at_s": 1493.74,
+      "bound_s": 3060.0,
+      "kind": "required-first-attempt",
+      "launched": true,
+      "needed_s": 0.0,
+      "phase": "dummy-control",
+      "point": "x1-warmup"
+    },
+    {
+      "at_s": 1571.87,
+      "bound_s": 3060.0,
+      "kind": "required-first-attempt",
+      "launched": true,
+      "needed_s": 0.0,
+      "phase": "dummy-control",
+      "point": "x1-a1"
+    },
+    {
+      "at_s": 1613.035,
+      "bound_s": 3060.0,
+      "kind": "required-first-attempt",
+      "launched": true,
+      "needed_s": 0.0,
+      "phase": "dummy-control",
+      "point": "x1-r1"
+    }
+  ],
+  "launch_window": {
+    "anchor": "job.env started_at",
+    "elapsed_at_driver_start_s": 16.042940378189087,
+    "hard_after_start_s": 3360.0,
+    "phases": [
+      {
+        "bound_after_start_s": 2400.0,
+        "hard_after_start_s": 2400.0,
+        "phase": "real",
+        "required_caps": {
+          "a-smoke": 1.5,
+          "a-warmup": 2.5,
+          "a1a": 1.5,
+          "a1b": 1.5,
+          "a1c": 1.5,
+          "f1": 1.5,
+          "r1": 2.5,
+          "r3": 12.0,
+          "r4": 3.5
+        },
+        "reserved_minutes": 32.0,
+        "start_minutes": 4.0
+      },
+      {
+        "bound_after_start_s": 3060.0,
+        "hard_after_start_s": 3360.0,
+        "phase": "dummy-control",
+        "required_caps": {
+          "x1-a1": 1.5,
+          "x1-r1": 2.5,
+          "x1-smoke": 1.5,
+          "x1-warmup": 2.5
+        },
+        "reserved_minutes": 11.0,
+        "start_minutes": 3.0
+      }
+    ],
+    "soft_after_start_s": 3060.0
+  },
+  "phases": {
+    "dummy-control": {
+      "G0.5": {
+        "attempts": [
+          {
+            "argv": [
+              "vllm",
+              "serve",
+              "/model-cache/cotcodec-models/qwen3.5-9b",
+              "--served-model-name",
+              "probe-model",
+              "--host",
+              "127.0.0.1",
+              "--port",
+              "8000",
+              "--load-format",
+              "dummy",
+              "--disable-uvicorn-access-log",
+              "--tensor-parallel-size",
+              "1",
+              "--dtype",
+              "bfloat16",
+              "--seed",
+              "42",
+              "--max-model-len",
+              "131072",
+              "--gpu-memory-utilization",
+              "0.9",
+              "--max-num-seqs",
+              "256",
+              "--max-num-batched-tokens",
+              "8192",
+              "--enable-prefix-caching",
+              "--generation-config",
+              "vllm",
+              "--limit-mm-per-prompt",
+              "{\"image\":{\"count\":20,\"height\":1080,\"width\":1920},\"video\":0}"
+            ],
+            "eager": false,
+            "ready": true,
+            "ready_timeout_s": 900.0,
+            "seconds": 62.04014639556408
+          }
+        ],
+        "eager_fallback": false,
+        "pass": true
+      },
+      "G0.6": {
+        "image_differential": {
+          "expected": 2040,
+          "image_tokens": 2042,
+          "pass": true,
+          "relative_tolerance": 0.02
+        },
+        "pass": true,
+        "smoke_ok": true
+      },
+      "G0.7": {
+        "client_output_tokens": 1024,
+        "client_prompt_tokens": 63699,
+        "generation_delta": 1024.0,
+        "pass": true,
+        "prompt_delta": 63699.0,
+        "prompt_matched": 63699
+      },
+      "G0.8": {
+        "compute_apps": {
+          "names": [],
+          "pass": true,
+          "pids": [],
+          "status": "empty"
+        },
+        "max_memory_used_mib": 0.0,
+        "max_utilization_pct": 0.0,
+        "pass": true,
+        "samples": 20
+      },
+      "G0.9": {
+        "appearances": [],
+        "basis": "container-namespace PIDs in the engine's process tree",
+        "device_mib": 75325.0,
+        "device_samples": 146,
+        "foreign_process_detection": "a listed foreign process at any size; one NVML does not list (it may omit other PID namespaces) only through unattributed memory above the reservation's plus the margin",
+        "mode": "pid",
+        "origins": [
+          "engine"
+        ],
+        "own_mib": 75314.0,
+        "own_pids": [
+          3764
+        ],
+        "pass": true,
+        "pid_check": true,
+        "readable_snapshots": 36,
+        "snapshots": 36,
+        "unattributed_mib": 11.0,
+        "warmup_prompt_tokens_max": 48540
+      },
+      "cut": false,
+      "engine": "a-dummy",
+      "engine_facts": {
+        "compilation_config_line": "ybrid_gdn_full_forward', 'vllm::sparse_attn_indexer', 'vllm::rocm_aiter_sparse_attn_indexer', 'vllm::deepseek_v4_attention', 'vllm::hpc_rope_norm_forward', 'vllm::unified_kv_cache_update', 'vllm::unified_mla_kv_cache_update'], 'compile_mm_encoder': False, 'cudagraph_mm_encoder': False, 'encoder_cudagraph_token_budgets': [], 'encoder_cudagraph_max_vision_items_per_batch': 0, 'encoder_cudagraph_max_frames_per_batch': None, 'compile_sizes': [], 'compile_ranges_endpoints': [8192], 'inductor_compile_config': {'enable_auto_functionalized_v2': False, 'combo_kernels': True, 'benchmark_combo_kernel': True}, 'inductor_passes': {}, 'cudagraph_mode': <CUDAGraphMode.FULL_AND_PIECEWISE: (2, 1)>, 'cudagraph_num_of_warmups': 1, 'cudagraph_capture_sizes': [1, 2, 4, 8, 16, 24, 32, 40, 48, 56, 64, 72, 80, 88, 96, 104, 112, 120, 128, 136, 144, 152, 160, 168, 176, 184, 192, 200, 208, 216, 224, 232, 240, 248, 256, 272, 288, 304, 320, 336, 352, 368, 384, 400, 416, 432, 448, 464, 480, 496, 512], 'cudagraph_copy_inputs': False, 'cudagraph_specialize_lora': True, 'use_inductor_graph_partition': False, 'pass_config': {'fuse_norm_quant': False, 'fuse_act_quant': False, 'fuse_attn_quant': False, 'enable_sp': False, 'fuse_gemm_comms': False, 'fuse_allreduce_rms': False, 'enable_qk_norm_rope_fusion': False, 'fuse_rope_kvcache_cat_mla': False, 'fuse_act_padding': False, 'fuse_qk_norm_rope_kvcache': False}, 'max_cudagraph_capture_size': 512, 'dynamic_shapes_config': {'type': <DynamicShapesType.BACKED: 'backed'>, 'evaluate_guards': False, 'assume_32_bit_indexing': False}, 'local_cache_dir': None, 'fast_moe_cold_start': False, 'static_all_moe_layers': []}, kernel_config=KernelConfig(ir_op_priority=IrOpPriorityConfig(rms_norm=['native'], fused_add_rms_norm=['native'], gelu_and_mul_sparse=['triton', 'native']), enable_flashinfer_autotune=True, enable_cutedsl_warmup=True, enable_jit_warmup=True, moe_backend='auto', sparse_indexer_topk_backend='auto', linear_backend='auto', linear_backend_per_quant=None)",
+        "compile_s": null,
+        "enforce_eager": false,
+        "graph_capture_s": 5.0,
+        "init_engine_s": null,
+        "kv_cache_gib": 51.23,
+        "kv_cache_tokens": 1634030.0,
+        "max_concurrency": [
+          131072.0,
+          12.47
+        ],
+        "tmp_mapped_files": {},
+        "weights_gib": 17.66
+      },
+      "engine_facts_final": {
+        "compilation_config_line": "ybrid_gdn_full_forward', 'vllm::sparse_attn_indexer', 'vllm::rocm_aiter_sparse_attn_indexer', 'vllm::deepseek_v4_attention', 'vllm::hpc_rope_norm_forward', 'vllm::unified_kv_cache_update', 'vllm::unified_mla_kv_cache_update'], 'compile_mm_encoder': False, 'cudagraph_mm_encoder': False, 'encoder_cudagraph_token_budgets': [], 'encoder_cudagraph_max_vision_items_per_batch': 0, 'encoder_cudagraph_max_frames_per_batch': None, 'compile_sizes': [], 'compile_ranges_endpoints': [8192], 'inductor_compile_config': {'enable_auto_functionalized_v2': False, 'combo_kernels': True, 'benchmark_combo_kernel': True}, 'inductor_passes': {}, 'cudagraph_mode': <CUDAGraphMode.FULL_AND_PIECEWISE: (2, 1)>, 'cudagraph_num_of_warmups': 1, 'cudagraph_capture_sizes': [1, 2, 4, 8, 16, 24, 32, 40, 48, 56, 64, 72, 80, 88, 96, 104, 112, 120, 128, 136, 144, 152, 160, 168, 176, 184, 192, 200, 208, 216, 224, 232, 240, 248, 256, 272, 288, 304, 320, 336, 352, 368, 384, 400, 416, 432, 448, 464, 480, 496, 512], 'cudagraph_copy_inputs': False, 'cudagraph_specialize_lora': True, 'use_inductor_graph_partition': False, 'pass_config': {'fuse_norm_quant': False, 'fuse_act_quant': False, 'fuse_attn_quant': False, 'enable_sp': False, 'fuse_gemm_comms': False, 'fuse_allreduce_rms': False, 'enable_qk_norm_rope_fusion': False, 'fuse_rope_kvcache_cat_mla': False, 'fuse_act_padding': False, 'fuse_qk_norm_rope_kvcache': False}, 'max_cudagraph_capture_size': 512, 'dynamic_shapes_config': {'type': <DynamicShapesType.BACKED: 'backed'>, 'evaluate_guards': False, 'assume_32_bit_indexing': False}, 'local_cache_dir': None, 'fast_moe_cold_start': False, 'static_all_moe_layers': []}, kernel_config=KernelConfig(ir_op_priority=IrOpPriorityConfig(rms_norm=['native'], fused_add_rms_norm=['native'], gelu_and_mul_sparse=['triton', 'native']), enable_flashinfer_autotune=True, enable_cutedsl_warmup=True, enable_jit_warmup=True, moe_backend='auto', sparse_indexer_topk_backend='auto', linear_backend='auto', linear_backend_per_quant=None)",
+        "compile_s": null,
+        "enforce_eager": false,
+        "graph_capture_s": 5.0,
+        "init_engine_s": null,
+        "kv_cache_gib": 51.23,
+        "kv_cache_tokens": 1634030.0,
+        "max_concurrency": [
+          131072.0,
+          12.47
+        ],
+        "weights_gib": 17.66
+      },
+      "engine_stop": {
+        "killed": false,
+        "returncode": 0
+      },
+      "memory_release": {
+        "memory_used_mib": 4.0,
+        "released": true
+      },
+      "reruns_not_launched": [],
+      "reservation": {
+        "appearances": [],
+        "basis": "container-namespace PIDs in the engine's process tree",
+        "device_mib": 75325.0,
+        "foreign_process_detection": "a listed foreign process at any size; one NVML does not list (it may omit other PID namespaces) only through unattributed memory above the reservation's plus the margin",
+        "mode": "pid",
+        "origins": [
+          "engine"
+        ],
+        "own_mib": 75314.0,
+        "own_pids": [
+          3764
+        ],
+        "pid_check": true,
+        "snapshots": 36,
+        "unattributed_mib": 11.0
+      },
+      "role": "dummy-control"
+    },
+    "real": {
+      "G0.5": {
+        "attempts": [
+          {
+            "argv": [
+              "vllm",
+              "serve",
+              "/model-cache/cotcodec-models/qwen3.5-9b",
+              "--served-model-name",
+              "probe-model",
+              "--host",
+              "127.0.0.1",
+              "--port",
+              "8000",
+              "--load-format",
+              "auto",
+              "--disable-uvicorn-access-log",
+              "--tensor-parallel-size",
+              "1",
+              "--dtype",
+              "bfloat16",
+              "--seed",
+              "42",
+              "--max-model-len",
+              "131072",
+              "--gpu-memory-utilization",
+              "0.9",
+              "--max-num-seqs",
+              "256",
+              "--max-num-batched-tokens",
+              "8192",
+              "--enable-prefix-caching",
+              "--generation-config",
+              "vllm",
+              "--limit-mm-per-prompt",
+              "{\"image\":{\"count\":20,\"height\":1080,\"width\":1920},\"video\":0}"
+            ],
+            "eager": false,
+            "ready": true,
+            "ready_timeout_s": 900.0,
+            "seconds": 104.09249596577138
+          }
+        ],
+        "eager_fallback": false,
+        "pass": true
+      },
+      "G0.6": {
+        "image_differential": {
+          "expected": 2040,
+          "image_tokens": 2042,
+          "pass": true,
+          "relative_tolerance": 0.02
+        },
+        "pass": true,
+        "smoke_ok": true
+      },
+      "G0.7": {
+        "client_output_tokens": 1024,
+        "client_prompt_tokens": 63699,
+        "generation_delta": 1024.0,
+        "pass": true,
+        "prompt_delta": 63699.0,
+        "prompt_matched": 63699
+      },
+      "G0.8": {
+        "compute_apps": {
+          "names": [],
+          "pass": true,
+          "pids": [],
+          "status": "empty"
+        },
+        "max_memory_used_mib": 1.0,
+        "max_utilization_pct": 0.0,
+        "pass": true,
+        "samples": 20
+      },
+      "G0.9": {
+        "appearances": [],
+        "basis": "container-namespace PIDs in the engine's process tree",
+        "device_mib": 75653.0,
+        "device_samples": 147,
+        "foreign_process_detection": "a listed foreign process at any size; one NVML does not list (it may omit other PID namespaces) only through unattributed memory above the reservation's plus the margin",
+        "mode": "pid",
+        "origins": [
+          "engine"
+        ],
+        "own_mib": 75642.0,
+        "own_pids": [
+          481
+        ],
+        "pass": true,
+        "pid_check": true,
+        "readable_snapshots": 36,
+        "snapshots": 36,
+        "unattributed_mib": 11.0,
+        "warmup_prompt_tokens_max": 48540
+      },
+      "cut": false,
+      "engine": "a-real",
+      "engine_facts": {
+        "compilation_config_line": "ybrid_gdn_full_forward', 'vllm::sparse_attn_indexer', 'vllm::rocm_aiter_sparse_attn_indexer', 'vllm::deepseek_v4_attention', 'vllm::hpc_rope_norm_forward', 'vllm::unified_kv_cache_update', 'vllm::unified_mla_kv_cache_update'], 'compile_mm_encoder': False, 'cudagraph_mm_encoder': False, 'encoder_cudagraph_token_budgets': [], 'encoder_cudagraph_max_vision_items_per_batch': 0, 'encoder_cudagraph_max_frames_per_batch': None, 'compile_sizes': [], 'compile_ranges_endpoints': [8192], 'inductor_compile_config': {'enable_auto_functionalized_v2': False, 'combo_kernels': True, 'benchmark_combo_kernel': True}, 'inductor_passes': {}, 'cudagraph_mode': <CUDAGraphMode.FULL_AND_PIECEWISE: (2, 1)>, 'cudagraph_num_of_warmups': 1, 'cudagraph_capture_sizes': [1, 2, 4, 8, 16, 24, 32, 40, 48, 56, 64, 72, 80, 88, 96, 104, 112, 120, 128, 136, 144, 152, 160, 168, 176, 184, 192, 200, 208, 216, 224, 232, 240, 248, 256, 272, 288, 304, 320, 336, 352, 368, 384, 400, 416, 432, 448, 464, 480, 496, 512], 'cudagraph_copy_inputs': False, 'cudagraph_specialize_lora': True, 'use_inductor_graph_partition': False, 'pass_config': {'fuse_norm_quant': False, 'fuse_act_quant': False, 'fuse_attn_quant': False, 'enable_sp': False, 'fuse_gemm_comms': False, 'fuse_allreduce_rms': False, 'enable_qk_norm_rope_fusion': False, 'fuse_rope_kvcache_cat_mla': False, 'fuse_act_padding': False, 'fuse_qk_norm_rope_kvcache': False}, 'max_cudagraph_capture_size': 512, 'dynamic_shapes_config': {'type': <DynamicShapesType.BACKED: 'backed'>, 'evaluate_guards': False, 'assume_32_bit_indexing': False}, 'local_cache_dir': None, 'fast_moe_cold_start': False, 'static_all_moe_layers': []}, kernel_config=KernelConfig(ir_op_priority=IrOpPriorityConfig(rms_norm=['native'], fused_add_rms_norm=['native'], gelu_and_mul_sparse=['triton', 'native']), enable_flashinfer_autotune=True, enable_cutedsl_warmup=True, enable_jit_warmup=True, moe_backend='auto', sparse_indexer_topk_backend='auto', linear_backend='auto', linear_backend_per_quant=None)",
+        "compile_s": null,
+        "enforce_eager": false,
+        "graph_capture_s": 6.0,
+        "init_engine_s": null,
+        "kv_cache_gib": 51.24,
+        "kv_cache_tokens": 1634030.0,
+        "max_concurrency": [
+          131072.0,
+          12.47
+        ],
+        "tmp_mapped_files": {},
+        "weights_gib": 17.66
+      },
+      "engine_facts_final": {
+        "compilation_config_line": "ybrid_gdn_full_forward', 'vllm::sparse_attn_indexer', 'vllm::rocm_aiter_sparse_attn_indexer', 'vllm::deepseek_v4_attention', 'vllm::hpc_rope_norm_forward', 'vllm::unified_kv_cache_update', 'vllm::unified_mla_kv_cache_update'], 'compile_mm_encoder': False, 'cudagraph_mm_encoder': False, 'encoder_cudagraph_token_budgets': [], 'encoder_cudagraph_max_vision_items_per_batch': 0, 'encoder_cudagraph_max_frames_per_batch': None, 'compile_sizes': [], 'compile_ranges_endpoints': [8192], 'inductor_compile_config': {'enable_auto_functionalized_v2': False, 'combo_kernels': True, 'benchmark_combo_kernel': True}, 'inductor_passes': {}, 'cudagraph_mode': <CUDAGraphMode.FULL_AND_PIECEWISE: (2, 1)>, 'cudagraph_num_of_warmups': 1, 'cudagraph_capture_sizes': [1, 2, 4, 8, 16, 24, 32, 40, 48, 56, 64, 72, 80, 88, 96, 104, 112, 120, 128, 136, 144, 152, 160, 168, 176, 184, 192, 200, 208, 216, 224, 232, 240, 248, 256, 272, 288, 304, 320, 336, 352, 368, 384, 400, 416, 432, 448, 464, 480, 496, 512], 'cudagraph_copy_inputs': False, 'cudagraph_specialize_lora': True, 'use_inductor_graph_partition': False, 'pass_config': {'fuse_norm_quant': False, 'fuse_act_quant': False, 'fuse_attn_quant': False, 'enable_sp': False, 'fuse_gemm_comms': False, 'fuse_allreduce_rms': False, 'enable_qk_norm_rope_fusion': False, 'fuse_rope_kvcache_cat_mla': False, 'fuse_act_padding': False, 'fuse_qk_norm_rope_kvcache': False}, 'max_cudagraph_capture_size': 512, 'dynamic_shapes_config': {'type': <DynamicShapesType.BACKED: 'backed'>, 'evaluate_guards': False, 'assume_32_bit_indexing': False}, 'local_cache_dir': None, 'fast_moe_cold_start': False, 'static_all_moe_layers': []}, kernel_config=KernelConfig(ir_op_priority=IrOpPriorityConfig(rms_norm=['native'], fused_add_rms_norm=['native'], gelu_and_mul_sparse=['triton', 'native']), enable_flashinfer_autotune=True, enable_cutedsl_warmup=True, enable_jit_warmup=True, moe_backend='auto', sparse_indexer_topk_backend='auto', linear_backend='auto', linear_backend_per_quant=None)",
+        "compile_s": null,
+        "enforce_eager": false,
+        "graph_capture_s": 6.0,
+        "init_engine_s": null,
+        "kv_cache_gib": 51.24,
+        "kv_cache_tokens": 1634030.0,
+        "max_concurrency": [
+          131072.0,
+          12.47
+        ],
+        "weights_gib": 17.66
+      },
+      "engine_stop": {
+        "killed": false,
+        "returncode": 0
+      },
+      "memory_release": {
+        "memory_used_mib": 4.0,
+        "released": true
+      },
+      "reruns_not_launched": [],
+      "reservation": {
+        "appearances": [],
+        "basis": "container-namespace PIDs in the engine's process tree",
+        "device_mib": 75653.0,
+        "foreign_process_detection": "a listed foreign process at any size; one NVML does not list (it may omit other PID namespaces) only through unattributed memory above the reservation's plus the margin",
+        "mode": "pid",
+        "origins": [
+          "engine"
+        ],
+        "own_mib": 75642.0,
+        "own_pids": [
+          481
+        ],
+        "pid_check": true,
+        "snapshots": 36,
+        "unattributed_mib": 11.0
+      },
+      "role": "primary"
+    }
+  },
+  "point_sha256": {
+    "a-smoke": "d2667d78be146549c3e03f4df9f11958a521c32b8832c64bae68c3ac4ae52029",
+    "a-warmup": "81d6ba20ad7a6a285eba6d950202dd64f732458d87744e00e2066a5e2cb0bc6b",
+    "a1a": "428f74006d1c0dab5eac5c60d6d487b46af4f195d5ae3c9a36a39d4b4bad3bdc",
+    "a1b": "82e6530d574f50f10bdf08192023201f45c8f08288f4751d427052c96fa9cc31",
+    "a1c": "a07a10fa763d7ad6247a98173418986307239f86336a0fca4b6f15cb6241d5c4",
+    "a2": "da6d9f6749e71f67e1330ed8409d965a4e82bfd51fc3d66046b3123dba440af8",
+    "f1": "a28442e94ae1f3a557bef535b6f418c41b6660803d37720510ddc02ce57dbcab",
+    "r1": "37e73b8a2589cbbc848b60c707baaf11123697791335c0c92b9b5e35eb11122a",
+    "r1b": "dbcaf4e08be0e20d124a568eb34985bb315466e196d0beb9edaaaf29ab886048",
+    "r2": "d21dd6174b2271fd9b7783fd2411dc905c82f09db29b562ced015c62d392a59c",
+    "r3": "16e9d1b740d2d30ebcec292554815eab9a7bf3695f9dd758aa244a29277d0f4f",
+    "r4": "81a4d91e41d8bdf4f903682f77baba85be8cd309f406719331cdb81cf502ae83",
+    "x1-a1": "2fd92ca85e49c973dde35dea24608890954dee6bca736c4b322b0d1bd3424f45",
+    "x1-r1": "c4de831f00b2459b6151926ae4eb668a016304c90cfde54f56317d95bfa7e95a",
+    "x1-smoke": "c2e9f03dc67d014cfa8a5566a79baa6307280505b143209fdecb24ede4c27857",
+    "x1-warmup": "7053889924ea392e0548cc4b43899035f161f92b97126bcaa1b1b8b856b05f2e"
+  },
+  "points": {
+    "a-smoke": "valid",
+    "a-warmup": "valid",
+    "a1a": "valid",
+    "a1b": "valid",
+    "a1c": "valid",
+    "a2": "valid",
+    "f1": "valid",
+    "r1": "valid",
+    "r1b": "valid",
+    "r2": "valid",
+    "r3": "valid-flagged",
+    "r4": "valid",
+    "x1-a1": "valid",
+    "x1-r1": "valid",
+    "x1-smoke": "valid",
+    "x1-warmup": "valid"
+  },
+  "resumed_terminal_points": [],
+  "seeds": [
+    42,
+    43,
+    44
+  ],
+  "signal": null,
+  "signals_received": [],
+  "started_at": "2026-10-07T15:07:07Z",
+  "status": "complete",
+  "x1": {
+    "a1_seed_range": 0.01817005283843075,
+    "a1_seeds_valid": 3,
+    "attribution": {
+      "dummy-control": {
+        "basis": "container-namespace PIDs in the engine's process tree",
+        "foreign_process_detection": "a listed foreign process at any size; one NVML does not list (it may omit other PID namespaces) only through unattributed memory above the reservation's plus the margin",
+        "mode": "pid",
+        "pass": true,
+        "pid_check": true,
+        "reason": null
+      },
+      "real": {
+        "basis": "container-namespace PIDs in the engine's process tree",
+        "foreign_process_detection": "a listed foreign process at any size; one NVML does not list (it may omit other PID namespaces) only through unattributed memory above the reservation's plus the margin",
+        "mode": "pid",
+        "pass": true,
+        "pid_check": true,
+        "reason": null
+      }
+    },
+    "identity": {
+      "a1a/x1-a1": {
+        "basis": "prompt-token-ids",
+        "differing": [],
+        "identical": true,
+        "reason": null,
+        "requests": 96
+      },
+      "r1/x1-r1": {
+        "basis": "prompt-token-ids",
+        "differing": [],
+        "identical": true,
+        "reason": null,
+        "requests": 240
+      }
+    },
+    "notes": [
+      "The replay threshold (8%) was set after v1's X1 result (v1: threshold 5%, r1/x1-r1 delta 5.89% on prompts 6.6% apart).",
+      "The replay delta's standard error uses within-run, per-request spread as the run-to-run noise; the registered operating characteristics are model-based. The same-engine replicate r1b, when valid and comparable, is the measured check."
+    ],
+    "open_loop_relative_delta": 0.026624414762665832,
+    "outcome": "pass",
+    "reason": null,
+    "replay_delta_se": 0.04001763384781752,
+    "replay_delta_z": 0.6783036129679932,
+    "replay_relative_delta": 0.02714410562140488,
+    "same_engine_replicate": {
+      "delta_se": 0.040479597609151985,
+      "identity": {
+        "basis": "prompt-token-ids",
+        "differing": [],
+        "identical": true,
+        "reason": null,
+        "requests": 240
+      },
+      "point": "r1b",
+      "reason": null,
+      "reference": "r1",
+      "relative_delta": 0.008023384305207342,
+      "used": true,
+      "within_replay_threshold": true
+    },
+    "thresholds": {
+      "a1_seed_range": 0.05,
+      "open_loop": 0.05,
+      "replay_delta_se": 0.05,
+      "replay_latency": 0.08
+    }
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "actions": [
+    {
+      "action": "uninstalled",
+      "package": "torchcodec",
+      "reason": "OSError: Could not load this library: /usr/local/lib/python3.12/dist-packages/torchcodec/libtorchcodec_image.so",
+      "version": "0.17.0"
+    }
+  ],
+  "required_imports": [
+    "vllm.engine.arg_utils",
+    "vllm.entrypoints.launchers.cli_args",
+    "vllm.multimodal",
+    "transformers"
+  ],
+  "schema_version": 1
+}
