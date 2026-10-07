@@ -47,6 +47,8 @@ AUDIT_FILES = (
     "audit/gpu_probes.py",
     "audit/calibration.py",
     "audit/replay.py",
+    # The audit's fp64 error metric and byte comparisons (shared numeric helpers).
+    "gates/reductions.py",
 )
 
 

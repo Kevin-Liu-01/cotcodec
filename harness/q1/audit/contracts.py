@@ -44,6 +44,22 @@ def _snapshot(values: Sequence[Any]) -> list[bytes | None]:
     return [tensor_bytes(v) if isinstance(v, torch.Tensor) else None for v in values]
 
 
+def same_bytes(left: Sequence[Any], right: Sequence[Any]) -> bool:
+    """``_snapshot(left) == _snapshot(right)``, compared on the device without host
+    copies (non-tensors compare equal to non-tensors, as their snapshot is ``None``)."""
+    from harness.q1.gates.reductions import bytes_equal
+
+    if len(left) != len(right):
+        return False
+    for a, b in zip(left, right, strict=True):
+        a_tensor, b_tensor = isinstance(a, torch.Tensor), isinstance(b, torch.Tensor)
+        if a_tensor != b_tensor:
+            return False
+        if a_tensor and not bytes_equal(a, b):
+            return False
+    return True
+
+
 def _clone_inputs(values: Sequence[Any]) -> list[Any]:
     return [v.clone() if isinstance(v, torch.Tensor) else v for v in values]
 
@@ -72,23 +88,32 @@ def check_determinism_and_aliasing(
     device: torch.device,
     runs: int = 5,
 ) -> list[ContractResult]:
-    """determinism, no-reuse/no-aliasing and input-immutability in one pass."""
-    reference_bytes = _snapshot(inputs)
+    """determinism, no-reuse/no-aliasing and input-immutability in one pass.
+
+    Byte comparisons run on the device (``same_bytes``): each run's outputs are
+    compared, right after the call returns, with a clone of run 0's outputs taken
+    when run 0 returned, and each run's inputs with the untouched originals (the
+    candidate only ever receives clones). This is the comparison of host byte
+    snapshots taken at those moments, without copying multi-GB tensors to the host.
+    """
     live_outputs: list[list[torch.Tensor]] = []
     live_inputs: list[list[Any]] = []
-    output_bytes: list[list[bytes]] = []
+    first_outputs: list[torch.Tensor] = []
+    deterministic = True
     mutated: list[int] = []
     with torch.no_grad():
         for run in range(runs):
             run_inputs = _clone_inputs(inputs)
             outputs = first_tensor_outputs(candidate(*run_inputs))
             synchronize(device)
-            if _snapshot(run_inputs) != reference_bytes:
+            if not same_bytes(run_inputs, inputs):
                 mutated.append(run)
+            if run == 0:
+                first_outputs = [o.detach().clone() for o in outputs]
+            elif not same_bytes(outputs, first_outputs):
+                deterministic = False
             live_inputs.append(run_inputs)
             live_outputs.append(outputs)
-            output_bytes.append([tensor_bytes(o) for o in outputs])
-    deterministic = all(b == output_bytes[0] for b in output_bytes[1:])
     spans = [[_storage_span(o) for o in outs if o.numel() > 0] for outs in live_outputs]
     reuse = any(
         _overlaps(a, b)
@@ -146,14 +171,14 @@ def factory_poison(byte: int) -> Iterator[None]:
 def check_factory_poison(
     candidate: torch.nn.Module, inputs: Sequence[Any], *, device: torch.device
 ) -> ContractResult:
-    results: list[list[bytes]] = []
+    results: list[list[torch.Tensor]] = []
     with torch.no_grad():
         for byte in POISON_BYTES:
             with factory_poison(byte):
                 outputs = first_tensor_outputs(candidate(*_clone_inputs(inputs)))
                 synchronize(device)
-            results.append([tensor_bytes(o) for o in outputs])
-    same = results[0] == results[1]
+            results.append([o.detach().clone() for o in outputs])
+    same = same_bytes(results[0], results[1])
     return ContractResult("dual_poison_factory", same, {"bytes": list(POISON_BYTES)})
 
 

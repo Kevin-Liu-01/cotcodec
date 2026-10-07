@@ -10,7 +10,6 @@ from __future__ import annotations
 
 import contextlib
 import importlib.util
-import math
 import os
 import sys
 import tempfile
@@ -150,27 +149,12 @@ def error_stats(output: torch.Tensor, reference: torch.Tensor) -> tuple[float, f
 
     Relative error divides by ``|reference|`` and skips exact-zero references.
     A non-finite mismatch (NaN or infinity where the other side differs)
-    makes both errors ``inf``.
+    makes both errors ``inf``. Computed in fp64 in chunks on the tensors'
+    device (``gates.reductions``; the same numbers as a host fp64 copy).
     """
-    out = output.detach().to("cpu", torch.float64)
-    ref = reference.detach().to("cpu", torch.float64)
-    if out.shape != ref.shape:
-        return math.inf, math.inf
-    if out.numel() == 0:
-        return 0.0, 0.0
-    both_finite = torch.isfinite(out) & torch.isfinite(ref)
-    same_nonfinite = (torch.isnan(out) & torch.isnan(ref)) | (
-        torch.isinf(out) & torch.isinf(ref) & (torch.sign(out) == torch.sign(ref))
-    )
-    if bool((~both_finite & ~same_nonfinite).any()):
-        return math.inf, math.inf
-    if not bool(both_finite.any()):
-        return 0.0, 0.0
-    diff = (out - ref).abs()[both_finite]
-    denom = ref.abs()[both_finite]
-    nonzero = denom > 0
-    max_rel = float((diff[nonzero] / denom[nonzero]).max()) if bool(nonzero.any()) else 0.0
-    return float(diff.max()), max_rel
+    from harness.q1.gates.reductions import error_stats as chunked
+
+    return chunked(output, reference)
 
 
 def allclose_compare(output: Any, reference: Any, atol: float, rtol: float) -> Comparison:
