@@ -29,7 +29,10 @@ Code. The probe job runs from the source baked into the probe image, built by
 `infra/slurm/host-single-node/build-architecture-image.sbatch` from a fresh
 clean clone of the commit that holds this file's ledger row. The manifest
 filler (`scripts/fill_sparse_indexer_k1_probe_manifest.py`) refuses to fill
-the manifest unless every file below has this SHA-256, and the probe writes
+the manifest unless every file below has this SHA-256, both in the checkout
+and at the image's commit (which must also hold this file's ledger row), and
+unless the manifest requests exactly 1 GPU for 9 minutes under a 0.15 GPU-h
+cap; the probe writes
 the digests of the files it ran into its receipt. The v2 registration tables
 the same digests for the files they share, and the v2 manifest filler refuses
 a probe receipt that measured any other version: changing any of this code
@@ -47,7 +50,7 @@ needed.
 | harness/sparse_indexer_k1_runtime.py | 6fbddc91b6f7224f909901edb82278a68f68a208b558526c1a778ec9da6812fd |
 | harness/sparse_indexer_k1_marker.py | 7bc69aa4d27a7d6de92f69a2f7b8e71d98b32101a2f34709fbaef2bdf84c3f1a |
 | scripts/run_sparse_indexer_phase0a.py | ee11c38c3d84e691133b9563a3945331831ceb84ad7207d4c4f7a72e0906aef8 |
-| scripts/fill_sparse_indexer_k1_probe_manifest.py | a5133df261e012ec94d300d174a6e13d636c41b100965f1fd57663ead970c7e0 |
+| scripts/fill_sparse_indexer_k1_probe_manifest.py | 739b721a8fcc98f9f849dc2ee7ca7ac66f557ac82f1dae569b8ba60d31215edd |
 
 The last four v1 files are `q3-k1-localization-screen-v1`'s tabled files,
 unchanged (same SHA-256 as in its registration): the probe imports v1's
@@ -76,7 +79,8 @@ does.
 Synthetic token ids only, from NumPy's `default_rng`: uniform over the regular
 vocabulary (ids below 151643), every training and evaluation sequence opening
 with the registered sink token 151643 (the options of the multiple-choice
-units do not), seed 42 for the tolerance sequence and, in one stream, the
+units do not, and neither does the tolerance arm's single evaluation unit,
+which feeds the same tokens to v1's and v2's paths), seed 42 for the tolerance sequence and, in one stream, the
 training batches, the stream-dev sequences and the solo workers; 43 for the
 evaluation units, 44 for the capture check, 45 for the component split and 52
 to 55 for the four concurrent workers. No Belebele text, no K1
