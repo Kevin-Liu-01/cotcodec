@@ -33,6 +33,27 @@ if [[ "${split}" != "dev" ]]; then
     exit 2
   fi
   frozen_env=(env Q2M_PREREG_FROZEN=q2-evaluator-mutation-v1)
+  # The code, catalog and spec digests are checked inside the containers
+  # (campaign.check_pins); the image IDs and the application mode only here.
+  python3 - "${src}/program/preregistrations/q2-evaluator-mutation-v1.md" \
+    "${metric}" "${lo}" "${apply_to}" <<'PY'
+import json
+import re
+import sys
+
+text = open(sys.argv[1], encoding="utf-8").read()
+blocks = [
+    json.loads(body)
+    for body in re.findall(r"^```json\n(.*?)^```$", text, re.DOTALL | re.MULTILINE)
+    if '"q2m_pins"' in body
+]
+if len(blocks) != 1:
+    sys.exit("the preregistration needs exactly one q2m_pins block")
+pins = blocks[0]
+wanted = (pins["metric_image_id"], pins["lo_vm_image_id"], pins["apply_to"])
+if wanted != tuple(sys.argv[2:5]):
+    sys.exit(f"images or apply-to differ from the preregistration pins: {wanted}")
+PY
 fi
 mkdir -p "${run}/prep" "${run}/build" "${run}/score"
 hex() { python3 -c 'import json,sys; print(json.dumps(sys.argv[1:]).encode().hex())' "$@"; }

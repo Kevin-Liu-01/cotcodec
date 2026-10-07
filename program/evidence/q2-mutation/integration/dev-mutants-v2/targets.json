@@ -1,0 +1,105 @@
+{
+ "skipped": {
+  "derived by a postconfig conversion (mutate its source instead)": 1,
+  "no complete gold": 13,
+  "no operator family for this file type": 3
+ },
+ "skipped_detail": [
+  {
+   "reason": "no complete gold",
+   "task_id": "08c73485-7c6d-4681-999d-919f5c32dcfa",
+   "vm_path": null
+  },
+  {
+   "reason": "no complete gold",
+   "task_id": "0e47de2a-32e0-456c-a366-8c607ef7a9d2",
+   "vm_path": null
+  },
+  {
+   "reason": "no complete gold",
+   "task_id": "276cc624-87ea-4f08-ab93-f770e3790175",
+   "vm_path": null
+  },
+  {
+   "reason": "no complete gold",
+   "task_id": "2b94c692-6abb-48ae-ab0b-b3e8a19cb340",
+   "vm_path": null
+  },
+  {
+   "reason": "no complete gold",
+   "task_id": "3f28fe4f-5d9d-4994-a456-efd78cfae1a3",
+   "vm_path": null
+  },
+  {
+   "reason": "no complete gold",
+   "task_id": "415ef462-bed3-493a-ac36-ca8c6d23bf1b",
+   "vm_path": null
+  },
+  {
+   "reason": "no operator family for this file type",
+   "task_id": "6a33f9b9-0a56-4844-9c3f-96ec3ffb3ba2",
+   "vm_path": "/home/user/Desktop/sample-recruitment-phone-script.odt"
+  },
+  {
+   "reason": "derived by a postconfig conversion (mutate its source instead)",
+   "task_id": "6e99a1ad-07d2-4b66-a1ce-ece6d99c20a5",
+   "vm_path": "/home/user/Keep_Two_decimal_points-Sheet1.csv"
+  },
+  {
+   "reason": "no complete gold",
+   "task_id": "72f83cdc-bf76-4531-9a1b-eb893a13f8aa",
+   "vm_path": null
+  },
+  {
+   "reason": "no complete gold",
+   "task_id": "8ba5ae7a-5ae5-4eab-9fcc-5dd4fe3abf89",
+   "vm_path": null
+  },
+  {
+   "reason": "no complete gold",
+   "task_id": "9219480b-3aed-47fc-8bac-d2cffc5849f7",
+   "vm_path": null
+  },
+  {
+   "reason": "no complete gold",
+   "task_id": "9d425400-e9b2-4424-9a4b-d4c7abac4140",
+   "vm_path": null
+  },
+  {
+   "reason": "no operator family for this file type",
+   "task_id": "aa4b5023-aef6-4ed9-bdc9-705f59ab9ad6",
+   "vm_path": "/home/user/1984_Apple_Macintosh_Commercial.mp4"
+  },
+  {
+   "reason": "no operator family for this file type",
+   "task_id": "aa4b5023-aef6-4ed9-bdc9-705f59ab9ad6",
+   "vm_path": "/home/user/Desktop/1984_Apple_Macintosh_Commercial.mp4"
+  },
+  {
+   "reason": "no complete gold",
+   "task_id": "ac9bb6cb-1888-43ab-81e4-a98a547918cd",
+   "vm_path": null
+  },
+  {
+   "reason": "no complete gold",
+   "task_id": "d52d6308-ec58-42b7-a2c9-de80e4837b2b",
+   "vm_path": null
+  },
+  {
+   "reason": "no complete gold",
+   "task_id": "f4aec372-4fb0-4df5-a52b-79e0e2a5d6ce",
+   "vm_path": null
+  }
+ ],
+ "split": "dev",
+ "targets": 17,
+ "targets_by_family": {
+  "docx": 4,
+  "pptx": 5,
+  "text": 1,
+  "xlsx": 7
+ },
+ "targets_without_initial": 4,
+ "tasks": 32,
+ "tasks_with_target": 17
+}

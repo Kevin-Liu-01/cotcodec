@@ -690,7 +690,7 @@ def _free_text_leaves(value: Any) -> list[str]:
 
 
 def test_release_view_redacts_document_text() -> None:
-    paragraph = "The Iliad is widely regarded as a heroic epic, much like the Odyssey."
+    paragraph = "The Iliad is the teachers' favourite heroic epic, much like the Odyssey."
     cjk = "\u6587\u6863\u5185\u5bb9" * 10
     recipe = {
         "seed": 42,
@@ -714,7 +714,7 @@ def test_release_view_redacts_document_text() -> None:
     }
     view = campaign.release_record(record)
     text = json.dumps(view, ensure_ascii=False)
-    assert paragraph not in text and cjk not in text
+    assert paragraph not in text and cjk not in text and "favourite heroic" not in text
     assert "'Iliad'" in view["witness"]["argument"]
     assert view["recipe_release"]["params"]["facts"]["new"] == "Iqiad"
     assert view["recipe_release"]["params"]["expectation"]["allow"] == ["body/10/text"]

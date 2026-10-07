@@ -1210,12 +1210,16 @@ def cmd_pins(args: argparse.Namespace) -> int:
 # holds a whole paragraph of the gold). The released view keeps every
 # identifier, locator, digest and short value, and replaces longer free text
 # (anything with whitespace or non-ASCII characters from REDACT_MIN_CHARS on)
-# by its SHA-256 and length. The full recipe stays on the host; its digest is
-# released, and planning is deterministic, so anyone holding the documents can
-# regenerate it and check the digest and the mutant id.
+# by its SHA-256 and length. The full recipe and the base file it names
+# (``input_sha256``) stay in the host run root; planning is deterministic given
+# the base, so a holder of the base files can regenerate each recipe and check
+# its digest and mutant id. (A fresh LibreOffice save of the gold is not
+# byte-identical, so it yields new ids with the same sites and labels.)
 REDACT_MIN_CHARS = 32
 _PLAIN_TOKEN = re.compile(r"[A-Za-z0-9_./\[\]:!$#@=+*,()<>&%^|~;?'\"-]+")
-_QUOTED = re.compile(r"'([^']*)'|\"([^\"]*)\"")
+# A quote opens after a non-word character and closes before one, so the
+# apostrophe in "R2's" or "don't" neither opens nor closes a span.
+_QUOTED = re.compile(r"(?<!\w)'(.*?)'(?!\w)|(?<!\w)\"(.*?)\"(?!\w)", re.DOTALL)
 OUTCOME_KEYS = frozenset(
     {
         "mutant_id",
@@ -1255,15 +1259,29 @@ def redact(value: Any) -> Any:
     return value
 
 
-def redact_quotes(text: str) -> str:
-    """Witness arguments are templates; only long quoted spans can be document text."""
+def _marker(text: str) -> str:
+    digest = hashlib.sha256(text.encode("utf-8")).hexdigest()
+    return f"<redacted sha256 {digest[:16]}, {len(text)} chars>"
+
+
+def free_text_leaves(value: Any) -> list[str]:
+    if isinstance(value, Mapping):
+        return [leaf for item in value.values() for leaf in free_text_leaves(item)]
+    if isinstance(value, list | tuple):
+        return [leaf for item in value for leaf in free_text_leaves(item)]
+    return [value] if isinstance(value, str) and needs_redaction(value) else []
+
+
+def redact_quotes(text: str, known: Sequence[str] = ()) -> str:
+    """Witness arguments are templates: redact known free text, then long quoted spans."""
+    for leaf in sorted(set(known), key=len, reverse=True):
+        text = text.replace(leaf, _marker(leaf))
 
     def swap(match: re.Match[str]) -> str:
         inner = match.group(1) if match.group(1) is not None else match.group(2)
-        if len(inner) < REDACT_MIN_CHARS:
+        if len(inner) < REDACT_MIN_CHARS or inner.startswith("<redacted sha256 "):
             return match.group(0)
-        digest = hashlib.sha256(inner.encode("utf-8")).hexdigest()
-        return f"'<redacted sha256 {digest[:16]}, {len(inner)} chars>'"
+        return f"'{_marker(inner)}'"
 
     return _QUOTED.sub(swap, text)
 
@@ -1287,7 +1305,9 @@ def release_record(record: Mapping[str, Any]) -> dict[str, Any]:
         "output_sha256": result.output_sha256,
         "witness": {
             "req_ids": list(result.witness.req_ids),
-            "argument": redact_quotes(result.witness.argument),
+            "argument": redact_quotes(
+                result.witness.argument, free_text_leaves(dict(result.recipe))
+            ),
         },
         "purity_checks": [
             {"name": check.name, "passed": check.passed} for check in result.purity_checks
@@ -1438,6 +1458,8 @@ def cmd_export(args: argparse.Namespace) -> int:
             "split": submitted["split"],
             "git_sha": submitted["git_sha"],
             "slurm_jobs": submitted["jobs"],
+            # Runs before the --apply-to option applied recipes to the base.
+            "apply_to": submitted.get("apply_to", "base"),
             "confirmatory": False,
             "source_sha256": sources,
             "exported_sha256": exported,

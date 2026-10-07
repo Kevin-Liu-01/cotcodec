@@ -60,11 +60,14 @@ Slurm jobs through `q2-mutation-cpu.sbatch`:
    OOXML, text and config files that no postconfig conversion derives), with
    the task's other gold files as context; the blind specs are validated and
    copied to JSON.
-2. LO-VM image: `campaign build` saves the gold (base), the initial file and
-   the null mutant (base saved once more) with `uno_apply.py`, plans every
-   operator of the family from the blind spec only, applies the recipes,
-   checks purity against the null mutant and dedupes; then `reach.sh` runs the
-   GUI-faithful save stage on every admitted mutant and one null job per
+2. LO-VM image: `campaign build` saves the gold (the base) and the initial
+   file with `uno_apply.py`, plans every operator of the family from the
+   blind spec and the base only, applies each office recipe to the raw gold
+   (`--apply-to gold`, the registered mode: mutant and null mutant are each
+   one LibreOffice round trip from the gold, and the null mutant is the base;
+   `--apply-to base` edits the base and saves it once more for the null),
+   checks purity against the null mutant and dedupes; then `reach.sh` runs
+   the GUI-faithful save stage on every admitted mutant and one null job per
    target.
 3. metric image: `campaign merge` (MutationResult ids kept), `score.sh` under
    both venvs (VerdictRow JSONL), `campaign recheck` (operator purity on the
@@ -72,7 +75,7 @@ Slurm jobs through `q2-mutation-cpu.sbatch`:
 
 ```bash
 bash ~/cotcodec-runs/stage0/q2-evaluator-mutation/src/$SHA/infra/q2-mutation/run/submit_mutants.sh \
-  $SHA dev dev-mutants-vN <metric-image-id> <lo-vm-image-id> 16
+  $SHA dev dev-mutants-vN <metric-image-id> <lo-vm-image-id> 16 gold
 # locally, after copying the run's prep/, build/ and score/ JSON files:
 uv run python -m harness.q2_mutation.campaign export --run <run copy> \
   --out program/evidence/q2-mutation/integration/dev-mutants-vN
@@ -88,7 +91,8 @@ touched (`PROBE_OPERATOR_MAP`) are kept out of the rate tables.
 Every split but `dev` is refused unless the staged tree carries the frozen
 ledger row of `q2-evaluator-mutation-v1`, `Q2M_PREREG_FROZEN` is set, and the
 tree's digests equal the preregistration's `q2m_pins` block
-(`campaign pins` prints them). `submit_target_counts.sh` only counts targets
+(`campaign pins` prints them); `submit_mutants.sh` also checks the image IDs
+and the application mode against that block. `submit_target_counts.sh` only counts targets
 per split (no spec, mutant or checker) and runs for every split.
 
 The controls-only path is still available: `controls.py mutation-jobs`
