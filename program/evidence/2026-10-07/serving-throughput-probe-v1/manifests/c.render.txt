@@ -1,0 +1,2 @@
+FAIL: job C needs control X1 to pass; job A has X1 fail
+exit_code=2

@@ -1,0 +1,96 @@
+{
+  "abort": null,
+  "attempt": 1,
+  "attempts": [
+    {
+      "attempt": 1,
+      "checks": {
+        "all_completed": true,
+        "caches_reset": true,
+        "counters_match": true,
+        "fixed_output_lengths": true,
+        "gpu_sampled": true,
+        "no_contamination": true,
+        "no_failures": true
+      },
+      "error": null,
+      "status": "valid"
+    }
+  ],
+  "cache_reset": {
+    "prefix": true
+  },
+  "checks": {
+    "all_completed": true,
+    "caches_reset": true,
+    "counters_match": true,
+    "fixed_output_lengths": true,
+    "gpu_sampled": true,
+    "no_contamination": true,
+    "no_failures": true
+  },
+  "config_sha256": "8e5ad94e08a17a3eacc049150a14a35ef6ab9509a8c32ca6a6b2ac9711f6e931",
+  "counter_check": {
+    "client_output_tokens": 262144,
+    "client_prompt_tokens": 4608,
+    "generation_delta": 262144.0,
+    "pass": true,
+    "prompt_delta": 36864.0,
+    "prompt_matched": 36864
+  },
+  "counters": {
+    "prefix_cache_hit_rate": 0.8628472222222222,
+    "vllm:generation_tokens": 262144.0,
+    "vllm:mm_cache_hits": 0.0,
+    "vllm:mm_cache_queries": 0.0,
+    "vllm:num_preemptions": 0.0,
+    "vllm:prefix_cache_hits": 31808.0,
+    "vllm:prefix_cache_queries": 36864.0,
+    "vllm:prompt_tokens": 36864.0,
+    "vllm:prompt_tokens_cached": 31808.0,
+    "vllm:request_success": 32.0
+  },
+  "eager": false,
+  "experiment_id": "serving-throughput-probe-v1",
+  "finished_at": "2026-10-07T11:53:33Z",
+  "flags": [],
+  "gpu": {
+    "mean_power_w": 593.5405357142856,
+    "mean_sm_clock_mhz": 1979.9330357142858,
+    "mean_utilization_pct": 99.99107142857143,
+    "min_sm_clock_mhz": 1965.0,
+    "peak_memory_used_mib": 73249.0,
+    "samples": 224
+  },
+  "job": "b",
+  "kind": "offline",
+  "params": {
+    "input_tokens": 1152,
+    "n": 8,
+    "output_tokens": 8192,
+    "prompts": 4,
+    "temperature": 1.0,
+    "top_p": 1.0
+  },
+  "point_id": "b2",
+  "prep_s": 0.00042889174073934555,
+  "ran_to_end": true,
+  "result": {
+    "completed": 32,
+    "completions": 32,
+    "completions_per_s": 0.285532828225001,
+    "duration_s": 112.07117654010653,
+    "failed": 0,
+    "gpu_s_per_completion": 3.502224266878329,
+    "output_throughput": 2339.084928819208,
+    "output_tokens": 262144,
+    "planned": 32,
+    "prompt_tokens": 4608,
+    "short_outputs": 0
+  },
+  "seed": 45,
+  "started_at": "2026-10-07T11:51:41Z",
+  "status": "valid",
+  "stop_reason": null,
+  "superseded_attempts": []
+}

@@ -1,0 +1,198 @@
+{
+  "allocation_minutes": 20,
+  "argv": [
+    "scripts/run_vllm_throughput_probe.py",
+    "run",
+    "--config",
+    "experiments/serving/serving-throughput-probe-v1.yaml",
+    "--job",
+    "b",
+    "--output-dir",
+    "/outputs/probe",
+    "--allocation-minutes",
+    "20",
+    "--image-variant",
+    "cu129",
+    "--weights-pin",
+    "qwen3-8b=8c206de0c96749d24a053351a9d83ef7c8f38d45da8ae7a0c8e964bf33809a48:a872f4dc37328ca2593192866f245537e4668add78ba0719c1ef41fd8bb0fa97",
+    "--seeds",
+    "42",
+    "43",
+    "44"
+  ],
+  "cache_env": [
+    "CUDA_CACHE_PATH",
+    "DG_JIT_CACHE_DIR",
+    "FLASHINFER_WORKSPACE_BASE",
+    "HF_HOME",
+    "HOME",
+    "MPLCONFIGDIR",
+    "TMPDIR",
+    "TORCHINDUCTOR_CACHE_DIR",
+    "TORCH_HOME",
+    "TRITON_CACHE_DIR",
+    "TRITON_HOME",
+    "VLLM_CACHE_ROOT",
+    "VLLM_CONFIG_ROOT",
+    "VLLM_FLASHINFER_AUTOTUNE_CACHE_DIR",
+    "VLLM_RPC_BASE_PATH",
+    "XDG_CACHE_HOME",
+    "XDG_CONFIG_HOME"
+  ],
+  "config_sha256": "8e5ad94e08a17a3eacc049150a14a35ef6ab9509a8c32ca6a6b2ac9711f6e931",
+  "env": {
+    "CUDA_CACHE_PATH": "/outputs/probe/cache/cuda",
+    "DG_JIT_CACHE_DIR": "/outputs/probe/cache/deepgemm",
+    "DO_NOT_TRACK": "1",
+    "FLASHINFER_WORKSPACE_BASE": "/outputs/probe/cache/flashinfer",
+    "HF_HOME": "/outputs/probe/cache/hf",
+    "HF_HUB_OFFLINE": "1",
+    "HOME": "/outputs/probe/cache/home",
+    "MPLCONFIGDIR": "/outputs/probe/cache/matplotlib",
+    "PYTHONUNBUFFERED": "1",
+    "TMPDIR": "/outputs/probe/cache/tmp",
+    "TORCHINDUCTOR_CACHE_DIR": "/outputs/probe/cache/inductor",
+    "TORCH_HOME": "/outputs/probe/cache/torch",
+    "TRANSFORMERS_OFFLINE": "1",
+    "TRITON_CACHE_DIR": "/outputs/probe/cache/triton",
+    "TRITON_HOME": "/outputs/probe/cache/triton-home",
+    "VLLM_CACHE_ROOT": "/outputs/probe/cache/vllm",
+    "VLLM_CONFIG_ROOT": "/outputs/probe/cache/vllm-config",
+    "VLLM_DO_NOT_TRACK": "1",
+    "VLLM_ENABLE_CUDA_COMPATIBILITY": "0",
+    "VLLM_FLASHINFER_AUTOTUNE_CACHE_DIR": "/outputs/probe/cache/flashinfer-autotune",
+    "VLLM_HOST_IP": "127.0.0.1",
+    "VLLM_LOGGING_LEVEL": "INFO",
+    "VLLM_NO_USAGE_STATS": "1",
+    "VLLM_RPC_BASE_PATH": "/outputs/probe/cache/rpc",
+    "VLLM_SERVER_DEV_MODE": "1",
+    "XDG_CACHE_HOME": "/outputs/probe/cache/xdg-cache",
+    "XDG_CONFIG_HOME": "/outputs/probe/cache/xdg-config"
+  },
+  "experiment_id": "serving-throughput-probe-v1",
+  "job": "b",
+  "lane_model": "qwen3-0.6b-base",
+  "phases": [
+    {
+      "engine": "b-offline",
+      "llm_kwargs": {
+        "disable_log_stats": false,
+        "dtype": "bfloat16",
+        "enable_prefix_caching": true,
+        "generation_config": "vllm",
+        "gpu_memory_utilization": 0.9,
+        "load_format": "dummy",
+        "max_model_len": 32768,
+        "max_num_batched_tokens": 16384,
+        "max_num_seqs": 256,
+        "seed": 42,
+        "tensor_parallel_size": 1
+      },
+      "load_format": "dummy",
+      "mode": "offline",
+      "model": "qwen3-8b",
+      "phase": "q1",
+      "points": [
+        {
+          "input_tokens": 256,
+          "kind": "smoke-offline",
+          "max_minutes": 3.0,
+          "n": 1,
+          "output_tokens": 64,
+          "point_id": "b-smoke",
+          "prompts": 16,
+          "seed": 7,
+          "temperature": 0.0
+        },
+        {
+          "input_tokens": 1152,
+          "kind": "offline",
+          "max_minutes": 3.0,
+          "n": 8,
+          "output_tokens": 4096,
+          "point_id": "b1a",
+          "prompts": 8,
+          "seed": 42,
+          "temperature": 1.0,
+          "top_p": 1.0
+        },
+        {
+          "input_tokens": 1152,
+          "kind": "offline",
+          "max_minutes": 4.0,
+          "n": 8,
+          "output_tokens": 8192,
+          "point_id": "b2",
+          "prompts": 4,
+          "seed": 45,
+          "temperature": 1.0,
+          "top_p": 1.0
+        },
+        {
+          "input_tokens": 16384,
+          "kind": "offline",
+          "max_minutes": 6.0,
+          "n": 8,
+          "output_tokens": 8192,
+          "point_id": "b6",
+          "prompts": 3,
+          "seed": 46,
+          "temperature": 1.0,
+          "top_p": 1.0
+        },
+        {
+          "input_tokens": 1152,
+          "kind": "offline",
+          "max_minutes": 3.0,
+          "n": 8,
+          "output_tokens": 4096,
+          "point_id": "b1b",
+          "prompts": 8,
+          "seed": 43,
+          "temperature": 1.0,
+          "top_p": 1.0
+        },
+        {
+          "input_tokens": 1152,
+          "kind": "offline",
+          "max_minutes": 3.0,
+          "n": 8,
+          "output_tokens": 4096,
+          "point_id": "b1c",
+          "prompts": 8,
+          "seed": 44,
+          "temperature": 1.0,
+          "top_p": 1.0
+        },
+        {
+          "input_tokens": 4096,
+          "kind": "offline",
+          "max_minutes": 4.0,
+          "n": 8,
+          "output_tokens": 4096,
+          "point_id": "b3",
+          "prompts": 8,
+          "seed": 47,
+          "temperature": 1.0,
+          "top_p": 1.0
+        }
+      ],
+      "reserve_minutes": 0.0
+    }
+  ],
+  "pinned_models": [
+    "qwen3-8b"
+  ],
+  "pins": {
+    "qwen3-8b": [
+      "8c206de0c96749d24a053351a9d83ef7c8f38d45da8ae7a0c8e964bf33809a48",
+      "a872f4dc37328ca2593192866f245537e4668add78ba0719c1ef41fd8bb0fa97"
+    ]
+  },
+  "primary_seeds": [
+    42,
+    43,
+    44
+  ],
+  "title": "Q1 offline n=8 sampling on the Qwen3-8B config with dummy weights"
+}
