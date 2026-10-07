@@ -13,6 +13,7 @@ for arm in lock scout; do
     --jobs "$jobs" --out "${prefix}-verdicts-$arm.jsonl" --notes "${prefix}-notes-$arm.jsonl" \
     --osworld /inputs/OSWorld --file-cache /inputs/file_cache_1e112283/files \
     --requirements "$req" --dep-set "$arm" --workers "$workers" --repeat "$repeat" \
-    --harness-revision "$(cat /src/.git_sha 2>/dev/null || echo unknown)"
+    --harness-revision "$(cat /src/.git_sha 2>/dev/null || echo unknown)" \
+    --vm-baseline /inputs/vm-baseline
 done
 cp /opt/q2/venv-lock.fingerprint.json /opt/q2/venv-scout.fingerprint.json "$(dirname "$prefix")/"

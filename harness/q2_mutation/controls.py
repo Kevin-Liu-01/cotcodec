@@ -53,28 +53,47 @@ def _metric_triples(evaluator: Mapping[str, Any]) -> list[tuple[Any, Any]]:
 
 
 def gold_pairs(raw: Mapping[str, Any]) -> tuple[list[tuple[str, str]], bool]:
-    """(vm result path, gold URL) pairs, and whether every vm_file result is covered."""
+    """(vm result path, gold URL) pairs, and whether they form a complete gold.
+
+    A task has a complete gold end state only if every metric compares a
+    ``vm_file`` result with a ``cloud_file`` expected file and no expected file
+    is one of the task's own initial downloads (a relational checker such as
+    ``check_image_mirror`` compares the result with the original input; its
+    "expected" file is not an answer).
+    """
     pairs: list[tuple[str, str]] = []
     complete = True
-    saw_vm_file = False
+    initial_urls = {
+        _normal_url(str(item["url"]))
+        for step in raw.get("config", [])
+        if step.get("type") == "download"
+        for item in step.get("parameters", {}).get("files", [])
+    }
     for result, expected in _metric_triples(raw["evaluator"]):
-        if not isinstance(result, Mapping) or result.get("type") != "vm_file":
-            continue
-        saw_vm_file = True
-        if not isinstance(expected, Mapping) or expected.get("type") != "cloud_file":
+        if (
+            not isinstance(result, Mapping)
+            or result.get("type") != "vm_file"
+            or not isinstance(expected, Mapping)
+            or expected.get("type") != "cloud_file"
+        ):
             complete = False
             continue
         paths = _as_list(result.get("path"))
         urls = _as_list(expected.get("path"))
-        if result.get("multi") != expected.get("multi") or len(paths) != len(urls):
+        if bool(result.get("multi")) != bool(expected.get("multi")) or len(paths) != len(urls):
             complete = False
             continue
         for path, url in zip(paths, urls, strict=True):
-            if str(url).startswith(FILE_CACHE_PREFIX):
-                pairs.append((resolve_vm_path(str(path)), str(url)))
-            else:
+            if not str(url).startswith(FILE_CACHE_PREFIX) or _normal_url(str(url)) in initial_urls:
                 complete = False
-    return pairs, (complete and saw_vm_file and bool(pairs))
+                continue
+            pairs.append((resolve_vm_path(str(path)), str(url)))
+    return pairs, (complete and bool(pairs))
+
+
+def _normal_url(url: str) -> str:
+    rest = url[len(FILE_CACHE_PREFIX) :] if url.startswith(FILE_CACHE_PREFIX) else url
+    return rest.partition("/")[2] if url.startswith(FILE_CACHE_PREFIX) else rest
 
 
 def result_paths(raw: Mapping[str, Any]) -> list[str]:

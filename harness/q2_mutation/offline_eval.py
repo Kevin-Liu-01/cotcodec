@@ -238,6 +238,99 @@ def build_initial_vm_root(raw: Mapping[str, Any], file_cache: Path, vm_root: Pat
     return report
 
 
+# Postconfig steps handled by the LibreOffice reachability stage (GUI and
+# LibreOffice conversions); everything else that only touches files is
+# emulated here, after the saved files are in place.
+GUI_POSTCONFIG = frozenset({"activate_window", "sleep", "close_window", "launch", "open"})
+STDOUT_COMMANDS = frozenset({"diff", "ls"})
+
+
+def _is_gui_execute(argv: list[str]) -> bool:
+    head = argv[0] if argv else ""
+    if head in ("python", "python3") and len(argv) >= 3 and "pyautogui" in argv[2]:
+        return True
+    return head in ("libreoffice", "soffice") and "--convert-to" in argv
+
+
+def apply_postconfig_file_steps(
+    raw: Mapping[str, Any], file_cache: Path, vm_root: Path, cache_dir: Path
+) -> list[str]:
+    """Download, file-only shell and ``stdout``-capturing diff/ls postconfig steps.
+
+    OSWorld's setup controller writes an ``execute`` step's stdout to
+    ``cache_dir/<stdout>``, where a ``cache_file`` getter reads it. Commands run
+    on the VM root with paths mapped in and the VM root prefix mapped back out.
+    Returns the steps that were not emulated.
+    """
+    unemulated: list[str] = []
+    for step in raw.get("evaluator", {}).get("postconfig", []):
+        kind = step.get("type")
+        params = step.get("parameters", {})
+        if kind in GUI_POSTCONFIG:
+            continue
+        if kind == "download":
+            for item in params.get("files", []):
+                target = vm_to_host(vm_root, str(item["path"]))
+                target.parent.mkdir(parents=True, exist_ok=True)
+                shutil.copyfile(file_cache_local(file_cache, str(item["url"])), target)
+            continue
+        if kind not in ("execute", "command"):
+            unemulated.append(f"postconfig {kind}")
+            continue
+        argvs = _split_shell(params.get("command"))
+        if all(_is_gui_execute(argv) for argv in argvs):
+            continue
+        stdout_name = params.get("stdout")
+        if stdout_name and len(argvs) == 1 and argvs[0] and argvs[0][0] in STDOUT_COMMANDS:
+            output = _run_mapped(vm_root, argvs[0])
+            (cache_dir / str(stdout_name)).write_text(output, encoding="utf-8")
+            continue
+        cwd = VM_HOME
+        for argv in argvs:
+            try:
+                handled, cwd = emulate_setup_step(vm_root, argv, cwd)
+            except (OSError, ValueError, tarfile.TarError, zipfile.BadZipFile) as exc:
+                unemulated.append(f"{' '.join(argv)[:160]} [failed: {exc}]")
+                continue
+            if not handled:
+                unemulated.append(" ".join(argv)[:160])
+    return unemulated
+
+
+def _run_mapped(vm_root: Path, argv: list[str]) -> str:
+    """Run diff/ls on the VM root as if inside the VM (cwd /home/user)."""
+    import subprocess
+
+    root = str(vm_root.resolve())
+    mapped = [argv[0]]
+    for arg in argv[1:]:
+        if arg.startswith("-"):
+            mapped.append(arg)
+        else:
+            mapped.append(str(vm_to_host(vm_root, posixpath.join(VM_HOME, arg))))
+    home = vm_to_host(vm_root, VM_HOME)
+    home.mkdir(parents=True, exist_ok=True)
+    result = subprocess.run(mapped, cwd=home, capture_output=True, text=True, timeout=120)
+    return result.stdout.replace(root, "")
+
+
+def overlay_tree(source: Path, vm_root: Path) -> int:
+    """Copy a VM-shaped tree (e.g. home/user/.config/vlc/vlcrc) into the VM root.
+
+    Top-level files of ``source`` (receipts, hash lists) are not VM content.
+    """
+    count = 0
+    for path in sorted(source.rglob("*")):
+        if path.parent == source:
+            continue
+        if path.is_file() and not path.is_symlink():
+            target = vm_root / path.relative_to(source)
+            target.parent.mkdir(parents=True, exist_ok=True)
+            shutil.copyfile(path, target)
+            count += 1
+    return count
+
+
 # --- stubs -----------------------------------------------------------------
 
 
@@ -386,6 +479,9 @@ def _score_in_worker(payload: dict[str, Any], queue: Any) -> None:
         try:
             raw = load_task(osworld, job.task_id)
             report = VmRootReport()
+            baseline = payload.get("vm_baseline")
+            if baseline:
+                out["notes"]["vm_baseline_files"] = overlay_tree(Path(baseline), vm_root)
             if job.include_initial:
                 report = build_initial_vm_root(raw, file_cache, vm_root)
             scored: list[Path] = []
@@ -424,6 +520,9 @@ def _score_in_worker(payload: dict[str, Any], queue: Any) -> None:
             env.vm_ip = "127.0.0.1"
             env.server_port = 0
             env._set_task_info(raw)
+            out["notes"]["postconfig_unemulated"] = apply_postconfig_file_steps(
+                raw, file_cache, vm_root, Path(env.cache_dir)
+            )
             result = env.evaluate()
             out["score"] = None if result is None else float(result)
             if result is None:
@@ -445,10 +544,21 @@ def _as_list(value: Any) -> list[Any]:
     return list(value) if isinstance(value, list) else [value]
 
 
-def score_once(job: ScoreJob, osworld: Path, file_cache: Path, timeout: float) -> dict[str, Any]:
+def score_once(
+    job: ScoreJob,
+    osworld: Path,
+    file_cache: Path,
+    timeout: float,
+    vm_baseline: Path | None = None,
+) -> dict[str, Any]:
     ctx = mp.get_context("spawn")
     queue = ctx.Queue()
-    payload = {"osworld": str(osworld), "file_cache": str(file_cache), "job": job.__dict__}
+    payload = {
+        "osworld": str(osworld),
+        "file_cache": str(file_cache),
+        "job": job.__dict__,
+        "vm_baseline": str(vm_baseline) if vm_baseline else None,
+    }
     process = ctx.Process(target=_score_in_worker, args=(payload, queue))
     started = time.monotonic()
     process.start()
@@ -484,10 +594,13 @@ def score_job(
     timeout: float = 300.0,
     repeat: int = 2,
     harness_revision: str | None = None,
+    vm_baseline: Path | None = None,
 ) -> tuple[VerdictRow, dict[str, Any]]:
     """Score one job ``repeat`` times in fresh processes; return the row and notes."""
     raw = load_task(osworld, job.task_id)
-    runs = [score_once(job, osworld, file_cache, timeout) for _ in range(max(1, repeat))]
+    runs = [
+        score_once(job, osworld, file_cache, timeout, vm_baseline) for _ in range(max(1, repeat))
+    ]
     first = runs[0]
     nondeterministic = any(
         (run["score"], run["error"] is None) != (first["score"], first["error"] is None)
@@ -543,6 +656,9 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--repeat", type=int, default=2)
     parser.add_argument("--timeout", type=float, default=300.0)
     parser.add_argument("--harness-revision", default=None)
+    parser.add_argument(
+        "--vm-baseline", type=Path, default=None, help="VM-shaped tree of baseline config files"
+    )
     args = parser.parse_args(argv)
     lock_sha = hashlib.sha256(args.requirements.read_bytes()).hexdigest()
     jobs = [
@@ -563,6 +679,7 @@ def main(argv: list[str] | None = None) -> int:
             timeout=args.timeout,
             repeat=args.repeat,
             harness_revision=args.harness_revision,
+            vm_baseline=args.vm_baseline,
         )
 
     with (
