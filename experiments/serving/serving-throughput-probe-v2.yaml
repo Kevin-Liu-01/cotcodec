@@ -176,7 +176,7 @@ point_templates:
     thinking: false
     concurrency: 8
     requests: 16
-  # Each of 20 H2 episodes, started 2.5 s apart as in r3, replays steps 1, 2 and 3 (the
+  # Each of 20 H2 episodes, with starts staggered over 2.5 s as in r3, replays steps 1, 2 and 3 (the
   # small staggered shapes at which v1's engine reached its memory plateau, 76,611 MiB)
   # and then step 20, the largest registered prompt shape (20 screenshots, 19 prebuilt
   # responses, 48,140 modelled prompt tokens). The loader refuses any later point of a
