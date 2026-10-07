@@ -4,6 +4,7 @@ import math
 
 import numpy as np
 import pytest
+from scipy import stats
 
 from harness import sparse_indexer_k1_stats as k1s
 
@@ -65,7 +66,75 @@ def test_seed_variance_widens_the_decision_interval() -> None:
     a, b = k1s.xi_interval(calm, replicates=500), k1s.xi_interval(noisy_seeds, replicates=500)
     assert b.s_seed > a.s_seed
     assert b.half_width > a.half_width
-    assert b.half_width == pytest.approx(k1s.Z_99 * math.sqrt(b.se_cluster**2 + b.s_seed**2 / 3))
+    se_total = math.sqrt(b.se_cluster**2 + b.s_seed**2 / 3)
+    df = k1s.welch_satterthwaite_df(b.se_cluster, b.s_seed, 3, 30)
+    assert b.df == pytest.approx(df)
+    assert b.half_width == pytest.approx(stats.t.ppf(0.995, df) * se_total)
+
+
+def test_welch_satterthwaite_df_tracks_the_dominant_term() -> None:
+    # Seed-dominated: close to the seed term's 2 degrees of freedom.
+    assert k1s.welch_satterthwaite_df(0.01, 2.0, 3, 122) == pytest.approx(2.0, rel=1e-3)
+    # Cluster-dominated: close to n_clusters - 1.
+    assert k1s.welch_satterthwaite_df(2.0, 0.01, 3, 122) == pytest.approx(121.0, rel=1e-3)
+    assert k1s.welch_satterthwaite_df(0.0, 0.0, 3, 122) == math.inf
+    assert k1s.decision_quantile(math.inf) == pytest.approx(k1s.Z_99)
+    assert k1s.decision_quantile(2.0) == pytest.approx(9.925, abs=1e-3)
+
+
+def _seed_dominated(rng: np.random.Generator, seed_sd: float) -> k1s.FamilyTable:
+    """True xi = 0; the indexer's CX recall carries a per-seed offset (init variance)."""
+
+    pairs, clusters = 14, 20
+    pair = np.repeat(np.arange(pairs), clusters)
+    cluster = np.tile(np.arange(clusters), pairs)
+    n = pair.size
+    tgt_mn = 60.0 + rng.normal(0.0, 2.0, n)
+    tgt_cx = 50.0 + rng.normal(0.0, 2.0, n)
+    seed_effect = rng.normal(0.0, seed_sd, size=(3, 1))
+    ind_mn = tgt_mn + rng.normal(0.0, 0.5, (3, n))
+    ind_cx = tgt_cx - seed_effect + rng.normal(0.0, 0.5, (3, n))
+    return k1s.FamilyTable(pair, cluster, ind_mn, ind_cx, tgt_mn, tgt_cx,
+                           np.full(n, 12.5), np.full(n, 12.5))
+
+
+def test_decision_interval_keeps_99_percent_coverage_when_seeds_dominate() -> None:
+    # Review finding: z = 2.576 with a df-2 seed SD under-covers (about 12 percent
+    # misses). The Welch-Satterthwaite t interval must hold close to 1 percent.
+    rng = np.random.default_rng(11)
+    reps, t_miss, z_miss = 300, 0, 0
+    for _ in range(reps):
+        interval = k1s.xi_interval(_seed_dominated(rng, 3.0), replicates=200)
+        t_miss += not (interval.lower <= 0.0 <= interval.upper)
+        z_miss += abs(interval.point) > k1s.Z_99 * interval.se_total
+    assert t_miss / reps <= 0.03
+    assert z_miss / reps >= 0.06  # the normal quantile this replaces would not
+
+
+def test_xi_rel_evaluability_is_decided_on_the_point_means_only() -> None:
+    # Review finding: one pair whose point headroom (about 1.4 points) is above
+    # the registered 1-point floor must not make xi_rel non-evaluable just
+    # because some bootstrap replicates dip below the floor.
+    rng = np.random.default_rng(7)
+    pairs, clusters = 14, 60
+    pair = np.repeat(np.arange(pairs), clusters)
+    cluster = np.tile(np.arange(clusters), pairs)
+    n = pair.size
+    rand = np.full(n, 12.5)
+    tgt_mn = np.clip(60.0 + rng.normal(0.0, 4.0, n), 0, 100)
+    cx_mean = np.where(pair == pairs - 1, 12.5 + 1.4, 40.0)
+    tgt_cx = np.clip(cx_mean + rng.normal(0.0, 4.0, n), 0, 100)
+    ind_mn = np.clip(rand + 0.95 * (tgt_mn - rand) + rng.normal(0.0, 1.0, (3, n)), 0, 100)
+    ind_cx = np.clip(rand + 0.3 * (tgt_cx - rand) + rng.normal(0.0, 1.0, (3, n)), 0, 100)
+    t = k1s.FamilyTable(pair, cluster, ind_mn, ind_cx, tgt_mn, tgt_cx, rand, rand.copy())
+    low_pair = t.tgt_cx[t.pair == pairs - 1].mean() - 12.5
+    assert 1.0 < low_pair < 2.0
+    rel = k1s.xi_rel_interval(t, replicates=1000)
+    assert rel.evaluable and math.isfinite(rel.lower)
+    assert rel.clipped_replicates > 0  # the floor was active in some replicates
+    read_ = k1s.TargetRead("mp", k1s.xi_interval(t, replicates=1000), rel,
+                           k1s.AdequacyRead((90.0,) * 3, 91.0), True)
+    assert read_.xi.point >= 10.0 and read_.go
 
 
 @pytest.mark.parametrize(
@@ -100,8 +169,48 @@ def test_bug_tell_holds_and_integrity_voids_before_anything_else() -> None:
 
 def test_v1_failure_requests_the_extension() -> None:
     t = table({**TARGET, "ind": (78.0, 50.0)})
-    verdict = k1s.k1_verdict([read("hs", t, ml=(70.0, 92.0))], GOOD)
+    reads = [read("hs", t, ml=(70.0, 92.0))]
+    verdict = k1s.k1_verdict(reads, GOOD)
     assert verdict.verdict == "V1_EXTENSION_REQUIRED"
+    assert k1s.extension_targets(verdict, reads) == ["hs"]
+    after = k1s.k1_verdict(reads, GOOD, after_extension=True)
+    assert after.verdict == "INCONCLUSIVE"
+    assert "after the registered extension" in after.reasons[0]
+
+
+def test_extension_rereads_only_v1_failing_targets_and_never_after_go() -> None:
+    hs_fail = read("hs", table({**TARGET, "ind": (77.0, 67.0)}, seed=0), ml=(70.0, 92.0))
+    go_mp = read("mp", table({**TARGET, "ind": (78.0, 50.0)}, seed=1))
+    neg_mp = read("mp", table({**TARGET, "ind": (77.0, 67.0)}, seed=1))
+    go = k1s.k1_verdict([hs_fail, go_mp], GOOD)
+    assert go.verdict == "GO" and k1s.extension_targets(go, [hs_fail, go_mp]) == []
+    waiting = k1s.k1_verdict([hs_fail, neg_mp], GOOD)
+    assert waiting.verdict == "INCONCLUSIVE"
+    assert k1s.extension_targets(waiting, [hs_fail, neg_mp]) == ["hs"]
+    # mp keeps its main read; only hs is replaced by its extension read.
+    hs_ext = read("hs", table({**TARGET, "ind": (77.0, 67.0)}, seed=0))
+    combined = k1s.combine_after_extension([hs_fail, neg_mp], [hs_ext])
+    assert combined[1] is neg_mp and combined[0] is hs_ext
+    assert k1s.k1_verdict(combined, GOOD, after_extension=True).verdict == "NEGATIVE"
+    with pytest.raises(k1s.StatsContractError):
+        k1s.combine_after_extension([hs_fail, neg_mp], [hs_ext, neg_mp])
+    for verdict in ("VOID", "HOLD", "UNINTERPRETABLE", "NEGATIVE", "GO"):
+        assert k1s.extension_targets(k1s.Verdict(verdict, ()), [hs_fail, neg_mp]) == []
+
+
+def test_reads_round_trip_through_json() -> None:
+    import json
+
+    t = table({**TARGET, "ind": (78.0, 50.0)})
+    original = read("hs", t, ml=(70.0, 92.0))
+    again = k1s.TargetRead.from_dict(json.loads(json.dumps(original.as_dict())))
+    assert again == original
+    headroom = k1s.HeadroomRead.from_dict(json.loads(json.dumps(GOOD.as_dict())))
+    assert headroom == GOOD
+    nan_read = read("hs", table({"tgt": (80.0, 10.5), "rand": (10.0, 10.0),
+                                 "ind": (77.0, 10.2)}, noise=0.0))
+    restored = k1s.TargetRead.from_dict(json.loads(json.dumps(nan_read.as_dict())))
+    assert not restored.xi_rel.evaluable and math.isnan(restored.xi_rel.point)
 
 
 def test_xi_rel_is_not_evaluable_without_target_headroom_in_a_pair() -> None:
