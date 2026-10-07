@@ -149,6 +149,16 @@ docker run --rm --network none --read-only --tmpfs /tmp:rw,nosuid,nodev,size=1g 
   --env HOME=/tmp/home \
   "${overlay_id}" python scripts/run_vllm_throughput_probe.py vllm-args-doctor \
   >"${COTCODEC_BUILD_ROOT}/vllm-args-doctor.json"
+# serving-throughput-probe-v2: its plan and its request payload, checked the same way.
+docker run --rm --network none --read-only --tmpfs /tmp:rw,nosuid,nodev,size=1g \
+  --cap-drop ALL --security-opt no-new-privileges --user "$(id -u):$(id -g)" \
+  "${overlay_id}" python scripts/run_vllm_throughput_probe_v2.py plan --job a \
+  >"${COTCODEC_BUILD_ROOT}/plan-job-a-v2.json"
+docker run --rm --network none --read-only --tmpfs /tmp:rw,nosuid,nodev,size=1g \
+  --cap-drop ALL --security-opt no-new-privileges --user "$(id -u):$(id -g)" \
+  --env HOME=/tmp/home \
+  "${overlay_id}" python scripts/run_vllm_throughput_probe_v2.py vllm-args-doctor \
+  >"${COTCODEC_BUILD_ROOT}/vllm-args-doctor-v2.json"
 docker run --rm --network none --read-only --tmpfs /tmp:rw,nosuid,nodev,size=1g \
   --cap-drop ALL --security-opt no-new-privileges --user "$(id -u):$(id -g)" \
   "${overlay_id}" cat /etc/cotcodec-vllm-overlay-fixups.json \
@@ -198,6 +208,8 @@ receipt = {
             "plan-job-a.json",
             "vllm-overlay-fixups.json",
             "vllm-args-doctor.json",
+            "plan-job-a-v2.json",
+            "vllm-args-doctor-v2.json",
         )
     },
 }

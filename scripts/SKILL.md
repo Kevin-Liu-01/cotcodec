@@ -84,6 +84,12 @@ provenance.
   (job C only from an accepted job A whose control X1 passed). `project` reads
   only accepted jobs whose summary lists the point files on disk and whose lane
   `termination.env` (in the output directory's parent) shows a clean exit.
+- `run_vllm_throughput_probe_v2.py` is serving-throughput-probe-v2 (`plan`,
+  `run`, `vllm-args-doctor`, `project`, `digest`): it subclasses the frozen v1
+  runner and adds the warm-up reservation (G0.9), PID-based contamination, the
+  launch-window ledger and X1 on identical prompts. Never edit the v1 driver:
+  both digests cover it. `render_serving_probe_v2_manifest.py` renders its one
+  job's manifest.
 
 ## Patterns to follow / invariants
 <!-- agent-docs:fill:patterns -->
