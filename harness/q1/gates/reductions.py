@@ -86,8 +86,7 @@ def allclose_fp64(a: torch.Tensor, b: torch.Tensor, tol: float, *, chunk: int = 
     if a.shape != b.shape:
         return False
     return all(
-        bool(torch.allclose(x, y, atol=tol, rtol=tol))
-        for x, y in paired_chunks(a, b, chunk=chunk)
+        bool(torch.allclose(x, y, atol=tol, rtol=tol)) for x, y in paired_chunks(a, b, chunk=chunk)
     )
 
 

@@ -69,10 +69,10 @@ Version card (`python scripts/q1_version_card.py --markdown`):
 | `schema` | `q1-version-card/1` |
 | `schema_py_sha256` | `c9bae9d502f7b9c83332f95e24fd9934d91bfe6cede47de527f6d584838b3256` |
 | `schema_version` | `q1-schema/1` |
-| `gate_code_sha256` | `ef06c848ad0423a47d2b53bb3fff9a0efe96139095a488b57203587b72e38c18` |
+| `gate_code_sha256` | `13ce463f3251bd7ed9f63ad6e5a07b569cb6147a7ac35e1c30256d869a75a64d` |
 | `gate_data_sha256` | `200fdacd8be621dccbd8c05c777c69e8dbe4dab70e74ae99de923eeef6d5a6af` |
 | `shape_manifest_sha256` | `29e693ee4d77bc86e3ecfdb1000307b3878c023c6c6224f87c4fcfae74a220cb` |
-| `audit_code_sha256` | `cc059b75161412742e043286f4b0eadfa03c027ce627bf467fc447ec97e1af64` |
+| `audit_code_sha256` | `02f2b6a0bd961ea13a5fe6640f1cd35fcce1ac84495ddfc8c98cdf9ea4dfe09a` |
 | `analysis_sha256` | `472deac3ef1db28098aab2c906c788a31cd324d0a80b3a796fd8c2511946e48c` |
 | `mutator_package_sha256` | `f97a8ca84cda8a910feccc6e3f78b8e32b0b7d4cb8ee35b34c22fd75b4f2ad5a` |
 | `mutator_registry_fingerprint` | `43a1f0a234ad1c4a4421626d740989e01890b878c5ce7f2dec5739e3d43922a6` |
