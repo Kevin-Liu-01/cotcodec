@@ -1,0 +1,225 @@
+{
+  "a1_stability": {
+    "basis": "incomplete (1 of 3 valid): max(1 + limit, max/min)",
+    "complete": false,
+    "limit": 0.1,
+    "max": 2.5765604881623907,
+    "mean": 2.5765604881623907,
+    "metric": "request_throughput",
+    "min": 2.5765604881623907,
+    "noise_multiplier": 1.1,
+    "points": [
+      "a1a",
+      "a1b",
+      "a1c"
+    ],
+    "relative_range": null,
+    "source": "job a's admitted points (enters the budget)",
+    "unstable": false,
+    "valid": 1
+  },
+  "b1_stability": {
+    "basis": "stable",
+    "complete": true,
+    "limit": 0.1,
+    "max": 1.0720576475503527,
+    "mean": 1.0682273745751354,
+    "metric": "completions_per_s",
+    "min": 1.061098394925674,
+    "noise_multiplier": 1.0,
+    "points": [
+      "b1a",
+      "b1b",
+      "b1c"
+    ],
+    "relative_range": 0.010259288317749282,
+    "source": "job b's admitted points (enters the budget)",
+    "unstable": false,
+    "valid": 3
+  },
+  "budget_inputs": {
+    "a": "used",
+    "b": "used",
+    "c": "not supplied"
+  },
+  "code": {
+    "digest": "15b7a73b39dca0bf03959b8943450dc1d862ed6f5a158adcbca8fe763c817277",
+    "files": {
+      "harness/serving_probe/__init__.py": "90ad4c36aadfc9d12edbe853a3d3a177cb596c4b7314c43b08798269a93c4235",
+      "harness/serving_probe/budget.py": "cdb75646eafe47148a2b52148e24493bdd07f1c1c05dcec8211c55d9ea75ceb1",
+      "harness/serving_probe/client.py": "eceed26a7173ff94b489f58372e87986d9b20b9bddfda54a7ca26c94c6352ac6",
+      "harness/serving_probe/config.py": "58dd7030e63f06feb53ab72dea04b2a5c34fe86446521aa38a612f3ab40030d3",
+      "harness/serving_probe/cuda_doctor.py": "4751a871de5ab1503f7360333a2194feeb1dfc41fedf2e7720d7bacae5902ffb",
+      "harness/serving_probe/images.py": "c57dcf6e4f2d25d99d2c58fad1860c7430a272c60bb4303e43a1bb9e02645571",
+      "harness/serving_probe/metrics.py": "7ab76754c4577dd95a3cc226ab436fdd65b9fad74ed345c5c728526607a45c08",
+      "harness/serving_probe/prompts.py": "d74dc109b6486faaa665826c74c94882fa82fcb30a87979366d8fe05d2f37077",
+      "harness/serving_probe/triton_kernels.py": "fce17daf8e503b8e2a0504aead760e3d8da7444029fb7b5b6cc02407793dd61b",
+      "scripts/run_vllm_throughput_probe.py": "8e9959857127795e872111346daecaa57fd9ecd350d78d7b4b670c5480153810"
+    },
+    "git": {
+      "head": "80a87ee4f91e104d73948b756e5acda3ee7863c6",
+      "probe_files_modified": false
+    }
+  },
+  "config_sha256": "8e5ad94e08a17a3eacc049150a14a35ef6ab9509a8c32ca6a6b2ac9711f6e931",
+  "experiment_id": "serving-throughput-probe-v1",
+  "jobs": {
+    "a": {
+      "acceptance": {
+        "accepted": true,
+        "eager": false,
+        "eager_phases": [],
+        "job_gate_failures": [],
+        "phase_gate_failures": {},
+        "status": "complete-with-cuts"
+      },
+      "accepted": true,
+      "eager": false,
+      "exit_code": 0,
+      "image_variant": "cu129",
+      "lane_termination": {
+        "fields": {
+          "checkpoint_marker_present": "false",
+          "checkpoint_ready": "false",
+          "exit_code": "0",
+          "finished_at": "2026-10-07T12:16:59Z",
+          "job_id": "442",
+          "reason": "completed"
+        },
+        "path": "/home/kevin/cotcodec-runs/stage0/serving-throughput-probe/runs/a/442/termination.env",
+        "problem": null
+      },
+      "reasons": [],
+      "status": "complete-with-cuts",
+      "summary_sha256": "541bd9a02acf7e3ff315f3fa66a74eda02e55f127daf5b41ef3e58f21810adf5"
+    },
+    "b": {
+      "acceptance": {
+        "accepted": true,
+        "eager": false,
+        "eager_phases": [],
+        "job_gate_failures": [],
+        "phase_gate_failures": {},
+        "status": "complete"
+      },
+      "accepted": true,
+      "eager": false,
+      "exit_code": 0,
+      "image_variant": "cu129",
+      "lane_termination": {
+        "fields": {
+          "checkpoint_marker_present": "false",
+          "checkpoint_ready": "false",
+          "exit_code": "0",
+          "finished_at": "2026-10-07T11:59:55Z",
+          "job_id": "446",
+          "reason": "completed"
+        },
+        "path": "/home/kevin/cotcodec-runs/stage0/serving-throughput-probe/runs/b/446/termination.env",
+        "problem": null
+      },
+      "reasons": [],
+      "status": "complete",
+      "summary_sha256": "0ad1b23a53ccd8b349b653faea9f222be5209e27d1e1d5016f83787f4655186f"
+    }
+  },
+  "preregistration": {
+    "contract_sha256": "8e5ad94e08a17a3eacc049150a14a35ef6ab9509a8c32ca6a6b2ac9711f6e931",
+    "experiment_id": "serving-throughput-probe-v1",
+    "frozen_at": "2026-10-07T11:42:15.310316+00:00",
+    "git_head_at_freeze": "9835577aa43956ce4cc7f5d7b05afd0d2b3b94cc",
+    "hash": "13c72ac3259c8c0a886bad66e5368a37a11f6dd0afb8ad3119a33791bdd47803",
+    "path": "program/preregistrations/serving-throughput-probe-v1.md",
+    "previous_hash": "aa32cb0a1f9c1a87e3f190919d756924036ae040dd4ac6cf787559f5aef5466f",
+    "probe_code_digest": "15b7a73b39dca0bf03959b8943450dc1d862ed6f5a158adcbca8fe763c817277",
+    "probe_code_files": {
+      "harness/serving_probe/__init__.py": "90ad4c36aadfc9d12edbe853a3d3a177cb596c4b7314c43b08798269a93c4235",
+      "harness/serving_probe/budget.py": "cdb75646eafe47148a2b52148e24493bdd07f1c1c05dcec8211c55d9ea75ceb1",
+      "harness/serving_probe/client.py": "eceed26a7173ff94b489f58372e87986d9b20b9bddfda54a7ca26c94c6352ac6",
+      "harness/serving_probe/config.py": "58dd7030e63f06feb53ab72dea04b2a5c34fe86446521aa38a612f3ab40030d3",
+      "harness/serving_probe/cuda_doctor.py": "4751a871de5ab1503f7360333a2194feeb1dfc41fedf2e7720d7bacae5902ffb",
+      "harness/serving_probe/images.py": "c57dcf6e4f2d25d99d2c58fad1860c7430a272c60bb4303e43a1bb9e02645571",
+      "harness/serving_probe/metrics.py": "7ab76754c4577dd95a3cc226ab436fdd65b9fad74ed345c5c728526607a45c08",
+      "harness/serving_probe/prompts.py": "d74dc109b6486faaa665826c74c94882fa82fcb30a87979366d8fe05d2f37077",
+      "harness/serving_probe/triton_kernels.py": "fce17daf8e503b8e2a0504aead760e3d8da7444029fb7b5b6cc02407793dd61b",
+      "scripts/run_vllm_throughput_probe.py": "8e9959857127795e872111346daecaa57fd9ecd350d78d7b4b670c5480153810"
+    },
+    "sha256": "f0db1a8e939694169e17141a2e9bb61f2d6281d71747f6ef607a0392f9a21784"
+  },
+  "q1": {
+    "b1_noise": {
+      "basis": "stable",
+      "complete": true,
+      "limit": 0.1,
+      "max": 1.0720576475503527,
+      "mean": 1.0682273745751354,
+      "metric": "completions_per_s",
+      "min": 1.061098394925674,
+      "noise_multiplier": 1.0,
+      "points": [
+        "b1a",
+        "b1b",
+        "b1c"
+      ],
+      "relative_range": 0.010259288317749282,
+      "unstable": false,
+      "valid": 3
+    },
+    "decision": "within-cap",
+    "flags": [
+      "dummy-weights-unvalidated-x1.5 (X1 fail)"
+    ],
+    "multiplier": 1.5,
+    "per_completion_gpu_s": {
+      "b2": 3.502224266878329,
+      "b3": 1.191424866381567,
+      "b6": 7.5607489425844205
+    },
+    "single_turn_gpu_hours": 2.918520222398608,
+    "three_turn_gpu_hours": 10.211998396536933
+  },
+  "q2": {
+    "decision": "incomplete-re-probe",
+    "reason": "required replay point r3 is missing or invalid"
+  },
+  "x1": {
+    "a1_relative_delta": 0.008568541588119502,
+    "a1_seed_range": null,
+    "a1_seeds_valid": 1,
+    "outcome": "fail",
+    "r1_relative_delta": 0.05888337833875816,
+    "reason": null,
+    "replay_prompt_tokens": {
+      "per_step": {
+        "1": [
+          3683.8,
+          3683.8
+        ],
+        "2": [
+          5943.175,
+          5735.8
+        ],
+        "3": [
+          8258.2,
+          7787.8
+        ],
+        "4": [
+          10594.075,
+          9839.8
+        ],
+        "5": [
+          12938.9,
+          11891.8
+        ],
+        "6": [
+          13046.325,
+          11913.7
+        ]
+      },
+      "r1_per_request": 9077.4125,
+      "relative_delta": 0.06631432690758512,
+      "x1_r1_per_request": 8475.45
+    },
+    "threshold": 0.05
+  }
+}

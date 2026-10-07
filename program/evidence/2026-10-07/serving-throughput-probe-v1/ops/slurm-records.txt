@@ -1,0 +1,47 @@
+== job 439 at 2026-10-07T12:17:45Z
+-- sacct -j 439 -X -o JobID,JobName%40,State,ExitCode,Start,End,Elapsed,AllocTRES%60
+Slurm accounting storage is disabled
+-- scontrol show job 439
+== job 444 at 2026-10-07T12:17:45Z
+-- sacct -j 444 -X -o JobID,JobName%40,State,ExitCode,Start,End,Elapsed,AllocTRES%60
+Slurm accounting storage is disabled
+-- scontrol show job 444
+== job 442 at 2026-10-07T12:17:45Z
+-- sacct -j 442 -X -o JobID,JobName%40,State,ExitCode,Start,End,Elapsed,AllocTRES%60
+Slurm accounting storage is disabled
+-- scontrol show job 442
+JobId=442 JobName=stp-v1-a-q2-qwen35-9b
+   JobState=COMPLETED Reason=None Dependency=(null)
+   Requeue=1 Restarts=0 BatchFlag=1 Reboot=0 ExitCode=0:0
+   RunTime=00:28:32 TimeLimit=00:40:00 TimeMin=N/A
+   SubmitTime=2026-10-07T11:48:27 EligibleTime=2026-10-07T11:48:27
+   StartTime=2026-10-07T11:48:27 EndTime=2026-10-07T12:16:59 Deadline=N/A
+   ReqNodeList=(null) ExcNodeList=(null)
+   NodeList=fal-h100-01
+   TRES=cpu=32,mem=160G,node=1,billing=32
+== job 446 at 2026-10-07T12:17:45Z
+-- sacct -j 446 -X -o JobID,JobName%40,State,ExitCode,Start,End,Elapsed,AllocTRES%60
+Slurm accounting storage is disabled
+-- scontrol show job 446
+== scontrol records captured by the operator when each job left the queue (verbatim lines;
+== scontrol had aged these jobs out by 12:17:45Z and sacct accounting is disabled)
+-- job 439 (stp-v1-overlay), captured 2026-10-07T11:48Z
+   JobState=COMPLETED Reason=None Dependency=(null)
+   Requeue=1 Restarts=0 BatchFlag=1 Reboot=0 ExitCode=0:0
+   RunTime=00:00:30 TimeLimit=00:10:00 TimeMin=N/A
+   StartTime=2026-10-07T11:47:26 EndTime=2026-10-07T11:47:56 Deadline=N/A
+-- job 444 (cotcodec-fetch-model-metadata), captured 2026-10-07T11:49Z
+   JobState=COMPLETED Reason=None Dependency=(null)
+   Requeue=1 Restarts=0 BatchFlag=1 Reboot=0 ExitCode=0:0
+   RunTime=00:00:05 TimeLimit=00:10:00 TimeMin=N/A
+   StartTime=2026-10-07T11:48:45 EndTime=2026-10-07T11:48:50 Deadline=N/A
+-- job 446 (stp-v1-b-q1-qwen3-8b-dummy), captured 2026-10-07T11:59:57Z
+   JobState=COMPLETED Reason=None Dependency=(null)
+   Requeue=1 Restarts=0 BatchFlag=1 Reboot=0 ExitCode=0:0
+   RunTime=00:10:51 TimeLimit=00:20:00 TimeMin=N/A
+   StartTime=2026-10-07T11:49:04 EndTime=2026-10-07T11:59:55 Deadline=N/A
+-- job 442 (stp-v1-a-q2-qwen35-9b), captured 2026-10-07T12:17:07Z (also live above)
+   JobState=COMPLETED Reason=None Dependency=(null)
+   Requeue=1 Restarts=0 BatchFlag=1 Reboot=0 ExitCode=0:0
+   RunTime=00:28:32 TimeLimit=00:40:00 TimeMin=N/A
+   StartTime=2026-10-07T11:48:27 EndTime=2026-10-07T12:16:59 Deadline=N/A
