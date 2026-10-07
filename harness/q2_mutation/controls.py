@@ -176,9 +176,17 @@ def make_jobs(
 
 
 def merge_lo(
-    jobs: Sequence[Mapping[str, Any]], lo_rows: Sequence[Mapping[str, Any]], *, suffix: str = "lo"
+    jobs: Sequence[Mapping[str, Any]],
+    lo_rows: Sequence[Mapping[str, Any]],
+    *,
+    suffix: str | None = "lo",
 ) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
-    """Jobs whose files are the reachability stage's outputs; and excluded jobs."""
+    """Jobs whose files are the reachability stage's outputs; and excluded jobs.
+
+    Control runs score raw and saved candidates side by side, so saved ids get
+    ``__<suffix>``. Mutant runs score only saved candidates and pass
+    ``suffix=None`` so a verdict row carries the ``MutationResult`` id.
+    """
     by_id = {row["job_id"]: row for row in lo_rows}
     merged: list[dict[str, Any]] = []
     excluded: list[dict[str, Any]] = []
@@ -198,8 +206,8 @@ def merge_lo(
         merged.append(
             {
                 **job,
-                "job_id": f"{job['job_id']}__{suffix}",
-                "mutant_id": f"{job['mutant_id']}__{suffix}",
+                "job_id": f"{job['job_id']}__{suffix}" if suffix else job["job_id"],
+                "mutant_id": f"{job['mutant_id']}__{suffix}" if suffix else job["mutant_id"],
                 "files": files,
                 "saved_via": "gui_faithful_lo_save" if touched else "none",
                 "lo_build": row.get("lo_build") if touched else None,
@@ -208,7 +216,12 @@ def merge_lo(
     return merged, excluded
 
 
-def mutation_jobs(mutations: Sequence[Mapping[str, Any]], files_root: Path) -> list[dict[str, Any]]:
+def mutation_jobs(
+    mutations: Sequence[Mapping[str, Any]],
+    files_root: Path,
+    *,
+    context: Mapping[str, Mapping[str, str | None]] | None = None,
+) -> list[dict[str, Any]]:
     """Scoring jobs for operator mutants (schema v1 ``MutationResult`` rows).
 
     Convention shared with the operators branch: the mutant file for
@@ -216,6 +229,11 @@ def mutation_jobs(mutations: Sequence[Mapping[str, Any]], files_root: Path) -> l
     leading slash>`` and its SHA-256 equals ``output_sha256``. Mutants of the
     ``script_writer`` stratum skip the save stage; ``ambiguous`` mutants are
     scored but never enter a rate.
+
+    ``context`` maps a task id to its gold end-state files (VM path -> local
+    path). A mutant of one file of a multi-file gold is that gold with the one
+    file replaced, so the other gold files are placed as well; without a
+    context the other result files stay at their initial state.
     """
     jobs: list[dict[str, Any]] = []
     for row in mutations:
@@ -234,7 +252,14 @@ def mutation_jobs(mutations: Sequence[Mapping[str, Any]], files_root: Path) -> l
                 "kind": "mutant",
                 "label": result.label,
                 "stratum": result.stratum,
-                "files": {vm_path: str(local)},
+                "files": {
+                    **{
+                        resolve_vm_path(path): other
+                        for path, other in (context or {}).get(result.task_id, {}).items()
+                        if resolve_vm_path(path) != vm_path
+                    },
+                    vm_path: str(local),
+                },
                 "candidate_sha256": result.output_sha256,
                 "skip_reachability": result.stratum == "script_writer",
             }
