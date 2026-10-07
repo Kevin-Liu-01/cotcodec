@@ -38,6 +38,7 @@ import hashlib
 import importlib.util
 import json
 import os
+import signal
 import sys
 import tempfile
 from collections.abc import Iterator
@@ -253,17 +254,31 @@ def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--spec", type=Path, required=True)
     parser.add_argument("--kernels", type=Path, nargs="+", required=True)
+    parser.add_argument("--per-kernel-timeout-s", type=int, default=600)
     args = parser.parse_args(argv)
     os.environ.setdefault("TRITON_DISABLE_LINE_INFO", "1")
     os.environ.setdefault("TRITON_CACHE_DIR", tempfile.mkdtemp(prefix="q1-triton-cache-"))
     records = load_specializations(args.spec)
-    for kernel in args.kernels:
-        try:
-            KernelSource(kernel.read_text(encoding="utf-8"))
-            row = {"kernel": str(kernel), "hashes": compile_hashes(kernel, records)}
-        except Exception as exc:  # noqa: BLE001 - reported per kernel
-            row = {"kernel": str(kernel), "error": f"{type(exc).__name__}: {exc}"[:2000]}
-        print(json.dumps(row, sort_keys=True), flush=True)
+
+    def on_alarm(signum: int, frame: Any) -> None:
+        raise TimeoutError(f"compile exceeded {args.per_kernel_timeout_s} s")
+
+    previous = signal.signal(signal.SIGALRM, on_alarm)
+    try:
+        for kernel in args.kernels:
+            signal.alarm(args.per_kernel_timeout_s)
+            try:
+                KernelSource(kernel.read_text(encoding="utf-8"))
+                row = {"kernel": str(kernel), "hashes": compile_hashes(kernel, records)}
+            except TimeoutError as exc:
+                row = {"kernel": str(kernel), "error": f"timeout: {exc}"}
+            except Exception as exc:  # noqa: BLE001 - reported per kernel
+                row = {"kernel": str(kernel), "error": f"{type(exc).__name__}: {exc}"[:2000]}
+            finally:
+                signal.alarm(0)
+            print(json.dumps(row, sort_keys=True), flush=True)
+    finally:
+        signal.signal(signal.SIGALRM, previous)
     return 0
 
 

@@ -135,3 +135,26 @@ def test_cpu_compile_cli_reports_errors_per_kernel(tmp_path, monkeypatch, capsys
     assert compiled.main(["--spec", str(spec), "--kernels", str(good), str(bad)]) == 0
     rows = [json.loads(line) for line in capsys.readouterr().out.splitlines()]
     assert "hashes" in rows[0] and "error" in rows[1]
+
+
+def test_cpu_compile_pool_end_to_end(tmp_path, monkeypatch):
+    """pool -> compile (subprocesses) -> select on one toy substrate, in a container."""
+    pytest.importorskip("triton")
+    from harness.q1.mutate import corpus
+    from tests._q1_mutate_support import make_substrates
+
+    monkeypatch.setenv("TRITON_CACHE_DIR", str(tmp_path / "cache"))
+    substrates = make_substrates(tmp_path / "substrates", ["relu_where"])
+    corpus.build_pool(substrates, tmp_path / "pool")
+    spec_dir = tmp_path / "specs" / "toy-relu-where"
+    spec_dir.mkdir(parents=True)
+    (spec_dir / "specializations.json").write_text(
+        compiled.dump_specializations([_relu_record()], "3.6.0")
+    )
+    corpus.compile_pool(tmp_path / "pool", tmp_path / "specs", workers=1, timeout_s=900)
+    manifest = corpus.select(tmp_path / "pool", substrates, tmp_path / "mutants")
+    summary = manifest["substrates"][0]["compile"]
+    assert manifest["compile_checked"] is True
+    assert summary.get("compile-fail", 0) >= 1  # e.g. mul2div makes float offsets
+    assert summary.get("distinct", 0) >= 10
+    assert manifest["substrates"][0]["eligible"] == summary["distinct"]

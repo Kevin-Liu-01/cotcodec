@@ -69,3 +69,10 @@ def test_registry_fingerprint_is_stable_and_tracks_metadata():
 def test_mapping_markdown_lists_every_rule():
     table = mapping_markdown()
     assert table.count("\n") == len(KERNELBENCH_M_RULES) + 1
+
+
+def test_readme_tables_are_current():
+    from harness.q1.mutate.rules import README_PATH, render_readme
+
+    text = README_PATH.read_text()
+    assert text == render_readme(text), "run: python -m harness.q1.mutate.rules"
