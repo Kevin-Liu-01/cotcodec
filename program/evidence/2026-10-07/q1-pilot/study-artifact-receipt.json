@@ -1,0 +1,24 @@
+{
+ "manifest_sha256": "260038b32e3f6778187c49a2610a5ecc81a34032214d93c353f0e7b6dd18279d",
+ "note": "host-only run input; never committed or pushed",
+ "path": "<host run root>/stage0/q1-gates/pilot/out/artifacts/q1-pilot-inputs-fef945dd.json",
+ "sha256": "144df1afebcdd4b9bdb0829c3f79740bc1f339ac3b0b160a5c6f5c646076a3ad",
+ "size_bytes": 28092379,
+ "trees": {
+  "corpus": {
+   "files": 1905,
+   "revision": null,
+   "tree_sha256": "62700d5ac1469e362352caf779946d2d758cc758266ca6b4325fd005cc45304b"
+  },
+  "kbv": {
+   "files": 604,
+   "revision": "3fdf6fec7372a4d0cb682635f00e7bdcbc55d50e",
+   "tree_sha256": "02aac1269d88844ee6bbe3049fb31528169fa64435b2ce6e37694276f3b3244d"
+  },
+  "kernelgym": {
+   "files": 291,
+   "revision": "3a84417f8c0efaadb215ef638b37d12e71ed20f3",
+   "tree_sha256": "162a31a621fa7e3a43e0537a30e6dba934aa4ddb7d73ca90df2b284a3e39a83e"
+  }
+ }
+}

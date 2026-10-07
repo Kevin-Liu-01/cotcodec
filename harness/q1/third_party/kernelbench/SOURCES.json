@@ -1,0 +1,104 @@
+{
+ "repo": "https://github.com/ScalingIntelligence/KernelBench",
+ "license": "MIT",
+ "license_sha256": "fb5917dd8e4476fa75e89ef6f03dccf07d4859636bc23c7db50e6c0413887b9e",
+ "problems": {
+  "revision": "423217d9fda91e0c2d67e4a43bf62f96f6d104f1",
+  "paths": "KernelBench/level1/*.py, KernelBench/level2/*.py",
+  "local": "problems/level{1,2}/",
+  "hash_table": "harness/q1/data/kernelbench_423217d9_problems.json",
+  "verbatim": true
+ },
+ "files": [
+  {
+   "local": "kb_44130946/eval.py",
+   "upstream_path": "src/eval.py",
+   "revision": "44130946562d633cfb8e893986c5762a609c551c",
+   "sha256": "5ad54fd8b91fa7a503fdec1889bf73c8a8d039635b35d9ae01541a783d2fd8b3",
+   "bytes": 36082,
+   "verbatim": true
+  },
+  {
+   "local": "kb_423217d9/eval.py",
+   "upstream_path": "src/kernelbench/eval.py",
+   "revision": "423217d9fda91e0c2d67e4a43bf62f96f6d104f1",
+   "sha256": "b42ce1268ec64ee7274db307ab98945c1e868792b54689554014b28c41787ee6",
+   "bytes": 34873,
+   "verbatim": true
+  },
+  {
+   "local": "kb_423217d9/timing.py",
+   "upstream_path": "src/kernelbench/timing.py",
+   "revision": "423217d9fda91e0c2d67e4a43bf62f96f6d104f1",
+   "sha256": "eaabdad5dd042cfaac7159713b5f0c17a9244e65622b504eb3ca909d780854c5",
+   "bytes": 23847,
+   "verbatim": true
+  },
+  {
+   "local": "kb_423217d9/kernel_static_checker.py",
+   "upstream_path": "src/kernelbench/kernel_static_checker.py",
+   "revision": "423217d9fda91e0c2d67e4a43bf62f96f6d104f1",
+   "sha256": "2fcfd82082d36d49ce00e26d78d43847f090d699eb5ddc8db7afe1acb9646565",
+   "bytes": 27845,
+   "verbatim": true
+  },
+  {
+   "local": "kb_423217d9/dataset.py",
+   "upstream_path": "src/kernelbench/dataset.py",
+   "revision": "423217d9fda91e0c2d67e4a43bf62f96f6d104f1",
+   "sha256": "53d1f24a73bca99855a61de45d0c7bcf21d0bf0f59959e4ad3cc9ded2cee3475",
+   "bytes": 19659,
+   "verbatim": true
+  },
+  {
+   "local": "kb_423217d9/unit_tests/test_kernels/result_reuse_kernel.py",
+   "upstream_path": "src/kernelbench/unit_tests/test_kernels/result_reuse_kernel.py",
+   "revision": "423217d9fda91e0c2d67e4a43bf62f96f6d104f1",
+   "sha256": "ed6e8311266d1717808740c23d13d3885fecdbac2a769443db414f932d162a5e",
+   "bytes": 1621,
+   "verbatim": true
+  },
+  {
+   "local": "kb_423217d9/unit_tests/test_kernels/zero_out_kernel.py",
+   "upstream_path": "src/kernelbench/unit_tests/test_kernels/zero_out_kernel.py",
+   "revision": "423217d9fda91e0c2d67e4a43bf62f96f6d104f1",
+   "sha256": "1b624cd8c05d1d68e07a267a30f16be8af220c9d8f95f7756531a8ef9943988b",
+   "bytes": 1471,
+   "verbatim": true
+  },
+  {
+   "local": "kb_423217d9/unit_tests/test_kernels/non_default_stream_kernel.py",
+   "upstream_path": "src/kernelbench/unit_tests/test_kernels/non_default_stream_kernel.py",
+   "revision": "423217d9fda91e0c2d67e4a43bf62f96f6d104f1",
+   "sha256": "262acf977b66143414ed0bced831658f0bc44fbc9a39eb7c51f546cd7f491d90",
+   "bytes": 2711,
+   "verbatim": true
+  },
+  {
+   "local": "LICENSE",
+   "upstream_path": "LICENSE",
+   "revision": "423217d9fda91e0c2d67e4a43bf62f96f6d104f1",
+   "sha256": "fb5917dd8e4476fa75e89ef6f03dccf07d4859636bc23c7db50e6c0413887b9e",
+   "bytes": 1143,
+   "verbatim": true
+  },
+  {
+   "local": "kb_44130946/utils.py",
+   "upstream_path": "src/utils.py",
+   "revision": "44130946562d633cfb8e893986c5762a609c551c",
+   "sha256": "f539f7375261c52711188d349ceafcd9ab18c12a5d347d395ed2e7d05165c9f7",
+   "bytes": 680,
+   "verbatim": false,
+   "note": "minimal stand-in: only the helpers eval.py reaches (read_file, get_gpu_vendor), bodies copied verbatim; upstream imports dotenv/openai/litellm/tqdm"
+  },
+  {
+   "local": "kb_423217d9/utils.py",
+   "upstream_path": "src/kernelbench/utils.py",
+   "revision": "423217d9fda91e0c2d67e4a43bf62f96f6d104f1",
+   "sha256": "397b9e48d436b564b091ea3757eb86df1e64560e2af4e2ad874faea9f4ecb223",
+   "bytes": 1144,
+   "verbatim": false,
+   "note": "minimal stand-in: only the helpers eval.py reaches (read_file, get_gpu_vendor), bodies copied verbatim; upstream imports dotenv/openai/litellm/tqdm"
+  }
+ ]
+}

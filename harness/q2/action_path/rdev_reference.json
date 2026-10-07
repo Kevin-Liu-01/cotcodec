@@ -1,0 +1,972 @@
+{
+  "entries": {
+    "caps_lock_roundtrip": {
+      "balanced": true,
+      "caps_led_ok": 5,
+      "distinct_projections": 1,
+      "events": [
+        [
+          "KeyPress",
+          "Caps_Lock",
+          []
+        ],
+        [
+          "KeyRelease",
+          "Caps_Lock",
+          []
+        ],
+        [
+          "KeyPress",
+          "Caps_Lock",
+          []
+        ],
+        [
+          "KeyRelease",
+          "Caps_Lock",
+          []
+        ]
+      ],
+      "guard_clean": 5,
+      "reps": 5,
+      "stable": true
+    },
+    "chord_alt_f4": {
+      "balanced": true,
+      "caps_led_ok": null,
+      "distinct_projections": 1,
+      "events": [
+        [
+          "KeyPress",
+          "Alt_L",
+          []
+        ],
+        [
+          "KeyPress",
+          "F4",
+          [
+            "Mod1"
+          ]
+        ],
+        [
+          "KeyRelease",
+          "F4",
+          [
+            "Mod1"
+          ]
+        ],
+        [
+          "KeyRelease",
+          "Alt_L",
+          [
+            "Mod1"
+          ]
+        ]
+      ],
+      "guard_clean": 5,
+      "reps": 5,
+      "stable": true
+    },
+    "chord_alt_tab": {
+      "balanced": true,
+      "caps_led_ok": null,
+      "distinct_projections": 1,
+      "events": [
+        [
+          "KeyPress",
+          "Alt_L",
+          []
+        ],
+        [
+          "KeyPress",
+          "Tab",
+          [
+            "Mod1"
+          ]
+        ],
+        [
+          "KeyRelease",
+          "Tab",
+          [
+            "Mod1"
+          ]
+        ],
+        [
+          "KeyRelease",
+          "Alt_L",
+          [
+            "Mod1"
+          ]
+        ]
+      ],
+      "guard_clean": 5,
+      "reps": 5,
+      "stable": true
+    },
+    "chord_ctrl_a": {
+      "balanced": true,
+      "caps_led_ok": null,
+      "distinct_projections": 1,
+      "events": [
+        [
+          "KeyPress",
+          "Control_L",
+          []
+        ],
+        [
+          "KeyPress",
+          "a",
+          [
+            "Control"
+          ]
+        ],
+        [
+          "KeyRelease",
+          "a",
+          [
+            "Control"
+          ]
+        ],
+        [
+          "KeyRelease",
+          "Control_L",
+          [
+            "Control"
+          ]
+        ]
+      ],
+      "guard_clean": 5,
+      "reps": 5,
+      "stable": true
+    },
+    "chord_ctrl_alone": {
+      "balanced": true,
+      "caps_led_ok": null,
+      "distinct_projections": 1,
+      "events": [
+        [
+          "KeyPress",
+          "Control_L",
+          []
+        ],
+        [
+          "KeyRelease",
+          "Control_L",
+          [
+            "Control"
+          ]
+        ]
+      ],
+      "guard_clean": 5,
+      "reps": 5,
+      "stable": true
+    },
+    "chord_ctrl_alt_shift_r": {
+      "balanced": true,
+      "caps_led_ok": null,
+      "distinct_projections": 1,
+      "events": [
+        [
+          "KeyPress",
+          "Control_L",
+          []
+        ],
+        [
+          "KeyPress",
+          "Alt_L",
+          [
+            "Control"
+          ]
+        ],
+        [
+          "KeyPress",
+          "Shift_L",
+          [
+            "Control",
+            "Mod1"
+          ]
+        ],
+        [
+          "KeyPress",
+          "r",
+          [
+            "Shift",
+            "Control",
+            "Mod1"
+          ]
+        ],
+        [
+          "KeyRelease",
+          "r",
+          [
+            "Shift",
+            "Control",
+            "Mod1"
+          ]
+        ],
+        [
+          "KeyRelease",
+          "Shift_L",
+          [
+            "Shift",
+            "Control",
+            "Mod1"
+          ]
+        ],
+        [
+          "KeyRelease",
+          "Alt_L",
+          [
+            "Control",
+            "Mod1"
+          ]
+        ],
+        [
+          "KeyRelease",
+          "Control_L",
+          [
+            "Control"
+          ]
+        ]
+      ],
+      "guard_clean": 5,
+      "reps": 5,
+      "stable": true
+    },
+    "chord_ctrl_c": {
+      "balanced": true,
+      "caps_led_ok": null,
+      "distinct_projections": 1,
+      "events": [
+        [
+          "KeyPress",
+          "Control_L",
+          []
+        ],
+        [
+          "KeyPress",
+          "c",
+          [
+            "Control"
+          ]
+        ],
+        [
+          "KeyRelease",
+          "c",
+          [
+            "Control"
+          ]
+        ],
+        [
+          "KeyRelease",
+          "Control_L",
+          [
+            "Control"
+          ]
+        ]
+      ],
+      "guard_clean": 5,
+      "reps": 5,
+      "stable": true
+    },
+    "chord_ctrl_home": {
+      "balanced": true,
+      "caps_led_ok": null,
+      "distinct_projections": 1,
+      "events": [
+        [
+          "KeyPress",
+          "Control_L",
+          []
+        ],
+        [
+          "KeyPress",
+          "Home",
+          [
+            "Control"
+          ]
+        ],
+        [
+          "KeyRelease",
+          "Home",
+          [
+            "Control"
+          ]
+        ],
+        [
+          "KeyRelease",
+          "Control_L",
+          [
+            "Control"
+          ]
+        ]
+      ],
+      "guard_clean": 5,
+      "reps": 5,
+      "stable": true
+    },
+    "chord_ctrl_shift_arrow": {
+      "balanced": true,
+      "caps_led_ok": null,
+      "distinct_projections": 1,
+      "events": [
+        [
+          "KeyPress",
+          "Control_L",
+          []
+        ],
+        [
+          "KeyPress",
+          "Shift_L",
+          [
+            "Control"
+          ]
+        ],
+        [
+          "KeyPress",
+          "Right",
+          [
+            "Shift",
+            "Control"
+          ]
+        ],
+        [
+          "KeyRelease",
+          "Right",
+          [
+            "Shift",
+            "Control"
+          ]
+        ],
+        [
+          "KeyRelease",
+          "Shift_L",
+          [
+            "Shift",
+            "Control"
+          ]
+        ],
+        [
+          "KeyRelease",
+          "Control_L",
+          [
+            "Control"
+          ]
+        ]
+      ],
+      "guard_clean": 5,
+      "reps": 5,
+      "stable": true
+    },
+    "chord_ctrl_shift_t": {
+      "balanced": true,
+      "caps_led_ok": null,
+      "distinct_projections": 1,
+      "events": [
+        [
+          "KeyPress",
+          "Control_L",
+          []
+        ],
+        [
+          "KeyPress",
+          "Shift_L",
+          [
+            "Control"
+          ]
+        ],
+        [
+          "KeyPress",
+          "t",
+          [
+            "Shift",
+            "Control"
+          ]
+        ],
+        [
+          "KeyRelease",
+          "t",
+          [
+            "Shift",
+            "Control"
+          ]
+        ],
+        [
+          "KeyRelease",
+          "Shift_L",
+          [
+            "Shift",
+            "Control"
+          ]
+        ],
+        [
+          "KeyRelease",
+          "Control_L",
+          [
+            "Control"
+          ]
+        ]
+      ],
+      "guard_clean": 5,
+      "reps": 5,
+      "stable": true
+    },
+    "chord_shift_alone": {
+      "balanced": true,
+      "caps_led_ok": null,
+      "distinct_projections": 1,
+      "events": [
+        [
+          "KeyPress",
+          "Shift_L",
+          []
+        ],
+        [
+          "KeyRelease",
+          "Shift_L",
+          [
+            "Shift"
+          ]
+        ]
+      ],
+      "guard_clean": 5,
+      "reps": 5,
+      "stable": true
+    },
+    "chord_shift_arrow_left": {
+      "balanced": true,
+      "caps_led_ok": null,
+      "distinct_projections": 1,
+      "events": [
+        [
+          "KeyPress",
+          "Shift_L",
+          []
+        ],
+        [
+          "KeyPress",
+          "Left",
+          [
+            "Shift"
+          ]
+        ],
+        [
+          "KeyRelease",
+          "Left",
+          [
+            "Shift"
+          ]
+        ],
+        [
+          "KeyRelease",
+          "Shift_L",
+          [
+            "Shift"
+          ]
+        ]
+      ],
+      "guard_clean": 5,
+      "reps": 5,
+      "stable": true
+    },
+    "chord_shift_tab": {
+      "balanced": true,
+      "caps_led_ok": null,
+      "distinct_projections": 1,
+      "events": [
+        [
+          "KeyPress",
+          "Shift_L",
+          []
+        ],
+        [
+          "KeyPress",
+          "Tab",
+          [
+            "Shift"
+          ]
+        ],
+        [
+          "KeyRelease",
+          "Tab",
+          [
+            "Shift"
+          ]
+        ],
+        [
+          "KeyRelease",
+          "Shift_L",
+          [
+            "Shift"
+          ]
+        ]
+      ],
+      "guard_clean": 5,
+      "reps": 5,
+      "stable": true
+    },
+    "chord_super_d": {
+      "balanced": true,
+      "caps_led_ok": null,
+      "distinct_projections": 1,
+      "events": [
+        [
+          "KeyPress",
+          "Super_L",
+          []
+        ],
+        [
+          "KeyPress",
+          "d",
+          [
+            "Mod4"
+          ]
+        ],
+        [
+          "KeyRelease",
+          "d",
+          [
+            "Mod4"
+          ]
+        ],
+        [
+          "KeyRelease",
+          "Super_L",
+          [
+            "Mod4"
+          ]
+        ]
+      ],
+      "guard_clean": 5,
+      "reps": 5,
+      "stable": true
+    },
+    "key_arrow_down": {
+      "balanced": true,
+      "caps_led_ok": null,
+      "distinct_projections": 1,
+      "events": [
+        [
+          "KeyPress",
+          "Down",
+          []
+        ],
+        [
+          "KeyRelease",
+          "Down",
+          []
+        ]
+      ],
+      "guard_clean": 5,
+      "reps": 5,
+      "stable": true
+    },
+    "key_arrow_left": {
+      "balanced": true,
+      "caps_led_ok": null,
+      "distinct_projections": 1,
+      "events": [
+        [
+          "KeyPress",
+          "Left",
+          []
+        ],
+        [
+          "KeyRelease",
+          "Left",
+          []
+        ]
+      ],
+      "guard_clean": 5,
+      "reps": 5,
+      "stable": true
+    },
+    "key_arrow_right": {
+      "balanced": true,
+      "caps_led_ok": null,
+      "distinct_projections": 1,
+      "events": [
+        [
+          "KeyPress",
+          "Right",
+          []
+        ],
+        [
+          "KeyRelease",
+          "Right",
+          []
+        ]
+      ],
+      "guard_clean": 5,
+      "reps": 5,
+      "stable": true
+    },
+    "key_arrow_up": {
+      "balanced": true,
+      "caps_led_ok": null,
+      "distinct_projections": 1,
+      "events": [
+        [
+          "KeyPress",
+          "Up",
+          []
+        ],
+        [
+          "KeyRelease",
+          "Up",
+          []
+        ]
+      ],
+      "guard_clean": 5,
+      "reps": 5,
+      "stable": true
+    },
+    "key_delete": {
+      "balanced": true,
+      "caps_led_ok": null,
+      "distinct_projections": 1,
+      "events": [
+        [
+          "KeyPress",
+          "Delete",
+          []
+        ],
+        [
+          "KeyRelease",
+          "Delete",
+          []
+        ]
+      ],
+      "guard_clean": 5,
+      "reps": 5,
+      "stable": true
+    },
+    "key_end": {
+      "balanced": true,
+      "caps_led_ok": null,
+      "distinct_projections": 1,
+      "events": [
+        [
+          "KeyPress",
+          "End",
+          []
+        ],
+        [
+          "KeyRelease",
+          "End",
+          []
+        ]
+      ],
+      "guard_clean": 5,
+      "reps": 5,
+      "stable": true
+    },
+    "key_enter": {
+      "balanced": true,
+      "caps_led_ok": null,
+      "distinct_projections": 1,
+      "events": [
+        [
+          "KeyPress",
+          "Return",
+          []
+        ],
+        [
+          "KeyRelease",
+          "Return",
+          []
+        ]
+      ],
+      "guard_clean": 5,
+      "reps": 5,
+      "stable": true
+    },
+    "key_esc": {
+      "balanced": true,
+      "caps_led_ok": null,
+      "distinct_projections": 1,
+      "events": [
+        [
+          "KeyPress",
+          "Escape",
+          []
+        ],
+        [
+          "KeyRelease",
+          "Escape",
+          []
+        ]
+      ],
+      "guard_clean": 5,
+      "reps": 5,
+      "stable": true
+    },
+    "key_f1": {
+      "balanced": true,
+      "caps_led_ok": null,
+      "distinct_projections": 1,
+      "events": [
+        [
+          "KeyPress",
+          "F1",
+          []
+        ],
+        [
+          "KeyRelease",
+          "F1",
+          []
+        ]
+      ],
+      "guard_clean": 5,
+      "reps": 5,
+      "stable": true
+    },
+    "key_f12": {
+      "balanced": true,
+      "caps_led_ok": null,
+      "distinct_projections": 1,
+      "events": [
+        [
+          "KeyPress",
+          "F12",
+          []
+        ],
+        [
+          "KeyRelease",
+          "F12",
+          []
+        ]
+      ],
+      "guard_clean": 5,
+      "reps": 5,
+      "stable": true
+    },
+    "key_f5": {
+      "balanced": true,
+      "caps_led_ok": null,
+      "distinct_projections": 1,
+      "events": [
+        [
+          "KeyPress",
+          "F5",
+          []
+        ],
+        [
+          "KeyRelease",
+          "F5",
+          []
+        ]
+      ],
+      "guard_clean": 5,
+      "reps": 5,
+      "stable": true
+    },
+    "key_f9": {
+      "balanced": true,
+      "caps_led_ok": null,
+      "distinct_projections": 1,
+      "events": [
+        [
+          "KeyPress",
+          "F9",
+          []
+        ],
+        [
+          "KeyRelease",
+          "F9",
+          []
+        ]
+      ],
+      "guard_clean": 5,
+      "reps": 5,
+      "stable": true
+    },
+    "key_home": {
+      "balanced": true,
+      "caps_led_ok": null,
+      "distinct_projections": 1,
+      "events": [
+        [
+          "KeyPress",
+          "Home",
+          []
+        ],
+        [
+          "KeyRelease",
+          "Home",
+          []
+        ]
+      ],
+      "guard_clean": 5,
+      "reps": 5,
+      "stable": true
+    },
+    "key_insert": {
+      "balanced": true,
+      "caps_led_ok": null,
+      "distinct_projections": 1,
+      "events": [
+        [
+          "KeyPress",
+          "Insert",
+          []
+        ],
+        [
+          "KeyRelease",
+          "Insert",
+          []
+        ]
+      ],
+      "guard_clean": 5,
+      "reps": 5,
+      "stable": true
+    },
+    "key_kp_add": {
+      "balanced": true,
+      "caps_led_ok": null,
+      "distinct_projections": 1,
+      "events": [
+        [
+          "KeyPress",
+          "KP_Add",
+          []
+        ],
+        [
+          "KeyRelease",
+          "KP_Add",
+          []
+        ]
+      ],
+      "guard_clean": 5,
+      "reps": 5,
+      "stable": true
+    },
+    "key_kp_enter": {
+      "balanced": true,
+      "caps_led_ok": null,
+      "distinct_projections": 1,
+      "events": [
+        [
+          "KeyPress",
+          "KP_Enter",
+          []
+        ],
+        [
+          "KeyRelease",
+          "KP_Enter",
+          []
+        ]
+      ],
+      "guard_clean": 5,
+      "reps": 5,
+      "stable": true
+    },
+    "key_menu": {
+      "balanced": true,
+      "caps_led_ok": null,
+      "distinct_projections": 1,
+      "events": [
+        [
+          "KeyPress",
+          "Menu",
+          []
+        ],
+        [
+          "KeyRelease",
+          "Menu",
+          []
+        ]
+      ],
+      "guard_clean": 5,
+      "reps": 5,
+      "stable": true
+    },
+    "key_pagedown": {
+      "balanced": true,
+      "caps_led_ok": null,
+      "distinct_projections": 1,
+      "events": [
+        [
+          "KeyPress",
+          "Next",
+          []
+        ],
+        [
+          "KeyRelease",
+          "Next",
+          []
+        ]
+      ],
+      "guard_clean": 5,
+      "reps": 5,
+      "stable": true
+    },
+    "key_pageup": {
+      "balanced": true,
+      "caps_led_ok": null,
+      "distinct_projections": 1,
+      "events": [
+        [
+          "KeyPress",
+          "Prior",
+          []
+        ],
+        [
+          "KeyRelease",
+          "Prior",
+          []
+        ]
+      ],
+      "guard_clean": 5,
+      "reps": 5,
+      "stable": true
+    },
+    "key_space_chord": {
+      "balanced": true,
+      "caps_led_ok": null,
+      "distinct_projections": 1,
+      "events": [
+        [
+          "KeyPress",
+          "space",
+          []
+        ],
+        [
+          "KeyRelease",
+          "space",
+          []
+        ]
+      ],
+      "guard_clean": 5,
+      "reps": 5,
+      "stable": true
+    },
+    "key_tab": {
+      "balanced": true,
+      "caps_led_ok": null,
+      "distinct_projections": 1,
+      "events": [
+        [
+          "KeyPress",
+          "Tab",
+          []
+        ],
+        [
+          "KeyRelease",
+          "Tab",
+          []
+        ]
+      ],
+      "guard_clean": 5,
+      "reps": 5,
+      "stable": true
+    }
+  },
+  "projection": "kind, keysym at index 0, state names restricted to Shift/Control/Mod1/Mod4",
+  "schema": "cotcodec-q2-rdev-reference-v1",
+  "source": {
+    "boot_id": "9ea4ab47-d5cc-443d-a05b-0562588f624c",
+    "job_id": "393",
+    "plan_sha256": "5c9b7215c89aadfa6308bdd94c629a716c7c822a8ca626315157e84bd1495d89",
+    "qemu": "9.1.0Debian 1:9.1.0+ds-8"
+  }
+}

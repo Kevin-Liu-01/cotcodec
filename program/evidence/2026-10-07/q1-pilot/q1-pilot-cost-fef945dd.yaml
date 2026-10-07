@@ -1,0 +1,66 @@
+# Filled from experiments/manifests/q1-core/q1-pilot-cost.template.yaml (stage0/q1-gates@fef945dd)
+# with the image build receipt of Slurm job 507 and the study-artifact pack receipt.
+# Argv adds the pilot options the template gains in the same pass (size-scaled watchdog,
+# phase boxes); the job is one GPU for at most 42 minutes (0.70 GPU-h).
+runtime: docker-single-node-discovery-v1
+name: q1-pilot-cost
+image_id: sha256:952549b9db663356639c50364aeb35bf0cc7c7302dce3d15b1ef925dfc9237cc
+git_sha: fef945dd4a49b508cd93a179da4f12b605d517d4
+source_sha256: a342e9f250c287930a9085543185b731a854d7a90bce0cf0cd2b3e9b4713c7e6
+container_profile: large-cpu-mem
+resources:
+  gpu_type: h100
+  gpus: 1
+  cpus: 32
+  memory_gb: 256
+  minutes: 42
+budget:
+  max_gpu_hours: 0.70
+randomness_contract: assignment-seed-matrix
+seeds: [42, 43, 44]
+seed_binding:
+  flag: "--seeds"
+run_root: /home/kevin/cotcodec-runs/stage0/q1-gates/pilot/runs
+model:
+  kind: none
+  reason: "Q1 pilot fidelity, calibration and cost card on compiler and pre-2025 human kernels; no checkpoint"
+study_artifact:
+  source_id: q1-pilot-inputs
+  revision: fef945dd4a49b508cd93a179da4f12b605d517d4
+  license: LicenseRef-q1-mixed
+  host_path: /home/kevin/cotcodec-runs/stage0/q1-gates/pilot/out/artifacts/q1-pilot-inputs-fef945dd.json
+  sha256: 144df1afebcdd4b9bdb0829c3f79740bc1f339ac3b0b160a5c6f5c646076a3ad
+  size_bytes: 28092379
+command:
+  - env
+  - TRITON_CACHE_DIR=/outputs/cache/triton
+  - TORCHINDUCTOR_CACHE_DIR=/outputs/cache/inductor
+  - python
+  - scripts/run_q1_gpu_pilot.py
+  - "--job"
+  - pilot
+  - "--output"
+  - /outputs/q1
+  - "--evidence"
+  - /inputs/study-artifact.json
+  - "--expected-evidence-sha256"
+  - 144df1afebcdd4b9bdb0829c3f79740bc1f339ac3b0b160a5c6f5c646076a3ad
+  - "--budget-minutes"
+  - "37"
+  - "--slots-per-gpu"
+  - "4"
+  - "--size-scaled-watchdog"
+  - "--smoke-minutes"
+  - "6"
+  - "--fidelity-minutes"
+  - "7"
+  - "--calibration-minutes"
+  - "4"
+  - "--timing-reserve-minutes"
+  - "2.5"
+  - "--timing-kernels"
+  - "2"
+  - "--seeds"
+  - "42"
+  - "43"
+  - "44"

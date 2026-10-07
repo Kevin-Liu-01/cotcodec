@@ -1,0 +1,153 @@
+{
+  "what": "Q1 Stage 0 fix pass after the adversarial review of stage0/q1-gates@acb3bc8 (infrastructure only: CPU tests, CPU doctor, black-box probes of the unmodified KernelGYM clone in GPU-less containers; no GPU, no confirmatory data)",
+  "date": "2026-10-07",
+  "branch": "stage0/q1-gates",
+  "reviewed_commit": "acb3bc8fd86b8dc0ead8b1880ab6bc94dd226e8c",
+  "fix_commit": "c6ef3a94a182544349193a92fa23df749da73b99",
+  "container": {
+    "image": "cotcodec-q1-gates:adda2feb",
+    "image_id": "sha256:b6d73b76aaf92a7afd2c0b3d95379f9ce48c50ad39744f231720888d01f72195",
+    "flags": "docker run --network=none, no --gpus, NVIDIA_VISIBLE_DEVICES=void, CUDA_VISIBLE_DEVICES='', worktree copy mounted read-only, unmodified KernelGYM clone @3a84417f mounted read-only at /kernelgym",
+    "nvidia_devices_visible": 0
+  },
+  "findings": [
+    {
+      "id": 1,
+      "severity": "critical",
+      "claim": "c3 config ids embed 'input_shape[0]', which schema.CONFIG_ID_RE refuses; the worker crashes building rows after the candidate ran and the runner records reject for every kernel on 10 L1 problems",
+      "verified": "20 committed c3 ids (U1 and U2 on L1/89, 90, 91, 92, 93, 94, 96, 98, 99, 100) fail CONFIG_ID_RE with their draw and seed suffix; runner.py records a post-load crash as reject",
+      "disposition": "fixed",
+      "fix": "shapes.root_label writes tuple-element roots as 'input_shape.0' (overrides keep the real name); shapes._config refuses an invalid id; manifest regenerated with the same 587/915/865 configurations; gate_c.c_configs checks ids before loading a candidate; the worker writes one 'infra_failure-harness-row' error row when building or serialising rows fails; the runner retries an infrastructure-failed item once; preregistration section 10 states the crash attribution",
+      "regression_tests": [
+        "tests/test_q1_problems.py::test_every_committed_config_id_is_schema_valid_with_its_suffix",
+        "tests/test_q1_problems.py::test_root_labels",
+        "tests/test_q1_runner.py::test_gate_c_runs_tuple_element_roots_end_to_end",
+        "tests/test_q1_runner.py::test_harness_row_fault_is_retried_once_and_never_a_rejection",
+        "tests/test_q1_worker.py::test_row_failure_becomes_one_error_row",
+        "tests/test_q1_worker.py::test_candidate_phase_exceptions_still_propagate"
+      ]
+    },
+    {
+      "id": 2,
+      "severity": "high",
+      "claim": "mutants of audit-rejected parents count as witnessed",
+      "verified": "acb3bc8 analysis.metrics defined witnessed as mutant tier == reject with no parent condition (analysis.py:257)",
+      "disposition": "fixed",
+      "fix": "analysis.scope_mutants: a mutant is scored only if the same audit tier and policy accept its parent at the same replicate; exclusions counted by parent verdict",
+      "regression_tests": [
+        "tests/test_q1_analysis.py::test_parent_filter_drops_mutants_of_a_faulty_parent"
+      ]
+    },
+    {
+      "id": 3,
+      "severity": "medium",
+      "claim": "ladder composition (reject dominates error, error excluded) makes c's denominators depend on the outcome when a family is unrefereeable",
+      "verified": "acb3bc8 _conjoin and metrics; gate_c.aggregate marks a family with no admissible configuration as error; the same applies to audit tiers through A2/A3 and FA-share",
+      "disposition": "fixed",
+      "fix": "a c family with no admissible configuration, and an A2/A3 channel with no admissible draw, is vacuous for every kernel of the problem (decided per problem; disagreements listed and not vacuous); tiers.tier_verdicts(vacuous=...); every gate's MS and FRR use the kernels a, b and c all referee; paired differences on that set",
+      "regression_tests": [
+        "tests/test_q1_analysis.py::test_unrefereeable_family_is_vacuous_not_outcome_dependent",
+        "tests/test_q1_analysis.py::test_unrefereeable_audit_channel_is_vacuous",
+        "tests/test_q1_analysis.py::test_refereeability_disagreement_is_listed_and_not_vacuous",
+        "tests/test_q1_analysis.py::test_every_gate_uses_the_kernels_a_b_and_c_referee",
+        "tests/test_q1_audit.py::test_tiers_drop_vacuous_channels_only_for_a2_and_a3"
+      ]
+    },
+    {
+      "id": 4,
+      "severity": "medium",
+      "claim": "several preregistered metrics and procedures have no frozen code; the FRR unit for criterion 3 does not match",
+      "verified": "tiers.adjudicate_gate_rejection and tiers.precision_only were called only from tests; no weighting, origin or tier breakdowns, calibration driver or c-lite existed; oracle.calibrate_multiplier raised on the inf that an exact reference produces; metrics() counted FRR per kernel",
+      "disposition": "fixed",
+      "fix": "audit/replay.py + scripts/q1_audit_hole_replay.py + analysis.audit_hole_candidates/audit_hole_summary (criterion 4); precision-only flag per kernel and policy; n/k-weighted MS; breakdowns by family, rule origin and source tier; paired differences; audit/calibration.py + scripts/q1_calibrate_audit.py (members, fault ceiling 1024, exact-reference rule); analysis.c_lite_set_cover; marginal and amortized cost; FRR_independent over kernel-family units with criterion_3_FRR_c; cluster bootstrap over problems linked by kernel family (numpy, vectorised); all in analysis_sha256 or audit_code_sha256",
+      "regression_tests": [
+        "tests/test_q1_analysis.py::test_metrics_ms_far_frr",
+        "tests/test_q1_analysis.py::test_independent_frr_counts_a_family_once",
+        "tests/test_q1_analysis.py::test_cluster_map_links_problems_of_one_kernel_family",
+        "tests/test_q1_analysis.py::test_precision_only_class",
+        "tests/test_q1_analysis.py::test_audit_hole_candidates_and_summary",
+        "tests/test_q1_analysis.py::test_c_lite_greedy_set_cover",
+        "tests/test_q1_analysis.py::test_cost_ratio_marginal_and_amortized",
+        "tests/test_q1_audit.py::test_required_multiplier_is_defined_for_exact_references",
+        "tests/test_q1_audit.py::test_calibration_driver_classifies_and_raises_m_once",
+        "tests/test_q1_audit.py::test_audit_hole_replay_classifies_gate_rejections",
+        "tests/test_q1_integration_cpu.py::test_metrics_and_report_run_on_the_journal"
+      ]
+    },
+    {
+      "id": 5,
+      "severity": "medium",
+      "claim": "mutants of S1 calibration-half parents are scored, contradicting section 3.5",
+      "verified": "acb3bc8 report_q1_stage0.py filtered mutants only by the dev/test split",
+      "disposition": "fixed (kept section 3.5)",
+      "fix": "analysis.substrate_halves; the report computes primary metrics with mutant_parents = evaluation substrates and a labelled 's1_calibration_parents' secondary; preregistration 3.5 says those mutants are scored only within the 8 GPU-h cap",
+      "regression_tests": [
+        "tests/test_q1_analysis.py::test_s1_calibration_parents_are_out_of_primary_scope",
+        "tests/test_q1_analysis.py::test_substrate_halves"
+      ]
+    },
+    {
+      "id": 6,
+      "severity": "medium",
+      "claim": "gate_b.py transliterates parts of unlicensed KernelGYM triton_detect.py while claiming no code is copied",
+      "verified": "token similarity measured without printing either source (simcheck.py): kernel_name vs _get_kernel_name raw 0.84, identifiers normalised 0.96, longest common run 18 tokens, 7 shared string literals; _record vs _append_capture 0.63/0.71, 5 literals",
+      "disposition": "fixed in the code; residual licence risk recorded",
+      "fix": "gate_b.py rewritten from KERNELGYM_SPEC.md by an agent that had read neither the KernelGYM source nor the earlier hook code; spec gaps (which object a capture names, the 'unknown' fall-through, getattr-based method lookup) measured black-box against the unmodified clone on 40 controlled objects and 5 interpreter kernels, all equal; after the rewrite _resolve_name vs _get_kernel_name is 0.49/0.58 (longest run 7, the 6 shared literals are spec-required attribute names) and capture_text vs _append_capture 0.45/0.57; false docstring claim removed; NOTICE and KERNELGYM_SPEC.md record the history; nothing was ever pushed",
+      "regression_tests": [
+        "tests/test_q1_gates.py::test_capture_names_match_kernelgym",
+        "tests/test_q1_gates.py::test_b1_and_b2_agree_with_unmodified_kernelgym",
+        "scripts/run_q1_gate_doctor.py b1_differential"
+      ]
+    },
+    {
+      "id": 7,
+      "severity": "low",
+      "claim": "a candidate can observe the gate id, seeds and the harness at run time",
+      "verified": "by code reading: the worker argv names item.json (holds 'gate'); channel seeds are public constants; the harness is on PYTHONPATH",
+      "disposition": "documented, not changed in code",
+      "fix": "preregistration section 12 records it as a threat-model limit with the three mitigations Stage 1 must meet or explicitly waive; Stage 0's harness-derived kernels do not read their environment"
+    },
+    {
+      "id": 8,
+      "severity": "low",
+      "claim": "b1 hooks calls 2 and 4 of a fresh module, released KernelGYM hooks 7 and 9 after b0; no b2 empty-profile retry",
+      "verified": "KERNELGYM_SPEC.md itself says b1 runs on 'the candidate module after b0' and step 4 retries an empty table; gate_b did neither; a call-count fixture passes a fresh-module b1",
+      "disposition": "fixed",
+      "fix": "gate_b.kernelgym_b0_calls replays b0's five candidate calls before b1 and b2; profiler_rows retries an empty table once; doctor fixture relu_call_count_switch and hack control call-count-switch (13 activations)",
+      "regression_tests": [
+        "tests/test_q1_gates.py::test_b1_replays_the_released_call_history",
+        "tests/test_q1_gates.py::test_b2_retries_an_empty_profile_once",
+        "scripts/run_q1_gate_doctor.py expectation relu_call_count_switch b1 reject",
+        "tests/test_q1_integration_cpu.py::test_every_control_expectation_holds_on_cpu"
+      ]
+    }
+  ],
+  "results": {
+    "q1_tests_in_container": {
+      "command": "python -m pytest -q tests/test_q1_*.py (KERNELGYM_SRC=/kernelgym)",
+      "tests": 280,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "junit_sha256": "650eb57bde4450fb1baadd1d1563ea3fff5a4a12c95ecbad091d44d232db3ec1"
+    },
+    "full_suite_on_host": {
+      "command": "uv run --locked --extra dev pytest -q tests (no torch; torch tests skip)",
+      "passed": 669,
+      "skipped": 8,
+      "failed": 0
+    },
+    "ruff": "ruff check . PASS; ruff format --check clean on the 24 changed or added Python files",
+    "cpu_gate_doctor": {
+      "command": "TRITON_INTERPRET=1 KERNELGYM_SRC=/kernelgym scripts/run_q1_gate_doctor.py --slots 16",
+      "status": "PASS",
+      "items": 195,
+      "report_sha256": "9ddc856db154b7f75ba19bedd1238c6a0e141ed1ff8e2631b032f86d15964044"
+    },
+    "shape_manifest_check": "PASS (587 c2, 915 c3, 865 A3)",
+    "gate_b_similarity_sha256": "daa6db4e7c8292ef95d3bcde7d42aa9ffe1f33491b00706d023b4eaa9ba90c28",
+    "validate_architecture_experiments": "PASS",
+    "validate_provider_models": "PASS"
+  },
+  "receipts_on_host": "~/cotcodec-runs/stage0/q1-gates/fix/receipts/20261007T153427 (q1-tests.xml, doctor_report.json, doctor.log, gate_b_similarity.txt, simcheck.py, capture-name probes and their outputs)"
+}

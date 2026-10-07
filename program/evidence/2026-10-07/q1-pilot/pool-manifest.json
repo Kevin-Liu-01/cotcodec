@@ -1,0 +1,357 @@
+{
+ "mutator": {
+  "n_operators": 68,
+  "package_sha256": "f4aa6e93214126b1fcc82964654833a2da419ff98e7d7b9d27fa24dc2f595296",
+  "registry_fingerprint": "43a1f0a234ad1c4a4421626d740989e01890b878c5ce7f2dec5739e3d43922a6",
+  "schema_version": "q1-schema/1"
+ },
+ "n_candidates": 936,
+ "pool_sha256": "8ba7ad331aa6cbe140a8acfa3951b820542b0658dbb91ea95218fe4fcccf60bb",
+ "schema": "q1-mutant-pool/1",
+ "substrates": [
+  {
+   "enumeration": {
+    "by_family": {
+     "arithmetic": 8,
+     "boundary": 7,
+     "indexing": 3,
+     "precision": 2
+    },
+    "by_operator": {
+     "block-size-to-num-programs": 1,
+     "ceil2floor": 1,
+     "load-offset-off1": 1,
+     "lt2gt": 1,
+     "lt2le": 1,
+     "mask-bound-minus1": 1,
+     "mask-bound-plus1": 1,
+     "mask-drop": 2,
+     "mul2div": 2,
+     "mul2plus": 2,
+     "negate-store": 1,
+     "plus2minus": 3,
+     "program-id-axis-swap": 1,
+     "store-fp16": 1,
+     "store-scale-nudge": 1
+    },
+    "candidates": 20,
+    "distinct": 20,
+    "duplicate": 0,
+    "equivalent_to_parent": 0,
+    "syntax": 0
+   },
+   "kernel_sha256": "81db78e0f27e61093b62ba7e6b718073c105f3cd20062633d622370d2ecc83e5",
+   "parent_dedup_hash": "62d73e5b63cdea45e152a8dd8a45cb2c52c7b1e170cc79e25ba2fa7da04ea2dc",
+   "problem_id": "L1/25_Swish",
+   "rejected": [],
+   "substrate_id": "s1-inductor-L1-25_Swish"
+  },
+  {
+   "enumeration": {
+    "by_family": {
+     "arithmetic": 60,
+     "boundary": 26,
+     "indexing": 7,
+     "precision": 2,
+     "semantic": 7
+    },
+    "by_operator": {
+     "acc-minus": 3,
+     "acc-overwrite": 3,
+     "ceil2floor": 2,
+     "const0to1": 1,
+     "ge2gt": 2,
+     "load-offset-off1": 4,
+     "loop-bound-minus1": 1,
+     "loop-start-1": 1,
+     "loop-step-double": 1,
+     "lt2gt": 4,
+     "lt2le": 4,
+     "mask-bound-minus1": 4,
+     "mask-bound-plus1": 4,
+     "mask-drop": 3,
+     "minus2plus": 3,
+     "mul2div": 20,
+     "mul2plus": 20,
+     "negate-store": 1,
+     "plus2minus": 16,
+     "program-id-axis-swap": 3,
+     "store-fp16": 1,
+     "store-scale-nudge": 1
+    },
+    "candidates": 102,
+    "distinct": 102,
+    "duplicate": 0,
+    "equivalent_to_parent": 0,
+    "syntax": 0
+   },
+   "kernel_sha256": "3d828cf874d4b8992e9da75392e0759ea320e9f3dfc41d1c3843378829fe6a94",
+   "parent_dedup_hash": "4a22131d78cd2ae7762cbd555144fc0008c4934e8b65e83bffe1cd02c132dcf8",
+   "problem_id": "L1/3_Batched_matrix_multiplication",
+   "rejected": [],
+   "substrate_id": "s1-inductor-L1-3_Batched_matrix_multiplication"
+  },
+  {
+   "enumeration": {
+    "by_family": {
+     "arithmetic": 153,
+     "boundary": 29,
+     "indexing": 32,
+     "precision": 9
+    },
+    "by_operator": {
+     "block-size-to-num-programs": 2,
+     "bound-dim-swap": 2,
+     "ceil2floor": 2,
+     "dim-param-swap-decode": 3,
+     "dim-param-swap-index": 12,
+     "erf-to-tanh-approx": 1,
+     "load-offset-off1": 13,
+     "lt2gt": 2,
+     "lt2le": 2,
+     "mask-bound-minus1": 2,
+     "mask-bound-plus1": 2,
+     "mask-drop": 14,
+     "minus2plus": 2,
+     "mul2div": 46,
+     "mul2plus": 46,
+     "named-constant-perturb": 2,
+     "named-constant-small-perturb": 2,
+     "negate-store": 2,
+     "plus2minus": 57,
+     "program-id-axis-swap": 2,
+     "store-fp16": 2,
+     "store-scale-nudge": 2,
+     "where-guard-drop": 3
+    },
+    "candidates": 223,
+    "distinct": 223,
+    "duplicate": 0,
+    "equivalent_to_parent": 0,
+    "syntax": 0
+   },
+   "kernel_sha256": "ed472cd560ba014e8f680d21bea76e3253f185babd41457222ce34f71b1975b3",
+   "parent_dedup_hash": "2e7f8e43648b3231a3ba87b605d60e46942acdf58a311af8fad4595eb337cabb",
+   "problem_id": "L2/3_ConvTranspose3d_Sum_LayerNorm_AvgPool_GELU",
+   "rejected": [],
+   "substrate_id": "s1-inductor-L2-3_ConvTranspose3d_Sum_LayerNorm_AvgPool_GELU"
+  },
+  {
+   "enumeration": {
+    "by_family": {
+     "arithmetic": 176,
+     "boundary": 27,
+     "indexing": 56,
+     "precision": 4,
+     "semantic": 12
+    },
+    "by_operator": {
+     "block-size-to-num-programs": 2,
+     "bound-dim-swap": 2,
+     "ceil2floor": 2,
+     "const0to1": 1,
+     "dim-param-swap-decode": 5,
+     "dim-param-swap-index": 36,
+     "gt2ge": 2,
+     "load-offset-off1": 11,
+     "lt2gt": 2,
+     "lt2le": 2,
+     "mask-bound-minus1": 2,
+     "mask-bound-plus1": 2,
+     "mask-drop": 13,
+     "max2min": 7,
+     "mul2div": 65,
+     "mul2plus": 65,
+     "negate-store": 2,
+     "plus2minus": 44,
+     "positive-cutoff-nudge": 2,
+     "program-id-axis-swap": 2,
+     "relu-threshold-shift": 2,
+     "store-fp16": 2,
+     "store-scale-nudge": 2
+    },
+    "candidates": 275,
+    "distinct": 275,
+    "duplicate": 0,
+    "equivalent_to_parent": 0,
+    "syntax": 0
+   },
+   "kernel_sha256": "e084a98d83c4624232f91a3df7bf7dd9b3ddae7d5fb85f09e7ffb7be7b8d8e15",
+   "parent_dedup_hash": "7962b6a4a18bbe195dcf583c97681aac4b2eb737b2498f6343dd834f3dee7057",
+   "problem_id": "L2/74_ConvTranspose3d_LeakyReLU_Multiply_LeakyReLU_Max",
+   "rejected": [],
+   "substrate_id": "s1-inductor-L2-74_ConvTranspose3d_LeakyReLU_Multiply_LeakyReLU_Max"
+  },
+  {
+   "enumeration": {
+    "by_family": {
+     "arithmetic": 14,
+     "boundary": 13,
+     "indexing": 6,
+     "precision": 2
+    },
+    "by_operator": {
+     "block-size-swap": 1,
+     "block-size-to-num-programs": 1,
+     "bound-dim-swap": 2,
+     "ceil2floor": 1,
+     "dim-param-swap-index": 1,
+     "load-offset-off1": 1,
+     "lt2gt": 2,
+     "lt2le": 2,
+     "mask-bound-minus1": 2,
+     "mask-bound-plus1": 2,
+     "mask-drop": 2,
+     "mul2div": 4,
+     "mul2plus": 4,
+     "negate-store": 1,
+     "plus2minus": 5,
+     "program-id-axis-swap": 2,
+     "store-fp16": 1,
+     "store-scale-nudge": 1
+    },
+    "candidates": 35,
+    "distinct": 35,
+    "duplicate": 0,
+    "equivalent_to_parent": 0,
+    "syntax": 0
+   },
+   "kernel_sha256": "ffab256227542792db7a1045818269281d3448ec05987efc9f248c837114c4cd",
+   "parent_dedup_hash": "3d5a456135bd01f3208a03e685400d641ecc0cd08fab4b723abecdcf30b994f8",
+   "problem_id": "L1/89_cumsum",
+   "rejected": [],
+   "substrate_id": "s2-flaggems-cumsum-L1-89_cumsum"
+  },
+  {
+   "enumeration": {
+    "by_family": {
+     "arithmetic": 10,
+     "boundary": 3,
+     "indexing": 4,
+     "precision": 4
+    },
+    "by_operator": {
+     "block-size-to-num-programs": 2,
+     "ceil2floor": 3,
+     "mul2div": 4,
+     "mul2plus": 4,
+     "negate-store": 2,
+     "program-id-axis-swap": 2,
+     "store-fp16": 2,
+     "store-scale-nudge": 2
+    },
+    "candidates": 21,
+    "distinct": 21,
+    "duplicate": 0,
+    "equivalent_to_parent": 0,
+    "syntax": 0
+   },
+   "kernel_sha256": "fc09530c6b67d98b6f24f096102ba23e71758696acf8d0cb70ff4860a97a2942",
+   "parent_dedup_hash": "06ed76f53f5784a0575b7b2fe1e121d5f095df1051c37b1d9c1e9c333a39af51",
+   "problem_id": "L1/5_Matrix_scalar_multiplication",
+   "rejected": [],
+   "substrate_id": "s2-flaggems-mul-scalar-L1-5_Matrix_scalar_multiplication"
+  },
+  {
+   "enumeration": {
+    "by_family": {
+     "arithmetic": 51,
+     "boundary": 55,
+     "indexing": 12,
+     "precision": 10,
+     "semantic": 21,
+     "synchronization": 1
+    },
+    "by_operator": {
+     "acc-minus": 7,
+     "acc-overwrite": 7,
+     "bound-dim-swap": 6,
+     "const0to1": 2,
+     "debug-barrier-remove": 1,
+     "gt2ge": 2,
+     "load-offset-off1": 7,
+     "loop-bound-minus1": 4,
+     "loop-start-1": 4,
+     "loop-step-double": 4,
+     "lt2gt": 7,
+     "lt2le": 7,
+     "mask-bound-minus1": 7,
+     "mask-bound-plus1": 7,
+     "mask-drop": 6,
+     "max2min": 2,
+     "minus2plus": 11,
+     "mul2div": 9,
+     "mul2plus": 9,
+     "negate-store": 5,
+     "plus2minus": 17,
+     "program-id-axis-swap": 2,
+     "sentinel-zero": 3,
+     "store-fp16": 5,
+     "store-scale-nudge": 5,
+     "stride-param-swap": 3,
+     "where-guard-drop": 1
+    },
+    "candidates": 150,
+    "distinct": 150,
+    "duplicate": 0,
+    "equivalent_to_parent": 0,
+    "syntax": 0
+   },
+   "kernel_sha256": "48226ca1b95bcb0b21421fb7f0c57046070431125a62b7baf6dc105cd80c541a",
+   "parent_dedup_hash": "3b58ac63c0e9b97f1d655c3f62fcb9f7a62d8b7f7e22e73082aec80bb8902783",
+   "problem_id": "L1/95_CrossEntropyLoss",
+   "rejected": [],
+   "substrate_id": "s2-liger-cross-entropy-L1-95_CrossEntropyLoss"
+  },
+  {
+   "enumeration": {
+    "by_family": {
+     "arithmetic": 49,
+     "boundary": 31,
+     "indexing": 20,
+     "precision": 3,
+     "semantic": 7
+    },
+    "by_operator": {
+     "acc-fp16": 1,
+     "acc-minus": 3,
+     "acc-overwrite": 3,
+     "block-size-to-num-programs": 1,
+     "bound-dim-swap": 4,
+     "ceil2floor": 5,
+     "const0to1": 1,
+     "dim-param-swap-decode": 2,
+     "ge2gt": 1,
+     "launch-stride-swap": 6,
+     "load-offset-off1": 2,
+     "loop-bound-minus1": 1,
+     "loop-start-1": 1,
+     "lt2gt": 4,
+     "lt2le": 4,
+     "mask-bound-minus1": 4,
+     "mask-bound-plus1": 4,
+     "mask-drop": 3,
+     "minus2plus": 3,
+     "mul2div": 17,
+     "mul2plus": 17,
+     "negate-store": 1,
+     "plus2minus": 11,
+     "program-id-axis-swap": 1,
+     "store-fp16": 1,
+     "store-scale-nudge": 1,
+     "stride-param-swap": 8
+    },
+    "candidates": 110,
+    "distinct": 110,
+    "duplicate": 0,
+    "equivalent_to_parent": 0,
+    "syntax": 0
+   },
+   "kernel_sha256": "b8a139b3006b1aa17e4ded73a3fa2fdcb3c7f12f4fbdbca9d33c3f89a32c87f2",
+   "parent_dedup_hash": "225a4b79e133891284e4617be45911c85d81f63df4a0524534179111eb1392ff",
+   "problem_id": "L1/2_Standard_matrix_multiplication_",
+   "rejected": [],
+   "substrate_id": "s2-tutorial-matmul-L1-2_Standard_matrix_multiplication_"
+  }
+ ]
+}

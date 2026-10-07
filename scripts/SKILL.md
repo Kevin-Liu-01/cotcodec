@@ -73,6 +73,24 @@ provenance.
   the freeze and, with trajectories, a feature file from a CONFIRMATORY
   `v2-tarball` receipt (`--tarball-receipt`). `v2-design` reads
   already-inspected data only.
+- Q2 action-path suite (`q2-action-path-v1`, CPU-only VM lane, decisions
+  D12 and D13): `submit_vm_campaign.py` validates a VM campaign manifest
+  (`harness/q2/vm/manifest.py`) and submits `vm-campaign.sbatch` with no GRES;
+  run it from the exported source tree the manifest names.
+  `render_q2_action_path_manifest.py` fills a scored campaign's manifest (A1-A6,
+  the ladder, C1-C3) from a local export of the frozen commit and the ledger,
+  and refuses before the freeze; acceptance seeds 43 and 44 stay refused until
+  the registration and both addenda are in the ledger. Admission also checks
+  every file the frozen digest tables pin in the export (and, with the executor
+  addendum, refuses any unpinned file under `harness/q2/`), so export the
+  commit that records the ledger rows and change nothing pinned; C2 renders
+  with only the inputs addendum frozen; runner CPUs default to
+  `manifest.runner_cpus(N)` and any other value is refused; a repair attempt
+  `--attempt 2` needs `q2-action-path-v1-executor-a2` frozen. Slurm forgets a
+  finished job within minutes: start `record_slurm_end_states.sh
+  RUN_ROOT/slurm-state JOB...` on the host right after submitting (the
+  analysis reads its records); without one the batch script's own
+  `driver_exit=0 labelled_containers_left=0` record decides.
 - `create_source_archive.py`, `verify_compute_provenance.py` and
   `verify_publication_attestation.py` bind source, image and claims.
   Archives hold regular files only. `--discovery` leaves out a symlink only
@@ -116,6 +134,23 @@ provenance.
   receipt digest, vLLM version, prompt and output SHA-256), `manifest` (lane
   manifest from the overlay build receipt; refuses a checkout other than the
   image's commit) and `verify`. Usage: `experiments/reviewer/README.md`.
+
+- `run_q1_gpu_pilot.py` is the Q1 pilot driver (`--job smoke|pilot`; pilot
+  phases smoke, fidelity, calibration, timing, scoring, selectable with
+  `--phases`; `--scoring-prefix N --scoring-shared-only` re-scores a registered
+  prefix of the schedule for a paired measurement). `q1_pilot_cost_card.py`
+  writes the cost card (`--pair-job` adds the paired concurrency ratio and the
+  trimming-rule projection at it); `q1_pilot_evidence.py` summarizes a job's
+  verdicts, fidelity and A4 probes. All three run in a GPU-less container
+  except the driver, which runs only as a lane job.
+- `run_q1_stage0.py` runs Q1 Stage 0 under the trimming rule
+  `q1-stage0-trim/2` (`harness/q1/trim.py`): `--plan-only` writes the plan and
+  its `plan_sha256` on the CPU; a scoring job checks `--expected-plan-sha256`,
+  refuses to start unless spent Stage 0 GPU-h + its cap + the reserve fit in
+  8.0, and scores only its `--buckets` (template
+  `experiments/manifests/q1-core/q1-stage0-trim-job.template.yaml`).
+  `q1_pilot_records.py` binds the pilot's run directories by hash and lists the
+  pilot-exposed kernels (`harness/q1/data/pilot_exposed.json`).
 
 ## Patterns to follow / invariants
 <!-- agent-docs:fill:patterns -->

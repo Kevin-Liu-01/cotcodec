@@ -1,0 +1,110 @@
+{
+  "modules": {
+    "gym_anything_aae6f7607.py": {
+      "blocks": [
+        {
+          "lines": [
+            14,
+            23
+          ],
+          "sha256": "344fe99c9c030cfb59993556de024c30b25b359490117f0619ea89c0b1410502",
+          "source": "ga_aae6"
+        },
+        {
+          "lines": [
+            465,
+            731
+          ],
+          "sha256": "920ddaef97ba0d6150c06aaf3b0d5ce8f577745ae304c9120e44778c3273c633",
+          "source": "ga_aae6"
+        }
+      ]
+    },
+    "gym_anything_bf965cde0.py": {
+      "blocks": [
+        {
+          "lines": [
+            25,
+            218
+          ],
+          "sha256": "d042ed5175c27ee985fd02951ddf1d9c6070bcf0926ec04f51b8f0f54e715065",
+          "source": "ga_bf96_shared"
+        },
+        {
+          "lines": [
+            28,
+            39
+          ],
+          "sha256": "7155a6bb66f81b177f62925021efd83f8a2e79f1c3fcb21cb112b61b8b7c4fce",
+          "source": "ga_bf96"
+        },
+        {
+          "lines": [
+            246,
+            398
+          ],
+          "sha256": "774b3fda639702623e258236e29e95170beb5b83544fda1cc8921dd65d2ba666",
+          "source": "ga_bf96"
+        },
+        {
+          "lines": [
+            401,
+            414
+          ],
+          "sha256": "382948bebfaa91a882b4177b0b54b58c0de0520167917daf1ca75c98f7d0e090",
+          "source": "ga_bf96"
+        }
+      ]
+    },
+    "osworld_bfd62bdc.py": {
+      "blocks": [
+        {
+          "lines": [
+            104,
+            106
+          ],
+          "sha256": "844b394927462682b6be5ab3063a91d84049864a4948e01ee6ccece040965cfa",
+          "source": "osworld_agent"
+        },
+        {
+          "lines": [
+            373,
+            563
+          ],
+          "sha256": "caeebe181f792f88b7385b9e47c0e85e1030e9ae91cb71a8bfc389bc5c1bf5d5",
+          "source": "osworld_agent"
+        }
+      ]
+    }
+  },
+  "sources": {
+    "ga_aae6": {
+      "license": "MIT",
+      "path": "agents/agents/qwen35vl.py",
+      "repo": "https://github.com/cmu-l3/gym-anything",
+      "rev": "aae6f7607e0f3d9d6306e1fefbad92bda99ca99a",
+      "sha256": "93666f2751d99dfee0034700f65385ca2db1544e3d9a0d194807050d2edea1a5"
+    },
+    "ga_bf96": {
+      "license": "MIT",
+      "path": "agents/agents/qwen35vl.py",
+      "repo": "https://github.com/cmu-l3/gym-anything",
+      "rev": "bf965cde02f498bf7d162e6e44da984cff289912",
+      "sha256": "824ef657345f317bf197b7f6470d82ddbf1779bd556a9a29cd184c5641fa43d8"
+    },
+    "ga_bf96_shared": {
+      "license": "MIT",
+      "path": "agents/shared/qwen_computer_use.py",
+      "repo": "https://github.com/cmu-l3/gym-anything",
+      "rev": "bf965cde02f498bf7d162e6e44da984cff289912",
+      "sha256": "b74793ea329407d0d27fb536c3db0502f5f0dfeb34f279691ca5f836f0c7b815"
+    },
+    "osworld_agent": {
+      "license": "Apache-2.0",
+      "path": "mm_agents/qwen35vl_agent.py",
+      "repo": "https://github.com/xlang-ai/OSWorld",
+      "rev": "bfd62bdc5a3319809a236dc90ddbbaf3cb4b7e06",
+      "sha256": "1f39be92cf5461d9671ab9307a69c05691abf0226aa6b53d2af332003a5096fe"
+    }
+  }
+}

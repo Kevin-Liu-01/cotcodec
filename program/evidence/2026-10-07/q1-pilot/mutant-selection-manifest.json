@@ -1,0 +1,209 @@
+{
+ "cap": 40,
+ "compile_checked": true,
+ "compile_sha256": "37d22f6707b253f0a050ea2a935b1008c884a73784555375dc4105392c56d536",
+ "mutants_sha256": "a6fc3743feedfc80634c7e6c2b96c80788bfc6cd0bdd3bd10998173c1ed52517",
+ "mutator": {
+  "n_operators": 68,
+  "package_sha256": "f4aa6e93214126b1fcc82964654833a2da419ff98e7d7b9d27fa24dc2f595296",
+  "registry_fingerprint": "43a1f0a234ad1c4a4421626d740989e01890b878c5ce7f2dec5739e3d43922a6",
+  "schema_version": "q1-schema/1"
+ },
+ "pool_sha256": "8ba7ad331aa6cbe140a8acfa3951b820542b0658dbb91ea95218fe4fcccf60bb",
+ "schema": "q1-mutant-corpus/1",
+ "seed": 42,
+ "split_seed": 42,
+ "split_version": "v1",
+ "substrates": [
+  {
+   "compile": {
+    "compile-fail": 1,
+    "compile-fail:CompilationError": 1,
+    "distinct": 19,
+    "parent_compiled_key": "f935b10848ae00e60f197a60216ce89fb1f681bf66c4627039231767e1801dfa"
+   },
+   "cpu_distinct": 20,
+   "eligible": 19,
+   "kernel_sha256": "81db78e0f27e61093b62ba7e6b718073c105f3cd20062633d622370d2ecc83e5",
+   "problem_id": "L1/25_Swish",
+   "selected": 19,
+   "selected_by_family": {
+    "arithmetic": 7,
+    "boundary": 7,
+    "indexing": 3,
+    "precision": 2
+   },
+   "substrate_id": "s1-inductor-L1-25_Swish"
+  },
+  {
+   "compile": {
+    "compile-fail": 22,
+    "compile-fail:CompilationError": 22,
+    "distinct": 76,
+    "equivalent-to-parent": 4,
+    "parent_compiled_key": "8ac0ae9c75cb6e5ec8216d243741636d8b99c90c27664dd5e6aadb69cf69a89f"
+   },
+   "cpu_distinct": 102,
+   "eligible": 76,
+   "kernel_sha256": "3d828cf874d4b8992e9da75392e0759ea320e9f3dfc41d1c3843378829fe6a94",
+   "problem_id": "L1/3_Batched_matrix_multiplication",
+   "selected": 40,
+   "selected_by_family": {
+    "arithmetic": 14,
+    "boundary": 14,
+    "indexing": 5,
+    "precision": 2,
+    "semantic": 5
+   },
+   "substrate_id": "s1-inductor-L1-3_Batched_matrix_multiplication"
+  },
+  {
+   "compile": {
+    "compile-fail": 40,
+    "compile-fail:CompilationError": 40,
+    "distinct": 179,
+    "equivalent-to-parent": 4,
+    "parent_compiled_key": "04d7421da2d37e6bb26a8d7a0fe6ec66fe3bf54d74de1712560cc35d4e81f7de"
+   },
+   "cpu_distinct": 223,
+   "eligible": 179,
+   "kernel_sha256": "ed472cd560ba014e8f680d21bea76e3253f185babd41457222ce34f71b1975b3",
+   "problem_id": "L2/3_ConvTranspose3d_Sum_LayerNorm_AvgPool_GELU",
+   "selected": 40,
+   "selected_by_family": {
+    "arithmetic": 11,
+    "boundary": 10,
+    "indexing": 10,
+    "precision": 9
+   },
+   "substrate_id": "s1-inductor-L2-3_ConvTranspose3d_Sum_LayerNorm_AvgPool_GELU"
+  },
+  {
+   "compile": {
+    "compile-fail": 62,
+    "compile-fail:CompilationError": 62,
+    "distinct": 213,
+    "parent_compiled_key": "3be2b0c547f5a8ca1a36c33175b6dcee731a7d3edcf9919c03053c0d610ad60a"
+   },
+   "cpu_distinct": 275,
+   "eligible": 213,
+   "kernel_sha256": "e084a98d83c4624232f91a3df7bf7dd9b3ddae7d5fb85f09e7ffb7be7b8d8e15",
+   "problem_id": "L2/74_ConvTranspose3d_LeakyReLU_Multiply_LeakyReLU_Max",
+   "selected": 40,
+   "selected_by_family": {
+    "arithmetic": 9,
+    "boundary": 9,
+    "indexing": 9,
+    "precision": 4,
+    "semantic": 9
+   },
+   "substrate_id": "s1-inductor-L2-74_ConvTranspose3d_LeakyReLU_Multiply_LeakyReLU_Max"
+  },
+  {
+   "compile": {
+    "compile-fail": 4,
+    "compile-fail:CompilationError": 4,
+    "distinct": 31,
+    "parent_compiled_key": "ea6aea4cbe5bcf9493c352f69deaa12426c3b5e6d1698b32fe6e17c0e77c4b9b"
+   },
+   "cpu_distinct": 35,
+   "eligible": 31,
+   "kernel_sha256": "ffab256227542792db7a1045818269281d3448ec05987efc9f248c837114c4cd",
+   "problem_id": "L1/89_cumsum",
+   "selected": 31,
+   "selected_by_family": {
+    "arithmetic": 10,
+    "boundary": 13,
+    "indexing": 6,
+    "precision": 2
+   },
+   "substrate_id": "s2-flaggems-cumsum-L1-89_cumsum"
+  },
+  {
+   "compile": {
+    "compile-fail": 2,
+    "compile-fail:CompilationError": 2,
+    "distinct": 10,
+    "equivalent-to-parent": 9,
+    "parent_compiled_key": "6cadb3dc3e4c2d9390f6ea5680816d4c01817d9f9b274fac29ac77458c17bcc6"
+   },
+   "cpu_distinct": 21,
+   "eligible": 10,
+   "kernel_sha256": "fc09530c6b67d98b6f24f096102ba23e71758696acf8d0cb70ff4860a97a2942",
+   "problem_id": "L1/5_Matrix_scalar_multiplication",
+   "selected": 10,
+   "selected_by_family": {
+    "arithmetic": 4,
+    "boundary": 3,
+    "indexing": 2,
+    "precision": 1
+   },
+   "substrate_id": "s2-flaggems-mul-scalar-L1-5_Matrix_scalar_multiplication"
+  },
+  {
+   "compile": {
+    "compile-fail": 7,
+    "compile-fail:CompilationError": 7,
+    "distinct": 85,
+    "duplicate": 1,
+    "equivalent-to-parent": 57,
+    "parent_compiled_key": "77b5785b1f0cdcfc4ccbbbbf080a156db58d538081c11bdf710c08fd0ad0c617"
+   },
+   "cpu_distinct": 150,
+   "eligible": 85,
+   "kernel_sha256": "48226ca1b95bcb0b21421fb7f0c57046070431125a62b7baf6dc105cd80c541a",
+   "problem_id": "L1/95_CrossEntropyLoss",
+   "selected": 40,
+   "selected_by_family": {
+    "arithmetic": 9,
+    "boundary": 9,
+    "indexing": 7,
+    "precision": 6,
+    "semantic": 8,
+    "synchronization": 1
+   },
+   "substrate_id": "s2-liger-cross-entropy-L1-95_CrossEntropyLoss"
+  },
+  {
+   "compile": {
+    "compile-fail": 17,
+    "compile-fail:CompilationError": 17,
+    "distinct": 90,
+    "equivalent-to-parent": 3,
+    "parent_compiled_key": "041c277c2c0f8ed8b8aa8268516200d9625219d09142278588b65e6279dcae0f"
+   },
+   "cpu_distinct": 110,
+   "eligible": 90,
+   "kernel_sha256": "b8a139b3006b1aa17e4ded73a3fa2fdcb3c7f12f4fbdbca9d33c3f89a32c87f2",
+   "problem_id": "L1/2_Standard_matrix_multiplication_",
+   "selected": 40,
+   "selected_by_family": {
+    "arithmetic": 11,
+    "boundary": 11,
+    "indexing": 11,
+    "precision": 2,
+    "semantic": 5
+   },
+   "substrate_id": "s2-tutorial-matmul-L1-2_Standard_matrix_multiplication_"
+  }
+ ],
+ "totals": {
+  "by_family": {
+   "arithmetic": 75,
+   "boundary": 76,
+   "indexing": 53,
+   "precision": 28,
+   "semantic": 27,
+   "synchronization": 1
+  },
+  "by_origin": {
+   "paper": 260
+  },
+  "by_split": {
+   "dev": 139,
+   "test": 121
+  },
+  "selected": 260
+ },
+ "triton_disable_line_info": true
+}
