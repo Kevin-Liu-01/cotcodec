@@ -65,9 +65,11 @@ addenda, each its own ledger entry made with `scripts/preregister.py`:
   first acceptance trial: the file digests of L0-fixed, the H-OSW-fixed and
   H-GA adapters, the acceptance workload code (`harness/q2/vm/*.py` and the
   batch script, pinned again), the regression corpus (`suite_cells.json` and
-  its generator), the mutation kit, `harness_design_diffs.md`, and the canary
-  target coordinates (`canary_targets.json`); its ledger row's git head is the
-  executor SHA.
+  its generator), the mutation kit, `harness_design_diffs.md`, the canary
+  target coordinates (`canary_targets.json`), the acceptance analysis
+  (`acceptance.py`, decision 32) and the VM-hour sizing with the measured
+  trial times it uses (`vm_hours.py`, decision 33); its ledger row's git head
+  is the executor SHA.
 
 Both addenda were written in one development pass with L0-fixed, before any
 freeze, not in the order the first draft gave (design decision 25).
@@ -551,31 +553,33 @@ a session adds a cold boot of about 20 s plus settling and probe start, under
 roughly 40-80 VM-hours, CPU only (no GPU is used anywhere in this
 experiment).
 
-**Concurrency rule.** The ladder has rungs N = 8, 16, 24, 32 and 40; the
-N = 1 rung is A1's seed-43 campaign. Rung N runs L0-fixed on N concurrent VMs
-over the seed-43 order of the 100 entries extended to r_N repetitions, the
-smallest r ≥ 5 that gives each observation setting at least max(N, 10)
-sessions (`manifest.ladder_reps`: r_N = 6, 10, 14, 19 and 24, so 1,200, 2,000,
-2,800, 3,800 and 4,800 trials in 20, 34, 48, 64 and 80 sessions). Every one of
-its N VMs is therefore busy at once and it has at least 20 cold boots; its
-first five repetitions are A1's seed-43 shuffle (the order of `order.py` is
-built repetition by repetition from one generator). N* is the largest N in
-{1, 8, 16, 24, 32, 40} such that, at that rung: at least 20 cold boots were
-measured; boot p95 (container start to first valid `/screenshot`) ≤ 180 s;
-step p95 (one `DesktopEnv.step`, both settings pooled) ≤ 2 x the N = 1 value;
-every gating trial passes (non-gating entries are reported); and no
-foreign-load abort occurred. A rung aborts if, at any of the host snapshots
-the driver takes before and after every session, a Slurm job other than the
-rung's own is running that was not running at the rung's first snapshot (a
-foreign job started), or the running foreign Slurm jobs hold more than 8 CPUs
-in total (foreign load); the snapshots go into the receipt. An aborted rung is
-rerun as a new attempt and both attempts are reported; it neither qualifies
-nor disqualifies its N. VMs are pinned to CPUs from their Slurm allocation;
-the ladder never exceeds 160 vCPUs. If N* < 40, the program kill criterion
-applies: cut the Stage-1 task count before adding GPUs. Changed before the
-freeze: the draft ran each rung on A1's seed-43 shuffle alone, 18 sessions,
-which can never show 20 cold boots and never loads more than 18 VMs, so no
-rung above N = 1 could have qualified (design decision 29).
+**Concurrency rule.** The ladder has rungs N = 8, 16, 24, 32 and 40; at N = 1
+the reference is A1 (both shuffles, 36 cold boots). Rung N runs L0-fixed on N
+concurrent VMs over the seed-43 order of the 100 entries extended to r_N
+repetitions, the smallest r ≥ 5 that gives each observation setting at least
+max(N, 10) sessions (`manifest.ladder_reps`: r_N = 6, 10, 14, 19 and 24, so
+1,200, 2,000, 2,800, 3,800 and 4,800 trials in 20, 34, 48, 64 and 80
+sessions). Every one of its N VMs is therefore busy at once and it has at
+least 20 cold boots; its first five repetitions are A1's seed-43 shuffle (the
+order of `order.py` is built repetition by repetition from one generator). N*
+is the largest rung N that qualifies, and 1 when none does (A1 gates N = 1
+itself). A rung qualifies when: at least 20 cold boots were measured; boot p95
+(container start to first valid `/screenshot`) ≤ 180 s; step p95 (one
+`DesktopEnv.step`, both settings pooled) ≤ 2 x A1's step p95 (both shuffles
+pooled); every gating trial passes (non-gating entries are reported); its
+campaigns count under section 6.1; and no foreign-load abort occurred. A rung
+aborts if, at any of the host snapshots the driver takes before and after
+every session, a Slurm job other than the rung's own is running that was not
+running at the rung's first snapshot (a foreign job started), or the running
+foreign Slurm jobs hold more than 8 CPUs in total (foreign load); the
+snapshots go into the receipt. An aborted rung is rerun as a new attempt and
+both attempts are reported; it neither qualifies nor disqualifies its N. VMs
+are pinned to CPUs from their Slurm allocation; the ladder never exceeds 160
+vCPUs. If N* < 40, the program kill criterion applies: cut the Stage-1 task
+count before adding GPUs. Changed before the freeze: the draft ran each rung
+on A1's seed-43 shuffle alone, 18 sessions, which can never show 20 cold boots
+and never loads more than 18 VMs, so no rung above N = 1 could have qualified
+(design decision 29).
 
 ## 10. Seeds, order and the development/acceptance split
 
@@ -586,13 +590,14 @@ rung above N = 1 could have qualified (design decision 29).
   goes into each receipt. The order is cut into sessions as in section 7.
 - **Seed 42: development, never evidence.** Catalog order and the seed-42
   shuffle; L0-fixed, the adapters and the canary target coordinates may be
-  iterated freely. Only L0-fixed, H-OSW-fixed, H-GA and the canary run in
-  development; L0-raw and the detection controls never do (`manifest.py`
-  refuses them). The inputs addendum lists every change to its components
-  made after an L0-fixed development run. C2 is scored once at seed 42 after
-  the inputs addendum; C1 and C3 are scored once after the executor addendum
-  (section 8). Seeds 43 and 44 are refused for every campaign until the
-  ledger admits acceptance.
+  iterated freely, and suite development may run sessions on concurrent
+  VMs. Only L0-fixed, H-OSW-fixed, H-GA and the canary run in development;
+  L0-raw and the detection controls never do (`manifest.py` refuses them).
+  The inputs addendum lists every change to its components made after an
+  L0-fixed development run. C2 is scored once at seed 42 after the inputs
+  addendum; C1 and C3 are scored once after the executor addendum (section
+  8). Seeds 43 and 44 are refused for every campaign until the ledger admits
+  acceptance.
 - **Freeze of the executor.** When development ends, the git SHA of L0-fixed
   and the adapters is frozen in `q2-action-path-v1-executor`.
 - **Seeds 43 and 44: acceptance.** Fresh VMs (every session is a cold boot of
@@ -625,9 +630,11 @@ reason; the L0-raw prediction table against the observed results; the R-dev
 reference stability per entry; which entries rest on a self-specified oracle;
 per-app canary results; the A4 per-class action counts and bounds, per-entry
 bounds and per-session results; the concurrency table (boot p50/p95, step
-p50/p95, CPU steal and utilization, overlay growth, pass rate per rung); every
-design difference per harness; every non-gating entry's results; and the
-certified keysym set.
+p50/p95, CPU steal and utilization, overlay growth, pass rate per rung, the
+host snapshots and any aborted rung with its reason); observation retries by
+type; each session's warm-up and reset-observation records; every design
+difference per harness; every non-gating entry's results; and the certified
+keysym set.
 
 ## 13. Infrastructure validation already done (not evidence for A1-A6)
 
@@ -778,13 +785,19 @@ here with its reason.
     0.1 s (QEMU `sendkey`'s hold in the R-dev capture; run 486's
     `chord_ctrl_alt_shift_r` released its keys 10 ms after pressing them while
     the shell opened its screenshot UI, and the releases lost their modifier
-    state). Every action then waits for the desktop shell to answer on D-Bus
-    and for the screen to be unchanged for 0.25 s (XDamage on the root
-    window; at least 0.1 s, PyAutoGUI's default pause, at most 2 s). Text that
-    needs spare keycodes remaps them in one burst first and waits until the
-    shell is idle, because the shell (the compositor) repaints nothing while it
-    rebuilds its keymap (runs 486-499: screenshots after Unicode typing showed
-    only the first character).
+    state). Every action then waits for the desktop shell to answer on D-Bus,
+    re-damages every viewable top-level window (XDamage `DamageAdd`, so the
+    compositor repaints each from its current contents), and waits for the
+    screen to be unchanged for 0.25 s (the root window's image read every
+    50 ms, as `/screenshot` reads it; at least 0.1 s, PyAutoGUI's default
+    pause, at most 2 s). Text that needs spare keycodes remaps them in one
+    burst first and waits until the shell is idle, because the shell (the
+    compositor) repaints nothing while it rebuilds its keymap (runs 486-499:
+    screenshots after Unicode typing showed only the first character). Without
+    the repaint request, the probe's last drawing never reached the screen in
+    about 4% of typing trials (runs 504-541, where the quiet wait saw no change
+    for 0.3 s and the drawing was still missing 2 s later); with it, none of
+    the typing trials of runs 545 onward did.
 25. **Build order.** The inputs addendum's components were written in the same
     development pass as L0-fixed, before any freeze, not before it as the
     first draft said. The protection that remains is the one the controls
@@ -809,6 +822,44 @@ here with its reason.
     accessibility extents had the right x but a y 24 px too high (run 501);
     Chrome's agreed with its screenshots. `canary_targets.json` records each
     app's targets and how they were measured.
+29. **Ladder rungs load every VM.** Rung N repeats the seed-43 order until
+    each setting has max(N, 10) sessions (section 9). A rung that ran A1's
+    seed-43 shuffle alone (18 sessions) could never show the 20 cold boots
+    the rule asks for, and above N = 18 could not load N VMs at once, so its
+    N* would have been 1 by construction. The extra repetitions extend the
+    same order, so the rung still contains A1's seed-43 shuffle.
+30. **Observations as Stage 1 sees them.** Each session takes
+    `DesktopEnv.reset`'s observation before its first trial (a Stage-1 episode
+    always starts with one, so its first step never makes the boot's first
+    `/accessibility` call), and an observation counts as an infrastructure
+    failure only when `DesktopEnv`'s own retries do not deliver it (section
+    6.1); every retry is reported. A delivered retry gives the agent the same
+    screenshot or a tree taken 5 s later from a screen that has been quiet
+    since the action; it changes neither the desktop's input nor what the
+    agent is shown. `/execute` keeps the strict rule because a retried
+    `/execute` can run an action twice.
+31. **Session warm-up.** The X server's master keyboard follows the slave
+    device that sent the last key event. A boot leaves it on a device other
+    than the XTest keyboard, so the session's first XTest key switches it, and
+    the server re-sends the keymap and recomputes the modifier state at that
+    moment. Development runs 549 and 574 (the same 14 sessions on 8 VMs and on
+    one) showed `chord_super_d` fail in the two sessions whose first key event
+    was its Super_L press: the `d` press arrived with state 0. Before any
+    trial, the guard presses and releases a keycode that has no keysym and
+    waits for the shell to be idle (`guard.py warmup`), so the switch happens
+    outside every entry. Stage 1 runs the same warm-up once per boot, after
+    `DesktopEnv.reset`; without it an agent's first key chord of an episode
+    can lose its modifier.
+32. **The acceptance analysis is code.** `acceptance.py` (frozen in the
+    executor addendum) applies sections 5-9 to campaign receipts: Slurm end
+    states, infrastructure gates, the realized order of each criterion, the
+    kill and equivalence rules of C3 and the ladder's N*, including the
+    foreign-load abort. The draft had prose rules and no code; a test drives
+    every rule on synthetic campaigns.
+33. **Cost from measured trial times.** `vm_hours.py` sizes every scored
+    campaign from the development runs' measured per-entry trial times and
+    session overheads (section 9, "Cost"); `trial_times.json` and
+    `vm_hours.json` are frozen in the executor addendum.
 
 ## 15. Changes after the 2026-10-07 review
 
@@ -840,3 +891,31 @@ disposition:
 13. Found while fixing: the draft counted A1's gating trials at N = 1 as
     3,440 (and bounded them at 0.087%); 86 x 5 x 2 x 2 is 1,720. Section 7
     now gives the trial and session counts.
+
+## 16. Changes found while finishing development (2026-10-07)
+
+Development runs 486-602 (seed 42, never evidence; listed with their outcomes
+in `program/evidence/2026-10-07/q2-action-path-stage0b/README.md`) and the
+work of writing the acceptance code found these, all before any freeze:
+
+1. The ladder could not qualify any rung above N = 1 (18 sessions per rung):
+   rungs now repeat the seed-43 order (section 9, decision 29).
+2. The judging code counted every retried `/screenshot` or `/accessibility`
+   call as an infrastructure failure, which section 6.1 did not say; aligned
+   with 6.1 and stated there, with retries reported (decision 30).
+3. A session's first XTest key event changes the master keyboard device and
+   can strip a chord's modifier (runs 549 and 574): every session now warms
+   the keyboard up first (decision 31).
+4. The compositor sometimes never painted the probe's last drawing after
+   typing (about 4% of typing trials, runs 504-541): L0-fixed now re-damages
+   the top-level windows after every action (decision 24, executor addendum).
+5. Chrome's "Can't update Chrome" bubble opened mid-trial and took the
+   keyboard (run 522): `canary.yaml` starts Chrome with a flag that keeps it
+   closed (A6).
+6. No code implemented the acceptance rules, and no test exercised acceptance
+   admission: both added (decision 32; `tests/test_q2_acceptance_admission.py`
+   freezes a ledger with `scripts/preregister.py` in a temporary tree and
+   checks that the repository's own ledger still refuses every acceptance
+   campaign).
+7. Campaigns other than the ladder and A4 now must run at N = 1 (section 7),
+   which the draft implied but `manifest.py` did not enforce.

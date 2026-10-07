@@ -33,7 +33,7 @@
       "doc": "program/questions/q2-calibrated-cua-instrument.md",
       "dossier_key": "S1-calibrated-cua-instrument",
       "status": "stage-0-running",
-      "next_action": "Rescope Stage 1 from the measured cost card (closed-loop VM time dominates): more VMs per engine, fewer rungs or cells; Stage 0 suite and checker-mutation kit continue",
+      "next_action": "Owner freezes q2-action-path-v1, then -inputs, then -executor (development complete on stage0/q2-action-path); then C2, C1 and C3, A1-A6 and the ladder. Rescope Stage 1 from the measured cost card (closed-loop VM time dominates); the checker-mutation kit continues",
       "first_gpu_experiment": {
         "name": "Qwen3.5 ladder (as dossier-designed)",
         "measured_projection_gpu_hours": 431.5,
@@ -43,7 +43,13 @@
       "blocked_by": [
         "action-path suite at 100% before any GPU episode",
         "Stage 1 noise anchor reworded to OpenCUA (D11) before the gauntlet"
-      ]
+      ],
+      "action_path_suite": {
+        "registration": "q2-action-path-v1 (+ -inputs, -executor addenda)",
+        "status": "development complete, ready to freeze (nothing frozen)",
+        "branch": "stage0/q2-action-path",
+        "development_jobs": "482-619 (seed 42, CPU only, never evidence)"
+      }
     },
     {
       "id": "Q3",

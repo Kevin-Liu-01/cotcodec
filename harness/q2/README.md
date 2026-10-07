@@ -38,7 +38,7 @@ settings; and a volume certification split from development runs.
 | `action_path/canary.yaml` | A6 cross-app canary: app settings, fixtures and expected final text |
 | `action_path/build_derived.py` | Regenerates `gating_set.json`, `expressible_entries.json`, `rdev_plan.json` and `volume_plan.json` (tests check them byte for byte) |
 | `vm/guest/probe.py` | Guest probe: fullscreen event log, text buffer, marker block, entry delimiters (inputs addendum) |
-| `vm/guest/guard.py` | Entry guard: checks (a)-(d), pointer park, side-effect restorations, probe control (inputs addendum) |
+| `vm/guest/guard.py` | Entry guard: checks (a)-(d), pointer park, side-effect restorations, probe control, the session's keyboard warm-up (inputs addendum) |
 | `vm/marker.py` | Stdlib PNG row decoder and marker reader (inputs addendum) |
 | `vm/guest/canary.py`, `vm/canary_run.py` | Cross-app canary driver: fixtures, profiles, launch, wait, read-back, close (inputs addendum) |
 | `vm/guest/canary_targets.py` | Development tool: the canary's pointer targets from accessibility extents and screenshots |
@@ -51,6 +51,8 @@ settings; and a volume certification split from development runs.
 | `action_path/corpus.py`, `build_suite.py`, `suite_cells.json`, `qwen35_chat_template.jinja` | Qwen3.5 template corpus and every cell the runner executes (executor addendum) |
 | `action_path/verdict.py`, `action_path/order.py` | Trial verdicts (sections 4.3, 5, 6) and seeded run orders and sessions |
 | `action_path/mutants.py` | Suite-mutation kit: the 44 scored mutants of `mutation_operators.yaml` as anchored patches |
+| `action_path/acceptance.py` | The acceptance analysis: A1-A6, C1-C4 and the ladder's N* from campaign receipts (executor addendum) |
+| `action_path/vm_hours.py`, `trial_times.json`, `vm_hours.json` | VM-hour sizing of every scored campaign from measured development trial times (executor addendum) |
 | `action_path/harness_design_diffs.md` | Every design difference of each Stage-1 harness |
 | `../../infra/slurm/host-single-node/vm-campaign.sbatch` | CPU-only Slurm entry point for VM work |
 | `../../infra/q2-vm-runner/Dockerfile`, `image-lock.json` | GPU-less runner image (stdlib Python only); the lock records the saved image tarball and its package versions |
@@ -91,8 +93,11 @@ under `~/cotcodec-runs/stage0/q2-action-path/runs/<job>/`.
 | 469 | `tap-selftest-v2.yaml` | content check: the re-send differed from the tap's table only at the remapped keycode (gate false) |
 | 470 | `tap-selftest-v3.yaml` | diagnostic: the server's row was XKB's four-column core view of the same mapping (gate false) |
 | 471 | `tap-selftest-v4.yaml` | rows compared under the core protocol's rules: see the evidence README |
+| 482-484 | `inputs-validation-v1/v2.yaml` | HMP input into the probe, guard and marker, and no-input canary read-back: 76 of 76 and 16 of 16 (inputs addendum, section 3) |
+| 486-613 | `dev-*.yaml` | development at seed 42 (never evidence): L0-fixed, H-OSW-fixed, H-GA, the canary, 8 concurrent VMs, and the 44 mutants on their predicted kill cells |
 
-Summaries: `program/evidence/2026-10-07/q2-action-path-stage0b/`.
+Summaries: `program/evidence/2026-10-07/q2-action-path-stage0b/` (development:
+`development-runs.json` and the README's development section).
 
 ## Isolation facts measured (jobs 369, 372, 374)
 
