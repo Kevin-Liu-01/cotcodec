@@ -41,7 +41,9 @@ def test_marker_under_a_cursor_is_unreadable_not_wrong():
     out = marker.read_marker(marker.encode_test_png(1500, probe.MARKER_ROWS + 2, cells + [half], 4))
     assert not out["ok"] and 1 in out["ambiguous_cells"]
     whole = (x0 + probe.CELL, y0, probe.CELL, probe.CELL)  # all of it: the sync check fails
-    out = marker.read_marker(marker.encode_test_png(1500, probe.MARKER_ROWS + 2, cells + [whole], 4))
+    out = marker.read_marker(
+        marker.encode_test_png(1500, probe.MARKER_ROWS + 2, cells + [whole], 4)
+    )
     assert not out["ok"] and out["seq"] is None
 
 
@@ -93,13 +95,24 @@ def test_delimiter_rows_and_tap_windows():
     reserved = 255
 
     def req(kind, seq):
-        return {"kind": "mapping_request", "first_keycode": reserved,
-                "rows": [probe.delimiter_row(kind, seq)]}  # fmt: skip
+        return {
+            "kind": "mapping_request",
+            "first_keycode": reserved,
+            "rows": [probe.delimiter_row(kind, seq)],
+        }
 
     motion = {"kind": "MotionNotify", "x": 1234, "y": 777}
     key = {"kind": "KeyPress", "detail": 36}
     other = {"kind": "mapping_request", "first_keycode": 200, "rows": [[0x41]]}
-    records = [motion, req("begin", 0), key, other, req("end", 0), motion, req("begin", 1),
-               req("end", 1)]  # fmt: skip
+    records = [
+        motion,
+        req("begin", 0),
+        key,
+        other,
+        req("end", 0),
+        motion,
+        req("begin", 1),
+        req("end", 1),
+    ]
     windows = tap_windows(records, reserved)
     assert windows == {0: [key, other], 1: []}

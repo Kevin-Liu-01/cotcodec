@@ -252,7 +252,7 @@ def validate_manifest(raw: Any) -> dict[str, Any]:
         if prereg["status"] != "frozen":
             raise ManifestError("acceptance campaigns require a frozen preregistration")
         raise ManifestError(
-            "acceptance is refused until the preregistration and both addenda are frozen"
+            "acceptance is refused before the freeze of the preregistration and both addenda"
         )
 
     source = _require_keys(manifest["source"], "source", {"host_dir", "tree_sha256"})
@@ -283,10 +283,6 @@ def validate_manifest(raw: Any) -> dict[str, Any]:
         isinstance(s, bool) or not isinstance(s, int) or s < 0 for s in seeds
     ):
         raise ManifestError("randomness.seeds must be a list of non-negative integers")
-    if set(seeds) & set(ACCEPTANCE_SEEDS):
-        # Seeds 43 and 44 are the preregistered acceptance shuffles; no campaign may
-        # use them before the freeze, whatever its stated purpose.
-        raise ManifestError("seeds 43 and 44 are reserved for acceptance after the freeze")
     if len(set(seeds)) != len(seeds):
         raise ManifestError("randomness.seeds repeats a seed")
     if randomness["contract"] == "deterministic":
@@ -299,6 +295,10 @@ def validate_manifest(raw: Any) -> dict[str, Any]:
         _match(binding["flag"], SEED_FLAG_RE, "randomness.seed_binding.flag")
     else:
         raise ManifestError("randomness.contract must be deterministic or seeded")
+    if set(seeds) & set(ACCEPTANCE_SEEDS):
+        # Seeds 43 and 44 are the preregistered acceptance shuffles; no campaign may
+        # use them before the freeze, whatever its stated purpose.
+        raise ManifestError("seeds 43 and 44 are reserved for acceptance after the freeze")
 
     vm = _require_keys(
         manifest["vm"],

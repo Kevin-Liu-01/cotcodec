@@ -19,7 +19,11 @@ CELLS = json.loads((ROOT / "harness/q2/action_path/suite_cells.json").read_text(
 def development(**workload) -> dict:
     manifest = base_manifest()
     manifest["purpose"] = "development"
-    manifest["randomness"] = {"contract": "seeded", "seeds": [42], "seed_binding": {"flag": "--seed"}}
+    manifest["randomness"] = {
+        "contract": "seeded",
+        "seeds": [42],
+        "seed_binding": {"flag": "--seed"},
+    }
     manifest["slurm"]["minutes"] = 1440
     manifest["workload"] = {
         "kind": "suite-development",
@@ -63,7 +67,7 @@ def test_acceptance_is_refused_even_with_a_frozen_preregistration():
     with pytest.raises(ManifestError, match="frozen"):
         validate_manifest(manifest)
     manifest["preregistration"]["status"] = "frozen"
-    with pytest.raises(ManifestError, match="both addenda"):
+    with pytest.raises(ManifestError, match="before the freeze"):
         validate_manifest(manifest)
 
 
@@ -75,10 +79,12 @@ def test_budget_and_shape_checks():
     with pytest.raises(ManifestError):
         validate_manifest(development(session_trials=61))
     canary = development()
-    canary["workload"] = {k: v for k, v in canary["workload"].items()
-                          if k not in ("layer", "cells", "settings")}  # fmt: skip
-    canary["workload"].update(kind="canary-development", apps=["writer"], entries="all",
-                              measure_targets=False)  # fmt: skip
+    canary["workload"] = {
+        k: v for k, v in canary["workload"].items() if k not in ("layer", "cells", "settings")
+    }
+    canary["workload"].update(
+        kind="canary-development", apps=["writer"], entries="all", measure_targets=False
+    )
     validate_manifest(canary)
     bad = copy.deepcopy(canary)
     bad["workload"]["apps"] = ["notepad"]
@@ -88,10 +94,18 @@ def test_budget_and_shape_checks():
 
 def test_inputs_validation_is_infrastructure_only():
     manifest = base_manifest()
-    manifest["workload"] = {"kind": "inputs-validation", "reps": 2, "canary_readback": True,
-                            "plan_sha256": "5" * 64, "boot_timeout_s": 300, "settle_timeout_s": 60,
-                            "cells_sha256": "4" * 64, "sessions": 1, "trials": 80,
-                            "max_trial_s": 30}  # fmt: skip
+    manifest["workload"] = {
+        "kind": "inputs-validation",
+        "reps": 2,
+        "canary_readback": True,
+        "plan_sha256": "5" * 64,
+        "boot_timeout_s": 300,
+        "settle_timeout_s": 60,
+        "cells_sha256": "4" * 64,
+        "sessions": 1,
+        "trials": 80,
+        "max_trial_s": 30,
+    }
     manifest["slurm"]["minutes"] = 180
     validate_manifest(manifest)
     manifest["purpose"] = "development"
@@ -100,8 +114,12 @@ def test_inputs_validation_is_infrastructure_only():
 
 
 def test_driver_session_plan_matches_declared_counts():
-    manifest = development(cells=["click_left_center", "type_plain", "key_enter"], reps=2,
-                           settings=["screenshot", "screenshot+a11y"], session_trials=4)  # fmt: skip
+    manifest = development(
+        cells=["click_left_center", "type_plain", "key_enter"],
+        reps=2,
+        settings=["screenshot", "screenshot+a11y"],
+        session_trials=4,
+    )
     plan = driver.session_plan(manifest, CELLS)
     assert [len(s["trials"]) for s in plan] == [3, 3, 3, 3]
     assert {s["setting"] for s in plan} == {"screenshot", "screenshot+a11y"}

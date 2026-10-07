@@ -489,7 +489,7 @@ def session_plan(manifest: dict[str, Any], cells: dict[str, Any]) -> list[dict[s
     kind = workload["kind"]
     if kind == "inputs-validation":
         return [
-            {"setting": "screenshot", "index": i, "trials": []} for i in range(workload["cycles"])
+            {"setting": "screenshot", "index": i, "trials": []} for i in range(workload["sessions"])
         ]
     seed = manifest["randomness"]["seeds"][0]
     if kind == "suite-development":
@@ -577,7 +577,8 @@ def run_cycle(
                 reps=workload.get("reps"),
                 canary_readback=workload.get("canary_readback", False),
                 measure_targets=workload.get("measure_targets", False),
-                tap_duration_s=600 + len(session["trials"]) * workload["max_trial_s"],
+                tap_duration_s=600
+                + (len(session["trials"]) + workload.get("reps", 0) * 40) * workload["max_trial_s"],
             )
         config_path = cycles_dir / f"config-{cycle:02d}.json"
         config_path.write_text(json.dumps(config, indent=2, sort_keys=True), encoding="utf-8")
