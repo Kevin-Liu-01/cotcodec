@@ -40,9 +40,11 @@ provenance.
   (same phases, signals and exit codes; the smoke measures steady-state rates
   and gates the main job and the worst-case extension against probe-derived
   limits); `probe_sparse_indexer_k1_throughput.py` is the synthetic-token
-  throughput probe (`q3-k1-throughput-probe-v1`, one GPU, no data reads);
+  throughput probe (`q3-k1-throughput-probe-v1`, one GPU, no data reads, its
+  own deadline before USR1, arm sizes checked by `planned_wall_s`);
   `derive_sparse_indexer_k1_v2_limits.py` turns its receipt into the
-  contract's job limits (and refuses over 8 GPU-h);
+  contract's job limits (and refuses when the summed caps, the worst-case
+  extension and every probe run included, exceed 8 GPU-h);
   `fill_sparse_indexer_k1_v2_manifests.py` fills `experiments/manifests/q3-k1-v2/`
   with v1's gates plus the limits re-derived from the probe receipt;
   `fill_sparse_indexer_k1_probe_manifest.py` fills the probe's manifest;

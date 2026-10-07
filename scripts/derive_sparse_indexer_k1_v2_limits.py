@@ -59,7 +59,8 @@ def markdown_rows(derived: dict[str, Any]) -> list[str]:
         rows.append(f"| {ROW_LABELS.get(job, job)} | {entry['gpus']} | "
                     f"{entry['projected_minutes']:.1f} | {entry['minutes']} | "
                     f"{entry['max_gpu_hours']:.2f} |")
-    rows.append(PROBE_ROW)
+    for run, cap in derived["probe_runs_gpu_hours"].items():  # every probe run counts
+        rows.append(PROBE_ROW if run == PROBE_ID else f"| {run} | | | | {cap:.2f} |")
     rows.append(f"| Total with the probe | | | | {derived['total_gpu_hours_with_probe']:.2f} |")
     return rows
 

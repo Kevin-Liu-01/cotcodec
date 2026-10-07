@@ -591,7 +591,7 @@ class Parent:
         freeze_path = self.ckpt / "smoke-lr.json"
         freeze_sha = rt.atomic_write_json(freeze_path, freeze)
         units, _, _ = self.dev_units(staged)
-        chosen = smoke_units(units, budget.SMOKE_UNITS_PER_KIND)
+        chosen = smoke_units(units, budget.SMOKE_UNITS_PER_KIND, staged)
         evaluated = self.evaluate(staged, "smoke", chosen, True, (str(freeze_path), freeze_sha),
                                   shards, 1, final_step=int(trained["final_step"]))[0]
         merged = rt.collect_eval(self.ckpt, "smoke", {u["unit"]: u["unit"] for u in chosen})
@@ -616,6 +616,7 @@ class Parent:
                              "train_startup_s": trained["timings"]["startup_s"],
                              "extension_startup_s": extension["timings"]["startup_s"],
                              "eval_startup_s": evaluated["timings"]["startup_s"],
+                             "eval_load_s": evaluated["timings"]["load_s"],
                              "save_s": trained["timings"]["save_s"], "capture_s": capture_s}
         gates = {
             "capture_reconstruction": report["capture"]["max_rel_output_error"]
@@ -840,18 +841,47 @@ CAPTURE_REL_ERROR_MAX = 1e-2  # v1's smoke gates
 EAGER_TV_MAX = 0.10
 
 
-def smoke_units(units: list[dict[str, Any]], per_kind: int) -> list[dict[str, Any]]:
-    """The first ``per_kind`` units of each kind, in v1's sorted unit order."""
+NO_HAYSTACK_ROLE = "dev-nohaystack"
 
-    picked: dict[str, list[dict[str, Any]]] = {"select_only": [], "select_mc": [],
-                                               "mc_only": []}
+
+def smoke_units(units: list[dict[str, Any]], per_kind: int,
+                staged: rt.StagedData) -> list[dict[str, Any]]:
+    """The smoke's timed development units, matched to the audit's cost per unit.
+
+    Metadata only (roles and query spans). Selection units of either kind: the
+    ``per_kind`` units whose query rows are closest to ``budget.TIMED_UNIT_ROWS``
+    (the audit mean of 33.2 rounded up, the probe's unit rows; ties to v1's
+    unit order), so the smoke and the probe time units of the same rows, at
+    the audit mean, and neither needs row scaling. Multiple-choice-only units:
+    haystack contexts first, like the audit's needle-absent ones
+    (``dev-nohaystack`` prompts have about half the context), then v1's unit
+    order.
+    """
+
+    prompts = {p["prompt_id"]: p for p in staged.meta["prompts"]}
+    order = {unit["unit"]: index for index, unit in enumerate(units)}
+
+    def rows(unit: dict[str, Any]) -> int:
+        meta = staged.meta["query_meta"][int(prompts[unit["prompt_id"]]["query_index"])]
+        return int(meta["row_end"]) - int(meta["row_start"])
+
+    kinds: dict[str, list[dict[str, Any]]] = {"select_only": [], "select_mc": [],
+                                              "mc_only": []}
     for unit in units:
         kind = ("select_mc" if unit["select"] and unit["mc"]
                 else "select_only" if unit["select"] else "mc_only" if unit["mc"] else None)
-        if kind is not None and len(picked[kind]) < per_kind:
-            picked[kind].append(unit)
-    return sorted(picked["select_only"] + picked["select_mc"] + picked["mc_only"],
-                  key=lambda unit: unit["unit"])
+        if kind is not None:
+            kinds[kind].append(unit)
+    target = budget.TIMED_UNIT_ROWS
+    picked: list[dict[str, Any]] = []
+    for kind in ("select_only", "select_mc"):
+        picked += sorted(kinds[kind],
+                         key=lambda unit: (abs(rows(unit) - target), order[unit["unit"]])
+                         )[:per_kind]
+    picked += sorted(kinds["mc_only"],
+                     key=lambda unit: (prompts[unit["prompt_id"]]["role"] == NO_HAYSTACK_ROLE,
+                                       order[unit["unit"]]))[:per_kind]
+    return sorted(picked, key=lambda unit: unit["unit"])
 
 
 def unit_mix(units: list[dict[str, Any]], staged: rt.StagedData) -> budget.UnitMix:
@@ -893,7 +923,10 @@ def smoke_rates(report: dict[str, Any], n_layers: int, batch: int) -> budget.Rat
         / n_layers,
         save_layer_s=float(timings["save_s"][-1]) / n_layers,
         train_startup_s=float(max(timings["train_startup_s"], timings["extension_startup_s"])),
-        eval_startup_s=float(timings["eval_startup_s"]),
+        # Spawn to the first unit without the checkpoint read, as the probe
+        # measures it; the budget prices the read apart (budget.eval_load_s).
+        eval_startup_s=max(0.0, float(timings["eval_startup_s"])
+                           - float(timings["eval_load_s"])),
         eval_select_s=float(kinds["select_only"]),
         eval_select_mc_s=float(kinds["select_mc"]),
         eval_mc_only_s=float(kinds["mc_only"]),

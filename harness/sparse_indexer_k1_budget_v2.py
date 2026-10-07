@@ -18,9 +18,16 @@ every job limit is an explicit function of measured rates:
    if ``1.2 x projection + 3`` fits the registered limit for the main job
    *and* for the worst-case V1 extension (``smoke_gate``).
 
-If the registered caps (all jobs, the conditional extension and the probe
-included) total more than 8 GPU-hours, the gauntlet applies before any v2
-freeze (program decision D20); the formula is never relaxed to fit.
+Counting rule for the 8 GPU-hour gauntlet threshold (program decision D20),
+fixed here and in both registrations before the probe measures anything: the
+total is the sum of the registered caps (GPUs x limit), never expected use, of
+every v2 job, with the conditional V1 extension counted at its worst-case cap
+and the main job's one continuation inside the main cap, plus the cap of every
+throughput-probe run (``PROBE_RUNS_GPU_HOURS``: a complete, incomplete or void
+run counts in full, and a rerun under a new id adds its own cap). If that total
+exceeds 8 GPU-hours, the gauntlet applies before any v2 freeze; the formula
+and its factors (1.2, 1.15, the 3-minute lead, the 5-minute minimum) are never
+changed after the probe to fit.
 """
 
 from __future__ import annotations
@@ -52,6 +59,10 @@ SMOKE_EXTENSION_STEPS = 6
 STEADY_SKIP_STEPS = 2  # steps 0 and 1 are excluded from every steady-state step time
 SMOKE_DEVKL_SEQUENCES = 4
 SMOKE_UNITS_PER_KIND = 24
+# Query rows of the timed selection units: the probe's synthetic units have
+# exactly this many and the smoke times the development units closest to it,
+# the audit mean (33.2) rounded up, so both measure at the same rows.
+TIMED_UNIT_ROWS = 34
 UNIT_SKIP = 1  # the first unit of each kind is excluded from per-unit times
 
 # Limit rule.
@@ -64,7 +75,14 @@ MIN_LIMIT_MINUTES = 5
 CONTINUATION_MIN_MINUTES = 5  # v1: a main continuation runs only if 5 minutes remain
 CONCURRENT_SAVE_FACTOR = 4  # four resume workers write their shards at once (serialised bound)
 GAUNTLET_GPU_HOURS = 8.0
-PROBE_GPU_HOURS = 0.15
+PROBE_GPU_HOURS = 0.15  # q3-k1-throughput-probe-v1: 1 GPU x 9 minutes (D20)
+# Every throughput-probe run, at its full cap, whatever its outcome. A rerun is
+# a new probe id and a new entry here (with the program owner's budget line).
+PROBE_RUNS_GPU_HOURS: dict[str, float] = {"q3-k1-throughput-probe-v1": PROBE_GPU_HOURS}
+COUNTING_RULE = ("sum of the registered caps (GPUs x limit) of every v2 job, the conditional "
+                 "extension at its worst-case cap and the main continuation inside the main "
+                 "cap, plus the cap of every throughput-probe run whatever its outcome; "
+                 "expected use never replaces a cap")
 
 JOBS: tuple[tuple[str, int], ...] = (
     ("smoke", 1), ("headroom-dev", 1), ("resume-r0", 1), ("resume-r1", 1), ("resume-r2", 1),
@@ -169,6 +187,16 @@ def eval_s(rates: Rates, mix: UnitMix) -> float:
     return rows_factor * selection + mix.mc_only * rates.eval_mc_only_s
 
 
+def eval_load_s(rates: Rates) -> float:
+    """An evaluation worker's read of the 28-layer generation, priced at the save rate.
+
+    ``eval_startup_s`` excludes this read in the probe (it loads nothing) and in
+    the smoke (which times the read apart), so both price it the same way.
+    """
+
+    return LAYERS * rates.save_layer_s
+
+
 def project_main(rates: Rates) -> dict[str, float]:
     train = max(MAIN_STEPS * shard_step_s(rates, layers)
                 + checkpoint_saves(0, MAIN_STEPS) * len(layers) * rates.save_layer_s
@@ -177,9 +205,10 @@ def project_main(rates: Rates) -> dict[str, float]:
                                  + len(layers) * rates.devkl_layer_seq_s) for layers in SHARDS)
     evaluation = eval_s(rates, AUDIT_MIX) / MAIN_GPUS
     startups = 2 * rates.train_startup_s + rates.eval_startup_s
+    load = eval_load_s(rates)
     return {"train_s": train, "devkl_s": devkl, "eval_s": evaluation, "startups_s": startups,
-            "allowance_s": MAIN_ALLOWANCE_S,
-            "wall_s": MAIN_ALLOWANCE_S + startups + train + devkl + evaluation}
+            "eval_load_s": load, "allowance_s": MAIN_ALLOWANCE_S,
+            "wall_s": MAIN_ALLOWANCE_S + startups + load + train + devkl + evaluation}
 
 
 def project_extension(rates: Rates) -> dict[str, float]:
@@ -191,9 +220,10 @@ def project_extension(rates: Rates) -> dict[str, float]:
                 for layers in SHARDS)  # + 1: reading the main run's final generation
     evaluation = eval_s(rates, AUDIT_MIX) / MAIN_GPUS
     startups = rates.train_startup_s + rates.eval_startup_s
+    load = eval_load_s(rates)
     return {"train_s": train, "eval_s": evaluation, "startups_s": startups,
-            "allowance_s": MAIN_ALLOWANCE_S,
-            "wall_s": MAIN_ALLOWANCE_S + startups + train + evaluation}
+            "eval_load_s": load, "allowance_s": MAIN_ALLOWANCE_S,
+            "wall_s": MAIN_ALLOWANCE_S + startups + load + train + evaluation}
 
 
 def project_smoke(rates: Rates) -> dict[str, float]:
@@ -208,11 +238,12 @@ def project_smoke(rates: Rates) -> dict[str, float]:
                                                         + rates.eval_select_mc_s)
                                          + rates.eval_mc_only_s)
     startups = 3 * rates.train_startup_s + rates.eval_startup_s
-    wall = (LEG_ALLOWANCE_S + rates.capture_check_s + startups + train + extension + devkl
-            + evaluation)
+    load = eval_load_s(rates)
+    wall = (LEG_ALLOWANCE_S + rates.capture_check_s + startups + load + train + extension
+            + devkl + evaluation)
     return {"train_s": train, "extension_timing_s": extension, "devkl_s": devkl,
             "eval_s": evaluation, "capture_s": rates.capture_check_s, "startups_s": startups,
-            "allowance_s": LEG_ALLOWANCE_S, "wall_s": wall}
+            "eval_load_s": load, "allowance_s": LEG_ALLOWANCE_S, "wall_s": wall}
 
 
 def project_headroom_dev(rates: Rates) -> dict[str, float]:
@@ -297,8 +328,11 @@ def derive_limits(rates: Rates) -> dict[str, Any]:
         jobs[job] = {"gpus": gpus, "projection": projection,
                      "projected_minutes": projection["wall_s"] / 60.0, "minutes": minutes,
                      "max_gpu_hours": gpu_hours(gpus, minutes)}
-    total = round(sum(job["max_gpu_hours"] for job in jobs.values()) + PROBE_GPU_HOURS, 2)
+    probes = sum(PROBE_RUNS_GPU_HOURS.values())
+    total = round(sum(job["max_gpu_hours"] for job in jobs.values()) + probes, 2)
     return {"jobs": jobs, "total_gpu_hours_with_probe": total,
+            "probe_runs_gpu_hours": dict(PROBE_RUNS_GPU_HOURS),
+            "counting_rule": COUNTING_RULE,
             "gauntlet_threshold_gpu_hours": GAUNTLET_GPU_HOURS,
             "gauntlet_required": total > GAUNTLET_GPU_HOURS,
             "rule": (f"limit = max({MIN_LIMIT_MINUTES}, ceil({PROJECTION_MARGIN} x "
@@ -410,6 +444,7 @@ __all__ = [
     "check_limits",
     "continuation_minutes",
     "derive_limits",
+    "eval_load_s",
     "gpu_hours",
     "limit_minutes",
     "limits_table",

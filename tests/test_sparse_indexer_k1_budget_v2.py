@@ -56,8 +56,36 @@ def test_main_projection_is_the_binding_worker_plus_evaluation() -> None:
                      + 300 * r.eval_mc_only_s) / 4
     assert projection["eval_s"] == pytest.approx(expected_eval)
     assert projection["wall_s"] == pytest.approx(
-        300 + 2 * r.train_startup_s + r.eval_startup_s + projection["train_s"]
-        + projection["devkl_s"] + expected_eval)
+        300 + 2 * r.train_startup_s + r.eval_startup_s + 28 * r.save_layer_s
+        + projection["train_s"] + projection["devkl_s"] + expected_eval)
+
+
+def test_the_evaluation_checkpoint_read_is_priced_apart_from_start_up() -> None:
+    # An evaluation worker reads the 28-layer generation before its first unit;
+    # the probe loads nothing and the smoke times the read apart, so both price
+    # it at the save rate (review finding: it was in the smoke's start-up only).
+    r = rates()
+    assert budget.eval_load_s(r) == pytest.approx(budget.LAYERS * r.save_layer_s)
+    for job in ("main", "extension", "smoke"):
+        projection = budget.project(r, job)
+        assert projection["eval_load_s"] == pytest.approx(budget.eval_load_s(r))
+        heavier = budget.project(rates(save_layer_s=r.save_layer_s * 2), job)
+        assert heavier["wall_s"] > projection["wall_s"]
+    assert "eval_load_s" not in budget.project(r, "headroom-dev")  # dense only, nothing read
+
+
+def test_the_gauntlet_total_sums_every_cap_and_every_probe_run(monkeypatch) -> None:
+    derived = budget.derive_limits(rates())
+    caps = sum(entry["max_gpu_hours"] for entry in derived["jobs"].values())
+    assert derived["jobs"]["extension"]["max_gpu_hours"] > 0  # counted at its worst case
+    assert derived["total_gpu_hours_with_probe"] == round(caps + budget.PROBE_GPU_HOURS, 2)
+    assert derived["probe_runs_gpu_hours"] == {"q3-k1-throughput-probe-v1": 0.15}
+    assert "expected use never replaces a cap" in derived["counting_rule"]
+    # A second probe run (a rerun under a new id) adds its whole cap.
+    monkeypatch.setitem(budget.PROBE_RUNS_GPU_HOURS, "q3-k1-throughput-probe-v2", 0.15)
+    again = budget.derive_limits(rates())
+    assert again["total_gpu_hours_with_probe"] == round(caps + 0.30, 2)
+    assert budget.limits_table(again) == budget.limits_table(derived)
 
 
 def test_rows_factor_scales_up_never_down() -> None:

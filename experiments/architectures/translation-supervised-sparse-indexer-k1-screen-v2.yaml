@@ -239,8 +239,10 @@ required_artifacts:
 
 execution:
   enabled: false
-  # The ceiling for the sum of the registered caps below with the probe; the
-  # caps themselves are the job limits, which come from the probe receipt.
+  # The ceiling for the sum of the registered caps below (the conditional
+  # extension at its worst-case cap) with every throughput-probe run's cap,
+  # never expected use (budget_v2.COUNTING_RULE); the caps themselves are the
+  # job limits, which come from the probe receipt.
   max_gpu_hours: 8.0
   gpus: 4
   checkpoint_to_persistent_storage: true

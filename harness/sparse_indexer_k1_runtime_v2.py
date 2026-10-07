@@ -357,6 +357,27 @@ def devkl_sequence(teacher: Any, layers: Sequence[int], params: Mapping[int, Map
     return out, timing
 
 
+def add_sequence_kl(sums: dict[int, torch.Tensor | None],
+                    values: Mapping[int, torch.Tensor]) -> None:
+    """Add one sequence's per-slot KL to the running sums in float64.
+
+    v1 adds ``float(loss)`` (each sequence's float32 loss, widened exactly) in
+    Python floats; widening every float32 value before the sum and adding in
+    the same sequence order gives v1's float64 sums bit for bit.
+    """
+
+    for layer, value in values.items():
+        wide = value.detach().to(torch.float64)
+        current = sums.get(layer)
+        sums[layer] = wide if current is None else current + wide
+
+
+def mean_sequence_kl(total: torch.Tensor | None, n_dev: int) -> list[float]:
+    """v1's mean: the float64 sum divided by the number of sequences."""
+
+    return [] if total is None else [float(value) for value in (total / n_dev).tolist()]
+
+
 def run_devkl_worker(ctx: WorkerContext, spec: TrainSpec, *, spawned_at: float | None = None,
                      max_sequences: int | None = None) -> dict[str, Any]:
     """Mean stream-dev KL of every indexer on the worker's layers (v1 semantics).
@@ -389,15 +410,11 @@ def run_devkl_worker(ctx: WorkerContext, spec: TrainSpec, *, spawned_at: float |
         values, timing = devkl_sequence(teacher, spec.layers, params, runs, ispec, tokens,
                                         scaling, ctx.device)
         records.append(timing)
-        for layer, value in values.items():
-            current = sums[layer]
-            sums[layer] = value if current is None else current + value
+        add_sequence_kl(sums, values)
     result: dict[str, float] = {}
     for layer in spec.layers:
-        current = sums[layer]
-        values = [] if current is None else (current / n_dev).tolist()
-        for key, value in zip(keys, values, strict=True):
-            result[skb.slot_name(layer, key)] = float(value)
+        for key, value in zip(keys, mean_sequence_kl(sums[layer], n_dev), strict=True):
+            result[skb.slot_name(layer, key)] = value
     if not all(math.isfinite(v) for v in result.values()):
         raise RuntimeContractError("non-finite stream-dev KL")
     payload = {"worker": ctx.worker, "sequences": n_dev, "kl": result}
@@ -574,7 +591,9 @@ def run_eval_worker(ctx: WorkerContext, spec: EvalSpec, profile: Profile, *,
     n_layers = int(config.num_hidden_layers)
     scaling = teacher_scaling(config)
     ispec = sit.IndexerSpec(d_model=int(config.hidden_size))
+    load_started = time.perf_counter()
     eval_params = load_eval_params(ctx, spec, n_layers)
+    load_s = time.perf_counter() - load_started  # inside startup_s; the budget prices it apart
     names = rt.selector_names(spec.seeds, with_indexers=spec.with_indexers)
     prompts = {p["prompt_id"]: p for p in ctx.stage.meta["prompts"]}
     out_dir = ctx.ckpt_dir / "eval" / spec.stage
@@ -630,7 +649,7 @@ def run_eval_worker(ctx: WorkerContext, spec: EvalSpec, profile: Profile, *,
         os.replace(buffer_path, target_path)
         done += len(chunk_ids)
     return {"worker": ctx.worker, "stage": spec.stage, "prompts": done, "engine": ENGINE,
-            "timings": {"startup_s": startup_s, "units": unit_times}}
+            "timings": {"startup_s": startup_s, "load_s": load_s, "units": unit_times}}
 
 
 def unit_kind(record: Mapping[str, Any]) -> str:
@@ -663,11 +682,13 @@ __all__ = [
     "ENGINE",
     "UnitOutput",
     "WorkerBanks",
+    "add_sequence_kl",
     "config_digest",
     "devkl_sequence",
     "eval_keys",
     "evaluate_unit",
     "load_eval_params",
+    "mean_sequence_kl",
     "run_devkl_worker",
     "run_eval_worker",
     "run_training_worker",
