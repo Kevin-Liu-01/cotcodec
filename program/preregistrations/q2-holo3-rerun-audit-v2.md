@@ -154,19 +154,20 @@ confirmatory result.
 ### Rule (a): agent behaviour shift
 
 Steps = the number of entries in a trajectory's `actions.json` that are JSON
-objects with an `action` key. Over clean tasks whose run1 and run2 trajectories both join
-(section 4): two-sided Wilcoxon signed-rank test of run1 vs run2 steps (scipy
-default, zero differences dropped), and the effect size m = mean over tasks
-of ln(run1 steps) - ln(run2 steps) (tasks with a zero count excluded from m).
+objects with an `action` key. Over clean tasks whose run1 and run2
+trajectories both join (section 4): two-sided Wilcoxon signed-rank test of
+run1 vs run2 steps (scipy default, zero differences dropped), and the effect
+size m = mean over tasks of ln(run1 steps) - ln(run2 steps) (tasks with a
+zero count excluded from m).
 
 Decision, at a fixed alpha of 0.01: **"agent-behaviour shift"** if p < 0.01
 and |m| >= ln(1.10); otherwise **"no agent-behaviour shift"**. The median of
 the per-task step ratios, the geometric-mean ratio exp(m) and the number of
 tied pairs are reported as descriptive. The 23 run1-only and 9 run2-only
-clean tasks pair a passing with a failing episode, and failing episodes run longer, so the known
-outcomes alone move m towards run2 being longer; section 5 registers the
-same test on concordant tasks as a sensitivity and section 6 states power by
-direction.
+clean tasks pair a passing with a failing episode, and failing episodes run
+longer, so the known outcomes alone move m towards run2 being longer;
+section 5 registers the same test on concordant tasks as a sensitivity and
+section 6 states power by direction.
 
 ### Rule (b): failure signatures of the unique failures
 
@@ -334,9 +335,14 @@ ran or on its p-value, so whether the tarball is read cannot change rule
   `--tarball-receipt` naming the v2-tarball receipt that wrote it, which
   must be a PASS labelled "v2 CONFIRMATORY" with every run condition true,
   the same five code-file hashes and ledger row, the section 1 tarball
-  SHA-256 and the feature file's SHA-256. The doctor checks each condition,
-  records them under `confirmatory_checks`, and labels any run that fails
-  one "v2 NON-CONFIRMATORY". Runs use a clone whose history contains
+  SHA-256 and the feature file's SHA-256. A run must also use the
+  interpreter the v2-design receipt used (section 6): Python 3.14 (the
+  receipt ran Python 3.14.6) with scipy 1.18.0; the doctor compares the
+  running Python major.minor and scipy version with these. The doctor checks
+  each condition, records them under `confirmatory_checks`, and labels any
+  run that fails one "v2 NON-CONFIRMATORY"; every label inside such a
+  receipt (`results.v2.label` and each `rule_d_evidence`) says
+  NON-CONFIRMATORY too. Runs use a clone whose history contains
   `git_head_at_freeze` (in a shallow clone the code check fails closed).
   Each receipt records the Python, numpy and scipy versions.
 
@@ -517,8 +523,8 @@ Both runs are kept if both happen.
 Choices this registration makes where the reviewed plan left them open or
 where it departs from the plan. Decisions 1-14 are accepted in D15
 (`program/decisions.md`), with its two conditions applied in sections 3 and
-5; decisions 15-21 record the changes made after the pre-freeze audit of
-2026-10-07.
+5; decisions 15-22 record the changes made after the pre-freeze audit of
+2026-10-07 and its re-audit.
 
 1. **The tarball read is part of v2, behind an explicit switch.** The plan
    made the 5.75 GB read optional pending the owner's OK, which D15 gives
@@ -616,3 +622,10 @@ where it departs from the plan. Decisions 1-14 are accepted in D15
     config blob manifest must equal v1's (design decision 13); the feature
     file passes the public-safety scan; and the tarball's member layout is
     counted, so an unexpected layout shows in the receipt.
+22. **The interpreter is pinned, and a non-confirmatory receipt says so
+    throughout.** Rules (a), (b) and (d) take their p-values from scipy
+    (Wilcoxon, Fisher and hypergeometric), so a confirmatory run needs the
+    Python major.minor and scipy version the design receipt used (section 4). A
+    receipt labelled "v2 NON-CONFIRMATORY" used to carry "CONFIRMATORY" in
+    `results.v2.label` and `rule_d_evidence`; both now follow the receipt's
+    label.

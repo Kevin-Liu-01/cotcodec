@@ -7,6 +7,8 @@ import hashlib
 import http.client
 import io
 import json
+import re
+import sys
 import tarfile
 import zlib
 from datetime import UTC, datetime, timedelta
@@ -291,6 +293,7 @@ def test_v2_stage_end_to_end_on_a_scratch_ledger(tmp_path, synthetic, monkeypatc
     assert receipt["confirmatory_checks"]["repository_ledger"] is False
     assert receipt["ledger"]["is_repository_ledger"] is False
     assert str(tmp_path) not in json.dumps(receipt)
+    _assert_no_confirmatory_label_inside(receipt)
 
     classes = receipt["results"]["evaluator_classes"]
     assert classes["counts_all"]["L"] > 0 and classes["narrow_L_count_all"] > 0
@@ -346,6 +349,7 @@ def test_v2_is_confirmatory_only_when_every_run_condition_holds(
     code, receipt = run(tmp_path, factory, "--stage", "v2")
     assert code == 0 and receipt["label"] == "v2 CONFIRMATORY"
     assert receipt["evidence_grade"].startswith("v2 CONFIRMATORY")
+    assert receipt["results"]["v2"]["label"] == "v2 CONFIRMATORY (rules a-d)"
     assert seen["uses_trajectories"] is False
 
 
@@ -360,6 +364,8 @@ def test_confirmatory_checks(tmp_path, monkeypatch) -> None:
 
     monkeypatch.setattr(doctor, "_git_ok", git_ok)
     monkeypatch.setattr(doctor, "REPOSITORY_LEDGER", PROJECT_ROOT / "program" / "x.jsonl")
+    registered = (v2.REGISTERED_PYTHON, v2.REGISTERED_SCIPY)
+    monkeypatch.setattr(doctor, "interpreter_versions", lambda: registered)
     args = argparse.Namespace(ledger=PROJECT_ROOT / "program" / "x.jsonl")
     fresh = datetime.now(UTC).isoformat()
     state = {"ledger": {"frozen": True, "frozen_at": fresh, "git_head_at_freeze": "a" * 40}}
@@ -368,6 +374,7 @@ def test_confirmatory_checks(tmp_path, monkeypatch) -> None:
         "repository_ledger": True,
         "ledger_committed_and_unmodified": True,
         "code_unchanged_since_freeze": True,
+        "python_and_scipy_match_registration": True,
         "within_14_days_of_freeze": True,
     }
     assert ("diff", "--quiet", "a" * 40, "--", *doctor.CODE_FILES) in calls
@@ -541,7 +548,10 @@ def test_trajectory_features_need_the_confirmatory_scan_that_wrote_them(
 
 
 def _repository_conditions_hold(monkeypatch) -> None:
-    """Make the repository-only run conditions true; leave provenance computed."""
+    """Make the repository-only run conditions and the interpreter check true;
+    leave provenance computed."""
+    registered = (v2.REGISTERED_PYTHON, v2.REGISTERED_SCIPY)
+    monkeypatch.setattr(doctor, "interpreter_versions", lambda: registered)
     real = doctor.confirmatory_checks
 
     def checks(args, state, *, uses_trajectories):
@@ -678,11 +688,14 @@ def test_the_confirmatory_chain_from_tarball_scan_to_v2(tmp_path, synthetic, mon
     abc = receipt["results"]["v2"]["rules_abc"]
     assert abc["rule_c_coverage"]["coverage_ok"] is True
     assert abc["rule_b_screenshots"]["joined_episodes_with_screenshots"] > 700
+    assert receipt["results"]["v2"]["label"] == "v2 CONFIRMATORY (rules a-d)"
     decisions = receipt["results"]["v2"]["decisions"]
     assert decisions["rule_d_blinding"] == v2.RULE_D_BLINDING_NOTE
-    assert decisions["rule_d_evidence"] in ("CONFIRMATORY",) or decisions[
-        "rule_d_evidence"
-    ].startswith("EXPLORATORY")
+    for evidence in (
+        decisions["rule_d_evidence"],
+        receipt["results"]["v2_probe_sensitivity"]["decisions"]["rule_d_evidence"],
+    ):
+        assert evidence == "CONFIRMATORY" or evidence.startswith("EXPLORATORY")
     assert "rule_a_robust_to_concordant_tasks" in decisions
     assert (
         receipt["inputs"]["tarball_receipt_sha256"]
@@ -750,3 +763,76 @@ def test_the_sha256sums_case_is_computed_not_asserted(tmp_path, synthetic, monke
     assert code == 1
     case = receipt["cases"]["verified_members_match_sha256sums"]
     assert case["status"] == "FAIL" and case["mismatched"] == 1
+
+
+# --------------------------------------------------------------------------- #
+# Re-audit (2026-10-07)
+# --------------------------------------------------------------------------- #
+
+_UNQUALIFIED_CONFIRMATORY = re.compile(r"(?<!NON-)CONFIRMATORY")
+
+
+def _strings(value):
+    if isinstance(value, dict):
+        for key, item in value.items():
+            yield str(key)
+            yield from _strings(item)
+    elif isinstance(value, list):
+        for item in value:
+            yield from _strings(item)
+    elif isinstance(value, str):
+        yield value
+
+
+def _assert_no_confirmatory_label_inside(receipt: dict) -> None:
+    """A NON-CONFIRMATORY receipt carries no confirmatory-looking label anywhere."""
+    assert receipt["label"] == "v2 NON-CONFIRMATORY"
+    results = receipt["results"]
+    assert results["v2"]["label"] == "v2 NON-CONFIRMATORY (rules a-d)"
+    assert results["v2"]["decisions"]["rule_d_evidence"] == "NON-CONFIRMATORY run"
+    if "v2_probe_sensitivity" in results:
+        probe = results["v2_probe_sensitivity"]["decisions"]
+        assert probe["rule_d_evidence"] == "NON-CONFIRMATORY run"
+    leaks = [text for text in _strings(receipt) if _UNQUALIFIED_CONFIRMATORY.search(text)]
+    assert not leaks, leaks
+
+
+def test_a_non_confirmatory_receipt_has_no_confirmatory_inner_label(
+    tmp_path, synthetic, monkeypatch
+) -> None:
+    """Re-audit: results.v2.label was hard-coded "CONFIRMATORY (v2 rules a-d)" and
+    rule_d_evidence said "CONFIRMATORY" in a NON-CONFIRMATORY receipt. Here every
+    run condition holds except the interpreter's scipy version."""
+    world, factory = synthetic
+    monkeypatch.setattr(v2, "REGISTERED_H_REFERENCE", synthetic_h_reference(world))
+    freeze_v2(tmp_path, monkeypatch)
+    _repository_conditions_hold(monkeypatch)
+    other = (v2.REGISTERED_PYTHON, v2.REGISTERED_SCIPY + ".post1")
+    monkeypatch.setattr(doctor, "interpreter_versions", lambda: other)
+    code, receipt = run(tmp_path, factory, "--stage", "v2")
+    assert code == 0, receipt["cases"]
+    checks = receipt["confirmatory_checks"]
+    assert checks.pop("python_and_scipy_match_registration") is False
+    assert checks and all(checks.values()), checks
+    assert receipt["evidence_grade"].startswith("v2 NON-CONFIRMATORY")
+    _assert_no_confirmatory_label_inside(receipt)
+
+
+def test_the_interpreter_check_compares_python_major_minor_and_scipy(monkeypatch) -> None:
+    """Re-audit: section 4 pins the design receipt's Python major.minor and scipy."""
+    assert doctor.interpreter_versions() == (
+        f"{sys.version_info.major}.{sys.version_info.minor}",
+        scipy.__version__,
+    )
+    monkeypatch.setattr(doctor, "_git_ok", lambda *command: True)
+    args = argparse.Namespace(ledger=doctor.REPOSITORY_LEDGER)
+    state = {"ledger": {"frozen": True, "git_head_at_freeze": "a" * 40}}
+    for versions, expected in (
+        ((v2.REGISTERED_PYTHON, v2.REGISTERED_SCIPY), True),
+        (("3.13", v2.REGISTERED_SCIPY), False),
+        ((v2.REGISTERED_PYTHON + "1", v2.REGISTERED_SCIPY), False),
+        ((v2.REGISTERED_PYTHON, "1.17.1"), False),
+    ):
+        monkeypatch.setattr(doctor, "interpreter_versions", lambda versions=versions: versions)
+        checks = doctor.confirmatory_checks(args, state, uses_trajectories=False)
+        assert checks["python_and_scipy_match_registration"] is expected, versions

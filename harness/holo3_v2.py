@@ -61,6 +61,17 @@ SHIFT_LOG_THRESHOLD = math.log(1.10)  # rule (a): |mean log step ratio| >= log 1
 COVERAGE_BAR = 0.95  # rule (c)
 FINAL_WINDOW_DAYS = 14
 
+# ---- Run conditions ------------------------------------------------------- #
+
+# The doctor's top-level label for a v2 or v2-tarball receipt that meets every
+# registered run condition; any other label makes every rule output in the
+# receipt non-confirmatory.
+CONFIRMATORY_LABEL = "v2 CONFIRMATORY"
+# The interpreter the v2-design receipt ran under (Python 3.14.6, scipy
+# 1.18.0). A confirmatory run needs the same Python major.minor and scipy.
+REGISTERED_PYTHON = "3.14"
+REGISTERED_SCIPY = "1.18.0"
+
 # ---- Pinned inputs asserted in code (defence in depth over the LFS pin) --- #
 
 # The trajectory tarball as section 1 of the registration states it.
@@ -1239,9 +1250,14 @@ def v2_decisions(
     rule_d_result: Mapping[str, Any],
     abc: Mapping[str, Any] | None,
     *,
+    run_label: str,
     rule_d_narrow: Mapping[str, Any] | None = None,
 ) -> dict[str, Any]:
-    """Decision labels. Fixed error rates: no test's threshold depends on another."""
+    """Decision labels. Fixed error rates: no test's threshold depends on another.
+
+    ``run_label`` is the receipt's top-level label: unless it is
+    ``CONFIRMATORY_LABEL``, ``rule_d_evidence`` says the run is not confirmatory.
+    """
     out: dict[str, Any] = {
         "error_rates": {
             "rule_d": ALPHA_D,
@@ -1258,13 +1274,17 @@ def v2_decisions(
         out["rule_d_narrow_L_sensitivity"] = rule_d_decision(rule_d_narrow)
         robust = out["rule_d_narrow_L_sensitivity"] == out["rule_d"]
         out["rule_d_robust_to_L_definition"] = robust
-    # D15: a checker-side label that the narrow-L sensitivity does not
-    # reproduce is reported as exploratory.
-    out["rule_d_evidence"] = (
-        "EXPLORATORY (checker-side label not robust to the narrow-L sensitivity; D15)"
-        if out["rule_d"] in CHECKER_SIDE_LABELS and robust is not True
-        else "CONFIRMATORY"
-    )
+    # A run that failed a registered run condition is never confirmatory. D15:
+    # a checker-side label that the narrow-L sensitivity does not reproduce is
+    # reported as exploratory.
+    if run_label != CONFIRMATORY_LABEL:
+        out["rule_d_evidence"] = "NON-CONFIRMATORY run"
+    elif out["rule_d"] in CHECKER_SIDE_LABELS and robust is not True:
+        out["rule_d_evidence"] = (
+            "EXPLORATORY (checker-side label not robust to the narrow-L sensitivity; D15)"
+        )
+    else:
+        out["rule_d_evidence"] = "CONFIRMATORY"
     if abc is None:
         out["rule_a"] = "NOT RUN (trajectory tarball not read)"
         out["rule_b"] = "NOT RUN (trajectory tarball not read)"
