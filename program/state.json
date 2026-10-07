@@ -27,7 +27,8 @@
       ],
       "stage0_branch": "stage0/q1-gates",
       "stage0_preregistration_draft": "program/preregistrations/q1-stage0-gate-validation.md",
-      "stage0_evidence": "program/evidence/2026-10-07/q1-integration-validation.json"
+      "stage0_evidence": "program/evidence/2026-10-07/q1-integration-validation.json",
+      "stage0_fix_pass_evidence": "program/evidence/2026-10-07/q1-gates-fix-pass.json"
     },
     {
       "id": "Q2",
@@ -73,7 +74,8 @@
     "Decide whether to purge the old host address and the internal corpus inventory from public git history (requires a force-push)",
     "Rotate the Moonshot API key that was pasted into a chat session",
     "Spot-check a sample of the Q2 checker-mutation audit as the human rater (decision D9)",
-    "Review and freeze the integrated Q1 Stage 0 preregistration (q1-stage0-gate-validation on stage0/q1-gates), including the integration decisions in its section 15"
+    "Review and freeze the integrated Q1 Stage 0 preregistration (q1-stage0-gate-validation on stage0/q1-gates), including the integration decisions in its section 15 and the review fix-pass decisions in its section 16",
+    "Decide whether to ask the KernelGYM authors for a licence: gate_b.py was rewritten from the spec after the review found a transliteration (stage0/q1-gates, never pushed); a licence would remove the residual risk"
   ],
   "gpu_hours_spent_this_program": 0
 }
