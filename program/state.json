@@ -48,7 +48,7 @@
         "registration": "q2-action-path-v1 (+ -inputs, -executor addenda)",
         "status": "development complete, ready to freeze (nothing frozen)",
         "branch": "stage0/q2-action-path",
-        "development_jobs": "482-619 (seed 42, CPU only, never evidence)"
+        "development_jobs": "482-622 (seed 42, CPU only, never evidence)"
       }
     },
     {

@@ -34,6 +34,8 @@ Frozen with this file (SHA-256 of the committed bytes):
 | `harness/q2/vm/guest/canary_targets.py` | `8b7233391b1da78092326c11d394f0385ee42052835a83554c76260e4201aab3` |
 | `harness/q2/action_path/vm_hours.py` | `757981ef219f62f7f423d1ff9d02f75fd042c5c0063669f724337d2a96c270ab` |
 | `harness/q2/action_path/acceptance.py` | `9dac21a9c166a866c25e803fd8025a328da43e67320632cdc7d8c553d8a1a632` |
+| `scripts/render_q2_action_path_manifest.py` | `bc56bf3f5e57f8270da62bef1a2e3261a16c4bf40b63c1fe74a37bf5ca52ed2e` |
+| `experiments/manifests/q2-action-path/dev-l0-fixed-v10.yaml` | `0a4f908e67631483687740cfba3266b829f3c5d2577b08b676a5fa022186ad92` |
 | `harness/q2/vm/guest/probe.py` | `ba5c0f1d364c80d5f8190f3c357b915cd504d754891285c3772ba959a804efeb` |
 | `harness/q2/vm/guest/guard.py` | `595fce1fa164c8fce868690b1853706ac6fa4761f0d15f41ac5cc0c3804224c5` |
 | `harness/q2/vm/guest/canary.py` | `32742019db56b4f09905c50c71159c2ef3fe024a044d07f4bffb31cd41fcea1e` |
@@ -160,6 +162,15 @@ realized order, A1-A6, C1-C4 with C3's kill and equivalence rules, and the
 ladder's N* with the foreign-load abort. Its verdicts are the ones reported;
 `tests/test_q2_acceptance_analysis.py` drives every rule on synthetic
 campaigns.
+
+`scripts/render_q2_action_path_manifest.py` writes each scored campaign's
+manifest from a local export of the frozen commit: the ledger's digests, the
+source tree digest, the realized order's session and trial counts and a Slurm
+limit from the lane's worst-case budget (an A4 that would exceed 24 hours is
+split into session ranges). It validates the manifest with the ledger and
+refuses before the freeze. The VM and runner pins come from the last
+development manifest at the candidate executor (`dev-l0-fixed-v10.yaml`),
+which carries the main preregistration's section 2.1 pins.
 
 ## 8. VM time (`vm_hours.py`, `trial_times.json`, `vm_hours.json`)
 

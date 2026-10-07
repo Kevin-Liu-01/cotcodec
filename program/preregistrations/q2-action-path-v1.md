@@ -430,7 +430,10 @@ one VM at a time (N = 1) except the concurrency ladder and A4 (section 9);
   bar shows the text editor's items); and after run 522, where Chrome's "Can't
   update Chrome" bubble (the guest's Chrome build is older than its clock
   allows) opened mid-trial and took the keyboard focus, `canary.yaml` starts
-  Chrome with a flag that keeps the bubble closed. The entries are the text
+  Chrome with a flag that keeps the bubble closed; and after run 613, where
+  VS Code dropped its first keys while still loading on a busy host, the
+  driver also waits until the trial's processes are idle (inputs addendum).
+  The entries are the text
   entries `type_plain`, `type_symbols_shifted`, `type_unicode_bmp`,
   `type_emoji`, `type_combining`, `type_rtl`, `type_multiline_tabs`,
   `type_with_correction`, `type_long_200`, `type_spaces`, `type_digits`
@@ -894,7 +897,7 @@ disposition:
 
 ## 16. Changes found while finishing development (2026-10-07)
 
-Development runs 486-602 (seed 42, never evidence; listed with their outcomes
+Development runs 486-622 (seed 42, never evidence; listed with their outcomes
 in `program/evidence/2026-10-07/q2-action-path-stage0b/README.md`) and the
 work of writing the acceptance code found these, all before any freeze:
 
@@ -919,3 +922,6 @@ work of writing the acceptance code found these, all before any freeze:
    campaign).
 7. Campaigns other than the ladder and A4 now must run at N = 1 (section 7),
    which the draft implied but `manifest.py` did not enforce.
+8. On a busy host VS Code showed its editor before it accepted input and
+   dropped the first keys of three canary trials (run 613): the canary driver
+   now also waits until the trial's processes are idle (A6, inputs addendum).
