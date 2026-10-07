@@ -162,3 +162,30 @@ def test_prereg_rater_pins_match_the_runner() -> None:
     assert declared["open_weight_gpu_hours_cap"] == render_rater_manifest.AUDIT_GPU_HOURS
     builder = (ROOT / "scripts" / "build_vllm_overlay_on_h100.sh").read_text(encoding="utf-8")
     assert f'base_id="{declared["vllm_base_image_id"]}"' in builder
+
+
+def test_prereg_pins_block_holds_only_checked_keys() -> None:
+    """Every key of the pins block is checked by code or by these tests (review 3)."""
+    import json
+
+    declared = campaign.prereg_pins(_text())
+    checked = {
+        "q2m_pins",
+        "experiment_id",
+        *campaign.PINNED_KEYS,
+        *campaign.INPUT_PIN_KEYS,
+        "metric_image_id",
+        "lo_vm_image_id",
+        "apply_to",
+        "mutation_split",
+        "seeds",
+        "specs_branch_commit",
+        "raters",
+    }
+    assert set(declared) == checked
+    provenance = json.loads(
+        (ROOT / "program/evidence/q2-mutation/integration/blind-spec-provenance.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    assert declared["specs_branch_commit"] == provenance["specs_head"]

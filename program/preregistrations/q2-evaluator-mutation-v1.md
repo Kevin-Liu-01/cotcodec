@@ -99,8 +99,8 @@ differ from the pins:
 {
  "q2m_pins": 1,
  "experiment_id": "q2-evaluator-mutation-v1",
- "code_tree_sha256": "15a1a96d7ba298d4d8a4f2d457e22e644be817fe2a84d75c30bef334b48fd4cf",
- "operator_catalog_sha256": "7f6d44f5cc848188bc7f6c5bd4d98846505f9a97a10d8ed75510155758fbb46a",
+ "code_tree_sha256": "37ae60f07e549da933c3eddb63cccf126d6950785fad7832dc5721017ab207ac",
+ "operator_catalog_sha256": "07e50a6fa39656e456584e6b56ca8f3c020fb7987ff9522d6d5f996bd9ac2dac",
  "operator_catalog_version": "q2-mut-operators-v1",
  "operators": 64,
  "spec_set_sha256": "05d4fb2074a7fa53046dff9f5d075b2b45ac014889eaae23d625c1894056de62",
@@ -122,14 +122,12 @@ differ from the pins:
   44
  ],
  "specs_branch_commit": "287d523374354e40af4c1f54bd06e46c3de6a955",
- "operators_branch_commit": "0d7f0857cc0a6d0007466a05ee08a44a467cf957",
- "harness_branch_commit": "65c90aae12c042f010856c589f145647f1733c0d",
  "raters": {
   "anthropic_model": "claude-opus-5-5",
-  "open_weight_model_id": "qwen3.5-9b",
-  "open_weight_repo": "Qwen/Qwen3.5-9B",
-  "open_weight_revision": "c202236235762e1c871ad0ccb60c8ee5ba337b9a",
-  "open_weight_receipt_sha256": "0a9e052d561b017c505adf5a1c6fcdc048522660a0db134486b84edbf3de5cb3",
+  "open_weight_model_id": "qwen3.6-35b-a3b",
+  "open_weight_repo": "Qwen/Qwen3.6-35B-A3B",
+  "open_weight_revision": "995ad96eacd98c81ed38be0c5b274b04031597b0",
+  "open_weight_receipt_sha256": "18c2a12881bf613c7110439b8e765ff89a4c060a1fb60aee62bb7250890ce1f9",
   "vllm_base_image_id": "sha256:423783aac4fefebfe6b67d6fc2810b88a1d4dc08ed8bba587c80b0d8973e0b8b",
   "open_weight_gpu_hours_cap": 1.0
  }
