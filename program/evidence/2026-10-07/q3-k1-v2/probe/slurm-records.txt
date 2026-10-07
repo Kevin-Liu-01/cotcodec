@@ -1,0 +1,23 @@
+Slurm records for q3-k1-throughput-probe-v1 operations (scontrol show job, captured shortly after each job ended;
+sacct accounting is off on this host). GPU-hours = allocated GPUs x (EndTime - StartTime).
+
+533 cotcodec-build-arch-image (probe image build from repo-probe at 4b9d6c4; submitted by the interrupted earlier attempt)
+   scontrol record not captured: purged after MinJobAge (300 s) before this session resumed.
+   Submitted 2026-10-07T17:33:14Z (operator log); build log written from 17:33 to 17:34:51Z; push, versions and receipt written 17:43:22Z.
+   sbatch header: --partition=research --cpus-per-task=16 --mem=64G --time=03:00:00, no --gres (CPU only)  -> 0 GPU-h
+534 k1-probe-doctor-v1 (srun step: docker run --network none, probe image, v1 K1 CPU doctor)
+   JobState=COMPLETED ExitCode=0:0 RunTime=00:03:34 TimeLimit=00:30:00 StartTime=2026-10-07T18:44:27 EndTime=2026-10-07T18:48:01
+   NumCPUs=16 TRES=cpu=16,mem=64G,node=1,billing=16 (no GPU)  -> 0 GPU-h
+535 not attributable: no scontrol record (purged or never created), no output file under ~/cotcodec-runs, and the probe
+   run root did not exist afterwards (checked 18:53:03Z and again in pre-submit-state.txt at 18:53:32Z).
+536 k1-probe-doctor-v2 (srun step: docker run --network none, probe image, v2 K1 CPU doctor)
+   JobState=COMPLETED ExitCode=0:0 RunTime=00:04:30 TimeLimit=00:30:00 StartTime=2026-10-07T18:48:01 EndTime=2026-10-07T18:52:31
+   NumCPUs=16 TRES=cpu=16,mem=64G,node=1,billing=16 (no GPU)  -> 0 GPU-h
+543 q3-k1-throughput-probe (orx run b6fb997c-96a0-4260-9cbe-7d5d8adaa938, node commit 8415ee7, manifest q3-k1-throughput-probe,
+    --gres=gpu:h100:1, --time=00:09:00, --mem=96G)
+   JobState=COMPLETED ExitCode=0:0 RunTime=00:03:18 TimeLimit=00:09:00 StartTime=2026-10-07T18:53:45 EndTime=2026-10-07T18:57:03
+   NumCPUs=16 TRES=cpu=16,mem=96G,node=1,billing=16; gpu-prolog: gpu_devices=0, foreign_compute_processes=0, decision=exclusive
+   termination.env: reason=completed exit_code=0 checkpoint_ready=false checkpoint_marker_present=false
+   -> 1 GPU x 198 s = 0.055 GPU-h used (registered cap 0.15 GPU-h; D22 counts the probe at its cap, 0.15)
+
+GPU-hours used by this experiment's operations: 0.055 (job 543 only). Jobs 533, 534 and 536 were CPU only.

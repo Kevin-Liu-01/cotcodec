@@ -1,0 +1,53 @@
+{
+  "batch_script_sha256": "7c4603babe1af27dd780d65b6812115c9b8e63844570ed5028865b2c4fa4de12",
+  "command": [
+    "python",
+    "scripts/probe_sparse_indexer_k1_throughput.py",
+    "--output-dir",
+    "/outputs/probe",
+    "--model-dir",
+    "/model-cache/cotcodec-models/qwen3-0.6b-base",
+    "--receipt",
+    "/model-cache/cotcodec-receipts/qwen3-0.6b-base.json",
+    "--expected-receipt-sha256",
+    "e7f36f05e6c87ec50b3736cf133fda60775abccb38f60fa9d3c134c432cf46df",
+    "--preregistration",
+    "program/preregistrations/q3-k1-throughput-probe-v1.md",
+    "--expected-preregistration-sha256",
+    "45b9b1347c5093bae0f06665d7d88ed122fe2711d993a9d0e2d133918ae42e51",
+    "--seeds",
+    "42",
+    "43",
+    "44"
+  ],
+  "container_profile": "default",
+  "cpus": 16,
+  "git_sha": "4b9d6c4748680e9a8a839c9ee3e1772ef0e02857",
+  "gpu_type": "h100",
+  "gpus": 1,
+  "image_id": "sha256:e59d9cc18c0db05fa0ae20a0f65492268112d07fef20f00af799323ae02ce6d3",
+  "max_gpu_hours": 0.15,
+  "memory_gb": 96,
+  "minutes": 9,
+  "model": {
+    "artifact_root_sha256": "7040f418762c61dd00b540e482527e0d8c8a916cce80eee56408bd10a6179ae0",
+    "cache_host_path": "/home/kevin/cotcodec-runs/hf-cache",
+    "model_id": "qwen3-0.6b-base",
+    "receipt_sha256": "e7f36f05e6c87ec50b3736cf133fda60775abccb38f60fa9d3c134c432cf46df",
+    "revision": "da87bfb608c14b7cf20ba1ce41287e8de496c0cd"
+  },
+  "name": "q3-k1-throughput-probe",
+  "randomness_contract": "assignment-seed-matrix",
+  "run_root": "/home/kevin/cotcodec-runs/translation-supervised-sparse-indexer/k1-throughput-probe-v1",
+  "runtime": "docker-single-node-discovery-v1",
+  "schema_version": 1,
+  "seed_binding": {
+    "flag": "--seeds"
+  },
+  "seeds": [
+    42,
+    43,
+    44
+  ],
+  "source_sha256": "8d8de791ed66854e8db61aa7c54d1535ae04dcee7774ff2a95488820e609d772"
+}
