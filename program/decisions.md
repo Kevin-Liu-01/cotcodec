@@ -213,3 +213,19 @@ recorded from the harness, and every prompt, packet digest and response
 hashed into the rater receipt. Sampling cannot be fixed on this path, which
 is disclosed; the open-weight rater stays seeded and deterministic. Reversal:
 a valid API key, after which the API path registered in the runner is used.
+
+**D26. K1 v2 ends at an honest gauntlet exit; Q3 continues with a dense
+headroom pre-check.** Gauntlet wave 1 for `q3-k1-localization-screen-v2`
+scored 45 (lower of two provider-distinct reviews: Claude 45, Qwen3.6-35B-A3B
+59), and all three refuters refuted, so the candidate stops. The defects are
+in the inherited design, not the engineering: NEGATIVE needs 20 points of
+dense headroom over random and v1's smoke measured about 14 on the 0.6B base;
+a selector flat on both non-literal legs falls inside NEGATIVE; GO is
+confounded because Belebele's translation rules keep a passage's proper
+nouns, dates and units in same-language questions but not in cross-script
+ones; and "cross-script" is collinear with scripts unseen in indexer training
+and with 5-6x tokenizer fertility. Next: a dense-only headroom pre-check under
+a new id, reading the development partition only and at most 0.5 GPU-h, on
+the 0.6B base and the registered 4B fallback. Any K1 v3 adds a non-literal
+adequacy floor, an entity-controlled question set and a seen-script
+cross-script condition, takes a new id, and runs the gauntlet.
