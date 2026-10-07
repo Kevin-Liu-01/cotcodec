@@ -1,5 +1,44 @@
 {
- "apps": {},
+ "apps": {
+  "chrome": {
+   "drag_select_word": {
+    "duration_ms": 500,
+    "from": [
+     172,
+     150
+    ],
+    "to": [
+     228,
+     150
+    ]
+   },
+   "triple_click_line": {
+    "x": 244,
+    "y": 150
+   }
+  },
+  "writer": {
+   "drag_select_word": {
+    "duration_ms": 500,
+    "from": [
+     680,
+     292
+    ],
+    "to": [
+     709,
+     292
+    ]
+   },
+   "triple_click_line": {
+    "x": 718,
+    "y": 292
+   }
+  }
+ },
+ "measured": {
+  "chrome": "development runs 501 and 506: accessibility character extents (DESKTOP_COORDS) agree with the screenshots: 'this' spans x 215-273, 'word' x 171-229, glyph centre y 150 (24 px monospace, 14.4 px per character from x 100); run 506's screenshot after the drag shows 'keep Y keep'",
+  "writer": "development run 501 screenshot (canary-040, canary-053): the fixture line's glyph centre is y 292; 'this' spans x 703-734 and 'word' x 679-710 (Liberation Mono 10 pt, 7.94 px per character from x 639); the accessibility extents had the right x but y 24 px too high"
+ },
  "note": "Screen targets of the canary's two pointer composites, measured in development (harness/q2/vm/guest/canary_targets.py) and frozen in the executor addendum. An app without a measured target runs those entries as unmeasured (a failure).",
  "schema": "cotcodec-q2-canary-targets-v1"
 }

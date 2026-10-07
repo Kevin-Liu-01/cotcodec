@@ -47,10 +47,9 @@ WINDOW_CLASSES = {
     "vscode": ("code",),
     "terminal": ("gnome-terminal-server", "gnome-terminal"),
 }
-# Seconds to wait after the window is active before the first input: VS Code's editor
-# takes input a moment after its window activates (development run 501 lost the first
-# keystroke at 1 s).
-SETTLE_S = {"writer": 1.0, "chrome": 1.0, "vscode": 3.0, "terminal": 1.0}
+# Seconds to wait after the app is ready (window active; Writer's document in the
+# accessibility tree; Chrome's mirrored title set; VS Code's editor items in its status bar).
+SETTLE_S = {"writer": 1.0, "chrome": 1.0, "vscode": 1.0, "terminal": 1.0}
 READBACK_TIMEOUT_S = 5.0
 PROCESS_PATTERNS = {
     "writer": ("soffice",),
@@ -232,6 +231,63 @@ def find_text_node(app):
     return None
 
 
+def _vscode_ready(geometry):
+    """VS Code's status bar shows the text editor's items (Ln, Col, encoding, mode).
+
+    With a file in the active editor the right half of the status bar holds text;
+    while the workbench loads, or with no text editor active, only the bell is there.
+    """
+    from PIL import ImageGrab
+
+    x, y, w, h = geometry
+    box = (x + w // 2, y + h - 20, x + w - 60, y + h - 2)
+    image = ImageGrab.grab(bbox=box).convert("L")
+    bright = sum(1 for v in image.getdata() if v > 170)
+    return bright > 40, bright
+
+
+def _chrome_title(d):
+    """The Chrome window's mirrored textarea value (None if no such window)."""
+    from Xlib import X
+
+    name = d.intern_atom("_NET_WM_NAME")
+    utf8 = d.intern_atom("UTF8_STRING")
+    clients = d.screen().root.get_full_property(
+        d.intern_atom("_NET_CLIENT_LIST"), X.AnyPropertyType
+    )
+    for wid in clients.value if clients else []:
+        window = d.create_resource_object("window", wid)
+        try:
+            prop = window.get_full_property(name, utf8)
+        except Exception:  # noqa: BLE001 - windows can vanish while we look
+            continue
+        title = prop.value.decode("utf-8", "replace") if prop and prop.value else ""
+        if title.startswith("Q2AP:") and title.endswith(" - Google Chrome"):
+            try:
+                return json.loads(title[len("Q2AP:") : -len(" - Google Chrome")])
+            except ValueError:
+                return None
+    return None
+
+
+def chrome_readback():
+    from Xlib import display
+
+    d = display.Display()
+    deadline = time.monotonic() + READBACK_TIMEOUT_S
+    last, since = object(), time.monotonic()
+    while time.monotonic() < deadline:
+        value = _chrome_title(d)
+        if value != last:
+            last, since = value, time.monotonic()
+        elif value is not None and time.monotonic() - since >= 0.5:
+            return {"ok": True, "text": value}
+        time.sleep(0.1)
+    if isinstance(last, str):
+        return {"ok": True, "text": last, "unstable": True}
+    return {"ok": False, "error": "no mirrored title"}
+
+
 def wait_window(config):
     from Xlib import display
 
@@ -252,7 +308,7 @@ def wait_window(config):
         return out
     out["window"] = window.id
     out["wm_class"] = list(_wm_class(d, window))
-    if app in ("writer", "chrome"):
+    if app == "writer":
         node = None
         while time.monotonic() < deadline and node is None:
             node = find_text_node(app)
@@ -260,6 +316,23 @@ def wait_window(config):
                 time.sleep(0.5)
         out["a11y_ready"] = node is not None
         out["ok"] = node is not None
+    if app == "chrome":
+        title = None
+        while time.monotonic() < deadline and title is None:
+            title = _chrome_title(d)
+            if title is None:
+                time.sleep(0.25)
+        out["title_ready"] = title is not None
+        out["ok"] = title is not None
+    if app == "vscode":
+        ready, bright = False, 0
+        while time.monotonic() < deadline and not ready:
+            ready, bright = _vscode_ready(_frame_geometry(d, window))
+            if not ready:
+                time.sleep(0.5)
+        out["editor_ready"] = ready
+        out["status_bar_bright"] = bright
+        out["ok"] = ready
     time.sleep(float(config.get("settle_s", SETTLE_S[app])))
     out["geometry"] = _frame_geometry(d, window)
     out["elapsed_s"] = round(time.monotonic() - started, 3)
@@ -311,10 +384,7 @@ def readback(config):
                 paragraphs.append(_node_text(child))
         return {"ok": True, "text": "\n".join(paragraphs), "paragraphs": len(paragraphs)}
     if app == "chrome":
-        node = _find_text_node_retry(app)
-        if node is None:
-            return {"ok": False, "error": "no textarea node"}
-        return {"ok": True, "text": _node_text(node)}
+        return chrome_readback()
     path = config["file"]
     saved = None
     if app == "vscode" and config.get("wait_cat_exit", True):

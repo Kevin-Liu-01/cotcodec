@@ -31,7 +31,7 @@ Frozen with this file (SHA-256 of the committed bytes):
 |---|---|
 | `harness/q2/vm/guest/probe.py` | `6f72a9a87327f5e7a8039f671b5989e28e6eca90232cb66bf979d770416df808` |
 | `harness/q2/vm/guest/guard.py` | `129b93d7ab7cccf91469ce56b4f4a3aefc3ed3697b4d169c96219c423cdfa984` |
-| `harness/q2/vm/guest/canary.py` | `547a0755733a1f2d65009081c3e7ae0c9d79cf80f23c232c5ced95f92e7ba9c3` |
+| `harness/q2/vm/guest/canary.py` | `8db6dde085001fc13d75ddfdb13ee6765cc2523f3211164a889c7e8affa1d0f1` |
 | `harness/q2/vm/guest/facts.py` | `4a071a39d4586a58b62419796a57b678568bdbc3bfd77ec6d50e841414dcd255` |
 | `harness/q2/vm/guest/sentinel.py` | `98f46a7faafc58e9c65466b19ae3547288fc8829378ad7aa169b09a17161b18b` |
 | `harness/q2/vm/guest/tap_selftest.py` | `7e051c0bcb45ba81c2b1fb855a9dc70115957fafa3ec7f333c8b3be5ab3bf835` |

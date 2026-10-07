@@ -19,22 +19,22 @@ Frozen with this file (SHA-256 of the committed bytes):
 
 | File | SHA-256 |
 |---|---|
-| `harness/q2/vm/guest/l0_fixed.py` | `b4582a55e095fb0e1a031532332c920315381558b4ca5b5cf1c0bd998aed2101` |
+| `harness/q2/vm/guest/l0_fixed.py` | `bc8547f6d84553084b1e48331e9a8a5cf8deec515abbb7872d9f16bfe666d6fc` |
 | `harness/q2/action_path/executor.py` | `d5c43bbb76926da056c15a39ddcbf05e1c328bd7dddb6a726cde3c46c2f9776a` |
 | `harness/q2/action_path/adapters.py` | `3a62eb109d656a717dfe9cbce31fba3bcf02457e9f5690f3e20639e8becbaf40` |
 | `harness/q2/action_path/upstream/osworld_bfd62bdc_fixed.py` | `9558b956004f6c971e881f073c42792e3d5d437396dbe6c0b407b250df3d8fdf` |
 | `harness/q2/action_path/upstream/gym_anything_aae6f7607.py` | `c624cee586e3b8b8b2ac12102ae1fca91e7de154b494035c4289123f38887aa6` |
 | `harness/q2/action_path/corpus.py` | `b4b1f974d481c249fcb22f2b77102579fcb82e504c64375a9183783f63bfbe49` |
 | `harness/q2/action_path/build_suite.py` | `c4648f125ff5149ed494684bf66eb48aa2ed789e9e4cec179203a33376182bf9` |
-| `harness/q2/action_path/suite_cells.json` | `ca7103bb93a39c4eb55bec9cc46ea53e0f6ee8051adac683746a634f9c5fd61e` |
+| `harness/q2/action_path/suite_cells.json` | `a2b83a2a9c6cfe0ef64c91a71151e9b8f8879517d6259e5370d20e504247c402` |
 | `harness/q2/action_path/qwen35_chat_template.jinja` | `a4aee8afcf2e0711942cf848899be66016f8d14a889ff9ede07bca099c28f715` |
 | `harness/q2/action_path/mutants.py` | `1791311503e0b57808b0f378ce2cd4c93167c76a99c80f8b6666f559a1a90beb` |
 | `harness/q2/action_path/harness_design_diffs.md` | `245dcfcf7b9393bd1c7f03a57360d9443c6478fb8c513bf64835196c4e59b61f` |
-| `harness/q2/action_path/canary_targets.json` | `6728df75fcf6e0e5d03aea1318bbe43455c0b8b62b4c1810647f45bbd979f844` |
+| `harness/q2/action_path/canary_targets.json` | `bd8892aeb9e7f6721407bbba5015d1d97e8674fb39203c5914410b8ee196a8e2` |
 | `harness/q2/vm/guest/canary_targets.py` | `8b7233391b1da78092326c11d394f0385ee42052835a83554c76260e4201aab3` |
 | `harness/q2/vm/guest/probe.py` | `6f72a9a87327f5e7a8039f671b5989e28e6eca90232cb66bf979d770416df808` |
 | `harness/q2/vm/guest/guard.py` | `129b93d7ab7cccf91469ce56b4f4a3aefc3ed3697b4d169c96219c423cdfa984` |
-| `harness/q2/vm/guest/canary.py` | `547a0755733a1f2d65009081c3e7ae0c9d79cf80f23c232c5ced95f92e7ba9c3` |
+| `harness/q2/vm/guest/canary.py` | `8db6dde085001fc13d75ddfdb13ee6765cc2523f3211164a889c7e8affa1d0f1` |
 | `harness/q2/vm/marker.py` | `b786b347fc5573425f14090bd67621294ac5c84671bf67f47e663d693ab17fb9` |
 | `harness/q2/vm/canary_run.py` | `8ebb89e4d0141173d633756a020495ffa28c1d7f2984baf59b733a3db1f54ebc` |
 | `harness/q2/vm/suite.py` | `030690b601ca75bd855ef0d95f99537ef6b4f3801e44cc20695675c5a6b52baf` |
