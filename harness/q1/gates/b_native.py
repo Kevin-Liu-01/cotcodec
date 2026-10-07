@@ -28,7 +28,7 @@ import types
 from pathlib import Path
 from typing import Any
 
-from harness.q1.gates.common import GateOutcome, exception_details
+from harness.q1.gates.outcome import GateOutcome, exception_details
 from harness.q1.schema import KERNELGYM_REVISION
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
@@ -59,18 +59,31 @@ def resolve_clone(
 
 
 def clone_revision(clone: Path) -> str | None:
-    """Git HEAD of the clone, or the ``REVISION`` file of an exported tree."""
+    """Git HEAD of the clone (only if the clone is itself the repository top level),
+    or the ``REVISION`` file of an exported tree."""
     try:
         completed = subprocess.run(
-            ["git", "-c", "safe.directory=*", "-C", str(clone), "rev-parse", "HEAD"],
+            [
+                "git",
+                "-c",
+                "safe.directory=*",
+                "-C",
+                str(clone),
+                "rev-parse",
+                "--show-toplevel",
+                "HEAD",
+            ],
             check=True,
             capture_output=True,
             text=True,
         )
-        return completed.stdout.strip()
-    except (OSError, subprocess.CalledProcessError):
-        marker = clone / "REVISION"
-        return marker.read_text(encoding="utf-8").strip() if marker.is_file() else None
+        toplevel, head = completed.stdout.split()
+        if Path(toplevel).resolve() == clone.resolve():
+            return head
+    except (OSError, subprocess.CalledProcessError, ValueError):
+        pass
+    marker = clone / "REVISION"
+    return marker.read_text(encoding="utf-8").strip() if marker.is_file() else None
 
 
 def _stub_packages(clone: Path) -> None:

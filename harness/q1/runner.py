@@ -21,6 +21,11 @@
 - **Journal.** Rows are appended to the append-only journal
   (``journal.py``); resume skips finished items and reruns the rest with the
   next attempt number.
+- **Signals.** Under the lane's checkpoint contract, SIGUSR1 or SIGTERM stops
+  scheduling, kills running children (their items are not journaled and rerun
+  on resume), and writes the checkpoint marker atomically (temp file, then
+  rename) after the journal is complete. The marker is also refreshed after
+  every journaled item. The CLI exits 75 when interrupted.
 """
 
 from __future__ import annotations
@@ -81,6 +86,7 @@ class RunnerConfig:
     extra_env: Mapping[str, str] = field(default_factory=dict)
     health_check: bool = True
     workdir: Path | None = None
+    checkpoint_marker: Path | None = None
 
 
 def _set_pdeathsig() -> None:
@@ -101,6 +107,34 @@ class Runner:
         self._lock = threading.Lock()
         self.summary: dict[str, int] = {"run": 0, "skipped": 0, "timeouts": 0, "crashes": 0}
         self.retired_slots: list[str] = []
+        self.stopped = threading.Event()
+        self._children: set[subprocess.Popen] = set()
+
+    def stop(self) -> None:
+        """Stop scheduling and kill running children; their items rerun on resume."""
+        self.stopped.set()
+        with self._lock:
+            children = list(self._children)
+        for child in children:
+            with contextlib.suppress(ProcessLookupError, PermissionError):
+                os.killpg(child.pid, signal.SIGKILL)
+
+    def write_checkpoint_marker(self) -> None:
+        marker = self.config.checkpoint_marker
+        if marker is None:
+            return
+        rows, invalid = self.journal.read()
+        payload = {
+            "run_id": self.config.run_id,
+            "journal": str(self.config.journal_path),
+            "journal_rows": len(rows),
+            "invalid_lines": invalid,
+            "items_final": sum(1 for s in self.journal.status().values() if s["final"]),
+            "written_at": time.time(),
+        }
+        temp = marker.with_name(f".{marker.name}.{os.getpid()}.tmp")
+        temp.write_text(json.dumps(payload, sort_keys=True), encoding="utf-8")
+        os.replace(temp, marker)
 
     # --- scheduling ---------------------------------------------------------
 
@@ -138,15 +172,18 @@ class Runner:
         }
 
     def _slot_loop(self, slot: str, work: queue.Queue) -> None:
-        while True:
+        while not self.stopped.is_set():
             try:
                 item, attempt = work.get_nowait()
             except queue.Empty:
                 return
             rows, healthy = self.execute(item, attempt, slot)
+            if self.stopped.is_set():
+                return  # an interrupted item is not journaled; it reruns on resume
             with self._lock:
                 self.journal.append(rows)
                 self.summary["run"] += 1
+                self.write_checkpoint_marker()
             if not healthy:
                 with self._lock:
                     self.retired_slots.append(slot)
@@ -200,7 +237,13 @@ class Runner:
                 preexec_fn=_set_pdeathsig if sys.platform.startswith("linux") else None,
             )
             os.close(write_fd)
-            phase, timed_out = self._watch(process, read_fd)
+            with self._lock:
+                self._children.add(process)
+            try:
+                phase, timed_out = self._watch(process, read_fd)
+            finally:
+                with self._lock:
+                    self._children.discard(process)
         os.close(read_fd)
         wall = time.monotonic() - start
         rows = self._collect(out_path) if process.returncode == 0 and not timed_out else []
@@ -314,12 +357,20 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--run-id", default=None)
     parser.add_argument("--timeouts", default=None, help="JSON overriding phase limits")
     parser.add_argument("--workdir", type=Path, default=None)
+    parser.add_argument(
+        "--checkpoint-marker",
+        type=Path,
+        default=Path(os.environ["COTCODEC_CHECKPOINT_MARKER"])
+        if os.environ.get("COTCODEC_CHECKPOINT_MARKER")
+        else None,
+    )
     args = parser.parse_args(argv)
     config = RunnerConfig(
         journal_path=args.journal,
         slots=[s for s in args.slots.split(",") if s],
         timing_slots=[s for s in args.timing_slots.split(",") if s],
         workdir=args.workdir,
+        checkpoint_marker=args.checkpoint_marker,
     )
     if args.run_id:
         config.run_id = args.run_id
@@ -328,9 +379,14 @@ def main(argv: list[str] | None = None) -> int:
     overlap = set(config.slots) & set(config.timing_slots)
     if overlap:
         parser.error(f"slots used for both correctness and timing: {sorted(overlap)}")
-    summary = Runner(config).run(load_items(args.items))
-    print(json.dumps(summary, sort_keys=True))
-    return 0
+    runner = Runner(config)
+    for signum in (signal.SIGUSR1, signal.SIGTERM):
+        signal.signal(signum, lambda *_: runner.stop())
+    summary = runner.run(load_items(args.items))
+    interrupted = runner.stopped.is_set()
+    runner.write_checkpoint_marker()
+    print(json.dumps({**summary, "interrupted": interrupted}, sort_keys=True))
+    return 75 if interrupted else 0
 
 
 if __name__ == "__main__":
