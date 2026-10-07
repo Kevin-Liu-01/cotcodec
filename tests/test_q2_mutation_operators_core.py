@@ -264,3 +264,20 @@ def test_rotated_or_flipped_shapes_are_not_moved() -> None:
     assert not movable({"off": [0, 0], "rot": "5400000"})
     assert not movable({"off": [0, 0], "flipH": "1"})
     assert not movable({"ext": [1, 1]})
+
+
+def test_dedupe_keeps_one_admitted_mutant_per_document() -> None:
+    from harness.q2_mutation.operators.pipeline import dedupe_admitted
+
+    def record(seed: int, digest: str, passed: bool = True) -> dict:
+        return {
+            "task_id": "t", "operator": "op", "mutant_id": f"m{seed}",
+            "recipe": {"seed": seed},
+            "purity_checks": [{"name": "survived_save", "passed": passed,
+                               "detail": f"mutant differs; snapshot sha256 {digest}"}],
+        }
+
+    kept, dropped = dedupe_admitted([record(43, "a"), record(42, "a"), record(44, "b"),
+                                     record(45, "a", passed=False)])
+    assert [r["mutant_id"] for r in kept] == ["m42", "m44", "m45"]
+    assert [r["mutant_id"] for r in dropped] == ["m43"]

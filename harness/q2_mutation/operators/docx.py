@@ -94,9 +94,18 @@ def outside_paragraphs(ctx: Context, top_level: bool | None = None) -> list[str]
     return out
 
 
-def deletable(block: dict) -> bool:
-    """Non-empty and not carrying a section break (deleting it would merge sections)."""
-    return bool(block["text"].strip()) and not block.get("section_break")
+def deletable(snap: dict, unit: str) -> bool:
+    """A non-empty top-level paragraph that neither ends nor starts a section.
+
+    Deleting a paragraph with a section break merges sections, and Writer keeps the
+    page style and page-number restart on a section's first paragraph, so deleting
+    that paragraph changes the section properties too.
+    """
+    index = int(unit.split("/")[1])
+    block = snap["body"][index]
+    if block.get("type") != "p" or not block["text"].strip() or block.get("section_break"):
+        return False
+    return index > 0 and not snap["body"][index - 1].get("section_break")
 
 
 def span_offsets(block: dict) -> list[tuple[int, int, dict]]:
@@ -561,7 +570,7 @@ class DeleteBoundParagraph(Operator):
     def sites(self, ctx, req, binding):
         return [
             site(u, req.req_id) for u in bound_paragraphs(ctx, binding)
-            if u.count("/") == 1 and deletable(paragraph(ctx.base, u))
+            if u.count("/") == 1 and deletable(ctx.base, u)
         ]
 
     def build(self, ctx, where, rng):
@@ -617,7 +626,7 @@ class DeleteUnrelatedParagraph(Operator):
         if len(ctx.base["body"]) < 2:
             return []
         return [site(u) for u in outside_paragraphs(ctx, top_level=True)
-                if deletable(paragraph(ctx.base, u))]
+                if deletable(ctx.base, u)]
 
     def build(self, ctx, where, rng):
         block = paragraph(ctx.base, where.unit)
