@@ -3,9 +3,13 @@
 # plus the verbatim upstream gate (a) at 44130946 and 423217d9 for fidelity.
 # Infrastructure validation only (no mutant, no substrate, no confirmatory data).
 #
-# NOT SUBMITTED: the stage0/lane submitter (container_profile, model kind none,
-# seed_binding, memory_gb, GPU prolog, signal checkpoint) is not merged into
-# main yet. Submit only after it is, from a clean host clone (never ~/cotcodec):
+# NOT SUBMITTED. The lane fields used here (container_profile, model kind none,
+# seed_binding, memory_gb, GPU prolog, signal checkpoint) were merged into main
+# at 1f18cae on 2026-10-07, after this branch was cut; the filled template
+# passes main's validate_manifest. Before submitting: merge main into this
+# branch, build a source-overlay image of that revision on top of
+# cotcodec-q1-gates (the lane runs the code embedded in the image and checks
+# its provenance), and submit from a clean host clone (never ~/cotcodec):
 #   uv run python scripts/submit_docker_research_job.py experiments/manifests/q1-core/q1-gate-gpu-smoke.yaml --dry-run
 # Every FILL-* value is written from measured artifacts at submission (image
 # build receipt, source capsule); the submitter rejects FILL-* values, so an

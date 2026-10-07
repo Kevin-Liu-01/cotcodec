@@ -10,8 +10,9 @@ revisions for a fidelity check. Expected: gate (a) accepts (L1/95 is
 unrefereeable at HEAD's fp32 cast), b1 and b2 reject (no Triton launch), gate
 (c) and the audit accept.
 
-Runs only as a Slurm job through the lane (one GPU, ``model: {kind: none}``),
-and only after the stage0/lane submitter is merged.
+Runs only as a Slurm job through the lane (one GPU, ``model: {kind: none}``,
+``experiments/manifests/q1-core/q1-gate-gpu-smoke.yaml``) from a
+source-overlay image of a revision that includes main's lane merge.
 
     python scripts/run_q1_gpu_smoke.py --output /outputs/q1-smoke --seeds 42 43 44
 """
