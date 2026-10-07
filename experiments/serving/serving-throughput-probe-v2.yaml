@@ -176,17 +176,18 @@ point_templates:
     thinking: false
     concurrency: 8
     requests: 16
-  # The largest registered prompt shape: 20 cold H2 requests at step 20 (20 screenshots,
-  # 19 prebuilt responses, 48,140 modelled prompt tokens each), all in flight at once.
-  # The loader refuses any later point of a phase that exceeds it in prompt tokens per
-  # request, images per request or tokens in flight.
+  # Each of 20 H2 episodes, started 2.5 s apart as in r3, replays steps 1, 2 and 3 (the
+  # small staggered shapes at which v1's engine reached its memory plateau, 76,611 MiB)
+  # and then step 20, the largest registered prompt shape (20 screenshots, 19 prebuilt
+  # responses, 48,140 modelled prompt tokens). The loader refuses any later point of a
+  # phase that exceeds the warm-up in prompt tokens per request, images per request or
+  # tokens in flight.
   warm-up: &warmup
     <<: *h2
     role: warm-up
-    start_depth: 19
-    steps: 1
-    stagger_s: 0
-    t_env_s: 0
+    start_depth: 0
+    steps: 4
+    step_list: [1, 2, 3, 20]
 
 points:
   a-smoke: {<<: *server_smoke, seed: 7, max_minutes: 1.5, required: true}
@@ -197,9 +198,14 @@ points:
   r4: {<<: *h2, seed: 104, start_depth: 17, steps: 2, output_tokens: 2048, thinking: true, max_minutes: 3.5, required: true}
   a1b: {<<: *s2, seed: 43, max_minutes: 1.5, required: true}
   a1c: {<<: *s2, seed: 44, max_minutes: 1.5, required: true}
+  # f1 is required: without it the open-loop bound is not corrected for PNG screenshots,
+  # and that bound binds on cells the Q2 decision rests on.
+  f1: {<<: *s2, seed: 42, image_kind: png-rendered, control_of: a1a, max_minutes: 1.5, required: true}
   r2: {<<: *h1, seed: 102, a11y_tokens: 6144, max_minutes: 3.5, required: false}
   a2: {<<: *s2, seed: 45, concurrency: 40, requests: 160, max_minutes: 2, required: false}
-  f1: {<<: *s2, seed: 42, image_kind: png-rendered, control_of: a1a, max_minutes: 1.5, required: false}
+  # Same-engine replicate of r1 (identical requests, real weights): X1's measured
+  # run-to-run replay noise. It enters no budget.
+  r1b: {<<: *h1, seed: 101, control_of: r1, max_minutes: 2.5, required: false}
   x1-smoke: {<<: *server_smoke, seed: 7, max_minutes: 1.5, required: true}
   x1-warmup: {<<: *warmup, seed: 105, max_minutes: 2.5, required: true}
   x1-a1: {<<: *s2, seed: 42, control_of: a1a, max_minutes: 1.5, required: true}
@@ -215,7 +221,7 @@ jobs:
         engine: a-real
         role: primary
         start_minutes: 4
-        points: [a-smoke, a-warmup, a1a, r1, r3, r4, a1b, a1c, r2, a2, f1]
+        points: [a-smoke, a-warmup, a1a, r1, r3, r4, a1b, a1c, f1, r2, a2, r1b]
       - id: dummy-control
         engine: a-dummy
         role: dummy-control

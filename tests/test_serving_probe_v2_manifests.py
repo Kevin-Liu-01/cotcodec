@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import hashlib
 import json
 from pathlib import Path
 
@@ -8,7 +9,6 @@ import yaml
 
 from harness.serving_probe_v2.config import load_config
 from scripts import render_serving_probe_v2_manifest as renderer
-from scripts.render_serving_probe_manifest import read_build_receipt
 from scripts.submit_docker_research_job import sbatch_argv, validate_manifest
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
@@ -16,9 +16,38 @@ TEMPLATE = (
     PROJECT_ROOT / "experiments" / "manifests" / "serving-throughput-probe-v2" / "a.template.yaml"
 )
 CONFIG = load_config(PROJECT_ROOT / "experiments" / "serving" / "serving-throughput-probe-v2.yaml")
+V1_RECEIPT = (
+    PROJECT_ROOT
+    / "program"
+    / "evidence"
+    / "2026-10-07"
+    / "serving-throughput-probe-v1"
+    / "overlay"
+    / "build-receipt.json"
+)
 
 
-def _build_receipt(tmp_path: Path, variant: str = "cu129") -> Path:
+def _build_receipt(
+    tmp_path: Path,
+    variant: str = "cu129",
+    *,
+    doctor_pass: bool = True,
+    plan_sha256: str | None = None,
+) -> Path:
+    """A receipt next to the v2 plan and args doctor, as the overlay builder writes them."""
+    tmp_path.mkdir(parents=True, exist_ok=True)
+    plan = {"experiment_id": "serving-throughput-probe-v2", "config_sha256": CONFIG.sha256}
+    if plan_sha256 is not None:
+        plan["config_sha256"] = plan_sha256
+    doctor = {
+        "pass": doctor_pass,
+        "v2_payload_thinking_False": True,
+        "v2_payload_thinking_True": True,
+    }
+    artifacts = {}
+    for name, body in ((renderer.V2_PLAN, plan), (renderer.V2_DOCTOR, doctor)):
+        (tmp_path / name).write_text(json.dumps(body))
+        artifacts[name] = hashlib.sha256((tmp_path / name).read_bytes()).hexdigest()
     path = tmp_path / "build-receipt.json"
     path.write_text(
         json.dumps(
@@ -28,10 +57,15 @@ def _build_receipt(tmp_path: Path, variant: str = "cu129") -> Path:
                 "git_sha": "2" * 40,
                 "source_sha256": "3" * 64,
                 "variant": variant,
+                "artifacts": artifacts,
             }
         )
     )
     return path
+
+
+def read_build_receipt(path: Path) -> dict[str, str]:
+    return renderer.read_v2_build_receipt(path)
 
 
 def _template() -> dict:
@@ -63,7 +97,8 @@ def test_rendered_manifest_passes_the_lane_and_binds_the_contract(tmp_path: Path
 def test_render_refuses_drift(tmp_path: Path) -> None:
     build = read_build_receipt(_build_receipt(tmp_path))
     with pytest.raises(renderer.RenderError, match="cu130 is not in the v2 contract"):
-        renderer.render(_template(), build=read_build_receipt(_build_receipt(tmp_path, "cu130")))
+        receipt = _build_receipt(tmp_path / "cu130", "cu130")
+        renderer.render(_template(), build=read_build_receipt(receipt))
     for edit, message in (
         (lambda m: m["resources"].update(minutes=30), "allocation minutes"),
         (lambda m: m.update(seeds=[1, 2, 3]), "seeds"),
@@ -77,6 +112,30 @@ def test_render_refuses_drift(tmp_path: Path) -> None:
         edit(template)
         with pytest.raises(renderer.RenderError, match=message):
             renderer.render(template, build=build)
+
+
+def test_render_refuses_a_receipt_without_the_v2_checks(tmp_path: Path, capsys) -> None:
+    """v1's own overlay receipt (an image with no v2 driver) is refused, as is a failed doctor."""
+    with pytest.raises(renderer.RenderError, match="not built with the v2 driver"):
+        read_build_receipt(V1_RECEIPT)
+    args = ["--template", str(TEMPLATE), "--build-receipt", str(V1_RECEIPT)]
+    assert renderer.main([*args, "--output", str(tmp_path / "v1.yaml")]) == 2
+    assert "not built with the v2 driver" in capsys.readouterr().err
+    assert not (tmp_path / "v1.yaml").exists()
+    with pytest.raises(renderer.RenderError, match="does not report a pass"):
+        read_build_receipt(_build_receipt(tmp_path / "failed", doctor_pass=False))
+    tampered = _build_receipt(tmp_path / "tampered")
+    (tampered.parent / renderer.V2_DOCTOR).write_text(json.dumps({"pass": True}))
+    with pytest.raises(renderer.RenderError, match="differs from the SHA-256"):
+        read_build_receipt(tampered)
+    missing = _build_receipt(tmp_path / "missing")
+    (missing.parent / renderer.V2_PLAN).unlink()
+    with pytest.raises(renderer.RenderError, match="is not next to the build receipt"):
+        read_build_receipt(missing)
+    # The image's plan was made from another contract than the one the manifest runs.
+    other = read_build_receipt(_build_receipt(tmp_path / "other", plan_sha256="e" * 64))
+    with pytest.raises(renderer.RenderError, match="v2 plan was made from contract"):
+        renderer.render(_template(), build=other)
 
 
 def test_render_cli_writes_once(tmp_path: Path, capsys) -> None:

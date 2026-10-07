@@ -9,9 +9,12 @@ GPU, so r3 and r4 were invalid only by this rule. v2 separates the two causes:
 * **Foreign processes** are identified by PID. A background poller lists the
   compute processes on the (only visible) GPU with their memory, next to the
   device's ``memory.used``. A PID is the engine's own when it is in the engine's
-  process tree in this container, or when it is one of the PIDs that appeared on
-  the GPU, empty at G0.8, while the engine started (NVML reports host-namespace
-  PIDs inside a container, which ``/proc`` here cannot resolve). Any other PID is
+  process tree in this container, or when it is a PID that ``/proc`` here
+  cannot resolve (NVML reporting host-namespace PIDs inside a container) and
+  that was first listed after G0.8 found the GPU empty and no later than the
+  engine's readiness (``/health`` 200), and is still listed, unchanged, over
+  the warm-up. A PID first listed after the engine was ready (during the smoke
+  or the warm-up) is not the engine's, and G0.9 fails. Any other PID is
   foreign. Memory that no listed process accounts for, beyond what was
   unaccounted at the reservation plus a margin, is treated as a foreign process
   NVML does not list.
@@ -19,9 +22,26 @@ GPU, so r3 and r4 were invalid only by this rule. v2 separates the two causes:
   warm-up at the largest registered prompt shape (G0.9). With PID attribution
   ("pid" mode), growth of the engine's own processes is not contamination and is
   checked against a separate own-footprint ceiling (reservation plus a margin),
-  flagged when exceeded. Without attribution ("device" mode, when NVML lists no
-  process here) the device peak must stay within the largest-shape reservation
-  plus the margin, as v1's rule did with its smaller reservation.
+  flagged when exceeded. Without it ("device" mode) the device peak must stay
+  within the largest-shape reservation plus the margin, as v1's rule did with
+  its smaller reservation.
+
+Device mode has three triggers, each recorded as the reservation's basis: no
+readable listing in the reservation window; readable listings that list no
+process; and a listed process (or the device) without a memory figure. Under
+the second and third, G0.9 still fixes the listed PID set (empty under the
+second), and any readable listing during a point that shows a PID outside that
+set and outside the engine's tree is contamination, as in pid mode. Under the
+first no set can be fixed, and only the device rule applies.
+
+What a foreign process the rule can detect depends on the basis, and the
+reservation records it (``detection``): with host-namespace PIDs NVML is
+listing processes outside this container, so a foreign process is expected to
+be listed and is caught at any size; with container-namespace PIDs only, NVML
+may omit other namespaces' processes, which are then caught only through
+unattributed memory; in device mode only through listed PIDs (when a set was
+fixed) and the device peak. Whether NVML in the lane's container lists other
+namespaces' processes has not been observed on this host.
 """
 
 from __future__ import annotations
@@ -232,6 +252,29 @@ def baseline_apps_verdict(snapshots: Sequence[AppsSnapshot]) -> dict[str, Any]:
     }
 
 
+#: What foreign process each attribution basis can detect (recorded with the reservation).
+DETECT_ANY_SIZE = (
+    "any size: NVML lists host-namespace PIDs, i.e. processes outside this container, "
+    "so a foreign process is expected to be listed"
+)
+DETECT_LISTED_OR_UNATTRIBUTED = (
+    "a listed foreign process at any size; one NVML does not list (it may omit other PID "
+    "namespaces) only through unattributed memory above the reservation's plus the margin"
+)
+DETECT_LISTED_OR_DEVICE = (
+    "a listed foreign process at any size; one NVML does not list only through the device "
+    "peak above the reservation plus the device margin"
+)
+DETECT_DEVICE_ONLY = "only through the device peak above the reservation plus the device margin"
+
+BASIS_NO_LISTING = "no readable compute-apps listing in the reservation window"
+BASIS_NOTHING_LISTED = "NVML lists no compute process in this container"
+BASIS_NO_MEMORY = "NVML reports no per-process or device memory"
+BASIS_CONTAINER = "container-namespace PIDs in the engine's process tree"
+BASIS_HOST = "host-namespace PIDs first listed between G0.8 (GPU empty) and the engine's readiness"
+BASIS_MIXED = "engine-tree and host-namespace PIDs"
+
+
 @dataclass(frozen=True)
 class Reservation:
     """The engine's footprint after the largest-shape warm-up (G0.9)."""
@@ -243,6 +286,10 @@ class Reservation:
     own_mib: float | None = None
     unattributed_mib: float | None = None
     snapshots: int = 0
+    #: Whether later listings are checked for PIDs outside ``own_pids`` (always in
+    #: pid mode; in device mode when G0.9 could fix the listed set).
+    pid_check: bool = True
+    detection: str = DETECT_ANY_SIZE
     details: Mapping[str, Any] = field(default_factory=dict)
 
     def describe(self) -> dict[str, Any]:
@@ -254,6 +301,8 @@ class Reservation:
             "own_mib": self.own_mib,
             "unattributed_mib": self.unattributed_mib,
             "snapshots": self.snapshots,
+            "pid_check": self.pid_check,
+            "foreign_process_detection": self.detection,
             **dict(self.details),
         }
 
@@ -262,17 +311,59 @@ def _own_rows(snapshot: AppsSnapshot, own_pids: frozenset[int]) -> list[AppRow]:
     return [row for row in snapshot.rows if row.pid in own_pids or row.origin == ENGINE]
 
 
+def appearance(
+    pid: int,
+    history: Sequence[AppsSnapshot],
+    *,
+    engine_start_at: float,
+    engine_ready_at: float,
+) -> dict[str, Any]:
+    """When ``pid`` was first listed, and whether it appeared while the engine started.
+
+    ``history`` holds the listings from the start of the phase's last G0.8
+    window. The PID appeared while the engine started when its first readable
+    listing is at or after ``engine_start_at`` (the end of that G0.8 window) and
+    no later than ``engine_ready_at``, and an earlier readable listing in the
+    history did not list it.
+    """
+    readable = sorted((s for s in history if s.ok), key=lambda s: s.t)
+    first = next((s.t for s in readable if pid in s.pids), None)
+    absent_before = first is not None and any(s.t < first and pid not in s.pids for s in readable)
+    during_start = (
+        first is not None and absent_before and engine_start_at <= first <= engine_ready_at
+    )
+    return {
+        "pid": pid,
+        "first_listed_after_g08_s": None if first is None else first - engine_start_at,
+        "ready_after_g08_s": engine_ready_at - engine_start_at,
+        "absent_before": absent_before,
+        "appeared_while_engine_started": during_start,
+    }
+
+
 def measure_reservation(
-    gpu_samples: Sequence[GpuSample], snapshots: Sequence[AppsSnapshot]
+    gpu_samples: Sequence[GpuSample],
+    snapshots: Sequence[AppsSnapshot],
+    *,
+    history: Sequence[AppsSnapshot],
+    engine_start_at: float,
+    engine_ready_at: float,
 ) -> tuple[Reservation | None, dict[str, Any]]:
     """G0.9: the reservation and the attribution mode, from the warm-up and the window after it.
 
+    ``snapshots`` are the listings of the reservation window; ``history`` those
+    from the start of the phase's last G0.8 window to the end of the reservation
+    window; ``engine_start_at`` is the end of that G0.8 window and
+    ``engine_ready_at`` the time the engine answered ``/health``.
+
     Fails (``None``) when the device sampler gave nothing, when a process in this
-    container but outside the engine's tree holds the GPU, or when the listed
-    PIDs change inside the window. Falls back to ``device`` mode when no snapshot
-    is readable, when NVML lists no process here, or when a listed process has
-    no memory figure. Otherwise ``pid`` mode, with the listed PIDs as the
-    engine's own.
+    container but outside the engine's tree holds the GPU, when the listed PIDs
+    change inside the window, or when a listed PID outside the engine's tree was
+    not first listed while the engine started (G0.8 to readiness). Falls back to
+    ``device`` mode when no snapshot is readable (no PID set is fixed), when NVML
+    lists no process here (the fixed set is empty), or when a listed process or
+    the device has no memory figure (the listed set is fixed). Otherwise ``pid``
+    mode, with the listed PIDs as the engine's own.
     """
     if not gpu_samples:
         return None, {"pass": False, "reason": "no device sample in the reservation window"}
@@ -286,12 +377,23 @@ def measure_reservation(
         "readable_snapshots": len(readable),
     }
 
-    def device(basis: str) -> tuple[Reservation, dict[str, Any]]:
-        reservation = Reservation(DEVICE_MODE, basis, device_mib, snapshots=len(readable))
-        return reservation, {**verdict, "mode": DEVICE_MODE, "basis": basis}
+    def device(
+        basis: str, *, pid_check: bool, own: frozenset[int] = frozenset(), **details: Any
+    ) -> tuple[Reservation, dict[str, Any]]:
+        reservation = Reservation(
+            DEVICE_MODE,
+            basis,
+            device_mib,
+            own_pids=own,
+            snapshots=len(readable),
+            pid_check=pid_check,
+            detection=DETECT_LISTED_OR_DEVICE if pid_check else DETECT_DEVICE_ONLY,
+            details=details,
+        )
+        return reservation, {**verdict, **reservation.describe()}
 
     if not readable:
-        return device("no readable compute-apps snapshot")
+        return device(BASIS_NO_LISTING, pid_check=False)
     others = sorted({row.pid for s in readable for row in s.rows if row.origin == OTHER})
     if others:
         return None, {
@@ -300,8 +402,6 @@ def measure_reservation(
             "reason": f"processes {others} in this container but outside the engine hold the GPU",
         }
     pid_sets = {s.pids for s in readable}
-    if pid_sets == {frozenset()}:
-        return device("NVML lists no compute process in this container")
     if len(pid_sets) != 1:
         return None, {
             **verdict,
@@ -309,17 +409,42 @@ def measure_reservation(
             "reason": "the GPU's process list changed inside the reservation window",
             "pid_sets": [sorted(pids) for pids in pid_sets],
         }
+    (own_pids,) = pid_sets
+    if not own_pids:
+        return device(BASIS_NOTHING_LISTED, pid_check=True)
+    engine_only = {
+        pid
+        for pid in own_pids
+        if all(row.origin == ENGINE for s in readable for row in s.rows if row.pid == pid)
+    }
+    appearances = [
+        appearance(pid, history, engine_start_at=engine_start_at, engine_ready_at=engine_ready_at)
+        for pid in sorted(own_pids - engine_only)
+    ]
+    late = [entry["pid"] for entry in appearances if not entry["appeared_while_engine_started"]]
+    if late:
+        return None, {
+            **verdict,
+            "pass": False,
+            "reason": f"PIDs {late} outside the engine's tree were not first listed between "
+            "G0.8 and the engine's readiness, so they are not the engine's",
+            "appearances": appearances,
+        }
+    origins = sorted({row.origin for s in readable for row in s.rows})
     if any(row.used_mib is None for s in readable for row in s.rows) or any(
         s.device_mib is None for s in readable
     ):
-        return device("NVML reports no per-process or device memory")
-    (own_pids,) = pid_sets
-    origins = sorted({row.origin for s in readable for row in s.rows})
-    basis = {
-        (ENGINE,): "container-namespace PIDs in the engine's process tree",
-        (UNRESOLVED,): "host-namespace PIDs that appeared on the GPU, empty at G0.8, "
-        "while the engine started",
-    }.get(tuple(origins), "engine-tree and host-namespace PIDs")
+        return device(
+            BASIS_NO_MEMORY,
+            pid_check=True,
+            own=own_pids,
+            origins=origins,
+            appearances=appearances,
+        )
+    basis, detection = {
+        (ENGINE,): (BASIS_CONTAINER, DETECT_LISTED_OR_UNATTRIBUTED),
+        (UNRESOLVED,): (BASIS_HOST, DETECT_ANY_SIZE),
+    }.get(tuple(origins), (BASIS_MIXED, DETECT_ANY_SIZE))
     own_mib = max(sum(float(row.used_mib or 0.0) for row in s.rows) for s in readable)
     unattributed = max(
         float(s.device_mib or 0.0) - sum(float(row.used_mib or 0.0) for row in s.rows)
@@ -333,9 +458,20 @@ def measure_reservation(
         own_mib=own_mib,
         unattributed_mib=unattributed,
         snapshots=len(readable),
-        details={"origins": origins},
+        pid_check=True,
+        detection=detection,
+        details={"origins": origins, "appearances": appearances},
     )
-    return reservation, {**verdict, "mode": PID_MODE, **reservation.describe()}
+    return reservation, {**verdict, **reservation.describe()}
+
+
+def _foreign_pids(snapshots: Sequence[AppsSnapshot], own_pids: frozenset[int]) -> set[int]:
+    return {
+        row.pid
+        for snapshot in snapshots
+        for row in snapshot.rows
+        if row.pid not in own_pids and row.origin != ENGINE
+    }
 
 
 def assess_contamination(
@@ -357,25 +493,33 @@ def assess_contamination(
     above the own-footprint ceiling, or a device peak above the largest-shape
     reservation plus the device margin, is flagged, not invalid. ``device``
     mode: ``no_contamination`` (device peak within the largest-shape
-    reservation plus the device margin).
+    reservation plus the device margin) and, when G0.9 fixed a PID set,
+    ``no_foreign_process`` over the readable listings (a listing that cannot be
+    read leaves only the device rule).
     """
     device_ceiling = reservation.device_mib + device_margin_mib
+    readable = [s for s in snapshots if s.ok]
     details: dict[str, Any] = {
         "mode": reservation.mode,
+        "basis": reservation.basis,
         "device_peak_mib": device_peak_mib,
         "device_ceiling_mib": device_ceiling,
+        "snapshots": len(readable),
     }
     flags: list[str] = []
     if reservation.mode == DEVICE_MODE:
         within = device_peak_mib is not None and device_peak_mib <= device_ceiling
-        return {"no_contamination": within}, flags, details
-    readable = [s for s in snapshots if s.ok]
-    foreign: set[int] = set()
+        checks = {"no_contamination": within}
+        if reservation.pid_check:
+            foreign = _foreign_pids(readable, reservation.own_pids)
+            checks["no_foreign_process"] = not foreign
+            details["foreign_pids"] = sorted(foreign)
+        return checks, flags, details
+    foreign = _foreign_pids(readable, reservation.own_pids)
     own_peak = 0.0
     unattributed_peak: float | None = None
     for snapshot in readable:
         own = _own_rows(snapshot, reservation.own_pids)
-        foreign |= {row.pid for row in snapshot.rows if row not in own}
         own_mib = sum(float(row.used_mib or 0.0) for row in own)
         own_peak = max(own_peak, own_mib)
         if snapshot.device_mib is not None:
@@ -395,7 +539,6 @@ def assess_contamination(
         flags.append("device-above-largest-shape-reservation")
     details.update(
         {
-            "snapshots": len(readable),
             "needed_snapshots": needed_snapshots,
             "foreign_pids": sorted(foreign),
             "own_peak_mib": own_peak if readable else None,

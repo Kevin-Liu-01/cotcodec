@@ -9,6 +9,12 @@ kept: v2 replays build every step from prebuilt history, so a step's prompt is
 the same whatever the engine generated (real or dummy weights).
 
 Timing, token accounting and summaries are v1's (``harness.serving_probe.client``).
+With ``return_token_ids`` vLLM v0.31.0 also puts ``token_ids`` on every
+generated chunk and sends a chunk even when no text is ready (``serving.py``,
+the ``delta_message is None`` branch). v1's points did not set the flag, so a
+token without text sent no chunk and did not time a token. To keep v1's TTFT,
+ITL and TPOT definitions, the v2 client times only chunks that carry text and
+ignores ``token_ids`` for timing.
 """
 
 from __future__ import annotations
@@ -89,14 +95,15 @@ async def stream_chat_identified(
                     usage = chunk["usage"]
                 if prompt_ids is None and chunk.get("prompt_token_ids") is not None:
                     prompt_ids = [int(token) for token in chunk["prompt_token_ids"]]
+                # A chunk times a token only when it carries text (v1's definition for
+                # requests without return_token_ids); token_ids alone do not count.
                 produced = False
                 for choice in chunk.get("choices") or []:
                     delta = choice.get("delta") or {}
                     piece = (delta.get("content") or "") + (
                         delta.get("reasoning_content") or delta.get("reasoning") or ""
                     )
-                    ids = choice.get("token_ids") or delta.get("token_ids") or []
-                    produced = produced or bool(piece) or bool(ids)
+                    produced = produced or bool(piece)
                 if produced:
                     now = clock()
                     if first is None:

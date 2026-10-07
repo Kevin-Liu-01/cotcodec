@@ -33,8 +33,12 @@ by subclassing v1's runner.
 
 - The v1 package and driver are frozen with serving-throughput-probe-v1 and are
   imported, never edited; v2's digest covers them too.
-- A PID in the engine's tree is the engine's; other PIDs count as the engine's
-  only when they appeared on a GPU that was empty at G0.8, before G0.9.
+- A PID in the engine's tree is the engine's; another PID counts as the
+  engine's only when it was first listed between the end of the phase's last
+  G0.8 window (GPU empty) and the engine's readiness. One first listed during
+  the smoke or the warm-up fails G0.9.
+- In device mode a fixed PID set (empty when NVML lists nothing) is still
+  checked; only "no readable listing at G0.9" leaves the device rule alone.
 - A rerun never takes reserved time: it runs after every required first
   attempt of its phase, and only from slack.
 
@@ -48,5 +52,9 @@ by subclassing v1's runner.
 ## Gotchas
 <!-- agent-docs:fill:gotchas -->
 
-- NVML inside a container reports host-namespace PIDs that `/proc` there
-  cannot resolve; the reservation step records which attribution applied.
+- NVML inside a container may report host-namespace PIDs that `/proc` there
+  cannot resolve, translate PIDs into the container, or list nothing; which one
+  holds on fal-h100-01 is unobserved. The reservation records the basis and what
+  it can detect, and `project` reports both next to X1 and Q2.
+- With `return_token_ids` vLLM sends a chunk per token, text or not; the client
+  times only text-carrying chunks (v1's TTFT/ITL definition).

@@ -14,12 +14,21 @@ Thresholds (contract ``dummy_admissibility``):
 * replay: |mean latency of x1-r1 - that of r1| / that of r1 <= ``max_replay_latency_delta``;
 * power: the replay delta's standard error (from both points' per-step standard
   errors) <= ``max_replay_delta_se``, and a1a, a1b, a1c valid with a relative
-  range <= ``max_a1_seed_range``.
+  range <= ``max_a1_seed_range``; and, when the same-engine replicate r1b (r1's
+  requests again on real weights) is valid and sent r1's token sequences, its
+  delta to r1 is within the replay threshold.
+
+The replay threshold (8%) was set after v1's X1 result (v1: threshold 5%, delta
+5.89% on prompts 6.6% apart). The standard error is computed from within-run,
+per-request spread; it stands in for run-to-run noise, so the operating
+characteristics the registration states are model-based. r1b is the one
+measured run-to-run replay check; without it (not run, not valid or not
+comparable) X1 says so and rests on the model.
 
 Outcomes, in this order: ``not-run`` (a1a, r1, x1-a1 or x1-r1 not valid),
 ``not-comparable`` (the prompt token sequences differ), ``fail`` (a delta above
-its threshold), ``underpowered`` (deltas within thresholds but the power
-conditions do not hold), ``pass``.
+its threshold), ``underpowered`` (deltas within thresholds but a power
+condition does not hold), ``pass``.
 """
 
 from __future__ import annotations
@@ -37,6 +46,15 @@ from harness.serving_probe.budget import (
 from harness.serving_probe_v2.client import compare_identity
 
 PAIRS = (("a1a", "x1-a1"), ("r1", "x1-r1"))
+#: The same-engine replay replicate: r1's requests again, later in the real phase.
+REPLICATE = ("r1", "r1b")
+NOTES = (
+    "The replay threshold (8%) was set after v1's X1 result (v1: threshold 5%, r1/x1-r1 "
+    "delta 5.89% on prompts 6.6% apart).",
+    "The replay delta's standard error uses within-run, per-request spread as the "
+    "run-to-run noise; the registered operating characteristics are model-based. The "
+    "same-engine replicate r1b, when valid and comparable, is the measured check.",
+)
 
 
 def replay_mean_se(point: Mapping[str, Any]) -> float | None:
@@ -59,6 +77,36 @@ def replay_delta_se(reference: Mapping[str, Any], control: Mapping[str, Any]) ->
     if first is None or second is None:
         return None
     return math.sqrt(first**2 + second**2) / replay_mean_latency(reference)
+
+
+def same_engine_replicate(
+    points: Mapping[str, Mapping[str, Any]], replay_limit: float
+) -> dict[str, Any]:
+    """r1 against r1b on the real-weight engine: the measured run-to-run replay delta."""
+    reference, replicate = REPLICATE
+    record: dict[str, Any] = {"point": replicate, "reference": reference, "used": False}
+    if not is_valid(points.get(replicate)):
+        status = (points.get(replicate) or {}).get("status", "missing")
+        return {**record, "reason": f"{replicate} is {status}; the noise model is not checked"}
+    if not is_valid(points.get(reference)):
+        return {**record, "reason": f"{reference} is not valid"}
+    identity = compare_identity(
+        points[reference].get("request_identity"), points[replicate].get("request_identity")
+    )
+    record["identity"] = identity
+    if not identity["identical"]:
+        return {**record, "reason": f"{replicate} did not send {reference}'s token sequences"}
+    delta = relative_delta(
+        replay_mean_latency(points[replicate]), replay_mean_latency(points[reference])
+    )
+    return {
+        **record,
+        "used": True,
+        "relative_delta": delta,
+        "delta_se": replay_delta_se(points[reference], points[replicate]),
+        "within_replay_threshold": delta <= replay_limit,
+        "reason": None,
+    }
 
 
 def evaluate_x1(
@@ -87,6 +135,8 @@ def evaluate_x1(
         },
         "a1_seed_range": seed_range,
         "a1_seeds_valid": len(seeds),
+        "same_engine_replicate": same_engine_replicate(points, replay_limit),
+        "notes": list(NOTES),
     }
     missing = [name for pair in PAIRS for name in pair if not is_valid(points.get(name))]
     if missing:
@@ -124,4 +174,12 @@ def evaluate_x1(
         return {**out, "outcome": "underpowered", "reason": "fewer than three valid A1 seeds"}
     if seed_range is None or seed_range > range_limit:
         return {**out, "outcome": "underpowered", "reason": "A1 seed range above its limit"}
+    replicate = base["same_engine_replicate"]
+    if replicate["used"] and not replicate["within_replay_threshold"]:
+        return {
+            **out,
+            "outcome": "underpowered",
+            "reason": "the same-engine replicate r1b differs from r1 by more than the replay "
+            "threshold",
+        }
     return {**out, "outcome": "pass"}
