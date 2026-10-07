@@ -16,6 +16,12 @@ attestation helpers. It starts small after the 2026-10-06 restart.
 
 - `translation_supervised_indexer.py` is Q3's NumPy Phase-0 mechanism: indexer,
   targets, reference sets, statistics and gates as pure functions.
+- Q3 K1 screen: `sparse_indexer_torch.py` (capture path, hs and QSA Eq. 17 mp
+  block targets, block indexer, selection and recall), `sparse_indexer_data.py`
+  (Belebele join, ParaDocs filter reimplementation, filters, dedup, packing,
+  bundle codec), `sparse_indexer_k1_stats.py` (xi, xi_rel, seed-plus-cluster
+  interval, verdict) and `sparse_indexer_k1_runtime.py` (checkpoints, training,
+  evaluation and receipt assembly for the GPU entry point).
 - `publication_attestation.py` verifies administrator signatures over complete
   publication claim waves.
 - The old agent loops, conditions, metrics, routing and memory trials are in

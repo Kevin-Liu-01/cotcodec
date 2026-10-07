@@ -23,6 +23,13 @@ provenance.
   `research_direction_doctor.py` fail closed on contract drift.
 - `run_translation_supervised_indexer_doctor.py` is Q3's CPU doctor;
   `fla_throughput_doctor.py` measures training throughput on the node.
+- Q3 K1: `run_sparse_indexer_phase0a.py` is the GPU entry point (phases smoke,
+  headroom-dev, resume-test, 0a-k1, 0a-k1-extend; PID-1 signal protocol; exit
+  codes 0/2/3/75), `run_sparse_indexer_k1_doctor.py` its CPU doctor on a tiny
+  model (needs the architecture extra), `build_sparse_indexer_k1_bundle.py` the
+  two-stage bundle builder, `compare_sparse_indexer_resume.py` the R0/R2 check
+  and `fill_sparse_indexer_k1_manifests.py` fills `experiments/manifests/` from
+  measured artifacts.
 - `create_source_archive.py`, `verify_compute_provenance.py` and
   `verify_publication_attestation.py` bind source, image and claims.
 

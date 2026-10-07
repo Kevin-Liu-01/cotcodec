@@ -1,0 +1,70 @@
+# Q3 K1 conditional V1 extension: runs only if V1 fails for a target; epochs 2-3 for the frozen-LR indexers, then one re-evaluation.
+# Template: every FILL-* value is written by
+# scripts/fill_sparse_indexer_k1_manifests.py from measured artifacts (image B
+# build receipt, bundle sidecar, frozen preregistration, Slurm job ids). The
+# submitter rejects every FILL-* value, so an unfilled template fails closed.
+# Fields container_profile, seed_binding and memory_gb follow the stage0/lane
+# submitter (container_profile default: 8 GB /tmp, 64 MB /dev/shm; seed_binding
+# binds the --seeds argv to the declared seeds).
+runtime: docker-single-node-discovery-v1
+name: q3-k1-extension
+image_id: FILL-image-b-image-id
+git_sha: FILL-image-b-git-sha
+source_sha256: FILL-image-b-source-tar-sha256
+container_profile: default
+resources:
+  gpu_type: h100
+  gpus: 4
+  cpus: 32
+  memory_gb: 128
+  minutes: 22
+budget:
+  max_gpu_hours: 1.5
+randomness_contract: assignment-seed-matrix
+seeds: [42, 43, 44]
+seed_binding:
+  flag: "--seeds"
+run_root: /home/kevin/cotcodec-runs/translation-supervised-sparse-indexer/k1-screen-v1/extension
+model:
+  model_id: qwen3-0.6b-base
+  revision: da87bfb608c14b7cf20ba1ce41287e8de496c0cd
+  cache_host_path: /home/kevin/cotcodec-runs/hf-cache
+  receipt_sha256: e7f36f05e6c87ec50b3736cf133fda60775abccb38f60fa9d3c134c432cf46df
+  artifact_root_sha256: 7040f418762c61dd00b540e482527e0d8c8a916cce80eee56408bd10a6179ae0
+study_artifact:
+  source_id: q3-k1-bundle-v1
+  revision: FILL-commit-a-git-sha
+  license: LicenseRef-cotcodec-k1-bundle-v1
+  host_path: /home/kevin/cotcodec-runs/translation-supervised-sparse-indexer/inputs/k1-bundle-v1.json
+  sha256: FILL-bundle-sha256
+  size_bytes: FILL-bundle-size-bytes
+resume_from_job_id: FILL-main-job-id
+resume_subpath: phase-0a-k1/checkpoints
+command:
+  - python
+  - scripts/run_sparse_indexer_phase0a.py
+  - experiments/architectures/translation-supervised-sparse-indexer-k1-screen.yaml
+  - "--phase"
+  - 0a-k1-extend
+  - "--output-dir"
+  - /outputs/phase-0a-k1
+  - "--evidence"
+  - /inputs/study-artifact.json
+  - "--expected-evidence-sha256"
+  - "FILL-bundle-sha256"
+  - "--model-dir"
+  - /model-cache/cotcodec-models/qwen3-0.6b-base
+  - "--receipt"
+  - /model-cache/cotcodec-receipts/qwen3-0.6b-base.json
+  - "--expected-receipt-sha256"
+  - e7f36f05e6c87ec50b3736cf133fda60775abccb38f60fa9d3c134c432cf46df
+  - "--preregistration"
+  - program/preregistrations/q3-k1-localization-screen-v1.md
+  - "--expected-preregistration-sha256"
+  - "FILL-preregistration-sha256"
+  - "--seeds"
+  - "42"
+  - "43"
+  - "44"
+  - "--workers"
+  - "4"
