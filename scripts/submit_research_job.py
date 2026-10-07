@@ -8,21 +8,69 @@ import json
 import math
 import re
 import subprocess
-from pathlib import Path
+from fnmatch import fnmatchcase
+from pathlib import Path, PurePosixPath
 from typing import Any
 
 import yaml
 
+# Same rule as scripts/submit_docker_research_job.py; tests keep them in parity.
+ARCHIVED_MEMORY_MESSAGE = (
+    "memory workloads were archived under legacy/ on 2026-10-06; "
+    "restore them from tag legacy-2026-10-06 to submit memory jobs"
+)
+ARCHIVED_MEMORY_SCRIPT_PATTERNS = (
+    "scripts/run_memory_*.py",
+    "scripts/run_memory_trials.py",
+    "scripts/run_letta*",
+    "scripts/*memory_model*",
+)
+ARCHIVED_MEMORY_PACKAGE = ("harness", "memory_trials")
+ARCHIVED_MEMORY_FLAGS = (
+    "--memory-bundle",
+    "--memory-treatment-mode",
+    "--expected-memory-system-id",
+)
+_ARGV_TOKEN_SEPARATORS = re.compile(r"[\s=,;:'\"]+")
+_DOTTED_MODULE_RE = re.compile(r"^[A-Za-z_][A-Za-z0-9_]*(?:\.[A-Za-z_][A-Za-z0-9_]*)+$")
 
-def validate_memory_job_admission(admission, *, command, has_memory_bundle):
-    """Memory workloads were archived to legacy/ on 2026-10-06; fail closed for them."""
-    memory_command = any("memory" in str(part) for part in command)
-    if admission is None and not has_memory_bundle and not memory_command:
-        return None
-    raise ValueError(
-        "memory workloads were archived under legacy/ on 2026-10-06; "
-        "restore them from tag legacy-2026-10-06 to submit memory jobs"
-    )
+
+def archived_memory_reference(argument: str) -> str | None:
+    """Return the archived memory script, package or flag an argv element names."""
+
+    for token in _ARGV_TOKEN_SEPARATORS.split(argument):
+        if token in ARCHIVED_MEMORY_FLAGS:
+            return token
+        candidates = [token]
+        if _DOTTED_MODULE_RE.fullmatch(token):
+            module_path = token.replace(".", "/")
+            candidates += [module_path, f"{module_path}.py"]
+        for candidate in candidates:
+            parts = PurePosixPath(candidate).parts
+            for current, following in zip(parts, parts[1:], strict=False):
+                if current == "scripts" and any(
+                    fnmatchcase(f"scripts/{following}", pattern)
+                    for pattern in ARCHIVED_MEMORY_SCRIPT_PATTERNS
+                ):
+                    return f"scripts/{following}"
+                if (current, following) == ARCHIVED_MEMORY_PACKAGE:
+                    return "harness/memory_trials"
+    return None
+
+
+def validate_memory_job_admission(
+    admission: Any, *, command: list[str], has_memory_bundle: bool
+) -> None:
+    """Reject the archived memory interface, not every argv that mentions memory."""
+
+    if admission is not None:
+        raise ValueError(f"{ARCHIVED_MEMORY_MESSAGE}: memory_source_admission must be absent")
+    if has_memory_bundle:
+        raise ValueError(f"{ARCHIVED_MEMORY_MESSAGE}: memory_bundle must be absent")
+    for index, argument in enumerate(command):
+        reference = archived_memory_reference(str(argument))
+        if reference is not None:
+            raise ValueError(f"{ARCHIVED_MEMORY_MESSAGE}: argv[{index}] names {reference}")
 
 
 OCI_RE = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._:/-]*@sha256:[0-9a-f]{64}$")
@@ -74,6 +122,13 @@ def validate_manifest(raw: dict[str, Any]) -> dict[str, Any]:
         )
     ):
         raise ValueError("command must be an argv list of 1-64 nonempty strings")
+    # Reject the archived memory interface before the bundle checks below can
+    # produce a misleading error.
+    validate_memory_job_admission(
+        raw.get("memory_source_admission"),
+        command=command,
+        has_memory_bundle=memory_bundle is not None,
+    )
     if (
         not isinstance(run_root, str)
         or not RUN_ROOT_RE.fullmatch(run_root)
@@ -177,13 +232,6 @@ def validate_manifest(raw: dict[str, Any]) -> dict[str, Any]:
             "sha256": artifact_sha256,
             "container_path": "/inputs/memory-selection-bundle.json",
         }
-    admission = validate_memory_job_admission(
-        raw.get("memory_source_admission"),
-        command=command,
-        has_memory_bundle=memory_bundle is not None,
-    )
-    if admission is not None:
-        manifest["memory_source_admission"] = admission
     return manifest
 
 
