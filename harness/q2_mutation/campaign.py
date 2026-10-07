@@ -30,6 +30,10 @@ place, and only reads what that place may read:
 ``report`` (anywhere)
     Joins labels, admission, post-save purity and verdicts into one outcome
     per mutant and the exploratory tables of a development run.
+``export`` (anywhere)
+    The releasable evidence of one run: redacted recipes (long document text
+    replaced by its digest), outcomes, verdict rows and summaries. Mutant
+    files never leave the host.
 
 Only the development split runs before the preregistration freeze; any other
 split needs the frozen ledger row of ``q2-evaluator-mutation-v1`` whose
@@ -44,6 +48,7 @@ import hashlib
 import json
 import os
 import posixpath
+import re
 import shutil
 import subprocess
 import sys
@@ -229,7 +234,51 @@ def require_split_allowed(split: str, src: Path) -> dict[str, Any] | None:
         raise CampaignError(f"split {split!r} runs only after {EXPERIMENT_ID} is frozen")
     if os.environ.get("Q2M_PREREG_FROZEN") != EXPERIMENT_ID:
         raise CampaignError(f"set Q2M_PREREG_FROZEN={EXPERIMENT_ID} to run split {split!r}")
+    check_pins(src)
     return row
+
+
+# Digests the preregistration's machine-readable pins block must match. Image
+# IDs in the block are checked by the submit scripts, which know them.
+PINNED_KEYS = (
+    "code_tree_sha256",
+    "operator_catalog_sha256",
+    "operator_catalog_version",
+    "operators",
+    "spec_set_sha256",
+    "specs",
+    "sanitized_manifest_sha256",
+    "splits_sha256",
+    "schema_sha256",
+)
+_JSON_FENCE = re.compile(r"^```json\n(.*?)^```$", re.DOTALL | re.MULTILINE)
+
+
+def prereg_pins(text: str) -> dict[str, Any]:
+    """The one fenced JSON block of the preregistration that carries ``q2m_pins``."""
+    blocks = []
+    for body in _JSON_FENCE.findall(text):
+        try:
+            data = json.loads(body)
+        except json.JSONDecodeError:
+            continue
+        if isinstance(data, dict) and "q2m_pins" in data:
+            blocks.append(data)
+    if len(blocks) != 1:
+        raise CampaignError(
+            f"the preregistration needs exactly one q2m_pins block, found {len(blocks)}"
+        )
+    return blocks[0]
+
+
+def check_pins(src: Path) -> dict[str, Any]:
+    """Refuse a staged tree whose code, catalog, specs or splits differ from the pins."""
+    declared = prereg_pins((src / PREREG_PATH).read_text(encoding="utf-8"))
+    actual = pins(src)
+    wrong = sorted(key for key in PINNED_KEYS if declared.get(key) != actual[key])
+    if wrong:
+        raise CampaignError(f"the staged tree differs from the preregistration pins: {wrong}")
+    return declared
 
 
 def _tree_files(root: Path, entry: str) -> list[Path]:
@@ -1138,6 +1187,255 @@ def cmd_pins(args: argparse.Namespace) -> int:
     return 0
 
 
+# --- stage 8: release view (anywhere) -------------------------------------------
+
+# Recipes and purity details can carry document text (a ``must_equal`` value
+# holds a whole paragraph of the gold). The released view keeps every
+# identifier, locator, digest and short value, and replaces longer free text
+# (anything with whitespace or non-ASCII characters from REDACT_MIN_CHARS on)
+# by its SHA-256 and length. The full recipe stays on the host; its digest is
+# released, and planning is deterministic, so anyone holding the documents can
+# regenerate it and check the digest and the mutant id.
+REDACT_MIN_CHARS = 32
+_PLAIN_TOKEN = re.compile(r"[A-Za-z0-9_./\[\]:!$#@=+*,()<>&%^|~;?'\"-]+")
+_QUOTED = re.compile(r"'([^']*)'|\"([^\"]*)\"")
+OUTCOME_KEYS = frozenset(
+    {
+        "mutant_id",
+        "task_id",
+        "target_id",
+        "operator",
+        "doc_family",
+        "label",
+        "witness_rule",
+        "admitted",
+        "failed_checks",
+        "post_save_admitted",
+        "post_save_failed",
+        "saved_via",
+        "probe_touched",
+        "checker_family",
+    }
+)
+
+
+def needs_redaction(text: str) -> bool:
+    return len(text) >= REDACT_MIN_CHARS and not _PLAIN_TOKEN.fullmatch(text)
+
+
+def _redacted(text: str) -> dict[str, Any]:
+    return {"redacted_sha256": hashlib.sha256(text.encode("utf-8")).hexdigest(), "chars": len(text)}
+
+
+def redact(value: Any) -> Any:
+    """Replace long free-text leaves with their digest; keep structure and short values."""
+    if isinstance(value, Mapping):
+        return {key: redact(item) for key, item in value.items()}
+    if isinstance(value, list | tuple):
+        return [redact(item) for item in value]
+    if isinstance(value, str) and needs_redaction(value):
+        return _redacted(value)
+    return value
+
+
+def redact_quotes(text: str) -> str:
+    """Witness arguments are templates; only long quoted spans can be document text."""
+
+    def swap(match: re.Match[str]) -> str:
+        inner = match.group(1) if match.group(1) is not None else match.group(2)
+        if len(inner) < REDACT_MIN_CHARS:
+            return match.group(0)
+        digest = hashlib.sha256(inner.encode("utf-8")).hexdigest()
+        return f"'<redacted sha256 {digest[:16]}, {len(inner)} chars>'"
+
+    return _QUOTED.sub(swap, text)
+
+
+def release_record(record: Mapping[str, Any]) -> dict[str, Any]:
+    """The releasable view of one ``MutationResult``: ids, label, witness, digests."""
+    from harness.q2_mutation.schema import MutationResult, recipe_sha256
+
+    result = MutationResult.from_dict(record)
+    digest = recipe_sha256(result.recipe)
+    if not result.mutant_id.endswith(digest[:12]):
+        raise CampaignError(f"{result.mutant_id}: recipe digest does not match the id")
+    return {
+        "mutant_id": result.mutant_id,
+        "task_id": result.task_id,
+        "operator": result.operator,
+        "family": result.family,
+        "label": result.label,
+        "stratum": result.stratum,
+        "target_path_in_vm": result.target_path_in_vm,
+        "output_sha256": result.output_sha256,
+        "witness": {
+            "req_ids": list(result.witness.req_ids),
+            "argument": redact_quotes(result.witness.argument),
+        },
+        "purity_checks": [
+            {"name": check.name, "passed": check.passed} for check in result.purity_checks
+        ],
+        "recipe_sha256": digest,
+        "recipe_release": redact(dict(result.recipe)),
+    }
+
+
+def release_verdict(row: Mapping[str, Any]) -> dict[str, Any]:
+    """A verdict row with any checker exception message cut to its type and a short head."""
+    from harness.q2_mutation.schema import VerdictRow
+
+    out = VerdictRow.from_dict(row).to_dict()
+    if out.get("error"):
+        head = str(out["error"])
+        out["error"] = head if len(head) <= 80 else head[:80] + "..."
+    return out
+
+
+def _receipts(root: Path) -> list[dict[str, Any]]:
+    receipts = []
+    for path in sorted(root.glob("*/receipt-*.json")):
+        data = json.loads(path.read_text(encoding="utf-8"))
+        argv = json.loads(bytes.fromhex(data.pop("argv_json_hex", "")) or b"[]")
+        receipts.append({**data, "stage": path.parent.name, "argv": argv})
+    return receipts
+
+
+def notes_summary(notes: Sequence[Mapping[str, Any]]) -> dict[str, Any]:
+    return {
+        "jobs": len(notes),
+        "nondeterministic": sorted(n["mutant_id"] for n in notes if n.get("nondeterministic")),
+        "infra_timeouts": sum(int(n.get("infra_timeouts", 0)) for n in notes),
+        "setup_unemulated_jobs": sum(1 for n in notes if n.get("setup_unemulated")),
+        "postconfig_unemulated_jobs": sum(1 for n in notes if n.get("postconfig_unemulated")),
+    }
+
+
+def reachability_summary(rows: Sequence[Mapping[str, Any]]) -> dict[str, Any]:
+    saves = [save for row in rows for save in row.get("saves", [])]
+    timings = sorted(s["seconds_to_write"] for s in saves if s.get("seconds_to_write") is not None)
+    return {
+        "jobs": len(rows),
+        "infra_errors": sorted(row["job_id"] for row in rows if row.get("infra_error")),
+        "skipped": sum(1 for row in rows if (row.get("plan") or {}).get("skipped")),
+        "jobs_with_failures": sorted(row["job_id"] for row in rows if row.get("failures")),
+        "saves": len(saves),
+        "saves_written": sum(1 for s in saves if s.get("written")),
+        "saves_with_dialogs": sum(1 for s in saves if s.get("dialogs")),
+        "saves_slower_than_0_5s": sum(1 for t in timings if t > 0.5),
+        "max_seconds_to_write": timings[-1] if timings else None,
+        "lo_builds": sorted({str(row.get("lo_build")) for row in rows}),
+    }
+
+
+def recheck_summary(rows: Sequence[Mapping[str, Any]]) -> dict[str, Any]:
+    by_status = Counter(row["status"] for row in rows)
+    failed: dict[str, Counter[str]] = defaultdict(Counter)
+    for row in rows:
+        for name in row.get("post_save_failed") or []:
+            failed[row["mutant_id"].split("__")[1]][name] += 1
+    return {
+        "rows": len(rows),
+        "status": dict(by_status),
+        "post_save_admitted": sum(1 for row in rows if row.get("post_save_admitted")),
+        "post_save_failed_by_operator": {op: dict(c) for op, c in sorted(failed.items())},
+    }
+
+
+def cmd_export(args: argparse.Namespace) -> int:
+    """Write the releasable evidence of one run (no document content, no mutant files)."""
+    run = Path(args.run)
+    out = Path(args.out)
+    if out.exists() and any(out.iterdir()):
+        raise CampaignError(f"{out} is not empty; version the export directory")
+    submitted = json.loads((run / "submitted.json").read_text(encoding="utf-8"))
+    if submitted["split"] != DEV_SPLIT:
+        require_split_allowed(submitted["split"], Path(args.src))
+    sources = {}
+    for rel in (
+        "submitted.json",
+        "prep/targets.report.json",
+        "build/build-summary.json",
+        "build/mutations.jsonl",
+        "build/admission.jsonl",
+        "build/targets-built.jsonl",
+        "build/scoring-jobs.jsonl",
+        "score/jobs-saved.jsonl",
+        "score/recheck.jsonl",
+        "score/outcomes.jsonl",
+        "score/report.json",
+    ):
+        sources[rel] = sha256_file(run / rel)
+    for arm in ("lock", "scout"):
+        for kind in ("verdicts", "notes"):
+            rel = f"score/mut-{kind}-{arm}.jsonl"
+            if (run / rel).is_file():
+                sources[rel] = sha256_file(run / rel)
+    mutations = read_jsonl(run / "build/mutations.jsonl")
+    outcomes = read_jsonl(run / "score/outcomes.jsonl")
+    for row in outcomes:
+        extra = {
+            key
+            for key in row
+            if key not in OUTCOME_KEYS
+            and not any(key.startswith(f"{arm}_") for arm in ("lock", "scout"))
+        }
+        if extra:
+            raise CampaignError(f"outcome row carries unexpected keys {sorted(extra)}")
+    lo_rows = [
+        row
+        for path in sorted((run / "build/lo").glob("reachability-*.jsonl"))
+        for row in read_jsonl(path)
+    ]
+    write_jsonl(out / "mutations.release.jsonl", (release_record(r) for r in mutations))
+    write_jsonl(out / "outcomes.jsonl", outcomes)
+    notes_out: dict[str, Any] = {}
+    for arm in ("lock", "scout"):
+        path = run / f"score/mut-verdicts-{arm}.jsonl"
+        if path.is_file():
+            write_jsonl(
+                out / f"verdicts-{arm}.jsonl", (release_verdict(r) for r in read_jsonl(path))
+            )
+            notes_out[arm] = notes_summary(read_jsonl(run / f"score/mut-notes-{arm}.jsonl"))
+    write_json(out / "notes-summary.json", notes_out)
+    write_json(out / "reachability-summary.json", reachability_summary(lo_rows))
+    write_json(
+        out / "recheck-summary.json", recheck_summary(read_jsonl(run / "score/recheck.jsonl"))
+    )
+    write_json(out / "report.json", json.loads((run / "score/report.json").read_text()))
+    write_json(
+        out / "build-summary.json", json.loads((run / "build/build-summary.json").read_text())
+    )
+    write_json(out / "targets.json", json.loads((run / "prep/targets.report.json").read_text()))
+    write_jsonl(out / "targets-built.jsonl", read_jsonl(run / "build/targets-built.jsonl"))
+    write_json(out / "receipts.json", _receipts(run))
+    exported = {
+        path.name: sha256_file(path)
+        for path in sorted(out.iterdir())
+        if path.name != "manifest.json"
+    }
+    write_json(
+        out / "manifest.json",
+        {
+            "experiment_id": EXPERIMENT_ID,
+            "run": submitted["run"],
+            "split": submitted["split"],
+            "git_sha": submitted["git_sha"],
+            "slurm_jobs": submitted["jobs"],
+            "confirmatory": False,
+            "source_sha256": sources,
+            "exported_sha256": exported,
+            "redaction": {
+                "min_chars": REDACT_MIN_CHARS,
+                "rule": "free-text leaves (whitespace or non-ASCII) of at least min_chars in a "
+                "recipe become {redacted_sha256, chars}; long quoted spans in witness arguments "
+                "likewise; purity-check details and reachability events are dropped",
+            },
+        },
+    )
+    print(json.dumps({"exported": sorted(exported), "mutations": len(mutations)}))
+    return 0
+
+
 # --- CLI ------------------------------------------------------------------------
 
 
@@ -1188,6 +1486,12 @@ def main(argv: list[str] | None = None) -> int:
     pn = sub.add_parser("pins", help="digests the preregistration names")
     pn.add_argument("--root", default=".")
     pn.set_defaults(func=cmd_pins)
+
+    ex = sub.add_parser("export", help="releasable evidence of one run (no document content)")
+    ex.add_argument("--run", required=True, help="run root with prep/, build/, score/")
+    ex.add_argument("--out", required=True)
+    ex.add_argument("--src", default=".", help="repository root (ledger check for non-dev runs)")
+    ex.set_defaults(func=cmd_export)
 
     args = parser.parse_args(argv)
     try:
