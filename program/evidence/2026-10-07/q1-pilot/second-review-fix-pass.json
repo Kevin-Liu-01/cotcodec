@@ -185,5 +185,12 @@
   "command": "python scripts/q1_pilot_cost_card.py --smoke-job /runs/474 --pilot-job /runs/518 --pair-job /runs/548 --corpus /runs/518/q1/inputs/corpus --counts /out/stage0-counts-v2.json --out /out/fix2/card --spent-gpu-hours 0.899 --resamples 1000 --records /out/fix2/run-records.json",
   "note": "harness/q1/cost_card.py, scripts/q1_pilot_cost_card.py and analysis.c_over_b_statistic are unchanged after ee1a505; later commits changed comments, the plan hash and the driver only",
   "run_records": "scripts/q1_pilot_records.py --job /runs/474 --job /runs/518 --job /runs/548 --corpus /runs/518/q1/inputs/corpus (same container); run-records.json sha256 2b4c20c10a9b3329620644b6d1fc58982ea8340fa9238db33c5c4e1c2e020f63; pilot_exposed.json identical to the committed file (cb4a0c36...)"
+ },
+ "checks": {
+  "ruff": "uv run ruff check . passes",
+  "whole_suite_host": "stage0/q1-gates@9f6879b in a GPU-less, network-less container of cotcodec-q1-gates:5af03757 (fresh clone mounted read-only): 1526 passed, 3 skipped (also at fd2b164; at ee1a505 one new test's fixture failed and was fixed)",
+  "cpu_gate_doctor_host": "scripts/run_q1_gate_doctor.py --slots 12 at 9f6879b, same container kind: PASS, 195 items (196 runs: the hanging fixture retried alone), 97 of 97 expectations, KernelBench and KernelGYM differentials",
+  "validators": "validate_architecture_experiments, validate_provider_models pass; agent-docs doctor 4 pass, 3 existing legacy warnings",
+  "gpu_hours_used": 0.0
  }
 }
