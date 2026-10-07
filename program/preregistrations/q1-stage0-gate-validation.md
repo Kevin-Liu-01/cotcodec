@@ -339,10 +339,11 @@ of the frozen revision.
 
 ## 9. Execution, budget and exclusions
 
-- GPU work runs only as Slurm jobs through the Docker lane with
-  `model: {kind: none}`, from a clean host clone, after the lane submitter
-  with `container_profile`, `memory_gb`, `seed_binding` and the GPU prolog is
-  merged. Templates: `experiments/manifests/q1-core/`.
+- GPU work runs only as Slurm jobs through the Docker lane (merged into main
+  at 1f18cae) with `model: {kind: none}`, `container_profile: large-cpu-mem`,
+  an explicit `memory_gb` and `seed_binding`, from a clean host clone and a
+  source-overlay image of the frozen revision. Templates:
+  `experiments/manifests/q1-core/`.
 - Budget: pilot at most 1 GPU-h; Stage 0 total at most 8 GPU-h. If the pilot
   projects more than 8, the research gauntlet runs before the full run, or the
   configuration shrinks (c-lite) by a new addendum.
@@ -424,8 +425,11 @@ plan left open, with reasons:
 7. The KernelGYM spec-first split was done by one agent writing the spec and
    then implementing from it, not by two agents; the b1/b2 differential
    against the unmodified clone is the check that matters.
-8. GPU smoke on reference problems is deferred: the lane submitter it needs
-   is on `stage0/lane`, not yet merged.
+8. No GPU smoke ran before this draft. The lane submitter it needs was merged
+   into main (1f18cae) only after this branch was cut, and the lane runs the
+   code embedded in a source-overlay image; the smoke
+   (`scripts/run_q1_gpu_smoke.py`, reference problems as their own kernels) is
+   the first GPU job after review and is infrastructure validation, not data.
 
 ## 13. References (accessed 2026-10-06 and 2026-10-07)
 

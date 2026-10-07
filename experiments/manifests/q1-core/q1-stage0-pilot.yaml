@@ -5,7 +5,8 @@
 # Stage 0 total against the 8 GPU-h cap. Pilot budget: at most 1 GPU-h.
 #
 # NOT SUBMITTED. Preconditions: the preregistration is frozen by the program
-# owner; the stage0/lane submitter is merged; the substrate and mutant corpus
+# owner; this branch includes main's lane merge (1f18cae) and runs from a
+# source-overlay image of the frozen revision; the substrate and mutant corpus
 # (stage0/q1-substrates, stage0/q1-mutate) is integrated and staged read-only
 # under the run root; audit v1 is frozen after S1-cal calibration. FILL-* values
 # come from measured artifacts at submission; the submitter rejects them unfilled.
