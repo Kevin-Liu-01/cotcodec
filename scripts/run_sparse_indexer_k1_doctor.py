@@ -5,7 +5,9 @@ Exercises every K1 object before any GPU job: the capture path against eager
 attention (including a KV-cache continuation), the hs and mp targets against a
 NumPy reference, block selection and the union reference against brute force,
 the indexer gradient against finite differences, the verdict rules on
-hand-made tables, the data objects (ParaDocs filter, filters, dedup, packing,
+hand-made tables (with the final verdict of program decision D16: HOLD is
+terminal, a called-for extension that was not run or ended void is
+INCONCLUSIVE), the data objects (ParaDocs filter, filters, dedup, packing,
 contexts, codec, fail-closed reads), and the GPU entry point end to end on CPU:
 a digest mismatch exits 2; smoke, headroom-dev, the three resume legs (with a
 real SIGUSR1 to the PID-1 parent and a stale marker), a SIGUSR1 while workers
@@ -558,6 +560,20 @@ def case_verdict_tables() -> dict[str, Any]:
     outcomes["v1_still_failing_after_extension"] = {
         "verdict": k1s.k1_verdict([hs_fail], good, after_extension=True).verdict,
         "expected": "INCONCLUSIVE"}
+    # Program decision D16: HOLD is terminal; a called-for extension is mandatory,
+    # and one that was not run or ended void makes the final verdict INCONCLUSIVE.
+    held_reads = [_read("hs", table, ml=(95.0, 92.0)), hs_fail]
+    outcomes["hold_is_terminal"] = {
+        "verdict": k1s.final_verdict(k1s.k1_verdict(held_reads, good), held_reads,
+                                     None).verdict,
+        "expected": "HOLD"}
+    outcomes["extension_not_run_is_inconclusive"] = {
+        "verdict": k1s.final_verdict(waiting, [hs_fail, neg_mp], None).verdict,
+        "expected": "INCONCLUSIVE"}
+    outcomes["extension_void_is_inconclusive"] = {
+        "verdict": k1s.final_verdict(waiting, [hs_fail, neg_mp],
+                                     k1s.Verdict("VOID", ("V3 integrity failed",))).verdict,
+        "expected": "INCONCLUSIVE"}
     gates = {name: row["verdict"] == row["expected"] for name, row in outcomes.items()}
     gates["extension_targets"] = (
         outcomes["v1_fail_with_go_needs_no_extension"]["extension_targets"] == []
@@ -653,6 +669,8 @@ def case_end_to_end(tmp: Path) -> dict[str, Any]:
     smoke = run.run("smoke", tmp / "smoke", workers=1)
     gates["smoke_passes"] = smoke.returncode == 0 and receipt_of(tmp / "smoke")["status"] in (
         "SMOKE_PASS", "SMOKE_PASS_OVER_BUDGET")
+    gates["smoke_projects_the_extension"] = smoke.returncode == 0 and "wall_minutes" in (
+        receipt_of(tmp / "smoke")["projection"].get("extension", {}))
     details["smoke_stderr_tail"] = smoke.stderr[-800:] if smoke.returncode else ""
     headroom = run.run("headroom-dev", tmp / "headroom")
     gates["headroom_dev_completes"] = headroom.returncode == 0 and "decision" in receipt_of(
@@ -713,7 +731,8 @@ def case_end_to_end(tmp: Path) -> dict[str, Any]:
         "GO", "NEGATIVE", "INCONCLUSIVE", "UNINTERPRETABLE", "HOLD", "V1_EXTENSION_REQUIRED"}
     names = ("lr_freeze_hashed_before_audit", "main_read_persisted",
              "main_continues_after_freeze", "corrupt_final_generation_fails_closed",
-             "extension_refused_without_v1_failure", "extension_rereads_only_failing_target")
+             "extension_refused_without_v1_failure", "extension_rereads_only_failing_target",
+             "extension_reports_its_final_verdict")
     if main_run.returncode != 0:
         details["main_stderr_tail"] = main_run.stderr[-1500:]
         gates.update({name: False for name in names})
@@ -781,10 +800,15 @@ def case_end_to_end(tmp: Path) -> dict[str, Any]:
             and ext_receipt["kept_main_read_targets"] == ["mp"]
             and set(ext_receipt["targets"]) == {"hs"}
             and bool(changed) and all(f"|hs|{hs_lr}|" in name for name in changed))
+        gates["extension_reports_its_final_verdict"] = ext_receipt["final_verdict"][
+            "verdict"] == ("INCONCLUSIVE" if ext_receipt["verdict"]["verdict"] == "VOID"
+                           else ext_receipt["verdict"]["verdict"])
         details["extension"] = {"verdict": ext_receipt["verdict"]["verdict"],
+                                "final_verdict": ext_receipt["final_verdict"]["verdict"],
                                 "changed_parameters": len(changed)}
     else:
         gates["extension_rereads_only_failing_target"] = False
+        gates["extension_reports_its_final_verdict"] = False
         details["extension_stderr_tail"] = extension.stderr[-1500:]
     return {"gates": gates, "details": details}
 

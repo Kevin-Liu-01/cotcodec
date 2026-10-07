@@ -20,8 +20,8 @@ attestation helpers. It starts small after the 2026-10-06 restart.
   block targets, block indexer, selection and recall), `sparse_indexer_data.py`
   (Belebele join, ParaDocs filter reimplementation, filters, dedup, packing,
   bundle codec), `sparse_indexer_k1_stats.py` (xi, xi_rel, the seed-plus-cluster
-  interval with a Welch-Satterthwaite t quantile, the verdict and the V1
-  extension rule) and `sparse_indexer_k1_runtime.py` (checkpoints with
+  interval with a Welch-Satterthwaite t quantile, the verdict, the V1
+  extension rule and the final verdict of program decision D16) and `sparse_indexer_k1_runtime.py` (checkpoints with
   completion records, training, evaluation and receipt assembly for the GPU
   entry point; evaluation loads exactly the completed final generation).
 - `publication_attestation.py` verifies administrator signatures over complete

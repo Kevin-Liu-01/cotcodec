@@ -16,8 +16,15 @@
 # raw directory and the model snapshot read-only, and writes the bundle and its
 # sidecar. Slurm opens the --output file before this script runs and does not
 # create directories, so the log goes to the existing shared builds directory.
+# A rebuild that must reproduce a registered bundle sets
+# COTCODEC_EXPECTED_RAW_MANIFEST_SHA256 (fetching is then refused: the raw
+# directory must already hold that raw-manifest.json, because a fresh fetch
+# records new streaming timings and changes the bundle) and, optionally,
+# COTCODEC_EXPECTED_BUNDLE_SHA256 (a different built bundle exits 1).
 # Usage:
 #   COTCODEC_IMAGE_ID=sha256:<image A> COTCODEC_BUNDLE_COMMIT=<commit A> \
+#     [COTCODEC_EXPECTED_RAW_MANIFEST_SHA256=<sha256>] \
+#     [COTCODEC_EXPECTED_BUNDLE_SHA256=<sha256>] \
 #     sbatch infra/slurm/host-single-node/build-k1-bundle.sbatch
 set -Eeuo pipefail
 umask 022
@@ -33,6 +40,14 @@ if [[ ! "${COTCODEC_BUNDLE_COMMIT}" =~ ^[0-9a-f]{40}$ ]]; then
   echo "COTCODEC_BUNDLE_COMMIT must be a 40-hex commit" >&2
   exit 2
 fi
+expected_raw="${COTCODEC_EXPECTED_RAW_MANIFEST_SHA256:-}"
+expected_bundle="${COTCODEC_EXPECTED_BUNDLE_SHA256:-}"
+for digest in "${expected_raw}" "${expected_bundle}"; do
+  if [[ -n "${digest}" && ! "${digest}" =~ ^[0-9a-f]{64}$ ]]; then
+    echo "expected digests must be 64 lowercase hex" >&2
+    exit 2
+  fi
+done
 label="$(docker image inspect --format '{{ index .Config.Labels "org.opencontainers.image.revision" }}' "${COTCODEC_IMAGE_ID}")"
 if [[ "${label}" != "${COTCODEC_BUNDLE_COMMIT}" ]]; then
   echo "image revision label ${label} differs from COTCODEC_BUNDLE_COMMIT" >&2
@@ -58,7 +73,18 @@ common=(--rm --read-only --tmpfs /tmp:rw,nosuid,nodev,size=8g --cap-drop ALL
   --env HF_HOME=/tmp/huggingface --env HF_HUB_DISABLE_TELEMETRY=1
   --env PYTHONUNBUFFERED=1 --volume "${model}:/model:ro")
 
-if [[ ! -f "${raw}/raw-manifest.json" ]]; then
+if [[ -n "${expected_raw}" ]]; then
+  if [[ ! -f "${raw}/raw-manifest.json" ]]; then
+    echo "refusing to fetch: ${raw}/raw-manifest.json is missing and a registered raw" \
+      "manifest digest was given" >&2
+    exit 2
+  fi
+  actual_raw="$(sha256sum "${raw}/raw-manifest.json" | cut -d' ' -f1)"
+  if [[ "${actual_raw}" != "${expected_raw}" ]]; then
+    echo "raw-manifest.json is ${actual_raw}, not the registered ${expected_raw}" >&2
+    exit 2
+  fi
+elif [[ ! -f "${raw}/raw-manifest.json" ]]; then
   docker run "${common[@]}" --network host --volume "${raw}:/raw" "${COTCODEC_IMAGE_ID}" \
     python scripts/build_sparse_indexer_k1_bundle.py fetch-raw \
       --raw-dir /raw --tokenizer /model/tokenizer.json
@@ -72,3 +98,12 @@ docker run "${common[@]}" --network none --volume "${raw}:/raw:ro" --volume "${o
 
 sha256sum "${out}/k1-bundle-v1.json" "${raw}/raw-manifest.json"
 cat "${out}/k1-bundle-v1.json.manifest.json"
+if [[ -n "${expected_bundle}" ]]; then
+  actual_bundle="$(sha256sum "${out}/k1-bundle-v1.json" | cut -d' ' -f1)"
+  if [[ "${actual_bundle}" != "${expected_bundle}" ]]; then
+    echo "the rebuilt bundle is ${actual_bundle}, not the registered ${expected_bundle}:" \
+      "a determinism defect to investigate before any freeze" >&2
+    exit 1
+  fi
+  echo "bundle reproduced: ${actual_bundle}"
+fi

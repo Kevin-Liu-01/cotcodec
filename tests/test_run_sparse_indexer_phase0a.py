@@ -50,6 +50,36 @@ def test_contract_and_entry_point_agree() -> None:
     assert contract["preregistration"]["path"].endswith(f"{entry.EXPERIMENT_ID}.md")
 
 
+def test_registered_limits_match_the_manifests_and_the_filler() -> None:
+    from scripts import fill_sparse_indexer_k1_manifests as filler
+    from scripts import run_sparse_indexer_phase0a as entry
+
+    manifests = PROJECT_ROOT / "experiments" / "manifests"
+    main = yaml.safe_load((manifests / "q3-k1-main.yaml").read_text())
+    extension = yaml.safe_load((manifests / "q3-k1-extension.yaml").read_text())
+    assert main["resources"]["minutes"] == entry.MAIN_MAX_MINUTES == filler.MAIN_LIMIT_MINUTES
+    assert extension["resources"]["minutes"] == entry.EXTENSION_LIMIT_MINUTES
+    # The filler re-checks the smoke gate with the entry point's own constants.
+    assert filler.PROJECTION_MARGIN == entry.PROJECTION_MARGIN
+    assert filler.SIGNAL_LEAD_MINUTES == entry.SIGNAL_LEAD_MINUTES
+
+
+def test_smoke_projects_the_extension_without_gating_on_it(tiny, tmp_path) -> None:
+    # Pre-freeze audit: the extension's 22 minutes were never projected.
+    run = tiny.run("smoke", tmp_path / "smoke", workers=1)
+    assert run.returncode == 0, run.stderr[-3000:]
+    receipt = receipt_of(tmp_path / "smoke")
+    projection = receipt["projection"]
+    extension = projection["extension"]
+    assert extension["limit_minutes"] == 22.0
+    assert extension["required_limit_minutes"] == pytest.approx(
+        1.2 * extension["wall_minutes"] + 3.0)
+    assert extension["fits_limit"] == (extension["required_limit_minutes"] <= 22.0)
+    assert len(extension["train_wall_s_per_worker"]) == len(
+        projection["train_wall_s_per_worker"])
+    assert receipt["status"] in {"SMOKE_PASS", "SMOKE_PASS_OVER_BUDGET"}  # not gated on it
+
+
 def test_startup_fails_closed_with_exit_two(tiny, tmp_path) -> None:
     assert tiny.run("smoke", tmp_path / "a", bundle_sha="0" * 64).returncode == 2
     seeds = tiny.argv("smoke", tmp_path / "b")
@@ -166,6 +196,10 @@ def test_extension_retrains_and_rereads_only_the_v1_failing_target(tiny, main_ru
     receipt = receipt_of(ext, "receipt-extension.json")
     assert receipt["reread_targets"] == ["hs"] and receipt["kept_main_read_targets"] == ["mp"]
     assert set(receipt["targets"]) == {"hs"}
+    # Program decision D16: the extension's combined verdict is final unless it is VOID.
+    expected_final = ("INCONCLUSIVE" if receipt["verdict"]["verdict"] == "VOID"
+                      else receipt["verdict"]["verdict"])
+    assert receipt["final_verdict"]["verdict"] == expected_final
     assert receipt["verdict"]["per_target"]["mp"]["xi"] == json.loads(
         json.dumps(synthetic["reads"][1]["xi"]))
     main = receipt_of(main_run)
@@ -197,6 +231,7 @@ def test_main_phase_writes_a_verdict_and_refuses_a_rerun(tiny, main_run) -> None
     assert receipt["verdict"]["verdict"] in {"GO", "NEGATIVE", "INCONCLUSIVE", "UNINTERPRETABLE",
                                              "HOLD", "V1_EXTENSION_REQUIRED"}
     assert set(receipt["targets"]) == {"hs", "mp"}
+    assert receipt["verdict_is_final"] == (not receipt["extension_targets"])
     assert receipt["seed_noise"]["degrees_of_freedom"] == 4
     assert receipt["hashes"]["lr_freeze_sha256"]
     assert len(receipt["stream_dev_kl"]) == 4 * 18

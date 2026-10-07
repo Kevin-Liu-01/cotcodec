@@ -1,4 +1,5 @@
-# Q3 K1 conditional V1 extension: runs only after a main read whose verdict is V1_EXTENSION_REQUIRED, or INCONCLUSIVE with a target failing V1; epochs 2-3 for the frozen-LR indexers of the V1-failing targets only, then one re-read of those targets (a target that passed V1 keeps its main read).
+# Q3 K1 V1 extension: runs only after a main read whose verdict is V1_EXTENSION_REQUIRED, or INCONCLUSIVE with a target failing V1, and is then mandatory (D16); epochs 2-3 for the frozen-LR indexers of the V1-failing targets only, then one re-read of those targets (a target that passed V1 keeps its main read).
+# It has no continuation and runs at most once: if it is not run or ends void the final verdict is INCONCLUSIVE.
 # It shares the main job's run root: the lane's resume copy looks for <run_root>/<predecessor job id>.
 # Template: every FILL-* value is written by
 # scripts/fill_sparse_indexer_k1_manifests.py from measured artifacts (image B

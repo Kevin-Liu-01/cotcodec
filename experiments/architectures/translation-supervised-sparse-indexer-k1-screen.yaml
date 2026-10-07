@@ -27,7 +27,11 @@ inherits_definitions_from: experiments/architectures/translation-supervised-spar
 preregistration:
   experiment_id: q3-k1-localization-screen-v1
   path: program/preregistrations/q3-k1-localization-screen-v1.md
-  status: draft until frozen with scripts/preregister.py by the program owner
+  status: >-
+    binding once frozen with scripts/preregister.py; the entry point refuses to
+    run unless program/preregistrations/ledger.jsonl holds a row whose SHA-256
+    equals the file, and the ledger row records the freeze time and
+    git_head_at_freeze
 
 k1_model:
   model_id: qwen3-0.6b-base
@@ -219,7 +223,8 @@ falsifiers:
   - K1-screen NEGATIVE when, for both targets, xi_T is at most 5 with the combined 99 percent upper bound below 10 and half-width at most 5, and xi_rel_T is at most 0.1 with its upper bound below 0.2, with V1-V3, H1 at least 20, H2a and H2b passing
   - GO (localization holds) when some target has xi_T at least 10 with the combined 99 percent lower bounds of xi_T and xi_rel_T above 0, with V1-V3, H1 at least 10, H2a and H2b passing
   - UNINTERPRETABLE when H1 is below 10 or H2a or H2b fails on audit; HOLD on a V2 bug tell; VOID on a V3 integrity failure; INCONCLUSIVE otherwise
-  - V1 extension only after a main read that is V1_EXTENSION_REQUIRED, or INCONCLUSIVE with a V1-failing target; it retrains and re-reads only the V1-failing targets, a target that passed V1 keeps its main read, the dense headroom gates are not re-read, and a target still failing V1 afterwards is INCONCLUSIVE
+  - HOLD is terminal for the experiment id (program decision D16); no GO or NEGATIVE is reported, the investigation is reported, a defect it finds makes the run VOID with any re-run under a new id and preregistration, and otherwise the verdict stays HOLD
+  - V1 extension only after a main read that is V1_EXTENSION_REQUIRED, or INCONCLUSIVE with a V1-failing target, and then mandatory (program decision D16); it retrains and re-reads only the V1-failing targets, a target that passed V1 keeps its main read, the dense headroom gates are not re-read, a target still failing V1 afterwards is INCONCLUSIVE, and an extension that is not run or ends void makes the final verdict INCONCLUSIVE with no second extension
 
 required_artifacts:
   - frozen preregistration q3-k1-localization-screen-v1 and its ledger row, verified in-image at startup
@@ -238,7 +243,6 @@ execution:
   fresh_job_resume_test: true
   checkpoint_interval_minutes: 10
   blocked_by:
-    - the preregistration q3-k1-localization-screen-v1 is a draft; the program owner freezes it after the bundle is built so its SHA-256 can be stated
-    - no image contains this code yet; image A (from this commit) builds the bundle, image B (A plus the frozen preregistration and ledger) runs every GPU job
-    - the K1 bundle was built on the host CPU on 2026-10-07 (k1-bundle-v1.json SHA-256 919d016b87ad862f8f156e9537c9a39e2864dab0e6c605307d100d25a199dd2d, 278,818,734 bytes, built twice bit-identically; raw manifest 808e6c2477cafbe672273f004f0dafad4b1cb83780bb83114f971f6a34819189; sources in program/evidence/2026-10-07/q3-k1-bundle-sources.json) and must be rebuilt bit-identically in image A before the freeze; ParaDocs streaming consumed 6.34 GB (en-th), 7.49 GB (en-hi) and all 4.10 GB of en-km, which fell 11.5 percent short of its 1.2x quota at the fetch stage; after the build's filters en-km is 206,442 tokens (11.7 percent) and en-th 1,000 tokens short, and the 207,442-token shortfall was refilled from the same-script pairs
-    - no orx node, accepted dry-run, smoke run or resume test exists for this code path
+    - the contract names no container image because every GPU job runs on image B, built after the freeze from commit A plus the frozen preregistration and its ledger row; jobs run only through the manifests experiments/manifests/q3-k1-*.yaml filled by scripts/fill_sparse_indexer_k1_manifests.py
+    - the main job, its continuation and the extension are filled only after a SMOKE_PASS smoke receipt, a PROCEED_TO_K1 development headroom receipt and an equivalent fresh-job resume test, each run under image B, the registered bundle, the frozen preregistration and the tabled code (program decision D16)
+    - the K1 bundle is k1-bundle-v1.json SHA-256 919d016b87ad862f8f156e9537c9a39e2864dab0e6c605307d100d25a199dd2d (278,818,734 bytes; raw manifest 808e6c2477cafbe672273f004f0dafad4b1cb83780bb83114f971f6a34819189; sources in program/evidence/2026-10-07/q3-k1-bundle-sources.json), built on the host CPU on 2026-10-07 twice bit-identically; the freeze requires image A to reproduce it from the same raw directory with fetching refused, and a mismatch is a determinism defect that is investigated, never amended away; ParaDocs streaming consumed 6.34 GB (en-th), 7.49 GB (en-hi) and all 4.10 GB of en-km, which fell 11.5 percent short of its 1.2x quota at the fetch stage; after the build's filters en-km is 206,442 tokens (11.7 percent) and en-th 1,000 tokens short, and the 207,442-token shortfall was refilled from the same-script pairs

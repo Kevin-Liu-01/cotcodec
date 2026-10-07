@@ -26,8 +26,15 @@ Registered statistics (preregistration ``q3-k1-localization-screen-v1``):
   Welch-Satterthwaite degrees of freedom of the two variance components
   (``n_clusters - 1`` for the cluster term, ``n_seeds - 1`` for the seed term).
   With three seeds a seed-dominated interval uses df close to 2, so the
-  interval keeps its 99 percent coverage instead of the ~88 percent a normal
-  quantile would give.
+  interval keeps about 98 to 99 percent coverage when one term dominates,
+  instead of the ~88 percent a normal quantile would give. When the two terms
+  are comparable, a small s_seed by chance raises df toward the cluster
+  term's and coverage falls to about 96.4 percent (pre-freeze audit
+  simulation); the point thresholds still keep GO at a true xi of 5 or below,
+  and NEGATIVE at 9 or above, near zero.
+* ``final_verdict`` applies program decision D16: HOLD is terminal, and a
+  V1 extension that the main read calls for is mandatory; one that was not
+  run or ended void makes the final verdict INCONCLUSIVE.
 """
 
 from __future__ import annotations
@@ -640,6 +647,32 @@ def combine_after_extension(main_reads: Sequence[TargetRead],
     return [by_target.get(read.target, read) for read in main_reads]
 
 
+def final_verdict(main: Verdict, main_reads: Sequence[TargetRead],
+                  extension: Verdict | None) -> Verdict:
+    """The experiment's final verdict (preregistration decision rules, program decision D16).
+
+    A main read that does not call for the V1 extension is final; HOLD among
+    them is terminal for the experiment id. When the main read calls for the
+    extension, the extension is mandatory and its combined verdict is final,
+    except that an extension that was not run (``extension`` is None) or ended
+    void makes the final verdict INCONCLUSIVE; no second extension runs.
+    """
+
+    if not extension_targets(main, main_reads):
+        if extension is not None:
+            raise StatsContractError(
+                f"the main read ({main.verdict}) does not call for the V1 extension")
+        return main
+    if extension is None or extension.verdict == "VOID":
+        return Verdict("INCONCLUSIVE",
+                       ("the registered V1 extension was not run or ended void",),
+                       extension.per_target if extension is not None else main.per_target)
+    if extension.verdict == "V1_EXTENSION_REQUIRED":
+        raise StatsContractError("the extension's combined read must be read with "
+                                 "after_extension=True, never as V1_EXTENSION_REQUIRED")
+    return extension
+
+
 def attribution_label(xi_cx: float, xi_cs: float) -> str:
     """Descriptive: 'cross-script' only if xi_CX - xi_CS >= 5 points."""
 
@@ -684,6 +717,7 @@ __all__ = [
     "decision_quantile",
     "extension_targets",
     "family_excess",
+    "final_verdict",
     "k1_verdict",
     "macro_mean_interval",
     "se_cluster_of_macro",
