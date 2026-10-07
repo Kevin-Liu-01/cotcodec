@@ -1,0 +1,22 @@
+task_id: ed43c15f-00cb-4054-9c95-62c880865d68
+author: blind-model-author-v1
+requirements:
+  - req_id: R0
+    statement: (implicit) The presentation is saved in place at /home/user/Desktop/43_1.pptx with 8 slides and unchanged texts.
+    check_kind: file_exists
+    observable: File loads; texts unchanged.
+  - req_id: R1
+    statement: The picture on slide 2 is moved to the top of the slide.
+    check_kind: slide_object
+    observable: Picture "Google Shape;571;p15" (initially top 6.94 cm, 7.51 x 7.52 cm) has top == 0 cm (tolerance 0.1 cm); size unchanged.
+  - req_id: R2
+    statement: All text in the text boxes on slides 1 and 2 is underlined.
+    check_kind: text_run
+    observable: Every non-empty run on slides 1 ("Minimalistic Newsletter", "Here is the start of the presentation") and 2 ("Announcement", "I'm Rain ...") has underline set.
+  - req_id: R3
+    statement: (implicit) Text on other slides is not underlined additionally.
+    check_kind: text_run
+    observable: Underline state on slides 3-8 equals the initial file.
+allowed_variations:
+  - Horizontal position of the moved picture.
+  - '[AMBIGUOUS] "slide top" read as the top edge (y = 0); merely moving it higher is a weaker reading.'

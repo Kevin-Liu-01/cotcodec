@@ -1,0 +1,25 @@
+task_id: b8adbc24-cef2-4b15-99d5-ecbe7ff445eb
+author: blind-model-author-v1
+requirements:
+  - req_id: R0
+    statement: (implicit) The presentation is saved in place at /home/user/Desktop/189_4.pptx with 2 slides; slide 1 unchanged.
+    check_kind: file_exists
+    observable: File loads; slide 1 title "Sustainable Energy" (FF0000, 44 pt) and table unchanged.
+  - req_id: R1
+    statement: Slide 2's title is "Online Shopping".
+    check_kind: slide_object
+    observable: The slide 2 title placeholder text == "Online Shopping".
+  - req_id: R2
+    statement: The new title has the same color as slide 1's title (red FF0000).
+    check_kind: text_run
+    observable: All runs of the slide 2 title have color FF0000.
+  - req_id: R3
+    statement: The new title has the same font size as slide 1's title (44 pt).
+    check_kind: text_run
+    observable: All runs have size 44 pt (explicit or effective).
+  - req_id: R4
+    statement: The new title has the same position as slide 1's title.
+    check_kind: slide_object
+    observable: Slide 2 title placeholder left/top/width/height == 1.27/0.76/22.86/3.17 cm (tolerance 0.05 cm).
+allowed_variations:
+  - Font family and alignment (slide 1 title is centered; matching it is natural but not requested).

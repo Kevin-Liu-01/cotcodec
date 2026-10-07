@@ -1,0 +1,17 @@
+task_id: 70bca0cc-c117-427e-b0be-4df7299ebeb6
+author: blind-model-author-v1
+requirements:
+  - req_id: R0
+    statement: (implicit) The presentation is saved in place at /home/user/Desktop/71_6.pptx with 2 slides and unchanged text.
+    check_kind: file_exists
+    observable: File loads; texts unchanged.
+  - req_id: R1
+    statement: Slide 2's background color equals its title text color (red, FF0000).
+    check_kind: slide_object
+    observable: Slide 2 has a solid background fill FF0000, the same as the title run color.
+  - req_id: R2
+    statement: (implicit) The title color itself is not changed, and slide 1's background is unchanged.
+    check_kind: text_run
+    observable: Slide 2 title runs still FF0000; slide 1 background equals initial.
+allowed_variations:
+  - The title becoming invisible against the background is a consequence of the instruction, not a defect.

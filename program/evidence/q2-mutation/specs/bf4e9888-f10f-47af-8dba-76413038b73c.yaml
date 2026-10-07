@@ -1,0 +1,23 @@
+task_id: bf4e9888-f10f-47af-8dba-76413038b73c
+author: blind-model-author-v1
+requirements:
+  - req_id: R1
+    statement: The presentation is saved as /home/user/Desktop/4.3-Template_4.29.2016.pptx (overwriting the template) in pptx format.
+    check_kind: file_exists
+    observable: The file exists and opens with python-pptx.
+  - req_id: R2
+    statement: The presentation consists of exactly six slides.
+    check_kind: slide_object
+    observable: len(prs.slides) == 6.
+  - req_id: R3
+    statement: Each slide is blank apart from its single image - no text boxes, placeholders or other objects.
+    check_kind: slide_object
+    observable: Each slide has exactly one shape and it is a picture (no placeholder or text frame with or without text).
+  - req_id: R4
+    statement: Slide i contains pic<i>.png from the Desktop, in numerical order.
+    check_kind: image_property
+    observable: The image blob on slide i is pixel-identical (or byte-identical) to /home/user/Desktop/pic<i>.png for i = 1..6 (each 720x540).
+allowed_variations:
+  - Picture size/position on the slide (e.g. fitted to the 28 x 15.75 cm slide or native size).
+  - '[AMBIGUOUS] "suitable for continuous playback in a kiosk" may additionally imply slide-show settings (auto-advance timings, loop/kiosk mode); the instruction does not state concrete values, so these are not required.'
+  - Whether the template's original title slide is reused (emptied) or deleted, as long as the final deck meets R2-R4.

@@ -18,9 +18,11 @@ requirements:
     check_kind: cell_format
     observable: C2:C25 are numeric cells (or numeric formula results), not strings.
   - req_id: R4
-    statement: The highest period rate (C20 = 14.724) is shown in green #00FF00 font.
+    statement: >-
+      The highest period rate (C20 = 14.724) is shown in green #00FF00 font.
     check_kind: cell_format
-    observable: C20 font color is FF00FF00 (direct formatting) or a conditional format rule that renders C20 in #00FF00; no other C cell is green.
+    observable: >-
+      C20 font color is FF00FF00 (direct formatting) or a conditional format rule that renders C20 in #00FF00; no other C cell is green.
 allowed_variations:
   - '[AMBIGUOUS] "convert the results as number type" may mean only numeric storage or also a "Number" category format (e.g. 0.00); decimal places are not specified.'
   - Green highlight may be direct formatting or conditional formatting.
