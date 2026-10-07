@@ -1,0 +1,61 @@
+q3-k1-localization-screen-v1 operator log (UTC). Host: fal-h100-01. Operator: Claude (subagent).
+Registration program/preregistrations/q3-k1-localization-screen-v1.md sha256 a0077d31dd250f621c82c2cdef2e80dfd8d3f7f4c356addfc0cbc241db51f79c
+Ledger row hash c50540e9757289f152874dbd3833433539332df71004e87e80d9246dad3f3c4e, git_head_at_freeze ec81fe3292d8559251adb273cb4e6ec5b070c162 (commit A); commit B d36cbbe7675be67d75214341c90e2dfc2613025f.
+All 12 tabled code/contract digests re-verified equal on main 6b7967f/80a87ee (no tabled file changed after commit B).
+
+2026-10-07T11:44Z job 437 (image B build) RUNNING; queue: 437 build (CPU), 438 holo3-v2 (CPU). GPUs 0-7 idle (0%, 0 MiB).
+2026-10-07T11:48Z job 437 COMPLETED ExitCode 0:0, RunTime 00:10:25, CPU only (cpu=16, mem=64G, no GPU).
+  image B id sha256:5dc3025ba8cfc0ab4a00a6c216a741f3b3ff647053454ac4d75ea363683c7171
+  git_sha d36cbbe7675be67d75214341c90e2dfc2613025f, source_tar_sha256 be0d1005382f123585718f2a65163d71dfde0611014a908abd820c04d37f4ec1
+  repo digest (local loopback registry) sha256:6e1d6f9151c97e49af3671694626de60b82380ad90500685b608212224cbb318
+  checks: image label org.opencontainers.image.revision = d36cbbe7...; repo-B HEAD = d36cbbe7..., clean; git archive HEAD | sha256 = be0d1005... (equal).
+2026-10-07T11:49Z K1 doctor in image B launched: srun (research partition, cpus 16, mem 64G, no GPU, 30 min) -> Slurm job 443;
+  docker run --rm --network none --user kevin, env USER=cotcodec HOME=/tmp TORCHINDUCTOR_CACHE_DIR=/tmp/torchinductor HF_HUB_OFFLINE=1.
+  pre-launch squeue: 437 done; 438 holo3-v2 RUNNING (no gres). Then 442 stp-v1-a-q2-qwen35-9b RUNNING gres:gpu:h100:1 appeared.
+2026-10-07T11:52Z job 443 (K1 doctor, image B) COMPLETED ExitCode 0:0, RunTime 00:03:45, CPU only (cpu=16, mem=64G). Wrapper exit=0.
+  K1_DOCTOR_PASS, 7/7 cases PASS (capture_vs_eager, targets_vs_numpy, selection_brute_force, gradient_check, verdict_tables, data_objects, end_to_end); runtime 222.3 s.
+  Receipt provenance digests equal the registration's table for all 7 files it lists. Receipt sha256 f45e10d4559f9f4c2a3a1983467c02c26c23fe32c23b623b869e6d3f9c7ef62c.
+2026-10-07T11:53Z filler pass 1 from repo-B (HEAD d36cbbe7, clean; filler sha256 4800cdf0..., compare sha256 75289c34... = table), uv run --locked, output outside the clone.
+  filled: smoke, headroom-dev, resume-r0, resume-r1; skipped: resume-r2 (FILL-resume-r1-job-id); blocked: main, main-resume, extension (no gate run roots given). exit 0.
+  Diff vs templates: only FILL-* values changed (image B id, git sha, source tar sha, commit A, bundle sha/size, prereg sha).
+  Pre-check from repo-B: submitter --dry-run and --test-only exit 0 for all four (smoke 0.117, headroom-dev 0.100, R0 0.133, R1 0.150 GPU-h requested).
+2026-10-07T11:53Z orx node created: 66f7d302-6b11-4f4b-99ad-7cdadd65dbca "Q3 K1 smoke" (new root, --baseline), branch orx/q3-k1-smoke-q3-k1-localization-screen-v1,
+  reset (provisional, no runs) to commit B d36cbbe, node commit 16ddcc0 adds node.yaml (slurm-manifest) + experiments/manifests/filled/q3-k1-smoke.yaml. Worktree /Users/kevinliu/repos/cotcodec-wt-orx-q3-k1.
+2026-10-07T11:53:46Z pre-submit smoke: squeue 438 holo3-v2 RUNNING (no gres); 442 stp-v1-a-q2-qwen35-9b RUNNING gpu:h100:1; 446 stp-v1-b-q1-qwen3-8b-dummy RUNNING gpu:h100:1.
+  nvidia-smi: GPU0 100% 76611 MiB, GPU1 100% 74401 MiB, GPU2-7 0% 0 MiB.
+  orx exp run --backend ssh --host fal-h100-01 -> orx run 01692785-2db3-4d75-a4bc-250c77620e6c; dry-run, test-only, submit -> Slurm job 452 (PENDING briefly, RUNNING by 11:54:04Z).
+2026-10-07T11:56:18Z job 452 (smoke) COMPLETED ExitCode 0:0, RunTime 00:02:25 (limit 7 min), GPU 2 exclusive (foreign processes 0).
+  ORX_SLURM_TERMINAL 452 state=COMPLETED exit_code=0:0; ORX_RESULT kind=slurm-manifest direction=translation-supervised-sparse-indexer job=452 exit=0. orx run status done (3m06s).
+  termination.env: reason=completed exit_code=0 checkpoint_ready=false. provenance-verification PASS (git d36cbbe7, source be0d1005).
+  Receipt phase-0a-k1/receipt.json sha256 6a7bf010d5541f1e0a8737f3ee71e90104a7e381a61492a23e8f03be281635c9:
+    experiment_id q3-k1-localization-screen-v1, phase smoke, profile registered, seeds 42 43 44;
+    hashes: preregistration a0077d31..., ledger_row_hash c50540e9..., contract 8b1bacda..., bundle 919d016b..., code digests = table.
+    status SMOKE_PASS_OVER_BUDGET. gates all true: capture_reconstruction (max rel output error 0.00458 <= 0.01),
+    eager_sanity (max layer mean TV 0.0116 <= 0.1), recall_finite true, selection_budget (max selected 1027 <= 1027).
+    timings: smoke training 16 sequences (4 steps) x 28 layers x 18 indexers/layer, wall 84.9 s
+      (worker timings: indexers 45.87 s, targets 10.93 s, teacher 1.33 s); smoke eval 20 units, 1.361 s/unit.
+    projection (single-GPU timings scaled to 4 workers): train wall per worker 2564/2303/2355/2086 s; eval 3066 s (9,010 audit units);
+      startup allowance 300 s; main_wall_minutes 98.84; main_gpu_hours 6.59; required limit 1.2 x 98.84 + 3 = 121.61 min > 30 min.
+      extension projection (descriptive): 96.1 min wall, 6.41 GPU-h, required 118.3 min vs 22-min limit (fits_limit false).
+    smoke recall (20 dev units, plumbing only): T:hs 26.45, T:mp 26.08, T:hm 26.27, U 66.54, Uk 9.75, rand 12.48, I:hs 11.87-12.57, I:mp 12.14-12.89 (4-step indexers, never reused).
+2026-10-07T11:58Z filler pass 2 (--smoke-run-root .../k1-screen-v1/smoke), exit 0: smoke gate job 452 passed=false,
+  problems: "smoke status is SMOKE_PASS_OVER_BUDGET, not SMOKE_PASS"; "1.2 x projected wall + 3 min is 121.61, over 30 min".
+  No identity-binding problem reported (job 452 ran under image B, the bundle, the frozen registration and the tabled code).
+  main, main-resume and extension blocked. Filled smoke/headroom-dev/R0/R1 byte-identical to pass 1.
+DECISION: stop at the smoke gate. Registration (Compute): "If the smoke receipt is SMOKE_PASS_OVER_BUDGET, the main job does not run under this id."
+  D16 declines budget amendments by default; the tabled filler hard-codes 1.2 x projection + 3 <= 30 and requires SMOKE_PASS, so no
+  amendment can take effect under this id. headroom-dev, R0, R1, R2, compare and main were NOT run; no continuation, no extension.
+  No audit statistic exists; no k1_verdict was computed. Serving probe jobs 442 (stp-v1-a) and 446 (stp-v1-b) were RUNNING at this time; irrelevant since main is barred.
+GPU-hours used: 0.0403 (job 452 only). Jobs 437 and 443 were CPU only.
+
+Evidence index (program/evidence/2026-10-07/q3-k1/, this commit). Lane files named *.env on the host are stored as *.env.txt, content unchanged.
+  k1-doctor-imageA.json            K1 CPU doctor in image A (committed at freeze, unchanged)
+  k1-doctor-imageB.json            K1 CPU doctor in image B (Slurm 443), K1_DOCTOR_PASS 7/7; k1-doctor-imageB-run.env.txt = wrapper exit/start/end
+  image-b-build-receipt-437.json   image B build receipt (Slurm 437)
+  filler/filler-1.json             filler pass 1 report (fills smoke, headroom-dev, R0, R1; main blocked)
+  filler/filler-2-smoke-gate.json  filler pass 2 report with --smoke-run-root: smoke gate failed (SMOKE_PASS_OVER_BUDGET, 121.61 > 30)
+  smoke-452/                       smoke job 452: lane job.env, termination.env, gpu-prolog.env, manifest.json, provenance and model
+                                   verification, slurm-452.out, phase-0a-k1 receipt, orx run 01692785 log (ORX_RESULT exit=0)
+  pre-submit-state.txt             squeue and nvidia-smi immediately before the only GPU submission
+  slurm-records.txt                scontrol records and GPU-hours
+Host originals: /home/kevin/cotcodec-runs/translation-supervised-sparse-indexer/k1-screen-v1/smoke/452/ and /home/kevin/cotcodec-runs/ops/q3-k1/.
