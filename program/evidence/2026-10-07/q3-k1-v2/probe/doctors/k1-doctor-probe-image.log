@@ -1,0 +1,5 @@
+Writing model shards:   0%|          | 0/1 [00:00<?, ?it/s]Writing model shards: 100%|██████████| 1/1 [00:00<00:00, 683.11it/s]
+Loading weights:   0%|          | 0/46 [00:00<?, ?it/s]Loading weights: 100%|██████████| 46/46 [00:00<00:00, 7645.65it/s]
+Loading weights:   0%|          | 0/46 [00:00<?, ?it/s]Loading weights: 100%|██████████| 46/46 [00:00<00:00, 8363.88it/s]
+Writing model shards:   0%|          | 0/1 [00:00<?, ?it/s]Writing model shards: 100%|██████████| 1/1 [00:00<00:00, 862.85it/s]
+{"status": "K1_DOCTOR_PASS", "case_status": {"capture_vs_eager": "PASS", "targets_vs_numpy": "PASS", "selection_brute_force": "PASS", "gradient_check": "PASS", "verdict_tables": "PASS", "data_objects": "PASS", "end_to_end": "PASS"}}
