@@ -1,0 +1,52 @@
+{
+  "batch_script_sha256": "7c4603babe1af27dd780d65b6812115c9b8e63844570ed5028865b2c4fa4de12",
+  "command": [
+    "python",
+    "scripts/run_vllm_throughput_probe.py",
+    "run",
+    "--config",
+    "experiments/serving/serving-throughput-probe-v1.yaml",
+    "--job",
+    "a",
+    "--output-dir",
+    "/outputs/probe",
+    "--allocation-minutes",
+    "40",
+    "--image-variant",
+    "cu129",
+    "--seeds",
+    "42",
+    "43",
+    "44"
+  ],
+  "container_profile": "vllm",
+  "cpus": 32,
+  "git_sha": "80a87ee4f91e104d73948b756e5acda3ee7863c6",
+  "gpu_type": "h100",
+  "gpus": 1,
+  "image_id": "sha256:fa1906ad5c53ec9bdb92551d8b81b78ae22e9bf26871c03c3128437236846dea",
+  "max_gpu_hours": 0.67,
+  "memory_gb": 160,
+  "minutes": 40,
+  "model": {
+    "artifact_root_sha256": "9845026dbe255e24b105224eebbb5436d315713b9a5c53c434137896b160c5b1",
+    "cache_host_path": "/home/kevin/cotcodec-runs/hf-cache",
+    "model_id": "qwen3.5-9b",
+    "receipt_sha256": "0a9e052d561b017c505adf5a1c6fcdc048522660a0db134486b84edbf3de5cb3",
+    "revision": "c202236235762e1c871ad0ccb60c8ee5ba337b9a"
+  },
+  "name": "stp-v1-a-q2-qwen35-9b",
+  "randomness_contract": "assignment-seed-matrix",
+  "run_root": "/home/kevin/cotcodec-runs/stage0/serving-throughput-probe/runs/a",
+  "runtime": "docker-single-node-discovery-v1",
+  "schema_version": 1,
+  "seed_binding": {
+    "flag": "--seeds"
+  },
+  "seeds": [
+    42,
+    43,
+    44
+  ],
+  "source_sha256": "2c607c86d83c0b023bddb28ac22ed7fa2541c816ac8b6b16370d83bc3fb4d5b9"
+}

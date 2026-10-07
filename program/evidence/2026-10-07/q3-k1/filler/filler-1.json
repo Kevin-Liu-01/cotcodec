@@ -1,0 +1,51 @@
+{
+  "blocked": {
+    "q3-k1-extension.yaml": [
+      "smoke: no --smoke-run-root was given",
+      "headroom_dev: no --headroom-dev-run-root was given",
+      "resume_equivalence: the resume test needs --r0-run-root and --r1-run-root"
+    ],
+    "q3-k1-main-resume.yaml": [
+      "smoke: no --smoke-run-root was given",
+      "headroom_dev: no --headroom-dev-run-root was given",
+      "resume_equivalence: the resume test needs --r0-run-root and --r1-run-root"
+    ],
+    "q3-k1-main.yaml": [
+      "smoke: no --smoke-run-root was given",
+      "headroom_dev: no --headroom-dev-run-root was given",
+      "resume_equivalence: the resume test needs --r0-run-root and --r1-run-root"
+    ]
+  },
+  "filled": [
+    "/home/kevin/cotcodec-runs/ops/q3-k1/filled-1/q3-k1-headroom-dev.yaml",
+    "/home/kevin/cotcodec-runs/ops/q3-k1/filled-1/q3-k1-resume-r0.yaml",
+    "/home/kevin/cotcodec-runs/ops/q3-k1/filled-1/q3-k1-resume-r1.yaml",
+    "/home/kevin/cotcodec-runs/ops/q3-k1/filled-1/q3-k1-smoke.yaml"
+  ],
+  "notes": [],
+  "pre_main_gates": {
+    "headroom_dev": {
+      "passed": false,
+      "problems": [
+        "no --headroom-dev-run-root was given"
+      ]
+    },
+    "resume_equivalence": {
+      "passed": false,
+      "problems": [
+        "the resume test needs --r0-run-root and --r1-run-root"
+      ]
+    },
+    "smoke": {
+      "passed": false,
+      "problems": [
+        "no --smoke-run-root was given"
+      ]
+    }
+  },
+  "skipped": {
+    "q3-k1-resume-r2.yaml": [
+      "FILL-resume-r1-job-id"
+    ]
+  }
+}

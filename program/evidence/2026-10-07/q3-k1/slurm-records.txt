@@ -1,0 +1,15 @@
+Slurm records for q3-k1-localization-screen-v1 operations (scontrol show job, captured at job end; sacct accounting is off on this host).
+GPU-hours = allocated GPUs x (EndTime - StartTime).
+
+437 cotcodec-build-arch-image (image B build, repo-B at commit B; started by the freeze operator)
+   JobState=COMPLETED ExitCode=0:0 RunTime=00:10:25 TimeLimit=03:00:00 StartTime=2026-10-07T11:37:12
+   TRES=cpu=16,mem=64G,node=1,billing=16 (no GPU)  -> 0 GPU-h
+443 q3-k1-doctor-imageB (srun step: docker run --network none, image B, K1 CPU doctor)
+   JobState=COMPLETED ExitCode=0:0 RunTime=00:03:45 TimeLimit=00:30:00 StartTime=2026-10-07T11:48:36 EndTime=2026-10-07T11:52:21
+   TRES=cpu=16,mem=64G,node=1,billing=16 (no GPU)  -> 0 GPU-h
+452 q3-k1-smoke (orx run 01692785-2db3-4d75-a4bc-250c77620e6c, manifest q3-k1-smoke, --gres=gpu:h100:1, --time=00:07:00)
+   JobState=COMPLETED ExitCode=0:0 RunTime=00:02:25 TimeLimit=00:07:00 StartTime=2026-10-07T11:53:53 EndTime=2026-10-07T11:56:18
+   TRES=cpu=16,mem=64G,node=1,billing=16; gpu-prolog: gpu_devices=2, foreign_compute_processes=0, decision=exclusive
+   -> 1 GPU x 145 s = 0.0403 GPU-h (cap 0.12)
+
+Total GPU-hours used by this experiment's operations: 0.0403 (registered cap 2.65 + conditional 1.5).
