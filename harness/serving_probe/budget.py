@@ -9,13 +9,16 @@ Q2 (closed-loop computer-use episodes, one cell per rung x harness x observation
 
     GPU-h_closed = g * ceil(E / V) * sum_{t=1..T} (t_env + m_r * L(t)) / 3600
     GPU-h_open   = E * T * g * m_r / r_cell / 3600
-    GPU-h_cell   = max(GPU-h_closed, GPU-h_open)
+    r_cell       = r_ref / max(P_cell / P_ref, O_cell / O_ref)
+    GPU-h_cell   = max(GPU-h_closed, GPU-h_open) * noise_A1
 
-Q1 (offline n=8 sampling): GPU-h = completions * sum_turns(GPU-s per completion) / 3600.
+Q1 (offline n=8 sampling): GPU-h = completions * sum_turns(GPU-s per completion)
+* x1_penalty * noise_B1 / 3600.
 """
 
 from __future__ import annotations
 
+import dataclasses
 import math
 from collections.abc import Mapping, Sequence
 from dataclasses import dataclass
@@ -67,24 +70,43 @@ def step_latencies(point: Mapping[str, Any]) -> dict[int, float]:
     return curve
 
 
+def per_request_tokens(point: Mapping[str, Any]) -> tuple[float, float]:
+    """Mean (prompt, output) tokens per completed request of an open-loop point."""
+    result = point["result"]
+    completed = int(result["completed"])
+    if completed <= 0:
+        raise BudgetError(f"{point.get('point_id')} has no completed requests")
+    return float(result["prompt_tokens"]) / completed, float(result["output_tokens"]) / completed
+
+
 def evaluate_x1(
     points: Mapping[str, Mapping[str, Any]],
     *,
     max_relative_delta: float,
     a1_seed_points: Sequence[str] = ("a1a", "a1b", "a1c"),
 ) -> dict[str, Any]:
-    """Dummy-weight admissibility (control X1) from job A's points."""
+    """Dummy-weight admissibility (control X1) from job A's points.
+
+    ``pass`` needs both deltas within the threshold and every A1 seed point valid
+    with a relative range within the same threshold; anything less is not a pass.
+    """
     needed = ("a1a", "r1", "x1-a1", "x1-r1")
     missing = [name for name in needed if not is_valid(points.get(name))]
-    seed_range = relative_range(
-        [
-            points[name]["result"]["request_throughput"]
-            for name in a1_seed_points
-            if is_valid(points.get(name))
-        ]
-    )
+    seed_values = [
+        points[name]["result"]["request_throughput"]
+        for name in a1_seed_points
+        if is_valid(points.get(name))
+    ]
+    seed_range = relative_range(seed_values)
+    seeds_valid = len(seed_values)
     if missing:
-        return {"outcome": "not-run", "missing_or_invalid": missing, "a1_seed_range": seed_range}
+        return {
+            "outcome": "not-run",
+            "missing_or_invalid": missing,
+            "a1_seed_range": seed_range,
+            "a1_seeds_valid": seeds_valid,
+            "threshold": max_relative_delta,
+        }
     a1_delta = relative_delta(
         points["x1-a1"]["result"]["request_throughput"],
         points["a1a"]["result"]["request_throughput"],
@@ -93,17 +115,22 @@ def evaluate_x1(
         replay_mean_latency(points["x1-r1"]), replay_mean_latency(points["r1"])
     )
     within = a1_delta <= max_relative_delta and r1_delta <= max_relative_delta
+    reason = None
     if not within:
         outcome = "fail"
+    elif seeds_valid < len(a1_seed_points):
+        outcome, reason = "underpowered", "fewer than three valid A1 seed points"
     elif seed_range is None or seed_range > max_relative_delta:
-        outcome = "underpowered"
+        outcome, reason = "underpowered", "A1 seed range above the threshold"
     else:
         outcome = "pass"
     return {
         "outcome": outcome,
+        "reason": reason,
         "a1_relative_delta": a1_delta,
         "r1_relative_delta": r1_delta,
         "a1_seed_range": seed_range,
+        "a1_seeds_valid": seeds_valid,
         "threshold": max_relative_delta,
     }
 
@@ -114,9 +141,24 @@ def stability(
     limit: float,
     metric: str = "request_throughput",
 ) -> dict[str, Any]:
-    """Seed spread of a throughput metric; UNSTABLE above ``limit``; budget uses the minimum."""
-    values = [points[name]["result"][metric] for name in names if is_valid(points.get(name))]
+    """Seed spread of a throughput metric and the noise multiplier it implies.
+
+    Every seed valid and range <= ``limit``: multiplier 1. Range above ``limit``
+    (UNSTABLE): max/min of the seeds. Fewer than all seeds valid: the larger of
+    ``1 + limit`` and max/min of the valid ones.
+    """
+    values = [float(points[name]["result"][metric]) for name in names if is_valid(points.get(name))]
     spread = relative_range(values)
+    complete = len(values) == len(names)
+    unstable = spread is not None and spread > limit
+    ratio = (max(values) / min(values)) if len(values) >= 2 and min(values) > 0 else None
+    if complete and not unstable:
+        multiplier, basis = 1.0, "stable"
+    elif complete:
+        multiplier, basis = float(ratio or 1.0 + limit), "unstable: max/min of the seeds"
+    else:
+        multiplier = max(1.0 + limit, ratio or 0.0)
+        basis = f"incomplete ({len(values)} of {len(names)} valid): max(1 + limit, max/min)"
     return {
         "points": list(names),
         "metric": metric,
@@ -125,14 +167,22 @@ def stability(
         "min": min(values) if values else None,
         "max": max(values) if values else None,
         "relative_range": spread,
-        "unstable": spread is not None and spread > limit,
-        "budget_value": min(values) if values else None,
+        "limit": limit,
+        "unstable": unstable,
+        "complete": complete,
+        "noise_multiplier": multiplier,
+        "basis": basis,
     }
 
 
 @dataclass(frozen=True)
 class Profile:
-    """A per-step latency curve L(t) with its measured V and extrapolation shape."""
+    """A per-step latency curve L(t) with its measured V and extrapolation shape.
+
+    ``shape`` describes the replay the curve was measured on and drives the
+    extrapolation; ``cell_a11y_tokens`` and ``cell_output_tokens`` describe the
+    cell the profile prices (its open-loop size and context check).
+    """
 
     name: str
     harness: str
@@ -141,6 +191,8 @@ class Profile:
     shape: HarnessShape
     additive_s: float = 0.0
     flags: tuple[str, ...] = ()
+    cell_a11y_tokens: int | None = None
+    cell_output_tokens: int | None = None
 
     def latency(self, step: int) -> float:
         if step in self.measured:
@@ -172,8 +224,26 @@ class Profile:
         tail = steps[-2:]
         return max(tail, key=lambda s: self.measured[s])
 
+    @property
+    def cell_shape(self) -> HarnessShape:
+        if self.cell_a11y_tokens is None:
+            return self.shape
+        return dataclasses.replace(self.shape, a11y_tokens=int(self.cell_a11y_tokens))
+
+    @property
+    def cell_output(self) -> int:
+        if self.cell_output_tokens is None:
+            return self.shape.response_tokens
+        return int(self.cell_output_tokens)
+
     def mean_prompt_tokens(self, steps: int) -> float:
-        return sum(modeled_prompt_tokens(self.shape, t) for t in range(1, steps + 1)) / steps
+        shape = self.cell_shape
+        return sum(modeled_prompt_tokens(shape, t) for t in range(1, steps + 1)) / steps
+
+    def max_context_tokens(self, steps: int) -> int:
+        """Largest modelled prompt plus output over steps 1..``steps`` of the cell."""
+        shape = self.cell_shape
+        return max(modeled_prompt_tokens(shape, t) for t in range(1, steps + 1)) + self.cell_output
 
 
 def _is_fold_step(step: int, shape: HarnessShape) -> bool:
@@ -225,6 +295,18 @@ def open_loop_gpu_hours(
     return episodes * steps * gpus * multiplier / requests_per_s / 3600.0
 
 
+def open_loop_cell_rate(reference: Mapping[str, Any], profile: Profile, steps: int) -> float:
+    """r_cell: the reference rate divided by the larger of the prompt and output ratios.
+
+    GPU time per request grows with both its prompt and its output; the larger
+    of the two ratios bounds any mix of the two from above, so the rate it gives
+    is never above the reference scaled by either one alone.
+    """
+    prompt_ratio = profile.mean_prompt_tokens(steps) / float(reference["prompt_tokens"])
+    output_ratio = profile.cell_output / float(reference["output_tokens"])
+    return float(reference["rate"]) / max(prompt_ratio, output_ratio)
+
+
 def _tpot_tail_s(point: Mapping[str, Any], steps: Sequence[int]) -> float | None:
     values = []
     for step in steps:
@@ -235,7 +317,12 @@ def _tpot_tail_s(point: Mapping[str, Any], steps: Sequence[int]) -> float | None
 
 
 def build_profiles(
-    points: Mapping[str, Mapping[str, Any]], *, image_tokens: int, unmeasured_multiplier: float
+    points: Mapping[str, Mapping[str, Any]],
+    *,
+    image_tokens: int,
+    unmeasured_multiplier: float,
+    a11y_tokens: int,
+    thinking_output_tokens: int,
 ) -> dict[str, Profile]:
     """Assemble the four Q2 harness profiles from job A (rules fixed in the preregistration)."""
     for required in ("r1", "r3"):
@@ -244,20 +331,22 @@ def build_profiles(
     r1, r3 = points["r1"], points["r3"]
     h1_shape = shape_from_point(r1, image_tokens)
     h2_shape = shape_from_point(r3, image_tokens)
-    profiles = {
-        "h1-screenshot": Profile(
-            "h1-screenshot", "h1", step_latencies(r1), int(r1["params"]["episodes"]), h1_shape
-        ),
-        "h2-screenshot": Profile(
-            "h2-screenshot", "h2", step_latencies(r3), int(r3["params"]["episodes"]), h2_shape
-        ),
-    }
-    h1_curve = profiles["h1-screenshot"]
+    h1_curve = Profile(
+        "h1-screenshot", "h1", step_latencies(r1), int(r1["params"]["episodes"]), h1_shape
+    )
+    r3_curve = Profile(
+        "h2-screenshot", "h2", step_latencies(r3), int(r3["params"]["episodes"]), h2_shape
+    )
+    if not h1_curve.measured or not r3_curve.measured:
+        raise BudgetError("r1 or r3 has no step that every episode completed")
+    profiles = {"h1-screenshot": h1_curve}
     r1_last = max(h1_curve.measured)
     steady_r1 = max(h1_curve.measured[s] for s in sorted(h1_curve.measured)[-2:])
     if is_valid(points.get("r2")):
         r2 = points["r2"]
         r2_curve = step_latencies(r2)
+        if not r2_curve:
+            raise BudgetError("r2 is valid but has no complete step")
         profiles["h1-a11y"] = Profile(
             "h1-a11y",
             "h1",
@@ -269,7 +358,6 @@ def build_profiles(
         a11y_penalty = max(0.0, steady_r2 - steady_r1)
         a11y_flags: tuple[str, ...] = ()
     else:
-        a11y_tokens = 6144
         share = a11y_tokens / modeled_prompt_tokens(h1_shape, r1_last)
         a11y_penalty = steady_r1 * share * unmeasured_multiplier
         a11y_flags = ("a11y-unmeasured-prompt-proportional-x1.5",)
@@ -281,9 +369,9 @@ def build_profiles(
             h1_shape,
             additive_s=a11y_penalty,
             flags=a11y_flags,
+            cell_a11y_tokens=a11y_tokens,
         )
 
-    r3_curve = profiles["h2-screenshot"]
     if is_valid(points.get("r4")):
         r4 = points["r4"]
         r4_curve = step_latencies(r4)
@@ -295,10 +383,10 @@ def build_profiles(
         think_penalty = max(0.0, r4_curve[warm] - r3_curve.measured[warm])
         think_flags: tuple[str, ...] = ()
     else:
-        tail = _tpot_tail_s(points["r3"], sorted(r3_curve.measured)[-6:])
+        tail = _tpot_tail_s(r3, sorted(r3_curve.measured)[-6:])
         if tail is None:
             raise BudgetError("thinking penalty cannot be estimated without r4 or r3 TPOT")
-        output_extra = 2048 - int(points["r3"]["params"]["output_tokens"])
+        output_extra = thinking_output_tokens - int(r3["params"]["output_tokens"])
         think_penalty = output_extra * tail * unmeasured_multiplier
         think_flags = ("thinking-unmeasured-tpot-p90-x1.5",)
     profiles["h2-thinking-screenshot"] = Profile(
@@ -309,6 +397,7 @@ def build_profiles(
         h2_shape,
         additive_s=think_penalty,
         flags=think_flags,
+        cell_output_tokens=thinking_output_tokens,
     )
     profiles["h2-thinking-a11y"] = Profile(
         "h2-thinking-a11y",
@@ -318,6 +407,8 @@ def build_profiles(
         h2_shape,
         additive_s=think_penalty + a11y_penalty,
         flags=think_flags + a11y_flags,
+        cell_a11y_tokens=a11y_tokens,
+        cell_output_tokens=thinking_output_tokens,
     )
     return profiles
 
@@ -325,15 +416,64 @@ def build_profiles(
 def frontend_ratio(
     job_a: Mapping[str, Mapping[str, Any]], rule: Mapping[str, Any] | None
 ) -> dict[str, Any]:
-    """F1: PNG-over-JPEG throughput ratio; applied to the open-loop bound above the threshold."""
+    """F1: PNG-over-JPEG request-throughput ratio at the A1 shape.
+
+    Applied to the open-loop reference rate only when PNG is slower by more than
+    the threshold (ratio < 1 - threshold); it can raise the bound, never lower it.
+    """
     if not rule:
         return {"applied": False, "ratio": None, "reason": "no rule"}
     control, reference = job_a.get(rule["point"]), job_a.get(rule["reference"])
+    threshold = float(rule["threshold"])
     if not (is_valid(control) and is_valid(reference)):
-        return {"applied": False, "ratio": None, "reason": "F1 or its reference is not valid"}
+        return {
+            "applied": False,
+            "ratio": None,
+            "threshold": threshold,
+            "reason": "F1 or its reference is not valid",
+        }
     ratio = control["result"]["request_throughput"] / reference["result"]["request_throughput"]
-    applied = abs(ratio - 1.0) > float(rule["threshold"])
-    return {"applied": applied, "ratio": ratio, "threshold": float(rule["threshold"])}
+    return {"applied": ratio < 1.0 - threshold, "ratio": ratio, "threshold": threshold}
+
+
+def open_loop_reference(
+    job_a: Mapping[str, Mapping[str, Any]],
+    rule: Mapping[str, Any],
+    frontend: Mapping[str, Any],
+) -> dict[str, Any]:
+    """r_ref, P_ref, O_ref from a2; else the slowest valid fallback point; else no budget."""
+    flags: list[str] = []
+    point = job_a.get(rule["point"])
+    if is_valid(point):
+        name = str(rule["point"])
+    else:
+        candidates = [
+            str(candidate)
+            for candidate in rule.get("fallback_points", [])
+            if is_valid(job_a.get(str(candidate)))
+        ]
+        if not candidates:
+            raise BudgetError(
+                f"open-loop reference {rule['point']} and every fallback point are missing "
+                "or invalid"
+            )
+        name = min(candidates, key=lambda key: job_a[key]["result"]["request_throughput"])
+        point = job_a[name]
+        flags.append(f"open-loop-reference-{name}-slowest-fallback ({rule['point']} not valid)")
+    prompt_tokens, output_tokens = per_request_tokens(point)
+    rate = float(point["result"]["request_throughput"])
+    measured_rate = rate
+    if frontend.get("applied"):
+        rate *= float(frontend["ratio"])
+        flags.append("open-loop-rate-x-f1-ratio")
+    return {
+        "point": name,
+        "measured_rate": measured_rate,
+        "rate": rate,
+        "prompt_tokens": prompt_tokens,
+        "output_tokens": output_tokens,
+        "flags": flags,
+    }
 
 
 def rung_multipliers(
@@ -380,11 +520,17 @@ def project_q2(
     job_a: Mapping[str, Mapping[str, Any]],
     job_c: Mapping[str, Mapping[str, Any]] | None,
     x1_outcome: str,
+    unstable_limit: float,
+    max_model_len: int,
 ) -> dict[str, Any]:
     q2 = budget["q2"]
     multiplier_unmeasured = float(q2["unmeasured_rung_multiplier"])
     profiles = build_profiles(
-        job_a, image_tokens=int(q2["image_tokens"]), unmeasured_multiplier=multiplier_unmeasured
+        job_a,
+        image_tokens=int(q2["image_tokens"]),
+        unmeasured_multiplier=multiplier_unmeasured,
+        a11y_tokens=int(q2["a11y_tokens"]),
+        thinking_output_tokens=int(q2["thinking_output_tokens"]),
     )
     rungs = rung_multipliers(
         q2["rungs"],
@@ -393,33 +539,36 @@ def project_q2(
         x1_outcome=x1_outcome,
         unmeasured_multiplier=multiplier_unmeasured,
     )
-    reference = q2["open_loop_reference"]
-    open_point = job_a.get(reference["point"])
-    open_rate = open_point["result"]["request_throughput"] if is_valid(open_point) else None
     frontend = frontend_ratio(job_a, q2.get("frontend_correction"))
-    if open_rate is not None and frontend["applied"]:
-        open_rate *= frontend["ratio"]
-    open_tokens = None
-    if is_valid(open_point):
-        open_tokens = open_point["result"]["prompt_tokens"] / max(
-            1, open_point["result"]["completed"]
-        )
-    profile_for_cell = {
-        ("h1", "screenshot"): "h1-screenshot",
-        ("h1", "a11y"): "h1-a11y",
-        ("h2", "screenshot"): "h2-thinking-screenshot",
-        ("h2", "a11y"): "h2-thinking-a11y",
-    }
+    reference = open_loop_reference(job_a, q2["open_loop_reference"], frontend)
+    noise = stability(job_a, tuple(q2["stability_points"]), unstable_limit)
+    noise_factor = float(noise["noise_multiplier"])
+    noise_flags = (
+        [] if noise_factor == 1.0 else [f"a1-noise-x{noise_factor:.4f} ({noise['basis']})"]
+    )
+    cells = [
+        (str(cell["harness"]), str(cell["observation"]), str(cell["profile"]))
+        for cell in q2["cells"]
+    ]
+    for _harness, _observation, profile_name in cells:
+        if profile_name not in profiles:
+            raise BudgetError(f"cell profile {profile_name} is not a built profile")
 
     def total(
-        steps_override: int | None, t_env: float, vm_cap: int | None
+        steps_override: int | None, t_env: float, vm_cap: int | None, *, primary: bool
     ) -> tuple[float, list[dict[str, Any]]]:
         rows = []
         grand = 0.0
         for rung_name, rung in rungs.items():
-            for (harness, observation), profile_name in profile_for_cell.items():
+            for harness, observation, profile_name in cells:
                 profile = profiles[profile_name]
                 steps = steps_override or int(q2["step_caps"][harness])
+                context = profile.max_context_tokens(steps)
+                if primary and context > max_model_len:
+                    raise BudgetError(
+                        f"cell {harness}/{observation} reaches {context} tokens by step {steps}, "
+                        f"above max_model_len {max_model_len}"
+                    )
                 vms = (
                     profile.vm_per_replica
                     if vm_cap is None
@@ -434,17 +583,15 @@ def project_q2(
                     multiplier=rung["multiplier"],
                     vm_per_replica=vms,
                 )
-                opened = None
-                if open_rate and open_tokens:
-                    cell_rate = open_rate * open_tokens / profile.mean_prompt_tokens(steps)
-                    opened = open_loop_gpu_hours(
-                        steps=steps,
-                        episodes=int(q2["episodes_per_cell"]),
-                        gpus=rung["gpus"],
-                        multiplier=rung["multiplier"],
-                        requests_per_s=cell_rate,
-                    )
-                cell = max(closed, opened or 0.0)
+                cell_rate = open_loop_cell_rate(reference, profile, steps)
+                opened = open_loop_gpu_hours(
+                    steps=steps,
+                    episodes=int(q2["episodes_per_cell"]),
+                    gpus=rung["gpus"],
+                    multiplier=rung["multiplier"],
+                    requests_per_s=cell_rate,
+                )
+                cell = max(closed, opened) * noise_factor
                 grand += cell
                 rows.append(
                     {
@@ -456,22 +603,37 @@ def project_q2(
                         "vm_per_replica": vms,
                         "closed_loop_gpu_hours": closed,
                         "open_loop_gpu_hours": opened,
+                        "open_loop_rate": cell_rate,
+                        "binding": "open-loop" if opened > closed else "closed-loop",
+                        "noise_multiplier": noise_factor,
                         "gpu_hours": cell,
+                        "max_context_tokens": context,
+                        "exceeds_max_model_len": context > max_model_len,
                         "rung_multiplier": rung["multiplier"],
                         "flags": list(profile.flags)
+                        + list(reference["flags"])
+                        + noise_flags
                         + ([] if rung["multiplier"] == 1.0 else [rung["basis"]]),
                     }
                 )
         return grand, rows
 
-    primary_total, rows = total(None, float(q2["t_env_s"]), None)
+    primary_total, rows = total(None, float(q2["t_env_s"]), None, primary=True)
     sensitivity = []
     for steps in q2["sensitivity"]["steps"]:
         for t_env in q2["sensitivity"]["t_env_s"]:
             for vms in q2["sensitivity"]["vm_pool"]:
-                value, _ = total(int(steps), float(t_env), int(vms))
+                value, sens_rows = total(int(steps), float(t_env), int(vms), primary=False)
                 sensitivity.append(
-                    {"steps": steps, "t_env_s": t_env, "vm_cap": vms, "gpu_hours": value}
+                    {
+                        "steps": steps,
+                        "t_env_s": t_env,
+                        "vm_cap": vms,
+                        "gpu_hours": value,
+                        "cells_over_max_model_len": sum(
+                            1 for row in sens_rows if row["exceeds_max_model_len"]
+                        ),
+                    }
                 )
     if primary_total > float(q2["rescope_above_gpu_hours"]):
         decision = "rescope-before-gauntlet"
@@ -489,12 +651,16 @@ def project_q2(
                 "measured_steps": sorted(profile.measured),
                 "vm_per_replica": profile.vm_per_replica,
                 "additive_s": profile.additive_s,
+                "cell_output_tokens": profile.cell_output,
+                "cell_a11y_tokens": profile.cell_shape.a11y_tokens,
                 "flags": list(profile.flags),
             }
             for name, profile in profiles.items()
         },
-        "open_loop_reference_rate": open_rate,
+        "open_loop_reference": reference,
         "frontend_correction": frontend,
+        "a1_noise": noise,
+        "max_model_len": max_model_len,
         "sensitivity": sensitivity,
     }
 
@@ -508,13 +674,23 @@ def per_completion_gpu_s(point: Mapping[str, Any], gpus: int) -> float:
 
 
 def project_q1(
-    budget: Mapping[str, Any], *, job_b: Mapping[str, Mapping[str, Any]], x1_outcome: str
+    budget: Mapping[str, Any],
+    *,
+    job_b: Mapping[str, Mapping[str, Any]],
+    x1_outcome: str,
+    unstable_limit: float,
 ) -> dict[str, Any]:
     q1 = budget["q1"]
     gpus = int(q1["gpus"])
     completions = int(q1["completions"])
     penalty = 1.0 if x1_outcome == "pass" else float(budget["q2"]["unmeasured_rung_multiplier"])
     flags = [] if penalty == 1.0 else [f"dummy-weights-unvalidated-x{penalty} (X1 {x1_outcome})"]
+    noise = stability(
+        job_b, tuple(q1["stability_points"]), unstable_limit, metric="completions_per_s"
+    )
+    noise_factor = float(noise["noise_multiplier"])
+    if noise_factor != 1.0:
+        flags.append(f"b1-noise-x{noise_factor:.4f} ({noise['basis']})")
     per_turn: dict[str, float] = {}
     for name in q1["turn_points"]:
         point = job_b.get(name)
@@ -527,8 +703,9 @@ def project_q1(
             flags.append(f"{name}-unmeasured-used-{fallback}")
             continue
         raise BudgetError(f"Q1 turn point {name} is missing or invalid and has no fallback")
-    single = completions * per_turn[q1["single_turn_point"]] * penalty / 3600.0
-    three = completions * sum(per_turn.values()) * penalty / 3600.0
+    scale = penalty * noise_factor / 3600.0
+    single = completions * per_turn[q1["single_turn_point"]] * scale
+    three = completions * sum(per_turn.values()) * scale
     exceeded = single > float(q1["single_turn_cap_gpu_hours"]) or three > float(
         q1["three_turn_cap_gpu_hours"]
     )
@@ -539,4 +716,5 @@ def project_q1(
         "decision": "cut-turns-tokens-or-tasks-before-gauntlet" if exceeded else "within-cap",
         "flags": flags,
         "multiplier": penalty,
+        "b1_noise": noise,
     }

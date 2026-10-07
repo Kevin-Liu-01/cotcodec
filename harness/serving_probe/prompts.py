@@ -13,6 +13,11 @@ message layout of the agents Stage 1 would run:
   blocks of ``fold_size`` into a fixed placeholder, tool-response wrappers
   around later screenshots.
 
+Only the layout and token sizes are reproduced. cua-speedrun has no LICENSE
+file, so none of its text is copied: the folded-screenshot placeholder here is
+neutral text of the same length (6 tokens under the Qwen3.5 tokenizer), and
+the tool-response tags are the Qwen chat template's own format.
+
 Generated text from the server is used as the assistant history, as the real
 harnesses do, but it is never parsed, executed or written to disk.
 """
@@ -25,7 +30,13 @@ from typing import Any, Protocol
 
 import numpy as np
 
-COLLAPSED_SCREENSHOT_TEXT = "This screenshot has been collapsed."
+#: Neutral placeholder for a folded screenshot; the same token count (6) as the
+#: harness's own text, which is not copied (see the module docstring).
+COLLAPSED_SCREENSHOT_TEXT = "Earlier screen image omitted here."
+#: Tags the Qwen3.5 chat template itself uses around tool responses (Apache-2.0
+#: model repository), which cua-speedrun's layout reuses.
+TOOL_RESPONSE_OPEN = "<tool_response>\n"
+TOOL_RESPONSE_CLOSE = "\n</tool_response>"
 #: Chat-template tokens around one image for Qwen3.5 (vision_start, vision_end).
 IMAGE_WRAPPER_TOKENS = 2
 
@@ -102,15 +113,20 @@ def open_loop_messages(prefix: str, body: str, image_urls: Sequence[str]) -> lis
     ]
 
 
+#: The instruction sentence of OSWorld ``mm_agents/qwen3vl_agent.py`` @b138d348
+#: (Copyright the OSWorld authors, Apache License 2.0), quoted so the H1 prompt
+#: has the harness's own token count.
+OSWORLD_INSTRUCTION = (
+    "\nPlease generate the next move according to the UI screenshot, instruction "
+    "and previous actions.\n\n"
+)
+
+
 def h1_instruction(task: str, actions_outside_window: Sequence[str]) -> str:
     previous = "\n".join(
         f"Step {index + 1}: {action}" for index, action in enumerate(actions_outside_window)
     )
-    return (
-        "\nPlease generate the next move according to the UI screenshot, instruction "
-        "and previous actions.\n\n"
-        f"Instruction: {task}\n\nPrevious actions:\n{previous}"
-    )
+    return f"{OSWORLD_INSTRUCTION}Instruction: {task}\n\nPrevious actions:\n{previous}"
 
 
 def h1_messages(
@@ -161,15 +177,11 @@ def h2_instruction(task: str, actions_before_window: Sequence[str]) -> str:
     previous = "\n".join(
         f"Step {index + 1}: {action}" for index, action in enumerate(actions_before_window)
     )
-    return (
-        "\nPlease generate the next move according to the UI screenshot, instruction "
-        "and previous actions.\n\n"
-        f"Instruction: {task}\n\nPrevious actions:\n{previous or 'None'}"
-    )
+    return f"{OSWORLD_INSTRUCTION}Instruction: {task}\n\nPrevious actions:\n{previous or 'None'}"
 
 
 def _tool_response(parts: list[dict[str, Any]]) -> list[dict[str, Any]]:
-    return [text_part("<tool_response>\n"), *parts, text_part("\n</tool_response>")]
+    return [text_part(TOOL_RESPONSE_OPEN), *parts, text_part(TOOL_RESPONSE_CLOSE)]
 
 
 def h2_messages(

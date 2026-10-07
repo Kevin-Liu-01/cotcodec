@@ -87,6 +87,7 @@ def test_open_loop_respects_concurrency_and_counts_everything() -> None:
     assert server.max_in_flight == 3
     summary = summarize_requests(results, planned=12, start=start, end=end, expected_output=5)
     assert summary["completed"] == 12 and summary["failed"] == 0
+    assert summary["request_errors"] == 0 and summary["not_sent"] == 0
     assert summary["output_tokens"] == 60 == server.generation_tokens
     assert summary["prompt_tokens"] == server.prompt_tokens
     assert summary["short_outputs"] == 0

@@ -382,6 +382,8 @@ def summarize_requests(
         "planned": planned,
         "completed": len(ok),
         "failed": len(failed) + (planned - len(results)),
+        "request_errors": len(failed),
+        "not_sent": planned - len(results),
         "errors": sorted({str(result.error) for result in failed})[:5],
         "duration_s": duration,
         "prompt_tokens": prompt_tokens,
