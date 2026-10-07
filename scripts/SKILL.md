@@ -35,6 +35,13 @@ provenance.
   PROCEED_TO_K1 and an equivalent resume test bound to image B, the bundle,
   the frozen preregistration and its tabled code digests (program decision
   D16).
+- `run_holo3_rerun_audit_doctor.py` is Q2's Holo3 rerun audit; its v2 stages
+  refuse to run until `q2-holo3-rerun-audit-v2` is frozen in the repository
+  ledger (a scratch `--ledger` alone does not open the gate), and a v2 receipt
+  is CONFIRMATORY only on the committed ledger with the code unchanged since
+  the freeze and, with trajectories, a feature file from a CONFIRMATORY
+  `v2-tarball` receipt (`--tarball-receipt`). `v2-design` reads
+  already-inspected data only.
 - `create_source_archive.py`, `verify_compute_provenance.py` and
   `verify_publication_attestation.py` bind source, image and claims.
 
@@ -58,5 +65,6 @@ provenance.
 ## Gotchas
 <!-- agent-docs:fill:gotchas -->
 
-- The seed-binding check in the submitters only knows the archived memory
-  scripts. A new seeded workload must add its own binding before it runs.
+- A seeded workload declares `seed_binding` in its manifest, parses with
+  `allow_abbrev=False`, and gives its seed option no short alias; see the
+  lane section of `docs/operations.md`.

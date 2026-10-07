@@ -26,6 +26,11 @@ attestation helpers. It starts small after the 2026-10-06 restart.
   entry point; evaluation loads exactly the completed final generation).
 - `publication_attestation.py` verifies administrator signatures over complete
   publication claim waves.
+- `remote_zip.py` reads selected members of pinned remote ZIP archives by HTTP
+  range (CRC-checked, cached, at most 6 concurrent requests);
+  `osworld_source.py` fetches OSWorld files bound to a commit by git blob SHA-1.
+  `holo3_rerun_audit.py` and `holo3_v2.py` are Q2's Holo3 rerun audit (v1
+  post-hoc reproduction, v2 rules).
 - The old agent loops, conditions, metrics, routing and memory trials are in
   `legacy/harness/`.
 
