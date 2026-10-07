@@ -1,0 +1,17 @@
+{
+  "device": "cuda",
+  "layers": [
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14
+  ],
+  "model_dir": "/model-cache/cotcodec-models/qwen3-0.6b-base",
+  "out_dir": "/outputs/probe",
+  "profile": "registered",
+  "spawned_at": 1791399354.429622,
+  "worker": 1
+}

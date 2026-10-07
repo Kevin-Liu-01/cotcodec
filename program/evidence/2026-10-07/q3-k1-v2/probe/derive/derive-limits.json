@@ -1,0 +1,46 @@
+{
+  "limits": {
+    "smoke": {
+      "minutes": 11,
+      "max_gpu_hours": 0.19
+    },
+    "headroom-dev": {
+      "minutes": 11,
+      "max_gpu_hours": 0.19
+    },
+    "resume-r0": {
+      "minutes": 15,
+      "max_gpu_hours": 0.25
+    },
+    "resume-r1": {
+      "minutes": 12,
+      "max_gpu_hours": 0.2
+    },
+    "resume-r2": {
+      "minutes": 11,
+      "max_gpu_hours": 0.19
+    },
+    "main": {
+      "minutes": 50,
+      "max_gpu_hours": 3.34
+    },
+    "extension": {
+      "minutes": 53,
+      "max_gpu_hours": 3.54
+    }
+  },
+  "total_gpu_hours_with_probe": 8.05,
+  "gauntlet_required": true,
+  "probe_receipt_sha256": "cae4e94905658f3f638d2eb8e0f504e341d3fbae9e5b08ffabc13940b7c07b4f",
+  "markdown_rows": [
+    "| smoke | 1 | 5.7 | 11 | 0.19 |",
+    "| headroom-dev | 1 | 5.7 | 11 | 0.19 |",
+    "| resume-r0 | 1 | 8.4 | 15 | 0.25 |",
+    "| resume-r1 | 1 | 6.1 | 12 | 0.20 |",
+    "| resume-r2 | 1 | 5.1 | 11 | 0.19 |",
+    "| main (and its continuation, if any) | 4 | 33.6 | 50 | 3.34 |",
+    "| extension (only when the main read calls for it, then mandatory) | 4 | 35.7 | 53 | 3.54 |",
+    "| q3-k1-throughput-probe-v1 | 1 | | 9 | 0.15 |",
+    "| Total with the probe | | | | 8.05 |"
+  ]
+}
