@@ -35,6 +35,21 @@ provenance.
   PROCEED_TO_K1 and an equivalent resume test bound to image B, the bundle,
   the frozen preregistration and its tabled code digests (program decision
   D16).
+- Q3 K1 successor (`q3-k1-localization-screen-v2`, program decision D20):
+  `run_sparse_indexer_phase0a_v2.py` is v1's entry point on the batched bank
+  (same phases, signals and exit codes; the smoke measures steady-state rates
+  and gates the main job and the worst-case extension against probe-derived
+  limits); `probe_sparse_indexer_k1_throughput.py` is the synthetic-token
+  throughput probe (`q3-k1-throughput-probe-v1`, one GPU, no data reads, its
+  own deadline before USR1, arm sizes checked by `planned_wall_s`);
+  `derive_sparse_indexer_k1_v2_limits.py` turns its receipt into the
+  contract's job limits (and refuses when the summed caps, the worst-case
+  extension and every probe run included, exceed 8 GPU-h);
+  `fill_sparse_indexer_k1_v2_manifests.py` fills `experiments/manifests/q3-k1-v2/`
+  with v1's gates plus the limits re-derived from the probe receipt;
+  `fill_sparse_indexer_k1_probe_manifest.py` fills the probe's manifest;
+  `run_sparse_indexer_k1_v2_doctor.py` is the v2 CPU doctor (float64 and
+  exact equivalence with v1's code, tiny end to end).
 - `run_holo3_rerun_audit_doctor.py` is Q2's Holo3 rerun audit; its v2 stages
   refuse to run until `q2-holo3-rerun-audit-v2` is frozen in the repository
   ledger (a scratch `--ledger` alone does not open the gate), and a v2 receipt
