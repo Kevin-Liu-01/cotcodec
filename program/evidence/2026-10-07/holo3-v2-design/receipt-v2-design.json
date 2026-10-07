@@ -49,15 +49,15 @@
     "code_files_dirty": false,
     "files_sha256": {
       "harness/holo3_rerun_audit.py": "785aa90eb59d81933a976986808da575844c689c796b6324085fded647a194dd",
-      "harness/holo3_v2.py": "0ea7a0041d8da049cce6138435a9fb27c65dc31e8d436322e7b05802e2a13194",
+      "harness/holo3_v2.py": "166f30b7ff06197a4bf65632f1e4537f2a63eb2cffad2551a071cca31798e442",
       "harness/osworld_source.py": "ae4f358e2d3c23ebf35d3df5d3e02886f25870196a0d9f5cab3b1d2a30cc44a7",
       "harness/remote_zip.py": "534b84c97b54b83a8fce225bfecf2a23aaa7cd2501b0030121043caf857b2061",
-      "scripts/run_holo3_rerun_audit_doctor.py": "214599fb0cdaa1bddfb9a58bb409809e6d29faed93be8984c48e70e2084ef754"
+      "scripts/run_holo3_rerun_audit_doctor.py": "b36ba6b4197064828d4205bd9cbd4942111a2e9196d0bd6defb2db97833fb667"
     },
-    "git_head": "0b0211678a6197107d064f3fdc9d4e41866e89d5"
+    "git_head": "c499d75d00fa16b3cd4c65791a0116b80f7b8bf4"
   },
   "doctor": "holo3-rerun-audit",
-  "elapsed_seconds": 157.419,
+  "elapsed_seconds": 133.478,
   "environment": {
     "numpy": "2.5.2",
     "python": "3.14.6",
@@ -180,7 +180,7 @@
     },
     "v2": {
       "experiment_id": "q2-holo3-rerun-audit-v2",
-      "file_sha256": "09944492a396163b63bb8c3b9351f77e43dd1f2ed997e6cd447ac1a85a23a400",
+      "file_sha256": "abb6e999682c75d3b60b8262cc34dac2c2485cd3570fd9a643b41bc2f33b00c1",
       "ledger": {
         "frozen": false,
         "reason": "experiment id q2-holo3-rerun-audit-v2 is not frozen"
@@ -1320,7 +1320,7 @@
     }
   },
   "stage": "v2-design",
-  "started_at": "2026-10-07T10:27:59.733272+00:00",
+  "started_at": "2026-10-07T11:22:12.913610+00:00",
   "status": "PASS",
   "transfer": {
     "bytes": 134007022,

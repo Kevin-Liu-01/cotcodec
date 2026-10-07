@@ -18,14 +18,22 @@ rules the adversarial review rejected.
 | Item | Value |
 |---|---|
 | Command | `uv run --locked python scripts/run_holo3_rerun_audit_doctor.py --stage v2-design --cache-dir CACHE --output receipt-v2-design.json`, with `CACHE` a fresh, empty directory |
-| Code | commit `0b0211678a6197107d064f3fdc9d4e41866e89d5` (the code the pre-freeze audit's fixes produced), code files clean, fresh clone from a git bundle on the H100 host (CPU only, no GPU, no Slurm) |
+| Code | commit `c499d75d00fa16b3cd4c65791a0116b80f7b8bf4` (the code the pre-freeze re-audit's fixes produced), code files clean, fresh clone from a git bundle on the H100 host (CPU only, no GPU, no Slurm) |
 | Environment | Python 3.14.6, numpy 2.5.2, scipy 1.18.0 (recorded in the receipt) |
-| Started | 2026-10-07T10:27:59Z, 157 s |
+| Started | 2026-10-07T11:22:12Z, 133 s |
 | Transfer | 134,007,022 B in 968 range requests, 0 retries, cold cache |
-| Receipt SHA-256 | `c6ced5fc9e214aef396e6460e244c0a1a1d293978df4a02511dfca8c8757ac16` |
+| Receipt SHA-256 | `edbad4090767c220c914b2ff01390e631195a1171015adcfb61d16b6dc823f4b` |
 | Controls | 6 of 6 PASS: 20 Holo3 domain cells and totals, leaderboard sheet, `SHA256SUMS` (1,448 members recomputed), package summaries, registered H reference, receipt public safety |
 
-This receipt supersedes the one generated at 08:14:31Z from commit
+This receipt supersedes the one generated at 10:27:59Z from commit
+`0b0211678a6197107d064f3fdc9d4e41866e89d5` (SHA-256
+`c6ced5fc9e214aef396e6460e244c0a1a1d293978df4a02511dfca8c8757ac16`, kept in
+git history). The re-audit changed only the labels inside a non-confirmatory
+v2 receipt and added the interpreter run condition, so it changed the code
+hashes; every result in `results.v2_design`, every control and the transfer
+totals are identical to that receipt's.
+
+That receipt superseded the one generated at 08:14:31Z from commit
 `7192c20aff1f318b2f200b8b10ef6235557669f4` (SHA-256
 `0b48edeeaabcce27edd58d4ba32271b5e10c4613826e5ebc2e449335f954addf`, kept in
 git history). The pre-freeze audit changed the tool-error and text criteria,
