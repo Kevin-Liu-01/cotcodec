@@ -372,8 +372,11 @@ def validate_manifest(raw: Any) -> dict[str, Any]:
                 "latency_reps",
                 "exposure_probe",
             },
+            {"tap_selftest"},
         )
         cycles = _int(workload["cycles"], "workload.cycles", 1, 60)
+        if "tap_selftest" in workload:
+            _bool(workload["tap_selftest"], "workload.tap_selftest")
         boot_timeout = _int(workload["boot_timeout_s"], "workload.boot_timeout_s", 60, 900)
         settle_timeout = _int(workload["settle_timeout_s"], "workload.settle_timeout_s", 0, 300)
         _bool(workload["hmp_input_check"], "workload.hmp_input_check")

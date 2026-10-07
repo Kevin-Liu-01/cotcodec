@@ -259,6 +259,26 @@ def test_cycle_verdict_flags_leftover_sentinel():
     assert driver.cycle_verdict(record, [])["no_gpu"] is False
 
 
+def test_tap_selftest_is_an_optional_boolean_and_gates_the_cycle():
+    manifest = base_manifest()
+    manifest["workload"]["tap_selftest"] = True
+    validate_manifest(manifest)
+    manifest["workload"]["tap_selftest"] = "yes"
+    with pytest.raises(ManifestError, match="tap_selftest"):
+        validate_manifest(manifest)
+    record = {
+        "cycle": 0,
+        "token": "q2ap-9-c00",
+        "runner_result": {"tap_selftest": {"ok": True}},
+        "vm_measurements": {},
+        "vm_inspect": {},
+        "teardown": {},
+    }
+    assert driver.cycle_verdict(record, [])["tap_selftest_ok"] is True
+    record["runner_result"]["tap_selftest"]["ok"] = False
+    assert driver.cycle_verdict(record, [])["tap_selftest_ok"] is False
+
+
 def test_labels_are_scoped_to_the_job():
     labels = container_labels(base_manifest(), "77", "vm", 3)
     assert labels["cotcodec.slurm_job"] == "77" and labels["cotcodec.cycle"] == "3"

@@ -522,6 +522,7 @@ def run_cycle(
             config.update(
                 latency_reps=workload["latency_reps"],
                 hmp_input_check=workload["hmp_input_check"],
+                tap_selftest=workload.get("tap_selftest", False),
                 full_facts=cycle == 0,
             )
         else:
@@ -622,6 +623,7 @@ def cycle_verdict(record: dict[str, Any], seen_tokens: list[str]) -> dict[str, A
         "sentinel_readback_gsettings": str(after.get("gsettings")) == SENTINEL_BLINK,
         "hmp_ok": hmp.get("ok"),
         "hmp_steps": {s["id"]: s["ok"] for s in hmp.get("steps") or []},
+        "tap_selftest_ok": (result.get("tap_selftest") or {}).get("ok"),
         "no_gpu": no_gpu,
         "no_published_ports": not inspect.get("port_bindings")
         and not inspect.get("publish_all_ports"),
@@ -671,6 +673,7 @@ def summarize(verdicts: list[dict[str, Any]], records: list[dict[str, Any]]) -> 
         "sentinel_readback_dconf": sum(v["sentinel_readback_dconf"] for v in verdicts),
         "sentinel_readback_gsettings": sum(v["sentinel_readback_gsettings"] for v in verdicts),
         "hmp_cycles_all_ok": sum(1 for v in verdicts if v["hmp_ok"]),
+        "tap_selftest_ok": sum(1 for v in verdicts if v.get("tap_selftest_ok")),
         "hmp_step_pass_counts": {k: f"{sum(v)}/{len(v)}" for k, v in sorted(hmp_steps.items())},
         "no_gpu_all": all(v["no_gpu"] for v in verdicts),
         "no_published_ports_all": all(v["no_published_ports"] for v in verdicts),
@@ -808,6 +811,8 @@ def main(argv: list[str] | None = None) -> int:
         and receipt["qcow2_unchanged"]
         and not receipt["labelled_containers_left"]
     )
+    if workload.get("tap_selftest"):
+        infra_ok = infra_ok and summary["tap_selftest_ok"] == summary["cycles"]
     if workload["kind"] == "rdev-capture":
         # One boot, no reset check; the capture itself is summarized below.
         infra_ok = (
