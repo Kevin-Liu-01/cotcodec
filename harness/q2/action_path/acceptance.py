@@ -96,6 +96,25 @@ def batch_end(run_dir: str) -> dict[str, int] | None:
     return {"driver_exit": int(driver_exit), "labelled_containers_left": int(left)}
 
 
+def recorded_slurm_state(run_dir: str, job: str) -> dict[str, str] | None:
+    """The end state ``scripts/record_slurm_end_states.sh`` caught for this job, if any.
+
+    The watcher writes ``<run root>/slurm-state/<job>.txt`` (the ``scontrol show job``
+    text) next to the job's run directory; a job Slurm had already forgotten is recorded
+    as ``forgotten`` and gives None.
+    """
+    path = os.path.join(os.path.dirname(os.path.normpath(run_dir)), "slurm-state", f"{job}.txt")
+    if not os.path.exists(path):
+        return None
+    with open(path, encoding="utf-8") as handle:
+        text = handle.read()
+    state = re.search(r"\bJobState=(\S+)", text)
+    code = re.search(r"\bExitCode=(\S+)", text)
+    if not state or not code:
+        return None
+    return {"state": state.group(1), "exit_code": code.group(1)}
+
+
 def load(
     run_dir: str,
     slurm: dict[str, str] | None = None,
@@ -104,12 +123,15 @@ def load(
     """One campaign: manifest, receipt, end state and its sessions' trials.
 
     ``slurm`` is the job's Slurm end state (``{"state", "exit_code"}``) when the operator
-    read it with ``scontrol show job`` before Slurm forgot the job; without it the batch
-    script's own record decides. ``earlier`` holds the loaded earlier attempts of the same
+    read it with ``scontrol show job`` before Slurm forgot the job; when it is not given,
+    the watcher's record is used if there is one, and without either the batch script's
+    own record decides. ``earlier`` holds the loaded earlier attempts of the same
     campaign (section 6.1), oldest first.
     """
     manifest = _read(os.path.join(run_dir, "manifest.json"))
     receipt = _read(os.path.join(run_dir, "receipt.json"))
+    if slurm is None:
+        slurm = recorded_slurm_state(run_dir, str(receipt.get("job_id")))
     sessions = []
     paths = glob.glob(os.path.join(run_dir, "cycles", "cycle-[0-9][0-9]*.json"))
     # Cycle numbers are plan indices; sort them as numbers (cycle-100 after cycle-99).

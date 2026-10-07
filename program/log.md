@@ -306,3 +306,38 @@ Append-only. Newest entries at the bottom.
 - Nothing frozen. Next: Kevin's A4 decision, then the owner freezes
   `q2-action-path-v1`, `-inputs` and `-executor`; C2, then C1 and C3, then
   A1-A6 and the ladder.
+
+## 2026-10-07 — Action-path suite: review of `2b492cd` answered
+
+- An independent review found the branch not ready to freeze: C2's L0-raw
+  prediction ignored the timing failures development had found (stale
+  screenshots, chord releases losing their modifier state), so C2 would very
+  likely have failed v1 for a reason unrelated to the names it tests; and the
+  A4 guest-server decision was still open. Fixed at `30d8c7f` (registration
+  section 17, design decisions 34-39): C2 is judged on the event and text
+  channels (marker reported; key-release state not compared); C3 counts only
+  clean kills against a clean reference; admission checks every file the
+  frozen tables pin and refuses unpinned files; end states come from the
+  batch script's own record or a Slurm watcher
+  (`scripts/record_slurm_end_states.sh`), a campaign is rerun at most once and
+  never loses its failures; an undelivered reset observation charges the
+  session's first trial; ladder runner CPUs are registered; repair attempts
+  name their executor addenda; `acceptance.py` is frozen with the inputs
+  addendum, before C2 runs. Found while fixing: C2 could not have been
+  submitted before the executor freeze, and a restart between two entries
+  went untyped; both fixed.
+- A guest-server restart now relaunches the tap with the probe. Development
+  run 662 SIGKILLed the server after the tenth trial of each session: only
+  that next trial failed (27 of 28 per session passed), against 55 trials
+  charged in run 622.
+- Final development runs at `30d8c7f` (seed 42, CPU only, COMPLETED 0:0,
+  no GPU, `System.qcow2` unchanged): L0-fixed on one VM (663, 400 trials) and
+  on 8 VMs (664, 800 trials), 200 of 200 cells each; H-OSW-fixed (665, fails
+  only R03 and R09, outside spec); H-GA (666, fails only R02, R04, R06 and
+  R10, outside spec); canary (667, 60 of 60).
+- Recounted from the receipts: the guest server crashed once in 8,114
+  `/accessibility` calls (the first count said 7,969); A4 as registered would
+  pass with probability about 0.01, with a single-event 95% range of 0.89 to
+  0. The A4 decision remains Kevin's (inputs addendum, section 6, options
+  1-5). jinja2 is in the dev extra, so the template check runs.
+- Nothing frozen, nothing pushed. GPU time 0.

@@ -11,7 +11,7 @@ summaries extracted from the job receipts, with the receipt SHA-256 recorded.
 | `boot-reset-report.json` | Jobs 369 (smoke), 372 (bridge exposure) and 374 (22 cold boots): boot and settle times, reset sentinel, isolation, guest facts, HMP reachability |
 | `rdev-capture-report.json` | Jobs 387 (superseded) and 393 (reference): the R-dev capture of the 35 key, chord and Caps Lock entries, 5 repetitions each; job 468, the same plan re-captured with the rewritten tap |
 | `tap-selftest-report.json` | Jobs 467, 469, 470 and 471: the rewritten XRecord tap's oracle self-test after the review |
-| `development-runs.json` | Jobs 482-637: inputs validation and development (seed 42, never evidence), one row per job |
+| `development-runs.json` | Jobs 482-637 and 662-667: inputs validation and development (seed 42, never evidence), one row per job |
 
 ## What the runs show
 
@@ -97,7 +97,7 @@ device in any container.
   35 entries stable, and all 35 projections identical to job 393's, so
   `rdev_reference.json` is unchanged. `COMPLETED`, exit `0:0`.
 
-## Development (seed 42, never evidence; jobs 482-637)
+## Development (seed 42, never evidence; jobs 482-637 and 662-667)
 
 Development runs iterate the executor, the harness adapters and the canary
 before the freeze (preregistration section 10). None of them is evidence for
@@ -126,6 +126,7 @@ What the development runs found and what changed (commits on
 | 620, 631-632 | `091b33e` | Writer put an emoji before the space typed ahead of it, in 1 of the 336 Writer trials of runs 501-632 (job 620; jobs 631-632 typed every Writer entry five times without it) | none; reported (GNOME's input-method daemon sits between X and GTK applications) |
 | 622 | `81fd5f3` | the guest server crashed inside `/accessibility`; systemd stopped everything it had launched (probe and tap) and restarted it, so one session's 55 trials were charged | restarts typed as `guest_server_restart` (`d0c4cec`); A4's exposure is a decision for the owner (inputs addendum, section 6) |
 | 545-632 | `a1d7e10`-`091b33e` | the nudge's `DamageAdd` on InputOnly windows drew a `BadMatch` error on almost every action (harmless; those windows have no contents) | InputOnly windows skipped (`d0c4cec`) |
+| 662 | `30d8c7f` | after the review of `2b492cd`: the guest server SIGKILLed on purpose after the tenth trial of each session (one per setting), the fault of run 622 | with the tap relaunched alongside the probe, only the next trial failed in each session (`guest_server_restart` typed, server 1747 to 2125 and 1766 to 2520), 27 of 28 trials passed per session, both tap segments' mapping checks clean |
 
 The final validation, at `81fd5f3` (with the warm-up), at `091b33e` (the
 canary's idle wait) and at `82af567` (the final runtime commit; the files the
@@ -153,9 +154,50 @@ design (preregistration section 3):
 | 636 | `82af567` | H-GA, every corpus cell, 1 repetition per setting | 186 | 178 of 186 | R02 (outside spec), R04 (outside spec), R06 (outside spec), R10 (outside spec) |
 | 637 | `82af567` | canary, every app and entry, 1 repetition | 60 | 60 of 60 | none |
 
+After the review of `2b492cd`, the fixes (`30d8c7f`) changed the session,
+runner, driver and manifest code, so the final validation was repeated there
+(every job `COMPLETED` 0:0 as recorded by a watcher, driver exit 0, no GPU in
+its TRES, `System.qcow2` unchanged, nothing labelled left). These are the
+runs the executor addendum's byte-identity rule refers to:
+
+| Job | Commit | Campaign | Trials | Cells PASS | Not PASS |
+|---|---|---|---:|---:|---|
+| 662 | `30d8c7f` | L0-fixed, 28 entries, 1 repetition per setting, guest server SIGKILLed after each session's tenth trial | 56 | 54 of 56 | `type_long_200` in both settings: the trial right after each restart (`guest_server_restart`) |
+| 663 | `30d8c7f` | L0-fixed, all 100 entries, 2 repetitions per setting, one VM | 400 | 200 of 200 | none |
+| 664 | `30d8c7f` | L0-fixed, all 100 entries, 4 repetitions per setting, 8 VMs | 800 | 200 of 200 | none |
+| 665 | `30d8c7f` | H-OSW-fixed, every corpus cell, 1 repetition per setting | 198 | 194 of 198 | R03 (outside spec), R09 (outside spec) |
+| 666 | `30d8c7f` | H-GA, every corpus cell, 1 repetition per setting | 186 | 178 of 186 | R02 (outside spec), R04 (outside spec), R06 (outside spec), R10 (outside spec) |
+| 667 | `30d8c7f` | canary, every app and entry, 1 repetition | 60 | 60 of 60 | none |
+
+Step p95 2.74 s (663, one VM) and 2.79 s (664, 8 VMs); boot p95 19.1 s and
+19.3 s. Every trial's reset observation was delivered. The acceptance
+analysis's loader read all six run directories (end state from the batch
+record and the watcher's Slurm record, both agreeing), and C4's check passed
+in 140 of 140 (663) and 280 of 280 (664) key, chord and Caps Lock trials.
+
 From job 545 on (the working repaint request), no trial ended on a stale
 marker: 0 of 2,114 typing trials (one-sided 95% upper bound 0.14%),
-against 31 of 941 in runs 504-541.
+against 31 of 941 in runs 504-541. Counting rule, recounted from the
+receipts after the review: every trial of a `suite-development` campaign
+(any layer, mutant runs excluded) whose catalog entry contains a `type`
+action; a stale marker is a trial whose verdict has the reason `marker [seq,
+crc] != probe final [...]` and no infrastructure failure. The recount gives
+31 of 940 for runs 504-541 and 0 of 2,100 for runs 545-637 (10 of those
+trials had an infrastructure failure, the session job 622's restart broke
+among them); the first counts above and the review's (965 and 2,154) differ
+only in which trials entered the population, and none shows a stale marker
+after the repaint request. Counting only `type_*` entries of L0-fixed: 22 of
+595 before and 0 of 1,446 after (0 of 189 more in jobs 662-664). That bound
+(0.14% per typing trial) is about three times looser than the 5 x 10^-4
+per-action rate A4 must show for the typing class, so A4 can still fail on a
+repaint loss too rare for development to see.
+
+Accessibility calls, recounted the same way: 8,114 `/accessibility` calls
+(8,117 attempts) in the 113 accessibility-setting sessions of runs 484-622,
+counting the reset observation and every step's call; the first count said
+7,969. Two observation faults: run 537's HTTP 500 on its session's first
+call (recovered by the retry) and run 622's crash on its session's third
+call.
 
 The acceptance analysis (`acceptance.py`) run over these receipts for
 information: job 609's 280 key, chord and Caps Lock trials all matched their

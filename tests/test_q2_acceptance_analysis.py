@@ -572,3 +572,23 @@ def test_load_reads_the_batch_record_and_charges_an_undelivered_reset_observatio
         "retried": ["screenshot"],
     }
     assert loaded["sessions"][0]["trials"][0]["pass"]
+
+
+def test_load_uses_the_watchers_slurm_record(tmp_path):
+    trial = {"seq": 0, "cell": "key_enter", "verdict": {"pass": True, "infra": [], "reasons": []}}
+    cycle = {"cycle": 0, "setting": "screenshot", "boot": {}, "trials": [trial]}
+    run = _write_run(tmp_path, cycle, "driver_exit=0 labelled_containers_left=0\n")
+    assert acc.load(run)["slurm"] is None
+    states = tmp_path / "slurm-state"
+    states.mkdir()
+    (states / "700.txt").write_text("JobId=700 JobName=q2 JobState=TIMEOUT Reason=TimeLimit\n"
+                                    "   ExitCode=0:15 RunTime=01:00:00\n")  # fmt: skip
+    loaded = acc.load(run)
+    assert loaded["slurm"] == {"state": "TIMEOUT", "exit_code": "0:15"}
+    assert "TIMEOUT" in acc.counting_problems(loaded)[0]
+    # An explicit reading wins; a job Slurm had forgotten leaves the batch record to decide.
+    assert acc.load(run, {"state": "COMPLETED", "exit_code": "0:0"})["slurm"]["state"] == (
+        "COMPLETED"
+    )
+    (states / "700.txt").write_text("forgotten: slurm_load_jobs error: Invalid job id\n")
+    assert acc.load(run)["slurm"] is None and acc.end_state_problems(acc.load(run)) == []

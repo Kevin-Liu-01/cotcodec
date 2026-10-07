@@ -64,7 +64,17 @@ provenance.
   `render_q2_action_path_manifest.py` fills a scored campaign's manifest (A1-A6,
   the ladder, C1-C3) from a local export of the frozen commit and the ledger,
   and refuses before the freeze; acceptance seeds 43 and 44 stay refused until
-  the registration and both addenda are in the ledger.
+  the registration and both addenda are in the ledger. Admission also checks
+  every file the frozen digest tables pin in the export (and, with the executor
+  addendum, refuses any unpinned file under `harness/q2/`), so export the
+  commit that records the ledger rows and change nothing pinned; C2 renders
+  with only the inputs addendum frozen; runner CPUs default to
+  `manifest.runner_cpus(N)` and any other value is refused; a repair attempt
+  `--attempt 2` needs `q2-action-path-v1-executor-a2` frozen. Slurm forgets a
+  finished job within minutes: start `record_slurm_end_states.sh
+  RUN_ROOT/slurm-state JOB...` on the host right after submitting (the
+  analysis reads its records); without one the batch script's own
+  `driver_exit=0 labelled_containers_left=0` record decides.
 - `create_source_archive.py`, `verify_compute_provenance.py` and
   `verify_publication_attestation.py` bind source, image and claims.
   Archives hold regular files only. `--discovery` leaves out a symlink only

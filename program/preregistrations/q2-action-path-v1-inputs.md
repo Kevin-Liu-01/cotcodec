@@ -14,7 +14,9 @@ Validity control C2 may be scored only after this ledger entry exists.
   pointer park and the side-effect restorations), the canary driver (app
   preparation, launch, wait, read-back, close), the two detection controls'
   translators with the unmodified upstream parsers they read, the code that
-  judges a trial, and the VM lane that runs every scored campaign.
+  judges a trial, the acceptance analysis (`acceptance.py`, which decides C2
+  and so must be fixed before C2 runs), and the VM lane that runs every
+  scored campaign, with the package files it imports.
 
 ## 1. Frozen files
 
@@ -23,7 +25,9 @@ them; the ledger row adds the repository's git head
 (`git_head_at_freeze`). A test (`tests/test_q2_prereg_inputs.py`) recomputes
 every digest from the repository, so no listed file can change without
 changing this file. Every scored campaign runs from a source tree exported
-at a commit where these digests hold; its receipt records the tree digest.
+at a commit where these digests hold; `manifest.py` refuses it otherwise, at
+submission and again inside the job (main preregistration, design decision
+35), and its receipt records the tree digest.
 
 Frozen with this file (SHA-256 of the committed bytes):
 
@@ -56,7 +60,7 @@ Frozen with this file (SHA-256 of the committed bytes):
 | `harness/q2/action_path/upstream/PROVENANCE.json` | `5bef93df835c560b1f8dc6e8cfe7d6c207ba7fbe2e26c861541878563062744d` |
 | `infra/slurm/host-single-node/vm-campaign.sbatch` | `3d86820d176e3a9f0699814a19f62154cde00f88da1777a33c804e884288ac8a` |
 | `scripts/submit_vm_campaign.py` | `f08aafc8bc693cd6eb6850ff972a3401f3bddc99f3c14e03187b4d313fcc5917` |
-| `harness/q2/action_path/acceptance.py` | `9e70d23b673134950f978b0406c396de71c68ea7bda317af15997ec53a1ed761` |
+| `harness/q2/action_path/acceptance.py` | `f8c8e8ea0cb1595d25a65cb40da8ab635b2b34274c048f591fa4cd63a656813b` |
 | `harness/__init__.py` | `17dac2704be26050e324aa36aba6d2c855abbd592e4d72f750b9b6e9c4399fec` |
 | `harness/q2/__init__.py` | `0932bda132c1dab03f40e460874a6827c4609424815e65eedcfefd3cd0b943a1` |
 | `harness/q2/action_path/__init__.py` | `8ce4d0afdd20f6b09dbb4e9d40d24acead2fc1992fccebd1ddf3891ec402613f` |
@@ -151,15 +155,35 @@ file equals it), so freezing the catalog fixes them.
   that `DesktopEnv`'s three attempts do not deliver; a retry that delivers is
   reported (`observation_retries`), not a failure. `suite.py` adds
   `guest_server_restart` when the guard's reports before and after an entry
-  name different guest-server processes. `suite.py` runs a session
-  (tap, probe, the guard's warm-up, `DesktopEnv.reset`'s observation, pre and
-  post guards, actions, marker) and assembles each trial's observation;
-  `verdict.py` applies sections 4.3 and 5. The lane (`runner.py`,
-  `driver.py`, `manifest.py`, the batch script and the submitter) runs every
-  campaign as a CPU-only Slurm job (decisions D12, D13); `manifest.py` admits
-  an acceptance or scored-control campaign only when the ledger freezes the
-  main preregistration and the addenda it needs, and refuses seeds 43 and 44
-  for every other purpose.
+  name different guest-server processes, or, when the guard before the entry
+  could not run, when the report after it names a server other than the last
+  one seen. `suite.py` runs a session
+  (tap, probe, the guard's warm-up, `DesktopEnv.reset`'s observation, whose
+  delivery the runner records, pre and post guards, actions, marker) and
+  assembles each trial's observation; when the probe is gone after an entry
+  and the tap's process is gone too (a guest-server restart stops both), it
+  relaunches the tap into a new file before relaunching the probe, and
+  `segment_check` judges each tap's records against that tap's own keymap.
+  `verdict.py` applies sections 4.3 and 5.
+- **Acceptance analysis** (`acceptance.py`). The main preregistration's
+  sections 5-9 as code (its design decision 32): end states from the batch
+  script's own record and, when read, Slurm; the rerun rules; an undelivered
+  reset observation charged to the session's first trial; the realized order
+  and one source tree per criterion; A1-A6; C1; C2's reading of L0-raw trials
+  (main section 8, decision 34); C3's clean kills (decision 36); C4; and the
+  ladder's N* with the foreign-load abort and its rerun cap.
+- **Lane** (`runner.py`, `driver.py`, `manifest.py`, the batch script and
+  the submitter). Every campaign runs as a CPU-only Slurm job (decisions
+  D12, D13). `manifest.py` admits an acceptance or scored-control campaign
+  only when the ledger freezes the main preregistration and the addenda it
+  needs, every file their frozen tables pin holds its digest in the exported
+  source tree, and, when the executor addendum is needed, no file under
+  `harness/q2/` (Markdown aside) is unpinned; it names the executor addendum
+  of each repair attempt, fixes the runner CPUs per concurrency, and refuses
+  seeds 43 and 44 for every other purpose. Development manifests may name a
+  trial after which the runner SIGKILLs the guest server
+  (`kill_guest_server_after_seq`), to exercise the restart handling; no
+  scored campaign can.
 
 ## 3. Validation before this freeze (infrastructure only)
 
@@ -211,28 +235,51 @@ later change to a file listed in section 1 (from `git log 29b056e..`):
 | `dba0580` | `suite.py` | A trial's compact tap window keeps each mapping notify's kind and keycode range (diagnostic, never judged). Run 549 could not otherwise tell which notifies surrounded its `chord_super_d` failures. |
 | `a6623ae` | `guest/guard.py`, `suite.py`, `runner.py` | The session warm-up described in section 2. Runs 549 (8 VMs) and 574 (one VM, the same 14 sessions): `chord_super_d` failed in the two sessions whose first key event was its Super_L press, the `d` press arriving with state 0, and in every session of runs 546 and 549 the keymap was re-sent right after the session's first key. |
 | `59697b3` | `guest/canary.py` | Writer, Chrome and VS Code trials also wait until the trial's processes are idle before the first action (section 2). Run 613, on a loaded host: three VS Code trials lost their first keys or clicks (`type_symbols_shifted` read back empty, `type_emoji` lost its first word and emoji, `triple_click_line` became a click inside the word) although the editor's status-bar items were showing; VS Code was still loading. |
-
 | `d0c4cec` | `guest/guard.py`, `suite.py` | Every guard report names the guest server process that ran it, and an entry whose two reports name different processes gets the infrastructure failure `guest_server_restart` (main section 6.1). Run 622: the server crashed inside `/accessibility`; its systemd unit stopped every process it had launched, the probe and the tap included, and restarted it 5 s later, so the rest of that session was charged with missing tap windows. |
+| `30d8c7f` | `suite.py`, `runner.py`, `driver.py` | After the review of `2b492cd`: when the probe is gone after an entry and the tap's process is gone too, the tap is relaunched into a new file before the probe, and each tap's records are checked against its own keymap; a restart between entries, when the guard before the next entry cannot run, is charged to that entry as `guest_server_restart`; the runner records whether `DesktopEnv.reset`'s observation was delivered; a development-only hook SIGKILLs the guest server after a given trial. Run 622 had charged 55 trials of one session to a single restart (its tap gone). Development run 662 (the hook after the tenth trial of each of its two sessions, one per setting) then failed only that next trial in each session, with `guest_server_restart` typed and the tap and probe relaunched; 27 of 28 trials passed in each session, every tap segment's mapping check clean. |
+| `30d8c7f` | `manifest.py` | After the review: admission checks every file the needed registrations' tables pin and, with the executor addendum, refuses any unpinned file under `harness/q2/` (main design decision 35); repair attempts name `q2-action-path-v1-executor-a2` or `-a3`, and C1-C3 have none; C2's manifest needs only the inputs addendum (it could not have been submitted before the executor freeze); the runner CPUs of a scored campaign are `runner_cpus(N)` (main decision 38); the development fault hook is admitted for suite development only. Development manifests are judged as before. |
+| `30d8c7f` | `acceptance.py` (pinned here from this commit on; it was in the executor addendum) | After the review (and, one commit later, reading the end state that `scripts/record_slurm_end_states.sh` records next to a run directory): C2's reading of L0-raw trials (main decision 34), C3's clean kills (decision 36), end states and reruns (decision 37), the reset-observation charge and one source tree per criterion. No scored data exists; every rule is driven on synthetic campaigns by `tests/test_q2_acceptance_analysis.py`. |
 
 The probe change makes the no-action entry's screenshot start from a settled
 screen, the canary changes make the read-back report what the app holds, and
 the warm-up and the reset observation move once-per-boot effects out of the
-first entry. One change touches how a trial is judged: the observation-failure
+first entry. Two changes touch how a trial is judged: the observation-failure
 rule of `b603347`, which aligns the code with main section 6.1 (a recovered
-retry had been counted as a failure, which 6.1 did not say); the retries stay
-in every report.
+retry had been counted as a failure, which 6.1 did not say; the retries stay
+in every report), and the restart rule of `30d8c7f`, which types a restart
+between entries that the guard could not see before. The analysis rules of
+`30d8c7f` (C2, C3, end states, reruns, the reset observation) were written in
+answer to the review of the registration, not to any trial's outcome; no
+scored campaign has run.
 
 ## 6. A decision before the freeze: guest-server restarts and A4
 
 Main section 16, item 9: in development the OSWorld guest server crashed once
-in 7,969 `/accessibility` calls (its tree walk runs on a thread pool), and its
-systemd unit then stopped every process the server had launched. A crash is an
-infrastructure failure (main section 6.1), and A4 needs zero failures over
-36,550 accessibility calls (36,016 steps and 534 reset observations in its
-screenshot-plus-accessibility sessions): about 4.6 expected crashes at that
-rate, so A4 would pass with probability about 0.01. The
-registration keeps the strict rule; the options the owner can take before the
-freeze, each with its cost:
+in the 8,114 `/accessibility` calls of runs 484-622 (8,117 attempts with
+retries; the first count, 7,969, missed some calls; its tree walk runs on a
+thread pool), and its systemd unit then stopped every process the server had
+launched. A crash is an infrastructure failure (main section 6.1), and A4
+needs zero failures over 36,550 accessibility calls (36,016 steps and 534
+reset observations in its screenshot-plus-accessibility sessions): about 4.5
+expected crashes at that rate, so A4 would pass with probability about 0.01.
+That rate rests on a single event. The exact Poisson 95% interval for one
+event (0.025 to 5.57 events) puts the expected number of crashes in A4
+between about 0.11 and 25, so A4's pass probability under the current rule
+lies between about 0.89 and zero; the point estimate is the one above.
+
+Where the faults struck (recounted from the receipts): there were two
+observation-service faults in the 113 accessibility-setting sessions of runs
+484-622, both in a session's first trial. Run 537's was an HTTP 500 on the session's first `/accessibility` call
+(before the reset observation existed), which its retry recovered. Run 622's
+crash came on the session's third call (the reset observation and the first
+step's call had both answered), and the retry after the restart delivered the
+tree. Per session, the crash (1 of 113 sessions) gives about 4.7 expected crashes
+over A4's 534 accessibility sessions, close to the per-call figure; the HTTP
+500 was delivered by its retry and would not count against A4. Two events cannot
+show whether faults cluster at a session's start.
+
+The registration keeps the strict rule; the options the owner can take before
+the freeze, each with its cost:
 
 1. Keep the rule. A4 will then very likely fail on a defect of the observation
    service rather than of the action path, and Stage 1 stays blocked until the
@@ -245,6 +292,18 @@ freeze, each with its cost:
    example, at most 5 x 10^-4 restarts per accessibility call from a
    dedicated campaign), with Stage 1 counting restarts per episode.
 4. Make the probe and the tap survive a restart (start them in their own
-   systemd scope) so a restart costs one trial instead of a session; this
-   improves the accounting under any of the options above but changes no
-   verdict on its own.
+   systemd scope). Since `30d8c7f` the suite relaunches the tap with the
+   probe after a restart, so a restart already costs the entry it hits rather
+   than the rest of the session (development run 662; section 5); a separate
+   scope would also spare that entry. Neither changes a verdict on its own.
+5. Warm the accessibility service up at boot (suggested by the review of
+   `2b492cd`): after `DesktopEnv.reset`, call `/accessibility` until two
+   consecutive calls deliver, and have Stage 1 do the same. It is cheap and
+   leaves the runtime as upstream ships it, but the one crash on record came
+   after two consecutive delivered calls in its session, so this would not
+   have prevented it; on the present evidence it is not expected to change
+   A4's outlook.
+
+Whichever is chosen, the decision and its reason go into
+`program/decisions.md` before `q2-action-path-v1` is frozen, and the
+single-event uncertainty above is reported with A4.
