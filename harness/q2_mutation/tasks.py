@@ -232,9 +232,9 @@ def file_cache_path(url: str) -> str:
     return urllib.parse.unquote(pinned[len(FILE_CACHE_PREFIX) + len(FILE_CACHE_REVISION) + 1 :])
 
 
-# The VM's OSWorld server runs with WorkingDirectory=/home/user
-# (desktop_env/server/osworld_server.service:11) and applies expanduser and
-# expandvars to upload paths (desktop_env/server/main.py:1166).
+# The VM's OSWorld server runs with WorkingDirectory=/home/user (the VM image's
+# /etc/systemd/system/osworld.service; desktop_env/server/osworld_server.service:11)
+# and applies expanduser and expandvars to upload paths (server/main.py:1166).
 VM_HOME = "/home/user"
 
 
