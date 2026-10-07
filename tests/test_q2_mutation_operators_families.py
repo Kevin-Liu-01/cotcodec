@@ -317,3 +317,46 @@ def test_text_families_end_to_end(tmp_path: Path, kind: str) -> None:
         mutant = tmp_path / "mutants" / record["mutant_id"] / name
         done = verify(record, base, mutant, logs[record["mutant_id"]])
         assert is_admitted(done), (record["operator"], done["purity_checks"])
+
+
+def _xlsx_spec(
+    reqs: list[tuple[str, str, str]], allowed: list[str] | None = None
+) -> RequirementSpec:
+    return _spec("xlsx", requirements=[
+        {"req_id": rid, "statement": text, "check_kind": kind, "observable": text}
+        for rid, text, kind in reqs
+    ], allowed_variations=allowed or [])
+
+
+def test_flagged_entries_are_questions_not_freedoms(tmp_path: Path) -> None:
+    base_req = [("R1", "D5 holds the grand total of D2:D4 as a formula.", "cell_value")]
+    flagged = _xlsx_spec(base_req, ["[AMBIGUOUS] whether D5 may be a typed value or a formula"])
+    record = _one(_ctx(tmp_path / "a", "xlsx", flagged), "xlsx.alt.literal_for_formula")
+    assert record["label"] == "ambiguous"
+    assert record["witness"]["argument"].startswith("W-A-")
+    freed = _xlsx_spec(base_req, ["whether D5 is a typed value or a formula"])
+    record = _one(_ctx(tmp_path / "b", "xlsx", freed), "xlsx.alt.literal_for_formula")
+    assert record["label"] == "should_pass_alt_solution"
+    flagged_req = _xlsx_spec([("R1", "[AMBIGUOUS] B8 may hold 12 or 12.0.", "cell_value")])
+    record = _one(_ctx(tmp_path / "c", "xlsx", flagged_req), "xlsx.viol.value_perturb")
+    assert record["label"] == "ambiguous"
+    assert record["witness"]["argument"].startswith("W-R-FLAGGED")
+
+
+def test_preservation_requirements_bind_the_untouched_cells(tmp_path: Path) -> None:
+    spec = _xlsx_spec([
+        ("R1", "D5 holds the total of D2:D4.", "cell_value"),
+        ("R2", "Cells in A1:D8 that held values initially keep their original values.",
+         "cell_value"),
+        ("R3", "Cells outside A1:D8 are not touched.", "cell_value"),
+    ])
+    ctx = _ctx(tmp_path, "xlsx", spec)
+    assert ctx.bindings["R1"].units == ("sheets/Data/cells/D5",)
+    kept = set(ctx.bindings["R2"].units)
+    assert ctx.bindings["R2"].method == "explicit-delta"
+    assert "sheets/Data/cells/D5" not in kept and "sheets/Data/cells/B2" in kept
+    assert ctx.bindings["R3"].method == "excluded_only" and not ctx.bindings["R3"].units
+    perturb = registry()["xlsx.viol.value_perturb"]()
+    planned, _ = plan_operator(perturb, ctx)
+    assert planned and all(p.record["witness"]["req_ids"] == ["R2"] for p in planned)
+    assert all(p.record["label"] == "should_fail_violation" for p in planned)

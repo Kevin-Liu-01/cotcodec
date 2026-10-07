@@ -38,10 +38,12 @@ from harness.q2_mutation.operators._diff import resolve
 from harness.q2_mutation.operators._purity import Expectation
 from harness.q2_mutation.operators._spec import (
     Binding,
+    is_flagged,
     mentions,
     pptx_shapes,
     quoted,
     req_text,
+    requirement_mentions,
 )
 
 FAMILY = "pptx"
@@ -179,10 +181,27 @@ class SubvisibleNudge(Operator):
         )
 
     def judge(self, ctx, where, built):
-        return judge_equivalence(
-            ctx, self.aspects,
-            f"moves shape {built.facts['name']!r} right by 0.01 mm (one LibreOffice unit), "
-            "which no viewer can see",
+        change = (f"moves shape {built.facts['name']!r} right by 0.01 mm (one LibreOffice "
+                  "unit), which no viewer can see")
+        readers = [
+            r for r in ctx.spec.requirements
+            if ctx.touches(where.unit, set(ctx.bindings[r.req_id].units))
+        ]
+        exact = [(r.req_id, requirement_mentions(r, "exact_geometry")) for r in readers]
+        exact = [(rid, hits) for rid, hits in exact if hits]
+        if exact:
+            return Judgement(
+                AMBIGUOUS,
+                f"W-E-CONFLICT: {change}; but {exact} read this shape's exact geometry.",
+                "W-E-CONFLICT",
+                tuple(rid for rid, _ in exact),
+            )
+        return Judgement(
+            EQUIV,
+            f"W-E-SILENT: {change}; no requirement that reads this shape states exact "
+            "coordinates, and the purity check confirms only its offset changed.",
+            "W-E-SILENT",
+            tuple(r.req_id for r in ctx.spec.requirements),
         )
 
 
@@ -321,10 +340,11 @@ class TextboxForPlaceholder(Operator):
 
 
 def _allowed_placeholder(ctx: Context) -> list[str]:
+    """Allowed variations that permit a plain text box (unflagged, naming a text box)."""
     return [
         f"allowed_variations[{i}] {text!r}"
         for i, text in enumerate(ctx.spec.allowed_variations)
-        if re.search(r"text ?box|placeholder", text, re.IGNORECASE)
+        if re.search(r"text ?box", text, re.IGNORECASE) and not is_flagged(text)
     ]
 
 

@@ -125,13 +125,37 @@ def spec_mentions(spec: RequirementSpec, aspect: str) -> list[tuple[str, list[st
     return out
 
 
+AMBIGUOUS_FLAG = "[AMBIGUOUS]"
+
+
+def is_flagged(text: str) -> bool:
+    """The blind author marks open questions with a leading ``[AMBIGUOUS]``."""
+    return text.lstrip().startswith(AMBIGUOUS_FLAG)
+
+
 def allowed_mentions(spec: RequirementSpec, aspect: str) -> list[tuple[int, str, list[str]]]:
-    """Allowed-variation entries that mention ``aspect`` (index, text, snippets)."""
+    """Allowed-variation entries that mention ``aspect`` (index, text, snippets).
+
+    Entries the author flagged ``[AMBIGUOUS]`` record an open question, not a
+    freedom, so they never count here; see :func:`flagged_mentions`.
+    """
     out = []
     for index, text in enumerate(spec.allowed_variations):
         hits = mentions(text, aspect)
-        if hits:
+        if hits and not is_flagged(text):
             out.append((index, text, hits))
+    return out
+
+
+def flagged_mentions(spec: RequirementSpec, aspect: str) -> list[str]:
+    """Flagged requirements or allowed variations that mention ``aspect``."""
+    out = []
+    for req in spec.requirements:
+        if is_flagged(req.statement) and requirement_mentions(req, aspect):
+            out.append(req.req_id)
+    for index, text in enumerate(spec.allowed_variations):
+        if is_flagged(text) and mentions(text, aspect):
+            out.append(f"allowed_variations[{index}]")
     return out
 
 
@@ -410,6 +434,13 @@ def bind(req: Requirement, snap: dict, delta: dict[str, set[str]] | None) -> Bin
         units, hints = _text_hint_units(req, snap)
     units = list(dict.fromkeys(units))
     delta_set = set(delta or {})
+    text = req_text(req)
+    if units and _PRESERVE.search(text) and delta_set:
+        # A preservation requirement ("keep the original values") reads the units the
+        # task must not change: its explicit units minus the task delta.
+        kept = [u for u in units if not _touches_delta(u, delta_set)]
+        if kept:
+            return Binding(req.req_id, tuple(kept), "explicit-delta", "medium", tuple(hints))
     if units:
         if delta_set:
             touched = [
@@ -419,10 +450,33 @@ def bind(req: Requirement, snap: dict, delta: dict[str, set[str]] | None) -> Bin
             if touched:
                 return Binding(req.req_id, tuple(touched), "explicit+delta", "high", tuple(hints))
         return Binding(req.req_id, tuple(units), "explicit", "medium", tuple(hints))
+    if _has_excluded_reference(text):
+        # Every reference names cells the requirement excludes; the task delta is
+        # not what such a requirement reads, so do not fall back to it.
+        return Binding(req.req_id, (), "excluded_only", "none", ())
     kind_units = [u for u, kinds in (delta or {}).items() if _kind_fits(req.check_kind, kinds, u)]
     if kind_units:
         return Binding(req.req_id, tuple(sorted(kind_units)), "delta_kind", "low", ())
     return Binding(req.req_id, (), "none", "none", ())
+
+
+_PRESERVE = re.compile(
+    r"\b(keep|keeps|kept|unchanged|preserv\w*|untouched|remain\w*|stay\w*|"
+    r"not (be )?(touched|changed|modified|altered))\b",
+    re.IGNORECASE,
+)
+
+
+def _touches_delta(unit: str, delta: set[str]) -> bool:
+    return unit in delta or any(d.startswith(unit + "/") for d in delta)
+
+
+def _has_excluded_reference(text: str) -> bool:
+    for pattern in (_CELL_REF, _COLUMN):
+        for match in pattern.finditer(text):
+            if _excluded(text, match.start()):
+                return True
+    return False
 
 
 def _kind_fits(check_kind: str, kinds: set[str], unit: str) -> bool:

@@ -153,11 +153,18 @@ def text_violation_reason(req_text_value: str, quoted_hits: list[str], old_word:
 def judge_text_edit(req, binding, change: str, old_word: str):
     """R rule for text edits: the requirement quotes or otherwise pins the edited text."""
     from harness.q2_mutation.operators._base import AMBIGUOUS, VIOLATION, Judgement
-    from harness.q2_mutation.operators._spec import quoted, req_text
+    from harness.q2_mutation.operators._spec import is_flagged, quoted, req_text
 
     reason = text_violation_reason(req_text(req), quoted(req_text(req)), old_word)
     confidence = binding.confidence if binding else "none"
     method = binding.method if binding else "none"
+    if is_flagged(req.statement):
+        return Judgement(
+            AMBIGUOUS,
+            f"W-R-FLAGGED: {change}; the spec flags {req.req_id} itself as ambiguous.",
+            "W-R-FLAGGED",
+            (req.req_id,),
+        )
     if reason and confidence in {"high", "medium"}:
         return Judgement(
             VIOLATION,

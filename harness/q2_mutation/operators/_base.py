@@ -25,6 +25,8 @@ from harness.q2_mutation.operators._spec import (
     Binding,
     allowed_mentions,
     bound_units,
+    flagged_mentions,
+    is_flagged,
     req_text,
     requirement_mentions,
     spec_mentions,
@@ -189,7 +191,15 @@ def judge_equivalence(ctx: Context, aspects: tuple[str, ...], change: str) -> Ju
     """E rule: the change touches only aspects no requirement constrains."""
     hits = [h for aspect in aspects for h in spec_mentions(ctx.spec, aspect)]
     allowed = [a for aspect in aspects for a in allowed_mentions(ctx.spec, aspect)]
+    flagged = sorted({f for aspect in aspects for f in flagged_mentions(ctx.spec, aspect)})
     every = tuple(r.req_id for r in ctx.spec.requirements)
+    if flagged and not allowed:
+        return Judgement(
+            AMBIGUOUS,
+            f"W-E-FLAGGED: {change}; the spec flags this aspect as ambiguous ({flagged}).",
+            "W-E-FLAGGED",
+            tuple(f for f in flagged if not f.startswith("allowed")),
+        )
     if hits and not allowed:
         return Judgement(
             AMBIGUOUS,
@@ -237,12 +247,21 @@ def judge_alternative(
             "W-A-ALLOWED",
             (req.req_id,),
         )
-    if explicit:
+    if explicit and not is_flagged(req.statement):
         return Judgement(
             VIOLATION,
             f"W-A-PINNED: {change}; but {req.req_id} explicitly requires the replaced "
             f"mechanism ({explicit}).",
             "W-A-PINNED",
+            (req.req_id,),
+        )
+    flagged = sorted({f for a in mechanism_aspects for f in flagged_mentions(ctx.spec, a)})
+    if is_flagged(req.statement) or flagged:
+        which = req.req_id if is_flagged(req.statement) else flagged
+        return Judgement(
+            AMBIGUOUS,
+            f"W-A-FLAGGED: {change}; the spec flags {which} as ambiguous.",
+            "W-A-FLAGGED",
             (req.req_id,),
         )
     if pinned:
@@ -275,6 +294,13 @@ def judge_violation(
     by_kind = req.check_kind in implied_by_kind
     confidence = binding.confidence if binding else "none"
     method = binding.method if binding else "none"
+    if is_flagged(req.statement):
+        return Judgement(
+            AMBIGUOUS,
+            f"W-R-FLAGGED: {change}; the spec flags {req.req_id} itself as ambiguous.",
+            "W-R-FLAGGED",
+            (req.req_id,),
+        )
     if (hits or by_kind) and confidence in {"high", "medium"}:
         reason = (
             f"it mentions {sorted(set(hits))}" if hits else f"its check_kind is {req.check_kind}"
@@ -306,6 +332,13 @@ def judge_violation(
 def judge_extra(ctx: Context, aspects: tuple[str, ...], change: str, harmful: bool) -> Judgement:
     """F rule (ABC-style): the site is outside every requirement and the task's own edits."""
     allowed = [a for aspect in aspects for a in allowed_mentions(ctx.spec, aspect)]
+    flagged = sorted({f for aspect in aspects for f in flagged_mentions(ctx.spec, aspect)})
+    if flagged and not allowed:
+        return Judgement(
+            AMBIGUOUS,
+            f"W-F-FLAGGED: {change}; the spec flags this aspect as ambiguous ({flagged}).",
+            "W-F-FLAGGED",
+        )
     if allowed:
         return Judgement(
             AMBIGUOUS if harmful else EQUIV,
@@ -350,10 +383,23 @@ def candidate_sites(op: Operator, ctx: Context) -> list[Site]:
                 found.extend(op.sites(ctx, req, ctx.bindings.get(req.req_id)))
     else:
         found.extend(op.sites(ctx, None, None))
-    unique: dict[str, Site] = {}
+    # One site per (unit, detail): keep the requirement with the strongest binding
+    # (then spec order), so the label cites the requirement that best reads the unit.
+    rank = {"high": 0, "medium": 1, "low": 2, "none": 3}
+    order = {r.req_id: i for i, r in enumerate(ctx.spec.requirements)}
+
+    def strength(item: Site) -> tuple[int, int]:
+        if item.req_id is None:
+            return (0, 0)
+        binding = ctx.bindings.get(item.req_id)
+        return (rank[binding.confidence if binding else "none"], order.get(item.req_id, 0))
+
+    best: dict[str, Site] = {}
     for item in found:
-        unique.setdefault(item.key(), item)
-    return list(unique.values())
+        key = canonical_json([item.unit, [list(kv) for kv in item.detail]])
+        if key not in best or strength(item) < strength(best[key]):
+            best[key] = item
+    return list(best.values())
 
 
 def plan_operator(
