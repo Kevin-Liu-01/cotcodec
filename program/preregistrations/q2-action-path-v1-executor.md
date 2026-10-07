@@ -38,7 +38,7 @@ Frozen with this file (SHA-256 of the committed bytes):
 | `harness/q2/vm/guest/canary.py` | `fbe21671a085b1eb58a8de08e4de1b46ce7c19d340576364814253e4a5305099` |
 | `harness/q2/vm/marker.py` | `b786b347fc5573425f14090bd67621294ac5c84671bf67f47e663d693ab17fb9` |
 | `harness/q2/vm/canary_run.py` | `295bdd0916869adf79015bc6da6cba4aff2a0ab9f0dab089e4ed3a3565abb119` |
-| `harness/q2/vm/suite.py` | `cb52a260693de79c6fb851eab2e2d2553ddf619cdfe0fd9c8f7282d5db860785` |
+| `harness/q2/vm/suite.py` | `f9c092212140d708a731b93dd350078d7d8d1298003f378baa0146ceb3d807c4` |
 | `harness/q2/vm/desktop.py` | `67030d6b5d79753e2db65b33bc12af2b5faaee2eacbaa5e49b4eb2de0a31c188` |
 | `harness/q2/vm/runner.py` | `83282118db329f6cc804f1b7b2ff8fe84c503bc508354ed97cb83898bde19547` |
 | `harness/q2/vm/driver.py` | `5afb36ec8a31f749d0275c5909f2c22a858c05f48d6c289ff1560ed0b0bf7a4e` |
