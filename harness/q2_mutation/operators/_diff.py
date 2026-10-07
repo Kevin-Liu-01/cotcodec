@@ -196,7 +196,7 @@ def _diff_sheet(d: _Differ, loc: str, a: dict, b: dict, default_a: dict, default
         d.leaf(f"{cell_loc}/v", CONTENT, ca["v"], cb["v"])
         d.leaf(f"{cell_loc}/f", CONTENT, ca["f"], cb["f"])
         d.mapping(f"{cell_loc}/style", FORMAT, ca["style"], cb["style"])
-    d.leaf(f"{loc}/rows", LAYOUT, a["rows"], b["rows"])
+    d.mapping(f"{loc}/rows", LAYOUT, a["rows"], b["rows"])
     d.leaf(f"{loc}/cols", LAYOUT, a["cols"], b["cols"])
     d.leaf(f"{loc}/merges", FORMAT, a["merges"], b["merges"])
     d.leaf(f"{loc}/conditional_formats", FORMAT, a["conditional_formats"],

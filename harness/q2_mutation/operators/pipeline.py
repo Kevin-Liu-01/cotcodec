@@ -140,11 +140,19 @@ def apply_text_records(records: list[dict], base_path: str | Path,
 
 def verify(
     record: dict,
-    base_path: str | Path,
+    reference_path: str | Path,
     mutant_path: str | Path | None,
     apply_log: dict | None,
 ) -> dict:
-    """Fill ``purity_checks`` and ``output_sha256``; validate against the schema."""
+    """Fill ``purity_checks`` and ``output_sha256``; validate against the schema.
+
+    ``reference_path`` is the null mutant: the base passed through the same
+    applier and save path with no edit (for office files, ``resave_row`` of the
+    base). LibreOffice is not a load-save fixed point (Impress shrinks shape
+    extents by 1/100 mm per round trip; Writer adds style properties on the
+    second save), so comparing against the base itself would report that drift
+    as collateral change. For text files the base is its own null mutant.
+    """
     out = dict(record)
     checks: list[PurityCheck] = []
     status = (apply_log or {}).get("status", "missing")
@@ -152,10 +160,13 @@ def verify(
         detail = (apply_log or {}).get("error", "no apply record")
         checks.append(PurityCheck("applied", False, str(detail)[:500]))
     else:
-        checks.append(PurityCheck("applied", True, (apply_log or {}).get("lo_build", "python")))
+        build = (apply_log or {}).get("lo_build") or "python"
+        checks.append(PurityCheck(
+            "applied", True, f"{build}; reference sha256 {sha256_file(reference_path)}"
+        ))
         family = record["family"]
         try:
-            base = snapshot(base_path, family)
+            base = snapshot(reference_path, family)
             actual = snapshot(mutant_path, family)
             expectation = Expectation.from_dict(record["recipe"]["params"]["expectation"])
             checks.extend(check(base, actual, expectation))

@@ -192,11 +192,19 @@ def to_api_grammar(formula: str) -> str:
     """Convert Excel separators to the UNO API grammar (``;`` between arguments).
 
     ``XCell.setFormula`` parses English function names with ``;`` as the
-    parameter separator. Commas inside string literals are preserved.
+    parameter separator and ``$Sheet.A1`` sheet references. Commas inside
+    string literals are preserved.
     """
     out = []
     for token in tokenize(formula):
-        out.append(";" if token.kind == "op" and token.text == "," else token.text)
+        if token.kind == "op" and token.text == ",":
+            out.append(";")
+        elif token.kind == "ref" and token.sheet is not None:
+            # The API grammar writes sheet references as $Sheet.A1 (PODF), not Sheet!A1.
+            name = _quote_sheet(token.sheet)
+            out.append(f"${name}.{token.first}" + (f":{token.last}" if token.last else ""))
+        else:
+            out.append(token.text)
     return "=" + "".join(out)
 
 

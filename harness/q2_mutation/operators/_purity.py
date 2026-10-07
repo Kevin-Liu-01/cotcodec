@@ -43,6 +43,7 @@ class Expectation:
     appearance: list[str] = field(default_factory=list)
     same_items: list[str] = field(default_factory=list)
     numeric_tolerance: float = 1e-9
+    int_tolerance: int = 0
 
     def as_dict(self) -> dict:
         return {
@@ -56,6 +57,7 @@ class Expectation:
             "appearance": list(self.appearance),
             "same_items": list(self.same_items),
             "numeric_tolerance": self.numeric_tolerance,
+            "int_tolerance": self.int_tolerance,
         }
 
     @classmethod
@@ -71,6 +73,7 @@ class Expectation:
             appearance=list(data.get("appearance", [])),
             same_items=list(data.get("same_items", [])),
             numeric_tolerance=float(data.get("numeric_tolerance", 1e-9)),
+            int_tolerance=int(data.get("int_tolerance", 0)),
         )
 
 
@@ -94,7 +97,11 @@ def _describe(changes: list[Change]) -> str:
     return "; ".join(shown) + (f"; +{more} more" if more > 0 else "")
 
 
-def _close(a: Any, b: Any, tolerance: float) -> bool:
+def _close(a: Any, b: Any, tolerance: float, int_tolerance: int = 0) -> bool:
+    if int_tolerance and isinstance(a, list) and isinstance(b, list) and len(a) == len(b) and all(
+        isinstance(x, int) and isinstance(y, int) for x, y in zip(a, b, strict=True)
+    ):
+        return all(abs(x - y) <= int_tolerance for x, y in zip(a, b, strict=True))
     if (
         isinstance(a, list) and isinstance(b, list) and len(a) == 2 and len(b) == 2
         and a[0] == b[0] == "n"
@@ -120,8 +127,68 @@ def _style_chain(styles: dict, name: str, kind: str) -> list[dict]:
     return list(reversed(chain))
 
 
+_FALSE_TOGGLES = frozenset(
+    {"b", "bCs", "i", "iCs", "caps", "smallCaps", "strike", "dstrike", "vanish", "outline",
+     "shadow", "emboss", "imprint"}
+)
+_RPR_DEFAULTS = {"u": "none", "vertAlign": "baseline", "spacing": "0", "position": "0",
+                 "kern": "0", "color": "auto", "highlight": "none"}
+
+
+def _merge(base: dict, over: dict) -> dict:
+    """Overlay ``over`` on ``base``; nested dicts (rFonts, spacing, ind) merge by key."""
+    out = dict(base)
+    for key, value in over.items():
+        if isinstance(value, dict) and isinstance(out.get(key), dict):
+            out[key] = _merge(out[key], value)
+        else:
+            out[key] = value
+    return out
+
+
+def _normal_rpr(props: dict) -> dict:
+    out = {}
+    for key, value in props.items():
+        if key in APPEARANCE_IGNORED:
+            continue
+        if key in _FALSE_TOGGLES and value is False:
+            continue
+        if _RPR_DEFAULTS.get(key) == value:
+            continue
+        out[key] = value
+    return out
+
+
+def _normal_ppr(props: dict) -> dict:
+    out = {}
+    for key, value in props.items():
+        if key in APPEARANCE_IGNORED:
+            continue
+        attrs = value.get("attrs") if isinstance(value, dict) else None
+        if key == "jc" and attrs and attrs.get("val") in {"left", "start"}:
+            continue
+        if key == "bidi" and attrs and attrs.get("val") in {"0", "false"}:
+            continue
+        if key in {"ind", "spacing"} and attrs is not None:
+            kept = {k: v for k, v in attrs.items() if v not in {"0", 0}}
+            single = kept.get("line") == "240" and kept.get("lineRule", "auto") == "auto"
+            if key == "spacing" and single:
+                kept.pop("line", None)
+                kept.pop("lineRule", None)
+            if not kept:
+                continue
+            value = {**value, "attrs": kept}
+        out[key] = value
+    return out
+
+
 def docx_effective(snap: dict, block: dict) -> dict:
-    """Paragraph appearance after resolving document defaults, styles and direct formatting."""
+    """Paragraph appearance after resolving defaults, styles and direct formatting.
+
+    Values equal to the format's defaults (a false toggle, ``u=none``, zero
+    indents, single line spacing, left alignment) are dropped, so explicit and
+    implicit defaults compare equal.
+    """
     styles = snap.get("styles") or {"defaults": {"rpr": {}, "ppr": {}}, "para": {}, "char": {}}
     name = block.get("style") or next(
         (n for n, entry in styles["para"].items() if entry.get("default")), ""
@@ -129,23 +196,17 @@ def docx_effective(snap: dict, block: dict) -> dict:
     ppr = dict(styles["defaults"].get("ppr", {}))
     base_rpr = dict(styles["defaults"].get("rpr", {}))
     for entry in _style_chain(styles, name, "para"):
-        ppr.update(entry.get("ppr", {}))
-        base_rpr.update(entry.get("rpr", {}))
-    ppr.update(block.get("ppr", {}))
+        ppr = _merge(ppr, entry.get("ppr", {}))
+        base_rpr = _merge(base_rpr, entry.get("rpr", {}))
+    ppr = _merge(ppr, block.get("ppr", {}))
     spans = []
     for text, props in block.get("spans", []):
         effective = dict(base_rpr)
         for entry in _style_chain(styles, props.get("rStyle", ""), "char"):
-            effective.update(entry.get("rpr", {}))
-        effective.update(props)
-        spans.append(
-            (text, {k: v for k, v in effective.items() if k not in APPEARANCE_IGNORED})
-        )
-    return {
-        "text": block.get("text"),
-        "ppr": {k: v for k, v in ppr.items() if k not in APPEARANCE_IGNORED},
-        "spans": merge_spans(spans),
-    }
+            effective = _merge(effective, entry.get("rpr", {}))
+        effective = _merge(effective, props)
+        spans.append((text, _normal_rpr(effective)))
+    return {"text": block.get("text"), "ppr": _normal_ppr(ppr), "spans": merge_spans(spans)}
 
 
 def _item_signatures(value: Any) -> list[str]:
@@ -267,7 +328,8 @@ def check(base: dict, actual: dict, expectation: Expectation) -> list[PurityChec
             except (KeyError, IndexError, ValueError):
                 wrong.append(f"{loc}: unresolvable")
                 continue
-            if not _close(value, expected, expectation.numeric_tolerance):
+            if not _close(value, expected, expectation.numeric_tolerance,
+                          expectation.int_tolerance):
                 wrong.append(f"{loc}: expected {expected!r}, found {value!r}")
         results.append(
             PurityCheck(

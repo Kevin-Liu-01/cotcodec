@@ -1083,6 +1083,24 @@ class FormatUnrelatedCell(Operator):
         )
 
 
+_CELL_ALLOW = re.compile(r"^sheets/([^/]+)/cells/([A-Z]{1,3})([0-9]+)/")
+
+
+def allow_edited_rows(self: Operator, ctx: Context, built: Build) -> Build:
+    """LibreOffice recomputes the automatic height of a row whose cell it edits.
+
+    That is a consequence of the edit, so the row attributes of every row that
+    holds an edited cell join the footprint. Rows of untouched cells stay out.
+    """
+    rows = set()
+    for pattern in built.expectation.allow + built.expectation.must_change:
+        match = _CELL_ALLOW.match(pattern)
+        if match:
+            rows.add(f"sheets/{match.group(1)}/rows/{match.group(3)}/*")
+    built.expectation.allow = list(built.expectation.allow) + sorted(rows)
+    return built
+
+
 OPERATORS: tuple[type[Operator], ...] = (
     DocTitle,
     ViewZoom,
@@ -1107,3 +1125,6 @@ OPERATORS: tuple[type[Operator], ...] = (
     DeleteUnrelatedSheet,
     FormatUnrelatedCell,
 )
+
+for _op in OPERATORS:
+    _op.finalize = allow_edited_rows  # type: ignore[method-assign]
