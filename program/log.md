@@ -86,3 +86,5 @@ Append-only. Newest entries at the bottom.
   verbatim and labelled post-hoc per D10) and `q2-holo3-rerun-audit-v2`
   (confirmatory rules on data nobody has read; sign-offs in D15). The v2
   rules run within 14 days of the freeze, under Python 3.14 with scipy 1.18.0.
+- Merged the serving-throughput probe and froze `serving-throughput-probe-v1`
+  (sign-offs D17, D18). Full suite on the host: 848 passed.
