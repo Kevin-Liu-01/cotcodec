@@ -1,133 +1,232 @@
 # Suite mutation operators for q2-action-path-v1 (reviewed plan, defect B2).
 #
 # The suite is itself a checker, so it is mutation-tested: each operator is a
-# deliberate defect applied to the L0-fixed executor or to a harness parser.
-# Validity control C3 requires that 100% of non-equivalent mutants are killed
-# (some catalog entry or regression case fails, or the entry guard fires).
-# `detected_by` is the author's prediction of which entries kill a mutant; it
-# is reported next to the observed killers and is never used to score.
+# deliberate defect applied to the L0-fixed executor or to a Stage-1 harness
+# parser. Validity control C3 requires that every scored mutant is killed or
+# equivalent. `kill_cells` is the author's prediction of which cells kill a
+# mutant; it is reported next to the observed killers and never used to score.
 #
-# Layers: executor = applied to the IR -> device translation of L0-fixed;
-# parser = applied to a harness's response parser (IR emit boundary);
-# both = applied to each.
-schema: cotcodec-q2-mutation-operators-v1
+# Revised before the freeze (review of 2026-10-07): the kill rule now says
+# which cells can kill, per layer, and which operator/layer pairs are not
+# scored, so no mutant can be unkillable by construction (M01 on H-GA used to
+# change only cells outside H-GA's spec).
+schema: cotcodec-q2-mutation-operators-v2
 status: draft
+scored_layers:
+  L0-fixed: >-
+    The executor. Its cells are all 100 catalog entries (gating or not; every
+    entry has an oracle) and the entry guard.
+  H-OSW-fixed: >-
+    The Stage-1 parser from OSWorld bfd62bdc with its own-spec fixes. Its cells
+    are its expressible catalog entries rendered as model responses (the
+    corpus) and its gating or declared-deviation R cases, each run through the
+    unmutated L0-fixed executor.
+  H-GA: >-
+    The Stage-1 parser from gym-anything aae6f7607 with its IR adapter. Its
+    cells are its expressible catalog entries rendered as model responses and
+    its gating R cases, each run through the unmutated L0-fixed executor.
+unscored_layers:
+  H-OSW-up: >-
+    Detection control C1: an upstream parser that carries known defects and has
+    no spec it is expected to pass, so a kill is undefined. Its defects are the
+    natural mutants C1 scores.
+  H-GA-buggy: >-
+    Detection control C1, for the same reason.
+kill_rule: >-
+  A mutant of a scored layer is killed when at least one of that layer's cells
+  is not PASS (FAIL, FLAKY, or a guard violation charged to it) in the mutant's
+  run. Cells outside a harness's spec (the R table's "outside" cells and
+  catalog entries outside its expressible set) run and are reported but can
+  never kill: they have no expectation to fail.
 equivalence_rule: >-
-  A mutant is equivalent only if, on every catalog entry (and every regression
-  case, for parser mutants) in the same run order, its XRecord event stream
-  with timestamps removed, its probe text buffer and its terminal action are
+  A mutant is equivalent only if, on every cell of its layer in the same run
+  order (outside-spec cells included), its XRecord event stream with
+  timestamps removed, its probe text buffer and its terminal action are
   byte-identical to those of the unmutated code. Equivalence is decided by
-  this comparison alone, never by argument.
+  this comparison alone, never by argument; `predicted` below is a prediction.
+scoring_run: >-
+  C3 is scored once, after the q2-action-path-v1-executor addendum is frozen,
+  at the frozen executor and adapter SHA with the frozen corpus, seed 42 order,
+  N = 1, screenshot observation setting; development runs of the mutants are
+  informative only. A pair whose status is excluded or not-applicable is listed
+  in the C3 table with its reason and is not scored.
+regression_cases:
+  # Status per Stage-1 harness, as in the preregistration's R table:
+  # gating = judged against Table 21 semantics; declared = judged against the
+  # harness prompt's declared deviation; outside = runs, reported, never kills.
+  R01: {name: middle_click, H-OSW-fixed: gating, H-GA: gating, tolerance_px: 2}
+  R02: {name: ctrl_click_text, H-OSW-fixed: gating, H-GA: outside, tolerance_px: 2}
+  R03: {name: ctrl_click_keys, H-OSW-fixed: outside, H-GA: outside, tolerance_px: 2}
+  R04: {name: shift_alt_ctrl_shift_clicks, H-OSW-fixed: gating, H-GA: outside, tolerance_px: 2}
+  R05: {name: move_then_scroll, H-OSW-fixed: gating, H-GA: gating, tolerance_px: 2}
+  R06: {name: move_then_drag, H-OSW-fixed: gating, H-GA: outside, tolerance_px: 2}
+  R07: {name: three_calls_one_turn, H-OSW-fixed: gating, H-GA: gating, tolerance_px: 2}
+  R08: {name: triple_click, H-OSW-fixed: declared, H-GA: gating, tolerance_px: 2}
+  R09: {name: scroll_at_coordinate, H-OSW-fixed: outside, H-GA: outside, tolerance_px: 2}
+  R10: {name: hscroll, H-OSW-fixed: declared, H-GA: outside, tolerance_px: 2}
+  R11: {name: terminate_failure, H-OSW-fixed: gating, H-GA: gating, tolerance_px: 2}
+  R12: {name: non_ascii_type, H-OSW-fixed: gating, H-GA: gating, tolerance_px: 2}
+  R13: {name: named_keys, H-OSW-fixed: gating, H-GA: gating, tolerance_px: 2}
+  # Exact: a 0-999 grid scaled by width/1000 instead of /999 moves (999, 999)
+  # by one or two pixels, inside the usual 2 px tolerance (operator M24).
+  R14: {name: corner_999, H-OSW-fixed: gating, H-GA: gating, tolerance_px: 0}
 operators:
   - id: M01-modifier-released-early
     layer: both
     description: Modifier keys are pressed and released before the pointer action instead of being held across it (the Table 20 Ctrl-click defect).
-    detected_by: [click_ctrl_left, click_shift_left, click_alt_left, click_ctrl_shift_right, scroll_ctrl_down_3, scroll_shift_down_3, "regression:ctrl_click_keys", "regression:ctrl_click_text"]
+    applies:
+      L0-fixed: {status: scored, kill_cells: [click_ctrl_left, click_shift_left, click_alt_left, click_ctrl_shift_right, scroll_ctrl_down_3, scroll_shift_down_3]}
+      H-OSW-fixed: {status: scored, kill_cells: [R02, R04, click_ctrl_left, scroll_ctrl_down_3]}
+      H-GA: {status: excluded, reason: "H-GA's prompt documents no modifier parameter for mouse actions; the parser's keys-hold path is reached only by R03 and modifier entries, all outside its spec, so the mutant can change no cell that can kill. Its effect on R03 is reported."}
   - id: M02-button-swap-left-right
     layer: executor
     description: X buttons 1 and 3 are swapped.
-    detected_by: [click_left_center, click_right, drag_short]
+    applies:
+      L0-fixed: {status: scored, kill_cells: [click_left_center, click_right, drag_short]}
   - id: M03-middle-click-noop
     layer: both
     description: A middle click produces no input (the Table 20 middle-click defect).
-    detected_by: [click_middle, "regression:middle_click"]
+    applies:
+      L0-fixed: {status: scored, kill_cells: [click_middle]}
+      H-OSW-fixed: {status: scored, kill_cells: [R01, click_middle]}
+      H-GA: {status: scored, kill_cells: [R01, click_middle]}
   - id: M04-coordinate-shift-5px
     layer: executor
     description: Every pointer x coordinate is shifted by +5 px.
-    detected_by: [click_left_center, move_only, drag_short]
+    applies:
+      L0-fixed: {status: scored, kill_cells: [click_left_center, move_only, drag_short]}
   - id: M05-scroll-sign-flip
     layer: both
     description: The vertical wheel direction is inverted.
-    detected_by: [scroll_down_1, scroll_up_3, scroll_down_then_up_net_zero, "regression:scroll_at_coordinate"]
+    applies:
+      L0-fixed: {status: scored, kill_cells: [scroll_down_1, scroll_up_3]}
+      H-OSW-fixed: {status: scored, kill_cells: [scroll_down_1, scroll_up_3, R05]}
+      H-GA: {status: scored, kill_cells: [scroll_down_1, scroll_up_3, R05]}
   - id: M06-scroll-ticks-doubled
     layer: executor
     description: Each wheel click is sent twice.
-    detected_by: [scroll_down_1, scroll_down_3]
+    applies:
+      L0-fixed: {status: scored, kill_cells: [scroll_down_1, scroll_down_3]}
   - id: M07-text-drop-last-char
     layer: executor
     description: The last code point of every typed string is not typed.
-    detected_by: [type_single_char, type_plain]
+    applies:
+      L0-fixed: {status: scored, kill_cells: [type_single_char, type_plain]}
   - id: M08-text-nfc-normalize
     layer: executor
     description: Typed text is NFC-normalized before typing.
-    detected_by: [type_combining]
+    applies:
+      L0-fixed: {status: scored, kill_cells: [type_combining]}
   - id: M09-text-drop-non-ascii
     layer: executor
     description: Code points above U+007F are silently skipped.
-    detected_by: [type_unicode_bmp, type_emoji, type_rtl, type_combining, type_emoji_zwj, "regression:non_ascii_type"]
+    applies:
+      L0-fixed: {status: scored, kill_cells: [type_unicode_bmp, type_emoji, type_rtl, type_combining, type_emoji_zwj]}
   - id: M10-less-to-greater
     layer: executor
     description: The `<` character is typed with Shift held on the 102nd key, producing `>`.
-    detected_by: [type_symbols_shifted, type_shell_hostile, type_long_500]
+    applies:
+      L0-fixed: {status: scored, kill_cells: [type_symbols_shifted, type_shell_hostile, type_long_500]}
   - id: M11-unknown-key-dropped
     layer: both
     description: Key names outside a short main-block list (KP_Enter, KP_Add, Menu, Caps_Lock, Super_L) are silently dropped.
-    detected_by: [key_kp_enter, key_kp_add, key_menu, caps_lock_roundtrip, chord_super_d, "regression:named_keys"]
+    applies:
+      L0-fixed: {status: scored, kill_cells: [key_kp_enter, key_kp_add, key_menu, caps_lock_roundtrip, chord_super_d]}
+      H-OSW-fixed: {status: scored, kill_cells: [R13, key_kp_enter, key_menu]}
+      H-GA: {status: scored, kill_cells: [R13, key_kp_enter, key_menu]}
   - id: M12-triple-to-double
     layer: both
     description: A triple click is sent as a double click.
-    detected_by: [click_triple_left, "regression:triple_click"]
+    applies:
+      L0-fixed: {status: scored, kill_cells: [click_triple_left]}
+      H-OSW-fixed: {status: scored, kill_cells: [], predicted: equivalent, reason: "its prompt declares triple_click simulated as double-click, so the unmutated parser already emits a double click"}
+      H-GA: {status: scored, kill_cells: [R08, click_triple_left]}
   - id: M13-hscroll-to-vscroll
     layer: both
     description: Horizontal wheel input is sent on the vertical axis.
-    detected_by: [scroll_left_3, scroll_right_3, scroll_diagonal, "regression:hscroll"]
+    applies:
+      L0-fixed: {status: scored, kill_cells: [scroll_left_3, scroll_right_3, scroll_diagonal]}
+      H-OSW-fixed: {status: scored, kill_cells: [], predicted: equivalent, reason: "its prompt declares hscroll mapped to regular scroll"}
+      H-GA: {status: not-applicable, reason: "H-GA has no horizontal scroll action, so there is no code path to mutate"}
   - id: M14-chord-release-order
     layer: executor
     description: Chord keys are released in press order instead of reverse order.
-    detected_by: [chord_ctrl_c, chord_ctrl_shift_t, chord_ctrl_alt_shift_r]
+    applies:
+      L0-fixed: {status: scored, kill_cells: [chord_ctrl_c, chord_ctrl_shift_t, chord_ctrl_alt_shift_r]}
   - id: M15-duplicate-click
     layer: executor
     description: Every single click is sent twice.
-    detected_by: [click_left_center, click_burst_5]
+    applies:
+      L0-fixed: {status: scored, kill_cells: [click_left_center, click_burst_5]}
   - id: M16-double-click-interval-600ms
     layer: executor
     description: The interval between the clicks of a double or triple click is stretched to 600 ms.
-    detected_by: [click_double_left, click_triple_left]
+    applies:
+      L0-fixed: {status: scored, kill_cells: [click_double_left, click_triple_left]}
   - id: M17-drag-teleport
     layer: executor
     description: A drag presses at the start, jumps to the end with no intermediate motion and releases.
-    detected_by: [drag_short, drag_long_diagonal, drag_vertical]
+    applies:
+      L0-fixed: {status: scored, kill_cells: [drag_short, drag_long_diagonal, drag_vertical]}
   - id: M18-first-tool-call-only
     layer: parser
     description: Only the first tool call of a multi-call response is executed (the Table 20 sequence defect).
-    detected_by: ["regression:move_then_scroll", "regression:move_then_drag", "regression:three_calls_one_turn"]
+    applies:
+      H-OSW-fixed: {status: scored, kill_cells: [R05, R06, R07]}
+      H-GA: {status: scored, kill_cells: [R05, R07]}
   - id: M19-last-tool-call-only
     layer: parser
     description: Only the last tool call of a multi-call response is executed.
-    detected_by: ["regression:move_then_scroll", "regression:three_calls_one_turn"]
+    applies:
+      H-OSW-fixed: {status: scored, kill_cells: [R05, R07]}
+      H-GA: {status: scored, kill_cells: [R05, R07]}
   - id: M20-terminate-failure-to-done
     layer: parser
     description: terminate(status=failure) is reported as success.
-    detected_by: ["regression:terminate_failure"]
+    applies:
+      H-OSW-fixed: {status: scored, kill_cells: [R11]}
+      H-GA: {status: scored, kill_cells: [R11]}
   - id: M21-hold-not-released
     layer: executor
     description: The release of a held modifier is skipped (a stuck modifier).
-    detected_by: ["guard:click_ctrl_left", "guard:scroll_ctrl_down_3", "guard:mixed_gesture_state"]
+    applies:
+      L0-fixed: {status: scored, kill_cells: [click_ctrl_left, scroll_ctrl_down_3, mixed_gesture_state]}
   - id: M22-keypad-to-main
     layer: both
     description: KP_Enter is sent as Return and KP_Add as plus.
-    detected_by: [key_kp_enter, key_kp_add]
+    applies:
+      L0-fixed: {status: scored, kill_cells: [key_kp_enter, key_kp_add]}
+      H-OSW-fixed: {status: scored, kill_cells: [key_kp_enter, key_kp_add, R13]}
+      H-GA: {status: scored, kill_cells: [key_kp_enter, key_kp_add, R13]}
   - id: M23-caps-lock-dropped
     layer: executor
     description: Caps_Lock presses are not sent.
-    detected_by: [caps_lock_roundtrip]
+    applies:
+      L0-fixed: {status: scored, kill_cells: [caps_lock_roundtrip]}
   - id: M24-grid-1000-instead-of-999
     layer: parser
     description: Model coordinates are scaled by width/1000 instead of width/999.
-    detected_by: ["regression:corner_999"]
+    applies:
+      H-OSW-fixed: {status: scored, kill_cells: [R14]}
+      H-GA: {status: scored, kill_cells: [R14]}
   - id: M25-shell-expansion
     layer: executor
     description: Typed text passes through a POSIX shell before typing.
-    detected_by: [type_shell_hostile]
+    applies:
+      L0-fixed: {status: scored, kill_cells: [type_shell_hostile]}
   - id: M26-newline-dropped
     layer: executor
     description: Newline characters in typed text are skipped.
-    detected_by: [type_multiline_tabs, seq_long_mixed]
+    applies:
+      L0-fixed: {status: scored, kill_cells: [type_multiline_tabs, seq_long_mixed]}
   - id: M27-extra-buttons-dropped
     layer: executor
     description: Buttons 8 and 9 produce no input.
-    detected_by: [click_button_back, click_button_forward]
+    applies:
+      L0-fixed: {status: scored, kill_cells: [click_button_back, click_button_forward]}
   - id: M28-modifier-text-ignored
     layer: parser
     description: Modifiers given in the `text` parameter of a click are ignored.
-    detected_by: ["regression:ctrl_click_text", "regression:shift_alt_ctrl_shift_clicks"]
+    applies:
+      H-OSW-fixed: {status: scored, kill_cells: [R02, R04, click_ctrl_left]}
+      H-GA: {status: not-applicable, reason: "H-GA's prompt and parser take no modifier in a click's text parameter"}

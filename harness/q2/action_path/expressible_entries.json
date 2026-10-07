@@ -55,6 +55,9 @@
       "scroll_diagonal": [
         "action 0 (scroll): no horizontal scroll action"
       ],
+      "scroll_down_25": [
+        "action 0 (scroll): prompt limits scroll magnitude to 1-10 per call"
+      ],
       "scroll_left_3": [
         "action 0 (scroll): no horizontal scroll action"
       ],
@@ -120,7 +123,6 @@
       "scroll_down_10",
       "scroll_up_3",
       "scroll_at_offcenter_position",
-      "scroll_down_25",
       "scroll_down_then_up_net_zero",
       "no_action_control",
       "click_two_positions_ordered",

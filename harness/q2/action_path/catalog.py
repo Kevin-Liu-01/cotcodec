@@ -17,7 +17,14 @@ import json
 from pathlib import Path
 from typing import Any
 
-from harness.q2.action_path.ir import KEYSYMS, SCREEN, IRError, parse_sequence
+from harness.q2.action_path.ir import (
+    CANONICAL_NAME,
+    KEYSYM_VALUES,
+    KEYSYMS,
+    SCREEN,
+    IRError,
+    parse_sequence,
+)
 from harness.q2.action_path.vocab import entry_gating
 
 CATALOG_PATH = Path(__file__).resolve().parent / "catalog.yaml"
@@ -112,6 +119,28 @@ def apply_buffer_rules(actions: list[dict[str, Any]]) -> str:
     return "".join(buffer)
 
 
+def _is_canonical_keysym(name: Any) -> bool:
+    return isinstance(name, str) and CANONICAL_NAME.get(KEYSYM_VALUES.get(name, -1)) == name
+
+
+def certified_keysyms(data: dict[str, Any], entry_ids: list[str]) -> list[str]:
+    """Keysyms the suite certifies: those named by the given entries' key and modifier fields.
+
+    The IR accepts every X keysym name; acceptance (A1-A6) only covers these.
+    Stage-1 key actions naming any other keysym are uncertified and must be
+    counted by the Stage-1 preregistration.
+    """
+    wanted = set(entry_ids)
+    names: set[str] = set()
+    for entry in data["entries"]:
+        if entry["id"] not in wanted:
+            continue
+        for action in parse_sequence(entry["actions"]):
+            names.update(action.keys or ())
+            names.update(action.modifiers)
+    return sorted(names)
+
+
 def _check_point(point: Any, screen: tuple[int, int], where: str) -> None:
     if (
         not isinstance(point, list)
@@ -130,8 +159,8 @@ def _check_events(events: Any, screen: tuple[int, int], where: str) -> None:
             raise CatalogError(f"{where}: malformed event {event!r}")
         kind = event[0]
         if kind in ("KeyPress", "KeyRelease"):
-            if len(event) not in (2, 3) or event[1] not in KEYSYMS:
-                raise CatalogError(f"{where}: key event {event!r} needs a known keysym")
+            if len(event) not in (2, 3) or not _is_canonical_keysym(event[1]):
+                raise CatalogError(f"{where}: key event {event!r} needs a canonical keysym")
             if len(event) == 3 and (
                 not isinstance(event[2], list) or not set(event[2]) <= set(STATE_MASKS)
             ):
@@ -142,6 +171,36 @@ def _check_events(events: Any, screen: tuple[int, int], where: str) -> None:
             _check_point(event[2:], screen, where)
         else:
             raise CatalogError(f"{where}: unknown event kind {kind!r}")
+
+
+def entry_points(entry: dict[str, Any]) -> set[tuple[int, int]]:
+    """Every screen point an entry's actions or expectations name."""
+    points: set[tuple[int, int]] = set()
+    for action in entry["actions"]:
+        if "x" in action:
+            points.add((action["x"], action["y"]))
+        for point in action.get("path") or []:
+            points.add((point[0], point[1]))
+    expect = entry["expect"]
+    for event in expect.get("events") or []:
+        if event[0] in ("ButtonPress", "ButtonRelease"):
+            points.add((event[2], event[3]))
+    for point in [expect.get("final_pointer")] + list(expect.get("motion_through") or []):
+        if point:
+            points.add((point[0], point[1]))
+    return points
+
+
+def _check_guard(guard: Any, entries: list[dict[str, Any]], screen: tuple[int, int]) -> None:
+    if not isinstance(guard, dict) or "park_pointer" not in guard:
+        raise CatalogError("guard.park_pointer is required")
+    park = guard["park_pointer"]
+    _check_point(park, screen, "guard.park_pointer")
+    for entry in entries:
+        used = entry_points(entry)
+        near = [p for p in used if abs(p[0] - park[0]) <= 2 and abs(p[1] - park[1]) <= 2]
+        if near:
+            raise CatalogError(f"guard.park_pointer is within 2 px of {entry['id']}'s point {near}")
 
 
 def validate_entry(entry: dict[str, Any], screen: tuple[int, int]) -> dict[str, Any]:
@@ -171,7 +230,7 @@ def validate_entry(entry: dict[str, Any], screen: tuple[int, int]) -> dict[str, 
         if expect.get("events") is not None:
             _check_events(expect["events"], screen, where)
         keysyms = expect.get("intended_keysyms") or []
-        if any(k not in KEYSYMS for k in keysyms):
+        if any(not _is_canonical_keysym(k) for k in keysyms):
             raise CatalogError(f"{where}: unknown intended keysym")
     elif oracle == "catalog":
         if "events" in expect:
@@ -214,6 +273,7 @@ def validate(data: dict[str, Any]) -> dict[str, Any]:
             if entry["id"] in members and entry.get("group") != group:
                 raise CatalogError(f"{entry['id']} must be in group {group}")
     results = [validate_entry(entry, screen) for entry in entries]  # type: ignore[arg-type]
+    _check_guard(data.get("guard"), entries, screen)
     pending = [
         e["id"]
         for e in entries

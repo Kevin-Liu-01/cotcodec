@@ -563,6 +563,15 @@ catalog = {
         "group sizes are public facts from sandweave@99ba1abe report.json; every action, "
         "coordinate, string and expectation here was written for this repository."
     ),
+    "guard": {
+        "park_pointer": [1234, 777],
+        "rule": (
+            "before every entry, outside its window, the guard moves the pointer to "
+            "park_pointer; no entry action or expectation uses that point, so an entry "
+            "that moves the pointer always produces motion (move_only would otherwise "
+            "see none if the previous entry ended where it starts)"
+        ),
+    },
     "probe_buffer_rules": {
         "printable": "the code points produced for a KeyPress are appended",
         "Return": "\\n",

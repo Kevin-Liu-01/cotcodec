@@ -23,7 +23,10 @@ plan's spec rule:
 
 Rule: where a prompt is silent, the paper's Table 21 semantics apply; where a
 prompt declares a deviation, the deviation is a logged design difference of
-that harness, and the action is not counted as expressible by it. An entry is
+that harness, and the action is not counted as expressible by it. Every
+declared deviation listed in ``HARNESSES`` is applied by ``expressible``
+(a test checks each one excludes at least one catalog entry or is a
+regression-only case). An entry is
 in G when every one of its actions is expressible by at least one Stage-1
 harness (the union of the vocabularies).
 """
@@ -31,6 +34,10 @@ harness (the union of the vocabularies).
 from __future__ import annotations
 
 from harness.q2.action_path.ir import Action
+
+# aae6f7607 agents/agents/qwen35vl.py: SCROLL_STEP_LIMIT = 10 (line 15), and the
+# prompt's scroll description says "the magnitude must be between 1 and 10".
+H_GA_SCROLL_LIMIT = 10
 
 HARNESSES = {
     "H-OSW": {
@@ -91,6 +98,11 @@ def expressible(harness: str, action: Action) -> tuple[bool, str]:
             )
         if action.modifiers and harness == "H-GA":
             return False, "prompt documents no modifier parameter for scroll"
+        if harness == "H-GA" and abs(action.wheel_y or 0) > H_GA_SCROLL_LIMIT:
+            # Declared deviation: the prompt says the magnitude must be 1 to 10,
+            # and the parser clamps to SCROLL_STEP_LIMIT = 10, so 25 ticks
+            # become 10. A design difference, never a failure (review finding).
+            return False, f"prompt limits scroll magnitude to 1-{H_GA_SCROLL_LIMIT} per call"
         return True, "vertical scroll (after mouse_move to the position)"
     return False, f"unknown op {op}"
 

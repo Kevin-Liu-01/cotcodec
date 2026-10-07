@@ -19,8 +19,19 @@ Conventions, fixed here so no adapter has to guess:
 * ``scroll.wheel_y > 0`` scrolls DOWN (X button 5) by that many wheel clicks;
   ``< 0`` scrolls up (button 4). ``wheel_x > 0`` scrolls RIGHT (button 7),
   ``< 0`` left (button 6). Every adapter converts its own sign convention.
-* Keys are X keysym names (``Return``, ``Control_L``, ``KP_Enter``, ``a``).
-  An unknown name is an error, never a silent drop.
+* Keys are X keysym names (``Return``, ``Control_L``, ``KP_Enter``, ``a``):
+  any name X.Org's ``keysymdef.h`` defines (``keysyms.json``, 2,109 names),
+  so the IR is never narrower than the paper's "key or chord". Aliases are
+  stored under their canonical name (``Page_Up`` becomes ``Prior``). An
+  unknown name is an error, never a silent drop. Which keysyms the suite
+  *certifies* is a separate, smaller set (``CERTIFIED_KEYSYMS`` in
+  ``catalog.py``: those the catalog exercises).
+* Harness coordinates are clamped to the screen *before* they become IR
+  (``clamp_point``), the rule every adapter applies. Upstream, PyAutoGUI
+  passes an off-screen point to XTest and the X server clamps it, so
+  ``(999, 999)`` on the 0-999 grid lands on ``(1919, 1079)``; the clamp keeps
+  that behaviour while the IR itself stays strict and rejects off-screen
+  points.
 * ``key`` presses keys in order and releases them in reverse order.
 * ``modifiers`` on pointer actions are held for the whole action: pressed in
   order before it and released in reverse order after it.
@@ -33,6 +44,7 @@ from __future__ import annotations
 
 import json
 from dataclasses import dataclass, field
+from pathlib import Path
 from typing import Any
 
 SCREEN = (1920, 1080)
@@ -41,8 +53,19 @@ MAX_TEXT = 2000
 MAX_WAIT_MS = 10_000
 MAX_WHEEL = 50
 
-# X keysym name -> (keysym value, QEMU qcode for the HMP reference path or None).
-# Values are from X11 keysymdef.h; qcodes from QEMU's QKeyCode enum.
+# Every keysym name X.Org defines (xorgproto 2024.1 keysymdef.h, MIT/X11 licence;
+# see keysyms.json for the source digest and notice). Name -> value, and the
+# canonical name of each value (the first name defined for it, in file order).
+_KEYSYM_TABLE = json.loads(
+    (Path(__file__).resolve().parent / "keysyms.json").read_text(encoding="ascii")
+)["keysyms"]
+KEYSYM_VALUES: dict[str, int] = {name: value for name, value in _KEYSYM_TABLE}
+CANONICAL_NAME: dict[int, str] = {}
+for _name, _value in _KEYSYM_TABLE:
+    CANONICAL_NAME.setdefault(_value, _name)
+
+# The HMP-referenced subset: X keysym name -> (keysym value, QEMU qcode for the
+# HMP reference path or None). qcodes are from QEMU's QKeyCode enum.
 _LETTERS = {chr(c): (c, chr(c)) for c in range(ord("a"), ord("z") + 1)}
 _DIGITS = {chr(c): (c, chr(c)) for c in range(ord("0"), ord("9") + 1)}
 _FKEYS = {f"F{n}": (0xFFBD + n, f"f{n}") for n in range(1, 13)}
@@ -163,16 +186,40 @@ def _point(x: Any, y: Any, screen: tuple[int, int]) -> tuple[int, int]:
     return _int(x, "x", 0, screen[0] - 1), _int(y, "y", 0, screen[1] - 1)
 
 
+def canonical_keysym(key: Any) -> str:
+    """The canonical X keysym name for ``key``; unknown names raise IRError."""
+    if not isinstance(key, str) or key not in KEYSYM_VALUES:
+        raise IRError(f"unknown keysym name {key!r}")
+    return CANONICAL_NAME[KEYSYM_VALUES[key]]
+
+
 def _keys(value: Any, name: str) -> tuple[str, ...]:
     if not isinstance(value, list | tuple) or not value:
         raise IRError(f"{name} must be a non-empty list of keysym names")
-    keys = tuple(value)
-    for key in keys:
-        if key not in KEYSYMS:
-            raise IRError(f"unknown keysym name {key!r} in {name}")
+    keys = []
+    for key in value:
+        try:
+            keys.append(canonical_keysym(key))
+        except IRError as exc:
+            raise IRError(f"{exc} in {name}") from exc
     if len(set(keys)) != len(keys):
         raise IRError(f"{name} repeats a key")
-    return keys
+    return tuple(keys)
+
+
+def clamp_point(x: float, y: float, screen: tuple[int, int] = SCREEN) -> tuple[int, int]:
+    """The IR-boundary rule for harness coordinates: truncate, then clamp to the screen.
+
+    Both Stage-1 harnesses scale the 0-999 grid with ``int(v * size / 999)``,
+    so 999 becomes 1920 or 1080, one pixel off screen. Upstream the X server
+    clamps the XTest motion; adapters call this function instead, so the IR
+    receives the pixel X would have used. Frozen in the preregistration; the
+    regression case R14 checks it.
+    """
+    return (
+        min(max(int(x), 0), screen[0] - 1),
+        min(max(int(y), 0), screen[1] - 1),
+    )
 
 
 def parse_action(raw: dict[str, Any], screen: tuple[int, int] = SCREEN) -> Action:
