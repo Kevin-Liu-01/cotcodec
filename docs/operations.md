@@ -62,8 +62,80 @@ scontrol show job <job-id>
 ```
 
 Leaving the queue is not success. A run succeeds only with terminal
-`JobState=COMPLETED` and `ExitCode=0:0`. Memory workloads from the old program
-are archived; the submitter rejects them.
+`JobState=COMPLETED` and `ExitCode=0:0`.
+
+Memory workloads from the old program are archived. Both submitters and the
+batch script reject an argv element naming `scripts/run_memory_*.py`,
+`scripts/run_letta*`, `scripts/*memory_model*` or anything under
+`harness/memory_trials` (as a path or a dotted module), the flags
+`--memory-bundle`, `--memory-treatment-mode` and `--expected-memory-system-id`,
+and any non-null `memory_source_admission` or `memory_bundle`. Other arguments
+that mention memory, such as vLLM's `--gpu-memory-utilization 0.9`, are
+admitted.
+
+### Manifest options
+
+Each option is opt-in. The submitter validates it and fails closed; the batch
+script checks it again against the hex-encoded manifest. A manifest that uses
+none of them produces the same sbatch argv, export list and container flags as
+before the options existed.
+
+| Field | Effect |
+|---|---|
+| `seed_binding: {flag: --seeds \| --seed \| --assignment-seeds}` | Required whenever `seeds` is non-empty. The argv must contain that flag once, followed by exactly the declared seeds in order as separate decimal elements, ended by the next `--` option or the end of argv. No other seed option (`--seed`, `--seeds`, `--assignment-seed`, `--assignment-seeds`) and no `--option=value` form may appear. Parse it with `allow_abbrev=False`. |
+| `randomness_contract: deterministic` | For a job with no randomness: `seeds: []`, no `seed_binding`, no seed option in argv. The older `deterministic-all-serve` is accepted with the same meaning. |
+| `container_profile` | `default` (also when absent), `vllm` or `large-cpu-mem`; see below. |
+| `resources.memory_gb` | Slurm gets `--mem=<memory_gb>G` and the container gets `--memory` and `--memory-swap` of exactly that size. The job exits 2 if Slurm does not export `SLURM_MEM_PER_NODE` or it differs. |
+| `model: {kind: none, reason: "..."}` | For jobs that load no checkpoint (kernel-gate validation, CPU doctors on GPUs, VM suites). `reason` is 20-500 characters on one line. No model cache is mounted, no receipt is verified, and `COTCODEC_MODEL_ID=none`. A missing `model` block is still rejected; it never implies `none`. |
+| `allow_shared_gpu: true` with `shared_gpu_reason: "..."` | Skips the refusal in the GPU prolog below. The reason follows the same rule as `model.reason`. |
+
+Container profiles:
+
+| Profile | `/tmp` tmpfs | `--shm-size` | `--pids-limit` |
+|---|---|---|---|
+| `default` | `rw,nosuid,nodev,size=8g`, **noexec** | Docker default (64 MB) | 4096 |
+| `vllm` | `rw,exec,nosuid,nodev,size=32g` | `16g` | 8192 |
+| `large-cpu-mem` | `rw,exec,nosuid,nodev,size=8g` | Docker default (64 MB) | 4096 |
+
+Under `default`, Docker mounts `/tmp` noexec. JIT caches that load compiled
+objects (Triton, TorchInductor) fail there, and `HOME=/tmp/home` puts Triton's
+default cache on `/tmp`. Point them at `/outputs` before importing torch (for
+example, prefix the argv with `env TRITON_CACHE_DIR=/outputs/cache/triton
+TORCHINDUCTOR_CACHE_DIR=/outputs/cache/inductor`), or choose a profile with an
+exec `/tmp`.
+
+### GPU prolog
+
+Slurm 21.08 on this host has no device cgroups, so an allocation does not prove
+the GPUs are idle. Just before `docker create`, the batch script lists compute
+processes with `nvidia-smi --query-compute-apps` and matches them to the UUIDs
+of the allocated GPUs. If any process holds an allocated GPU, the job exits
+**75** with `reason=foreign_gpu_process`; resubmit when the GPU is idle. If the
+list cannot be read, the job exits 2 with `reason=gpu_prolog_unavailable`.
+`gpu-prolog.env` and `gpu-compute-apps-prolog.csv` in the run directory record
+the result. This is a check at one moment, not isolation.
+
+### Signal checkpoint contract
+
+Slurm sends SIGUSR1 to the batch script 180 s before the time limit. The
+script forwards it to the running container at once (and forwards SIGTERM the
+same way). The workload must:
+
+1. On SIGUSR1, finish a complete checkpoint save to `/outputs`.
+2. Only after that save is complete, write `/outputs/checkpoint.ready`
+   atomically: write a temporary file in `/outputs`, then rename it over the
+   marker. A periodic save may update the marker the same way.
+3. Then exit, or keep running until SIGTERM.
+
+The batch script records the marker's device, inode, size and nanosecond mtime
+before it sends the signal. It confirms only a marker that differs from that
+record and was modified no earlier than the signal. A stale marker from a
+periodic save never confirms. It waits up to 120 s or until the container
+exits, then sends SIGTERM if the container is still running. `termination.env`
+records the outcome as `reason=signal_USR1_checkpoint_confirmed`, `_missing`
+(container exited without a new marker), `_timeout` or `_not_forwarded`
+(container not running). Other reasons are `completed`, `workload_failed`,
+`foreign_gpu_process` and `gpu_prolog_unavailable`.
 
 ## Checkpoints
 
