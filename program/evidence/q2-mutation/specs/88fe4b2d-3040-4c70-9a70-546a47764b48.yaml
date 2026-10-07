@@ -1,0 +1,23 @@
+task_id: 88fe4b2d-3040-4c70-9a70-546a47764b48
+author: blind-model-author-v1
+requirements:
+  - req_id: R0
+    statement: (implicit) The document is saved in place at /home/user/Desktop/CCCH9003_Tutorial_guidelines.docx; the rest of the document is unchanged.
+    check_kind: file_exists
+    observable: File loads; paragraphs after the first paragraph and the 9x3 table equal the initial ones.
+  - req_id: R1
+    statement: Each of the 7 sentences of the first paragraph stands on its own line, in original order and wording.
+    check_kind: text_run
+    observable: >-
+      The first 7 non-empty paragraphs (or lines) are, stripped: "The purpose of the tutorial is to facilitate in-depth discussions on a more specific issue related to our lectures.",
+      "Discussions play an important role ... own ideas.", "Besides this, if you can explain something to others clearly, then you really understand it.",
+      "If you can’t, you don’t!", "So, the discussion is also an effective way ... in class.",
+      "The harvest of our tutorials largely depends on your active participation and contribution.", "Thus, be proactive and talkative!".
+  - req_id: R2
+    statement: Exactly one empty line follows each sentence.
+    check_kind: paragraph_format
+    observable: Between consecutive sentences there is exactly one empty paragraph (or one blank line), and one empty line follows the last sentence before "Setting".
+allowed_variations:
+  - Sentence lines may be separate paragraphs or line breaks within one paragraph, as long as one blank line separates them.
+  - '[AMBIGUOUS] After the last sentence the pre-existing empty paragraph may serve as its empty line or an extra one may be added.'
+  - Trailing spaces after sentences.

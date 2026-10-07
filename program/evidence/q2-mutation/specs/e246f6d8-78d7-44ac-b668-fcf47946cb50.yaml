@@ -1,0 +1,17 @@
+task_id: e246f6d8-78d7-44ac-b668-fcf47946cb50
+author: blind-model-author-v1
+requirements:
+  - req_id: R0
+    statement: (implicit) The document is saved in place at /home/user/Desktop/Y22-2119-assign4.docx with unchanged text.
+    check_kind: file_exists
+    observable: File loads; texts unchanged.
+  - req_id: R1
+    statement: Every italic word is 14 pt.
+    check_kind: text_run
+    observable: All 21 italic runs (e.g. "AVL tree", "preorder", "postorder", "average case analysis", single-letter variables like "u", "n", "k", "A") have size 14 pt and remain italic.
+  - req_id: R2
+    statement: Non-italic text keeps 12 pt.
+    check_kind: text_run
+    observable: All non-italic non-empty runs have size 12 pt.
+allowed_variations:
+  - Whitespace runs adjacent to italic words may be either size.
