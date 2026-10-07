@@ -2,12 +2,13 @@
   "what": "Operator catalog and harness-validation evidence for the Q2 evaluator-mutation study (branch stage0/q2-mut-operators). No checker was run and the confirmatory mutation campaign has not started; it waits for the preregistration freeze.",
   "files": {
     "operator-catalog.json": "catalog() output: 64 operators with family, label class, target, check kinds, aspects, provenance, stratum, and a SHA-256 over the descriptions and operator sources (catalog_sha256).",
-    "validation-synthetic.json": "End-to-end run of every operator on synthetic documents in the LO-VM image (job 422).",
-    "devsmoke-dev.json": "Edit-primitive smoke run on 14 development-split OSWorld files (job 423); labels not reported.",
-    "prereg-operators-section.md": "Operator items for the q2-0a preregistration; an input for the preregistration author, not frozen."
+    "validation-synthetic.json": "End-to-end run of every operator on synthetic documents in the LO-VM image (job 431).",
+    "devsmoke-dev.json": "Edit-primitive smoke run on 14 development-split OSWorld files (job 432); labels not reported.",
+    "prereg-operators-section.md": "Operator items for the q2-0a preregistration; an input for the preregistration author, not frozen.",
+    "devplan-dev.json": "Label rules exercised with the blind specs on the 14 dev tasks (no checker)."
   },
-  "code_revision_validated": "4a44f5d459d74202c3175278b7278454e3728529",
-  "catalog_sha256": "6d01e283a4be3826c147127cf445dfbdf21d0a4ed452067137b108add3bd2411",
+  "code_revision_validated": "7c429bcb793369649bc7970ccad0fba290ad2772",
+  "catalog_sha256": "2e2f24069c833c54bba23650481edec6ffff97176d07377327019e3a7f51d1fe",
   "schema": {
     "path": "harness/q2_mutation/schema.py",
     "copied_from": "stage0/q2-mut-harness 484a656db40fec9d012ec9002b71045af243ba8f",
@@ -35,7 +36,7 @@
       "revision": "HF xlangai/ubuntu_osworld_file_cache 1e112283c4ecb08d6fed8069bca7de74fa2f12aa (harness inputs/file_cache_1e112283)",
       "bytes": 35991595,
       "sha256": "f21c188c82e61c816281ee9f7683c9e72f03e30a6e4801a69b617ac8f59bde69",
-      "sha256_definition": "SHA-256 of the sorted lines '<file sha256>  <bytes>' of the 28 files; the per-file manifest is on the host next to run devsmoke-delta-4a44f5d4-v1 (inputs-manifest.json). Every file also matched the harness job list's candidate digest.",
+      "sha256_definition": "SHA-256 of the sorted lines '<file sha256>  <bytes>' of the 28 files; the per-file manifest is on the host next to run devsmoke-delta-7c429bcb-v1 (inputs-manifest.json). Every file also matched the harness job list's candidate digest.",
       "licence": "apache-2.0 dataset card; the documents are third-party content and are not redistributed"
     },
     {
@@ -44,6 +45,11 @@
       "bytes": 22013,
       "sha256": "3a078293a0d79d412eaa009c3d8be6718855eef122f9325683782a2ef470fc63",
       "licence": "MIT (this repository's harness output)"
+    },
+    {
+      "name": "blind requirement specs for the 14 dev tasks",
+      "revision": "stage0/q2-mut-specs 287d523374354e40af4c1f54bd06e46c3de6a955 (program/evidence/q2-mutation/specs/<task_id>.yaml, converted to JSON unchanged for the container, which has no PyYAML)",
+      "licence": "MIT (this repository)"
     }
   ],
   "third_party_python_packages": "none: the operators, the purity oracle and the appliers use the standard library, plus LibreOffice's own pyuno inside the container",

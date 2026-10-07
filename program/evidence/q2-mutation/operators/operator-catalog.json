@@ -1,5 +1,5 @@
 {
-  "catalog_sha256": "6d01e283a4be3826c147127cf445dfbdf21d0a4ed452067137b108add3bd2411",
+  "catalog_sha256": "2e2f24069c833c54bba23650481edec6ffff97176d07377327019e3a7f51d1fe",
   "catalog_version": "q2-mut-operators-v1",
   "counts": {
     "config": {
@@ -877,21 +877,21 @@
   ],
   "sources": {
     "__init__.py": "fce0a773a523e39bb41bd4188907b96f14b63fb552babc3fe7eca69faf0fa2cc",
-    "_base.py": "4597e764ae6b15cfdcf7fd970d8ff9fb8291b0e7d799bcd2138aba1793c53cc3",
-    "_common.py": "141c21fde79ee41a76d1bc9a4cddffede7667b4be88308bbd2aa7f10cfe9e5a9",
+    "_base.py": "7c51c0d12246435809815bbb69d0629efa20b73f6acbac88bf0379db4fed239a",
+    "_common.py": "0722a4cf3c5b8c067e129e0191dc8ea46c3d2634e60ad3175f9598d10c4644a8",
     "_diff.py": "6169f830cb10ac004c2cd1bcb982e932007596ccd0945f1e81fd8fae928d856f",
     "_formula.py": "cde78b65ccd676ab7d091ef6cfdb160ae8494f09480297db1255f772ae57c3e4",
     "_jsonspan.py": "09298b54b8b91ad27c4dfdf29c1c749cd47d42e9148870de78457f4b7534a285",
     "_ooxml.py": "1f721787b78f5c457a8d004f801d71d84898ddc50ab1609370ffd519bf586583",
     "_purity.py": "1da908164c27dbf1fa704ba795d3e96f46fdc013bf4a960c316424d159cecdea",
     "_snapshot.py": "80602be58d6de32755f8d1615481caccb2ec8ba5c790bfae1c9ae03267ee3664",
-    "_spec.py": "085363f286779bc5aa4907ae6d3bc3bdaf27df5bf2579ff817836fc46994e71c",
+    "_spec.py": "7fe7ecef80c8c7fbcd9da904dfa4e60a1ca30161f6e0ebb0a353951fe818b61a",
     "_textops.py": "836f6337985c15bf6d977f8a3f800c5cc7e34b60472e2d49378ca5a13e0a9e44",
     "apply_text.py": "01dbb79fb27e9fa7ae0639839640bc0f1d37b5bf9ed94737546172482f9cc4e1",
     "config.py": "96b70c7804734d1fc3f04409a2fd2494dd47a71472814a2c6975a427c683da27",
-    "docx.py": "792c656bd41b82a925effdf993189b5d7e92dfbe0c4ae32ec99a29971c3e4839",
+    "docx.py": "553f1031605e79bb447318f0180b7c96f89bcef3c645f8087d0c189899a9625a",
     "pipeline.py": "64f554bbb36a24533222f268996ed97d1a4d402c29d5c8286078419e83f31c75",
-    "pptx.py": "4b25529514cba35b2a28f6f2b6bfc4b88fed18efba04d499cf542367e7ab0a18",
+    "pptx.py": "256065fa223f5bf7e693e99e5c9bfaad2116d4191388ddb9be19e43d5f805f26",
     "text.py": "be0977a8fb1992050b251db0d6f556b4840f92c3009fe1f29bcdacaab6c1782e",
     "uno_apply.py": "6d9afccabdcfa85472307de49cf0befdfd755010cf86b174cad5822edb6f9982",
     "xlsx.py": "eaa63dd37ccffe451afc477aa06d5b9f3afb64b64ff2adf2dcf42fad0b99da84"
