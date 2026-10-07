@@ -262,3 +262,22 @@ Append-only. Newest entries at the bottom.
   workload ignores TERM outlives a timed-out job.
 - GPU time 0.1589 GPU-h in all (two overlay builds 0.027). Evidence:
   `program/evidence/2026-10-07/open-weight-reviewer-smoke/`.
+
+## 2026-10-07 — K1 v2 throughput probe and gauntlet wave 1
+
+- The K1 v2 throughput probe (Slurm 543, PROBE_COMPLETE) put v2's caps plus
+  the probe at 8.05 GPU-h under D22, so v2 went to the research gauntlet
+  (D24).
+- Gauntlet wave 1 (`program/gauntlet/2026-10-07-q3-k1-localization-screen-v2.jsonl`,
+  proposal `program/proposals/2026-10-07-q3-k1-localization-screen-v2.md`):
+  three discovery cells (about 157 orx queries, 35 full-text reads; novelty
+  STILL_OPEN, no direct prior through 2026-10-07; SeerAttention 2410.13276 and
+  A.X K2 2608.30181 added as uncited priors), blind discrimination passed,
+  refute-first triad 3 of 3 refuted, reviews 45 (Claude) and 59 (Qwen3.6-35B-A3B,
+  self-hosted, Slurm 640). Honest exit: triad stop plus query and token
+  budgets. Doctor FAIL with the expected trust-store and compute issues.
+- Decision D26: Q3 next runs a dense headroom pre-check under a new id.
+- The open-weight reviewer tooling is merged; its smoke (Slurm 617) hung at
+  vLLM teardown and overran its 0.1 GPU-h cap (0.11 by Slurm); a fix exists
+  but is validated on CPU only. The lane leaves a container alive if Slurm
+  kills the batch script at the time limit; to be fixed.
