@@ -398,7 +398,7 @@ Rules (a), (b) and (d) use exact or rank tests and no random numbers. The
 design numbers below come from already-read inputs only (v1 totals and URL
 strata; the H Company runs' rewards and step counts), computed by
 `scripts/run_holo3_rerun_audit_doctor.py --stage v2-design` at commit
-`0b0211678a6197107d064f3fdc9d4e41866e89d5` (receipt in
+`c499d75d00fa16b3cd4c65791a0116b80f7b8bf4` (receipt in
 `program/evidence/2026-10-07/holo3-v2-design/`). They supersede the
 `results.v2_design` section of the v1 receipt.
 
