@@ -1,0 +1,32 @@
+{
+ "url": "https://arxiv.org/abs/2211.12850",
+ "fetched_at": "2026-10-07T20:58:56Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 42746,
+ "raw_sha256": "9dec52dcc935acf036dfede387f23e5f99204116c6cf674f5fc86f8f9c860446",
+ "raw_stored": false,
+ "extract": {
+  "title": "OOD-DiskANN: Efficient and Scalable Graph ANNS for Out-of-Distribution Queries",
+  "authors": [
+   "Jaiswal, Shikhar",
+   "Krishnaswamy, Ravishankar",
+   "Garg, Ankit",
+   "Simhadri, Harsha Vardhan",
+   "Agrawal, Sheshansh"
+  ],
+  "citation_date": "2022/10/22",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Sat, 22 Oct 2022 21:22:50 UTC"
+   },
+   {
+    "version": "v2",
+    "date": "Wed, 30 Nov 2022 11:14:07 UTC"
+   }
+  ],
+  "abstract": "State-of-the-art algorithms for Approximate Nearest Neighbor Search (ANNS) such as DiskANN, FAISS-IVF, and HNSW build data dependent indices that offer substantially better accuracy and search efficiency over data-agnostic indices by overfitting to the index data distribution. When the query data is drawn from a different distribution - e.g., when index represents image embeddings and query represents textual embeddings - such algorithms lose much of this performance advantage. On a variety of datasets, for a fixed recall target, latency is worse by an order of magnitude or more for Out-Of-Distribution (OOD) queries as compared to In-Distribution (ID) queries. The question we address in this work is whether ANNS algorithms can be made efficient for OOD queries if the index construction is given access to a small sample set of these queries. We answer positively by presenting OOD-DiskANN, which uses a sparing sample (1% of index set size) of OOD queries, and provides up to 40% improvement in mean query latency over SoTA algorithms of a similar memory footprint. OOD-DiskANN is scalable and has the efficiency of graph-based ANNS indices. Some of our contributions can improve query efficiency for ID queries as well.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}

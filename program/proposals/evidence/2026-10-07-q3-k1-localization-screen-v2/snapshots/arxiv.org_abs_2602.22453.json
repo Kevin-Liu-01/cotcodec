@@ -1,0 +1,40 @@
+{
+ "url": "https://arxiv.org/abs/2602.22453",
+ "fetched_at": "2026-10-07T20:58:39Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 42869,
+ "raw_sha256": "59d27d9eae9cd47d90134f0371dc90e2f7706e7739c6e68bf7107c50b3816428",
+ "raw_stored": false,
+ "extract": {
+  "title": "Identifying Crucial Attention Heads for Multilingual Language Models: Retrieval and Retrieval-Transition Heads",
+  "authors": [
+   "Patel, Shaswat",
+   "Trivedi, Vishvesh",
+   "Han, Yue",
+   "Hong, Yihuai",
+   "Choi, Eunsol"
+  ],
+  "citation_date": "2026/02/25",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Wed, 25 Feb 2026 22:28:50 UTC"
+   },
+   {
+    "version": "v2",
+    "date": "Fri, 27 Feb 2026 17:36:39 UTC"
+   },
+   {
+    "version": "v3",
+    "date": "Wed, 2 Sep 2026 01:26:21 UTC"
+   },
+   {
+    "version": "v4",
+    "date": "Fri, 11 Sep 2026 19:22:24 UTC"
+   }
+  ],
+  "abstract": "Retrieval heads, a subset of attention heads in Transformers, were studied in English, showing its crucial role in retrieving information from the context. We expand the study of retrieval heads to multilingual context and find that while nearly half of all retrieval heads are often shared across multiple languages, language-specific retrieval heads also emerge. We further design a cross-lingual needle-in-the-haystack task, to identify $\\textit{Retrieval Transition Heads (RTH)}$ that retrieve key information and further map it to target-language output. Our experiments reveal that RTHs do not always overlap with RH, and can be more vital for Chain-of-Thought reasoning in multilingual LLMs. Across four multilingual benchmarks (MMLU-ProX, MGSM, MLQA, and XQuAD) and two model families (Qwen2.5-7B Instruct and Llama3.1-8B Instruct), we demonstrate that masking RTH induces bigger performance drop than masking Retrieval Heads (RH). Specifically, for Llama3.1-8B Instruct, masking the top-25 RTHs results in an average 37.3-point drop (against 19.5-point drop from RH masking) in reasoning accuracy (MMLU-ProX, MGSM) and 9.0 F1-score reduction (against 5.1 drop for RH) in extractive QA (MLQA, XQuAD). Our work advances the understanding of multilingual LMs by isolating the attention heads responsible for mapping to target languages.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}

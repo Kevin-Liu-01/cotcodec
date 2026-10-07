@@ -1,0 +1,36 @@
+{
+ "url": "https://arxiv.org/abs/2605.28306",
+ "fetched_at": "2026-10-07T20:59:12Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 42916,
+ "raw_sha256": "8f2640dd2e9f19ef3b8cd7ba9e6213cf55fd57ceecd187c36f4a5a8aa20a2b58",
+ "raw_stored": false,
+ "extract": {
+  "title": "RA-MoE: Routing-Aligned Fine-Tuning for Multilingual Adaptation of Mixture-of-Experts Models",
+  "authors": [
+   "Deng, Guanzhi",
+   "Wu, Kuan",
+   "Wang, Haibo",
+   "Wong, Shing Yin",
+   "Luo, Sichun",
+   "Liu, Zengyan",
+   "Xu, Fang",
+   "Wang, Zhuoran",
+   "Song, Linqi"
+  ],
+  "citation_date": "2026/05/27",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Wed, 27 May 2026 11:01:25 UTC"
+   },
+   {
+    "version": "v2",
+    "date": "Wed, 30 Sep 2026 10:56:30 UTC"
+   }
+  ],
+  "abstract": "Mixture-of-Experts (MoE) models enable efficient LLM scaling, yet adapting them to non-English downstream tasks remains challenging. Standard multilingual fine-tuning largely ignores their heterogeneous routing structure. Across multiple MoE models and tasks, we find strong cross-lingual routing alignment in middle layers, with routing divergence associated with target-language performance gaps. Motivated by this observation, we propose RA-MoE (Routing-Aligned MoE Fine-Tuning), a three-stage framework for multilingual MoE adaptation. RA-MoE categorizes parallel examples into four correctness groups (cc/ci/ic/ii) and identifies task-relevant experts in middle layers. It then selectively aligns target-language routing on ci examples toward successful English routing patterns, jointly matching the total routing mass assigned to task experts and its relative allocation among them. Experiments across three MoE models, three downstream tasks, and six target languages show that RA-MoE consistently outperforms standard SFT and strong routing-aware baselines. Further analyses confirm the intended routing changes and reveal that middle-layer task routing is largely shared and transferable across languages, providing mechanistic evidence for the cross-language transferability of task-specific routing.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}

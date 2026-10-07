@@ -1,0 +1,9 @@
+{
+ "doctor": "Design",
+ "status": "FAIL",
+ "evaluated_on": "2026-10-07",
+ "evaluated_by": "wave-1 single synthesis owner (Claude agent); not an independent review",
+ "pass_condition": "Intervention, controls, falsifier, metrics, leakage, and statistics specified",
+ "evidence": "Intervention, controls, metrics, statistics and leakage checks are specified by the draft registration (validate_architecture_experiments.py PASS, contract BLOCKED). The falsifier is defective: (1) the NEGATIVE region admits an indexer that is at random on both non-literal legs (xi = -Delta_T, xi_rel = 0) because V1 reads only English literal recall (harness/sparse_indexer_k1_stats.py TargetRead.negative, AdequacyRead.v1_pass); (2) NEGATIVE needs H1 >= 20 while v1 smoke 452 measured about 14 points of pooled development headroom (26.45 hs, 26.08 mp against 12.48 random); (3) the cross-script attribution changes script exposure, tokenizer fertility and budget binding at once.",
+ "remediation": "A new experiment id with a non-literal adequacy floor on NEGATIVE and either a seen-script cross-script condition or attribution scoped to 'trained without these scripts'; the owner decides whether to repair before admission (D20 forbids changing the science under v2)."
+}

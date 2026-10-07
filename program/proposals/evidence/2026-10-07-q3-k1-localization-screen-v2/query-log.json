@@ -1,0 +1,3741 @@
+{
+ "schema": "cotcodec gauntlet query log v1",
+ "gauntlet": "q3-k1-localization-screen-v2 (D24), wave 1",
+ "source_cutoff": "2026-10-07",
+ "declared_query_budget": 150,
+ "cells": {
+  "frontier": {
+   "source": "session scratchpad frontier/queries.json (written by the frontier cell), sha256 8359448d3166faf1871ebf4156ad54529ee8de3b72084594acfd2c244eb77114",
+   "rows": [
+    {
+     "tool": "orx discover keyword --limit 10",
+     "query": "Q1: lightning indexer cross-lingual",
+     "returned_ids": [
+      "2608.01662",
+      "2608.pretraining-fails-cross-lingual-knowledge",
+      "2610.01921",
+      "2609.19291",
+      "2609.23231",
+      "2607.28449",
+      "2603.12201",
+      "2606.24579",
+      "2605.07363",
+      "2606.06586"
+     ]
+    },
+    {
+     "tool": "orx discover keyword --limit 15",
+     "query": "Q3: DeepSeek Sparse Attention multilingual languages",
+     "returned_ids": [
+      "2609.19969",
+      "2606.09079",
+      "2606.19348",
+      "2606.13392",
+      "2610.04635",
+      "2610.03367",
+      "2609.30739",
+      "2607.10371",
+      "2609.08515",
+      "2605.12623",
+      "2605.18239",
+      "2512.02556",
+      "2605.26002",
+      "2608.07727",
+      "2606.19746"
+     ]
+    },
+    {
+     "tool": "orx discover keyword --limit 15 --published-after 2025-06-01",
+     "query": "Q5: top-k token selection non-English languages long context",
+     "returned_ids": [
+      "2610.07247",
+      "2609.08450",
+      "2609.39001",
+      "2610.04162",
+      "2607.27692",
+      "2610.08463",
+      "2608.11786",
+      "2609.29828",
+      "2609.22943",
+      "2609.35869",
+      "2607.29279",
+      "2610.04295",
+      "2608.07629",
+      "2609.17888",
+      "2609.34447"
+     ]
+    },
+    {
+     "tool": "orx discover keyword --limit 15",
+     "query": "Q4: sparse attention cross-lingual needle in a haystack",
+     "returned_ids": [
+      "2610.00973",
+      "2608.01662",
+      "2610.00348",
+      "2609.35378",
+      "2606.06467",
+      "2609.23231",
+      "2609.03085",
+      "2607.02303",
+      "2603.28458",
+      "2605.07363",
+      "2608.09095",
+      "2608.27580",
+      "2605.28640",
+      "2606.24579",
+      "2508.02124"
+     ]
+    },
+    {
+     "tool": "orx discover keyword --limit 15",
+     "query": "Q2: sparse attention indexer multilingual",
+     "returned_ids": [
+      "2605.07363",
+      "2610.04635",
+      "2607.11976",
+      "2608.01662",
+      "2607.24593",
+      "2606.13392",
+      "2606.09079",
+      "2609.26368",
+      "2608.07009",
+      "2609.13205",
+      "2603.12201",
+      "2609.08450",
+      "2606.06467",
+      "2610.06801",
+      "2603.28458"
+     ]
+    },
+    {
+     "tool": "orx discover openalex --limit 15",
+     "query": "Q8: sparse attention indexer cross-lingual retrieval long context",
+     "returned_ids": [
+      "10.17863/cam.30462",
+      "W7166902776",
+      "10.1613/jair.4762",
+      "10.1613/jair.1.11640",
+      "10.18653/v1/2024.wikinlp-1.3",
+      "10.18653/v1/2025.findings-emnlp.612",
+      "10.1007/978-3-030-15712-8_34",
+      "10.48550/arxiv.2510.07812",
+      "10.18653/v1/2025.findings-emnlp.575",
+      "10.18653/v1/2022.findings-naacl.142",
+      "10.18653/v1/2022.emnlp-main.203",
+      "10.6084/m9.figshare.3204040",
+      "10.18653/v1/2026.acl-long.692",
+      "10.48550/arxiv.2303.14991",
+      "10.18653/v1/p17-1130"
+     ]
+    },
+    {
+     "tool": "orx discover embedding --limit 20",
+     "query": "Q6: A small learned indexer is distilled by KL divergence from a frozen language model's own attention to select the top-k key blocks for sparse attention. We measure whether this indexer loses more recall of the relevant passage than the dense model's own top-k attention when the question is written in a different script or language from the passage, at a matched token budget.",
+     "returned_ids": [
+      "2610.02875",
+      "2609.37879",
+      "2610.00694",
+      "2609.34063",
+      "2608.23296",
+      "2609.38261",
+      "2609.32579",
+      "2608.27128",
+      "2608.25230",
+      "2609.13415",
+      "2608.27760",
+      "2608.03796",
+      "2606.22874",
+      "2609.18989",
+      "2607.21692"
+     ]
+    },
+    {
+     "tool": "orx discover embedding --limit 20",
+     "query": "Q7: multilingual evaluation of sparse attention and KV cache compression methods on non-English long-context retrieval",
+     "returned_ids": [
+      "2610.06686",
+      "2610.02953",
+      "2610.00412",
+      "2609.12913",
+      "2608.00528",
+      "2607.17715",
+      "2609.13205",
+      "2607.06519",
+      "2606.24467",
+      "2608.26175",
+      "2607.06523",
+      "2605.05971",
+      "2603.22910",
+      "2603.16435",
+      "2607.05399"
+     ]
+    },
+    {
+     "tool": "orx discover keyword --limit 10",
+     "query": "Q10: SpotAttention selector frozen backbone",
+     "returned_ids": [
+      "2606.22874",
+      "2608.19743",
+      "2606.14153",
+      "2609.24441",
+      "2608.09124",
+      "2608.07982",
+      "2609.30751",
+      "2609.03265",
+      "2608.28316",
+      "2609.33407"
+     ]
+    },
+    {
+     "tool": "orx discover keyword --limit 15",
+     "query": "Q11: KV cache compression multilingual non-English degradation",
+     "returned_ids": [
+      "2609.19969",
+      "2610.06479",
+      "2609.32831",
+      "2609.03235",
+      "2609.36322",
+      "2609.37988",
+      "2610.02815",
+      "2610.02953",
+      "2609.24298",
+      "2609.35621",
+      "2610.03198",
+      "2610.06286",
+      "2610.03027",
+      "2609.07966",
+      "2609.22158"
+     ]
+    },
+    {
+     "tool": "orx discover keyword --limit 10",
+     "query": "Q9: Oracle-Guided Sparse Prefill",
+     "returned_ids": [
+      "2606.07703",
+      "2609.20971",
+      "2609.26368",
+      "2610.06917",
+      "2608.19758",
+      "2609.26333",
+      "2609.33252",
+      "2609.32259",
+      "2605.16839",
+      "2610.06801"
+     ]
+    },
+    {
+     "tool": "orx discover keyword --limit 15",
+     "query": "Q13: attention sparsity across languages",
+     "returned_ids": [
+      "2609.08690",
+      "2609.19702",
+      "2608.18545",
+      "2609.20888",
+      "2609.31967",
+      "2609.20005",
+      "2609.01788",
+      "2606.18056",
+      "2609.00097",
+      "2610.03367",
+      "2609.05910",
+      "2609.33889",
+      "2605.15508",
+      "2608.03507",
+      "2608.27848"
+     ]
+    },
+    {
+     "tool": "orx discover keyword --limit 15",
+     "query": "Q12: KV cache eviction multilingual languages",
+     "returned_ids": [
+      "2608.28293",
+      "2609.03430",
+      "2610.07643",
+      "2610.06286",
+      "2610.03007",
+      "2610.06996",
+      "2609.27981",
+      "2609.08131",
+      "2608.23296",
+      "2609.23314",
+      "2609.27470",
+      "2609.06663",
+      "2610.06479",
+      "2610.03198",
+      "2608.01247"
+     ]
+    },
+    {
+     "tool": "orx discover keyword --limit 15 --published-after 2025-01-01",
+     "query": "Q14: multilingual needle in a haystack benchmark",
+     "returned_ids": [
+      "2610.00973",
+      "2610.00348",
+      "2609.20945",
+      "2609.03085",
+      "2609.23490",
+      "2609.34752",
+      "2610.06339",
+      "2609.01056",
+      "2608.20853",
+      "2609.02379",
+      "2608.27580",
+      "2607.02956",
+      "2606.25343",
+      "2604.20347",
+      "2608.28641"
+     ]
+    },
+    {
+     "tool": "orx discover keyword --limit 10",
+     "query": "Q17: MLNeedle multilingual needle",
+     "returned_ids": [
+      "2408.10151",
+      "2610.00348",
+      "2609.18546",
+      "2607.26337",
+      "2604.20347",
+      "2608.23037",
+      "2608.27620",
+      "2608.08201",
+      "2607.25180",
+      "2608.03559"
+     ]
+    },
+    {
+     "tool": "orx discover keyword --limit 15",
+     "query": "Q15: cross-lingual long-context retrieval benchmark needle different language",
+     "returned_ids": [
+      "2609.23231",
+      "2608.21714",
+      "2610.02875",
+      "2609.38958",
+      "2608.12820",
+      "2606.24467",
+      "2606.13100",
+      "2606.24579",
+      "2607.06008",
+      "2607.06523",
+      "2607.11215",
+      "2606.24610",
+      "2606.22910",
+      "2606.18033",
+      "2605.27243"
+     ]
+    },
+    {
+     "tool": "orx discover keyword --limit 10",
+     "query": "Q16: OneRuler multilingual long-context",
+     "returned_ids": [
+      "2608.20853",
+      "2609.36218",
+      "2503.01996",
+      "2609.40181",
+      "2604.20720",
+      "2610.08463",
+      "2605.12227",
+      "2606.27306",
+      "2608.10359",
+      "2608.18474"
+     ]
+    },
+    {
+     "tool": "orx discover keyword --limit 10",
+     "query": "Q23: Lost in Compression cross-lingual audit extractive prompt compressors",
+     "returned_ids": [
+      "2608.26175",
+      "2607.25335",
+      "2609.14245",
+      "2608.04569",
+      "2609.23231",
+      "2609.15184",
+      "2609.32474",
+      "2608.27848",
+      "2610.06093",
+      "2605.26596"
+     ]
+    },
+    {
+     "tool": "orx discover openalex --limit 15",
+     "query": "Q21: cross-lingual needle in a haystack",
+     "returned_ids": [
+      "10.48550/arxiv.2408.10151",
+      "10.1145/2783258.2788580",
+      "10.48550/arxiv.2604.18835",
+      "10.18653/v1/2025.naacl-long.267",
+      "10.18653/v1/2023.eacl-main.75",
+      "10.1016/j.ajodo.2019.01.018",
+      "10.18653/v1/2023.acl-long.524",
+      "10.48550/arxiv.2208.05309",
+      "10.48550/arxiv.2305.10266",
+      "10.3233/ida-227347",
+      "10.48550/arxiv.2207.01054",
+      "10.48550/arxiv.2601.04036",
+      "W7119557247",
+      "10.1145/3764112",
+      "10.18653/v1/2025.acl-long.778"
+     ]
+    },
+    {
+     "tool": "orx discover keyword --limit 10",
+     "query": "Q22: Multilinguality in Hybrid Attention LLMs",
+     "returned_ids": [
+      "2609.35378",
+      "2608.28383",
+      "2609.26368",
+      "2608.17088",
+      "2608.30310",
+      "2609.20751",
+      "2609.32114",
+      "2608.12149",
+      "2610.08527",
+      "2608.27875"
+     ]
+    },
+    {
+     "tool": "orx discover embedding --limit 20",
+     "query": "Q18: long-context benchmark where the question is in one language and the relevant passage (needle) is in another language, measuring cross-lingual retrieval inside the context window of large language models",
+     "returned_ids": [
+      "2610.00606",
+      "2609.20945",
+      "2608.21714",
+      "2608.27481",
+      "2606.15345",
+      "2605.07249",
+      "2605.27649",
+      "2604.21096",
+      "2601.20276",
+      "2502.05167",
+      "2511.14774",
+      "2503.01996",
+      "2509.13930",
+      "2507.22411",
+      "2504.10906"
+     ]
+    },
+    {
+     "tool": "orx discover openalex --limit 15",
+     "query": "Q20: multilingual long-context language models needle haystack benchmark",
+     "returned_ids": [
+      "10.18653/v1/2025.naacl-long.267",
+      "10.48550/arxiv.2408.10151",
+      "10.48550/arxiv.2503.01996",
+      "10.48550/arxiv.2504.12845",
+      "10.18653/v1/2026.eacl-long.290",
+      "10.48448/dfmq-2b42",
+      "10.18653/v1/2025.acl-long.1162",
+      "10.48550/arxiv.2411.19360",
+      "10.18653/v1/2025.codi-1.1",
+      "10.52202/085713-2939",
+      "10.18653/v1/2024.mrl-1.18",
+      "10.48550/arxiv.2409.18006",
+      "10.18653/v1/2024.emnlp-main.552",
+      "10.15760/etd.4098",
+      "W7142582410"
+     ]
+    },
+    {
+     "tool": "orx discover embedding --limit 20 --published-after 2025-06-01",
+     "query": "Q19: multilingual long-context benchmark across many languages measuring needle retrieval degradation in low-resource languages",
+     "returned_ids": [
+      "2609.23416",
+      "2609.20945",
+      "2609.09349",
+      "2608.20853",
+      "2608.21714",
+      "2608.02189",
+      "2608.03803",
+      "2607.23058",
+      "2607.17173",
+      "2606.15345",
+      "2606.24200",
+      "2607.00171",
+      "2606.15643",
+      "2605.07249",
+      "2605.24556"
+     ]
+    },
+    {
+     "tool": "orx discover keyword --limit 15",
+     "query": "Q28: retrieval heads multilingual cross-lingual",
+     "returned_ids": [
+      "2609.23231",
+      "2610.06216",
+      "2610.02875",
+      "2608.12820",
+      "2608.21714",
+      "2609.05976",
+      "2608.22363",
+      "2606.24579",
+      "2608.26357",
+      "2602.22453",
+      "2606.06586",
+      "2605.31171",
+      "2606.24200",
+      "2605.26575",
+      "2604.05684"
+     ]
+    },
+    {
+     "tool": "orx discover keyword --limit 10",
+     "query": "Q29: Cross-Lingual Alignment for Decoder-Only Models using MoE Routers",
+     "returned_ids": [
+      "2610.01921",
+      "2608.27115",
+      "2609.06381",
+      "2609.15184",
+      "2609.30535",
+      "2608.23149",
+      "2609.19398",
+      "2608.27867",
+      "2609.12855",
+      "2606.26466"
+     ]
+    },
+    {
+     "tool": "orx discover keyword --limit 10",
+     "query": "Q27: Understanding LLMs Cross-Lingual Context Retrieval",
+     "returned_ids": [
+      "2609.23231",
+      "2609.21722",
+      "2608.pretraining-fails-cross-lingual-knowledge",
+      "2609.19291",
+      "2610.01921",
+      "2609.07687",
+      "2608.21714",
+      "2608.12820",
+      "2609.27376",
+      "2608.26357"
+     ]
+    },
+    {
+     "tool": "orx discover embedding --limit 20 --published-before 2026-01-01",
+     "query": "Q25: efficient attention and token eviction methods evaluated on multilingual long-context tasks show larger losses for languages other than English",
+     "returned_ids": [
+      "2512.10772",
+      "2512.24410",
+      "2510.19546",
+      "2510.20647",
+      "2505.20276",
+      "2505.22888",
+      "2507.00246",
+      "2504.17720",
+      "2509.05486",
+      "2507.19699",
+      "2504.20022",
+      "2503.04360",
+      "2406.14670",
+      "2407.03211",
+      "2502.12476"
+     ]
+    },
+    {
+     "tool": "orx discover embedding --limit 20",
+     "query": "Q24: KV cache compression or sparse attention disproportionately degrades non-English and low-resource languages; multilingual analysis of efficient inference methods",
+     "returned_ids": [
+      "2609.38106",
+      "2608.19670",
+      "2608.11786",
+      "2608.26175",
+      "2607.24276",
+      "2606.21869",
+      "2606.08451",
+      "2608.09941",
+      "2604.16656",
+      "2603.21036",
+      "2510.00231",
+      "2602.05929",
+      "2601.12033",
+      "2601.13328",
+      "2509.25138"
+     ]
+    },
+    {
+     "tool": "orx discover openalex --limit 15",
+     "query": "Q26: KV cache compression multilingual",
+     "returned_ids": [
+      "10.48550/arxiv.2410.15252",
+      "10.48550/arxiv.2609.19969",
+      "10.48550/arxiv.2607.06827",
+      "10.21203/rs.3.rs-10297225/v1",
+      "10.48550/arxiv.2606.14782",
+      "10.18653/v1/2025.findings-emnlp.426",
+      "10.48550/arxiv.2502.01941",
+      "W7161354758",
+      "10.5753/sbbd.2025.247245",
+      "10.18653/v1/2026.acl-long.1811",
+      "10.48550/arxiv.2609.33334",
+      "10.48550/arxiv.2511.16786",
+      "10.18653/v1/2026.findings-acl.494",
+      "10.5281/zenodo.21514619",
+      "10.48550/arxiv.2602.05929"
+     ]
+    },
+    {
+     "tool": "orx discover keyword --limit 15",
+     "query": "Q31: parallel data auxiliary alignment loss attention decoder-only",
+     "returned_ids": [
+      "2610.01921",
+      "2609.12855",
+      "2609.11020",
+      "2607.24439",
+      "2607.25948",
+      "2607.13929",
+      "2605.31432",
+      "2607.26164",
+      "2607.18363",
+      "2608.17913",
+      "2606.17410",
+      "2606.03967",
+      "2606.24147",
+      "2602.10622",
+      "2604.09389"
+     ]
+    },
+    {
+     "tool": "orx discover keyword --limit 15 --published-after 2025-06-01",
+     "query": "Q33: cross-lingual attention alignment parallel sentences LLM",
+     "returned_ids": [
+      "2608.27115",
+      "2610.01921",
+      "2609.06381",
+      "2608.23149",
+      "2609.30535",
+      "2609.15184",
+      "2608.pretraining-fails-cross-lingual-knowledge",
+      "2608.23390",
+      "2609.05976",
+      "2610.07524",
+      "2608.28860",
+      "2609.09953",
+      "2609.23231",
+      "2609.35378",
+      "2609.19291"
+     ]
+    },
+    {
+     "tool": "orx discover keyword --limit 10",
+     "query": "Q35: AlignAtt alignment heads LLM translation",
+     "returned_ids": [
+      "2606.03967",
+      "2606.23885",
+      "2609.37991",
+      "2608.27161",
+      "2609.35225",
+      "2609.07568",
+      "2602.04613",
+      "2610.05999",
+      "2606.03948",
+      "2608.30065"
+     ]
+    },
+    {
+     "tool": "orx discover openalex --limit 15",
+     "query": "Q34: supervised attention alignment parallel corpus neural machine translation guided alignment",
+     "returned_ids": [
+      "10.18653/v1/2020.emnlp-main.42",
+      "10.1109/taslp.2021.3138719",
+      "10.48550/arxiv.2103.17250",
+      "10.5715/jnlp.27.531",
+      "10.24963/ijcai.2022/587",
+      "10.18293/seke2023-165",
+      "10.48550/arxiv.2004.14837",
+      "10.18653/v1/2021.emnlp-main.1",
+      "10.18653/v1/2021.emnlp-main.664",
+      "10.18653/v1/w17-4716",
+      "10.18653/v1/2022.emnlp-main.689",
+      "10.18653/v1/w17-3204",
+      "10.48550/arxiv.2210.06716",
+      "10.63317/4ggtazzyrfq2",
+      "10.48550/arxiv.2012.07162"
+     ]
+    },
+    {
+     "tool": "orx discover keyword --limit 15",
+     "query": "Q32: supervised attention word alignment guided alignment loss",
+     "returned_ids": [
+      "2608.28508",
+      "2608.18474",
+      "2610.05306",
+      "2609.34467",
+      "2609.15150",
+      "2609.05913",
+      "2609.27413",
+      "2608.21023",
+      "2608.27950",
+      "2609.38925",
+      "2606.10675",
+      "2609.12855",
+      "2607.07230",
+      "2608.25493",
+      "2607.23944"
+     ]
+    },
+    {
+     "tool": "orx discover embedding --limit 20",
+     "query": "Q30: Train the top-k sparse-attention indexer of a decoder-only language model with an auxiliary loss on concatenated bilingual parallel documents so that query tokens in one language select the aligned sentence of the translation; supervision from corpus sentence alignments, main attention left untouched, evaluated on held-out languages",
+     "returned_ids": [
+      "2610.01921",
+      "2608.04904",
+      "2603.29026",
+      "2603.24258",
+      "2601.04768",
+      "2601.10310",
+      "2510.27254",
+      "2503.06394",
+      "2401.05811",
+      "2401.04810",
+      "2311.08089",
+      "1911.01464",
+      "2101.08231",
+      "2210.06633",
+      "2406.13195"
+     ]
+    },
+    {
+     "tool": "orx discover openalex --limit 15 --published-after 2025-06-01",
+     "query": "Q40: trainable sparse attention learned indexer distillation pretrained model",
+     "returned_ids": [
+      "10.48550/arxiv.2511.20102",
+      "10.48550/arxiv.2607.10762",
+      "10.48550/arxiv.2606.22874",
+      "10.48550/arxiv.2606.13392",
+      "10.48550/arxiv.2609.34044",
+      "10.1109/tai.2025.3636862",
+      "10.1145/3726302.3730185",
+      "10.1021/acs.jmedchem.5c02620",
+      "10.48550/arxiv.2603.22008",
+      "10.48550/arxiv.2605.18753",
+      "10.48550/arxiv.2603.23032",
+      "10.48550/arxiv.2604.00004",
+      "10.48550/arxiv.2512.08829",
+      "10.48550/arxiv.2605.16928",
+      "10.48550/arxiv.2608.16585"
+     ]
+    },
+    {
+     "tool": "orx discover keyword --limit 15",
+     "query": "Q37: indexer KL distillation frozen backbone attention distribution",
+     "returned_ids": [
+      "2606.20005",
+      "2610.00317",
+      "2609.33791",
+      "2606.09079",
+      "2608.25643",
+      "2610.04635",
+      "2606.07703",
+      "2609.39319",
+      "2610.02188",
+      "2609.33407",
+      "2609.33200",
+      "2609.34581",
+      "2607.19358",
+      "2605.07363",
+      "2608.01662"
+     ]
+    },
+    {
+     "tool": "orx discover keyword --limit 15",
+     "query": "Q39: Qwen sparse attention compressed block indexer max-pool",
+     "returned_ids": [
+      "2605.07363",
+      "2609.22884",
+      "2606.13392",
+      "2607.09052",
+      "2609.31093",
+      "2610.04635",
+      "2606.09079",
+      "2608.07009",
+      "2608.30320",
+      "2610.08527",
+      "2607.24593",
+      "2607.11976",
+      "2609.13205",
+      "2609.26368",
+      "2605.02568"
+     ]
+    },
+    {
+     "tool": "orx discover keyword --limit 15",
+     "query": "Q41: indexer recall dense attention top-k oracle selection error",
+     "returned_ids": [
+      "2610.04635",
+      "2606.07703",
+      "2609.08450",
+      "2607.27692",
+      "2607.24593",
+      "2605.02568",
+      "2610.06801",
+      "2608.12780",
+      "2607.11976",
+      "2605.07363",
+      "2609.13134",
+      "2609.20734",
+      "2609.32712",
+      "2608.07009",
+      "2604.22312"
+     ]
+    },
+    {
+     "tool": "orx discover keyword --limit 15",
+     "query": "Q38: indexer target retrieval heads distillation sparse attention",
+     "returned_ids": [
+      "2605.07363",
+      "2609.39319",
+      "2609.26368",
+      "2608.01662",
+      "2610.04635",
+      "2606.13392",
+      "2606.09079",
+      "2607.11976",
+      "2605.16928",
+      "2608.06849",
+      "2609.13205",
+      "2608.03555",
+      "2607.24593",
+      "2608.27417",
+      "2609.32704"
+     ]
+    },
+    {
+     "tool": "orx discover embedding --limit 20 --published-after 2025-09-01",
+     "query": "Q36: Retrofit a pretrained dense transformer with a lightweight learned token or block selector trained by KL divergence against the model's own aggregated attention distribution while the backbone stays frozen, then use top-k selection for sparse attention",
+     "returned_ids": [
+      "2609.13141",
+      "2609.34650",
+      "2610.07809",
+      "2610.00426",
+      "2609.34063",
+      "2608.23296",
+      "2609.32124",
+      "2605.23872",
+      "2609.30288",
+      "2608.08853",
+      "2606.22874",
+      "2607.07724",
+      "2605.26797",
+      "2606.10722",
+      "2604.05248"
+     ]
+    },
+    {
+     "tool": "orx discover keyword --limit 15 --published-after 2025-09-01",
+     "query": "Q43: mixture of block attention MoBA",
+     "returned_ids": [
+      "2511.11571",
+      "2609.38428",
+      "2609.31093",
+      "2610.08527",
+      "2609.22884",
+      "2609.31261",
+      "2609.38832",
+      "2609.38978",
+      "2606.13392",
+      "2603.15619",
+      "2605.09516",
+      "2608.19758",
+      "2607.09052",
+      "2605.07363",
+      "2608.01934"
+     ]
+    },
+    {
+     "tool": "orx discover embedding --limit 20",
+     "query": "Q45: sparse attention token budget and tokenizer fertility: languages that need more tokens per word lose more under a fixed top-k token budget",
+     "returned_ids": [
+      "2609.39001",
+      "2610.01763",
+      "2608.21541",
+      "2608.12150",
+      "2608.04160",
+      "2607.24276",
+      "2607.15232",
+      "2608.26175",
+      "2608.00582",
+      "2608.21384",
+      "2607.16117",
+      "2609.00378",
+      "2606.24460",
+      "2606.28560",
+      "2606.15044"
+     ]
+    },
+    {
+     "tool": "orx discover keyword --limit 15",
+     "query": "Q42: multilingual routing mixture-of-experts cross-lingual router alignment",
+     "returned_ids": [
+      "2610.01921",
+      "2610.06216",
+      "2609.36301",
+      "2606.25821",
+      "2609.24058",
+      "2609.34634",
+      "2610.02875",
+      "2609.37751",
+      "2609.02293",
+      "2609.18176",
+      "2609.02404",
+      "2605.28306",
+      "2610.04140",
+      "2610.06677",
+      "2608.07890"
+     ]
+    },
+    {
+     "tool": "orx discover keyword --limit 15",
+     "query": "Q44: native sparse attention NSA multilingual",
+     "returned_ids": [
+      "2609.38832",
+      "2607.09052",
+      "2606.13392",
+      "2502.11089",
+      "2608.07009",
+      "2607.02980",
+      "2510.02295",
+      "2608.01662",
+      "2609.31093",
+      "2610.05416",
+      "2610.04635",
+      "2605.18753",
+      "2508.18224",
+      "2609.32882",
+      "2604.21221"
+     ]
+    },
+    {
+     "tool": "orx discover embedding --limit 20 --published-after 2025-06-01",
+     "query": "Q46: learned token selector or router in a language model fails to transfer across languages; selection recall drops for queries in a different language from the evidence",
+     "returned_ids": [
+      "2608.25832",
+      "2608.pretraining-fails-cross-lingual-knowledge",
+      "2610.02762",
+      "2609.19291",
+      "2609.37104",
+      "2609.01341",
+      "2608.23023",
+      "2608.11146",
+      "2608.08032",
+      "2609.27758",
+      "2608.06506",
+      "2608.02486",
+      "2607.08731",
+      "2607.04814",
+      "2606.01196"
+     ]
+    },
+    {
+     "tool": "orx discover openalex --limit 15 --published-after 2025-01-01",
+     "query": "Q47: sparse attention multilingual evaluation language models",
+     "returned_ids": [
+      "10.5281/zenodo.20637041",
+      "10.3390/electronics15071395",
+      "10.48550/arxiv.2511.07498",
+      "10.48550/arxiv.2601.02819",
+      "10.1007/s11704-024-40579-4",
+      "10.1016/j.ipm.2026.104627",
+      "10.48550/arxiv.2504.07072",
+      "10.7488/era/7299",
+      "10.62311/nesx/rb14ag-978-81-68314-86-3",
+      "10.48550/arxiv.2605.23036",
+      "10.18653/v1/2026.trustnlp-main.24",
+      "10.48550/arxiv.2605.26002",
+      "10.21203/rs.3.rs-10218350/v1",
+      "10.48550/arxiv.2501.05478",
+      "W7212200699"
+     ]
+    },
+    {
+     "tool": "orx discover keyword --limit 10",
+     "query": "Q52: Routing Absorption sparse attention random gates",
+     "returned_ids": [
+      "2603.02227",
+      "2609.22884",
+      "2609.20974",
+      "2606.06467",
+      "2609.31093",
+      "2609.27373",
+      "2606.13392",
+      "2609.27150",
+      "2608.11519",
+      "2609.01925"
+     ]
+    },
+    {
+     "tool": "orx discover openalex --limit 10",
+     "query": "Q50: SeerAttention learning intrinsic sparse attention in your LLMs",
+     "returned_ids": [
+      "10.48550/arxiv.2410.13276",
+      "10.48550/arxiv.2609.13205",
+      "10.48550/arxiv.2602.05191",
+      "10.48550/arxiv.2609.38830",
+      "10.18653/v1/2025.acl-long.1126",
+      "10.48550/arxiv.2605.07363",
+      "10.48550/arxiv.2505.19578",
+      "10.48550/arxiv.2510.13602",
+      "10.48550/arxiv.2603.06274",
+      "10.18653/v1/2026.findings-acl.348"
+     ]
+    },
+    {
+     "tool": "orx discover keyword --limit 10",
+     "query": "Q53: RTPurbo Full Attention Strikes Back retrieval subspace",
+     "returned_ids": [
+      "2605.16928",
+      "2609.30601",
+      "2609.31947",
+      "2609.38978",
+      "2609.32704",
+      "2608.12780",
+      "2608.24971",
+      "2609.37879",
+      "2607.02980",
+      "2609.33913"
+     ]
+    },
+    {
+     "tool": "orx discover embedding --limit 20",
+     "query": "Q51: learnable gate predicts block-level attention sparsity, trained by self-distillation from the pooled attention map of the frozen pretrained model",
+     "returned_ids": [
+      "2609.13141",
+      "2609.34650",
+      "2608.23296",
+      "2609.22005",
+      "2609.10287",
+      "2608.15787",
+      "2608.06776",
+      "2607.21692",
+      "2606.30139",
+      "2605.05222",
+      "2602.01468",
+      "2602.04784",
+      "2511.18670",
+      "2410.13276",
+      "2510.13876"
+     ]
+    },
+    {
+     "tool": "orx discover keyword --limit 10",
+     "query": "Q48: SeerAttention learning intrinsic sparse attention",
+     "returned_ids": [
+      "2410.13276",
+      "2506.08889",
+      "2609.31093",
+      "2607.02980",
+      "2609.26368",
+      "2606.13392",
+      "2606.25010",
+      "2609.32882",
+      "2609.38830",
+      "2606.04511"
+     ]
+    },
+    {
+     "tool": "orx discover keyword --limit 15",
+     "query": "Q49: AttnGate self-distillation max-pooled attention map block sparse",
+     "returned_ids": [
+      "2609.31093",
+      "2609.26368",
+      "2608.19758",
+      "2609.22884",
+      "2609.33200",
+      "2609.38978",
+      "2606.13392",
+      "2609.25869",
+      "2607.09052",
+      "2608.16585",
+      "2610.01013",
+      "2610.08772",
+      "2609.13141",
+      "2610.05416",
+      "2610.06801"
+     ]
+    },
+    {
+     "tool": "orx discover keyword --limit 15",
+     "query": "Q54: sparse attention Belebele",
+     "returned_ids": [
+      "2606.13392",
+      "2609.26368",
+      "2610.06801",
+      "2609.32882",
+      "2609.24202",
+      "2607.02980",
+      "2609.38832",
+      "2610.04635",
+      "2606.04511",
+      "2608.19920",
+      "2610.04424",
+      "2607.09052",
+      "2609.13205",
+      "2608.10519",
+      "2604.20920"
+     ]
+    },
+    {
+     "tool": "orx discover embedding --limit 20 --published-after 2026-01-01",
+     "query": "Q58: Does DeepSeek sparse attention or a learned top-k indexer degrade multilingual or cross-lingual long-context performance compared with dense attention?",
+     "returned_ids": [
+      "2609.02737",
+      "2608.01662",
+      "2610.01139",
+      "2610.02875",
+      "2609.35378",
+      "2609.37879",
+      "2609.38530",
+      "2609.08574",
+      "2609.34063",
+      "2608.23296",
+      "2609.11913",
+      "2609.01341",
+      "2607.24593",
+      "2609.13205",
+      "2608.15061"
+     ]
+    },
+    {
+     "tool": "orx discover openalex --limit 15",
+     "query": "Q59: DeepSeek sparse attention lightning indexer",
+     "returned_ids": [
+      "10.48550/arxiv.2606.09079",
+      "10.48550/arxiv.2608.01662",
+      "10.48550/arxiv.2607.19358",
+      "W7135429492",
+      "10.48550/arxiv.2603.12201",
+      "10.48550/arxiv.2603.28458",
+      "10.48550/arxiv.2605.02568",
+      "10.48550/arxiv.2605.07363",
+      "10.48550/arxiv.2606.13392",
+      "10.1093/nsr/nwag212",
+      "10.48550/arxiv.2607.24593",
+      "10.48550/arxiv.2606.06467",
+      "10.18653/v1/2026.findings-acl.1926",
+      "10.48550/arxiv.2604.20920",
+      "10.48550/arxiv.2512.03494"
+     ]
+    },
+    {
+     "tool": "orx discover keyword --limit 15",
+     "query": "Q55: lightning indexer languages Japanese Korean",
+     "returned_ids": [
+      "2608.01662",
+      "2609.11772",
+      "2606.09079",
+      "2608.30181",
+      "2608.05802",
+      "2608.20840",
+      "2605.07363",
+      "2606.25937",
+      "2607.10114",
+      "2607.16777",
+      "2607.11976",
+      "2603.12201",
+      "2407.19400",
+      "2605.29414",
+      "2603.05883"
+     ]
+    },
+    {
+     "tool": "orx discover keyword --limit 15 --published-after 2026-01-01",
+     "query": "Q56: sparse attention low-resource languages long context",
+     "returned_ids": [
+      "2608.19758",
+      "2608.19920",
+      "2606.09079",
+      "2609.23816",
+      "2606.04511",
+      "2609.20971",
+      "2609.26368",
+      "2607.02980",
+      "2609.13205",
+      "2609.36529",
+      "2609.38832",
+      "2607.25291",
+      "2606.13392",
+      "2609.08450",
+      "2607.21927"
+     ]
+    },
+    {
+     "tool": "orx discover keyword --limit 15",
+     "query": "Q57: attention mass recall indexer per language",
+     "returned_ids": [
+      "2610.04635",
+      "2609.20734",
+      "2605.07363",
+      "2609.02737",
+      "2607.11976",
+      "2607.24593",
+      "2609.32712",
+      "2606.09079",
+      "2609.32704",
+      "2608.30376",
+      "2603.12201",
+      "2609.36835",
+      "2605.02568",
+      "2608.07009",
+      "2610.02235"
+     ]
+    },
+    {
+     "tool": "orx discover keyword --limit 10",
+     "query": "Q60: GLM-5 technical report DSA",
+     "returned_ids": [
+      "2602.15763",
+      "2603.10910",
+      "2608.glm-5",
+      "2026.glm-5-2",
+      "2512.14291",
+      "2606.10651",
+      "2608.30703",
+      "2608.26990",
+      "2608.04505",
+      "2607.pangram-4"
+     ]
+    },
+    {
+     "tool": "orx discover embedding --limit 20",
+     "query": "Q63: per-language analysis of which context tokens a sparse attention selector keeps, comparing English with Chinese, Japanese, Arabic and other scripts",
+     "returned_ids": [
+      "2609.37879",
+      "2609.36205",
+      "2609.08322",
+      "2609.00325",
+      "2608.26576",
+      "2607.16117",
+      "2606.01800",
+      "2606.09335",
+      "2605.31363",
+      "2605.17598",
+      "2603.00432",
+      "2510.04694",
+      "2601.13328",
+      "2601.04664",
+      "2510.03315"
+     ]
+    },
+    {
+     "tool": "orx discover keyword --limit 10",
+     "query": "Q62: sparse indexer warmup Korean long-context",
+     "returned_ids": [
+      "2605.07363",
+      "2606.09079",
+      "2608.30181",
+      "2607.11976",
+      "2609.13205",
+      "2609.08450",
+      "2607.19358",
+      "2606.04511",
+      "2606.06467",
+      "2608.01662"
+     ]
+    },
+    {
+     "tool": "orx discover keyword --limit 10",
+     "query": "Q61: Kimi linear attention MoBA multilingual long context",
+     "returned_ids": [
+      "2607.24653",
+      "2609.36529",
+      "2510.26692",
+      "2609.08574",
+      "2502.13189",
+      "2609.38428",
+      "2609.36062",
+      "2609.24797",
+      "2608.20853",
+      "2609.38166"
+     ]
+    },
+    {
+     "tool": "orx discover keyword --limit 15",
+     "query": "Q65: query-aware KV cache selection language mismatch query context",
+     "returned_ids": [
+      "2609.36722",
+      "2609.33503",
+      "2609.39329",
+      "2610.03198",
+      "2610.03135",
+      "2610.00412",
+      "2610.06686",
+      "2608.01247",
+      "2609.32831",
+      "2608.03276",
+      "2610.06996",
+      "2609.22158",
+      "2609.08131",
+      "2609.26300",
+      "2609.35621"
+     ]
+    },
+    {
+     "tool": "orx discover openalex --limit 15",
+     "query": "Q67: cross-lingual KV cache compression query language different from context language",
+     "returned_ids": [
+      "10.48550/arxiv.2609.03235",
+      "10.52202/085713-0966",
+      "10.18653/v1/2026.acl-long.1811",
+      "10.48550/arxiv.2608.26175",
+      "10.48550/arxiv.2602.05929",
+      "10.48550/arxiv.2609.32610",
+      "10.48550/arxiv.2406.18139",
+      "10.18653/v1/2024.findings-emnlp.235",
+      "10.48550/arxiv.2608.22704",
+      "10.48550/arxiv.2511.01815",
+      "10.26153/tsw/64320",
+      "10.48550/arxiv.2406.13035",
+      "10.1109/tpami.2026.3708708",
+      "10.48550/arxiv.2307.06435",
+      "10.48550/arxiv.2410.07590"
+     ]
+    },
+    {
+     "tool": "orx discover embedding --limit 20",
+     "query": "Q68: Token selection for long-context inference is guided by the query; when the query is in a different language from the document, attention-based token selection may miss the relevant evidence",
+     "returned_ids": [
+      "2609.36534",
+      "2610.00606",
+      "2607.21692",
+      "2605.08234",
+      "2605.19274",
+      "2604.21096",
+      "2603.27859",
+      "2603.18446",
+      "2603.13911",
+      "2601.06644",
+      "2601.16934",
+      "2602.11841",
+      "2601.23223",
+      "2511.19325",
+      "2511.01380"
+     ]
+    },
+    {
+     "tool": "orx discover keyword --limit 15",
+     "query": "Q69: head-sum versus max-pool target indexer distillation ablation",
+     "returned_ids": [
+      "2605.07363",
+      "2609.34250",
+      "2609.17284",
+      "2609.39319",
+      "2609.39687",
+      "2609.10317",
+      "2606.01920",
+      "2607.induction-head-ablation-repetition-dynamics",
+      "2609.30837",
+      "2609.32704",
+      "2609.37041",
+      "2610.00373",
+      "2609.39275",
+      "2609.39338",
+      "2607.28590"
+     ]
+    },
+    {
+     "tool": "orx discover keyword --limit 10",
+     "query": "Q66: \u7a00\u758f\u6ce8\u610f\u529b \u591a\u8bed\u8a00",
+     "returned_ids": [
+      "2608.08650",
+      "2608.10021",
+      "2608.enterprise-ai-decision-support-systems",
+      "2608.enterprise-information-systems-lifecycle-management",
+      "2608.ai-enterprise-lightweight-transformation",
+      "2608.cross-border-ecommerce-systems-globalization",
+      "2608.ai-wireless-network-penetration-testing",
+      "2605.22064",
+      "2607.15686",
+      "2607.13533"
+     ]
+    },
+    {
+     "tool": "orx discover keyword --limit 15",
+     "query": "Q64: SnapKV multilingual cross-lingual question answering",
+     "returned_ids": [
+      "2608.22363",
+      "2608.27481",
+      "2609.04409",
+      "2609.23231",
+      "2610.06216",
+      "2608.13160",
+      "2609.05976",
+      "2607.19867",
+      "2604.20531",
+      "2608.20757",
+      "2606.24579",
+      "2606.25246",
+      "2606.21954",
+      "2604.10590",
+      "2606.01464"
+     ]
+    },
+    {
+     "tool": "orx discover embedding --limit 20 --published-after 2025-03-01",
+     "query": "Q73: cross-lingual long-context question answering where the document and the question are in different languages, evaluated at increasing context lengths for many languages and scripts",
+     "returned_ids": [
+      "2610.00606",
+      "2609.27376",
+      "2609.04409",
+      "2608.21714",
+      "2608.27481",
+      "2606.15345",
+      "2606.27306",
+      "2604.05684",
+      "2601.15337",
+      "2601.06644",
+      "2601.18886",
+      "2602.01451",
+      "2511.19325",
+      "2601.03025",
+      "2511.14774"
+     ]
+    },
+    {
+     "tool": "orx discover openalex --limit 15 --published-after 2025-01-01",
+     "query": "Q72: multilingual long-context benchmark cross-lingual question context different languages",
+     "returned_ids": [
+      "10.3390/app15147800",
+      "10.18653/v1/2025.acl-long.404",
+      "10.48550/arxiv.2606.01464",
+      "10.48550/arxiv.2604.20531",
+      "W7214129258",
+      "10.48550/arxiv.2609.05976",
+      "10.48550/arxiv.2609.04409",
+      "10.18653/v1/2025.findings-acl.219",
+      "10.3390/computers15020092",
+      "10.1145/3777415",
+      "10.18653/v1/2025.emnlp-main.1380",
+      "10.48550/arxiv.2504.20484",
+      "10.18653/v1/2026.findings-acl.1367",
+      "10.18653/v1/2025.naacl-long.267",
+      "10.63317/29b354pejyrt"
+     ]
+    },
+    {
+     "tool": "orx discover keyword --limit 15 --published-after 2025-04-01",
+     "query": "Q71: multilingual BABILong RULER languages long context evaluation",
+     "returned_ids": [
+      "2608.20853",
+      "2609.36218",
+      "2608.03297",
+      "2610.03367",
+      "2609.05910",
+      "2608.24477",
+      "2608.19981",
+      "2609.32312",
+      "2607.10371",
+      "2609.13413",
+      "2609.35820",
+      "2609.30739",
+      "2609.12686",
+      "2607.02956",
+      "2609.02379"
+     ]
+    },
+    {
+     "tool": "orx discover keyword --limit 15",
+     "query": "Q70: multilingual NoLiMa non-literal long-context",
+     "returned_ids": [
+      "2607.01002",
+      "2502.05167",
+      "2610.08463",
+      "2608.20853",
+      "2605.10544",
+      "2609.12686",
+      "2609.36218",
+      "2609.33485",
+      "2609.40181",
+      "2606.02147",
+      "2609.38137",
+      "2609.34781",
+      "2609.27590",
+      "2608.21690",
+      "2606.29718"
+     ]
+    },
+    {
+     "tool": "orx discover openalex --limit 15",
+     "query": "Q77: attention-based in-context re-ranking cross-lingual",
+     "returned_ids": [
+      "10.1007/s10791-022-09406-x",
+      "10.1109/access.2020.3041605",
+      "10.48550/arxiv.2304.01019",
+      "10.1109/access.2020.2999568",
+      "10.17863/cam.30462",
+      "10.18653/v1/d18-1269",
+      "10.18653/v1/2023.findings-acl.109",
+      "10.48550/arxiv.2206.07587",
+      "10.18653/v1/2022.findings-emnlp.384",
+      "10.1613/jair.1.11640",
+      "10.1145/3626772.3657864",
+      "10.1162/tacl_a_00520",
+      "10.18653/v1/2025.findings-emnlp.612",
+      "10.48550/arxiv.2210.13693",
+      "10.48550/arxiv.1809.05053"
+     ]
+    },
+    {
+     "tool": "orx discover keyword --limit 15",
+     "query": "Q76: attention supervision parallel corpus cross-lingual retrieval heads training",
+     "returned_ids": [
+      "2610.02875",
+      "2609.23231",
+      "2608.27115",
+      "2609.28826",
+      "2609.30535",
+      "2609.09953",
+      "2606.22910",
+      "2608.21714",
+      "2608.29890",
+      "2608.12820",
+      "2606.06586",
+      "2602.22453",
+      "2605.27243",
+      "2604.05821",
+      "2604.20666"
+     ]
+    },
+    {
+     "tool": "orx discover embedding --limit 20",
+     "query": "Q75: use the attention scores of a decoder LLM's heads as a zero-shot retriever or re-ranker for passages in other languages; cross-lingual in-context retrieval with attention",
+     "returned_ids": [
+      "2607.22042",
+      "2605.07249",
+      "2604.24608",
+      "2604.05821",
+      "2604.25182",
+      "2604.19678",
+      "2602.12192",
+      "2602.08625",
+      "2602.22453",
+      "2601.04768",
+      "2601.18886",
+      "2511.07498",
+      "2510.02219",
+      "2506.09944",
+      "2504.10906"
+     ]
+    },
+    {
+     "tool": "orx discover keyword --limit 15",
+     "query": "Q74: query-focused retrieval heads attention re-ranking multilingual",
+     "returned_ids": [
+      "2608.06849",
+      "2609.23880",
+      "2609.34650",
+      "2607.04043",
+      "2605.25165",
+      "2609.30904",
+      "2604.24608",
+      "2608.27417",
+      "2506.09944",
+      "2609.14174",
+      "2602.22453",
+      "2510.02219",
+      "2609.22990",
+      "2608.20886",
+      "2606.25249"
+     ]
+    },
+    {
+     "tool": "orx paper --full",
+     "query": "closest-prior full-text reads (35 documents)",
+     "returned_ids": [
+      "2606.07703",
+      "2606.22874",
+      "2512.02556",
+      "2608.30320",
+      "2608.26175",
+      "2609.35378",
+      "2610.01921",
+      "2408.10151",
+      "2503.01996",
+      "2608.20853",
+      "2602.22453",
+      "2607.01002",
+      "2410.13276",
+      "2506.08889",
+      "2603.02227",
+      "2605.16928",
+      "2609.13141",
+      "2606.13392",
+      "2606.19348",
+      "2504.10906",
+      "2610.04635",
+      "2606.03967",
+      "2609.19969",
+      "2606.25821",
+      "2608.30181",
+      "2602.15763",
+      "2608.04505",
+      "2607.24653",
+      "2510.04694",
+      "2607.21692",
+      "2601.18886",
+      "2606.09079",
+      "2608.01662",
+      "2607.24593",
+      "2608.glm-5"
+     ]
+    },
+    {
+     "tool": "orx paper (report)",
+     "query": "abstract/report reads",
+     "returned_ids": [
+      "2409.18006",
+      "2504.12845"
+     ]
+    },
+    {
+     "tool": "curl https://export.arxiv.org/abs/<id> (version history)",
+     "query": "version-history check of every named closest prior and new hit (38 ids)",
+     "returned_ids": [
+      "2606.07703",
+      "2606.22874",
+      "2512.02556",
+      "2608.30320",
+      "2608.26175",
+      "2609.35378",
+      "2610.01921",
+      "2408.10151",
+      "2503.01996",
+      "2608.20853",
+      "2602.22453",
+      "2607.01002",
+      "2605.16928",
+      "2606.03967",
+      "2411.04986",
+      "2603.02227",
+      "2607.24593",
+      "2502.11089",
+      "2608.01662",
+      "2606.13392",
+      "2606.09079",
+      "2502.05167",
+      "2607.21692",
+      "2601.18886",
+      "2410.13276",
+      "2506.08889",
+      "2606.25821",
+      "2605.28306",
+      "2510.04694",
+      "2504.10906",
+      "2608.30181",
+      "2609.13141",
+      "2610.04635",
+      "2602.15763",
+      "2606.19348",
+      "2609.19969",
+      "2608.06506",
+      "2506.09944"
+     ]
+    },
+    {
+     "tool": "curl https://export.arxiv.org/pdf/2602.22453v1 + pdftotext",
+     "query": "diff RTH v1 against v4 for the KV-compression implication paragraph",
+     "returned_ids": [
+      "2602.22453v1"
+     ]
+    }
+   ]
+  },
+  "killshot": {
+   "source": "transcribed by the synthesis owner from the kill-shot cell output in the workflow task text (the cell kept no files)",
+   "rows": [
+    {
+     "tool": "orx discover keyword",
+     "query": "lightning indexer multilingual cross-lingual recall",
+     "returned_ids": [
+      "2609.23231",
+      "2610.06216",
+      "2608.01662",
+      "2609.05976",
+      "2606.06586",
+      "2608.22363",
+      "2610.01921",
+      "2606.24579",
+      "2608.12820",
+      "2609.14431",
+      "2608.26357",
+      "2606.21954",
+      "2606.15345",
+      "2607.04814",
+      "2607.11215"
+     ]
+    },
+    {
+     "tool": "orx discover keyword",
+     "query": "sparse attention indexer cross-script needle retrieval",
+     "returned_ids": [
+      "2609.26368",
+      "2610.04635",
+      "2608.01662",
+      "2605.07363",
+      "2606.06467",
+      "2607.11976",
+      "2603.12201",
+      "2606.09079",
+      "2606.13392",
+      "2609.13205",
+      "2603.28458",
+      "2607.24593",
+      "2608.03555",
+      "2605.16928",
+      "2609.38978"
+     ]
+    },
+    {
+     "tool": "orx discover keyword",
+     "query": "DeepSeek Sparse Attention non-English languages degradation",
+     "returned_ids": [
+      "2609.19969",
+      "2606.09079",
+      "2608.11786",
+      "2610.06801",
+      "2606.19348",
+      "2606.13392",
+      "2608.22363",
+      "2610.04635",
+      "2610.05238",
+      "2609.24202",
+      "2608.01662",
+      "2609.39001",
+      "2608.13698",
+      "2606.04511",
+      "2608.04433"
+     ]
+    },
+    {
+     "tool": "orx discover keyword",
+     "query": "Lost in Compression cross-lingual prompt compression",
+     "returned_ids": [
+      "2608.26175",
+      "2609.32474",
+      "2609.36526",
+      "2609.15184",
+      "2608.27848",
+      "2609.37017",
+      "2609.12310",
+      "2610.06093",
+      "2609.06076",
+      "2609.25963"
+     ]
+    },
+    {
+     "tool": "orx discover keyword",
+     "query": "Multilinguality in Hybrid Attention LLMs",
+     "returned_ids": [
+      "2609.35378",
+      "2608.28383",
+      "2609.26368",
+      "2608.17088",
+      "2608.30310",
+      "2609.20751",
+      "2609.32114",
+      "2608.12149",
+      "2610.08527",
+      "2608.27875"
+     ]
+    },
+    {
+     "tool": "orx discover keyword",
+     "query": "Oracle-Guided Sparse Prefill",
+     "returned_ids": [
+      "2606.07703",
+      "2609.20971",
+      "2609.26368",
+      "2610.06917",
+      "2608.19758",
+      "2609.26333",
+      "2609.33252",
+      "2609.32259",
+      "2605.16839",
+      "2610.06801"
+     ]
+    },
+    {
+     "tool": "orx discover keyword",
+     "query": "Cross-Lingual Alignment with MoE Routers",
+     "returned_ids": [
+      "2610.01921",
+      "2609.06381",
+      "2608.23149",
+      "2609.15184",
+      "2608.27115",
+      "2609.32581",
+      "2608.23390",
+      "2609.23231",
+      "2609.19398",
+      "2608.27867"
+     ]
+    },
+    {
+     "tool": "orx discover embedding",
+     "query": "Does a learned top-k sparse attention indexer distilled by KL divergence from the model's full attention lose more needle retrieval recall when the question is in a different language or script from the passage than the dense attention it imitates?",
+     "returned_ids": [
+      "2610.01139",
+      "2610.02875",
+      "2609.34063",
+      "2608.23296",
+      "2609.01341",
+      "2608.25717",
+      "2608.21462",
+      "2607.21692",
+      "2606.02737",
+      "2605.24556",
+      "2606.00356",
+      "2604.21096",
+      "2603.14782",
+      "2510.26271",
+      "2511.19324"
+     ]
+    },
+    {
+     "tool": "orx discover keyword",
+     "query": "KV cache compression multilingual languages degradation",
+     "returned_ids": [
+      "2609.19969",
+      "2610.06479",
+      "2609.03235",
+      "2609.37988",
+      "2609.32831",
+      "2610.02953",
+      "2609.36322",
+      "2610.02815",
+      "2609.24298",
+      "2610.03198",
+      "2609.35621",
+      "2610.06286",
+      "2609.07966",
+      "2610.03027",
+      "2609.22158"
+     ]
+    },
+    {
+     "tool": "orx discover keyword",
+     "query": "KV cache eviction non-English low-resource languages long context",
+     "returned_ids": [
+      "2610.03007",
+      "2608.28293",
+      "2609.03430",
+      "2606.24467",
+      "2610.06286",
+      "2610.06996",
+      "2609.08131",
+      "2610.07643",
+      "2610.02815",
+      "2605.25475",
+      "2609.37988",
+      "2609.27470",
+      "2610.03198",
+      "2609.27981",
+      "2605.09649"
+     ]
+    },
+    {
+     "tool": "orx discover keyword",
+     "query": "sparse attention multilingual needle in a haystack",
+     "returned_ids": [
+      "2610.00973",
+      "2610.00348",
+      "2609.31947",
+      "2608.28444",
+      "2609.31093",
+      "2609.03085",
+      "2608.01662",
+      "2608.27580",
+      "2607.02303",
+      "2609.38832",
+      "2606.13392",
+      "2608.19758",
+      "2603.28458",
+      "2605.28640",
+      "2607.02980"
+     ]
+    },
+    {
+     "tool": "orx discover keyword",
+     "query": "retrieval heads multilingual cross-lingual long context",
+     "returned_ids": [
+      "2609.23231",
+      "2610.06216",
+      "2608.21714",
+      "2608.12820",
+      "2609.05976",
+      "2608.22363",
+      "2608.29613",
+      "2605.27243",
+      "2602.22453",
+      "2606.24579",
+      "2607.06008",
+      "2606.06586",
+      "2605.31171",
+      "2604.25182",
+      "2606.24200"
+     ]
+    },
+    {
+     "tool": "orx discover embedding",
+     "query": "Multilingual evaluation of sparse attention and KV cache selection methods: token selection recall drops for non-English and cross-lingual queries in long-context retrieval",
+     "returned_ids": [
+      "2610.02875",
+      "2608.01631",
+      "2608.30996",
+      "2608.26175",
+      "2607.21692",
+      "2608.12333",
+      "2606.24200",
+      "2608.vorn-kv-cache-eviction",
+      "2608.09941",
+      "2605.07249",
+      "2605.24556",
+      "2605.24904",
+      "2605.08234",
+      "2604.21096",
+      "2602.20986"
+     ]
+    },
+    {
+     "tool": "orx discover openalex",
+     "query": "sparse attention indexer multilingual cross-lingual retrieval",
+     "returned_ids": [
+      "arXiv:2510.07812",
+      "10.18653/v1/2025.findings-emnlp.575",
+      "10.18653/v1/2022.findings-naacl.142",
+      "10.18653/v1/2022.acl-long.288",
+      "arXiv:2204.08887",
+      "10.1145/3777415",
+      "10.17863/cam.30462",
+      "W2907395836",
+      "10.1613/jair.1.11640",
+      "10.1007/978-3-030-15712-8_34",
+      "10.18653/v1/2025.findings-emnlp.612",
+      "10.18653/v1/2022.emnlp-main.597",
+      "10.1613/jair.4762",
+      "arXiv:2207.05737",
+      "10.18653/v1/2025.acl-long.253"
+     ]
+    },
+    {
+     "tool": "orx discover openalex",
+     "query": "KV cache compression multilingual long context",
+     "returned_ids": [
+      "10.18653/v1/2025.findings-emnlp.426",
+      "arXiv:2410.15252",
+      "10.18653/v1/2026.acl-long.1811",
+      "arXiv:2605.31105",
+      "10.18653/v1/2026.findings-acl.494",
+      "arXiv:2609.19969",
+      "10.21203/rs.3.rs-10297225/v1",
+      "arXiv:2606.14782",
+      "arXiv:2607.06827",
+      "arXiv:2604.08426",
+      "arXiv:2502.01941",
+      "arXiv:2605.25085",
+      "10.5753/sbbd.2025.247245",
+      "W7161354758",
+      "arXiv:2412.05896"
+     ]
+    },
+    {
+     "tool": "orx discover keyword",
+     "query": "lightning indexer KL divergence attention distillation top-k selection recall",
+     "returned_ids": [
+      "2609.34447",
+      "2610.04635",
+      "2608.01662",
+      "2609.33791",
+      "2606.20005",
+      "2608.14728",
+      "2609.08450",
+      "2610.03529",
+      "2610.07247",
+      "2605.02568",
+      "2606.09079",
+      "2609.01532",
+      "2603.12201",
+      "2607.19358",
+      "2607.27692"
+     ]
+    },
+    {
+     "tool": "orx discover keyword --published-after 2026-06-01",
+     "query": "multilingual long-context sparse attention evaluation languages",
+     "returned_ids": [
+      "2608.19758",
+      "2608.20853",
+      "2608.19920",
+      "2606.09079",
+      "2609.20971",
+      "2609.23816",
+      "2606.04511",
+      "2609.26368",
+      "2607.02980",
+      "2609.36218",
+      "2606.13392",
+      "2609.36529",
+      "2609.38832",
+      "2607.25291",
+      "2609.13205",
+      "2608.01676",
+      "2608.24477",
+      "2610.03367",
+      "2609.05910",
+      "2608.20427"
+     ]
+    },
+    {
+     "tool": "orx discover keyword",
+     "query": "MLNeedle multilingual needle in a haystack",
+     "returned_ids": [
+      "2610.00973",
+      "2610.00348",
+      "2408.10151",
+      "2609.03085",
+      "2608.27580",
+      "2604.20347",
+      "2609.18546",
+      "2603.29187",
+      "2607.26337",
+      "2608.12687"
+     ]
+    },
+    {
+     "tool": "orx discover keyword",
+     "query": "OneRuler multilingual long-context benchmark",
+     "returned_ids": [
+      "2608.20853",
+      "2609.36218",
+      "2608.28411",
+      "2609.40181",
+      "2503.01996",
+      "2609.01056",
+      "2609.02379",
+      "2609.20945",
+      "2609.23490",
+      "2609.23416"
+     ]
+    },
+    {
+     "tool": "orx discover keyword",
+     "query": "token premium tokenizer fertility long context budget non-English sparse",
+     "returned_ids": [
+      "2609.36194",
+      "2610.01984",
+      "2609.39001",
+      "2608.26449",
+      "2607.24276",
+      "2608.14277",
+      "2606.24460",
+      "2608.09046",
+      "2608.18062",
+      "2609.34738",
+      "2607.09598",
+      "2607.25291",
+      "2608.19920",
+      "2608.30092",
+      "2608.26175"
+     ]
+    },
+    {
+     "tool": "orx discover keyword",
+     "query": "Belebele contamination FLORES memorization",
+     "returned_ids": [
+      "2601.20858",
+      "2608.09766",
+      "2609.37647",
+      "2607.12649",
+      "2609.34933",
+      "2606.31208",
+      "2605.24818",
+      "2603.03203",
+      "2608.12771",
+      "2607.23440",
+      "2605.21856",
+      "2609.02899",
+      "2608.07341",
+      "2607.20572",
+      "2608.02052"
+     ]
+    },
+    {
+     "tool": "orx discover embedding --published-after 2026-01-01",
+     "query": "Sparse attention, token eviction or KV selection methods degrade more for low-resource and non-Latin-script languages because of tokenizer fertility and cross-lingual query-key mismatch",
+     "returned_ids": [
+      "2609.39001",
+      "2610.00540",
+      "2608.23358",
+      "2608.28645",
+      "2608.11786",
+      "2609.27758",
+      "2607.26831",
+      "2607.24276",
+      "2608.26175",
+      "2608.21384",
+      "2607.08362",
+      "2607.10112",
+      "2607.04814",
+      "2609.00378",
+      "2606.21869"
+     ]
+    },
+    {
+     "tool": "orx discover openalex",
+     "query": "lightning indexer DeepSeek sparse attention",
+     "returned_ids": [
+      "arXiv:2606.09079",
+      "arXiv:2608.01662",
+      "arXiv:2607.19358",
+      "W7135429492",
+      "arXiv:2603.12201",
+      "arXiv:2603.28458",
+      "arXiv:2605.02568",
+      "arXiv:2605.07363",
+      "arXiv:2606.13392",
+      "10.1093/nsr/nwag212",
+      "arXiv:2607.24593",
+      "arXiv:2606.06467",
+      "10.18653/v1/2026.findings-acl.1926",
+      "arXiv:2604.20920",
+      "arXiv:2512.03494"
+     ]
+    },
+    {
+     "tool": "orx discover openalex",
+     "query": "multilingual needle in a haystack cross-lingual long context",
+     "returned_ids": [
+      "arXiv:2408.10151",
+      "10.18653/v1/2025.naacl-long.267",
+      "arXiv:2503.01996",
+      "arXiv:2504.12845",
+      "10.18653/v1/2026.eacl-long.290",
+      "10.3233/ida-227347",
+      "arXiv:2207.01054",
+      "10.18653/v1/2023.eacl-main.75",
+      "arXiv:2604.18835",
+      "10.18653/v1/2024.naacl-long.339",
+      "10.18653/v1/2023.acl-long.524",
+      "arXiv:2404.04659",
+      "arXiv:2208.05309",
+      "arXiv:2305.10266",
+      "W7142582410"
+     ]
+    },
+    {
+     "tool": "orx discover keyword --published-after 2026-09-01",
+     "query": "sparse attention indexer language",
+     "returned_ids": [
+      "2610.04635",
+      "2609.26368",
+      "2609.02737",
+      "2609.08450",
+      "2609.38832",
+      "2610.06801",
+      "2609.31093",
+      "2609.20971",
+      "2609.24202",
+      "2609.39661",
+      "2610.04753",
+      "2609.32704",
+      "2609.13134",
+      "2609.37538",
+      "2609.22884",
+      "2609.32882",
+      "2609.36938",
+      "2609.38830",
+      "2609.33746",
+      "2609.27373"
+     ]
+    },
+    {
+     "tool": "orx discover keyword",
+     "query": "multilingual sparse attention retrofit frozen indexer",
+     "returned_ids": [
+      "2610.04635",
+      "2605.07363",
+      "2608.20427",
+      "2607.11976",
+      "2608.01662",
+      "2606.09079",
+      "2607.24593",
+      "2606.13392",
+      "2609.26368",
+      "2606.07703",
+      "2608.07009",
+      "2603.12201",
+      "2609.13205",
+      "2606.06467",
+      "2609.08450"
+     ]
+    },
+    {
+     "tool": "orx discover embedding --published-after 2026-06-01",
+     "query": "We evaluate learned sparse attention token selectors (indexers) across many languages and scripts and find that selection recall of the relevant context drops for non-English and cross-lingual queries compared with dense attention",
+     "returned_ids": [
+      "2610.02875",
+      "2610.01139",
+      "2610.07266",
+      "2609.35820",
+      "2610.00540",
+      "2609.32331",
+      "2609.23231",
+      "2609.27376",
+      "2608.25089",
+      "2608.27760",
+      "2608.21714",
+      "2608.20047",
+      "2608.14886",
+      "2608.28645",
+      "2606.13537"
+     ]
+    },
+    {
+     "tool": "orx discover keyword",
+     "query": "attention sparsity multilingual low-resource languages top-k",
+     "returned_ids": [
+      "2608.30725",
+      "2609.15758",
+      "2608.14626",
+      "2606.02147",
+      "2607.02235",
+      "2608.11146",
+      "2608.07629",
+      "2608.27753",
+      "2605.27740",
+      "2605.18239",
+      "2606.09535",
+      "2608.00533",
+      "2607.11163",
+      "2606.09553",
+      "2606.26144"
+     ]
+    },
+    {
+     "tool": "orx discover openalex --published-after 2025-06-01",
+     "query": "sparse attention multilingual languages selection recall",
+     "returned_ids": [
+      "arXiv:2601.02819",
+      "arXiv:2606.13392",
+      "arXiv:2609.35378",
+      "arXiv:2606.03780",
+      "10.7488/era/7299",
+      "W7212200699",
+      "arXiv:2512.14082",
+      "10.18653/v1/2026.acl-long.1706",
+      "arXiv:2608.30725",
+      "arXiv:2604.10627",
+      "10.21203/rs.3.rs-8714867/v1",
+      "arXiv:2604.25578",
+      "10.3390/drones10050361",
+      "10.54501/jots.v3i3.330",
+      "arXiv:2609.24417"
+     ]
+    },
+    {
+     "tool": "orx discover keyword",
+     "query": "Retrieval Head Mechanistically Explains Long-Context Factuality",
+     "returned_ids": [
+      "2404.15574",
+      "2609.38222",
+      "2610.08463",
+      "2609.30467",
+      "2609.38958",
+      "2609.07663",
+      "2608.12218",
+      "2609.02029",
+      "2608.05228",
+      "2609.32663"
+     ]
+    },
+    {
+     "tool": "orx discover keyword",
+     "query": "head-summed attention target indexer KL distillation retrieval heads dilution",
+     "returned_ids": [
+      "2609.39319",
+      "2609.37991",
+      "2609.32704",
+      "2605.07363",
+      "2609.38832",
+      "2610.04635",
+      "2609.34650",
+      "2608.27417",
+      "2610.01494",
+      "2608.06849",
+      "2606.20005",
+      "2606.20097",
+      "2606.07703",
+      "2609.17284",
+      "2607.08107"
+     ]
+    },
+    {
+     "tool": "orx discover embedding",
+     "query": "Qwen3-0.6B Belebele multilingual reading comprehension accuracy small language model",
+     "returned_ids": [
+      "2610.06216",
+      "2607.17466",
+      "2607.17173",
+      "2607.03801",
+      "2606.21954",
+      "2606.16383",
+      "2606.07069",
+      "2603.11510",
+      "2605.15763",
+      "2602.11961",
+      "2603.20854",
+      "2602.20065",
+      "2601.10310",
+      "2512.13298",
+      "2512.03976"
+     ]
+    },
+    {
+     "tool": "orx discover keyword",
+     "query": "Qwen3-0.6B Belebele",
+     "returned_ids": [
+      "2601.21337",
+      "2505.09388",
+      "2601.15621",
+      "2609.when-does-distillation-help-reinforcement-learning",
+      "2608.02689",
+      "2610.04950",
+      "2601.04720",
+      "2509.17765",
+      "2511.21631",
+      "2607.26057",
+      "2506.05176",
+      "2609.16096",
+      "2609.28430",
+      "2609.28568",
+      "2609.17848"
+     ]
+    },
+    {
+     "tool": "orx discover keyword",
+     "query": "Qwen3-0.6B-Base needle in a haystack long context retrieval 8K",
+     "returned_ids": [
+      "2610.00973",
+      "2609.38958",
+      "2610.08463",
+      "2608.27580",
+      "2607.25066",
+      "2609.31947",
+      "2610.04973",
+      "2606.24467",
+      "2605.27243",
+      "2608.17616",
+      "2609.38530",
+      "2607.24882",
+      "2610.00348",
+      "2608.20427",
+      "2608.23463"
+     ]
+    },
+    {
+     "tool": "orx discover keyword",
+     "query": "KV cache eviction cross-lingual multilingual long-context retrieval language",
+     "returned_ids": [
+      "2610.06996",
+      "2609.03430",
+      "2610.03007",
+      "2605.25475",
+      "2610.06286",
+      "2606.24467",
+      "2608.28293",
+      "2609.08131",
+      "2610.03135",
+      "2610.07643",
+      "2609.27470",
+      "2609.39329",
+      "2606.31145",
+      "2608.05326",
+      "2609.37988"
+     ]
+    },
+    {
+     "tool": "orx discover keyword",
+     "query": "native sparse attention multilingual evaluation languages",
+     "returned_ids": [
+      "2609.35820",
+      "2609.38832",
+      "2606.13392",
+      "2610.03367",
+      "2607.23242",
+      "2608.24477",
+      "2610.00540",
+      "2609.05910",
+      "2608.19981",
+      "2609.30739",
+      "2608.00533",
+      "2608.14626",
+      "2607.05992",
+      "2607.10371",
+      "2604.21221"
+     ]
+    },
+    {
+     "tool": "orx discover embedding",
+     "query": "Token eviction and KV cache compression methods such as SnapKV and H2O evaluated across languages show larger accuracy drops for non-English languages and for queries in a different language than the context",
+     "returned_ids": [
+      "2609.39001",
+      "2609.35820",
+      "2608.27128",
+      "2608.19670",
+      "2608.01631",
+      "2608.20047",
+      "2608.30996",
+      "2608.28641",
+      "2608.06506",
+      "2607.26831",
+      "2608.26175",
+      "2608.21384",
+      "2607.13205",
+      "2608.09941",
+      "2605.24904"
+     ]
+    },
+    {
+     "tool": "orx discover openalex --published-after 2026-09-01",
+     "query": "DeepSeek sparse attention lightning indexer",
+     "returned_ids": [
+      "arXiv:2609.08450",
+      "arXiv:2609.22884",
+      "arXiv:2609.32704",
+      "arXiv:2609.39661",
+      "arXiv:2609.32712",
+      "arXiv:2609.25802",
+      "arXiv:2609.35378",
+      "arXiv:2609.14507",
+      "arXiv:2609.22258",
+      "arXiv:2609.12419",
+      "arXiv:2609.13537",
+      "arXiv:2609.18110",
+      "arXiv:2609.20807",
+      "arXiv:2609.06551",
+      "arXiv:2609.36860"
+     ]
+    },
+    {
+     "tool": "orx discover keyword",
+     "query": "attention sink local attention question tokens needle attention mass small model",
+     "returned_ids": [
+      "2609.08574",
+      "2609.02737",
+      "2609.31947",
+      "2608.28444",
+      "2609.37879",
+      "2608.29539",
+      "2608.14712",
+      "2609.32712",
+      "2605.22372",
+      "2609.00746"
+     ]
+    },
+    {
+     "tool": "orx discover openalex",
+     "query": "Belebele benchmark contamination FLORES-200 pretraining",
+     "returned_ids": [
+      "arXiv:2602.16763",
+      "10.18653/v1/2025.findings-acl.578",
+      "10.18653/v1/2024.acl-long.777",
+      "arXiv:2403.11009",
+      "10.18653/v1/2025.findings-acl.1053",
+      "10.13140/rg.2.2.27046.59201",
+      "arXiv:2609.03350",
+      "arXiv:2408.13585",
+      "10.18653/v1/2025.naacl-long.314",
+      "10.63317/5ceec3hhv4d5"
+     ]
+    },
+    {
+     "tool": "orx paper --full",
+     "query": "2608.30320",
+     "returned_ids": [
+      "2608.30320"
+     ]
+    },
+    {
+     "tool": "orx paper --full",
+     "query": "2606.07703",
+     "returned_ids": [
+      "2606.07703"
+     ]
+    },
+    {
+     "tool": "orx paper --full",
+     "query": "2608.26175",
+     "returned_ids": [
+      "2608.26175"
+     ]
+    },
+    {
+     "tool": "orx paper --full",
+     "query": "2609.35378",
+     "returned_ids": [
+      "2609.35378"
+     ]
+    },
+    {
+     "tool": "orx paper --full",
+     "query": "2610.01921",
+     "returned_ids": [
+      "2610.01921"
+     ]
+    },
+    {
+     "tool": "orx paper --full",
+     "query": "2602.22453",
+     "returned_ids": [
+      "2602.22453"
+     ]
+    },
+    {
+     "tool": "orx paper --full",
+     "query": "2606.22874",
+     "returned_ids": [
+      "2606.22874"
+     ]
+    },
+    {
+     "tool": "orx paper --full",
+     "query": "2512.02556",
+     "returned_ids": [
+      "2512.02556"
+     ]
+    },
+    {
+     "tool": "orx paper --full",
+     "query": "2505.09388",
+     "returned_ids": [
+      "2505.09388"
+     ]
+    },
+    {
+     "tool": "orx paper --full",
+     "query": "2608.20427",
+     "returned_ids": [
+      "2608.20427"
+     ]
+    },
+    {
+     "tool": "orx paper --full",
+     "query": "2606.19348",
+     "returned_ids": [
+      "2606.19348"
+     ]
+    },
+    {
+     "tool": "orx paper --full",
+     "query": "2603.11510",
+     "returned_ids": [
+      "2603.11510"
+     ]
+    },
+    {
+     "tool": "orx paper --full",
+     "query": "2602.20065",
+     "returned_ids": [
+      "2602.20065"
+     ]
+    },
+    {
+     "tool": "orx paper --full",
+     "query": "2601.02819",
+     "returned_ids": [
+      "2601.02819"
+     ]
+    },
+    {
+     "tool": "orx paper --full",
+     "query": "2608.02689",
+     "returned_ids": [
+      "2608.02689"
+     ]
+    },
+    {
+     "tool": "orx paper --full",
+     "query": "2404.15574",
+     "returned_ids": [
+      "2404.15574"
+     ]
+    }
+   ]
+  },
+  "crossdomain": {
+   "source": "parsed from session scratchpad xd/log.txt (sha256 c1f89d789c7994a340f1155603327e3c27645f816e6562193f3247f212845695) and xd/ids.txt (sha256 6408be90d42ec9670a932840158baf7e2f7a084148e2db436dfce68f2de271be); the two WebSearch rows are transcribed from the cell output",
+   "rows": [
+    {
+     "tool": "orx discover keyword",
+     "query": "Q1: cross-lingual dense retrieval distillation cross-encoder teacher student gap",
+     "returned_ids": [
+      "2609.21619",
+      "2609.36246",
+      "2609.11412",
+      "2609.37243",
+      "2607.02966",
+      "2610.02516",
+      "2609.23231",
+      "2609.35319",
+      "2610.02597",
+      "2609.31785",
+      "2609.18686",
+      "2608.03610"
+     ]
+    },
+    {
+     "tool": "orx discover keyword --prioritize historical",
+     "query": "Q2: Translate-Distill cross-language dense retrieval translation distillation",
+     "returned_ids": [
+      "2401.04810",
+      "2605.29755",
+      "2609.38777",
+      "2505.21549",
+      "2608.12820",
+      "2601.11269",
+      "2405.00977",
+      "2609.13916",
+      "2608.14107",
+      "2509.25100",
+      "2410.01383",
+      "2606.28089"
+     ]
+    },
+    {
+     "tool": "orx discover keyword --prioritize historical",
+     "query": "Q3: ColBERT-X cross-language late interaction retrieval",
+     "returned_ids": [
+      "2603.25248",
+      "2503.19009",
+      "2609.29652",
+      "2601.06389",
+      "2004.12832",
+      "2604.19566",
+      "2511.16528",
+      "2605.10109",
+      "2608.19204",
+      "2609.07561",
+      "2408.16672",
+      "2404.13950"
+     ]
+    },
+    {
+     "tool": "orx discover keyword --prioritize historical",
+     "query": "Q4: language bias multilingual dense retrieval same-language preference LAReQA strong alignment",
+     "returned_ids": [
+      "2607.22042",
+      "2605.07249",
+      "2606.18801",
+      "2502.14786",
+      "2608.02189",
+      "2606.13537",
+      "2605.31171",
+      "2509.25138",
+      "2601.04768",
+      "2601.02956",
+      "2608.23149",
+      "2604.20199"
+     ]
+    },
+    {
+     "tool": "orx discover embedding",
+     "query": "Q5: A cheap low-dimensional first-stage scorer is distilled from an expensive teacher's relevance scores; we measure whether the student's top-k recall falls further behind the teacher's own top-k when the query is in a different language and script from the passage than when query and passage share a language.",
+     "returned_ids": [
+      "2609.29769",
+      "2610.06216",
+      "2609.32331",
+      "2609.00329",
+      "2608.27760",
+      "2608.28645",
+      "2605.23857",
+      "2607.11465",
+      "2607.07050",
+      "2607.08268",
+      "2609.17542",
+      "2604.03192"
+     ]
+    },
+    {
+     "tool": "orx discover openalex",
+     "query": "Q6: cross-language information retrieval knowledge distillation dense retriever recall teacher reranker",
+     "returned_ids": [
+      "10.18653/v1/2021.repl4nlp-1.17",
+      "10.48550/arxiv.2401.04810",
+      "10.1145/3805622.3810780",
+      "10.48550/arxiv.2604.22722",
+      "10.48550/arxiv.2303.13220",
+      "10.1145/3626772.3657955",
+      "10.48550/arxiv.2607.18152",
+      "10.21203/rs.3.rs-6219315/v1",
+      "10.1145/3570724",
+      "10.48550/arxiv.2302.13400",
+      "10.1145/3404835.3462891",
+      "10.18653/v1/2024.findings-acl.692"
+     ]
+    },
+    {
+     "tool": "orx discover keyword --prioritize historical",
+     "query": "Q7: theoretical limitations of embedding-based retrieval top-k subsets embedding dimension sign rank",
+     "returned_ids": [
+      "2508.21038",
+      "2601.20844",
+      "2602.05062",
+      "2606.11780",
+      "2506.05176",
+      "2609.01963",
+      "2602.03992",
+      "2608.13200",
+      "2607.18666",
+      "2601.06873",
+      "2510.12709",
+      "2608.13495"
+     ]
+    },
+    {
+     "tool": "orx discover keyword",
+     "query": "Q8: KV cache compression multilingual languages eviction SnapKV H2O non-English",
+     "returned_ids": [
+      "2609.33334",
+      "2608.28293",
+      "2610.06286",
+      "2609.03430",
+      "2610.06479",
+      "2609.27981",
+      "2610.07643",
+      "2610.02815",
+      "2609.08131",
+      "2609.22157",
+      "2609.16617",
+      "2609.37988"
+     ]
+    },
+    {
+     "tool": "orx discover keyword --prioritize historical",
+     "query": "Q9: KV cache eviction cross-lingual",
+     "returned_ids": [
+      "2609.03430",
+      "2608.28293",
+      "2605.25475",
+      "2606.03928",
+      "2605.09649",
+      "2605.08840",
+      "2608.23296",
+      "2512.14946",
+      "2605.08317",
+      "2606.15157",
+      "2609.08131",
+      "2605.07234"
+     ]
+    },
+    {
+     "tool": "orx discover embedding",
+     "query": "Q10: Auditing KV-cache eviction and sparse attention methods such as H2O, SnapKV and PyramidKV across many languages: does token eviction under a fixed cache budget hurt non-English and cross-lingual long-context retrieval more than English?",
+     "returned_ids": [
+      "2610.03109",
+      "2610.05685",
+      "2610.03007",
+      "2610.07643",
+      "2610.06251",
+      "2608.23296",
+      "2609.33759",
+      "2609.30738",
+      "2609.16617",
+      "2609.08279",
+      "2609.31678",
+      "2608.01631"
+     ]
+    },
+    {
+     "tool": "orx discover keyword --prioritize historical",
+     "query": "Q11: KV cache compression low-resource languages multilingual long-context degradation",
+     "returned_ids": [
+      "2609.19969",
+      "2606.24467",
+      "2606.31145",
+      "2607.00760",
+      "2607.06519",
+      "2606.08382",
+      "2503.18893",
+      "2509.17396",
+      "2605.25475",
+      "2608.08569",
+      "2605.09649",
+      "2605.22269"
+     ]
+    },
+    {
+     "tool": "orx discover openalex",
+     "query": "Q12: KV cache compression multilingual evaluation languages",
+     "returned_ids": [
+      "10.48550/arxiv.2410.15252",
+      "10.48550/arxiv.2609.19969",
+      "10.48550/arxiv.2606.14782",
+      "10.48550/arxiv.2607.06827",
+      "W7152933851",
+      "10.21203/rs.3.rs-10297225/v1",
+      "10.18653/v1/2026.acl-long.594",
+      "10.18653/v1/2025.findings-emnlp.426",
+      "10.48550/arxiv.2605.25085",
+      "10.48550/arxiv.2502.01941",
+      "10.5753/sbbd.2025.247245",
+      "W7161354758"
+     ]
+    },
+    {
+     "tool": "orx discover keyword --prioritize historical",
+     "query": "Q13: How does quantization affect multilingual LLMs",
+     "returned_ids": [
+      "2407.03211",
+      "2609.11716",
+      "2505.21505",
+      "2505.20276",
+      "2609.11582",
+      "2606.25444",
+      "2605.11195",
+      "2511.10840",
+      "2602.08625",
+      "2503.03592",
+      "2502.12560",
+      "2605.28710"
+     ]
+    },
+    {
+     "tool": "orx discover keyword --prioritize historical",
+     "query": "Q14: SnapKV PyramidKV multilingual languages Chinese Japanese Korean evaluation cache budget",
+     "returned_ids": [
+      "2406.02069",
+      "2606.11164",
+      "2608.05802",
+      "2605.29414",
+      "2609.33334",
+      "2606.28884",
+      "2407.19400",
+      "2608.26700",
+      "2604.11288",
+      "2608.23037",
+      "2607.11942",
+      "2608.28641"
+     ]
+    },
+    {
+     "tool": "orx discover embedding",
+     "query": "Q15: Language-dependent degradation of long-context models under token-budgeted compression: tokenizer fertility means non-Latin scripts use more tokens per unit of content, so a fixed token budget keeps less information for those languages.",
+     "returned_ids": [
+      "2609.39001",
+      "2608.26449",
+      "2609.00329",
+      "2608.04160",
+      "2607.24276",
+      "2608.09046",
+      "2608.26175",
+      "2607.26831",
+      "2607.16117",
+      "2608.21384",
+      "2609.00378",
+      "2606.14122"
+     ]
+    },
+    {
+     "tool": "orx discover keyword --prioritize historical",
+     "query": "Q16: Language Model Tokenizers Introduce Unfairness Between Languages",
+     "returned_ids": [
+      "2305.15425",
+      "2609.15528",
+      "2506.10766",
+      "2606.13674",
+      "2609.09143",
+      "2607.23319",
+      "2609.39001",
+      "2606.15044",
+      "2510.06128",
+      "2507.06378",
+      "2602.15397",
+      "2510.05699"
+     ]
+    },
+    {
+     "tool": "orx discover keyword",
+     "query": "Q17: multilingual needle-in-a-haystack KV cache compression eviction OneRuler MLNeedle",
+     "returned_ids": [
+      "2610.06286",
+      "2610.03198",
+      "2610.06996",
+      "2608.28293",
+      "2610.02953",
+      "2609.03430",
+      "2606.24467",
+      "2610.07643",
+      "2610.06479",
+      "2609.08131",
+      "2609.33334",
+      "2610.02815"
+     ]
+    },
+    {
+     "tool": "orx discover keyword",
+     "query": "Q18: sparse attention multilingual cross-lingual retrieval top-k selection non-English degradation",
+     "returned_ids": [
+      "2608.22363",
+      "2609.23231",
+      "2608.12820",
+      "2610.02875",
+      "2610.06216",
+      "2608.21714",
+      "2609.32331",
+      "2609.27376",
+      "2609.04409",
+      "2608.03446",
+      "2606.15345",
+      "2604.20666"
+     ]
+    },
+    {
+     "tool": "orx discover openalex --published-after 2024-01-01",
+     "query": "Q19: multilingual KV cache eviction language disparity long context",
+     "returned_ids": [
+      "10.48550/arxiv.2511.16786",
+      "10.48550/arxiv.2405.14256",
+      "10.48550/arxiv.2605.17447",
+      "10.18653/v1/2025.emnlp-main.1166",
+      "10.1145/3809166",
+      "10.48550/arxiv.2410.03090",
+      "10.48550/arxiv.2604.08075",
+      "10.48550/arxiv.2411.18191",
+      "10.48550/arxiv.2604.09613",
+      "W7148176105",
+      "10.18653/v1/2025.emnlp-main.209",
+      "10.48550/arxiv.2401.08092"
+     ]
+    },
+    {
+     "tool": "orx paper --full",
+     "query": "2406.02069",
+     "returned_ids": [
+      "2406.02069"
+     ]
+    },
+    {
+     "tool": "orx paper --full",
+     "query": "2502.01941",
+     "returned_ids": [
+      "2502.01941"
+     ]
+    },
+    {
+     "tool": "orx paper --full",
+     "query": "2607.11942",
+     "returned_ids": [
+      "2607.11942"
+     ]
+    },
+    {
+     "tool": "orx discover embedding --published-after 2024-06-01",
+     "query": "Q20: We evaluate KV cache compression methods across many languages and find that token eviction disproportionately harms non-English and low-resource languages in long-context question answering.",
+     "returned_ids": [
+      "2609.36322",
+      "2608.27128",
+      "2608.19670",
+      "2608.22490",
+      "2608.01631",
+      "2608.09046",
+      "2606.24467",
+      "2608.26175",
+      "2608.21384",
+      "2606.15157",
+      "2608.vorn-kv-cache-eviction",
+      "2608.09941"
+     ]
+    },
+    {
+     "tool": "orx discover keyword --published-after 2025-01-01",
+     "query": "Q21: efficient attention multilingual fairness compression harms low-resource languages long context",
+     "returned_ids": [
+      "2608.14626",
+      "2609.15528",
+      "2606.24467",
+      "2608.30725",
+      "2608.20853",
+      "2609.language-agnostic-whisper-adaptation-low-resource-asr",
+      "2606.02147",
+      "2609.15758",
+      "2609.13205",
+      "2608.27753",
+      "2609.30739",
+      "2607.02235"
+     ]
+    },
+    {
+     "tool": "orx discover openalex",
+     "query": "Q22: translation priming asymmetry meta-analysis masked priming L1 L2 non-cognate",
+     "returned_ids": [
+      "10.3758/s13423-016-1151-1",
+      "10.3389/fpsyg.2018.00986",
+      "10.5070/g601147",
+      "10.31234/osf.io/dehrt",
+      "10.3758/mc.37.5.569",
+      "10.1017/s0272263122000249",
+      "W2910381970",
+      "10.1017/s1366728926101679",
+      "10.3389/fpsyg.2018.00267",
+      "W7217649758",
+      "10.3389/fpsyg.2024.1500750",
+      "10.1177/13670069231164257"
+     ]
+    },
+    {
+     "tool": "orx discover openalex",
+     "query": "Q23: bilingual memory search cross-language semantic retrieval cue language mismatch recall",
+     "returned_ids": [
+      "W2325304666",
+      "10.1111/j.1467-9450.2009.00744.x",
+      "10.1080/09658211.2023.2171435",
+      "10.1016/j.jml.2020.104155",
+      "10.3390/electronics14153145",
+      "10.1016/j.neuropsychologia.2021.107795",
+      "W2886668275",
+      "10.48550/arxiv.2605.07249",
+      "10.31234/osf.io/tbuzh",
+      "W2979638275",
+      "W2795226082",
+      "10.1044/2020_jslhr-20-00007"
+     ]
+    },
+    {
+     "tool": "orx discover openalex",
+     "query": "Q24: language-dependent memory retrieval bilinguals encoding specificity language of retrieval cue",
+     "returned_ids": [
+      "10.1080/09658211.2013.873809",
+      "10.3389/fpsyg.2014.00137",
+      "10.9707/2307-0919.1034",
+      "10.3389/fpsyg.2014.01369",
+      "10.1086/595022",
+      "10.4324/9781410603494-67",
+      "10.18653/v1/n18-1183",
+      "10.3758/bf03194123",
+      "10.1080/09658211.2023.2171435",
+      "10.3389/fpsyg.2023.1198117",
+      "10.3389/fpsyg.2016.00120",
+      "10.1080/01690960143000515"
+     ]
+    },
+    {
+     "tool": "orx discover openalex",
+     "query": "Q25: visual search target template specificity picture cue versus word cue guidance efficiency",
+     "returned_ids": [
+      "10.3758/s13423-020-01859-9",
+      "10.3758/app.72.5.1283",
+      "10.3758/s13414-024-02899-2",
+      "W2764924344",
+      "10.3758/s13414-018-1520-0",
+      "10.3758/s13414-020-02213-w",
+      "10.3758/s13414-011-0153-3",
+      "10.1167/16.2.3",
+      "10.31390/gradschool_theses.4405",
+      "10.1167/18.13.11",
+      "10.1037/xhp0000156",
+      "W7132907836"
+     ]
+    },
+    {
+     "tool": "orx discover openalex",
+     "query": "Q26: language context guides memory content Marian Kaushanskaya",
+     "returned_ids": [
+      "10.3758/bf03194123",
+      "10.3389/fnhum.2019.00364",
+      "10.1016/j.learninstruc.2016.01.003",
+      "10.3389/fpsyg.2017.00394",
+      "10.3758/s13421-023-01415-5",
+      "10.1075/hcp.21.05sut",
+      "10.3389/fpsyg.2010.00162",
+      "10.1038/s41539-020-0068-7",
+      "10.3389/fpsyg.2023.1237471",
+      "10.58445/rars.551",
+      "10.1371/journal.pone.0169001",
+      "10.32601/ejal.460617"
+     ]
+    },
+    {
+     "tool": "orx discover keyword",
+     "query": "Q27: rate-distortion attention sparsity top-k budget selection distortion bound sparse attention",
+     "returned_ids": [
+      "2606.13392",
+      "2609.08450",
+      "2609.26368",
+      "2605.27740",
+      "2608.12780",
+      "2606.27321",
+      "2609.34367",
+      "2610.06801",
+      "2610.04635",
+      "2609.19702",
+      "2607.27692",
+      "2609.35593"
+     ]
+    },
+    {
+     "tool": "orx discover embedding",
+     "query": "Q28: Selecting a subset of context tokens under a fixed token budget is a lossy source-coding problem; how much of the relevant evidence survives depends on how many tokens the evidence costs in a given language's tokenization and on the budget operating point.",
+     "returned_ids": [
+      "2610.05685",
+      "2609.39001",
+      "2609.37879",
+      "2609.38699",
+      "2610.08722",
+      "2609.35869",
+      "2610.05126",
+      "2610.02233",
+      "2609.bite-morphology-guided-computational-mastication",
+      "2609.33405",
+      "2609.37575",
+      "2608.01347"
+     ]
+    },
+    {
+     "tool": "orx discover openalex --published-after 2023-01-01",
+     "query": "Q29: budgeted selection recall curve operating point compression ratio cross-lingual evaluation",
+     "returned_ids": [
+      "10.48550/arxiv.2607.02966",
+      "10.1007/s10489-024-05747-w",
+      "10.48550/arxiv.2609.03235",
+      "10.48550/arxiv.2608.15962",
+      "10.1007/s40747-025-02019-z",
+      "10.48550/arxiv.2606.20571",
+      "10.48550/arxiv.2511.05747",
+      "10.48550/arxiv.2608.18062",
+      "10.1613/jair.1.13715",
+      "10.48550/arxiv.2602.07574",
+      "10.48550/arxiv.2607.29539",
+      "10.48550/arxiv.2608.25735"
+     ]
+    },
+    {
+     "tool": "orx discover keyword --prioritize historical",
+     "query": "Q30: LAReQA language-agnostic answer retrieval multilingual pool strong alignment",
+     "returned_ids": [
+      "2004.05484",
+      "2605.07249",
+      "2607.22042",
+      "2605.31171",
+      "2609.06381",
+      "2606.18801",
+      "2608.02189",
+      "2604.05684",
+      "2601.04768",
+      "2511.09984",
+      "2510.00908",
+      "2512.03514"
+     ]
+    },
+    {
+     "tool": "orx discover keyword --prioritize historical",
+     "query": "Q31: Sparse, Dense, and Attentional Representations for Text Retrieval embedding dimension capacity",
+     "returned_ids": [
+      "2608.02583",
+      "2602.05062",
+      "2608.22764",
+      "2609.32671",
+      "2508.16707",
+      "2503.02453",
+      "2506.05176",
+      "2608.16918",
+      "2608.14107",
+      "2005.00181",
+      "2608.18855",
+      "2605.29507"
+     ]
+    },
+    {
+     "tool": "orx paper --full",
+     "query": "2401.04810",
+     "returned_ids": [
+      "2401.04810"
+     ]
+    },
+    {
+     "tool": "orx paper --full",
+     "query": "2405.00977",
+     "returned_ids": [
+      "2405.00977"
+     ]
+    },
+    {
+     "tool": "orx paper --full",
+     "query": "2302.13400",
+     "returned_ids": [
+      "2302.13400"
+     ]
+    },
+    {
+     "tool": "orx paper --full",
+     "query": "2508.21038",
+     "returned_ids": [
+      "2508.21038"
+     ]
+    },
+    {
+     "tool": "orx paper --full",
+     "query": "2005.00181",
+     "returned_ids": [
+      "2005.00181"
+     ]
+    },
+    {
+     "tool": "orx paper --full",
+     "query": "2608.26175",
+     "returned_ids": [
+      "2608.26175"
+     ]
+    },
+    {
+     "tool": "orx paper --full",
+     "query": "2608.04160",
+     "returned_ids": [
+      "2608.04160"
+     ]
+    },
+    {
+     "tool": "orx paper --full",
+     "query": "2608.19670",
+     "returned_ids": [
+      "2608.19670"
+     ]
+    },
+    {
+     "tool": "orx paper --full",
+     "query": "2305.15425",
+     "returned_ids": [
+      "2305.15425"
+     ]
+    },
+    {
+     "tool": "orx paper --full",
+     "query": "2004.05484",
+     "returned_ids": [
+      "2004.05484"
+     ]
+    },
+    {
+     "tool": "orx paper --full",
+     "query": "2601.20844",
+     "returned_ids": [
+      "2601.20844"
+     ]
+    },
+    {
+     "tool": "orx paper --full",
+     "query": "2407.03211",
+     "returned_ids": [
+      "2407.03211"
+     ]
+    },
+    {
+     "tool": "orx discover keyword --published-after 2025-01-01 --prioritize default",
+     "query": "Q32: KV cache compression across languages language-dependent token importance multilingual long-context benchmark eviction",
+     "returned_ids": [
+      "2610.06479",
+      "2610.06286",
+      "2609.03430",
+      "2609.08131",
+      "2610.02953",
+      "2605.25475",
+      "2609.37988",
+      "2609.39329",
+      "2608.28293",
+      "2606.24467",
+      "2610.02815",
+      "2610.03007"
+     ]
+    },
+    {
+     "tool": "orx discover openalex --published-after 2025-01-01",
+     "query": "Q33: multilingual long-context KV cache eviction cross-lingual needle retrieval evaluation",
+     "returned_ids": [
+      "10.18653/v1/2026.acl-long.1811",
+      "10.1109/tpami.2026.3708708"
+     ]
+    },
+    {
+     "tool": "orx discover embedding",
+     "query": "Q34: Cross-lingual robustness of query-aware KV cache selection: when the question and the document are in different languages, does attention-based token selection (SnapKV-style observation window) keep the relevant evidence?",
+     "returned_ids": [
+      "2608.25832",
+      "2609.34049",
+      "2610.03109",
+      "2610.00606",
+      "2609.33759",
+      "2609.30738",
+      "2609.04409",
+      "2609.00155",
+      "2608.21714",
+      "2606.13537",
+      "2606.15345",
+      "2601.18527"
+     ]
+    },
+    {
+     "tool": "orx paper --full (found via WebSearch)",
+     "query": "2602.05929",
+     "returned_ids": [
+      "2602.05929"
+     ]
+    },
+    {
+     "tool": "orx paper (openalex metadata)",
+     "query": "10.3758/s13423-016-1151-1",
+     "returned_ids": [
+      "10.3758/s13423-016-1151-1"
+     ]
+    },
+    {
+     "tool": "orx paper (openalex metadata)",
+     "query": "10.3758/s13421-023-01415-5",
+     "returned_ids": [
+      "10.3758/s13421-023-01415-5"
+     ]
+    },
+    {
+     "tool": "orx paper (openalex metadata)",
+     "query": "10.3758/s13423-020-01859-9",
+     "returned_ids": [
+      "10.3758/s13423-020-01859-9"
+     ]
+    },
+    {
+     "tool": "orx paper (openalex metadata)",
+     "query": "10.3758/bf03194123",
+     "returned_ids": [
+      "10.3758/bf03194123"
+     ]
+    },
+    {
+     "tool": "orx discover openalex",
+     "query": "Q35: Bjontegaard delta rate distortion curves average difference codec comparison",
+     "returned_ids": [
+      "10.1109/access.2021.3077116",
+      "10.1109/tip.2023.3346695",
+      "10.3390/electronics9101579",
+      "10.1109/iccv48922.2021.00661",
+      "10.48550/arxiv.2208.04303",
+      "10.48550/arxiv.2401.17246",
+      "10.15002/00025871",
+      "10.48550/arxiv.2111.10302",
+      "W2968017848",
+      "10.36227/techrxiv.170775802.27887173/v1",
+      "W18713181",
+      "10.1109/access.2018.2870183"
+     ]
+    },
+    {
+     "tool": "orx discover keyword --prioritize historical",
+     "query": "Q36: Bjontegaard delta rate-distortion curve comparison interpolation reliability",
+     "returned_ids": [
+      "2609.30077",
+      "2609.02107",
+      "2606.13366",
+      "2608.11636",
+      "2602.15779",
+      "2504.02216",
+      "2605.06675",
+      "2509.05929",
+      "2601.19293",
+      "2606.16592",
+      "2605.14694",
+      "2606.22888"
+     ]
+    },
+    {
+     "tool": "orx paper (openalex metadata)",
+     "query": "10.1109/tip.2023.3346695",
+     "returned_ids": [
+      "10.1109/tip.2023.3346695"
+     ]
+    },
+    {
+     "tool": "orx discover keyword --prioritize historical",
+     "query": "Q37: OOD-DiskANN out-of-distribution queries approximate nearest neighbor search recall",
+     "returned_ids": [],
+     "note": "returned 'error decoding response body'; zero ids"
+    },
+    {
+     "tool": "orx discover embedding",
+     "query": "Q38: Approximate nearest neighbor indexes built on one data distribution lose recall against exact top-k search when queries come from a different distribution, such as text queries over image embeddings or cross-lingual queries.",
+     "returned_ids": [
+      "2609.23036",
+      "2609.00364",
+      "2608.25185",
+      "2607.24880",
+      "2608.12333",
+      "2605.17415",
+      "2604.27674",
+      "2604.20417",
+      "2604.24469",
+      "2604.01960",
+      "2604.21645",
+      "2604.16351"
+     ]
+    },
+    {
+     "tool": "orx discover openalex",
+     "query": "Q39: OOD-DiskANN efficient scalable graph ANNS out-of-distribution queries",
+     "returned_ids": [
+      "10.48550/arxiv.2211.12850",
+      "10.48550/arxiv.2310.00402",
+      "10.14778/3681954.3681959",
+      "10.48550/arxiv.2408.13899",
+      "10.1145/3627535.3638475",
+      "10.48550/arxiv.2403.01797",
+      "10.48550/arxiv.2305.04359",
+      "10.1145/3736227.3736237",
+      "10.1145/3769783",
+      "10.1145/3639269",
+      "10.48550/arxiv.2602.02057",
+      "10.1145/3736716"
+     ]
+    },
+    {
+     "tool": "orx paper --full",
+     "query": "2211.12850",
+     "returned_ids": [
+      "2211.12850"
+     ]
+    },
+    {
+     "tool": "orx discover keyword --prioritize historical",
+     "query": "Q40: OPTICAL optimal transport distillation low-resource cross-lingual information retrieval bitext",
+     "returned_ids": [
+      "2301.12566",
+      "2609.06381",
+      "2608.12820",
+      "2605.31171",
+      "2604.05684",
+      "2609.23231",
+      "2604.05821",
+      "2605.10714",
+      "2510.00908",
+      "2608.21714",
+      "2607.18693",
+      "2608.11146"
+     ]
+    },
+    {
+     "tool": "orx paper --full",
+     "query": "2301.12566",
+     "returned_ids": [
+      "2301.12566"
+     ]
+    },
+    {
+     "tool": "WebSearch (standard)",
+     "query": "KV cache compression multilingual evaluation non-English languages SnapKV H2O degradation",
+     "returned_ids": [
+      "2502.00299",
+      "2502.16886",
+      "2602.05929",
+      "2404.14469",
+      "aclanthology 2026.acl-long.1926 (The Pitfalls of KV Cache Compression)"
+     ]
+    },
+    {
+     "tool": "WebSearch (standard)",
+     "query": "sparse attention token eviction cross-lingual query document different language long-context retrieval audit",
+     "returned_ids": [
+      "2602.03152",
+      "2506.11498",
+      "2602.05191",
+      "2605.16928",
+      "2510.20787"
+     ]
+    }
+   ]
+  },
+  "synthesis": {
+   "source": "this synthesis step; full texts kept in the session scratchpad only (not redistributed); text_sha256 binds what was read",
+   "rows": [
+    {
+     "tool": "orx paper --full --no-telemetry",
+     "query": "2004.05484",
+     "returned_ids": [
+      "2004.05484"
+     ],
+     "bytes": 42316,
+     "text_sha256": "1a987f09d832af2de3f62a6b562cf034bdbff4b717a804574229b0769c86ed6c",
+     "stored": false
+    },
+    {
+     "tool": "orx paper --full --no-telemetry",
+     "query": "2211.12850",
+     "returned_ids": [
+      "2211.12850"
+     ],
+     "bytes": 68313,
+     "text_sha256": "e931676048a2069b73c1b37b8be6653fd03ed546d0283641107ab62f31a58260",
+     "stored": false
+    },
+    {
+     "tool": "orx paper --full --no-telemetry",
+     "query": "2401.04810",
+     "returned_ids": [
+      "2401.04810"
+     ],
+     "bytes": 52291,
+     "text_sha256": "1fe80cc22591e77c445ef5e543dba5d1d54407c4a073efd8cb7a426abdcae510",
+     "stored": false
+    },
+    {
+     "tool": "orx paper --full --no-telemetry",
+     "query": "2404.15574",
+     "returned_ids": [
+      "2404.15574"
+     ],
+     "bytes": 37042,
+     "text_sha256": "9abebb0c3081b8d1369c0d7d8f8b36762a194c47be4cd3574da768509c670c3d",
+     "stored": false
+    },
+    {
+     "tool": "orx paper --full --no-telemetry",
+     "query": "2408.10151",
+     "returned_ids": [
+      "2408.10151"
+     ],
+     "bytes": 53928,
+     "text_sha256": "d9273af6ac210557a1501c7fceab3c21ef4402466b731d4863c0edd759109ade",
+     "stored": false
+    },
+    {
+     "tool": "orx paper --full --no-telemetry",
+     "query": "2410.13276",
+     "returned_ids": [
+      "2410.13276"
+     ],
+     "bytes": 53436,
+     "text_sha256": "3741640b445302514ce3c3b0679e44438dd68046b5ecaca1d6ab8163b23234bc",
+     "stored": false
+    },
+    {
+     "tool": "orx paper --full --no-telemetry",
+     "query": "2502.05167",
+     "returned_ids": [
+      "2502.05167"
+     ],
+     "bytes": 72729,
+     "text_sha256": "846f0705bb02eaf67a48ec6102264bf71e5696e2079b08de36388a24f5ec4961",
+     "stored": false
+    },
+    {
+     "tool": "orx paper --full --no-telemetry",
+     "query": "2503.01996",
+     "returned_ids": [
+      "2503.01996"
+     ],
+     "bytes": 80574,
+     "text_sha256": "2c9c63822d5f51ca5508809d4bdebdca7e415aff6ef43401071b2e44ba82e72b",
+     "stored": false
+    },
+    {
+     "tool": "orx paper --full --no-telemetry",
+     "query": "2504.10906",
+     "returned_ids": [
+      "2504.10906"
+     ],
+     "bytes": 126673,
+     "text_sha256": "cc14cd5a94aa4699edc1c3a019674a83df0beda9c64a000b5ca83c9ddf5aa722",
+     "stored": false
+    },
+    {
+     "tool": "orx paper --full --no-telemetry",
+     "query": "2505.09388",
+     "returned_ids": [
+      "2505.09388"
+     ],
+     "bytes": 116322,
+     "text_sha256": "d51a60f8180e5ad7ffa39aa2659c0de3fbf9fe1f6b25ec66fbd756c218beb709",
+     "stored": false
+    },
+    {
+     "tool": "orx paper --full --no-telemetry",
+     "query": "2512.02556",
+     "returned_ids": [
+      "2512.02556"
+     ],
+     "bytes": 67530,
+     "text_sha256": "807a15785d47e40ea1a0f6c5d780056a291d14c62456bc6b3515891975a503b8",
+     "stored": false
+    },
+    {
+     "tool": "orx paper --full --no-telemetry",
+     "query": "2601.02819",
+     "returned_ids": [
+      "2601.02819"
+     ],
+     "bytes": 44377,
+     "text_sha256": "df33a38b2ec3cde6d03cdacf1e705cfc67dc13722742fdd59fbf6dbf31d4dc99",
+     "stored": false
+    },
+    {
+     "tool": "orx paper --full --no-telemetry",
+     "query": "2601.18886",
+     "returned_ids": [
+      "2601.18886"
+     ],
+     "bytes": 31128,
+     "text_sha256": "4994c4bb15afad9d46093554e8fa48038b3d602527969e430e2612ed22540290",
+     "stored": false
+    },
+    {
+     "tool": "orx paper --full --no-telemetry",
+     "query": "2602.22453",
+     "returned_ids": [
+      "2602.22453"
+     ],
+     "bytes": 64302,
+     "text_sha256": "c1b9017d266148b7a980b6c6ae919803033adb1f12fb290a9de67b2d0efa539b",
+     "stored": false
+    },
+    {
+     "tool": "orx paper --full --no-telemetry",
+     "query": "2603.02227",
+     "returned_ids": [
+      "2603.02227"
+     ],
+     "bytes": 41128,
+     "text_sha256": "b960d67d3b6825764eaabef6ecc4f0432b1bfe7077b25410f53a78944e876e10",
+     "stored": false
+    },
+    {
+     "tool": "orx paper --full --no-telemetry",
+     "query": "2606.07703",
+     "returned_ids": [
+      "2606.07703"
+     ],
+     "bytes": 77704,
+     "text_sha256": "695d44b99f320cbdb900fb36c5cd08dfb73730ab24d6afdab14a6594129c1563",
+     "stored": false
+    },
+    {
+     "tool": "orx paper --full --no-telemetry",
+     "query": "2606.22874",
+     "returned_ids": [
+      "2606.22874"
+     ],
+     "bytes": 63328,
+     "text_sha256": "7d0c5e14afc5cb1d4d34a089572151d30b5e6e6edab89cf2299c35cdab34600f",
+     "stored": false
+    },
+    {
+     "tool": "orx paper --full --no-telemetry",
+     "query": "2607.01002",
+     "returned_ids": [
+      "2607.01002"
+     ],
+     "bytes": 124136,
+     "text_sha256": "57a5608f037146daedf0135ade098049f478479bdbb672882666698f6f4545d1",
+     "stored": false
+    },
+    {
+     "tool": "orx paper --full --no-telemetry",
+     "query": "2607.21692",
+     "returned_ids": [
+      "2607.21692"
+     ],
+     "bytes": 115016,
+     "text_sha256": "205fc78266a842d98eadfee89cbf7289d4244cbfbcc253737cc2081e6c30699b",
+     "stored": false
+    },
+    {
+     "tool": "orx paper --full --no-telemetry",
+     "query": "2608.04160",
+     "returned_ids": [
+      "2608.04160"
+     ],
+     "bytes": 60333,
+     "text_sha256": "b9fee69f16442ea87f2a4f8f3fbb620205a101488cdb0e6dd07d17b4b8340322",
+     "stored": false
+    },
+    {
+     "tool": "orx paper --full --no-telemetry",
+     "query": "2608.26175",
+     "returned_ids": [
+      "2608.26175"
+     ],
+     "bytes": 57738,
+     "text_sha256": "6ca89c8ccc878a38c27ff918430d25157d477232f6ebd0c979deb03b51ad8098",
+     "stored": false
+    },
+    {
+     "tool": "orx paper --full --no-telemetry",
+     "query": "2608.30181",
+     "returned_ids": [
+      "2608.30181"
+     ],
+     "bytes": 133786,
+     "text_sha256": "bf11618addcd47b9978e84046ec249743383ebe78f7885fcc66a615f95882f43",
+     "stored": false
+    },
+    {
+     "tool": "orx paper --full --no-telemetry",
+     "query": "2608.30320",
+     "returned_ids": [
+      "2608.30320"
+     ],
+     "bytes": 110498,
+     "text_sha256": "8de1034bed45d353b8b7766e7df585eb3b8ab292add4144b697f9b35bbb5df3d",
+     "stored": false
+    },
+    {
+     "tool": "orx paper --full --no-telemetry",
+     "query": "2609.35378",
+     "returned_ids": [
+      "2609.35378"
+     ],
+     "bytes": 114686,
+     "text_sha256": "7fa3c04dcae6327eb8ca482477fabdeca96e14a9f005595f3feddd17312fb955",
+     "stored": false
+    },
+    {
+     "tool": "orx paper --full --no-telemetry",
+     "query": "2610.01921",
+     "returned_ids": [
+      "2610.01921"
+     ],
+     "bytes": 79864,
+     "text_sha256": "01944bc58a49fbb7542d487a9e6ff11e69e51663d7d975235a58ad6ba19925a4",
+     "stored": false
+    },
+    {
+     "tool": "orx paper --full --no-telemetry",
+     "query": "2610.04635",
+     "returned_ids": [
+      "2610.04635"
+     ],
+     "bytes": 62636,
+     "text_sha256": "19f7069a478fd1ebc78b6e4b60d2b6bbf9ff32b30de411c1258c95c49d278491",
+     "stored": false
+    }
+   ]
+  }
+ },
+ "counts": {
+  "frontier": {
+   "orx_discover": 77,
+   "websearch": 0,
+   "paper_reads": 2,
+   "other": 2
+  },
+  "killshot": {
+   "orx_discover": 40,
+   "websearch": 0,
+   "paper_reads": 16,
+   "other": 0
+  },
+  "crossdomain": {
+   "orx_discover": 40,
+   "websearch": 2,
+   "paper_reads": 23,
+   "other": 0
+  },
+  "synthesis": {
+   "orx_discover": 0,
+   "websearch": 0,
+   "paper_reads": 26,
+   "other": 0
+  }
+ },
+ "queries_against_budget": 159,
+ "budget_note": "Each discovery cell counted its own queries against the 150-query gauntlet budget independently; combined they used 159 (orx discover plus WebSearch), over the declared 150 before synthesis. The synthesis step ran no discover query for that reason; it read 26 full texts (paper reads are not counted as queries by any cell)."
+}
