@@ -1,0 +1,784 @@
+{
+  "a1_stability": {
+    "basis": "stable",
+    "complete": true,
+    "limit": 0.1,
+    "max": 2.5693637592691316,
+    "mean": 2.5508837379032645,
+    "metric": "request_throughput",
+    "min": 2.5230140669667356,
+    "noise_multiplier": 1.0,
+    "points": [
+      "a1a",
+      "a1b",
+      "a1c"
+    ],
+    "relative_range": 0.01817005283843075,
+    "source": "job a's admitted points (enters the budget)",
+    "unstable": false,
+    "valid": 3
+  },
+  "code": {
+    "digest": "64493671bed78f0633a01b67dc28d8e47da7d9bc7a7ec90b6efb7a9920012af6",
+    "files": {
+      "harness/serving_probe/__init__.py": "90ad4c36aadfc9d12edbe853a3d3a177cb596c4b7314c43b08798269a93c4235",
+      "harness/serving_probe/budget.py": "cdb75646eafe47148a2b52148e24493bdd07f1c1c05dcec8211c55d9ea75ceb1",
+      "harness/serving_probe/client.py": "eceed26a7173ff94b489f58372e87986d9b20b9bddfda54a7ca26c94c6352ac6",
+      "harness/serving_probe/config.py": "58dd7030e63f06feb53ab72dea04b2a5c34fe86446521aa38a612f3ab40030d3",
+      "harness/serving_probe/cuda_doctor.py": "4751a871de5ab1503f7360333a2194feeb1dfc41fedf2e7720d7bacae5902ffb",
+      "harness/serving_probe/images.py": "c57dcf6e4f2d25d99d2c58fad1860c7430a272c60bb4303e43a1bb9e02645571",
+      "harness/serving_probe/metrics.py": "7ab76754c4577dd95a3cc226ab436fdd65b9fad74ed345c5c728526607a45c08",
+      "harness/serving_probe/prompts.py": "d74dc109b6486faaa665826c74c94882fa82fcb30a87979366d8fe05d2f37077",
+      "harness/serving_probe/triton_kernels.py": "fce17daf8e503b8e2a0504aead760e3d8da7444029fb7b5b6cc02407793dd61b",
+      "harness/serving_probe_v2/__init__.py": "c478673eed78fa0f9a75a3a1d01eb9bee8a952ba393421a4749bee64df0e8e9d",
+      "harness/serving_probe_v2/client.py": "29761c1d01e4170843252223c5e32999fbb4a26ffd98a58191a81b13dd751e4e",
+      "harness/serving_probe_v2/config.py": "413756a5d07dc62f25b10a099e19947c58aa7b8eab3823a875c957e227ad5600",
+      "harness/serving_probe_v2/contamination.py": "5a8469e7d1e19920768ca659ab36b6106b46b93f36d42a8edfdead9add505720",
+      "harness/serving_probe_v2/requests.py": "493334ea491bd8f3870934df7bbc504f128c46804330e9fddecb18ffe09196e1",
+      "harness/serving_probe_v2/schedule.py": "2cde58c72558632268983d6a85e6d69e07aa1f4e4b186550ea70c4455c75000a",
+      "harness/serving_probe_v2/x1.py": "1af4c41579f7b569647bc1cc08b1704ac0d0493211fb36f97e3857dde90e8bc5",
+      "scripts/run_vllm_throughput_probe.py": "8e9959857127795e872111346daecaa57fd9ecd350d78d7b4b670c5480153810",
+      "scripts/run_vllm_throughput_probe_v2.py": "1cdf8f47b89ac9b7379afcc20624901c5a8708c59ba3157dfd46caa815c4ae32"
+    },
+    "git": {
+      "head": "1141d9442b9c78233176f558fe8870046ab2fb8f",
+      "probe_files_modified": false
+    }
+  },
+  "config_sha256": "9224ccdcfc9c2667f28860f8f4c5c94f4e2121b3d7dd47c8b68acd4bde26257a",
+  "experiment_id": "serving-throughput-probe-v2",
+  "jobs": {
+    "a": {
+      "acceptance": {
+        "accepted": true,
+        "eager": false,
+        "eager_phases": [],
+        "job_gate_failures": [],
+        "phase_gate_failures": {},
+        "status": "complete"
+      },
+      "accepted": true,
+      "eager": false,
+      "exit_code": 0,
+      "image_variant": "cu129",
+      "lane_termination": {
+        "fields": {
+          "checkpoint_marker_present": "false",
+          "checkpoint_ready": "false",
+          "exit_code": "0",
+          "finished_at": "2026-10-07T15:35:14Z",
+          "job_id": "466",
+          "reason": "completed"
+        },
+        "path": "/home/kevin/cotcodec-runs/stage0/serving-throughput-probe-v2/runs/a/466/termination.env",
+        "problem": null
+      },
+      "reasons": [],
+      "status": "complete",
+      "summary_sha256": "665b952cf6e2ecc3d9821d1fb486d0c6cc57d77249199ab30535d26fb90a4bb4"
+    }
+  },
+  "preregistration": {
+    "contract_sha256": "9224ccdcfc9c2667f28860f8f4c5c94f4e2121b3d7dd47c8b68acd4bde26257a",
+    "experiment_id": "serving-throughput-probe-v2",
+    "frozen_at": "2026-10-07T15:01:46.227869+00:00",
+    "git_head_at_freeze": "1422b2bcf5e0ed1a69e76cb2a96ea7c298ebaa91",
+    "hash": "52cd6a84c73bda00f1dfff5d49752d7adb211e527f49c121a259f5d1a385df44",
+    "path": "program/preregistrations/serving-throughput-probe-v2.md",
+    "previous_hash": "13c72ac3259c8c0a886bad66e5368a37a11f6dd0afb8ad3119a33791bdd47803",
+    "probe_code_digest": "64493671bed78f0633a01b67dc28d8e47da7d9bc7a7ec90b6efb7a9920012af6",
+    "probe_code_files": {
+      "harness/serving_probe/__init__.py": "90ad4c36aadfc9d12edbe853a3d3a177cb596c4b7314c43b08798269a93c4235",
+      "harness/serving_probe/budget.py": "cdb75646eafe47148a2b52148e24493bdd07f1c1c05dcec8211c55d9ea75ceb1",
+      "harness/serving_probe/client.py": "eceed26a7173ff94b489f58372e87986d9b20b9bddfda54a7ca26c94c6352ac6",
+      "harness/serving_probe/config.py": "58dd7030e63f06feb53ab72dea04b2a5c34fe86446521aa38a612f3ab40030d3",
+      "harness/serving_probe/cuda_doctor.py": "4751a871de5ab1503f7360333a2194feeb1dfc41fedf2e7720d7bacae5902ffb",
+      "harness/serving_probe/images.py": "c57dcf6e4f2d25d99d2c58fad1860c7430a272c60bb4303e43a1bb9e02645571",
+      "harness/serving_probe/metrics.py": "7ab76754c4577dd95a3cc226ab436fdd65b9fad74ed345c5c728526607a45c08",
+      "harness/serving_probe/prompts.py": "d74dc109b6486faaa665826c74c94882fa82fcb30a87979366d8fe05d2f37077",
+      "harness/serving_probe/triton_kernels.py": "fce17daf8e503b8e2a0504aead760e3d8da7444029fb7b5b6cc02407793dd61b",
+      "harness/serving_probe_v2/__init__.py": "c478673eed78fa0f9a75a3a1d01eb9bee8a952ba393421a4749bee64df0e8e9d",
+      "harness/serving_probe_v2/client.py": "29761c1d01e4170843252223c5e32999fbb4a26ffd98a58191a81b13dd751e4e",
+      "harness/serving_probe_v2/config.py": "413756a5d07dc62f25b10a099e19947c58aa7b8eab3823a875c957e227ad5600",
+      "harness/serving_probe_v2/contamination.py": "5a8469e7d1e19920768ca659ab36b6106b46b93f36d42a8edfdead9add505720",
+      "harness/serving_probe_v2/requests.py": "493334ea491bd8f3870934df7bbc504f128c46804330e9fddecb18ffe09196e1",
+      "harness/serving_probe_v2/schedule.py": "2cde58c72558632268983d6a85e6d69e07aa1f4e4b186550ea70c4455c75000a",
+      "harness/serving_probe_v2/x1.py": "1af4c41579f7b569647bc1cc08b1704ac0d0493211fb36f97e3857dde90e8bc5",
+      "scripts/run_vllm_throughput_probe.py": "8e9959857127795e872111346daecaa57fd9ecd350d78d7b4b670c5480153810",
+      "scripts/run_vllm_throughput_probe_v2.py": "1cdf8f47b89ac9b7379afcc20624901c5a8708c59ba3157dfd46caa815c4ae32"
+    },
+    "sha256": "19a9f5b5960507fff4561a0051de0417b54bbb9a936ceae53336e3f3043dd4d9"
+  },
+  "q1": {
+    "decision": "not-projected",
+    "reason": "v2 registers Q2 cells only; Q1 stays with serving-throughput-probe-v1"
+  },
+  "q2": {
+    "a1_noise": {
+      "basis": "stable",
+      "complete": true,
+      "limit": 0.1,
+      "max": 2.5693637592691316,
+      "mean": 2.5508837379032645,
+      "metric": "request_throughput",
+      "min": 2.5230140669667356,
+      "noise_multiplier": 1.0,
+      "points": [
+        "a1a",
+        "a1b",
+        "a1c"
+      ],
+      "relative_range": 0.01817005283843075,
+      "unstable": false,
+      "valid": 3
+    },
+    "attribution": {
+      "basis": "container-namespace PIDs in the engine's process tree",
+      "foreign_process_detection": "a listed foreign process at any size; one NVML does not list (it may omit other PID namespaces) only through unattributed memory above the reservation's plus the margin",
+      "mode": "pid",
+      "pass": true,
+      "pid_check": true,
+      "reason": null
+    },
+    "cells": [
+      {
+        "binding": "closed-loop",
+        "closed_loop_gpu_hours": 0.7521983055845203,
+        "exceeds_max_model_len": false,
+        "flags": [],
+        "gpu_hours": 0.7521983055845203,
+        "harness": "h1",
+        "max_context_tokens": 13470,
+        "noise_multiplier": 1.0,
+        "observation": "screenshot",
+        "open_loop_gpu_hours": 0.6670687005894538,
+        "open_loop_rate": 2.2486439532757694,
+        "profile": "h1-screenshot",
+        "rung": "qwen3.5-4b",
+        "rung_multiplier": 1.0,
+        "steps": 15,
+        "vm_per_replica": 40
+      },
+      {
+        "binding": "closed-loop",
+        "closed_loop_gpu_hours": 1.1289328990273928,
+        "exceeds_max_model_len": false,
+        "flags": [],
+        "gpu_hours": 1.1289328990273928,
+        "harness": "h1",
+        "max_context_tokens": 19614,
+        "noise_multiplier": 1.0,
+        "observation": "a11y",
+        "open_loop_gpu_hours": 1.0232302870926926,
+        "open_loop_rate": 1.4659456614228599,
+        "profile": "h1-a11y",
+        "rung": "qwen3.5-4b",
+        "rung_multiplier": 1.0,
+        "steps": 15,
+        "vm_per_replica": 40
+      },
+      {
+        "binding": "closed-loop",
+        "closed_loop_gpu_hours": 24.10542833812917,
+        "exceeds_max_model_len": false,
+        "flags": [],
+        "gpu_hours": 24.10542833812917,
+        "harness": "h2",
+        "max_context_tokens": 74188,
+        "noise_multiplier": 1.0,
+        "observation": "screenshot",
+        "open_loop_gpu_hours": 21.647946429649988,
+        "open_loop_rate": 0.461937580661395,
+        "profile": "h2-thinking-screenshot",
+        "rung": "qwen3.5-4b",
+        "rung_multiplier": 1.0,
+        "steps": 100,
+        "vm_per_replica": 20
+      },
+      {
+        "binding": "closed-loop",
+        "closed_loop_gpu_hours": 29.295437998694,
+        "exceeds_max_model_len": false,
+        "flags": [],
+        "gpu_hours": 29.295437998694,
+        "harness": "h2",
+        "max_context_tokens": 80332,
+        "noise_multiplier": 1.0,
+        "observation": "a11y",
+        "open_loop_gpu_hours": 21.647946429649988,
+        "open_loop_rate": 0.461937580661395,
+        "profile": "h2-thinking-a11y",
+        "rung": "qwen3.5-4b",
+        "rung_multiplier": 1.0,
+        "steps": 100,
+        "vm_per_replica": 20
+      },
+      {
+        "binding": "closed-loop",
+        "closed_loop_gpu_hours": 0.7521983055845203,
+        "exceeds_max_model_len": false,
+        "flags": [],
+        "gpu_hours": 0.7521983055845203,
+        "harness": "h1",
+        "max_context_tokens": 13470,
+        "noise_multiplier": 1.0,
+        "observation": "screenshot",
+        "open_loop_gpu_hours": 0.6670687005894538,
+        "open_loop_rate": 2.2486439532757694,
+        "profile": "h1-screenshot",
+        "rung": "qwen3.5-9b",
+        "rung_multiplier": 1.0,
+        "steps": 15,
+        "vm_per_replica": 40
+      },
+      {
+        "binding": "closed-loop",
+        "closed_loop_gpu_hours": 1.1289328990273928,
+        "exceeds_max_model_len": false,
+        "flags": [],
+        "gpu_hours": 1.1289328990273928,
+        "harness": "h1",
+        "max_context_tokens": 19614,
+        "noise_multiplier": 1.0,
+        "observation": "a11y",
+        "open_loop_gpu_hours": 1.0232302870926926,
+        "open_loop_rate": 1.4659456614228599,
+        "profile": "h1-a11y",
+        "rung": "qwen3.5-9b",
+        "rung_multiplier": 1.0,
+        "steps": 15,
+        "vm_per_replica": 40
+      },
+      {
+        "binding": "closed-loop",
+        "closed_loop_gpu_hours": 24.10542833812917,
+        "exceeds_max_model_len": false,
+        "flags": [],
+        "gpu_hours": 24.10542833812917,
+        "harness": "h2",
+        "max_context_tokens": 74188,
+        "noise_multiplier": 1.0,
+        "observation": "screenshot",
+        "open_loop_gpu_hours": 21.647946429649988,
+        "open_loop_rate": 0.461937580661395,
+        "profile": "h2-thinking-screenshot",
+        "rung": "qwen3.5-9b",
+        "rung_multiplier": 1.0,
+        "steps": 100,
+        "vm_per_replica": 20
+      },
+      {
+        "binding": "closed-loop",
+        "closed_loop_gpu_hours": 29.295437998694,
+        "exceeds_max_model_len": false,
+        "flags": [],
+        "gpu_hours": 29.295437998694,
+        "harness": "h2",
+        "max_context_tokens": 80332,
+        "noise_multiplier": 1.0,
+        "observation": "a11y",
+        "open_loop_gpu_hours": 21.647946429649988,
+        "open_loop_rate": 0.461937580661395,
+        "profile": "h2-thinking-a11y",
+        "rung": "qwen3.5-9b",
+        "rung_multiplier": 1.0,
+        "steps": 100,
+        "vm_per_replica": 20
+      },
+      {
+        "binding": "closed-loop",
+        "closed_loop_gpu_hours": 3.0567673751303412,
+        "exceeds_max_model_len": false,
+        "flags": [
+          "unmeasured: max(1, active params / 9B) x1.5"
+        ],
+        "gpu_hours": 3.0567673751303412,
+        "harness": "h1",
+        "max_context_tokens": 13470,
+        "noise_multiplier": 1.0,
+        "observation": "screenshot",
+        "open_loop_gpu_hours": 3.0018091526525423,
+        "open_loop_rate": 2.2486439532757694,
+        "profile": "h1-screenshot",
+        "rung": "qwen3.5-27b",
+        "rung_multiplier": 4.5,
+        "steps": 15,
+        "vm_per_replica": 40
+      },
+      {
+        "binding": "closed-loop",
+        "closed_loop_gpu_hours": 4.752073045623267,
+        "exceeds_max_model_len": false,
+        "flags": [
+          "unmeasured: max(1, active params / 9B) x1.5"
+        ],
+        "gpu_hours": 4.752073045623267,
+        "harness": "h1",
+        "max_context_tokens": 19614,
+        "noise_multiplier": 1.0,
+        "observation": "a11y",
+        "open_loop_gpu_hours": 4.604536291917116,
+        "open_loop_rate": 1.4659456614228599,
+        "profile": "h1-a11y",
+        "rung": "qwen3.5-27b",
+        "rung_multiplier": 4.5,
+        "steps": 15,
+        "vm_per_replica": 40
+      },
+      {
+        "binding": "closed-loop",
+        "closed_loop_gpu_hours": 104.09942752158125,
+        "exceeds_max_model_len": false,
+        "flags": [
+          "unmeasured: max(1, active params / 9B) x1.5"
+        ],
+        "gpu_hours": 104.09942752158125,
+        "harness": "h2",
+        "max_context_tokens": 74188,
+        "noise_multiplier": 1.0,
+        "observation": "screenshot",
+        "open_loop_gpu_hours": 97.41575893342495,
+        "open_loop_rate": 0.461937580661395,
+        "profile": "h2-thinking-screenshot",
+        "rung": "qwen3.5-27b",
+        "rung_multiplier": 4.5,
+        "steps": 100,
+        "vm_per_replica": 20
+      },
+      {
+        "binding": "closed-loop",
+        "closed_loop_gpu_hours": 127.45447099412299,
+        "exceeds_max_model_len": false,
+        "flags": [
+          "unmeasured: max(1, active params / 9B) x1.5"
+        ],
+        "gpu_hours": 127.45447099412299,
+        "harness": "h2",
+        "max_context_tokens": 80332,
+        "noise_multiplier": 1.0,
+        "observation": "a11y",
+        "open_loop_gpu_hours": 97.41575893342495,
+        "open_loop_rate": 0.461937580661395,
+        "profile": "h2-thinking-a11y",
+        "rung": "qwen3.5-27b",
+        "rung_multiplier": 4.5,
+        "steps": 100,
+        "vm_per_replica": 20
+      },
+      {
+        "binding": "closed-loop",
+        "closed_loop_gpu_hours": 1.0814224583767806,
+        "exceeds_max_model_len": false,
+        "flags": [
+          "unmeasured: max(1, active params / 9B) x1.5"
+        ],
+        "gpu_hours": 1.0814224583767806,
+        "harness": "h1",
+        "max_context_tokens": 13470,
+        "noise_multiplier": 1.0,
+        "observation": "screenshot",
+        "open_loop_gpu_hours": 1.0006030508841808,
+        "open_loop_rate": 2.2486439532757694,
+        "profile": "h1-screenshot",
+        "rung": "qwen3.5-35b-a3b",
+        "rung_multiplier": 1.5,
+        "steps": 15,
+        "vm_per_replica": 40
+      },
+      {
+        "binding": "closed-loop",
+        "closed_loop_gpu_hours": 1.646524348541089,
+        "exceeds_max_model_len": false,
+        "flags": [
+          "unmeasured: max(1, active params / 9B) x1.5"
+        ],
+        "gpu_hours": 1.646524348541089,
+        "harness": "h1",
+        "max_context_tokens": 19614,
+        "noise_multiplier": 1.0,
+        "observation": "a11y",
+        "open_loop_gpu_hours": 1.5348454306390389,
+        "open_loop_rate": 1.4659456614228599,
+        "profile": "h1-a11y",
+        "rung": "qwen3.5-35b-a3b",
+        "rung_multiplier": 1.5,
+        "steps": 15,
+        "vm_per_replica": 40
+      },
+      {
+        "binding": "closed-loop",
+        "closed_loop_gpu_hours": 35.53314250719375,
+        "exceeds_max_model_len": false,
+        "flags": [
+          "unmeasured: max(1, active params / 9B) x1.5"
+        ],
+        "gpu_hours": 35.53314250719375,
+        "harness": "h2",
+        "max_context_tokens": 74188,
+        "noise_multiplier": 1.0,
+        "observation": "screenshot",
+        "open_loop_gpu_hours": 32.47191964447498,
+        "open_loop_rate": 0.461937580661395,
+        "profile": "h2-thinking-screenshot",
+        "rung": "qwen3.5-35b-a3b",
+        "rung_multiplier": 1.5,
+        "steps": 100,
+        "vm_per_replica": 20
+      },
+      {
+        "binding": "closed-loop",
+        "closed_loop_gpu_hours": 43.318156998041,
+        "exceeds_max_model_len": false,
+        "flags": [
+          "unmeasured: max(1, active params / 9B) x1.5"
+        ],
+        "gpu_hours": 43.318156998041,
+        "harness": "h2",
+        "max_context_tokens": 80332,
+        "noise_multiplier": 1.0,
+        "observation": "a11y",
+        "open_loop_gpu_hours": 32.47191964447498,
+        "open_loop_rate": 0.461937580661395,
+        "profile": "h2-thinking-a11y",
+        "rung": "qwen3.5-35b-a3b",
+        "rung_multiplier": 1.5,
+        "steps": 100,
+        "vm_per_replica": 20
+      }
+    ],
+    "decision": "rescope-before-gauntlet",
+    "frontend_correction": {
+      "applied": false,
+      "ratio": 1.0308873679872685,
+      "threshold": 0.1
+    },
+    "max_model_len": 131072,
+    "open_loop_reference": {
+      "flags": [],
+      "measured_rate": 3.15349388398179,
+      "output_tokens": 300.0,
+      "point": "a2",
+      "prompt_tokens": 8205.46875,
+      "rate": 3.15349388398179
+    },
+    "profiles": {
+      "h1-a11y": {
+        "additive_s": 0.0,
+        "cell_a11y_tokens": 6144,
+        "cell_output_tokens": 300,
+        "flags": [],
+        "measured_steps": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ],
+        "vm_per_replica": 40
+      },
+      "h1-screenshot": {
+        "additive_s": 0.0,
+        "cell_a11y_tokens": 0,
+        "cell_output_tokens": 300,
+        "flags": [],
+        "measured_steps": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ],
+        "vm_per_replica": 40
+      },
+      "h2-thinking-a11y": {
+        "additive_s": 27.191596385533924,
+        "cell_a11y_tokens": 6144,
+        "cell_output_tokens": 2048,
+        "flags": [],
+        "measured_steps": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16,
+          17,
+          18,
+          19,
+          20,
+          21,
+          22,
+          23,
+          24
+        ],
+        "vm_per_replica": 20
+      },
+      "h2-thinking-screenshot": {
+        "additive_s": 16.811577064404265,
+        "cell_a11y_tokens": 0,
+        "cell_output_tokens": 2048,
+        "flags": [],
+        "measured_steps": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16,
+          17,
+          18,
+          19,
+          20,
+          21,
+          22,
+          23,
+          24
+        ],
+        "vm_per_replica": 20
+      }
+    },
+    "rungs": {
+      "qwen3.5-27b": {
+        "basis": "unmeasured: max(1, active params / 9B) x1.5",
+        "gpus": 1,
+        "multiplier": 4.5
+      },
+      "qwen3.5-35b-a3b": {
+        "basis": "unmeasured: max(1, active params / 9B) x1.5",
+        "gpus": 1,
+        "multiplier": 1.5
+      },
+      "qwen3.5-4b": {
+        "basis": "qwen3.5-9b measured",
+        "gpus": 1,
+        "multiplier": 1.0
+      },
+      "qwen3.5-9b": {
+        "basis": "qwen3.5-9b measured",
+        "gpus": 1,
+        "multiplier": 1.0
+      }
+    },
+    "sensitivity": [
+      {
+        "cells_over_max_model_len": 0,
+        "gpu_hours": 79.95317070495058,
+        "steps": 15,
+        "t_env_s": 1.5,
+        "vm_cap": 20
+      },
+      {
+        "cells_over_max_model_len": 0,
+        "gpu_hours": 65.95412106805529,
+        "steps": 15,
+        "t_env_s": 1.5,
+        "vm_cap": 40
+      },
+      {
+        "cells_over_max_model_len": 0,
+        "gpu_hours": 80.55317070495057,
+        "steps": 15,
+        "t_env_s": 2.5,
+        "vm_cap": 20
+      },
+      {
+        "cells_over_max_model_len": 0,
+        "gpu_hours": 66.25412106805528,
+        "steps": 15,
+        "t_env_s": 2.5,
+        "vm_cap": 40
+      },
+      {
+        "cells_over_max_model_len": 0,
+        "gpu_hours": 81.45317070495058,
+        "steps": 15,
+        "t_env_s": 4.0,
+        "vm_cap": 20
+      },
+      {
+        "cells_over_max_model_len": 0,
+        "gpu_hours": 66.70412106805529,
+        "steps": 15,
+        "t_env_s": 4.0,
+        "vm_cap": 40
+      },
+      {
+        "cells_over_max_model_len": 0,
+        "gpu_hours": 294.7998326907367,
+        "steps": 50,
+        "t_env_s": 1.5,
+        "vm_cap": 20
+      },
+      {
+        "cells_over_max_model_len": 0,
+        "gpu_hours": 241.4442197905271,
+        "steps": 50,
+        "t_env_s": 1.5,
+        "vm_cap": 40
+      },
+      {
+        "cells_over_max_model_len": 0,
+        "gpu_hours": 297.7998326907367,
+        "steps": 50,
+        "t_env_s": 2.5,
+        "vm_cap": 20
+      },
+      {
+        "cells_over_max_model_len": 0,
+        "gpu_hours": 243.4442197905271,
+        "steps": 50,
+        "t_env_s": 2.5,
+        "vm_cap": 40
+      },
+      {
+        "cells_over_max_model_len": 0,
+        "gpu_hours": 302.46108189345125,
+        "steps": 50,
+        "t_env_s": 4.0,
+        "vm_cap": 20
+      },
+      {
+        "cells_over_max_model_len": 0,
+        "gpu_hours": 246.60546899324163,
+        "steps": 50,
+        "t_env_s": 4.0,
+        "vm_cap": 40
+      },
+      {
+        "cells_over_max_model_len": 0,
+        "gpu_hours": 636.8644326529079,
+        "steps": 100,
+        "t_env_s": 1.5,
+        "vm_cap": 20
+      },
+      {
+        "cells_over_max_model_len": 0,
+        "gpu_hours": 525.0356816737467,
+        "steps": 100,
+        "t_env_s": 1.5,
+        "vm_cap": 40
+      },
+      {
+        "cells_over_max_model_len": 0,
+        "gpu_hours": 644.8644326529079,
+        "steps": 100,
+        "t_env_s": 2.5,
+        "vm_cap": 20
+      },
+      {
+        "cells_over_max_model_len": 0,
+        "gpu_hours": 531.0356816737467,
+        "steps": 100,
+        "t_env_s": 2.5,
+        "vm_cap": 40
+      },
+      {
+        "cells_over_max_model_len": 0,
+        "gpu_hours": 656.8644326529079,
+        "steps": 100,
+        "t_env_s": 4.0,
+        "vm_cap": 20
+      },
+      {
+        "cells_over_max_model_len": 0,
+        "gpu_hours": 540.0356816737467,
+        "steps": 100,
+        "t_env_s": 4.0,
+        "vm_cap": 40
+      }
+    ],
+    "total_gpu_hours": 431.5059803314806
+  },
+  "x1": {
+    "a1_seed_range": 0.01817005283843075,
+    "a1_seeds_valid": 3,
+    "attribution": {
+      "dummy-control": {
+        "basis": "container-namespace PIDs in the engine's process tree",
+        "foreign_process_detection": "a listed foreign process at any size; one NVML does not list (it may omit other PID namespaces) only through unattributed memory above the reservation's plus the margin",
+        "mode": "pid",
+        "pass": true,
+        "pid_check": true,
+        "reason": null
+      },
+      "real": {
+        "basis": "container-namespace PIDs in the engine's process tree",
+        "foreign_process_detection": "a listed foreign process at any size; one NVML does not list (it may omit other PID namespaces) only through unattributed memory above the reservation's plus the margin",
+        "mode": "pid",
+        "pass": true,
+        "pid_check": true,
+        "reason": null
+      }
+    },
+    "identity": {
+      "a1a/x1-a1": {
+        "basis": "prompt-token-ids",
+        "differing": [],
+        "identical": true,
+        "reason": null,
+        "requests": 96
+      },
+      "r1/x1-r1": {
+        "basis": "prompt-token-ids",
+        "differing": [],
+        "identical": true,
+        "reason": null,
+        "requests": 240
+      }
+    },
+    "notes": [
+      "The replay threshold (8%) was set after v1's X1 result (v1: threshold 5%, r1/x1-r1 delta 5.89% on prompts 6.6% apart).",
+      "The replay delta's standard error uses within-run, per-request spread as the run-to-run noise; the registered operating characteristics are model-based. The same-engine replicate r1b, when valid and comparable, is the measured check."
+    ],
+    "open_loop_relative_delta": 0.026624414762665832,
+    "outcome": "pass",
+    "reason": null,
+    "replay_delta_se": 0.04001763384781752,
+    "replay_delta_z": 0.6783036129679932,
+    "replay_relative_delta": 0.02714410562140488,
+    "same_engine_replicate": {
+      "delta_se": 0.040479597609151985,
+      "identity": {
+        "basis": "prompt-token-ids",
+        "differing": [],
+        "identical": true,
+        "reason": null,
+        "requests": 240
+      },
+      "point": "r1b",
+      "reason": null,
+      "reference": "r1",
+      "relative_delta": 0.008023384305207342,
+      "used": true,
+      "within_replay_threshold": true
+    },
+    "thresholds": {
+      "a1_seed_range": 0.05,
+      "open_loop": 0.05,
+      "replay_delta_se": 0.05,
+      "replay_latency": 0.08
+    }
+  }
+}
