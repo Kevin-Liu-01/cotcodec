@@ -1,0 +1,5 @@
+{
+  "gpu_hours_cap": 0.1,
+  "name": "owr-smoke-qwen35-9b",
+  "output": "/home/kevin/cotcodec-runs/stage0/open-weight-reviewer/manifests/smoke.yaml"
+}

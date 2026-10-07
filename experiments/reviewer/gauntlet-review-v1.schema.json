@@ -1,0 +1,95 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Gauntlet review v1 (docs/gauntlet-procedure.md, Scoring; criterion-bound form of .claude/rules/research-gauntlet-loop.md)",
+  "description": "Reference schema for one reviewer's score of one candidate. The total and the caps are checked by the consumer, not by the schema.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "candidate_id",
+    "dimensions",
+    "uncapped_total",
+    "caps_applied",
+    "total",
+    "verdict",
+    "largest_defect",
+    "defects",
+    "calibration_state"
+  ],
+  "properties": {
+    "candidate_id": {"type": "string", "minLength": 1, "maxLength": 64},
+    "dimensions": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "question_and_strategic_fit",
+        "primary_source_evidence",
+        "defensible_novelty_delta",
+        "mechanism_and_falsifiability",
+        "controls_and_causal_identification",
+        "evaluation_and_statistics",
+        "feasibility_and_information_per_gpu_hour",
+        "reproducibility_and_artifact_contract",
+        "safety_data_rights_and_monitorability",
+        "independent_adversarial_review_quality"
+      ],
+      "properties": {
+        "question_and_strategic_fit": {"$ref": "#/$defs/dimension"},
+        "primary_source_evidence": {"$ref": "#/$defs/dimension"},
+        "defensible_novelty_delta": {"$ref": "#/$defs/dimension"},
+        "mechanism_and_falsifiability": {"$ref": "#/$defs/dimension"},
+        "controls_and_causal_identification": {"$ref": "#/$defs/dimension"},
+        "evaluation_and_statistics": {"$ref": "#/$defs/dimension"},
+        "feasibility_and_information_per_gpu_hour": {"$ref": "#/$defs/dimension"},
+        "reproducibility_and_artifact_contract": {"$ref": "#/$defs/dimension"},
+        "safety_data_rights_and_monitorability": {"$ref": "#/$defs/dimension"},
+        "independent_adversarial_review_quality": {"$ref": "#/$defs/dimension"}
+      }
+    },
+    "uncapped_total": {"type": "integer", "minimum": 0, "maximum": 100},
+    "caps_applied": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "enum": [
+          "missing-falsifier-59",
+          "incomplete-novelty-or-failed-blind-discrimination-74",
+          "missing-executable-pilot-79",
+          "missing-independent-provider-distinct-review-89",
+          "reject-direct-prior-fatal-leakage-or-safety"
+        ]
+      }
+    },
+    "total": {"type": "integer", "minimum": 0, "maximum": 100},
+    "verdict": {"enum": ["REJECT", "REVISE", "PILOT_READY"]},
+    "largest_defect": {"type": "string", "minLength": 1, "maxLength": 1200},
+    "defects": {
+      "type": "array",
+      "maxItems": 20,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["dimension", "severity", "defect", "fix"],
+        "properties": {
+          "dimension": {"type": "string", "minLength": 1, "maxLength": 64},
+          "severity": {"enum": ["fatal", "major", "minor"]},
+          "defect": {"type": "string", "minLength": 1, "maxLength": 1200},
+          "fix": {"type": "string", "minLength": 1, "maxLength": 1200}
+        }
+      }
+    },
+    "calibration_state": {"const": "NOT_CALIBRATED"}
+  },
+  "$defs": {
+    "dimension": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["score", "criterion", "evidence_anchor", "rationale"],
+      "properties": {
+        "score": {"type": "integer", "minimum": 0, "maximum": 10},
+        "criterion": {"enum": ["EXCEEDS", "MEETS", "PARTLY_MEETS", "DOES_NOT_MEET", "NOT_ASSESSED"]},
+        "evidence_anchor": {"type": "string", "minLength": 1, "maxLength": 300},
+        "rationale": {"type": "string", "minLength": 1, "maxLength": 1200}
+      }
+    }
+  }
+}

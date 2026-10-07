@@ -1,0 +1,9 @@
+{
+ "doctor": "Source",
+ "status": "PASS",
+ "evaluated_on": "2026-10-07",
+ "evaluated_by": "wave-1 single synthesis owner (Claude agent); not an independent review",
+ "pass_condition": "Required backends reachable; cutoff and degraded coverage recorded",
+ "evidence": "orx (alphaXiv keyword and embedding, OpenAlex) reachable and used by all three discovery cells; source cutoff 2026-10-07; degraded coverage recorded in the proposal header (no arXiv API, Semantic Scholar or host relay; no OpenReview, code, model-card, patent or social-media search; one Chinese query); 50 cited primary pages fetched on 2026-10-07 with HTTP 200, raw-body SHA-256 recorded and a metadata extract hashed under snapshots/.",
+ "remediation": "Use the host relay for Semantic Scholar and the arXiv API in any later wave; record OpenReview access."
+}

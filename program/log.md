@@ -237,6 +237,32 @@ Append-only. Newest entries at the bottom.
 - GPU time: 0.055 GPU-h (D22 counts the probe at its 0.15 cap). Evidence:
   `program/evidence/2026-10-07/q3-k1-v2/probe/`.
 
+## 2026-10-07 — Open-weight reviewer tooling: smoke reviewed, exit hung, fixed
+
+- Built `scripts/run_open_weight_review.py` on branch
+  `stage0/open-weight-reviewer` (not pushed): the D23/D24 provider-distinct
+  reviewer, offline vLLM `LLM.generate` in the cu129 overlay, greedy, seed 42
+  primary plus same-batch replicates 43 and 44, one retry with the parse error
+  appended, a fail-closed JSON Schema subset, a receipt (model id, HF revision,
+  model receipt digest, vLLM version, prompt and output SHA-256) and a lane
+  manifest renderer. Default reviewer `qwen3.6-35b-a3b` at TP=1 (64.56 GiB of
+  language-model weights fit one H100); the smoke used `qwen3.5-9b` because a
+  35B-A3B job cannot fit the 0.1 GPU-h smoke cap.
+- Overlay 614 (`f74084d`, image `f760b0fe`). Smoke 617 wrote a `PARSED`
+  review 71 s after its container started (engine init 52.5 s, replicates
+  token-identical), then hung in interpreter shutdown; its reset handlers let
+  PID 1 ignore USR1 and TERM, the job ended TIMEOUT and the container held GPU
+  0 for 88 s after the job until stopped by hand. Smoke GPU time 0.1075 GPU-h
+  by Slurm, 0.1319 physical, over its 0.1 cap.
+- Fix `37f4f2a` (handlers kept, bounded engine close, `os._exit`); overlay 629
+  (image `eda72497`); CPU-only PID-1 checks in that image pass (hang scenario
+  exits 0 in 1.3 s; USR1 and TERM end a generating run with exit 3 and the
+  marker). The GPU re-smoke (`smoke2.yaml`, cap 0.1) is rendered and
+  test-only passed but not submitted. Lane gap noted: a container whose
+  workload ignores TERM outlives a timed-out job.
+- GPU time 0.1589 GPU-h in all (two overlay builds 0.027). Evidence:
+  `program/evidence/2026-10-07/open-weight-reviewer-smoke/`.
+
 ## 2026-10-07 — Action-path suite: development complete, one decision before the freeze
 
 - Q2 Stage 0b (branch `stage0/q2-action-path`), development only (seed 42,

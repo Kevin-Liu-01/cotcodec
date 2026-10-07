@@ -77,9 +77,10 @@
     "Decide whether to purge the old host address and the internal corpus inventory from public git history (requires a force-push)",
     "Spot-check a sample of the Q2 checker-mutation audit as the human rater (decision D9)",
     "Moonshot (Kimi) account is suspended for insufficient balance; recharge it if a Kimi model should be a rater or reviewer (rotate the exposed key at the same time)",
-    "Before freezing q2-action-path-v1: decide how A4 treats OSWorld guest-server restarts inside /accessibility (1 in 7,969 calls in development; A4 as registered would very likely fail on them); options in program/preregistrations/q2-action-path-v1-inputs.md section 6"
+    "Before freezing q2-action-path-v1: decide how A4 treats OSWorld guest-server restarts inside /accessibility (1 in 7,969 calls in development; A4 as registered would very likely fail on them); options in program/preregistrations/q2-action-path-v1-inputs.md section 6",
+    "The ANTHROPIC_API_KEY on this machine is invalid (HTTP 401); supply a valid key if the Claude rater and gauntlet reviews should use the API rather than the agent harness (D25)"
   ],
-  "gpu_hours_spent_this_program": 1.251,
+  "gpu_hours_spent_this_program": 1.4099,
   "frozen_registrations": [
     "q3-k1-localization-screen-v1",
     "q2-holo3-rerun-audit-v1-posthoc",
@@ -139,6 +140,16 @@
         "543 probe"
       ],
       "outcome": "PROBE_COMPLETE; v2 caps plus probe 8.05 GPU-h under D22: gauntlet applies"
+    },
+    {
+      "experiment": "open-weight reviewer tooling smoke (D23, D24)",
+      "gpu_hours": 0.1589,
+      "jobs": [
+        "614 overlay build",
+        "617 smoke qwen3.5-9b (TIMEOUT; container outlived the job 88 s)",
+        "629 overlay build of the exit fix"
+      ],
+      "outcome": "review PARSED in 71 s; process hung at exit, smoke over its 0.1 GPU-h cap (0.132 physical); exit fix 37f4f2a CPU-validated as PID 1, GPU re-smoke not run"
     }
   ],
   "results": [

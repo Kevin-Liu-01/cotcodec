@@ -1,0 +1,12 @@
+{
+ "url": "https://huggingface.co/datasets/jhu-clsp/paradocs/tree/f80095affa44545d18d0d64a574f9b8679017196",
+ "fetched_at": "2026-10-07T21:00:20Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 99023,
+ "raw_sha256": "0e4e8524f1acc3c5236e7637dceb93ff597567ab130eec4d2275afe40e3df4d4",
+ "raw_stored": false,
+ "extract": {
+  "html_title": "jhu-clsp/paradocs at f80095affa44545d18d0d64a574f9b8679017196"
+ }
+}
