@@ -1,0 +1,59 @@
+# Q2 Stage 0b infrastructure validation: >= 20 cold boots and >= 20 reset-sentinel checks.
+# Infrastructure validation only (allowed before the freeze); no action-path trials run here.
+schema: cotcodec-vm-campaign-v1
+name: q2ap-boot-reset
+campaign_id: q2ap-boot-reset-v1
+experiment_id: q2-action-path-v1
+purpose: infrastructure-validation
+preregistration:
+  path: program/preregistrations/q2-action-path-v1.md
+  status: absent
+  sha256: null
+git_sha: d2d63b920da92453dc0907c88f0da92a8adc0a2e
+source:
+  host_dir: /home/kevin/cotcodec-runs/stage0/q2-action-path/src/d2d63b920da92453dc0907c88f0da92a8adc0a2e
+  tree_sha256: 321965b5f2fdf6a6993fc8b59edef650b876ca5d0eb1f11144929cb32af17776
+run_root: /home/kevin/cotcodec-runs/stage0/q2-action-path/runs
+slurm:
+  cpus: 8
+  memory_gb: 12
+  minutes: 200
+container_profile: default
+model:
+  kind: none
+  reason: boot and reset validation of the desktop VM runtime runs no model
+randomness:
+  contract: deterministic
+  seeds: []
+vm:
+  image: happysixd/osworld-docker@sha256:0e6497a9295647cf05bf2b2af522fdd79bdeba2737595259cab310a3bcf6baa9
+  image_id: sha256:fe8d9a5e5ad6c593d059887ea2c790481b3f32dd42fa961f2441cdbbe2c70cf4
+  qcow2:
+    host_path: /home/kevin/cotcodec-runs/stage0/q2-action-path/vm/Ubuntu.qcow2
+    sha256: 6bf667a852b3c307f61d9f09c42559351f45e0607e428b4997becf534cf4d313
+    size_bytes: 24460197888
+    source_url: https://huggingface.co/datasets/xlangai/ubuntu_osworld/resolve/a5d9c3eaae98eebf6e3a0beb84e7e47cf72ae133/Ubuntu.qcow2.zip
+    archive_sha256: b795b6cd4c69b252c1b4f10150a347795555032501b60fd031751ed09b896712
+    revision: a5d9c3eaae98eebf6e3a0beb84e7e47cf72ae133
+    license: apache-2.0
+  ram_size: 4G
+  cpu_cores: 4
+  disk_size: 32G
+  memory_gb: 6
+  network: none-netns
+  guest_ip: 20.20.20.21
+  server_port: 5000
+  hmp_port: 7100
+  concurrency: 1
+runner:
+  image_id: sha256:ac2b5815bcc2ed193116aa2d4bdee773b5a457c545453a6c91956768634a6002
+  memory_gb: 1
+  cpus: 1
+workload:
+  kind: boot-reset-validation
+  cycles: 22
+  boot_timeout_s: 300
+  settle_timeout_s: 60
+  hmp_input_check: true
+  latency_reps: 3
+  exposure_probe: false

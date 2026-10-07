@@ -321,3 +321,49 @@ def test_hmp_telnet_stripping_and_reply_cleanup():
 def test_hmp_reply_drops_garbled_echo_and_extra_prompts():
     raw = b"i\x1b[Kin\x1b[Kinfo status\r\nVM status: running\r\n(qemu) \r\n(qemu) "
     assert clean_reply(raw, "info status") == "VM status: running"
+
+
+def rdev_manifest() -> dict:
+    manifest = base_manifest()
+    manifest["purpose"] = "reference-capture"
+    manifest["slurm"]["minutes"] = 60
+    manifest["workload"] = {
+        "kind": "rdev-capture",
+        "reps": 5,
+        "boot_timeout_s": 300,
+        "settle_timeout_s": 60,
+        "plan_sha256": "9" * 64,
+    }
+    return manifest
+
+
+def test_rdev_capture_manifest_rules():
+    validate_manifest(rdev_manifest())
+    wrong_purpose = rdev_manifest()
+    wrong_purpose["purpose"] = "infrastructure-validation"
+    with pytest.raises(ManifestError, match="reference capture"):
+        validate_manifest(wrong_purpose)
+    no_prereg = rdev_manifest()
+    no_prereg["preregistration"].update(status="absent", sha256=None)
+    with pytest.raises(ManifestError, match="preregistration"):
+        validate_manifest(no_prereg)
+    short = rdev_manifest()
+    short["slurm"]["minutes"] = 20
+    with pytest.raises(ManifestError, match="capture budget"):
+        validate_manifest(short)
+
+
+def test_rdev_runner_argv_uses_the_capture_subcommand():
+    argv = driver.runner_run_argv(
+        rdev_manifest(),
+        "5",
+        0,
+        source_dir="/home/kevin/cotcodec-runs/s/src/x",
+        out_dir="/o",
+        config_in_container="/out/c.json",
+        cpuset=None,
+        uid=1,
+        gid=1,
+        subcommand="rdev-capture",
+    )
+    assert argv[argv.index("harness.q2.vm.runner") + 1] == "rdev-capture"

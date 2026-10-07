@@ -1,0 +1,1636 @@
+schema: cotcodec-q2-action-path-catalog-v1
+status: draft
+screen: [1920, 1080]
+description: Independent reimplementation of a 100-entry action-path catalog. Entry IDs and group sizes
+  are public facts from sandweave@99ba1abe report.json; every action, coordinate, string and expectation
+  here was written for this repository.
+probe_buffer_rules: {printable: the code points produced for a KeyPress are appended, Return: \n, KP_Enter: \n,
+  Tab: \t, BackSpace: deletes the last code point, other: keys that produce no text leave the buffer unchanged}
+event_rules: {events: ordered key and button events; motion is ignored unless a field asks for it, key_event: '[KeyPress|KeyRelease,
+    keysym name]', button_event: '[ButtonPress|ButtonRelease, X button, x, y] with tolerance_px', events_scope_pointer: only
+    button events are compared; text is compared separately, button_state_includes: every button event's
+    state mask must include these modifiers, min_gap_ms: '[i, j, ms]: server time of event j minus event
+    i is at least ms', max_gap_ms: '[i, j, ms]: server time of event j minus event i is at most ms', min_motion_events: 'at
+    least this many MotionNotify events in the entry; with button events, between the first and the last
+    of them', order_multiset: events compared as a multiset, rdev: key events must equal the frozen R-dev
+    reference stream for rdev_input}
+entries:
+- id: click_left_center
+  group: clicks
+  observable: app
+  side_effects: []
+  tags: []
+  actions:
+  - {op: click, x: 960, y: 540}
+  expect:
+    oracle: catalog
+    events:
+    - [ButtonPress, 1, 960, 540]
+    - [ButtonRelease, 1, 960, 540]
+    tolerance_px: 2
+    final_pointer: [960, 540]
+- id: click_right
+  group: clicks
+  observable: app
+  side_effects: []
+  tags: []
+  actions:
+  - {op: click, x: 700, y: 400, button: 3}
+  expect:
+    oracle: catalog
+    events:
+    - [ButtonPress, 3, 700, 400]
+    - [ButtonRelease, 3, 700, 400]
+    tolerance_px: 2
+- id: click_middle
+  group: clicks
+  observable: app
+  side_effects: []
+  tags: [table20]
+  actions:
+  - {op: click, x: 1200, y: 400, button: 2}
+  expect:
+    oracle: catalog
+    events:
+    - [ButtonPress, 2, 1200, 400]
+    - [ButtonRelease, 2, 1200, 400]
+    tolerance_px: 2
+- id: click_double_left
+  group: clicks
+  observable: app
+  side_effects: []
+  tags: []
+  actions:
+  - {op: click, x: 960, y: 700, count: 2}
+  expect:
+    oracle: catalog
+    events:
+    - &id001 [ButtonPress, 1, 960, 700]
+    - &id002 [ButtonRelease, 1, 960, 700]
+    - *id001
+    - *id002
+    tolerance_px: 2
+    max_gap_ms:
+    - [0, 2, 300]
+- id: click_triple_left
+  group: clicks
+  observable: app
+  side_effects: []
+  tags: [regression]
+  actions:
+  - {op: click, x: 800, y: 700, count: 3}
+  expect:
+    oracle: catalog
+    events:
+    - &id003 [ButtonPress, 1, 800, 700]
+    - &id004 [ButtonRelease, 1, 800, 700]
+    - *id003
+    - *id004
+    - *id003
+    - *id004
+    tolerance_px: 2
+    max_gap_ms:
+    - [0, 2, 300]
+    - [2, 4, 300]
+- id: click_ctrl_left
+  group: clicks
+  observable: app
+  side_effects: []
+  tags: [modifier_hold, table20]
+  actions:
+  - op: click
+    x: 500
+    y: 300
+    modifiers: [Control_L]
+  expect:
+    oracle: catalog
+    events:
+    - [KeyPress, Control_L]
+    - [ButtonPress, 1, 500, 300]
+    - [ButtonRelease, 1, 500, 300]
+    - [KeyRelease, Control_L]
+    tolerance_px: 2
+    button_state_includes: [Control]
+- id: click_shift_left
+  group: clicks
+  observable: app
+  side_effects: []
+  tags: [modifier_hold, table20]
+  actions:
+  - op: click
+    x: 1100
+    y: 300
+    modifiers: [Shift_L]
+  expect:
+    oracle: catalog
+    events:
+    - [KeyPress, Shift_L]
+    - [ButtonPress, 1, 1100, 300]
+    - [ButtonRelease, 1, 1100, 300]
+    - [KeyRelease, Shift_L]
+    tolerance_px: 2
+    button_state_includes: [Shift]
+- id: click_alt_left
+  group: clicks
+  observable: app
+  side_effects: []
+  tags: [modifier_hold, table20]
+  actions:
+  - op: click
+    x: 1300
+    y: 300
+    modifiers: [Alt_L]
+  expect:
+    oracle: catalog
+    events:
+    - [KeyPress, Alt_L]
+    - [ButtonPress, 1, 1300, 300]
+    - [ButtonRelease, 1, 1300, 300]
+    - [KeyRelease, Alt_L]
+    tolerance_px: 2
+    button_state_includes: [Mod1]
+- id: click_ctrl_shift_right
+  group: clicks
+  observable: app
+  side_effects: []
+  tags: [modifier_hold, table20]
+  actions:
+  - op: click
+    x: 900
+    y: 350
+    button: 3
+    modifiers: [Control_L, Shift_L]
+  expect:
+    oracle: catalog
+    events:
+    - [KeyPress, Control_L]
+    - [KeyPress, Shift_L]
+    - [ButtonPress, 3, 900, 350]
+    - [ButtonRelease, 3, 900, 350]
+    - [KeyRelease, Shift_L]
+    - [KeyRelease, Control_L]
+    tolerance_px: 2
+    button_state_includes: [Control, Shift]
+- id: click_corner_topleft
+  group: clicks
+  observable: app
+  side_effects: [hot_corner]
+  tags: [edge]
+  actions:
+  - {op: click, x: 0, y: 0}
+  expect:
+    oracle: catalog
+    events:
+    - [ButtonPress, 1, 0, 0]
+    - [ButtonRelease, 1, 0, 0]
+    tolerance_px: 2
+- id: click_corner_bottomright
+  group: clicks
+  observable: app
+  side_effects: []
+  tags: [edge, regression]
+  actions:
+  - {op: click, x: 1919, y: 1079}
+  expect:
+    oracle: catalog
+    events:
+    - [ButtonPress, 1, 1919, 1079]
+    - [ButtonRelease, 1, 1919, 1079]
+    tolerance_px: 2
+- id: press_hold_release_left
+  group: clicks
+  observable: app
+  side_effects: []
+  tags: [hold]
+  actions:
+  - {op: button_down, button: 1, x: 600, y: 800}
+  - {op: wait, ms: 600}
+  - {op: button_up, button: 1, x: 600, y: 800}
+  expect:
+    oracle: catalog
+    events:
+    - [ButtonPress, 1, 600, 800]
+    - [ButtonRelease, 1, 600, 800]
+    tolerance_px: 2
+    min_gap_ms:
+    - [0, 1, 500]
+- id: move_only
+  group: clicks
+  observable: app
+  side_effects: []
+  tags: []
+  actions:
+  - {op: move, x: 1500, y: 900}
+  expect:
+    oracle: catalog
+    events: []
+    tolerance_px: 2
+    final_pointer: [1500, 900]
+    min_motion_events: 1
+- id: press_hold_release_right
+  group: clicks
+  observable: app
+  side_effects: []
+  tags: [hold]
+  actions:
+  - {op: button_down, button: 3, x: 650, y: 820}
+  - {op: wait, ms: 600}
+  - {op: button_up, button: 3, x: 650, y: 820}
+  expect:
+    oracle: catalog
+    events:
+    - [ButtonPress, 3, 650, 820]
+    - [ButtonRelease, 3, 650, 820]
+    tolerance_px: 2
+    min_gap_ms:
+    - [0, 1, 500]
+- id: click_burst_5
+  group: clicks
+  observable: app
+  side_effects: []
+  tags: [timing]
+  actions:
+  - {op: click, x: 1000, y: 600}
+  - {op: click, x: 1000, y: 600}
+  - {op: click, x: 1000, y: 600}
+  - {op: click, x: 1000, y: 600}
+  - {op: click, x: 1000, y: 600}
+  expect:
+    oracle: catalog
+    events:
+    - &id005 [ButtonPress, 1, 1000, 600]
+    - &id006 [ButtonRelease, 1, 1000, 600]
+    - *id005
+    - *id006
+    - *id005
+    - *id006
+    - *id005
+    - *id006
+    - *id005
+    - *id006
+    tolerance_px: 2
+- id: click_double_slow
+  group: clicks
+  observable: app
+  side_effects: []
+  tags: [timing]
+  actions:
+  - {op: click, x: 1000, y: 750}
+  - {op: wait, ms: 700}
+  - {op: click, x: 1000, y: 750}
+  expect:
+    oracle: catalog
+    events:
+    - &id007 [ButtonPress, 1, 1000, 750]
+    - &id008 [ButtonRelease, 1, 1000, 750]
+    - *id007
+    - *id008
+    tolerance_px: 2
+    min_gap_ms:
+    - [1, 2, 500]
+- id: click_button_back
+  group: clicks
+  observable: app
+  side_effects: []
+  tags: [extra_button]
+  actions:
+  - {op: click, x: 960, y: 540, button: 8}
+  expect:
+    oracle: catalog
+    events:
+    - [ButtonPress, 8, 960, 540]
+    - [ButtonRelease, 8, 960, 540]
+    tolerance_px: 2
+- id: click_button_forward
+  group: clicks
+  observable: app
+  side_effects: []
+  tags: [extra_button]
+  actions:
+  - {op: click, x: 960, y: 540, button: 9}
+  expect:
+    oracle: catalog
+    events:
+    - [ButtonPress, 9, 960, 540]
+    - [ButtonRelease, 9, 960, 540]
+    tolerance_px: 2
+- id: drag_short
+  group: drags
+  observable: app
+  side_effects: []
+  tags: []
+  actions:
+  - op: drag
+    path:
+    - [800, 500]
+    - [860, 540]
+    duration_ms: 300
+  expect:
+    oracle: catalog
+    events:
+    - [ButtonPress, 1, 800, 500]
+    - [ButtonRelease, 1, 860, 540]
+    tolerance_px: 2
+    min_motion_events: 3
+    final_pointer: [860, 540]
+- id: drag_long_diagonal
+  group: drags
+  observable: app
+  side_effects: []
+  tags: []
+  actions:
+  - op: drag
+    path:
+    - [100, 100]
+    - [1800, 1000]
+    duration_ms: 800
+  expect:
+    oracle: catalog
+    events:
+    - [ButtonPress, 1, 100, 100]
+    - [ButtonRelease, 1, 1800, 1000]
+    tolerance_px: 2
+    min_motion_events: 3
+    final_pointer: [1800, 1000]
+- id: drag_multipoint_l_shape
+  group: drags
+  observable: app
+  side_effects: []
+  tags: [multipoint]
+  actions:
+  - op: drag
+    path:
+    - [400, 300]
+    - [400, 800]
+    - [1200, 800]
+    duration_ms: 900
+  expect:
+    oracle: catalog
+    events:
+    - [ButtonPress, 1, 400, 300]
+    - [ButtonRelease, 1, 1200, 800]
+    tolerance_px: 2
+    min_motion_events: 3
+    final_pointer: [1200, 800]
+    motion_through:
+    - [400, 800]
+- id: drag_right_button
+  group: drags
+  observable: app
+  side_effects: []
+  tags: [extra_button]
+  actions:
+  - op: drag
+    path:
+    - [900, 300]
+    - [1100, 400]
+    duration_ms: 500
+    button: 3
+  expect:
+    oracle: catalog
+    events:
+    - [ButtonPress, 3, 900, 300]
+    - [ButtonRelease, 3, 1100, 400]
+    tolerance_px: 2
+    min_motion_events: 3
+    final_pointer: [1100, 400]
+- id: drag_shift_held
+  group: drags
+  observable: app
+  side_effects: []
+  tags: [modifier_hold]
+  actions:
+  - op: drag
+    path:
+    - [300, 600]
+    - [700, 650]
+    duration_ms: 500
+    modifiers: [Shift_L]
+  expect:
+    oracle: catalog
+    events:
+    - [KeyPress, Shift_L]
+    - [ButtonPress, 1, 300, 600]
+    - [ButtonRelease, 1, 700, 650]
+    - [KeyRelease, Shift_L]
+    tolerance_px: 2
+    min_motion_events: 3
+    final_pointer: [700, 650]
+    button_state_includes: [Shift]
+- id: drag_slow_small
+  group: drags
+  observable: app
+  side_effects: []
+  tags: [timing]
+  actions:
+  - op: drag
+    path:
+    - [1000, 500]
+    - [1010, 505]
+    duration_ms: 1500
+  expect:
+    oracle: catalog
+    events:
+    - [ButtonPress, 1, 1000, 500]
+    - [ButtonRelease, 1, 1010, 505]
+    tolerance_px: 2
+    min_motion_events: 3
+    final_pointer: [1010, 505]
+- id: drag_vertical
+  group: drags
+  observable: app
+  side_effects: []
+  tags: []
+  actions:
+  - op: drag
+    path:
+    - [1500, 200]
+    - [1500, 900]
+    duration_ms: 600
+  expect:
+    oracle: catalog
+    events:
+    - [ButtonPress, 1, 1500, 200]
+    - [ButtonRelease, 1, 1500, 900]
+    tolerance_px: 2
+    min_motion_events: 3
+    final_pointer: [1500, 900]
+- id: drag_to_corner
+  group: drags
+  observable: app
+  side_effects: []
+  tags: [edge]
+  actions:
+  - op: drag
+    path:
+    - [960, 540]
+    - [1919, 1079]
+    duration_ms: 600
+  expect:
+    oracle: catalog
+    events:
+    - [ButtonPress, 1, 960, 540]
+    - [ButtonRelease, 1, 1919, 1079]
+    tolerance_px: 2
+    min_motion_events: 3
+    final_pointer: [1919, 1079]
+- id: drag_ctrl_held
+  group: drags
+  observable: app
+  side_effects: []
+  tags: [modifier_hold]
+  actions:
+  - op: drag
+    path:
+    - [500, 500]
+    - [800, 700]
+    duration_ms: 500
+    modifiers: [Control_L]
+  expect:
+    oracle: catalog
+    events:
+    - [KeyPress, Control_L]
+    - [ButtonPress, 1, 500, 500]
+    - [ButtonRelease, 1, 800, 700]
+    - [KeyRelease, Control_L]
+    tolerance_px: 2
+    min_motion_events: 3
+    final_pointer: [800, 700]
+    button_state_includes: [Control]
+- id: drag_middle_button
+  group: drags
+  observable: app
+  side_effects: []
+  tags: [extra_button]
+  actions:
+  - op: drag
+    path:
+    - [700, 700]
+    - [900, 750]
+    duration_ms: 500
+    button: 2
+  expect:
+    oracle: catalog
+    events:
+    - [ButtonPress, 2, 700, 700]
+    - [ButtonRelease, 2, 900, 750]
+    tolerance_px: 2
+    min_motion_events: 3
+    final_pointer: [900, 750]
+- id: drag_alt_held
+  group: drags
+  observable: app
+  side_effects: []
+  tags: [modifier_hold]
+  actions:
+  - op: drag
+    path:
+    - [1200, 600]
+    - [1400, 700]
+    duration_ms: 500
+    modifiers: [Alt_L]
+  expect:
+    oracle: catalog
+    events:
+    - [KeyPress, Alt_L]
+    - [ButtonPress, 1, 1200, 600]
+    - [ButtonRelease, 1, 1400, 700]
+    - [KeyRelease, Alt_L]
+    tolerance_px: 2
+    min_motion_events: 3
+    final_pointer: [1400, 700]
+    button_state_includes: [Mod1]
+- id: key_enter
+  group: keys_chords
+  observable: app
+  side_effects: []
+  tags: []
+  actions:
+  - op: key
+    keys: [Return]
+  expect:
+    oracle: rdev
+    rdev_input:
+    - [ret]
+    intended_keysyms: [Return]
+    events: null
+- id: key_esc
+  group: keys_chords
+  observable: app
+  side_effects: []
+  tags: []
+  actions:
+  - op: key
+    keys: [Escape]
+  expect:
+    oracle: rdev
+    rdev_input:
+    - [esc]
+    intended_keysyms: [Escape]
+    events: null
+- id: key_tab
+  group: keys_chords
+  observable: app
+  side_effects: []
+  tags: []
+  actions:
+  - op: key
+    keys: [Tab]
+  expect:
+    oracle: rdev
+    rdev_input:
+    - [tab]
+    intended_keysyms: [Tab]
+    events: null
+- id: key_f5
+  group: keys_chords
+  observable: app
+  side_effects: []
+  tags: []
+  actions:
+  - op: key
+    keys: [F5]
+  expect:
+    oracle: rdev
+    rdev_input:
+    - [f5]
+    intended_keysyms: [F5]
+    events: null
+- id: key_arrow_up
+  group: keys_chords
+  observable: app
+  side_effects: []
+  tags: []
+  actions:
+  - op: key
+    keys: [Up]
+  expect:
+    oracle: rdev
+    rdev_input:
+    - [up]
+    intended_keysyms: [Up]
+    events: null
+- id: key_arrow_left
+  group: keys_chords
+  observable: app
+  side_effects: []
+  tags: []
+  actions:
+  - op: key
+    keys: [Left]
+  expect:
+    oracle: rdev
+    rdev_input:
+    - [left]
+    intended_keysyms: [Left]
+    events: null
+- id: key_home
+  group: keys_chords
+  observable: app
+  side_effects: []
+  tags: []
+  actions:
+  - op: key
+    keys: [Home]
+  expect:
+    oracle: rdev
+    rdev_input:
+    - [home]
+    intended_keysyms: [Home]
+    events: null
+- id: key_pageup
+  group: keys_chords
+  observable: app
+  side_effects: []
+  tags: []
+  actions:
+  - op: key
+    keys: [Prior]
+  expect:
+    oracle: rdev
+    rdev_input:
+    - [pgup]
+    intended_keysyms: [Prior]
+    events: null
+- id: key_pagedown
+  group: keys_chords
+  observable: app
+  side_effects: []
+  tags: []
+  actions:
+  - op: key
+    keys: [Next]
+  expect:
+    oracle: rdev
+    rdev_input:
+    - [pgdn]
+    intended_keysyms: [Next]
+    events: null
+- id: key_delete
+  group: keys_chords
+  observable: app
+  side_effects: []
+  tags: []
+  actions:
+  - op: key
+    keys: [Delete]
+  expect:
+    oracle: rdev
+    rdev_input:
+    - [delete]
+    intended_keysyms: [Delete]
+    events: null
+- id: chord_ctrl_c
+  group: keys_chords
+  observable: app
+  side_effects: []
+  tags: [chord]
+  actions:
+  - op: key
+    keys: [Control_L, c]
+  expect:
+    oracle: rdev
+    rdev_input:
+    - [ctrl, c]
+    intended_keysyms: [Control_L, c]
+    events: null
+- id: chord_ctrl_a
+  group: keys_chords
+  observable: app
+  side_effects: []
+  tags: [chord]
+  actions:
+  - op: key
+    keys: [Control_L, a]
+  expect:
+    oracle: rdev
+    rdev_input:
+    - [ctrl, a]
+    intended_keysyms: [Control_L, a]
+    events: null
+- id: chord_ctrl_shift_t
+  group: keys_chords
+  observable: app
+  side_effects: []
+  tags: [chord]
+  actions:
+  - op: key
+    keys: [Control_L, Shift_L, t]
+  expect:
+    oracle: rdev
+    rdev_input:
+    - [ctrl, shift, t]
+    intended_keysyms: [Control_L, Shift_L, t]
+    events: null
+- id: chord_ctrl_shift_arrow
+  group: keys_chords
+  observable: app
+  side_effects: []
+  tags: [chord]
+  actions:
+  - op: key
+    keys: [Control_L, Shift_L, Right]
+  expect:
+    oracle: rdev
+    rdev_input:
+    - [ctrl, shift, right]
+    intended_keysyms: [Control_L, Shift_L, Right]
+    events: null
+- id: chord_shift_tab
+  group: keys_chords
+  observable: app
+  side_effects: []
+  tags: [chord]
+  actions:
+  - op: key
+    keys: [Shift_L, Tab]
+  expect:
+    oracle: rdev
+    rdev_input:
+    - [shift, tab]
+    intended_keysyms: [Shift_L, Tab]
+    events: null
+- id: chord_alt_f4
+  group: keys_chords
+  observable: raw-only
+  side_effects: [closes_window]
+  tags: [chord, desktop_shortcut]
+  actions:
+  - op: key
+    keys: [Alt_L, F4]
+  expect:
+    oracle: rdev
+    rdev_input:
+    - [alt, f4]
+    intended_keysyms: [Alt_L, F4]
+    events: null
+- id: chord_super_d
+  group: keys_chords
+  observable: raw-only
+  side_effects: [shows_desktop]
+  tags: [chord, desktop_shortcut, regression]
+  actions:
+  - op: key
+    keys: [Super_L, d]
+  expect:
+    oracle: rdev
+    rdev_input:
+    - [meta_l, d]
+    intended_keysyms: [Super_L, d]
+    events: null
+- id: key_f1
+  group: keys_chords
+  observable: app
+  side_effects: []
+  tags: []
+  actions:
+  - op: key
+    keys: [F1]
+  expect:
+    oracle: rdev
+    rdev_input:
+    - [f1]
+    intended_keysyms: [F1]
+    events: null
+- id: key_f9
+  group: keys_chords
+  observable: app
+  side_effects: []
+  tags: []
+  actions:
+  - op: key
+    keys: [F9]
+  expect:
+    oracle: rdev
+    rdev_input:
+    - [f9]
+    intended_keysyms: [F9]
+    events: null
+- id: key_f12
+  group: keys_chords
+  observable: app
+  side_effects: []
+  tags: []
+  actions:
+  - op: key
+    keys: [F12]
+  expect:
+    oracle: rdev
+    rdev_input:
+    - [f12]
+    intended_keysyms: [F12]
+    events: null
+- id: key_insert
+  group: keys_chords
+  observable: app
+  side_effects: []
+  tags: []
+  actions:
+  - op: key
+    keys: [Insert]
+  expect:
+    oracle: rdev
+    rdev_input:
+    - [insert]
+    intended_keysyms: [Insert]
+    events: null
+- id: key_space_chord
+  group: keys_chords
+  observable: app
+  side_effects: []
+  tags: []
+  actions:
+  - op: key
+    keys: [space]
+  expect:
+    oracle: rdev
+    rdev_input:
+    - [spc]
+    intended_keysyms: [space]
+    events: null
+  note: space sent as a key action, not as typed text
+- id: key_end
+  group: keys_chords
+  observable: app
+  side_effects: []
+  tags: []
+  actions:
+  - op: key
+    keys: [End]
+  expect:
+    oracle: rdev
+    rdev_input:
+    - [end]
+    intended_keysyms: [End]
+    events: null
+- id: key_arrow_down
+  group: keys_chords
+  observable: app
+  side_effects: []
+  tags: []
+  actions:
+  - op: key
+    keys: [Down]
+  expect:
+    oracle: rdev
+    rdev_input:
+    - [down]
+    intended_keysyms: [Down]
+    events: null
+- id: key_arrow_right
+  group: keys_chords
+  observable: app
+  side_effects: []
+  tags: []
+  actions:
+  - op: key
+    keys: [Right]
+  expect:
+    oracle: rdev
+    rdev_input:
+    - [right]
+    intended_keysyms: [Right]
+    events: null
+- id: chord_ctrl_home
+  group: keys_chords
+  observable: app
+  side_effects: []
+  tags: [chord]
+  actions:
+  - op: key
+    keys: [Control_L, Home]
+  expect:
+    oracle: rdev
+    rdev_input:
+    - [ctrl, home]
+    intended_keysyms: [Control_L, Home]
+    events: null
+- id: chord_shift_arrow_left
+  group: keys_chords
+  observable: app
+  side_effects: []
+  tags: [chord]
+  actions:
+  - op: key
+    keys: [Shift_L, Left]
+  expect:
+    oracle: rdev
+    rdev_input:
+    - [shift, left]
+    intended_keysyms: [Shift_L, Left]
+    events: null
+- id: chord_ctrl_alt_shift_r
+  group: keys_chords
+  observable: raw-only
+  side_effects: [screencast]
+  tags: [chord, desktop_shortcut]
+  actions:
+  - op: key
+    keys: [Control_L, Alt_L, Shift_L, r]
+  expect:
+    oracle: rdev
+    rdev_input:
+    - [ctrl, alt, shift, r]
+    intended_keysyms: [Control_L, Alt_L, Shift_L, r]
+    events: null
+  note: GNOME binds this chord to its screen recorder; the guard stops a recording
+- id: chord_alt_tab
+  group: keys_chords
+  observable: raw-only
+  side_effects: [switches_window]
+  tags: [chord, desktop_shortcut]
+  actions:
+  - op: key
+    keys: [Alt_L, Tab]
+  expect:
+    oracle: rdev
+    rdev_input:
+    - [alt, tab]
+    intended_keysyms: [Alt_L, Tab]
+    events: null
+- id: key_kp_enter
+  group: keys_chords
+  observable: app
+  side_effects: []
+  tags: [named_key, regression]
+  actions:
+  - op: key
+    keys: [KP_Enter]
+  expect:
+    oracle: rdev
+    rdev_input:
+    - [kp_enter]
+    intended_keysyms: [KP_Enter]
+    events: null
+- id: key_kp_add
+  group: keys_chords
+  observable: app
+  side_effects: []
+  tags: [named_key]
+  actions:
+  - op: key
+    keys: [KP_Add]
+  expect:
+    oracle: rdev
+    rdev_input:
+    - [kp_add]
+    intended_keysyms: [KP_Add]
+    events: null
+- id: chord_shift_alone
+  group: keys_chords
+  observable: app
+  side_effects: []
+  tags: [modifier_only]
+  actions:
+  - op: key
+    keys: [Shift_L]
+  expect:
+    oracle: rdev
+    rdev_input:
+    - [shift]
+    intended_keysyms: [Shift_L]
+    events: null
+- id: chord_ctrl_alone
+  group: keys_chords
+  observable: app
+  side_effects: []
+  tags: [modifier_only]
+  actions:
+  - op: key
+    keys: [Control_L]
+  expect:
+    oracle: rdev
+    rdev_input:
+    - [ctrl]
+    intended_keysyms: [Control_L]
+    events: null
+- id: key_menu
+  group: keys_chords
+  observable: app
+  side_effects: []
+  tags: [named_key, regression]
+  actions:
+  - op: key
+    keys: [Menu]
+  expect:
+    oracle: rdev
+    rdev_input:
+    - [compose]
+    intended_keysyms: [Menu]
+    events: null
+- id: scroll_down_1
+  group: scrolls
+  observable: app
+  side_effects: []
+  tags: []
+  actions:
+  - {op: scroll, x: 960, y: 540, wheel_y: 1}
+  expect:
+    oracle: catalog
+    events:
+    - [ButtonPress, 5, 960, 540]
+    - [ButtonRelease, 5, 960, 540]
+    tolerance_px: 2
+    final_pointer: [960, 540]
+- id: scroll_down_3
+  group: scrolls
+  observable: app
+  side_effects: []
+  tags: []
+  actions:
+  - {op: scroll, x: 960, y: 540, wheel_y: 3}
+  expect:
+    oracle: catalog
+    events:
+    - &id009 [ButtonPress, 5, 960, 540]
+    - &id010 [ButtonRelease, 5, 960, 540]
+    - *id009
+    - *id010
+    - *id009
+    - *id010
+    tolerance_px: 2
+    final_pointer: [960, 540]
+- id: scroll_down_10
+  group: scrolls
+  observable: app
+  side_effects: []
+  tags: []
+  actions:
+  - {op: scroll, x: 960, y: 540, wheel_y: 10}
+  expect:
+    oracle: catalog
+    events:
+    - &id011 [ButtonPress, 5, 960, 540]
+    - &id012 [ButtonRelease, 5, 960, 540]
+    - *id011
+    - *id012
+    - *id011
+    - *id012
+    - *id011
+    - *id012
+    - *id011
+    - *id012
+    - *id011
+    - *id012
+    - *id011
+    - *id012
+    - *id011
+    - *id012
+    - *id011
+    - *id012
+    - *id011
+    - *id012
+    tolerance_px: 2
+    final_pointer: [960, 540]
+- id: scroll_up_3
+  group: scrolls
+  observable: app
+  side_effects: []
+  tags: []
+  actions:
+  - {op: scroll, x: 960, y: 540, wheel_y: -3}
+  expect:
+    oracle: catalog
+    events:
+    - &id013 [ButtonPress, 4, 960, 540]
+    - &id014 [ButtonRelease, 4, 960, 540]
+    - *id013
+    - *id014
+    - *id013
+    - *id014
+    tolerance_px: 2
+    final_pointer: [960, 540]
+- id: scroll_left_3
+  group: scrolls
+  observable: app
+  side_effects: []
+  tags: [horizontal]
+  actions:
+  - {op: scroll, x: 960, y: 540, wheel_x: -3}
+  expect:
+    oracle: catalog
+    events:
+    - &id015 [ButtonPress, 6, 960, 540]
+    - &id016 [ButtonRelease, 6, 960, 540]
+    - *id015
+    - *id016
+    - *id015
+    - *id016
+    tolerance_px: 2
+    final_pointer: [960, 540]
+- id: scroll_right_3
+  group: scrolls
+  observable: app
+  side_effects: []
+  tags: [horizontal]
+  actions:
+  - {op: scroll, x: 960, y: 540, wheel_x: 3}
+  expect:
+    oracle: catalog
+    events:
+    - &id017 [ButtonPress, 7, 960, 540]
+    - &id018 [ButtonRelease, 7, 960, 540]
+    - *id017
+    - *id018
+    - *id017
+    - *id018
+    tolerance_px: 2
+    final_pointer: [960, 540]
+- id: scroll_ctrl_down_3
+  group: scrolls
+  observable: app
+  side_effects: []
+  tags: [modifier_hold]
+  actions:
+  - op: scroll
+    x: 960
+    y: 540
+    wheel_y: 3
+    modifiers: [Control_L]
+  expect:
+    oracle: catalog
+    events:
+    - [KeyPress, Control_L]
+    - &id019 [ButtonPress, 5, 960, 540]
+    - &id020 [ButtonRelease, 5, 960, 540]
+    - *id019
+    - *id020
+    - *id019
+    - *id020
+    - [KeyRelease, Control_L]
+    tolerance_px: 2
+    final_pointer: [960, 540]
+    button_state_includes: [Control]
+- id: scroll_shift_down_3
+  group: scrolls
+  observable: app
+  side_effects: []
+  tags: [modifier_hold]
+  actions:
+  - op: scroll
+    x: 960
+    y: 540
+    wheel_y: 3
+    modifiers: [Shift_L]
+  expect:
+    oracle: catalog
+    events:
+    - [KeyPress, Shift_L]
+    - &id021 [ButtonPress, 5, 960, 540]
+    - &id022 [ButtonRelease, 5, 960, 540]
+    - *id021
+    - *id022
+    - *id021
+    - *id022
+    - [KeyRelease, Shift_L]
+    tolerance_px: 2
+    final_pointer: [960, 540]
+    button_state_includes: [Shift]
+- id: scroll_at_offcenter_position
+  group: scrolls
+  observable: app
+  side_effects: []
+  tags: [regression]
+  actions:
+  - {op: scroll, x: 300, y: 900, wheel_y: 2}
+  expect:
+    oracle: catalog
+    events:
+    - &id023 [ButtonPress, 5, 300, 900]
+    - &id024 [ButtonRelease, 5, 300, 900]
+    - *id023
+    - *id024
+    tolerance_px: 2
+    final_pointer: [300, 900]
+- id: scroll_down_25
+  group: scrolls
+  observable: app
+  side_effects: []
+  tags: [magnitude]
+  actions:
+  - {op: scroll, x: 960, y: 540, wheel_y: 25}
+  expect:
+    oracle: catalog
+    events:
+    - &id025 [ButtonPress, 5, 960, 540]
+    - &id026 [ButtonRelease, 5, 960, 540]
+    - *id025
+    - *id026
+    - *id025
+    - *id026
+    - *id025
+    - *id026
+    - *id025
+    - *id026
+    - *id025
+    - *id026
+    - *id025
+    - *id026
+    - *id025
+    - *id026
+    - *id025
+    - *id026
+    - *id025
+    - *id026
+    - *id025
+    - *id026
+    - *id025
+    - *id026
+    - *id025
+    - *id026
+    - *id025
+    - *id026
+    - *id025
+    - *id026
+    - *id025
+    - *id026
+    - *id025
+    - *id026
+    - *id025
+    - *id026
+    - *id025
+    - *id026
+    - *id025
+    - *id026
+    - *id025
+    - *id026
+    - *id025
+    - *id026
+    - *id025
+    - *id026
+    - *id025
+    - *id026
+    - *id025
+    - *id026
+    tolerance_px: 2
+    final_pointer: [960, 540]
+- id: scroll_down_then_up_net_zero
+  group: scrolls
+  observable: app
+  side_effects: []
+  tags: []
+  actions:
+  - {op: scroll, x: 960, y: 540, wheel_y: 3}
+  - {op: scroll, x: 960, y: 540, wheel_y: -3}
+  expect:
+    oracle: catalog
+    events:
+    - &id027 [ButtonPress, 5, 960, 540]
+    - &id028 [ButtonRelease, 5, 960, 540]
+    - *id027
+    - *id028
+    - *id027
+    - *id028
+    - &id029 [ButtonPress, 4, 960, 540]
+    - &id030 [ButtonRelease, 4, 960, 540]
+    - *id029
+    - *id030
+    - *id029
+    - *id030
+    tolerance_px: 2
+- id: scroll_diagonal
+  group: scrolls
+  observable: app
+  side_effects: []
+  tags: [horizontal]
+  actions:
+  - {op: scroll, x: 960, y: 540, wheel_y: 2, wheel_x: 2}
+  expect:
+    oracle: catalog
+    events:
+    - &id031 [ButtonPress, 5, 960, 540]
+    - &id032 [ButtonRelease, 5, 960, 540]
+    - *id031
+    - *id032
+    - &id033 [ButtonPress, 7, 960, 540]
+    - &id034 [ButtonRelease, 7, 960, 540]
+    - *id033
+    - *id034
+    tolerance_px: 2
+    order: multiset
+  note: one action on two axes; the event order across axes is not specified
+- id: no_action_control
+  group: mixed
+  observable: app
+  side_effects: []
+  tags: [control]
+  actions: []
+  expect:
+    oracle: catalog
+    events: []
+    tolerance_px: 2
+    text: ''
+    max_motion_events: 0
+- id: click_two_positions_ordered
+  group: mixed
+  observable: app
+  side_effects: []
+  tags: [regression]
+  actions:
+  - {op: click, x: 400, y: 400}
+  - {op: click, x: 1500, y: 700}
+  expect:
+    oracle: catalog
+    events:
+    - [ButtonPress, 1, 400, 400]
+    - [ButtonRelease, 1, 400, 400]
+    - [ButtonPress, 1, 1500, 700]
+    - [ButtonRelease, 1, 1500, 700]
+    tolerance_px: 2
+- id: click_then_type
+  group: mixed
+  observable: app
+  side_effects: []
+  tags: []
+  actions:
+  - {op: click, x: 960, y: 540}
+  - {op: type, text: probe ok}
+  expect:
+    oracle: catalog
+    events:
+    - [ButtonPress, 1, 960, 540]
+    - [ButtonRelease, 1, 960, 540]
+    tolerance_px: 2
+    text: probe ok
+    events_scope: pointer
+- id: mixed_gesture_state
+  group: mixed
+  observable: app
+  side_effects: []
+  tags: [hold, modifier_hold]
+  actions:
+  - op: key_down
+    keys: [Shift_L]
+  - {op: click, x: 700, y: 500}
+  - op: drag
+    path:
+    - [700, 500]
+    - [900, 600]
+    duration_ms: 500
+  - op: key_up
+    keys: [Shift_L]
+  expect:
+    oracle: catalog
+    events:
+    - [KeyPress, Shift_L]
+    - [ButtonPress, 1, 700, 500]
+    - [ButtonRelease, 1, 700, 500]
+    - [ButtonPress, 1, 700, 500]
+    - [ButtonRelease, 1, 900, 600]
+    - [KeyRelease, Shift_L]
+    tolerance_px: 2
+    button_state_includes: [Shift]
+  note: a modifier held across two pointer actions
+- id: seq_type_chord_type
+  group: mixed
+  observable: app
+  side_effects: []
+  tags: []
+  actions:
+  - {op: type, text: one}
+  - op: key
+    keys: [Tab]
+  - {op: type, text: two}
+  expect:
+    oracle: catalog
+    text: "one\ttwo"
+    rdev_refs: [key_tab]
+- id: seq_drag_then_click
+  group: mixed
+  observable: app
+  side_effects: []
+  tags: []
+  actions:
+  - op: drag
+    path:
+    - [300, 300]
+    - [600, 450]
+    duration_ms: 500
+  - {op: click, x: 1200, y: 500}
+  expect:
+    oracle: catalog
+    events:
+    - [ButtonPress, 1, 300, 300]
+    - [ButtonRelease, 1, 600, 450]
+    - [ButtonPress, 1, 1200, 500]
+    - [ButtonRelease, 1, 1200, 500]
+    tolerance_px: 2
+    min_motion_events: 3
+- id: seq_long_mixed
+  group: mixed
+  observable: app
+  side_effects: []
+  tags: [sequence]
+  actions:
+  - {op: move, x: 200, y: 200}
+  - {op: click, x: 200, y: 200}
+  - {op: type, text: seq 9}
+  - op: key
+    keys: [Return]
+  - {op: scroll, x: 960, y: 540, wheel_y: 2}
+  - op: drag
+    path:
+    - [1000, 300]
+    - [1100, 350]
+    duration_ms: 500
+  - {op: click, x: 1300, y: 600, button: 3}
+  - op: key
+    keys: [Escape]
+  expect:
+    oracle: catalog
+    events:
+    - [ButtonPress, 1, 200, 200]
+    - [ButtonRelease, 1, 200, 200]
+    - &id035 [ButtonPress, 5, 960, 540]
+    - &id036 [ButtonRelease, 5, 960, 540]
+    - *id035
+    - *id036
+    - [ButtonPress, 1, 1000, 300]
+    - [ButtonRelease, 1, 1100, 350]
+    - [ButtonPress, 3, 1300, 600]
+    - [ButtonRelease, 3, 1300, 600]
+    tolerance_px: 2
+    text: 'seq 9
+
+      '
+    events_scope: pointer
+    rdev_refs: [key_enter, key_esc]
+- id: caps_lock_roundtrip
+  group: mixed
+  observable: app
+  side_effects: [lock_state]
+  tags: [named_key, lock]
+  actions:
+  - op: key
+    keys: [Caps_Lock]
+  - op: key
+    keys: [Caps_Lock]
+  expect:
+    oracle: rdev
+    rdev_input:
+    - [caps_lock]
+    - [caps_lock]
+    intended_keysyms: [Caps_Lock, Caps_Lock]
+    events: null
+    caps_lock_final: 'off'
+- id: type_plain
+  group: typing
+  observable: app
+  side_effects: []
+  tags: []
+  actions:
+  - {op: type, text: plain text check}
+  expect: {oracle: catalog, text: plain text check}
+- id: type_shell_hostile
+  group: typing
+  observable: app
+  side_effects: []
+  tags: [shell]
+  actions:
+  - {op: type, text: '$PATH `uname` $(true) ''a'' "b" \n; x && y || z > /dev/null < in * ? ~ #!'}
+  expect: {oracle: catalog, text: '$PATH `uname` $(true) ''a'' "b" \n; x && y || z > /dev/null < in *
+      ? ~ #!'}
+- id: type_symbols_shifted
+  group: typing
+  observable: app
+  side_effects: []
+  tags: [shifted]
+  actions:
+  - {op: type, text: '<>?:"{}|~!@#$%^&*()_+'}
+  expect: {oracle: catalog, text: '<>?:"{}|~!@#$%^&*()_+'}
+- id: type_unicode_bmp
+  group: typing
+  observable: app
+  side_effects: []
+  tags: [unicode]
+  actions:
+  - {op: type, text: "cr\xE8me br\xFBl\xE9e, \xC6r\xF8, \u03A9\u03BC\u03AD\u03B3\u03B1, \u0416\u0443\u043A\
+      , \u65E5\u672C\u8A9E"}
+  expect: {oracle: catalog, text: "cr\xE8me br\xFBl\xE9e, \xC6r\xF8, \u03A9\u03BC\u03AD\u03B3\u03B1, \u0416\
+      \u0443\u043A, \u65E5\u672C\u8A9E"}
+- id: type_multiline_tabs
+  group: typing
+  observable: app
+  side_effects: []
+  tags: []
+  actions:
+  - {op: type, text: "line one\n\tindented\nline three"}
+  expect: {oracle: catalog, text: "line one\n\tindented\nline three"}
+- id: type_long_200
+  group: typing
+  observable: app
+  side_effects: []
+  tags: [length]
+  actions:
+  - {op: type, text: 'Action path check 01: the quick probe records every key; commas, periods; numbers
+      0123456789 and CAPS stay exact. Action path check 01: the quick probe records every key; commas,
+      periods; numbers 0123'}
+  expect: {oracle: catalog, text: 'Action path check 01: the quick probe records every key; commas, periods;
+      numbers 0123456789 and CAPS stay exact. Action path check 01: the quick probe records every key;
+      commas, periods; numbers 0123'}
+- id: type_emoji
+  group: typing
+  observable: app
+  side_effects: []
+  tags: [unicode, astral]
+  actions:
+  - {op: type, text: "ok \U0001F680 done \U0001F389"}
+  expect: {oracle: catalog, text: "ok \U0001F680 done \U0001F389"}
+- id: type_rtl
+  group: typing
+  observable: app
+  side_effects: []
+  tags: [unicode, rtl]
+  actions:
+  - {op: type, text: "\u05E9\u05DC\u05D5\u05DD \u05E2\u05D5\u05DC\u05DD \u0645\u0631\u062D\u0628\u0627"}
+  expect: {oracle: catalog, text: "\u05E9\u05DC\u05D5\u05DD \u05E2\u05D5\u05DC\u05DD \u0645\u0631\u062D\
+      \u0628\u0627"}
+- id: type_combining
+  group: typing
+  observable: app
+  side_effects: []
+  tags: [unicode, combining]
+  actions:
+  - {op: type, text: "e\u0301 a\u0308 n\u0303"}
+  expect: {oracle: catalog, text: "e\u0301 a\u0308 n\u0303"}
+- id: type_emoji_zwj
+  group: typing
+  observable: app
+  side_effects: []
+  tags: [unicode, astral, zwj]
+  actions:
+  - {op: type, text: "\U0001F469\u200D\U0001F4BB \U0001F468\u200D\U0001F469\u200D\U0001F467"}
+  expect: {oracle: catalog, text: "\U0001F469\u200D\U0001F4BB \U0001F468\u200D\U0001F469\u200D\U0001F467"}
+- id: type_with_correction
+  group: typing
+  observable: app
+  side_effects: []
+  tags: [correction]
+  actions:
+  - {op: type, text: helo}
+  - op: key
+    keys: [BackSpace]
+  - {op: type, text: lo world}
+  expect:
+    oracle: catalog
+    text: hello world
+    rdev_refs: []
+  note: the probe buffer applies BackSpace as delete-last-code-point
+- id: type_single_char
+  group: typing
+  observable: app
+  side_effects: []
+  tags: []
+  actions:
+  - {op: type, text: x}
+  expect: {oracle: catalog, text: x}
+- id: type_spaces
+  group: typing
+  observable: app
+  side_effects: []
+  tags: [whitespace]
+  actions:
+  - {op: type, text: '  two  spaces   three   '}
+  expect: {oracle: catalog, text: '  two  spaces   three   '}
+- id: type_repeated_chars
+  group: typing
+  observable: app
+  side_effects: []
+  tags: [repeat]
+  actions:
+  - {op: type, text: zzzzzzzzzz 0000000000 ..........}
+  expect: {oracle: catalog, text: zzzzzzzzzz 0000000000 ..........}
+- id: type_mixed_case
+  group: typing
+  observable: app
+  side_effects: []
+  tags: [shifted]
+  actions:
+  - {op: type, text: MiXeD CaSe TeXt QwErTy}
+  expect: {oracle: catalog, text: MiXeD CaSe TeXt QwErTy}
+- id: type_digits
+  group: typing
+  observable: app
+  side_effects: []
+  tags: []
+  actions:
+  - {op: type, text: 0123456789 9876543210}
+  expect: {oracle: catalog, text: 0123456789 9876543210}
+- id: type_long_500
+  group: typing
+  observable: app
+  side_effects: []
+  tags: [length]
+  actions:
+  - {op: type, text: 'Line A: verify typed text arrives in order (no drops, no doubles) -- symbols: []
+      {} () <> ; : '' " / \ | ` ~ ! @ # $ % ^ & * _ + = ? 42. Line A: verify typed text arrives in order
+      (no drops, no doubles) -- symbols: [] {} () <> ; : '' " / \ | ` ~ ! @ # $ % ^ & * _ + = ? 42. Line
+      A: verify typed text arrives in order (no drops, no doubles) -- symbols: [] {} () <> ; : '' " /
+      \ | ` ~ ! @ # $ % ^ & * _ + = ? 42. Line A: verify typed text arrives in order (no drops, no doubles)
+      -- symbols: [] {} () <> ; '}
+  expect: {oracle: catalog, text: 'Line A: verify typed text arrives in order (no drops, no doubles) --
+      symbols: [] {} () <> ; : '' " / \ | ` ~ ! @ # $ % ^ & * _ + = ? 42. Line A: verify typed text arrives
+      in order (no drops, no doubles) -- symbols: [] {} () <> ; : '' " / \ | ` ~ ! @ # $ % ^ & * _ + =
+      ? 42. Line A: verify typed text arrives in order (no drops, no doubles) -- symbols: [] {} () <>
+      ; : '' " / \ | ` ~ ! @ # $ % ^ & * _ + = ? 42. Line A: verify typed text arrives in order (no drops,
+      no doubles) -- symbols: [] {} () <> ; '}

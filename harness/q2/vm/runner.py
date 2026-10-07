@@ -81,6 +81,14 @@ LED_SNIPPET = (
     "print(json.dumps({'led_mask':display.Display().get_keyboard_control().led_mask}))"
 )
 CLOCK_SNIPPET = "import time,json;print(json.dumps({'t':time.time()}))"
+# Guard probe: pressed keycodes, pressed pointer buttons and LED mask.
+GUARD_SNIPPET = (
+    "from Xlib import display;import json;d=display.Display();"
+    "km=d.query_keymap();p=d.screen().root.query_pointer();"
+    "keys=[i*8+b for i,v in enumerate(km) for b in range(8) if v>>b&1];"
+    "print(json.dumps({'keys':keys,'buttons':p.mask&0x1f00,"
+    "'led_mask':d.get_keyboard_control().led_mask}))"
+)
 
 
 def gpu_free_assertion() -> dict[str, Any]:
@@ -333,6 +341,141 @@ def hmp_input_check(client: GuestClient, hmp_port: int, token: str) -> dict[str,
     }
 
 
+def read_guard(client: GuestClient) -> dict[str, Any]:
+    result = client.execute(["python3", "-c", GUARD_SNIPPET], timeout=30.0)
+    try:
+        return json.loads(str(result.get("output", "")).strip().splitlines()[-1])
+    except (IndexError, json.JSONDecodeError):
+        return {"error": str(result.get("error", ""))[-300:]}
+
+
+def rdev_capture(client: GuestClient, config: dict[str, Any]) -> dict[str, Any]:
+    """Send every plan entry's chords through HMP, rep times, and record XRecord.
+
+    Each (repetition, entry) gets the window [start, next start) in guest time,
+    with a 0.3 s quiet lead before its first chord. Recovery chords run in a
+    window of their own and are never compared. A guard read after each entry
+    records pressed keys and buttons (they must be empty) and the LED mask.
+    """
+    from harness.q2.action_path.rdev import project
+
+    plan = json.loads(Path(config["plan_path"]).read_text(encoding="utf-8"))
+    reps = int(config["reps"])
+    token = config["token"]
+    tap_path = f"/tmp/q2ap_rdev_{token}.jsonl"
+    stop_path = f"/tmp/q2ap_rdev_{token}.stop"
+    offset_start = guest_clock_offset(client)
+    duration = 120 + reps * len(plan["entries"]) * 6
+    status, text = client.launch_script(
+        _guest_script("xrecord_tap.py"), [tap_path, str(duration), stop_path]
+    )
+    if status != 200:
+        return {"error": f"tap launch failed: {status} {text}"}
+    ready = None
+    for _ in range(40):
+        ready = next((r for r in read_tap(client, tap_path) if r.get("kind") == "ready"), None)
+        if ready:
+            break
+        time.sleep(0.25)
+    if not ready:
+        return {"error": "tap never became ready"}
+    baseline = read_guard(client)
+    marks: list[dict[str, Any]] = []
+    with HmpClient(port=config["hmp_port"]) as hmp:
+        banner = hmp.banner
+        qemu_version = hmp.command("info version")
+        for rep in range(reps):
+            for entry in plan["entries"]:
+                mark: dict[str, Any] = {"rep": rep, "id": entry["id"], "start": _now()}
+                time.sleep(0.3)
+                leds = []
+                for chord in entry["chords"]:
+                    hmp.sendkey("-".join(chord), hold_ms=100)
+                    time.sleep(0.35)
+                    if entry.get("caps_lock"):
+                        leds.append(read_led(client))
+                time.sleep(0.5)
+                mark["end"] = _now()
+                if entry["recovery"]:
+                    for chord in entry["recovery"]:
+                        hmp.sendkey("-".join(chord), hold_ms=100)
+                        time.sleep(1.0)
+                    time.sleep(1.5)
+                mark["guard"] = read_guard(client)
+                if entry.get("caps_lock"):
+                    base_bit = int(baseline.get("led_mask", 0)) & 1
+                    expected = [base_bit ^ ((i + 1) % 2) for i in range(len(leds))]
+                    observed = [None if v is None else v & 1 for v in leds]
+                    mark["caps_leds"] = observed
+                    mark["caps_led_ok"] = observed == expected and observed[-1] == base_bit
+                marks.append(mark)
+    offset_end = guest_clock_offset(client)
+    offset = (offset_start + offset_end) / 2
+    time.sleep(0.5)
+    client.execute(["touch", stop_path], timeout=30.0)
+    records: list[dict[str, Any]] = []
+    for _ in range(60):
+        records = read_tap(client, tap_path)
+        if any(r.get("kind") == "stop" for r in records):
+            break
+        time.sleep(0.5)
+    events = [r for r in records if r.get("kind") not in ("ready", "stop")]
+    trials = []
+    for mark in marks:
+        low, high = mark["start"] + offset, mark["end"] + offset
+        window = [e for e in events if low <= e["t"] < high]
+        guard = mark["guard"]
+        trials.append(
+            {
+                "rep": mark["rep"],
+                "id": mark["id"],
+                "projection": project(window),
+                "raw": [
+                    [e["kind"], e["detail"], e.get("keysym0"), e.get("keysym1"), e["state"]]
+                    for e in window
+                    if e["kind"] in ("KeyPress", "KeyRelease")
+                ],
+                "guard": guard,
+                "guard_clean": not guard.get("keys") and not guard.get("buttons"),
+                "caps_leds": mark.get("caps_leds"),
+                "caps_led_ok": mark.get("caps_led_ok"),
+            }
+        )
+    client.execute(["rm", "-f", tap_path, stop_path], timeout=30.0)
+    return {
+        "hmp_banner": banner[:200],
+        "qemu_version": qemu_version[:200],
+        "clock_offset_s": [round(offset_start, 4), round(offset_end, 4)],
+        "baseline_guard": baseline,
+        "events_total": len(events),
+        "trials": trials,
+    }
+
+
+def capture_cycle(config: dict[str, Any]) -> dict[str, Any]:
+    result: dict[str, Any] = {"cycle": config["cycle"], "token": config["token"]}
+    result["runner"] = gpu_free_assertion()
+    if not result["runner"]["ok"]:
+        result["error"] = "runner sees an NVIDIA device; refusing to continue"
+        return result
+    client = GuestClient(config["guest_ip"], config["server_port"])
+    boot = wait_for_boot(client, config["t0"], config["boot_timeout_s"])
+    result["boot"] = boot
+    if boot.get("t_screenshot_200") is None:
+        result["error"] = boot.get("error", "boot failed")
+        return result
+    if config["settle_timeout_s"]:
+        result["settle"] = wait_for_settle(client, config["t0"], config["settle_timeout_s"])
+    result["facts"] = client.run_script(_guest_script("facts.py"), ["brief"])
+    capture = rdev_capture(client, config)
+    capture["boot_id"] = result["facts"].get("boot_id")
+    capture["plan_sha256"] = config["plan_sha256"]
+    result["capture"] = capture
+    if "error" in capture:
+        result["error"] = capture["error"]
+    return result
+
+
 def boot_cycle(config: dict[str, Any]) -> dict[str, Any]:
     result: dict[str, Any] = {"cycle": config["cycle"], "token": config["token"]}
     result["runner"] = gpu_free_assertion()
@@ -403,17 +546,19 @@ def main(argv: list[str] | None = None) -> int:
     commands = parser.add_subparsers(dest="command", required=True)
     boot = commands.add_parser("boot-cycle")
     boot.add_argument("--config", type=Path, required=True)
+    capture = commands.add_parser("rdev-capture")
+    capture.add_argument("--config", type=Path, required=True)
     probe = commands.add_parser("tcp-probe")
     probe.add_argument("--host", required=True)
     probe.add_argument("--port", type=int, default=5000)
     probe.add_argument("--path", default="/platform")
     probe.add_argument("--out", type=Path, required=True)
     args = parser.parse_args(argv)
-    if args.command == "boot-cycle":
+    if args.command in ("boot-cycle", "rdev-capture"):
         config = json.loads(args.config.read_text(encoding="utf-8"))
         out_path = Path(config["out"])
         try:
-            result = boot_cycle(config)
+            result = boot_cycle(config) if args.command == "boot-cycle" else capture_cycle(config)
         except Exception:  # noqa: BLE001 - every failure is recorded, never swallowed
             result = {"cycle": config.get("cycle"), "error": traceback.format_exc()[-2000:]}
         result["runner_finished_at"] = _now()
