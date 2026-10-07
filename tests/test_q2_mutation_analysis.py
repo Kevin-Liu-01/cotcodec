@@ -135,6 +135,40 @@ def test_p1_and_k6_from_the_controls() -> None:
     assert out["K6"]["adequacy_claim"] is False  # one P5 task is far below 59
 
 
+def test_k6_adequacy_needs_p5_in_the_headline(monkeypatch: pytest.MonkeyPatch) -> None:
+    from harness.q2_mutation import report
+
+    monkeypatch.setattr(analysis, "K6_MIN_TASKS", 3)
+    rows = [_row(0, f"t{n}", "should_fail_violation", "fail") for n in range(4)]
+    tasks = {
+        "g1": {
+            "gold_raw_lock": {"verdict": "pass", "score": None, "error": None},
+            "gold_saved_lock": {"verdict": "pass", "score": None, "error": None},
+            "gold_save": {
+                "placed_office": ["/home/user/a.docx"], "saves": [], "save_failures": []
+            },
+        }
+    }
+    controls = {"tasks": tasks, "aggregate": report.aggregate(tasks)}
+    clean = {"kappa_fires": False, "k3_fires": {}, "k4_fires": False}
+
+    def k6(audit: dict | None) -> dict:
+        return analysis.headline(rows, controls=controls, audit=audit, n_boot=50)["K6"]
+
+    assert k6(clean)["adequacy_claim"] is True and k6(clean)["blocked_by"] == []
+    # P5 leaving the headline (K3 label error, kappa, a pending audit) or a K4
+    # stop withdraws the claim, whatever P5 shows.
+    for audit in (
+        {**clean, "k3_fires": {"should_fail_violation": True}},
+        {**clean, "k3_fires": {"should_pass_equiv": True}},
+        {**clean, "kappa_fires": True},
+        {**clean, "k4_fires": True},
+        None,
+    ):
+        out = k6(audit)
+        assert out["adequacy_claim"] is False and out["blocked_by"], audit
+
+
 def test_p1_counts_the_confirm_and_reserve_control_runs_together() -> None:
     from harness.q2_mutation import report
 

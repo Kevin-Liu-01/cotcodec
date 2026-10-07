@@ -374,13 +374,20 @@ def headline(
         out["K1"] = controls["aggregate"][primary]["k1_gold_pass_and_do_nothing_fail"]
     out["P1"] = p1
     confirmed_flips = len(p1["confirmed_tasks"]) if p1 else None
+    # K6 is a claim about P5, so it needs P5 in the headline: not removed by
+    # K3 (label error, kappa) or a pending audit, and no K4 stop.
+    blocked = list(exclusions["metrics_leaving_headline"].get("P5", []))
+    if exclusions["k4_stop"]:
+        blocked.append("K4: the audit stops the run")
     out["K6"] = {
         "p5_tasks": p5["n"],
         "p5_escapes": p5["events"],
         "confirmed_p1_flips": confirmed_flips,
         "p1_runs": sorted(p1["runs"]) if p1 else [],
+        "blocked_by": blocked,
         "adequacy_claim": bool(
-            p5["n"] >= K6_MIN_TASKS
+            not blocked
+            and p5["n"] >= K6_MIN_TASKS
             and p5["events"] == 0
             and confirmed_flips is not None
             and confirmed_flips <= 1

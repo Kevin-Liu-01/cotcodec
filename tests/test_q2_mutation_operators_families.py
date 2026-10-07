@@ -293,6 +293,68 @@ def test_pptx_move_delete_and_zorder_mutants(tmp_path: Path) -> None:
     assert not admitted(check(ctx.base, tampered, _expectation(swap)))
 
 
+def _sh(x: int, y: int, w: int, h: int, **extra) -> dict:
+    return {"kind": "sp", "name": f"s{x}-{y}", "off": [x, y], "ext": [w, h], **extra}
+
+
+def test_zorder_swap_needs_clear_shapes_in_between() -> None:
+    from harness.q2_mutation.operators.pptx import CLEARANCE_EMU, zorder_pair_is_inert
+
+    # Review 3 (5cfb9197, slide 2): group 4 and 'Videotapes' (10) do not overlap,
+    # but 'Newspapers' (8) lies inside group 4's frame. The old rule swapped them
+    # and the filled frame then covered 'Newspapers'.
+    group = _sh(3597120, 6396480, 3258720, 3023280, kind="grpSp")
+    between = [_sh(7513920, 6396480, 3258720, 3023280, kind="grpSp"),
+               _sh(11431080, 6396480, 3258720, 3023280, kind="grpSp"),
+               _sh(3791880, 4950720, 2869200, 703080),
+               _sh(3791880, 7523280, 2869200, 703080),  # inside the group's frame
+               _sh(7707600, 4950720, 2869200, 703080)]
+    videotapes = _sh(7707600, 7523280, 2869200, 703080)
+    shapes = [_sh(0, 0, 10, 10)] * 4 + [group, *between, videotapes]
+    assert not zorder_pair_is_inert(shapes, 4, 10)
+    far = 10_000_000
+    a, b, c = _sh(0, 0, 1_000_000, 1_000_000), _sh(far, 0, 1_000_000, 1_000_000), \
+        _sh(0, far, 1_000_000, 1_000_000)
+    assert zorder_pair_is_inert([a, b], 0, 1)  # adjacent, apart
+    assert zorder_pair_is_inert([a, c, b], 0, 2)  # the shape between touches neither
+    assert not zorder_pair_is_inert([a, _sh(500_000, 0, 9_000_000, 10), b], 0, 2)
+    assert not zorder_pair_is_inert([a, {"kind": "sp", "name": "ph"}, b], 0, 2)  # no frame
+    near = _sh(1_000_000 + CLEARANCE_EMU - 1, 0, 1_000_000, 1_000_000)
+    assert not zorder_pair_is_inert([a, near], 0, 1)  # within the clearance
+    # A rotated shape is judged by the bounding box of its rotation.
+    tall = _sh(0, 0, 4_000_000, 100_000)
+    assert not zorder_pair_is_inert([tall, _sh(0, 150_000, 100_000, 100_000)], 0, 1)
+    beside = _sh(1_800_000, 600_000, 100_000, 100_000)
+    assert zorder_pair_is_inert([tall, beside], 0, 1)
+    assert not zorder_pair_is_inert([{**tall, "rot": str(90 * 60_000)}, beside], 0, 1)
+
+
+def test_delete_bound_shape_skips_shapes_hidden_under_later_ones(tmp_path: Path) -> None:
+    from harness.q2_mutation.operators.pptx import COVERED_SHARE, covered_share
+
+    # Review 3 (4ed5abd0, slide 2): a sparkle group drawn again, piece by
+    # piece, by the shapes stacked above it.
+    group = _sh(16125120, 779040, 1460880, 1468440, kind="grpSp")
+    pieces = [_sh(16125120, 799920, 1254960, 1415880), _sh(17251200, 779040, 334800, 412200),
+              _sh(17227080, 1829880, 354960, 417600), _sh(16189920, 846360, 1149840, 1319760),
+              _sh(17285760, 821160, 273600, 318240), _sh(17254800, 1864080, 299520, 342360)]
+    assert covered_share([group, *pieces], 0) >= COVERED_SHARE
+    assert covered_share([*pieces, group], len(pieces)) == 0.0  # nothing above it
+    assert covered_share([_sh(0, 0, 100, 100), _sh(0, 0, 50, 100)], 0) == pytest.approx(0.5)
+    assert covered_share([_sh(0, 0, 100, 100), _sh(0, 0, 50, 100), _sh(40, 0, 60, 100)], 0) == 1.0
+
+    ctx = _ctx(tmp_path, "pptx")
+    planned, _ = plan_operator(registry()["pptx.viol.delete_bound_shape"](), ctx)
+    units = {p.record["recipe"]["params"]["site"]["unit"] for p in planned}
+    assert units  # the synthetic deck's bound shapes are visible
+    slide = ctx.base["slides"][0]["shapes"]
+    cover = {**slide[0], "name": "Cover", "off": [0, 0], "ext": [9_144_000, 6_858_000]}
+    ctx.base["slides"][0]["shapes"] = [*slide, cover]
+    planned, _ = plan_operator(registry()["pptx.viol.delete_bound_shape"](), ctx)
+    hidden = {p.record["recipe"]["params"]["site"]["unit"] for p in planned}
+    assert not any(u.startswith("slides/0/shapes/") for u in hidden)
+
+
 # --------------------------------------------------------------------------- text and config
 
 

@@ -4,12 +4,13 @@ Decision D9 (program/decisions.md) replaces the two blind human raters with
 two model raters under the same blind protocol, and sets aside a stratified
 sample for a human spot check by Kevin. Decision D23 fixes the lineup: a
 Claude model through the Anthropic API and a self-hosted open-weight
-vision-language model (Qwen3.5-9B, a different developer and training
-lineage). The spec author is also a Claude model, so the open-weight rater is
-the independent one: each rater's answers are reported separately, and an
-item on which the raters do not agree is adjudicated by Kevin (blind, same
-packet) or counted as a label error, never dropped. Every result names them as
-model raters and states that the human check is pending.
+vision-language model (Qwen3.6-35B-A3B since D27, Qwen3.5-9B before it; a
+different developer and training lineage). The spec author is also a Claude
+model, so the open-weight rater is the independent one: each rater's answers
+are reported separately, and an item on which the raters do not agree is
+adjudicated by Kevin (blind, same packet) or counted as a label error, never
+dropped. Every result names them as model raters and states that the human
+check is pending.
 
 This module fixes, before any rating exists:
 
@@ -85,10 +86,10 @@ RATERS: tuple[Mapping[str, str], ...] = (
     {
         "rater_id": "model-rater-open-weight",
         "provider": "qwen-open-weight-self-hosted",
-        "registry_id": "qwen3.5-9b",
-        "repo_id": "Qwen/Qwen3.5-9B",
-        "revision": "c202236235762e1c871ad0ccb60c8ee5ba337b9a",
-        "receipt_sha256": "0a9e052d561b017c505adf5a1c6fcdc048522660a0db134486b84edbf3de5cb3",
+        "registry_id": "qwen3.6-35b-a3b",
+        "repo_id": "Qwen/Qwen3.6-35B-A3B",
+        "revision": "995ad96eacd98c81ed38be0c5b274b04031597b0",
+        "receipt_sha256": "18c2a12881bf613c7110439b8e765ff89a4c060a1fb60aee62bb7250890ce1f9",
         "role": "independent",
     },
 )
@@ -309,6 +310,8 @@ NON_ANSWER_OUTCOMES = (
     "request_rejected",
     "malformed_response",
     "unrated",
+    # Isolated agent-harness rater (D27): the transcript audit voided the answer.
+    "isolation_void",
 )
 
 

@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import json
 import math
+import os
 import sys
 from pathlib import Path
 from typing import Any
@@ -101,6 +102,18 @@ def _anthropic_response(text: str, stop: str = "end_turn") -> bytes:
         "usage": {"input_tokens": 10, "output_tokens": 3},
     }
     return json.dumps(body).encode()
+
+
+def _call(rater_id: str, item_id: str, answer: str) -> dict:
+    """A minimal record in the shared call schema."""
+    return {
+        "schema": rater_runner.CALL_SCHEMA,
+        "rater_id": rater_id,
+        "item_id": item_id,
+        "answer": answer,
+        "status": "ok",
+        "outcome": "ok",
+    }
 
 
 def test_replies_map_to_answers() -> None:
@@ -527,11 +540,9 @@ def test_audit_summarize_end_to_end(tmp_path: Path) -> None:
             }
         )
     audit.write_jsonl(tmp_path / "sample.jsonl", rows)
+    rater_of = {"a": "model-rater-anthropic", "b": "model-rater-open-weight"}
     for rater, answer in (("a", "accept"), ("b", "reject")):
-        calls = [
-            {"item_id": f"i{n}", "answer": answer if n else "accept", "status": "ok"}
-            for n in range(3)
-        ]
+        calls = [_call(rater_of[rater], f"i{n}", answer if n else "accept") for n in range(3)]
         # Rater a's items came from two packet shards (one lane job each).
         if rater == "a":
             audit.write_jsonl(tmp_path / "a" / "shard0" / "calls.jsonl", calls[:2])
@@ -575,7 +586,7 @@ def test_audit_summarize_end_to_end(tmp_path: Path) -> None:
     assert [s["records"] for s in shards] == [2, 1]
     # The same item in two shards breaks "one call per rater per item".
     audit.write_jsonl(
-        tmp_path / "a" / "dup" / "calls.jsonl", [{"item_id": "i0", "answer": "reject"}]
+        tmp_path / "a" / "dup" / "calls.jsonl", [_call("model-rater-anthropic", "i0", "reject")]
     )
     with pytest.raises(SystemExit, match="one call per rater per item"):
         audit.main(
@@ -591,7 +602,9 @@ def test_audit_summarize_end_to_end(tmp_path: Path) -> None:
             ]
         )
     # A calls file of another audit (an item outside the sample) is refused.
-    audit.write_jsonl(tmp_path / "other" / "calls.jsonl", [{"item_id": "zz", "answer": "accept"}])
+    audit.write_jsonl(
+        tmp_path / "other" / "calls.jsonl", [_call("model-rater-anthropic", "zz", "accept")]
+    )
     with pytest.raises(SystemExit, match="outside the sample"):
         audit.main(
             [
@@ -606,11 +619,27 @@ def test_audit_summarize_end_to_end(tmp_path: Path) -> None:
         )
     # A record of the other rater in a rater's file is refused.
     audit.write_jsonl(
-        tmp_path / "wrong" / "calls.jsonl",
-        [{"item_id": "i0", "answer": "accept", "rater_id": "model-rater-open-weight"}],
+        tmp_path / "wrong" / "calls.jsonl", [_call("model-rater-open-weight", "i0", "accept")]
     )
     with pytest.raises(SystemExit, match="not model-rater-anthropic"):
         rater_runner.merge_calls([tmp_path / "wrong" / "calls.jsonl"], "model-rater-anthropic")
+    # Inside one file: a second record for an item is refused, not resolved by
+    # keeping the last one, and a record without a rater_id is not a call.
+    audit.write_jsonl(
+        tmp_path / "twice" / "calls.jsonl",
+        [
+            _call("model-rater-anthropic", "i0", "accept"),
+            _call("model-rater-anthropic", "i0", "reject"),
+        ],
+    )
+    with pytest.raises(SystemExit, match="a second record for item i0"):
+        rater_runner.merge_calls([tmp_path / "twice" / "calls.jsonl"], "model-rater-anthropic")
+    anonymous = _call("model-rater-anthropic", "i0", "accept")
+    del anonymous["rater_id"]
+    audit.write_jsonl(tmp_path / "anon" / "calls.jsonl", [anonymous])
+    for rater_id in ("model-rater-anthropic", None):
+        with pytest.raises(SystemExit, match="not a call record"):
+            rater_runner.merge_calls([tmp_path / "anon" / "calls.jsonl"], rater_id)
 
 
 def test_render_rater_manifest_passes_the_lane_validator(tmp_path: Path) -> None:
@@ -638,6 +667,7 @@ def test_render_rater_manifest_passes_the_lane_validator(tmp_path: Path) -> None
         "--run-root",
         "/home/kevin/cotcodec-runs/stage0/q2-evaluator-mutation/raters/smoke",
     ]
+    base += ["--audit-id", "dev-smoke", "--gpu-ledger", str(tmp_path / "ledger.jsonl")]
     out = tmp_path / "m.yaml"
     assert (
         render_rater_manifest.main(
@@ -666,13 +696,15 @@ def test_render_rater_manifest_passes_the_lane_validator(tmp_path: Path) -> None
             [
                 *base,
                 "--minutes",
-                "30",
+                "36",
                 "--max-gpu-hours",
-                "0.5",
+                "0.6",
                 "--kind",
                 "smoke",
                 "--out",
-                str(out),
+                str(tmp_path / "m2.yaml"),
+                "--name",
+                "q2m-rater-smoke-2",
             ]
         )
     with pytest.raises(SystemExit, match="capped"):
@@ -686,8 +718,15 @@ def test_render_rater_manifest_passes_the_lane_validator(tmp_path: Path) -> None
                 "--kind",
                 "audit",
                 "--out",
-                str(out),
+                str(tmp_path / "m3.yaml"),
+                "--name",
+                "q2m-rater-audit-3",
             ]
+        )
+    with pytest.raises(SystemExit, match="exists"):
+        render_rater_manifest.main(
+            [*base, "--minutes", "6", "--max-gpu-hours", "0.1", "--kind", "smoke"]
+            + ["--out", str(out)]
         )
 
 
@@ -893,34 +932,343 @@ def test_agent_harness_export_and_ingest(tmp_path: Path) -> None:
         rater_runner.ingest_harness(items, tampered, b"[]", tmp_path / "y")
 
 
-def test_rater_manifest_cap_counts_earlier_shards(tmp_path: Path) -> None:
+def test_rater_manifest_cap_reads_earlier_shards_from_the_ledger(tmp_path: Path) -> None:
     sys.path.insert(0, str(ROOT / "infra" / "q2-mutation" / "run"))
     import render_rater_manifest
 
     packets = tmp_path / "packets-001.jsonl"
     packets.write_text(json.dumps(_packet("i0")) + "\n", encoding="utf-8")
-    base = [
-        "--name",
-        "q2m-rater-audit-1",
-        "--image-id",
-        "sha256:" + "a" * 64,
-        "--git-sha",
-        "b" * 40,
-        "--source-sha256",
-        "c" * 64,
+    ledger = tmp_path / "gpu-ledger.jsonl"
+
+    def render(
+        name: str, minutes: int, hours: float, audit_id: str = "confirm-audit", out: str = ""
+    ) -> int:
+        return render_rater_manifest.main(
+            [
+                "--name",
+                name,
+                "--image-id",
+                "sha256:" + "a" * 64,
+                "--git-sha",
+                "b" * 40,
+                "--source-sha256",
+                "c" * 64,
+                "--packets",
+                str(packets),
+                "--packets-revision",
+                "d" * 40,
+                "--run-root",
+                "/home/kevin/cotcodec-runs/stage0/q2-evaluator-mutation/raters/audit",
+                "--kind",
+                "audit",
+                "--audit-id",
+                audit_id,
+                "--gpu-ledger",
+                str(ledger),
+                "--minutes",
+                str(minutes),
+                "--max-gpu-hours",
+                str(hours),
+                "--out",
+                str(tmp_path / f"{out or name}.yaml"),
+            ]
+        )
+
+    assert render("shard-0", 36, 0.6) == 0
+    rows = render_rater_manifest.read_ledger(ledger)
+    assert [(r["name"], r["max_gpu_hours"], r["prior_gpu_hours"]) for r in rows] == [
+        ("shard-0", 0.6, 0.0)
+    ]
+    # The rerun's cap is checked against what the ledger already holds.
+    with pytest.raises(SystemExit, match=r"ledger \(0.6000 GPU-h\).*exceed the audit cap"):
+        render("rerun-1", 30, 0.5)
+    assert render("rerun-1", 24, 0.4) == 0
+    with pytest.raises(SystemExit, match="exceed the audit cap"):
+        render("rerun-2", 1, 0.02)
+    # Another audit has its own total; a name is rendered once.
+    assert render("other-0", 24, 0.4, audit_id="other-audit") == 0
+    with pytest.raises(SystemExit, match="already has a job named"):
+        render("other-0", 1, 0.02, audit_id="other-audit", out="other-0-again")
+    assert len(render_rater_manifest.read_ledger(ledger)) == 3
+
+
+def test_ingest_harness_accepts_the_rater_workflow_wrapper(tmp_path: Path) -> None:
+    items = [_packet(f"i{n}") for n in range(2)]
+    manifest = rater_runner.export_harness(items, tmp_path / "export")
+    wrapper = {
+        "rater": "claude-agent-harness-blind-rater",
+        "model_id": "claude-opus-5-5",
+        "items": [
+            {"item_id": "i0", "answer": "accept", "reason": "ok"},
+            {"item_id": "i1", "answer": "reject", "reason": "no"},
+        ],
+    }
+    result = rater_runner.ingest_harness(
+        items, manifest, json.dumps(wrapper).encode(), tmp_path / "out"
+    )
+    assert result["rated"] == 2 and result["models_returned"] == {"claude-opus-5-5": 2}
+    for bad, match in (
+        ({**wrapper, "model_id": "claude-sonnet-5"}, "not 'claude-opus-5-5'"),
+        (
+            {**wrapper, "items": [{**wrapper["items"][0], "model_id": "claude-sonnet-5"}]},
+            "differs from the wrapper",
+        ),
+        ({**wrapper, "extra": 1}, "wrapper"),
+        ({"items": []}, "wrapper"),
+    ):
+        with pytest.raises(SystemExit, match=match):
+            rater_runner.ingest_harness(
+                items, manifest, json.dumps(bad).encode(), tmp_path / "bad" / match[:6]
+            )
+
+
+def _transcript(*entries: dict) -> bytes:
+    return "".join(json.dumps(e) + "\n" for e in entries).encode()
+
+
+def _turn(*blocks: dict, model: str = "claude-opus-5-5") -> dict:
+    return {
+        "type": "assistant",
+        "message": {"role": "assistant", "model": model, "content": list(blocks)},
+    }
+
+
+def _use(name: str, **params: Any) -> dict:
+    return {"type": "tool_use", "id": "t", "name": name, "input": params}
+
+
+def test_isolated_export_holds_one_item_per_directory(tmp_path: Path) -> None:
+    items = [_packet(f"i{n}", pages=2) for n in range(3)]
+    root = tmp_path / "iso"
+    packets = tmp_path / "packets-000.jsonl"
+    packets.write_text("".join(json.dumps(p) + "\n" for p in items), encoding="utf-8")
+    with pytest.raises(SystemExit, match="outside the isolation root"):
+        rater_runner.main(
+            [
+                "export-isolated",
+                "--packets",
+                str(packets),
+                "--iso-root",
+                str(root),
+                "--manifest-out",
+                str(root / "manifest.json"),
+            ]
+        )
+    manifest_path = tmp_path / "iso-manifest.json"
+    args = ["--packets", str(packets), "--iso-root", str(root)]
+    assert rater_runner.main(["export-isolated", *args, "--manifest-out", str(manifest_path)]) == 0
+    manifest = json.loads(manifest_path.read_text())
+    # The root holds the item directories and nothing else: no index, no manifest.
+    assert sorted(p.name for p in root.iterdir()) == ["i0", "i1", "i2"]
+    for item in ("i0", "i1", "i2"):
+        folder = root / item
+        files = sorted(p.relative_to(folder).as_posix() for p in folder.rglob("*") if p.is_file())
+        assert files == ["packet.txt", "pages/p01.png", "pages/p02.png", "pages/p03.png"]
+        text = (folder / "packet.txt").read_text()
+        assert rater_runner.ISOLATED_NOTE in text and "(image file: pages/p01.png)" in text
+        for other in {"i0", "i1", "i2"} - {item}:
+            assert f"ITEM {other}" not in text
+        entry = manifest["items"][item]
+        assert entry["files"] == rater_runner.hash_tree(folder)
+        assert entry["tree_sha256"] == rater_runner.tree_digest(entry["files"])
+        assert not os.access(folder / "packet.txt", os.W_OK)  # read-only
+    assert manifest["order"] == raters.rater_order(["i0", "i1", "i2"], "model-rater-anthropic")
+    assert raters._leaked_keys(manifest) == []
+    with pytest.raises(SystemExit, match="not empty"):
+        rater_runner.export_isolated(items, root)
+
+
+def test_transcript_audit_voids_shell_outside_paths_and_other_tools(tmp_path: Path) -> None:
+    folder = tmp_path / "iso" / "i0"
+    (folder / "pages").mkdir(parents=True)
+    (folder / "packet.txt").write_text("x")
+    inside = str(folder / "packet.txt")
+    page = str(folder / "pages" / "p01.png")
+
+    def audit(*blocks: dict) -> dict:
+        return rater_runner.audit_transcript(
+            _transcript(
+                {"type": "user", "message": {"role": "user", "content": "rate it"}},
+                _turn(*blocks),
+                _turn(
+                    {"type": "text", "text": "accept"}, _use("StructuredOutput", answer="accept")
+                ),
+            ),
+            folder,
+        )
+
+    clean = audit(_use("Read", file_path=inside), _use("Read", file_path=page))
+    assert clean["void_reasons"] == [] and clean["models"] == {"claude-opus-5-5": 2}
+    assert clean["tool_calls"] == {"Read": 2, "StructuredOutput": 1}
+    assert audit(_use("Glob", path=str(folder), pattern="pages/*.png"))["void_reasons"] == []
+    for blocks, reason in (
+        ((_use("Bash", command="ls"),), "shell call"),
+        ((_use("Read", file_path=str(tmp_path / "iso" / "i1" / "packet.txt")),), "not inside"),
+        ((_use("Read", file_path=str(folder / ".." / "i1" / "packet.txt")),), "not inside"),
+        ((_use("Read", file_path="packet.txt"),), "not inside"),  # relative: cwd unknown
+        ((_use("Glob", pattern="*.txt"),), "not inside"),  # no path: the session's cwd
+        ((_use("Glob", path=str(folder), pattern="../*"),), "climbs out"),
+        ((_use("Grep", path=str(tmp_path), pattern="accept"),), "not inside"),
+        ((_use("Write", file_path=inside, content="x"),), "not a read-only tool"),
+        ((_use("WebFetch", url="https://example.org"),), "not a read-only tool"),
+        ((_use("Task", prompt="rate"),), "not a read-only tool"),
+    ):
+        reasons = audit(*blocks)["void_reasons"]
+        assert reasons and reason in reasons[0], (blocks, reasons)
+    nameless = rater_runner.audit_transcript(_transcript({"type": "user"}), folder)
+    assert "the transcript names no model" in nameless["void_reasons"]
+
+
+def test_isolated_ingest_takes_the_model_from_the_transcript_and_voids_breaches(
+    tmp_path: Path,
+) -> None:
+    items = [_packet(f"i{n}") for n in range(5)]
+    root = tmp_path / "iso"
+    manifest = rater_runner.export_isolated(items, root)
+    transcripts = tmp_path / "transcripts"
+    transcripts.mkdir()
+
+    def write(item: str, *blocks: dict, model: str = "claude-opus-5-5") -> None:
+        read = _use("Read", file_path=str(root / item / "packet.txt"))
+        (transcripts / f"{item}.jsonl").write_bytes(_transcript(_turn(read, *blocks, model=model)))
+
+    write("i0", _use("StructuredOutput", answer="accept", reason="fine"))
+    write(
+        "i1",
+        _use("Bash", command="cat ../i0/packet.txt"),
+        _use("StructuredOutput", answer="reject"),
+    )
+    write("i2", _use("StructuredOutput", answer="reject"))  # the record says accept
+    # i3 answers without a transcript; i4 is not answered at all.
+    answers = tmp_path / "answers"
+    answers.mkdir()
+    for item, answer in (("i0", "accept"), ("i1", "reject"), ("i2", "accept"), ("i3", "accept")):
+        record = {"item_id": item, "answer": answer, "reason": "r"}
+        (answers / f"{item}.json").write_text(json.dumps(record), encoding="utf-8")
+    manifest_path = tmp_path / "iso-manifest.json"
+    manifest_path.write_text(json.dumps(manifest), encoding="utf-8")
+    packets = tmp_path / "packets-000.jsonl"
+    packets.write_text("".join(json.dumps(p) + "\n" for p in items), encoding="utf-8")
+    out = tmp_path / "rater"
+    argv = [
+        "ingest-isolated",
         "--packets",
         str(packets),
-        "--packets-revision",
-        "d" * 40,
-        "--run-root",
-        "/home/kevin/cotcodec-runs/stage0/q2-evaluator-mutation/raters/audit",
-        "--kind",
-        "audit",
+        "--manifest",
+        str(manifest_path),
+        "--iso-root",
+        str(root),
+        "--answers",
+        str(answers),
+        "--transcripts",
+        str(transcripts),
         "--out",
-        str(tmp_path / "m.yaml"),
+        str(out),
     ]
-    ok = [*base, "--minutes", "24", "--max-gpu-hours", "0.4", "--prior-gpu-hours", "0.6"]
-    assert render_rater_manifest.main(ok) == 0
-    over = [*base, "--minutes", "24", "--max-gpu-hours", "0.4", "--prior-gpu-hours", "0.7"]
-    with pytest.raises(SystemExit, match="exceed the audit cap"):
-        render_rater_manifest.main(over)
+    assert rater_runner.main(argv) == 0
+    calls = rater_runner.read_calls(out / "calls.jsonl")
+    assert calls["i0"]["answer"] == "accept" and calls["i0"]["outcome"] == "ok"
+    assert calls["i0"]["model_returned"] == "claude-opus-5-5"
+    assert calls["i0"]["extra"]["transcript_sha256"] == rater_runner.sha256_file(
+        transcripts / "i0.jsonl"
+    )
+    assert calls["i0"]["extra"]["answer_source"] == "structured_output"
+    for item in ("i1", "i2", "i3"):
+        assert (calls[item]["answer"], calls[item]["status"]) == ("unsure", "isolation_void")
+    assert "shell call Bash" in calls["i1"]["extra"]["void_reasons"]
+    assert calls["i2"]["extra"]["void_reasons"] == [
+        "the answer is not the one the transcript returned"
+    ]
+    assert calls["i3"]["extra"]["void_reasons"] == ["no harness transcript for this item"]
+    assert "i4" not in calls
+    receipt = json.loads((out / "receipt.json").read_text())
+    assert receipt["result"]["unrated"] == ["i4"] and receipt["result"]["void"] == 3
+    assert set(receipt["answers_files_sha256"]) == {"i0.json", "i1.json", "i2.json", "i3.json"}
+    assert "r" not in {c["extra"].get("reason") for c in calls.values()}
+    summary = rater_runner.merged_answers([out / "calls.jsonl"], [f"i{n}" for n in range(5)])
+    assert summary["i1"] == ("unsure", "isolation_void") and summary["i4"] == ("unsure", "unrated")
+
+    # Another model in a transcript refuses the whole ingest; so does a second answer.
+    write("i0", _use("StructuredOutput", answer="accept"), model="claude-sonnet-5")
+    records = [{"item_id": "i0", "answer": "accept"}]
+    with pytest.raises(SystemExit, match="names model"):
+        rater_runner.ingest_isolated(items, manifest, root, records, transcripts, tmp_path / "x")
+    write("i0", _use("StructuredOutput", answer="accept"))
+    with pytest.raises(SystemExit, match="second answer"):
+        rater_runner.ingest_isolated(
+            items, manifest, root, records * 2, transcripts, tmp_path / "y"
+        )
+    # A changed item directory voids that item.
+    (root / "i0").chmod(0o755)
+    (root / "i0" / "note.txt").write_text("label: should_pass_equiv")
+    result = rater_runner.ingest_isolated(
+        items, manifest, root, records, transcripts, tmp_path / "z"
+    )
+    assert result["void"] == 1
+    row = rater_runner.read_calls(tmp_path / "z" / "calls.jsonl")["i0"]
+    assert "the item directory differs from its export" in row["extra"]["void_reasons"]
+
+
+def test_a_stop_signal_ends_the_run_inside_its_grace(tmp_path: Path) -> None:
+    import threading
+
+    packets = [_packet(f"i{n}") for n in range(6)]
+    release = threading.Event()
+    sent: list[str] = []
+
+    def send(item_id: str, payload: bytes) -> rater_runner.Attempt:
+        sent.append(item_id)
+        if len(sent) == 1:
+            runner.signal_stop()  # the lane's USR1 arrives during the first call
+            release.wait(5)  # the engine stops: the request in flight fails
+            return rater_runner.Attempt(transport_error="ConnectError", request_bytes=payload)
+        body = {"choices": [{"message": {"content": "accept"}}]}
+        return rater_runner.Attempt(
+            status=200, request_bytes=payload, response_bytes=json.dumps(body).encode()
+        )
+
+    runner = rater_runner.Runner(
+        "model-rater-open-weight",
+        tmp_path,
+        send,
+        rater_runner.openai_reply,
+        workers=1,
+        sleep=lambda s: None,
+        grace_s=0.2,
+    )
+    timer = threading.Timer(0.5, release.set)
+    timer.start()
+    result = runner.run(packets)
+    timer.join()
+    # One request was in flight; nothing more was sent; the interrupted item has
+    # no record (it stays unrated for the rerun), and no retry was made.
+    assert len(sent) == 1 and result["stopped"]
+    assert sorted(result["unrated"]) == [f"i{n}" for n in range(6)]
+    assert (
+        not (tmp_path / "calls.jsonl").exists()
+        or rater_runner.read_calls(tmp_path / "calls.jsonl") == {}
+    )
+    # A second signal ends the grace at once.
+    hurry = rater_runner.Runner(
+        "model-rater-open-weight", tmp_path / "b", send, rater_runner.openai_reply, workers=1
+    )
+    hurry.signal_stop()
+    hurry.signal_stop()
+    assert hurry.hurry.is_set()
+
+
+def test_args_doctor_adds_the_image_input_check(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    monkeypatch.setattr(rater_runner, "args_doctor", lambda: {"problems": [], "pass": True})
+    monkeypatch.setattr(
+        rater_runner,
+        "image_input_doctor",
+        lambda d: {"pass": False, "problems": ["one page gave image placeholders []"]},
+    )
+    out = tmp_path / "doctor.json"
+    code = rater_runner.main(["args-doctor", "--out", str(out), "--model-dir", str(tmp_path)])
+    report = json.loads(out.read_text())
+    assert code == 1 and report["pass"] is False
+    assert report["problems"] == ["image input: one page gave image placeholders []"]
+    assert rater_runner.main(["args-doctor", "--out", str(out)]) == 0

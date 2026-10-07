@@ -8,6 +8,7 @@ shape text against ``expect_sha256`` (a digest of the expected text) before edit
 
 from __future__ import annotations
 
+import math
 import re
 
 from harness.q2_mutation.operators._base import (
@@ -206,16 +207,89 @@ class SubvisibleNudge(Operator):
         )
 
 
-def _box(shape: dict) -> tuple[int, int, int, int] | None:
+Box = tuple[int, int, int, int]
+# Clearance around every box when deciding that two shapes cannot paint the same
+# pixel: outlines are drawn centred on the frame and shadows or glow extend past
+# it, so frames that merely touch or come within 2 mm count as overlapping.
+CLEARANCE_EMU = 72_000
+# delete_bound_shape: a shape whose frame lies at least this share under the
+# frames of the shapes stacked above it may be hidden, so deleting it may not
+# change the rendered slide (the 4ed5abd0 sparkle group under its own copies).
+COVERED_SHARE = 0.9
+
+
+def _box(shape: dict) -> Box | None:
+    """The shape's frame on the slide, widened to the bounding box of its rotation."""
     if not shape.get("off") or not shape.get("ext"):
         return None
     x, y = shape["off"]
     cx, cy = shape["ext"]
+    rot = shape.get("rot")
+    if rot not in (None, "0"):
+        try:
+            angle = math.radians(int(rot) / 60_000)
+        except ValueError:
+            return None
+        w = abs(cx * math.cos(angle)) + abs(cy * math.sin(angle))
+        h = abs(cx * math.sin(angle)) + abs(cy * math.cos(angle))
+        mx, my = x + cx / 2, y + cy / 2
+        return (math.floor(mx - w / 2), math.floor(my - h / 2),
+                math.ceil(mx + w / 2), math.ceil(my + h / 2))
     return x, y, x + cx, y + cy
 
 
-def _overlap(a: tuple[int, int, int, int], b: tuple[int, int, int, int]) -> bool:
-    return not (a[2] <= b[0] or b[2] <= a[0] or a[3] <= b[1] or b[3] <= a[1])
+def _overlap(a: Box, b: Box, clearance: int = 0) -> bool:
+    return not (
+        a[2] + clearance <= b[0] or b[2] + clearance <= a[0]
+        or a[3] + clearance <= b[1] or b[3] + clearance <= a[1]
+    )
+
+
+def zorder_pair_is_inert(shapes: list[dict], a: int, b: int) -> bool:
+    """Swapping shapes ``a < b`` cannot change what the slide shows.
+
+    The swap puts ``a`` above, and ``b`` below, every shape stacked between
+    them, so it changes the relative order of the pairs (a, b), (a, x) and
+    (x, b) for each x in between. It is inert only if no such pair can paint
+    the same pixel: every one of these shapes has a known frame (a shape
+    without one, such as a placeholder that inherits its layout's position,
+    could be anywhere), and no frame of the pair comes within ``CLEARANCE_EMU``
+    of the other or of any shape in between.
+    """
+    boxes = [_box(shapes[k]) for k in range(a, b + 1)]
+    if any(box is None for box in boxes):
+        return False
+    box_a, box_b = boxes[0], boxes[-1]
+    if _overlap(box_a, box_b, CLEARANCE_EMU):
+        return False
+    return not any(
+        _overlap(box, box_a, CLEARANCE_EMU) or _overlap(box, box_b, CLEARANCE_EMU)
+        for box in boxes[1:-1]
+    )
+
+
+def covered_share(shapes: list[dict], k: int) -> float:
+    """Share of shape ``k``'s frame that lies under the frames of the shapes above it."""
+    box = _box(shapes[k])
+    if box is None or box[2] <= box[0] or box[3] <= box[1]:
+        return 0.0
+    above = [
+        (max(o[0], box[0]), max(o[1], box[1]), min(o[2], box[2]), min(o[3], box[3]))
+        for o in (_box(s) for s in shapes[k + 1:])
+        if o is not None and _overlap(o, box)
+    ]
+    if not above:
+        return 0.0
+    xs = sorted({v for r in above for v in (r[0], r[2])})
+    ys = sorted({v for r in above for v in (r[1], r[3])})
+    covered = 0
+    for i in range(len(xs) - 1):
+        x0, x1 = xs[i], xs[i + 1]
+        for j in range(len(ys) - 1):
+            y0, y1 = ys[j], ys[j + 1]
+            if any(r[0] <= x0 and x1 <= r[2] and r[1] <= y0 and y1 <= r[3] for r in above):
+                covered += (x1 - x0) * (y1 - y0)
+    return covered / ((box[2] - box[0]) * (box[3] - box[1]))
 
 
 class ZOrderNonOverlap(Operator):
@@ -224,7 +298,10 @@ class ZOrderNonOverlap(Operator):
     label_class = EQUIV
     target = "document"
     aspects = ("z_order",)
-    description = "Swap the stacking order of two shapes that do not overlap."
+    description = (
+        "Swap the stacking order of two shapes when neither comes within 2 mm of the other or "
+        "of any shape stacked between them, so the rendered order cannot change."
+    )
 
     def sites(self, ctx, req, binding):
         out = []
@@ -232,8 +309,7 @@ class ZOrderNonOverlap(Operator):
             shapes = slide["shapes"]
             for a in range(len(shapes)):
                 for b in range(a + 1, len(shapes)):
-                    box_a, box_b = _box(shapes[a]), _box(shapes[b])
-                    if box_a and box_b and not _overlap(box_a, box_b):
+                    if zorder_pair_is_inert(shapes, a, b):
                         out.append(site(f"slides/{s}/shapes", slide=s, a=a, b=b))
         return out[:200]
 
@@ -259,8 +335,9 @@ class ZOrderNonOverlap(Operator):
         f = built.facts
         return judge_equivalence(
             ctx, self.aspects,
-            f"swaps the stacking order of {f['a']!r} and {f['b']!r} on slide {f['slide'] + 1}, "
-            "which do not overlap, so the rendered slide is identical",
+            f"swaps the stacking order of {f['a']!r} and {f['b']!r} on slide {f['slide'] + 1}; "
+            "neither overlaps the other or any shape stacked between them, so the rendered "
+            "slide is identical",
         )
 
 
@@ -597,10 +674,21 @@ class DeleteBoundShape(Operator):
     label_class = VIOLATION
     target = "requirement"
     check_kinds = ("slide_object", "text_run")
-    description = "Delete a bound shape."
+    description = (
+        "Delete a bound shape whose frame is not at least 90% under the frames of the shapes "
+        "stacked above it."
+    )
 
     def sites(self, ctx, req, binding):
-        return [site(u, req.req_id) for u in bound_shapes(ctx, binding)]
+        out = []
+        for unit in bound_shapes(ctx, binding):
+            address = shape_address(unit)
+            shapes = ctx.base["slides"][address["slide"]]["shapes"]
+            # A shape hidden under the shapes above it may vanish without a visible
+            # change, so its deletion is not a clear violation.
+            if covered_share(shapes, address["shape"]) < COVERED_SHARE:
+                out.append(site(unit, req.req_id))
+        return out
 
     def build(self, ctx, where, rng):
         shape = get_shape(ctx.base, where.unit)
