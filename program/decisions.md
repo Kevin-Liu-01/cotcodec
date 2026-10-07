@@ -245,3 +245,64 @@ rating whose agent read or ran anything outside its directory. The
 equivalence operator `pptx.eq.zorder_nonoverlap` is restricted so it cannot
 change rendered order. If kappa still falls below 0.6 with the stronger rater,
 the design goes back to review rather than having its rule changed.
+
+**D28. Q1 pilot exposure and D14's precondition.** (Numbered D26 on branch `stage0/q1-gates`; Q1 code comments and the branch's fix-pass evidence still say D26.) The Q1 Stage 0 pilot pass
+(jobs 474, 518 and 548, branch `stage0/q1-gates`) scored, with the full gate
+and audit stack at replicate 42, five evaluation substrates (S1 L1/3, L2/3 and
+L2/74, the Liger cross-entropy and the Triton tutorial matmul) and part of a
+sixth (FlagGems cumsum), eight mutants of evaluation parents (three in the
+test split) and ten controls, before the preregistration and audit v1 were
+frozen. D14's "fixed before any mutant is scored" can no longer be met as
+written. Decided: (i) the exposed kernels are listed and hash-bound
+(`harness/q1/data/pilot_exposed.json`); (ii) exposed mutants never enter a
+sampling frame; (iii) exposed units stay in the primary analysis, because the
+outcome-blind pilot rule `q1-pilot/1` chose them and Stage 0 rescores them with
+the frozen code, and every primary quantity is also reported without them as a
+pre-specified sensitivity analysis; (iv) an audit change motivated by a pilot
+verdict (the TF32 `tl.dot` threshold, A5's refusal handling, a cap on the
+TF32 convolution tolerance) is labelled data-motivated, is designed and
+validated only on S1-cal and other non-evaluation kernels, and removes from
+the primary analysis of criteria 2 and 3 and of the mutant metrics every unit
+whose correctness it would change (the tutorial matmul family for the TF32
+threshold). D14's TF32 policy itself stands; changing it is Kevin's call.
+Reversal: Kevin prefers to exclude the exposed units from the primary
+analysis outright (criterion 3 then cannot reach 72 units within 8 GPU-h).
+
+**D29. Upstream benchmark test code on GPUs.** (Numbered D27 on branch `stage0/q1-gates`; Q1 code comments and the branch's fix-pass evidence still say D27.) D3 and D7 did not name two
+kinds of code that ran with GPU access in Q1 pilot job 518: KernelBench's three
+adversarial test kernels (`load_inline` CUDA, upstream commit 29c73cc of
+2025-12-27, vendored verbatim and reviewed here) and the unmodified upstream
+fidelity code (KernelBench at both pinned revisions, KernelGYM@3a84417f and
+kernel_bench_verified@3fdf6fec, unpacked read-only from hash-checked trees).
+Both are admitted as trusted inputs under D7: neither is code under study
+produced during an experiment, each is pinned by hash, small, and run only as
+a control or to check the gates against upstream. They are not part of D3's
+validation corpus, which stays TorchInductor output and human-written kernels
+from before 2025. Reversal: Kevin rules that post-2025 upstream code waits
+for the R580 driver; the three controls and the fidelity runs then move after
+the upgrade.
+
+**D30. Action-path A4: observation-service restarts are bounded separately.**
+In development the upstream OSWorld guest server crashed once in 8,114
+accessibility calls, and its systemd unit then stopped the processes it had
+launched. A4 certifies the action path; a guest-server fault belongs to the
+upstream observation service, which Stage 1 will run unchanged. Patching the
+server would make the runtime differ from the one the leaderboard uses.
+Decided before freezing: A4's zero-failure count excludes guest-server
+restarts, which are reported; the observation service gets its own registered
+bound (at most 5 x 10^-4 restarts per accessibility call, upper 95% bound from
+a dedicated campaign); the probe and tap are started in their own systemd
+scope so a restart costs at most the entry it hits; and Stage 1 counts
+restarts per episode as infrastructure failures. The single-event uncertainty
+is reported with A4.
+
+**D31. Q1 Stage 0 budget: engineering first, then re-pilot.** The trimmed
+Stage 0 (rule trim/2) fits 8 GPU-h only at the central estimate. As with D20,
+the design is not cut: an engineering-only pass computes references once per
+problem and draw, then a re-pilot of at most 0.5 GPU-h on S1-cal and other
+non-evaluation kernels only (no further exposure of evaluation units) sets the
+projection. Stage 0 is admitted only if the high estimate is within 8 GPU-h;
+otherwise it waits on the gauntlet (D24). D14's audit policy stays as
+registered: the TF32 convolution tolerance above 1 on two pilot problems is
+reported as a limitation, and any audit change follows D28's data-motivated
+rule.

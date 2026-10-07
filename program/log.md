@@ -177,6 +177,58 @@ Append-only. Newest entries at the bottom.
   (9-10 GPU-h) is above the gauntlet threshold, so a measured pilot decides
   between a registered trimming rule and the gauntlet.
 
+## 2026-10-07 — Q1 gate stack integrated (branch `stage0/q1-gates`, not merged)
+
+- Merged the Q1 core (gates, audit, runner, analysis), mutator and substrate
+  branches. The shared schema was byte-identical on all three
+  (`c9bae9d5...3256`). No GPU job ran.
+- Reconciled what the components disagreed on: the analysis now uses the
+  substrate corpus's S1 split (`b773f218...`) and the mutator's content-hash
+  dev/test split; one exclusion list serves every component; every control's
+  `expected` map is checked by `analysis.control_checks`.
+- Gate (c) no longer sets a free root below 2. The S1 converter refuses sizes
+  below 2 (Dynamo's 0/1 specialisation), so 19 size-1 configurations would have
+  made gate (c) reject correct S1 substrates; two of them (L1/9, L1/11) are in
+  the evaluation half. Audit A3 keeps size 1, where a refusal is classified.
+  The shape manifest was regenerated.
+- The integration tests found three more defects: the mutant compile filter
+  broke when `TRITON_INTERPRET=1` was set in the process (fixed), and the
+  specialization manifest lacked `seeds: []` and asked for 1.0 GPU-h against a
+  0.5 GPU-h budget (fixed).
+- A CPU end-to-end test runs an Inductor ReLU and a Triton-tutorial softmax,
+  five mutants and 15 controls through the real runner. It also showed that
+  gate (a)'s 1e-2 absolute tolerance accepts a negated softmax over 1,024
+  columns; this is recorded as a prediction in the draft.
+- The two component preregistration drafts were merged into
+  `program/preregistrations/q1-stage0-gate-validation.md`, which now names the
+  version card it will freeze. It is a draft; freezing is the program owner's
+  step. Evidence: `program/evidence/2026-10-07/q1-integration-validation.json`
+  (253 Q1 tests in a GPU-less container, 651 passed and 8 skipped on the host,
+  CPU doctor PASS).
+
+## 2026-10-07 — Q1 gate stack fix pass after adversarial review (branch `stage0/q1-gates`, not merged)
+
+- An adversarial review of `stage0/q1-gates@acb3bc8` reported 8 findings. All
+  were verified; 7 are fixed in `c6ef3a9` and 1 (candidates can see the gate
+  id and seeds) is recorded as a Stage 1 threat-model limit.
+- Critical: c3 config ids built from `input_shape[0]` failed the verdict schema
+  inside the worker after the candidate ran, so gate (c) rejected every kernel
+  on 10 L1 problems. Ids now use `input_shape.0`; gate (c) checks ids before a
+  candidate loads; row-building failures are infrastructure errors, retried
+  once.
+- Analysis: parent filter for mutants; unrefereeable components vacuous per
+  problem; one kernel set across gates; S1 calibration parents' mutants out of
+  the primary metrics; and code for every preregistered quantity that had none
+  (audit-hole replay, calibration driver, weighting, breakdowns, c-lite, cost,
+  FRR over independent units).
+- `gate_b.py` was rewritten from the spec after the review found it
+  transliterated parts of unlicensed KernelGYM code (never pushed). b1 and b2
+  now replay b0's five calls first, as released.
+- Infrastructure validation only: 280 Q1 tests in a GPU-less container, 669
+  passed and 8 skipped on the host, CPU doctor PASS (195 items). Evidence:
+  `program/evidence/2026-10-07/q1-gates-fix-pass.json`. The draft is not
+  frozen.
+
 ## 2026-10-07 — Serving probe v2 run: X1 pass, Q2 rescope before the gauntlet
 
 - Ran the frozen `serving-throughput-probe-v2` from a fresh host clone of the
@@ -360,3 +412,72 @@ Append-only. Newest entries at the bottom.
   0. The A4 decision remains Kevin's (inputs addendum, section 6, options
   1-5). jinja2 is in the dev extra, so the template check runs.
 - Nothing frozen, nothing pushed. GPU time 0.
+
+## 2026-10-07 — Q1 Stage 0 pilot pass: GPU paths validated, cost card measured (branch `stage0/q1-gates`, not merged)
+
+- Three one-GPU lane jobs on trusted code only (KernelBench references,
+  TorchInductor output, pre-2025 human-written kernels and harness-derived
+  mutants and controls; model kind none): 474 smoke and admission, 518 pilot
+  cost, 548 paired concurrency re-measurement. 0.899 GPU-h of the pass's 1.0;
+  image builds 472, 487, 507 and 544 CPU-only from fresh clones.
+- Corpus hand-off: S2 sources vendored with their licences (22 files
+  re-verified against the pinned commits), the corpus recipe committed, and one
+  hash-bound study artifact per job (28 MB, host-only; it carries the
+  unmodified KernelGYM and KBV clones for fidelity).
+- Validated on the GPU: admission and device codegen, specializations, the
+  identity control through all 15 gates and channels, fidelity against
+  unmodified KernelBench (a 11/11; a_head_1e-4 9/11 plus 2 listed in
+  advance), KernelGYM (decoy 5/5 comparable) and KBV (c1 11/11), calibration
+  on S1-cal (M stays 16), the poison allocator, compute-sanitizer, b2 and the
+  timing harness.
+- Found and fixed: compute-sanitizer never ran on S1 kernels (they refuse
+  `A3/lead1`), so A4 and every tier were `error` for all S1 kernels; the probe
+  now skips refused shapes (job 548: 6/6 S1 kernels accepted at `A3/lead5`).
+  b2 rows record profile attempts (the retry is unreachable on a working
+  GPU); timing now runs before scoring.
+- Open (owner): the TF32-admissible threshold rejects the TF32 tutorial
+  matmul at every held-out shape; A5 counts S1 dtype refusals as failures.
+- Cost card: c/b = 1.64 (no c-lite). Stage 0 as drafted projects to about
+  1,056 GPU-h (scoring 95% interval 671-1,359), far above the 8 GPU-h cap and
+  a lower bound (gate (c) on a 4.3 GB problem ran over 676 s). 12 items per
+  GPU halve small-problem cost with identical verdicts (ratio 0.493 on 240
+  paired items). Proposed rule `q1-stage0-trim/1` (preregistration section
+  18.5): 7.37 GPU-h through its last fixed bucket, a hard stop at 8, every gate,
+  family, tier and policy kept, mutant metrics narrowed to problems under 1 GB
+  with about 2.5 times wider intervals; or the gauntlet. Evidence:
+  `program/evidence/2026-10-07/q1-pilot/`.
+
+## 2026-10-07 — Q1 Stage 0 second review fix pass: trimming rule /2 in code, pilot exposure registered (branch `stage0/q1-gates`, not merged)
+
+- Merged main@36af438 (D22-D25; conflicts in this log and `state.json`, both
+  sides kept; ledger 2.150 GPU-h). No GPU was used in this pass; host work ran
+  in GPU-less, network-less containers of `cotcodec-q1-gates:5af03757` from a
+  fresh clone of the branch.
+- Verified all 13 findings of the second adversarial review of `@04c2934`;
+  12 fixed, the c-lite one partly rejected (the ratio of medians has been the
+  analysis code's statistic since before the pilot; it is now named in
+  sections 5.5 and 12 with its interval, 1.64 (1.52-2.32), and the other
+  readings, 2.11 and 2.38, reported). Evidence:
+  `program/evidence/2026-10-07/q1-pilot/second-review-fix-pass.json`.
+- Pilot exposure (D26): the pilot had scored five evaluation substrates, part
+  of a sixth, eight mutants (three test) and ten controls. Listed and
+  hash-bound (`harness/q1/data/pilot_exposed.json`); exposed mutants leave
+  every sampling frame; a pre-specified sensitivity analysis drops every
+  exposed unit; data-motivated audit changes drop the units they affect.
+- `q1-stage0-trim/2` is code (`harness/q1/trim.py`, run by
+  `scripts/run_q1_stage0.py`): seeded frames and samples, FRR set with a
+  margin, per-kind control sample, buckets P1-P8, 12 capacity units per GPU,
+  shared-item timeouts and CUDA out-of-memory errors retried alone, stop by
+  Slurm job caps; `driver_sha256` in the version card. Criterion 5 amended
+  for the unscheduled KBV H.1 and hack-emulating mutant controls (at least
+  6.2 GPU-h to score at one replicate).
+- Corrected projection (fidelity at its measured allocation, timing floor at
+  its 8-GPU allocation, anchors for problems of 1 GB or more): 7.60 GPU-h
+  through P3 and 10.99 through P7 centrally, 8.70 and 13.09 at the high point;
+  the stop keeps the run under 8 (centrally P1-P3 complete, one margin unit).
+  The pilot pass's /1 was 7.37 with lower charges.
+- Also: TF32 identity timing bias 0.907 (0.886-1.044) reported; TF32
+  convolution tolerance above 1 (L2/3 T = 2.67) recorded as finding 18.3.8;
+  run records hashed (`run-records.json`), killed items recorded by the
+  runner; sanitizer row memcheck-only; Apache-2.0 text with the Liger
+  substrates that carry Unsloth code; D27 for upstream test code on GPUs.

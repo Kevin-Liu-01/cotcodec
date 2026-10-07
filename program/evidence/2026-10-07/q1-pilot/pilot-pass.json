@@ -1,0 +1,271 @@
+{
+ "schema": "q1-pilot-pass/1",
+ "what": "Q1 Stage 0 pilot pass on stage0/q1-gates: GPU validation of every gate and audit path on trusted code, the pilot cost card, and the proposed trimming rule",
+ "evidence_grade": "pilot, infrastructure (not Stage 0 data)",
+ "trusted_code_only": "KernelBench reference code, TorchInductor output, pre-2025 human-written Triton kernels (FlagGems, Liger-Kernel, Triton tutorials) and harness-derived mutants and controls of them; model kind none; decisions D3 and D7",
+ "gpu_jobs": [
+  {
+   "job": 474,
+   "name": "q1-pilot-smoke",
+   "image": "cotcodec-q1-gates:74540542",
+   "state": "COMPLETED",
+   "exit": "0:0",
+   "run_seconds": 757,
+   "gpus": 1,
+   "lane_reason": "signal_USR1_checkpoint_missing (fixed: section 17.3 item 4)"
+  },
+  {
+   "job": 518,
+   "name": "q1-pilot-cost",
+   "image": "cotcodec-q1-gates:fef945dd",
+   "state": "COMPLETED",
+   "exit": "0:0",
+   "run_seconds": 2211,
+   "gpus": 1,
+   "lane_reason": "completed"
+  },
+  {
+   "job": 548,
+   "name": "q1-pilot-concurrency",
+   "image": "cotcodec-q1-gates:89391e18",
+   "image_id": "sha256:c05fc537bbadd4f03b17f5e10f57efbbe01d24effa342475234b9ff503ade807",
+   "state": "COMPLETED",
+   "exit": "0:0",
+   "run_seconds": 268,
+   "gpus": 1,
+   "lane_reason": "completed"
+  }
+ ],
+ "gpu_hours_this_pass": 0.8989,
+ "gpu_hours_cap_this_pass": 1.0,
+ "cpu_only_jobs": {
+  "image_builds": [
+   472,
+   487,
+   507,
+   544,
+   638
+  ],
+  "note": "build-q1-gates-image.sbatch requests no GPU; each from a fresh clean clone of a git bundle of the branch, never ~/cotcodec"
+ },
+ "validated_on_gpu": {
+  "admission_and_device_codegen": "job 474: device TorchInductor codegen of 24 S1 problems, S2 build, static check, gate (b) launch-hook GPU admission of the picks (one inadmissible pick replaced by the rule)",
+  "specialization_recording": "job 474: 8 evaluation picks",
+  "smoke_reference_identity_every_gate": "job 518: L2/12 identity control through all 15 scoring gates and channels, every expectation met (smoke_checks_failed = [])",
+  "gate_a_fidelity_vs_unmodified_kernelbench": "job 518: a vs @44130946 11/11 agree; a_head_1e-4 vs @423217d9 9/11 agree and 2/11 the class listed in advance (HEAD reference raises on L1/95)",
+  "b_native_vs_unmodified_kernelgym": "job 518: b0 vs a 11/11 agree; decoy verdict 5/5 agree where comparable (KernelGYM skips detection when b0 fails: 6 items)",
+  "c1_vs_unmodified_kbv": "job 518: KBV-compatibility c1 vs KBV run_hidden_correctness_check per configuration 11/11 agree",
+  "b2_end_to_end": "jobs 518 and 548: 26 and 16 b2 rows; profile_attempts recorded from image 89391e18 on (all 1). The empty-table retry is unreachable on a working GPU (the window's self-test always records device rows); covered by a CPU unit test",
+  "a4_poison_allocator": "jobs 518 and 548: accept on every substrate and control, reject (output-depends-on-poison) on one nondeterministic Liger mutant in 518 that passed the probe in 548; its in-process A4 rejected it in both",
+  "compute_sanitizer": "job 518: error (sanitizer-did-not-run) on every S1 kernel because S1 refuses A3/lead1; fixed in 89391e18; job 548: the 6 S1 kernels run at A3/lead5 and accept; memcheck rejects the launch-stride-swap mutant in both jobs",
+  "audit_calibration_s1_cal": "job 518: 4 members, largest required multiplier 1.0001, M stays 16 (audit version 2b115e0f... at the 518 audit code; recomputed at freeze)",
+  "timing_harness": "job 518 smoke (identity L2/12: strict-fp32 speedup 0.974 [0.966, 0.983], TF32 0.907 [0.886, 1.044]); job 548 timing phase on 2 S1 substrates (11.1 GPU-s per item)"
+ },
+ "cost_card": {
+  "file": "cost-card.json",
+  "per_gate_gpu_seconds_median_p95_job518": {
+   "A1": [
+    2.589,
+    7.635
+   ],
+   "A2": [
+    4.983,
+    13.613
+   ],
+   "A3": [
+    2.331,
+    5.105
+   ],
+   "A4": [
+    1.102,
+    3.865
+   ],
+   "A4_poison": [
+    1.988,
+    6.695
+   ],
+   "A4_sanitizer": [
+    1.194,
+    2.906
+   ],
+   "A5": [
+    1.034,
+    3.534
+   ],
+   "a": [
+    1.449,
+    15.377
+   ],
+   "a_1e-3": [
+    1.444,
+    4.279
+   ],
+   "a_head_1e-2": [
+    0.985,
+    15.335
+   ],
+   "a_head_1e-4": [
+    0.973,
+    25.368
+   ],
+   "a_static": [
+    0.986,
+    15.003
+   ],
+   "b1": [
+    1.557,
+    16.983
+   ],
+   "b2": [
+    1.906,
+    4.729
+   ],
+   "c": [
+    5.039,
+    22.775
+   ]
+  },
+  "kernel_replicates_complete": 17,
+  "c_over_b_median_cumulative": 1.642,
+  "censored_items": [
+   {
+    "exclusive": true,
+    "gate": "c",
+    "gpu_seconds_lower_bound": 676.8,
+    "item_key": "s2-flaggems-cumsum-L1-89_cumsum|c|seed-42",
+    "phase": "scoring",
+    "problem_id": "L1/89_cumsum",
+    "wall_seconds_lower_bound": 676.8
+   },
+   {
+    "exclusive": true,
+    "gate": "a_head_1e-4",
+    "gpu_seconds_lower_bound": 109.0,
+    "item_key": "ctl-identity-L1-19_ReLU|a_head_1e-4|seed-42",
+    "phase": "smoke",
+    "problem_id": "L1/19_ReLU",
+    "wall_seconds_lower_bound": 109.0
+   }
+  ],
+  "as_drafted_total_gpu_h": 1055.558,
+  "as_drafted_scoring_95": {
+   "high": 1359.085625,
+   "low": 670.6633999999999
+  },
+  "concurrency_12_vs_4_gpu_seconds_ratio": 0.493,
+  "concurrency_verdict_differences": [
+   {
+    "base": {
+     "error": 1
+    },
+    "item_key": "s1-inductor-L2-3_ConvTranspose3d_Sum_LayerNorm_AvgPool_GELU.dim-param-swap-decode.L76C21|A4_sanitizer|seed-42",
+    "other": {
+     "accept": 1
+    }
+   },
+   {
+    "base": {
+     "error": 1
+    },
+    "item_key": "s1-inductor-L2-3_ConvTranspose3d_Sum_LayerNorm_AvgPool_GELU.plus2minus.L132C31|A4_sanitizer|seed-42",
+    "other": {
+     "accept": 1
+    }
+   },
+   {
+    "base": {
+     "error": 1
+    },
+    "item_key": "s1-inductor-L2-3_ConvTranspose3d_Sum_LayerNorm_AvgPool_GELU|A4_sanitizer|seed-42",
+    "other": {
+     "accept": 1
+    }
+   },
+   {
+    "base": {
+     "error": 1
+    },
+    "item_key": "s1-inductor-L2-74_ConvTranspose3d_LeakyReLU_Multiply_LeakyReLU_Max.dim-param-swap-decode.L92C19|A4_sanitizer|seed-42",
+    "other": {
+     "accept": 1
+    }
+   },
+   {
+    "base": {
+     "error": 1
+    },
+    "item_key": "s1-inductor-L2-74_ConvTranspose3d_LeakyReLU_Multiply_LeakyReLU_Max.mul2div.L75C12|A4_sanitizer|seed-42",
+    "other": {
+     "accept": 1
+    }
+   },
+   {
+    "base": {
+     "error": 1
+    },
+    "item_key": "s1-inductor-L2-74_ConvTranspose3d_LeakyReLU_Multiply_LeakyReLU_Max|A4_sanitizer|seed-42",
+    "other": {
+     "accept": 1
+    }
+   },
+   {
+    "base": {
+     "reject": 1
+    },
+    "item_key": "s2-liger-cross-entropy-L1-95_CrossEntropyLoss.program-id-axis-swap.L55C17|A4_poison|seed-42",
+    "other": {
+     "accept": 1
+    }
+   }
+  ],
+  "proposed_rule": "q1-stage0-trim/1 (cost_card.TRIM_RULE)",
+  "proposed_total_through_P6_gpu_h": 7.368,
+  "proposed_total_through_P6_high_gpu_h": 9.392,
+  "proposed_budget_stop": {
+   "central": {
+    "completed": [
+     "P1",
+     "P2",
+     "P3",
+     "P4",
+     "P5",
+     "P6"
+    ],
+    "partial": {
+     "bucket": "P7",
+     "share": 0.433
+    },
+    "test_mutants_scored": 440
+   },
+   "high": {
+    "completed": [
+     "P1",
+     "P2",
+     "P3"
+    ],
+    "partial": {
+     "bucket": "P4",
+     "share": 0.581
+    },
+    "test_mutants_scored": 310
+   }
+  },
+  "under_8_gpu_h_as_drafted": false,
+  "under_8_gpu_h_with_rule": "central yes (7.37 through P6); at the bootstrap high (9.39) only with the rule's stop, which then completes P1-P3",
+  "computed_by": "scripts/q1_pilot_cost_card.py inside cotcodec-q1-gates:5af03757 (job 638's image, embedded code) in a GPU-less container on the job directories /runs/474, /runs/518 and /runs/548; 1000 bootstrap resamples, seed 0. A run of the same code from the worktree on copies of the job directories gave the same card except the censored lower bound (676.0 s there, 676.8 s here: copied file times lose sub-second precision)"
+ },
+ "cpu_checks": {
+  "q1_tests": "316 passed (tests/test_q1_*.py) in a GPU-less, network-less container of cotcodec-q1-gates:89391e18 with this pass's worktree",
+  "cpu_doctor": "scripts/run_q1_gate_doctor.py PASS: 195 items, 97 expectations, gate a vs KernelBench@44130946 and b1 vs unmodified KernelGYM differentials, resume pass; same container",
+  "ruff": "uv run ruff check . passes",
+  "full_test_suite": "1500 passed, 3 skipped (tests/) in a GPU-less, network-less container of cotcodec-q1-gates:5af03757 with the final worktree"
+ },
+ "final_image": {
+  "job": 638,
+  "git_sha": "5af037579d8f98496c6fa76001f54594df321d80",
+  "tag": "cotcodec-q1-gates:5af03757",
+  "image_id": "sha256:ae1da400591510df23ab5971a25aa0b2a875c2fed48d0dc2c620c5d22a8b94fb",
+  "digest": "cotcodec-q1-gates@sha256:11b8c2a5e369d06b8c4110189ce627ad4a9a701e9c3ac34917b73c4f20e172e3",
+  "note": "the pass's last code commit; later commits on the branch add evidence and documents only"
+ }
+}

@@ -1,0 +1,196 @@
+{
+ "schema": "q1-review-fix-pass/1",
+ "review": "second adversarial review of stage0/q1-gates@04c2934 (pilot pass)",
+ "date": "2026-10-07",
+ "verification_inputs": [
+  "pilot run directories of jobs 474, 518 and 548, copied read-only from the host and re-hashed there (run-records.json)",
+  "program/evidence/2026-10-07/q1-pilot/cost-card.json (recomputed on the host in a GPU-less, network-less container of cotcodec-q1-gates:5af03757 with the fix-pass code)",
+  "stage0-counts-v2.json (host-only planning counts of the full Stage 0 corpus)"
+ ],
+ "findings": [
+  {
+   "n": 1,
+   "severity": "high",
+   "title": "pilot scored evaluation units and test mutants before the freeze",
+   "verified": true,
+   "verification": "job 518 scoring journal: L1/3, L2/3, L2/74, Liger cross-entropy and tutorial matmul scored at replicate 42 with all 15 gates and channels; FlagGems cumsum a, a_head_1e-4, a_head_1e-2, a_static, b1 (c killed); 8 mutants of evaluation parents, 3 test by sampling.split_of (plus2minus.L132C31, program-id-axis-swap.L55C17, launch-stride-swap.L158C21); 10 controls",
+   "disposition": "fixed",
+   "changes": [
+    "preregistration header corrected",
+    "harness/q1/data/pilot_exposed.json (hash-pinned) from scripts/q1_pilot_records.py",
+    "trim.mutant_frames drops exposed mutants by id and by (parent, dedup hash)",
+    "analysis.exposure_exclusions: data-motivated audit changes remove their units from the primary analysis; sensitivity without every exposed unit, reported by scripts/report_q1_stage0.py",
+    "decision D26",
+    "preregistration section 18.6 item 1"
+   ],
+   "tests": [
+    "tests/test_q1_trim.py::test_frames_drop_exposed_mutants_by_id_and_by_content",
+    "tests/test_q1_trim.py::test_pilot_exposure_file_is_hash_bound_and_lists_the_pilot_record",
+    "tests/test_q1_analysis.py::test_exposure_exclusions_primary_and_sensitivity",
+    "tests/test_q1_integration_cpu.py::test_trim_plan_driver_and_report_on_the_cpu_journal"
+   ]
+  },
+  {
+   "n": 2,
+   "severity": "high",
+   "title": "trim/1 dropped KBV H.1 and hack-emulating mutant controls",
+   "verified": true,
+   "verification": "stage0-counts-v2: KBV H.1 kinds only on S1 L1/20, L1/31 and FlagGems relu L1/19 (6 controls), mutant controls on L1/19, 30, 32, 38; all 6.44-8.59 GB; in-scope hack_controls 281 = 4 x 69 + 5 (L1/88 only); project_trimmed had no mutant-control role",
+   "disposition": "fixed by amending criterion 5 explicitly (cost of scoring them: at least 6.19 GPU-h at replicate 42)",
+   "changes": [
+    "trim.control_schedule: per-kind sample (at least one), kinds without in-scope instance listed",
+    "analysis.control_checks(scheduled=..., parent premise)",
+    "cost_card.project_trimmed reports unscheduled controls and their cost",
+    "preregistration 3.4, 8.2 criterion 5, 18.6 item 2"
+   ],
+   "tests": [
+    "tests/test_q1_trim.py::test_control_schedule_samples_every_kind_and_lists_the_rest",
+    "tests/test_q1_analysis.py::test_control_checks_follow_the_trim_schedule_and_the_parent_premise",
+    "tests/test_q1_cost_card.py::test_trimmed_projection_keeps_every_family_and_reaches_the_frr_units"
+   ]
+  },
+  {
+   "n": 3,
+   "severity": "high",
+   "title": "registered driver lacked the pilot's execution rules; not in the version card",
+   "verified": true,
+   "verification": "scripts/run_q1_stage0.py@04c2934 built WorkItem(exclusive=False, timeouts=None); size-scaled limits behind --size-scaled-watchdog in the pilot driver only; TRIM_RULE a projection dict; versions.py paths excluded pilot.py, cost_card.py and both drivers",
+   "disposition": "fixed",
+   "changes": [
+    "harness/q1/trim.py",
+    "scripts/run_q1_stage0.py rewritten (plan hash, budget refusal, units, watchdogs, study artifact)",
+    "runner: capacity units, contention retries alone (also after resume), fit_deadline, cut.jsonl",
+    "versions.py driver_sha256 and trim_rule",
+    "manifest template q1-stage0-trim-job"
+   ],
+   "tests": [
+    "tests/test_q1_runner.py::test_watchdog_timeout_and_crash_rows",
+    "tests/test_q1_runner.py::test_device_share_units_and_writer_preference",
+    "tests/test_q1_runner.py::test_contention_failures_are_read_from_rows",
+    "tests/test_q1_runner.py::test_fit_deadline_defers_items_that_could_not_finish",
+    "tests/test_q1_runner.py::test_killed_items_are_recorded_with_spawn_and_kill_times",
+    "tests/test_q1_runner.py::test_resume_runs_a_retry_alone_item_alone",
+    "tests/test_q1_trim.py::test_plan_runs_buckets_in_order_with_units_and_limits",
+    "tests/test_q1_trim.py::test_budget_check_is_the_sum_of_caps",
+    "tests/test_q1_integration_cpu.py::test_trim_plan_driver_and_report_on_the_cpu_journal"
+   ]
+  },
+  {
+   "n": 4,
+   "severity": "medium",
+   "title": "criterion 3 set had zero margin",
+   "verified": true,
+   "verification": "63 in-scope units; byte-order additions reach exactly 72; s2-flaggems-mm-L1-6 adds no unit",
+   "disposition": "fixed (skip no-unit substrates; core to 72 in P1, margin of 6 in P4); the margin is largely unaffordable (centrally 1 of 6 units), stated",
+   "tests": [
+    "tests/test_q1_trim.py::test_frr_set_skips_substrates_that_add_no_unit_and_splits_core_and_margin",
+    "tests/test_q1_cost_card.py::test_frr_set_skips_no_new_unit_and_adds_a_margin_bucket"
+   ]
+  },
+  {
+   "n": 5,
+   "severity": "medium",
+   "title": "c-lite statistic not pinned; median of ratios flips the decision",
+   "verified": "partly",
+   "verification": "values reproduced (ratio of medians 1.642, median of ratios 2.112, ratio of means 2.381); but analysis.cost has computed the ratio of medians of per-kernel cumulative costs since 66bc7ce (docstring since c6ef3a9), before any pilot GPU job, and that file is in analysis_sha256",
+   "disposition": "pinned in text and code, interval and other readings reported; decision unchanged (not triggered; 1.64, 95% interval 1.52-2.32, 39.6% of resamples above 2)",
+   "tests": [
+    "tests/test_q1_analysis.py::test_c_over_b_statistic_is_pinned_and_reports_the_other_readings"
+   ]
+  },
+  {
+   "n": 6,
+   "severity": "medium",
+   "title": "projection inputs do not transfer; timing reported selectively",
+   "verified": true,
+   "verification": "(a) pair 518/548 spans images fef945dd and 89391e18; (b) fidelity phase 306.1 s for 11 kernels = 27.83 GPU-s each vs 12.3 modelled; (c) size model 228.6 vs 297.6 s (L1/3); (d) floor charged 80 x 11 s single-GPU; (e) TF32 identity ratio 0.907 (0.886-1.044) in job 518 smoke-timing",
+   "disposition": "fixed: measured fidelity charge, anchors for >= 1 GB, timing floor at allocation (8 GPUs), TF32 bias reported, execution registered at the measured condition",
+   "tests": [
+    "tests/test_q1_cost_card.py::test_large_problems_are_anchored_to_measured_and_censored_costs",
+    "tests/test_q1_cost_card.py::test_timing_floor_is_charged_at_its_allocation"
+   ]
+  },
+  {
+   "n": 7,
+   "severity": "medium",
+   "title": "TF32-admissible tolerance above 1 on convolution problems",
+   "verified": true,
+   "verification": "job 518 A1 rows: L2/3 T 2.670 (TF32 ref error 0.167, strict T 0.0159); L2/74 T 1.19 (0.0743; strict 0.000586)",
+   "disposition": "reported (finding 18.3.8), folded into the D14 decision; report lists problems with T >= 0.1",
+   "tests": [
+    "tests/test_q1_analysis.py::test_audit_tolerance_report_flags_near_vacuous_tolerances"
+   ]
+  },
+  {
+   "n": 8,
+   "severity": "medium",
+   "title": "trim sampling seeds, implementation and weights open",
+   "verified": true,
+   "disposition": "fixed (trim.seed_of, mutant_frames, mutant_sample, rank_major, ht_weights; preregistration 18.7 items 3-4)",
+   "tests": [
+    "tests/test_q1_trim.py::test_seeds_are_named_and_order_free",
+    "tests/test_q1_trim.py::test_samples_are_prefixes_and_rank_major_cuts_every_family_evenly",
+    "tests/test_q1_trim.py::test_ht_weights_use_frame_size_over_scored_including_cut_items"
+   ]
+  },
+  {
+   "n": 9,
+   "severity": "low",
+   "title": "run records not bound by hashes; censored bounds from mtimes",
+   "verified": true,
+   "disposition": "fixed: run-records.json (host-computed); runner records cut.jsonl; pilot bounds remain mtime-based and are labelled",
+   "tests": [
+    "tests/test_q1_runner.py::test_killed_items_are_recorded_with_spawn_and_kill_times"
+   ]
+  },
+  {
+   "n": 10,
+   "severity": "low",
+   "title": "Liger files with Unsloth code lack the Apache-2.0 text",
+   "verified": true,
+   "disposition": "fixed (LICENSE.Apache-2.0 vendored; LICENSE.Apache-2.0.unsloth in the three affected substrates; q1-s2-build/2; kernel.py unchanged)",
+   "tests": [
+    "tests/test_q1_substrates.py::test_s2_entries_build_from_vendored_sources",
+    "tests/test_q1_substrates.py::test_unsloth_apache_text_is_the_flaggems_licence_body"
+   ]
+  },
+  {
+   "n": 11,
+   "severity": "low",
+   "title": "sanitizer at a held-out shape in native-shape tiers",
+   "verified": true,
+   "disposition": "fixed by amending 6.4/6.6, memcheck-only row, shift reported",
+   "tests": [
+    "tests/test_q1_audit.py::test_sanitizer_probe_reports_a_post_launch_crash_at_a_held_out_shape",
+    "tests/test_q1_analysis.py::test_sanitizer_shift_lists_held_out_shape_verdicts_in_native_tiers"
+   ]
+  },
+  {
+   "n": 12,
+   "severity": "low",
+   "title": "branch conflicts with main; predates D24",
+   "verified": true,
+   "disposition": "fixed: merged main@36af438 (conflicts in program/log.md and program/state.json, both sides kept); ledger 2.150; D24 cited"
+  },
+  {
+   "n": 13,
+   "severity": "low",
+   "title": "D3/D7 do not cover post-2025 upstream test kernels and unmodified fidelity code on GPUs",
+   "verified": true,
+   "disposition": "decision D27 recorded (reversible by Kevin)"
+  }
+ ],
+ "cost_card_provenance": {
+  "computed_on": "fal-h100-01, GPU-less and network-less container of cotcodec-q1-gates:5af03757 (image ae1da4005915) with a fresh clone of stage0/q1-gates@ee1a505 mounted read-only",
+  "command": "python scripts/q1_pilot_cost_card.py --smoke-job /runs/474 --pilot-job /runs/518 --pair-job /runs/548 --corpus /runs/518/q1/inputs/corpus --counts /out/stage0-counts-v2.json --out /out/fix2/card --spent-gpu-hours 0.899 --resamples 1000 --records /out/fix2/run-records.json",
+  "note": "harness/q1/cost_card.py, scripts/q1_pilot_cost_card.py and analysis.c_over_b_statistic are unchanged after ee1a505; later commits changed comments, the plan hash and the driver only",
+  "run_records": "scripts/q1_pilot_records.py --job /runs/474 --job /runs/518 --job /runs/548 --corpus /runs/518/q1/inputs/corpus (same container); run-records.json sha256 2b4c20c10a9b3329620644b6d1fc58982ea8340fa9238db33c5c4e1c2e020f63; pilot_exposed.json identical to the committed file (cb4a0c36...)"
+ },
+ "checks": {
+  "ruff": "uv run ruff check . passes",
+  "whole_suite_host": "stage0/q1-gates@9f6879b in a GPU-less, network-less container of cotcodec-q1-gates:5af03757 (fresh clone mounted read-only): 1526 passed, 3 skipped (also at fd2b164; at ee1a505 one new test's fixture failed and was fixed)",
+  "cpu_gate_doctor_host": "scripts/run_q1_gate_doctor.py --slots 12 at 9f6879b, same container kind: PASS, 195 items (196 runs: the hanging fixture retried alone), 97 of 97 expectations, KernelBench and KernelGYM differentials",
+  "validators": "validate_architecture_experiments, validate_provider_models pass; agent-docs doctor 4 pass, 3 existing legacy warnings",
+  "gpu_hours_used": 0.0
+ }
+}
