@@ -1,0 +1,2091 @@
+{
+ "a4_probes": {
+  "counts": {
+   "aggregate|tutorial": {
+    "reject:candidate-raised": 1
+   },
+   "compute-sanitizer|control": {
+    "accept:": 5
+   },
+   "compute-sanitizer|inductor": {
+    "error:sanitizer-did-not-run": 7
+   },
+   "compute-sanitizer|liger": {
+    "accept:": 3
+   },
+   "compute-sanitizer|tutorial": {
+    "accept:": 2,
+    "reject:": 1
+   },
+   "in-process|control": {
+    "accept:": 5
+   },
+   "in-process|inductor": {
+    "accept:": 7
+   },
+   "in-process|liger": {
+    "accept:": 2,
+    "reject:": 1
+   },
+   "in-process|tutorial": {
+    "accept:": 2
+   },
+   "poison-allocator|control": {
+    "accept:": 5
+   },
+   "poison-allocator|inductor": {
+    "accept:": 7
+   },
+   "poison-allocator|liger": {
+    "accept:": 2,
+    "reject:output-depends-on-poison": 1
+   },
+   "poison-allocator|tutorial": {
+    "accept:": 3
+   }
+  },
+  "rows": [
+   {
+    "config_id": "in-process",
+    "kernel": "ctl-identity-L2-12_Gemm_Multiply_LeakyReLU",
+    "phase": "smoke",
+    "probe_config_id": null,
+    "reason": "",
+    "refused_configs": null,
+    "returncode": null,
+    "role": "identity-control",
+    "verdict": "accept"
+   },
+   {
+    "config_id": "compute-sanitizer",
+    "kernel": "ctl-identity-L2-12_Gemm_Multiply_LeakyReLU",
+    "phase": "smoke",
+    "probe_config_id": "A3/lead1",
+    "reason": "",
+    "refused_configs": null,
+    "returncode": 0,
+    "role": "identity-control",
+    "verdict": "accept"
+   },
+   {
+    "config_id": "poison-allocator",
+    "kernel": "ctl-identity-L2-12_Gemm_Multiply_LeakyReLU",
+    "phase": "smoke",
+    "probe_config_id": null,
+    "reason": "",
+    "refused_configs": null,
+    "returncode": null,
+    "role": "identity-control",
+    "verdict": "accept"
+   },
+   {
+    "config_id": "in-process",
+    "kernel": "s1-inductor-L2-74_ConvTranspose3d_LeakyReLU_Multiply_LeakyReLU_Max",
+    "phase": "scoring",
+    "probe_config_id": null,
+    "reason": "",
+    "refused_configs": null,
+    "returncode": null,
+    "role": "substrate",
+    "verdict": "accept"
+   },
+   {
+    "config_id": "compute-sanitizer",
+    "kernel": "s1-inductor-L2-74_ConvTranspose3d_LeakyReLU_Multiply_LeakyReLU_Max",
+    "phase": "scoring",
+    "probe_config_id": null,
+    "reason": "sanitizer-did-not-run",
+    "refused_configs": null,
+    "returncode": 1,
+    "role": "substrate",
+    "verdict": "error"
+   },
+   {
+    "config_id": "poison-allocator",
+    "kernel": "s1-inductor-L2-74_ConvTranspose3d_LeakyReLU_Multiply_LeakyReLU_Max",
+    "phase": "scoring",
+    "probe_config_id": null,
+    "reason": "",
+    "refused_configs": null,
+    "returncode": null,
+    "role": "substrate",
+    "verdict": "accept"
+   },
+   {
+    "config_id": "in-process",
+    "kernel": "s1-inductor-L2-3_ConvTranspose3d_Sum_LayerNorm_AvgPool_GELU",
+    "phase": "scoring",
+    "probe_config_id": null,
+    "reason": "",
+    "refused_configs": null,
+    "returncode": null,
+    "role": "substrate",
+    "verdict": "accept"
+   },
+   {
+    "config_id": "compute-sanitizer",
+    "kernel": "s1-inductor-L2-3_ConvTranspose3d_Sum_LayerNorm_AvgPool_GELU",
+    "phase": "scoring",
+    "probe_config_id": null,
+    "reason": "sanitizer-did-not-run",
+    "refused_configs": null,
+    "returncode": 1,
+    "role": "substrate",
+    "verdict": "error"
+   },
+   {
+    "config_id": "poison-allocator",
+    "kernel": "s1-inductor-L2-3_ConvTranspose3d_Sum_LayerNorm_AvgPool_GELU",
+    "phase": "scoring",
+    "probe_config_id": null,
+    "reason": "",
+    "refused_configs": null,
+    "returncode": null,
+    "role": "substrate",
+    "verdict": "accept"
+   },
+   {
+    "config_id": "in-process",
+    "kernel": "s2-liger-cross-entropy-L1-95_CrossEntropyLoss",
+    "phase": "scoring",
+    "probe_config_id": null,
+    "reason": "",
+    "refused_configs": null,
+    "returncode": null,
+    "role": "substrate",
+    "verdict": "accept"
+   },
+   {
+    "config_id": "compute-sanitizer",
+    "kernel": "s2-liger-cross-entropy-L1-95_CrossEntropyLoss",
+    "phase": "scoring",
+    "probe_config_id": "A3/lead1",
+    "reason": "",
+    "refused_configs": null,
+    "returncode": 0,
+    "role": "substrate",
+    "verdict": "accept"
+   },
+   {
+    "config_id": "poison-allocator",
+    "kernel": "s2-liger-cross-entropy-L1-95_CrossEntropyLoss",
+    "phase": "scoring",
+    "probe_config_id": null,
+    "reason": "",
+    "refused_configs": null,
+    "returncode": null,
+    "role": "substrate",
+    "verdict": "accept"
+   },
+   {
+    "config_id": "in-process",
+    "kernel": "s2-tutorial-matmul-L1-2_Standard_matrix_multiplication_",
+    "phase": "scoring",
+    "probe_config_id": null,
+    "reason": "",
+    "refused_configs": null,
+    "returncode": null,
+    "role": "substrate",
+    "verdict": "accept"
+   },
+   {
+    "config_id": "compute-sanitizer",
+    "kernel": "s2-tutorial-matmul-L1-2_Standard_matrix_multiplication_",
+    "phase": "scoring",
+    "probe_config_id": "A3/allprime",
+    "reason": "",
+    "refused_configs": null,
+    "returncode": 0,
+    "role": "substrate",
+    "verdict": "accept"
+   },
+   {
+    "config_id": "poison-allocator",
+    "kernel": "s2-tutorial-matmul-L1-2_Standard_matrix_multiplication_",
+    "phase": "scoring",
+    "probe_config_id": null,
+    "reason": "",
+    "refused_configs": null,
+    "returncode": null,
+    "role": "substrate",
+    "verdict": "accept"
+   },
+   {
+    "config_id": "in-process",
+    "kernel": "ctl-identity-L2-74_ConvTranspose3d_LeakyReLU_Multiply_LeakyReLU_Max",
+    "phase": "scoring",
+    "probe_config_id": null,
+    "reason": "",
+    "refused_configs": null,
+    "returncode": null,
+    "role": "identity-control",
+    "verdict": "accept"
+   },
+   {
+    "config_id": "compute-sanitizer",
+    "kernel": "ctl-identity-L2-74_ConvTranspose3d_LeakyReLU_Multiply_LeakyReLU_Max",
+    "phase": "scoring",
+    "probe_config_id": "A3/lead1",
+    "reason": "",
+    "refused_configs": null,
+    "returncode": 0,
+    "role": "identity-control",
+    "verdict": "accept"
+   },
+   {
+    "config_id": "poison-allocator",
+    "kernel": "ctl-identity-L2-74_ConvTranspose3d_LeakyReLU_Multiply_LeakyReLU_Max",
+    "phase": "scoring",
+    "probe_config_id": null,
+    "reason": "",
+    "refused_configs": null,
+    "returncode": null,
+    "role": "identity-control",
+    "verdict": "accept"
+   },
+   {
+    "config_id": "in-process",
+    "kernel": "ctl-identity-L2-3_ConvTranspose3d_Sum_LayerNorm_AvgPool_GELU",
+    "phase": "scoring",
+    "probe_config_id": null,
+    "reason": "",
+    "refused_configs": null,
+    "returncode": null,
+    "role": "identity-control",
+    "verdict": "accept"
+   },
+   {
+    "config_id": "compute-sanitizer",
+    "kernel": "ctl-identity-L2-3_ConvTranspose3d_Sum_LayerNorm_AvgPool_GELU",
+    "phase": "scoring",
+    "probe_config_id": "A3/lead1",
+    "reason": "",
+    "refused_configs": null,
+    "returncode": 0,
+    "role": "identity-control",
+    "verdict": "accept"
+   },
+   {
+    "config_id": "poison-allocator",
+    "kernel": "ctl-identity-L2-3_ConvTranspose3d_Sum_LayerNorm_AvgPool_GELU",
+    "phase": "scoring",
+    "probe_config_id": null,
+    "reason": "",
+    "refused_configs": null,
+    "returncode": null,
+    "role": "identity-control",
+    "verdict": "accept"
+   },
+   {
+    "config_id": "in-process",
+    "kernel": "ctl-identity-L1-95_CrossEntropyLoss",
+    "phase": "scoring",
+    "probe_config_id": null,
+    "reason": "",
+    "refused_configs": null,
+    "returncode": null,
+    "role": "identity-control",
+    "verdict": "accept"
+   },
+   {
+    "config_id": "compute-sanitizer",
+    "kernel": "ctl-identity-L1-95_CrossEntropyLoss",
+    "phase": "scoring",
+    "probe_config_id": "A3/lead1",
+    "reason": "",
+    "refused_configs": null,
+    "returncode": 0,
+    "role": "identity-control",
+    "verdict": "accept"
+   },
+   {
+    "config_id": "poison-allocator",
+    "kernel": "ctl-identity-L1-95_CrossEntropyLoss",
+    "phase": "scoring",
+    "probe_config_id": null,
+    "reason": "",
+    "refused_configs": null,
+    "returncode": null,
+    "role": "identity-control",
+    "verdict": "accept"
+   },
+   {
+    "config_id": "in-process",
+    "kernel": "ctl-identity-L1-2_Standard_matrix_multiplication_",
+    "phase": "scoring",
+    "probe_config_id": null,
+    "reason": "",
+    "refused_configs": null,
+    "returncode": null,
+    "role": "identity-control",
+    "verdict": "accept"
+   },
+   {
+    "config_id": "compute-sanitizer",
+    "kernel": "ctl-identity-L1-2_Standard_matrix_multiplication_",
+    "phase": "scoring",
+    "probe_config_id": "A3/allprime",
+    "reason": "",
+    "refused_configs": null,
+    "returncode": 0,
+    "role": "identity-control",
+    "verdict": "accept"
+   },
+   {
+    "config_id": "poison-allocator",
+    "kernel": "ctl-identity-L1-2_Standard_matrix_multiplication_",
+    "phase": "scoring",
+    "probe_config_id": null,
+    "reason": "",
+    "refused_configs": null,
+    "returncode": null,
+    "role": "identity-control",
+    "verdict": "accept"
+   },
+   {
+    "config_id": "in-process",
+    "kernel": "s1-inductor-L2-74_ConvTranspose3d_LeakyReLU_Multiply_LeakyReLU_Max.mul2div.L75C12",
+    "phase": "scoring",
+    "probe_config_id": null,
+    "reason": "",
+    "refused_configs": null,
+    "returncode": null,
+    "role": "mutant",
+    "verdict": "accept"
+   },
+   {
+    "config_id": "compute-sanitizer",
+    "kernel": "s1-inductor-L2-74_ConvTranspose3d_LeakyReLU_Multiply_LeakyReLU_Max.mul2div.L75C12",
+    "phase": "scoring",
+    "probe_config_id": null,
+    "reason": "sanitizer-did-not-run",
+    "refused_configs": null,
+    "returncode": 1,
+    "role": "mutant",
+    "verdict": "error"
+   },
+   {
+    "config_id": "poison-allocator",
+    "kernel": "s1-inductor-L2-74_ConvTranspose3d_LeakyReLU_Multiply_LeakyReLU_Max.mul2div.L75C12",
+    "phase": "scoring",
+    "probe_config_id": null,
+    "reason": "",
+    "refused_configs": null,
+    "returncode": null,
+    "role": "mutant",
+    "verdict": "accept"
+   },
+   {
+    "config_id": "in-process",
+    "kernel": "s1-inductor-L2-3_ConvTranspose3d_Sum_LayerNorm_AvgPool_GELU.plus2minus.L132C31",
+    "phase": "scoring",
+    "probe_config_id": null,
+    "reason": "",
+    "refused_configs": null,
+    "returncode": null,
+    "role": "mutant",
+    "verdict": "accept"
+   },
+   {
+    "config_id": "compute-sanitizer",
+    "kernel": "s1-inductor-L2-3_ConvTranspose3d_Sum_LayerNorm_AvgPool_GELU.plus2minus.L132C31",
+    "phase": "scoring",
+    "probe_config_id": null,
+    "reason": "sanitizer-did-not-run",
+    "refused_configs": null,
+    "returncode": 1,
+    "role": "mutant",
+    "verdict": "error"
+   },
+   {
+    "config_id": "poison-allocator",
+    "kernel": "s1-inductor-L2-3_ConvTranspose3d_Sum_LayerNorm_AvgPool_GELU.plus2minus.L132C31",
+    "phase": "scoring",
+    "probe_config_id": null,
+    "reason": "",
+    "refused_configs": null,
+    "returncode": null,
+    "role": "mutant",
+    "verdict": "accept"
+   },
+   {
+    "config_id": "in-process",
+    "kernel": "s2-liger-cross-entropy-L1-95_CrossEntropyLoss.minus2plus.L140C13",
+    "phase": "scoring",
+    "probe_config_id": null,
+    "reason": "",
+    "refused_configs": null,
+    "returncode": null,
+    "role": "mutant",
+    "verdict": "accept"
+   },
+   {
+    "config_id": "compute-sanitizer",
+    "kernel": "s2-liger-cross-entropy-L1-95_CrossEntropyLoss.minus2plus.L140C13",
+    "phase": "scoring",
+    "probe_config_id": "A3/lead1",
+    "reason": "",
+    "refused_configs": null,
+    "returncode": 0,
+    "role": "mutant",
+    "verdict": "accept"
+   },
+   {
+    "config_id": "poison-allocator",
+    "kernel": "s2-liger-cross-entropy-L1-95_CrossEntropyLoss.minus2plus.L140C13",
+    "phase": "scoring",
+    "probe_config_id": null,
+    "reason": "",
+    "refused_configs": null,
+    "returncode": null,
+    "role": "mutant",
+    "verdict": "accept"
+   },
+   {
+    "config_id": "in-process",
+    "kernel": "s2-tutorial-matmul-L1-2_Standard_matrix_multiplication_.mul2plus.L123C18",
+    "phase": "scoring",
+    "probe_config_id": null,
+    "reason": "",
+    "refused_configs": null,
+    "returncode": null,
+    "role": "mutant",
+    "verdict": "accept"
+   },
+   {
+    "config_id": "poison-allocator",
+    "kernel": "s2-tutorial-matmul-L1-2_Standard_matrix_multiplication_.mul2plus.L123C18",
+    "phase": "scoring",
+    "probe_config_id": null,
+    "reason": "",
+    "refused_configs": null,
+    "returncode": null,
+    "role": "mutant",
+    "verdict": "accept"
+   },
+   {
+    "config_id": "compute-sanitizer",
+    "kernel": "s2-tutorial-matmul-L1-2_Standard_matrix_multiplication_.mul2plus.L123C18",
+    "phase": "scoring",
+    "probe_config_id": "A3/allprime",
+    "reason": "",
+    "refused_configs": null,
+    "returncode": 0,
+    "role": "mutant",
+    "verdict": "accept"
+   },
+   {
+    "config_id": "in-process",
+    "kernel": "s1-inductor-L2-74_ConvTranspose3d_LeakyReLU_Multiply_LeakyReLU_Max.dim-param-swap-decode.L92C19",
+    "phase": "scoring",
+    "probe_config_id": null,
+    "reason": "",
+    "refused_configs": null,
+    "returncode": null,
+    "role": "mutant",
+    "verdict": "accept"
+   },
+   {
+    "config_id": "compute-sanitizer",
+    "kernel": "s1-inductor-L2-74_ConvTranspose3d_LeakyReLU_Multiply_LeakyReLU_Max.dim-param-swap-decode.L92C19",
+    "phase": "scoring",
+    "probe_config_id": null,
+    "reason": "sanitizer-did-not-run",
+    "refused_configs": null,
+    "returncode": 1,
+    "role": "mutant",
+    "verdict": "error"
+   },
+   {
+    "config_id": "poison-allocator",
+    "kernel": "s1-inductor-L2-74_ConvTranspose3d_LeakyReLU_Multiply_LeakyReLU_Max.dim-param-swap-decode.L92C19",
+    "phase": "scoring",
+    "probe_config_id": null,
+    "reason": "",
+    "refused_configs": null,
+    "returncode": null,
+    "role": "mutant",
+    "verdict": "accept"
+   },
+   {
+    "config_id": "in-process",
+    "kernel": "s1-inductor-L2-3_ConvTranspose3d_Sum_LayerNorm_AvgPool_GELU.dim-param-swap-decode.L76C21",
+    "phase": "scoring",
+    "probe_config_id": null,
+    "reason": "",
+    "refused_configs": null,
+    "returncode": null,
+    "role": "mutant",
+    "verdict": "accept"
+   },
+   {
+    "config_id": "compute-sanitizer",
+    "kernel": "s1-inductor-L2-3_ConvTranspose3d_Sum_LayerNorm_AvgPool_GELU.dim-param-swap-decode.L76C21",
+    "phase": "scoring",
+    "probe_config_id": null,
+    "reason": "sanitizer-did-not-run",
+    "refused_configs": null,
+    "returncode": 1,
+    "role": "mutant",
+    "verdict": "error"
+   },
+   {
+    "config_id": "poison-allocator",
+    "kernel": "s1-inductor-L2-3_ConvTranspose3d_Sum_LayerNorm_AvgPool_GELU.dim-param-swap-decode.L76C21",
+    "phase": "scoring",
+    "probe_config_id": null,
+    "reason": "",
+    "refused_configs": null,
+    "returncode": null,
+    "role": "mutant",
+    "verdict": "accept"
+   },
+   {
+    "config_id": "in-process",
+    "kernel": "s2-liger-cross-entropy-L1-95_CrossEntropyLoss.program-id-axis-swap.L55C17",
+    "phase": "scoring",
+    "probe_config_id": null,
+    "reason": "",
+    "refused_configs": null,
+    "returncode": null,
+    "role": "mutant",
+    "verdict": "reject"
+   },
+   {
+    "config_id": "compute-sanitizer",
+    "kernel": "s2-liger-cross-entropy-L1-95_CrossEntropyLoss.program-id-axis-swap.L55C17",
+    "phase": "scoring",
+    "probe_config_id": "A3/lead1",
+    "reason": "",
+    "refused_configs": null,
+    "returncode": 0,
+    "role": "mutant",
+    "verdict": "accept"
+   },
+   {
+    "config_id": "poison-allocator",
+    "kernel": "s2-liger-cross-entropy-L1-95_CrossEntropyLoss.program-id-axis-swap.L55C17",
+    "phase": "scoring",
+    "probe_config_id": null,
+    "reason": "output-depends-on-poison",
+    "refused_configs": null,
+    "returncode": null,
+    "role": "mutant",
+    "verdict": "reject"
+   },
+   {
+    "config_id": "aggregate",
+    "kernel": "s2-tutorial-matmul-L1-2_Standard_matrix_multiplication_.launch-stride-swap.L158C21",
+    "phase": "scoring",
+    "probe_config_id": null,
+    "reason": "candidate-raised",
+    "refused_configs": null,
+    "returncode": null,
+    "role": "mutant",
+    "verdict": "reject"
+   },
+   {
+    "config_id": "compute-sanitizer",
+    "kernel": "s2-tutorial-matmul-L1-2_Standard_matrix_multiplication_.launch-stride-swap.L158C21",
+    "phase": "scoring",
+    "probe_config_id": null,
+    "reason": "",
+    "refused_configs": null,
+    "returncode": 86,
+    "role": "mutant",
+    "verdict": "reject"
+   },
+   {
+    "config_id": "poison-allocator",
+    "kernel": "s2-tutorial-matmul-L1-2_Standard_matrix_multiplication_.launch-stride-swap.L158C21",
+    "phase": "scoring",
+    "probe_config_id": null,
+    "reason": "",
+    "refused_configs": null,
+    "returncode": null,
+    "role": "mutant",
+    "verdict": "accept"
+   },
+   {
+    "config_id": "in-process",
+    "kernel": "s1-inductor-L1-3_Batched_matrix_multiplication",
+    "phase": "scoring",
+    "probe_config_id": null,
+    "reason": "",
+    "refused_configs": null,
+    "returncode": null,
+    "role": "substrate",
+    "verdict": "accept"
+   },
+   {
+    "config_id": "poison-allocator",
+    "kernel": "s1-inductor-L1-3_Batched_matrix_multiplication",
+    "phase": "scoring",
+    "probe_config_id": null,
+    "reason": "",
+    "refused_configs": null,
+    "returncode": null,
+    "role": "substrate",
+    "verdict": "accept"
+   },
+   {
+    "config_id": "compute-sanitizer",
+    "kernel": "s1-inductor-L1-3_Batched_matrix_multiplication",
+    "phase": "scoring",
+    "probe_config_id": null,
+    "reason": "sanitizer-did-not-run",
+    "refused_configs": null,
+    "returncode": 1,
+    "role": "substrate",
+    "verdict": "error"
+   }
+  ]
+ },
+ "b2_rows": [
+  {
+   "details": {
+    "b0_calls_replayed": 5,
+    "event_rows": null,
+    "num_custom_kernels": 0,
+    "num_total_kernels": 16,
+    "reason": "profiler-shows-no-captured-kernel"
+   },
+   "kernel": "ctl-identity-L2-12_Gemm_Multiply_LeakyReLU",
+   "phase": "smoke",
+   "profile_attempts": null,
+   "verdict": "reject"
+  },
+  {
+   "details": {
+    "b0_calls_replayed": 5,
+    "event_rows": null,
+    "num_custom_kernels": 0,
+    "num_total_kernels": 12,
+    "reason": "profiler-shows-no-captured-kernel"
+   },
+   "kernel": "s1-inductor-L1-25_Swish.hack.cached-output",
+   "phase": "smoke",
+   "profile_attempts": null,
+   "verdict": "reject"
+  },
+  {
+   "details": {
+    "b0_calls_replayed": 5,
+    "event_rows": null,
+    "num_custom_kernels": 0,
+    "num_total_kernels": 9,
+    "reason": "profiler-shows-no-captured-kernel"
+   },
+   "kernel": "ctl-kernelbench-non-default-stream-L1-1",
+   "phase": "fidelity",
+   "profile_attempts": null,
+   "verdict": "reject"
+  },
+  {
+   "details": {
+    "b0_calls_replayed": 5,
+    "event_rows": null,
+    "num_custom_kernels": 0,
+    "num_total_kernels": 8,
+    "reason": "profiler-shows-no-captured-kernel"
+   },
+   "kernel": "ctl-kernelbench-result-reuse-L1-1",
+   "phase": "fidelity",
+   "profile_attempts": null,
+   "verdict": "reject"
+  },
+  {
+   "details": {
+    "b0_calls_replayed": 5,
+    "event_rows": null,
+    "num_custom_kernels": 0,
+    "num_total_kernels": 10,
+    "reason": "profiler-shows-no-captured-kernel"
+   },
+   "kernel": "ctl-kernelbench-zero-out-L1-1",
+   "phase": "fidelity",
+   "profile_attempts": null,
+   "verdict": "reject"
+  },
+  {
+   "details": {
+    "b0_calls_replayed": 5,
+    "event_rows": null,
+    "num_custom_kernels": 3,
+    "num_total_kernels": 18,
+    "reason": null
+   },
+   "kernel": "s1-inductor-L2-74_ConvTranspose3d_LeakyReLU_Multiply_LeakyReLU_Max.mul2div.L75C12",
+   "phase": "fidelity",
+   "profile_attempts": null,
+   "verdict": "accept"
+  },
+  {
+   "details": {
+    "b0_calls_replayed": 5,
+    "event_rows": null,
+    "num_custom_kernels": 3,
+    "num_total_kernels": 18,
+    "reason": null
+   },
+   "kernel": "s1-inductor-L2-3_ConvTranspose3d_Sum_LayerNorm_AvgPool_GELU.plus2minus.L132C31",
+   "phase": "fidelity",
+   "profile_attempts": null,
+   "verdict": "accept"
+  },
+  {
+   "details": {
+    "b0_calls_replayed": 5,
+    "event_rows": null,
+    "num_custom_kernels": 2,
+    "num_total_kernels": 22,
+    "reason": null
+   },
+   "kernel": "s2-liger-cross-entropy-L1-95_CrossEntropyLoss.minus2plus.L140C13",
+   "phase": "fidelity",
+   "profile_attempts": null,
+   "verdict": "accept"
+  },
+  {
+   "details": {
+    "b0_calls_replayed": 5,
+    "event_rows": null,
+    "num_custom_kernels": 2,
+    "num_total_kernels": 9,
+    "reason": null
+   },
+   "kernel": "s2-tutorial-matmul-L1-2_Standard_matrix_multiplication_.mul2plus.L123C18",
+   "phase": "fidelity",
+   "profile_attempts": null,
+   "verdict": "accept"
+  },
+  {
+   "details": {
+    "b0_calls_replayed": 5,
+    "event_rows": null,
+    "num_custom_kernels": 3,
+    "num_total_kernels": 18,
+    "reason": null
+   },
+   "kernel": "s1-inductor-L2-74_ConvTranspose3d_LeakyReLU_Multiply_LeakyReLU_Max",
+   "phase": "scoring",
+   "profile_attempts": null,
+   "verdict": "accept"
+  },
+  {
+   "details": {
+    "b0_calls_replayed": 5,
+    "event_rows": null,
+    "num_custom_kernels": 3,
+    "num_total_kernels": 18,
+    "reason": null
+   },
+   "kernel": "s1-inductor-L2-3_ConvTranspose3d_Sum_LayerNorm_AvgPool_GELU",
+   "phase": "scoring",
+   "profile_attempts": null,
+   "verdict": "accept"
+  },
+  {
+   "details": {
+    "b0_calls_replayed": 5,
+    "event_rows": null,
+    "num_custom_kernels": 2,
+    "num_total_kernels": 22,
+    "reason": null
+   },
+   "kernel": "s2-liger-cross-entropy-L1-95_CrossEntropyLoss",
+   "phase": "scoring",
+   "profile_attempts": null,
+   "verdict": "accept"
+  },
+  {
+   "details": {
+    "b0_calls_replayed": 5,
+    "event_rows": null,
+    "num_custom_kernels": 2,
+    "num_total_kernels": 9,
+    "reason": null
+   },
+   "kernel": "s2-tutorial-matmul-L1-2_Standard_matrix_multiplication_",
+   "phase": "scoring",
+   "profile_attempts": null,
+   "verdict": "accept"
+  },
+  {
+   "details": {
+    "b0_calls_replayed": 5,
+    "event_rows": null,
+    "num_custom_kernels": 0,
+    "num_total_kernels": 27,
+    "reason": "profiler-shows-no-captured-kernel"
+   },
+   "kernel": "ctl-identity-L2-74_ConvTranspose3d_LeakyReLU_Multiply_LeakyReLU_Max",
+   "phase": "scoring",
+   "profile_attempts": null,
+   "verdict": "reject"
+  },
+  {
+   "details": {
+    "b0_calls_replayed": 5,
+    "event_rows": null,
+    "num_custom_kernels": 0,
+    "num_total_kernels": 27,
+    "reason": "profiler-shows-no-captured-kernel"
+   },
+   "kernel": "ctl-identity-L2-3_ConvTranspose3d_Sum_LayerNorm_AvgPool_GELU",
+   "phase": "scoring",
+   "profile_attempts": null,
+   "verdict": "reject"
+  },
+  {
+   "details": {
+    "b0_calls_replayed": 5,
+    "event_rows": null,
+    "num_custom_kernels": 0,
+    "num_total_kernels": 18,
+    "reason": "profiler-shows-no-captured-kernel"
+   },
+   "kernel": "ctl-identity-L1-95_CrossEntropyLoss",
+   "phase": "scoring",
+   "profile_attempts": null,
+   "verdict": "reject"
+  },
+  {
+   "details": {
+    "b0_calls_replayed": 5,
+    "event_rows": null,
+    "num_custom_kernels": 0,
+    "num_total_kernels": 11,
+    "reason": "profiler-shows-no-captured-kernel"
+   },
+   "kernel": "ctl-identity-L1-2_Standard_matrix_multiplication_",
+   "phase": "scoring",
+   "profile_attempts": null,
+   "verdict": "reject"
+  },
+  {
+   "details": {
+    "b0_calls_replayed": 5,
+    "event_rows": null,
+    "num_custom_kernels": 3,
+    "num_total_kernels": 18,
+    "reason": null
+   },
+   "kernel": "s1-inductor-L2-74_ConvTranspose3d_LeakyReLU_Multiply_LeakyReLU_Max.mul2div.L75C12",
+   "phase": "scoring",
+   "profile_attempts": null,
+   "verdict": "accept"
+  },
+  {
+   "details": {
+    "b0_calls_replayed": 5,
+    "event_rows": null,
+    "num_custom_kernels": 3,
+    "num_total_kernels": 18,
+    "reason": null
+   },
+   "kernel": "s1-inductor-L2-3_ConvTranspose3d_Sum_LayerNorm_AvgPool_GELU.plus2minus.L132C31",
+   "phase": "scoring",
+   "profile_attempts": null,
+   "verdict": "accept"
+  },
+  {
+   "details": {
+    "b0_calls_replayed": 5,
+    "event_rows": null,
+    "num_custom_kernels": 2,
+    "num_total_kernels": 22,
+    "reason": null
+   },
+   "kernel": "s2-liger-cross-entropy-L1-95_CrossEntropyLoss.minus2plus.L140C13",
+   "phase": "scoring",
+   "profile_attempts": null,
+   "verdict": "accept"
+  },
+  {
+   "details": {
+    "b0_calls_replayed": 5,
+    "event_rows": null,
+    "num_custom_kernels": 2,
+    "num_total_kernels": 9,
+    "reason": null
+   },
+   "kernel": "s2-tutorial-matmul-L1-2_Standard_matrix_multiplication_.mul2plus.L123C18",
+   "phase": "scoring",
+   "profile_attempts": null,
+   "verdict": "accept"
+  },
+  {
+   "details": {
+    "b0_calls_replayed": 5,
+    "event_rows": null,
+    "num_custom_kernels": 3,
+    "num_total_kernels": 18,
+    "reason": null
+   },
+   "kernel": "s1-inductor-L2-74_ConvTranspose3d_LeakyReLU_Multiply_LeakyReLU_Max.dim-param-swap-decode.L92C19",
+   "phase": "scoring",
+   "profile_attempts": null,
+   "verdict": "accept"
+  },
+  {
+   "details": {
+    "b0_calls_replayed": 5,
+    "event_rows": null,
+    "num_custom_kernels": 3,
+    "num_total_kernels": 18,
+    "reason": null
+   },
+   "kernel": "s1-inductor-L2-3_ConvTranspose3d_Sum_LayerNorm_AvgPool_GELU.dim-param-swap-decode.L76C21",
+   "phase": "scoring",
+   "profile_attempts": null,
+   "verdict": "accept"
+  },
+  {
+   "details": {
+    "b0_calls_replayed": 5,
+    "event_rows": null,
+    "num_custom_kernels": 2,
+    "num_total_kernels": 22,
+    "reason": null
+   },
+   "kernel": "s2-liger-cross-entropy-L1-95_CrossEntropyLoss.program-id-axis-swap.L55C17",
+   "phase": "scoring",
+   "profile_attempts": null,
+   "verdict": "accept"
+  },
+  {
+   "details": {
+    "b0_calls_replayed": null,
+    "event_rows": null,
+    "num_custom_kernels": null,
+    "num_total_kernels": null,
+    "reason": "profiling-raised"
+   },
+   "kernel": "s2-tutorial-matmul-L1-2_Standard_matrix_multiplication_.launch-stride-swap.L158C21",
+   "phase": "scoring",
+   "profile_attempts": null,
+   "verdict": "error"
+  },
+  {
+   "details": {
+    "b0_calls_replayed": 5,
+    "event_rows": null,
+    "num_custom_kernels": 2,
+    "num_total_kernels": 9,
+    "reason": null
+   },
+   "kernel": "s1-inductor-L1-3_Batched_matrix_multiplication",
+   "phase": "scoring",
+   "profile_attempts": null,
+   "verdict": "accept"
+  }
+ ],
+ "calibration": {
+  "audit_version": {
+   "audit_version_sha256": "2b115e0f15e69a4675d87b1ab21bffb01e41bfe9f4ede6bd8eef89b92a7d83eb",
+   "files": {
+    "audit/calibration.py": "57d486feb8eacf562330c039e7e320c03af1f18b6e0c993a8b9e98d6e07605dc",
+    "audit/contracts.py": "3a3eaa3dc1cea317467cfb15affa5a1535343636403f7e251c417aa81c9f6b4b",
+    "audit/gpu_probes.py": "632ae7fbafa1ed922055f8ccc6f0dcece468d6c061bc0b69775fde3ea3f7ff22",
+    "audit/lethe_contracts.py": "41694473e5ec1540a97c8568d0818e4ba5764c07efb0b12549773657932eaa79",
+    "audit/oracle.py": "115d62a717ac1fd0c926f7b27f0bcd824c3f8d765f1c89dfe1655ff561706816",
+    "audit/poison_alloc.c": "9c47dfd6e149f982f7ba2f935dff6b568764ece9e15b4a4b2aab55e35339a7e8",
+    "audit/replay.py": "0bdf037dab6daf78855dfc30b98a82ada552dc3b11fd639192c084a12e0c0572",
+    "audit/run.py": "abfa38b44393da3867428359b9d89d86d5de5f8fed791f8470edb4b8c674ac8c",
+    "audit/tiers.py": "0184e9bee09ad8760629e920b7f08d3340870f2816c0b92dbfef74f5ba11001c",
+    "audit/values.py": "160640fecdfc697205642cad153a5459d87804e917b44de8ab4a5d9250149435",
+    "gates/reductions.py": "d41aacb7d9f5595722cf160004bdf3d5b09daf1563081178f9a3d646c3beb083"
+   },
+   "kappa": 0.001,
+   "multiplier": 16,
+   "multiplier_raised": false,
+   "policies": [
+    "tf32-admissible",
+    "strict-fp32"
+   ],
+   "precision_only_factor": 64,
+   "primary_policy": "tf32-admissible",
+   "primary_tier": "G",
+   "t_floor": 9.5367431640625e-07
+  },
+  "calibration_version": "q1-audit-calibration/1",
+  "counts": {
+   "member": 4
+  },
+  "fault_candidates": [],
+  "fault_ceiling": 1024.0,
+  "kernels": {
+   "s1-inductor-L1-15_Matmul_for_lower_triangular_matrices": {
+    "draws": 5,
+    "infinite": false,
+    "required_multiplier": 0.014240456784221409,
+    "status": "member"
+   },
+   "s1-inductor-L1-47_Sum_reduction_over_a_dimension": {
+    "draws": 5,
+    "infinite": false,
+    "required_multiplier": 0.0,
+    "status": "member"
+   },
+   "s1-inductor-L2-52_Conv2d_Activation_BatchNorm": {
+    "draws": 5,
+    "infinite": false,
+    "required_multiplier": 1.0001316637938729,
+    "status": "member"
+   },
+   "s1-inductor-L2-60_ConvTranspose3d_Swish_GroupNorm_HardSwish": {
+    "draws": 5,
+    "infinite": false,
+    "required_multiplier": 1.0000021229439946,
+    "status": "member"
+   }
+  },
+  "largest_member_requirement": 1.0001316637938729,
+  "multiplier": 16,
+  "multiplier_raised": false,
+  "policy": "tf32-admissible",
+  "s1_split_sha256": "b773f218f174e3bb8ab4fcde4f4e6318d870ef020e6b86bce807362c5292a0b2",
+  "seed": 42
+ },
+ "fidelity": [
+  {
+   "a_head_1e-4_vs_423217d9": {
+    "agree": true,
+    "listed_in_advance": false,
+    "ours": "accept",
+    "upstream": "accept"
+   },
+   "a_vs_44130946": {
+    "agree": true,
+    "ours": "accept",
+    "upstream": "accept"
+   },
+   "b_vs_kernelgym": {
+    "b0_vs_a_agree": true,
+    "decoy_agree": true,
+    "decoy_not_comparable": null,
+    "ours_a": "accept",
+    "ours_b1": "reject",
+    "ours_b2": "reject",
+    "ours_decoy": true,
+    "upstream_b0_correct": true,
+    "upstream_decoy": true,
+    "upstream_reason": null,
+    "upstream_verdict": "reject"
+   },
+   "c1_kbv_compat_vs_native": {
+    "agree_per_config": true,
+    "kbv_aggregate": "accept",
+    "kbv_per_config": [
+     "accept",
+     "accept",
+     "accept",
+     "accept"
+    ],
+    "kbv_problem_equals_ours": true,
+    "kbv_reason": null,
+    "ours_aggregate_kbv_raw": "accept",
+    "ours_aggregate_validity_filtered": "accept",
+    "ours_per_config": [
+     "accept",
+     "accept",
+     "accept",
+     "accept"
+    ]
+   },
+   "kernel": "ctl-kernelbench-non-default-stream-L1-1",
+   "role": "core-control"
+  },
+  {
+   "a_head_1e-4_vs_423217d9": {
+    "agree": true,
+    "listed_in_advance": false,
+    "ours": "reject",
+    "upstream": "reject"
+   },
+   "a_vs_44130946": {
+    "agree": true,
+    "ours": "reject",
+    "upstream": "reject"
+   },
+   "b_vs_kernelgym": {
+    "b0_vs_a_agree": true,
+    "decoy_agree": null,
+    "decoy_not_comparable": "upstream skips detection when b0 fails",
+    "ours_a": "reject",
+    "ours_b1": "reject",
+    "ours_b2": "reject",
+    "ours_decoy": true,
+    "upstream_b0_correct": false,
+    "upstream_decoy": false,
+    "upstream_reason": null,
+    "upstream_verdict": "reject"
+   },
+   "c1_kbv_compat_vs_native": {
+    "agree_per_config": true,
+    "kbv_aggregate": "reject",
+    "kbv_per_config": [
+     "reject",
+     "reject",
+     "reject",
+     "reject"
+    ],
+    "kbv_problem_equals_ours": true,
+    "kbv_reason": null,
+    "ours_aggregate_kbv_raw": "reject",
+    "ours_aggregate_validity_filtered": "reject",
+    "ours_per_config": [
+     "reject",
+     "reject",
+     "reject",
+     "reject"
+    ]
+   },
+   "kernel": "ctl-kernelbench-result-reuse-L1-1",
+   "role": "core-control"
+  },
+  {
+   "a_head_1e-4_vs_423217d9": {
+    "agree": true,
+    "listed_in_advance": false,
+    "ours": "reject",
+    "upstream": "reject"
+   },
+   "a_vs_44130946": {
+    "agree": true,
+    "ours": "reject",
+    "upstream": "reject"
+   },
+   "b_vs_kernelgym": {
+    "b0_vs_a_agree": true,
+    "decoy_agree": null,
+    "decoy_not_comparable": "upstream skips detection when b0 fails",
+    "ours_a": "reject",
+    "ours_b1": "reject",
+    "ours_b2": "reject",
+    "ours_decoy": true,
+    "upstream_b0_correct": false,
+    "upstream_decoy": false,
+    "upstream_reason": null,
+    "upstream_verdict": "reject"
+   },
+   "c1_kbv_compat_vs_native": {
+    "agree_per_config": true,
+    "kbv_aggregate": "reject",
+    "kbv_per_config": [
+     "reject",
+     "reject",
+     "reject",
+     "reject"
+    ],
+    "kbv_problem_equals_ours": true,
+    "kbv_reason": null,
+    "ours_aggregate_kbv_raw": "reject",
+    "ours_aggregate_validity_filtered": "reject",
+    "ours_per_config": [
+     "reject",
+     "reject",
+     "reject",
+     "reject"
+    ]
+   },
+   "kernel": "ctl-kernelbench-zero-out-L1-1",
+   "role": "core-control"
+  },
+  {
+   "a_head_1e-4_vs_423217d9": {
+    "agree": true,
+    "listed_in_advance": false,
+    "ours": "accept",
+    "upstream": "accept"
+   },
+   "a_vs_44130946": {
+    "agree": true,
+    "ours": "accept",
+    "upstream": "accept"
+   },
+   "b_vs_kernelgym": {
+    "b0_vs_a_agree": true,
+    "decoy_agree": true,
+    "decoy_not_comparable": null,
+    "ours_a": "accept",
+    "ours_b1": "accept",
+    "ours_b2": "accept",
+    "ours_decoy": false,
+    "upstream_b0_correct": true,
+    "upstream_decoy": false,
+    "upstream_reason": null,
+    "upstream_verdict": "accept"
+   },
+   "c1_kbv_compat_vs_native": {
+    "agree_per_config": true,
+    "kbv_aggregate": "accept",
+    "kbv_per_config": [
+     "accept",
+     "accept",
+     "accept",
+     "accept"
+    ],
+    "kbv_problem_equals_ours": true,
+    "kbv_reason": null,
+    "ours_aggregate_kbv_raw": "accept",
+    "ours_aggregate_validity_filtered": "accept",
+    "ours_per_config": [
+     "accept",
+     "accept",
+     "accept",
+     "accept"
+    ]
+   },
+   "kernel": "s1-inductor-L2-3_ConvTranspose3d_Sum_LayerNorm_AvgPool_GELU",
+   "role": "substrate"
+  },
+  {
+   "a_head_1e-4_vs_423217d9": {
+    "agree": true,
+    "listed_in_advance": false,
+    "ours": "reject",
+    "upstream": "reject"
+   },
+   "a_vs_44130946": {
+    "agree": true,
+    "ours": "reject",
+    "upstream": "reject"
+   },
+   "b_vs_kernelgym": {
+    "b0_vs_a_agree": true,
+    "decoy_agree": null,
+    "decoy_not_comparable": "upstream skips detection when b0 fails",
+    "ours_a": "reject",
+    "ours_b1": "accept",
+    "ours_b2": "accept",
+    "ours_decoy": false,
+    "upstream_b0_correct": false,
+    "upstream_decoy": false,
+    "upstream_reason": null,
+    "upstream_verdict": "reject"
+   },
+   "c1_kbv_compat_vs_native": {
+    "agree_per_config": true,
+    "kbv_aggregate": "reject",
+    "kbv_per_config": [
+     "reject",
+     "reject",
+     "reject",
+     "reject"
+    ],
+    "kbv_problem_equals_ours": true,
+    "kbv_reason": null,
+    "ours_aggregate_kbv_raw": "reject",
+    "ours_aggregate_validity_filtered": "reject",
+    "ours_per_config": [
+     "reject",
+     "reject",
+     "reject",
+     "reject"
+    ]
+   },
+   "kernel": "s1-inductor-L2-3_ConvTranspose3d_Sum_LayerNorm_AvgPool_GELU.plus2minus.L132C31",
+   "role": "mutant"
+  },
+  {
+   "a_head_1e-4_vs_423217d9": {
+    "agree": true,
+    "listed_in_advance": false,
+    "ours": "accept",
+    "upstream": "accept"
+   },
+   "a_vs_44130946": {
+    "agree": true,
+    "ours": "accept",
+    "upstream": "accept"
+   },
+   "b_vs_kernelgym": {
+    "b0_vs_a_agree": true,
+    "decoy_agree": true,
+    "decoy_not_comparable": null,
+    "ours_a": "accept",
+    "ours_b1": "accept",
+    "ours_b2": "accept",
+    "ours_decoy": false,
+    "upstream_b0_correct": true,
+    "upstream_decoy": false,
+    "upstream_reason": null,
+    "upstream_verdict": "accept"
+   },
+   "c1_kbv_compat_vs_native": {
+    "agree_per_config": true,
+    "kbv_aggregate": "accept",
+    "kbv_per_config": [
+     "accept",
+     "accept",
+     "accept",
+     "accept"
+    ],
+    "kbv_problem_equals_ours": true,
+    "kbv_reason": null,
+    "ours_aggregate_kbv_raw": "accept",
+    "ours_aggregate_validity_filtered": "accept",
+    "ours_per_config": [
+     "accept",
+     "accept",
+     "accept",
+     "accept"
+    ]
+   },
+   "kernel": "s1-inductor-L2-74_ConvTranspose3d_LeakyReLU_Multiply_LeakyReLU_Max",
+   "role": "substrate"
+  },
+  {
+   "a_head_1e-4_vs_423217d9": {
+    "agree": true,
+    "listed_in_advance": false,
+    "ours": "reject",
+    "upstream": "reject"
+   },
+   "a_vs_44130946": {
+    "agree": true,
+    "ours": "reject",
+    "upstream": "reject"
+   },
+   "b_vs_kernelgym": {
+    "b0_vs_a_agree": true,
+    "decoy_agree": null,
+    "decoy_not_comparable": "upstream skips detection when b0 fails",
+    "ours_a": "reject",
+    "ours_b1": "accept",
+    "ours_b2": "accept",
+    "ours_decoy": false,
+    "upstream_b0_correct": false,
+    "upstream_decoy": false,
+    "upstream_reason": null,
+    "upstream_verdict": "reject"
+   },
+   "c1_kbv_compat_vs_native": {
+    "agree_per_config": true,
+    "kbv_aggregate": "reject",
+    "kbv_per_config": [
+     "reject",
+     "reject",
+     "reject",
+     "reject"
+    ],
+    "kbv_problem_equals_ours": true,
+    "kbv_reason": null,
+    "ours_aggregate_kbv_raw": "reject",
+    "ours_aggregate_validity_filtered": "reject",
+    "ours_per_config": [
+     "reject",
+     "reject",
+     "reject",
+     "reject"
+    ]
+   },
+   "kernel": "s1-inductor-L2-74_ConvTranspose3d_LeakyReLU_Multiply_LeakyReLU_Max.mul2div.L75C12",
+   "role": "mutant"
+  },
+  {
+   "a_head_1e-4_vs_423217d9": {
+    "agree": false,
+    "listed_in_advance": true,
+    "ours": "error",
+    "upstream": "reject"
+   },
+   "a_vs_44130946": {
+    "agree": true,
+    "ours": "accept",
+    "upstream": "accept"
+   },
+   "b_vs_kernelgym": {
+    "b0_vs_a_agree": true,
+    "decoy_agree": true,
+    "decoy_not_comparable": null,
+    "ours_a": "accept",
+    "ours_b1": "accept",
+    "ours_b2": "accept",
+    "ours_decoy": false,
+    "upstream_b0_correct": true,
+    "upstream_decoy": false,
+    "upstream_reason": null,
+    "upstream_verdict": "accept"
+   },
+   "c1_kbv_compat_vs_native": {
+    "agree_per_config": true,
+    "kbv_aggregate": "accept",
+    "kbv_per_config": [
+     "accept",
+     "accept",
+     "accept",
+     "accept"
+    ],
+    "kbv_problem_equals_ours": true,
+    "kbv_reason": null,
+    "ours_aggregate_kbv_raw": "accept",
+    "ours_aggregate_validity_filtered": "error",
+    "ours_per_config": [
+     "accept",
+     "accept",
+     "accept",
+     "accept"
+    ]
+   },
+   "kernel": "s2-liger-cross-entropy-L1-95_CrossEntropyLoss",
+   "role": "substrate"
+  },
+  {
+   "a_head_1e-4_vs_423217d9": {
+    "agree": false,
+    "listed_in_advance": true,
+    "ours": "error",
+    "upstream": "reject"
+   },
+   "a_vs_44130946": {
+    "agree": true,
+    "ours": "reject",
+    "upstream": "reject"
+   },
+   "b_vs_kernelgym": {
+    "b0_vs_a_agree": true,
+    "decoy_agree": null,
+    "decoy_not_comparable": "upstream skips detection when b0 fails",
+    "ours_a": "reject",
+    "ours_b1": "accept",
+    "ours_b2": "accept",
+    "ours_decoy": false,
+    "upstream_b0_correct": false,
+    "upstream_decoy": false,
+    "upstream_reason": null,
+    "upstream_verdict": "reject"
+   },
+   "c1_kbv_compat_vs_native": {
+    "agree_per_config": true,
+    "kbv_aggregate": "accept",
+    "kbv_per_config": [
+     "accept",
+     "accept",
+     "accept",
+     "accept"
+    ],
+    "kbv_problem_equals_ours": true,
+    "kbv_reason": null,
+    "ours_aggregate_kbv_raw": "accept",
+    "ours_aggregate_validity_filtered": "error",
+    "ours_per_config": [
+     "accept",
+     "accept",
+     "accept",
+     "accept"
+    ]
+   },
+   "kernel": "s2-liger-cross-entropy-L1-95_CrossEntropyLoss.minus2plus.L140C13",
+   "role": "mutant"
+  },
+  {
+   "a_head_1e-4_vs_423217d9": {
+    "agree": true,
+    "listed_in_advance": false,
+    "ours": "reject",
+    "upstream": "reject"
+   },
+   "a_vs_44130946": {
+    "agree": true,
+    "ours": "accept",
+    "upstream": "accept"
+   },
+   "b_vs_kernelgym": {
+    "b0_vs_a_agree": true,
+    "decoy_agree": true,
+    "decoy_not_comparable": null,
+    "ours_a": "accept",
+    "ours_b1": "accept",
+    "ours_b2": "accept",
+    "ours_decoy": false,
+    "upstream_b0_correct": true,
+    "upstream_decoy": false,
+    "upstream_reason": null,
+    "upstream_verdict": "accept"
+   },
+   "c1_kbv_compat_vs_native": {
+    "agree_per_config": true,
+    "kbv_aggregate": "accept",
+    "kbv_per_config": [
+     "accept",
+     "accept",
+     "accept",
+     "accept"
+    ],
+    "kbv_problem_equals_ours": true,
+    "kbv_reason": null,
+    "ours_aggregate_kbv_raw": "accept",
+    "ours_aggregate_validity_filtered": "accept",
+    "ours_per_config": [
+     "accept",
+     "accept",
+     "accept",
+     "accept"
+    ]
+   },
+   "kernel": "s2-tutorial-matmul-L1-2_Standard_matrix_multiplication_",
+   "role": "substrate"
+  },
+  {
+   "a_head_1e-4_vs_423217d9": {
+    "agree": true,
+    "listed_in_advance": false,
+    "ours": "reject",
+    "upstream": "reject"
+   },
+   "a_vs_44130946": {
+    "agree": true,
+    "ours": "reject",
+    "upstream": "reject"
+   },
+   "b_vs_kernelgym": {
+    "b0_vs_a_agree": true,
+    "decoy_agree": null,
+    "decoy_not_comparable": "upstream skips detection when b0 fails",
+    "ours_a": "reject",
+    "ours_b1": "accept",
+    "ours_b2": "accept",
+    "ours_decoy": false,
+    "upstream_b0_correct": false,
+    "upstream_decoy": false,
+    "upstream_reason": null,
+    "upstream_verdict": "reject"
+   },
+   "c1_kbv_compat_vs_native": {
+    "agree_per_config": true,
+    "kbv_aggregate": "reject",
+    "kbv_per_config": [
+     "reject",
+     "reject",
+     "reject",
+     "reject"
+    ],
+    "kbv_problem_equals_ours": true,
+    "kbv_reason": null,
+    "ours_aggregate_kbv_raw": "reject",
+    "ours_aggregate_validity_filtered": "reject",
+    "ours_per_config": [
+     "reject",
+     "reject",
+     "reject",
+     "reject"
+    ]
+   },
+   "kernel": "s2-tutorial-matmul-L1-2_Standard_matrix_multiplication_.mul2plus.L123C18",
+   "role": "mutant"
+  }
+ ],
+ "fidelity_agreement_counts": {
+  "a_head_1e-4_vs_423217d9:True": 9,
+  "a_head_1e-4_vs_423217d9:listed-in-advance": 2,
+  "a_vs_44130946:True": 11,
+  "b0_vs_a:True": 11,
+  "b_decoy:None": 6,
+  "b_decoy:True": 5,
+  "c1_per_config:True": 11
+ },
+ "job": "runs/518",
+ "phases": {
+  "elapsed_seconds": 2207.353,
+  "job": "pilot",
+  "phases": [
+   {
+    "manifest_sha256": "260038b32e3f6778187c49a2610a5ecc81a34032214d93c353f0e7b6dd18279d",
+    "phase": "unpack",
+    "seconds": 0.32,
+    "sigusr1_handler_before": "install_signal_handlers.<locals>.<lambda>",
+    "start_offset_seconds": 0.02,
+    "status": "ok",
+    "trees": {
+     "corpus": {
+      "added": [],
+      "files": 1905,
+      "licence": "mixed",
+      "path": "/outputs/q1/inputs/corpus",
+      "revision": null,
+      "source": "q1-pilot-corpus",
+      "tree_sha256": "62700d5ac1469e362352caf779946d2d758cc758266ca6b4325fd005cc45304b"
+     },
+     "kbv": {
+      "added": [
+       "REVISION"
+      ],
+      "files": 604,
+      "licence": "MIT",
+      "path": "/outputs/q1/inputs/kbv",
+      "revision": "3fdf6fec7372a4d0cb682635f00e7bdcbc55d50e",
+      "source": "facebookresearch/kernel_bench_verified",
+      "tree_sha256": "02aac1269d88844ee6bbe3049fb31528169fa64435b2ce6e37694276f3b3244d"
+     },
+     "kernelgym": {
+      "added": [
+       "REVISION"
+      ],
+      "files": 291,
+      "licence": "none",
+      "path": "/outputs/q1/inputs/kernelgym",
+      "revision": "3a84417f8c0efaadb215ef638b37d12e71ed20f3",
+      "source": "hkust-nlp/KernelGYM",
+      "tree_sha256": "162a31a621fa7e3a43e0537a30e6dba934aa4ddb7d73ca90df2b284a3e39a83e"
+     }
+    }
+   },
+   {
+    "phase": "smoke",
+    "runs": [
+     {
+      "budget_seconds": 360.0,
+      "crashes": 0,
+      "left_in_queue": 0,
+      "name": "smoke",
+      "planned": 19,
+      "retired_slots": [],
+      "run": 19,
+      "run_id": "ba00cccd92f9",
+      "skipped": 0,
+      "time_boxed": false,
+      "timeouts": 0
+     },
+     {
+      "budget_seconds": 120,
+      "crashes": 0,
+      "left_in_queue": 0,
+      "name": "smoke-timing",
+      "planned": 1,
+      "retired_slots": [],
+      "run": 1,
+      "run_id": "23f106c0d65b",
+      "skipped": 0,
+      "time_boxed": false,
+      "timeouts": 0
+     }
+    ],
+    "seconds": 127.076,
+    "sigusr1_handler_before": "install_signal_handlers.<locals>.<lambda>",
+    "start_offset_seconds": 0.391,
+    "status": "ok"
+   },
+   {
+    "phase": "fidelity",
+    "runs": [
+     {
+      "budget_seconds": 420.0,
+      "crashes": 0,
+      "left_in_queue": 0,
+      "name": "fidelity",
+      "planned": 83,
+      "retired_slots": [],
+      "run": 83,
+      "run_id": "01dab0e00629",
+      "skipped": 0,
+      "time_boxed": false,
+      "timeouts": 0
+     }
+    ],
+    "seconds": 306.143,
+    "sigusr1_handler_before": "install_signal_handlers.<locals>.<lambda>",
+    "start_offset_seconds": 127.468,
+    "status": "ok"
+   },
+   {
+    "calibrate_exit": 0,
+    "phase": "calibration",
+    "runs": [
+     {
+      "budget_seconds": 240.0,
+      "crashes": 0,
+      "left_in_queue": 0,
+      "name": "calibration",
+      "planned": 4,
+      "retired_slots": [],
+      "run": 4,
+      "run_id": "e4fc6ad8758e",
+      "skipped": 0,
+      "time_boxed": false,
+      "timeouts": 0
+     }
+    ],
+    "seconds": 97.434,
+    "sigusr1_handler_before": "install_signal_handlers.<locals>.<lambda>",
+    "start_offset_seconds": 433.611,
+    "status": "ok"
+   },
+   {
+    "phase": "scoring",
+    "runs": [
+     {
+      "budget_seconds": 1538.9,
+      "crashes": 3,
+      "left_in_queue": 4551,
+      "name": "scoring",
+      "planned": 4815,
+      "retired_slots": [],
+      "run": 260,
+      "run_id": "ae738cb1f7f3",
+      "skipped": 0,
+      "time_boxed": true,
+      "timeouts": 0
+     }
+    ],
+    "seconds": 1676.298,
+    "sigusr1_handler_before": "install_signal_handlers.<locals>.<lambda>",
+    "start_offset_seconds": 531.045,
+    "status": "ok"
+   },
+   {
+    "phase": "timing",
+    "runs": [
+     {
+      "budget_seconds": 0.0,
+      "crashes": 0,
+      "left_in_queue": 2,
+      "name": "timing",
+      "planned": 2,
+      "retired_slots": [],
+      "run": 0,
+      "run_id": "1c5e5e5ae11c",
+      "skipped": 0,
+      "time_boxed": true,
+      "timeouts": 0
+     }
+    ],
+    "seconds": 0.001,
+    "sigusr1_handler_before": "install_signal_handlers.<locals>.<lambda>",
+    "start_offset_seconds": 2207.344,
+    "status": "ok"
+   }
+  ],
+  "slots": [
+   "cuda:0",
+   "cuda:0",
+   "cuda:0",
+   "cuda:0"
+  ],
+  "slots_per_gpu": 4
+ },
+ "schema": "q1-pilot-evidence/1",
+ "smoke_checks": [
+  {
+   "expected": "accept",
+   "gate": "a",
+   "got": "accept",
+   "kernel": "ctl-identity-L2-12_Gemm_Multiply_LeakyReLU",
+   "ok": true
+  },
+  {
+   "expected": "accept",
+   "gate": "a_1e-3",
+   "got": "accept",
+   "kernel": "ctl-identity-L2-12_Gemm_Multiply_LeakyReLU",
+   "ok": true
+  },
+  {
+   "expected": "accept",
+   "gate": "a_head_1e-4",
+   "got": "accept",
+   "kernel": "ctl-identity-L2-12_Gemm_Multiply_LeakyReLU",
+   "ok": true
+  },
+  {
+   "expected": "accept",
+   "gate": "a_head_1e-2",
+   "got": "accept",
+   "kernel": "ctl-identity-L2-12_Gemm_Multiply_LeakyReLU",
+   "ok": true
+  },
+  {
+   "expected": null,
+   "gate": "a_static",
+   "got": "reject",
+   "kernel": "ctl-identity-L2-12_Gemm_Multiply_LeakyReLU",
+   "ok": null
+  },
+  {
+   "expected": "reject",
+   "gate": "b1",
+   "got": "reject",
+   "kernel": "ctl-identity-L2-12_Gemm_Multiply_LeakyReLU",
+   "ok": true
+  },
+  {
+   "expected": "reject",
+   "gate": "b2",
+   "got": "reject",
+   "kernel": "ctl-identity-L2-12_Gemm_Multiply_LeakyReLU",
+   "ok": true
+  },
+  {
+   "expected": "accept",
+   "gate": "A1",
+   "got": "accept",
+   "kernel": "ctl-identity-L2-12_Gemm_Multiply_LeakyReLU",
+   "ok": true
+  },
+  {
+   "expected": "accept",
+   "gate": "A2",
+   "got": "accept",
+   "kernel": "ctl-identity-L2-12_Gemm_Multiply_LeakyReLU",
+   "ok": true
+  },
+  {
+   "expected": "accept",
+   "gate": "A4",
+   "got": "accept",
+   "kernel": "ctl-identity-L2-12_Gemm_Multiply_LeakyReLU",
+   "ok": true
+  },
+  {
+   "expected": "accept",
+   "gate": "A4_poison",
+   "got": null,
+   "kernel": "ctl-identity-L2-12_Gemm_Multiply_LeakyReLU",
+   "ok": null
+  },
+  {
+   "expected": "accept",
+   "gate": "A4_sanitizer",
+   "got": null,
+   "kernel": "ctl-identity-L2-12_Gemm_Multiply_LeakyReLU",
+   "ok": null
+  },
+  {
+   "expected": null,
+   "gate": "c",
+   "got": null,
+   "kernel": "ctl-identity-L2-12_Gemm_Multiply_LeakyReLU",
+   "ok": null
+  },
+  {
+   "expected": null,
+   "gate": "c1",
+   "got": "accept",
+   "kernel": "ctl-identity-L2-12_Gemm_Multiply_LeakyReLU",
+   "ok": null
+  },
+  {
+   "expected": null,
+   "gate": "c2",
+   "got": "accept",
+   "kernel": "ctl-identity-L2-12_Gemm_Multiply_LeakyReLU",
+   "ok": null
+  },
+  {
+   "expected": null,
+   "gate": "c3",
+   "got": "accept",
+   "kernel": "ctl-identity-L2-12_Gemm_Multiply_LeakyReLU",
+   "ok": null
+  },
+  {
+   "expected": null,
+   "gate": "A3",
+   "got": "accept",
+   "kernel": "ctl-identity-L2-12_Gemm_Multiply_LeakyReLU",
+   "ok": null
+  },
+  {
+   "expected": null,
+   "gate": "A5",
+   "got": "accept",
+   "kernel": "ctl-identity-L2-12_Gemm_Multiply_LeakyReLU",
+   "ok": null
+  }
+ ],
+ "smoke_checks_failed": [],
+ "verdict_counts": {
+  "calibration": {
+   "A1": {
+    "accept": 2,
+    "reject": 2
+   }
+  },
+  "fidelity": {
+   "a": {
+    "accept": 1,
+    "reject": 6
+   },
+   "a_head_1e-4": {
+    "accept": 1,
+    "error": 1,
+    "reject": 5
+   },
+   "a_upstream_423217d9": {
+    "accept": 3,
+    "reject": 8
+   },
+   "a_upstream_44130946": {
+    "accept": 5,
+    "reject": 6
+   },
+   "b1": {
+    "accept": 4,
+    "reject": 3
+   },
+   "b2": {
+    "accept": 4,
+    "reject": 3
+   },
+   "b_native": {
+    "accept": 4,
+    "reject": 7
+   },
+   "c1_kbv_compat": {
+    "accept": 4,
+    "error": 2,
+    "reject": 5
+   },
+   "c1_kbv_compat_raw": {
+    "accept": 6,
+    "reject": 5
+   },
+   "c1_kbv_native": {
+    "accept": 6,
+    "reject": 5
+   }
+  },
+  "scoring": {
+   "A1": {
+    "accept": 4,
+    "reject": 13
+   },
+   "A2": {
+    "accept": 4,
+    "reject": 13
+   },
+   "A3": {
+    "accept": 3,
+    "refuse": 4,
+    "reject": 10
+   },
+   "A4": {
+    "reject": 1
+   },
+   "A5": {
+    "accept": 5,
+    "error": 1,
+    "reject": 11
+   },
+   "a": {
+    "accept": 12,
+    "reject": 6
+   },
+   "a_1e-3": {
+    "accept": 11,
+    "reject": 6
+   },
+   "a_head_1e-2": {
+    "accept": 10,
+    "error": 4,
+    "reject": 4
+   },
+   "a_head_1e-4": {
+    "accept": 9,
+    "error": 4,
+    "reject": 5
+   },
+   "a_static": {
+    "accept": 7,
+    "reject": 11
+   },
+   "b1": {
+    "accept": 13,
+    "error": 1,
+    "reject": 4
+   },
+   "b2": {
+    "accept": 12,
+    "error": 1,
+    "reject": 4
+   },
+   "c": {
+    "reject": 1
+   },
+   "c1": {
+    "accept": 11,
+    "reject": 5
+   },
+   "c2": {
+    "accept": 11,
+    "reject": 5
+   },
+   "c3": {
+    "accept": 11,
+    "reject": 5
+   },
+   "c_1e-2": {
+    "accept": 11,
+    "reject": 5
+   },
+   "c_kbv_raw": {
+    "accept": 11,
+    "reject": 5
+   }
+  },
+  "smoke": {
+   "A1": {
+    "accept": 1
+   },
+   "A2": {
+    "accept": 1
+   },
+   "A3": {
+    "accept": 1
+   },
+   "A5": {
+    "accept": 1
+   },
+   "a": {
+    "accept": 1
+   },
+   "a_1e-3": {
+    "accept": 1
+   },
+   "a_head_1e-2": {
+    "accept": 1
+   },
+   "a_head_1e-4": {
+    "accept": 1
+   },
+   "a_static": {
+    "reject": 1
+   },
+   "a_upstream_423217d9": {
+    "accept": 1
+   },
+   "a_upstream_44130946": {
+    "accept": 1
+   },
+   "b1": {
+    "reject": 2
+   },
+   "b2": {
+    "reject": 2
+   },
+   "c1": {
+    "accept": 1
+   },
+   "c2": {
+    "accept": 1
+   },
+   "c3": {
+    "accept": 1
+   },
+   "c_1e-2": {
+    "accept": 1
+   },
+   "c_kbv_raw": {
+    "accept": 1
+   }
+  },
+  "smoke-timing": {
+   "timing": {
+    "accept": 1
+   }
+  },
+  "timing": {}
+ }
+}

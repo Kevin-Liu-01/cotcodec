@@ -1,0 +1,15 @@
+{
+  "job_id": "487",
+  "git_sha": "45dbb1995de8e7f92323c214881909de5001ba05",
+  "git_tree": "5573487c42f1999be229af963cb462fe4fbb1ea1",
+  "source_tar_sha256": "fc7aeae8dfe65fcd35881beabc09b35ae6a55a1eee28d4c72cc716c01c6ce07f",
+  "tag": "cotcodec-q1-gates:45dbb199",
+  "image_id": "sha256:5fbc60ac5ad94ea5bc5e178ef378ac77c23e94b31ecb69797c424dc385b2eccf",
+  "repo_digest": "127.0.0.1:5000/cotcodec-q1-gates@sha256:714c29cbc0b89703f444e47558d55f9fc6a86f7fa5614d01a02e6ff46705f538",
+  "base_image": "127.0.0.1:5000/cotcodec-research@sha256:02965f3d696d4e516a7cd6d5c03434e9098139738748ae778ed967215db7be6d",
+  "base_image_id": "sha256:3804466639c13f132be4b0369de4d3395b9d5ea2d3dc100cd38884c75197fe29",
+  "lane_ready": true,
+  "network_during_build": true,
+  "pushed": "private local registry only",
+  "evidence_grade": "infrastructure-only"
+}

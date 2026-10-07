@@ -1,0 +1,247 @@
+{
+ "a4_wall_hours_at_concurrency": [
+  [
+   1,
+   44.03
+  ],
+  [
+   8,
+   5.5
+  ],
+  [
+   16,
+   2.75
+  ],
+  [
+   24,
+   1.83
+  ],
+  [
+   32,
+   1.38
+  ],
+  [
+   40,
+   1.1
+  ]
+ ],
+ "campaigns": {
+  "A1 seed 43": {
+   "jobs": 1,
+   "sessions": 18,
+   "trial_s": 2277.6,
+   "trials": 1000,
+   "vm_hours": 0.766
+  },
+  "A1 seed 44": {
+   "jobs": 1,
+   "sessions": 18,
+   "trial_s": 2277.6,
+   "trials": 1000,
+   "vm_hours": 0.766
+  },
+  "A2 H-GA": {
+   "jobs": 1,
+   "sessions": 16,
+   "trial_s": 2357.4,
+   "trials": 930,
+   "vm_hours": 0.774
+  },
+  "A2 H-OSW-fixed": {
+   "jobs": 1,
+   "sessions": 18,
+   "trial_s": 2572.3,
+   "trials": 990,
+   "vm_hours": 0.848
+  },
+  "A3 H-GA": {
+   "jobs": 1,
+   "sessions": 24,
+   "trial_s": 4503.9,
+   "trials": 1440,
+   "vm_hours": 1.425
+  },
+  "A3 H-OSW-fixed": {
+   "jobs": 1,
+   "sessions": 30,
+   "trial_s": 5516.5,
+   "trials": 1740,
+   "vm_hours": 1.748
+  },
+  "A3 L0-fixed": {
+   "jobs": 1,
+   "sessions": 30,
+   "trial_s": 4931.3,
+   "trials": 1800,
+   "vm_hours": 1.585
+  },
+  "A4": {
+   "jobs": 1,
+   "sessions": 1068,
+   "trial_s": 132201.7,
+   "trials": 64028,
+   "vm_hours": 44.029
+  },
+  "A5": {
+   "jobs": 1,
+   "sessions": 21,
+   "trial_s": 0.0,
+   "trials": 0,
+   "vm_hours": 0.301
+  },
+  "A6": {
+   "jobs": 1,
+   "sessions": 5,
+   "trial_s": 2968.3,
+   "trials": 300,
+   "vm_hours": 0.869
+  },
+  "C1 H-GA-buggy": {
+   "jobs": 1,
+   "sessions": 2,
+   "trial_s": 127.9,
+   "trials": 70,
+   "vm_hours": 0.059
+  },
+  "C1 H-OSW-up": {
+   "jobs": 1,
+   "sessions": 2,
+   "trial_s": 119.9,
+   "trials": 70,
+   "vm_hours": 0.057
+  },
+  "C2 L0-raw": {
+   "jobs": 1,
+   "sessions": 9,
+   "trial_s": 630.2,
+   "trials": 500,
+   "vm_hours": 0.247
+  },
+  "C3 H-GA": {
+   "jobs": 10,
+   "sessions": 20,
+   "trial_s": 1285.0,
+   "trials": 930,
+   "vm_hours": 0.6
+  },
+  "C3 H-OSW-fixed": {
+   "jobs": 13,
+   "sessions": 26,
+   "trial_s": 1799.2,
+   "trials": 1287,
+   "vm_hours": 0.806
+  },
+  "C3 L0-fixed": {
+   "jobs": 24,
+   "sessions": 48,
+   "trial_s": 3024.0,
+   "trials": 2400,
+   "vm_hours": 1.416
+  },
+  "ladder N=16": {
+   "jobs": 1,
+   "sessions": 34,
+   "trial_s": 4555.3,
+   "trials": 2000,
+   "vm_hours": 1.508
+  },
+  "ladder N=24": {
+   "jobs": 1,
+   "sessions": 48,
+   "trial_s": 6377.4,
+   "trials": 2800,
+   "vm_hours": 2.11
+  },
+  "ladder N=32": {
+   "jobs": 1,
+   "sessions": 64,
+   "trial_s": 8655.0,
+   "trials": 3800,
+   "vm_hours": 2.852
+  },
+  "ladder N=40": {
+   "jobs": 1,
+   "sessions": 80,
+   "trial_s": 10932.7,
+   "trials": 4800,
+   "vm_hours": 3.594
+  },
+  "ladder N=8": {
+   "jobs": 1,
+   "sessions": 20,
+   "trial_s": 2733.2,
+   "trials": 1200,
+   "vm_hours": 0.906
+  }
+ },
+ "measured_from": [
+  {
+   "campaign_id": "q2ap-dev-l0-fixed-v10",
+   "git_sha": "81fd5f3e73adb76c5d7243806b9073c953463ab1",
+   "job": "609",
+   "receipt_sha256": "420806c0fb9966ababb0819df8ec05e97d6bda0dd78794d8b60aff1a5de8f2e9"
+  },
+  {
+   "campaign_id": "q2ap-dev-l0-fixed-v11",
+   "git_sha": "82af56779ff29a89b17f93c6e12d481fa1621584",
+   "job": "633",
+   "receipt_sha256": "1ce7eb2f32180044cef79933bf4c6839740fc5d9f51d197f1ebd19562f0dff3c"
+  },
+  {
+   "campaign_id": "q2ap-dev-hosw-fixed-v6",
+   "git_sha": "81fd5f3e73adb76c5d7243806b9073c953463ab1",
+   "job": "611",
+   "receipt_sha256": "e7e2401e53e61a2ef859357976f17d95018b131754940cfd1269d0547b702d2a"
+  },
+  {
+   "campaign_id": "q2ap-dev-hosw-fixed-v7",
+   "git_sha": "82af56779ff29a89b17f93c6e12d481fa1621584",
+   "job": "635",
+   "receipt_sha256": "45a56738b97202c4d4a53816896ce93aeca53c740dc51e34c9d6a427a71f5850"
+  },
+  {
+   "campaign_id": "q2ap-dev-hga-v6",
+   "git_sha": "81fd5f3e73adb76c5d7243806b9073c953463ab1",
+   "job": "612",
+   "receipt_sha256": "6f170dc81f03217760f0a8b2dc18ee9fd64ae64e3b51ef90050954b8fcd5550c"
+  },
+  {
+   "campaign_id": "q2ap-dev-hga-v7",
+   "git_sha": "82af56779ff29a89b17f93c6e12d481fa1621584",
+   "job": "636",
+   "receipt_sha256": "c10ea9a00ed79b2fe6aa639d58f7e278fc328fe6d6e2e213f3d5c7d1957c4ee9"
+  },
+  {
+   "campaign_id": "q2ap-dev-canary-v8",
+   "git_sha": "091b33e9209f14274cf3d254a56aeff4f433718f",
+   "job": "620",
+   "receipt_sha256": "6d4409b1b3a5f630e669c4d1872f0ca2abe22cc2caec8fd90995d242123984f9"
+  },
+  {
+   "campaign_id": "q2ap-dev-canary-v9",
+   "git_sha": "82af56779ff29a89b17f93c6e12d481fa1621584",
+   "job": "637",
+   "receipt_sha256": "b81f71971d3684c32d0fcf3abe2535e35acaf42e33042624e5707430ab605b98"
+  },
+  {
+   "campaign_id": "q2ap-boot-reset-v1",
+   "git_sha": "d2d63b920da92453dc0907c88f0da92a8adc0a2e",
+   "job": "374",
+   "receipt_sha256": "4dd215f83878c17216a05dbc3ea0eecfe5d069a9e696ee1033bd61f23e4cf849"
+  }
+ ],
+ "model": {
+  "boot_reset_cycle_s": 49.872,
+  "boot_s_p50": 18.239,
+  "boot_s_p95": 19.937,
+  "job_overhead_s": 36.757,
+  "session_overhead_s": 24.595,
+  "substitutions": {
+   "H-GA-buggy <- H-GA": 70,
+   "H-OSW-up <- H-OSW-fixed": 70,
+   "L0-raw <- L0-fixed": 500
+  }
+ },
+ "schema": "cotcodec-q2-vm-hours-v1",
+ "total_vm_hours": 67.27
+}

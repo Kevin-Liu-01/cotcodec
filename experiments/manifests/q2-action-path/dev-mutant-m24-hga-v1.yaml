@@ -1,0 +1,73 @@
+# Q2 Stage 0b development (seed 42, informative only): mutant M24 (grid /1000) on four H-GA
+# cells, to exercise the C3 parser-mutant path through the vendored parser.
+schema: cotcodec-vm-campaign-v1
+name: q2ap-dev-mut
+campaign_id: q2ap-dev-mutant-m24-hga-v1
+experiment_id: q2-action-path-v1
+purpose: development
+preregistration:
+  path: program/preregistrations/q2-action-path-v1.md
+  status: draft
+  sha256: 4126957c1e7024656c935620686ff6a116a6c7c1c07ff8ebb549264e73eb9007
+git_sha: 1cebeb097fdcd980c6c6e28ea6ac32a96980a827
+source:
+  host_dir: /home/kevin/cotcodec-runs/stage0/q2-action-path/src/1cebeb097fdcd980c6c6e28ea6ac32a96980a827
+  tree_sha256: 288929ddc1abdc38e0508809e8b1311dd2c73d9fb149a948ece0a30939ccdea2
+run_root: /home/kevin/cotcodec-runs/stage0/q2-action-path/runs
+slurm:
+  cpus: 8
+  memory_gb: 12
+  minutes: 34
+container_profile: default
+model:
+  kind: none
+  reason: development runs of the action-path executor and harness parsers load no model
+randomness:
+  contract: seeded
+  seeds:
+  - 42
+  seed_binding:
+    flag: --seed
+vm:
+  image: happysixd/osworld-docker@sha256:0e6497a9295647cf05bf2b2af522fdd79bdeba2737595259cab310a3bcf6baa9
+  image_id: sha256:fe8d9a5e5ad6c593d059887ea2c790481b3f32dd42fa961f2441cdbbe2c70cf4
+  qcow2:
+    host_path: /home/kevin/cotcodec-runs/stage0/q2-action-path/vm/Ubuntu.qcow2
+    sha256: 6bf667a852b3c307f61d9f09c42559351f45e0607e428b4997becf534cf4d313
+    size_bytes: 24460197888
+    source_url: https://huggingface.co/datasets/xlangai/ubuntu_osworld/resolve/a5d9c3eaae98eebf6e3a0beb84e7e47cf72ae133/Ubuntu.qcow2.zip
+    archive_sha256: b795b6cd4c69b252c1b4f10150a347795555032501b60fd031751ed09b896712
+    revision: a5d9c3eaae98eebf6e3a0beb84e7e47cf72ae133
+    license: apache-2.0
+  ram_size: 4G
+  cpu_cores: 4
+  disk_size: 32G
+  memory_gb: 6
+  network: none-netns
+  guest_ip: 20.20.20.21
+  server_port: 5000
+  hmp_port: 7100
+  concurrency: 1
+runner:
+  image_id: sha256:ac2b5815bcc2ed193116aa2d4bdee773b5a457c545453a6c91956768634a6002
+  memory_gb: 1
+  cpus: 1
+workload:
+  kind: suite-development
+  layer: H-GA
+  cells:
+  - R01
+  - R14
+  - click_left_center
+  - key_kp_enter
+  reps: 1
+  settings:
+  - screenshot
+  session_trials: 60
+  boot_timeout_s: 300
+  settle_timeout_s: 60
+  cells_sha256: d99bcaea93db502e5337fac0365509e62736cc54718d246f44ed9ebd9f53e921
+  sessions: 1
+  trials: 4
+  max_trial_s: 60
+  mutant: M24-grid-1000-instead-of-999

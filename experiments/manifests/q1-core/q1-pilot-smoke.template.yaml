@@ -1,0 +1,54 @@
+# Q1 Stage 0 pilot, job 1 of 2 (scripts/run_q1_gpu_pilot.py --job smoke): pilot
+# substrate admission with device codegen, specialization recording of the pilot
+# evaluation substrates, controls, and the gate-stack GPU smoke (reference-identity
+# controls of L1/19, L1/95 and L2/12 through every gate and audit channel; b1/b2 on
+# the hack controls of the S1 activation pick, including b2's empty-profile retry;
+# gate (a) through unmodified KernelBench at both pinned revisions; the timing harness).
+#
+# Trusted code only (D3, D7): KernelBench reference code, TorchInductor output,
+# pre-2025 human-written kernels and harness-generated wrappers around them. No model.
+#
+# Template. Every FILL-* value is written from measured artifacts (the image build
+# receipt of infra/slurm/host-single-node/build-q1-gates-image.sbatch at the
+# submitted revision); the submitter rejects FILL-* values, so it fails closed.
+# Submit from a clean clone (never ~/cotcodec): --dry-run, --test-only, then submit.
+runtime: docker-single-node-discovery-v1
+name: q1-pilot-smoke
+image_id: FILL-q1-gates-image-id
+git_sha: FILL-git-sha
+source_sha256: FILL-source-tar-sha256
+container_profile: large-cpu-mem
+resources:
+  gpu_type: h100
+  gpus: 1
+  cpus: 32
+  memory_gb: 256
+  minutes: 15
+budget:
+  max_gpu_hours: 0.25
+randomness_contract: assignment-seed-matrix
+seeds: [42, 43, 44]
+seed_binding:
+  flag: "--seeds"
+run_root: /home/kevin/cotcodec-runs/stage0/q1-gates/pilot/runs
+model:
+  kind: none
+  reason: "Q1 pilot admission and gate smoke on compiler and pre-2025 human kernels; no checkpoint"
+command:
+  - env
+  - TRITON_CACHE_DIR=/outputs/cache/triton
+  - TORCHINDUCTOR_CACHE_DIR=/outputs/cache/inductor
+  - python
+  - scripts/run_q1_gpu_pilot.py
+  - "--job"
+  - smoke
+  - "--output"
+  - /outputs/q1
+  - "--budget-minutes"
+  - "11"
+  - "--slots-per-gpu"
+  - "4"
+  - "--seeds"
+  - "42"
+  - "43"
+  - "44"

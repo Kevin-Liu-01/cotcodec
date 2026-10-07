@@ -1,0 +1,20 @@
+{
+ "what": "Re-verification of the vendored S2 human-written sources against the pinned upstream commits (pilot pass, 2026-10-07)",
+ "method": "git fetch --depth 1 of each pinned commit into a scratch repository on fal-h100-01; SHA-256 of every file listed in harness/q1/substrates/s2_catalog.UPSTREAM_FILES read with git show <commit>:<path>, compared with the recorded SHA-256 (which tests/test_q1_substrates.py checks against the vendored copies)",
+ "upstream": {
+  "flaggems": {"repo": "https://github.com/flagos-ai/FlagGems", "commit": "18b8e4281610c91e178518271bc756a98fdc84c9", "licence": "Apache-2.0", "licence_files_at_commit": ["LICENSE"], "notice_file": false},
+  "liger-kernel": {"repo": "https://github.com/linkedin/Liger-Kernel", "commit": "1520999e60e34a9e034026d05917082de098be1e", "licence": "BSD-2-Clause", "licence_files_at_commit": ["LICENSE", "NOTICE"], "notice_file": true},
+  "triton-tutorials": {"repo": "https://github.com/triton-lang/triton", "commit": "105cb56487cd8a433b8fbfe9cc63c1f1c04a4b2a", "licence": "MIT", "licence_files_at_commit": ["LICENSE"], "notice_file": false}
+ },
+ "licence_file_sha256": {
+  "FlagGems/LICENSE": "aab2b520bd1336cc55cc9eb10602e1086c100e6f6eb3ce725797d6900ad7ad9e",
+  "Liger-Kernel/LICENSE": "3a1ccb0c7274b68e1af2ca1d54b10b662085ca56753400182ecf87ae33f2d1a8",
+  "Liger-Kernel/NOTICE": "05791763d696bc4cbfecc001e7bcc3bb5cfcb8c613d62d65f41e84a47b816bcb",
+  "triton-tutorials/LICENSE": "92640fb97222fd0a698ff28ce0c3782c172623f8d6c609b557636a80f28fb946"
+ },
+ "files_checked": 22,
+ "files_matching_upstream": 22,
+ "files_mismatching": 0,
+ "never_vendored": ["hkust-nlp/KernelGYM (no licence)", "Elfsong/KernelBench-M (no licence)", "Dr. Kernel (no licence)"],
+ "evidence_grade": "infrastructure-only"
+}
