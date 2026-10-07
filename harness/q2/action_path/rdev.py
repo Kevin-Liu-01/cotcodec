@@ -20,10 +20,12 @@ import hashlib
 import json
 from typing import Any
 
-from harness.q2.action_path.ir import KEYSYMS
+from harness.q2.action_path.ir import CANONICAL_NAME
 
 STATE_BITS = (("Shift", 1), ("Control", 4), ("Mod1", 8), ("Mod4", 64))
-KEYSYM_NAMES = {value: name for name, (value, _) in KEYSYMS.items()}
+# Value -> canonical keysym name (X.Org's full table; the HMP-referenced names are
+# all canonical, so job 393's projections are unchanged by the full table).
+KEYSYM_NAMES = CANONICAL_NAME
 # Recovery sent after an entry (recorded in its own window, never compared).
 RECOVERY: dict[str, list[list[str]]] = {
     "key_menu": [["esc"]],

@@ -141,21 +141,60 @@ def test_gating_rule_uses_each_harness_prompt():
     assert entry_gating(held_drag)[0] is False
 
 
+def _expressible() -> dict[str, list[str]]:
+    data = json.loads((HERE / "expressible_entries.json").read_text(encoding="utf-8"))
+    return {name: data[name]["expressible"] for name in data}
+
+
 def test_mutation_operator_manifest_is_frozen_ready():
     manifest = yaml.safe_load((HERE / "mutation_operators.yaml").read_text(encoding="utf-8"))
     operators = manifest["operators"]
-    assert len(operators) >= 20
+    assert len(operators) == 28
     ids = [op["id"] for op in operators]
     assert len(set(ids)) == len(ids)
-    for op in operators:
-        assert set(op) >= {"id", "layer", "description", "detected_by"}
-        assert op["layer"] in ("executor", "parser", "both")
-        assert op["detected_by"], op["id"]
-        for entry in op["detected_by"]:
-            assert entry in cat.PUBLIC_IDS or entry.startswith(("regression:", "guard:")), entry
-            if entry.startswith("guard:"):
-                assert entry.split(":", 1)[1] in cat.PUBLIC_IDS
     assert manifest["equivalence_rule"].startswith("A mutant is equivalent only if")
+    assert set(manifest["scored_layers"]) == {"L0-fixed", "H-OSW-fixed", "H-GA"}
+    assert set(manifest["unscored_layers"]) == {"H-OSW-up", "H-GA-buggy"}
+    layers_for = {
+        "executor": {"L0-fixed"},
+        "parser": {"H-OSW-fixed", "H-GA"},
+        "both": {"L0-fixed", "H-OSW-fixed", "H-GA"},
+    }
+    for op in operators:
+        assert set(op) == {"id", "layer", "description", "applies"}, op["id"]
+        assert set(op["applies"]) == layers_for[op["layer"]], op["id"]
+        assert any(v["status"] == "scored" for v in op["applies"].values()), op["id"]
+
+
+def test_every_scored_mutant_can_be_killed_by_an_in_spec_cell():
+    """Review finding: M01 on H-GA could change only outside-spec cells, so it was unkillable."""
+    manifest = yaml.safe_load((HERE / "mutation_operators.yaml").read_text(encoding="utf-8"))
+    cases = manifest["regression_cases"]
+    assert list(cases) == [f"R{i:02d}" for i in range(1, 15)]
+    assert cases["R14"]["tolerance_px"] == 0  # M24 moves (999, 999) by under 2 px
+    expressible = _expressible()
+    killable = {
+        "L0-fixed": set(cat.PUBLIC_IDS),
+        "H-OSW-fixed": set(expressible["H-OSW"])
+        | {r for r, c in cases.items() if c["H-OSW-fixed"] in ("gating", "declared")},
+        "H-GA": set(expressible["H-GA"])
+        | {r for r, c in cases.items() if c["H-GA"] in ("gating", "declared")},
+    }
+    for op in manifest["operators"]:
+        for layer, verdict in op["applies"].items():
+            assert verdict["status"] in ("scored", "excluded", "not-applicable"), op["id"]
+            if verdict["status"] != "scored":
+                assert len(verdict["reason"]) > 20, (op["id"], layer)
+                continue
+            cells = set(verdict["kill_cells"])
+            assert cells <= killable[layer], (op["id"], layer, cells - killable[layer])
+            if verdict.get("predicted") == "equivalent":
+                assert not cells and verdict["reason"]
+            else:
+                assert cells, (op["id"], layer)
+    m01 = next(op for op in manifest["operators"] if op["id"].startswith("M01"))
+    assert m01["applies"]["H-GA"]["status"] == "excluded"
+    assert "R03" not in killable["H-GA"] and "R03" not in killable["H-OSW-fixed"]
 
 
 def test_l0_raw_prediction_names_catalog_entries():
@@ -170,6 +209,7 @@ def test_l0_raw_prediction_names_catalog_entries():
     )
     for name in prediction["key_names"].values():
         assert name is None or name == name.lower()
+    assert set(prediction["reasons"]) <= set(cat.PUBLIC_IDS)
 
 
 def test_gating_set_file_matches_the_catalog(catalog):
@@ -177,6 +217,30 @@ def test_gating_set_file_matches_the_catalog(catalog):
     summary = cat.validate(catalog)
     assert frozen["gating"] == summary["gating"]
     assert frozen["non_gating"] == summary["non_gating"]
+
+
+def test_derived_files_are_reproduced_byte_for_byte(catalog):
+    from harness.q2.action_path import build_derived
+
+    for name, render in build_derived.RENDERERS.items():
+        assert render(catalog) == (HERE / name).read_text(encoding="utf-8"), name
+
+
+def test_guard_parks_the_pointer_away_from_every_entry(catalog):
+    park = tuple(catalog["guard"]["park_pointer"])
+    for entry in catalog["entries"]:
+        assert all(
+            abs(x - park[0]) > 2 or abs(y - park[1]) > 2 for x, y in cat.entry_points(entry)
+        ), entry["id"]
+    # move_only ends where drag_vertical ends: without the park, move_only after
+    # drag_vertical would see no motion and fail by construction.
+    entries = {e["id"]: e for e in catalog["entries"]}
+    assert entries["move_only"]["expect"]["final_pointer"] == [1500, 900]
+    assert entries["drag_vertical"]["expect"]["final_pointer"] == [1500, 900]
+    tampered = copy.deepcopy(catalog)
+    tampered["guard"]["park_pointer"] = [1500, 900]
+    with pytest.raises(cat.CatalogError, match="park_pointer"):
+        cat.validate(tampered)
 
 
 def test_build_catalog_reproduces_the_committed_yaml():
@@ -231,9 +295,29 @@ def test_expressible_entries_file_matches_the_vocabularies(catalog):
     committed = json.loads((HERE / "expressible_entries.json").read_text(encoding="utf-8"))
     assert committed == computed
     assert len(computed["H-OSW"]["expressible"]) == 85
-    assert len(computed["H-GA"]["expressible"]) == 80
+    assert len(computed["H-GA"]["expressible"]) == 79
     assert "click_triple_left" in computed["H-OSW"]["excluded"]
     assert "click_ctrl_left" in computed["H-GA"]["excluded"]
+    # Review finding: H-GA's prompt limits scroll magnitude to 1-10 and its parser
+    # clamps 25 ticks to 10, a declared deviation, so scroll_down_25 is not H-GA's.
+    assert "magnitude" in computed["H-GA"]["excluded"]["scroll_down_25"][0]
+    assert "scroll_down_25" in computed["H-OSW"]["expressible"]
+    assert "scroll_down_10" in computed["H-GA"]["expressible"]
+
+
+def test_every_declared_deviation_is_applied_by_the_vocabulary():
+    from harness.q2.action_path.vocab import H_GA_SCROLL_LIMIT, HARNESSES, expressible
+
+    assert HARNESSES["H-GA"]["declared_deviations"] == ["scroll magnitude 1..10 per call"]
+    at_limit = parse_action({"op": "scroll", "x": 5, "y": 5, "wheel_y": -H_GA_SCROLL_LIMIT})
+    over = parse_action({"op": "scroll", "x": 5, "y": 5, "wheel_y": H_GA_SCROLL_LIMIT + 1})
+    assert expressible("H-GA", at_limit)[0] is True
+    assert expressible("H-GA", over)[0] is False
+    assert expressible("H-OSW", over)[0] is True
+    triple = parse_action({"op": "click", "x": 5, "y": 5, "count": 3})
+    hscroll = parse_action({"op": "scroll", "x": 5, "y": 5, "wheel_x": 2})
+    assert expressible("H-OSW", triple)[0] is False
+    assert expressible("H-OSW", hscroll)[0] is False
 
 
 def test_rdev_reference_rejects_an_unbalanced_window():
