@@ -727,3 +727,65 @@ def test_release_view_redacts_document_text() -> None:
     record["recipe"] = {**recipe, "seed": 43}
     with pytest.raises(Exception, match="mutant_id|recipe"):
         campaign.release_record(record)
+
+
+@pytest.mark.parametrize("apply_to", ["gold", "base"])
+def test_build_wires_office_recipes_to_gold_or_base(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, apply_to: str
+) -> None:
+    """Office wiring without LibreOffice: a stand-in applier copies input to output."""
+    task_id = synth.SYNTH_TASK_IDS["xlsx"]
+    gold = synth.build_xlsx(tmp_path / "cache" / "gold.xlsx")
+    initial = synth.build_xlsx(tmp_path / "cache" / "initial.xlsx", title="draft")
+    spec_dir = tmp_path / "prep" / "specs"
+    spec_dir.mkdir(parents=True)
+    (spec_dir / f"{task_id}.json").write_text(json.dumps(synth.synthetic_spec("xlsx")))
+    vm_path = "/home/user/Desktop/report.xlsx"
+    target = {
+        "target_id": campaign.target_id(task_id, vm_path),
+        "null_id": campaign.null_id(task_id, vm_path),
+        "task_id": task_id,
+        "family": "xlsx",
+        "vm_path": vm_path,
+        "gold": str(gold),
+        "gold_sha256": campaign.sha256_file(gold),
+        "initial": str(initial),
+        "initial_sha256": campaign.sha256_file(initial),
+        "context_files": {vm_path: str(gold)},
+        "spec_json": f"specs/{task_id}.json",
+    }
+    campaign.write_jsonl(tmp_path / "prep" / "targets.jsonl", [target])
+    calls: dict[str, list[dict[str, Any]]] = {}
+
+    def fake_uno(root: Path, rows: list, name: str, **_: Any) -> dict[str, dict[str, Any]]:
+        calls[name] = list(rows)
+        logs = {}
+        for row in rows:
+            src = Path(root, row["input"])
+            assert campaign.sha256_file(src) == row.get("input_sha256", campaign.sha256_file(src))
+            dst = Path(root, row["output"])
+            dst.parent.mkdir(parents=True, exist_ok=True)
+            dst.write_bytes(src.read_bytes())
+            logs[row["mutant_id"]] = {"status": "ok", "lo_build": "stand-in"}
+        return logs
+
+    monkeypatch.setattr(campaign, "run_uno", fake_uno)
+    out = tmp_path / "build"
+    argv = ["build", "--targets", str(tmp_path / "prep" / "targets.jsonl"), "--out", str(out)]
+    assert campaign.main([*argv, "--apply-to", apply_to]) == 0
+    base = out / "prep" / target["target_id"] / "base" / "report.xlsx"
+    null = out / campaign.mutant_file_rel(target["null_id"], vm_path)
+    assert campaign.sha256_file(null) == campaign.sha256_file(base)
+    applied = calls["apply"]
+    assert applied, "no office recipe reached the applier"
+    if apply_to == "gold":
+        assert "null" not in calls or not calls["null"]
+        assert {row["input"] for row in applied} == {str(gold)}
+        assert {row["input_sha256"] for row in applied} == {target["gold_sha256"]}
+    else:
+        assert [row["input"] for row in calls["null"]] == [str(base.relative_to(out))]
+        assert {row["input"] for row in applied} == {str(base.relative_to(out))}
+    summary = json.loads((out / "build-summary.json").read_text())
+    assert summary["apply_to"] == apply_to
+    # The stand-in made no edit, so every mutant fails edit_landed and none is admitted.
+    assert summary["admitted"] == 0 and summary["planned"] == len(applied)
