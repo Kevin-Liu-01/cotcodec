@@ -133,6 +133,16 @@ TINY_LANES: dict[str, Lane] = {
 }
 TOTAL_CAP_GPU_HOURS = 0.5  # program decision D26
 REGISTERED_ORDER = ("qwen3-0.6b-base", "qwen3.5-4b-base")
+# Jobs of a registered lane. Every job of a lane (its first job, a re-run of a
+# void job, its one continuation) counts against that lane's own minutes: the
+# filler charges each ended job its elapsed minutes rounded up plus one, and a
+# later job gets what is left, at least MIN_JOB_MINUTES. A continuation follows
+# a predecessor that used at least one minute and was charged one more, so its
+# limit is at most the lane's minutes minus CONTINUATION_MIN_CHARGE.
+OUTPUT_SUBDIR = "dense-precheck"
+RESUME_SUBPATH = f"{OUTPUT_SUBDIR}/checkpoints"
+MIN_JOB_MINUTES = 3
+CONTINUATION_MIN_CHARGE = 2
 
 
 def lane_of(lane_id: str) -> Lane:
@@ -373,7 +383,13 @@ def symbol_only(codec: TokenCodec, token_id: int) -> bool:
 
 
 class ContentFilter:
-    """Content tokens: not one of the needle language's stop ids, not symbol-only."""
+    """Content tokens of a query: not a stop id of the needle language nor of the
+    query's own language, and not symbol-only.
+
+    Both languages' stop ids are removed so that on a cross-script prompt the
+    query's function words (English ones on an X>en prompt) do not count as
+    content; on a same-language prompt the two sets are the same.
+    """
 
     def __init__(self, codec: TokenCodec, stop_ids: Mapping[str, Sequence[int]]) -> None:
         self.codec = codec
@@ -381,9 +397,17 @@ class ContentFilter:
                      for language, ids in stop_ids.items()}
         self._symbol: dict[int, bool] = {}
 
-    def is_content(self, token_id: int, language: str) -> bool:
+    def _stop(self, languages: Sequence[str]) -> frozenset[int]:
+        if isinstance(languages, str):
+            raise DenseDataError("content tokens need the needle and the query language")
+        missing = sorted(set(languages) - set(self.stop))
+        if missing:
+            raise DenseDataError(f"no stop ids for {missing}")
+        return frozenset().union(*(self.stop[language] for language in languages))
+
+    def is_content(self, token_id: int, languages: Sequence[str]) -> bool:
         token_id = int(token_id)
-        if token_id in self.stop[language]:
+        if token_id in self._stop(languages):
             return False
         flag = self._symbol.get(token_id)
         if flag is None:
@@ -391,8 +415,20 @@ class ContentFilter:
             self._symbol[token_id] = flag
         return not flag
 
-    def content_ids(self, tokens: Iterable[int], language: str) -> list[int]:
-        return [int(t) for t in tokens if self.is_content(int(t), language)]
+    def content_ids(self, tokens: Iterable[int], languages: Sequence[str]) -> list[int]:
+        stop = self._stop(languages)
+        out = []
+        for token in tokens:
+            token = int(token)
+            if token in stop:
+                continue
+            flag = self._symbol.get(token)
+            if flag is None:
+                flag = symbol_only(self.codec, token)
+                self._symbol[token] = flag
+            if not flag:
+                out.append(token)
+        return out
 
 
 def stop_ids_by_language(contexts: Sequence[Mapping[str, Any]],
@@ -726,7 +762,7 @@ def text_features(contexts: Sequence[Mapping[str, Any]], queries: Sequence[Mappi
         q_tokens = flat_q[off_q[prompt["query_index"]] : off_q[prompt["query_index"] + 1]]
         needle = {int(t) for t in c_tokens[context["needle_start"] : context["needle_end"]]}
         content = filt.content_ids(q_tokens[query["row_start"] : query["row_end"]],
-                                   context["needle_language"])
+                                   (context["needle_language"], query["language"]))
         shared = sum(1 for t in content if t in needle)
         overlap[prompt["prompt_id"]] = {
             "content_tokens": len(content), "shared_with_needle": shared,
@@ -840,12 +876,15 @@ def unit_of(prompt: Mapping[str, Any]) -> str:
 
 
 def lexical_block_scores(tokens: NDArray[np.uint32], context_length: int, q0: int, q1: int,
-                         language: str, content: ContentFilter) -> NDArray[np.float32]:
+                         languages: Sequence[str], content: ContentFilter
+                         ) -> NDArray[np.float32]:
     """The literal selector's block scores: per 4-token block of the whole
     sequence, how many context tokens (sink excluded) are content ids of the
-    query. Query blocks score only their context tokens (none)."""
+    query (``languages``: the needle's and the query's). Query blocks score only
+    their context tokens (none). It matches every shared token, entities among
+    them; it is a lexical-overlap selector, not an entity detector."""
 
-    wanted = sorted(set(content.content_ids(tokens[q0:q1], language)))
+    wanted = sorted(set(content.content_ids(tokens[q0:q1], languages)))
     match = np.zeros(len(tokens), dtype=np.float32)
     if wanted:
         match[1:context_length] = np.isin(tokens[1:context_length],
@@ -884,8 +923,13 @@ def write_json(path: Path, payload: Any) -> str:
 
 __all__ = [
     "ARTIFACT_SCHEMA",
+    "CONTINUATION_MIN_CHARGE",
     "EXPERIMENT_ID",
     "LANES",
+    "MIN_JOB_MINUTES",
+    "OUTPUT_SUBDIR",
+    "REGISTERED_ORDER",
+    "RESUME_SUBPATH",
     "SEEDS",
     "SOURCE_BUNDLE_SHA256",
     "SOURCE_TOKENIZER_SHA256",

@@ -309,3 +309,38 @@ Append-only. Newest entries at the bottom.
   steps): DENSE_DOCTOR_PASS, including both tiny lanes end to end, a SIGUSR1
   interrupt (exit 75 with the marker) and its continuation. No GPU time used.
 - Waiting on Kevin: the draft's design decisions 1-14.
+
+## 2026-10-07 — Q3 dense headroom pre-check: review fix pass (draft, not run)
+
+- An independent review of the draft (`stage0/q3-dense-precheck` at 9f9e735)
+  asked for changes before freeze; all nine findings were reproduced and
+  fixed, with regression tests. Still a draft, still no GPU time.
+- Continuations could never run: the entry point required the lane's full
+  minutes. It now checks the job's kind from `manifest.json`: a fresh job (at
+  most the lane's minutes, no checkpoints), or a continuation naming its
+  predecessor with the batch script's resume receipt and the predecessor's
+  pinned artifact (at most the lane's minutes minus two). A time-limit
+  interrupt still leaves no room for one (SIGUSR1 comes three minutes early),
+  so a lane that overruns ends INCOMPLETE; this is now stated.
+- The combined read failed open on an INVALID lane; any INVALID lane now
+  makes it INVALID, and the 4B lane is submitted only after the 0.6B smoke
+  reproduction is REPRODUCED.
+- D26's requirements of a K1 v3 (entity-controlled question set, non-literal
+  floor, seen-script cross-script condition, new id and gauntlet) are always
+  required; the measured flags only add. `anchor_confound` is renamed
+  `lexical_confound` (the literal selector reads all lexical overlap), and the
+  literal selector now drops the query language's stop ids as well as the
+  needle language's.
+- The floor candidate is VIABLE only when a V1-adequate null's 99 percent
+  lower bound of G(MN) reaches 0.5. The null is CENTRED only if an adequate
+  noise scale loses at least 2.5 points of English ML recall; the sigma grid
+  is now 0.25 to 4 in steps of about 1.4 (9 scales, 54 null columns).
+- Budget: every job of a lane (re-runs, the one continuation) is charged
+  against the lane's minutes from the run root's `job.env` and
+  `termination.env` timestamps; the filler claims each later job's slot in the
+  run root once; no budget amendment is possible under this id.
+- The lane templates and `scripts/preregister.py` are tabled; the filler
+  refuses a filled manifest that is not the template with only its `FILL-*`
+  values replaced. The summariser applies the void rules from each job's files
+  and the saved orx logs and hashes receipts over their bytes.
+- Waiting on Kevin: the draft's design decisions 1-15.
