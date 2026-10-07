@@ -259,6 +259,21 @@ def test_filler_uses_only_measured_values(tmp_path) -> None:
         assert sbatch_argv(validated, test_only=True)[-2] == "--test-only"
     assert not (out / "q3-k1-extension.yaml").exists()  # main job id not yet measured
     assert not (out / "q3-k1-main-resume.yaml").exists()  # no interrupted main job
+    # An interrupted main job and a completed continuation whose read calls for
+    # the extension: both resumed manifests fill and pass the lane's validation.
+    main_root = tmp_path / "main"
+    _job(main_root, 201, "q3-k1-main", CONFIRMED)
+    _job(main_root, 202, "q3-k1-main-resume", DONE,
+         receipt={"verdict": {"verdict": "INCONCLUSIVE"}, "extension_targets": ["hs"]})
+    later = tmp_path / "filled-later"
+    assert filler.main(["--image-receipt", str(image), "--bundle", str(bundle),
+                        "--bundle-sidecar", str(sidecar), "--bundle-commit", "d" * 40,
+                        "--repo-root", str(repo), "--main-run-root", str(main_root),
+                        "--output", str(later)]) == 0
+    resumed = validate_manifest(load(later / "q3-k1-main-resume.yaml"))
+    assert str(resumed["resume_from_job_id"]) == "201" and resumed["minutes"] == 16
+    extension = validate_manifest(load(later / "q3-k1-extension.yaml"))
+    assert str(extension["resume_from_job_id"]) == "202"
     sidecar.write_text(json.dumps({"sha256": "0" * 64, "size_bytes": 3}))
     assert filler.main(["--image-receipt", str(image), "--bundle", str(bundle),
                         "--bundle-sidecar", str(sidecar), "--bundle-commit", "d" * 40,
