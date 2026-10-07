@@ -519,6 +519,18 @@ def run_job(
     session: LoSession, job: Mapping[str, Any], raw_task: Mapping[str, Any], out_dir: Path
 ) -> dict[str, Any]:
     """Place files, open documents, replay postconfig, collect saved files."""
+    if job.get("skip_reachability"):
+        # script_writer stratum: bytes reach the checker as written, unsaved.
+        return {
+            "job_id": job["job_id"],
+            "task_id": job["task_id"],
+            "plan": {"skipped": "script_writer stratum"},
+            "saves": [],
+            "failures": [],
+            "postconfig_target_absent": [],
+            "outputs": {},
+            "events": [],
+        }
     session.reset()
     session.log = []
     files: Mapping[str, str | None] = job["files"]

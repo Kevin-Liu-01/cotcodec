@@ -570,3 +570,36 @@ def test_make_jobs_skips_gold_identical_to_initial(tmp_path: Path) -> None:
         f"{ids[1]}__gold",
         f"{ids[1]}__initial",
     ]
+
+
+def test_mutation_jobs_follow_the_shared_file_convention(tmp_path: Path) -> None:
+    import hashlib
+
+    from harness.q2_mutation import schema
+
+    data = b"mutant bytes"
+    recipe = {"seed": 42, "input_sha256": "a" * 64, "params": {"cell": "B2"}}
+    mutant_id = schema.make_mutant_id(TASK, "S-R1", recipe)
+    target = "/home/user/a.xlsx"
+    path = tmp_path / mutant_id / "home/user/a.xlsx"
+    path.parent.mkdir(parents=True)
+    path.write_bytes(data)
+    row = {
+        "mutant_id": mutant_id,
+        "task_id": TASK,
+        "operator": "S-R1",
+        "family": "spreadsheet",
+        "label": "should_fail_violation",
+        "witness": {"req_ids": ["R1"], "argument": "x"},
+        "purity_checks": [],
+        "recipe": recipe,
+        "target_path_in_vm": target,
+        "output_sha256": hashlib.sha256(data).hexdigest(),
+        "stratum": "script_writer",
+    }
+    jobs = controls.mutation_jobs([row], tmp_path)
+    assert jobs[0]["files"] == {target: str(path)}
+    assert jobs[0]["skip_reachability"] is True
+    row["output_sha256"] = "b" * 64
+    with pytest.raises(ValueError, match="output_sha256"):
+        controls.mutation_jobs([row], tmp_path)

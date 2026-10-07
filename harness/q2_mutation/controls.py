@@ -28,6 +28,7 @@ from pathlib import Path
 from typing import Any
 
 from harness.q2_mutation.offline_eval import file_cache_local, load_task
+from harness.q2_mutation.schema import MutationResult
 from harness.q2_mutation.tasks import FILE_CACHE_PREFIX, resolve_vm_path
 
 KINDS = ("gold", "initial")
@@ -207,6 +208,40 @@ def merge_lo(
     return merged, excluded
 
 
+def mutation_jobs(mutations: Sequence[Mapping[str, Any]], files_root: Path) -> list[dict[str, Any]]:
+    """Scoring jobs for operator mutants (schema v1 ``MutationResult`` rows).
+
+    Convention shared with the operators branch: the mutant file for
+    ``target_path_in_vm`` lives at ``files_root/<mutant_id>/<path without the
+    leading slash>`` and its SHA-256 equals ``output_sha256``. Mutants of the
+    ``script_writer`` stratum skip the save stage; ``ambiguous`` mutants are
+    scored but never enter a rate.
+    """
+    jobs: list[dict[str, Any]] = []
+    for row in mutations:
+        result = MutationResult.from_dict(row)
+        if result.target_path_in_vm is None or result.output_sha256 is None:
+            raise ValueError(f"{result.mutant_id}: needs target_path_in_vm and output_sha256")
+        vm_path = resolve_vm_path(result.target_path_in_vm)
+        local = files_root / result.mutant_id / vm_path.lstrip("/")
+        if hashlib.sha256(local.read_bytes()).hexdigest() != result.output_sha256:
+            raise ValueError(f"{result.mutant_id}: mutant file does not match output_sha256")
+        jobs.append(
+            {
+                "job_id": result.mutant_id,
+                "mutant_id": result.mutant_id,
+                "task_id": result.task_id,
+                "kind": "mutant",
+                "label": result.label,
+                "stratum": result.stratum,
+                "files": {vm_path: str(local)},
+                "candidate_sha256": result.output_sha256,
+                "skip_reachability": result.stratum == "script_writer",
+            }
+        )
+    return jobs
+
+
 def _read_jsonl(path: Path) -> list[dict[str, Any]]:
     return [json.loads(line) for line in path.read_text(encoding="utf-8").splitlines() if line]
 
@@ -225,6 +260,10 @@ def main(argv: list[str] | None = None) -> int:
     make.add_argument("--splits", type=Path, required=True)
     make.add_argument("--split", required=True, choices=["dev", "confirm", "reserve"])
     make.add_argument("--out", type=Path, required=True)
+    mut = sub.add_parser("mutation-jobs")
+    mut.add_argument("--mutations", type=Path, required=True)
+    mut.add_argument("--files-root", type=Path, required=True)
+    mut.add_argument("--out", type=Path, required=True)
     merge = sub.add_parser("merge-lo")
     merge.add_argument("--jobs", type=Path, required=True)
     merge.add_argument("--lo-rows", type=Path, nargs="+", required=True)
@@ -238,6 +277,10 @@ def main(argv: list[str] | None = None) -> int:
             json.dumps(report, indent=1, sort_keys=True), "utf-8"
         )
         print(json.dumps({"jobs": len(jobs), **{k: len(v) for k, v in report.items()}}))
+    elif args.command == "mutation-jobs":
+        jobs = mutation_jobs(_read_jsonl(args.mutations), args.files_root)
+        _write_jsonl(args.out, jobs)
+        print(json.dumps({"jobs": len(jobs)}))
     else:
         rows = [row for path in args.lo_rows for row in _read_jsonl(path)]
         merged, excluded = merge_lo(_read_jsonl(args.jobs), rows)
