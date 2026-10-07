@@ -229,7 +229,9 @@ def stream_paradocs_pair(
                 for index, doc in enumerate(batch):
                     en_text, x_text = sides[index]
                     en_tok, x_tok = encoded[2 * index], encoded[2 * index + 1]
-                    item_tokens = len(en_tok) + len(sep) + len(x_tok)
+                    # Count exactly what the builder packs: each side capped.
+                    item_tokens = (min(len(en_tok), BILINGUAL_SIDE_MAX_TOKENS) + len(sep)
+                                   + min(len(x_tok), BILINGUAL_SIDE_MAX_TOKENS))
                     record["kept_item_tokens"] += item_tokens
                     record["kept_en_tokens"] += len(en_tok)
                     record["kept_x_tokens"] += len(x_tok)
