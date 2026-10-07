@@ -24,6 +24,13 @@ attestation helpers. It starts small after the 2026-10-06 restart.
   extension rule and the final verdict of program decision D16) and `sparse_indexer_k1_runtime.py` (checkpoints with
   completion records, training, evaluation and receipt assembly for the GPU
   entry point; evaluation loads exactly the completed final generation).
+- Q3 K1 successor (v2): `sparse_indexer_bank.py` (batched indexer bank per
+  layer: stacked cells, per-slot clipping, one Adam per cell, row-chunked
+  causal KL; exact composite-key top-k selection), `sparse_indexer_k1_runtime_v2.py`
+  (v1's workers on the bank, timed per step and per unit),
+  `sparse_indexer_k1_budget_v2.py` (torch-free registered limit formula and
+  smoke gate) and `sparse_indexer_k1_equivalence_v2.py` (the device TF32 gates
+  the throughput probe runs). None of v1's tabled files changes.
 - `publication_attestation.py` verifies administrator signatures over complete
   publication claim waves.
 - `remote_zip.py` reads selected members of pinned remote ZIP archives by HTTP

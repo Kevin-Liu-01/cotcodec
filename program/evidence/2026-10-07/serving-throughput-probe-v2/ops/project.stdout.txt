@@ -1,0 +1,2 @@
+{"attribution": {"dummy-control": "pid", "real": "pid"}, "q2": "rescope-before-gauntlet", "x1": "pass"}
+exit_code=0
