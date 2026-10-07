@@ -481,3 +481,20 @@ Append-only. Newest entries at the bottom.
   run records hashed (`run-records.json`), killed items recorded by the
   runner; sanitizer row memcheck-only; Apache-2.0 text with the Liger
   substrates that carry Unsloth code; D27 for upstream test code on GPUs.
+
+## 2026-10-07 — Action-path suite and Q1 gate stack merged (not frozen)
+
+- Merged `stage0/q2-action-path`: the 100-entry action-path suite, its
+  device-level references, adapters, acceptance rules and three draft
+  registrations. Final development runs (seed 42, CPU only) passed every
+  in-spec cell for L0-fixed on 1 and 8 VMs, H-OSW-fixed, H-GA and the canary;
+  42 of 44 suite mutants were killed and the two predicted-equivalent ones
+  survived. Scored campaigns need about 67 VM-hours, CPU only.
+- Merged `stage0/q1-gates`: gates (a)/(b)/(c), the independent audit,
+  mutator, substrates, the trimmed Stage 0 driver and the pilot (Slurm 474,
+  518, 548; 0.90 GPU-h). The pilot scored a few evaluation units before the
+  freeze; D28 (branch D26) hash-pins and fences them. D29 (branch D27) admits
+  pinned upstream benchmark test code on GPUs.
+- D30: guest-server restarts are bounded separately from A4. D31: Q1 Stage 0
+  gets an engineering pass and a non-evaluation re-pilot before admission.
+- Full suite on the host after the merges: 1,681 passed, 28 skipped.
