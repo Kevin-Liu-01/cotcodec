@@ -27,3 +27,16 @@ Append-only. Newest entries at the bottom.
   private archive outside the repository. Old copies of the first two remain
   in public git history.
 - No GPU job ran. GPU-hours spent by this program: 0.
+
+## 2026-10-06 — Stage 0 begins
+
+- Created a clean host clone of `main` at `~/cotcodec-main` for program work;
+  the older host checkout with Codex's uncommitted edits is left untouched.
+- Fetched `qwen3-0.6b-base` (Qwen/Qwen3-0.6B-Base at revision
+  `da87bfb608c14b7cf20ba1ce41287e8de496c0cd`) with a receipt through Slurm job
+  365 in image `cotcodec-research:0b3ecef0-architecture`. Terminal state
+  COMPLETED, exit 0:0. Receipt artifact-root SHA-256
+  `7040f418762c61dd00b540e482527e0d8c8a916cce80eee56408bd10a6179ae0`.
+- Scoping workflow launched for six Stage-0 items: evaluator mutation kit,
+  Holo3 archive diff, Q3 K1, Q1 gate stack, action-path suite and VM runtime,
+  and the serving throughput probe.
