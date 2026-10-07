@@ -1,0 +1,14 @@
+task_id: 20236825-b5df-46e7-89bf-62e1d640a897
+author: blind-model-author-v1
+requirements:
+  - req_id: R1
+    statement: The bubbleSort function in bubbleSort.py on the Desktop (extracted from bubbleSort.zip) is implemented and sorts the list in place in ascending order.
+    check_kind: other
+    observable: Importing /home/user/Desktop/bubbleSort.py and calling bubbleSort(x) on random integer lists leaves x == sorted(original x); the TODO stub is replaced.
+  - req_id: R2
+    statement: The program's output is saved as /home/user/Desktop/res.txt.
+    check_kind: file_exists
+    observable: res.txt exists and its content is the script's printed output, "Sorted array:" followed by "11 12 22 25 34 64 90" (trailing space/newline tolerated).
+allowed_variations:
+  - '[AMBIGUOUS] bubbleSort.py may live in an extracted subfolder; the zip has it at its root, so /home/user/Desktop/bubbleSort.py is expected.'
+  - Optimized (early exit) or plain bubble sort.
