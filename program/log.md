@@ -67,3 +67,86 @@ Append-only. Newest entries at the bottom.
   lane should be treated as untested.
 - `legacy/` is excluded from future images. The D21 doctor test now bounds
   child CPU time instead of wall time. Full suite on the host: 458 passed.
+
+## 2026-10-07 — Q3 K1 frozen
+
+- Merged the K1 code as commit A (`ec81fe3`). Image A
+  (`sha256:6de9c900...`, Slurm job 434) was built from a clean clone of it.
+- The K1 CPU doctor passed all seven cases in image A (receipt in
+  `program/evidence/2026-10-07/q3-k1/`). The data bundle was rebuilt in image A
+  from the recorded raw directory (Slurm job 436) and reproduced the
+  registered SHA-256 `919d016b...` byte for byte.
+- Froze `q3-k1-localization-screen-v1` (ledger row `c50540e9...`,
+  `git_head_at_freeze` = commit A). Sign-offs are decision D16.
+
+## 2026-10-07 — Holo3 audit registered
+
+- Merged the Holo3 rerun audit (branch `stage0/q2-holo3-diff`). Froze
+  `q2-holo3-rerun-audit-v1-posthoc` (the original v1 registration, recorded
+  verbatim and labelled post-hoc per D10) and `q2-holo3-rerun-audit-v2`
+  (confirmatory rules on data nobody has read; sign-offs in D15). The v2
+  rules run within 14 days of the freeze, under Python 3.14 with scipy 1.18.0.
+- Merged the serving-throughput probe and froze `serving-throughput-probe-v1`
+  (sign-offs D17, D18). Full suite on the host: 848 passed.
+
+## 2026-10-07 — Serving-throughput probe run (serving-throughput-probe-v1)
+
+- Ran the frozen registration from a fresh host clone of `80a87ee` (contract
+  and probe digest verified). Overlay image `sha256:fa1906ad...` built under
+  Slurm 439 (cu129; torchcodec removed, args doctor pass); metadata for
+  Qwen3-8B, Qwen3.5-27B-FP8 and Qwen3.5-35B-A3B-FP8 fetched under Slurm 444.
+- Job A (Slurm 442, 28 min 32 s) and job B (Slurm 446, 10 min 51 s) both
+  COMPLETED 0:0, lane `reason=completed`, and accepted; all gates passed,
+  no eager fallback. X1 failed (replay latency delta 5.89% > 5%; 1 of 3 A1
+  seeds valid), so job C was not rendered and no cu130 retry applied.
+- Projection: Q1 within cap (2.92 GPU-h single turn, 10.21 three turns,
+  x1.5 for X1); Q2 incomplete, re-probe: r3 and r4 failed only the
+  contamination check, because the engine's own footprint under 20-screenshot
+  prompts (76,611 MiB) exceeded the post-smoke reservation plus 2 GiB
+  (76,349 MiB). Fixing that rule needs a new experiment id.
+- GPU time 0.666 GPU-h: probe 0.656 (cap 1.0), build and fetch 0.010
+  (cap 0.333). The capsule omitted the 27 tracked `.agents/skills` symlinks,
+  which the discovery archiver refuses. Evidence:
+  `program/evidence/2026-10-07/serving-throughput-probe-v1/`.
+
+## 2026-10-07 — Q3 K1 screen stops at the smoke gate
+
+- Image B (`sha256:5dc3025b...`, Slurm job 437, CPU only) was built from a
+  clean clone at commit B (`d36cbbe`). Its revision label and source-tar
+  SHA-256 match the clone.
+- The K1 CPU doctor passed all seven cases in image B (Slurm job 443, `srun`,
+  network none, no GPU). Its receipt's code digests equal the registration's
+  table.
+- The manifest filler (run from the clean clone) filled smoke, headroom-dev,
+  R0 and R1. The smoke ran as orx node `66f7d302` (run `01692785`, branch
+  `orx/q3-k1-smoke-q3-k1-localization-screen-v1` on commit B) as Slurm job 452.
+  Terminal state COMPLETED, exit 0:0, `ORX_RESULT ... exit=0`, 2 min 25 s on
+  one GPU.
+- Smoke receipt: **SMOKE_PASS_OVER_BUDGET**. All four smoke gates passed, but
+  the projected main wall time is 98.8 minutes (training about 43 minutes
+  per worker, audit evaluation 51 minutes, 5 minutes start-up). That makes
+  1.2 x 98.8 + 3 = 121.6 minutes against the fixed 30-minute limit (about
+  6.6 GPU-h against the 2.0 GPU-h cap). The filler, re-run with the smoke run
+  root, holds back the main job, its continuation and the extension for this
+  reason.
+- Under the registration and D16 the main job does not run under this id.
+  Headroom-dev, the resume test and the main read were not run. No audit
+  statistic exists and there is no K1 verdict. The tabled filler hard-codes
+  the 30-minute rule, so any rescoping needs a new experiment id and
+  preregistration. At the projected cost (about 6.6 GPU-h for the main job
+  plus up to about 6.4 GPU-h for the extension) it would cross the 8 GPU-h
+  gauntlet threshold. That is Kevin's decision.
+- GPU-hours spent by this experiment: 0.04. Evidence:
+  `program/evidence/2026-10-07/q3-k1/`.
+
+## 2026-10-07 — Holo3 v2: first confirmatory result
+
+- Ran `q2-holo3-rerun-audit-v2` (Slurm job 438, CPU only). All receipts are
+  `v2 CONFIRMATORY`. Rule (d): not attributable to checker time-dependence
+  (p = 0.156). Rule (a): no agent-behaviour shift (Wilcoxon p = 0.94).
+  Rule (b): the 14 run2-unique failures are unexplained (1 environment,
+  1 agent-side). Coverage 96.8%. The 5.75 GB tarball was deleted after the
+  run. Results: `program/evidence/2026-10-07/holo3-v2/RESULTS.md`.
+- Implication for Q2 Stage 1: same-day, same-operator reruns can shift by
+  4.4 points with no visible cause, so the variance model needs a session
+  random effect and more than one session per cell.

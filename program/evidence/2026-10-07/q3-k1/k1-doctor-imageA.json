@@ -1,0 +1,243 @@
+{
+  "case_status": {
+    "capture_vs_eager": "PASS",
+    "data_objects": "PASS",
+    "end_to_end": "PASS",
+    "gradient_check": "PASS",
+    "selection_brute_force": "PASS",
+    "targets_vs_numpy": "PASS",
+    "verdict_tables": "PASS"
+  },
+  "cases": {
+    "capture_vs_eager": {
+      "gates": {
+        "capture_equals_eager": true,
+        "hidden_states_agree": true,
+        "kv_cache_continuation_equals_eager": true
+      },
+      "max_abs_hidden_error": 9.5367431640625e-07,
+      "max_abs_prob_error": 2.682209014892578e-07,
+      "max_abs_prob_error_kv_cache": 7.450580596923828e-08
+    },
+    "data_objects": {
+      "bundle_sha256": "8db57db2bb4140e62c24b62e369649755b4702ebba6001cdafba5966715d105c",
+      "eval_counts": {
+        "by_role": {
+          "absent": 6,
+          "dev": 56,
+          "dev-absent": 28,
+          "dev-nohaystack": 28,
+          "literal": 8,
+          "main": 224,
+          "same-script": 160
+        },
+        "contexts": 158,
+        "prompts": 510,
+        "queries": 128
+      },
+      "gates": {
+        "builder_filters_counted": true,
+        "bundle_digest_enforced": true,
+        "codec_digest_enforced": true,
+        "context_exact_length_and_needle": true,
+        "dedup_exact_minhash_clean": true,
+        "latin_function_word_filter": true,
+        "packing": true,
+        "paradocs_quirk_and_breaks": true,
+        "partition_read_fails_closed": true,
+        "prompt_layout": true,
+        "script_filter": true
+      }
+    },
+    "end_to_end": {
+      "details": {
+        "corrupt_stderr_tail": ").load_step(step)\n                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/workspace/cotcodec/harness/sparse_indexer_k1_runtime.py\", line 297, in load_step\n    raise RuntimeContractError(\nharness.sparse_indexer_k1_runtime.RuntimeContractError: worker-0: generation 6 is missing or fails its digest check\nINTEGRITY: eval-audit-main: worker exit codes {0: -15, 1: 3}\n",
+        "early_signal_stderr_tail": "",
+        "extension": {
+          "changed_parameters": 36,
+          "final_verdict": "HOLD",
+          "verdict": "HOLD"
+        },
+        "headroom_stderr_tail": "",
+        "main": {
+          "lr_freeze": {
+            "hs": "3e-3",
+            "mp": "3e-3"
+          },
+          "units": 310,
+          "verdict": "HOLD"
+        },
+        "resume": {
+          "checks": {
+            "final_state_digests_equal": true,
+            "param_digests_equal": true,
+            "r1_all_workers_acknowledged_one_step": true,
+            "r1_marker_has_usr1_trigger": true,
+            "r1_signal_checkpoint_confirmed": true,
+            "r2_resumed": true,
+            "same_stop_step": true
+          },
+          "r2_resumed_from": [
+            2
+          ]
+        },
+        "smoke_stderr_tail": ""
+      },
+      "gates": {
+        "corrupt_final_generation_fails_closed": true,
+        "digest_mismatch_exits_2": true,
+        "extension_refused_without_v1_failure": true,
+        "extension_reports_its_final_verdict": true,
+        "extension_rereads_only_failing_target": true,
+        "headroom_dev_completes": true,
+        "lr_freeze_hashed_before_audit": true,
+        "main_completes_with_verdict": true,
+        "main_continues_after_freeze": true,
+        "main_read_persisted": true,
+        "periodic_checkpoints_write_no_marker": true,
+        "resume_bitwise_equal": true,
+        "signal_during_worker_start_checkpoints": true,
+        "signal_save_exits_75": true,
+        "smoke_passes": true,
+        "smoke_projects_the_extension": true,
+        "stale_marker_replaced_after_acks": true
+      }
+    },
+    "gradient_check": {
+      "gates": {
+        "gradient_matches": true
+      },
+      "max_relative_error": 6.870795448007531e-09
+    },
+    "selection_brute_force": {
+      "gates": {
+        "analytic_random_equals_enumeration": true,
+        "block_selection_equals_brute_force": true,
+        "union_reference_equals_brute_force": true
+      },
+      "random_max_error": 9.934107481068821e-09,
+      "selection_mismatches": 0,
+      "union_mismatches": 0
+    },
+    "targets_vs_numpy": {
+      "gates": {
+        "mp_is_not_hs": true,
+        "targets_equal_numpy_reference": true
+      },
+      "max_abs_error": 1.1102230246251565e-16
+    },
+    "verdict_tables": {
+      "gates": {
+        "bug_tell_holds": true,
+        "extension_not_run_is_inconclusive": true,
+        "extension_pass_completes_negative": true,
+        "extension_targets": true,
+        "extension_void_is_inconclusive": true,
+        "go": true,
+        "hold_is_terminal": true,
+        "integrity_voids": true,
+        "masked_deficit_inconclusive": true,
+        "negative": true,
+        "no_headroom_uninterpretable": true,
+        "noisy_negative_inconclusive": true,
+        "uniformly_weaker_is_not_a_go": true,
+        "v1_fail_extension_rereads_only_that_target": true,
+        "v1_fail_with_go_needs_no_extension": true,
+        "v1_still_failing_after_extension": true
+      },
+      "outcomes": {
+        "bug_tell_holds": {
+          "expected": "HOLD",
+          "verdict": "HOLD"
+        },
+        "extension_not_run_is_inconclusive": {
+          "expected": "INCONCLUSIVE",
+          "verdict": "INCONCLUSIVE"
+        },
+        "extension_pass_completes_negative": {
+          "expected": "NEGATIVE",
+          "verdict": "NEGATIVE"
+        },
+        "extension_void_is_inconclusive": {
+          "expected": "INCONCLUSIVE",
+          "verdict": "INCONCLUSIVE"
+        },
+        "go": {
+          "expected": "GO",
+          "verdict": "GO",
+          "xi": 18.05165589186865,
+          "xi_rel": 0.30546596398446696
+        },
+        "hold_is_terminal": {
+          "expected": "HOLD",
+          "verdict": "HOLD"
+        },
+        "integrity_voids": {
+          "expected": "VOID",
+          "verdict": "VOID"
+        },
+        "masked_deficit_inconclusive": {
+          "expected": "INCONCLUSIVE",
+          "verdict": "INCONCLUSIVE",
+          "xi": 8.034393770179216,
+          "xi_rel": 0.20008301431666148
+        },
+        "negative": {
+          "expected": "NEGATIVE",
+          "verdict": "NEGATIVE",
+          "xi": -0.02499680118191038,
+          "xi_rel": 0.006670371571199786
+        },
+        "no_headroom_uninterpretable": {
+          "expected": "UNINTERPRETABLE",
+          "verdict": "UNINTERPRETABLE",
+          "xi": -0.179824780632398,
+          "xi_rel": 0.004525595238770981
+        },
+        "noisy_negative_inconclusive": {
+          "expected": "INCONCLUSIVE",
+          "verdict": "INCONCLUSIVE",
+          "xi": 0.5646848800040152,
+          "xi_rel": 0.008296846991468074
+        },
+        "uniformly_weaker_is_not_a_go": {
+          "expected": "NEGATIVE",
+          "verdict": "NEGATIVE",
+          "xi": -4.931019401548286,
+          "xi_rel": 0.0009064334179984891
+        },
+        "v1_fail_extension_rereads_only_that_target": {
+          "expected": "INCONCLUSIVE",
+          "extension_targets": [
+            "hs"
+          ],
+          "verdict": "INCONCLUSIVE"
+        },
+        "v1_fail_with_go_needs_no_extension": {
+          "expected": "GO",
+          "extension_targets": [],
+          "verdict": "GO"
+        },
+        "v1_still_failing_after_extension": {
+          "expected": "INCONCLUSIVE",
+          "verdict": "INCONCLUSIVE"
+        }
+      }
+    }
+  },
+  "doctor": "q3-k1-localization-screen-cpu-doctor",
+  "evidence_grade": "EXECUTABILITY_AND_GATE_SEMANTICS_ONLY: a tiny randomly initialised Qwen3 model, a byte-level stand-in tokenizer and a synthetic bundle built by the real builder code. Nothing here touches Qwen3-0.6B-Base, Belebele, FineWeb or ParaDocs.",
+  "numbers_are_synthetic": true,
+  "provenance": {
+    "harness/sparse_indexer_data.py": "8b180e1ca0ba67d29587e3ffc5f5e46720376de6d1a52348f82b8789ab929faa",
+    "harness/sparse_indexer_k1_runtime.py": "6fbddc91b6f7224f909901edb82278a68f68a208b558526c1a778ec9da6812fd",
+    "harness/sparse_indexer_k1_stats.py": "b9949b4b24502ad30d576938e88cd39d0fdcfc2be90eeedf52a68c76430f36b8",
+    "harness/sparse_indexer_torch.py": "f21301a49634af07d5ae0385c34011400c83af15b984a96238dc6fe1d4ee9457",
+    "scripts/build_sparse_indexer_k1_bundle.py": "6ee842651372ce45827d612539e14e97383493fa162fd29482a99202708502d6",
+    "scripts/run_sparse_indexer_k1_doctor.py": "1444b0635289a477d265b82f90e7b43d4fb913aff6639c3160d887f6ec25fcb7",
+    "scripts/run_sparse_indexer_phase0a.py": "ee11c38c3d84e691133b9563a3945331831ceb84ad7207d4c4f7a72e0906aef8"
+  },
+  "runtime_seconds": 208.85931078065187,
+  "schema_version": "1.0",
+  "status": "K1_DOCTOR_PASS"
+}

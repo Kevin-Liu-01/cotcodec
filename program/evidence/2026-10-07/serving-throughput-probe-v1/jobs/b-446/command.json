@@ -1,0 +1,21 @@
+[
+  "python",
+  "scripts/run_vllm_throughput_probe.py",
+  "run",
+  "--config",
+  "experiments/serving/serving-throughput-probe-v1.yaml",
+  "--job",
+  "b",
+  "--output-dir",
+  "/outputs/probe",
+  "--allocation-minutes",
+  "20",
+  "--image-variant",
+  "cu129",
+  "--weights-pin",
+  "qwen3-8b=8c206de0c96749d24a053351a9d83ef7c8f38d45da8ae7a0c8e964bf33809a48:a872f4dc37328ca2593192866f245537e4668add78ba0719c1ef41fd8bb0fa97",
+  "--seeds",
+  "42",
+  "43",
+  "44"
+]

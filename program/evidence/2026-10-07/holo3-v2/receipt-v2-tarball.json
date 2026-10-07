@@ -1,0 +1,138 @@
+{
+  "cases": {
+    "feature_file_public_safety": {
+      "status": "PASS"
+    },
+    "receipt_public_safety": {
+      "status": "PASS"
+    }
+  },
+  "code": {
+    "code_files_dirty": false,
+    "files_sha256": {
+      "harness/holo3_rerun_audit.py": "785aa90eb59d81933a976986808da575844c689c796b6324085fded647a194dd",
+      "harness/holo3_v2.py": "166f30b7ff06197a4bf65632f1e4537f2a63eb2cffad2551a071cca31798e442",
+      "harness/osworld_source.py": "ae4f358e2d3c23ebf35d3df5d3e02886f25870196a0d9f5cab3b1d2a30cc44a7",
+      "harness/remote_zip.py": "534b84c97b54b83a8fce225bfecf2a23aaa7cd2501b0030121043caf857b2061",
+      "scripts/run_holo3_rerun_audit_doctor.py": "b36ba6b4197064828d4205bd9cbd4942111a2e9196d0bd6defb2db97833fb667"
+    },
+    "git_head": "b721739737a34c2c239ec6548434a9b6e58c3069"
+  },
+  "confirmatory_checks": {
+    "code_unchanged_since_freeze": true,
+    "ledger_committed_and_unmodified": true,
+    "python_and_scipy_match_registration": true,
+    "repository_ledger": true,
+    "within_14_days_of_freeze": true
+  },
+  "doctor": "holo3-rerun-audit",
+  "elapsed_seconds": 305.809,
+  "environment": {
+    "numpy": "2.5.2",
+    "python": "3.14.6",
+    "scipy": "1.18.0"
+  },
+  "evidence_grade": "v2 CONFIRMATORY for rules (a)-(d) only, read against the frozen v2 registration; the external OpenCUA reference stays EXPLORATORY.",
+  "freeze_gate": {
+    "repository_ledger_frozen": true,
+    "run_ledger_frozen": true
+  },
+  "inputs": {
+    "archives": {
+      "holo3-verified": {
+        "kind": "huggingface",
+        "lfs_sha256": "0dea53ac7b04fa7d962c2da48e4c5b4023455c221043378fe1857daf97251ca4",
+        "path": "OSWorldSurfer-Holo3-35B-A3B-20260330-OSWorld-Verified_20260420_verified-run_with-local-rewards.zip",
+        "repo": "xlangai/ubuntu_osworld_verified_trajs",
+        "repo_type": "datasets",
+        "revision": "5473c39e42a538a187a9b2c2b499db59d560fd8c",
+        "size": 5773773410
+      }
+    },
+    "dataset": {
+      "license": "MIT (dataset card cardData.license)",
+      "repo": "xlangai/ubuntu_osworld_verified_trajs",
+      "revision": "5473c39e42a538a187a9b2c2b499db59d560fd8c"
+    }
+  },
+  "label": "v2 CONFIRMATORY",
+  "ledger": {
+    "is_repository_ledger": true,
+    "sha256": "04db6346a164d8bb30461a9eb3ea86ea0d68cdec52203b026279711aecab45d2"
+  },
+  "parameters": {
+    "h_steps": false,
+    "max_workers": 6,
+    "model_draws": 100000,
+    "opencua": true,
+    "power_sims_rule_a": 400,
+    "seeds": [
+      42,
+      43,
+      44
+    ],
+    "sign_flip_draws": 1000000,
+    "tarball_receipt": false,
+    "trajectory_features": false
+  },
+  "preregistrations": {
+    "v1_posthoc": {
+      "experiment_id": "q2-holo3-rerun-audit-v1-posthoc",
+      "file_sha256": "e86ec0b781e28819632a65ed52cb480f03385af6daab812108c223a303853d8e",
+      "ledger": {
+        "frozen": true,
+        "frozen_at": "2026-10-07T11:39:20.389111+00:00",
+        "git_head_at_freeze": "48f6b4e5e45c01369e7e5b84c5e720a06cc208a1",
+        "row_hash": "2b8536f212eb530be4a59068a8adfbfb9ac5ce98bddbbce32b1c6a199125abbf",
+        "sha256": "e86ec0b781e28819632a65ed52cb480f03385af6daab812108c223a303853d8e"
+      },
+      "path": "program/preregistrations/q2-holo3-rerun-audit-v1-posthoc.md"
+    },
+    "v2": {
+      "experiment_id": "q2-holo3-rerun-audit-v2",
+      "file_sha256": "30e2850024c7f8b849b3303d609127860182f3dbd6947a111cf7051100c00219",
+      "ledger": {
+        "frozen": true,
+        "frozen_at": "2026-10-07T11:39:20.800194+00:00",
+        "git_head_at_freeze": "48f6b4e5e45c01369e7e5b84c5e720a06cc208a1",
+        "row_hash": "aa32cb0a1f9c1a87e3f190919d756924036ae040dd4ac6cf787559f5aef5466f",
+        "sha256": "30e2850024c7f8b849b3303d609127860182f3dbd6947a111cf7051100c00219"
+      },
+      "path": "program/preregistrations/q2-holo3-rerun-audit-v2.md"
+    }
+  },
+  "results": {
+    "tarball": {
+      "crc32": "c5d5275e",
+      "resumed_from_bytes": 0,
+      "reused_existing_file": false,
+      "sha256": "3d6d65d1842f827494fb19fa4431bfe77f3b3430f3a7edf7673f928d114ffccd",
+      "size": 5748726271
+    },
+    "tarball_scan": {
+      "feature_file_sha256": "df5abafd4828bcb9603164721b42e60078589606ab1a5da7d8682cbdce267e74",
+      "layout": {
+        "actions_members": 700,
+        "file_members": 16459,
+        "image_members": 15736,
+        "other_file_members": 23,
+        "trajectories_with_actions": 700,
+        "trajectories_with_images": 700
+      },
+      "status_trajectory_ids": 721,
+      "trajectories_in_tarball": 700,
+      "trajectories_matching_status_files": 698
+    }
+  },
+  "stage": "v2-tarball",
+  "started_at": "2026-10-07T11:48:57.205681+00:00",
+  "status": "PASS",
+  "transfer": {
+    "bytes": 5772782243,
+    "members_read": {
+      "0dea53ac7b04fa7d962c2da48e4c5b4023455c221043378fe1857daf97251ca4": 1449
+    },
+    "requests": 92,
+    "retries": 0
+  }
+}

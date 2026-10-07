@@ -1,0 +1,10 @@
+== stage v2 (rule d) 2026-10-07T11:39:50Z
+{"output": "/home/kevin/cotcodec-runs/stage0/q2-holo3-diff/v2/receipt-v2-d.json", "status": "PASS"}
+rc_d=0
+== stage v2-tarball 2026-10-07T11:48:56Z
+{"output": "/home/kevin/cotcodec-runs/stage0/q2-holo3-diff/v2/receipt-v2-tarball.json", "status": "PASS"}
+rc_tar=0
+== stage v2 final 2026-10-07T11:54:03Z
+{"output": "/home/kevin/cotcodec-runs/stage0/q2-holo3-diff/v2/receipt-v2-final.json", "status": "PASS"}
+rc_final=0
+== done 2026-10-07T11:54:26Z

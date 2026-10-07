@@ -1,0 +1,16 @@
+{
+  "config_sha256": "8e5ad94e08a17a3eacc049150a14a35ef6ab9509a8c32ca6a6b2ac9711f6e931",
+  "job": "b",
+  "points": {
+    "b-smoke": "valid",
+    "b1a": "valid",
+    "b1b": "valid",
+    "b1c": "valid",
+    "b2": "valid",
+    "b3": "valid",
+    "b6": "valid"
+  },
+  "signal": null,
+  "state": "complete",
+  "updated_at": "2026-10-07T11:59:53Z"
+}
