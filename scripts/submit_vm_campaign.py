@@ -35,6 +35,8 @@ if str(PROJECT_ROOT) not in sys.path:
 from harness.q2.vm.manifest import (  # noqa: E402
     ManifestError,
     canonical_json,
+    ledger_paths,
+    ledger_view,
     manifest_sha256,
     source_tree_sha256,
     validate_manifest,
@@ -129,13 +131,17 @@ def sbatch_argv(manifest: dict[str, Any], *, test_only: bool) -> list[str]:
     return argv
 
 
-def load_manifest(path: Path) -> dict[str, Any]:
+def load_manifest(path: Path, with_ledger: bool = False) -> dict[str, Any]:
+    """Validate a manifest; acceptance manifests also pass the ledger check (host only)."""
     import yaml
 
     raw = yaml.safe_load(path.read_text(encoding="utf-8"))
     if not isinstance(raw, dict):
         raise ManifestError("manifest must be a YAML mapping")
-    return validate_manifest(raw)
+    ledger = None
+    if with_ledger and raw.get("purpose") == "acceptance":
+        ledger = ledger_view(str(PROJECT_ROOT), ledger_paths(raw))
+    return validate_manifest(raw, ledger)
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -146,7 +152,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--test-only", action="store_true")
     args = parser.parse_args(argv)
     try:
-        manifest = load_manifest(args.manifest)
+        manifest = load_manifest(args.manifest, with_ledger=not args.offline)
         if args.offline:
             print(json.dumps({"status": "VALID", "manifest_sha256": manifest_sha256(manifest)}))
             return 0

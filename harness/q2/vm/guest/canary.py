@@ -321,7 +321,7 @@ def close(config):
     for pid in pids:
         with contextlib.suppress(OSError):
             os.kill(pid, signal.SIGTERM)
-    deadline = time.monotonic() + 15
+    deadline = time.monotonic() + 5
     while time.monotonic() < deadline and _pids(PROCESS_PATTERNS[app], needle):
         time.sleep(0.2)
     left = _pids(PROCESS_PATTERNS[app], needle)

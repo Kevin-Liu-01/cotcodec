@@ -273,15 +273,27 @@ class Session:
         a11y: bool,
         source: str | None,
         steps: list[dict[str, Any]],
+        transport: str = "L0-fixed",
     ) -> tuple[bytes | None, str | None, list[str]]:
-        """Run IR dicts through L0-fixed; returns (last screenshot, terminal, errors)."""
+        """Run IR dicts through L0-fixed (or the L0-raw control); returns (shot, terminal, errors).
+
+        L0-raw (validity control C2) sends ``l0_raw.translate``'s PyAutoGUI command for
+        each action through the same ``DesktopEnv.step``; it is only ever scored, never
+        developed (manifest.py admits no L0-raw development run).
+        """
         shot = None
         errors: list[str] = []
         for action in actions:
             if action["op"] == "terminate":
                 return shot, action["status"], errors
             try:
-                command = step_command(action, source)
+                if transport == "L0-raw":
+                    from harness.q2.action_path.ir import parse_action
+                    from harness.q2.action_path.l0_raw import translate
+
+                    command = translate(parse_action(action))
+                else:
+                    command = step_command(action, source)
             except (IRError, ValueError, KeyError) as exc:
                 errors.append(f"IR: {exc}")
                 return shot, None, errors
@@ -310,8 +322,8 @@ class Session:
         errors: list[str] = []
         terminal = None
         shot = None
-        if layer == "L0-fixed":
-            shot, terminal, errors = self.run_actions(cell["actions"], a11y, source, steps)
+        if layer in ("L0-fixed", "L0-raw"):
+            shot, terminal, errors = self.run_actions(cell["actions"], a11y, source, steps, layer)
             trial["ir"] = cell["actions"]
         else:
             from harness.q2.action_path.adapters import turn_ir

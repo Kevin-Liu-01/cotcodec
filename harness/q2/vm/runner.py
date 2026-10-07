@@ -593,6 +593,14 @@ def boot_cycle(config: dict[str, Any]) -> dict[str, Any]:
     return result
 
 
+def _progress(config: dict[str, Any], trial: dict[str, Any]) -> dict[str, Any]:
+    """Append one trial to ``cycle-NN.trials.jsonl`` so a killed session keeps its trials."""
+    path = Path(config["out"]).with_suffix(".trials.jsonl")
+    with path.open("a", encoding="utf-8") as handle:
+        handle.write(json.dumps(trial, sort_keys=True) + "\n")
+    return trial
+
+
 def session_cycle(config: dict[str, Any]) -> dict[str, Any]:
     """One cold-booted session of the suite: inputs validation, development or canary."""
     from harness.q2.vm.suite import Session
@@ -621,7 +629,7 @@ def session_cycle(config: dict[str, Any]) -> dict[str, Any]:
     config["park"] = cells["guard"]["park_pointer"]
     a11y = config["setting"] == "screenshot+a11y"
     kind = config["kind"]
-    if kind == "canary-development":
+    if kind in ("canary-development", "canary-acceptance"):
         from harness.q2.vm.canary_run import canary_trial
 
         trials = []
@@ -629,7 +637,7 @@ def session_cycle(config: dict[str, Any]) -> dict[str, Any]:
             app, entry = pair.split(":", 1)
             trial = canary_trial(client, cells["canary"], app, entry, seq)
             trial["seq"], trial["cell"] = seq, pair
-            trials.append(trial)
+            trials.append(_progress(config, trial))
         result["trials"] = trials
         result["session_wall_s"] = round(time.monotonic() - started, 2)
         return result
@@ -649,7 +657,7 @@ def session_cycle(config: dict[str, Any]) -> dict[str, Any]:
         with HmpClient(port=config["hmp_port"]) as hmp:
             for _ in range(int(config["reps"])):
                 for item in items:
-                    trials.append(hmp_trial(session, hmp, item, seq))
+                    trials.append(_progress(config, hmp_trial(session, hmp, item, seq)))
                     seq += 1
         result["stop"] = session.stop()
         result["judged"] = judge_probe_validation(session, trials, items)
@@ -672,9 +680,19 @@ def session_cycle(config: dict[str, Any]) -> dict[str, Any]:
         result["session_wall_s"] = round(time.monotonic() - started, 2)
         return result
     layer = config["layer"]
-    by_id = {c["id"]: c for c in cells["layers"][layer]}
+    by_id = {c["id"]: c for c in cells["layers"]["L0-fixed" if layer == "L0-raw" else layer]}
+    source = None
+    mutant = config.get("mutant")
+    if mutant not in (None, "none"):
+        # C3: one mutant per session (patched modules stay loaded in this process).
+        from harness.q2.action_path import mutants
+
+        loaded = mutants.load_layer(layer, mutants.build(mutant, layer))
+        source = loaded if isinstance(loaded, str) else None
+        result["mutant"] = mutant
     for seq, cell_id in config["trials"]:
-        trials.append(session.run_cell(by_id[cell_id], layer, seq, a11y))
+        trial = session.run_cell(by_id[cell_id], layer, seq, a11y, source)
+        trials.append(_progress(config, trial))
     result["stop"] = session.stop()
     result["mapping_check"] = session.judge_all(trials, by_id)
     result["trials"] = trials
