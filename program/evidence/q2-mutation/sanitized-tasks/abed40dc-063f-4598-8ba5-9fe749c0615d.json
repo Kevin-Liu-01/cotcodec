@@ -1,0 +1,16 @@
+{
+  "domain": "libreoffice_calc",
+  "initial_files": [
+    {
+      "path_in_vm": "/home/user/Names_Duplicate_Unique.xlsx",
+      "sha256": "0b4de861a9ad5caa5564d1a840abd1644cb4877766eae53ad13185a3df93563b",
+      "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/1e112283c4ecb08d6fed8069bca7de74fa2f12aa/libreoffice_calc/abed40dc-063f-4598-8ba5-9fe749c0615d/Names_Duplicate_Unique.xlsx"
+    }
+  ],
+  "instruction": "Check the names in column \"Names with duplicates\" and put the unique ones in column \"Unique Names\". Keep the original order of the first occurrences. Finish the work and don't touch irrelevant regions, even if they are blank.",
+  "related_apps": [
+    "libreoffice calc"
+  ],
+  "snapshot": "libreoffice_calc",
+  "task_id": "abed40dc-063f-4598-8ba5-9fe749c0615d"
+}

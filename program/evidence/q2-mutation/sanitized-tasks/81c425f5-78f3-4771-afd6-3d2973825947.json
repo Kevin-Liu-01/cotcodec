@@ -1,0 +1,18 @@
+{
+  "domain": "multi_apps",
+  "initial_files": [
+    {
+      "path_in_vm": "/home/user/Desktop/OSP_Envelope_Price-List_2023_5000.xlsx",
+      "sha256": "dfbb801f920024ef5a3227299cb30b163d6cebe2f3e5f84480bbb38c7ed40627",
+      "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/1e112283c4ecb08d6fed8069bca7de74fa2f12aa/multi_apps/81c425f5-78f3-4771-afd6-3d2973825947/OSP_Envelope_Price-List_2023_5000.xlsx"
+    }
+  ],
+  "instruction": "Can you assist me in transferring the data from LibreOffice Calc in the current sheet to a LibreOffice Writer table while preserving the original format as in calc file? Save the document as \"price.docx\" on the desktop.",
+  "related_apps": [
+    "libreoffice_writer",
+    "libreoffice_calc",
+    "os"
+  ],
+  "snapshot": "libreoffice_calc",
+  "task_id": "81c425f5-78f3-4771-afd6-3d2973825947"
+}

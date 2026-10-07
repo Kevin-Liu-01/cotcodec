@@ -1,0 +1,10 @@
+{
+  "domain": "vlc",
+  "initial_files": [],
+  "instruction": "Can you change the color of the volume slider to black-ish color? I often use the player in a low-light environment, and a darker color scheme would be less straining on my eyes, especially during nighttime usage.",
+  "related_apps": [
+    "vlc"
+  ],
+  "snapshot": "chrome",
+  "task_id": "d06f0d4d-2cd5-4ede-8de9-598629438c6e"
+}

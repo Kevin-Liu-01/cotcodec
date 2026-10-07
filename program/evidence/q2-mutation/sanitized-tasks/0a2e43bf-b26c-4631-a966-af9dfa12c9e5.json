@@ -1,0 +1,16 @@
+{
+  "domain": "libreoffice_calc",
+  "initial_files": [
+    {
+      "path_in_vm": "/home/user/SalesRep.xlsx",
+      "sha256": "f4e54c5b2394e7c7dc5975d1f0bea29f93227aa435827d6649ce86b64734428f",
+      "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/1e112283c4ecb08d6fed8069bca7de74fa2f12aa/libreoffice_calc/0326d92d-d218-48a8-9ca1-981cd6d064c7/SalesRep.xlsx"
+    }
+  ],
+  "instruction": "Work out the monthly total sales in a new row called \"Total\" and then create a line chart to show the results (x-axis be Months).",
+  "related_apps": [
+    "libreoffice_calc"
+  ],
+  "snapshot": "libreoffice_calc",
+  "task_id": "0a2e43bf-b26c-4631-a966-af9dfa12c9e5"
+}

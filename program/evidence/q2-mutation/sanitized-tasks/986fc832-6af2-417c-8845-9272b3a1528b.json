@@ -1,0 +1,16 @@
+{
+  "domain": "libreoffice_impress",
+  "initial_files": [
+    {
+      "path_in_vm": "/home/user/Desktop/154_3.pptx",
+      "sha256": "5ea88b468b11c3d4171b76eb614adf780b8aaf40b9dd0625930225e2fd399ccd",
+      "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/1e112283c4ecb08d6fed8069bca7de74fa2f12aa/libreoffice_impress/986fc832-6af2-417c-8845-9272b3a1528b/154_3.pptx"
+    }
+  ],
+  "instruction": "Underline the body text of the slide only, without underlining the title or table. Then set the font color of all text on the slide, including the title, body text, and table text, to the \"Dark Red 2\" color from the LibreOffice color palette.",
+  "related_apps": [
+    "libreoffice_impress"
+  ],
+  "snapshot": "libreoffice_impress",
+  "task_id": "986fc832-6af2-417c-8845-9272b3a1528b"
+}

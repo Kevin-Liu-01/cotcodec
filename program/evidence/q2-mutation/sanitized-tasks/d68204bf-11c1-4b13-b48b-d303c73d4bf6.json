@@ -1,0 +1,17 @@
+{
+  "domain": "multi_apps",
+  "initial_files": [
+    {
+      "path_in_vm": "/home/user/Desktop/tilearray.png",
+      "sha256": "3ad2cb1f1244c08687d3801a8eb64c71cc8012c7360e11e8614ae5b6f6634d0f",
+      "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/1e112283c4ecb08d6fed8069bca7de74fa2f12aa/multi_apps/d68204bf-11c1-4b13-b48b-d303c73d4bf6/tilearray.png"
+    }
+  ],
+  "instruction": "Divide my image vertically into three equal sections with command line. Reorder the original sections from warmest to coolest from left to right, without changing the colors or applying any tint/filter, and save the result as \"rearranged.png\".",
+  "related_apps": [
+    "gimp",
+    "os"
+  ],
+  "snapshot": "gimp",
+  "task_id": "d68204bf-11c1-4b13-b48b-d303c73d4bf6"
+}

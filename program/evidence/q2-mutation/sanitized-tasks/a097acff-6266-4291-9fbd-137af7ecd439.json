@@ -1,0 +1,16 @@
+{
+  "domain": "libreoffice_impress",
+  "initial_files": [
+    {
+      "path_in_vm": "/home/user/Downloads/Secrets-of-Monetizing-Video.pptx",
+      "sha256": "73621e64dcfbcf2c19d465c2726701f7e1b3445e6154ee795994a2e098d7d047",
+      "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/1e112283c4ecb08d6fed8069bca7de74fa2f12aa/libreoffice_impress/a097acff-6266-4291-9fbd-137af7ecd439/Secrets-of-Monetizing-Video.pptx"
+    }
+  ],
+  "instruction": "Could you help me save my slides as pre.pptx on the Desktop?",
+  "related_apps": [
+    "libreoffice_impress"
+  ],
+  "snapshot": "libreoffice_impress",
+  "task_id": "a097acff-6266-4291-9fbd-137af7ecd439"
+}

@@ -1,0 +1,32 @@
+{
+  "domain": "multi_apps",
+  "initial_files": [
+    {
+      "path_in_vm": "/home/user/Desktop/snake/food.py",
+      "sha256": "5f110994a6d7ba0c6b0f8b219d3c0fc4f53372dde96b86c3bd6b8aa470c568de",
+      "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/1e112283c4ecb08d6fed8069bca7de74fa2f12aa/multi_apps/26150609-0da3-4a7d-8868-0faf9c5f01bb/food.py"
+    },
+    {
+      "path_in_vm": "/home/user/Desktop/snake/main.py",
+      "sha256": "8ccc39605033c5437e92c03d8d00415cae6ce268190a71a65a869098a834456e",
+      "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/1e112283c4ecb08d6fed8069bca7de74fa2f12aa/multi_apps/26150609-0da3-4a7d-8868-0faf9c5f01bb/main.py"
+    },
+    {
+      "path_in_vm": "/home/user/Desktop/snake/settings.py",
+      "sha256": "d0c0c50a54cb333ca9a7434bf53b03b96506c33c04fbc768195151b729170780",
+      "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/1e112283c4ecb08d6fed8069bca7de74fa2f12aa/multi_apps/26150609-0da3-4a7d-8868-0faf9c5f01bb/settings.py"
+    },
+    {
+      "path_in_vm": "/home/user/Desktop/snake/snake.py",
+      "sha256": "f01de3f82d9242ca88a13a53a57b1180708e4b9afa6807152e662ccaff7bac1b",
+      "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/1e112283c4ecb08d6fed8069bca7de74fa2f12aa/multi_apps/26150609-0da3-4a7d-8868-0faf9c5f01bb/snake.py"
+    }
+  ],
+  "instruction": "So, I've been dabbling with coding a Snake game in Python, and I finally got it up and running. It's pretty cool, but it's not without its quirks. The biggest issue I'm facing right now is that the snake can't seem to eat the food, no matter what. Could you help me tweak the code so the snake can actually eat the food? Thanks a bunch!",
+  "related_apps": [
+    "vs_code",
+    "os"
+  ],
+  "snapshot": "vs_code",
+  "task_id": "26150609-0da3-4a7d-8868-0faf9c5f01bb"
+}

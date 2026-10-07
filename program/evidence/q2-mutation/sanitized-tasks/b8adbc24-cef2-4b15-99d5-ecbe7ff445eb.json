@@ -1,0 +1,16 @@
+{
+  "domain": "libreoffice_impress",
+  "initial_files": [
+    {
+      "path_in_vm": "/home/user/Desktop/189_4.pptx",
+      "sha256": "fe492d73a833ce61dc6342037c2fb34aa1494058a2136ca14ca68414560814fa",
+      "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/1e112283c4ecb08d6fed8069bca7de74fa2f12aa/libreoffice_impress/b8adbc24-cef2-4b15-99d5-ecbe7ff445eb/189_4.pptx"
+    }
+  ],
+  "instruction": "Go to the second slide and name its title as \"Online Shopping\" with the same color, position and font size as the previous title.",
+  "related_apps": [
+    "libreoffice_impress"
+  ],
+  "snapshot": "libreoffice_impress",
+  "task_id": "b8adbc24-cef2-4b15-99d5-ecbe7ff445eb"
+}

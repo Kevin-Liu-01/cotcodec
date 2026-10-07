@@ -1,0 +1,16 @@
+{
+  "domain": "libreoffice_impress",
+  "initial_files": [
+    {
+      "path_in_vm": "/home/user/Desktop/45_1.pptx",
+      "sha256": "84b314cfe102d230633cd02866a146cecdf6eac1aa1e9392e89541b53e10a0ea",
+      "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/1e112283c4ecb08d6fed8069bca7de74fa2f12aa/libreoffice_impress/3161d64e-3120-47b4-aaad-6a764a92493b/45_1.pptx"
+    }
+  ],
+  "instruction": "Make the first textbox font size 60 pt while the second 28 pt on slide 14.",
+  "related_apps": [
+    "libreoffice_impress"
+  ],
+  "snapshot": "libreoffice_impress",
+  "task_id": "3161d64e-3120-47b4-aaad-6a764a92493b"
+}

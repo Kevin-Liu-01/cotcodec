@@ -1,0 +1,16 @@
+{
+  "domain": "gimp",
+  "initial_files": [
+    {
+      "path_in_vm": "/home/user/Desktop/dog_with_background.png",
+      "sha256": "e08ef7f647e9394682f3ee4858137c69cc931d2ace8b7bc618e25da83618d581",
+      "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/1e112283c4ecb08d6fed8069bca7de74fa2f12aa/gimp/2a729ded-3296-423d-aec4-7dd55ed5fbb3/dog_with_background.png"
+    }
+  ],
+  "instruction": "Could you make the background of this image transparent for me?",
+  "related_apps": [
+    "gimp"
+  ],
+  "snapshot": "gimp",
+  "task_id": "2a729ded-3296-423d-aec4-7dd55ed5fbb3"
+}

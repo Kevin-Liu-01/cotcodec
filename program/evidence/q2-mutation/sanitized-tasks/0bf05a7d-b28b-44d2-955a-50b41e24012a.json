@@ -1,0 +1,16 @@
+{
+  "domain": "libreoffice_calc",
+  "initial_files": [
+    {
+      "path_in_vm": "/home/user/Customers_New_7digit_Id.xlsx",
+      "sha256": "3b83aba5790e91f538ee5d6f0856efa73e59d86730f857b7ed186eda0a3a329f",
+      "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/1e112283c4ecb08d6fed8069bca7de74fa2f12aa/libreoffice_calc/0bf05a7d-b28b-44d2-955a-50b41e24012a/Customers_New_7digit_Id.xlsx"
+    }
+  ],
+  "instruction": "I would like to copy all the numbers in the 'Old ID' column to the 'New 7 Digit Id' column, and pad them with zeros in front, to fill them up to seven digits. Finish the work and don't touch irrelevant regions, even if they are blank.",
+  "related_apps": [
+    "libreoffice calc"
+  ],
+  "snapshot": "libreoffice_calc",
+  "task_id": "0bf05a7d-b28b-44d2-955a-50b41e24012a"
+}

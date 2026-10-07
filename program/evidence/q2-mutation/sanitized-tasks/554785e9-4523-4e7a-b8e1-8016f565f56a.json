@@ -1,0 +1,16 @@
+{
+  "domain": "gimp",
+  "initial_files": [
+    {
+      "path_in_vm": "/home/user/Desktop/woman_sitting_by_the_tree2.png",
+      "sha256": "4acbf30f243b4098fe571534d67f3b71f3aa17fe0abebbeba27db9fc79c52367",
+      "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/1e112283c4ecb08d6fed8069bca7de74fa2f12aa/gimp/554785e9-4523-4e7a-b8e1-8016f565f56a/woman_sitting_by_the_tree2.png"
+    }
+  ],
+  "instruction": "Could you assist me in enhancing the color vibrancy of my photo?",
+  "related_apps": [
+    "gimp"
+  ],
+  "snapshot": "gimp",
+  "task_id": "554785e9-4523-4e7a-b8e1-8016f565f56a"
+}

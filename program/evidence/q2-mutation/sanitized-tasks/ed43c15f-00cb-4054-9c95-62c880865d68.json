@@ -1,0 +1,16 @@
+{
+  "domain": "libreoffice_impress",
+  "initial_files": [
+    {
+      "path_in_vm": "/home/user/Desktop/43_1.pptx",
+      "sha256": "d83184b6503d9ee484dc80064cf293a6210a2778af188efd04312abeb5df1e2e",
+      "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/1e112283c4ecb08d6fed8069bca7de74fa2f12aa/libreoffice_impress/ed43c15f-00cb-4054-9c95-62c880865d68/43_1.pptx"
+    }
+  ],
+  "instruction": "Move the picture on page 2 to slide top. Make textboxes underlined on slide 1 and 2.",
+  "related_apps": [
+    "libreoffice_impress"
+  ],
+  "snapshot": "libreoffice_impress",
+  "task_id": "ed43c15f-00cb-4054-9c95-62c880865d68"
+}

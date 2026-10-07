@@ -1,0 +1,32 @@
+{
+  "domain": "multi_apps",
+  "initial_files": [
+    {
+      "path_in_vm": "/home/user/Desktop/tetris/block.py",
+      "sha256": "173f6c788ba63b6fc695f00bdd28e82f362e47f99dedca8367ebb76f814fd82c",
+      "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/1e112283c4ecb08d6fed8069bca7de74fa2f12aa/multi_apps/9219480b-3aed-47fc-8bac-d2cffc5849f7/block.py"
+    },
+    {
+      "path_in_vm": "/home/user/Desktop/tetris/main.py",
+      "sha256": "094e808b626fbd936ceb800c3b055bcb432ec12a33b477bc745cf95caa333d69",
+      "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/1e112283c4ecb08d6fed8069bca7de74fa2f12aa/multi_apps/9219480b-3aed-47fc-8bac-d2cffc5849f7/main.py"
+    },
+    {
+      "path_in_vm": "/home/user/Desktop/tetris/settings.py",
+      "sha256": "fca04a7cc2e995f756bf9515d847d42b7447948ae53a4fbcde636f5bac2b5c13",
+      "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/1e112283c4ecb08d6fed8069bca7de74fa2f12aa/multi_apps/9219480b-3aed-47fc-8bac-d2cffc5849f7/settings.py"
+    },
+    {
+      "path_in_vm": "/home/user/Desktop/tetris/tetris.py",
+      "sha256": "59ff97d002d5810e458e025d9943dafe53097e7c49026fefcdb789d5641f9b72",
+      "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/1e112283c4ecb08d6fed8069bca7de74fa2f12aa/multi_apps/9219480b-3aed-47fc-8bac-d2cffc5849f7/tetris.py"
+    }
+  ],
+  "instruction": "Hi, I recently playing with developing a small python-based tetris game. While I have finished most of the part, something is wrong under some cases when I press up to rotate, the whole program will crash, please run the code for me and fix the bugs of code.",
+  "related_apps": [
+    "vs_code",
+    "os"
+  ],
+  "snapshot": "vs_code",
+  "task_id": "9219480b-3aed-47fc-8bac-d2cffc5849f7"
+}
