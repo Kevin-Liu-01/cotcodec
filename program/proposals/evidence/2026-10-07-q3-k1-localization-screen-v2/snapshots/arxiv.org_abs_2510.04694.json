@@ -1,0 +1,32 @@
+{
+ "url": "https://arxiv.org/abs/2510.04694",
+ "fetched_at": "2026-10-07T20:59:15Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 43236,
+ "raw_sha256": "9197e53076c1ddc60bf94b3b079a4d2b9fda1efd4198c8dd8d34216c8f014388",
+ "raw_stored": false,
+ "extract": {
+  "title": "Multilingual Routing in Mixture-of-Experts",
+  "authors": [
+   "Bandarkar, Lucas",
+   "Yang, Chenyuan",
+   "Fayyaz, Mohsen",
+   "Hu, Junlin",
+   "Peng, Nanyun"
+  ],
+  "citation_date": "2025/10/06",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Mon, 6 Oct 2025 11:09:20 UTC"
+   },
+   {
+    "version": "v2",
+    "date": "Tue, 17 Feb 2026 19:00:20 UTC"
+   }
+  ],
+  "abstract": "Mixture-of-Experts (MoE) architectures have become the key to scaling modern LLMs, yet little is understood about how their sparse routing dynamics respond to multilingual data. In this work, we analyze expert routing patterns using parallel multilingual datasets and present highly interpretable layer-wise phenomena. We find that MoE models route tokens in language-specific ways in the early and late decoder layers but exhibit significant cross-lingual routing alignment in middle layers, mirroring parameter-sharing trends observed in dense LLMs. In particular, we reveal a clear, strong correlation between a model's performance in a given language and how similarly its tokens are routed to English in these layers. Extending beyond correlation, we explore inference-time interventions that induce higher cross-lingual routing alignment. We introduce a method that steers the router by promoting middle-layer task experts frequently activated in English, and it successfully increases multilingual performance. These 1-2% gains are remarkably consistent across two evaluation tasks, three models, and 15+ languages, especially given that these simple interventions override routers of extensively trained, state-of-the-art LLMs. In comparison, interventions outside of the middle layers or targeting multilingual-specialized experts only yield performance degradation. Altogether, we present numerous findings that explain how MoEs process non-English text and demonstrate that generalization is limited by the model's ability to leverage language-universal experts in all languages.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}

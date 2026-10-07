@@ -1,0 +1,35 @@
+{
+ "url": "https://arxiv.org/abs/2005.00181",
+ "fetched_at": "2026-10-07T20:59:02Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 41620,
+ "raw_sha256": "2d71f30a4ba74f66db9db569069115dc8d8ef47577a251bd4abbf0c9afc6013f",
+ "raw_stored": false,
+ "extract": {
+  "title": "Sparse, Dense, and Attentional Representations for Text Retrieval",
+  "authors": [
+   "Luan, Yi",
+   "Eisenstein, Jacob",
+   "Toutanova, Kristina",
+   "Collins, Michael"
+  ],
+  "citation_date": "2020/05/01",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Fri, 1 May 2020 02:21:17 UTC"
+   },
+   {
+    "version": "v2",
+    "date": "Wed, 14 Oct 2020 19:12:42 UTC"
+   },
+   {
+    "version": "v3",
+    "date": "Tue, 16 Feb 2021 23:18:25 UTC"
+   }
+  ],
+  "abstract": "Dual encoders perform retrieval by encoding documents and queries into dense lowdimensional vectors, scoring each document by its inner product with the query. We investigate the capacity of this architecture relative to sparse bag-of-words models and attentional neural networks. Using both theoretical and empirical analysis, we establish connections between the encoding dimension, the margin between gold and lower-ranked documents, and the document length, suggesting limitations in the capacity of fixed-length encodings to support precise retrieval of long documents. Building on these insights, we propose a simple neural model that combines the efficiency of dual encoders with some of the expressiveness of more costly attentional architectures, and explore sparse-dense hybrids to capitalize on the precision of sparse retrieval. These models outperform strong alternatives in large-scale retrieval.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}
