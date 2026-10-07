@@ -533,3 +533,40 @@ def test_packet_artifacts_for_text_and_binary(tmp_path: Path) -> None:
     assert "gold" not in json.dumps(out)
     cmds = packets.render_command("/w/x.docx", "/w/r", "/w/h")
     assert cmds[0][-1] == "/w/x.docx" and cmds[1][0] == "pdftoppm"
+
+
+def test_make_jobs_skips_gold_identical_to_initial(tmp_path: Path) -> None:
+    cache = tmp_path / "cache"
+    (cache / "x").mkdir(parents=True)
+    (cache / "x" / "in.pptx").write_bytes(b"same")
+    (cache / "x" / "gold.pptx").write_bytes(b"same")
+    (cache / "x" / "real_gold.pptx").write_bytes(b"answer")
+    osworld = tmp_path / "osw"
+    tasks_dir = osworld / "evaluation_examples" / "examples" / "libreoffice_impress"
+    tasks_dir.mkdir(parents=True)
+    ids = [f"{n:08x}-0000-4000-8000-000000000000" for n in (1, 2)]
+    for task_id, gold in zip(ids, ("gold.pptx", "real_gold.pptx"), strict=True):
+        raw = {
+            "id": task_id,
+            "config": [
+                {
+                    "type": "download",
+                    "parameters": {
+                        "files": [{"url": f"{CACHE}/x/in.pptx", "path": "/home/user/a.pptx"}]
+                    },
+                }
+            ],
+            "evaluator": {
+                "func": "compare_pptx_files",
+                "result": {"type": "vm_file", "path": "/home/user/a.pptx", "dest": "a.pptx"},
+                "expected": {"type": "cloud_file", "path": f"{CACHE}/x/{gold}", "dest": "g.pptx"},
+            },
+        }
+        (tasks_dir / f"{task_id}.json").write_text(json.dumps(raw))
+    jobs, report = controls.make_jobs(osworld, cache, ids)
+    assert report["gold_equals_initial"] == [ids[0]]
+    assert [job["job_id"] for job in jobs] == [
+        f"{ids[0]}__initial",
+        f"{ids[1]}__gold",
+        f"{ids[1]}__initial",
+    ]
