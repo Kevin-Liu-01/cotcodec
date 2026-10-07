@@ -228,6 +228,6 @@ execution:
   blocked_by:
     - the preregistration q3-k1-localization-screen-v1 is a draft; the program owner freezes it after the bundle is built so its SHA-256 can be stated
     - no image contains this code yet; image A (from this commit) builds the bundle, image B (A plus the frozen preregistration and ledger) runs every GPU job
-    - the K1 bundle has not been built; the ParaDocs yield probe (2026-10-06) projects 5.3 GB (en-th), 7.1 GB (en-hi) and all 4.10 GB of en-km streamed reads, with en-km about 7 percent short of its quota
+    - the K1 bundle is built from image A and its digest written into the frozen preregistration; the ParaDocs yield probe (2026-10-07, 1 GB per cross-script pair) kept 278,595, 206,703 and 331,407 item tokens per GB for en-th, en-hi and en-km, so the 1.2x quota needs about 6.3, 8.5 and 5.3 GB of streamed reads and en-km (4.10 GB in total) falls about 23 percent short, refilled from the same-script pairs
     - the discovery-lane submitter changes on stage0/lane (container_profile, model kind, seed_binding, memory mapping, signal marker semantics) must merge before the manifests under experiments/manifests/ validate
     - no orx node, accepted dry-run, smoke run or resume test exists for this code path
