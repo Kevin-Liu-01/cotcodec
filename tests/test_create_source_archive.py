@@ -2,8 +2,10 @@ from __future__ import annotations
 
 import gzip
 import hashlib
+import inspect
 import json
 import os
+import shutil
 import subprocess
 import sys
 import tarfile
@@ -11,10 +13,12 @@ from pathlib import Path
 
 import pytest
 
+import scripts.create_source_archive as creator_module
 import scripts.extract_discovery_source_archive as extraction_module
 import scripts.verify_compute_provenance as provenance_module
 from scripts.create_source_archive import (
-    OMITTABLE_SYMLINK_PREFIXES,
+    OMITTABLE_SYMLINK_RULES,
+    committed_symlinks,
     create_archive,
     write_receipt,
 )
@@ -168,7 +172,7 @@ def _agent_tooling_repo(tmp_path: Path) -> Path:
     links = root / ".agents/skills"
     links.mkdir(parents=True)
     (links / "demo").symlink_to("../../.claude/skills/demo")
-    (links / "research.py").symlink_to("../../research.py")
+    (links / "demo.md").symlink_to("../../.claude/skills/demo/SKILL.md")
     _run(root, "git", "add", ".")
     _run(root, "git", "commit", "-qm", "agent tooling links")
     return root
@@ -180,6 +184,11 @@ def _commit_link(root: Path, link: str, target: str | Path) -> None:
     path.symlink_to(target)
     _run(root, "git", "add", link)
     _run(root, "git", "commit", "-qm", f"link {link}")
+
+
+def _exclude(root: Path, *patterns: str) -> None:
+    with (root / ".git/info/exclude").open("a", encoding="utf-8") as handle:
+        handle.write("".join(f"{pattern}\n" for pattern in patterns))
 
 
 def _members(receipt: dict[str, object]) -> list[str]:
@@ -196,15 +205,17 @@ def test_discovery_omits_tracked_agent_links_into_the_repository_and_records_the
     receipt = create_archive(root, tmp_path / "linked.tar.gz", mode="discovery")
     expected_rows = [
         {"path": ".agents/skills/demo", "target": "../../.claude/skills/demo"},
-        {"path": ".agents/skills/research.py", "target": "../../research.py"},
+        {"path": ".agents/skills/demo.md", "target": "../../.claude/skills/demo/SKILL.md"},
     ]
     assert receipt["schema_version"] == 3
     assert receipt["worktree_clean"] is True
-    assert receipt["omittable_symlink_prefixes"] == [".agents/"]
+    assert receipt["omittable_symlink_rules"] == [[".agents/skills/", ".claude/skills/"]]
     assert receipt["omitted_symlinks"] == expected_rows
     assert receipt["omitted_symlinks_sha256"] == hashlib.sha256(
         json.dumps(expected_rows, sort_keys=True, separators=(",", ":")).encode()
     ).hexdigest()
+    # Anyone holding the repository can recompute the record of a clean capsule.
+    assert list(committed_symlinks(root, str(receipt["git_tree"]))) == expected_rows
     names = _members(receipt)
     assert names == receipt["file_manifest"] == [
         ".claude/skills/demo/SKILL.md",
@@ -268,7 +279,7 @@ def test_discovery_refuses_agent_link_pointing_outside_the_repository(
     (outside / "secret.txt").write_text("no\n", encoding="utf-8")
     target = "../../../outside" if kind == "relative" else outside
     _commit_link(root, ".agents/skills/outside", target)
-    match = "escapes the repository" if kind == "relative" else "must be relative"
+    match = "escapes the repository" if kind == "relative" else "not a canonical relative path"
     with pytest.raises(ValueError, match=match):
         create_archive(root, tmp_path / "outside.tar.gz", mode="discovery")
     assert not (tmp_path / "outside.tar.gz").exists()
@@ -281,10 +292,20 @@ def test_discovery_refuses_dangling_agent_link(tmp_path: Path) -> None:
         create_archive(root, tmp_path / "dangling.tar.gz", mode="discovery")
 
 
-def test_discovery_refuses_links_outside_the_reviewed_prefixes(tmp_path: Path) -> None:
-    root = _repo(tmp_path)
-    _commit_link(root, "scripts/alias.py", "../research.py")
-    with pytest.raises(ValueError, match="reviewed agent-tooling prefixes"):
+@pytest.mark.parametrize(
+    ("link", "target"),
+    [
+        ("scripts/alias.py", "../research.py"),
+        (".agents/alias", "../.claude/skills/demo"),
+        (".agents/skills-extra/demo", "../../.claude/skills/demo"),
+    ],
+)
+def test_discovery_refuses_links_outside_the_reviewed_rules(
+    tmp_path: Path, link: str, target: str
+) -> None:
+    root = _agent_tooling_repo(tmp_path)
+    _commit_link(root, link, target)
+    with pytest.raises(ValueError, match="reviewed agent-tooling rules"):
         create_archive(root, tmp_path / "alias.tar.gz", mode="discovery")
 
 
@@ -298,12 +319,25 @@ def test_discovery_refuses_untracked_agent_link(tmp_path: Path) -> None:
 @pytest.mark.parametrize(
     ("target", "match"),
     [
-        ("../..", "names its root"),
-        ("..", "contains the link itself"),
-        ("demo", "passes through another symlink"),
-        ("../../data/raw.txt", "not a tracked regular file"),
-        ("../../draft.py", "not a tracked regular file"),
-        ("../../research.py/inner", "dangling"),
+        ("../..", "not a canonical relative path"),
+        ("..", "not a canonical relative path"),
+        # Each of these simplifies to archived content as text, but the
+        # operating system follows it elsewhere or nowhere.
+        ("../../nonexistent/../.claude/skills/demo", "not a canonical relative path"),
+        ("../../.claude/skills/demo/SKILL.md/../SKILL.md", "not a canonical relative path"),
+        ("../../.claude/skills/demo/SKILL.md/", "not a canonical relative path"),
+        ("../../.claude/skills/demo/", "not a canonical relative path"),
+        ("../../.claude/./skills/demo", "not a canonical relative path"),
+        ("../..//.claude/skills/demo", "not a canonical relative path"),
+        ("../../../outside", "escapes the repository"),
+        ("demo", "outside the reviewed target prefix"),
+        ("../../research.py", "outside the reviewed target prefix"),
+        ("../../data/raw.txt", "outside the reviewed target prefix"),
+        ("../../.claude/skills/draft.md", "not a tracked regular file"),
+        ("../../.claude/skills/drafts", "not a tracked regular file"),
+        ("../../.claude/skills/typechange", "not a tracked regular file"),
+        ("../../.claude/skills/demo/SKILL.md/inner", "dangling"),
+        ("../../.claude/skills/missing", "dangling"),
     ],
 )
 def test_discovery_refuses_agent_links_that_do_not_name_archived_content(
@@ -313,11 +347,75 @@ def test_discovery_refuses_agent_links_that_do_not_name_archived_content(
     (root / "data").mkdir()
     (root / "data/raw.txt").write_text("raw\n", encoding="utf-8")
     _run(root, "git", "add", "-f", "data/raw.txt")
-    _run(root, "git", "commit", "-qm", "data")
-    (root / "draft.py").write_text("draft = True\n", encoding="utf-8")
+    _commit_link(root, ".claude/skills/typechange", "demo")
+    # Untracked research files are archived but were never committed.
+    (root / ".claude/skills/draft.md").write_text("draft\n", encoding="utf-8")
+    (root / ".claude/skills/drafts").mkdir()
+    (root / ".claude/skills/drafts/a.md").write_text("draft\n", encoding="utf-8")
+    # Tracked as a link but a regular file on disk: archived, not a tracked file.
+    (root / ".claude/skills/typechange").unlink()
+    (root / ".claude/skills/typechange").write_text("swapped\n", encoding="utf-8")
     _commit_link(root, ".agents/skills/bad", target)
     with pytest.raises(ValueError, match=match):
         create_archive(root, tmp_path / "bad.tar.gz", mode="discovery")
+    assert not (tmp_path / "bad.tar.gz").exists()
+
+
+def test_discovery_refuses_a_target_reached_through_an_ignored_symlink(tmp_path: Path) -> None:
+    """Tracked files read through an ignored link leave the repository."""
+
+    root = _agent_tooling_repo(tmp_path)
+    outside = tmp_path / "outside-demo"
+    shutil.move(root / ".claude/skills/demo", outside)
+    (root / ".claude/skills/demo").symlink_to(outside)
+    _exclude(root, ".claude/skills/demo")
+    with pytest.raises(ValueError, match="passes through another symlink"):
+        create_archive(root, tmp_path / "escape.tar.gz", mode="discovery")
+
+
+def test_discovery_refuses_a_link_below_an_ignored_symlinked_directory(tmp_path: Path) -> None:
+    root = _agent_tooling_repo(tmp_path)
+    (root / ".agents").rename(root / ".agents-real")
+    (root / ".agents").symlink_to(".agents-real")
+    _exclude(root, ".agents", ".agents-real/")
+    with pytest.raises(ValueError, match="sits below another symlink"):
+        create_archive(root, tmp_path / "below.tar.gz", mode="discovery")
+
+
+def test_discovery_refuses_a_link_that_does_not_land_where_its_target_says(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """A link retargeted after it was read must not be recorded with the old target."""
+
+    root = _agent_tooling_repo(tmp_path)
+    other = root / ".claude/skills/other"
+    other.mkdir()
+    (other / "SKILL.md").write_text("# other\n", encoding="utf-8")
+    _run(root, "git", "add", ".claude/skills/other")
+    _run(root, "git", "commit", "-qm", "other")
+    real_readlink = os.readlink
+
+    def stale_readlink(path: os.PathLike[str] | str) -> str:
+        if Path(path).name == "demo":
+            return "../../.claude/skills/other"
+        return real_readlink(path)
+
+    monkeypatch.setattr(creator_module.os, "readlink", stale_readlink)
+    with pytest.raises(ValueError, match="does not resolve where its target says"):
+        create_archive(root, tmp_path / "raced.tar.gz", mode="discovery")
+
+
+def test_clean_discovery_record_must_equal_the_committed_links(tmp_path: Path) -> None:
+    """A link hidden from `git status` cannot change the record of a clean capsule."""
+
+    root = _agent_tooling_repo(tmp_path)
+    _run(root, "git", "update-index", "--assume-unchanged", ".agents/skills/demo")
+    (root / ".agents/skills/demo").unlink()
+    (root / ".agents/skills/demo").symlink_to("../../.claude/skills/demo/references")
+    assert not subprocess.check_output(["git", "status", "--porcelain"], cwd=root)
+    with pytest.raises(ValueError, match="differ from the links the clean commit tracks"):
+        create_archive(root, tmp_path / "hidden.tar.gz", mode="discovery")
+    assert not (tmp_path / "hidden.tar.gz").exists()
 
 
 def test_publication_still_refuses_every_tracked_symlink(tmp_path: Path) -> None:
@@ -327,4 +425,49 @@ def test_publication_still_refuses_every_tracked_symlink(tmp_path: Path) -> None
 
 
 def test_extractor_holds_the_same_omission_rule() -> None:
-    assert extraction_module.OMITTABLE_SYMLINK_PREFIXES == OMITTABLE_SYMLINK_PREFIXES
+    assert extraction_module.OMITTABLE_SYMLINK_RULES == OMITTABLE_SYMLINK_RULES
+    assert inspect.getsource(extraction_module.omitted_symlink_target) == inspect.getsource(
+        creator_module.omitted_symlink_target
+    )
+    # Disjoint prefixes keep an omitted link from naming itself or its directories.
+    prefixes = [prefix for rule in OMITTABLE_SYMLINK_RULES for prefix in rule]
+    assert all(prefix.endswith("/") for prefix in prefixes)
+    for link_prefix, _ in OMITTABLE_SYMLINK_RULES:
+        for _, target_prefix in OMITTABLE_SYMLINK_RULES:
+            assert not link_prefix.startswith(target_prefix)
+            assert not target_prefix.startswith(link_prefix)
+
+
+@pytest.mark.parametrize("module", [creator_module, extraction_module])
+@pytest.mark.parametrize(
+    ("link", "target", "expected"),
+    [
+        (".agents/skills/demo", "../../.claude/skills/demo", ".claude/skills/demo"),
+        (".agents/skills/a/b", "../../../.claude/skills/a/b.md", ".claude/skills/a/b.md"),
+        (".agents/skills/demo", "../../.claude/skills/demo\0", "not a canonical relative path"),
+        (".agents/skills/demo", "", "not a canonical relative path"),
+        (".agents/skills/demo", "/abs/.claude/skills/demo", "not a canonical relative path"),
+        (".agents/skills/demo", "../../.claude/skills/./demo", "not a canonical relative path"),
+        (".agents/skills/demo", "../../../.claude/skills/demo", "escapes the repository"),
+        (".agents/skills/demo", "../skills/demo", "outside the reviewed target prefix"),
+        (".agents/skills/demo", "../../.claude/skillsx/demo", "outside the reviewed target"),
+        (".agents/skills/de\0mo", "../../.claude/skills/demo", "reviewed agent-tooling rules"),
+        (".agents/skills/", "../../.claude/skills/demo", "reviewed agent-tooling rules"),
+        (".agents/skills//demo", "../../.claude/skills/demo", "reviewed agent-tooling rules"),
+        (".agents/skills/./demo", "../../.claude/skills/demo", "reviewed agent-tooling rules"),
+        (
+            ".agents/skills/../skills/demo",
+            "../../../../.claude/skills/demo",
+            "reviewed agent-tooling rules",
+        ),
+        ("/.agents/skills/demo", "../../.claude/skills/demo", "reviewed agent-tooling rules"),
+    ],
+)
+def test_omission_rule_is_lexical_and_canonical_in_both_copies(
+    module, link: str, target: str, expected: str
+) -> None:
+    if expected.startswith(".claude/"):
+        assert module.omitted_symlink_target(link, target) == expected
+    else:
+        with pytest.raises(ValueError, match=expected):
+            module.omitted_symlink_target(link, target)
