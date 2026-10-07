@@ -19,21 +19,27 @@ Stages:
   rule (b)'s H rerun reference. It never classifies an evaluator and never
   reads the tarball.
 * ``v2``: refuses to run unless ``q2-holo3-rerun-audit-v2`` is frozen in the
-  preregistration ledger, and refuses ``--skip-opencua`` (a registered positive
+  repository ledger (``program/preregistrations/ledger.jsonl``, whatever
+  ``--ledger`` names), and refuses ``--skip-opencua`` (a registered positive
   control). Runs rule (d) and, given a trajectory feature file, rules (a)-(c).
-* ``v2-tarball``: refuses unless v2 is frozen and ``--allow-large-download`` is
-  given. Downloads the 5.75 GB trajectory tarball to ``--tarball-dir``,
-  verifies size, CRC-32 and SHA-256 (an existing file is re-verified), scans
-  it once and writes a feature file (trajectory ids and derived numbers only).
+* ``v2-tarball``: refuses unless v2 is frozen in the repository ledger and
+  ``--allow-large-download`` is given. Checks the tarball member against the
+  registered size, CRC-32 and SHA-256 before any byte is fetched, downloads it
+  to ``--tarball-dir``, verifies it again (an existing file is re-verified),
+  scans it once and writes a feature file (trajectory ids and derived numbers
+  only).
 
 A v2 or v2-tarball receipt is labelled CONFIRMATORY only if it ran against the
 repository ledger, committed and unmodified, with the code files unchanged
 since the ledger's ``git_head_at_freeze``, and (when it uses trajectories)
-within 14 days of the freeze. Otherwise it is labelled NON-CONFIRMATORY and
-names the failed checks.
+within 14 days of the freeze. A v2 run with a feature file is CONFIRMATORY only
+if ``--tarball-receipt`` names the CONFIRMATORY v2-tarball receipt that wrote
+that file with the same code and freeze. Otherwise it is labelled
+NON-CONFIRMATORY and names the failed checks.
 
 Exit codes: 0 PASS, 1 a control or check failed, 2 infrastructure or integrity
-error, 3 refused by a gate.
+error (fetch, identity, CRC-32, SHA-256 or truncated transfer), 3 refused by a
+gate.
 """
 
 from __future__ import annotations
@@ -47,6 +53,7 @@ import io
 import itertools
 import json
 import os
+import platform
 import subprocess
 import sys
 import tempfile
@@ -57,6 +64,7 @@ from pathlib import Path
 from typing import Any
 
 import numpy as np
+import scipy
 from scipy import stats
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
@@ -130,6 +138,11 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser.add_argument("--matrix-output", type=Path, help="write the Holo3 per-task CSV here")
     parser.add_argument("--ledger", type=Path, default=preregister.DEFAULT_LEDGER)
     parser.add_argument("--trajectory-features", type=Path, help="v2: feature file from v2-tarball")
+    parser.add_argument(
+        "--tarball-receipt",
+        type=Path,
+        help="v2: the v2-tarball receipt that wrote --trajectory-features (provenance check)",
+    )
     parser.add_argument("--tarball-dir", type=Path, help="v2-tarball: host scratch directory")
     parser.add_argument("--allow-large-download", action="store_true")
     args = parser.parse_args(argv)
@@ -148,10 +161,14 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
 # --------------------------------------------------------------------------- #
 
 
+def code_file_hashes() -> dict[str, str]:
+    return {
+        rel: hashlib.sha256((PROJECT_ROOT / rel).read_bytes()).hexdigest() for rel in CODE_FILES
+    }
+
+
 def code_hashes() -> dict[str, Any]:
-    files = {}
-    for rel in CODE_FILES:
-        files[rel] = hashlib.sha256((PROJECT_ROOT / rel).read_bytes()).hexdigest()
+    files = code_file_hashes()
     head = dirty = None
     try:
         head = subprocess.run(
@@ -205,6 +222,35 @@ def _git_ok(*command: str) -> bool:
     return completed.returncode == 0
 
 
+def features_from_confirmatory_scan(
+    features: Path, tarball_receipt: Path | None, ledger_state: dict[str, Any]
+) -> bool:
+    """True only if ``tarball_receipt`` is the CONFIRMATORY v2-tarball receipt that
+    wrote ``features``, from the registered tarball, with this code and this freeze."""
+    if tarball_receipt is None:
+        return False
+    try:
+        scan = json.loads(tarball_receipt.read_text())
+        checks = scan["confirmatory_checks"]
+        row_hash = ledger_state.get("row_hash")
+        return bool(
+            scan["doctor"] == DOCTOR_NAME
+            and scan["stage"] == "v2-tarball"
+            and scan["status"] == "PASS"
+            and scan["label"] == "v2 CONFIRMATORY"
+            and checks
+            and all(checks.values())
+            and scan["code"]["files_sha256"] == code_file_hashes()
+            and row_hash
+            and scan["preregistrations"]["v2"]["ledger"]["row_hash"] == row_hash
+            and scan["results"]["tarball"]["sha256"] == v2.TARBALL_SHA256
+            and scan["results"]["tarball_scan"]["feature_file_sha256"]
+            == hashlib.sha256(features.read_bytes()).hexdigest()
+        )
+    except (OSError, ValueError, KeyError, TypeError, AttributeError):
+        return False
+
+
 def confirmatory_checks(
     args: argparse.Namespace, v2_state: dict[str, Any], *, uses_trajectories: bool
 ) -> dict[str, bool]:
@@ -231,7 +277,35 @@ def confirmatory_checks(
             datetime.now(UTC) - datetime.fromisoformat(str(frozen_at))
             <= timedelta(days=v2.FINAL_WINDOW_DAYS)
         )
+    features = getattr(args, "trajectory_features", None)
+    if getattr(args, "stage", None) == "v2" and features is not None:
+        checks["trajectory_features_from_confirmatory_scan"] = features_from_confirmatory_scan(
+            features, getattr(args, "tarball_receipt", None), ledger
+        )
     return checks
+
+
+REPOSITORY_LEDGER_REL = "program/preregistrations/ledger.jsonl"
+
+
+def require_repository_freeze(receipt: dict[str, Any]) -> None:
+    """Freeze gate for the v2 stages.
+
+    v2 must be frozen in the repository ledger, whatever ``--ledger`` names: a
+    freeze in a scratch ledger alone must not unblind the class-outcome join
+    or start the tarball download.
+    """
+    state = prereg_state(v2.V2_EXPERIMENT_ID, V2_PREREG, REPOSITORY_LEDGER)
+    gate = {
+        "repository_ledger_frozen": bool(state["ledger"]["frozen"]),
+        "run_ledger_frozen": bool(receipt["preregistrations"]["v2"]["ledger"]["frozen"]),
+    }
+    receipt["freeze_gate"] = gate
+    if not all(gate.values()):
+        raise GateRefused(
+            f"{v2.V2_EXPERIMENT_ID} is not frozen in the repository ledger "
+            f"({REPOSITORY_LEDGER_REL}) and the ledger this run names"
+        )
 
 
 def make_context(args: argparse.Namespace) -> tuple[audit.FetchContext, remote_zip.TransferStats]:
@@ -380,9 +454,13 @@ def run_common(
     cases["leaderboard_constants_match_pinned_sheet"] = audit.check_leaderboard_constants(rows)
 
     pkg = audit.load_verified_package(ctx)
+    # load_verified_package raises (exit 2) on the first mismatch; this case
+    # re-checks every member it returned against SHA256SUMS.
+    mismatched = [rel for rel, d in pkg.member_sha256.items() if pkg.sha256sums.get(rel) != d]
     cases["verified_members_match_sha256sums"] = {
-        "status": "PASS",
+        "status": "PASS" if pkg.member_sha256 and not mismatched else "FAIL",
         "members_checked": len(pkg.member_sha256),
+        "mismatched": len(mismatched),
     }
     receipt["inputs"]["verified_package"] = {
         "root": audit.VERIFIED_ROOT.rstrip("/"),
@@ -600,10 +678,16 @@ def stage_v2_design(
         "rule_d_power_exact": v2.power_rule_d(strata),
         "unique_failures": {"run2": len(run2_unique), "run1": len(run1_unique)},
     }
+    # Rule (a)'s own step definition (entries that are objects with an
+    # ``action`` key), applied to the H trajectories.
+    h_steps = {
+        tag: {t: f.steps for t, f in h.features.get(tag, {}).items() if f.parsed}
+        for tag in audit.H_RUN_TAGS
+    }
     pairs: list[tuple[int, int]] = []
     baseline = []
     for a_tag, b_tag in itertools.combinations(audit.H_RUN_TAGS, 2):
-        a, b = h.steps[a_tag], h.steps[b_tag]
+        a, b = h_steps[a_tag], h_steps[b_tag]
         common = sorted(set(a) & set(b))
         pairs += [(a[t], b[t]) for t in common]
         x = [a[t] for t in common]
@@ -614,7 +698,39 @@ def stage_v2_design(
     design["rule_a_power"] = v2.power_rule_a(
         pairs, n=len(clean), sims=args.power_sims_a, seeds=args.seeds
     )
+    # Power given the clean set's known outcome pattern (pre-freeze audit):
+    # run1-only and run2-only tasks pair a passing with a failing episode.
+    counts = {
+        "both_pass": sum(1 for t in clean if s1[t] >= 0.5 and s2[t] >= 0.5),
+        "both_fail": sum(1 for t in clean if s1[t] < 0.5 and s2[t] < 0.5),
+        "run1_only": sum(1 for t in clean if s1[t] >= 0.5 > s2[t]),
+        "run2_only": sum(1 for t in clean if s2[t] >= 0.5 > s1[t]),
+    }
+    pools = v2.outcome_pools(h_steps, h_rewards)
+    design["clean_outcome_counts"] = counts
+    design["rule_a_outcome_pools"] = {
+        c: {
+            "pairs": len(v),
+            "step_cap_share_of_second": (
+                sum(1 for _, b in v if b >= v2.STEP_CAP) / len(v) if v else None
+            ),
+        }
+        for c, v in pools.items()
+    }
+    design["rule_a_power_by_outcome"] = v2.power_rule_a_by_outcome(
+        pools, counts, sims=args.power_sims_a, seeds=args.seeds
+    )
+    design["rule_d_size_all_allocations"] = v2.size_rule_d_all_allocations(strata)
     design["rule_b"] = rule_b_design(h, clean, len(run2_unique))
+    design["rule_b_power"] = {
+        "assumption": "each of the run2-unique failures falls in the class independently "
+        "with the given share; full coverage; for agent-side, no environment failures",
+        "rows": v2.power_rule_b(
+            len(run2_unique),
+            design["rule_b"]["label_thresholds_for_run2"]["primary"],
+            reference=design["rule_b"]["reference_primary"]["pooled"],
+        ),
+    }
     receipt["cases"]["rule_b_h_reference_matches_registration"] = h_reference_control(
         design["rule_b"]["reference_primary"]["pooled"]
     )
@@ -631,13 +747,18 @@ def h_reference_control(observed: dict[str, Any]) -> dict[str, Any]:
 
 
 def stage_v2(args: argparse.Namespace, ctx: audit.FetchContext, receipt: dict[str, Any]) -> None:
-    if not receipt["preregistrations"]["v2"]["ledger"]["frozen"]:
-        raise GateRefused(f"{v2.V2_EXPERIMENT_ID} is not frozen in the ledger")
+    require_repository_freeze(receipt)
     if args.skip_opencua:
         raise GateRefused("--skip-opencua drops a positive control the v2 registration requires")
     pkg, m, h, configs, _ = run_common(
         args, ctx, receipt, audit.OSWORLD_V2_CONFIG_COMMIT, h_features=True
     )
+    manifest = receipt["inputs"]["osworld_configs"].get("config_blob_manifest_sha256")
+    receipt["cases"]["v2_config_blobs_equal_v1"] = {
+        "status": "PASS" if manifest == v2.V1_CONFIG_BLOB_MANIFEST else "FAIL",
+        "got": manifest,
+        "registered": v2.V1_CONFIG_BLOB_MANIFEST,
+    }
     s1 = {t: v for t, v in m.s1.items() if v is not None}
     s2 = {t: v for t, v in m.s2.items() if v is not None}
     common = [t for t in m.tasks if t in s1 and t in s2]
@@ -687,6 +808,10 @@ def stage_v2(args: argparse.Namespace, ctx: audit.FetchContext, receipt: dict[st
         receipt["inputs"]["trajectory_features_sha256"] = hashlib.sha256(
             args.trajectory_features.read_bytes()
         ).hexdigest()
+        if args.tarball_receipt is not None:
+            receipt["inputs"]["tarball_receipt_sha256"] = hashlib.sha256(
+                args.tarball_receipt.read_bytes()
+            ).hexdigest()
         # Registered sensitivity: drop every clean task whose run1 or run2
         # trajectory lies in the tarball region read before registration.
         probed = {
@@ -737,8 +862,7 @@ def stage_v2(args: argparse.Namespace, ctx: audit.FetchContext, receipt: dict[st
 def stage_v2_tarball(
     args: argparse.Namespace, ctx: audit.FetchContext, receipt: dict[str, Any]
 ) -> None:
-    if not receipt["preregistrations"]["v2"]["ledger"]["frozen"]:
-        raise GateRefused(f"{v2.V2_EXPERIMENT_ID} is not frozen in the ledger")
+    require_repository_freeze(receipt)
     if not args.allow_large_download or args.tarball_dir is None:
         raise GateRefused("v2-tarball needs --allow-large-download and --tarball-dir")
     pkg = audit.load_verified_package(ctx)
@@ -746,11 +870,26 @@ def stage_v2_tarball(
     (member,) = remote_zip.select(
         ctx.listing(audit.VERIFIED_ARCHIVE), [audit.VERIFIED_ROOT + audit.TARBALL_RELPATH]
     )
+    # Section 1's literals, checked before any tarball byte is fetched.
+    differs = [
+        name
+        for name, ok in (
+            ("size", member.file_size == v2.TARBALL_SIZE),
+            ("crc32", member.crc == v2.TARBALL_CRC32),
+            ("sha256", pkg.tarball["sha256_from_sha256sums"] == v2.TARBALL_SHA256),
+        )
+        if not ok
+    ]
+    if differs:
+        raise remote_zip.ZipIntegrityError(
+            f"tarball member differs from the registered literals: {differs}"
+        )
     dest = args.tarball_dir / "trajectories.tar.gz"
     receipt["results"]["tarball"] = v2.download_stored_member(
-        source, member, dest, expected_sha256=str(pkg.tarball["sha256_from_sha256sums"])
+        source, member, dest, expected_sha256=v2.TARBALL_SHA256
     )
-    features = v2.scan_trajectory_tarball(dest)
+    layout: dict[str, int] = {}
+    features = v2.scan_trajectory_tarball(dest, layout=layout)
     wanted = {
         str(record.get("trajectory_id"))
         for run in ("run1", "repair", "run2")
@@ -758,14 +897,25 @@ def stage_v2_tarball(
         if record.get("trajectory_id")
     }
     public = {k: f.public() for k, f in sorted(features.items()) if k in wanted}
-    out = args.tarball_dir / "trajectory_features.json"
-    _atomic_write(out, json.dumps({"features": public}, sort_keys=True).encode())
-    receipt["results"]["tarball_scan"] = {
+    scan: dict[str, Any] = {
         "trajectories_in_tarball": len(features),
         "trajectories_matching_status_files": len(public),
         "status_trajectory_ids": len(wanted),
-        "feature_file_sha256": hashlib.sha256(out.read_bytes()).hexdigest(),
+        "layout": layout,
     }
+    receipt["results"]["tarball_scan"] = scan
+    try:
+        audit.assert_public_safe(public, "trajectory features")
+    except audit.PublicSafetyError:
+        receipt["cases"]["feature_file_public_safety"] = {
+            "status": "FAIL",
+            "detail": "feature file withheld: a value matched a public-safety pattern",
+        }
+        return
+    receipt["cases"]["feature_file_public_safety"] = {"status": "PASS"}
+    out = args.tarball_dir / "trajectory_features.json"
+    _atomic_write(out, json.dumps({"features": public}, sort_keys=True).encode())
+    scan["feature_file_sha256"] = hashlib.sha256(out.read_bytes()).hexdigest()
 
 
 # --------------------------------------------------------------------------- #
@@ -831,6 +981,12 @@ def main(argv: list[str] | None = None, *, context_factory=make_context) -> int:
             "h_steps": args.h_steps,
             "opencua": not args.skip_opencua,
             "trajectory_features": args.trajectory_features is not None,
+            "tarball_receipt": args.tarball_receipt is not None,
+        },
+        "environment": {
+            "python": platform.python_version(),
+            "numpy": np.__version__,
+            "scipy": scipy.__version__,
         },
         "inputs": {
             "dataset": {

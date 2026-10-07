@@ -24,9 +24,12 @@ provenance.
 - `run_translation_supervised_indexer_doctor.py` is Q3's CPU doctor;
   `fla_throughput_doctor.py` measures training throughput on the node.
 - `run_holo3_rerun_audit_doctor.py` is Q2's Holo3 rerun audit; its v2 stages
-  refuse to run until `q2-holo3-rerun-audit-v2` is frozen in the ledger, and a
-  v2 receipt is CONFIRMATORY only on the committed ledger with the code
-  unchanged since the freeze (`v2-design` reads already-inspected data only).
+  refuse to run until `q2-holo3-rerun-audit-v2` is frozen in the repository
+  ledger (a scratch `--ledger` alone does not open the gate), and a v2 receipt
+  is CONFIRMATORY only on the committed ledger with the code unchanged since
+  the freeze and, with trajectories, a feature file from a CONFIRMATORY
+  `v2-tarball` receipt (`--tarball-receipt`). `v2-design` reads
+  already-inspected data only.
 - `create_source_archive.py`, `verify_compute_provenance.py` and
   `verify_publication_attestation.py` bind source, image and claims.
 

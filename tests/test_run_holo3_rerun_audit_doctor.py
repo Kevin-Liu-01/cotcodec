@@ -3,12 +3,18 @@ from __future__ import annotations
 import argparse
 import collections
 import csv
+import hashlib
 import http.client
+import io
 import json
+import tarfile
+import zlib
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
 
+import numpy as np
 import pytest
+import scipy
 
 from harness import holo3_rerun_audit as audit
 from harness import holo3_v2 as v2
@@ -31,7 +37,11 @@ def synthetic(monkeypatch: pytest.MonkeyPatch):
     )
 
     def load_configs(commit, universe, cache_dir):
-        return world_mod.configs(world), {"commit": commit, "configs": len(universe)}
+        info = {"commit": commit, "configs": len(universe)}
+        info["config_blob_manifest_sha256"] = world.config_manifest
+        return world_mod.configs(world), info
+
+    world.config_manifest = v2.V1_CONFIG_BLOB_MANIFEST
 
     monkeypatch.setattr(doctor, "load_configs", load_configs)
 
@@ -64,10 +74,20 @@ def run(tmp_path: Path, factory, *extra: str) -> tuple[int, dict]:
     return code, json.loads(output.read_text())
 
 
-def freeze_v2(tmp_path: Path) -> Path:
+def freeze_v2(tmp_path: Path, monkeypatch: pytest.MonkeyPatch | None = None) -> Path:
+    """Freeze v2 into the scratch ledger the runs use.
+
+    With ``monkeypatch``, also freeze it into a stand-in for the repository
+    ledger and point the doctor's freeze gate there, as after the real freeze.
+    The runs still name the scratch ledger, so they stay NON-CONFIRMATORY.
+    """
     ledger = tmp_path / "ledger.jsonl"
     draft = PROJECT_ROOT / doctor.V2_PREREG
     preregister.freeze(draft, v2.V2_EXPERIMENT_ID, ledger=ledger, root=PROJECT_ROOT)
+    if monkeypatch is not None:
+        repository = tmp_path / "repository" / "ledger.jsonl"
+        preregister.freeze(draft, v2.V2_EXPERIMENT_ID, ledger=repository, root=PROJECT_ROOT)
+        monkeypatch.setattr(doctor, "REPOSITORY_LEDGER", repository)
     return ledger
 
 
@@ -147,6 +167,22 @@ def test_v2_design_stage_uses_already_inspected_data_only(tmp_path, synthetic, m
     assert {k: pooled[k] for k in expected} == expected
     assert set(rule_b["null_check_each_h_run_vs_other_two"]) == {"primary", "step_cap_first"}
     assert design["unique_failures"]["run2"] == rule_b["run2_unique_failures"]
+    # Added after the pre-freeze audit.
+    counts = design["clean_outcome_counts"]
+    assert sum(counts.values()) == design["clean_tasks"]
+    assert counts["run1_only"] == sum(s["run1_only"] for s in strata.values())
+    by_outcome = design["rule_a_power_by_outcome"]
+    assert {r["run2_step_factor"] for r in by_outcome} >= {1.0, 1.1, round(1 / 1.1, 4)}
+    assert all("power_mean_concordant_tasks" in r and "mean_m" in r for r in by_outcome)
+    size = design["rule_d_size_all_allocations"]
+    assert size["allocations"] == (strata["web"]["tasks"] + 1) * (strata["offline"]["tasks"] + 1)
+    assert size["max_size"] < v2.ALPHA_D
+    power_b = design["rule_b_power"]["rows"]
+    assert {r["class"] for r in power_b} == {"environment", "agent_side"}
+    assert any(r["at_reference_share"] for r in power_b)
+    env = receipt["environment"]
+    assert env["scipy"] == scipy.__version__ and env["numpy"] == np.__version__
+    assert env["python"].count(".") == 2
 
 
 def test_flipped_score_fails_with_exit_1(tmp_path, synthetic) -> None:
@@ -202,10 +238,10 @@ def test_v2_stages_refuse_until_v2_is_frozen(tmp_path, synthetic) -> None:
     assert code == 3 and receipt["status"] == "REFUSED"
 
 
-def test_v2_refuses_to_skip_the_opencua_control(tmp_path, synthetic) -> None:
+def test_v2_refuses_to_skip_the_opencua_control(tmp_path, synthetic, monkeypatch) -> None:
     """Regression (review finding 6): --skip-opencua used to drop a registered control."""
     _, factory = synthetic
-    freeze_v2(tmp_path)
+    freeze_v2(tmp_path, monkeypatch)
     code, receipt = run(tmp_path, factory, "--stage", "v2", "--skip-opencua")
     assert code == 3 and receipt["status"] == "REFUSED"
     assert "skip-opencua" in receipt["error"]
@@ -239,7 +275,7 @@ def feature_file(world, tmp_path: Path, *, probed: set[str], capped: set[str]) -
 def test_v2_stage_end_to_end_on_a_scratch_ledger(tmp_path, synthetic, monkeypatch) -> None:
     world, factory = synthetic
     monkeypatch.setattr(v2, "REGISTERED_H_REFERENCE", synthetic_h_reference(world))
-    freeze_v2(tmp_path)
+    freeze_v2(tmp_path, monkeypatch)
     m, _, _ = synthetic_matrix(world)
     clean = doctor.clean_tasks(m)
     run1_only = [t for t in world_mod.run1_only_tasks(world) if t in clean]
@@ -288,7 +324,7 @@ def test_v2_stage_fails_a_control_on_an_unregistered_h_reference(
     world, factory = synthetic
     wrong = dict(synthetic_h_reference(world), tasks=999)
     monkeypatch.setattr(v2, "REGISTERED_H_REFERENCE", wrong)
-    freeze_v2(tmp_path)
+    freeze_v2(tmp_path, monkeypatch)
     code, receipt = run(tmp_path, factory, "--stage", "v2")
     assert code == 1 and receipt["status"] == "FAIL"
     assert receipt["cases"]["rule_b_h_reference_matches_registration"]["status"] == "FAIL"
@@ -299,7 +335,7 @@ def test_v2_is_confirmatory_only_when_every_run_condition_holds(
 ) -> None:
     world, factory = synthetic
     monkeypatch.setattr(v2, "REGISTERED_H_REFERENCE", synthetic_h_reference(world))
-    freeze_v2(tmp_path)
+    freeze_v2(tmp_path, monkeypatch)
     seen = {}
 
     def all_pass(args, state, *, uses_trajectories):
@@ -374,3 +410,343 @@ def test_preregistrations_pass_the_freeze_lint_and_the_node_is_admitted(tmp_path
     )
     assert node["doctor"] == "scripts/run_holo3_rerun_audit_doctor.py"
     assert "--output" not in node["args"]
+
+
+# --------------------------------------------------------------------------- #
+# Pre-freeze audit (2026-10-07)
+# --------------------------------------------------------------------------- #
+
+
+def test_a_freeze_in_a_scratch_ledger_alone_is_refused(tmp_path, synthetic, monkeypatch) -> None:
+    """Audit blocking defect 1: the gate read whatever --ledger named, so a
+    scratch-ledger freeze let v2 classify evaluators and v2-tarball download."""
+    world, factory = synthetic
+    monkeypatch.setattr(v2, "REGISTERED_H_REFERENCE", synthetic_h_reference(world))
+    monkeypatch.setattr(doctor, "REPOSITORY_LEDGER", tmp_path / "repository" / "ledger.jsonl")
+    freeze_v2(tmp_path)  # the scratch ledger only
+    code, receipt = run(tmp_path, factory, "--stage", "v2")
+    assert code == 3 and receipt["status"] == "REFUSED", receipt.get("status")
+    assert "repository ledger" in receipt["error"]
+    assert receipt["freeze_gate"] == {"repository_ledger_frozen": False, "run_ledger_frozen": True}
+    assert "evaluator_classes" not in receipt["results"] and "v2" not in receipt["results"]
+    other = tmp_path / "second"
+    other.mkdir()
+    freeze_v2(other)
+    tar_dir = other / "tar"
+    code, receipt = run(
+        other,
+        factory,
+        "--stage",
+        "v2-tarball",
+        "--allow-large-download",
+        "--tarball-dir",
+        str(tar_dir),
+    )
+    assert code == 3 and receipt["status"] == "REFUSED"
+    assert "tarball" not in receipt["results"] and not tar_dir.exists()
+
+
+def _scan_receipt(features: Path, row_hash: str, **changes) -> dict:
+    receipt = {
+        "doctor": doctor.DOCTOR_NAME,
+        "stage": "v2-tarball",
+        "status": "PASS",
+        "label": "v2 CONFIRMATORY",
+        "confirmatory_checks": {"repository_ledger": True, "within_14_days_of_freeze": True},
+        "code": {"files_sha256": doctor.code_file_hashes()},
+        "preregistrations": {"v2": {"ledger": {"frozen": True, "row_hash": row_hash}}},
+        "results": {
+            "tarball": {"sha256": v2.TARBALL_SHA256},
+            "tarball_scan": {
+                "feature_file_sha256": hashlib.sha256(features.read_bytes()).hexdigest()
+            },
+        },
+    }
+    for path, value in changes.items():
+        *parents, leaf = path.split("__")
+        node = receipt
+        for key in parents:
+            node = node[key]
+        node[leaf] = value
+    return receipt
+
+
+def test_trajectory_features_need_the_confirmatory_scan_that_wrote_them(
+    tmp_path, monkeypatch
+) -> None:
+    """Audit blocking defect 2: any JSON passed as --trajectory-features could
+    yield a CONFIRMATORY v2 receipt."""
+    monkeypatch.setattr(doctor, "_git_ok", lambda *command: True)
+    monkeypatch.setattr(doctor, "REPOSITORY_LEDGER", PROJECT_ROOT / "program" / "x.jsonl")
+    features = tmp_path / "features.json"
+    features.write_text('{"features": {}}')
+    row_hash = "r" * 64
+    state = {
+        "ledger": {
+            "frozen": True,
+            "frozen_at": datetime.now(UTC).isoformat(),
+            "git_head_at_freeze": "a" * 40,
+            "row_hash": row_hash,
+        }
+    }
+
+    def check(receipt: dict | None, **args) -> bool:
+        path = None
+        if receipt is not None:
+            path = tmp_path / f"scan-{len(list(tmp_path.iterdir()))}.json"
+            path.write_text(json.dumps(receipt))
+        namespace = argparse.Namespace(
+            ledger=PROJECT_ROOT / "program" / "x.jsonl",
+            stage="v2",
+            trajectory_features=features,
+            tarball_receipt=path,
+            **args,
+        )
+        checks = doctor.confirmatory_checks(namespace, state, uses_trajectories=True)
+        return checks["trajectory_features_from_confirmatory_scan"]
+
+    assert check(_scan_receipt(features, row_hash)) is True
+    assert check(None) is False
+    for change in (
+        {"label": "v2 NON-CONFIRMATORY"},
+        {"stage": "v2"},
+        {"status": "FAIL"},
+        {"doctor": "other"},
+        {"confirmatory_checks__within_14_days_of_freeze": False},
+        {"confirmatory_checks": {}},
+        {"code__files_sha256": {"scripts/run_holo3_rerun_audit_doctor.py": "0" * 64}},
+        {"preregistrations__v2__ledger__row_hash": "s" * 64},
+        {"results__tarball__sha256": "0" * 64},
+        {"results__tarball_scan__feature_file_sha256": "0" * 64},
+    ):
+        assert check(_scan_receipt(features, row_hash, **change)) is False, change
+    del_scan = _scan_receipt(features, row_hash)
+    del del_scan["results"]["tarball_scan"]
+    assert check(del_scan) is False
+    garbage = tmp_path / "garbage.json"
+    garbage.write_text("not json")
+    namespace = argparse.Namespace(
+        ledger=PROJECT_ROOT / "program" / "x.jsonl",
+        stage="v2",
+        trajectory_features=features,
+        tarball_receipt=garbage,
+    )
+    checks = doctor.confirmatory_checks(namespace, state, uses_trajectories=True)
+    assert checks["trajectory_features_from_confirmatory_scan"] is False
+    # No feature file, or another stage: no provenance condition.
+    namespace.trajectory_features = None
+    assert "trajectory_features_from_confirmatory_scan" not in doctor.confirmatory_checks(
+        namespace, state, uses_trajectories=False
+    )
+
+
+def _repository_conditions_hold(monkeypatch) -> None:
+    """Make the repository-only run conditions true; leave provenance computed."""
+    real = doctor.confirmatory_checks
+
+    def checks(args, state, *, uses_trajectories):
+        out = real(args, state, uses_trajectories=uses_trajectories)
+        for key in (
+            "repository_ledger",
+            "ledger_committed_and_unmodified",
+            "code_unchanged_since_freeze",
+            "within_14_days_of_freeze",
+        ):
+            if key in out:
+                out[key] = True
+        return out
+
+    monkeypatch.setattr(doctor, "confirmatory_checks", checks)
+
+
+def test_a_forged_feature_file_does_not_yield_a_confirmatory_receipt(
+    tmp_path, synthetic, monkeypatch
+) -> None:
+    world, factory = synthetic
+    monkeypatch.setattr(v2, "REGISTERED_H_REFERENCE", synthetic_h_reference(world))
+    freeze_v2(tmp_path, monkeypatch)
+    _repository_conditions_hold(monkeypatch)
+    m, _, _ = synthetic_matrix(world)
+    clean = doctor.clean_tasks(m)
+    forged = feature_file(world, tmp_path, probed=set(), capped=set(clean))  # every run2 at 100
+    code, receipt = run(tmp_path, factory, "--stage", "v2", "--trajectory-features", str(forged))
+    assert code == 0, receipt["cases"]
+    assert receipt["confirmatory_checks"]["trajectory_features_from_confirmatory_scan"] is False
+    assert receipt["label"] == "v2 NON-CONFIRMATORY"
+
+
+def _synthetic_tarball(world) -> bytes:
+    buffer = io.BytesIO()
+    with tarfile.open(fileobj=buffer, mode="w:gz") as archive:
+
+        def add(name: str, data: bytes) -> None:
+            info = tarfile.TarInfo(name)
+            info.size = len(data)
+            archive.addfile(info, io.BytesIO(data))
+
+        for run, scores in (("run1", world.run1), ("run2", world.run2), ("repair", world.run1)):
+            for t, score in scores.items():
+                if score is None:
+                    continue
+                trajectory = world_mod.trajectory_id(t, run)
+                base = f"fsx/person/trajectories_x/{trajectory}"
+                entries = []
+                for i in range(12):
+                    entries.append({"image": f"images/{i:04d}.png"})
+                    entries.append({"reasoning": "r", "action": {"tool_name": "click"}})
+                add(f"{base}/actions.json", json.dumps(entries).encode())
+                for i in range(2):
+                    add(f"{base}/images/{i:04d}.png", bytes([i]) * 8)
+        add("fsx/person/README.txt", b"ignore")
+    return buffer.getvalue()
+
+
+def _register_synthetic_tarball(world, monkeypatch) -> None:
+    world.tarball = _synthetic_tarball(world)
+    monkeypatch.setattr(v2, "TARBALL_SIZE", len(world.tarball))
+    monkeypatch.setattr(v2, "TARBALL_CRC32", zlib.crc32(world.tarball) & 0xFFFFFFFF)
+    monkeypatch.setattr(v2, "TARBALL_SHA256", hashlib.sha256(world.tarball).hexdigest())
+
+
+def test_v2_tarball_checks_the_registered_literals_before_downloading(
+    tmp_path, synthetic, monkeypatch
+) -> None:
+    """Audit note: section 1's size, CRC-32 and SHA-256 were not asserted in code."""
+    _, factory = synthetic
+    freeze_v2(tmp_path, monkeypatch)
+    tar_dir = tmp_path / "tar"
+    code, receipt = run(
+        tmp_path,
+        factory,
+        "--stage",
+        "v2-tarball",
+        "--allow-large-download",
+        "--tarball-dir",
+        str(tar_dir),
+    )
+    assert code == 2 and receipt["status"] == "INFRA_ERROR"
+    assert receipt["error"]["type"] == "ZipIntegrityError"
+    assert "registered literals" in receipt["error"]["message"]
+    assert not tar_dir.exists()  # nothing fetched
+
+
+def test_the_confirmatory_chain_from_tarball_scan_to_v2(tmp_path, synthetic, monkeypatch) -> None:
+    world, factory = synthetic
+    monkeypatch.setattr(v2, "REGISTERED_H_REFERENCE", synthetic_h_reference(world))
+    _register_synthetic_tarball(world, monkeypatch)
+    freeze_v2(tmp_path, monkeypatch)
+    _repository_conditions_hold(monkeypatch)
+    tar_dir = tmp_path / "tar"
+    scan_out = tmp_path / "scan"
+    scan_out.mkdir()
+    (scan_out / "ledger.jsonl").write_bytes((tmp_path / "ledger.jsonl").read_bytes())
+    code, scan = run(
+        scan_out,
+        factory,
+        "--stage",
+        "v2-tarball",
+        "--allow-large-download",
+        "--tarball-dir",
+        str(tar_dir),
+    )
+    assert code == 0, scan
+    assert scan["label"] == "v2 CONFIRMATORY"
+    assert scan["cases"]["feature_file_public_safety"]["status"] == "PASS"
+    layout = scan["results"]["tarball_scan"]["layout"]
+    assert layout["actions_members"] == layout["trajectories_with_actions"] > 700
+    assert layout["image_members"] == 2 * layout["actions_members"]
+    assert layout["other_file_members"] == 1
+    features = tar_dir / "trajectory_features.json"
+    text = features.read_text()
+    assert "fsx" not in text and "person" not in text
+    digest = hashlib.sha256(features.read_bytes()).hexdigest()
+    assert scan["results"]["tarball_scan"]["feature_file_sha256"] == digest
+
+    code, receipt = run(
+        tmp_path,
+        factory,
+        "--stage",
+        "v2",
+        "--trajectory-features",
+        str(features),
+        "--tarball-receipt",
+        str(scan_out / "receipt.json"),
+    )
+    assert code == 0, receipt["cases"]
+    assert receipt["confirmatory_checks"]["trajectory_features_from_confirmatory_scan"] is True
+    assert receipt["label"] == "v2 CONFIRMATORY"
+    abc = receipt["results"]["v2"]["rules_abc"]
+    assert abc["rule_c_coverage"]["coverage_ok"] is True
+    assert abc["rule_b_screenshots"]["joined_episodes_with_screenshots"] > 700
+    decisions = receipt["results"]["v2"]["decisions"]
+    assert decisions["rule_d_blinding"] == v2.RULE_D_BLINDING_NOTE
+    assert decisions["rule_d_evidence"] in ("CONFIRMATORY",) or decisions[
+        "rule_d_evidence"
+    ].startswith("EXPLORATORY")
+    assert "rule_a_robust_to_concordant_tasks" in decisions
+    assert (
+        receipt["inputs"]["tarball_receipt_sha256"]
+        == hashlib.sha256((scan_out / "receipt.json").read_bytes()).hexdigest()
+    )
+
+
+def test_a_feature_file_that_fails_public_safety_is_not_written(
+    tmp_path, synthetic, monkeypatch
+) -> None:
+    """Audit note: tool names come from the data, so the feature file is scanned too."""
+    world, factory = synthetic
+    _register_synthetic_tarball(world, monkeypatch)
+    freeze_v2(tmp_path, monkeypatch)
+    real = v2.TrajectoryFeatures.public
+
+    def leaky(self):
+        out = real(self)
+        out["tools"] = {f"ws://{world_mod.FAKE_PRIVATE_IP}:9222": 1}
+        return out
+
+    monkeypatch.setattr(v2.TrajectoryFeatures, "public", leaky)
+    tar_dir = tmp_path / "tar"
+    code, receipt = run(
+        tmp_path,
+        factory,
+        "--stage",
+        "v2-tarball",
+        "--allow-large-download",
+        "--tarball-dir",
+        str(tar_dir),
+    )
+    assert code == 1 and receipt["status"] == "FAIL"
+    assert receipt["cases"]["feature_file_public_safety"]["status"] == "FAIL"
+    assert not (tar_dir / "trajectory_features.json").exists()
+    assert world_mod.FAKE_PRIVATE_IP not in (tmp_path / "receipt.json").read_text()
+
+
+def test_v2_fails_a_control_when_its_configs_differ_from_v1s(
+    tmp_path, synthetic, monkeypatch
+) -> None:
+    """Design decision 13: v2 reads configs at f7230379 because they equal v1's."""
+    world, factory = synthetic
+    monkeypatch.setattr(v2, "REGISTERED_H_REFERENCE", synthetic_h_reference(world))
+    world.config_manifest = "0" * 64
+    freeze_v2(tmp_path, monkeypatch)
+    code, receipt = run(tmp_path, factory, "--stage", "v2")
+    assert code == 1 and receipt["status"] == "FAIL"
+    assert receipt["cases"]["v2_config_blobs_equal_v1"]["status"] == "FAIL"
+
+
+def test_the_sha256sums_case_is_computed_not_asserted(tmp_path, synthetic, monkeypatch) -> None:
+    """Audit finding: the SHA256SUMS case was hard-coded PASS."""
+    _, factory = synthetic
+    real = audit.load_verified_package
+
+    def tampered(ctx):
+        pkg = real(ctx)
+        rel = next(iter(pkg.member_sha256))
+        pkg.member_sha256[rel] = "0" * 64
+        return pkg
+
+    monkeypatch.setattr(audit, "load_verified_package", tampered)
+    code, receipt = run(tmp_path, factory, "--skip-opencua")
+    assert code == 1
+    case = receipt["cases"]["verified_members_match_sha256sums"]
+    assert case["status"] == "FAIL" and case["mismatched"] == 1
