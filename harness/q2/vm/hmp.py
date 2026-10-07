@@ -61,15 +61,19 @@ def strip_telnet(data: bytes) -> bytes:
 
 
 def clean_reply(raw: bytes, command: str) -> str:
-    """Turn the bytes between a command and the next prompt into plain text."""
+    """Turn the bytes between a command and the next prompt into plain text.
+
+    QEMU's readline echoes the command with cursor-redraw sequences, so the
+    first line of a reply is the (garbled) echo and is dropped whenever a
+    command was sent. Trailing prompts are dropped too.
+    """
     text = strip_telnet(raw).decode("utf-8", errors="replace")
     text = _ANSI_RE.sub("", text).replace("\r", "")
-    if text.endswith(PROMPT.decode()):
-        text = text[: -len(PROMPT)]
     lines = text.split("\n")
-    # The monitor echoes the command line back first.
-    if lines and lines[0].strip() == command.strip():
+    if command.strip() and lines:
         lines = lines[1:]
+    while lines and lines[-1].strip() in ("", PROMPT.decode().strip()):
+        lines.pop()
     return "\n".join(line.rstrip() for line in lines).strip()
 
 
@@ -124,7 +128,7 @@ class HmpClient:
             raise HmpError("one HMP command per call")
         if self.sock is None:
             raise HmpError("not connected")
-        self.sock.sendall(line.encode("ascii") + b"\r\n")
+        self.sock.sendall(line.encode("ascii") + b"\r")
         reply = clean_reply(self._read_until_prompt(), line)
         lowered = reply.lower()
         if lowered.startswith("unknown command") or "invalid parameter" in lowered:

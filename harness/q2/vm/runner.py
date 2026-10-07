@@ -47,8 +47,13 @@ HMP_STEPS: list[dict[str, Any]] = [
     },
     {"id": "key_kp_enter", "calls": [["sendkey", "kp_enter"]], "expect_keys": [0xFF8D]},
     {"id": "key_kp_add", "calls": [["sendkey", "kp_add"]], "expect_keys": [0xFFAB]},
+    # QEMU has two candidate qcodes for the PC application key; record both.
     {"id": "key_menu", "calls": [["sendkey", "menu"]], "expect_keys": [0xFF67]},
     {"id": "key_esc_after_menu", "calls": [["sendkey", "esc"]], "expect_keys": [0xFF1B]},
+    {"id": "key_compose", "calls": [["sendkey", "compose"]], "expect_keys": [0xFF67]},
+    {"id": "key_esc_after_compose", "calls": [["sendkey", "esc"]], "expect_keys": [0xFF1B]},
+    # The 102nd key (keycode 94 on pc105): the `<` path that pyautogui prefers.
+    {"id": "key_less_102nd", "calls": [["sendkey", "less"]], "expect_keys": [0x3C]},
     {"id": "caps_lock_on", "calls": [["sendkey", "caps_lock"]], "expect_keys": [0xFFE5], "led": 1},
     {"id": "caps_lock_off", "calls": [["sendkey", "caps_lock"]], "expect_keys": [0xFFE5], "led": 0},
     {
@@ -223,6 +228,7 @@ def evaluate_step(step: dict[str, Any], events: list[dict[str, Any]]) -> dict[st
     observed_presses = [e["keysym0"] for e in keys if e["kind"] == "KeyPress"]
     observed_releases = [e["keysym0"] for e in keys if e["kind"] == "KeyRelease"]
     observed_buttons = [(e["kind"], e["detail"]) for e in buttons]
+    keycodes = [(e["kind"], e["detail"]) for e in keys]
     ok = True
     if "expect_keys" in step:
         ok = observed_presses == step["expect_keys"] and sorted(observed_releases) == sorted(
@@ -249,6 +255,7 @@ def evaluate_step(step: dict[str, Any], events: list[dict[str, Any]]) -> dict[st
         "key_presses": observed_presses,
         "key_releases": observed_releases,
         "key_states": [e["state"] for e in keys],
+        "keycodes": keycodes,
         "shifted_keysyms": [e.get("keysym1") for e in keys if e["kind"] == "KeyPress"],
         "buttons": observed_buttons,
         "motion_events": len(motion),
@@ -274,21 +281,23 @@ def hmp_input_check(client: GuestClient, hmp_port: int, token: str) -> dict[str,
         time.sleep(0.25)
     if not ready:
         return {"ok": False, "error": "tap never became ready"}
-    windows = []
+    starts: list[float] = []
     led_after: dict[str, int | None] = {}
     with HmpClient(port=hmp_port) as hmp:
         banner = hmp.banner
         for step in HMP_STEPS:
-            started = _now()
+            # Window i is [start_i, start_i+1) in guest time. A quiet lead of
+            # 0.3 s before the first call absorbs clock-offset error.
+            starts.append(_now())
+            time.sleep(0.3)
             for call in step["calls"]:
                 method = getattr(hmp, call[0])
                 method(*call[1:])
                 time.sleep(0.15)
-            time.sleep(0.5)
-            ended = _now()
-            windows.append((step, started + offset - 0.05, ended + offset))
+            time.sleep(0.6)
             if "led" in step:
                 led_after[step["id"]] = read_led(client)
+    starts.append(_now())
     time.sleep(0.5)
     client.execute(["touch", stop_path], timeout=30.0)
     records: list[dict[str, Any]] = []
@@ -300,8 +309,9 @@ def hmp_input_check(client: GuestClient, hmp_port: int, token: str) -> dict[str,
     events = [r for r in records if r.get("kind") not in ("ready", "stop")]
     steps = []
     assigned = 0
-    for step, low, high in windows:
-        in_window = [e for e in events if low <= e["t"] <= high]
+    for index, step in enumerate(HMP_STEPS):
+        low, high = starts[index] + offset, starts[index + 1] + offset
+        in_window = [e for e in events if low <= e["t"] < high]
         assigned += len(in_window)
         result = evaluate_step(step, in_window)
         if "led" in step:

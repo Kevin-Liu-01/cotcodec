@@ -86,6 +86,23 @@ if MODE == "full":
     facts["gnome_shell_version"] = run(["gnome-shell", "--version"])
     facts["xset_q"] = run(["xset", "q"])
     facts["loginctl"] = run(["loginctl", "list-sessions", "--no-legend"])
+    try:
+        keymap_text = subprocess.run(
+            ["xmodmap", "-pke"], capture_output=True, text=True, timeout=15
+        ).stdout
+    except Exception as exc:  # noqa: BLE001
+        keymap_text = "ERR " + repr(exc)[:200]
+    wanted_codes = ("59", "60", "94", "104", "86", "135", "147", "66", "133")
+    facts["xmodmap"] = {
+        "lines_total": len(keymap_text.splitlines()),
+        "sha256": hashlib.sha256(keymap_text.encode()).hexdigest(),
+        "lines": [
+            line
+            for line in keymap_text.splitlines()
+            if line.split("=")[0].replace("keycode", "").strip() in wanted_codes
+        ],
+    }
+    facts["locale"] = run(["locale"])
     modules = {}
     for name in ("pyautogui", "Xlib", "pynput", "tkinter", "PIL", "pyatspi", "requests", "flask"):
         try:

@@ -316,3 +316,8 @@ def test_hmp_telnet_stripping_and_reply_cleanup():
     assert strip_telnet(raw).startswith(b"info kvm")
     assert clean_reply(raw, "info kvm") == "kvm support: enabled"
     assert strip_telnet(bytes([255, 255])) == bytes([255])
+
+
+def test_hmp_reply_drops_garbled_echo_and_extra_prompts():
+    raw = b"i\x1b[Kin\x1b[Kinfo status\r\nVM status: running\r\n(qemu) \r\n(qemu) "
+    assert clean_reply(raw, "info status") == "VM status: running"
