@@ -144,13 +144,13 @@ def transform_inputs(inputs: list[Any], draw: str) -> list[Any]:
 
 def _within(a: torch.Tensor, b: torch.Tensor, tol: float) -> bool:
     """``|a - b| <= tol + tol * |b|`` in fp64; integers and bools must be equal."""
+    from harness.q1.gates.reductions import allclose_fp64, equal_int64
+
     if a.shape != b.shape:
         return False
     if not a.is_floating_point() or not b.is_floating_point():
-        return bool(torch.equal(a.cpu().to(torch.int64), b.cpu().to(torch.int64)))
-    a64 = a.detach().cpu().double()
-    b64 = b.detach().cpu().double()
-    return bool(torch.allclose(a64, b64, atol=tol, rtol=tol))
+        return equal_int64(a, b)
+    return allclose_fp64(a, b, tol)
 
 
 def validity_check(

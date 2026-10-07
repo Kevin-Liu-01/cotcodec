@@ -94,38 +94,18 @@ def candidate_uses_tl_dot(kernel_source: str) -> bool:
 
 
 def masks_equal(x: torch.Tensor, r64: torch.Tensor) -> bool:
-    x = x.detach().cpu().double()
-    r = r64.detach().cpu().double()
-    if x.shape != r.shape:
-        return False
-    return bool(
-        torch.equal(torch.isnan(x), torch.isnan(r))
-        and torch.equal(torch.isposinf(x), torch.isposinf(r))
-        and torch.equal(torch.isneginf(x), torch.isneginf(r))
-    )
+    """NaN, +Inf and -Inf masks agree (fp64, chunked on the device; ``gates.reductions``)."""
+    from harness.q1.gates.reductions import masks_equal as chunked
+
+    return chunked(x, r64)
 
 
 def scaled_error(x: torch.Tensor, r64: torch.Tensor, kappa: float = KAPPA) -> float:
-    """``e(x)``; ``inf`` on shape mismatch, 0 for empty or all-non-finite outputs."""
-    x = x.detach().cpu().double()
-    r = r64.detach().cpu().double()
-    if x.shape != r.shape:
-        return math.inf
-    finite = torch.isfinite(x) & torch.isfinite(r)
-    if not bool(finite.any()):
-        return 0.0
-    r_finite = r[finite]
-    norm = float(r_finite.abs().max())
-    denom = r_finite.abs() + kappa * norm
-    diff = (x[finite] - r_finite).abs()
-    zero = denom == 0
-    if bool(zero.any()):
-        if bool((diff[zero] > 0).any()):
-            return math.inf
-        diff, denom = diff[~zero], denom[~zero]
-        if diff.numel() == 0:
-            return 0.0
-    return float((diff / denom).max())
+    """``e(x)``; ``inf`` on shape mismatch, 0 for empty or all-non-finite outputs
+    (fp64, chunked on the device; ``gates.reductions``)."""
+    from harness.q1.gates.reductions import scaled_error as chunked
+
+    return chunked(x, r64, kappa)
 
 
 def threshold(reference_errors: Sequence[float], multiplier: float) -> float:
