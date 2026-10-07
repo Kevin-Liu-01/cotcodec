@@ -71,7 +71,9 @@ def campaign(
             "labelled_containers_left": [],
         },
         "slurm": {"state": "COMPLETED", "exit_code": "0:0"},
+        "batch": {"driver_exit": 0, "labelled_containers_left": 0},
         "sessions": sessions,
+        "earlier": [],
     }
 
 
@@ -320,3 +322,253 @@ def test_the_analysis_expects_the_order_the_driver_runs():
         },
     }
     assert acc.a6([campaign(driver.session_plan(canary, CELLS))])["pass"]
+
+
+# --- fix pass after the 2026-10-07 review of 2b492cd ---------------------------------------------
+
+STATE = {"Shift": 1, "Control": 4, "Mod1": 8, "Mod4": 64}
+
+
+def _key_records(expect_events, release_state: bool, raw_only: bool) -> list[list]:
+    """Observed records for an R-dev cell; releases optionally lose their modifier state."""
+    from harness.q2.action_path.ir import KEYSYM_VALUES
+
+    out = []
+    for index, (kind, name, states) in enumerate(expect_events):
+        state = sum(STATE[s] for s in states)
+        if kind == "KeyRelease" and not release_state:
+            state = 0
+        keysym = KEYSYM_VALUES[name]
+        if raw_only:  # tap window, timestamp dropped: [kind, keycode, state, keysym0]
+            out.append([kind, 40 + index, state, keysym])
+        else:  # probe log: [kind, keycode, state, x, y, time, keysym0]
+            out.append([kind, 40 + index, state, 0, 0, 1000 + index, keysym])
+    return out
+
+
+def _c2_campaign(plan, mutate):
+    """A C2 campaign failing exactly the predicted set, then ``mutate(trial)`` on every trial."""
+    import yaml
+
+    predicted = frozenset(
+        yaml.safe_load((ROOT / "harness/q2/action_path/l0_raw_prediction.yaml").read_text())[
+            "predicted_fail"
+        ]
+    )
+    run = campaign(plan, fail=predicted)
+    for session in run["sessions"]:
+        for trial in session["trials"]:
+            trial["reasons"] = [] if trial["pass"] else ["text 'a' != 'b'"]
+            mutate(trial)
+    return run
+
+
+def test_c2_judges_l0_raw_on_the_event_and_text_channels_only():
+    """Design decision 34: marker and release-state timing never decide C2."""
+    plan = order.plan(ids("L0-fixed"), 42, 5, ["screenshot"])
+    l0 = {c["id"]: c for c in CELLS["layers"]["L0-fixed"]}
+    assert acc.c2([_c2_campaign(plan, lambda t: None)])["pass"]
+
+    def stale_marker(trial):
+        if trial["cell"] in ("type_plain", "no_action_control"):
+            trial["pass"] = False
+            trial["reasons"] = ["marker [3, 1] != probe final [3, 2]"]
+
+    result = acc.c2([_c2_campaign(plan, stale_marker)])
+    assert result["pass"], result["problems"]
+    assert result["strict_entries"]["type_plain"] == "FAIL"
+    assert result["entries"]["type_plain"] == "PASS"
+
+    def released_without_state(trial):
+        cell = l0[trial["cell"]]
+        if trial["cell"] in ("chord_ctrl_alt_shift_r", "chord_ctrl_c"):
+            raw_only = cell["observable"] == "raw-only"
+            records = _key_records(cell["expect"]["events"], False, raw_only)
+            trial["pass"] = False
+            trial["reasons"] = ["R-dev projection differs: (releases lost their state)"]
+            trial["events" if raw_only else "probe_events"] = records
+
+    assert acc.c2([_c2_campaign(plan, released_without_state)])["pass"]
+
+    def press_without_state(trial):
+        cell = l0[trial["cell"]]
+        if trial["cell"] == "chord_ctrl_c":
+            events = [list(e) for e in cell["expect"]["events"]]
+            events[1][2] = []  # the c press lost Control: a real defect, not timing
+            trial["pass"] = False
+            trial["reasons"] = ["R-dev projection differs: (press lost Control)"]
+            trial["probe_events"] = _key_records(events, True, False)
+
+    result = acc.c2([_c2_campaign(plan, press_without_state)])
+    assert not result["pass"] and "chord_ctrl_c" in result["problems"][-1]
+
+    first_type_plain = min(seq for s in plan for seq, cell in s["trials"] if cell == "type_plain")
+
+    def marker_and_infra(trial):
+        # One repetition of five with an infrastructure failure: FLAKY, an unpredicted miss.
+        if trial["seq"] == first_type_plain:
+            trial["pass"] = False
+            trial["reasons"] = ["marker unreadable: x", "infra: execute"]
+            trial["infra"] = ["execute"]
+
+    result = acc.c2([_c2_campaign(plan, marker_and_infra)])
+    assert not result["pass"] and result["entries"]["type_plain"] == "FLAKY"
+
+    def text_and_marker(trial):
+        if trial["cell"] == "type_spaces":
+            trial["pass"] = False
+            trial["reasons"] = ["text 'a' != ' a '", "marker [1, 1] != probe final [1, 2]"]
+
+    assert not acc.c2([_c2_campaign(plan, text_and_marker)])["pass"]
+
+
+def test_c3_counts_only_clean_kills_against_a_clean_reference():
+    import yaml
+
+    from harness.q2.action_path import mutants as kit
+
+    operators = yaml.safe_load(
+        (ROOT / "harness/q2/action_path/mutation_operators.yaml").read_text()
+    )
+    pairs = kit.scored_pairs(operators)
+    plans = {layer: order.plan(ids(layer), 42, 1, ["screenshot"]) for layer in acc.C3_LAYERS}
+    references = {layer: [campaign(plans[layer])] for layer in acc.C3_LAYERS}
+    runs = {(op, layer): [campaign(plans[layer], fail={"R14", "key_enter"})] for op, layer in pairs}
+    op = next(p for p in pairs if p[1] == "L0-fixed")
+    # A cell that fails only through an infrastructure failure never kills.
+    infra_only = dict(runs)
+    infra_only[op] = [campaign(plans["L0-fixed"], fail={"key_enter"})]
+    for session in infra_only[op][0]["sessions"]:
+        for trial in session["trials"]:
+            if trial["cell"] == "key_enter":
+                trial["infra"] = ["tap_window_missing"]
+                trial["events"] = []
+    result = acc.c3(infra_only, references)
+    entry = result["mutants"][f"{op[0]} L0-fixed"]
+    assert not result["pass"] and entry["outcome"] == "survived"
+    assert entry["infra_cells"] == ["key_enter"] and entry["killers"] == []
+    # A cell the unmutated reference also failed cannot kill.
+    flaky_reference = copy.deepcopy(references)
+    flaky_reference["L0-fixed"] = [campaign(plans["L0-fixed"], fail={"key_enter"})]
+    lone = dict(runs)
+    lone[op] = [campaign(plans["L0-fixed"], fail={"key_enter"})]
+    entry = acc.c3(lone, flaky_reference)["mutants"][f"{op[0]} L0-fixed"]
+    assert entry["outcome"] != "killed" and entry["reference_not_clean"] == ["key_enter"]
+    # A clean kill reports the observed killers next to the predicted ones.
+    entry = acc.c3(runs, references)["mutants"][f"{op[0]} L0-fixed"]
+    assert entry["outcome"] == "killed" and entry["killers"] == ["key_enter"]
+    assert isinstance(entry["predicted_killers"], list)
+    # Without a reference run nothing can be killed.
+    assert not acc.c3(runs, {})["pass"]
+
+
+def test_end_state_comes_from_the_batch_record_or_slurm():
+    good = campaign(a1_plan(43))
+    assert acc.counting_problems(good) == []
+    no_slurm = dict(good, slurm=None)
+    assert acc.counting_problems(no_slurm) == []
+    unknown = dict(good, slurm=None, batch=None)
+    assert "end state unknown" in acc.counting_problems(unknown)[0]
+    killed = dict(good, batch=None)
+    assert "never recorded its end" in acc.counting_problems(killed)[0]
+    timeout = dict(good, slurm={"state": "TIMEOUT", "exit_code": "0:15"})
+    assert "TIMEOUT" in acc.counting_problems(timeout)[0]
+    infra = dict(good, slurm=None, batch={"driver_exit": 3, "labelled_containers_left": 0})
+    assert "driver_exit=3" in acc.counting_problems(infra)[0]
+
+
+def test_reruns_are_capped_and_never_erase_failures():
+    good = campaign(a1_plan(43))
+    incomplete = copy.deepcopy(good)
+    incomplete["job"], incomplete["batch"], incomplete["slurm"] = "899", None, None
+    incomplete["sessions"] = incomplete["sessions"][:3]
+    rerun = dict(copy.deepcopy(good), earlier=[incomplete])
+    assert acc.a1({43: [rerun], 44: [campaign(a1_plan(44))]})["pass"]
+    # A campaign that counted cannot be rerun.
+    counted = dict(copy.deepcopy(good), earlier=[copy.deepcopy(good)])
+    assert any("counted and was rerun" in p for p in acc.campaign_problems(counted))
+    # A failed trial of an abandoned attempt still counts against the criterion.
+    failing = copy.deepcopy(incomplete)
+    failing["sessions"][0]["trials"][0]["pass"] = False
+    hidden = dict(copy.deepcopy(good), earlier=[failing])
+    assert any("failed trials" in p for p in acc.campaign_problems(hidden))
+    assert not acc.a1({43: [hidden], 44: [campaign(a1_plan(44))]})["pass"]
+    # At most two attempts.
+    third = dict(copy.deepcopy(good), earlier=[incomplete, copy.deepcopy(incomplete)])
+    assert any("3 attempts" in p for p in acc.campaign_problems(third))
+
+
+def test_an_aborted_rung_may_be_rerun_once_and_its_failures_do_not_count():
+    a1 = [campaign(a1_plan(43)), campaign(a1_plan(44))]
+    plan = order.plan(ids("L0-fixed"), 43, ladder_reps(8), list(order.SETTINGS), acceptance=True)
+    aborted = campaign(plan, job="80", concurrency=8, fail=frozenset({"key_enter"}))
+    aborted["sessions"][1]["snapshots"][1]["squeue_foreign"] = [
+        ["81", "u", "RUNNING", "2", "", "x"]
+    ]
+    assert acc.foreign_abort(aborted)
+    rerun = dict(campaign(plan, job="82", concurrency=8), earlier=[aborted])
+    result = acc.n_star(a1, {8: [rerun]})
+    assert result["n_star"] == 8, result["rungs"][8]["problems"]
+    assert result["rungs"][8]["earlier_attempts"][0]["failed_trials"] > 0
+    # A rung that ran cleanly cannot be rerun to replace its result.
+    clean = campaign(plan, job="83", concurrency=8)
+    replaced = dict(campaign(plan, job="84", concurrency=8), earlier=[clean])
+    assert acc.n_star(a1, {8: [replaced]})["n_star"] == 1
+    # A third attempt is refused even after two aborts.
+    twice = dict(campaign(plan, job="85", concurrency=8), earlier=[aborted, aborted])
+    assert acc.n_star(a1, {8: [twice]})["n_star"] == 1
+
+
+def test_one_criterion_runs_one_source_tree():
+    first, second = campaign(a1_plan(43)[:9], job="1"), campaign(a1_plan(43)[9:], job="2")
+    assert acc.a1({43: [first, second], 44: [campaign(a1_plan(44))]})["pass"]
+    second["manifest"]["git_sha"] = "c" * 40
+    result = acc.a1({43: [first, second], 44: [campaign(a1_plan(44))]})
+    assert not result["pass"] and "different source trees" in result["problems"][0]
+
+
+def _write_run(tmp_path, cycle: dict, preflight: str) -> str:
+    run = tmp_path / "run"
+    (run / "cycles").mkdir(parents=True)
+    (run / "manifest.json").write_text(json.dumps({"vm": {"concurrency": 1}}))
+    (run / "receipt.json").write_text(json.dumps({"job_id": "700"}))
+    (run / "preflight.txt").write_text(preflight)
+    (run / "cycles" / "cycle-00.json").write_text(json.dumps(cycle))
+    return str(run)
+
+
+def test_load_reads_the_batch_record_and_charges_an_undelivered_reset_observation(tmp_path):
+    trial = {"seq": 0, "cell": "key_enter", "verdict": {"pass": True, "infra": [], "reasons": []}}
+    cycle = {
+        "cycle": 0,
+        "setting": "screenshot+a11y",
+        "boot": {"t_screenshot_200": 20.0},
+        "reset_observation": {
+            "screenshot_attempts": [{"status": 200}],
+            "screenshot_ok": True,
+            "accessibility_attempts": [{"error": "closed"}, {"error": "refused"}, {"error": "x"}],
+            "accessibility_ok": False,
+        },
+        "trials": [trial, dict(trial, seq=1)],
+    }
+    run = _write_run(tmp_path, cycle, "job_id=700\ndriver_exit=0 labelled_containers_left=0\n")
+    loaded = acc.load(run)
+    assert loaded["batch"] == {"driver_exit": 0, "labelled_containers_left": 0}
+    first, second = loaded["sessions"][0]["trials"]
+    assert not first["pass"] and first["infra"] == ["reset_observation"]
+    assert second["pass"]
+    # A retry that delivers is reported, not charged; older records infer delivery.
+    cycle["reset_observation"] = {
+        "screenshot_attempts": [{"status": 500}, {"status": 200}],
+        "accessibility_attempts": [{"status": 200}],
+    }
+    other = tmp_path / "other"
+    other.mkdir()
+    run = _write_run(other, cycle, "job_id=700\n")
+    loaded = acc.load(run)
+    assert loaded["batch"] is None
+    assert loaded["sessions"][0]["reset_observation"] == {
+        "delivered": True,
+        "retried": ["screenshot"],
+    }
+    assert loaded["sessions"][0]["trials"][0]["pass"]

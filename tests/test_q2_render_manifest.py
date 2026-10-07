@@ -10,8 +10,8 @@ import pytest
 import yaml
 
 from harness.q2.vm.manifest import validate_manifest
-from scripts import preregister
 from scripts import render_q2_action_path_manifest as render
+from tests.test_q2_acceptance_admission import export_tree
 
 ROOT = Path(__file__).resolve().parents[1]
 SHA = "b" * 40
@@ -19,17 +19,8 @@ SHA = "b" * 40
 
 @pytest.fixture()
 def export(tmp_path: Path) -> Path:
-    """A minimal export: the harness tree and the three registrations frozen in a ledger."""
-    shutil.copytree(
-        ROOT / "harness", tmp_path / "harness", ignore=shutil.ignore_patterns("__pycache__")
-    )
-    ledger = tmp_path / "program/preregistrations/ledger.jsonl"
-    for experiment, relative in render.PREREG_PATHS.items():
-        target = tmp_path / relative
-        target.parent.mkdir(parents=True, exist_ok=True)
-        shutil.copyfile(ROOT / relative, target)
-        preregister.freeze(target, experiment, ledger=ledger, root=tmp_path)
-    return tmp_path
+    """An export: the harness tree, every pinned file and the three registrations frozen."""
+    return export_tree(tmp_path)
 
 
 def _render(export: Path, tmp_path: Path, *argv: str) -> dict:
@@ -69,8 +60,8 @@ def test_renders_admissible_scored_campaigns(export, tmp_path):
         (("A1", "--seed", "44"), 18, 1000),
         (("A2", "--layer", "H-GA"), 16, 930),
         (("A3", "--layer", "L0-fixed"), 30, 1800),
-        (("ladder", "--concurrency", "8", "--runner-cpus", "4"), 20, 1200),
-        (("A4", "--concurrency", "40", "--runner-cpus", "8"), 1068, 64028),
+        (("ladder", "--concurrency", "8"), 20, 1200),
+        (("A4", "--concurrency", "40"), 1068, 64028),
         (("A4", "--session-range", "0", "30"), 30, None),
         (("A6",), 5, 300),
         (("C1", "--seed", "42", "--layer", "H-OSW-up"), 2, 70),
@@ -109,3 +100,24 @@ def test_a4_on_one_vm_must_be_split(export, tmp_path):
         ]
     )
     assert code == 2
+
+
+def test_runner_cpus_follow_the_registered_rule(export, tmp_path):
+    rung = _render(export, tmp_path, "ladder", "--concurrency", "40")
+    assert rung["runner"]["cpus"] == 20 and rung["slurm"]["cpus"] == 40 * 4 + 20
+    out = str(tmp_path / "m.yaml")
+    argv = ["ladder", "--concurrency", "8", "--runner-cpus", "1", "--source-dir", str(export),
+            "--git-sha", SHA, "--campaign-id", "q2ap-x", "--out", out]  # fmt: skip
+    assert render.main(argv) == 2
+
+
+def test_c2_renders_between_the_inputs_and_the_executor_freeze(tmp_path):
+    from harness.q2.vm.manifest import ADDENDA_IDS, PREREG_ID
+
+    tree = export_tree(tmp_path / "export", freeze=(PREREG_ID, ADDENDA_IDS["inputs"]))
+    c2 = _render(tree, tmp_path, "C2", "--seed", "42", "--layer", "L0-raw")
+    assert set(c2["addenda"]) == {"inputs"} and c2["workload"]["trials"] == 500
+    out = str(tmp_path / "a1.yaml")
+    argv = ["A1", "--source-dir", str(tree), "--git-sha", SHA, "--campaign-id", "q2ap-x",
+            "--out", out]  # fmt: skip
+    assert render.main(argv) == 2

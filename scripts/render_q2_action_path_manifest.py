@@ -40,9 +40,11 @@ from harness.q2.vm.manifest import (  # noqa: E402
     CRITERIA,
     PREREG_ID,
     ManifestError,
+    executor_addendum,
     ladder_reps,
     ledger_paths,
     ledger_view,
+    runner_cpus,
     source_tree_sha256,
     validate_manifest,
 )
@@ -77,6 +79,8 @@ def render(args: argparse.Namespace) -> dict[str, Any]:
     if PREREG_ID not in rows:
         raise ManifestError(f"{PREREG_ID} is not frozen in the ledger of {source_dir}")
     concurrency = args.concurrency
+    # Section 9: the runner CPUs are registered per concurrency, not chosen per campaign.
+    cpus_for_runners = runner_cpus(concurrency) if args.runner_cpus is None else args.runner_cpus
     manifest: dict[str, Any] = {
         "schema": template["schema"],
         "name": args.name,
@@ -102,7 +106,7 @@ def render(args: argparse.Namespace) -> dict[str, Any]:
         },
         "randomness": {},
         "vm": dict(copy.deepcopy(template["vm"]), concurrency=concurrency),
-        "runner": dict(template["runner"], cpus=args.runner_cpus),
+        "runner": dict(template["runner"], cpus=cpus_for_runners),
     }
     cells_bytes = (source_dir / CELLS).read_bytes()
     cells = json.loads(cells_bytes)
@@ -130,9 +134,16 @@ def render(args: argparse.Namespace) -> dict[str, Any]:
             "seeds": [args.seed],
             "seed_binding": {"flag": "--seed"},
         }
+        # The inputs addendum, and the executor addendum of this repair attempt once frozen
+        # (C2 runs before the executor freeze; manifest.check_ledger enforces what each needs).
+        executor_id, executor_path = executor_addendum(args.attempt)
+        pins = {
+            "inputs": (ADDENDA_IDS["inputs"], PREREG_PATHS[ADDENDA_IDS["inputs"]]),
+            "executor": (executor_id, executor_path),
+        }
         manifest["addenda"] = {
-            key: {"path": PREREG_PATHS[experiment], "sha256": rows[experiment]["sha256"]}
-            for key, experiment in ADDENDA_IDS.items()
+            key: {"path": path, "sha256": rows[experiment]["sha256"]}
+            for key, (experiment, path) in pins.items()
             if experiment in rows
         }
         if args.criterion == "A6":
@@ -173,7 +184,7 @@ def render(args: argparse.Namespace) -> dict[str, Any]:
             f"worst-case budget {minutes} min exceeds {MAX_MINUTES}: split with --session-range"
         )
     manifest["slurm"] = {
-        "cpus": concurrency * manifest["vm"]["cpu_cores"] + args.runner_cpus,
+        "cpus": concurrency * manifest["vm"]["cpu_cores"] + cpus_for_runners,
         "memory_gb": max(12, concurrency * (manifest["vm"]["memory_gb"] + 1) + 2),
         "minutes": minutes,
     }
@@ -191,7 +202,9 @@ def parse_args(argv: list[str] | None) -> argparse.Namespace:
     parser.add_argument("--seed", type=int, default=43)
     parser.add_argument("--layer")
     parser.add_argument("--concurrency", type=int, default=1)
-    parser.add_argument("--runner-cpus", type=int, default=1)
+    parser.add_argument(
+        "--runner-cpus", type=int, default=None, help="default: manifest.runner_cpus(N)"
+    )
     parser.add_argument("--session-range", type=int, nargs=2, default=None)
     parser.add_argument("--mutant", default=None)
     parser.add_argument("--attempt", type=int, default=1)

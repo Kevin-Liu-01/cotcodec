@@ -25,9 +25,12 @@ from harness.q2.vm.manifest import (
     LADDER_RUNGS,
     PREREG_ID,
     ManifestError,
+    executor_addendum,
+    frozen_table,
     ladder_reps,
     ledger_paths,
     ledger_view,
+    runner_cpus,
     validate_manifest,
 )
 from scripts import preregister
@@ -66,8 +69,9 @@ def acceptance(criterion: str = "A1", seed: int = 43, concurrency: int = 1, **wo
         "seed_binding": {"flag": "--seed"},
     }
     manifest["vm"]["concurrency"] = concurrency
+    manifest["runner"]["cpus"] = runner_cpus(concurrency)
     manifest["slurm"] = {
-        "cpus": concurrency * 4 + 1,
+        "cpus": concurrency * 4 + runner_cpus(concurrency),
         "memory_gb": concurrency * 7 + 2,
         "minutes": 1440,
     }
@@ -93,17 +97,30 @@ def acceptance(criterion: str = "A1", seed: int = 43, concurrency: int = 1, **wo
     return manifest
 
 
+def export_tree(target: Path, freeze: tuple[str, ...] = tuple(FILES)) -> Path:
+    """An export: the harness tree, every file the registrations pin, and a fresh ledger
+    freezing the registrations named in ``freeze``."""
+    shutil.copytree(
+        ROOT / "harness", target / "harness", ignore=shutil.ignore_patterns("__pycache__")
+    )
+    for relative in FILES.values():
+        pinned = frozen_table((ROOT / relative).read_text(encoding="utf-8"))
+        for listed in [relative, *pinned]:
+            destination = target / listed
+            if not destination.exists():
+                destination.parent.mkdir(parents=True, exist_ok=True)
+                shutil.copyfile(ROOT / listed, destination)
+    ledger = target / "program/preregistrations/ledger.jsonl"
+    for experiment in freeze:
+        relative = FILES[experiment]
+        preregister.freeze(target / relative, experiment, ledger=ledger, root=target)
+    return target
+
+
 @pytest.fixture()
 def frozen_tree(tmp_path: Path) -> Path:
-    """A copy of the three preregistration files frozen in a fresh ledger."""
-    for relative in FILES.values():
-        target = tmp_path / relative
-        target.parent.mkdir(parents=True, exist_ok=True)
-        shutil.copyfile(ROOT / relative, target)
-    ledger = tmp_path / "program/preregistrations/ledger.jsonl"
-    for experiment, relative in FILES.items():
-        preregister.freeze(tmp_path / relative, experiment, ledger=ledger, root=tmp_path)
-    return tmp_path
+    """An export with the three preregistration files frozen in a fresh ledger."""
+    return export_tree(tmp_path)
 
 
 def _ledger(tree: Path, manifest: dict) -> dict:
@@ -275,3 +292,103 @@ def test_development_may_run_concurrent_vms_only_for_the_suite():
     manifest["randomness"]["seeds"] = [43]
     with pytest.raises(ManifestError, match="reserved for acceptance"):
         validate_manifest(manifest)
+
+
+# --- fix pass after the 2026-10-07 review of 2b492cd ---------------------------------------------
+
+
+def test_admission_checks_every_frozen_file_not_only_the_registrations(frozen_tree):
+    """Design decision 35: an edited executor file is refused although no .md changed."""
+    manifest = acceptance()
+    validate_manifest(manifest, _ledger(frozen_tree, manifest))
+    executor = frozen_tree / "harness/q2/vm/guest/l0_fixed.py"
+    executor.write_text(executor.read_text() + "\n# edited after the freeze\n")
+    with pytest.raises(ManifestError, match="l0_fixed.py in the source tree is not the file"):
+        validate_manifest(manifest, _ledger(frozen_tree, manifest))
+
+
+def test_admission_refuses_files_no_frozen_table_pins(frozen_tree):
+    extra = frozen_tree / "harness/q2/action_path/helper.py"
+    extra.write_text("PATCH = True\n")
+    manifest = acceptance()
+    with pytest.raises(ManifestError, match="files no frozen table pins"):
+        validate_manifest(manifest, _ledger(frozen_tree, manifest))
+    # C2 needs only the main registration and the inputs addendum; their tables still hold.
+    c2 = acceptance("C2", seed=42, layer="L0-raw", settings=["screenshot"], sessions=9, trials=500)
+    validate_manifest(c2, _ledger(frozen_tree, c2))
+
+
+def test_c2_is_admitted_before_the_executor_freeze_with_the_inputs_addendum_only(tmp_path):
+    tree = export_tree(tmp_path, freeze=(PREREG_ID, ADDENDA_IDS["inputs"]))
+    c2 = acceptance("C2", seed=42, layer="L0-raw", settings=["screenshot"], sessions=9, trials=500)
+    del c2["addenda"]["executor"]
+    validate_manifest(c2, _ledger(tree, c2))
+    a1 = acceptance()
+    del a1["addenda"]["executor"]
+    with pytest.raises(ManifestError, match="needs the executor addendum"):
+        validate_manifest(a1, _ledger(tree, a1))
+
+
+def test_a_repair_attempt_runs_under_its_own_executor_addendum(tmp_path):
+    tree = export_tree(tmp_path)
+    experiment, path = executor_addendum(2)
+    assert experiment == "q2-action-path-v1-executor-a2"
+    repair = acceptance(attempt=2)
+    with pytest.raises(ManifestError, match="runs under"):
+        validate_manifest(repair, _ledger(tree, repair))
+    shutil.copyfile(tree / FILES[ADDENDA_IDS["executor"]], tree / path)
+    ledger = tree / "program/preregistrations/ledger.jsonl"
+    with pytest.raises(ManifestError, match="not frozen"):
+        repair["addenda"]["executor"] = {"path": path, "sha256": _sha(tree / path)}
+        validate_manifest(repair, _ledger(tree, repair))
+    (tree / path).write_text((tree / path).read_text() + "\nRepair attempt 2.\n")
+    preregister.freeze(tree / path, experiment, ledger=ledger, root=tree)
+    repair["addenda"]["executor"] = {"path": path, "sha256": _sha(tree / path)}
+    validate_manifest(repair, _ledger(tree, repair))
+    # Validity controls are never repaired within v1 (section 11).
+    c3 = acceptance("C3", seed=42, settings=["screenshot"], reps=1, mutant="none", attempt=2)
+    with pytest.raises(ManifestError, match="no repair attempts"):
+        validate_manifest(c3, _ledger(tree, c3))
+
+
+def test_runner_cpus_are_registered_per_concurrency(frozen_tree):
+    assert [runner_cpus(n) for n in (1, 8, 16, 24, 32, 40)] == [1, 4, 8, 12, 16, 20]
+    reps = ladder_reps(8)
+    rung = acceptance("ladder", concurrency=8, reps=reps, sessions=20, trials=200 * reps)
+    validate_manifest(rung, _ledger(frozen_tree, rung))
+    starved = copy.deepcopy(rung)
+    starved["runner"]["cpus"] = 1
+    with pytest.raises(ManifestError, match="runner.cpus must be 4"):
+        validate_manifest(starved, _ledger(frozen_tree, starved))
+
+
+def test_the_guest_server_fault_hook_is_development_only(frozen_tree):
+    manifest = base_manifest()
+    manifest["purpose"] = "development"
+    manifest["randomness"] = {
+        "contract": "seeded",
+        "seeds": [42],
+        "seed_binding": {"flag": "--seed"},
+    }
+    manifest["workload"] = {
+        "kind": "suite-development",
+        "layer": "L0-fixed",
+        "cells": ["key_enter", "type_plain"],
+        "reps": 1,
+        "settings": ["screenshot"],
+        "session_trials": 60,
+        "boot_timeout_s": 300,
+        "settle_timeout_s": 60,
+        "cells_sha256": "4" * 64,
+        "sessions": 1,
+        "trials": 2,
+        "max_trial_s": 60,
+        "kill_guest_server_after_seq": 0,
+    }
+    validate_manifest(manifest)
+    manifest["workload"]["kill_guest_server_after_seq"] = "0"
+    with pytest.raises(ManifestError, match="kill_guest_server_after_seq"):
+        validate_manifest(manifest)
+    a1 = acceptance(kill_guest_server_after_seq=0)
+    with pytest.raises(ManifestError, match="unknown"):
+        validate_manifest(a1, _ledger(frozen_tree, a1))

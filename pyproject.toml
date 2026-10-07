@@ -59,6 +59,8 @@ tinker = [
     "tinker==0.23.3",
 ]
 dev = [
+    # The corpus check renders through the Qwen3.5 chat template (tests/test_q2_suite.py).
+    "jinja2",
     "pytest",
     "pytest-asyncio",
     "ruff",
@@ -71,10 +73,10 @@ extend-exclude = [
   ".claude/skills",
   ".agents",
   "program/evidence",
-  # Upstream parsers vendored byte for byte (harness/q2/action_path/upstream/vendor.py)
-  # and the marked, patched H-OSW-fixed copy keep their upstream style.
-  "harness/q2/action_path/upstream/osworld_*.py",
-  "harness/q2/action_path/upstream/gym_anything_*.py",
+  # Upstream parsers vendored byte for byte (harness/q2/action_path/upstream/vendor.py).
+  "harness/q2/action_path/upstream/osworld_bfd62bdc.py",
+  "harness/q2/action_path/upstream/gym_anything_bf965cde0.py",
+  "harness/q2/action_path/upstream/gym_anything_aae6f7607.py",
 ]
 line-length = 100
 target-version = "py311"
@@ -85,6 +87,9 @@ select = ["E", "F", "I", "UP", "B", "SIM"]
 [tool.ruff.lint.per-file-ignores]
 # Mutation patches quote whole lines of the frozen sources as anchors.
 "harness/q2/action_path/mutants.py" = ["E501"]
+# The marked, patched H-OSW-fixed copy keeps its upstream typing style and line lengths;
+# every other rule applies to the project's changes in it.
+"harness/q2/action_path/upstream/osworld_bfd62bdc_fixed.py" = ["E501", "UP006", "UP035", "UP045"]
 
 [tool.pytest.ini_options]
 asyncio_mode = "auto"

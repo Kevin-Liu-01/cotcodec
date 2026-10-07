@@ -35,9 +35,12 @@ unscored_layers:
 kill_rule: >-
   A mutant of a scored layer is killed when at least one of that layer's cells
   is not PASS (FAIL, FLAKY, or a guard violation charged to it) in the mutant's
-  run. Cells outside a harness's spec (the R table's "outside" cells and
-  catalog entries outside its expressible set) run and are reported but can
-  never kill: they have no expectation to fail.
+  run with no infrastructure failure on that cell, and the unmutated reference
+  run of the same layer passed that cell with no infrastructure failure. A
+  failing cell with an infrastructure failure never kills; it is reported
+  separately (acceptance.c3, infra_cells). Cells outside a harness's spec (the
+  R table's "outside" cells and catalog entries outside its expressible set)
+  run and are reported but can never kill: they have no expectation to fail.
 equivalence_rule: >-
   A mutant is equivalent only if, on every cell of its layer in the same run
   order (outside-spec cells included), its XRecord event stream with
@@ -139,14 +142,14 @@ operators:
     description: A triple click is sent as a double click.
     applies:
       L0-fixed: {status: scored, kill_cells: [click_triple_left]}
-      H-OSW-fixed: {status: scored, kill_cells: [], predicted: equivalent, reason: "its prompt declares triple_click simulated as double-click, so the unmutated parser already emits a double click"}
+      H-OSW-fixed: {status: scored, kill_cells: [], predicted: equivalent, reason: "its prompt declares triple_click simulated as double-click, so the unmutated parser already emits a double click; the patch (mutants.py) only marks that line, and the pair is kept as a negative control of the equivalence rule: a no-op mutant must be judged equivalent, never killed"}
       H-GA: {status: scored, kill_cells: [R08, click_triple_left]}
   - id: M13-hscroll-to-vscroll
     layer: both
     description: Horizontal wheel input is sent on the vertical axis.
     applies:
       L0-fixed: {status: scored, kill_cells: [scroll_left_3, scroll_right_3, scroll_diagonal]}
-      H-OSW-fixed: {status: scored, kill_cells: [], predicted: equivalent, reason: "its prompt declares hscroll mapped to regular scroll"}
+      H-OSW-fixed: {status: scored, kill_cells: [], predicted: equivalent, reason: "its prompt declares hscroll mapped to regular scroll, so the unmutated parser already sends hscroll on the vertical axis; the patch (mutants.py) only marks that line, and the pair is kept as a negative control of the equivalence rule"}
       H-GA: {status: not-applicable, reason: "H-GA has no horizontal scroll action, so there is no code path to mutate"}
   - id: M14-chord-release-order
     layer: executor

@@ -63,6 +63,19 @@ WORKLOAD_KINDS = (
 )
 PREREG_ID = "q2-action-path-v1"
 ADDENDA_IDS = {"inputs": "q2-action-path-v1-inputs", "executor": "q2-action-path-v1-executor"}
+PREREG_DIR = "program/preregistrations"
+# The frozen digest tables of the preregistration and its addenda ("Frozen with this
+# file" followed by rows of `path` and `sha256`). Admission checks every listed file of
+# the source tree against them (design decision 35).
+FROZEN_TABLE_MARKER = "Frozen with this file"
+FROZEN_ROW_RE = re.compile(r"^\| `([^`]+)` \| `([0-9a-f]{64})` \|$")
+# Every file a VM campaign can import or read lives under harness/q2 (plus the package
+# root); a campaign that needs the executor addendum must find each of them pinned.
+CLOSED_WORLD_ROOTS = ("harness/q2",)
+CLOSED_WORLD_FILES = ("harness/__init__.py",)
+# Runner CPUs per concurrency (preregistration section 9): half a CPU per concurrent
+# runner, at least one, at most MAX_RUNNER_CPUS (development at N = 8 used 4).
+MAX_RUNNER_CPUS = 20
 # What each scored campaign needs frozen in the ledger (preregistration sections 2.2 and 8):
 # C2 runs after the inputs addendum; C1, C3 and every acceptance criterion after both.
 CRITERIA = {
@@ -87,6 +100,22 @@ CATALOG_ENTRIES = 100
 SESSION_TRIALS = 60
 # Every other scored campaign runs one VM at a time; A4 runs at N* (1 or a ladder rung).
 CONCURRENCY = {"A4": (1, *LADDER_RUNGS), "ladder": LADDER_RUNGS}
+
+
+def executor_addendum(attempt: int) -> tuple[str, str]:
+    """(experiment id, path) of the executor addendum a repair attempt runs under.
+
+    Attempt 1 runs under ``q2-action-path-v1-executor``; a repair attempt k (section 11)
+    under ``q2-action-path-v1-executor-a<k>``, frozen in its own ledger row.
+    """
+    suffix = "" if attempt == 1 else f"-a{attempt}"
+    experiment = f"{ADDENDA_IDS['executor']}{suffix}"
+    return experiment, f"{PREREG_DIR}/{experiment}.md"
+
+
+def runner_cpus(concurrency: int) -> int:
+    """The runner CPUs an acceptance campaign at this concurrency must use (section 9)."""
+    return max(1, min(MAX_RUNNER_CPUS, -(-concurrency // 2)))
 
 
 def ladder_reps(concurrency: int) -> int:
@@ -256,15 +285,62 @@ def ledger_view(source_dir: str, paths: list[str]) -> dict[str, Any]:
                 ).hexdigest()
                 if row.get("previous_hash") != previous or row.get("hash") != digest:
                     raise ManifestError(f"ledger line {number}: broken hash chain")
-                rows[row["experiment_id"]] = {"path": row["path"], "sha256": row["sha256"]}
+                rows[row["experiment_id"]] = {
+                    "path": row["path"],
+                    "sha256": row["sha256"],
+                    "git_head_at_freeze": row.get("git_head_at_freeze"),
+                }
                 previous = row["hash"]
-    files = {}
-    for path in paths:
+    files: dict[str, str] = {}
+    tables: dict[str, dict[str, str]] = {}
+
+    def digest(path: str) -> None:
         full = os.path.join(source_dir, path)
-        if os.path.isfile(full) and not os.path.islink(full):
+        if path not in files and os.path.isfile(full) and not os.path.islink(full):
             with open(full, "rb") as handle:
                 files[path] = hashlib.sha256(handle.read()).hexdigest()
-    return {"rows": rows, "files": files}
+
+    for path in paths:
+        digest(path)
+        if path in files:
+            with open(os.path.join(source_dir, path), encoding="utf-8") as handle:
+                tables[path] = frozen_table(handle.read())
+            for listed in tables[path]:
+                digest(listed)
+    closed = closed_world(source_dir)
+    for path in closed:
+        digest(path)
+    return {"rows": rows, "files": files, "tables": tables, "closed_world": closed}
+
+
+def frozen_table(text: str) -> dict[str, str]:
+    """The ``path -> sha256`` rows of a registration's "Frozen with this file" table."""
+    if FROZEN_TABLE_MARKER not in text:
+        return {}
+    rows: dict[str, str] = {}
+    started = False
+    for line in text.split(FROZEN_TABLE_MARKER, 1)[1].splitlines():
+        match = FROZEN_ROW_RE.match(line.strip())
+        if match:
+            rows[match.group(1)] = match.group(2)
+            started = True
+        elif started and not line.strip():
+            break
+    return rows
+
+
+def closed_world(source_dir: str) -> list[str]:
+    """Every file under harness/q2 (bytecode and Markdown excluded) and the package root."""
+    out = [path for path in CLOSED_WORLD_FILES if os.path.isfile(os.path.join(source_dir, path))]
+    for root in CLOSED_WORLD_ROOTS:
+        for dirpath, dirnames, filenames in os.walk(os.path.join(source_dir, root)):
+            dirnames[:] = sorted(d for d in dirnames if d != "__pycache__")
+            for filename in filenames:
+                if filename.endswith((".pyc", ".pyo", ".md")):
+                    continue
+                full = os.path.join(dirpath, filename)
+                out.append(os.path.relpath(full, source_dir).replace(os.sep, "/"))
+    return sorted(out)
 
 
 def ledger_paths(raw: dict[str, Any]) -> list[str]:
@@ -279,15 +355,31 @@ def ledger_paths(raw: dict[str, Any]) -> list[str]:
 def check_ledger(manifest: dict[str, Any], ledger: dict[str, Any], needed: tuple[str, ...]) -> None:
     """Acceptance admission: the ledger freezes the preregistration and the needed addenda.
 
-    ``ledger`` is ``{"rows": {experiment_id: {"path", "sha256"}}, "files": {path: sha256}}``,
-    built by the caller from ``program/preregistrations/ledger.jsonl`` (hash chain
-    verified) and the source tree's files. Every row must match the manifest's digest
-    and the file in the source tree.
+    ``ledger`` is ``ledger_view``'s result: the hash-chain-verified rows of
+    ``program/preregistrations/ledger.jsonl``, the source tree's file digests, each
+    registration's frozen table and the closed-world file list. Every row must match the
+    manifest's digest and the file in the source tree; every file a needed registration's
+    table lists must hold its frozen digest in the source tree; and a campaign that needs
+    the executor addendum must find every file under harness/q2 pinned by one of the
+    needed tables (design decision 35). The repair attempt names its executor addendum
+    (``executor_addendum``).
     """
     rows, files = ledger.get("rows") or {}, ledger.get("files") or {}
+    tables = ledger.get("tables") or {}
     wanted = [(PREREG_ID, manifest["preregistration"])]
     for key in needed:
-        wanted.append((ADDENDA_IDS[key], manifest["addenda"][key]))
+        pin = manifest["addenda"].get(key)
+        if pin is None:
+            raise ManifestError(f"this campaign needs the {key} addendum frozen and pinned")
+        if key == "executor":
+            attempt = int(manifest["workload"].get("attempt", 1))
+            experiment, path = executor_addendum(attempt)
+            if pin["path"] != path:
+                raise ManifestError(f"attempt {attempt} runs under {path}, not {pin['path']}")
+            wanted.append((experiment, pin))
+        else:
+            wanted.append((ADDENDA_IDS[key], pin))
+    pinned: dict[str, str] = {}
     for experiment_id, pin in wanted:
         row = rows.get(experiment_id)
         if row is None:
@@ -296,6 +388,19 @@ def check_ledger(manifest: dict[str, Any], ledger: dict[str, Any], needed: tuple
             raise ManifestError(f"{experiment_id}: the manifest and the ledger disagree")
         if files.get(pin["path"]) != pin["sha256"]:
             raise ManifestError(f"{pin['path']} changed after it was frozen")
+        table = tables.get(pin["path"]) or {}
+        if not table:
+            raise ManifestError(f"{pin['path']} has no frozen digest table")
+        for path, sha in sorted(table.items()):
+            if files.get(path) != sha:
+                raise ManifestError(
+                    f"{path} in the source tree is not the file {experiment_id} froze"
+                )
+            pinned[path] = sha
+    if "executor" in needed:
+        unpinned = [path for path in ledger.get("closed_world") or [] if path not in pinned]
+        if unpinned:
+            raise ManifestError(f"files no frozen table pins: {unpinned[:5]}")
 
 
 def validate_manifest(raw: Any, ledger: dict[str, Any] | None = None) -> dict[str, Any]:
@@ -369,8 +474,10 @@ def validate_manifest(raw: Any, ledger: dict[str, Any] | None = None) -> dict[st
                 "acceptance is refused before the freeze of the preregistration and both addenda"
                 " (no ledger check was made)"
             )
-        addenda = _require_keys(manifest.get("addenda"), "addenda", set(ADDENDA_IDS))
-        for key in ADDENDA_IDS:
+        # C2 is scored after the inputs freeze and before the executor freeze, so only the
+        # inputs addendum is always present; check_ledger requires each one a campaign needs.
+        addenda = _require_keys(manifest.get("addenda"), "addenda", {"inputs"}, {"executor"})
+        for key in addenda:
             pin = _require_keys(addenda[key], f"addenda.{key}", {"path", "sha256"})
             _match(pin["path"], REPO_PATH_RE, f"addenda.{key}.path")
             _match(pin["sha256"], SHA_RE, f"addenda.{key}.sha256")
@@ -492,9 +599,9 @@ def validate_manifest(raw: Any, ledger: dict[str, Any] | None = None) -> dict[st
     runner = _require_keys(manifest["runner"], "runner", {"image_id", "memory_gb", "cpus"})
     _match(runner["image_id"], IMAGE_ID_RE, "runner.image_id")
     runner_mem = _int(runner["memory_gb"], "runner.memory_gb", 1, 16)
-    runner_cpus = _int(runner["cpus"], "runner.cpus", 1, 8)
+    runner_cpu_count = _int(runner["cpus"], "runner.cpus", 1, MAX_RUNNER_CPUS)
 
-    if slurm["cpus"] < concurrency * cores + runner_cpus:
+    if slurm["cpus"] < concurrency * cores + runner_cpu_count:
         raise ManifestError("slurm.cpus must cover concurrency x cpu_cores plus the runner")
     if slurm["memory_gb"] < concurrency * (vm_mem + runner_mem) + 2:
         raise ManifestError("slurm.memory_gb must cover every VM, its runner and 2 GiB slack")
@@ -619,7 +726,15 @@ def _validate_acceptance_workload(
             not isinstance(span, list) or len(span) != 2 or not 0 <= span[0] < span[1]
         ):
             raise ManifestError("workload.session_range must be null or [start, end)")
-    _int(workload["attempt"], "workload.attempt", 1, 3)
+    attempt = _int(workload["attempt"], "workload.attempt", 1, 3)
+    if attempt != 1 and workload.get("criterion") in ("C1", "C2", "C3"):
+        # Section 11: a failed validity control is not repaired within v1.
+        raise ManifestError("validity controls C1-C3 have no repair attempts")
+    if manifest["runner"]["cpus"] != runner_cpus(manifest["vm"]["concurrency"]):
+        raise ManifestError(
+            f"runner.cpus must be {runner_cpus(manifest['vm']['concurrency'])} at concurrency "
+            f"{manifest['vm']['concurrency']} (section 9)"
+        )
     _int(workload["session_trials"], "workload.session_trials", 1, 60)
     _match(workload["cells_sha256"], SHA_RE, "workload.cells_sha256")
     boot_timeout = _int(workload["boot_timeout_s"], "workload.boot_timeout_s", 60, 900)
@@ -659,7 +774,7 @@ def _validate_session_workload(
         _match(workload["plan_sha256"], SHA_RE, "workload.plan_sha256")
     else:
         extra = {"layer", "cells", "reps", "settings", "session_trials"}
-        optional: set[str] = {"mutant"}
+        optional: set[str] = {"mutant", "kill_guest_server_after_seq"}
         if kind == "canary-development":
             extra = {"apps", "entries", "reps", "session_trials", "measure_targets"}
             optional = set()
@@ -667,6 +782,11 @@ def _validate_session_workload(
         mutant = workload.get("mutant")
         if mutant is not None and (not isinstance(mutant, str) or not MUTANT_RE.fullmatch(mutant)):
             raise ManifestError("workload.mutant must be an operator id such as M02-...")
+        if "kill_guest_server_after_seq" in workload:
+            # Development only: SIGKILL the guest server after this trial, as the crash of
+            # run 622 ended it, to exercise the probe and tap relaunch (never in acceptance).
+            _int(workload["kill_guest_server_after_seq"], "workload.kill_guest_server_after_seq",
+                 0, 20000)  # fmt: skip
         if purpose != "development":
             raise ManifestError(f"{kind} is a development workload")
         if randomness["contract"] != "seeded" or randomness["seeds"] != [DEVELOPMENT_SEED]:

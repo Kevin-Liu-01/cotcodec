@@ -81,6 +81,27 @@ def tap_windows(records: list[dict[str, Any]], reserved: int) -> dict[int, list[
     return out
 
 
+def segment_check(records: list[dict[str, Any]]) -> dict[str, Any]:
+    """``mapping_check`` per tap process, merged.
+
+    A relaunched tap (after a guest-server restart) starts its own stream with a ready
+    record and a fresh keymap; each segment is checked against its own keymap, and a
+    keycode unverified in any segment is unverified for the session.
+    """
+    starts = [i for i, r in enumerate(records) if r.get("kind") == "ready"] or [0]
+    starts[0] = 0
+    bounds = list(zip(starts, starts[1:] + [len(records)], strict=True))
+    checks = [mapping_check(records[a:b]) for a, b in bounds]
+    if len(checks) == 1:
+        return dict(checks[0], segments=1)
+    merged: dict[str, Any] = {"ok": all(c["ok"] for c in checks), "segments": len(checks)}
+    for key in ("requests", "keyboard_notifies", "explained", "benign_unexplained"):
+        merged[key] = sum(c[key] for c in checks)
+    for key in ("unverified", "requests_without_notify"):
+        merged[key] = [item for c in checks for item in c[key]]
+    return merged
+
+
 def unverified_in_window(check: dict[str, Any], window: list[dict[str, Any]]) -> bool:
     """A key event in the window on a keycode the tap's mapping check marks unverified."""
     bad = {
@@ -99,14 +120,18 @@ class Session:
         token = config["token"]
         self.probe_dir = f"/tmp/q2ap_probe_{token}"
         self.sock = f"{self.probe_dir}/sock"
+        self.token = token
         self.tap_path = f"/tmp/q2ap_suite_tap_{token}.jsonl"
         self.tap_stop = f"/tmp/q2ap_suite_tap_{token}.stop"
         self.tap_offset = 0
         self.tap_records: list[dict[str, Any]] = []
+        self.tap_ready: dict[str, Any] | None = None
         self.ready: dict[str, Any] = {}
         self.reserved: int | None = None
         self.baseline_led: int | None = None
         self.relaunches = 0
+        self.tap_relaunches = 0
+        self.server_pid: int | None = None  # the guest server last seen by a guard report
         self.guard_src = guest_source("guard.py")
 
     # --- guest helpers -------------------------------------------------------------------
@@ -138,22 +163,52 @@ class Session:
             time.sleep(0.25)
         return {"error": "probe never became ready"}
 
-    def start(self) -> dict[str, Any]:
+    def launch_tap(self) -> dict[str, Any]:
+        """Start the XRecord tap writing to ``self.tap_path`` and wait for its ready record."""
         duration = int(self.config.get("tap_duration_s", 7200))
         status, text = self.client.launch_script(
             guest_source("xrecord_tap.py"), [self.tap_path, str(duration), self.tap_stop]
         )
         if status != 200:
             return {"error": f"tap launch failed: {status} {text}"}
-        tap_ready = None
+        known = len(self.tap_records)
         for _ in range(40):
             self.read_tap()
-            tap_ready = next((r for r in self.tap_records if r.get("kind") == "ready"), None)
-            if tap_ready:
-                break
+            ready = next((r for r in self.tap_records[known:] if r.get("kind") == "ready"), None)
+            if ready:
+                self.tap_ready = ready
+                return ready
             time.sleep(0.25)
-        if not tap_ready:
-            return {"error": "tap never became ready"}
+        return {"error": "tap never became ready"}
+
+    def tap_alive(self) -> bool | None:
+        """Whether the tap process still runs (None when that cannot be read)."""
+        pid = (self.tap_ready or {}).get("pid")
+        if not isinstance(pid, int):
+            return None
+        try:
+            result = self.client.execute(["test", "-d", f"/proc/{pid}"], timeout=30.0)
+        except GuestError:
+            return None
+        return result.get("returncode") == 0
+
+    def relaunch_tap(self) -> dict[str, Any]:
+        """A new tap in a new file after the guest server's restart stopped the old one.
+
+        The old file keeps what the old tap recorded; the session's stream continues in the
+        new file from its own ready record (a fresh keymap), and ``segment_check`` judges
+        each tap's records against its own keymap.
+        """
+        self.tap_relaunches += 1
+        self.tap_path = f"/tmp/q2ap_suite_tap_{self.token}.{self.tap_relaunches}.jsonl"
+        self.tap_offset = 0
+        ready = self.launch_tap()
+        return {k: ready.get(k) for k in ("error", "pid", "min_keycode", "led_mask") if k in ready}
+
+    def start(self) -> dict[str, Any]:
+        tap_ready = self.launch_tap()
+        if "error" in tap_ready:
+            return {"error": tap_ready["error"]}
         self.ready = self.launch_probe()
         if "error" in self.ready:
             return {"error": self.ready["error"]}
@@ -164,6 +219,7 @@ class Session:
             self.guard_src,
         )
         self.baseline_led = self.ready.get("led_mask")
+        self.server_pid = check.get("server_pid")
         # Decision 31: the master keyboard's switch to the XTest device happens here,
         # outside every entry window (guest/guard.py, warmup).
         warmup = self.run_guest(
@@ -247,6 +303,10 @@ class Session:
             )
             if ((ping.get("check") or {}).get("probe") or {}).get("absent"):
                 self.relaunches += 1
+                if self.tap_alive() is False:
+                    # A guest-server restart stops the tap with the probe (run 622): relaunch
+                    # it first, so it records the relaunched probe's delimiter keycode.
+                    out["tap_relaunch"] = self.relaunch_tap()
                 out["relaunch"] = self.launch_probe()
         return out
 
@@ -268,12 +328,13 @@ class Session:
                 's.sendall(b\'{"op": "quit"}\\n\');print(s.recv(4096).decode())',
                 [self.sock],
             )
-        check = mapping_check(self.tap_records)
+        check = segment_check(self.tap_records)
         return {
             "final_guard": quit_reply,
             "mapping_check": check,
             "tap_records": len(self.tap_records),
             "probe_relaunches": self.relaunches,
+            "tap_relaunches": self.tap_relaunches,
         }
 
     # --- trials ------------------------------------------------------------------------
@@ -327,6 +388,9 @@ class Session:
         started = time.monotonic()
         trial: dict[str, Any] = {"seq": seq, "cell": cell["id"], "layer": layer}
         trial["pre"] = self.pre(seq)
+        # The server that served the guard before this entry: the pre report's, or, when the
+        # pre guard could not run (the server was restarting), the last one seen.
+        trial["server_before"] = trial["pre"].get("server_pid") or self.server_pid
         t_pre = time.monotonic()
         steps: list[dict[str, Any]] = []
         errors: list[str] = []
@@ -357,6 +421,7 @@ class Session:
             trial["observation_ok"] = shot is not None
         trial["steps"] = steps
         trial["post"] = self.post(seq, cell.get("side_effects") or [])
+        self.server_pid = trial["post"].get("server_pid") or trial["server_before"]
         t_post = time.monotonic()
         try:
             trial["marker"] = read_marker(shot) if shot else {"ok": False, "error": "no screenshot"}
@@ -376,7 +441,7 @@ class Session:
     def judge_all(
         self, trials: list[dict[str, Any]], cells: dict[str, dict[str, Any]]
     ) -> dict[str, Any]:
-        check = mapping_check(self.tap_records)
+        check = segment_check(self.tap_records)
         windows = tap_windows(self.tap_records, self.reserved or -1)
         for trial in trials:
             cell = cells[trial["cell"]]
@@ -424,9 +489,11 @@ def observation(
         infra.append("probe_absent")
     if "error" in pre or "error" in post:
         infra.append("guard_script")
-    servers = {pre.get("server_pid"), post.get("server_pid")} - {None}
+    before = pre.get("server_pid") or trial.get("server_before")
+    servers = {before, post.get("server_pid")} - {None}
     if len(servers) > 1:
-        # The guest server crashed and systemd restarted it during the entry (section 6.1).
+        # The guest server crashed and systemd restarted it during the entry, or between
+        # the last guard report and this entry's post guard (section 6.1).
         infra.append("guest_server_restart")
     retried: list[str] = []
     for step in trial.get("steps") or []:
