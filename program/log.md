@@ -138,3 +138,15 @@ Append-only. Newest entries at the bottom.
   gauntlet threshold. That is Kevin's decision.
 - GPU-hours spent by this experiment: 0.04. Evidence:
   `program/evidence/2026-10-07/q3-k1/`.
+
+## 2026-10-07 — Holo3 v2: first confirmatory result
+
+- Ran `q2-holo3-rerun-audit-v2` (Slurm job 438, CPU only). All receipts are
+  `v2 CONFIRMATORY`. Rule (d): not attributable to checker time-dependence
+  (p = 0.156). Rule (a): no agent-behaviour shift (Wilcoxon p = 0.94).
+  Rule (b): the 14 run2-unique failures are unexplained (1 environment,
+  1 agent-side). Coverage 96.8%. The 5.75 GB tarball was deleted after the
+  run. Results: `program/evidence/2026-10-07/holo3-v2/RESULTS.md`.
+- Implication for Q2 Stage 1: same-day, same-operator reruns can shift by
+  4.4 points with no visible cause, so the variance model needs a session
+  random effect and more than one session per cell.

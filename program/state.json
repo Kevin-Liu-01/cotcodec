@@ -33,7 +33,7 @@
       "doc": "program/questions/q2-calibrated-cua-instrument.md",
       "dossier_key": "S1-calibrated-cua-instrument",
       "status": "stage-0-running",
-      "next_action": "Holo3 v2 rules running (Slurm job 438); action-path suite and checker-mutation kit being built (branches stage0/q2-action-path, stage0/q2-evaluator-mutation)",
+      "next_action": "Holo3 v2 done (unexplained session shift). Build and freeze the action-path suite and the checker-mutation kit; add a session random effect to the Stage 1 design",
       "first_gpu_experiment": {
         "name": "Qwen3.5 four-size ladder",
         "estimated_gpu_hours": 60,
@@ -100,6 +100,15 @@
         "452 smoke"
       ],
       "outcome": "stopped at smoke gate: SMOKE_PASS_OVER_BUDGET (projected 98.8 min vs 30)"
+    }
+  ],
+  "results": [
+    {
+      "registration": "q2-holo3-rerun-audit-v2",
+      "date": "2026-10-07",
+      "label": "v2 CONFIRMATORY",
+      "outcome": "rule d: not attributable to checker time-dependence; rule a: no agent-behaviour shift; rule b: unexplained; coverage ok",
+      "evidence": "program/evidence/2026-10-07/holo3-v2/RESULTS.md"
     }
   ]
 }
