@@ -45,8 +45,9 @@ dossier's corrections.
 
 ## Open obligations from dropped lines
 
-- **E8:** disclose the Letta symlink finding and the post-deletion plaintext
-  residue to letta-ai before any write-up. This is an outward action and needs
-  Kevin's go-ahead. The doctor that found it is kept privately, not in this
+- **E8:** disclose two security-relevant Letta observations to the
+  maintainers before any write-up. Details are withheld here pending
+  coordinated disclosure. This is an outward action and needs Kevin's
+  go-ahead. The doctors and the recheck are kept privately, not in this
   public repository.
 - **E1:** the claims in `legacy/directions/01-language.md` are withdrawn.
