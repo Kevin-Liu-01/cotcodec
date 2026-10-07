@@ -355,7 +355,13 @@ for v1). v2 does not draw on D8's probe cap, which v1 has largely used.
     raises the reservation. The first window is the engine start (v1: under 2
     minutes) on a GPU that the lane prolog and G0.8 found idle; the PIDs, when
     each was first listed, and their memory are recorded at every snapshot, so
-    such a case is visible in the evidence.
+    such a case is visible in the evidence. The converse risk: if an engine
+    process outside the tree `/proc` can resolve first opened a CUDA context
+    after `/health` (the API server during the smoke, say), G0.9 would fail with
+    host-namespace PIDs and job A would end as a pre-result. vLLM's API server
+    does no GPU work, and v1's record lists only EngineCore on the GPU (v1
+    evidence README); the smoke runs before the warm-up, so such a failure would
+    end the job about 10 minutes in (about 0.17 of its 1.0 GPU-h).
 22. **Resume.** As v1, a resumed job skips terminal points and reruns
     interrupted, failed-infra and not-run points; an invalid point whose rerun
     was still pending when a signal arrived gets that rerun, under the same slack
