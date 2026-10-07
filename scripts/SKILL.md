@@ -44,6 +44,25 @@ provenance.
   already-inspected data only.
 - `create_source_archive.py`, `verify_compute_provenance.py` and
   `verify_publication_attestation.py` bind source, image and claims.
+  Archives hold regular files only. `--discovery` leaves out a symlink only
+  under a reviewed rule (link under `.agents/skills/`, target under
+  `.claude/skills/`: the agent-skill mirror), when it is tracked as a link, its
+  target is canonical (a run of `..`, then named parts with no empty, `.` or
+  `..` part), stays inside the repository, passes through no other symlink,
+  lands on disk where its text says, and names a tracked regular file the
+  archive holds or a directory holding one. Any other symlink is refused,
+  including dangling links and links that leave the repository. The schema 3
+  receipt records the rules and each omitted `{path, target}` with a digest;
+  for a clean worktree the creator checks the record equals HEAD's committed
+  links (`committed_symlinks`), so anyone with the repository can recompute it
+  from `git_tree`. `archive_sha256` and `file_manifest_sha256` cover archived
+  files only, so omitting a link gives the same archive as deleting it, and
+  nothing the lane pins binds the record: an edited receipt can empty it.
+  `extract_discovery_source_archive.py` holds an identical rule (a test checks
+  the source matches), accepts schema 3, accepts schema 2 only for capsules
+  retained before schema 3 (so a stripped record cannot pass as schema 2),
+  checks each omitted target is archived, and never recreates links.
+  Publication archives still refuse every symlink.
 - `run_vllm_throughput_probe.py` is the serving-throughput probe
   (serving-throughput-probe-v1): `plan`, `run`, `vllm-args-doctor`, `project`,
   `digest`.
