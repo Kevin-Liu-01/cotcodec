@@ -12,6 +12,16 @@ the upstream `LICENSE` (and `NOTICE` where one exists).
 | `Liger-Kernel/` | https://github.com/linkedin/Liger-Kernel | tag `v0.3.1`, `1520999e60e34a9e034026d05917082de098be1e` (2024-10-01) | BSD-2-Clause, copyright 2024 LinkedIn Corporation; `utils.py` and `rms_norm.py` state that they incorporate Unsloth code under Apache-2.0 |
 | `triton-tutorials/` | https://github.com/triton-lang/triton | `105cb56487cd8a433b8fbfe9cc63c1f1c04a4b2a` (2024-12-09), `python/tutorials/` | MIT, copyright 2018-2020 Philippe Tillet, 2020-2022 OpenAI |
 
-Sizes and SHA-256 of every file are in `../s2_catalog.py` (`UPSTREAM_FILES`)
-and are checked by `tests/test_q1_substrates.py`. The files are excluded from
+`Liger-Kernel/LICENSE.Apache-2.0` is not a Liger file: it is the Apache License
+2.0 text (sections 1-9; the same text as `FlagGems/LICENSE` without its copyright
+line) under which Liger's `utils.py` and `rms_norm.py` state that they
+incorporate Unsloth code (https://github.com/unslothai/unsloth). Apache-2.0
+section 4(a) requires a copy of the licence with that code, so it is vendored
+here and copied as `LICENSE.Apache-2.0.unsloth` into every Liger substrate that
+contains it (`rms_norm.py`, or `utils.py` helpers inlined by
+`liger-inline-utils`; `s2_catalog.includes_unsloth_code`, build `q1-s2-build/2`).
+
+Sizes and SHA-256 of every file are in `../s2_catalog.py` (`UPSTREAM_FILES`, and
+`UNSLOTH_APACHE_LICENSE` for the Apache text) and are checked by
+`tests/test_q1_substrates.py`. The files are excluded from
 ruff (`ruff.toml`) so they stay identical to upstream.

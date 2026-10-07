@@ -1,0 +1,87 @@
+# Q1 Stage 0 scoring job under the trimming rule q1-stage0-trim/2 (preregistration
+# section 18.6; scripts/run_q1_stage0.py). It scores the buckets named in its argv of
+# the plan computed from the frozen corpus (harness.q1.trim.plan), checked against
+# --expected-plan-sha256 before anything runs.
+#
+# Execution as measured by pilot jobs 518 and 548: one GPU and 32 CPUs, one Stage 0 job
+# at a time, 12 capacity units on the GPU (1 per item below 0.6 GB of native inputs,
+# 3 from 0.6 to 1 GB, all 12 from 1 GB), size-scaled watchdog limits, contention
+# failures (shared-item timeout or CUDA out-of-memory) retried once alone.
+#
+# The stop is this job's cap: the driver refuses to start unless the Stage 0 GPU-hours
+# already spent (Slurm allocations of every finished Stage 0 job, pilot 0.899
+# included), budget.max_gpu_hours below and the reserve (timing floor and audit-hole
+# replay cap) sum to at most 8.0, and --job-cap-gpu-hours must equal GPUs x minutes
+# / 60. Slurm ends the job at its limit.
+#
+# Inputs arrive as ONE hash-bound study artifact (the frozen corpus; host-only, never
+# committed). Trusted code only (D3, D7, D26). Template: FILL-* values come from the
+# image build receipt, the artifact pack receipt, the plan (--plan-only on the CPU) and
+# the GPU ledger; the submitter rejects them unfilled.
+runtime: docker-single-node-discovery-v1
+name: q1-stage0-trim-job
+image_id: FILL-q1-gates-image-id
+git_sha: FILL-git-sha
+source_sha256: FILL-source-tar-sha256
+container_profile: large-cpu-mem
+resources:
+  gpu_type: h100
+  gpus: 1
+  cpus: 32
+  memory_gb: 256
+  minutes: 180
+budget:
+  max_gpu_hours: 3.0
+randomness_contract: assignment-seed-matrix
+seeds: [42, 43, 44]
+seed_binding:
+  flag: "--seeds"
+run_root: /home/kevin/cotcodec-runs/stage0/q1-gates/stage0/runs
+model:
+  kind: none
+  reason: "Q1 Stage 0 scores compiler and pre-2025 human kernels and their mutants and controls; no checkpoint"
+study_artifact:
+  source_id: q1-stage0-inputs
+  revision: FILL-git-sha
+  license: LicenseRef-q1-mixed
+  host_path: FILL-study-artifact-host-path
+  sha256: FILL-study-artifact-sha256
+  size_bytes: FILL-study-artifact-size
+command:
+  - env
+  - TRITON_CACHE_DIR=/outputs/cache/triton
+  - TORCHINDUCTOR_CACHE_DIR=/outputs/cache/inductor
+  - python
+  - scripts/run_q1_stage0.py
+  - "--evidence"
+  - /inputs/study-artifact.json
+  - "--expected-evidence-sha256"
+  - FILL-study-artifact-sha256
+  - "--corpus"
+  - corpus/substrates
+  - "--corpus"
+  - corpus/mutants
+  - "--corpus"
+  - corpus/controls-core
+  - "--corpus"
+  - corpus/controls-hacks
+  - "--corpus"
+  - corpus/controls-mutants
+  - "--output"
+  - /outputs/stage0
+  - "--buckets"
+  - FILL-buckets
+  - "--expected-plan-sha256"
+  - FILL-plan-sha256
+  - "--stage0-spent-gpu-hours"
+  - FILL-stage0-spent-gpu-hours
+  - "--job-cap-gpu-hours"
+  - "3.0"
+  - "--reserve-gpu-hours"
+  - FILL-reserve-gpu-hours
+  - "--budget-minutes"
+  - "180"
+  - "--seeds"
+  - "42"
+  - "43"
+  - "44"

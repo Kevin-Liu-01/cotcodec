@@ -15,7 +15,15 @@ runner's watchdog, which kills the worker's process group, covers them):
   memcheck found an error. (Pilot job 518: every S1 substrate refuses
   ``A3/lead1``, a size below its compiled range, so a probe fixed to the
   smallest configuration never ran a kernel and reported ``error``, which made
-  A4 and every tier ``error`` for all S1 kernels.)
+  A4 and every tier ``error`` for all S1 kernels.) The row is memcheck's
+  verdict alone: when the candidate raises *after* a launch at that held-out
+  configuration, the exception is recorded (``workload_raised_after_launch``)
+  and the child exits 0, so the row is ``accept`` unless memcheck reports an
+  error. A3 runs the same configuration and judges the crash; without this, a
+  held-out-shape crash made the row ``error`` and removed the kernel from tiers
+  N and c-disjoint, whose other channels run at native shapes (second review,
+  finding 11). At native shape an exception still propagates (``error``; A1
+  rejects that kernel anyway).
 
     python -m harness.q1.audit.gpu_probes poison ITEM.json OUT.json
     python -m harness.q1.audit.gpu_probes sanitizer ITEM.json OUT.json
@@ -56,15 +64,16 @@ def run_first_accepted(
     source: str,
     configs: list[dict[str, Any]],
     seed: int,
-) -> tuple[list[Any], str, list[dict[str, Any]]]:
+) -> tuple[list[Any], str, list[dict[str, Any]], dict[str, Any] | None]:
     """Run the candidate on the first configuration it does not refuse, else native.
 
     A refusal is an exception before any launch (``audit.run.LaunchCounter``:
     no Triton launch and no aten compute op), exactly as A3 classifies it; it
     is recorded and the next configuration is tried. An exception after a
-    launch propagates (the sanitizer run then does not complete and the row is
-    ``error``; A3 judges that crash). Returns the outputs, the configuration id
-    and the refused configurations.
+    launch at a held-out configuration is returned as the fourth value (no
+    outputs): the sanitizer row then reports memcheck alone and A3 judges the
+    crash. At native shape an exception propagates. Returns the outputs, the
+    configuration id, the refused configurations and the post-launch exception.
     """
     import torch
 
@@ -88,11 +97,19 @@ def run_first_accepted(
                 outputs = first_tensor_outputs(subject.candidate(*inputs))
                 synchronize(subject.device)
         except Exception as exc:
-            if counter.launches or config is None:
+            if config is None:
                 raise
+            if counter.launches:
+                raised = {
+                    "config_id": config_id,
+                    "exception": type(exc).__name__,
+                    "message": str(exc)[:500],
+                    "launches_before_exception": counter.launches,
+                }
+                return [], config_id, refused, raised
             refused.append({"config_id": config_id, "exception": type(exc).__name__})
             continue
-        return outputs, config_id, refused
+        return outputs, config_id, refused, None
     raise AssertionError("unreachable: the native configuration either returns or raises")
 
 
@@ -121,11 +138,26 @@ def _child(mode: str, item_path: Path, out_path: Path) -> int:
     subject = audit.prepare(problem_id, source, kernel, replicate_seed=seed, device="cuda:0")
     try:
         refused: list[dict[str, Any]] = []
+        raised: dict[str, Any] | None = None
         if mode == "sanitizer":
             configs = sanitizer_configs(item.get("a3_entry") or {})
-            outputs, config_id, refused = run_first_accepted(
+            outputs, config_id, refused, raised = run_first_accepted(
                 subject, problem_id, source, configs, seed
             )
+            if raised is not None:
+                # memcheck alone decides the row; A3 judges the crash at this shape.
+                out_path.write_text(
+                    json.dumps(
+                        {
+                            "sha256": None,
+                            "config_id": config_id,
+                            "refused_configs": refused,
+                            "workload_raised_after_launch": raised,
+                        }
+                    ),
+                    encoding="utf-8",
+                )
+                return 0
         else:
             config_id = "native"
             inputs = audit.draw_inputs(
@@ -244,11 +276,14 @@ def run_sanitizer(item: dict[str, Any], workdir: Path) -> GateOutcome:
     # complete under the sanitizer (reported as error; A3 already judges the
     # candidate at this shape without the sanitizer).
     verdict = {True: "accept", False: "reject", None: "error"}[result.passed]
+    details = {**result.details, "probe": probe, "stdout_tail": done.stdout[-3000:]}
+    if probe.get("workload_raised_after_launch"):
+        details["workload_raised_after_launch"] = probe["workload_raised_after_launch"]
     return GateOutcome(
         "A4",
         "compute-sanitizer",
         verdict,
-        details={**result.details, "probe": probe, "stdout_tail": done.stdout[-3000:]},
+        details=details,
         wall_seconds=time.perf_counter() - start,
     )
 

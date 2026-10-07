@@ -234,7 +234,7 @@ Q1_MANIFESTS = (
     "experiments/manifests/q1-substrate-admission.yaml",
     "experiments/manifests/q1-mutate/specializations-v1.yaml",
     "experiments/manifests/q1-core/q1-gate-gpu-smoke.yaml",
-    "experiments/manifests/q1-core/q1-stage0-pilot.yaml",
+    "experiments/manifests/q1-core/q1-stage0-trim-job.template.yaml",
     "experiments/manifests/q1-core/q1-audit-hole-replay.yaml",
     "experiments/manifests/q1-core/q1-pilot-smoke.template.yaml",
     "experiments/manifests/q1-core/q1-pilot-cost.template.yaml",

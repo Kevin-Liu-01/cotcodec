@@ -233,18 +233,133 @@ def test_trimmed_projection_keeps_every_family_and_reaches_the_frr_units() -> No
         ],
         "adversarial_controls": 3,
     }
-    rule = {**cc.TRIM_RULE, "frr_min_units": 2, "family_quota_test": 10, "family_quota_dev": 2}
+    rule = {
+        **cc.TRIM_RULE,
+        "frr_min_units": 2,
+        "frr_margin_units": 0,
+        "family_quota_test": 10,
+        "family_quota_dev": 2,
+    }
     out = cc.project_trimmed(counts, fits, survival=1.0, rule=rule)
     assert out["n_eval_independent"] == 2 and out["frr_extra_substrates"] == ["s1-b"]
     fam = out["mutants_per_family"]
     assert fam["arithmetic"]["test"] == 10 and fam["arithmetic"]["dev"] == 2
+    assert fam["arithmetic"]["robustness"] == 1
     assert fam["boundary"]["test"] == 2  # fewer than the quota: all of the frame's half
-    assert out["kernels"]["frr-substrate-replicate-42"] == 1
+    assert out["kernels"]["frr-core-replicate-42"] == 1
+    assert set(out["gpu_hours_by_priority"]) <= {f"P{i}" for i in range(1, 9)}
+    # the out-of-scope controls are costed, not silently absent
+    assert out["unscheduled_controls_kernels"]["hack-emulating-mutant-controls"] == 5
     halved = cc.project_trimmed(
         counts, fits, survival=1.0, rule=rule, factors=dict.fromkeys(cc.SCORING_GATES, 0.5)
     )
     assert halved["gpu_hours"] < out["gpu_hours"]
     assert (
-        halved["gpu_hours_by_role"]["frr-substrate-replicate-42"]
-        == out["gpu_hours_by_role"]["frr-substrate-replicate-42"]
+        halved["gpu_hours_by_role"]["frr-core-replicate-42"]
+        == out["gpu_hours_by_role"]["frr-core-replicate-42"]
     )  # exclusive problems are not scaled by the concurrency factor
+    # pilot-exposed mutants leave the frame of their family and split
+    exposed = {"mutants": [{"family": "arithmetic", "split": "test"}] * 4}
+    fewer = cc.project_trimmed(counts, fits, survival=1.0, rule=rule, exposed=exposed)
+    assert (
+        fewer["mutants_per_family"]["arithmetic"]["test_frame"]
+        == out["mutants_per_family"]["arithmetic"]["test_frame"] - 4
+    )
+    assert fewer["mutants_exposed_removed"] == {"arithmetic/test": 4}
+
+
+def test_frr_set_skips_no_new_unit_and_adds_a_margin_bucket() -> None:
+    fits = {gate: {"alpha": 1.0, "beta": 10.0} for gate in cc.SCORING_GATES}
+
+    def row(sid: str, problem: str, source: str = "inductor") -> dict:
+        from harness.q1 import pilot
+
+        size = pilot.native_input_bytes(problem)
+        return {
+            "substrate_id": sid,
+            "problem_id": problem,
+            "source_kind": source,
+            "native_input_bytes": size,
+            "exclusive": size >= 1_000_000_000,
+            "hack_controls": 4,
+            "cpu_distinct_by_family": {"arithmetic": 4},
+        }
+
+    counts = {
+        "evaluation_substrates": [
+            row(
+                "s2-flaggems-mm-L1-1_Square_matrix_multiplication_",
+                "L1/1_Square_matrix_multiplication_",
+                "flaggems",
+            ),
+            row(
+                "s2-flaggems-mm-L1-6_Matmul_with_large_K_dimension_",
+                "L1/6_Matmul_with_large_K_dimension_",
+                "flaggems",
+            ),
+            row(
+                "s1-inductor-L1-6_Matmul_with_large_K_dimension_",
+                "L1/6_Matmul_with_large_K_dimension_",
+            ),
+            row("s1-inductor-L1-89_cumsum", "L1/89_cumsum"),
+        ],
+        "identity_controls": [],
+        "adversarial_controls": 0,
+        "hack_emulating_mutant_controls": 0,
+    }
+    rule = {**cc.TRIM_RULE, "frr_min_units": 2, "frr_margin_units": 1}
+    out = cc.project_trimmed(counts, fits, survival=1.0, rule=rule)
+    assert out["frr_skipped_no_new_unit"] == ["s2-flaggems-mm-L1-6_Matmul_with_large_K_dimension_"]
+    assert out["frr_core_substrates"] == ["s1-inductor-L1-6_Matmul_with_large_K_dimension_"]
+    assert out["frr_margin_substrates"] == ["s1-inductor-L1-89_cumsum"]
+    assert out["n_eval_independent_core"] == 2 and out["n_eval_independent"] == 3
+    assert out["gpu_hours_by_priority"]["P4"] > 0  # the margin is its own bucket
+
+
+def test_large_problems_are_anchored_to_measured_and_censored_costs() -> None:
+    rows = [
+        {
+            "kernel_id": "s1-inductor-L1-3_Batched_matrix_multiplication",
+            "problem_id": "L1/3_Batched_matrix_multiplication",
+            "cost_class": "L1-exclusive",
+            "total": 297.6,
+            "c_marginal": 87.2,
+        },
+        {
+            "kernel_id": "small",
+            "problem_id": "L1/2_x",
+            "cost_class": "L1-shared",
+            "total": 26.0,
+            "c_marginal": 4.0,
+        },
+    ]
+    censored = [{"gate": "c", "problem_id": "L1/89_cumsum", "gpu_seconds_lower_bound": 676.8}]
+    anchors = cc.large_problem_anchors(rows, censored)
+    gb3 = cc._gigabytes("L1/3_Batched_matrix_multiplication")
+    assert anchors["non_c_gpu_seconds_per_gb"] == pytest.approx((297.6 - 87.2) / gb3, rel=1e-3)
+    assert [p["kind"] for p in anchors["c_points"]] == ["measured", "censored lower bound"]
+    assert cc.anchored_seconds(gb3, anchors) == pytest.approx(297.6, rel=1e-3)
+    gb89 = cc._gigabytes("L1/89_cumsum")
+    assert cc.anchored_seconds(gb89, anchors) == pytest.approx(
+        anchors["non_c_gpu_seconds_per_gb"] * gb89 + 676.8, rel=1e-3
+    )
+    mid = (gb3 + gb89) / 2
+    low = anchors["non_c_gpu_seconds_per_gb"] * mid + 87.2 / gb3 * mid
+    high = anchors["non_c_gpu_seconds_per_gb"] * mid + 676.8 / gb89 * mid
+    assert low < cc.anchored_seconds(mid, anchors) < high
+    assert cc.large_problem_anchors(rows[1:], censored) is None
+
+
+def test_timing_floor_is_charged_at_its_allocation() -> None:
+    import argparse
+
+    from scripts import q1_pilot_cost_card as script
+
+    args = argparse.Namespace(timing_floor_gpu_hours=0.5)
+    rule = dict(cc.TRIM_RULE)
+    # 80 items on 2 timing GPUs of an 8-GPU job at 11.25 s each: 40 x 11.25 s x 8 GPUs
+    assert script.timing_floor_hours(rule, 11.25, args) == pytest.approx(40 * 11.25 * 8 / 3600)
+    assert script.timing_floor_hours(rule, 11.25, args, allocation=False) == pytest.approx(
+        80 * 11.25 / 3600
+    )
+    assert script.timing_floor_hours(rule, None, args) == 0.5

@@ -6,18 +6,29 @@ Status: DRAFT for the program owner's review. Not frozen. Integrated on branch
 drafts `q1-stage0-mutant-corpus` and `q1-stage0-substrate-corpus` were never
 frozen; their rules are merged here, reconciled where they disagreed
 (section 15), and their files are removed, so one experiment id is frozen.
-No Stage 0 substrate, mutant or control has been scored on a GPU, and no
-confirmatory data exists. The only executions so far are infrastructure
+No Stage 0 data exists, but this draft is no longer blind to every Stage 0
+kernel. Before the pilot pass the only executions were infrastructure
 validation: CPU unit tests, CPU doctors in GPU-less containers, mock-H100
 codegen, sm_90 compiles without a device, and the CPU end-to-end integration
-test (`tests/test_q1_integration_cpu.py`). An adversarial review of
-`stage0/q1-gates@acb3bc8` found one critical, one high and four medium
-defects; the fix pass that answers it is recorded in section 16, and the
-version card in section 2.1 is the fixed code's. The pilot pass (sections 17
-and 18) ran three one-GPU lane jobs on trusted code only (0.899 GPU-h): it
-validated every GPU path, fixed what it found, and measured the cost card. Its
-projection of Stage 0 as drafted is about 1,056 GPU-h, far above the 8 GPU-h
-cap; section 18.5 proposes a trimming rule for the owner's decision.
+test (`tests/test_q1_integration_cpu.py`). The pilot pass (sections 17 and
+18) then ran three one-GPU lane jobs on trusted code only (0.899 GPU-h) and, at
+replicate 42 with the full gate and audit stack, scored five evaluation
+substrates (S1 L1/3, L2/3 and L2/74; the Liger cross-entropy and the Triton
+tutorial matmul) and part of a sixth (FlagGems cumsum), eight mutants of
+evaluation parents (three in the test split) and ten controls. Those verdicts
+are pilot infrastructure evidence, not Stage 0 data; the kernels are listed in
+`harness/q1/data/pilot_exposed.json` and handled by the rule of section 18.6
+(decision D26). An adversarial review of `stage0/q1-gates@acb3bc8` found one
+critical, one high and four medium defects; its fix pass is section 16 and the
+version card in section 2.1 is the current code's. The pilot projected Stage 0
+as drafted at about 1,056 GPU-h, far above the 8 GPU-h cap. A second
+adversarial review (of `@04c2934`) found that the proposed trimming rule
+`q1-stage0-trim/1` (section 18.5) dropped control kinds, had no margin for
+criterion 3, was not implemented in the Stage 0 driver and projected its fixed
+phases too low; its fix pass is section 18.6, which registers
+`q1-stage0-trim/2` and its corrected projection (about 7.6 GPU-h through its
+bucket P3, 11.0 through P7; the stop keeps the run under 8) for the owner's
+decision.
 
 Freezing is the program owner's step:
 
@@ -70,20 +81,22 @@ Version card (`python scripts/q1_version_card.py --markdown`):
 
 | Key | Value |
 |---|---|
-| `schema` | `q1-version-card/1` |
+| `schema` | `q1-version-card/2` |
 | `schema_py_sha256` | `c9bae9d502f7b9c83332f95e24fd9934d91bfe6cede47de527f6d584838b3256` |
 | `schema_version` | `q1-schema/1` |
-| `gate_code_sha256` | `08df7d53dd480967560166188f371c18f2e197e5816e6867707889a6952750b5` |
-| `gate_data_sha256` | `200fdacd8be621dccbd8c05c777c69e8dbe4dab70e74ae99de923eeef6d5a6af` |
+| `gate_code_sha256` | `0f3fd3cdb324c0f05adf60fb0d9cebc2a010ecd2b1f334db995498be1137f7f1` |
+| `gate_data_sha256` | `c9f5ecfa38f5528f0bf13202496389d8039428b8683b821c03267719ba6da85a` |
 | `shape_manifest_sha256` | `29e693ee4d77bc86e3ecfdb1000307b3878c023c6c6224f87c4fcfae74a220cb` |
-| `audit_code_sha256` | `2d1adf86c265a2e523c9f36aae3f8ca6fd81f7e069ac1d951c03274bdee190b1` |
-| `analysis_sha256` | `472deac3ef1db28098aab2c906c788a31cd324d0a80b3a796fd8c2511946e48c` |
+| `audit_code_sha256` | `8ed89f1548d5003da9398b494d29d239afab97fb9f921f32c688541d16fc7100` |
+| `analysis_sha256` | `d86f36525465ef016bfe8b37cc634a5196677cb70e270dc63448063f5d8bd9e7` |
+| `driver_sha256` | `876e03c57060bf63ed0a6425a798851025ddd214806ab0ad8fbb1f2ea3142e26` |
+| `trim_rule` | `q1-stage0-trim/2` |
 | `mutator_package_sha256` | `f4aa6e93214126b1fcc82964654833a2da419ff98e7d7b9d27fa24dc2f595296` |
 | `mutator_registry_fingerprint` | `43a1f0a234ad1c4a4421626d740989e01890b878c5ce7f2dec5739e3d43922a6` |
 | `mutator_operators` | `68` |
 | `mutant_split` | `v1/seed=42` |
-| `substrates_sha256` | `65bb08885d14ce25f9d838b86abe9f16cd5ebbaecab2d0f7d1f8382f715b54d1` |
-| `substrate_builders` | `["q1-inductor-convert/1", "q1-s2-build/1", "q1-substrate-admission/1"]` |
+| `substrates_sha256` | `8f03bde1b9f025a84d3833d082738af68793a886269f272830eb889a458a5080` |
+| `substrate_builders` | `["q1-inductor-convert/1", "q1-s2-build/2", "q1-substrate-admission/1"]` |
 | `s2_catalog_entries` | `25` |
 | `s1_split_sha256` | `b773f218f174e3bb8ab4fcde4f4e6318d870ef020e6b86bce807362c5292a0b2` |
 | `s1_split_sizes` | `[98, 98]` |

@@ -15,6 +15,11 @@ identifiers its own owner already records:
   be computed at calibration time);
 - ``analysis``: the analysis module, the report script that computes every
   preregistered metric, and the audit-hole replay and calibration drivers;
+- ``driver``: what decides what Stage 0 scores and how it runs (second review):
+  the trimming rule and its sampler (``trim.py``), the pilot module whose size
+  rules it uses (``pilot.py``: watchdog limits, the exclusive class), the cost
+  card that projects it (``cost_card.py`` and its script), the Stage 0 and pilot
+  drivers, and the pilot-records script that lists the pilot-exposed kernels;
 - ``mutator``: the mutator's own ``package_sha256`` and operator
   ``registry_fingerprint`` (both recorded in every corpus manifest);
 - ``substrates``: the substrate package with its vendored S2 sources, the
@@ -36,7 +41,7 @@ from typing import Any
 
 Q1_ROOT = Path(__file__).resolve().parent
 PROJECT_ROOT = Q1_ROOT.parents[1]
-CARD_SCHEMA = "q1-version-card/1"
+CARD_SCHEMA = "q1-version-card/2"
 
 #: Gate implementation and the execution path every gate row goes through.
 GATE_CODE_PATHS = (
@@ -62,6 +67,17 @@ ANALYSIS_PATHS = (
 )
 #: Substrate builders and their vendored upstream sources.
 SUBSTRATE_PATHS = ("substrates",)
+#: The Stage 0 plan and execution (relative to the project root).
+DRIVER_PATHS = (
+    "harness/q1/trim.py",
+    "harness/q1/pilot.py",
+    "harness/q1/cost_card.py",
+    "harness/q1/data/pilot_exposed.json",
+    "scripts/run_q1_stage0.py",
+    "scripts/run_q1_gpu_pilot.py",
+    "scripts/q1_pilot_cost_card.py",
+    "scripts/q1_pilot_records.py",
+)
 
 
 def _files(root: Path, entries: Iterable[str]) -> list[Path]:
@@ -114,7 +130,7 @@ def row_code_sha256(gate: str) -> str:
 
 def version_card() -> dict[str, Any]:
     """Every identifier the Stage 0 preregistration names (see the module docstring)."""
-    from harness.q1 import problems
+    from harness.q1 import problems, trim
     from harness.q1.mutate.corpus import package_sha256
     from harness.q1.mutate.operators import OPERATORS, registry_fingerprint
     from harness.q1.mutate.sampling import SPLIT_SEED, SPLIT_VERSION
@@ -132,6 +148,8 @@ def version_card() -> dict[str, Any]:
         "shape_manifest_sha256": sha256_file(Q1_ROOT / "data" / "shape_manifest.json"),
         "audit_code_sha256": audit_code_sha256(),
         "analysis_sha256": tree_sha256(PROJECT_ROOT, ANALYSIS_PATHS),
+        "driver_sha256": tree_sha256(PROJECT_ROOT, DRIVER_PATHS),
+        "trim_rule": trim.RULE_VERSION,
         "mutator_package_sha256": package_sha256(),
         "mutator_registry_fingerprint": registry_fingerprint(),
         "mutator_operators": len(OPERATORS),

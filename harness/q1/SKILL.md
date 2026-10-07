@@ -25,7 +25,13 @@ deterministic mutants. The draft preregistration is
 - `runner.py` runs one `worker.py` process per kernel x gate x seed with a
   phase watchdog and an append-only journal; `gates/` and `audit/` produce the
   rows; `analysis.py` composes the ladder, tiers, metrics and control checks.
-- `versions.py` is the version card the preregistration names.
+- `versions.py` is the version card the preregistration names; `driver_sha256`
+  binds what decides what Stage 0 scores (`trim.py`, `pilot.py`,
+  `cost_card.py`, `data/pilot_exposed.json` and the drivers).
+- `trim.py` is the trimming rule `q1-stage0-trim/2`: seeded frames and samples,
+  the FRR set with its margin, the control schedule, buckets P1-P8, the
+  concurrency units and the budget check. `scripts/run_q1_stage0.py` runs its
+  plan and nothing else; the report reads the same `plan.json`.
 
 ## Patterns to follow / invariants
 <!-- agent-docs:fill:patterns -->
@@ -46,6 +52,15 @@ deterministic mutants. The draft preregistration is
   under `TRITON_INTERPRET=1` in GPU-less containers only.
 - After any change to Q1 code or data, regenerate the preregistration's
   version table with `python scripts/q1_version_card.py --markdown`.
+- Every random choice of the trimming rule is a seeded permutation
+  (`trim.seed_of`); a sample is a prefix of it, so a cut leaves a simple random
+  sample. Never draw with an unseeded RNG or reorder a frame by outcome.
+- Pilot-exposed kernels (`data/pilot_exposed.json`, hash-pinned in
+  `trim.PILOT_EXPOSED_SHA256`) never enter a sampling frame; regenerate the file
+  only with `scripts/q1_pilot_records.py` and update the pin (decision D26).
+- An audit change chosen after seeing a pilot verdict is data-motivated: design
+  and validate it on S1-cal and non-evaluation kernels only, and name the units
+  it affects in `pilot_exposed.json["data_motivated_units"]`.
 
 ## Common tasks → first action
 <!-- agent-docs:fill:tasks -->
@@ -58,7 +73,10 @@ deterministic mutants. The draft preregistration is
 | Build controls | `python -m harness.q1.controls --out-root R` |
 | Calibrate the audit (M, audit v1) | `scripts/q1_calibrate_audit.py --journal CAL --corpus C --output audit-v1.json` |
 | Adjudicate gate rejections of audit-accepted kernels | `scripts/q1_audit_hole_replay.py --journal J --corpus C --output O --multiplier M --seeds 42 43 44` |
-| Write the Stage 0 report | `scripts/report_q1_stage0.py --journal J --corpus C --replay-journal O/journal.jsonl --calibration audit-v1.json --output R` |
+| Write the Stage 0 report | `scripts/report_q1_stage0.py --journal J --corpus C --replay-journal O/journal.jsonl --calibration audit-v1.json --plan PLAN.json --output R` |
+| Plan Stage 0 (CPU) | `scripts/run_q1_stage0.py --corpus C ... --output OUT --seeds 42 43 44 --plan-only` (records `plan_sha256`) |
+| Run a Stage 0 job | `experiments/manifests/q1-core/q1-stage0-trim-job.template.yaml` (buckets, plan hash, spent GPU-h and caps filled from the ledger) |
+| Bind pilot run records / list exposure | `scripts/q1_pilot_records.py --job RUNS/474 --job RUNS/518 --job RUNS/548 --corpus ... --records R --exposed E` |
 
 ## Gotchas
 <!-- agent-docs:fill:gotchas -->
@@ -78,9 +96,19 @@ deterministic mutants. The draft preregistration is
   compute: items of problems under 0.6 GB cost half as many GPU-seconds at 12
   per GPU as at 4 with identical verdicts (pilot job 548); problems of 1 GB or
   more run alone and can take over 10 minutes per gate (c on L1/89).
-- A worker crash after the candidate loads is a rejection, so a concurrency-
-  induced CUDA out-of-memory error would be charged to the candidate; it must
-  become an infrastructure failure before running more than 4 items per GPU
-  on problems above 0.6 GB.
-- The runner never journals an item it kills at the hard deadline;
-  `cost_card.censored_items` recovers it as a lower bound.
+- A worker crash after the candidate loads is a rejection. Since the second
+  review a shared item's watchdog timeout or CUDA out-of-memory error is an
+  infrastructure failure retried once alone (`runner.contention_failure`,
+  `retry_alone` survives a resume); alone, the outcome stands. Existing tests
+  that run a hanging kernel on two slots now see two timeouts.
+- The runner never journals an item it kills at the hard deadline; it records
+  it in `cut.jsonl` with spawn and kill times, and `cost_card.censored_items`
+  reads that (the pilot jobs predate it: mtimes, bound by
+  `program/evidence/2026-10-07/q1-pilot/run-records.json`). With
+  `fit_deadline` an item starts only if its watchdog limits end before the
+  hard deadline.
+- The c/b statistic is pinned in `analysis.c_over_b_statistic` (ratio of
+  medians of per-kernel cumulative cost); report the other readings, never
+  switch.
+- The compute-sanitizer row runs at a held-out shape and reports memcheck
+  alone; a post-launch crash there is A3's (`workload_raised_after_launch`).

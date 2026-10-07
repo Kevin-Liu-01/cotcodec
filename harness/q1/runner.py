@@ -12,6 +12,15 @@
   problem whose inputs alone fill much of the GPU) then waits until the
   device is empty and runs alone (``DeviceShare``), so concurrency can never
   turn a neighbour's memory use into a candidate's out-of-memory rejection.
+  Items may also hold a number of capacity ``units`` (the trimming rule's
+  concurrency classes, ``harness.q1.trim``): a device's capacity is the number
+  of slots naming it, and an item starts only when its units fit.
+- **Contention retries.** An item that ran in a shared class (fewer units than
+  the device's capacity) and either timed out or shows a CUDA out-of-memory
+  error is an infrastructure failure (``infra_failure-timeout-shared`` or
+  ``infra_failure-oom-shared``): its rows are journaled as not final with
+  ``retry_alone`` and it runs once more alone on its device (also after a
+  resume). Alone, the outcome stands.
 - **Watchdog.** Phases ``compile`` (from spawn), ``correctness`` and
   ``timing`` have their own limits (default 120 s, 180 s, 300 s). The child
   reports phase changes on a pipe; phases only move forward. On expiry the
@@ -35,8 +44,12 @@
   next attempt number.
 - **Time boxes.** ``soft_deadline`` stops slots from taking new items;
   ``hard_deadline`` kills running children (not journaled, like a signal,
-  but no checkpoint marker is written). Every row records
-  ``item_wall_seconds`` (spawn to verdict) for the cost card.
+  but no checkpoint marker is written). With ``fit_deadline``, an item starts
+  only if its watchdog limits (compile plus correctness, or timing) end before
+  the hard deadline, so a large item is deferred to the next job instead of
+  being started and killed. Every killed item is recorded in ``cut.jsonl``
+  next to the journal with its spawn and kill times (censored cost). Every
+  row records ``item_wall_seconds`` (spawn to verdict) for the cost card.
 - **Signals.** Under the lane's checkpoint contract (docs/operations.md), SIGUSR1
   or SIGTERM stops scheduling and kills running children (their items are not
   journaled and rerun on resume). Once the journal is complete, the runner
@@ -63,7 +76,7 @@ import threading
 import time
 import uuid
 from collections.abc import Iterable, Mapping, Sequence
-from dataclasses import asdict, dataclass, field
+from dataclasses import asdict, dataclass, field, replace
 from pathlib import Path
 from typing import Any
 
@@ -102,6 +115,8 @@ class WorkItem:
     #: Per-item phase limits overriding the runner's (a preregistered size rule,
     #: e.g. ``harness.q1.pilot.watchdog_limits``); ``None`` keeps the defaults.
     timeouts: dict[str, float] | None = None
+    #: Capacity units held on the device (``None``: one unit; ``exclusive``: all).
+    units: int | None = None
 
     @property
     def key(self) -> str:
@@ -131,46 +146,78 @@ class RunnerConfig:
     #: ``time.monotonic()`` after which running children are killed; their
     #: items are not journaled (as on a signal) and are counted as cut.
     hard_deadline: float | None = None
+    #: Start an item only if its watchdog limits end before ``hard_deadline``.
+    fit_deadline: bool = False
 
 
 class DeviceShare:
-    """Readers-writer admission per device: shared items run together up to the
-    slot count; an exclusive item waits until the device is empty and blocks new
-    items until it finishes (writer preference, so it cannot starve)."""
+    """Capacity admission per device: an item holds ``units`` of the device's
+    ``capacity`` (the number of slots naming it); an exclusive item holds all of it.
+    A waiting request larger than one unit blocks smaller new ones until it is
+    admitted (writer preference), so a large or exclusive item cannot starve."""
 
-    def __init__(self) -> None:
+    def __init__(self, capacity: int = 1) -> None:
         self._cond = threading.Condition()
-        self._running = 0
-        self._exclusive = False
-        self._waiting_exclusive = 0
+        self.capacity = max(1, int(capacity))
+        self._used = 0
+        self._waiting_large = 0
 
-    def acquire(self, exclusive: bool, stopped: threading.Event) -> bool:
+    def units_for(self, exclusive: bool, units: int | None) -> int:
+        if exclusive:
+            return self.capacity
+        return max(1, min(self.capacity, int(units or 1)))
+
+    def acquire(self, exclusive: bool, stopped: threading.Event, units: int | None = None) -> bool:
+        need = self.units_for(exclusive, units)
         with self._cond:
-            if exclusive:
-                self._waiting_exclusive += 1
-                try:
-                    while self._running or self._exclusive:
-                        if stopped.is_set():
-                            return False
-                        self._cond.wait(0.5)
-                finally:
-                    self._waiting_exclusive -= 1
-                self._exclusive = True
-            else:
-                while self._exclusive or self._waiting_exclusive:
+            large = need > 1
+            if large:
+                self._waiting_large += 1
+            try:
+                while self._used + need > self.capacity or (not large and self._waiting_large):
                     if stopped.is_set():
                         return False
                     self._cond.wait(0.5)
-                self._running += 1
+            finally:
+                if large:
+                    self._waiting_large -= 1
+            self._used += need
             return True
 
-    def release(self, exclusive: bool) -> None:
+    def release(self, exclusive: bool, units: int | None = None) -> None:
         with self._cond:
-            if exclusive:
-                self._exclusive = False
-            else:
-                self._running -= 1
+            self._used -= self.units_for(exclusive, units)
             self._cond.notify_all()
+
+
+#: Text that marks a CUDA out-of-memory failure in rows or a worker log.
+OOM_MARKERS = (
+    "outofmemoryerror",
+    "cuda out of memory",
+    "cuda error: out of memory",
+    "cudaerrormemoryallocation",
+    "cuda_error_out_of_memory",
+)
+
+
+def contention_failure(rows: Sequence[Mapping[str, Any]]) -> str | None:
+    """``timeout-shared`` or ``oom-shared`` when an item's rows show a watchdog
+    timeout or a CUDA out-of-memory error (only meaningful for a shared item)."""
+    if any(row["verdict"] == "timeout" for row in rows):
+        return "timeout-shared"
+    for row in rows:
+        text = json.dumps(row.get("details", {}), default=str).lower()
+        if any(marker in text for marker in OOM_MARKERS):
+            return "oom-shared"
+    return None
+
+
+def item_budget_seconds(item: WorkItem, timeouts: Mapping[str, float]) -> float:
+    """The longest an item can run before its watchdog ends it."""
+    limits = {**DEFAULT_TIMEOUTS, **dict(timeouts), **(item.timeouts or {})}
+    if item.is_timing:
+        return limits["compile"] + limits["timing"]
+    return limits["compile"] + limits["correctness"]
 
 
 def _set_pdeathsig() -> None:
@@ -196,6 +243,8 @@ class Runner:
         self.expired = False
         self._children: set[subprocess.Popen] = set()
         self._shares: dict[str, DeviceShare] = {}
+        self.deferred: list[str] = []
+        self.cut_path = config.journal_path.with_name("cut.jsonl")
 
     def expire(self) -> None:
         """Hard time box: stop scheduling and kill children, without a signal trigger
@@ -262,7 +311,14 @@ class Runner:
             if entry and entry["final"]:
                 self.summary["skipped"] += 1
                 continue
+            if entry and entry.get("retry_alone") and not item.exclusive:
+                item = replace(item, exclusive=True)
             pending.append((item, (entry["attempt"] + 1) if entry else 1))
+        for slot in {*self.config.slots, *self.config.timing_slots}:
+            capacity = list(self.config.slots).count(slot) + list(self.config.timing_slots).count(
+                slot
+            )
+            self._shares.setdefault(slot, DeviceShare(capacity))
         correctness: queue.Queue = queue.Queue()
         timing: queue.Queue = queue.Queue()
         for item, attempt in pending:
@@ -290,7 +346,8 @@ class Runner:
             **self.summary,
             "retired_slots": self.retired_slots,
             "run_id": self.config.run_id,
-            "left_in_queue": correctness.qsize() + timing.qsize(),
+            "left_in_queue": correctness.qsize() + timing.qsize() + len(self.deferred),
+            "deferred_by_deadline": len(self.deferred),
             "time_boxed": self.expired
             or (
                 self.config.soft_deadline is not None
@@ -299,7 +356,32 @@ class Runner:
             ),
         }
 
+    def _fits(self, item: WorkItem) -> bool:
+        if not self.config.fit_deadline or self.config.hard_deadline is None:
+            return True
+        budget = item_budget_seconds(item, self.config.timeouts)
+        return time.monotonic() + budget <= self.config.hard_deadline
+
+    def _record_cut(self, item: WorkItem, attempt: int, rows: list[dict], slot: str) -> None:
+        """A killed item is not journaled; its spawn and kill times are kept for the
+        cost card (a censored lower bound on its cost)."""
+        started = rows[0]["details"].get("item_started_at") if rows else None
+        record = {
+            "item_key": item.key,
+            "attempt": attempt,
+            "slot": slot,
+            "units": item.units,
+            "exclusive": item.exclusive,
+            "started_at": started,
+            "killed_at": round(time.time(), 3),
+            "reason": "hard-deadline" if self.expired else f"signal-{self.trigger}",
+            "run_id": self.config.run_id,
+        }
+        with self._lock, self.cut_path.open("a", encoding="utf-8") as handle:
+            handle.write(json.dumps(record, sort_keys=True) + "\n")
+
     def _slot_loop(self, slot: str, work: queue.Queue) -> None:
+        share = self._shares.setdefault(slot, DeviceShare())
         while not self.stopped.is_set():
             if (
                 self.config.soft_deadline is not None
@@ -310,28 +392,40 @@ class Runner:
                 item, attempt = work.get_nowait()
             except queue.Empty:
                 return
-            with self._lock:
-                share = self._shares.setdefault(slot, DeviceShare())
-            if not share.acquire(item.exclusive, self.stopped):
+            if not self._fits(item):
+                with self._lock:
+                    self.deferred.append(item.key)
+                continue  # left for the next job (resume); never started and killed
+            if not share.acquire(item.exclusive, self.stopped, item.units):
                 return  # stopped while waiting; the item reruns on resume
+            alone = item.exclusive or share.units_for(False, item.units) >= share.capacity
             try:
                 rows, healthy = self.execute(item, attempt, slot)
             finally:
-                share.release(item.exclusive)
+                share.release(item.exclusive, item.units)
             if self.stopped.is_set():
+                self._record_cut(item, attempt, rows, slot)
                 return  # an interrupted item is not journaled; it reruns on resume
             infra = is_infra_failure(rows)
-            if infra and attempt < MAX_INFRA_ATTEMPTS:
+            contention = None if alone or item.is_timing else contention_failure(rows)
+            retry = (infra or contention is not None) and attempt < MAX_INFRA_ATTEMPTS
+            if retry:
                 for row in rows:  # journaled for the record, but not final
                     row["details"]["item_final"] = False
+                    if contention is not None:
+                        row["details"]["retry_alone"] = True
+                        row["details"]["infra_failure_kind"] = f"infra_failure-{contention}"
             with self._lock:
                 self.journal.append(rows)
                 self.summary["run"] += 1
                 if infra:
                     self.summary["infra_failures"] = self.summary.get("infra_failures", 0) + 1
+                if contention is not None:
+                    key = f"contention_{contention.replace('-', '_')}"
+                    self.summary[key] = self.summary.get(key, 0) + 1
                 self.write_progress()
-            if infra and attempt < MAX_INFRA_ATTEMPTS:
-                work.put((item, attempt + 1))
+            if retry:
+                work.put((replace(item, exclusive=True) if contention else item, attempt + 1))
             if not healthy:
                 with self._lock:
                     self.retired_slots.append(slot)
@@ -364,6 +458,7 @@ class Runner:
             "attempt": attempt,
             "device": "cuda:0" if slot.startswith("cuda:") else "cpu",
             "workdir": str(workdir),
+            "spawned_at": round(time.time(), 3),
         }
         if slot.startswith("cuda:") and item.is_timing:
             payload["options"] = {**item.options, "gpu_index": int(slot.split(":", 1)[1])}
@@ -442,6 +537,8 @@ class Runner:
             row["details"]["item_started_at"] = round(started_at, 3)
             row["details"]["item_ended_at"] = round(started_at + wall, 3)
             row["details"]["item_exclusive"] = item.exclusive
+            if item.units is not None:
+                row["details"]["item_units"] = item.units
             if item.timeouts:
                 row["details"]["item_timeouts"] = dict(item.timeouts)
         rows[-1]["details"]["item_final"] = True

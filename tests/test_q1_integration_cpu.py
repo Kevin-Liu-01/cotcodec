@@ -436,3 +436,76 @@ def test_metrics_and_report_run_on_the_journal(run: dict, tmp_path: Path) -> Non
     replicate = report["replicates"]["42"]
     assert replicate["controls"][analysis.PRIMARY_POLICY]["cells"] > 0
     assert set(replicate["metrics"]) == {"test", "dev"}
+
+
+def test_trim_plan_driver_and_report_on_the_cpu_journal(run: dict, tmp_path: Path) -> None:
+    """Second review, findings 3 and 8: the trimming rule's plan is computed from the
+    corpus (seeded frames, samples and schedule), the Stage 0 driver plans the same
+    thing and refuses to score without its budget, and the report reads the plan
+    for the trimmed weights, the control schedule and the pilot-exposure analysis."""
+    from harness.q1 import trim
+
+    sys.path.insert(0, str(ROOT))
+    from scripts import report_q1_stage0, run_q1_stage0
+
+    rule = {**trim.TRIM_RULE, "scope_bytes": 10**13, "frr_min_units": 1, "frr_margin_units": 0}
+    records = trim.records_from_corpus(run["roots"])
+    kinds = {r.kernel_id: r for r in records}
+    assert kinds[S2_SOFTMAX].half == "evaluation" and kinds[S1_RELU].half == "calibration"
+    record = trim.plan(records, rule=rule, exposed=trim.load_exposed())
+    planned = {(i["bucket"], i["kernel_id"], i["seed"]) for i in record["items"]}
+    assert ("P1", S2_SOFTMAX, 42) in planned and ("P5", S2_SOFTMAX, 44) in planned
+    # mutants of the S1-cal ReLU are never sampled; the softmax's are, as prefixes
+    sampled = {k for f in record["mutant_sample"].values() for k in f["test_quota"]}
+    assert sampled and all(kinds[k].parent == S2_SOFTMAX for k in sampled)
+    assert all(
+        f["test_quota"] == record["mutant_frames"][family]["test"][: len(f["test_quota"])]
+        for family, f in record["mutant_sample"].items()
+    )
+    plan_path = tmp_path / "plan.json"
+    plan_path.write_text(json.dumps(record))
+    # The driver (registered rule) plans on the CPU and refuses to score over budget.
+    out = tmp_path / "stage0"
+    argv = ["--output", str(out), "--seeds", "42", "43", "44"]
+    for root in run["roots"]:
+        argv += ["--corpus", str(root)]
+    assert run_q1_stage0.main([*argv, "--plan-only"]) == 0
+    driver_plan = json.loads((out / "plan.json").read_text())
+    assert driver_plan["plan_sha256"] == trim.plan_digest(driver_plan)
+    budget = [
+        "--expected-plan-sha256",
+        driver_plan["plan_sha256"],
+        "--stage0-spent-gpu-hours",
+        "0.899",
+        "--job-cap-gpu-hours",
+        "7.0",
+        "--reserve-gpu-hours",
+        "1.5",
+        "--budget-minutes",
+        "420",
+    ]
+    assert run_q1_stage0.main([*argv, *budget]) == 2
+    assert not json.loads((out / "budget.json").read_text())["ok"]
+    assert not (out / "journal.jsonl").exists()
+    wrong = [*argv, *budget]
+    wrong[wrong.index("--expected-plan-sha256") + 1] = "0" * 64
+    assert run_q1_stage0.main(wrong) == 2
+    # The report under the plan: trimmed weights, scheduled controls, sensitivity.
+    output = tmp_path / "report.json"
+    rargv = ["--journal", str(run["journal"].path), "--output", str(output)]
+    for root in run["roots"]:
+        rargv += ["--corpus", str(root)]
+    rargv += ["--plan", str(plan_path), "--seeds", "42", "--resamples", "50"]
+    assert report_q1_stage0.main(rargv) == 0
+    report = json.loads(output.read_text())
+    assert report["trim_plan_sha256"] == record["plan_sha256"]
+    assert report["trim_weights"]["factors"]
+    replicate = report["replicates"]["42"]
+    controls = replicate["controls"][analysis.PRIMARY_POLICY]
+    scheduled = trim.scheduled_controls(record)[42]
+    assert set(controls["not_scheduled"]) == {
+        k for k, v in run["table"].items() if v["kind"] == "control" and k not in scheduled
+    }
+    assert "criterion_3_FRR_c" in replicate["sensitivity_without_pilot_exposed"]
+    assert "problems_at_or_above_threshold" in report["audit_tolerance"]
+    assert "kernels_shifted" in replicate["sanitizer_shift"]
