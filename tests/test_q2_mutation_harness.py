@@ -462,6 +462,12 @@ def test_report_aggregate_counts_fixed_point_and_flips() -> None:
     assert out["lock"]["k1_gold_pass_and_do_nothing_fail"] == "2/2"
     assert out["lock"]["gold_fixed_point_flips"] == 1 and out["lock"]["gold_fixed_point_n"] == 2
     assert [f["candidate"] for f in out["dependency_flips"]] == ["initial_raw"]
+    tasks["t1"]["initial_raw_scout"] = {**v("pass", 1.0), "nondeterministic": True}
+    again = report.aggregate(tasks)
+    assert again["dependency_flips"] == []
+    assert again["venv_differences_from_nondeterministic_checkers"] == [
+        {"task_id": "t1", "candidate": "initial_raw"}
+    ]
     assert out["saves"] == {
         "n": 1,
         "written": 1,

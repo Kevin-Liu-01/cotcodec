@@ -131,12 +131,18 @@ def aggregate(tasks: Mapping[str, Mapping[str, Any]]) -> dict[str, Any]:
             "do_nothing_saved_passes": len(dn_saved_pass),
         }
     flips = []
+    unstable: list[dict[str, str]] = []
     for task_id, t in tasks.items():
         for kind in ("gold", "initial"):
             for source in ("raw", "saved"):
                 a = t.get(f"{kind}_{source}_lock")
                 b = t.get(f"{kind}_{source}_scout")
-                if a and b and (a["verdict"], a["score"]) != (b["verdict"], b["score"]):
+                if not (a and b) or (a["verdict"], a["score"]) == (b["verdict"], b["score"]):
+                    continue
+                if a.get("nondeterministic") or b.get("nondeterministic"):
+                    # S1 counts a flip only when each venv is stable on repeat.
+                    unstable.append({"task_id": task_id, "candidate": f"{kind}_{source}"})
+                else:
                     flips.append(
                         {
                             "task_id": task_id,
@@ -146,6 +152,7 @@ def aggregate(tasks: Mapping[str, Mapping[str, Any]]) -> dict[str, Any]:
                         }
                     )
     out["dependency_flips"] = flips
+    out["venv_differences_from_nondeterministic_checkers"] = unstable
     saves = [
         s
         for t in tasks.values()

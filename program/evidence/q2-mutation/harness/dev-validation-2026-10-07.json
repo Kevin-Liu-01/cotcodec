@@ -1,5 +1,5 @@
 {
- "dependency_flips_v4": [],
+ "dependency_flips": [],
  "gold_fixed_point": {
   "flipped_task": "af23762e-2bfd-4a1d-aada-20fa8de9ce07 (compare_pptx_files): after the GUI-faithful save, slide 5 shape 1 paragraph 1 alignment reads CENTER where the gold reads LEFT; the gold passes against itself. Candidate false negative, to be audited.",
   "flips_lock": 1,
@@ -10,13 +10,15 @@
    0.24638731166898786
   ]
  },
- "harness_revision": "afda4fe39daf3e498fca4dc52c86a6e00b881942",
+ "harness_revision": "8ecf2fb6d1ea6d803a9945bfb78d82b399e0225f",
  "images": {
   "lo_vm": "sha256:f5b4c40eefd2b92f846652910ba34db35e1ae7bf90fa474595cc745cc5895361",
   "metric": "sha256:2006c1a9247e4911a82508cd22e9d9a7efc5c13e35a20e8a03baac7112876230"
  },
  "infrastructure_notes": [
-  "v1/v2 of the save stage failed for harness reasons fixed in later commits (profile permissions, missing passwd entry for uid 1004, xdotool absent from the VM, pyautogui in the VM user's site-packages, comma-split mounts); v3 scoring used 16 scorers with default BLAS threads and one scikit-image scoring timed out; v4 uses one thread per scorer."
+  "Runs v1-v3 of the save stage failed or were repaired for harness reasons fixed in later commits: profile permissions, a missing passwd entry for uid 1004 (LibreOffice hung at start-up), xdotool absent from the VM (keys now go through the VM's pyautogui), pyautogui living in the VM user's site-packages, and comma-split mounts.",
+  "v3 and v5 each had one scoring stall to the 300 s timeout while its repeat finished at once (check_triangle_position, compare_table); v4 added one BLAS thread per scorer, v6 reads the result queue before joining and retries timeouts as infrastructure failures. v6 had zero timeouts.",
+  "Earlier summaries (v2-v5) stay on the host under runs/; v6 is the reference dev validation at the harness revision above."
  ],
  "k1_raw_gold_pass_and_do_nothing_fail": {
   "lock": "19/19",
@@ -52,7 +54,7 @@
   "note": "The test suite draws a random tetromino; the unmodified initial code passes about 3 in 10 times in both venvs. An apparent lock-vs-scout flip in dev-controls-v2/v3 was this nondeterminism, not a dependency effect.",
   "task": "9219480b-3aed-47fc-8bac-d2cffc5849f7 (check_python_file_by_test_suite)"
  },
- "run": "dev-controls-v4",
+ "run": "dev-controls-v6",
  "save_note": "Ctrl+S on a freshly loaded, unmodified document rewrote the file in every case; no dialog appeared (VM profile has WarnAlienFormat=false); no write took longer than 0.5 s.",
  "saves": {
   "changed_bytes": 35,
@@ -62,14 +64,21 @@
   "written": 35
  },
  "slurm_jobs": [
-  416,
-  417,
-  418
+  424,
+  425,
+  426
  ],
  "status": "exploratory: development split only (32 tasks), harness validation before the preregistration freeze",
+ "summary_file": "harness/dev-controls-v6-summary.json",
  "task_defects_seen": [
   "2b94c692-6abb-48ae-ab0b-b3e8a19cb340: gold byte-identical to the initial file (no positive control)",
   "936321ce-5236-426a-9a20-e0e3c5dc536f: postconfig activates 'Graphemes_Sound_Letter_Patterns_Gold.docx - LibreOffice Writer' but the result file is Graphemes_Sound_Letter_Patterns.docx, so wmctrl -Fa cannot match in the VM either",
   "415ef462-bed3-493a-ac36-ca8c6d23bf1b: second metric reads a diff of an agent-moved PDF produced in postconfig; no gold end state exists for it"
+ ],
+ "venv_differences_from_nondeterministic_checkers": [
+  {
+   "candidate": "initial_saved",
+   "task_id": "9219480b-3aed-47fc-8bac-d2cffc5849f7"
+  }
  ]
 }
