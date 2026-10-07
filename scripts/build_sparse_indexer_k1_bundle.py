@@ -22,6 +22,7 @@ from __future__ import annotations
 import argparse
 import gzip
 import hashlib
+import io
 import json
 import os
 import sys
@@ -328,7 +329,11 @@ def _fetch_pair(pair: str, raw_dir: str, tokenizer_path: str, cross_cap: int,
     quota = int(PAIR_QUOTA_TOKENS * COLLECT_MARGIN * (SAME_SCRIPT_COLLECT_FACTOR if same
                                                       else 1.0))
     temporary = destination.with_suffix(".part")
-    with gzip.open(temporary, "wt", encoding="utf-8", compresslevel=6, mtime=0) as handle:
+    # A fixed gzip header (no file name, mtime 0) keeps the filtered file's digest a
+    # function of its content.
+    with temporary.open("wb") as raw_handle, gzip.GzipFile(
+        filename="", mode="wb", fileobj=raw_handle, compresslevel=6, mtime=0
+    ) as compressed, io.TextIOWrapper(compressed, encoding="utf-8") as handle:
 
         def sink(row: dict[str, Any], handle: Any = handle) -> None:
             handle.write(json.dumps(row, ensure_ascii=False, sort_keys=True) + "\n")
