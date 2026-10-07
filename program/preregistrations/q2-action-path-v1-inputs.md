@@ -139,10 +139,12 @@ file equals it), so freezing the catalog fixes them.
 - **Judging** (`verdict.py`, `suite.py`, `desktop.py`). `desktop.py`
   reproduces OSWorld `b138d348`'s `DesktopEnv.step` and controller calls
   (retries, timeouts, the PyAutoGUI prefix) and records the infrastructure
-  failure types of section 6.1: an `/execute` whose first attempt is not HTTP
-  200 within 30 s, a screenshot or (in the accessibility setting) a tree that
-  `DesktopEnv`'s three attempts do not deliver; a retry that delivers is
-  reported (`observation_retries`), not a failure. `suite.py` runs a session
+  failure types of main section 6.1: an `/execute` whose first attempt is not
+  HTTP 200 within 30 s, a screenshot or (in the accessibility setting) a tree
+  that `DesktopEnv`'s three attempts do not deliver; a retry that delivers is
+  reported (`observation_retries`), not a failure. `suite.py` adds
+  `guest_server_restart` when the guard's reports before and after an entry
+  name different guest-server processes. `suite.py` runs a session
   (tap, probe, the guard's warm-up, `DesktopEnv.reset`'s observation, pre and
   post guards, actions, marker) and assembles each trial's observation;
   `verdict.py` applies sections 4.3 and 5. The lane (`runner.py`,
