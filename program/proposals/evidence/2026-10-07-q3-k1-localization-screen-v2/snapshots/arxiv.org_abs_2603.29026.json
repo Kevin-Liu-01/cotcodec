@@ -1,0 +1,25 @@
+{
+ "url": "https://arxiv.org/abs/2603.29026",
+ "fetched_at": "2026-10-07T20:59:25Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 39846,
+ "raw_sha256": "9c290d83c4484f5497993dffe6b090f44f3c2fd183c41d62d6351a20be07ae0d",
+ "raw_stored": false,
+ "extract": {
+  "title": "On the limited utility of parallel data for learning shared multilingual representations",
+  "authors": [
+   "Leino, Julius",
+   "Tiedemann, Jörg"
+  ],
+  "citation_date": "2026/03/30",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Mon, 30 Mar 2026 21:37:34 UTC"
+   }
+  ],
+  "abstract": "Shared multilingual representations are essential for cross-lingual tasks and knowledge transfer across languages. This study looks at the impact of parallel data, i.e. translated sentences, in pretraining as a signal to trigger representations that are aligned across languages. We train reference models with different proportions of parallel data and show that parallel data seem to have only a minimal effect on the cross-lingual alignment. Based on multiple evaluation methods, we find that the effect is limited to potentially accelerating the representation sharing in the early phases of pretraining, and to decreasing the amount of language-specific neurons in the model. Cross-lingual alignment seems to emerge on similar levels even without the explicit signal from parallel data.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}

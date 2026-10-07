@@ -1,0 +1,29 @@
+{
+ "url": "https://arxiv.org/abs/2004.05484",
+ "fetched_at": "2026-10-07T20:58:36Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 41295,
+ "raw_sha256": "88367500d9b4e9abdbee303bd2803e765ec41c08a165558a86ad351b9ac48035",
+ "raw_stored": false,
+ "extract": {
+  "title": "LAReQA: Language-agnostic answer retrieval from a multilingual pool",
+  "authors": [
+   "Roy, Uma",
+   "Constant, Noah",
+   "Al-Rfou, Rami",
+   "Barua, Aditya",
+   "Phillips, Aaron",
+   "Yang, Yinfei"
+  ],
+  "citation_date": "2020/04/11",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Sat, 11 Apr 2020 20:51:11 UTC"
+   }
+  ],
+  "abstract": "We present LAReQA, a challenging new benchmark for language-agnostic answer retrieval from a multilingual candidate pool. Unlike previous cross-lingual tasks, LAReQA tests for \"strong\" cross-lingual alignment, requiring semantically related cross-language pairs to be closer in representation space than unrelated same-language pairs. Building on multilingual BERT (mBERT), we study different strategies for achieving strong alignment. We find that augmenting training data via machine translation is effective, and improves significantly over using mBERT out-of-the-box. Interestingly, the embedding baseline that performs the best on LAReQA falls short of competing baselines on zero-shot variants of our task that only target \"weak\" alignment. This finding underscores our claim that languageagnostic retrieval is a substantively new kind of cross-lingual evaluation.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}

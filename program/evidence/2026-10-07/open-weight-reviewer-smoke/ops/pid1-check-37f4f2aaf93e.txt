@@ -1,0 +1,4 @@
+doctor pass True 0.31.0
+hang-exit as PID 1: exit 0 in 1.3 s; status PARSED timeout after 1 s; marker absent
+USR1 as PID 1 while generating: exit 3, 0.08 s after the signal; status INTERRUPTED ['SIGUSR1']; marker trigger=SIGUSR1
+TERM as PID 1 while generating: exit 3, 0.08 s after the signal; status INTERRUPTED ['SIGTERM']; marker trigger=SIGTERM

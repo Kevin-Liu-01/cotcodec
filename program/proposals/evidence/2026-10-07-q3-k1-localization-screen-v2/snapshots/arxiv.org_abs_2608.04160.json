@@ -1,0 +1,25 @@
+{
+ "url": "https://arxiv.org/abs/2608.04160",
+ "fetched_at": "2026-10-07T20:58:21Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 43446,
+ "raw_sha256": "1c7877f4d704cfad123aab9cd9b29dd5bbd24441f07914f286270a2f7d58562d",
+ "raw_stored": false,
+ "extract": {
+  "title": "Mind the Cap: Output-Budget Regimes Change the Measured Multilingual Reasoning Gap",
+  "authors": [
+   "Goyal, Ankit",
+   "Ray, Jaideep"
+  ],
+  "citation_date": "2026/08/04",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Tue, 4 Aug 2026 19:18:41 UTC"
+   }
+  ],
+  "abstract": "Multilingual evaluations report accuracy at a single output-token cap, but languages need different numbers of tokens to express the same content, so the cap is a hidden experimental variable. We test whether the native-vs-translate gap on MGSM (German, Thai, Swahili) is a token-budget artifact for Qwen3-8B and Llama-3.1-8B-Instruct under four prompting strategies. The measured gap swings by up to 57 points across budgets, length normalization moves it by up to 38.9 points where the cap binds, and at tight caps normalization can reverse which strategy scores higher. We prospectively froze the sweep's three Qwen peaks and its near-zero value at 1024 and evaluated them on 540,000 independently hard-capped decodes: a second frozen family of six Holm-corrected tests rejects every null. The frozen test at $B^*=1024$ still fails to reject because native accuracy has already saturated there; above saturation, the residual difference is a strategy-performance gap, not an identified reasoning deficit. The same truncation channel prices a cost-ordered adaptation ladder: a cross-fitted Thai vocabulary extension closes 0.0 points of the gap at the frozen budget and 4.9 points where 19% of traces still truncate. A third frozen family varies only the announced budget at a fixed enforced cap; announcing 128 rather than 2048 tokens moves Thai native accuracy by 5.1 points, so accuracy is not a function of the enforced cap alone. A correct-emission timing identity computed from one long-cap run matches the three pre-specified MGSM peaks to 0.65 points and, in an exploratory Qwen-only analysis of three further benchmarks, tracks held-out items to 0.92 points, locating the peak exactly in five of seven cells. Treat the output cap as an independent variable and report accuracy across the budget regime, not at a single budget.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}
