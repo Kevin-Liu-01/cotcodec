@@ -98,5 +98,9 @@ def test_main_phase_writes_a_verdict_and_refuses_a_rerun(tiny, tmp_path) -> None
     assert receipt["seed_noise"]["degrees_of_freedom"] == 4
     assert receipt["hashes"]["lr_freeze_sha256"]
     assert len(receipt["stream_dev_kl"]) == 4 * 18
+    hs = receipt["targets"]["hs"]
+    assert {"S_vs_U_cx", "S_vs_Uk_cx", "lambda_en", "lambda_x"} <= set(hs)
+    assert any("depth=" in key for key in receipt["descriptive"]["main_by_depth"])
+    assert [w["final_step"] for w in receipt["training_workers"]] == [6, 6]
     again = tiny.run("0a-k1", tmp_path / "main")
     assert again.returncode == 2

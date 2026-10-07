@@ -968,6 +968,59 @@ def descriptive_tables(prompts: Sequence[Mapping[str, Any]], results: Mapping[st
     }
 
 
+def depth_tables(prompts: Sequence[Mapping[str, Any]], results: Mapping[str, Any],
+                 context_meta: Sequence[Mapping[str, Any]], role: str) -> dict[str, Any]:
+    """Per condition and needle depth: mean recall of every selector (descriptive)."""
+
+    rows = results["rows"]
+    selectors = results["selectors"]
+    sums: dict[str, np.ndarray] = {}
+    counts: dict[str, int] = {}
+    for prompt in prompts:
+        if prompt["role"] != role:
+            continue
+        depth = context_meta[int(prompt["context_index"])]["depth"]
+        key = f"{prompt['condition']}|depth={depth}"
+        sums[key] = sums.get(key, 0.0) + rows[prompt["prompt_id"]]["recall"].mean(axis=0)
+        counts[key] = counts.get(key, 0) + 1
+    return {key: {"n": counts[key],
+                  "mean_recall": dict(zip(selectors, (sums[key] / counts[key]).tolist(),
+                                          strict=True))}
+            for key in sorted(sums)}
+
+
+def reference_and_literal_rows(prompts: Sequence[Mapping[str, Any]], results: Mapping[str, Any],
+                               target: str, seeds: Sequence[int]) -> dict[str, Any]:
+    """S_T against U and U_k on CX, and Lambda = R(ML) - R(MN) by needle language group."""
+
+    rows = results["rows"]
+    selectors = results["selectors"]
+
+    def indexer(row: Mapping[str, Any]) -> float:
+        return float(np.mean([prompt_recall(row, selectors, f"I:{target}:{s}") for s in seeds]))
+
+    cx = [rows[p["prompt_id"]] for p in prompts if p["role"] == "main" and p["condition"] == "CX"]
+    out: dict[str, Any] = {
+        "S_vs_U_cx": float(np.mean([prompt_recall(r, selectors, "U") - indexer(r) for r in cx])),
+        "S_vs_Uk_cx": float(np.mean([prompt_recall(r, selectors, "Uk") - indexer(r)
+                                     for r in cx])),
+    }
+    for group in ("en", "x"):
+        literal = [rows[p["prompt_id"]] for p in prompts if p["role"] == "literal"
+                   and (p["pair"] == "en>en") == (group == "en")]
+        mn = [rows[p["prompt_id"]] for p in prompts if p["role"] == "main"
+              and p["condition"] == "MN" and p["pair"].startswith("en>") == (group == "en")]
+        if not literal or not mn:
+            continue
+        out[f"lambda_{group}"] = {
+            "target": float(np.mean([prompt_recall(r, selectors, f"T:{target}") for r in literal])
+                            - np.mean([prompt_recall(r, selectors, f"T:{target}") for r in mn])),
+            "indexer": float(np.mean([indexer(r) for r in literal])
+                             - np.mean([indexer(r) for r in mn])),
+        }
+    return out
+
+
 def summarise_headroom(prompts: Sequence[Mapping[str, Any]], results: Mapping[str, Any],
                        targets: Sequence[str], present_role: str, absent_role: str,
                        replicates: int = k1s.BOOTSTRAP_REPLICATES) -> dict[str, Any]:
@@ -1034,6 +1087,7 @@ __all__ = [
     "build_family_table",
     "collect_eval",
     "config_digest",
+    "depth_tables",
     "descriptive_tables",
     "epoch_order",
     "freeze_learning_rates",
@@ -1041,6 +1095,7 @@ __all__ = [
     "learning_rate",
     "lr_tag",
     "plan_units",
+    "reference_and_literal_rows",
     "run_devkl_worker",
     "run_eval_worker",
     "run_training_worker",
