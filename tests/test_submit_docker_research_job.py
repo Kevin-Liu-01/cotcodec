@@ -231,7 +231,9 @@ def test_docker_manifest_binds_generic_study_artifact_read_only() -> None:
     manifest = validate_manifest(raw)
     assert manifest["study_artifact"]["container_path"] == "/inputs/study-artifact.json"
     export = next(
-        value for value in sbatch_argv(manifest, test_only=True) if value.startswith("--export=")
+        value
+        for value in sbatch_argv(manifest, test_only=True)
+        if value.startswith("--export=")
     )
     assert "COTCODEC_STUDY_ARTIFACT_HOST_HEX=" in export
     assert "COTCODEC_STUDY_ARTIFACT_SHA256=" + "4" * 64 in export

@@ -20,7 +20,6 @@ def canonical_json(value: Any) -> str:
 def sha256_text(value: str) -> str:
     return hashlib.sha256(value.encode()).hexdigest()
 
-
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 PUBLICATION_TRUST_ROOT = Path("/etc/cotcodec/trust")
 PUBLICATION_TRUST_STORE = PUBLICATION_TRUST_ROOT / "publication-attestors.json"
@@ -90,7 +89,9 @@ def publication_claim_bindings(
     wave_bytes = (json.dumps(wave, indent=2, sort_keys=True) + "\n").encode()
     batch_script_sha256 = sha256_file(batch_script_path)
     runtime = capsule.get("runtime")
-    if not isinstance(runtime, dict) or runtime.get("batch_script_sha256") != (batch_script_sha256):
+    if not isinstance(runtime, dict) or runtime.get("batch_script_sha256") != (
+        batch_script_sha256
+    ):
         raise ValueError("publication batch script differs from the signed source capsule")
     if wave.get("batch_script_sha256") != batch_script_sha256:
         raise ValueError("publication wave batch script differs from the signed source capsule")
@@ -104,7 +105,9 @@ def publication_claim_bindings(
         "wave_sha256": wave_sha256,
         "wave_file_sha256": hashlib.sha256(wave_bytes).hexdigest(),
         "batch_script_sha256": batch_script_sha256,
-        "eligible_controls_sha256": sha256_text(canonical_json(wave.get("eligible_controls"))),
+        "eligible_controls_sha256": sha256_text(
+            canonical_json(wave.get("eligible_controls"))
+        ),
     }
 
 
@@ -128,7 +131,9 @@ def _protected_trust_store(
     if trust_sha256 != expected_trust_store_sha256:
         raise ValueError("publication trust store differs from the protected digest")
     trust = _object(trust_store_path, "publication trust store")
-    if trust.get("schema_version") != 1 or trust.get("status") != ("TRUSTED_PUBLICATION_ATTESTORS"):
+    if trust.get("schema_version") != 1 or trust.get("status") != (
+        "TRUSTED_PUBLICATION_ATTESTORS"
+    ):
         raise ValueError("publication trust store schema is invalid")
     return trust, trust_sha256
 
@@ -156,7 +161,9 @@ def verify_publication_claim_attestation(
         wave=wave,
         batch_script_path=batch_script_path,
     )
-    trust, trust_sha256 = _protected_trust_store(trust_store_path, expected_trust_store_sha256)
+    trust, trust_sha256 = _protected_trust_store(
+        trust_store_path, expected_trust_store_sha256
+    )
     keys = trust.get("keys")
     if not isinstance(keys, list):
         raise ValueError("publication trust store keys are invalid")

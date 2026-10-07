@@ -9,7 +9,9 @@ import pytest
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 DOCKERFILE = PROJECT_ROOT / "infra" / "research" / "Dockerfile"
-SOURCE_OVERLAY_DOCKERFILE = PROJECT_ROOT / "infra" / "research" / "Dockerfile.source-overlay"
+SOURCE_OVERLAY_DOCKERFILE = (
+    PROJECT_ROOT / "infra" / "research" / "Dockerfile.source-overlay"
+)
 SOURCE_OVERLAY_BUILDER = PROJECT_ROOT / "scripts" / "build_source_overlay_on_h100.sh"
 
 
@@ -47,27 +49,29 @@ def test_source_overlay_records_profile_and_dev_dependency_contract() -> None:
 def test_overlay_builders_make_normalized_archive_readable_to_container_uid() -> None:
     for path in (SOURCE_OVERLAY_BUILDER,):
         content = path.read_text(encoding="utf-8")
-        assert "${SLURM_JOB_ID:?Run this build through Slurm}" in content
+        assert '${SLURM_JOB_ID:?Run this build through Slurm}' in content
         assert 'chmod -R a+rX "${context}"' in content
         assert "sudo" not in content
 
 
 def test_source_overlay_builder_refuses_stale_context_and_validates_receipt() -> None:
     content = SOURCE_OVERLAY_BUILDER.read_text(encoding="utf-8")
-    assert "${COTCODEC_SOURCE_RECEIPT:?Set the retained source receipt path}" in content
-    assert "${COTCODEC_SOURCE_EXTRACTOR:?Set the retained source extractor path}" in content
-    assert "${COTCODEC_SOURCE_EXTRACTOR_SHA256:?" in content
-    assert "${COTCODEC_SOURCE_BUILDER_SHA256:?" in content
+    assert '${COTCODEC_SOURCE_RECEIPT:?Set the retained source receipt path}' in content
+    assert '${COTCODEC_SOURCE_EXTRACTOR:?Set the retained source extractor path}' in content
+    assert '${COTCODEC_SOURCE_EXTRACTOR_SHA256:?' in content
+    assert '${COTCODEC_SOURCE_BUILDER_SHA256:?' in content
     assert "refusing to reuse source-overlay build root" in content
     assert 'python3 "${extractor_snapshot}"' in content
-    assert "BASE_IMAGE=${COTCODEC_BASE_IMAGE_TAG}" in content
-    assert "@sha256:[0-9a-f]{64}" in content
+    assert 'BASE_IMAGE=${COTCODEC_BASE_IMAGE_TAG}' in content
+    assert '@sha256:[0-9a-f]{64}' in content
     assert "--pull=false" in content
     assert 'tar -xzf "${COTCODEC_SOURCE_ARCHIVE}"' not in content
 
 
 @pytest.mark.parametrize("drifted_input", ["builder", "extractor"])
-def test_source_overlay_builder_rejects_unbound_helpers(tmp_path: Path, drifted_input: str) -> None:
+def test_source_overlay_builder_rejects_unbound_helpers(
+    tmp_path: Path, drifted_input: str
+) -> None:
     extractor = tmp_path / "extractor.py"
     extractor.write_text("raise SystemExit(99)\n", encoding="utf-8")
     builder_sha256 = hashlib.sha256(SOURCE_OVERLAY_BUILDER.read_bytes()).hexdigest()
