@@ -1,0 +1,44 @@
+# Q1 mutator: record every admitted substrate's native Triton specializations
+# (one native forward pass per parent substrate on one GPU), for the
+# compiled-specialization dedup of the mutant pool. No mutant runs in this job.
+#
+# Template: every FILL-* value is written from measured artifacts (the image
+# build receipt and the committed revision that holds the admitted substrates
+# and the vendored KernelBench@423217d9 problems). The submitter rejects every
+# FILL-* value, so an unfilled template fails closed.
+#
+# Fields container_profile, model.kind none, seed_binding and memory_gb follow
+# the stage0/lane submitter. The job is deterministic (seed 42 is fixed inside
+# scripts/q1_record_specializations.py and only selects native input values,
+# which do not change a specialization), so it declares no seeds.
+#
+# Untrusted-code status: parent substrates are compiler-generated or
+# human-written kernels admitted by reviewed harness code (decisions D3, D7).
+runtime: docker-single-node-discovery-v1
+name: q1-mutant-specializations-v1
+image_id: FILL-research-image-id
+git_sha: FILL-git-sha-with-admitted-substrates
+source_sha256: FILL-source-tar-sha256
+container_profile: default
+resources:
+  gpu_type: h100
+  gpus: 1
+  cpus: 8
+  memory_gb: 64
+  minutes: 60
+budget:
+  max_gpu_hours: 0.5
+randomness_contract: deterministic
+run_root: /home/kevin/cotcodec-runs/stage0/q1-mutate/specializations-v1
+model:
+  kind: none
+  reason: Records Triton compile specializations of admitted kernel substrates; no model is loaded.
+command:
+  - python
+  - scripts/q1_record_specializations.py
+  - "--substrates-root"
+  - FILL-substrates-root-in-source-capsule
+  - "--kernelbench-root"
+  - FILL-kernelbench-423217d9-root-in-source-capsule
+  - "--out-root"
+  - /outputs/specializations
