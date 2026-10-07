@@ -9,11 +9,13 @@
 # never mounted into a rater job. GPU-less, network-less (q2-mutation-cpu.sbatch).
 #
 # Usage (on the host): submit_audit.sh <git-sha> <mutation-run> <controls-run> \
-#          <audit-name> <metric-image-id> <lo-image-id> [workers]
+#          <audit-name> <metric-image-id> <lo-image-id> [workers] [reserve-controls-run]
 # The split is the one the mutation run recorded; any split but dev needs the
 # frozen ledger row and Q2M_PREREG_FROZEN (check_frozen.py), as the runs did.
+# The confirmatory audit also passes the reserve control run: P1 audits every
+# flip of the confirm and the reserve golds.
 set -Eeuo pipefail
-sha="$1"; mrun="$2"; crun="$3"; name="$4"; metric="$5"; lo="$6"; workers="${7:-8}"
+sha="$1"; mrun="$2"; crun="$3"; name="$4"; metric="$5"; lo="$6"; workers="${7:-8}"; rrun="${8:-}"
 root=/home/kevin/cotcodec-runs/stage0/q2-evaluator-mutation
 src="${root}/src/${sha}"
 mut="${root}/runs/${mrun}"
@@ -29,18 +31,29 @@ csplit="$(python3 -c 'import json,sys; print(json.load(open(sys.argv[1]))["split
 [[ "${split}" == "${csplit}" ]] || { echo "mutation run is ${split}, control run is ${csplit}" >&2; exit 2; }
 python3 "${src}/infra/q2-mutation/run/check_frozen.py" --src "${src}" --sha "${sha}" \
   --split "${split}" --metric "${metric}" --lo "${lo}"
+extra_ro="${mut}:/ro/mut+${ctl}:/ro/controls"
+reserve_arg=""
+if [[ -n "${rrun}" ]]; then
+  res="${root}/runs/${rrun}"
+  [[ -f "${res}/summary.json" ]] || { echo "${res} has no control summary" >&2; exit 2; }
+  rsplit="$(python3 -c 'import json,sys; print(json.load(open(sys.argv[1]))["split"])' "${res}/submitted.json")"
+  [[ "${rsplit}" == "reserve" ]] || { echo "${rrun} is not a reserve control run" >&2; exit 2; }
+  extra_ro+="+${res}:/ro/reserve"
+  reserve_arg="--controls /ro/reserve"
+fi
 mkdir -p "${out}"
 hex() { python3 -c 'import json,sys; print(json.dumps(sys.argv[1:]).encode().hex())' "$@"; }
 
-argv=$(hex sh -c "cd /src && python3 -m harness.q2_mutation.audit sample --run /ro/mut --controls /ro/controls \
+argv=$(hex sh -c "cd /src && python3 -m harness.q2_mutation.audit sample --run /ro/mut \
+     --controls /ro/controls ${reserve_arg} \
      --sanitized /src/program/evidence/q2-mutation/sanitized-tasks \
      --file-cache /inputs/file_cache_1e112283/files --out /out \
-     --path-map /ro/build/=/ro/mut/build/ --path-map /out/=/ro/controls/lo/ \
+     --path-map /ro/build/=/ro/mut/build/ \
   && python3 -m harness.q2_mutation.audit packets --items /out/items.jsonl \
      --sanitized /src/program/evidence/q2-mutation/sanitized-tasks --out /out/packets \
      --workers ${workers}")
 job=$(sbatch --parsable --cpus-per-task="${workers}" --mem=64G --time=03:00:00 \
-  --export=ALL,Q2M_MODE=run,Q2M_IMAGE_ID="${lo}",Q2M_ARGV_JSON_HEX="${argv}",Q2M_SOURCE="${src}",Q2M_RUN_DIR="${out}",Q2M_INPUTS="${root}/inputs",Q2M_EXTRA_RO="${mut}:/ro/mut+${ctl}:/ro/controls",Q2M_TMPFS_SIZE=32g \
+  --export=ALL,Q2M_MODE=run,Q2M_IMAGE_ID="${lo}",Q2M_ARGV_JSON_HEX="${argv}",Q2M_SOURCE="${src}",Q2M_RUN_DIR="${out}",Q2M_INPUTS="${root}/inputs",Q2M_EXTRA_RO="${extra_ro}",Q2M_TMPFS_SIZE=32g \
   "${batch}")
 printf '{"audit": "%s", "split": "%s", "mutation_run": "%s", "controls_run": "%s", "git_sha": "%s", "job": %s}\n' \
   "${name}" "${split}" "${mrun}" "${crun}" "${sha}" "${job}" | tee "${out}/submitted.json"

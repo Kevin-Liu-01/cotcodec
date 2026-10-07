@@ -375,3 +375,27 @@ def test_render_rater_manifest_passes_the_lane_validator(tmp_path: Path) -> None
                 str(out),
             ]
         )
+
+
+def test_controls_inputs_map_each_run_to_its_own_save_stage(tmp_path: Path) -> None:
+    for name in ("confirm", "reserve"):
+        run = tmp_path / name
+        audit.write_jsonl(
+            run / "saved" / "jobs-saved.jsonl",
+            [
+                {
+                    "kind": "gold",
+                    "task_id": f"t-{name}",
+                    "mutant_id": f"t-{name}__gold__lo",
+                    "files": {"/home/user/a.docx": f"/out/files/t-{name}__gold/home/user/a.docx"},
+                }
+            ],
+        )
+    tasks, saved = audit.controls_inputs([str(tmp_path / "confirm"), str(tmp_path / "reserve")])
+    assert tasks == {}
+    paths = sorted(job["files"]["/home/user/a.docx"] for job in saved)
+    assert paths == [
+        f"{tmp_path}/confirm/lo/files/t-confirm__gold/home/user/a.docx",
+        f"{tmp_path}/reserve/lo/files/t-reserve__gold/home/user/a.docx",
+    ]
+    assert audit.controls_inputs([]) == (None, [])

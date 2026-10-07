@@ -2,8 +2,9 @@
 
 ``sample`` (anywhere, stdlib only)
     From a scored mutation run (``score/outcomes.jsonl``, ``score/jobs-saved.jsonl``,
-    ``prep/targets.jsonl``) and, optionally, the control run of the same split
-    (``summary.json``, ``saved/jobs-saved.jsonl``): the candidate pool
+    ``prep/targets.jsonl``) and the control runs whose P1 flips are audited
+    (``summary.json``, ``saved/jobs-saved.jsonl``; for the confirmatory audit
+    the confirm and the reserve control runs): the candidate pool
     (``raters.audit_candidates``), the stratified sample with shams and every P1
     flip (``raters.draw_audit_sample``), Kevin's spot-check list, and one item
     per sampled key with the files the packet shows. ``sample.jsonl`` carries
@@ -202,16 +203,35 @@ def build_sample(
     }
 
 
-def cmd_sample(args: argparse.Namespace) -> int:
+def controls_inputs(
+    runs: Sequence[str],
+) -> tuple[dict[str, dict[str, Any]] | None, list[dict[str, Any]]]:
+    """Control-run tasks and saved gold jobs of every given control run.
+
+    A control run's saved jobs name files under the save stage's ``/out/``
+    (its ``lo/`` directory), so those paths are mapped to ``<run>/lo/``.
+    """
     from harness.q2_mutation.report import summarize_run
 
+    if not runs:
+        return None, []
+    tasks: dict[str, dict[str, Any]] = {}
+    saved: list[dict[str, Any]] = []
+    for run in runs:
+        tasks.update(summarize_run(Path(run))["tasks"])
+        for job in read_jsonl(Path(run) / "saved" / "jobs-saved.jsonl"):
+            job["files"] = {
+                vm: remap(local, [("/out/", f"{run.rstrip('/')}/lo/")])
+                for vm, local in job["files"].items()
+            }
+            saved.append(job)
+    return tasks, saved
+
+
+def cmd_sample(args: argparse.Namespace) -> int:
     run = Path(args.run)
     mapping = [tuple(item.split("=", 1)) for item in args.path_map]
-    controls_tasks = None
-    controls_saved: list[dict[str, Any]] = []
-    if args.controls:
-        controls_tasks = summarize_run(Path(args.controls))["tasks"]
-        controls_saved = read_jsonl(Path(args.controls) / "saved" / "jobs-saved.jsonl")
+    controls_tasks, controls_saved = controls_inputs(args.controls)
     sanitized = Path(args.sanitized)
     cache = Path(args.file_cache)
     built = build_sample(
@@ -509,7 +529,13 @@ def main(argv: list[str] | None = None) -> int:
     sub = parser.add_subparsers(dest="command", required=True)
     sample = sub.add_parser("sample", allow_abbrev=False)
     sample.add_argument("--run", required=True, help="scored mutation run directory")
-    sample.add_argument("--controls", help="control run directory of the same split")
+    sample.add_argument(
+        "--controls",
+        action="append",
+        default=[],
+        help="control run directory (repeat: the confirm and the reserve control runs, "
+        "whose P1 flips are all audited)",
+    )
     sample.add_argument("--sanitized", required=True, help="sanitized task export directory")
     sample.add_argument("--file-cache", required=True, help="file-cache files directory")
     sample.add_argument("--out", required=True)
