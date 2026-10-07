@@ -727,29 +727,15 @@ def session_cycle(config: dict[str, Any]) -> dict[str, Any]:
         trial = session.run_cell(by_id[cell_id], layer, seq, a11y, source)
         trials.append(_progress(config, trial))
         if kill_after is not None and seq == kill_after:
-            result["fault_injection"] = kill_guest_server(client, seq)
+            # Development only: the guest server dies between two entries (suite.py).
+            from harness.q2.vm.suite import kill_guest_server
+
+            result["fault_injection"] = kill_guest_server(client, seq, "after")
     result["stop"] = session.stop()
     result["mapping_check"] = session.judge_all(trials, by_id)
     result["trials"] = trials
     result["session_wall_s"] = round(time.monotonic() - started, 2)
     return result
-
-
-def kill_guest_server(client: GuestClient, after_seq: int) -> dict[str, Any]:
-    """Development only: SIGKILL the guest server, as the crash of run 622 ended it.
-
-    Its systemd unit restarts it a few seconds later and, on the way, stops every process
-    it launched, the probe and the tap included; the next trials then exercise the
-    suite's restart handling (``guest_server_restart``, probe and tap relaunch). The
-    request that kills the server never answers, so its error is the expected outcome.
-    """
-    out: dict[str, Any] = {"after_seq": after_seq, "t": time.time()}
-    try:
-        reply = client.execute(["bash", "-c", "kill -KILL $PPID"], timeout=30.0)
-        out["reply"] = {k: reply.get(k) for k in ("returncode", "error")}
-    except GuestError as exc:
-        out["error"] = str(exc)[:200]
-    return out
 
 
 def tcp_probe(host: str, port: int, path: str) -> dict[str, Any]:

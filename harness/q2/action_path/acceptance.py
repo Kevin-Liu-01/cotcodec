@@ -1,4 +1,4 @@
-"""Acceptance analysis of q2-action-path-v1: A1-A6, C1-C4 and the concurrency N*.
+"""Acceptance analysis of q2-action-path-v1: A1-A7, C1-C4 and the concurrency N*.
 
 This module restates the preregistration's decision rules (sections 5-9 of
 ``program/preregistrations/q2-action-path-v1.md``) as code, frozen with the inputs
@@ -21,7 +21,10 @@ Rules that apply to every criterion:
   included (section 6.1); a session whose ``DesktopEnv.reset`` observation was not
   delivered charges its first trial (``reset_observation``); an entry is PASS only at k
   of k repetitions, and an entry that is PASS in one observation setting and not the
-  other fails (section 5);
+  other fails (section 5). One exception, A4's count (decision D30): a trial whose only
+  failure is a guest-server restart is reported and not counted (``restart_only``);
+* the observation service has its own bound (A7, decision D30): guest-server restarts
+  per ``/accessibility`` call, judged on the exact one-sided 95% Poisson upper bound;
 * reruns (section 6.1): a campaign may be rerun once, as a new attempt with a new
   output path, and only when the earlier attempt did not count (a ladder rung also when
   it aborted on foreign load); every trial of every attempt is reported, and a failed
@@ -46,6 +49,7 @@ from pathlib import Path
 from typing import Any
 
 from harness.q2.action_path import order
+from harness.q2.vm import suite
 
 ROOT = Path(__file__).resolve().parents[3]
 CELLS = ROOT / "harness/q2/action_path/suite_cells.json"
@@ -73,6 +77,16 @@ BATCH_END = re.compile(r"^driver_exit=(\d+) labelled_containers_left=(\d+)$", re
 C2_EXCUSED = ("marker ",)
 C2_RDEV = "R-dev projection differs"
 STATE_BITS = (("Shift", 1), ("Control", 4), ("Mod1", 8), ("Mod4", 64))
+# Decision D30. A4 does not count a trial whose only failure is a guest-server restart
+# (with the accessibility tree that restart left undelivered); A7 bounds the restarts per
+# /accessibility call at OBSERVATION_BOUND, judged on the exact one-sided upper bound at
+# level 1 - OBSERVATION_ALPHA. The development rate (one restart in 8,114 calls, runs
+# 484-622) is reported with A4 and A7 with its exact two-sided 95% interval.
+RESTART = "guest_server_restart"
+RESTART_EXCUSED = ("infra: guest_server_restart", "infra: accessibility")
+OBSERVATION_BOUND = 5e-4
+OBSERVATION_ALPHA = 0.05
+DEVELOPMENT_RESTARTS, DEVELOPMENT_CALLS = 1, 8114
 
 
 # --- loading ----------------------------------------------------------------------------------
@@ -155,6 +169,8 @@ def load(
                 "reset_observation": reset,
                 "trials": trials,
                 "snapshots": [record.get("host_before"), record.get("host_after")],
+                "restarts": suite.session_restarts(cycle),
+                "accessibility_calls": suite.accessibility_calls(cycle),
             }
         )
     return {
@@ -259,26 +275,48 @@ def counting_problems(campaign: dict[str, Any]) -> list[str]:
     return out
 
 
-def failed_trials(campaign: dict[str, Any]) -> list[tuple[str, int, str]]:
+def failed_trials(
+    campaign: dict[str, Any], excused: Callable[[dict[str, Any]], bool] | None = None
+) -> list[tuple[str, int, str]]:
+    """(setting, seq, cell) of every failed trial, less those ``excused`` (A4's restarts)."""
     return [
         (session["setting"], trial["seq"], trial["cell"])
         for session in campaign["sessions"]
         for trial in session["trials"]
-        if not trial["pass"]
+        if not trial["pass"] and not (excused and excused(trial))
     ]
+
+
+def restart_only(trial: dict[str, Any]) -> bool:
+    """Decision D30: a failed trial whose only failure is a guest-server restart.
+
+    Its reasons are the restart itself and, at most, an ``/accessibility`` failure (the
+    tree the restart left undelivered). A4 reports such a trial and does not count it; any
+    other reason in the same trial (an event, text, marker or guard difference, or an
+    infrastructure failure of any other type) counts as usual.
+    """
+    reasons = trial.get("reasons")
+    return (
+        not trial["pass"]
+        and RESTART in (trial.get("infra") or [])
+        and reasons is not None
+        and set(reasons) <= set(RESTART_EXCUSED)
+    )
 
 
 def campaign_problems(
     campaign: dict[str, Any],
     rerun_allowed: Callable[[dict[str, Any]], bool] | None = None,
     earlier_failures_count: Callable[[dict[str, Any]], bool] | None = None,
+    excused: Callable[[dict[str, Any]], bool] | None = None,
 ) -> list[str]:
     """Why a campaign cannot count at all (empty when it can), its reruns included.
 
     Section 6.1: at most ``MAX_ATTEMPTS`` attempts; an earlier attempt may be rerun only
     when it did not count (``rerun_allowed``; the ladder also admits a foreign-load
     abort), and its failed trials count against the criterion unless
-    ``earlier_failures_count`` says otherwise (an aborted rung's do not).
+    ``earlier_failures_count`` says otherwise (an aborted rung's do not) or the criterion
+    ``excused`` them (A4's restart-only trials).
     """
     rerun_allowed = rerun_allowed or (lambda prev: bool(counting_problems(prev)))
     earlier_failures_count = earlier_failures_count or (lambda prev: True)
@@ -291,7 +329,7 @@ def campaign_problems(
             out.append(
                 f"job {campaign['job']}: earlier attempt {previous['job']} counted and was rerun"
             )
-        failed = failed_trials(previous)
+        failed = failed_trials(previous, excused)
         if failed and earlier_failures_count(previous):
             out.append(
                 f"job {campaign['job']}: earlier attempt {previous['job']} has "
@@ -448,8 +486,42 @@ def a3(by_layer: dict[str, list[dict[str, Any]]]) -> dict[str, Any]:
     return _verdict(problems, {"entries": table})
 
 
+def _restart_report(campaigns: list[dict[str, Any]]) -> dict[str, Any]:
+    """Restarts, accessibility calls and every trial a restart hit, over every attempt."""
+    every = [a for c in campaigns for a in [*c.get("earlier", []), c]]
+    hit = [
+        {
+            "job": a["job"],
+            "setting": s["setting"],
+            "seq": t["seq"],
+            "cell": t["cell"],
+            "reasons": t.get("reasons"),
+            "counted": not restart_only(t),
+        }
+        for a in every
+        for s in a["sessions"]
+        for t in s["trials"]
+        if RESTART in (t.get("infra") or [])
+    ]
+    return {
+        "restarts": sum(s.get("restarts") or 0 for a in every for s in a["sessions"]),
+        "accessibility_calls": sum(
+            s.get("accessibility_calls") or 0 for a in every for s in a["sessions"]
+        ),
+        "trials_hit": hit,
+        "development_rate": development_rate(),
+    }
+
+
 def a4(campaigns: list[dict[str, Any]], n_star: int) -> dict[str, Any]:
-    """The volume plan, zero failures, over the N* VMs; its session slices tile the plan."""
+    """The volume plan, zero failures, over the N* VMs; its session slices tile the plan.
+
+    Decision D30: a trial whose only failure is a guest-server restart (``restart_only``)
+    is not counted; every trial a restart hit is reported with its reasons, together with
+    the restarts and accessibility calls of every attempt and the development rate's
+    single-event uncertainty. Its device actions still count toward the class bounds: the
+    action path was judged on that trial and showed no difference.
+    """
     from harness.q2.action_path import volume
 
     problems: list[str] = []
@@ -461,36 +533,144 @@ def a4(campaigns: list[dict[str, Any]], n_star: int) -> dict[str, Any]:
         for chunk in realized_sessions[setting]
     ]
     for c in campaigns:
-        problems += campaign_problems(c)
+        problems += campaign_problems(c, excused=restart_only)
         if c["manifest"]["vm"]["concurrency"] != n_star:
             problems.append(f"job {c['job']}: A4 runs at N* = {n_star}")
-    ordered = sorted(
-        campaigns, key=lambda c: (c["manifest"]["workload"].get("session_range") or [0])[0]
-    )
-    spans = [c["manifest"]["workload"].get("session_range") or [0, len(full)] for c in ordered]
-    if [s[0] for s in spans[1:]] != [s[1] for s in spans[:-1]] or (
-        spans and (spans[0][0] != 0 or spans[-1][1] != len(full))
-    ):
-        problems.append(f"A4 session ranges {spans} do not tile [0, {len(full)})")
+    ordered = _tiled(campaigns, len(full), "A4", problems)
     problems += _check_plan(ordered, expected(full), "A4")
-    flags = [t["pass"] for c in campaigns for s in c["sessions"] for t in s["trials"]]
+    trials = [t for c in campaigns for s in c["sessions"] for t in s["trials"]]
     failed = [
         (s["setting"], t["seq"], t["cell"])
         for c in campaigns
         for s in c["sessions"]
         for t in s["trials"]
-        if not t["pass"]
+        if not t["pass"] and not restart_only(t)
     ]
     if failed:
         problems.append(f"A4: {len(failed)} failed trials, first {failed[:5]}")
     return _verdict(
         problems,
         {
-            "trials": len(flags),
+            "trials": len(trials),
             "failures": len(failed),
+            "restart_only_trials": sum(1 for t in trials if restart_only(t)),
+            "guest_server": _restart_report(campaigns),
             "class_actions": plan_data["class_actions"],
             "class_upper_bound_family_95": plan_data["class_upper_bound_family_95"],
             "boot_upper_bound_family_95": plan_data["boot_upper_bound_family_95"],
+        },
+    )
+
+
+def _tiled(
+    campaigns: list[dict[str, Any]], total: int, what: str, problems: list[str]
+) -> list[dict[str, Any]]:
+    """The campaigns in session-range order; their ranges must tile ``[0, total)``."""
+    ordered = sorted(
+        campaigns, key=lambda c: (c["manifest"]["workload"].get("session_range") or [0])[0]
+    )
+    spans = [c["manifest"]["workload"].get("session_range") or [0, total] for c in ordered]
+    if [s[0] for s in spans[1:]] != [s[1] for s in spans[:-1]] or (
+        spans and (spans[0][0] != 0 or spans[-1][1] != total)
+    ):
+        problems.append(f"{what} session ranges {spans} do not tile [0, {total})")
+    return ordered
+
+
+# --- A7: the observation service (decision D30) -------------------------------------------------
+
+
+def _poisson_cdf(k: int, mean: float) -> float:
+    term = total = math.exp(-mean)
+    for i in range(1, k + 1):
+        term *= mean / i
+        total += term
+    return total
+
+
+def poisson_upper(k: int, alpha: float = OBSERVATION_ALPHA) -> float:
+    """Exact one-sided upper confidence bound at level 1 - alpha on a Poisson mean.
+
+    The mean m with P(X <= k | m) = alpha (Garwood); k = 0 gives -ln(alpha), 2.996 at 0.05.
+    """
+    low, high = 0.0, 10.0 * (k + 5)
+    for _ in range(200):
+        mid = (low + high) / 2
+        if _poisson_cdf(k, mid) > alpha:
+            low = mid
+        else:
+            high = mid
+    return (low + high) / 2
+
+
+def poisson_lower(k: int, alpha: float) -> float:
+    """Exact one-sided lower bound at level 1 - alpha: P(X >= k | m) = alpha (0 for k = 0)."""
+    if k == 0:
+        return 0.0
+    low, high = 0.0, 10.0 * (k + 5)
+    for _ in range(200):
+        mid = (low + high) / 2
+        if 1.0 - _poisson_cdf(k - 1, mid) < alpha:
+            low = mid
+        else:
+            high = mid
+    return (low + high) / 2
+
+
+def development_rate() -> dict[str, Any]:
+    """The development restart rate with its exact two-sided 95% interval (reported only)."""
+    k, n = DEVELOPMENT_RESTARTS, DEVELOPMENT_CALLS
+    return {
+        "restarts": k,
+        "accessibility_calls": n,
+        "rate": k / n,
+        "interval_95": [poisson_lower(k, 0.025) / n, poisson_upper(k, 0.025) / n],
+    }
+
+
+def observation_plan() -> list[dict[str, Any]]:
+    """A7's realized order: G, ``OBSERVATION_REPS`` shuffles of seed 43, accessibility only."""
+    from harness.q2.vm.manifest import OBSERVATION_REPS
+
+    gating = [c["id"] for c in _cells()["layers"]["L0-fixed"] if c["status"] == "gating"]
+    return order.plan(gating, 43, OBSERVATION_REPS, ["screenshot+a11y"], acceptance=True)
+
+
+def a7(campaigns: list[dict[str, Any]], n_star: int) -> dict[str, Any]:
+    """Guest-server restarts per accessibility call: exact 95% upper bound <= 5 x 10^-4.
+
+    The campaign runs L0-fixed over G in the screenshot-plus-accessibility setting
+    (``observation_plan``) at N*, its session slices tiling the plan. Restarts and calls
+    are summed over every attempt of every campaign (section 6.1: an attempt that did not
+    count keeps its restarts). Trial verdicts are reported, not judged: A1-A4 judge the
+    action path.
+    """
+    problems: list[str] = []
+    full = observation_plan()
+    for c in campaigns:
+        problems += campaign_problems(c, earlier_failures_count=lambda prev: False)
+        if c["manifest"]["vm"]["concurrency"] != n_star:
+            problems.append(f"job {c['job']}: A7 runs at N* = {n_star}")
+    ordered = _tiled(campaigns, len(full), "A7", problems)
+    problems += _check_plan(ordered, expected(full), "A7")
+    report = _restart_report(campaigns)
+    restarts, calls = report["restarts"], report["accessibility_calls"]
+    upper = poisson_upper(restarts) / calls if calls else None
+    if upper is None or upper > OBSERVATION_BOUND:
+        problems.append(
+            f"A7: {restarts} restarts in {calls} accessibility calls, upper 95% bound "
+            f"{upper} > {OBSERVATION_BOUND}"
+        )
+    return _verdict(
+        problems,
+        {
+            "restarts": restarts,
+            "accessibility_calls": calls,
+            "rate": restarts / calls if calls else None,
+            "upper_95": upper,
+            "bound": OBSERVATION_BOUND,
+            "failed_trials": sum(len(failed_trials(c)) for c in campaigns),
+            "guest_server": report,
         },
     )
 

@@ -76,6 +76,9 @@ CLOSED_WORLD_FILES = ("harness/__init__.py",)
 # Runner CPUs per concurrency (preregistration section 9): half a CPU per concurrent
 # runner, at least one, at most MAX_RUNNER_CPUS (development at N = 8 used 4).
 MAX_RUNNER_CPUS = 20
+# A7, the observation-service campaign (decision D30): repetitions of the gating set G in the
+# screenshot-plus-accessibility setting, sized in preregistration section 9.
+OBSERVATION_REPS = 360
 # What each scored campaign needs frozen in the ledger (preregistration sections 2.2 and 8):
 # C2 runs after the inputs addendum; C1, C3 and every acceptance criterion after both.
 CRITERIA = {
@@ -85,6 +88,8 @@ CRITERIA = {
     "A3": (("L0-fixed", "H-OSW-fixed", "H-GA"), (43,), (30,), "both", "stress",
            ("inputs", "executor")),
     "A4": (("L0-fixed",), (43,), (1,), "both", "volume", ("inputs", "executor")),
+    "A7": (("L0-fixed",), (43,), (OBSERVATION_REPS,), "screenshot+a11y", "gating",
+           ("inputs", "executor")),
     "ladder": (("L0-fixed",), (43,), "rung", "both", "all", ("inputs", "executor")),
     "C1": (("H-OSW-up", "H-GA-buggy"), (42,), (5,), "screenshot", "all", ("inputs", "executor")),
     "C2": (("L0-raw",), (42,), (5,), "screenshot", "all", ("inputs",)),
@@ -98,8 +103,8 @@ LADDER_RUNGS = (8, 16, 24, 32, 40)
 LADDER_MIN_BOOTS = 20
 CATALOG_ENTRIES = 100
 SESSION_TRIALS = 60
-# Every other scored campaign runs one VM at a time; A4 runs at N* (1 or a ladder rung).
-CONCURRENCY = {"A4": (1, *LADDER_RUNGS), "ladder": LADDER_RUNGS}
+# Every other scored campaign runs one VM at a time; A4 and A7 run at N* (1 or a ladder rung).
+CONCURRENCY = {"A4": (1, *LADDER_RUNGS), "A7": (1, *LADDER_RUNGS), "ladder": LADDER_RUNGS}
 
 
 def executor_addendum(attempt: int) -> tuple[str, str]:
@@ -774,7 +779,11 @@ def _validate_session_workload(
         _match(workload["plan_sha256"], SHA_RE, "workload.plan_sha256")
     else:
         extra = {"layer", "cells", "reps", "settings", "session_trials"}
-        optional: set[str] = {"mutant", "kill_guest_server_after_seq"}
+        optional: set[str] = {
+            "mutant",
+            "kill_guest_server_after_seq",
+            "kill_guest_server_during_seq",
+        }
         if kind == "canary-development":
             extra = {"apps", "entries", "reps", "session_trials", "measure_targets"}
             optional = set()
@@ -782,11 +791,12 @@ def _validate_session_workload(
         mutant = workload.get("mutant")
         if mutant is not None and (not isinstance(mutant, str) or not MUTANT_RE.fullmatch(mutant)):
             raise ManifestError("workload.mutant must be an operator id such as M02-...")
-        if "kill_guest_server_after_seq" in workload:
-            # Development only: SIGKILL the guest server after this trial, as the crash of
-            # run 622 ended it, to exercise the probe and tap relaunch (never in acceptance).
-            _int(workload["kill_guest_server_after_seq"], "workload.kill_guest_server_after_seq",
-                 0, 20000)  # fmt: skip
+        for hook in ("kill_guest_server_after_seq", "kill_guest_server_during_seq"):
+            # Development only: SIGKILL the guest server after this trial, or inside it before
+            # its post guard, as the crash of run 622 ended it, to check that the probe and
+            # the tap survive in their scopes (decision D30; never in acceptance).
+            if hook in workload:
+                _int(workload[hook], f"workload.{hook}", 0, 20000)
         if purpose != "development":
             raise ManifestError(f"{kind} is a development workload")
         if randomness["contract"] != "seeded" or randomness["seeds"] != [DEVELOPMENT_SEED]:

@@ -229,6 +229,11 @@ def plan(measured: dict[str, Any]) -> dict[str, Any]:
         for chunk in realized[setting]
     ]
     out["A4"] = _seconds(times, "L0-fixed", a4, jobs=1)
+    from harness.q2.vm.manifest import OBSERVATION_REPS
+
+    # A7 (decision D30): G in the screenshot-plus-accessibility setting, seed-43 shuffles.
+    gating = [c["id"] for c in cells["layers"]["L0-fixed"] if c["status"] == "gating"]
+    run("A7", "L0-fixed", gating, 43, OBSERVATION_REPS, ["screenshot+a11y"])
     for rung in LADDER_RUNGS:
         from harness.q2.vm.manifest import ladder_reps
 
@@ -260,6 +265,7 @@ def plan(measured: dict[str, Any]) -> dict[str, Any]:
     out.update(c3)
     total = sum(v["vm_hours"] for v in out.values())
     a4_hours = out["A4"]["vm_hours"]
+    a7_hours = out["A7"]["vm_hours"]
     return {
         "schema": SCHEMA,
         "measured_from": [
@@ -277,6 +283,7 @@ def plan(measured: dict[str, Any]) -> dict[str, Any]:
         "campaigns": out,
         "total_vm_hours": round(total, 2),
         "a4_wall_hours_at_concurrency": [[n, round(a4_hours / n, 2)] for n in (1, *LADDER_RUNGS)],
+        "a7_wall_hours_at_concurrency": [[n, round(a7_hours / n, 2)] for n in (1, *LADDER_RUNGS)],
     }
 
 
