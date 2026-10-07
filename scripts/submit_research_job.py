@@ -8,21 +8,167 @@ import json
 import math
 import re
 import subprocess
-from pathlib import Path
+from fnmatch import fnmatchcase
+from pathlib import Path, PurePosixPath
 from typing import Any
 
 import yaml
 
+# Same rule as scripts/submit_docker_research_job.py and the batch script;
+# tests keep the three copies in parity.
+ARCHIVED_MEMORY_MESSAGE = (
+    "memory workloads were archived under legacy/ on 2026-10-06; "
+    "restore them from tag legacy-2026-10-06 to submit memory jobs"
+)
+# The whole archive lives under legacy/, so any path or module component named
+# legacy is refused, whatever the file it leads to.
+ARCHIVE_ROOT = "legacy"
+# Matched against every path and dotted-module component, not only after
+# scripts/, so PYTHONPATH, chdir and python -m forms are covered.
+ARCHIVED_MEMORY_NAME_PATTERNS = (
+    "run_memory_*",
+    "run_letta*",
+    "*memory_model*",
+    "memory_trials",
+)
+# Every memory-named entry point the restart archived: the files and packages
+# directly under legacy/scripts, legacy/harness and legacy/infra whose names
+# contain "mem" or "letta", by stem. Exact names, so a live file is refused only
+# if it reuses an archived name; this also covers pre-restart images, where these
+# files still sit at scripts/<name>.py. Tests regenerate the set from legacy/.
+ARCHIVED_MEMORY_ENTRY_POINTS = frozenset(
+    """
+    aggregate_memory_control_matrix aggregate_memorybank_h100_screen
+    analyze_causal_memory_bundle analyze_memory_system_semantic_smokes
+    analyze_memorybank_frozen_controls audit_memforest_published_artifacts
+    audit_mempalace_port_equivalence audit_mempalace_upstream_artifact
+    audit_sodamem_published_artifacts build_mem0_overlay_on_h100 build_mempalace_container
+    causal_memory_trials compare_memory_lifecycle_runs compare_mempalace_reproductions
+    compile_memory_landscape compile_memory_open_job compile_memory_public_docker_job
+    compile_memory_publication_wave compile_memory_replay_doctor_job
+    compile_memorybank_h100_jobs freeze_memory_control_matrix freeze_memory_system_outputs
+    memory-baselines memory_job_admission memory_trials mempalace_control_factory
+    mempalace_upstream_adapter prepare_hermes_observational_memory_context
+    prepare_longmemeval_judge_packet prepare_memory_baseline_context
+    prepare_memory_benchmarks prepare_memory_publication_claim
+    prepare_mempalace_source_context reanalyze_memory_frontier_screen
+    run_allmem_topology_doctor run_causal_memory_holdout run_causal_memory_sensitivity
+    run_hermes_observational_memory_doctor run_infini_memory_lifecycle_doctor
+    run_jiuwen_memory_lifecycle_doctor run_langmem_lifecycle_doctor
+    run_lightmem2_context_paging_doctor run_lightmem_offline_doctor
+    run_longmemeval_official_judge run_mem0_lifecycle_doctor run_memforest_lifecycle_doctor
+    run_memforge_fresh_install_doctor run_memgpt_letta_lifecycle_doctor
+    run_memoria_lifecycle_doctor run_memory_doctors run_memory_frontier_screen
+    run_memory_lifecycle_contract run_memory_model_replay_doctor run_memory_model_screen
+    run_memory_system_smoke run_memory_trials run_memorybank_decay_container
+    run_memorybank_decay_doctor run_mempalace_upstream_reproduction
+    run_recmem_consolidation_doctor run_reference_memory_lifecycle_sidecar
+    run_reference_memory_sidecar run_supermemory_local_doctor
+    seal_infini_memory_lifecycle_evidence seal_jiuwen_memory_lifecycle_evidence
+    seal_langmem_native_lifecycle_evidence seal_lightmem2_context_paging_evidence
+    seal_memforest_artifact_evidence seal_memforest_lifecycle_evidence
+    seal_memgpt_letta_lifecycle_evidence seal_memory_evidence seal_mempalace_runtime_receipt
+    seal_mempalace_sbom_job_receipt seal_sodamem_artifact_evidence submit_mempalace_cpu_job
+    validate_allmem_topology_experiment validate_hermes_observational_memory_experiment
+    validate_infini_memory_lifecycle_experiment validate_jiuwen_memory_lifecycle_experiment
+    validate_langmem_lifecycle_experiment validate_lightmem2_context_paging_experiment
+    validate_lightmem_offline_evidence validate_lightmem_offline_experiment
+    validate_mem0_lifecycle_experiment validate_mem0_persistence
+    validate_memforest_artifact_experiment validate_memforest_lifecycle_experiment
+    validate_memforge_fresh_install_evidence validate_memforge_fresh_install_experiment
+    validate_memgpt_letta_lifecycle_experiment validate_memoria_lifecycle_evidence
+    validate_memoria_lifecycle_experiment validate_memory_experiments
+    validate_memory_lifecycle_experiment validate_memory_persistent_transport
+    validate_memory_portfolio validate_memory_source_contract validate_memory_sources
+    validate_memorybank_decay_evidence validate_memorybank_decay_experiment
+    validate_memorybank_h100_evidence validate_memorybank_h100_experiment
+    validate_recmem_consolidation_evidence validate_recmem_consolidation_experiment
+    validate_sodamem_artifact_experiment validate_supermemory_local_experiment
+    validate_timem_core_evidence validate_timem_core_experiment
+    verify_memory_baseline_sources
+    """.split()  # noqa: SIM905 - same compact block as the batch script
+)
+ARCHIVED_MEMORY_FLAGS = (
+    "--memory-bundle",
+    "--memory-treatment-mode",
+    "--expected-memory-system-id",
+)
+_ARGV_TOKEN_SEPARATORS = re.compile(r"[\s=,;:'\"`()\[\]{}<>|&$]+")
+_MODULE_RE = re.compile(r"[A-Za-z_][A-Za-z0-9_]*(?:\.[A-Za-z_][A-Za-z0-9_]*)*")
+_SCRIPT_SUFFIXES = (".py", ".pyc", ".pyw", ".sh")
 
-def validate_memory_job_admission(admission, *, command, has_memory_bundle):
-    """Memory workloads were archived to legacy/ on 2026-10-06; fail closed for them."""
-    memory_command = any("memory" in str(part) for part in command)
-    if admission is None and not has_memory_bundle and not memory_command:
-        return None
-    raise ValueError(
-        "memory workloads were archived under legacy/ on 2026-10-06; "
-        "restore them from tag legacy-2026-10-06 to submit memory jobs"
-    )
+
+def _argv_name_variants(token: str) -> list[str]:
+    """The token, plus any value glued to a short option (python -mpkg.mod)."""
+
+    variants = [token]
+    if token.startswith("-") and not token.startswith("--"):
+        # Up to three option letters may precede the value, as in -Bmpkg.mod.
+        variants += [token[1 + cut :] for cut in range(4) if token[1 + cut :]]
+    return variants
+
+
+def _name_components(variant: str) -> list[str]:
+    """Path components (with and without a script suffix) and module components."""
+
+    components: list[str] = []
+    for part in PurePosixPath(variant).parts:
+        if part == "/":
+            continue
+        components.append(part)
+        components += [part[: -len(suffix)] for suffix in _SCRIPT_SUFFIXES if part.endswith(suffix)]
+    module = variant[:-3] if variant.endswith(".py") else variant
+    if _MODULE_RE.fullmatch(module):
+        components += module.split(".")
+    return components
+
+
+def archived_memory_reference(argument: str) -> str | None:
+    """Return what an argv element names from the archive, or None.
+
+    The element is split on shell and Python punctuation, a value glued to a
+    short option is tried on its own, and every path or module component is
+    compared with the archive root, the archived memory entry points and the
+    archived name patterns. A long option that is an archived memory flag, or
+    an argparse abbreviation of one, is refused too.
+    """
+
+    for token in _ARGV_TOKEN_SEPARATORS.split(argument):
+        for variant in _argv_name_variants(token):
+            if (
+                variant.startswith("--")
+                and len(variant) > 2
+                and any(flag.startswith(variant) for flag in ARCHIVED_MEMORY_FLAGS)
+            ):
+                return f"the archived memory flag {variant}"
+            for component in _name_components(variant):
+                if component == ARCHIVE_ROOT:
+                    return "the legacy/ archive"
+                if component in ARCHIVED_MEMORY_ENTRY_POINTS or any(
+                    fnmatchcase(component, pattern) for pattern in ARCHIVED_MEMORY_NAME_PATTERNS
+                ):
+                    return f"the archived memory entry point {component}"
+    return None
+
+
+def validate_memory_job_admission(
+    admission: Any, *, command: list[str], has_memory_bundle: bool
+) -> None:
+    """Reject the archived memory interface, not every argv that mentions memory.
+
+    Flags such as vLLM's ``--gpu-memory-utilization`` are admitted; anything
+    under legacy/, the archived memory entry points and name patterns, the
+    archived memory flags, and any memory admission or bundle block are not.
+    """
+
+    if admission is not None:
+        raise ValueError(f"{ARCHIVED_MEMORY_MESSAGE}: memory_source_admission must be absent")
+    if has_memory_bundle:
+        raise ValueError(f"{ARCHIVED_MEMORY_MESSAGE}: memory_bundle must be absent")
+    for index, argument in enumerate(command):
+        reference = archived_memory_reference(str(argument))
+        if reference is not None:
+            raise ValueError(f"{ARCHIVED_MEMORY_MESSAGE}: argv[{index}] names {reference}")
 
 
 OCI_RE = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._:/-]*@sha256:[0-9a-f]{64}$")
@@ -74,6 +220,13 @@ def validate_manifest(raw: dict[str, Any]) -> dict[str, Any]:
         )
     ):
         raise ValueError("command must be an argv list of 1-64 nonempty strings")
+    # Reject the archived memory interface before the bundle checks below can
+    # produce a misleading error.
+    validate_memory_job_admission(
+        raw.get("memory_source_admission"),
+        command=command,
+        has_memory_bundle=memory_bundle is not None,
+    )
     if (
         not isinstance(run_root, str)
         or not RUN_ROOT_RE.fullmatch(run_root)
@@ -177,13 +330,6 @@ def validate_manifest(raw: dict[str, Any]) -> dict[str, Any]:
             "sha256": artifact_sha256,
             "container_path": "/inputs/memory-selection-bundle.json",
         }
-    admission = validate_memory_job_admission(
-        raw.get("memory_source_admission"),
-        command=command,
-        has_memory_bundle=memory_bundle is not None,
-    )
-    if admission is not None:
-        manifest["memory_source_admission"] = admission
     return manifest
 
 
