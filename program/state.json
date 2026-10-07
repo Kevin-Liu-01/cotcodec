@@ -69,9 +69,10 @@
     "Approve asking the Dr. Kernel and KernelGYM authors to add licenses, or choose another licensed Q1 policy",
     "Decide whether to purge the old host address and the internal corpus inventory from public git history (requires a force-push)",
     "Spot-check a sample of the Q2 checker-mutation audit as the human rater (decision D9)",
-    "Moonshot (Kimi) account is suspended for insufficient balance; recharge it if a Kimi model should be a rater or reviewer (rotate the exposed key at the same time)"
+    "Moonshot (Kimi) account is suspended for insufficient balance; recharge it if a Kimi model should be a rater or reviewer (rotate the exposed key at the same time)",
+    "Q2 checker-mutation (q2-evaluator-mutation-v1, third draft): sign off the D23 rater lineup and sending public OSWorld task files and their renders to the Anthropic API, and provide a working Anthropic API key for the rater (the key in the agent environment returns 401)"
   ],
-  "gpu_hours_spent_this_program": 1.196,
+  "gpu_hours_spent_this_program": 1.3188,
   "frozen_registrations": [
     "q3-k1-localization-screen-v1",
     "q2-holo3-rerun-audit-v1-posthoc",
@@ -119,6 +120,15 @@
         "516 GPU tests"
       ],
       "outcome": "3/3 passed; largest observed/tolerance ratio 7.9e-3"
+    },
+    {
+      "experiment": "q2-evaluator-mutation-v1 rater dev smoke (unregistered dev work, second-review fix)",
+      "gpu_hours": 0.1228,
+      "jobs": [
+        "566 overlay build",
+        "582 open-weight rater smoke (133 dev packets)"
+      ],
+      "outcome": "runner works end to end on dev packets: 133 calls, all parsed, 0.110 GPU-h of the 0.2 smoke cap; Anthropic arm blocked by an invalid API key"
     }
   ],
   "results": [

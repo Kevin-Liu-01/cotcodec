@@ -26,10 +26,18 @@ GPU-hours spent by the program are in `program/state.json`
 - `stage0/q1-gates`: gates, audit, mutator and substrates integrated; GPU
   smoke and pilot cost card next. Projected Stage 0 total 9-10 GPU-h.
 - `stage0/q2-evaluator-mutation`: faithful-save harness, blind specs for 205
-  tasks, operator catalog, campaign driver; first review fixed and the dev
-  campaign rerun (`dev-mutants-v4`, `dev-controls-v7`). The
-  `q2-evaluator-mutation-v1` draft awaits a second review and Kevin's D2/D9
-  confirmation before the freeze.
+  tasks, operator catalog, campaign driver. Second review (55/100) answered
+  in the third draft of `q2-evaluator-mutation-v1`: rater runner in the
+  pinned tree (D23 raters; one call per item, hashed receipts), audit
+  packets, registered headline analysis (`harness/q2_mutation/analysis.py`),
+  K2 sample and fallback label, P3 at the cell-level rule, probe-informed
+  operators exploratory in code, P1 a replication on 92 save-exposed golds.
+  Open-weight rater smoke on 133 dev packets passed (0.110 GPU-h); it
+  rejected 25 of 60 equivalence mutants, mostly over save-stage changes
+  visible in the packet difference, so K3 may fire on confirm. The Anthropic
+  arm is blocked: the API key in the agent environment returns 401. Awaits
+  a third review, a working key and Kevin's D2/D23 sign-offs (prereg
+  section 17).
 
 ## Next actions
 

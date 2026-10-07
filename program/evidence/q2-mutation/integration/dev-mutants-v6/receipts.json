@@ -1,0 +1,62 @@
+[
+ {
+  "argv": [
+   "sh",
+   "-c",
+   "cd /src && python3 -m harness.q2_mutation.campaign build      --targets /ro/prep/targets.jsonl --out /out      --profile-template /home/user/.config/libreoffice/4/user --shards 8 --apply-to gold   && mkdir -p /out/lo && /src/infra/q2-mutation/run/reach.sh /out/scoring-jobs.jsonl /out/lo 16"
+  ],
+  "argv_json_hex_sha256": "f481812dda2cef486f371ca8b7364f8afe1b7b7316cdc9227e5df64c15735d78",
+  "batch_sha256": "f97d3af96418fb4fa806f39456e4117f306cbf04b14e08533d77a95349b37443",
+  "container_dev_nvidia": [],
+  "exit_status": 0,
+  "finished_at": "2026-10-07T20:14:15Z",
+  "gpus_requested": 0,
+  "image_id": "sha256:f5b4c40eefd2b92f846652910ba34db35e1ae7bf90fa474595cc745cc5895361",
+  "job_id": "624",
+  "mode": "run",
+  "mounts": "/home/kevin/cotcodec-runs/stage0/q2-evaluator-mutation/src/2874bb6233c434bb69b6458f95cf4cc542b70c4a:/src:ro /home/kevin/cotcodec-runs/stage0/q2-evaluator-mutation/runs/dev-mutants-v6/build:/out:rw /home/kevin/cotcodec-runs/stage0/q2-evaluator-mutation/inputs:/inputs:ro /home/kevin/cotcodec-runs/stage0/q2-evaluator-mutation/runs/dev-mutants-v6/prep:/ro/prep:ro",
+  "network": "none",
+  "stage": "build",
+  "started_at": "2026-10-07T20:11:36Z"
+ },
+ {
+  "argv": [
+   "sh",
+   "-c",
+   "cd /src && /opt/venv-lock/bin/python -m harness.q2_mutation.campaign guard --split dev --src /src --inputs /inputs && /src/infra/q2-mutation/run/make_jobs.sh dev /out/jobs.jsonl   && cd /src && /opt/venv-lock/bin/python -m harness.q2_mutation.campaign targets --src /src --osworld /inputs/OSWorld      --jobs /out/jobs.jsonl --split dev --out /out"
+  ],
+  "argv_json_hex_sha256": "a894864a7b655898ebc76ad7a52127fe4d164d808ee376e2b08511445d3fa72c",
+  "batch_sha256": "f97d3af96418fb4fa806f39456e4117f306cbf04b14e08533d77a95349b37443",
+  "container_dev_nvidia": [],
+  "exit_status": 0,
+  "finished_at": "2026-10-07T20:11:36Z",
+  "gpus_requested": 0,
+  "image_id": "sha256:2006c1a9247e4911a82508cd22e9d9a7efc5c13e35a20e8a03baac7112876230",
+  "job_id": "623",
+  "mode": "run",
+  "mounts": "/home/kevin/cotcodec-runs/stage0/q2-evaluator-mutation/src/2874bb6233c434bb69b6458f95cf4cc542b70c4a:/src:ro /home/kevin/cotcodec-runs/stage0/q2-evaluator-mutation/runs/dev-mutants-v6/prep:/out:rw /home/kevin/cotcodec-runs/stage0/q2-evaluator-mutation/inputs:/inputs:ro",
+  "network": "none",
+  "stage": "prep",
+  "started_at": "2026-10-07T20:11:34Z"
+ },
+ {
+  "argv": [
+   "sh",
+   "-c",
+   "cd /src && /opt/venv-lock/bin/python -m harness.q2_mutation.campaign guard --split dev --src /src --inputs /inputs && /opt/venv-lock/bin/python -m harness.q2_mutation.campaign k2-sample      --jobs /ro/build/scoring-jobs.jsonl --sanitized /src/program/evidence/q2-mutation/sanitized-tasks      --out /out/k2-sample.jsonl   && /opt/venv-lock/bin/python -m harness.q2_mutation.campaign merge      --jobs /ro/build/scoring-jobs.jsonl --lo-rows $(ls /ro/build/lo/reachability-*.jsonl)      --out /out/jobs-saved.jsonl --path-map /out/=/ro/build/   && /src/infra/q2-mutation/run/score.sh /out/jobs-saved.jsonl /out/mut 16 2   && /opt/venv-lock/bin/python -m harness.q2_mutation.dependency_flips --jobs /out/jobs-saved.jsonl --prefix /out/mut      --workers 16   && /opt/venv-lock/bin/python -m harness.q2_mutation.campaign recheck --mutations /ro/build/mutations.jsonl      --admission /ro/build/admission.jsonl --saved-jobs /out/jobs-saved.jsonl --out /out/recheck.jsonl   && /opt/venv-lock/bin/python -m harness.q2_mutation.campaign report --run /out --mutations /ro/build/mutations.jsonl      --admission /ro/build/admission.jsonl      --probe-touched /src/program/evidence/q2-mutation/harness/probe_touched.json"
+  ],
+  "argv_json_hex_sha256": "b72353d2c1c70f72bc67c8a050bca10b89c3cc21d808d6ee1f2481947cd32ecc",
+  "batch_sha256": "f97d3af96418fb4fa806f39456e4117f306cbf04b14e08533d77a95349b37443",
+  "container_dev_nvidia": [],
+  "exit_status": 0,
+  "finished_at": "2026-10-07T20:27:55Z",
+  "gpus_requested": 0,
+  "image_id": "sha256:2006c1a9247e4911a82508cd22e9d9a7efc5c13e35a20e8a03baac7112876230",
+  "job_id": "625",
+  "mode": "run",
+  "mounts": "/home/kevin/cotcodec-runs/stage0/q2-evaluator-mutation/src/2874bb6233c434bb69b6458f95cf4cc542b70c4a:/src:ro /home/kevin/cotcodec-runs/stage0/q2-evaluator-mutation/runs/dev-mutants-v6/score:/out:rw /home/kevin/cotcodec-runs/stage0/q2-evaluator-mutation/inputs:/inputs:ro /home/kevin/cotcodec-runs/stage0/q2-evaluator-mutation/runs/dev-mutants-v6/build:/ro/build:ro",
+  "network": "none",
+  "stage": "score",
+  "started_at": "2026-10-07T20:14:16Z"
+ }
+]

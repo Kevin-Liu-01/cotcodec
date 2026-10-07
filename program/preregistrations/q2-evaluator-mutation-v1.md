@@ -839,24 +839,24 @@ numbers labelled pre-reachability; and the deviations below.
 
 ## 15. Integration validation on the development split (exploratory)
 
-Four end-to-end campaigns ran on the 17 dev targets through the three
+Six end-to-end campaigns ran on the 17 dev targets through the three
 CPU-only Slurm jobs (no GPU, no network, `/dev/nvidia*` absent in every
-receipt). `dev-mutants-v4` ran at commit
-`6ad6af6be3d471e8ccebdf99da2732f13c132f8e`, the code tree pinned by the
-second draft (after the first review's fixes). The code changed after it in
-the second review's fixes (audit, rater runner, analysis, report, K2 sample,
-probe-informed cells and the classification of harness-caused scoring
-failures); the dev rerun at the pinned tree is recorded below
-(`dev-mutants-v5`, `dev-controls-v8`). The exports, with recipes redacted,
-are committed under `program/evidence/q2-mutation/integration/` and checked
-by `tests/test_q2_mutation_integration_evidence.py`.
+receipt). `dev-mutants-v6` ran at commit
+`2874bb6233c434bb69b6458f95cf4cc542b70c4a`, whose code tree is the one
+pinned above (after the second review's fixes); `dev-mutants-v4` ran at the
+second draft's pinned tree (`6ad6af6`) and `dev-mutants-v5` at the
+intermediate `d9c5876`. The exports, with recipes redacted, are committed
+under `program/evidence/q2-mutation/integration/` and checked by
+`tests/test_q2_mutation_integration_evidence.py`.
 
 | Run | Code | Recipes applied to | Planned | Admitted | Evaluable (lock) | Ambiguous | `null_not_pass` | Normalized |
 |---|---|---|---:|---:|---:|---:|---:|---:|
 | `dev-mutants-v1` (Slurm 453-455) | `2cc8559` | base (null = base saved again) | 275 | 271 | 203 | 27 | 40 (2 targets) | 1 |
 | `dev-mutants-v2` (Slurm 458-460) | `99992bc` | raw gold (null = base) | 275 | 271 | 215 | 27 | 28 (1 target) | 1 |
 | `dev-mutants-v3` (Slurm 461-463) | `17aac70` | raw gold (null = base) | 275 | 271 | 215 | 27 | 28 (1 target) | 1 |
-| `dev-mutants-v4` (Slurm 475-477), pinned code | `6ad6af6` | raw gold (null = base) | 275 | 271 | 215 | 27 | 28 (1 target) | 1 |
+| `dev-mutants-v4` (Slurm 475-477) | `6ad6af6` | raw gold (null = base) | 275 | 271 | 215 | 27 | 28 (1 target) | 1 |
+| `dev-mutants-v5` (Slurm 603-605) | `d9c5876` | raw gold (null = base) | 275 | 270 | 214 | 27 | 28 (1 target) | 1 |
+| `dev-mutants-v6` (Slurm 623-625), pinned code | `2874bb6` | raw gold (null = base) | 275 | 269 | 214 | 27 | 27 (1 target) | 1 |
 
 - Build: 4 of 275 planned mutants failed build-time purity (two
   `docx.alt.para_direct_for_style` changed the resolved appearance; two
@@ -894,11 +894,37 @@ by `tests/test_q2_mutation_integration_evidence.py`.
   them only on 5cfb9197. Mutant ids differ between the runs because a
   LibreOffice save is not byte-deterministic (document timestamps) and each
   recipe carries the SHA-256 of its base file.
-- Controls at the same code (`dev-controls-v7`, Slurm 478-480,
+- Controls at the v4 code (`dev-controls-v7`, Slurm 478-480,
   `harness/dev-controls-v7-summary.json`): K1 19/19 under both venvs; P1 one
   flip in 19 golds (af23762e; Clopper-Pearson 95% 0.13%-26.0%); no gold
   save failed; 2 dev tasks without a gold excluded as `unemulated`
   (postconfig typed text).
+- Reruns after the second review. `dev-mutants-v5` and `v6` reproduce v4 on
+  every mutant matched by task, operator and recipe (275 of 275) in label,
+  status, event and verdict under both venvs, except mutants the build did
+  not admit: the UNO bridge to LibreOffice was disposed mid-application
+  (`DisposedException` in `uno_apply`), so the `applied` check failed for 1
+  mutant in v5 (e528b65e `docx.viol.delete_bound_paragraph`) and 2 in v6
+  (936321ce `docx.extra.delete_unrelated_paragraph`, af23762e
+  `pptx.eq.doc_property`). Section 7 counts these as `not_admitted`
+  (`applied`), so about 0.5% of planned mutants per run can be lost to this
+  infrastructure fault, a different set each run. The probe-touched set is
+  the same (115 of 275 mutants; no dev probe-informed mutant lay outside a
+  probe cell), and no dev venv disagreement needed S1. The K2 sample drawn
+  in job 3 of v6 has 80 jobs over 4 domains and 17 tasks
+  (`integration/k2-sample-dev-mutants-v6/`).
+- Controls at the new code (`dev-controls-v8` at `d9c5876`, `dev-controls-v9`
+  at the pinned `2874bb6`; `harness/dev-controls-v8-summary.json`,
+  `-v9-summary.json`): K1 19/19 under both venvs; P1 one flip in 17 counted
+  golds (af23762e), with the two non-office golds (20236825 txt, aa4b5023
+  mp4) now listed as not exposed instead of counted. In v8 the do-nothing of
+  9219480b passed under the lock-exact venv and failed under the scoping
+  venv, each venv's two scorings agreeing; its checker
+  (`check_python_file_by_test_suite`, a random tetromino test) passes about
+  3 runs in 10 in both venvs (dev validation, `dev-validation-2026-10-07.json`),
+  so this was not a dependency effect. That motivated the five-scoring S1
+  confirmation (`dependency_flips.py`), which v9 and v6 ran with no
+  candidate (the rescoring path is covered by unit tests only).
 
 - Rater smoke on dev packets (`integration/rater-smoke-dev-v1/`, code
   `ba840b4`): `submit_audit.sh` (Slurm 559, CPU only, LO-VM image) drew the
