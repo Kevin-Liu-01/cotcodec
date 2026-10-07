@@ -1,0 +1,51 @@
+{
+  "what": "Operator catalog and harness-validation evidence for the Q2 evaluator-mutation study (branch stage0/q2-mut-operators). No checker was run and the confirmatory mutation campaign has not started; it waits for the preregistration freeze.",
+  "files": {
+    "operator-catalog.json": "catalog() output: 64 operators with family, label class, target, check kinds, aspects, provenance, stratum, and a SHA-256 over the descriptions and operator sources (catalog_sha256).",
+    "validation-synthetic.json": "End-to-end run of every operator on synthetic documents in the LO-VM image (job 422).",
+    "devsmoke-dev.json": "Edit-primitive smoke run on 14 development-split OSWorld files (job 423); labels not reported.",
+    "prereg-operators-section.md": "Operator items for the q2-0a preregistration; an input for the preregistration author, not frozen."
+  },
+  "code_revision_validated": "4a44f5d459d74202c3175278b7278454e3728529",
+  "catalog_sha256": "6d01e283a4be3826c147127cf445dfbdf21d0a4ed452067137b108add3bd2411",
+  "schema": {
+    "path": "harness/q2_mutation/schema.py",
+    "copied_from": "stage0/q2-mut-harness 484a656db40fec9d012ec9002b71045af243ba8f",
+    "sha256": "65d91703754b4026b15f6c53a4a6069da723b58d749730770da2910c1edf427d",
+    "version": "q2-mutation-schema-v1"
+  },
+  "sources": [
+    {
+      "name": "LO-VM image cotcodec-q2-lo-vm:9a8b00a1 (built by the harness branch)",
+      "revision": "image sha256:894b2623dceb43e8468a2adbd6e03a532ea9683d4b7754cd79fa0d58a331f909; harness build job 384, Dockerfile sha256 9f49b037ba3d091b9d468a96e656df8f2bfb6adf1e1dd19778e0051410b04989, context sha256 015f42e77dd8876e01e88b4aaf8c7418c32ae68562d2ead8c7dce11cd0ec67b8",
+      "bytes": 7770699755,
+      "sha256": "894b2623dceb43e8468a2adbd6e03a532ea9683d4b7754cd79fa0d58a331f909",
+      "licence": "LibreOffice MPL-2.0; the OSWorld VM userland (HF xlangai/ubuntu_osworld a5d9c3ea) under the Ubuntu archive licences",
+      "content": "the OSWorld VM's own LibreOffice 7.3.7.2 30(Build:2) (Ubuntu 1:7.3.7-0ubuntu0.22.04.4), python3-uno 3.10, Xvfb, and the VM's LibreOffice user profile used as --profile-template"
+    },
+    {
+      "name": "harness CPU-only Slurm entry infra/slurm/host-single-node/q2-mutation-cpu.sbatch",
+      "revision": "stage0/q2-mut-harness 9a8b00a1f259c2ea7d92a39571ade626de513521",
+      "sha256": "6aa4e91bc958819a6b2a4718f568a7faee947a4db32dc282b05d4e7174de1bc1",
+      "licence": "MIT (this repository)",
+      "content": "D12 lane: no GRES, containers without --gpus, --network=none, read-only root, non-root uid, receipt asserts no /dev/nvidia* in the container"
+    },
+    {
+      "name": "OSWorld file cache, 14 development-split tasks (gold and initial)",
+      "revision": "HF xlangai/ubuntu_osworld_file_cache 1e112283c4ecb08d6fed8069bca7de74fa2f12aa (harness inputs/file_cache_1e112283)",
+      "bytes": 35991595,
+      "sha256": "f21c188c82e61c816281ee9f7683c9e72f03e30a6e4801a69b617ac8f59bde69",
+      "sha256_definition": "SHA-256 of the sorted lines '<file sha256>  <bytes>' of the 28 files; the per-file manifest is on the host next to run devsmoke-delta-4a44f5d4-v1 (inputs-manifest.json). Every file also matched the harness job list's candidate digest.",
+      "licence": "apache-2.0 dataset card; the documents are third-party content and are not redistributed"
+    },
+    {
+      "name": "harness control job list runs/dev-controls-raw-v1/jobs-dev.jsonl",
+      "revision": "harness run dev-controls-raw-v1",
+      "bytes": 22013,
+      "sha256": "3a078293a0d79d412eaa009c3d8be6718855eef122f9325683782a2ef470fc63",
+      "licence": "MIT (this repository's harness output)"
+    }
+  ],
+  "third_party_python_packages": "none: the operators, the purity oracle and the appliers use the standard library, plus LibreOffice's own pyuno inside the container",
+  "release_policy": "Recipes carry SHA-256 digests of the text they expect plus at most a few words of edited text; mutant documents and per-mutant records stay on the host."
+}
