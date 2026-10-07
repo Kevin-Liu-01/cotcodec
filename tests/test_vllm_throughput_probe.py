@@ -825,11 +825,15 @@ def test_plan_and_project_cli(tmp_path: Path, capsys) -> None:
     assert "head" in projection["code"]["git"]
     assert projection["jobs"]["a"]["status"] == "complete"
     assert projection["jobs"]["a"]["acceptance"]["accepted"] is True
-    # The CLI checks the real ledger, where this experiment is not frozen.
+    # The CLI checks the real ledger. Before the freeze it refused because the
+    # experiment was not frozen; since the freeze it refuses because this small
+    # test contract is not the one the frozen registration names. Either way no
+    # projection may be written.
     output = tmp_path / "projection.json"
     args = ["project", "--config", str(_small_config(tmp_path)), "--job-a", str(job_a)]
     assert probe.main([*args, "--output", str(output)]) == probe.EXIT_PRE_RESULT
-    assert "not frozen" in capsys.readouterr().err
+    err = capsys.readouterr().err
+    assert "not frozen" in err or "does not name contract SHA-256" in err
     assert not output.exists()
     output.write_text("{}")
     with pytest.raises(SystemExit, match="overwrite"):
