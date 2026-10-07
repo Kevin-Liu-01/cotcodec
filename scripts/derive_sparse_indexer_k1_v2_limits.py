@@ -46,12 +46,21 @@ class DeriveError(ValueError):
     """The probe receipt cannot give registered limits."""
 
 
+ROW_LABELS = {"main": "main (and its continuation, if any)",
+              "extension": "extension (only when the main read calls for it, then mandatory)"}
+PROBE_ROW = "| q3-k1-throughput-probe-v1 | 1 | | 9 | 0.15 |"
+
+
 def markdown_rows(derived: dict[str, Any]) -> list[str]:
+    """The rows of the v2 preregistration's limits table ("Compute"), in its order."""
+
     rows = []
     for job, entry in derived["jobs"].items():
-        rows.append(f"| {job} | {entry['gpus']} | {entry['projected_minutes']:.1f} | "
-                    f"{entry['minutes']} | {entry['max_gpu_hours']:.2f} |")
-    rows.append(f"| total with the probe | | | | {derived['total_gpu_hours_with_probe']:.2f} |")
+        rows.append(f"| {ROW_LABELS.get(job, job)} | {entry['gpus']} | "
+                    f"{entry['projected_minutes']:.1f} | {entry['minutes']} | "
+                    f"{entry['max_gpu_hours']:.2f} |")
+    rows.append(PROBE_ROW)
+    rows.append(f"| Total with the probe | | | | {derived['total_gpu_hours_with_probe']:.2f} |")
     return rows
 
 

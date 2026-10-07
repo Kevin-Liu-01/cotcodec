@@ -25,6 +25,14 @@ Each contract proves valid inputs pass and decision-bearing drift fails.
   them inside the research image (CPU, `--network none`).
   `test_sparse_indexer_k1_prereg.py` binds the K1 preregistration's code table
   to the working tree until the experiment is frozen.
+- K1 successor: `test_sparse_indexer_bank.py` (float64 and exact equivalence
+  with v1's per-indexer code), `test_run_sparse_indexer_phase0a_v2.py`,
+  `test_probe_sparse_indexer_k1_throughput.py` and
+  `test_sparse_indexer_k1_v2_doctor.py` need torch;
+  `test_sparse_indexer_k1_budget_v2.py`, `test_sparse_indexer_k1_v2_manifests.py`
+  and `test_sparse_indexer_k1_v2_prereg.py` mostly do not.
+  `test_sparse_indexer_bank_gpu.py` runs only with `COTCODEC_GPU_TESTS=1` on a
+  Slurm-allocated GPU inside the image.
 - `_holo3_world.py` builds in-memory stand-ins for the Holo3 and OpenCUA
   archives that reproduce the real leaderboard cells, so the audit's controls
   and tamper cases run without network.
