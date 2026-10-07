@@ -30,9 +30,11 @@ scores it. Runbook: `README.md` in this directory.
   purity oracle; its sources are hashed into `catalog_sha256`.
 - `raters.py`, `packets.py` and `stats.py` hold the D9/D23 audit: sample, blind
   packet (built from the operators' snapshot), answer rule, consensus,
-  adjudication and the K3 bound; `audit.py` builds samples, packets and the
-  summary; `rater_runner.py` makes the model calls (one per rater per item,
-  hashed receipts); `analysis.py` is the registered headline.
+  adjudication and the K3 bound; `audit.py` builds samples, saved-start
+  baselines, packets fitted to the token budget and the summary (one calls
+  file per shard and rater); `rater_runner.py` makes the model calls (one per
+  rater per item, hashed receipts) and exports/ingests the agent-harness
+  Claude rater (D25); `analysis.py` is the registered headline.
 
 ## Patterns to follow / invariants
 <!-- agent-docs:fill:patterns -->

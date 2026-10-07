@@ -101,3 +101,45 @@ def test_reviewed_run_names_what_each_recipe_was_applied_to() -> None:
             # Office recipes were planned on the base but applied to the gold.
             assert row["applied_input_sha256"] != row["recipe_release"]["input_sha256"]
     assert all(t["status"] == "planned" for t in targets.values())
+
+
+SMOKES = sorted(p for p in INTEGRATION.glob("rater-smoke-dev-v*") if p.is_dir())
+
+
+@pytest.mark.parametrize("smoke", SMOKES, ids=lambda p: p.name)
+def test_rater_smoke_evidence_is_intact_dev_only_and_blind(smoke: Path) -> None:
+    """Every file is in SHA256SUMS; the sample is dev-only; no reply text or packet bytes."""
+    sums = {}
+    for line in (smoke / "SHA256SUMS").read_text(encoding="utf-8").splitlines():
+        digest, name = line.split(maxsplit=1)
+        sums[name.removeprefix("./")] = digest
+    files = {
+        str(p.relative_to(smoke))
+        for p in smoke.rglob("*")
+        if p.is_file() and p.name != "SHA256SUMS"
+    }
+    assert set(sums) == files
+    for name, digest in sums.items():
+        assert hashlib.sha256((smoke / name).read_bytes()).hexdigest() == digest, name
+    sample = _jsonl(smoke / "audit" / "sample.jsonl")
+    assert sample and {row["task_id"] for row in sample} <= DEV
+    calls = _jsonl(smoke / "open-weight" / "calls.jsonl")
+    items = {row["item_id"] for row in sample}
+    assert calls and {c["item_id"] for c in calls} <= items
+    for call in calls:
+        assert "text" not in call and "content" not in json.dumps(call)
+    for path in smoke.rglob("*.json*"):
+        assert "data_b64" not in path.read_text(encoding="utf-8"), path
+
+
+def test_harness_export_manifest_holds_digests_only() -> None:
+    manifest = json.loads(
+        (
+            INTEGRATION / "rater-smoke-dev-v2" / "harness-export" / "dev-export-manifest.json"
+        ).read_text(encoding="utf-8")
+    )
+    sample = _jsonl(INTEGRATION / "rater-smoke-dev-v2" / "audit" / "sample.jsonl")
+    assert sorted(manifest["order"]) == sorted(row["item_id"] for row in sample)
+    text = json.dumps(manifest)
+    for word in ("should_", "verdict", "label", "operator", "mutant"):
+        assert word not in text

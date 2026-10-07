@@ -1,31 +1,39 @@
 # q2-evaluator-mutation-v1: OSWorld-Verified checker mutation audit
 
-**Status: DRAFT for a third review, not frozen.** Every pin below is
+**Status: DRAFT for a fourth review, not frozen.** Every pin below is
 filled from the integration branch `stage0/q2-evaluator-mutation`, and no
 value is left open. The first adversarial review (2026-10-07) was answered in
-the previous draft. This draft answers the second review (2026-10-07, 55/100,
-not ready to freeze), whose seven blocking defects are fixed here:
+the second draft and the second review (55/100) in the third. The third
+draft's re-audit (2026-10-07, 62/100, not ready to freeze) closed the second
+review's seven defects and found new ones; this draft answers them and
+adopts decisions D24 and D25:
 
-1. K3 and K4 are computed on the two label classes that enter the metrics
-   without an audit gate (`should_pass_equiv`, `should_fail_violation`);
-   alternative-solution acceptance and extra-change rejection are reported
-   under S6; K3 has one registered consequence (sections 5, 9, 10).
-2. A rater runner is in the pinned tree (`harness/q2_mutation/rater_runner.py`)
-   with the D23 raters, fixed parameters, one call per rater per item,
-   transport-only retries, the first-token rule, `unsure` for every
-   non-answer, shams and P1 flips in the sample, and hashed receipts. The
-   open-weight rater runs as a lane job under a registered GPU cap; a
-   development smoke ran on dev packets (sections 2, 9, 15).
-3. K2 has a registered sample, executor rule, closed list of explanations and
-   a fallback label (section 10).
-4. P3 is counted at the code's cell-level rule; the section 6 table, the dev
-   sentence and K7 are corrected, and the family floor decides where K7
-   applies (sections 6, 10).
-5. The two probe-informed operators are probe-touched in code everywhere
-   (`campaign.PROBE_INFORMED_OPERATORS`; section 12).
-6. P1 is a replication only, on golds with an office file the save stage
-   rewrites; the other golds are listed as not exposed (sections 4, 12).
-7. The branch carries main's six-row ledger and decisions D1-D23.
+1. Packet baseline: each packet's starting file and the end-state
+   difference are the starting file saved through the same LibreOffice
+   steps as the end state, so changes the save alone makes (the document
+   language, default styles and cell defaults the VM's LibreOffice writes)
+   are not shown as edits; a raw-file fallback is stated in the packet
+   (sections 9, 15).
+2. The `should_fail_violation` K3 group is a census stratum, so it reaches
+   the registered minimum at the expected confirm size; the sampler and K3
+   rule were simulated (sections 9, 10;
+   `integration/audit-design-v1/`).
+3. P1 and K6 are computed over the confirm and the reserve control runs in
+   code; K1 stays confirm-only (sections 4, 10).
+4. The audit summary merges one call file per shard and rater and refuses an
+   item rated twice; the GPU cap is enforced across shards (section 9).
+5. Rater runner: a 200 response whose body is not the provider's JSON is
+   saved, hashed and `unsure`; the Anthropic receipt is written however the
+   run ends (section 9).
+6. A registered token budget fits every packet to the open-weight rater's
+   context window and records every cut (section 9).
+7. The Claude rater runs through the Claude Code agent harness while no
+   valid API key exists (D25), with blind exported packets, a fixed
+   instruction file and hashed receipts; sampling on that path is not fixed
+   and is disclosed (sections 2, 9, 14).
+8. A checker family K2 drops leaves P2-P5, which are recomputed without it;
+   S1 candidates whose five scorings disagree are S5 and leave P2-P5; the
+   expected adjudication workload is stated (sections 5, 9, 10).
 
 The registered analysis is code (`harness/q2_mutation/analysis.py`), so no
 choice is left to make after a confirmatory verdict is read. After the third
@@ -73,8 +81,8 @@ web and infeasible tasks are out of scope.
 | Operator catalog | `q2-mut-operators-v1`, `catalog_sha256` (hash over the operator descriptions and the sources of `harness/q2_mutation/operators/`), 64 operators listed in Appendix A; validated at `7c429bcb793369649bc7970ccad0fba290ad2772`, merged unchanged from `stage0/q2-mut-operators` at `0d7f0857cc0a6d0007466a05ee08a44a467cf957` |
 | Harness and campaign code | code-tree SHA-256 over every file of `harness/q2_mutation/` (README and SKILL files excepted), `infra/q2-mutation/`, `infra/slurm/host-single-node/q2-mutation-cpu.sbatch`, `scripts/q2_mutation_export_tasks.py` and `scripts/q2_mutation_operators.py` (`campaign.code_tree_sha256`); schema `q2-mutation-schema-v1`; operator snapshot version 2 (pptx slide backgrounds, shape outlines and text-body properties added after the review) |
 | Mounted inputs | `osworld_tree_sha256` over `desktop_env/` and `evaluation_examples/` of the host's clean checkout at `b138d348` (git status clean, 537 files); `vm_baseline_tree_sha256` over the 75 VM config-baseline files; every file-cache file re-hashed against `program/evidence/q2-mutation/harness/file-cache-receipts.tsv` (447 files, its SHA-256 pinned); the probe map input `probe_touched.json` (SHA-256 pinned) |
-| Raters (decision D23) | Anthropic rater: Messages API, model `claude-opus-5-5`, the id the API names recorded by `rater_runner` before the first call (the run stops if it differs) and from every response. Open-weight rater (the independent one): `Qwen/Qwen3.5-9B` at Hugging Face revision `c202236235762e1c871ad0ccb60c8ee5ba337b9a`, model receipt SHA-256 `0a9e052d561b017c505adf5a1c6fcdc048522660a0db134486b84edbf3de5cb3` (artifact root `9845026dbe255e24b105224eebbb5436d315713b9a5c53c434137896b160c5b1`, Apache-2.0), verified by the lane in every job |
-| Rater runner and serving | `harness/q2_mutation/rater_runner.py` (inside the code-tree pin), prompt `RATER_PROMPT_V1`; vLLM 0.31.0 (commit `db9527a46873454610df6dbedf79a36d6bf1a7f6`) in the cu129 overlay of `vllm/vllm-openai@sha256:b18abb2df97b8f798e81862bd93f872ea18613372e2c3adc0cc2ac21e66ac12f` (image ID `sha256:423783aac4fefebfe6b67d6fc2810b88a1d4dc08ed8bba587c80b0d8973e0b8b`), built by `scripts/build_vllm_overlay_on_h100.sh` from a source capsule of the frozen commit; the serving probes validated this base, variant and checkpoint (`program/evidence/2026-10-07/serving-throughput-probe-v2/`) |
+| Raters (decisions D23, D25) | Anthropic rater, model `claude-opus-5-5`, by one of two registered paths: the Messages API once a valid key exists (the id the API names recorded by `rater_runner` before the first call, the run stops if it differs, and from every response), and until then the Claude Code agent harness (D25: `rater_runner export-harness` / `ingest-harness`; the model id the harness names must be `claude-opus-5-5` for every record or the ingest refuses it). Open-weight rater (the independent one): `Qwen/Qwen3.5-9B` at Hugging Face revision `c202236235762e1c871ad0ccb60c8ee5ba337b9a`, model receipt SHA-256 `0a9e052d561b017c505adf5a1c6fcdc048522660a0db134486b84edbf3de5cb3` (artifact root `9845026dbe255e24b105224eebbb5436d315713b9a5c53c434137896b160c5b1`, Apache-2.0), verified by the lane in every job |
+| Rater runner and serving | `harness/q2_mutation/rater_runner.py` (inside the code-tree pin), prompt `RATER_PROMPT_V1`, harness instructions `HARNESS_INSTRUCTIONS` (the prompt plus a fixed note on reading the exported item); vLLM 0.31.0 (commit `db9527a46873454610df6dbedf79a36d6bf1a7f6`) in the cu129 overlay of `vllm/vllm-openai@sha256:b18abb2df97b8f798e81862bd93f872ea18613372e2c3adc0cc2ac21e66ac12f` (image ID `sha256:423783aac4fefebfe6b67d6fc2810b88a1d4dc08ed8bba587c80b0d8973e0b8b`), built by `scripts/build_vllm_overlay_on_h100.sh` from a source capsule of the frozen commit; the serving probes validated this base, variant and checkpoint (`program/evidence/2026-10-07/serving-throughput-probe-v2/`) |
 
 Machine-readable pins. Before any job is submitted, `check_frozen.py` on the
 host refuses a staged tree whose `.git_sha` is not the submitted commit, and,
@@ -208,7 +216,11 @@ verdicts differ between the venvs while each venv's two scorings agree is
 rescored five times in fresh processes in each venv in the same Slurm job
 (`harness/q2_mutation/dependency_flips.py`, wired into job 3 of a mutation
 run and jobs 1 and 3 of a control run); it counts for S1 only if all five
-agree within each venv.
+agree within each venv. Where the five scorings of a venv disagree, or agree
+on a verdict other than its first two scorings, the candidate was scored
+nondeterministically in that venv: it is `nondeterministic` (S5) under that
+venv and leaves P2-P5, and when it is a null mutant so do its target's
+mutants (`campaign.build_report` `s1_notes`).
 
 **Verdicts.** `pass` iff score == 1.0; `fail` otherwise; `error` iff
 `evaluate()` raised (OSWorld's `run.py` logs and skips such a task, so an
@@ -246,7 +258,12 @@ a probe-informed operator, section 12). The registered computation is
   others are listed. Every flip goes to the audit (stratum `p1_flip`); a
   flip is a confirmed false negative when the audit decision is accept.
   Reported: raw flip share and audit-confirmed share with exact
-  Clopper-Pearson 95% intervals (zero flips in 92 gives 0-3.9%). The headless
+  Clopper-Pearson 95% intervals (zero flips in 92 gives 0-3.9%). The
+  registered computation sums the confirm and the reserve control runs
+  (`analysis.p1_over_controls`, `--controls-summary` and
+  `--reserve-controls-summary`): counted golds and flips of both runs, which
+  must hold disjoint tasks of their own splits (`splits.json`); K1 reads the
+  confirm run only, and K6 counts the confirmed flips of both. The headless
   scoping round trip already saved all 92 of these golds (a different save
   path and build) and flipped 7 of 63 gold-passing confirm golds and 1 of 26
   reserve golds, so P1 has no confirmatory component: it replicates that
@@ -293,8 +310,12 @@ percentile bootstrap (10,000 resamples, seed 42, two-sided 95%).
   `venv_disagreements`, `report.aggregate` `dependency_flips`), counted only
   when five further fresh-process scorings in each venv all agree
   (`dependency_flips.py`; `report.json` `s1`, `confirmed_at_repeat_5`);
-  candidates that fail the confirmation are reported as unstable (S5). Its
-  scope is the package differences of section 2
+  a candidate that fails the confirmation is nondeterministic (S5), never an
+  S1 flip: in a mutation run it leaves P2-P5 under the venv whose scorings
+  disagree (section 3; `report.json` `s5_unstable_at_repeat_5`), and in a
+  control run it is listed under S5 (`report.aggregate`
+  `s5_unstable_at_repeat_5`). Its scope is the package differences of
+  section 2
   (pandas 3.0.1 vs 2.3.3, opencv-python-headless, chardet, beautifulsoup4 and
   59 others); it is not a measurement of leaderboard-era drift.
 - S2 Script-writer stratum rates (P2-P4 on that stratum; empty for this
@@ -305,7 +326,8 @@ percentile bootstrap (10,000 resamples, seed 42, two-sided 95%).
 - S4 Save timing: share of all saves of the save stage (postconfig saves and
   agent-equivalent saves) whose write took longer than the 0.5 s the VM waits
   before reading the file (`campaign.reachability_summary`).
-- S5 Nondeterministic checkers: candidates whose repeated scorings disagree.
+- S5 Nondeterministic checkers: candidates whose repeated scorings disagree,
+  at the two registered scorings or in the five-scoring S1 rescoring.
 - S6 Audit agreement with the a-priori labels, per label class
   (`raters.summarize` `by_label_class`): decisions, the Hajek-weighted share
   agreeing with the label and the unresolved share for each of the four
@@ -435,7 +457,7 @@ first that applies in this order:
 | `infra_failed` | the mutant's or its null mutant's scoring failed for a harness cause: it exceeded 300 s on every attempt (one try and two retries), or its process died without a result, met a live getter or a refused network fetch | no, infrastructure, with the reason |
 | `null_not_pass` | the target's saved null mutant does not pass under this venv | no, S7 |
 | `error` | `evaluate()` raised | no, counted per checker |
-| `nondeterministic` | the mutant's or its null mutant's repeated scorings disagree | no, S5 |
+| `nondeterministic` | the mutant's or its null mutant's repeated scorings disagree (its two scorings, or the five of the S1 rescoring, which must also agree with the first two) | no, S5 |
 | `ambiguous` | label `ambiguous` | no, counted per witness rule and verdict |
 | `evaluable` | all of the above clear | yes: event FN, FN_alt, FP_R or FP_F when the verdict disagrees with the label, otherwise `ok` |
 
@@ -480,26 +502,57 @@ first that applies in this order:
   most twice; every attempt is reported; the first complete run counts and
   nothing from a failed attempt is merged into it. An open-weight rater job
   that stops early keeps its rated items (one call per item), and a rerun
-  rates only the rest, inside the GPU cap of section 9. A failed UNO office
+  rates only the rest, inside the GPU cap of section 9. An item with call
+  records in two shards or attempts is refused at the summary
+  (`rater_runner.merge_calls`), never counted twice. A failed UNO office
   restart aborts the build job (`CampaignError`) and falls under this rule.
 
 A checker exception is not an infrastructure failure; it is verdict `error`.
 
-## 9. Audit (decisions D9 and D23)
+## 9. Audit (decisions D9, D23 and D25)
 
 - Raters (D23), labelled "model raters" in every result:
-  - Anthropic rater (`model-rater-anthropic`): the Anthropic Messages API,
-    model `claude-opus-5-5`. Before the first call the runner records the
-    model object the API returns for that id (`GET /v1/models/{id}`) and
-    stops if its id differs; every response's `model` field is recorded.
-    `max_tokens` 16,000 (it covers the model's adaptive thinking and the
-    answer), effort `high` (`output_config.effort`). The request carries no
-    sampling parameter: this model rejects `temperature`, `top_p` and
-    `top_k` and its thinking cannot be disabled, so its sampling is the API's
-    fixed default at that effort. No refusal fallback is enabled, because a
-    fallback would answer with another model; a refusal is `unsure`.
-    Per-request timeout 600 s, at most 4 requests in flight. The calls run
-    where the API key is (not on the H100 host).
+  - Anthropic rater (`model-rater-anthropic`), model `claude-opus-5-5`, by
+    one of two registered paths. Both present the same blind packet content
+    in the same order (`rater_runner.packet_parts`), and every result names
+    the path used.
+    - API path (used once a valid API key exists; the reversal of D25): the
+      Anthropic Messages API. Before the first call the runner records the
+      model object the API returns for that id (`GET /v1/models/{id}`) and
+      stops if its id differs; every response's `model` field is recorded.
+      `max_tokens` 16,000 (it covers the model's adaptive thinking and the
+      answer), effort `high` (`output_config.effort`). The request carries
+      no sampling parameter: this model rejects `temperature`, `top_p` and
+      `top_k` and its thinking cannot be disabled, so its sampling is the
+      API's fixed default at that effort. No refusal fallback is enabled,
+      because a fallback would answer with another model; a refusal is
+      `unsure`. Per-request timeout 600 s, at most 4 requests in flight. The
+      calls run where the API key is (not on the H100 host).
+    - Agent-harness path (D25; used while the API key available here is
+      invalid): `rater_runner export-harness` writes one blind text file per
+      item (`{item_id}.txt`: `HARNESS_INSTRUCTIONS`, which is `RATER_PROMPT_V1`
+      plus a fixed note on reading the item, then the packet's parts in
+      `packet_parts` order, each page image named by its file, then the
+      answer line), the item's page images (`{item_id}.pages/`) and
+      `index.json`, which lists the item ids alone in the rater's seeded
+      order. Nothing else is in that directory: no label, verdict, operator,
+      checker, score or other rater's answer. The export manifest (SHA-256
+      of every exported file and of the request body rebuilt from the
+      packet) is written beside it. One Claude subagent rates one item and
+      reads only that item's file and images. The answers come back as a
+      JSON list of `{item_id, answer, reason, model_id}`; `rater_runner
+      ingest-harness` rebuilds every exported body from the packets and
+      checks it against the manifest, refuses an item outside the export, a
+      second record for an item and a model id other than
+      `claude-opus-5-5`, applies the first-token rule to `answer`, and writes
+      `calls.jsonl` in the shared call schema (request digest: the exported
+      file; body digest: the rebuilt request; response digest: the canonical
+      record) and `receipt.json` (digests of the instructions, the index, the
+      export manifest and the answers file). An exported item without a
+      record is `unrated` (`unsure`). Disclosure: on this path the harness,
+      not the registration, sets the model's sampling and thinking, so the
+      Claude rater's sampling is not fixed; the open-weight rater stays
+      seeded and greedy.
   - Open-weight rater (`model-rater-open-weight`, the independent one):
     Qwen3.5-9B at the revision and receipt of section 2, served by
     `vllm serve` on 127.0.0.1 inside the network-less lane container with
@@ -514,23 +567,34 @@ A checker exception is not an infrastructure failure; it is verdict `error`.
     `container_profile: vllm`, one H100, the model receipt verified in the
     container, one packet shard mounted read-only as the study artifact;
     manifest from `infra/q2-mutation/run/render_rater_manifest.py`) in the
-    cu129 overlay built from the frozen commit.
+    cu129 overlay built from the frozen commit. The lane sends a checkpoint
+    signal 180 s before a job's limit (`--signal=B:USR1@180`), at which the
+    runner stops sending, so a job's limit covers the engine start (about two
+    minutes), its shard's items (about 28 per minute on the dev packets) and
+    those 180 s; an item not reached is `unrated` and goes to a rerun of the
+    rest (section 8).
   - GPU cap: every open-weight rater job of the confirmatory audit together
-    (all shards and any rerun) at most 1.0 GPU-h of allocation, plus the
-    overlay build at the frozen commit, at most 10 minutes of one H100
+    (all shards and any rerun) at most 1.0 GPU-h of allocation;
+    `render_rater_manifest.py` refuses a job whose cap plus the caps of the
+    audit's earlier shards and reruns (`--prior-gpu-hours`) exceeds it. Plus
+    the overlay build at the frozen commit, at most 10 minutes of one H100
     (0.167 GPU-h, as for the serving probes, D8 and D19). The development
-    smoke (section 15) was capped at 0.2 GPU-h plus its own overlay build.
-    The registration's GPU total is therefore at most 1.17 GPU-h, below the
-    8 GPU-h gauntlet threshold.
-  - Data sent to the Anthropic API: only the packet text (the task
+    smokes (section 15) were capped at 0.2 and 0.15 GPU-h plus their own
+    overlay builds. The registration's GPU total is therefore at most
+    1.17 GPU-h, below the 8 GPU-h gauntlet threshold.
+  - Data sent to the Anthropic model: only the packet text (the task
     instruction, structure listings and differences) and page renders of the
-    task's starting files and of the candidate end-state files. These are
-    public OSWorld task files (task configs Apache-2.0; file-cache documents
-    under the dataset's apache-2.0 card, third-party content) and edits of
-    them made by the operators; no credential, private data or other
-    material is sent. Volume for the confirmatory audit: at most 587 items
-    (450 mutants under the stratum caps, 45 shams, at most 92 P1 flips), one
-    request each, with up to 40 page images per request.
+    task's starting files and of the candidate end-state files, on either
+    path (through the API, or read from the exported files by a Claude
+    subagent of the agent harness). These are public OSWorld task files
+    (task configs Apache-2.0; file-cache documents under the dataset's
+    apache-2.0 card, third-party content) and edits of them made by the
+    operators; no credential, private data or other material is sent.
+    Volume for the confirmatory audit: at most 807 items (650 mutants under
+    the stratum caps, 65 shams, at most 92 P1 flips) and about 375 expected
+    (the simulation of section 10 at the expected sizes: about 365 mutants
+    and shams, plus the P1 flips), one request each, with up to 40 page
+    images per request.
 - Runner rules (`harness/q2_mutation/rater_runner.py`): one call per rater per
   item (an item with any record in `calls.jsonl` is never sent again, so a
   resumed run skips it); retries only on transport errors (connection
@@ -540,17 +604,25 @@ A checker exception is not an infrastructure failure; it is verdict `error`.
   case-folded, and counts only if it is `accept`, `reject` or `unsure`
   (`raters.parse_first_token`); a refusal (`stop_reason` `refusal`), an empty
   or unparseable reply, a timeout that survived its retries, an exhausted
-  transport, or a request the provider rejected (HTTP 400 or 413, for
-  example a packet over the context window) is `unsure`; an item a job never
-  reached is `unsure` (`unrated`); an authentication, permission or
+  transport, a request the provider rejected (HTTP 400 or 413, for example a
+  packet over the context window) or a 200 response whose body is not the
+  provider's JSON (`malformed_response`, for example a proxy error page; its
+  bytes are saved and hashed like any response) is `unsure`; an item a job
+  never reached is `unsure` (`unrated`); an authentication, permission or
   unknown-model error stops the run and rates nothing (rerun under section 8).
   Every call record holds the SHA-256 of the exact request bytes, of the
   canonical request body (rebuilt from the packet by `request_body`) and of
   the exact response bytes; `receipt.json` records the code, prompt, packet
   file, model identity, parameters, outcome counts and the SHA-256 of
-  `calls.jsonl`. Both raters see the same parts in the same order
-  (`packet_parts`): `RATER_PROMPT_V1` as the system prompt, then the packet,
-  then the answer line; each rater sees the items in its own seeded order.
+  `calls.jsonl`, and is written however the run ends (`try`/`finally`).
+  Both raters see the same parts in the same order (`packet_parts`):
+  `RATER_PROMPT_V1` as the system prompt (or at the head of the harness
+  file), then the packet, then the answer line; each rater sees the items in
+  its own seeded order. The audit summary takes one `calls.jsonl` per packet
+  shard and rater (`audit summarize --anthropic-calls ... --open-calls ...`)
+  and merges them (`rater_runner.merge_calls`); an item with records in two
+  files, a record of the other rater or a record for an item outside the
+  sample is refused, and an item no file rated is `unrated`.
 - Blind packet (`harness/q2_mutation/audit.py`, built in the LO-VM image):
   the task instruction, every starting file of the task and every end-state
   file of the candidate, each with its structure listing; for each end-state
@@ -564,21 +636,58 @@ A checker exception is not an infrastructure failure; it is verdict `error`.
   (highlight, colour, font, size, shading), paragraph properties, styles,
   headers, footers, notes, cell styles, shape fills, outlines, text-body
   properties and slide backgrounds, not from python-docx, python-pptx or
-  openpyxl, so the raters do not share the checkers' blind spots. Packets are
-  written to shards of at most 480 MiB so each fits a lane study artifact.
+  openpyxl, so the raters do not share the checkers' blind spots.
+  - Saved starting file (the packet's baseline). The difference, and the
+    starting file's listing and render, use the starting file saved through
+    the same LibreOffice steps as the end state, so changes the save alone
+    makes (the document language, default styles and cell defaults the VM's
+    LibreOffice writes) are not shown as edits. For a mutant and a gold sham
+    (the saved null mutant): the target's starting file as the build saved
+    it through
+    `uno_apply.py` (`prep/{target}/initial`), with the task's other starting
+    files raw, through the GUI-faithful save stage (`reach.sh` on
+    `baseline-jobs.jsonl` in the audit job), as the mutant went (one UNO
+    save, then the save stage). For a P1 flip (the control's saved gold) and
+    a do-nothing sham: the control run's saved do-nothing files (one save
+    stage, as the saved gold); the do-nothing sham's end state is that saved
+    do-nothing itself, the end state the checker reads when nothing is done.
+    The packet states, per end-state file, how many changes the save alone
+    made to the raw starting file (`save_only_changes`); this count is the
+    only raw-baseline view. Where the baseline save failed (by the rule of
+    `reachability.save_failures`) the difference is against the raw starting
+    file and the packet says so; end-state files with no starting file are
+    shown as new files.
+  - Token budget (`audit.fit_packet`): every packet must fit the
+    open-weight rater's 131,072-token window less 256 answer tokens and a
+    2,048-token allowance for the system prompt, chat template and answer
+    line (128,768 tokens), estimated before any rater sees it at 0.55
+    tokens per UTF-8 byte of text (the dev smoke measured at most 0.49) and
+    one token per 32 x 32 pixel cell of each image plus two. A packet over
+    the budget is shortened in a fixed order (starting-file listings, then
+    end-state listings, then end-state differences, each from its end and to
+    no fewer than 50 lines, then rendered pages, starting-file pages
+    first); each shortened section ends with a line saying how many lines
+    are not shown, and `packet["fit"]` and the packet manifest record every
+    cut. A packet still over the budget is sent as it is and, if the
+    provider rejects it, is `unsure` by the runner rules.
+  - Packets are written to shards of at most 480 MiB so each fits a lane
+    study artifact.
 - Candidate pool (`raters.audit_candidates`): the mutants P2-P5 are computed
   on, evaluable under the lock-exact venv and outside probe-touched cells.
 - Sample (`raters.draw_audit_sample`, seed 42), disjoint strata in priority
-  order: all `should_pass_alt_solution` mutants (cap 150), all label-verdict
-  disagreements (cap 200), 100 random agreements, each with its inclusion
+  order: all `should_pass_alt_solution` mutants (`alt_solution`, cap 150),
+  all `should_fail_violation` mutants whatever their verdict (`violation`,
+  cap 200: a census, so the violation K3 group is audited at weight 1), the
+  other label-verdict disagreements (`disagreement`, cap 200), 100 random
+  agreements among the rest (`agreement`), each with its inclusion
   probability; plus 10% sham items (the target's LibreOffice-saved null
-  mutant as the saved gold, and the task's starting files as do-nothing; at
-  most two per task); plus every P1 flip of the confirm and reserve control
-  runs (stratum `p1_flip`). Mutants labelled `ambiguous` and `error`
-  verdicts are outside the sample (`raters.stratum_of`); ambiguous mutants
-  are reported as counts per witness rule and verdict, never as rates.
-  `submit_audit.sh` builds the sample, the items and the packets in one
-  CPU-only job; `sample.jsonl` (labels and verdicts) never reaches a rater.
+  mutant as the saved gold, and the task's saved do-nothing; at most two per
+  task); plus every P1 flip of the confirm and reserve control runs (stratum
+  `p1_flip`). Mutants labelled `ambiguous` and `error` verdicts are outside
+  the sample (`raters.stratum_of`); ambiguous mutants are reported as counts
+  per witness rule and verdict, never as rates. `submit_audit.sh` builds the
+  sample, the items, the saved baselines and the packets in one CPU-only
+  job; `sample.jsonl` (labels and verdicts) never reaches a rater.
 - Spec author and raters: the blind specs that fix every label were written
   by Claude Opus 5.5 (Anthropic; `blind-spec-provenance.json`), and the
   Anthropic rater is a Claude model, so the open-weight rater is the
@@ -591,12 +700,27 @@ A checker exception is not an infrastructure failure; it is verdict `error`.
   the raters' answers; his answer (accept or reject) decides it. Label error
   uses Hajek weights; an item still unresolved at analysis counts as a label
   error. The estimate with unresolved items dropped is a sensitivity
-  analysis only.
+  analysis only. Adjudication changes label error, never kappa.
 - K3 and K4 groups: `should_pass_equiv` (enters P2 and P5) and
   `should_fail_violation` (enters P3 and P5), the label classes that enter the
   metrics without an audit gate. Alternative-solution and extra-change items
   decide their own entry into P2 and P4, so their acceptance and rejection
-  rates are S6 results and never fire K3.
+  rates are S6 results and never fire K3. Their operating characteristics
+  under the registered sampler and summary are in section 10.
+- Adjudication workload (an estimate, before any confirm item exists): the
+  split items Kevin adjudicates are those on which the two raters do not
+  both accept or both reject. At the expected audit size (about 365 real
+  and sham items), raters that are each right 90% of the time and unsure 5%
+  of the time split on about 61 items (17%; simulation of section 10). If
+  the Anthropic rater agreed with every label and the open-weight rater
+  answered as on the dev packets, the split share would be the open-weight
+  rater's disagreement with the labels: 29% on the first dev smoke (38 of
+  133, raw baseline) and 24% on the 90 items the second rated (22 of 90;
+  saved baseline, section 15), about 90 confirm items. At an assumed 3 to 5
+  minutes per item (packets of up to 1,500 listing lines per file and up to
+  40 page renders), that is roughly 3 to 7.5 hours (61 to 90 items) of blind
+  adjudication. Unadjudicated splits count as label errors, so K4 fires
+  whenever about 10% of a K3 group stays split (section 10).
 - Human spot check: a stratified sample (max(5, 10%) per stratum plus 5 shams)
   for Kevin. Results state that the human check is pending until it is done.
 
@@ -641,7 +765,12 @@ pre-freeze evidence already makes a criterion unlikely to fire, it says so.
     evaluate error or timeout; excluded). Any other difference is
     unexplained (`analysis.K2_EXPLANATIONS`).
   - Consequence: a checker family with an unexplained difference leaves the
-    headline and is reported as exploratory. Fallback: if no K2 report exists
+    headline. P2-P5 are then recomputed without that family's mutants: the
+    pooled rates, the family tables and P5's tasks (a task's checker family
+    is its set of metric functions, so a dropped family takes its tasks out
+    of P5), and K6 reads the recomputed P5. The dropped family's own tables
+    and the pooled rates that include it are reported as exploratory
+    (`analysis.headline` `k2_exploratory`). Fallback: if no K2 report exists
     when the result is written, the headline is labelled "offline harness,
     VM fidelity unverified"; a K2 report added later (on the same fixed
     sample) replaces the label and applies the consequence.
@@ -660,7 +789,35 @@ pre-freeze evidence already makes a criterion unlikely to fire, it says so.
   P2 and P5 leave the headline; for `should_fail_violation`, P3 and P5; when
   κ is below 0.6, P2-P5. A metric that leaves the headline is reported as
   exploratory with the same tables; nothing is relabelled
-  (`analysis.headline_exclusions`).
+  (`analysis.headline_exclusions`). κ is computed on the three answers
+  (accept, reject, unsure) of the real items; Kevin's adjudication does not
+  change it.
+  - Operating characteristics (`integration/audit-design-v1/sim_audit_oc.py`,
+    `audit-oc.json`: the registered sampler and summary on synthetic pools at
+    the section 6 sizes, 200 replicates per scenario, independent label
+    errors, bootstrap 1,000 resamples). With raters that answer the truth:
+    the equivalence group is audited with about 115 items (Kish size about
+    107) and never insufficiently; P(K3 fires for it) is 0.00, 0.015, 0.055,
+    0.52 and 0.97 at true label error 0, 1, 2, 5 and 10%. The violation
+    census at the expected 17 tasks audits about 89 items at weight 1 (Kish
+    size at least 65 in every replicate): P(insufficient) 0, P(K3 fires)
+    0.00, 0.00, 0.065, 0.55 and 0.95 at the same errors. At 13 violation
+    tasks (68 items): 0.00, 0.04, 0.135, 0.67, 0.985; at 24 (124 items):
+    0.00, 0.00, 0.015, 0.39, 0.96; at the 8-task floor (42 items):
+    P(insufficient) 0.01 and P(K3 fires) 0.01, 0.30, 0.475, 0.82, 0.97. The
+    third draft's sampler (violations shared with the other classes in the
+    disagreement and agreement strata) audited 34 violation items (Kish
+    size 30, as low as 16) and fired for the violation group with
+    probability 0.42, 0.60, 0.72 and 0.91 at 0, 1, 2 and 5%. With raters that
+    are each right 90% of the time, wrong 5% and unsure 5% (about 61 split
+    items) and Kevin adjudicating every split item correctly, P(K3 fires)
+    is unchanged within simulation error (equivalence 0.00 / 0.085 / 0.56 /
+    0.985, violation 0.00 / 0.065 / 0.595 / 0.955 at 0, 2, 5, 10%), but κ
+    falls below 0.6 in 0.11 to 0.27 of replicates, which takes P2-P5 out of
+    the headline whatever the labels; without adjudication K4 fires in 0.99
+    to 1.00 of replicates. The κ rule is therefore the binding constraint on
+    rater quality: two raters must agree well beyond 90% each for the
+    headline to survive it reliably.
 - **K4 Operator design.** If audited label error (the Hajek estimate after
   Kevin's adjudication, with unresolved items counted as errors) exceeds 10%
   in both K3 groups, stop and redesign under a new id.
@@ -787,8 +944,11 @@ events; the family-floor flags, K6b and K7 per family; which metrics left
 the headline under K2 or K3, and the K2 label; the excluded-task,
 not-exposed-gold and no-target lists; the dependency-flip table; the
 save-timing table; the fidelity-gate table; rater κ, sham accuracy and the
-pending human check; GPU time and API usage of the raters; the scoping-probe
-numbers labelled pre-reachability; and the deviations below.
+pending human check; the Anthropic rater's path (API or agent harness, D25)
+and the model ids each path named; the packets' baseline status (saved,
+save failed, none) and every cut the token budget made; GPU time and API
+usage of the raters; the scoping-probe numbers labelled pre-reachability;
+and the deviations below.
 
 ## 14. Deviations from the reviewed plan
 
@@ -805,7 +965,12 @@ numbers labelled pre-reachability; and the deviations below.
   providers; D23 replaces the second (no OpenAI key, the Moonshot account is
   suspended) with a self-hosted open-weight model (Qwen3.5-9B), which is the
   independent rater because the spec author and the first rater are both
-  Claude models.
+  Claude models. While no valid Anthropic API key exists, the Claude rater
+  runs through the Claude Code agent harness (D25), where its sampling is
+  not fixed; the API path stays registered for when a key exists.
+- The audit packet compares an end state with the starting file saved
+  through the same LibreOffice steps, not with the raw starting file, and
+  the violation label class is audited as a census (section 9).
 - The mutation population is the 67 confirm tasks with a complete gold and a
   mutable file, not all 120: a mutant is an edit of a gold end state.
 - Mutants carry one LibreOffice round trip more than a raw gold before the
@@ -842,11 +1007,13 @@ numbers labelled pre-reachability; and the deviations below.
 Six end-to-end campaigns ran on the 17 dev targets through the three
 CPU-only Slurm jobs (no GPU, no network, `/dev/nvidia*` absent in every
 receipt). `dev-mutants-v6` ran at commit
-`2874bb6233c434bb69b6458f95cf4cc542b70c4a`, whose code tree is the one
-pinned above (after the second review's fixes); `dev-mutants-v4` ran at the
-second draft's pinned tree (`6ad6af6`) and `dev-mutants-v5` at the
-intermediate `d9c5876`. The exports, with recipes redacted, are committed
-under `program/evidence/q2-mutation/integration/` and checked by
+`2874bb6233c434bb69b6458f95cf4cc542b70c4a`, the third draft's pinned tree;
+the fourth draft changed the audit, analysis and report code (section 9, the
+S1/S5 rule of section 3), not the build, save or scoring stages, and v6 had
+no S1 candidate, so its outcomes are the same under the pinned tree;
+`dev-mutants-v4` ran at the second draft's pinned tree (`6ad6af6`) and
+`dev-mutants-v5` at the intermediate `d9c5876`. The exports, with recipes
+redacted, are committed under `program/evidence/q2-mutation/integration/` and checked by
 `tests/test_q2_mutation_integration_evidence.py`.
 
 | Run | Code | Recipes applied to | Planned | Admitted | Evaluable (lock) | Ambiguous | `null_not_pass` | Normalized |
@@ -944,13 +1111,67 @@ under `program/evidence/q2-mutation/integration/` and checked by
   of 6 accepted; the P1 flip accepted; equivalence 35 accept / 25 reject;
   alternative 25 / 3; violation 8 / 18; extra change 0 / 6. Its rejections of
   equivalence mutants and of two gold shams cite the task result or changes
-  the save stage itself makes (for example the VM profile's default font and
-  language written into a saved spreadsheet), not the mutation: the packet's
-  difference is against the raw starting file. If the two raters split this
-  way on confirm, K3 for `should_pass_equiv` fires unless Kevin adjudicates
-  the unresolved items (section 10). The Anthropic rater did not run: the
-  API key available to the agent is rejected (HTTP 401) on the model
-  lookup, before any packet is sent.
+  of document defaults (a default font and language), not the mutation; the
+  packet's difference was against the raw starting file. The draft read
+  those changes as made by the save stage; the second smoke shows the
+  language and font come from the gold file itself (below). If the
+  Anthropic rater agreed with every label, κ on these answers would be 0.36
+  and the κ rule (section 10) would take P2-P5 out of the headline whatever
+  Kevin adjudicates; adjudication changes label error, not κ. The Anthropic
+  rater did not run: the API key available to the agent is rejected (HTTP
+  401) on the model lookup, before any packet is sent.
+- Second rater smoke, saved-start packets (`integration/rater-smoke-dev-v2/`,
+  code `4b9b45d`, the pinned code tree): `submit_audit.sh` (Slurm 644, CPU
+  only, LO-VM image) drew the same 133 items from `dev-mutants-v4` and
+  `dev-controls-v7` (the violation census took the 26 violation items, which
+  the first smoke had in its disagreement and agreement strata; the item ids
+  are the same), ran the GUI-faithful save stage on 12 baseline jobs (all
+  saved, every office file written, no failure) and wrote 133 packets in one
+  409 MB shard: 99 items compare with a saved starting file, 34 have end-state
+  files with no starting file (new files) and none fell back to the raw
+  file. The save alone changes a median of 189 snapshot leaves per starting
+  file (at most 1,278); the packets' difference lines fell from 21,842 to
+  7,705; no packet needed the token budget (largest estimate 126,830 of
+  128,768; the estimate is at least 1.1 times the prompt the engine counted).
+  The cu129 overlay was built from a capsule of `4b9b45d` (Slurm 646, about
+  43 s on one H100, image
+  `sha256:0fe3f4523b9c8fe59173e9f4d1e2ae531cc3bbd021cda768f22235078626316f`,
+  provenance PASS), the args doctor passed (Slurm 647, CPU only), and the
+  open-weight rater ran as a lane job (Slurm 650, 4 min 58 s on one H100,
+  0.083 GPU-h; with the overlay 0.095 GPU-h of the 0.15 allowed; engine
+  ready in 89 s). It rated 90 of the 133 items, each once, every reply
+  parsed (two cut at 256 tokens after a valid first word), prompts up to
+  110,448 tokens (median 48,478), median 13.0 s per call, and stopped at the
+  lane's checkpoint signal, which the lane sends 180 s before the job's
+  limit (`--signal=B:USR1@180`, 8-minute limit); the 43 items it did not
+  reach are `unrated`, and no rerun was made, to stay inside the smoke's
+  GPU allowance. A rater job's allocation must therefore cover the engine
+  start, the items and those 180 s: about 28 items per minute after a
+  two-minute start on this hardware. Answers (exploratory, one rater): gold
+  shams 4 of 6 accepted (the same two rejected); do-nothing shams 2 of 2
+  rated rejected; the P1 flip accepted; equivalence 24 accept / 14 reject;
+  alternative 18 / 2; violation 4 / 15; extra change 0 / 4. On the 90 items
+  rated in both smokes, the saved start changed two answers (two equivalence
+  rejections became acceptances) and the rater disagreed with the label on
+  22 of 90 items against 24 of 90 before; κ if the Anthropic rater agreed
+  with every label rises from 0.44 to 0.48, still under 0.6. Its remaining
+  rejections are task-level: where it rejects a task's gold sham it rejects
+  that task's equivalence and alternative mutants too, because it judges the
+  gold end state, not the mutation (01b269ae: the gold carries a zh-CN
+  document language and a CJK default font that the saved starting file
+  does not, an artifact of how the gold file was made, which the rater
+  reads as an unrequested change; 5bc63fb9: it reads the instruction's
+  filter as unmet by the gold), plus misreadings (b5062e3e: it judges an
+  alphabetical author order wrong). The saved start removes the save stage's
+  noise but does not bring this rater's agreement anywhere near what the κ
+  rule needs: unless the Anthropic rater's dev answers show otherwise, the
+  κ rule is expected to fire on confirm (open item, section 17).
+- Dev packets exported for the agent-harness Claude rater (D25): `rater_runner
+  export-harness` on the second smoke's shard wrote 133 item files with
+  their page images and `index.json` (item ids only, in the Anthropic
+  rater's seeded order) outside the repository; the export manifest (digests
+  only) is `integration/rater-smoke-dev-v2/harness-export/`. The Claude
+  rater's dev answers are pending.
 
 These numbers size the confirmatory design; they are never pooled with it.
 
@@ -971,9 +1192,11 @@ from the gold plus the recipe. A LibreOffice save is not byte-deterministic,
 so a fresh base save yields new ids with the same sites and labels (section
 15). The audit's released evidence is the sample summary, each rater's call
 records (answer, status, outcome, request, body and response SHA-256, model
-id, usage) and receipt, the decisions and the audit summary. Not released:
-mutant documents, base files, full recipes, gold or initial files, audit
-packets and renders, and raw rater responses (they may quote document text).
+id, usage) and receipt, the agent-harness export manifest (digests only),
+the decisions and the audit summary. Not released: mutant documents, base
+files, full recipes, gold or initial files, saved baselines, audit packets,
+exported harness files and renders, and raw rater responses and reasons
+(they may quote document text).
 
 ## 17. Freeze checklist
 
@@ -990,26 +1213,39 @@ packets and renders, and raw rater responses (they may quote document text).
       restated, probe map widened, input pins added; dev rerun at the new
       code tree (`dev-mutants-v4`, `dev-controls-v7`) and pins refreshed.
 - [x] Second adversarial review (2026-10-07): 55/100, not ready to freeze;
-      its seven blocking defects are fixed in this draft (see the status
-      note), the cheap rule-code inconsistencies too (S1, S4, S6, the P4
-      denominator, the audit pool, the family sizes, K7's power, the
-      `infra_failed` causes, the rerun policy). Lowest review score so far:
-      55.
-- [x] Rater runner in the pinned tree; open-weight rater smoke on dev
-      packets inside its 0.2 GPU-h cap (section 15).
-- [ ] Anthropic rater smoke on dev packets: blocked, the API key in the
-      agent's environment is rejected (HTTP 401); needs a working key.
-- [ ] Third adversarial review; record its score next to 55 and use the
+      its seven blocking defects were fixed in the third draft, the cheap
+      rule-code inconsistencies too (S1, S4, S6, the P4 denominator, the
+      audit pool, the family sizes, K7's power, the `infra_failed` causes,
+      the rerun policy).
+- [x] Third review (re-audit of the third draft, 2026-10-07): 62/100, not
+      ready to freeze; its two blocking and eight other findings are
+      answered in this draft (see the status note). Lowest review score so
+      far: 55.
+- [x] Rater runner in the pinned tree; open-weight rater smokes on dev
+      packets inside their caps (0.2 and 0.15 GPU-h, section 15), the second
+      on packets with the saved-start baseline.
+- [x] Dev packets exported for the agent-harness Claude rater (D25;
+      section 15).
+- [ ] Anthropic rater smoke on dev packets through the agent harness (D25):
+      rate the exported dev packets, ingest the answers
+      (`rater_runner ingest-harness`) and summarize both raters on dev
+      (κ, sham accuracy, split share); the API path stays untested until a
+      valid key exists.
+- [ ] Fourth adversarial review; record its score next to 55 and use the
       lower.
 - [ ] Kevin's sign-offs: D2 (upstream defect reports and other outward
-      disclosures stay unsent while this runs); D23 rater lineup, including
-      sending public OSWorld task files and their renders to the Anthropic
-      API (section 9); acceptance that no adequacy claim is expected (K6)
-      and that P3 and P4 are pooled, large-effect tests; P1 as a replication
+      disclosures stay unsent while this runs); the D23/D25 rater lineup,
+      including the agent-harness path with unfixed sampling and sending
+      public OSWorld task files and their renders to the Anthropic model
+      (section 9); the κ rule's operating characteristics (section 10:
+      raters that are each right 90% of the time fire it in about one run in
+      four to five); acceptance that no adequacy claim is expected (K6) and
+      that P3 and P4 are pooled, large-effect tests; P1 as a replication
       that uses reserve-split golds; release of the specs, which quote short
-      passages of file-cache documents; ownership and size of the human spot
-      check (recommendation: every should-fail agreement-stratum item that
-      drives K3), whose result stays pending until done.
+      passages of file-cache documents; the adjudication workload (section
+      9) and ownership and size of the human spot check (recommendation:
+      every should-fail agreement-stratum item that drives K3), whose result
+      stays pending until done.
 
 ## Appendix A. Operator catalog `q2-mut-operators-v1` (64 operators)
 

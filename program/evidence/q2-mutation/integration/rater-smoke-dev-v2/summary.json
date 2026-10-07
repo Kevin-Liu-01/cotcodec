@@ -1,0 +1,318 @@
+{
+ "answer_changes_v1_to_v2_by_label_class": {
+  "p1_flip": {
+   "accept->accept": 1
+  },
+  "sham_do_nothing": {
+   "reject->reject": 2,
+   "reject->unrated": 4
+  },
+  "sham_gold": {
+   "accept->accept": 4,
+   "reject->reject": 2
+  },
+  "should_fail_extra_change": {
+   "reject->reject": 4,
+   "reject->unrated": 2
+  },
+  "should_fail_violation": {
+   "accept->accept": 4,
+   "accept->unrated": 4,
+   "reject->reject": 15,
+   "reject->unrated": 3
+  },
+  "should_pass_alt_solution": {
+   "accept->accept": 18,
+   "accept->unrated": 7,
+   "reject->reject": 2,
+   "reject->unrated": 1
+  },
+  "should_pass_equiv": {
+   "accept->accept": 22,
+   "accept->unrated": 13,
+   "reject->accept": 2,
+   "reject->reject": 14,
+   "reject->unrated": 9
+  }
+ },
+ "answers": {
+  "accept": 51,
+  "reject": 39
+ },
+ "answers_by_label_class": {
+  "p1_flip": {
+   "accept": 1
+  },
+  "sham_do_nothing": {
+   "reject": 2,
+   "unrated": 4
+  },
+  "sham_gold": {
+   "accept": 4,
+   "reject": 2
+  },
+  "should_fail_extra_change": {
+   "reject": 4,
+   "unrated": 2
+  },
+  "should_fail_violation": {
+   "accept": 4,
+   "reject": 15,
+   "unrated": 7
+  },
+  "should_pass_alt_solution": {
+   "accept": 18,
+   "reject": 2,
+   "unrated": 8
+  },
+  "should_pass_equiv": {
+   "accept": 24,
+   "reject": 14,
+   "unrated": 22
+  }
+ },
+ "answers_by_label_class_smoke_v1_raw_baseline": {
+  "p1_flip": {
+   "accept": 1
+  },
+  "sham_do_nothing": {
+   "reject": 6
+  },
+  "sham_gold": {
+   "accept": 4,
+   "reject": 2
+  },
+  "should_fail_extra_change": {
+   "reject": 6
+  },
+  "should_fail_violation": {
+   "accept": 8,
+   "reject": 18
+  },
+  "should_pass_alt_solution": {
+   "accept": 25,
+   "reject": 3
+  },
+  "should_pass_equiv": {
+   "accept": 35,
+   "reject": 25
+  }
+ },
+ "answers_by_operator": {
+  "docx.alt.char_style_for_direct": {
+   "accept": 3
+  },
+  "docx.alt.highlight_as_shading": {
+   "reject": 2,
+   "unrated": 1
+  },
+  "docx.alt.para_direct_for_style": {
+   "accept": 1
+  },
+  "docx.eq.view_zoom": {
+   "accept": 4,
+   "reject": 3,
+   "unrated": 5
+  },
+  "docx.viol.delete_bound_paragraph": {
+   "accept": 1,
+   "reject": 4,
+   "unrated": 3
+  },
+  "docx.viol.drop_char_format": {
+   "reject": 3
+  },
+  "docx.viol.text_edit": {
+   "accept": 1,
+   "reject": 6,
+   "unrated": 2
+  },
+  "pptx.eq.subvisible_nudge": {
+   "accept": 4,
+   "reject": 3,
+   "unrated": 5
+  },
+  "pptx.eq.zorder_nonoverlap": {
+   "accept": 5,
+   "reject": 2,
+   "unrated": 2
+  },
+  "pptx.extra.add_textbox": {
+   "reject": 3
+  },
+  "pptx.viol.delete_bound_shape": {
+   "accept": 2,
+   "reject": 2,
+   "unrated": 2
+  },
+  "xlsx.alt.absolute_refs": {
+   "accept": 4,
+   "unrated": 2
+  },
+  "xlsx.alt.literal_for_formula": {
+   "accept": 3,
+   "unrated": 3
+  },
+  "xlsx.alt.named_style_for_direct": {
+   "accept": 4,
+   "unrated": 2
+  },
+  "xlsx.alt.plus_chain_to_sum": {
+   "accept": 3
+  },
+  "xlsx.eq.active_sheet": {
+   "accept": 1
+  },
+  "xlsx.eq.view_selection": {
+   "accept": 7,
+   "reject": 5,
+   "unrated": 6
+  },
+  "xlsx.eq.view_zoom": {
+   "accept": 3,
+   "reject": 1,
+   "unrated": 4
+  },
+  "xlsx.extra.edit_unrelated_value": {
+   "reject": 1,
+   "unrated": 2
+  }
+ },
+ "completion_cut_at_max_tokens": 2,
+ "if_anthropic_agreed_with_every_label_v1": {
+  "items": 133,
+  "k3_fires": {
+   "should_fail_violation": true,
+   "should_pass_equiv": true
+  },
+  "k3_items": {
+   "should_fail_violation": [
+    26,
+    26.0
+   ],
+   "should_pass_equiv": [
+    60,
+    60.0
+   ]
+  },
+  "k4_fires": true,
+  "kappa": 0.3627852545348157,
+  "kappa_fires": true,
+  "label_error_unresolved_as_wrong": {
+   "should_fail_violation": 0.3076923076923077,
+   "should_pass_equiv": 0.4166666666666667
+  },
+  "split_items": 38,
+  "split_share": 0.2857142857142857
+ },
+ "if_anthropic_agreed_with_every_label_v1_on_items_rated_in_v2": {
+  "items": 90,
+  "k3_fires": {
+   "should_fail_violation": true,
+   "should_pass_equiv": true
+  },
+  "k3_items": {
+   "should_fail_violation": [
+    19,
+    19.0
+   ],
+   "should_pass_equiv": [
+    38,
+    38.0
+   ]
+  },
+  "k4_fires": true,
+  "kappa": 0.43940335612181475,
+  "kappa_fires": true,
+  "label_error_unresolved_as_wrong": {
+   "should_fail_violation": 0.21052631578947367,
+   "should_pass_equiv": 0.42105263157894735
+  },
+  "split_items": 24,
+  "split_share": 0.26666666666666666
+ },
+ "if_anthropic_agreed_with_every_label_v2": {
+  "items": 133,
+  "k3_fires": {
+   "should_fail_violation": true,
+   "should_pass_equiv": true
+  },
+  "k3_items": {
+   "should_fail_violation": [
+    26,
+    26.0
+   ],
+   "should_pass_equiv": [
+    60,
+    60.0
+   ]
+  },
+  "k4_fires": true,
+  "kappa": 0.23548939815806377,
+  "kappa_fires": true,
+  "label_error_unresolved_as_wrong": {
+   "should_fail_violation": 0.4230769230769231,
+   "should_pass_equiv": 0.6
+  },
+  "split_items": 65,
+  "split_share": 0.48872180451127817
+ },
+ "if_anthropic_agreed_with_every_label_v2_on_items_rated_in_v2": {
+  "items": 90,
+  "k3_fires": {
+   "should_fail_violation": true,
+   "should_pass_equiv": true
+  },
+  "k3_items": {
+   "should_fail_violation": [
+    19,
+    19.0
+   ],
+   "should_pass_equiv": [
+    38,
+    38.0
+   ]
+  },
+  "k4_fires": true,
+  "kappa": 0.4787031150667514,
+  "kappa_fires": true,
+  "label_error_unresolved_as_wrong": {
+   "should_fail_violation": 0.21052631578947367,
+   "should_pass_equiv": 0.3684210526315789
+  },
+  "split_items": 22,
+  "split_share": 0.24444444444444444
+ },
+ "items": 133,
+ "outcomes": {
+  "ok": 90
+ },
+ "packets": {
+  "baseline_status": {
+   "none": 34,
+   "saved": 99
+  },
+  "diff_lines_total": 7705,
+  "end_state_files_by_baseline": {
+   "None": 1,
+   "none": 47,
+   "saved": 99
+  },
+  "save_only_changes_max": 1278,
+  "save_only_changes_median": 189,
+  "shortened_by_the_budget": 0
+ },
+ "prompt_tokens": {
+  "actual_over_registered_estimate_max": 0.9041620280853889,
+  "max": 110448,
+  "median": 48477.5,
+  "registered_estimate_max": 126830,
+  "smoke_v1_max": 120678,
+  "smoke_v1_median": 46294
+ },
+ "rated": 90,
+ "seconds_per_call_median": 12.970500000000001,
+ "statuses": {
+  "ok": 90
+ }
+}
