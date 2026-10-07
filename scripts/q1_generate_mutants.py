@@ -10,19 +10,20 @@ Steps (each refuses to overwrite its output):
 ``controls``  hack-emulating wrapper controls (needs a KernelBench checkout)
 ``table``     print the operator registry or the KernelBench-M rule mapping
 
-Typical run::
+Typical run (outputs on persistent storage, never in the repository;
+RUN=~/cotcodec-runs/stage0/q1-mutate, SUB = the admitted substrates root)::
 
     uv run python scripts/q1_generate_mutants.py pool \
-        --substrates-root data/q1/substrates --pool-root data/q1/pool
+        --substrates-root $SUB --pool-root $RUN/pool
     # in a GPU-less container with the research image:
     python scripts/q1_generate_mutants.py compile \
-        --pool-root data/q1/pool --specializations-root data/q1/specializations
-    uv run python scripts/q1_generate_mutants.py select --pool-root data/q1/pool \
-        --substrates-root data/q1/substrates --out-root data/q1/mutants \
-        --controls-root data/q1/controls-mutants --seed 42 --cap 40
+        --pool-root $RUN/pool --specializations-root $RUN/specializations
+    uv run python scripts/q1_generate_mutants.py select --pool-root $RUN/pool \
+        --substrates-root $SUB --out-root $RUN/mutants \
+        --controls-root $RUN/controls-mutants --seed 42 --cap 40
     uv run python scripts/q1_generate_mutants.py controls \
-        --substrates-root data/q1/substrates --kernelbench-root ~/src/KernelBench \
-        --out-root data/q1/controls-hacks
+        --substrates-root $SUB --kernelbench-root $KERNELBENCH_423217D9 \
+        --out-root $RUN/controls-hacks
 
 Exit codes: 0 success, 2 bad input or refused overwrite, 3 internal failure.
 """
