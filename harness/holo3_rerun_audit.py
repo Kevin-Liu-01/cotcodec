@@ -1361,6 +1361,9 @@ def five_run_comparison(m: V1Matrix, h: HRuns) -> dict[str, Any]:
     }
     common = [t for t in m.tasks if all(t in s for s in runs.values())]
     rates = {name: 100 * sum(s[t] for t in common) / len(common) for name, s in runs.items()}
+    binary = {
+        name: 100 * sum(1 for t in common if s[t] >= 0.5) / len(common) for name, s in runs.items()
+    }
     pairs = []
     for a, b in itertools.combinations(runs, 2):
         pairs.append({"pair": [a, b], **mcnemar(common, runs[a], runs[b]).as_dict()})
@@ -1378,6 +1381,7 @@ def five_run_comparison(m: V1Matrix, h: HRuns) -> dict[str, Any]:
     return {
         "n_common": len(common),
         "rates_pct": rates,
+        "pass_rates_pct_binary": binary,
         "pairs": pairs,
         "idiosyncratic": idiosyncratic,
         "reading": "run1 is high relative to the H runs; run2 has more unique failures; "
