@@ -1,0 +1,379 @@
+{
+  "binding_classes": {
+    "cell_format|explicit+delta|high": 1,
+    "cell_value|delta_kind|low": 2,
+    "cell_value|excluded_only|none": 1,
+    "cell_value|explicit+delta|high": 4,
+    "cell_value|explicit-delta|medium": 1,
+    "file_exists|explicit-delta|medium": 3,
+    "file_exists|explicit|medium": 1,
+    "file_exists|none|none": 10,
+    "image_property|explicit+delta|high": 1,
+    "image_property|none|none": 2,
+    "other|explicit|medium": 3,
+    "other|none|none": 3,
+    "slide_object|delta_kind|low": 2,
+    "slide_object|explicit+delta|high": 1,
+    "slide_object|explicit|medium": 1,
+    "table_cell|delta_kind|low": 1,
+    "table_cell|explicit+delta|high": 1,
+    "table_cell|explicit|medium": 1,
+    "table_cell|none|none": 1,
+    "text_run|delta_kind|low": 1,
+    "text_run|explicit+delta|high": 8
+  },
+  "command": "python3 -m harness.q2_mutation.operators.devsmoke --jobs /ro/devjobs/jobs-dev.jsonl --out /out/devplan --specs-dir /ro/specs --profile-template /home/user/.config/libreoffice/4/user",
+  "image_id": "sha256:894b2623dceb43e8468a2adbd6e03a532ea9683d4b7754cd79fa0d58a331f909",
+  "labels_admitted": {
+    "ambiguous": 36,
+    "should_fail_extra_change": 31,
+    "should_fail_violation": 50,
+    "should_pass_alt_solution": 20,
+    "should_pass_equiv": 106
+  },
+  "labels_planned": {
+    "ambiguous": 36,
+    "should_fail_extra_change": 31,
+    "should_fail_violation": 52,
+    "should_pass_alt_solution": 20,
+    "should_pass_equiv": 106
+  },
+  "operators": {
+    "docx.eq.doc_property": {
+      "admitted": 6,
+      "admitted:should_pass_equiv": 6,
+      "applied": 6,
+      "failed_checks": {},
+      "label:should_pass_equiv": 6,
+      "planned": 6
+    },
+    "docx.eq.view_zoom": {
+      "admitted": 6,
+      "admitted:should_pass_equiv": 6,
+      "applied": 6,
+      "failed_checks": {},
+      "label:should_pass_equiv": 6,
+      "planned": 6
+    },
+    "docx.extra.delete_unrelated_paragraph": {
+      "admitted": 3,
+      "admitted:should_fail_extra_change": 3,
+      "applied": 3,
+      "failed_checks": {},
+      "label:should_fail_extra_change": 3,
+      "planned": 3
+    },
+    "docx.extra.edit_unrelated_paragraph": {
+      "admitted": 3,
+      "admitted:should_fail_extra_change": 3,
+      "applied": 3,
+      "failed_checks": {},
+      "label:should_fail_extra_change": 3,
+      "planned": 3
+    },
+    "docx.extra.edit_unrelated_table_cell": {
+      "admitted": 3,
+      "admitted:should_fail_extra_change": 3,
+      "applied": 3,
+      "failed_checks": {},
+      "label:should_fail_extra_change": 3,
+      "planned": 3
+    },
+    "docx.extra.format_unrelated_run": {
+      "admitted": 3,
+      "admitted:ambiguous": 3,
+      "applied": 3,
+      "failed_checks": {},
+      "label:ambiguous": 3,
+      "planned": 3
+    },
+    "docx.viol.delete_bound_paragraph": {
+      "admitted": 2,
+      "admitted:should_fail_violation": 2,
+      "applied": 2,
+      "failed_checks": {},
+      "label:should_fail_violation": 2,
+      "planned": 2
+    },
+    "docx.viol.text_edit": {
+      "admitted": 3,
+      "admitted:should_fail_violation": 3,
+      "applied": 3,
+      "failed_checks": {},
+      "label:should_fail_violation": 3,
+      "planned": 3
+    },
+    "pptx.alt.case_via_format": {
+      "admitted": 4,
+      "admitted:ambiguous": 4,
+      "applied": 4,
+      "failed_checks": {},
+      "label:ambiguous": 4,
+      "planned": 4
+    },
+    "pptx.alt.textbox_for_placeholder": {
+      "admitted": 6,
+      "admitted:ambiguous": 6,
+      "applied": 6,
+      "failed_checks": {},
+      "label:ambiguous": 6,
+      "planned": 6
+    },
+    "pptx.eq.doc_property": {
+      "admitted": 18,
+      "admitted:should_pass_equiv": 18,
+      "applied": 18,
+      "failed_checks": {},
+      "label:should_pass_equiv": 18,
+      "planned": 18
+    },
+    "pptx.eq.subvisible_nudge": {
+      "admitted": 18,
+      "admitted:ambiguous": 1,
+      "admitted:should_pass_equiv": 17,
+      "applied": 18,
+      "failed_checks": {},
+      "label:ambiguous": 1,
+      "label:should_pass_equiv": 17,
+      "planned": 18
+    },
+    "pptx.eq.zorder_nonoverlap": {
+      "admitted": 15,
+      "admitted:should_pass_equiv": 15,
+      "applied": 15,
+      "failed_checks": {},
+      "label:should_pass_equiv": 15,
+      "planned": 15
+    },
+    "pptx.extra.add_textbox": {
+      "admitted": 16,
+      "admitted:should_fail_extra_change": 16,
+      "applied": 16,
+      "failed_checks": {},
+      "label:should_fail_extra_change": 16,
+      "planned": 16
+    },
+    "pptx.extra.edit_notes": {
+      "admitted": 1,
+      "admitted:ambiguous": 1,
+      "applied": 1,
+      "failed_checks": {},
+      "label:ambiguous": 1,
+      "planned": 1
+    },
+    "pptx.viol.delete_bound_shape": {
+      "admitted": 13,
+      "admitted:ambiguous": 1,
+      "admitted:should_fail_violation": 12,
+      "applied": 13,
+      "failed_checks": {},
+      "label:ambiguous": 1,
+      "label:should_fail_violation": 12,
+      "planned": 13
+    },
+    "pptx.viol.drop_char_format": {
+      "admitted": 9,
+      "admitted:ambiguous": 8,
+      "admitted:should_fail_violation": 1,
+      "applied": 9,
+      "failed_checks": {},
+      "label:ambiguous": 8,
+      "label:should_fail_violation": 1,
+      "planned": 9
+    },
+    "pptx.viol.move_shape": {
+      "admitted": 7,
+      "admitted:ambiguous": 4,
+      "admitted:should_fail_violation": 3,
+      "applied": 7,
+      "failed_checks": {},
+      "label:ambiguous": 4,
+      "label:should_fail_violation": 3,
+      "planned": 7
+    },
+    "pptx.viol.text_edit": {
+      "admitted": 11,
+      "admitted:ambiguous": 2,
+      "admitted:should_fail_violation": 9,
+      "applied": 11,
+      "failed_checks": {},
+      "label:ambiguous": 2,
+      "label:should_fail_violation": 9,
+      "planned": 11
+    },
+    "xlsx.alt.absolute_refs": {
+      "admitted": 6,
+      "admitted:should_pass_alt_solution": 6,
+      "applied": 6,
+      "failed_checks": {},
+      "label:should_pass_alt_solution": 6,
+      "planned": 6
+    },
+    "xlsx.alt.literal_for_formula": {
+      "admitted": 6,
+      "admitted:should_pass_alt_solution": 6,
+      "applied": 6,
+      "failed_checks": {},
+      "label:should_pass_alt_solution": 6,
+      "planned": 6
+    },
+    "xlsx.alt.named_style_for_direct": {
+      "admitted": 3,
+      "admitted:should_pass_alt_solution": 3,
+      "applied": 3,
+      "failed_checks": {},
+      "label:should_pass_alt_solution": 3,
+      "planned": 3
+    },
+    "xlsx.alt.plus_chain_to_sum": {
+      "admitted": 3,
+      "admitted:should_pass_alt_solution": 3,
+      "applied": 3,
+      "failed_checks": {},
+      "label:should_pass_alt_solution": 3,
+      "planned": 3
+    },
+    "xlsx.alt.reference_for_literal": {
+      "admitted": 2,
+      "admitted:should_pass_alt_solution": 2,
+      "applied": 2,
+      "failed_checks": {},
+      "label:should_pass_alt_solution": 2,
+      "planned": 2
+    },
+    "xlsx.eq.active_sheet": {
+      "admitted": 1,
+      "admitted:should_pass_equiv": 1,
+      "applied": 1,
+      "failed_checks": {},
+      "label:should_pass_equiv": 1,
+      "planned": 1
+    },
+    "xlsx.eq.doc_property": {
+      "admitted": 18,
+      "admitted:should_pass_equiv": 18,
+      "applied": 18,
+      "failed_checks": {},
+      "label:should_pass_equiv": 18,
+      "planned": 18
+    },
+    "xlsx.eq.view_selection": {
+      "admitted": 15,
+      "admitted:should_pass_equiv": 15,
+      "applied": 15,
+      "failed_checks": {},
+      "label:should_pass_equiv": 15,
+      "planned": 15
+    },
+    "xlsx.eq.view_zoom": {
+      "admitted": 7,
+      "admitted:should_pass_equiv": 7,
+      "applied": 7,
+      "failed_checks": {},
+      "label:should_pass_equiv": 7,
+      "planned": 7
+    },
+    "xlsx.extra.clear_unrelated_row": {
+      "admitted": 3,
+      "admitted:should_fail_extra_change": 3,
+      "applied": 3,
+      "failed_checks": {},
+      "label:should_fail_extra_change": 3,
+      "planned": 3
+    },
+    "xlsx.extra.edit_unrelated_value": {
+      "admitted": 3,
+      "admitted:should_fail_extra_change": 3,
+      "applied": 3,
+      "failed_checks": {},
+      "label:should_fail_extra_change": 3,
+      "planned": 3
+    },
+    "xlsx.extra.format_unrelated_cell": {
+      "admitted": 3,
+      "admitted:should_pass_equiv": 3,
+      "applied": 3,
+      "failed_checks": {},
+      "label:should_pass_equiv": 3,
+      "planned": 3
+    },
+    "xlsx.viol.clear_bound_cell": {
+      "admitted": 12,
+      "admitted:ambiguous": 3,
+      "admitted:should_fail_violation": 9,
+      "applied": 12,
+      "failed_checks": {},
+      "label:ambiguous": 3,
+      "label:should_fail_violation": 9,
+      "planned": 12
+    },
+    "xlsx.viol.formula_ref_shift": {
+      "admitted": 4,
+      "admitted:should_fail_violation": 4,
+      "applied": 6,
+      "failed_checks": {
+        "edit_landed": 2
+      },
+      "label:should_fail_violation": 6,
+      "planned": 6
+    },
+    "xlsx.viol.number_format_change": {
+      "admitted": 3,
+      "admitted:should_fail_violation": 3,
+      "applied": 3,
+      "failed_checks": {},
+      "label:should_fail_violation": 3,
+      "planned": 3
+    },
+    "xlsx.viol.value_perturb": {
+      "admitted": 7,
+      "admitted:ambiguous": 3,
+      "admitted:should_fail_violation": 4,
+      "applied": 7,
+      "failed_checks": {},
+      "label:ambiguous": 3,
+      "label:should_fail_violation": 4,
+      "planned": 7
+    }
+  },
+  "receipt": {
+    "argv_json_hex": "5b22707974686f6e33222c20222d6d222c20226861726e6573732e71325f6d75746174696f6e2e6f70657261746f72732e646576736d6f6b65222c20222d2d6a6f6273222c20222f726f2f6465766a6f62732f6a6f62732d6465762e6a736f6e6c222c20222d2d6f7574222c20222f6f75742f646576706c616e222c20222d2d73706563732d646972222c20222f726f2f7370656373222c20222d2d70726f66696c652d74656d706c617465222c20222f686f6d652f757365722f2e636f6e6669672f6c696272656f66666963652f342f75736572225d",
+    "argv_json_hex_sha256": "0b39593804e4c7d21482b886ccce780508f154d00e132085d4cbcceb15c5f237",
+    "batch_sha256": "6aa4e91bc958819a6b2a4718f568a7faee947a4db32dc282b05d4e7174de1bc1",
+    "container_dev_nvidia": [],
+    "exit_status": 0,
+    "finished_at": "2026-10-07T08:19:58Z",
+    "gpus_requested": 0,
+    "image_id": "sha256:894b2623dceb43e8468a2adbd6e03a532ea9683d4b7754cd79fa0d58a331f909",
+    "job_id": "433",
+    "mode": "run",
+    "mounts": "/home/kevin/cotcodec-runs/stage0/q2-evaluator-mutation/operators/src/7c429bcb793369649bc7970ccad0fba290ad2772:/src:ro /home/kevin/cotcodec-runs/stage0/q2-evaluator-mutation/operators/runs/devplan-7c429bcb-v1:/out:rw /home/kevin/cotcodec-runs/stage0/q2-evaluator-mutation/inputs:/inputs:ro /home/kevin/cotcodec-runs/stage0/q2-evaluator-mutation/runs/dev-controls-raw-v1:/ro/devjobs:ro /home/kevin/cotcodec-runs/stage0/q2-evaluator-mutation/operators/inputs/specs-287d5233:/ro/specs:ro",
+    "network": "none",
+    "started_at": "2026-10-07T08:16:51Z"
+  },
+  "slurm_job": "433",
+  "source_revision": "7c429bcb793369649bc7970ccad0fba290ad2772",
+  "specs_revision": "stage0/q2-mut-specs 287d523374354e40af4c1f54bd06e46c3de6a955 (YAML converted to JSON unchanged)",
+  "totals": {
+    "admitted": 243,
+    "applied": 245,
+    "planned": 245
+  },
+  "what": "Planning, application and purity with the blind requirement specs (stage0/q2-mut-specs 287d5233) on the same 14 development-split tasks. This exercises the label rules on real specs; no checker ran, so there are no verdicts, and the development split is never part of the confirmatory analysis.",
+  "witness_rules": {
+    "W-A-ALLOWED": 6,
+    "W-A-REPRESENTATION": 4,
+    "W-A-SILENT": 14,
+    "W-A-STRUCTURE": 6,
+    "W-E-ALLOWED": 6,
+    "W-E-CONFLICT": 1,
+    "W-E-SILENT": 97,
+    "W-F-ALLOWED": 3,
+    "W-F-COSMETIC": 4,
+    "W-F-UNREQUESTED": 31,
+    "W-R-PINNED": 40,
+    "W-R-TEXT": 12,
+    "W-R-UNPINNED": 14,
+    "W-R-WEAK-BINDING": 7
+  }
+}

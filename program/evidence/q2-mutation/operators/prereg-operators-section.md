@@ -6,9 +6,9 @@ the experiment's preregistration before `scripts/preregister.py freeze`.
 ## Identity
 
 - Operator catalog `q2-mut-operators-v1`, `catalog_sha256`
-  `6d01e283a4be3826c147127cf445dfbdf21d0a4ed452067137b108add3bd2411` (hash over the operator descriptions and the
+  `2e2f24069c833c54bba23650481edec6ffff97176d07377327019e3a7f51d1fe` (hash over the operator descriptions and the
   sources of `harness/q2_mutation/operators/`), 64 operators.
-- Validated at commit `4a44f5d459d74202c3175278b7278454e3728529` in image
+- Validated at commit `7c429bcb793369649bc7970ccad0fba290ad2772` in image
   `sha256:894b2623dceb43e8468a2adbd6e03a532ea9683d4b7754cd79fa0d58a331f909`
   (the OSWorld VM's LibreOffice 7.3.7.2 30(Build:2)).
 - Any operator added or changed after the freeze is exploratory and reported
@@ -38,21 +38,29 @@ defect class the scoping probes found; their cells are exploratory.
   slide's layout association; Writer adds a default-style property on the
   second save; placeholder names are regenerated from export order).
 - At scoring, the harness reachability stage re-saves every mutant through the
-  task's own postconfig save, as for every other candidate.
+  task's own postconfig save, as for every other candidate. Purity should be
+  re-checked on those outputs against the reachability output of the null
+  mutant.
 
 ## Sites, seeds and labels
 
 - Requirement binding from the blind spec only: explicit references or quotes
-  that the task delta also touches (high), explicit references (medium),
-  delta units of the matching check kind (low).
+  that the task delta also touches (`explicit+delta`, high); for preservation
+  requirements ("keep", "unchanged", "not touched"), explicit units minus the
+  delta (`explicit-delta`, medium); other explicit references (medium); delta
+  units of the matching check kind (`delta_kind`, low). A requirement whose
+  only references are exclusions ("cells outside B1:E30") binds nothing.
 - At most 3 sites per (task, operator), ordered by a SHA-256 of
-  (task, operator), assigned seeds 42, 43, 44. Outside sites exclude every
+  (task, operator), assigned seeds 42, 43, 44. A unit bound to several
+  requirements cites the most strongly bound one. Outside sites exclude every
   unit in the task delta or a binding, and cells that feed them.
 - Labels are fixed at planning time from the spec (witness rules W-E, W-A,
   W-R, W-F in the package docstring). `should_fail_violation` needs a high or
   medium binding and a requirement that pins the attacked aspect; otherwise
-  the mutant is `ambiguous`. Ambiguous mutants never enter FN or FP rates;
-  they go to the blind audit (D9).
+  the mutant is `ambiguous`. Requirements and allowed variations the author
+  marked `[AMBIGUOUS]` are questions, not freedoms: an operator touching them
+  is labelled `ambiguous` (W-*-FLAGGED). Ambiguous mutants never enter FN or
+  FP rates; they go to the blind audit (D9).
 
 ## Admission and exclusions
 
@@ -60,6 +68,11 @@ defect class the scoping probes found; their cells are exploratory.
   `survived_save`, `edit_landed`, `no_collateral_change`, and the declared
   `forbidden_kinds_absent`, `observable_preserved`, `appearance_preserved`,
   `same_items`, `expected_values`, `expected_deltas`, `expected_formulas`.
+- Consequences LibreOffice applies to the edited unit itself are inside the
+  footprint: automatic row height of an edited spreadsheet row, the recognized
+  number format of a cleared cell, the height of an auto-growing text box or
+  table row after a text edit, regenerated placeholder names on an edited
+  slide, and child offsets of a moved group.
 - `edit_landed` failures of R operators are equivalent mutants (the edit did
   not change the observable); they are counted per operator, never relabelled.
 - `survived_save` failures are normalization findings, reported per operator.
@@ -70,5 +83,6 @@ defect class the scoping probes found; their cells are exploratory.
 
 ## Dev-split exposure
 
-The operator smoke runs used only development-split files (14 tasks, listed
-in `devsmoke-dev.json`), never the confirmatory split, and ran no checker.
+The operator runs on OSWorld files used only development-split tasks (14,
+listed in `devsmoke-dev.json` and `devplan-dev.json`), never the confirmatory
+split, and ran no checker.

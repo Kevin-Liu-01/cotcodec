@@ -1,5 +1,5 @@
 {
-  "catalog_sha256": "6d01e283a4be3826c147127cf445dfbdf21d0a4ed452067137b108add3bd2411",
+  "catalog_sha256": "2e2f24069c833c54bba23650481edec6ffff97176d07377327019e3a7f51d1fe",
   "command": "python3 -m harness.q2_mutation.operators.validate --out /out/validate --profile-template /home/user/.config/libreoffice/4/user",
   "fixed_point_first_resave": {
     "docx": [
@@ -302,7 +302,6 @@
   },
   "image_id": "sha256:894b2623dceb43e8468a2adbd6e03a532ea9683d4b7754cd79fa0d58a331f909",
   "lo_build": "LibreOffice 7.3.7.2 30(Build:2)",
-  "not_admitted_note": "xlsx.viol.formula_ref_shift: one shifted reference left the value unchanged (an equivalent mutant), so edit_landed rejected it as designed.",
   "operators": {
     "config.alt.json_number_repr": {
       "admitted": 1,
@@ -639,13 +638,13 @@
       "planned": 1
     },
     "pptx.viol.text_edit": {
-      "admitted": 3,
-      "applied": 3,
+      "admitted": 2,
+      "applied": 2,
       "failed_checks": {},
       "labels": {
-        "should_fail_violation": 3
+        "should_fail_violation": 2
       },
-      "planned": 3
+      "planned": 2
     },
     "text.eq.trailing_newline": {
       "admitted": 1,
@@ -890,14 +889,14 @@
     "batch_sha256": "6aa4e91bc958819a6b2a4718f568a7faee947a4db32dc282b05d4e7174de1bc1",
     "container_dev_nvidia": [],
     "exit_status": 0,
-    "finished_at": "2026-10-07T07:57:57Z",
+    "finished_at": "2026-10-07T08:17:49Z",
     "gpus_requested": 0,
     "image_id": "sha256:894b2623dceb43e8468a2adbd6e03a532ea9683d4b7754cd79fa0d58a331f909",
-    "job_id": "422",
+    "job_id": "431",
     "mode": "run",
-    "mounts": "/home/kevin/cotcodec-runs/stage0/q2-evaluator-mutation/operators/src/4a44f5d459d74202c3175278b7278454e3728529:/src:ro /home/kevin/cotcodec-runs/stage0/q2-evaluator-mutation/operators/runs/validate-4a44f5d4-v1:/out:rw",
+    "mounts": "/home/kevin/cotcodec-runs/stage0/q2-evaluator-mutation/operators/src/7c429bcb793369649bc7970ccad0fba290ad2772:/src:ro /home/kevin/cotcodec-runs/stage0/q2-evaluator-mutation/operators/runs/validate-7c429bcb-v1:/out:rw",
     "network": "none",
-    "started_at": "2026-10-07T07:56:52Z"
+    "started_at": "2026-10-07T08:16:48Z"
   },
   "resave": {
     "base-docx": {
@@ -925,12 +924,12 @@
       "status": "ok"
     }
   },
-  "slurm_job": "422",
-  "source_revision": "4a44f5d459d74202c3175278b7278454e3728529",
+  "slurm_job": "431",
+  "source_revision": "7c429bcb793369649bc7970ccad0fba290ad2772",
   "totals": {
-    "admitted": 131,
-    "applied": 132,
-    "planned": 132
+    "admitted": 130,
+    "applied": 131,
+    "planned": 131
   },
   "what": "Operator validation doctor on synthetic documents written from scratch (no OSWorld content): every operator planned against synthetic specs, applied through uno_apply.py (UNO edits + .uno:Save, VM LibreOffice profile) in the LO-VM image, and checked for purity against the null mutant. No checker ran."
 }

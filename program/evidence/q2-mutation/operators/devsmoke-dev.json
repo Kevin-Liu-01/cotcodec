@@ -1,8 +1,7 @@
 {
   "command": "python3 -m harness.q2_mutation.operators.devsmoke --jobs /ro/devjobs/jobs-dev.jsonl --out /out/devsmoke --delta-requirements --profile-template /home/user/.config/libreoffice/4/user",
   "image_id": "sha256:894b2623dceb43e8468a2adbd6e03a532ea9683d4b7754cd79fa0d58a331f909",
-  "inputs": "harness run dev-controls-raw-v1/jobs-dev.jsonl (gold and initial file per dev task) over the harness file cache inputs/file_cache_1e112283; every file matched the job list's candidate SHA-256 (rejected_hash is empty)",
-  "not_admitted_note": "xlsx.viol.formula_ref_shift: two shifted references left the value unchanged (equivalent mutants). Mutant documents and per-mutant records stay on the host under ~/cotcodec-runs/stage0/q2-evaluator-mutation/operators/runs/; they contain third-party content and are not released.",
+  "inputs": "harness run dev-controls-raw-v1/jobs-dev.jsonl over the harness file cache inputs/file_cache_1e112283; every file matched the job list's candidate SHA-256 (rejected_hash is empty)",
   "null_drift_change_kinds": {
     "01b269ae-2111-4a07-81fd-3fcd711993b0": {},
     "12382c62-0cd1-4bf2-bdc8-1d20bf9b2371": {},
@@ -35,12 +34,6 @@
     }
   },
   "operators": {
-    "docx.alt.para_direct_for_style": {
-      "admitted": 3,
-      "applied": 3,
-      "failed_checks": {},
-      "planned": 3
-    },
     "docx.eq.doc_property": {
       "admitted": 6,
       "applied": 6,
@@ -284,18 +277,19 @@
     "batch_sha256": "6aa4e91bc958819a6b2a4718f568a7faee947a4db32dc282b05d4e7174de1bc1",
     "container_dev_nvidia": [],
     "exit_status": 0,
-    "finished_at": "2026-10-07T08:00:42Z",
+    "finished_at": "2026-10-07T08:20:21Z",
     "gpus_requested": 0,
     "image_id": "sha256:894b2623dceb43e8468a2adbd6e03a532ea9683d4b7754cd79fa0d58a331f909",
-    "job_id": "423",
+    "job_id": "432",
     "mode": "run",
-    "mounts": "/home/kevin/cotcodec-runs/stage0/q2-evaluator-mutation/operators/src/4a44f5d459d74202c3175278b7278454e3728529:/src:ro /home/kevin/cotcodec-runs/stage0/q2-evaluator-mutation/operators/runs/devsmoke-delta-4a44f5d4-v1:/out:rw /home/kevin/cotcodec-runs/stage0/q2-evaluator-mutation/inputs:/inputs:ro /home/kevin/cotcodec-runs/stage0/q2-evaluator-mutation/runs/dev-controls-raw-v1:/ro/devjobs:ro",
+    "mounts": "/home/kevin/cotcodec-runs/stage0/q2-evaluator-mutation/operators/src/7c429bcb793369649bc7970ccad0fba290ad2772:/src:ro /home/kevin/cotcodec-runs/stage0/q2-evaluator-mutation/operators/runs/devsmoke-delta-7c429bcb-v1:/out:rw /home/kevin/cotcodec-runs/stage0/q2-evaluator-mutation/inputs:/inputs:ro /home/kevin/cotcodec-runs/stage0/q2-evaluator-mutation/runs/dev-controls-raw-v1:/ro/devjobs:ro",
     "network": "none",
-    "started_at": "2026-10-07T07:56:54Z"
+    "started_at": "2026-10-07T08:16:51Z"
   },
   "rejected_hash": [],
-  "slurm_job": "423",
-  "source_revision": "4a44f5d459d74202c3175278b7278454e3728529",
+  "release_note": "Mutant documents and per-mutant records stay on the host under ~/cotcodec-runs/stage0/q2-evaluator-mutation/operators/runs/; they contain third-party content.",
+  "slurm_job": "432",
+  "source_revision": "7c429bcb793369649bc7970ccad0fba290ad2772",
   "tasks": [
     {
       "family": "xlsx",
@@ -377,15 +371,15 @@
     },
     {
       "family": "docx",
-      "planned": 18,
+      "planned": 15,
       "status": "ok",
       "task_id": "e528b65e-1107-4b8c-8988-490e4fece599"
     }
   ],
   "totals": {
-    "admitted": 304,
-    "applied": 306,
-    "planned": 306
+    "admitted": 301,
+    "applied": 303,
+    "planned": 303
   },
   "touched_task_ids": [
     "01b269ae-2111-4a07-81fd-3fcd711993b0",
