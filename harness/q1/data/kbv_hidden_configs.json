@@ -1,0 +1,2220 @@
+{
+ "extras": {
+  "D5-alternating-targets": "L1/100 only: replace the targets with torch.ones(batch_size) and set every second entry to -1.0 (KBV hidden_tests/level1/100_hidden.py)"
+ },
+ "factors": {
+  "D1": 1.0,
+  "D2": 3.0,
+  "D3": 0.01,
+  "D4": -1.0
+ },
+ "kbv_repo": "https://github.com/facebookresearch/kernel_bench_verified",
+ "kbv_revision": "3fdf6fec7372a4d0cb682635f00e7bdcbc55d50e",
+ "license": "MIT",
+ "problems": {
+  "L1/100_HingeLoss": {
+   "configs": [
+    "D1",
+    "D2",
+    "D3",
+    "D4",
+    "D5-alternating-targets"
+   ],
+   "filtered": {},
+   "hidden_test_path": "hidden_tests/level1/100_hidden.py",
+   "hidden_test_sha256": "3f05997df463dc1f1b6fe0b697999429b289504fd534921f3e08c687915d0e76"
+  },
+  "L1/10_3D_tensor_matrix_multiplication": {
+   "configs": [
+    "D1",
+    "D2",
+    "D3",
+    "D4"
+   ],
+   "filtered": {},
+   "hidden_test_path": "hidden_tests/level1/10_hidden.py",
+   "hidden_test_sha256": "5626a8cca2d82e20820c7bd0b484e5acf7e0a7c6154fecd94cde282c3e7f61f1"
+  },
+  "L1/11_4D_tensor_matrix_multiplication": {
+   "configs": [
+    "D1",
+    "D2",
+    "D3",
+    "D4"
+   ],
+   "filtered": {},
+   "hidden_test_path": "hidden_tests/level1/11_hidden.py",
+   "hidden_test_sha256": "5e71b4f5c277826186c7ecedde01a750c3cdb8843058b44113107957acb1012b"
+  },
+  "L1/12_Matmul_with_diagonal_matrices_": {
+   "configs": [
+    "D1",
+    "D2",
+    "D3",
+    "D4"
+   ],
+   "filtered": {},
+   "hidden_test_path": "hidden_tests/level1/12_hidden.py",
+   "hidden_test_sha256": "621e6abbee2571b5afc3e67741df8947fe300edba905409c2884ea262478adb0"
+  },
+  "L1/13_Matmul_for_symmetric_matrices": {
+   "configs": [
+    "D1",
+    "D2",
+    "D3",
+    "D4"
+   ],
+   "filtered": {},
+   "hidden_test_path": "hidden_tests/level1/13_hidden.py",
+   "hidden_test_sha256": "027b60e7c3476042475f72370f4fac7c37edf069a2879741dc5f5086eb388f5d"
+  },
+  "L1/14_Matmul_for_upper_triangular_matrices": {
+   "configs": [
+    "D1",
+    "D2",
+    "D3",
+    "D4"
+   ],
+   "filtered": {},
+   "hidden_test_path": "hidden_tests/level1/14_hidden.py",
+   "hidden_test_sha256": "1c21da9a8341189aa37825d180485bfcdf12e07a6d32979e6666b0ba57aeee28"
+  },
+  "L1/15_Matmul_for_lower_triangular_matrices": {
+   "configs": [
+    "D1",
+    "D2",
+    "D3",
+    "D4"
+   ],
+   "filtered": {},
+   "hidden_test_path": "hidden_tests/level1/15_hidden.py",
+   "hidden_test_sha256": "cf7aa71f697894cb67526fceb3500f4a7702869fc52726084304a59f152b8202"
+  },
+  "L1/16_Matmul_with_transposed_A": {
+   "configs": [
+    "D1",
+    "D2",
+    "D3",
+    "D4"
+   ],
+   "filtered": {},
+   "hidden_test_path": "hidden_tests/level1/16_hidden.py",
+   "hidden_test_sha256": "f820e23677887b836eefe5f9531ed4a86967830a458659c53610f17c63e7ceb4"
+  },
+  "L1/17_Matmul_with_transposed_B": {
+   "configs": [
+    "D1",
+    "D2",
+    "D3",
+    "D4"
+   ],
+   "filtered": {},
+   "hidden_test_path": "hidden_tests/level1/17_hidden.py",
+   "hidden_test_sha256": "c578e2cdc34da5d49df7f33349d1357a4a8a71b95237f4baefd802128963784a"
+  },
+  "L1/18_Matmul_with_transposed_both": {
+   "configs": [
+    "D1",
+    "D2",
+    "D3",
+    "D4"
+   ],
+   "filtered": {},
+   "hidden_test_path": "hidden_tests/level1/18_hidden.py",
+   "hidden_test_sha256": "b33ab32a834f66e65a651a20997a86e253651d835ebafe1899c3e72055c5802f"
+  },
+  "L1/19_ReLU": {
+   "configs": [
+    "D1",
+    "D2",
+    "D3",
+    "D4"
+   ],
+   "filtered": {},
+   "hidden_test_path": "hidden_tests/level1/19_hidden.py",
+   "hidden_test_sha256": "8dcaad20a63fdfba5404bb823b8a8da54abe93ef676f6dfc629dd0e041ba65fb"
+  },
+  "L1/1_Square_matrix_multiplication_": {
+   "configs": [
+    "D1",
+    "D2",
+    "D3",
+    "D4"
+   ],
+   "filtered": {},
+   "hidden_test_path": "hidden_tests/level1/1_hidden.py",
+   "hidden_test_sha256": "9377caa50e3653ea38e6d35c3189a4cbdad1753d0c8dd17eb8ae2f70eba74f85"
+  },
+  "L1/20_LeakyReLU": {
+   "configs": [
+    "D1",
+    "D2",
+    "D3",
+    "D4"
+   ],
+   "filtered": {},
+   "hidden_test_path": "hidden_tests/level1/20_hidden.py",
+   "hidden_test_sha256": "64d536cc5387ed8a8189a952b8823105b755226898caef5cb2cc45a8f96ac843"
+  },
+  "L1/21_Sigmoid": {
+   "configs": [
+    "D1",
+    "D2",
+    "D3",
+    "D4"
+   ],
+   "filtered": {},
+   "hidden_test_path": "hidden_tests/level1/21_hidden.py",
+   "hidden_test_sha256": "f2885f27b3dac67deee365b483a838a8559550992d3894959eb8afbcd0eb8d09"
+  },
+  "L1/22_Tanh": {
+   "configs": [
+    "D1",
+    "D2",
+    "D3",
+    "D4"
+   ],
+   "filtered": {},
+   "hidden_test_path": "hidden_tests/level1/22_hidden.py",
+   "hidden_test_sha256": "b14356bf36c274b01be296f34112a0d12304f1172e6369c5c5cb761f6beeaa56"
+  },
+  "L1/23_Softmax": {
+   "configs": [
+    "D1",
+    "D2",
+    "D3",
+    "D4"
+   ],
+   "filtered": {},
+   "hidden_test_path": "hidden_tests/level1/23_hidden.py",
+   "hidden_test_sha256": "9f53a7215931122d7719a726f68f28460c30d5093cb20479acb275bacdadd236"
+  },
+  "L1/24_LogSoftmax": {
+   "configs": [
+    "D1",
+    "D2",
+    "D3",
+    "D4"
+   ],
+   "filtered": {},
+   "hidden_test_path": "hidden_tests/level1/24_hidden.py",
+   "hidden_test_sha256": "a153b8b289ccb4ac56f4d3ee6b5aeca63666dba1ff07a42914f2a0def7630cce"
+  },
+  "L1/25_Swish": {
+   "configs": [
+    "D1",
+    "D2",
+    "D3",
+    "D4"
+   ],
+   "filtered": {},
+   "hidden_test_path": "hidden_tests/level1/25_hidden.py",
+   "hidden_test_sha256": "cb30a8272b27cc05ddb69d9be0b969a3aaaa94200a975ba7246dd66c1d49d04a"
+  },
+  "L1/26_GELU_": {
+   "configs": [
+    "D1",
+    "D2",
+    "D3",
+    "D4"
+   ],
+   "filtered": {},
+   "hidden_test_path": "hidden_tests/level1/26_hidden.py",
+   "hidden_test_sha256": "eca2e5c61a3d08a77776625752d91ebae4f9037c168c6e2cb6814551999bf697"
+  },
+  "L1/27_SELU_": {
+   "configs": [
+    "D1",
+    "D2",
+    "D3",
+    "D4"
+   ],
+   "filtered": {},
+   "hidden_test_path": "hidden_tests/level1/27_hidden.py",
+   "hidden_test_sha256": "7ea9047590f8359d4d557abf45d93bbac92f55de55d4edb094145ce753653bfc"
+  },
+  "L1/28_HardSigmoid": {
+   "configs": [
+    "D1",
+    "D2",
+    "D3",
+    "D4"
+   ],
+   "filtered": {},
+   "hidden_test_path": "hidden_tests/level1/28_hidden.py",
+   "hidden_test_sha256": "e44ef59d745a2069eb60329f12649d7159231bb40caf60bc71121fa427f5cd85"
+  },
+  "L1/29_Softplus": {
+   "configs": [
+    "D1",
+    "D2",
+    "D3",
+    "D4"
+   ],
+   "filtered": {},
+   "hidden_test_path": "hidden_tests/level1/29_hidden.py",
+   "hidden_test_sha256": "9eab22e530dba373967437867a3de9a61187180b7f032c31aaeda34c9d39a0ee"
+  },
+  "L1/2_Standard_matrix_multiplication_": {
+   "configs": [
+    "D1",
+    "D2",
+    "D3",
+    "D4"
+   ],
+   "filtered": {},
+   "hidden_test_path": "hidden_tests/level1/2_hidden.py",
+   "hidden_test_sha256": "569d7bef6824286f5c34119950879a6711f5edcdb47e9873bcd10e92ab6289ea"
+  },
+  "L1/30_Softsign": {
+   "configs": [
+    "D1",
+    "D2",
+    "D3",
+    "D4"
+   ],
+   "filtered": {},
+   "hidden_test_path": "hidden_tests/level1/30_hidden.py",
+   "hidden_test_sha256": "11e0f43437b8256801b7d39d461edf905c5ab60a845fcdf947b1ca2530fd2809"
+  },
+  "L1/31_ELU": {
+   "configs": [
+    "D1",
+    "D2",
+    "D3",
+    "D4"
+   ],
+   "filtered": {},
+   "hidden_test_path": "hidden_tests/level1/31_hidden.py",
+   "hidden_test_sha256": "a7ed6b23133f71b8e296430fa01575e28b53e53c78193d5d541c546b62fb4c67"
+  },
+  "L1/32_HardTanh": {
+   "configs": [
+    "D1",
+    "D2",
+    "D3",
+    "D4"
+   ],
+   "filtered": {},
+   "hidden_test_path": "hidden_tests/level1/32_hidden.py",
+   "hidden_test_sha256": "168949065d84a15605f250726415b7d9a7a81f2e886b05c9e2ebd06a768af5e8"
+  },
+  "L1/33_BatchNorm": {
+   "configs": [
+    "D1",
+    "D2",
+    "D3",
+    "D4"
+   ],
+   "filtered": {},
+   "hidden_test_path": "hidden_tests/level1/33_hidden.py",
+   "hidden_test_sha256": "65e445725eac03f3b18ef450a8fdfe4c54b398cb55ee424d03e4d36e943717c9"
+  },
+  "L1/34_InstanceNorm": {
+   "configs": [
+    "D1",
+    "D2",
+    "D3",
+    "D4"
+   ],
+   "filtered": {},
+   "hidden_test_path": "hidden_tests/level1/34_hidden.py",
+   "hidden_test_sha256": "6720e422886b6f602deb0fcf34406870410ab5be3c1a5d2f45d4a7bbb975875d"
+  },
+  "L1/35_GroupNorm_": {
+   "configs": [
+    "D1",
+    "D2",
+    "D3",
+    "D4"
+   ],
+   "filtered": {},
+   "hidden_test_path": "hidden_tests/level1/35_hidden.py",
+   "hidden_test_sha256": "adf1303861351aca5fc3878e7ccda2896cec0c9f2c1ed1e8e0e280b029210dc2"
+  },
+  "L1/36_RMSNorm_": {
+   "configs": [
+    "D1",
+    "D2",
+    "D3",
+    "D4"
+   ],
+   "filtered": {},
+   "hidden_test_path": "hidden_tests/level1/36_hidden.py",
+   "hidden_test_sha256": "fb05fa1f32bfd40d79acc5d538fa68eb374f12f80db9877a34b7c7d0f932377b"
+  },
+  "L1/37_FrobeniusNorm_": {
+   "configs": [
+    "D1",
+    "D2",
+    "D3",
+    "D4"
+   ],
+   "filtered": {},
+   "hidden_test_path": "hidden_tests/level1/37_hidden.py",
+   "hidden_test_sha256": "61ab2c3a1d3c37c826f4cbe36b917447ca44ca99bcb6c344d7a5e94d338fd57b"
+  },
+  "L1/38_L1Norm_": {
+   "configs": [
+    "D1",
+    "D2",
+    "D3",
+    "D4"
+   ],
+   "filtered": {},
+   "hidden_test_path": "hidden_tests/level1/38_hidden.py",
+   "hidden_test_sha256": "b490cd9861de0c171fd981bf600df96237194c947b84a51c21f2bfc74d4299d7"
+  },
+  "L1/39_L2Norm_": {
+   "configs": [
+    "D1",
+    "D2",
+    "D3",
+    "D4"
+   ],
+   "filtered": {},
+   "hidden_test_path": "hidden_tests/level1/39_hidden.py",
+   "hidden_test_sha256": "e161ca34b4d621aa26f7dd9aa15955751746c86324d5849f60dfeafa028d1889"
+  },
+  "L1/3_Batched_matrix_multiplication": {
+   "configs": [
+    "D1",
+    "D2",
+    "D3",
+    "D4"
+   ],
+   "filtered": {},
+   "hidden_test_path": "hidden_tests/level1/3_hidden.py",
+   "hidden_test_sha256": "7a75ad4a155cffcdb8293421b41f7319b465e606bbe813c704924878c9b870b2"
+  },
+  "L1/40_LayerNorm": {
+   "configs": [
+    "D1",
+    "D2",
+    "D3",
+    "D4"
+   ],
+   "filtered": {},
+   "hidden_test_path": "hidden_tests/level1/40_hidden.py",
+   "hidden_test_sha256": "cc4ad4c73d2f771503dcbe29f653836e2c2819ff55619383d872a357ebaaad50"
+  },
+  "L1/41_Max_Pooling_1D": {
+   "configs": [
+    "D1",
+    "D2",
+    "D3",
+    "D4"
+   ],
+   "filtered": {},
+   "hidden_test_path": "hidden_tests/level1/41_hidden.py",
+   "hidden_test_sha256": "56e2d22df3cf6e3b897e674c0638f46c5fdb28f94a3700bda7b8349bcae76a01"
+  },
+  "L1/42_Max_Pooling_2D": {
+   "configs": [
+    "D1",
+    "D2",
+    "D3",
+    "D4"
+   ],
+   "filtered": {},
+   "hidden_test_path": "hidden_tests/level1/42_hidden.py",
+   "hidden_test_sha256": "63181bfd6a34f8915891f7cd66c85c2b3debe038bf950689d378cd4fd99dc785"
+  },
+  "L1/43_Max_Pooling_3D": {
+   "configs": [
+    "D1",
+    "D2",
+    "D3",
+    "D4"
+   ],
+   "filtered": {},
+   "hidden_test_path": "hidden_tests/level1/43_hidden.py",
+   "hidden_test_sha256": "a64248fbcbdd79a2526dccc16ccdab1b93b85d5bd6951b184d9b2ccc515e7090"
+  },
+  "L1/44_Average_Pooling_1D": {
+   "configs": [
+    "D1",
+    "D2",
+    "D3",
+    "D4"
+   ],
+   "filtered": {},
+   "hidden_test_path": "hidden_tests/level1/44_hidden.py",
+   "hidden_test_sha256": "7306a0ad509629c3b5d8896df2866ed126958864d7c373a1ec5d05a40cc6ef29"
+  },
+  "L1/45_Average_Pooling_2D": {
+   "configs": [
+    "D1",
+    "D2",
+    "D3",
+    "D4"
+   ],
+   "filtered": {},
+   "hidden_test_path": "hidden_tests/level1/45_hidden.py",
+   "hidden_test_sha256": "f60ca7268dd9bab87a3a73ecb8ad69837f18a34f41dd9425bdc4fe55d443dd12"
+  },
+  "L1/46_Average_Pooling_3D": {
+   "configs": [
+    "D1",
+    "D2",
+    "D3",
+    "D4"
+   ],
+   "filtered": {},
+   "hidden_test_path": "hidden_tests/level1/46_hidden.py",
+   "hidden_test_sha256": "27cfc73fbf533b04ac45c68d7f9a9ffeb57daa8ea241d9b3299c2ef967a3c517"
+  },
+  "L1/47_Sum_reduction_over_a_dimension": {
+   "configs": [
+    "D1",
+    "D2",
+    "D3",
+    "D4"
+   ],
+   "filtered": {},
+   "hidden_test_path": "hidden_tests/level1/47_hidden.py",
+   "hidden_test_sha256": "f47b374adce1b3f874293f508832b6924fd32b98637a39cf61fdc47fc10bc5e2"
+  },
+  "L1/48_Mean_reduction_over_a_dimension": {
+   "configs": [
+    "D1",
+    "D2",
+    "D3",
+    "D4"
+   ],
+   "filtered": {},
+   "hidden_test_path": "hidden_tests/level1/48_hidden.py",
+   "hidden_test_sha256": "4870322303e76f9f66be1485616542f10206fbf4416d30ff095dc14116f73b30"
+  },
+  "L1/49_Max_reduction_over_a_dimension": {
+   "configs": [
+    "D1",
+    "D2",
+    "D3",
+    "D4"
+   ],
+   "filtered": {},
+   "hidden_test_path": "hidden_tests/level1/49_hidden.py",
+   "hidden_test_sha256": "5af409242546957179186b890b47abddca4514f54a567849f16d4efcd89e8594"
+  },
+  "L1/4_Matrix_vector_multiplication_": {
+   "configs": [
+    "D1",
+    "D2",
+    "D3",
+    "D4"
+   ],
+   "filtered": {},
+   "hidden_test_path": "hidden_tests/level1/4_hidden.py",
+   "hidden_test_sha256": "709fb50d4379350e1ba5db7c112c21e349f48a2216b78cf02be5def4e8db69c2"
+  },
+  "L1/50_conv_standard_2D__square_input__square_kernel": {
+   "configs": [
+    "D1",
+    "D2",
+    "D3",
+    "D4"
+   ],
+   "filtered": {},
+   "hidden_test_path": "hidden_tests/level1/50_hidden.py",
+   "hidden_test_sha256": "d10de6df62d6e64cb3873594ea838fc1b13eca7819fbc1b87cc993222cad1aa9"
+  },
+  "L1/51_Argmax_over_a_dimension": {
+   "configs": [
+    "D1",
+    "D2",
+    "D3",
+    "D4"
+   ],
+   "filtered": {},
+   "hidden_test_path": "hidden_tests/level1/51_hidden.py",
+   "hidden_test_sha256": "180e8bfcc46cf5fbcbe98b090205b7e2b5e094c6bb912cb8b3fab6bcfbd220b9"
+  },
+  "L1/52_Argmin_over_a_dimension": {
+   "configs": [
+    "D1",
+    "D2",
+    "D3",
+    "D4"
+   ],
+   "filtered": {},
+   "hidden_test_path": "hidden_tests/level1/52_hidden.py",
+   "hidden_test_sha256": "a7ddf0f540efa27e252b51a81997909c4bf8270fc9412c8313dd56461ad71e1f"
+  },
+  "L1/53_Min_reduction_over_a_dimension": {
+   "configs": [
+    "D1",
+    "D2",
+    "D3",
+    "D4"
+   ],
+   "filtered": {},
+   "hidden_test_path": "hidden_tests/level1/53_hidden.py",
+   "hidden_test_sha256": "12d5bf1e73f1167b8b0798d71347435162ae0fc9fc1e291a669a5e32cd91f2f5"
+  },
+  "L1/54_conv_standard_3D__square_input__square_kernel": {
+   "configs": [
+    "D1",
+    "D2",
+    "D3",
+    "D4"
+   ],
+   "filtered": {},
+   "hidden_test_path": "hidden_tests/level1/54_hidden.py",
+   "hidden_test_sha256": "d3175246476510bf614e9e281b556d7a194d86d3a4c3c153cb74518788efcfe4"
+  },
+  "L1/55_conv_standard_2D__asymmetric_input__square_kernel": {
+   "configs": [
+    "D1",
+    "D2",
+    "D3",
+    "D4"
+   ],
+   "filtered": {},
+   "hidden_test_path": "hidden_tests/level1/55_hidden.py",
+   "hidden_test_sha256": "6d5600b773fb7900a2f136d8f69bada8c40a06185727d6fcb5b8971f59d384be"
+  },
+  "L1/56_conv_standard_2D__asymmetric_input__asymmetric_kernel": {
+   "configs": [
+    "D1",
+    "D2",
+    "D3",
+    "D4"
+   ],
+   "filtered": {},
+   "hidden_test_path": "hidden_tests/level1/56_hidden.py",
+   "hidden_test_sha256": "fe2c2b1e963644786323da07af341b25a788b267a58d6432de29cedc9743b94c"
+  },
+  "L1/57_conv_transposed_2D__square_input__square_kernel": {
+   "configs": [
+    "D1",
+    "D2",
+    "D3",
+    "D4"
+   ],
+   "filtered": {},
+   "hidden_test_path": "hidden_tests/level1/57_hidden.py",
+   "hidden_test_sha256": "6d3e6e3b57c02e32b40419f9aee5e3890c0674d37b6e22daf5a786a698176dfa"
+  },
+  "L1/58_conv_transposed_3D__asymmetric_input__asymmetric_kernel": {
+   "configs": [
+    "D1",
+    "D2",
+    "D3",
+    "D4"
+   ],
+   "filtered": {},
+   "hidden_test_path": "hidden_tests/level1/58_hidden.py",
+   "hidden_test_sha256": "e2da3da09d1f76ea01718e49775df11fc4053de2e903d8d921a1e6f44df297b6"
+  },
+  "L1/59_conv_standard_3D__asymmetric_input__square_kernel": {
+   "configs": [
+    "D1",
+    "D2",
+    "D3",
+    "D4"
+   ],
+   "filtered": {},
+   "hidden_test_path": "hidden_tests/level1/59_hidden.py",
+   "hidden_test_sha256": "3a9b4b8cc0bdbb17d1846d42be70243717d44835f3253419ae2b7810f7c5f040"
+  },
+  "L1/5_Matrix_scalar_multiplication": {
+   "configs": [
+    "D1",
+    "D2",
+    "D3",
+    "D4"
+   ],
+   "filtered": {},
+   "hidden_test_path": "hidden_tests/level1/5_hidden.py",
+   "hidden_test_sha256": "18fc5a02b2aeb37a87a8b22b7d318975b8c176d76dc646a9298b3512d8cd3946"
+  },
+  "L1/60_conv_standard_3D__square_input__asymmetric_kernel": {
+   "configs": [
+    "D1",
+    "D2",
+    "D3",
+    "D4"
+   ],
+   "filtered": {},
+   "hidden_test_path": "hidden_tests/level1/60_hidden.py",
+   "hidden_test_sha256": "3c10663eaae8effe1ec316c71e832601a5ea01b89a4a28683357cf9a24f5dfea"
+  },
+  "L1/61_conv_transposed_3D__square_input__square_kernel": {
+   "configs": [
+    "D1",
+    "D2",
+    "D3",
+    "D4"
+   ],
+   "filtered": {},
+   "hidden_test_path": "hidden_tests/level1/61_hidden.py",
+   "hidden_test_sha256": "3e758646ae44447c459f73827852fb0945561e5873c6f8413c690df71c285cf3"
+  },
+  "L1/62_conv_standard_2D__square_input__asymmetric_kernel": {
+   "configs": [
+    "D1",
+    "D2",
+    "D3",
+    "D4"
+   ],
+   "filtered": {},
+   "hidden_test_path": "hidden_tests/level1/62_hidden.py",
+   "hidden_test_sha256": "73d560e8166ace97f4bc717ab6528e36ccb2059296110797d8198baf01c089f0"
+  },
+  "L1/63_conv_standard_2D__square_input__square_kernel": {
+   "configs": [
+    "D1",
+    "D2",
+    "D3",
+    "D4"
+   ],
+   "filtered": {},
+   "hidden_test_path": "hidden_tests/level1/63_hidden.py",
+   "hidden_test_sha256": "bc6dc3d3faaa1e12bed3b21d06a3484f5f1579e6c3ed68e4ae690179a61a2bb2"
+  },
+  "L1/64_conv_transposed_1D": {
+   "configs": [
+    "D1",
+    "D2",
+    "D3",
+    "D4"
+   ],
+   "filtered": {},
+   "hidden_test_path": "hidden_tests/level1/64_hidden.py",
+   "hidden_test_sha256": "5bba4e940d9a69e14a746b16cb0edb226d3cb3186caab236f43b9746d247bb49"
+  },
+  "L1/65_conv_transposed_2D__square_input__asymmetric_kernel": {
+   "configs": [
+    "D1",
+    "D2",
+    "D3",
+    "D4"
+   ],
+   "filtered": {},
+   "hidden_test_path": "hidden_tests/level1/65_hidden.py",
+   "hidden_test_sha256": "0a263d89289bbfc7ead630cfb5706244b28744ea5a2e286e227db0c360ed64fb"
+  },
+  "L1/66_conv_standard_3D__asymmetric_input__asymmetric_kernel": {
+   "configs": [
+    "D1",
+    "D2",
+    "D3",
+    "D4"
+   ],
+   "filtered": {},
+   "hidden_test_path": "hidden_tests/level1/66_hidden.py",
+   "hidden_test_sha256": "83c85dce643d1110feb74986e25af3329d1d6b78ba1c569a09bfd20f748c78fd"
+  },
+  "L1/67_conv_standard_1D": {
+   "configs": [
+    "D1",
+    "D2",
+    "D3",
+    "D4"
+   ],
+   "filtered": {},
+   "hidden_test_path": "hidden_tests/level1/67_hidden.py",
+   "hidden_test_sha256": "46bc2f966652ca79dfb4627b3e22466c9bf1d17c44547c5af8519a5770b8c367"
+  },
+  "L1/68_conv_transposed_3D__square_input__asymmetric_kernel": {
+   "configs": [
+    "D1",
+    "D2",
+    "D3",
+    "D4"
+   ],
+   "filtered": {},
+   "hidden_test_path": "hidden_tests/level1/68_hidden.py",
+   "hidden_test_sha256": "034a834340ed3988e7ecc7a8b8cb7096a04afd139c9acff3ce743c80c54fd5cd"
+  },
+  "L1/69_conv_transposed_2D__asymmetric_input__asymmetric_kernel": {
+   "configs": [
+    "D1",
+    "D2",
+    "D3",
+    "D4"
+   ],
+   "filtered": {},
+   "hidden_test_path": "hidden_tests/level1/69_hidden.py",
+   "hidden_test_sha256": "3b6cc5b9b1817d0e7ed75910e354533262d4e6d88878585efc588a4b834a3026"
+  },
+  "L1/6_Matmul_with_large_K_dimension_": {
+   "configs": [
+    "D1",
+    "D2",
+    "D3",
+    "D4"
+   ],
+   "filtered": {},
+   "hidden_test_path": "hidden_tests/level1/6_hidden.py",
+   "hidden_test_sha256": "49d54c1339d74492b29bd0820e85a2b88faf6f1a60c51723617003c17677ce05"
+  },
+  "L1/70_conv_transposed_3D__asymmetric_input__square_kernel": {
+   "configs": [
+    "D1",
+    "D2",
+    "D3",
+    "D4"
+   ],
+   "filtered": {},
+   "hidden_test_path": "hidden_tests/level1/70_hidden.py",
+   "hidden_test_sha256": "a683757cb3af52416662639b1e6deef0ff1df77a173a264517f5ffdd44824346"
+  },
+  "L1/71_conv_transposed_2D__asymmetric_input__square_kernel": {
+   "configs": [
+    "D1",
+    "D2",
+    "D3",
+    "D4"
+   ],
+   "filtered": {},
+   "hidden_test_path": "hidden_tests/level1/71_hidden.py",
+   "hidden_test_sha256": "a22aac927858f2e19d2363207a82a562806bae2f87346190fed4651d904dea99"
+  },
+  "L1/72_conv_transposed_3D_asymmetric_input_asymmetric_kernel___strided_padded_grouped_": {
+   "configs": [
+    "D1",
+    "D2",
+    "D3",
+    "D4"
+   ],
+   "filtered": {},
+   "hidden_test_path": "hidden_tests/level1/72_hidden.py",
+   "hidden_test_sha256": "5f6950e7539c40e4ad7ece73c7e5c932f793bef9edae83ef96a05e3a48da3faf"
+  },
+  "L1/73_conv_transposed_3D_asymmetric_input_square_kernel__strided_padded__grouped": {
+   "configs": [
+    "D1",
+    "D2",
+    "D3",
+    "D4"
+   ],
+   "filtered": {},
+   "hidden_test_path": "hidden_tests/level1/73_hidden.py",
+   "hidden_test_sha256": "9b52b98a259e7ae7298d675df440154500e27f166f0e4fd83b803549cb02bad0"
+  },
+  "L1/74_conv_transposed_1D_dilated": {
+   "configs": [
+    "D1",
+    "D2",
+    "D3",
+    "D4"
+   ],
+   "filtered": {},
+   "hidden_test_path": "hidden_tests/level1/74_hidden.py",
+   "hidden_test_sha256": "e095a4252026bfd2bc9fa145b9fdb5243929e152aa20f3b1bd66b4a2d1b99889"
+  },
+  "L1/75_conv_transposed_2D_asymmetric_input_asymmetric_kernel_strided__grouped____padded____dilated__": {
+   "configs": [
+    "D1",
+    "D2",
+    "D3",
+    "D4"
+   ],
+   "filtered": {},
+   "hidden_test_path": "hidden_tests/level1/75_hidden.py",
+   "hidden_test_sha256": "1ab798f6209ab690aac7759109b8a4b40010411f069872213d8020bda8a78d49"
+  },
+  "L1/76_conv_standard_1D_dilated_strided__": {
+   "configs": [
+    "D1",
+    "D2",
+    "D3",
+    "D4"
+   ],
+   "filtered": {},
+   "hidden_test_path": "hidden_tests/level1/76_hidden.py",
+   "hidden_test_sha256": "8a78f15f5cc4bee116c593509ed5da0ba79cee66dc6260f511bed9722ca17da7"
+  },
+  "L1/77_conv_transposed_3D_square_input_square_kernel___padded____dilated____strided__": {
+   "configs": [
+    "D1",
+    "D2",
+    "D3",
+    "D4"
+   ],
+   "filtered": {},
+   "hidden_test_path": "hidden_tests/level1/77_hidden.py",
+   "hidden_test_sha256": "8156e3bc3a1964e53fcc1cad2e98ecf54e60c2b5aae17eaab27cab0421eaa26b"
+  },
+  "L1/78_conv_transposed_2D_asymmetric_input_asymmetric_kernel___padded__": {
+   "configs": [
+    "D1",
+    "D2",
+    "D3",
+    "D4"
+   ],
+   "filtered": {},
+   "hidden_test_path": "hidden_tests/level1/78_hidden.py",
+   "hidden_test_sha256": "8a7d77db20082322c00224a4057f740ca5b4d8c312e0f390f721e7b848674be9"
+  },
+  "L1/79_conv_transposed_1D_asymmetric_input_square_kernel___padded____strided____dilated__": {
+   "configs": [
+    "D1",
+    "D2",
+    "D3",
+    "D4"
+   ],
+   "filtered": {},
+   "hidden_test_path": "hidden_tests/level1/79_hidden.py",
+   "hidden_test_sha256": "408bc218a0ee2c34712d0235e3ab0fbcd1e4fa54bd62a440689d2af7548e4d60"
+  },
+  "L1/7_Matmul_with_small_K_dimension_": {
+   "configs": [
+    "D1",
+    "D2",
+    "D3",
+    "D4"
+   ],
+   "filtered": {},
+   "hidden_test_path": "hidden_tests/level1/7_hidden.py",
+   "hidden_test_sha256": "4c151627c428f3b7424fa323f609f668a2e83120c707a6dbfbcc0cba4b06b131"
+  },
+  "L1/80_conv_standard_2D_square_input_asymmetric_kernel___dilated____padded__": {
+   "configs": [
+    "D1",
+    "D2",
+    "D3",
+    "D4"
+   ],
+   "filtered": {},
+   "hidden_test_path": "hidden_tests/level1/80_hidden.py",
+   "hidden_test_sha256": "7970488b7d0223e0bf26bd4104576b1d87ec4607b9ef5a6f706fc6cafc3b775d"
+  },
+  "L1/81_conv_transposed_2D_asymmetric_input_square_kernel___dilated____padded____strided__": {
+   "configs": [
+    "D1",
+    "D2",
+    "D3",
+    "D4"
+   ],
+   "filtered": {},
+   "hidden_test_path": "hidden_tests/level1/81_hidden.py",
+   "hidden_test_sha256": "0a10774183d63ff1ae4448f95cbcf1e23639840de87e41dd76b502c02fc5ce8c"
+  },
+  "L1/82_conv_depthwise_2D_square_input_square_kernel": {
+   "configs": [
+    "D1",
+    "D2",
+    "D3",
+    "D4"
+   ],
+   "filtered": {},
+   "hidden_test_path": "hidden_tests/level1/82_hidden.py",
+   "hidden_test_sha256": "aa49f7f7a63d302be3c7d360dfd3316c9ea6d9d6a817ea6976831b17ba3f4e47"
+  },
+  "L1/83_conv_depthwise_2D_square_input_asymmetric_kernel": {
+   "configs": [
+    "D1",
+    "D2",
+    "D3",
+    "D4"
+   ],
+   "filtered": {},
+   "hidden_test_path": "hidden_tests/level1/83_hidden.py",
+   "hidden_test_sha256": "9bb4e1cf18390f40955a2e888835d0a66bb72571360729ff9a1feb5417d6bf72"
+  },
+  "L1/84_conv_depthwise_2D_asymmetric_input_square_kernel": {
+   "configs": [
+    "D1",
+    "D2",
+    "D3",
+    "D4"
+   ],
+   "filtered": {},
+   "hidden_test_path": "hidden_tests/level1/84_hidden.py",
+   "hidden_test_sha256": "2de8e4beeb679501c49ee889b854aacb6ec055fbe3d2706dc6f0d441cbee83b4"
+  },
+  "L1/85_conv_depthwise_2D_asymmetric_input_asymmetric_kernel": {
+   "configs": [
+    "D1",
+    "D2",
+    "D3",
+    "D4"
+   ],
+   "filtered": {},
+   "hidden_test_path": "hidden_tests/level1/85_hidden.py",
+   "hidden_test_sha256": "d8ef8c5052ac5fc0cc6a1c0f151cd8c7f448f4a97da584bfe6d26e07558e6791"
+  },
+  "L1/86_conv_depthwise_separable_2D": {
+   "configs": [
+    "D1",
+    "D2",
+    "D3",
+    "D4"
+   ],
+   "filtered": {},
+   "hidden_test_path": "hidden_tests/level1/86_hidden.py",
+   "hidden_test_sha256": "c842527d3b06695b713be3d0d4c9d462127abca19c0245a7a53ac5733a73f121"
+  },
+  "L1/87_conv_pointwise_2D": {
+   "configs": [
+    "D1",
+    "D2",
+    "D3",
+    "D4"
+   ],
+   "filtered": {},
+   "hidden_test_path": "hidden_tests/level1/87_hidden.py",
+   "hidden_test_sha256": "5990d08c44f65d71e781e9dfe3ff6f4404de74610cb06bef247a848d4ef245b3"
+  },
+  "L1/88_MinGPTNewGelu": {
+   "configs": [
+    "D1",
+    "D2",
+    "D3",
+    "D4"
+   ],
+   "filtered": {},
+   "hidden_test_path": "hidden_tests/level1/88_hidden.py",
+   "hidden_test_sha256": "735a8deda2d93b83130c0ebeff9aeb1df4d02026e55b5fd2bf8ac36bf2e868f7"
+  },
+  "L1/89_cumsum": {
+   "configs": [
+    "D1",
+    "D2",
+    "D3",
+    "D4"
+   ],
+   "filtered": {},
+   "hidden_test_path": "hidden_tests/level1/89_hidden.py",
+   "hidden_test_sha256": "b5b918e9db18bbe65dc20fa9849d49b255dbc1a67d2cc9d8eb3fef1bbc5547eb"
+  },
+  "L1/8_Matmul_with_irregular_shapes_": {
+   "configs": [
+    "D1",
+    "D2",
+    "D3",
+    "D4"
+   ],
+   "filtered": {},
+   "hidden_test_path": "hidden_tests/level1/8_hidden.py",
+   "hidden_test_sha256": "ce91c18936bf3b22f421c0d7c28e4f1f6084181ecc99fdfb0cb930ed35e2edf8"
+  },
+  "L1/90_cumprod": {
+   "configs": [
+    "D1",
+    "D3",
+    "D4"
+   ],
+   "filtered": {
+    "D2": "reference output contains NaN/Inf"
+   },
+   "hidden_test_path": "hidden_tests/level1/90_hidden.py",
+   "hidden_test_sha256": "916f8e270361625c0e4621e44b2114afed819c279c614773f7e747aca88e88a0"
+  },
+  "L1/91_cumsum_reverse": {
+   "configs": [
+    "D1",
+    "D2",
+    "D3",
+    "D4"
+   ],
+   "filtered": {},
+   "hidden_test_path": "hidden_tests/level1/91_hidden.py",
+   "hidden_test_sha256": "895359858613ed65066e33a67bb4c161833256871ba99ddbb552d516feb881db"
+  },
+  "L1/92_cumsum_exclusive": {
+   "configs": [
+    "D1",
+    "D2",
+    "D3",
+    "D4"
+   ],
+   "filtered": {},
+   "hidden_test_path": "hidden_tests/level1/92_hidden.py",
+   "hidden_test_sha256": "4803901c025a25c6deee0a5d1d30de9a2e39e0f9041cc1321a32982eeba7a62a"
+  },
+  "L1/93_masked_cumsum": {
+   "configs": [
+    "D1",
+    "D2",
+    "D3",
+    "D4"
+   ],
+   "filtered": {},
+   "hidden_test_path": "hidden_tests/level1/93_hidden.py",
+   "hidden_test_sha256": "99e780da9cba2554cbc83076c78dbca2c7a85d5fea93c0bb8deb9417694c6657"
+  },
+  "L1/94_MSELoss": {
+   "configs": [
+    "D1",
+    "D2",
+    "D3",
+    "D4"
+   ],
+   "filtered": {},
+   "hidden_test_path": "hidden_tests/level1/94_hidden.py",
+   "hidden_test_sha256": "b6d696db237cbc06e27b363af4b50c709061f294918360063277df3c3adddc81"
+  },
+  "L1/95_CrossEntropyLoss": {
+   "configs": [
+    "D1",
+    "D2",
+    "D3",
+    "D4"
+   ],
+   "filtered": {},
+   "hidden_test_path": "hidden_tests/level1/95_hidden.py",
+   "hidden_test_sha256": "cce0ab8b6714fc9c808f9ebc4f197f76e81e5fc396376a8f22c83bf4ba4ce7ef"
+  },
+  "L1/96_HuberLoss": {
+   "configs": [
+    "D1",
+    "D2",
+    "D3",
+    "D4"
+   ],
+   "filtered": {},
+   "hidden_test_path": "hidden_tests/level1/96_hidden.py",
+   "hidden_test_sha256": "290696907afb313fb759fd227b5566a86f664d7ff47191ed826bcfd1d5667fcd"
+  },
+  "L1/97_ScaledDotProductAttention": {
+   "configs": [
+    "D1",
+    "D2",
+    "D3",
+    "D4"
+   ],
+   "filtered": {},
+   "hidden_test_path": "hidden_tests/level1/97_hidden.py",
+   "hidden_test_sha256": "c1b0894b8401324f552d05978fbd22cc3016949f24906b648ec59cc9a3ca682f"
+  },
+  "L1/98_KLDivLoss": {
+   "configs": [
+    "D1",
+    "D2",
+    "D3"
+   ],
+   "filtered": {
+    "D4": "reference output contains NaN/Inf"
+   },
+   "hidden_test_path": "hidden_tests/level1/98_hidden.py",
+   "hidden_test_sha256": "6bec7baa4ef4941aedb0c913b9f1a8461316051c5d14742f161e560638a73830"
+  },
+  "L1/99_TripletMarginLoss": {
+   "configs": [
+    "D1",
+    "D2",
+    "D3",
+    "D4"
+   ],
+   "filtered": {},
+   "hidden_test_path": "hidden_tests/level1/99_hidden.py",
+   "hidden_test_sha256": "446fdcea9d4d4945e8402f2aa769dcfa86ddae538f2bb5f79ea6fcb3b1047cd6"
+  },
+  "L1/9_Tall_skinny_matrix_multiplication_": {
+   "configs": [
+    "D1",
+    "D2",
+    "D3",
+    "D4"
+   ],
+   "filtered": {},
+   "hidden_test_path": "hidden_tests/level1/9_hidden.py",
+   "hidden_test_sha256": "da85c982fcd42f2d90957b04ed0fe074bbedca704669fc53b3925e2612325975"
+  },
+  "L2/100_ConvTranspose3d_Clamp_Min_Divide": {
+   "configs": [
+    "D1",
+    "D2",
+    "D3",
+    "D4"
+   ],
+   "filtered": {},
+   "hidden_test_path": "hidden_tests/level2/100_hidden.py",
+   "hidden_test_sha256": "6a982f37dee2fb2de2d9ee459f1eed773b1bb2c64b866e5b96a843b2878449b7"
+  },
+  "L2/10_ConvTranspose2d_MaxPool_Hardtanh_Mean_Tanh": {
+   "configs": [
+    "D1",
+    "D2",
+    "D3",
+    "D4"
+   ],
+   "filtered": {},
+   "hidden_test_path": "hidden_tests/level2/10_hidden.py",
+   "hidden_test_sha256": "03423143d2bdcd3c16fe3d30676e6acf3c14e64c7500bcd4ba9df67674aec8c6"
+  },
+  "L2/11_ConvTranspose2d_BatchNorm_Tanh_MaxPool_GroupNorm": {
+   "configs": [
+    "D1",
+    "D2",
+    "D3",
+    "D4"
+   ],
+   "filtered": {},
+   "hidden_test_path": "hidden_tests/level2/11_hidden.py",
+   "hidden_test_sha256": "7ca036c2592f807b4286e4a017ae6eb7b99b47428dae6a1722ccf4bbb3db9ac1"
+  },
+  "L2/12_Gemm_Multiply_LeakyReLU": {
+   "configs": [
+    "D1",
+    "D2",
+    "D3",
+    "D4"
+   ],
+   "filtered": {},
+   "hidden_test_path": "hidden_tests/level2/12_hidden.py",
+   "hidden_test_sha256": "c1adb1c9d7c34855dea45ff840cfb18e55fb8a22f68d9e200541d4a6a16b8161"
+  },
+  "L2/13_ConvTranspose3d_Mean_Add_Softmax_Tanh_Scaling": {
+   "configs": [
+    "D1",
+    "D2",
+    "D3",
+    "D4"
+   ],
+   "filtered": {},
+   "hidden_test_path": "hidden_tests/level2/13_hidden.py",
+   "hidden_test_sha256": "888dcdf3a8a8b83c159c8b28787e99b3278503ae0403de8b2440fc047886e158"
+  },
+  "L2/14_Gemm_Divide_Sum_Scaling": {
+   "configs": [
+    "D1",
+    "D2",
+    "D3",
+    "D4"
+   ],
+   "filtered": {},
+   "hidden_test_path": "hidden_tests/level2/14_hidden.py",
+   "hidden_test_sha256": "bf4282f7699076b9f33aa4feef2139d675411b1a249f9de8a47a7be11b06a464"
+  },
+  "L2/15_ConvTranspose3d_BatchNorm_Subtract": {
+   "configs": [
+    "D1",
+    "D2",
+    "D3",
+    "D4"
+   ],
+   "filtered": {},
+   "hidden_test_path": "hidden_tests/level2/15_hidden.py",
+   "hidden_test_sha256": "19f2a84135ef6bbccd3974e589865c90d7ff67e0a0a842f9ae522b168714f18d"
+  },
+  "L2/16_ConvTranspose2d_Mish_Add_Hardtanh_Scaling": {
+   "configs": [
+    "D1",
+    "D2",
+    "D3",
+    "D4"
+   ],
+   "filtered": {},
+   "hidden_test_path": "hidden_tests/level2/16_hidden.py",
+   "hidden_test_sha256": "8ea9be70e109c2a3e85257ce3db87770d667642609aa95f26e4535bc0772677d"
+  },
+  "L2/17_Conv2d_InstanceNorm_Divide": {
+   "configs": [
+    "D1",
+    "D2",
+    "D3",
+    "D4"
+   ],
+   "filtered": {},
+   "hidden_test_path": "hidden_tests/level2/17_hidden.py",
+   "hidden_test_sha256": "e0a3ce255541993a7e4a3178b6a2d82c8eac1455d28c0f900fbed764723281b2"
+  },
+  "L2/18_Matmul_Sum_Max_AvgPool_LogSumExp_LogSumExp": {
+   "configs": [
+    "D1",
+    "D2",
+    "D3",
+    "D4"
+   ],
+   "filtered": {},
+   "hidden_test_path": "hidden_tests/level2/18_hidden.py",
+   "hidden_test_sha256": "ac8c1a4d2afd54bc296d1a2a840a3464010c89453c66c23ac47ef78f24ebd545"
+  },
+  "L2/19_ConvTranspose2d_GELU_GroupNorm": {
+   "configs": [
+    "D1",
+    "D2",
+    "D3",
+    "D4"
+   ],
+   "filtered": {},
+   "hidden_test_path": "hidden_tests/level2/19_hidden.py",
+   "hidden_test_sha256": "d46f7ffaab4e8c763e33ae353caae280ce94b72101921546ef6f6d19f6d1a79f"
+  },
+  "L2/1_Conv2D_ReLU_BiasAdd": {
+   "configs": [
+    "D1",
+    "D2",
+    "D3",
+    "D4"
+   ],
+   "filtered": {},
+   "hidden_test_path": "hidden_tests/level2/1_hidden.py",
+   "hidden_test_sha256": "3f4c5124b6b49880f374ed90610d54b764197ee19429c17cfca0252101669eed"
+  },
+  "L2/20_ConvTranspose3d_Sum_ResidualAdd_Multiply_ResidualAdd": {
+   "configs": [
+    "D1",
+    "D2",
+    "D3",
+    "D4"
+   ],
+   "filtered": {},
+   "hidden_test_path": "hidden_tests/level2/20_hidden.py",
+   "hidden_test_sha256": "d13e7874e77980ccb7e44cdfc7dd1c3245d64f98061fe46871c6ab30b0b261e1"
+  },
+  "L2/21_Conv2d_Add_Scale_Sigmoid_GroupNorm": {
+   "configs": [
+    "D1",
+    "D2",
+    "D3",
+    "D4"
+   ],
+   "filtered": {},
+   "hidden_test_path": "hidden_tests/level2/21_hidden.py",
+   "hidden_test_sha256": "022a022183ebdb87ae73b4b35531b4d3f5008c36891a861c9d54764b6cd2a0e5"
+  },
+  "L2/22_Matmul_Scale_ResidualAdd_Clamp_LogSumExp_Mish": {
+   "configs": [
+    "D1",
+    "D2",
+    "D3",
+    "D4"
+   ],
+   "filtered": {},
+   "hidden_test_path": "hidden_tests/level2/22_hidden.py",
+   "hidden_test_sha256": "b72fd7e74b9107f3f8223f4860394759c4d43a6b7cd6f3910e2209d548d7e6c7"
+  },
+  "L2/23_Conv3d_GroupNorm_Mean": {
+   "configs": [
+    "D1",
+    "D2",
+    "D3",
+    "D4"
+   ],
+   "filtered": {},
+   "hidden_test_path": "hidden_tests/level2/23_hidden.py",
+   "hidden_test_sha256": "7e210583cb5aca9da01da941023bb272c9d1b8280cf349d841884c29eb185525"
+  },
+  "L2/24_Conv3d_Min_Softmax": {
+   "configs": [
+    "D1",
+    "D2",
+    "D3",
+    "D4"
+   ],
+   "filtered": {},
+   "hidden_test_path": "hidden_tests/level2/24_hidden.py",
+   "hidden_test_sha256": "680dc3a65698e8a53c63fcea7412ec663d54a6eadf503a5b8027f431e9111dc4"
+  },
+  "L2/25_Conv2d_Min_Tanh_Tanh": {
+   "configs": [
+    "D1",
+    "D2",
+    "D3",
+    "D4"
+   ],
+   "filtered": {},
+   "hidden_test_path": "hidden_tests/level2/25_hidden.py",
+   "hidden_test_sha256": "41e3e1abf32d02ccbb5eec0674b3aa65247c51b319b410e15bfa31cfd0434362"
+  },
+  "L2/26_ConvTranspose3d_Add_HardSwish": {
+   "configs": [
+    "D1",
+    "D2",
+    "D3",
+    "D4"
+   ],
+   "filtered": {},
+   "hidden_test_path": "hidden_tests/level2/26_hidden.py",
+   "hidden_test_sha256": "6d654eed91f612a66b6ecccaeea703b146037c5cbd5dc15423b89850212e92d9"
+  },
+  "L2/27_Conv3d_HardSwish_GroupNorm_Mean": {
+   "configs": [
+    "D1",
+    "D2",
+    "D3",
+    "D4"
+   ],
+   "filtered": {},
+   "hidden_test_path": "hidden_tests/level2/27_hidden.py",
+   "hidden_test_sha256": "4611c961704212919c201eefa207df0c2a49d424f30d15b17b883cd41fcae774"
+  },
+  "L2/28_BMM_InstanceNorm_Sum_ResidualAdd_Multiply": {
+   "configs": [
+    "D1",
+    "D2",
+    "D3",
+    "D4"
+   ],
+   "filtered": {},
+   "hidden_test_path": "hidden_tests/level2/28_hidden.py",
+   "hidden_test_sha256": "f629df9838edd7a4417d47105b1f3004836f130f42a1ba838097414c6efec64e"
+  },
+  "L2/29_Matmul_Mish_Mish": {
+   "configs": [
+    "D1",
+    "D2",
+    "D3",
+    "D4"
+   ],
+   "filtered": {},
+   "hidden_test_path": "hidden_tests/level2/29_hidden.py",
+   "hidden_test_sha256": "c1d5d546298a23b6050c99647d6fd2a5ec16beb4a67c8e34f1b9697b4c5618b0"
+  },
+  "L2/2_ConvTranspose2d_BiasAdd_Clamp_Scaling_Clamp_Divide": {
+   "configs": [
+    "D1",
+    "D2",
+    "D3",
+    "D4"
+   ],
+   "filtered": {},
+   "hidden_test_path": "hidden_tests/level2/2_hidden.py",
+   "hidden_test_sha256": "5a951a50e3d2e23f3a977005e6508ae3f37974e1bf08b2fdb0f004619f46e6f0"
+  },
+  "L2/30_Gemm_GroupNorm_Hardtanh": {
+   "configs": [
+    "D1",
+    "D2",
+    "D3",
+    "D4"
+   ],
+   "filtered": {},
+   "hidden_test_path": "hidden_tests/level2/30_hidden.py",
+   "hidden_test_sha256": "e9d18eca36c2236a5a771416a6197f7ab13c152bc2b609038396723460d0c13f"
+  },
+  "L2/31_Conv2d_Min_Add_Multiply": {
+   "configs": [
+    "D1",
+    "D2",
+    "D3",
+    "D4"
+   ],
+   "filtered": {},
+   "hidden_test_path": "hidden_tests/level2/31_hidden.py",
+   "hidden_test_sha256": "f70d2e7e4dec289bbe9dc690a1ff575b32c371f2cd5f1a5a535bf161cae6a7df"
+  },
+  "L2/32_Conv2d_Scaling_Min": {
+   "configs": [
+    "D1",
+    "D2",
+    "D3",
+    "D4"
+   ],
+   "filtered": {},
+   "hidden_test_path": "hidden_tests/level2/32_hidden.py",
+   "hidden_test_sha256": "a4f4276a21e90156e62c44eb2feefe34e02695f2014829da0bf602702f05ad47"
+  },
+  "L2/33_Gemm_Scale_BatchNorm": {
+   "configs": [
+    "D1",
+    "D2",
+    "D3",
+    "D4"
+   ],
+   "filtered": {},
+   "hidden_test_path": "hidden_tests/level2/33_hidden.py",
+   "hidden_test_sha256": "7ba4fb4fa32b215fef718c15e33f8df716985619235906c0151a73c0d7155479"
+  },
+  "L2/34_ConvTranspose3d_LayerNorm_GELU_Scaling": {
+   "configs": [
+    "D1",
+    "D2",
+    "D3",
+    "D4"
+   ],
+   "filtered": {},
+   "hidden_test_path": "hidden_tests/level2/34_hidden.py",
+   "hidden_test_sha256": "583af3de0964a977f2784e0084c56257efea60449d12f969df9fbe842a49d7a6"
+  },
+  "L2/35_Conv2d_Subtract_HardSwish_MaxPool_Mish": {
+   "configs": [
+    "D1",
+    "D2",
+    "D3",
+    "D4"
+   ],
+   "filtered": {},
+   "hidden_test_path": "hidden_tests/level2/35_hidden.py",
+   "hidden_test_sha256": "fc094df9d3ce031163924221833ed148e90052f661d0bc524fdb3eb798c67a37"
+  },
+  "L2/36_ConvTranspose2d_Min_Sum_GELU_Add": {
+   "configs": [
+    "D1",
+    "D2",
+    "D3",
+    "D4"
+   ],
+   "filtered": {},
+   "hidden_test_path": "hidden_tests/level2/36_hidden.py",
+   "hidden_test_sha256": "a67507bc4b3dd94104fa2cbda6d1eeea6169f59ccc655f8a70cea4d22e46c5b4"
+  },
+  "L2/37_Matmul_Swish_Sum_GroupNorm": {
+   "configs": [
+    "D1",
+    "D2",
+    "D3",
+    "D4"
+   ],
+   "filtered": {},
+   "hidden_test_path": "hidden_tests/level2/37_hidden.py",
+   "hidden_test_sha256": "f019b36123a91d76a25d3f62cd898069be20a4084b3a57e98e63a311a64e5116"
+  },
+  "L2/38_ConvTranspose3d_AvgPool_Clamp_Softmax_Multiply": {
+   "configs": [
+    "D1",
+    "D2",
+    "D3",
+    "D4"
+   ],
+   "filtered": {},
+   "hidden_test_path": "hidden_tests/level2/38_hidden.py",
+   "hidden_test_sha256": "113c466ca2de6ba50920972788a766b389a8899abbf0658609f7b8fea07fc204"
+  },
+  "L2/39_Gemm_Scale_BatchNorm": {
+   "configs": [
+    "D1",
+    "D2",
+    "D3",
+    "D4"
+   ],
+   "filtered": {},
+   "hidden_test_path": "hidden_tests/level2/39_hidden.py",
+   "hidden_test_sha256": "d5ffb3711933119819cfa5fa54384165453081bdd104968bf2442b096479cd72"
+  },
+  "L2/3_ConvTranspose3d_Sum_LayerNorm_AvgPool_GELU": {
+   "configs": [
+    "D1",
+    "D2",
+    "D3",
+    "D4"
+   ],
+   "filtered": {},
+   "hidden_test_path": "hidden_tests/level2/3_hidden.py",
+   "hidden_test_sha256": "4c5bb1ff9f640ab10a46af717b06b6c1e3bd0065b962af94a0b1fd7a1c401bd9"
+  },
+  "L2/40_Matmul_Scaling_ResidualAdd": {
+   "configs": [
+    "D1",
+    "D2",
+    "D3",
+    "D4"
+   ],
+   "filtered": {},
+   "hidden_test_path": "hidden_tests/level2/40_hidden.py",
+   "hidden_test_sha256": "dfcfe7956352bc138f6ec900fb24cd7d37554129a1936be72f18060f8762d8aa"
+  },
+  "L2/41_Gemm_BatchNorm_GELU_ReLU": {
+   "configs": [
+    "D1",
+    "D2",
+    "D3",
+    "D4"
+   ],
+   "filtered": {},
+   "hidden_test_path": "hidden_tests/level2/41_hidden.py",
+   "hidden_test_sha256": "41ca1b4cf4b538f842d73f0f7f1fd56e0ae5867c1635d0c2c9f16e6dd48d65a8"
+  },
+  "L2/42_ConvTranspose2d_GlobalAvgPool_BiasAdd_LogSumExp_Sum_Multiply": {
+   "configs": [
+    "D1",
+    "D2",
+    "D3",
+    "D4"
+   ],
+   "filtered": {},
+   "hidden_test_path": "hidden_tests/level2/42_hidden.py",
+   "hidden_test_sha256": "5f05a9d415e32374c82003a46d9ca94a4b93c31aa5c56c39e85f43fa91ef1724"
+  },
+  "L2/43_Conv3d_Max_LogSumExp_ReLU": {
+   "configs": [
+    "D1",
+    "D2",
+    "D3",
+    "D4"
+   ],
+   "filtered": {},
+   "hidden_test_path": "hidden_tests/level2/43_hidden.py",
+   "hidden_test_sha256": "ce9fa2d96e260c38ee31e45f46ccd9fa9664ee51a057371a3f35e21812ec42b6"
+  },
+  "L2/44_ConvTranspose2d_Multiply_GlobalAvgPool_GlobalAvgPool_Mean": {
+   "configs": [
+    "D1",
+    "D2",
+    "D3",
+    "D4"
+   ],
+   "filtered": {},
+   "hidden_test_path": "hidden_tests/level2/44_hidden.py",
+   "hidden_test_sha256": "c7c199d8d1faac5ce2e8c2fdea58461bb1a7ec51b2fb35fad0770f6e088ea8ab"
+  },
+  "L2/45_Gemm_Sigmoid_LogSumExp": {
+   "configs": [
+    "D1",
+    "D2",
+    "D3",
+    "D4"
+   ],
+   "filtered": {},
+   "hidden_test_path": "hidden_tests/level2/45_hidden.py",
+   "hidden_test_sha256": "c5d15efe7eec314ac707b9f279cca2455e36ea6d2ec5ead386d9ceba76dd619c"
+  },
+  "L2/46_Conv2d_Subtract_Tanh_Subtract_AvgPool": {
+   "configs": [
+    "D1",
+    "D2",
+    "D3",
+    "D4"
+   ],
+   "filtered": {},
+   "hidden_test_path": "hidden_tests/level2/46_hidden.py",
+   "hidden_test_sha256": "9f534bcc6c3765e155d3c05ef9558ca81168b56cc0ee1591cc68bd670eb7180a"
+  },
+  "L2/47_Conv3d_Mish_Tanh": {
+   "configs": [
+    "D1",
+    "D2",
+    "D3",
+    "D4"
+   ],
+   "filtered": {},
+   "hidden_test_path": "hidden_tests/level2/47_hidden.py",
+   "hidden_test_sha256": "3b1bdb5705e37c0dac0e09abe9f03dc19d8f8229fe5bc7b32a588e605667d7f9"
+  },
+  "L2/48_Conv3d_Scaling_Tanh_Multiply_Sigmoid": {
+   "configs": [
+    "D1",
+    "D2",
+    "D3",
+    "D4"
+   ],
+   "filtered": {},
+   "hidden_test_path": "hidden_tests/level2/48_hidden.py",
+   "hidden_test_sha256": "497b4f300be89a8b1caf14e5a783610e26d901e07db488982d3c28e19a0cedf9"
+  },
+  "L2/49_ConvTranspose3d_Softmax_Sigmoid": {
+   "configs": [
+    "D1",
+    "D2",
+    "D3",
+    "D4"
+   ],
+   "filtered": {},
+   "hidden_test_path": "hidden_tests/level2/49_hidden.py",
+   "hidden_test_sha256": "008ec1d13a260d3d5ba98c51e1e3ed165010bde99ccd6ca0a8e5992f56a55e85"
+  },
+  "L2/4_Conv2d_Mish_Mish": {
+   "configs": [
+    "D1",
+    "D2",
+    "D3",
+    "D4"
+   ],
+   "filtered": {},
+   "hidden_test_path": "hidden_tests/level2/4_hidden.py",
+   "hidden_test_sha256": "a949e87f6a438d553bbdf84b98101732fad8fec520925375bd936b5373f04bb6"
+  },
+  "L2/50_ConvTranspose3d_Scaling_AvgPool_BiasAdd_Scaling": {
+   "configs": [
+    "D1",
+    "D2",
+    "D3",
+    "D4"
+   ],
+   "filtered": {},
+   "hidden_test_path": "hidden_tests/level2/50_hidden.py",
+   "hidden_test_sha256": "e787ee11bca08da5830c2372f968bf5c2f7d3fcb8895c86857e89e2fd42e535a"
+  },
+  "L2/51_Gemm_Subtract_GlobalAvgPool_LogSumExp_GELU_ResidualAdd": {
+   "configs": [
+    "D1",
+    "D2",
+    "D3",
+    "D4"
+   ],
+   "filtered": {},
+   "hidden_test_path": "hidden_tests/level2/51_hidden.py",
+   "hidden_test_sha256": "55fea0466e5b9a271143db1650755ad28ff1c24a526a66b2a1d8eae9a4d58a0f"
+  },
+  "L2/52_Conv2d_Activation_BatchNorm": {
+   "configs": [
+    "D1",
+    "D2",
+    "D3",
+    "D4"
+   ],
+   "filtered": {},
+   "hidden_test_path": "hidden_tests/level2/52_hidden.py",
+   "hidden_test_sha256": "f8787efc79b61a651b5cfd0f3abe1da32bd07bff4e3765e6fb1f6bd2e2e3f87f"
+  },
+  "L2/53_Gemm_Scaling_Hardtanh_GELU": {
+   "configs": [
+    "D1",
+    "D2",
+    "D3",
+    "D4"
+   ],
+   "filtered": {},
+   "hidden_test_path": "hidden_tests/level2/53_hidden.py",
+   "hidden_test_sha256": "6d8596e3702c16603739bccefb216fdb9626bd77435345c6e96664b6eeacb7a9"
+  },
+  "L2/54_Conv2d_Multiply_LeakyReLU_GELU": {
+   "configs": [
+    "D1",
+    "D2",
+    "D3",
+    "D4"
+   ],
+   "filtered": {},
+   "hidden_test_path": "hidden_tests/level2/54_hidden.py",
+   "hidden_test_sha256": "c5438c85756e2a2609fb7ac6b90fc1834b1ff28cd0937f3a7b0c2b3bfaa44704"
+  },
+  "L2/55_Matmul_MaxPool_Sum_Scale": {
+   "configs": [
+    "D1",
+    "D2",
+    "D3",
+    "D4"
+   ],
+   "filtered": {},
+   "hidden_test_path": "hidden_tests/level2/55_hidden.py",
+   "hidden_test_sha256": "46e6a8414912a19451b2f227eba0e0bb245f6983ad5dcd8fa949f35874f31e60"
+  },
+  "L2/56_Matmul_Sigmoid_Sum": {
+   "configs": [
+    "D1",
+    "D2",
+    "D3",
+    "D4"
+   ],
+   "filtered": {},
+   "hidden_test_path": "hidden_tests/level2/56_hidden.py",
+   "hidden_test_sha256": "919c9f52fc1ea9770849a568a59dcb6e30af8cce3cf2ba6d72ba49a765220b5c"
+  },
+  "L2/57_Conv2d_ReLU_HardSwish": {
+   "configs": [
+    "D1",
+    "D2",
+    "D3",
+    "D4"
+   ],
+   "filtered": {},
+   "hidden_test_path": "hidden_tests/level2/57_hidden.py",
+   "hidden_test_sha256": "4bb7db98660071c8be3d927906cf2599d12b983b9c8e8d382876ea5dad0c7e8d"
+  },
+  "L2/58_ConvTranspose3d_LogSumExp_HardSwish_Subtract_Clamp": {
+   "configs": [
+    "D1",
+    "D2",
+    "D3",
+    "D4"
+   ],
+   "filtered": {},
+   "hidden_test_path": "hidden_tests/level2/58_hidden.py",
+   "hidden_test_sha256": "424cd732057dc5d0e84c56a4f43e19bc98f3c671f21c6ef00c9e79affb388924"
+  },
+  "L2/59_Matmul_Swish_Scaling": {
+   "configs": [
+    "D1",
+    "D2",
+    "D3",
+    "D4"
+   ],
+   "filtered": {},
+   "hidden_test_path": "hidden_tests/level2/59_hidden.py",
+   "hidden_test_sha256": "63c3d9e5f324ad9b059f88087467d270fabe11fa0eef5816b511ebcdadf87ce5"
+  },
+  "L2/5_ConvTranspose2d_Subtract_Tanh": {
+   "configs": [
+    "D1",
+    "D2",
+    "D3",
+    "D4"
+   ],
+   "filtered": {},
+   "hidden_test_path": "hidden_tests/level2/5_hidden.py",
+   "hidden_test_sha256": "c516666bbe3da015582ed48300c7ae1493b6d7808af18f493c4c7aab7f82a1ab"
+  },
+  "L2/60_ConvTranspose3d_Swish_GroupNorm_HardSwish": {
+   "configs": [
+    "D1",
+    "D2",
+    "D3",
+    "D4"
+   ],
+   "filtered": {},
+   "hidden_test_path": "hidden_tests/level2/60_hidden.py",
+   "hidden_test_sha256": "cf5fbcb17bf10270386fcc4ad5d412ebe70e401c8556b72ee1fcfce64e98bf40"
+  },
+  "L2/61_ConvTranspose3d_ReLU_GroupNorm": {
+   "configs": [
+    "D1",
+    "D2",
+    "D3",
+    "D4"
+   ],
+   "filtered": {},
+   "hidden_test_path": "hidden_tests/level2/61_hidden.py",
+   "hidden_test_sha256": "61b04a68f40a31475ce0fa0b7045baeaa29136dcf6ba7781a3bf0d2757464078"
+  },
+  "L2/62_Matmul_GroupNorm_LeakyReLU_Sum": {
+   "configs": [
+    "D1",
+    "D2",
+    "D3",
+    "D4"
+   ],
+   "filtered": {},
+   "hidden_test_path": "hidden_tests/level2/62_hidden.py",
+   "hidden_test_sha256": "4780524c1399a2b9bed3184a27e3912565b5f5470de0e78997258cec7b4aa3f1"
+  },
+  "L2/63_Gemm_ReLU_Divide": {
+   "configs": [
+    "D1",
+    "D2",
+    "D3",
+    "D4"
+   ],
+   "filtered": {},
+   "hidden_test_path": "hidden_tests/level2/63_hidden.py",
+   "hidden_test_sha256": "ba3b52b6f7a088ae24fe800502f56d7f04d3e7821dba4d7afe4e931648b86244"
+  },
+  "L2/64_Gemm_LogSumExp_LeakyReLU_LeakyReLU_GELU_GELU": {
+   "configs": [
+    "D1",
+    "D2",
+    "D3",
+    "D4"
+   ],
+   "filtered": {},
+   "hidden_test_path": "hidden_tests/level2/64_hidden.py",
+   "hidden_test_sha256": "d2cfaaa322a4b2296db9d5a1131795da463ae04821f7bd9e48f5e6172370b085"
+  },
+  "L2/65_Conv2d_AvgPool_Sigmoid_Sum": {
+   "configs": [
+    "D1",
+    "D2",
+    "D3",
+    "D4"
+   ],
+   "filtered": {},
+   "hidden_test_path": "hidden_tests/level2/65_hidden.py",
+   "hidden_test_sha256": "13f56f94e992e094a8bdb8750284b9410f50c33a75808016a502fd1233681a03"
+  },
+  "L2/66_Matmul_Dropout_Softmax": {
+   "configs": [
+    "D1",
+    "D2",
+    "D3",
+    "D4"
+   ],
+   "filtered": {},
+   "hidden_test_path": "hidden_tests/level2/66_hidden.py",
+   "hidden_test_sha256": "2a99ad733346c7d6c2598642f00a4ee1b6ac231bda2b128e237917604b5edc5c"
+  },
+  "L2/67_Conv2d_GELU_GlobalAvgPool": {
+   "configs": [
+    "D1",
+    "D2",
+    "D3",
+    "D4"
+   ],
+   "filtered": {},
+   "hidden_test_path": "hidden_tests/level2/67_hidden.py",
+   "hidden_test_sha256": "6c6acc5fcee47ebae9ccb45818eebe34e93979972b637688c7c6d841b48b6346"
+  },
+  "L2/68_Matmul_Min_Subtract": {
+   "configs": [
+    "D1",
+    "D2",
+    "D3",
+    "D4"
+   ],
+   "filtered": {},
+   "hidden_test_path": "hidden_tests/level2/68_hidden.py",
+   "hidden_test_sha256": "a019cb0877d9362e46eb8cf0a5e971416c3ddaf25fd2ee5be32e517a4f8080a8"
+  },
+  "L2/69_Conv2d_HardSwish_ReLU": {
+   "configs": [
+    "D1",
+    "D2",
+    "D3",
+    "D4"
+   ],
+   "filtered": {},
+   "hidden_test_path": "hidden_tests/level2/69_hidden.py",
+   "hidden_test_sha256": "7ee539796c13d6302aa199908cf0b1874fa65fe415b41e8988303ae0a736d17c"
+  },
+  "L2/6_Conv3d_Softmax_MaxPool_MaxPool": {
+   "configs": [
+    "D1",
+    "D2",
+    "D3",
+    "D4"
+   ],
+   "filtered": {},
+   "hidden_test_path": "hidden_tests/level2/6_hidden.py",
+   "hidden_test_sha256": "e62741d23d8ac376567e6cb49a277c1dd0d5e1b44bdba6dfcfccf314b0198222"
+  },
+  "L2/70_Gemm_Sigmoid_Scaling_ResidualAdd": {
+   "configs": [
+    "D1",
+    "D2",
+    "D3",
+    "D4"
+   ],
+   "filtered": {},
+   "hidden_test_path": "hidden_tests/level2/70_hidden.py",
+   "hidden_test_sha256": "9ba4799dce3e426b708955de465a425e34ebd469ee9331882a2970ac3ef83232"
+  },
+  "L2/71_Conv2d_Divide_LeakyReLU": {
+   "configs": [
+    "D1",
+    "D2",
+    "D3",
+    "D4"
+   ],
+   "filtered": {},
+   "hidden_test_path": "hidden_tests/level2/71_hidden.py",
+   "hidden_test_sha256": "8ade95f2f891af165fa945ae8680140281c1660e9433186852e85a20e2393169"
+  },
+  "L2/72_ConvTranspose3d_BatchNorm_AvgPool_AvgPool": {
+   "configs": [
+    "D1",
+    "D2",
+    "D3",
+    "D4"
+   ],
+   "filtered": {},
+   "hidden_test_path": "hidden_tests/level2/72_hidden.py",
+   "hidden_test_sha256": "b211ff98190e1ff879f3801622898a57ce88042aee02829ba622e5b08c0b8a5c"
+  },
+  "L2/73_Conv2d_BatchNorm_Scaling": {
+   "configs": [
+    "D1",
+    "D2",
+    "D3",
+    "D4"
+   ],
+   "filtered": {},
+   "hidden_test_path": "hidden_tests/level2/73_hidden.py",
+   "hidden_test_sha256": "876f593b41f448d092dcfdd84f5d5ae8c1e1be10168f051b5b80b2a7c42cc4b9"
+  },
+  "L2/74_ConvTranspose3d_LeakyReLU_Multiply_LeakyReLU_Max": {
+   "configs": [
+    "D1",
+    "D2",
+    "D3",
+    "D4"
+   ],
+   "filtered": {},
+   "hidden_test_path": "hidden_tests/level2/74_hidden.py",
+   "hidden_test_sha256": "d3e997283abbc7e4acc378f9ad7bf2c106b4379735a06a7ad2045749eb2afb4c"
+  },
+  "L2/75_Gemm_GroupNorm_Min_BiasAdd": {
+   "configs": [
+    "D1",
+    "D2",
+    "D3",
+    "D4"
+   ],
+   "filtered": {},
+   "hidden_test_path": "hidden_tests/level2/75_hidden.py",
+   "hidden_test_sha256": "13e8fa625a3511513d167afdc8098222d92872f2dd0c9692e9cddd18e74dacab"
+  },
+  "L2/76_Gemm_Add_ReLU": {
+   "configs": [
+    "D1",
+    "D2",
+    "D3",
+    "D4"
+   ],
+   "filtered": {},
+   "hidden_test_path": "hidden_tests/level2/76_hidden.py",
+   "hidden_test_sha256": "b129d1198e01846285a373a88df06f8015b48ff04b8911be01e58c6ced48d874"
+  },
+  "L2/77_ConvTranspose3d_Scale_BatchNorm_GlobalAvgPool": {
+   "configs": [
+    "D1",
+    "D2",
+    "D3",
+    "D4"
+   ],
+   "filtered": {},
+   "hidden_test_path": "hidden_tests/level2/77_hidden.py",
+   "hidden_test_sha256": "96c256080cf36aa4652d41cef38bc5dee8a4f6fbd4ad9effb7901dbddc2b8ce0"
+  },
+  "L2/78_ConvTranspose3d_Max_Max_Sum": {
+   "configs": [
+    "D1",
+    "D2",
+    "D3",
+    "D4"
+   ],
+   "filtered": {},
+   "hidden_test_path": "hidden_tests/level2/78_hidden.py",
+   "hidden_test_sha256": "5d689fd1808f3ec2bf14408352ee4f1a347f240b7f1973c0e11c303e96768e23"
+  },
+  "L2/79_Conv3d_Multiply_InstanceNorm_Clamp_Multiply_Max": {
+   "configs": [
+    "D1",
+    "D2",
+    "D3",
+    "D4"
+   ],
+   "filtered": {},
+   "hidden_test_path": "hidden_tests/level2/79_hidden.py",
+   "hidden_test_sha256": "4fe55fbf07b1112f8f636231dc1654afdbee41eb198045bf583238af4dafef29"
+  },
+  "L2/7_Conv3d_ReLU_LeakyReLU_GELU_Sigmoid_BiasAdd": {
+   "configs": [
+    "D1",
+    "D2",
+    "D3",
+    "D4"
+   ],
+   "filtered": {},
+   "hidden_test_path": "hidden_tests/level2/7_hidden.py",
+   "hidden_test_sha256": "3e7c847f45239e312c8ab6185ae34424c0956dd9541df6b16bc674f4c113b07a"
+  },
+  "L2/80_Gemm_Max_Subtract_GELU": {
+   "configs": [
+    "D1",
+    "D2",
+    "D3",
+    "D4"
+   ],
+   "filtered": {},
+   "hidden_test_path": "hidden_tests/level2/80_hidden.py",
+   "hidden_test_sha256": "c26dbfdc7ab69949d26380b81ff413dab6646e31ca22e0cfc2c0ebd14969d4ff"
+  },
+  "L2/81_Gemm_Swish_Divide_Clamp_Tanh_Clamp": {
+   "configs": [
+    "D1",
+    "D2",
+    "D3",
+    "D4"
+   ],
+   "filtered": {},
+   "hidden_test_path": "hidden_tests/level2/81_hidden.py",
+   "hidden_test_sha256": "87b7de38b5a918fd580ff17024e799ce3e4bc0702db2691b0a6ee0e561be9555"
+  },
+  "L2/82_Conv2d_Tanh_Scaling_BiasAdd_Max": {
+   "configs": [
+    "D1",
+    "D2",
+    "D3",
+    "D4"
+   ],
+   "filtered": {},
+   "hidden_test_path": "hidden_tests/level2/82_hidden.py",
+   "hidden_test_sha256": "00f518e6ccd50eca0c143dce1bf9e94d19c85eaf355959daea18a57a5de25eae"
+  },
+  "L2/83_Conv3d_GroupNorm_Min_Clamp_Dropout": {
+   "configs": [
+    "D1",
+    "D2",
+    "D3",
+    "D4"
+   ],
+   "filtered": {},
+   "hidden_test_path": "hidden_tests/level2/83_hidden.py",
+   "hidden_test_sha256": "cf6172845c867eb819500085edac9abb74e4e92a02bd580115b26f8fc1d69492"
+  },
+  "L2/84_Gemm_BatchNorm_Scaling_Softmax": {
+   "configs": [
+    "D1",
+    "D2",
+    "D3",
+    "D4"
+   ],
+   "filtered": {},
+   "hidden_test_path": "hidden_tests/level2/84_hidden.py",
+   "hidden_test_sha256": "16a7eb4cb08844a47b412db385c1d729622585b45e318ad4d8e009ec95068de9"
+  },
+  "L2/85_Conv2d_GroupNorm_Scale_MaxPool_Clamp": {
+   "configs": [
+    "D1",
+    "D2",
+    "D3",
+    "D4"
+   ],
+   "filtered": {},
+   "hidden_test_path": "hidden_tests/level2/85_hidden.py",
+   "hidden_test_sha256": "eda4968f014a402a66db58948c167a4a54eac763bcc7dc0afa559e40fb1ab69c"
+  },
+  "L2/86_Matmul_Divide_GELU": {
+   "configs": [
+    "D1",
+    "D2",
+    "D3",
+    "D4"
+   ],
+   "filtered": {},
+   "hidden_test_path": "hidden_tests/level2/86_hidden.py",
+   "hidden_test_sha256": "0aa548c1c92b01725a68817279027409443b4d91933649dbe249e53228e4b34a"
+  },
+  "L2/87_Conv2d_Subtract_Subtract_Mish": {
+   "configs": [
+    "D1",
+    "D2",
+    "D3",
+    "D4"
+   ],
+   "filtered": {},
+   "hidden_test_path": "hidden_tests/level2/87_hidden.py",
+   "hidden_test_sha256": "c62e8a73b489c6746aac79bc481fe84de1a6f81b54cea8deeff606d2d8d4a61b"
+  },
+  "L2/88_Gemm_GroupNorm_Swish_Multiply_Swish": {
+   "configs": [
+    "D1",
+    "D2",
+    "D3",
+    "D4"
+   ],
+   "filtered": {},
+   "hidden_test_path": "hidden_tests/level2/88_hidden.py",
+   "hidden_test_sha256": "836a913c6a13a61c5b29ab689ba92dfdeeb6876771d8834aa693c052ee2f372a"
+  },
+  "L2/89_ConvTranspose3d_MaxPool_Softmax_Subtract_Swish_Max": {
+   "configs": [
+    "D1",
+    "D2",
+    "D3",
+    "D4"
+   ],
+   "filtered": {},
+   "hidden_test_path": "hidden_tests/level2/89_hidden.py",
+   "hidden_test_sha256": "ef37eb47ef2c7ce1f77588c47512b88b26d8589ec4f2a33b9bb6a88df9db3bd3"
+  },
+  "L2/8_Conv3d_Divide_Max_GlobalAvgPool_BiasAdd_Sum": {
+   "configs": [
+    "D1",
+    "D2",
+    "D3",
+    "D4"
+   ],
+   "filtered": {},
+   "hidden_test_path": "hidden_tests/level2/8_hidden.py",
+   "hidden_test_sha256": "32a44525e9ef4a88dd2d5b54aa2e9dc5b9085eb4f45da589459cd0801e834108"
+  },
+  "L2/90_Conv3d_LeakyReLU_Sum_Clamp_GELU": {
+   "configs": [
+    "D1",
+    "D2",
+    "D3",
+    "D4"
+   ],
+   "filtered": {},
+   "hidden_test_path": "hidden_tests/level2/90_hidden.py",
+   "hidden_test_sha256": "e0258416dc44be41ed5cc1bf7fdbd5ebb82dfdee0bba346f9f97b5f257344f77"
+  },
+  "L2/91_ConvTranspose2d_Softmax_BiasAdd_Scaling_Sigmoid": {
+   "configs": [
+    "D1",
+    "D2",
+    "D3",
+    "D4"
+   ],
+   "filtered": {},
+   "hidden_test_path": "hidden_tests/level2/91_hidden.py",
+   "hidden_test_sha256": "199d3c29594a15bfe0cc186cc8b68d9faa6009601f04601e9078d3c4580b43b8"
+  },
+  "L2/92_Conv2d_GroupNorm_Tanh_HardSwish_ResidualAdd_LogSumExp": {
+   "configs": [
+    "D1",
+    "D2",
+    "D3",
+    "D4"
+   ],
+   "filtered": {},
+   "hidden_test_path": "hidden_tests/level2/92_hidden.py",
+   "hidden_test_sha256": "a610b32e1ccdac8f3e9027d05ab79b3f5f8a24bb7d836302a27d74b52207853b"
+  },
+  "L2/93_ConvTranspose2d_Add_Min_GELU_Multiply": {
+   "configs": [
+    "D1",
+    "D2",
+    "D3",
+    "D4"
+   ],
+   "filtered": {},
+   "hidden_test_path": "hidden_tests/level2/93_hidden.py",
+   "hidden_test_sha256": "45f69c39a33cc0f54056f71fba4b322be8966752551c09b1974b065da38f5315"
+  },
+  "L2/94_Gemm_BiasAdd_Hardtanh_Mish_GroupNorm": {
+   "configs": [
+    "D1",
+    "D2",
+    "D3",
+    "D4"
+   ],
+   "filtered": {},
+   "hidden_test_path": "hidden_tests/level2/94_hidden.py",
+   "hidden_test_sha256": "214f398986a504f0b4b9f7ac444d84f4fe1ca7cca496f4e70f6945f954be5fa7"
+  },
+  "L2/95_Matmul_Add_Swish_Tanh_GELU_Hardtanh": {
+   "configs": [
+    "D1",
+    "D2",
+    "D3",
+    "D4"
+   ],
+   "filtered": {},
+   "hidden_test_path": "hidden_tests/level2/95_hidden.py",
+   "hidden_test_sha256": "c4bd54a5db803f1b0a05d82f5cde59b3c3491b9896892436327d6cbca882d0b3"
+  },
+  "L2/96_ConvTranspose3d_Multiply_Max_GlobalAvgPool_Clamp": {
+   "configs": [
+    "D1",
+    "D2",
+    "D3",
+    "D4"
+   ],
+   "filtered": {},
+   "hidden_test_path": "hidden_tests/level2/96_hidden.py",
+   "hidden_test_sha256": "216173388614742ddd7fc178b05270986682f0c5cb4395bd912d74b3aaa06a9b"
+  },
+  "L2/97_Matmul_BatchNorm_BiasAdd_Divide_Swish": {
+   "configs": [
+    "D1",
+    "D2",
+    "D3",
+    "D4"
+   ],
+   "filtered": {},
+   "hidden_test_path": "hidden_tests/level2/97_hidden.py",
+   "hidden_test_sha256": "59cce18ffe81544a1255459248ee62f29bd6bfe23d04d82b0c2d242da3974551"
+  },
+  "L2/98_Matmul_AvgPool_GELU_Scale_Max": {
+   "configs": [
+    "D1",
+    "D2",
+    "D3",
+    "D4"
+   ],
+   "filtered": {},
+   "hidden_test_path": "hidden_tests/level2/98_hidden.py",
+   "hidden_test_sha256": "236d9dd7ff3eeedfefbc0a2e29e03e66184ff5ed08a6220b8b68322ac851609a"
+  },
+  "L2/99_Matmul_GELU_Softmax": {
+   "configs": [
+    "D1",
+    "D2",
+    "D3",
+    "D4"
+   ],
+   "filtered": {},
+   "hidden_test_path": "hidden_tests/level2/99_hidden.py",
+   "hidden_test_sha256": "4aa8ca563309cb7712be769ed4dfb41f82a18273e05cadb6208ee4a27e93c8c5"
+  },
+  "L2/9_Matmul_Subtract_Multiply_ReLU": {
+   "configs": [
+    "D1",
+    "D2",
+    "D3",
+    "D4"
+   ],
+   "filtered": {},
+   "hidden_test_path": "hidden_tests/level2/9_hidden.py",
+   "hidden_test_sha256": "d6bf4927369de9d85c4cb6eca9ba9a30c78a9ae57e69201a5c7e6e9fdd542845"
+  }
+ },
+ "schema": "q1-kbv-hidden-configs/1"
+}
