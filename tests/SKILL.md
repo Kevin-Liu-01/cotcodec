@@ -19,6 +19,9 @@ Each contract proves valid inputs pass and decision-bearing drift fails.
 - `test_submit_*` cover manifest validation, sbatch rendering and the
   fail-closed rejection of archived memory workloads.
 - Pre-restart tests are in `legacy/tests/` and are not collected.
+- `_holo3_world.py` builds in-memory stand-ins for the Holo3 and OpenCUA
+  archives that reproduce the real leaderboard cells, so the audit's controls
+  and tamper cases run without network.
 
 ## Patterns to follow / invariants
 <!-- agent-docs:fill:patterns -->
