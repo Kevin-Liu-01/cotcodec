@@ -16,6 +16,6 @@ requirements:
   - req_id: R3
     statement: All text on the slide - title, body and table cells - has the LibreOffice palette color "Dark Red 2".
     check_kind: text_run
-    observable: Every non-empty run in the title, body and every table cell has color 8D281E (LibreOffice standard palette "Dark Red 2"; confirm the hex against the pinned build's standard.soc).
+    observable: Every non-empty run in the title, body and every table cell has color C9211E (LibreOffice standard palette "Dark Red 2", verified in share/palette/standard.soc of an Ubuntu 22.04 LibreOffice build; Dark Red 1 = F10D0C and Dark Red 3 = 8D281E are wrong shades).
 allowed_variations:
   - Bold state of the title and table formatting other than color/underline are not constrained (expected unchanged).

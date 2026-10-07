@@ -1,0 +1,13 @@
+task_id: a503b07f-9119-456b-b75d-f5146737d24f
+author: blind-model-author-v1
+requirements:
+  - req_id: R1
+    statement: The receipt image /home/user/OIP.jpg is converted to /home/user/Desktop/receipt.pdf.
+    check_kind: file_exists
+    observable: receipt.pdf exists and is a valid PDF.
+  - req_id: R2
+    statement: The PDF shows the receipt image.
+    check_kind: image_property
+    observable: The PDF has one page whose rendered content (or embedded image) matches OIP.jpg (474 x 670 aspect) with high similarity.
+allowed_variations:
+  - Page size and margins.
