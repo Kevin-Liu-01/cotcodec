@@ -138,7 +138,8 @@ def shape_text_build(ctx: Context, unit: str, rng, prefer: list[str]) -> Build:
                 "start": start, "end": end, "new": new,
                 "expect_sha256": text_sha256(shape["text"])}],
         expectation=Expectation(
-            allow=[f"{unit}/text", f"{unit}/paras/*"],
+            # An auto-growing text box re-fits its height when a word changes width.
+            allow=[f"{unit}/text", f"{unit}/paras/*", f"{unit}/ext"],
             must_change=[f"{unit}/text"],
             must_equal=[(f"{unit}/text", new_text)],
         ),
@@ -392,7 +393,7 @@ class CaseViaFormat(Operator):
                  "expect_sha256": text_sha256(new_text), "props": {"case_map": "upper"}},
             ],
             expectation=Expectation(
-                allow=[f"{where.unit}/text", f"{where.unit}/paras/*"],
+                allow=[f"{where.unit}/text", f"{where.unit}/paras/*", f"{where.unit}/ext"],
                 must_change=[f"{where.unit}/text", f"{where.unit}/paras/*"],
                 must_equal=[(f"{where.unit}/text", new_text)],
             ),
@@ -480,7 +481,9 @@ class TableCellText(Operator):
                     "start": start, "end": end, "new": new,
                     "expect_sha256": text_sha256(cell["text"])}],
             expectation=Expectation(
-                allow=[f"{where.unit}/text", f"{where.unit}/spans"],
+                # Table rows re-fit their height to the edited text.
+                allow=[f"{where.unit}/text", f"{where.unit}/spans",
+                       f"{shape_unit(where.unit)}/ext"],
                 must_change=[f"{where.unit}/text"],
                 must_equal=[(f"{where.unit}/text", new_text)],
             ),
