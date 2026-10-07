@@ -40,7 +40,7 @@ a3=$(hex sh -c "cd /src && /opt/venv-lock/bin/python -m harness.q2_mutation.cont
   && sed 's#\"/out/files/#\"/ro/lo/files/#g' /out/jobs-saved.jsonl > /out/jobs-saved-mounted.jsonl \
   && /src/infra/q2-mutation/run/score.sh /out/jobs-saved-mounted.jsonl /out/saved ${workers} 2")
 j3=$(sbatch --parsable --dependency=afterok:"${j2}" --cpus-per-task="${workers}" --mem=96G --time=03:00:00 \
-  --export=ALL,Q2M_MODE=run,Q2M_IMAGE_ID="${metric}",Q2M_ARGV_JSON_HEX="${a3}",Q2M_SOURCE="${src}",Q2M_RUN_DIR="${run}/saved",Q2M_INPUTS="${root}/inputs",Q2M_EXTRA_RO="${run}/raw:/ro/raw,${run}/lo:/ro/lo",Q2M_TMPFS_SIZE=32g \
+  --export=ALL,Q2M_MODE=run,Q2M_IMAGE_ID="${metric}",Q2M_ARGV_JSON_HEX="${a3}",Q2M_SOURCE="${src}",Q2M_RUN_DIR="${run}/saved",Q2M_INPUTS="${root}/inputs",Q2M_EXTRA_RO="${run}/raw:/ro/raw+${run}/lo:/ro/lo",Q2M_TMPFS_SIZE=32g \
   "${batch}")
 
 printf '{"run": "%s", "split": "%s", "git_sha": "%s", "jobs": [%s, %s, %s]}\n' \
