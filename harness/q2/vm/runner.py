@@ -633,9 +633,17 @@ def session_cycle(config: dict[str, Any]) -> dict[str, Any]:
         from harness.q2.vm.canary_run import canary_trial
 
         trials = []
+        measure = bool(config.get("measure_targets"))
+        if measure:
+            from harness.q2.vm.canary_run import install_canary_module
+
+            result["canary_module"] = install_canary_module(client)
+        shot_dir = str(Path(config["out"]).parent) if measure else None
         for seq, pair in config["trials"]:
             app, entry = pair.split(":", 1)
-            trial = canary_trial(client, cells["canary"], app, entry, seq)
+            trial = canary_trial(
+                client, cells["canary"], app, entry, seq, measure=measure, shot_dir=shot_dir
+            )
             trial["seq"], trial["cell"] = seq, pair
             trials.append(_progress(config, trial))
         result["trials"] = trials

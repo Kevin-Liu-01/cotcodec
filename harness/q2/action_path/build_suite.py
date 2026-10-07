@@ -86,7 +86,9 @@ def build(data: dict[str, Any] | None = None) -> dict[str, Any]:
     expressible = json.loads((HERE / "expressible_entries.json").read_text(encoding="utf-8"))
     canary = yaml.safe_load((HERE / "canary.yaml").read_text(encoding="utf-8"))
     targets_path = HERE / "canary_targets.json"
-    targets = json.loads(targets_path.read_text(encoding="utf-8")) if targets_path.exists() else {}
+    targets = {}
+    if targets_path.exists():
+        targets = json.loads(targets_path.read_text(encoding="utf-8"))["apps"]
     layers = {
         "L0-fixed": corpus.l0_cells(data, summary["gating"]),
         "H-OSW-fixed": corpus.harness_cells(data, expressible, "H-OSW"),

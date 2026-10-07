@@ -25,6 +25,10 @@
 #      parameter keeps its inner and edge whitespace (exactly one wrapping
 #      newline, which the chat template adds, is trimmed); upstream stripped
 #      all edge whitespace from every parameter.
+#   5. Own-spec fix: `wait` waits the `time` its prompt says it waits;
+#      upstream emitted WAIT, which DesktopEnv.step turns into sleep(pause),
+#      0.0 s in Stage 1 (development run 491: click_double_slow's clicks came
+#      381 ms apart against the catalog's 500 ms minimum).
 # Declared design differences of its own prompt stay as they are: triple_click
 # is a double click and hscroll is a vertical scroll. `keys` on clicks and a
 # coordinate on scroll are not in its prompt and are not added.
@@ -200,7 +204,13 @@ class Qwen35VLAgent:
                         ir["modifiers"] = modifiers()
                     ir_actions.append(ir)
             elif action == "wait":
-                ir_actions.append({"op": "wait", "ms": 0})  # DesktopEnv.step("WAIT", pause=0.0)
+                # CHANGED (cotcodec), fix 5: wait the specified seconds. Upstream emitted
+                # WAIT, which DesktopEnv.step turns into sleep(pause), 0.0 s in Stage 1.
+                try:
+                    seconds = float(params.get("time", 0))
+                except Exception:
+                    seconds = 0.0
+                ir_actions.append({"op": "wait", "ms": int(round(seconds * 1000))})
             elif action in {"terminate", "answer"}:
                 # CHANGED (cotcodec), fix 2: terminate(status=failure) is a failure.
                 status = str(params.get("status", "success")).strip().lower()

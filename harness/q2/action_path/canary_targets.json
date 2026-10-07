@@ -1,0 +1,5 @@
+{
+ "apps": {},
+ "note": "Screen targets of the canary's two pointer composites, measured in development (harness/q2/vm/guest/canary_targets.py) and frozen in the executor addendum. An app without a measured target runs those entries as unmeasured (a failure).",
+ "schema": "cotcodec-q2-canary-targets-v1"
+}

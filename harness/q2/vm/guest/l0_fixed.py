@@ -33,7 +33,12 @@ server has processed it before the process exits.
 * ``wait``: sleep. ``screenshot``: nothing. ``terminate`` never reaches the
   device.
 
-Every action except ``wait`` ends with ``SETTLE_S`` (0.1 s), the default
+A ``type`` action that changes the keymap first remaps every code point it
+needs in one burst and waits for the desktop shell to answer on D-Bus before
+typing (``shell_barrier``): the shell is the compositor, and it repaints
+nothing while it rebuilds its keymap. Every action except ``wait`` ends with
+the same barrier (the shell has processed the action's events) and then
+``SETTLE_S`` (0.1 s), the default
 ``pyautogui.PAUSE`` that ends every PyAutoGUI call of the upstream harnesses,
 so the screenshot ``DesktopEnv.step`` takes next has had the same time to
 catch up as upstream's (development run 486 showed screenshots one frame
@@ -59,6 +64,7 @@ code. Everything above ``Executor`` is pure Python.
 
 import json
 import os
+import subprocess
 import sys
 import time
 
@@ -373,7 +379,36 @@ class Executor:
         finally:
             self.release_keys(pressed)
 
+    def shell_barrier(self):
+        """Wait until the desktop shell's main loop answers on D-Bus (after keymap changes).
+
+        Every keymap change makes GNOME Shell, the compositor, rebuild its keymap;
+        while it does, the screen is not repainted (development runs 486-493:
+        screenshots after Unicode typing showed the first character only). A
+        property read on org.gnome.Shell is answered from the shell's main loop,
+        after the X events already queued there.
+        """
+        started = time.monotonic()
+        try:
+            done = subprocess.run(
+                ["gdbus", "call", "--session", "--dest", "org.gnome.Shell", "--object-path",
+                 "/org/gnome/Shell", "--method", "org.freedesktop.DBus.Properties.Get",
+                 "org.gnome.Shell", "ShellVersion"],
+                capture_output=True, timeout=10,
+            )  # fmt: skip
+            ok = done.returncode == 0
+        except (OSError, subprocess.TimeoutExpired):
+            ok = False
+        self.log.setdefault("barriers", []).append([round(time.monotonic() - started, 4), ok])
+
     def type_text(self, text):
+        # Remap every code point this text needs first, in one burst, and let the shell
+        # absorb the keymap changes before the first key event.
+        before = len(self.log["remaps"])
+        for ch in dict.fromkeys(text):
+            self.resolve(char_keysym(ch))
+        if len(self.log["remaps"]) > before:
+            self.shell_barrier()
         shift = None
         for ch in text:
             keycode, shifted = self.resolve(char_keysym(ch))
@@ -429,6 +464,7 @@ class Executor:
             else:
                 raise ValueError(f"L0-fixed has no device action for {op!r}")
             if op != "wait":
+                self.shell_barrier()
                 time.sleep(SETTLE_S)
         finally:
             for keycode in list(reversed(self.held_keys)):
