@@ -162,6 +162,17 @@ running). Other reasons are `completed`, `workload_failed`,
 means a signal-triggered checkpoint was confirmed in this job;
 `checkpoint_marker_present` only says whether the file exists at the end.
 
+### Open-weight reviewer jobs
+
+A gauntlet review by the self-hosted open-weight model (D23, D24) is one lane
+job of `scripts/run_open_weight_review.py run` in the cu129 vLLM overlay:
+`container_profile: vllm`, seeds `[42, 43, 44]` bound with `--seeds`, the model
+receipt bound by digest and the request bundle (prompt and schema) mounted as
+the study artifact. `run_open_weight_review.py manifest` renders the manifest;
+the commands and output files are in `experiments/reviewer/README.md`. A review
+has no training state, so no resume test applies; a signal ends it as
+`INTERRUPTED` with a receipt and the marker, and it is resubmitted.
+
 ## Checkpoints
 
 Every long workload checkpoints atomically to persistent storage: model and
