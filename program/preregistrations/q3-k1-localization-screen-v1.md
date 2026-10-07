@@ -33,22 +33,24 @@ Code. The commit that contains exactly the files below with these SHA-256
 digests (commit A), on top of main with the merged discovery lane. It is the
 `git_head_at_freeze` of this experiment's ledger row and image A's
 `org.opencontainers.image.revision` label. On the review branch it is
-`e29570418a813667b636b9e0ed85778c15abe0f8`; if the owner rebases, the file
-digests bind, not the commit id.
+`7eb02f458914d274be7233930bc97bdbc49e6cae` (the last code commit after the plan
+review's fix pass; the draft commits come after it); if the owner rebases, the
+file digests bind, not the commit id.
 
 | File | SHA-256 |
 |---|---|
 | harness/sparse_indexer_torch.py | f21301a49634af07d5ae0385c34011400c83af15b984a96238dc6fe1d4ee9457 |
-| harness/sparse_indexer_k1_stats.py | a14db816ae0b292eed6026e32898c7d02309d39bc42185417418a936ef282bc5 |
-| harness/sparse_indexer_k1_runtime.py | e1e1bcde4dc1a94e16cfb4ceabdcc2d89d06211652a861696bc0967c05fb50f2 |
+| harness/sparse_indexer_k1_stats.py | 743a4317ddbe3a61469ac7955588a6a304ace481717abe807e252036cadaebdf |
+| harness/sparse_indexer_k1_runtime.py | 6fbddc91b6f7224f909901edb82278a68f68a208b558526c1a778ec9da6812fd |
 | harness/sparse_indexer_k1_marker.py | 7bc69aa4d27a7d6de92f69a2f7b8e71d98b32101a2f34709fbaef2bdf84c3f1a |
 | harness/sparse_indexer_data.py | 8b180e1ca0ba67d29587e3ffc5f5e46720376de6d1a52348f82b8789ab929faa |
 | harness/translation_supervised_indexer.py | dee5318d254d962380e2de051eed227a97db10bfaa40eb0c12467e9a289e0cd5 |
-| scripts/run_sparse_indexer_phase0a.py | b3f17d90153560333c0019168d27ab227c5a8cebbbd71471a0aec2de97e982a1 |
+| scripts/run_sparse_indexer_phase0a.py | 0f11a51fabbb6f578a0c254f19fb3597b394ea84809c466f6637a6de08cc4b8e |
 | scripts/build_sparse_indexer_k1_bundle.py | 6ee842651372ce45827d612539e14e97383493fa162fd29482a99202708502d6 |
-| scripts/run_sparse_indexer_k1_doctor.py | 6d98b7b2016ca47131a8a64ccf36e4efe0b18859257a611cc0be2e98a866bb87 |
+| scripts/run_sparse_indexer_k1_doctor.py | 69609944e0d311feb4740329e8ebff2d63ac9a9b979804cc4fe2cb1a9f3c2964 |
 | scripts/compare_sparse_indexer_resume.py | 75289c34d48e123cb9221c0d980b202c5c8e66750b607a9ae0715375836092bb |
-| experiments/architectures/translation-supervised-sparse-indexer-k1-screen.yaml | 25c45ac0a2165f548725749da686b7efeaeb1ee491574a8268179ea61821bfef |
+| scripts/fill_sparse_indexer_k1_manifests.py | 0c611d4a3221d1b6761c0f1c87c70cb63d94734d906c6957f6a24b97845bf386 |
+| experiments/architectures/translation-supervised-sparse-indexer-k1-screen.yaml | ea31f601c78bf0459316746b86dcb07823c7482a9c4405b472c877aafd82dace |
 
 Image. Image B, built by `infra/slurm/host-single-node/build-architecture-image.sbatch`
 from a fresh clean clone at commit B (commit A plus this file and its ledger
@@ -126,8 +128,12 @@ Training grid: targets {hs, mp} × learning rates {3e-4, 1e-3, 3e-3} × seeds
 stream. Adam (beta 0.9, 0.999; eps 1e-8; no weight decay), gradient clipping
 at 1.0 per indexer, batch 4 sequences of 8,192 tokens, 610 steps (20.0M
 tokens), 20-step linear warm-up then constant learning rate, deterministic
-algorithms, TF32 matmuls (products of bf16 values are exact; accumulation is
-fp32), no torch.compile and no code generated at run time.
+algorithms, TF32 matmuls allowed, no torch.compile and no code generated at run
+time. TF32 is exact only where both factors are bf16-valued: the target
+recomputation from captured bf16 queries and keys (products exact, fp32
+accumulation). The indexer's own matmuls (fp32 weights W_Q, W_K, W_w and the
+fp32 q · kbar logits) are rounded to TF32's 10-bit mantissa on CUDA; the
+indexer is therefore trained and evaluated at TF32 precision.
 
 Targets come from the teacher's SDPA forward in bf16: post-norm, post-RoPE
 queries and keys are captured and exact probabilities are recomputed in fp32
@@ -237,15 +243,25 @@ of the family mean of [R_ind(MN) − R_ind(CX)] − [R_T(MN) − R_T(CX)], in
 recall points.
 
 Co-statistic: G(c) = (R_ind(c) − R_rand(c)) / (R_T(c) − R_rand(c)) on pair
-condition means; xi_rel_T = macro over pairs of G(MN) − G(CX). If any pair has
-R_T(c) − R_rand(c) of 1 point or less, xi_rel_T is not evaluable.
+condition means; xi_rel_T = macro over pairs of G(MN) − G(CX). Evaluability is
+decided once, on the point pair means: if any pair has R_T(c) − R_rand(c) of 1
+point or less (MN or CX), xi_rel_T is not evaluable. Inside each bootstrap
+replicate the denominator is max(R_T(c) − R_rand(c), 1 point), so a replicate
+never divides by a vanishing or negative headroom; the number of replicates in
+which this floor was active is reported. Per-seed values share the target and
+random denominators, so they are evaluable exactly when the point is.
 
 Interval: se_cluster is the SD of a passage-cluster bootstrap over the 122
 audit links (B = 10,000, NumPy seed 42, macro-averaging inside each replicate,
 seeds held fixed); s_seed is the SD of the three per-seed values; the decision
-interval is point ± 2.576 × sqrt(se_cluster² + s_seed² / 3). The same
-construction applies to xi_rel_T. The percentile bootstrap interval and the
-per-seed values are reported alongside.
+interval is point ± t(0.995, df) × sqrt(se_cluster² + s_seed² / 3), where df
+is the Welch–Satterthwaite degrees of freedom of the two terms:
+df = (se_cluster² + s_seed²/3)² / (se_cluster⁴ / 121 + (s_seed²/3)² / 2)
+(a zero term drops out; df is infinite, and t the normal quantile 2.576, only
+if both are zero). With three seeds a seed-dominated interval uses df near 2
+(t up to 9.925); a normal quantile there would cover only about 88 percent.
+The same construction applies to xi_rel_T. The percentile bootstrap interval,
+df, the quantile and the per-seed values are reported alongside.
 
 Multiple choice: acc_norm, the option with the highest sum of token
 log-probabilities divided by its UTF-8 byte length, each option scored as a
@@ -288,12 +304,31 @@ Qwen3.5-4B-Base under a new contract version and preregistration, or stop.
   indexer trained without the evaluation languages.
 - UNINTERPRETABLE: H1 below 10, or H2a or H2b fails on the audit partition.
 - HOLD: a V2 bug tell. VOID: a V3 integrity failure.
-- V1 failure: one registered extension (epochs 2 and 3, the frozen-LR
-  indexers only), evaluated once; a target still failing V1 is inconclusive.
+- V1 failure: one registered extension (epochs 2 and 3), run only after a
+  main read whose verdict is V1_EXTENSION_REQUIRED, or INCONCLUSIVE with at
+  least one target failing V1 (never after GO, NEGATIVE, UNINTERPRETABLE, HOLD
+  or VOID). It retrains the frozen-LR indexers of the V1-failing targets only
+  and re-reads only those targets, once. A target that passed V1 in the main
+  read keeps its main read and is never re-read; the dense-only gates (H1,
+  H2a, H2b) are not re-read either (the main read's values decide; the
+  extension's dense recomputation is reported as a determinism check). The
+  final verdict applies the same rules to the main reads of the V1-passing
+  targets and the extension reads of the others; a target still failing V1
+  is inconclusive, so a read in which no target passes V1 after the extension
+  is INCONCLUSIVE, not a second extension. The main job persists its read in
+  `checkpoints/main-read.json` (SHA-256 in its receipt); the extension
+  recomputes that read's verdict and extension targets with the registered
+  rules and refuses to run on any disagreement.
 - INCONCLUSIVE: everything else, including a disagreement between the xi and
   xi_rel classifications and any half-width above 5 points.
-- Order: VOID, HOLD, UNINTERPRETABLE, V1 extension, GO, NEGATIVE,
-  INCONCLUSIVE (implemented by `harness.sparse_indexer_k1_stats.k1_verdict`).
+- Order (implemented by `harness.sparse_indexer_k1_stats.k1_verdict`): VOID
+  (any target fails V3); HOLD (any V2 bug tell); UNINTERPRETABLE (H1 below 10,
+  or H2a or H2b fails); V1_EXTENSION_REQUIRED when no target passes V1
+  (INCONCLUSIVE after the extension); GO when any target that passes V1 is in
+  the GO region (a GO is not delayed by the other target failing V1); NEGATIVE
+  when both targets pass V1, both are in the NEGATIVE region and H1 is at
+  least 20; otherwise INCONCLUSIVE (with the extension called for when a
+  target failed V1).
 - Multiplicity: two targets, each at 99 percent. Same-script rows, Lambda,
   hm, U, U_k and all per-language, per-direction, per-layer and per-position
   tables are descriptive and uncorrected.
@@ -305,14 +340,26 @@ Qwen3.5-4B-Base under a new contract version and preregistration, or stop.
   therefore initialisation variance only.
 - 3,220 cross-script families in 122 passage clusters (6,440 prompts), 2,300
   same-script families, 200 ML prompts, 300 needle-absent cells.
-- SE(xi) is not known in advance. If the cluster-level SD of the family excess
-  were 10 points, se_cluster would be about 0.9; with a seed SD of 1 point the
-  combined SE is about 1.07, the 99 percent half-width about 2.8 and the
-  minimum detectable effect (two-sided 0.01, power 0.8) about 3.7 points,
-  under the GO threshold of 10. A NEGATIVE needs a half-width of at most 5
-  points (combined SE at most 1.94), which the rule enforces, so an
-  underpowered read cannot be called NEGATIVE. The development pre-check
-  reports se_cluster of Delta_T and Delta_U as a calibration.
+- SE(xi) is not known in advance. Worked case: if the cluster-level SD of the
+  family excess were 10 points, se_cluster would be about 0.9; with a seed SD
+  of 1 point the combined SE is about 1.07 and df about 21 (t = 2.83), so the
+  99 percent half-width is about 3.0 points.
+- GO requires the point estimate itself to reach 10, so its power at a true
+  xi of exactly 10 is about 0.5 whatever the SE. With SE 1.07, P(GO) is about
+  0.83 at a true xi of 11, 0.97 at 12 and above 0.99 at 13 (the xi
+  lower-bound condition is then met with near certainty because t × SE ≈ 3 is
+  far below 10; these figures assume the xi_rel lower bound is also above 0);
+  GO detects a true xi of about 10.9 points with power 0.8. If the
+  seed term dominates (se_cluster near 0, df near 2, t up to 9.925), a GO at
+  a point of 10 additionally needs SE below about 1.0, that is a seed SD of
+  xi below about 1.7 points.
+- A NEGATIVE needs a half-width of at most 5 points, which the rule enforces,
+  so an underpowered read cannot be called NEGATIVE. In the worked case the
+  half-width is about 3.0. In a seed-dominated read the half-width is about
+  t(2) × s_seed / sqrt(3) = 5.7 × s_seed, so a NEGATIVE then needs a seed SD of
+  xi of at most about 0.87 points; seeds vary initialisation only.
+- The development pre-check reports se_cluster of Delta_T and Delta_U as a
+  calibration.
 
 ## Compute
 
@@ -321,14 +368,27 @@ Qwen3.5-4B-Base under a new contract version and preregistration, or stop.
 | Smoke | 1 × 7 | 0.12 |
 | Development headroom pre-check | 1 × 6 | 0.10 |
 | Resume R0, R1, R2 (four workers share one GPU) | 1 × 8, 1 × 9, 1 × 8 | 0.43 |
-| K1 main | 4 × 30 | 2.00 |
+| K1 main (plus its continuation, if any) | 4 × 30 | 2.00 |
 | Total | | 2.65 |
 | Conditional V1 extension | 4 × 22 | 1.50 |
 
 The smoke job projects the main job's wall time from measured per-layer
-target, indexer and teacher timings. The main job's minutes may be lowered
-from that projection but never raised above 30; if the projection exceeds the
-2.0 GPU-h cap the main job does not run under this id.
+target, indexer and teacher timings (with a 300 s start-up allowance). The main
+job's limit is fixed at 30 minutes; it runs only if 1.2 × the projected wall
+time + 3 minutes (the lead of Slurm's USR1, sent 180 s before the limit) is at
+most 30 minutes, which the smoke receipt reports as SMOKE_PASS (otherwise
+SMOKE_PASS_OVER_BUDGET). If the smoke receipt is SMOKE_PASS_OVER_BUDGET, the
+main job does not run under this id unless the owner records a budget
+amendment before any audit data exist.
+
+If the main job nevertheless ends with a confirmed signal checkpoint (exit 75,
+`signal_USR1_checkpoint_confirmed`), the continuation job `q3-k1-main-resume`
+runs once in the main job's run root from its `phase-0a-k1/checkpoints`, with
+a limit of 30 minutes minus the minutes the interrupted job used (rounded up,
+plus one), so the two together stay within 4 × 30 minutes. It runs only if at
+least 5 minutes remain; otherwise the screen stops without a read, reported as
+over budget, and any further continuation needs an owner budget amendment
+recorded before the audit statistics are computed.
 
 ## Resume test
 
@@ -337,21 +397,42 @@ the same command, holds after step 25 until the Slurm signal 180 seconds
 before its limit, saves on that signal, writes `checkpoint.ready` (with the
 line `trigger=SIGUSR1` that the batch script requires) only after all four
 workers acknowledged the save (a stale marker is deleted on receipt of the
-signal; periodic saves never write it) and exits 75. R2 is a fresh job resumed from R1's
-`phase-0a-k1/checkpoints` and trains to step 40. The resume is valid only if
+signal; periodic saves never write it) and exits 75. Workers start with
+SIGUSR1 and SIGTERM blocked and unblock them only after installing their
+handler, so a signal that arrives while a worker is starting is held, not
+fatal. R2 is a fresh job in R1's run root (the lane's resume copy reads the
+predecessor's job directory, named by its Slurm job id, inside the resuming
+job's own run root), resumed from R1's
+`phase-0a-k1/checkpoints`, and trains to step 40. The resume is valid only if
 R2's final state (parameters, Adam moments and step counters of every
 indexer) equals R0's bit for bit and R1 terminated with
-`signal_USR1_checkpoint_confirmed` (`scripts/compare_sparse_indexer_resume.py`).
+`signal_USR1_checkpoint_confirmed` and exit code 75
+(`scripts/compare_sparse_indexer_resume.py`). R1's exit 75 is its expected
+end: Slurm records it as FAILED 75:0 and its orx node prints ORX_RESULT
+exit=5; the manifest filler selects R1 as R2's predecessor only from its
+`termination.env`.
+
+Evaluation reads exactly the generation each training worker completed at
+the registered final step (610, or 1,830 after the extension), verified
+against the worker's completion record; a missing or corrupt final generation
+is an integrity failure (exit 3), never a fallback to an older generation.
 
 ## Infrastructure failures and exclusions
 
 A run is void, with no partial read, when: the job does not end COMPLETED
-with exit code 0:0 (an exit 75 followed by a valid resume is allowed); the
-signal checkpoint times out; any startup digest check fails (exit 2); an
-integrity failure occurs (exit 3); provenance verification fails; the smoke
-gates fail; or the orx node lacks its ORX_RESULT line. A re-run uses a new run
-root and this same id only if no audit number was produced; otherwise it needs
-a new id.
+with exit code 0:0, except R1 (whose registered end is exit 75) and a main job
+that ends with a confirmed signal checkpoint (exit 75) and is completed by its
+one registered continuation (see Compute); the signal checkpoint times out,
+or is missing in a job that did not complete with exit code 0 (a signal that
+arrives after the last checkpointable step, while the receipt is written, lets
+the job finish); any startup digest check fails (exit 2); an integrity failure
+occurs (exit 3); provenance verification fails; the smoke gates fail; or the
+orx node lacks its ORX_RESULT line. A continuation is not a re-run: it reuses
+the interrupted job's completed training, stream-dev KL, LR freeze and
+evaluation chunks and computes the statistics once, at the end. A re-run uses
+a new run root and this same id only if no audit statistic was produced
+(written evaluation chunks that no statistic has read do not count; a main
+receipt or `main-read.json` does); otherwise it needs a new id.
 
 ## Reported regardless of outcome
 
@@ -407,10 +488,13 @@ Input facts measured while building (no model was run):
   for those prompts; MN and CX share the needle, so the cap enters both legs.
 - Training stream: 2,441 × 8,192 and 64 × 8,192 tokens, every row starting
   with 151643. ParaDocs streaming consumed 6,340,670,165 bytes (en-th, quota
-  met), 7,494,905,291 (en-hi, quota met) and 4,104,691,058 (en-km, all files,
-  quota not met); 16 to 60 MB per same-script pair. After filters, en-km
-  supplied 1,552,984 of its 1,759,426-token target; the 207,442-token
-  shortfall raised each same-script target to 1,811,287. Realised packed
+  met at the fetch stage with 1,765,090 tokens), 7,494,905,291 (en-hi, quota
+  met with 1,779,230) and 4,104,691,058 (en-km, all files, 1,557,005 tokens,
+  11.5 percent short); 16 to 60 MB per same-script pair. After the build's
+  filters the cross-script pairs supplied en-th 1,758,426 (1,000 short of the
+  1,759,426-token target), en-hi 1,759,460 and en-km 1,552,984 (206,442 short,
+  11.7 percent); the combined 207,442-token shortfall raised each same-script
+  target to 1,811,287. Realised packed
   shares: en-de 14.6, en-es 14.7, en-fr 14.7, en-pl 14.6, en-th 14.3, en-hi
   14.3, en-km 12.6 percent of bilingual tokens.
 - Removals: no exact-50-gram or MinHash match in any training or haystack
@@ -437,7 +521,9 @@ Input facts measured while building (no model was run):
    before freezing.
 3. Freeze this file, commit it with the ledger row (commit B), build image B,
    run the K1 doctor in image B, fill the manifests and run the orx nodes in
-   the order smoke, headroom-dev, R0, R1, R2, main.
+   the order smoke, headroom-dev, R0, R1, R2, main (then the main-job
+   continuation only if the main job ended with a confirmed signal checkpoint,
+   and the extension only if the main read calls for it).
 
 ## Design decisions
 
@@ -453,9 +539,11 @@ freezing.
    9 GB of compressed input per pair. The yield probe (1 GB per pair,
    2026-10-07) kept 278,595 (en-th), 206,703 (en-hi) and 331,407 (en-km) item
    tokens per GB; the full fetch then consumed 6.34, 7.49 and 4.10 GB, and
-   en-km (whose two files hold 4.10 GB) ended 11.5 percent short. The
-   shortfall is refilled from the same-script pairs in equal shares and the
-   realised shares are reported (en-km 12.6 percent of bilingual tokens).
+   en-km (whose two files hold 4.10 GB) ended 11.5 percent short at the fetch
+   stage (11.7 percent, 206,442 tokens, after the build's filters, which also
+   left en-th 1,000 tokens short). The 207,442-token shortfall is refilled
+   from the same-script pairs in equal shares and the realised shares are
+   reported (en-km 12.6 percent of bilingual tokens).
    Reason: this keeps the registered 50/50 bilingual/monolingual design and
    the largest feasible cross-script share; dropping cross-script bilingual
    data would change the recipe more than a recorded shortfall.
@@ -477,8 +565,9 @@ freezing.
    xi_rel ≤ 0.1 with upper bound below 0.2. GO needs the xi_rel lower bound
    above 0. Reason: the additive xi penalises a uniformly weaker indexer and
    can mask a cross-script deficit (D2b, D2c).
-8. Combined seed-plus-cluster interval (D3), matching the D21 contract's own
-   noise model.
+8. Combined seed-plus-cluster interval (D3), the D21 contract's own noise
+   model, read with a Welch–Satterthwaite t quantile instead of the D21
+   contract's normal quantile (decision 20).
 9. Base ladder: 0.6B now; if the pre-check or the audit read is
    UNINTERPRETABLE, the fallback is Qwen3.5-4B-Base (named in the D21 contract
    and the dossier; receipt on the host) under a new contract version and
@@ -515,3 +604,46 @@ freezing.
 19. The orx `cpu-doctor` node runs `uv run --locked` without the architecture
     extra, so it cannot import torch; the K1 doctor is run in image A and in
     image B (CPU, no network) and its receipt is recorded with the node.
+20. Decision-interval quantile: t(0.995, df) with Welch–Satterthwaite df
+    (121 for the cluster term, 2 for the seed term) instead of 2.576. Reason:
+    with three seeds the seed SD has 2 degrees of freedom; MN and CX share
+    needle and context, so cluster effects largely cancel in xi and the seed
+    term can dominate, where a normal quantile covers only about 88 percent.
+    Simulated with the module's own code (true xi = 0, 300 to 400 tables per
+    scenario, including the plan review's two), 2.576 missed 13 to 15 percent
+    and the t quantile 0.5 to 2 percent (`tests/test_sparse_indexer_k1_stats.py`
+    keeps one scenario as a regression test). More seeds
+    would cost GPU time the budget does not have; the cost of the honest
+    quantile is that a seed-dominated NEGATIVE needs a seed SD of xi of at
+    most about 0.87 points.
+21. xi_rel evaluability is decided on the point pair means only, and
+    bootstrap replicates use max(R_T(c) − R_rand(c), 1) as the denominator.
+    Reason: the registered rule names the pair means; a replicate-level rule
+    let a single pair with 1.3 to 4 points of target headroom block both GO and
+    NEGATIVE although the point statistic is defined. The floor keeps a
+    replicate from dividing by a vanishing or negative headroom; dropping such
+    replicates instead would condition the bootstrap on the data. The number
+    of replicates where the floor was active is reported.
+22. V1 extension scope: only after V1_EXTENSION_REQUIRED, or INCONCLUSIVE with
+    a V1-failing target; only the V1-failing targets are retrained and
+    re-read; a V1-passing target keeps its main read; H1, H2a and H2b are not
+    re-read. Reason: re-reading a target that already passed V1 (or the
+    dense gates) would be an unregistered second look.
+23. The main job's limit is fixed at 30 minutes, gated by 1.2 × the smoke
+    projection + 3 minutes ≤ 30, instead of "lowered from the projection".
+    Reason: a lower limit buys nothing but scheduling and raises the chance
+    of an interruption; the 1.2 factor covers the single-GPU-to-four-worker
+    scaling of the projection and the 3 minutes are Slurm's USR1 lead. A
+    confirmed-signal interruption is continued once within the remaining
+    minutes (at least 5), so the main read never exceeds its 2.0 GPU-h cap
+    without an owner amendment.
+24. Resumed legs share their predecessor's run root (R1 and R2 in
+    `k1-screen-v1/resume-r1-r2`; main, its continuation and the extension in
+    `k1-screen-v1/main`). Reason: the merged lane copies the resume subpath
+    from the predecessor's job directory (named by its Slurm job id) inside
+    the resuming job's own run root; separate run roots fail before the
+    container starts.
+25. TF32 stays enabled for the indexer's fp32 matmuls; the precision
+    statement is narrowed to the target recomputation. Reason: TF32 is
+    deterministic, the screen reads selection recall rather than exact fp32
+    logits, and indexer training and evaluation use the same precision.
