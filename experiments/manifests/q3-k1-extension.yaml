@@ -1,4 +1,5 @@
-# Q3 K1 conditional V1 extension: runs only if V1 fails for a target; epochs 2-3 for the frozen-LR indexers, then one re-evaluation.
+# Q3 K1 conditional V1 extension: runs only after a main read whose verdict is V1_EXTENSION_REQUIRED, or INCONCLUSIVE with a target failing V1; epochs 2-3 for the frozen-LR indexers of the V1-failing targets only, then one re-read of those targets (a target that passed V1 keeps its main read).
+# It shares the main job's run root: the lane's resume copy looks for <run_root>/<predecessor job id>.
 # Template: every FILL-* value is written by
 # scripts/fill_sparse_indexer_k1_manifests.py from measured artifacts (image B
 # build receipt, bundle sidecar, frozen preregistration, Slurm job ids). The
@@ -24,7 +25,7 @@ randomness_contract: assignment-seed-matrix
 seeds: [42, 43, 44]
 seed_binding:
   flag: "--seeds"
-run_root: /home/kevin/cotcodec-runs/translation-supervised-sparse-indexer/k1-screen-v1/extension
+run_root: /home/kevin/cotcodec-runs/translation-supervised-sparse-indexer/k1-screen-v1/main
 model:
   model_id: qwen3-0.6b-base
   revision: da87bfb608c14b7cf20ba1ce41287e8de496c0cd

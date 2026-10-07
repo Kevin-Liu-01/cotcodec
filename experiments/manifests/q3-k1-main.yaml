@@ -1,4 +1,6 @@
-# Q3 K1 main job: 18 indexers per layer, stream-dev KL, LR freeze, audit evaluation, statistics and verdict (minutes are set from the smoke projection, within the 2.0 GPU-h cap).
+# Q3 K1 main job: 18 indexers per layer, stream-dev KL, LR freeze, audit evaluation, statistics and verdict.
+# Minutes are fixed at 30 (4 GPUs, the 2.0 GPU-h cap); it runs only if the smoke receipt shows
+# 1.2 x projected wall minutes + 3 min (the USR1 lead) <= 30.
 # Template: every FILL-* value is written by
 # scripts/fill_sparse_indexer_k1_manifests.py from measured artifacts (image B
 # build receipt, bundle sidecar, frozen preregistration, Slurm job ids). The

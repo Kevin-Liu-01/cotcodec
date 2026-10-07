@@ -6,7 +6,7 @@
 #SBATCH --cpus-per-task=32
 #SBATCH --mem=128G
 #SBATCH --time=04:00:00
-#SBATCH --output=/home/kevin/cotcodec-runs/translation-supervised-sparse-indexer/builds/slurm-%x-%j.out
+#SBATCH --output=/home/kevin/cotcodec-runs/builds/slurm-%x-%j.out
 
 # Build the Q3 K1 study bundle with image A. CPU only: no GPU is requested and
 # no model runs. Stage 1 (fetch-raw) downloads pinned Belebele, FineWeb-2 and
@@ -14,7 +14,9 @@
 # the network, so it runs with host networking (the bridge has no DNS) and
 # writes only to the raw directory. Stage 2 (build) runs with no network, the
 # raw directory and the model snapshot read-only, and writes the bundle and its
-# sidecar. Usage:
+# sidecar. Slurm opens the --output file before this script runs and does not
+# create directories, so the log goes to the existing shared builds directory.
+# Usage:
 #   COTCODEC_IMAGE_ID=sha256:<image A> COTCODEC_BUNDLE_COMMIT=<commit A> \
 #     sbatch infra/slurm/host-single-node/build-k1-bundle.sbatch
 set -Eeuo pipefail
@@ -42,7 +44,7 @@ raw="${base}/raw/k1-v1"
 out="${base}/inputs"
 model=/home/kevin/cotcodec-runs/hf-cache/cotcodec-models/qwen3-0.6b-base
 receipt=/home/kevin/cotcodec-runs/hf-cache/cotcodec-receipts/qwen3-0.6b-base.json
-mkdir -m 0755 -p "${raw}" "${out}" "${base}/builds"
+mkdir -m 0755 -p "${raw}" "${out}"
 expected_tokenizer="$(python3 -c 'import json,sys; d=json.load(open(sys.argv[1])); print([f["sha256"] for f in d["files"] if f["path"]=="tokenizer.json"][0])' "${receipt}")"
 actual_tokenizer="$(sha256sum "${model}/tokenizer.json" | cut -d' ' -f1)"
 if [[ "${expected_tokenizer}" != "${actual_tokenizer}" ]]; then
