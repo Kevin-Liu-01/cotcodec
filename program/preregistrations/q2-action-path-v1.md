@@ -43,10 +43,15 @@ residual per-action failure rates.
 
 ### 2.2 Suite inputs
 
-These files are frozen by their SHA-256 at the freeze commit. Before the first
-acceptance trial, a second ledger entry `q2-action-path-v1-inputs` freezes a
-manifest listing each file and its digest; every acceptance receipt verifies
-both ledger entries and every listed digest.
+These files are frozen by their SHA-256 in two addenda, each its own ledger
+entry made with `scripts/preregister.py`. `q2-action-path-v1-inputs` lists
+the catalog, its R-dev references, G, the expressible sets, the operators,
+the L0-raw prediction, and the probe, guard and marker code; it is frozen
+before any L0-fixed code is written. `q2-action-path-v1-executor` lists the
+git SHA and file digests of L0-fixed, the L0-raw translator and the harness
+adapters, the regression corpus and `harness_design_diffs.md`; it is frozen
+when development ends and before the first acceptance trial. Every acceptance
+receipt verifies this file and both addenda.
 
 | File | Content at drafting time |
 |---|---|
@@ -58,9 +63,9 @@ both ledger entries and every listed digest.
 | `harness/q2/action_path/l0_raw_prediction.yaml` | the predicted L0-raw failing set |
 | `harness/q2/action_path/ir.py`, `vocab.py`, `catalog.py` | IR, vocabularies, validator |
 | `harness/q2/action_path/rdev_reference.json` | produced by the reference capture (section 4.3) and copied into the catalog |
-| Guest probe, guard and marker code | written before the freeze; digests in the inputs manifest |
-| Harness adapters, per-harness expressible sets, regression corpus | section 3; digests in the inputs manifest |
-| L0-fixed executor | its git SHA is frozen when development ends (section 10); acceptance uses only that SHA |
+| Guest probe, guard and marker code | digests in `q2-action-path-v1-inputs` |
+| Harness adapters and regression corpus | section 3; digests in `q2-action-path-v1-executor` |
+| L0-fixed executor | its git SHA is frozen in `q2-action-path-v1-executor` when development ends (section 10); acceptance uses only that SHA |
 
 ## 3. Layers under test
 
@@ -347,7 +352,7 @@ program kill criterion applies: cut the Stage-1 task count before adding GPUs.
   shuffle; L0-fixed, the probe, the guard and the adapters may be iterated
   freely; mutation scoring (C3) and the L0-raw control (C2) run here.
 - **Freeze of the executor.** When development ends, the git SHA of L0-fixed
-  and the adapters is recorded in `q2-action-path-v1-inputs`.
+  and the adapters is frozen in `q2-action-path-v1-executor`.
 - **Seeds 43 and 44: acceptance.** Fresh VMs (every cycle is a cold boot of a
   new container), the frozen executor SHA, both observation settings. Stress
   and volume orders use `random.Random(43)`. There is no unseeded randomness.
@@ -355,8 +360,8 @@ program kill criterion applies: cut the Stage-1 task count before adding GPUs.
 ## 11. Repairs and kill criteria
 
 - A failed acceptance attempt is repaired only as a new versioned attempt
-  (`-a2`, then `-a3`) with a new output path and a new executor SHA recorded in
-  an addendum. The catalog, its references, G and the predictions stay frozen.
+  (`-a2`, then `-a3`) with a new output path and a new executor SHA frozen in a
+  new executor addendum. The catalog, its references, G and the predictions stay frozen.
 - If any gating entry still fails at the third attempt, the affected layer is
   not admitted and Stage 1 does not start.
 - If the reset sentinel fails, it is debugged before any concurrency work.
