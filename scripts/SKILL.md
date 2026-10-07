@@ -44,6 +44,14 @@ provenance.
   already-inspected data only.
 - `create_source_archive.py`, `verify_compute_provenance.py` and
   `verify_publication_attestation.py` bind source, image and claims.
+- `run_vllm_throughput_probe.py` is the serving-throughput probe
+  (serving-throughput-probe-v1): `plan`, `run`, `vllm-args-doctor`, `project`,
+  `digest`.
+  `build_vllm_overlay_on_h100.sh` builds its vLLM overlay image and
+  `render_serving_probe_manifest.py` fills its manifest templates from receipts
+  (job C only from an accepted job A whose control X1 passed). `project` reads
+  only accepted jobs whose summary lists the point files on disk and whose lane
+  `termination.env` (in the output directory's parent) shows a clean exit.
 
 ## Patterns to follow / invariants
 <!-- agent-docs:fill:patterns -->

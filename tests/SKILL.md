@@ -28,6 +28,9 @@ Each contract proves valid inputs pass and decision-bearing drift fails.
 - `_holo3_world.py` builds in-memory stand-ins for the Holo3 and OpenCUA
   archives that reproduce the real leaderboard cells, so the audit's controls
   and tamper cases run without network.
+- `serving_probe_fakes.py` (not collected) holds a word tokenizer, a fake
+  vLLM server on `httpx.MockTransport` and a stand-in for vLLM's offline request
+  bookkeeping for the serving-probe tests.
 
 ## Patterns to follow / invariants
 <!-- agent-docs:fill:patterns -->
