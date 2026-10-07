@@ -116,7 +116,7 @@ soupsieve==2.10
 soxr==1.1.0
 sympy==1.13.1
 threadpoolctl==3.7.0
-tifffile==2026.3.3
+tifffile==2026.3.3
 tldextract==5.3.1
 torch==2.5.1+cpu
 torchvision==0.20.1+cpu
