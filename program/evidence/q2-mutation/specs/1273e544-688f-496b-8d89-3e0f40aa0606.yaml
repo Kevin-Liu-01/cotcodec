@@ -1,0 +1,22 @@
+task_id: 1273e544-688f-496b-8d89-3e0f40aa0606
+author: blind-model-author-v1
+requirements:
+  - req_id: R0
+    statement: (implicit) The workbook is persisted at /home/user/NetIncome.xlsx and Sheet1 is unchanged (copy, not move).
+    check_kind: file_exists
+    observable: File loads; Sheet1 A1:B20 equal initial values.
+  - req_id: R1
+    statement: A new sheet named "Sheet2" exists.
+    check_kind: other
+    observable: Sheet names include "Sheet2".
+  - req_id: R2
+    statement: Sheet2 holds the Revenue column with its header, in the original order.
+    check_kind: cell_value
+    observable: Sheet2 A1 == "Revenue" and A2:A20 == 39929, 55389, 52686, 49490, 38279, 30002, 56315, 54870, 39465, 26176, 32121, 59875, 42235, 55101, 35972, 51922, 42471, 46706, 58782.
+  - req_id: R3
+    statement: Only the Revenue column is copied (not Total Expenses).
+    check_kind: cell_value
+    observable: Sheet2 has no other non-empty cells besides the copied column.
+allowed_variations:
+  - '[AMBIGUOUS] The paste anchor is not stated; A1 is the natural default. A copy anchored elsewhere is a defensible but different reading.'
+  - Values may be constants or formulas referencing Sheet1.

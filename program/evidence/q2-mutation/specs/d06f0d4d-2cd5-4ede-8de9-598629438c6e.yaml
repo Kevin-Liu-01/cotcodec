@@ -1,0 +1,9 @@
+task_id: d06f0d4d-2cd5-4ede-8de9-598629438c6e
+author: blind-model-author-v1
+requirements:
+  - req_id: R1
+    statement: The volume slider colors are changed to a black-ish (dark) scheme.
+    check_kind: config_value
+    observable: ~/.config/vlc/vlcrc has qt-slider-colours set to RGB triplets that are all dark (e.g. each component <= 64), replacing the default green-yellow-red gradient.
+allowed_variations:
+  - '[AMBIGUOUS] Exact shades; switching to a dark interface style/skin is a different mechanism.'

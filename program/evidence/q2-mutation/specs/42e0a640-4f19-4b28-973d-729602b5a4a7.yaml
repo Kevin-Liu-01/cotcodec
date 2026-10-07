@@ -1,0 +1,22 @@
+task_id: 42e0a640-4f19-4b28-973d-729602b5a4a7
+author: blind-model-author-v1
+requirements:
+  - req_id: R0
+    statement: (implicit) The workbook is persisted at /home/user/NetIncome.xlsx with Sheet1 unchanged.
+    check_kind: file_exists
+    observable: File loads; Sheet1 A1:B20 equal initial values.
+  - req_id: R1
+    statement: A new sheet named "Sheet2" exists.
+    check_kind: other
+    observable: Sheet names include "Sheet2".
+  - req_id: R2
+    statement: Sheet2 has two column headers "Total Revenue" and "Total Expenses".
+    check_kind: cell_value
+    observable: Sheet2 A1 == "Total Revenue", B1 == "Total Expenses".
+  - req_id: R3
+    statement: Under the headers are the column sums of Revenue and Total Expenses.
+    check_kind: cell_value
+    observable: Sheet2 A2 computed == 867786, B2 computed == 411686.
+allowed_variations:
+  - Formulas referencing Sheet1 (=SUM(Sheet1.A2:A20)) or constants.
+  - Number format and column widths.

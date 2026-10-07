@@ -1,0 +1,14 @@
+task_id: 415ef462-bed3-493a-ac36-ca8c6d23bf1b
+author: blind-model-author-v1
+requirements:
+  - req_id: R1
+    statement: The December AWS invoice PDF attached to the e-mail in the local "Bills" folder is saved into the receipts folder following the existing naming pattern.
+    check_kind: file_exists
+    observable: /home/user/Documents/Finance/receipts/aws-invoice-2312.pdf exists and is byte-identical to the e-mail's attachment (invoice for December 1-31, 2023; total $10.02).
+  - req_id: R2
+    statement: A record for this invoice is appended at the end of the tally book.
+    check_kind: cell_value
+    observable: /home/user/Documents/Finance/tally_book.xlsx row 7 == ("AWS", 2023.12, 10.02) with Amount formatted like the column above; rows 1-6 unchanged.
+allowed_variations:
+  - Month value stored as number 2023.12 like existing rows (text "2023.12" is a gray zone).
+  - Original receipts are untouched.

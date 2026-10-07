@@ -1,0 +1,18 @@
+task_id: 1e8df695-bd1b-45b3-b557-e7d599cf7597
+author: blind-model-author-v1
+requirements:
+  - req_id: R0
+    statement: (implicit) The workbook is persisted at /home/user/WeeklySales.xlsx with A1:C11 unchanged.
+    check_kind: file_exists
+    observable: File loads; A1:C11 equal initial values.
+  - req_id: R1
+    statement: A new column headed "Profit" is placed right next to the COGS column (the instruction's "CGOS" is a typo for COGS), i.e. column D.
+    check_kind: cell_value
+    observable: D1 == "Profit".
+  - req_id: R2
+    statement: Each week's profit equals Sales minus COGS.
+    check_kind: cell_value
+    observable: D2:D11 computed values == B - C per row = 11577.1772, 70773.4698, 82267.6130, 4763.3297, 50481.3435, 62432.3232, 40804.2217, 20648.4393, 97994.6544, 28668.9422 (tolerance 1e-3).
+allowed_variations:
+  - Formulas (=B2-C2) or constants.
+  - Number format / rounding display of the Profit column.

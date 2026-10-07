@@ -1,0 +1,22 @@
+task_id: 4ed5abd0-8b5d-47bd-839f-cacfa15ca37a
+author: blind-model-author-v1
+requirements:
+  - req_id: R0
+    statement: (implicit) The presentation is saved in place at /home/user/Desktop/4_1.pptx with 6 slides and unchanged texts.
+    check_kind: file_exists
+    observable: File loads; texts unchanged.
+  - req_id: R1
+    statement: The titles of slides 2, 3 and 5 are black.
+    check_kind: text_run
+    observable: All runs of slide 2 "How to Use This Presentation", slide 3 "Add a Roadmap Page" and slide 5 "Write your topic or idea" have color 000000.
+  - req_id: R2
+    statement: The titles of slides 2, 3 and 5 are underlined.
+    check_kind: text_run
+    observable: All runs of those three title shapes have underline set (single underline, u="sng").
+  - req_id: R3
+    statement: (implicit) Other titles (e.g. slide 4 "Add an Agenda Page") and non-title text keep their color and underline state.
+    check_kind: text_run
+    observable: All other runs keep their initial color (284379 etc.) and are not underlined.
+allowed_variations:
+  - '[AMBIGUOUS] Slides 2, 3, 5 have no title placeholder; the title is the large top text shape. Double/other underline styles are a gray zone.'
+  - Font family and size of the titles.

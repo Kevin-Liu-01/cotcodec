@@ -1,0 +1,9 @@
+task_id: 9439a27b-18ae-42d8-9778-5f68f891805e
+author: blind-model-author-v1
+requirements:
+  - req_id: R1
+    statement: VS Code no longer moves focus back to the editor when debugging (e.g. on break), so focus can stay in the Debug Console.
+    check_kind: config_value
+    observable: User settings.json has "debug.focusEditorOnBreak" == false.
+allowed_variations:
+  - '[AMBIGUOUS] Related settings (e.g. "debug.internalConsoleOptions": "openOnSessionStart") may also be set; the instruction maps most directly to focusEditorOnBreak.'

@@ -1,0 +1,17 @@
+task_id: e8172110-ec08-421b-a6f5-842e6451911f
+author: blind-model-author-v1
+requirements:
+  - req_id: R1
+    statement: The character (cartoon dog) extracted in GIMP is saved as character_gimp.png (Desktop).
+    check_kind: file_exists
+    observable: /home/user/Desktop/character_gimp.png exists; it contains the dog character with the flat mint background removed (transparent) and/or cropped to the character's bounding box.
+  - req_id: R2
+    statement: A Python script automating the same selection exists and its output is saved as character_code.png.
+    check_kind: file_exists
+    observable: A .py script exists on the Desktop and /home/user/Desktop/character_code.png exists.
+  - req_id: R3
+    statement: The script output mimics the GIMP extraction precisely.
+    check_kind: image_property
+    observable: character_code.png has the same size as character_gimp.png and near-identical pixels/alpha (e.g. > 95% matching pixels).
+allowed_variations:
+  - '[AMBIGUOUS] "extract" may mean transparent background at full canvas size or a crop; both outputs must use the same convention.'

@@ -1,0 +1,17 @@
+task_id: c82632a4-56b6-4db4-9dd1-3820ee3388e4
+author: blind-model-author-v1
+requirements:
+  - req_id: R0
+    statement: (implicit) The presentation is saved in place at /home/user/Desktop/31_2.pptx with 2 slides and unchanged texts.
+    check_kind: file_exists
+    observable: File loads; texts unchanged.
+  - req_id: R1
+    statement: The image none.png from the Desktop is added to slide 2.
+    check_kind: image_property
+    observable: Slide 2 has a new picture whose image is pixel-identical to /home/user/Desktop/none.png (512x512).
+  - req_id: R2
+    statement: The image's displayed size is 1 cm x 1 cm.
+    check_kind: image_property
+    observable: Picture width == 1.00 cm and height == 1.00 cm (tolerance 0.02 cm; 360000 EMU).
+allowed_variations:
+  - Position of the picture on slide 2.

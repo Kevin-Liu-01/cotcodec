@@ -1,0 +1,14 @@
+task_id: 3a93cae4-ad3e-403e-8c12-65303b271818
+author: blind-model-author-v1
+requirements:
+  - req_id: R1
+    statement: The timetable /home/user/Desktop/Course Timetable.xlsx gets a two-hour lecture on Wednesday at 12:00.
+    check_kind: cell_value
+    observable: Cell D5 (column "Wed", row of the 12:00 block) contains a lecture entry in the existing style, e.g. "Lec 2 (12:00-14:00)" - it mentions a lecture ("Lec"/"Lecture") and the time range 12:00-14:00.
+  - req_id: R2
+    statement: Other timetable entries are unchanged.
+    check_kind: cell_value
+    observable: All other cells and merged ranges equal the initial file.
+allowed_variations:
+  - '[AMBIGUOUS] Lecture numbering ("Lec 2") and exact label are not given.'
+  - The other Desktop files (student docs, grammar PDFs) are irrelevant and must not change.

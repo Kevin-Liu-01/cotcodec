@@ -1,0 +1,18 @@
+task_id: 8979838c-54a5-4454-a2b8-3d135a1a5c8f
+author: blind-model-author-v1
+requirements:
+  - req_id: R0
+    statement: (implicit) The presentation is saved in place at /home/user/Desktop/186_3.pptx (1 slide) with the title unchanged.
+    check_kind: file_exists
+    observable: File loads; title == "Should You Consider Studying Abroad?".
+  - req_id: R1
+    statement: The slide background is purple.
+    check_kind: slide_object
+    observable: >-
+      Solid background fill purple (default reading #800080).
+  - req_id: R2
+    statement: The slide's title text is added to the speaker notes.
+    check_kind: slide_object
+    observable: notes_slide.notes_text_frame.text.strip() == "Should You Consider Studying Abroad?".
+allowed_variations:
+  - '[AMBIGUOUS] Purple hue (see 841b50aa); notes text formatting.'

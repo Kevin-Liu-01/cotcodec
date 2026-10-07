@@ -1,0 +1,17 @@
+task_id: d68204bf-11c1-4b13-b48b-d303c73d4bf6
+author: blind-model-author-v1
+requirements:
+  - req_id: R1
+    statement: The result is saved as rearranged.png (on the Desktop next to tilearray.png).
+    check_kind: file_exists
+    observable: /home/user/Desktop/rearranged.png exists and is a valid PNG of size 962 x 1280.
+  - req_id: R2
+    statement: The image is cut vertically into three equal-width strips (the three tile columns) that are reordered from warmest (left) to coolest (right) without altering colors.
+    check_kind: image_property
+    observable: The output consists of the original column strips (x 0-320, 321-640, 641-961) placed side by side, pixel-identical up to 1 px boundary rounding; by warmth = mean(R) - mean(B) (col0 32.0, col1 40.4, col2 50.9) the order is [col2, col1, col0].
+  - req_id: R3
+    statement: No tint, filter or resizing is applied.
+    check_kind: image_property
+    observable: Per-strip pixels equal the corresponding source strip pixels (JPEG-decoded source).
+allowed_variations:
+  - '[AMBIGUOUS] "Warmth" metric is not defined; R-B mean difference and R/B ratio agree here, a hue-based metric might not. Record the metric.'

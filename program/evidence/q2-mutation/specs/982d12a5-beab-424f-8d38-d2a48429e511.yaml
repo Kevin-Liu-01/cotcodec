@@ -1,0 +1,9 @@
+task_id: 982d12a5-beab-424f-8d38-d2a48429e511
+author: blind-model-author-v1
+requirements:
+  - req_id: R1
+    statement: VS Code's color theme is "Visual Studio Dark".
+    check_kind: config_value
+    observable: User settings.json has "workbench.colorTheme" == "Visual Studio Dark".
+allowed_variations:
+  - Icon theme and other settings unchanged.

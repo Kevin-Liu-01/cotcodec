@@ -1,0 +1,15 @@
+task_id: 06ca5602-62ca-47f6-ad4f-da151cde54cc
+author: blind-model-author-v1
+requirements:
+  - req_id: R1
+    statement: The image is converted to palette-based (indexed) mode and the result is written back to /home/user/Desktop/computer.png.
+    check_kind: image_property
+    observable: /home/user/Desktop/computer.png opens with PIL and has mode "P" (indexed palette); note the input file is actually JPEG data with a .png name, so the output must be a real PNG (or other palette-capable format) to carry indexed mode.
+  - req_id: R2
+    statement: (implicit) The picture content and dimensions are preserved apart from color quantization.
+    check_kind: image_property
+    observable: Size == 5184 x 3888; converting both to RGB, mean absolute pixel difference to the original is small (e.g. < 15 per channel).
+allowed_variations:
+  - >-
+    Palette size / dithering options (GIMP defaults: optimum palette, 255 colors).
+  - '[AMBIGUOUS] The instruction does not name an output file; exporting over computer.png is the natural reading, saving an XCF only is a different reading.'

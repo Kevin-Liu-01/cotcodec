@@ -1,0 +1,15 @@
+task_id: bb83cab4-e5c7-42c7-a67b-e46068032b86
+author: blind-model-author-v1
+requirements:
+  - req_id: R1
+    statement: A Writer document /home/user/Desktop/script.docx exists.
+    check_kind: file_exists
+    observable: The file exists and opens with python-docx.
+  - req_id: R2
+    statement: It contains all the text from the Impress file's slides, in slide order.
+    check_kind: text_run
+    observable: >-
+      Every non-empty text from slide text shapes of Unlocking-the-Power-of-ChatGPT.pptx (e.g. "Unlocking the Power of ChatGPT: Writing Effective Prompts", "Be sure to sign up for your ChatGPT account!", "Crafting Effective Prompts", "One Prompt, One Idea, One Conversation", ..., "Break Out Time!") appears in the document text, in slide order.
+allowed_variations:
+  - Formatting and layout (the user will reformat).
+  - '[AMBIGUOUS] Slide-number fields ("<number>"), speaker notes and text inside images are not required.'

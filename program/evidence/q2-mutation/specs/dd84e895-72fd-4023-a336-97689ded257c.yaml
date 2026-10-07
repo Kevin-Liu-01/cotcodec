@@ -1,0 +1,13 @@
+task_id: dd84e895-72fd-4023-a336-97689ded257c
+author: blind-model-author-v1
+requirements:
+  - req_id: R1
+    statement: Every email in the local "Bills" folder is starred (flagged).
+    check_kind: other
+    observable: Both messages in ~/.thunderbird/t5q2a5hp.default-release/Mail/Local Folders/Bills (the AWS invoice and the X receipt) are flagged - X-Mozilla-Status has the 0x0004 bit and/or the folder's .msf marks them flagged.
+  - req_id: R2
+    statement: (implicit) No other folder's messages get starred and no messages are removed.
+    check_kind: other
+    observable: Bills still has 2 messages; Inbox messages are not flagged.
+allowed_variations:
+  - Read/unread state changes caused by viewing.

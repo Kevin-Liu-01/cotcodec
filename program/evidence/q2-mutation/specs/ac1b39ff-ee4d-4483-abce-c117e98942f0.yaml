@@ -1,0 +1,18 @@
+task_id: ac1b39ff-ee4d-4483-abce-c117e98942f0
+author: blind-model-author-v1
+requirements:
+  - req_id: R0
+    statement: (implicit) The presentation is saved in place at /home/user/Desktop/55_10.pptx with 3 slides; texts and table contents unchanged.
+    check_kind: file_exists
+    observable: File loads; slide 3 table still 3x3 with 1..9.
+  - req_id: R1
+    statement: The table on slide 3 is moved to the bottom of the slide.
+    check_kind: slide_object
+    observable: The table's bottom edge (top + height; height about 3.08 cm) lies within the slide and within about 1.5 cm of the slide's bottom edge (19.05 cm), i.e. top roughly 14.5-15.97 cm.
+  - req_id: R2
+    statement: (implicit) Only the table moves; its size and other shapes are unchanged.
+    check_kind: slide_object
+    observable: Table width/height unchanged; title and body placeholder geometry unchanged.
+allowed_variations:
+  - Horizontal position of the table.
+  - Exact margin to the bottom edge.

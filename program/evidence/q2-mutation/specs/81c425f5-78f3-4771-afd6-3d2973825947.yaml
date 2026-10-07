@@ -1,0 +1,18 @@
+task_id: 81c425f5-78f3-4771-afd6-3d2973825947
+author: blind-model-author-v1
+requirements:
+  - req_id: R1
+    statement: A Writer document /home/user/Desktop/price.docx is saved.
+    check_kind: file_exists
+    observable: The file exists and opens with python-docx.
+  - req_id: R2
+    statement: It contains a table with the data of the current (active) sheet "#9,#10, small eps" (A1:E15).
+    check_kind: table_cell
+    observable: A table with 15 rows x 5 columns whose first row is (blank), MCC 150072, MCC 150006, MCC 150063, MCC 150066 and last row "Estimate No.", 143333, 143336, 143363, 143365.
+  - req_id: R3
+    statement: Values keep the formatting shown in Calc (quantities with thousands separators, prices as currency without decimals).
+    check_kind: table_cell
+    observable: Cell texts equal Calc's displayed strings, e.g. row 2 == "5,000", "$617", "$645", "$623", "$664" (accounting-format padding spaces ignored); row 6 == "10,000", "$814", "$870", "$826", "$908".
+allowed_variations:
+  - Table styling (fonts, borders, alignment) beyond the displayed number formats.
+  - '[AMBIGUOUS] The second sheet "Catalog, Large EPS" is not the current sheet and is not required.'

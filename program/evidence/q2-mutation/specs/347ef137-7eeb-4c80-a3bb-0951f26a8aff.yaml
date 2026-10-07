@@ -1,0 +1,23 @@
+task_id: 347ef137-7eeb-4c80-a3bb-0951f26a8aff
+author: blind-model-author-v1
+requirements:
+  - req_id: R0
+    statement: (implicit) The workbook is persisted at /home/user/Create_column_charts_using_statistics.xlsx with cell data unchanged.
+    check_kind: file_exists
+    observable: File loads; Sheet1 A1:I32 values/formulas equal the initial file.
+  - req_id: R1
+    statement: A column chart shows the 2019 per-month total costs (12 columns, Jan..Dec).
+    check_kind: other
+    observable: A chart with c:barChart barDir col whose single series values reference Sheet1 I3:I14 (computed 399,404,429,399,389,419,419,364,359,364,374,389) and categories A3:A14.
+  - req_id: R2
+    statement: A second column chart shows the 2020 per-month total costs (12 columns, Jan..Dec).
+    check_kind: other
+    observable: A chart with c:barChart barDir col whose single series values reference I20:I31 (359,364,349,364,399,359,359,359,354,359,364,369) and categories A20:A31.
+  - req_id: R3
+    statement: Exactly two charts are created, one per year (not one combined chart, not per-category charts).
+    check_kind: other
+    observable: The workbook has two chart parts.
+allowed_variations:
+  - Chart titles, legend, colors, size and placement are not constrained.
+  - '[AMBIGUOUS] "column bar charts" is read as vertical column charts; horizontal bar charts would be a looser reading.'
+  - Including the yearly grand total (I15/I32) as a 13th column is a gray zone; the instruction asks for per-month totals.

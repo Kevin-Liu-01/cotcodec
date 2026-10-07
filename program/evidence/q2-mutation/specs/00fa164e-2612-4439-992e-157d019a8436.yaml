@@ -1,0 +1,26 @@
+task_id: 00fa164e-2612-4439-992e-157d019a8436
+author: blind-model-author-v1
+requirements:
+  - req_id: R0
+    statement: (implicit) The report is saved in place at /home/user/Documents/awesome-desktop/awe_desk_env.docx; existing text is unchanged.
+    check_kind: file_exists
+    observable: File loads; all existing paragraphs' texts equal the initial ones.
+  - req_id: R1
+    statement: A table is inserted in the "5.2 Main Results" section (between the "5.2 Main Results" heading and "5.3 Qualitative Analysis").
+    check_kind: table_cell
+    observable: The document body has a table located after the "5.2 Main Results" heading paragraph and before the "5.3 Qualitative Analysis" heading.
+  - req_id: R2
+    statement: The table's first row is the spreadsheet header.
+    check_kind: table_cell
+    observable: Row 1 cells == model, os, calc, impress, writer, vlc, gimp, chrome, thunderbird, vscode, multi, avg.
+  - req_id: R3
+    statement: The table contains the GPT-4 row with values exactly as displayed in the spreadsheet (4 decimals, trailing zeros kept).
+    check_kind: table_cell
+    observable: Row 2 cells == Gpt-4, 0.3333, 0.0000, 0.0910, 0.0476, 0.1507, 0.0625, 0.3636, 0.1333, 0.4545, 0.2143, 0.1557.
+  - req_id: R4
+    statement: Only GPT-4's results are included (not the "rl+il" row).
+    check_kind: table_cell
+    observable: The table has exactly 2 rows (header + Gpt-4) and 12 columns.
+allowed_variations:
+  - Table style/borders/width; whether the empty paragraph under the heading is replaced.
+  - The model name cell text as in the sheet ("Gpt-4"); writing "GPT-4" is a gray zone.

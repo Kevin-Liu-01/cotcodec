@@ -1,0 +1,21 @@
+task_id: 8b1ce5f2-59d2-4dcc-b0b0-666a714b9a14
+author: blind-model-author-v1
+requirements:
+  - req_id: R0
+    statement: (implicit) The workbook is persisted at /home/user/Calendar_Highlight_Weekend_Days.xlsx with all date values unchanged.
+    check_kind: file_exists
+    observable: File loads; B2:F33 values equal initial values.
+  - req_id: R1
+    statement: Every cell whose date falls on a Saturday or Sunday has a red (#FF0000) background.
+    check_kind: cell_format
+    observable: >-
+      The 44 cells F3, C4, F4, C5, E5, B6, E6, B7, D8, D9, F10, C11, F11, C12, E12, B13, E13, B14, D15, D16, F17, C18, F18,
+      C19, E19, B20, E20, B21, D22, D23, F24, C25, F25, C26, E26, B27, E27, B28, D29, D30, F31, C32, F32, C33 render with
+      fill color FF0000 (solid pattern fill, or an equivalent conditional format).
+  - req_id: R2
+    statement: Weekday cells, the month header row and blank cells keep no red background (explicit "don't touch irrelevant regions").
+    check_kind: cell_format
+    observable: All other cells in B2:F33 and every cell outside it have no fill (as initially); B33 and E33 stay blank.
+allowed_variations:
+  - Direct cell fill or conditional formatting (e.g. WEEKDAY-based rule) that yields the same rendered fill.
+  - Font color of the highlighted cells is not constrained.

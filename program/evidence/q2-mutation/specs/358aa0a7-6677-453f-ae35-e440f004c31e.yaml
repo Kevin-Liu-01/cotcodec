@@ -1,0 +1,16 @@
+task_id: 358aa0a7-6677-453f-ae35-e440f004c31e
+author: blind-model-author-v1
+requirements:
+  - req_id: R0
+    statement: (implicit) The presentation is saved in place at /home/user/Desktop/note-taking-strategies.pptx with 28 slides and unchanged text.
+    check_kind: file_exists
+    observable: File loads; 28 slides; all texts equal the initial ones.
+  - req_id: R1
+    statement: All text in all text boxes / placeholders on every slide uses the font "Liberation Sans Narrow".
+    check_kind: text_run
+    observable: For every non-empty run on every slide, the effective latin typeface (run rPr latin, else paragraph/list style, else layout/master text style) is "Liberation Sans Narrow".
+allowed_variations:
+  - The change may be done per run, via select-all per slide, or via master/layout text styles, as long as the effective font of every run is Liberation Sans Narrow.
+  - Font sizes, colors and other attributes are not constrained (expected unchanged).
+  - '[AMBIGUOUS] Speaker-notes text and table text: "all text boxes" most naturally covers slide text shapes; notes pages are a gray zone.'
+  - The instruction is phrased as a request for suggestions; the expected end state is that the font is actually standardized.

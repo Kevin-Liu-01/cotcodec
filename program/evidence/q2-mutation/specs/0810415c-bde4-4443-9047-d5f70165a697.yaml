@@ -1,0 +1,18 @@
+task_id: 0810415c-bde4-4443-9047-d5f70165a697
+author: blind-model-author-v1
+requirements:
+  - req_id: R0
+    statement: (implicit) The document is saved in place at /home/user/Desktop/Novels_Intro_Packet.docx (docx) with unchanged text.
+    check_kind: file_exists
+    observable: File loads with python-docx; paragraph texts equal the initial ones.
+  - req_id: R1
+    statement: The first two (text) paragraphs use double line spacing.
+    check_kind: paragraph_format
+    observable: Paragraph 0 ("Compared to a short story, a novel ...") and paragraph 2 ("A novel may have any number of climaxes ...") have line spacing 2.0 (w:spacing line="480" lineRule="auto").
+  - req_id: R2
+    statement: Later paragraphs keep their original single line spacing.
+    check_kind: paragraph_format
+    observable: Paragraphs from index 4 onward keep line_spacing 1.0.
+allowed_variations:
+  - '[AMBIGUOUS] Index 1 is an empty paragraph between the two text paragraphs; whether it also gets double spacing is not constrained. A reading that counts the empty paragraph as the "second paragraph" (changing only P0 and P1) is a different interpretation.'
+  - Spacing before/after paragraphs.

@@ -1,0 +1,17 @@
+task_id: 72b810ef-4156-4d09-8f08-a0cf57e7cefe
+author: blind-model-author-v1
+requirements:
+  - req_id: R0
+    statement: (implicit) The document is saved in place at /home/user/Desktop/GEOG2169_Course_Outline_2022-23.docx with unchanged text.
+    check_kind: file_exists
+    observable: File loads; texts unchanged.
+  - req_id: R1
+    statement: All words of the last paragraph ("Each student will be responsible for one discussion leading ...") have strike-through.
+    check_kind: text_run
+    observable: Every non-whitespace run of the last non-empty paragraph has strike == true (w:strike).
+  - req_id: R2
+    statement: Other paragraphs are not struck through.
+    check_kind: text_run
+    observable: Paragraphs 0 and 2 have no strike.
+allowed_variations:
+  - Double strike-through (w:dstrike) is a gray zone.

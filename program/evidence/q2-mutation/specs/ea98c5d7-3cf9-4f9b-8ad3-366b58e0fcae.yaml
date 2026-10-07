@@ -1,0 +1,14 @@
+task_id: ea98c5d7-3cf9-4f9b-8ad3-366b58e0fcae
+author: blind-model-author-v1
+requirements:
+  - req_id: R1
+    statement: The ctrl+f shortcut for the tree-view Find (Explorer search) is removed.
+    check_kind: config_value
+    observable: >-
+      keybindings.json contains a removal rule {"key": "ctrl+f", "command": "-list.find", "when": <the default when-clause of that binding, e.g. "listFocus && listSupportsFind">} so ctrl+f no longer triggers tree find in the Explorer.
+  - req_id: R2
+    statement: (implicit) Other ctrl+f bindings (editor Find) are untouched.
+    check_kind: config_value
+    observable: No removal rule targets "actions.find" or other non-tree commands.
+allowed_variations:
+  - The exact "when" text as written by the Keyboard Shortcuts editor.

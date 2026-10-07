@@ -1,0 +1,14 @@
+task_id: 4c26e3f3-3a14-4d86-b44a-d3cedebbb487
+author: blind-model-author-v1
+requirements:
+  - req_id: R1
+    statement: The (dim) image from slide 2 is saved, brightened, as /home/user/Desktop/background.png.
+    check_kind: file_exists
+    observable: background.png exists and is a valid PNG.
+  - req_id: R2
+    statement: The saved image is the slide-2 picture (2433 x 1622 photo) with higher brightness.
+    check_kind: image_property
+    observable: Image content matches the original picture (same aspect 1.5, high structural similarity) and mean luminance is noticeably higher than the original's 39.9.
+allowed_variations:
+  - Brightness method/amount; whether the presentation itself is updated is not required.
+  - Pixel size may equal the original or the displayed size.

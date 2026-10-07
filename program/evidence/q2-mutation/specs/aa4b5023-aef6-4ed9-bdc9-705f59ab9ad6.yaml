@@ -1,0 +1,18 @@
+task_id: aa4b5023-aef6-4ed9-bdc9-705f59ab9ad6
+author: blind-model-author-v1
+requirements:
+  - req_id: R1
+    statement: A corrected video is saved as /home/user/Desktop/1984_Apple_Macintosh_Commercial.mp4.
+    check_kind: file_exists
+    observable: The file exists and ffprobe reads a video stream (and audio).
+  - req_id: R2
+    statement: The picture is turned the right way up - the source is flipped vertically (on-screen text reads upside-down but left-to-right), so the fix is a vertical flip.
+    check_kind: image_property
+    observable: Frames of the output match vertically flipped (ffmpeg vflip) frames of the input at the same timestamps (high similarity), e.g. at t = 40 s the "... WE WILL PREVAIL" text is upright.
+  - req_id: R3
+    statement: (implicit) Same content length.
+    check_kind: other
+    observable: Duration within 1 s of 59.83 s; dimensions 320 x 236 (or the same aspect).
+allowed_variations:
+  - '[AMBIGUOUS] A 180-degree rotation also puts the image upright but mirrors left-right; given the source is a pure vertical flip, rotation leaves text mirrored and is a weaker fix.'
+  - Codec/container settings.

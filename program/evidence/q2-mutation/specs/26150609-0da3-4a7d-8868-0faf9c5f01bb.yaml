@@ -1,0 +1,13 @@
+task_id: 26150609-0da3-4a7d-8868-0faf9c5f01bb
+author: blind-model-author-v1
+requirements:
+  - req_id: R1
+    statement: The snake can eat the food - the food's position is aligned with the snake's movement grid (multiples of SNAKE_SIZE = 10) from the start, or collision is detected by overlap.
+    check_kind: other
+    observable: With the edited /home/user/Desktop/snake/*.py, constructing Food() many times yields positions that are multiples of 10 within the 600 x 400 window (initially __init__ used unaligned random.randint values), or the eat check uses rectangle overlap; a scripted run moving the head onto the food triggers grow() (length increases) and respawn.
+  - req_id: R2
+    statement: The game still runs and otherwise behaves the same (movement, drawing).
+    check_kind: other
+    observable: main.py imports and runs headless (e.g. SDL_VIDEODRIVER=dummy) for several frames without errors; Snake.move semantics unchanged.
+allowed_variations:
+  - Fix location (food.py __init__ calling respawn(), or main.py collision logic).

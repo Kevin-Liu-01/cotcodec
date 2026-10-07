@@ -1,0 +1,18 @@
+task_id: af2d657a-e6b3-4c6a-9f67-9e3ed015974c
+author: blind-model-author-v1
+requirements:
+  - req_id: R0
+    statement: (implicit) The presentation is saved in place at /home/user/Desktop/9_1.pptx with 6 slides.
+    check_kind: file_exists
+    observable: File loads; 6 slides.
+  - req_id: R1
+    statement: Slide 1's title is "Happy Family".
+    check_kind: slide_object
+    observable: The title placeholder of slide 1 (initially empty) has text exactly "Happy Family".
+  - req_id: R2
+    statement: The title text uses the font "Microsoft JhengHei".
+    check_kind: text_run
+    observable: All runs of that title have latin (and/or ea) typeface "Microsoft JhengHei".
+allowed_variations:
+  - The font name must be recorded as requested even if the font is not installed (LibreOffice keeps the requested name).
+  - Size, color and alignment are not constrained.

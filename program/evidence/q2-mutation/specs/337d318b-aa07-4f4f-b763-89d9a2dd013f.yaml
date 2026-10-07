@@ -1,0 +1,17 @@
+task_id: 337d318b-aa07-4f4f-b763-89d9a2dd013f
+author: blind-model-author-v1
+requirements:
+  - req_id: R1
+    statement: >-
+      The invoice that does not match the bank statement - "Invoice # 243729.pdf" (Staples, total US$500.00 vs. the statement's Staples debit of 540.00) - is placed in the "problematic" folder.
+    check_kind: file_exists
+    observable: >-
+      /home/user/Desktop/problematic/Invoice # 243729.pdf exists (byte-identical to the original).
+  - req_id: R2
+    statement: Matching invoices are not placed there.
+    check_kind: file_exists
+    observable: >-
+      problematic/ contains neither "Invoice # GES-20220215-82.pdf" (3,180.00 matches) nor "invoice TII-20220301-90.pdf" (8,480.00 matches).
+allowed_variations:
+  - '[AMBIGUOUS] "pull out" may mean move (original removed from Desktop) or copy; record which.'
+  - '[AMBIGUOUS] Folder location assumed /home/user/Desktop/problematic (created if absent).'
