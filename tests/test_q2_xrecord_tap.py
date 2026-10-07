@@ -97,7 +97,14 @@ def test_mapping_check_separates_device_switches_from_unseen_changes():
     # An XKB change the tap never saw: keycode 8 now reads 'b', the table says 'a'.
     changed = dict(switch, rows=[[0x62, 0x42]] + switch_rows[1:])
     result = tap.mapping_check([ready, request, explained, changed])
-    assert result["ok"] is False and result["unverified"] == [{"range": [8, 248], "keycodes": [8]}]
+    assert result["ok"] is False
+    assert result["unverified"] == [
+        {
+            "range": [8, 248],
+            "keycodes": [8],
+            "rows": [{"keycode": 8, "tap": [0x61, 0x41], "server": [0x62, 0x42]}],
+        }
+    ]
     # A notify read just before its request's record is absorbed by the look-ahead.
     early = dict(switch)
     assert tap.mapping_check([ready, early, request, explained])["ok"] is True
