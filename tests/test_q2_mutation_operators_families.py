@@ -282,7 +282,13 @@ def test_pptx_move_delete_and_zorder_mutants(tmp_path: Path) -> None:
     order[step["a"]], order[step["b"]] = order[step["b"]], order[step["a"]]
     mutant = snapshot(synth.build_pptx(tmp_path / "z.pptx", slides=slides))
     assert admitted(check(ctx.base, mutant, _expectation(swap)))
-    order[step["a"]] = {**order[step["a"]], "name": "Renamed"}
+    renamed = copy.deepcopy(slides)
+    renamed[step["slide"]][step["a"]]["name"] = "PlaceHolder 9"  # regenerated names are ignored
+    assert admitted(check(ctx.base, snapshot(synth.build_pptx(tmp_path / "n.pptx",
+                                                              slides=renamed)),
+                          _expectation(swap)))
+    moved = order[step["a"]]
+    order[step["a"]] = {**moved, "off": (moved["off"][0] + 360, moved["off"][1])}
     tampered = snapshot(synth.build_pptx(tmp_path / "t.pptx", slides=slides))
     assert not admitted(check(ctx.base, tampered, _expectation(swap)))
 

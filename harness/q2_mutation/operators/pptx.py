@@ -65,6 +65,16 @@ def shape_unit(unit: str) -> str:
     return "/".join(unit.split("/")[:4])
 
 
+def movable(shape: dict) -> bool:
+    """Has an explicit offset and no rotation or flip (LibreOffice positions a rotated
+    shape by its bounding box, so a move does not map one-to-one onto the offset)."""
+    if not shape.get("off"):
+        return False
+    rotated = shape.get("rot") not in (None, "0")
+    flipped = any(shape.get(k) in {"1", "true"} for k in ("flipH", "flipV"))
+    return not rotated and not flipped
+
+
 def get_shape(snap: dict, unit: str) -> dict:
     return resolve(snap, shape_unit(unit))
 
@@ -149,19 +159,17 @@ class SubvisibleNudge(Operator):
 
     def sites(self, ctx, req, binding):
         return [site(path) for path, shape in pptx_shapes(ctx.base)
-                if shape.get("off") and shape["kind"] in {"sp", "pic", "table"}][:200]
+                if movable(shape) and shape["kind"] in {"sp", "pic", "table"}][:200]
 
     def build(self, ctx, where, rng):
         shape = get_shape(ctx.base, where.unit)
-        x, y = shape["off"]
-        new = [x + NUDGE_EMU, y]
         return Build(
             steps=[{"op": "pptx.move_shape", **shape_address(where.unit), "dx_emu": NUDGE_EMU,
                     "dy_emu": 0, "expect_sha256": text_sha256(shape.get("text", ""))}],
             expectation=Expectation(
                 allow=[f"{where.unit}/off"],
                 must_change=[f"{where.unit}/off"],
-                must_equal=[(f"{where.unit}/off", new)],
+                deltas=[(f"{where.unit}/off", [NUDGE_EMU, 0])],
             ),
             facts={"unit": where.unit, "name": shape.get("name", "")},
         )
@@ -525,7 +533,7 @@ class MoveShape(Operator):
 
     def sites(self, ctx, req, binding):
         return [site(u, req.req_id) for u in bound_shapes(ctx, binding)
-                if get_shape(ctx.base, u).get("off")]
+                if movable(get_shape(ctx.base, u))]
 
     def build(self, ctx, where, rng):
         shape = get_shape(ctx.base, where.unit)
@@ -539,7 +547,7 @@ class MoveShape(Operator):
             expectation=Expectation(
                 allow=[f"{where.unit}/off"],
                 must_change=[f"{where.unit}/off"],
-                must_equal=[(f"{where.unit}/off", [x + dx, y + dy])],
+                deltas=[(f"{where.unit}/off", [dx, dy])],
             ),
             facts={"unit": where.unit, "dx_cm": dx / 360_000, "dy_cm": dy / 360_000},
         )
@@ -663,7 +671,7 @@ class AddTextbox(Operator):
         width, height = (int(v) for v in (ctx.base.get("slide_size") or [9_144_000, 6_858_000]))
         box_w, box_h = 2_880_000, 540_000
         x = rng.randrange(0, max(1, width - box_w), EMU_PER_HMM * 100)
-        y = height - box_h - 180_000
+        y = (height - box_h - 180_000) // EMU_PER_HMM * EMU_PER_HMM
         count = len(ctx.base["slides"][s]["shapes"])
         return Build(
             steps=[{"op": "pptx.add_textbox", "slide": s, "x_emu": x, "y_emu": y,

@@ -7,6 +7,7 @@ Cell units are ``sheets/<sheet>/cells/<A1>`` locators of the base snapshot.
 
 from __future__ import annotations
 
+import json
 import random
 import re
 
@@ -139,6 +140,19 @@ def feeds_protected(ctx: Context, unit: str) -> bool:
     """True when a formula in the task delta or a requirement binding reads ``unit``."""
     protected = set(ctx.delta) | ctx.bound
     return any(dep.rsplit("/", 1)[0] in protected for dep in xlsx_dependents(ctx.base, [unit]))
+
+
+def sheet_name_referenced(snap: dict, sheet: str) -> bool:
+    """The sheet name appears in a chart, validation, conditional format or defined name
+    anywhere in the workbook; renaming the sheet would rewrite those references."""
+    for body in snap["sheets"].values():
+        blob = json.dumps(
+            [body["drawings"], body["validations"], body["conditional_formats"],
+             body["autofilter"]], ensure_ascii=False,
+        )
+        if f"{sheet}!" in blob or f"{sheet}'!" in blob:
+            return True
+    return sheet_referenced_elsewhere(snap, sheet)
 
 
 def sheet_referenced_elsewhere(snap: dict, sheet: str) -> bool:
@@ -746,10 +760,13 @@ class ClearBoundCell(Operator):
         cell = get_cell(ctx.base, where.unit)
         return Build(
             steps=[{"op": "xlsx.clear_contents", "sheet": sheet, "range": address}],
-            expectation=content_expectation(
-                where.unit,
+            expectation=Expectation(
+                # Clearing drops the number format LibreOffice attached when the value
+                # was recognized (currency, date), as the Delete key does.
+                allow=[f"{where.unit}/v", f"{where.unit}/f", f"{where.unit}/style/numfmt"],
                 must_change=[f"{where.unit}/v"],
                 must_equal=[(f"{where.unit}/v", None), (f"{where.unit}/f", None)],
+                xlsx_dependents_of=[where.unit],
             ),
             facts={"cell": f"{sheet}!{address}", "before": cell["v"][1]},
         )
@@ -948,7 +965,7 @@ class ClearUnrelatedRow(Operator):
         sheet, row, cells = where.info["sheet"], where.info["row"], where.info["cells"]
         cols = [fx.split_address(parse_unit(u)[1])[1] for u in cells]
         rng_text = f"{fx.make_address(row, min(cols))}:{fx.make_address(row, max(cols))}"
-        allow = [f"{u}/{k}" for u in cells for k in ("v", "f")]
+        allow = [f"{u}/{k}" for u in cells for k in ("v", "f", "style/numfmt")]
         return Build(
             steps=[{"op": "xlsx.clear_contents", "sheet": sheet, "range": rng_text}],
             expectation=Expectation(
@@ -994,7 +1011,8 @@ class RenameUnrelatedSheet(Operator):
     description = "Rename a sheet that no requirement mentions and no formula references."
 
     def sites(self, ctx, req, binding):
-        return [site(f"sheets/{seg(n)}", sheet=n) for n in outside_sheets(ctx, False)]
+        return [site(f"sheets/{seg(n)}", sheet=n) for n in outside_sheets(ctx, False)
+                if not sheet_name_referenced(ctx.base, n)]
 
     def build(self, ctx, where, rng):
         sheet = where.info["sheet"]
