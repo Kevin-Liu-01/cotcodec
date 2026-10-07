@@ -306,3 +306,13 @@ def test_git_blob_verification_rejects_tampered_config(tmp_path) -> None:
         tampered.read("a.json")
     with pytest.raises(osworld_source.SourceFetchError):
         osworld_source.fetch_pinned_file("u", "0" * 64, fetch=lambda url: b"x")
+
+
+def test_five_run_comparison_reports_mean_and_binary_rates() -> None:
+    world = world_mod.build_world()
+    _, m, h = matrix(world)
+    result = audit.five_run_comparison(m, h)
+    assert set(result["rates_pct"]) == set(result["pass_rates_pct_binary"])
+    assert result["pass_rates_pct_binary"]["run1"] >= result["rates_pct"]["run1"] - 1e-9
+    pair = next(p for p in result["pairs"] if p["pair"] == ["run1", "run2"])
+    assert pair["n"] == result["n_common"]
