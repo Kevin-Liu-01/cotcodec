@@ -72,12 +72,32 @@ CRITERIA = {
     "A3": (("L0-fixed", "H-OSW-fixed", "H-GA"), (43,), (30,), "both", "stress",
            ("inputs", "executor")),
     "A4": (("L0-fixed",), (43,), (1,), "both", "volume", ("inputs", "executor")),
-    "ladder": (("L0-fixed",), (43,), (5,), "both", "all", ("inputs", "executor")),
+    "ladder": (("L0-fixed",), (43,), "rung", "both", "all", ("inputs", "executor")),
     "C1": (("H-OSW-up", "H-GA-buggy"), (42,), (5,), "screenshot", "all", ("inputs", "executor")),
     "C2": (("L0-raw",), (42,), (5,), "screenshot", "all", ("inputs",)),
     "C3": (("L0-fixed", "H-OSW-fixed", "H-GA"), (42,), (1,), "screenshot", "all",
            ("inputs", "executor")),
 }  # fmt: skip
+# The concurrency ladder (preregistration section 9). Rung N repeats the seed-43 order of the
+# 100 entries (its first five repetitions are A1's seed-43 shuffle) until each setting has at
+# least max(N, 10) sessions, so N VMs are busy at once and the rung has at least 20 cold boots.
+LADDER_RUNGS = (8, 16, 24, 32, 40)
+LADDER_MIN_BOOTS = 20
+CATALOG_ENTRIES = 100
+SESSION_TRIALS = 60
+# Every other scored campaign runs one VM at a time; A4 runs at N* (1 or a ladder rung).
+CONCURRENCY = {"A4": (1, *LADDER_RUNGS), "ladder": LADDER_RUNGS}
+
+
+def ladder_reps(concurrency: int) -> int:
+    """Repetitions of the seed-43 order at a ladder rung (at least A1's five)."""
+    want = max(concurrency, LADDER_MIN_BOOTS // len(SETTINGS))
+    reps = 5
+    while -(-reps * CATALOG_ENTRIES // SESSION_TRIALS) < want:
+        reps += 1
+    return reps
+
+
 # Development runs the Stage-1 executor and harnesses only. L0-raw (validity control
 # C2) and the detection controls (C1) are scored once on frozen code, never in
 # development, so they are not admitted here.
@@ -566,6 +586,8 @@ def _validate_acceptance_workload(
         _require_keys(workload, "workload", common | {"apps", "reps"})
         if seeds != [43] or workload["reps"] != 5 or workload["apps"] != list(CANARY_APPS):
             raise ManifestError("A6 runs every app, 5 repetitions, in the seed-43 order")
+        if manifest["vm"]["concurrency"] != 1:
+            raise ManifestError("A6 runs one VM at a time")
         needed: tuple[str, ...] = ("inputs", "executor")
     else:
         _require_keys(
@@ -578,6 +600,11 @@ def _validate_acceptance_workload(
         layers, allowed_seeds, reps, settings, cells, needed = CRITERIA[criterion]
         if workload["layer"] not in layers or seeds[0] not in allowed_seeds:
             raise ManifestError(f"{criterion}: layer or seed outside the preregistration")
+        concurrency = manifest["vm"]["concurrency"]
+        if concurrency not in CONCURRENCY.get(criterion, (1,)):
+            raise ManifestError(f"{criterion} cannot run at concurrency {concurrency}")
+        if reps == "rung":
+            reps = (ladder_reps(concurrency),)
         if workload["reps"] not in reps:
             raise ManifestError(f"{criterion}: repetitions outside the preregistration")
         want = list(SETTINGS) if settings == "both" else [settings]
@@ -663,7 +690,9 @@ def _validate_session_workload(
             _bool(workload["measure_targets"], "workload.measure_targets")
     if prereg["status"] == "absent":
         raise ManifestError(f"{kind} must name its preregistration draft")
-    if concurrency != 1:
+    if concurrency != 1 and kind != "suite-development":
+        # Suite development may run N VMs at once (seed 42 only) to exercise the
+        # concurrent path the ladder and A4 use; the rest run one VM at a time.
         raise ManifestError(f"{kind} runs one VM at a time")
     _match(workload["cells_sha256"], SHA_RE, "workload.cells_sha256")
     boot_timeout = _int(workload["boot_timeout_s"], "workload.boot_timeout_s", 60, 900)

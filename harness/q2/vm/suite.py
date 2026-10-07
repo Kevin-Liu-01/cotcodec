@@ -344,6 +344,7 @@ class Session:
         if shot is None:
             shot, attempts = desktop.get_screenshot(self.client)
             trial["observation_attempts"] = attempts
+            trial["observation_ok"] = shot is not None
         trial["steps"] = steps
         trial["post"] = self.post(seq, cell.get("side_effects") or [])
         t_post = time.monotonic()
@@ -408,12 +409,18 @@ def observation(
         infra.append("probe_absent")
     if "error" in pre or "error" in post:
         infra.append("guard_script")
+    retried: list[str] = []
     for step in trial.get("steps") or []:
         infra += step.get("infra") or []
-    if trial.get("observation_attempts") and (
-        trial["observation_attempts"][0].get("status") != 200
-    ):
-        infra.append("screenshot")
+        retried += step.get("retried") or []
+    attempts = trial.get("observation_attempts")
+    if attempts is not None:
+        # The no-action entry's screenshot (section 5, condition 3): a failure only when no
+        # attempt delivers an image (section 6.1); a retry that does is reported.
+        if not trial.get("observation_ok", attempts[-1].get("status") == 200):
+            infra.append("screenshot")
+        elif len(attempts) > 1:
+            retried.append("screenshot")
     end = post.get("end") or {}
     tap_events = None
     if window is None:
@@ -438,6 +445,7 @@ def observation(
         "probe_final": [end.get("seq"), end.get("crc")] if end.get("ok") else None,
         "guard_violations": {"pre": pre.get("violations"), "post": post.get("violations")},
         "infra": sorted(set(infra)),
+        "retried": sorted(retried),
         "errors": trial.get("errors") or [],
         "terminal": trial.get("terminal"),
     }
