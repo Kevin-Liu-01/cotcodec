@@ -350,8 +350,11 @@ def a6(campaigns: list[dict[str, Any]]) -> dict[str, Any]:
     """Every canary app and entry, 5 repetitions, screenshot setting: 100%."""
     problems: list[str] = []
     cells = _cells()
+    from harness.q2.vm.manifest import CANARY_APPS
+
+    # The driver's order: the apps as A6's manifest lists them, then each app's entries.
     apps = cells["canary"]["apps"]
-    pairs = [f"{app}:{entry}" for app, spec in apps.items() for entry in spec["entries"]]
+    pairs = [f"{app}:{entry}" for app in CANARY_APPS for entry in apps[app]["entries"]]
     for c in campaigns:
         problems += campaign_problems(c)
     plan = order.plan(pairs, 43, 5, ["screenshot"], acceptance=True)

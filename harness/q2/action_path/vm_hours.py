@@ -234,8 +234,11 @@ def plan(measured: dict[str, Any]) -> dict[str, Any]:
 
         run(f"ladder N={rung}", "L0-fixed", _layer_ids(cells, "L0-fixed"), 43,
             ladder_reps(rung), both)  # fmt: skip
+    from harness.q2.vm.manifest import CANARY_APPS
+
+    # The driver's order: the apps as A6's manifest lists them, then each app's entries.
     apps = cells["canary"]["apps"]
-    pairs = [f"{app}:{entry}" for app, spec in apps.items() for entry in spec["entries"]]
+    pairs = [f"{app}:{entry}" for app in CANARY_APPS for entry in apps[app]["entries"]]
     canary_sessions = order.plan(pairs, 43, 5, ["screenshot"], acceptance=True)
     canary_s = sum(_mean(times.canary[cell]) for s in canary_sessions for _, cell in s["trials"])
     canary_vm = canary_s + len(canary_sessions) * times.session_overhead_s + times.job_overhead_s

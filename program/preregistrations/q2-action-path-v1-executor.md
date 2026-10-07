@@ -32,8 +32,8 @@ Frozen with this file (SHA-256 of the committed bytes):
 | `harness/q2/action_path/harness_design_diffs.md` | `245dcfcf7b9393bd1c7f03a57360d9443c6478fb8c513bf64835196c4e59b61f` |
 | `harness/q2/action_path/canary_targets.json` | `a49782274cf7c3dec0b6ceca64564207824220b2dc1572387f98339b0d4805f6` |
 | `harness/q2/vm/guest/canary_targets.py` | `8b7233391b1da78092326c11d394f0385ee42052835a83554c76260e4201aab3` |
-| `harness/q2/action_path/vm_hours.py` | `7187d49f6c05ecdf783001f9ad750ba82b86d0a40f6338b1826b54b8bfb720b0` |
-| `harness/q2/action_path/acceptance.py` | `94908d8965c7849a821e9179abca620f6605ff244d95429a873fac288e596e6b` |
+| `harness/q2/action_path/vm_hours.py` | `757981ef219f62f7f423d1ff9d02f75fd042c5c0063669f724337d2a96c270ab` |
+| `harness/q2/action_path/acceptance.py` | `9dac21a9c166a866c25e803fd8025a328da43e67320632cdc7d8c553d8a1a632` |
 | `harness/q2/vm/guest/probe.py` | `ba5c0f1d364c80d5f8190f3c357b915cd504d754891285c3772ba959a804efeb` |
 | `harness/q2/vm/guest/guard.py` | `595fce1fa164c8fce868690b1853706ac6fa4761f0d15f41ac5cc0c3804224c5` |
 | `harness/q2/vm/guest/canary.py` | `fbe21671a085b1eb58a8de08e4de1b46ce7c19d340576364814253e4a5305099` |
@@ -75,21 +75,34 @@ within 50 ms, since it repaints nothing while it rebuilds its keymap. Every
 action but `wait` then ends in four steps: the same D-Bus round trip (the
 shell has processed the action's events); an XDamage `DamageAdd` of each
 viewable top-level window's full area, so the compositor repaints every window
-from its current contents; a wait until the root window's image (read every
-50 ms, as `/screenshot` reads it) has been unchanged for 0.25 s; at least
-0.1 s (PyAutoGUI's default `PAUSE`, which ends every upstream PyAutoGUI call)
-and at most 2 s after the action's device events. Development runs 486-499
-showed screenshots one compositor frame behind without the quiet wait, runs
-486-493 the screen frozen during keymap rebuilds without the shell wait, and
-runs 504-524 the last drawing of about 4% of typing trials never painted
-without the repaint request (the reason for each is in the executor's
-source).
+from its current contents (the XFixes region requests and `DamageAdd` are
+encoded from the protocol specifications, and a nudge that cannot be sent
+fails the action); a wait until the root window's image (read every 50 ms, as
+`/screenshot` reads it) has been unchanged for 0.25 s; at least 0.1 s
+(PyAutoGUI's default `PAUSE`, which ends every upstream PyAutoGUI call) and at
+most 2 s after the action's device events. Development runs 486-499 showed
+screenshots one compositor frame behind without the quiet wait, runs 486-493
+the screen frozen during keymap rebuilds without the shell wait, and runs
+504-541 the last drawing of about 4% of typing trials never painted without
+the repaint request (runs 537-541 ran with a nudge that raised and was
+skipped, a control: their typing trials failed the same way); from run 545 on,
+with the repaint request working, no typing trial did (the reason for each
+step is in the executor's source).
+
+Before a session's first trial the runner runs the guard's keyboard warm-up
+(inputs addendum; main preregistration design decision 31). It is not part of
+L0-fixed, but Stage 1 must run it once per boot after `DesktopEnv.reset`, with
+the same `guard.py warmup` the suite uses, before the agent's first action.
 
 ## 3. Stage-1 harnesses (`adapters.py`, `upstream/`)
 
-- **H-OSW-fixed**: OSWorld `bfd62bdc`'s `parse_response`, emitting IR, with
-  four own-spec fixes marked in the source (terminate failure, explicit key
-  names, exact text including edge whitespace) and nothing else changed.
+- **H-OSW-fixed**: OSWorld `bfd62bdc`'s `parse_response` with its emit
+  boundary changed to IR and the own-spec fixes of the main preregistration's
+  design decisions 4 and 23, each marked in the source: terminate(failure) is
+  a failure, key names go through an explicit map (unknown names raise),
+  non-ASCII text reaches the IR `type` action (part of the emit-boundary
+  change), `type` keeps its edge whitespace, and `wait` waits its `time`.
+  Nothing else is changed.
 - **H-GA**: gym-anything `aae6f7607`'s `_parse_response`, vendored byte for
   byte, with the adapter `controls.translate_ga_dicts` (frozen in the inputs
   addendum).
@@ -121,13 +134,42 @@ Offline, every parser mutant changes the IR of at least one of its predicted
 kill cells, and the two pairs predicted equivalent (M12 and M13 on
 H-OSW-fixed) change none (`tests/test_q2_mutants.py`).
 
+Development (informative only, jobs 553-602 at `b603347`, one session per
+mutant on its predicted kill cells, screenshot setting): all 42 mutants not
+predicted equivalent failed at least one predicted kill cell; M12 and M13 on
+H-OSW-fixed passed their declared cells (R08, R10) and the control cell run
+with them. Three predicted killers did not kill: `scroll_ctrl_down_3` for M01
+on H-OSW-fixed (its scroll takes no modifier from `text`), `mixed_gesture_state`
+for M21 (it holds its key with `key_down`, which M21 does not touch) and
+`seq_long_mixed` for M26 (its newline is a key action, not typed text). The
+predictions stay as frozen; C3's report lists predicted next to observed
+killers.
+
 ## 6. Canary targets (`canary_targets.json`)
 
 The two pointer composites' screen targets per app, measured in development
 (`guest/canary_targets.py`: character extents from the accessibility tree
 for Writer and Chrome; for VS Code, from a screenshot of the opened fixture).
 
-## 7. Development record (seed 42, never evidence)
+## 7. Acceptance analysis (`acceptance.py`)
+
+The decision rules of the main preregistration's sections 5-9 as code (design
+decision 32): which campaigns count (Slurm COMPLETED 0:0, infrastructure gates,
+`System.qcow2` unchanged, nothing leaked), that each criterion ran exactly its
+realized order, A1-A6, C1-C4 with C3's kill and equivalence rules, and the
+ladder's N* with the foreign-load abort. Its verdicts are the ones reported;
+`tests/test_q2_acceptance_analysis.py` drives every rule on synthetic
+campaigns.
+
+## 8. VM time (`vm_hours.py`, `trial_times.json`, `vm_hours.json`)
+
+`trial_times.json` holds the measured per-entry trial times (both settings),
+session overheads and canary times of the final development runs at the
+candidate executor, with each receipt's SHA-256; `vm_hours.json` is
+`vm_hours.py plan` over it (a test checks the file reproduces), and the main
+preregistration's section 9 cites its totals.
+
+## 9. Development record (seed 42, never evidence)
 
 Listed in `program/evidence/2026-10-07/q2-action-path-stage0b/README.md`
-with every job's outcome.
+with every job's outcome, and per job in `development-runs.json` there.

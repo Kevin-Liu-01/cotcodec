@@ -264,3 +264,59 @@ def test_a5_needs_clean_receipts_and_twenty_pristine_resets(field):
     short = copy.deepcopy(reset)
     short["receipt"]["summary"].update(sentinel_reset_checks=19, sentinel_pristine=19)
     assert not acc.a5(short, [other], "a" * 40)["pass"]
+
+
+def _driver_campaign(criterion, layer, seed, reps, settings, cells="all", mutant=None):
+    """A campaign whose trials are exactly what the driver would run for this manifest."""
+    from harness.q2.vm import driver
+
+    manifest = {
+        "randomness": {"seeds": [seed]},
+        "workload": {
+            "kind": "suite-acceptance",
+            "criterion": criterion,
+            "layer": layer,
+            "reps": reps,
+            "settings": settings,
+            "cells": cells,
+            "session_trials": 60,
+            "session_range": None,
+            "mutant": mutant,
+        },
+    }
+    volume_plan = json.loads((ROOT / "harness/q2/action_path/volume_plan.json").read_text())
+    return campaign(driver.acceptance_plan(manifest, CELLS, volume_plan), job=f"{criterion}{seed}")
+
+
+def test_the_analysis_expects_the_order_the_driver_runs():
+    from harness.q2.vm import driver
+    from harness.q2.vm.manifest import CANARY_APPS
+
+    both = list(order.SETTINGS)
+    a1 = {s: [_driver_campaign("A1", "L0-fixed", s, 5, both)] for s in (43, 44)}
+    assert acc.a1(a1)["pass"]
+    a2 = {h: [_driver_campaign("A2", h, 43, 5, both)] for h in ("H-OSW-fixed", "H-GA")}
+    assert acc.a2(a2)["pass"]
+    a3 = {
+        layer: [_driver_campaign("A3", layer, 43, 30, both, cells="stress")]
+        for layer in acc.C3_LAYERS
+    }
+    assert acc.a3(a3)["pass"]
+    c1 = {
+        layer: [_driver_campaign("C1", layer, 42, 5, ["screenshot"])] for layer in acc.C1_MUST_FAIL
+    }
+    for layer, cells in acc.C1_MUST_FAIL.items():
+        for session in c1[layer][0]["sessions"]:
+            for trial in session["trials"]:
+                trial["pass"] = trial["cell"] not in cells
+    assert acc.c1(c1)["pass"]
+    canary = {
+        "randomness": {"seeds": [43]},
+        "workload": {
+            "kind": "canary-acceptance",
+            "apps": list(CANARY_APPS),
+            "reps": 5,
+            "session_trials": 60,
+        },
+    }
+    assert acc.a6([campaign(driver.session_plan(canary, CELLS))])["pass"]

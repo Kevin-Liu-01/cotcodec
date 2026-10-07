@@ -101,7 +101,14 @@ file equals it), so freezing the catalog fixes them.
   lock state, nothing. A violation charges the entry; the guard then releases
   every pressed key and button through XTest, toggles the LEDs back, presses
   Escape and re-activates the probe, and the runner relaunches the probe (with
-  the same reserved keycode) if it is gone.
+  the same reserved keycode) if it is gone. Its `warmup` mode runs once per
+  session (suite and canary), before the first trial and outside every entry
+  window: one XTest press and release of a keycode with no keysym, then D-Bus
+  round trips until GNOME Shell answers twice within 50 ms. The session's
+  first XTest key event moves the X server's master keyboard to the XTest
+  device, which re-sends the keymap and recomputes the modifier state; without
+  the warm-up that happens inside the first entry that presses a key (main
+  preregistration, design decision 31).
 - **Canary driver** (`guest/canary.py`, `canary_run.py`). Per trial: write the
   fixture and a fresh profile (Writer: a new LibreOffice user installation
   whose `registrymodifications.xcu` turns AutoCorrect while typing, word
@@ -129,7 +136,11 @@ file equals it), so freezing the catalog fixes them.
 - **Judging** (`verdict.py`, `suite.py`, `desktop.py`). `desktop.py`
   reproduces OSWorld `b138d348`'s `DesktopEnv.step` and controller calls
   (retries, timeouts, the PyAutoGUI prefix) and records the infrastructure
-  failure types of section 6.1. `suite.py` runs a session (tap, probe, pre and
+  failure types of section 6.1: an `/execute` whose first attempt is not HTTP
+  200 within 30 s, a screenshot or (in the accessibility setting) a tree that
+  `DesktopEnv`'s three attempts do not deliver; a retry that delivers is
+  reported (`observation_retries`), not a failure. `suite.py` runs a session
+  (tap, probe, the guard's warm-up, `DesktopEnv.reset`'s observation, pre and
   post guards, actions, marker) and assembles each trial's observation;
   `verdict.py` applies sections 4.3 and 5. The lane (`runner.py`,
   `driver.py`, `manifest.py`, the batch script and the submitter) runs every
@@ -183,8 +194,15 @@ later change to a file listed in section 1 (from `git log 29b056e..`):
 | `7c1bb02` | `canary_run.py`, `runner.py` | Development-only measurement of the canary's pointer targets (accessibility extents and screenshots, `guest/canary_targets.py`); acceptance runs never take this path. |
 | `1ce92a6` | `guest/canary.py`, `canary_run.py` | Read-backs retry for 5 s; VS Code's read-back waits until the saved file changed and is stable; screenshots after the pointer composites (development only). Run 501: VS Code's file was read before its save landed, and Chrome's accessibility node was missing right after typing. |
 | `44a30dd` | `guest/canary.py` | Chrome is read back from the window title the page mirrors its value into (with `canary.yaml`'s page and read-back changed in the main preregistration); VS Code is ready when its status bar shows the text editor's items (and `canary.yaml` turns its first-run walkthrough off). Runs 501 and 506: Chrome's accessibility text stayed at the fixture after edits the screen showed (`keep Y keep` on screen, `keep word keep` read back), and the walkthrough took the keyboard from the file. |
+| `fe92765` | `guest/canary.py`, `canary_run.py`, `guest/probe.py`, `manifest.py` | Chrome's mirrored title is percent-decoded (run 515: `document.title` collapses runs of spaces, so the JSON form lost them) and every window title is listed when the mirror is missing; a Chrome screenshot after each trial in measurement mode (development only); the probe records when it last handled input and last drew (diagnostic); a development manifest may name a mutant (informative mutant runs; C3 is still scored only after the executor freeze). |
+| `b603347` | `desktop.py`, `suite.py`, `verdict.py`, `driver.py`, `runner.py`, `manifest.py` | The observation-failure rule now says what main section 6.1 says (a screenshot or tree that `DesktopEnv`'s retries do not deliver; a delivered retry is reported); the code had counted every retried `/screenshot` or `/accessibility` call. Run 537: the boot's first `/accessibility` call answered HTTP 500 and its retry 200, 1 of 2,415 accessibility calls in runs 484-541. Each suite session takes `DesktopEnv.reset`'s observation before its first trial, as Stage 1 does. `manifest.py`: ladder rungs repeat the seed-43 order until every VM is busy and the rung has 20 cold boots (main design decision 29), only the ladder and A4 run concurrent VMs, and suite development may run concurrent VMs at seed 42. |
+| `dba0580` | `suite.py` | A trial's compact tap window keeps each mapping notify's kind and keycode range (diagnostic, never judged). Run 549 could not otherwise tell which notifies surrounded its `chord_super_d` failures. |
+| `a6623ae` | `guest/guard.py`, `suite.py`, `runner.py` | The session warm-up described in section 2. Runs 549 (8 VMs) and 574 (one VM, the same 14 sessions): `chord_super_d` failed in the two sessions whose first key event was its Super_L press, the `d` press arriving with state 0, and in every session of runs 546 and 549 the keymap was re-sent right after the session's first key. |
 
-None of these changes touches how an event, a text buffer or a marker is
-judged; the probe change makes the no-action entry's screenshot start from a
-settled screen, and the canary changes make the read-back report what the app
-holds.
+The probe change makes the no-action entry's screenshot start from a settled
+screen, the canary changes make the read-back report what the app holds, and
+the warm-up and the reset observation move once-per-boot effects out of the
+first entry. One change touches how a trial is judged: the observation-failure
+rule of `b603347`, which aligns the code with main section 6.1 (a recovered
+retry had been counted as a failure, which 6.1 did not say); the retries stay
+in every report.
