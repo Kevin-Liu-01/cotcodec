@@ -460,6 +460,38 @@ def test_s2_entries_build_from_vendored_sources(tmp_path: Path) -> None:
         assert (directory / "LICENSE.upstream").exists()
         check = admission.static_check(directory)
         assert check["verdict"] == "pass", (row["substrate_id"], check["reasons"])
+        # Second review, finding 10: Liger code that incorporates Unsloth code
+        # (Apache-2.0) ships with the Apache-2.0 text; kernel.py is untouched.
+        item = s2_catalog.entry(row["substrate_id"])
+        apache = directory / "LICENSE.Apache-2.0.unsloth"
+        build = json.loads((directory / "build.json").read_text(encoding="utf-8"))
+        assert apache.exists() == s2_catalog.includes_unsloth_code(item)
+        assert build["additional_licences"] == (
+            ["LICENSE.Apache-2.0.unsloth"] if apache.exists() else []
+        )
+        assert "Apache-2.0.unsloth" not in text
+        if apache.exists():
+            licence = apache.read_text(encoding="utf-8")
+            assert licence.lstrip().startswith("Apache License")
+            assert "Version 2.0, January 2004" in licence
+            assert licence.rstrip().endswith("END OF TERMS AND CONDITIONS")
+    unsloth = {
+        r["substrate_id"]
+        for r in rows
+        if (tmp_path / "out" / r["substrate_id"] / "LICENSE.Apache-2.0.unsloth").exists()
+    }
+    assert unsloth == {
+        "s2-liger-rms-norm-L1-36_RMSNorm_",
+        "s2-liger-layer-norm-L1-40_LayerNorm",
+        "s2-liger-kl-div-L1-98_KLDivLoss",
+    }
+
+
+def test_unsloth_apache_text_is_the_flaggems_licence_body() -> None:
+    root = sources.VENDORED_SOURCES_ROOT
+    flaggems = (root / "FlagGems" / "LICENSE").read_text(encoding="utf-8")
+    apache = s2_catalog.read_unsloth_licence(root)
+    assert flaggems.split("\n", 2)[2].rstrip() == apache.rstrip()
 
 
 def test_problem_file_accepts_both_layouts(tmp_path: Path) -> None:

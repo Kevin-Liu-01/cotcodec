@@ -12,8 +12,9 @@ The journal is one JSONL file of schema verdict rows. Writing rules:
   line. Readers skip and count invalid lines; they never hide them.
 
 Resume: items with a final row are skipped; any other item reruns with
-``attempt`` one higher than the highest attempt already journaled. Analyses
-use, for each item, the rows of its final attempt only.
+``attempt`` one higher than the highest attempt already journaled (alone on its
+device when that attempt's rows carry ``retry_alone``, a contention failure in a
+shared class). Analyses use, for each item, the rows of its final attempt only.
 """
 
 from __future__ import annotations
@@ -75,7 +76,8 @@ class Journal:
         return rows, invalid
 
     def status(self) -> dict[str, dict[str, Any]]:
-        """Per item: highest attempt seen and whether that attempt finished."""
+        """Per item: highest attempt seen, whether that attempt finished, and whether
+        it asked for the next attempt to run alone (``retry_alone``)."""
         rows, _ = self.read()
         items: dict[str, dict[str, Any]] = {}
         for row in rows:
@@ -83,11 +85,14 @@ class Journal:
             if key is None:
                 continue
             attempt = int(row.get("attempt", 1))
-            entry = items.setdefault(key, {"attempt": 0, "final": False})
+            entry = items.setdefault(key, {"attempt": 0, "final": False, "retry_alone": False})
             if attempt > entry["attempt"]:
-                entry["attempt"], entry["final"] = attempt, False
-            if attempt == entry["attempt"] and row["details"].get("item_final"):
-                entry["final"] = True
+                entry["attempt"], entry["final"], entry["retry_alone"] = attempt, False, False
+            if attempt == entry["attempt"]:
+                if row["details"].get("item_final"):
+                    entry["final"] = True
+                if row["details"].get("retry_alone"):
+                    entry["retry_alone"] = True
         return items
 
     def final_rows(self) -> list[dict[str, Any]]:

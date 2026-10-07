@@ -221,15 +221,69 @@ def test_sanitizer_probe_skips_configurations_the_candidate_refuses() -> None:
     for name in ("relu_correct", "relu_refuses_shapes"):
         subject = _subject(name)
         try:
-            outputs, config_id, refused = gpu_probes.run_first_accepted(
+            outputs, config_id, refused, raised = gpu_probes.run_first_accepted(
                 subject, problem_id, source, configs, 42
             )
         finally:
             subject.cleanup()
-        assert outputs
+        assert outputs and raised is None
         chosen[name] = (config_id, [r["config_id"] for r in refused])
     assert chosen["relu_correct"] == (configs[0]["config_id"], [])
     assert chosen["relu_refuses_shapes"] == ("native", [c["config_id"] for c in configs])
+
+
+def test_sanitizer_probe_reports_a_post_launch_crash_at_a_held_out_shape() -> None:
+    """Second review, finding 11: a crash after a launch at the probe's held-out shape
+    is A3's to judge; the sanitizer row reports memcheck alone (the child records the
+    exception and exits 0) instead of becoming ``error`` and removing the kernel from
+    tiers N and c-disjoint. At native shape the exception still propagates."""
+    from harness.q1 import problems as problem_lib
+    from harness.q1 import shapes
+    from harness.q1.audit import gpu_probes
+
+    problem_id = "L1/9001_SyntheticReLU"
+    source = fx.PROBLEMS[problem_id]
+    analysis = problem_lib.analyze_problem(problem_id, source)
+
+    def input_bytes(overrides: dict[str, int]) -> int:
+        variant = problem_lib.override_constants(source, analysis, overrides)
+        return int(problem_lib.meta_input_summary(variant)["input_bytes"])
+
+    entry = shapes.build_problem_manifest(
+        analysis, problem_sha256="0" * 64, input_bytes=input_bytes
+    )
+    configs = gpu_probes.sanitizer_configs(entry)
+    crashes_off_native = fx._relu_model(
+        "        x = x.contiguous()\n        y = torch.empty_like(x)\n"
+        "        launch_relu(x, y, x.numel())\n"
+        "        if tuple(x.shape) != (4, 1000):\n"
+        "            raise RuntimeError('crash after the launch')\n"
+        "        return y\n"
+    )
+    subject = audit.prepare(problem_id, source, crashes_off_native, device="cpu")
+    try:
+        outputs, config_id, refused, raised = gpu_probes.run_first_accepted(
+            subject, problem_id, source, configs, 42
+        )
+        assert outputs == [] and refused == [] and config_id == configs[0]["config_id"]
+        assert raised["exception"] == "RuntimeError" and raised["launches_before_exception"] >= 1
+        outputs, config_id, _, raised = gpu_probes.run_first_accepted(
+            subject, problem_id, source, [], 42
+        )
+        assert outputs and config_id == "native" and raised is None
+    finally:
+        subject.cleanup()
+    always = fx._relu_model(
+        "        x = x.contiguous()\n        y = torch.empty_like(x)\n"
+        "        launch_relu(x, y, x.numel())\n"
+        "        raise RuntimeError('crash after the launch')\n"
+    )
+    subject = audit.prepare(problem_id, source, always, device="cpu")
+    try:
+        with pytest.raises(RuntimeError):  # at native shape the exception propagates
+            gpu_probes.run_first_accepted(subject, problem_id, source, [], 42)
+    finally:
+        subject.cleanup()
 
 
 @pytest.mark.parametrize(

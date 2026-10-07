@@ -33,8 +33,8 @@ def test_status_and_final_rows(tmp_path: Path) -> None:
     journal.append([_row(k2, "reject", final=False)])  # attempt 1 never finished
     journal.append([_row(k2, "accept", attempt=2)])
     status = journal.status()
-    assert status[k1] == {"attempt": 1, "final": True}
-    assert status[k2] == {"attempt": 2, "final": True}
+    assert status[k1] == {"attempt": 1, "final": True, "retry_alone": False}
+    assert status[k2] == {"attempt": 2, "final": True, "retry_alone": False}
     finals = journal.final_rows()
     assert [r["verdict"] for r in finals if r["details"]["item_key"] == k2] == ["accept"]
     assert len([r for r in finals if r["details"]["item_key"] == k1]) == 2

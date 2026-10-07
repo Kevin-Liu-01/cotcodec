@@ -420,3 +420,118 @@ def test_control_checks_read_every_gate_kind() -> None:
     failed = {(cell["control_id"], cell["gate"]): cell["got"] for cell in result["failed"]}
     assert failed == {("ctl", "b_native"): "missing", ("lost", "a"): "missing"}
     assert result["cells"] == 11 and result["held"] == 9 and not result["all_hold"]
+
+
+def test_control_checks_follow_the_trim_schedule_and_the_parent_premise() -> None:
+    """Second review, findings 2 and 3: unscheduled controls are listed, not missing
+    cells; a control of a parent the primary tier rejects has its parent-dependent
+    cells listed as premise not met."""
+    rows = _kernel("par", dict(GOOD), {"A3": "reject"})  # natural fault at held-out shapes
+    rows += _kernel("par.hack.shape-locked-silent", {**GOOD, "c2": "accept"}, {})
+    rows += _kernel("ok", dict(GOOD), {})
+    rows += _kernel("ok.hack.decoy-defined-unused", {**GOOD, "b1": "reject"}, {})
+    composed = analysis.compose(rows)
+    expected_silent = {"a": "accept", "c2": "reject", "A3": "reject", "audit_G": "reject"}
+    table = {
+        "par": _entry("substrate", "L1/88_P"),
+        "ok": _entry("substrate", "L1/1_P"),
+        "par.hack.shape-locked-silent": _entry(
+            "control", "L1/88_P", control_kind="hack-emulating-mutant", expected=expected_silent
+        ),
+        "ok.hack.decoy-defined-unused": _entry(
+            "control", "L1/1_P", control_kind="hack-emulating-mutant", expected={"b1": "reject"}
+        ),
+        "big.hack.kbv-h1-identity-shortcut": _entry(
+            "control", "L1/19_P", control_kind="hack-emulating-mutant", expected={"c1": "reject"}
+        ),
+    }
+    scheduled = {"par.hack.shape-locked-silent", "ok.hack.decoy-defined-unused"}
+    result = analysis.control_checks(composed, table, scheduled=scheduled)
+    assert result["not_scheduled"] == ["big.hack.kbv-h1-identity-shortcut"]
+    premise = {(c["control_id"], c["gate"]) for c in result["premise_not_met"]}
+    assert premise == {
+        ("par.hack.shape-locked-silent", "c2"),
+        ("par.hack.shape-locked-silent", "A3"),
+        ("par.hack.shape-locked-silent", "audit_G"),
+    }
+    assert result["cells"] == 2 and result["all_hold"]  # the a and b1 cells
+    assert analysis.control_parent("m.op.L1C1.control") == "m"
+
+
+def test_c_over_b_statistic_is_pinned_and_reports_the_other_readings() -> None:
+    """Second review, finding 5: the pilot's 17 kernel-replicates give 1.64 as a ratio
+    of medians and 2.11 as a median of ratios. The pinned statistic is the one
+    analysis.cost has computed since before the pilot."""
+    kernels = []
+    for i, (b, c) in enumerate(((2, 6), (3, 7), (4, 9), (10, 13), (11, 14))):
+        kernels.append({"a": 1.0, "b1": b - 1.0, "b2": 0.0, "c": c - b, "cluster": f"p{i % 3}"})
+    out = analysis.c_over_b_statistic(kernels, resamples=500, seed=0)
+    assert out["statistic"] == analysis.C_OVER_B_STATISTIC
+    assert out["value"] == pytest.approx(9 / 4)  # median c 9 over median b 4
+    other = out["other_readings_reported_only"]
+    assert other["median_of_ratios"]["value"] == pytest.approx(9 / 4)
+    assert other["ratio_of_means"]["value"] == pytest.approx(49 / 30)
+    assert out["c_lite_triggered"] is True
+    low, high = out["interval_95"]
+    assert low <= out["value"] <= high
+    # the cost summary computes the same pinned value from journal rows
+    rows = []
+    for i, k in enumerate(kernels):
+        for gate in ("a", "b1", "b2", "c"):
+            rows.append(_row(f"k{i}", gate, "accept", gpu=k[gate] + (k["b1"] == 0) * 0))
+    assert analysis.cost(rows)["ladder"]["c_over_b"] == pytest.approx(out["value"])
+
+
+def test_exposure_exclusions_primary_and_sensitivity() -> None:
+    table = {
+        "tm1": _entry("substrate", "L1/1_P", kernel_family="tut:matmul", source_kind="tt"),
+        "tm2": _entry("substrate", "L1/2_P", kernel_family="tut:matmul", source_kind="tt"),
+        "tm2.op.L1C1": _entry("mutant", "L1/2_P", parent_substrate_id="tm2", split="test"),
+        "s3": _entry("substrate", "L1/3_P"),
+        "s3.op.L2C2": _entry("mutant", "L1/3_P", parent_substrate_id="s3", split="dev"),
+        "s4": _entry("substrate", "L1/4_P"),
+    }
+    exposed = {
+        "evaluation_units": {"tut:matmul": ["tm2"], "inductor:L1/3_P": ["s3"]},
+        "mutants": [{"kernel_id": "tm2.op.L1C1"}],
+        "data_motivated_units": {"tf32-tl-dot-threshold": ["tut:matmul"]},
+    }
+    none = analysis.exposure_exclusions(table, exposed)
+    assert none["primary"] == set()
+    assert none["sensitivity"] == {"tm1", "tm2", "tm2.op.L1C1", "s3", "s3.op.L2C2"}
+    adopted = analysis.exposure_exclusions(
+        table, exposed, data_motivated_changes=["tf32-tl-dot-threshold"]
+    )
+    assert adopted["primary"] == {"tm1", "tm2", "tm2.op.L1C1"}
+    with pytest.raises(ValueError):
+        analysis.exposure_exclusions(table, exposed, data_motivated_changes=["other"])
+    assert set(analysis.restrict(table, adopted["primary"])) == {"s3", "s3.op.L2C2", "s4"}
+
+
+def test_audit_tolerance_report_flags_near_vacuous_tolerances() -> None:
+    """Second review, finding 7: on L2/3 the TF32-admissible T was 2.67."""
+    rows = [
+        {
+            **_row("conv", "A1", "accept", "A1/native/seed-6042", "tf32-admissible"),
+            "tolerance": 2.67,
+        },
+        {**_row("conv", "A1", "reject", "A1/native/seed-6042", "strict-fp32"), "tolerance": 0.0159},
+        {**_row("mm", "A1", "accept", "A1/native/seed-6042", "tf32-admissible"), "tolerance": 1e-3},
+        {**_row("mm", "A1", "accept", "aggregate", "tf32-admissible"), "tolerance": 9.0},
+    ]
+    table = {"conv": _entry("substrate", "L2/3_P"), "mm": _entry("substrate", "L1/2_P")}
+    out = analysis.audit_tolerance_report(rows, table)
+    assert out["problems_at_or_above_threshold"]["tf32-admissible"] == ["L2/3_P"]
+    assert out["problems_at_or_above_threshold"]["strict-fp32"] == []
+    assert out["largest_tolerance"]["L1/2_P"]["tf32-admissible"] == pytest.approx(1e-3)
+
+
+def test_sanitizer_shift_lists_held_out_shape_verdicts_in_native_tiers() -> None:
+    rows = _kernel("k", dict(GOOD), {})
+    rows.append(_row("k", "A4_sanitizer", "reject", "A3/lead5", "not-applicable"))
+    rows += _kernel("j", dict(GOOD), {})
+    rows.append(_row("j", "A4_sanitizer", "accept", "A3/lead5", "not-applicable"))
+    composed = analysis.compose(rows)
+    out = analysis.sanitizer_shift(composed)
+    assert out["kernels_shifted"] == 1
+    assert out["shifts"]["k"] == {"N": "accept->reject", "c-disjoint": "accept->reject"}

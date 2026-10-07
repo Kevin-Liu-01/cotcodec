@@ -213,3 +213,39 @@ recorded from the harness, and every prompt, packet digest and response
 hashed into the rater receipt. Sampling cannot be fixed on this path, which
 is disclosed; the open-weight rater stays seeded and deterministic. Reversal:
 a valid API key, after which the API path registered in the runner is used.
+
+**D26. Q1 pilot exposure and D14's precondition.** The Q1 Stage 0 pilot pass
+(jobs 474, 518 and 548, branch `stage0/q1-gates`) scored, with the full gate
+and audit stack at replicate 42, five evaluation substrates (S1 L1/3, L2/3 and
+L2/74, the Liger cross-entropy and the Triton tutorial matmul) and part of a
+sixth (FlagGems cumsum), eight mutants of evaluation parents (three in the
+test split) and ten controls, before the preregistration and audit v1 were
+frozen. D14's "fixed before any mutant is scored" can no longer be met as
+written. Decided: (i) the exposed kernels are listed and hash-bound
+(`harness/q1/data/pilot_exposed.json`); (ii) exposed mutants never enter a
+sampling frame; (iii) exposed units stay in the primary analysis, because the
+outcome-blind pilot rule `q1-pilot/1` chose them and Stage 0 rescores them with
+the frozen code, and every primary quantity is also reported without them as a
+pre-specified sensitivity analysis; (iv) an audit change motivated by a pilot
+verdict (the TF32 `tl.dot` threshold, A5's refusal handling, a cap on the
+TF32 convolution tolerance) is labelled data-motivated, is designed and
+validated only on S1-cal and other non-evaluation kernels, and removes from
+the primary analysis of criteria 2 and 3 and of the mutant metrics every unit
+whose correctness it would change (the tutorial matmul family for the TF32
+threshold). D14's TF32 policy itself stands; changing it is Kevin's call.
+Reversal: Kevin prefers to exclude the exposed units from the primary
+analysis outright (criterion 3 then cannot reach 72 units within 8 GPU-h).
+
+**D27. Upstream benchmark test code on GPUs.** D3 and D7 did not name two
+kinds of code that ran with GPU access in Q1 pilot job 518: KernelBench's three
+adversarial test kernels (`load_inline` CUDA, upstream commit 29c73cc of
+2025-12-27, vendored verbatim and reviewed here) and the unmodified upstream
+fidelity code (KernelBench at both pinned revisions, KernelGYM@3a84417f and
+kernel_bench_verified@3fdf6fec, unpacked read-only from hash-checked trees).
+Both are admitted as trusted inputs under D7: neither is code under study
+produced during an experiment, each is pinned by hash, small, and run only as
+a control or to check the gates against upstream. They are not part of D3's
+validation corpus, which stays TorchInductor output and human-written kernels
+from before 2025. Reversal: Kevin rules that post-2025 upstream code waits
+for the R580 driver; the three controls and the fidelity runs then move after
+the upgrade.

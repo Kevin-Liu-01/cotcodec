@@ -4,7 +4,12 @@ Sources (licences read from each repository's LICENSE at the pinned revision):
 
 - FlagGems tag v1.0-manual @18b8e428 (Apache-2.0, copyright 2024 BAAI);
 - Liger-Kernel tag v0.3.1 @1520999e (BSD-2-Clause, copyright 2024 LinkedIn; several
-  files state that they incorporate Unsloth code under Apache-2.0);
+  files state that they incorporate Unsloth code under Apache-2.0: ``utils.py`` and
+  ``rms_norm.py``. A Liger substrate that contains that code (``rms_norm.py``, or
+  ``utils.py`` helpers inlined by ``liger-inline-utils``) also carries the
+  Apache-2.0 text as ``LICENSE.Apache-2.0.unsloth`` beside ``kernel.py``, as
+  Apache-2.0 section 4(a) requires (``q1-s2-build/2``; ``kernel.py`` itself is
+  unchanged);
 - Triton python/tutorials @105cb564 (MIT, copyright 2018-2020 Philippe Tillet,
   2020-2022 OpenAI).
 
@@ -58,7 +63,19 @@ from harness.q1.substrates.inductor_convert import (
 )
 from harness.q1.substrates.sources import SOURCES, VENDORED_SOURCES_ROOT, problem_file
 
-S2_BUILD_VERSION = "q1-s2-build/1"
+S2_BUILD_VERSION = "q1-s2-build/2"
+#: The Apache License 2.0 text (sections 1-9) under which Liger's ``utils.py`` and
+#: ``rms_norm.py`` incorporate Unsloth code; vendored beside the Liger files
+#: (``third_party/Liger-Kernel/LICENSE.Apache-2.0``, the same text as FlagGems' LICENSE
+#: without its copyright line). (size in bytes, sha256).
+UNSLOTH_APACHE_LICENSE = (
+    "liger",
+    "LICENSE.Apache-2.0",
+    10173,
+    "a6cba85bc92e0cff7a450b1d873c0eaa2e9fc96bf472df0247a26bec77bf3ff9",
+)
+#: Liger upstream files that state they incorporate Unsloth code.
+UNSLOTH_FILES = ("src/liger_kernel/ops/utils.py", "src/liger_kernel/ops/rms_norm.py")
 
 #: Upstream files, by (source key, path): (size in bytes, sha256). Measured on the
 #: host clones at the pinned revisions on 2026-10-07.
@@ -616,6 +633,22 @@ def entry(key_or_id: str) -> S2Entry:
 # --- build --------------------------------------------------------------------------
 
 
+def includes_unsloth_code(item: S2Entry) -> bool:
+    """True for a Liger substrate that contains code from ``UNSLOTH_FILES``."""
+    return item.source == "liger" and (
+        item.path in UNSLOTH_FILES or "liger-inline-utils" in item.edits
+    )
+
+
+def read_unsloth_licence(sources_root: Path) -> str:
+    source, path, size, digest = UNSLOTH_APACHE_LICENSE
+    data = (Path(sources_root) / SOURCE_DIRS[source] / path).read_bytes()
+    actual = hashlib.sha256(data).hexdigest()
+    if len(data) != size or actual != digest:
+        raise S2BuildError(f"{source}:{path} does not match its pin ({len(data)} B, {actual})")
+    return data.decode("utf-8")
+
+
 def read_upstream(sources_root: Path, source: str, path: str) -> str:
     file = Path(sources_root) / SOURCE_DIRS[source] / path
     data = file.read_bytes()
@@ -687,6 +720,7 @@ def build_entry(item: S2Entry, sources_root: Path, kernelbench_root: Path) -> di
     source = SOURCES[item.source]
     license_text = read_upstream(sources_root, item.source, "LICENSE")
     notice_text = read_upstream(sources_root, item.source, "NOTICE") if source.notice_file else None
+    unsloth_text = read_unsloth_licence(sources_root) if includes_unsloth_code(item) else None
     body = textwrap.indent(item.forward_body.strip() + "\n", " " * 8)
     header = textwrap.dedent(f'''\
         """Q1 S2 substrate {item.substrate_id}: human-written Triton.
@@ -742,6 +776,8 @@ def build_entry(item: S2Entry, sources_root: Path, kernelbench_root: Path) -> di
     }
     if notice_text:
         files["NOTICE.upstream"] = notice_text
+    if unsloth_text:
+        files["LICENSE.Apache-2.0.unsloth"] = unsloth_text
     level, _, _ = parse_problem_id(item.problem_id)
     build = {
         "s2_build_version": S2_BUILD_VERSION,
@@ -755,6 +791,9 @@ def build_entry(item: S2Entry, sources_root: Path, kernelbench_root: Path) -> di
         "source_kernel_family": item.kernel_family,
         "autotune_index": item.autotune_index,
         "edits": list(item.edits),
+        # Licence texts beside kernel.py besides the upstream LICENSE/NOTICE (kernel.py is
+        # unchanged, so mutant sites, dedup hashes and splits are unchanged).
+        "additional_licences": ["LICENSE.Apache-2.0.unsloth"] if unsloth_text else [],
         "triton_coverage": "hybrid-library"
         if "torch.matmul" in item.forward_body
         else "triton-only",

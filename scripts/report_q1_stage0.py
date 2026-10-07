@@ -22,6 +22,19 @@ per problem), and writes, for every contract tier under both TF32 policies:
   gate (c) rejections of correct substrates, audit-hole adjudications
   (criterion 4, from the replay journal), c-lite on dev mutants, the audit
   calibration record, and marginal and amortized cost.
+
+Under the trimming rule (``--plan``, the ``plan.json`` of ``run_q1_stage0.py``;
+preregistration section 18.6): mutant weights become ``(n/k) x (N_fs / m_fs)``
+(``trim.ht_weights``; cut and unstarted sampled mutants listed), criterion 5
+counts the controls the plan schedules at each replicate (the rest are listed
+as not scheduled), and a control whose parent the primary tier rejects has its
+parent-dependent cells listed as premise not met. Always: the primary analysis
+without the units of any adopted data-motivated audit change
+(``--data-motivated-change``), and the same quantities without every
+pilot-exposed unit (``--exposed``) as a pre-specified sensitivity analysis; the
+audit tolerance report (problems whose A1/A2 tolerance reaches 0.1); the
+held-out-shape sanitizer's shift of tiers N and c-disjoint; and the pinned c/b
+statistic with the other readings.
 """
 
 from __future__ import annotations
@@ -35,10 +48,22 @@ PROJECT_ROOT = Path(__file__).resolve().parents[1]
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
-from harness.q1 import analysis  # noqa: E402
+from harness.q1 import analysis, trim  # noqa: E402
 from harness.q1.journal import Journal  # noqa: E402
 
 SCOPES = ("evaluation_parents", "s1_calibration_parents")
+
+
+def _sensitivity(result: dict) -> dict:
+    """The pre-specified sensitivity analysis's headline quantities (section 18.6)."""
+    return {
+        "counts": result["counts"],
+        "criterion_3_FRR_c": result["criterion_3_FRR_c"],
+        "MS": {gate: result["gates"][gate]["MS"] for gate in analysis.PRIMARY_LADDER},
+        "FRR_independent": {
+            gate: result["gates"][gate]["FRR_independent"] for gate in analysis.PRIMARY_LADDER
+        },
+    }
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -50,13 +75,53 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--calibration", type=Path, default=None)
     parser.add_argument("--seeds", type=int, nargs="+", default=[42, 43, 44])
     parser.add_argument("--resamples", type=int, default=10_000)
+    parser.add_argument("--plan", type=Path, default=None, help="trim plan.json (rule /2)")
+    parser.add_argument("--exposed", type=Path, default=trim.PILOT_EXPOSED_PATH)
+    parser.add_argument(
+        "--data-motivated-change",
+        action="append",
+        default=[],
+        help="an adopted audit change chosen after the pilot (pilot_exposed.json keys)",
+    )
     args = parser.parse_args(argv)
     journal = Journal(args.journal)
     rows = journal.final_rows()
     all_rows, invalid = journal.read()
     replay_rows = Journal(args.replay_journal).final_rows() if args.replay_journal else []
     table = analysis.kernel_table(args.corpus)
-    problem_of = {k: v["problem_id"] for k, v in table.items()}
+    exposed = trim.load_exposed(args.exposed)
+    plan = json.loads(args.plan.read_text()) if args.plan else None
+    weights_record = None
+    scheduled = None
+    if plan is not None:
+        final_items = {
+            (row["kernel_id"], row["details"]["item_key"].split("|")[1], int(row.get("seed", 42)))
+            for row in rows
+            if row["details"].get("item_key")
+        }
+        scored42 = {
+            kernel for kernel, seed in trim.scored_kernel_replicates(final_items) if seed == 42
+        }
+        weights_record = trim.ht_weights(
+            plan, scored42, {k: v.get("weight") for k, v in table.items()}
+        )
+        for kernel_id, weight in weights_record["weights"].items():
+            table[kernel_id] = {**table[kernel_id], "weight": weight}
+        sampled = {
+            k
+            for family in plan["mutant_sample"].values()
+            for key in ("test_quota", "test_extension", "dev_quota")
+            for k in family[key]
+        }
+        # Mutants the rule never sampled are not part of the trimmed estimate.
+        table = {k: v for k, v in table.items() if v["kind"] != "mutant" or k in sampled}
+        scheduled = trim.scheduled_controls(plan)
+    exclusions = analysis.exposure_exclusions(
+        table, exposed, data_motivated_changes=args.data_motivated_change
+    )
+    full_table = table
+    table = analysis.restrict(table, exclusions["primary"])
+    problem_of = {k: v["problem_id"] for k, v in full_table.items()}
     clusters = analysis.cluster_map(table)
     split = analysis.s1_split()
     halves = analysis.substrate_halves(table, split)
@@ -66,6 +131,12 @@ def main(argv: list[str] | None = None) -> int:
         "s1_calibration_parents": halves["calibration"],
     }
     dev, test = analysis.mutant_split(table)
+    test_set = set(test)
+    sensitivity_table = {
+        k: v
+        for k, v in analysis.restrict(full_table, exclusions["sensitivity"]).items()
+        if v["kind"] != "mutant" or k in test_set
+    }
     report: dict = {
         "journal_rows": len(rows),
         "invalid_journal_lines": invalid,
@@ -90,6 +161,12 @@ def main(argv: list[str] | None = None) -> int:
         "calibration": json.loads(args.calibration.read_text()) if args.calibration else None,
         "replicates": {},
         "cost": analysis.cost(rows, all_rows),
+        "trim_plan_sha256": None if plan is None else plan.get("plan_sha256"),
+        "trim_weights": weights_record,
+        "data_motivated_changes": args.data_motivated_change,
+        "excluded_from_primary": sorted(exclusions["primary"]),
+        "excluded_in_sensitivity": sorted(exclusions["sensitivity"]),
+        "audit_tolerance": analysis.audit_tolerance_report(rows, full_table),
     }
     for seed in args.seeds:
         composed = analysis.compose(rows, seed=seed, problem_of=problem_of)
@@ -124,9 +201,27 @@ def main(argv: list[str] | None = None) -> int:
             ]["criterion_3_FRR_c"],
             "refereeability": analysis.refereeability_report(composed, table),
             "controls": {
-                policy: analysis.control_checks(composed, table, policy=policy)
+                policy: analysis.control_checks(
+                    composed,
+                    full_table,
+                    policy=policy,
+                    scheduled=None if scheduled is None else scheduled.get(seed, set()),
+                )
                 for policy in analysis.POLICIES
             },
+            "sanitizer_shift": analysis.sanitizer_shift(composed),
+            "sensitivity_without_pilot_exposed": _sensitivity(
+                analysis.metrics(
+                    composed,
+                    sensitivity_table,
+                    policy=analysis.PRIMARY_POLICY,
+                    tier=analysis.PRIMARY_TIER,
+                    evaluation_substrates=evaluation_substrates,
+                    mutant_parents=parents["evaluation_parents"],
+                    resamples=args.resamples,
+                    clusters=clusters,
+                )
+            ),
             "c_rejection_causes_evaluation_substrates": {
                 k: v for k, v in causes.items() if k in evaluation_substrates
             },

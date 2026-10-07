@@ -11,16 +11,30 @@ Outputs ``cost_card.json`` and ``cost_card.md``: per-gate GPU-seconds (median,
 p95) of the scored items, per-kernel cost by rung, the c/b ratio, the measured
 fixed phases, items a time box killed (lower bounds), and the projected Stage 0
 total against the 8 GPU-h cap with a cluster-bootstrap interval, under the
-drafted design and a grid of simple trims, and under the proposed trimming rule
-``q1-stage0-trim/1`` (``cost_card.TRIM_RULE``) at the measured cost and, when
-``--pair-job`` names a paired re-run of the same items at another concurrency,
-at that job's measured per-gate cost ratio.
+drafted design and a grid of simple trims, and under the trimming rule
+``q1-stage0-trim/2`` (``harness.q1.trim``; ``q1-stage0-trim/1``, the pilot pass's
+proposal, is recomputed beside it) at the measured cost and, when ``--pair-job``
+names a paired re-run of the same items at another concurrency, at that job's
+measured per-gate cost ratio.
+
+Since the second review: the c/b statistic comes from the analysis code
+(``analysis.c_over_b_statistic``: the pinned ratio of medians with a cluster
+bootstrap interval, and the other readings reported beside it); items of 1 GB or
+more are anchored to the measured and censored pilot costs
+(``cost_card.large_problem_anchors``); the fidelity sample is charged at the
+measured allocation per kernel of the pilot's fidelity phase; the timing noise
+floor is charged at the allocation of its registered protocol (an 8-GPU job
+timing on 2 GPUs); the timing bias of the identity control is reported under
+both TF32 policies; the pilot-exposed mutants (``harness/q1/data/pilot_exposed.json``)
+leave the frames; and ``--records`` binds the run records by hash.
 """
 
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
+import math
 import statistics
 import sys
 from pathlib import Path
@@ -30,6 +44,7 @@ PROJECT_ROOT = Path(__file__).resolve().parents[1]
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
+from harness.q1 import analysis, trim  # noqa: E402
 from harness.q1 import cost_card as cc  # noqa: E402
 
 FIDELITY_GATES = (
@@ -136,10 +151,17 @@ def fixed_phases(
             per_kernel[item["kernel_id"]] = (
                 per_kernel.get(item["kernel_id"], 0.0) + item["gpu_seconds"]
             )
+    fidelity_phase = _phase(pilot, "fidelity") or {}
     out["fidelity"] = {
         "kernels": len(per_kernel),
         "per_gate": cc.gate_stats(fidelity_items),
         "per_kernel_gpu_seconds": cc.summarize(list(per_kernel.values())),
+        # The phase held the GPU for its whole wall time (4 items per GPU, our gates on
+        # the adversarial controls and mutants included): the charge per kernel.
+        "phase_seconds": fidelity_phase.get("seconds"),
+        "allocation_seconds_per_kernel": round(fidelity_phase["seconds"] / len(per_kernel), 2)
+        if fidelity_phase.get("seconds") and per_kernel
+        else None,
     }
     return out
 
@@ -154,14 +176,20 @@ def trimmed_fixed_hours(
     factors: dict[str, float] | None,
     rule: dict[str, Any],
     timing_item_seconds: float | None = None,
+    measured_charges: bool = True,
 ) -> dict[str, float]:
     """Fixed phases under the trimming rule (GPU-h): admission of every problem
     (corpus metrics), specializations of in-scope parents, calibration on the
     S1-cal substrates within the FRR set's largest input size, a registered
     fidelity sample (every in-scope evaluation substrate, the three adversarial
     controls and one test mutant per family and source tier), the timing noise
-    floor (``timing_floor_items`` timing items at the measured GPU-seconds of one)
-    and the audit-hole replay cap (the draft's cap, not measured)."""
+    floor and the audit-hole replay cap (the draft's cap, not measured).
+
+    ``measured_charges`` (the second review's corrections, 6(b) and 6(d)): the
+    fidelity sample at the measured allocation per kernel of the pilot's fidelity
+    phase, and the timing floor at the allocation of its registered protocol
+    (``timing_floor_job_gpus`` GPUs held while ``timing_floor_timing_gpus`` time).
+    Without it, the pilot pass's charges (size model; one GPU per timing item)."""
     from harness.q1 import pilot
 
     def seconds(problem_id: str, gates: dict[str, float]) -> float:
@@ -188,18 +216,25 @@ def trimmed_fixed_hours(
         for sid in counts["calibration_substrates"]
     ]
     calibration = [p for p in calibration if (pilot.native_input_bytes(p) or 0) <= largest]
-    fidelity_gates = {"a": 2.0, "a_head_1e-4": 1.0, "b1": 1.0, "b2": 1.0, "c": 0.4}
-    fidelity = sum(seconds(r["problem_id"], fidelity_gates) for r in in_scope)
-    fidelity += 3 * seconds("L1/1_Square_matrix_multiplication_", fidelity_gates)
-    mean_substrate = fidelity / max(1, len(in_scope))
-    fidelity += 12 * int(rule["fidelity_mutants_per_family_tier"]) * mean_substrate
+    n_fidelity = len(in_scope) + 3 + 12 * int(rule["fidelity_mutants_per_family_tier"])
+    per_kernel = fixed["fidelity"].get("allocation_seconds_per_kernel")
+    if measured_charges and per_kernel:
+        fidelity = n_fidelity * per_kernel
+    else:
+        fidelity_gates = {"a": 2.0, "a_head_1e-4": 1.0, "b1": 1.0, "b2": 1.0, "c": 0.4}
+        fidelity = sum(seconds(r["problem_id"], fidelity_gates) for r in in_scope)
+        fidelity += 3 * seconds("L1/1_Square_matrix_multiplication_", fidelity_gates)
+        mean_substrate = fidelity / max(1, len(in_scope))
+        fidelity += 12 * int(rule["fidelity_mutants_per_family_tier"]) * mean_substrate
     return {
         "already_spent_this_pass": args.spent_gpu_hours,
         "admission_full": fixed["admission"]["projected_seconds"] / 3600,
         "specializations_in_scope": per_spec * len(in_scope) / 3600,
         "calibration_within_frr_bound": sum(seconds(p, {"A1": 1.0}) for p in calibration) / 3600,
         "fidelity_sample": fidelity / 3600,
-        "timing_noise_floor": timing_floor_hours(rule, timing_item_seconds, args),
+        "timing_noise_floor": timing_floor_hours(
+            rule, timing_item_seconds, args, allocation=measured_charges
+        ),
         "audit_hole_replay_cap": args.replay_gpu_hours,
     }
 
@@ -213,9 +248,12 @@ def bootstrap_trimmed(
     factors: dict[str, float] | None,
     args: argparse.Namespace,
     seed: int = 0,
+    **extra: Any,
 ) -> dict[str, float | None]:
     """Cluster bootstrap of the trimmed scoring projection over pilot parents
-    (each with its mutants and controls), refitting the size model each time."""
+    (each with its mutants and controls), refitting the size model each time (the
+    large-problem anchors stay fixed: they are lower bounds from one measured and
+    one censored item)."""
     import random
     from collections import defaultdict
 
@@ -232,9 +270,9 @@ def bootstrap_trimmed(
         sample = [i for _ in keys for i in clusters[rng.choice(keys)]]
         fits = cc.fit_item_costs(sample)
         totals.append(
-            cc.project_trimmed(counts, fits, survival=survival, rule=rule, factors=factors)[
-                "gpu_hours"
-            ]
+            cc.project_trimmed(
+                counts, fits, survival=survival, rule=rule, factors=factors, **extra
+            )["gpu_hours"]
         )
     totals.sort()
     return {
@@ -246,12 +284,13 @@ def bootstrap_trimmed(
 def stop_point(
     projection: dict[str, Any], fixed_total: float, scale: float | None
 ) -> dict[str, Any]:
-    """Where the rule's 8 GPU-h stop falls (central and high projection): the last
-    priority bucket that completes, the share of the next one that runs, and the
-    test-split mutants scored (P2 plus the P7 extension that fits)."""
+    """Where the 8 GPU-h total falls (central and high projection): the last priority
+    bucket that completes, the share of the next one that runs, and the test-split
+    mutants scored (the test quota plus the extension that fits)."""
     buckets = projection["gpu_hours_by_priority"]
     test_quota = sum(v["test"] for v in projection["mutants_per_family"].values())
     extension = sum(v["test_extension_max"] for v in projection["mutants_per_family"].values())
+    quota_bucket, extension_bucket = "P2", max(buckets) if buckets else "P8"
     out: dict[str, Any] = {}
     for label, factor in (("central", 1.0), ("high", scale)):
         if factor is None:
@@ -265,15 +304,15 @@ def stop_point(
                 room -= hours
                 completed.append(name)
                 continue
-            partial = {"bucket": name, "share": round(room / hours, 3) if hours else 0.0}
+            partial = {"bucket": name, "share": round(max(0.0, room) / hours, 3) if hours else 0.0}
             break
-        scored_test = test_quota if "P2" in completed else None
+        scored_test = test_quota if quota_bucket in completed else None
         if scored_test is not None:
-            if "P7" in completed:
+            if extension_bucket in completed:
                 scored_test += extension
-            elif partial and partial["bucket"] == "P7":
+            elif partial and partial["bucket"] == extension_bucket:
                 scored_test += round(extension * partial["share"])
-        if partial and partial["bucket"] == "P2":
+        if partial and partial["bucket"] == quota_bucket:
             scored_test = round(test_quota * partial["share"])
         out[label] = {
             "completed": completed,
@@ -284,13 +323,58 @@ def stop_point(
 
 
 def timing_floor_hours(
-    rule: dict[str, Any], timing_item_seconds: float | None, args: argparse.Namespace
+    rule: dict[str, Any],
+    timing_item_seconds: float | None,
+    args: argparse.Namespace,
+    *,
+    allocation: bool = True,
 ) -> float:
-    """The noise floor at the measured GPU-seconds of one timing item (it runs
-    alone on its GPU), else the draft's estimate."""
+    """The noise floor at the measured seconds of one timing item. With
+    ``allocation`` (the registered protocol: timing on GPUs 6-7 while GPUs 0-5
+    are held idle and then loaded) the charge is the job's GPUs times its wall
+    time; without it, one GPU per item (the pilot pass's charge)."""
     if timing_item_seconds is None:
         return args.timing_floor_gpu_hours
-    return int(rule["timing_floor_items"]) * timing_item_seconds / 3600
+    items = int(rule["timing_floor_items"])
+    if not allocation:
+        return items * timing_item_seconds / 3600
+    timing_gpus = int(rule.get("timing_floor_timing_gpus", 2))
+    job_gpus = int(rule.get("timing_floor_job_gpus", 8))
+    wall = math.ceil(items / timing_gpus) * timing_item_seconds
+    return job_gpus * wall / 3600
+
+
+def timing_bias(jobs: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    """Speedup of reference-identity controls timed against their own reference
+    (a candidate equal to the reference): the systematic bias of the paired
+    protocol under each TF32 policy (second review, 6(e))."""
+    out = []
+    for job in jobs:
+        root = Path(job["dir"])
+        for journal in sorted(root.glob("*timing*/journal.jsonl")):
+            for line in journal.read_text(encoding="utf-8").splitlines():
+                if not line.strip():
+                    continue
+                row = json.loads(line)
+                if not row["kernel_id"].startswith("ctl-identity-"):
+                    continue
+                details = row["details"]
+                out.append(
+                    {
+                        "job": root.parent.name,
+                        "kernel_id": row["kernel_id"],
+                        **{
+                            policy: {
+                                "median_speedup": round(details[policy]["median_speedup"], 4),
+                                "ci95": [round(x, 4) for x in details[policy]["speedup_ci95"]],
+                                "rounds_kept": details[policy]["rounds_kept"],
+                            }
+                            for policy in ("strict_fp32", "tf32")
+                            if isinstance(details.get(policy), dict)
+                        },
+                    }
+                )
+    return out
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -320,6 +404,18 @@ def main(argv: list[str] | None = None) -> int:
         default=0.5,
         help="share of scored mutants the primary audit witnesses (planning value)",
     )
+    parser.add_argument(
+        "--exposed",
+        type=Path,
+        default=trim.PILOT_EXPOSED_PATH,
+        help="pilot-exposed kernels (hash-checked); their mutants leave the frames",
+    )
+    parser.add_argument(
+        "--records",
+        type=Path,
+        default=None,
+        help="run-records JSON of the jobs (scripts/q1_pilot_records.py), bound by hash",
+    )
     args = parser.parse_args(argv)
     smoke = cc.load_job(args.smoke_job / "q1")
     pilot = cc.load_job(args.pilot_job / "q1")
@@ -332,25 +428,37 @@ def main(argv: list[str] | None = None) -> int:
     means = cc.class_means(kernel_rows)
     fixed = fixed_phases(smoke, pilot, counts, kinds)
     rung = {name: cc.summarize([row[name] for row in kernel_rows]) for name in cc.RUNGS}
-    b_cum = [row["a"] + row["b_marginal"] for row in kernel_rows]
-    c_cum = [row["a"] + row["b_marginal"] + row["c_marginal"] for row in kernel_rows]
+    # The pinned c/b statistic (analysis.c_over_b_statistic; sections 5.5 and 12) with a
+    # cluster bootstrap over pilot parents, and the other readings reported beside it.
+    per_kernel_items: dict[tuple[str, int], dict[str, float]] = {}
+    for item in scoring_items:
+        if (
+            item["final"]
+            and item["gpu_seconds"] is not None
+            and item["gate"] in {"a", "b1", "b2", "c"}
+        ):
+            per_kernel_items.setdefault((item["kernel_id"], item["seed"]), {})[item["gate"]] = item[
+                "gpu_seconds"
+            ]
+    c_over_b_rows = [
+        {**gates, "cluster": kinds.get(kernel, {}).get("parent", kernel)}
+        for (kernel, _seed), gates in sorted(per_kernel_items.items())
+        if {"a", "b1", "b2", "c"} <= set(gates)
+        and any(r["kernel_id"] == kernel for r in kernel_rows)
+    ]
+    c_over_b = analysis.c_over_b_statistic(c_over_b_rows, resamples=args.resamples, seed=0)
     ratio = {
-        "median_c_cumulative_over_b_cumulative": (
-            round(statistics.median(c_cum) / statistics.median(b_cum), 3) if b_cum else None
+        "median_c_cumulative_over_b_cumulative": None
+        if c_over_b["value"] is None
+        else round(c_over_b["value"], 3),
+        "median_c_marginal_over_b_marginal": None
+        if c_over_b["other_readings_reported_only"]["marginal_ratio_of_medians"]["value"] is None
+        else round(
+            c_over_b["other_readings_reported_only"]["marginal_ratio_of_medians"]["value"], 3
         ),
-        "median_c_marginal_over_b_marginal": (
-            round(
-                statistics.median([r["c_marginal"] for r in kernel_rows])
-                / statistics.median([r["b_marginal"] for r in kernel_rows]),
-                3,
-            )
-            if kernel_rows
-            else None
-        ),
-        "c_lite_trigger_2x": None,
+        "c_lite_trigger_2x": c_over_b["c_lite_triggered"],
+        "pinned_statistic": c_over_b,
     }
-    if ratio["median_c_cumulative_over_b_cumulative"] is not None:
-        ratio["c_lite_trigger_2x"] = ratio["median_c_cumulative_over_b_cumulative"] > 2.0
     # The size model uses the pilot job's scored items only: job 1's smoke items ran
     # the pre-fix reductions (host fp64 copies) and were cut by the fixed 180 s watchdog,
     # so they are reported (per_gate_smoke_identity) but not used for the projection.
@@ -507,18 +615,41 @@ def main(argv: list[str] | None = None) -> int:
         if i["phase"] in {"timing", "smoke-timing"} and i["final"] and i["gpu_seconds"]
     ]
     timing_seconds = statistics.median(timing_items) if timing_items else None
+    timing_phase_seconds = None
+    if args.pair_job is not None:
+        phase = _phase(other, "timing")
+        runs = (phase or {}).get("runs") or []
+        ran = sum(r.get("run", 0) for r in runs)
+        if phase and ran:
+            timing_phase_seconds = phase["seconds"] / ran
+    exposed = trim.load_exposed(args.exposed)
+    anchors = cc.large_problem_anchors(kernel_rows, censored)
     trimmed = []
-    for label, quota_test, quota_dev, fac in (
-        ("trim-q60", 60, 15, None),
-        ("trim-q30", 30, 8, None),
-        ("trim-q120", 120, 30, None),
-        ("trim-q60-paired-concurrency", 60, 15, factors),
-        ("trim-q120-paired-concurrency", 120, 30, factors),
-        ("trim-q200-paired-concurrency", 200, 50, factors),
-    ):
+    scenarios_trim = (
+        # The pilot pass's proposal recomputed under /2's accounting of units and samples
+        # (no margin, no anchors, no exposure, its charges for the fidelity sample and
+        # the timing floor); its own card (7.37 GPU-h) is in git at 5af0375.
+        ("trim1-recomputed-paired-concurrency", cc.TRIM_RULE_V1, factors, False),
+        # The registered rule with the second review's corrections.
+        ("trim2-paired-concurrency", cc.TRIM_RULE, factors, True),
+        ("trim2-measured-4-per-gpu", cc.TRIM_RULE, None, True),
+        (
+            "trim2-q30-paired-concurrency",
+            {**cc.TRIM_RULE, "family_quota_test": 30, "family_quota_dev": 8},
+            factors,
+            True,
+        ),
+        (
+            "trim2-no-margin-paired-concurrency",
+            {**cc.TRIM_RULE, "frr_margin_units": 0},
+            factors,
+            True,
+        ),
+    )
+    for label, rule, fac, corrected in scenarios_trim:
         if label.endswith("paired-concurrency") and not factors:
             continue
-        rule = {**cc.TRIM_RULE, "family_quota_test": quota_test, "family_quota_dev": quota_dev}
+        extra = {"anchors": anchors, "exposed": exposed} if corrected else {}
         projection = cc.project_trimmed(
             counts,
             fits,
@@ -526,6 +657,7 @@ def main(argv: list[str] | None = None) -> int:
             rule=rule,
             factors=fac,
             witness_rate=args.witness_rate,
+            **extra,
         )
         fixed_trim = trimmed_fixed_hours(
             counts,
@@ -535,65 +667,48 @@ def main(argv: list[str] | None = None) -> int:
             args,
             factors=fac,
             rule=rule,
-            timing_item_seconds=timing_seconds,
+            timing_item_seconds=(timing_phase_seconds or timing_seconds)
+            if corrected
+            else timing_seconds,
+            measured_charges=corrected,
         )
         interval = bootstrap_trimmed(
-            all_scored, kinds, counts, survival["survival"], rule, fac, args
+            all_scored, kinds, counts, survival["survival"], rule, fac, args, **extra
         )
-        # The P7 extension is open-ended by design (the stop cuts it), so the rule
-        # "fits" when everything through P6 fits.
-        extension = projection["gpu_hours_by_priority"].get("P7", 0.0)
+        buckets = projection["gpu_hours_by_priority"]
+        extension_bucket = max(buckets) if buckets else None
+        extension = buckets.get(extension_bucket, 0.0) if extension_bucket else 0.0
         core = projection["gpu_hours"] - extension
-        total = round(sum(fixed_trim.values()) + core, 3)
-        high = (
-            None
-            if interval["high"] is None
-            else round(
-                sum(fixed_trim.values())
-                + core * interval["high"] / max(projection["gpu_hours"], 1e-9),
-                3,
-            )
-        )
-        # Under the rule's stop, scoring halts when the Stage 0 total would pass 8 GPU-h
-        # with the timing floor and the replay cap held in reserve; where the stop
-        # falls at the central and at the high projection.
-        before = sum(
-            v
-            for k, v in fixed_trim.items()
-            if k not in {"timing_noise_floor", "audit_hole_replay_cap"}
-        )
-        reserve = fixed_trim["timing_noise_floor"] + fixed_trim["audit_hole_replay_cap"]
+        fixed_sum = sum(fixed_trim.values())
+        total = round(fixed_sum + core, 3)
         scale = (
             interval["high"] / projection["gpu_hours"]
             if interval["high"] and projection["gpu_hours"]
             else None
         )
+        high = None if scale is None else round(fixed_sum + core * scale, 3)
         cumulative = []
-        running = before + reserve
-        for bucket, hours in projection["gpu_hours_by_priority"].items():
-            running_high = None
+        running = fixed_sum
+        for bucket, hours in buckets.items():
             running += hours
-            if scale is not None:
-                running_high = (
-                    before
-                    + reserve
-                    + scale
-                    * sum(v for k, v in projection["gpu_hours_by_priority"].items() if k <= bucket)
-                )
             cumulative.append(
                 {
                     "through": bucket,
                     "total_central": round(running, 3),
-                    "total_high": None if running_high is None else round(running_high, 3),
+                    "total_high": None
+                    if scale is None
+                    else round(
+                        fixed_sum + scale * sum(v for k, v in buckets.items() if k <= bucket), 3
+                    ),
                 }
             )
-        stop = stop_point(projection, before + reserve, scale)
         trimmed.append(
             {
                 "name": label,
+                "corrected_for_second_review": corrected,
                 **projection,
                 "priority_cumulative_with_reserve": cumulative,
-                "budget_stop": stop,
+                "budget_stop": stop_point(projection, fixed_sum, scale),
                 "scoring_gpu_hours_95": interval,
                 "fixed_gpu_hours": {k: round(v, 3) for k, v in fixed_trim.items()},
                 "total_gpu_hours": total,
@@ -603,8 +718,15 @@ def main(argv: list[str] | None = None) -> int:
             }
         )
     card = {
-        "schema": "q1-pilot-cost-card/1",
+        "schema": "q1-pilot-cost-card/2",
         "censored_items": censored,
+        "large_problem_anchors": anchors,
+        "timing_bias_identity_controls": timing_bias([pilot] + ([other] if args.pair_job else [])),
+        "timing_phase_seconds_per_item": timing_phase_seconds,
+        "exposed_sha256": hashlib.sha256(args.exposed.read_bytes()).hexdigest(),
+        "run_records_sha256": None
+        if args.records is None
+        else hashlib.sha256(args.records.read_bytes()).hexdigest(),
         "paired_concurrency": paired,
         "trimmed": trimmed,
         "spent_gpu_hours": args.spent_gpu_hours,
@@ -659,9 +781,9 @@ def main(argv: list[str] | None = None) -> int:
         )
     lines += [
         "",
-        "| trimmed rule | in-scope substrates | units | mutants | scoring GPU-h (P1-P7) "
-        "| fixed GPU-h | total GPU-h (P1-P6) | high | fits | pooled witnessed (planning) "
-        "| families >= 30 |",
+        "| trimmed rule | in-scope substrates | units | mutants | scoring GPU-h (all buckets) "
+        "| fixed GPU-h | total GPU-h (without the open extension) | high | fits "
+        "| pooled witnessed (planning) | families >= 30 |",
         "|---|---:|---:|---:|---:|---:|---:|---:|---|---:|---:|",
     ]
     for sc in trimmed:

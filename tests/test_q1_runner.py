@@ -144,12 +144,22 @@ def test_watchdog_timeout_and_crash_rows(tmp_path: Path) -> None:
         workdir=tmp_path,
     )
     summary = Runner(config).run(items)
-    assert summary["timeouts"] == 1 and summary["crashes"] == 1
-    rows = {r["kernel_id"]: r for r in Journal(config.journal_path).final_rows()}
+    # Two slots share the device: the shared timeout is a contention failure, retried
+    # once alone (second review, finding 3); alone, the timeout stands. A crash is not
+    # a contention failure and is not retried.
+    assert summary["timeouts"] == 2 and summary["crashes"] == 1
+    assert summary["contention_timeout_shared"] == 1
+    journal = Journal(config.journal_path)
+    rows = {r["kernel_id"]: r for r in journal.final_rows()}
     hang, crash = rows["t-relu_hang"], rows["t-relu_crash"]
     assert hang["verdict"] == "timeout" and hang["details"]["phase"] == "correctness"
+    assert hang["attempt"] == 2 and hang["details"]["item_exclusive"] is True
     assert hang["wall_seconds"] < 60
     assert crash["verdict"] == "reject" and crash["details"]["reason"] == "worker-crashed"
+    first = [r for r in journal.read()[0] if r["kernel_id"] == "t-relu_hang" and r["attempt"] == 1]
+    assert first and all(r["details"]["retry_alone"] for r in first)
+    assert all(not r["details"]["item_final"] for r in first)
+    assert first[0]["details"]["infra_failure_kind"] == "infra_failure-timeout-shared"
 
 
 def test_harness_row_fault_is_retried_once_and_never_a_rejection(tmp_path: Path) -> None:
@@ -312,3 +322,147 @@ def test_exclusive_items_never_overlap_others(tmp_path: Path) -> None:
     assert len(spans) == 3
     for other_start, other_end in spans.values():
         assert other_end <= start + 0.01 or other_start >= end - 0.01
+
+
+def test_device_share_units_and_writer_preference() -> None:
+    import threading
+
+    from harness.q1.runner import DeviceShare
+
+    share = DeviceShare(12)
+    stop = threading.Event()
+    assert share.acquire(False, stop, units=3) and share.acquire(False, stop, units=3)
+    for _ in range(6):
+        assert share.acquire(False, stop, units=1)
+    started = threading.Event()
+    got: list[str] = []
+
+    def exclusive() -> None:
+        started.set()
+        assert share.acquire(True, stop)
+        got.append("exclusive")
+        share.release(True)
+
+    thread = threading.Thread(target=exclusive)
+    thread.start()
+    started.wait(5)
+    time.sleep(0.2)
+    # a waiting exclusive item blocks new single-unit items (writer preference)
+    blocked = threading.Event()
+    blocked.set()
+    stop_small = threading.Event()
+    stop_small.set()
+    assert not share.acquire(False, stop_small, units=1)
+    assert got == []
+    for _ in range(6):
+        share.release(False, 1)
+    share.release(False, 3)
+    share.release(False, 3)
+    thread.join(5)
+    assert got == ["exclusive"]
+    assert share.units_for(False, 99) == 12 and share.units_for(False, None) == 1
+
+
+def test_contention_failures_are_read_from_rows() -> None:
+    from harness.q1.runner import contention_failure
+
+    def row(verdict: str, **details) -> dict:
+        return {"verdict": verdict, "details": details}
+
+    assert contention_failure([row("timeout", reason="watchdog-correctness")]) == "timeout-shared"
+    assert (
+        contention_failure([row("reject", error_name="torch.OutOfMemoryError", error="...")])
+        == "oom-shared"
+    )
+    assert (
+        contention_failure([row("reject", log_tail="RuntimeError: CUDA out of memory. Tried")])
+        == "oom-shared"
+    )
+    assert (
+        contention_failure([row("reject", reason="candidate-raised", error="ValueError")]) is None
+    )
+
+
+def test_fit_deadline_defers_items_that_could_not_finish(tmp_path: Path) -> None:
+    items = _items(tmp_path, ["relu_correct"], ("a", "a_1e-3"))
+    items[1].timeouts = {"compile": 600.0, "correctness": 600.0}
+    config = RunnerConfig(
+        journal_path=tmp_path / "journal.jsonl",
+        timeouts={"compile": 30.0, "correctness": 60.0, "timing": 10.0},
+        extra_env={"TRITON_INTERPRET": "1"},
+        health_check=False,
+        workdir=tmp_path,
+        hard_deadline=time.monotonic() + 300.0,
+        fit_deadline=True,
+    )
+    summary = Runner(config).run(items)
+    assert summary["run"] == 1 and summary["deferred_by_deadline"] == 1
+    assert summary["left_in_queue"] == 1
+    final = {r["gate"] for r in Journal(config.journal_path).final_rows()}
+    assert final == {"a"}
+
+
+def test_killed_items_are_recorded_with_spawn_and_kill_times(tmp_path: Path) -> None:
+    items = _items(tmp_path, ["relu_hang"], ("a",))
+    config = RunnerConfig(
+        journal_path=tmp_path / "journal.jsonl",
+        timeouts={"compile": 120.0, "correctness": 120.0, "timing": 10.0},
+        extra_env={"TRITON_INTERPRET": "1"},
+        health_check=False,
+        workdir=tmp_path,
+        hard_deadline=time.monotonic() + 8.0,
+    )
+    Runner(config).run(items)
+    (cut,) = [
+        json.loads(line)
+        for line in (tmp_path / "cut.jsonl").read_text().splitlines()
+        if line.strip()
+    ]
+    assert cut["item_key"] == items[0].key and cut["reason"] == "hard-deadline"
+    assert cut["killed_at"] > cut["started_at"] > 0
+    from harness.q1 import cost_card
+
+    (tmp_path / "q1" / "phase").mkdir(parents=True)
+    for name in ("journal.jsonl", "cut.jsonl"):
+        (tmp_path / "q1" / "phase" / name).write_text((tmp_path / name).read_text())
+    (tmp_path / "q1" / "phase" / "items.jsonl").write_text(
+        json.dumps({"kernel_id": "t-relu_hang", "gate": "a", "seed": 42, "problem_id": "p"}) + "\n"
+    )
+    (censored,) = cost_card.censored_items(tmp_path / "q1")
+    assert censored["bound_from"] == "runner" and censored["wall_seconds_lower_bound"] >= 5
+
+
+def test_resume_runs_a_retry_alone_item_alone(tmp_path: Path) -> None:
+    items = _items(tmp_path, ["relu_correct"], ("a",))
+    journal = Journal(tmp_path / "journal.jsonl")
+    from harness.q1.schema import make_verdict_row
+
+    journal.append(
+        [
+            make_verdict_row(
+                kernel_id=items[0].kernel_id,
+                gate="a",
+                config_id="item/seed-42",
+                verdict="timeout",
+                tf32_policy="not-applicable",
+                gpu_seconds=1.0,
+                wall_seconds=1.0,
+                details={"item_key": items[0].key, "item_final": False, "retry_alone": True},
+                seed=42,
+                run_id="r0",
+                attempt=1,
+                code_sha256="0" * 64,
+            )
+        ]
+    )
+    assert journal.status()[items[0].key] == {"attempt": 1, "final": False, "retry_alone": True}
+    config = RunnerConfig(
+        journal_path=tmp_path / "journal.jsonl",
+        slots=["cpu", "cpu"],
+        extra_env={"TRITON_INTERPRET": "1"},
+        health_check=False,
+        workdir=tmp_path,
+    )
+    Runner(config).run(items)
+    (row,) = Journal(config.journal_path).final_rows()
+    assert row["attempt"] == 2 and row["details"]["item_exclusive"] is True

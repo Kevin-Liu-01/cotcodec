@@ -57,7 +57,7 @@ import json
 import re
 import statistics
 from collections import defaultdict
-from collections.abc import Callable, Iterable, Mapping, Sequence
+from collections.abc import Callable, Collection, Iterable, Mapping, Sequence
 from pathlib import Path
 from typing import Any
 
@@ -297,6 +297,7 @@ def compose(
         a1_details: dict[str, dict[str, Any]] = {}
         flags: dict[tuple[str, str], bool] = {}  # (scope, component) -> unrefereeable
         a4_parts: list[str] = []
+        a4_by_part: dict[str, list[str]] = defaultdict(list)
         for row in kernel_rows:
             gate, config, verdict = row["gate"], row["config_id"], row["verdict"]
             item_level = config.startswith("item/")  # runner timeout or crash row
@@ -321,12 +322,14 @@ def compose(
                         flags[(policy, gate)] = _audit_unrefereeable(row)
             elif gate in {"A4", "A4_poison", "A4_sanitizer"}:
                 a4_parts.append("reject" if verdict == "timeout" else verdict)
+                a4_by_part[gate].append("reject" if verdict == "timeout" else verdict)
         facts[kernel_id] = {
             "gates": gates,
             "audit": audit,
             "a1_details": a1_details,
             "flags": flags,
             "a4_parts": a4_parts,
+            "a4_by_part": {k: _conjoin(v) for k, v in a4_by_part.items()},
         }
 
     vacuous, anomalies = _vacuous_components(facts, problem_of)
@@ -365,6 +368,7 @@ def compose(
             "ladder": ladder,
             "audit": audit,
             "A4": a4,
+            "A4_parts": dict(f["a4_by_part"]),
             "tiers": tiers,
             "precision_only": precision,
             "b_fail_open": fail_open,
@@ -762,34 +766,92 @@ def composed_verdict(entry: Mapping[str, Any], gate: str, *, policy: str = PRIMA
     return "unknown-gate"
 
 
+#: Control expectations that rest on the parent substrate being correct at held-out
+#: shapes or under the audit (gate (c) components, A3, A4 with its held-out-shape
+#: sanitizer run, and every audit tier). A1 and A2 also assume a correct parent.
+PARENT_PREMISE_GATES = frozenset(
+    {
+        "c",
+        "c1",
+        "c2",
+        "c3",
+        "c_1e-2",
+        "c_kbv_raw",
+        "A1",
+        "A1_strict",
+        "A2",
+        "A3",
+        "A4",
+        "audit_N",
+        "audit_G",
+        "audit_G_strict",
+        "audit_c_disjoint",
+    }
+)
+
+
+def control_parent(kernel_id: str) -> str | None:
+    """The substrate a hack control or a hack-emulating mutant control wraps."""
+    if ".hack." in kernel_id:
+        return kernel_id.split(".hack.", 1)[0]
+    if kernel_id.endswith(".control"):
+        return kernel_id.split(".", 1)[0]
+    return None
+
+
 def control_checks(
     composed: Mapping[str, Mapping[str, Any]],
     table: Mapping[str, Mapping[str, Any]],
     *,
     policy: str = PRIMARY_POLICY,
+    scheduled: Collection[str] | None = None,
 ) -> dict[str, Any]:
     """Every control expectation against its composed verdict (acceptance criterion 5).
 
     A control with no rows at all, a missing gate and an unknown gate id each
     count as a failed cell: the criterion needs 100% of cells to hold.
+
+    Under the trimming rule (preregistration section 18.6) ``scheduled`` names the
+    controls the plan scores at this replicate; the others are listed as
+    ``not-scheduled`` and are not cells. Expectations assume a correct parent
+    (section 3.4): when the primary tier (G, TF32-admissible) does not accept the
+    parent substrate at this replicate, a cell on a gate in
+    :data:`PARENT_PREMISE_GATES` is listed as ``premise-not-met`` (with its
+    verdict) instead of counting as held or failed; a/b-gate cells still count.
     """
     cells = []
+    not_scheduled: list[str] = []
+    premise: list[dict[str, Any]] = []
     for kernel_id, facts in sorted(table.items()):
         if facts["kind"] != "control":
             continue
+        if scheduled is not None and kernel_id not in scheduled:
+            not_scheduled.append(kernel_id)
+            continue
         entry = composed.get(kernel_id)
+        parent = control_parent(kernel_id)
+        parent_verdict = (
+            None
+            if parent is None
+            else composed.get(parent, {})
+            .get("tiers", {})
+            .get(PRIMARY_POLICY, {})
+            .get(PRIMARY_TIER, "missing")
+        )
         for gate, expected in sorted(facts["expected"].items()):
             got = "missing" if entry is None else composed_verdict(entry, gate, policy=policy)
-            cells.append(
-                {
-                    "control_id": kernel_id,
-                    "control_kind": facts["control_kind"],
-                    "gate": gate,
-                    "expected": expected,
-                    "got": got,
-                    "ok": got == expected,
-                }
-            )
+            cell = {
+                "control_id": kernel_id,
+                "control_kind": facts["control_kind"],
+                "gate": gate,
+                "expected": expected,
+                "got": got,
+                "ok": got == expected,
+            }
+            if parent_verdict not in (None, "accept") and gate in PARENT_PREMISE_GATES:
+                premise.append({**cell, "parent": parent, "parent_verdict": parent_verdict})
+                continue
+            cells.append(cell)
     failed = [cell for cell in cells if not cell["ok"]]
     return {
         "policy": policy,
@@ -797,6 +859,8 @@ def control_checks(
         "held": len(cells) - len(failed),
         "failed": failed,
         "all_hold": bool(cells) and not failed,
+        "not_scheduled": not_scheduled,
+        "premise_not_met": premise,
     }
 
 
@@ -1064,6 +1128,7 @@ def cost(
             "b_median": b_median,
             "c_median": c_median,
             "c_over_b": (c_median / b_median) if b_median else None,
+            "statistic": C_OVER_B_STATISTIC,
         }
         marginal = {
             "a": [g["a"] for g in complete],
@@ -1095,3 +1160,227 @@ def cost(
         amortized["shared_validity_gpu_seconds"] = shared
         summary["amortized"] = amortized
     return summary
+
+
+# --- c/b, the c-lite and Stage 1 cost statistic (sections 5.5 and 12) ------------------------
+
+#: The pinned c/b statistic. It has been the computation of :func:`cost` since the
+#: analysis was first committed (before any pilot GPU job): per kernel, cumulative
+#: GPU-seconds of c (a + b1 + b2 + c) and of b (a + b1 + b2) over the kernels with all
+#: four items, and the ratio of the two medians. Section 5.5's c-lite trigger and
+#: section 12's Stage 1 cost rule compare this ratio with 2.
+C_OVER_B_STATISTIC = "ratio of medians of per-kernel cumulative GPU-seconds, c over b"
+C_LITE_TRIGGER = 2.0
+
+
+def c_over_b_statistic(
+    kernels: Sequence[Mapping[str, Any]],
+    *,
+    resamples: int = 10_000,
+    seed: int = 0,
+) -> dict[str, Any]:
+    """The pinned c/b statistic with a cluster-bootstrap 95% interval, and the other
+    readings reported beside it (never used for a decision).
+
+    ``kernels``: one dict per kernel (and replicate) with GPU-seconds ``a``, ``b1``,
+    ``b2``, ``c`` and a bootstrap ``cluster`` (its parent substrate or problem).
+    Readings: ``ratio_of_medians`` (pinned), ``median_of_ratios`` (per-kernel c/b),
+    ``ratio_of_means`` (total c over total b) and ``marginal_ratio_of_medians`` (the
+    c item over b1 + b2). The bootstrap resamples clusters with replacement
+    (``random.Random(seed)``).
+    """
+    import random
+
+    rows = [
+        {
+            "b": float(k["a"]) + float(k["b1"]) + float(k["b2"]),
+            "c": float(k["a"]) + float(k["b1"]) + float(k["b2"]) + float(k["c"]),
+            "b_marginal": float(k["b1"]) + float(k["b2"]),
+            "c_marginal": float(k["c"]),
+            "cluster": str(k.get("cluster", "")),
+        }
+        for k in kernels
+    ]
+
+    def readings(sample: Sequence[Mapping[str, Any]]) -> dict[str, float | None]:
+        if not sample:
+            return dict.fromkeys(_C_OVER_B_READINGS)
+        b = [r["b"] for r in sample]
+        c = [r["c"] for r in sample]
+        bm = statistics.median(r["b_marginal"] for r in sample)
+        return {
+            "ratio_of_medians": statistics.median(c) / statistics.median(b)
+            if statistics.median(b)
+            else None,
+            "median_of_ratios": statistics.median(
+                ci / bi for ci, bi in zip(c, b, strict=True) if bi
+            ),
+            "ratio_of_means": sum(c) / sum(b) if sum(b) else None,
+            "marginal_ratio_of_medians": statistics.median(r["c_marginal"] for r in sample) / bm
+            if bm
+            else None,
+        }
+
+    point = readings(rows)
+    clusters: dict[str, list[Mapping[str, Any]]] = defaultdict(list)
+    for row in rows:
+        clusters[row["cluster"]].append(row)
+    keys = sorted(clusters)
+    draws: dict[str, list[float]] = {name: [] for name in _C_OVER_B_READINGS}
+    if len(keys) >= 2 and resamples > 0:
+        rng = random.Random(seed)
+        for _ in range(resamples):
+            sample = [r for _ in keys for r in clusters[rng.choice(keys)]]
+            for name, value in readings(sample).items():
+                if value is not None:
+                    draws[name].append(value)
+
+    def interval(values: list[float]) -> list[float] | None:
+        if not values:
+            return None
+        ordered = sorted(values)
+        return [ordered[int(0.025 * (len(ordered) - 1))], ordered[int(0.975 * (len(ordered) - 1))]]
+
+    pinned = point["ratio_of_medians"]
+    return {
+        "statistic": C_OVER_B_STATISTIC,
+        "kernels": len(rows),
+        "clusters": len(keys),
+        "value": pinned,
+        "interval_95": interval(draws["ratio_of_medians"]),
+        "c_lite_triggered": None if pinned is None else pinned > C_LITE_TRIGGER,
+        "share_of_resamples_above_2": (
+            sum(v > C_LITE_TRIGGER for v in draws["ratio_of_medians"])
+            / len(draws["ratio_of_medians"])
+            if draws["ratio_of_medians"]
+            else None
+        ),
+        "other_readings_reported_only": {
+            name: {"value": point[name], "interval_95": interval(draws[name])}
+            for name in _C_OVER_B_READINGS
+            if name != "ratio_of_medians"
+        },
+    }
+
+
+_C_OVER_B_READINGS = (
+    "ratio_of_medians",
+    "median_of_ratios",
+    "ratio_of_means",
+    "marginal_ratio_of_medians",
+)
+
+
+# --- Pilot exposure (section 18.6, decision D26) -----------------------------------------------
+
+
+def exposure_exclusions(
+    table: Mapping[str, Mapping[str, Any]],
+    exposed: Mapping[str, Any],
+    *,
+    data_motivated_changes: Collection[str] = (),
+) -> dict[str, set[str]]:
+    """Kernel ids to leave out of the primary analysis and of the sensitivity analysis.
+
+    ``primary``: every substrate of a unit named in ``exposed["data_motivated_units"]``
+    for an adopted data-motivated audit change, and every mutant of those
+    substrates (their correctness, and so their mutants' parent filter, would
+    rest on a policy chosen after the pilot saw them). ``sensitivity``: every
+    substrate of a pilot-exposed evaluation unit and all their mutants, plus the
+    exposed mutants themselves (those are never sampled under the rule anyway).
+    """
+    units_motivated: set[str] = set()
+    for change in data_motivated_changes:
+        if change not in exposed.get("data_motivated_units", {}):
+            raise ValueError(f"unknown data-motivated change {change!r}")
+        units_motivated |= set(exposed["data_motivated_units"][change])
+    units_exposed = set(exposed.get("evaluation_units", {}))
+    mutant_ids = {m["kernel_id"] for m in exposed.get("mutants", [])}
+
+    def members(units: set[str]) -> set[str]:
+        subs = {
+            k
+            for k, v in table.items()
+            if v["kind"] == "substrate" and (v.get("kernel_family") or k) in units
+        }
+        muts = {
+            k
+            for k, v in table.items()
+            if v["kind"] == "mutant" and v["parent_substrate_id"] in subs
+        }
+        return subs | muts
+
+    return {
+        "primary": members(units_motivated),
+        "sensitivity": members(units_exposed | units_motivated)
+        | {k for k in mutant_ids if k in table},
+    }
+
+
+def restrict(table: Mapping[str, Mapping[str, Any]], drop: Collection[str]) -> dict[str, Any]:
+    """The kernel table without ``drop``."""
+    dropped = set(drop)
+    return {k: v for k, v in table.items() if k not in dropped}
+
+
+# --- Reports for review findings (reported, never a rule) ---------------------------------------
+
+#: An audit tolerance at or above this worst-element relative error is reported as
+#: near-vacuous for A1/A2 on that problem (second review, finding 7).
+TOLERANCE_REPORT_THRESHOLD = 0.1
+
+
+def audit_tolerance_report(
+    rows: Iterable[Mapping[str, Any]],
+    table: Mapping[str, Mapping[str, Any]],
+    *,
+    seed: int = 42,
+    threshold: float = TOLERANCE_REPORT_THRESHOLD,
+) -> dict[str, Any]:
+    """Per problem, the largest A1/A2 tolerance T of substrate rows under each policy,
+    and the problems where it reaches ``threshold`` (worst-element relative error):
+    there, A1 and A2 can witness only deviations larger than T."""
+    largest: dict[str, dict[str, float]] = defaultdict(dict)
+    for row in rows:
+        if row.get("seed", 42) != seed or row["gate"] not in {"A1", "A2"}:
+            continue
+        if row["config_id"] == "aggregate" or row["config_id"].startswith("item/"):
+            continue
+        facts = table.get(row["kernel_id"], {})
+        if facts.get("kind") != "substrate" or row.get("tolerance") is None:
+            continue
+        policy = row["tf32_policy"]
+        problem = facts["problem_id"]
+        largest[problem][policy] = max(largest[problem].get(policy, 0.0), float(row["tolerance"]))
+    flagged = {
+        policy: sorted(p for p, by in largest.items() if by.get(policy, 0.0) >= threshold)
+        for policy in POLICIES
+    }
+    return {
+        "threshold": threshold,
+        "largest_tolerance": {p: dict(v) for p, v in sorted(largest.items())},
+        "problems_at_or_above_threshold": flagged,
+    }
+
+
+def sanitizer_shift(composed: Mapping[str, Mapping[str, Any]]) -> dict[str, Any]:
+    """Kernels whose tier N or c-disjoint verdict (primary policy) changes when the
+    compute-sanitizer row, which runs at a held-out shape (section 6.4), is left out
+    of A4: the composition shift the held-out-shape sanitizer brings into tiers
+    defined at native shapes (second review, finding 11)."""
+    shifted: dict[str, dict[str, str]] = {}
+    for kernel_id, entry in composed.items():
+        parts = entry.get("A4_parts", {})
+        if "A4_sanitizer" not in parts:
+            continue
+        native = [v for k, v in parts.items() if k != "A4_sanitizer"]
+        a4_native = _conjoin(native) if native else "error"
+        channels = {**entry["audit"][PRIMARY_POLICY], "A4": a4_native}
+        skip = set(entry.get("vacuous", {}).get(PRIMARY_POLICY, []))
+        without = tier_verdicts(channels, vacuous=skip)
+        for tier in ("N", "c-disjoint"):
+            if without[tier] != entry["tiers"][PRIMARY_POLICY][tier]:
+                shifted.setdefault(kernel_id, {})[tier] = (
+                    f"{without[tier]}->{entry['tiers'][PRIMARY_POLICY][tier]}"
+                )
+    return {"kernels_shifted": len(shifted), "shifts": dict(sorted(shifted.items()))}
