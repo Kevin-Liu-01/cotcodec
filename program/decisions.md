@@ -161,3 +161,15 @@ threshold moved from v1's 5% to 8% after v1 measured 5.89%. That is accepted
 only because v2 collects fresh data on identical prompt token sequences, the
 8% is calibrated to v1's measured run-to-run noise (about 2 standard errors),
 and the registration discloses that it was chosen after v1's result.
+
+**D22. K1 v2 counting rule and probe sign-offs.** The 8 GPU-h threshold of
+D20 for `q3-k1-localization-screen-v2` applies to the sum of the registered
+caps of every job: the conditional V1 extension at its worst-case cap, the
+main continuation inside the main cap, and the cap of every throughput-probe
+run whatever its outcome. Expected use never replaces a cap. The limit
+formula's factors (1.2 and 1.15) are fixed before the probe runs. If the
+probe-derived total exceeds 8 GPU-h, v2 is not frozen and goes through the
+research gauntlet. A one-GPU job of at most 0.1 GPU-h is pre-approved to run
+the batched-bank GPU equivalence tests before the probe is frozen, so the TF32
+tolerances are checked on the H100 first; it reads no evaluation data. Probe
+design decisions 1-12 and v2 design decisions 32-46 are accepted.
