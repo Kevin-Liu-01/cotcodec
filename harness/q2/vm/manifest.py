@@ -735,6 +735,10 @@ def _validate_acceptance_workload(
     if attempt != 1 and workload.get("criterion") in ("C1", "C2", "C3"):
         # Section 11: a failed validity control is not repaired within v1.
         raise ManifestError("validity controls C1-C3 have no repair attempts")
+    if attempt != 1 and workload.get("criterion") == "A7":
+        # Decision D30: A7 bounds the upstream observation service, which no executor repair
+        # changes; its attempt-1 result stands for every later attempt (section 11).
+        raise ManifestError("A7 has no repair attempts")
     if manifest["runner"]["cpus"] != runner_cpus(manifest["vm"]["concurrency"]):
         raise ManifestError(
             f"runner.cpus must be {runner_cpus(manifest['vm']['concurrency'])} at concurrency "
