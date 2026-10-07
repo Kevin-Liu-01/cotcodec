@@ -111,8 +111,9 @@ def test_kill_and_resume_finishes_every_item_once(tmp_path: Path) -> None:
     assert len(finals) == len(items)
     _, invalid = journal.read()
     assert invalid == 1
-    marker_payload = json.loads(marker.read_text())
-    assert marker_payload["items_final"] == len(items)
+    assert not marker.exists()  # no signal arrived: the marker is reserved for signals
+    progress = json.loads((tmp_path / "progress.json").read_text())
+    assert progress["items_final"] == len(items)
 
 
 def test_sigusr1_checkpoints_and_exits_75(tmp_path: Path) -> None:
@@ -125,7 +126,9 @@ def test_sigusr1_checkpoints_and_exits_75(tmp_path: Path) -> None:
     process.send_signal(signal.SIGUSR1)
     out, _ = process.communicate(timeout=120)
     assert process.returncode == 75, out
-    assert json.loads(marker.read_text())["run_id"] == "resume-test"
+    lines = marker.read_text().splitlines()
+    assert lines[0] == "trigger=SIGUSR1"
+    assert "run_id=resume-test" in lines
     hang_key = items[1].key
     assert hang_key not in Journal(journal_path).status()  # killed item not journaled
 

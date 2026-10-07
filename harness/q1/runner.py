@@ -21,11 +21,14 @@
 - **Journal.** Rows are appended to the append-only journal
   (``journal.py``); resume skips finished items and reruns the rest with the
   next attempt number.
-- **Signals.** Under the lane's checkpoint contract, SIGUSR1 or SIGTERM stops
-  scheduling, kills running children (their items are not journaled and rerun
-  on resume), and writes the checkpoint marker atomically (temp file, then
-  rename) after the journal is complete. The marker is also refreshed after
-  every journaled item. The CLI exits 75 when interrupted.
+- **Signals.** Under the lane's checkpoint contract (docs/operations.md), SIGUSR1
+  or SIGTERM stops scheduling and kills running children (their items are not
+  journaled and rerun on resume). Once the journal is complete, the runner
+  writes ``checkpoint.ready`` atomically (temp file in the same directory, then
+  rename) with the line ``trigger=SIGUSR1`` or ``trigger=SIGTERM``. The marker
+  is reserved for that signal-triggered save: progress after each journaled
+  item goes to a separate ``progress.json`` and never to the marker. The CLI
+  exits 75 when interrupted.
 """
 
 from __future__ import annotations
@@ -87,6 +90,7 @@ class RunnerConfig:
     health_check: bool = True
     workdir: Path | None = None
     checkpoint_marker: Path | None = None
+    progress_path: Path | None = None
 
 
 def _set_pdeathsig() -> None:
@@ -108,10 +112,13 @@ class Runner:
         self.summary: dict[str, int] = {"run": 0, "skipped": 0, "timeouts": 0, "crashes": 0}
         self.retired_slots: list[str] = []
         self.stopped = threading.Event()
+        self.trigger: str | None = None
         self._children: set[subprocess.Popen] = set()
 
-    def stop(self) -> None:
+    def stop(self, trigger: str = "SIGUSR1") -> None:
         """Stop scheduling and kill running children; their items rerun on resume."""
+        if self.trigger is None:
+            self.trigger = trigger
         self.stopped.set()
         with self._lock:
             children = list(self._children)
@@ -119,22 +126,38 @@ class Runner:
             with contextlib.suppress(ProcessLookupError, PermissionError):
                 os.killpg(child.pid, signal.SIGKILL)
 
-    def write_checkpoint_marker(self) -> None:
-        marker = self.config.checkpoint_marker
-        if marker is None:
-            return
+    def _journal_facts(self) -> dict[str, Any]:
         rows, invalid = self.journal.read()
-        payload = {
+        return {
             "run_id": self.config.run_id,
-            "journal": str(self.config.journal_path),
             "journal_rows": len(rows),
             "invalid_lines": invalid,
             "items_final": sum(1 for s in self.journal.status().values() if s["final"]),
             "written_at": time.time(),
         }
-        temp = marker.with_name(f".{marker.name}.{os.getpid()}.tmp")
-        temp.write_text(json.dumps(payload, sort_keys=True), encoding="utf-8")
-        os.replace(temp, marker)
+
+    @staticmethod
+    def _atomic_write(path: Path, text: str) -> None:
+        temp = path.with_name(f".{path.name}.{os.getpid()}.tmp")
+        temp.write_text(text, encoding="utf-8")
+        os.replace(temp, path)
+
+    def write_progress(self) -> None:
+        """Periodic progress record; never the checkpoint marker."""
+        if self.config.progress_path is not None:
+            self._atomic_write(
+                self.config.progress_path, json.dumps(self._journal_facts(), sort_keys=True)
+            )
+
+    def write_checkpoint_marker(self) -> bool:
+        """Signal-triggered checkpoint marker. Returns False when no signal was received."""
+        marker = self.config.checkpoint_marker
+        if marker is None or self.trigger is None:
+            return False
+        facts = self._journal_facts()
+        lines = [f"trigger={self.trigger}"] + [f"{key}={facts[key]}" for key in sorted(facts)]
+        self._atomic_write(marker, "\n".join(lines) + "\n")
+        return True
 
     # --- scheduling ---------------------------------------------------------
 
@@ -183,7 +206,7 @@ class Runner:
             with self._lock:
                 self.journal.append(rows)
                 self.summary["run"] += 1
-                self.write_checkpoint_marker()
+                self.write_progress()
             if not healthy:
                 with self._lock:
                     self.retired_slots.append(slot)
@@ -341,6 +364,13 @@ class Runner:
             return False
 
 
+def install_signal_handlers(runner: Runner) -> None:
+    """SIGUSR1 and SIGTERM stop the runner and name the trigger for the marker."""
+    for signum in (signal.SIGUSR1, signal.SIGTERM):
+        name = signal.Signals(signum).name
+        signal.signal(signum, lambda *_, _name=name: runner.stop(_name))
+
+
 def load_items(path: Path) -> list[WorkItem]:
     items = []
     for line in path.read_text(encoding="utf-8").splitlines():
@@ -372,6 +402,7 @@ def main(argv: list[str] | None = None) -> int:
         timing_slots=[s for s in args.timing_slots.split(",") if s],
         workdir=args.workdir,
         checkpoint_marker=args.checkpoint_marker,
+        progress_path=args.journal.with_name("progress.json"),
     )
     if args.run_id:
         config.run_id = args.run_id
@@ -381,8 +412,7 @@ def main(argv: list[str] | None = None) -> int:
     if overlap:
         parser.error(f"slots used for both correctness and timing: {sorted(overlap)}")
     runner = Runner(config)
-    for signum in (signal.SIGUSR1, signal.SIGTERM):
-        signal.signal(signum, lambda *_: runner.stop())
+    install_signal_handlers(runner)
     summary = runner.run(load_items(args.items))
     interrupted = runner.stopped.is_set()
     runner.write_checkpoint_marker()

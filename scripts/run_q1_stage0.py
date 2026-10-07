@@ -20,7 +20,6 @@ from __future__ import annotations
 import argparse
 import json
 import os
-import signal
 import sys
 from pathlib import Path
 
@@ -28,7 +27,13 @@ PROJECT_ROOT = Path(__file__).resolve().parents[1]
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
-from harness.q1.runner import DEFAULT_TIMEOUTS, Runner, RunnerConfig, WorkItem  # noqa: E402
+from harness.q1.runner import (  # noqa: E402
+    DEFAULT_TIMEOUTS,
+    Runner,
+    RunnerConfig,
+    WorkItem,
+    install_signal_handlers,
+)
 from harness.q1.schema import iter_kernel_dirs  # noqa: E402
 from harness.q1.worker import WORK_GATES  # noqa: E402
 
@@ -102,10 +107,10 @@ def main(argv: list[str] | None = None) -> int:
         timeouts={**DEFAULT_TIMEOUTS, **(json.loads(args.timeouts) if args.timeouts else {})},
         workdir=workdir,
         checkpoint_marker=Path(marker) if marker else None,
+        progress_path=args.output / "progress.json",
     )
     runner = Runner(config)
-    for signum in (signal.SIGUSR1, signal.SIGTERM):
-        signal.signal(signum, lambda *_: runner.stop())
+    install_signal_handlers(runner)
     summary = runner.run(items)
     runner.write_checkpoint_marker()
     summary["interrupted"] = runner.stopped.is_set()
