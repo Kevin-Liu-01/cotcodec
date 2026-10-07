@@ -25,6 +25,10 @@ settings; and a volume certification split from development runs.
 | `action_path/ir.py` | Canonical action IR (Table 21 vocabulary plus explicit holds) |
 | `action_path/catalog.yaml` | The 100-entry catalog (draft; key entries await R-dev references) |
 | `action_path/catalog.py` | Catalog loader, validator and hash |
+| `action_path/build_catalog.py` | Author tool that writes `catalog.yaml`; a test checks it reproduces the file byte for byte |
+| `action_path/rdev.py`, `rdev_plan.json` | R-dev reference: HMP chords per key entry, projection and stability rules |
+| `action_path/rdev_reference.json` | Stable R-dev streams from the reference capture (copied into `catalog.yaml`) |
+| `action_path/expressible_entries.json` | Per Stage-1 harness: expressible entries (H-OSW 85, H-GA 80) and reasons for the rest |
 | `action_path/vocab.py` | Stage-1 harness vocabularies and the gating set G |
 | `action_path/gating_set.json` | G (86 entries) and the 14 non-gating entries with reasons |
 | `action_path/mutation_operators.yaml` | 28 suite mutation operators and the equivalence rule |

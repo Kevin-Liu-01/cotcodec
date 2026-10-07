@@ -210,3 +210,30 @@ def test_rdev_projection_and_stability():
     assert unstable["entries"]["chord_ctrl_c"]["events"] is None
     dirty = rdev.summarize_capture({"trials": [dict(trial, guard_clean=False)] + [trial] * 4})
     assert dirty["entries"]["chord_ctrl_c"]["stable"] is False
+
+
+def test_expressible_entries_file_matches_the_vocabularies(catalog):
+    from harness.q2.action_path.vocab import harness_expressible
+
+    entries = [(e["id"], parse_sequence(e["actions"])) for e in catalog["entries"]]
+    computed = harness_expressible(entries)
+    committed = json.loads((HERE / "expressible_entries.json").read_text(encoding="utf-8"))
+    assert committed == computed
+    assert len(computed["H-OSW"]["expressible"]) == 85
+    assert len(computed["H-GA"]["expressible"]) == 80
+    assert "click_triple_left" in computed["H-OSW"]["excluded"]
+    assert "click_ctrl_left" in computed["H-GA"]["excluded"]
+
+
+def test_rdev_reference_rejects_an_unbalanced_window():
+    from harness.q2.action_path import rdev
+
+    leaked = [
+        ["KeyPress", "F1", []],
+        ["KeyRelease", "F1", []],
+        ["KeyPress", "Escape", []],
+    ]
+    assert rdev.balanced(leaked[:2]) and not rdev.balanced(leaked)
+    trial = {"id": "key_f1", "projection": leaked, "guard_clean": True}
+    summary = rdev.summarize_capture({"trials": [trial] * 5})
+    assert summary["entries"]["key_f1"]["stable"] is False

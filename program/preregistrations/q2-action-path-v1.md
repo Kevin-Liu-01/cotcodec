@@ -52,10 +52,12 @@ both ledger entries and every listed digest.
 |---|---|
 | `harness/q2/action_path/catalog.yaml` | 100 entries, status draft; the 35 key, chord and Caps Lock entries wait for their R-dev reference streams (section 4.3) |
 | `harness/q2/action_path/gating_set.json` | G = 86 entries, 14 non-gating with reasons |
+| `harness/q2/action_path/expressible_entries.json` | per-harness expressible sets (H-OSW 85, H-GA 80) with exclusion reasons |
+| `harness/q2/action_path/rdev_plan.json`, `rdev.py` | the HMP chords per key entry and the projection and stability rules |
 | `harness/q2/action_path/mutation_operators.yaml` | 28 operators and the equivalence rule |
 | `harness/q2/action_path/l0_raw_prediction.yaml` | the predicted L0-raw failing set |
 | `harness/q2/action_path/ir.py`, `vocab.py`, `catalog.py` | IR, vocabularies, validator |
-| R-dev reference file | produced by the reference capture (section 4.3) |
+| `harness/q2/action_path/rdev_reference.json` | produced by the reference capture (section 4.3) and copied into the catalog |
 | Guest probe, guard and marker code | written before the freeze; digests in the inputs manifest |
 | Harness adapters, per-harness expressible sets, regression corpus | section 3; digests in the inputs manifest |
 | L0-fixed executor | its git SHA is frozen when development ends (section 10); acceptance uses only that SHA |
@@ -156,8 +158,9 @@ They run in every pass and are reported; they do not gate.
   reference is the projection (event kind, keysym at index 0 of the keycode,
   modifier mask restricted to Shift, Control, Mod1, Mod4) with timestamps
   removed. An entry gets a reference only if all 5 repetitions give the same
-  projection; otherwise it is labelled "self-specified oracle" and its claim is
-  downgraded in every report. Caps Lock additionally requires the Caps LED bit
+  projection, every key pressed in the window is released in it, and the guard
+  after the entry is clean; otherwise it is labelled "self-specified oracle"
+  and its claim is downgraded in every report. Caps Lock additionally requires the Caps LED bit
   to toggle on and back off. Infrastructure validation (job 374) measured the
   HMP path: `sendkey` reaches X for letters, Shift chords, KP_Enter (keycode
   104), KP_Add (86), the 102nd key (94, `less`), Caps Lock with LED toggle, and
