@@ -32,6 +32,8 @@ WORK_GATES = (
     "A3",
     "A4",
     "A5",
+    "A4_poison",
+    "A4_sanitizer",
     "timing",
 )
 
@@ -152,6 +154,27 @@ def _rows_for(item: Mapping[str, Any]) -> list[dict[str, Any]]:
                 policy_of[index] = "not-applicable"
             else:
                 policy_of[index] = outcome.details.get("policy", "tf32-admissible")
+    elif gate in {"A4_poison", "A4_sanitizer"}:
+        from harness.q1.audit import gpu_probes
+
+        if device.type != "cuda":
+            raise SystemExit(f"{gate} needs a CUDA device")
+        workdir = Path(item.get("workdir") or Path(item["kernel_path"]).parent)
+        probe_item = {key: item[key] for key in ("problem_id", "kernel_path", "seed")}
+        probe_item["problem_source_path"] = item.get("problem_source_path")
+        if gate == "A4_poison":
+            outcomes = [gpu_probes.run_poison(probe_item, workdir, options.get("so_path"))]
+        else:
+            from harness.q1.gates.gate_c import shape_manifest
+
+            manifest = (
+                json.loads(Path(options["manifest_path"]).read_text(encoding="utf-8"))
+                if options.get("manifest_path")
+                else shape_manifest()
+            )
+            probe_item["a3_entry"] = manifest["problems"].get(problem_id, {})
+            outcomes = [gpu_probes.run_sanitizer(probe_item, workdir)]
+        policy_of[0] = "not-applicable"
     elif gate == "timing":
         from harness.q1.audit import run as audit
         from harness.q1.timing import time_against_baselines

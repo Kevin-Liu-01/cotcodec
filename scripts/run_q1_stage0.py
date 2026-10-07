@@ -45,6 +45,8 @@ DEFAULT_GATES = (
     "A2",
     "A3",
     "A4",
+    "A4_poison",
+    "A4_sanitizer",
     "A5",
 )
 

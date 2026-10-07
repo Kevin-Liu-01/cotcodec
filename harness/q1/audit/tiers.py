@@ -17,6 +17,9 @@ Audit hole: a gate rejected a kernel on a validity-gated input the audit
 accepted. Replay the kernel on that input against the fp64 oracle: if it
 deviates beyond T the audit has a hole (bump the audit version and rerun
 everything); otherwise the gate falsely rejected it.
+
+This module imports torch only inside the functions that need the oracle, so
+tier composition runs in torch-free analyses.
 """
 
 from __future__ import annotations
@@ -27,8 +30,6 @@ from collections.abc import Mapping
 from pathlib import Path
 from typing import Any
 
-from harness.q1.audit import oracle
-
 TIERS = ("N", "G", "G-strict", "c-disjoint")
 AUDIT_FILES = (
     "audit/oracle.py",
@@ -38,6 +39,7 @@ AUDIT_FILES = (
     "audit/run.py",
     "audit/tiers.py",
     "audit/poison_alloc.c",
+    "audit/gpu_probes.py",
 )
 
 
@@ -82,13 +84,18 @@ def precision_only(a1_aggregate_details: Mapping[str, Any], channels: Mapping[st
 
 def adjudicate_gate_rejection(
     candidate_output: Any,
-    reference: oracle.OracleReference,
+    reference: Any,
     *,
     policy: str = "tf32-admissible",
-    multiplier: float = oracle.DEFAULT_MULTIPLIER,
+    multiplier: float = 16,
     candidate_tl_dot: bool = False,
 ) -> dict[str, Any]:
-    """Audit-hole replay on the gate's rejecting input (already validity-gated)."""
+    """Audit-hole replay on the gate's rejecting input (already validity-gated).
+
+    ``reference`` is an ``oracle.OracleReference`` built on that input.
+    """
+    from harness.q1.audit import oracle
+
     result = oracle.a1_compare(
         candidate_output,
         reference,
@@ -106,6 +113,8 @@ def audit_version_hash(
     *, multiplier: int, multiplier_raised: bool, q1_root: Path | None = None
 ) -> dict[str, Any]:
     """Freeze record for audit v1: constants plus SHA-256 of every audit source file."""
+    from harness.q1.audit import oracle
+
     root = q1_root or Path(__file__).resolve().parents[1]
     files = {name: hashlib.sha256((root / name).read_bytes()).hexdigest() for name in AUDIT_FILES}
     record = {

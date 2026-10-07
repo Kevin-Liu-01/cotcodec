@@ -215,6 +215,7 @@ class Runner:
             "run_id": self.config.run_id,
             "attempt": attempt,
             "device": "cuda:0" if slot.startswith("cuda:") else "cpu",
+            "workdir": str(workdir),
         }
         if slot.startswith("cuda:") and item.is_timing:
             payload["options"] = {**item.options, "gpu_index": int(slot.split(":", 1)[1])}
