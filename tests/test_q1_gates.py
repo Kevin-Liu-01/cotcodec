@@ -138,8 +138,12 @@ def test_b2_retries_an_empty_profile_once() -> None:
     x = torch.ones(4)
     for retries, expected in ((0, 3 + 10 + 10), (1, 3 + 10 + 10 + 10)):
         Counting.calls = 0
-        rows = gate_b.profiler_rows(Counting(), [x], device=torch.device("cpu"), retries=retries)
+        stats: dict = {}
+        rows = gate_b.profiler_rows(
+            Counting(), [x], device=torch.device("cpu"), retries=retries, stats=stats
+        )
         assert rows == [] and Counting.calls == expected  # CPU rows carry no device time
+        assert stats == {"profile_attempts": 1 + retries, "event_rows": 0}
 
 
 def test_launch_hook_restores_triton_classes() -> None:

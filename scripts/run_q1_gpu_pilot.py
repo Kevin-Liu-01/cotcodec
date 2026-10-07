@@ -15,7 +15,7 @@
 4. **smoke**: reference-identity controls of three KernelBench problems through
    every scoring gate and audit channel (A4's poison allocator and
    compute-sanitizer included), gate (a) at replicates 43 and 44, b1 and b2 on
-   every hack control of the S1 activation pick (empty-profile retry path),
+   every hack control of the S1 activation pick,
    gate (a) through unmodified KernelBench at both pinned revisions, and the
    timing harness.
 
@@ -28,9 +28,15 @@ CPU steps derived from it, plus the unmodified KernelGYM and KBV clones):
    one mutant of each of the first substrates;
 2. **calibration**: A1 at M = 16, replicate 42, on the S1-cal picks, then the
    calibration driver (CPU);
-3. **scoring**: ``pilot.schedule`` (every gate and channel, P0..P4), cut by the
-   time box at a deterministic point;
-4. **timing** of the first pilot substrates against their references.
+3. **timing** of the first pilot substrates against their references (before
+   scoring since this pass: in job 518 scoring's in-flight items used up the
+   timing reserve);
+4. **scoring**: ``pilot.schedule`` (every gate and channel, P0..P4), cut by the
+   time box at a deterministic point; ``--scoring-prefix N`` and
+   ``--scoring-shared-only`` restrict it to a registered prefix of that order
+   (a paired re-measurement, for example at another ``--slots-per-gpu``).
+
+``--phases`` selects which of these run (the unpack always runs).
 
 Every phase writes its wall seconds to ``phases.json`` (the GPU is held for the
 whole job, so phase wall time is GPU allocation time). Runs only as a one-GPU
@@ -66,6 +72,8 @@ from harness.q1.runner import Runner, RunnerConfig, WorkItem, install_signal_han
 from harness.q1.schema import iter_kernel_dirs  # noqa: E402
 
 SMOKE_PROBLEMS = ("L1/19_ReLU", "L1/95_CrossEntropyLoss", "L2/12_Gemm_Multiply_LeakyReLU")
+#: Phases of ``--job pilot`` in run order (unpack always runs first).
+PILOT_PHASES = ("smoke", "fidelity", "calibration", "timing", "scoring")
 #: Head candidates per S1 stratum that get device codegen (fallbacks included).
 HEADS_PER_PICK = 3
 #: Set by --size-scaled-watchdog (pilot job): per-item limits from pilot.watchdog_limits.
@@ -459,13 +467,39 @@ def job_pilot(driver: Driver, args: argparse.Namespace) -> None:
         "c1_kbv_native": {"kbv_src": str(kbv)},
     }
     shared = [s for s in ordered if not pilot.exclusive_problem(s.problem_id)]
+    phases = set(args.phases)
 
+    if "smoke" in phases:
+        _pilot_smoke(driver, args, core, controls)
+    if "fidelity" in phases:
+        _pilot_fidelity(driver, args, core, mutants, shared, fidelity_options)
+    if "calibration" in phases:
+        _pilot_calibration(driver, args, corpus)
+    # Timing runs before scoring: in job 518 scoring's in-flight items overran the
+    # timing reserve and the timing phase got a zero budget.
+    if "timing" in phases:
+        with driver.phase("timing") as record:
+            driver.run_items(
+                "timing",
+                [_item(k, "timing", 42) for k in shared[: args.timing_kernels]],
+                budget_seconds=min(args.timing_minutes * 60, driver.remaining() - 45),
+                timing=True,
+                record=record,
+            )
+    if "scoring" in phases:
+        _pilot_scoring(driver, args, out, ordered, controls, mutants)
+
+
+def _pilot_smoke(driver: Driver, args: argparse.Namespace, core: dict, controls: dict) -> None:
     with driver.phase("smoke") as record:
         # Every scoring gate and audit channel (A4 poison allocator and compute-sanitizer
         # included), unmodified KernelBench gate (a) at both revisions and the timing
         # harness on the reference-identity control of a small problem; b1 and b2 on the
         # cached-output hack control of the S1 activation pick (no launch after the
-        # first call: b2's empty-profile retry path).
+        # first call). b2 retries only an empty event table; the window's 1024-element
+        # self-test always records device rows on a working GPU, so the retry branch is
+        # reached only by a profiler failure (CPU unit test); b2 rows record
+        # profile_attempts so a retry would be visible.
         from harness.q1.controls import identity_control_id
 
         identity = core[identity_control_id(args.smoke_problem)]
@@ -489,6 +523,15 @@ def job_pilot(driver: Driver, args: argparse.Namespace) -> None:
             record=record,
         )
 
+
+def _pilot_fidelity(
+    driver: Driver,
+    args: argparse.Namespace,
+    core: dict,
+    mutants: dict,
+    shared: list,
+    fidelity_options: dict,
+) -> None:
     with driver.phase("fidelity") as record:
         adversarial = [
             k
@@ -516,6 +559,9 @@ def job_pilot(driver: Driver, args: argparse.Namespace) -> None:
             "fidelity", items, budget_seconds=args.fidelity_minutes * 60, record=record
         )
 
+
+def _pilot_calibration(driver: Driver, args: argparse.Namespace, corpus: Path) -> None:
+    out = driver.out
     with driver.phase("calibration") as record:
         calibration = sorted(
             iter_kernel_dirs(corpus / "pilot-calibration"),
@@ -540,6 +586,15 @@ def job_pilot(driver: Driver, args: argparse.Namespace) -> None:
             ]
         )
 
+
+def _pilot_scoring(
+    driver: Driver,
+    args: argparse.Namespace,
+    out: Path,
+    ordered: list,
+    controls: dict,
+    mutants: dict,
+) -> None:
     with driver.phase("scoring") as record:
 
         def meta(kernel: Any) -> dict[str, Any]:
@@ -572,21 +627,19 @@ def job_pilot(driver: Driver, args: argparse.Namespace) -> None:
         (out / "scoring-plan.json").write_text(
             json.dumps([p.__dict__ for p in plan], indent=0, sort_keys=True)
         )
-        driver.run_items(
-            "scoring",
-            items,
-            budget_seconds=driver.remaining() - args.timing_reserve_minutes * 60,
-            record=record,
-        )
-
-    with driver.phase("timing") as record:
-        driver.run_items(
-            "timing",
-            [_item(k, "timing", 42) for k in shared[: args.timing_kernels]],
-            budget_seconds=driver.remaining() - 45,
-            timing=True,
-            record=record,
-        )
+        # A measurement job may score only a registered prefix of the schedule (the
+        # first N items, in pilot.schedule order), optionally without the exclusive
+        # items, so it can be paired item by item with an earlier pilot job.
+        if args.scoring_prefix is not None:
+            items = items[: args.scoring_prefix]
+        if args.scoring_shared_only:
+            items = [item for item in items if not item.exclusive]
+        record["scoring_selection"] = {
+            "prefix": args.scoring_prefix,
+            "shared_only": args.scoring_shared_only,
+            "items": len(items),
+        }
+        driver.run_items("scoring", items, budget_seconds=driver.remaining() - 30, record=record)
 
 
 def _kmeta(kernel: Any) -> dict[str, Any]:
@@ -607,8 +660,23 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--fidelity-minutes", type=float, default=8.0)
     parser.add_argument("--fidelity-mutants", type=int, default=4)
     parser.add_argument("--calibration-minutes", type=float, default=3.0)
-    parser.add_argument("--timing-reserve-minutes", type=float, default=2.5)
+    parser.add_argument(
+        "--timing-reserve-minutes",
+        type=float,
+        default=2.5,
+        help="accepted for the job 518 argv; timing now runs before scoring",
+    )
+    parser.add_argument("--timing-minutes", type=float, default=2.5)
     parser.add_argument("--timing-kernels", type=int, default=3)
+    parser.add_argument(
+        "--phases",
+        nargs="+",
+        choices=PILOT_PHASES,
+        default=list(PILOT_PHASES),
+        help="pilot job phases to run (unpack always runs)",
+    )
+    parser.add_argument("--scoring-prefix", type=int, default=None)
+    parser.add_argument("--scoring-shared-only", action="store_true")
     parser.add_argument(
         "--dry-run",
         action="store_true",

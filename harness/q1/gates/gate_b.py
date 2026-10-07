@@ -379,12 +379,16 @@ def profiler_rows(
     num_warmup: int = 3,
     cpu_rows_as_kernels: bool = False,
     retries: int = PROFILE_RETRIES,
+    stats: dict[str, Any] | None = None,
 ) -> list[dict[str, Any]]:
     """Spec b2 steps 2-4: timing calls, a profiled window, and one retry of an empty table.
 
     ``cpu_rows_as_kernels`` is a CPU-doctor-only approximation (no CUDA
     events exist on CPU): rows with positive CPU time count as kernels. It is
     never used for Stage 0 GPU runs and is recorded in the row details.
+    ``stats``, when given, receives ``profile_attempts`` (1, or 2 after the
+    retry of an empty table) and ``event_rows`` (rows of the final table), so
+    a b2 row shows whether the retry ran.
     """
     timed = device.type == "cuda"
     for index in range(num_warmup + num_perf_trials):
@@ -401,12 +405,16 @@ def profiler_rows(
     table = _event_table(
         module, inputs, device=device, calls=calls, cpu_rows_as_kernels=cpu_rows_as_kernels
     )
+    attempts = 1
     for _ in range(max(0, retries)):
         if table:
             break
+        attempts += 1
         table = _event_table(
             module, inputs, device=device, calls=calls, cpu_rows_as_kernels=cpu_rows_as_kernels
         )
+    if stats is not None:
+        stats.update({"profile_attempts": attempts, "event_rows": len(table)})
     return table
 
 
@@ -553,14 +561,16 @@ def run_gate_b2(
 
     def body(custom: torch.nn.Module, inputs: list[Any], dev: torch.device) -> tuple[str, dict]:
         _, captures, _ = detect_launches(custom, inputs, device=dev)
+        stats: dict[str, Any] = {}
         rows = profiler_rows(
             custom,
             inputs,
             device=dev,
             num_perf_trials=num_perf_trials,
             cpu_rows_as_kernels=cpu_rows_as_kernels,
+            stats=stats,
         )
-        facts = coverage(captures, rows)
+        facts = {**coverage(captures, rows), **stats}
         if facts["decoy"]:
             facts["reason"] = "profiler-shows-no-captured-kernel"
         return ("reject" if facts["decoy"] else "accept"), facts

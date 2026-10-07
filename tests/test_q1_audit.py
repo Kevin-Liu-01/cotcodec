@@ -195,6 +195,43 @@ def test_a3_classifies_refusals_and_silent_failures() -> None:
     assert outcomes["relu_native_only"].details["counts"]["silent-wrong"] >= 1
 
 
+def test_sanitizer_probe_skips_configurations_the_candidate_refuses() -> None:
+    """Pilot job 518: S1 substrates refuse A3/lead1, so the sanitizer probe must move
+    to the next A3 configuration (and to native shape when every one is refused)."""
+    from harness.q1 import problems as problem_lib
+    from harness.q1 import shapes
+    from harness.q1.audit import gpu_probes
+
+    problem_id = "L1/9001_SyntheticReLU"
+    source = fx.PROBLEMS[problem_id]
+    analysis = problem_lib.analyze_problem(problem_id, source)
+
+    def input_bytes(overrides: dict[str, int]) -> int:
+        variant = problem_lib.override_constants(source, analysis, overrides)
+        return int(problem_lib.meta_input_summary(variant)["input_bytes"])
+
+    entry = shapes.build_problem_manifest(
+        analysis, problem_sha256="0" * 64, input_bytes=input_bytes
+    )
+    configs = gpu_probes.sanitizer_configs(entry)
+    assert configs and [c["input_bytes"] for c in configs] == sorted(
+        c["input_bytes"] for c in configs
+    )
+    chosen = {}
+    for name in ("relu_correct", "relu_refuses_shapes"):
+        subject = _subject(name)
+        try:
+            outputs, config_id, refused = gpu_probes.run_first_accepted(
+                subject, problem_id, source, configs, 42
+            )
+        finally:
+            subject.cleanup()
+        assert outputs
+        chosen[name] = (config_id, [r["config_id"] for r in refused])
+    assert chosen["relu_correct"] == (configs[0]["config_id"], [])
+    assert chosen["relu_refuses_shapes"] == ("native", [c["config_id"] for c in configs])
+
+
 @pytest.mark.parametrize(
     ("name", "failed"),
     [
