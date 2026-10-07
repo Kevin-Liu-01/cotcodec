@@ -263,7 +263,7 @@ Per mutant and venv, `campaign.classify` assigns exactly one status:
 | `null_not_pass` | the target's saved null mutant does not pass under this venv | no, S7 |
 | `error` | `evaluate()` raised | no, counted per checker |
 | `nondeterministic` | the mutant's or its null mutant's repeated scorings disagree | no, S5 |
-| `ambiguous` | label `ambiguous` | no, counted and sent to the audit |
+| `ambiguous` | label `ambiguous` | no, counted per witness rule and verdict |
 | `evaluable` | all of the above clear | yes: event FN, FN_alt, FP_R or FP_F when the verdict disagrees with the label, otherwise `ok` |
 
 - `should_pass_alt_solution` enters P2 only after audit acceptance; before
@@ -292,8 +292,10 @@ it is verdict `error`.
 - Sample, disjoint strata in priority order: all `should_pass_alt_solution`
   mutants (cap 150), all label-verdict disagreements (cap 200), 100 random
   agreements, each with its inclusion probability; plus 10% sham items
-  (LibreOffice-saved gold, do-nothing; at most two per task); every P1 flip
-  and every ambiguous mutant with a verdict, up to the same caps.
+  (LibreOffice-saved gold, do-nothing; at most two per task); every P1 flip.
+  Mutants labelled `ambiguous` and `error` verdicts are outside the sample
+  (`raters.stratum_of`); ambiguous mutants are reported as counts per witness
+  rule and verdict, never as rates.
 - Decision per item: both raters accept → accept; both reject → reject;
   otherwise unresolved, sent to Kevin. Label error uses Hajek weights with a
   task-cluster bootstrap; unresolved items are excluded in the primary estimate
@@ -425,8 +427,11 @@ numbers labelled pre-reachability; and the deviations below.
 
 ## 15. Integration validation on the development split (exploratory)
 
-Two end-to-end campaigns ran on the 17 dev targets through the three CPU-only
-Slurm jobs (no GPU, no network, `/dev/nvidia*` absent in every receipt). The
+Three end-to-end campaigns ran on the 17 dev targets through the three
+CPU-only Slurm jobs (no GPU, no network, `/dev/nvidia*` absent in every
+receipt). `dev-mutants-v3` ran at commit
+`17aac70171e3f8921bae6f6896267a52454f6293`, whose code tree is the one pinned
+above. The
 exports, with recipes redacted, are committed under
 `program/evidence/q2-mutation/integration/` and checked by
 `tests/test_q2_mutation_integration_evidence.py`.
@@ -435,16 +440,17 @@ exports, with recipes redacted, are committed under
 |---|---|---:|---:|---:|---:|---:|---:|
 | `dev-mutants-v1` (Slurm 453-455) | base (null = base saved again) | 275 | 271 | 203 | 27 | 40 (2 targets) | 1 |
 | `dev-mutants-v2` (Slurm 458-460) | raw gold (null = base) | 275 | 271 | 215 | 27 | 28 (1 target) | 1 |
+| `dev-mutants-v3` (Slurm 461-463), pinned code | raw gold (null = base) | 275 | 271 | 215 | 27 | 28 (1 target) | 1 |
 
 - Build: 4 of 275 planned mutants failed build-time purity (two
   `docx.alt.para_direct_for_style` changed the resolved appearance; two
   `xlsx.viol.formula_ref_shift` left the value unchanged, i.e. equivalent
   mutants). Admitted labels: 111 equiv, 28 alternative, 68 violation,
   27 extra change, 37 ambiguous.
-- Save stage: 288 jobs, 286 saves, all written, no dialog, slowest write
-  0.30 s, no infrastructure error, no scoring timeout, no nondeterministic
-  scoring; the lock-exact and scoping venvs gave the same verdict on every
-  candidate.
+- Save stage (each run): 288 jobs, 286 saves, all written, no dialog,
+  slowest write 0.30 s, no infrastructure error, no scoring timeout, no
+  nondeterministic scoring; the lock-exact and scoping venvs gave the same
+  verdict on every candidate.
 - Post-save purity held for 270 of 271 admitted mutants; one
   `pptx.viol.drop_char_format` colour removal did not survive the save (S3).
 - Null mutants: in v1, two targets failed: af23762e (the known gold
@@ -460,9 +466,10 @@ exports, with recipes redacted, are committed under
   mutants, FP_R); `docx.extra.delete_unrelated_paragraph` passes
   `compare_docx_tables` on 936321ce (3 extra-change mutants, FP_F). Task
   escapes (FN or FP_R): 3 of 15 tasks.
-- Reproducibility: v1 and v2 planned every mutant at the same site with the
-  same label, and the 263 mutants of the other 16 targets had the same
-  status and event in both runs. Mutant ids differ between the runs because
+- Reproducibility: v1, v2 and v3 planned every mutant at the same site with
+  the same label; v2 and v3 gave the same status, event and verdict for all
+  275 mutants under both venvs, and v1 differed from them only on
+  5cfb9197. Mutant ids differ between the runs because
   a LibreOffice save is not byte-deterministic (document timestamps) and each
   recipe carries the SHA-256 of its base file.
 
@@ -521,5 +528,6 @@ W-F-UNREQUESTED gives `should_fail_extra_change`, W-F-COSMETIC gives
 `[AMBIGUOUS]` spec entry) gives `ambiguous`.
 Planning, binding, sites and admission follow
 `program/evidence/q2-mutation/operators/prereg-operators-section.md`, which
-this registration adopts with one change: recipes are applied to the raw gold
-(section 3).
+this registration adopts with two changes: recipes are applied to the raw
+gold (section 3), and ambiguous mutants are counted but not audited
+(section 9).
