@@ -68,6 +68,8 @@ from harness.q1.schema import iter_kernel_dirs  # noqa: E402
 SMOKE_PROBLEMS = ("L1/19_ReLU", "L1/95_CrossEntropyLoss", "L2/12_Gemm_Multiply_LeakyReLU")
 #: Head candidates per S1 stratum that get device codegen (fallbacks included).
 HEADS_PER_PICK = 3
+#: Set by --size-scaled-watchdog (pilot job): per-item limits from pilot.watchdog_limits.
+SIZE_SCALED_WATCHDOG = False
 
 
 class Driver:
@@ -91,6 +93,19 @@ class Driver:
         self.current: Runner | None = None
         self.interrupted = False
         self.trigger: str | None = None
+        self.signal_target: Any = None
+
+    def arm_signals(self, record: dict[str, Any]) -> None:
+        """(Re)install the SIGUSR1/SIGTERM handlers before every phase and record
+        whether something replaced them (job 474 ended its time box without its
+        handler running; the cause is recorded here, not assumed)."""
+        import signal
+
+        if self.signal_target is None:
+            return
+        current = signal.getsignal(signal.SIGUSR1)
+        record["sigusr1_handler_before"] = getattr(current, "__qualname__", repr(current))
+        install_signal_handlers(self.signal_target)
 
     def remaining(self) -> float:
         return self.end - time.monotonic()
@@ -113,6 +128,7 @@ class Driver:
         start = time.monotonic()
         record["start_offset_seconds"] = round(start - self.started, 3)
         self.phases.append(record)
+        self.arm_signals(record)
         self.write_phases()
         print(json.dumps({"phase": name, "status": "start"}), flush=True)
         try:
@@ -152,7 +168,9 @@ class Driver:
             workdir=workdir,
             progress_path=self.out / name / "progress.json",
             soft_deadline=now + budget,
-            hard_deadline=now + budget + 330.0,
+            # Never past the driver's own end: the job must finish before the lane's
+            # SIGUSR1 window (job 474 overran its budget by the old fixed margin).
+            hard_deadline=max(now + budget, min(now + budget + 330.0, self.end - 15.0)),
         )
         (self.out / name / "items.jsonl").write_text(
             "".join(json.dumps(item.__dict__, sort_keys=True) + "\n" for item in items),
@@ -165,6 +183,8 @@ class Driver:
             return summary
         runner = Runner(config)
         self.current = runner
+        if self.signal_target is not None:
+            install_signal_handlers(self.signal_target)
         try:
             summary = runner.run(items)
         finally:
@@ -190,6 +210,7 @@ def _item(kernel: Any, gate: str, seed: int, options: dict | None = None) -> Wor
         seed=seed,
         options=dict(options or {}),
         exclusive=pilot.exclusive_problem(kernel.problem_id),
+        timeouts=pilot.watchdog_limits(kernel.problem_id) if SIZE_SCALED_WATCHDOG else None,
     )
 
 
@@ -437,6 +458,36 @@ def job_pilot(driver: Driver, args: argparse.Namespace) -> None:
         "b_native": {"kernelgym_src": str(kernelgym)},
         "c1_kbv_native": {"kbv_src": str(kbv)},
     }
+    shared = [s for s in ordered if not pilot.exclusive_problem(s.problem_id)]
+
+    with driver.phase("smoke") as record:
+        # Every scoring gate and audit channel (A4 poison allocator and compute-sanitizer
+        # included), unmodified KernelBench gate (a) at both revisions and the timing
+        # harness on the reference-identity control of a small problem; b1 and b2 on the
+        # cached-output hack control of the S1 activation pick (no launch after the
+        # first call: b2's empty-profile retry path).
+        from harness.q1.controls import identity_control_id
+
+        identity = core[identity_control_id(args.smoke_problem)]
+        items = [_item(identity, gate, 42) for gate in pilot.SCORING_GATES]
+        items += [
+            _item(identity, gate, 42) for gate in ("a_upstream_44130946", "a_upstream_423217d9")
+        ]
+        cached = [
+            k
+            for group in controls.values()
+            for k in group
+            if k.kernel_id.endswith(".hack.cached-output")
+        ][:1]
+        items += [_item(k, gate, 42) for k in cached for gate in ("b1", "b2")]
+        driver.run_items("smoke", items, budget_seconds=args.smoke_minutes * 60, record=record)
+        driver.run_items(
+            "smoke-timing",
+            [_item(identity, "timing", 42)],
+            budget_seconds=120,
+            timing=True,
+            record=record,
+        )
 
     with driver.phase("fidelity") as record:
         adversarial = [
@@ -446,10 +497,10 @@ def job_pilot(driver: Driver, args: argparse.Namespace) -> None:
         ]
         first_mutants = [
             pilot.order_mutants([_kmeta(m) for m in mutants[s.kernel_id]])[0]["kernel"]
-            for s in ordered[: args.fidelity_mutants]
+            for s in shared[: args.fidelity_mutants]
             if mutants[s.kernel_id]
         ]
-        kernels = list(ordered) + adversarial + first_mutants
+        kernels = list(shared) + adversarial + first_mutants
         items = [
             _item(k, gate, 42, fidelity_options.get(gate))
             for k in kernels
@@ -466,7 +517,10 @@ def job_pilot(driver: Driver, args: argparse.Namespace) -> None:
         )
 
     with driver.phase("calibration") as record:
-        calibration = list(iter_kernel_dirs(corpus / "pilot-calibration"))
+        calibration = sorted(
+            iter_kernel_dirs(corpus / "pilot-calibration"),
+            key=lambda k: pilot.native_input_bytes(k.problem_id) or 0,
+        )
         driver.run_items(
             "calibration",
             [_item(k, "A1", 42) for k in calibration],
@@ -511,6 +565,7 @@ def job_pilot(driver: Driver, args: argparse.Namespace) -> None:
                 gate=p.gate,
                 seed=p.seed,
                 exclusive=pilot.exclusive_problem(p.problem_id),
+                timeouts=pilot.watchdog_limits(p.problem_id) if SIZE_SCALED_WATCHDOG else None,
             )
             for p in plan
         ]
@@ -527,7 +582,7 @@ def job_pilot(driver: Driver, args: argparse.Namespace) -> None:
     with driver.phase("timing") as record:
         driver.run_items(
             "timing",
-            [_item(k, "timing", 42) for k in ordered[: args.timing_kernels]],
+            [_item(k, "timing", 42) for k in shared[: args.timing_kernels]],
             budget_seconds=driver.remaining() - 45,
             timing=True,
             record=record,
@@ -547,6 +602,8 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--slots-per-gpu", type=int, default=4)
     parser.add_argument("--evidence", type=Path)
     parser.add_argument("--expected-evidence-sha256")
+    parser.add_argument("--smoke-minutes", type=float, default=6.0)
+    parser.add_argument("--smoke-problem", default="L2/12_Gemm_Multiply_LeakyReLU")
     parser.add_argument("--fidelity-minutes", type=float, default=8.0)
     parser.add_argument("--fidelity-mutants", type=int, default=4)
     parser.add_argument("--calibration-minutes", type=float, default=3.0)
@@ -557,7 +614,14 @@ def main(argv: list[str] | None = None) -> int:
         action="store_true",
         help="GPU-less plumbing check: mock codegen, no admission, items planned not run",
     )
+    parser.add_argument(
+        "--size-scaled-watchdog",
+        action="store_true",
+        help="per-item watchdog limits that grow with native input bytes (pilot.watchdog_limits)",
+    )
     args = parser.parse_args(argv)
+    global SIZE_SCALED_WATCHDOG
+    SIZE_SCALED_WATCHDOG = args.size_scaled_watchdog
     if sorted(args.seeds) != [42, 43, 44]:
         parser.error("the pilot declares replicates 42, 43 and 44")
     import torch
@@ -585,7 +649,8 @@ def main(argv: list[str] | None = None) -> int:
             if driver.current is not None:
                 driver.current.stop(trigger)
 
-    install_signal_handlers(_Proxy())  # type: ignore[arg-type]
+    driver.signal_target = _Proxy()
+    install_signal_handlers(driver.signal_target)
     gpu = torch.cuda.is_available()
     env = {
         "torch": torch.__version__,

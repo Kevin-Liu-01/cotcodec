@@ -1,15 +1,15 @@
-# Q1 Stage 0 pilot cost card (preregistration q1-stage0-gate-validation, step
-# "pilot"): 8 substrates with all their mutants and the ruling-free positive
-# controls, every gate and audit channel, seeds 42/43/44, one GPU. Measures
-# per-gate GPU-seconds (median, p95) and the c/b cost ratio; projects the
-# Stage 0 total against the 8 GPU-h cap. Pilot budget: at most 1 GPU-h.
+# SUPERSEDED for the pilot (2026-10-07) by q1-pilot-smoke.template.yaml and
+# q1-pilot-cost.template.yaml (scripts/run_q1_gpu_pilot.py): at the measured per-item
+# cost, "8 substrates with all their mutants and controls, seeds 42/43/44" does not fit
+# a 1 GPU-h pilot, so the pilot scores a registered, deterministic prefix of that work
+# (harness/q1/pilot.py) and the cost card projects the rest. Kept as the template of a
+# plain run_q1_stage0.py job over a staged corpus (FILL-* values fail closed).
 #
-# NOT SUBMITTED. Preconditions: the preregistration is frozen by the program
-# owner; this branch includes main's lane merge (1f18cae) and runs from a
-# source-overlay image of the frozen revision; the substrate and mutant corpus
-# (stage0/q1-substrates, stage0/q1-mutate) is integrated and staged read-only
-# under the run root; audit v1 is frozen after S1-cal calibration. FILL-* values
-# come from measured artifacts at submission; the submitter rejects them unfilled.
+# Original header: Q1 Stage 0 pilot cost card (preregistration q1-stage0-gate-validation,
+# step "pilot"): 8 substrates with all their mutants and the ruling-free positive
+# controls, every gate and audit channel, seeds 42/43/44, one GPU. Measures per-gate
+# GPU-seconds (median, p95) and the c/b cost ratio; projects the Stage 0 total against
+# the 8 GPU-h cap. Pilot budget: at most 1 GPU-h.
 runtime: docker-single-node-discovery-v1
 name: q1-stage0-pilot
 image_id: FILL-q1-gates-image-id
