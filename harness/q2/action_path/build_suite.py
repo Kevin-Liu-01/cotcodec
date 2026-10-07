@@ -16,7 +16,6 @@ from __future__ import annotations
 
 import hashlib
 import json
-import re
 from pathlib import Path
 from typing import Any
 
@@ -65,7 +64,7 @@ def canary_cells(
         ids = list(entries) if app["entries"] == "all" else list(app["entries"])
         spec: dict[str, Any] = {"entries": ids, "readback": app["readback"]}
         if name == "chrome":
-            spec["flags"] = re.findall(r"--[a-z][a-z-]*(?:=[a-z]+)?", app["program"])
+            spec["flags"] = list(app["flags"])
             spec["page"] = app["page"]
         if name == "vscode":
             spec["settings"] = app["settings"]
