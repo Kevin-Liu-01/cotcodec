@@ -13,11 +13,12 @@ summaries extracted from the job receipts, with the receipt SHA-256 recorded.
 
 ## What the runs show
 
-All three ran as CPU-only Slurm jobs through `vm-campaign.sbatch` (no GRES in
-the job's TRES), with the VM image pinned by digest, the qcow2 read-only and
-unchanged (SHA-256 checked before and after), and zero labelled containers or
-volumes left. Job 374 ended `COMPLETED`, exit `0:0`; jobs 369 and 372 left
-the queue before their state was read, and their driver exit codes are 0.
+All five jobs (369, 372, 374, 387, 393) ran as CPU-only Slurm jobs through
+`vm-campaign.sbatch` (no GRES in the job's TRES), with the VM image pinned by
+digest, the qcow2 read-only and unchanged (SHA-256 checked before and after),
+and zero labelled containers or volumes left. Jobs 374, 387 and 393 ended
+`COMPLETED`, exit `0:0`; jobs 369 and 372 left the queue before their state
+was read, and their driver exit codes are 0.
 
 - **Boot (job 374, N = 1, 4 vCPU, 4 GiB):** 22 of 22 cold boots served a valid
   `/screenshot`; container start to first screenshot p50 18.3 s, p95 20.8 s,
