@@ -16,7 +16,10 @@ Branches: harness `stage0/q2-mut-harness` (this code), specs
 | `reachability.py` | LO-VM image (Python 3.10, stdlib) | GUI-faithful LibreOffice save: Xvfb + openbox, the VM's LibreOffice and profile, postconfig replay, pyautogui keys |
 | `offline_eval.py` | metric image, per venv | The pinned `DesktopEnv.evaluate()` with a stub VM; fresh processes, repeat scoring, `error` verdicts |
 | `stats.py` | anywhere | Task-cluster bootstrap, Wilson and Clopper-Pearson intervals, zero-event bounds, MDE, Hajek audit weights, the K3 label-error bound (exact at the Kish effective size), κ |
-| `raters.py` | anywhere | D9 model-rater audit: sample, blind packets, consensus, Kevin's adjudication, label error, per-rater disagreement |
+| `raters.py` | anywhere | D9/D23 model-rater audit: candidate pool, sample (shams, P1 flips), blind packets, first-token answer rule, consensus, Kevin's adjudication, K3/K4 on the ungated label classes, S6 per label class |
+| `rater_runner.py` | Anthropic API (local) / vLLM lane (H100) | One call per rater per item, transport-only retries (at most 3), request and response hashes, receipts; the open-weight rater serves Qwen3.5-9B with vLLM in the cu129 overlay |
+| `audit.py` | anywhere / LO-VM image | Audit sample and items from a scored run, blind packets with 100-dpi renders (sharded), audit summary and decisions |
+| `analysis.py` | anywhere | Registered headline: P1 (replication), P2-P5 with the audit gates, family floor, K2/K3 consequences, K5, K6, K6b, K7, K9 |
 | `packets.py` | anywhere (stdlib) | Rater packet artifacts: listing and structural difference from the operators' snapshot, render commands (100 dpi) |
 | `vm_injection.py` | anywhere | Corrected in-VM injection plan for the fidelity gate (executed later on the VM runtime): opens agent-created outputs, agent-equivalent saves, save path per target |
 | `report.py` | anywhere | Summary of a control run (K1, P1 with exact intervals; save failures and unemulated tasks listed) |
@@ -91,12 +94,14 @@ Outcome per mutant and venv (`campaign.classify`, first match): `not_admitted`,
 write every office file; `merge` leaves such jobs out and lists them in
 `jobs-saved.excluded.jsonl`), `unemulated` (a setup or postconfig step the
 harness cannot replay may write a checker-read file), `not_scored`,
-`normalized` (the edit did not survive the save), `infra_timeout` (scoring
-timed out after its retries), `null_not_pass` (the saved null mutant of the
+`normalized` (the edit did not survive the save), `infra_failed` (scoring
+timed out after its retries, or the scoring process died, met a live getter or
+a refused network fetch), `null_not_pass` (the saved null mutant of the
 target does not pass, so no label can be read), `error`, `nondeterministic`,
 `ambiguous`, or `evaluable` with event `FN` / `FN_alt` / `FP_R` / `FP_F` or
-`ok`. Cells a scoping probe touched (`PROBE_OPERATOR_MAP`) are kept out of the
-rate tables.
+`ok`. Cells a scoping probe touched (`PROBE_OPERATOR_MAP`) and the two
+probe-informed operators (`PROBE_INFORMED_OPERATORS`) are kept out of the rate
+tables.
 
 Every split but `dev` is refused unless the staged tree carries the frozen
 ledger row of `q2-evaluator-mutation-v1` (hash chain verified),
