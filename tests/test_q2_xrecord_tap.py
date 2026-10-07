@@ -111,6 +111,20 @@ def test_mapping_check_separates_device_switches_from_unseen_changes():
     assert tap.mapping_check([request])["ok"] is False  # no ready record
 
 
+def test_core_groups_follow_the_protocol_keysym_list_rules():
+    e = 0xE9
+    # Job 470: the tap wrote [e] * 7, the server read back XKB's core view.
+    assert tap.core_groups([e] * 7) == tap.core_groups([e, e, e, e, 0, 0, 0]) == (e, e, e, e)
+    assert tap.core_groups([e]) == tap.core_groups([e, 0, e, 0]) == (e, e, e, e)
+    assert tap.core_groups([0x61, 0x41]) == tap.core_groups([0x61, 0x41, 0x61, 0x41])
+    assert tap.core_groups([]) == (0, 0, 0, 0)
+    assert tap.core_groups([0x61]) != tap.core_groups([0x62])
+    assert tap.core_groups([0x61, 0x41, 0x61, 0x41, 0xE9]) == tap.core_groups([0x61, 0x41])
+    keymap = tap.Keymap(248, [[e] * 7])
+    assert tap._rows_differ(keymap, 248, [[e, e, e, e, 0, 0, 0]]) == []
+    assert tap._rows_differ(keymap, 248, [[0, 0, 0, 0]]) == [248]
+
+
 class _FakeGuest:
     """Just enough of GuestClient for runner.tap_selftest."""
 
