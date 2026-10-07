@@ -18,7 +18,8 @@ server has processed it before the process exits.
 * ``scroll``: motion if given; modifiers; one press/release of button 5 (down)
   or 4 (up) per ``wheel_y`` tick, then 7 (right) or 6 (left) per ``wheel_x``
   tick; modifiers released.
-* ``key``: keys pressed in order and released in reverse order.
+* ``key``: keys pressed in order, held ``KEY_HOLD_S`` (QEMU ``sendkey``'s
+  hold in the R-dev reference capture), and released in reverse order.
   ``key_down`` / ``key_up`` press or release the listed keys and nothing else.
 * ``type``: code points in order. ``\\n`` is Return and ``\\t`` is Tab. A code
   point whose keysym (Latin-1 value, else ``0x01000000 + cp``) is at index 0
@@ -31,6 +32,12 @@ server has processed it before the process exits.
   can see a key event whose mapping has already been changed back.
 * ``wait``: sleep. ``screenshot``: nothing. ``terminate`` never reaches the
   device.
+
+Every action except ``wait`` ends with ``SETTLE_S`` (0.1 s), the default
+``pyautogui.PAUSE`` that ends every PyAutoGUI call of the upstream harnesses,
+so the screenshot ``DesktopEnv.step`` takes next has had the same time to
+catch up as upstream's (development run 486 showed screenshots one frame
+behind the probe without it).
 
 Keysyms resolve to keycodes through the server's keyboard mapping read at the
 start of each action, under the core protocol's keysym-list rules: a keysym at
@@ -64,6 +71,8 @@ MOTION_SETTLE_S = 0.02
 DRAG_STEP_S = 0.016
 DRAG_PRESS_SETTLE_S = 0.05
 SCROLL_GAP_S = 0.03
+KEY_HOLD_S = 0.1  # a key or chord is held this long before release (QEMU sendkey's R-dev hold)
+SETTLE_S = 0.1  # every action ends with this pause: PyAutoGUI 0.9.54's default PAUSE
 REMAP_SETTLE_S = 0.3
 SHIFT_L = 0xFFE1
 RETURN, TAB = 0xFF0D, 0xFF09
@@ -360,6 +369,7 @@ class Executor:
         pressed = []
         try:
             pressed = self.press_keys(keysyms)
+            time.sleep(KEY_HOLD_S)
         finally:
             self.release_keys(pressed)
 
@@ -418,6 +428,8 @@ class Executor:
                 pass
             else:
                 raise ValueError(f"L0-fixed has no device action for {op!r}")
+            if op != "wait":
+                time.sleep(SETTLE_S)
         finally:
             for keycode in list(reversed(self.held_keys)):
                 self.key_release(keycode)
