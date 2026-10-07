@@ -4,10 +4,12 @@
     python scripts/report_q1_stage0.py --journal RUN/journal.jsonl --corpus CORPUS \\
         --output RUN/stage0-report.json
 
-Applies the preregistered splits (S1 calibration split and mutant dev/test,
-seed 42), composes the gate ladder and audit tiers per replicate, and writes
-MS/FAR/FRR/FA-share with Clopper-Pearson and problem-cluster bootstrap
-intervals for every contract tier under both TF32 policies, plus cost.
+Applies the preregistered splits (the substrate corpus's S1 calibration split
+and the mutator's content-hash dev/test split, both seed 42), composes the
+gate ladder and audit tiers per replicate, and writes MS/FAR/FRR/FA-share
+with Clopper-Pearson and problem-cluster bootstrap intervals for every
+contract tier under both TF32 policies, every control expectation, the causes
+of gate (c) rejections of correct substrates, and cost.
 """
 
 from __future__ import annotations
@@ -37,25 +39,29 @@ def main(argv: list[str] | None = None) -> int:
     rows = journal.final_rows()
     _, invalid = journal.read()
     table = analysis.kernel_table(args.corpus)
-    s1_problems = [
-        v["problem_id"]
-        for v in table.values()
-        if v["kind"] == "substrate" and v["source_kind"] == "inductor"
-    ]
-    calibration, evaluation = analysis.calibration_split(s1_problems)
+    split = analysis.s1_split()
+    evaluation = set(split["evaluation"])
     evaluation_substrates = {
         k
         for k, v in table.items()
         if v["kind"] == "substrate"
-        and (v["source_kind"] != "inductor" or v["problem_id"] in set(evaluation))
+        and (v["source_kind"] != "inductor" or v["problem_id"] in evaluation)
     }
-    dev, test = analysis.mutant_split(k for k, v in table.items() if v["kind"] == "mutant")
+    dev, test = analysis.mutant_split(table)
     report: dict = {
         "journal_rows": len(rows),
         "invalid_journal_lines": invalid,
         "splits": {
-            "s1_calibration_problems": calibration,
-            "s1_evaluation_problems": evaluation,
+            "s1_split_sha256": split["sha256"],
+            "s1_calibration_problems": split["calibration"],
+            "s1_evaluation_problems": split["evaluation"],
+            "s1_calibration_substrates": sorted(
+                k
+                for k, v in table.items()
+                if v["kind"] == "substrate"
+                and v["source_kind"] == "inductor"
+                and v["problem_id"] not in evaluation
+            ),
             "dev_mutants": len(dev),
             "test_mutants": len(test),
         },
@@ -79,10 +85,18 @@ def main(argv: list[str] | None = None) -> int:
                 for policy in analysis.POLICIES
                 for tier in ("N", "G", "G-strict", "c-disjoint")
             }
+        causes = analysis.c_rejection_causes(rows, seed=seed)
         report["replicates"][str(seed)] = {
             "kernels": len(composed),
             "b_fail_open": sum(bool(v["b_fail_open"]) for v in composed.values()),
             "metrics": per_split,
+            "controls": {
+                policy: analysis.control_checks(composed, table, policy=policy)
+                for policy in analysis.POLICIES
+            },
+            "c_rejection_causes_evaluation_substrates": {
+                k: v for k, v in causes.items() if k in evaluation_substrates
+            },
         }
     args.output.write_text(json.dumps(report, indent=1, sort_keys=True, default=str))
     print(json.dumps({"rows": len(rows), "kernels": len(table)}))

@@ -15,16 +15,17 @@
 # NOT SUBMITTABLE AS COMMITTED. git_sha and source_sha256 are sentinels that
 # fail validation on purpose; fill them from the measured integration commit and
 # its source capsule (docs/operations.md), never from copied hashes. Submit only
-# after program/preregistrations/q1-stage0-substrate-corpus.md is frozen, from a
-# clean clone (never ~/cotcodec):
+# after program/preregistrations/q1-stage0-gate-validation.md (which now holds
+# the substrate-corpus rules) is frozen, from a clean clone (never ~/cotcodec):
 #   uv run python scripts/submit_docker_research_job.py experiments/manifests/q1-substrate-admission.yaml --dry-run
 #   uv run python scripts/submit_docker_research_job.py experiments/manifests/q1-substrate-admission.yaml --test-only
 #   uv run python scripts/submit_docker_research_job.py experiments/manifests/q1-substrate-admission.yaml
 runtime: docker-single-node-discovery-v1
 name: q1-substrate-admission
-# cotcodec-research:0b3ecef0-architecture (repo digest sha256:02965f3d...), torch
-# 2.11.0+cu128, Triton 3.6.0: the image the CPU dry run and mock codegen used.
-image_id: sha256:3804466639c13f132be4b0369de4d3395b9d5ea2d3dc100cd38884c75197fe29
+# Integration (stage0/q1-gates): one image for every Q1 step, cotcodec-q1-gates
+# rebuilt at the frozen revision (FROM cotcodec-research@sha256:02965f3d..., the
+# 0b3ecef0 research image the CPU dry run used; torch 2.11.0+cu128, Triton 3.6.0).
+image_id: FILL-q1-gates-image-id
 git_sha: "FILL-integration-commit-sha"
 source_sha256: "FILL-source-capsule-sha256"
 run_root: /home/kevin/cotcodec-runs/stage0/q1-substrates/runs

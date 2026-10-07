@@ -7,7 +7,7 @@
  },
  "generator_sha256": {
   "harness/q1/problems.py": "5c07653bab479d289d4ae0d42a1dabf88e2b8a9ab1652d1580eba0b477804b67",
-  "harness/q1/shapes.py": "14791e9a41ce96440a7b0d8251353ce033e438d2ca7fe78ad8112fed6a3a161c",
+  "harness/q1/shapes.py": "5e5d24dee729c3eaa0a043f1e467f6a54685c0cf1e802ce1679d2f4e27acae7e",
   "scripts/build_q1_shape_manifest.py": "b4a1fafe6a6503b118f910d150834ed7f73d7f70f1fadd1474e471baf57dafed"
  },
  "kernelbench_revision": "423217d9fda91e0c2d67e4a43bf62f96f6d104f1",
@@ -290,6 +290,26 @@
    "A3": [
     {
      "config_id": "A3/lead1",
+     "init_inputs_unchanged": true,
+     "input_bytes": 14680064,
+     "input_shapes": [
+      [
+       1,
+       1024,
+       2048
+      ],
+      [
+       2048,
+       768
+      ]
+     ],
+     "meta_forward": "ok",
+     "overrides": {
+      "N": 1
+     }
+    },
+    {
+     "config_id": "A3/lead5",
      "init_inputs_unchanged": true,
      "input_bytes": 48234496,
      "input_shapes": [
@@ -601,10 +621,10 @@
     {
      "config_id": "c3/MM1",
      "init_inputs_unchanged": true,
-     "input_bytes": 14703624,
+     "input_bytes": 23104524,
      "input_shapes": [
       [
-       1,
+       2,
        1025,
        2049
       ],
@@ -618,7 +638,7 @@
       "K": 2049,
       "L": 769,
       "M": 1025,
-      "N": 1
+      "N": 2
      }
     },
     {
@@ -650,13 +670,6 @@
      "config_id": "c3/U2/N",
      "overrides": {
       "N": 17
-     },
-     "reason": "duplicates native or an earlier config"
-    },
-    {
-     "config_id": "A3/lead5",
-     "overrides": {
-      "N": 5
      },
      "reason": "duplicates native or an earlier config"
     }
@@ -702,10 +715,10 @@
     {
      "config_id": "A3/lead1",
      "init_inputs_unchanged": true,
-     "input_bytes": 269221888,
+     "input_bytes": 135004160,
      "input_shapes": [
       [
-       2,
+       1,
        256,
        512,
        256
@@ -717,7 +730,7 @@
      ],
      "meta_forward": "ok",
      "overrides": {
-      "b": 2
+      "b": 1
      }
     },
     {
@@ -786,10 +799,10 @@
     {
      "config_id": "A3/allprime",
      "init_inputs_unchanged": true,
-     "input_bytes": 11570356,
+     "input_bytes": 28774768,
      "input_shapes": [
       [
-       2,
+       5,
        89,
        181,
        89
@@ -801,7 +814,7 @@
      ],
      "meta_forward": "ok",
      "overrides": {
-      "b": 2,
+      "b": 5,
       "i": 89,
       "j": 181,
       "k": 283,
@@ -855,10 +868,10 @@
     {
      "config_id": "c2/S-small",
      "init_inputs_unchanged": true,
-     "input_bytes": 274432,
+     "input_bytes": 536576,
      "input_shapes": [
       [
-       1,
+       2,
        32,
        64,
        32
@@ -870,7 +883,7 @@
      ],
      "meta_forward": "ok",
      "overrides": {
-      "b": 1,
+      "b": 2,
       "i": 32,
       "j": 64,
       "k": 96,
@@ -1092,10 +1105,10 @@
     {
      "config_id": "c3/MM1",
      "init_inputs_unchanged": true,
-     "input_bytes": 136323080,
+     "input_bytes": 271855628,
      "input_shapes": [
       [
-       1,
+       2,
        257,
        513,
        257
@@ -1107,7 +1120,7 @@
      ],
      "meta_forward": "ok",
      "overrides": {
-      "b": 1,
+      "b": 2,
       "i": 257,
       "j": 513,
       "k": 769,
@@ -14489,10 +14502,10 @@
     {
      "config_id": "A3/lead1",
      "init_inputs_unchanged": true,
-     "input_bytes": 268435456,
+     "input_bytes": 134217728,
      "input_shapes": [
       [
-       2,
+       1,
        64,
        512,
        1024
@@ -14500,7 +14513,7 @@
      ],
      "meta_forward": "ok",
      "overrides": {
-      "batch_size": 2
+      "batch_size": 1
      }
     },
     {
@@ -14557,10 +14570,10 @@
     {
      "config_id": "A3/allprime",
      "init_inputs_unchanged": true,
-     "input_bytes": 35122688,
+     "input_bytes": 87806720,
      "input_shapes": [
       [
-       2,
+       5,
        64,
        181,
        379
@@ -14568,7 +14581,7 @@
      ],
      "meta_forward": "ok",
      "overrides": {
-      "batch_size": 2,
+      "batch_size": 5,
       "height": 181,
       "width": 379
      }
@@ -14612,10 +14625,10 @@
     {
      "config_id": "c2/S-small",
      "init_inputs_unchanged": true,
-     "input_bytes": 2097152,
+     "input_bytes": 4194304,
      "input_shapes": [
       [
-       1,
+       2,
        64,
        64,
        128
@@ -14623,7 +14636,7 @@
      ],
      "meta_forward": "ok",
      "overrides": {
-      "batch_size": 1,
+      "batch_size": 2,
       "height": 64,
       "width": 128
      }
@@ -14782,10 +14795,10 @@
     {
      "config_id": "A3/lead1",
      "init_inputs_unchanged": true,
-     "input_bytes": 67108864,
+     "input_bytes": 33554432,
      "input_shapes": [
       [
-       2,
+       1,
        64,
        512,
        256
@@ -14793,7 +14806,7 @@
      ],
      "meta_forward": "ok",
      "overrides": {
-      "batch_size": 2
+      "batch_size": 1
      }
     },
     {
@@ -14850,10 +14863,10 @@
     {
      "config_id": "A3/allprime",
      "init_inputs_unchanged": true,
-     "input_bytes": 8247808,
+     "input_bytes": 20619520,
      "input_shapes": [
       [
-       2,
+       5,
        64,
        181,
        89
@@ -14861,7 +14874,7 @@
      ],
      "meta_forward": "ok",
      "overrides": {
-      "batch_size": 2,
+      "batch_size": 5,
       "height": 181,
       "width": 89
      }
@@ -14905,10 +14918,10 @@
     {
      "config_id": "c2/S-small",
      "init_inputs_unchanged": true,
-     "input_bytes": 524288,
+     "input_bytes": 1048576,
      "input_shapes": [
       [
-       1,
+       2,
        64,
        64,
        32
@@ -14916,7 +14929,7 @@
      ],
      "meta_forward": "ok",
      "overrides": {
-      "batch_size": 1,
+      "batch_size": 2,
       "height": 64,
       "width": 32
      }
@@ -15077,10 +15090,10 @@
     {
      "config_id": "A3/lead1",
      "init_inputs_unchanged": true,
-     "input_bytes": 536870912,
+     "input_bytes": 268435456,
      "input_shapes": [
       [
-       2,
+       1,
        64,
        1024,
        1024
@@ -15088,7 +15101,7 @@
      ],
      "meta_forward": "ok",
      "overrides": {
-      "batch_size": 2
+      "batch_size": 1
      }
     },
     {
@@ -15145,10 +15158,10 @@
     {
      "config_id": "A3/allprime",
      "init_inputs_unchanged": true,
-     "input_bytes": 73544192,
+     "input_bytes": 183860480,
      "input_shapes": [
       [
-       2,
+       5,
        64,
        379,
        379
@@ -15156,7 +15169,7 @@
      ],
      "meta_forward": "ok",
      "overrides": {
-      "batch_size": 2,
+      "batch_size": 5,
       "height": 379,
       "width": 379
      }
@@ -15200,10 +15213,10 @@
     {
      "config_id": "c2/S-small",
      "init_inputs_unchanged": true,
-     "input_bytes": 4194304,
+     "input_bytes": 8388608,
      "input_shapes": [
       [
-       1,
+       2,
        64,
        128,
        128
@@ -15211,7 +15224,7 @@
      ],
      "meta_forward": "ok",
      "overrides": {
-      "batch_size": 1,
+      "batch_size": 2,
       "height": 128,
       "width": 128
      }
@@ -15841,20 +15854,20 @@
     {
      "config_id": "c2/S-small",
      "init_inputs_unchanged": true,
-     "input_bytes": 24576,
+     "input_bytes": 49152,
      "input_shapes": [
       [
        2,
        3,
        32,
        32,
-       1
+       2
       ]
      ],
      "meta_forward": "ok",
      "overrides": {
       "batch_size": 2,
-      "depth": 1,
+      "depth": 2,
       "height": 32,
       "width": 32
      }
@@ -16655,10 +16668,10 @@
     {
      "config_id": "A3/lead1",
      "init_inputs_unchanged": true,
-     "input_bytes": 100663296,
+     "input_bytes": 50331648,
      "input_shapes": [
       [
-       2,
+       1,
        48,
        64,
        64,
@@ -16667,7 +16680,7 @@
      ],
      "meta_forward": "ok",
      "overrides": {
-      "batch_size": 2
+      "batch_size": 1
      }
     },
     {
@@ -16727,10 +16740,10 @@
     {
      "config_id": "A3/allprime",
      "init_inputs_unchanged": true,
-     "input_bytes": 4672128,
+     "input_bytes": 11680320,
      "input_shapes": [
       [
-       2,
+       5,
        48,
        23,
        23,
@@ -16739,7 +16752,7 @@
      ],
      "meta_forward": "ok",
      "overrides": {
-      "batch_size": 2,
+      "batch_size": 5,
       "depth": 23,
       "height": 23,
       "width": 23
@@ -16786,10 +16799,10 @@
     {
      "config_id": "c2/S-small",
      "init_inputs_unchanged": true,
-     "input_bytes": 98304,
+     "input_bytes": 196608,
      "input_shapes": [
       [
-       1,
+       2,
        48,
        8,
        8,
@@ -16798,7 +16811,7 @@
      ],
      "meta_forward": "ok",
      "overrides": {
-      "batch_size": 1,
+      "batch_size": 2,
       "depth": 8,
       "height": 8,
       "width": 8
@@ -17003,10 +17016,10 @@
     {
      "config_id": "A3/lead1",
      "init_inputs_unchanged": true,
-     "input_bytes": 67108864,
+     "input_bytes": 33554432,
      "input_shapes": [
       [
-       2,
+       1,
        32,
        512,
        512
@@ -17014,7 +17027,7 @@
      ],
      "meta_forward": "ok",
      "overrides": {
-      "batch_size": 2
+      "batch_size": 1
      }
     },
     {
@@ -17071,10 +17084,10 @@
     {
      "config_id": "A3/allprime",
      "init_inputs_unchanged": true,
-     "input_bytes": 8386816,
+     "input_bytes": 20967040,
      "input_shapes": [
       [
-       2,
+       5,
        32,
        181,
        181
@@ -17082,7 +17095,7 @@
      ],
      "meta_forward": "ok",
      "overrides": {
-      "batch_size": 2,
+      "batch_size": 5,
       "height": 181,
       "width": 181
      }
@@ -17126,10 +17139,10 @@
     {
      "config_id": "c2/S-small",
      "init_inputs_unchanged": true,
-     "input_bytes": 524288,
+     "input_bytes": 1048576,
      "input_shapes": [
       [
-       1,
+       2,
        32,
        64,
        64
@@ -17137,7 +17150,7 @@
      ],
      "meta_forward": "ok",
      "overrides": {
-      "batch_size": 1,
+      "batch_size": 2,
       "height": 64,
       "width": 64
      }
@@ -17841,10 +17854,10 @@
     {
      "config_id": "A3/lead1",
      "init_inputs_unchanged": true,
-     "input_bytes": 134217728,
+     "input_bytes": 67108864,
      "input_shapes": [
       [
-       2,
+       1,
        64,
        512,
        512
@@ -17852,7 +17865,7 @@
      ],
      "meta_forward": "ok",
      "overrides": {
-      "batch_size": 2
+      "batch_size": 1
      }
     },
     {
@@ -17909,10 +17922,10 @@
     {
      "config_id": "A3/allprime",
      "init_inputs_unchanged": true,
-     "input_bytes": 16773632,
+     "input_bytes": 41934080,
      "input_shapes": [
       [
-       2,
+       5,
        64,
        181,
        181
@@ -17920,7 +17933,7 @@
      ],
      "meta_forward": "ok",
      "overrides": {
-      "batch_size": 2,
+      "batch_size": 5,
       "height": 181,
       "width": 181
      }
@@ -17964,10 +17977,10 @@
     {
      "config_id": "c2/S-small",
      "init_inputs_unchanged": true,
-     "input_bytes": 1048576,
+     "input_bytes": 2097152,
      "input_shapes": [
       [
-       1,
+       2,
        64,
        64,
        64
@@ -17975,7 +17988,7 @@
      ],
      "meta_forward": "ok",
      "overrides": {
-      "batch_size": 1,
+      "batch_size": 2,
       "height": 64,
       "width": 64
      }
@@ -18136,10 +18149,10 @@
     {
      "config_id": "A3/lead1",
      "init_inputs_unchanged": true,
-     "input_bytes": 6291456,
+     "input_bytes": 3145728,
      "input_shapes": [
       [
-       2,
+       1,
        3,
        16,
        128,
@@ -18148,7 +18161,7 @@
      ],
      "meta_forward": "ok",
      "overrides": {
-      "batch_size": 2
+      "batch_size": 1
      }
     },
     {
@@ -18208,10 +18221,10 @@
     {
      "config_id": "A3/allprime",
      "init_inputs_unchanged": true,
-     "input_bytes": 265080,
+     "input_bytes": 662700,
      "input_shapes": [
       [
-       2,
+       5,
        3,
        5,
        47,
@@ -18220,7 +18233,7 @@
      ],
      "meta_forward": "ok",
      "overrides": {
-      "batch_size": 2,
+      "batch_size": 5,
       "depth": 5,
       "height": 47,
       "width": 47
@@ -18267,10 +18280,10 @@
     {
      "config_id": "c2/S-small",
      "init_inputs_unchanged": true,
-     "input_bytes": 6144,
+     "input_bytes": 12288,
      "input_shapes": [
       [
-       1,
+       2,
        3,
        2,
        16,
@@ -18279,7 +18292,7 @@
      ],
      "meta_forward": "ok",
      "overrides": {
-      "batch_size": 1,
+      "batch_size": 2,
       "depth": 2,
       "height": 16,
       "width": 16
@@ -19752,10 +19765,10 @@
     {
      "config_id": "A3/lead1",
      "init_inputs_unchanged": true,
-     "input_bytes": 339738624,
+     "input_bytes": 169869312,
      "input_shapes": [
       [
-       2,
+       1,
        48,
        96,
        96,
@@ -19764,7 +19777,7 @@
      ],
      "meta_forward": "ok",
      "overrides": {
-      "batch_size": 2
+      "batch_size": 1
      }
     },
     {
@@ -19824,10 +19837,10 @@
     {
      "config_id": "A3/allprime",
      "init_inputs_unchanged": true,
-     "input_bytes": 11439744,
+     "input_bytes": 28599360,
      "input_shapes": [
       [
-       2,
+       5,
        48,
        31,
        31,
@@ -19836,7 +19849,7 @@
      ],
      "meta_forward": "ok",
      "overrides": {
-      "batch_size": 2,
+      "batch_size": 5,
       "depth": 31,
       "height": 31,
       "width": 31
@@ -19883,10 +19896,10 @@
     {
      "config_id": "c2/S-small",
      "init_inputs_unchanged": true,
-     "input_bytes": 331776,
+     "input_bytes": 663552,
      "input_shapes": [
       [
-       1,
+       2,
        48,
        12,
        12,
@@ -19895,7 +19908,7 @@
      ],
      "meta_forward": "ok",
      "overrides": {
-      "batch_size": 1,
+      "batch_size": 2,
       "depth": 12,
       "height": 12,
       "width": 12
@@ -20100,10 +20113,10 @@
     {
      "config_id": "A3/lead1",
      "init_inputs_unchanged": true,
-     "input_bytes": 134217728,
+     "input_bytes": 67108864,
      "input_shapes": [
       [
-       2,
+       1,
        32,
        512,
        1024
@@ -20111,7 +20124,7 @@
      ],
      "meta_forward": "ok",
      "overrides": {
-      "batch_size": 2
+      "batch_size": 1
      }
     },
     {
@@ -20168,10 +20181,10 @@
     {
      "config_id": "A3/allprime",
      "init_inputs_unchanged": true,
-     "input_bytes": 17561344,
+     "input_bytes": 43903360,
      "input_shapes": [
       [
-       2,
+       5,
        32,
        181,
        379
@@ -20179,7 +20192,7 @@
      ],
      "meta_forward": "ok",
      "overrides": {
-      "batch_size": 2,
+      "batch_size": 5,
       "height_in": 181,
       "width_in": 379
      }
@@ -20223,10 +20236,10 @@
     {
      "config_id": "c2/S-small",
      "init_inputs_unchanged": true,
-     "input_bytes": 1048576,
+     "input_bytes": 2097152,
      "input_shapes": [
       [
-       1,
+       2,
        32,
        64,
        128
@@ -20234,7 +20247,7 @@
      ],
      "meta_forward": "ok",
      "overrides": {
-      "batch_size": 1,
+      "batch_size": 2,
       "height_in": 64,
       "width_in": 128
      }
@@ -20393,10 +20406,10 @@
     {
      "config_id": "A3/lead1",
      "init_inputs_unchanged": true,
-     "input_bytes": 3538944,
+     "input_bytes": 1769472,
      "input_shapes": [
       [
-       2,
+       1,
        32,
        12,
        24,
@@ -20405,7 +20418,7 @@
      ],
      "meta_forward": "ok",
      "overrides": {
-      "batch_size": 2
+      "batch_size": 1
      }
     },
     {
@@ -20465,10 +20478,10 @@
     {
      "config_id": "A3/allprime",
      "init_inputs_unchanged": true,
-     "input_bytes": 69888,
+     "input_bytes": 174720,
      "input_shapes": [
       [
-       2,
+       5,
        32,
        3,
        7,
@@ -20477,7 +20490,7 @@
      ],
      "meta_forward": "ok",
      "overrides": {
-      "batch_size": 2,
+      "batch_size": 5,
       "depth": 3,
       "height": 7,
       "width": 13
@@ -20524,20 +20537,20 @@
     {
      "config_id": "c2/S-small",
      "init_inputs_unchanged": true,
-     "input_bytes": 2304,
+     "input_bytes": 9216,
      "input_shapes": [
       [
-       1,
+       2,
        32,
-       1,
+       2,
        3,
        6
       ]
      ],
      "meta_forward": "ok",
      "overrides": {
-      "batch_size": 1,
-      "depth": 1,
+      "batch_size": 2,
+      "depth": 2,
       "height": 3,
       "width": 6
      }
@@ -20757,6 +20770,24 @@
     {
      "config_id": "A3/lead1",
      "init_inputs_unchanged": true,
+     "input_bytes": 33554432,
+     "input_shapes": [
+      [
+       1,
+       32,
+       32,
+       64,
+       128
+      ]
+     ],
+     "meta_forward": "ok",
+     "overrides": {
+      "batch_size": 1
+     }
+    },
+    {
+     "config_id": "A3/lead5",
+     "init_inputs_unchanged": true,
      "input_bytes": 234881024,
      "input_shapes": [
       [
@@ -20811,10 +20842,10 @@
     {
      "config_id": "A3/allprime",
      "init_inputs_unchanged": true,
-     "input_bytes": 3044096,
+     "input_bytes": 10654336,
      "input_shapes": [
       [
-       2,
+       7,
        32,
        11,
        23,
@@ -20823,7 +20854,7 @@
      ],
      "meta_forward": "ok",
      "overrides": {
-      "batch_size": 2,
+      "batch_size": 7,
       "depth": 11,
       "height": 23,
       "width": 47
@@ -20870,10 +20901,10 @@
     {
      "config_id": "c2/S-small",
      "init_inputs_unchanged": true,
-     "input_bytes": 65536,
+     "input_bytes": 131072,
      "input_shapes": [
       [
-       1,
+       2,
        32,
        4,
        8,
@@ -20882,7 +20913,7 @@
      ],
      "meta_forward": "ok",
      "overrides": {
-      "batch_size": 1,
+      "batch_size": 2,
       "depth": 4,
       "height": 8,
       "width": 16
@@ -21042,13 +21073,6 @@
       "batch_size": 17
      },
      "reason": "input bytes 570425344 exceed 2x native"
-    },
-    {
-     "config_id": "A3/lead5",
-     "overrides": {
-      "batch_size": 7
-     },
-     "reason": "duplicates native or an earlier config"
     }
    ],
    "free_roots": [
@@ -22247,10 +22271,10 @@
     {
      "config_id": "A3/lead1",
      "init_inputs_unchanged": true,
-     "input_bytes": 134217728,
+     "input_bytes": 67108864,
      "input_shapes": [
       [
-       2,
+       1,
        32,
        512,
        1024
@@ -22258,7 +22282,7 @@
      ],
      "meta_forward": "ok",
      "overrides": {
-      "batch_size": 2
+      "batch_size": 1
      }
     },
     {
@@ -22315,10 +22339,10 @@
     {
      "config_id": "A3/allprime",
      "init_inputs_unchanged": true,
-     "input_bytes": 17561344,
+     "input_bytes": 43903360,
      "input_shapes": [
       [
-       2,
+       5,
        32,
        181,
        379
@@ -22326,7 +22350,7 @@
      ],
      "meta_forward": "ok",
      "overrides": {
-      "batch_size": 2,
+      "batch_size": 5,
       "height": 181,
       "width": 379
      }
@@ -22370,10 +22394,10 @@
     {
      "config_id": "c2/S-small",
      "init_inputs_unchanged": true,
-     "input_bytes": 1048576,
+     "input_bytes": 2097152,
      "input_shapes": [
       [
-       1,
+       2,
        32,
        64,
        128
@@ -22381,7 +22405,7 @@
      ],
      "meta_forward": "ok",
      "overrides": {
-      "batch_size": 1,
+      "batch_size": 2,
       "height": 64,
       "width": 128
      }
@@ -23165,10 +23189,10 @@
     {
      "config_id": "A3/lead1",
      "init_inputs_unchanged": true,
-     "input_bytes": 67108864,
+     "input_bytes": 33554432,
      "input_shapes": [
       [
-       2,
+       1,
        32,
        512,
        512
@@ -23176,7 +23200,7 @@
      ],
      "meta_forward": "ok",
      "overrides": {
-      "batch_size": 2
+      "batch_size": 1
      }
     },
     {
@@ -23233,10 +23257,10 @@
     {
      "config_id": "A3/allprime",
      "init_inputs_unchanged": true,
-     "input_bytes": 8386816,
+     "input_bytes": 20967040,
      "input_shapes": [
       [
-       2,
+       5,
        32,
        181,
        181
@@ -23244,7 +23268,7 @@
      ],
      "meta_forward": "ok",
      "overrides": {
-      "batch_size": 2,
+      "batch_size": 5,
       "height": 181,
       "width": 181
      }
@@ -23288,10 +23312,10 @@
     {
      "config_id": "c2/S-small",
      "init_inputs_unchanged": true,
-     "input_bytes": 524288,
+     "input_bytes": 1048576,
      "input_shapes": [
       [
-       1,
+       2,
        32,
        64,
        64
@@ -23299,7 +23323,7 @@
      ],
      "meta_forward": "ok",
      "overrides": {
-      "batch_size": 1,
+      "batch_size": 2,
       "height": 64,
       "width": 64
      }
@@ -29680,21 +29704,21 @@
     {
      "config_id": "c3/MM1",
      "init_inputs_unchanged": true,
-     "input_bytes": 262152,
+     "input_bytes": 524304,
      "input_shapes": [
       [
        32769,
-       1
+       2
       ],
       [
-       1,
+       2,
        32769
       ]
      ],
      "meta_forward": "ok",
      "overrides": {
       "M": 32769,
-      "N": 1
+      "N": 2
      }
     },
     {
@@ -37562,6 +37586,24 @@
     {
      "config_id": "A3/lead1",
      "init_inputs_unchanged": true,
+     "input_bytes": 67108864,
+     "input_shapes": [
+      [
+       1,
+       32,
+       32,
+       128,
+       128
+      ]
+     ],
+     "meta_forward": "ok",
+     "overrides": {
+      "batch_size": 1
+     }
+    },
+    {
+     "config_id": "A3/lead5",
+     "init_inputs_unchanged": true,
      "input_bytes": 469762048,
      "input_shapes": [
       [
@@ -37614,24 +37656,6 @@
      "overrides": {
       "batch_size": 8
      }
-    },
-    {
-     "config_id": "c2/S-small",
-     "init_inputs_unchanged": true,
-     "input_bytes": 67108864,
-     "input_shapes": [
-      [
-       1,
-       32,
-       32,
-       128,
-       128
-      ]
-     ],
-     "meta_forward": "ok",
-     "overrides": {
-      "batch_size": 1
-     }
     }
    ],
    "c3": [
@@ -37674,6 +37698,13 @@
    ],
    "excluded": [
     {
+     "config_id": "c2/S-small",
+     "overrides": {
+      "batch_size": 2
+     },
+     "reason": "duplicates native or an earlier config"
+    },
+    {
      "config_id": "c3/U2/batch_size",
      "overrides": {
       "batch_size": 17
@@ -37681,16 +37712,9 @@
      "reason": "input bytes 1140850688 exceed 2x native"
     },
     {
-     "config_id": "A3/lead5",
-     "overrides": {
-      "batch_size": 7
-     },
-     "reason": "duplicates native or an earlier config"
-    },
-    {
      "config_id": "A3/inner37",
      "overrides": {
-      "batch_size": 2
+      "batch_size": 7
      },
      "reason": "duplicates native or an earlier config"
     },
@@ -37704,7 +37728,7 @@
     {
      "config_id": "A3/allprime",
      "overrides": {
-      "batch_size": 2
+      "batch_size": 7
      },
      "reason": "duplicates native or an earlier config"
     }

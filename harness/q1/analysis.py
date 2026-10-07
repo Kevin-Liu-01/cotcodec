@@ -16,7 +16,15 @@ Pure Python (scipy for exact intervals). Inputs are the journal's final rows
 - a mutant is witnessed when the primary audit (tier G, TF32-admissible)
   rejects it; MS = rejected by the gate / witnessed; FAR = 1 - MS;
 - FRR over correct substrates (kind substrate, primary audit accepts);
-- FA-share = accepted by the gate and audit-rejected / accepted by the gate.
+- FA-share = accepted by the gate and audit-rejected / accepted by the gate;
+- control checks: every ``control.json`` expectation against the composed
+  verdict of the gate or tier it names (:func:`control_checks`).
+
+Splits are the component owners' frozen rules, never re-derived here: the S1
+calibration split is ``harness.q1.substrates.split`` over every vendored L1/L2
+problem id (excluded ids included, as the substrate corpus computed it before
+any build), and the mutant dev/test split is ``harness.q1.mutate.sampling``'s
+content hash of ``(parent_substrate_id, dedup_hash)``.
 """
 
 from __future__ import annotations
@@ -39,34 +47,71 @@ PRIMARY_POLICY, PRIMARY_TIER = "tf32-admissible", "G"
 
 
 def kernel_table(corpus_roots: Iterable[Path]) -> dict[str, dict[str, Any]]:
-    """kernel_id -> kind, problem_id, family (mutants), source_kind (substrates/mutants)."""
-    table = {}
+    """kernel_id -> kind, problem_id, family and split (mutants), source_kind, control facts."""
+    from harness.q1.mutate.sampling import split_of
+
+    table: dict[str, dict[str, Any]] = {}
     for root in corpus_roots:
         for kernel in iter_kernel_dirs(root):
+            if kernel.kernel_id in table:
+                raise ValueError(f"kernel id {kernel.kernel_id} appears in two corpus roots")
+            mutation = kernel.mutation or {}
             table[kernel.kernel_id] = {
                 "kind": kernel.kind,
                 "problem_id": kernel.problem_id,
-                "family": (kernel.mutation or {}).get("family"),
+                "family": mutation.get("family"),
+                "operator": mutation.get("operator"),
+                "parent_substrate_id": mutation.get("parent_substrate_id"),
+                "split": split_of(mutation["parent_substrate_id"], mutation["dedup_hash"])
+                if kernel.kind == "mutant"
+                else None,
                 "source_kind": (kernel.substrate or {}).get("source_kind"),
                 "control_kind": (kernel.control or {}).get("control_kind"),
+                "expected": dict((kernel.control or {}).get("expected", {})),
             }
     return table
 
 
-def calibration_split(problem_ids: Iterable[str], seed: int = 42) -> tuple[list[str], list[str]]:
-    """S1 calibration split: sort, ``random.Random(seed).shuffle``, first ceil(n/2) calibrate."""
-    ordered = sorted(set(problem_ids))
-    random.Random(seed).shuffle(ordered)
-    half = (len(ordered) + 1) // 2
-    return sorted(ordered[:half]), sorted(ordered[half:])
+def s1_split(seed: int = 42) -> dict[str, Any]:
+    """The frozen S1 calibration/evaluation split (``harness.q1.substrates.split``).
+
+    Computed over every vendored L1/L2 problem id, excluded ids included, exactly
+    as the substrate corpus computed it before any build; ``sha256`` is the
+    value the preregistration names.
+    """
+    from harness.q1 import problems
+    from harness.q1.substrates.split import calibration_split as substrate_split
+
+    return substrate_split(problems.list_problem_ids(include_excluded=True), seed=seed)
 
 
-def mutant_split(mutant_ids: Iterable[str], seed: int = 42) -> tuple[list[str], list[str]]:
-    """Mutant dev/test split: sort, shuffle with ``random.Random(seed)``, first half dev."""
-    ordered = sorted(set(mutant_ids))
-    random.Random(seed).shuffle(ordered)
-    half = len(ordered) // 2
-    return sorted(ordered[:half]), sorted(ordered[half:])
+def calibration_split(
+    problem_ids: Iterable[str] | None = None, seed: int = 42
+) -> tuple[list[str], list[str]]:
+    """S1 calibration and evaluation problem ids.
+
+    With ``problem_ids=None`` (the preregistered use) this is :func:`s1_split`.
+    Given ids, the same per-level rule is applied to them, which is only
+    useful for tests: the frozen split is defined over the full problem list.
+    """
+    from harness.q1.substrates.split import calibration_split as substrate_split
+
+    split = s1_split(seed) if problem_ids is None else substrate_split(problem_ids, seed=seed)
+    return list(split["calibration"]), list(split["evaluation"])
+
+
+def mutant_split(table: Mapping[str, Mapping[str, Any]]) -> tuple[list[str], list[str]]:
+    """Mutant dev/test ids from the mutator's frozen content-hash split (seed 42).
+
+    ``table`` is :func:`kernel_table`'s output; each mutant's ``split`` was
+    computed there from ``(parent_substrate_id, dedup_hash)``.
+    """
+    mutants = {k: v for k, v in table.items() if v["kind"] == "mutant"}
+    dev = sorted(k for k, v in mutants.items() if v["split"] == "dev")
+    test = sorted(k for k, v in mutants.items() if v["split"] == "test")
+    if len(dev) + len(test) != len(mutants):
+        raise ValueError("every mutant needs a dev or test split")
+    return dev, test
 
 
 def _gate_verdict(verdict: str) -> str:
@@ -263,6 +308,97 @@ def metrics(
         for family in families
     }
     return out
+
+
+#: Control ``expected`` gate ids read from the composed ladder.
+_LADDER_IDS = frozenset(LADDER)
+#: ... from single gate rows and c-family aggregates.
+_GATE_IDS = frozenset({*SINGLE_ROW_GATES, *C_FAMILIES})
+#: ... from the audit tiers (schema ``KNOWN_GATES`` spelling -> tier name).
+_TIER_IDS = {
+    "audit_N": "N",
+    "audit_G": "G",
+    "audit_G_strict": "G-strict",
+    "audit_c_disjoint": "c-disjoint",
+}
+
+
+def composed_verdict(entry: Mapping[str, Any], gate: str, *, policy: str = PRIMARY_POLICY) -> str:
+    """The verdict a ``control.json`` gate id names, read from one :func:`compose` entry.
+
+    ``missing`` means no row for that gate exists for this replicate;
+    ``unknown-gate`` means the id is not a gate, channel or tier.
+    """
+    if gate in _LADDER_IDS:
+        return entry["ladder"].get(gate, "missing")
+    if gate in _GATE_IDS:
+        return entry["gates"].get(gate, "missing")
+    if gate in {"A1", "A2", "A3"}:
+        return entry["audit"][policy].get(gate, "missing")
+    if gate == "A1_strict":
+        return entry["audit"]["strict-fp32"].get("A1", "missing")
+    if gate == "A4":
+        return entry["A4"]
+    if gate in _TIER_IDS:
+        return entry["tiers"][policy][_TIER_IDS[gate]]
+    return "unknown-gate"
+
+
+def control_checks(
+    composed: Mapping[str, Mapping[str, Any]],
+    table: Mapping[str, Mapping[str, Any]],
+    *,
+    policy: str = PRIMARY_POLICY,
+) -> dict[str, Any]:
+    """Every control expectation against its composed verdict (acceptance criterion 5).
+
+    A control with no rows at all, a missing gate and an unknown gate id each
+    count as a failed cell: the criterion needs 100% of cells to hold.
+    """
+    cells = []
+    for kernel_id, facts in sorted(table.items()):
+        if facts["kind"] != "control":
+            continue
+        entry = composed.get(kernel_id)
+        for gate, expected in sorted(facts["expected"].items()):
+            got = "missing" if entry is None else composed_verdict(entry, gate, policy=policy)
+            cells.append(
+                {
+                    "control_id": kernel_id,
+                    "control_kind": facts["control_kind"],
+                    "gate": gate,
+                    "expected": expected,
+                    "got": got,
+                    "ok": got == expected,
+                }
+            )
+    failed = [cell for cell in cells if not cell["ok"]]
+    return {
+        "policy": policy,
+        "cells": len(cells),
+        "held": len(cells) - len(failed),
+        "failed": failed,
+        "all_hold": bool(cells) and not failed,
+    }
+
+
+def c_rejection_causes(rows: Iterable[Mapping[str, Any]], *, seed: int = 42) -> dict[str, Any]:
+    """Per kernel, why gate (c) rejected: ``candidate-raised``, ``mismatch`` or ``shape-mismatch``.
+
+    Read from the admissible per-configuration c1/c2/c3 rejections, so FRR(c)
+    can be split into refusals or crashes and silent numerical failures.
+    """
+    causes: dict[str, dict[str, int]] = defaultdict(lambda: defaultdict(int))
+    for row in rows:
+        if row.get("seed", 42) != seed or row["gate"] not in C_FAMILIES:
+            continue
+        if row["config_id"] == "aggregate" or row["verdict"] != "reject":
+            continue
+        if not row["details"].get("admissible"):
+            continue
+        reason = row["details"].get("reason") or "mismatch"
+        causes[row["kernel_id"]][reason] += 1
+    return {kernel: dict(counts) for kernel, counts in sorted(causes.items())}
 
 
 def cost(rows: Iterable[Mapping[str, Any]]) -> dict[str, Any]:

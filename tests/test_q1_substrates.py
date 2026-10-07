@@ -483,6 +483,7 @@ def test_admission_manifest_validates_once_hashes_are_filled() -> None:
     raw = yaml.safe_load(path.read_text(encoding="utf-8"))
     with pytest.raises(ValueError):
         submitter.validate_manifest(dict(raw), verify_claim_files=False)
+    raw["image_id"] = "sha256:" + "c" * 64
     raw["git_sha"] = "a" * 40
     raw["source_sha256"] = "b" * 64
     manifest = submitter.validate_manifest(raw, verify_claim_files=False)

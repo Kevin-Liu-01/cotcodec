@@ -22,8 +22,8 @@ RUN=~/cotcodec-runs/stage0/q1-mutate, SUB = the admitted substrates root)::
         --substrates-root $SUB --out-root $RUN/mutants \
         --controls-root $RUN/controls-mutants --seed 42 --cap 40
     uv run python scripts/q1_generate_mutants.py controls \
-        --substrates-root $SUB --kernelbench-root $KERNELBENCH_423217D9 \
-        --out-root $RUN/controls-hacks
+        --substrates-root $SUB --out-root $RUN/controls-hacks
+    # (--kernelbench-root defaults to the vendored, hash-checked problems)
 
 Exit codes: 0 success, 2 bad input or refused overwrite, 3 internal failure.
 """
@@ -79,7 +79,13 @@ def _parser() -> argparse.ArgumentParser:
 
     ctl = sub.add_parser("controls", help="hack-emulating wrapper controls")
     ctl.add_argument("--substrates-root", type=Path, required=True)
-    ctl.add_argument("--kernelbench-root", type=Path, required=True)
+    ctl.add_argument(
+        "--kernelbench-root",
+        type=Path,
+        default=None,
+        help="KernelBench checkout or problem tree; default: the vendored, hash-checked "
+        "KernelBench@423217d9 problems (harness/q1/third_party/kernelbench/problems)",
+    )
     ctl.add_argument("--out-root", type=Path, required=True)
     ctl.add_argument("--kind", action="append", dest="kinds")
 

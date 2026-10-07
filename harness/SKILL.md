@@ -18,6 +18,11 @@ attestation helpers. It starts small after the 2026-10-06 restart.
   targets, reference sets, statistics and gates as pure functions.
 - `publication_attestation.py` verifies administrator signatures over complete
   publication claim waves.
+- `q1/` is Q1's Stage 0 gate stack: shared `schema.py`, gates (a)-(c), the
+  independent audit, runner/worker/journal, analysis, the mutator (`q1/mutate/`)
+  and the substrate builders (`q1/substrates/`). `q1/README.md` maps it;
+  `program/preregistrations/q1-stage0-gate-validation.md` is its draft
+  preregistration.
 - The old agent loops, conditions, metrics, routing and memory trials are in
   `legacy/harness/`.
 
@@ -38,9 +43,17 @@ attestation helpers. It starts small after the 2026-10-06 restart.
 |---|---|
 | Add a question's mechanism | Write its contract in `experiments/` first, then the module and a doctor. |
 | Change Q3 gates | Read the D21 contract and `tests/test_translation_supervised_indexer_doctor.py`. |
+| Change any Q1 code or data | Run `tests/test_q1_*.py` in a GPU-less container, then `python scripts/q1_version_card.py --markdown` and update the preregistration's version table. |
 
 ## Gotchas
 <!-- agent-docs:fill:gotchas -->
 
 - Doctor numbers are synthetic-case evidence only; they never lift the Compute
   doctor from FAIL.
+- `harness/q1/schema.py` is binding on every Q1 component; never edit it in a
+  component branch.
+- Running Triton kernels under `TRITON_INTERPRET=1` patches `triton.language`
+  for the whole process. Compile for sm_90 (the mutant compile filter) only in
+  a fresh process without that variable.
+- S1 substrates target CUDA: they refuse CPU tensors and refuse sizes below 2.
+  CPU tests port their host code explicitly (`tests/test_q1_integration_cpu.py`).
