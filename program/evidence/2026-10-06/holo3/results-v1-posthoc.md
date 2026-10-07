@@ -124,4 +124,9 @@ tasks both turns scored; z = (a only - b only) / sqrt(discordant).
 
 `results.v2_design` in the receipt holds the power simulations for v2 rules
 (a) and (d) and the calibration of rule (b)'s signatures on the H Company
-runs. The v2 draft quotes them in its section 6.
+runs, under the first v2 draft.
+
+*Note added 2026-10-07:* the adversarial review changed v2's rules (a), (b)
+and (d), so that section is superseded by the `v2-design` receipt in
+`program/evidence/2026-10-07/holo3-v2-design/`, which the current v2 draft
+quotes. The v1 numbers above are unaffected.
