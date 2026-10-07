@@ -365,16 +365,19 @@ class LoSession:
     def wait_written(
         self, path: Path, before: tuple[float, int] | None, timeout: float
     ) -> float | None:
-        """Seconds until the file's (mtime, size) changed and stayed stable for 0.3 s."""
+        """Seconds until the file's (mtime, size) changed (then held stable for 0.3 s)."""
         start = time.monotonic()
         while time.monotonic() - start < timeout:
             if path.is_file():
                 stat = path.stat()
                 if before is None or (stat.st_mtime, stat.st_size) != before:
+                    detected = time.monotonic() - start
                     time.sleep(0.3)
                     again = path.stat()
                     if (again.st_mtime, again.st_size) == (stat.st_mtime, stat.st_size):
-                        return round(time.monotonic() - start, 3)
+                        # Time until the new file was first visible, not
+                        # including the stability check.
+                        return round(detected, 3)
             time.sleep(0.1)
         return None
 
