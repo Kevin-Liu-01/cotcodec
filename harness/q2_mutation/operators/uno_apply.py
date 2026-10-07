@@ -133,11 +133,12 @@ def check_digest(text, expected, what):
 
 
 class Office:
-    def __init__(self, soffice, workdir, display, profile_xcu=None):
+    def __init__(self, soffice, workdir, display, profile_xcu=None, profile_template=None):
         self.soffice = soffice
         self.workdir = workdir
         self.display = display
         self.profile_xcu = profile_xcu
+        self.profile_template = profile_template
         self.xvfb = None
         self.proc = None
         self.pipe = f"{PIPE_PREFIX}{os.getpid()}"
@@ -157,11 +158,13 @@ class Office:
                 time.sleep(1.0)
         profile = os.path.join(self.workdir, "lo-profile")
         user_dir = os.path.join(profile, "user")
+        if self.profile_template and not os.path.exists(user_dir):
+            shutil.copytree(self.profile_template, user_dir, symlinks=True)
         os.makedirs(user_dir, exist_ok=True)
         xcu_path = os.path.join(user_dir, "registrymodifications.xcu")
         if self.profile_xcu:
             shutil.copyfile(self.profile_xcu, xcu_path)
-        elif not os.path.exists(xcu_path):
+        elif not self.profile_template and not os.path.exists(xcu_path):
             with open(xcu_path, "w") as handle:
                 handle.write(profile_xcu())
         args = [
@@ -737,6 +740,19 @@ def apply_row(office, root, row):
     return sha256_file(dst)
 
 
+def lo_version(soffice):
+    """``soffice --version`` text, or the version file the LO-VM image records at build."""
+    try:
+        text = subprocess.run([soffice, "--version"], stdout=subprocess.PIPE,
+                              stderr=subprocess.DEVNULL, text=True, timeout=60).stdout.strip()
+    except (OSError, subprocess.SubprocessError):
+        text = ""
+    if not text and os.path.exists("/opt/q2/soffice-version.txt"):
+        with open("/opt/q2/soffice-version.txt") as handle:
+            text = handle.read().strip()
+    return text
+
+
 class Watchdog:
     """Kill a hung office after ``seconds``; the row is then recorded as an error."""
 
@@ -766,11 +782,15 @@ def run(args):
             if line.strip():
                 rows.append(json.loads(line))
     workdir = tempfile.mkdtemp(prefix="q2-uno-")
-    office = Office(args.soffice, workdir, args.display, args.profile_xcu)
+
+    def new_office():
+        return Office(args.soffice, workdir, args.display, args.profile_xcu,
+                      args.profile_template)
+
+    office = new_office()
     office.start()
     build = office.build_id()
-    version = subprocess.run([args.soffice, "--version"], stdout=subprocess.PIPE,
-                             stderr=subprocess.DEVNULL, text=True).stdout.strip()
+    version = lo_version(args.soffice)
     try:
         with open(args.log, "a") as log:
             for row in rows:
@@ -787,7 +807,7 @@ def run(args):
                     record["trace"] = traceback.format_exc()[-2000:]
                     if office.proc is None or office.proc.poll() is not None:
                         office.kill()
-                        office = Office(args.soffice, workdir, args.display, args.profile_xcu)
+                        office = new_office()
                         office.start()
                 record["seconds"] = round(time.time() - started, 3)
                 log.write(json.dumps(record, sort_keys=True) + "\n")
@@ -805,7 +825,10 @@ def main(argv=None):
     parser.add_argument("--soffice", default="soffice")
     parser.add_argument("--display", default=":99",
                         help="X display for a visible office; empty for headless fallback")
-    parser.add_argument("--profile-xcu", default=None)
+    parser.add_argument("--profile-xcu", default=None,
+                        help="registrymodifications.xcu to use instead of the built-in one")
+    parser.add_argument("--profile-template", default=None,
+                        help="a LibreOffice user profile directory to copy (the VM's profile)")
     parser.add_argument("--timeout", type=int, default=DEFAULT_TIMEOUT)
     return run(parser.parse_args(argv))
 
