@@ -93,6 +93,15 @@ provenance.
   both digests cover it. `render_serving_probe_v2_manifest.py` renders its one
   job's manifest.
 
+- `run_q1_gpu_pilot.py` is the Q1 pilot driver (`--job smoke|pilot`; pilot
+  phases smoke, fidelity, calibration, timing, scoring, selectable with
+  `--phases`; `--scoring-prefix N --scoring-shared-only` re-scores a registered
+  prefix of the schedule for a paired measurement). `q1_pilot_cost_card.py`
+  writes the cost card (`--pair-job` adds the paired concurrency ratio and the
+  trimming-rule projection at it); `q1_pilot_evidence.py` summarizes a job's
+  verdicts, fidelity and A4 probes. All three run in a GPU-less container
+  except the driver, which runs only as a lane job.
+
 ## Patterns to follow / invariants
 <!-- agent-docs:fill:patterns -->
 
