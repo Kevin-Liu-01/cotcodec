@@ -68,9 +68,19 @@ SPLITS_PATH = "program/evidence/q2-mutation/splits.json"
 SPECS_DIR = "program/evidence/q2-mutation/specs"
 SANITIZED_MANIFEST = "program/evidence/q2-mutation/sanitized-tasks.manifest.json"
 PROBE_TOUCHED = "program/evidence/q2-mutation/harness/probe_touched.json"
+FILE_CACHE_RECEIPTS = "program/evidence/q2-mutation/harness/file-cache-receipts.tsv"
 DEV_SPLIT = "dev"
+# Container mounts of the external inputs (q2-mutation-cpu.sbatch, Q2M_INPUTS).
+INPUT_OSWORLD = "OSWorld"
+INPUT_FILE_CACHE = "file_cache_1e112283/files"
+INPUT_VM_BASELINE = "vm-baseline"
+# The OSWorld parts a scoring run executes or reads: the pinned evaluate() and
+# metric code, and the task configs.
+OSWORLD_TREES = ("desktop_env", "evaluation_examples")
 
 OFFICE_SUFFIXES = {".xlsx": "xlsx", ".docx": "docx", ".pptx": "pptx"}
+# Files the save stage must write before scoring (reachability.LO_SAVE_EXTENSIONS).
+OFFICE_SAVE_SUFFIXES = frozenset({".docx", ".xlsx", ".pptx", ".odt", ".ods", ".odp"})
 # Plain-text end states the text/config operators edit by splicing characters.
 TEXT_SUFFIXES = frozenset(
     {
@@ -97,20 +107,20 @@ OUTSIDE_TARGET = "outside"
 # operators that make the same kind of edit. A (task, operator) cell is
 # probe-touched when the task carries the probe and the operator matches one
 # of its patterns; such cells are exploratory (preregistration section 12).
-# Probes of the byte-level kind (zip repacks, split runs) map to no
-# document_model operator; controls and the headless gold round trip map to
-# none either (P1 handles the latter separately).
-_TEXT_EDITS = (
+# An unrelated-edit probe (a typo in body text or a table, an edited cell) on a
+# task predicts how its checker treats every unrequested change, so it touches
+# every extra-change operator of the task, not only the one that types the
+# same kind of edit; a revert probe touches every violation operator. Probes of
+# the byte-level kind (zip repacks, split runs) map to no document_model
+# operator; controls and the headless gold round trip map to none either (P1
+# handles the latter separately).
+_TEXT_VIOLATIONS = (
     "docx.viol.text_edit",
-    "docx.extra.edit_unrelated_paragraph",
     "pptx.viol.text_edit",
-    "pptx.extra.edit_unrelated_text",
-    "pptx.extra.edit_notes",
     "xlsx.viol.value_perturb",
-    "xlsx.extra.edit_unrelated_value",
     "text.viol.line_edit",
-    "text.extra.unrelated_line_edit",
 )
+_UNRELATED_EDITS = ("*.extra.*",)
 PROBE_OPERATOR_MAP: dict[str, tuple[str, ...]] = {
     "controls:gold+do_nothing(raw)": (),
     "lo_rt:gold_headless_save(ubuntu .13)": (),
@@ -118,23 +128,16 @@ PROBE_OPERATOR_MAP: dict[str, tuple[str, ...]] = {
     "equiv:E-ZIP": (),
     "runsplit:E-RUNSPLIT-TOUCHED": (),
     "runsplit:E-RUNSPLIT-UNTOUCHED": (),
-    "mutants:F-TYPO": _TEXT_EDITS,
-    "mutants_v2:F-TYPO-BODY": _TEXT_EDITS,
-    "mutants_v2:F-TYPO-TABLE": (
-        "docx.extra.edit_unrelated_table_cell",
-        "pptx.viol.table_cell_text",
-    ),
-    "mutants_v2:F-CELL": (
-        "xlsx.extra.edit_unrelated_value",
-        "xlsx.extra.clear_unrelated_row",
-        "xlsx.viol.value_perturb",
-    ),
+    "mutants:F-TYPO": _TEXT_VIOLATIONS + _UNRELATED_EDITS,
+    "mutants_v2:F-TYPO-BODY": _TEXT_VIOLATIONS + _UNRELATED_EDITS,
+    "mutants_v2:F-TYPO-TABLE": ("pptx.viol.table_cell_text",) + _UNRELATED_EDITS,
+    "mutants_v2:F-CELL": ("xlsx.viol.value_perturb",) + _UNRELATED_EDITS,
     "mutants:R-REVERT": ("*.viol.*",),
     "mutants_v2:R-REVERT": ("*.viol.*",),
 }
 
-# Code whose bytes the preregistration pins (README files excluded so a
-# documentation fix does not move the pin).
+# Code whose bytes the preregistration pins (README and SKILL files excluded so
+# a documentation fix does not move the pin).
 CODE_TREE_ROOTS = (
     "harness/q2_mutation",
     "infra/q2-mutation",
@@ -142,6 +145,9 @@ CODE_TREE_ROOTS = (
     "scripts/q2_mutation_export_tasks.py",
     "scripts/q2_mutation_operators.py",
 )
+
+
+DOC_FILES = frozenset({"README.md", "SKILL.md"})
 
 
 class CampaignError(RuntimeError):
@@ -211,16 +217,35 @@ def checker_family(funcs: Sequence[str]) -> str:
 # --- split guard and pins -------------------------------------------------------
 
 
+LEDGER_GENESIS = "0" * 64
+
+
+def ledger_rows(ledger: Path) -> list[dict[str, Any]]:
+    """Ledger rows after checking the hash chain end to end (``scripts/preregister.py``)."""
+    rows: list[dict[str, Any]] = []
+    previous = LEDGER_GENESIS
+    for number, line in enumerate(ledger.read_text(encoding="utf-8").splitlines(), 1):
+        if not line.strip():
+            continue
+        row = json.loads(line)
+        body = {key: value for key, value in row.items() if key != "hash"}
+        payload = json.dumps(body, sort_keys=True, separators=(",", ":")).encode()
+        if row.get("previous_hash") != previous:
+            raise CampaignError(f"ledger line {number}: broken previous_hash link")
+        if row.get("hash") != hashlib.sha256(payload).hexdigest():
+            raise CampaignError(f"ledger line {number}: row hash does not match its body")
+        rows.append(row)
+        previous = str(row["hash"])
+    return rows
+
+
 def frozen_ledger_row(src: Path) -> dict[str, Any] | None:
     """The ledger row of this experiment if the staged preregistration matches it."""
     ledger = src / LEDGER_PATH
     prereg = src / PREREG_PATH
     if not ledger.is_file() or not prereg.is_file():
         return None
-    for line in ledger.read_text(encoding="utf-8").splitlines():
-        if not line.strip():
-            continue
-        row = json.loads(line)
+    for row in ledger_rows(ledger):
         if row.get("experiment_id") == EXPERIMENT_ID:
             if row.get("path") != PREREG_PATH or row.get("sha256") != sha256_file(prereg):
                 raise CampaignError("the staged preregistration differs from its frozen digest")
@@ -253,7 +278,12 @@ PINNED_KEYS = (
     "sanitized_manifest_sha256",
     "splits_sha256",
     "schema_sha256",
+    "probe_touched_sha256",
+    "file_cache_receipts_sha256",
 )
+# Digests of the external inputs, checked against the mounted /inputs tree in
+# every container stage that reads them (``campaign guard``).
+INPUT_PIN_KEYS = ("osworld_tree_sha256", "vm_baseline_tree_sha256")
 _JSON_FENCE = re.compile(r"^```json\n(.*?)^```$", re.DOTALL | re.MULTILINE)
 
 
@@ -294,7 +324,7 @@ def _tree_files(root: Path, entry: str) -> list[Path]:
         if p.is_file()
         and "__pycache__" not in p.parts
         and p.suffix != ".pyc"
-        and p.name != "README.md"
+        and p.name not in DOC_FILES
     )
 
 
@@ -333,7 +363,61 @@ def pins(root: Path) -> dict[str, Any]:
         "sanitized_manifest_sha256": sha256_file(root / SANITIZED_MANIFEST),
         "splits_sha256": sha256_file(root / SPLITS_PATH),
         "schema_sha256": sha256_file(root / "harness/q2_mutation/schema.py"),
+        "probe_touched_sha256": sha256_file(root / PROBE_TOUCHED),
+        "file_cache_receipts_sha256": sha256_file(root / FILE_CACHE_RECEIPTS),
     }
+
+
+def tree_sha256(root: Path, entries: Sequence[str] = ("",)) -> str:
+    """SHA-256 over (relative path, file SHA-256) of every file under ``entries``.
+
+    ``__pycache__`` directories, ``.pyc`` files and ``.git`` are skipped.
+    """
+    digest = hashlib.sha256()
+    for entry in entries:
+        base = root / entry if entry else root
+        for path in sorted(base.rglob("*")):
+            parts = path.relative_to(root).parts
+            if not path.is_file() or "__pycache__" in parts or ".git" in parts:
+                continue
+            if path.suffix == ".pyc":
+                continue
+            digest.update(path.relative_to(root).as_posix().encode("utf-8") + b"\0")
+            digest.update(sha256_file(path).encode("ascii") + b"\n")
+    return digest.hexdigest()
+
+
+def input_digests(inputs: Path) -> dict[str, str]:
+    """Digests of the mounted OSWorld tree and VM baseline (``INPUT_PIN_KEYS``)."""
+    return {
+        "osworld_tree_sha256": tree_sha256(inputs / INPUT_OSWORLD, OSWORLD_TREES),
+        "vm_baseline_tree_sha256": tree_sha256(inputs / INPUT_VM_BASELINE),
+    }
+
+
+def check_file_cache(src: Path, files: Path) -> int:
+    """Re-hash every file-cache file against the committed receipts; return the count."""
+    count = 0
+    for line in (src / FILE_CACHE_RECEIPTS).read_text(encoding="utf-8").splitlines():
+        if not line.strip():
+            continue
+        rel, size, digest = line.split("\t")[:3]
+        path = files / rel
+        if not path.is_file() or path.stat().st_size != int(size) or sha256_file(path) != digest:
+            raise CampaignError(f"file cache {rel} differs from its receipt")
+        count += 1
+    return count
+
+
+def check_inputs(src: Path, inputs: Path) -> dict[str, Any]:
+    """Refuse mounted inputs whose OSWorld tree, VM baseline or file cache differ from the pins."""
+    declared = prereg_pins((src / PREREG_PATH).read_text(encoding="utf-8"))
+    actual = input_digests(inputs)
+    wrong = sorted(key for key in INPUT_PIN_KEYS if declared.get(key) != actual[key])
+    if wrong:
+        raise CampaignError(f"the mounted inputs differ from the preregistration pins: {wrong}")
+    files = check_file_cache(src, inputs / INPUT_FILE_CACHE)
+    return {**actual, "file_cache_files_verified": files}
 
 
 # --- stage 1: targets (metric image) --------------------------------------------
@@ -694,19 +778,31 @@ def cmd_build(args: argparse.Namespace) -> int:
         plans.append((target, base, null, records))
 
     apply_rows = []
+    # What each recipe was applied to: the recipe's own input_sha256 names the
+    # base it was planned on; under --apply-to gold the steps edit the raw gold.
+    applied_input: dict[str, dict[str, str]] = {}
     for target, base, _null, records in plans:
         if target["family"] not in OFFICE_FAMILIES:
+            for record in records:
+                # Text and config bases are byte copies of the gold.
+                applied_input[record["mutant_id"]] = {
+                    "applied_to": "gold",
+                    "applied_input_sha256": target["gold_sha256"],
+                }
             continue
         for record in records:
             to_gold = args.apply_to == "gold"
+            input_sha = target["gold_sha256"] if to_gold else record["recipe"]["input_sha256"]
+            applied_input[record["mutant_id"]] = {
+                "applied_to": args.apply_to,
+                "applied_input_sha256": input_sha,
+            }
             apply_rows.append(
                 {
                     "mutant_id": record["mutant_id"],
                     "family": record["family"],
                     "input": target["gold"] if to_gold else str(base.relative_to(out)),
-                    "input_sha256": (
-                        target["gold_sha256"] if to_gold else record["recipe"]["input_sha256"]
-                    ),
+                    "input_sha256": input_sha,
                     "output": mutant_file_rel(record["mutant_id"], target["vm_path"]),
                     "steps": record["recipe"]["params"]["steps"],
                 }
@@ -755,6 +851,7 @@ def cmd_build(args: argparse.Namespace) -> int:
                 "duplicate": record["mutant_id"] in dropped_ids,
                 "failed_checks": failed,
                 "apply_status": applied.get(record["mutant_id"], {}).get("status", "missing"),
+                **applied_input.get(record["mutant_id"], {}),
             }
         )
     write_jsonl(out / "mutations.jsonl", verified)
@@ -950,22 +1047,38 @@ def classify(
     verdict: Mapping[str, Any] | None,
     null_verdict: Mapping[str, Any] | None,
     nondeterministic: bool,
+    *,
+    save_failed: bool = False,
+    unemulated: bool = False,
+    infra_failed: bool = False,
 ) -> tuple[str, str | None]:
     """(status, event) of one mutant under one venv.
 
-    status: not_admitted | not_scored | normalized | null_not_pass | error |
-    nondeterministic | ambiguous | evaluable. event is set only for evaluable
-    mutants: FN / FN_alt / FP_R / FP_F when the checker disagrees with the label,
-    'ok' when it agrees.
+    status, first match wins: not_admitted | save_failed (the GUI-faithful
+    save of the mutant or of its null mutant did not write every office file,
+    or an office candidate reached the scorer unsaved) | unemulated (the task
+    has a setup or postconfig step the harness cannot replay and that may write
+    a file the checker reads) | not_scored | normalized | infra_timeout (the
+    mutant's or its null mutant's scoring timed out after its retries) |
+    null_not_pass | error | nondeterministic | ambiguous | evaluable. The first
+    three and infra_timeout are infrastructure exclusions (preregistration
+    section 8). event is set only for evaluable mutants: FN / FN_alt / FP_R /
+    FP_F when the checker disagrees with the label, 'ok' when it agrees.
     """
     if not admitted:
         return "not_admitted", None
+    if save_failed:
+        return "save_failed", None
+    if unemulated:
+        return "unemulated", None
     if verdict is None:
         return "not_scored", None
     if post_save is None or post_save.get("status") != "checked":
         return "not_scored", None
     if not post_save.get("post_save_admitted"):
         return "normalized", None
+    if infra_failed:
+        return "infra_timeout", None
     if null_verdict is None or null_verdict["verdict"] != "pass":
         return "null_not_pass", None
     if verdict["verdict"] == "error":
@@ -978,6 +1091,18 @@ def classify(
     passed = verdict["verdict"] == "pass"
     disagrees = (not passed) if wrong == "fail_or_partial" else passed
     return "evaluable", (event if disagrees else "ok")
+
+
+def unsaved_office(job: Mapping[str, Any] | None) -> bool:
+    """An office candidate that reached the scorer without its GUI-faithful save."""
+    if job is None or job.get("skip_reachability"):
+        return False
+    office = any(
+        posixpath.splitext(vm)[1].lower() in OFFICE_SAVE_SUFFIXES
+        for vm, local in (job.get("files") or {}).items()
+        if local is not None
+    )
+    return office and job.get("saved_via") != "gui_faithful_lo_save"
 
 
 def _verdicts(path: Path) -> dict[str, dict[str, Any]]:
@@ -1038,20 +1163,45 @@ def build_report(
     saved_jobs: Sequence[Mapping[str, Any]],
     probe_cells: Mapping[str, Sequence[str]],
     *,
+    excluded: Sequence[Mapping[str, Any]] = (),
+    scoring_jobs: Sequence[Mapping[str, Any]] = (),
     primary: str = "lock",
     seed: int = 42,
     n_boot: int = 10_000,
 ) -> tuple[list[dict[str, Any]], dict[str, Any]]:
-    """Outcome rows (one per planned mutant) and the summary tables."""
+    """Outcome rows (one per planned mutant) and the summary tables.
+
+    ``excluded`` are the jobs ``merge`` left out because their save stage
+    failed; ``scoring_jobs`` (the build's job list) names the null mutant of
+    a target whose own save failed, which ``saved_jobs`` no longer holds.
+    """
     from harness.q2_mutation.stats import Unit, minimum_detectable_rate
 
     adm = {a["mutant_id"]: a for a in admission}
     post = {r["mutant_id"]: r for r in recheck}
     null_of_target = {
-        job["target_id"]: job["mutant_id"] for job in saved_jobs if job.get("kind") == "null"
+        job["target_id"]: job["mutant_id"]
+        for job in [*scoring_jobs, *saved_jobs]
+        if job.get("kind") == "null"
     }
+    saved = {job["mutant_id"]: job for job in saved_jobs}
     saved_via = {job["mutant_id"]: job.get("saved_via") for job in saved_jobs}
+    save_failed_ids = {row["mutant_id"] for row in excluded if row.get("mutant_id")}
     arms = sorted(verdicts)
+
+    def save_failed(mutant: str | None) -> bool:
+        return bool(mutant) and (mutant in save_failed_ids or unsaved_office(saved.get(mutant)))
+
+    def unemulated_writes(mutant: str | None, arm: str) -> bool:
+        if not mutant:
+            return False
+        note = notes.get(arm, {}).get(mutant, {})
+        return bool(
+            (saved.get(mutant) or {}).get("save_stage_unemulated_writes")
+            or note.get("setup_unemulated_writes")
+            or note.get("postconfig_unemulated_writes")
+        )
+
     outcomes = []
     for record in mutations:
         mutant_id = record["mutant_id"]
@@ -1079,7 +1229,15 @@ def build_report(
             null_note = notes.get(arm, {}).get(null, {}) if null else {}
             unstable = bool(note.get("nondeterministic")) or bool(null_note.get("nondeterministic"))
             status, event = classify(
-                record["label"], a["admitted"], post.get(mutant_id), verdict, null_verdict, unstable
+                record["label"],
+                a["admitted"],
+                post.get(mutant_id),
+                verdict,
+                null_verdict,
+                unstable,
+                save_failed=save_failed(mutant_id) or save_failed(null),
+                unemulated=unemulated_writes(mutant_id, arm) or unemulated_writes(null, arm),
+                infra_failed=bool(note.get("infra_failed") or null_note.get("infra_failed")),
             )
             row[f"{arm}_verdict"] = verdict["verdict"] if verdict else None
             row[f"{arm}_score"] = verdict["score"] if verdict else None
@@ -1094,6 +1252,17 @@ def build_report(
         "primary_dep_set": primary,
         "planned": len(outcomes),
         "admitted": sum(1 for r in outcomes if r["admitted"]),
+        "save_stage_exclusions": [
+            {"mutant_id": row.get("mutant_id"), "kind": row.get("kind")}
+            for row in sorted(excluded, key=lambda r: str(r.get("mutant_id")))
+        ],
+        "unemulated_tasks": sorted(
+            {
+                r["task_id"]
+                for r in outcomes
+                if any(r.get(f"{arm}_status") == "unemulated" for arm in arms)
+            }
+        ),
         "labels_admitted": dict(Counter(r["label"] for r in outcomes if r["admitted"])),
         "status": {arm: dict(Counter(r[f"{arm}_status"] for r in outcomes)) for arm in arms},
         "null_verdicts": {
@@ -1183,6 +1352,8 @@ def cmd_report(args: argparse.Namespace) -> int:
     verdicts = {arm: rows for arm, rows in verdicts.items() if rows}
     notes = {arm: _notes(run / f"mut-notes-{arm}.jsonl") for arm in verdicts}
     probe = json.loads(Path(args.probe_touched).read_text(encoding="utf-8"))
+    excluded_path = run / "jobs-saved.excluded.jsonl"
+    scoring_path = Path(args.admission).parent / "scoring-jobs.jsonl"
     outcomes, summary = build_report(
         read_jsonl(args.mutations),
         read_jsonl(args.admission),
@@ -1191,6 +1362,8 @@ def cmd_report(args: argparse.Namespace) -> int:
         notes,
         read_jsonl(run / "jobs-saved.jsonl"),
         probe_touched_cells(probe),
+        excluded=read_jsonl(excluded_path) if excluded_path.is_file() else [],
+        scoring_jobs=read_jsonl(scoring_path) if scoring_path.is_file() else [],
         n_boot=args.n_boot,
     )
     write_jsonl(run / "outcomes.jsonl", outcomes)
@@ -1200,7 +1373,25 @@ def cmd_report(args: argparse.Namespace) -> int:
 
 
 def cmd_pins(args: argparse.Namespace) -> int:
-    print(json.dumps(pins(Path(args.root)), indent=1, sort_keys=True))
+    out = pins(Path(args.root))
+    if args.inputs:
+        out.update(input_digests(Path(args.inputs)))
+    print(json.dumps(out, indent=1, sort_keys=True))
+    return 0
+
+
+def cmd_guard(args: argparse.Namespace) -> int:
+    """Refuse a stage whose split, staged code or mounted inputs differ from the registration.
+
+    Every split: the mounted OSWorld tree, VM baseline and file cache must
+    match the pins. Every split but dev: also the frozen ledger row (hash chain
+    and file digest), ``Q2M_PREREG_FROZEN`` and the code, catalog, spec,
+    split, probe-map and receipt digests (``require_split_allowed``).
+    """
+    src = Path(args.src)
+    row = require_split_allowed(args.split, src)
+    checked = check_inputs(src, Path(args.inputs))
+    print(json.dumps({"split": args.split, "frozen": bool(row), **checked}, sort_keys=True))
     return 0
 
 
@@ -1213,8 +1404,10 @@ def cmd_pins(args: argparse.Namespace) -> int:
 # by its SHA-256 and length. The full recipe and the base file it names
 # (``input_sha256``) stay in the host run root; planning is deterministic given
 # the base, so a holder of the base files can regenerate each recipe and check
-# its digest and mutant id. (A fresh LibreOffice save of the gold is not
-# byte-identical, so it yields new ids with the same sites and labels.)
+# its digest and mutant id. The mutant file is the recipe's steps applied to the
+# file a release row names in ``applied_input_sha256`` (the raw gold under
+# ``--apply-to gold``, not the base). (A fresh LibreOffice save of the gold is
+# not byte-identical, so it yields new ids with the same sites and labels.)
 REDACT_MIN_CHARS = 32
 _PLAIN_TOKEN = re.compile(r"[A-Za-z0-9_./\[\]:!$#@=+*,()<>&%^|~;?'\"-]+")
 # A quote opens after a non-word character and closes before one, so the
@@ -1286,8 +1479,15 @@ def redact_quotes(text: str, known: Sequence[str] = ()) -> str:
     return _QUOTED.sub(swap, text)
 
 
-def release_record(record: Mapping[str, Any]) -> dict[str, Any]:
-    """The releasable view of one ``MutationResult``: ids, label, witness, digests."""
+def release_record(
+    record: Mapping[str, Any], applied: Mapping[str, Any] | None = None
+) -> dict[str, Any]:
+    """The releasable view of one ``MutationResult``: ids, label, witness, digests.
+
+    ``applied`` (the build's admission row) names what the recipe's steps were
+    applied to and that file's SHA-256: under ``--apply-to gold`` the gold, not
+    the base that ``recipe.input_sha256`` names (the base is what planning read).
+    """
     from harness.q2_mutation.schema import MutationResult, recipe_sha256
 
     result = MutationResult.from_dict(record)
@@ -1314,6 +1514,8 @@ def release_record(record: Mapping[str, Any]) -> dict[str, Any]:
         ],
         "recipe_sha256": digest,
         "recipe_release": redact(dict(result.recipe)),
+        "applied_to": (applied or {}).get("applied_to"),
+        "applied_input_sha256": (applied or {}).get("applied_input_sha256"),
     }
 
 
@@ -1342,8 +1544,14 @@ def notes_summary(notes: Sequence[Mapping[str, Any]]) -> dict[str, Any]:
         "jobs": len(notes),
         "nondeterministic": sorted(n["mutant_id"] for n in notes if n.get("nondeterministic")),
         "infra_timeouts": sum(int(n.get("infra_timeouts", 0)) for n in notes),
+        "infra_failed": sorted(n["mutant_id"] for n in notes if n.get("infra_failed")),
         "setup_unemulated_jobs": sum(1 for n in notes if n.get("setup_unemulated")),
         "postconfig_unemulated_jobs": sum(1 for n in notes if n.get("postconfig_unemulated")),
+        "unemulated_writing_jobs": sum(
+            1
+            for n in notes
+            if n.get("setup_unemulated_writes") or n.get("postconfig_unemulated_writes")
+        ),
     }
 
 
@@ -1355,6 +1563,9 @@ def reachability_summary(rows: Sequence[Mapping[str, Any]]) -> dict[str, Any]:
         "infra_errors": sorted(row["job_id"] for row in rows if row.get("infra_error")),
         "skipped": sum(1 for row in rows if (row.get("plan") or {}).get("skipped")),
         "jobs_with_failures": sorted(row["job_id"] for row in rows if row.get("failures")),
+        "jobs_with_unemulated_steps": sorted(
+            row["job_id"] for row in rows if (row.get("plan") or {}).get("unemulated")
+        ),
         "saves": len(saves),
         "saves_written": sum(1 for s in saves if s.get("written")),
         "saves_with_dialogs": sum(1 for s in saves if s.get("dialogs")),
@@ -1407,6 +1618,10 @@ def cmd_export(args: argparse.Namespace) -> int:
             rel = f"score/mut-{kind}-{arm}.jsonl"
             if (run / rel).is_file():
                 sources[rel] = sha256_file(run / rel)
+    if (run / "score/jobs-saved.excluded.jsonl").is_file():
+        sources["score/jobs-saved.excluded.jsonl"] = sha256_file(
+            run / "score/jobs-saved.excluded.jsonl"
+        )
     mutations = read_jsonl(run / "build/mutations.jsonl")
     outcomes = read_jsonl(run / "score/outcomes.jsonl")
     for row in outcomes:
@@ -1423,7 +1638,11 @@ def cmd_export(args: argparse.Namespace) -> int:
         for path in sorted((run / "build/lo").glob("reachability-*.jsonl"))
         for row in read_jsonl(path)
     ]
-    write_jsonl(out / "mutations.release.jsonl", (release_record(r) for r in mutations))
+    admission = {a["mutant_id"]: a for a in read_jsonl(run / "build/admission.jsonl")}
+    write_jsonl(
+        out / "mutations.release.jsonl",
+        (release_record(r, admission.get(r["mutant_id"])) for r in mutations),
+    )
     write_jsonl(out / "outcomes.jsonl", outcomes)
     notes_out: dict[str, Any] = {}
     for arm in ("lock", "scout"):
@@ -1531,7 +1750,14 @@ def main(argv: list[str] | None = None) -> int:
 
     pn = sub.add_parser("pins", help="digests the preregistration names")
     pn.add_argument("--root", default=".")
+    pn.add_argument("--inputs", default=None, help="also digest a mounted inputs tree")
     pn.set_defaults(func=cmd_pins)
+
+    gd = sub.add_parser("guard", help="refuse unregistered splits, code or inputs (containers)")
+    gd.add_argument("--split", required=True, choices=["dev", "confirm", "reserve"])
+    gd.add_argument("--src", default="/src")
+    gd.add_argument("--inputs", default="/inputs")
+    gd.set_defaults(func=cmd_guard)
 
     ex = sub.add_parser("export", help="releasable evidence of one run (no document content)")
     ex.add_argument("--run", required=True, help="run root with prep/, build/, score/")

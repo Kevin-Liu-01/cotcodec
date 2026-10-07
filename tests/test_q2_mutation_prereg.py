@@ -44,30 +44,93 @@ def test_prereg_pins_match_the_tree() -> None:
     assert declared["mutation_split"] == "confirm"
 
 
-def _submit_image_check() -> str:
-    script = SUBMIT.read_text(encoding="utf-8")
-    return script.split("<<'PY'\n", 1)[1].split("\nPY\n", 1)[0]
+CHECK = ROOT / "infra" / "q2-mutation" / "run" / "check_frozen.py"
+CONTROLS = ROOT / "infra" / "q2-mutation" / "run" / "submit_controls.sh"
+SHA = "a" * 40
+
+
+def _staged(tmp_path: Path, *, frozen: bool = True, tamper: bool = False) -> Path:
+    """A staged tree with this preregistration, frozen in a scratch ledger."""
+    src = tmp_path / "src"
+    prereg = src / campaign.PREREG_PATH
+    prereg.parent.mkdir(parents=True)
+    prereg.write_text(_text(), encoding="utf-8")
+    (src / ".git_sha").write_text(SHA + "\n", encoding="utf-8")
+    if frozen:
+        sys.path.insert(0, str(ROOT / "scripts"))
+        import preregister
+
+        ledger = src / campaign.LEDGER_PATH
+        preregister.freeze(prereg, campaign.EXPERIMENT_ID, ledger=ledger, root=src)
+        if tamper:
+            row = ledger.read_text(encoding="utf-8").replace('"frozen_at": "', '"frozen_at": "x')
+            ledger.write_text(row, encoding="utf-8")
+    return src
+
+
+def _check(src: Path, *args: str, env: dict | None = None) -> subprocess.CompletedProcess:
+    import os
+
+    environ = {k: v for k, v in os.environ.items() if k != "Q2M_PREREG_FROZEN"}
+    environ.update(env or {})
+    return subprocess.run(
+        [sys.executable, str(CHECK), "--src", str(src), *args],
+        text=True,
+        capture_output=True,
+        check=False,
+        env=environ,
+    )
+
+
+FROZEN = {"Q2M_PREREG_FROZEN": campaign.EXPERIMENT_ID}
 
 
 @pytest.mark.parametrize(
     ("metric", "lo", "apply_to", "ok"),
     [
         (METRIC, LO_VM, "gold", True),
+        (METRIC, LO_VM, None, True),
         (METRIC, LO_VM, "base", False),
         (METRIC, "sha256:" + "0" * 64, "gold", False),
     ],
 )
-def test_submit_script_checks_images_against_the_pins(
-    metric: str, lo: str, apply_to: str, ok: bool
+def test_host_check_compares_images_with_the_pins(
+    tmp_path: Path, metric: str, lo: str, apply_to: str | None, ok: bool
 ) -> None:
-    run = subprocess.run(
-        [sys.executable, "-", str(PREREG), metric, lo, apply_to],
-        input=_submit_image_check(),
-        text=True,
-        capture_output=True,
-        check=False,
+    src = _staged(tmp_path)
+    extra = ["--apply-to", apply_to] if apply_to else []
+    run = _check(
+        src, "--sha", SHA, "--split", "confirm", "--metric", metric, "--lo", lo, *extra, env=FROZEN
     )
     assert (run.returncode == 0) is ok, run.stderr
+
+
+def test_host_check_refuses_unfrozen_or_mismatched_trees(tmp_path: Path) -> None:
+    base = ["--split", "confirm", "--metric", METRIC, "--lo", LO_VM]
+    src = _staged(tmp_path / "a")
+    assert _check(src, "--sha", "b" * 40, *base, env=FROZEN).returncode == 2
+    no_env = _check(src, "--sha", SHA, *base)
+    assert no_env.returncode == 2 and "dev split" in no_env.stderr
+    unfrozen = _check(_staged(tmp_path / "b", frozen=False), "--sha", SHA, *base, env=FROZEN)
+    assert unfrozen.returncode == 2 and "frozen" in unfrozen.stderr
+    tampered = _check(_staged(tmp_path / "c", tamper=True), "--sha", SHA, *base, env=FROZEN)
+    assert tampered.returncode == 2 and "row hash" in tampered.stderr
+    edited = _staged(tmp_path / "d")
+    with (edited / campaign.PREREG_PATH).open("a", encoding="utf-8") as handle:
+        handle.write("\nedited after the freeze\n")
+    assert _check(edited, "--sha", SHA, *base, env=FROZEN).returncode == 2
+    dev = _check(src, "--sha", SHA, "--split", "dev", "--metric", "x", "--lo", "y")
+    assert dev.returncode == 0, dev.stderr
+
+
+@pytest.mark.parametrize("script", [SUBMIT, CONTROLS])
+def test_submit_scripts_run_the_host_check_and_the_container_guard(script: Path) -> None:
+    text = script.read_text(encoding="utf-8")
+    assert "check_frozen.py" in text and '--sha "${sha}"' in text
+    assert "campaign guard --split ${split}" in text
+    # Jobs 1 and 3 (metric image) start with the guard and carry the frozen env.
+    assert text.count('hex "${frozen_env[@]}" sh -c "${guard} &&') == 2
+    assert 'Q2M_PREREG_FROZEN:-}" != "q2-evaluator-mutation-v1"' not in text
 
 
 def test_build_default_matches_the_registered_application_mode() -> None:

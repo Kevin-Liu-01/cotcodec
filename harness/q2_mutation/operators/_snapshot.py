@@ -26,7 +26,9 @@ from harness.q2_mutation.operators._ooxml import (
     q,
 )
 
-SNAPSHOT_VERSION = 1
+# 2: pptx slides record their background, shapes their outline (a:ln) and text-body
+# properties (a:bodyPr), which compare_pptx_files and the rendering depend on.
+SNAPSHOT_VERSION = 2
 
 OFFICE_FAMILIES = {"xlsx", "docx", "pptx"}
 TEXT_SUFFIXES = {
@@ -852,7 +854,14 @@ def _pptx_slide(pkg: Package, part: str) -> dict:
     tree = root.find(f"{q('p', 'cSld')}/{q('p', 'spTree')}")
     shapes = _pptx_shapes(pkg, tree, rels) if tree is not None else []
     hidden = bool_attr(root.get("show"), default=True) is False
-    return {"layout": layout, "hidden": hidden, "shapes": shapes, "notes": notes}
+    background = root.find(f"{q('p', 'cSld')}/{q('p', 'bg')}")
+    return {
+        "layout": layout,
+        "hidden": hidden,
+        "background": element_to_canonical(background) if background is not None else None,
+        "shapes": shapes,
+        "notes": notes,
+    }
 
 
 def _pptx_notes(pkg: Package, part: str) -> str:
@@ -928,6 +937,9 @@ def _pptx_shapes(pkg: Package, tree: ET.Element, rels: dict) -> list[dict]:
                 fill = sp_pr.find(q("a", "solidFill"))
                 if fill is not None:
                     shape["fill"] = _a_color(fill)
+                line = sp_pr.find(q("a", "ln"))
+                if line is not None:
+                    shape["line"] = element_to_canonical(line)
             if name == "pic":
                 blip = child.find(f".//{q('a', 'blip')}")
                 if blip is not None:
@@ -937,10 +949,33 @@ def _pptx_shapes(pkg: Package, tree: ET.Element, rels: dict) -> list[dict]:
                     shape["image_sha256"] = hashlib.sha256(data).hexdigest() if data else None
         body = child.find(q("p", "txBody"))
         if body is not None:
+            body_pr = _a_body_pr(body.find(q("a", "bodyPr")))
+            if body_pr:
+                shape["body"] = body_pr
             shape["paras"] = [_a_paragraph(p) for p in body.findall(q("a", "p"))]
             shape["text"] = "\n".join(p["text"] for p in shape["paras"])
         shapes.append(shape)
     return shapes
+
+
+def _a_body_pr(body_pr: ET.Element | None) -> dict:
+    """Text-body properties: wrap, anchoring, insets, rotation, columns, autofit mode.
+
+    Only the autofit mode is kept, not its result (``fontScale``,
+    ``lnSpcReduction``), which LibreOffice recomputes whenever the text changes.
+    """
+    if body_pr is None:
+        return {}
+    props: dict = {local_name(k): v for k, v in sorted(body_pr.attrib.items())}
+    for child in body_pr:
+        name = local_name(child.tag)
+        if name in {"normAutofit", "spAutoFit", "noAutofit"}:
+            props["autofit"] = name
+            continue
+        node = element_to_canonical(child)
+        node.pop("tag", None)
+        props[name] = node or True
+    return props
 
 
 def _a_color(node: ET.Element | None) -> str | None:

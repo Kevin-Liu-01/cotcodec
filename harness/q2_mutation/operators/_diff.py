@@ -271,7 +271,7 @@ def _diff_docx(d: _Differ, a: dict, b: dict) -> None:
 # --------------------------------------------------------------------------- pptx
 
 _SHAPE_LAYOUT = {"off", "ext", "rot", "flipH", "flipV"}
-_SHAPE_FORMAT = {"geom", "fill"}
+_SHAPE_FORMAT = {"geom", "fill", "line", "body"}
 _SHAPE_META = {"name", "descr"}
 
 
@@ -285,6 +285,8 @@ def _diff_shape(d: _Differ, loc: str, a: dict, b: dict) -> None:
         child = f"{loc}/{seg(key)}"
         if key in _SHAPE_LAYOUT:
             d.leaf(child, LAYOUT, va, vb)
+        elif key in _SHAPE_FORMAT and isinstance(va, dict) and isinstance(vb, dict):
+            d.mapping(child, FORMAT, va, vb)
         elif key in _SHAPE_FORMAT:
             d.leaf(child, FORMAT, va, vb)
         elif key in _SHAPE_META:
@@ -339,6 +341,7 @@ def _slide_coarse(slide: dict) -> Any:
 def _diff_slide(d: _Differ, loc: str, a: dict, b: dict) -> None:
     d.leaf(f"{loc}/layout", STRUCTURE, a.get("layout"), b.get("layout"))
     d.leaf(f"{loc}/hidden", STRUCTURE, a.get("hidden"), b.get("hidden"))
+    d.leaf(f"{loc}/background", FORMAT, a.get("background"), b.get("background"))
     d.leaf(f"{loc}/notes", CONTENT, a.get("notes"), b.get("notes"))
     d.sequence(f"{loc}/shapes", a.get("shapes", []), b.get("shapes", []),
                lambda lc, x, y: _diff_shape(d, lc, x, y), STRUCTURE, _shape_coarse)

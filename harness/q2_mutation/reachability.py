@@ -201,6 +201,73 @@ def documents_to_open(steps: Sequence[Step], candidate_paths: Iterable[str]) -> 
     return wanted
 
 
+def convert_inputs(argv: Sequence[str]) -> list[str]:
+    """VM paths a ``--convert-to`` command reads (its source documents)."""
+    args = list(argv)
+    if "--convert-to" not in args:
+        return []
+    outdir = args[args.index("--outdir") + 1] if "--outdir" in args else None
+    return [resolve_vm_path(a) for a in args[1:] if a.startswith("/") and a != outdir]
+
+
+def save_failures(files: Mapping[str, str | None], row: Mapping[str, Any] | None) -> list[str]:
+    """Why a candidate's GUI-faithful save cannot be trusted; empty when it can.
+
+    ``files`` is the candidate (VM path -> local file, ``None`` for an absent
+    file) and ``row`` the save stage's result for it. A candidate passes only
+    if the stage ran without an infrastructure error and without an open or
+    activation failure, every office file it places (``LO_SAVE_EXTENSIONS``)
+    has at least one save event that wrote it and none that timed out, and
+    every postconfig conversion of a placed file produced its output. A
+    ``script_writer`` job (stage skipped by design) passes. Preregistration
+    section 8: such a candidate is an infrastructure exclusion, never scored
+    on its pre-save bytes.
+    """
+    if row is None:
+        return ["no save-stage row"]
+    if row.get("infra_error"):
+        return [f"infra_error: {row['infra_error']}"[:200]]
+    if (row.get("plan") or {}).get("skipped"):
+        return []
+    reasons = [str(failure) for failure in row.get("failures", [])]
+    placed = {resolve_vm_path(p) for p, local in files.items() if local is not None}
+    saves: dict[str, list[Mapping[str, Any]]] = {}
+    for event in row.get("saves", []):
+        saves.setdefault(resolve_vm_path(str(event.get("vm_path", ""))), []).append(event)
+    for vm_path in sorted(placed):
+        if posixpath.splitext(vm_path)[1].lower() not in LO_SAVE_EXTENSIONS:
+            continue
+        events = saves.get(vm_path, [])
+        if not events:
+            reasons.append(f"never saved: {vm_path}")
+        elif not all(event.get("written") for event in events):
+            reasons.append(f"save not written (timeout): {vm_path}")
+    for event in row.get("events", []):
+        if event.get("event") != "convert" or event.get("produced"):
+            continue
+        sources = [p for p in convert_inputs(event.get("argv", [])) if p in placed]
+        if sources:
+            reasons.append(f"conversion produced nothing: {', '.join(sources)}")
+    return reasons
+
+
+# Unemulated steps that cannot write a file a checker reads: closing or
+# launching an application window, and keystrokes sent during setup (the agent's
+# end state replaces what they act on). Everything else unemulated (typed text
+# such as a file name in a save dialog, shell commands, scripts, package
+# installs) is assumed to write and excludes the task (preregistration section 8).
+NON_WRITING_STEPS = frozenset({"postconfig close_window", "postconfig launch"})
+
+
+def step_may_write(text: str) -> bool:
+    """Whether one unemulated setup or postconfig step may write a checker-read file."""
+    stripped = text.strip()
+    if stripped in NON_WRITING_STEPS:
+        return False
+    keystrokes = stripped.startswith(("python -c ", "python3 -c ")) and "pyautogui" in stripped
+    return not (keystrokes and "pyautogui.write" not in stripped and "open(" not in stripped)
+
+
 def build_plan(raw_task: Mapping[str, Any], candidate_paths: Sequence[str]) -> dict[str, Any]:
     """Opening order and replay steps for one candidate end state."""
     postconfig = raw_task.get("evaluator", {}).get("postconfig", [])

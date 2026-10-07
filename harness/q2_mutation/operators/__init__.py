@@ -41,9 +41,12 @@ load-save fixed point): ``applied``, ``survived_save``, ``edit_landed``,
 ``expected_values``, ``expected_deltas``, ``expected_formulas``.
 
 Planning is deterministic: at most three sites per (task, operator), ordered
-by a hash of (task, operator), seeded 42, 43, 44. Recipes carry SHA-256
-digests of the text they expect, not document text; mutant documents stay on
-the host and are never released.
+by a hash of (task, operator), seeded 42, 43, 44. Recipe steps carry SHA-256
+digests of the text they expect, but a recipe's purity expectation can hold
+document text (``must_equal`` quotes a whole paragraph), so recipes are
+released only through ``campaign export``, which replaces long text by its
+digest. Mutant documents and full recipes stay on the host and are never
+released.
 """
 
 from __future__ import annotations

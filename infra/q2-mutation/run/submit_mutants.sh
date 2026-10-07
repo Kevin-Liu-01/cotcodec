@@ -26,40 +26,22 @@ batch="${src}/infra/slurm/host-single-node/q2-mutation-cpu.sbatch"
 [[ -f "${src}/.git_sha" ]] || { echo "stage ${sha} first" >&2; exit 2; }
 [[ "$(cat "${src}/.git_sha")" == "${sha}" ]] || { echo "${src}/.git_sha mismatch" >&2; exit 2; }
 [[ ! -e "${run}" ]] || { echo "${run} exists; version the run name" >&2; exit 2; }
+# Host-side: .git_sha, and for any split but dev the frozen ledger row (hash
+# chain and digest), Q2M_PREREG_FROZEN, the pinned image IDs and apply-to. The
+# code, catalog, spec, split and input digests are checked inside the
+# containers (`campaign guard` in jobs 1 and 3, `campaign targets`).
+python3 "${src}/infra/q2-mutation/run/check_frozen.py" --src "${src}" --sha "${sha}" \
+  --split "${split}" --metric "${metric}" --lo "${lo}" --apply-to "${apply_to}"
 frozen_env=()
 if [[ "${split}" != "dev" ]]; then
-  if [[ "${Q2M_PREREG_FROZEN:-}" != "q2-evaluator-mutation-v1" ]]; then
-    echo "only the dev split runs before the preregistration freeze" >&2
-    exit 2
-  fi
   frozen_env=(env Q2M_PREREG_FROZEN=q2-evaluator-mutation-v1)
-  # The code, catalog and spec digests are checked inside the containers
-  # (campaign.check_pins); the image IDs and the application mode only here.
-  python3 - "${src}/program/preregistrations/q2-evaluator-mutation-v1.md" \
-    "${metric}" "${lo}" "${apply_to}" <<'PY'
-import json
-import re
-import sys
-
-text = open(sys.argv[1], encoding="utf-8").read()
-blocks = [
-    json.loads(body)
-    for body in re.findall(r"^```json\n(.*?)^```$", text, re.DOTALL | re.MULTILINE)
-    if '"q2m_pins"' in body
-]
-if len(blocks) != 1:
-    sys.exit("the preregistration needs exactly one q2m_pins block")
-pins = blocks[0]
-wanted = (pins["metric_image_id"], pins["lo_vm_image_id"], pins["apply_to"])
-if wanted != tuple(sys.argv[2:5]):
-    sys.exit(f"images or apply-to differ from the preregistration pins: {wanted}")
-PY
 fi
 mkdir -p "${run}/prep" "${run}/build" "${run}/score"
 hex() { python3 -c 'import json,sys; print(json.dumps(sys.argv[1:]).encode().hex())' "$@"; }
 py=/opt/venv-lock/bin/python
+guard="cd /src && ${py} -m harness.q2_mutation.campaign guard --split ${split} --src /src --inputs /inputs"
 
-a1=$(hex "${frozen_env[@]}" sh -c "/src/infra/q2-mutation/run/make_jobs.sh ${split} /out/jobs.jsonl \
+a1=$(hex "${frozen_env[@]}" sh -c "${guard} && /src/infra/q2-mutation/run/make_jobs.sh ${split} /out/jobs.jsonl \
   && cd /src && ${py} -m harness.q2_mutation.campaign targets --src /src --osworld /inputs/OSWorld \
      --jobs /out/jobs.jsonl --split ${split} --out /out")
 j1=$(sbatch --parsable --cpus-per-task=4 --mem=16G --time=00:30:00 \
@@ -74,7 +56,7 @@ j2=$(sbatch --parsable --dependency=afterok:"${j1}" --cpus-per-task="${workers}"
   --export=ALL,Q2M_MODE=run,Q2M_IMAGE_ID="${lo}",Q2M_ARGV_JSON_HEX="${a2}",Q2M_SOURCE="${src}",Q2M_RUN_DIR="${run}/build",Q2M_INPUTS="${root}/inputs",Q2M_EXTRA_RO="${run}/prep:/ro/prep",Q2M_TMPFS_SIZE=32g \
   "${batch}")
 
-a3=$(hex sh -c "cd /src && ${py} -m harness.q2_mutation.campaign merge \
+a3=$(hex "${frozen_env[@]}" sh -c "${guard} && ${py} -m harness.q2_mutation.campaign merge \
      --jobs /ro/build/scoring-jobs.jsonl --lo-rows \$(ls /ro/build/lo/reachability-*.jsonl) \
      --out /out/jobs-saved.jsonl --path-map /out/=/ro/build/ \
   && /src/infra/q2-mutation/run/score.sh /out/jobs-saved.jsonl /out/mut ${workers} 2 \

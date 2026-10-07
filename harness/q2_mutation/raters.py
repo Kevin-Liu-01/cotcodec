@@ -16,8 +16,11 @@ This module fixes, before any rating exists:
 * the blind packet: instruction, initial files and the candidate only.
   Never gold, checker verdict, operator, family or label;
 * the human spot-check sample for Kevin;
-* how two ratings combine and how label error is estimated (Hajek weights,
-  task-cluster bootstrap, ``stats.audit_label_error``).
+* how two ratings combine and how label error is estimated: consensus, else
+  Kevin's adjudication, else counted as a label error; Hajek weights; the K3
+  bound is the larger of the task-cluster bootstrap limit and an exact bound
+  at the Kish effective size, with a minimum audited size
+  (``stats.label_error_bound``).
 
 Model calls are not made here; a runner sends ``packet`` objects and stores
 the answers as ``Rating`` rows.
@@ -34,11 +37,14 @@ from typing import Any
 
 from harness.q2_mutation.schema import SHOULD_FAIL_LABELS, SHOULD_PASS_LABELS
 from harness.q2_mutation.stats import (
+    K3_THRESHOLD,
     AuditItem,
     Interval,
+    LabelErrorBound,
     audit_label_error,
     cohens_kappa,
     hajek_rate,
+    label_error_bound,
 )
 
 RATERS: tuple[Mapping[str, str], ...] = (
@@ -219,12 +225,31 @@ def label_is_wrong(label: str, decision: str) -> bool | None:
 
 @dataclass(frozen=True)
 class AuditSummary:
+    """Audit result. ``label_error`` and ``k3`` are the K3/K4 statistics.
+
+    An item is resolved by rater consensus, else by Kevin's adjudication; an
+    item still unresolved counts as a label error (the spec author and one
+    rater share a provider, so dropping the other rater's dissents would bias
+    label error down). ``label_error_resolved_only`` (unresolved items
+    dropped) is a sensitivity estimate, and ``per_rater`` shows each rater's
+    disagreement with the labels on its own.
+    """
+
     kappa: float
     n_items: int
     n_unresolved: int
+    n_adjudicated: int
     sham_accuracy: Mapping[str, float]
     label_error: Mapping[str, Interval]
+    k3: Mapping[str, LabelErrorBound]
+    k3_fires: Mapping[str, bool]
+    kappa_fires: bool
+    label_error_resolved_only: Mapping[str, Interval]
     label_error_unresolved_as_wrong: Mapping[str, float]
+    per_rater: Mapping[str, Mapping[str, Mapping[str, float]]]
+
+
+KAPPA_MIN = 0.6
 
 
 def summarize(
@@ -232,10 +257,16 @@ def summarize(
     labels: Mapping[str, str],
     ratings: Mapping[str, tuple[str, str]],
     *,
+    adjudicated: Mapping[str, str] | None = None,
     n_boot: int = 10_000,
     seed: int = 42,
 ) -> AuditSummary:
-    """Combine two raters' answers into kappa, sham accuracy and label error."""
+    """Combine two raters' answers into kappa, sham accuracy and label error.
+
+    ``adjudicated`` maps an item whose raters did not agree to Kevin's answer
+    (accept or reject).
+    """
+    adjudicated = adjudicated or {}
     real = [s for s in sample if s.sham is None and s.mutant_id in ratings]
     shams = [s for s in sample if s.sham is not None and s.mutant_id in ratings]
     kappa = cohens_kappa(
@@ -247,40 +278,83 @@ def summarize(
         if shams:
             hits = sum(ratings[s.mutant_id][index] == expected[str(s.sham)] for s in shams)
             sham_accuracy[rater["rater_id"]] = hits / len(shams)
-    per_class: dict[str, list[AuditItem]] = {}
+    primary: dict[str, list[AuditItem]] = {}
+    resolved_only: dict[str, list[AuditItem]] = {}
     pessimistic: dict[str, list[AuditItem]] = {}
+    per_rater_items: dict[str, dict[str, list[AuditItem]]] = {}
+    per_rater_unsure: dict[str, dict[str, list[AuditItem]]] = {}
     unresolved = 0
-    for item in real:
-        label = labels[item.mutant_id]
+    n_adjudicated = 0
+
+    def item(source: Sampled, wrong: bool) -> AuditItem:
+        return AuditItem(
+            source.mutant_id, source.task_id, source.stratum, source.inclusion_probability, wrong
+        )
+
+    for source in real:
+        label = labels[source.mutant_id]
         group = "should_pass" if label in SHOULD_PASS_LABELS else "should_fail"
-        wrong = label_is_wrong(label, consensus(*ratings[item.mutant_id]))
+        decision = consensus(*ratings[source.mutant_id])
+        wrong = label_is_wrong(label, decision)
         if wrong is None:
             unresolved += 1
-        audit = AuditItem(
-            item.mutant_id, item.task_id, item.stratum, item.inclusion_probability, bool(wrong)
-        )
-        pessimistic.setdefault(group, []).append(
-            AuditItem(
-                item.mutant_id,
-                item.task_id,
-                item.stratum,
-                item.inclusion_probability,
-                True if wrong is None else wrong,
-            )
-        )
+        pessimistic.setdefault(group, []).append(item(source, True if wrong is None else wrong))
         if wrong is not None:
-            per_class.setdefault(group, []).append(audit)
+            resolved_only.setdefault(group, []).append(item(source, wrong))
+        else:
+            answer = adjudicated.get(source.mutant_id)
+            if answer is not None:
+                if answer not in ("accept", "reject"):
+                    raise ValueError(f"adjudication {answer!r} is not accept or reject")
+                n_adjudicated += 1
+                wrong = label_is_wrong(label, answer)
+        primary.setdefault(group, []).append(item(source, True if wrong is None else wrong))
+        for index, rater in enumerate(RATERS):
+            answer = ratings[source.mutant_id][index]
+            rid = rater["rater_id"]
+            single = label_is_wrong(label, answer if answer != "unsure" else "unresolved")
+            per_rater_items.setdefault(rid, {}).setdefault(group, []).append(
+                item(source, bool(single))
+            )
+            per_rater_unsure.setdefault(rid, {}).setdefault(group, []).append(
+                item(source, answer == "unsure")
+            )
 
+    k3 = {
+        group: label_error_bound(items, n_boot=n_boot, seed=seed)
+        for group, items in primary.items()
+    }
     return AuditSummary(
         kappa=kappa,
         n_items=len(real),
         n_unresolved=unresolved,
+        n_adjudicated=n_adjudicated,
         sham_accuracy=sham_accuracy,
         label_error={
             group: audit_label_error(items, n_boot=n_boot, seed=seed)
-            for group, items in per_class.items()
+            for group, items in primary.items()
+        },
+        k3=k3,
+        k3_fires={
+            group: (not bound.sufficient) or bound.upper > K3_THRESHOLD
+            for group, bound in k3.items()
+        },
+        kappa_fires=kappa < KAPPA_MIN,
+        label_error_resolved_only={
+            group: audit_label_error(items, n_boot=n_boot, seed=seed)
+            for group, items in resolved_only.items()
         },
         label_error_unresolved_as_wrong={
             group: hajek_rate(items) for group, items in pessimistic.items()
+        },
+        per_rater={
+            rid: {
+                group: {
+                    "contradicts_label": hajek_rate(items),
+                    "unsure": hajek_rate(per_rater_unsure[rid][group]),
+                }
+                for group, items in groups.items()
+            }
+            for rid, groups in per_rater_items.items()
         },
     )

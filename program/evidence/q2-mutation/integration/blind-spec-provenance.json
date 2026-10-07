@@ -62,5 +62,12 @@
   "the author saw docker images output and top-level names of ~/cotcodec-runs on the host"
  ],
  "verdict": "No trace of checker access: the specs branch changed only specs/, the copied sanitized tasks and the byte-identical schema.py; no spec names any of the OSWorld metric functions or evaluator fields; the README's read list contains no harness-side file. Pretraining exposure cannot be excluded (disclosed).",
- "tests": "tests/test_q2_mutation_specs.py"
+ "tests": "tests/test_q2_mutation_specs.py",
+ "spec_author": {
+  "model": "Claude Opus 5.5",
+  "provider": "Anthropic",
+  "evidence": "Co-Authored-By: Claude Opus 5.5 trailer on all six specs-branch commits (287d5233, 13c76c6e, d23e9e3c, d367818a, 13cf252b, 55dedffe)",
+  "recorded_at": "2026-10-07",
+  "rater_overlap": "audit rater 1 (claude-opus-5) shares the provider; label error therefore counts an item the raters do not agree on as wrong unless Kevin adjudicates it, and each rater's disagreement with the labels is reported on its own (raters.summarize)"
+ }
 }

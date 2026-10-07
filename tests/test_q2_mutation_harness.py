@@ -3,10 +3,11 @@ import json
 import tarfile
 import zipfile
 from pathlib import Path
+from typing import Any
 
 import pytest
 
-from harness.q2_mutation import controls, offline_eval, raters, reachability, vm_injection
+from harness.q2_mutation import controls, offline_eval, raters, reachability, stats, vm_injection
 from harness.q2_mutation.tasks import FILE_CACHE_REVISION
 
 CACHE = "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/main"
@@ -161,6 +162,56 @@ def test_setup_emulation_handles_file_steps_only(tmp_path: Path) -> None:
     assert not (vm / "home/user/Desktop/z.zip").exists()
     assert (vm / "home/user/data1").is_dir()
     assert report.setup_unemulated == ["pip install pygame"]
+    assert report.unemulated_writes is True
+    keys = offline_eval.build_initial_vm_root(
+        {
+            "config": [
+                {
+                    "type": "execute",
+                    "parameters": {
+                        "command": ["python", "-c", "import pyautogui; pyautogui.press('f11')"]
+                    },
+                }
+            ]
+        },
+        cache,
+        vm,
+    )
+    assert keys.setup_unemulated and keys.unemulated_writes is False
+
+
+def test_score_job_marks_a_timeout_after_retries_as_infrastructure(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    calls = []
+
+    def timed_out(*_args: object, **_kwargs: object) -> dict:
+        calls.append(1)
+        return {
+            "score": None,
+            "error": "Timeout after 1s",
+            "infra_timeout": True,
+            "notes": {},
+            "seconds": 1.0,
+        }
+
+    monkeypatch.setattr(offline_eval, "score_once", timed_out)
+    monkeypatch.setattr(
+        offline_eval,
+        "load_task",
+        lambda *_: {"evaluator": {"func": "compare_table"}},
+    )
+    job = offline_eval.ScoreJob(mutant_id="m", task_id=TASK, files={})
+    row, notes = offline_eval.score_job(
+        job,
+        osworld=tmp_path,
+        file_cache=tmp_path,
+        venv_lock_sha256="0" * 64,
+        dep_set="lock",
+        repeat=1,
+    )
+    assert len(calls) == 3  # one attempt and two retries
+    assert row.verdict == "error" and notes["infra_failed"] is True and notes["infra_timeouts"] == 3
 
 
 def test_stub_controller(tmp_path: Path) -> None:
@@ -216,7 +267,91 @@ def test_merge_lo_excludes_infra_failures() -> None:
     assert merged[0]["files"] == {"/a": "/saved", "/a.csv": "/csv"}
     assert merged[0]["saved_via"] == "gui_faithful_lo_save"
     assert merged[0]["mutant_id"] == "t__gold__lo"
-    assert excluded == [{"job_id": "t__initial", "reason": "Timeout"}]
+    assert excluded == [
+        {
+            "job_id": "t__initial",
+            "mutant_id": "t__initial",
+            "kind": "infra_error",
+            "reason": "Timeout",
+        }
+    ]
+
+
+def _office_row(job_id: str, **changes: object) -> dict:
+    row = {
+        "job_id": job_id,
+        "failures": [],
+        "saves": [{"vm_path": "/home/user/a.docx", "written": True}],
+        "outputs": {"/home/user/a.docx": f"/out/files/{job_id}/home/user/a.docx"},
+        "events": [],
+        "lo_build": "7.3.7.2",
+        "plan": {"unemulated": []},
+    }
+    row.update(changes)
+    return row
+
+
+@pytest.mark.parametrize(
+    ("changes", "reason"),
+    [
+        # What run_job returns when soffice never shows a window: no exception,
+        # no save, a failure entry (the reviewer's reproduction).
+        ({"failures": ["open failed: /home/user/a.docx"], "saves": [], "outputs": {}}, "open"),
+        ({"failures": ["activate failed: a.docx - LibreOffice Writer"]}, "activate"),
+        ({"saves": [{"vm_path": "/home/user/a.docx", "written": False}]}, "not written"),
+        ({"saves": [], "outputs": {}}, "never saved"),
+    ],
+)
+def test_merge_lo_excludes_office_files_whose_save_failed(changes: dict, reason: str) -> None:
+    job = {
+        "job_id": "T__op__abc",
+        "mutant_id": "T__op__abc",
+        "task_id": TASK,
+        "files": {"/home/user/a.docx": "/out/files/T__op__abc/home/user/a.docx"},
+    }
+    merged, excluded = controls.merge_lo(
+        [job], [_office_row(job["job_id"], **changes)], suffix=None
+    )
+    assert merged == []
+    assert [(e["mutant_id"], e["kind"]) for e in excluded] == [("T__op__abc", "save_failed")]
+    assert reason in excluded[0]["reason"]
+    ok, none = controls.merge_lo([job], [_office_row(job["job_id"])], suffix=None)
+    assert none == [] and ok[0]["saved_via"] == "gui_faithful_lo_save"
+
+
+def test_save_failures_cover_conversions_and_skip_script_writers() -> None:
+    files = {"/home/user/a.xlsx": "/m.xlsx", "/home/user/a.csv": "/gold.csv"}
+    convert = {
+        "event": "convert",
+        "argv": [
+            "libreoffice",
+            "--convert-to",
+            "csv",
+            "--outdir",
+            "/home/user",
+            "/home/user/a.xlsx",
+        ],
+        "produced": [],
+    }
+    row = _office_row(
+        "j", saves=[{"vm_path": "/home/user/a.xlsx", "written": True}], events=[convert]
+    )
+    assert reachability.save_failures(files, row) == [
+        "conversion produced nothing: /home/user/a.xlsx"
+    ]
+    # Do-nothing without the source file: the VM's conversion also makes nothing.
+    assert reachability.save_failures({"/home/user/a.csv": None}, {**row, "saves": []}) == []
+    skipped = {"job_id": "j", "plan": {"skipped": "script_writer stratum"}, "saves": []}
+    assert reachability.save_failures({"/home/user/a.docx": "/m.docx"}, skipped) == []
+    assert reachability.save_failures(files, None) == ["no save-stage row"]
+
+
+def test_step_may_write() -> None:
+    assert reachability.step_may_write("pyautogui.write: import pyautogui; pyautogui.write('x')")
+    assert reachability.step_may_write("pip install x")
+    assert reachability.step_may_write("python3 -c with open('/home/user/t.py', 'w') as f: f")
+    assert not reachability.step_may_write("postconfig close_window")
+    assert not reachability.step_may_write("python -c import pyautogui; pyautogui.hotkey('f11')")
 
 
 def test_reachability_plan_replays_postconfig() -> None:
@@ -318,9 +453,46 @@ def test_consensus_and_summary() -> None:
     ratings["s1"] = ("accept", "reject")
     summary = raters.summarize(sample, labels, ratings, n_boot=200)
     assert summary.n_unresolved == 1
-    assert summary.label_error["should_fail"].estimate == 0.0
+    # The unresolved item counts as a label error until Kevin adjudicates it;
+    # dropping it is only the sensitivity estimate.
+    assert summary.label_error["should_fail"].estimate == pytest.approx(1 / 6)
+    assert summary.label_error_resolved_only["should_fail"].estimate == 0.0
     assert summary.label_error_unresolved_as_wrong["should_fail"] == pytest.approx(1 / 6)
     assert summary.sham_accuracy == {"model-rater-anthropic": 1.0, "model-rater-openai": 0.0}
+    # Each rater on its own: the dissent of one rater stays visible.
+    assert summary.per_rater["model-rater-anthropic"]["should_fail"]["contradicts_label"] == (
+        pytest.approx(1 / 6)
+    )
+    assert summary.per_rater["model-rater-openai"]["should_fail"]["contradicts_label"] == 0.0
+    # Six items on six tasks are too few to audit a group: K3 fires.
+    assert summary.k3["should_fail"].sufficient is False
+    assert summary.k3_fires["should_fail"] is True
+    adjudicated = raters.summarize(
+        sample, labels, ratings, adjudicated={"m5": "reject"}, n_boot=200
+    )
+    assert adjudicated.n_adjudicated == 1
+    assert adjudicated.label_error["should_fail"].estimate == 0.0
+    with pytest.raises(ValueError, match="accept or reject"):
+        raters.summarize(sample, labels, ratings, adjudicated={"m5": "unsure"}, n_boot=200)
+
+
+def test_k3_bound_fires_without_observed_errors_when_the_sample_is_small() -> None:
+    """The reviewer's case: 6 items on 3 tasks, 0 errors gave a [0, 0] interval."""
+    small = [stats.AuditItem(f"m{i}", f"t{i % 3}", "agreement", 1.0, False) for i in range(6)]
+    assert stats.audit_label_error(small, n_boot=200).high == 0.0
+    bound = stats.label_error_bound(small, n_boot=200)
+    assert bound.upper == pytest.approx(stats.exact_upper_bound(0, 6)) and bound.upper > 0.3
+    assert bound.sufficient is False
+    # 40 items, one error, inclusion probability 0.25: the bootstrap said 0.075;
+    # the exact one-sided 95% bound is 0.113 (two-sided limit 0.132) and fires K3.
+    items = [stats.AuditItem(f"m{i}", f"t{i % 10}", "agreement", 0.25, i == 0) for i in range(40)]
+    bound = stats.label_error_bound(items, n_boot=2000)
+    assert bound.kish_n == pytest.approx(40.0)
+    assert bound.exact_high == pytest.approx(0.1132, abs=1e-3)
+    assert stats.clopper_pearson(1, 40)[1] == pytest.approx(0.1316, abs=1e-3)
+    assert bound.upper > stats.K3_THRESHOLD and bound.sufficient
+    clean = [stats.AuditItem(f"m{i}", f"t{i % 10}", "agreement", 1.0, False) for i in range(40)]
+    assert stats.label_error_bound(clean, n_boot=200).upper < stats.K3_THRESHOLD
 
 
 def test_injection_plan_order_and_tamper() -> None:
@@ -345,6 +517,70 @@ def test_injection_plan_order_and_tamper() -> None:
     reordered[upload], reordered[reopen] = reordered[reopen], reordered[upload]
     with pytest.raises(vm_injection.InjectionPlanError):
         vm_injection.check_plan(reordered)
+
+
+def test_injection_plan_opens_agent_created_outputs_before_the_postconfig_save() -> None:
+    """The reviewer's case: a target absent from the initial state is never opened by a
+    config step, so the postconfig's Ctrl+S cannot reach it unless the plan opens it."""
+    target = "/home/user/Desktop/report.docx"
+    raw = {
+        "id": TASK,
+        "config": [{"type": "launch", "parameters": {"command": ["libreoffice", "--writer"]}}],
+        "evaluator": {
+            "postconfig": [
+                {
+                    "type": "activate_window",
+                    "parameters": {
+                        "window_name": "report.docx - LibreOffice Writer",
+                        "strict": True,
+                    },
+                },
+                {"type": "sleep", "parameters": {"seconds": 0.5}},
+                {
+                    "type": "execute",
+                    "parameters": {
+                        "command": [
+                            "python",
+                            "-c",
+                            "import pyautogui; pyautogui.hotkey('ctrl', 's')",
+                        ]
+                    },
+                },
+            ]
+        },
+    }
+    plan = vm_injection.build_injection_plan(
+        raw, {target: {"local": "/m.docx", "sha256": "f" * 64}}, "c" * 64
+    )
+    ops = [step["op"] for step in plan]
+    assert "config_step" not in ops
+    assert ops.index("upload") < ops.index("open_file") < ops.index("postconfig")
+    opened = plan[ops.index("open_file")]
+    assert opened == {
+        "op": "open_file",
+        "path": target,
+        "window": "report.docx - LibreOffice Writer",
+    }
+    assert plan[-2]["expect_changed"] == [target]
+    assert plan[-1]["save_paths"] == {target: "postconfig_save"}
+    # The same plan without the open step is refused.
+    with pytest.raises(vm_injection.InjectionPlanError, match="nothing opened"):
+        vm_injection.check_plan([step for step in plan if step["op"] != "open_file"])
+    # Without a postconfig save, the target gets an agent-equivalent save, as offline.
+    unsaved = {**raw, "evaluator": {"postconfig": []}}
+    plan = vm_injection.build_injection_plan(
+        unsaved, {target: {"local": "/m.docx", "sha256": "f" * 64}}, "c" * 64
+    )
+    assert [s for s in plan if s["op"] == "agent_save"] == [
+        {"op": "agent_save", "path": target, "window": "report.docx - LibreOffice Writer"}
+    ]
+    assert plan[-1]["save_paths"] == {target: "agent_save"}
+    with pytest.raises(vm_injection.InjectionPlanError, match="agent-equivalent"):
+        vm_injection.check_plan([step for step in plan if step["op"] != "agent_save"])
+    png = vm_injection.build_injection_plan(
+        unsaved, {"/home/user/out.png": {"local": "/o.png", "sha256": "f" * 64}}, "c" * 64
+    )
+    assert png[-1]["save_paths"] == {"/home/user/out.png": "no_save"}
 
 
 def test_postconfig_file_steps_write_stdout_to_cache(tmp_path: Path) -> None:
@@ -456,11 +692,38 @@ def test_report_aggregate_counts_fixed_point_and_flips() -> None:
             "gold_raw_lock": v("pass", 1.0),
             "initial_raw_lock": v("fail", 0.0),
             "gold_saved_lock": v("pass", 1.0),
+            "gold_save": {"saves": [], "save_failures": []},
+        },
+        # The gold's save never happened: its "saved" verdict is on pre-save
+        # bytes and must not count as a fixed-point outcome.
+        "t3": {
+            "gold_raw_lock": v("pass", 1.0),
+            "initial_raw_lock": v("fail", 0.0),
+            "gold_saved_lock": v("fail", 0.0),
+            "gold_save": {"saves": [], "save_failures": ["open failed: /home/user/a.docx"]},
+        },
+        # A postconfig types a file name the harness cannot replay: excluded.
+        "t4": {
+            "gold_raw_lock": v("fail", 0.0),
+            "initial_raw_lock": v("fail", 0.0),
+            "gold_saved_lock": v("fail", 0.0),
+            "gold_save": {"saves": [], "save_failures": [], "unemulated_writes": True},
+        },
+        # The do-nothing scoring timed out after its retries: not a K1 outcome.
+        "t5": {
+            "gold_raw_lock": v("pass", 1.0),
+            "initial_raw_lock": {**v("error", None), "infra_failed": True},
         },
     }
     out = report.aggregate(tasks)
-    assert out["lock"]["k1_gold_pass_and_do_nothing_fail"] == "2/2"
+    assert out["excluded_unemulated"] == ["t4"]
+    assert out["lock"]["k1_gold_pass_and_do_nothing_fail"] == "3/3"
+    assert out["lock"]["k1_infra_excluded"] == 1
     assert out["lock"]["gold_fixed_point_flips"] == 1 and out["lock"]["gold_fixed_point_n"] == 2
+    assert out["lock"]["gold_save_failed"] == ["t3"]
+    assert out["lock"]["gold_fixed_point_not_counted"] == ["t3", "t5"]
+    low, high = out["lock"]["gold_fixed_point_flip_clopper_pearson95"]
+    assert low == pytest.approx(0.0126, abs=1e-3) and high == pytest.approx(0.9874, abs=1e-3)
     assert [f["candidate"] for f in out["dependency_flips"]] == ["initial_raw"]
     tasks["t1"]["initial_raw_scout"] = {**v("pass", 1.0), "nondeterministic": True}
     again = report.aggregate(tasks)
@@ -609,3 +872,197 @@ def test_mutation_jobs_follow_the_shared_file_convention(tmp_path: Path) -> None
     row["output_sha256"] = "b" * 64
     with pytest.raises(ValueError, match="output_sha256"):
         controls.mutation_jobs([row], tmp_path)
+
+
+# --------------------------------------------------------------------------- rater packets
+
+
+def _patched(src: Path, dst: Path, member: str, old: str, new: str, extra=None) -> Path:
+    """Copy an OOXML package, replacing ``old`` by ``new`` in one member."""
+    with zipfile.ZipFile(src) as zin, zipfile.ZipFile(dst, "w", zipfile.ZIP_DEFLATED) as zout:
+        for info in zin.infolist():
+            data = zin.read(info.filename)
+            if info.filename == member:
+                text = data.decode("utf-8")
+                assert old in text, (member, old)
+                data = text.replace(old, new, 1).encode("utf-8")
+            zout.writestr(info, data)
+        for name, body in (extra or {}).items():
+            zout.writestr(name, body)
+    return dst
+
+
+def _docx_with_header(path: Path, text: str) -> Path:
+    from harness.q2_mutation.operators import _synth as synth
+
+    base = synth.build_docx(path.with_suffix(".base.docx"))
+    header = (
+        f'<?xml version="1.0" encoding="UTF-8" standalone="yes"?><w:hdr xmlns:w="{synth.W}">'
+        f"<w:p><w:r><w:t>{text}</w:t></w:r></w:p></w:hdr>"
+    )
+    rel = (
+        '<Relationship Id="rId9" Type="http://schemas.openxmlformats.org/officeDocument/2006/'
+        'relationships/header" Target="header1.xml"/></Relationships>'
+    )
+    return _patched(
+        base,
+        path,
+        "word/_rels/document.xml.rels",
+        "</Relationships>",
+        rel,
+        {"word/header1.xml": header},
+    )
+
+
+def _office_pair(tmp_path: Path, case: str) -> tuple[Path, Path]:
+    from harness.q2_mutation.operators import _synth as synth
+
+    a, b = tmp_path / f"{case}-a", tmp_path / f"{case}-b"
+    if case == "docx_highlight":
+        blocks = [dict(block) for block in synth.DEFAULT_DOCX]
+        blocks[3] = {"runs": [("Highlights include ", {}), ("new markets", {}), (".", {})]}
+        return synth.build_docx(a.with_suffix(".docx")), synth.build_docx(
+            b.with_suffix(".docx"), blocks=blocks
+        )
+    if case == "docx_font_colour":
+        blocks = [dict(block) for block in synth.DEFAULT_DOCX]
+        blocks[5] = {"runs": [("Prepared by the finance team.", {"color": "FF0000"})]}
+        return synth.build_docx(a.with_suffix(".docx")), synth.build_docx(
+            b.with_suffix(".docx"), blocks=blocks
+        )
+    if case == "docx_line_spacing":
+        base = synth.build_docx(a.with_suffix(".docx"))
+        jc = '<w:jc w:val="center"/>'
+        spaced = jc + '<w:spacing w:line="480" w:lineRule="auto"/>'
+        return base, _patched(base, b.with_suffix(".docx"), "word/document.xml", jc, spaced)
+    if case == "docx_header":
+        return (
+            _docx_with_header(a.with_suffix(".docx"), "Confidential"),
+            _docx_with_header(b.with_suffix(".docx"), "Draft"),
+        )
+    pptx = synth.build_pptx(a.with_suffix(".pptx"))
+    slide = "ppt/slides/slide1.xml"
+    if case == "pptx_run_colour":
+        old = '<a:rPr lang="en-US"/><a:t>Outlook'
+        new = (
+            '<a:rPr lang="en-US"><a:solidFill><a:srgbClr val="FF0000"/></a:solidFill></a:rPr>'
+            "<a:t>Outlook"
+        )
+        return pptx, _patched(pptx, b.with_suffix(".pptx"), slide, old, new)
+    if case == "pptx_background":
+        bg = (
+            '<p:cSld><p:bg><p:bgPr><a:solidFill><a:srgbClr val="FF0000"/></a:solidFill>'
+            "<a:effectLst/></p:bgPr></p:bg>"
+        )
+        return pptx, _patched(pptx, b.with_suffix(".pptx"), slide, "<p:cSld>", bg)
+    if case == "pptx_outline":
+        fill = '<a:solidFill><a:srgbClr val="4F81BD"/></a:solidFill>'
+        line = fill + '<a:ln w="38100"><a:solidFill><a:srgbClr val="000000"/></a:solidFill></a:ln>'
+        return pptx, _patched(pptx, b.with_suffix(".pptx"), "ppt/slides/slide2.xml", fill, line)
+    if case == "pptx_text_body":
+        old = '<a:bodyPr wrap="square"/>'
+        return pptx, _patched(
+            pptx, b.with_suffix(".pptx"), slide, old, '<a:bodyPr wrap="square" anchor="ctr"/>'
+        )
+    if case == "xlsx_fill":
+        return synth.build_xlsx(a.with_suffix(".xlsx")), synth.build_xlsx(
+            b.with_suffix(".xlsx"), cells={"Data": {"A8": ("s", "Target", 3)}}
+        )
+    if case == "xlsx_number_format":
+        return synth.build_xlsx(a.with_suffix(".xlsx")), synth.build_xlsx(
+            b.with_suffix(".xlsx"), cells={"Data": {"B8": ("n", 12, 2)}}
+        )
+    raise ValueError(case)
+
+
+@pytest.mark.parametrize(
+    ("case", "shown"),
+    [
+        # The reviewer's reproduction: python-docx's listing showed no highlight.
+        ("docx_highlight", "highlight"),
+        ("docx_font_colour", "color"),
+        ("docx_line_spacing", "spacing"),
+        ("docx_header", "headers"),
+        ("pptx_run_colour", "FF0000"),
+        ("pptx_background", "background"),
+        ("pptx_outline", "line"),
+        ("pptx_text_body", "anchor"),
+        ("xlsx_fill", "fill"),
+        ("xlsx_number_format", "0.00"),
+    ],
+)
+def test_packet_diff_shows_formatting_the_checker_libraries_hide(
+    tmp_path: Path, case: str, shown: str
+) -> None:
+    from harness.q2_mutation import packets
+
+    initial, candidate = _office_pair(tmp_path, case)
+    out = packets.artifacts({"/f": str(initial)}, {"/f": str(candidate)})["/f"]
+    assert out["diff_vs_initial"], case
+    assert any(shown in line for line in out["diff_vs_initial"]), out["diff_vs_initial"]
+    assert packets.structure_lines(initial) != packets.structure_lines(candidate)
+    same = packets.artifacts({"/f": str(initial)}, {"/f": str(initial)})["/f"]
+    assert same["diff_vs_initial"] == []
+
+
+def _unflatten(lines: list[str]) -> dict:
+    import re
+
+    root: dict = {}
+    for line in lines:
+        location, _, value = line.partition(" = ")
+        tokens = re.findall(r"/([^/\[]+)|\[(\d+)\]", location)
+        node: Any = root
+        for i, (key, index) in enumerate(tokens):
+            last = i == len(tokens) - 1
+            nxt = tokens[i + 1] if not last else None
+            fresh: Any = json.loads(value) if last else ([] if nxt and nxt[1] else {})
+            if key:
+                node = node.setdefault(key, fresh) if not last else node.__setitem__(key, fresh)
+            else:
+                position = int(index)
+                while len(node) <= position:
+                    node.append(None)
+                if last:
+                    node[position] = fresh
+                else:
+                    if node[position] is None:
+                        node[position] = fresh
+                    node = node[position]
+    return root
+
+
+def test_packet_listing_determines_the_snapshot(tmp_path: Path) -> None:
+    """Every snapshot leaf is listed, so every edit an operator can make is visible."""
+    from harness.q2_mutation import packets
+    from harness.q2_mutation.operators import _synth as synth
+    from harness.q2_mutation.operators._snapshot import snapshot
+    from harness.q2_mutation.operators.pipeline import make_context, plan_task
+    from harness.q2_mutation.schema import RequirementSpec
+
+    builders = {
+        "xlsx": synth.build_xlsx,
+        "docx": synth.build_docx,
+        "pptx": synth.build_pptx,
+    }
+    for family, build in builders.items():
+        path = build(tmp_path / f"gold.{family}")
+        snap = snapshot(path)
+        lines = packets.flatten(snap)
+        expected = {k: v for k, v in snap.items() if k not in ("snapshot_version", "family")}
+        assert _unflatten(lines) == json.loads(json.dumps(expected)), family
+        # Every operator of the family edits inside a listed top-level part.
+        spec = RequirementSpec.from_dict(synth.synthetic_spec(family))
+        ctx = make_context(spec.task_id, spec, path, None)
+        records, _ = plan_task(ctx)
+        roots = {line.split(" = ")[0].split("/")[1].split("[")[0] for line in lines}
+        for record in records:
+            for pattern in record["recipe"]["params"]["expectation"]["allow"]:
+                assert pattern.split("/")[0] in roots, (record["operator"], pattern)
+
+
+def test_render_resolution_is_raised() -> None:
+    from harness.q2_mutation import packets
+
+    render = packets.render_command("/w/x.docx", "/w/r", "/w/h")[1]
+    assert render[render.index("-r") + 1] == "100" and render[render.index("-l") + 1] == "20"
