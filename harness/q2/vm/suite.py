@@ -15,10 +15,11 @@ The tap and the probe run in their own transient systemd scope (decision D30), n
 in the guest server's unit: when the server crashes, systemd restarts the unit and
 stops every process in its control group (development run 622), and a scope outside
 that group keeps the oracle channels running, so a restart costs at most the entry
-it hits. Every guard report names the server process that ran it; the session's
-sequence of server ids (``server_pids``) counts restarts, and ``accessibility_calls``
-counts the ``/accessibility`` calls ``DesktopEnv`` made (the observation-service
-bound of the preregistration, criterion A7).
+it hits. Every guard report names the server process that ran it, so the reports'
+server ids (``server_pids``) say which entry a restart hit; ``session_restarts`` counts
+a session's restarts (with the unit's own restart counter) and ``accessibility_calls``
+the ``/accessibility`` calls ``DesktopEnv`` made (the observation-service bound of the
+preregistration, criterion A7).
 
 Layers: ``L0-fixed`` runs a catalog cell's IR actions directly; the harness
 layers (``H-OSW-fixed``, ``H-GA`` and the detection controls ``H-OSW-up``,
@@ -56,8 +57,9 @@ GUEST_DIR = Path(__file__).resolve().parent / "guest"
 # ``systemd-run --scope`` registers the scope, moves itself into it and then execs the
 # command, so the scope's one process is the script itself; the launcher returns once that
 # process's control group is the scope's (or with systemd-run's output if it exits first).
-# The guest server runs as the desktop user, so the scope belongs to that user's manager;
-# moving a process out of the server's system unit is done for it by the system manager.
+# The guest server (osworld.service, a system unit) runs as the desktop user, so the scope
+# belongs to that user's manager (development run 694: the probe and the tap in
+# user@1000.service/app.slice/q2ap-*.scope, outside system.slice/osworld.service).
 SCOPE_LAUNCHER = """\
 import json, os, subprocess, sys, time
 unit, log = sys.argv[1], sys.argv[2]

@@ -202,6 +202,144 @@ def test_a4_must_tile_the_volume_plan_at_n_star():
     assert acc.a4(halves, 8)["failures"] == 1 and not acc.a4(halves, 8)["pass"]
 
 
+def _a4_halves() -> list[dict]:
+    plan_data = json.loads((ROOT / "harness/q2/action_path/volume_plan.json").read_text())
+    realized = volume.sessions(plan_data, 43)
+    full = [
+        {"setting": s, "trials": list(enumerate(chunk))}
+        for s in order.SETTINGS
+        for chunk in realized[s]
+    ]
+    return [
+        campaign(full[:500], job="1", concurrency=8, session_range=[0, 500]),
+        campaign(full[500:], job="2", concurrency=8, session_range=[500, len(full)]),
+    ]
+
+
+def _hit(trial: dict, *reasons: str) -> None:
+    """A trial a guest-server restart hit, failing for ``reasons`` (``infra: <type>`` ones)."""
+    trial["pass"] = False
+    trial["reasons"] = list(reasons)
+    trial["infra"] = sorted(r[len("infra: ") :] for r in reasons if r.startswith("infra: "))
+
+
+def test_a4_does_not_count_a_trial_whose_only_failure_is_a_restart():
+    """Decision D30: the restart (and the tree it left undelivered) is reported, not counted."""
+    halves = _a4_halves()
+    halves[1]["sessions"][60]["restarts"] = 1
+    halves[1]["sessions"][60]["accessibility_calls"] = 68
+    trial = halves[1]["sessions"][60]["trials"][7]
+    _hit(trial, "infra: guest_server_restart")
+    result = acc.a4(halves, 8)
+    assert result["pass"] and result["failures"] == 0 and result["restart_only_trials"] == 1
+    report = result["guest_server"]
+    assert report["restarts"] == 1 and report["accessibility_calls"] == 68
+    assert (
+        report["trials_hit"][0]["cell"] == trial["cell"] and not report["trials_hit"][0]["counted"]
+    )
+    rate = report["development_rate"]
+    assert rate["restarts"] == 1 and rate["accessibility_calls"] == 8114
+    assert rate["interval_95"][0] < rate["rate"] < rate["interval_95"][1]
+    _hit(trial, "infra: accessibility", "infra: guest_server_restart")
+    assert acc.a4(halves, 8)["pass"]
+
+
+@pytest.mark.parametrize(
+    "reasons",
+    [
+        ("infra: guest_server_restart", "infra: probe_absent"),
+        ("infra: guest_server_restart", "infra: execute"),
+        ("infra: guest_server_restart", "text 'a' != 'b'"),
+        ("infra: guest_server_restart", "marker [3, 1] != probe final [3, 2]"),
+        ("infra: accessibility",),
+    ],
+)
+def test_a4_still_counts_every_other_failure_of_a_trial_a_restart_hit(reasons):
+    halves = _a4_halves()
+    _hit(halves[0]["sessions"][3]["trials"][0], *reasons)
+    result = acc.a4(halves, 8)
+    assert not result["pass"] and result["failures"] == 1
+
+
+def test_a4_excuses_restart_only_trials_of_an_earlier_attempt_too():
+    halves = _a4_halves()
+    earlier = copy.deepcopy(halves[0])
+    earlier["job"], earlier["batch"], earlier["slurm"] = "0", None, None
+    earlier["sessions"] = earlier["sessions"][:4]
+    _hit(earlier["sessions"][1]["trials"][2], "infra: guest_server_restart")
+    halves[0]["earlier"] = [earlier]
+    assert acc.a4(halves, 8)["pass"]
+    _hit(earlier["sessions"][1]["trials"][2], "infra: guest_server_restart", "infra: execute")
+    assert not acc.a4(halves, 8)["pass"]
+
+
+def _a7(restarts_per_session: dict[int, int], calls: int = 76, **kwargs) -> list[dict]:
+    plan = acc.observation_plan()
+    run = campaign(plan, job="7", concurrency=kwargs.pop("concurrency", 8), **kwargs)
+    for index, session in enumerate(run["sessions"]):
+        session["accessibility_calls"] = calls
+        session["restarts"] = restarts_per_session.get(index, 0)
+    return [run]
+
+
+def test_poisson_bounds_are_the_exact_ones():
+    assert acc.poisson_upper(0) == pytest.approx(2.99573, abs=1e-4)
+    assert acc.poisson_upper(1) == pytest.approx(4.74386, abs=1e-4)
+    assert acc.poisson_upper(12) == pytest.approx(19.4426, abs=1e-3)
+    assert acc.poisson_lower(1, 0.025) == pytest.approx(0.025318, abs=1e-5)
+    assert acc.poisson_upper(1, 0.025) == pytest.approx(5.5716, abs=1e-3)
+
+
+def test_a7_runs_the_gating_set_in_the_accessibility_setting_only():
+    from harness.q2.vm.manifest import OBSERVATION_REPS
+
+    plan = acc.observation_plan()
+    assert {s["setting"] for s in plan} == {"screenshot+a11y"}
+    cells = [cell for s in plan for _, cell in s["trials"]]
+    gating = set(
+        json.loads((ROOT / "harness/q2/action_path/gating_set.json").read_text())["gating"]
+    )
+    assert set(cells) == gating and len(cells) == len(gating) * OBSERVATION_REPS
+    assert len(plan) == 516 and len(cells) == 30960
+
+
+def test_a7_judges_the_upper_95_bound_on_restarts_per_call():
+    # 516 sessions x 76 calls = 39,216 calls; 12 restarts give 19.44 / 39,216 = 4.96e-4.
+    twelve = _a7({i: 1 for i in range(12)})
+    result = acc.a7(twelve, 8)
+    assert result["pass"] and result["restarts"] == 12 and result["accessibility_calls"] == 39216
+    assert result["upper_95"] == pytest.approx(19.4426 / 39216, rel=1e-4)
+    assert result["upper_95"] <= 5e-4
+    thirteen = _a7({i: 1 for i in range(13)})
+    assert not acc.a7(thirteen, 8)["pass"]
+    assert acc.a7(_a7({}), 8)["upper_95"] == pytest.approx(2.9957 / 39216, rel=1e-4)
+    # Trial failures are reported, not judged; the plan, N* and the end state are.
+    failing = _a7({}, fail=frozenset({"key_enter"}))
+    result = acc.a7(failing, 8)
+    assert result["pass"] and result["failed_trials"] > 0
+    assert not acc.a7(_a7({}), 16)["pass"]
+    short = _a7({})
+    short[0]["sessions"].pop()
+    assert not acc.a7(short, 8)["pass"]
+    killed = _a7({})
+    killed[0]["batch"] = None
+    assert not acc.a7(killed, 8)["pass"]
+    assert not acc.a7(_a7({}, calls=0), 8)["pass"]
+
+
+def test_a7_keeps_the_restarts_of_an_attempt_that_did_not_count():
+    rerun = _a7({i: 1 for i in range(12)})
+    earlier = copy.deepcopy(rerun[0])
+    earlier["job"], earlier["batch"], earlier["slurm"] = "6", None, None
+    earlier["sessions"] = earlier["sessions"][:3]
+    for session in earlier["sessions"]:
+        session["restarts"] = 1
+    rerun[0]["earlier"] = [earlier]
+    result = acc.a7(rerun, 8)
+    assert result["restarts"] == 15 and result["accessibility_calls"] == 39216 + 3 * 76
+    assert not result["pass"]
+
+
 def test_foreign_load_aborts_a_rung():
     plan = order.plan(ids("L0-fixed"), 43, ladder_reps(8), list(order.SETTINGS), acceptance=True)
     rung = campaign(plan, job="77", concurrency=8)
@@ -304,6 +442,12 @@ def test_the_analysis_expects_the_order_the_driver_runs():
         for layer in acc.C3_LAYERS
     }
     assert acc.a3(a3)["pass"]
+    from harness.q2.vm.manifest import OBSERVATION_REPS
+
+    a7 = _driver_campaign("A7", "L0-fixed", 43, OBSERVATION_REPS, ["screenshot+a11y"], "gating")
+    for session in a7["sessions"]:
+        session["accessibility_calls"] = 76
+    assert acc.a7([a7], 1)["pass"]
     c1 = {
         layer: [_driver_campaign("C1", layer, 42, 5, ["screenshot"])] for layer in acc.C1_MUST_FAIL
     }
@@ -572,6 +716,37 @@ def test_load_reads_the_batch_record_and_charges_an_undelivered_reset_observatio
         "retried": ["screenshot"],
     }
     assert loaded["sessions"][0]["trials"][0]["pass"]
+
+
+def test_load_counts_restarts_and_accessibility_calls(tmp_path):
+    """Decision D30: each session's restarts (guard reports and NRestarts) and calls."""
+    verdict = {"pass": True, "infra": [], "reasons": []}
+    step = {"accessibility_attempts": [{"status": 200}]}
+    trials = [
+        {"seq": 0, "cell": "key_enter", "verdict": verdict, "steps": [step],
+         "pre": {"server_pid": 10}, "post": {"server_pid": 10}},
+        {"seq": 1, "cell": "type_plain", "steps": [step, step], "pre": {"server_pid": 10},
+         "post": {"server_pid": 11},
+         "verdict": {"pass": False, "infra": ["guest_server_restart"],
+                     "reasons": ["infra: guest_server_restart"]}},
+    ]  # fmt: skip
+    cycle = {
+        "cycle": 0,
+        "setting": "screenshot+a11y",
+        "boot": {"t_screenshot_200": 20.0},
+        "start": {
+            "baseline_check": {"server_pid": 10},
+            "warmup": {"server_pid": 10},
+            "server_unit": {"n_restarts": 0},
+        },
+        "reset_observation": {"accessibility_attempts": [{"status": 200}]},
+        "trials": trials,
+        "stop": {"final_guard": {"server_pid": 11}, "server_unit": {"n_restarts": 1}},
+    }
+    run = _write_run(tmp_path, cycle, "driver_exit=0 labelled_containers_left=0\n")
+    session = acc.load(run)["sessions"][0]
+    assert session["restarts"] == 1 and session["accessibility_calls"] == 4
+    assert acc.restart_only(session["trials"][1]) and not acc.restart_only(session["trials"][0])
 
 
 def test_load_uses_the_watchers_slurm_record(tmp_path):
