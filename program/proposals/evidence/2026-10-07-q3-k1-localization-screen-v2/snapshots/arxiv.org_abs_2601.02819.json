@@ -1,0 +1,30 @@
+{
+ "url": "https://arxiv.org/abs/2601.02819",
+ "fetched_at": "2026-10-07T20:59:32Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 42496,
+ "raw_sha256": "ff36fab896bf70e0e58a090c19543cc5aaf04cd248b578f3e7f28cb944cb0386",
+ "raw_stored": false,
+ "extract": {
+  "title": "Punctuation-aware Hybrid Trainable Sparse Attention for Large Language Models",
+  "authors": [
+   "Qiu, Junxiang",
+   "Wang, Shuo",
+   "Chen, Zhengsu",
+   "Zhang, Hengheng",
+   "Lu, Jinda",
+   "Li, Changcheng",
+   "Tian, Qi"
+  ],
+  "citation_date": "2026/01/06",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Tue, 6 Jan 2026 08:47:16 UTC"
+   }
+  ],
+  "abstract": "Attention serves as the fundamental mechanism for long-context modeling in large language models (LLMs), yet dense attention becomes structurally prohibitive for long sequences due to its quadratic complexity. Consequently, sparse attention has received increasing attention as a scalable alternative. However, existing sparse attention methods rely on coarse-grained semantic representations during block selection, which blur intra-block semantic boundaries and lead to the loss of critical information. To address this issue, we propose \\textbf{P}unctuation-aware \\textbf{H}ybrid \\textbf{S}parse \\textbf{A}ttention \\textbf{(PHSA)}, a natively trainable sparse attention framework that leverages punctuation tokens as semantic boundary anchors. Specifically, (1) we design a dual-branch aggregation mechanism that fuses global semantic representations with punctuation-enhanced boundary features, preserving the core semantic structure while introducing almost no additional computational overhead; (2) we introduce an extreme-sparsity-adaptive training and inference strategy that stabilizes model behavior under very low token activation ratios; Extensive experiments on general benchmarks and long-context evaluations demonstrate that PHSA consistently outperforms dense attention and state-of-the-art sparse attention baselines, including InfLLM v2. Specifically, for the 0.6B-parameter model with 32k-token input sequences, PHSA can reduce the information loss by 10.8\\% at a sparsity ratio of 97.3\\%.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}

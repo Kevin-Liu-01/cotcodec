@@ -1,0 +1,9 @@
+{
+ "doctor": "Citation",
+ "status": "PASS",
+ "evaluated_on": "2026-10-07",
+ "evaluated_by": "wave-1 single synthesis owner (Claude agent); not an independent review",
+ "pass_condition": "URLs, dates, authors, and quantitative claims verified in primary sources",
+ "evidence": "Claim registry C01-C46 in the proposal with locator, date and status; 32 claims verified by the synthesis owner in full text (orx paper --full, digests in query-log.json) or read from committed repository records; remaining claims marked CELL_READ or ABSTRACT_ONLY and not load-bearing; dates and authors taken from the hashed arXiv abstract-page snapshots; one discovery-cell misreading corrected (C19: Qwen3-0.6B-Base CMMLU 53.38 and C-Eval 54.90 are well above chance). Structure follows the gauntlet rule's claim registry, tracing and cross-reference row; the ARS protocol file itself was not opened.",
+ "remediation": "Independent line-by-line audit by a fresh reader; synthesis re-read of the C32 production reports."
+}

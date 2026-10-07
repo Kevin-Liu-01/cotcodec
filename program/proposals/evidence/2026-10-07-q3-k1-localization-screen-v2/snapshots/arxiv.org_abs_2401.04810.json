@@ -1,0 +1,28 @@
+{
+ "url": "https://arxiv.org/abs/2401.04810",
+ "fetched_at": "2026-10-07T20:58:52Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 42089,
+ "raw_sha256": "9914f56ece58b7bc61f5f1745b9acf365010ef47cea907b03b7853c801d538b1",
+ "raw_stored": false,
+ "extract": {
+  "title": "Translate-Distill: Learning Cross-Language Dense Retrieval by Translation and Distillation",
+  "authors": [
+   "Yang, Eugene",
+   "Lawrie, Dawn",
+   "Mayfield, James",
+   "Oard, Douglas W.",
+   "Miller, Scott"
+  ],
+  "citation_date": "2024/01/09",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Tue, 9 Jan 2024 20:40:49 UTC"
+   }
+  ],
+  "abstract": "Prior work on English monolingual retrieval has shown that a cross-encoder trained using a large number of relevance judgments for query-document pairs can be used as a teacher to train more efficient, but similarly effective, dual-encoder student models. Applying a similar knowledge distillation approach to training an efficient dual-encoder model for Cross-Language Information Retrieval (CLIR), where queries and documents are in different languages, is challenging due to the lack of a sufficiently large training collection when the query and document languages differ. The state of the art for CLIR thus relies on translating queries, documents, or both from the large English MS MARCO training set, an approach called Translate-Train. This paper proposes an alternative, Translate-Distill, in which knowledge distillation from either a monolingual cross-encoder or a CLIR cross-encoder is used to train a dual-encoder CLIR student model. This richer design space enables the teacher model to perform inference in an optimized setting, while training the student model directly for CLIR. Trained models and artifacts are publicly available on Huggingface.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}

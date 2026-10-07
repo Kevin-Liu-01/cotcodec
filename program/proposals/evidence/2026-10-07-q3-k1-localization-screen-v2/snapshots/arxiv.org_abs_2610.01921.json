@@ -1,0 +1,32 @@
+{
+ "url": "https://arxiv.org/abs/2610.01921",
+ "fetched_at": "2026-10-07T20:59:05Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 41655,
+ "raw_sha256": "95688119052e44a770d808342a574b2228af2d9f2cedc056979e89107b20a4ff",
+ "raw_stored": false,
+ "extract": {
+  "title": "Cross-Lingual Alignment for Decoder-Only Models using MoE Routers",
+  "authors": [
+   "Bandarkar, Lucas",
+   "Peng, Clark",
+   "Ahmed, Ahmed Haj",
+   "Khandelwal, Aditi",
+   "Peng, Nanyun"
+  ],
+  "citation_date": "2026/10/01",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Thu, 1 Oct 2026 15:56:54 UTC"
+   },
+   {
+    "version": "v2",
+    "date": "Fri, 2 Oct 2026 12:35:42 UTC"
+   }
+  ],
+  "abstract": "Cross-lingual contrastive learning has been a core component of multilingual encoder training, but the ability to explicitly align representations is not possible in decoder-only LLMs because of varying multilingual tokenization. However, a growing amount of research suggests that even in LLMs, higher cross-lingual representational alignment leads to improved cross-lingual transfer. In this paper, we propose a novel approach to reimagine cross-lingual contrastive learning given the architectural constraints of modern LLMs. Rather than applying an auxiliary alignment loss on hidden states, we propose using the outputs of the mixture-of-experts (MoE) routers as the target for alignment. Router outputs lend themselves better to pooling over many tokens, enabling more reliable cross-lingual comparisons at the sequence-level. Controlled continual pre-training experiments on four open-source MoEs show that incorporating this routing loss also aligns the underlying hidden representations across languages. Most importantly, this loss improves multilingual performance on our diverse evaluation suite, demonstrating the potential of cross-lingual MoE router alignment.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}
