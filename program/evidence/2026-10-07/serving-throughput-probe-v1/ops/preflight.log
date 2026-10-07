@@ -1,0 +1,57 @@
+== overlay-build-cu129 at 2026-10-07T11:47:15Z
+-- squeue -h -o "%i %j %T %M %b"
+437 cotcodec-build-arch-image RUNNING 10:03 N/A
+438 holo3-v2 RUNNING 7:26 N/A
+-- nvidia-smi --query-gpu=index,utilization.gpu,memory.used --format=csv
+index, utilization.gpu [%], memory.used [MiB]
+0, 0 %, 0 MiB
+1, 0 %, 0 MiB
+2, 0 %, 0 MiB
+3, 0 %, 0 MiB
+4, 0 %, 0 MiB
+5, 0 %, 0 MiB
+6, 0 %, 0 MiB
+7, 0 %, 0 MiB
+== job-a-submit at 2026-10-07T11:48:26Z
+-- squeue -h -o "%i %j %T %M %b"
+438 holo3-v2 RUNNING 8:37 N/A
+-- nvidia-smi --query-gpu=index,utilization.gpu,memory.used --format=csv
+index, utilization.gpu [%], memory.used [MiB]
+0, 0 %, 0 MiB
+1, 0 %, 0 MiB
+2, 0 %, 0 MiB
+3, 0 %, 0 MiB
+4, 0 %, 0 MiB
+5, 0 %, 0 MiB
+6, 0 %, 0 MiB
+7, 0 %, 0 MiB
+== metadata-fetch-submit at 2026-10-07T11:48:44Z
+-- squeue -h -o "%i %j %T %M %b"
+438 holo3-v2 RUNNING 8:55 N/A
+442 stp-v1-a-q2-qwen35-9b RUNNING 0:17 gres:gpu:h100:1
+443 q3-k1-doctor-imageB RUNNING 0:08 N/A
+-- nvidia-smi --query-gpu=index,utilization.gpu,memory.used --format=csv
+index, utilization.gpu [%], memory.used [MiB]
+0, 0 %, 0 MiB
+1, 0 %, 0 MiB
+2, 0 %, 0 MiB
+3, 0 %, 0 MiB
+4, 0 %, 0 MiB
+5, 0 %, 0 MiB
+6, 0 %, 0 MiB
+7, 0 %, 0 MiB
+== job-b-submit at 2026-10-07T11:49:03Z
+-- squeue -h -o "%i %j %T %M %b"
+438 holo3-v2 RUNNING 9:14 N/A
+442 stp-v1-a-q2-qwen35-9b RUNNING 0:36 gres:gpu:h100:1
+443 q3-k1-doctor-imageB RUNNING 0:27 N/A
+-- nvidia-smi --query-gpu=index,utilization.gpu,memory.used --format=csv
+index, utilization.gpu [%], memory.used [MiB]
+0, 0 %, 0 MiB
+1, 0 %, 0 MiB
+2, 0 %, 0 MiB
+3, 0 %, 0 MiB
+4, 0 %, 0 MiB
+5, 0 %, 0 MiB
+6, 0 %, 0 MiB
+7, 0 %, 0 MiB

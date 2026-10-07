@@ -1,0 +1,351 @@
+# Contract for the vLLM serving-throughput probe (experiment serving-throughput-probe-v1).
+#
+# This file is the single source of every engine flag, point, seed, gate threshold
+# and budget rule the probe uses. scripts/run_vllm_throughput_probe.py reads it and
+# refuses to run unless program/preregistrations/serving-throughput-probe-v1.md is
+# frozen in the ledger. Engine flags live here, not in the job argv, so the Slurm
+# manifest carries only the job letter, paths, the allocation length and the seeds.
+# Any change to this file after the preregistration is frozen is a new experiment id.
+schema_version: 1
+experiment_id: serving-throughput-probe-v1
+preregistration: program/preregistrations/serving-throughput-probe-v1.md
+claim_level: infrastructure-admission
+
+vllm:
+  version: 0.31.0
+  commit: db9527a46873454610df6dbedf79a36d6bf1a7f6
+  image_variants:
+    cu129:
+      base_image: docker.io/vllm/vllm-openai@sha256:b18abb2df97b8f798e81862bd93f872ea18613372e2c3adc0cc2ac21e66ac12f
+      base_image_id: sha256:423783aac4fefebfe6b67d6fc2810b88a1d4dc08ed8bba587c80b0d8973e0b8b
+      env:
+        VLLM_ENABLE_CUDA_COMPATIBILITY: "0"
+    cu130:
+      base_image: docker.io/vllm/vllm-openai@sha256:a4a4c0437bf7240089da5f08aa370c4aee17ae5290f7a3b468825ee26c4c3a6b
+      base_image_id: sha256:c76d0e2225a4b1cb1e2109ace39639f55e714abd1a7a427acc8b0bbd7f6a83b3
+      env:
+        VLLM_ENABLE_CUDA_COMPATIBILITY: "1"
+
+# --seeds in every job argv must equal this list exactly (seed_binding flag --seeds).
+primary_seeds: [42, 43, 44]
+
+models:
+  qwen3.5-9b:
+    repo_id: Qwen/Qwen3.5-9B
+    revision: c202236235762e1c871ad0ccb60c8ee5ba337b9a
+    weights: real
+    receipt_sha256: 0a9e052d561b017c505adf5a1c6fcdc048522660a0db134486b84edbf3de5cb3
+    artifact_root_sha256: 9845026dbe255e24b105224eebbb5436d315713b9a5c53c434137896b160c5b1
+  qwen3-0.6b-base:
+    repo_id: Qwen/Qwen3-0.6B-Base
+    revision: da87bfb608c14b7cf20ba1ce41287e8de496c0cd
+    weights: admission-token
+    receipt_sha256: e7f36f05e6c87ec50b3736cf133fda60775abccb38f60fa9d3c134c432cf46df
+    artifact_root_sha256: 7040f418762c61dd00b540e482527e0d8c8a916cce80eee56408bd10a6179ae0
+  qwen3-8b:
+    repo_id: Qwen/Qwen3-8B
+    revision: b968826d9c46dd6066d109eabc6255188de91218
+    weights: dummy
+  qwen3.5-27b-fp8:
+    repo_id: Qwen/Qwen3.5-27B-FP8
+    revision: 97f5941bf617e31c5e237364a8602ce3f03a551a
+    weights: dummy
+  qwen3.5-35b-a3b-fp8:
+    repo_id: Qwen/Qwen3.5-35B-A3B-FP8
+    revision: 9d1823d2dee688a6b25e77009dc727688c44936e
+    weights: dummy
+
+gates:
+  doctor_timeout_s: 600
+  matmul_size: 4096
+  matmul_max_normalized_error: 0.01
+  baseline_duration_s: 10
+  baseline_interval_s: 0.5
+  baseline_max_memory_used_mib: 1024
+  baseline_max_utilization_pct: 0
+  baseline_settle_s: 2
+  engine_ready_timeout_s: 900
+  image_tokens_expected: 2040
+  image_tokens_relative_tolerance: 0.02
+  prompt_counter_relative_tolerance: 0.01
+  gpu_release_timeout_s: 90
+
+validity:
+  contamination_margin_mib: 2048
+  frontend_cpu_flag_pct: 90
+  unstable_relative_range: 0.10
+  reruns_per_invalid_point: 1
+  reservation_window_s: 5
+  # A point needs at least this fraction of the samples the sampling interval implies
+  # over its wall time (and at least one), or its contamination check cannot hold.
+  min_gpu_sample_fraction: 0.2
+
+dummy_admissibility:
+  max_relative_delta: 0.05
+  unvalidated_multiplier: 1.5
+
+stop:
+  soft_fraction: 0.85
+  hard_margin_minutes: 4
+  in_flight_grace_s: 30
+
+sampling:
+  gpu_interval_ms: 500
+  cpu_interval_s: 1.0
+  kv_poll_interval_s: 2.0
+
+server:
+  host: 127.0.0.1
+  port: 8000
+  served_model_name: probe-model
+  request_timeout_s: 1800
+
+screenshot:
+  width: 1920
+  height: 1080
+
+engines:
+  a-real:
+    mode: server
+    model: qwen3.5-9b
+    load_format: auto
+    flags: &vlm_flags
+      tensor_parallel_size: 1
+      dtype: bfloat16
+      seed: 42
+      # cua-speedrun's own default (agents/qwen35/init.py VLLM_MAX_MODEL_LEN); the
+      # H2 history reaches about 72K tokens by its 100-step cap.
+      max_model_len: 131072
+      gpu_memory_utilization: 0.90
+      max_num_seqs: 256
+      max_num_batched_tokens: 8192
+      enable_prefix_caching: true
+      generation_config: vllm
+      limit_mm_per_prompt:
+        image: {count: 20, width: 1920, height: 1080}
+        video: 0
+  a-dummy:
+    mode: server
+    model: qwen3.5-9b
+    load_format: dummy
+    flags: *vlm_flags
+  b-offline:
+    mode: offline
+    model: qwen3-8b
+    load_format: dummy
+    flags:
+      tensor_parallel_size: 1
+      dtype: bfloat16
+      seed: 42
+      max_model_len: 32768
+      gpu_memory_utilization: 0.90
+      max_num_seqs: 256
+      max_num_batched_tokens: 16384
+      enable_prefix_caching: true
+      generation_config: vllm
+  c-27b:
+    mode: server
+    model: qwen3.5-27b-fp8
+    load_format: dummy
+    flags: *vlm_flags
+  c-35b:
+    mode: server
+    model: qwen3.5-35b-a3b-fp8
+    load_format: dummy
+    flags: *vlm_flags
+
+# Text sizes are in tokens of the served model's tokenizer; images are rendered or
+# random screenshots of the size above (2,040 visual tokens each for Qwen3.5).
+point_templates:
+  s2-open-loop: &s2
+    kind: open-loop
+    prefix_tokens: 1536
+    body_tokens: 4608
+    images: 1
+    image_kind: jpeg-random
+    output_tokens: 300
+    thinking: false
+    concurrency: 16
+    requests: 96
+  h1-replay: &h1
+    kind: replay
+    harness: h1
+    episodes: 40
+    start_depth: 0
+    steps: 6
+    output_tokens: 300
+    thinking: false
+    a11y_tokens: 0
+    system_tokens: 1536
+    task_tokens: 64
+    action_tokens: 16
+    prebuilt_response_tokens: 300
+    t_env_s: 2.5
+    stagger_s: 2.5
+    history_n: 4
+  h2-replay: &h2
+    kind: replay
+    harness: h2
+    episodes: 20
+    start_depth: 0
+    steps: 24
+    output_tokens: 300
+    thinking: false
+    a11y_tokens: 0
+    system_tokens: 1536
+    task_tokens: 64
+    action_tokens: 16
+    prebuilt_response_tokens: 300
+    t_env_s: 2.5
+    stagger_s: 2.5
+    history_n: 100
+    image_max: 20
+    fold_size: 10
+  server-smoke: &server_smoke
+    kind: smoke-server
+    prefix_tokens: 1536
+    body_tokens: 512
+    images: 1
+    image_kind: png-rendered
+    output_tokens: 64
+    thinking: false
+    concurrency: 8
+    requests: 16
+
+points:
+  a-smoke: {<<: *server_smoke, seed: 7, max_minutes: 3}
+  a1a: {<<: *s2, seed: 42, max_minutes: 4}
+  r1: {<<: *h1, seed: 101, max_minutes: 6}
+  r3: {<<: *h2, seed: 103, max_minutes: 8}
+  r4: {<<: *h2, seed: 104, start_depth: 17, steps: 2, output_tokens: 2048, thinking: true, max_minutes: 8}
+  a1b: {<<: *s2, seed: 43, max_minutes: 4}
+  r2: {<<: *h1, seed: 102, a11y_tokens: 6144, max_minutes: 7}
+  a1c: {<<: *s2, seed: 44, max_minutes: 4}
+  f1: {<<: *s2, seed: 42, image_kind: png-rendered, control_of: a1a, max_minutes: 4}
+  a2: {<<: *s2, seed: 45, concurrency: 40, requests: 160, max_minutes: 5}
+  d8:
+    kind: aa
+    seed: 47
+    prefix_tokens: 1536
+    body_tokens: 4608
+    images: 1
+    image_kind: png-rendered
+    output_tokens: 128
+    thinking: false
+    requests: 16
+    arms: [1, 16]
+    max_minutes: 3
+  a6: {<<: *s2, seed: 46, images: 20, concurrency: 8, requests: 24, max_minutes: 4}
+  x1-smoke: {<<: *server_smoke, seed: 7, max_minutes: 3}
+  x1-a1: {<<: *s2, seed: 42, control_of: a1a, max_minutes: 4}
+  x1-r1: {<<: *h1, seed: 101, control_of: r1, max_minutes: 6}
+  b-smoke:
+    kind: smoke-offline
+    seed: 7
+    input_tokens: 256
+    output_tokens: 64
+    prompts: 16
+    n: 1
+    temperature: 0.0
+    max_minutes: 3
+  b1a: &b1 {kind: offline, seed: 42, input_tokens: 1152, output_tokens: 4096, prompts: 8, n: 8, temperature: 1.0, top_p: 1.0, max_minutes: 3}
+  b2: {<<: *b1, seed: 45, output_tokens: 8192, prompts: 4, max_minutes: 4}
+  b6: {<<: *b1, seed: 46, input_tokens: 16384, output_tokens: 8192, prompts: 3, max_minutes: 6}
+  b1b: {<<: *b1, seed: 43}
+  b1c: {<<: *b1, seed: 44}
+  b3: {<<: *b1, seed: 47, input_tokens: 4096, output_tokens: 4096, max_minutes: 4}
+  c27-smoke: {<<: *server_smoke, seed: 7, max_minutes: 3}
+  c27-a1: {<<: *s2, seed: 42, max_minutes: 6}
+  c27-r1: {<<: *h1, seed: 101, max_minutes: 9}
+  c35-smoke: {<<: *server_smoke, seed: 7, max_minutes: 3}
+  c35-a1: {<<: *s2, seed: 42, max_minutes: 4}
+  c35-r1: {<<: *h1, seed: 101, max_minutes: 6}
+
+jobs:
+  a:
+    title: Q2 VLM serving on Qwen3.5-9B real weights, then the dummy-weight control X1
+    allocation_minutes: 40
+    lane_model: qwen3.5-9b
+    phases:
+      - id: real
+        engine: a-real
+        role: primary
+        reserve_minutes: 0
+        points: [a-smoke, a1a, r1, r3, r4, a1b, r2, a1c, f1, a2, d8, a6]
+      - id: dummy-control
+        engine: a-dummy
+        role: dummy-control
+        reserve_minutes: 9
+        points: [x1-smoke, x1-a1, x1-r1]
+  b:
+    title: Q1 offline n=8 sampling on the Qwen3-8B config with dummy weights
+    allocation_minutes: 20
+    lane_model: qwen3-0.6b-base
+    phases:
+      - id: q1
+        engine: b-offline
+        role: dummy-rung
+        reserve_minutes: 0
+        points: [b-smoke, b1a, b2, b6, b1b, b1c, b3]
+  c:
+    title: Q2 dummy-weight rungs Qwen3.5-27B-FP8 and Qwen3.5-35B-A3B-FP8 at TP=1
+    allocation_minutes: 30
+    lane_model: qwen3-0.6b-base
+    phases:
+      - id: rung-27b
+        engine: c-27b
+        role: dummy-rung
+        reserve_minutes: 0
+        points: [c27-smoke, c27-a1, c27-r1]
+      - id: rung-35b
+        engine: c-35b
+        role: dummy-rung
+        reserve_minutes: 7
+        points: [c35-smoke, c35-a1, c35-r1]
+
+budget:
+  q2:
+    episodes_per_cell: 360
+    vm_pool: 40
+    t_env_s: 2.5
+    step_caps: {h1: 15, h2: 100}
+    image_tokens: 2040
+    # Cell sizes the profiles are priced at (r2's accessibility tree, r4's thinking output).
+    a11y_tokens: 6144
+    thinking_output_tokens: 2048
+    rescope_above_gpu_hours: 90
+    overestimate_below_gpu_hours: 15
+    unmeasured_rung_multiplier: 1.5
+    rungs:
+      qwen3.5-4b: {source: qwen3.5-9b, active_params_b: 4.0, gpus: 1}
+      qwen3.5-9b: {source: measured, active_params_b: 9.0, gpus: 1}
+      qwen3.5-27b: {source: job-c, phase: rung-27b, open_loop_point: c27-a1, active_params_b: 27.0, gpus: 1}
+      qwen3.5-35b-a3b: {source: job-c, phase: rung-35b, open_loop_point: c35-a1, active_params_b: 3.0, gpus: 1}
+    # Descriptive: budget.build_profiles builds exactly these four profiles from these points.
+    profiles:
+      h1-screenshot: {point: r1}
+      h1-a11y: {point: r2, fallback: r1}
+      h2-thinking-screenshot: {point: r3, thinking_point: r4}
+      h2-thinking-a11y: {point: r3, thinking_point: r4, a11y_from: [r1, r2]}
+    # Read by budget.project_q2: one cell per entry and rung.
+    cells:
+      - {harness: h1, observation: screenshot, profile: h1-screenshot}
+      - {harness: h1, observation: a11y, profile: h1-a11y}
+      - {harness: h2, observation: screenshot, profile: h2-thinking-screenshot}
+      - {harness: h2, observation: a11y, profile: h2-thinking-a11y}
+    open_loop_reference: {point: a2, concurrency: 40, fallback_points: [a1a, a1b, a1c]}
+    frontend_correction: {point: f1, reference: a1a, threshold: 0.10}
+    stability_points: [a1a, a1b, a1c]
+    sensitivity:
+      steps: [15, 50, 100]
+      t_env_s: [1.5, 2.5, 4.0]
+      vm_pool: [20, 40]
+  q1:
+    completions: 2000
+    gpus: 1
+    single_turn_point: b2
+    turn_points: [b2, b3, b6]
+    turn_fallbacks: {b3: b6}
+    stability_points: [b1a, b1b, b1c]
+    single_turn_cap_gpu_hours: 6.0
+    three_turn_cap_gpu_hours: 12.0

@@ -1,5 +1,13 @@
 #!/usr/bin/env python3
-"""Validate and extract one normalized discovery source archive."""
+"""Validate and extract one normalized discovery source archive.
+
+Accepts schema 3 receipts, which record the tracked agent-tooling links the
+creator left out, and schema 2 receipts (no omission record) for the capsules
+retained before schema 3 only. Omitted links are validated against the
+archive's manifest and never recreated: the extracted tree holds regular files
+only. This file runs as a standalone snapshot (under the host's python3), so it
+carries its own copy of the creator's rules table and lexical omission rule.
+"""
 
 from __future__ import annotations
 
@@ -13,6 +21,26 @@ import tarfile
 import tempfile
 from pathlib import Path, PurePosixPath
 from typing import Any, BinaryIO
+
+# Must equal OMITTABLE_SYMLINK_RULES in scripts/create_source_archive.py.
+OMITTABLE_SYMLINK_RULES: tuple[tuple[str, str], ...] = ((".agents/skills/", ".claude/skills/"),)
+SYMLINK_RECEIPT_FIELDS = (
+    "omittable_symlink_rules",
+    "omitted_symlinks",
+    "omitted_symlinks_sha256",
+)
+# Schema 2 receipts carry no omission record. Nothing the lane pins binds that
+# record, so a schema 3 receipt with its record stripped would read as schema
+# 2; schema 2 is therefore accepted only for these capsules, built before
+# schema 3. Extract any other schema 2 capsule with the extractor revision
+# pinned when it was built.
+SCHEMA_2_RETAINED_ARCHIVE_SHA256 = frozenset(
+    {
+        # serving-throughput-probe-v1 at 80a87ee; receipt retained in
+        # program/evidence/2026-10-07/serving-throughput-probe-v1/capsule/.
+        "2c607c86d83c0b023bddb28ac22ed7fa2541c816ac8b6b16370d83bc3fb4d5b9",
+    }
+)
 
 
 def _sha256_file(path: Path) -> str:
@@ -33,6 +61,142 @@ def _load_receipt(path: Path) -> dict[str, Any]:
     if not isinstance(payload, dict):
         raise ValueError("source receipt must contain one JSON object")
     return payload
+
+
+def omitted_symlink_target(link: str, target: str) -> str:
+    """Return the repository path an omittable link names, or raise ValueError.
+
+    Lexical, and identical in create_source_archive.py and
+    extract_discovery_source_archive.py (a test compares the source).
+    The link is a canonical relative path under a reviewed link prefix. The
+    target is canonical: a run of `..` and then at least one named part, with no
+    empty, `.` or `..` part after it, so it resolves on disk exactly as it does
+    here whenever no directory it passes is a symlink. It stays inside the
+    repository and resolves under the rule's target prefix.
+    """
+
+    def named(parts: list[str]) -> bool:
+        return bool(parts) and all(
+            part not in {"", ".", ".."} and "\0" not in part for part in parts
+        )
+
+    link_parts = link.split("/")
+    rule = next((rule for rule in OMITTABLE_SYMLINK_RULES if link.startswith(rule[0])), None)
+    if rule is None or not named(link_parts):
+        raise ValueError(
+            "source archive forbids symlinks outside the reviewed agent-tooling "
+            f"rules {[list(rule) for rule in OMITTABLE_SYMLINK_RULES]}: {link!r}"
+        )
+    target_parts = target.split("/")
+    climb = 0
+    while climb < len(target_parts) and target_parts[climb] == "..":
+        climb += 1
+    if not named(target_parts[climb:]):
+        raise ValueError(
+            f"symlink target is not a canonical relative path: {link} -> {target!r}"
+        )
+    directory = link_parts[:-1]
+    if climb > len(directory):
+        raise ValueError(f"symlink target escapes the repository: {link} -> {target}")
+    resolved = "/".join(directory[: len(directory) - climb] + target_parts[climb:])
+    if not resolved.startswith(rule[1]):
+        raise ValueError(
+            f"symlink target is outside the reviewed target prefix {rule[1]!r}: "
+            f"{link} -> {target}"
+        )
+    return resolved
+
+
+def _validate_omitted_symlinks(receipt: dict[str, Any], manifest: list[str]) -> None:
+    """Check a schema 3 receipt's omitted links name content the archive holds."""
+
+    if receipt.get("omittable_symlink_rules") != [list(rule) for rule in OMITTABLE_SYMLINK_RULES]:
+        raise ValueError("source receipt records a different symlink omission rule")
+    rows = receipt.get("omitted_symlinks")
+    if not isinstance(rows, list) or any(
+        not isinstance(row, dict)
+        or set(row) != {"path", "target"}
+        or not all(isinstance(row[key], str) and row[key] for key in ("path", "target"))
+        for row in rows
+    ):
+        raise ValueError("source receipt omitted symlinks are malformed")
+    links = [row["path"] for row in rows]
+    if len(set(links)) != len(links) or links != sorted(links, key=lambda name: name.encode()):
+        raise ValueError("source receipt omitted symlinks are malformed")
+    digest = hashlib.sha256(
+        json.dumps(rows, sort_keys=True, separators=(",", ":")).encode()
+    ).hexdigest()
+    if receipt.get("omitted_symlinks_sha256") != digest:
+        raise ValueError("source receipt omitted symlink digest drifted")
+    archived = set(manifest)
+
+    def holds(name: str) -> bool:
+        return name in archived or any(member.startswith(f"{name}/") for member in manifest)
+
+    for row in rows:
+        resolved = omitted_symlink_target(row["path"], row["target"])
+        if holds(row["path"]) or any(
+            parent.as_posix() in archived for parent in PurePosixPath(row["path"]).parents
+        ):
+            raise ValueError(f"omitted symlink collides with an archived file: {row['path']}")
+        if not holds(resolved):
+            raise ValueError(
+                f"omitted symlink target is not archived content: {row['path']} -> {row['target']}"
+            )
+
+
+def _validated_manifest(
+    receipt: dict[str, Any],
+    *,
+    expected_archive_sha256: str,
+    expected_git_sha: str,
+    expected_git_tree: str,
+) -> list[str]:
+    """Check a discovery receipt against the registered identities; return its manifest."""
+
+    schema_version = receipt.get("schema_version")
+    if type(schema_version) is not int or schema_version not in {2, 3}:
+        raise ValueError("source receipt differs from the registered discovery archive")
+    expected_fields = {
+        "mode": "discovery",
+        "archive_sha256": expected_archive_sha256,
+        "archive_format": "normalized-worktree-tar+gzip-mtime-zero",
+        "git_sha": expected_git_sha,
+        "git_tree": expected_git_tree,
+        "selected_ref": "HEAD",
+        "data_excluded": True,
+        "metadata_normalized": True,
+    }
+    if any(receipt.get(key) != value for key, value in expected_fields.items()):
+        raise ValueError("source receipt differs from the registered discovery archive")
+    manifest = receipt.get("file_manifest")
+    if (
+        not isinstance(manifest, list)
+        or not manifest
+        or any(not isinstance(name, str) or not name for name in manifest)
+        or len(set(manifest)) != len(manifest)
+        or manifest != sorted(manifest, key=lambda name: name.encode())
+    ):
+        raise ValueError("source receipt file manifest is malformed")
+    manifest_digest = hashlib.sha256(
+        json.dumps(manifest, separators=(",", ":")).encode()
+    ).hexdigest()
+    if (
+        receipt.get("file_count") != len(manifest)
+        or receipt.get("file_manifest_sha256") != manifest_digest
+    ):
+        raise ValueError("source receipt file manifest digest drifted")
+    if schema_version == 2:
+        if expected_archive_sha256 not in SCHEMA_2_RETAINED_ARCHIVE_SHA256:
+            raise ValueError(
+                "schema 2 source receipts are accepted only for capsules retained "
+                "before schema 3"
+            )
+        if any(key in receipt for key in SYMLINK_RECEIPT_FIELDS):
+            raise ValueError("schema 2 source receipt cannot record omitted symlinks")
+    else:
+        _validate_omitted_symlinks(receipt, manifest)
+    return manifest
 
 
 def _snapshot_archive(
@@ -102,41 +266,19 @@ def validate_and_extract(
     archive_snapshot, actual_archive_sha256 = _snapshot_archive(
         archive_path, output_dir
     )
-    if actual_archive_sha256 != expected_archive_sha256:
+    try:
+        if actual_archive_sha256 != expected_archive_sha256:
+            raise ValueError("source archive SHA-256 drifted")
+        receipt = _load_receipt(receipt_path)
+        manifest = _validated_manifest(
+            receipt,
+            expected_archive_sha256=expected_archive_sha256,
+            expected_git_sha=expected_git_sha,
+            expected_git_tree=expected_git_tree,
+        )
+    except BaseException:
         archive_snapshot.close()
-        raise ValueError("source archive SHA-256 drifted")
-
-    receipt = _load_receipt(receipt_path)
-    expected_fields = {
-        "schema_version": 2,
-        "mode": "discovery",
-        "archive_sha256": expected_archive_sha256,
-        "archive_format": "normalized-worktree-tar+gzip-mtime-zero",
-        "git_sha": expected_git_sha,
-        "git_tree": expected_git_tree,
-        "selected_ref": "HEAD",
-        "data_excluded": True,
-        "metadata_normalized": True,
-    }
-    if any(receipt.get(key) != value for key, value in expected_fields.items()):
-        raise ValueError("source receipt differs from the registered discovery archive")
-    manifest = receipt.get("file_manifest")
-    if (
-        not isinstance(manifest, list)
-        or not manifest
-        or any(not isinstance(name, str) or not name for name in manifest)
-        or len(set(manifest)) != len(manifest)
-        or manifest != sorted(manifest, key=lambda name: name.encode())
-    ):
-        raise ValueError("source receipt file manifest is malformed")
-    manifest_digest = hashlib.sha256(
-        json.dumps(manifest, separators=(",", ":")).encode()
-    ).hexdigest()
-    if (
-        receipt.get("file_count") != len(manifest)
-        or receipt.get("file_manifest_sha256") != manifest_digest
-    ):
-        raise ValueError("source receipt file manifest digest drifted")
+        raise
 
     extracted_names: list[str] = []
     try:
