@@ -33,6 +33,7 @@ Frozen with this file (SHA-256 of the committed bytes):
 | `harness/q2/action_path/canary_targets.json` | `a49782274cf7c3dec0b6ceca64564207824220b2dc1572387f98339b0d4805f6` |
 | `harness/q2/vm/guest/canary_targets.py` | `8b7233391b1da78092326c11d394f0385ee42052835a83554c76260e4201aab3` |
 | `harness/q2/action_path/vm_hours.py` | `7187d49f6c05ecdf783001f9ad750ba82b86d0a40f6338b1826b54b8bfb720b0` |
+| `harness/q2/action_path/acceptance.py` | `94908d8965c7849a821e9179abca620f6605ff244d95429a873fac288e596e6b` |
 | `harness/q2/vm/guest/probe.py` | `ba5c0f1d364c80d5f8190f3c357b915cd504d754891285c3772ba959a804efeb` |
 | `harness/q2/vm/guest/guard.py` | `595fce1fa164c8fce868690b1853706ac6fa4761f0d15f41ac5cc0c3804224c5` |
 | `harness/q2/vm/guest/canary.py` | `fbe21671a085b1eb58a8de08e4de1b46ce7c19d340576364814253e4a5305099` |
