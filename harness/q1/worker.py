@@ -36,6 +36,20 @@ WORK_GATES = (
     "A4_sanitizer",
     "timing",
     "audit_hole",
+    # fidelity only (preregistration section 8.2, criterion 1): unmodified
+    # upstream code next to our implementation; never part of a ladder gate
+    "a_upstream_44130946",
+    "a_upstream_423217d9",
+    "c1_kbv_compat",
+    "c1_kbv_native",
+)
+#: Fidelity gates whose rows never enter a ladder gate or audit tier.
+FIDELITY_GATES = (
+    "b_native",
+    "a_upstream_44130946",
+    "a_upstream_423217d9",
+    "c1_kbv_compat",
+    "c1_kbv_native",
 )
 GATE_A_VARIANTS = ("a", "a_1e-3", "a_head_1e-4", "a_head_1e-2", "a_static")
 #: ``details.reason`` of the row written when building or serialising rows fails.
@@ -97,6 +111,8 @@ def _outcomes_for(item: Mapping[str, Any]) -> tuple[list[Any], dict[int, str], A
     elif gate == "b_native":
         from harness.q1.gates.b_native import run_b_native
 
+        # Upstream loads the candidate itself; from here on candidate code runs.
+        report_phase("correctness")
         outcomes = [
             run_b_native(
                 problem_source,
@@ -106,6 +122,67 @@ def _outcomes_for(item: Mapping[str, Any]) -> tuple[list[Any], dict[int, str], A
                 device=device.index or 0,
             )
         ]
+    elif gate in {"a_upstream_44130946", "a_upstream_423217d9"}:
+        import time
+
+        from harness.q1.gates.gate_a import upstream_gate_a
+
+        revision = gate.rsplit("_", 1)[1]
+        start = time.perf_counter()
+        report_phase("correctness")
+        result = upstream_gate_a(
+            problem_source,
+            kernel_source,
+            revision=revision,
+            seed=seed,
+            num_trials=int(options.get("num_trials", 5)),
+            device=device.index or 0,
+        )
+        if result["correctness"] is None:
+            verdict = "error"
+        else:
+            verdict = "accept" if result["correctness"] else "reject"
+        outcomes = [
+            GateOutcome(
+                gate,
+                f"native/seed-{seed}",
+                verdict,
+                tolerance=1e-2 if revision == "44130946" else 1e-4,
+                details={"kernelbench_revision": revision, **result},
+                wall_seconds=time.perf_counter() - start,
+            )
+        ]
+    elif gate == "c1_kbv_compat":
+        from harness.q1.gates.gate_c import run_gate_c
+
+        # Gate (c1) in KBV-compatibility mode (inherited RNG, every tensor cast to
+        # fp32, no validity filter), renamed so its rows never count as c1.
+        renamed = {"c1": "c1_kbv_compat", "c_kbv_raw": "c1_kbv_compat_raw"}
+        outcomes = []
+        for outcome in run_gate_c(
+            problem_id,
+            kernel_source,
+            problem_source=problem_source,
+            families=("c1",),
+            replicate_seed=seed,
+            device=device,
+            validity="off",
+            kbv_compat=True,
+        ):
+            if outcome.gate in renamed:
+                outcome.gate = renamed[outcome.gate]
+                outcomes.append(outcome)
+    elif gate == "c1_kbv_native":
+        from harness.q1.gates.kbv_native import run_kbv_native
+
+        outcomes = run_kbv_native(
+            problem_id,
+            kernel_source,
+            clone=options.get("kbv_src"),
+            seed=seed,
+            device=device,
+            ours_problem_source=problem_source,
+        )
     elif gate == "c":
         from harness.q1.gates.gate_c import run_gate_c
 

@@ -69,7 +69,7 @@ Version card (`python scripts/q1_version_card.py --markdown`):
 | `schema` | `q1-version-card/1` |
 | `schema_py_sha256` | `c9bae9d502f7b9c83332f95e24fd9934d91bfe6cede47de527f6d584838b3256` |
 | `schema_version` | `q1-schema/1` |
-| `gate_code_sha256` | `afd4c60ac6c155fcc57887d2f60df9e96ba1954cd8a38357ab82def33183647f` |
+| `gate_code_sha256` | `470f9d25f813d810695c26f185b61584c98ad833d9b917baed1c1b33fb88e732` |
 | `gate_data_sha256` | `200fdacd8be621dccbd8c05c777c69e8dbe4dab70e74ae99de923eeef6d5a6af` |
 | `shape_manifest_sha256` | `29e693ee4d77bc86e3ecfdb1000307b3878c023c6c6224f87c4fcfae74a220cb` |
 | `audit_code_sha256` | `3c1abf346c84f5d963e589f0007191e740d05de4ade0abcd7c2b4eb08ce61e02` |

@@ -242,3 +242,73 @@ def test_gate_c_runs_tuple_element_roots_end_to_end(tmp_path: Path) -> None:
     aggregates = {r["gate"]: r["verdict"] for r in rows if r["config_id"] == "aggregate"}
     assert aggregates["c3"] == "accept" and aggregates["c2"] == "accept", aggregates
     assert any("input_shape.0" in r["config_id"] for r in rows if r["gate"] == "c3")
+
+
+def test_rows_record_item_wall_seconds(tmp_path: Path) -> None:
+    """Cost card input: every row carries spawn-to-verdict seconds."""
+    items = _items(tmp_path, ["relu_correct", "relu_crash"], ("a",))
+    config = RunnerConfig(
+        journal_path=tmp_path / "journal.jsonl",
+        extra_env={"TRITON_INTERPRET": "1"},
+        health_check=False,
+        workdir=tmp_path,
+    )
+    Runner(config).run(items)
+    rows = Journal(config.journal_path).final_rows()
+    assert rows and all(row["details"]["item_wall_seconds"] > 0 for row in rows)
+
+
+def test_soft_deadline_leaves_items_queued(tmp_path: Path) -> None:
+    items = _items(tmp_path, ["relu_correct"], ("a", "a_1e-3", "a_head_1e-4"))
+    config = RunnerConfig(
+        journal_path=tmp_path / "journal.jsonl",
+        extra_env={"TRITON_INTERPRET": "1"},
+        health_check=False,
+        workdir=tmp_path,
+        soft_deadline=time.monotonic() - 1.0,
+    )
+    summary = Runner(config).run(items)
+    assert summary["run"] == 0 and summary["left_in_queue"] == 3 and summary["time_boxed"]
+    assert not Journal(config.journal_path).final_rows()
+
+
+def test_hard_deadline_kills_without_journaling_or_marker(tmp_path: Path) -> None:
+    items = _items(tmp_path, ["relu_hang"], ("a",))
+    marker = tmp_path / "checkpoint.ready"
+    config = RunnerConfig(
+        journal_path=tmp_path / "journal.jsonl",
+        timeouts={"compile": 120.0, "correctness": 120.0, "timing": 10.0},
+        extra_env={"TRITON_INTERPRET": "1"},
+        health_check=False,
+        workdir=tmp_path,
+        checkpoint_marker=marker,
+        hard_deadline=time.monotonic() + 8.0,
+    )
+    runner = Runner(config)
+    started = time.monotonic()
+    summary = runner.run(items)
+    assert time.monotonic() - started < 60
+    assert summary["time_boxed"] and runner.expired
+    assert not Journal(config.journal_path).final_rows()
+    assert runner.write_checkpoint_marker() is False and not marker.exists()
+
+
+def test_exclusive_items_never_overlap_others(tmp_path: Path) -> None:
+    items = _items(tmp_path, ["relu_correct"], ("a", "a_1e-3", "a_head_1e-4", "a_head_1e-2"))
+    items[1].exclusive = True
+    config = RunnerConfig(
+        journal_path=tmp_path / "journal.jsonl",
+        slots=["cpu", "cpu", "cpu"],
+        extra_env={"TRITON_INTERPRET": "1"},
+        health_check=False,
+        workdir=tmp_path,
+    )
+    Runner(config).run(items)
+    spans = {
+        row["gate"]: (row["details"]["item_started_at"], row["details"]["item_ended_at"])
+        for row in Journal(config.journal_path).final_rows()
+    }
+    start, end = spans.pop(items[1].gate)
+    assert len(spans) == 3
+    for other_start, other_end in spans.values():
+        assert other_end <= start + 0.01 or other_start >= end - 0.01
