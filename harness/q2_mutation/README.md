@@ -15,12 +15,13 @@ Branches: harness `stage0/q2-mut-harness` (this code), specs
 | `controls.py` | metric image | Gold and do-nothing jobs; merges the save stage's outputs |
 | `reachability.py` | LO-VM image (Python 3.10, stdlib) | GUI-faithful LibreOffice save: Xvfb + openbox, the VM's LibreOffice and profile, postconfig replay, pyautogui keys |
 | `offline_eval.py` | metric image, per venv | The pinned `DesktopEnv.evaluate()` with a stub VM; fresh processes, repeat scoring, `error` verdicts |
-| `stats.py` | anywhere | Task-cluster bootstrap, Wilson, zero-event bounds, MDE, Hajek audit weights, κ |
-| `raters.py` | anywhere | D9 model-rater audit: sample, blind packets, consensus, label error |
-| `vm_injection.py` | anywhere | Corrected in-VM injection plan for the fidelity gate (executed later on the VM runtime) |
-| `report.py` | anywhere | Summary of a control run |
+| `stats.py` | anywhere | Task-cluster bootstrap, Wilson and Clopper-Pearson intervals, zero-event bounds, MDE, Hajek audit weights, the K3 label-error bound (exact at the Kish effective size), κ |
+| `raters.py` | anywhere | D9 model-rater audit: sample, blind packets, consensus, Kevin's adjudication, label error, per-rater disagreement |
+| `packets.py` | anywhere (stdlib) | Rater packet artifacts: listing and structural difference from the operators' snapshot, render commands (100 dpi) |
+| `vm_injection.py` | anywhere | Corrected in-VM injection plan for the fidelity gate (executed later on the VM runtime): opens agent-created outputs, agent-equivalent saves, save path per target |
+| `report.py` | anywhere | Summary of a control run (K1, P1 with exact intervals; save failures and unemulated tasks listed) |
 | `operators/` | LO-VM image (planning, UNO application) and anywhere (snapshots, purity) | The 64-operator catalog (`q2-mut-operators-v1`), spec binding and witness rules, `uno_apply.py`, the stdlib purity oracle |
-| `campaign.py` | metric image, LO-VM image, anywhere (per subcommand) | Joins blind specs, operators and the scorer: `targets`, `build`, `merge`, `recheck`, `report`, `export`, `pins` |
+| `campaign.py` | metric image, LO-VM image, anywhere (per subcommand) | Joins blind specs, operators and the scorer: `targets`, `build`, `merge`, `recheck`, `report`, `export`, `pins`, `guard` |
 
 ## Images (H100 host, CPU-only, built through `q2-mutation-cpu.sbatch`)
 
@@ -47,8 +48,12 @@ bash ~/cotcodec-runs/stage0/q2-evaluator-mutation/src/$SHA/infra/q2-mutation/run
 python -m harness.q2_mutation.report runs/dev-controls-vN --out summary.json
 ```
 
-`submit_controls.sh` refuses any split other than `dev` unless
-`Q2M_PREREG_FROZEN=q2-evaluator-mutation-v1` is set after the freeze.
+`submit_controls.sh` carries the same guards as `submit_mutants.sh`: on the
+host, `check_frozen.py` checks `.git_sha` and, for any split but `dev`, the
+frozen ledger row (hash chain and digest), `Q2M_PREREG_FROZEN` and the pinned
+image IDs; in jobs 1 and 3, `campaign guard` checks the code, catalog, spec,
+split, probe-map and receipt digests (non-dev) and the mounted OSWorld tree,
+VM baseline and file cache (every split).
 
 ## A mutation run (spec -> operator -> mutant -> save -> verdict)
 
@@ -81,18 +86,24 @@ uv run python -m harness.q2_mutation.campaign export --run <run copy> \
   --out program/evidence/q2-mutation/integration/dev-mutants-vN
 ```
 
-Outcome per mutant and venv (`campaign.classify`): `not_admitted`,
-`not_scored`, `normalized` (the edit did not survive the save),
-`null_not_pass` (the saved null mutant of the target does not pass, so no
-label can be read), `error`, `nondeterministic`, `ambiguous`, or `evaluable`
-with event `FN` / `FN_alt` / `FP_R` / `FP_F` or `ok`. Cells a scoping probe
-touched (`PROBE_OPERATOR_MAP`) are kept out of the rate tables.
+Outcome per mutant and venv (`campaign.classify`, first match): `not_admitted`,
+`save_failed` (the GUI-faithful save of the mutant or its null mutant did not
+write every office file; `merge` leaves such jobs out and lists them in
+`jobs-saved.excluded.jsonl`), `unemulated` (a setup or postconfig step the
+harness cannot replay may write a checker-read file), `not_scored`,
+`normalized` (the edit did not survive the save), `infra_timeout` (scoring
+timed out after its retries), `null_not_pass` (the saved null mutant of the
+target does not pass, so no label can be read), `error`, `nondeterministic`,
+`ambiguous`, or `evaluable` with event `FN` / `FN_alt` / `FP_R` / `FP_F` or
+`ok`. Cells a scoping probe touched (`PROBE_OPERATOR_MAP`) are kept out of the
+rate tables.
 
 Every split but `dev` is refused unless the staged tree carries the frozen
-ledger row of `q2-evaluator-mutation-v1`, `Q2M_PREREG_FROZEN` is set, and the
-tree's digests equal the preregistration's `q2m_pins` block
-(`campaign pins` prints them); `submit_mutants.sh` also checks the image IDs
-and the application mode against that block. `submit_target_counts.sh` only counts targets
+ledger row of `q2-evaluator-mutation-v1` (hash chain verified),
+`Q2M_PREREG_FROZEN` is set, and the tree's digests equal the
+preregistration's `q2m_pins` block (`campaign pins --root . [--inputs DIR]`
+prints them); `check_frozen.py` also checks the image IDs and the application
+mode against that block before any job is submitted. `submit_target_counts.sh` only counts targets
 per split (no spec, mutant or checker) and runs for every split.
 
 The controls-only path is still available: `controls.py mutation-jobs`
@@ -102,7 +113,9 @@ builds scoring jobs from any `MutationResult` JSONL whose files follow
 Released evidence (`campaign export`) carries redacted recipes: free text of
 32 characters or more in a recipe (a `must_equal` value holds a whole gold
 paragraph) is replaced by its SHA-256 and length, and purity details are
-dropped. Mutant documents and full recipes stay on the host.
+dropped. Each release row names what the recipe's steps were applied to
+(`applied_to`, `applied_input_sha256`: the raw gold under `--apply-to gold`).
+Mutant documents and full recipes stay on the host.
 
 ## Invariants
 

@@ -181,3 +181,27 @@ Append-only. Newest entries at the bottom.
   `q2-evaluator-mutation-v1` now pins code tree, catalog, specs, splits and
   images, and K6 is resized to what 67 tasks allow. It awaits a second review
   before freezing. No confirm-split mutant was planned, built or scored.
+
+## 2026-10-07 — Q2 evaluator-mutation: first review answered (dev split, exploratory)
+
+- The first adversarial review of `q2-evaluator-mutation-v1` found that an
+  office candidate whose GUI-faithful save never ran was still scored on its
+  pre-save bytes (and a gold could count for P1 unsaved). The merge now
+  excludes such jobs (`save_failed`), and `unemulated` and `infra_timeout`
+  are their own statuses. Also fixed: the rater packet is built from the
+  operators' snapshot (the checker libraries hid highlight, colour, fills
+  and spacing), the K3 bound is exact at the Kish effective size with a
+  minimum audited size, unresolved rater disagreements count as label
+  errors unless Kevin adjudicates them, the K2 plan opens agent-created
+  outputs, the control path has the same freeze, pin and image guards as
+  the mutation path, and the pins cover the probe map, file cache, OSWorld
+  tree and VM baseline.
+- Rerun at the new code (Slurm 475-480): `dev-mutants-v4` reproduces v3 on
+  all 275 mutants (admission, status, event, verdict, both venvs);
+  `dev-controls-v7` gives K1 19/19 and one P1 flip in 19.
+- The draft now states that K6 is very unlikely to fire, reports P1 on the
+  93 golds the headless probe saved as a replication, and restates power:
+  after the probe exclusion only about 9 (P3) and 5 (P4) confirm tasks are
+  expected, so P3 and P4 are pooled-only. The dependency-sensitivity arm is
+  disclosed as not leaderboard-era. Still not frozen: second review and
+  Kevin's D2/D9 confirmation pending.

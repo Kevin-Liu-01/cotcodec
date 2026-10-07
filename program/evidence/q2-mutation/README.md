@@ -13,8 +13,8 @@ The binding record formats are in `harness/q2_mutation/schema.py`
 | `splits.json` | Seeded (42) stratified task split: `dev` (harness validation, pilot, τ calibration), `confirm` (the 120-task confirmatory mutation subset), `reserve` | Everyone |
 | `specs/<task_id>.yaml` | Requirement specs written blind (spec branch) | Everyone after they are committed |
 | `operators/` | Operator catalog (`operator-catalog.json`), synthetic and dev-split operator validation, the operators' preregistration input | Not the blind spec author |
-| `integration/` | Integration of specs, operators and harness: `blind-spec-provenance.json` (no trace of checker access), `target-counts-v1.json` (targets per split, no specs or checkers), and one `campaign export` per dev-split end-to-end run (`dev-mutants-v*`: redacted recipes, outcomes, verdict rows, summaries; exploratory) | Not the blind spec author or the raters |
-| `harness/` | Checker-derived harness side: `task-scope.json` (task classes and metric functions), `file-cache-receipts.tsv` (447 files with SHA-256), `inputs-manifest.json` (every external source), dev-split validation (`dev-validation-2026-10-07.json`, `dev-controls-v6-summary.json`) | Not the blind spec author |
+| `integration/` | Integration of specs, operators and harness: `blind-spec-provenance.json` (no trace of checker access; the spec author's model and provider), `target-counts-v1.json` (targets per split, no specs or checkers), and one `campaign export` per dev-split end-to-end run (`dev-mutants-v*`: redacted recipes, outcomes, verdict rows, summaries; exploratory) | Not the blind spec author or the raters |
+| `harness/` | Checker-derived harness side: `task-scope.json` (task classes and metric functions), `file-cache-receipts.tsv` (447 files with SHA-256), `inputs-manifest.json` (every external source), dev-split validation (`dev-validation-2026-10-07.json`, `dev-controls-v6-summary.json`, and `dev-controls-v7-summary.json` at the reviewed code: save failures and unemulated tasks listed, exact P1 interval) | Not the blind spec author |
 
 ## Scope
 
