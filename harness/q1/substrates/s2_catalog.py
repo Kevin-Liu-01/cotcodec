@@ -186,8 +186,8 @@ class S2Entry:
 
     @property
     def kernel_family(self) -> str:
-        """Upstream kernel identity, for clustering substrates that share a kernel."""
-        return f"{self.source}:{self.path}"
+        """Upstream kernel identity (file and forward kernels), for clustering substrates."""
+        return f"{self.source}:{self.path}:{','.join(self.forward_kernels)}"
 
 
 # --- text transformations -------------------------------------------------------
@@ -694,10 +694,13 @@ def build_entry(item: S2Entry, sources_root: Path, kernelbench_root: Path) -> di
         KernelBench problem: {item.problem_id}.
 
         Upstream: {source.repo} @ {source.revision} ({source.tag or "untagged"}), {item.path}
-        Licence: {source.license} (LICENSE{" and NOTICE" if notice_text else ""} copied beside this
-        file). This file is a modified copy; the modifications are listed in substrate.json and
-        the full diff is normalization.diff. ModelNew below is harness glue (reviewed project
-        code), not upstream code. Forward kernels: {", ".join(item.forward_kernels)}.
+        Licence: {source.license}; upstream LICENSE{" and NOTICE" if notice_text else ""} are
+        copied beside this file ({
+        "LICENSE.upstream, NOTICE.upstream" if notice_text else "LICENSE.upstream"
+    }).
+        This file is a modified copy: the changes are listed in substrate.json and the full
+        diff is normalization.diff. ModelNew below is harness glue (reviewed project code),
+        not upstream code. Forward kernels: {", ".join(item.forward_kernels)}.
         """
         ''')
     model_new = (
