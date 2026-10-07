@@ -33,10 +33,11 @@
       "doc": "program/questions/q2-calibrated-cua-instrument.md",
       "dossier_key": "S1-calibrated-cua-instrument",
       "status": "stage-0-running",
-      "next_action": "Holo3 v2 done (unexplained session shift). Build and freeze the action-path suite and the checker-mutation kit; add a session random effect to the Stage 1 design",
+      "next_action": "Rescope Stage 1 from the measured cost card (closed-loop VM time dominates): more VMs per engine, fewer rungs or cells; Stage 0 suite and checker-mutation kit continue",
       "first_gpu_experiment": {
-        "name": "Qwen3.5 four-size ladder",
-        "estimated_gpu_hours": 60,
+        "name": "Qwen3.5 ladder (as dossier-designed)",
+        "measured_projection_gpu_hours": 431.5,
+        "status": "rescope before gauntlet",
         "gauntlet_required": true
       },
       "blocked_by": [
@@ -70,7 +71,7 @@
     "Rotate the Moonshot API key that was pasted into a chat session",
     "Spot-check a sample of the Q2 checker-mutation audit as the human rater (decision D9)"
   ],
-  "gpu_hours_spent_this_program": 0.7063,
+  "gpu_hours_spent_this_program": 1.1916,
   "frozen_registrations": [
     "q3-k1-localization-screen-v1",
     "q2-holo3-rerun-audit-v1-posthoc",
@@ -78,7 +79,7 @@
     "serving-throughput-probe-v1"
   ],
   "infrastructure": {
-    "serving_probe": "v1 ran (0.666 GPU-h): Q1 sampling within cap; Q2 replay needs a v2 with a corrected contamination rule",
+    "serving_probe": "v1 and v2 done (1.15 GPU-h): cu129 vLLM works on R570; Q1 sampling within cap; Q2 ladder needs rescoping",
     "lane": "hardened discovery lane merged 2026-10-07"
   },
   "gpu_hours_ledger": [
@@ -100,6 +101,15 @@
         "452 smoke"
       ],
       "outcome": "stopped at smoke gate: SMOKE_PASS_OVER_BUDGET (projected 98.8 min vs 30)"
+    },
+    {
+      "experiment": "serving-throughput-probe-v2",
+      "gpu_hours": 0.4853,
+      "jobs": [
+        "464 overlay build",
+        "466 job A"
+      ],
+      "outcome": "X1 pass on identical prompts; Q2 Stage 1 as designed projects to 431.5 GPU-h (4B+9B alone 110.6) against the 90 GPU-h rescope line: rescope-before-gauntlet"
     }
   ],
   "results": [
@@ -109,6 +119,12 @@
       "label": "v2 CONFIRMATORY",
       "outcome": "rule d: not attributable to checker time-dependence; rule a: no agent-behaviour shift; rule b: unexplained; coverage ok",
       "evidence": "program/evidence/2026-10-07/holo3-v2/RESULTS.md"
+    },
+    {
+      "registration": "serving-throughput-probe-v2",
+      "date": "2026-10-07",
+      "outcome": "X1 pass; Q2 rescope-before-gauntlet (431.5 GPU-h projected); per-cell 9B H1 screenshot 0.75, a11y 1.13, H2 thinking 24.1/29.3 GPU-h",
+      "evidence": "program/evidence/2026-10-07/serving-throughput-probe-v2/README.md"
     }
   ]
 }

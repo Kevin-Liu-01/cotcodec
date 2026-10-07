@@ -1,0 +1,45 @@
+{
+  "G0.2": {
+    "pass": true
+  },
+  "G0.3": {
+    "finite": true,
+    "normalized_max_error": 0.002808088669553399,
+    "pass": true
+  },
+  "G0.4": {
+    "correct": true,
+    "pass": true,
+    "tmp_mapped_files": [],
+    "triton_cache_dir": "/outputs/probe/cache/triton",
+    "triton_cache_populated": true,
+    "triton_cache_under_outputs": true
+  },
+  "compat_libcuda_active": true,
+  "cuda_available": true,
+  "device_count": 1,
+  "device_name": "NVIDIA H100 80GB HBM3",
+  "driver": {
+    "cu_init_rc": 0,
+    "loaded": true,
+    "version": 12090,
+    "version_rc": 0
+  },
+  "libcuda_ldconfig": [
+    "libcuda.so.1 (libc6,x86-64) => /usr/local/cuda-12.9/compat/libcuda.so.1",
+    "libcuda.so.1 (libc6,x86-64) => /usr/lib/x86_64-linux-gnu/libcuda.so.1",
+    "libcuda.so (libc6,x86-64) => /usr/local/cuda-12.9/compat/libcuda.so"
+  ],
+  "libcuda_mapped": [
+    {
+      "path": "/usr/local/cuda-12.9/compat/libcuda.so.575.57.08",
+      "realpath": "/usr/local/cuda-12.9/compat/libcuda.so.575.57.08"
+    }
+  ],
+  "pass": true,
+  "torch_cuda": "12.9",
+  "torch_version": "2.13.0+cu129",
+  "triton_version": "3.7.1",
+  "vllm_build_commit": "db9527a46873454610df6dbedf79a36d6bf1a7f6",
+  "vllm_version": "0.31.0"
+}

@@ -182,6 +182,48 @@ Append-only. Newest entries at the bottom.
   images, and K6 is resized to what 67 tasks allow. It awaits a second review
   before freezing. No confirm-split mutant was planned, built or scored.
 
+## 2026-10-07 — Action-path runtime and Q1 gate stack built (not frozen)
+
+- Q2 Stage 0b (branch `stage0/q2-action-path`): CPU-only VM lane
+  (`vm-campaign.sbatch`), VM in its own network namespace with the runner
+  sharing it (D13: a bridge-unpublished guest was still reachable from other
+  containers through the image's DNAT, job 372). 22 cold boots: first
+  screenshot p50 18.3 s, p95 20.8 s; 21 of 21 resets pristine; only
+  `/dev/kvm` exposed. The 100-entry action-path catalog and its device-level
+  reference were frozen-ready before any executor code. Review findings
+  (11) fixed; remaining components are being written.
+- Q1 Stage 0 (branch `stage0/q1-gates`): gates (a), (b), (c), the
+  independent audit, mutator and substrate builders integrated; 280 tests
+  pass in a GPU-less container. The review found a critical defect (gate (c)
+  rejected every kernel on 10 problems because of a config-id format) and
+  seven others, all fixed. Not yet run on a GPU; the projected Stage 0 total
+  (9-10 GPU-h) is above the gauntlet threshold, so a measured pilot decides
+  between a registered trimming rule and the gauntlet.
+
+## 2026-10-07 — Serving probe v2 run: X1 pass, Q2 rescope before the gauntlet
+
+- Ran the frozen `serving-throughput-probe-v2` from a fresh host clone of the
+  freeze commit `1141d94` (contract `9224ccdc...` and probe digest
+  `64493671...` verified; ledger row verified). The schema-3 capsule
+  (`0e9c210c...`, worktree clean) omitted the 27 `.agents/skills` links under
+  the reviewed rule. Overlay image `sha256:a59d7782...` built under Slurm 464
+  (cu129; v2 plan and args doctor pass).
+- Job A (Slurm 466, 28 min 23 s) COMPLETED 0:0, lane `reason=completed`,
+  summary `complete` and accepted. Every gate passed (G0.9 in pid mode in
+  both phases, container-namespace PIDs; reservation 75,653 MiB real,
+  75,325 MiB dummy). All 16 points valid on their first attempt; r3 flagged
+  front-end-bound.
+- X1 `pass`: identical prompt token ids on all 336 paired requests; open-loop
+  delta 2.66% (5%), replay delta 2.71% (8%), SE 4.00% (5%), A1 range 1.82%,
+  r1b replicate 0.80%. It enters no v2 budget; later registrations cite it.
+- Q2 `rescope-before-gauntlet`: 431.5 GPU-h (4B and 9B rungs 55.3 each, 27B
+  239.4 and 35B-A3B 81.6 on the unmeasured active-parameter rule). The 4B and
+  9B rungs alone (110.6) exceed the 90 GPU-h line. A1 noise 1.0; no F1
+  correction (PNG 3.1% faster). Q1 not projected; v1's result stands.
+- GPU time 0.485 GPU-h: job A 0.473 (cap 1.0), overlay build 0.012 (cap
+  0.167). Serving probe total with v1: 1.151 GPU-h. Evidence:
+  `program/evidence/2026-10-07/serving-throughput-probe-v2/`.
+
 ## 2026-10-07 — Q2 evaluator-mutation: first review answered (dev split, exploratory)
 
 - The first adversarial review of `q2-evaluator-mutation-v1` found that an
