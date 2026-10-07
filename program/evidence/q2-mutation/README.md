@@ -12,6 +12,8 @@ The binding record formats are in `harness/q2_mutation/schema.py`
 | `sanitized-tasks.manifest.json` | Pins (OSWorld commit, file-cache revision), selection rule, manual web exclusions, SHA-256 of every exported file | Everyone |
 | `splits.json` | Seeded (42) stratified task split: `dev` (harness validation, pilot, τ calibration), `confirm` (the 120-task confirmatory mutation subset), `reserve` | Everyone |
 | `specs/<task_id>.yaml` | Requirement specs written blind (spec branch) | Everyone after they are committed |
+| `operators/` | Operator catalog (`operator-catalog.json`), synthetic and dev-split operator validation, the operators' preregistration input | Not the blind spec author |
+| `integration/` | Integration of specs, operators and harness: `blind-spec-provenance.json` (no trace of checker access), `target-counts-v1.json` (targets per split, no specs or checkers), and one `campaign export` per dev-split end-to-end run (`dev-mutants-v*`: redacted recipes, outcomes, verdict rows, summaries; exploratory) | Not the blind spec author or the raters |
 | `harness/` | Checker-derived harness side: `task-scope.json` (task classes and metric functions), `file-cache-receipts.tsv` (447 files with SHA-256), `inputs-manifest.json` (every external source), dev-split validation (`dev-validation-2026-10-07.json`, `dev-controls-v6-summary.json`) | Not the blind spec author |
 
 ## Scope
@@ -35,8 +37,9 @@ Relative download targets are resolved the way the OSWorld server does it:
    initial files (fetch them by URL and check the SHA-256) and public
    application documentation.
 2. Never open OSWorld's `desktop_env/evaluators`, the task JSONs in
-   `evaluation_examples/`, gold files, anything under `harness/` here, the
-   scoping and review plans, or any probe output.
+   `evaluation_examples/`, gold files, anything under `harness/`,
+   `operators/` or `integration/` here, the scoping and review plans, or any
+   probe output.
 3. Write `specs/<task_id>.yaml` with `author: blind-model-author-v1`. Each
    requirement's `observable` says how to test it on the end-state document
    without any checker. List what the instruction leaves open under

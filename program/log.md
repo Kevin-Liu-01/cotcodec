@@ -150,3 +150,25 @@ Append-only. Newest entries at the bottom.
 - Implication for Q2 Stage 1: same-day, same-operator reruns can shift by
   4.4 points with no visible cause, so the variance model needs a session
   random effect and more than one session per cell.
+
+## 2026-10-07 — Q2 evaluator-mutation kit integrated (dev split, exploratory)
+
+- Branch `stage0/q2-evaluator-mutation` merges the harness, the blind specs
+  and the operator catalog, and adds `harness/q2_mutation/campaign.py`: blind
+  spec -> operator -> mutant -> GUI-faithful LibreOffice save -> pinned
+  `evaluate()` -> VerdictRow, as three CPU-only Slurm jobs per run (no GPU, no
+  network, D12/D13).
+- Two end-to-end runs on the 17 dev targets (Slurm 453-455, 458-460): 275
+  mutants planned from the blind specs, 271 admitted. Applying recipes to the
+  raw gold instead of the LibreOffice-saved base kept 5cfb9197, whose null
+  mutant failed after three round trips; 215 mutants were evaluable in v2.
+  Unaudited candidate checker errors: a z-order swap of non-overlapping
+  shapes fails `compare_pptx_files` (2 tasks), dropped highlight passes
+  `compare_docx_files_and_ignore_new_lines`, a deleted unrelated paragraph
+  passes `compare_docx_tables`. Exploratory; never pooled with the
+  confirmatory run.
+- Target counts (no specs or checkers): 67 of 120 confirm tasks have a
+  mutable gold file (68 targets). The preregistration draft
+  `q2-evaluator-mutation-v1` now pins code tree, catalog, specs, splits and
+  images, and K6 is resized to what 67 tasks allow. It awaits a second review
+  before freezing. No confirm-split mutant was planned, built or scored.

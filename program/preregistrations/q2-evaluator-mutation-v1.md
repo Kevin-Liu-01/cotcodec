@@ -1,7 +1,8 @@
 # q2-evaluator-mutation-v1: OSWorld-Verified checker mutation audit
 
-**Status: DRAFT, not frozen.** Every `FILL-AT-FREEZE` marker must be replaced
-and reviewed before freezing with
+**Status: DRAFT for the second review, not frozen.** Every pin below is
+filled from the integration branch `stage0/q2-evaluator-mutation`, and no
+value is left open. After the review, freeze with
 
 ```bash
 uv run python scripts/preregister.py freeze q2-evaluator-mutation-v1 \
@@ -9,9 +10,11 @@ uv run python scripts/preregister.py freeze q2-evaluator-mutation-v1 \
 uv run python scripts/preregister.py verify q2-evaluator-mutation-v1
 ```
 
-No confirmatory mutant is scored before the freeze. Development-split runs
-(harness validation, gold fixed-point checks, τ and timing calibration) are
-allowed and are reported as exploratory.
+and commit the ledger. The ledger's `git_head_at_freeze` is the harness
+commit. No confirmatory mutant is planned, built or scored before the freeze.
+Development-split runs (harness validation, the gold fixed point on dev tasks,
+the end-to-end campaign on dev tasks) are allowed and are reported as
+exploratory.
 
 ## 1. Question
 
@@ -31,38 +34,104 @@ web and infeasible tasks are out of scope.
 | OSWorld | `b138d348256078fa634fc3b73567a7337c793e6b`; evaluators and tasks last changed in `0514b9a262c5e49007a5724e3e6c84171566ae66` (Apache-2.0) |
 | File cache | HF `xlangai/ubuntu_osworld_file_cache` at `1e112283c4ecb08d6fed8069bca7de74fa2f12aa`; 447 files fetched, every LFS file verified against its oid (apache-2.0 card; third-party document content) |
 | VM image | HF `xlangai/ubuntu_osworld` at `a5d9c3eaae98eebf6e3a0beb84e7e47cf72ae133`; `Ubuntu.qcow2.zip` 12,273,896,463 B, SHA-256 `b795b6cd4c69b252c1b4f10150a347795555032501b60fd031751ed09b896712`; extracted `Ubuntu.qcow2` SHA-256 `6bf667a852b3c307f61d9f09c42559351f45e0607e428b4997becf534cf4d313` |
-| LibreOffice | the VM's own Ubuntu build, `libreoffice-core 1:7.3.7-0ubuntu0.22.04.4`, "LibreOffice 7.3.7.2 30(Build:2)" (not TDF's build). The save stage runs the VM's extracted `/usr`, `/etc`, dpkg database, LibreOffice profile and the user's site-packages with PyAutoGUI 0.9.54 (205,028 files, tree SHA-256 `fceee6501ff0d1f1a33500b36663624c220f1598140fa271040b5e97a9de30bf`) plus xvfb `2:21.1.4-2ubuntu1.7~22.04.8` (the VM's X server version, deb SHA-256 `f8c64bc652e3dc1a1041e85025267f574c27f86b00d7965545a8b3ec41a60cd4`) and openbox 3.6.1-10; no VM package changes; one passwd entry for the runtime uid. LO-VM image `sha256:f5b4c40eefd2b92f846652910ba34db35e1ae7bf90fa474595cc745cc5895361` (rebuilt image at freeze: FILL-AT-FREEZE) |
+| LibreOffice | the VM's own Ubuntu build, `libreoffice-core 1:7.3.7-0ubuntu0.22.04.4`, "LibreOffice 7.3.7.2 30(Build:2)" (not TDF's build). The LO-VM image runs the VM's extracted `/usr`, `/etc`, dpkg database, LibreOffice profile and the user's site-packages with PyAutoGUI 0.9.54 (205,028 files, tree SHA-256 `fceee6501ff0d1f1a33500b36663624c220f1598140fa271040b5e97a9de30bf`) plus xvfb `2:21.1.4-2ubuntu1.7~22.04.8` (the VM's X server version, deb SHA-256 `f8c64bc652e3dc1a1041e85025267f574c27f86b00d7965545a8b3ec41a60cd4`) and openbox 3.6.1-10; no VM package changes; one passwd entry for the runtime uid |
+| LO-VM image | `sha256:f5b4c40eefd2b92f846652910ba34db35e1ae7bf90fa474595cc745cc5895361`, used for the base, initial and null-mutant saves, operator application (`uno_apply.py`) and the GUI-faithful save stage. The operators' own validation (Slurm 431-433) used the earlier build `sha256:894b2623dceb43e8468a2adbd6e03a532ea9683d4b7754cd79fa0d58a331f909` of the same LibreOffice package from the first VM userland extraction; the integration runs used `f5b4c40e` |
 | LibreOffice profile | the VM's `registrymodifications.xcu` (SHA-256 `6b5ec88d1570a8ad85932eb53a1a6f8370053d3ac60b30fe759c14135e902ef2`): `WarnAlienFormat=false`, `ShowTipOfTheDay=false`, Writer default filter "MS Word 2007 XML" |
 | Metric image | `sha256:2006c1a9247e4911a82508cd22e9d9a7efc5c13e35a20e8a03baac7112876230` (ubuntu:22.04 `sha256:5ec03bb3…6401`, Python 3.12.13, uv 0.11.30) |
 | Lock-exact venv (primary) | OSWorld `uv.lock` exported for Python 3.12 with hashes, agp-client left out; requirements SHA-256 `3f463d6f3331a80c3054dfd8aced1dabb56adf8ee8b6fa7441e25435f626c2a3`; installed-RECORD fingerprint `f2c9e208d2bdb888668e64143f0603ce92f56cee2fd1002f0211d2c2287db810`; pandas 3.0.1, numpy 1.26.4, python-pptx 1.0.2, python-docx 1.2.0, openpyxl 3.1.5, torch 2.5.1 |
 | Scoping venv (sensitivity) | the scoping agent's 129 package versions (pandas 2.3.3, torch 2.5.1+cpu); requirements SHA-256 `5ae07a7a527c22ff580a171692ccbc608f563e6c7264b0819a92ff1c41bd6fb7`; fingerprint `e591c8875c353ecbf6ec38b6c9c467e01b4164cc129744bd51e27c993310417a` |
-| Task export | `program/evidence/q2-mutation/sanitized-tasks.manifest.json` (205 tasks) |
+| Task export | `program/evidence/q2-mutation/sanitized-tasks.manifest.json` (205 tasks), SHA-256 in the pins block |
 | Splits | `program/evidence/q2-mutation/splits.json`, seed 42, stratified by domain × task class: dev 32, confirm 120, reserve 53 |
-| Requirement specs | `program/evidence/q2-mutation/specs/`, author `blind-model-author-v1`; set SHA-256 FILL-AT-FREEZE |
-| Operator catalog | `harness/q2_mutation/operators/`; catalog SHA-256 and per-operator label class FILL-AT-FREEZE |
-| Harness | integration branch `stage0/q2-evaluator-mutation` commit FILL-AT-FREEZE; schema `q2-mutation-schema-v1` |
+| Requirement specs | `program/evidence/q2-mutation/specs/` from `stage0/q2-mut-specs` at `287d523374354e40af4c1f54bd06e46c3de6a955`: 205 YAML specs, 598 requirements, author `blind-model-author-v1`. Set SHA-256 = SHA-256 of the sorted lines `{file sha256}  {file name}` (`campaign.spec_set_sha256`). Blindness check: `program/evidence/q2-mutation/integration/blind-spec-provenance.json` |
+| Operator catalog | `q2-mut-operators-v1`, `catalog_sha256` (hash over the operator descriptions and the sources of `harness/q2_mutation/operators/`), 64 operators listed in Appendix A; validated at `7c429bcb793369649bc7970ccad0fba290ad2772`, merged unchanged from `stage0/q2-mut-operators` at `0d7f0857cc0a6d0007466a05ee08a44a467cf957` |
+| Harness and campaign code | code-tree SHA-256 over every file of `harness/q2_mutation/` (README files excepted), `infra/q2-mutation/`, `infra/slurm/host-single-node/q2-mutation-cpu.sbatch`, `scripts/q2_mutation_export_tasks.py` and `scripts/q2_mutation_operators.py` (`campaign.code_tree_sha256`); schema `q2-mutation-schema-v1` |
+
+Machine-readable pins. `campaign.py` refuses every split but `dev` unless the
+staged tree carries this file's frozen ledger row, `Q2M_PREREG_FROZEN` is
+set, and `campaign pins` on the staged tree equals the digests below:
+
+```json
+{
+ "q2m_pins": 1,
+ "experiment_id": "q2-evaluator-mutation-v1",
+ "code_tree_sha256": "d968f080a5fa6357146496160514557d5213548d91119d2f93603d0368eb2c87",
+ "operator_catalog_sha256": "2e2f24069c833c54bba23650481edec6ffff97176d07377327019e3a7f51d1fe",
+ "operator_catalog_version": "q2-mut-operators-v1",
+ "operators": 64,
+ "spec_set_sha256": "05d4fb2074a7fa53046dff9f5d075b2b45ac014889eaae23d625c1894056de62",
+ "specs": 205,
+ "sanitized_manifest_sha256": "40ef4a459086b86f4971d3f938402df6c2749bd16a2acc2822f25261ebc70380",
+ "splits_sha256": "2099792e6fb86c69e4f79b1ce47d2839cc25623f5c4633698e95822553c007d9",
+ "schema_sha256": "65d91703754b4026b15f6c53a4a6069da723b58d749730770da2910c1edf427d",
+ "metric_image_id": "sha256:2006c1a9247e4911a82508cd22e9d9a7efc5c13e35a20e8a03baac7112876230",
+ "lo_vm_image_id": "sha256:f5b4c40eefd2b92f846652910ba34db35e1ae7bf90fa474595cc745cc5895361",
+ "apply_to": "gold",
+ "mutation_split": "confirm",
+ "seeds": [
+  42,
+  43,
+  44
+ ],
+ "specs_branch_commit": "287d523374354e40af4c1f54bd06e46c3de6a955",
+ "operators_branch_commit": "0d7f0857cc0a6d0007466a05ee08a44a467cf957",
+ "harness_branch_commit": "65c90aae12c042f010856c589f145647f1733c0d"
+}
+```
 
 Licences of runtime packages that are run but never vendored: PyMuPDF 1.27.1
 (AGPL-3.0 or commercial), borb 2.1.25 (AGPL-3.0-or-later or commercial),
-mutagen 1.47.0 (GPL-2.0+), formulas 1.3.3 (EUPL-1.1+). Mutant documents are
-never released; recipes, verdicts and kill matrices are.
+mutagen 1.47.0 (GPL-2.0+), formulas 1.3.3 (EUPL-1.1+). Mutant documents and
+full recipes are never released; redacted recipes, verdicts and outcome rows
+are (section 16).
 
 ## 3. Design
 
 **Candidates.** Each candidate is a set of end-state files for one task. Kinds:
 the task's gold (where every metric pairs a `vm_file` result with a
 `cloud_file` gold that is not one of the task's own inputs), do-nothing (the
-initial state), and operator mutants (`MutationResult`, schema v1).
+initial state), operator mutants (`MutationResult`, schema v1) and one null
+mutant per mutation target.
 
-**Labels.** Fixed a priori from the blind requirement spec, never from a
-checker: `should_pass_equiv`, `should_pass_alt_solution`,
-`should_fail_violation` (witness names at least one `req_id`),
-`should_fail_extra_change`, `ambiguous`.
+**Mutation targets.** A target is one gold file of a confirm task with a
+complete gold whose type an operator family handles (`.xlsx`, `.docx`,
+`.pptx`; text and config files such as `.txt`, `.csv`, `.json`, `.ini`) and
+which no postconfig conversion derives (`campaign.select_targets`). The
+task's other gold files are the target's context and are placed unchanged
+with every mutant. Tasks without a complete gold, LibreOffice-native files
+(`.odt`, `.ods`), media, images and archives have no target and are listed.
 
-**Strata.** `document_model` mutants (edits made through an application's
-document model) form the headline. `script_writer` mutants (byte-level edits
-LibreOffice normalizes on load: split runs, re-packed zips, re-serialized XML)
-are reported separately and never pooled.
+**Mutant pipeline** (`infra/q2-mutation/run/submit_mutants.sh`, three
+CPU-only Slurm jobs; `harness/q2_mutation/campaign.py`):
+
+1. `targets` (metric image): control jobs, targets, blind specs to JSON.
+2. `build` (LO-VM image): the base (LibreOffice-save of the gold through
+   `uno_apply.py`, `.uno:Save` on the document frame under Xvfb with the VM
+   profile) and the LibreOffice-saved initial file; planning of every operator
+   of the target's family from the blind spec, the base and the task delta
+   (base vs saved initial) only; each office recipe applied to the raw gold
+   and saved once (`--apply-to gold`), so a mutant and its null mutant (the
+   base) are each one LibreOffice round trip from the gold; text and config
+   recipes splice characters of the gold; purity checks against the null
+   mutant; deduplication by snapshot digest within a (task, operator) cell.
+3. The GUI-faithful save stage (`reach.sh`) on every admitted mutant and null
+   mutant, then `merge`, scoring under both venvs (`score.sh`, two fresh
+   processes each), `recheck` (purity re-run on the saved mutant against the
+   saved null mutant) and `report`.
+
+The operators never read a task config, a checker or a verdict.
+
+**Labels.** Fixed at planning time from the blind requirement spec, never
+from a checker, by the witness rules W-E, W-A, W-R and W-F (Appendix A):
+`should_pass_equiv`, `should_pass_alt_solution`, `should_fail_violation`
+(witness names at least one `req_id` with a high or medium binding that pins
+the edited aspect), `should_fail_extra_change`, `ambiguous`. Spec entries
+marked `[AMBIGUOUS]` are questions, not freedoms.
+
+**Strata.** All 64 operators are in the `document_model` stratum (edits made
+through LibreOffice's document model, or character splices of text files);
+it is the headline. A `script_writer` stratum (byte-level edits LibreOffice
+normalizes on load) would be reported separately and never pooled; the
+frozen catalog has no such operator.
 
 **Reachability stage (GUI-faithful save).** Every office candidate is placed
 at its VM path in a fresh copy of the VM profile, opened by non-headless
@@ -89,81 +158,128 @@ leaderboard-impact statements.
 
 ## 4. Primary metrics (lock-exact venv, document_model stratum, confirm split)
 
+The mutation metrics P2-P5 are computed on evaluable mutants (section 7):
+admitted, the targeted edit survives the save stage, the target's saved null
+mutant passes, the verdict is not `error`, the candidate's scorings agree,
+and the (task, operator) cell was not touched by a scoping probe (section 12).
+
 - **P1 Gold fixed-point false negative.** Unit: task. Population: non-dev
   in-scope tasks with a complete gold (confirm and reserve splits). Event:
   LibreOffice-save(gold) through the reachability stage does not pass. Every
   flip goes to the audit; a flip is a confirmed false negative when the audit
   accepts the saved gold as a correct result. Reported: raw flip share and
   audit-confirmed share with exact Clopper-Pearson 95% intervals.
-- **P2 FN per checker family.** Share of admitted should-pass mutants
+- **P2 FN per checker family.** Share of evaluable should-pass mutants
   (`should_pass_equiv` plus audit-accepted `should_pass_alt_solution`) whose
   verdict is not pass.
-- **P3 FP_R per checker family.** Share of admitted `should_fail_violation`
+- **P3 FP_R per checker family.** Share of evaluable `should_fail_violation`
   mutants whose verdict is pass.
-- **P4 FP_F per checker family.** Share of admitted `should_fail_extra_change`
-  mutants whose verdict is pass, counted only where the audit rejects the file.
-  Always reported separately from P3.
-- **P5 Task-level escape rate.** Share of confirm tasks with at least one
-  admitted FN or FP_R.
+- **P4 FP_F per checker family.** Share of evaluable
+  `should_fail_extra_change` mutants whose verdict is pass, counted only where
+  the audit rejects the file. Always reported separately from P3.
+- **P5 Task-level escape rate.** Share of evaluable confirm tasks (at least
+  one evaluable `should_pass_equiv` or `should_fail_violation` mutant) with at
+  least one FN or FP_R event.
 
-A checker family is a metric function (`compare_table` rule types and
-`compare_pptx_files` facets are descriptive sub-families). Family rates are the
-unweighted mean over tasks of per-task rates (tasks weighted equally; at most
-three mutants per task and operator, site seeds 42, 43, 44).
+A checker family is the set of distinct metric functions of a task, joined by
+`+` when there are several (`campaign.checker_family`); `compare_table` rule
+types and `compare_pptx_files` facets are descriptive sub-families. Family
+rates are the unweighted mean over tasks of per-task rates (tasks weighted
+equally; at most three mutants per task and operator, site seeds 42, 43, 44).
 
 ## 5. Secondary metrics
 
 - S1 Dependency flips: candidates whose verdict differs between the two venvs,
   counted only when each venv gives the same verdict on five fresh-process
   scorings.
-- S2 Script-writer stratum rates (P2-P4 on that stratum).
-- S3 Reachability normalization per operator: share of mutants whose targeted
-  edit is absent after the save (operator purity checks re-run on the saved
-  file).
+- S2 Script-writer stratum rates (P2-P4 on that stratum; empty for this
+  catalog).
+- S3 Reachability normalization per operator: share of admitted mutants whose
+  targeted edit is absent after the save (operator purity re-run on the saved
+  file against the saved null mutant).
 - S4 Save timing: share of postconfig saves whose write took longer than the
   0.5 s the VM waits before reading the file.
 - S5 Nondeterministic checkers: candidates whose repeated scorings disagree.
 - S6 Audit agreement with the a-priori labels, per label class.
+- S7 Null-mutant failures: share of targets whose saved null mutant does not
+  pass, with the target list (their mutants are excluded from P2-P5).
 
-## 6. Uncertainty, sample size and minimum detectable effects
+## 6. Task subset, sample sizes and minimum detectable effects
 
+Counted before the freeze without specs, mutants or checkers
+(`submit_target_counts.sh`, Slurm 457, `program/evidence/q2-mutation/integration/target-counts-v1.json`):
+
+| Split | Tasks | Tasks with a target | Targets (xlsx / pptx / docx / text) | No complete gold | Other files skipped |
+|---|---:|---:|---|---:|---|
+| dev | 32 | 17 | 17 (7 / 5 / 4 / 1) | 13 | 3 no operator family, 1 derived |
+| confirm | 120 | 67 | 68 (32 / 22 / 13 / 1) | 43 | 11 no operator family, 5 derived |
+| reserve | 53 | 28 | 28 (12 / 8 / 5 / 3) | 21 | 7 no operator family |
+
+- Mutation population: the 67 confirm tasks with a target. The 43 confirm
+  tasks without a complete gold get no mutant; they need constructed,
+  spec-based positive controls, which are out of this experiment.
+- Planned mutants: the dev campaign planned 275 mutants on 17
+  targets (16.2 per target) and admitted 271, so the confirm split is
+  expected to yield about 1,100 planned and 1,080 admitted mutants (68
+  targets), of which the dev run made 78% evaluable.
 - Pooled and family rates: task-cluster percentile bootstrap, 10,000
   resamples, seed 42 (`harness/q2_mutation/stats.py`). Wilson or exact
   intervals only for task-level proportions.
-- Family floor: a family rate is inferential only with at least 8 tasks and
-  20 admitted mutants; otherwise descriptive. In the confirm split only
-  `compare_table` (33 tasks) and `compare_pptx_files` (21 tasks) reach 8.
-  No inferential claim is made at the operator × checker cell level.
-- Planned size: 120 confirm tasks; about 2,000-3,000 raw mutants before
-  deduplication and admission.
-- Minimum detectable rate (one-sided α = 0.05, power 0.8, 3 mutants per task
-  and operator, intra-task correlation 0.5, null rate 5%): 14.3% at 33 tasks,
-  17.0% at 21 tasks, 9.5% at 120 tasks (correlation 0.3 / 0.8: 13.2% / 15.8%
-  at 33; 9.0% / 10.2% at 120). Recomputed from the dev-split correlation
-  before freezing: FILL-AT-FREEZE.
-- Exact one-sided 95% upper bound with zero events: 2.5% at 120 tasks, 8.7%
-  at 33, 13.3% at 21; with one event at 120 tasks, 3.9%.
+- Family floor: a family rate is inferential only with at least 8 evaluable
+  tasks and 20 evaluable mutants; otherwise descriptive. The target counts
+  bound the families at 32 tasks (`compare_table`, the xlsx targets), 22
+  (`compare_pptx_files` and its variants) and 13 (all docx checkers
+  together). No inferential claim is made at the operator × checker cell
+  level.
+- Intra-task correlation measured on the dev campaign (exploratory, one-way
+  ANOVA estimator over evaluable mutants outside probe-touched cells, lock
+  venv, `dev-mutants-v2`): FN 0.28, FP_R 0.13, FP_F 1.0 (all FP_F events in
+  one of six tasks), FN_alt undefined (no event). With 14 dev
+  tasks these estimates are imprecise; the design uses the larger of the dev
+  estimate and 0.5 for FN and FP_R, and 1.0 for FP_F.
+- Minimum detectable rate (one-sided α = 0.05, power 0.8, null rate 5%):
 
-## 7. Admission and quarantine
+  | Evaluable tasks | ICC 0.13 / 0.31 / 0.5 / 1.0, 3 mutants per task | ICC 0.13 / 0.31 / 0.5, 6 mutants per task |
+  |---:|---|---|
+  | 67 | 9.8% / 10.5% / 11.2% / 12.8% | 8.8% / 9.9% / 10.8% |
+  | 59 | 10.2% / 11.0% / 11.7% / 13.4% | 9.1% / 10.2% / 11.2% |
+  | 32 | 12.3% / 13.4% / 14.4% / 16.9% | 10.7% / 12.3% / 13.8% |
+  | 22 | 14.0% / 15.4% / 16.7% / 19.8% | 12.1% / 14.1% / 15.8% |
+  | 13 | 17.1% / 19.0% / 20.9% / 25.1% | 14.5% / 17.2% / 19.7% |
 
-- `should_fail_violation`: witness names a requirement of the task's spec,
-  every operator purity check passes on the saved file, and the targeted edit
-  survives the reachability stage.
-- `should_pass_equiv`: purity checks pass on the saved file.
-- `should_pass_alt_solution`: admitted only after audit acceptance.
-- `ambiguous`: never in a rate; counted.
-- Duplicates: one mutant per canonical content hash (volatile docProps and zip
-  timestamps excluded).
+- Exact one-sided 95% upper bound with zero events: 4.4% at 67 tasks, 4.95%
+  at 59, 8.9% at 32, 12.7% at 22, 20.6% at 13. With one event at 67 tasks the
+  bound exceeds 5%.
+
+## 7. Admission, evaluability and quarantine
+
+Per mutant and venv, `campaign.classify` assigns exactly one status:
+
+| Status | Rule | In P2-P5 |
+|---|---|---|
+| `not_admitted` | a build-time purity check failed (`applied`, `survived_save`, `edit_landed`, `no_collateral_change`, and the declared `forbidden_kinds_absent`, `observable_preserved`, `appearance_preserved`, `same_items`, `expected_values`, `expected_deltas`, `expected_formulas`), or a duplicate | no, counted per operator and check |
+| `not_scored` | no verdict row or no post-save purity row | no, counted as infrastructure |
+| `normalized` | post-save purity against the saved null mutant fails (the edit did not survive the save stage) | no, S3 |
+| `null_not_pass` | the target's saved null mutant does not pass under this venv | no, S7 |
+| `error` | `evaluate()` raised | no, counted per checker |
+| `nondeterministic` | the mutant's or its null mutant's repeated scorings disagree | no, S5 |
+| `ambiguous` | label `ambiguous` | no, counted and sent to the audit |
+| `evaluable` | all of the above clear | yes: event FN, FN_alt, FP_R or FP_F when the verdict disagrees with the label, otherwise `ok` |
+
+- `should_pass_alt_solution` enters P2 only after audit acceptance; before
+  the audit its events are reported as `FN_alt`.
+- `should_fail_extra_change` enters P4 only where the audit rejects the file.
 - Every quarantine reason is counted and reported.
 
 ## 8. Infrastructure failures (excluded and counted, never relabeled)
 
-LibreOffice open, activation or save failure or timeout; a scoring process
-that exceeds 300 s (retried at most twice, every retry counted); a container failure;
-a candidate whose repeated scorings disagree (it moves to S5); a setup or
-postconfig step the harness cannot emulate that writes a file the checker
-reads (the whole task is excluded and listed). A checker exception is not an
-infrastructure failure; it is verdict `error`.
+LibreOffice open, activation or save failure or timeout; a UNO application
+error or timeout; a scoring process that exceeds 300 s (retried at most twice,
+every retry counted); a container failure; a candidate whose repeated
+scorings disagree (it moves to S5); a setup or postconfig step the harness
+cannot emulate that writes a file the checker reads (the whole task is
+excluded and listed). A checker exception is not an infrastructure failure;
+it is verdict `error`.
 
 ## 9. Audit (decision D9)
 
@@ -176,7 +292,8 @@ infrastructure failure; it is verdict `error`.
 - Sample, disjoint strata in priority order: all `should_pass_alt_solution`
   mutants (cap 150), all label-verdict disagreements (cap 200), 100 random
   agreements, each with its inclusion probability; plus 10% sham items
-  (LibreOffice-saved gold, do-nothing; at most two per task); every P1 flip.
+  (LibreOffice-saved gold, do-nothing; at most two per task); every P1 flip
+  and every ambiguous mutant with a verdict, up to the same caps.
 - Decision per item: both raters accept → accept; both reject → reject;
   otherwise unresolved, sent to Kevin. Label error uses Hajek weights with a
   task-cluster bootstrap; unresolved items are excluded in the primary estimate
@@ -186,13 +303,13 @@ infrastructure failure; it is verdict `error`.
 
 ## 10. Decision rules and kill criteria
 
-Each criterion is checked to be able to fire at the planned sizes.
+Each criterion is checked to be able to fire at the sizes in section 6.
 
 - **K1 Harness validity (first step after the freeze, before any mutant is
   scored).** On confirm tasks with a complete gold, raw gold must pass and raw
   do-nothing must fail in at least 90% of tasks under the lock-exact venv;
   otherwise stop, fix, and rerun under a new experiment id. (On the dev split
-  this check is a pre-freeze harness test.)
+  this check passed 19/19 before the freeze.)
 - **K2 VM fidelity gate.** At least 80 task-candidate pairs across at least
   three domains run through the corrected injection plan
   (`harness/q2_mutation/vm_injection.py`). A checker family with any
@@ -205,17 +322,21 @@ Each criterion is checked to be able to fire at the planned sizes.
   should-pass and the should-fail group, stop and redesign under a new id.
 - **K5 Normalization.** An operator whose edit the reachability stage erases
   in more than 50% of its mutants is reported only as a normalization finding.
-- **K6 Adequacy (negative result).** If at least 93 confirm tasks are
-  evaluable, the exact one-sided 95% upper bound of P5 is below 5% (zero
-  escapes at 59 or more tasks, at most one at 93 or more), and P1 has at most
-  one confirmed flip, publish "adequate under this operator set".
+- **K6 Adequacy (negative result).** If at least 59 confirm tasks are
+  evaluable for P5, P5 has zero escapes (exact one-sided 95% upper bound
+  below 5%; at 59-67 tasks one escape already exceeds it), and P1 has at most
+  one confirmed flip, publish "adequate under this operator set". With fewer
+  than 59 evaluable tasks no adequacy claim is made, and the result says so.
 - **K7 Unreliable family.** A family whose P2, P3 or P4 task-cluster 95% lower
   bound exceeds 5% is reported as unreliable for that error type (feasible at
-  33 tasks for true rates of about 14% or more).
+  32 tasks for true rates of about 14% or more, at 22 tasks of about 17%).
 - **K8 Prior art.** Before drafting, rerun `orx` and keyword search including
   citers of AgentRewardBench and ABC. If a mutation audit of desktop CUA
   checkers has appeared, pivot the note to the reachability, gold fixed-point
   and dependency-drift findings.
+- **K9 Null-mutant coverage.** If more than 25% of confirm targets end
+  `null_not_pass`, the mutation rates are reported as covering only the
+  remaining targets, and the excluded checker families are named.
 
 ## 11. Priors
 
@@ -240,15 +361,35 @@ Each criterion is checked to be able to fire at the planned sizes.
 
 ## 12. Exploratory, not confirmatory
 
-- Dev-split results (harness validation, P1 on dev tasks, timing).
+- Dev-split results (harness validation, P1 on dev tasks, the end-to-end
+  campaign of section 15, timing).
 - Scoping-probe numbers (run split 34/38, F-CELL 12/30, headless round trip
   10/106): pre-reachability, Ubuntu `0ubuntu0.22.04.13` build, headless;
   disclosed, never pooled.
-- Every (task, operator family) cell touched by a scoping probe
-  (`program/evidence/q2-mutation/harness/probe_touched.json`: 207 tasks;
-  E-ZIP/E-META 104, run split 65 cells, F-CELL 33, typo probes 106 cells,
-  reverts 52 cells) is reported separately; the mapping from probe ops to
-  final operator ids is fixed at freeze (FILL-AT-FREEZE).
+- Every (task, operator) cell touched by a scoping probe
+  (`program/evidence/q2-mutation/harness/probe_touched.json`, 207 tasks) is
+  kept out of P2-P5 and reported separately. 63 of the 120 confirm tasks
+  carry at least one touched cell. The mapping from probe ops to operator
+  ids is fixed here (`campaign.PROBE_OPERATOR_MAP`; patterns are shell-style
+  over operator names):
+
+  | Probe op | Operators whose cells it touches |
+  |---|---|
+  | `controls:gold+do_nothing(raw)` | none (controls) |
+  | `lo_rt:gold_headless_save(ubuntu .13)` | none (P1 is handled separately) |
+  | `equiv:E-META` | `*.eq.doc_property` |
+  | `equiv:E-ZIP` | none (byte-level, no document_model operator) |
+  | `runsplit:E-RUNSPLIT-TOUCHED`, `runsplit:E-RUNSPLIT-UNTOUCHED` | none (byte-level) |
+  | `mutants:F-TYPO`, `mutants_v2:F-TYPO-BODY` | `docx.viol.text_edit`, `docx.extra.edit_unrelated_paragraph`, `pptx.viol.text_edit`, `pptx.extra.edit_unrelated_text`, `pptx.extra.edit_notes`, `xlsx.viol.value_perturb`, `xlsx.extra.edit_unrelated_value`, `text.viol.line_edit`, `text.extra.unrelated_line_edit` |
+  | `mutants_v2:F-TYPO-TABLE` | `docx.extra.edit_unrelated_table_cell`, `pptx.viol.table_cell_text` |
+  | `mutants_v2:F-CELL` | `xlsx.extra.edit_unrelated_value`, `xlsx.extra.clear_unrelated_row`, `xlsx.viol.value_perturb` |
+  | `mutants:R-REVERT`, `mutants_v2:R-REVERT` | `*.viol.*` |
+
+  Seven Impress golds were also split-run and saved headless by a review
+  agent that did not record their task ids; they cannot be mapped and are
+  disclosed.
+- The two probe-informed operators (`docx.extra.edit_unrelated_table_cell`,
+  `pptx.viol.table_cell_text`) are reported as exploratory everywhere.
 - P1 stays confirmatory although a headless round trip of 113 golds was
   probed: that probe used a different save path (headless) and build
   (`0ubuntu0.22.04.13`), and nothing in the harness was tuned on it. P1 is
@@ -257,16 +398,18 @@ Each criterion is checked to be able to fire at the planned sizes.
 
 ## 13. Reported regardless of outcome
 
-P1-P5 and S1-S6 with intervals; per-task distributions; every quarantine,
-error and infrastructure-failure count with reasons; the excluded-task list;
-the dependency-flip table; the save-timing table; the fidelity-gate table;
-rater κ, sham accuracy and the pending human check; the scoping-probe numbers
-labelled pre-reachability; and the deviations below.
+P1-P5 and S1-S7 with intervals; per-task distributions; the status table of
+section 7 per operator and per checker family; every quarantine, error and
+infrastructure-failure count with reasons; the excluded-task and no-target
+lists; the dependency-flip table; the save-timing table; the fidelity-gate
+table; rater κ, sham accuracy and the pending human check; the scoping-probe
+numbers labelled pre-reachability; and the deviations below.
 
 ## 14. Deviations from the reviewed plan
 
 - The VM runs Ubuntu's LibreOffice build `0ubuntu0.22.04.4`, not TDF's; the
-  save stage runs the VM's own userland instead of a TDF tarball.
+  save stage and operator application run the VM's own userland instead of a
+  TDF tarball.
 - Split seed 42 (the program's seed rule and the shared interface), not
   20261006.
 - Experiment id `q2-evaluator-mutation-v1` and this path, per the program's
@@ -274,13 +417,109 @@ labelled pre-reachability; and the deviations below.
 - Intent predicates on an independent stack are replaced by spec witnesses,
   operator purity checks on the saved file, and the D9 audit.
 - Human raters are replaced by provider-distinct model raters (D9).
+- The mutation population is the 67 confirm tasks with a complete gold and a
+  mutable file, not all 120: a mutant is an edit of a gold end state.
+- Mutants carry one LibreOffice round trip more than a raw gold before the
+  save stage (the UNO application save); the null mutant carries the same,
+  and targets whose null mutant fails are excluded (S7, K9).
 
-## 15. Freeze checklist
+## 15. Integration validation on the development split (exploratory)
 
-- [ ] Replace every FILL-AT-FREEZE value.
-- [ ] Dev-split harness validation (gold, do-nothing, gold fixed point,
+Two end-to-end campaigns ran on the 17 dev targets through the three CPU-only
+Slurm jobs (no GPU, no network, `/dev/nvidia*` absent in every receipt). The
+exports, with recipes redacted, are committed under
+`program/evidence/q2-mutation/integration/` and checked by
+`tests/test_q2_mutation_integration_evidence.py`.
+
+| Run | Recipes applied to | Planned | Admitted | Evaluable (lock) | Ambiguous | `null_not_pass` | Normalized |
+|---|---|---:|---:|---:|---:|---:|---:|
+| `dev-mutants-v1` (Slurm 453-455) | base (null = base saved again) | 275 | 271 | 203 | 27 | 40 (2 targets) | 1 |
+| `dev-mutants-v2` (Slurm 458-460) | raw gold (null = base) | 275 | 271 | 215 | 27 | 28 (1 target) | 1 |
+
+- Build: 4 of 275 planned mutants failed build-time purity (two
+  `docx.alt.para_direct_for_style` changed the resolved appearance; two
+  `xlsx.viol.formula_ref_shift` left the value unchanged, i.e. equivalent
+  mutants). Admitted labels: 111 equiv, 28 alternative, 68 violation,
+  27 extra change, 37 ambiguous.
+- Save stage: 288 jobs, 286 saves, all written, no dialog, slowest write
+  0.30 s, no infrastructure error, no scoring timeout, no nondeterministic
+  scoring; the lock-exact and scoping venvs gave the same verdict on every
+  candidate.
+- Post-save purity held for 270 of 271 admitted mutants; one
+  `pptx.viol.drop_char_format` colour removal did not survive the save (S3).
+- Null mutants: in v1, two targets failed: af23762e (the known gold
+  fixed-point flip) and 5cfb9197, whose gold after three LibreOffice round
+  trips fails `compare_pptx_files` although it passes after one. Applying
+  recipes to the raw gold (v2, the registered mode) recovered 5cfb9197;
+  only af23762e (28 mutants) remains excluded.
+- Evaluable: 215 mutants on 15 tasks, 83 of them in probe-touched cells.
+  Outside those cells, candidate checker errors (unaudited):
+  `pptx.eq.zorder_nonoverlap` fails `compare_pptx_files` on 5cfb9197 and
+  e4ef0baf (6 equivalence mutants, FN); `docx.viol.drop_char_format` passes
+  `compare_docx_files_and_ignore_new_lines` on 5bc63fb9 (3 violation
+  mutants, FP_R); `docx.extra.delete_unrelated_paragraph` passes
+  `compare_docx_tables` on 936321ce (3 extra-change mutants, FP_F). Task
+  escapes (FN or FP_R): 3 of 15 tasks.
+- Reproducibility: v1 and v2 planned every mutant at the same site with the
+  same label, and the 263 mutants of the other 16 targets had the same
+  status and event in both runs. Mutant ids differ between the runs because
+  a LibreOffice save is not byte-deterministic (document timestamps) and each
+  recipe carries the SHA-256 of its base file.
+
+These numbers size the confirmatory design; they are never pooled with it.
+
+## 16. Release
+
+Released: sanitized tasks, specs, the operator catalog, redacted recipes
+(`campaign export`: free-text leaves of 32 characters or more, or with
+non-ASCII characters, in a recipe become `{redacted_sha256, chars}`, long
+quoted spans in witness arguments likewise, purity details dropped), the
+recipe SHA-256, verdict rows, outcome rows and summaries. Each recipe names
+the SHA-256 of its base file (`input_sha256`); base files, mutant files and
+full recipes stay in the host run root, and planning is deterministic given
+the base, so a holder of the base files can regenerate every recipe and
+check its mutant id. A LibreOffice save is not byte-deterministic, so a fresh
+base save yields new ids with the same sites and labels (section 15). Not
+released: mutant documents, base files, full recipes, gold or initial files.
+
+## 17. Freeze checklist
+
+- [x] Every value the earlier draft left open is filled (pins block,
+      catalog, specs, probe mapping, dev intra-task correlation, image).
+- [x] Dev-split harness validation (gold, do-nothing, gold fixed point,
       determinism, timing) recorded as exploratory evidence.
-- [ ] Dev-split intra-task correlation measured; MDE table updated.
-- [ ] Spec set and operator catalog hashes recorded; no spec author saw
-      checker code or probe output (provenance file).
+- [x] Dev-split end-to-end campaign recorded; intra-task correlation measured;
+      MDE table updated.
+- [x] Spec set and operator catalog hashes recorded; blind-author provenance
+      checked (`integration/blind-spec-provenance.json`).
 - [ ] Reviewed by a second agent; lower of two review scores recorded.
+- [ ] Kevin's go-ahead on decisions D2 (upstream defect reports stay
+      unsent) and D9 (model raters) still stands.
+
+## Appendix A. Operator catalog `q2-mut-operators-v1` (64 operators)
+
+Label class is nominal; the label of each mutant comes from its witness rule.
+Probe-informed operators are marked with a dagger (†).
+
+| Family | Equivalence (E) | Alternative solution (A) | Violation (R) | Extra change (F) |
+|---|---|---|---|---|
+| xlsx | `xlsx.eq.doc_property`, `xlsx.eq.view_zoom`, `xlsx.eq.view_selection`, `xlsx.eq.active_sheet` | `xlsx.alt.literal_for_formula`, `xlsx.alt.reference_for_literal`, `xlsx.alt.sum_range_expand`, `xlsx.alt.plus_chain_to_sum`, `xlsx.alt.average_to_sum_count`, `xlsx.alt.absolute_refs`, `xlsx.alt.concat_to_ampersand`, `xlsx.alt.named_style_for_direct` | `xlsx.viol.value_perturb`, `xlsx.viol.formula_ref_shift`, `xlsx.viol.clear_bound_cell`, `xlsx.viol.drop_char_format`, `xlsx.viol.number_format_change` | `xlsx.extra.edit_unrelated_value`, `xlsx.extra.clear_unrelated_row`, `xlsx.extra.rename_unrelated_sheet`, `xlsx.extra.delete_unrelated_sheet`, `xlsx.extra.format_unrelated_cell` |
+| docx | `docx.eq.doc_property`, `docx.eq.view_zoom` | `docx.alt.char_style_for_direct`, `docx.alt.para_direct_for_style`, `docx.alt.highlight_as_shading`, `docx.alt.case_via_format` | `docx.viol.text_edit`, `docx.viol.drop_char_format`, `docx.viol.para_align_change`, `docx.viol.line_spacing_change`, `docx.viol.delete_bound_paragraph` | `docx.extra.edit_unrelated_paragraph`, `docx.extra.delete_unrelated_paragraph`, `docx.extra.edit_unrelated_table_cell` †, `docx.extra.format_unrelated_run` |
+| pptx | `pptx.eq.doc_property`, `pptx.eq.subvisible_nudge`, `pptx.eq.zorder_nonoverlap` | `pptx.alt.textbox_for_placeholder`, `pptx.alt.case_via_format` | `pptx.viol.text_edit`, `pptx.viol.table_cell_text` †, `pptx.viol.drop_char_format`, `pptx.viol.move_shape`, `pptx.viol.delete_bound_shape` | `pptx.extra.edit_unrelated_text`, `pptx.extra.delete_unrelated_slide`, `pptx.extra.add_textbox`, `pptx.extra.edit_notes` |
+| text | `text.eq.trailing_newline` | none | `text.viol.line_edit` | `text.extra.unrelated_line_edit`, `text.extra.unrelated_line_delete` |
+| config | `config.eq.trailing_newline`, `config.eq.json_reformat`, `config.eq.json_key_reorder`, `config.eq.ini_kv_spacing` | `config.alt.json_number_repr` | `config.viol.value_change`, `config.viol.key_delete` | `config.extra.unrelated_value_change`, `config.extra.unrelated_key_delete` |
+
+Witness rules (`harness/q2_mutation/operators/__init__.py`): W-E-SILENT /
+W-E-ALLOWED give `should_pass_equiv`, W-E-CONFLICT gives `ambiguous`;
+W-A-SILENT / W-A-ALLOWED give `should_pass_alt_solution`, W-A-PINNED gives
+`should_fail_violation`, W-A-MENTIONED, W-A-REPRESENTATION and W-A-STRUCTURE
+give `ambiguous` unless the spec frees the aspect; W-R-PINNED / W-R-TEXT give
+`should_fail_violation`, W-R-WEAK-BINDING and W-R-UNPINNED give `ambiguous`;
+W-F-UNREQUESTED gives `should_fail_extra_change`, W-F-COSMETIC gives
+`ambiguous`, W-F-ALLOWED gives `should_pass_equiv` for a cosmetic change and
+`ambiguous` for a content change, and any rule ending in FLAGGED (an
+`[AMBIGUOUS]` spec entry) gives `ambiguous`.
+Planning, binding, sites and admission follow
+`program/evidence/q2-mutation/operators/prereg-operators-section.md`, which
+this registration adopts with one change: recipes are applied to the raw gold
+(section 3).
