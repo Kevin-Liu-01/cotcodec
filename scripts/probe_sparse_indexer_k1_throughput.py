@@ -33,7 +33,11 @@ spawn, separately from the steady-state times:
 4. ``capture``    v1's smoke capture and eager check on a synthetic prompt.
 5. ``concurrent`` the four registered shards as four workers sharing the one
    GPU (the resume legs' layout): 6 steps each (steps 0 and 1 excluded), and
-   each worker's start-up and peak memory.
+   each worker's start-up and peak memory. If this last arm is cut by the time
+   limit (timeout or USR1), the resume legs are priced by the registered bound
+   (1.25 x the sum of the four solo steps, 2 x the solo start-up) and the
+   receipt says so; if it fails otherwise (for example out of memory), the
+   probe is incomplete.
 
 The receipt holds the measured ``Rates`` and, for the v2 registration to adopt,
 the limits ``harness/sparse_indexer_k1_budget_v2.derive_limits`` computes from
@@ -75,6 +79,12 @@ SEEDS = [42, 43, 44]
 DATA_SEED = 42
 SINK = 151643
 EXTENSION_LR = 1e-3  # the 6 trainable indexers' learning rate does not change their cost
+# If the concurrent arm (last) is cut by the time limit, the resume legs are
+# priced from the four solo workers instead: the GPU serialises them (v1: four
+# workers 15.07 s per step against 15.06 s for the sum of their solo steps), so
+# 1.25 x the sum bounds the shared step, and two solo start-ups the shared one.
+CONCURRENT_BOUND_FACTOR = 1.25
+CONCURRENT_STARTUP_BOUND_FACTOR = 2.0
 EXIT_OK, EXIT_CONTRACT, EXIT_INCOMPLETE = 0, 2, 3
 CODE_FILES = (
     "scripts/probe_sparse_indexer_k1_throughput.py",
@@ -523,6 +533,7 @@ class Probe:
         self.out = args.output_dir
         self.results: dict[str, Any] = {}
         self.failures: dict[str, str] = {}
+        self.timed_out: set[str] = set()  # arms cut by the time limit or a signal
         self.arm_wall_s: dict[str, float] = {}
         self.shapes = Shapes.registered() if args.profile == "registered" else Shapes.tiny()
 
@@ -575,6 +586,8 @@ class Probe:
         self.arm_wall_s[arm] = time.perf_counter() - started
         if failure is not None:
             self.failures[arm] = failure
+            if failure.startswith(("stopped by", "timed out")):
+                self.timed_out.add(arm)
 
     def rates(self) -> budget.Rates:
         train, evaluation = self.results["train"], self.results["eval"]
@@ -582,7 +595,14 @@ class Probe:
         n_layers, prefix = len(train["layers"]), train["prefix_layers"]
         sequences = train["devkl"][budget.UNIT_SKIP:] or train["devkl"]
         summary = evaluation["summary"]
-        concurrent = self.results["concurrent"]
+        concurrent = self.results.get("concurrent")
+        if concurrent is not None:
+            concurrent_step = max(w["steps"]["step_s"] for w in concurrent)
+            concurrent_startup = max(w["startup_s"] for w in concurrent)
+        else:  # the registered bound (the concurrent arm was cut by the time limit)
+            concurrent_step = CONCURRENT_BOUND_FACTOR * sum(
+                entry["steps"]["step_s"] for entry in train["solo"].values())
+            concurrent_startup = CONCURRENT_STARTUP_BOUND_FACTOR * train["startup_s"]
         return budget.Rates(
             teacher_layer_seq_s=steps["teacher_s"] / (train["batch"] * prefix),
             layer_step_s=steps["layers_total_s"] / n_layers,
@@ -600,8 +620,8 @@ class Probe:
             eval_mc_only_s=summary["mc_only"]["mean_s"],
             eval_rows=summary["selection_mean_rows"],
             capture_check_s=self.results["capture"]["seconds"],
-            concurrent_step_s=max(w["steps"]["step_s"] for w in concurrent),
-            concurrent_startup_s=max(w["startup_s"] for w in concurrent))
+            concurrent_step_s=concurrent_step,
+            concurrent_startup_s=concurrent_startup)
 
     def run(self) -> int:
         receipt_path = self.out / "receipt.json"
@@ -629,8 +649,12 @@ class Probe:
             "shapes": asdict(self.shapes), "hashes": hashes, "arms": self.results,
             "failures": self.failures, "arm_wall_s": self.arm_wall_s,
             "startup_checks_s": startup_s, "slurm_job_id": os.environ.get("SLURM_JOB_ID")}
+        bounded = set(self.failures) == {"concurrent"} and "concurrent" in self.timed_out
+        payload["concurrent_bound_used"] = bounded
         if "tolerance" in self.failures and "tolerance" in self.results:
             status = "PROBE_TOLERANCE_FAIL"
+        elif bounded:
+            status = "PROBE_COMPLETE"
         elif self.failures or set(self.results) != set(ARM_ORDER):
             status = "PROBE_INCOMPLETE"
         else:
