@@ -10,10 +10,13 @@ place, and only reads what that place may read:
     skip files a postconfig conversion derives. Blind specs are validated and
     copied to JSON, because the LibreOffice image has no PyYAML.
 ``build`` (LO-VM image, its Python 3.10 with pyuno)
-    Per target: the base (LibreOffice-save of the gold), the saved initial file
-    and the null mutant (the base saved once more) through ``uno_apply.py``;
-    planning with the blind spec only; application; purity against the null
-    mutant; deduplication. Writes ``mutations.jsonl`` (strict
+    Per target: the base (LibreOffice-save of the gold) and the saved initial
+    file through ``uno_apply.py``; planning with the blind spec only against
+    the base; application of each recipe to the raw gold (``--apply-to gold``,
+    the default: mutant and null mutant are each one LibreOffice round trip
+    from the gold, and the null mutant is the base) or to the base
+    (``--apply-to base``: the null mutant is the base saved once more);
+    purity against the null mutant; deduplication. Writes ``mutations.jsonl`` (strict
     ``MutationResult`` rows), ``admission.jsonl``, the mutant files in the
     shared layout ``files/<mutant_id>/<VM path>``, and ``scoring-jobs.jsonl``
     (admitted mutants plus one null job per target). The operators never see
@@ -602,20 +605,30 @@ def cmd_build(args: argparse.Namespace) -> int:
     text = [t for t in targets if t["family"] not in OFFICE_FAMILIES]
     prep = run_uno(out, [row for t in office for row in prepare_rows(t)], "prepare", **uno)
     null_rows = []
+    nulls: dict[str, dict[str, Any]] = {}
     for target in office:
         key = target["target_id"]
         name = posixpath.basename(target["vm_path"])
-        if prep.get(f"{key}-base", {}).get("status") == "ok":
-            null_rows.append(
-                {
-                    "mutant_id": target["null_id"],
-                    "family": target["family"],
-                    "input": _rel("prep", key, "base", name),
-                    "output": mutant_file_rel(target["null_id"], target["vm_path"]),
-                    "steps": [],
-                }
-            )
-    nulls = run_uno(out, null_rows, "null", **uno)
+        if prep.get(f"{key}-base", {}).get("status") != "ok":
+            continue
+        if args.apply_to == "gold":
+            # Recipes are applied to the raw gold, so a mutant is one LibreOffice
+            # round trip away from the gold, as the base is: the base is the null.
+            null = out / mutant_file_rel(target["null_id"], target["vm_path"])
+            null.parent.mkdir(parents=True, exist_ok=True)
+            shutil.copyfile(out / "prep" / key / "base" / name, null)
+            nulls[target["null_id"]] = {"status": "ok", "null": "base"}
+            continue
+        null_rows.append(
+            {
+                "mutant_id": target["null_id"],
+                "family": target["family"],
+                "input": _rel("prep", key, "base", name),
+                "output": mutant_file_rel(target["null_id"], target["vm_path"]),
+                "steps": [],
+            }
+        )
+    nulls.update(run_uno(out, null_rows, "null", **uno))
     for target in text:
         key = target["target_id"]
         name = posixpath.basename(target["vm_path"])
@@ -685,12 +698,15 @@ def cmd_build(args: argparse.Namespace) -> int:
         if target["family"] not in OFFICE_FAMILIES:
             continue
         for record in records:
+            to_gold = args.apply_to == "gold"
             apply_rows.append(
                 {
                     "mutant_id": record["mutant_id"],
                     "family": record["family"],
-                    "input": str(base.relative_to(out)),
-                    "input_sha256": record["recipe"]["input_sha256"],
+                    "input": target["gold"] if to_gold else str(base.relative_to(out)),
+                    "input_sha256": (
+                        target["gold_sha256"] if to_gold else record["recipe"]["input_sha256"]
+                    ),
                     "output": mutant_file_rel(record["mutant_id"], target["vm_path"]),
                     "steps": record["recipe"]["params"]["steps"],
                 }
@@ -761,6 +777,7 @@ def cmd_build(args: argparse.Namespace) -> int:
         ),
         "scoring_jobs": len(jobs),
         "lo_build": next((e.get("lo_build") for e in prep.values() if e.get("lo_build")), None),
+        "apply_to": args.apply_to,
     }
     write_json(out / "build-summary.json", summary)
     print(json.dumps(summary, sort_keys=True))
@@ -1459,6 +1476,13 @@ def main(argv: list[str] | None = None) -> int:
     bd.add_argument("--profile-template", default=None)
     bd.add_argument("--timeout", type=int, default=240)
     bd.add_argument("--shards", type=int, default=4)
+    bd.add_argument(
+        "--apply-to",
+        choices=["base", "gold"],
+        default="gold",
+        help="office recipes edit the raw gold (null mutant = base) or the base "
+        "(null mutant = base saved once more)",
+    )
     bd.set_defaults(func=cmd_build)
 
     mg = sub.add_parser("merge", help="saved files into scoring jobs, mutant ids kept")

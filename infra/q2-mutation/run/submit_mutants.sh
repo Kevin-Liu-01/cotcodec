@@ -12,12 +12,13 @@
 # GPU-less and network-less (q2-mutation-cpu.sbatch, decisions D12 and D13).
 #
 # Usage (on the host): submit_mutants.sh <git-sha> <split> <run-name> \
-#          <metric-image-id> <lo-image-id> [workers]
+#          <metric-image-id> <lo-image-id> [workers] [apply-to: gold|base]
 # Only the dev split runs before the preregistration freeze; the campaign
 # driver also refuses any other split unless the staged tree carries the
 # frozen ledger row and Q2M_PREREG_FROZEN=q2-evaluator-mutation-v1 is set.
 set -Eeuo pipefail
-sha="$1"; split="$2"; name="$3"; metric="$4"; lo="$5"; workers="${6:-16}"
+sha="$1"; split="$2"; name="$3"; metric="$4"; lo="$5"; workers="${6:-16}"; apply_to="${7:-gold}"
+[[ "${apply_to}" == "gold" || "${apply_to}" == "base" ]] || { echo "apply-to is gold or base" >&2; exit 2; }
 root=/home/kevin/cotcodec-runs/stage0/q2-evaluator-mutation
 src="${root}/src/${sha}"
 run="${root}/runs/${name}"
@@ -46,7 +47,7 @@ j1=$(sbatch --parsable --cpus-per-task=4 --mem=16G --time=00:30:00 \
 
 a2=$(hex sh -c "cd /src && python3 -m harness.q2_mutation.campaign build \
      --targets /ro/prep/targets.jsonl --out /out \
-     --profile-template /home/user/.config/libreoffice/4/user --shards 8 \
+     --profile-template /home/user/.config/libreoffice/4/user --shards 8 --apply-to ${apply_to} \
   && mkdir -p /out/lo && /src/infra/q2-mutation/run/reach.sh /out/scoring-jobs.jsonl /out/lo ${workers}")
 j2=$(sbatch --parsable --dependency=afterok:"${j1}" --cpus-per-task="${workers}" --mem=96G --time=04:00:00 \
   --export=ALL,Q2M_MODE=run,Q2M_IMAGE_ID="${lo}",Q2M_ARGV_JSON_HEX="${a2}",Q2M_SOURCE="${src}",Q2M_RUN_DIR="${run}/build",Q2M_INPUTS="${root}/inputs",Q2M_EXTRA_RO="${run}/prep:/ro/prep",Q2M_TMPFS_SIZE=32g \
@@ -65,5 +66,5 @@ j3=$(sbatch --parsable --dependency=afterok:"${j2}" --cpus-per-task="${workers}"
   --export=ALL,Q2M_MODE=run,Q2M_IMAGE_ID="${metric}",Q2M_ARGV_JSON_HEX="${a3}",Q2M_SOURCE="${src}",Q2M_RUN_DIR="${run}/score",Q2M_INPUTS="${root}/inputs",Q2M_EXTRA_RO="${run}/build:/ro/build",Q2M_TMPFS_SIZE=32g \
   "${batch}")
 
-printf '{"run": "%s", "split": "%s", "git_sha": "%s", "jobs": [%s, %s, %s]}\n' \
-  "${name}" "${split}" "${sha}" "${j1}" "${j2}" "${j3}" | tee "${run}/submitted.json"
+printf '{"run": "%s", "split": "%s", "git_sha": "%s", "apply_to": "%s", "jobs": [%s, %s, %s]}\n' \
+  "${name}" "${split}" "${sha}" "${apply_to}" "${j1}" "${j2}" "${j3}" | tee "${run}/submitted.json"
