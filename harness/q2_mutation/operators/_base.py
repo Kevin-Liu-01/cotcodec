@@ -153,6 +153,10 @@ class Operator:
     def judge(self, ctx: Context, where: Site, built: Build) -> Judgement:
         raise NotImplementedError
 
+    def finalize(self, ctx: Context, built: Build) -> Build:
+        """Family-wide footprint adjustments (for example spreadsheet row heights)."""
+        return built
+
     @classmethod
     def catalog_entry(cls) -> dict:
         return {
@@ -373,7 +377,7 @@ def plan_operator(
             break
         seed = pending[0]
         try:
-            built = op.build(ctx, where, rng_for(ctx.task_id, op.name, seed))
+            built = op.finalize(ctx, op.build(ctx, where, rng_for(ctx.task_id, op.name, seed)))
         except OperatorError as exc:
             skipped.append({"operator": op.name, "unit": where.unit, "reason": str(exc)})
             continue

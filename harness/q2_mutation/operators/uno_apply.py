@@ -365,9 +365,9 @@ def calc_step(office, doc, step):
 
 def number_format_key(doc, code):
     formats = doc.getNumberFormats()
+    # The empty locale is the document's default, as when a user types the code in
+    # Format Cells; an explicit en-US locale makes the export add a [$-409] prefix.
     locale = uno.createUnoStruct("com.sun.star.lang.Locale")
-    locale.Language = "en"
-    locale.Country = "US"
     key = formats.queryKey(code, locale, False)
     if key == -1:
         key = formats.addNew(code, locale)

@@ -368,7 +368,7 @@ def _xlsx_sheet(
             for key in ("ht", "customHeight", "hidden", "outlineLevel", "collapsed")
             if row.get(key) is not None
         }
-        if row_attrs.get("customHeight") or row_attrs.get("hidden"):
+        if row_attrs:
             rows[row.get("r", "")] = row_attrs
         for cell in row.findall(q("main", "c")):
             address = cell.get("r", "")

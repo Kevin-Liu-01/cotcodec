@@ -114,12 +114,19 @@ def main(argv: list[str] | None = None) -> int:
         if saved.get(f"base-{family}", {}).get("status") == "ok"
     ]
     fixed_log = run_uno(root, fixed, "fixed", args)
+    again_rows = [
+        resave_row(f"fixed2-{family}", family, f"saved/fixed/{name}", f"saved/fixed2/{name}")
+        for family, name in OFFICE.items()
+        if fixed_log.get(f"fixed-{family}", {}).get("status") == "ok"
+    ]
+    again_log = run_uno(root, again_rows, "fixed2", args)
 
     summary: dict = {
         "catalog_sha256": catalog()["catalog_sha256"],
         "resave": {k: {"status": v["status"], "error": v.get("error")} for k, v in saved.items()},
         "lo_build": next((v.get("lo_build") for v in saved.values()), None),
         "fixed_point": {},
+        "fixed_point_second": {},
         "operators": {},
     }
     for family, name in OFFICE.items():
@@ -128,6 +135,10 @@ def main(argv: list[str] | None = None) -> int:
         if fixed_log.get(f"fixed-{family}", {}).get("status") == "ok":
             changes = diff(snapshot(base, family), snapshot(again, family))
             summary["fixed_point"][family] = [c.as_dict() for c in changes][:20]
+        third = root / "saved" / "fixed2" / name
+        if again_log.get(f"fixed2-{family}", {}).get("status") == "ok":
+            changes = diff(snapshot(again, family), snapshot(third, family))
+            summary["fixed_point_second"][family] = [c.as_dict() for c in changes][:20]
 
     records_all: list[dict] = []
     plans: list[tuple[str, Path, list[dict]]] = []
@@ -160,11 +171,13 @@ def main(argv: list[str] | None = None) -> int:
     per_op: dict[str, Counter] = defaultdict(Counter)
     failures: dict[str, Counter] = defaultdict(Counter)
     errors: dict[str, list[str]] = defaultdict(list)
-    for _kind, base, records in plans:
+    for kind, base, records in plans:
+        # Office mutants are compared with the null mutant (base saved once more).
+        reference = root / "saved" / "fixed" / OFFICE[kind] if kind in OFFICE else base
         for record in records:
             mutant = root / "mutants" / record["mutant_id"] / base.name
             log = applied.get(record["mutant_id"])
-            done = verify(record, base, mutant if mutant.exists() else None, log)
+            done = verify(record, reference, mutant if mutant.exists() else None, log)
             records_all.append(done)
             op = record["operator"]
             per_op[op]["planned"] += 1
@@ -192,8 +205,8 @@ def main(argv: list[str] | None = None) -> int:
         totals.update({k: v for k, v in counts.items() if k in {"planned", "applied", "admitted"}})
     summary["totals"] = dict(totals)
     (root / "summary.json").write_text(json.dumps(summary, indent=2, sort_keys=True))
-    print(json.dumps({"totals": summary["totals"], "fixed_point": summary["fixed_point"]},
-                     indent=1))
+    print(json.dumps({"totals": summary["totals"], "fixed_point": summary["fixed_point"],
+                      "fixed_point_second": summary["fixed_point_second"]}, indent=1)[:4000])
     for op, info in sorted(summary["operators"].items()):
         print(f"{op:45s} planned={info.get('planned', 0)} applied={info.get('applied', 0)} "
               f"admitted={info.get('admitted', 0)} failed={info['failed_checks']}")

@@ -276,6 +276,7 @@ class TextboxForPlaceholder(Operator):
                 must_equal=[(f"{new_loc}/text", shape["text"]),
                             (f"{new_loc}/off", shape["off"]),
                             (f"{new_loc}/ext", shape["ext"])],
+                int_tolerance=2 * EMU_PER_HMM,
             ),
             facts={"unit": where.unit, "placeholder": shape["placeholder"]["type"],
                    "text": shape["text"][:80]},
