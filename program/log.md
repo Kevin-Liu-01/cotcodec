@@ -67,3 +67,14 @@ Append-only. Newest entries at the bottom.
   lane should be treated as untested.
 - `legacy/` is excluded from future images. The D21 doctor test now bounds
   child CPU time instead of wall time. Full suite on the host: 458 passed.
+
+## 2026-10-07 — Q3 K1 frozen
+
+- Merged the K1 code as commit A (`ec81fe3`). Image A
+  (`sha256:6de9c900...`, Slurm job 434) was built from a clean clone of it.
+- The K1 CPU doctor passed all seven cases in image A (receipt in
+  `program/evidence/2026-10-07/q3-k1/`). The data bundle was rebuilt in image A
+  from the recorded raw directory (Slurm job 436) and reproduced the
+  registered SHA-256 `919d016b...` byte for byte.
+- Froze `q3-k1-localization-screen-v1` (ledger row `c50540e9...`,
+  `git_head_at_freeze` = commit A). Sign-offs are decision D16.
