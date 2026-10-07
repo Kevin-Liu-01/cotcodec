@@ -78,14 +78,13 @@ PATCHES: dict[tuple[str, str], list[Patch]] = {
         (L0, "                for _ in range(ticks):\n", "                for _ in range(2 * ticks):\n", 1),
     ],
     ("M07-text-drop-last-char", "L0-fixed"): [
-        (L0, "        for ch in text:\n", "        for ch in text[:-1]:\n", 1),
+        (L0, "        for piece in self.segments(text):\n", "        for piece in self.segments(text[:-1]):\n", 1),
     ],
     ("M08-text-nfc-normalize", "L0-fixed"): [
-        (L0, "        for ch in text:\n",
-         '        for ch in __import__("unicodedata").normalize("NFC", text):\n', 1),
+        (L0, "        for piece in self.segments(text):\n", '        for piece in self.segments(__import__("unicodedata").normalize("NFC", text)):\n', 1),
     ],
     ("M09-text-drop-non-ascii", "L0-fixed"): [
-        (L0, "        for ch in text:\n", "        for ch in (c for c in text if ord(c) < 0x80):\n", 1),
+        (L0, "        for piece in self.segments(text):\n", '        for piece in self.segments("".join(c for c in text if ord(c) < 0x80)):\n', 1),
     ],
     ("M10-less-to-greater", "L0-fixed"): [
         (L0, "            keycode, shifted = self.resolve(char_keysym(ch))\n",
@@ -130,12 +129,12 @@ PATCHES: dict[tuple[str, str], list[Patch]] = {
          "        resolved = [self.resolve(k) for k in keysyms if k != 0xFFE5]\n", 1),
     ],
     ("M25-shell-expansion", "L0-fixed"): [
-        (L0, "        for ch in text:\n",
+        (L0, "        for piece in self.segments(text):\n",
          '        text = __import__("subprocess").run(["sh", "-c", "printf %s " + text],'
-         " capture_output=True, text=True).stdout\n        for ch in text:\n", 1),
+         " capture_output=True, text=True).stdout\n        for piece in self.segments(text):\n", 1),
     ],
     ("M26-newline-dropped", "L0-fixed"): [
-        (L0, "        for ch in text:\n", '        for ch in text.replace("\\n", ""):\n', 1),
+        (L0, "        for piece in self.segments(text):\n", '        for piece in self.segments(text.replace("\\n", "")):\n', 1),
     ],
     ("M27-extra-buttons-dropped", "L0-fixed"): [
         (L0, '        button = action.get("button", 1)\n        count = action.get("count", 1)\n',

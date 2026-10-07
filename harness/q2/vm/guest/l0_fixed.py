@@ -79,6 +79,7 @@ DRAG_PRESS_SETTLE_S = 0.05
 SCROLL_GAP_S = 0.03
 KEY_HOLD_S = 0.1  # a key or chord is held this long before release (QEMU sendkey's R-dev hold)
 SETTLE_S = 0.1  # every action ends with this pause: PyAutoGUI 0.9.54's default PAUSE
+IDLE_REPLY_S = 0.05  # a shell D-Bus reply within this means its main loop is idle
 REMAP_SETTLE_S = 0.3
 SHIFT_L = 0xFFE1
 RETURN, TAB = 0xFF0D, 0xFF09
@@ -186,14 +187,21 @@ class SparePool:
                 return int(kc)
         return None
 
-    def allocate(self, keysym):
-        if not self.state["keycodes"]:
+    def allocate(self, keysym, protected=()):
+        """The least recently used owned keycode outside ``protected``, now assigned to keysym.
+
+        It is marked used at once, so the next allocation of the same burst takes
+        another keycode.
+        """
+        free = [kc for kc in self.state["keycodes"] if kc not in protected]
+        if not free:
             raise RuntimeError("zero spare keycodes: cannot type this code point")
         last = self.state["last_used"]
-        keycode = min(self.state["keycodes"], key=lambda kc: (last.get(str(kc), [-1, 0])[0], kc))
+        keycode = min(free, key=lambda kc: (last.get(str(kc), [-1, 0])[0], kc))
         used_at = last.get(str(keycode), [-1, 0])[1]
         wait = REMAP_SETTLE_S - (time.time() - used_at)
         self.state["assigned"][str(keycode)] = keysym
+        self.touch(keycode)
         return keycode, max(0.0, wait)
 
     def touch(self, keycode):
@@ -260,14 +268,14 @@ class Executor:
         self.keymap[keycode] = [keysym, keysym]
         self.log["remaps"].append([keycode, keysym])
 
-    def resolve(self, keysym):
+    def resolve(self, keysym, protected=()):
         """(keycode, shift) for a keysym, remapping an owned spare keycode if needed."""
         found = find_keycode(self.keymap, keysym, exclude=self.pool.owned())
         if found is not None:
             return found
         keycode = self.pool.lookup(keysym)
         if keycode is None:
-            keycode, wait = self.pool.allocate(keysym)
+            keycode, wait = self.pool.allocate(keysym, protected)
             if wait:
                 time.sleep(wait)
             self.remap(keycode, keysym)
@@ -399,16 +407,59 @@ class Executor:
             ok = done.returncode == 0
         except (OSError, subprocess.TimeoutExpired):
             ok = False
-        self.log.setdefault("barriers", []).append([round(time.monotonic() - started, 4), ok])
+        elapsed = round(time.monotonic() - started, 4)
+        self.log.setdefault("barriers", []).append([elapsed, ok])
+        return elapsed if ok else None
+
+    def shell_idle(self):
+        """Repeat the barrier until the shell answers within IDLE_REPLY_S (at most 5 s).
+
+        A busy shell (rebuilding its keymap) answers late; two consecutive prompt
+        answers mean it has drained the work queued before the first call.
+        """
+        deadline = time.monotonic() + 5.0
+        prompt = 0
+        while prompt < 2 and time.monotonic() < deadline:
+            elapsed = self.shell_barrier()
+            if elapsed is None:
+                return
+            prompt = prompt + 1 if elapsed < IDLE_REPLY_S else 0
+
+    def needs_remap(self, ch):
+        keysym = char_keysym(ch)
+        owned = self.pool.owned()
+        return find_keycode(self.keymap, keysym, exclude=owned) is None
+
+    def segments(self, text):
+        """Cut text so each piece needs at most one owned keycode per remapped code point."""
+        limit = max(1, len(self.pool.owned()))
+        pieces, current, distinct = [], [], set()
+        for ch in text:
+            if self.needs_remap(ch) and ch not in distinct and len(distinct) >= limit:
+                pieces.append("".join(current))
+                current, distinct = [], set()
+            if self.needs_remap(ch):
+                distinct.add(ch)
+            current.append(ch)
+        if current:
+            pieces.append("".join(current))
+        return pieces
 
     def type_text(self, text):
-        # Remap every code point this text needs first, in one burst, and let the shell
-        # absorb the keymap changes before the first key event.
+        for piece in self.segments(text):
+            self.type_segment(piece)
+
+    def type_segment(self, text):
+        # Remap every code point this piece needs first, in one burst (no keycode the
+        # piece uses is evicted), and let the shell absorb the keymap changes before
+        # the first key event.
         before = len(self.log["remaps"])
+        protected = set()
         for ch in dict.fromkeys(text):
-            self.resolve(char_keysym(ch))
+            keycode, _ = self.resolve(char_keysym(ch), protected)
+            protected.add(keycode)
         if len(self.log["remaps"]) > before:
-            self.shell_barrier()
+            self.shell_idle()
         shift = None
         for ch in text:
             keycode, shifted = self.resolve(char_keysym(ch))
@@ -464,7 +515,10 @@ class Executor:
             else:
                 raise ValueError(f"L0-fixed has no device action for {op!r}")
             if op != "wait":
-                self.shell_barrier()
+                if self.log["remaps"]:
+                    self.shell_idle()
+                else:
+                    self.shell_barrier()
                 time.sleep(SETTLE_S)
         finally:
             for keycode in list(reversed(self.held_keys)):

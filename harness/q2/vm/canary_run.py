@@ -195,6 +195,9 @@ def canary_trial(
                 break
         time.sleep(0.5)
     record["steps"] = steps
+    if measure and shot_dir and entry.get("needs_targets") and not no_input:
+        after = measure_targets(client, "after", entry_id, trial, shot_dir)
+        record.setdefault("measured", {})["after_screenshot"] = after.get("screenshot")
     readback = {"ok": False, "error": "not read"}
     if "argv" in prepared:
         readback = _guest(

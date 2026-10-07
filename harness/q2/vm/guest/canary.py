@@ -47,6 +47,11 @@ WINDOW_CLASSES = {
     "vscode": ("code",),
     "terminal": ("gnome-terminal-server", "gnome-terminal"),
 }
+# Seconds to wait after the window is active before the first input: VS Code's editor
+# takes input a moment after its window activates (development run 501 lost the first
+# keystroke at 1 s).
+SETTLE_S = {"writer": 1.0, "chrome": 1.0, "vscode": 3.0, "terminal": 1.0}
+READBACK_TIMEOUT_S = 5.0
 PROCESS_PATTERNS = {
     "writer": ("soffice",),
     "chrome": ("chrome",),
@@ -168,6 +173,8 @@ def prepare(config):
         out["file"] = path
     else:
         raise SystemExit(f"unknown app {app!r}")
+    if os.path.exists(out["file"]):
+        out["fixture_mtime_ns"] = os.stat(out["file"]).st_mtime_ns
     with open(os.path.join(base, "prepare.json"), "w", encoding="utf-8") as handle:
         json.dump(out, handle)
     return out
@@ -253,7 +260,7 @@ def wait_window(config):
                 time.sleep(0.5)
         out["a11y_ready"] = node is not None
         out["ok"] = node is not None
-    time.sleep(float(config.get("settle_s", 1.0)))
+    time.sleep(float(config.get("settle_s", SETTLE_S[app])))
     out["geometry"] = _frame_geometry(d, window)
     out["elapsed_s"] = round(time.monotonic() - started, 3)
     return out
@@ -264,10 +271,37 @@ def _node_text(node):
     return text.getText(0, text.characterCount)
 
 
+def _find_text_node_retry(app):
+    """The text node, retried for READBACK_TIMEOUT_S (the tree can be rebuilding after input)."""
+    deadline = time.monotonic() + READBACK_TIMEOUT_S
+    while True:
+        node = find_text_node(app)
+        if node is not None or time.monotonic() >= deadline:
+            return node
+        time.sleep(0.25)
+
+
+def _wait_saved(path, before_ns):
+    """VS Code writes the file after Ctrl+S returns: wait until it changed and is stable."""
+    deadline = time.monotonic() + READBACK_TIMEOUT_S
+    last = None
+    while time.monotonic() < deadline:
+        try:
+            stat = os.stat(path)
+        except OSError:
+            stat = None
+        current = (stat.st_mtime_ns, stat.st_size) if stat else None
+        if current and current[0] != before_ns and current == last:
+            return True
+        last = current
+        time.sleep(0.2)
+    return False
+
+
 def readback(config):
     app = config["app"]
     if app == "writer":
-        node = find_text_node(app)
+        node = _find_text_node_retry(app)
         if node is None:
             return {"ok": False, "error": "no document text node"}
         paragraphs = []
@@ -277,11 +311,15 @@ def readback(config):
                 paragraphs.append(_node_text(child))
         return {"ok": True, "text": "\n".join(paragraphs), "paragraphs": len(paragraphs)}
     if app == "chrome":
-        node = find_text_node(app)
+        node = _find_text_node_retry(app)
         if node is None:
             return {"ok": False, "error": "no textarea node"}
         return {"ok": True, "text": _node_text(node)}
     path = config["file"]
+    saved = None
+    if app == "vscode" and config.get("wait_cat_exit", True):
+        with open(os.path.join(trial_dir(config), "prepare.json"), encoding="utf-8") as handle:
+            saved = _wait_saved(path, json.load(handle).get("fixture_mtime_ns"))
     if app == "terminal" and config.get("wait_cat_exit", True):
         deadline = time.monotonic() + 10
         while time.monotonic() < deadline and _pids(["cat"], path):
@@ -292,7 +330,7 @@ def readback(config):
     except OSError as exc:
         return {"ok": False, "error": repr(exc)[:200]}
     try:
-        return {"ok": True, "text": data.decode("utf-8"), "bytes": len(data)}
+        return {"ok": True, "text": data.decode("utf-8"), "bytes": len(data), "saved": saved}
     except UnicodeDecodeError:
         return {"ok": False, "error": "not UTF-8", "bytes": len(data)}
 

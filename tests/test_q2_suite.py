@@ -381,3 +381,22 @@ def test_controls_reject_what_they_cannot_translate():
         controls.translate_pyautogui("os.system('x')")
     with pytest.raises(controls.TranslationError):
         controls.translate_pyautogui("pyautogui.click(__import__('os'))")
+
+
+def test_l0_fixed_segments_and_burst_allocation_never_reuse_a_keycode(tmp_path):
+    keymap = {38: [0x61, 0x41], 50: [0xFFE1], 36: [0xFF0D], 23: [0xFF09]}
+    keymap.update({kc: [] for kc in (200, 201, 202)})
+    executor = object.__new__(l0_fixed.Executor)
+    executor.keymap = keymap
+    executor.pool = l0_fixed.SparePool(keymap, str(tmp_path / "spares.json"))
+    assert executor.pool.owned() == {200, 201, 202}
+    text = "aéèaêëì"  # five code points need a spare keycode
+    pieces = executor.segments(text)
+    assert "".join(pieces) == text
+    assert [len({c for c in p if executor.needs_remap(c)}) for p in pieces] == [3, 2]
+    protected = set()
+    for ch in dict.fromkeys(pieces[0]):
+        if executor.needs_remap(ch):
+            keycode, _ = executor.pool.allocate(l0_fixed.char_keysym(ch), protected)
+            protected.add(keycode)
+    assert protected == {200, 201, 202}
