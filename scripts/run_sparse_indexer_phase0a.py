@@ -553,9 +553,10 @@ class Parent:
         shards = self.layer_shards(n_layers, self.args.workers)
         steps = self.total_steps(staged)
         freeze_path = self.ckpt / "lr_freeze.json"
+        training: list[dict[str, Any]] = []
         if not extension:
             if not self.training_complete(shards, steps):
-                self.train(staged, "train", shards, steps)
+                training = self.train(staged, "train", shards, steps)
             if not all((self.ckpt / "devkl" / f"worker-{w}.json").is_file()
                        for w in range(len(shards))):
                 specs = []
@@ -582,8 +583,8 @@ class Parent:
             if not self.training_complete(shards, total):
                 accept = [rt.config_digest(self.train_spec(layers, steps), self.profile,
                                            self.hashes) for layers in shards]
-                self.train(staged, "train-extension", shards, total, epochs=3, train_only=keys,
-                           accept_config_digests=accept)
+                training = self.train(staged, "train-extension", shards, total, epochs=3,
+                                      train_only=keys, accept_config_digests=accept)
             stage = "audit-extension"
         freeze_sha = rt.sha256_file(freeze_path)
         self.hashes["lr_freeze_sha256"] = freeze_sha
@@ -597,7 +598,10 @@ class Parent:
         if self.flag.received:
             self.checkpoint_without_workers()
         results = rt.collect_eval(self.ckpt, stage, prompt_to_unit)
-        report = self.statistics(prompts, results, freeze)
+        report = self.statistics(prompts, results, staged.meta["context_meta"])
+        report["training_workers"] = [
+            {key: result.get(key) for key in ("worker", "final_step", "state_digest", "timings",
+                                               "resumed_from")} for result in training]
         report["lr_freeze"] = freeze
         report["units"] = results["units"]
         devkl_all = {}
@@ -617,7 +621,8 @@ class Parent:
     def phase_extend(self, staged: rt.StagedData) -> int:
         return self._main_flow(staged, extension=True)
 
-    def statistics(self, prompts: list, results: dict, freeze: dict) -> dict[str, Any]:
+    def statistics(self, prompts: list, results: dict,
+                   context_meta: list[dict[str, Any]]) -> dict[str, Any]:
         seeds = list(self.args.seeds)
         rows, selectors = results["rows"], results["selectors"]
         k_limit = self.profile.k_blocks * 4 + 3
@@ -652,6 +657,7 @@ class Parent:
                 "single_difference_cx": float(np.mean(table.tgt_cx - ind_cx)),
                 "pairs": pair_names,
                 "cx_recall_by_seed": [float(v) for v in table.ind_cx.mean(axis=1)],
+                **rt.reference_and_literal_rows(prompts, results, target, seeds),
             }
         headroom = rt.summarise_headroom(prompts, results, TARGETS, "main", "absent")
         headroom_read = k1s.HeadroomRead(headroom["h1_points"], headroom["h2a"], headroom["h2b"])
@@ -670,10 +676,10 @@ class Parent:
             "main": rt.descriptive_tables(prompts, results, "main"),
             "same_script": rt.descriptive_tables(prompts, results, "same-script"),
             "literal": rt.descriptive_tables(prompts, results, "literal"),
+            "main_by_depth": rt.depth_tables(prompts, results, context_meta, "main"),
             "tie_counts": {name: int(sum(int(row["ties"][i]) for row in rows.values()))
                            for i, name in enumerate(selectors)},
         }
-        _ = freeze
         return report
 
 
