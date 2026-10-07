@@ -18,6 +18,10 @@ attestation helpers. It starts small after the 2026-10-06 restart.
   targets, reference sets, statistics and gates as pure functions.
 - `publication_attestation.py` verifies administrator signatures over complete
   publication claim waves.
+- `q2_mutation/` is Q2's OSWorld checker-mutation harness: the binding
+  `schema.py`, task scope and sanitization, the GUI-faithful LibreOffice save
+  stage, the offline `evaluate()` scorer, clustered statistics and the D9
+  rater protocol. Runbook: `q2_mutation/README.md`.
 - The old agent loops, conditions, metrics, routing and memory trials are in
   `legacy/harness/`.
 
