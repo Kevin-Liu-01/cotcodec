@@ -1,0 +1,832 @@
+{
+ "audit_version_sha256": "0995e31801afdf402a4165d071b9167239a845aac46435ec3f48de0ed749e876",
+ "b1_vs_upstream_kernelgym": [
+  {
+   "kernel": "relu_correct",
+   "ok": true,
+   "ours": true,
+   "upstream": true
+  },
+  {
+   "kernel": "relu_identity_control",
+   "ok": true,
+   "ours": false,
+   "upstream": false
+  },
+  {
+   "kernel": "relu_decoy_launch",
+   "ok": true,
+   "ours": true,
+   "upstream": true
+  },
+  {
+   "kernel": "relu_removed",
+   "ok": true,
+   "ours": true,
+   "upstream": true
+  }
+ ],
+ "b2_coverage_rule": [
+  {
+   "captures": [
+    "relu_kernel grid=(4,) module=temp_module"
+   ],
+   "expected_decoy": false,
+   "got": false,
+   "ok": true,
+   "rows": [
+    "relu_kernel",
+    "aten::sum"
+   ]
+  },
+  {
+   "captures": [
+    "relu_kernel grid=(4,)"
+   ],
+   "expected_decoy": true,
+   "got": true,
+   "ok": true,
+   "rows": [
+    "aten::relu",
+    "aten::sum"
+   ]
+  },
+  {
+   "captures": [
+    "relu_kernel grid=(4,)"
+   ],
+   "expected_decoy": false,
+   "got": false,
+   "ok": true,
+   "rows": []
+  },
+  {
+   "captures": [
+    "Add grid=None"
+   ],
+   "expected_decoy": false,
+   "got": false,
+   "ok": true,
+   "rows": [
+    "aten::add"
+   ]
+  }
+ ],
+ "calibration": {
+  "no_raise": [
+   16,
+   false
+  ],
+  "raise_to_64": [
+   64,
+   true
+  ]
+ },
+ "checks": {
+  "b1_differential": true,
+  "b2_coverage_rule": true,
+  "calibration": true,
+  "every_item_final": true,
+  "expectations": true,
+  "gate_a_differential": true,
+  "journal_clean": true,
+  "resume_runs_nothing": true,
+  "timing_ran": true
+ },
+ "doctor": "q1-gate-doctor/1",
+ "evidence_grade": "synthetic CPU fixtures under TRITON_INTERPRET=1; infrastructure validation only",
+ "expectations": [
+  {
+   "expected": "accept",
+   "gate": "a",
+   "got": "accept",
+   "kernel": "relu_correct",
+   "ok": true
+  },
+  {
+   "expected": "accept",
+   "gate": "a_1e-3",
+   "got": "accept",
+   "kernel": "relu_correct",
+   "ok": true
+  },
+  {
+   "expected": "accept",
+   "gate": "a_head_1e-4",
+   "got": "accept",
+   "kernel": "relu_correct",
+   "ok": true
+  },
+  {
+   "expected": "accept",
+   "gate": "b1",
+   "got": "accept",
+   "kernel": "relu_correct",
+   "ok": true
+  },
+  {
+   "expected": "accept",
+   "gate": "c1",
+   "got": "accept",
+   "kernel": "relu_correct",
+   "ok": true
+  },
+  {
+   "expected": "accept",
+   "gate": "c2",
+   "got": "accept",
+   "kernel": "relu_correct",
+   "ok": true
+  },
+  {
+   "expected": "accept",
+   "gate": "c3",
+   "got": "accept",
+   "kernel": "relu_correct",
+   "ok": true
+  },
+  {
+   "expected": "accept",
+   "gate": "A1",
+   "got": "accept",
+   "kernel": "relu_correct",
+   "ok": true
+  },
+  {
+   "expected": "accept",
+   "gate": "A2",
+   "got": "accept",
+   "kernel": "relu_correct",
+   "ok": true
+  },
+  {
+   "expected": "accept",
+   "gate": "A3",
+   "got": "accept",
+   "kernel": "relu_correct",
+   "ok": true
+  },
+  {
+   "expected": "accept",
+   "gate": "A4",
+   "got": "accept",
+   "kernel": "relu_correct",
+   "ok": true
+  },
+  {
+   "expected": "accept",
+   "gate": "tier:N",
+   "got": "accept",
+   "kernel": "relu_correct",
+   "ok": true
+  },
+  {
+   "expected": "accept",
+   "gate": "tier:G",
+   "got": "accept",
+   "kernel": "relu_correct",
+   "ok": true
+  },
+  {
+   "expected": "accept",
+   "gate": "tier:G-strict",
+   "got": "accept",
+   "kernel": "relu_correct",
+   "ok": true
+  },
+  {
+   "expected": "accept",
+   "gate": "a",
+   "got": "accept",
+   "kernel": "relu_identity_control",
+   "ok": true
+  },
+  {
+   "expected": "reject",
+   "gate": "b1",
+   "got": "reject",
+   "kernel": "relu_identity_control",
+   "ok": true
+  },
+  {
+   "expected": "accept",
+   "gate": "c1",
+   "got": "accept",
+   "kernel": "relu_identity_control",
+   "ok": true
+  },
+  {
+   "expected": "accept",
+   "gate": "A1",
+   "got": "accept",
+   "kernel": "relu_identity_control",
+   "ok": true
+  },
+  {
+   "expected": "accept",
+   "gate": "A2",
+   "got": "accept",
+   "kernel": "relu_identity_control",
+   "ok": true
+  },
+  {
+   "expected": "accept",
+   "gate": "A4",
+   "got": "accept",
+   "kernel": "relu_identity_control",
+   "ok": true
+  },
+  {
+   "expected": "accept",
+   "gate": "tier:N",
+   "got": "accept",
+   "kernel": "relu_identity_control",
+   "ok": true
+  },
+  {
+   "expected": "accept",
+   "gate": "a",
+   "got": "accept",
+   "kernel": "relu_removed",
+   "ok": true
+  },
+  {
+   "expected": "accept",
+   "gate": "b1",
+   "got": "accept",
+   "kernel": "relu_removed",
+   "ok": true
+  },
+  {
+   "expected": "reject",
+   "gate": "c1",
+   "got": "reject",
+   "kernel": "relu_removed",
+   "ok": true
+  },
+  {
+   "expected": "accept",
+   "gate": "A1",
+   "got": "accept",
+   "kernel": "relu_removed",
+   "ok": true
+  },
+  {
+   "expected": "reject",
+   "gate": "A2",
+   "got": "reject",
+   "kernel": "relu_removed",
+   "ok": true
+  },
+  {
+   "expected": "reject",
+   "gate": "tier:N",
+   "got": "reject",
+   "kernel": "relu_removed",
+   "ok": true
+  },
+  {
+   "expected": "reject",
+   "gate": "tier:G",
+   "got": "reject",
+   "kernel": "relu_removed",
+   "ok": true
+  },
+  {
+   "expected": "accept",
+   "gate": "a",
+   "got": "accept",
+   "kernel": "relu_refuses_shapes",
+   "ok": true
+  },
+  {
+   "expected": "accept",
+   "gate": "c1",
+   "got": "accept",
+   "kernel": "relu_refuses_shapes",
+   "ok": true
+  },
+  {
+   "expected": "reject",
+   "gate": "c2",
+   "got": "reject",
+   "kernel": "relu_refuses_shapes",
+   "ok": true
+  },
+  {
+   "expected": "reject",
+   "gate": "c3",
+   "got": "reject",
+   "kernel": "relu_refuses_shapes",
+   "ok": true
+  },
+  {
+   "expected": "accept",
+   "gate": "A1",
+   "got": "accept",
+   "kernel": "relu_refuses_shapes",
+   "ok": true
+  },
+  {
+   "expected": "accept",
+   "gate": "A2",
+   "got": "accept",
+   "kernel": "relu_refuses_shapes",
+   "ok": true
+  },
+  {
+   "expected": "refuse",
+   "gate": "A3",
+   "got": "refuse",
+   "kernel": "relu_refuses_shapes",
+   "ok": true
+  },
+  {
+   "expected": "accept",
+   "gate": "tier:N",
+   "got": "accept",
+   "kernel": "relu_refuses_shapes",
+   "ok": true
+  },
+  {
+   "expected": "accept",
+   "gate": "tier:G",
+   "got": "accept",
+   "kernel": "relu_refuses_shapes",
+   "ok": true
+  },
+  {
+   "expected": "reject",
+   "gate": "tier:G-strict",
+   "got": "reject",
+   "kernel": "relu_refuses_shapes",
+   "ok": true
+  },
+  {
+   "expected": "accept",
+   "gate": "a",
+   "got": "accept",
+   "kernel": "relu_native_only",
+   "ok": true
+  },
+  {
+   "expected": "accept",
+   "gate": "c1",
+   "got": "accept",
+   "kernel": "relu_native_only",
+   "ok": true
+  },
+  {
+   "expected": "reject",
+   "gate": "c2",
+   "got": "reject",
+   "kernel": "relu_native_only",
+   "ok": true
+  },
+  {
+   "expected": "accept",
+   "gate": "A1",
+   "got": "accept",
+   "kernel": "relu_native_only",
+   "ok": true
+  },
+  {
+   "expected": "reject",
+   "gate": "A3",
+   "got": "reject",
+   "kernel": "relu_native_only",
+   "ok": true
+  },
+  {
+   "expected": "accept",
+   "gate": "tier:N",
+   "got": "accept",
+   "kernel": "relu_native_only",
+   "ok": true
+  },
+  {
+   "expected": "reject",
+   "gate": "tier:G",
+   "got": "reject",
+   "kernel": "relu_native_only",
+   "ok": true
+  },
+  {
+   "expected": "reject",
+   "gate": "tier:G-strict",
+   "got": "reject",
+   "kernel": "relu_native_only",
+   "ok": true
+  },
+  {
+   "expected": "accept",
+   "gate": "a",
+   "got": "accept",
+   "kernel": "relu_inplace",
+   "ok": true
+  },
+  {
+   "expected": "reject",
+   "gate": "A4",
+   "got": "reject",
+   "kernel": "relu_inplace",
+   "ok": true
+  },
+  {
+   "expected": "reject",
+   "gate": "tier:N",
+   "got": "reject",
+   "kernel": "relu_inplace",
+   "ok": true
+  },
+  {
+   "expected": "reject",
+   "gate": "a",
+   "got": "reject",
+   "kernel": "relu_cached",
+   "ok": true
+  },
+  {
+   "expected": "reject",
+   "gate": "A4",
+   "got": "reject",
+   "kernel": "relu_cached",
+   "ok": true
+  },
+  {
+   "expected": "reject",
+   "gate": "tier:N",
+   "got": "reject",
+   "kernel": "relu_cached",
+   "ok": true
+  },
+  {
+   "expected": null,
+   "gate": "a",
+   "got": "reject",
+   "kernel": "relu_empty_tail",
+   "ok": true
+  },
+  {
+   "expected": "reject",
+   "gate": "A4",
+   "got": "reject",
+   "kernel": "relu_empty_tail",
+   "ok": true
+  },
+  {
+   "expected": "reject",
+   "gate": "tier:N",
+   "got": "reject",
+   "kernel": "relu_empty_tail",
+   "ok": true
+  },
+  {
+   "expected": "accept",
+   "gate": "a",
+   "got": "accept",
+   "kernel": "relu_nondeterministic",
+   "ok": true
+  },
+  {
+   "expected": "reject",
+   "gate": "A4",
+   "got": "reject",
+   "kernel": "relu_nondeterministic",
+   "ok": true
+  },
+  {
+   "expected": "reject",
+   "gate": "tier:N",
+   "got": "reject",
+   "kernel": "relu_nondeterministic",
+   "ok": true
+  },
+  {
+   "expected": "accept",
+   "gate": "a",
+   "got": "accept",
+   "kernel": "relu_decoy_launch",
+   "ok": true
+  },
+  {
+   "expected": "accept",
+   "gate": "b1",
+   "got": "accept",
+   "kernel": "relu_decoy_launch",
+   "ok": true
+  },
+  {
+   "expected": "accept",
+   "gate": "A1",
+   "got": "accept",
+   "kernel": "relu_decoy_launch",
+   "ok": true
+  },
+  {
+   "expected": "accept",
+   "gate": "tier:N",
+   "got": "accept",
+   "kernel": "relu_decoy_launch",
+   "ok": true
+  },
+  {
+   "expected": "timeout",
+   "gate": "a",
+   "got": "timeout",
+   "kernel": "relu_hang",
+   "ok": true
+  },
+  {
+   "expected": "reject",
+   "gate": "a",
+   "got": "reject",
+   "kernel": "relu_crash",
+   "ok": true
+  },
+  {
+   "expected": "accept",
+   "gate": "a",
+   "got": "accept",
+   "kernel": "rowsum_correct",
+   "ok": true
+  },
+  {
+   "expected": "accept",
+   "gate": "a_1e-3",
+   "got": "accept",
+   "kernel": "rowsum_correct",
+   "ok": true
+  },
+  {
+   "expected": "accept",
+   "gate": "c1",
+   "got": "accept",
+   "kernel": "rowsum_correct",
+   "ok": true
+  },
+  {
+   "expected": "accept",
+   "gate": "c2",
+   "got": "accept",
+   "kernel": "rowsum_correct",
+   "ok": true
+  },
+  {
+   "expected": "accept",
+   "gate": "c3",
+   "got": "accept",
+   "kernel": "rowsum_correct",
+   "ok": true
+  },
+  {
+   "expected": "accept",
+   "gate": "A1",
+   "got": "accept",
+   "kernel": "rowsum_correct",
+   "ok": true
+  },
+  {
+   "expected": "accept",
+   "gate": "A2",
+   "got": "accept",
+   "kernel": "rowsum_correct",
+   "ok": true
+  },
+  {
+   "expected": "accept",
+   "gate": "A3",
+   "got": "accept",
+   "kernel": "rowsum_correct",
+   "ok": true
+  },
+  {
+   "expected": "accept",
+   "gate": "A4",
+   "got": "accept",
+   "kernel": "rowsum_correct",
+   "ok": true
+  },
+  {
+   "expected": "accept",
+   "gate": "tier:N",
+   "got": "accept",
+   "kernel": "rowsum_correct",
+   "ok": true
+  },
+  {
+   "expected": "accept",
+   "gate": "tier:G",
+   "got": "accept",
+   "kernel": "rowsum_correct",
+   "ok": true
+  },
+  {
+   "expected": "accept",
+   "gate": "a",
+   "got": "accept",
+   "kernel": "rowsum_tail_drop",
+   "ok": true
+  },
+  {
+   "expected": "accept",
+   "gate": "a_head_1e-2",
+   "got": "accept",
+   "kernel": "rowsum_tail_drop",
+   "ok": true
+  },
+  {
+   "expected": "reject",
+   "gate": "a_1e-3",
+   "got": "reject",
+   "kernel": "rowsum_tail_drop",
+   "ok": true
+  },
+  {
+   "expected": "reject",
+   "gate": "a_head_1e-4",
+   "got": "reject",
+   "kernel": "rowsum_tail_drop",
+   "ok": true
+  },
+  {
+   "expected": "reject",
+   "gate": "c1",
+   "got": "reject",
+   "kernel": "rowsum_tail_drop",
+   "ok": true
+  },
+  {
+   "expected": "reject",
+   "gate": "A1",
+   "got": "reject",
+   "kernel": "rowsum_tail_drop",
+   "ok": true
+  },
+  {
+   "expected": "reject",
+   "gate": "tier:N",
+   "got": "reject",
+   "kernel": "rowsum_tail_drop",
+   "ok": true
+  },
+  {
+   "expected": "accept",
+   "gate": "a",
+   "got": "accept",
+   "kernel": "ce_torch_control",
+   "ok": true
+  },
+  {
+   "expected": "error",
+   "gate": "a_head_1e-4",
+   "got": "error",
+   "kernel": "ce_torch_control",
+   "ok": true
+  },
+  {
+   "expected": "reject",
+   "gate": "b1",
+   "got": "reject",
+   "kernel": "ce_torch_control",
+   "ok": true
+  },
+  {
+   "expected": "accept",
+   "gate": "A1",
+   "got": "accept",
+   "kernel": "ce_torch_control",
+   "ok": true
+  },
+  {
+   "expected": "accept",
+   "gate": "a",
+   "got": "accept",
+   "kernel": "argmax_control",
+   "ok": true
+  },
+  {
+   "expected": "accept",
+   "gate": "A1",
+   "got": "accept",
+   "kernel": "argmax_control",
+   "ok": true
+  },
+  {
+   "expected": "accept",
+   "gate": "A2",
+   "got": "accept",
+   "kernel": "argmax_control",
+   "ok": true
+  },
+  {
+   "expected": "accept",
+   "gate": "tier:N",
+   "got": "accept",
+   "kernel": "argmax_control",
+   "ok": true
+  },
+  {
+   "expected": "accept",
+   "gate": "a",
+   "got": "accept",
+   "kernel": "argmax_last_tie",
+   "ok": true
+  },
+  {
+   "expected": "accept",
+   "gate": "A1",
+   "got": "accept",
+   "kernel": "argmax_last_tie",
+   "ok": true
+  },
+  {
+   "expected": "reject",
+   "gate": "A2",
+   "got": "reject",
+   "kernel": "argmax_last_tie",
+   "ok": true
+  },
+  {
+   "expected": "reject",
+   "gate": "tier:N",
+   "got": "reject",
+   "kernel": "argmax_last_tie",
+   "ok": true
+  }
+ ],
+ "first_pass": {
+  "crashes": 1,
+  "left_in_queue": 0,
+  "retired_slots": [],
+  "run": 183,
+  "run_id": "a2573683d62f",
+  "skipped": 0,
+  "timeouts": 1
+ },
+ "gate_a_vs_upstream_44130946": [
+  {
+   "kernel": "relu_correct",
+   "ok": true,
+   "ours": "accept",
+   "upstream_correctness": true
+  },
+  {
+   "kernel": "relu_removed",
+   "ok": true,
+   "ours": "accept",
+   "upstream_correctness": true
+  },
+  {
+   "kernel": "relu_cached",
+   "ok": true,
+   "ours": "reject",
+   "upstream_correctness": false
+  },
+  {
+   "kernel": "rowsum_tail_drop",
+   "ok": true,
+   "ours": "accept",
+   "upstream_correctness": true
+  },
+  {
+   "kernel": "rowsum_correct",
+   "ok": true,
+   "ours": "accept",
+   "upstream_correctness": true
+  },
+  {
+   "kernel": "ce_torch_control",
+   "ok": true,
+   "ours": "accept",
+   "upstream_correctness": true
+  },
+  {
+   "kernel": "argmax_last_tie",
+   "ok": true,
+   "ours": "accept",
+   "upstream_correctness": true
+  }
+ ],
+ "image": "cotcodec-research:0b3ecef0-architecture (sha256:3804466639c13f132be4b0369de4d3395b9d5ea2d3dc100cd38884c75197fe29)",
+ "invalid_journal_lines": 0,
+ "items": 183,
+ "resume_pass": {
+  "crashes": 0,
+  "left_in_queue": 0,
+  "retired_slots": [],
+  "run": 0,
+  "run_id": "a2573683d62f",
+  "skipped": 183,
+  "timeouts": 0
+ },
+ "status": "PASS",
+ "timing_cpu_example": {
+  "clock": "perf_counter",
+  "median_speedup": 0.00035950122849050524,
+  "rounds_kept": 8
+ },
+ "torch": "2.11.0+cu128",
+ "triton_interpret": "1",
+ "wall_seconds": 115.5
+}

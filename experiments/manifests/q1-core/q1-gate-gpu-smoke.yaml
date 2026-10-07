@@ -1,0 +1,52 @@
+# Q1 gate-stack GPU smoke: the KernelBench reference re-exported as ModelNew on
+# L1/19, L1/95 and L2/12, through every gate, the audit and the timing harness,
+# plus the verbatim upstream gate (a) at 44130946 and 423217d9 for fidelity.
+# Infrastructure validation only (no mutant, no substrate, no confirmatory data).
+#
+# NOT SUBMITTED. The lane fields used here (container_profile, model kind none,
+# seed_binding, memory_gb, GPU prolog, signal checkpoint) were merged into main
+# at 1f18cae on 2026-10-07, after this branch was cut; the filled template
+# passes main's validate_manifest. Before submitting: merge main into this
+# branch, build a source-overlay image of that revision on top of
+# cotcodec-q1-gates (the lane runs the code embedded in the image and checks
+# its provenance), and submit from a clean host clone (never ~/cotcodec):
+#   uv run python scripts/submit_docker_research_job.py experiments/manifests/q1-core/q1-gate-gpu-smoke.yaml --dry-run
+# Every FILL-* value is written from measured artifacts at submission (image
+# build receipt, source capsule); the submitter rejects FILL-* values, so an
+# unfilled template fails closed.
+# large-cpu-mem gives an exec /tmp (Triton JIT caches) and the explicit memory
+# limit L1/19's 6.4 GB input plus fp64 and CPU references need.
+runtime: docker-single-node-discovery-v1
+name: q1-gate-gpu-smoke
+image_id: FILL-q1-gates-image-id
+git_sha: FILL-git-sha
+source_sha256: FILL-source-tar-sha256
+container_profile: large-cpu-mem
+resources:
+  gpu_type: h100
+  gpus: 1
+  cpus: 16
+  memory_gb: 192
+  minutes: 45
+budget:
+  max_gpu_hours: 0.75
+randomness_contract: assignment-seed-matrix
+seeds: [42, 43, 44]
+seed_binding:
+  flag: "--seeds"
+run_root: /home/kevin/cotcodec-runs/stage0/q1-core/smoke
+model:
+  kind: none
+  reason: "Q1 gate validation runs KernelBench reference code only and loads no checkpoint"
+command:
+  - env
+  - TRITON_CACHE_DIR=/outputs/cache/triton
+  - TORCHINDUCTOR_CACHE_DIR=/outputs/cache/inductor
+  - python
+  - scripts/run_q1_gpu_smoke.py
+  - "--output"
+  - /outputs/q1-smoke
+  - "--seeds"
+  - "42"
+  - "43"
+  - "44"
