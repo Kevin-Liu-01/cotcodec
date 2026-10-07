@@ -158,10 +158,11 @@ Append-only. Newest entries at the bottom.
   spec -> operator -> mutant -> GUI-faithful LibreOffice save -> pinned
   `evaluate()` -> VerdictRow, as three CPU-only Slurm jobs per run (no GPU, no
   network, D12/D13).
-- Two end-to-end runs on the 17 dev targets (Slurm 453-455, 458-460): 275
-  mutants planned from the blind specs, 271 admitted. Applying recipes to the
-  raw gold instead of the LibreOffice-saved base kept 5cfb9197, whose null
-  mutant failed after three round trips; 215 mutants were evaluable in v2.
+- Three end-to-end runs on the 17 dev targets (Slurm 453-455, 458-460,
+  461-463): 275 mutants planned from the blind specs, 271 admitted. Applying
+  recipes to the raw gold instead of the LibreOffice-saved base kept
+  5cfb9197, whose null mutant failed after three round trips; 215 mutants
+  were evaluable in v2 and in v3 (the pinned code), with identical outcomes.
   Unaudited candidate checker errors: a z-order swap of non-overlapping
   shapes fails `compare_pptx_files` (2 tasks), dropped highlight passes
   `compare_docx_files_and_ignore_new_lines`, a deleted unrelated paragraph
