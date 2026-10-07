@@ -1,0 +1,23 @@
+You are reviewing a deliberately tiny research proposal. This is a tooling smoke test.
+
+Proposal: "We will check whether sorting a list of integers twice gives the same order as sorting it once. The falsifier is any list whose second sort differs from its first."
+
+Give the proposal's falsifiability a score from 0 to 10, state whether it has a falsifier, and name its largest defect in one sentence.
+
+
+---
+Answer with exactly one JSON object and nothing else. It must validate against this JSON Schema:
+```json
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Open-weight reviewer smoke answer",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["falsifiability_score", "has_falsifier", "largest_defect"],
+  "properties": {
+    "falsifiability_score": {"type": "integer", "minimum": 0, "maximum": 10},
+    "has_falsifier": {"type": "boolean"},
+    "largest_defect": {"type": "string", "minLength": 1, "maxLength": 400}
+  }
+}
+```

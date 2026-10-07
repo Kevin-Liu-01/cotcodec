@@ -57,7 +57,15 @@ resumable state, resubmit with a longer allocation), 4 `PARSE_FAILED`, 5
 
 Everything below runs on the host from a clean clone of the commit the overlay
 image was built from (`manifest` refuses any other checkout). `$R` is
-`~/cotcodec-runs/stage0/open-weight-reviewer`; `$C` the clone.
+`/home/kevin/cotcodec-runs/stage0/open-weight-reviewer` (spell run roots out in
+full; the lane refuses `~`); `$C` the clone.
+
+Current build (2026-10-07): commit `37f4f2a`, image
+`sha256:eda7249764e263e8b0f8ae20816206bb8279a00f602f8402f4b8fea0cce05293`,
+receipt `$R/overlay-37f4f2aaf93e/build-receipt.json`, clone with a test venv
+`$C=$R/wt-37f4f2aaf93e`. Its exit fix is CPU-validated as PID 1 but has not run
+on a GPU (`program/evidence/2026-10-07/open-weight-reviewer-smoke/`). The
+image of `f74084d` (`f760b0fe`) hangs after its review: do not use it.
 
 ```bash
 cd "$C"
@@ -87,7 +95,15 @@ uv run --locked python scripts/run_open_weight_review.py verify \
 (`max_gpu_hours`). Slurm sends USR1 180 s (up to 240 s) before the limit, and
 the lane ends the job soon after, so the work must fit in the allocation minus
 4 minutes. The lane first hashes the whole snapshot (`fetch_open_model.py
-verify`: 72 GB for qwen3.6-35b-a3b, 19 GB for qwen3.5-9b).
+verify`: 72 GB for qwen3.6-35b-a3b, 19 GB for qwen3.5-9b). Measured for
+qwen3.5-9b, eager (smoke job 617): 15 s from container start to the workload,
+52.5 s engine init, 3.6 s to generate 3 x 62 tokens. Nothing has been measured
+for qwen3.6-35b-a3b; `--minutes 20` above is an estimate for a first review
+(leave out `--enforce-eager` for long outputs so CUDA graphs speed decoding).
+
+After the job leaves the queue, accept it only with `JobState=COMPLETED`,
+`ExitCode=0:0`, `reason=completed` in `termination.env`, and no container left
+behind: `docker ps -a --filter name=cotcodec-<job-id>` must list nothing.
 
 `plan` prints the resolved settings without a GPU; `doctor` checks, inside the
 image, that the installed vLLM accepts every argument `run` passes:
@@ -101,7 +117,22 @@ docker run --rm --network none --read-only --tmpfs /tmp:rw,nosuid,nodev,size=1g 
 ## Building the overlay for a new commit
 
 The image must contain the reviewer's commit: build it as the serving probes
-did (`scripts/build_vllm_overlay_on_h100.sh`, cu129, from a fresh clean clone
-and its discovery source archive; one idle H100 for about a minute, accounted
-separately from review inference). The exact commands of the smoke build are in
-the smoke evidence README.
+did, from a fresh clean clone that nothing else touches (a second clone runs
+the tests), with one idle H100 for about a minute, accounted separately from
+review inference. The commands used for overlay 629:
+
+```bash
+C="$R/checkout-<sha12>"; A=/home/kevin/cotcodec-runs/source-archives/owr-<sha12>
+cd "$C" && python3 scripts/create_source_archive.py --discovery \
+  --output "$A.tar.gz" --receipt "$A.receipt.json"
+EX="$C/scripts/extract_discovery_source_archive.py"; BU="$C/scripts/build_vllm_overlay_on_h100.sh"
+sbatch --parsable --job-name=owr-overlay --partition=research --nodes=1 --ntasks=1 \
+  --gres=gpu:h100:1 --cpus-per-task=8 --mem=32G --time=00:05:00 \
+  --output="$R/slurm-overlay-%j.out" \
+  --export=ALL,COTCODEC_SOURCE_ARCHIVE=$A.tar.gz,COTCODEC_SOURCE_RECEIPT=$A.receipt.json,\
+COTCODEC_SOURCE_EXTRACTOR=$EX,COTCODEC_SOURCE_EXTRACTOR_SHA256=$(sha256sum "$EX" | cut -d' ' -f1),\
+COTCODEC_SOURCE_BUILDER_SHA256=$(sha256sum "$BU" | cut -d' ' -f1),\
+COTCODEC_SOURCE_SHA256=$(sha256sum "$A.tar.gz" | cut -d' ' -f1),\
+COTCODEC_GIT_SHA=$(git rev-parse HEAD),COTCODEC_GIT_TREE=$(git rev-parse 'HEAD^{tree}'),\
+COTCODEC_BUILD_ROOT=$R/overlay-<sha12>,COTCODEC_VLLM_VARIANT=cu129 "$BU"
+```
