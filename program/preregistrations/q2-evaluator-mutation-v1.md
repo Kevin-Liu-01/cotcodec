@@ -244,7 +244,14 @@ Each criterion is checked to be able to fire at the planned sizes.
   10/106): pre-reachability, Ubuntu `0ubuntu0.22.04.13` build, headless;
   disclosed, never pooled.
 - Every (task, operator family) cell touched by a scoping probe
-  (`probe_touched.json`, FILL-AT-FREEZE) is reported separately.
+  (`program/evidence/q2-mutation/harness/probe_touched.json`: 207 tasks;
+  E-ZIP/E-META 104, run split 65 cells, F-CELL 33, typo probes 106 cells,
+  reverts 52 cells) is reported separately; the mapping from probe ops to
+  final operator ids is fixed at freeze (FILL-AT-FREEZE).
+- P1 stays confirmatory although a headless round trip of 113 golds was
+  probed: that probe used a different save path (headless) and build
+  (`0ubuntu0.22.04.13`), and nothing in the harness was tuned on it. P1 is
+  also reported separately for probe-touched and untouched tasks.
 - Operators added after the freeze.
 
 ## 13. Reported regardless of outcome
