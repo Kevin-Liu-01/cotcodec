@@ -1,0 +1,9 @@
+{
+ "doctor": "Novelty",
+ "status": "FAIL",
+ "evaluated_on": "2026-10-07",
+ "evaluated_by": "wave-1 single synthesis owner (Claude agent); not an independent review",
+ "pass_condition": "Synonyms, component pairs, citation graph, code, and adjacent fields searched",
+ "evidence": "No cell found a direct prior (merged verdict NARROWED, core measurement STILL_OPEN), but coverage is incomplete: no forward or backward citation-graph expansion, no code or model-card search, no OpenReview, no XProvence title-phrase query, one Chinese-language query. The blind closest-prior discrimination (paragraphs under blind/) and the novelty refuter have not run.",
+ "remediation": "Run the blind discrimination on the two paragraphs; expand forward citations of 2606.07703, 2608.26175, 2601.18886 and 2410.13276 through OpenAlex or the relay. Requires new query budget: the declared 150 queries were spent by the discovery cells (159)."
+}

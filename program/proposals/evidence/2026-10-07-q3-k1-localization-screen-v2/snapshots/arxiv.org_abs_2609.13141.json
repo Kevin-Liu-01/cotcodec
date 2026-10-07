@@ -1,0 +1,32 @@
+{
+ "url": "https://arxiv.org/abs/2609.13141",
+ "fetched_at": "2026-10-07T20:59:22Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 44097,
+ "raw_sha256": "03d3808073bdf499ec76985322e8981b202afb8b7e4bfbd27abea04351c7955c",
+ "raw_stored": false,
+ "extract": {
+  "title": "SAS: Simple Attention Sparsification via End-to-End Optimization of Context Ranking",
+  "authors": [
+   "Li, Zhiwei",
+   "Zhu, Lei",
+   "Gu, Hao",
+   "Hu, Xiang",
+   "Wang, Yan",
+   "Mi, Haitao",
+   "Han, Sirui",
+   "Liang, Leo",
+   "Guo, Zhijiang"
+  ],
+  "citation_date": "2026/09/11",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Fri, 11 Sep 2026 17:58:06 UTC"
+   }
+  ],
+  "abstract": "Post-training attention sparsification reduces the quadratic cumulative attention cost of pretrained Transformers by selecting a small set of context units (tokens or blocks) for each query. Existing trainable methods usually use a lightweight selector to score context units, followed by hard Top-K selection that blocks gradients from the language modeling loss. Consequently, these methods commonly distill layer-wise dense attention distributions. Although this encourages the selector to rank context units by dense attention weights in the original model, the ranking is not directly aligned with their impact on predictions under a fixed attention budget (i.e., the number of attended context units per query), potentially wasting the limited budget on less useful units. To address this misalignment, we propose Simple Attention Sparsification (SAS), a gated sparse attention mechanism that optimizes context ranking end-to-end with the language modeling loss. The key idea is to inject the selector's continuous scores into attention logits during training, allowing the loss to update the selector through standard backpropagation. We identify several choices crucial for this simple design to work well in practice: placing the gate inside the attention softmax in log form, using normalized softmax gates to calibrate historical context against the always-retained current block, and preserving continuous selector scores so the model learns relative priorities rather than only hard selections. To support long-sequence training, we implement a memory-efficient Triton kernel that integrates SAS into FlashAttention-style computation. Across reasoning, long-context understanding, and agentic tasks, SAS consistently outperforms trainable sparse attention baselines across attention budgets, with especially large gains under tight budgets, demonstrating more effective context ranking for downstream tasks.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}

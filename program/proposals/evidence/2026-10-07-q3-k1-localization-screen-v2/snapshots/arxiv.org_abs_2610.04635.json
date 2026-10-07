@@ -1,0 +1,27 @@
+{
+ "url": "https://arxiv.org/abs/2610.04635",
+ "fetched_at": "2026-10-07T20:57:57Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 42528,
+ "raw_sha256": "904c705b2f46b1453f79c37ac759efa8e69eb1fddddc51f4eb45e4895fccb541",
+ "raw_stored": false,
+ "extract": {
+  "title": "LatentIndex: Cross-Layer Sharing with Layer-Specific Selection for Sparse Attention",
+  "authors": [
+   "Wang, Zhaohui",
+   "Pan, Zhixin",
+   "Meng, Fanxu",
+   "Zhang, Muhan"
+  ],
+  "citation_date": "2026/10/03",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Sat, 3 Oct 2026 16:26:00 UTC"
+   }
+  ],
+  "abstract": "Sparse attention reduces core-attention computation, but its indexers still incur repeated selection work and per-layer key-cache storage. Reusing selected indices across layers reduces this overhead but constrains multiple layers to the same token set. We introduce LatentIndex, which extends the latent-sharing principle of Multi-head Latent Attention across indexer layers. Each layer group constructs a shared latent cache from its first layer's hidden states, while layer-specific scoring enables independent token selection. Absorbing key decoders into queries enables direct scoring of the shared cache without reconstructing historical per-layer keys. We develop training-free calibration and investigate a training-aware instantiation of this principle. To balance quality and computation, a hierarchical selection (HS) variant lets followers independently refine a shared candidate set proposed by the anchor. With four-layer sharing, LatentIndex reduces logical indexer-cache storage by 61.1% on DeepSeek-V3.2. Across DeepSeek-V3.2 and GLM-5, training-free LatentIndex improves head-wise attention-mass recall over IndexCache by up to 3.28 percentage points while maintaining RULER and LongBench performance close to native DSA. HS further achieves 2.30-2.72 times decode indexer speedups over DSA across 8K-128K contexts, retaining most of LatentIndex's recall. LatentIndex offers a new perspective on cross-layer indexing: sharing continuous representations rather than discrete selections enables efficient reuse while preserving layer-specific token selection.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}

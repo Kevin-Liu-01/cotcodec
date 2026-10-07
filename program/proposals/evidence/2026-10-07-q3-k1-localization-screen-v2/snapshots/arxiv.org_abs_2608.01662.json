@@ -1,0 +1,41 @@
+{
+ "url": "https://arxiv.org/abs/2608.01662",
+ "fetched_at": "2026-10-07T20:59:56Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 44679,
+ "raw_sha256": "ce5f6b9a876893cb5e6501b069a5d610a356444d058cf7480438648c1b1d2e1b",
+ "raw_stored": false,
+ "extract": {
+  "title": "LongCat Sparse Attention: Taming the Lightning via Streaming-aware Hierarchical Cross-Layer Indexing",
+  "authors": [
+   "Zan, Wen",
+   "Zhang, Jiaqi",
+   "Tan, Jianchao",
+   "Liu, Hong",
+   "Wang, Cunguang",
+   "Li, Xiang",
+   "Ma, Duyue",
+   "Wu, Guanyu",
+   "Lu, Yifan",
+   "Li, Fengcun",
+   "Sun, Yerui",
+   "Pei, Peng",
+   "Xie, Yuchen",
+   "Cai, Xunliang"
+  ],
+  "citation_date": "2026/08/03",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Mon, 3 Aug 2026 03:51:21 UTC"
+   },
+   {
+    "version": "v2",
+    "date": "Tue, 4 Aug 2026 07:46:43 UTC"
+   }
+  ],
+  "abstract": "DeepSeek Sparse Attention (DSA) enables efficient long-context modeling through its Lightning Indexer. However, practical deployment remains constrained by the indexer's expensive $O(L^2)$ scoring overhead and the hardware-inefficient, discontinuous memory-access patterns induced by its outputs. To address these system-level bottlenecks, we introduce LongCat Sparse Attention (LSA), a hardware-algorithm co-designed framework comprising three complementary and orthogonal strategies: (1) Streaming-Aware Indexing, which selectively converts scattered KV entries into hardware-aligned contiguous layouts to enable coalesced HBM access; (2) Cross-Layer Indexing, which amortizes indexing overhead by reusing the results produced by a single layer across consecutive layers, supported by cross-layer distillation; and (3) Hierarchical Indexing, which adopts a coarse-to-fine scoring scheme to progressively narrow the candidate set for each query, thereby substantially reducing indexing computation. Extensive scaling experiments, ranging from 69B-A3B to 560B-A27B models, demonstrate that LSA consistently achieves performance on par with full attention across both general-purpose and long-context benchmarks. Moreover, LSA supports native training with context lengths of up to one million tokens and underpins the development of LongCat-2.0 (1.6T-A48B). To facilitate further research, we also introduce and open-source LongCat-Flash-Lite-Sparse (69B-A3B), which integrates LSA into LongCat-Flash-Lite and incorporates an updated long-context training corpus.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}

@@ -1,0 +1,36 @@
+{
+ "url": "https://arxiv.org/abs/2602.05929",
+ "fetched_at": "2026-10-07T20:58:14Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 42665,
+ "raw_sha256": "bda2290394379a4e7cae2f77f9fbb028a5cfc4246ce25ab8b445f9d1f00b387b",
+ "raw_stored": false,
+ "extract": {
+  "title": "KV-CoRE: Benchmarking Data-Dependent Low-Rank Compressibility of KV-Caches in LLMs",
+  "authors": [
+   "Chen, Jian",
+   "Wang, Zhuoran",
+   "Qin, Jiayu",
+   "Li, Ming",
+   "Wang, Meng",
+   "Chen, Changyou",
+   "Chen, Yin",
+   "Weng, Qizhen",
+   "Liu, Yirui"
+  ],
+  "citation_date": "2026/02/05",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Thu, 5 Feb 2026 17:41:57 UTC"
+   },
+   {
+    "version": "v2",
+    "date": "Sat, 7 Feb 2026 15:57:16 UTC"
+   }
+  ],
+  "abstract": "Large language models rely on kv-caches to avoid redundant computation during autoregressive decoding, but as context length grows, reading and writing the cache can quickly saturate GPU memory bandwidth. Recent work has explored KV-cache compression, yet most approaches neglect the data-dependent nature of kv-caches and their variation across layers. We introduce KV-CoRE KV-cache Compressibility by Rank Evaluation), an SVD-based method for quantifying the data-dependent low-rank compressibility of kv-caches. KV-CoRE computes the optimal low-rank approximation under the Frobenius norm and, being gradient-free and incremental, enables efficient dataset-level, layer-wise evaluation. Using this method, we analyze multiple models and datasets spanning five English domains and sixteen languages, uncovering systematic patterns that link compressibility to model architecture, training data, and language coverage. As part of this analysis, we employ the Normalized Effective Rank as a metric of compressibility and show that it correlates strongly with performance degradation under compression. Our study establishes a principled evaluation framework and the first large-scale benchmark of kv-cache compressibility in LLMs, offering insights for dynamic, data-aware compression and data-centric model development.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}

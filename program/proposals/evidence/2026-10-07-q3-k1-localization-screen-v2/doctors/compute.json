@@ -1,0 +1,9 @@
+{
+ "doctor": "Compute",
+ "status": "FAIL",
+ "evaluated_on": "2026-10-07",
+ "evaluated_by": "wave-1 single synthesis owner (Claude agent); not an independent review",
+ "pass_condition": "Image digest, Slurm dry-run, seeds, quota, checkpoint, and cost plan specified",
+ "evidence": "Registered caps 8.05 GPU-h exceed the 8 GPU-h threshold (D22), so v2 is not frozen; image B2, the filled v2 manifests, the v2 smoke and a v2 Slurm dry-run do not exist. Present: the tabled code's real model loop in probe job 543 (digest-pinned image, Slurm, provenance PASS, submitter dry-run and test-only exit 0, ORX_RESULT exit=0). No signed compute attestation can exist (D24). The deterministic doctor's manifest schema (submit_research_job.validate_manifest) rejects the executed Docker-lane probe manifest, which declares image_id rather than an OCI digest in image.",
+ "remediation": "Kevin's admission decision (D24); then freeze, build image B2, run both K1 doctors in it, fill the manifests, dry-run, and run the registered gate jobs."
+}
