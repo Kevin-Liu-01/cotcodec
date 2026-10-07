@@ -1,5 +1,12 @@
 #!/usr/bin/env python3
-"""Validate and extract one normalized discovery source archive."""
+"""Validate and extract one normalized discovery source archive.
+
+Accepts schema 2 receipts (no omitted links) and schema 3 receipts, which
+record the tracked agent-tooling links the creator left out. Omitted links are
+validated against the archive's manifest and never recreated: the extracted
+tree holds regular files only. This file runs as a standalone snapshot, so it
+carries its own copy of the creator's lexical omission rule.
+"""
 
 from __future__ import annotations
 
@@ -7,12 +14,21 @@ import argparse
 import hashlib
 import json
 import os
+import posixpath
 import re
 import stat
 import tarfile
 import tempfile
 from pathlib import Path, PurePosixPath
 from typing import Any, BinaryIO
+
+# Must equal OMITTABLE_SYMLINK_PREFIXES in scripts/create_source_archive.py.
+OMITTABLE_SYMLINK_PREFIXES: tuple[str, ...] = (".agents/",)
+SYMLINK_RECEIPT_FIELDS = (
+    "omittable_symlink_prefixes",
+    "omitted_symlinks",
+    "omitted_symlinks_sha256",
+)
 
 
 def _sha256_file(path: Path) -> str:
@@ -33,6 +49,108 @@ def _load_receipt(path: Path) -> dict[str, Any]:
     if not isinstance(payload, dict):
         raise ValueError("source receipt must contain one JSON object")
     return payload
+
+
+def _validate_omitted_symlinks(receipt: dict[str, Any], manifest: list[str]) -> None:
+    """Check a schema 3 receipt's omitted links name content the archive holds."""
+
+    if receipt.get("omittable_symlink_prefixes") != list(OMITTABLE_SYMLINK_PREFIXES):
+        raise ValueError("source receipt records a different symlink omission rule")
+    rows = receipt.get("omitted_symlinks")
+    if not isinstance(rows, list) or any(
+        not isinstance(row, dict)
+        or set(row) != {"path", "target"}
+        or not all(isinstance(row[key], str) and row[key] for key in ("path", "target"))
+        for row in rows
+    ):
+        raise ValueError("source receipt omitted symlinks are malformed")
+    links = [row["path"] for row in rows]
+    if len(set(links)) != len(links) or links != sorted(links, key=lambda name: name.encode()):
+        raise ValueError("source receipt omitted symlinks are malformed")
+    digest = hashlib.sha256(
+        json.dumps(rows, sort_keys=True, separators=(",", ":")).encode()
+    ).hexdigest()
+    if receipt.get("omitted_symlinks_sha256") != digest:
+        raise ValueError("source receipt omitted symlink digest drifted")
+    archived = set(manifest)
+
+    def holds(name: str) -> bool:
+        return name in archived or any(member.startswith(f"{name}/") for member in manifest)
+
+    for row in rows:
+        link = PurePosixPath(row["path"])
+        target = row["target"]
+        if (
+            link.is_absolute()
+            or ".." in link.parts
+            or link.as_posix() != row["path"]
+            or not any(row["path"].startswith(prefix) for prefix in OMITTABLE_SYMLINK_PREFIXES)
+        ):
+            raise ValueError(f"source receipt omits a link outside the rule: {row['path']}")
+        if holds(row["path"]) or any(parent.as_posix() in archived for parent in link.parents):
+            raise ValueError(f"omitted symlink collides with an archived file: {row['path']}")
+        if target.startswith("/") or "\0" in target:
+            raise ValueError(f"omitted symlink target must be relative: {row['path']}")
+        resolved = posixpath.normpath(posixpath.join(link.parent.as_posix(), target))
+        if (
+            resolved in {".", ".."}
+            or resolved.startswith("../")
+            or PurePosixPath(resolved) == link
+            or PurePosixPath(resolved) in link.parents
+            or not holds(resolved)
+        ):
+            raise ValueError(
+                f"omitted symlink target is not archived content: {row['path']} -> {target}"
+            )
+
+
+def _validated_manifest(
+    receipt: dict[str, Any],
+    *,
+    expected_archive_sha256: str,
+    expected_git_sha: str,
+    expected_git_tree: str,
+) -> list[str]:
+    """Check a discovery receipt against the registered identities; return its manifest."""
+
+    schema_version = receipt.get("schema_version")
+    if type(schema_version) is not int or schema_version not in {2, 3}:
+        raise ValueError("source receipt differs from the registered discovery archive")
+    expected_fields = {
+        "mode": "discovery",
+        "archive_sha256": expected_archive_sha256,
+        "archive_format": "normalized-worktree-tar+gzip-mtime-zero",
+        "git_sha": expected_git_sha,
+        "git_tree": expected_git_tree,
+        "selected_ref": "HEAD",
+        "data_excluded": True,
+        "metadata_normalized": True,
+    }
+    if any(receipt.get(key) != value for key, value in expected_fields.items()):
+        raise ValueError("source receipt differs from the registered discovery archive")
+    manifest = receipt.get("file_manifest")
+    if (
+        not isinstance(manifest, list)
+        or not manifest
+        or any(not isinstance(name, str) or not name for name in manifest)
+        or len(set(manifest)) != len(manifest)
+        or manifest != sorted(manifest, key=lambda name: name.encode())
+    ):
+        raise ValueError("source receipt file manifest is malformed")
+    manifest_digest = hashlib.sha256(
+        json.dumps(manifest, separators=(",", ":")).encode()
+    ).hexdigest()
+    if (
+        receipt.get("file_count") != len(manifest)
+        or receipt.get("file_manifest_sha256") != manifest_digest
+    ):
+        raise ValueError("source receipt file manifest digest drifted")
+    if schema_version == 2:
+        if any(key in receipt for key in SYMLINK_RECEIPT_FIELDS):
+            raise ValueError("schema 2 source receipt cannot record omitted symlinks")
+    else:
+        _validate_omitted_symlinks(receipt, manifest)
+    return manifest
 
 
 def _snapshot_archive(
@@ -102,41 +220,19 @@ def validate_and_extract(
     archive_snapshot, actual_archive_sha256 = _snapshot_archive(
         archive_path, output_dir
     )
-    if actual_archive_sha256 != expected_archive_sha256:
+    try:
+        if actual_archive_sha256 != expected_archive_sha256:
+            raise ValueError("source archive SHA-256 drifted")
+        receipt = _load_receipt(receipt_path)
+        manifest = _validated_manifest(
+            receipt,
+            expected_archive_sha256=expected_archive_sha256,
+            expected_git_sha=expected_git_sha,
+            expected_git_tree=expected_git_tree,
+        )
+    except BaseException:
         archive_snapshot.close()
-        raise ValueError("source archive SHA-256 drifted")
-
-    receipt = _load_receipt(receipt_path)
-    expected_fields = {
-        "schema_version": 2,
-        "mode": "discovery",
-        "archive_sha256": expected_archive_sha256,
-        "archive_format": "normalized-worktree-tar+gzip-mtime-zero",
-        "git_sha": expected_git_sha,
-        "git_tree": expected_git_tree,
-        "selected_ref": "HEAD",
-        "data_excluded": True,
-        "metadata_normalized": True,
-    }
-    if any(receipt.get(key) != value for key, value in expected_fields.items()):
-        raise ValueError("source receipt differs from the registered discovery archive")
-    manifest = receipt.get("file_manifest")
-    if (
-        not isinstance(manifest, list)
-        or not manifest
-        or any(not isinstance(name, str) or not name for name in manifest)
-        or len(set(manifest)) != len(manifest)
-        or manifest != sorted(manifest, key=lambda name: name.encode())
-    ):
-        raise ValueError("source receipt file manifest is malformed")
-    manifest_digest = hashlib.sha256(
-        json.dumps(manifest, separators=(",", ":")).encode()
-    ).hexdigest()
-    if (
-        receipt.get("file_count") != len(manifest)
-        or receipt.get("file_manifest_sha256") != manifest_digest
-    ):
-        raise ValueError("source receipt file manifest digest drifted")
+        raise
 
     extracted_names: list[str] = []
     try:
