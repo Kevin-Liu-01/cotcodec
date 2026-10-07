@@ -1,0 +1,16 @@
+{
+  "domain": "libreoffice_calc",
+  "initial_files": [
+    {
+      "path_in_vm": "/home/user/Order_Id_Mark_Pass_Fail.xlsx",
+      "sha256": "c72c9bb3446ecebf1b10fd4e48833670683aaff02b20cfd10309e5b1626de5fa",
+      "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/1e112283c4ecb08d6fed8069bca7de74fa2f12aa/libreoffice_calc/ecb0df7a-4e8d-4a03-b162-053391d3afaf/Order_Id_Mark_Pass_Fail.xlsx"
+    }
+  ],
+  "instruction": "In the column \"Pass/Fail/Held\", one from the texts \"Pass\", \"Fail\", and \"Held\" should be filled. For convinience, enable data validation for the cells in this column so that the texts to fill can be directly selected from a drop down list. Finish the work and don't touch irrelevant regions, even if they are blank.",
+  "related_apps": [
+    "libreoffice calc"
+  ],
+  "snapshot": "libreoffice_calc",
+  "task_id": "ecb0df7a-4e8d-4a03-b162-053391d3afaf"
+}

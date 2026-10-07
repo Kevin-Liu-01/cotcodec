@@ -1,0 +1,18 @@
+task_id: a01fbce3-2793-461f-ab86-43680ccbae25
+author: blind-model-author-v1
+requirements:
+  - req_id: R0
+    statement: (implicit) The workbook is persisted at /home/user/Set_Decimal_Separator_Dot.xlsx.
+    check_kind: file_exists
+    observable: File exists and loads.
+  - req_id: R1
+    statement: The numbers in the sheet (A2:B20) are displayed with a comma as decimal separator (e.g. 0,1 and 0,2).
+    check_kind: cell_format
+    observable: Rendering the sheet (e.g. LibreOffice CSV/HTML export "as shown") yields "0,1" for A2 and "0,2" for B2, ..., "2,0" for B20.
+  - req_id: R2
+    statement: The numeric values themselves are kept as-is (still numbers, same values; formulas in B still work).
+    check_kind: cell_value
+    observable: A2:A20 are numeric 0.1..1.9 and B2:B20 compute A+0.1; cells are not converted to text strings.
+allowed_variations:
+  - '[AMBIGUOUS] The mechanism is unspecified: changing the cell number-format language/locale (e.g. a German locale code on the format), or the application/document locale. A global LibreOffice option change leaves no trace in the xlsx; a per-cell locale format does. Record which.'
+  - The one-decimal display ("0.0" pattern) is expected to be kept ("keep the decimal numbers as-is").

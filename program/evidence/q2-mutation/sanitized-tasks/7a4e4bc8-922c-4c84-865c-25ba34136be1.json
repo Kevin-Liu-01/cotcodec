@@ -1,0 +1,16 @@
+{
+  "domain": "libreoffice_calc",
+  "initial_files": [
+    {
+      "path_in_vm": "/home/user/Name_Order_Id_move_column.xlsx",
+      "sha256": "903d84381ff8d559617c4e35239ed980a698c8389f891ad6e24057a35c8551f1",
+      "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/1e112283c4ecb08d6fed8069bca7de74fa2f12aa/libreoffice_calc/7a4e4bc8-922c-4c84-865c-25ba34136be1/Name_Order_Id_move_column.xlsx"
+    }
+  ],
+  "instruction": "Reorder the columns to be \"Date\", \"First Name\", \"Last Name\", \"Order ID\", \"Sales\". Finish the work and don't touch irrelevant regions, even if they are blank.",
+  "related_apps": [
+    "libreoffice calc"
+  ],
+  "snapshot": "libreoffice_calc",
+  "task_id": "7a4e4bc8-922c-4c84-865c-25ba34136be1"
+}

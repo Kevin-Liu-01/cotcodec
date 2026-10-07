@@ -1,0 +1,16 @@
+{
+  "domain": "libreoffice_writer",
+  "initial_files": [
+    {
+      "path_in_vm": "/home/user/Desktop/Graphemes_Sound_Letter_Patterns.docx",
+      "sha256": "c66b6d7bf814e71acd4777353b7be5eca1c9735dc9f510fa61993d78aef492ca",
+      "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/1e112283c4ecb08d6fed8069bca7de74fa2f12aa/libreoffice_writer/936321ce-5236-426a-9a20-e0e3c5dc536f/Graphemes_Sound_Letter_Patterns.docx"
+    }
+  ],
+  "instruction": "Could you help me convert the text seperated by commas to a table?",
+  "related_apps": [
+    "libreoffice_writer"
+  ],
+  "snapshot": "libreoffice_writer",
+  "task_id": "936321ce-5236-426a-9a20-e0e3c5dc536f"
+}

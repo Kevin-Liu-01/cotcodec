@@ -1,0 +1,21 @@
+task_id: 37608790-6147-45d0-9f20-1137bb35703d
+author: blind-model-author-v1
+requirements:
+  - req_id: R0
+    statement: (implicit) The workbook is persisted at /home/user/Employee_Roles_and_Ranks.xlsx (sheet "工作表1").
+    check_kind: file_exists
+    observable: File loads with sheet "工作表1".
+  - req_id: R1
+    statement: For each data row 2-22, First Name (B), Last Name (C) and Rank (D) are the first, second and third words of column A.
+    check_kind: cell_value
+    observable: E.g. B2/C2/D2 == "Benedict"/"Cucumberbach"/"Manager"; B13/C13/D13 == "Reese"/"Withoutaspoon"/"Analyst"; B22/C22/D22 == "Selena"/"Stopmez"/"Clerk"; for all rows the three cells joined by single spaces equal A.
+  - req_id: R2
+    statement: The original combined data in column A is unchanged (explicit).
+    check_kind: cell_value
+    observable: A1:A22 equal the initial values.
+  - req_id: R3
+    statement: (implicit) Headers B1:D1 remain "First Name", "Last Name", "Rank" and nothing is written outside B2:D22.
+    check_kind: cell_value
+    observable: B1:D1 unchanged; columns E+ and rows 23+ empty.
+allowed_variations:
+  - Cells may be formulas (e.g. LEFT/MID/FIND) or constants as long as computed values match.

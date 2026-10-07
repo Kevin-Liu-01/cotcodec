@@ -1,0 +1,16 @@
+{
+  "domain": "libreoffice_writer",
+  "initial_files": [
+    {
+      "path_in_vm": "/home/user/Desktop/Geography_And_Magical_Realism.docx",
+      "sha256": "b7a84074837e33be184bac095e0c6824bd818a79791c3358ef2cdcd352f046b4",
+      "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/1e112283c4ecb08d6fed8069bca7de74fa2f12aa/libreoffice_writer/e528b65e-1107-4b8c-8988-490e4fece599/Geography_And_Magical_Realism.docx"
+    }
+  ],
+  "instruction": "Please help me make the first letter of each word to uppercase.",
+  "related_apps": [
+    "libreoffice_writer"
+  ],
+  "snapshot": "libreoffice_writer",
+  "task_id": "e528b65e-1107-4b8c-8988-490e4fece599"
+}

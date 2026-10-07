@@ -1,0 +1,21 @@
+task_id: 357ef137-7eeb-4c80-a3bb-0951f26a8aff
+author: blind-model-author-v1
+requirements:
+  - req_id: R0
+    statement: (implicit) The workbook is persisted at /home/user/Multiply_Time_Number.xlsx.
+    check_kind: file_exists
+    observable: File exists and loads.
+  - req_id: R1
+    statement: The "Total Earned" cell (E3) holds total hours (D3, a time of 7:40) converted to decimal hours times the hourly rate (F3 = 25).
+    check_kind: cell_value
+    observable: E3 computed numeric value == 7.6667 * 25 == 191.6667 (tolerance 0.01), e.g. via =D3*24*F3.
+  - req_id: R2
+    statement: Existing cells are unchanged.
+    check_kind: cell_value
+    observable: A2:F2 headers, A3:B7, D3 (=SUM(B3:B7)) and F3 equal the initial file.
+  - req_id: R3
+    statement: No other (blank) cells are filled (explicit "don't touch irrelevant blank regions").
+    check_kind: cell_value
+    observable: All cells other than E3 that were empty remain empty (e.g. C column, E4:E7, row 1, row 8+).
+allowed_variations:
+  - E3 may be a formula or constant; number format (currency, 2 decimals, general) is not constrained, but it must not be a time format that hides the numeric product.

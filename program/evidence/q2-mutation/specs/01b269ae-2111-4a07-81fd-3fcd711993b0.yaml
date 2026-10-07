@@ -1,0 +1,28 @@
+task_id: 01b269ae-2111-4a07-81fd-3fcd711993b0
+author: blind-model-author-v1
+requirements:
+  - req_id: R0
+    statement: (implicit) The edited workbook is persisted at /home/user/Student_Level_Fill_Blank.xlsx and still opens as a spreadsheet with sheet "Sheet1".
+    check_kind: file_exists
+    observable: The file exists at that path and loads with openpyxl (or LibreOffice); sheet "Sheet1" is present.
+  - req_id: R1
+    statement: Every cell in B1:E30 that was blank in the initial file now holds the value of the nearest non-blank cell above it in the same column (fill-down).
+    check_kind: cell_value
+    observable: >-
+      In the initial file the blanks are only in columns B and C. Expected end values (displayed/computed):
+      B3:B6 = "Primary"; B8:B18 = "Secondary"; B20:B24 = "Intermediate"; B26:B30 = "Advance";
+      C3:C4 = "Blake Dreary"; C6 = "Bey Twice"; C8:C11 = "Arnold Shawarma"; C13:C15 = "Clint Eastwood";
+      C17:C18 = "Olivia Calme"; C20:C21 = "Parah Salin"; C23:C24 = "Elijah Plastic"; C26:C30 = "Tom Softy".
+      Read each cell's computed value (formula result if a formula) and compare as strings.
+  - req_id: R2
+    statement: Cells in B1:E30 that were non-blank initially keep their original values.
+    check_kind: cell_value
+    observable: For every cell in B1:E30 that was non-blank in the initial file, the end value equals the initial value (strings exact, numbers equal).
+  - req_id: R3
+    statement: Cells outside B1:E30 are not touched, even if blank (explicit "don't touch irrelevant regions").
+    check_kind: cell_value
+    observable: Column A, columns F onward, and rows 31 onward of Sheet1 are empty in the end file exactly as in the initial file; no other sheets are added.
+allowed_variations:
+  - The filled cells may contain constant text or formulas referencing the cell above (e.g. =B2), as long as the computed value matches.
+  - Cell formatting (font, borders, fill, alignment) of the filled cells is not constrained.
+  - Column widths, active cell, selection and view settings are not constrained.

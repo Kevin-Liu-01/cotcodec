@@ -1,0 +1,21 @@
+task_id: 3aaa4e37-dc91-482e-99af-132a612d40f3
+author: blind-model-author-v1
+requirements:
+  - req_id: R1
+    statement: A CSV file sharing the workbook's base name exists next to it.
+    check_kind: file_exists
+    observable: /home/user/Export_Calc_to_CSV.csv exists.
+  - req_id: R2
+    statement: The CSV holds the current sheet's cells as displayed, in default CSV format (comma separator, one line per row).
+    check_kind: other
+    observable: >-
+      Parsed with a standard CSV reader the rows are
+      [Student,Clint,Olivia,Parah,Elijah], [Class,Primary,Secondary,H. School,College],
+      [Subject,English,Urdu,Math,English], [Marks,36,83,35,30] (numbers as displayed, i.e. "36" not "36.0").
+  - req_id: R3
+    statement: (implicit) The original xlsx is left in place.
+    check_kind: file_exists
+    observable: /home/user/Export_Calc_to_CSV.xlsx still exists with unchanged cell values.
+allowed_variations:
+  - Text quoting of fields and trailing newline at end of file follow LibreOffice defaults; quoting is not semantically relevant.
+  - Character encoding UTF-8 (default) is expected; the content is ASCII so encoding differences do not matter.

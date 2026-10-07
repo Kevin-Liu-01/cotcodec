@@ -1,0 +1,30 @@
+task_id: 4de54231-e4b5-49e3-b2ba-61a0bec721c0
+author: blind-model-author-v1
+requirements:
+  - req_id: R0
+    statement: (implicit) The workbook is persisted at /home/user/RampUpAndDown.xlsx; columns A and C and row 1 headers are unchanged.
+    check_kind: file_exists
+    observable: File loads; A1:A30, C1:C30, B1, D1, B2, D2 equal the initial file.
+  - req_id: R1
+    statement: Column B rows 3-30 follow the row-2 acceleration formula applied to each row's hanging mass in A.
+    check_kind: cell_value
+    observable: B_r == 9.8*((A_r-0.75*SIN(RADIANS(45))-0.25*0.75*COS(RADIANS(45)))/(A_r+0.75)) for r = 3..30, e.g. B3 == -2.034653, B30 == 1.702606 (tolerance 1e-6).
+  - req_id: R2
+    statement: Column D rows 3-30 follow the row-2 formula applied to each row's hanging mass in C.
+    check_kind: cell_value
+    observable: D_r == -9.8*((-C_r+0.75*SIN(RADIANS(45))-0.25*0.75*COS(RADIANS(45)))/(C_r+0.75)) for r = 3..30, e.g. D3 == -4.807696, D30 == 1.213797.
+  - req_id: R3
+    statement: A new column (E) headed "Combined Data" exists.
+    check_kind: cell_value
+    observable: E1 == "Combined Data".
+  - req_id: R4
+    statement: >-
+      For every data row 2-30, the Combined Data cell is "Header: value, Header: value, Header: value, Header: value" over columns A..D, with each number shown with 2 decimal digits.
+    check_kind: cell_value
+    observable: >-
+      E2 == "Hanging mass (kilograms): 0.40, Acceleration of Block up Ramp: -2.24, Hanging mass (kilograms): 0.00, Acceleration of Block down Ramp: -5.20"
+      (fixed 2 decimals); E30 == "Hanging mass (kilograms): 0.96, Acceleration of Block up Ramp: 1.70, Hanging mass (kilograms): 0.56, Acceleration of Block down Ramp: 1.21".
+allowed_variations:
+  - '[AMBIGUOUS] "only keep 2 decimal digits" may mean fixed two decimals ("0.40", "0.00") or rounding to at most two decimals ("0.4", "0"). Fixed two decimals is the stricter reading; record which was used.'
+  - B/D/E cells may be formulas or constants.
+  - Number formats of B and D are not constrained.

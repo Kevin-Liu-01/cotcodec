@@ -1,0 +1,16 @@
+{
+  "domain": "libreoffice_calc",
+  "initial_files": [
+    {
+      "path_in_vm": "/home/user/Employee_Roles_and_Ranks.xlsx",
+      "sha256": "55a78a8f2469d28c3fcb4e417e615bb6c65a65094243c973cc3b1524162ab269",
+      "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/1e112283c4ecb08d6fed8069bca7de74fa2f12aa/libreoffice_calc/37608790-6147-45d0-9f20-1137bb35703d/Employee_Roles_and_Ranks.xlsx"
+    }
+  ],
+  "instruction": "The information are mixed in one field. Help me split them and fill in the columns of First Name, Last Name and Rank. Finish the work and don't touch the original data.",
+  "related_apps": [
+    "libreoffice calc"
+  ],
+  "snapshot": "libreoffice_calc",
+  "task_id": "37608790-6147-45d0-9f20-1137bb35703d"
+}

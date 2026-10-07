@@ -1,0 +1,16 @@
+{
+  "domain": "libreoffice_calc",
+  "initial_files": [
+    {
+      "path_in_vm": "/home/user/SmallBalanceSheet.xlsx",
+      "sha256": "4249084517378a0c24a0ff20b5e7b771942f2bf96dce95fbee22598d337fcc5a",
+      "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/1e112283c4ecb08d6fed8069bca7de74fa2f12aa/libreoffice_calc/04d9aeaf-7bed-4024-bedb-e10e6f00eb7f/SmallBalanceSheet.xlsx"
+    }
+  ],
+  "instruction": "In a new sheet (\"Sheet2\") with 4 headers \"Year\", \"CA changes\", \"FA changes\", and \"OA changes\", calculate the percentage annual changes compared to last year in 2015 to 2019 for the Current Assets, Fixed Assets, and Other Assets columns. ",
+  "related_apps": [
+    "libreoffice_calc"
+  ],
+  "snapshot": "libreoffice_calc",
+  "task_id": "04d9aeaf-7bed-4024-bedb-e10e6f00eb7f"
+}

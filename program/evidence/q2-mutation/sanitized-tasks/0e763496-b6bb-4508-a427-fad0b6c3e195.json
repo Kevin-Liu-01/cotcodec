@@ -1,0 +1,16 @@
+{
+  "domain": "libreoffice_writer",
+  "initial_files": [
+    {
+      "path_in_vm": "/home/user/Desktop/Dublin_Zoo_Intro.docx",
+      "sha256": "76d9039c2b6c86381cbcf1a87178c6c50bbcf9b1e3d651ddb6e9caa189988430",
+      "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/1e112283c4ecb08d6fed8069bca7de74fa2f12aa/libreoffice_writer/0e763496-b6bb-4508-a427-fad0b6c3e195/Dublin_Zoo_Intro.docx"
+    }
+  ],
+  "instruction": "Change the font to \"Times New Roman\" throughout the text.",
+  "related_apps": [
+    "libreoffice_writer"
+  ],
+  "snapshot": "libreoffice_writer",
+  "task_id": "0e763496-b6bb-4508-a427-fad0b6c3e195"
+}

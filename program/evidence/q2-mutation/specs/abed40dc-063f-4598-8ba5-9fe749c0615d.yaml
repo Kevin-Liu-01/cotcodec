@@ -1,0 +1,17 @@
+task_id: abed40dc-063f-4598-8ba5-9fe749c0615d
+author: blind-model-author-v1
+requirements:
+  - req_id: R0
+    statement: (implicit) The workbook is persisted at /home/user/Names_Duplicate_Unique.xlsx; column B and headers unchanged.
+    check_kind: file_exists
+    observable: File loads; B1:B18 and D1 equal initial values.
+  - req_id: R1
+    statement: The "Unique Names" column lists each distinct name once, in order of first occurrence, starting directly under the header.
+    check_kind: cell_value
+    observable: D2:D7 == "Keira Daily", "50 Dollar Dollar", "Jonah Mountain", "Jeff Tunnels", "Emma Stoned", "Morgan Prisoner"; D8 and below are empty.
+  - req_id: R2
+    statement: No irrelevant cells are touched, even blank ones (explicit).
+    check_kind: cell_value
+    observable: Columns A, C, E+ and rows 19+ remain empty.
+allowed_variations:
+  - Constants or formulas producing the same displayed values (formulas must not leave visible error/empty-string artifacts in D8:D18 that differ from blank only if they display nothing).

@@ -1,0 +1,16 @@
+{
+  "domain": "libreoffice_calc",
+  "initial_files": [
+    {
+      "path_in_vm": "/home/user/Resize_Cells_Fit_Page.xlsx",
+      "sha256": "019e40f4e8e5ee662b6d4038ec7f206e37a6fbc90b6ddd553b0bbe0d5081ef7a",
+      "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/1e112283c4ecb08d6fed8069bca7de74fa2f12aa/libreoffice_calc/aa3a8974-2e85-438b-b29e-a64df44deb4b/Resize_Cells_Fit_Page.xlsx"
+    }
+  ],
+  "instruction": "I'm working on a project and need to resize cells in a spreadsheet to fit onto one page and export to PDF for efficient presentation. Could you help me on this? Keep the name of PDF the same as the spreadsheet and place it under my home directory.",
+  "related_apps": [
+    "libreoffice_calc"
+  ],
+  "snapshot": "libreoffice_calc",
+  "task_id": "aa3a8974-2e85-438b-b29e-a64df44deb4b"
+}
