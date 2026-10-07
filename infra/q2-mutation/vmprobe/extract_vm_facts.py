@@ -87,6 +87,12 @@ def main() -> int:
     candidates = sorted(table["partitions"], key=lambda p: -int(p["size"]))
     root = candidates[0]
     raw = scratch / "root.raw"
+    start, size = int(root["start"]), int(root["size"])
+    # Largest block (up to 8 MiB) dividing both partition start and size;
+    # qemu-img dd is slow with 512-byte blocks.
+    sectors = 16384
+    while sectors > 1 and (start % sectors or size % sectors):
+        sectors //= 2
     run(
         [
             "qemu-img",
@@ -96,9 +102,9 @@ def main() -> int:
             "qcow2",
             "-O",
             "raw",
-            "bs=512",
-            f"skip={root['start']}",
-            f"count={root['size']}",
+            f"bs={512 * sectors}",
+            f"skip={start // sectors}",
+            f"count={size // sectors}",
             f"if={args.qcow2}",
             f"of={raw}",
         ]
