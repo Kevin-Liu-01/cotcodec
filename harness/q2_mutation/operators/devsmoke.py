@@ -4,7 +4,7 @@ Harness validation only. For each development-split task whose gold and
 initial end states are one office file at the same VM path (as listed in the
 harness's control jobs), it:
 
-1. checks the SHA-256 of both files against the job list;
+1. checks both files against the job list's candidate SHA-256;
 2. saves gold (the base), initial, and the base once more (the null mutant)
    through ``uno_apply.py`` in the LO-VM image;
 3. plans only operators that need no requirement spec (``document`` and
@@ -49,8 +49,12 @@ OFFICE_SUFFIXES = {".xlsx": "xlsx", ".docx": "docx", ".pptx": "pptx"}
 NO_SPEC_AUTHOR = "operator-devsmoke-no-requirements"
 
 
-def sha256(path: Path) -> str:
-    return hashlib.sha256(path.read_bytes()).hexdigest()
+def candidate_sha256(vm_path: str, local: str) -> str:
+    """The harness job list's candidate digest for a one-file candidate."""
+    digest = hashlib.sha256()
+    digest.update(vm_path.encode())
+    digest.update(hashlib.sha256(Path(local).read_bytes()).digest())
+    return digest.hexdigest()
 
 
 def task_pairs(jobs: list[dict]) -> list[dict]:
@@ -88,8 +92,8 @@ def main(argv: list[str] | None = None) -> int:
     pairs = []
     rejected = []
     for pair in task_pairs(jobs):
-        ok = (sha256(Path(pair["gold"])) == pair["gold_sha256"]
-              and sha256(Path(pair["initial"])) == pair["initial_sha256"])
+        ok = (candidate_sha256(pair["vm_path"], pair["gold"]) == pair["gold_sha256"]
+              and candidate_sha256(pair["vm_path"], pair["initial"]) == pair["initial_sha256"])
         (pairs if ok else rejected).append(pair)
     name_of = {p["task_id"]: Path(p["vm_path"]).name for p in pairs}
 
