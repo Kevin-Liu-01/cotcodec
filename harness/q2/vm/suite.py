@@ -424,6 +424,10 @@ def observation(
         infra.append("probe_absent")
     if "error" in pre or "error" in post:
         infra.append("guard_script")
+    servers = {pre.get("server_pid"), post.get("server_pid")} - {None}
+    if len(servers) > 1:
+        # The guest server crashed and systemd restarted it during the entry (section 6.1).
+        infra.append("guest_server_restart")
     retried: list[str] = []
     for step in trial.get("steps") or []:
         infra += step.get("infra") or []

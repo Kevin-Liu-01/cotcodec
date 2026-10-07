@@ -30,14 +30,14 @@ Frozen with this file (SHA-256 of the committed bytes):
 | File | SHA-256 |
 |---|---|
 | `harness/q2/vm/guest/probe.py` | `ba5c0f1d364c80d5f8190f3c357b915cd504d754891285c3772ba959a804efeb` |
-| `harness/q2/vm/guest/guard.py` | `595fce1fa164c8fce868690b1853706ac6fa4761f0d15f41ac5cc0c3804224c5` |
+| `harness/q2/vm/guest/guard.py` | `0ef7e2e6d5025e4937b0611a9c33e7ff8776428aad04338015ea287917f7ca62` |
 | `harness/q2/vm/guest/canary.py` | `32742019db56b4f09905c50c71159c2ef3fe024a044d07f4bffb31cd41fcea1e` |
 | `harness/q2/vm/guest/facts.py` | `4a071a39d4586a58b62419796a57b678568bdbc3bfd77ec6d50e841414dcd255` |
 | `harness/q2/vm/guest/sentinel.py` | `98f46a7faafc58e9c65466b19ae3547288fc8829378ad7aa169b09a17161b18b` |
 | `harness/q2/vm/guest/tap_selftest.py` | `7e051c0bcb45ba81c2b1fb855a9dc70115957fafa3ec7f333c8b3be5ab3bf835` |
 | `harness/q2/vm/marker.py` | `b786b347fc5573425f14090bd67621294ac5c84671bf67f47e663d693ab17fb9` |
 | `harness/q2/vm/canary_run.py` | `295bdd0916869adf79015bc6da6cba4aff2a0ab9f0dab089e4ed3a3565abb119` |
-| `harness/q2/vm/suite.py` | `ef3b23c6c671d94a460b962aa2924a534bff749ecec4f33ff13d92e0d4e5edf6` |
+| `harness/q2/vm/suite.py` | `fdf71cce160194d3ca8dfbe0cd5e3d5bc414d2864084cab330d4ad0343ebe11e` |
 | `harness/q2/vm/desktop.py` | `67030d6b5d79753e2db65b33bc12af2b5faaee2eacbaa5e49b4eb2de0a31c188` |
 | `harness/q2/vm/validation.py` | `2ab5508e5a42269d447312e481b58c9f491d815d73e4977ba9c55d235231116f` |
 | `harness/q2/vm/guest_http.py` | `13e34f874c89b0b32f7f82ffae658682d2608bc9a0614a569742459d6b796ceb` |
@@ -203,6 +203,8 @@ later change to a file listed in section 1 (from `git log 29b056e..`):
 | `a6623ae` | `guest/guard.py`, `suite.py`, `runner.py` | The session warm-up described in section 2. Runs 549 (8 VMs) and 574 (one VM, the same 14 sessions): `chord_super_d` failed in the two sessions whose first key event was its Super_L press, the `d` press arriving with state 0, and in every session of runs 546 and 549 the keymap was re-sent right after the session's first key. |
 | `59697b3` | `guest/canary.py` | Writer, Chrome and VS Code trials also wait until the trial's processes are idle before the first action (section 2). Run 613, on a loaded host: three VS Code trials lost their first keys or clicks (`type_symbols_shifted` read back empty, `type_emoji` lost its first word and emoji, `triple_click_line` became a click inside the word) although the editor's status-bar items were showing; VS Code was still loading. |
 
+| SERVER_COMMIT | `guest/guard.py`, `suite.py` | Every guard report names the guest server process that ran it, and an entry whose two reports name different processes gets the infrastructure failure `guest_server_restart` (main section 6.1). Run 622: the server crashed inside `/accessibility`; its systemd unit stopped every process it had launched, the probe and the tap included, and restarted it 5 s later, so the rest of that session was charged with missing tap windows. |
+
 The probe change makes the no-action entry's screenshot start from a settled
 screen, the canary changes make the read-back report what the app holds, and
 the warm-up and the reset observation move once-per-boot effects out of the
@@ -210,3 +212,28 @@ first entry. One change touches how a trial is judged: the observation-failure
 rule of `b603347`, which aligns the code with main section 6.1 (a recovered
 retry had been counted as a failure, which 6.1 did not say); the retries stay
 in every report.
+
+## 6. A decision before the freeze: guest-server restarts and A4
+
+Main section 16, item 9: in development the OSWorld guest server crashed once
+in 7,969 `/accessibility` calls (its tree walk runs on a thread pool), and its
+systemd unit then stopped every process the server had launched. A crash is an
+infrastructure failure (section 6.1), and A4 needs zero failures over about
+42,000 accessibility calls, about five expected crashes at that rate. The
+registration keeps the strict rule; the options the owner can take before the
+freeze, each with its cost:
+
+1. Keep the rule. A4 will then very likely fail on a defect of the observation
+   service rather than of the action path, and Stage 1 stays blocked until the
+   runtime changes.
+2. Patch the guest server so the walk runs on one thread (or catches the
+   crash) and pin the patched `main.py`. The accessibility tree's content does
+   not change, but the runtime no longer matches upstream OSWorld exactly.
+3. Run the screenshot-plus-accessibility setting only where Stage 1 uses it,
+   or drop it from A4 and bound the observation service separately (for
+   example, at most 5 x 10^-4 restarts per accessibility call from a
+   dedicated campaign), with Stage 1 counting restarts per episode.
+4. Make the probe and the tap survive a restart (start them in their own
+   systemd scope) so a restart costs one trial instead of a session; this
+   improves the accounting under any of the options above but changes no
+   verdict on its own.

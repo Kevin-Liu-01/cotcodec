@@ -322,6 +322,8 @@ attempt does not return HTTP 200 within 30 s (`DesktopEnv` would retry it, and a
 retry can run the action twice); a `/screenshot` failure, meaning no valid image
 after `DesktopEnv`'s own three attempts; in the screenshot-plus-accessibility
 setting, an `/accessibility` failure, meaning no tree after its three attempts;
+a restart of the guest server during an entry (the guard's two reports name
+different server processes);
 the probe absent at a guard; the QEMU monitor unreachable during a reference
 capture; a key event inside an entry's window on a keycode range the tap's
 `mapping_check` marks unverified; a campaign receipt with `infra_gates_pass`
@@ -925,3 +927,21 @@ work of writing the acceptance code found these, all before any freeze:
 8. On a busy host VS Code showed its editor before it accepted input and
    dropped the first keys of three canary trials (run 613): the canary driver
    now also waits until the trial's processes are idle (A6, inputs addendum).
+9. The guest server can crash inside `/accessibility`: OSWorld's handler
+   walks the accessibility tree from a thread pool, and its systemd unit
+   (`Restart=on-failure`, default `KillMode`) then stops every process the
+   server launched, including the probe and the tap, and restarts the server
+   5 s later. Run 622 saw this once in the 7,969 accessibility calls of runs
+   484-622 (one later session charged with 55 failed trials, its tap gone).
+   A restart during an entry is now an infrastructure failure of its own
+   type (section 6.1; the guard reports the server's process id). With that
+   rate, A4's 64,028 zero-failure trials (about 42,000 accessibility calls)
+   would expect about five restarts, so A4 as registered would very likely
+   fail on this alone. The rule is left as registered; whether to change the
+   runtime, the observation settings or the criterion is the owner's decision
+   before the freeze (the inputs addendum lists the options).
+10. Writer once read back `done🎉 ` for `done 🎉` (run 620, a loaded host):
+    a space and the emoji typed after it arrived in Writer in the other order,
+    although the X server's event order was right. In 1 of the WRITER_TRIALS Writer
+    trials of runs 501-632 that typed text; GNOME's input-method daemon
+    (IBus) stands between X and GTK applications. Reported, not changed.

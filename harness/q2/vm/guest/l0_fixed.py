@@ -434,13 +434,13 @@ class Executor:
             prompt = prompt + 1 if elapsed < IDLE_REPLY_S else 0
 
     def nudge_compositor(self):
-        """Re-damage every viewable top-level window (no pixel changes), so the compositor
-        repaints from each window's current contents.
+        """Re-damage every viewable InputOutput top-level window (no pixel changes), so the
+        compositor repaints from each window's current contents.
 
-        Development runs 504-524: after typing, the probe's last drawing (made 4 ms
+        Development runs 504-541: after typing, the probe's last drawing (made 4 ms
         before the executor's last event) stayed off the screen for good (still
         missing 1.9 s later, when the next entry's drawing finally showed it), in
-        about 4% of typing trials, always exactly the last draw: the compositor
+        31 of 941 typing trials, always exactly the last draw: the compositor
         consumed that damage without repainting it. A Stage-1 screenshot would be
         stale the same way. XDamage DamageAdd (DAMAGE minor opcode 4: drawable,
         region) marks each window damaged again over a region made with XFixes
@@ -479,7 +479,11 @@ class Executor:
             nudged = 0
             for window in self.d.screen().root.query_tree().children:
                 try:
-                    if window.get_attributes().map_state != X.IsViewable:
+                    attributes = window.get_attributes()
+                    # An InputOnly window has no contents to repaint (and DamageAdd on it
+                    # is a BadMatch error).
+                    viewable = attributes.map_state == X.IsViewable
+                    if not viewable or attributes.win_class != X.InputOutput:
                         continue
                     geometry = window.get_geometry()
                 except Exception:  # noqa: BLE001 - windows can vanish meanwhile
