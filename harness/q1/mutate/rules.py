@@ -18,6 +18,8 @@ Statuses:
 
 from __future__ import annotations
 
+from pathlib import Path
+
 from harness.q1.mutate.operators import OPERATORS
 
 # All 127 rule definitions loaded by the released mutator (its pattern-level
@@ -250,3 +252,40 @@ def mapping_markdown() -> str:
         target = entry.get("operator") or entry.get("reason", "")
         lines.append(f"| `{rule}` | {KERNELBENCH_M_RULES[rule]} | {entry['status']} | {target} |")
     return "\n".join(lines)
+
+
+def operator_markdown() -> str:
+    """The operator registry as a Markdown table (for the README)."""
+    lines = [
+        "| Operator | Family | Origin | KernelBench-M rule | Also covers | Scope | What it does |",
+        "|---|---|---|---|---|---|---|",
+    ]
+    for op in OPERATORS:
+        rule = f"`{op.kbm_rule}`" if op.kbm_rule else "none"
+        ports = ", ".join(f"`{r}`" for r in op.ports) or ""
+        lines.append(
+            f"| `{op.name}` | {op.family} | {op.origin} | {rule} | {ports} | "
+            f"{'+'.join(op.scopes)} | {op.description} |"
+        )
+    return "\n".join(lines)
+
+
+README_PATH = Path(__file__).resolve().parent / "README.md"
+_MARKERS = {"operators": operator_markdown, "rules": mapping_markdown}
+
+
+def render_readme(text: str) -> str:
+    """``text`` with the generated tables between their markers refreshed."""
+    for name, render in _MARKERS.items():
+        start = f"<!-- q1-mutate:{name} start -->"
+        end = f"<!-- q1-mutate:{name} end -->"
+        head, _, rest = text.partition(start)
+        _, _, tail = rest.partition(end)
+        if not rest:
+            raise ValueError(f"README is missing the {name} markers")
+        text = f"{head}{start}\n{render()}\n{end}{tail}"
+    return text
+
+
+if __name__ == "__main__":  # python -m harness.q1.mutate.rules  (refreshes the README)
+    README_PATH.write_text(render_readme(README_PATH.read_text()))

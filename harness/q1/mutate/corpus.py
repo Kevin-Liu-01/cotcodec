@@ -195,6 +195,37 @@ def build_pool(substrates_root: Path, pool_root: Path) -> dict[str, Any]:
     return manifest
 
 
+def _compile_batch(
+    python: str, spec: Path, kernel_dir: Path, names: list[str], timeout_s: int
+) -> dict[str, dict[str, Any]]:
+    """Compile ``names`` in one fresh interpreter; return the results it printed."""
+    argv = [python, "-m", "harness.q1.mutate.compiled", "--spec", str(spec), "--kernels"]
+    argv += [str(kernel_dir / f"{n}.py") for n in names]
+    env = dict(os.environ, TRITON_DISABLE_LINE_INFO="1")
+    try:
+        done = subprocess.run(
+            argv,
+            capture_output=True,
+            text=True,
+            timeout=timeout_s,
+            env=env,
+            cwd=str(PACKAGE_DIR.parents[2]),
+            check=False,
+        )
+        stdout = done.stdout
+    except subprocess.TimeoutExpired as exc:
+        stdout = exc.stdout.decode() if isinstance(exc.stdout, bytes) else (exc.stdout or "")
+    results: dict[str, dict[str, Any]] = {}
+    for line in stdout.splitlines():
+        try:
+            record = json.loads(line)
+        except json.JSONDecodeError:
+            continue
+        if isinstance(record, dict) and "kernel" in record:
+            results[Path(record["kernel"]).stem] = record
+    return results
+
+
 # --- 2. compile ----------------------------------------------------------------
 
 
@@ -228,32 +259,20 @@ def compile_pool(
             ]
         kernel_dir = pool_root / "kernels" / substrate_id
         names = ["parent", *by_substrate.get(substrate_id, [])]
-        argv = [
-            python,
-            "-m",
-            "harness.q1.mutate.compiled",
-            "--spec",
-            str(spec),
-            "--kernels",
-            *[str(kernel_dir / f"{n}.py") for n in names],
-        ]
-        env = dict(os.environ, TRITON_DISABLE_LINE_INFO="1")
-        done = subprocess.run(
-            argv,
-            capture_output=True,
-            text=True,
-            timeout=timeout_s,
-            env=env,
-            cwd=str(PACKAGE_DIR.parents[2]),
-            check=False,
-        )
-        results = {}
-        for line in done.stdout.splitlines():
-            record = json.loads(line)
-            results[Path(record["kernel"]).stem] = record
+        results = _compile_batch(python, spec, kernel_dir, names, timeout_s)
+        # A batch that died (compiler crash, timeout) loses the remaining
+        # kernels; retry each of them alone, twice, so one crashing mutant is
+        # isolated and attributed to itself.
+        for name in [n for n in names if n not in results]:
+            for _attempt in range(2):
+                results.update(_compile_batch(python, spec, kernel_dir, [name], timeout_s))
+                if name in results:
+                    break
+            else:
+                results[name] = {"error": "crash: no result after two isolated attempts"}
         out_rows = []
         for name in names:
-            record = results.get(name, {"error": f"no result (exit {done.returncode})"})
+            record = results[name]
             row = {"substrate_id": substrate_id, "candidate": name}
             if "hashes" in record:
                 row["hashes"] = record["hashes"]
@@ -299,6 +318,9 @@ def _compile_status(
             )
             status[ident] = result
             counts[result[0]] += 1
+            if result[0] == "compile-fail":
+                kind = str(record.get("error", "missing")).split(":", 1)[0]
+                counts[f"compile-fail:{kind}"] += 1
         summaries[substrate_id] = {
             "parent_compiled_key": parent_key,
             **dict(sorted(counts.items())),
