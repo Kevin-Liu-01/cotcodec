@@ -4,6 +4,7 @@ import contextlib
 import hashlib
 import json
 import os
+import re
 import shutil
 import signal
 import subprocess
@@ -544,10 +545,23 @@ case "$1" in
     fi
     exit 0 ;;
   start) exec bash "${FAKE_WORKLOAD}" ;;
-  kill) kill -s "$3" "$(cat "${state}/workload.pid")"; exit 0 ;;
+  kill)
+    printf '%s %s\n' "$(date +%s.%N)" "$3" >> "${state}/kill-times"
+    if [[ "$(cat "${state}/status" 2>/dev/null)" != running ]]; then
+      echo "Error response from daemon: container $4 is not running" >&2
+      exit 1
+    fi
+    kill -s "$3" "$(cat "${state}/workload.pid")" 2>/dev/null || true
+    if [[ "$3" == KILL ]]; then
+      echo 137 > "${state}/exit_code"
+      echo exited > "${state}/status"
+    fi
+    exit 0 ;;
   rm)
     if [[ "$(cat "${state}/status" 2>/dev/null)" == running ]]; then
       kill -9 "$(cat "${state}/workload.pid")" 2>/dev/null || true
+      echo 137 > "${state}/exit_code"
+      echo exited > "${state}/status"
     fi
     exit 0 ;;
   logs) exit 0 ;;
@@ -585,8 +599,19 @@ on_usr1() {
   esac
   finish 0
 }
+on_term() {
+  echo TERM >> "${state}/workload-signals"
+  case "${FAKE_WORKLOAD_MODE}" in
+    checkpoint-on-term) write_marker trigger=SIGTERM step=term-checkpoint; finish 75 ;;
+  esac
+  finish 143
+}
 trap on_usr1 USR1
-trap 'echo TERM >> "${state}/workload-signals"; finish 143' TERM
+trap on_term TERM
+case "${FAKE_WORKLOAD_MODE}" in
+  # Slurm 617: PID 1 with default dispositions ignores USR1 and TERM alike.
+  ignore-signals) trap '' USR1 TERM ;;
+esac
 echo running > "${state}/status"
 case "${FAKE_PERIODIC_MARKER:-false}" in
   true) write_marker step=periodic-checkpoint ;;
@@ -598,6 +623,21 @@ case "${FAKE_WORKLOAD_MODE}" in
   exit-*) finish "${FAKE_WORKLOAD_MODE#exit-}" ;;
 esac
 while :; do sleep 0.05; done
+"""
+
+# squeue -h -j <job> -o %L: the time left before the job's limit.
+FAKE_SQUEUE = r"""#!/usr/bin/env bash
+echo "${FAKE_TIME_LEFT-30:00}"
+"""
+
+FAKE_SCONTROL = r"""#!/usr/bin/env bash
+if [[ "$1 $2" == "show config" ]]; then
+  if [[ -n "${FAKE_KILL_WAIT-30}" ]]; then
+    echo "KillWait                = ${FAKE_KILL_WAIT-30} sec"
+  fi
+  exit 0
+fi
+echo "JobId=$3"
 """
 
 FAKE_NVIDIA_SMI = r"""#!/usr/bin/env bash
@@ -613,6 +653,10 @@ while [[ $# -gt 0 ]]; do
 done
 case "${query}" in
   apps)
+    if [[ -n "${FAKE_COMPUTE_APPS_DELAY:-}" ]]; then
+      touch "${FAKE_DOCKER_STATE}/prolog-started"
+      sleep "${FAKE_COMPUTE_APPS_DELAY}"
+    fi
     if [[ -n "${FAKE_COMPUTE_APPS:-}" ]]; then printf '%s\n' "${FAKE_COMPUTE_APPS}"; fi
     exit "${FAKE_COMPUTE_APPS_STATUS:-0}" ;;
   gpu:name) for d in ${devices//,/ }; do echo "NVIDIA H100 80GB HBM3"; done ;;
@@ -638,7 +682,8 @@ class StubbedRun:
         for name, body in (
             ("docker", FAKE_DOCKER),
             ("nvidia-smi", FAKE_NVIDIA_SMI),
-            ("scontrol", "#!/usr/bin/env bash\necho \"JobId=$3\"\n"),
+            ("scontrol", FAKE_SCONTROL),
+            ("squeue", FAKE_SQUEUE),
         ):
             (bin_dir / name).write_text(body, encoding="utf-8")
             (bin_dir / name).chmod(0o755)
@@ -731,6 +776,23 @@ class StubbedRun:
         text = (self.run_dir / name).read_text(encoding="utf-8")
         return dict(line.split("=", 1) for line in text.splitlines() if "=" in line)
 
+    def kills(self) -> list[tuple[float, str]]:
+        """Every `docker kill` as (wall time, signal), in order."""
+        path = self.state / "kill-times"
+        if not path.exists():
+            return []
+        rows = [line.split() for line in path.read_text(encoding="utf-8").splitlines()]
+        return [(float(stamp), name) for stamp, name in rows]
+
+    def workload_alive(self) -> bool:
+        """Whether the fake container's process still runs (a zombie counts as dead)."""
+        pid = (self.state / "workload.pid").read_text(encoding="utf-8").strip()
+        try:
+            stat = Path(f"/proc/{pid}/stat").read_text(encoding="utf-8")
+        except FileNotFoundError:
+            return False
+        return stat.rsplit(")", 1)[1].split()[0] != "Z"
+
 
 @pytest.fixture
 def lane_root(tmp_path_factory: pytest.TempPathFactory) -> Path:
@@ -753,6 +815,7 @@ def test_default_manifest_runs_with_the_original_container_flags(lane_root: Path
     expected = [
         "create",
         "--name", "cotcodec-4242",
+        "--stop-timeout", "10",
         "--entrypoint", "/bin/bash",
         "--gpus", "device=0",
         "--network", "none",
@@ -797,10 +860,16 @@ def test_default_manifest_runs_with_the_original_container_flags(lane_root: Path
     assert job["container_profile"] == "default"
     assert job["allow_shared_gpu"] == "false"
     assert job["memory_limit_mb"] == "32768"
+    assert job["slurm_time_left_seconds"] == "1800"
+    assert job["slurm_kill_wait_seconds"] == "30"
+    assert job["term_grace_seconds"] == "10"
     assert run.env_file("gpu-prolog.env")["decision"] == "exclusive"
     termination = run.env_file("termination.env")
     assert termination["reason"] == "completed"
     assert termination["exit_code"] == "0"
+    assert termination["hard_stop_at"] == job["hard_stop_at"]
+    assert termination["container_killed_by"] == "none"
+    assert not (run.run_dir / "hard-stop.env").exists()
     assert (run.run_dir / "model-receipt.json").is_file()
 
 
@@ -991,3 +1060,197 @@ def test_completed_job_with_a_leftover_marker_is_not_checkpoint_ready(lane_root:
     assert termination["reason"] == "completed"
     assert termination["checkpoint_ready"] == "false"
     assert termination["checkpoint_marker_present"] == "true"
+
+
+# --- container lifetime -------------------------------------------------------
+#
+# The container is a child of the Docker daemon, so only the batch script can
+# end it. Slurm 617: a workload whose PID 1 ignored USR1 and TERM outlived its
+# timed-out job by 88 s, holding its GPU, because the container was removed only
+# by the exit trap and Slurm's KILL (KillWait after TERM) skips every trap.
+
+
+def _wait_for_exit(run: StubbedRun, timeout: float) -> int:
+    assert run.process is not None
+    return run.process.wait(timeout=timeout)
+
+
+@RUNTIME_SKIP
+@pytest.mark.parametrize("usr1", [False, True], ids=["no-signal", "usr1-ignored"])
+def test_hard_stop_kills_a_container_that_ignores_term_before_the_job_ends(
+    lane_root: Path, usr1: bool
+) -> None:
+    # 36 s left at start: the hard stop is 30 s before the limit, about 6 s in.
+    # Slurm's own end is no earlier than started + 36, because squeue ran later.
+    run = StubbedRun(
+        lane_root, _seeded_raw(), FAKE_WORKLOAD_MODE="ignore-signals", FAKE_TIME_LEFT="0:36"
+    )
+    started = time.time()
+    job_end = started + 36
+    run.start()
+    run.wait_for_workload()
+    assert run.process is not None
+    if usr1:
+        run.process.send_signal(signal.SIGUSR1)
+    try:
+        code = _wait_for_exit(run, timeout=60)
+        ended = time.time()
+        alive = run.workload_alive()
+    finally:
+        run.finish()
+    assert code == 137, run.stderr_text()
+    assert not alive
+    assert ended < job_end
+    kill_at = next(stamp for stamp, name in run.kills() if name == "KILL")
+    assert started + 5 <= kill_at < job_end
+    assert ["rm", "--force", "cotcodec-4242"] in run.calls("rm")
+    assert not (run.state / "workload-signals").exists()
+    termination = run.env_file("termination.env")
+    assert termination["exit_code"] == "137"
+    assert termination["container_killed_by"] == "hard_stop"
+    assert termination["hard_stop_at"] == run.env_file("job.env")["hard_stop_at"]
+    assert run.env_file("hard-stop.env")["killed_at"] == termination["container_killed_at"]
+    if usr1:
+        # The USR1 protocol is unchanged: forwarded at once, then its 120 s wait
+        # is cut short by the hard stop, so no checkpoint is confirmed.
+        assert [name for _stamp, name in run.kills()][:2] == ["USR1", "KILL"]
+        assert termination["reason"] == "signal_USR1_checkpoint_missing"
+    else:
+        assert [name for _stamp, name in run.kills()] == ["KILL"]
+        assert termination["reason"] == "hard_stop"
+    assert termination["checkpoint_ready"] == "false"
+
+
+@RUNTIME_SKIP
+def test_term_kills_a_container_that_ignores_term_inside_kill_wait(lane_root: Path) -> None:
+    # KillWait 22 s leaves a 2 s TERM grace (KillWait minus the 20 s reserve).
+    run = StubbedRun(
+        lane_root, _seeded_raw(), FAKE_WORKLOAD_MODE="ignore-signals", FAKE_KILL_WAIT="22"
+    )
+    run.start()
+    run.wait_for_workload()
+    assert run.process is not None
+    term_at = time.time()
+    run.process.send_signal(signal.SIGTERM)
+    try:
+        code = _wait_for_exit(run, timeout=60)
+        ended = time.time()
+        alive = run.workload_alive()
+    finally:
+        run.finish()
+    assert code == 137, run.stderr_text()
+    assert not alive
+    # Slurm's KILL would come 22 s after its TERM; the script is done long before.
+    assert ended - term_at < 22 - 10
+    signals = [name for _stamp, name in run.kills()]
+    assert signals[0] == "TERM" and "KILL" in signals
+    kill_at = next(stamp for stamp, name in run.kills() if name == "KILL")
+    assert 2 <= kill_at - term_at < 22 - 10
+    assert ["rm", "--force", "cotcodec-4242"] in run.calls("rm")
+    assert run.env_file("job.env")["term_grace_seconds"] == "2"
+    termination = run.env_file("termination.env")
+    assert termination["reason"] == "signal_TERM_checkpoint_timeout"
+    assert termination["exit_code"] == "137"
+    assert termination["container_killed_by"] == "signal_TERM"
+    assert termination["checkpoint_ready"] == "false"
+
+
+@RUNTIME_SKIP
+def test_term_still_confirms_a_term_triggered_checkpoint(lane_root: Path) -> None:
+    run = StubbedRun(lane_root, _seeded_raw(), FAKE_WORKLOAD_MODE="checkpoint-on-term")
+    run.start()
+    run.wait_for_workload()
+    assert run.process is not None
+    run.process.send_signal(signal.SIGTERM)
+    assert run.finish() == 75, run.stderr_text()
+    assert (run.state / "workload-signals").read_text(encoding="utf-8").split() == ["TERM"]
+    assert [name for _stamp, name in run.kills()] == ["TERM"]
+    termination = run.env_file("termination.env")
+    assert termination["reason"] == "signal_TERM_checkpoint_confirmed"
+    assert termination["exit_code"] == "75"
+    assert termination["checkpoint_ready"] == "true"
+    assert termination["container_killed_by"] == "none"
+
+
+@RUNTIME_SKIP
+def test_term_before_the_container_exists_never_starts_one(lane_root: Path) -> None:
+    run = StubbedRun(lane_root, _seeded_raw(), FAKE_COMPUTE_APPS_DELAY="2")
+    run.start()
+    deadline = time.monotonic() + 30
+    while not (run.state / "prolog-started").exists():
+        assert run.process is not None and run.process.poll() is None, run.stderr_text()
+        assert time.monotonic() < deadline, "the GPU prolog never ran"
+        time.sleep(0.05)
+    assert run.process is not None
+    run.process.send_signal(signal.SIGTERM)
+    assert run.finish() == 143, run.stderr_text()
+    assert run.calls("create") == []
+    assert run.calls("start") == []
+    termination = run.env_file("termination.env")
+    assert termination["reason"] == "signal_TERM_not_forwarded"
+    assert termination["container_killed_by"] == "none"
+
+
+@RUNTIME_SKIP
+@pytest.mark.parametrize(
+    ("time_left", "message"),
+    [
+        ("UNLIMITED", "did not report a finite time left"),
+        ("", "did not report a finite time left"),
+        ("31:00", "exceeds the manifest minutes"),
+        ("0:30", "does not reach past the container hard stop"),
+    ],
+)
+def test_job_without_a_bounded_time_limit_is_refused(
+    lane_root: Path, time_left: str, message: str
+) -> None:
+    run = StubbedRun(lane_root, _seeded_raw(), FAKE_TIME_LEFT=time_left)
+    assert run.run() == 2, run.stderr_text()
+    assert message in run.stderr_text()
+    assert run.calls("create") == []
+
+
+@RUNTIME_SKIP
+@pytest.mark.parametrize(
+    ("kill_wait", "recorded", "grace"),
+    [("30", "30", "10"), ("", "unknown", "0"), ("12", "12", "0"), ("300", "300", "120")],
+)
+def test_term_grace_fits_inside_slurm_kill_wait(
+    lane_root: Path, kill_wait: str, recorded: str, grace: str
+) -> None:
+    run = StubbedRun(lane_root, _seeded_raw(), FAKE_KILL_WAIT=kill_wait)
+    assert run.run() == 0, run.stderr_text()
+    job = run.env_file("job.env")
+    assert job["slurm_kill_wait_seconds"] == recorded
+    assert job["term_grace_seconds"] == grace
+    args = run.create_args()
+    assert args[args.index("--stop-timeout") + 1] == grace
+
+
+def _script_constant(content: str, name: str) -> int:
+    match = re.search(rf"^{name}=([0-9]+)$", content, re.MULTILINE)
+    assert match is not None, name
+    return int(match.group(1))
+
+
+def test_hard_stop_falls_after_the_usr1_checkpoint_window() -> None:
+    content = BATCH_SCRIPT.read_text(encoding="utf-8")
+    argv = sbatch_argv(validate_manifest(_seeded_raw()), test_only=True)
+    (signal_option,) = [value for value in argv if value.startswith("--signal=")]
+    usr1_lead = int(signal_option.removeprefix("--signal=B:USR1@"))
+    assert f"#SBATCH --signal=B:USR1@{usr1_lead}" in content
+    margin = _script_constant(content, "hard_stop_margin_seconds")
+    wait = _script_constant(content, "checkpoint_wait_seconds")
+    reserve = _script_constant(content, "term_kill_reserve_seconds")
+    # A USR1 sent on time gets its whole checkpoint wait before the hard stop.
+    assert 0 < margin < usr1_lead - wait
+    # After the TERM grace, KillWait still covers the bounded exit-code poll in
+    # on_term plus the exit trap's inspect, logs and removal.
+    on_term = content.split("on_term() {", 1)[1].split("\n}\n", 1)[0]
+    poll = int(re.search(r"container_exit_code ([0-9]+)", on_term).group(1))
+    assert reserve >= poll + 5
+    assert "trap on_term TERM" in content
+    assert "docker stop" not in content.replace("`docker stop`", "")
+    create = content.split("docker create \\\n", 1)[1].split("container-id.txt", 1)[0]
+    assert '--stop-timeout "${term_grace_seconds}"' in create
+    assert content.index("hard_stop_before_start") < content.index("docker create \\\n")

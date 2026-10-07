@@ -281,3 +281,23 @@ Append-only. Newest entries at the bottom.
   vLLM teardown and overran its 0.1 GPU-h cap (0.11 by Slurm); a fix exists
   but is validated on CPU only. The lane leaves a container alive if Slurm
   kills the batch script at the time limit; to be fixed.
+
+## 2026-10-07 — Lane: container lifetime bounded by the job
+
+- Fixed the lane gap found by the open-weight reviewer smoke (Slurm 617) on
+  branch `stage0/lane-container-lifetime`: `docker-research.sbatch` removed its
+  container only from its exit trap, so a workload that ignored TERM outlived a
+  timed-out job (Slurm's KILL, KillWait 30 s after TERM, skips every trap).
+- The batch script now reads the time left (`squeue -o %L`, exit 2 if not
+  finite or above the manifest minutes), SIGKILLs the container 30 s before the
+  limit from a background timer (after USR1's 120 s checkpoint window), and on
+  TERM waits at most KillWait minus 20 s (10 s here) for a `trigger=SIGTERM`
+  checkpoint before `docker kill` and removal. A TERM before start starts no
+  container; `docker create` gets `--stop-timeout`. `termination.env` adds
+  `hard_stop_at`, `container_killed_by` and `container_killed_at`.
+- Stub-docker tests: a container ignoring USR1 and TERM is killed before the
+  job's end (hard stop) and within KillWait (TERM); all 8 new runtime tests
+  fail against the previous script. No GPU time used.
+- `vm-campaign.sbatch` (branch `stage0/q2-action-path`, not on main) does not
+  have this gap: its USR1/TERM handler kills the driver and force-removes every
+  job-labelled container without waiting on them.
