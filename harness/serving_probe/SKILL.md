@@ -31,6 +31,9 @@ time for Q1 (offline n=8 sampling) and Q2 (closed-loop computer-use episodes).
 - Text and image seeds are separate streams, so controls resend identical text.
 - Generated text stays in memory; only counts and token-id digests are written.
 - Budget fallbacks are fixed in the preregistration and always flagged.
+- Only accepted jobs enter a budget: `project` admits a job only when its
+  summary.json is accepted (recomputed), exit code 0, and lists the SHA-256 of
+  exactly the point files on disk.
 - The frozen preregistration names the contract SHA-256 and the digest of every
   `*.py` here plus the driver; G0.0 and `project` refuse any other code. Print
   both with `run_vllm_throughput_probe.py digest`.

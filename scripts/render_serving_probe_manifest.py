@@ -5,7 +5,9 @@ Inputs are artifacts, never copied hashes: the vLLM overlay build receipt (image
 git SHA, source-capsule SHA-256, image variant) and, for dummy-weight jobs, the
 metadata receipts written by fetch-model-metadata-in-docker.sh. The renderer
 replaces the template's FILL_* sentinels, cross-checks the result against the
-probe contract and the current lane validator, and refuses to overwrite.
+probe contract and the current lane validator, and refuses to overwrite. Job C
+renders only from job A's output directory, and only when job A is accepted and
+its control X1 passed (preregistration design decisions 21 and 33).
 """
 
 from __future__ import annotations
@@ -97,6 +99,7 @@ def render(
     *,
     build: Mapping[str, str],
     pins: Mapping[str, str],
+    job_a_output: Path | None = None,
     config_root: Path = PROJECT_ROOT,
 ) -> dict[str, Any]:
     manifest = copy.deepcopy(dict(template))
@@ -118,12 +121,38 @@ def render(
     leftover = [key for key, value in manifest.items() if "FILL_" in json.dumps(value)]
     if leftover:
         raise RenderError(f"unfilled sentinels remain in {leftover}")
-    check_rendered(manifest, config_root=config_root, pins=pins)
+    check_rendered(manifest, config_root=config_root, pins=pins, job_a_output=job_a_output)
     return manifest
 
 
+def check_job_c_gate(config: Any, job_a_output: Path | None) -> None:
+    """Refuse job C unless job A is accepted and its control X1 passed."""
+    from scripts.run_vllm_throughput_probe import ProjectionError, job_c_gate
+
+    if job_a_output is None:
+        raise RenderError(
+            "job C renders only from job A's output directory (--job-a-output), after "
+            "control X1 passed"
+        )
+    try:
+        verdict = job_c_gate(config, job_a_output)
+    except (ProjectionError, OSError, ValueError) as exc:
+        raise RenderError(f"job A output {job_a_output} cannot be read: {exc}") from exc
+    if not verdict["job_a"]["accepted"]:
+        reasons = "; ".join(verdict["job_a"]["reasons"])
+        raise RenderError(f"job C needs an accepted job A; job A is not accepted: {reasons}")
+    if not verdict["submit"]:
+        raise RenderError(
+            f"job C needs control X1 to pass; job A has X1 {verdict['x1']['outcome']}"
+        )
+
+
 def check_rendered(
-    manifest: Mapping[str, Any], *, config_root: Path, pins: Mapping[str, str]
+    manifest: Mapping[str, Any],
+    *,
+    config_root: Path,
+    pins: Mapping[str, str],
+    job_a_output: Path | None = None,
 ) -> None:
     """Cross-check a rendered manifest against the probe contract and the lane."""
     if manifest.get("container_profile") not in CONTAINER_PROFILES:
@@ -149,6 +178,8 @@ def check_rendered(
     if list(config.primary_seeds) != list(manifest["seeds"]):
         raise RenderError("manifest seeds differ from the contract's primary seeds")
     resources = manifest["resources"]
+    if int(resources["gpus"]) != 1:
+        raise RenderError("the probe runs on exactly one GPU (TP=1, gate G0.2)")
     if int(minutes) != int(resources["minutes"]) or int(minutes) != job.allocation_minutes:
         raise RenderError("allocation minutes differ between command, resources and contract")
     if manifest["model"]["model_id"] != job.lane_model:
@@ -163,6 +194,8 @@ def check_rendered(
     validated = validate_manifest(dict(manifest), verify_claim_files=False)
     if validated["gpus"] * validated["minutes"] / 60 > validated["max_gpu_hours"] + 1e-9:
         raise RenderError("max_gpu_hours is below the allocation")
+    if job_id == "c":
+        check_job_c_gate(config, job_a_output)
 
 
 def main(argv: Sequence[str] | None = None) -> int:
@@ -170,13 +203,18 @@ def main(argv: Sequence[str] | None = None) -> int:
     parser.add_argument("--template", type=Path, required=True)
     parser.add_argument("--build-receipt", type=Path, required=True)
     parser.add_argument("--metadata-receipt", type=Path, action="append", default=[])
+    parser.add_argument(
+        "--job-a-output",
+        type=Path,
+        help="job A's probe output directory (required for job C: accepted, X1 passed)",
+    )
     parser.add_argument("--output", type=Path, required=True)
     args = parser.parse_args(argv)
     template = yaml.safe_load(args.template.read_text(encoding="utf-8"))
     try:
         build = read_build_receipt(args.build_receipt)
         pins = dict(read_metadata_receipt(path) for path in args.metadata_receipt)
-        manifest = render(template, build=build, pins=pins)
+        manifest = render(template, build=build, pins=pins, job_a_output=args.job_a_output)
     except (RenderError, ValueError, KeyError) as exc:
         print(f"FAIL: {exc}", file=sys.stderr)
         return 2

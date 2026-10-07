@@ -1,7 +1,8 @@
 # Job C of serving-throughput-probe-v1 (optional 0.5 GPU-h extension, decision D8): the
 # Qwen3.5-27B-FP8 and Qwen3.5-35B-A3B-FP8 configs with vLLM dummy weights at TP=1.
-# Submit only after job A's control X1 passed. qwen3-0.6b-base is the lane's admission
-# token; the driver verifies both pinned metadata receipts itself.
+# Submitted only after job A is accepted and its control X1 passed: the renderer refuses
+# it without --job-a-output showing both. qwen3-0.6b-base is the lane's admission token;
+# the driver verifies both pinned metadata receipts itself.
 # Template only. Render it with scripts/render_serving_probe_manifest.py; the FILL_* values
 # are invalid on purpose so the submitter rejects this file.
 runtime: docker-single-node-discovery-v1

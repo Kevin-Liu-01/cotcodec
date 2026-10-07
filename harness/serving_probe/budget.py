@@ -79,6 +79,35 @@ def per_request_tokens(point: Mapping[str, Any]) -> tuple[float, float]:
     return float(result["prompt_tokens"]) / completed, float(result["output_tokens"]) / completed
 
 
+def _prompt_tokens_per_request(point: Mapping[str, Any]) -> float | None:
+    result = point.get("result", {})
+    completed, tokens = result.get("completed"), result.get("prompt_tokens")
+    return float(tokens) / float(completed) if completed and tokens is not None else None
+
+
+def replay_prompt_tokens(
+    reference: Mapping[str, Any], control: Mapping[str, Any]
+) -> dict[str, Any]:
+    """Mean prompt tokens per request (overall and per step) of two replay points.
+
+    Reported next to the X1 deltas: the dummy-weight replay's history carries
+    dummy outputs, which may re-tokenise to other lengths. Reporting only.
+    """
+    first, second = _prompt_tokens_per_request(reference), _prompt_tokens_per_request(control)
+    steps_a = reference.get("result", {}).get("per_step", {})
+    steps_b = control.get("result", {}).get("per_step", {})
+    per_step = {
+        step: [steps_a[step].get("mean_prompt_tokens"), steps_b[step].get("mean_prompt_tokens")]
+        for step in sorted(set(steps_a) & set(steps_b), key=int)
+    }
+    return {
+        "r1_per_request": first,
+        "x1_r1_per_request": second,
+        "relative_delta": (relative_delta(second, first) if first and second is not None else None),
+        "per_step": per_step,
+    }
+
+
 def evaluate_x1(
     points: Mapping[str, Mapping[str, Any]],
     *,
@@ -132,6 +161,7 @@ def evaluate_x1(
         "a1_seed_range": seed_range,
         "a1_seeds_valid": seeds_valid,
         "threshold": max_relative_delta,
+        "replay_prompt_tokens": replay_prompt_tokens(points["r1"], points["x1-r1"]),
     }
 
 

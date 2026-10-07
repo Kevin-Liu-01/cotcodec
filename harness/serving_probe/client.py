@@ -350,11 +350,22 @@ async def run_aa(
 def percentile_summary(
     values: Sequence[float], *, scale: float = 1000.0
 ) -> dict[str, float | None]:
-    """Mean and p50/p90/p99 (linear interpolation), scaled (default seconds -> ms)."""
+    """Mean, sample SD, SE of the mean and p50/p90/p99 (linear interpolation), scaled.
+
+    ``scale`` converts units (default seconds -> ms). SD uses n - 1 and SE is
+    SD / sqrt(n); both are None with fewer than two values.
+    """
     clean = sorted(float(value) for value in values if value is not None and math.isfinite(value))
     if not clean:
-        return {"mean": None, **{f"p{p}": None for p in PERCENTILES}}
-    summary: dict[str, float | None] = {"mean": scale * sum(clean) / len(clean)}
+        return {"mean": None, "sd": None, "se": None, **{f"p{p}": None for p in PERCENTILES}}
+    count = len(clean)
+    mean = sum(clean) / count
+    sd = math.sqrt(sum((x - mean) ** 2 for x in clean) / (count - 1)) if count > 1 else None
+    summary: dict[str, float | None] = {
+        "mean": scale * mean,
+        "sd": None if sd is None else scale * sd,
+        "se": None if sd is None else scale * sd / math.sqrt(count),
+    }
     for p in PERCENTILES:
         rank = (len(clean) - 1) * p / 100
         low = math.floor(rank)

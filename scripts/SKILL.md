@@ -29,7 +29,9 @@ provenance.
   (serving-throughput-probe-v1): `plan`, `run`, `vllm-args-doctor`, `project`,
   `digest`.
   `build_vllm_overlay_on_h100.sh` builds its vLLM overlay image and
-  `render_serving_probe_manifest.py` fills its manifest templates from receipts.
+  `render_serving_probe_manifest.py` fills its manifest templates from receipts
+  (job C only from an accepted job A whose control X1 passed). `project` reads
+  only accepted jobs whose summary lists the point files on disk.
 
 ## Patterns to follow / invariants
 <!-- agent-docs:fill:patterns -->

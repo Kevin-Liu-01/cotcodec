@@ -1,9 +1,11 @@
 from __future__ import annotations
 
 import asyncio
+import math
 import threading
 import time
 
+import pytest
 from serving_probe_fakes import IMAGE_TOKENS, WRAPPER_TOKENS, FakeVllm
 
 from harness.serving_probe.client import (
@@ -233,7 +235,19 @@ def test_percentiles_are_linear_and_scaled() -> None:
     assert summary["mean"] == 2500.0
     assert summary["p50"] == 2500.0
     assert abs(summary["p90"] - 3700.0) < 1e-9
-    assert percentile_summary([]) == {"mean": None, "p50": None, "p90": None, "p99": None}
+    empty = {"mean": None, "sd": None, "se": None, "p50": None, "p90": None, "p99": None}
+    assert percentile_summary([]) == empty
+
+
+def test_percentile_summary_reports_the_standard_error_of_the_mean() -> None:
+    # Preregistration section 6: the standard error of a replay step mean is reported.
+    summary = percentile_summary([1.0, 2.0, 3.0, 4.0], scale=1.0)
+    sd = math.sqrt(sum((x - 2.5) ** 2 for x in (1.0, 2.0, 3.0, 4.0)) / 3)
+    assert summary["sd"] == pytest.approx(sd)
+    assert summary["se"] == pytest.approx(sd / 2.0)
+    assert percentile_summary([1.0, 2.0])["se"] == pytest.approx(500.0)  # scaled to ms
+    single = percentile_summary([3.0], scale=1.0)
+    assert single["mean"] == 3.0 and single["sd"] is None and single["se"] is None
 
 
 def test_stop_token_sleep_returns_early() -> None:

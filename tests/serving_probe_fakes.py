@@ -189,3 +189,83 @@ class FakeLLM:
             )
             for request_id, sampling in finished
         ]
+
+
+def write_job_dir(
+    directory: Any,
+    config: Any,
+    job_id: str,
+    points: dict[str, dict[str, Any]],
+    *,
+    status: str = "complete",
+    exit_code: int = 0,
+) -> Any:
+    """Write point files and a finished summary.json for one job, as the driver does.
+
+    ``points`` maps point ids to partial records (``status`` and ``result``); the
+    identity fields the projection checks are filled in here. Returns the directory.
+    """
+    import hashlib
+    from pathlib import Path
+
+    from scripts import run_vllm_throughput_probe as probe
+
+    directory = Path(directory)
+    (directory / "points").mkdir(parents=True, exist_ok=True)
+    shas = {}
+    for point_id, record in points.items():
+        full = {
+            "experiment_id": config.experiment_id,
+            "config_sha256": config.sha256,
+            "job": job_id,
+            "point_id": point_id,
+            **record,
+        }
+        path = directory / "points" / f"{point_id}.json"
+        path.write_text(json.dumps(full), encoding="utf-8")
+        shas[point_id] = hashlib.sha256(path.read_bytes()).hexdigest()
+    summary: dict[str, Any] = {
+        "experiment_id": config.experiment_id,
+        "job": job_id,
+        "config_sha256": config.sha256,
+        "gates": {gate: {"pass": True} for gate in ("G0.0", "G0.1", "G0.2", "G0.3", "G0.4")},
+        "status": status,
+        "exit_code": exit_code,
+        "points": {name: record.get("status") for name, record in points.items()},
+        "point_sha256": shas,
+        "eager": False,
+        "image_variant": "cu129",
+    }
+    summary["acceptance"] = probe.job_acceptance(summary)
+    (directory / "summary.json").write_text(json.dumps(summary), encoding="utf-8")
+    return directory
+
+
+def x1_passing_job_a_points() -> dict[str, dict[str, Any]]:
+    """The six job A points control X1 reads, valid and within every threshold."""
+
+    def opened(rate: float) -> dict[str, Any]:
+        return {
+            "status": "valid",
+            "result": {"request_throughput": rate, "prompt_tokens": 960, "completed": 96},
+        }
+
+    def replay(latency_s: float) -> dict[str, Any]:
+        return {
+            "status": "valid",
+            "result": {
+                "e2el_ms": {"mean": latency_s * 1000.0},
+                "prompt_tokens": 2400,
+                "completed": 240,
+                "per_step": {"1": {"mean_prompt_tokens": 10.0}},
+            },
+        }
+
+    return {
+        "a1a": opened(2.0),
+        "a1b": opened(2.02),
+        "a1c": opened(2.01),
+        "x1-a1": opened(2.03),
+        "r1": replay(5.0),
+        "x1-r1": replay(5.05),
+    }
