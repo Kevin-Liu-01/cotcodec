@@ -20,7 +20,7 @@ from __future__ import annotations
 
 import argparse
 import json
-import signal
+import os
 import sys
 from pathlib import Path
 
@@ -29,7 +29,12 @@ if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
 from harness.q1 import problems as problem_lib  # noqa: E402
-from harness.q1.runner import Runner, RunnerConfig, WorkItem  # noqa: E402
+from harness.q1.runner import (  # noqa: E402
+    Runner,
+    RunnerConfig,
+    WorkItem,
+    install_signal_handlers,
+)
 from harness.q1.schema import (  # noqa: E402
     KERNELBENCH_PROBLEMS_REVISION,
     canonical_json,
@@ -117,17 +122,20 @@ def main(argv: list[str] | None = None) -> int:
         for gate in GATES
     ]
     (args.output / "items").mkdir(exist_ok=True)
+    marker = os.environ.get("COTCODEC_CHECKPOINT_MARKER")
     runner = Runner(
         RunnerConfig(
             journal_path=args.output / "journal.jsonl",
             slots=["cuda:0"],
             workdir=args.output / "items",
+            checkpoint_marker=Path(marker) if marker else None,
+            progress_path=args.output / "progress.json",
         )
     )
-    for signum in (signal.SIGUSR1, signal.SIGTERM):
-        signal.signal(signum, lambda *_: runner.stop())
+    install_signal_handlers(runner)
     summary = runner.run(items)
     if runner.stopped.is_set():
+        runner.write_checkpoint_marker()
         return 75
     timing = Runner(
         RunnerConfig(
