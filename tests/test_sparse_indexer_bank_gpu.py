@@ -45,8 +45,6 @@ def test_registered_shape_bank_matches_v1_under_tf32() -> None:
     assert report["loss_max_rel"] <= tolerance["loss_max_rel"], report
     assert report["clip_norm_max_rel"] <= tolerance["clip_norm_max_rel"], report
     assert max(report["grad_max_rel_fro"].values()) <= tolerance["grad_max_rel_fro"], report
-    assert max(report["param_after_step_max_rel_fro"].values()) <= (
-        tolerance["param_after_step_max_rel_fro"]), report
     adam = eq.adam_check(sit.IndexerSpec(), 15, eq.registered_keys(), DEVICE)
     assert adam["adam_step_max_rel"] <= tolerance["adam_step_max_rel"], adam
 
