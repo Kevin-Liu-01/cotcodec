@@ -38,8 +38,9 @@ needs in one burst and waits for the desktop shell to answer on D-Bus before
 typing (``shell_barrier``): the shell is the compositor, and it repaints
 nothing while it rebuilds its keymap. Every action except ``wait`` ends with
 the same barrier (the shell has processed the action's events), then waits
-until the screen has been unchanged for ``QUIET_S`` (0.25 s, XDamage on the
-root window), at least ``SETTLE_S`` (0.1 s, the default ``pyautogui.PAUSE``
+until the screen has been unchanged for ``QUIET_S`` (0.25 s; the root window's
+image read every 0.05 s, as ``/screenshot`` reads it), at least ``SETTLE_S``
+(0.1 s, the default ``pyautogui.PAUSE``
 that ends every upstream PyAutoGUI call) and at most ``QUIET_MAX_S`` (2 s)
 after its device events (``screen_quiet``), so the screenshot
 ``DesktopEnv.step`` takes next shows the action's effect (development runs
@@ -81,6 +82,7 @@ SCROLL_GAP_S = 0.03
 KEY_HOLD_S = 0.1  # a key or chord is held this long before release (QEMU sendkey's R-dev hold)
 SETTLE_S = 0.1  # every action lasts at least this: PyAutoGUI 0.9.54's default PAUSE
 QUIET_S = 0.25  # ...and ends only after the screen has been unchanged this long
+QUIET_STEP_S = 0.05  # how often the screen is read while waiting
 QUIET_MAX_S = 2.0  # ...or this long after its device events, whichever is first
 IDLE_REPLY_S = 0.05  # a shell D-Bus reply within this means its main loop is idle
 REMAP_SETTLE_S = 0.3
@@ -429,44 +431,47 @@ class Executor:
             prompt = prompt + 1 if elapsed < IDLE_REPLY_S else 0
 
     def screen_quiet(self, started):
-        """Return once the screen has been unchanged for QUIET_S (XDamage on the root window).
+        """Return once the screen has been unchanged for QUIET_S, as a screenshot reads it.
 
-        The compositor paints a client's drawing up to two frames later (development
-        runs 489-499: a marker drawn by the probe reached the screen after 72 ms at
-        the median and 110 ms at the 99th percentile, and screenshots taken 0.1 s
-        after typing were one character behind). Damage on the root window reports
-        every change of the screen's contents, as VNC servers use it. At least
+        The compositor paints a client's drawing one or more frames later
+        (development runs 489-499: the probe's marker reached the screen 72 ms
+        after it was drawn at the median, 110 ms at the 99th percentile; run 520:
+        after typing, a final draw made before the action's last event was still
+        not on screen 0.26 s later). XDamage on the root window did not report the
+        compositor's frames (one notify per action, runs 509-520), so the screen
+        is read directly: the root window's image, as ``/screenshot`` reads it,
+        every QUIET_STEP_S, until it has not changed for QUIET_S; at least
         SETTLE_S after ``started``, at most QUIET_MAX_S.
         """
-        try:
-            if not self.d.has_extension("DAMAGE"):
-                raise RuntimeError("no DAMAGE extension")
-            self.d.damage_query_version()
-            damage = self.d.screen().root.damage_create(3)  # DamageReportNonEmpty
-            self.d.sync()
-        except Exception as exc:  # noqa: BLE001 - recorded; fall back to a fixed wait
-            self.log["quiet"] = {"fallback": repr(exc)[:200]}
-            time.sleep(max(0.0, SETTLE_S + QUIET_S - (time.monotonic() - started)))
-            return
-        last = time.monotonic()
-        notifies = 0
+        import hashlib
+
+        from Xlib import X
+
+        root = self.d.screen().root
+        geometry = root.get_geometry()
+
+        def grab():
+            image = root.get_image(0, 0, geometry.width, geometry.height, X.ZPixmap, 0xFFFFFFFF)
+            return hashlib.md5(image.data).digest()
+
+        last_hash = grab()
+        last_change = time.monotonic()
+        grabs, changes = 1, 0
         while True:
             now = time.monotonic()
             if now - started >= QUIET_MAX_S:
                 break
-            if now - started >= SETTLE_S and now - last >= QUIET_S:
+            if now - started >= SETTLE_S and now - last_change >= QUIET_S:
                 break
-            while self.d.pending_events():
-                event = self.d.next_event()
-                if type(event).__name__ == "DamageNotify":
-                    notifies += 1
-                    last = time.monotonic()
-                    self.d.damage_subtract(damage)
-            time.sleep(0.01)
-        self.d.damage_destroy(damage)
-        self.d.sync()
+            time.sleep(QUIET_STEP_S)
+            current = grab()
+            grabs += 1
+            if current != last_hash:
+                last_hash, last_change = current, time.monotonic()
+                changes += 1
         self.log["quiet"] = {
-            "notifies": notifies,
+            "grabs": grabs,
+            "changes": changes,
             "waited_s": round(time.monotonic() - started, 4),
             "capped": time.monotonic() - started >= QUIET_MAX_S,
         }
