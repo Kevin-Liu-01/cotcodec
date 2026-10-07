@@ -43,9 +43,10 @@
    472,
    487,
    507,
-   544
+   544,
+   638
   ],
-  "note": "build-q1-gates-image.sbatch requests no GPU; each from a fresh clean clone, never ~/cotcodec"
+  "note": "build-q1-gates-image.sbatch requests no GPU; each from a fresh clean clone of a git bundle of the branch, never ~/cotcodec"
  },
  "validated_on_gpu": {
   "admission_and_device_codegen": "job 474: device TorchInductor codegen of 24 S1 problems, S2 build, static check, gate (b) launch-hook GPU admission of the picks (one inadmissible pick replaced by the rule)",
@@ -130,11 +131,11 @@
    {
     "exclusive": true,
     "gate": "c",
-    "gpu_seconds_lower_bound": 676.0,
+    "gpu_seconds_lower_bound": 676.8,
     "item_key": "s2-flaggems-cumsum-L1-89_cumsum|c|seed-42",
     "phase": "scoring",
     "problem_id": "L1/89_cumsum",
-    "wall_seconds_lower_bound": 676.0
+    "wall_seconds_lower_bound": 676.8
    },
    {
     "exclusive": true,
@@ -250,11 +251,21 @@
    }
   },
   "under_8_gpu_h_as_drafted": false,
-  "under_8_gpu_h_with_rule": "central yes (7.37 through P6); at the bootstrap high (9.39) only with the rule's stop, which then completes P1-P3"
+  "under_8_gpu_h_with_rule": "central yes (7.37 through P6); at the bootstrap high (9.39) only with the rule's stop, which then completes P1-P3",
+  "computed_by": "scripts/q1_pilot_cost_card.py inside cotcodec-q1-gates:5af03757 (job 638's image, embedded code) in a GPU-less container on the job directories /runs/474, /runs/518 and /runs/548; 1000 bootstrap resamples, seed 0. A run of the same code from the worktree on copies of the job directories gave the same card except the censored lower bound (676.0 s there, 676.8 s here: copied file times lose sub-second precision)"
  },
  "cpu_checks": {
   "q1_tests": "316 passed (tests/test_q1_*.py) in a GPU-less, network-less container of cotcodec-q1-gates:89391e18 with this pass's worktree",
   "cpu_doctor": "scripts/run_q1_gate_doctor.py PASS: 195 items, 97 expectations, gate a vs KernelBench@44130946 and b1 vs unmodified KernelGYM differentials, resume pass; same container",
-  "ruff": "uv run ruff check . passes"
+  "ruff": "uv run ruff check . passes",
+  "full_test_suite": "1500 passed, 3 skipped (tests/) in a GPU-less, network-less container of cotcodec-q1-gates:5af03757 with the final worktree"
+ },
+ "final_image": {
+  "job": 638,
+  "git_sha": "5af037579d8f98496c6fa76001f54594df321d80",
+  "tag": "cotcodec-q1-gates:5af03757",
+  "image_id": "sha256:ae1da400591510df23ab5971a25aa0b2a875c2fed48d0dc2c620c5d22a8b94fb",
+  "digest": "cotcodec-q1-gates@sha256:11b8c2a5e369d06b8c4110189ce627ad4a9a701e9c3ac34917b73c4f20e172e3",
+  "note": "the pass's last code commit; later commits on the branch add evidence and documents only"
  }
 }

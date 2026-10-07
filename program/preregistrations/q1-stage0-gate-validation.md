@@ -1108,7 +1108,9 @@ tutorial matmul, as the rule prescribes.
 1. Image `cotcodec-q1-gates` rebuilt through Slurm from fresh clean clones
    (CPU-only jobs 472, 487, 507 and 544; section 2.3); the pilot jobs ran
    `cotcodec-q1-gates:74540542` (job 474), `:fef945dd` (job 518) and
-   `:89391e18` (job 548).
+   `:89391e18` (job 548). CPU-only job 638 built `:5af03757` (digest
+   `sha256:11b8c2a5e369d06b8c4110189ce627ad4a9a701e9c3ac34917b73c4f20e172e3`)
+   at the pass's last code commit, which also recomputed the cost card.
 2. Job 474 (`q1-pilot-smoke`, 15 min, 1 GPU): device-mode TorchInductor
    codegen of the head candidates of every S1 stratum (24 problems), S2
    build, static check, selection with GPU admission, specialization
@@ -1197,7 +1199,9 @@ measurement (same items, other concurrency, fixed image), not a repeat.
    A2, A4 and its probes accept).
 3. **Fidelity against the unmodified upstream code** (job 518, 11 kernels:
    the four shared-class picks, the three KernelBench adversarial kernels and
-   four mutants): gate `a` agrees with KernelBench@44130946 on 11 of 11;
+   four mutants; KernelGYM@3a84417f and kernel_bench_verified@3fdf6fec
+   unpacked read-only from the hash-bound study artifact, each tree checked
+   against its git objects): gate `a` agrees with KernelBench@44130946 on 11 of 11;
    `a_head_1e-4` with @423217d9 on 9 of 11, and the other 2 are the class
    listed in advance (the HEAD reference raises on L1/95, upstream says
    incorrect, Q1 says unrefereeable); b0 versus our `a` 11 of 11; the
@@ -1397,13 +1401,16 @@ synchronization is not estimable either way (prediction 6); (iv) criterion 3
 has no slack: one false rejection of a correct substrate by gate (c) fails it.
 
 **Alternatives to this rule**, either of which also needs the owner: (a) the
-research gauntlet for a Stage 0 budget near 15-20 GPU-h, which would keep the
-large problems' substrates and restore most of the drafted mutant precision
-on small problems (trim-q120 at 12 per GPU projects 9.5 GPU-h through P6);
-(b) an engineering pass first that computes references and validity once per
-problem and draw instead of once per kernel and gate (the fp64 replays and the
-CPU fp32 references are kernel-independent and dominate large items), then a
-new paired pilot measurement. Neither is assumed in the projection above.
+research gauntlet for a larger Stage 0 budget. For scale, at 12 items per GPU:
+raising the test quota to 120 per family (about 300 witnessed test mutants,
+the section 8.1 threshold) projects 9.5 GPU-h through P6; scoring the other
+27 large evaluation substrates once adds at least 7.6 GPU-h (a size-model
+lower bound, finding 18.3.2); the drafted mutant design (cap 40, three
+replicates) on the in-scope problems alone projects about 45 GPU-h. (b) An
+engineering pass first that computes references and validity once per problem
+and draw instead of once per kernel and gate (the fp64 replays and the CPU
+fp32 references are kernel-independent and dominate large items), then a new
+paired pilot measurement. Neither is assumed in the projection above.
 
 The rule is a proposal. Adopting it changes sections 3.3, 3.4, 3.5, 4, 8.1
 and 10 and needs the owner's sign-off before the draft is frozen; the pilot's
