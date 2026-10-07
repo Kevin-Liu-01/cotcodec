@@ -1,0 +1,265 @@
+# Contract for the vLLM serving-throughput probe v2 (experiment serving-throughput-probe-v2).
+#
+# The single source of every engine flag, point, seed, gate threshold, launch-window
+# reservation and budget rule v2 uses. scripts/run_vllm_throughput_probe_v2.py reads it
+# and refuses to run unless program/preregistrations/serving-throughput-probe-v2.md is
+# frozen in the ledger and names this file's SHA-256. v2 re-measures the Q2 cells that
+# serving-throughput-probe-v1 did not deliver or invalidated; no v1 measurement is
+# reused. Any change to this file after the preregistration is frozen is a new id.
+schema_version: 1
+experiment_id: serving-throughput-probe-v2
+preregistration: program/preregistrations/serving-throughput-probe-v2.md
+claim_level: infrastructure-admission
+
+vllm:
+  version: 0.31.0
+  commit: db9527a46873454610df6dbedf79a36d6bf1a7f6
+  # v1 passed every cu129 gate on this node; v2 has no pre-approved cu130 retry.
+  image_variants:
+    cu129:
+      base_image: docker.io/vllm/vllm-openai@sha256:b18abb2df97b8f798e81862bd93f872ea18613372e2c3adc0cc2ac21e66ac12f
+      base_image_id: sha256:423783aac4fefebfe6b67d6fc2810b88a1d4dc08ed8bba587c80b0d8973e0b8b
+      env:
+        VLLM_ENABLE_CUDA_COMPATIBILITY: "0"
+
+# --seeds in the job argv must equal this list exactly (seed_binding flag --seeds).
+primary_seeds: [42, 43, 44]
+
+models:
+  qwen3.5-9b:
+    repo_id: Qwen/Qwen3.5-9B
+    revision: c202236235762e1c871ad0ccb60c8ee5ba337b9a
+    weights: real
+    receipt_sha256: 0a9e052d561b017c505adf5a1c6fcdc048522660a0db134486b84edbf3de5cb3
+    artifact_root_sha256: 9845026dbe255e24b105224eebbb5436d315713b9a5c53c434137896b160c5b1
+
+gates:
+  doctor_timeout_s: 600
+  matmul_size: 4096
+  matmul_max_normalized_error: 0.01
+  baseline_duration_s: 10
+  baseline_interval_s: 0.5
+  baseline_max_memory_used_mib: 1024
+  baseline_max_utilization_pct: 0
+  baseline_settle_s: 2
+  engine_ready_timeout_s: 900
+  image_tokens_expected: 2040
+  image_tokens_relative_tolerance: 0.02
+  prompt_counter_relative_tolerance: 0.01
+  gpu_release_timeout_s: 90
+
+validity:
+  # Device mode (NVML lists no process here): device peak <= largest-shape reservation + this.
+  contamination_margin_mib: 2048
+  # PID mode: the engine's own processes above their reservation + this are flagged.
+  own_footprint_margin_mib: 2048
+  # PID mode: device memory minus the engine's processes above the reservation's + this
+  # is a process NVML does not list (contamination).
+  unattributed_margin_mib: 1024
+  frontend_cpu_flag_pct: 90
+  unstable_relative_range: 0.10
+  reruns_per_invalid_point: 1
+  reservation_window_s: 5
+  min_gpu_sample_fraction: 0.2
+  min_apps_snapshot_fraction: 0.2
+
+dummy_admissibility:
+  max_open_loop_delta: 0.05
+  max_replay_latency_delta: 0.08
+  max_replay_delta_se: 0.05
+  max_a1_seed_range: 0.05
+
+stop:
+  soft_fraction: 0.85
+  hard_margin_minutes: 4
+  in_flight_grace_s: 30
+  # Gates G0.0-G0.4 before the first phase, reserved in the launch window.
+  preamble_minutes: 2
+
+sampling:
+  gpu_interval_ms: 500
+  apps_interval_s: 2.0
+  cpu_interval_s: 1.0
+  kv_poll_interval_s: 2.0
+
+server:
+  host: 127.0.0.1
+  port: 8000
+  served_model_name: probe-model
+  request_timeout_s: 1800
+
+screenshot:
+  width: 1920
+  height: 1080
+
+engines:
+  a-real:
+    mode: server
+    model: qwen3.5-9b
+    load_format: auto
+    flags: &vlm_flags
+      tensor_parallel_size: 1
+      dtype: bfloat16
+      seed: 42
+      max_model_len: 131072
+      gpu_memory_utilization: 0.90
+      max_num_seqs: 256
+      max_num_batched_tokens: 8192
+      enable_prefix_caching: true
+      generation_config: vllm
+      limit_mm_per_prompt:
+        image: {count: 20, width: 1920, height: 1080}
+        video: 0
+  a-dummy:
+    mode: server
+    model: qwen3.5-9b
+    load_format: dummy
+    flags: *vlm_flags
+
+# Text sizes are in tokens of the served model's tokenizer; screenshots are 1920 x 1080
+# (2,040 visual tokens each for Qwen3.5). Every replay builds its history from prebuilt
+# responses, so a step's prompt token sequence never depends on what an engine generated.
+point_templates:
+  s2-open-loop: &s2
+    kind: open-loop
+    prefix_tokens: 1536
+    body_tokens: 4608
+    images: 1
+    image_kind: jpeg-random
+    output_tokens: 300
+    thinking: false
+    concurrency: 16
+    requests: 96
+  h1-replay: &h1
+    kind: replay
+    history: prebuilt
+    harness: h1
+    episodes: 40
+    start_depth: 0
+    steps: 6
+    output_tokens: 300
+    thinking: false
+    a11y_tokens: 0
+    system_tokens: 1536
+    task_tokens: 64
+    action_tokens: 16
+    prebuilt_response_tokens: 300
+    t_env_s: 2.5
+    stagger_s: 2.5
+    history_n: 4
+  h2-replay: &h2
+    kind: replay
+    history: prebuilt
+    harness: h2
+    episodes: 20
+    start_depth: 0
+    steps: 24
+    output_tokens: 300
+    thinking: false
+    a11y_tokens: 0
+    system_tokens: 1536
+    task_tokens: 64
+    action_tokens: 16
+    prebuilt_response_tokens: 300
+    t_env_s: 2.5
+    stagger_s: 2.5
+    history_n: 100
+    image_max: 20
+    fold_size: 10
+  server-smoke: &server_smoke
+    kind: smoke-server
+    prefix_tokens: 1536
+    body_tokens: 512
+    images: 1
+    image_kind: png-rendered
+    output_tokens: 64
+    thinking: false
+    concurrency: 8
+    requests: 16
+  # Each of 20 H2 episodes, with starts staggered over 2.5 s as in r3, replays steps 1, 2 and 3 (the
+  # small staggered shapes at which v1's engine reached its memory plateau, 76,611 MiB)
+  # and then step 20, the largest registered prompt shape (20 screenshots, 19 prebuilt
+  # responses, 48,140 modelled prompt tokens). The loader refuses any later point of a
+  # phase that exceeds the warm-up in prompt tokens per request, images per request or
+  # tokens in flight.
+  warm-up: &warmup
+    <<: *h2
+    role: warm-up
+    start_depth: 0
+    steps: 4
+    step_list: [1, 2, 3, 20]
+
+points:
+  a-smoke: {<<: *server_smoke, seed: 7, max_minutes: 1.5, required: true}
+  a-warmup: {<<: *warmup, seed: 105, max_minutes: 2.5, required: true}
+  a1a: {<<: *s2, seed: 42, max_minutes: 1.5, required: true}
+  r1: {<<: *h1, seed: 101, max_minutes: 2.5, required: true}
+  r3: {<<: *h2, seed: 103, max_minutes: 12, required: true}
+  r4: {<<: *h2, seed: 104, start_depth: 17, steps: 2, output_tokens: 2048, thinking: true, max_minutes: 3.5, required: true}
+  a1b: {<<: *s2, seed: 43, max_minutes: 1.5, required: true}
+  a1c: {<<: *s2, seed: 44, max_minutes: 1.5, required: true}
+  # f1 is required: without it the open-loop bound is not corrected for PNG screenshots,
+  # and that bound binds on cells the Q2 decision rests on.
+  f1: {<<: *s2, seed: 42, image_kind: png-rendered, control_of: a1a, max_minutes: 1.5, required: true}
+  r2: {<<: *h1, seed: 102, a11y_tokens: 6144, max_minutes: 3.5, required: false}
+  a2: {<<: *s2, seed: 45, concurrency: 40, requests: 160, max_minutes: 2, required: false}
+  # Same-engine replicate of r1 (identical requests, real weights): X1's measured
+  # run-to-run replay noise. It enters no budget.
+  r1b: {<<: *h1, seed: 101, control_of: r1, max_minutes: 2.5, required: false}
+  x1-smoke: {<<: *server_smoke, seed: 7, max_minutes: 1.5, required: true}
+  x1-warmup: {<<: *warmup, seed: 105, max_minutes: 2.5, required: true}
+  x1-a1: {<<: *s2, seed: 42, control_of: a1a, max_minutes: 1.5, required: true}
+  x1-r1: {<<: *h1, seed: 101, control_of: r1, max_minutes: 2.5, required: true}
+
+jobs:
+  a:
+    title: Q2 VLM serving on Qwen3.5-9B real weights, then control X1 on identical prompts
+    allocation_minutes: 60
+    lane_model: qwen3.5-9b
+    phases:
+      - id: real
+        engine: a-real
+        role: primary
+        start_minutes: 4
+        points: [a-smoke, a-warmup, a1a, r1, r3, r4, a1b, a1c, f1, r2, a2, r1b]
+      - id: dummy-control
+        engine: a-dummy
+        role: dummy-control
+        start_minutes: 3
+        points: [x1-smoke, x1-warmup, x1-a1, x1-r1]
+
+budget:
+  q2:
+    episodes_per_cell: 360
+    vm_pool: 40
+    t_env_s: 2.5
+    step_caps: {h1: 15, h2: 100}
+    image_tokens: 2040
+    a11y_tokens: 6144
+    thinking_output_tokens: 2048
+    rescope_above_gpu_hours: 90
+    overestimate_below_gpu_hours: 15
+    unmeasured_rung_multiplier: 1.5
+    # v2 runs no rung job: the 27B and 35B-A3B rungs keep v1's active-parameter rule.
+    rungs:
+      qwen3.5-4b: {source: qwen3.5-9b, active_params_b: 4.0, gpus: 1}
+      qwen3.5-9b: {source: measured, active_params_b: 9.0, gpus: 1}
+      qwen3.5-27b: {source: unmeasured, active_params_b: 27.0, gpus: 1}
+      qwen3.5-35b-a3b: {source: unmeasured, active_params_b: 3.0, gpus: 1}
+    profiles:
+      h1-screenshot: {point: r1}
+      h1-a11y: {point: r2, fallback: r1}
+      h2-thinking-screenshot: {point: r3, thinking_point: r4}
+      h2-thinking-a11y: {point: r3, thinking_point: r4, a11y_from: [r1, r2]}
+    cells:
+      - {harness: h1, observation: screenshot, profile: h1-screenshot}
+      - {harness: h1, observation: a11y, profile: h1-a11y}
+      - {harness: h2, observation: screenshot, profile: h2-thinking-screenshot}
+      - {harness: h2, observation: a11y, profile: h2-thinking-a11y}
+    open_loop_reference: {point: a2, concurrency: 40, fallback_points: [a1a, a1b, a1c]}
+    frontend_correction: {point: f1, reference: a1a, threshold: 0.10}
+    stability_points: [a1a, a1b, a1c]
+    sensitivity:
+      steps: [15, 50, 100]
+      t_env_s: [1.5, 2.5, 4.0]
+      vm_pool: [20, 40]
