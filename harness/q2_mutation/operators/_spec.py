@@ -16,8 +16,6 @@ import re
 from dataclasses import dataclass, field
 from pathlib import Path
 
-import yaml
-
 from harness.q2_mutation.operators import _formula as fx
 from harness.q2_mutation.operators._diff import Change, seg, unseg
 from harness.q2_mutation.schema import Requirement, RequirementSpec
@@ -26,7 +24,9 @@ Spec = RequirementSpec
 
 
 def load_spec(path: str | Path) -> RequirementSpec:
-    """Load and strictly validate a blind-author requirement spec."""
+    """Load and strictly validate a blind-author requirement spec (YAML)."""
+    import yaml  # the LibreOffice container plans from dicts and has no PyYAML
+
     return RequirementSpec.from_dict(yaml.safe_load(Path(path).read_text(encoding="utf-8")))
 
 
