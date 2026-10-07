@@ -1,5 +1,11 @@
 #!/usr/bin/env python3
-"""Create a deterministic discovery or clean publication source archive."""
+"""Create a deterministic discovery or clean publication source archive.
+
+Both archives hold regular files only. A discovery archive leaves out a
+tracked symlink only under a reviewed agent-tooling rule, and only when its
+canonical relative target names content that the archive already holds; the
+receipt records every omitted link. Every other symlink is refused.
+"""
 
 from __future__ import annotations
 
@@ -8,11 +14,26 @@ import gzip
 import hashlib
 import json
 import os
+import stat
 import subprocess
 import tarfile
 import tempfile
 from pathlib import Path, PurePosixPath
 from typing import Any
+
+# Reviewed (link prefix, target prefix) rules under which a tracked symlink may
+# be left out of a discovery archive. `.agents/skills/<name>` mirrors
+# `.claude/skills/<name>` for the universal AgentSkills path; no harness,
+# script, image or workload reads `.agents/` at run time. Link and target
+# prefixes must be disjoint (neither a prefix of the other), so an omitted link
+# can never name itself or one of its own directories.
+# scripts/extract_discovery_source_archive.py holds the same table and an
+# identical omitted_symlink_target(); tests check both copies match.
+OMITTABLE_SYMLINK_RULES: tuple[tuple[str, str], ...] = ((".agents/skills/", ".claude/skills/"),)
+DISCOVERY_SCHEMA_VERSION = 3
+PUBLICATION_SCHEMA_VERSION = 2
+REGULAR_INDEX_MODES = frozenset({"100644", "100755"})
+SYMLINK_INDEX_MODE = "120000"
 
 
 def sha256_bytes(value: bytes) -> str:
@@ -53,8 +74,138 @@ def git_status(root: Path) -> bytes:
     )
 
 
-def source_paths(root: Path) -> tuple[PurePosixPath, ...]:
-    """Return discovery-mode worktree paths, including untracked research code."""
+def _index_modes(root: Path) -> dict[PurePosixPath, frozenset[str]]:
+    """Return every index entry's file modes (more than one only mid-merge)."""
+
+    raw = subprocess.run(
+        ["git", "ls-files", "-s", "-z", "--", "."],
+        cwd=root,
+        check=True,
+        capture_output=True,
+    ).stdout
+    modes: dict[PurePosixPath, set[str]] = {}
+    for record in raw.split(b"\0"):
+        if not record:
+            continue
+        metadata, separator, path_bytes = record.partition(b"\t")
+        if not separator:
+            raise ValueError("Git index emitted a malformed entry")
+        try:
+            mode = metadata.split(b" ", 1)[0].decode("ascii")
+        except UnicodeDecodeError as exc:
+            raise ValueError("Git index emitted an undecodable entry") from exc
+        modes.setdefault(PurePosixPath(os.fsdecode(path_bytes)), set()).add(mode)
+    return {path: frozenset(values) for path, values in modes.items()}
+
+
+def omitted_symlink_target(link: str, target: str) -> str:
+    """Return the repository path an omittable link names, or raise ValueError.
+
+    Lexical, and identical in create_source_archive.py and
+    extract_discovery_source_archive.py (a test compares the source).
+    The link is a canonical relative path under a reviewed link prefix. The
+    target is canonical: a run of `..` and then at least one named part, with no
+    empty, `.` or `..` part after it, so it resolves on disk exactly as it does
+    here whenever no directory it passes is a symlink. It stays inside the
+    repository and resolves under the rule's target prefix.
+    """
+
+    def named(parts: list[str]) -> bool:
+        return bool(parts) and all(
+            part not in {"", ".", ".."} and "\0" not in part for part in parts
+        )
+
+    link_parts = link.split("/")
+    rule = next((rule for rule in OMITTABLE_SYMLINK_RULES if link.startswith(rule[0])), None)
+    if rule is None or not named(link_parts):
+        raise ValueError(
+            "source archive forbids symlinks outside the reviewed agent-tooling "
+            f"rules {[list(rule) for rule in OMITTABLE_SYMLINK_RULES]}: {link!r}"
+        )
+    target_parts = target.split("/")
+    climb = 0
+    while climb < len(target_parts) and target_parts[climb] == "..":
+        climb += 1
+    if not named(target_parts[climb:]):
+        raise ValueError(
+            f"symlink target is not a canonical relative path: {link} -> {target!r}"
+        )
+    directory = link_parts[:-1]
+    if climb > len(directory):
+        raise ValueError(f"symlink target escapes the repository: {link} -> {target}")
+    resolved = "/".join(directory[: len(directory) - climb] + target_parts[climb:])
+    if not resolved.startswith(rule[1]):
+        raise ValueError(
+            f"symlink target is outside the reviewed target prefix {rule[1]!r}: "
+            f"{link} -> {target}"
+        )
+    return resolved
+
+
+def _omittable_symlink(
+    root: Path,
+    link: PurePosixPath,
+    archived: frozenset[PurePosixPath],
+    index_modes: dict[PurePosixPath, frozenset[str]],
+) -> dict[str, str]:
+    """Check one discovery symlink against the omission rule and return its record."""
+
+    if index_modes.get(link) != frozenset({SYMLINK_INDEX_MODE}):
+        raise ValueError(f"source archive forbids symlinks that are not tracked as links: {link}")
+    absolute = root.joinpath(*link.parts)
+    target = os.readlink(absolute)
+    resolved = PurePosixPath(omitted_symlink_target(link.as_posix(), target))
+
+    # A canonical target resolves on disk as it does lexically only along real
+    # directories: no directory above the link and no part of the target may
+    # be a symlink, and every part of the target must exist.
+    current = root
+    for part in link.parts[:-1]:
+        current = current / part
+        if not stat.S_ISDIR(current.lstat().st_mode):
+            raise ValueError(f"symlink sits below another symlink: {link}")
+    current = root
+    for part in resolved.parts:
+        current = current / part
+        try:
+            status = current.lstat()
+        except (FileNotFoundError, NotADirectoryError) as exc:
+            raise ValueError(f"symlink target is dangling: {link} -> {target}") from exc
+        if stat.S_ISLNK(status.st_mode):
+            raise ValueError(f"symlink target passes through another symlink: {link} -> {target}")
+    # Confirm on the real filesystem that the link lands on that very object;
+    # this also catches a link retargeted after it was read.
+    try:
+        landed = absolute.stat()
+    except OSError as exc:
+        raise ValueError(f"symlink target is dangling: {link} -> {target}") from exc
+    if (landed.st_dev, landed.st_ino) != (status.st_dev, status.st_ino):
+        raise ValueError(f"symlink does not resolve where its target says: {link} -> {target}")
+
+    def archived_tracked_file(path: PurePosixPath) -> bool:
+        # For a tracked file outside data/ the inventory already guarantees
+        # `path in archived`; it is restated so the claim holds locally.
+        modes = index_modes.get(path, frozenset())
+        return path in archived and bool(modes) and modes <= REGULAR_INDEX_MODES
+
+    if not archived_tracked_file(resolved) and not any(
+        resolved in path.parents and archived_tracked_file(path) for path in archived
+    ):
+        raise ValueError(
+            "symlink target is not a tracked regular file or a directory of tracked "
+            f"regular files that the archive holds: {link} -> {target}"
+        )
+    return {"path": link.as_posix(), "target": target}
+
+
+def discovery_inventory(
+    root: Path,
+) -> tuple[tuple[PurePosixPath, ...], tuple[dict[str, str], ...]]:
+    """Return discovery-mode worktree files and the tracked links left out.
+
+    Files include untracked research code; `data/` is excluded. A symlink is
+    left out only under the omission rule above and is otherwise refused.
+    """
 
     completed = subprocess.run(
         ["git", "ls-files", "-co", "--exclude-standard", "-z", "--", "."],
@@ -63,6 +214,7 @@ def source_paths(root: Path) -> tuple[PurePosixPath, ...]:
         capture_output=True,
     )
     paths: list[PurePosixPath] = []
+    links: list[PurePosixPath] = []
     for raw_path in completed.stdout.split(b"\0"):
         if not raw_path:
             continue
@@ -74,11 +226,51 @@ def source_paths(root: Path) -> tuple[PurePosixPath, ...]:
             continue
         absolute = root.joinpath(*path.parts)
         if absolute.is_symlink():
-            raise ValueError(f"source archive forbids symlinks: {path}")
+            links.append(path)
+            continue
         if not absolute.is_file():
             raise ValueError(f"source path is not a regular file: {path}")
         paths.append(path)
-    return tuple(sorted(paths, key=lambda item: item.as_posix().encode()))
+    archived = frozenset(paths)
+    index_modes = _index_modes(root) if links else {}
+    omitted = [_omittable_symlink(root, link, archived, index_modes) for link in links]
+    return (
+        tuple(sorted(paths, key=lambda item: item.as_posix().encode())),
+        tuple(sorted(omitted, key=lambda row: row["path"].encode())),
+    )
+
+
+def omitted_symlinks_sha256(rows: list[dict[str, str]] | tuple[dict[str, str], ...]) -> str:
+    return sha256_bytes(json.dumps(list(rows), sort_keys=True, separators=(",", ":")).encode())
+
+
+def committed_symlinks(root: Path, tree: str) -> tuple[dict[str, str], ...]:
+    """Return every symlink a Git tree-ish commits outside `data/`, sorted by path.
+
+    Rows are `{path, target}` with the target read from the link's blob. A
+    discovery receipt from a clean worktree must record exactly HEAD's links,
+    so anyone holding the repository can recompute the record of a lane
+    receipt (selected_ref HEAD) from its `git_tree`.
+    """
+
+    raw = bytes(_git(root, "ls-tree", "-r", "-z", "--full-tree", tree))
+    rows: list[dict[str, str]] = []
+    for record in raw.split(b"\0"):
+        if not record:
+            continue
+        metadata, separator, path_bytes = record.partition(b"\t")
+        if not separator:
+            raise ValueError("Git tree emitted a malformed entry")
+        try:
+            mode, _object_type, object_id = metadata.decode("ascii").split(" ")
+        except (UnicodeDecodeError, ValueError) as exc:
+            raise ValueError("Git tree emitted an undecodable entry") from exc
+        path = os.fsdecode(path_bytes)
+        if mode != SYMLINK_INDEX_MODE or path.split("/", 1)[0] == "data":
+            continue
+        target = os.fsdecode(bytes(_git(root, "cat-file", "blob", object_id)))
+        rows.append({"path": path, "target": target})
+    return tuple(sorted(rows, key=lambda row: row["path"].encode()))
 
 
 def publication_tree(root: Path, ref: str) -> tuple[dict[str, str], ...]:
@@ -182,10 +374,10 @@ def _write_discovery_archive(
         ):
             for relative in paths:
                 source = root.joinpath(*relative.parts)
-                stat = source.stat()
+                status = source.stat()
                 info = tarfile.TarInfo(relative.as_posix())
-                info.size = stat.st_size
-                info.mode = 0o755 if stat.st_mode & 0o111 else 0o644
+                info.size = status.st_size
+                info.mode = 0o755 if status.st_mode & 0o111 else 0o644
                 info.mtime = 0
                 info.uid = 0
                 info.gid = 0
@@ -255,6 +447,7 @@ def create_archive(
     git_head = str(_git(root, "rev-parse", "HEAD", text=True)).strip()
     selected_sha = str(_git(root, "rev-parse", f"{ref}^{{commit}}", text=True)).strip()
     git_tree = str(_git(root, "rev-parse", f"{selected_sha}^{{tree}}", text=True)).strip()
+    omitted: tuple[dict[str, str], ...] = ()
     if mode == "publication":
         before_status = git_status(root)
         if before_status:
@@ -292,7 +485,7 @@ def create_archive(
         worktree_clean = True
         data_excluded = False
     else:
-        paths = source_paths(root)
+        paths, omitted = discovery_inventory(root)
         if not paths:
             raise ValueError("source archive would be empty")
         _atomic_output(
@@ -309,9 +502,28 @@ def create_archive(
         archive_format = "normalized-worktree-tar+gzip-mtime-zero"
         worktree_clean = not bool(git_status(root))
         data_excluded = True
+        if worktree_clean and omitted != committed_symlinks(root, git_head):
+            output.unlink(missing_ok=True)
+            raise ValueError("omitted symlinks differ from the links the clean commit tracks")
 
+    # Discovery receipts (schema 3) also record the reviewed omission rules and
+    # every link they left out. Identity is unchanged: archive_sha256 hashes the
+    # archive bytes and file_manifest_sha256 the archived paths, neither of
+    # which includes an omitted link, so the record is bound by nothing the
+    # lane pins. For a clean capsule it equals committed_symlinks(git_tree).
+    # Publication receipts stay at schema 2.
+    discovery = mode == "discovery"
+    symlink_fields: dict[str, Any] = (
+        {
+            "omittable_symlink_rules": [list(rule) for rule in OMITTABLE_SYMLINK_RULES],
+            "omitted_symlinks": list(omitted),
+            "omitted_symlinks_sha256": omitted_symlinks_sha256(omitted),
+        }
+        if discovery
+        else {}
+    )
     return {
-        "schema_version": 2,
+        "schema_version": DISCOVERY_SCHEMA_VERSION if discovery else PUBLICATION_SCHEMA_VERSION,
         "mode": mode,
         "archive": str(output),
         "archive_sha256": sha256_file(output),
@@ -326,6 +538,7 @@ def create_archive(
         "worktree_clean": worktree_clean,
         "data_excluded": data_excluded,
         "metadata_normalized": True,
+        **symlink_fields,
     }
 
 
