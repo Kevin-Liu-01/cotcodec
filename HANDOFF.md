@@ -35,7 +35,11 @@ host checkout itself was not touched.
 The Q1 gate stack, mutator and substrate builders are integrated on
 `stage0/q1-gates` (not merged, not pushed). The unified draft
 preregistration is `program/preregistrations/q1-stage0-gate-validation.md`;
-its section 15 lists the integration decisions. Next, in order:
+its section 15 lists the integration decisions and section 16 the fixes made
+after the adversarial review (evidence:
+`program/evidence/2026-10-07/q1-gates-fix-pass.json`). Do not push
+`stage0/q1-gates` until Kevin has seen the gate (b) licence note in
+`harness/q1/README.md` (NOTICE). Next, in order:
 
 1. Review and freeze the draft (`scripts/preregister.py freeze ...`), after
    checking `python scripts/q1_version_card.py --markdown` against its table.

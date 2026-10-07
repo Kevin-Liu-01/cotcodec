@@ -96,3 +96,27 @@ Append-only. Newest entries at the bottom.
   step. Evidence: `program/evidence/2026-10-07/q1-integration-validation.json`
   (253 Q1 tests in a GPU-less container, 651 passed and 8 skipped on the host,
   CPU doctor PASS).
+
+## 2026-10-07 — Q1 gate stack fix pass after adversarial review (branch `stage0/q1-gates`, not merged)
+
+- An adversarial review of `stage0/q1-gates@acb3bc8` reported 8 findings. All
+  were verified; 7 are fixed in `c6ef3a9` and 1 (candidates can see the gate
+  id and seeds) is recorded as a Stage 1 threat-model limit.
+- Critical: c3 config ids built from `input_shape[0]` failed the verdict schema
+  inside the worker after the candidate ran, so gate (c) rejected every kernel
+  on 10 L1 problems. Ids now use `input_shape.0`; gate (c) checks ids before a
+  candidate loads; row-building failures are infrastructure errors, retried
+  once.
+- Analysis: parent filter for mutants; unrefereeable components vacuous per
+  problem; one kernel set across gates; S1 calibration parents' mutants out of
+  the primary metrics; and code for every preregistered quantity that had none
+  (audit-hole replay, calibration driver, weighting, breakdowns, c-lite, cost,
+  FRR over independent units).
+- `gate_b.py` was rewritten from the spec after the review found it
+  transliterated parts of unlicensed KernelGYM code (never pushed). b1 and b2
+  now replay b0's five calls first, as released.
+- Infrastructure validation only: 280 Q1 tests in a GPU-less container, 669
+  passed and 8 skipped on the host, CPU doctor PASS (195 items). Evidence:
+  `program/evidence/2026-10-07/q1-gates-fix-pass.json`. The draft is not
+  frozen.
+
