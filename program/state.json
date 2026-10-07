@@ -33,7 +33,7 @@
       "doc": "program/questions/q2-calibrated-cua-instrument.md",
       "dossier_key": "S1-calibrated-cua-instrument",
       "status": "stage-0-running",
-      "next_action": "Rescope Stage 1 from the measured cost card (closed-loop VM time dominates): more VMs per engine, fewer rungs or cells; Stage 0 suite and checker-mutation kit continue",
+      "next_action": "Kevin decides how A4 treats guest-server restarts (inputs addendum section 6); then the owner freezes q2-action-path-v1, -inputs and -executor (development complete on stage0/q2-action-path) and runs C2, C1 and C3, A1-A6 and the ladder. Rescope Stage 1 from the measured cost card (closed-loop VM time dominates); the checker-mutation kit continues",
       "first_gpu_experiment": {
         "name": "Qwen3.5 ladder (as dossier-designed)",
         "measured_projection_gpu_hours": 431.5,
@@ -43,7 +43,13 @@
       "blocked_by": [
         "action-path suite at 100% before any GPU episode",
         "Stage 1 noise anchor reworded to OpenCUA (D11) before the gauntlet"
-      ]
+      ],
+      "action_path_suite": {
+        "registration": "q2-action-path-v1 (+ -inputs, -executor addenda)",
+        "status": "development complete and review fixes applied (C2 judged on event and text channels, C3 clean kills, content-checked admission, rerun and end-state rules, tap relaunch after a guest-server restart); ready to freeze after the owner's A4 decision on guest-server restarts (nothing frozen)",
+        "branch": "stage0/q2-action-path",
+        "development_jobs": "482-637 and 662-667 (seed 42, CPU only, never evidence; 662-667 at the review-fix commit 30d8c7f)"
+      }
     },
     {
       "id": "Q3",
@@ -71,6 +77,7 @@
     "Decide whether to purge the old host address and the internal corpus inventory from public git history (requires a force-push)",
     "Spot-check a sample of the Q2 checker-mutation audit as the human rater (decision D9)",
     "Moonshot (Kimi) account is suspended for insufficient balance; recharge it if a Kimi model should be a rater or reviewer (rotate the exposed key at the same time)",
+    "Before freezing q2-action-path-v1: decide how A4 treats OSWorld guest-server restarts inside /accessibility (1 crash in 8,114 calls in development, a single event: A4 as registered passes with probability about 0.01, 95% range 0.89 to 0); options 1-5 in program/preregistrations/q2-action-path-v1-inputs.md section 6",
     "The ANTHROPIC_API_KEY on this machine is invalid (HTTP 401); supply a valid key if the Claude rater and gauntlet reviews should use the API rather than the agent harness (D25)"
   ],
   "gpu_hours_spent_this_program": 1.4099,

@@ -1,0 +1,778 @@
+{
+  "jobs": {
+    "467": {
+      "boots_ok": 3,
+      "campaign_id": "q2ap-tap-selftest-v1",
+      "cycles": 3,
+      "git_sha": "a1aade376cba407cca7c75f286807587b96f92a4",
+      "hmp_step_pass_counts": {
+        "button_left": "3/3",
+        "button_middle": "3/3",
+        "button_right": "3/3",
+        "caps_lock_off": "3/3",
+        "caps_lock_on": "3/3",
+        "chord_shift_comma": "3/3",
+        "key_a": "3/3",
+        "key_compose": "3/3",
+        "key_esc_after_compose": "3/3",
+        "key_esc_after_menu": "3/3",
+        "key_esc_after_right": "3/3",
+        "key_kp_add": "3/3",
+        "key_kp_enter": "3/3",
+        "key_less_102nd": "3/3",
+        "key_menu": "0/3",
+        "rel_motion": "3/3",
+        "wheel_dz_neg": "3/3",
+        "wheel_dz_pos": "3/3"
+      },
+      "infra_gates_pass": false,
+      "label": "tap self-test v1 (3 cycles): mapping check counted unexplained notifies by range only",
+      "labelled_containers_left": [],
+      "no_gpu_all": true,
+      "no_published_ports_all": true,
+      "per_cycle": [
+        {
+          "boot_s": 18.093,
+          "cycle": 0,
+          "error": null,
+          "frozen_keymap_keysyms": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "keycode": 248,
+          "mapping_check": {
+            "keyboard_notifies": 5,
+            "ok": false,
+            "requests": 4,
+            "requests_without_notify": [],
+            "unmatched_ranges": [
+              [
+                8,
+                248
+              ]
+            ]
+          },
+          "observed_equals_expected": true,
+          "observed_keysyms": [
+            233,
+            233,
+            16778262,
+            16778262,
+            0,
+            0
+          ],
+          "selftest_ok": false
+        },
+        {
+          "boot_s": 18.46,
+          "cycle": 1,
+          "error": null,
+          "frozen_keymap_keysyms": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "keycode": 248,
+          "mapping_check": {
+            "keyboard_notifies": 5,
+            "ok": false,
+            "requests": 4,
+            "requests_without_notify": [],
+            "unmatched_ranges": [
+              [
+                8,
+                248
+              ]
+            ]
+          },
+          "observed_equals_expected": true,
+          "observed_keysyms": [
+            233,
+            233,
+            16778262,
+            16778262,
+            0,
+            0
+          ],
+          "selftest_ok": false
+        },
+        {
+          "boot_s": 17.966,
+          "cycle": 2,
+          "error": null,
+          "frozen_keymap_keysyms": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "keycode": 248,
+          "mapping_check": {
+            "keyboard_notifies": 5,
+            "ok": false,
+            "requests": 4,
+            "requests_without_notify": [],
+            "unmatched_ranges": [
+              [
+                8,
+                248
+              ]
+            ]
+          },
+          "observed_equals_expected": true,
+          "observed_keysyms": [
+            233,
+            233,
+            16778262,
+            16778262,
+            0,
+            0
+          ],
+          "selftest_ok": false
+        }
+      ],
+      "qcow2_unchanged": true,
+      "receipt_sha256": "6c8f59e50e6afd6c33b0f6f6f8f93cde6831929ea18b7f55ccb37cecdf327b68",
+      "sentinel_pristine": "2/2",
+      "slurm": "not read before scontrol purged it (accounting is off); infra_gates_pass false, so the driver exited 3",
+      "tap_selftest_ok": 0
+    },
+    "469": {
+      "boots_ok": 5,
+      "campaign_id": "q2ap-tap-selftest-v2",
+      "cycles": 5,
+      "git_sha": "2b612a028d28b65b417d74c4bb1714cdae6b28eb",
+      "hmp_step_pass_counts": {
+        "button_left": "5/5",
+        "button_middle": "5/5",
+        "button_right": "5/5",
+        "caps_lock_off": "5/5",
+        "caps_lock_on": "5/5",
+        "chord_shift_comma": "5/5",
+        "key_a": "5/5",
+        "key_compose": "5/5",
+        "key_esc_after_compose": "5/5",
+        "key_esc_after_menu": "5/5",
+        "key_esc_after_right": "5/5",
+        "key_kp_add": "5/5",
+        "key_kp_enter": "5/5",
+        "key_less_102nd": "5/5",
+        "key_menu": "0/5",
+        "rel_motion": "5/5",
+        "wheel_dz_neg": "5/5",
+        "wheel_dz_pos": "5/5"
+      },
+      "infra_gates_pass": false,
+      "label": "tap self-test v2 (5 cycles): unexplained notifies compared by content, raw rows",
+      "labelled_containers_left": [],
+      "no_gpu_all": true,
+      "no_published_ports_all": true,
+      "per_cycle": [
+        {
+          "boot_s": 22.476,
+          "cycle": 0,
+          "error": null,
+          "frozen_keymap_keysyms": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "keycode": 248,
+          "mapping_check": {
+            "benign_unexplained": 0,
+            "explained": 4,
+            "keyboard_notifies": 5,
+            "ok": false,
+            "requests": 4,
+            "requests_without_notify": [],
+            "unverified": [
+              {
+                "keycodes": [
+                  248
+                ],
+                "range": [
+                  8,
+                  248
+                ]
+              }
+            ]
+          },
+          "observed_equals_expected": true,
+          "observed_keysyms": [
+            233,
+            233,
+            16778262,
+            16778262,
+            0,
+            0
+          ],
+          "selftest_ok": false
+        },
+        {
+          "boot_s": 18.002,
+          "cycle": 1,
+          "error": null,
+          "frozen_keymap_keysyms": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "keycode": 248,
+          "mapping_check": {
+            "benign_unexplained": 0,
+            "explained": 4,
+            "keyboard_notifies": 5,
+            "ok": false,
+            "requests": 4,
+            "requests_without_notify": [],
+            "unverified": [
+              {
+                "keycodes": [
+                  248
+                ],
+                "range": [
+                  8,
+                  248
+                ]
+              }
+            ]
+          },
+          "observed_equals_expected": true,
+          "observed_keysyms": [
+            233,
+            233,
+            16778262,
+            16778262,
+            0,
+            0
+          ],
+          "selftest_ok": false
+        },
+        {
+          "boot_s": 17.972,
+          "cycle": 2,
+          "error": null,
+          "frozen_keymap_keysyms": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "keycode": 248,
+          "mapping_check": {
+            "benign_unexplained": 0,
+            "explained": 4,
+            "keyboard_notifies": 5,
+            "ok": false,
+            "requests": 4,
+            "requests_without_notify": [],
+            "unverified": [
+              {
+                "keycodes": [
+                  248
+                ],
+                "range": [
+                  8,
+                  248
+                ]
+              }
+            ]
+          },
+          "observed_equals_expected": true,
+          "observed_keysyms": [
+            233,
+            233,
+            16778262,
+            16778262,
+            0,
+            0
+          ],
+          "selftest_ok": false
+        },
+        {
+          "boot_s": 17.91,
+          "cycle": 3,
+          "error": null,
+          "frozen_keymap_keysyms": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "keycode": 248,
+          "mapping_check": {
+            "benign_unexplained": 0,
+            "explained": 4,
+            "keyboard_notifies": 5,
+            "ok": false,
+            "requests": 4,
+            "requests_without_notify": [],
+            "unverified": [
+              {
+                "keycodes": [
+                  248
+                ],
+                "range": [
+                  8,
+                  248
+                ]
+              }
+            ]
+          },
+          "observed_equals_expected": true,
+          "observed_keysyms": [
+            233,
+            233,
+            16778262,
+            16778262,
+            0,
+            0
+          ],
+          "selftest_ok": false
+        },
+        {
+          "boot_s": 17.965,
+          "cycle": 4,
+          "error": null,
+          "frozen_keymap_keysyms": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "keycode": 248,
+          "mapping_check": {
+            "benign_unexplained": 0,
+            "explained": 4,
+            "keyboard_notifies": 5,
+            "ok": false,
+            "requests": 4,
+            "requests_without_notify": [],
+            "unverified": [
+              {
+                "keycodes": [
+                  248
+                ],
+                "range": [
+                  8,
+                  248
+                ]
+              }
+            ]
+          },
+          "observed_equals_expected": true,
+          "observed_keysyms": [
+            233,
+            233,
+            16778262,
+            16778262,
+            0,
+            0
+          ],
+          "selftest_ok": false
+        }
+      ],
+      "qcow2_unchanged": true,
+      "receipt_sha256": "9d62d27b6f4b31a25275a2105e4f59e517cdb4331c51b8212769c84b9396a873",
+      "sentinel_pristine": "4/4",
+      "slurm": "not read before scontrol purged it; infra_gates_pass false, driver exit 3",
+      "tap_selftest_ok": 0
+    },
+    "470": {
+      "boots_ok": 2,
+      "campaign_id": "q2ap-tap-selftest-v3",
+      "cycles": 2,
+      "git_sha": "f03e0e48ffde764c2f02faee7b7d7f2d593ab868",
+      "hmp_step_pass_counts": {
+        "button_left": "2/2",
+        "button_middle": "2/2",
+        "button_right": "2/2",
+        "caps_lock_off": "2/2",
+        "caps_lock_on": "2/2",
+        "chord_shift_comma": "2/2",
+        "key_a": "2/2",
+        "key_compose": "2/2",
+        "key_esc_after_compose": "2/2",
+        "key_esc_after_menu": "2/2",
+        "key_esc_after_right": "2/2",
+        "key_kp_add": "2/2",
+        "key_kp_enter": "2/2",
+        "key_less_102nd": "2/2",
+        "key_menu": "0/2",
+        "rel_motion": "2/2",
+        "wheel_dz_neg": "2/2",
+        "wheel_dz_pos": "2/2"
+      },
+      "infra_gates_pass": false,
+      "label": "tap self-test v3 (2 cycles): diagnostic, records the differing rows",
+      "labelled_containers_left": [],
+      "no_gpu_all": true,
+      "no_published_ports_all": true,
+      "per_cycle": [
+        {
+          "boot_s": 17.908,
+          "cycle": 0,
+          "error": null,
+          "frozen_keymap_keysyms": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "keycode": 248,
+          "mapping_check": {
+            "benign_unexplained": 0,
+            "explained": 4,
+            "keyboard_notifies": 5,
+            "ok": false,
+            "requests": 4,
+            "requests_without_notify": [],
+            "unverified": [
+              {
+                "keycodes": [
+                  248
+                ],
+                "range": [
+                  8,
+                  248
+                ],
+                "rows": [
+                  {
+                    "keycode": 248,
+                    "server": [
+                      233,
+                      233,
+                      233,
+                      233,
+                      0,
+                      0,
+                      0
+                    ],
+                    "tap": [
+                      233,
+                      233,
+                      233,
+                      233,
+                      233,
+                      233,
+                      233
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          "observed_equals_expected": true,
+          "observed_keysyms": [
+            233,
+            233,
+            16778262,
+            16778262,
+            0,
+            0
+          ],
+          "selftest_ok": false
+        },
+        {
+          "boot_s": 17.909,
+          "cycle": 1,
+          "error": null,
+          "frozen_keymap_keysyms": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "keycode": 248,
+          "mapping_check": {
+            "benign_unexplained": 0,
+            "explained": 4,
+            "keyboard_notifies": 5,
+            "ok": false,
+            "requests": 4,
+            "requests_without_notify": [],
+            "unverified": [
+              {
+                "keycodes": [
+                  248
+                ],
+                "range": [
+                  8,
+                  248
+                ],
+                "rows": [
+                  {
+                    "keycode": 248,
+                    "server": [
+                      233,
+                      233,
+                      233,
+                      233,
+                      0,
+                      0,
+                      0
+                    ],
+                    "tap": [
+                      233,
+                      233,
+                      233,
+                      233,
+                      233,
+                      233,
+                      233
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          "observed_equals_expected": true,
+          "observed_keysyms": [
+            233,
+            233,
+            16778262,
+            16778262,
+            0,
+            0
+          ],
+          "selftest_ok": false
+        }
+      ],
+      "qcow2_unchanged": true,
+      "receipt_sha256": "d5bb2ba73b212c463fc52327c9edb805e427fa380a2f714a6e41bca0f771eedd",
+      "sentinel_pristine": "1/1",
+      "slurm": "not read before scontrol purged it; infra_gates_pass false, driver exit 3",
+      "tap_selftest_ok": 0
+    },
+    "471": {
+      "boots_ok": 5,
+      "campaign_id": "q2ap-tap-selftest-v4",
+      "cycles": 5,
+      "git_sha": "54317d6f03531217016dbaa25c41446d34223591",
+      "hmp_step_pass_counts": {
+        "button_left": "5/5",
+        "button_middle": "5/5",
+        "button_right": "5/5",
+        "caps_lock_off": "5/5",
+        "caps_lock_on": "5/5",
+        "chord_shift_comma": "5/5",
+        "key_a": "5/5",
+        "key_compose": "5/5",
+        "key_esc_after_compose": "5/5",
+        "key_esc_after_menu": "5/5",
+        "key_esc_after_right": "5/5",
+        "key_kp_add": "5/5",
+        "key_kp_enter": "5/5",
+        "key_less_102nd": "5/5",
+        "key_menu": "0/5",
+        "rel_motion": "5/5",
+        "wheel_dz_neg": "5/5",
+        "wheel_dz_pos": "5/5"
+      },
+      "infra_gates_pass": true,
+      "label": "tap self-test v4 (5 cycles): rows compared under the core protocol's keysym-list rules",
+      "labelled_containers_left": [],
+      "no_gpu_all": true,
+      "no_published_ports_all": true,
+      "per_cycle": [
+        {
+          "boot_s": 17.9,
+          "cycle": 0,
+          "error": null,
+          "frozen_keymap_keysyms": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "keycode": 248,
+          "mapping_check": {
+            "benign_unexplained": 1,
+            "explained": 4,
+            "keyboard_notifies": 5,
+            "ok": true,
+            "requests": 4,
+            "requests_without_notify": [],
+            "unverified": []
+          },
+          "observed_equals_expected": true,
+          "observed_keysyms": [
+            233,
+            233,
+            16778262,
+            16778262,
+            0,
+            0
+          ],
+          "selftest_ok": true
+        },
+        {
+          "boot_s": 18.265,
+          "cycle": 1,
+          "error": null,
+          "frozen_keymap_keysyms": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "keycode": 248,
+          "mapping_check": {
+            "benign_unexplained": 1,
+            "explained": 4,
+            "keyboard_notifies": 5,
+            "ok": true,
+            "requests": 4,
+            "requests_without_notify": [],
+            "unverified": []
+          },
+          "observed_equals_expected": true,
+          "observed_keysyms": [
+            233,
+            233,
+            16778262,
+            16778262,
+            0,
+            0
+          ],
+          "selftest_ok": true
+        },
+        {
+          "boot_s": 21.065,
+          "cycle": 2,
+          "error": null,
+          "frozen_keymap_keysyms": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "keycode": 248,
+          "mapping_check": {
+            "benign_unexplained": 1,
+            "explained": 4,
+            "keyboard_notifies": 5,
+            "ok": true,
+            "requests": 4,
+            "requests_without_notify": [],
+            "unverified": []
+          },
+          "observed_equals_expected": true,
+          "observed_keysyms": [
+            233,
+            233,
+            16778262,
+            16778262,
+            0,
+            0
+          ],
+          "selftest_ok": true
+        },
+        {
+          "boot_s": 17.39,
+          "cycle": 3,
+          "error": null,
+          "frozen_keymap_keysyms": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "keycode": 248,
+          "mapping_check": {
+            "benign_unexplained": 1,
+            "explained": 4,
+            "keyboard_notifies": 5,
+            "ok": true,
+            "requests": 4,
+            "requests_without_notify": [],
+            "unverified": []
+          },
+          "observed_equals_expected": true,
+          "observed_keysyms": [
+            233,
+            233,
+            16778262,
+            16778262,
+            0,
+            0
+          ],
+          "selftest_ok": true
+        },
+        {
+          "boot_s": 17.259,
+          "cycle": 4,
+          "error": null,
+          "frozen_keymap_keysyms": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "keycode": 248,
+          "mapping_check": {
+            "benign_unexplained": 1,
+            "explained": 4,
+            "keyboard_notifies": 5,
+            "ok": true,
+            "requests": 4,
+            "requests_without_notify": [],
+            "unverified": []
+          },
+          "observed_equals_expected": true,
+          "observed_keysyms": [
+            233,
+            233,
+            16778262,
+            16778262,
+            0,
+            0
+          ],
+          "selftest_ok": true
+        }
+      ],
+      "qcow2_unchanged": true,
+      "receipt_sha256": "d510a6a032d243f54c49c14f1275c2b4ca2dc90bf85e8ed315e293f47e9474e2",
+      "sentinel_pristine": "4/4",
+      "slurm": "COMPLETED ExitCode=0:0 (scontrol)",
+      "tap_selftest_ok": 5
+    }
+  },
+  "note": "Oracle validation after the 2026-10-07 review; no system under test ran. In every cycle a guest fixture remapped one spare keycode with core ChangeKeyboardMapping (eacute, U+0416, NoSymbol), pressed it with XTest after each change, and restored it. observed_keysyms is what the rewritten tap reported; frozen_keymap_keysyms is what a keymap read at tap start (the previous tap's behaviour) gives. Jobs 467, 469 and 470 failed their tap gate because of the mapping check, not the keysyms; 471 is the validation of the committed check.",
+  "schema": "cotcodec-q2-tap-selftest-report-v1"
+}
