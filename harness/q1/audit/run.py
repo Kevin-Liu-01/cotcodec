@@ -11,7 +11,7 @@ keeps both in training mode, and draws its own inputs from its own seeds:
 | A1 | five native ``get_inputs()`` draws | ``channel_seed(6042, r, t)`` |
 | A2 | seven held-out value distributions at native shapes | ``channel_seed(4042, r, j)`` |
 | A3 | the manifest's prime shapes, ``get_inputs()`` values | ``channel_seed(5042, r, k)`` |
-| A4 | the first A1 draw | |
+| A4 | the first A1 draw and one signed (randn) draw | ``6042``, ``4042`` |
 | A5 | lethe-style perturbations of a native draw | ``channel_seed(7042, r, 0)`` |
 
 A1, A2 and A3 judge every output with the A1 rule (``oracle.py``) under both
@@ -355,35 +355,52 @@ def run_a3(
 
 
 def run_a4(subject: AuditSubject) -> list:
+    """Contracts on two draws: the first native draw and a signed (randn) draw.
+
+    The signed draw exposes value-dependent in-place writes and aliasing that a
+    non-negative ``torch.rand`` input hides (for example an in-place ReLU).
+    """
     start = time.perf_counter()
-    seed = channel_seed(A1_BASE, subject.replicate_seed, 0)
-    inputs = draw_inputs(subject.get_inputs, seed, subject.device)
-    try:
-        results = contracts.check_determinism_and_aliasing(
-            subject.candidate, inputs, device=subject.device
-        )
-        results.append(
-            contracts.check_factory_poison(subject.candidate, inputs, device=subject.device)
-        )
-    except Exception as exc:
-        return [
-            GateOutcome(
-                "A4",
-                "aggregate",
-                "reject",
-                details={"reason": "candidate-raised", **exception_details(exc)},
-                wall_seconds=time.perf_counter() - start,
+    native_seed = channel_seed(A1_BASE, subject.replicate_seed, 0)
+    signed_seed = channel_seed(A2_BASE, subject.replicate_seed, 0)
+    draws = {"native": draw_inputs(subject.get_inputs, native_seed, subject.device)}
+    set_seed(signed_seed)
+    draws["signed"] = process_inputs(
+        apply_distribution(subject.get_inputs(), "randn"), subject.device, "preserve"
+    )
+    sub: dict[str, Any] = {}
+    failed: set[str] = set()
+    for label, inputs in draws.items():
+        try:
+            results = contracts.check_determinism_and_aliasing(
+                subject.candidate, inputs, device=subject.device
             )
-        ]
-    sub = {r.name: {"passed": r.passed, **r.details} for r in results}
-    failed = [r.name for r in results if r.passed is False]
+            results.append(
+                contracts.check_factory_poison(subject.candidate, inputs, device=subject.device)
+            )
+        except Exception as exc:
+            return [
+                GateOutcome(
+                    "A4",
+                    "aggregate",
+                    "reject",
+                    details={"reason": "candidate-raised", "draw": label, **exception_details(exc)},
+                    wall_seconds=time.perf_counter() - start,
+                )
+            ]
+        sub[label] = {r.name: {"passed": r.passed, **r.details} for r in results}
+        failed |= {r.name for r in results if r.passed is False}
     verdict = "reject" if failed else "accept"
     return [
         GateOutcome(
             "A4",
             "in-process",
             verdict,
-            details={"subchecks": sub, "failed": failed, "seed": seed},
+            details={
+                "subchecks": sub,
+                "failed": sorted(failed),
+                "seeds": {"native": native_seed, "signed": signed_seed},
+            },
             wall_seconds=time.perf_counter() - start,
         )
     ]

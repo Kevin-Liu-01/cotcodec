@@ -42,6 +42,8 @@ from harness.q1.gates.common import report_phase, synchronize
 
 L2_FLUSH_BYTES = 256 * 1024 * 1024
 UNCONTENDED_ENV = "Q1_UNCONTENDED_ATTESTATION"
+#: The lane's GPU prolog result (``docker-research.sbatch`` writes it to the run dir).
+PROLOG_ENV_PATH = os.environ.get("Q1_GPU_PROLOG_ENV", "/outputs/gpu-prolog.env")
 #: nvidia-smi throttle reasons that do not invalidate a round (bit masks).
 BENIGN_THROTTLE = {0x0, 0x1}  # none, GPU idle
 
@@ -110,10 +112,29 @@ def gpu_sample(index: int | None) -> dict[str, Any] | None:
     }
 
 
+def _read_env_file(path: str) -> dict[str, str]:
+    values: dict[str, str] = {}
+    with open(path, encoding="utf-8") as handle:
+        for line in handle:
+            key, sep, value = line.strip().partition("=")
+            if sep:
+                values[key] = value
+    return values
+
+
 def uncontended_evidence() -> dict[str, Any]:
-    """Lane prolog attestation (if the lane provides one) and the local view."""
-    evidence: dict[str, Any] = {"attestation_path": os.environ.get(UNCONTENDED_ENV)}
-    path = evidence["attestation_path"]
+    """Lane GPU-prolog result, any extra attestation, and the in-container view.
+
+    The prolog checks foreign compute processes once, before the container
+    starts; it is evidence for that moment, not isolation.
+    """
+    evidence: dict[str, Any] = {"prolog_env_path": PROLOG_ENV_PATH}
+    if os.path.isfile(PROLOG_ENV_PATH):
+        try:
+            evidence["prolog"] = _read_env_file(PROLOG_ENV_PATH)
+        except OSError as exc:
+            evidence["prolog_error"] = str(exc)
+    path = os.environ.get(UNCONTENDED_ENV)
     if path and os.path.isfile(path):
         try:
             with open(path, encoding="utf-8") as handle:
@@ -135,8 +156,13 @@ def uncontended_evidence() -> dict[str, Any]:
             )
         except (OSError, subprocess.SubprocessError) as exc:
             evidence["compute_apps_error"] = str(exc)
-    attested = evidence.get("attestation", {})
-    evidence["uncontended"] = attested.get("foreign_gpu_processes") == 0 if attested else None
+    prolog = evidence.get("prolog", {})
+    if prolog:
+        evidence["uncontended"] = (
+            prolog.get("foreign_compute_processes") == "0" and prolog.get("decision") == "exclusive"
+        )
+    else:
+        evidence["uncontended"] = None
     return evidence
 
 
