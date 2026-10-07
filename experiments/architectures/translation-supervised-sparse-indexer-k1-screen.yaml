@@ -66,6 +66,10 @@ reference_doctor:
     - block selection and the union reference equal brute force on every case
     - indexer KL gradient within 1e-4 relative error of central finite differences (float64)
     - a resumed run equals an uninterrupted run bit for bit; a signal save writes the marker only after every worker acknowledged; a stale marker is deleted
+    - a signal forwarded while workers are still starting checkpoints (exit 75 with a fresh marker) instead of killing them
+    - a fresh job continuing 0a-k1 after the LR freeze reuses training, stream-dev KL, the freeze and evaluation chunks and reproduces the read
+    - a corrupt final training generation is an integrity failure (exit 3), never a silent fallback to an older generation
+    - the V1 extension is refused for a main read that does not call for it and otherwise retrains and re-reads only the V1-failing target
     - the verdict classifier returns GO, NEGATIVE, INCONCLUSIVE, UNINTERPRETABLE, HOLD and VOID on hand-made tables in the registered direction
     - a bundle digest mismatch exits 2 and a read outside the declared partition raises IndexerContractError
   receipt: data/results/translation-supervised-sparse-indexer/k1-doctor.json
@@ -190,16 +194,22 @@ primary_endpoint:
   minimum_effect: 10.0
   unit_of_analysis: matched family (pair x Belebele question), clustered by passage link
   aggregation: >-
-    macro over pairs; decision interval = point +/- 2.576 x sqrt(se_cluster^2 +
-    s_seed^2 / 3) with se_cluster from a passage-cluster bootstrap (B = 10,000,
-    seed 42) and s_seed the SD of the per-seed xi_T
+    macro over pairs; decision interval = point +/- t_{0.995, df} x
+    sqrt(se_cluster^2 + s_seed^2 / 3) with se_cluster from a passage-cluster
+    bootstrap (B = 10,000, seed 42), s_seed the SD of the per-seed xi_T and df
+    the Welch-Satterthwaite degrees of freedom of the two terms (122 - 1 for
+    the cluster term, 3 - 1 for the seed term)
 
 statistics:
   seeds: [42, 43, 44]
   interval: >-
-    combined seed-plus-cluster 99 percent interval for xi_T and xi_rel_T; the
-    percentile cluster-bootstrap interval and the per-seed values are reported
-    alongside; H2a and H2b use percentile cluster-bootstrap 99 percent intervals
+    combined seed-plus-cluster 99 percent interval (Welch-Satterthwaite t
+    quantile) for xi_T and xi_rel_T; the percentile cluster-bootstrap interval
+    and the per-seed values are reported alongside; H2a and H2b use percentile
+    cluster-bootstrap 99 percent intervals. xi_rel_T is evaluable unless a pair
+    has R_T(c) - R_rand(c) of 1 point or less on the point pair means; inside
+    bootstrap replicates its denominator is max(R_T(c) - R_rand(c), 1) and the
+    number of replicates where that floor was active is reported
   multiplicity: >-
     two targets, each read at 99 percent; same-script rows, Lambda, hm, U, U_k,
     per-language, per-direction, per-layer and per-position tables are
@@ -209,6 +219,7 @@ falsifiers:
   - K1-screen NEGATIVE when, for both targets, xi_T is at most 5 with the combined 99 percent upper bound below 10 and half-width at most 5, and xi_rel_T is at most 0.1 with its upper bound below 0.2, with V1-V3, H1 at least 20, H2a and H2b passing
   - GO (localization holds) when some target has xi_T at least 10 with the combined 99 percent lower bounds of xi_T and xi_rel_T above 0, with V1-V3, H1 at least 10, H2a and H2b passing
   - UNINTERPRETABLE when H1 is below 10 or H2a or H2b fails on audit; HOLD on a V2 bug tell; VOID on a V3 integrity failure; INCONCLUSIVE otherwise
+  - V1 extension only after a main read that is V1_EXTENSION_REQUIRED, or INCONCLUSIVE with a V1-failing target; it retrains and re-reads only the V1-failing targets, a target that passed V1 keeps its main read, the dense headroom gates are not re-read, and a target still failing V1 afterwards is INCONCLUSIVE
 
 required_artifacts:
   - frozen preregistration q3-k1-localization-screen-v1 and its ledger row, verified in-image at startup
@@ -216,6 +227,7 @@ required_artifacts:
   - smoke receipt with capture reconstruction, eager sanity and timing projections; dev headroom receipt
   - resume equivalence report (R2 versus R0 bit for bit) and R1 termination receipt with signal_USR1_checkpoint_confirmed
   - main receipt with V1-V3, H1, H2a, H2b, xi_T and xi_rel_T intervals, per-seed values, verdict, seed SD (df 4), stream-dev KL for all 18 indexers, LR freeze and its SHA-256, descriptive tables and timings
+  - checkpoints/main-read.json (the main read the extension combines with), its SHA-256 recorded in the main receipt and in the extension receipt
   - K1 CPU doctor receipt data/results/translation-supervised-sparse-indexer/k1-doctor.json
 
 execution:
@@ -228,6 +240,5 @@ execution:
   blocked_by:
     - the preregistration q3-k1-localization-screen-v1 is a draft; the program owner freezes it after the bundle is built so its SHA-256 can be stated
     - no image contains this code yet; image A (from this commit) builds the bundle, image B (A plus the frozen preregistration and ledger) runs every GPU job
-    - the K1 bundle was built on the host CPU on 2026-10-07 (k1-bundle-v1.json SHA-256 919d016b87ad862f8f156e9537c9a39e2864dab0e6c605307d100d25a199dd2d, 278,818,734 bytes, built twice bit-identically; raw manifest 808e6c2477cafbe672273f004f0dafad4b1cb83780bb83114f971f6a34819189; sources in program/evidence/2026-10-07/q3-k1-bundle-sources.json) and must be rebuilt bit-identically in image A before the freeze; ParaDocs streaming consumed 6.34 GB (en-th), 7.49 GB (en-hi) and all 4.10 GB of en-km, which fell 11.5 percent short of its 1.2x quota and was refilled from the same-script pairs
-    - the discovery-lane submitter changes on stage0/lane (container_profile, model kind, seed_binding, memory mapping, signal marker semantics) must merge before the manifests under experiments/manifests/ validate
+    - the K1 bundle was built on the host CPU on 2026-10-07 (k1-bundle-v1.json SHA-256 919d016b87ad862f8f156e9537c9a39e2864dab0e6c605307d100d25a199dd2d, 278,818,734 bytes, built twice bit-identically; raw manifest 808e6c2477cafbe672273f004f0dafad4b1cb83780bb83114f971f6a34819189; sources in program/evidence/2026-10-07/q3-k1-bundle-sources.json) and must be rebuilt bit-identically in image A before the freeze; ParaDocs streaming consumed 6.34 GB (en-th), 7.49 GB (en-hi) and all 4.10 GB of en-km, which fell 11.5 percent short of its 1.2x quota at the fetch stage; after the build's filters en-km is 206,442 tokens (11.7 percent) and en-th 1,000 tokens short, and the 207,442-token shortfall was refilled from the same-script pairs
     - no orx node, accepted dry-run, smoke run or resume test exists for this code path
