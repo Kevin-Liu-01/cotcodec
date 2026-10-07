@@ -1,0 +1,9 @@
+{
+  "experiment_id": "serving-throughput-probe-v2",
+  "frozen_at": "2026-10-07T15:01:46.227869+00:00",
+  "git_head_at_freeze": "1422b2bcf5e0ed1a69e76cb2a96ea7c298ebaa91",
+  "hash": "52cd6a84c73bda00f1dfff5d49752d7adb211e527f49c121a259f5d1a385df44",
+  "path": "program/preregistrations/serving-throughput-probe-v2.md",
+  "previous_hash": "13c72ac3259c8c0a886bad66e5368a37a11f6dd0afb8ad3119a33791bdd47803",
+  "sha256": "19a9f5b5960507fff4561a0051de0417b54bbb9a936ceae53336e3f3043dd4d9"
+}
