@@ -24,7 +24,7 @@ per problem), and writes, for every contract tier under both TF32 policies:
   calibration record, and marginal and amortized cost.
 
 Under the trimming rule (``--plan``, the ``plan.json`` of ``run_q1_stage0.py``;
-preregistration section 18.6): mutant weights become ``(n/k) x (N_fs / m_fs)``
+preregistration section 18.7): mutant weights become ``(n/k) x (N_fs / m_fs)``
 (``trim.ht_weights``; cut and unstarted sampled mutants listed), criterion 5
 counts the controls the plan schedules at each replicate (the rest are listed
 as not scheduled), and a control whose parent the primary tier rejects has its

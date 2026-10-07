@@ -17,7 +17,7 @@ substrates (S1 L1/3, L2/3 and L2/74; the Liger cross-entropy and the Triton
 tutorial matmul) and part of a sixth (FlagGems cumsum), eight mutants of
 evaluation parents (three in the test split) and ten controls. Those verdicts
 are pilot infrastructure evidence, not Stage 0 data; the kernels are listed in
-`harness/q1/data/pilot_exposed.json` and handled by the rule of section 18.6
+`harness/q1/data/pilot_exposed.json` and handled as section 18.6 (item 1) registers
 (decision D26). An adversarial review of `stage0/q1-gates@acb3bc8` found one
 critical, one high and four medium defects; its fix pass is section 16 and the
 version card in section 2.1 is the current code's. The pilot projected Stage 0
@@ -25,7 +25,7 @@ as drafted at about 1,056 GPU-h, far above the 8 GPU-h cap. A second
 adversarial review (of `@04c2934`) found that the proposed trimming rule
 `q1-stage0-trim/1` (section 18.5) dropped control kinds, had no margin for
 criterion 3, was not implemented in the Stage 0 driver and projected its fixed
-phases too low; its fix pass is section 18.6, which registers
+phases too low; its fix pass is section 18.6, and section 18.7 registers
 `q1-stage0-trim/2` and its corrected projection (about 7.6 GPU-h through its
 bucket P3, 11.0 through P7; the stop keeps the run under 8) for the owner's
 decision.
@@ -71,8 +71,11 @@ each component's files, sorted by relative path); `tests/test_q1_integration.py`
 fails if this table differs from the code. Every corpus manifest records the
 mutator's `package_sha256` and `registry_fingerprint`, and every verdict row
 records `code_sha256` (`gate_code_sha256` for gate rows, `audit_code_sha256`
-for audit rows). Output whose identifiers differ from this table is not
-admissible for this experiment. Audit v1 is additionally frozen at
+for audit rows). `driver_sha256` binds what decides which kernels Stage 0
+scores and how it runs: the trimming rule and its sampler (`harness/q1/trim.py`,
+`trim_rule`), the pilot module whose size rules it uses, the cost card, the
+pilot-exposure list and the drivers (second review, finding 3). Output whose
+identifiers differ from this table is not admissible for this experiment. Audit v1 is additionally frozen at
 calibration as `audit/tiers.audit_version_hash(multiplier=M, ...)`, which
 folds the calibrated multiplier into the hash of exactly the files counted in
 `audit_code_sha256` (section 6.1).
@@ -88,8 +91,8 @@ Version card (`python scripts/q1_version_card.py --markdown`):
 | `gate_data_sha256` | `c9f5ecfa38f5528f0bf13202496389d8039428b8683b821c03267719ba6da85a` |
 | `shape_manifest_sha256` | `29e693ee4d77bc86e3ecfdb1000307b3878c023c6c6224f87c4fcfae74a220cb` |
 | `audit_code_sha256` | `8ed89f1548d5003da9398b494d29d239afab97fb9f921f32c688541d16fc7100` |
-| `analysis_sha256` | `d86f36525465ef016bfe8b37cc634a5196677cb70e270dc63448063f5d8bd9e7` |
-| `driver_sha256` | `876e03c57060bf63ed0a6425a798851025ddd214806ab0ad8fbb1f2ea3142e26` |
+| `analysis_sha256` | `60d5371d199bb4ee288a9cb79fd4ef284539833214deb0d929106659460fca54` |
+| `driver_sha256` | `1d52945095f80690aada6c09b5e279c61e1f1c48c6fe9d72c7481a3e7c7fde30` |
 | `trim_rule` | `q1-stage0-trim/2` |
 | `mutator_package_sha256` | `f4aa6e93214126b1fcc82964654833a2da419ff98e7d7b9d27fa24dc2f595296` |
 | `mutator_registry_fingerprint` | `43a1f0a234ad1c4a4421626d740989e01890b878c5ce7f2dec5739e3d43922a6` |
@@ -278,7 +281,13 @@ with `expected` verdicts keyed by schema gate ids, checked by
 
 The 13 activations are L1/19, 20, 21, 22, 25, 26, 27, 28, 29, 30, 31, 32 and
 88, each with a single `torch.rand` input (checked statically). Expectations
-assume the parent substrate is correct (section 3.2).
+assume the parent substrate is correct (section 3.2). When the primary tier
+(G, TF32-admissible) does not accept a control's parent at a replicate (a
+natural fault, prediction 4), that control's cells on gate (c) components, A1,
+A2, A3, A4 and the audit tiers are listed as "premise not met" with their
+verdicts, not counted as held or failed; its a- and b-gate cells still count
+(`analysis.control_checks`, `PARENT_PREMISE_GATES`; fixed in the second
+review's fix pass before any Stage 0 control is scored).
 
 ### 3.5 Splits (fixed now)
 
@@ -435,9 +444,22 @@ preregistration with a new experiment id before any test mutant is scored.
 The universe is the scored dev mutants the primary audit witnesses and gate
 `b` accepts; a configuration is a config id without its replicate seed, and
 its cost is the median GPU-seconds of its rows
-(`analysis.c_lite_set_cover`, computed and reported in every case). Pilot
-(section 18.4): c/b = 1.64 on 17 kernel replicates, so c-lite is not
-triggered by the pilot.
+(`analysis.c_lite_set_cover`, computed and reported in every case).
+
+The statistic (pinned; `analysis.C_OVER_B_STATISTIC`, `analysis.c_over_b_statistic`)
+is the ratio of two medians over kernels with all four items: the median of
+the per-kernel cumulative GPU-seconds of c (a + b1 + b2 + c) over the median of
+those of b (a + b1 + b2). `analysis.cost` has computed exactly this since the
+analysis was first committed (66bc7ce, and its docstring since c6ef3a9), before
+any pilot GPU job, so the reading was not chosen after the data. The pilot's
+cost card computes it with that function. Pilot (section 18.4): 1.64 on 17
+kernel-replicates in 9 bootstrap clusters, cluster-bootstrap 95% interval
+1.52-2.32, 39.6% of resamples above 2, so c-lite is not triggered, though not
+decisively. Reported beside it and never used for the decision (second
+review, finding 5): the median of per-kernel ratios 2.11 (1.52-2.20), the
+ratio of means 2.38 (1.79-2.83) and the marginal ratio of medians (c over
+b1 + b2) 1.35 (0.78-1.80). Two of those readings exceed 2; the decision
+follows the pinned statistic.
 
 ## 6. Independent audit (frozen at v1 after calibration)
 
@@ -526,8 +548,13 @@ with 0xFF; on GPU additionally through the `CUDAPluggableAllocator` in
 input bytes) at which the candidate does not refuse before launch (A3's
 refusal classification), else at native shape (pilot finding 18.3.1); no
 watchdog timeout. A4 is the conjunction of the in-process,
-poison-allocator and sanitizer rows. A sanitizer run that does not complete
-(exit code other than 0 or 86) is reported as `error`, not as a fault.
+poison-allocator and sanitizer rows. The sanitizer row is memcheck's verdict
+alone: a candidate that raises after a launch at that held-out configuration
+has the exception recorded (`workload_raised_after_launch`; A3 judges it at
+the same configuration) and the row is `accept` unless memcheck reports an
+error (second review, finding 11). A sanitizer run that does not complete
+for another reason (exit code other than 0 or 86, or an exception at native
+shape) is reported as `error`, not as a fault.
 
 ### 6.5 A5 (secondary tier)
 
@@ -539,7 +566,11 @@ the reference shares the candidate's weights.
 
 ### 6.6 Contract tiers (decision D14; primary = G)
 
-- **N** = A1 and A2 and A4 at native shapes.
+- **N** = A1 and A2 and A4, at native shapes except A4's memcheck run, which
+  is at the held-out shape of section 6.4 (amended in the second review: it
+  was so since section 6.4 was written, and the S1 fix of 18.3.1 made it
+  bite). The report lists every kernel whose N or c-disjoint verdict differs
+  when that row is left out (`analysis.sanitizer_shift`).
 - **G** = N and A3, where refusal-before-launch is "non-general", not a fault.
   This is the primary tier: never silently wrong at held-out shapes.
 - **G-strict** = N and A3, refusals count as faults.
@@ -729,7 +760,11 @@ the report on the CPU end-to-end journal.
    (`criterion_4_holds`).
 5. **Controls**: every expectation of every control (section 3.4) holds in
    100% of control x gate x replicate cells under the primary TF32 policy
-   (`analysis.control_checks`; a missing cell counts as a failure). A mismatch
+   (`analysis.control_checks`; a missing cell counts as a failure). Under the
+   trimming rule of section 18.7 the cells are those of the controls the plan
+   schedules at each replicate; the others are listed as not scheduled (the
+   expectations left untested are in section 18.6, item 2), and cells whose
+   premise is not met (section 3.4) are listed, not counted. A mismatch
    blocks Stage 0 results until it is classified as a gate or audit bug (fixed
    in a new version and rerun), a control bug (new control version and rerun)
    or a false premise (the expectation is withdrawn in a new preregistration
@@ -784,7 +819,8 @@ the report on the CPU end-to-end journal.
   `experiments/manifests/q1-substrate-admission.yaml`,
   `experiments/manifests/q1-mutate/specializations-v1.yaml`,
   `experiments/manifests/q1-core/q1-gate-gpu-smoke.yaml`,
-  `experiments/manifests/q1-core/q1-stage0-pilot.yaml`,
+  `experiments/manifests/q1-core/q1-stage0-trim-job.template.yaml` (a Stage 0
+  scoring job under the trimming rule of section 18.7),
   `experiments/manifests/q1-core/q1-audit-hole-replay.yaml`.
 - **Order.** (1) GPU smoke (reference identity, every gate; 0.75 GPU-h cap);
   (2) substrate admission with device codegen (1.5 cap); (3) specialization
@@ -800,9 +836,11 @@ the report on the CPU end-to-end journal.
   gauntlet runs before the full run, or the configuration shrinks (c-lite) by
   an addendum. **Measured (section 18.4):** the projection as drafted is about
   1,056 GPU-h (scoring 95% interval 671-1,359), a lower bound; c-lite is not
-  triggered (c/b = 1.64). Section 18.5 proposes the trimming rule
-  `q1-stage0-trim/1` (projected 7.37 GPU-h with a hard stop at 8), or the
-  gauntlet.
+  triggered (c/b = 1.64). Section 18.5 proposed the trimming rule
+  `q1-stage0-trim/1`; after the second review section 18.7 replaces it with
+  `q1-stage0-trim/2` (7.60 GPU-h through its bucket P3 and 10.99 through P7
+  at the central projection, kept under 8 by job caps), or the gauntlet
+  (blocked under D24 until the trust store exists).
 - **Corpus hand-off** (solved in the pilot pass). The lane mounts one
   read-only, SHA-256-checked study artifact per job (`study_artifact`, at most
   512 MiB, at `/inputs/study-artifact.json`). Every Stage 0 job that needs
@@ -835,7 +873,13 @@ the report on the CPU end-to-end journal.
   correct large-problem kernels. The limits are therefore a function of the
   problem's native input bytes `B` (from the committed shape manifest),
   `harness.q1.pilot.watchdog_limits`: compile `120 + 30 B/GB` s, correctness
-  `180 + 150 B/GB` s, timing `300 + 60 B/GB` s (unchanged below 0.1 GB).
+  `180 + 150 B/GB` s, timing `300 + 60 B/GB` s (unchanged below 0.1 GB). The
+  Stage 0 driver (`scripts/run_q1_stage0.py`) attaches them to every item.
+  **Contention** (second review, finding 3): an item that ran in a shared
+  concurrency class (fewer capacity units than its GPU has) and either timed
+  out or shows a CUDA out-of-memory error is an infrastructure failure
+  (`infra_failure-timeout-shared`, `infra_failure-oom-shared`) and runs once
+  more alone, also after a resume; alone, its outcome is final.
 - **Crash attribution.** A post-load crash counts as a rejection only when
   it is attributable to the candidate. The worker runs candidate code only
   while the gate or channel runs; a worker process that dies (signal,
@@ -908,8 +952,9 @@ results cannot shape them:
 - Proceed to the three-arm RL comparison only if FA-share(a) - FA-share(c) ≥
   3 pp and FA-share(b) - FA-share(c) ≥ 3 pp, each with non-overlapping 95%
   task-cluster bootstrap intervals, and median GPU-seconds of c (or c-lite) at
-  most 2x those of b per kernel, under the primary tier (G) and TF32 policy
-  (TF32-admissible).
+  most 2x those of b per kernel (the pinned statistic of section 5.5: the
+  ratio of the medians of per-kernel cumulative cost), under the primary tier
+  (G) and TF32 policy (TF32-admissible).
 - Decisive negative: the 95% upper bound of FA-share(a) below 3 pp, or fewer
   than 30 audit-rejected kernels among those gate (a) accepts.
 - Power gate: before sampling, a pilot-calibrated simulation must give power
@@ -1243,9 +1288,11 @@ measurement (same items, other concurrency, fixed image), not a repeat.
    substrates (job 548), 30 kept rounds each, none dropped for throttling,
    11 GPU-s per item. The identity control timed against itself gave a
    strict-fp32 ratio of 0.974 (95% CI 0.966-0.983): a 2.6% systematic
-   difference between the two sides of the paired protocol on one item. The
-   timing noise floor (section 10, order item 8) must measure this before any
-   speedup is interpreted.
+   difference between the two sides of the paired protocol on one item. Under
+   TF32, the speed baseline of D14, the same control gave 0.907 (95% CI
+   0.886-1.044; candidate and reference CV about 7%), which the pilot pass did
+   not report (second review, 6(e)). The timing noise floor (section 10,
+   order item 8) must measure both before any speedup is interpreted.
 9. **Crash attribution and slot health**: the `launch-stride-swap` mutant's
    illegal memory access crashed its A3 and gate (c) workers (charged as
    rejections, section 10); every post-crash health check passed and no slot
@@ -1301,6 +1348,23 @@ measurement (same items, other concurrency, fixed image), not a repeat.
    L2/3 reference-identity control fails PRC-01 at fp16 tolerance. A5 is
    reported only, but its refusals should be classified like A3's before it
    is reported.
+8. **Open: under TF32-admissible the A1/A2 tolerance on convolution problems
+   exceeds 1** (second review, finding 7). On L2/3 the TF32 device
+   reference's worst-element relative error is 0.167, so T = 16 x 0.167 = 2.67
+   (strict-fp32 T 0.0159); on L2/74 it is 0.0743, so T = 1.19 (strict 0.000586).
+   Any output within 267% or 119% worst-element relative error passes A1 and A2
+   there under the primary policy. The S1 convolution substrates themselves
+   run cuDNN in TF32 (candidate error 0.167 on L2/3, equal to the TF32
+   reference's), which is why the calibration members L2/52 and L2/60 needed
+   a multiplier of about 1.0000. 25 of the 69 problems below 1 GB are
+   convolution problems. A cap on T, or classifying such problems as
+   precision-limited for A1 and A2 under TF32-admissible, would reject the S1
+   convolution substrates or exclude their mutants, so it is part of the D14
+   decision with 18.3.6 (a data-motivated change under D26). Until then the
+   report lists every problem whose A1/A2 tolerance reaches 0.1
+   (`analysis.audit_tolerance_report`), and the planning witness rate for
+   convolution parents is lower than 0.5 (witnesses there come from A3, A4 and
+   gross errors only).
 
 ### 18.4 Cost card (section 7.1 cost, measured on the registered pilot substrates)
 
@@ -1328,7 +1392,12 @@ or more), and each of those costs hundreds of GPU-seconds per kernel and
 replicate. None of the simple trims fit either (a 2-mutant cap on small
 problems with one mutant replicate still totals 18.8 GPU-h; `cost-card.md`).
 
-### 18.5 Proposed trimming rule `q1-stage0-trim/1` (for the owner's decision)
+### 18.5 Proposed trimming rule `q1-stage0-trim/1` (superseded by `q1-stage0-trim/2`, section 18.7)
+
+Kept as written by the pilot pass. The second adversarial review found it
+dropped control kinds, left criterion 3 no margin, existed only as a
+projection, projected the fidelity sample and the timing floor too low, and
+did not register its seeds; section 18.7 replaces it (fix pass: section 18.6).
 
 It keeps every gate and audit channel on every scored kernel, all six
 mutation families, all four contract tiers and both TF32 policies. What
@@ -1414,7 +1483,9 @@ synchronization is not estimable either way (prediction 6); (iv) criterion 3
 has no slack: one false rejection of a correct substrate by gate (c) fails it.
 
 **Alternatives to this rule**, either of which also needs the owner: (a) the
-research gauntlet for a larger Stage 0 budget. For scale, at 12 items per GPU:
+research gauntlet for a larger Stage 0 budget (under D24 no gauntlet can
+reach 100 until Kevin sets up the protected trust store, so this path also
+waits on that or on a ruling on admission). For scale, at 12 items per GPU:
 raising the test quota to 120 per family (about 300 witnessed test mutants,
 the section 8.1 threshold) projects 9.5 GPU-h through P6; scoring the other
 27 large evaluation substrates once adds at least 7.6 GPU-h (a size-model
@@ -1428,6 +1499,277 @@ paired pilot measurement. Neither is assumed in the projection above.
 The rule is a proposal. Adopting it changes sections 3.3, 3.4, 3.5, 4, 8.1
 and 10 and needs the owner's sign-off before the draft is frozen; the pilot's
 findings 18.3.6 and 18.3.7 need decisions first in any case.
+
+### 18.6 Second adversarial review (of `stage0/q1-gates@04c2934`) and its fix pass
+
+Each finding was verified against the code, the pilot's run directories (copied
+read-only from the host and re-hashed there) and the cost card before it was
+fixed; dispositions are in `program/evidence/2026-10-07/q1-pilot/second-review-fix-pass.json`.
+Main was merged again (main@36af438, decisions D22-D25; ledger 2.150 GPU-h).
+
+1. **Pilot exposure (high; decision D26).** Verified: job 518 scored S1 L1/3,
+   L2/3 and L2/74, the Liger cross-entropy and the tutorial matmul at
+   replicate 42 with every gate and channel (gate c accepted all five; A3
+   rejected the tutorial matmul under TF32-admissible), part of FlagGems cumsum
+   (gates a, a_head_1e-4, a_head_1e-2, a_static and b1; its c item was killed),
+   eight mutants of evaluation parents of which three are in the test split by
+   `sampling.split_of` (L2/3 `plus2minus.L132C31`, Liger cross-entropy
+   `program-id-axis-swap.L55C17`, tutorial matmul `launch-stride-swap.L158C21`),
+   and ten controls. The header said no Stage 0 kernel had been scored; it is
+   corrected. Registered handling: (i) the exposed kernels are listed in
+   `harness/q1/data/pilot_exposed.json` (`scripts/q1_pilot_records.py` from the
+   three jobs' journals; SHA-256 pinned in `trim.PILOT_EXPOSED_SHA256` and in
+   `driver_sha256`); (ii) exposed mutants never enter a sampling frame
+   (matched by id and by parent and dedup hash); (iii) exposed units stay in the
+   primary analysis: the outcome-blind rule `q1-pilot/1` chose them, no gate's
+   verdict logic changed after they were scored, and Stage 0 rescores them with
+   the frozen code. Every primary quantity (criteria 2 and 3, MS, FRR) is also
+   reported without every exposed unit and its mutants, as a pre-specified
+   sensitivity analysis (`analysis.exposure_exclusions`,
+   `report["replicates"][seed]["sensitivity_without_pilot_exposed"]`);
+   (iv) an audit change motivated by a pilot verdict (the TF32 `tl.dot`
+   threshold of 18.3.6, A5's refusal handling of 18.3.7, a convolution
+   tolerance cap of 18.3.8) is labelled data-motivated, designed and validated
+   only on S1-cal substrates, controls and synthetic kernels, and drops from the
+   primary analysis of criteria 2 and 3 and of the mutant metrics every unit
+   whose correctness it would change (`pilot_exposed.json["data_motivated_units"]`;
+   for the TF32 threshold the tutorial matmul family, L1/1, L1/2 and L1/8;
+   `report_q1_stage0.py --data-motivated-change`). Excluding all exposed units
+   from the primary analysis instead was considered: 4 of the 63 in-scope units
+   and one FRR-core unit (L1/3) are exposed, so criterion 3 would need five
+   more units, the Liger KL divergence and four 4.3 GB problems (at least 1.65
+   GPU-h more), which pushes the test quota past 8 GPU-h even at the central
+   projection. D14's "fixed before any mutant is scored" can no longer be met; D26
+   records this.
+2. **Control kinds (high).** Verified: the KBV H.1 controls (plain and with a
+   decoy launch) apply only to substrates of L1/19, 20, 31 and 32 (in the
+   evaluation set: S1 L1/20 and L1/31 and FlagGems relu L1/19, so 6 controls),
+   and the 5 hack-emulating mutant controls to L1/19, 30, 32 and 38; all those
+   problems have 6.44-8.59 GB of native inputs, outside the trimmed scope, and
+   `project_trimmed` had no role for them. The 5 activation-specific kinds
+   exist in scope only on `s2-flaggems-gelu-tanh-L1-88`. Scoring the 11
+   out-of-scope controls at replicate 42 alone costs at least 6.2 GPU-h
+   (anchored lower bounds), which the 8 GPU-h cap cannot hold. Fixed by
+   amending criterion 5 explicitly (section 8.2): it covers the controls the
+   plan schedules; the others are listed as not scheduled, and the
+   expectations left untested are: KBV H.1 (a accept; b1, b, c1, c and
+   `audit_N` reject) and its decoy-launch variant (a, b1, b accept; c1, c and
+   `audit_N` reject), and the hack-emulating mutants (a, b accept; c1, c and
+   `audit_N` reject; the lower-clamp removal c accept and `audit_N` reject).
+   No scheduled control tests gate c1's hidden configurations specifically
+   (the CPU end-to-end test checks the analogous S1 ReLU-removal mutant at
+   shrunk shapes). The projection now costs and lists them
+   (`unscheduled_controls_*`). Because the five activation kinds rest on one
+   substrate that prediction 4 expects to be a natural fault, cells whose
+   premise (a correct parent) is not met are listed, not counted (section
+   3.4). Section 8.2 is added to the sections the rule amends (criteria 1, 3
+   and 5).
+3. **Registered run path (high).** Verified: `scripts/run_q1_stage0.py` built
+   every item with `exclusive=False` and the default 180 s limit; the
+   size-scaled limits, the exclusive class and the concurrency setting existed
+   only in the pilot driver (behind an opt-in flag), the rule only as a
+   projection dictionary, and none of these files were in the version card.
+   Fixed: `harness/q1/trim.py` is the rule as code and
+   `scripts/run_q1_stage0.py` runs its plan and nothing else (section 18.7);
+   the runner gained capacity units, contention retries alone (section 10),
+   the deadline-fit rule and `cut.jsonl`; the stop is enforced by Slurm job
+   caps (section 18.7, item 7); `driver_sha256` binds `trim.py`, `pilot.py`,
+   `cost_card.py`, `pilot_exposed.json`, both drivers, the cost-card script and
+   the records script. Tested on the CPU end-to-end journal
+   (`tests/test_q1_integration_cpu.py::test_trim_plan_driver_and_report_on_the_cpu_journal`)
+   and by unit tests of the plan, the runner and the report.
+4. **Criterion 3 margin (medium).** Verified: the in-scope substrates make 63
+   units; adding the FRR substrates in byte order gave exactly 72 admitted
+   units, `s2-flaggems-mm-L1-6` added none, and predictions 3 to 5 make several
+   in-scope units likely not correct (the Liger and tutorial LayerNorms refuse
+   L1/40 at admission; FlagGems gelu-tanh is a natural-fault candidate; the
+   tutorial matmul fails A3 under TF32-admissible). Fixed: substrates that add
+   no unit are skipped; the FRR set targets 72 admitted units (core, bucket P1)
+   plus a margin of 6 (bucket P4, after the test quota and the control
+   replicates). Below 2.2 GB only 73 units exist; the margin's first unit is
+   the Liger KL divergence (2.15 GB), the rest are 4.3 GB problems (L1/43, 5,
+   89, 90 and 92) at an anchored lower bound of 0.37 GPU-h each. Centrally the
+   stop falls 20% into P4 (one margin unit). If fewer than 72 scored units are
+   correct, criterion 3 is reported as not met (under-powered) with its n, as
+   section 8.2 already says; no unit is added after any Stage 0 verdict is
+   seen. The incentive the review names (a TF32 fix that rescues the tutorial
+   matmul and adds a unit with a known gate-c accept) is removed by item 1(iv).
+5. **c-lite statistic (medium; partly rejected).** Verified: on the same 17
+   kernel-replicates the ratio of medians is 1.642 and the median of
+   per-kernel ratios 2.112. Not verified: that the statistic was unpinned.
+   `analysis.cost` (in `analysis_sha256`) has computed the ratio of the medians
+   of per-kernel cumulative costs since the analysis was first committed,
+   before any pilot GPU job. Fixed: sections 5.5 and 12 now name it, the cost
+   card calls `analysis.c_over_b_statistic` (and `cost_card.py` with its script
+   is in `driver_sha256`), and the interval and the other readings are
+   reported (section 5.5). The decision stays "not triggered".
+6. **Projection inputs (medium).** Verified (a)-(e). Fixed: (a) the registered
+   execution is the measured condition (one GPU and 32 CPUs per job, one Stage
+   0 job at a time, 12 units per GPU); the paired factor was measured at
+   replicate 42 on problems up to 0.54 GB and is applied only below 0.6 GB;
+   its A4_sanitizer factor (0.849) partly reflects the S1 probe change between
+   the two images and is reported as such; (b) the fidelity sample is charged
+   at the pilot's measured allocation, 27.83 GPU-s per kernel (0.649 GPU-h for
+   84 kernels; was 0.139); (c) problems of 1 GB or more are anchored to the
+   measured L1/3 cost (156.8 GPU-s per GB without gate c, 65.0 for gate c) and
+   the censored gate-c bound at 4.3 GB (at least 157.6 GPU-s per GB),
+   whichever of model and anchor is larger; (d) the timing floor is charged at
+   its registered allocation, 8 GPUs while 2 time 80 items at the measured
+   11.25 s each (1.00 GPU-h; was 0.234); (e) the TF32 identity bias is
+   reported (section 18.2, item 8).
+7. **Convolution tolerance (medium).** Verified (A1 rows of job 518). Reported
+   as finding 18.3.8 and folded into the D14 decision; the report lists
+   problems whose A1/A2 tolerance reaches 0.1.
+8. **Seeds and weights (medium).** Fixed in section 18.7, items 3 and 4, and
+   in `trim.py`; the three exposed test mutants leave the frame.
+9. **Run-record hashes (low).** Fixed: `run-records.json` in the evidence
+   folder holds the SHA-256 and size of every file of the three pilot run
+   directories (the unpacked study artifact excluded, bound by its own hash)
+   and the file times the two killed items' bounds were read from; the cost
+   card records that file's hash. The runner now writes `cut.jsonl` with spawn
+   and kill times, which the cost card prefers.
+10. **Unsloth licence (low).** Fixed: the Apache-2.0 text is vendored as
+    `third_party/Liger-Kernel/LICENSE.Apache-2.0` and copied as
+    `LICENSE.Apache-2.0.unsloth` into the Liger substrates that contain the
+    Unsloth-derived code (RMSNorm, LayerNorm and KL divergence;
+    `q1-s2-build/2`); `kernel.py` is unchanged, so no mutant id, dedup hash or
+    split moves.
+11. **Sanitizer shape (low).** Fixed by amending sections 6.4 and 6.6 and
+    reporting the shift (`analysis.sanitizer_shift`); a post-launch crash at
+    the held-out shape no longer makes the row `error`.
+12. **Merge and D24 (low).** Main merged; section 18.5 and the handoff cite
+    D24 (no gauntlet can reach 100 without Kevin's trust store).
+13. **Upstream test code on GPUs (low; decision D27).** D27 admits the
+    KernelBench adversarial kernels and the unmodified upstream fidelity code
+    as trusted inputs under D7; they are not part of D3's corpus.
+
+### 18.7 Trimming rule `q1-stage0-trim/2` (for the owner's decision)
+
+The rule is `harness/q1/trim.py` (`TRIM_RULE`, `plan`), run by
+`scripts/run_q1_stage0.py`; the projection is `cost_card.project_trimmed`. It
+keeps every gate and audit channel on every scored kernel, all six mutation
+families, all four contract tiers and both TF32 policies.
+
+1. **Scope.** Mutants, every control and replicates 43 and 44 only on problems
+   whose native inputs are below 1 GB: 69 of the 106 evaluation substrates
+   (63 units).
+2. **FRR set.** Out-of-scope evaluation substrates in ascending native input
+   bytes (ties by substrate id), skipping any whose unit is already in the
+   set, up to 72 admitted units (core: S1 L1/6, L2/32, L2/42, L1/11, L2/26,
+   L1/3, FlagGems bmm, S1 L1/42 and L1/44) and then 6 more (margin: Liger KL
+   divergence, S1 L1/43, L1/5, L1/89, L1/90, L1/92), at replicate 42 only.
+3. **Mutants.** Frame of family `{family}` and split `{split}`: the capped mutants (cap 40, cap
+   seed 42) of in-scope evaluation parents with that family and split, minus
+   the pilot-exposed ones, sorted by kernel id and permuted by
+   `random.Random(seed).shuffle` with seed = the first 8 bytes (big-endian) of
+   `sha256("q1-stage0-trim/2/mutants/{family}/{split}")`. Test quota: the first 60 of
+   the test permutation; robustness subsample: its first `ceil(0.1 x quota)`;
+   test extension: positions 60-119; dev quota: the first 15 of the dev
+   permutation. Each prefix of a uniform permutation is a simple random sample.
+   Bucket order is rank-major across families in the family order
+   `seeded_order(families, "family-order")`, so a cut leaves every family a
+   prefix.
+4. **Weights.** A scored sampled mutant's Horvitz-Thompson weight is
+   `(n/k) x (N_fs / m_fs)`, with `N_fs` the frame size of its family and split
+   and `m_fs` the frame members scored at replicate 42 with all 15 items final
+   (`trim.ht_weights`). Sampled mutants the stop cut or that never started are
+   not in `m_fs` and are listed per family and split; nothing else is dropped.
+5. **Controls.** Reference-identity controls of in-scope problems at replicate
+   42; per hack kind, the first `max(1, ceil(0.15 x n))` of its in-scope
+   instances permuted with seed `sha256("q1-stage0-trim/2/hack/{kind}")`, and
+   the three KernelBench adversarial controls, at 42 (P1) and 43 and 44 (P3).
+   Controls of out-of-scope problems are not scheduled (section 18.6, item 2).
+6. **Execution.** One GPU and 32 CPUs per lane job and one Stage 0 job at a
+   time (the conditions jobs 518 and 548 measured); 12 capacity units per GPU:
+   1 per item below 0.6 GB of native inputs, 3 from 0.6 to 1 GB, all 12 from
+   1 GB; size-scaled watchdog limits on every item; contention failures retried
+   once alone (section 10). Template:
+   `experiments/manifests/q1-core/q1-stage0-trim-job.template.yaml`.
+7. **Order and stop.** P1 in-scope substrates, identity controls, the hack
+   sample and the adversarial controls at 42, then the FRR core at 42; P2 the
+   test quota at 42; P3 the hack sample and adversarial controls at 43 and 44;
+   P4 the FRR margin at 42; P5 in-scope substrates at 43 and 44; P6 the
+   robustness subsample at 43 and 44; P7 the dev quota at 42; P8 the test
+   extension at 42. The plan (`--plan-only`, CPU) records `plan_sha256`; every
+   scoring job checks it. A job refuses to start unless the Stage 0 GPU-hours
+   already spent (Slurm allocations of every finished Stage 0 job, the pilot's
+   0.899 included), its own cap (its Slurm limit times its GPUs, the manifest's
+   `max_gpu_hours`) and the reserve (the timing floor and the audit-hole replay
+   cap, 1.5 GPU-h) sum to at most 8.0 (`trim.budget_check`); Slurm ends it at
+   its limit, so the caps bound the spend. Inside a job an item starts only if
+   its watchdog limits end before the driver's hard deadline (240 s before the
+   limit). Killed or unstarted items rerun in the next job, which resumes the
+   previous job's journal through the lane (`resume_from_job_id`,
+   `resume_subpath`), and are reported as not scored if no budget remains. The
+   plan hash leaves out kernel paths, so the CPU plan and every job's plan from
+   the unpacked study artifact share it. Cap seeds 43 and 44 and mutants of S1-cal
+   parents stay unscored (sections 3.3 and 3.5).
+8. **Fixed phases.** Admission and device codegen of all 196 problems (0.55
+   GPU-h, measured per unit); specializations of in-scope parents (0.18);
+   calibration on the S1-cal substrates within the FRR set's largest size
+   (0.08); fidelity on every in-scope evaluation substrate, the 3 adversarial
+   controls and one test mutant per family and source tier (84 kernels at the
+   measured 27.83 GPU-s, 0.65); the timing noise floor (1.00); the audit-hole
+   replay cap (0.5); with the pilot's 0.899, 3.86 GPU-h.
+
+**Projection** (`program/evidence/2026-10-07/q1-pilot/cost-card.json`,
+`trim2-paired-concurrency`; cumulative totals with the fixed phases, central
+and at the cluster bootstrap's 97.5% point):
+
+| Through | Central GPU-h | High GPU-h |
+|---|---:|---:|
+| P1 | 5.59 | 6.10 |
+| P2 | 7.09 | 8.03 |
+| P3 | 7.60 | 8.70 |
+| P4 | 9.63 | 11.32 |
+| P5 | 10.29 | 12.18 |
+| P7 | 10.99 | 13.09 |
+
+Through P7 the rule does not fit 8 GPU-h; the stop makes the run fit. At the
+central projection it completes P1-P3 (every in-scope substrate and scheduled
+control at 42, the FRR core, the full test quota, the control replicates) and
+20% of P4 (one margin unit); at the high point it ends 98% into P2, with
+304 of the 310 quota test mutants and no control or substrate replicate. The
+same rule without the margin projects 8.93 central and 10.89 high through
+P7; with a 30-per-family test quota 9.94 and 11.69 (cost card). The pilot
+pass's `/1` recomputed under the same accounting but its own charges is 7.45
+central (its card said 7.37); the difference to `/2` is the margin (2.02
+GPU-h), the measured fidelity charge (+0.51), the timing floor's allocation
+(+0.77), the anchors (+0.21) and a wider calibration set (+0.04).
+
+**Effect on precision** (planning witness rate 0.5, design effect 2, as in
+section 9; lower for convolution parents, 18.3.8):
+
+| Quantity | As drafted | `q1-stage0-trim/2` at the central stop |
+|---|---|---|
+| Scored test mutants | about 1,950 | 310 (5 families x 60, synchronization 10) |
+| Witnessed test mutants per family | about 100-300 | 30 (synchronization 5) |
+| 95% half-width of a family miss rate near 0.2 | about 6-11 pp | 20 pp |
+| Pooled witnessed test mutants | about 980 | 155 |
+| 95% half-width of pooled FAR near 17% | 3.3 pp | 8.4 pp |
+| Smallest detectable paired gate difference | 1.6 pp | 10.1 pp |
+| Admitted units for criterion 3 | 99 | 72 core, about 73 at the central stop (upper bound 5.0% at 72 units and 0 rejections) |
+| Robustness replicates | every kernel | substrates, scheduled controls, 10% of test mutants (substrate replicates only if P5 is reached) |
+| Controls | every kind, every applicable substrate | every kind with an in-scope instance; KBV H.1 and the mutant controls not scheduled |
+
+Consequences, stated plainly: (i) the mutant metrics describe problems below
+1 GB only; (ii) with fewer than 300 witnessed test mutants every mutant metric
+is labelled under-powered (section 8.1); (iii) synchronization is not
+estimable; (iv) criterion 3 needs at least 72 correct units among about 73
+admitted, so it is likely to end "not met (under-powered)"; (v) criterion 5
+does not test gate c1's hidden configurations against identity shortcuts;
+(vi) at the high cost point, the control and substrate replicates (P3, P5)
+are cut and criterion 5 is evaluated at replicate 42 only.
+
+**Alternatives**, each needing the owner: (a) the research gauntlet for a
+larger budget, which under D24 cannot reach 100 until Kevin sets up the
+protected trust store or rules on admission; (b) an engineering pass that
+computes references, validity and fp64 replays once per problem and draw
+instead of once per kernel and gate (they dominate large items), followed by
+a new paired pilot measurement; (c) accept `/2` with the consequences above.
+Adopting `/2` changes sections 3.3, 3.4, 3.5, 4, 8.1, 8.2 (criteria 1, 3 and
+5), 10 and 12's inputs, and needs the owner's sign-off before the draft is
+frozen; findings 18.3.6 to 18.3.8 need D14 decisions first in any case.
 
 ## 19. References (accessed 2026-10-06 and 2026-10-07)
 

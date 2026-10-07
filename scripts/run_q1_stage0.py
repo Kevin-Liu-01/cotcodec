@@ -5,7 +5,7 @@ The plan is a pure function of the corpus (``harness.q1.trim.plan``): which
 substrates, mutants and controls are scored, at which replicates, in which
 priority buckets (P1-P8), with which concurrency units and watchdog limits.
 This driver runs exactly that plan, or the buckets a job is given, and nothing
-else (preregistration section 18.6):
+else (preregistration section 18.7):
 
 - **Plan.** ``--plan-only`` writes ``plan.json`` (the rule, seeds, FRR set,
   mutant frames and samples, control schedule, every item, ``plan_sha256``)
@@ -35,8 +35,11 @@ else (preregistration section 18.6):
         --reserve-gpu-hours 1.5 --budget-minutes 180
 
 With ``--evidence`` the corpus arrives as one hash-bound study artifact
-(``harness/q1/study_artifact.py``), unpacked read-only under ``OUTPUT/inputs``;
-relative ``--corpus`` paths are resolved there.
+(``harness/q1/study_artifact.py``), unpacked read-only beside the output
+(``OUTPUT-inputs``); relative ``--corpus`` paths are resolved there. Every job
+after the first resumes the previous job's journal: its manifest names the
+previous job in ``resume_from_job_id`` with ``resume_subpath`` set to the
+output directory, so the lane copies that directory in before the job starts.
 
 Re-running with the same ``--output`` resumes from the journal.
 """
@@ -112,12 +115,15 @@ def main(argv: list[str] | None = None) -> int:
 
         if not args.expected_evidence_sha256:
             parser.error("--evidence needs --expected-evidence-sha256")
-        inputs = args.output / "inputs"
+        # Beside the output, not in it: a later job resumes by copying the output
+        # directory (the lane's resume_from_job_id / resume_subpath) and unpacks again.
+        inputs = args.output.parent / f"{args.output.name}-inputs"
         receipt = study_artifact.unpack(
             study_artifact.load(args.evidence, args.expected_evidence_sha256), inputs
         )
         args.output.mkdir(parents=True, exist_ok=True)
-        (args.output / "study-artifact-receipt.json").write_text(
+        job = os.environ.get("SLURM_JOB_ID", "local")
+        (args.output / f"study-artifact-receipt-{job}.json").write_text(
             json.dumps(receipt, indent=1, sort_keys=True, default=str)
         )
         corpus = [path if path.is_absolute() else inputs / path for path in corpus]

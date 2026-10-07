@@ -423,8 +423,9 @@ def test_killed_items_are_recorded_with_spawn_and_kill_times(tmp_path: Path) -> 
     from harness.q1 import cost_card
 
     (tmp_path / "q1" / "phase").mkdir(parents=True)
-    for name in ("journal.jsonl", "cut.jsonl"):
-        (tmp_path / "q1" / "phase" / name).write_text((tmp_path / name).read_text())
+    assert not (tmp_path / "journal.jsonl").exists()  # the killed item was not journaled
+    (tmp_path / "q1" / "phase" / "journal.jsonl").write_text("")
+    (tmp_path / "q1" / "phase" / "cut.jsonl").write_text((tmp_path / "cut.jsonl").read_text())
     (tmp_path / "q1" / "phase" / "items.jsonl").write_text(
         json.dumps({"kernel_id": "t-relu_hang", "gate": "a", "seed": 42, "problem_id": "p"}) + "\n"
     )

@@ -1,5 +1,5 @@
 """Q1 Stage 0 trimming rule ``q1-stage0-trim/2``: what Stage 0 scores, in which order,
-how much runs at once, and how it stops (preregistration section 18.6).
+how much runs at once, and how it stops (preregistration section 18.7).
 
 Pure Python (no torch). The rule is applied to the Stage 0 corpus on the CPU
 before any Stage 0 scoring job; ``scripts/run_q1_stage0.py`` runs the plan it
@@ -57,7 +57,7 @@ PRIMARY_SEED = 42
 REPLICATE_SEEDS = (43, 44)
 SCORING_GATES = pilot.SCORING_GATES
 
-#: The registered rule (preregistration section 18.6). ``cost_card`` projects it;
+#: The registered rule (preregistration section 18.7). ``cost_card`` projects it;
 #: ``plan`` applies it.
 TRIM_RULE: dict[str, Any] = {
     "name": RULE_VERSION,
@@ -523,7 +523,12 @@ def plan(
 
 
 def plan_digest(record: Mapping[str, Any]) -> str:
+    """SHA-256 of the plan without kernel paths, so the same corpus unpacked at
+    another place (the CPU plan, the lane job's study artifact) has one hash."""
     body = {k: v for k, v in record.items() if k != "plan_sha256"}
+    body["items"] = [
+        {k: v for k, v in item.items() if k != "kernel_path"} for item in body.get("items", [])
+    ]
     return hashlib.sha256(json.dumps(body, sort_keys=True, default=str).encode()).hexdigest()
 
 

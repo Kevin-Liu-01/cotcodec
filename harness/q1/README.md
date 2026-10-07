@@ -25,6 +25,8 @@ CPU doctor. The preregistration draft is
 | `third_party/kernelbench/` | core | verbatim KernelBench files (MIT), see NOTICE |
 | `controls.py` | core | reference-identity and KernelBench adversarial controls (`python -m harness.q1.controls --out-root R`) |
 | `versions.py` | integration | version card named in the preregistration (`scripts/q1_version_card.py`) |
+| `pilot.py`, `cost_card.py` | pilot pass | pilot selection, schedule and size rules (watchdog limits, exclusive class); the cost card and the trimmed projection |
+| `trim.py`, `data/pilot_exposed.json` | second review fix pass | the trimming rule `q1-stage0-trim/2` as code (plan, seeded samples, FRR set, control schedule, buckets, units, budget check) and the hash-pinned list of kernels the pilot exposed (decision D26); run by `scripts/run_q1_stage0.py` |
 | `mutate/` | mutator owner (`stage0/q1-mutate`) | Triton AST mutants, compiled dedup, cap and split, hack controls; see `mutate/README.md` |
 | `substrates/` | substrate owner (`stage0/q1-substrates`) | S1 Inductor and S2 human-written substrates, admission, S1 split; see `substrates/README.md` |
 
@@ -63,8 +65,9 @@ The three components are merged on `stage0/q1-gates`. The pipeline is
 
 ```
 substrates (S1 convert, S2 build, admission) -> mutate (pool, compile, select, controls)
-  + controls.py (identity, adversarial) -> runner/worker (gates a-c, audit A1-A5)
-  -> journal -> analysis.py / report_q1_stage0.py
+  + controls.py (identity, adversarial) -> trim.plan (q1-stage0-trim/2)
+  -> run_q1_stage0.py -> runner/worker (gates a-c, audit A1-A5)
+  -> journal -> analysis.py / report_q1_stage0.py --plan
 ```
 
 - `tests/test_q1_integration.py` (pure Python) builds real substrates, runs

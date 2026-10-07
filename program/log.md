@@ -322,3 +322,38 @@ Append-only. Newest entries at the bottom.
   family, tier and policy kept, mutant metrics narrowed to problems under 1 GB
   with about 2.5 times wider intervals; or the gauntlet. Evidence:
   `program/evidence/2026-10-07/q1-pilot/`.
+
+## 2026-10-07 — Q1 Stage 0 second review fix pass: trimming rule /2 in code, pilot exposure registered (branch `stage0/q1-gates`, not merged)
+
+- Merged main@36af438 (D22-D25; conflicts in this log and `state.json`, both
+  sides kept; ledger 2.150 GPU-h). No GPU was used in this pass; host work ran
+  in GPU-less, network-less containers of `cotcodec-q1-gates:5af03757` from a
+  fresh clone of the branch.
+- Verified all 13 findings of the second adversarial review of `@04c2934`;
+  12 fixed, the c-lite one partly rejected (the ratio of medians has been the
+  analysis code's statistic since before the pilot; it is now named in
+  sections 5.5 and 12 with its interval, 1.64 (1.52-2.32), and the other
+  readings, 2.11 and 2.38, reported). Evidence:
+  `program/evidence/2026-10-07/q1-pilot/second-review-fix-pass.json`.
+- Pilot exposure (D26): the pilot had scored five evaluation substrates, part
+  of a sixth, eight mutants (three test) and ten controls. Listed and
+  hash-bound (`harness/q1/data/pilot_exposed.json`); exposed mutants leave
+  every sampling frame; a pre-specified sensitivity analysis drops every
+  exposed unit; data-motivated audit changes drop the units they affect.
+- `q1-stage0-trim/2` is code (`harness/q1/trim.py`, run by
+  `scripts/run_q1_stage0.py`): seeded frames and samples, FRR set with a
+  margin, per-kind control sample, buckets P1-P8, 12 capacity units per GPU,
+  shared-item timeouts and CUDA out-of-memory errors retried alone, stop by
+  Slurm job caps; `driver_sha256` in the version card. Criterion 5 amended
+  for the unscheduled KBV H.1 and hack-emulating mutant controls (at least
+  6.2 GPU-h to score at one replicate).
+- Corrected projection (fidelity at its measured allocation, timing floor at
+  its 8-GPU allocation, anchors for problems of 1 GB or more): 7.60 GPU-h
+  through P3 and 10.99 through P7 centrally, 8.70 and 13.09 at the high point;
+  the stop keeps the run under 8 (centrally P1-P3 complete, one margin unit).
+  The pilot pass's /1 was 7.37 with lower charges.
+- Also: TF32 identity timing bias 0.907 (0.886-1.044) reported; TF32
+  convolution tolerance above 1 (L2/3 T = 2.67) recorded as finding 18.3.8;
+  run records hashed (`run-records.json`), killed items recorded by the
+  runner; sanitizer row memcheck-only; Apache-2.0 text with the Liger
+  substrates that carry Unsloth code; D27 for upstream test code on GPUs.

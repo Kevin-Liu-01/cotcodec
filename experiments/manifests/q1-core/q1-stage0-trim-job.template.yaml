@@ -14,6 +14,11 @@
 # replay cap) sum to at most 8.0, and --job-cap-gpu-hours must equal GPUs x minutes
 # / 60. Slurm ends the job at its limit.
 #
+# Every job after the first resumes the previous one: add
+#   resume_from_job_id: <the previous Stage 0 job's Slurm id>
+#   resume_subpath: stage0
+# so the lane copies that job's /outputs/stage0 (journal, cut records) in first.
+#
 # Inputs arrive as ONE hash-bound study artifact (the frozen corpus; host-only, never
 # committed). Trusted code only (D3, D7, D26). Template: FILL-* values come from the
 # image build receipt, the artifact pack receipt, the plan (--plan-only on the CPU) and
