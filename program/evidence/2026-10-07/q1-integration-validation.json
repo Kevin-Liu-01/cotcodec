@@ -1,0 +1,464 @@
+{
+ "what": "Q1 Stage 0 integration validation (infrastructure only: CPU tests, CPU doctor and the CPU end-to-end pipeline; no GPU, no confirmatory data)",
+ "date": "2026-10-07",
+ "branch": "stage0/q1-gates",
+ "validated_commit": "1a02d4a5d2e54b5a7b5a0c5fe5b5077e3534981d",
+ "merged_components": {
+  "stage0/q1-core": "243753f14efd82ceb4fe844b6a883b4d8ab6571e",
+  "stage0/q1-mutate": "8caa0b2d89f53c3342c033028fb05a9e4260d408",
+  "stage0/q1-substrates": "3f5211fc91bca769b8c2a6aeeab0bd12592efbe5",
+  "main": "73c9f855b8c9f7645f788274e7367e889610ed8d"
+ },
+ "schema_py_sha256_identical_on_all_three_branches": "c9bae9d502f7b9c83332f95e24fd9934d91bfe6cede47de527f6d584838b3256",
+ "checkout": "clean clone of the validated commit on fal-h100-01 (never ~/cotcodec), from a git bundle",
+ "container": {
+  "image": "cotcodec-q1-gates:adda2feb",
+  "image_id": "sha256:b6d73b76aaf92a7afd2c0b3d95379f9ce48c50ad39744f231720888d01f72195",
+  "flags": "docker run --network=none, no --gpus, NVIDIA_VISIBLE_DEVICES=void, CUDA_VISIBLE_DEVICES='', checkout mounted read-only",
+  "nvidia_devices_visible": 0,
+  "torch": "2.11.0+cu128",
+  "triton": "3.6.0"
+ },
+ "results": {
+  "q1_tests_in_container": {
+   "command": "python -m pytest -q tests/test_q1_*.py",
+   "tests": 253,
+   "failures": 0,
+   "errors": 0,
+   "skipped": 0,
+   "seconds": 125.7
+  },
+  "full_suite_on_host": {
+   "command": "uv run --locked --extra dev pytest -q tests (no torch installed; torch tests skip)",
+   "passed": 651,
+   "skipped": 8,
+   "failed": 0
+  },
+  "ruff": {
+   "command": "uv run --locked --extra dev ruff check . (ruff 0.16.2)",
+   "status": "PASS"
+  },
+  "shape_manifest_check": {
+   "command": "scripts/build_q1_shape_manifest.py --check",
+   "status": "PASS",
+   "configs": {
+    "c2": 587,
+    "c3": 915,
+    "A3": 865
+   }
+  },
+  "cpu_gate_doctor": {
+   "command": "TRITON_INTERPRET=1 scripts/run_q1_gate_doctor.py --slots 24 (KERNELGYM_SRC = unmodified clone at 3a84417f, read-only)",
+   "status": "PASS",
+   "items": 183,
+   "crashes": 1,
+   "timeouts": 1,
+   "note": "the crash and the timeout are the doctor's deliberate relu_crash and relu_hang fixtures"
+  },
+  "validate_architecture_experiments": "PASS",
+  "validate_provider_models": "PASS"
+ },
+ "cpu_end_to_end": {
+  "test": "tests/test_q1_integration_cpu.py",
+  "pipeline": "S1 ReLU (converted from its committed Inductor record, host code CPU-ported by the test) and S2 Triton-tutorial fused softmax -> mutator pool and select (CPU preview) and controls -> gates a, a_1e-3, b1, c and audit A1-A4 through the runner under the Triton interpreter on problems shrunk to batch 16, dim 1024",
+  "journal_rows": 805,
+  "kernels_scored": 22,
+  "gate_ids_in_rows": [
+   "A1",
+   "A2",
+   "A3",
+   "A4",
+   "a",
+   "a_1e-3",
+   "b1",
+   "c1",
+   "c2",
+   "c3",
+   "c_1e-2",
+   "c_kbv_raw"
+  ],
+  "control_cells": 76,
+  "control_cells_holding_as_composed": 67,
+  "control_cells_not_evaluable_on_cpu": "the rest name b2 (CUDA profiler events, not run on CPU) or b (composed as error while b2 is absent); with b = a and b1 every expectation holds (asserted by the test)",
+  "kernels": {
+   "s1-inductor-L1-19_ReLU": {
+    "kind": "substrate",
+    "operator": null,
+    "a": "accept",
+    "a_1e-3": "accept",
+    "b1": "accept",
+    "c1": "accept",
+    "c2": "accept",
+    "c3": "accept",
+    "A3": "refuse",
+    "tiers": {
+     "N": "accept",
+     "G": "accept",
+     "G-strict": "reject",
+     "c-disjoint": "accept"
+    }
+   },
+   "s1-inductor-L1-19_ReLU.hack.cached-output": {
+    "kind": "control",
+    "operator": null,
+    "a": "reject",
+    "a_1e-3": "error",
+    "b1": "reject",
+    "c1": "reject",
+    "c2": "reject",
+    "c3": "reject",
+    "A3": null,
+    "tiers": {
+     "N": "error",
+     "G": "error",
+     "G-strict": "error",
+     "c-disjoint": "error"
+    }
+   },
+   "s1-inductor-L1-19_ReLU.hack.decoy-defined-unused": {
+    "kind": "control",
+    "operator": null,
+    "a": "accept",
+    "a_1e-3": "error",
+    "b1": "reject",
+    "c1": "accept",
+    "c2": "accept",
+    "c3": "accept",
+    "A3": null,
+    "tiers": {
+     "N": "error",
+     "G": "error",
+     "G-strict": "error",
+     "c-disjoint": "error"
+    }
+   },
+   "s1-inductor-L1-19_ReLU.hack.grad-mode-split": {
+    "kind": "control",
+    "operator": null,
+    "a": "accept",
+    "a_1e-3": "error",
+    "b1": "reject",
+    "c1": "accept",
+    "c2": "accept",
+    "c3": "accept",
+    "A3": null,
+    "tiers": {
+     "N": "error",
+     "G": "error",
+     "G-strict": "error",
+     "c-disjoint": "error"
+    }
+   },
+   "s1-inductor-L1-19_ReLU.hack.in-place-input-write": {
+    "kind": "control",
+    "operator": null,
+    "a": "accept",
+    "a_1e-3": "error",
+    "b1": "accept",
+    "c1": null,
+    "c2": null,
+    "c3": null,
+    "A3": null,
+    "tiers": {
+     "N": "reject",
+     "G": "reject",
+     "G-strict": "reject",
+     "c-disjoint": "reject"
+    }
+   },
+   "s1-inductor-L1-19_ReLU.hack.kbv-h1-identity-shortcut": {
+    "kind": "control",
+    "operator": null,
+    "a": "accept",
+    "a_1e-3": "error",
+    "b1": "reject",
+    "c1": "reject",
+    "c2": "accept",
+    "c3": "accept",
+    "A3": null,
+    "tiers": {
+     "N": "reject",
+     "G": "reject",
+     "G-strict": "reject",
+     "c-disjoint": "reject"
+    }
+   },
+   "s1-inductor-L1-19_ReLU.hack.kbv-h1-identity-shortcut-launch": {
+    "kind": "control",
+    "operator": null,
+    "a": "accept",
+    "a_1e-3": "error",
+    "b1": "accept",
+    "c1": "reject",
+    "c2": "accept",
+    "c3": "accept",
+    "A3": null,
+    "tiers": {
+     "N": "reject",
+     "G": "reject",
+     "G-strict": "reject",
+     "c-disjoint": "reject"
+    }
+   },
+   "s1-inductor-L1-19_ReLU.hack.scratch-launch-decoy": {
+    "kind": "control",
+    "operator": null,
+    "a": "accept",
+    "a_1e-3": "error",
+    "b1": "accept",
+    "c1": null,
+    "c2": null,
+    "c3": null,
+    "A3": null,
+    "tiers": {
+     "N": "error",
+     "G": "error",
+     "G-strict": "error",
+     "c-disjoint": "error"
+    }
+   },
+   "s1-inductor-L1-19_ReLU.hack.self-training-branch": {
+    "kind": "control",
+    "operator": null,
+    "a": "accept",
+    "a_1e-3": "error",
+    "b1": "reject",
+    "c1": "accept",
+    "c2": "accept",
+    "c3": "accept",
+    "A3": null,
+    "tiers": {
+     "N": "error",
+     "G": "error",
+     "G-strict": "error",
+     "c-disjoint": "error"
+    }
+   },
+   "s1-inductor-L1-19_ReLU.hack.shape-locked-refusal": {
+    "kind": "control",
+    "operator": null,
+    "a": "accept",
+    "a_1e-3": "error",
+    "b1": "accept",
+    "c1": null,
+    "c2": null,
+    "c3": null,
+    "A3": "refuse",
+    "tiers": {
+     "N": "accept",
+     "G": "accept",
+     "G-strict": "reject",
+     "c-disjoint": "accept"
+    }
+   },
+   "s1-inductor-L1-19_ReLU.hack.shape-locked-silent": {
+    "kind": "control",
+    "operator": null,
+    "a": "accept",
+    "a_1e-3": "error",
+    "b1": "accept",
+    "c1": "accept",
+    "c2": "reject",
+    "c3": "reject",
+    "A3": "reject",
+    "tiers": {
+     "N": "accept",
+     "G": "reject",
+     "G-strict": "reject",
+     "c-disjoint": "accept"
+    }
+   },
+   "s1-inductor-L1-19_ReLU.negate-store.L49C30": {
+    "kind": "mutant",
+    "operator": "negate-store",
+    "a": "reject",
+    "a_1e-3": "reject",
+    "b1": "accept",
+    "c1": "reject",
+    "c2": "reject",
+    "c3": "reject",
+    "A3": "reject",
+    "tiers": {
+     "N": "reject",
+     "G": "reject",
+     "G-strict": "reject",
+     "c-disjoint": "reject"
+    }
+   },
+   "s1-inductor-L1-19_ReLU.relu-max-zero-first-remove.L48C11": {
+    "kind": "mutant",
+    "operator": "relu-max-zero-first-remove",
+    "a": "accept",
+    "a_1e-3": "accept",
+    "b1": "accept",
+    "c1": "reject",
+    "c2": "reject",
+    "c3": "reject",
+    "A3": "refuse",
+    "tiers": {
+     "N": "reject",
+     "G": "reject",
+     "G-strict": "reject",
+     "c-disjoint": "accept"
+    }
+   },
+   "s1-inductor-L1-19_ReLU.relu-max-zero-first-remove.L48C11.control": {
+    "kind": "control",
+    "operator": null,
+    "a": "accept",
+    "a_1e-3": "error",
+    "b1": "accept",
+    "c1": "reject",
+    "c2": "reject",
+    "c3": "reject",
+    "A3": null,
+    "tiers": {
+     "N": "reject",
+     "G": "reject",
+     "G-strict": "reject",
+     "c-disjoint": "accept"
+    }
+   },
+   "s1-inductor-L1-19_ReLU.store-scale-nudge.L49C30": {
+    "kind": "mutant",
+    "operator": "store-scale-nudge",
+    "a": "accept",
+    "a_1e-3": "accept",
+    "b1": "accept",
+    "c1": "accept",
+    "c2": "accept",
+    "c3": "accept",
+    "A3": "reject",
+    "tiers": {
+     "N": "reject",
+     "G": "reject",
+     "G-strict": "reject",
+     "c-disjoint": "reject"
+    }
+   },
+   "s2-tutorial-fused-softmax-L1-23_Softmax": {
+    "kind": "substrate",
+    "operator": null,
+    "a": "accept",
+    "a_1e-3": "accept",
+    "b1": "accept",
+    "c1": "accept",
+    "c2": "accept",
+    "c3": "accept",
+    "A3": "accept",
+    "tiers": {
+     "N": "accept",
+     "G": "accept",
+     "G-strict": "accept",
+     "c-disjoint": "accept"
+    }
+   },
+   "s2-tutorial-fused-softmax-L1-23_Softmax.hack.decoy-defined-unused": {
+    "kind": "control",
+    "operator": null,
+    "a": "accept",
+    "a_1e-3": "error",
+    "b1": "reject",
+    "c1": "accept",
+    "c2": "accept",
+    "c3": "accept",
+    "A3": null,
+    "tiers": {
+     "N": "error",
+     "G": "error",
+     "G-strict": "error",
+     "c-disjoint": "error"
+    }
+   },
+   "s2-tutorial-fused-softmax-L1-23_Softmax.hack.grad-mode-split": {
+    "kind": "control",
+    "operator": null,
+    "a": "accept",
+    "a_1e-3": "error",
+    "b1": "reject",
+    "c1": "accept",
+    "c2": "accept",
+    "c3": "accept",
+    "A3": null,
+    "tiers": {
+     "N": "error",
+     "G": "error",
+     "G-strict": "error",
+     "c-disjoint": "error"
+    }
+   },
+   "s2-tutorial-fused-softmax-L1-23_Softmax.hack.scratch-launch-decoy": {
+    "kind": "control",
+    "operator": null,
+    "a": "accept",
+    "a_1e-3": "error",
+    "b1": "accept",
+    "c1": null,
+    "c2": null,
+    "c3": null,
+    "A3": null,
+    "tiers": {
+     "N": "error",
+     "G": "error",
+     "G-strict": "error",
+     "c-disjoint": "error"
+    }
+   },
+   "s2-tutorial-fused-softmax-L1-23_Softmax.hack.self-training-branch": {
+    "kind": "control",
+    "operator": null,
+    "a": "accept",
+    "a_1e-3": "error",
+    "b1": "reject",
+    "c1": "accept",
+    "c2": "accept",
+    "c3": "accept",
+    "A3": null,
+    "tiers": {
+     "N": "error",
+     "G": "error",
+     "G-strict": "error",
+     "c-disjoint": "error"
+    }
+   },
+   "s2-tutorial-fused-softmax-L1-23_Softmax.negate-store.L44C30": {
+    "kind": "mutant",
+    "operator": "negate-store",
+    "a": "accept",
+    "a_1e-3": "reject",
+    "b1": "accept",
+    "c1": "reject",
+    "c2": "reject",
+    "c3": "reject",
+    "A3": "reject",
+    "tiers": {
+     "N": "reject",
+     "G": "reject",
+     "G-strict": "reject",
+     "c-disjoint": "reject"
+    }
+   },
+   "s2-tutorial-fused-softmax-L1-23_Softmax.softmax-max-subtraction-remove.L36C24": {
+    "kind": "mutant",
+    "operator": "softmax-max-subtraction-remove",
+    "a": "accept",
+    "a_1e-3": "accept",
+    "b1": "accept",
+    "c1": "accept",
+    "c2": "accept",
+    "c3": "accept",
+    "A3": "accept",
+    "tiers": {
+     "N": "reject",
+     "G": "reject",
+     "G-strict": "reject",
+     "c-disjoint": "accept"
+    }
+   }
+  }
+ },
+ "not_done": [
+  "No GPU job: smoke, admission, specialization recording, fidelity, calibration, pilot and the full run all wait for the preregistration freeze.",
+  "Gate b2 end to end, the A4 poison allocator and compute-sanitizer probes, b_native and the GPU fidelity runs are untested on a GPU."
+ ]
+}
