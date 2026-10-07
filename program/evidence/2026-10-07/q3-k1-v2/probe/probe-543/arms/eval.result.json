@@ -1,0 +1,365 @@
+{
+  "long_rows": 220,
+  "peak_memory_bytes": 3792344064,
+  "select_only_long_mean_s": 0.23688243282958865,
+  "startup_s": 10.397903203964233,
+  "summary": {
+    "mc_only": {
+      "mean_rows": 34.0,
+      "mean_s": 0.19100287191880247,
+      "measured": 12,
+      "units": 13
+    },
+    "select_mc": {
+      "mean_rows": 34.0,
+      "mean_s": 0.2525534573166321,
+      "measured": 12,
+      "units": 13
+    },
+    "select_only": {
+      "mean_rows": 34.0,
+      "mean_s": 0.13770412180262306,
+      "measured": 12,
+      "units": 13
+    },
+    "selection_mean_rows": 34.0
+  },
+  "units": [
+    {
+      "kind": "select_only",
+      "mc": false,
+      "rows": 34,
+      "seconds": 0.6293067773804069,
+      "select": true,
+      "unit": "synthetic-0"
+    },
+    {
+      "kind": "select_mc",
+      "mc": true,
+      "rows": 34,
+      "seconds": 0.2762011056765914,
+      "select": true,
+      "unit": "synthetic-1"
+    },
+    {
+      "kind": "mc_only",
+      "mc": true,
+      "rows": 34,
+      "seconds": 0.1883766008540988,
+      "select": false,
+      "unit": "synthetic-2"
+    },
+    {
+      "kind": "select_only",
+      "mc": false,
+      "rows": 34,
+      "seconds": 0.13610838539898396,
+      "select": true,
+      "unit": "synthetic-3"
+    },
+    {
+      "kind": "select_mc",
+      "mc": true,
+      "rows": 34,
+      "seconds": 0.24897571094334126,
+      "select": true,
+      "unit": "synthetic-4"
+    },
+    {
+      "kind": "mc_only",
+      "mc": true,
+      "rows": 34,
+      "seconds": 0.18928042147308588,
+      "select": false,
+      "unit": "synthetic-5"
+    },
+    {
+      "kind": "select_only",
+      "mc": false,
+      "rows": 34,
+      "seconds": 0.14122304413467646,
+      "select": true,
+      "unit": "synthetic-6"
+    },
+    {
+      "kind": "select_mc",
+      "mc": true,
+      "rows": 34,
+      "seconds": 0.25131784193217754,
+      "select": true,
+      "unit": "synthetic-7"
+    },
+    {
+      "kind": "mc_only",
+      "mc": true,
+      "rows": 34,
+      "seconds": 0.1868787007406354,
+      "select": false,
+      "unit": "synthetic-8"
+    },
+    {
+      "kind": "select_only",
+      "mc": false,
+      "rows": 34,
+      "seconds": 0.13676188047975302,
+      "select": true,
+      "unit": "synthetic-9"
+    },
+    {
+      "kind": "select_mc",
+      "mc": true,
+      "rows": 34,
+      "seconds": 0.25107605289667845,
+      "select": true,
+      "unit": "synthetic-10"
+    },
+    {
+      "kind": "mc_only",
+      "mc": true,
+      "rows": 34,
+      "seconds": 0.18645164277404547,
+      "select": false,
+      "unit": "synthetic-11"
+    },
+    {
+      "kind": "select_only",
+      "mc": false,
+      "rows": 34,
+      "seconds": 0.13745889347046614,
+      "select": true,
+      "unit": "synthetic-12"
+    },
+    {
+      "kind": "select_mc",
+      "mc": true,
+      "rows": 34,
+      "seconds": 0.2650371640920639,
+      "select": true,
+      "unit": "synthetic-13"
+    },
+    {
+      "kind": "mc_only",
+      "mc": true,
+      "rows": 34,
+      "seconds": 0.19688473921269178,
+      "select": false,
+      "unit": "synthetic-14"
+    },
+    {
+      "kind": "select_only",
+      "mc": false,
+      "rows": 34,
+      "seconds": 0.1394151644781232,
+      "select": true,
+      "unit": "synthetic-15"
+    },
+    {
+      "kind": "select_mc",
+      "mc": true,
+      "rows": 34,
+      "seconds": 0.2476828759536147,
+      "select": true,
+      "unit": "synthetic-16"
+    },
+    {
+      "kind": "mc_only",
+      "mc": true,
+      "rows": 34,
+      "seconds": 0.19163425732403994,
+      "select": false,
+      "unit": "synthetic-17"
+    },
+    {
+      "kind": "select_only",
+      "mc": false,
+      "rows": 34,
+      "seconds": 0.13613645918667316,
+      "select": true,
+      "unit": "synthetic-18"
+    },
+    {
+      "kind": "select_mc",
+      "mc": true,
+      "rows": 34,
+      "seconds": 0.25403744261711836,
+      "select": true,
+      "unit": "synthetic-19"
+    },
+    {
+      "kind": "mc_only",
+      "mc": true,
+      "rows": 34,
+      "seconds": 0.19716594461351633,
+      "select": false,
+      "unit": "synthetic-20"
+    },
+    {
+      "kind": "select_only",
+      "mc": false,
+      "rows": 34,
+      "seconds": 0.13806386943906546,
+      "select": true,
+      "unit": "synthetic-21"
+    },
+    {
+      "kind": "select_mc",
+      "mc": true,
+      "rows": 34,
+      "seconds": 0.25341030210256577,
+      "select": true,
+      "unit": "synthetic-22"
+    },
+    {
+      "kind": "mc_only",
+      "mc": true,
+      "rows": 34,
+      "seconds": 0.18678548466414213,
+      "select": false,
+      "unit": "synthetic-23"
+    },
+    {
+      "kind": "select_only",
+      "mc": false,
+      "rows": 34,
+      "seconds": 0.13814194034785032,
+      "select": true,
+      "unit": "synthetic-24"
+    },
+    {
+      "kind": "select_mc",
+      "mc": true,
+      "rows": 34,
+      "seconds": 0.25162295438349247,
+      "select": true,
+      "unit": "synthetic-25"
+    },
+    {
+      "kind": "mc_only",
+      "mc": true,
+      "rows": 34,
+      "seconds": 0.18647125456482172,
+      "select": false,
+      "unit": "synthetic-26"
+    },
+    {
+      "kind": "select_only",
+      "mc": false,
+      "rows": 34,
+      "seconds": 0.13713679742068052,
+      "select": true,
+      "unit": "synthetic-27"
+    },
+    {
+      "kind": "select_mc",
+      "mc": true,
+      "rows": 34,
+      "seconds": 0.2561961291357875,
+      "select": true,
+      "unit": "synthetic-28"
+    },
+    {
+      "kind": "mc_only",
+      "mc": true,
+      "rows": 34,
+      "seconds": 0.18826973997056484,
+      "select": false,
+      "unit": "synthetic-29"
+    },
+    {
+      "kind": "select_only",
+      "mc": false,
+      "rows": 34,
+      "seconds": 0.13723731692880392,
+      "select": true,
+      "unit": "synthetic-30"
+    },
+    {
+      "kind": "select_mc",
+      "mc": true,
+      "rows": 34,
+      "seconds": 0.24873051512986422,
+      "select": true,
+      "unit": "synthetic-31"
+    },
+    {
+      "kind": "mc_only",
+      "mc": true,
+      "rows": 34,
+      "seconds": 0.18738328199833632,
+      "select": false,
+      "unit": "synthetic-32"
+    },
+    {
+      "kind": "select_only",
+      "mc": false,
+      "rows": 34,
+      "seconds": 0.13886907324194908,
+      "select": true,
+      "unit": "synthetic-33"
+    },
+    {
+      "kind": "select_mc",
+      "mc": true,
+      "rows": 34,
+      "seconds": 0.2518634553998709,
+      "select": true,
+      "unit": "synthetic-34"
+    },
+    {
+      "kind": "mc_only",
+      "mc": true,
+      "rows": 34,
+      "seconds": 0.19008176308125257,
+      "select": false,
+      "unit": "synthetic-35"
+    },
+    {
+      "kind": "select_only",
+      "mc": false,
+      "rows": 34,
+      "seconds": 0.13589663710445166,
+      "select": true,
+      "unit": "synthetic-36"
+    },
+    {
+      "kind": "select_mc",
+      "mc": true,
+      "rows": 34,
+      "seconds": 0.25069104321300983,
+      "select": true,
+      "unit": "synthetic-37"
+    },
+    {
+      "kind": "mc_only",
+      "mc": true,
+      "rows": 34,
+      "seconds": 0.20474723260849714,
+      "select": false,
+      "unit": "synthetic-38"
+    },
+    {
+      "kind": "select_only_long",
+      "mc": false,
+      "rows": 220,
+      "seconds": 0.23846787307411432,
+      "select": true,
+      "unit": "synthetic-39"
+    },
+    {
+      "kind": "select_only_long",
+      "mc": false,
+      "rows": 220,
+      "seconds": 0.23659508116543293,
+      "select": true,
+      "unit": "synthetic-40"
+    },
+    {
+      "kind": "select_only_long",
+      "mc": false,
+      "rows": 220,
+      "seconds": 0.23716978449374437,
+      "select": true,
+      "unit": "synthetic-41"
+    }
+  ]
+}

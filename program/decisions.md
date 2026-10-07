@@ -188,3 +188,17 @@ human spot check or counted as a label error, never dropped. Rater inputs are
 documents, diffs and renders, not code, so serving them on GPUs is outside
 the untrusted-code rule (D7). GPU time for the rater is bounded in the
 registration.
+
+**D24. K1 v2 goes through the gauntlet; the gauntlet cannot certify 100 here
+yet.** The K1 v2 throughput probe (Slurm 543, PROBE_COMPLETE) puts the v2
+caps plus the probe at 8.05 GPU-h under D22, over the 8 GPU-h threshold. The
+counting rule was fixed before the measurement and is not revisited, so
+`q3-k1-localization-screen-v2` is not frozen and runs the research gauntlet
+(D20). A gauntlet score of 100 requires two Ed25519-signed reviews whose keys
+come from an external trust store pinned by protected CI, plus a real compute
+attestation; that infrastructure does not exist and only Kevin can set it up
+(generating the keys here would defeat its purpose). Gauntlets therefore run
+with honest budgets and end at an honest exit below 100, with the review
+content ready to sign. Every experiment over 8 GPU-h (K1 v2, the rescoped Q2
+Stage 1, and Q1 Stage 0 if its pilot lands over the line) waits on Kevin
+either establishing the trust store or ruling on admission.

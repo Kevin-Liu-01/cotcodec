@@ -1,0 +1,109 @@
+q3-k1-throughput-probe-v1 operator log (UTC). Host: fal-h100-01. Operator: Claude (subagent), resumed after an interrupted session.
+Registration program/preregistrations/q3-k1-throughput-probe-v1.md sha256 45b9b1347c5093bae0f06665d7d88ed122fe2711d993a9d0e2d133918ae42e51
+Ledger row hash c9b45f00bb607b0fcf761cc831ab44779ae7aabd16dab5f0ef2617b2c207790d, git_head_at_freeze fb8e304; image commit 4b9d6c4748680e9a8a839c9ee3e1772ef0e02857 (holds the row).
+
+Earlier (interrupted) attempt
+2026-10-07T17:33:14Z fresh clean clone of main at 4b9d6c4 in ~/cotcodec-runs/stage0/k1-v2/repo-probe; image build submitted as Slurm 533
+  (infra/slurm/host-single-node/build-architecture-image.sbatch, COTCODEC_REPO=repo-probe). pre-build-state.txt: 518 q1-pilot-cost
+  (1 GPU) and 526 q2ap-dev-l0 (CPU) running; GPU 0 at 647 MiB, GPUs 1-7 idle.
+2026-10-07T17:43:22Z build 533 finished: image-build-receipt-533.json. Tag cotcodec-research:4b9d6c47-architecture,
+  image id sha256:e59d9cc18c0db05fa0ae20a0f65492268112d07fef20f00af799323ae02ce6d3, git_tree f156f7c9,
+  source_tar_sha256 8d8de791ed66854e8db61aa7c54d1535ae04dcee7774ff2a95488820e609d772, loopback-registry digest
+  sha256:2eb02b0fb1a8622d47089019eb7168e4dbea467857f3784db77d1551e2583f7e. torch 2.11.0+cu128, CUDA 12.8.1.
+  The session ended before the doctors ran.
+
+This session
+2026-10-07T18:41Z resume checks: no probe run root (.../translation-supervised-sparse-indexer/k1-throughput-probe-v1 absent), no
+  probe Slurm output anywhere under ~/cotcodec-runs, empty queue; nothing newer than the build except unrelated q1/q2 runs.
+  repo-probe HEAD 4b9d6c4, clean (`## main...origin/main`, only the ignored .venv). Docker image e59d9cc1... present with
+  label org.opencontainers.image.revision=4b9d6c4748680e9a8a839c9ee3e1772ef0e02857. Image 533 reused; nothing rebuilt.
+2026-10-07T18:44:21Z pre-doctor state (pre-doctor-state.txt): queue empty, all 8 GPUs 0% and 0 MiB, no compute processes.
+2026-10-07T18:44:27Z doctors launched in tmux (doctors/run-doctors.sh), each in its own srun step (research partition, 16 CPUs,
+  64G, no GPU, 30 min), docker run --rm --network none --user <uid:gid>, HOME=/tmp, HF_HUB_OFFLINE=1, image e59d9cc1...
+  (the same invocation as v1's ops/q3-k1/run-doctor-imageB.sh).
+2026-10-07T18:48:01Z Slurm 534 (v1 K1 doctor) COMPLETED 0:0, 3 min 34 s. K1_DOCTOR_PASS, 7/7 cases (capture_vs_eager,
+  data_objects, end_to_end, gradient_check, selection_brute_force, targets_vs_numpy, verdict_tables), 211.4 s.
+  Receipt doctors/k1-doctor-probe-image.json sha256 82b295d2dfa1ef407a5ee0ccc66bd1a22aec4e49deffb73bb299fb2d74c59b3d.
+  Its 7 provenance digests equal the v2 registration's table (v1 rows).
+2026-10-07T18:52:31Z Slurm 536 (v2 K1 doctor) COMPLETED 0:0, 4 min 30 s. K1_V2_DOCTOR_PASS, 5/5 cases (bank_equivalence,
+  slot_independence, selection_equivalence, eval_unit_vs_v1, end_to_end), 268.2 s.
+  Receipt doctors/k1-v2-doctor-probe-image.json sha256 d03e3cb74427e88986506380a14558f378deb67fea932e062f3136215faf8753.
+  Its 8 provenance digests equal the v2 registration's table. Slurm id 535 between them is not attributable (slurm-records.txt).
+2026-10-07T18:44:45Z filler from repo-probe (uv run --locked python scripts/fill_sparse_indexer_k1_probe_manifest.py
+  --image-receipt <build 533 receipt> --output ~/cotcodec-runs/stage0/k1-v2/probe-ops/filled), exit 0, stderr empty.
+  Diff against the template: only the four FILL values (image id e59d9cc1..., git sha 4b9d6c47..., source tar 8d8de791...,
+  preregistration 45b9b134... = the ledger row's sha256). Filled manifest sha256
+  45d09cab3e3fe86f75db008dd948481360ea4b56812b90eaa99b6611ae422cec (filler/q3-k1-throughput-probe.filled.yaml).
+  The filler's own checks passed: tabled code digests in the checkout and at the image commit, the ledger row at the image
+  commit, 1 GPU, 9 minutes, 0.15 GPU-h.
+2026-10-07T18:45:05Z pre-check from repo-probe: submitter --dry-run exit 0 (filler/precheck-dry-run.json: gpu_hours 0.15, --gres=gpu:h100:1,
+  --time=00:09:00, --mem=96G, --signal=B:USR1@180, seeds 42:43:44 bound to --seeds, profile default, no study artifact) and
+  --test-only exit 0. Neither creates the run root; it was still absent afterwards.
+2026-10-07T18:46Z orx node created: 1c4cb641-8854-4d7e-b6e2-a1cd91ed15a2 "Q3 K1 throughput probe (q3-k1-throughput-probe-v1)" (new root,
+  --baseline), branch orx/q3-k1-throughput-probe-q3-k1-throughput-probe-v1, reset (provisional, no runs) to 4b9d6c4; node commit
+  8415ee7 adds experiments/orx/node.yaml (kind slurm-manifest) and experiments/manifests/filled/q3-k1-throughput-probe.yaml
+  (byte-identical to the filler's output, sha256 45d09cab...). Needed because the registration voids a probe whose orx node lacks
+  its ORX_RESULT line; same pattern as v1's smoke node 16ddcc0. Not pushed. Worktree /Users/kevinliu/repos/cotcodec-wt-orx-k1-probe.
+2026-10-07T18:53:32Z pre-submit state (pre-submit-state.txt): 537-541 q2ap-dev-* running, all CPU only (no gres); all 8 GPUs 0% and
+  0 MiB, no compute processes; probe run root absent.
+2026-10-07T18:53Z orx exp run 1c4cb641 --backend ssh --host fal-h100-01 -> orx run b6fb997c-96a0-4260-9cbe-7d5d8adaa938 (commit 8415ee7):
+  dry-run, test-only, submit -> Slurm job 543 (PENDING briefly, RUNNING from 18:53:45Z, GPU 0 exclusive, 0 foreign processes).
+2026-10-07T18:57:03Z job 543 COMPLETED ExitCode 0:0, RunTime 00:03:18 (limit 9 min). termination.env reason=completed exit_code=0
+  checkpoint_ready=false. provenance-verification PASS (git 4b9d6c47, source 8d8de791). model-verification full, artifact root
+  7040f418... at revision da87bfb6.... ORX_SLURM_TERMINAL 543 state=COMPLETED exit_code=0:0;
+  ORX_RESULT kind=slurm-manifest direction=translation-supervised-sparse-indexer job=543 exit=0. orx run done (4m10s).
+  Receipt probe-543/receipt.json sha256 cae4e94905658f3f638d2eb8e0f504e341d3fbae9e5b08ffabc13940b7c07b4f:
+    experiment_id q3-k1-throughput-probe-v1, profile registered, seeds 42 43 44, status PROBE_COMPLETE, failures {},
+    concurrent_bound_used false; hashes: preregistration 45b9b134..., ledger_row_hash c9b45f00..., git 4b9d6c47...,
+    source 8d8de791..., model receipt e7f36f05...; the 9 code digests equal the registration's table.
+    Probe wall 191.3 s (deadline 330 s). Arm walls: tolerance 14.8 s, train 60.3, eval 20.2, capture 27.2, concurrent 68.7
+    (registered sizing model, descriptive: 40.4, 59.5, 20.6, 29.6, 66.9; total 216.9).
+    Tolerance gates, all passed (GPU NVIDIA H100 80GB HBM3, torch 2.11.0+cu128, CUDA 12.8; layer 15, 18 slots, 8,192 tokens):
+      KL loss max rel 1.08e-7 (1e-3); clip norm 8.08e-6 (1e-2); gradients max rel Frobenius 1.66e-4 wk (1e-2);
+      Adam step on identical inputs 0.0, bitwise (1e-6); chunked targets 2.38e-7 (1e-4), dropped-block mass 0;
+      slot independence bitwise (losses and gradients), perturbed loss moves; selection and U/U_k exact, 0 mismatches;
+      one 34-row unit: dense 7.6e-6 points (1e-3), indexer columns 3.8e-6 (reported). Post-step parameters (reported):
+      max rel Frobenius 8.3e-6 (wk).
+    Composition check passed: composed vs direct solo step, workers [0-7] 1.9213/1.9200 s, [8-14] 1.7586/1.7603,
+      [15-21] 1.8262/1.8262, [22-27] 1.6538/1.6536; max ratio 1.0010 (limit 1.15).
+    Rates (s): teacher_layer_seq 0.002416, layer_step 0.23038, layer_step_ext 0.12205, step_overhead 0.000993,
+      devkl_teacher_layer_seq 0.002744, devkl_layer_seq 0.027249, save_layer 0.46888, train_startup 9.826, eval_startup 10.398,
+      eval_select 0.13770, eval_select_mc 0.25255, eval_mc_only 0.19100, eval_rows 34.0, capture_check 19.747,
+      concurrent_step 7.4114 (worker [15-21]; 1.035 x the 7.16 s sum of solo steps, measured, no bound),
+      concurrent_startup 29.809.
+    Descriptive: 220-row selection unit 0.237 s against 0.138 s at 34 rows; one-layer split at layer 15 (targets 0.0132 s,
+      targets + bank 0.0576 s, bank 0.0444 s, host enqueue 0.0226 s, clip 0.0011 s); peak memory: tolerance 4.13 GB,
+      train 6.87 GB, eval 3.79 GB, capture 15.81 GB, concurrent workers 6.05-6.88 GB each.
+    The receipt's slurm_job_id field is null (the job id is bound by the lane's job.env, termination.env and the orx log).
+2026-10-07T18:58:03Z scripts/derive_sparse_indexer_k1_v2_limits.py --probe-receipt <receipt> from repo-probe (no --apply; digest
+  8318f73b... = the v2 table), exit 1 (gauntlet applies), stderr empty; repo-probe still clean afterwards.
+  Output derive/derive-limits.json. The receipt's own limits equal the recomputed ones (the script refuses otherwise).
+    | Job | GPUs | Projected minutes | Limit (minutes) | Cap (GPU-h) |
+    | smoke | 1 | 5.7 | 11 | 0.19 |
+    | headroom-dev | 1 | 5.7 | 11 | 0.19 |
+    | resume-r0 | 1 | 8.4 | 15 | 0.25 |
+    | resume-r1 | 1 | 6.1 | 12 | 0.20 |
+    | resume-r2 | 1 | 5.1 | 11 | 0.19 |
+    | main (and its continuation, if any) | 4 | 33.6 | 50 | 3.34 |
+    | extension (worst case) | 4 | 35.7 | 53 | 3.54 |
+    | q3-k1-throughput-probe-v1 | 1 | | 9 | 0.15 |
+    | Total with the probe | | | | 8.05 |
+  total_gpu_hours_with_probe 8.05 > 8.0, gauntlet_required true.
+DECISION (not the operator's to take; recorded): under D20 and D22 the caps with the probe exceed 8 GPU-h, so
+  q3-k1-localization-screen-v2 is not frozen and goes through the research gauntlet; the design is not cut to fit. --apply was not
+  run (it would refuse anyway) and the v2 registration and contract were not edited. The probe itself is complete and valid.
+GPU-hours used: 0.055 (job 543). Jobs 533, 534, 536 were CPU only.
+
+Evidence index (program/evidence/2026-10-07/q3-k1-v2/probe/). Lane files named *.env on the host are stored as *.env.txt, content unchanged.
+  image-build-receipt-533.json, image-build-versions-533.txt, slurm-533-image-build.out   probe image build (Slurm 533)
+  pre-build-state.txt, pre-doctor-state.txt, pre-submit-state.txt                        squeue and nvidia-smi before each step
+  doctors/                         run-doctors.sh; v1 and v2 doctor receipts, logs and run.env (Slurm 534, 536)
+  filler/                          filler.json, the filled manifest, the submitter dry-run from repo-probe
+  probe-543/                       job.env, termination.env, gpu-prolog.env, manifest.json, command.json, provenance and model
+                                   verification, container-doctor.txt, container.log, slurm-543.out, receipt.json, arms/*.json,
+                                   orx run b6fb997c log (ORX_RESULT exit=0), host-files-sha256.txt (digests of host files not copied:
+                                   docker inspect records, system.txt, the batch script copy, model receipt, per-step loss logs)
+  derive/                          derive-limits.json and its exit code (1, gauntlet applies)
+  slurm-records.txt                scontrol records and GPU-hours
+Host originals: /home/kevin/cotcodec-runs/translation-supervised-sparse-indexer/k1-throughput-probe-v1/543/ and
+  /home/kevin/cotcodec-runs/stage0/k1-v2/probe-ops/.

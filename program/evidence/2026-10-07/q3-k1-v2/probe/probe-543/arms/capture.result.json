@@ -1,0 +1,7 @@
+{
+  "max_layer_mean_tv": 0.015574507415294647,
+  "max_rel_output_error": 0.0035842584911733866,
+  "note": "descriptive: synthetic tokens; the v2 smoke gates the real check",
+  "peak_memory_bytes": 15808231936,
+  "seconds": 19.747459060512483
+}
