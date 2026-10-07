@@ -1,0 +1,9 @@
+[2026-10-07T11:50:52Z] real/a-smoke: valid
+[2026-10-07T11:51:39Z] real/a1a: valid
+[2026-10-07T11:53:06Z] real/r1: valid
+[2026-10-07T12:08:13Z] real/r3: invalid
+[2026-10-07T12:13:00Z] real/r4: invalid
+[2026-10-07T12:13:29Z] real/a1b: truncated
+[2026-10-07T12:14:47Z] dummy-control/x1-smoke: valid
+[2026-10-07T12:15:33Z] dummy-control/x1-a1: valid
+[2026-10-07T12:16:56Z] dummy-control/x1-r1: valid

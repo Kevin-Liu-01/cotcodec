@@ -1,0 +1,50 @@
+# Rendered from experiments/manifests/serving-throughput-probe-v1/b.template.yaml by scripts/render_serving_probe_manifest.py
+# build receipt sha256 31f11632aa7504e29d2302bd560d216320dd406d28ce8c8ff70dea19498d0622
+runtime: docker-single-node-discovery-v1
+name: stp-v1-b-q1-qwen3-8b-dummy
+image_id: sha256:fa1906ad5c53ec9bdb92551d8b81b78ae22e9bf26871c03c3128437236846dea
+git_sha: 80a87ee4f91e104d73948b756e5acda3ee7863c6
+source_sha256: 2c607c86d83c0b023bddb28ac22ed7fa2541c816ac8b6b16370d83bc3fb4d5b9
+run_root: /home/kevin/cotcodec-runs/stage0/serving-throughput-probe/runs/b
+container_profile: vllm
+resources:
+  gpu_type: h100
+  gpus: 1
+  cpus: 16
+  memory_gb: 128
+  minutes: 20
+budget:
+  max_gpu_hours: 0.34
+randomness_contract: assignment-seed-matrix
+seeds:
+- 42
+- 43
+- 44
+seed_binding:
+  flag: --seeds
+model:
+  cache_host_path: /home/kevin/cotcodec-runs/hf-cache
+  model_id: qwen3-0.6b-base
+  revision: da87bfb608c14b7cf20ba1ce41287e8de496c0cd
+  receipt_sha256: e7f36f05e6c87ec50b3736cf133fda60775abccb38f60fa9d3c134c432cf46df
+  artifact_root_sha256: 7040f418762c61dd00b540e482527e0d8c8a916cce80eee56408bd10a6179ae0
+command:
+- python
+- scripts/run_vllm_throughput_probe.py
+- run
+- --config
+- experiments/serving/serving-throughput-probe-v1.yaml
+- --job
+- b
+- --output-dir
+- /outputs/probe
+- --allocation-minutes
+- '20'
+- --image-variant
+- cu129
+- --weights-pin
+- qwen3-8b=8c206de0c96749d24a053351a9d83ef7c8f38d45da8ae7a0c8e964bf33809a48:a872f4dc37328ca2593192866f245537e4668add78ba0719c1ef41fd8bb0fa97
+- --seeds
+- '42'
+- '43'
+- '44'
