@@ -667,3 +667,293 @@ def test_rule_b_thresholds() -> None:
         p_below = v2.fisher_one_sided([[k - 1, 15 - k], [reference[key], 33 - reference[key]]])
         assert p_below >= v2.ALPHA_B or (k - 1) / 14 < v2.SHARE_BAR
     assert v2.rule_b_thresholds(0, reference) == {"environment": None, "agent_side": None}
+
+
+# --------------------------------------------------------------------------- #
+# Pre-freeze audit (2026-10-07): rule-code consistency and owner conditions
+# --------------------------------------------------------------------------- #
+
+
+def _parsed(entries: list) -> v2.TrajectoryFeatures:
+    features = v2.TrajectoryFeatures("x")
+    v2.parse_actions(features, entries)
+    return features
+
+
+@pytest.mark.parametrize(
+    "entry",
+    [
+        {"action": {"tool_name": "click"}, "error": False},
+        {"action": {"tool_name": "click"}, "error": 0},
+        {"action": {"tool_name": "click"}, "error": None},
+        {"action": {"tool_name": "click"}, "error": ""},
+        {"action": {"tool_name": "click"}, "exception": []},
+        {"action": {"tool_name": "click"}, "traceback": {}},
+        {"action": {"tool_name": "click"}, "Error": "boom"},  # key names are case-sensitive
+        {"action": {"tool_name": "click", "result": {"TOOL_ERROR": "x"}}},
+    ],
+)
+def test_tool_error_needs_an_exact_key_with_a_non_empty_value(entry: dict) -> None:
+    """Audit finding: {'error': False}, {'error': 0} and 'Error' used to count."""
+    assert _parsed([entry]).tool_error_entries == 0
+
+
+@pytest.mark.parametrize(
+    "entry",
+    [
+        {"action": {"tool_name": "click"}, "error": "boom"},
+        {"action": {"tool_name": "click"}, "error": True},
+        {"action": {"tool_name": "click", "result": {"traceback": ["line 1"]}}},
+        {"action": {"tool_name": "click"}, "tool_error": {"code": 1}},
+        {"action": {"tool_name": "click"}, "exception": 3},
+    ],
+)
+def test_tool_error_fires_on_a_non_empty_value_at_any_depth(entry: dict) -> None:
+    assert _parsed([entry]).tool_error_entries == 1
+
+
+def test_text_patterns_do_not_match_across_fields() -> None:
+    """Audit finding: the three text fields were joined, so 'connection' in
+    reasoning plus 'failed to open' in thought fired the connection pattern."""
+    split = _parsed([{"reasoning": "connection", "thought": "failed to open", "action": {}}])
+    assert split.env_text_hits == {}
+    one_field = _parsed([{"note": "Connection refused by the host", "action": {}}])
+    assert one_field.env_text_hits == {"connection": 1}
+    both = _parsed([{"reasoning": "captcha shown", "thought": "a captcha again", "action": {}}])
+    assert both.env_text_hits == {"captcha": 1}  # counted once per entry
+
+
+def test_a_checker_side_label_not_robust_to_narrow_l_is_exploratory() -> None:
+    """D15 condition: a checker-side label that the narrow-L sensitivity does
+    not reproduce is reported as exploratory."""
+    clean, web, s1, s2 = make_split()
+    l_tasks = {f"w{i}" for i in range(15)} | {"o0", "o100"}
+    broad = v2.rule_d({t: ("L" if t in l_tasks else "O") for t in clean}, s1, s2, clean, web)
+    narrow_none = v2.rule_d({t: "not L" for t in clean}, s1, s2, clean, web)
+    out = v2.v2_decisions(broad, None, rule_d_narrow=narrow_none)
+    assert out["rule_d"] == "checker-side time-drift candidate"
+    assert out["rule_d_robust_to_L_definition"] is False
+    assert out["rule_d_evidence"].startswith("EXPLORATORY")
+    robust = v2.v2_decisions(broad, None, rule_d_narrow=broad)
+    assert robust["rule_d_evidence"] == "CONFIRMATORY"
+    # A null primary is not a checker-side label: it stays confirmatory even if
+    # the sensitivity differs (it is still reported as not robust).
+    null = v2.v2_decisions(narrow_none, None, rule_d_narrow=broad)
+    assert null["rule_d"] == "not attributable to checker time-dependence"
+    assert null["rule_d_robust_to_L_definition"] is False
+    assert null["rule_d_evidence"] == "CONFIRMATORY"
+    missing = v2.v2_decisions(broad, None)
+    assert missing["rule_d_evidence"].startswith("EXPLORATORY")
+
+
+def test_every_rule_d_output_carries_the_blinding_note_and_attainable_share() -> None:
+    clean, web, s1, s2 = make_split()
+    l_web_only = {f"w{i}" for i in range(20)}
+    result = v2.rule_d({t: ("L" if t in l_web_only else "O") for t in clean}, s1, s2, clean, web)
+    assert result["blinding"] == v2.RULE_D_BLINDING_NOTE
+    assert "self-attested" in v2.RULE_D_BLINDING_NOTE
+    # 20 L tasks inside the URL stratum hold at most its 7 run1-only tasks: share 7/14.
+    assert result["max_attainable_share_of_net_in_L"] == pytest.approx(0.5)
+    decisions = v2.v2_decisions(result, None, rule_d_narrow=result)
+    assert decisions["rule_d_blinding"] == v2.RULE_D_BLINDING_NOTE
+
+
+def test_max_attainable_share_counts_forced_run2_only_tasks() -> None:
+    clean, web, s1, s2 = make_split(off_n=30, off_r1=16, off_r2=9)
+    every = v2.rule_d({t: "L" for t in clean}, s1, s2, clean, web)
+    assert every["max_attainable_share_of_net_in_L"] == pytest.approx(1.0)  # net 14 of 14
+    offline_only = v2.rule_d({t: ("O" if web[t] else "L") for t in clean}, s1, s2, clean, web)
+    assert offline_only["max_attainable_share_of_net_in_L"] == pytest.approx(7 / 14)
+
+
+def test_the_nominal_family_wise_error_rate_is_stated() -> None:
+    """D15 condition: the nominal family-wise rate over (a), (b) and (d) is 0.10."""
+    out = v2.v2_decisions({"stratified_exact_one_sided_p": 0.5, "share_of_net_in_L": 0.0}, None)
+    assert out["error_rates"]["nominal_family_wise_rate_a_b_d"] == pytest.approx(0.10)
+    bonferroni_bound = v2.ALPHA_D + v2.ALPHA_A + 2 * v2.ALPHA_B
+    assert bonferroni_bound == pytest.approx(v2.NOMINAL_FAMILY_WISE_RATE)
+
+
+def _outcome_world(n_concordant: int = 300, n_run1_only: int = 30):
+    """Concordant tasks with identical step counts; run1-only tasks whose run2
+    (failing) trajectory hits the step cap, as failing episodes often do."""
+    tasks = [f"t{i}" for i in range(n_concordant + n_run1_only)]
+    s1 = {t: 1.0 for t in tasks}
+    s2 = {t: 1.0 for t in tasks}
+    status1 = {t: {"trajectory_id": f"a{t}"} for t in tasks}
+    status2 = {t: {"trajectory_id": f"b{t}"} for t in tasks}
+    features = {}
+    for i, t in enumerate(tasks):
+        steps = 10 + i % 9
+        run2_steps = steps
+        if i >= n_concordant:
+            s2[t] = 0.0
+            run2_steps = 100
+        features[f"a{t}"] = v2.TrajectoryFeatures(f"a{t}", steps=steps, parsed=True)
+        features[f"b{t}"] = v2.TrajectoryFeatures(f"b{t}", steps=run2_steps, parsed=True)
+    return tasks, s1, s2, status1, status2, features
+
+
+def test_rule_a_concordant_sensitivity_removes_the_known_outcome_asymmetry() -> None:
+    """Audit blocking defect 3: failing episodes are longer, so known run1-only
+    discordance alone moves m; the concordant-task sensitivity does not see it."""
+    tasks, s1, s2, status1, status2, features = _outcome_world()
+    h_rewards, h_features = h_world(tasks, {})
+    out = v2.rules_abc(
+        features=features,
+        status1=status1,
+        status2=status2,
+        s1=s1,
+        s2=s2,
+        clean=tasks,
+        h_rewards=h_rewards,
+        h_features=h_features,
+    )
+    concordant = out["rule_a_steps_concordant_tasks"]
+    assert concordant["n_pairs"] == 300 and concordant["tied_pairs"] == 300
+    assert out["rule_a_steps"]["n_pairs"] == 330
+    decisions = v2.v2_decisions(
+        {"stratified_exact_one_sided_p": 0.5, "share_of_net_in_L": 0.0}, out
+    )
+    assert decisions["rule_a"] == "agent-behaviour shift"
+    assert decisions["rule_a_sensitivity_concordant_tasks"] == "no agent-behaviour shift"
+    assert decisions["rule_a_robust_to_concordant_tasks"] is False
+
+
+def test_all_criteria_sensitivity_is_not_run_when_no_screenshot_matched() -> None:
+    """Audit note: if the tarball's image layout differs from the registered
+    one, the screenshot sensitivity must not silently equal the primary."""
+    tasks, s1, s2, status1, status2, features = episode_world(20)
+    for t in tasks[:4]:
+        s2[t] = 0.0
+    h_rewards, h_features = h_world(tasks, {"h1": {"t10": feat(20)}})
+    kwargs = dict(
+        status1=status1,
+        status2=status2,
+        s1=s1,
+        s2=s2,
+        clean=tasks,
+        h_rewards=h_rewards,
+        h_features=h_features,
+    )
+    blind = v2.rules_abc(features=features, **kwargs)
+    assert blind["rule_b_screenshots"]["joined_episodes_with_screenshots"] == 0
+    assert blind["rule_b_sensitivity_all_criteria"]["verdict"].startswith("NOT RUN")
+    for f in features.values():
+        f.image_count = 5
+    seen = v2.rules_abc(features=features, **kwargs)
+    assert seen["rule_b_screenshots"]["joined_episodes_with_screenshots"] == 40
+    assert not seen["rule_b_sensitivity_all_criteria"]["verdict"].startswith("NOT RUN")
+
+
+def test_rule_b_class_order_robustness_is_reported() -> None:
+    tasks, s1, s2, status1, status2, features = episode_world(40)
+    for t in tasks[:4]:
+        s2[t] = 0.0
+        features[f"b{t}"].steps = 100
+        features[f"b{t}"].env_text_hits = {"captcha": 1}
+    h_rewards, h_features = h_world(tasks, {"h1": {t: feat(20) for t in tasks[20:30]}})
+    out = v2.rules_abc(
+        features=features,
+        status1=status1,
+        status2=status2,
+        s1=s1,
+        s2=s2,
+        clean=tasks,
+        h_rewards=h_rewards,
+        h_features=h_features,
+    )
+    decisions = v2.v2_decisions(
+        {"stratified_exact_one_sided_p": 0.5, "share_of_net_in_L": 0.0}, out
+    )
+    assert decisions["rule_b"] == "R1-retro: infrastructure"
+    assert decisions["rule_b_sensitivity_step_cap_first"] == "agent-side session variation"
+    assert decisions["rule_b_robust_to_class_order"] is False
+
+
+def test_public_features_keep_the_image_count() -> None:
+    features = v2.TrajectoryFeatures("x", steps=3, parsed=True)
+    features.image_digests = {0: "a", 1: "b"}
+    public = features.public()
+    assert public["images"] == 2 and "image_count" not in public
+    rebuilt = v2.TrajectoryFeatures.from_public(public)
+    assert rebuilt.n_images() == 2 and rebuilt.public() == public
+
+
+def test_tarball_scan_reports_its_member_layout(tmp_path: Path) -> None:
+    tar = tmp_path / "t.tar.gz"
+    make_tarball(tar)
+    layout: dict = {}
+    v2.scan_trajectory_tarball(tar, layout=layout)
+    assert layout == {
+        "file_members": 10,
+        "actions_members": 2,
+        "image_members": 7,
+        "other_file_members": 1,
+        "trajectories_with_actions": 2,
+        "trajectories_with_images": 2,
+    }
+
+
+def test_tarball_literals_match_the_registration() -> None:
+    flat = " ".join((ROOT_PREREG / "q2-holo3-rerun-audit-v2.md").read_text().split())
+    assert f"{v2.TARBALL_SIZE:,} B" in flat
+    assert f"CRC-32 `{v2.TARBALL_CRC32:08x}`" in flat
+    assert f"SHA-256 `{v2.TARBALL_SHA256}`" in flat
+
+
+ROOT_PREREG = Path(__file__).resolve().parents[1] / "program" / "preregistrations"
+
+
+# ---- Design numbers added after the pre-freeze audit ---------------------- #
+
+
+def test_outcome_pools_orient_discordant_pairs_by_outcome() -> None:
+    steps = {"h1": {"a": 10, "b": 20, "c": 7}, "h2": {"a": 12, "b": 100, "c": 9}}
+    rewards = {"h1": {"a": 1.0, "b": 1.0, "c": 0.0}, "h2": {"a": 1.0, "b": 0.0, "c": 0.0}}
+    pools = v2.outcome_pools(steps, rewards)
+    assert sorted(pools["both_pass"]) == [(10, 12), (12, 10)]
+    assert sorted(pools["both_fail"]) == [(7, 9), (9, 7)]
+    assert pools["run1_only"] == [(20, 100)]  # (passing steps, failing steps)
+    assert pools["run2_only"] == [(100, 20)]
+
+
+def test_power_rule_a_by_outcome_shows_the_offset_of_known_discordance() -> None:
+    uneven = [(10 + i % 5, 11 + i % 3) for i in range(50)]
+    pools = {
+        "both_pass": [(10 + i % 7, 10 + i % 7) for i in range(50)]
+        + uneven
+        + [(b, a) for a, b in uneven],
+        "both_fail": [(30 + i % 9, 30 + i % 9) for i in range(40)],
+        "run1_only": [(12, 100), (11, 60), (14, 90), (13, 40)],
+        "run2_only": [(100, 12), (60, 11), (90, 14), (40, 13)],
+    }
+    counts = {"both_pass": 260, "run1_only": 23, "run2_only": 9, "both_fail": 50}
+    rows = v2.power_rule_a_by_outcome(
+        pools, counts, scenarios=((1.0, 1.0), (1.0, 1.10), (1.0, 1 / 1.10)), sims=20, seeds=(42,)
+    )
+    null, longer, shorter = rows
+    assert null["mean_m"] < -0.05  # run2 longer by construction of the known 23/9
+    assert abs(null["mean_m_concordant_tasks"]) < 0.02
+    assert longer["power_mean"] > shorter["power_mean"]  # direction-dependent
+    assert null["power_mean_concordant_tasks"] <= 0.1
+
+
+def test_size_of_rule_d_over_every_allocation_stays_below_alpha() -> None:
+    strata = {
+        "web": {"tasks": 48, "run1_only": 7, "run2_only": 0},
+        "offline": {"tasks": 294, "run1_only": 16, "run2_only": 9},
+    }
+    out = v2.size_rule_d_all_allocations(strata, step=(4, 21))
+    assert out["allocations"] == 13 * 15
+    assert 0 < out["max_size"] < v2.ALPHA_D
+    web_l, off_l = out["max_size_at"]
+    tabled = v2.power_rule_d(strata, l_tasks=((web_l, off_l),), odds_ratios=(1.0,))
+    assert tabled[0]["power_test_alone"] == pytest.approx(out["max_size"], abs=1e-6)
+
+
+def test_power_rule_b_is_binomial_above_the_count_thresholds() -> None:
+    rows = v2.power_rule_b(14, {"environment": 7, "agent_side": 10}, shares=(0.5, 0.7))
+    by = {(r["class"], r["share"]): r["power"] for r in rows}
+    assert by[("environment", 0.5)] == pytest.approx(stats.binom.sf(6, 14, 0.5))
+    assert by[("agent_side", 0.7)] == pytest.approx(stats.binom.sf(9, 14, 0.7))

@@ -81,6 +81,8 @@ class World:
     opencua: dict[str, dict[str, dict[str, float]]] = field(default_factory=dict)
     drop: set[str] = field(default_factory=set)
     corrupt_sha256sums: bool = False
+    tarball: bytes | None = None  # bytes of the trajectory tarball member
+    config_manifest: str = ""  # what the stubbed config loader reports
 
     @property
     def tasks(self) -> list[str]:
@@ -203,7 +205,7 @@ def verified_zip(world: World) -> bytes:
                 "libreoffice_impress": world.repaired[1:],
             }
         ).encode(),
-        audit.TARBALL_RELPATH: b"not really a tarball",
+        audit.TARBALL_RELPATH: world.tarball or b"not really a tarball",
     }
     cdp_error = (
         "Setup step 3 failed: _chrome_open_tabs_setup - BrowserType.connect_over_cdp: Timeout "
