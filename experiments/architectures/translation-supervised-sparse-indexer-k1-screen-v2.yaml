@@ -1,0 +1,261 @@
+schema_version: 1
+name: translation-supervised-sparse-indexer-k1-screen-v2
+direction: Translation-Supervised Sparse Indexer (Direction 21), Q3 K1 localization screen, successor v2
+readiness: contract
+claim_scope: attachment-capability
+research_question: >-
+  On frozen Qwen3-0.6B-Base, do block-form (compress ratio 4) KL-distilled
+  sparse-attention indexers trained without the evaluation languages lose more
+  needle-selection recall than the dense block top-k of their own distillation
+  target when the query is a human translation in a different script from the
+  needle passage, compared with a same-language non-literal query, at a matched
+  achieved budget of 1,024 tokens in an 8,192-token context?
+null_hypothesis: >-
+  The indexer's cross-lingual gap equals its target's gap within 5 recall
+  points for both registered targets (head-sum hs and QSA Eq. 17 max-pool mp),
+  with the combined 99 percent interval excluding 10 points and the scale-free
+  retention difference xi_rel at most 0.1 with its interval excluding 0.2.
+
+# The successor of q3-k1-localization-screen-v1 (program decision D20): the
+# same registered design (v1's design decisions 1-25 and every registered
+# quantity), new code efficiency (batched indexer bank, vectorised evaluation),
+# limits and caps measured first by q3-k1-throughput-probe-v1, under a new
+# experiment id. The v1 contract,
+# translation-supervised-sparse-indexer-k1-screen.yaml, stays unchanged.
+inherits_definitions_from: experiments/architectures/translation-supervised-sparse-indexer-k1-screen.yaml
+preregistration:
+  experiment_id: q3-k1-localization-screen-v2
+  path: program/preregistrations/q3-k1-localization-screen-v2.md
+  status: >-
+    binding once frozen with scripts/preregister.py; the entry point refuses to
+    run unless program/preregistrations/ledger.jsonl holds a row whose SHA-256
+    equals the file, and the ledger row records the freeze time and
+    git_head_at_freeze
+
+k1_model:
+  model_id: qwen3-0.6b-base
+  revision: da87bfb608c14b7cf20ba1ce41287e8de496c0cd
+  receipt_sha256: e7f36f05e6c87ec50b3736cf133fda60775abccb38f60fa9d3c134c432cf46df
+  artifact_root_sha256: 7040f418762c61dd00b540e482527e0d8c8a916cce80eee56408bd10a6179ae0
+
+reference_doctor:
+  implementation: harness/sparse_indexer_bank.py
+  command_argv:
+    - uv
+    - run
+    - python
+    - scripts/run_sparse_indexer_k1_v2_doctor.py
+    - --output
+    - data/results/translation-supervised-sparse-indexer/k1-v2-doctor.json
+  runtime: torch-cpu (tiny random Qwen3 model); v1's K1 doctor runs beside it for the shared objects
+  evidence_grade: >-
+    EXECUTABILITY_AND_EQUIVALENCE_ONLY; float64 equivalence of the batched bank
+    with v1's per-indexer path (forward, KL, gradients, per-indexer clipping,
+    bitwise Adam), exact equality of the batched selection with v1's selection
+    functions, and the v2 entry point end to end on a tiny random Qwen3 model
+    and a synthetic bundle; no claim about the real model
+  objects:
+    - batched indexer bank per layer (stacked cells of one target and learning rate, per-slot clipping, one Adam per cell)
+    - row-chunked causal targets and KL (1,024-row chunks, keys and blocks truncated at the chunk end)
+    - composite-key top-k selection (score, then lower index), one top-k for U and U_k, the random baseline once per unit
+    - steady-state step and per-unit timing, the projection and limit formula, the smoke gate on the main job and the extension
+  gates:
+    - float64 loss, clip norm, gradients and post-step parameters within 1e-11 relative of v1's per-indexer path; the Adam step bit for bit
+    - changing one indexer's parameters leaves every other indexer's loss and gradients bit-identical
+    - block selection hits, tie counts and selected-token counts, and U and U_k hits, equal v1's functions exactly, including exact ties and signed zeros
+    - chunked targets equal v1's sequence targets within float32 rounding and every dropped block carries no mass
+    - the v1 doctor's resume, signal, continuation, corrupt-generation and extension cases pass on the v2 entry point
+  receipt: data/results/translation-supervised-sparse-indexer/k1-v2-doctor.json
+
+throughput_probe:
+  experiment_id: q3-k1-throughput-probe-v1
+  preregistration: program/preregistrations/q3-k1-throughput-probe-v1.md
+  implementation: scripts/probe_sparse_indexer_k1_throughput.py
+  formula: harness/sparse_indexer_k1_budget_v2.py derive_limits
+  receipt_sha256: null  # written from the probe receipt before the v2 freeze
+
+stages:
+  - stage: cpu-doctor
+    gpu_hours: 0
+    promotion_gate: the v1 and v2 K1 doctors pass and every K1 test passes on the commit that builds the v2 image A
+  - stage: throughput-probe
+    gpu_hours_ceiling: 0.15
+    promotion_gate: >-
+      q3-k1-throughput-probe-v1 ends PROBE_COMPLETE (GPU TF32 tolerance check
+      passed, every arm measured); its rates give the job limits below by the
+      registered formula, and the caps total at most 8 GPU-h with the probe,
+      or the gauntlet applies before any freeze (program decision D20)
+  - stage: k1-smoke-and-headroom
+    gpu_hours_ceiling: probe-derived (smoke and headroom-dev rows of execution.job_limits)
+    promotion_gate: >-
+      smoke gates pass (capture reconstruction, eager sanity, finite recall,
+      budget, registered unit mix) and both the main job and the worst-case V1
+      extension fit their registered limits under the smoke's own measurement;
+      the dense development pre-check passes H1, H2a and H2b
+  - stage: k1-resume-test
+    gpu_hours_ceiling: probe-derived (resume-r0, resume-r1 and resume-r2 rows)
+    promotion_gate: >-
+      R2 (resumed from R1's signal checkpoint) equals R0 (uninterrupted) bit
+      for bit and R1 terminated with signal_USR1_checkpoint_confirmed
+  - stage: k1-main
+    gpu_hours_ceiling: probe-derived (main row; the extension row when the main read calls for it)
+    promotion_gate: the registered verdict, read once on the audit partition
+
+starting_point:
+  arms:
+    - name: kl-only-block-hs-qwen3-0-6b
+      mode: frozen-checkpoint-retrofit
+      model_ids: [qwen3-0.6b-base]
+      is_control: true
+      purpose: >-
+        Block-form indexers on all 28 layers distilled by KL from the head-sum
+        target (head-sum, L1, sum within each 4-token block, renormalised over
+        complete blocks), the DSA-style recipe; LR {3e-4, 1e-3, 3e-3} x seeds
+        {42, 43, 44}; the LR is frozen on stream-dev KL before any audit read.
+    - name: kl-only-block-mp-qwen3-0-6b
+      mode: frozen-checkpoint-retrofit
+      model_ids: [qwen3-0.6b-base]
+      is_control: true
+      purpose: >-
+        The same design distilled from QSA Eq. 17 (head-sum, L1, max within
+        each 4-token block, L1 over complete blocks).
+
+intervention:
+  mechanism: >-
+    A detached block-form indexer I_{i,b} = sum_j w_ij ReLU(<q_i^j, kbar_b>) /
+    sqrt(128) with four 128-dimensional RMS-normalised query heads, one
+    average-pooled RMS-normalised key per complete 4-token block, rotary
+    position on all 128 dimensions (theta 1e6; query at i, key at 4b) and the
+    gate w_ij = b_j + x_i W_w (b = 1, W_w = 0 at init) is trained by KL to a
+    frozen target aggregation of the frozen layer's exact attention. Selection
+    keeps the top 256 complete blocks plus the incomplete tail block. Recall is
+    read offline against captured dense attention; no sparse kernel runs. v2
+    computes the same function for the 18 indexers of a layer at once.
+  trainable_components:
+    - indexer query and key projections, the two RMSNorm gains and the per-head gate (659,716 parameters per indexer)
+  frozen_components:
+    - Qwen3-0.6B-Base weights, tokenizer and attention (receipt e7f36f05...46df)
+    - target definitions hs and mp, the budget (k = 1,024 tokens, 256 blocks) and the tie-break
+    - the frozen learning rate per target after the stream-dev KL rule
+    - the passage-id partition, prompts, haystacks, needle positions and the bundle digest
+
+data:
+  train:
+    source: >-
+      2,441 training sequences of 8,192 tokens (20.0M tokens) plus 64
+      stream-dev sequences, half bilingual (ParaDocs en-th, en-hi, en-km from
+      all/paracrawl and en-de, en-fr, en-es, en-pl from the authors' strict
+      split, through one reimplemented filter with minimum_size 2,
+      frequency_cutoff 100, lid_cutoff 0.5) and half monolingual FineWeb-2 test
+      text in deu, fra, spa, pol, tha, hin, khm, cmn, arb, rus. TED2020 is
+      excluded (decision D4). The v1 bundle is reused unchanged.
+    identity: >-
+      k1-bundle-v1.json SHA-256 919d016b87ad862f8f156e9537c9a39e2864dab0e6c605307d100d25a199dd2d;
+      HF revisions jhu-clsp/paradocs@f80095af, HuggingFaceFW/fineweb-2@af9c1333;
+      per-file LFS ids, compressed bytes and lines consumed, the filtered-file
+      SHA-256 and the packed-stream array digests are inside the bundle
+  development:
+    source: >-
+      the 64 stream-dev sequences (LR selection by mean KL) and the Belebele
+      development partition (122 passages, 224 questions) for the smoke and
+      the dense headroom pre-check only
+    identity: bundle split section (seed 42) and stream digests
+  test:
+    source: >-
+      Belebele audit partition (122 passages, 230 questions; facebook/belebele@
+      7899cdfa) crossed with 14 cross-script pairs (needle X, query en) and
+      (needle en, query X) for X in {ja, ko, bn, ta, el, he, ka} and 10
+      same-script descriptive pairs for X in {id, tr, sw, nl, it}; haystacks
+      from FineWeb-2 test splits (X) and FineWeb CC-MAIN-2025-26/004_00046
+      (en); the primary partition is never read
+    identity: >-
+      the bundle's prompt ledger (context, query and option token digests) and
+      split; reads outside the audit partition fail closed
+    sealed: true
+  contamination_checks:
+    - exact 50-gram and MinHash (128 permutations, token 5-gram shingles, Jaccard at least 0.8) deduplication of every training and haystack document against every Belebele passage, question and option in 18 languages, with removal counts in the bundle
+    - documents with more than 0.5 percent held-out cross-script characters and Latin-script text whose function words read as it, nl, tr, id or sw are removed from training
+    - needle-absent CX twins (300) bound parametric answering; no-haystack passage-plus-question accuracy is reported on development
+
+controls:
+  - name: dense-own-target-block-top-k
+    matches: [prompts, layer, achieved-budget, target-aggregation]
+  - name: union-of-per-head-top-k-reference-and-budget-matched-u-k
+    matches: [prompts, layer, k-per-head]
+  - name: analytic-random-block-selection
+    matches: [prompts, achieved-budget]
+  - name: same-script-descriptive-pairs
+    matches: [items, haystack-source, positions, indexers]
+  - name: needle-absent-cx-twins
+    matches: [query, haystack-language, context-length]
+
+primary_endpoint:
+  metric: >-
+    xi_T = macro over the 14 cross-script pairs of the family mean of
+    [R_ind(MN) - R_ind(CX)] - [R_T(MN) - R_T(CX)] in recall points, R the mean
+    over question tokens and 28 layers of |S intersect N| / |N| x 100, R_ind the
+    3-seed mean at the frozen LR, R_T the dense block top-256 of target T
+  direction: maximize
+  minimum_effect: 10.0
+  unit_of_analysis: matched family (pair x Belebele question), clustered by passage link
+  aggregation: >-
+    macro over pairs; decision interval = point +/- t_{0.995, df} x
+    sqrt(se_cluster^2 + s_seed^2 / 3) with se_cluster from a passage-cluster
+    bootstrap (B = 10,000, seed 42), s_seed the SD of the per-seed xi_T and df
+    the Welch-Satterthwaite degrees of freedom of the two terms (122 - 1 for
+    the cluster term, 3 - 1 for the seed term)
+
+statistics:
+  seeds: [42, 43, 44]
+  interval: >-
+    combined seed-plus-cluster 99 percent interval (Welch-Satterthwaite t
+    quantile) for xi_T and xi_rel_T; the percentile cluster-bootstrap interval
+    and the per-seed values are reported alongside; H2a and H2b use percentile
+    cluster-bootstrap 99 percent intervals. xi_rel_T is evaluable unless a pair
+    has R_T(c) - R_rand(c) of 1 point or less on the point pair means; inside
+    bootstrap replicates its denominator is max(R_T(c) - R_rand(c), 1) and the
+    number of replicates where that floor was active is reported
+  multiplicity: >-
+    two targets, each read at 99 percent; same-script rows, Lambda, hm, U, U_k,
+    per-language, per-direction, per-layer and per-position tables are
+    descriptive and uncorrected
+
+falsifiers:
+  - K1-screen NEGATIVE when, for both targets, xi_T is at most 5 with the combined 99 percent upper bound below 10 and half-width at most 5, and xi_rel_T is at most 0.1 with its upper bound below 0.2, with V1-V3, H1 at least 20, H2a and H2b passing
+  - GO (localization holds) when some target has xi_T at least 10 with the combined 99 percent lower bounds of xi_T and xi_rel_T above 0, with V1-V3, H1 at least 10, H2a and H2b passing
+  - UNINTERPRETABLE when H1 is below 10 or H2a or H2b fails on audit; HOLD on a V2 bug tell; VOID on a V3 integrity failure; INCONCLUSIVE otherwise
+  - HOLD is terminal for the experiment id (program decision D16); no GO or NEGATIVE is reported, the investigation is reported, a defect it finds makes the run VOID with any re-run under a new id and preregistration, and otherwise the verdict stays HOLD
+  - V1 extension only after a main read that is V1_EXTENSION_REQUIRED, or INCONCLUSIVE with a V1-failing target, and then mandatory (program decision D16); it retrains and re-reads only the V1-failing targets, a target that passed V1 keeps its main read, the dense headroom gates are not re-read, a target still failing V1 afterwards is INCONCLUSIVE, and an extension that is not run or ends void makes the final verdict INCONCLUSIVE with no second extension
+
+required_artifacts:
+  - frozen preregistration q3-k1-localization-screen-v2 and its ledger row, verified in-image at startup
+  - the frozen q3-k1-throughput-probe-v1 receipt whose rates give the registered job limits
+  - k1 bundle (v1, unchanged) with per-source licence manifest (LicenseRef-cotcodec-k1-bundle-v1), dedup, quota and shortfall reports
+  - smoke receipt with capture reconstruction, eager sanity, steady-state rates and the main and extension projections against their limits; dev headroom receipt
+  - resume equivalence report (R2 versus R0 bit for bit) and R1 termination receipt with signal_USR1_checkpoint_confirmed
+  - main receipt with V1-V3, H1, H2a, H2b, xi_T and xi_rel_T intervals, per-seed values, verdict, seed SD (df 4), stream-dev KL for all 18 indexers, LR freeze and its SHA-256, descriptive tables and timings
+  - checkpoints/main-read.json (the main read the extension combines with), its SHA-256 recorded in the main receipt and in the extension receipt
+  - K1 CPU doctor receipts (v1 doctor and v2 doctor) in both images
+
+execution:
+  enabled: false
+  # The ceiling for the sum of the registered caps below (the conditional
+  # extension at its worst-case cap) with every throughput-probe run's cap,
+  # never expected use (budget_v2.COUNTING_RULE); the caps themselves are the
+  # job limits, which come from the probe receipt.
+  max_gpu_hours: 8.0
+  gpus: 4
+  checkpoint_to_persistent_storage: true
+  fresh_job_resume_test: true
+  checkpoint_interval_minutes: 10
+  # job_limits is written from the q3-k1-throughput-probe-v1 receipt with
+  # scripts/derive_sparse_indexer_k1_v2_limits.py before the v2 freeze:
+  # {smoke, headroom-dev, resume-r0, resume-r1, resume-r2, main, extension} ->
+  # {minutes, max_gpu_hours}. While it is null the entry point refuses the
+  # registered profile and the manifest filler fills nothing.
+  job_limits: null
+  blocked_by:
+    - the job limits are not set; they are a registered function of the q3-k1-throughput-probe-v1 receipt (harness/sparse_indexer_k1_budget_v2.py), and the gauntlet applies if their caps with the probe exceed 8 GPU-h (program decision D20)
+    - every GPU job runs on the v2 image B, built after the v2 freeze from the commit holding the frozen preregistration and its ledger row; jobs run only through experiments/manifests/q3-k1-v2/q3-k1-v2-*.yaml filled by scripts/fill_sparse_indexer_k1_v2_manifests.py
+    - the main job, its continuation and the extension are filled only after a SMOKE_PASS smoke receipt (main job and worst-case extension within their limits), a PROCEED_TO_K1 development headroom receipt and an equivalent fresh-job resume test, each run under the v2 image B, the registered bundle, the frozen preregistration and the tabled code (program decisions D16 and D20)
+    - the K1 bundle is v1's k1-bundle-v1.json SHA-256 919d016b87ad862f8f156e9537c9a39e2864dab0e6c605307d100d25a199dd2d (278,818,734 bytes), reused without a rebuild; the filler refuses any other bundle
