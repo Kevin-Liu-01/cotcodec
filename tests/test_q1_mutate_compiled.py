@@ -187,3 +187,30 @@ def test_cpu_compile_pool_end_to_end(tmp_path, monkeypatch):
     assert summary.get("compile-fail", 0) >= 1  # e.g. mul2div makes float offsets
     assert summary.get("distinct", 0) >= 10
     assert manifest["substrates"][0]["eligible"] == summary["distinct"]
+
+
+def test_cpu_compile_pool_batching_does_not_change_rows(tmp_path, monkeypatch):
+    """Batches of one kernel give the same compile.jsonl rows as one batch per substrate."""
+    pytest.importorskip("triton")
+    from harness.q1.mutate import corpus
+    from tests._q1_mutate_support import make_substrates
+
+    monkeypatch.setenv("TRITON_CACHE_DIR", str(tmp_path / "cache"))
+    substrates = make_substrates(tmp_path / "substrates", ["relu_where"])
+    spec_dir = tmp_path / "specs" / "toy-relu-where"
+    spec_dir.mkdir(parents=True)
+    (spec_dir / "specializations.json").write_text(
+        compiled.dump_specializations([_relu_record()], "3.6.0")
+    )
+    rows = {}
+    for label, batch in (("whole", None), ("single", 1)):
+        corpus.build_pool(substrates, tmp_path / f"pool-{label}")
+        out = corpus.compile_pool(
+            tmp_path / f"pool-{label}",
+            tmp_path / "specs",
+            workers=4,
+            timeout_s=900,
+            batch_size=batch,
+        )
+        rows[label] = [json.loads(line) for line in out.read_text().splitlines()]
+    assert rows["whole"] == rows["single"]

@@ -111,6 +111,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--smoke-out", type=Path, required=True)
     parser.add_argument("--work", type=Path, required=True)
     parser.add_argument("--workers", type=int, default=16)
+    parser.add_argument("--compile-batch-size", type=int, default=1)
     parser.add_argument("--cap", type=int, default=40)
     parser.add_argument("--cap-seed", type=int, default=42)
     parser.add_argument("--no-require-compile", action="store_true", help="CPU preview only")
@@ -135,7 +136,12 @@ def main(argv: list[str] | None = None) -> int:
     pool_manifest = mutate_corpus.build_pool(corpus / "pilot-substrates", pool)
     print(json.dumps({"pool": pool_manifest["n_candidates"]}), flush=True)
     if not args.no_require_compile:
-        mutate_corpus.compile_pool(pool, corpus / "specializations", workers=args.workers)
+        mutate_corpus.compile_pool(
+            pool,
+            corpus / "specializations",
+            workers=args.workers,
+            batch_size=args.compile_batch_size,
+        )
     result = mutate_corpus.select(
         pool,
         corpus / "pilot-substrates",

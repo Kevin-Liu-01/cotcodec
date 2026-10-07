@@ -238,8 +238,16 @@ def compile_pool(
     workers: int = 8,
     timeout_s: int = 3600,
     python: str = sys.executable,
+    batch_size: int | None = None,
 ) -> Path:
-    """Compile parents and candidates (run inside a GPU-less container)."""
+    """Compile parents and candidates (run inside a GPU-less container).
+
+    ``batch_size`` splits each substrate's kernels into batches of at most that
+    many (the parent in the first), so one substrate whose kernels take minutes
+    each in ptxas (the pilot's FlagGems cumsum) uses several workers. Each kernel
+    is compiled in a fresh interpreter batch exactly as before; results, the
+    isolated retries and the rows written do not depend on the batching.
+    """
     pool_root = Path(pool_root)
     out = pool_root / "compile.jsonl"
     if out.exists():
@@ -249,7 +257,28 @@ def compile_pool(
     for row in rows:
         by_substrate.setdefault(row["parent_substrate_id"], []).append(row["mutant_id"])
 
-    def run(substrate_id: str) -> list[dict[str, Any]]:
+    def names_of(substrate_id: str) -> list[str]:
+        return ["parent", *by_substrate.get(substrate_id, [])]
+
+    def compile_batch(task: tuple[str, list[str]]) -> tuple[str, dict[str, dict[str, Any]]]:
+        substrate_id, names = task
+        spec = Path(specializations_root) / substrate_id / "specializations.json"
+        if not spec.is_file():
+            return substrate_id, {}
+        kernel_dir = pool_root / "kernels" / substrate_id
+        return substrate_id, _compile_batch(python, spec, kernel_dir, names, timeout_s)
+
+    tasks: list[tuple[str, list[str]]] = []
+    for substrate_id in sorted(by_substrate):
+        names = names_of(substrate_id)
+        size = batch_size or len(names)
+        tasks += [(substrate_id, names[i : i + size]) for i in range(0, len(names), size)]
+    merged: dict[str, dict[str, dict[str, Any]]] = {s: {} for s in by_substrate}
+    with ThreadPoolExecutor(max_workers=workers) as pool:
+        for substrate_id, results in pool.map(compile_batch, tasks):
+            merged[substrate_id].update(results)
+
+    def finish(substrate_id: str) -> list[dict[str, Any]]:
         spec = Path(specializations_root) / substrate_id / "specializations.json"
         if not spec.is_file():
             return [
@@ -260,9 +289,9 @@ def compile_pool(
                 }
             ]
         kernel_dir = pool_root / "kernels" / substrate_id
-        names = ["parent", *by_substrate.get(substrate_id, [])]
-        results = _compile_batch(python, spec, kernel_dir, names, timeout_s)
-        # A batch that died (compiler crash, timeout) loses the remaining
+        names = names_of(substrate_id)
+        results = merged[substrate_id]
+        # A batch that died (compiler crash, timeout) loses its remaining
         # kernels; retry each of them alone, twice, so one crashing mutant is
         # isolated and attributed to itself.
         for name in [n for n in names if n not in results]:
@@ -284,7 +313,7 @@ def compile_pool(
         return out_rows
 
     with ThreadPoolExecutor(max_workers=workers) as pool:
-        results = list(pool.map(run, sorted(by_substrate)))
+        results = list(pool.map(finish, sorted(by_substrate)))
     staging = out.with_name(f".{out.name}.tmp-{os.getpid()}")
     _write_jsonl(staging, [row for chunk in results for row in chunk])
     staging.rename(out)
