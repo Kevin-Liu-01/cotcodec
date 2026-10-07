@@ -8,11 +8,11 @@
   {
    "exclusive": true,
    "gate": "c",
-   "gpu_seconds_lower_bound": 676.0,
+   "gpu_seconds_lower_bound": 676.8,
    "item_key": "s2-flaggems-cumsum-L1-89_cumsum|c|seed-42",
    "phase": "scoring",
    "problem_id": "L1/89_cumsum",
-   "wall_seconds_lower_bound": 676.0
+   "wall_seconds_lower_bound": 676.8
   },
   {
    "exclusive": true,
@@ -1730,7 +1730,7 @@
    "slots_per_gpu": 4
   }
  },
- "pilot_job": "runs/518",
+ "pilot_job": "/runs/518",
  "scenarios": [
   {
    "cap": 40,
@@ -2778,7 +2778,7 @@
    "n": 18
   }
  },
- "smoke_job": "runs/474",
+ "smoke_job": "/runs/474",
  "spent_gpu_hours": 0.899,
  "trimmed": [
   {
