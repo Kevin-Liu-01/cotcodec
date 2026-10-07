@@ -1,0 +1,26 @@
+{
+ "url": "https://arxiv.org/abs/2301.12566",
+ "fetched_at": "2026-10-07T20:59:29Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 44424,
+ "raw_sha256": "e6ab4613b12abdfeff45008d664b87f33048756337ce240db85893adeef31e8f",
+ "raw_stored": false,
+ "extract": {
+  "title": "Improving Cross-lingual Information Retrieval on Low-Resource Languages via Optimal Transport Distillation",
+  "authors": [
+   "Huang, Zhiqi",
+   "Yu, Puxuan",
+   "Allan, James"
+  ],
+  "citation_date": "2023/01/29",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Sun, 29 Jan 2023 22:30:36 UTC"
+   }
+  ],
+  "abstract": "Benefiting from transformer-based pre-trained language models, neural ranking models have made significant progress. More recently, the advent of multilingual pre-trained language models provides great support for designing neural cross-lingual retrieval models. However, due to unbalanced pre-training data in different languages, multilingual language models have already shown a performance gap between high and low-resource languages in many downstream tasks. And cross-lingual retrieval models built on such pre-trained models can inherit language bias, leading to suboptimal result for low-resource languages. Moreover, unlike the English-to-English retrieval task, where large-scale training collections for document ranking such as MS MARCO are available, the lack of cross-lingual retrieval data for low-resource language makes it more challenging for training cross-lingual retrieval models. In this work, we propose OPTICAL: Optimal Transport distillation for low-resource Cross-lingual information retrieval. To transfer a model from high to low resource languages, OPTICAL forms the cross-lingual token alignment task as an optimal transport problem to learn from a well-trained monolingual retrieval model. By separating the cross-lingual knowledge from knowledge of query document matching, OPTICAL only needs bitext data for distillation training, which is more feasible for low-resource languages. Experimental results show that, with minimal training data, OPTICAL significantly outperforms strong baselines on low-resource languages, including neural machine translation.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}

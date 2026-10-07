@@ -202,3 +202,14 @@ with honest budgets and end at an honest exit below 100, with the review
 content ready to sign. Every experiment over 8 GPU-h (K1 v2, the rescoped Q2
 Stage 1, and Q1 Stage 0 if its pilot lands over the line) waits on Kevin
 either establishing the trust store or ruling on admission.
+
+**D25. The Claude rater runs through the agent harness until a valid API key
+exists.** The `ANTHROPIC_API_KEY` available here is invalid (HTTP 401 on the
+models endpoint), and supplying a key is Kevin's call. The D23 Claude rater
+therefore runs as a Claude subagent through the Claude Code agent harness:
+one blind packet per item, read from files that contain only the packet, no
+access to labels, checker code or the other rater's answers, the model id
+recorded from the harness, and every prompt, packet digest and response
+hashed into the rater receipt. Sampling cannot be fixed on this path, which
+is disclosed; the open-weight rater stays seeded and deterministic. Reversal:
+a valid API key, after which the API path registered in the runner is used.

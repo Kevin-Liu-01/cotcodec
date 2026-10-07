@@ -1,0 +1,28 @@
+{
+ "url": "https://arxiv.org/abs/2404.15574",
+ "fetched_at": "2026-10-07T20:58:42Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 43553,
+ "raw_sha256": "889baa5386a9ac0a2771b52fd09660935c813f0998eeaf564310ee2d7c2b7ad9",
+ "raw_stored": false,
+ "extract": {
+  "title": "Retrieval Head Mechanistically Explains Long-Context Factuality",
+  "authors": [
+   "Wu, Wenhao",
+   "Wang, Yizhong",
+   "Xiao, Guangxuan",
+   "Peng, Hao",
+   "Fu, Yao"
+  ],
+  "citation_date": "2024/04/24",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Wed, 24 Apr 2024 00:24:03 UTC"
+   }
+  ],
+  "abstract": "Despite the recent progress in long-context language models, it remains elusive how transformer-based models exhibit the capability to retrieve relevant information from arbitrary locations within the long context. This paper aims to address this question. Our systematic investigation across a wide spectrum of models reveals that a special type of attention heads are largely responsible for retrieving information, which we dub retrieval heads. We identify intriguing properties of retrieval heads:(1) universal: all the explored models with long-context capability have a set of retrieval heads; (2) sparse: only a small portion (less than 5\\%) of the attention heads are retrieval. (3) intrinsic: retrieval heads already exist in models pretrained with short context. When extending the context length by continual pretraining, it is still the same set of heads that perform information retrieval. (4) dynamically activated: take Llama-2 7B for example, 12 retrieval heads always attend to the required information no matter how the context is changed. The rest of the retrieval heads are activated in different contexts. (5) causal: completely pruning retrieval heads leads to failure in retrieving relevant information and results in hallucination, while pruning random non-retrieval heads does not affect the model's retrieval ability. We further show that retrieval heads strongly influence chain-of-thought (CoT) reasoning, where the model needs to frequently refer back the question and previously-generated context. Conversely, tasks where the model directly generates the answer using its intrinsic knowledge are less impacted by masking out retrieval heads. These observations collectively explain which internal part of the model seeks information from the input tokens. We believe our insights will foster future research on reducing hallucination, improving reasoning, and compressing the KV cache.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}

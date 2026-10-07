@@ -1,0 +1,25 @@
+{
+ "url": "https://arxiv.org/abs/2606.22874",
+ "fetched_at": "2026-10-07T20:57:50Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 41843,
+ "raw_sha256": "68b5db54ba64828f305aaa1965fd25021f088a6117153cc8a462bfc22c5dc63f",
+ "raw_stored": false,
+ "extract": {
+  "title": "SpotAttention: Plug-In Block-Sparse Routing for Pretrained Long-Context Transformers",
+  "authors": [
+   "Ahmad, Huzama",
+   "Yun, Se-Young"
+  ],
+  "citation_date": "2026/06/22",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Mon, 22 Jun 2026 05:39:12 UTC"
+   }
+  ],
+  "abstract": "Long contexts have become standard in pretrained LLMs, yet they remain expensive to run: prefill compute grows quadratically with sequence length, and every decode step re-reads a key-value cache that grows linearly with it. Sparse attention cuts these costs by attending only to a relevant subset of past tokens, but selecting that subset is itself expensive. We present SpotAttention, a lightweight selector that attaches to a frozen pretrained transformer and learns by KL distillation to estimate its attention distribution. The selector picks the top-K keys each query attends to, and because its estimate is a calibrated distribution, a dual top-p rule reads the per-query, per-layer budget directly from it. Across Qwen3 (dense, 4B-32B) and Qwen3.5 (hybrid linear/full attention, 4B-9B), SpotAttention matches dense accuracy at contexts up to 128K tokens, eight times the training length. Decode at L=128K runs 3.9x faster than FlashAttention and 1.8x faster than Twilight, the strongest training-free baseline. Quantizing the selector's K-cache to INT4 or FP4 microscale shrinks it 3.5x at no accuracy cost.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}

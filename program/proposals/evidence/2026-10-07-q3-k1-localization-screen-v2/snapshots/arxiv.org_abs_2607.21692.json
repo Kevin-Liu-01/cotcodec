@@ -1,0 +1,36 @@
+{
+ "url": "https://arxiv.org/abs/2607.21692",
+ "fetched_at": "2026-10-07T20:59:18Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 120995,
+ "raw_sha256": "ec93eb5d1131600f624e78d730e3024749e57bab15e0383dc2df8c5d7eacf0a0",
+ "raw_stored": false,
+ "extract": {
+  "title": "Learning What Matters: Supervising Global Context Pruning with Causal Evidence Sets",
+  "authors": [
+   "Allchin, James E."
+  ],
+  "citation_date": "2026/07/23",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Thu, 23 Jul 2026 17:11:34 UTC"
+   },
+   {
+    "version": "v2",
+    "date": "Wed, 29 Jul 2026 14:12:37 UTC"
+   },
+   {
+    "version": "v3",
+    "date": "Tue, 4 Aug 2026 19:02:58 UTC"
+   },
+   {
+    "version": "v4",
+    "date": "Fri, 28 Aug 2026 23:17:32 UTC"
+   }
+  ],
+  "abstract": "Pruning a long context means committing to the blocks a model will keep, and the usual selector is distilled from a dense teacher's attention. That assumes attention shows which context the answer depends on. We test the assumption on retrieval tasks where the evidence is known exactly, by masking context and measuring whether the answer changes. Attention and causal dependence disagree. Teachers attend to outdated facts that the answer does not depend on, and they attend differently across training runs that use the same evidence. Selectors trained on that attention copy both failures. On a multi-hop retrieval task, a selector distilled from attention routes at 36% to 98% depending on the training run. The same selector trained on causal evidence sets reaches 99% or better on every run. Dense accuracy does not tell the teachers apart. Masking the frozen teacher recovers the causal sets of these tasks without annotations. Frozen pretrained models show the same conflict, and selectors supervised with known evidence labels beat attention-based eviction through 32B when context must be pruned before the question arrives.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}

@@ -1,0 +1,21 @@
+{
+  "llm_kwargs": [
+    "disable_log_stats",
+    "dtype",
+    "enforce_eager",
+    "gpu_memory_utilization",
+    "language_model_only",
+    "max_model_len",
+    "max_num_seqs",
+    "model",
+    "seed",
+    "tensor_parallel_size",
+    "tokenizer",
+    "trust_remote_code"
+  ],
+  "missing_llm_arguments": [],
+  "pass": true,
+  "sampling_error": null,
+  "transformers_version": "5.17.0",
+  "vllm_version": "0.31.0"
+}

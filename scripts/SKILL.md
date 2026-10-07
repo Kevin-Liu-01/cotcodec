@@ -100,6 +100,14 @@ provenance.
   launch-window ledger and X1 on identical prompts. Never edit the v1 driver:
   both digests cover it. `render_serving_probe_v2_manifest.py` renders its one
   job's manifest.
+- `run_open_weight_review.py` is the open-weight gauntlet reviewer (D23, D24):
+  `pack` (prompt + schema -> request bundle for the lane's study-artifact
+  mount), `plan`, `doctor` (vLLM API check, in the image), `run` (offline
+  `LLM.generate`, greedy, seed 42 primary plus same-batch replicates, one
+  retry with the parse error appended; receipt with model id, revision,
+  receipt digest, vLLM version, prompt and output SHA-256), `manifest` (lane
+  manifest from the overlay build receipt; refuses a checkout other than the
+  image's commit) and `verify`. Usage: `experiments/reviewer/README.md`.
 
 ## Patterns to follow / invariants
 <!-- agent-docs:fill:patterns -->

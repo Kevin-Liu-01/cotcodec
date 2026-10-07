@@ -1,0 +1,35 @@
+{
+ "url": "https://arxiv.org/abs/2606.25821",
+ "fetched_at": "2026-10-07T20:59:09Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 44060,
+ "raw_sha256": "dfa30eb7a281bf7cd07c87936a8fe2c604ce408ccaa1cd2be77b4020a355df57",
+ "raw_stored": false,
+ "extract": {
+  "title": "SARA: Unlocking Multilingual Knowledge in Mixture-of-Experts via Semantically Anchored Routing Alignment",
+  "authors": [
+   "Dong, Tianyu",
+   "Liu, Yangyang",
+   "Zhou, Jiang",
+   "Wu, Xinwei",
+   "Zhao, Xiaohu",
+   "Wang, Hao",
+   "Liu, Heng",
+   "Xu, Linlong",
+   "Wang, Longyue",
+   "Luo, Weihua",
+   "Zhu, Shaolin",
+   "Xiong, Deyi"
+  ],
+  "citation_date": "2026/06/24",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Wed, 24 Jun 2026 13:36:46 UTC"
+   }
+  ],
+  "abstract": "Sparse Mixture-of-Experts (MoE) architectures have emerged as an increasingly influential paradigm as they offer a strategic balance between parameter scalability and computational efficiency. However, low-resource languages, which suffer from a scarcity of high-quality training data, often have their tokens routed to different experts than those predominantly activated by high-resource inputs, which limits cross-lingual expert sharing. This cross-lingual routing divergence consequently hinders their efficacy in multilingual contexts. To address this issue, we propose SARA (Semantically Anchored Routing Alignment), a framework designed to transfer specialized capabilities from high-resource languages as anchors to low-resource languages. SARA explicitly aligns the routing distribution of multilingual inputs with high-resource semantic anchors using a symmetric Jensen-Shannon (JS) divergence constraint. Unlike traditional distillation methods that operate on output logits, SARA directly aligns the internal routing distributions of MoE layers, encouraging mechanistic consistency in expert selection across languages. We conduct experiments on 2 LLMs across 5 low-resource languages and 3 benchmarks. Experiment results demonstrate that SARA outperforms standard instruction tuning, e.g., +0.8% on Qwen3-30B-A3B and +1.2% on Phi-3.5-MoE-instruct on Global-MMLU. Further analyses show that SARA effectively addresses performance bottlenecks in low-resource languages, providing a scalable pathway to enhance multilingual capabilities in sparse architectures.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}

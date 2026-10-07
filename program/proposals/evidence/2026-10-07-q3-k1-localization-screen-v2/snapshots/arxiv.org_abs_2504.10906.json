@@ -1,0 +1,35 @@
+{
+ "url": "https://arxiv.org/abs/2504.10906",
+ "fetched_at": "2026-10-07T20:58:33Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 42598,
+ "raw_sha256": "051c48f5570eb56d84933df9cf1efb6b6a34a81ecc6b834bc091a11161144618",
+ "raw_stored": false,
+ "extract": {
+  "title": "Understanding LLMs' Cross-Lingual Context Retrieval: How Good It Is And Where It Comes From",
+  "authors": [
+   "Gao, Changjiang",
+   "Lin, Hankun",
+   "Huang, Xin",
+   "Han, Xue",
+   "Feng, Junlan",
+   "Deng, Chao",
+   "Chen, Jiajun",
+   "Huang, Shujian"
+  ],
+  "citation_date": "2025/04/15",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Tue, 15 Apr 2025 06:35:27 UTC"
+   },
+   {
+    "version": "v2",
+    "date": "Sat, 18 Oct 2025 12:02:19 UTC"
+   }
+  ],
+  "abstract": "Cross-lingual context retrieval (extracting contextual information in one language based on requests in another) is a fundamental aspect of cross-lingual alignment, but the performance and mechanism of it for large language models (LLMs) remains unclear. In this paper, we evaluate the cross-lingual context retrieval of over 40 LLMs across 12 languages, using cross-lingual machine reading comprehension (xMRC) as a representative scenario. Our results show that post-trained open LLMs show strong cross-lingual context retrieval ability, comparable to closed-source LLMs such as GPT-4o, and their estimated oracle performances greatly improve after post-training. Our mechanism analysis shows that the cross-lingual context retrieval process can be divided into two main phases: question encoding and answer retrieval, which are formed in pre-training and post-training respectively. The phasing stability correlates with xMRC performance, and the xMRC bottleneck lies at the last model layers in the second phase, where the effect of post-training can be evidently observed. Our results also indicate that larger-scale pretraining cannot improve the xMRC performance. Instead, larger LLMs need further multilingual post-training to fully unlock their cross-lingual context retrieval potential.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}
