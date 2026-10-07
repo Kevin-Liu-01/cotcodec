@@ -11,7 +11,7 @@ summaries extracted from the job receipts, with the receipt SHA-256 recorded.
 | `boot-reset-report.json` | Jobs 369 (smoke), 372 (bridge exposure) and 374 (22 cold boots): boot and settle times, reset sentinel, isolation, guest facts, HMP reachability |
 | `rdev-capture-report.json` | Jobs 387 (superseded) and 393 (reference): the R-dev capture of the 35 key, chord and Caps Lock entries, 5 repetitions each; job 468, the same plan re-captured with the rewritten tap |
 | `tap-selftest-report.json` | Jobs 467, 469, 470 and 471: the rewritten XRecord tap's oracle self-test after the review |
-| `development-runs.json` | Jobs 482-632: inputs validation and development (seed 42, never evidence), one row per job |
+| `development-runs.json` | Jobs 482-637: inputs validation and development (seed 42, never evidence), one row per job |
 
 ## What the runs show
 
