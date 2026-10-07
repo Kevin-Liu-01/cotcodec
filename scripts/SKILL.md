@@ -29,7 +29,8 @@ provenance.
   model (needs the architecture extra), `build_sparse_indexer_k1_bundle.py` the
   two-stage bundle builder, `compare_sparse_indexer_resume.py` the R0/R2 check
   and `fill_sparse_indexer_k1_manifests.py` fills `experiments/manifests/` from
-  measured artifacts.
+  measured artifacts (a resumed leg's predecessor is chosen from its
+  `termination.env`, and it shares the predecessor's run root).
 - `create_source_archive.py`, `verify_compute_provenance.py` and
   `verify_publication_attestation.py` bind source, image and claims.
 
