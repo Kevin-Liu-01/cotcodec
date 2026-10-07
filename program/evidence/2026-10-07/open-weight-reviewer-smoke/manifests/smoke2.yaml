@@ -1,0 +1,69 @@
+# Rendered by scripts/run_open_weight_review.py manifest
+# build receipt sha256 1acef57a32dcb3ca89fc3ceedbe3415f4c0ff7c1078111e4b58ac5c032fcb3d0
+# request label smoke, prompt sha256 25b716c6b770d319cc1d701682e38f2da224e0114aef243fe18ec2e74d13a88f
+runtime: docker-single-node-discovery-v1
+name: owr-smoke2-qwen35-9b
+image_id: sha256:eda7249764e263e8b0f8ae20816206bb8279a00f602f8402f4b8fea0cce05293
+git_sha: 37f4f2aaf93e2a3035e7f0314b7fcf0ec5f370e9
+source_sha256: ef7ce7d4d8bf931d95aafffa8ac5b72aeb47f4d62e723da63ef01c6376e55b7f
+run_root: /home/kevin/cotcodec-runs/stage0/open-weight-reviewer/runs/smoke2
+container_profile: vllm
+resources:
+  gpu_type: h100
+  gpus: 1
+  cpus: 16
+  memory_gb: 96
+  minutes: 6
+budget:
+  max_gpu_hours: 0.1
+randomness_contract: assignment-seed-matrix
+seeds:
+- 42
+- 43
+- 44
+seed_binding:
+  flag: --seeds
+model:
+  cache_host_path: /home/kevin/cotcodec-runs/hf-cache
+  model_id: qwen3.5-9b
+  revision: c202236235762e1c871ad0ccb60c8ee5ba337b9a
+  receipt_sha256: 0a9e052d561b017c505adf5a1c6fcdc048522660a0db134486b84edbf3de5cb3
+  artifact_root_sha256: 9845026dbe255e24b105224eebbb5436d315713b9a5c53c434137896b160c5b1
+study_artifact:
+  source_id: owr-request-54f8a11d8656
+  revision: 37f4f2aaf93e2a3035e7f0314b7fcf0ec5f370e9
+  license: LicenseRef-cotcodec-review-request
+  host_path: /home/kevin/cotcodec-runs/stage0/open-weight-reviewer/inputs/smoke-request.json
+  sha256: 54f8a11d86560a2e12d00b137840fb84082128750a7cc2f8845722234549fd7c
+  size_bytes: 1266
+command:
+- python
+- scripts/run_open_weight_review.py
+- run
+- --evidence
+- /inputs/study-artifact.json
+- --expected-evidence-sha256
+- 54f8a11d86560a2e12d00b137840fb84082128750a7cc2f8845722234549fd7c
+- --model-dir
+- /model-cache/cotcodec-models/qwen3.5-9b
+- --model-receipt
+- /model-cache/cotcodec-receipts/qwen3.5-9b.json
+- --expected-model-receipt-sha256
+- 0a9e052d561b017c505adf5a1c6fcdc048522660a0db134486b84edbf3de5cb3
+- --output-dir
+- /outputs/review
+- --tensor-parallel-size
+- '1'
+- --max-model-len
+- '8192'
+- --max-tokens
+- '512'
+- --gpu-memory-utilization
+- '0.9'
+- --thinking
+- 'off'
+- --enforce-eager
+- --seeds
+- '42'
+- '43'
+- '44'
