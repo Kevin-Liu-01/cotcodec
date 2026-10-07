@@ -90,7 +90,7 @@ Frozen with this file (SHA-256 of the committed bytes):
 | `harness/q2/action_path/volume_plan.json` | `9567d257b769273788153c4193981f1c7eb1e8664b4d1ef36389b4fbd211802a` |
 | `harness/q2/action_path/mutation_operators.yaml` | `eabef01f55e51e9d8f774ba58206bfff394bee0f8c506b8e9cd6dab79cd4ea57` |
 | `harness/q2/action_path/l0_raw_prediction.yaml` | `8b947acafeae1d2bf4fda5a715888556d9ca672e57d488a4c31dadc420f9302a` |
-| `harness/q2/action_path/canary.yaml` | `58a6a994d124847717fd24e9510edaee1c5f2a56bdab92240d79501eaf966206` |
+| `harness/q2/action_path/canary.yaml` | `5221c8a6e337a448352d4a5372f2a727294154450b255a16ff5f7bac76cd62ab` |
 | `harness/q2/action_path/keysyms.json` | `a1ea436d9bd4ae8d9fbc8305772f7dca776858b023092ce1cea059a693924acb` |
 | `harness/q2/action_path/ir.py` | `33dc24771b823597eef453a4994faf730d0364bd090488aa13e9de5e3498d305` |
 | `harness/q2/action_path/vocab.py` | `f26dd7d34988aebf8e8bbeb3ea118e6da3b9d37505ba8433a6eb6d9f0f186792` |
@@ -399,8 +399,14 @@ setting. The session counts below follow from that rule.
   off, so the app does not rewrite typed text), each fixture's initial text,
   each entry's actions and its exact expected final text, and the read-back
   (Writer: paragraph texts joined with `\n` from the accessibility tree;
-  Chrome: the textarea value from the accessibility tree; VS Code: the saved
-  file; Terminal: the file written by `cat`). The entries are the text
+  Chrome: the textarea value, which the page mirrors into its title on every
+  input event, read from the window title once stable; VS Code: the saved
+  file, once it has changed and is stable; Terminal: the file written by
+  `cat`). Changed before the freeze after development runs 501 and 506:
+  Chrome's accessibility text was stale after edits that the screen showed,
+  and a fresh VS Code profile opened its first-run walkthrough over the file
+  (turned off in `canary.yaml`; the driver also waits until VS Code's status
+  bar shows the text editor's items). The entries are the text
   entries `type_plain`, `type_symbols_shifted`, `type_unicode_bmp`,
   `type_emoji`, `type_combining`, `type_rtl`, `type_multiline_tabs`,
   `type_with_correction`, `type_long_200`, `type_spaces`, `type_digits`

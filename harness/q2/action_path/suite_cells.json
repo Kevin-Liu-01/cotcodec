@@ -26,9 +26,25 @@
      "--no-default-browser-check",
      "--force-renderer-accessibility"
     ],
-    "page": "<!doctype html><meta charset=\"utf-8\"><textarea id=\"t\" spellcheck=\"false\" autocomplete=\"off\" autocorrect=\"off\" autocapitalize=\"off\" autofocus style=\"position:fixed;inset:0;font:24px monospace\"></textarea><script> const t=document.getElementById(\"t\");t.value=FIXTURE;t.addEventListener(\"keydown\", e=>{if(e.key===\"Tab\"){e.preventDefault();document.execCommand(\"insertText\",false,\"\\t\")}}); </script>",
-    "readback": "the textarea's value from the accessibility tree",
-    "targets": {}
+    "page": "<!doctype html><meta charset=\"utf-8\"><textarea id=\"t\" spellcheck=\"false\" autocomplete=\"off\" autocorrect=\"off\" autocapitalize=\"off\" autofocus style=\"position:fixed;inset:0;font:24px monospace\"></textarea><script> const t=document.getElementById(\"t\");t.value=FIXTURE;t.addEventListener(\"keydown\", e=>{if(e.key===\"Tab\"){e.preventDefault();document.execCommand(\"insertText\",false,\"\\t\")}}); const show=()=>{document.title=\"Q2AP:\"+JSON.stringify(t.value)};show(); t.addEventListener(\"input\",show); </script>",
+    "readback": "the textarea's value as the page mirrors it into the window title (_NET_WM_NAME \"Q2AP:\" + JSON + \" - Google Chrome\"), read when it has been stable for 0.5 s. Changed before the freeze: development runs 501 and 506 showed the accessibility tree's text stale after edits and missing right after typing, while the screen showed the edit",
+    "targets": {
+     "drag_select_word": {
+      "duration_ms": 500,
+      "from": [
+       172,
+       150
+      ],
+      "to": [
+       228,
+       150
+      ]
+     },
+     "triple_click_line": {
+      "x": 244,
+      "y": 150
+     }
+    }
    },
    "terminal": {
     "entries": [
@@ -74,7 +90,7 @@
       "s"
      ]
     ],
-    "readback": "the saved file's bytes decoded as UTF-8",
+    "readback": "the saved file's bytes decoded as UTF-8, once the file has changed and is stable",
     "settings": {
      "editor.acceptSuggestionOnEnter": "off",
      "editor.autoClosingBrackets": "never",
@@ -105,7 +121,10 @@
      "files.trimFinalNewlines": false,
      "files.trimTrailingWhitespace": false,
      "security.workspace.trust.enabled": false,
-     "workbench.startupEditor": "none"
+     "telemetry.telemetryLevel": "off",
+     "workbench.startupEditor": "none",
+     "workbench.tips.enabled": false,
+     "workbench.welcomePage.walkthroughs.openOnInstall": false
     },
     "targets": {}
    },
@@ -130,7 +149,23 @@
     ],
     "finish_keys": [],
     "readback": "the text of every paragraph of the document, in order, joined with \"\\n\" (no trailing newline added), from the accessibility tree",
-    "targets": {}
+    "targets": {
+     "drag_select_word": {
+      "duration_ms": 500,
+      "from": [
+       680,
+       292
+      ],
+      "to": [
+       709,
+       292
+      ]
+     },
+     "triple_click_line": {
+      "x": 718,
+      "y": 292
+     }
+    }
    }
   },
   "entries": {
@@ -388,8 +423,8 @@
   "rule": "before every entry, outside its window, the guard moves the pointer to park_pointer; no entry action or expectation uses that point, so an entry that moves the pointer always produces motion (move_only would otherwise see none if the previous entry ended where it starts)"
  },
  "inputs": {
-  "canary.yaml": "58a6a994d124847717fd24e9510edaee1c5f2a56bdab92240d79501eaf966206",
-  "canary_targets.json": "6728df75fcf6e0e5d03aea1318bbe43455c0b8b62b4c1810647f45bbd979f844",
+  "canary.yaml": "5221c8a6e337a448352d4a5372f2a727294154450b255a16ff5f7bac76cd62ab",
+  "canary_targets.json": "bd8892aeb9e7f6721407bbba5015d1d97e8674fb39203c5914410b8ee196a8e2",
   "catalog.yaml": "5934c4281cb85a8309be32cb98442b038054a2bba0e7ec3755e20112710b7bba",
   "expressible_entries.json": "380e058e9aced24e30cbfc93ebace901a5cb02b567b42f0cceb7543c87c822ac",
   "gating_set.json": "fe2afcaa5fcb6710f54510555633bcd86bc8d516f01211253cfd46271fdf5a6a"

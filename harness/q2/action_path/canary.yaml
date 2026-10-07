@@ -52,9 +52,17 @@ apps:
       style="position:fixed;inset:0;font:24px monospace"></textarea><script>
       const t=document.getElementById("t");t.value=FIXTURE;t.addEventListener("keydown",
       e=>{if(e.key==="Tab"){e.preventDefault();document.execCommand("insertText",false,"\t")}});
+      const show=()=>{document.title="Q2AP:"+JSON.stringify(t.value)};show();
+      t.addEventListener("input",show);
       </script>
-    page_note: FIXTURE is the fixture text as a JSON string literal; Tab inserts a tab instead of moving focus
-    readback: the textarea's value from the accessibility tree
+    page_note: >-
+      FIXTURE is the fixture text as a JSON string literal; Tab inserts a tab instead of moving
+      focus; the page mirrors the textarea's value into its title on every input event
+    readback: >-
+      the textarea's value as the page mirrors it into the window title (_NET_WM_NAME
+      "Q2AP:" + JSON + " - Google Chrome"), read when it has been stable for 0.5 s. Changed
+      before the freeze: development runs 501 and 506 showed the accessibility tree's text
+      stale after edits and missing right after typing, while the screen showed the edit
     finish_keys: []
     entries: all
   vscode:
@@ -87,7 +95,14 @@ apps:
       files.trimTrailingWhitespace: false
       security.workspace.trust.enabled: false
       workbench.startupEditor: none
-    readback: the saved file's bytes decoded as UTF-8
+      workbench.welcomePage.walkthroughs.openOnInstall: false
+      workbench.tips.enabled: false
+      telemetry.telemetryLevel: "off"
+    readback: the saved file's bytes decoded as UTF-8, once the file has changed and is stable
+    ready: >-
+      the window is active and its status bar shows the text editor's items (development run
+      506: a fresh user-data directory opened the first-run walkthrough over the file, so the
+      walkthrough is turned off above and the driver waits for the editor)
     finish_keys: [[Control_L, s]]
     entries: all
   terminal:
