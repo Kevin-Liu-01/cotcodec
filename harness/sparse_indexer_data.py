@@ -467,7 +467,10 @@ class DedupIndex:
         hashes = window_hashes(tokens, NGRAM_EXACT)
         if hashes.size == 0 or self.ngrams.size == 0:
             return False
-        return bool(np.isin(hashes, self.ngrams, assume_unique=False).any())
+        # self.ngrams is sorted and unique: binary search instead of re-sorting it.
+        index = np.searchsorted(self.ngrams, hashes)
+        index[index == self.ngrams.size] = 0
+        return bool((self.ngrams[index] == hashes).any())
 
     def max_jaccard(self, tokens: Sequence[int] | NDArray[Any]) -> float:
         signature = self.hasher.signature(tokens)
