@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import http.client
 import io
 import random
 import threading
@@ -268,3 +269,27 @@ def test_hf_source_retries_with_backoff_then_fails_closed() -> None:
     mislabeled = hf_source(blob, resolve_open=resolver(size=len(blob)), range_open=wrong)
     with pytest.raises(remote_zip.RemoteFetchError):
         mislabeled.read_range(100, 10)
+
+
+def test_hf_source_retries_a_truncated_reply() -> None:
+    """Regression (review finding 7): IncompleteRead is not an OSError and used to escape."""
+    blob = bytes(range(256)) * 4
+    good, _ = ranger(blob)
+    state = {"calls": 0}
+
+    def truncating(request, timeout):
+        state["calls"] += 1
+        if state["calls"] == 1:
+            raise http.client.IncompleteRead(b"partial", 10)
+        return good(request, timeout)
+
+    source = hf_source(blob, resolve_open=resolver(size=len(blob)), range_open=truncating)
+    assert source.read_range(5, 10) == blob[5:15]
+    assert source.stats.retries == 1
+
+    def always_truncated(request, timeout):
+        raise http.client.IncompleteRead(b"", 10)
+
+    failing = hf_source(blob, resolve_open=resolver(size=len(blob)), range_open=always_truncated)
+    with pytest.raises(remote_zip.RemoteFetchError):
+        failing.read_range(0, 10)

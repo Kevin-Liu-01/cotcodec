@@ -14,6 +14,7 @@ for the cells this audit cites, and never written into the repository.
 from __future__ import annotations
 
 import hashlib
+import http.client
 import json
 import re
 import time
@@ -49,7 +50,7 @@ def http_get(url: str, *, attempts: int = 5, backoff: float = 1.0, timeout: floa
             last = exc
             if exc.code not in (403, 408, 429, 500, 502, 503, 504):
                 break
-        except (urllib.error.URLError, TimeoutError, OSError) as exc:
+        except (urllib.error.URLError, TimeoutError, OSError, http.client.HTTPException) as exc:
             last = exc
         time.sleep(backoff * (2**attempt))
     raise SourceFetchError(f"GET failed for {url}: {last}")

@@ -199,6 +199,9 @@ def test_mde_matches_closed_form() -> None:
     ("value", "pattern"),
     [
         ("connect to 192.0.2.77 failed", "ipv4"),
+        ("Failed to connect to 192.0.2.77.", "ipv4"),
+        ("host ip-192-0-2-77.ec2.internal", "aws_private_dns"),
+        ("vpc-0a1b2c3d4e5f6a7b8", "aws_vpc"),
         ("group sg-0123456789abcdef0", "aws_security_group"),
         ("subnet-0a1b2c3d4e5f6a7b8", "aws_subnet"),
         ("image ami-0123abcd", "aws_ami"),
@@ -206,7 +209,7 @@ def test_mde_matches_closed_form() -> None:
         ("arn:aws:iam::123456789012:user/x", "aws_account_id"),
         ("/home/someone/run", "home_path"),
         ("/Users/someone/run", "home_path"),
-        ("fsx/someone/trajectories_tianbao/x", "shared_fs_path"),
+        ("fsx/someone/trajectories_x/x", "shared_fs_path"),
         ("ws://host:9222/devtools/browser/1", "websocket_url"),
         ("https://cdn/x?X-Amz-Signature=abc", "signed_url"),
         ("AKIA" + "Z" * 16, "aws_access_key"),
@@ -220,6 +223,12 @@ def test_receipt_injection_is_caught(value: str, pattern: str) -> None:
     assert pattern not in audit.public_safety_hits(audit.scrub(value))
 
 
+@pytest.mark.parametrize("value", [123456789012, 123456789012.0])
+def test_numeric_account_id_is_caught(value) -> None:
+    with pytest.raises(audit.PublicSafetyError, match="aws_account_id"):
+        audit.assert_public_safe({"results": {"n": value}})
+
+
 def test_ordinary_receipt_values_are_not_flagged() -> None:
     clean = {
         "task": "06fe7178-4491-4589-810f-2e2bc9502122",
@@ -229,6 +238,11 @@ def test_ordinary_receipt_values_are_not_flagged() -> None:
         "sha": "a" * 64,
         "path": "program/preregistrations/q2-holo3-rerun-audit-v2.md",
         "version": "1.17.1",
+        "sentence": "Version 1.2.3 ended.",
+        "bytes": 5_748_726_271,
+        "archive_bytes": 13_053_766_042,
+        "flag": True,
+        "share": 0.663,
     }
     audit.assert_public_safe(clean)
     assert audit.error_class(f"Flask not available at http://{world_mod.FAKE_PRIVATE_IP}:5000") == (

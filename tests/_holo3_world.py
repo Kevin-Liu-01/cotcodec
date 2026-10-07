@@ -153,7 +153,22 @@ def build_opencua(universe: dict[str, list[str]]) -> dict[str, dict[str, dict[st
     return out
 
 
-def _status(task: str, score: float | None, *, error: str | None, elapsed: float = 100.0) -> bytes:
+TRAJECTORY_TAGS = {"run1": "1111-4111", "repair": "3333-4333", "run2": "2222-4222"}
+
+
+def trajectory_id(task: str, run: str) -> str:
+    """Synthetic trajectory id of one run's episode of a task (distinct per run)."""
+    return task.replace("0000-4000", TRAJECTORY_TAGS[run])
+
+
+def _status(
+    task: str,
+    score: float | None,
+    *,
+    error: str | None,
+    elapsed: float = 100.0,
+    run: str = "run1",
+) -> bytes:
     if score is None:
         record = {
             "task_id": task,
@@ -167,7 +182,7 @@ def _status(task: str, score: float | None, *, error: str | None, elapsed: float
             "instruction": "synthetic",
             "status": "completed",
             "started_at": "2026-04-20T13:00:00",
-            "trajectory_id": task.replace("0000-4000", "1111-4111"),
+            "trajectory_id": trajectory_id(task, run),
             "score": str(score),
             "elapsed_s": str(elapsed),
             "agp_message": f"Completed (trajectory={task})",
@@ -205,7 +220,7 @@ def verified_zip(world: World) -> bytes:
                 base = f"{run_dir}/pyautogui/screenshot/{agent}/{domain}/{t}"
                 elapsed = 50.0 + (int(t[:8], 16) * (7 if run == "run1" else 11)) % 100
                 files[f"{base}/status.json"] = _status(
-                    t, score, error=error_text.get(t), elapsed=elapsed
+                    t, score, error=error_text.get(t), elapsed=elapsed, run=run
                 )
                 if score is not None:
                     files[f"{base}/result.txt"] = f"{score}\n".encode()
@@ -214,7 +229,7 @@ def verified_zip(world: World) -> bytes:
         domain = world.domain_of[t]
         base = f"{repair_dir}/pyautogui/screenshot/{agent}/{domain}/{t}"
         score = world.run1[t] if t in world.repaired else None
-        files[f"{base}/status.json"] = _status(t, score, error=error_text.get(t))
+        files[f"{base}/status.json"] = _status(t, score, error=error_text.get(t), run="repair")
         if score is not None:
             files[f"{base}/result.txt"] = f"{score}\n".encode()
     for run, prefixes in world.env_prep.items():
@@ -319,12 +334,39 @@ def leaderboard_rows() -> dict[int, dict[str, str]]:
     return rows
 
 
+def run1_only_tasks(world: World) -> list[str]:
+    return [
+        t
+        for t in world.tasks
+        if world.run1[t] is not None
+        and world.run2[t] is not None
+        and world.run1[t] >= 0.5 > world.run2[t]  # type: ignore[operator]
+    ]
+
+
 def configs(world: World) -> dict[str, dict]:
+    """Task configs: mostly offline or web, with some live and clock evaluators.
+
+    Half of the run1-only tasks get a live expected value (class L, plan's
+    narrow L too), so rule (d) has something to find; a few other tasks get a
+    clock rule or a result-side live getter (class L, not narrow L).
+    """
+    live = set(run1_only_tasks(world)[::2])
     out = {}
     for i, t in enumerate(world.tasks):
         url = "https://www.example.org/page" if i % 7 == 0 else "http://localhost:8080/x"
-        out[t] = {
-            "config": [{"type": "open", "parameters": {"url": url}}],
-            "evaluator": {"func": "f"},
-        }
+        evaluator: dict = {"func": "f"}
+        if t in live:
+            evaluator = {
+                "func": "check",
+                "expected": {"type": "info_from_website", "url": "https://www.example.org/live"},
+            }
+        elif i % 13 == 0:
+            evaluator = {
+                "func": "check",
+                "expected": {"type": "rule", "rules": {"relativeTime": {"from": "today"}}},
+            }
+        elif i % 17 == 0:
+            evaluator = {"func": "check", "result": {"type": "active_tab_info"}}
+        out[t] = {"config": [{"type": "open", "parameters": {"url": url}}], "evaluator": evaluator}
     return out
