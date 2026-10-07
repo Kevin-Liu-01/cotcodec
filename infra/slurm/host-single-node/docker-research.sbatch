@@ -121,6 +121,13 @@ case "${container_profile}" in
     ;;
 esac
 
+# The archive (legacy/) is part of the image's source tree but of no live
+# workload. Every container gets an empty read-only tmpfs over it, so archived
+# code cannot run even when an argv hides its path from the admission rule below
+# (for example inside python -c). Docker creates the mount point if an image has
+# no legacy/ directory.
+archive_mask=/workspace/cotcodec/legacy:ro,noexec,nosuid,nodev,size=64k
+
 allow_shared_gpu=false
 if [[ "${COTCODEC_ALLOW_SHARED_GPU+set}" == set ]]; then
   if [[ "${COTCODEC_ALLOW_SHARED_GPU}" != true ]]; then
@@ -168,39 +175,110 @@ if not isinstance(command, list) or not command or not all(isinstance(arg, str) 
 if not isinstance(manifest, dict) or manifest.get("command") != command:
     fail("the manifest does not bind the exported command")
 
-# Archived memory interface; mirrors validate_memory_job_admission.
+# BEGIN archived-memory-rule: mirrors validate_memory_job_admission in both
+# submitters; tests execute this block and keep the three copies in parity.
 archived = (
     "memory workloads were archived under legacy/ on 2026-10-06; "
     "restore them from tag legacy-2026-10-06 to submit memory jobs"
 )
-script_patterns = (
-    "scripts/run_memory_*.py",
-    "scripts/run_memory_trials.py",
-    "scripts/run_letta*",
-    "scripts/*memory_model*",
+archive_root = "legacy"
+name_patterns = ("run_memory_*", "run_letta*", "*memory_model*", "memory_trials")
+archived_entry_points = frozenset(
+    """
+    aggregate_memory_control_matrix aggregate_memorybank_h100_screen
+    analyze_causal_memory_bundle analyze_memory_system_semantic_smokes
+    analyze_memorybank_frozen_controls audit_memforest_published_artifacts
+    audit_mempalace_port_equivalence audit_mempalace_upstream_artifact
+    audit_sodamem_published_artifacts build_mem0_overlay_on_h100 build_mempalace_container
+    causal_memory_trials compare_memory_lifecycle_runs compare_mempalace_reproductions
+    compile_memory_landscape compile_memory_open_job compile_memory_public_docker_job
+    compile_memory_publication_wave compile_memory_replay_doctor_job
+    compile_memorybank_h100_jobs freeze_memory_control_matrix freeze_memory_system_outputs
+    memory-baselines memory_job_admission memory_trials mempalace_control_factory
+    mempalace_upstream_adapter prepare_hermes_observational_memory_context
+    prepare_longmemeval_judge_packet prepare_memory_baseline_context
+    prepare_memory_benchmarks prepare_memory_publication_claim
+    prepare_mempalace_source_context reanalyze_memory_frontier_screen
+    run_allmem_topology_doctor run_causal_memory_holdout run_causal_memory_sensitivity
+    run_hermes_observational_memory_doctor run_infini_memory_lifecycle_doctor
+    run_jiuwen_memory_lifecycle_doctor run_langmem_lifecycle_doctor
+    run_lightmem2_context_paging_doctor run_lightmem_offline_doctor
+    run_longmemeval_official_judge run_mem0_lifecycle_doctor run_memforest_lifecycle_doctor
+    run_memforge_fresh_install_doctor run_memgpt_letta_lifecycle_doctor
+    run_memoria_lifecycle_doctor run_memory_doctors run_memory_frontier_screen
+    run_memory_lifecycle_contract run_memory_model_replay_doctor run_memory_model_screen
+    run_memory_system_smoke run_memory_trials run_memorybank_decay_container
+    run_memorybank_decay_doctor run_mempalace_upstream_reproduction
+    run_recmem_consolidation_doctor run_reference_memory_lifecycle_sidecar
+    run_reference_memory_sidecar run_supermemory_local_doctor
+    seal_infini_memory_lifecycle_evidence seal_jiuwen_memory_lifecycle_evidence
+    seal_langmem_native_lifecycle_evidence seal_lightmem2_context_paging_evidence
+    seal_memforest_artifact_evidence seal_memforest_lifecycle_evidence
+    seal_memgpt_letta_lifecycle_evidence seal_memory_evidence seal_mempalace_runtime_receipt
+    seal_mempalace_sbom_job_receipt seal_sodamem_artifact_evidence submit_mempalace_cpu_job
+    validate_allmem_topology_experiment validate_hermes_observational_memory_experiment
+    validate_infini_memory_lifecycle_experiment validate_jiuwen_memory_lifecycle_experiment
+    validate_langmem_lifecycle_experiment validate_lightmem2_context_paging_experiment
+    validate_lightmem_offline_evidence validate_lightmem_offline_experiment
+    validate_mem0_lifecycle_experiment validate_mem0_persistence
+    validate_memforest_artifact_experiment validate_memforest_lifecycle_experiment
+    validate_memforge_fresh_install_evidence validate_memforge_fresh_install_experiment
+    validate_memgpt_letta_lifecycle_experiment validate_memoria_lifecycle_evidence
+    validate_memoria_lifecycle_experiment validate_memory_experiments
+    validate_memory_lifecycle_experiment validate_memory_persistent_transport
+    validate_memory_portfolio validate_memory_source_contract validate_memory_sources
+    validate_memorybank_decay_evidence validate_memorybank_decay_experiment
+    validate_memorybank_h100_evidence validate_memorybank_h100_experiment
+    validate_recmem_consolidation_evidence validate_recmem_consolidation_experiment
+    validate_sodamem_artifact_experiment validate_supermemory_local_experiment
+    validate_timem_core_evidence validate_timem_core_experiment
+    verify_memory_baseline_sources
+    """.split()
 )
 memory_flags = ("--memory-bundle", "--memory-treatment-mode", "--expected-memory-system-id")
-module_re = re.compile(r"^[A-Za-z_][A-Za-z0-9_]*(?:\.[A-Za-z_][A-Za-z0-9_]*)+$")
+token_separators = re.compile(r"[\s=,;:'\"`()\[\]{}<>|&$]+")
+module_re = re.compile(r"[A-Za-z_][A-Za-z0-9_]*(?:\.[A-Za-z_][A-Za-z0-9_]*)*")
+script_suffixes = (".py", ".pyc", ".pyw", ".sh")
+
+
+def name_variants(token):
+    variants = [token]
+    if token.startswith("-") and not token.startswith("--"):
+        variants += [token[1 + cut :] for cut in range(4) if token[1 + cut :]]
+    return variants
+
+
+def name_components(variant):
+    components = []
+    for part in PurePosixPath(variant).parts:
+        if part == "/":
+            continue
+        components.append(part)
+        components += [part[: -len(suffix)] for suffix in script_suffixes if part.endswith(suffix)]
+    module = variant[:-3] if variant.endswith(".py") else variant
+    if module_re.fullmatch(module):
+        components += module.split(".")
+    return components
 
 
 def archived_reference(argument):
-    for token in re.split(r"[\s=,;:'\"]+", argument):
-        if token in memory_flags:
-            return token
-        candidates = [token]
-        if module_re.fullmatch(token):
-            candidates += [token.replace(".", "/"), token.replace(".", "/") + ".py"]
-        for candidate in candidates:
-            parts = PurePosixPath(candidate).parts
-            for current, following in zip(parts, parts[1:]):
-                if current == "scripts" and any(
-                    fnmatchcase("scripts/" + following, pattern) for pattern in script_patterns
+    for token in token_separators.split(argument):
+        for variant in name_variants(token):
+            if (
+                variant.startswith("--")
+                and len(variant) > 2
+                and any(flag.startswith(variant) for flag in memory_flags)
+            ):
+                return "the archived memory flag " + variant
+            for component in name_components(variant):
+                if component == archive_root:
+                    return "the legacy/ archive"
+                if component in archived_entry_points or any(
+                    fnmatchcase(component, pattern) for pattern in name_patterns
                 ):
-                    return "scripts/" + following
-                if (current, following) == ("harness", "memory_trials"):
-                    return "harness/memory_trials"
+                    return "the archived memory entry point " + component
     return None
-
+# END archived-memory-rule
 
 if (
     manifest.get("memory_source_admission") is not None
@@ -224,6 +302,21 @@ binding_flag = env.get("COTCODEC_SEED_BINDING_FLAG")
 expected_binding = None if binding_flag is None else {"flag": binding_flag}
 if manifest.get("seed_binding") != expected_binding:
     fail("seed binding differs from the manifest")
+
+
+def seed_abbreviation(argument):
+    # argparse expands any unambiguous prefix of a long option (allow_abbrev).
+    head = argument.split("=", 1)[0]
+    return (
+        head.startswith("--")
+        and len(head) > 2
+        and head not in seed_options
+        and any(option.startswith(head) for option in seed_options)
+    )
+
+
+if any(seed_abbreviation(argument) for argument in command):
+    fail("seed options must be spelled in full, not as an argparse abbreviation")
 if any("=" in argument and argument.split("=", 1)[0] in seed_options for argument in command):
     fail("seed options must be separate argv elements")
 if contract in ("deterministic", "deterministic-all-serve"):
@@ -940,7 +1033,11 @@ termination_file="${run_dir}/termination.env"
 container_name="cotcodec-${SLURM_JOB_ID}"
 container_created=false
 termination_reason="starting"
+# true only after forward_signal confirmed a fresh, signal-triggered marker in
+# this job. A marker that merely exists (stale, periodic or copied) never sets it.
+signal_checkpoint_confirmed=false
 
+# shellcheck disable=SC2329  # reached through the signal and EXIT traps
 write_termination() {
   local exit_code="$1"
   {
@@ -948,10 +1045,12 @@ write_termination() {
     echo "reason=${termination_reason}"
     echo "exit_code=${exit_code}"
     echo "finished_at=$(date -u +%Y-%m-%dT%H:%M:%SZ)"
-    echo "checkpoint_ready=$([[ -f "${checkpoint_marker}" ]] && echo true || echo false)"
+    echo "checkpoint_ready=${signal_checkpoint_confirmed}"
+    echo "checkpoint_marker_present=$([[ -f "${checkpoint_marker}" ]] && echo true || echo false)"
   } > "${termination_file}"
 }
 
+# shellcheck disable=SC2329  # reached through the signal and EXIT traps
 container_running() {
   [[ "${container_created}" == true ]] \
     && [[ "$(docker inspect --format '{{.State.Running}}' "${container_name}" 2>/dev/null \
@@ -960,6 +1059,7 @@ container_running() {
 
 # Identity of the checkpoint marker as device:inode:size:mtime (nanoseconds),
 # or "absent". An atomic write (temporary file plus rename) always changes it.
+# shellcheck disable=SC2329  # reached through the signal and EXIT traps
 checkpoint_marker_identity() {
   if [[ -f "${checkpoint_marker}" && ! -L "${checkpoint_marker}" ]]; then
     stat -c '%d:%i:%s:%.9Y' "${checkpoint_marker}" 2>/dev/null || echo absent
@@ -968,38 +1068,61 @@ checkpoint_marker_identity() {
   fi
 }
 
-# A marker confirms a signal-triggered checkpoint only when it is a different
-# file version from the one present before the signal and its mtime is not
-# earlier than the moment the signal was sent. A stale marker left by a
-# periodic save therefore never confirms.
+# A marker confirms the checkpoint requested by signal SIG<name> only when all
+# of these hold:
+#   1. it is a different file version from the one recorded just before the
+#      signal was sent (so a stale marker never confirms);
+#   2. its mtime is not earlier than that moment;
+#   3. its content has the line trigger=SIG<name>, which only the workload's
+#      handler for this signal writes (so a periodic save that lands in the same
+#      window, or a marker without a trigger, never confirms);
+#   4. it did not change while its content was read.
+# shellcheck disable=SC2329  # reached through the signal and EXIT traps
 checkpoint_marker_is_fresh() {
-  local before="$1" signal_sent_ns="$2" current mtime_ns
+  local before="$1" requested_ns="$2" signal_name="$3" current mtime_ns content
   current="$(checkpoint_marker_identity)"
   if [[ "${current}" == absent || "${current}" == "${before}" ]]; then
     return 1
   fi
   mtime_ns="${current##*:}"
   mtime_ns="${mtime_ns/./}"
-  [[ "${mtime_ns}" =~ ^[0-9]+$ ]] && (( 10#${mtime_ns} >= signal_sent_ns ))
+  if [[ ! "${mtime_ns}" =~ ^[0-9]+$ ]] || (( 10#${mtime_ns} < requested_ns )); then
+    return 1
+  fi
+  content="$(timeout 5 head -c 4096 -- "${checkpoint_marker}" 2>/dev/null)" || return 1
+  [[ "$(checkpoint_marker_identity)" == "${current}" ]] || return 1
+  [[ $'\n'"${content}"$'\n' == *$'\n'"trigger=SIG${signal_name}"$'\n'* ]]
 }
 
+# shellcheck disable=SC2329  # reached through the signal and EXIT traps
 forward_signal() {
-  local signal_name="$1" marker_before signal_sent_ns waited=0
+  local signal_name="$1" marker_before requested_ns waited=0
+  if ! container_running; then
+    # Keep an earlier confirmation: the container is gone because of it.
+    if [[ "${signal_checkpoint_confirmed}" != true ]]; then
+      termination_reason="signal_${signal_name}_not_forwarded"
+    fi
+    return 0
+  fi
   termination_reason="signal_${signal_name}_checkpoint_requested"
+  # Record the marker and the clock as late as possible but still before the
+  # signal: the workload's handler may finish before `docker kill` returns, so
+  # a snapshot taken after it could hide the real checkpoint.
   marker_before="$(checkpoint_marker_identity)"
-  signal_sent_ns="$(date +%s%N)"
-  if ! container_running \
-    || ! docker kill --signal "${signal_name}" "${container_name}" >/dev/null 2>&1; then
+  requested_ns="$(date +%s%N)"
+  if ! docker kill --signal "${signal_name}" "${container_name}" >/dev/null 2>&1; then
     termination_reason="signal_${signal_name}_not_forwarded"
     return 0
   fi
   while true; do
-    if checkpoint_marker_is_fresh "${marker_before}" "${signal_sent_ns}"; then
+    if checkpoint_marker_is_fresh "${marker_before}" "${requested_ns}" "${signal_name}"; then
+      signal_checkpoint_confirmed=true
       termination_reason="signal_${signal_name}_checkpoint_confirmed"
       break
     fi
     if ! container_running; then
-      if checkpoint_marker_is_fresh "${marker_before}" "${signal_sent_ns}"; then
+      if checkpoint_marker_is_fresh "${marker_before}" "${requested_ns}" "${signal_name}"; then
+        signal_checkpoint_confirmed=true
         termination_reason="signal_${signal_name}_checkpoint_confirmed"
       else
         termination_reason="signal_${signal_name}_checkpoint_missing"
@@ -1018,6 +1141,7 @@ forward_signal() {
   fi
 }
 
+# shellcheck disable=SC2329  # reached through the signal and EXIT traps
 on_exit() {
   local exit_code="$?"
   if [[ "${container_created}" == true ]]; then
@@ -1141,6 +1265,7 @@ docker create \
   --read-only \
   --tmpfs "${container_tmpfs}" \
   "${container_shm_args[@]}" \
+  --tmpfs "${archive_mask}" \
   --cap-drop ALL \
   --security-opt no-new-privileges \
   --pids-limit "${container_pids_limit}" \

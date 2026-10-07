@@ -132,6 +132,7 @@ def test_source_overlay_builder_rejects_unbound_helpers(
 ARCHIVED_PREFIX = "memory workloads were archived under legacy/"
 DIGEST_STAGE = "batch script digest does not match the submitted manifest"
 NO_MODEL_REASON = "CPU doctor on an H100 allocation needs no checkpoint"
+ARCHIVE_MASK = "/workspace/cotcodec/legacy:ro,noexec,nosuid,nodev,size=64k"
 SHARED_GPU_REASON = "co-scheduled profiler measures contention on purpose"
 CHECKPOINT_SCRIPT = (
     "python scripts/verify_compute_provenance.py > /outputs/provenance-verification.txt"
@@ -295,11 +296,38 @@ def test_batch_admits_every_valid_submitter_output(variant: str) -> None:
         "harness.memory_trials.runner",
         "--memory-treatment-mode",
         "--expected-memory-system-id=memgpt",
+        "--memory-bund",
     ],
 )
 def test_batch_rejects_archived_memory_argv(element: str) -> None:
     env = _batch_env(validate_manifest(_deterministic_raw()))
     _rewrite(env, command=["python", "scripts/probe.py", element])
+    _assert_refused(env, ARCHIVED_PREFIX)
+
+
+# Commands that the submitters and the batch script all admitted on 5ed577d. A
+# forger who bypasses the submitter must still be stopped by the batch script.
+REVIEW_BYPASS_COMMANDS = [
+    ["python", "-mlegacy.scripts.run_memory_model_screen", "--output-dir", "/outputs/x"],
+    ["python", "-mharness.memory_trials"],
+    ["env", "PYTHONPATH=legacy/scripts", "python", "-m", "run_memory_model_screen"],
+    ["env", "--chdir=legacy/scripts", "python", "run_memory_trials.py"],
+    ["python", "-c", "from legacy.harness import memory_trials"],
+    ["python", "legacy/scripts/run_memorybank_decay_container.py", "--output", "/outputs/x"],
+    ["python", "-m", "legacy.harness.causal_memory_trials"],
+    ["python", "legacy/scripts/run_memgpt_letta_lifecycle_doctor.py"],
+]
+
+
+@admission_only
+@pytest.mark.parametrize("command", REVIEW_BYPASS_COMMANDS)
+def test_batch_rejects_review_bypass_commands(command: list[str]) -> None:
+    raw = _deterministic_raw()
+    raw["command"] = command
+    with pytest.raises(ValueError, match=f"^{ARCHIVED_PREFIX}"):
+        validate_manifest(raw)
+    env = _batch_env(validate_manifest(_deterministic_raw()))
+    _rewrite(env, command=command)
     _assert_refused(env, ARCHIVED_PREFIX)
 
 
@@ -343,6 +371,30 @@ def test_batch_rechecks_seed_binding() -> None:
     env = _batch_env(validate_manifest(_deterministic_raw()))
     _rewrite(env, command=["python", "scripts/probe.py", "--seed", "0"])
     _assert_refused(env, "deterministic jobs cannot execute seed options")
+
+
+@admission_only
+@pytest.mark.parametrize("abbreviation", [["--see", "7"], ["--see=7"], ["--assign", "7"]])
+def test_batch_rejects_seed_option_abbreviations(abbreviation: list[str]) -> None:
+    # The review case: argparse would turn the trailing --see 7 into --seeds 7.
+    raw = _seeded_raw()
+    raw["command"] = [
+        "python",
+        "scripts/run_translation_supervised_indexer_doctor.py",
+        "--output",
+        "/outputs/r.json",
+        "--seeds",
+        "42",
+        "43",
+        "44",
+    ]
+    env = _batch_env(validate_manifest(raw))
+    _rewrite(env, command=raw["command"] + abbreviation)
+    _assert_refused(env, "seed options must be spelled in full")
+
+    env = _batch_env(validate_manifest(_deterministic_raw()))
+    _rewrite(env, command=["python", "scripts/probe.py", *abbreviation])
+    _assert_refused(env, "seed options must be spelled in full")
 
 
 @admission_only
@@ -413,12 +465,23 @@ def test_batch_forwards_signals_while_the_workload_runs() -> None:
     assert 'docker start --attach "${container_name}" &' in content
     assert 'wait "${docker_client_pid}" || wait_status=$?' in content
     forward = content.split("forward_signal() {", 1)[1].split("\n}\n", 1)[0]
-    assert forward.index('marker_before="$(checkpoint_marker_identity)"') < forward.index(
-        'docker kill --signal "${signal_name}"'
+    # The snapshot follows the running check (a docker inspect) and precedes the
+    # signal, so a periodic save that lands during the inspect is part of it.
+    running = forward.index("if ! container_running; then")
+    snapshot = forward.index('marker_before="$(checkpoint_marker_identity)"')
+    clock = forward.index('requested_ns="$(date +%s%N)"')
+    kill = forward.index('docker kill --signal "${signal_name}"')
+    assert running < snapshot < clock < kill
+    assert (
+        'checkpoint_marker_is_fresh "${marker_before}" "${requested_ns}" "${signal_name}"'
+        in forward
     )
-    assert 'signal_sent_ns="$(date +%s%N)"' in forward
-    assert 'checkpoint_marker_is_fresh "${marker_before}" "${signal_sent_ns}"' in forward
+    assert "signal_checkpoint_confirmed=true" in forward
     assert '[[ ! -f "${checkpoint_marker}"' not in forward
+    fresh = content.split("checkpoint_marker_is_fresh() {", 1)[1].split("\n}\n", 1)[0]
+    assert '"trigger=SIG${signal_name}"' in fresh
+    termination = content.split("write_termination() {", 1)[1].split("\n}\n", 1)[0]
+    assert 'echo "checkpoint_ready=${signal_checkpoint_confirmed}"' in termination
 
 
 def test_batch_prolog_checks_allocated_gpus_before_docker_create() -> None:
@@ -466,6 +529,13 @@ case "$1" in
     if [[ "$2" == --format ]]; then
       case "$3" in
         '{{.State.Running}}')
+          # A periodic save that finishes during this inspect (review case A).
+          if [[ "${FAKE_PERIODIC_SAVE_ON_INSPECT:-false}" == true && "${status}" == running ]]; then
+            saves="$(( $(cat "${state}/periodic-saves" 2>/dev/null || echo 0) + 1 ))"
+            echo "${saves}" > "${state}/periodic-saves"
+            printf 'step=periodic-%s\n' "${saves}" > "${FAKE_RUN_DIR}/checkpoint.ready.tmp"
+            mv "${FAKE_RUN_DIR}/checkpoint.ready.tmp" "${FAKE_RUN_DIR}/checkpoint.ready"
+          fi
           if [[ "${status}" == running ]]; then echo true; else echo false; fi ;;
         *) echo "${status} $(cat "${state}/exit_code" 2>/dev/null || echo 0)" ;;
       esac
@@ -496,22 +566,32 @@ finish() {
   exit "$1"
 }
 write_marker() {
-  printf '%s\n' "$1" > "${marker}.tmp"
+  printf '%s\n' "$@" > "${marker}.tmp"
   mv "${marker}.tmp" "${marker}"
 }
 on_usr1() {
   echo USR1 >> "${state}/workload-signals"
-  if [[ "${FAKE_WORKLOAD_MODE}" == checkpoint-on-signal ]]; then
-    write_marker signal-checkpoint
-  fi
+  # Finish the save even if the batch script's TERM arrives meanwhile.
+  trap '' TERM
+  case "${FAKE_WORKLOAD_MODE}" in
+    checkpoint-on-signal) write_marker trigger=SIGUSR1 step=signal-checkpoint ;;
+    untriggered-on-signal) write_marker step=signal-checkpoint ;;
+    wrong-trigger-on-signal) write_marker trigger=SIGTERM ;;
+    periodic-after-signal)
+      # Review case B: a periodic save lands after the signal, and the
+      # workload stops without its own signal-triggered save.
+      ( sleep 0.5; write_marker step=periodic-1000 ) &
+      sleep 1.5 ;;
+  esac
   finish 0
 }
 trap on_usr1 USR1
 trap 'echo TERM >> "${state}/workload-signals"; finish 143' TERM
 echo running > "${state}/status"
-if [[ "${FAKE_PERIODIC_MARKER:-false}" == true ]]; then
-  write_marker periodic-checkpoint
-fi
+case "${FAKE_PERIODIC_MARKER:-false}" in
+  true) write_marker step=periodic-checkpoint ;;
+  stale-trigger) write_marker trigger=SIGUSR1 step=stale ;;
+esac
 echo "$$" > "${state}/workload.pid.tmp"
 mv "${state}/workload.pid.tmp" "${state}/workload.pid"
 case "${FAKE_WORKLOAD_MODE}" in
@@ -678,6 +758,7 @@ def test_default_manifest_runs_with_the_original_container_flags(lane_root: Path
         "--network", "none",
         "--read-only",
         "--tmpfs", "/tmp:rw,nosuid,nodev,size=8g",
+        "--tmpfs", ARCHIVE_MASK,
         "--cap-drop", "ALL",
         "--security-opt", "no-new-privileges",
         "--pids-limit", "4096",
@@ -751,9 +832,9 @@ def test_container_profile_selects_docker_flags(
     assert args[tmpfs_at + 1] == tmpfs
     if shm is None:
         assert "--shm-size" not in args
-        assert args[tmpfs_at + 2] == "--cap-drop"
+        assert args[tmpfs_at + 2 : tmpfs_at + 5] == ["--tmpfs", ARCHIVE_MASK, "--cap-drop"]
     else:
-        assert args[tmpfs_at + 2 : tmpfs_at + 4] == ["--shm-size", shm]
+        assert args[tmpfs_at + 2 : tmpfs_at + 6] == ["--shm-size", shm, "--tmpfs", ARCHIVE_MASK]
     assert args[args.index("--pids-limit") + 1] == pids
     assert run.env_file("job.env")["container_profile"] == profile
 
@@ -843,25 +924,44 @@ def test_unreadable_gpu_process_list_fails_closed(lane_root: Path) -> None:
     assert run.env_file("termination.env")["reason"] == "gpu_prolog_unavailable"
 
 
+SIGNAL_MARKER = "trigger=SIGUSR1\nstep=signal-checkpoint"
+
+
 @RUNTIME_SKIP
 @pytest.mark.parametrize(
-    ("periodic_marker", "mode", "reason"),
+    ("periodic_marker", "mode", "inspect_save", "confirmed", "marker"),
     [
-        # The regression: a stale periodic marker used to confirm the signal.
-        ("true", "stop-on-signal", "signal_USR1_checkpoint_missing"),
-        ("false", "stop-on-signal", "signal_USR1_checkpoint_missing"),
-        ("true", "checkpoint-on-signal", "signal_USR1_checkpoint_confirmed"),
-        ("false", "checkpoint-on-signal", "signal_USR1_checkpoint_confirmed"),
+        # The original regression: a stale periodic marker confirmed the signal.
+        ("true", "stop-on-signal", "false", False, "step=periodic-checkpoint"),
+        ("false", "stop-on-signal", "false", False, None),
+        # A stale marker never confirms, even one that names the trigger.
+        ("stale-trigger", "stop-on-signal", "false", False, "trigger=SIGUSR1\nstep=stale"),
+        # Review case A: a periodic save finishes during the running check.
+        ("true", "stop-on-signal", "true", False, "step=periodic-"),
+        # Review case B: a periodic save lands after the signal.
+        ("true", "periodic-after-signal", "false", False, "step=periodic-1000"),
+        # A marker written on the signal confirms only with the right trigger line.
+        ("false", "untriggered-on-signal", "false", False, "step=signal-checkpoint"),
+        ("false", "wrong-trigger-on-signal", "false", False, "trigger=SIGTERM"),
+        ("true", "checkpoint-on-signal", "false", True, SIGNAL_MARKER),
+        ("false", "checkpoint-on-signal", "false", True, SIGNAL_MARKER),
+        ("stale-trigger", "checkpoint-on-signal", "false", True, SIGNAL_MARKER),
     ],
 )
-def test_usr1_is_forwarded_live_and_only_a_fresh_marker_confirms(
-    lane_root: Path, periodic_marker: str, mode: str, reason: str
+def test_usr1_is_forwarded_live_and_only_a_fresh_triggered_marker_confirms(
+    lane_root: Path,
+    periodic_marker: str,
+    mode: str,
+    inspect_save: str,
+    confirmed: bool,
+    marker: str | None,
 ) -> None:
     run = StubbedRun(
         lane_root,
         _seeded_raw(),
         FAKE_WORKLOAD_MODE=mode,
         FAKE_PERIODIC_MARKER=periodic_marker,
+        FAKE_PERIODIC_SAVE_ON_INSPECT=inspect_save,
     )
     run.start()
     run.wait_for_workload()
@@ -871,11 +971,23 @@ def test_usr1_is_forwarded_live_and_only_a_fresh_marker_confirms(
     assert (run.state / "workload-signals").read_text(encoding="utf-8").split() == ["USR1"]
     assert ["kill", "--signal", "USR1", "cotcodec-4242"] in run.calls("kill")
     termination = run.env_file("termination.env")
-    assert termination["reason"] == reason
-    marker = (run.run_dir / "checkpoint.ready").read_text(encoding="utf-8").strip() if (
-        run.run_dir / "checkpoint.ready"
-    ).exists() else None
-    if mode == "checkpoint-on-signal":
-        assert marker == "signal-checkpoint"
+    outcome = "confirmed" if confirmed else "missing"
+    assert termination["reason"] == f"signal_USR1_checkpoint_{outcome}"
+    # checkpoint_ready reports the confirmation, not the bare existence of a marker.
+    assert termination["checkpoint_ready"] == str(confirmed).lower()
+    assert termination["checkpoint_marker_present"] == str(marker is not None).lower()
+    path = run.run_dir / "checkpoint.ready"
+    if marker is None:
+        assert not path.exists()
     else:
-        assert marker == ("periodic-checkpoint" if periodic_marker == "true" else None)
+        assert path.read_text(encoding="utf-8").strip().startswith(marker)
+
+
+@RUNTIME_SKIP
+def test_completed_job_with_a_leftover_marker_is_not_checkpoint_ready(lane_root: Path) -> None:
+    run = StubbedRun(lane_root, _seeded_raw(), FAKE_PERIODIC_MARKER="stale-trigger")
+    assert run.run() == 0, run.stderr_text()
+    termination = run.env_file("termination.env")
+    assert termination["reason"] == "completed"
+    assert termination["checkpoint_ready"] == "false"
+    assert termination["checkpoint_marker_present"] == "true"
