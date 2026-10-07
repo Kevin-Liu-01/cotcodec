@@ -26,8 +26,8 @@
      "--no-default-browser-check",
      "--force-renderer-accessibility"
     ],
-    "page": "<!doctype html><meta charset=\"utf-8\"><textarea id=\"t\" spellcheck=\"false\" autocomplete=\"off\" autocorrect=\"off\" autocapitalize=\"off\" autofocus style=\"position:fixed;inset:0;font:24px monospace\"></textarea><script> const t=document.getElementById(\"t\");t.value=FIXTURE;t.addEventListener(\"keydown\", e=>{if(e.key===\"Tab\"){e.preventDefault();document.execCommand(\"insertText\",false,\"\\t\")}}); const show=()=>{document.title=\"Q2AP:\"+JSON.stringify(t.value)};show(); t.addEventListener(\"input\",show); </script>",
-    "readback": "the textarea's value as the page mirrors it into the window title (_NET_WM_NAME \"Q2AP:\" + JSON + \" - Google Chrome\"), read when it has been stable for 0.5 s. Changed before the freeze: development runs 501 and 506 showed the accessibility tree's text stale after edits and missing right after typing, while the screen showed the edit",
+    "page": "<!doctype html><meta charset=\"utf-8\"><textarea id=\"t\" spellcheck=\"false\" autocomplete=\"off\" autocorrect=\"off\" autocapitalize=\"off\" autofocus style=\"position:fixed;inset:0;font:24px monospace\"></textarea><script> const t=document.getElementById(\"t\");t.value=FIXTURE;t.addEventListener(\"keydown\", e=>{if(e.key===\"Tab\"){e.preventDefault();document.execCommand(\"insertText\",false,\"\\t\")}}); const show=()=>{document.title=\"Q2AP:\"+encodeURIComponent(t.value)};show(); t.addEventListener(\"input\",show); </script>",
+    "readback": "the textarea's value as the page mirrors it into the window title (_NET_WM_NAME \"Q2AP:\" + encodeURIComponent(value) + \" - Google Chrome\", percent-decoded as UTF-8), read when it has been stable for 0.5 s. Changed before the freeze: development runs 501 and 506 showed the accessibility tree's text stale after edits and missing right after typing, while the screen showed the edit; run 515 showed that a JSON title loses runs of spaces (document.title collapses whitespace), so the value is percent-encoded",
     "targets": {
      "drag_select_word": {
       "duration_ms": 500,
@@ -126,7 +126,23 @@
      "workbench.tips.enabled": false,
      "workbench.welcomePage.walkthroughs.openOnInstall": false
     },
-    "targets": {}
+    "targets": {
+     "drag_select_word": {
+      "duration_ms": 500,
+      "from": [
+       609,
+       284
+      ],
+      "to": [
+       640,
+       284
+      ]
+     },
+     "triple_click_line": {
+      "x": 650,
+      "y": 284
+     }
+    }
    },
    "writer": {
     "entries": [
@@ -423,8 +439,8 @@
   "rule": "before every entry, outside its window, the guard moves the pointer to park_pointer; no entry action or expectation uses that point, so an entry that moves the pointer always produces motion (move_only would otherwise see none if the previous entry ended where it starts)"
  },
  "inputs": {
-  "canary.yaml": "5221c8a6e337a448352d4a5372f2a727294154450b255a16ff5f7bac76cd62ab",
-  "canary_targets.json": "bd8892aeb9e7f6721407bbba5015d1d97e8674fb39203c5914410b8ee196a8e2",
+  "canary.yaml": "1e3b0dbc9c5a9d84bfc5003bc7ec870f72426cf85176c80bc7238cd8da4082ae",
+  "canary_targets.json": "a49782274cf7c3dec0b6ceca64564207824220b2dc1572387f98339b0d4805f6",
   "catalog.yaml": "5934c4281cb85a8309be32cb98442b038054a2bba0e7ec3755e20112710b7bba",
   "expressible_entries.json": "380e058e9aced24e30cbfc93ebace901a5cb02b567b42f0cceb7543c87c822ac",
   "gating_set.json": "fe2afcaa5fcb6710f54510555633bcd86bc8d516f01211253cfd46271fdf5a6a"

@@ -90,7 +90,7 @@ Frozen with this file (SHA-256 of the committed bytes):
 | `harness/q2/action_path/volume_plan.json` | `9567d257b769273788153c4193981f1c7eb1e8664b4d1ef36389b4fbd211802a` |
 | `harness/q2/action_path/mutation_operators.yaml` | `eabef01f55e51e9d8f774ba58206bfff394bee0f8c506b8e9cd6dab79cd4ea57` |
 | `harness/q2/action_path/l0_raw_prediction.yaml` | `8b947acafeae1d2bf4fda5a715888556d9ca672e57d488a4c31dadc420f9302a` |
-| `harness/q2/action_path/canary.yaml` | `5221c8a6e337a448352d4a5372f2a727294154450b255a16ff5f7bac76cd62ab` |
+| `harness/q2/action_path/canary.yaml` | `1e3b0dbc9c5a9d84bfc5003bc7ec870f72426cf85176c80bc7238cd8da4082ae` |
 | `harness/q2/action_path/keysyms.json` | `a1ea436d9bd4ae8d9fbc8305772f7dca776858b023092ce1cea059a693924acb` |
 | `harness/q2/action_path/ir.py` | `33dc24771b823597eef453a4994faf730d0364bd090488aa13e9de5e3498d305` |
 | `harness/q2/action_path/vocab.py` | `f26dd7d34988aebf8e8bbeb3ea118e6da3b9d37505ba8433a6eb6d9f0f186792` |
@@ -399,8 +399,8 @@ setting. The session counts below follow from that rule.
   off, so the app does not rewrite typed text), each fixture's initial text,
   each entry's actions and its exact expected final text, and the read-back
   (Writer: paragraph texts joined with `\n` from the accessibility tree;
-  Chrome: the textarea value, which the page mirrors into its title on every
-  input event, read from the window title once stable; VS Code: the saved
+  Chrome: the textarea value, which the page mirrors percent-encoded into its
+  title on every input event, read from the window title once stable; VS Code: the saved
   file, once it has changed and is stable; Terminal: the file written by
   `cat`). Changed before the freeze after development runs 501 and 506:
   Chrome's accessibility text was stale after edits that the screen showed,
@@ -700,6 +700,76 @@ here with its reason.
     would have projected as 0x0.
 18. **The runner image is kept as a saved tarball** because its Dockerfile's
     apt step is not reproducible; the lock records every package version.
+19. **Entry windows are delimited by requests, not timestamps.** The probe
+    opens and closes each entry with a core `ChangeKeyboardMapping` request on
+    a reserved spare keycode and processes its queue up to the MappingNotify
+    it causes; the tap records the same request. The X server orders requests
+    and device events in one sequence, so the probe's log and the XRecord
+    stream split at exactly the same point (validated in job 484: 153
+    delimiter requests, each matched in both channels). Server timestamps were
+    rejected because a property-change time need not be fresher than the last
+    input event's.
+20. **The guard re-activates the probe after every restoration** that can take
+    its focus (screencast, closed, shown or switched windows, the hot
+    corner), and R13's Super key, which opens the shell's overview, is
+    restored like the hot corner. Without it the guard would charge the next
+    entry with a focus loss the restoration did not undo.
+21. **The marker check includes the compositor.** The probe's marker is read
+    from the screenshot the entry's last `DesktopEnv.step` returns, so the
+    compositor's latency counts against the action path: in development the
+    probe's drawing reached the screen 72 ms after it was made at the median
+    and 110 ms at the 99th percentile (784 measurements, runs 489-499). The
+    probe's `begin` returns only once the screen shows the new marker, so
+    an entry never starts from a stale screen.
+22. **A2 runs the plain renderings; perturbations are judged at the IR
+    level.** Each perturbation must parse to exactly the plain rendering's
+    IR on every gating and declared cell (a test checks it for the frozen
+    corpus); the same IR then runs on the same executor, so a VM run of each
+    perturbation would add nothing. H-GA's R10 differs between perturbations
+    (its parser waits one second when a call it does not know comes without an
+    `Action:` line); R10 is outside H-GA's spec.
+23. **H-OSW-fixed has five own-spec fixes, not three.** Development found two
+    more bugs against its own prompt, fixed by the same rule: `type` lost edge
+    whitespace (upstream stripped every parameter; `type_spaces` could never
+    pass), and `wait` ignored its `time` (upstream `WAIT` sleeps
+    `DesktopEnv.step`'s `pause`, 0.0 s in Stage 1; run 491's
+    `click_double_slow` clicks came 381 ms apart against a 500 ms minimum).
+    Both are marked in the source and listed in `harness_design_diffs.md`.
+24. **L0-fixed waits for its effect to be visible.** Keys and chords are held
+    0.1 s (QEMU `sendkey`'s hold in the R-dev capture; run 486's
+    `chord_ctrl_alt_shift_r` released its keys 10 ms after pressing them while
+    the shell opened its screenshot UI, and the releases lost their modifier
+    state). Every action then waits for the desktop shell to answer on D-Bus
+    and for the screen to be unchanged for 0.25 s (XDamage on the root
+    window; at least 0.1 s, PyAutoGUI's default pause, at most 2 s). Text that
+    needs spare keycodes remaps them in one burst first and waits until the
+    shell is idle, because the shell (the compositor) repaints nothing while it
+    rebuilds its keymap (runs 486-499: screenshots after Unicode typing showed
+    only the first character).
+25. **Build order.** The inputs addendum's components were written in the same
+    development pass as L0-fixed, before any freeze, not before it as the
+    first draft said. The protection that remains is the one the controls
+    need: C2 is scored once after the inputs freeze, with the L0-raw
+    translator and prediction frozen here; C1 and C3 are scored once after
+    the executor freeze, with the control translators frozen in the inputs
+    addendum; and every change to an inputs component after the first L0-fixed
+    run is listed in that addendum.
+26. **Acceptance is admitted by the ledger.** `manifest.py` admits an
+    acceptance or scored-control campaign only when
+    `program/preregistrations/ledger.jsonl` (hash chain verified) freezes this
+    file and the addenda it needs with the digests the manifest names and the
+    source tree holds; the submitter and the job both check. The acceptance
+    code is therefore frozen in the executor addendum and needs no change
+    after the freeze. Seeds 43 and 44 are refused for every other campaign,
+    and development admits only L0-fixed, H-OSW-fixed, H-GA and the canary.
+27. **The corpus uses one tool call per turn.** Both prompts ask for a single
+    call per step; a positioned H-OSW scroll and a two-point H-OSW drag take a
+    `mouse_move` turn first. Multi-call turns appear only in R05-R07, which
+    test them.
+28. **Canary targets are measured from screenshots.** LibreOffice's
+    accessibility extents had the right x but a y 24 px too high (run 501);
+    Chrome's agreed with its screenshots. `canary_targets.json` records each
+    app's targets and how they were measured.
 
 ## 15. Changes after the 2026-10-07 review
 
