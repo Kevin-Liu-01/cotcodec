@@ -42,6 +42,7 @@ class Expectation:
     formulas: list[tuple[str, str]] = field(default_factory=list)
     appearance: list[str] = field(default_factory=list)
     same_items: list[str] = field(default_factory=list)
+    deltas: list[tuple[str, list[int]]] = field(default_factory=list)
     numeric_tolerance: float = 1e-9
     int_tolerance: int = 0
 
@@ -56,6 +57,7 @@ class Expectation:
             "formulas": [[loc, formula] for loc, formula in self.formulas],
             "appearance": list(self.appearance),
             "same_items": list(self.same_items),
+            "deltas": [[loc, list(delta)] for loc, delta in self.deltas],
             "numeric_tolerance": self.numeric_tolerance,
             "int_tolerance": self.int_tolerance,
         }
@@ -72,6 +74,7 @@ class Expectation:
             formulas=[(loc, formula) for loc, formula in data.get("formulas", [])],
             appearance=list(data.get("appearance", [])),
             same_items=list(data.get("same_items", [])),
+            deltas=[(loc, list(delta)) for loc, delta in data.get("deltas", [])],
             numeric_tolerance=float(data.get("numeric_tolerance", 1e-9)),
             int_tolerance=int(data.get("int_tolerance", 0)),
         )
@@ -209,9 +212,22 @@ def docx_effective(snap: dict, block: dict) -> dict:
     return {"text": block.get("text"), "ppr": _normal_ppr(ppr), "spans": merge_spans(spans)}
 
 
+IDENTITY_KEYS = frozenset({"name", "descr"})
+
+
+def _without_identity(item: Any) -> Any:
+    if isinstance(item, dict):
+        return {k: _without_identity(v) for k, v in item.items() if k not in IDENTITY_KEYS}
+    if isinstance(item, list):
+        return [_without_identity(v) for v in item]
+    return item
+
+
 def _item_signatures(value: Any) -> list[str]:
+    """Order-free item signatures. Shape names are left out: LibreOffice regenerates
+    placeholder names ("PlaceHolder N") from the export order."""
     items = value if isinstance(value, list) else []
-    return sorted(json.dumps(item, sort_keys=True) for item in items)
+    return sorted(json.dumps(_without_identity(item), sort_keys=True) for item in items)
 
 
 def xlsx_dependents(snap: dict, cell_locs: list[str]) -> set[str]:
@@ -372,6 +388,26 @@ def check(base: dict, actual: dict, expectation: Expectation) -> list[PurityChec
                 "same_items",
                 not moved,
                 "only the order of items changed" if not moved else "; ".join(moved),
+            )
+        )
+
+    if expectation.deltas:
+        off = []
+        for loc, delta in expectation.deltas:
+            try:
+                before, after = resolve(base, loc), resolve(actual, loc)
+            except (KeyError, IndexError, ValueError):
+                off.append(f"{loc}: unresolvable")
+                continue
+            moved = [int(b) - int(a) for a, b in zip(before, after, strict=True)]
+            slack = expectation.int_tolerance
+            if any(abs(m - d) > slack for m, d in zip(moved, delta, strict=True)):
+                off.append(f"{loc}: moved {moved}, expected {list(delta)}")
+        results.append(
+            PurityCheck(
+                "expected_deltas",
+                not off,
+                "moved by the recipe's offsets" if not off else "; ".join(off[:MAX_DETAIL]),
             )
         )
 
