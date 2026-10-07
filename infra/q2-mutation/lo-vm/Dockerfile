@@ -18,6 +18,12 @@ RUN set -eux; \
     # COPY makes every file root-owned; the profile template must be readable by
     # the unprivileged runtime user, who copies it into a fresh per-job HOME.
     chmod -R a+rX /home/user/.config/libreoffice; \
+    # The runtime user is the host account (uid/gid 1004), which the VM's
+    # passwd lacks. LibreOffice resolves its home and user installation through
+    # getpwuid and hangs at start-up without an entry, so add one (no package
+    # changes; the VM's own account "user" (uid 1000) is untouched).
+    echo 'q2m:x:1004:1004:q2 mutation runner:/tmp/home:/bin/bash' >> /etc/passwd; \
+    echo 'q2m:x:1004:' >> /etc/group; \
     dpkg-query -W -f='${Package}\t${Version}\t${Status}\n' > /opt/q2/dpkg-before.tsv; \
     dpkg -i /opt/q2/xvfb_21.1.4-2ubuntu1.7~22.04.8_amd64.deb; \
     cp /opt/q2/q2-sources.list /etc/apt/sources.list; \

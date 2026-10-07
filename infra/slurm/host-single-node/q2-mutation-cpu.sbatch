@@ -160,10 +160,15 @@ if [[ -n "${nvidia_nodes}" ]]; then
   exit 3
 fi
 
+# scancel stops this script, not the container it started: name the container
+# and kill it on any termination signal so no workload outlives its job.
+container="q2m-${SLURM_JOB_ID}"
+trap 'docker kill "${container}" >/dev/null 2>&1 || true' TERM INT HUP EXIT
 set +e
-docker run "${common[@]}" "${mounts[@]}" -w /src \
+docker run --name "${container}" "${common[@]}" "${mounts[@]}" -w /src \
   -e Q2M_RUN_DIR=/out \
-  "${Q2M_IMAGE_ID}" "${argv[@]}"
+  "${Q2M_IMAGE_ID}" "${argv[@]}" &
+wait $!
 status=$?
 set -e
 
