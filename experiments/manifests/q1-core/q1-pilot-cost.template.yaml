@@ -23,9 +23,9 @@ resources:
   gpus: 1
   cpus: 32
   memory_gb: 256
-  minutes: 40
+  minutes: 42
 budget:
-  max_gpu_hours: 0.67
+  max_gpu_hours: 0.70
 randomness_contract: assignment-seed-matrix
 seeds: [42, 43, 44]
 seed_binding:
@@ -56,9 +56,20 @@ command:
   - "--expected-evidence-sha256"
   - FILL-study-artifact-sha256
   - "--budget-minutes"
-  - "36"
+  - "37"
   - "--slots-per-gpu"
   - "4"
+  - "--size-scaled-watchdog"
+  - "--smoke-minutes"
+  - "6"
+  - "--fidelity-minutes"
+  - "7"
+  - "--calibration-minutes"
+  - "4"
+  - "--timing-reserve-minutes"
+  - "2.5"
+  - "--timing-kernels"
+  - "2"
   - "--seeds"
   - "42"
   - "43"

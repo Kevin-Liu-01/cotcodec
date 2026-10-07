@@ -1,0 +1,1378 @@
+{
+ "rows": [
+  {
+   "cpu_forward_seconds": 0.081,
+   "get_inputs_seconds": 0.139,
+   "input_bytes": 134217728,
+   "problem_id": "L1/1_Square_matrix_multiplication_",
+   "process_seconds": 1.891
+  },
+  {
+   "cpu_forward_seconds": 0.078,
+   "get_inputs_seconds": 0.203,
+   "input_bytes": 201326592,
+   "problem_id": "L1/2_Standard_matrix_multiplication_",
+   "process_seconds": 1.743
+  },
+  {
+   "cpu_forward_seconds": 0.256,
+   "get_inputs_seconds": 1.34,
+   "input_bytes": 1342177280,
+   "problem_id": "L1/3_Batched_matrix_multiplication",
+   "process_seconds": 3.261
+  },
+  {
+   "cpu_forward_seconds": 0.656,
+   "get_inputs_seconds": 8.721,
+   "input_bytes": 8594128896,
+   "problem_id": "L1/4_Matrix_vector_multiplication_",
+   "process_seconds": 11.462
+  },
+  {
+   "cpu_forward_seconds": 0.495,
+   "get_inputs_seconds": 4.245,
+   "input_bytes": 4294967296,
+   "problem_id": "L1/5_Matrix_scalar_multiplication",
+   "process_seconds": 6.382
+  },
+  {
+   "cpu_forward_seconds": 0.051,
+   "get_inputs_seconds": 1.174,
+   "input_bytes": 1073741824,
+   "problem_id": "L1/6_Matmul_with_large_K_dimension_",
+   "process_seconds": 3.036
+  },
+  {
+   "cpu_forward_seconds": 0.498,
+   "get_inputs_seconds": 0.019,
+   "input_bytes": 16777216,
+   "problem_id": "L1/7_Matmul_with_small_K_dimension_",
+   "process_seconds": 2.009
+  },
+  {
+   "cpu_forward_seconds": 0.184,
+   "get_inputs_seconds": 0.167,
+   "input_bytes": 166630296,
+   "problem_id": "L1/8_Matmul_with_irregular_shapes_",
+   "process_seconds": 1.977
+  },
+  {
+   "cpu_forward_seconds": 0.469,
+   "get_inputs_seconds": 0.01,
+   "input_bytes": 8388608,
+   "problem_id": "L1/9_Tall_skinny_matrix_multiplication_",
+   "process_seconds": 1.795
+  },
+  {
+   "cpu_forward_seconds": 0.036,
+   "get_inputs_seconds": 0.138,
+   "input_bytes": 140509184,
+   "problem_id": "L1/10_3D_tensor_matrix_multiplication",
+   "process_seconds": 1.642
+  },
+  {
+   "cpu_forward_seconds": 0.771,
+   "get_inputs_seconds": 1.044,
+   "input_bytes": 1074528256,
+   "problem_id": "L1/11_4D_tensor_matrix_multiplication",
+   "process_seconds": 3.398
+  },
+  {
+   "cpu_forward_seconds": 0.009,
+   "get_inputs_seconds": 0.067,
+   "input_bytes": 67125248,
+   "problem_id": "L1/12_Matmul_with_diagonal_matrices_",
+   "process_seconds": 1.536
+  },
+  {
+   "cpu_forward_seconds": 0.079,
+   "get_inputs_seconds": 0.206,
+   "input_bytes": 134217728,
+   "problem_id": "L1/13_Matmul_for_symmetric_matrices",
+   "process_seconds": 1.665
+  },
+  {
+   "cpu_forward_seconds": 0.108,
+   "get_inputs_seconds": 0.206,
+   "input_bytes": 134217728,
+   "problem_id": "L1/14_Matmul_for_upper_triangular_matrices",
+   "process_seconds": 1.818
+  },
+  {
+   "cpu_forward_seconds": 0.096,
+   "get_inputs_seconds": 0.15,
+   "input_bytes": 134217728,
+   "problem_id": "L1/15_Matmul_for_lower_triangular_matrices",
+   "process_seconds": 1.744
+  },
+  {
+   "cpu_forward_seconds": 0.086,
+   "get_inputs_seconds": 0.209,
+   "input_bytes": 201326592,
+   "problem_id": "L1/16_Matmul_with_transposed_A",
+   "process_seconds": 1.671
+  },
+  {
+   "cpu_forward_seconds": 0.07,
+   "get_inputs_seconds": 0.199,
+   "input_bytes": 201326592,
+   "problem_id": "L1/17_Matmul_with_transposed_B",
+   "process_seconds": 1.743
+  },
+  {
+   "cpu_forward_seconds": 0.078,
+   "get_inputs_seconds": 0.197,
+   "input_bytes": 201326592,
+   "problem_id": "L1/18_Matmul_with_transposed_both",
+   "process_seconds": 1.824
+  },
+  {
+   "cpu_forward_seconds": 1.572,
+   "get_inputs_seconds": 6.752,
+   "input_bytes": 6442450944,
+   "problem_id": "L1/19_ReLU",
+   "process_seconds": 10.314
+  },
+  {
+   "cpu_forward_seconds": 0.993,
+   "get_inputs_seconds": 6.287,
+   "input_bytes": 6442450944,
+   "problem_id": "L1/20_LeakyReLU",
+   "process_seconds": 9.486
+  },
+  {
+   "cpu_forward_seconds": 0.942,
+   "get_inputs_seconds": 6.693,
+   "input_bytes": 6442450944,
+   "problem_id": "L1/21_Sigmoid",
+   "process_seconds": 9.638
+  },
+  {
+   "cpu_forward_seconds": 1.314,
+   "get_inputs_seconds": 6.345,
+   "input_bytes": 6442450944,
+   "problem_id": "L1/22_Tanh",
+   "process_seconds": 9.445
+  },
+  {
+   "cpu_forward_seconds": 1.97,
+   "get_inputs_seconds": 6.79,
+   "input_bytes": 6442450944,
+   "problem_id": "L1/23_Softmax",
+   "process_seconds": 10.939
+  },
+  {
+   "cpu_forward_seconds": 1.632,
+   "get_inputs_seconds": 6.534,
+   "input_bytes": 6442450944,
+   "problem_id": "L1/24_LogSoftmax",
+   "process_seconds": 10.268
+  },
+  {
+   "cpu_forward_seconds": 1.916,
+   "get_inputs_seconds": 6.42,
+   "input_bytes": 6442450944,
+   "problem_id": "L1/25_Swish",
+   "process_seconds": 10.21
+  },
+  {
+   "cpu_forward_seconds": 1.405,
+   "get_inputs_seconds": 6.844,
+   "input_bytes": 6442450944,
+   "problem_id": "L1/26_GELU_",
+   "process_seconds": 9.994
+  },
+  {
+   "cpu_forward_seconds": 1.331,
+   "get_inputs_seconds": 6.6,
+   "input_bytes": 6442450944,
+   "problem_id": "L1/27_SELU_",
+   "process_seconds": 10.48
+  },
+  {
+   "cpu_forward_seconds": 1.586,
+   "get_inputs_seconds": 6.984,
+   "input_bytes": 6442450944,
+   "problem_id": "L1/28_HardSigmoid",
+   "process_seconds": 10.901
+  },
+  {
+   "cpu_forward_seconds": 1.54,
+   "get_inputs_seconds": 6.848,
+   "input_bytes": 6442450944,
+   "problem_id": "L1/29_Softplus",
+   "process_seconds": 10.686
+  },
+  {
+   "cpu_forward_seconds": 3.051,
+   "get_inputs_seconds": 6.645,
+   "input_bytes": 6442450944,
+   "problem_id": "L1/30_Softsign",
+   "process_seconds": 11.857
+  },
+  {
+   "cpu_forward_seconds": 1.648,
+   "get_inputs_seconds": 7.001,
+   "input_bytes": 6442450944,
+   "problem_id": "L1/31_ELU",
+   "process_seconds": 10.698
+  },
+  {
+   "cpu_forward_seconds": 0.944,
+   "get_inputs_seconds": 6.755,
+   "input_bytes": 6442450944,
+   "problem_id": "L1/32_HardTanh",
+   "process_seconds": 9.99
+  },
+  {
+   "cpu_forward_seconds": 0.825,
+   "get_inputs_seconds": 4.653,
+   "input_bytes": 4294967296,
+   "problem_id": "L1/33_BatchNorm",
+   "process_seconds": 7.352
+  },
+  {
+   "cpu_forward_seconds": 1.245,
+   "get_inputs_seconds": 8.086,
+   "input_bytes": 7516192768,
+   "problem_id": "L1/34_InstanceNorm",
+   "process_seconds": 11.611
+  },
+  {
+   "cpu_forward_seconds": 1.854,
+   "get_inputs_seconds": 8.234,
+   "input_bytes": 7516192768,
+   "problem_id": "L1/35_GroupNorm_",
+   "process_seconds": 12.121
+  },
+  {
+   "cpu_forward_seconds": 2.629,
+   "get_inputs_seconds": 7.97,
+   "input_bytes": 7516192768,
+   "problem_id": "L1/36_RMSNorm_",
+   "process_seconds": 12.884
+  },
+  {
+   "cpu_forward_seconds": 2.394,
+   "get_inputs_seconds": 7.731,
+   "input_bytes": 7516192768,
+   "problem_id": "L1/37_FrobeniusNorm_",
+   "process_seconds": 12.394
+  },
+  {
+   "cpu_forward_seconds": 3.272,
+   "get_inputs_seconds": 8.958,
+   "input_bytes": 8589803520,
+   "problem_id": "L1/38_L1Norm_",
+   "process_seconds": 14.293
+  },
+  {
+   "cpu_forward_seconds": 1.692,
+   "get_inputs_seconds": 8.579,
+   "input_bytes": 8589803520,
+   "problem_id": "L1/39_L2Norm_",
+   "process_seconds": 12.384
+  },
+  {
+   "cpu_forward_seconds": 0.046,
+   "get_inputs_seconds": 0.266,
+   "input_bytes": 268435456,
+   "problem_id": "L1/40_LayerNorm",
+   "process_seconds": 1.894
+  },
+  {
+   "cpu_forward_seconds": 0.496,
+   "get_inputs_seconds": 3.175,
+   "input_bytes": 3221225472,
+   "problem_id": "L1/41_Max_Pooling_1D",
+   "process_seconds": 5.51
+  },
+  {
+   "cpu_forward_seconds": 2.731,
+   "get_inputs_seconds": 2.128,
+   "input_bytes": 2147483648,
+   "problem_id": "L1/42_Max_Pooling_2D",
+   "process_seconds": 6.634
+  },
+  {
+   "cpu_forward_seconds": 1.257,
+   "get_inputs_seconds": 4.339,
+   "input_bytes": 4294967296,
+   "problem_id": "L1/43_Max_Pooling_3D",
+   "process_seconds": 7.509
+  },
+  {
+   "cpu_forward_seconds": 0.634,
+   "get_inputs_seconds": 2.195,
+   "input_bytes": 2147483648,
+   "problem_id": "L1/44_Average_Pooling_1D",
+   "process_seconds": 4.456
+  },
+  {
+   "cpu_forward_seconds": 0.751,
+   "get_inputs_seconds": 18.033,
+   "input_bytes": 17179869184,
+   "problem_id": "L1/45_Average_Pooling_2D",
+   "process_seconds": 21.408
+  },
+  {
+   "cpu_forward_seconds": 1.275,
+   "get_inputs_seconds": 9.02,
+   "input_bytes": 8589934592,
+   "problem_id": "L1/46_Average_Pooling_3D",
+   "process_seconds": 12.153
+  },
+  {
+   "cpu_forward_seconds": 0.681,
+   "get_inputs_seconds": 8.838,
+   "input_bytes": 8587837440,
+   "problem_id": "L1/47_Sum_reduction_over_a_dimension",
+   "process_seconds": 11.681
+  },
+  {
+   "cpu_forward_seconds": 0.787,
+   "get_inputs_seconds": 8.98,
+   "input_bytes": 8587837440,
+   "problem_id": "L1/48_Mean_reduction_over_a_dimension",
+   "process_seconds": 11.832
+  },
+  {
+   "cpu_forward_seconds": 1.178,
+   "get_inputs_seconds": 9.155,
+   "input_bytes": 8587837440,
+   "problem_id": "L1/49_Max_reduction_over_a_dimension",
+   "process_seconds": 12.598
+  },
+  {
+   "cpu_forward_seconds": 0.079,
+   "get_inputs_seconds": 0.154,
+   "input_bytes": 154140672,
+   "problem_id": "L1/50_conv_standard_2D__square_input__square_kernel",
+   "process_seconds": 1.878
+  },
+  {
+   "cpu_forward_seconds": 1.9,
+   "get_inputs_seconds": 9.616,
+   "input_bytes": 8587837440,
+   "problem_id": "L1/51_Argmax_over_a_dimension",
+   "process_seconds": 13.635
+  },
+  {
+   "cpu_forward_seconds": 1.973,
+   "get_inputs_seconds": 9.58,
+   "input_bytes": 8587837440,
+   "problem_id": "L1/52_Argmin_over_a_dimension",
+   "process_seconds": 13.605
+  },
+  {
+   "cpu_forward_seconds": 2.006,
+   "get_inputs_seconds": 9.323,
+   "input_bytes": 8587837440,
+   "problem_id": "L1/53_Min_reduction_over_a_dimension",
+   "process_seconds": 13.636
+  },
+  {
+   "cpu_forward_seconds": 0.383,
+   "get_inputs_seconds": 0.064,
+   "input_bytes": 50331648,
+   "problem_id": "L1/54_conv_standard_3D__square_input__square_kernel",
+   "process_seconds": 1.953
+  },
+  {
+   "cpu_forward_seconds": 0.864,
+   "get_inputs_seconds": 1.096,
+   "input_bytes": 1073741824,
+   "problem_id": "L1/55_conv_standard_2D__asymmetric_input__square_kernel",
+   "process_seconds": 3.531
+  },
+  {
+   "cpu_forward_seconds": 0.451,
+   "get_inputs_seconds": 0.27,
+   "input_bytes": 268435456,
+   "problem_id": "L1/56_conv_standard_2D__asymmetric_input__asymmetric_kernel",
+   "process_seconds": 2.335
+  },
+  {
+   "cpu_forward_seconds": 1.545,
+   "get_inputs_seconds": 2.177,
+   "input_bytes": 2147483648,
+   "problem_id": "L1/57_conv_transposed_2D__square_input__square_kernel",
+   "process_seconds": 5.399
+  },
+  {
+   "cpu_forward_seconds": 0.05,
+   "get_inputs_seconds": 0.069,
+   "input_bytes": 67108864,
+   "problem_id": "L1/58_conv_transposed_3D__asymmetric_input__asymmetric_kernel",
+   "process_seconds": 1.631
+  },
+  {
+   "cpu_forward_seconds": 1.134,
+   "get_inputs_seconds": 0.131,
+   "input_bytes": 125829120,
+   "problem_id": "L1/59_conv_standard_3D__asymmetric_input__square_kernel",
+   "process_seconds": 2.818
+  },
+  {
+   "cpu_forward_seconds": 0.282,
+   "get_inputs_seconds": 0.05,
+   "input_bytes": 50331648,
+   "problem_id": "L1/60_conv_standard_3D__square_input__asymmetric_kernel",
+   "process_seconds": 2.003
+  },
+  {
+   "cpu_forward_seconds": 0.277,
+   "get_inputs_seconds": 0.399,
+   "input_bytes": 402653184,
+   "problem_id": "L1/61_conv_transposed_3D__square_input__square_kernel",
+   "process_seconds": 2.267
+  },
+  {
+   "cpu_forward_seconds": 0.334,
+   "get_inputs_seconds": 0.264,
+   "input_bytes": 268435456,
+   "problem_id": "L1/62_conv_standard_2D__square_input__asymmetric_kernel",
+   "process_seconds": 2.137
+  },
+  {
+   "cpu_forward_seconds": 3.388,
+   "get_inputs_seconds": 1.068,
+   "input_bytes": 1073741824,
+   "problem_id": "L1/63_conv_standard_2D__square_input__square_kernel",
+   "process_seconds": 5.98
+  },
+  {
+   "cpu_forward_seconds": 1.151,
+   "get_inputs_seconds": 2.509,
+   "input_bytes": 2147483648,
+   "problem_id": "L1/64_conv_transposed_1D",
+   "process_seconds": 5.381
+  },
+  {
+   "cpu_forward_seconds": 0.371,
+   "get_inputs_seconds": 0.534,
+   "input_bytes": 536870912,
+   "problem_id": "L1/65_conv_transposed_2D__square_input__asymmetric_kernel",
+   "process_seconds": 2.68
+  },
+  {
+   "cpu_forward_seconds": 0.13,
+   "get_inputs_seconds": 0.025,
+   "input_bytes": 25165824,
+   "problem_id": "L1/66_conv_standard_3D__asymmetric_input__asymmetric_kernel",
+   "process_seconds": 1.628
+  },
+  {
+   "cpu_forward_seconds": 0.826,
+   "get_inputs_seconds": 1.097,
+   "input_bytes": 1073741824,
+   "problem_id": "L1/67_conv_standard_1D",
+   "process_seconds": 3.696
+  },
+  {
+   "cpu_forward_seconds": 0.982,
+   "get_inputs_seconds": 0.517,
+   "input_bytes": 536870912,
+   "problem_id": "L1/68_conv_transposed_3D__square_input__asymmetric_kernel",
+   "process_seconds": 3.106
+  },
+  {
+   "cpu_forward_seconds": 0.75,
+   "get_inputs_seconds": 0.533,
+   "input_bytes": 536870912,
+   "problem_id": "L1/69_conv_transposed_2D__asymmetric_input__asymmetric_kernel",
+   "process_seconds": 3.022
+  },
+  {
+   "cpu_forward_seconds": 0.829,
+   "get_inputs_seconds": 1.364,
+   "input_bytes": 1358954496,
+   "problem_id": "L1/70_conv_transposed_3D__asymmetric_input__square_kernel",
+   "process_seconds": 3.843
+  },
+  {
+   "cpu_forward_seconds": 0.264,
+   "get_inputs_seconds": 0.558,
+   "input_bytes": 536870912,
+   "problem_id": "L1/71_conv_transposed_2D__asymmetric_input__square_kernel",
+   "process_seconds": 2.624
+  },
+  {
+   "cpu_forward_seconds": 0.035,
+   "get_inputs_seconds": 0.015,
+   "input_bytes": 14155776,
+   "problem_id": "L1/72_conv_transposed_3D_asymmetric_input_asymmetric_kernel___strided_padded_grouped_",
+   "process_seconds": 1.613
+  },
+  {
+   "cpu_forward_seconds": 0.713,
+   "get_inputs_seconds": 0.132,
+   "input_bytes": 134217728,
+   "problem_id": "L1/73_conv_transposed_3D_asymmetric_input_square_kernel__strided_padded__grouped",
+   "process_seconds": 2.422
+  },
+  {
+   "cpu_forward_seconds": 0.348,
+   "get_inputs_seconds": 0.559,
+   "input_bytes": 536870912,
+   "problem_id": "L1/74_conv_transposed_1D_dilated",
+   "process_seconds": 2.498
+  },
+  {
+   "cpu_forward_seconds": 0.314,
+   "get_inputs_seconds": 0.069,
+   "input_bytes": 67108864,
+   "problem_id": "L1/75_conv_transposed_2D_asymmetric_input_asymmetric_kernel_strided__grouped____padded____dilated__",
+   "process_seconds": 1.935
+  },
+  {
+   "cpu_forward_seconds": 3.646,
+   "get_inputs_seconds": 8.591,
+   "input_bytes": 8589803520,
+   "problem_id": "L1/76_conv_standard_1D_dilated_strided__",
+   "process_seconds": 14.334
+  },
+  {
+   "cpu_forward_seconds": 0.394,
+   "get_inputs_seconds": 0.032,
+   "input_bytes": 33554432,
+   "problem_id": "L1/77_conv_transposed_3D_square_input_square_kernel___padded____dilated____strided__",
+   "process_seconds": 1.853
+  },
+  {
+   "cpu_forward_seconds": 0.302,
+   "get_inputs_seconds": 0.552,
+   "input_bytes": 536870912,
+   "problem_id": "L1/78_conv_transposed_2D_asymmetric_input_asymmetric_kernel___padded__",
+   "process_seconds": 2.305
+  },
+  {
+   "cpu_forward_seconds": 0.436,
+   "get_inputs_seconds": 0.256,
+   "input_bytes": 268435456,
+   "problem_id": "L1/79_conv_transposed_1D_asymmetric_input_square_kernel___padded____strided____dilated__",
+   "process_seconds": 2.166
+  },
+  {
+   "cpu_forward_seconds": 0.326,
+   "get_inputs_seconds": 0.264,
+   "input_bytes": 268435456,
+   "problem_id": "L1/80_conv_standard_2D_square_input_asymmetric_kernel___dilated____padded__",
+   "process_seconds": 2.102
+  },
+  {
+   "cpu_forward_seconds": 0.216,
+   "get_inputs_seconds": 0.016,
+   "input_bytes": 16777216,
+   "problem_id": "L1/81_conv_transposed_2D_asymmetric_input_square_kernel___dilated____padded____strided__",
+   "process_seconds": 1.642
+  },
+  {
+   "cpu_forward_seconds": 0.482,
+   "get_inputs_seconds": 1.372,
+   "input_bytes": 1073741824,
+   "problem_id": "L1/82_conv_depthwise_2D_square_input_square_kernel",
+   "process_seconds": 3.568
+  },
+  {
+   "cpu_forward_seconds": 0.339,
+   "get_inputs_seconds": 0.523,
+   "input_bytes": 536870912,
+   "problem_id": "L1/83_conv_depthwise_2D_square_input_asymmetric_kernel",
+   "process_seconds": 2.361
+  },
+  {
+   "cpu_forward_seconds": 2.247,
+   "get_inputs_seconds": 4.304,
+   "input_bytes": 4294967296,
+   "problem_id": "L1/84_conv_depthwise_2D_asymmetric_input_square_kernel",
+   "process_seconds": 8.249
+  },
+  {
+   "cpu_forward_seconds": 0.174,
+   "get_inputs_seconds": 0.516,
+   "input_bytes": 536870912,
+   "problem_id": "L1/85_conv_depthwise_2D_asymmetric_input_asymmetric_kernel",
+   "process_seconds": 2.146
+  },
+  {
+   "cpu_forward_seconds": 1.319,
+   "get_inputs_seconds": 1.045,
+   "input_bytes": 1073741824,
+   "problem_id": "L1/86_conv_depthwise_separable_2D",
+   "process_seconds": 4.007
+  },
+  {
+   "cpu_forward_seconds": 3.228,
+   "get_inputs_seconds": 4.417,
+   "input_bytes": 4294967296,
+   "problem_id": "L1/87_conv_pointwise_2D",
+   "process_seconds": 9.536
+  },
+  {
+   "cpu_forward_seconds": 0.288,
+   "get_inputs_seconds": 0.272,
+   "input_bytes": 268435456,
+   "problem_id": "L1/88_MinGPTNewGelu",
+   "process_seconds": 2.002
+  },
+  {
+   "cpu_forward_seconds": 0.92,
+   "get_inputs_seconds": 4.375,
+   "input_bytes": 4294967296,
+   "problem_id": "L1/89_cumsum",
+   "process_seconds": 7.135
+  },
+  {
+   "cpu_forward_seconds": 1.162,
+   "get_inputs_seconds": 4.423,
+   "input_bytes": 4294967296,
+   "problem_id": "L1/90_cumprod",
+   "process_seconds": 7.387
+  },
+  {
+   "cpu_forward_seconds": 2.067,
+   "get_inputs_seconds": 4.367,
+   "input_bytes": 4294967296,
+   "problem_id": "L1/91_cumsum_reverse",
+   "process_seconds": 8.207
+  },
+  {
+   "cpu_forward_seconds": 1.17,
+   "get_inputs_seconds": 4.211,
+   "input_bytes": 4294967296,
+   "problem_id": "L1/92_cumsum_exclusive",
+   "process_seconds": 7.168
+  },
+  {
+   "cpu_forward_seconds": 1.928,
+   "get_inputs_seconds": 11.19,
+   "input_bytes": 5368709120,
+   "problem_id": "L1/93_masked_cumsum",
+   "process_seconds": 15.358
+  },
+  {
+   "cpu_forward_seconds": 1.089,
+   "get_inputs_seconds": 9.307,
+   "input_bytes": 8589934592,
+   "problem_id": "L1/94_MSELoss",
+   "process_seconds": 12.454
+  },
+  {
+   "cpu_forward_seconds": 0.067,
+   "get_inputs_seconds": 0.524,
+   "input_bytes": 537133056,
+   "problem_id": "L1/95_CrossEntropyLoss",
+   "process_seconds": 2.025
+  },
+  {
+   "cpu_forward_seconds": 0.642,
+   "get_inputs_seconds": 9.463,
+   "input_bytes": 8589934592,
+   "problem_id": "L1/96_HuberLoss",
+   "process_seconds": 12.202
+  },
+  {
+   "cpu_forward_seconds": 1.188,
+   "get_inputs_seconds": 6.992,
+   "input_bytes": 6442450944,
+   "problem_id": "L1/97_ScaledDotProductAttention",
+   "process_seconds": 10.12
+  },
+  {
+   "cpu_forward_seconds": 0.693,
+   "get_inputs_seconds": 2.661,
+   "input_bytes": 2147483648,
+   "problem_id": "L1/98_KLDivLoss",
+   "process_seconds": 5.117
+  },
+  {
+   "cpu_forward_seconds": 0.743,
+   "get_inputs_seconds": 3.358,
+   "input_bytes": 3221225472,
+   "problem_id": "L1/99_TripletMarginLoss",
+   "process_seconds": 6.173
+  },
+  {
+   "cpu_forward_seconds": 2.026,
+   "get_inputs_seconds": 4.667,
+   "input_bytes": 4295098368,
+   "problem_id": "L1/100_HingeLoss",
+   "process_seconds": 8.709
+  },
+  {
+   "cpu_forward_seconds": 0.729,
+   "get_inputs_seconds": 0.531,
+   "input_bytes": 536870912,
+   "problem_id": "L2/1_Conv2D_ReLU_BiasAdd",
+   "process_seconds": 2.719
+  },
+  {
+   "cpu_forward_seconds": 2.535,
+   "get_inputs_seconds": 0.519,
+   "input_bytes": 536870912,
+   "problem_id": "L2/2_ConvTranspose2d_BiasAdd_Clamp_Scaling_Clamp_Divide",
+   "process_seconds": 4.536
+  },
+  {
+   "cpu_forward_seconds": 1.137,
+   "get_inputs_seconds": 0.066,
+   "input_bytes": 67108864,
+   "problem_id": "L2/3_ConvTranspose3d_Sum_LayerNorm_AvgPool_GELU",
+   "process_seconds": 2.707
+  },
+  {
+   "cpu_forward_seconds": 1.876,
+   "get_inputs_seconds": 1.098,
+   "input_bytes": 1073741824,
+   "problem_id": "L2/4_Conv2d_Mish_Mish",
+   "process_seconds": 4.676
+  },
+  {
+   "cpu_forward_seconds": 2.872,
+   "get_inputs_seconds": 0.564,
+   "input_bytes": 536870912,
+   "problem_id": "L2/5_ConvTranspose2d_Subtract_Tanh",
+   "process_seconds": 5.003
+  },
+  {
+   "cpu_forward_seconds": 0.056,
+   "get_inputs_seconds": 0.026,
+   "input_bytes": 25165824,
+   "problem_id": "L2/6_Conv3d_Softmax_MaxPool_MaxPool",
+   "process_seconds": 1.596
+  },
+  {
+   "cpu_forward_seconds": 0.947,
+   "get_inputs_seconds": 0.274,
+   "input_bytes": 268435456,
+   "problem_id": "L2/7_Conv3d_ReLU_LeakyReLU_GELU_Sigmoid_BiasAdd",
+   "process_seconds": 2.82
+  },
+  {
+   "cpu_forward_seconds": 0.269,
+   "get_inputs_seconds": 0.271,
+   "input_bytes": 268435456,
+   "problem_id": "L2/8_Conv3d_Divide_Max_GlobalAvgPool_BiasAdd_Sum",
+   "process_seconds": 2.037
+  },
+  {
+   "cpu_forward_seconds": 0.108,
+   "get_inputs_seconds": 0.034,
+   "input_bytes": 33554432,
+   "problem_id": "L2/9_Matmul_Subtract_Multiply_ReLU",
+   "process_seconds": 1.868
+  },
+  {
+   "cpu_forward_seconds": 2.192,
+   "get_inputs_seconds": 2.454,
+   "input_bytes": 2147483648,
+   "problem_id": "L2/10_ConvTranspose2d_MaxPool_Hardtanh_Mean_Tanh",
+   "process_seconds": 6.409
+  },
+  {
+   "cpu_forward_seconds": 0.395,
+   "get_inputs_seconds": 0.131,
+   "input_bytes": 134217728,
+   "problem_id": "L2/11_ConvTranspose2d_BatchNorm_Tanh_MaxPool_GroupNorm",
+   "process_seconds": 1.932
+  },
+  {
+   "cpu_forward_seconds": 0.113,
+   "get_inputs_seconds": 0.037,
+   "input_bytes": 33554432,
+   "problem_id": "L2/12_Gemm_Multiply_LeakyReLU",
+   "process_seconds": 1.81
+  },
+  {
+   "cpu_forward_seconds": 1.301,
+   "get_inputs_seconds": 0.526,
+   "input_bytes": 536870912,
+   "problem_id": "L2/13_ConvTranspose3d_Mean_Add_Softmax_Tanh_Scaling",
+   "process_seconds": 3.386
+  },
+  {
+   "cpu_forward_seconds": 0.111,
+   "get_inputs_seconds": 0.033,
+   "input_bytes": 33554432,
+   "problem_id": "L2/14_Gemm_Divide_Sum_Scaling",
+   "process_seconds": 1.895
+  },
+  {
+   "cpu_forward_seconds": 0.279,
+   "get_inputs_seconds": 0.017,
+   "input_bytes": 16777216,
+   "problem_id": "L2/15_ConvTranspose3d_BatchNorm_Subtract",
+   "process_seconds": 1.798
+  },
+  {
+   "cpu_forward_seconds": 2.444,
+   "get_inputs_seconds": 0.52,
+   "input_bytes": 536870912,
+   "problem_id": "L2/16_ConvTranspose2d_Mish_Add_Hardtanh_Scaling",
+   "process_seconds": 4.495
+  },
+  {
+   "cpu_forward_seconds": 0.784,
+   "get_inputs_seconds": 0.529,
+   "input_bytes": 536870912,
+   "problem_id": "L2/17_Conv2d_InstanceNorm_Divide",
+   "process_seconds": 2.961
+  },
+  {
+   "cpu_forward_seconds": 0.106,
+   "get_inputs_seconds": 0.033,
+   "input_bytes": 33554432,
+   "problem_id": "L2/18_Matmul_Sum_Max_AvgPool_LogSumExp_LogSumExp",
+   "process_seconds": 1.846
+  },
+  {
+   "cpu_forward_seconds": 2.185,
+   "get_inputs_seconds": 2.119,
+   "input_bytes": 2147483648,
+   "problem_id": "L2/19_ConvTranspose2d_GELU_GroupNorm",
+   "process_seconds": 5.978
+  },
+  {
+   "cpu_forward_seconds": 0.71,
+   "get_inputs_seconds": 0.032,
+   "input_bytes": 33554432,
+   "problem_id": "L2/20_ConvTranspose3d_Sum_ResidualAdd_Multiply_ResidualAdd",
+   "process_seconds": 2.177
+  },
+  {
+   "cpu_forward_seconds": 0.857,
+   "get_inputs_seconds": 0.262,
+   "input_bytes": 268435456,
+   "problem_id": "L2/21_Conv2d_Add_Scale_Sigmoid_GroupNorm",
+   "process_seconds": 2.561
+  },
+  {
+   "cpu_forward_seconds": 0.128,
+   "get_inputs_seconds": 0.033,
+   "input_bytes": 33554432,
+   "problem_id": "L2/22_Matmul_Scale_ResidualAdd_Clamp_LogSumExp_Mish",
+   "process_seconds": 1.965
+  },
+  {
+   "cpu_forward_seconds": 0.105,
+   "get_inputs_seconds": 0.038,
+   "input_bytes": 37748736,
+   "problem_id": "L2/24_Conv3d_Min_Softmax",
+   "process_seconds": 1.579
+  },
+  {
+   "cpu_forward_seconds": 0.803,
+   "get_inputs_seconds": 0.525,
+   "input_bytes": 536870912,
+   "problem_id": "L2/25_Conv2d_Min_Tanh_Tanh",
+   "process_seconds": 2.926
+  },
+  {
+   "cpu_forward_seconds": 1.109,
+   "get_inputs_seconds": 1.355,
+   "input_bytes": 1140850688,
+   "problem_id": "L2/26_ConvTranspose3d_Add_HardSwish",
+   "process_seconds": 4.099
+  },
+  {
+   "cpu_forward_seconds": 0.405,
+   "get_inputs_seconds": 0.2,
+   "input_bytes": 201326592,
+   "problem_id": "L2/27_Conv3d_HardSwish_GroupNorm_Mean",
+   "process_seconds": 2.169
+  },
+  {
+   "cpu_forward_seconds": 0.124,
+   "get_inputs_seconds": 0.073,
+   "input_bytes": 67108864,
+   "problem_id": "L2/28_BMM_InstanceNorm_Sum_ResidualAdd_Multiply",
+   "process_seconds": 2.015
+  },
+  {
+   "cpu_forward_seconds": 0.118,
+   "get_inputs_seconds": 0.033,
+   "input_bytes": 33554432,
+   "problem_id": "L2/29_Matmul_Mish_Mish",
+   "process_seconds": 1.883
+  },
+  {
+   "cpu_forward_seconds": 0.106,
+   "get_inputs_seconds": 0.035,
+   "input_bytes": 33554432,
+   "problem_id": "L2/30_Gemm_GroupNorm_Hardtanh",
+   "process_seconds": 1.919
+  },
+  {
+   "cpu_forward_seconds": 0.871,
+   "get_inputs_seconds": 0.533,
+   "input_bytes": 536870912,
+   "problem_id": "L2/31_Conv2d_Min_Add_Multiply",
+   "process_seconds": 2.947
+  },
+  {
+   "cpu_forward_seconds": 1.433,
+   "get_inputs_seconds": 1.065,
+   "input_bytes": 1073741824,
+   "problem_id": "L2/32_Conv2d_Scaling_Min",
+   "process_seconds": 4.194
+  },
+  {
+   "cpu_forward_seconds": 0.116,
+   "get_inputs_seconds": 0.034,
+   "input_bytes": 33554432,
+   "problem_id": "L2/33_Gemm_Scale_BatchNorm",
+   "process_seconds": 1.964
+  },
+  {
+   "cpu_forward_seconds": 1.166,
+   "get_inputs_seconds": 0.067,
+   "input_bytes": 67108864,
+   "problem_id": "L2/34_ConvTranspose3d_LayerNorm_GELU_Scaling",
+   "process_seconds": 2.773
+  },
+  {
+   "cpu_forward_seconds": 1.07,
+   "get_inputs_seconds": 0.523,
+   "input_bytes": 536870912,
+   "problem_id": "L2/35_Conv2d_Subtract_HardSwish_MaxPool_Mish",
+   "process_seconds": 3.193
+  },
+  {
+   "cpu_forward_seconds": 0.347,
+   "get_inputs_seconds": 0.067,
+   "input_bytes": 67108864,
+   "problem_id": "L2/36_ConvTranspose2d_Min_Sum_GELU_Add",
+   "process_seconds": 1.911
+  },
+  {
+   "cpu_forward_seconds": 0.521,
+   "get_inputs_seconds": 0.132,
+   "input_bytes": 134217728,
+   "problem_id": "L2/37_Matmul_Swish_Sum_GroupNorm",
+   "process_seconds": 2.204
+  },
+  {
+   "cpu_forward_seconds": 1.162,
+   "get_inputs_seconds": 0.526,
+   "input_bytes": 536870912,
+   "problem_id": "L2/38_ConvTranspose3d_AvgPool_Clamp_Softmax_Multiply",
+   "process_seconds": 3.249
+  },
+  {
+   "cpu_forward_seconds": 0.385,
+   "get_inputs_seconds": 0.266,
+   "input_bytes": 268435456,
+   "problem_id": "L2/39_Gemm_Scale_BatchNorm",
+   "process_seconds": 2.366
+  },
+  {
+   "cpu_forward_seconds": 0.447,
+   "get_inputs_seconds": 0.265,
+   "input_bytes": 268435456,
+   "problem_id": "L2/40_Matmul_Scaling_ResidualAdd",
+   "process_seconds": 2.268
+  },
+  {
+   "cpu_forward_seconds": 0.447,
+   "get_inputs_seconds": 0.269,
+   "input_bytes": 268435456,
+   "problem_id": "L2/41_Gemm_BatchNorm_GELU_ReLU",
+   "process_seconds": 2.296
+  },
+  {
+   "cpu_forward_seconds": 1.548,
+   "get_inputs_seconds": 1.198,
+   "input_bytes": 1073741824,
+   "problem_id": "L2/42_ConvTranspose2d_GlobalAvgPool_BiasAdd_LogSumExp_Sum_Multiply",
+   "process_seconds": 4.674
+  },
+  {
+   "cpu_forward_seconds": 0.329,
+   "get_inputs_seconds": 0.265,
+   "input_bytes": 268435456,
+   "problem_id": "L2/43_Conv3d_Max_LogSumExp_ReLU",
+   "process_seconds": 2.085
+  },
+  {
+   "cpu_forward_seconds": 0.42,
+   "get_inputs_seconds": 0.108,
+   "input_bytes": 67108864,
+   "problem_id": "L2/44_ConvTranspose2d_Multiply_GlobalAvgPool_GlobalAvgPool_Mean",
+   "process_seconds": 2.353
+  },
+  {
+   "cpu_forward_seconds": 0.367,
+   "get_inputs_seconds": 0.135,
+   "input_bytes": 134217728,
+   "problem_id": "L2/45_Gemm_Sigmoid_LogSumExp",
+   "process_seconds": 1.959
+  },
+  {
+   "cpu_forward_seconds": 0.966,
+   "get_inputs_seconds": 0.533,
+   "input_bytes": 536870912,
+   "problem_id": "L2/46_Conv2d_Subtract_Tanh_Subtract_AvgPool",
+   "process_seconds": 3.012
+  },
+  {
+   "cpu_forward_seconds": 0.424,
+   "get_inputs_seconds": 0.26,
+   "input_bytes": 268435456,
+   "problem_id": "L2/47_Conv3d_Mish_Tanh",
+   "process_seconds": 2.181
+  },
+  {
+   "cpu_forward_seconds": 0.372,
+   "get_inputs_seconds": 0.1,
+   "input_bytes": 100663296,
+   "problem_id": "L2/48_Conv3d_Scaling_Tanh_Multiply_Sigmoid",
+   "process_seconds": 2.041
+  },
+  {
+   "cpu_forward_seconds": 0.512,
+   "get_inputs_seconds": 0.033,
+   "input_bytes": 33554432,
+   "problem_id": "L2/49_ConvTranspose3d_Softmax_Sigmoid",
+   "process_seconds": 2.002
+  },
+  {
+   "cpu_forward_seconds": 0.84,
+   "get_inputs_seconds": 0.03,
+   "input_bytes": 25165824,
+   "problem_id": "L2/50_ConvTranspose3d_Scaling_AvgPool_BiasAdd_Scaling",
+   "process_seconds": 2.312
+  },
+  {
+   "cpu_forward_seconds": 0.179,
+   "get_inputs_seconds": 0.07,
+   "input_bytes": 67108864,
+   "problem_id": "L2/51_Gemm_Subtract_GlobalAvgPool_LogSumExp_GELU_ResidualAdd",
+   "process_seconds": 1.929
+  },
+  {
+   "cpu_forward_seconds": 0.499,
+   "get_inputs_seconds": 0.265,
+   "input_bytes": 268435456,
+   "problem_id": "L2/52_Conv2d_Activation_BatchNorm",
+   "process_seconds": 2.321
+  },
+  {
+   "cpu_forward_seconds": 0.174,
+   "get_inputs_seconds": 0.065,
+   "input_bytes": 67108864,
+   "problem_id": "L2/53_Gemm_Scaling_Hardtanh_GELU",
+   "process_seconds": 1.984
+  },
+  {
+   "cpu_forward_seconds": 1.152,
+   "get_inputs_seconds": 1.047,
+   "input_bytes": 1073741824,
+   "problem_id": "L2/54_Conv2d_Multiply_LeakyReLU_GELU",
+   "process_seconds": 3.77
+  },
+  {
+   "cpu_forward_seconds": 0.53,
+   "get_inputs_seconds": 0.021,
+   "input_bytes": 16777216,
+   "problem_id": "L2/55_Matmul_MaxPool_Sum_Scale",
+   "process_seconds": 6.766
+  },
+  {
+   "cpu_forward_seconds": 0.388,
+   "get_inputs_seconds": 0.018,
+   "input_bytes": 16777216,
+   "problem_id": "L2/56_Matmul_Sigmoid_Sum",
+   "process_seconds": 6.427
+  },
+  {
+   "cpu_forward_seconds": 0.461,
+   "get_inputs_seconds": 0.068,
+   "input_bytes": 67108864,
+   "problem_id": "L2/57_Conv2d_ReLU_HardSwish",
+   "process_seconds": 1.964
+  },
+  {
+   "cpu_forward_seconds": 0.911,
+   "get_inputs_seconds": 0.025,
+   "input_bytes": 25165824,
+   "problem_id": "L2/58_ConvTranspose3d_LogSumExp_HardSwish_Subtract_Clamp",
+   "process_seconds": 2.445
+  },
+  {
+   "cpu_forward_seconds": 0.402,
+   "get_inputs_seconds": 0.017,
+   "input_bytes": 16777216,
+   "problem_id": "L2/59_Matmul_Swish_Scaling",
+   "process_seconds": 6.375
+  },
+  {
+   "cpu_forward_seconds": 1.124,
+   "get_inputs_seconds": 0.025,
+   "input_bytes": 25165824,
+   "problem_id": "L2/60_ConvTranspose3d_Swish_GroupNorm_HardSwish",
+   "process_seconds": 2.723
+  },
+  {
+   "cpu_forward_seconds": 0.279,
+   "get_inputs_seconds": 0.132,
+   "input_bytes": 134217728,
+   "problem_id": "L2/61_ConvTranspose3d_ReLU_GroupNorm",
+   "process_seconds": 1.886
+  },
+  {
+   "cpu_forward_seconds": 0.121,
+   "get_inputs_seconds": 0.033,
+   "input_bytes": 33554432,
+   "problem_id": "L2/62_Matmul_GroupNorm_LeakyReLU_Sum",
+   "process_seconds": 1.887
+  },
+  {
+   "cpu_forward_seconds": 0.106,
+   "get_inputs_seconds": 0.034,
+   "input_bytes": 33554432,
+   "problem_id": "L2/63_Gemm_ReLU_Divide",
+   "process_seconds": 1.835
+  },
+  {
+   "cpu_forward_seconds": 0.104,
+   "get_inputs_seconds": 0.034,
+   "input_bytes": 33554432,
+   "problem_id": "L2/64_Gemm_LogSumExp_LeakyReLU_LeakyReLU_GELU_GELU",
+   "process_seconds": 1.894
+  },
+  {
+   "cpu_forward_seconds": 1.689,
+   "get_inputs_seconds": 0.6,
+   "input_bytes": 603979776,
+   "problem_id": "L2/65_Conv2d_AvgPool_Sigmoid_Sum",
+   "process_seconds": 3.905
+  },
+  {
+   "cpu_forward_seconds": 0.908,
+   "get_inputs_seconds": 0.261,
+   "input_bytes": 268435456,
+   "problem_id": "L2/67_Conv2d_GELU_GlobalAvgPool",
+   "process_seconds": 2.733
+  },
+  {
+   "cpu_forward_seconds": 0.083,
+   "get_inputs_seconds": 0.009,
+   "input_bytes": 8388608,
+   "problem_id": "L2/68_Matmul_Min_Subtract",
+   "process_seconds": 2.871
+  },
+  {
+   "cpu_forward_seconds": 0.277,
+   "get_inputs_seconds": 0.066,
+   "input_bytes": 67108864,
+   "problem_id": "L2/69_Conv2d_HardSwish_ReLU",
+   "process_seconds": 1.909
+  },
+  {
+   "cpu_forward_seconds": 0.138,
+   "get_inputs_seconds": 0.034,
+   "input_bytes": 33554432,
+   "problem_id": "L2/70_Gemm_Sigmoid_Scaling_ResidualAdd",
+   "process_seconds": 2.022
+  },
+  {
+   "cpu_forward_seconds": 0.283,
+   "get_inputs_seconds": 0.067,
+   "input_bytes": 67108864,
+   "problem_id": "L2/71_Conv2d_Divide_LeakyReLU",
+   "process_seconds": 1.844
+  },
+  {
+   "cpu_forward_seconds": 1.026,
+   "get_inputs_seconds": 0.026,
+   "input_bytes": 25165824,
+   "problem_id": "L2/72_ConvTranspose3d_BatchNorm_AvgPool_AvgPool",
+   "process_seconds": 2.551
+  },
+  {
+   "cpu_forward_seconds": 0.292,
+   "get_inputs_seconds": 0.068,
+   "input_bytes": 67108864,
+   "problem_id": "L2/73_Conv2d_BatchNorm_Scaling",
+   "process_seconds": 1.82
+  },
+  {
+   "cpu_forward_seconds": 0.277,
+   "get_inputs_seconds": 0.016,
+   "input_bytes": 16777216,
+   "problem_id": "L2/74_ConvTranspose3d_LeakyReLU_Multiply_LeakyReLU_Max",
+   "process_seconds": 1.708
+  },
+  {
+   "cpu_forward_seconds": 0.111,
+   "get_inputs_seconds": 0.034,
+   "input_bytes": 33554432,
+   "problem_id": "L2/75_Gemm_GroupNorm_Min_BiasAdd",
+   "process_seconds": 2.149
+  },
+  {
+   "cpu_forward_seconds": 0.11,
+   "get_inputs_seconds": 0.033,
+   "input_bytes": 33554432,
+   "problem_id": "L2/76_Gemm_Add_ReLU",
+   "process_seconds": 1.896
+  },
+  {
+   "cpu_forward_seconds": 0.417,
+   "get_inputs_seconds": 0.068,
+   "input_bytes": 67108864,
+   "problem_id": "L2/77_ConvTranspose3d_Scale_BatchNorm_GlobalAvgPool",
+   "process_seconds": 1.906
+  },
+  {
+   "cpu_forward_seconds": 1.136,
+   "get_inputs_seconds": 0.065,
+   "input_bytes": 67108864,
+   "problem_id": "L2/78_ConvTranspose3d_Max_Max_Sum",
+   "process_seconds": 2.837
+  },
+  {
+   "cpu_forward_seconds": 0.095,
+   "get_inputs_seconds": 0.025,
+   "input_bytes": 25165824,
+   "problem_id": "L2/79_Conv3d_Multiply_InstanceNorm_Clamp_Multiply_Max",
+   "process_seconds": 1.644
+  },
+  {
+   "cpu_forward_seconds": 0.132,
+   "get_inputs_seconds": 0.032,
+   "input_bytes": 33554432,
+   "problem_id": "L2/81_Gemm_Swish_Divide_Clamp_Tanh_Clamp",
+   "process_seconds": 1.896
+  },
+  {
+   "cpu_forward_seconds": 1.605,
+   "get_inputs_seconds": 0.266,
+   "input_bytes": 268435456,
+   "problem_id": "L2/82_Conv2d_Tanh_Scaling_BiasAdd_Max",
+   "process_seconds": 3.437
+  },
+  {
+   "cpu_forward_seconds": 0.12,
+   "get_inputs_seconds": 0.033,
+   "input_bytes": 33554432,
+   "problem_id": "L2/84_Gemm_BatchNorm_Scaling_Softmax",
+   "process_seconds": 1.891
+  },
+  {
+   "cpu_forward_seconds": 0.333,
+   "get_inputs_seconds": 0.064,
+   "input_bytes": 67108864,
+   "problem_id": "L2/85_Conv2d_GroupNorm_Scale_MaxPool_Clamp",
+   "process_seconds": 1.998
+  },
+  {
+   "cpu_forward_seconds": 0.11,
+   "get_inputs_seconds": 0.033,
+   "input_bytes": 33554432,
+   "problem_id": "L2/86_Matmul_Divide_GELU",
+   "process_seconds": 1.886
+  },
+  {
+   "cpu_forward_seconds": 1.589,
+   "get_inputs_seconds": 0.384,
+   "input_bytes": 268435456,
+   "problem_id": "L2/87_Conv2d_Subtract_Subtract_Mish",
+   "process_seconds": 3.65
+  },
+  {
+   "cpu_forward_seconds": 0.127,
+   "get_inputs_seconds": 0.034,
+   "input_bytes": 33554432,
+   "problem_id": "L2/88_Gemm_GroupNorm_Swish_Multiply_Swish",
+   "process_seconds": 1.921
+  },
+  {
+   "cpu_forward_seconds": 0.728,
+   "get_inputs_seconds": 0.025,
+   "input_bytes": 25165824,
+   "problem_id": "L2/89_ConvTranspose3d_MaxPool_Softmax_Subtract_Swish_Max",
+   "process_seconds": 2.235
+  },
+  {
+   "cpu_forward_seconds": 1.495,
+   "get_inputs_seconds": 0.263,
+   "input_bytes": 268435456,
+   "problem_id": "L2/90_Conv3d_LeakyReLU_Sum_Clamp_GELU",
+   "process_seconds": 3.532
+  },
+  {
+   "cpu_forward_seconds": 1.522,
+   "get_inputs_seconds": 0.13,
+   "input_bytes": 134217728,
+   "problem_id": "L2/91_ConvTranspose2d_Softmax_BiasAdd_Scaling_Sigmoid",
+   "process_seconds": 3.18
+  },
+  {
+   "cpu_forward_seconds": 0.524,
+   "get_inputs_seconds": 0.079,
+   "input_bytes": 67108864,
+   "problem_id": "L2/92_Conv2d_GroupNorm_Tanh_HardSwish_ResidualAdd_LogSumExp",
+   "process_seconds": 2.171
+  },
+  {
+   "cpu_forward_seconds": 1.309,
+   "get_inputs_seconds": 0.133,
+   "input_bytes": 134217728,
+   "problem_id": "L2/93_ConvTranspose2d_Add_Min_GELU_Multiply",
+   "process_seconds": 3.079
+  },
+  {
+   "cpu_forward_seconds": 0.13,
+   "get_inputs_seconds": 0.033,
+   "input_bytes": 33554432,
+   "problem_id": "L2/94_Gemm_BiasAdd_Hardtanh_Mish_GroupNorm",
+   "process_seconds": 1.955
+  },
+  {
+   "cpu_forward_seconds": 0.128,
+   "get_inputs_seconds": 0.033,
+   "input_bytes": 33554432,
+   "problem_id": "L2/95_Matmul_Add_Swish_Tanh_GELU_Hardtanh",
+   "process_seconds": 1.821
+  },
+  {
+   "cpu_forward_seconds": 0.832,
+   "get_inputs_seconds": 0.025,
+   "input_bytes": 25165824,
+   "problem_id": "L2/96_ConvTranspose3d_Multiply_Max_GlobalAvgPool_Clamp",
+   "process_seconds": 2.355
+  },
+  {
+   "cpu_forward_seconds": 0.125,
+   "get_inputs_seconds": 0.033,
+   "input_bytes": 33554432,
+   "problem_id": "L2/97_Matmul_BatchNorm_BiasAdd_Divide_Swish",
+   "process_seconds": 1.958
+  },
+  {
+   "cpu_forward_seconds": 0.103,
+   "get_inputs_seconds": 0.033,
+   "input_bytes": 33554432,
+   "problem_id": "L2/98_Matmul_AvgPool_GELU_Scale_Max",
+   "process_seconds": 1.881
+  },
+  {
+   "cpu_forward_seconds": 0.121,
+   "get_inputs_seconds": 0.033,
+   "input_bytes": 33554432,
+   "problem_id": "L2/99_Matmul_GELU_Softmax",
+   "process_seconds": 1.964
+  },
+  {
+   "cpu_forward_seconds": 4.104,
+   "get_inputs_seconds": 0.235,
+   "input_bytes": 226492416,
+   "problem_id": "L2/100_ConvTranspose3d_Clamp_Min_Divide",
+   "process_seconds": 5.867
+  }
+ ],
+ "schema": "q1-problem-cost-probe/1",
+ "threads": 12
+}

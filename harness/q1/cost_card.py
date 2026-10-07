@@ -416,6 +416,10 @@ def fit_item_costs(items: Iterable[Mapping[str, Any]]) -> dict[str, dict[str, An
     return fits
 
 
+def _s2_family(substrate_id: str) -> str:
+    return substrate_id.removeprefix("s2-").split("-L1-", 1)[0]
+
+
 def project_scoring(
     counts: Mapping[str, Any],
     fits: Mapping[str, Mapping[str, Any]],
@@ -424,26 +428,44 @@ def project_scoring(
     survival: float,
     seeds: int = SEEDS,
     mutant_seeds: int | None = None,
+    control_seeds: int | None = None,
+    scope: str = "all",
+    hack_fraction: float = 1.0,
 ) -> dict[str, Any]:
     """Stage 0 scoring GPU-seconds from per-problem kernel counts and the size model.
 
-    ``mutant_seeds`` (default ``seeds``) lets a trimming rule score mutants at
-    fewer replicates than substrates and controls."""
+    A trimming rule may score mutants (``mutant_seeds``) or controls
+    (``control_seeds``) at fewer replicates than substrates (``seeds``), restrict
+    the problems to the shared input-size class (``scope="shared"``: native inputs
+    below 1 GB), and score each hack-control kind on a deterministic fraction of
+    the substrates (``hack_fraction``). Every kernel scored keeps every gate."""
+    from harness.q1 import pilot
+
+    if scope not in {"all", "shared"}:
+        raise ValueError("scope must be all or shared")
     missing = [g for g in SCORING_GATES if g not in fits]
     alpha = sum(fits[g]["alpha"] for g in SCORING_GATES if g in fits)
     beta = sum(fits[g]["beta"] for g in SCORING_GATES if g in fits)
     mutant_seeds = seeds if mutant_seeds is None else mutant_seeds
-    seconds = Counter()
-    kernels = Counter()
+    control_seeds = seeds if control_seeds is None else control_seeds
+    seconds: Counter[str] = Counter()
+    kernels: Counter[str] = Counter()
     per_family: Counter[str] = Counter()
+    s1_units: set[str] = set()
+    s2_units: set[str] = set()
 
-    def add(role: str, problem_id: str, n: int, replicates: int) -> None:
+    def in_scope(exclusive: bool) -> bool:
+        return scope == "all" or not exclusive
+
+    def add(role: str, problem_id: str, n: float, replicates: int) -> None:
         if n <= 0:
             return
         kernels[role] += n
         seconds[role] += n * replicates * (alpha + beta * _gigabytes(problem_id))
 
     for row in counts["evaluation_substrates"]:
+        if not in_scope(row["exclusive"]):
+            continue
         by_family = row.get("cpu_distinct_by_family") or {}
         families = [f for f in MUTATION_FAMILIES if by_family.get(f)]
         sizes = [max(0, round(by_family[f] * survival)) for f in families]
@@ -452,22 +474,44 @@ def project_scoring(
             per_family[family] += k
         add("substrate", row["problem_id"], 1, seeds)
         add("mutant", row["problem_id"], sum(alloc), mutant_seeds)
-        add("hack-control", row["problem_id"], row["hack_controls"], seeds)
+        add("hack-control", row["problem_id"], row["hack_controls"] * hack_fraction, control_seeds)
+        if row["source_kind"] == "inductor":
+            s1_units.add(row["problem_id"])
+        else:
+            s2_units.add(_s2_family(row["substrate_id"]))
     for row in counts["identity_controls"]:
-        add("identity-control", row["problem_id"], 1, seeds)
-    add(
-        "adversarial-control",
-        "L1/1_Square_matrix_multiplication_",
-        int(counts.get("adversarial_controls", 3)),
-        seeds,
+        if in_scope(row["exclusive"]):
+            add("identity-control", row["problem_id"], 1, control_seeds)
+    fixed_controls = (
+        (
+            "adversarial-control",
+            "L1/1_Square_matrix_multiplication_",
+            int(counts.get("adversarial_controls", 3)),
+        ),
+        ("mutant-control", "L1/19_ReLU", int(counts.get("hack_emulating_mutant_controls", 5))),
     )
-    add("mutant-control", "L1/19_ReLU", int(counts.get("hack_emulating_mutant_controls", 5)), seeds)
+    for role, problem_id, n in fixed_controls:
+        if in_scope(pilot.exclusive_problem(problem_id)):
+            add(role, problem_id, n, control_seeds)
+    units = len(s1_units) + len(s2_units)
     return {
+        "rule": {
+            "scope": scope,
+            "cap": cap,
+            "substrate_seeds": seeds,
+            "mutant_seeds": mutant_seeds,
+            "control_seeds": control_seeds,
+            "hack_fraction": hack_fraction,
+        },
         "cap": cap,
         "seeds": seeds,
         "mutant_seeds": mutant_seeds,
-        "kernels": dict(kernels),
+        "kernels": {k: round(v, 1) for k, v in kernels.items()},
         "mutants_per_family": dict(per_family),
+        "n_eval_independent": units,
+        "frr_upper_bound_at_zero_rejections": None
+        if not units
+        else round(1 - 0.025 ** (1 / units), 4),
         "gpu_hours_by_role": {k: round(v / 3600, 3) for k, v in seconds.items()},
         "gpu_hours": round(sum(seconds.values()) / 3600, 3),
         "missing_gates": missing,
@@ -484,6 +528,7 @@ def bootstrap_projection(
     mutant_seeds: int | None = None,
     resamples: int = 1000,
     seed: int = 0,
+    **rule: Any,
 ) -> dict[str, float | None]:
     """Cluster bootstrap of the projection over pilot parent substrates (each with
     its mutants and controls), refitting the size model in each resample."""
@@ -500,9 +545,9 @@ def bootstrap_projection(
         sample = [i for _ in keys for i in clusters[rng.choice(keys)]]
         fits = fit_item_costs(sample)
         totals.append(
-            project_scoring(counts, fits, cap=cap, survival=survival, mutant_seeds=mutant_seeds)[
-                "gpu_hours"
-            ]
+            project_scoring(
+                counts, fits, cap=cap, survival=survival, mutant_seeds=mutant_seeds, **rule
+            )["gpu_hours"]
         )
     return {"low": _quantile(totals, 0.025), "high": _quantile(totals, 0.975)}
 
