@@ -101,12 +101,27 @@ def test_metadata_fetch_never_gets_a_gpu_or_overwrites_a_receipt() -> None:
         subprocess.run(["bash", "-n", str(path)], check=True)
 
 
+def _bash_major(env: dict[str, str]) -> int:
+    version = subprocess.run(
+        ["bash", "-c", "echo ${BASH_VERSINFO[0]}"],
+        env=env,
+        capture_output=True,
+        text=True,
+        check=True,
+    )
+    return int(version.stdout.strip())
+
+
 def test_metadata_fetch_validates_inputs_before_docker(tmp_path: Path) -> None:
     env = {
         "PATH": "/usr/bin:/bin",
         "COTCODEC_IMAGE_ID": "sha256:" + "a" * 64,
         "COTCODEC_MODEL_CACHE_ROOT": str(tmp_path),
     }
+    if _bash_major(env) < 4:
+        # macOS ships bash 3.2, whose regex engine rejects the cache-root bound
+        # {1,511} (above RE_DUP_MAX 255); the lane host runs bash 5.
+        pytest.skip("bash < 4 cannot compile the script's cache-root regex")
     unsafe = subprocess.run(["bash", str(FETCH), "../etc"], env=env, capture_output=True, text=True)
     assert unsafe.returncode == 2 and "unsafe" in unsafe.stderr
     no_slurm = subprocess.run(
