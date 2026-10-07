@@ -352,6 +352,10 @@ def main(argv):
         raise SystemExit("mode must be pre, post, check or warmup")
     result["mode"] = mode
     result["elapsed_s"] = round(time.time() - started, 4)
+    # The guest server that ran this script (/execute): a different id after the entry than
+    # before it means the server restarted during the entry (its systemd unit restarts it on
+    # failure and stops every process it launched; development run 622).
+    result["server_pid"] = os.getppid()
     print(json.dumps(result, sort_keys=True))
 
 

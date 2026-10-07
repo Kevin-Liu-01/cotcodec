@@ -19,7 +19,7 @@ Frozen with this file (SHA-256 of the committed bytes):
 
 | File | SHA-256 |
 |---|---|
-| `harness/q2/vm/guest/l0_fixed.py` | `1af2bd76cefe4e63d55e803fe65a4a0804572e59c328be246074995fa88a7200` |
+| `harness/q2/vm/guest/l0_fixed.py` | `7f8bed98ad22eee662d92d5422ee564d80459645d2e0c58bb6f3df74a94425f1` |
 | `harness/q2/action_path/executor.py` | `d5c43bbb76926da056c15a39ddcbf05e1c328bd7dddb6a726cde3c46c2f9776a` |
 | `harness/q2/action_path/adapters.py` | `3a62eb109d656a717dfe9cbce31fba3bcf02457e9f5690f3e20639e8becbaf40` |
 | `harness/q2/action_path/upstream/osworld_bfd62bdc_fixed.py` | `9558b956004f6c971e881f073c42792e3d5d437396dbe6c0b407b250df3d8fdf` |
@@ -37,11 +37,11 @@ Frozen with this file (SHA-256 of the committed bytes):
 | `scripts/render_q2_action_path_manifest.py` | `bc56bf3f5e57f8270da62bef1a2e3261a16c4bf40b63c1fe74a37bf5ca52ed2e` |
 | `experiments/manifests/q2-action-path/dev-l0-fixed-v10.yaml` | `0a4f908e67631483687740cfba3266b829f3c5d2577b08b676a5fa022186ad92` |
 | `harness/q2/vm/guest/probe.py` | `ba5c0f1d364c80d5f8190f3c357b915cd504d754891285c3772ba959a804efeb` |
-| `harness/q2/vm/guest/guard.py` | `595fce1fa164c8fce868690b1853706ac6fa4761f0d15f41ac5cc0c3804224c5` |
+| `harness/q2/vm/guest/guard.py` | `0ef7e2e6d5025e4937b0611a9c33e7ff8776428aad04338015ea287917f7ca62` |
 | `harness/q2/vm/guest/canary.py` | `32742019db56b4f09905c50c71159c2ef3fe024a044d07f4bffb31cd41fcea1e` |
 | `harness/q2/vm/marker.py` | `b786b347fc5573425f14090bd67621294ac5c84671bf67f47e663d693ab17fb9` |
 | `harness/q2/vm/canary_run.py` | `295bdd0916869adf79015bc6da6cba4aff2a0ab9f0dab089e4ed3a3565abb119` |
-| `harness/q2/vm/suite.py` | `ef3b23c6c671d94a460b962aa2924a534bff749ecec4f33ff13d92e0d4e5edf6` |
+| `harness/q2/vm/suite.py` | `fdf71cce160194d3ca8dfbe0cd5e3d5bc414d2864084cab330d4ad0343ebe11e` |
 | `harness/q2/vm/desktop.py` | `67030d6b5d79753e2db65b33bc12af2b5faaee2eacbaa5e49b4eb2de0a31c188` |
 | `harness/q2/vm/runner.py` | `14e7ae59e3abe9afd9d4cbd0464811b82cba8710cea034c9fed8c622e07f7c9c` |
 | `harness/q2/vm/driver.py` | `5afb36ec8a31f749d0275c5909f2c22a858c05f48d6c289ff1560ed0b0bf7a4e` |
@@ -76,8 +76,11 @@ waits until GNOME Shell (the compositor) answers a D-Bus property read twice
 within 50 ms, since it repaints nothing while it rebuilds its keymap. Every
 action but `wait` then ends in four steps: the same D-Bus round trip (the
 shell has processed the action's events); an XDamage `DamageAdd` of each
-viewable top-level window's full area, so the compositor repaints every window
-from its current contents (the XFixes region requests and `DamageAdd` are
+viewable InputOutput top-level window's full area, so the compositor repaints
+every window from its current contents (InputOnly windows have no contents,
+and `DamageAdd` on one is a `BadMatch` error that the X server reported on
+almost every action of runs 545-632 until they were skipped; the XFixes region
+requests and `DamageAdd` are
 encoded from the protocol specifications, and a nudge that cannot be sent
 fails the action); a wait until the root window's image (read every 50 ms, as
 `/screenshot` reads it) has been unchanged for 0.25 s; at least 0.1 s

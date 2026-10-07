@@ -400,3 +400,36 @@ def test_l0_fixed_segments_and_burst_allocation_never_reuse_a_keycode(tmp_path):
             keycode, _ = executor.pool.allocate(l0_fixed.char_keysym(ch), protected)
             protected.add(keycode)
     assert protected == {200, 201, 202}
+
+
+def test_observation_types_infrastructure_failures_and_retries():
+    from harness.q2.vm import desktop
+    from harness.q2.vm.suite import observation
+
+    end = {"ok": True, "seq": 3, "crc": 1, "events": [], "text": "", "state": {}}
+    trial = {
+        "pre": {"server_pid": 101},
+        "post": {"server_pid": 101, "end": end},
+        "steps": [{"infra": [], "retried": ["accessibility"]}],
+        "marker": {"ok": True, "seq": 3, "crc": 1},
+    }
+    obs = observation(trial, [], {"unverified": []})
+    assert obs["infra"] == [] and obs["retried"] == ["accessibility"]
+    # The guest server restarted during the entry (systemd's restart stops what it launched).
+    restarted = copy.deepcopy(trial)
+    restarted["post"]["server_pid"] = 202
+    assert "guest_server_restart" in observation(restarted, [], {"unverified": []})["infra"]
+    # Observation failures follow section 6.1: only an observation never delivered fails.
+    step = {
+        "execute": {"ok": True, "attempts": [{"status": 200, "elapsed_s": 0.1}]},
+        "screenshot_attempts": [{"status": 500}, {"status": 200, "bytes": 10}],
+        "screenshot_ok": True,
+        "accessibility_attempts": [{"error": "refused"}, {"status": 200}],
+        "accessibility_bytes": 5,
+    }
+    assert desktop.infra_failures(step, a11y=True) == []
+    assert desktop.observation_retries(step, a11y=True) == ["screenshot", "accessibility"]
+    lost = dict(step, screenshot_ok=False, accessibility_bytes=None)
+    assert desktop.infra_failures(lost, a11y=True) == ["screenshot", "accessibility"]
+    slow = dict(step, execute={"ok": True, "attempts": [{"status": 200, "elapsed_s": 31.0}]})
+    assert desktop.infra_failures(slow, a11y=False) == ["execute"]
