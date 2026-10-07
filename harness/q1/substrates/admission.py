@@ -1156,6 +1156,13 @@ def corpus_manifest(root: Path, split_path: Path | None = None) -> dict[str, Any
                 row["substrate_id"]: row
                 for row in json.loads(file.read_text(encoding="utf-8"))["rows"]
             }
+    gpu: dict[str, dict[str, str]] = {}
+    hook_rows = root / "admission_hook.jsonl"
+    if hook_rows.exists():
+        for line in hook_rows.read_text(encoding="utf-8").splitlines():
+            if line.strip():
+                row = json.loads(line)
+                gpu.setdefault(row["kernel_id"], {})[row["config_id"]] = row["verdict"]
     rows = []
     for path in sorted(p for p in root.iterdir() if (p / "substrate.json").exists()):
         substrate = json.loads((path / "substrate.json").read_text(encoding="utf-8"))
@@ -1173,6 +1180,24 @@ def corpus_manifest(root: Path, split_path: Path | None = None) -> dict[str, Any
             half = "evaluation"
         else:
             half = "excluded"
+        verdicts = {name: checks[name].get(path.name, {}).get("verdict") for name in checks}
+        hook = gpu.get(path.name, {})
+        hook_ok = bool(hook) and all(
+            hook.get(f"native-seed42-{mode}") == "accept"
+            for mode in ("inference_mode", "enable_grad")
+        )
+        native = verdicts.get("check_compile_native")
+        native_ok = native == "pass" or (
+            native == "error"
+            and "meta tensors" in str(checks["check_compile_native"][path.name].get("reason"))
+        )
+        interp_ok = substrate["source_kind"] != "inductor" or verdicts.get("check_interp") != "fail"
+        admitted = (
+            verdicts.get("check_static") == "pass" and native_ok and interp_ok and hook_ok
+            if hook
+            else None
+        )
+        family = build.get("source_kernel_family") or f"inductor:{problem_id}"
         rows.append(
             {
                 "substrate_id": substrate["substrate_id"],
@@ -1183,13 +1208,20 @@ def corpus_manifest(root: Path, split_path: Path | None = None) -> dict[str, Any
                 "source_license": substrate["source_license"],
                 "kernel_sha256": sha256_file(path / "kernel.py"),
                 "triton_coverage": build.get("triton_coverage"),
-                "source_kernel_family": build.get("source_kernel_family"),
+                "source_kernel_family": family,
                 "split_half": half,
-                **{name: checks[name].get(path.name, {}).get("verdict") for name in checks},
+                **verdicts,
+                "admission_hook": hook or None,
+                "admitted": admitted,
             }
         )
     summary: dict[str, Any] = {"substrates": len(rows)}
-    for key in ("source_kind", "split_half", *checks):
+    admitted_eval = [r for r in rows if r["admitted"] and r["split_half"] == "evaluation"]
+    summary["n_eval_independent"] = (
+        len({r["source_kernel_family"] for r in admitted_eval}) if gpu else None
+    )
+    summary["admitted"] = sum(1 for r in rows if r["admitted"]) if gpu else None
+    for key in ("source_kind", "split_half", "triton_coverage", *checks):
         counts: dict[str, int] = {}
         for row in rows:
             counts[str(row.get(key))] = counts.get(str(row.get(key)), 0) + 1

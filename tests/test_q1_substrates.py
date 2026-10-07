@@ -472,3 +472,54 @@ def test_problem_file_accepts_both_layouts(tmp_path: Path) -> None:
     assert sources.problem_file(tmp_path / "b", "L1/19_ReLU").parent == flat
     with pytest.raises(FileNotFoundError):
         sources.problem_file(tmp_path / "b", "L1/20_LeakyReLU")
+
+
+def test_admission_manifest_validates_once_hashes_are_filled() -> None:
+    import yaml
+
+    from scripts import submit_docker_research_job as submitter
+
+    path = Path(__file__).resolve().parents[1] / "experiments/manifests/q1-substrate-admission.yaml"
+    raw = yaml.safe_load(path.read_text(encoding="utf-8"))
+    with pytest.raises(ValueError):
+        submitter.validate_manifest(dict(raw), verify_claim_files=False)
+    raw["git_sha"] = "a" * 40
+    raw["source_sha256"] = "b" * 64
+    manifest = submitter.validate_manifest(raw, verify_claim_files=False)
+    assert manifest["model"] == {"kind": "none", "reason": raw["model"]["reason"]}
+    assert manifest["randomness_contract"] == "deterministic" and manifest["seeds"] == []
+    assert manifest["gpus"] == 1 and manifest["max_gpu_hours"] <= 1.5
+    assert manifest["command"][4:6] == ["scripts/q1_build_substrates.py", "admission-job"]
+
+
+def test_manifest_counts_independent_evaluation_kernels(tmp_path: Path) -> None:
+    converted = convert_record(load("L1__19_ReLU"))
+    directory = write_substrate(tmp_path, converted)
+    (tmp_path / "check_static.json").write_text(
+        json.dumps({"rows": [admission.static_check(directory)]}), encoding="utf-8"
+    )
+    (tmp_path / "check_compile_native.json").write_text(
+        json.dumps({"rows": [{"substrate_id": directory.name, "verdict": "pass"}]}),
+        encoding="utf-8",
+    )
+    rows = [
+        schema.make_verdict_row(
+            kernel_id=directory.name,
+            gate="admission_hook",
+            config_id=f"native-seed42-{mode}",
+            verdict="accept",
+            tf32_policy="torch-default",
+        )
+        for mode in ("inference_mode", "enable_grad")
+    ]
+    (tmp_path / "admission_hook.jsonl").write_text(
+        "".join(schema.dump_verdict_row(row) for row in rows), encoding="utf-8"
+    )
+    split_path = tmp_path / "split.json"
+    result = split.calibration_split(["L1/19_ReLU"])
+    split_path.write_text(json.dumps(result), encoding="utf-8")
+    manifest = admission.corpus_manifest(tmp_path, split_path)
+    row = manifest["rows"][0]
+    assert row["admitted"] is True
+    expected = 1 if row["split_half"] == "evaluation" else 0
+    assert manifest["summary"]["n_eval_independent"] == expected

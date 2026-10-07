@@ -25,8 +25,8 @@ name: q1-substrate-admission
 # cotcodec-research:0b3ecef0-architecture (repo digest sha256:02965f3d...), torch
 # 2.11.0+cu128, Triton 3.6.0: the image the CPU dry run and mock codegen used.
 image_id: sha256:3804466639c13f132be4b0369de4d3395b9d5ea2d3dc100cd38884c75197fe29
-git_sha: FILL-integration-commit-sha
-source_sha256: FILL-source-capsule-sha256
+git_sha: "FILL-integration-commit-sha"
+source_sha256: "FILL-source-capsule-sha256"
 run_root: /home/kevin/cotcodec-runs/stage0/q1-substrates/runs
 resources:
   gpu_type: h100
