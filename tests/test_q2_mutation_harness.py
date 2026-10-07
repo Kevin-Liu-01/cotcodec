@@ -397,24 +397,47 @@ def test_parse_execute_variants() -> None:
 
 def test_audit_sample_strata_probabilities_and_shams() -> None:
     cands = [
-        raters.Candidate(f"m{i}", f"t{i % 5}", "should_fail_violation", "fail") for i in range(300)
+        raters.Candidate(f"m{i}", f"t{i % 5}", "should_pass_equiv", "pass") for i in range(300)
     ]
     cands += [
         raters.Candidate(f"d{i}", f"t{i % 5}", "should_pass_equiv", "fail") for i in range(10)
     ]
     cands += [raters.Candidate(f"a{i}", "t1", "should_pass_alt_solution", "pass") for i in range(3)]
     cands += [raters.Candidate("e0", "t1", "should_pass_equiv", "error")]
+    # Violations are a census whatever the verdict, up to the cap of 200.
+    cands += [
+        raters.Candidate(f"v{i}", f"t{i % 7}", "should_fail_violation", "pass" if i % 4 else "fail")
+        for i in range(250)
+    ]
     sample = raters.draw_audit_sample(cands, seed=42)
     by = {}
     for item in sample:
         by.setdefault(item.stratum, []).append(item)
     assert len(by["alt_solution"]) == 3 and by["alt_solution"][0].inclusion_probability == 1.0
+    assert len(by["violation"]) == 200
+    assert by["violation"][0].inclusion_probability == pytest.approx(200 / 250)
     assert len(by["disagreement"]) == 10
     assert len(by["agreement"]) == 100
     assert by["agreement"][0].inclusion_probability == pytest.approx(100 / 300)
-    assert len(by["sham"]) == 10  # ceil(10% of 113) = 12, capped at 2 per task
+    assert len(by["sham"]) == 14  # ceil(10% of 313) = 32, capped at 2 per task (7 tasks)
     assert all(item.mutant_id != "e0" for item in sample)
     assert raters.draw_audit_sample(cands, seed=42) == sample
+
+
+def test_violation_census_weights_every_violation_once() -> None:
+    """At the expected confirm size every violation is audited at weight 1."""
+    verdicts = ["pass"] * 9 + ["fail"] * 79
+    cands = [
+        raters.Candidate(f"v{i}", f"t{i % 17}", "should_fail_violation", verdict)
+        for i, verdict in enumerate(verdicts)
+    ]
+    cands += [
+        raters.Candidate(f"e{i}", f"u{i % 59}", "should_pass_equiv", "pass") for i in range(236)
+    ]
+    sample = raters.draw_audit_sample(cands, seed=42)
+    violations = [s for s in sample if s.stratum == "violation"]
+    assert len(violations) == 88 and {s.inclusion_probability for s in violations} == {1.0}
+    assert not any(s.mutant_id.startswith("v") and s.stratum != "violation" for s in sample)
 
 
 def test_packets_are_blind() -> None:
@@ -549,7 +572,14 @@ def test_first_token_rule(text: str | None, answer: str, status: str) -> None:
 
 
 def test_non_answers_map_to_unsure() -> None:
-    for outcome in ("refusal", "timeout", "transport_exhausted", "request_rejected", "unrated"):
+    for outcome in (
+        "refusal",
+        "timeout",
+        "transport_exhausted",
+        "request_rejected",
+        "malformed_response",
+        "unrated",
+    ):
         assert raters.answer_for(outcome, "accept") == ("unsure", outcome)
     assert raters.answer_for("ok", "reject because") == ("reject", "ok")
     with pytest.raises(ValueError, match="unknown call outcome"):
@@ -571,7 +601,7 @@ def test_audit_pool_and_sampler_add_p1_flips() -> None:
     assert [c.mutant_id for c in pool] == ["m1", "m4"]
     sample = raters.draw_audit_sample(pool, p1_flip_tasks=["t9", "t9"])
     strata = {s.mutant_id: s.stratum for s in sample}
-    assert strata["m1"] == "agreement" and strata["m4"] == "disagreement"
+    assert strata["m1"] == "agreement" and strata["m4"] == "violation"
     assert strata["t9__p1_flip"] == "p1_flip"
     assert sum(1 for s in sample if s.stratum == "sham") == 1
 

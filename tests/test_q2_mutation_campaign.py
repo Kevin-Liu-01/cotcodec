@@ -764,6 +764,39 @@ def test_report_counts_escapes_flips_and_probe_cells() -> None:
     assert summary["rates_exploratory"]["FP_R"]["pooled"]["rate"] == 0.5
     assert summary["task_escape"] == {"tasks": 2, "with_escape": 1}
     assert summary["venv_disagreements"] == [rows[0]["mutant_id"]]
+    assert summary["s5_unstable_at_repeat_5"] == {"lock": [], "scout": []}
+
+    # S1 candidate rescored five times per venv (dependency_flips.py): the lock
+    # venv's five scorings disagree, so it was scored nondeterministically and
+    # leaves P2-P5 as S5 (``nondeterministic``), like a repeat-2 disagreement.
+    # The null mutant of t2 agrees five times on a verdict other than its first
+    # two scorings, so every mutant of that target is nondeterministic too.
+    s1 = {
+        "lock": {
+            rows[0]["mutant_id"]: {"repeat_scores": [1.0, 1.0, 0.0, 1.0, 1.0]},
+            f"{t2}__null": {"repeat_scores": [0.0] * 5, "repeat_errors": [None] * 5},
+        },
+        "scout": {rows[0]["mutant_id"]: {"repeat_scores": [0.0] * 5}},
+    }
+    outcomes, summary = campaign.build_report(
+        rows,
+        admission,
+        recheck,
+        {"lock": lock, "scout": scout},
+        {},
+        saved,
+        probe_cells,
+        s1_notes=s1,
+        n_boot=200,
+    )
+    status = {o["mutant_id"]: (o["lock_status"], o["scout_status"]) for o in outcomes}
+    assert status[rows[0]["mutant_id"]] == ("nondeterministic", "evaluable")
+    assert status[rows[1]["mutant_id"]] == ("evaluable", "evaluable")
+    assert status[rows[2]["mutant_id"]][0] == "nondeterministic"
+    assert summary["s5_unstable_at_repeat_5"]["lock"] == sorted(
+        [rows[0]["mutant_id"], f"{t2}__null"]
+    )
+    assert summary["s5_unstable_at_repeat_5"]["scout"] == []
 
 
 def test_mutation_jobs_place_the_other_gold_files(tmp_path: Path) -> None:

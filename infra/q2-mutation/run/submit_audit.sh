@@ -2,9 +2,15 @@
 # Submit the CPU-only audit packet job of one scored mutation run on the H100
 # host (LO-VM image: the VM's LibreOffice renders the pages):
 #   1. harness.q2_mutation.audit sample: candidate pool, stratified sample,
-#      shams, every P1 flip of the control run, Kevin's spot-check list;
-#   2. harness.q2_mutation.audit packets: one blind packet per item, sharded so
-#      each shard fits a lane study artifact (the open-weight rater's input).
+#      shams, every P1 flip of the control run, Kevin's spot-check list, and
+#      the saved-baseline jobs (each target's starting files, the target file
+#      as the build saved it through uno_apply.py);
+#   2. reach.sh on the baseline jobs: the same GUI-faithful save stage the
+#      mutants went through, so a packet's difference is against the saved
+#      starting file and the save's own changes are not shown as edits;
+#   3. harness.q2_mutation.audit packets: one blind packet per item, fitted to
+#      the registered token budget and sharded so each shard fits a lane study
+#      artifact (the open-weight rater's input).
 # sample.jsonl (labels, verdicts) stays on the host next to the packets and is
 # never mounted into a rater job. GPU-less, network-less (q2-mutation-cpu.sbatch).
 #
@@ -49,7 +55,11 @@ argv=$(hex sh -c "cd /src && python3 -m harness.q2_mutation.audit sample --run /
      --sanitized /src/program/evidence/q2-mutation/sanitized-tasks \
      --file-cache /inputs/file_cache_1e112283/files --out /out \
      --path-map /ro/build/=/ro/mut/build/ \
+  && mkdir -p /out/baseline \
+  && /src/infra/q2-mutation/run/reach.sh /out/baseline-jobs.jsonl /out/baseline ${workers} \
   && python3 -m harness.q2_mutation.audit packets --items /out/items.jsonl \
+     --baseline-jobs /out/baseline-jobs.jsonl \
+     --baseline-rows \$(ls /out/baseline/reachability-*.jsonl) \
      --sanitized /src/program/evidence/q2-mutation/sanitized-tasks --out /out/packets \
      --workers ${workers}")
 job=$(sbatch --parsable --cpus-per-task="${workers}" --mem=64G --time=03:00:00 \

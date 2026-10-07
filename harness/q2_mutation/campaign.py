@@ -1180,6 +1180,7 @@ def build_report(
     *,
     excluded: Sequence[Mapping[str, Any]] = (),
     scoring_jobs: Sequence[Mapping[str, Any]] = (),
+    s1_notes: Mapping[str, Mapping[str, Mapping[str, Any]]] | None = None,
     primary: str = "lock",
     seed: int = 42,
     n_boot: int = 10_000,
@@ -1189,7 +1190,14 @@ def build_report(
     ``excluded`` are the jobs ``merge`` left out because their save stage
     failed; ``scoring_jobs`` (the build's job list) names the null mutant of
     a target whose own save failed, which ``saved_jobs`` no longer holds.
+    ``s1_notes`` are the notes of the five-scoring S1 rescoring per venv
+    (``dependency_flips.py``): a candidate whose five scorings in a venv
+    disagree, or agree on a verdict other than its first two scorings', was
+    scored nondeterministically in that venv, so it is ``nondeterministic``
+    (S5) under that venv like any candidate whose repeated scorings disagree
+    (it and its target's mutants, when it is the null mutant), never evaluable.
     """
+    from harness.q2_mutation.dependency_flips import stable_verdict
     from harness.q2_mutation.stats import Unit, minimum_detectable_rate
 
     adm = {a["mutant_id"]: a for a in admission}
@@ -1203,6 +1211,12 @@ def build_report(
     saved_via = {job["mutant_id"]: job.get("saved_via") for job in saved_jobs}
     save_failed_ids = {row["mutant_id"] for row in excluded if row.get("mutant_id")}
     arms = sorted(verdicts)
+    s1_unstable: dict[str, set[str]] = {arm: set() for arm in arms}
+    for arm, rescored in (s1_notes or {}).items():
+        for mutant, note in rescored.items():
+            first = verdicts.get(arm, {}).get(mutant, {}).get("verdict")
+            if stable_verdict(note) != first:
+                s1_unstable.setdefault(arm, set()).add(mutant)
 
     def save_failed(mutant: str | None) -> bool:
         return bool(mutant) and (mutant in save_failed_ids or unsaved_office(saved.get(mutant)))
@@ -1243,7 +1257,12 @@ def build_report(
             null_verdict = verdicts[arm].get(null) if null else None
             note = notes.get(arm, {}).get(mutant_id, {})
             null_note = notes.get(arm, {}).get(null, {}) if null else {}
-            unstable = bool(note.get("nondeterministic")) or bool(null_note.get("nondeterministic"))
+            unstable = (
+                bool(note.get("nondeterministic"))
+                or bool(null_note.get("nondeterministic"))
+                or mutant_id in s1_unstable.get(arm, set())
+                or (null is not None and null in s1_unstable.get(arm, set()))
+            )
             status, event = classify(
                 record["label"],
                 a["admitted"],
@@ -1272,6 +1291,7 @@ def build_report(
             {"mutant_id": row.get("mutant_id"), "kind": row.get("kind")}
             for row in sorted(excluded, key=lambda r: str(r.get("mutant_id")))
         ],
+        "s5_unstable_at_repeat_5": {arm: sorted(ids) for arm, ids in s1_unstable.items()},
         "unemulated_tasks": sorted(
             {
                 r["task_id"]
@@ -1480,6 +1500,7 @@ def cmd_report(args: argparse.Namespace) -> int:
         probe_touched_cells(probe),
         excluded=read_jsonl(excluded_path) if excluded_path.is_file() else [],
         scoring_jobs=read_jsonl(scoring_path) if scoring_path.is_file() else [],
+        s1_notes={arm: _notes(run / f"mut-s1-notes-{arm}.jsonl") for arm in verdicts},
         n_boot=args.n_boot,
     )
     s1 = run / "mut-s1.json"

@@ -12,12 +12,15 @@ the runner.
 GPU caps (preregistration section 9): the whole confirmatory audit, every
 shard and any rerun together, at most ``AUDIT_GPU_HOURS``; a development
 smoke at most ``SMOKE_GPU_HOURS``. This script refuses a manifest whose
-allocation exceeds the cap it is given or a cap above the registered one.
+allocation exceeds the cap it is given or a cap above the registered one,
+and, with ``--prior-gpu-hours`` (the allocations of the audit's earlier
+shards and reruns), a manifest that would take the audit's total over its
+registered cap.
 
 Usage: render_rater_manifest.py --name ... --image-id sha256:... --git-sha ...
          --source-sha256 ... --packets <host path> --packets-revision <sha>
          --run-root <host dir> --minutes N --max-gpu-hours X --kind smoke|audit
-         --out manifest.yaml
+         [--prior-gpu-hours Y] --out manifest.yaml
 """
 
 from __future__ import annotations
@@ -52,6 +55,13 @@ def manifest(args: argparse.Namespace) -> dict[str, object]:
         raise SystemExit(f"{args.kind} jobs are capped at {cap} GPU-h")
     if args.minutes / 60 > args.max_gpu_hours:
         raise SystemExit("the allocation exceeds the job's GPU-hour cap")
+    if args.prior_gpu_hours < 0:
+        raise SystemExit("--prior-gpu-hours cannot be negative")
+    if args.prior_gpu_hours + args.max_gpu_hours > cap + 1e-9:
+        raise SystemExit(
+            f"earlier shards and reruns ({args.prior_gpu_hours} GPU-h) plus this job "
+            f"({args.max_gpu_hours} GPU-h) exceed the {args.kind} cap of {cap} GPU-h"
+        )
     packets = Path(args.packets)
     digest = sha256_file(packets)
     return {
@@ -115,6 +125,12 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--minutes", type=int, required=True)
     parser.add_argument("--max-gpu-hours", type=float, required=True)
     parser.add_argument("--kind", choices=["smoke", "audit"], required=True)
+    parser.add_argument(
+        "--prior-gpu-hours",
+        type=float,
+        default=0.0,
+        help="GPU-hour caps of this audit's earlier shard and rerun jobs (all count)",
+    )
     parser.add_argument("--out", type=Path, required=True)
     args = parser.parse_args(argv)
     data = manifest(args)

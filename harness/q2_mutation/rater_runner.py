@@ -22,6 +22,22 @@ Two raters answer every audit packet once (``raters.RATERS``):
     vLLM's own parsers accept the engine argv and the request payload.
 ``models`` (anthropic)
     Record the Anthropic model object only.
+``export-harness`` / ``ingest-harness`` (decision D25: the Claude rater through
+the Claude Code agent harness while no valid API key exists)
+    ``export-harness`` writes one blind file per item (``<item>.txt``: the
+    fixed rater instructions and the packet's parts in ``packet_parts``
+    order, each page image named by its file) with its page images
+    (``<item>.pages/``), and ``index.json``, the item ids only, in the rater's
+    seeded order. Nothing else goes into that directory; the export manifest
+    (digests of every exported file and of the request body rebuilt from the
+    packet) is written beside it. ``ingest-harness`` reads the external
+    rater's JSON list of ``{item_id, answer, reason, model_id}``, applies the
+    registered first-token rule to ``answer``, refuses an item outside the
+    export, a second record for an item and a model id other than
+    ``ANTHROPIC["model"]``, and writes ``calls.jsonl`` in the shared call
+    schema plus ``receipt.json``, with the SHA-256 of every exported file, of
+    the answers file and of each record. Sampling cannot be fixed on this
+    path; the receipt says so.
 
 Rules shared by both raters (preregistration section 9):
 
@@ -31,10 +47,14 @@ Rules shared by both raters (preregistration section 9):
   409, 429, 500, 502, 503, 504, 529), at most ``MAX_TRANSPORT_RETRIES``;
   after the last one the item is ``transport_exhausted``;
 * the answer is the first word of the reply (``raters.parse_first_token``); a
-  refusal, an empty or unparseable reply, a timeout, an exhausted transport
-  or a request the provider rejected (HTTP 400 or 413, for example a packet
-  over the context window) is ``unsure``; an authentication, permission or
-  unknown-model error stops the run instead (nothing is rated);
+  refusal, an empty or unparseable reply, a timeout, an exhausted transport,
+  a request the provider rejected (HTTP 400 or 413, for example a packet
+  over the context window) or a 200 response whose body is not the
+  provider's JSON (``malformed_response``, for example a proxy error page;
+  its bytes are saved and hashed like any response) is ``unsure``; an
+  authentication, permission or unknown-model error stops the run instead
+  (nothing is rated);
+* ``receipt.json`` is written however the run ends (``try``/``finally``);
 * every request and response is hashed: ``request_sha256`` is the SHA-256 of
   the exact bytes sent, ``body_sha256`` of the canonical request body (which
   ``request_body`` rebuilds from the packet), ``response_sha256`` of the
@@ -327,7 +347,8 @@ class Attempt:
 
 @dataclass
 class Reply:
-    outcome: str  # ok | refusal | empty | request_rejected | timeout | transport_exhausted
+    # ok | refusal | request_rejected | timeout | transport_exhausted | malformed_response
+    outcome: str
     text: str | None = None
     model: str | None = None
     stop_reason: str | None = None
@@ -367,13 +388,29 @@ def call_with_retries(
     return attempt, log
 
 
+def _json_object(data: bytes) -> dict[str, Any] | None:
+    """The response body as a JSON object, or None when it is not one."""
+    try:
+        body = json.loads(data)
+    except (ValueError, UnicodeDecodeError):
+        return None
+    return body if isinstance(body, dict) else None
+
+
+def malformed(error: str) -> Reply:
+    return Reply("malformed_response", extra={"error": error})
+
+
 def anthropic_reply(attempt: Attempt) -> Reply:
     if is_transport(attempt):
         return Reply("timeout" if attempt.timeout else "transport_exhausted")
     if attempt.status != 200 or attempt.response_bytes is None:
         return Reply("request_rejected", extra={"status": attempt.status})
-    body = json.loads(attempt.response_bytes)
-    texts = [b.get("text", "") for b in body.get("content", []) if b.get("type") == "text"]
+    body = _json_object(attempt.response_bytes)
+    if body is None or not isinstance(body.get("content", []), list):
+        return malformed("the 200 response body is not a Messages API JSON object")
+    blocks = [b for b in body.get("content", []) if isinstance(b, dict)]
+    texts = [str(b.get("text", "")) for b in blocks if b.get("type") == "text"]
     stop = body.get("stop_reason")
     reply = Reply(
         "ok",
@@ -393,12 +430,18 @@ def openai_reply(attempt: Attempt) -> Reply:
         return Reply("timeout" if attempt.timeout else "transport_exhausted")
     if attempt.status != 200 or attempt.response_bytes is None:
         return Reply("request_rejected", extra={"status": attempt.status})
-    body = json.loads(attempt.response_bytes)
-    choice = (body.get("choices") or [{}])[0]
-    message = choice.get("message") or {}
+    body = _json_object(attempt.response_bytes)
+    choices = body.get("choices") if body is not None else None
+    if body is None or not isinstance(choices, list) or not choices:
+        return malformed("the 200 response body is not a chat completion JSON object")
+    choice = choices[0] if isinstance(choices[0], dict) else {}
+    message = choice.get("message") if isinstance(choice.get("message"), dict) else {}
+    content = message.get("content")
+    if content is not None and not isinstance(content, str):
+        return malformed("the reply content is not a string")
     return Reply(
         "ok",
-        text=message.get("content"),
+        text=content,
         model=body.get("model"),
         stop_reason=choice.get("finish_reason"),
         usage=body.get("usage"),
@@ -456,12 +499,66 @@ def read_calls(path: Path) -> dict[str, dict[str, Any]]:
 
 def answers(calls_path: Path, item_ids: Iterable[str]) -> dict[str, tuple[str, str]]:
     """(answer, status) per item; an item without a call record is ``unrated`` (unsure)."""
-    calls = read_calls(calls_path)
+    return merged_answers([calls_path], item_ids, strict=False)
+
+
+def merge_calls(paths: Sequence[Path], rater_id: str | None = None) -> dict[str, dict[str, Any]]:
+    """The call records of one rater over its shards (one ``calls.jsonl`` per shard).
+
+    Shards hold disjoint items, so an item with records in two shards breaks
+    "one call per rater per item" and is refused, as is a record of another
+    rater.
+    """
+    merged: dict[str, dict[str, Any]] = {}
+    origin: dict[str, str] = {}
+    for path in paths:
+        for item_id, row in read_calls(path).items():
+            if rater_id is not None and row.get("rater_id", rater_id) != rater_id:
+                raise SystemExit(f"{path}: record of {row.get('rater_id')}, not {rater_id}")
+            if item_id in merged:
+                raise SystemExit(
+                    f"item {item_id} has call records in {origin[item_id]} and {path}: "
+                    "one call per rater per item"
+                )
+            merged[item_id] = row
+            origin[item_id] = str(path)
+    return merged
+
+
+def merged_answers(
+    paths: Sequence[Path],
+    item_ids: Iterable[str],
+    rater_id: str | None = None,
+    *,
+    strict: bool = True,
+) -> dict[str, tuple[str, str]]:
+    """(answer, status) per item over every shard; an item no shard rated is ``unrated``.
+
+    With ``strict`` (the audit summary), a record for an item outside
+    ``item_ids`` means a calls file from another audit and is refused.
+    """
+    wanted = list(item_ids)
+    calls = merge_calls(paths, rater_id)
+    stray = sorted(set(calls) - set(wanted))
+    if stray and strict:
+        raise SystemExit(f"call records for items outside the sample: {stray[:5]}")
     out = {}
-    for item_id in item_ids:
+    for item_id in wanted:
         row = calls.get(item_id)
         out[item_id] = (row["answer"], row["status"]) if row else answer_for("unrated", None)
     return out
+
+
+def calls_files_record(paths: Sequence[Path]) -> list[dict[str, Any]]:
+    """SHA-256 and record count of each shard's calls file (for the audit summary)."""
+    return [
+        {
+            "path": str(path),
+            "sha256": sha256_file(path) if path.is_file() else None,
+            "records": len(read_calls(path)),
+        }
+        for path in paths
+    ]
 
 
 class Runner:
@@ -512,7 +609,10 @@ class Runner:
                 self.fatal = str(exc)
                 self.stop.set()
                 return
-            reply = self.parse(attempt)
+            try:
+                reply = self.parse(attempt)
+            except Exception as exc:  # noqa: BLE001 - any unreadable body is unsure, not a crash
+                reply = malformed(f"{type(exc).__name__}: {str(exc)[:200]}")
             record = call_record(self.rater_id, item_id, index, body, attempt, log, reply, started)
             with self.lock:
                 if attempt.response_bytes is not None:
@@ -539,6 +639,7 @@ class Runner:
 
 
 def write_receipt(out_dir: Path, receipt: Mapping[str, Any]) -> dict[str, Any]:
+    out_dir.mkdir(parents=True, exist_ok=True)
     calls = out_dir / "calls.jsonl"
     full = {
         "schema": "q2m-rater-receipt-v1",
@@ -643,25 +744,282 @@ def cmd_anthropic(args: argparse.Namespace) -> int:
     )
     _install_stop(runner)
     started = utc_now()
-    result = runner.run(packets)
+    result: dict[str, Any] = {}
+    error: str | None = None
+    try:
+        result = runner.run(packets)
+    except BaseException as exc:
+        error = f"{type(exc).__name__}: {str(exc)[:400]}"
+        raise
+    finally:
+        receipt = write_receipt(
+            args.out,
+            {
+                "rater": dict(RATERS[0]),
+                "path": "Anthropic Messages API",
+                "provider_endpoint": "Anthropic Messages API (POST /v1/messages)",
+                "model": model,
+                "params": {k: ANTHROPIC[k] for k in ("model", "max_tokens", "effort", "timeout_s")},
+                "sampling": "no sampling parameter sent (the model rejects them); API default",
+                "data_sent": (
+                    "packet text and page renders of public OSWorld task files and edits of them"
+                ),
+                "packets": _packets_record(args.packets, packets),
+                "started_at": started,
+                "result": result,
+                "run_error": error,
+            },
+        )
+    print(json.dumps({"calls_sha256": receipt["calls_sha256"], **result}, sort_keys=True))
+    return 1 if result["fatal"] else 0
+
+
+# --- agent harness (decision D25) ----------------------------------------------
+
+HARNESS_SCHEMA = "q2m-harness-export-v1"
+HARNESS_PATH = "Claude Code agent harness (decision D25)"
+HARNESS_NOTE = """\
+How to read this item: everything you may use is in this file and in the page
+images it names (PNG or JPEG files in the folder named after this item, next to
+this file); open every image it names. You have no other information about the
+task, and nothing outside this file and its images is part of it. Rate this
+item on its own.
+"""
+HARNESS_INSTRUCTIONS = RATER_PROMPT_V1 + "\n" + HARNESS_NOTE
+HARNESS_ANSWER_KEYS = frozenset({"item_id", "answer", "reason", "model_id"})
+
+
+def _image_bytes(part: Mapping[str, Any]) -> bytes:
+    import base64
+
+    return base64.b64decode(part["data_b64"])
+
+
+def harness_text(packet: Mapping[str, Any]) -> tuple[str, list[tuple[str, bytes]]]:
+    """The exported item file and its images, in ``packet_parts`` order."""
+    item = str(packet["item_id"])
+    chunks = [
+        "RATER INSTRUCTIONS\n\n",
+        HARNESS_INSTRUCTIONS,
+        f"\nITEM {item}\n\n",
+    ]
+    images: list[tuple[str, bytes]] = []
+    for part in packet_parts(packet):
+        if part["type"] == "text":
+            chunks.append(part["text"])
+            continue
+        suffix = ".png" if part["media_type"] == "image/png" else ".jpg"
+        name = f"{item}.pages/p{len(images) + 1:02d}{suffix}"
+        images.append((name, _image_bytes(part)))
+        chunks.append(f"(image file: {name})\n")
+    return "".join(chunks) + "\n", images
+
+
+def harness_body(packet: Mapping[str, Any]) -> dict[str, Any]:
+    """Canonical request of the harness path, rebuilt from the packet (digest only)."""
+    text, images = harness_text(packet)
+    return {
+        "path": HARNESS_PATH,
+        "model": ANTHROPIC["model"],
+        "text": text,
+        "images": [{"name": n, "sha256": sha256_bytes(b)} for n, b in images],
+    }
+
+
+def export_harness(packets: Sequence[Mapping[str, Any]], out_dir: Path) -> dict[str, Any]:
+    """Blind item files for the agent-harness rater; returns the export manifest."""
+    out_dir.mkdir(parents=True, exist_ok=True)
+    if any(out_dir.iterdir()):
+        raise SystemExit(f"{out_dir} is not empty; export into a new directory")
+    items: dict[str, Any] = {}
+    for packet in packets:
+        item = str(packet["item_id"])
+        text, images = harness_text(packet)
+        data = text.encode("utf-8")
+        (out_dir / f"{item}.txt").write_bytes(data)
+        for name, blob in images:
+            path = out_dir / name
+            path.parent.mkdir(parents=True, exist_ok=True)
+            path.write_bytes(blob)
+        items[item] = {
+            "file": f"{item}.txt",
+            "file_sha256": sha256_bytes(data),
+            "body_sha256": sha256_bytes(canonical_bytes(harness_body(packet))),
+            "images": [{"name": n, "sha256": sha256_bytes(b)} for n, b in images],
+        }
+    order = rater_order(list(items), str(ANTHROPIC["rater_id"]), ORDER_SEED)
+    index = (json.dumps(order, indent=1) + "\n").encode("utf-8")
+    (out_dir / "index.json").write_bytes(index)
+    return {
+        "schema": HARNESS_SCHEMA,
+        "path": HARNESS_PATH,
+        "rater_id": ANTHROPIC["rater_id"],
+        "model": ANTHROPIC["model"],
+        "instructions_sha256": sha256_bytes(HARNESS_INSTRUCTIONS.encode()),
+        "prompt_sha256": sha256_bytes(RATER_PROMPT_V1.encode()),
+        "answer_line_sha256": sha256_bytes(ANSWER_LINE.encode()),
+        "index_sha256": sha256_bytes(index),
+        "order": order,
+        "items": items,
+        "exported_at": utc_now(),
+    }
+
+
+def ingest_harness(
+    packets: Sequence[Mapping[str, Any]],
+    manifest: Mapping[str, Any],
+    answers_bytes: bytes,
+    out_dir: Path,
+) -> dict[str, Any]:
+    """Call records of the agent-harness rater from its JSON list of answers.
+
+    Every exported body is rebuilt from the packets and checked against the
+    export manifest first. One record per item: a second record, an item
+    outside the export or a model id other than ``ANTHROPIC["model"]`` is
+    refused and nothing is written. An exported item without a record stays
+    unrated (``unsure``).
+    """
+    if manifest.get("schema") != HARNESS_SCHEMA:
+        raise SystemExit("not a q2m harness export manifest")
+    by_id = {str(p["item_id"]): p for p in packets}
+    exported = dict(manifest["items"])
+    for item, entry in exported.items():
+        if item not in by_id:
+            raise SystemExit(f"exported item {item} is not in the packets")
+        if sha256_bytes(canonical_bytes(harness_body(by_id[item]))) != entry["body_sha256"]:
+            raise SystemExit(f"item {item}: the packet differs from the exported file")
+    try:
+        records = json.loads(answers_bytes)
+    except ValueError as exc:
+        raise SystemExit(f"the answers file is not JSON: {exc}") from exc
+    if not isinstance(records, list):
+        raise SystemExit("the answers file must hold a JSON list")
+    order = {item: index for index, item in enumerate(manifest["order"])}
+    seen: set[str] = set()
+    calls: list[dict[str, Any]] = []
+    for number, rec in enumerate(records):
+        if not isinstance(rec, dict) or set(rec) - HARNESS_ANSWER_KEYS or "item_id" not in rec:
+            raise SystemExit(f"record {number}: keys must be {sorted(HARNESS_ANSWER_KEYS)}")
+        item = str(rec["item_id"])
+        if item not in exported:
+            raise SystemExit(f"record {number}: item {item} was not exported")
+        if item in seen:
+            raise SystemExit(f"record {number}: a second record for item {item}")
+        seen.add(item)
+        if rec.get("model_id") != ANTHROPIC["model"]:
+            raise SystemExit(
+                f"record {number}: model {rec.get('model_id')!r}, not {ANTHROPIC['model']!r}"
+            )
+        answer_text = rec.get("answer")
+        answer, status = answer_for("ok", answer_text if isinstance(answer_text, str) else None)
+        reason = rec.get("reason")
+        calls.append(
+            {
+                "schema": CALL_SCHEMA,
+                "rater_id": ANTHROPIC["rater_id"],
+                "item_id": item,
+                "order_index": order[item],
+                "model_requested": ANTHROPIC["model"],
+                "model_returned": rec.get("model_id"),
+                "body_sha256": exported[item]["body_sha256"],
+                "request_sha256": exported[item]["file_sha256"],
+                "response_sha256": sha256_bytes(canonical_bytes(rec)),
+                "http_status": None,
+                "outcome": "ok",
+                "answer": answer,
+                "status": status,
+                "stop_reason": None,
+                "usage": None,
+                "extra": {
+                    "path": "agent_harness",
+                    "images_sha256": [i["sha256"] for i in exported[item]["images"]],
+                    "reason_sha256": (
+                        sha256_bytes(str(reason).encode()) if reason is not None else None
+                    ),
+                },
+                "attempts": [],
+                "started_at": None,
+                "finished_at": utc_now(),
+            }
+        )
+    out_dir.mkdir(parents=True, exist_ok=True)
+    calls_path = out_dir / "calls.jsonl"
+    if calls_path.exists():
+        raise SystemExit(f"{calls_path} exists: one ingest per export (one call per item)")
+    responses = out_dir / "responses"
+    responses.mkdir(exist_ok=True)
+    for rec in records:
+        (responses / f"{rec['item_id']}.json").write_bytes(canonical_bytes(rec))
+    calls.sort(key=lambda c: c["order_index"])
+    calls_path.write_text(
+        "".join(json.dumps(c, sort_keys=True) + "\n" for c in calls), encoding="utf-8"
+    )
+    return {
+        "items": len(exported),
+        "rated": len(calls),
+        "unrated": sorted(set(exported) - seen),
+        "outcomes": dict(Counter(c["outcome"] for c in calls)),
+        "answers": dict(Counter(c["answer"] for c in calls)),
+        "statuses": dict(Counter(c["status"] for c in calls)),
+        "models_returned": dict(Counter(str(c["model_returned"]) for c in calls)),
+    }
+
+
+def _load_shards(paths: Sequence[Path]) -> list[dict[str, Any]]:
+    packets: list[dict[str, Any]] = []
+    seen: set[str] = set()
+    for path in paths:
+        for packet in load_packets(path):
+            if packet["item_id"] in seen:
+                raise SystemExit(f"{path}: item {packet['item_id']} is in two shards")
+            seen.add(packet["item_id"])
+            packets.append(packet)
+    return packets
+
+
+def cmd_export_harness(args: argparse.Namespace) -> int:
+    packets = _load_shards(args.packets)
+    manifest = export_harness(packets, args.out)
+    manifest["packets"] = [_packets_record(p, load_packets(p)) for p in args.packets]
+    args.manifest_out.parent.mkdir(parents=True, exist_ok=True)
+    args.manifest_out.write_text(
+        json.dumps(manifest, indent=1, sort_keys=True) + "\n", encoding="utf-8"
+    )
+    print(json.dumps({"items": len(manifest["items"]), "index_sha256": manifest["index_sha256"]}))
+    return 0
+
+
+def cmd_ingest_harness(args: argparse.Namespace) -> int:
+    packets = _load_shards(args.packets)
+    manifest_bytes = args.export_manifest.read_bytes()
+    manifest = json.loads(manifest_bytes)
+    answers_bytes = args.answers.read_bytes()
+    result = ingest_harness(packets, manifest, answers_bytes, args.out)
     receipt = write_receipt(
         args.out,
         {
             "rater": dict(RATERS[0]),
-            "provider_endpoint": "Anthropic Messages API (POST /v1/messages)",
-            "model": model,
-            "params": {k: ANTHROPIC[k] for k in ("model", "max_tokens", "effort", "timeout_s")},
-            "sampling": "no sampling parameter sent (the model rejects them); API default",
-            "data_sent": (
-                "packet text and page renders of public OSWorld task files and edits of them"
+            "path": HARNESS_PATH,
+            "model": {"requested": ANTHROPIC["model"], "returned": result["models_returned"]},
+            "params": {"model": ANTHROPIC["model"]},
+            "sampling": (
+                "not fixed on this path: the agent harness sets the model's sampling and "
+                "thinking (disclosed under D25); the open-weight rater stays seeded"
             ),
-            "packets": _packets_record(args.packets, packets),
-            "started_at": started,
+            "data_sent": (
+                "packet text and page renders of public OSWorld task files and edits of them, "
+                "read from exported files by a Claude subagent"
+            ),
+            "export_manifest_sha256": sha256_bytes(manifest_bytes),
+            "index_sha256": manifest["index_sha256"],
+            "instructions_sha256": manifest["instructions_sha256"],
+            "answers_sha256": sha256_bytes(answers_bytes),
+            "packets": [_packets_record(p, load_packets(p)) for p in args.packets],
             "result": result,
         },
     )
     print(json.dumps({"calls_sha256": receipt["calls_sha256"], **result}, sort_keys=True))
-    return 1 if result["fatal"] else 0
+    return 0
 
 
 # --- open-weight (vLLM) -------------------------------------------------------
@@ -958,6 +1316,15 @@ def build_parser() -> argparse.ArgumentParser:
     open_.add_argument("--expected-evidence-sha256", required=True)
     open_.add_argument("--output-dir", type=Path, required=True)
     open_.add_argument("--model-root", default=MODEL_ROOT)
+    export = sub.add_parser("export-harness", allow_abbrev=False)
+    export.add_argument("--packets", type=Path, nargs="+", required=True)
+    export.add_argument("--out", type=Path, required=True, help="new, empty export directory")
+    export.add_argument("--manifest-out", type=Path, required=True)
+    ingest = sub.add_parser("ingest-harness", allow_abbrev=False)
+    ingest.add_argument("--packets", type=Path, nargs="+", required=True)
+    ingest.add_argument("--export-manifest", type=Path, required=True)
+    ingest.add_argument("--answers", type=Path, required=True)
+    ingest.add_argument("--out", type=Path, required=True)
     return parser
 
 
@@ -968,6 +1335,8 @@ def main(argv: list[str] | None = None) -> int:
         "anthropic": cmd_anthropic,
         "args-doctor": cmd_args_doctor,
         "open": cmd_open,
+        "export-harness": cmd_export_harness,
+        "ingest-harness": cmd_ingest_harness,
     }
     return handlers[args.command](args)
 
