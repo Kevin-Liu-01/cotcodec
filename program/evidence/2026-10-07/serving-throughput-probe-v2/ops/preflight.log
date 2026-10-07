@@ -1,0 +1,30 @@
+== overlay-build-cu129 at 2026-10-07T15:05:29Z
+-- squeue -h -o "%i %j %T %M %b"
+463 cotcodec-q2-mutation-cpu RUNNING 1:35 N/A
+-- nvidia-smi --query-gpu=index,utilization.gpu,memory.used --format=csv
+index, utilization.gpu [%], memory.used [MiB]
+0, 0 %, 0 MiB
+1, 0 %, 0 MiB
+2, 0 %, 0 MiB
+3, 0 %, 0 MiB
+4, 0 %, 0 MiB
+5, 0 %, 0 MiB
+6, 0 %, 0 MiB
+7, 0 %, 0 MiB
+-- nvidia-smi --query-compute-apps=gpu_uuid,pid,process_name,used_memory --format=csv
+gpu_uuid, pid, process_name, used_gpu_memory [MiB]
+== job-a-submit at 2026-10-07T15:06:50Z
+-- squeue -h -o "%i %j %T %M %b"
+463 cotcodec-q2-mutation-cpu RUNNING 2:56 N/A
+-- nvidia-smi --query-gpu=index,utilization.gpu,memory.used --format=csv
+index, utilization.gpu [%], memory.used [MiB]
+0, 0 %, 0 MiB
+1, 0 %, 0 MiB
+2, 0 %, 0 MiB
+3, 0 %, 0 MiB
+4, 0 %, 0 MiB
+5, 0 %, 0 MiB
+6, 0 %, 0 MiB
+7, 0 %, 0 MiB
+-- nvidia-smi --query-compute-apps=gpu_uuid,pid,process_name,used_memory --format=csv
+gpu_uuid, pid, process_name, used_gpu_memory [MiB]

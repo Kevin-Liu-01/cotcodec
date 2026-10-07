@@ -1,0 +1,19 @@
+-- job 464 (stp-v2-overlay), captured 2026-10-07T15:06:25Z
+JobId=464 JobName=stp-v2-overlay
+   JobState=COMPLETED Reason=None Dependency=(null)
+   Requeue=1 Restarts=0 BatchFlag=1 Reboot=0 ExitCode=0:0
+   RunTime=00:00:44 TimeLimit=00:10:00 TimeMin=N/A
+   StartTime=2026-10-07T15:05:37 EndTime=2026-10-07T15:06:21 Deadline=N/A
+   ReqNodeList=(null) ExcNodeList=(null)
+   NodeList=fal-h100-01
+   TRES=cpu=8,mem=32G,node=1,billing=8
+-- job 466 (stp-v2-a-q2-qwen35-9b), captured 2026-10-07T15:35:22Z
+JobId=466 JobName=stp-v2-a-q2-qwen35-9b
+   JobState=COMPLETED Reason=None Dependency=(null)
+   Requeue=1 Restarts=0 BatchFlag=1 Reboot=0 ExitCode=0:0
+   RunTime=00:28:23 TimeLimit=01:00:00 TimeMin=N/A
+   SubmitTime=2026-10-07T15:06:50 EligibleTime=2026-10-07T15:06:50
+   StartTime=2026-10-07T15:06:51 EndTime=2026-10-07T15:35:14 Deadline=N/A
+   ReqNodeList=(null) ExcNodeList=(null)
+   NodeList=fal-h100-01
+   TRES=cpu=32,mem=160G,node=1,billing=32

@@ -1,0 +1,25 @@
+{
+  "config_sha256": "9224ccdcfc9c2667f28860f8f4c5c94f4e2121b3d7dd47c8b68acd4bde26257a",
+  "job": "a",
+  "points": {
+    "a-smoke": "valid",
+    "a-warmup": "valid",
+    "a1a": "valid",
+    "a1b": "valid",
+    "a1c": "valid",
+    "a2": "valid",
+    "f1": "valid",
+    "r1": "valid",
+    "r1b": "valid",
+    "r2": "valid",
+    "r3": "valid-flagged",
+    "r4": "valid",
+    "x1-a1": "valid",
+    "x1-r1": "valid",
+    "x1-smoke": "valid",
+    "x1-warmup": "valid"
+  },
+  "signal": null,
+  "state": "complete",
+  "updated_at": "2026-10-07T15:35:13Z"
+}
