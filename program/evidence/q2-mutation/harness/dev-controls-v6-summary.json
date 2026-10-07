@@ -29,7 +29,7 @@
    "written": 35
   },
   "scout": {
-   "do_nothing_saved_passes": 1,
+   "do_nothing_saved_passes": 0,
    "gold_fixed_point_flip_wilson95": [
     0.009351994062300362,
     0.24638731166898786
@@ -46,7 +46,13 @@
    "k1_gold_pass_and_do_nothing_fail": "19/19",
    "tasks_with_gold": 19,
    "tasks_with_initial": 32
-  }
+  },
+  "venv_differences_from_nondeterministic_checkers": [
+   {
+    "candidate": "initial_saved",
+    "task_id": "9219480b-3aed-47fc-8bac-d2cffc5849f7"
+   }
+  ]
  },
  "tasks": {
   "01b269ae-2111-4a07-81fd-3fcd711993b0": {
@@ -129,7 +135,7 @@
       "changed": true,
       "dialogs": [],
       "reason": "postconfig",
-      "seconds_to_write": 0.201,
+      "seconds_to_write": 0.2,
       "written": true
      }
     ],
@@ -567,7 +573,7 @@
       "changed": true,
       "dialogs": [],
       "reason": "postconfig",
-      "seconds_to_write": 0.201,
+      "seconds_to_write": 0.301,
       "written": true
      }
     ],
@@ -771,7 +777,7 @@
       "changed": true,
       "dialogs": [],
       "reason": "postconfig",
-      "seconds_to_write": 0.201,
+      "seconds_to_write": 0.2,
       "written": true
      }
     ],
@@ -820,7 +826,7 @@
       "changed": true,
       "dialogs": [],
       "reason": "postconfig",
-      "seconds_to_write": 0.1,
+      "seconds_to_write": 0.2,
       "written": true
      }
     ],
@@ -875,7 +881,7 @@
       "changed": true,
       "dialogs": [],
       "reason": "postconfig",
-      "seconds_to_write": 0.2,
+      "seconds_to_write": 0.201,
       "written": true
      }
     ],
@@ -1072,7 +1078,7 @@
       "changed": true,
       "dialogs": [],
       "reason": "postconfig",
-      "seconds_to_write": 0.1,
+      "seconds_to_write": 0.0,
       "written": true
      }
     ],
@@ -1175,7 +1181,7 @@
       "changed": true,
       "dialogs": [],
       "reason": "postconfig",
-      "seconds_to_write": 0.201,
+      "seconds_to_write": 0.2,
       "written": true
      }
     ],
@@ -1328,7 +1334,7 @@
       "changed": true,
       "dialogs": [],
       "reason": "postconfig",
-      "seconds_to_write": 0.2,
+      "seconds_to_write": 0.201,
       "written": true
      }
     ],
@@ -1463,7 +1469,7 @@
    },
    "initial_raw_scout": {
     "error": null,
-    "nondeterministic": false,
+    "nondeterministic": true,
     "postconfig_unemulated": [],
     "score": 0.0,
     "setup_unemulated": [],
@@ -1478,7 +1484,7 @@
    },
    "initial_saved_lock": {
     "error": null,
-    "nondeterministic": false,
+    "nondeterministic": true,
     "postconfig_unemulated": [],
     "score": 1.0,
     "setup_unemulated": [],
@@ -1488,9 +1494,9 @@
     "error": null,
     "nondeterministic": true,
     "postconfig_unemulated": [],
-    "score": 1.0,
+    "score": 0.0,
     "setup_unemulated": [],
-    "verdict": "pass"
+    "verdict": "fail"
    }
   },
   "936321ce-5236-426a-9a20-e0e3c5dc536f": {
@@ -1826,7 +1832,7 @@
       "changed": true,
       "dialogs": [],
       "reason": "postconfig",
-      "seconds_to_write": 0.2,
+      "seconds_to_write": 0.1,
       "written": true
      }
     ],
@@ -2263,7 +2269,7 @@
       "changed": true,
       "dialogs": [],
       "reason": "postconfig",
-      "seconds_to_write": 0.201,
+      "seconds_to_write": 0.2,
       "written": true
      }
     ],
@@ -2312,7 +2318,7 @@
       "changed": true,
       "dialogs": [],
       "reason": "postconfig",
-      "seconds_to_write": 0.1,
+      "seconds_to_write": 0.2,
       "written": true
      }
     ],
