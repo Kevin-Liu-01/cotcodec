@@ -424,3 +424,41 @@ def test_overlay_skips_top_level_files(tmp_path: Path) -> None:
     vm = tmp_path / "vm"
     assert offline_eval.overlay_tree(source, vm) == 1
     assert (vm / "home/user/.config/vlc/vlcrc").exists() and not (vm / "baseline.sha256").exists()
+
+
+def test_report_aggregate_counts_fixed_point_and_flips() -> None:
+    from harness.q2_mutation import report
+
+    def v(verdict: str, score: float | None) -> dict:
+        return {"verdict": verdict, "score": score, "error": None}
+
+    tasks = {
+        "t1": {
+            "gold_raw_lock": v("pass", 1.0),
+            "initial_raw_lock": v("fail", 0.0),
+            "gold_saved_lock": v("fail", 0.0),
+            "gold_raw_scout": v("pass", 1.0),
+            "initial_raw_scout": v("pass", 1.0),
+            "gold_save": {
+                "saves": [
+                    {"written": True, "changed": True, "seconds_to_write": 0.8, "dialogs": []}
+                ]
+            },
+        },
+        "t2": {
+            "gold_raw_lock": v("pass", 1.0),
+            "initial_raw_lock": v("fail", 0.0),
+            "gold_saved_lock": v("pass", 1.0),
+        },
+    }
+    out = report.aggregate(tasks)
+    assert out["lock"]["k1_gold_pass_and_do_nothing_fail"] == "2/2"
+    assert out["lock"]["gold_fixed_point_flips"] == 1 and out["lock"]["gold_fixed_point_n"] == 2
+    assert [f["candidate"] for f in out["dependency_flips"]] == ["initial_raw"]
+    assert out["saves"] == {
+        "n": 1,
+        "written": 1,
+        "changed_bytes": 1,
+        "slower_than_0_5s": 1,
+        "with_dialog": 0,
+    }

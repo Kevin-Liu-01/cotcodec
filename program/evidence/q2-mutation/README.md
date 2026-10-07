@@ -12,7 +12,7 @@ The binding record formats are in `harness/q2_mutation/schema.py`
 | `sanitized-tasks.manifest.json` | Pins (OSWorld commit, file-cache revision), selection rule, manual web exclusions, SHA-256 of every exported file | Everyone |
 | `splits.json` | Seeded (42) stratified task split: `dev` (harness validation, pilot, τ calibration), `confirm` (the 120-task confirmatory mutation subset), `reserve` | Everyone |
 | `specs/<task_id>.yaml` | Requirement specs written blind (spec branch) | Everyone after they are committed |
-| `harness/` | Checker-derived harness outputs: task classes, controls, gold fixed-point, verdict rows | Not the blind spec author |
+| `harness/` | Checker-derived harness side: `task-scope.json` (task classes and metric functions), `file-cache-receipts.tsv` (447 files with SHA-256), `inputs-manifest.json` (every external source), dev-split control summaries | Not the blind spec author |
 
 ## Scope
 

@@ -63,9 +63,7 @@ def test_receipt_detects_local_file_mutation(tmp_path: Path) -> None:
         "files": files,
         "artifact_root_sha256": artifact_root(files),
     }
-    (receipt_root / "smollm2-135m.json").write_text(
-        json.dumps(receipt), encoding="utf-8"
-    )
+    (receipt_root / "smollm2-135m.json").write_text(json.dumps(receipt), encoding="utf-8")
     verify_receipt("smollm2-135m", entry, model_root, receipt_root)
 
     (snapshot / "config.json").write_text("tampered\n", encoding="utf-8")
