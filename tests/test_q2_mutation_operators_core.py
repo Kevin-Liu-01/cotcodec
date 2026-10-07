@@ -281,3 +281,16 @@ def test_dedupe_keeps_one_admitted_mutant_per_document() -> None:
                                      record(45, "a", passed=False)])
     assert [r["mutant_id"] for r in kept] == ["m42", "m44", "m45"]
     assert [r["mutant_id"] for r in dropped] == ["m43"]
+
+
+def test_binding_skips_references_the_requirement_excludes(tmp_path: Path) -> None:
+    base = snapshot(synth.build_xlsx(tmp_path / "a.xlsx"))
+    spec = synth.synthetic_spec("xlsx")
+    spec["requirements"] = [{
+        "req_id": "R9", "check_kind": "cell_value",
+        "statement": "Cells outside B2:B4 are not touched; column C keeps its prices.",
+        "observable": "Everything except B2:B4 equals the initial file.",
+    }]
+    binding = bind(_req(spec, "R9"), base, {})
+    assert "sheets/Data/cells/B2" not in binding.units
+    assert "sheets/Data/cells/C2" in binding.units
