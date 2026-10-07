@@ -421,6 +421,10 @@ Input facts measured while building (no model was run):
   monolingual. A sanity check with the real tokenizer flagged a Belebele
   passage embedded in other text (exact 50-gram) and gave Jaccard 0.898 for a
   one-token edit.
+- The reimplemented ParaDocs filter reproduces the upstream tool's output
+  line for line (same documents, same lines, same order) on the three head
+  samples the plan review filtered with the upstream tool: en-th (36
+  documents, 107 lines), en-hi (20, 44) and en-km (17, 35).
 
 ## Freeze procedure
 
