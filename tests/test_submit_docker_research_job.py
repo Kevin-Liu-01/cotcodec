@@ -10,11 +10,13 @@ import yaml
 
 from scripts import submit_research_job
 from scripts.submit_docker_research_job import (
+    ARCHIVED_MEMORY_ENTRY_POINTS,
     BATCH_SCRIPT,
     RUNTIME,
     archived_memory_reference,
     prepare_run_root,
     sbatch_argv,
+    seed_option_abbreviation,
     validate_manifest,
     validate_memory_job_admission,
 )
@@ -399,6 +401,30 @@ ARCHIVED_ARGV_ELEMENTS = [
     "--memory-treatment-mode",
     "--expected-memory-system-id",
     "python scripts/run_memory_trials.py --seeds 1",
+    # Review findings on 5ed577d: forms that reached archived code.
+    "-mlegacy.scripts.run_memory_model_screen",
+    "-mharness.memory_trials",
+    "-Bmlegacy.harness.causal_memory_trials",
+    "PYTHONPATH=legacy/scripts",
+    "--chdir=legacy/scripts",
+    "legacy/scripts",
+    "legacy",
+    "./legacy/",
+    "run_memory_model_screen",
+    "run_memory_trials.py",
+    "from legacy.harness import memory_trials",
+    "import runpy; runpy.run_path('legacy/scripts/run_mem0_lifecycle_doctor.py')",
+    "cd legacy && python scripts/run_mem0_lifecycle_doctor.py",
+    "legacy/scripts/run_memorybank_decay_container.py",
+    "legacy.harness.causal_memory_trials",
+    "legacy/scripts/run_memgpt_letta_lifecycle_doctor.py",
+    "legacy/infra/memory-baselines/graphiti_sidecar.py",
+    "legacy/experiments/memory/stage1-longmemeval-screen.yaml",
+    "scripts/run_memorybank_decay_doctor.py",
+    "harness/causal_memory_trials.py",
+    "--memory-bund",
+    "--memory-bund=/inputs/memory-selection-bundle.json",
+    "--expected-memory-sys",
 ]
 ADMITTED_ARGV_ELEMENTS = [
     "--gpu-memory-utilization",
@@ -411,7 +437,46 @@ ADMITTED_ARGV_ELEMENTS = [
     "scripts/run_translation_supervised_indexer_doctor.py",
     "harness/memory_trials_v2/runner.py",
     "memory",
+    "legacy-2026-10-06",
+    "--legacy-format",
+    "/outputs/legacy_scores.json",
+    "-m",
+    "-mvllm.entrypoints.openai.api_server",
+    "--",
 ]
+
+
+def _archived_memory_tree() -> set[str]:
+    """Memory-named files and packages directly under the archived trees, by stem."""
+
+    root = BATCH_SCRIPT.parents[3] / "legacy"
+    names = set()
+    for base in ("scripts", "harness", "infra"):
+        for path in (root / base).iterdir():
+            if path.name.startswith(".") or path.name == "__pycache__":
+                continue
+            lowered = path.name.lower()
+            if "mem" in lowered or "letta" in lowered:
+                names.add(path.name.removesuffix(".py").removesuffix(".sh"))
+    return names
+
+
+def _batch_archived_rule() -> dict:
+    """Execute the batch script's archived-memory block exactly as written."""
+
+    content = BATCH_SCRIPT.read_text(encoding="utf-8")
+    block = (
+        content.split("# BEGIN archived-memory-rule", 1)[1]
+        .split("\n", 1)[1]
+        .split("# END archived-memory-rule", 1)[0]
+    )
+    namespace: dict = {}
+    exec(  # noqa: S102 - the batch script's own admission code, read from the repo
+        "import re\nfrom fnmatch import fnmatchcase\nfrom pathlib import PurePosixPath\n"
+        + block,
+        namespace,
+    )
+    return namespace
 
 
 @pytest.mark.parametrize("element", ARCHIVED_ARGV_ELEMENTS)
@@ -435,11 +500,88 @@ def test_memory_words_outside_the_archived_interface_are_admitted(element: str) 
     validate_memory_job_admission(None, command=["python", element], has_memory_bundle=False)
 
 
-def test_both_submitters_share_one_archived_memory_rule() -> None:
-    for element in ARCHIVED_ARGV_ELEMENTS + ADMITTED_ARGV_ELEMENTS:
-        assert archived_memory_reference(element) == (
-            submit_research_job.archived_memory_reference(element)
-        ), element
+def test_both_submitters_and_the_batch_script_share_one_archived_memory_rule() -> None:
+    batch = _batch_archived_rule()
+    assert batch["archived_entry_points"] == ARCHIVED_MEMORY_ENTRY_POINTS
+    assert submit_research_job.ARCHIVED_MEMORY_ENTRY_POINTS == ARCHIVED_MEMORY_ENTRY_POINTS
+    forms = ARCHIVED_ARGV_ELEMENTS + ADMITTED_ARGV_ELEMENTS + [
+        form for name in sorted(ARCHIVED_MEMORY_ENTRY_POINTS) for form in _entry_point_forms(name)
+    ]
+    for element in forms:
+        expected = archived_memory_reference(element)
+        assert submit_research_job.archived_memory_reference(element) == expected, element
+        assert batch["archived_reference"](element) == expected, element
+
+
+def _entry_point_forms(name: str) -> list[str]:
+    forms = [
+        f"legacy/scripts/{name}.py",
+        f"scripts/{name}.py",
+        f"/workspace/cotcodec/infra/{name}/doctor.py",
+        f"{name}.py",
+        name,
+        f"-m{name}",
+        f"PYTHONPATH=/workspace/cotcodec/scripts/{name}",
+    ]
+    if name.isidentifier():
+        forms += [f"scripts.{name}", f"legacy.harness.{name}", f"import harness.{name} as h"]
+    return forms
+
+
+def test_archived_entry_points_are_every_memory_named_file_in_the_archive() -> None:
+    assert _archived_memory_tree() == ARCHIVED_MEMORY_ENTRY_POINTS
+    assert {"run_memorybank_decay_container", "causal_memory_trials", "memory_trials"} <= (
+        ARCHIVED_MEMORY_ENTRY_POINTS
+    )
+
+
+@pytest.mark.parametrize("name", sorted(_archived_memory_tree()))
+def test_every_archived_memory_entry_point_is_rejected_in_every_form(name: str) -> None:
+    for form in _entry_point_forms(name):
+        for check in (archived_memory_reference, submit_research_job.archived_memory_reference):
+            assert check(form) is not None, (name, form)
+
+
+@pytest.mark.parametrize(
+    "command",
+    [
+        ["python", "-mlegacy.scripts.run_memory_model_screen", "--output-dir", "/outputs/x"],
+        ["python", "-mharness.memory_trials"],
+        ["env", "PYTHONPATH=legacy/scripts", "python", "-m", "run_memory_model_screen"],
+        ["env", "--chdir=legacy/scripts", "python", "run_memory_trials.py"],
+        ["env", "-C", "legacy", "python", "-m", "scripts.run_mem0_lifecycle_doctor"],
+        ["python", "-c", "from legacy.harness import memory_trials"],
+        ["python", "legacy/scripts/run_memorybank_decay_container.py", "--output", "/outputs/x"],
+        ["python", "-m", "legacy.harness.causal_memory_trials"],
+        ["python", "legacy/scripts/run_memgpt_letta_lifecycle_doctor.py"],
+        ["python", "scripts/probe.py", "--memory-bund", "/inputs/bundle.json"],
+    ],
+)
+def test_review_bypass_commands_are_rejected_by_both_submitters(command: list[str]) -> None:
+    raw = _deterministic_manifest()
+    raw["command"] = command
+    with pytest.raises(ValueError, match=f"^{ARCHIVED_PREFIX}"):
+        validate_manifest(raw)
+    research = {
+        "name": "bypass-check",
+        "image": "registry.example/cotcodec@sha256:" + "a" * 64,
+        "command": command,
+        "run_root": "/shared/cotcodec/runs",
+        "git_sha": "a" * 40,
+        "source_sha256": "b" * 64,
+        "seeds": [42, 43, 44],
+        "resources": {"gpu_type": "h100", "gpus": 1, "cpus": 16, "memory_gb": 64, "minutes": 30},
+        "budget": {"max_gpu_hours": 1},
+    }
+    with pytest.raises(ValueError, match=f"^{ARCHIVED_PREFIX}"):
+        submit_research_job.validate_manifest(research)
+
+
+def test_batch_masks_the_archive_inside_every_container() -> None:
+    content = BATCH_SCRIPT.read_text(encoding="utf-8")
+    assert "archive_mask=/workspace/cotcodec/legacy:ro,noexec,nosuid,nodev,size=64k" in content
+    create = content.split("docker create \\\n", 1)[1].split("container-id.txt", 1)[0]
+    assert '--tmpfs "${archive_mask}"' in create
 
 
 def test_vllm_gpu_memory_utilization_flag_is_admitted_by_both_submitters() -> None:
@@ -544,6 +686,12 @@ def test_malformed_seed_binding_is_rejected(binding) -> None:
         (["--seeds", "42", "43", "44", "--seed", "0"], "no other seed option"),
         (["--seeds=42,43,44"], "separate argv elements"),
         (["--output-dir", "/outputs"], "exactly one --seeds"),
+        # argparse would expand these abbreviations to --seeds or --assignment-seeds.
+        (["--seeds", "42", "43", "44", "--see", "7"], "spelled in full"),
+        (["--seeds", "42", "43", "44", "--see=7"], "spelled in full"),
+        (["--seeds", "42", "43", "44", "--s", "7"], "spelled in full"),
+        (["--seeds", "42", "43", "44", "--assign", "7"], "spelled in full"),
+        (["--se", "42", "43", "44"], "spelled in full"),
     ],
 )
 def test_seed_binding_rejects_drifting_or_extra_seed_arguments(
@@ -553,6 +701,30 @@ def test_seed_binding_rejects_drifting_or_extra_seed_arguments(
     raw["command"] = raw["command"][:4] + tail
     with pytest.raises(ValueError, match=message):
         validate_manifest(raw)
+
+
+def test_seed_abbreviation_matches_what_argparse_would_expand() -> None:
+    import argparse
+
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--output")
+    parser.add_argument("--seeds", type=int, nargs="+")
+    parsed = parser.parse_args(["--output", "r.json", "--seeds", "42", "43", "44", "--see", "7"])
+    assert parsed.seeds == [7]
+    for argument in ("--see", "--see=7", "--s", "--assignment-se", "--assign"):
+        assert seed_option_abbreviation(argument) is not None, argument
+    for argument in ("--seeds", "--seed", "--seed-file", "--sequence-length", "--", "-s", "7"):
+        assert seed_option_abbreviation(argument) is None, argument
+
+
+def test_seed_abbreviation_after_valid_seeds_is_not_admitted_for_the_repo_workload() -> None:
+    raw = _manifest()
+    raw["command"] += ["--see", "7"]
+    with pytest.raises(ValueError, match="argparse would expand --see"):
+        validate_manifest(raw)
+    raw = _manifest()
+    raw["command"] += ["--sequence-length", "128"]
+    assert validate_manifest(raw)["command"][-2:] == ["--sequence-length", "128"]
 
 
 def test_seed_matrix_rejects_repeated_seeds() -> None:
@@ -587,6 +759,13 @@ def test_deterministic_jobs_take_no_seeds_binding_or_seed_options(contract: str)
         executing["command"] += [option, "0"]
         with pytest.raises(ValueError, match="cannot execute seed options"):
             validate_manifest(executing)
+
+    for abbreviation in ("--see", "--se=1", "--assignment-s"):
+        abbreviated = _deterministic_manifest()
+        abbreviated["randomness_contract"] = contract
+        abbreviated["command"] += [abbreviation, "7"]
+        with pytest.raises(ValueError, match="spelled in full"):
+            validate_manifest(abbreviated)
 
 
 def test_unknown_randomness_contract_is_rejected() -> None:

@@ -31,42 +31,134 @@ ARCHIVED_MEMORY_MESSAGE = (
     "memory workloads were archived under legacy/ on 2026-10-06; "
     "restore them from tag legacy-2026-10-06 to submit memory jobs"
 )
-ARCHIVED_MEMORY_SCRIPT_PATTERNS = (
-    "scripts/run_memory_*.py",
-    "scripts/run_memory_trials.py",
-    "scripts/run_letta*",
-    "scripts/*memory_model*",
+# The whole archive lives under legacy/, so any path or module component named
+# legacy is refused, whatever the file it leads to.
+ARCHIVE_ROOT = "legacy"
+# Matched against every path and dotted-module component, not only after
+# scripts/, so PYTHONPATH, chdir and python -m forms are covered.
+ARCHIVED_MEMORY_NAME_PATTERNS = (
+    "run_memory_*",
+    "run_letta*",
+    "*memory_model*",
+    "memory_trials",
 )
-ARCHIVED_MEMORY_PACKAGE = ("harness", "memory_trials")
+# Every memory-named entry point the restart archived: the files and packages
+# directly under legacy/scripts, legacy/harness and legacy/infra whose names
+# contain "mem" or "letta", by stem. Exact names, so a live file is refused only
+# if it reuses an archived name; this also covers pre-restart images, where these
+# files still sit at scripts/<name>.py. Tests regenerate the set from legacy/.
+ARCHIVED_MEMORY_ENTRY_POINTS = frozenset(
+    """
+    aggregate_memory_control_matrix aggregate_memorybank_h100_screen
+    analyze_causal_memory_bundle analyze_memory_system_semantic_smokes
+    analyze_memorybank_frozen_controls audit_memforest_published_artifacts
+    audit_mempalace_port_equivalence audit_mempalace_upstream_artifact
+    audit_sodamem_published_artifacts build_mem0_overlay_on_h100 build_mempalace_container
+    causal_memory_trials compare_memory_lifecycle_runs compare_mempalace_reproductions
+    compile_memory_landscape compile_memory_open_job compile_memory_public_docker_job
+    compile_memory_publication_wave compile_memory_replay_doctor_job
+    compile_memorybank_h100_jobs freeze_memory_control_matrix freeze_memory_system_outputs
+    memory-baselines memory_job_admission memory_trials mempalace_control_factory
+    mempalace_upstream_adapter prepare_hermes_observational_memory_context
+    prepare_longmemeval_judge_packet prepare_memory_baseline_context
+    prepare_memory_benchmarks prepare_memory_publication_claim
+    prepare_mempalace_source_context reanalyze_memory_frontier_screen
+    run_allmem_topology_doctor run_causal_memory_holdout run_causal_memory_sensitivity
+    run_hermes_observational_memory_doctor run_infini_memory_lifecycle_doctor
+    run_jiuwen_memory_lifecycle_doctor run_langmem_lifecycle_doctor
+    run_lightmem2_context_paging_doctor run_lightmem_offline_doctor
+    run_longmemeval_official_judge run_mem0_lifecycle_doctor run_memforest_lifecycle_doctor
+    run_memforge_fresh_install_doctor run_memgpt_letta_lifecycle_doctor
+    run_memoria_lifecycle_doctor run_memory_doctors run_memory_frontier_screen
+    run_memory_lifecycle_contract run_memory_model_replay_doctor run_memory_model_screen
+    run_memory_system_smoke run_memory_trials run_memorybank_decay_container
+    run_memorybank_decay_doctor run_mempalace_upstream_reproduction
+    run_recmem_consolidation_doctor run_reference_memory_lifecycle_sidecar
+    run_reference_memory_sidecar run_supermemory_local_doctor
+    seal_infini_memory_lifecycle_evidence seal_jiuwen_memory_lifecycle_evidence
+    seal_langmem_native_lifecycle_evidence seal_lightmem2_context_paging_evidence
+    seal_memforest_artifact_evidence seal_memforest_lifecycle_evidence
+    seal_memgpt_letta_lifecycle_evidence seal_memory_evidence seal_mempalace_runtime_receipt
+    seal_mempalace_sbom_job_receipt seal_sodamem_artifact_evidence submit_mempalace_cpu_job
+    validate_allmem_topology_experiment validate_hermes_observational_memory_experiment
+    validate_infini_memory_lifecycle_experiment validate_jiuwen_memory_lifecycle_experiment
+    validate_langmem_lifecycle_experiment validate_lightmem2_context_paging_experiment
+    validate_lightmem_offline_evidence validate_lightmem_offline_experiment
+    validate_mem0_lifecycle_experiment validate_mem0_persistence
+    validate_memforest_artifact_experiment validate_memforest_lifecycle_experiment
+    validate_memforge_fresh_install_evidence validate_memforge_fresh_install_experiment
+    validate_memgpt_letta_lifecycle_experiment validate_memoria_lifecycle_evidence
+    validate_memoria_lifecycle_experiment validate_memory_experiments
+    validate_memory_lifecycle_experiment validate_memory_persistent_transport
+    validate_memory_portfolio validate_memory_source_contract validate_memory_sources
+    validate_memorybank_decay_evidence validate_memorybank_decay_experiment
+    validate_memorybank_h100_evidence validate_memorybank_h100_experiment
+    validate_recmem_consolidation_evidence validate_recmem_consolidation_experiment
+    validate_sodamem_artifact_experiment validate_supermemory_local_experiment
+    validate_timem_core_evidence validate_timem_core_experiment
+    verify_memory_baseline_sources
+    """.split()  # noqa: SIM905 - same compact block as the batch script
+)
 ARCHIVED_MEMORY_FLAGS = (
     "--memory-bundle",
     "--memory-treatment-mode",
     "--expected-memory-system-id",
 )
-_ARGV_TOKEN_SEPARATORS = re.compile(r"[\s=,;:'\"]+")
-_DOTTED_MODULE_RE = re.compile(r"^[A-Za-z_][A-Za-z0-9_]*(?:\.[A-Za-z_][A-Za-z0-9_]*)+$")
+_ARGV_TOKEN_SEPARATORS = re.compile(r"[\s=,;:'\"`()\[\]{}<>|&$]+")
+_MODULE_RE = re.compile(r"[A-Za-z_][A-Za-z0-9_]*(?:\.[A-Za-z_][A-Za-z0-9_]*)*")
+_SCRIPT_SUFFIXES = (".py", ".pyc", ".pyw", ".sh")
+
+
+def _argv_name_variants(token: str) -> list[str]:
+    """The token, plus any value glued to a short option (python -mpkg.mod)."""
+
+    variants = [token]
+    if token.startswith("-") and not token.startswith("--"):
+        # Up to three option letters may precede the value, as in -Bmpkg.mod.
+        variants += [token[1 + cut :] for cut in range(4) if token[1 + cut :]]
+    return variants
+
+
+def _name_components(variant: str) -> list[str]:
+    """Path components (with and without a script suffix) and module components."""
+
+    components: list[str] = []
+    for part in PurePosixPath(variant).parts:
+        if part == "/":
+            continue
+        components.append(part)
+        components += [part[: -len(suffix)] for suffix in _SCRIPT_SUFFIXES if part.endswith(suffix)]
+    module = variant[:-3] if variant.endswith(".py") else variant
+    if _MODULE_RE.fullmatch(module):
+        components += module.split(".")
+    return components
 
 
 def archived_memory_reference(argument: str) -> str | None:
-    """Return the archived memory script, package or flag an argv element names."""
+    """Return what an argv element names from the archive, or None.
+
+    The element is split on shell and Python punctuation, a value glued to a
+    short option is tried on its own, and every path or module component is
+    compared with the archive root, the archived memory entry points and the
+    archived name patterns. A long option that is an archived memory flag, or
+    an argparse abbreviation of one, is refused too.
+    """
 
     for token in _ARGV_TOKEN_SEPARATORS.split(argument):
-        if token in ARCHIVED_MEMORY_FLAGS:
-            return token
-        candidates = [token]
-        if _DOTTED_MODULE_RE.fullmatch(token):
-            module_path = token.replace(".", "/")
-            candidates += [module_path, f"{module_path}.py"]
-        for candidate in candidates:
-            parts = PurePosixPath(candidate).parts
-            for current, following in zip(parts, parts[1:], strict=False):
-                if current == "scripts" and any(
-                    fnmatchcase(f"scripts/{following}", pattern)
-                    for pattern in ARCHIVED_MEMORY_SCRIPT_PATTERNS
+        for variant in _argv_name_variants(token):
+            if (
+                variant.startswith("--")
+                and len(variant) > 2
+                and any(flag.startswith(variant) for flag in ARCHIVED_MEMORY_FLAGS)
+            ):
+                return f"the archived memory flag {variant}"
+            for component in _name_components(variant):
+                if component == ARCHIVE_ROOT:
+                    return "the legacy/ archive"
+                if component in ARCHIVED_MEMORY_ENTRY_POINTS or any(
+                    fnmatchcase(component, pattern) for pattern in ARCHIVED_MEMORY_NAME_PATTERNS
                 ):
-                    return f"scripts/{following}"
-                if (current, following) == ARCHIVED_MEMORY_PACKAGE:
-                    return "harness/memory_trials"
+                    return f"the archived memory entry point {component}"
     return None
 
 
@@ -75,9 +167,9 @@ def validate_memory_job_admission(
 ) -> None:
     """Reject the archived memory interface, not every argv that mentions memory.
 
-    Flags such as vLLM's ``--gpu-memory-utilization`` are admitted; archived
-    memory scripts, the ``harness/memory_trials`` package, the archived memory
-    flags, and any memory admission or bundle block are not.
+    Flags such as vLLM's ``--gpu-memory-utilization`` are admitted; anything
+    under legacy/, the archived memory entry points and name patterns, the
+    archived memory flags, and any memory admission or bundle block are not.
     """
 
     if admission is not None:
@@ -272,6 +364,24 @@ def _validate_seed_binding(value: Any) -> dict[str, str] | None:
     return {"flag": value["flag"]}
 
 
+def seed_option_abbreviation(argument: str) -> str | None:
+    """Return a long option that argparse would expand to a seed option, or None.
+
+    argparse accepts any unambiguous prefix of a long option by default
+    (allow_abbrev=True), so ``--see 7`` after the bound seeds would replace them.
+    """
+
+    head = argument.split("=", 1)[0]
+    if (
+        head.startswith("--")
+        and len(head) > 2
+        and head not in SEED_OPTIONS
+        and any(option.startswith(head) for option in SEED_OPTIONS)
+    ):
+        return head
+    return None
+
+
 def _validate_seed_execution(
     command: list[str],
     seeds: list[int],
@@ -280,6 +390,14 @@ def _validate_seed_execution(
 ) -> None:
     """Require every declared seed to reach the workload through one declared flag."""
 
+    abbreviated = [
+        head for head in map(seed_option_abbreviation, command) if head is not None
+    ]
+    if abbreviated:
+        raise ValueError(
+            f"seed options must be spelled in full; argparse would expand {abbreviated[0]} "
+            "to a seed option"
+        )
     inline = [
         argument
         for argument in command
