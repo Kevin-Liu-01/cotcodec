@@ -68,6 +68,9 @@ LO_APP_TITLES = {
 HOTKEY_RE = re.compile(r"pyautogui\.hotkey\(\s*\[?\s*([^)\]]*)\]?\s*\)")
 PRESS_RE = re.compile(r"pyautogui\.press\(\s*\[?\s*['\"]([a-z0-9]+)['\"]\s*\]?\s*\)")
 SLEEP_RE = re.compile(r"time\.sleep\(\s*([0-9.]+)\s*\)")
+# File-only postconfig commands the metric-side scorer emulates after the saves
+# (offline_eval.apply_postconfig_file_steps); they are not GUI steps.
+METRIC_SIDE_COMMANDS = frozenset({"diff", "ls", "rm", "unzip", "mkdir", "tar", "zip"})
 # Keys are kept in pyautogui's names and sent with pyautogui itself, from the
 # VM's own installation (PyAutoGUI 0.9.54, python-xlib 0.33, XTEST), exactly
 # as the postconfig command does in the VM.
@@ -127,7 +130,28 @@ def parse_execute(command: Any) -> list[Step]:
         return steps or [Step("unemulated", f"python -c: {code[:80]}")]
     if argv[0] in ("libreoffice", "soffice") and "--convert-to" in argv:
         return [Step("convert", argv=tuple(argv))]
+    if argv[0] in METRIC_SIDE_COMMANDS or (argv[:2] == ["/bin/bash", "-c"] and len(argv) == 3):
+        return [Step("metric_side", " ".join(argv)[:160])]
     return [Step("unemulated", " ".join(argv)[:160])]
+
+
+def derived_outputs(argv: Sequence[str]) -> list[tuple[str, str, str]]:
+    """(VM out dir, input stem, extension) a ``--convert-to`` command produces.
+
+    LibreOffice 7.3 writes ``stem.ext``, or ``stem-SheetName.ext`` when the CSV
+    filter's sheet option selects a sheet; both shapes are matched.
+    """
+    args = list(argv)
+    if "--convert-to" not in args:
+        return []
+    target = args[args.index("--convert-to") + 1]
+    ext = target.split(":", 1)[0]
+    outdir = args[args.index("--outdir") + 1] if "--outdir" in args else VM_HOME
+    inputs = [a for a in args[1:] if a.startswith("/") and a != outdir]
+    return [
+        (resolve_vm_path(outdir), posixpath.splitext(posixpath.basename(path))[0], ext)
+        for path in inputs
+    ]
 
 
 def plan_postconfig(postconfig: Sequence[Mapping[str, Any]]) -> list[Step]:
@@ -145,6 +169,10 @@ def plan_postconfig(postconfig: Sequence[Mapping[str, Any]]) -> list[Step]:
             steps.extend(parse_execute(params.get("command")))
         elif kind == "open":
             steps.append(Step("open", resolve_vm_path(str(params.get("path", "")))))
+        elif kind == "download":
+            steps.append(Step("metric_side", "postconfig download"))
+        elif kind in ("close_window", "launch"):
+            steps.append(Step("unemulated", f"postconfig {kind}"))
         else:
             steps.append(Step("unemulated", f"postconfig {kind}"))
     return steps
@@ -187,6 +215,7 @@ def build_plan(raw_task: Mapping[str, Any], candidate_paths: Sequence[str]) -> d
         "postconfig_steps": [asdict(step) for step in steps],
         "saves_in_postconfig": saves_in_postconfig,
         "unemulated": [step.arg for step in steps if step.kind == "unemulated"],
+        "metric_side": [step.arg for step in steps if step.kind == "metric_side"],
     }
 
 
@@ -403,6 +432,23 @@ class LoSession:
         return event
 
     def convert(self, argv: Sequence[str], timeout: float = 120.0) -> dict[str, Any]:
+        """Run a postconfig ``--convert-to`` as the VM does, then wait for its output.
+
+        Any file the conversion would produce is removed first: in the real
+        pipeline the agent never writes it, the postconfig derives it, so a
+        stale candidate copy must not survive a conversion that silently fails.
+        With a LibreOffice instance already running on the same profile the
+        command hands the request to that instance and returns at once, so the
+        output is awaited (up to 20 s) and its appearance time recorded.
+        """
+        outputs = derived_outputs(argv)
+        removed = []
+        for pattern_dir, stem, ext in outputs:
+            directory = self.host_path(pattern_dir)
+            for candidate in sorted(directory.glob(f"{stem}*.{ext}")) if directory.is_dir() else []:
+                if candidate.name == f"{stem}.{ext}" or candidate.name.startswith(f"{stem}-"):
+                    removed.append("/" + candidate.relative_to(self.vm_root).as_posix())
+                    candidate.unlink()
         mapped = [self.soffice]
         for arg in argv[1:]:
             mapped.append(str(self.host_path(arg)) if arg.startswith("/") else arg)
@@ -410,10 +456,29 @@ class LoSession:
         result = subprocess.run(
             mapped, env=self.env, capture_output=True, text=True, timeout=timeout
         )
+        returned = round(time.monotonic() - started, 3)
+        produced: list[str] = []
+        deadline = time.monotonic() + 20.0
+        while time.monotonic() < deadline and not produced:
+            for pattern_dir, stem, ext in outputs:
+                directory = self.host_path(pattern_dir)
+                if directory.is_dir():
+                    produced += [
+                        "/" + c.relative_to(self.vm_root).as_posix()
+                        for c in sorted(directory.glob(f"{stem}*.{ext}"))
+                        if c.name == f"{stem}.{ext}" or c.name.startswith(f"{stem}-")
+                    ]
+            if not produced:
+                time.sleep(0.1)
+        if produced:
+            time.sleep(0.5)  # let the writer finish before collection
         info = {
             "argv": list(argv),
             "returncode": result.returncode,
-            "seconds": round(time.monotonic() - started, 3),
+            "seconds_to_return": returned,
+            "seconds_to_output": round(time.monotonic() - started, 3) if produced else None,
+            "removed_before": removed,
+            "produced": produced,
             "stdout_tail": result.stdout[-300:],
         }
         self._event("convert", **info)
@@ -467,6 +532,7 @@ def run_job(
     plan = build_plan(raw_task, [p for p, local in files.items() if local is not None])
     saves: list[SaveEvent] = []
     failures: list[str] = []
+    target_absent: list[str] = []
     try:
         for vm_path in plan["agent_saves"]:
             title = window_title_for(vm_path)
@@ -483,8 +549,18 @@ def run_job(
         for raw_step in plan["postconfig_steps"]:
             step = Step(**{**raw_step, "argv": tuple(raw_step["argv"])})
             if step.kind == "activate":
-                if not session.activate(step.arg, step.strict):
+                mapped = any(
+                    window_title_for(p) == step.arg for p in plan["open_before_postconfig"]
+                )
+                ok = session.activate(step.arg, step.strict)
+                if not ok and mapped:
                     failures.append(f"activate failed: {step.arg}")
+                elif not ok:
+                    # No candidate file has this window (do-nothing without the
+                    # result file, or a window name the task never produces).
+                    # In the VM wmctrl fails the same way and keys go to the
+                    # focused window.
+                    target_absent.append(step.arg)
                 last_activated = step.arg
             elif step.kind == "sleep":
                 time.sleep(step.seconds)
@@ -499,7 +575,6 @@ def run_job(
                 )
                 if target is None:
                     session.key("ctrl+s")
-                    failures.append(f"ctrl+s with no mapped document (window {last_activated})")
                 else:
                     saves.append(session.save_with_ctrl_s(target, "postconfig"))
             elif step.kind == "key":
@@ -510,7 +585,7 @@ def run_job(
                 session.open(step.arg)
     finally:
         session.close()
-    outputs: dict[str, str] = {}
+    outputs: dict[str, str | None] = {}
     job_out = out_dir / job["job_id"]
     if job_out.exists():
         shutil.rmtree(job_out)
@@ -524,12 +599,16 @@ def run_job(
         dest.parent.mkdir(parents=True, exist_ok=True)
         shutil.copyfile(host_file, dest)
         outputs[vm_path] = str(dest)
+    for vm_path, local in files.items():
+        if local is not None and not session.host_path(vm_path).exists():
+            outputs[vm_path] = None  # removed (a derived file the conversion did not remake)
     return {
         "job_id": job["job_id"],
         "task_id": job["task_id"],
         "plan": plan,
         "saves": [asdict(event) for event in saves],
         "failures": failures,
+        "postconfig_target_absent": target_absent,
         "before_sha256": before,
         "after_sha256": {p: sha256_file(session.host_path(p)) for p in files},
         "outputs": outputs,

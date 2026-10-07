@@ -185,14 +185,18 @@ def merge_lo(
             continue
         files = dict(job["files"])
         files.update(row.get("outputs", {}))
+        touched = any(save.get("written") for save in row.get("saves", [])) or any(
+            event.get("event") == "convert" and event.get("produced")
+            for event in row.get("events", [])
+        )
         merged.append(
             {
                 **job,
                 "job_id": f"{job['job_id']}__{suffix}",
                 "mutant_id": f"{job['mutant_id']}__{suffix}",
                 "files": files,
-                "saved_via": "gui_faithful_lo_save",
-                "lo_build": row.get("lo_build"),
+                "saved_via": "gui_faithful_lo_save" if touched else "none",
+                "lo_build": row.get("lo_build") if touched else None,
             }
         )
     return merged, excluded
