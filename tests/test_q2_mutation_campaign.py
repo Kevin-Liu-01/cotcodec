@@ -438,7 +438,10 @@ def _frozen_tree(tmp_path: Path, digest: str | None = None, pins: dict | None = 
         "experiment_id": campaign.EXPERIMENT_ID,
         "path": campaign.PREREG_PATH,
         "sha256": digest or campaign.sha256_file(prereg),
+        "previous_hash": campaign.LEDGER_GENESIS,
     }
+    payload = json.dumps(row, sort_keys=True, separators=(",", ":")).encode()
+    row["hash"] = hashlib.sha256(payload).hexdigest()
     (src / campaign.LEDGER_PATH).write_text(json.dumps(row) + "\n", encoding="utf-8")
     return src
 
@@ -499,6 +502,16 @@ def test_probe_operator_map_covers_every_probe_and_names_real_operators() -> Non
         campaign.probe_touched_cells({"tasks": {"t": {"probes": ["new:PROBE"]}}})
 
 
+@pytest.mark.parametrize("probe", ["mutants:F-TYPO", "mutants_v2:F-TYPO-BODY", "mutants_v2:F-CELL"])
+def test_unrelated_edit_probes_touch_every_extra_change_operator(probe: str) -> None:
+    """The reviewer's case: an F-TYPO probe on a paragraph-blind checker predicts the
+    outcome of deleting or reformatting an unrelated paragraph too."""
+    cells = campaign.probe_touched_cells({"tasks": {"t": {"probes": [probe]}}})
+    extra = [name for name in registry() if ".extra." in name]
+    assert extra and all(campaign.is_probe_touched(cells, "t", name) for name in extra)
+    assert not campaign.is_probe_touched(cells, "t", "docx.eq.view_zoom")
+
+
 @pytest.mark.parametrize(
     ("label", "admitted", "post", "verdict", "null", "unstable", "expected"),
     [
@@ -530,6 +543,114 @@ def test_classify(
     verdict_row = None if verdict is None else {"verdict": verdict}
     null_row = None if null is None else {"verdict": null}
     assert campaign.classify(label, admitted, post_row, verdict_row, null_row, unstable) == expected
+
+
+@pytest.mark.parametrize(
+    ("flags", "expected"),
+    [
+        ({"save_failed": True}, "save_failed"),
+        ({"unemulated": True}, "unemulated"),
+        ({"infra_failed": True}, "infra_timeout"),
+        ({"save_failed": True, "infra_failed": True}, "save_failed"),
+    ],
+)
+def test_classify_infrastructure_exclusions(flags: dict[str, bool], expected: str) -> None:
+    post = {"status": "checked", "post_save_admitted": True}
+    status = campaign.classify(
+        "should_pass_equiv", True, post, {"verdict": "error"}, {"verdict": "pass"}, False, **flags
+    )
+    assert status == (expected, None)
+    assert campaign.classify("should_pass_equiv", False, post, None, None, False, **flags) == (
+        "not_admitted",
+        None,
+    )
+
+
+def test_report_never_scores_an_unsaved_office_mutant() -> None:
+    """The reviewer's reproduction: an office mutant whose save never ran is not evaluable."""
+    task = "77777777-7777-4777-8777-777777777777"
+    vm = "/home/user/Desktop/a.docx"
+
+    def mutation(op: str, seed: int) -> dict[str, Any]:
+        recipe = {"seed": seed, "input_sha256": "a" * 64, "params": {}}
+        return {
+            "mutant_id": make_mutant_id(task, op, recipe),
+            "task_id": task,
+            "operator": op,
+            "family": "docx",
+            "label": "should_pass_equiv",
+            "witness": {"req_ids": ["R1"], "argument": "W-E-SILENT: x"},
+            "purity_checks": [],
+            "recipe": recipe,
+            "target_path_in_vm": vm,
+        }
+
+    rows = [mutation("docx.eq.view_zoom", s) for s in (42, 43, 44)]
+    ids = [r["mutant_id"] for r in rows]
+    null = f"{task}__null__x"
+    admission = [
+        {"mutant_id": i, "target_id": f"{task}__x", "admitted": True, "failed_checks": []}
+        for i in ids
+    ]
+    recheck = [
+        {"mutant_id": i, "status": "checked", "post_save_admitted": True, "post_save_failed": []}
+        for i in ids
+    ]
+    scoring = [
+        {"mutant_id": i, "target_id": f"{task}__x", "kind": "mutant", "files": {vm: f"/f/{i}"}}
+        for i in ids
+    ] + [{"mutant_id": null, "target_id": f"{task}__x", "kind": "null", "files": {vm: "/n"}}]
+    # ids[0]: merge excluded it (open failed); ids[1]: reached the scorer unsaved
+    # (an older merge); ids[2]: saved and scored, but its scoring timed out.
+    saved = [
+        {**scoring[1], "saved_via": "none"},
+        {**scoring[2], "saved_via": "gui_faithful_lo_save"},
+        {**scoring[3], "saved_via": "gui_faithful_lo_save"},
+    ]
+    excluded = [{"mutant_id": ids[0], "kind": "save_failed", "reason": "open failed: x"}]
+    verdict = {"checker_funcs": ["compare_docx_files"]}
+    lock = {
+        ids[1]: {**verdict, "verdict": "fail", "score": 0.0},
+        ids[2]: {**verdict, "verdict": "error", "score": None},
+        null: {**verdict, "verdict": "pass", "score": 1.0},
+    }
+    notes = {"lock": {ids[2]: {"mutant_id": ids[2], "infra_failed": True}}}
+    outcomes, summary = campaign.build_report(
+        rows,
+        admission,
+        recheck,
+        {"lock": lock},
+        notes,
+        saved,
+        {},
+        excluded=excluded,
+        scoring_jobs=scoring,
+        n_boot=100,
+    )
+    status = {o["mutant_id"]: o["lock_status"] for o in outcomes}
+    assert status == {ids[0]: "save_failed", ids[1]: "save_failed", ids[2]: "infra_timeout"}
+    assert summary["save_stage_exclusions"] == [{"mutant_id": ids[0], "kind": "save_failed"}]
+    # The null mutant's save failing excludes every mutant of the target.
+    _, summary = campaign.build_report(
+        rows,
+        admission,
+        recheck,
+        {"lock": lock},
+        {},
+        saved[:2],
+        {},
+        excluded=[{"mutant_id": null, "kind": "save_failed"}],
+        scoring_jobs=scoring,
+        n_boot=100,
+    )
+    assert summary["status"]["lock"] == {"save_failed": 3}
+    # A task whose postconfig types a file name is excluded as unemulated.
+    typed = [{**job, "save_stage_unemulated_writes": True} for job in saved]
+    outcomes, summary = campaign.build_report(
+        rows, admission, recheck, {"lock": lock}, {}, typed, {}, scoring_jobs=scoring, n_boot=100
+    )
+    assert {o["lock_status"] for o in outcomes} == {"save_failed", "unemulated"}
+    assert summary["unemulated_tasks"] == [task]
 
 
 def test_report_counts_escapes_flips_and_probe_cells() -> None:
@@ -787,5 +908,86 @@ def test_build_wires_office_recipes_to_gold_or_base(
         assert {row["input"] for row in applied} == {str(base.relative_to(out))}
     summary = json.loads((out / "build-summary.json").read_text())
     assert summary["apply_to"] == apply_to
+    # Each admission row says what the steps edited: the gold or the base.
+    admission = campaign.read_jsonl(out / "admission.jsonl")
+    wanted = target["gold_sha256"] if apply_to == "gold" else campaign.sha256_file(base)
+    assert {(a["applied_to"], a["applied_input_sha256"]) for a in admission} == {(apply_to, wanted)}
+    mutations = campaign.read_jsonl(out / "mutations.jsonl")
+    by_id = {a["mutant_id"]: a for a in admission}
+    released = campaign.release_record(mutations[0], by_id[mutations[0]["mutant_id"]])
+    assert released["applied_to"] == apply_to and released["applied_input_sha256"] == wanted
+    assert released["recipe_release"]["input_sha256"] == campaign.sha256_file(base)
     # The stand-in made no edit, so every mutant fails edit_landed and none is admitted.
     assert summary["admitted"] == 0 and summary["planned"] == len(applied)
+
+
+def test_ledger_chain_check_matches_preregister_and_refuses_tampering(tmp_path: Path) -> None:
+    import sys
+
+    sys.path.insert(0, str(ROOT / "scripts"))
+    import preregister
+
+    ledger = ROOT / campaign.LEDGER_PATH
+    assert campaign.ledger_rows(ledger) == preregister.read_ledger(ledger)
+    lines = ledger.read_text(encoding="utf-8").splitlines()
+    forged = json.loads(lines[0])
+    forged["sha256"] = "0" * 64
+    bad = tmp_path / "ledger.jsonl"
+    bad.write_text("\n".join([json.dumps(forged), *lines[1:]]) + "\n", encoding="utf-8")
+    with pytest.raises(campaign.CampaignError, match="row hash"):
+        campaign.ledger_rows(bad)
+
+
+def _inputs_world(tmp_path: Path) -> tuple[Path, Path]:
+    src = tmp_path / "src"
+    inputs = tmp_path / "inputs"
+    for rel, text in {
+        "OSWorld/desktop_env/evaluators/metrics/table.py": "def compare_table(): ...\n",
+        "OSWorld/evaluation_examples/examples/calc/t.json": '{"id": "t"}\n',
+        "OSWorld/README.md": "not pinned\n",
+        "vm-baseline/home/user/.config/vlc/vlcrc": "[core]\n",
+        "file_cache_1e112283/files/calc/t/gold.xlsx": "gold bytes",
+    }.items():
+        path = inputs / rel
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text(text, encoding="utf-8")
+    gold = inputs / "file_cache_1e112283/files/calc/t/gold.xlsx"
+    receipts = src / campaign.FILE_CACHE_RECEIPTS
+    receipts.parent.mkdir(parents=True)
+    receipts.write_text(
+        f"calc/t/gold.xlsx\t{gold.stat().st_size}\t{campaign.sha256_file(gold)}\t-\treused\n",
+        encoding="utf-8",
+    )
+    block = json.dumps({"q2m_pins": 1, **campaign.input_digests(inputs)}, indent=1)
+    prereg = src / campaign.PREREG_PATH
+    prereg.parent.mkdir(parents=True)
+    prereg.write_text(f"# draft\n\n```json\n{block}\n```\n", encoding="utf-8")
+    return src, inputs
+
+
+def test_guard_checks_the_mounted_inputs_against_the_pins(tmp_path: Path) -> None:
+    src, inputs = _inputs_world(tmp_path)
+    checked = campaign.check_inputs(src, inputs)
+    assert checked["file_cache_files_verified"] == 1
+    assert (
+        campaign.main(["guard", "--split", "dev", "--src", str(src), "--inputs", str(inputs)]) == 0
+    )
+    # A README outside the pinned trees may change; a task config may not.
+    (inputs / "OSWorld/README.md").write_text("changed\n", encoding="utf-8")
+    campaign.check_inputs(src, inputs)
+    (inputs / "OSWorld/evaluation_examples/examples/calc/t.json").write_text("{}\n")
+    with pytest.raises(campaign.CampaignError, match="osworld_tree_sha256"):
+        campaign.check_inputs(src, inputs)
+    src, inputs = _inputs_world(tmp_path / "b")
+    (inputs / "file_cache_1e112283/files/calc/t/gold.xlsx").write_text("gold bytez")
+    with pytest.raises(campaign.CampaignError, match="file cache calc/t/gold.xlsx"):
+        campaign.check_inputs(src, inputs)
+    assert (
+        campaign.main(["guard", "--split", "dev", "--src", str(src), "--inputs", str(inputs)]) == 2
+    )
+
+
+def test_pins_cover_the_probe_map_and_the_file_cache_receipts() -> None:
+    assert {"probe_touched_sha256", "file_cache_receipts_sha256"} <= set(campaign.PINNED_KEYS)
+    actual = campaign.pins(ROOT)
+    assert actual["probe_touched_sha256"] == campaign.sha256_file(ROOT / campaign.PROBE_TOUCHED)

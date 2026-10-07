@@ -16,8 +16,9 @@ from collections.abc import Mapping
 from pathlib import Path
 from typing import Any
 
+from harness.q2_mutation.reachability import save_failures, step_may_write
 from harness.q2_mutation.schema import read_verdict_rows
-from harness.q2_mutation.stats import wilson_interval
+from harness.q2_mutation.stats import clopper_pearson
 
 ARMS = ("lock", "scout")
 
@@ -73,12 +74,22 @@ def summarize_run(run: Path) -> dict[str, Any]:
                     "nondeterministic": note.get("nondeterministic"),
                     "setup_unemulated": note.get("setup_unemulated"),
                     "postconfig_unemulated": note.get("postconfig_unemulated"),
+                    "unemulated_writes": bool(
+                        note.get("setup_unemulated_writes")
+                        or note.get("postconfig_unemulated_writes")
+                    ),
+                    "infra_failed": bool(note.get("infra_failed")),
                 }
     for job_id, row in reach.items():
         task_id, kind, _ = _key(job_id)
         entry = tasks.setdefault(task_id, {})
+        # The placed candidate files: the stage hashes each before replaying.
+        placed = {path: "placed" for path, sha in (row.get("before_sha256") or {}).items() if sha}
+        unemulated = list((row.get("plan") or {}).get("unemulated", []))
         entry[f"{kind}_save"] = {
             "infra_error": row.get("infra_error"),
+            "save_failures": save_failures(placed, row),
+            "unemulated_writes": any(step_may_write(str(step)) for step in unemulated),
             "saves": [
                 {
                     "reason": s["reason"],
@@ -96,21 +107,53 @@ def summarize_run(run: Path) -> dict[str, Any]:
     return {"tasks": dict(sorted(tasks.items())), "aggregate": aggregate(tasks)}
 
 
+def unemulated_task(t: Mapping[str, Any]) -> bool:
+    """A step the harness cannot replay may write a file the checker reads.
+
+    Such a task is excluded from K1 and P1 and listed (preregistration section 8).
+    """
+    return any(
+        isinstance(value, Mapping) and bool(value.get("unemulated_writes")) for value in t.values()
+    )
+
+
+def save_ok(t: Mapping[str, Any], kind: str) -> bool:
+    """The kind's GUI-faithful save ran and wrote every office file (no save row: no)."""
+    save = t.get(f"{kind}_save")
+    return bool(save) and not save.get("infra_error") and not save.get("save_failures")
+
+
+def infra_failed(t: Mapping[str, Any], *keys: str) -> bool:
+    return any(bool((t.get(key) or {}).get("infra_failed")) for key in keys)
+
+
 def aggregate(tasks: Mapping[str, Mapping[str, Any]]) -> dict[str, Any]:
-    out: dict[str, Any] = {}
+    out: dict[str, Any] = {
+        "excluded_unemulated": sorted(k for k, t in tasks.items() if unemulated_task(t)),
+    }
+    kept = {k: t for k, t in tasks.items() if not unemulated_task(t)}
     for arm in ARMS:
-        gold = [t for t in tasks.values() if f"gold_raw_{arm}" in t]
-        initial = [t for t in tasks.values() if f"initial_raw_{arm}" in t]
-        both = [t for t in gold if f"initial_raw_{arm}" in t]
+        gold = {k: t for k, t in kept.items() if f"gold_raw_{arm}" in t}
+        initial = [t for t in kept.values() if f"initial_raw_{arm}" in t]
+        paired = [t for t in gold.values() if f"initial_raw_{arm}" in t]
+        both = [t for t in paired if not infra_failed(t, f"gold_raw_{arm}", f"initial_raw_{arm}")]
         k1 = sum(
             t[f"gold_raw_{arm}"]["verdict"] == "pass"
             and t[f"initial_raw_{arm}"]["verdict"] == "fail"
             for t in both
         )
-        fixed = [t for t in gold if f"gold_saved_{arm}" in t]
+        # P1 counts a gold only if its GUI-faithful save wrote every office file
+        # and neither scoring timed out; the others are listed, never counted.
+        fixed = {
+            k: t
+            for k, t in gold.items()
+            if f"gold_saved_{arm}" in t
+            and save_ok(t, "gold")
+            and not infra_failed(t, f"gold_raw_{arm}", f"gold_saved_{arm}")
+        }
         flips = [
             t
-            for t in fixed
+            for t in fixed.values()
             if t[f"gold_raw_{arm}"]["verdict"] == "pass"
             and t[f"gold_saved_{arm}"]["verdict"] != "pass"
         ]
@@ -121,12 +164,21 @@ def aggregate(tasks: Mapping[str, Mapping[str, Any]]) -> dict[str, Any]:
             "tasks_with_gold": len(gold),
             "tasks_with_initial": len(initial),
             "k1_gold_pass_and_do_nothing_fail": f"{k1}/{len(both)}",
-            "gold_raw_verdicts": dict(Counter(t[f"gold_raw_{arm}"]["verdict"] for t in gold)),
-            "gold_saved_verdicts": dict(Counter(t[f"gold_saved_{arm}"]["verdict"] for t in fixed)),
+            "k1_infra_excluded": len(paired) - len(both),
+            "gold_raw_verdicts": dict(
+                Counter(t[f"gold_raw_{arm}"]["verdict"] for t in gold.values())
+            ),
+            "gold_saved_verdicts": dict(
+                Counter(t[f"gold_saved_{arm}"]["verdict"] for t in fixed.values())
+            ),
             "gold_fixed_point_flips": len(flips),
             "gold_fixed_point_n": len(fixed),
-            "gold_fixed_point_flip_wilson95": (
-                list(wilson_interval(len(flips), len(fixed))) if fixed else None
+            "gold_fixed_point_flip_clopper_pearson95": (
+                list(clopper_pearson(len(flips), len(fixed))) if fixed else None
+            ),
+            "gold_fixed_point_not_counted": sorted(set(gold) - set(fixed)),
+            "gold_save_failed": sorted(
+                k for k, t in gold.items() if "gold_save" in t and not save_ok(t, "gold")
             ),
             "do_nothing_saved_passes": len(dn_saved_pass),
         }

@@ -12,7 +12,8 @@
 
 ``merge-lo`` replaces job files with the reachability stage's saved outputs:
 the gold fixed-point candidate is LibreOffice-save(gold), the faithful
-do-nothing candidate is LibreOffice-save(initial).
+do-nothing candidate is LibreOffice-save(initial). A job whose save failed
+(open, activation, unwritten save, empty conversion) is excluded and listed.
 
 The checker-derived fields read here (result/expected getters) never leave
 the harness side.
@@ -28,6 +29,7 @@ from pathlib import Path
 from typing import Any
 
 from harness.q2_mutation.offline_eval import file_cache_local, load_task
+from harness.q2_mutation.reachability import save_failures, step_may_write
 from harness.q2_mutation.schema import MutationResult
 from harness.q2_mutation.tasks import FILE_CACHE_PREFIX, resolve_vm_path
 
@@ -183,7 +185,10 @@ def merge_lo(
 ) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
     """Jobs whose files are the reachability stage's outputs; and excluded jobs.
 
-    Control runs score raw and saved candidates side by side, so saved ids get
+    A job is excluded (``kind`` infra_error, no_lo_row or save_failed) when
+    the save stage raised, has no row, or did not write every office file of
+    the candidate (``reachability.save_failures``); it is never scored on its
+    pre-save bytes. Control runs score raw and saved candidates side by side, so saved ids get
     ``__<suffix>``. Mutant runs score only saved candidates and pass
     ``suffix=None`` so a verdict row carries the ``MutationResult`` id.
     """
@@ -194,11 +199,30 @@ def merge_lo(
         row = by_id.get(job["job_id"])
         if row is None or row.get("infra_error"):
             excluded.append(
-                {"job_id": job["job_id"], "reason": (row or {}).get("infra_error", "no LO row")}
+                {
+                    "job_id": job["job_id"],
+                    "mutant_id": job["mutant_id"],
+                    "kind": "infra_error" if row else "no_lo_row",
+                    "reason": (row or {}).get("infra_error", "no LO row"),
+                }
+            )
+            continue
+        # An office file whose GUI-faithful save did not happen must not be
+        # scored on its pre-save bytes (preregistration section 8).
+        failed = save_failures(job["files"], row)
+        if failed:
+            excluded.append(
+                {
+                    "job_id": job["job_id"],
+                    "mutant_id": job["mutant_id"],
+                    "kind": "save_failed",
+                    "reason": "; ".join(failed)[:400],
+                }
             )
             continue
         files = dict(job["files"])
         files.update(row.get("outputs", {}))
+        unemulated = [str(step) for step in (row.get("plan") or {}).get("unemulated", [])]
         touched = any(save.get("written") for save in row.get("saves", [])) or any(
             event.get("event") == "convert" and event.get("produced")
             for event in row.get("events", [])
@@ -211,6 +235,10 @@ def merge_lo(
                 "files": files,
                 "saved_via": "gui_faithful_lo_save" if touched else "none",
                 "lo_build": row.get("lo_build") if touched else None,
+                # Postconfig steps the save stage could not replay (typed text,
+                # scripts); a writing one excludes the task (section 8).
+                "save_stage_unemulated": list(unemulated),
+                "save_stage_unemulated_writes": any(step_may_write(s) for s in unemulated),
             }
         )
     return merged, excluded

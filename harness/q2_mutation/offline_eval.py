@@ -52,6 +52,7 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any
 
+from harness.q2_mutation.reachability import step_may_write
 from harness.q2_mutation.schema import VerdictRow, verdict_for_score
 from harness.q2_mutation.tasks import (
     FILE_CACHE_PREFIX,
@@ -208,6 +209,13 @@ class VmRootReport:
     downloaded: list[str] = field(default_factory=list)
     emulated: list[str] = field(default_factory=list)
     setup_unemulated: list[str] = field(default_factory=list)
+    # Whether any unemulated step may write a file a checker reads, judged on
+    # the full command text (``reachability.step_may_write``), not the cut one.
+    unemulated_writes: bool = False
+
+    def unemulated(self, text: str, full: str) -> None:
+        self.setup_unemulated.append(text)
+        self.unemulated_writes |= step_may_write(full)
 
 
 def build_initial_vm_root(raw: Mapping[str, Any], file_cache: Path, vm_root: Path) -> VmRootReport:
@@ -226,15 +234,19 @@ def build_initial_vm_root(raw: Mapping[str, Any], file_cache: Path, vm_root: Pat
             command = params.get("command")
             cwd = VM_HOME
             for argv in _split_shell(command):
-                text = " ".join(argv)[:160]
+                full = " ".join(argv)
+                text = full[:160]
                 try:
                     handled, cwd = emulate_setup_step(vm_root, argv, cwd)
                 except (OSError, ValueError, tarfile.TarError, zipfile.BadZipFile) as exc:
-                    report.setup_unemulated.append(f"{text} [failed: {exc}]")
+                    report.unemulated(f"{text} [failed: {exc}]", f"{full} [failed]")
                     continue
-                (report.emulated if handled else report.setup_unemulated).append(text)
+                if handled:
+                    report.emulated.append(text)
+                else:
+                    report.unemulated(text, full)
         elif kind not in ("launch", "open", "activate_window", "sleep", "close_window"):
-            report.setup_unemulated.append(f"config step {kind}")
+            report.unemulated(f"config step {kind}", f"config step {kind}")
     return report
 
 
@@ -253,16 +265,22 @@ def _is_gui_execute(argv: list[str]) -> bool:
 
 
 def apply_postconfig_file_steps(
-    raw: Mapping[str, Any], file_cache: Path, vm_root: Path, cache_dir: Path
+    raw: Mapping[str, Any],
+    file_cache: Path,
+    vm_root: Path,
+    cache_dir: Path,
+    writes: list[bool] | None = None,
 ) -> list[str]:
     """Download, file-only shell and ``stdout``-capturing diff/ls postconfig steps.
 
     OSWorld's setup controller writes an ``execute`` step's stdout to
     ``cache_dir/<stdout>``, where a ``cache_file`` getter reads it. Commands run
     on the VM root with paths mapped in and the VM root prefix mapped back out.
-    Returns the steps that were not emulated.
+    Returns the steps that were not emulated; ``writes`` receives, per such
+    step, whether it may write a file a checker reads (judged on the full text).
     """
     unemulated: list[str] = []
+    writes = writes if writes is not None else []
     for step in raw.get("evaluator", {}).get("postconfig", []):
         kind = step.get("type")
         params = step.get("parameters", {})
@@ -276,6 +294,7 @@ def apply_postconfig_file_steps(
             continue
         if kind not in ("execute", "command"):
             unemulated.append(f"postconfig {kind}")
+            writes.append(step_may_write(f"postconfig {kind}"))
             continue
         argvs = _split_shell(params.get("command"))
         if all(_is_gui_execute(argv) for argv in argvs):
@@ -291,9 +310,11 @@ def apply_postconfig_file_steps(
                 handled, cwd = emulate_setup_step(vm_root, argv, cwd)
             except (OSError, ValueError, tarfile.TarError, zipfile.BadZipFile) as exc:
                 unemulated.append(f"{' '.join(argv)[:160]} [failed: {exc}]")
+                writes.append(True)
                 continue
             if not handled:
                 unemulated.append(" ".join(argv)[:160])
+                writes.append(step_may_write(" ".join(argv)))
     return unemulated
 
 
@@ -497,6 +518,7 @@ def _score_in_worker(payload: dict[str, Any], queue: Any) -> None:
                 shutil.copyfile(local, target)
                 scored.append(target)
             out["notes"]["setup_unemulated"] = report.setup_unemulated
+            out["notes"]["setup_unemulated_writes"] = report.unemulated_writes
             out["scored_sha256"] = _sha256_tree(scored) if scored else None
             evaluator = raw["evaluator"]
             for getter in _as_list(evaluator.get("result")) + _as_list(evaluator.get("expected")):
@@ -520,9 +542,11 @@ def _score_in_worker(payload: dict[str, Any], queue: Any) -> None:
             env.vm_ip = "127.0.0.1"
             env.server_port = 0
             env._set_task_info(raw)
+            post_writes: list[bool] = []
             out["notes"]["postconfig_unemulated"] = apply_postconfig_file_steps(
-                raw, file_cache, vm_root, Path(env.cache_dir)
+                raw, file_cache, vm_root, Path(env.cache_dir), post_writes
             )
+            out["notes"]["postconfig_unemulated_writes"] = any(post_writes)
             result = env.evaluate()
             out["score"] = None if result is None else float(result)
             if result is None:
@@ -627,6 +651,9 @@ def score_job(
             infra_timeouts += 1
         runs.append(run)
     first = runs[0]
+    # A timeout that survived its retries is an infrastructure failure (section 8),
+    # kept apart from a checker exception although both leave verdict "error".
+    infra_failed = any(run.get("infra_timeout") for run in runs)
     nondeterministic = any(
         (run["score"], run["error"] is None) != (first["score"], first["error"] is None)
         for run in runs[1:]
@@ -657,6 +684,7 @@ def score_job(
         "mutant_id": job.mutant_id,
         "thread_env": THREAD_ENV,
         "infra_timeouts": infra_timeouts,
+        "infra_failed": infra_failed,
         "nondeterministic": nondeterministic,
         "repeat_scores": [run["score"] for run in runs],
         "repeat_errors": [run["error"] for run in runs],

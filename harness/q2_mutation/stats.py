@@ -130,6 +130,64 @@ def wilson_interval(successes: int, n: int, z: float = Z95) -> tuple[float, floa
     return max(0.0, centre - half), min(1.0, centre + half)
 
 
+def binomial_cdf(k: int, n: int, p: float) -> float:
+    """P(X <= k) for X ~ Binomial(n, p), summed exactly in log space."""
+    if k < 0:
+        return 0.0
+    if k >= n:
+        return 1.0
+    if p <= 0.0:
+        return 1.0
+    if p >= 1.0:
+        return 0.0
+    log_p, log_q = math.log(p), math.log1p(-p)
+    terms = [
+        math.lgamma(n + 1)
+        - math.lgamma(i + 1)
+        - math.lgamma(n - i + 1)
+        + i * log_p
+        + (n - i) * log_q
+        for i in range(k + 1)
+    ]
+    top = max(terms)
+    return min(1.0, math.exp(top) * sum(math.exp(t - top) for t in terms))
+
+
+def _bisect(func: Callable[[float], float], target: float, increasing: bool) -> float:
+    low, high = 0.0, 1.0
+    for _ in range(200):
+        mid = (low + high) / 2
+        value = func(mid)
+        if (value < target) == increasing:
+            low = mid
+        else:
+            high = mid
+    return (low + high) / 2
+
+
+def exact_upper_bound(k: int, n: int, alpha: float = 0.05) -> float:
+    """Exact (Clopper-Pearson) one-sided (1 - alpha) upper bound for k events in n."""
+    if n <= 0:
+        raise ValueError("n must be positive")
+    if not 0 <= k <= n:
+        raise ValueError("k must be in [0, n]")
+    if k == n:
+        return 1.0
+    # P(X <= k | p) falls as p grows; the bound is where it equals alpha.
+    return _bisect(lambda p: binomial_cdf(k, n, p), alpha, increasing=False)
+
+
+def clopper_pearson(k: int, n: int, alpha: float = 0.05) -> tuple[float, float]:
+    """Exact two-sided (1 - alpha) interval for k events in n."""
+    if n <= 0:
+        raise ValueError("n must be positive")
+    if not 0 <= k <= n:
+        raise ValueError("k must be in [0, n]")
+    low = 0.0 if k == 0 else 1.0 - exact_upper_bound(n - k, n, alpha / 2)
+    high = exact_upper_bound(k, n, alpha / 2)
+    return low, high
+
+
 def zero_event_upper_bound(n_clusters: int, alpha: float = 0.05) -> float:
     """Exact one-sided (1 - alpha) upper bound for a rate with 0 events in n."""
     if n_clusters <= 0:
@@ -272,6 +330,70 @@ def audit_label_error(
         n_clusters=len(keys),
         n_units=len(items),
         method=f"Hajek IPW, task-cluster bootstrap {n_boot}, seed {seed}",
+    )
+
+
+def kish_effective_n(weights: Sequence[float]) -> float:
+    """Kish effective sample size (sum w)^2 / sum w^2 of a weighted sample."""
+    if not weights:
+        raise ValueError("no weights")
+    return sum(weights) ** 2 / sum(w * w for w in weights)
+
+
+# K3 feasibility: the smallest effective sample whose zero-error exact upper
+# bound falls below 10% (29), and the fewest tasks and items a label group must
+# have before its label error counts as audited at all.
+K3_THRESHOLD = 0.10
+MIN_AUDITED_ITEMS = 30
+MIN_AUDITED_TASKS = 8
+
+
+@dataclass(frozen=True)
+class LabelErrorBound:
+    """The K3/K4 statistic of one label group."""
+
+    estimate: float
+    bootstrap_high: float
+    kish_n: float
+    exact_high: float
+    upper: float
+    n_items: int
+    n_tasks: int
+    sufficient: bool
+
+
+def label_error_bound(
+    items: Sequence[AuditItem], *, n_boot: int = 10_000, seed: int = 42, alpha: float = 0.05
+) -> LabelErrorBound:
+    """Upper bound on a group's weighted label error that can fire with few errors.
+
+    A percentile bootstrap collapses to [0, 0] when no error is observed, so
+    the bound is the larger of (a) the task-cluster bootstrap's upper limit
+    and (b) the exact one-sided Clopper-Pearson bound at the Kish effective
+    sample size (rounded down) with the weighted error count rounded up. A
+    group with fewer than ``MIN_AUDITED_ITEMS`` items, ``MIN_AUDITED_TASKS``
+    tasks or an effective size below what a zero-error bound under 10% needs
+    is insufficient: K3 treats it as failed, not passed.
+    """
+    interval = audit_label_error(items, n_boot=n_boot, seed=seed, alpha=2 * alpha)
+    n_eff = kish_effective_n([item.weight() for item in items])
+    n_int = max(1, math.floor(n_eff + 1e-9))
+    k_int = min(n_int, math.ceil(interval.estimate * n_eff - 1e-9))
+    exact = exact_upper_bound(k_int, n_int, alpha)
+    sufficient = (
+        len(items) >= MIN_AUDITED_ITEMS
+        and interval.n_clusters >= MIN_AUDITED_TASKS
+        and n_int >= min_clusters_for_upper_bound(K3_THRESHOLD, alpha)
+    )
+    return LabelErrorBound(
+        estimate=interval.estimate,
+        bootstrap_high=interval.high,
+        kish_n=n_eff,
+        exact_high=exact,
+        upper=max(interval.high, exact),
+        n_items=len(items),
+        n_tasks=interval.n_clusters,
+        sufficient=sufficient,
     )
 
 
