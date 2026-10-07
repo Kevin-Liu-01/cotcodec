@@ -44,7 +44,18 @@ apps:
     finish_keys: []
     entries: all
   chrome:
-    program: Google Chrome (as installed), --no-first-run --no-default-browser-check --force-renderer-accessibility, a new profile directory per trial
+    program: Google Chrome (as installed) with the flags below, a new profile directory per trial
+    flags:
+      - --no-first-run
+      - --no-default-browser-check
+      - --force-renderer-accessibility
+      - --simulate-outdated-no-au=Tue, 31 Dec 2099 23:59:59 GMT
+    flags_note: >-
+      the last flag sets the build date Chrome's outdated-build check compares with the clock
+      to 2099, so the "Can't update Chrome" bubble never opens. Added before the freeze:
+      development run 522 showed the bubble opening mid-trial (the guest image's Chrome build
+      is older than the guest clock allows) and taking the keyboard focus; its default button
+      took the typed Enter or space and opened a reinstall tab
     open: file:///home/user/canary/textarea.html
     page: >-
       <!doctype html><meta charset="utf-8"><textarea id="t" spellcheck="false"

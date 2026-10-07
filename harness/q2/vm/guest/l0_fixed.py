@@ -37,7 +37,10 @@ A ``type`` action that changes the keymap first remaps every code point it
 needs in one burst and waits for the desktop shell to answer on D-Bus before
 typing (``shell_barrier``): the shell is the compositor, and it repaints
 nothing while it rebuilds its keymap. Every action except ``wait`` ends with
-the same barrier (the shell has processed the action's events), then waits
+the same barrier (the shell has processed the action's events; after a
+keymap change, repeated until the shell answers promptly, ``shell_idle``),
+re-damages every viewable top-level window so the compositor repaints each from
+its current contents (``nudge_compositor``), then waits
 until the screen has been unchanged for ``QUIET_S`` (0.25 s; the root window's
 image read every 0.05 s, as ``/screenshot`` reads it), at least ``SETTLE_S``
 (0.1 s, the default ``pyautogui.PAUSE``
@@ -430,6 +433,61 @@ class Executor:
                 return
             prompt = prompt + 1 if elapsed < IDLE_REPLY_S else 0
 
+    def nudge_compositor(self):
+        """Re-damage every viewable top-level window (no pixel changes), so the compositor
+        repaints from each window's current contents.
+
+        Development runs 504-524: after typing, the probe's last drawing (made 4 ms
+        before the executor's last event) stayed off the screen for good (still
+        missing 1.9 s later, when the next entry's drawing finally showed it), in
+        about 4% of typing trials, always exactly the last draw: the compositor
+        consumed that damage without repainting it. A Stage-1 screenshot would be
+        stale the same way. XDamage DamageAdd marks the windows damaged again;
+        XFixes CreateRegion supplies the region (python-xlib has no binding, so
+        the two requests are encoded here from the protocol).
+        """
+        from Xlib import X
+        from Xlib.protocol import rq, structs
+
+        class CreateRegion(rq.Request):
+            _request = rq.Struct(
+                rq.Card8("opcode"), rq.Opcode(5), rq.RequestLength(), rq.Card32("region"),
+                rq.List("rectangles", structs.Rectangle),
+            )  # fmt: skip
+
+        class DestroyRegion(rq.Request):
+            _request = rq.Struct(
+                rq.Card8("opcode"), rq.Opcode(10), rq.RequestLength(), rq.Card32("region")
+            )
+
+        try:
+            self.d.xfixes_query_version()
+            self.d.damage_query_version()
+            xfixes = self.d.get_extension_major("XFIXES")
+            nudged = 0
+            for window in self.d.screen().root.query_tree().children:
+                try:
+                    if window.get_attributes().map_state != X.IsViewable:
+                        continue
+                    geometry = window.get_geometry()
+                except Exception:  # noqa: BLE001 - windows can vanish meanwhile
+                    continue
+                region = self.d.display.allocate_resource_id()
+                CreateRegion(
+                    display=self.d.display, opcode=xfixes, region=region,
+                    rectangles=[{"x": 0, "y": 0, "width": geometry.width,
+                                 "height": geometry.height}],
+                )  # fmt: skip
+                # python-xlib's DamageAdd fields are misnamed: the protocol's
+                # (drawable, region) travel as (repair, parts).
+                window.damage_add(window.id, region)
+                DestroyRegion(display=self.d.display, opcode=xfixes, region=region)
+                nudged += 1
+            self.d.sync()
+            self.log["nudged"] = nudged
+        except Exception as exc:  # noqa: BLE001 - recorded; the quiet wait still runs
+            self.log["nudged"] = repr(exc)[:200]
+
     def screen_quiet(self, started):
         """Return once the screen has been unchanged for QUIET_S, as a screenshot reads it.
 
@@ -572,6 +630,7 @@ class Executor:
                     self.shell_idle()
                 else:
                     self.shell_barrier()
+                self.nudge_compositor()
                 self.screen_quiet(ended)
         finally:
             for keycode in list(reversed(self.held_keys)):

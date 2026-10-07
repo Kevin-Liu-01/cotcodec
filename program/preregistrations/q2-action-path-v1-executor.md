@@ -19,14 +19,14 @@ Frozen with this file (SHA-256 of the committed bytes):
 
 | File | SHA-256 |
 |---|---|
-| `harness/q2/vm/guest/l0_fixed.py` | `5dcd0079cb6c481419c665816b0714fe25a15f7a0d694b3c759941b1eda0a2a6` |
+| `harness/q2/vm/guest/l0_fixed.py` | `e9f03940c08993dd715bfae92c7ecf883d0417a95f568546425f6e4a9d85eb72` |
 | `harness/q2/action_path/executor.py` | `d5c43bbb76926da056c15a39ddcbf05e1c328bd7dddb6a726cde3c46c2f9776a` |
 | `harness/q2/action_path/adapters.py` | `3a62eb109d656a717dfe9cbce31fba3bcf02457e9f5690f3e20639e8becbaf40` |
 | `harness/q2/action_path/upstream/osworld_bfd62bdc_fixed.py` | `9558b956004f6c971e881f073c42792e3d5d437396dbe6c0b407b250df3d8fdf` |
 | `harness/q2/action_path/upstream/gym_anything_aae6f7607.py` | `c624cee586e3b8b8b2ac12102ae1fca91e7de154b494035c4289123f38887aa6` |
 | `harness/q2/action_path/corpus.py` | `b4b1f974d481c249fcb22f2b77102579fcb82e504c64375a9183783f63bfbe49` |
-| `harness/q2/action_path/build_suite.py` | `c4648f125ff5149ed494684bf66eb48aa2ed789e9e4cec179203a33376182bf9` |
-| `harness/q2/action_path/suite_cells.json` | `d99bcaea93db502e5337fac0365509e62736cc54718d246f44ed9ebd9f53e921` |
+| `harness/q2/action_path/build_suite.py` | `1980d245c8bd4a7175124a74f2131d513facc127abfc5c10ec0db25fd1cfbc3a` |
+| `harness/q2/action_path/suite_cells.json` | `a79073a2f5e6e7d7e109b14d50fb4c1e2791f856504c32cd855911e726a95c95` |
 | `harness/q2/action_path/qwen35_chat_template.jinja` | `a4aee8afcf2e0711942cf848899be66016f8d14a889ff9ede07bca099c28f715` |
 | `harness/q2/action_path/mutants.py` | `1791311503e0b57808b0f378ce2cd4c93167c76a99c80f8b6666f559a1a90beb` |
 | `harness/q2/action_path/harness_design_diffs.md` | `245dcfcf7b9393bd1c7f03a57360d9443c6478fb8c513bf64835196c4e59b61f` |
@@ -66,9 +66,22 @@ that key with Shift_L; any other code point is typed through an
 executor-owned spare keycode remapped to `[keysym, keysym]` (Latin-1 value or
 `0x01000000 + cp`), left mapped after use (least recently used first when one
 is reused, never within 0.3 s of its last press), so no client sees a key
-whose mapping has changed back; zero spare keycodes raises. Every action but
-`wait` ends with a 0.1 s settle, PyAutoGUI's default `PAUSE` that ends every
-upstream PyAutoGUI call.
+whose mapping has changed back; zero spare keycodes raises. A `type` action
+that changes the keymap remaps every code point it needs in one burst, then
+waits until GNOME Shell (the compositor) answers a D-Bus property read twice
+within 50 ms, since it repaints nothing while it rebuilds its keymap. Every
+action but `wait` then ends in four steps: the same D-Bus round trip (the
+shell has processed the action's events); an XDamage `DamageAdd` of each
+viewable top-level window's full area, so the compositor repaints every window
+from its current contents; a wait until the root window's image (read every
+50 ms, as `/screenshot` reads it) has been unchanged for 0.25 s; at least
+0.1 s (PyAutoGUI's default `PAUSE`, which ends every upstream PyAutoGUI call)
+and at most 2 s after the action's device events. Development runs 486-499
+showed screenshots one compositor frame behind without the quiet wait, runs
+486-493 the screen frozen during keymap rebuilds without the shell wait, and
+runs 504-524 the last drawing of about 4% of typing trials never painted
+without the repaint request (the reason for each is in the executor's
+source).
 
 ## 3. Stage-1 harnesses (`adapters.py`, `upstream/`)
 
