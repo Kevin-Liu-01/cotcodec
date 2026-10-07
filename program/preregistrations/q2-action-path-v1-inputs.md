@@ -31,7 +31,7 @@ Frozen with this file (SHA-256 of the committed bytes):
 |---|---|
 | `harness/q2/vm/guest/probe.py` | `ba5c0f1d364c80d5f8190f3c357b915cd504d754891285c3772ba959a804efeb` |
 | `harness/q2/vm/guest/guard.py` | `595fce1fa164c8fce868690b1853706ac6fa4761f0d15f41ac5cc0c3804224c5` |
-| `harness/q2/vm/guest/canary.py` | `fbe21671a085b1eb58a8de08e4de1b46ce7c19d340576364814253e4a5305099` |
+| `harness/q2/vm/guest/canary.py` | `32742019db56b4f09905c50c71159c2ef3fe024a044d07f4bffb31cd41fcea1e` |
 | `harness/q2/vm/guest/facts.py` | `4a071a39d4586a58b62419796a57b678568bdbc3bfd77ec6d50e841414dcd255` |
 | `harness/q2/vm/guest/sentinel.py` | `98f46a7faafc58e9c65466b19ae3547288fc8829378ad7aa169b09a17161b18b` |
 | `harness/q2/vm/guest/tap_selftest.py` | `7e051c0bcb45ba81c2b1fb855a9dc70115957fafa3ec7f333c8b3be5ab3bf835` |
@@ -117,10 +117,13 @@ file equals it), so freezing the catalog fixes them.
   a JSON literal; VS Code: a new user-data directory with the `canary.yaml`
   settings, extensions disabled, `--password-store=basic`; Terminal: a new
   window running `cat > out.txt`), launch through `/setup/launch`, wait for
-  the app's window to be active (and its text object in the accessibility
-  tree for Writer and Chrome), run the actions and finish keys through
-  L0-fixed, read back as `canary.yaml` says, and terminate every process of
-  the trial.
+  the app's window to be active and for the app's own sign of readiness
+  (Writer: its text object in the accessibility tree; Chrome: the page's
+  mirrored title; VS Code: the text editor's status-bar items), then for
+  Writer, Chrome and VS Code until the trial's processes use under 10% of one
+  CPU in two consecutive 0.5 s windows (at most 20 s), run the actions and
+  finish keys through L0-fixed, read back as `canary.yaml` says, and
+  terminate every process of the trial.
 - **Detection-control translators** (`controls.py`, `keynames.py`). H-OSW-up
   runs OSWorld `bfd62bdc`'s `parse_response` unmodified
   (`upstream/osworld_bfd62bdc.py`) and maps each PyAutoGUI string call for
@@ -198,6 +201,7 @@ later change to a file listed in section 1 (from `git log 29b056e..`):
 | `b603347` | `desktop.py`, `suite.py`, `verdict.py`, `driver.py`, `runner.py`, `manifest.py` | The observation-failure rule now says what main section 6.1 says (a screenshot or tree that `DesktopEnv`'s retries do not deliver; a delivered retry is reported); the code had counted every retried `/screenshot` or `/accessibility` call. Run 537: the boot's first `/accessibility` call answered HTTP 500 and its retry 200, 1 of 2,415 accessibility calls in runs 484-541. Each suite session takes `DesktopEnv.reset`'s observation before its first trial, as Stage 1 does. `manifest.py`: ladder rungs repeat the seed-43 order until every VM is busy and the rung has 20 cold boots (main design decision 29), only the ladder and A4 run concurrent VMs, and suite development may run concurrent VMs at seed 42. |
 | `dba0580` | `suite.py` | A trial's compact tap window keeps each mapping notify's kind and keycode range (diagnostic, never judged). Run 549 could not otherwise tell which notifies surrounded its `chord_super_d` failures. |
 | `a6623ae` | `guest/guard.py`, `suite.py`, `runner.py` | The session warm-up described in section 2. Runs 549 (8 VMs) and 574 (one VM, the same 14 sessions): `chord_super_d` failed in the two sessions whose first key event was its Super_L press, the `d` press arriving with state 0, and in every session of runs 546 and 549 the keymap was re-sent right after the session's first key. |
+| CANARY_COMMIT | `guest/canary.py` | Writer, Chrome and VS Code trials also wait until the trial's processes are idle before the first action (section 2). Run 613, on a loaded host: three VS Code trials lost their first keys or clicks (`type_symbols_shifted` read back empty, `type_emoji` lost its first word and emoji, `triple_click_line` became a click inside the word) although the editor's status-bar items were showing; VS Code was still loading. |
 
 The probe change makes the no-action entry's screenshot start from a settled
 screen, the canary changes make the read-back report what the app holds, and

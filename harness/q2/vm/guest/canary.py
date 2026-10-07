@@ -15,14 +15,19 @@ Modes (``python3 -c <bootstrap> <b64> MODE <json>``; prints one JSON object):
   directory and the textarea page with the fixture as a JSON string literal;
   VS Code a new user-data directory with the frozen ``settings.json``;
   GNOME Terminal a new window running ``cat > out.txt``.
-* ``wait``: wait until the active window has the app's class and (for the
-  accessibility read-backs) the app's text object is in the accessibility
-  tree; returns the window id, its geometry and the elapsed time.
+* ``wait``: wait until the active window has the app's class, then for the
+  app's own sign of readiness (Writer: its text object in the accessibility
+  tree; Chrome: the page's mirrored title; VS Code: the status bar shows the
+  text editor's items), then (Writer, Chrome, VS Code) until the trial's
+  processes are idle (``wait_idle``: under ``IDLE_CPU_FRACTION`` of one CPU
+  in two consecutive ``IDLE_WINDOW_S`` windows, at most ``IDLE_TIMEOUT_S``),
+  then ``SETTLE_S``; returns the window id, its geometry and the elapsed time.
 * ``readback``: Writer: the text of every paragraph of the document, in
   order, joined with ``\\n``, from the accessibility tree; Chrome: the
-  textarea's text from the accessibility tree; VS Code: the saved fixture
-  file's bytes as UTF-8; Terminal: ``out.txt`` as UTF-8 (after ``cat`` exits,
-  or as it stands for the no-input validation).
+  textarea's value as the page mirrors it, percent-encoded, into the window
+  title; VS Code: the saved fixture file's bytes as UTF-8; Terminal:
+  ``out.txt`` as UTF-8 (after ``cat`` exits, or as it stands for the no-input
+  validation).
 * ``close``: terminate every process started for the trial (matched by the
   trial's profile path or window class) and wait until they are gone.
 
@@ -51,6 +56,12 @@ WINDOW_CLASSES = {
 # Seconds to wait after the app is ready (window active; Writer's document in the
 # accessibility tree; Chrome's mirrored title set; VS Code's editor items in its status bar).
 SETTLE_S = {"writer": 1.0, "chrome": 1.0, "vscode": 1.0, "terminal": 1.0}
+# The trial's app processes are idle when, in two consecutive IDLE_WINDOW_S windows, they use
+# less than IDLE_CPU_FRACTION of one CPU in all (development run 613: under host load, VS Code
+# showed its editor's status-bar items while still loading, and dropped the first keys typed).
+IDLE_WINDOW_S = 0.5
+IDLE_CPU_FRACTION = 0.10
+IDLE_TIMEOUT_S = 20.0
 READBACK_TIMEOUT_S = 5.0
 PROCESS_PATTERNS = {
     "writer": ("soffice",),
@@ -308,6 +319,36 @@ def chrome_readback():
     return {"ok": False, "error": "no mirrored title", "titles": _titles(d)}
 
 
+def _cpu_ticks(pids):
+    """utime + stime (clock ticks) of the processes, from /proc/<pid>/stat."""
+    total = 0
+    for pid in pids:
+        try:
+            with open(f"/proc/{pid}/stat", encoding="utf-8") as handle:
+                fields = handle.read().rsplit(")", 1)[1].split()
+        except OSError:
+            continue
+        total += int(fields[11]) + int(fields[12])  # fields 14 and 15 of proc(5)
+    return total
+
+
+def wait_idle(app, needle):
+    """Wait until the trial's app processes are idle (at most IDLE_TIMEOUT_S)."""
+    tick = os.sysconf("SC_CLK_TCK")
+    limit = IDLE_CPU_FRACTION * IDLE_WINDOW_S * tick
+    started = time.monotonic()
+    windows, quiet = [], 0
+    while quiet < 2 and time.monotonic() - started < IDLE_TIMEOUT_S:
+        pids = _pids(PROCESS_PATTERNS[app], needle)
+        before = _cpu_ticks(pids)
+        time.sleep(IDLE_WINDOW_S)
+        used = _cpu_ticks(pids) - before
+        windows.append([len(pids), used])
+        quiet = quiet + 1 if pids and used < limit else 0
+    return {"idle": quiet >= 2, "waited_s": round(time.monotonic() - started, 3),
+            "windows": windows[-6:]}  # fmt: skip
+
+
 def wait_window(config):
     from Xlib import display
 
@@ -353,6 +394,8 @@ def wait_window(config):
         out["editor_ready"] = ready
         out["status_bar_bright"] = bright
         out["ok"] = ready
+    if app in ("writer", "chrome", "vscode"):
+        out["idle"] = wait_idle(app, trial_dir(config))
     time.sleep(float(config.get("settle_s", SETTLE_S[app])))
     out["geometry"] = _frame_geometry(d, window)
     out["elapsed_s"] = round(time.monotonic() - started, 3)
