@@ -22,3 +22,22 @@ the dossier are arXiv submission dates unless stated otherwise.
 
 This is input construction for preregistration q3-k1-localization-screen-v1,
 not an experimental result.
+
+## 2026-10-07: Q3 K1 pre-freeze operating characteristics
+
+| File | What it is |
+|---|---|
+| `2026-10-07/q3-k1-prefreeze-simulations/sim_xi.py`, `sim_xi_4000_10000.json` | GO and NEGATIVE probabilities and 99 percent interval coverage of the registered xi and xi_rel rules: 4,000 synthetic audit reads per cell (two targets each), B = 10,000, five noise scenarios (A the preregistration's worked case, B cluster-dominated, C seed-dominated, D both terms comparable, E small seed SD), nine true effects |
+| `2026-10-07/q3-k1-prefreeze-simulations/sim_h2.py`, `sim_h2_2000_10000.json` | Pass probabilities of the H2a and H2b gates on the development pre-check and the audit read: 2,000 replicates per cell, B = 10,000, logit item-difficulty SD 0.8 or 1.5 |
+| `2026-10-07/q3-k1-prefreeze-simulations/sim_v12.py`, `sim_v12.log` | HOLD (V2) and V1-failure trigger rates on 100 English ML prompts, two targets by three seeds, 200,000 draws per cell |
+
+The pre-freeze audit of preregistration q3-k1-localization-screen-v1 wrote
+these scripts and ran them with the registered statistics code
+(`harness/sparse_indexer_k1_stats.py` at SHA-256 `743a4317...`, NumPy 2.5.2):
+the two bootstrap studies on the H100 host's CPU, the trigger-rate study on a
+workstation CPU. They are kept verbatim (so `program/evidence` is excluded
+from lint); a run from the repository root with `harness/` importable
+reproduces them. Commit A changes that module only by adding `final_verdict`
+and documentation; the interval and gate functions the scripts call are
+unchanged. Synthetic numbers only: they describe the decision rules, not the
+model or the data.
