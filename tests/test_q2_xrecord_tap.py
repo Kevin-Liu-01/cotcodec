@@ -71,16 +71,37 @@ def test_key_events_use_the_mapping_in_force_when_processed():
     }
 
 
-def test_mapping_check_flags_changes_without_a_recorded_request():
-    ok = [
-        {"kind": "mapping_request", "first_keycode": 255, "count": 1},
-        {"kind": "mapping_notify", "request": 1, "first_keycode": 255, "count": 1},
-        {"kind": "mapping_notify", "request": 0, "first_keycode": 0, "count": 0},
-    ]
-    assert tap.mapping_check(ok)["ok"] is True
-    xkb = ok + [{"kind": "mapping_notify", "request": 1, "first_keycode": 8, "count": 248}]
-    result = tap.mapping_check(xkb)
-    assert result["ok"] is False and result["unmatched_ranges"] == [[8, 248]]
+def test_mapping_check_separates_device_switches_from_unseen_changes():
+    ready = {"kind": "ready", "min_keycode": 8, "keymap": [[0x61, 0x41]] + [[0, 0]] * 247}
+    request = {
+        "kind": "mapping_request",
+        "first_keycode": 255,
+        "count": 1,
+        "rows": [[0xE9, 0xE9]],
+    }
+    explained = {"kind": "mapping_notify", "request": 1, "first_keycode": 255, "count": 1}
+    # Job 467: switching the master keyboard from the PS/2 device to the XTest
+    # device re-sent the whole keymap; it equals the tap's table, so it is benign.
+    switch_rows = [[0x61, 0x41, 0, 0]] + [[0, 0]] * 246 + [[0xE9, 0xE9]]
+    switch = {
+        "kind": "mapping_notify",
+        "request": 1,
+        "first_keycode": 8,
+        "count": 248,
+        "rows": switch_rows,
+    }
+    modifier = {"kind": "mapping_notify", "request": 0, "first_keycode": 0, "count": 0}
+    result = tap.mapping_check([ready, request, explained, switch, modifier])
+    assert result["ok"] is True
+    assert (result["explained"], result["benign_unexplained"]) == (1, 1)
+    # An XKB change the tap never saw: keycode 8 now reads 'b', the table says 'a'.
+    changed = dict(switch, rows=[[0x62, 0x42]] + switch_rows[1:])
+    result = tap.mapping_check([ready, request, explained, changed])
+    assert result["ok"] is False and result["unverified"] == [{"range": [8, 248], "keycodes": [8]}]
+    # A notify read just before its request's record is absorbed by the look-ahead.
+    early = dict(switch)
+    assert tap.mapping_check([ready, early, request, explained])["ok"] is True
+    assert tap.mapping_check([request])["ok"] is False  # no ready record
 
 
 class _FakeGuest:
@@ -106,7 +127,9 @@ class _FakeGuest:
 def _selftest_records(keysyms: list[int]) -> tuple[list[dict], dict]:
     expected, records = [], [{"kind": "ready", "min_keycode": 8, "keymap": [[0] * 2] * 248}]
     for gen, keysym in enumerate([0xE9, 0x1000416, 0], start=1):
-        records.append({"kind": "mapping_request", "first_keycode": 255, "count": 1})
+        records.append(
+            {"kind": "mapping_request", "first_keycode": 255, "count": 1, "rows": [[keysym] * 2]}
+        )
         records.append({"kind": "mapping_notify", "request": 1, "first_keycode": 255, "count": 1})
         for kind in ("KeyPress", "KeyRelease"):
             records.append(

@@ -387,3 +387,18 @@ def test_rdev_runner_argv_uses_the_capture_subcommand():
         subcommand="rdev-capture",
     )
     assert argv[argv.index("harness.q2.vm.runner") + 1] == "rdev-capture"
+
+
+def test_runner_image_lock_pins_the_saved_image_and_its_packages():
+    lock = json.loads((ROOT / "infra/q2-vm-runner/image-lock.json").read_text(encoding="utf-8"))
+    dockerfile = ROOT / lock["dockerfile"]
+    assert hashlib.sha256(dockerfile.read_bytes()).hexdigest() == lock["dockerfile_sha256"]
+    assert lock["base_image"].split("@")[1] in dockerfile.read_text(encoding="utf-8")
+    assert re.fullmatch(r"[0-9a-f]{64}", lock["tarball"]["sha256"])
+    assert lock["tarball"]["host_path"].startswith("/home/kevin/cotcodec-runs/")
+    assert lock["packages"]["python3.10"] == "3.10.12-1~22.04.18"
+    manifests = sorted((ROOT / "experiments/manifests/q2-action-path").glob("*.yaml"))
+    assert manifests
+    for path in manifests:
+        text = path.read_text(encoding="utf-8")
+        assert f"image_id: {lock['image_id']}" in text, path.name

@@ -20,13 +20,18 @@ recomputed offline from the ``ready`` snapshot and the ``mapping_request``
 records.
 
 A second connection watches MappingNotify, which the server sends to every
-non-XKB client on any keyboard-mapping change, core or XKB. Each one becomes a
-``mapping_notify`` record. ``mapping_check`` pairs them with the recorded
-requests: a keyboard MappingNotify without a recorded core request means the
-mapping changed through XKB requests, which the tap does not decode, and every
-later key event on that keycode range is unverified. The suite treats an
-unverified key event inside an entry's window as an infrastructure failure of
-the oracle (preregistration section 6.1).
+non-XKB client on any keyboard-mapping change, and records the keymap it then
+reads for the notified range (``mapping_notify``). Besides core requests, the
+server sends one when the master keyboard switches slave device (for example
+from QEMU's PS/2 keyboard to the XTest keyboard) and copies that device's
+keymap, or when the mapping changes through XKB requests, which the tap does
+not decode. ``mapping_check`` therefore compares each keyboard MappingNotify
+that no recorded core request explains with the tap's own table at that point
+of the stream: equal means the keymap did not change (a device switch, job
+467); different means the server's keymap left the tap's table, and every
+later key event on that range is unverified. The suite treats an unverified
+key event inside an entry's window as an infrastructure failure of the oracle
+(preregistration section 6.1).
 
 Output is JSONL. Every record has ``kind`` and ``t`` (guest wall time):
 
@@ -149,32 +154,77 @@ def key_record(event, keymap):
     return record
 
 
-def mapping_check(records):
-    """Pair keyboard MappingNotify records with recorded core requests, in order.
+def _trimmed(row):
+    row = list(row)
+    while row and not row[-1]:
+        row.pop()
+    return row
 
-    Returns ok, the counts, and the keycode ranges changed by something other
-    than a recorded core request (key events on them after that point are
-    unverified).
-    """
-    requests = [r for r in records if r.get("kind") == "mapping_request"]
-    notifies = [
-        r
-        for r in records
-        if r.get("kind") == "mapping_notify" and r.get("request") == MAPPING_KEYBOARD
+
+def _rows_differ(keymap, first, rows):
+    """Keycodes in [first, first + len(rows)) where rows disagree with the keymap."""
+    return [
+        first + i
+        for i, row in enumerate(rows)
+        if _trimmed(row) != _trimmed(keymap.rows.get(first + i) or [])
     ]
+
+
+def mapping_check(records):
+    """Check every keyboard MappingNotify against the tap's own keymap.
+
+    A notify is *explained* when a recorded core request changed the same
+    range. An unexplained notify is *benign* when the keymap the watcher read
+    for its range equals the tap's table at that point of the stream (or right
+    after the next recorded request, which absorbs the two threads' ordering);
+    otherwise it is a change the tap did not see, and key events on that range
+    after it are unverified.
+    """
+    ready = next((r for r in records if r.get("kind") == "ready"), None)
+    keymap = Keymap(ready["min_keycode"], ready["keymap"]) if ready else None
+    requests = [r for r in records if r.get("kind") == "mapping_request"]
     pending = [(r["first_keycode"], r["count"]) for r in requests]
-    unmatched = []
-    for notify in notifies:
-        key = (notify["first_keycode"], notify["count"])
+    explained, benign, unverified = 0, 0, []
+    for index, record in enumerate(records):
+        kind = record.get("kind")
+        if kind == "mapping_request" and keymap is not None:
+            keymap.apply(record["first_keycode"], record.get("rows") or [])
+            continue
+        if kind != "mapping_notify" or record.get("request") != MAPPING_KEYBOARD:
+            continue
+        key = (record["first_keycode"], record["count"])
         if key in pending:
             pending.remove(key)
+            explained += 1
+            continue
+        rows = record.get("rows") or []
+        differ = _rows_differ(keymap, key[0], rows) if keymap is not None and rows else ["no rows"]
+        if differ and keymap is not None and rows:
+            following = next(
+                (r for r in records[index + 1 :] if r.get("kind") == "mapping_request"), None
+            )
+            if following is not None:
+                ahead = Keymap(keymap.min_keycode, [])
+                ahead.rows = {k: list(v) for k, v in keymap.rows.items()}
+                ahead.apply(following["first_keycode"], following.get("rows") or [])
+                if not _rows_differ(ahead, key[0], rows):
+                    differ = []
+        if differ:
+            unverified.append({"range": list(key), "keycodes": differ[:20]})
         else:
-            unmatched.append(list(key))
+            benign += 1
+    keyboard = sum(
+        1
+        for r in records
+        if r.get("kind") == "mapping_notify" and r.get("request") == MAPPING_KEYBOARD
+    )
     return {
-        "ok": not unmatched,
+        "ok": ready is not None and not unverified,
         "requests": len(requests),
-        "keyboard_notifies": len(notifies),
-        "unmatched_ranges": unmatched,
+        "keyboard_notifies": keyboard,
+        "explained": explained,
+        "benign_unexplained": benign,
+        "unverified": unverified,
         "requests_without_notify": [list(k) for k in pending],
     }
 
