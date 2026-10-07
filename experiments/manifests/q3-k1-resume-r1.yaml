@@ -1,4 +1,6 @@
 # Q3 K1 resume test R1: trains to step 25, holds until the Slurm USR1 (180 s before the limit), saves on that signal and exits 75.
+# Exit 75 is this leg's expected end: its orx node prints ORX_RESULT exit=5 (Slurm state FAILED 75:0);
+# the pass criterion is termination.env reason=signal_USR1_checkpoint_confirmed, exit_code=75.
 # Template: every FILL-* value is written by
 # scripts/fill_sparse_indexer_k1_manifests.py from measured artifacts (image B
 # build receipt, bundle sidecar, frozen preregistration, Slurm job ids). The
@@ -24,7 +26,7 @@ randomness_contract: assignment-seed-matrix
 seeds: [42, 43, 44]
 seed_binding:
   flag: "--seeds"
-run_root: /home/kevin/cotcodec-runs/translation-supervised-sparse-indexer/k1-screen-v1/resume-r1
+run_root: /home/kevin/cotcodec-runs/translation-supervised-sparse-indexer/k1-screen-v1/resume-r1-r2
 model:
   model_id: qwen3-0.6b-base
   revision: da87bfb608c14b7cf20ba1ce41287e8de496c0cd

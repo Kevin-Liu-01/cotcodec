@@ -1,6 +1,8 @@
-# Q3 K1 main job: 18 indexers per layer, stream-dev KL, LR freeze, audit evaluation, statistics and verdict.
-# Minutes are fixed at 30 (4 GPUs, the 2.0 GPU-h cap); it runs only if the smoke receipt shows
-# 1.2 x projected wall minutes + 3 min (the USR1 lead) <= 30.
+# Q3 K1 main-job continuation: used only if q3-k1-main ended with a confirmed USR1 checkpoint (exit 75).
+# A fresh job in the main job's run root resumes from its phase-0a-k1/checkpoints: completed training,
+# stream-dev KL, the LR freeze and evaluation chunks are reused, not recomputed. Its minutes are 30 minus
+# the minutes the interrupted job used (rounded up, plus one), so both jobs together stay within the
+# main job's 2.0 GPU-h cap; the filler leaves it unfilled if fewer than 5 minutes remain.
 # Template: every FILL-* value is written by
 # scripts/fill_sparse_indexer_k1_manifests.py from measured artifacts (image B
 # build receipt, bundle sidecar, frozen preregistration, Slurm job ids). The
@@ -9,7 +11,7 @@
 # submitter (container_profile default: 8 GB /tmp, 64 MB /dev/shm; seed_binding
 # binds the --seeds argv to the declared seeds).
 runtime: docker-single-node-discovery-v1
-name: q3-k1-main
+name: q3-k1-main-resume
 image_id: FILL-image-b-image-id
 git_sha: FILL-image-b-git-sha
 source_sha256: FILL-image-b-source-tar-sha256
@@ -19,9 +21,9 @@ resources:
   gpus: 4
   cpus: 32
   memory_gb: 128
-  minutes: 30
+  minutes: FILL-main-resume-minutes
 budget:
-  max_gpu_hours: 2.0
+  max_gpu_hours: FILL-main-resume-gpu-hours
 randomness_contract: assignment-seed-matrix
 seeds: [42, 43, 44]
 seed_binding:
@@ -40,6 +42,8 @@ study_artifact:
   host_path: /home/kevin/cotcodec-runs/translation-supervised-sparse-indexer/inputs/k1-bundle-v1.json
   sha256: FILL-bundle-sha256
   size_bytes: FILL-bundle-size-bytes
+resume_from_job_id: FILL-main-checkpointed-job-id
+resume_subpath: phase-0a-k1/checkpoints
 command:
   - python
   - scripts/run_sparse_indexer_phase0a.py
