@@ -2,7 +2,8 @@
 #
 # The VM (HF xlangai/ubuntu_osworld a5d9c3ea, Ubuntu.qcow2 sha256 6bf667a8...)
 # runs Ubuntu's LibreOffice 1:7.3.7-0ubuntu0.22.04.4 (buildid 30(Build:2)).
-# rootfs/ is that VM's /usr, /etc, dpkg database and LibreOffice user profile,
+# rootfs/ is that VM's /usr, /etc, dpkg database, LibreOffice user profile and
+# the user's Python site-packages (PyAutoGUI, used to send postconfig keys),
 # copied by infra/q2-mutation/vmprobe/extract_rootfs.py. Two packages are
 # added and nothing else may change: xvfb at the VM's X server version
 # (2:21.1.4-2ubuntu1.7~22.04.8, same source as the installed xserver-common)
@@ -17,7 +18,7 @@ RUN set -eux; \
     chmod 1777 /tmp /var/tmp; \
     # COPY makes every file root-owned; the profile template must be readable by
     # the unprivileged runtime user, who copies it into a fresh per-job HOME.
-    chmod -R a+rX /home/user/.config/libreoffice; \
+    chmod -R a+rX /home/user/.config/libreoffice /home/user/.local; \
     # The runtime user is the host account (uid/gid 1004), which the VM's
     # passwd lacks. LibreOffice resolves its home and user installation through
     # getpwuid and hangs at start-up without an entry, so add one (no package

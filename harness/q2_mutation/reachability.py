@@ -228,6 +228,9 @@ class Display:
             "LC_ALL": "en_US.UTF-8",
             # The VM runs LibreOffice under GNOME with the gtk3 VCL plugin.
             "SAL_USE_VCLPLUGIN": os.environ.get("Q2M_VCL_PLUGIN", "gtk3"),
+            # pyautogui is in the VM user's site-packages (~/.local), which the
+            # postconfig's `python -c` sees because it runs as that user.
+            "PYTHONUSERBASE": os.environ.get("Q2M_PYTHONUSERBASE", "/home/user/.local"),
         }
         return env
 

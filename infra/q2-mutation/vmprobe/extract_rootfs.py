@@ -23,7 +23,15 @@ import re
 import subprocess
 from pathlib import Path
 
-TREES = ["/usr", "/etc", "/var/lib/dpkg", "/home/user/.config/libreoffice"]
+TREES = [
+    "/usr",
+    "/etc",
+    "/var/lib/dpkg",
+    "/home/user/.config/libreoffice",
+    # PyAutoGUI 0.9.54 and python-xlib 0.33 live in the VM user's site-packages;
+    # the postconfig keystrokes are sent with them.
+    "/home/user/.local/lib",
+]
 TOP_LINKS = ["/bin", "/sbin", "/lib", "/lib32", "/lib64", "/libx32"]
 
 
