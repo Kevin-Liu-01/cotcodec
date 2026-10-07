@@ -48,7 +48,7 @@ docker tag "${tag}" "${registry}/${tag}"
 docker push "${registry}/${tag}" >"${build_root}/docker-push.log" 2>&1
 repo_digest="$(docker image inspect --format '{{index .RepoDigests 0}}' "${tag}")"
 docker run --rm --network=none "${tag}" python -c \
-  'import importlib.metadata as m, sys; print({p: m.version(p) for p in ["torch","transformers","flash-linear-attention","fla-core","triton"]})' \
+  'import importlib.metadata as m, sys; print({p: m.version(p) for p in ["torch","transformers","flash-linear-attention","fla-core","triton","tilelang","peft","pyarrow","tokenizers","safetensors","numpy","scipy"]})' \
   >"${build_root}/versions.txt" 2>&1 || true
 
 cat >"${build_root}/receipt.json" <<JSON
