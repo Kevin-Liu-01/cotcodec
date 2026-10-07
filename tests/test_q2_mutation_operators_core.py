@@ -241,3 +241,26 @@ def test_apply_text_guards_and_transforms() -> None:
     ini = "[s]\nk=v\nx = y\n"
     assert apply_steps(ini, [{"op": "ini.respace", "style": "spaced"}]) == "[s]\nk = v\nx = y\n"
     assert apply_steps("a\n", [{"op": "text.set_trailing_newline", "value": False}]) == "a"
+
+
+def test_delta_expectations_are_relative_to_the_reference(tmp_path: Path) -> None:
+    slides = [[dict(s) for s in synth.DEFAULT_SLIDES[0]], synth.DEFAULT_SLIDES[1]]
+    base = snapshot(synth.build_pptx(tmp_path / "a.pptx", slides=slides))
+    slides[0][3] = {**slides[0][3], "off": (slides[0][3]["off"][0] + 360, slides[0][3]["off"][1])}
+    actual = snapshot(synth.build_pptx(tmp_path / "b.pptx", slides=slides))
+    loc = "slides/0/shapes/3/off"
+    good = Expectation(allow=[loc], must_change=[loc], deltas=[(loc, [360, 0])])
+    assert admitted(check(base, actual, good))
+    wrong = Expectation(allow=[loc], must_change=[loc], deltas=[(loc, [0, 360])])
+    assert not admitted(check(base, actual, wrong))
+    roundtrip = Expectation.from_dict(json.loads(json.dumps(good.as_dict())))
+    assert roundtrip.deltas == good.deltas
+
+
+def test_rotated_or_flipped_shapes_are_not_moved() -> None:
+    from harness.q2_mutation.operators.pptx import movable
+
+    assert movable({"off": [0, 0]})
+    assert not movable({"off": [0, 0], "rot": "5400000"})
+    assert not movable({"off": [0, 0], "flipH": "1"})
+    assert not movable({"ext": [1, 1]})

@@ -7,8 +7,12 @@ harness's control jobs), it:
 1. checks both files against the job list's candidate SHA-256;
 2. saves gold (the base), initial, and the base once more (the null mutant)
    through ``uno_apply.py`` in the LO-VM image;
-3. plans only operators that need no requirement spec (``document`` and
-   ``outside`` targets) against an empty, unserialized requirement set;
+3. plans the operators that need no requirement (``document`` and
+   ``outside`` targets) against an empty, unserialized requirement set; with
+   ``--delta-requirements`` it also plans the requirement-targeted operators
+   against placeholder requirements bound only to the task's own
+   initial-to-gold changes (one per check kind), to exercise their edit
+   primitives on real files. These placeholders are never written out as specs;
 4. applies the recipes and runs the purity checks against the null mutant.
 
 It reports per operator how many recipes applied and passed purity, and the
@@ -43,10 +47,27 @@ from harness.q2_mutation.operators.pipeline import (
     write_jsonl,
 )
 from harness.q2_mutation.operators.validate import run_uno
-from harness.q2_mutation.schema import RequirementSpec
+from harness.q2_mutation.schema import Requirement, RequirementSpec
 
 OFFICE_SUFFIXES = {".xlsx": "xlsx", ".docx": "docx", ".pptx": "pptx"}
 NO_SPEC_AUTHOR = "operator-devsmoke-no-requirements"
+SMOKE_KINDS = {
+    "xlsx": ("cell_value", "cell_format"),
+    "docx": ("text_run", "paragraph_format"),
+    "pptx": ("text_run", "slide_object", "table_cell"),
+}
+
+
+def smoke_spec(task_id: str, family: str, with_requirements: bool) -> RequirementSpec:
+    """An in-memory requirement set for harness smoke runs; never serialized as a spec."""
+    if not with_requirements:
+        return RequirementSpec(task_id, NO_SPEC_AUTHOR, (), ())
+    placeholder = "harness smoke placeholder, bound to the task's own changes"
+    reqs = tuple(
+        Requirement(f"SMOKE-{kind}", placeholder, kind, placeholder)
+        for kind in SMOKE_KINDS[family]
+    )
+    return RequirementSpec(task_id, NO_SPEC_AUTHOR, reqs, ())
 
 
 def candidate_sha256(vm_path: str, local: str) -> str:
@@ -85,6 +106,8 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--display", default=":99")
     parser.add_argument("--profile-template", default=None)
     parser.add_argument("--timeout", type=int, default=240)
+    parser.add_argument("--delta-requirements", action="store_true",
+                        help="also smoke requirement-targeted operators on delta sites")
     args = parser.parse_args(argv)
     root = Path(args.out)
     root.mkdir(parents=True, exist_ok=True)
@@ -116,7 +139,8 @@ def main(argv: list[str] | None = None) -> int:
     nulls = run_uno(root, null_rows, "null", args)
 
     ops = registry()
-    wanted = [name for name, cls in ops.items() if cls.target in {"document", "outside"}]
+    targets = {"document", "outside"} | ({"requirement"} if args.delta_requirements else set())
+    wanted = [name for name, cls in ops.items() if cls.target in targets]
     summary: dict = {"tasks": [], "rejected_hash": [p["task_id"] for p in rejected],
                      "null_drift": {}, "operators": {}}
     plans = []
@@ -130,7 +154,7 @@ def main(argv: list[str] | None = None) -> int:
         try:
             drift = diff(snapshot(base, p["family"]), snapshot(root / rel("null", task_id),
                                                               p["family"]))
-            spec = RequirementSpec(task_id, NO_SPEC_AUTHOR, (), ())
+            spec = smoke_spec(task_id, p["family"], args.delta_requirements)
             ctx = make_context(task_id, spec, base, initial, p["family"], p["vm_path"])
             records, _skips = plan_task(ctx, operators=wanted)
         except (SnapshotError, ValueError, KeyError) as exc:
