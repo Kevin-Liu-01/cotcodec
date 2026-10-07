@@ -19,6 +19,8 @@ Each contract proves valid inputs pass and decision-bearing drift fails.
 - `test_submit_*` cover manifest validation, sbatch rendering and the
   fail-closed rejection of archived memory workloads.
 - Pre-restart tests are in `legacy/tests/` and are not collected.
+- `serving_probe_fakes.py` (not collected) holds a word tokenizer and a fake
+  vLLM server on `httpx.MockTransport` for the serving-probe tests.
 
 ## Patterns to follow / invariants
 <!-- agent-docs:fill:patterns -->

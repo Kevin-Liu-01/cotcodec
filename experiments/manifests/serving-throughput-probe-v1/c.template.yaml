@@ -1,0 +1,53 @@
+# Job C of serving-throughput-probe-v1 (optional 0.5 GPU-h extension, decision D8): the
+# Qwen3.5-27B-FP8 and Qwen3.5-35B-A3B-FP8 configs with vLLM dummy weights at TP=1.
+# Submit only after job A's control X1 passed. qwen3-0.6b-base is the lane's admission
+# token; the driver verifies both pinned metadata receipts itself.
+# Template only. Render it with scripts/render_serving_probe_manifest.py; the FILL_* values
+# are invalid on purpose so the submitter rejects this file.
+runtime: docker-single-node-discovery-v1
+name: stp-v1-c-q2-dummy-rungs
+image_id: FILL_OVERLAY_IMAGE_ID
+git_sha: FILL_GIT_SHA
+source_sha256: FILL_SOURCE_SHA256
+run_root: /home/kevin/cotcodec-runs/stage0/serving-throughput-probe/runs/c
+container_profile: vllm
+resources:
+  gpu_type: h100
+  gpus: 1
+  cpus: 32
+  memory_gb: 128
+  minutes: 30
+budget:
+  max_gpu_hours: 0.5
+randomness_contract: assignment-seed-matrix
+seeds: [42, 43, 44]
+seed_binding:
+  flag: --seeds
+model:
+  cache_host_path: /home/kevin/cotcodec-runs/hf-cache
+  model_id: qwen3-0.6b-base
+  revision: da87bfb608c14b7cf20ba1ce41287e8de496c0cd
+  receipt_sha256: e7f36f05e6c87ec50b3736cf133fda60775abccb38f60fa9d3c134c432cf46df
+  artifact_root_sha256: 7040f418762c61dd00b540e482527e0d8c8a916cce80eee56408bd10a6179ae0
+command:
+  - python
+  - scripts/run_vllm_throughput_probe.py
+  - run
+  - --config
+  - experiments/serving/serving-throughput-probe-v1.yaml
+  - --job
+  - c
+  - --output-dir
+  - /outputs/probe
+  - --allocation-minutes
+  - "30"
+  - --image-variant
+  - FILL_IMAGE_VARIANT
+  - --weights-pin
+  - FILL_PIN_qwen3.5-27b-fp8
+  - --weights-pin
+  - FILL_PIN_qwen3.5-35b-a3b-fp8
+  - --seeds
+  - "42"
+  - "43"
+  - "44"

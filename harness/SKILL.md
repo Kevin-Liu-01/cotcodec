@@ -18,6 +18,11 @@ attestation helpers. It starts small after the 2026-10-06 restart.
   targets, reference sets, statistics and gates as pure functions.
 - `publication_attestation.py` verifies administrator signatures over complete
   publication claim waves.
+- `serving_probe/` is the CPU-testable core of the vLLM serving probe: contract
+  loader, synthetic screenshots and prompts, the OSWorld (h1) and cua-speedrun
+  (h2) message layouts, the streaming client and episode replay, metric parsing
+  and the preregistered budget rules. Only `cuda_doctor.py` and
+  `triton_kernels.py` import torch or Triton.
 - The old agent loops, conditions, metrics, routing and memory trials are in
   `legacy/harness/`.
 
