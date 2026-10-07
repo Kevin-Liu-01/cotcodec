@@ -30,6 +30,8 @@ from scripts import run_vllm_throughput_probe_v2 as probe
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 CONFIG_PATH = PROJECT_ROOT / "experiments" / "serving" / "serving-throughput-probe-v2.yaml"
+#: CPU flags (front-end-bound, client-bound) can mark a point valid-flagged on a busy host.
+VALID = {"valid", "valid-flagged"}
 PREREG = PROJECT_ROOT / "program" / "preregistrations" / "serving-throughput-probe-v2.md"
 V1_PREREG = PROJECT_ROOT / "program" / "preregistrations" / "serving-throughput-probe-v1.md"
 ORDER = [
@@ -294,7 +296,7 @@ def test_a_foreign_pid_invalidates_a_point_and_its_rerun_waits_for_slack(tmp_pat
     assert runner.run() == probe.EXIT_OK
     points = _points(tmp_path / "outputs" / "probe")
     a1b = points["a1b"]
-    assert a1b["status"] == "valid"
+    assert a1b["status"] in VALID
     first = a1b["superseded_attempts"][0]
     assert first["status"] == "invalid"
     assert first["checks"]["no_foreign_process"] is False
@@ -305,7 +307,7 @@ def test_a_foreign_pid_invalidates_a_point_and_its_rerun_waits_for_slack(tmp_pat
     # The rerun runs after every required first attempt (a1c), before optional points.
     assert decisions.index(("a1c", "required-first-attempt")) < decisions.index(("a1b", "rerun"))
     assert decisions.index(("a1b", "rerun")) < decisions.index(("r2", "optional"))
-    assert [a["status"] for a in a1b["attempts"]] == ["invalid", "valid"]
+    assert [a["status"] in VALID for a in a1b["attempts"]] == [False, True]
 
 
 def test_an_unlisted_foreign_process_is_unattributed_memory(tmp_path: Path) -> None:
@@ -341,7 +343,7 @@ def test_device_mode_when_nvml_lists_no_process(tmp_path: Path) -> None:
     assert verdict["basis"] == "NVML lists no compute process in this container"
     points = _points(tmp_path / "outputs" / "probe")
     assert set(points["r3"]["checks"]) >= {"no_contamination"}
-    assert points["r3"]["status"] == "valid"
+    assert points["r3"]["status"] in VALID
 
 
 def test_device_mode_reservation_is_taken_after_the_largest_shape(tmp_path: Path) -> None:
@@ -359,7 +361,7 @@ def test_device_mode_reservation_is_taken_after_the_largest_shape(tmp_path: Path
     summary = _summary(tmp_path)
     assert summary["gates"]["G0.9"]["real"]["device_mib"] == 76611.0
     points = _points(tmp_path / "outputs" / "probe")
-    assert points["r3"]["status"] == "valid"
+    assert points["r3"]["status"] in VALID
     assert points["r3"]["contamination"]["device_ceiling_mib"] == 76611.0 + 2048
 
 
@@ -416,14 +418,14 @@ def test_reruns_and_optional_points_never_take_reserved_time(tmp_path: Path) -> 
     summary = _summary(tmp_path)
     points = _points(tmp_path / "outputs" / "probe")
     for name in ("a-smoke", "a-warmup", "a1a", "r1", "r3", "r4", "a1c"):
-        assert points[name]["status"] == "valid", name
+        assert points[name]["status"] in VALID, name
     assert points["a1b"]["status"] == "invalid"
     assert points["a1b"]["rerun"] == "not launched: no slack"
     for name in ("r2", "a2", "f1"):
         assert points[name]["status"] == "not-run"
         assert points[name]["reason"] == "launch window: no slack for an optional point"
     for name in ("x1-smoke", "x1-warmup", "x1-a1", "x1-r1"):
-        assert points[name]["status"] == "valid", name
+        assert points[name]["status"] in VALID, name
     assert summary["status"] == "complete-with-cuts"
     assert summary["phases"]["real"]["reruns_not_launched"] == ["a1b"]
 
@@ -593,7 +595,7 @@ def test_a_signal_checkpoints_and_a_resumed_job_finishes(tmp_path: Path) -> None
     assert marker.splitlines()[0] == "trigger=SIGUSR1"
     points = _points(tmp_path / "outputs" / "probe")
     assert points["r4"]["status"] == "interrupted"
-    assert points["r3"]["status"] == "valid"
+    assert points["r3"]["status"] in VALID
     summary = _summary(tmp_path)
     assert summary["status"] == "interrupted" and summary["acceptance"]["accepted"] is False
 
