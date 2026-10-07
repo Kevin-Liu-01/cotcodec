@@ -16,18 +16,28 @@ material change after freezing is a new experiment id.
   3 turns, 32,768 context).
 - **Claim level.** Infrastructure evidence ("admission pass"). Nothing here is a
   scientific result about models, harnesses or checkers.
-- **Code revision.** The commit that adds this file's ledger row. Every job runs
-  from the source capsule of that commit (manifest `git_sha`), and the driver
-  refuses to start unless this file verifies against the ledger inside the image
-  (gate G0.0).
+- **Code revision.** Jobs run from the source capsule of a commit X of `main`
+  that contains this file's ledger row (X is pushed, then cloned on the host).
+  X is recorded in each job's manifest (`git_sha`), provenance verification and
+  the evidence bundle. X may differ from the freeze commit only outside the
+  probe code and the contract: both must be byte-identical to what this file
+  names below, and the driver checks this.
 - **Contract.** `experiments/serving/serving-throughput-probe-v1.yaml` holds every
   engine flag, point, seed, gate threshold and budget parameter named below. Its
-  SHA-256 at the time this draft was written is
-  `6c3ed9f1dfd6fbe59862bf6cb2d154d66ed8024fab6f429c97622b2239b54d5c`; the owner
-  refreshes this line if the contract changes during review, before freezing.
+  SHA-256 is
+  `8e5ad94e08a17a3eacc049150a14a35ef6ab9509a8c32ca6a6b2ac9711f6e931`.
   Every point file and summary records the contract SHA-256 it ran under.
-- **Driver.** `scripts/run_vllm_throughput_probe.py` with
-  `harness/serving_probe/`. Budget rules: `harness/serving_probe/budget.py`.
+- **Probe code.** `scripts/run_vllm_throughput_probe.py` and every module of
+  `harness/serving_probe/` (budget rules in `budget.py`). Their digest, the
+  SHA-256 of the compact JSON list of [path, file SHA-256] pairs sorted by path
+  (`run_vllm_throughput_probe.py digest` prints it), is
+  `e2a08231356cce6e3177c7a6c11c6ab64bf14d6dc7a5052ac92eb1a81ffbada5`.
+- **Binding.** Gate G0.0 (in the image) and the `project` step (on the host)
+  both verify this file against the ledger and refuse unless its frozen text
+  names the contract SHA-256 and the probe code digest they compute from the
+  files they run. A changed threshold, rule or line of probe code after freezing
+  therefore stops the experiment; it needs a new experiment id. The projection
+  records the ledger row, the digest, the per-file hashes and git HEAD.
 - **Runtime.** vLLM v0.31.0, commit db9527a46873454610df6dbedf79a36d6bf1a7f6,
   base image `docker.io/vllm/vllm-openai@sha256:b18abb2df97b8f798e81862bd93f872ea18613372e2c3adc0cc2ac21e66ac12f`
   (CUDA 12.9.1, torch 2.13.0+cu129, local image ID
@@ -46,7 +56,8 @@ material change after freezing is a new experiment id.
   and both request payload variants with vLLM's own parsers on CPU.
 - **Lane.** `scripts/submit_docker_research_job.py` with `container_profile: vllm`
   (16 GB /dev/shm, exec /tmp of 32 GB, 8,192 pids), `seed_binding.flag: --seeds`,
-  one H100 per job, TP=1.
+  one H100 per job, TP=1. The driver parses its options with abbreviations
+  disabled, as the lane's seed binding requires.
 - **Data.** Synthetic only: random-token text, rendered PNG screenshots and
   random-pixel JPEG screenshots, all derived from the seeds below. No dataset,
   no model output and no benchmark task is read.
@@ -84,6 +95,8 @@ itself has no license and stays out of receipted runs (decision D5).
   rejects any speculative flag.
 - Server points run greedy (temperature 0). Harness sampling settings
   (cua-speedrun uses 1.0) change no kernel under fixed lengths.
+- The VLM engines serve `max_model_len` 131,072 (cua-speedrun's own default);
+  the probe measures prompts up to about 47K tokens and extrapolates beyond.
 - The overlay cannot decode audio or video (torchcodec removed); the probe sends
   neither, and `limit_mm_per_prompt` sets the video limit to 0.
 
@@ -146,9 +159,11 @@ it, each with its reason. The owner can overrule any of them before freezing.
 11. **G0.3 metric:** the maximum absolute difference between a bf16 4096 x 4096
     GEMM and the fp32 GEMM of the same bf16-rounded inputs (TF32 off), divided
     by the maximum absolute fp32 value.
-12. **X1 power.** X1 passes only if both deltas are at most 5% and the spread of
-    A1 across its three seeds is at most 5%. A larger seed spread makes X1
-    "underpowered", treated as not passed.
+12. **X1 power.** X1 passes only if both deltas are at most 5%, all three A1
+    seed points are valid, and their spread is at most 5%. Fewer valid seeds or
+    a larger spread makes X1 "underpowered", treated as not passed. Section 6
+    gives the rule's operating characteristics; a false fail only makes the
+    budgets more conservative (×1.5) and skips job C.
 13. **Offline sampling uses the engine seed (42), not per-request seeds.**
     Per-request seeds force a slower per-request sampler path. Prompt content is
     seeded per point.
@@ -156,9 +171,12 @@ it, each with its reason. The owner can overrule any of them before freezing.
     step is not a synchronised burst.
 15. **Q2 primary projection is conservative:** H2 cells use thinking-on costs
     (cua-speedrun's default) and harness step caps (H1 15, H2 100).
-16. **F1 correction.** If the PNG-to-JPEG throughput ratio at the A1 shape
-    differs from 1 by more than 10%, the open-loop bound (from A2, random JPEG)
-    is multiplied by that ratio.
+16. **F1 correction.** F1's ratio is PNG request throughput (f1) divided by
+    random-JPEG request throughput (a1a). If it is below 0.90 (PNG more than 10%
+    slower), the open-loop reference request rate (a2, random JPEG) is
+    multiplied by it, which raises the open-loop GPU-h. A ratio above 1.10 is
+    reported but not applied: the rendered PNGs are simpler than real desktop
+    screenshots, so a faster PNG path must not lower the budget.
 17. **Resume test.** Resume (skip terminal points, refuse a different contract)
     is tested on CPU with a fake engine; no GPU resume run is planned, because
     a probe has no training state to restore. The owner may require one.
@@ -184,6 +202,46 @@ it, each with its reason. The owner can overrule any of them before freezing.
     compatibility library for most kernels on R570 while cu130 does. The only
     other CUDA-13-linked files in the image are the optional nixl KV connectors,
     which vLLM imports only when KV transfer is configured.
+24. **`max_model_len` is 131,072 for the VLM engines** (jobs A and C), the
+    default of cua-speedrun's own server launcher (`agents/qwen35/init.py`,
+    `VLLM_MAX_MODEL_LEN`). At 65,536 the modelled H2 thinking prompt plus its
+    2,048 output tokens passes the limit at step 79 (step 59 with the
+    accessibility tree) and peaks at 74,188 (80,332) tokens, so the budget would
+    price requests the engine rejects. The projection refuses any primary cell
+    whose modelled prompt plus output exceeds the limit.
+25. **Seed noise enters the budgets.** The UNSTABLE rule needs a target: every
+    budget number comes from one seed per point, so the A1 seeds set a noise
+    multiplier on every Q2 cell and the B1 seeds one on both Q1 totals (section
+    8). The rung ratio stays seed-matched (a1a against each rung's seed-42 A1).
+26. **The open-loop bound prices output length and the accessibility tree.** The
+    cell's request rate is the reference rate divided by the larger of the
+    cell-to-reference prompt ratio and output ratio, an upper bound on any mix
+    of prefill and decode cost. Accessibility cells carry their 6,144 tree tokens
+    on every step. If a2 is not valid, the slowest valid A1 seed (concurrency 16,
+    so a lower rate and a higher bound) replaces it, flagged.
+27. **Acceptance.** A job's points may enter a budget when its summary says
+    `acceptance.accepted: true`: status complete or complete-with-cuts and gates
+    G0.0 to G0.4 passed. An eager-fallback job is accepted and labelled eager
+    (section 5). A non-primary phase whose gate failed contributes no points
+    (they are not-run) and is listed, without rejecting the job.
+28. **Checkpoint marker.** The driver follows the lane's signal-checkpoint
+    contract (docs/operations.md): `checkpoint.ready` is written only after a
+    USR1 or TERM, after progress is saved, as text whose first line is
+    `trigger=SIGUSR1` (or `trigger=SIGTERM`). A run that gets no signal never
+    writes it.
+29. **Offline truncation.** When an offline point is stopped by its wall cap or
+    a signal, its requests are aborted in the engine before the next point, and
+    each `generate` keeps only outputs with its own request ids; if requests
+    remain after the abort, the phase stops (its remaining points are not-run).
+30. **Device and cache checks fail closed.** A point needs device samples
+    (section 7), a measured engine reservation, and successful prefix,
+    multimodal and encoder cache resets. A sampler that yields nothing after the
+    smoke stops the phase (G0.8).
+31. **No unlicensed text.** cua-speedrun has no LICENSE file, so the probe
+    copies none of its text: the folded-screenshot placeholder is neutral text
+    of the same length (6 tokens), and the tool-response tags are the Qwen3.5
+    chat template's own. The one OSWorld sentence used is quoted with its
+    Apache-2.0 attribution.
 
 ## 4. Step-0 gates
 
@@ -191,7 +249,8 @@ All must pass, otherwise the job outcome is "pre-result" (driver exit code 2)
 and no number from that job enters a budget.
 
 - **G0.0** This file verifies against the ledger in the image, at the path the
-  contract names.
+  contract names, and its text names the SHA-256 of the contract the driver
+  loaded and the digest of the probe code in the image (section 1, Binding).
 - **G0.1** The lane's provenance verification printed status PASS, its container
   doctor printed `STATUS PASS`, and its bound-model verification reports the
   contract's model id, revision, artifact root and mode `full`. For jobs B and C,
@@ -213,20 +272,33 @@ and no number from that job enters a budget.
 - **G0.6** A 16-request smoke at concurrency 8 completes with 0 failures and every
   output at its requested length. For VLM engines, prompt tokens of one image
   plus text minus the same text alone is within 2,040 ± 2% (1,999.2 to 2,080.8);
-  the exact value is recorded.
+  the exact value is recorded. The smoke point must also pass section 7's
+  validity checks other than the reservation (cache resets, device samples).
 - **G0.7** For the smoke, and for every later point as a validity condition: the
   `/metrics` (or `LLM.get_metrics`) generation-token delta equals the client's
   output-token total exactly, and the prompt-token delta is within 1% of the
   client's prompt-token total. Offline, the prompt check accepts either the
   per-request or the per-sample (n=8 fan-out) total, and records which matched.
-- **G0.8** Before every engine start, after a 2 s settle, every 500 ms sample over
-  10 s shows device memory.used below 1,024 MiB and utilisation 0%.
+- **G0.8** Before every engine start, including the eager retry (after waiting
+  up to 90 s for the failed engine's memory to be released), after a 2 s
+  settle, every 500 ms sample over 10 s shows device memory.used below
+  1,024 MiB and utilisation 0%. After the smoke, the sampler must report at
+  least one sample in the 5 s reservation window; otherwise the phase stops.
 
 ## 5. Failure path
 
 - **G0.5 fails, eager start succeeds:** the job continues with
   `--enforce-eager`, labelled "eager", and every later engine of the job also
-  starts eager. Stage 1 must then also run eager, or wait for the R580 driver.
+  starts eager. Its points are admissible: the job is accepted with G0.5
+  recorded as not passed and `eager_fallback: true` (design decision 27).
+  Stage 1 must then also run eager, or wait for the R580 driver.
+- **Acceptance of a job.** Slurm `JobState=COMPLETED` with `ExitCode=0:0`, and
+  `summary.json` showing `acceptance.accepted: true` (status complete or
+  complete-with-cuts, G0.0 to G0.4 passed). Nothing else is required, and
+  nothing less is accepted. Points of a job that is not accepted (pre-result,
+  crashed, interrupted, Slurm TIMEOUT) are kept and reported but enter no
+  budget; the projections that need them are "incomplete: re-probe", and any
+  resubmission needs the owner's approval of the extra GPU time.
 - **Any other gate fails on the cu129 image:** one retry of the job with the
   vLLM v0.31.0 default (cu130) image, linux/amd64 manifest
   sha256:a4a4c0437bf7240089da5f08aa370c4aee17ae5290f7a3b468825ee26c4c3a6b
@@ -252,7 +324,7 @@ driver refuses any other list.
 Text shapes are in tokens of the served model's tokenizer. Screenshots are
 1920 x 1080 (2,040 visual tokens each after the processor's resize to 1920 x 1088).
 
-**Job A** (Qwen3.5-9B, TP=1, prefix caching on, `max_model_len` 65,536,
+**Job A** (Qwen3.5-9B, TP=1, prefix caching on, `max_model_len` 131,072,
 `gpu_memory_utilization` 0.90, `max_num_seqs` 256, `max_num_batched_tokens` 8,192,
 `limit_mm_per_prompt` 20 images at 1920 x 1080 and no video, `generation_config`
 vllm, engine seed 42).
@@ -303,12 +375,26 @@ seed 101, cap 9); phase rung-35b (7 minutes reserved) runs c35-smoke, c35-a1
 
 **Minimum detectable effects.**
 - X1 resolves a 5% difference only when A1's three-seed spread is at most 5%
-  (design decision 12).
+  (design decision 12). Its operating characteristics, from a Monte Carlo of
+  the rule as coded (200,000 draws; each throughput or mean latency is the true
+  value times 1 + N(0, CV²), independently): with dummy weights exactly like
+  real ones, P(pass) is 0.998, 0.71, 0.33 and 0.15 at a run-to-run CV of 1%, 2%,
+  3% and 4%; with a true 8% difference, P(pass) is at most 0.03 at any of these
+  CVs. The run-to-run CV on this node is unknown before the probe; the A1 seed
+  spread reports it. A non-pass is conservative (×1.5 on dummy-weight numbers,
+  no job C), never a loss of validity. X1 is measured on the hybrid 9B VLM in
+  server mode and also governs the dense Qwen3-8B offline numbers of job B: it
+  is the probe's only check of dummy weights, and applying a non-pass to job B
+  can only raise the Q1 budget.
 - Per-step replay latency: V=40 (H1) or V=20 (H2) requests per step; the
   standard error of a step mean is reported. With a coefficient of variation of
   0.3, that is about 5% (V=40) or 7% (V=20) of the mean.
-- A1 and B1 throughput: three seeds; a range above 10% of the mean is flagged
-  UNSTABLE and the budget uses the lowest throughput.
+- A1 and B1 throughput: three seeds each. If all three are valid and their
+  range is at most 10% of the mean, the noise multiplier is 1. A range above
+  10% is flagged UNSTABLE and the multiplier is max/min of the three. With
+  fewer than three valid, it is the larger of 1.10 and max/min of the valid
+  ones. A1's multiplier applies to every Q2 cell, B1's to both Q1 totals
+  (section 8).
 - D8 agreement rate: 16 prompts, resolution 1/16 (6.25 points).
 - The budget decisions (section 8) change only when a projection crosses 90 or
   15 GPU-h (Q2) or 6 and 12 GPU-h (Q1). The sensitivity table shows how far the
@@ -330,28 +416,42 @@ completion, output tokens per second. Engine facts per phase: weight GiB, KV-cac
 GiB and tokens, maximum concurrency, compile and graph-capture seconds, the
 compilation config line, eager or not.
 
-**Validity.** A point is valid only if: failed is 0; completed equals planned;
-every completion has exactly its requested output tokens; the G0.7 counter check
-holds for the point; and device memory.used never exceeds the phase's engine
-reservation (peak memory over 5 s after the smoke) plus 2,048 MiB. API-server CPU
-of 90% or more (one core saturated) leaves a point valid but flagged
-"front-end-bound"; client CPU of 90% or more is flagged "client-bound".
+**Validity.** A point is valid only if it ran to its end and: failed is 0;
+completed equals planned (never more); every completion has exactly its
+requested output tokens; the G0.7 counter check holds for the point; every
+cache reset before it (and, for d8, between its arms) succeeded: the prefix
+cache, plus the multimodal and encoder caches for server points; the device
+sampler delivered at least max(1, floor(0.2 × wall seconds / 0.5 s)) samples in
+its window; and, except for the smokes, the phase's engine reservation (peak
+memory over 5 s after the smoke) was measured and device memory.used never
+exceeded it plus 2,048 MiB. API-server CPU of 90% or more (one core saturated)
+leaves a point valid but flagged "front-end-bound"; client CPU of 90% or more is
+flagged "client-bound".
 
-**Infrastructure failures and exclusions.** An invalid point is rerun once with
-the same seed if the phase's launch deadline allows; both attempts are kept and
-the second stands. A point stopped by its wall cap or a phase deadline is
-"truncated"; one stopped by USR1 or TERM is "interrupted"; one lost to an engine
-crash or a transport error is "failed-infra"; one never launched because of a
-deadline, a gate or an engine failure is "not-run". Only valid (including
-flagged) points enter any budget. Interrupted, failed-infra and not-run points
-are rerun on a resumed job; the others are terminal.
+**Infrastructure failures and exclusions.** A point stopped by USR1 or TERM is
+"interrupted". A point stopped by its wall cap or a phase deadline with no
+failed request is "truncated". Every other point that ends early, such as a
+replay whose episode stopped at a failed request, and every deadline-stopped
+point with a failed request, goes through the validity checks and is "invalid".
+A failed request (an HTTP error, a transport error or a stream without usage) is
+a request error, counted in the point; an exception outside the requests (the
+engine died, or its metrics or cache endpoints failed) makes the point
+"failed-infra". A point never launched because of a deadline, a gate or an
+engine failure is "not-run". An invalid point is rerun once with the same seed
+if the phase's launch deadline allows and the engine is alive; both attempts
+are kept in full (the first, with all its metrics, under
+`superseded_attempts`) and the second stands. Only valid (including flagged)
+points enter any budget. Interrupted, failed-infra and not-run points are rerun
+on a resumed job; the others are terminal.
 
 **Dummy admissibility (control X1).** X1 passes if |x1-a1 − a1a| / a1a ≤ 5% in
 request throughput, |mean latency of x1-r1 − mean latency of r1| / that of r1 ≤
-5% (mean over every completed replay request), and the a1a/a1b/a1c throughput
-range is at most 5% of its mean. Outcomes: pass, fail, underpowered, not-run.
-Anything but pass multiplies every dummy-weight number (jobs B and C) by 1.5 in
-the budgets. Job C is submitted only after a pass.
+5% (mean over every completed replay request), all three of a1a, a1b and a1c
+are valid, and their throughput range is at most 5% of its mean. Outcomes:
+pass, fail (a delta above 5%), underpowered (deltas within 5% but fewer than
+three valid A1 seeds or a wider range), not-run (a1a, r1, x1-a1 or x1-r1 not
+valid). Anything but pass multiplies every dummy-weight number (jobs B and C)
+by 1.5 in the budgets. Job C is submitted only after a pass.
 
 ## 8. Budget rules and decisions
 
@@ -360,7 +460,8 @@ observations = 16 cells, E = 360 episodes each = 120 tasks x 3 reruns, 5,760 in
 all).**
 
 GPU-h_closed = g × ceil(E / V) × Σ_{t=1..T} (t_env + m × L(t)) / 3600, and
-GPU-h_open = E × T × g × m / r_cell / 3600. The cell value is the larger.
+GPU-h_open = E × T × g × m / r_cell / 3600. The cell value is the larger of the
+two, times the A1 noise multiplier n_A1 (section 6).
 
 - g = 1 (TP=1 for every rung). V = the replay's measured V (40 for H1, 20 for
   H2). t_env = 2.5 s. T = the harness step cap: 15 for H1 (OSWorld
@@ -384,9 +485,22 @@ GPU-h_open = E × T × g × m / r_cell / 3600. The cell value is the larger.
   the a1a throughput divided by the rung's A1 throughput from job C, times 1.5
   unless X1 passed; without job C, max(1, active parameters / 9B) × 1.5, that is
   4.5 for 27B and 1.5 for 35B-A3B.
-- r_cell = a2 request throughput × (a2 mean prompt tokens / the cell's mean
-  modelled prompt tokens over t = 1..T), times the F1 ratio when design decision
-  16 applies.
+- r_cell = r_ref / max(P_cell / P_ref, O_cell / O_ref). r_ref, P_ref and O_ref
+  are a2's request throughput and its mean prompt and output tokens per
+  completed request. P_cell is the cell's mean modelled prompt tokens over
+  t = 1..T; accessibility cells include their 6,144 tree tokens on every step.
+  O_cell is the cell's output tokens: 300 for H1 and 2,048 for the H2 (thinking)
+  cells. If f1's request throughput divided by a1a's is below 0.90, r_ref is
+  multiplied by that ratio (design decision 16); otherwise F1 is reported only.
+- If a2 is not valid, the reference is whichever of a1a, a1b and a1c is valid
+  with the lowest request throughput, flagged; if none is valid, no Q2 budget is
+  frozen ("incomplete: re-probe").
+- Context check: in every primary cell, the largest modelled prompt over
+  t = 1..T plus O_cell must not exceed `max_model_len` (131,072); otherwise no
+  Q2 budget is frozen ("incomplete: re-probe"). Sensitivity rows report how many
+  cells exceed it.
+- n_A1 is 1 when a1a, a1b and a1c are valid within a 10% range; otherwise as in
+  section 6. It is flagged on every cell when it is not 1.
 - Sensitivity table: T in {15, 50, 100}, t_env in {1.5, 2.5, 4.0} s, V in {20, 40}
   per replica (V above the measured value is not extrapolated; such rows reuse
   the measured V).
@@ -399,7 +513,8 @@ recorded as an over-estimate. Otherwise the total is within the dossier's range.
 **Q1.** GPU-s per completion = g × point duration / (prompts × n). Single turn
 uses b2. Three turns sum b2, b3 and b6 (b3 falls back to b6 if not valid), every
 completion assumed to continue (conservative). Completions = 2,000. If X1 did not
-pass, both totals are multiplied by 1.5.
+pass, both totals are multiplied by 1.5. Both totals are multiplied by the B1
+noise multiplier n_B1 (b1a, b1b, b1c completions per second; section 6).
 
 **Q1 decision.** If 2,000 single-turn completions exceed 6 GPU-h (half the
 dossier's 12 GPU-h central estimate), or the three-turn total exceeds 12 GPU-h,
@@ -417,21 +532,28 @@ Stage 1 must reuse these engine settings or re-probe.
 - Every running point is truncated at its wall cap or at the allocation end
   minus 4 minutes; in-flight requests get 30 s, then are cancelled.
 - USR1 or TERM (the lane sends USR1 180 s before the end): no new request,
-  progress saved, then the checkpoint marker written, then engines stopped.
+  in-flight requests get 30 s, the point is recorded "interrupted", progress
+  is saved, then the lane's checkpoint marker is written (first line
+  `trigger=SIGUSR1` or `trigger=SIGTERM`, design decision 28), then engines
+  stop. An offline point is stopped at once and its requests aborted.
 - Slurm `--time` is the hard cap: job A 40 min (0.67 GPU-h budgeted), job B
   20 min (0.34), job C 30 min (0.5). A Slurm TIMEOUT classifies the job
-  "incomplete" and keeps its points.
+  "incomplete": its points are kept and reported, and enter no budget
+  (section 5, Acceptance).
 - A prefix-caching-off arm and TP=2 runs are not part of this experiment.
 
 ## 10. Reported regardless of outcome
 
 Every gate result with its recorded values; every point with its status,
-attempts and metrics, valid or not; the X1 deltas, seed spread and outcome; the
-F1 ratio; the D8 agreement rate; A1 and B1 stability; engine facts per phase
-including eager use and `/tmp` mappings; all GPU-allocated time, including the
-overlay build and metadata fetch allocations; the Q1 and Q2 projections with
-every flag and the sensitivity table; the contract SHA-256, image IDs, receipt
-hashes and this file's ledger row; and every deviation from this document.
+attempts (superseded attempts in full) and metrics, valid or not; each job's
+acceptance verdict and eager label; the X1 deltas, seed spread and outcome; the
+F1 ratio, applied or not; the D8 agreement rate; A1 and B1 stability and noise
+multipliers; the open-loop reference used and which bound binds in each cell;
+engine facts per phase including eager use and `/tmp` mappings; all
+GPU-allocated time, including the overlay build and metadata fetch allocations;
+the Q1 and Q2 projections with every flag and the sensitivity table; the
+contract SHA-256, the probe code digest and git HEAD, image IDs, receipt hashes
+and this file's ledger row; and every deviation from this document.
 
 ## 11. External sources
 
@@ -444,8 +566,9 @@ hashes and this file's ledger row; and every deviation from this document.
 | Qwen/Qwen3-8B metadata (8 files, no weights) | b968826d9c46dd6066d109eabc6255188de91218 | 15,910,042 B | per-file SHA-256 in the metadata receipt; tokenizer.json aeb13307a71acd8fe81861d94ad54ab689df773318809eed3cbe794b4492dae4 | Apache-2.0 (LICENSE file) |
 | Qwen/Qwen3.5-27B-FP8 metadata (11 files) | 97f5941bf617e31c5e237364a8602ce3f03a551a | 23,033,229 B | per-file SHA-256 in the metadata receipt; tokenizer.json 5f9e4d4901a92b997e463c1f46055088b6cca5ca61a6522d1b9f64c4bb81cb42 | Apache-2.0 (LICENSE file) |
 | Qwen/Qwen3.5-35B-A3B-FP8 metadata (11 files) | 9d1823d2dee688a6b25e77009dc727688c44936e | 23,034,749 B | per-file SHA-256 in the metadata receipt; tokenizer.json 5f9e4d4901a92b997e463c1f46055088b6cca5ca61a6522d1b9f64c4bb81cb42 | Apache-2.0 (LICENSE file) |
-| OSWorld `mm_agents/qwen3vl_agent.py`, read for the H1 layout | b138d348256078fa634fc3b73567a7337c793e6b | 30,053 B | c9bb34d3ad822168c66133cd97c607d4645b7eff08072e1e45c49dbbad8491b4 | Apache-2.0 |
-| cua-speedrun `agents/qwen35/agent.py`, read for the H2 layout | be17c72c5efbb145d06f86028336fdf2743a3d98 | 31,910 B | 287ce1244a787e71aa89bc9c0efd6bf24c2779b6918be7e7b8ae932bcf9c1bfc | unresolved (no LICENSE file); parameters only, no code copied |
+| OSWorld `mm_agents/qwen3vl_agent.py`, read for the H1 layout | b138d348256078fa634fc3b73567a7337c793e6b | 30,053 B | c9bb34d3ad822168c66133cd97c607d4645b7eff08072e1e45c49dbbad8491b4 | Apache-2.0; one instruction sentence quoted in `harness/serving_probe/prompts.py` with attribution |
+| cua-speedrun `agents/qwen35/agent.py`, read for the H2 layout | be17c72c5efbb145d06f86028336fdf2743a3d98 | 31,910 B | 287ce1244a787e71aa89bc9c0efd6bf24c2779b6918be7e7b8ae932bcf9c1bfc | unresolved (no LICENSE file); layout and parameters only, no code or text copied |
+| cua-speedrun `agents/qwen35/init.py`, read for its server's `max_model_len` default (131,072) | be17c72c5efbb145d06f86028336fdf2743a3d98 | 8,671 B | 798246a4cfd00d79af08a0a8ea7cc7e8838e36d5cdf010e920bed028f92894ce | unresolved (no LICENSE file); one parameter value only |
 | KernelBench, read for the scout's prompt-length measurement | 423217d9fda91e0c2d67e4a43bf62f96f6d104f1 | not vendored | LICENSE fb5917dd8e4476fa75e89ef6f03dccf07d4859636bc23c7db50e6c0413887b9e | MIT |
 | Dr.Kernel paper (arXiv 2602.05885), sampling protocol | v1 | not stored | not applicable | arXiv |
 

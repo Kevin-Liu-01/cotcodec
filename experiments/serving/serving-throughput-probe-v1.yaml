@@ -76,6 +76,9 @@ validity:
   unstable_relative_range: 0.10
   reruns_per_invalid_point: 1
   reservation_window_s: 5
+  # A point needs at least this fraction of the samples the sampling interval implies
+  # over its wall time (and at least one), or its contamination check cannot hold.
+  min_gpu_sample_fraction: 0.2
 
 dummy_admissibility:
   max_relative_delta: 0.05
@@ -110,7 +113,9 @@ engines:
       tensor_parallel_size: 1
       dtype: bfloat16
       seed: 42
-      max_model_len: 65536
+      # cua-speedrun's own default (agents/qwen35/init.py VLLM_MAX_MODEL_LEN); the
+      # H2 history reaches about 72K tokens by its 100-step cap.
+      max_model_len: 131072
       gpu_memory_utilization: 0.90
       max_num_seqs: 256
       max_num_batched_tokens: 8192
@@ -305,6 +310,9 @@ budget:
     t_env_s: 2.5
     step_caps: {h1: 15, h2: 100}
     image_tokens: 2040
+    # Cell sizes the profiles are priced at (r2's accessibility tree, r4's thinking output).
+    a11y_tokens: 6144
+    thinking_output_tokens: 2048
     rescope_above_gpu_hours: 90
     overestimate_below_gpu_hours: 15
     unmeasured_rung_multiplier: 1.5
@@ -313,18 +321,21 @@ budget:
       qwen3.5-9b: {source: measured, active_params_b: 9.0, gpus: 1}
       qwen3.5-27b: {source: job-c, phase: rung-27b, open_loop_point: c27-a1, active_params_b: 27.0, gpus: 1}
       qwen3.5-35b-a3b: {source: job-c, phase: rung-35b, open_loop_point: c35-a1, active_params_b: 3.0, gpus: 1}
+    # Descriptive: budget.build_profiles builds exactly these four profiles from these points.
     profiles:
       h1-screenshot: {point: r1}
-      h1-a11y: {point: r2}
-      h2-screenshot: {point: r3}
+      h1-a11y: {point: r2, fallback: r1}
       h2-thinking-screenshot: {point: r3, thinking_point: r4}
+      h2-thinking-a11y: {point: r3, thinking_point: r4, a11y_from: [r1, r2]}
+    # Read by budget.project_q2: one cell per entry and rung.
     cells:
       - {harness: h1, observation: screenshot, profile: h1-screenshot}
       - {harness: h1, observation: a11y, profile: h1-a11y}
       - {harness: h2, observation: screenshot, profile: h2-thinking-screenshot}
-      - {harness: h2, observation: a11y, profile: h2-thinking-screenshot, a11y_from: [r1, r2]}
-    open_loop_reference: {point: a2, concurrency: 40}
+      - {harness: h2, observation: a11y, profile: h2-thinking-a11y}
+    open_loop_reference: {point: a2, concurrency: 40, fallback_points: [a1a, a1b, a1c]}
     frontend_correction: {point: f1, reference: a1a, threshold: 0.10}
+    stability_points: [a1a, a1b, a1c]
     sensitivity:
       steps: [15, 50, 100]
       t_env_s: [1.5, 2.5, 4.0]
@@ -335,5 +346,6 @@ budget:
     single_turn_point: b2
     turn_points: [b2, b3, b6]
     turn_fallbacks: {b3: b6}
+    stability_points: [b1a, b1b, b1c]
     single_turn_cap_gpu_hours: 6.0
     three_turn_cap_gpu_hours: 12.0

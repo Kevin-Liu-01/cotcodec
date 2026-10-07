@@ -10,9 +10,12 @@ Subcommands:
 * ``cuda-doctor``: internal child process for gates G0.2-G0.4.
 * ``project``: apply the preregistered budget rules to finished job outputs.
 
-The workload is PID 1 in its container: it installs its own USR1/TERM handlers,
-writes ``COTCODEC_CHECKPOINT_MARKER`` only after the progress it describes is on
-disk, and reaps orphaned children. Generated text is never executed or stored.
+The workload is PID 1 in its container: it installs its own USR1/TERM handlers
+and reaps orphaned children. ``COTCODEC_CHECKPOINT_MARKER`` is the lane's
+signal-checkpoint marker: it is written only after a USR1 or TERM, only after
+the progress it describes is on disk, and it carries the lane's
+``trigger=SIG<name>`` line; a run that receives no signal never writes it.
+Generated text is never executed or stored.
 Exit codes: 0 finished, 1 crash, 2 pre-result (a gate failed), 3 interrupted.
 """
 
@@ -23,6 +26,7 @@ import asyncio
 import contextlib
 import hashlib
 import json
+import math
 import os
 import signal
 import subprocess
@@ -99,7 +103,13 @@ DEFAULT_CONFIG = PROJECT_ROOT / "experiments" / "serving" / "serving-throughput-
 EXIT_OK, EXIT_CRASH, EXIT_PRE_RESULT, EXIT_INTERRUPTED = 0, 1, 2, 3
 TERMINAL_STATUSES = {"valid", "valid-flagged", "invalid", "truncated"}
 RERUNNABLE_STATUSES = {"interrupted", "failed-infra", "not-run"}
+ACCEPTED_JOB_STATUSES = {"complete", "complete-with-cuts"}
 MEMORY_RELEASED_MIB = 1024.0
+#: Gates recorded once per phase (the others are recorded once per job).
+PHASE_GATES = ("G0.5", "G0.6", "G0.7", "G0.8")
+#: The code whose digest the preregistration names: every module of the probe
+#: package and this driver. Any change to them after freezing is a new experiment.
+PROBE_CODE_GLOBS = ("harness/serving_probe/*.py", "scripts/run_vllm_throughput_probe.py")
 
 #: Every JIT, compile and scratch location is redirected under <output>/cache, because
 #: the lane's /tmp tmpfs is noexec in the default container profile.
@@ -159,15 +169,52 @@ def sha256_file(path: Path) -> str:
     return digest.hexdigest()
 
 
-def atomic_write_json(path: Path, payload: Any) -> None:
+def atomic_write_text(path: Path, text: str) -> None:
+    """Write ``text`` to a temporary file beside ``path``, fsync it, then rename it over."""
     path.parent.mkdir(parents=True, exist_ok=True)
     temporary = path.with_name(f".{path.name}.{os.getpid()}.tmp")
     with temporary.open("w", encoding="utf-8") as handle:
-        json.dump(payload, handle, indent=2, sort_keys=True, default=str)
-        handle.write("\n")
+        handle.write(text)
         handle.flush()
         os.fsync(handle.fileno())
     os.replace(temporary, path)
+
+
+def atomic_write_json(path: Path, payload: Any) -> None:
+    atomic_write_text(path, json.dumps(payload, indent=2, sort_keys=True, default=str) + "\n")
+
+
+def probe_code_digest(root: Path = PROJECT_ROOT) -> dict[str, Any]:
+    """SHA-256 over the sorted (path, SHA-256) list of the probe's code files."""
+    files = sorted(
+        {path for pattern in PROBE_CODE_GLOBS for path in root.glob(pattern) if path.is_file()}
+    )
+    if not files:
+        raise ProbeConfigError(f"no probe code files under {root}")
+    listing = [[path.relative_to(root).as_posix(), sha256_file(path)] for path in files]
+    digest = hashlib.sha256(json.dumps(listing, separators=(",", ":")).encode("utf-8")).hexdigest()
+    return {"digest": digest, "files": dict(listing)}
+
+
+def git_revision(root: Path = PROJECT_ROOT) -> dict[str, Any]:
+    """HEAD and whether the probe code or contract differ from it (None outside git)."""
+
+    def git(*args: str) -> str | None:
+        try:
+            completed = subprocess.run(
+                ["git", "-C", str(root), *args],
+                check=True,
+                capture_output=True,
+                text=True,
+                timeout=30,
+            )
+        except (OSError, subprocess.SubprocessError):
+            return None
+        return completed.stdout.strip()
+
+    head = git("rev-parse", "HEAD")
+    status = git("status", "--porcelain", "--", *PROBE_CODE_GLOBS, "experiments/serving")
+    return {"head": head, "probe_files_modified": None if status is None else bool(status)}
 
 
 def cache_environment(output_dir: Path, variant_env: Mapping[str, str]) -> dict[str, str]:
@@ -371,6 +418,12 @@ class OfflineEngine:
         self.log_path = log_path
         self.llm: Any = None
         self._saved_fds: tuple[int, int] | None = None
+        #: External request ids of the generate() call in progress (vLLM numbers them
+        #: from LLM.request_counter), so an interrupted call can be aborted.
+        self._call_ids: list[str] = []
+        #: Set when requests could not be cleared after an interrupted call; the
+        #: engine then reports itself dead and the phase stops.
+        self.poisoned = False
 
     @property
     def pid(self) -> int:
@@ -406,7 +459,7 @@ class OfflineEngine:
         self.llm = LLM(model=self.model_dir, tokenizer=self.model_dir, **kwargs)
 
     def alive(self) -> bool:
-        return self.llm is not None
+        return self.llm is not None and not self.poisoned
 
     def wait_ready(self, timeout_s: float, should_stop: Callable[[], bool] | None = None) -> bool:
         return self.llm is not None
@@ -441,8 +494,32 @@ class OfflineEngine:
             min_tokens=max_tokens,
             ignore_eos=True,
         )
+        first = int(self.llm.request_counter.counter)
+        self._call_ids = [str(first + index) for index in range(len(prompts))]
         outputs = self.llm.generate(prompts, params, use_tqdm=False)
-        return [[len(choice.token_ids) for choice in output.outputs] for output in outputs]
+        own = set(self._call_ids)
+        self._call_ids = []
+        # LLM._run_engine drains every unfinished request, so keep only this call's.
+        return [
+            [len(choice.token_ids) for choice in output.outputs]
+            for output in outputs
+            if output.request_id in own
+        ]
+
+    def abort_unfinished(self) -> dict[str, Any]:
+        """Abort the interrupted call's requests; poison the engine if any remain.
+
+        ``LLM.generate`` leaves requests in the engine when an exception (here a
+        deadline or a signal) leaves its loop, and the next call would finish them
+        and return their outputs with its own.
+        """
+        engine = self.llm.llm_engine
+        ids, self._call_ids = list(self._call_ids), []
+        if ids:
+            engine.abort_request(ids, internal=False)
+        remaining = bool(engine.has_unfinished_requests())
+        self.poisoned = remaining
+        return {"aborted_request_ids": len(ids), "unfinished_after_abort": remaining}
 
     def log_text(self) -> str:
         try:
@@ -642,29 +719,58 @@ def build_offline_prompts(point: PointSpec, allowed: np.ndarray) -> list[list[in
 # ---------------------------------------------------------------------------
 
 
+def caches_reset(outcomes: Sequence[Mapping[str, Any]], *, server: bool) -> bool:
+    """Every reset before (and, for the A/A point, between) a point's requests succeeded."""
+    keys = ("prefix", "mm", "encoder") if server else ("prefix",)
+    return bool(outcomes) and all(outcome.get(key) is True for outcome in outcomes for key in keys)
+
+
+def min_gpu_samples(duration_s: float, interval_ms: float, fraction: float) -> int:
+    """Samples a point needs: ``fraction`` of those its wall time implies, and at least one."""
+    expected = max(0.0, duration_s) * 1000.0 / interval_ms
+    return max(1, math.floor(fraction * expected))
+
+
 def assess_point(
     result: Mapping[str, Any],
     *,
     counters: Mapping[str, Any],
     gpu: Mapping[str, Any],
     reservation_mib: float | None,
+    reservation_required: bool,
     margin_mib: float,
     api_cpu_pct: float | None,
     client_cpu_pct: float | None,
     flag_pct: float,
     stop_reason: str | None,
     ran_to_end: bool,
+    caches_ok: bool,
+    min_samples: int,
 ) -> tuple[str, list[str], dict[str, bool]]:
+    """Status of one attempt (section 7 of the preregistration).
+
+    ``interrupted`` needs a signal and ``truncated`` a deadline (with no request
+    error); a point that ends early for any other reason, such as a replay whose
+    episode stopped at a failed request, goes through the validity checks and is
+    ``invalid``. The device checks fail closed: no samples, or no reservation
+    where one is required, is never a pass.
+    """
     peak = gpu.get("peak_memory_used_mib")
+    samples = int(gpu.get("samples") or 0)
     checks = {
         "no_failures": result["failed"] == 0,
         "all_completed": result["completed"] == result["planned"],
         "fixed_output_lengths": result.get("short_outputs", 0) == 0,
         "counters_match": bool(counters.get("pass")),
-        "no_contamination": reservation_mib is None
-        or peak is None
-        or peak <= reservation_mib + margin_mib,
+        "caches_reset": caches_ok,
+        "gpu_sampled": samples >= min_samples and peak is not None,
     }
+    if reservation_required:
+        checks["no_contamination"] = (
+            reservation_mib is not None
+            and peak is not None
+            and peak <= reservation_mib + margin_mib
+        )
     flags = []
     if api_cpu_pct is not None and api_cpu_pct >= flag_pct:
         flags.append("front-end-bound")
@@ -672,9 +778,9 @@ def assess_point(
         flags.append("client-bound")
     if not ran_to_end and stop_reason == "signal":
         return "interrupted", flags, checks
-    if not ran_to_end:
+    if not ran_to_end and stop_reason == "deadline" and int(result.get("request_errors", 0)) == 0:
         return "truncated", flags, checks
-    if all(checks.values()):
+    if ran_to_end and all(checks.values()):
         return ("valid-flagged" if flags else "valid"), flags, checks
     return "invalid", flags, checks
 
@@ -700,16 +806,39 @@ def image_differential(
 # ---------------------------------------------------------------------------
 
 
-def verify_preregistration(config: ProbeConfig, ledger: Path | None = None) -> dict[str, Any]:
+def verify_preregistration(
+    config: ProbeConfig, ledger: Path | None = None, root: Path = PROJECT_ROOT
+) -> dict[str, Any]:
+    """G0.0: the preregistration is frozen and names this contract and this probe code.
+
+    The ledger freezes the preregistration's bytes; the preregistration names the
+    contract's SHA-256 and the probe code digest. Requiring both here binds the
+    frozen rules to the contract and the code that produce and read the data.
+    """
     from scripts.preregister import DEFAULT_LEDGER, PreregistrationError, verify
 
     try:
-        row = verify(config.experiment_id, ledger=ledger or DEFAULT_LEDGER, root=PROJECT_ROOT)
+        row = verify(config.experiment_id, ledger=ledger or DEFAULT_LEDGER, root=root)
     except PreregistrationError as exc:
         raise GateFailure(f"G0.0 preregistration is not frozen: {exc}") from exc
     if row.get("path") != config.preregistration:
         raise GateFailure("G0.0 the frozen preregistration path differs from the contract")
-    return dict(row)
+    text = (root / str(row["path"])).read_text(encoding="utf-8")
+    if config.sha256 not in text:
+        raise GateFailure(
+            f"G0.0 the frozen preregistration does not name contract SHA-256 {config.sha256}"
+        )
+    code = probe_code_digest(root)
+    if code["digest"] not in text:
+        raise GateFailure(
+            f"G0.0 the frozen preregistration does not name probe code digest {code['digest']}"
+        )
+    return {
+        **dict(row),
+        "contract_sha256": config.sha256,
+        "probe_code_digest": code["digest"],
+        "probe_code_files": code["files"],
+    }
 
 
 def check_lane_outputs(outputs_root: Path, config: ProbeConfig, job: JobSpec) -> dict[str, Any]:
@@ -856,7 +985,9 @@ class ProbeRunner:
         self._reaper_stop = threading.Event()
         self._reaper_paused = threading.Event()
         self._tracked: set[int] = set()
-        self._signal_checkpointed = False
+        #: Every signal received, in order; the marker acknowledges each one once.
+        self.signals_received: list[str] = []
+        self._signals_acknowledged = 0
 
     # -- infrastructure -------------------------------------------------
 
@@ -899,12 +1030,18 @@ class ProbeRunner:
                 command, env={**os.environ, **env}, stdout=log, stderr=subprocess.STDOUT
             )
             self._tracked.add(process.pid)
-            try:
-                returncode = process.wait(timeout=float(gates["doctor_timeout_s"]))
-            except subprocess.TimeoutExpired:
-                process.kill()
-                process.wait()
-                return {"pass": False, "error": "cuda doctor timed out"}
+            end = time.perf_counter() + float(gates["doctor_timeout_s"])
+            # Poll rather than block, so a USR1/TERM is checkpointed without waiting
+            # for the doctor to finish.
+            while process.poll() is None:
+                if self.stop_event.is_set() or time.perf_counter() >= end:
+                    process.kill()
+                    process.wait()
+                    if self.stop_event.is_set():
+                        raise ProbeInterrupted(self.signal_name or "signal")
+                    return {"pass": False, "error": "cuda doctor timed out"}
+                time.sleep(0.5)
+            returncode = process.returncode
         try:
             report = json.loads(output.read_text(encoding="utf-8"))
         except (OSError, json.JSONDecodeError):
@@ -920,8 +1057,7 @@ class ProbeRunner:
 
     def _install_signals(self) -> None:
         def handle(signum: int, _frame: Any) -> None:
-            self.signal_name = signal.Signals(signum).name
-            self.stop_event.set()
+            self.note_signal(signal.Signals(signum).name)
             if self.blocking:
                 raise ProbeInterrupted(self.signal_name)
 
@@ -932,6 +1068,12 @@ class ProbeRunner:
         for name in ("SIGUSR1", "SIGTERM", "SIGINT"):
             signal.signal(getattr(signal, name), handle)
         signal.signal(signal.SIGALRM, alarm)
+
+    def note_signal(self, name: str) -> None:
+        """Record a stop signal (the handler's bookkeeping; no I/O)."""
+        self.signal_name = name
+        self.signals_received.append(name)
+        self.stop_event.set()
 
     def _reap_once(self) -> None:
         for pid in orphan_zombies(os.getpid(), self._tracked):
@@ -956,29 +1098,40 @@ class ProbeRunner:
             },
         )
 
-    def _write_marker(self, reason: str) -> None:
-        """Create the lane's checkpoint marker; always after progress.json is on disk."""
+    def _write_marker(self, triggers: Sequence[str]) -> None:
+        """Write the lane's signal-checkpoint marker (docs/operations.md).
+
+        Plain text, written atomically in the marker's directory. The first lines
+        are ``trigger=SIG<name>``, one per signal this save answers (the lane reads
+        the first 4,096 bytes); the rest describe the saved progress.
+        """
         if self.marker_path is None:
             return
         progress = self.output_dir / "progress.json"
-        atomic_write_json(
-            self.marker_path,
-            {
-                "reason": reason,
-                "written_at": utc_now(),
-                "progress_sha256": sha256_file(progress) if progress.is_file() else None,
-                "points": dict(self.point_status),
-            },
-        )
+        lines = [f"trigger={name}" for name in dict.fromkeys(triggers)]
+        lines += [
+            f"written_at={utc_now()}",
+            f"experiment_id={self.config.experiment_id}",
+            f"job={self.job.job_id}",
+            f"progress_sha256={sha256_file(progress) if progress.is_file() else 'none'}",
+        ]
+        lines += [f"point.{name}={status}" for name, status in sorted(self.point_status.items())]
+        atomic_write_text(self.marker_path, "\n".join(lines) + "\n")
 
-    def _checkpoint_after_signal(self) -> None:
-        """On USR1/TERM: persist progress first, then (and only then) the marker."""
-        if self._signal_checkpointed or not self.stop_event.is_set():
+    def _checkpoint_after_signal(self, state: str = "signal-checkpoint") -> None:
+        """After USR1/TERM: persist progress first, then (and only then) the marker.
+
+        Runs at every checkpoint opportunity (after an interrupted point, when an
+        engine stops, at exit); it writes nothing unless a signal arrived that no
+        marker has acknowledged yet.
+        """
+        pending = self.signals_received[self._signals_acknowledged :]
+        if not pending:
             return
-        self._write_progress("signal-checkpoint")
-        self._write_marker("signal-checkpoint")
-        self._signal_checkpointed = True
-        self.log(f"signal {self.signal_name}: progress saved, checkpoint marker written")
+        self._write_progress(state)
+        self._write_marker(pending)
+        self._signals_acknowledged += len(pending)
+        self.log(f"signal {', '.join(pending)}: progress saved, checkpoint marker written")
 
     def _record(self, point: PointSpec, record: dict[str, Any]) -> None:
         atomic_write_json(self.points_dir / f"{point.point_id}.json", record)
@@ -1153,19 +1306,35 @@ class ProbeRunner:
 
     def _start_engine(
         self, phase: PhaseSpec, engine_dir: Path, launch_deadline: float
-    ) -> tuple[Any, list[dict[str, Any]]]:
+    ) -> tuple[Any, list[dict[str, Any]], str | None]:
         """G0.5: default compile + CUDA-graph mode first, one eager fallback, then sticky eager.
 
         Each ready wait is capped by the gate timeout and by the phase launch deadline.
+        Before the eager retry the device must release the failed engine's memory and
+        pass G0.8 again. Returns the engine (or None), the attempts, and the gate that
+        stopped the start ("G0.8" when the retry's baseline failed, else None).
         """
         model_dir = str(self.model_root / phase.engine.model)
         gate_timeout = float(self.config.section("gates")["engine_ready_timeout_s"])
         attempts: list[dict[str, Any]] = []
         for eager in [True] if self.eager else [False, True]:
+            attempt: dict[str, Any] = {"eager": eager, "ready": False}
+            if attempts:
+                attempt["memory_release"] = self._wait_memory_released()
+                if self.stop_event.is_set():
+                    break
+                baseline = self._baseline()
+                attempt["G0.8"] = baseline
+                self.summary["gates"].setdefault("G0.8", {})[f"{phase.phase_id}/eager-retry"] = (
+                    baseline
+                )
+                if not baseline["pass"]:
+                    attempt["error"] = "G0.8 device baseline failed before the eager retry"
+                    attempts.append(attempt)
+                    return None, attempts, "G0.8"
             timeout = min(gate_timeout, max(1.0, launch_deadline - time.perf_counter()))
             suffix = "-eager" if eager else ""
             engine = self.engine_factory(phase, model_dir, engine_dir / f"engine{suffix}.log")
-            attempt: dict[str, Any] = {"eager": eager, "ready": False}
             if engine.mode == "server":
                 attempt["argv"] = engine.argv(eager)
             started = time.perf_counter()
@@ -1182,6 +1351,7 @@ class ProbeRunner:
             except ProbeDeadline:
                 attempt["error"] = "engine start exceeded the ready timeout"
             except ProbeInterrupted:
+                self._checkpoint_after_signal()
                 engine.stop()
                 raise
             except Exception as exc:  # noqa: BLE001 - a failed start is a G0.5 outcome
@@ -1195,12 +1365,13 @@ class ProbeRunner:
                 self._tracked.add(int(pid))
             attempts.append(attempt)
             if attempt["ready"]:
-                return engine, attempts
+                return engine, attempts, None
+            self._checkpoint_after_signal()
             engine.stop()
             self._reaper_paused.clear()
             if self.stop_event.is_set() or time.perf_counter() >= launch_deadline:
                 break
-        return None, attempts
+        return None, attempts, None
 
     def _run_phase(
         self, index: int, phase: PhaseSpec, existing: Mapping[str, dict[str, Any]]
@@ -1238,7 +1409,7 @@ class ProbeRunner:
             return outcome
         engine_dir = self.output_dir / "engines" / phase.phase_id
         engine_dir.mkdir(parents=True, exist_ok=True)
-        engine, attempts = self._start_engine(phase, engine_dir, launch_deadline)
+        engine, attempts, stopped_by = self._start_engine(phase, engine_dir, launch_deadline)
         default_mode = engine is not None and not any(
             a.get("eager") for a in attempts if a["ready"]
         )
@@ -1250,8 +1421,9 @@ class ProbeRunner:
         outcome["G0.5"] = verdict
         self.summary["gates"].setdefault("G0.5", {})[phase.phase_id] = verdict
         if engine is None:
-            self._mark_not_run(phase.points, "G0.5 engine did not start")
-            outcome["gate_failed"] = "G0.5"
+            gate = stopped_by or "G0.5"
+            self._mark_not_run(phase.points, f"{gate} failed while starting the engine")
+            outcome["gate_failed"] = gate
             if not self.stop_event.is_set():
                 outcome["memory_release"] = self._wait_memory_released()
             return outcome
@@ -1273,6 +1445,14 @@ class ProbeRunner:
             if not self.stop_event.is_set():
                 outcome["memory_release"] = self._wait_memory_released()
         return outcome
+
+    def _fail_gate(
+        self, phase: PhaseSpec, gate: str, verdict: dict[str, Any], outcome: dict[str, Any]
+    ) -> None:
+        """Record a failed phase gate in the summary and the phase outcome."""
+        self.summary["gates"].setdefault(gate, {})[phase.phase_id] = verdict
+        outcome[gate] = verdict
+        outcome["gate_failed"] = gate
 
     def _mark_not_run(self, points: Sequence[PointSpec], reason: str) -> None:
         for point in points:
@@ -1334,12 +1514,17 @@ class ProbeRunner:
                     outcome["cut"] = True
                     break
                 attempts: list[dict[str, Any]] = []
+                superseded: list[dict[str, Any]] = []
                 record: dict[str, Any] = {}
                 for attempt in range(1, 2 + reruns):
                     if attempt > 1 and (
-                        time.perf_counter() >= launch_deadline or self.stop_event.is_set()
+                        time.perf_counter() >= launch_deadline
+                        or self.stop_event.is_set()
+                        or not engine.alive()
                     ):
                         break
+                    if record:
+                        superseded.append(record)
                     deadline = min(time.perf_counter() + 60.0 * point.max_minutes, hard_deadline)
                     record = self._execute(
                         point,
@@ -1358,6 +1543,8 @@ class ProbeRunner:
                     if record["status"] != "invalid":
                         break
                 record["attempts"] = attempts
+                # Earlier attempts are kept in full (metrics included); the last one stands.
+                record["superseded_attempts"] = superseded
                 self._record(point, record)
                 self.log(f"{phase.phase_id}/{point.point_id}: {record['status']}")
                 if record["status"] == "interrupted" or self.stop_event.is_set():
@@ -1373,7 +1560,8 @@ class ProbeRunner:
                     self._mark_not_run(left, "engine failed")
                     outcome["engine_failed"] = True
                     if smoke:
-                        outcome["gate_failed"] = "G0.6"
+                        reason = f"smoke {record['status']}: {record.get('error')}"
+                        self._fail_gate(phase, "G0.6", {"pass": False, "reason": reason}, outcome)
                     break
                 if smoke:
                     gates = record.get("gates", {})
@@ -1382,7 +1570,18 @@ class ProbeRunner:
                         self.summary["gates"].setdefault(gate, {})[phase.phase_id] = verdict
                     if record["status"] not in {"valid", "valid-flagged"}:
                         failed = [g for g, v in gates.items() if not v.get("pass")]
-                        outcome["gate_failed"] = failed[0] if failed else "G0.6"
+                        if not failed:
+                            # The gates' own checks held but the smoke point is not
+                            # valid (cache resets, device samples): G0.6 fails.
+                            bad = sorted(k for k, ok in record.get("checks", {}).items() if not ok)
+                            verdict = {
+                                **gates.get("G0.6", {}),
+                                "pass": False,
+                                "reason": f"smoke {record['status']}; failed checks {bad}",
+                            }
+                            self._fail_gate(phase, "G0.6", verdict, outcome)
+                            failed = ["G0.6"]
+                        outcome["gate_failed"] = failed[0]
                         rest = [p for p in phase.points if p is not point]
                         self._mark_not_run(rest, f"{outcome['gate_failed']} failed in the smoke")
                         break
@@ -1392,6 +1591,22 @@ class ProbeRunner:
                     window = self.sampler.window(now - window_s, now)
                     reservation = max((s.memory_used_mib for s in window), default=None)
                     outcome["reservation_mib"] = reservation
+                    outcome["reservation_samples"] = len(window)
+                    if reservation is None:
+                        # No device sample after the smoke: the contamination check
+                        # could never hold, so the phase stops here (G0.8, sampling).
+                        verdict = {
+                            "pass": False,
+                            "reason": "no device sample in the reservation window after the smoke",
+                        }
+                        self.summary["gates"].setdefault("G0.8", {})[
+                            f"{phase.phase_id}/reservation"
+                        ] = verdict
+                        outcome["G0.8 reservation"] = verdict
+                        outcome["gate_failed"] = "G0.8"
+                        rest = [p for p in phase.points if p is not point]
+                        self._mark_not_run(rest, "G0.8 no engine reservation was measured")
+                        break
         return outcome
 
     def _execute(
@@ -1421,17 +1636,26 @@ class ProbeRunner:
             return record
         record.update(body)
         validity = self.config.section("validity")
+        smoke = point.kind in {"smoke-server", "smoke-offline"}
+        resets = [body["cache_reset"], *body.get("cache_reset_between_arms", [])]
         status, flags, checks = assess_point(
             body["result"],
             counters=body["counter_check"],
             gpu=body["gpu"],
             reservation_mib=reservation,
+            reservation_required=not smoke,
             margin_mib=float(validity["contamination_margin_mib"]),
             api_cpu_pct=body.get("api_server_cpu_pct"),
             client_cpu_pct=body.get("client_cpu_pct"),
             flag_pct=float(validity["frontend_cpu_flag_pct"]),
             stop_reason=body.get("stop_reason"),
             ran_to_end=body["ran_to_end"],
+            caches_ok=caches_reset(resets, server=engine.mode == "server"),
+            min_samples=min_gpu_samples(
+                float(body["result"].get("duration_s") or 0.0),
+                float(self.config.section("sampling")["gpu_interval_ms"]),
+                float(validity["min_gpu_sample_fraction"]),
+            ),
         )
         gates = body.get("gates")
         gates_failed = gates and not all(verdict.get("pass") for verdict in gates.values())
@@ -1508,6 +1732,7 @@ class ProbeRunner:
         }
         if "agreement" in body:
             out["agreement"] = body["agreement"]
+            out["cache_reset_between_arms"] = body["cache_reset_between_arms"]
         if point.kind == "smoke-server":
             differential = image_differential(
                 body["results"],
@@ -1581,9 +1806,10 @@ class ProbeRunner:
                         "stop_reason": None if ran_to_end else stop.reason(),
                     }
                 if point.kind == "aa":
+                    between_resets: list[dict[str, Any]] = []
 
                     async def between() -> None:
-                        await asyncio.to_thread(engine.reset_caches)
+                        between_resets.append(await asyncio.to_thread(engine.reset_caches))
 
                     started = stop.clock()
                     arms = await run_aa(
@@ -1608,6 +1834,7 @@ class ProbeRunner:
                     return {
                         "result": result,
                         "agreement": aa_agreement(arms),
+                        "cache_reset_between_arms": between_resets,
                         "ran_to_end": ran_to_end,
                         "stop_reason": None if ran_to_end else stop.reason(),
                     }
@@ -1671,10 +1898,20 @@ class ProbeRunner:
             )
         except ProbeDeadline:
             stop_reason = "deadline"
+        except ProbeInterrupted:
+            stop_reason = "signal"
         finally:
             signal.setitimer(signal.ITIMER_REAL, 0)
             self.blocking = False
         finished = time.perf_counter()
+        abort: dict[str, Any] | None = None
+        if stop_reason is not None:
+            # The interrupted call's requests are still in the engine; the next
+            # point's generate() would finish them and count them as its own.
+            abort = engine.abort_unfinished()
+            self.log(f"{point.point_id}: stopped by {stop_reason}; abort {abort}")
+            if stop_reason == "signal":
+                raise ProbeInterrupted(self.signal_name or "signal")
         after = engine.metrics()
         completions = sum(len(choice) for choice in lengths)
         generated = sum(sum(choice) for choice in lengths)
@@ -1711,6 +1948,7 @@ class ProbeRunner:
             "gpu": summarize_gpu(self.sampler.window(started, finished)),
             "ran_to_end": ran_to_end,
             "stop_reason": stop_reason,
+            "abort": abort,
         }
         if point.kind == "smoke-offline":
             smoke_ok = completions == planned and result["short_outputs"] == 0
@@ -1754,15 +1992,54 @@ class ProbeRunner:
                 "exit_code": exit_code,
                 "finished_at": utc_now(),
                 "signal": self.signal_name,
+                "signals_received": list(self.signals_received),
             }
         )
+        self.summary["acceptance"] = job_acceptance(self.summary)
         self.output_dir.mkdir(parents=True, exist_ok=True)
         atomic_write_json(self.output_dir / "summary.json", self.summary)
         self._write_progress(status)
-        self._write_marker("signal-checkpoint" if self.signal_name else "final")
+        # The marker answers signals only; a run that received none never writes it.
+        self._checkpoint_after_signal(state=status)
         self._reaper_stop.set()
         if os.getpid() == 1:
             self._reap_once()
+
+
+def job_acceptance(summary: Mapping[str, Any]) -> dict[str, Any]:
+    """Whether a finished job's points may enter a budget (preregistration section 5).
+
+    Accepted: status complete or complete-with-cuts, every job-level gate (G0.0 to
+    G0.4) passed, and every phase-level gate passed except G0.5 when the eager
+    fallback started the engine (the job is then labelled eager). A phase whose
+    gate failed has all its points not-run; it is listed, and only blocks
+    acceptance when it is the primary phase (which ends the job as a pre-result).
+    """
+    gates = summary.get("gates", {})
+    job_gates = {gate: verdict for gate, verdict in gates.items() if gate not in PHASE_GATES}
+    job_gate_failures = sorted(
+        gate for gate, verdict in job_gates.items() if not verdict.get("pass")
+    )
+    phase_failures: dict[str, list[str]] = {}
+    eager_phases = []
+    for gate in PHASE_GATES:
+        for phase, verdict in gates.get(gate, {}).items():
+            if verdict.get("pass"):
+                continue
+            if gate == "G0.5" and verdict.get("eager_fallback"):
+                eager_phases.append(phase)
+                continue
+            phase_failures.setdefault(phase.split("/", 1)[0], []).append(gate)
+    status = summary.get("status")
+    accepted = status in ACCEPTED_JOB_STATUSES and not job_gate_failures
+    return {
+        "accepted": bool(accepted),
+        "status": status,
+        "eager": bool(eager_phases),
+        "eager_phases": sorted(eager_phases),
+        "job_gate_failures": job_gate_failures,
+        "phase_gate_failures": {phase: sorted(set(g)) for phase, g in phase_failures.items()},
+    }
 
 
 # ---------------------------------------------------------------------------
@@ -1917,19 +2194,74 @@ def plan_payload(config: ProbeConfig, job: JobSpec, model_root: str) -> dict[str
     }
 
 
-def _load_points(directory: Path) -> dict[str, dict[str, Any]]:
-    points = {}
+class ProjectionError(RuntimeError):
+    """A job directory does not belong to this contract, job or experiment."""
+
+
+def load_job_points(directory: Path, config: ProbeConfig, job_id: str) -> dict[str, dict[str, Any]]:
+    """Point files of one job, refusing any written under another contract, job or experiment."""
+    job = config.job(job_id)
+    expected = {point.point_id for phase in job.phases for point in phase.points}
+    points: dict[str, dict[str, Any]] = {}
     for path in sorted((directory / "points").glob("*.json")):
         record = json.loads(path.read_text(encoding="utf-8"))
+        problems = []
+        if record.get("experiment_id") != config.experiment_id:
+            problems.append(f"experiment {record.get('experiment_id')!r}")
+        if record.get("config_sha256") != config.sha256:
+            problems.append(f"contract {record.get('config_sha256')!r}")
+        if record.get("job") != job_id:
+            problems.append(f"job {record.get('job')!r}")
+        if record.get("point_id") not in expected or path.stem != record.get("point_id"):
+            problems.append(f"point {record.get('point_id')!r}")
+        if problems:
+            raise ProjectionError(
+                f"{path} is not a job-{job_id} point of this contract: {problems}"
+            )
         points[record["point_id"]] = record
     return points
 
 
+def job_summary(directory: Path, config: ProbeConfig, job_id: str) -> dict[str, Any]:
+    """The job's status and acceptance, from summary.json when the driver finished."""
+    path = directory / "summary.json"
+    if not path.is_file():
+        return {"summary": None, "note": "no summary.json (the driver did not finish)"}
+    summary = json.loads(path.read_text(encoding="utf-8"))
+    if summary.get("config_sha256") != config.sha256 or summary.get("job") != job_id:
+        raise ProjectionError(f"{path} belongs to another contract or job")
+    return {
+        "summary_sha256": sha256_file(path),
+        "status": summary.get("status"),
+        "acceptance": summary.get("acceptance"),
+        "eager": summary.get("eager"),
+        "image_variant": summary.get("image_variant"),
+    }
+
+
 def project(
-    config: ProbeConfig, *, job_a: Path, job_b: Path | None, job_c: Path | None
+    config: ProbeConfig,
+    *,
+    job_a: Path,
+    job_b: Path | None,
+    job_c: Path | None,
+    prereg_check: Callable[[ProbeConfig], dict[str, Any]] | None = None,
 ) -> dict[str, Any]:
+    """Apply the preregistered budget rules to finished job outputs.
+
+    Refuses unless the frozen preregistration names this contract and this probe
+    code (the G0.0 check), and refuses point files from another contract, job or
+    experiment. The output records the ledger row, the code digest and git HEAD.
+    """
+    try:
+        prereg = (prereg_check or verify_preregistration)(config)
+    except GateFailure as exc:
+        raise ProjectionError(f"projection refused: {exc}") from exc
     budget = config.section("budget")
-    points_a = _load_points(job_a)
+    limit = float(config.section("validity")["unstable_relative_range"])
+    points_a = load_job_points(job_a, config, "a")
+    points_b = load_job_points(job_b, config, "b") if job_b is not None else None
+    points_c = load_job_points(job_c, config, "c") if job_c is not None else None
     x1 = budget_rules.evaluate_x1(
         points_a,
         max_relative_delta=float(config.section("dummy_admissibility")["max_relative_delta"]),
@@ -1937,26 +2269,38 @@ def project(
     out: dict[str, Any] = {
         "experiment_id": config.experiment_id,
         "config_sha256": config.sha256,
+        "preregistration": prereg,
+        "code": {**probe_code_digest(), "git": git_revision()},
+        "jobs": {
+            name: job_summary(directory, config, name)
+            for name, directory in (("a", job_a), ("b", job_b), ("c", job_c))
+            if directory is not None
+        },
         "x1": x1,
-        "a1_stability": budget_rules.stability(
-            points_a,
-            ("a1a", "a1b", "a1c"),
-            float(config.section("validity")["unstable_relative_range"]),
-        ),
+        "a1_stability": budget_rules.stability(points_a, ("a1a", "a1b", "a1c"), limit),
     }
+    max_model_len = max(
+        int(config.engines[phase.engine.engine_id].flags["max_model_len"])
+        for phase in config.job("a").phases
+    )
     try:
         out["q2"] = budget_rules.project_q2(
             budget,
             job_a=points_a,
-            job_c=_load_points(job_c) if job_c else None,
+            job_c=points_c,
             x1_outcome=x1["outcome"],
+            unstable_limit=limit,
+            max_model_len=max_model_len,
         )
     except budget_rules.BudgetError as exc:
         out["q2"] = {"decision": "incomplete-re-probe", "reason": str(exc)}
-    if job_b is not None:
+    if points_b is not None:
+        out["b1_stability"] = budget_rules.stability(
+            points_b, ("b1a", "b1b", "b1c"), limit, metric="completions_per_s"
+        )
         try:
             out["q1"] = budget_rules.project_q1(
-                budget, job_b=_load_points(job_b), x1_outcome=x1["outcome"]
+                budget, job_b=points_b, x1_outcome=x1["outcome"], unstable_limit=limit
             )
         except budget_rules.BudgetError as exc:
             out["q1"] = {"decision": "incomplete-re-probe", "reason": str(exc)}
@@ -1964,15 +2308,17 @@ def project(
 
 
 def build_parser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
+    # allow_abbrev=False everywhere: the lane's seed binding assumes no option can be
+    # reached by an abbreviation (docs/operations.md, seed_binding).
+    parser = argparse.ArgumentParser(description=__doc__.splitlines()[0], allow_abbrev=False)
     commands = parser.add_subparsers(dest="command", required=True)
 
-    plan = commands.add_parser("plan")
+    plan = commands.add_parser("plan", allow_abbrev=False)
     plan.add_argument("--config", type=Path, default=DEFAULT_CONFIG)
     plan.add_argument("--job", required=True)
     plan.add_argument("--model-root", default="/model-cache/cotcodec-models")
 
-    run = commands.add_parser("run")
+    run = commands.add_parser("run", allow_abbrev=False)
     run.add_argument("--config", type=Path, required=True)
     run.add_argument("--job", required=True)
     run.add_argument("--output-dir", type=Path, required=True)
@@ -1983,7 +2329,7 @@ def build_parser() -> argparse.ArgumentParser:
     run.add_argument("--weights-pin", action="append", default=[])
     run.add_argument("--seeds", type=int, nargs="+", required=True)
 
-    doctor = commands.add_parser("cuda-doctor")
+    doctor = commands.add_parser("cuda-doctor", allow_abbrev=False)
     doctor.add_argument("--output", type=Path, required=True)
     doctor.add_argument("--matmul-size", type=int, required=True)
     doctor.add_argument("--max-error", type=float, required=True)
@@ -1993,15 +2339,19 @@ def build_parser() -> argparse.ArgumentParser:
     doctor.add_argument("--expected-vllm-commit", required=True)
     doctor.add_argument("--cache-root", type=Path, required=True)
 
-    args_doctor = commands.add_parser("vllm-args-doctor")
+    args_doctor = commands.add_parser("vllm-args-doctor", allow_abbrev=False)
     args_doctor.add_argument("--config", type=Path, default=DEFAULT_CONFIG)
 
-    proj = commands.add_parser("project")
+    proj = commands.add_parser("project", allow_abbrev=False)
     proj.add_argument("--config", type=Path, default=DEFAULT_CONFIG)
     proj.add_argument("--job-a", type=Path, required=True)
     proj.add_argument("--job-b", type=Path)
     proj.add_argument("--job-c", type=Path)
     proj.add_argument("--output", type=Path, required=True)
+
+    commands.add_parser("digest", allow_abbrev=False).add_argument(
+        "--config", type=Path, default=DEFAULT_CONFIG
+    )
     return parser
 
 
@@ -2035,10 +2385,23 @@ def main(argv: Sequence[str] | None = None) -> int:
             )
         )
         return 0
+    if args.command == "digest":
+        print(
+            json.dumps(
+                {"contract_sha256": config.sha256, **probe_code_digest()},
+                indent=2,
+                sort_keys=True,
+            )
+        )
+        return 0
     if args.command == "project":
         if args.output.exists():
             raise SystemExit(f"refusing to overwrite {args.output}")
-        payload = project(config, job_a=args.job_a, job_b=args.job_b, job_c=args.job_c)
+        try:
+            payload = project(config, job_a=args.job_a, job_b=args.job_b, job_c=args.job_c)
+        except ProjectionError as exc:
+            print(f"refused: {exc}", file=sys.stderr)
+            return EXIT_PRE_RESULT
         atomic_write_json(args.output, payload)
         print(
             json.dumps(

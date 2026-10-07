@@ -8,6 +8,7 @@ from __future__ import annotations
 import asyncio
 import json
 import re
+import types
 from typing import Any
 
 import httpx
@@ -130,3 +131,61 @@ class FakeVllm:
 
     def sync_client(self) -> httpx.Client:
         return httpx.Client(transport=httpx.MockTransport(self.sync_handle), base_url="http://fake")
+
+
+class _FakeLLMEngine:
+    def __init__(self, llm: FakeLLM) -> None:
+        self.llm = llm
+
+    def abort_request(self, request_ids: list[str], internal: bool = False) -> None:
+        assert internal is False, "the probe aborts by external request id"
+        self.llm.aborted.extend(request_ids)
+        if not self.llm.abort_ignored:
+            for request_id in request_ids:
+                self.llm.pending.pop(request_id, None)
+
+    def has_unfinished_requests(self) -> bool:
+        return bool(self.llm.pending)
+
+
+class FakeLLM:
+    """vLLM ``LLM``'s request bookkeeping (v0.31.0 offline_utils).
+
+    Request ids come from ``request_counter``; ``generate`` adds its prompts, then
+    finishes every unfinished request, including those an interrupted earlier call
+    left behind, and returns them all sorted by id.
+    """
+
+    def __init__(self, interrupt: type[BaseException]) -> None:
+        self.request_counter = types.SimpleNamespace(counter=0)
+        self.pending: dict[str, dict[str, Any]] = {}
+        self.interrupt = interrupt
+        self.interrupt_next = False
+        self.abort_ignored = False
+        self.aborted: list[str] = []
+        self.llm_engine = _FakeLLMEngine(self)
+
+    @property
+    def unfinished(self) -> set[str]:
+        return set(self.pending)
+
+    def generate(self, prompts, params, use_tqdm: bool = False):
+        for _prompt in prompts:
+            request_id = str(self.request_counter.counter)
+            self.request_counter.counter += 1
+            self.pending[request_id] = params
+        if self.interrupt_next:
+            self.interrupt_next = False
+            raise self.interrupt("deadline inside generate")
+        finished = sorted(self.pending.items(), key=lambda item: int(item[0]))
+        self.pending = {}
+        return [
+            types.SimpleNamespace(
+                request_id=request_id,
+                outputs=[
+                    types.SimpleNamespace(token_ids=[0] * int(sampling["max_tokens"]))
+                    for _ in range(int(sampling["n"]))
+                ],
+            )
+            for request_id, sampling in finished
+        ]

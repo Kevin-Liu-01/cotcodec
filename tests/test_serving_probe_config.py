@@ -100,7 +100,7 @@ def test_server_argv_has_no_speculative_decoding_and_prefix_caching_on() -> None
     joined = " ".join(argv)
     assert "--enable-prefix-caching" in argv
     assert "--gpu-memory-utilization 0.9" in joined
-    assert "--max-model-len 65536" in joined
+    assert "--max-model-len 131072" in joined
     assert "--load-format auto" in joined
     assert "speculative" not in joined and "mtp" not in joined.lower()
     assert '{"image":{"count":20,"height":1080,"width":1920},"video":0}' in argv
@@ -201,3 +201,15 @@ def test_weight_pins_parse_and_must_cover_the_job() -> None:
             parse_weight_pins([bad])
     with pytest.raises(ProbeConfigError, match="repeated"):
         parse_weight_pins([f"qwen3-8b={PIN}", f"qwen3-8b={PIN}"])
+
+
+def test_budget_cell_sizes_match_the_points_they_price() -> None:
+    config = load_config(CONFIG)
+    q2 = config.section("budget")["q2"]
+    assert q2["a11y_tokens"] == config.points["r2"]["a11y_tokens"]
+    assert q2["thinking_output_tokens"] == config.points["r4"]["output_tokens"]
+    assert {cell["profile"] for cell in q2["cells"]} == set(q2["profiles"])
+    reference = q2["open_loop_reference"]
+    assert reference["point"] == "a2" and reference["fallback_points"] == ["a1a", "a1b", "a1c"]
+    for engine_id in ("a-real", "a-dummy", "c-27b", "c-35b"):
+        assert config.engines[engine_id].flags["max_model_len"] == 131072

@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from pathlib import Path
+
 import numpy as np
 import pytest
 from serving_probe_fakes import WordTokenizer
@@ -108,6 +110,7 @@ def test_h2_folding_follows_cua_speedrun() -> None:
     assert messages[1]["content"] == [{"type": "text", "text": messages[1]["content"][0]["text"]}]
     assert "Previous actions:\nNone" in messages[1]["content"][0]["text"]
     assert messages[-1]["content"][0]["text"] == "<tool_response>\n"
+    assert messages[-1]["content"][-1]["text"] == "\n</tool_response>"
     assert sum(1 for m in messages if m["role"] == "assistant") == total - 1
 
 
@@ -140,3 +143,13 @@ def test_modeled_prompt_tokens_drop_at_folds_and_grow_between() -> None:
     assert modeled_prompt_tokens(h1, 6) == modeled_prompt_tokens(h1, 5) + 16
     with pytest.raises(ValueError):
         visible_images(h1, 0)
+
+
+def test_no_unlicensed_harness_text_is_reproduced() -> None:
+    # cua-speedrun has no LICENSE file: its placeholder sentence must not appear.
+    import harness.serving_probe.prompts as prompts
+
+    source = Path(prompts.__file__).read_text(encoding="utf-8")
+    assert "has been collapsed" not in source
+    assert COLLAPSED_SCREENSHOT_TEXT == "Earlier screen image omitted here."
+    assert "Apache License 2.0" in source and "OSWorld" in source

@@ -31,13 +31,18 @@ time for Q1 (offline n=8 sampling) and Q2 (closed-loop computer-use episodes).
 - Text and image seeds are separate streams, so controls resend identical text.
 - Generated text stays in memory; only counts and token-id digests are written.
 - Budget fallbacks are fixed in the preregistration and always flagged.
+- The frozen preregistration names the contract SHA-256 and the digest of every
+  `*.py` here plus the driver; G0.0 and `project` refuse any other code. Print
+  both with `run_vllm_throughput_probe.py digest`.
+- Validity fails closed: no device samples, no reservation or a failed cache
+  reset is invalid; only a signal interrupts and only a deadline truncates.
 
 ## Common tasks → first action
 <!-- agent-docs:fill:tasks -->
 
 | Task | First action |
 |---|---|
-| Change a point or flag | It is a new experiment id once the preregistration is frozen. |
+| Change a point, flag or any probe code | Before freezing: rerun `digest` and update the preregistration's two hash lines. After: a new experiment id. |
 | Check flags against vLLM | `python scripts/run_vllm_throughput_probe.py vllm-args-doctor` in the overlay. |
 
 ## Gotchas
