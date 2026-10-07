@@ -281,3 +281,31 @@ Append-only. Newest entries at the bottom.
   vLLM teardown and overran its 0.1 GPU-h cap (0.11 by Slurm); a fix exists
   but is validated on CPU only. The lane leaves a container alive if Slurm
   kills the batch script at the time limit; to be fixed.
+
+## 2026-10-07 — Q3 dense headroom pre-check built (D26), not run
+
+- Branch `stage0/q3-dense-precheck`: draft registration
+  `program/preregistrations/q3-dense-headroom-precheck-v1.md` (not frozen) and
+  its code. Dense only, no indexer; the development partition of the K1
+  bundle (`919d016b...`) only; two lanes, Qwen3-0.6B-Base (1 GPU x 9 min, cap
+  0.15) and Qwen3.5-4B-Base (1 GPU x 21 min, cap 0.35), caps summing to D26's
+  0.5 GPU-h. The 4B lane re-tokenizes the bundle's Qwen3 tokens segment by
+  segment (needle spans exact) and reads its 8 full-attention layers.
+- Measures H1 on MN, CX and ML (development literal prompts built with the K1
+  builder's rule), H2a and H2b, a non-literal floor candidate, English entity
+  anchors with the entity-controlled subset, a literal (lexical) selector and
+  a block-score null (target log-scores plus noise, seeds 42/43/44) read with
+  K1's xi and xi_rel, recall by tokenizer fertility, and a reproduction of K1
+  smoke 452's dense numbers on the 0.6B lane. Lane decisions
+  (NEGATIVE_CAPABLE needs H1_CX >= 20 with lower bound >= 10) and a combined
+  read say which K1 v3 designs are viable.
+- New modules beside the frozen K1 files (none edited):
+  `harness/dense_headroom_{data,stats,torch}.py`,
+  `scripts/run_dense_headroom_precheck{,_doctor}.py`,
+  `scripts/fill_dense_headroom_precheck_manifests.py`,
+  `scripts/summarise_dense_headroom_precheck.py`, lane templates in
+  `experiments/manifests/q3-dense-headroom-precheck-v1/`.
+- CPU doctor in the research image (`e59d9cc1`, network none, Slurm CPU
+  steps): DENSE_DOCTOR_PASS, including both tiny lanes end to end, a SIGUSR1
+  interrupt (exit 75 with the marker) and its continuation. No GPU time used.
+- Waiting on Kevin: the draft's design decisions 1-14.

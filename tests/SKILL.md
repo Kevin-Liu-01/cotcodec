@@ -33,6 +33,13 @@ Each contract proves valid inputs pass and decision-bearing drift fails.
   and `test_sparse_indexer_k1_v2_prereg.py` mostly do not.
   `test_sparse_indexer_bank_gpu.py` runs only with `COTCODEC_GPU_TESTS=1` on a
   Slurm-allocated GPU inside the image.
+- Dense headroom pre-check: `test_dense_headroom_data.py`,
+  `test_dense_headroom_stats.py`, `test_dense_headroom_manifests.py`,
+  `test_dense_headroom_prereg.py` (binds the draft's code table to the tree
+  until frozen) and `test_summarise_dense_headroom_precheck.py` run without
+  torch; `test_dense_headroom_torch.py` and
+  `test_run_dense_headroom_precheck.py` (end to end on CPU) need the image
+  (the K1 v2 pytest overlay supplies pytest there).
 - `_holo3_world.py` builds in-memory stand-ins for the Holo3 and OpenCUA
   archives that reproduce the real leaderboard cells, so the audit's controls
   and tamper cases run without network.

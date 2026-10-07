@@ -31,6 +31,15 @@ attestation helpers. It starts small after the 2026-10-06 restart.
   `sparse_indexer_k1_budget_v2.py` (torch-free registered limit formula and
   smoke gate) and `sparse_indexer_k1_equivalence_v2.py` (the device TF32 gates
   the throughput probe runs). None of v1's tabled files changes.
+- Q3 dense headroom pre-check (D26): `dense_headroom_data.py` (torch-free:
+  lanes, byte-exact token codecs, the development artifact with re-tokenization
+  for Qwen3.5 and the development literal prompts, entity anchors, stop ids,
+  lexical overlap, units), `dense_headroom_stats.py` (torch-free: H1, H2,
+  the literal selector and block-score null under K1's statistics, the floor
+  candidate, fertility, the K1 smoke reproduction, lane and combined
+  decisions) and `dense_headroom_torch.py` (one forward per unit through K1
+  v1's capture path and K1 v2's batched selection; hybrid-safe multiple
+  choice). Imports the frozen K1 files unchanged.
 - `publication_attestation.py` verifies administrator signatures over complete
   publication claim waves.
 - `remote_zip.py` reads selected members of pinned remote ZIP archives by HTTP

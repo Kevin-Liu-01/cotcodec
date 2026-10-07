@@ -50,16 +50,17 @@
       "title": "Cross-script sparse-indexer recall",
       "doc": "program/questions/q3-cross-script-indexer.md",
       "dossier_key": "E6-d21-translation-supervised-indexer",
-      "status": "stage-0-gauntlet",
-      "next_action": "Run the bounded research gauntlet for q3-k1-localization-screen-v2 (8.05 GPU-h under D22); admission waits on Kevin (D24)",
+      "status": "stage-0-precheck-draft",
+      "next_action": "Kevin accepts or amends the design decisions of the draft q3-dense-headroom-precheck-v1 (dense only, development partition of the K1 bundle, Qwen3-0.6B-Base and Qwen3.5-4B-Base, caps 0.15 + 0.35 = 0.5 GPU-h under D26); then freeze, build the image, run the CPU doctor in it, fill and submit the two lanes, and write the combined K1 v3 design read",
       "first_gpu_experiment": {
-        "name": "K1 localization screen",
-        "registration": "q3-k1-localization-screen-v1",
-        "cap_gpu_hours": 2.65,
-        "conditional_extension_gpu_hours": 1.5,
+        "name": "dense headroom pre-check",
+        "registration": "q3-dense-headroom-precheck-v1 (draft)",
+        "cap_gpu_hours": 0.5,
         "gauntlet_required": false
       },
-      "blocked_by": []
+      "blocked_by": [
+        "owner acceptance of the pre-check's design decisions (draft registration, branch stage0/q3-dense-precheck)"
+      ]
     }
   ],
   "pending_decisions_for_kevin": [
@@ -71,7 +72,8 @@
     "Decide whether to purge the old host address and the internal corpus inventory from public git history (requires a force-push)",
     "Spot-check a sample of the Q2 checker-mutation audit as the human rater (decision D9)",
     "Moonshot (Kimi) account is suspended for insufficient balance; recharge it if a Kimi model should be a rater or reviewer (rotate the exposed key at the same time)",
-    "The ANTHROPIC_API_KEY on this machine is invalid (HTTP 401); supply a valid key if the Claude rater and gauntlet reviews should use the API rather than the agent harness (D25)"
+    "The ANTHROPIC_API_KEY on this machine is invalid (HTTP 401); supply a valid key if the Claude rater and gauntlet reviews should use the API rather than the agent harness (D25)",
+    "Accept or amend design decisions 1-14 of the draft q3-dense-headroom-precheck-v1 (program/preregistrations/q3-dense-headroom-precheck-v1.md): two lanes, development partition only, caps 0.15 + 0.35 GPU-h (D26's 0.5), the entity-anchor rule, the literal selector, the block-score null and the floor candidate"
   ],
   "gpu_hours_spent_this_program": 1.4099,
   "frozen_registrations": [

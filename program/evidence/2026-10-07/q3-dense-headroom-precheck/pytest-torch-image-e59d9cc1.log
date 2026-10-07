@@ -1,0 +1,12 @@
+start=2026-10-07T23:04:23Z image=sha256:e59d9cc18c0db05fa0ae20a0f65492268112d07fef20f00af799323ae02ce6d3
+.......................................................                  [100%]
+=============================== warnings summary ===============================
+../pytest-overlay/_pytest/config/__init__.py:1464
+  /pytest-overlay/_pytest/config/__init__.py:1464: PytestConfigWarning: Unknown config option: asyncio_mode
+  
+    self._warn_or_fail_if_strict(f"Unknown config option: {key}\n")
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+55 passed, 1 warning in 102.64s (0:01:42)
+exit=0
+end=2026-10-07T23:06:07Z
