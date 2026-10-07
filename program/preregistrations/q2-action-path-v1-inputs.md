@@ -37,7 +37,7 @@ Frozen with this file (SHA-256 of the committed bytes):
 | `harness/q2/vm/guest/tap_selftest.py` | `7e051c0bcb45ba81c2b1fb855a9dc70115957fafa3ec7f333c8b3be5ab3bf835` |
 | `harness/q2/vm/marker.py` | `b786b347fc5573425f14090bd67621294ac5c84671bf67f47e663d693ab17fb9` |
 | `harness/q2/vm/canary_run.py` | `295bdd0916869adf79015bc6da6cba4aff2a0ab9f0dab089e4ed3a3565abb119` |
-| `harness/q2/vm/suite.py` | `cb52a260693de79c6fb851eab2e2d2553ddf619cdfe0fd9c8f7282d5db860785` |
+| `harness/q2/vm/suite.py` | `f9c092212140d708a731b93dd350078d7d8d1298003f378baa0146ceb3d807c4` |
 | `harness/q2/vm/desktop.py` | `67030d6b5d79753e2db65b33bc12af2b5faaee2eacbaa5e49b4eb2de0a31c188` |
 | `harness/q2/vm/validation.py` | `2ab5508e5a42269d447312e481b58c9f491d815d73e4977ba9c55d235231116f` |
 | `harness/q2/vm/guest_http.py` | `13e34f874c89b0b32f7f82ffae658682d2608bc9a0614a569742459d6b796ceb` |

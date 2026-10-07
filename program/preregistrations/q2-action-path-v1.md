@@ -315,12 +315,23 @@ a failure of that setting.
 ### 6.1 Infrastructure failures
 
 An infrastructure failure is any of: a boot that does not serve a valid
-`/screenshot` within 300 s of container start; an `/execute` call that does not
-return HTTP 200 within 30 s; a `/screenshot` failure; the probe absent at a
-guard; the QEMU monitor unreachable during a reference capture; a key event
-inside an entry's window on a keycode range the tap's `mapping_check` marks
-unverified; a campaign receipt with `infra_gates_pass` false or a Slurm state
-other than COMPLETED with exit code 0:0.
+`/screenshot` within 300 s of container start; an `/execute` call whose first
+attempt does not return HTTP 200 within 30 s (`DesktopEnv` would retry it, and a
+retry can run the action twice); a `/screenshot` failure, meaning no valid image
+after `DesktopEnv`'s own three attempts; in the screenshot-plus-accessibility
+setting, an `/accessibility` failure, meaning no tree after its three attempts;
+the probe absent at a guard; the QEMU monitor unreachable during a reference
+capture; a key event inside an entry's window on a keycode range the tap's
+`mapping_check` marks unverified; a campaign receipt with `infra_gates_pass`
+false or a Slurm state other than COMPLETED with exit code 0:0. An observation
+that a retry of `DesktopEnv`'s delivers is what a Stage-1 agent would see; it
+is not a failure, and every such retry is counted and reported per type
+(`observation_retries`). Changed before the freeze: the judging code had
+counted any retried `/screenshot` or `/accessibility` call as a failure, which
+this section did not say; development run 537 had one (the boot's first
+`/accessibility` call answered HTTP 500 and its retry 200, in 1 of 2,415
+accessibility calls over runs 484-541), and each session now takes
+`DesktopEnv.reset`'s observation before its first trial (design decision 30).
 
 Infrastructure failures are **not excluded** from any gating verdict: an entry
 that hits one fails that repetition. They are counted and reported separately.
@@ -355,17 +366,22 @@ relaunches the probe). The implementation is frozen in the inputs addendum
 Every acceptance campaign runs its realized trial order in **sessions** of at
 most 60 consecutive trials, near-equal in size (`ceil(n / 60)` sessions for n
 trials), each session a cold boot of a new VM container in one observation
-setting. The session counts below follow from that rule.
+setting. The session counts below follow from that rule. Every campaign runs
+one VM at a time (N = 1) except the concurrency ladder and A4 (section 9);
+`manifest.py` refuses any other concurrency.
 
 - **A1 (runtime layer).** L0-fixed passes 100% of G at 5 repetitions in the
   seed-43 and seed-44 shuffles, each under both observation settings, at N = 1
-  VM; and passes the seed-43 shuffle under both observation settings at the
-  operating concurrency N* (section 9). All 100 entries run; G gates. Trials at
-  N = 1: 100 x 5 x 2 x 2 = 2,000 in 36 sessions (gating trials 1,720).
+  VM; and, if N* > 1, passes the seed-43 shuffle under both observation
+  settings at the operating concurrency N*, which the ladder rung N* shows (its
+  first five repetitions are that shuffle; section 9). All 100 entries run; G
+  gates. Trials at N = 1: 100 x 5 x 2 x 2 = 2,000 in 36 sessions (gating
+  trials 1,720).
 - **A2 (harness layer).** H-OSW-fixed and H-GA each pass 100% of their
   expressible entries (85 and 79) and of their gating and declared-deviation R
   cells, 5 repetitions, judged against their own spec, under both observation
-  settings.
+  settings: 990 trials in 18 sessions (H-OSW-fixed, 99 cells) and 930 in 16
+  (H-GA, 93 cells).
 - **A3 (stress).** 30 timing- and state-sensitive entries, 60 repetitions
   each, zero failures, on L0-fixed and on each Stage-1 harness where the entry
   is expressible: `click_double_left`, `click_triple_left`, `click_ctrl_left`,
@@ -377,7 +393,9 @@ setting. The session counts below follow from that rule.
   `scroll_ctrl_down_3`, `scroll_shift_down_3`, `scroll_down_then_up_net_zero`,
   `type_symbols_shifted`, `type_unicode_bmp`, `type_emoji_zwj`,
   `type_combining`, `type_long_500`, `type_with_correction`, `seq_long_mixed`.
-  Repetitions are split evenly between the two observation settings.
+  Repetitions are split evenly between the two observation settings: 1,800
+  trials in 30 sessions on L0-fixed, 1,740 in 30 on H-OSW-fixed (29 entries
+  expressible) and 1,440 in 24 on H-GA (24 expressible).
 - **A4 (volume).** L0-fixed runs `volume_plan.json` (built by `volume.py`)
   with zero failures: 64,028 trials over the 86 G entries, each entry's
   repetitions split evenly between the observation settings, in 1,068
@@ -394,7 +412,8 @@ setting. The session counts below follow from that rule.
 - **A6 (cross-app canary).** L0-fixed passes 100% of `canary.yaml` (frozen
   with this file) in each of LibreOffice Writer, Google Chrome (a local
   `file://` textarea page), Visual Studio Code and GNOME Terminal, 5
-  repetitions per app and entry, screenshot setting. `canary.yaml` fixes each
+  repetitions per app and entry (300 trials in 5 sessions), screenshot
+  setting. `canary.yaml` fixes each
   app's configuration (autocorrect, auto-closing, auto-indent and completion
   off, so the app does not rewrite typed text), each fixture's initial text,
   each entry's actions and its exact expected final text, and the read-back
@@ -406,7 +425,10 @@ setting. The session counts below follow from that rule.
   Chrome's accessibility text was stale after edits that the screen showed,
   and a fresh VS Code profile opened its first-run walkthrough over the file
   (turned off in `canary.yaml`; the driver also waits until VS Code's status
-  bar shows the text editor's items). The entries are the text
+  bar shows the text editor's items); and after run 522, where Chrome's "Can't
+  update Chrome" bubble (the guest's Chrome build is older than its clock
+  allows) opened mid-trial and took the keyboard focus, `canary.yaml` starts
+  Chrome with a flag that keeps the bubble closed. The entries are the text
   entries `type_plain`, `type_symbols_shifted`, `type_unicode_bmp`,
   `type_emoji`, `type_combining`, `type_rtl`, `type_multiline_tabs`,
   `type_with_correction`, `type_long_200`, `type_spaces`, `type_digits`
@@ -529,14 +551,31 @@ a session adds a cold boot of about 20 s plus settling and probe start, under
 roughly 40-80 VM-hours, CPU only (no GPU is used anywhere in this
 experiment).
 
-**Concurrency rule.** N* is the largest N in {1, 8, 16, 24, 32, 40} such that,
-at that rung: at least 20 cold boots were measured; boot p95 (container start
-to first valid `/screenshot`) ≤ 180 s; step p95 ≤ 2 x the N = 1 value; A1's
-seed-43 shuffle passes under both observation settings; and no foreign-load
-abort occurred. A rung aborts if a foreign Slurm job starts or foreign load
-exceeds 8 CPUs; the snapshots go into the receipt. VMs are pinned to CPUs from
-their Slurm allocation; the ladder never exceeds 160 vCPUs. If N* < 40, the
-program kill criterion applies: cut the Stage-1 task count before adding GPUs.
+**Concurrency rule.** The ladder has rungs N = 8, 16, 24, 32 and 40; the
+N = 1 rung is A1's seed-43 campaign. Rung N runs L0-fixed on N concurrent VMs
+over the seed-43 order of the 100 entries extended to r_N repetitions, the
+smallest r ≥ 5 that gives each observation setting at least max(N, 10)
+sessions (`manifest.ladder_reps`: r_N = 6, 10, 14, 19 and 24, so 1,200, 2,000,
+2,800, 3,800 and 4,800 trials in 20, 34, 48, 64 and 80 sessions). Every one of
+its N VMs is therefore busy at once and it has at least 20 cold boots; its
+first five repetitions are A1's seed-43 shuffle (the order of `order.py` is
+built repetition by repetition from one generator). N* is the largest N in
+{1, 8, 16, 24, 32, 40} such that, at that rung: at least 20 cold boots were
+measured; boot p95 (container start to first valid `/screenshot`) ≤ 180 s;
+step p95 (one `DesktopEnv.step`, both settings pooled) ≤ 2 x the N = 1 value;
+every gating trial passes (non-gating entries are reported); and no
+foreign-load abort occurred. A rung aborts if, at any of the host snapshots
+the driver takes before and after every session, a Slurm job other than the
+rung's own is running that was not running at the rung's first snapshot (a
+foreign job started), or the running foreign Slurm jobs hold more than 8 CPUs
+in total (foreign load); the snapshots go into the receipt. An aborted rung is
+rerun as a new attempt and both attempts are reported; it neither qualifies
+nor disqualifies its N. VMs are pinned to CPUs from their Slurm allocation;
+the ladder never exceeds 160 vCPUs. If N* < 40, the program kill criterion
+applies: cut the Stage-1 task count before adding GPUs. Changed before the
+freeze: the draft ran each rung on A1's seed-43 shuffle alone, 18 sessions,
+which can never show 20 cold boots and never loads more than 18 VMs, so no
+rung above N = 1 could have qualified (design decision 29).
 
 ## 10. Seeds, order and the development/acceptance split
 

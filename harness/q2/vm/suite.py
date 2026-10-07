@@ -396,6 +396,11 @@ def _compact_tap(record: dict[str, Any]) -> list[Any]:
             record.get("y"),
             record.get("server_time"),
         ]
+    if kind == "mapping_notify":
+        # request: 0 modifier, 1 keyboard, 2 pointer (diagnostic; never judged).
+        return [kind, record.get("request"), record.get("first_keycode"), record.get("count")]
+    if kind == "mapping_request":
+        return [kind, record.get("first_keycode"), record.get("count")]
     return [kind]
 
 
