@@ -52,6 +52,14 @@ step. It rejects missing or multiple GPU mappings and allows network access
 only for the public Hub fetch. Every resulting snapshot must subsequently pass
 `fetch_open_model.py verify` in a fresh `--network none` job before inference.
 
+`fetch-model-metadata-in-docker.sh MODEL_ID` (driven by
+`fetch-model-metadata.sbatch`) fetches only a model's registered
+`metadata_files` (config, tokenizer, processor, license) into a metadata-mode
+receipt, for vLLM `--load-format dummy` engines. It gives the container no GPU,
+refuses to overwrite an existing receipt or snapshot, and requires an image with
+an empty entrypoint (the vLLM overlay), because the stock vLLM image's
+`vllm serve` entrypoint would swallow the command.
+
 Installation is intentionally two-stage:
 
 1. Copy this directory to the host and inspect it.
