@@ -1,0 +1,78 @@
+{
+  "adam": {
+    "adam_step_bitwise": true,
+    "adam_step_max_rel": 0.0
+  },
+  "cuda": "12.8",
+  "device": "cuda:0",
+  "eval_unit": {
+    "dense_max_abs_points": 7.62939453125e-06,
+    "indexer_max_abs_points": 3.814697265625e-06,
+    "rows": 34
+  },
+  "gates": {
+    "adam_step": true,
+    "clip_norm": true,
+    "eval_unit_dense": true,
+    "gradients": true,
+    "independence": true,
+    "loss": true,
+    "selection": true,
+    "targets": true
+  },
+  "gpu": "NVIDIA H100 80GB HBM3",
+  "independence": {
+    "other_gradients_bitwise": true,
+    "other_losses_bitwise": true,
+    "perturbed_loss_moves": true
+  },
+  "indexer_path": {
+    "adam_step_bitwise": true,
+    "clip_norm_max_rel": 8.075117384677965e-06,
+    "device": "cuda:0",
+    "dtype": "torch.float32",
+    "grad_max_rel_fro": {
+      "gate_b": 4.67619483065343e-08,
+      "gate_w": 2.627143148582394e-06,
+      "k_norm": 6.421531165844355e-06,
+      "q_norm": 1.2399543701412784e-07,
+      "wk": 0.00016573617233488024,
+      "wq": 5.6680107985104544e-06
+    },
+    "loss_max_rel": 1.0763562842631114e-07,
+    "n_blocks": 2048,
+    "param_after_step_max_rel_fro": {
+      "gate_b": 0.0,
+      "gate_w": 5.6618195087239105e-06,
+      "k_norm": 0.0,
+      "q_norm": 0.0,
+      "wk": 8.314294034331414e-06,
+      "wq": 3.1152568570025813e-07
+    },
+    "row_chunk": 1024,
+    "slots": 18
+  },
+  "layer": 15,
+  "length": 8192,
+  "passed": true,
+  "peak_memory_bytes": 4131644928,
+  "seconds": 4.205528907477856,
+  "selection": {
+    "selection_exact": true,
+    "selection_mismatches": []
+  },
+  "slots": 18,
+  "targets": {
+    "dropped_block_mass": 0.0,
+    "targets_max_rel": 2.384185791015625e-07
+  },
+  "tolerances": {
+    "adam_step_max_rel": 1e-06,
+    "clip_norm_max_rel": 0.01,
+    "dense_recall_points": 0.001,
+    "grad_max_rel_fro": 0.01,
+    "loss_max_rel": 0.001,
+    "targets_max_rel": 0.0001
+  },
+  "torch": "2.11.0+cu128"
+}

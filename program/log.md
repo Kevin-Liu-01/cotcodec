@@ -264,6 +264,31 @@ Append-only. Newest entries at the bottom.
   under D22's counting rule: about 6.6 GPU-h central, 9.5 conservative; the
   probe's measurement decides between freezing v2 and the gauntlet.
 
+## 2026-10-07 — K1 v2 throughput probe run: complete, caps 8.05 GPU-h, gauntlet
+
+- Ran the frozen `q3-k1-throughput-probe-v1` from a fresh clean host clone of
+  `4b9d6c4` (holds ledger row `c9b45f00...`). Probe image `sha256:e59d9cc1...`
+  (Slurm 533, CPU). v1's K1 doctor (Slurm 534, 7/7) and the v2 doctor (Slurm
+  536, 5/5) passed in that image, CPU only and `--network none`. The filler,
+  dry-run and test-only passed. orx node `1c4cb641` (commit `8415ee7`) ran as
+  orx run `b6fb997c`.
+- Job 543 COMPLETED 0:0 in 3 min 18 s (limit 9). Lane `reason=completed`,
+  provenance and model verification passed, `ORX_RESULT ... exit=0`. Receipt
+  `cae4e949...`: `PROBE_COMPLETE`. Every TF32 device gate passed: largest
+  gradient deviation 1.7e-4 against 1e-2, Adam bitwise, selection exact. The
+  composition check passed (max ratio 1.001 against 1.15). The concurrent arm
+  was measured, not bounded: 7.41 s per step, 1.035 times the sum of the solo
+  steps.
+- `derive_sparse_indexer_k1_v2_limits.py` without `--apply` (exit 1). Main
+  projects 33.6 min (limit 50, cap 3.34 GPU-h); the worst-case extension 35.7
+  (53, 3.54); smoke, headroom-dev and R2 each get 11 min, R0 15 and R1 12. The
+  total with the probe is **8.05 GPU-h**, over the 8 GPU-h threshold, so
+  `gauntlet_required` is true. Under D20 and D22, v2 is not frozen and goes
+  through the research gauntlet; the design is not cut. Neither the contract
+  nor the v2 registration was edited.
+- GPU time: 0.055 GPU-h (D22 counts the probe at its 0.15 cap). Evidence:
+  `program/evidence/2026-10-07/q3-k1-v2/probe/`.
+
 ## 2026-10-07 — Q1 Stage 0 pilot pass: GPU paths validated, cost card measured (branch `stage0/q1-gates`, not merged)
 
 - Three one-GPU lane jobs on trusted code only (KernelBench references,
