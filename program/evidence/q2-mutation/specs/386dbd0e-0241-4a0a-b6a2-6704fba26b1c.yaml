@@ -1,0 +1,9 @@
+task_id: 386dbd0e-0241-4a0a-b6a2-6704fba26b1c
+author: blind-model-author-v1
+requirements:
+  - req_id: R1
+    statement: VLC has a global (system-wide) hotkey for Play/Pause so playback can be toggled while another app (the PDF reader) has focus.
+    check_kind: config_value
+    observable: ~/.config/vlc/vlcrc has a non-empty global-key-play-pause value (e.g. "Ctrl+Alt+p", "Media Play Pause") and the global hotkeys module is active.
+allowed_variations:
+  - The specific key combination is not given by the user.

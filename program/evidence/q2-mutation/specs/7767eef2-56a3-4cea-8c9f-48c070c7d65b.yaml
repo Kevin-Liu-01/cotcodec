@@ -1,0 +1,10 @@
+task_id: 7767eef2-56a3-4cea-8c9f-48c070c7d65b
+author: blind-model-author-v1
+requirements:
+  - req_id: R1
+    statement: GIMP's user-interface theme is changed from Dark to Light.
+    check_kind: config_value
+    observable: The GIMP user config (~/.config/GIMP/2.10/gimprc) contains (theme "Light") and no longer selects "Dark".
+allowed_variations:
+  - Icon theme is not constrained.
+  - The setting must persist (GIMP writes gimprc on exit or when preferences are confirmed).

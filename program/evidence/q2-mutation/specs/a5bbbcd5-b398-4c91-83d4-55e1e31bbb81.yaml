@@ -1,0 +1,9 @@
+task_id: a5bbbcd5-b398-4c91-83d4-55e1e31bbb81
+author: blind-model-author-v1
+requirements:
+  - req_id: R1
+    statement: VLC starts in Minimal Interface (bottom controls hidden) in window mode, persistently.
+    check_kind: config_value
+    observable: ~/.config/vlc/vlcrc has qt-minimal-view=1 (persisted), and fullscreen is not forced (fullscreen=0 or unset).
+allowed_variations:
+  - Menu bar visibility details of minimal view.

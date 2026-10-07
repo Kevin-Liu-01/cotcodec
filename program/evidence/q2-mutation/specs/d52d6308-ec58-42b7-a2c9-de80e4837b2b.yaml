@@ -1,0 +1,9 @@
+task_id: d52d6308-ec58-42b7-a2c9-de80e4837b2b
+author: blind-model-author-v1
+requirements:
+  - req_id: R1
+    statement: The dock on the left side of the GIMP window (toolbox/tool-options dock) is removed/hidden.
+    check_kind: config_value
+    observable: GIMP's saved session (~/.config/GIMP/2.10/sessionrc) no longer contains the left dock column (no "left-docks" entry with dockables in the single-window layout), or docks are hidden (hide-docks yes) - state persisted after GIMP exits.
+allowed_variations:
+  - '[AMBIGUOUS] "remove the dock" may be satisfied by closing the dock or by Windows > Hide Docks (which also hides the right dock). Record which.'

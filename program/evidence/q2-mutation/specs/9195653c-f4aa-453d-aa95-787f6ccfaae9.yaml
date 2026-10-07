@@ -1,0 +1,9 @@
+task_id: 9195653c-f4aa-453d-aa95-787f6ccfaae9
+author: blind-model-author-v1
+requirements:
+  - req_id: R1
+    statement: VLC's maximum volume is raised to 200%.
+    check_kind: config_value
+    observable: ~/.config/vlc/vlcrc has qt-max-volume=200.
+allowed_variations:
+  - Current volume level is not constrained.
