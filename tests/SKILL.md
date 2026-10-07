@@ -25,6 +25,9 @@ Each contract proves valid inputs pass and decision-bearing drift fails.
   them inside the research image (CPU, `--network none`).
   `test_sparse_indexer_k1_prereg.py` binds the K1 preregistration's code table
   to the working tree until the experiment is frozen.
+- `_holo3_world.py` builds in-memory stand-ins for the Holo3 and OpenCUA
+  archives that reproduce the real leaderboard cells, so the audit's controls
+  and tamper cases run without network.
 
 ## Patterns to follow / invariants
 <!-- agent-docs:fill:patterns -->
