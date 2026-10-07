@@ -19,7 +19,7 @@ Frozen with this file (SHA-256 of the committed bytes):
 
 | File | SHA-256 |
 |---|---|
-| `harness/q2/vm/guest/l0_fixed.py` | `e9f03940c08993dd715bfae92c7ecf883d0417a95f568546425f6e4a9d85eb72` |
+| `harness/q2/vm/guest/l0_fixed.py` | `1af2bd76cefe4e63d55e803fe65a4a0804572e59c328be246074995fa88a7200` |
 | `harness/q2/action_path/executor.py` | `d5c43bbb76926da056c15a39ddcbf05e1c328bd7dddb6a726cde3c46c2f9776a` |
 | `harness/q2/action_path/adapters.py` | `3a62eb109d656a717dfe9cbce31fba3bcf02457e9f5690f3e20639e8becbaf40` |
 | `harness/q2/action_path/upstream/osworld_bfd62bdc_fixed.py` | `9558b956004f6c971e881f073c42792e3d5d437396dbe6c0b407b250df3d8fdf` |
