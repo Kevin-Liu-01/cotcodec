@@ -44,6 +44,7 @@ from harness.q1.mutate.operators import OPERATORS, registry_fingerprint
 from harness.q1.mutate.sampling import (
     DEFAULT_CAP,
     DEFAULT_SEED,
+    SPLIT_SEED,
     SPLIT_VERSION,
     problem_split_of,
     split_of,
@@ -428,8 +429,8 @@ def select(
                             )
                         },
                         "compiled_key": status.get(row["mutant_id"], (None, None))[1],
-                        "split": split_of(substrate_id, row["dedup_hash"], seed),
-                        "problem_split": problem_split_of(row["problem_id"], seed),
+                        "split": split_of(substrate_id, row["dedup_hash"], SPLIT_SEED),
+                        "problem_split": problem_split_of(row["problem_id"], SPLIT_SEED),
                         "n_operator_stratum": pick.n_operator_stratum,
                         "k_operator_stratum": pick.k_operator_stratum,
                         "inclusion_probability": pick.inclusion_probability,
@@ -455,6 +456,7 @@ def select(
             "seed": seed,
             "cap": cap,
             "split_version": SPLIT_VERSION,
+            "split_seed": SPLIT_SEED,
             "compile_checked": compile_checked,
             "triton_disable_line_info": True,
             "pool_sha256": pool_manifest["pool_sha256"],

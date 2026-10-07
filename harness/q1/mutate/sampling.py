@@ -33,6 +33,9 @@ T = TypeVar("T")
 DEFAULT_CAP = 40
 DEFAULT_SEED = 42
 SPLIT_VERSION = "v1"
+#: The split is frozen at seed 42 whatever cap seed draws the sample, so a
+#: mutant kept by the seed-43 or seed-44 alternate sample has the same half.
+SPLIT_SEED = 42
 
 
 def waterfill(capacities: Sequence[int], total: int) -> list[int]:
@@ -117,13 +120,13 @@ def stratified_cap(
     return selected
 
 
-def split_of(substrate_id: str, dedup_hash: str, seed: int = DEFAULT_SEED) -> str:
+def split_of(substrate_id: str, dedup_hash: str, seed: int = SPLIT_SEED) -> str:
     """Frozen mutant-level dev/test assignment."""
     key = f"q1-mutant-split/{SPLIT_VERSION}/seed={seed}/{substrate_id}/{dedup_hash}"
     return "dev" if hashlib.sha256(key.encode()).digest()[0] & 1 == 0 else "test"
 
 
-def problem_split_of(problem_id: str, seed: int = DEFAULT_SEED) -> str:
+def problem_split_of(problem_id: str, seed: int = SPLIT_SEED) -> str:
     """Secondary problem-level dev/test assignment (all mutants of a problem together)."""
     key = f"q1-problem-split/{SPLIT_VERSION}/seed={seed}/{problem_id}"
     return "dev" if hashlib.sha256(key.encode()).digest()[0] & 1 == 0 else "test"
