@@ -11,7 +11,8 @@ Subcommands, in pipeline order:
                    tutorial sources (pure Python).
 ``check-static``   Launch-path admission by AST: plain JIT/Autotuner launches only, no
                    libentry or triton_heuristics, ModelNew present (pure Python).
-``check-compile``  Compile every kernel for sm_90 without a GPU (needs triton).
+``check-compile``  Compile every kernel for sm_90 without a GPU on small CPU inputs.
+``check-compile-native``  The same at native shapes on the meta device (nothing runs).
 ``check-interp``   Run ModelNew against Model on small CPU inputs with the Triton
                    interpreter (needs torch + triton, no GPU). Build validation only.
 ``admit-gpu``      GPU admission: gate (b)'s launch hook must observe a launch under
@@ -20,6 +21,9 @@ Subcommands, in pipeline order:
 ``split``          Seeded calibration/evaluation split of S1 problems (seed 42).
 ``manifest``       Corpus manifest: one row per substrate with provenance and every
                    admission verdict so far.
+``admission-job``  The one-GPU Slurm job: device-mode S1 codegen, conversion, S2 build,
+                   static check, split, admission and manifest, all under ``--out``.
+``parity``         Compare mock-H100 and device-mode codegen records (CPU).
 
 Nothing here scores a gate or a mutant. Exit code 0 means the step ran; per-item
 outcomes are in the JSONL logs.
@@ -44,7 +48,17 @@ if str(PROJECT_ROOT) not in sys.path:
 
 from harness.q1.schema import parse_problem_id, problem_id_from_path  # noqa: E402
 from harness.q1.substrates import admission, split  # noqa: E402
-from harness.q1.substrates.sources import EXCLUDED_PROBLEMS, LEVELS  # noqa: E402
+from harness.q1.substrates.sources import (  # noqa: E402
+    EXCLUDED_PROBLEMS,
+    LEVELS,
+    VENDORED_SOURCES_ROOT,
+    level_dir,
+)
+
+#: Vendored KernelBench@423217d9 problems (core owner's tree), the default problem root.
+DEFAULT_KERNELBENCH_ROOT = (
+    PROJECT_ROOT / "harness" / "q1" / "third_party" / "kernelbench" / "problems"
+)
 
 #: Problems whose default Inductor output calls a library GEMM or convolution are
 #: recompiled with Triton templates (reviewed plan section 7(ii) for GEMMs; the
@@ -79,8 +93,7 @@ def kernelbench_problems(kernelbench_root: Path, levels: tuple[int, ...]) -> lis
     """``(problem_id, path)`` for every problem file of the given levels, sorted by id."""
     problems = []
     for level in levels:
-        directory = kernelbench_root / "KernelBench" / f"level{level}"
-        for path in directory.glob("*.py"):
+        for path in level_dir(kernelbench_root, level).glob("*.py"):
             problem_id = problem_id_from_path(f"level{level}/{path.name}")
             problems.append((problem_id, path))
     return sorted(problems, key=lambda item: parse_problem_id(item[0])[:2])
@@ -363,7 +376,11 @@ def _run_cpu_check(args: argparse.Namespace, check: str) -> int:
     """Run ``admission.<check>`` per substrate in its own subprocess (no GPU)."""
     root = Path(args.root)
     rows = []
-    function = {"compile": "compile_check", "interp": "interpreter_check"}[check]
+    function = {
+        "compile": "compile_check",
+        "compile-native": "native_compile_check",
+        "interp": "interpreter_check",
+    }[check]
 
     def run(path: Path) -> dict[str, Any]:
         command = [
@@ -413,7 +430,7 @@ def _run_cpu_check(args: argparse.Namespace, check: str) -> int:
                 ),
                 flush=True,
             )
-    _write_json(root / f"check_{check}.json", {"rows": rows})
+    _write_json(root / f"check_{check.replace('-', '_')}.json", {"rows": rows})
     summary: dict[str, int] = {}
     for row in rows:
         summary[row["verdict"]] = summary.get(row["verdict"], 0) + 1
@@ -429,10 +446,90 @@ def cmd_check_interp(args: argparse.Namespace) -> int:
     return _run_cpu_check(args, "interp")
 
 
+def cmd_check_compile_native(args: argparse.Namespace) -> int:
+    return _run_cpu_check(args, "compile-native")
+
+
 def cmd_admit_gpu(args: argparse.Namespace) -> int:
     return admission.admit_gpu_main(
         Path(args.root), Path(args.kernelbench_root), Path(args.out), only=args.only, seed=args.seed
     )
+
+
+def cmd_admission_job(args: argparse.Namespace) -> int:
+    """One-GPU Slurm job: canonical S1 codegen on the device, S2 build, CPU checks, admission.
+
+    Every step writes under ``--out`` (the job's /outputs), including the Triton and
+    Inductor caches. Seed 42 is fixed for admission (hook visibility is structural);
+    the job declares the deterministic randomness contract.
+    """
+    import glob
+
+    if not glob.glob("/dev/nvidia[0-9]*"):
+        print(
+            "admission-job needs a GPU; run it through the one-GPU Slurm manifest", file=sys.stderr
+        )
+        return 2
+    out = Path(args.out)
+    out.mkdir(parents=True, exist_ok=True)
+    os.environ.setdefault("TRITON_CACHE_DIR", str(out / ".triton-cache"))
+    os.environ.setdefault("TORCHINDUCTOR_CACHE_DIR", str(out / ".inductor-cache"))
+    kb = str(args.kernelbench_root)
+    records = out / "records-cuda"
+    root = out / "substrates"
+    steps = [
+        [
+            "s1-codegen",
+            "--kernelbench-root",
+            kb,
+            "--records-dir",
+            str(records),
+            "--mode",
+            "cuda",
+            "--jobs",
+            str(args.jobs),
+        ],
+        ["s1-convert", "--records-dir", str(records), "--out-root", str(root)],
+        ["s2-build", "--kernelbench-root", kb, "--out-root", str(root)],
+        ["check-static", "--root", str(root)],
+        ["split", "--kernelbench-root", kb, "--out", str(root / "split.json")],
+        [
+            "admit-gpu",
+            "--root",
+            str(root),
+            "--kernelbench-root",
+            kb,
+            "--out",
+            str(root / "admission_hook.jsonl"),
+        ],
+        [
+            "manifest",
+            "--root",
+            str(root),
+            "--split",
+            str(root / "split.json"),
+            "--out",
+            str(out / "corpus_manifest.json"),
+        ],
+    ]
+    for step in steps:
+        print(json.dumps({"step": step[0]}), flush=True)
+        code = main(step)
+        print(json.dumps({"step": step[0], "exit": code}), flush=True)
+        # s2-build exits 1 when some entry fails to build; that is logged, not fatal.
+        if code != 0 and not (step[0] == "s2-build" and code == 1):
+            return code
+    return 0
+
+
+def cmd_parity(args: argparse.Namespace) -> int:
+    rows = admission.codegen_parity(Path(args.mock_records), Path(args.cuda_records))
+    _write_json(Path(args.out), {"rows": rows})
+    summary: dict[str, int] = {}
+    for row in rows:
+        summary[row["parity"]] = summary.get(row["parity"], 0) + 1
+    print(json.dumps({"summary": summary}, sort_keys=True))
+    return 0
 
 
 def cmd_split(args: argparse.Namespace) -> int:
@@ -488,8 +585,9 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     s2 = sub.add_parser("s2-build")
     s2.add_argument(
         "--sources-root",
-        required=True,
-        help="directory holding FlagGems/, Liger-Kernel/ and triton-tutorials/",
+        default=str(VENDORED_SOURCES_ROOT),
+        help="directory holding FlagGems/, Liger-Kernel/ and triton-tutorials/ "
+        "(default: the vendored pinned copies)",
     )
     s2.add_argument("--kernelbench-root", required=True)
     s2.add_argument("--out-root", required=True)
@@ -501,7 +599,11 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     static.add_argument("--only", nargs="*")
     static.set_defaults(func=cmd_check_static)
 
-    for name, func in (("check-compile", cmd_check_compile), ("check-interp", cmd_check_interp)):
+    for name, func in (
+        ("check-compile", cmd_check_compile),
+        ("check-compile-native", cmd_check_compile_native),
+        ("check-interp", cmd_check_interp),
+    ):
         check = sub.add_parser(name)
         check.add_argument("--root", required=True)
         check.add_argument("--kernelbench-root", required=True)
@@ -523,6 +625,18 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     sp.add_argument("--seed", type=int, default=42)
     sp.add_argument("--out", required=True)
     sp.set_defaults(func=cmd_split)
+
+    job = sub.add_parser("admission-job")
+    job.add_argument("--kernelbench-root", default=str(DEFAULT_KERNELBENCH_ROOT))
+    job.add_argument("--out", required=True)
+    job.add_argument("--jobs", type=int, default=8)
+    job.set_defaults(func=cmd_admission_job)
+
+    parity = sub.add_parser("parity")
+    parity.add_argument("--mock-records", required=True)
+    parity.add_argument("--cuda-records", required=True)
+    parity.add_argument("--out", required=True)
+    parity.set_defaults(func=cmd_parity)
 
     man = sub.add_parser("manifest")
     man.add_argument("--root", required=True)

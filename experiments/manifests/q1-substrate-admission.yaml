@@ -1,0 +1,55 @@
+# Q1 Stage 0 substrate admission: one H100, about 1 GPU-hour.
+#
+# Runs scripts/q1_build_substrates.py admission-job inside the pinned research
+# image: device-mode TorchInductor codegen for every admissible KernelBench
+# L1/L2 problem (the canonical S1 build), conversion to plain JIT launches, the
+# S2 build from the vendored FlagGems/Liger/Triton-tutorial files, the static
+# launch-path check, the seeded split, and gate (b)'s launch-hook admission at
+# native shapes (seed 42, both grad modes). Every output, including the Triton
+# and Inductor caches, is written under /outputs.
+#
+# Code classes on the GPU: reviewed harness code (D7), compiler-generated
+# TorchInductor kernels and pre-2025 human-written kernels (D3). No model, no
+# model-generated kernel.
+#
+# NOT SUBMITTABLE AS COMMITTED. git_sha and source_sha256 are sentinels that
+# fail validation on purpose; fill them from the measured integration commit and
+# its source capsule (docs/operations.md), never from copied hashes. Submit only
+# after program/preregistrations/q1-stage0-substrate-corpus.md is frozen, from a
+# clean clone (never ~/cotcodec):
+#   uv run python scripts/submit_docker_research_job.py experiments/manifests/q1-substrate-admission.yaml --dry-run
+#   uv run python scripts/submit_docker_research_job.py experiments/manifests/q1-substrate-admission.yaml --test-only
+#   uv run python scripts/submit_docker_research_job.py experiments/manifests/q1-substrate-admission.yaml
+runtime: docker-single-node-discovery-v1
+name: q1-substrate-admission
+# cotcodec-research:0b3ecef0-architecture (repo digest sha256:02965f3d...), torch
+# 2.11.0+cu128, Triton 3.6.0: the image the CPU dry run and mock codegen used.
+image_id: sha256:3804466639c13f132be4b0369de4d3395b9d5ea2d3dc100cd38884c75197fe29
+git_sha: FILL-integration-commit-sha
+source_sha256: FILL-source-capsule-sha256
+run_root: /home/kevin/cotcodec-runs/stage0/q1-substrates/runs
+resources:
+  gpu_type: h100
+  gpus: 1
+  cpus: 16
+  memory_gb: 128
+  minutes: 90
+budget:
+  max_gpu_hours: 1.5
+randomness_contract: deterministic
+seeds: []
+model:
+  kind: none
+  reason: Substrate build and launch-hook admission run compiler-generated and human-written Triton kernels; no checkpoint is loaded.
+container_profile: default
+command:
+  - env
+  - TRITON_CACHE_DIR=/outputs/cache/triton
+  - TORCHINDUCTOR_CACHE_DIR=/outputs/cache/inductor
+  - python
+  - scripts/q1_build_substrates.py
+  - admission-job
+  - --out
+  - /outputs/q1-substrates
+  - --jobs
+  - "8"

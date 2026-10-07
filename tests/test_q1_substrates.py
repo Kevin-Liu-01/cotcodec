@@ -267,13 +267,6 @@ def test_shrunk_source_rewrites_chained_and_tuple_assignments() -> None:
     assert namespace["in_channels"] == 64
 
 
-def test_candidate_overrides_never_go_below_two() -> None:
-    candidates = admission.candidate_overrides(PROBLEM)
-    assert candidates[0]["batch_size"] == 128
-    assert all(value >= 2 for override in candidates for value in override.values())
-    assert candidates[-1]["batch_size"] == 2
-
-
 # --- split ------------------------------------------------------------------------
 
 
@@ -434,3 +427,48 @@ def test_corpus_manifest_reports_split_half(tmp_path: Path) -> None:
     assert row["check_static"] == "pass"
     assert row["split_half"] in ("calibration", "evaluation")
     assert manifest["summary"]["substrates"] == 1
+
+
+def test_vendored_s2_sources_match_their_pins() -> None:
+    verified = s2_catalog.verify_vendored_sources()
+    assert len(verified) == len(s2_catalog.UPSTREAM_FILES)
+    for item in s2_catalog.CATALOG:
+        assert f"{s2_catalog.SOURCE_DIRS[item.source]}/{item.path}" in verified
+
+
+def test_s2_entries_build_from_vendored_sources(tmp_path: Path) -> None:
+    root = tmp_path / "kb"
+    for item in s2_catalog.CATALOG:
+        level, number, name = schema.parse_problem_id(item.problem_id)
+        problem = root / f"level{level}" / f"{number}_{name}.py"
+        problem.parent.mkdir(parents=True, exist_ok=True)
+        if not problem.exists():
+            problem.write_text(
+                "import torch\nimport torch.nn as nn\n\n\nclass Model(nn.Module):\n"
+                "    def __init__(self, *args):\n        super().__init__()\n\n"
+                "    def forward(self, x, A=None, B=None, s=None, predictions=None, "
+                "targets=None):\n        return x\n",
+                encoding="utf-8",
+            )
+    rows = s2_catalog.build_all(sources.VENDORED_SOURCES_ROOT, root, tmp_path / "out")
+    assert all(row["status"] == "built" for row in rows), rows
+    for row in rows:
+        directory = tmp_path / "out" / row["substrate_id"]
+        assert schema.load_kernel_dir(directory).kind == "substrate"
+        text = (directory / "kernel.py").read_text(encoding="utf-8")
+        assert "@libentry" not in text and "if __debug__" not in text
+        assert (directory / "LICENSE.upstream").exists()
+        check = admission.static_check(directory)
+        assert check["verdict"] == "pass", (row["substrate_id"], check["reasons"])
+
+
+def test_problem_file_accepts_both_layouts(tmp_path: Path) -> None:
+    nested = tmp_path / "a" / "KernelBench" / "level1"
+    flat = tmp_path / "b" / "level1"
+    for directory in (nested, flat):
+        directory.mkdir(parents=True)
+        (directory / "19_ReLU.py").write_text("x = 1\n", encoding="utf-8")
+    assert sources.problem_file(tmp_path / "a", "L1/19_ReLU").parent == nested
+    assert sources.problem_file(tmp_path / "b", "L1/19_ReLU").parent == flat
+    with pytest.raises(FileNotFoundError):
+        sources.problem_file(tmp_path / "b", "L1/20_LeakyReLU")

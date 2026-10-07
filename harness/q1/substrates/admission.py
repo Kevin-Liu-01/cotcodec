@@ -24,10 +24,12 @@ its kernels. Four checks, cheapest first:
     build validation, not correctness evidence, and its tolerance is loose.
 
 ``admit_gpu_main`` (one GPU, inside a Slurm job only)
-    At native shapes with seed 42, a launch recorder patched on
-    ``JITFunction.run`` and ``Autotuner.run`` (the classes KernelGYM's hook
-    patches) must observe at least one launch under ``torch.inference_mode()`` and
-    under ``torch.enable_grad()``. Writes ``admission_hook`` verdict rows.
+    At native shapes with seed 42, gate (b)'s own ``LaunchHook``
+    (``harness.q1.gates.gate_b``, falling back to :class:`LaunchRecorder` on
+    ``JITFunction.run`` and ``Autotuner.run`` when the core package is absent)
+    must observe at least one launch under ``torch.inference_mode()`` and under
+    ``torch.enable_grad()``, after one unhooked warmup call as in b1. Writes
+    ``admission_hook`` verdict rows.
 
 Small inputs come from the problem's own ``get_inputs`` after shrinking its
 module-level integer sizes that ``get_init_inputs`` does not use (parameters are
@@ -54,9 +56,9 @@ from harness.q1.schema import (
     SchemaError,
     load_kernel_dir,
     make_verdict_row,
-    problem_relpath,
     sha256_file,
 )
+from harness.q1.substrates.sources import problem_file
 
 ADMISSION_VERSION = "q1-substrate-admission/1"
 
@@ -77,8 +79,8 @@ STRICT_STATIC_PATTERNS = {
     "pass": r"\bpass\b",
 }
 #: Small-input budget for CPU checks: largest tensor and total elements.
-MAX_TENSOR_NUMEL = 1 << 16
-MAX_TOTAL_NUMEL = 1 << 18
+MAX_TENSOR_NUMEL = 1 << 18
+MAX_TOTAL_NUMEL = 1 << 20
 INTERP_ATOL = 1e-3
 INTERP_RTOL = 1e-3
 
@@ -273,7 +275,7 @@ def _assignment_pairs(node: ast.stmt) -> list[tuple[str, ast.expr]]:
 
 
 def shrinkable_sizes(problem_source: str) -> tuple[dict[str, int], set[str]]:
-    """Module-level integer sizes and the subset frozen by ``get_init_inputs``."""
+    """Module-level integer sizes and the subset frozen by ``get_init_inputs`` or ``Model``."""
     tree = ast.parse(problem_source)
     sizes: dict[str, int] = {}
     deps: dict[str, set[str]] = {}
@@ -285,7 +287,10 @@ def shrinkable_sizes(problem_source: str) -> tuple[dict[str, int], set[str]]:
             if value is not None:
                 sizes[name] = value
         if isinstance(node, ast.FunctionDef) and node.name == "get_init_inputs":
-            init_names = {n.id for n in ast.walk(node) if isinstance(n, ast.Name)}
+            init_names |= {n.id for n in ast.walk(node) if isinstance(n, ast.Name)}
+        if isinstance(node, ast.ClassDef) and node.name == "Model":
+            # Constants read as globals inside the model are part of the compiled program.
+            init_names |= {n.id for n in ast.walk(node) if isinstance(n, ast.Name)}
     frozen: set[str] = set()
     stack = list(init_names)
     while stack:
@@ -317,18 +322,6 @@ def shrunk_source(problem_source: str, overrides: dict[str, int]) -> str:
     return ast.unparse(ast.fix_missing_locations(tree))
 
 
-def candidate_overrides(problem_source: str, max_shift: int = 14) -> list[dict[str, int]]:
-    """Shrink candidates: each free size ``v >= 2`` becomes ``max(2, v >> k)``, k = 0..max_shift."""
-    sizes, frozen = shrinkable_sizes(problem_source)
-    free = {name: value for name, value in sizes.items() if name not in frozen and value >= 2}
-    candidates = []
-    for shift in range(0, max_shift + 1):
-        override = {name: max(2, value >> shift) for name, value in free.items()}
-        if not candidates or override != candidates[-1]:
-            candidates.append(override)
-    return candidates
-
-
 def _exec_problem(source: str, name: str = "q1_problem") -> Any:
     import types
 
@@ -337,34 +330,66 @@ def _exec_problem(source: str, name: str = "q1_problem") -> Any:
     return module
 
 
-def choose_small_inputs(problem_source: str, guard_check=None) -> dict[str, Any]:
-    """Pick the mildest shrink whose inputs fit the CPU budget and pass ``guard_check``."""
+def _evaluate_shrink(problem_source: str, override: dict[str, int], guard_check) -> dict:
+    """Meta-device inputs for ``override`` and why they are unusable (``problem``), if so."""
     import torch
 
-    tried = []
-    for override in candidate_overrides(problem_source):
-        try:
-            module = _exec_problem(shrunk_source(problem_source, override))
-            with torch.device("meta"):
-                inputs = list(module.get_inputs())
-        except Exception as exc:  # noqa: BLE001 - try a different shrink
-            tried.append({"override": override, "error": f"{type(exc).__name__}: {exc}"[:200]})
-            continue
-        numels = [t.numel() for t in inputs if isinstance(t, torch.Tensor)]
-        if not numels or max(numels) > MAX_TENSOR_NUMEL or sum(numels) > MAX_TOTAL_NUMEL:
-            tried.append({"override": override, "numel": sum(numels)})
-            continue
-        if guard_check is not None:
-            problem = guard_check(inputs)
-            if problem:
-                tried.append({"override": override, "guard": problem})
+    try:
+        module = _exec_problem(shrunk_source(problem_source, override))
+        with torch.device("meta"):
+            inputs = list(module.get_inputs())
+    except Exception as exc:  # noqa: BLE001 - this shrink is unusable
+        return {"problem": f"{type(exc).__name__}: {exc}"[:200], "numel": None}
+    numels = [t.numel() for t in inputs if isinstance(t, torch.Tensor)]
+    if not numels:
+        return {"problem": "no tensor inputs", "numel": None}
+    if guard_check is not None:
+        problem = guard_check(inputs)
+        if problem:
+            return {"problem": f"guard: {problem}", "numel": sum(numels)}
+    return {
+        "problem": None,
+        "numel": sum(numels),
+        "max_numel": max(numels),
+        "shapes": [list(t.shape) if isinstance(t, torch.Tensor) else repr(t) for t in inputs],
+    }
+
+
+def choose_small_inputs(problem_source: str, guard_check=None) -> dict[str, Any]:
+    """Shrink the problem's free sizes greedily until the inputs fit the CPU budget.
+
+    Starting from the native sizes, repeatedly halve (never below 2) the largest
+    free size whose halving keeps ``get_inputs`` valid and the substrate's guards
+    satisfied. Deterministic: ties break by name.
+    """
+    sizes, frozen = shrinkable_sizes(problem_source)
+    current = {name: value for name, value in sizes.items() if name not in frozen and value >= 2}
+    state = _evaluate_shrink(problem_source, current, guard_check)
+    if state["problem"] is not None:
+        return {"override": None, "tried": [{"override": current, **state}]}
+    tried: list[dict[str, Any]] = []
+
+    def fits(result: dict) -> bool:
+        return result["max_numel"] <= MAX_TENSOR_NUMEL and result["numel"] <= MAX_TOTAL_NUMEL
+
+    while not fits(state):
+        progressed = False
+        for name in sorted(current, key=lambda n: (-current[n], n)):
+            if current[name] <= 2:
                 continue
-        return {
-            "override": override,
-            "source": shrunk_source(problem_source, override),
-            "shapes": [list(t.shape) if isinstance(t, torch.Tensor) else repr(t) for t in inputs],
-        }
-    return {"override": None, "tried": tried[-3:]}
+            trial = {**current, name: max(2, current[name] // 2)}
+            result = _evaluate_shrink(problem_source, trial, guard_check)
+            if result["problem"] is None:
+                current, state, progressed = trial, result, True
+                break
+            tried.append({"override": trial, "problem": result["problem"]})
+        if not progressed:
+            return {"override": None, "tried": tried[-3:], "last": current}
+    return {
+        "override": current,
+        "source": shrunk_source(problem_source, current),
+        "shapes": state["shapes"],
+    }
 
 
 # --- CPU execution harness ----------------------------------------------------------
@@ -381,8 +406,8 @@ def load_kernel_module(path: Path, name: str = "q1_substrate_kernel") -> Any:
 
 
 @contextlib.contextmanager
-def cpu_device_shims(kernel_module: Any):
-    """Let a CUDA-targeting substrate run its host code on CPU tensors (CPU checks only)."""
+def cpu_device_shims(kernel_module: Any, device: str = "cpu"):
+    """Let a CUDA-targeting substrate run its host code on CPU (or meta) tensors."""
     import torch
 
     saved = {
@@ -408,7 +433,7 @@ def cpu_device_shims(kernel_module: Any):
     if hasattr(kernel_module, "empty_strided_cuda"):
         module_saved["empty_strided_cuda"] = kernel_module.empty_strided_cuda
         kernel_module.empty_strided_cuda = lambda size, stride, dtype: torch.empty_strided(
-            size, stride, dtype=dtype, device="cpu"
+            size, stride, dtype=dtype, device=device
         )
     if hasattr(kernel_module, "_check_tensor"):
         module_saved["_check_tensor"] = kernel_module._check_tensor
@@ -449,7 +474,7 @@ def _s1_guard_check(path: Path, instance: Any = None):
         local = {**dict(zip(names, inputs, strict=False)), "self": instance}
         scope = {"L": local, "torch": torch, "math": math}
         try:
-            values = {sym: int(eval(src, scope)) for sym, src in sources.items()}  # noqa: S307
+            values = {sym: eval(src, scope) for sym, src in sources.items()}  # noqa: S307
         except Exception as exc:  # noqa: BLE001
             return f"symbol binding failed: {exc}"
         for sym, (lower, upper) in ranges.items():
@@ -493,9 +518,7 @@ def _forward_arg_names(path: Path) -> list[str]:
 def _problem_source(path: Path, kernelbench_root: Path) -> tuple[str, str]:
     substrate = json.loads((path / "substrate.json").read_text(encoding="utf-8"))
     problem_id = substrate["problem_id"]
-    source = (Path(kernelbench_root) / "KernelBench" / problem_relpath(problem_id)).read_text(
-        encoding="utf-8"
-    )
+    source = problem_file(kernelbench_root, problem_id).read_text(encoding="utf-8")
     return problem_id, source
 
 
@@ -534,7 +557,12 @@ def _compare(reference: Any, candidate: Any) -> dict[str, Any]:
 
 
 def _run_on_cpu(path: Path, kernelbench_root: Path, mode: str) -> dict[str, Any]:
-    """Shared body of the compile and interpreter checks (one substrate, this process)."""
+    """Shared body of the CPU checks (one substrate, this process).
+
+    ``compile`` and ``interpret`` use small CPU inputs from :func:`choose_small_inputs`;
+    ``compile-native`` uses the problem's native shapes on the meta device (nothing is
+    allocated or executed), so shape-dependent block sizes compile as on the GPU.
+    """
     import torch
 
     started = time.monotonic()
@@ -548,21 +576,33 @@ def _run_on_cpu(path: Path, kernelbench_root: Path, mode: str) -> dict[str, Any]
     native = _exec_problem(problem_source)
     torch.manual_seed(42)
     candidate = kernel_module.ModelNew(*native.get_init_inputs())
-    small = choose_small_inputs(problem_source, _s1_guard_check(path, candidate))
-    row["small_inputs"] = {k: small[k] for k in ("override", "shapes") if k in small}
-    if small.get("override") is None:
-        return {**row, "verdict": "no-small-shape", "tried": small.get("tried")}
-    problem = _exec_problem(small["source"])
-    torch.manual_seed(42)
-    reference = problem.Model(*problem.get_init_inputs())
-    torch.manual_seed(42)
-    inputs = list(problem.get_inputs())
+    if mode == "compile-native":
+        with torch.device("meta"):
+            inputs = list(native.get_inputs())
+        candidate = candidate.to("meta")
+        row["native_shapes"] = [
+            list(t.shape) if isinstance(t, torch.Tensor) else repr(t) for t in inputs
+        ]
+        expected = None
+        device = "meta"
+    else:
+        small = choose_small_inputs(problem_source, _s1_guard_check(path, candidate))
+        row["small_inputs"] = {k: small[k] for k in ("override", "shapes") if k in small}
+        if small.get("override") is None:
+            return {**row, "verdict": "no-small-shape", "tried": small.get("tried")}
+        problem = _exec_problem(small["source"])
+        torch.manual_seed(42)
+        reference = problem.Model(*problem.get_init_inputs())
+        torch.manual_seed(42)
+        inputs = list(problem.get_inputs())
+        with torch.no_grad():
+            expected = reference(*[t.clone() if isinstance(t, torch.Tensor) else t for t in inputs])
+        device = "cpu"
     refusal = getattr(kernel_module, "SubstrateRefusal", None)
+    recorder = _InterpreterLaunches() if mode == "interpret" else _CompileOnly()
     with torch.no_grad():
-        expected = reference(*[t.clone() if isinstance(t, torch.Tensor) else t for t in inputs])
-        recorder = _CompileOnly() if mode == "compile" else _InterpreterLaunches()
         try:
-            with cpu_device_shims(kernel_module), recorder:
+            with cpu_device_shims(kernel_module, device), recorder:
                 got = candidate(*inputs)
         except Exception as exc:  # noqa: BLE001 - classified into the row
             if refusal is not None and isinstance(exc, refusal):
@@ -585,7 +625,7 @@ def _run_on_cpu(path: Path, kernelbench_root: Path, mode: str) -> dict[str, Any]
     row["seconds"] = round(time.monotonic() - started, 2)
     if not row["launches"]["count"]:
         return {**row, "verdict": "fail", "reason": "no Triton launch observed"}
-    if mode == "compile":
+    if mode != "interpret":
         return {**row, "verdict": "pass"}
     comparison = _compare(expected, got)
     return {**row, "verdict": "pass" if comparison["match"] else "fail", **comparison}
@@ -623,7 +663,7 @@ class _CompileOnly:
             def is_active(self):
                 return True
 
-        self._saved_driver = driver.active
+        # Never touch driver.active here: resolving it would try to load libcuda.
         driver.set_active(_Driver())
         self._jit_run = jit.JITFunction.run
         self._autotune_run = autotuner.Autotuner.run
@@ -651,7 +691,8 @@ class _CompileOnly:
 
         jit.JITFunction.run = self._jit_run
         autotuner.Autotuner.run = self._autotune_run
-        driver.set_active(self._saved_driver)
+        # reset_active() would build the default (CUDA) driver; restore the lazy state.
+        driver._active = None
         return False
 
     def summary(self) -> dict[str, Any]:
@@ -847,6 +888,10 @@ def compile_check(path: Path, kernelbench_root: Path) -> dict[str, Any]:
     return _run_on_cpu(Path(path), Path(kernelbench_root), "compile")
 
 
+def native_compile_check(path: Path, kernelbench_root: Path) -> dict[str, Any]:
+    return _run_on_cpu(Path(path), Path(kernelbench_root), "compile-native")
+
+
 def interpreter_check(path: Path, kernelbench_root: Path) -> dict[str, Any]:
     return _run_on_cpu(Path(path), Path(kernelbench_root), "interpret")
 
@@ -893,14 +938,36 @@ class LaunchRecorder:
         return False
 
 
+def default_hook_factory():
+    """Gate (b)'s own launch hook when the core package is present, else :class:`LaunchRecorder`."""
+    try:
+        from harness.q1.gates.gate_b import LaunchHook  # core owner's b1 hook
+    except ImportError:
+        return LaunchRecorder, "harness.q1.substrates.admission.LaunchRecorder"
+    return LaunchHook, "harness.q1.gates.gate_b.LaunchHook"
+
+
+def _captured(hook: Any) -> list[str]:
+    return list(getattr(hook, "captured", None) or getattr(hook, "launches", None) or [])
+
+
 def admit_one_gpu(
-    path: Path, kernelbench_root: Path, seed: int = 42, hook_factory=LaunchRecorder
+    path: Path, kernelbench_root: Path, seed: int = 42, hook_factory=None
 ) -> list[dict[str, Any]]:
-    """Hook-visibility admission at native shapes on the current CUDA device."""
+    """Hook-visibility admission at native shapes on the current CUDA device.
+
+    Mirrors b1's protocol: per grad mode, one unhooked warmup call, then one call
+    under the hook; the mode is accepted when the hook records a launch. An
+    exception is ``refuse`` for :class:`SubstrateRefusal` and ``error`` otherwise.
+    """
     import torch
 
     path = Path(path)
     substrate_id = path.name
+    if hook_factory is None:
+        hook_factory, hook_name = default_hook_factory()
+    else:
+        hook_name = getattr(hook_factory, "__qualname__", repr(hook_factory))
     problem_id, problem_source = _problem_source(path, kernelbench_root)
     problem = _exec_problem(problem_source)
     kernel_module = load_kernel_module(path)
@@ -909,8 +976,12 @@ def admit_one_gpu(
     rows = []
     torch.manual_seed(seed)
     model_new = kernel_module.ModelNew(*problem.get_init_inputs()).to(device)
+    # Hook visibility does not depend on input values, so inputs are drawn directly on
+    # the device (seeded CUDA generator) instead of KernelBench's CPU draw and copy.
     torch.manual_seed(seed)
-    inputs = [t.to(device) if isinstance(t, torch.Tensor) else t for t in problem.get_inputs()]
+    with torch.device(device):
+        inputs = list(problem.get_inputs())
+    inputs = [t.to(device) if isinstance(t, torch.Tensor) else t for t in inputs]
     for grad_mode, context in (
         ("inference_mode", torch.inference_mode),
         ("enable_grad", torch.enable_grad),
@@ -922,18 +993,25 @@ def admit_one_gpu(
             "admission_version": ADMISSION_VERSION,
             "grad_mode": grad_mode,
             "problem_id": problem_id,
+            "hook": hook_name,
+            "protocol": "warmup 1 unhooked, step 1 hooked",
             "kernel_sha256": sha256_file(path / "kernel.py"),
         }
         try:
-            hook = hook_factory()
             start_event.record()
+            with context():
+                model_new(*inputs)
+            torch.cuda.synchronize()
+            hook = hook_factory()
             with context(), hook:
                 model_new(*inputs)
+                torch.cuda.synchronize()
             end_event.record()
             torch.cuda.synchronize()
-            details["launches"] = len(hook.launches)
-            details["kernels_seen"] = sorted(set(hook.launches))
-            verdict = "accept" if hook.launches else "reject"
+            captured = _captured(hook)
+            details["launches"] = len(captured)
+            details["kernels_seen"] = sorted(set(captured))[:50]
+            verdict = "accept" if captured else "reject"
             gpu_seconds = start_event.elapsed_time(end_event) / 1000.0
         except Exception as exc:  # noqa: BLE001 - classified into the row
             torch.cuda.synchronize()
@@ -1071,7 +1149,7 @@ def corpus_manifest(root: Path, split_path: Path | None = None) -> dict[str, Any
     root = Path(root)
     split = json.loads(split_path.read_text(encoding="utf-8")) if split_path else None
     checks = {}
-    for name in ("check_static", "check_compile", "check_interp"):
+    for name in ("check_static", "check_compile", "check_compile_native", "check_interp"):
         file = root / f"{name}.json"
         if file.exists():
             checks[name] = {
