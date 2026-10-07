@@ -5,7 +5,7 @@ Q2 Stage 0c follow-up. Produced by `scripts/run_holo3_rerun_audit_doctor.py`.
 | File | What it is | Label |
 |---|---|---|
 | `results-v1-posthoc.md` | v1 numbers reproduced, controls, review corrections, OpenCUA reference | POST-HOC; OpenCUA part EXPLORATORY |
-| `receipt-v1-posthoc.json` | the doctor's receipt: input hashes, controls, all results | POST-HOC |
+| `receipt-v1-posthoc.json` | the doctor's receipt: input hashes, controls, all results (its `results.v2_design` section is superseded by `../../2026-10-07/holo3-v2-design/`) | POST-HOC |
 | `holo3-per-task-matrix.csv` | per-task scores, flags, elapsed times and AGP outcome classes for run1, run2 and the H Company rewards | derived numbers only |
 
 ## External sources
