@@ -9,8 +9,13 @@ runner's watchdog, which kills the worker's process group, covers them):
   and writes the SHA-256 of its output bytes. Different hashes mean the
   candidate returned bytes it never wrote.
 - ``sanitizer``: the child runs under ``compute-sanitizer --tool memcheck`` on
-  the smallest A3 configuration (by input bytes). Exit code 86 means memcheck
-  found an error.
+  the smallest A3 configuration (by input bytes) at which the candidate does
+  not refuse before launch (the A3 classification: an exception before any
+  Triton launch or aten compute op), else at native shape. Exit code 86 means
+  memcheck found an error. (Pilot job 518: every S1 substrate refuses
+  ``A3/lead1``, a size below its compiled range, so a probe fixed to the
+  smallest configuration never ran a kernel and reported ``error``, which made
+  A4 and every tier ``error`` for all S1 kernels.)
 
     python -m harness.q1.audit.gpu_probes poison ITEM.json OUT.json
     python -m harness.q1.audit.gpu_probes sanitizer ITEM.json OUT.json
@@ -39,6 +44,58 @@ SO_ENV = "Q1_POISON_ALLOC_SO_PATH"
 PROBE_TIMEOUT_S = 170.0
 
 
+def sanitizer_configs(entry: dict[str, Any]) -> list[dict[str, Any]]:
+    """The A3 configurations in probe order: input bytes, then config id."""
+    configs = list(entry.get("A3", []))
+    return sorted(configs, key=lambda c: (c.get("input_bytes", 0), c.get("config_id", "")))
+
+
+def run_first_accepted(
+    subject: Any,
+    problem_id: str,
+    source: str,
+    configs: list[dict[str, Any]],
+    seed: int,
+) -> tuple[list[Any], str, list[dict[str, Any]]]:
+    """Run the candidate on the first configuration it does not refuse, else native.
+
+    A refusal is an exception before any launch (``audit.run.LaunchCounter``:
+    no Triton launch and no aten compute op), exactly as A3 classifies it; it
+    is recorded and the next configuration is tried. An exception after a
+    launch propagates (the sanitizer run then does not complete and the row is
+    ``error``; A3 judges that crash). Returns the outputs, the configuration id
+    and the refused configurations.
+    """
+    import torch
+
+    from harness.q1 import problems as problem_lib
+    from harness.q1.audit import run as audit
+    from harness.q1.gates.common import first_tensor_outputs, load_reference, synchronize
+    from harness.q1.gates.outcome import channel_seed
+
+    refused: list[dict[str, Any]] = []
+    analysis = problem_lib.analyze_problem(problem_id, source) if configs else None
+    for config in [*configs, None]:
+        if config is None:
+            get_inputs, config_id = subject.get_inputs, "native"
+        else:
+            variant = problem_lib.override_constants(source, analysis, config["overrides"])
+            get_inputs, config_id = load_reference(variant)[2], config["config_id"]
+        inputs = audit.draw_inputs(get_inputs, channel_seed(audit.A1_BASE, seed, 0), subject.device)
+        counter = audit.LaunchCounter()
+        try:
+            with torch.no_grad(), counter:
+                outputs = first_tensor_outputs(subject.candidate(*inputs))
+                synchronize(subject.device)
+        except Exception as exc:
+            if counter.launches or config is None:
+                raise
+            refused.append({"config_id": config_id, "exception": type(exc).__name__})
+            continue
+        return outputs, config_id, refused
+    raise AssertionError("unreachable: the native configuration either returns or raises")
+
+
 def _child(mode: str, item_path: Path, out_path: Path) -> int:
     """Child body: allocator first (poison mode), then import torch and run once."""
     if mode == "poison":
@@ -50,7 +107,7 @@ def _child(mode: str, item_path: Path, out_path: Path) -> int:
 
     from harness.q1 import problems as problem_lib
     from harness.q1.audit import run as audit
-    from harness.q1.gates.common import first_tensor_outputs, load_reference
+    from harness.q1.gates.common import first_tensor_outputs
     from harness.q1.gates.outcome import channel_seed
 
     item = json.loads(item_path.read_text(encoding="utf-8"))
@@ -63,19 +120,19 @@ def _child(mode: str, item_path: Path, out_path: Path) -> int:
     seed = int(item["seed"])
     subject = audit.prepare(problem_id, source, kernel, replicate_seed=seed, device="cuda:0")
     try:
-        get_inputs = subject.get_inputs
-        config_id = "native"
+        refused: list[dict[str, Any]] = []
         if mode == "sanitizer":
-            entry = item.get("a3_entry") or {}
-            configs = sorted(entry.get("A3", []), key=lambda c: c.get("input_bytes", 0))
-            if configs:
-                analysis = problem_lib.analyze_problem(problem_id, source)
-                variant = problem_lib.override_constants(source, analysis, configs[0]["overrides"])
-                get_inputs = load_reference(variant)[2]
-                config_id = configs[0]["config_id"]
-        inputs = audit.draw_inputs(get_inputs, channel_seed(audit.A1_BASE, seed, 0), subject.device)
-        with torch.no_grad():
-            outputs = first_tensor_outputs(subject.candidate(*inputs))
+            configs = sanitizer_configs(item.get("a3_entry") or {})
+            outputs, config_id, refused = run_first_accepted(
+                subject, problem_id, source, configs, seed
+            )
+        else:
+            config_id = "native"
+            inputs = audit.draw_inputs(
+                subject.get_inputs, channel_seed(audit.A1_BASE, seed, 0), subject.device
+            )
+            with torch.no_grad():
+                outputs = first_tensor_outputs(subject.candidate(*inputs))
         torch.cuda.synchronize()
         digest = hashlib.sha256()
         for tensor in outputs:
@@ -85,6 +142,7 @@ def _child(mode: str, item_path: Path, out_path: Path) -> int:
                 {
                     "sha256": digest.hexdigest(),
                     "config_id": config_id,
+                    "refused_configs": refused,
                     "shapes": [list(t.shape) for t in outputs],
                 }
             ),

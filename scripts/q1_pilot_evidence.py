@@ -111,12 +111,17 @@ def main(argv: list[str] | None = None) -> int:
                 }
             )
     retry = []
-    for row in rows["smoke"]:
-        if row["gate"] == "b2":
+    for phase in phases:
+        for row in rows[phase]:
+            if row["gate"] != "b2":
+                continue
             retry.append(
                 {
+                    "phase": phase,
                     "kernel": row["kernel_id"],
                     "verdict": row["verdict"],
+                    # Recorded by gate_b from the image of this pass on; null in rows
+                    # written before (job 518), where only the table size is known.
                     "profile_attempts": row["details"].get("profile_attempts"),
                     "details": {
                         k: row["details"].get(k)
@@ -124,13 +129,41 @@ def main(argv: list[str] | None = None) -> int:
                             "reason",
                             "b0_calls_replayed",
                             "event_rows",
-                            "retried",
-                            "custom_kernels",
-                            "total_kernels",
+                            "num_custom_kernels",
+                            "num_total_kernels",
                         )
                     },
                 }
             )
+    a4_probes: dict[str, Any] = {"rows": [], "counts": {}}
+    probe_counts: dict[str, Counter] = defaultdict(Counter)
+    for phase in phases:
+        for row in rows[phase]:
+            if row["gate"] != "A4":
+                continue
+            role = kinds.get(row["kernel_id"], {}).get("role", "unknown")
+            source = (
+                row["kernel_id"].split("-", 2)[1]
+                if row["kernel_id"][:3] in {"s1-", "s2-"}
+                else "control"
+            )
+            probe = row["details"].get("probe") or {}
+            reason = row["details"].get("reason") or ""
+            probe_counts[f"{row['config_id']}|{source}"][f"{row['verdict']}:{reason}"] += 1
+            a4_probes["rows"].append(
+                {
+                    "phase": phase,
+                    "kernel": row["kernel_id"],
+                    "role": role,
+                    "config_id": row["config_id"],
+                    "verdict": row["verdict"],
+                    "reason": reason,
+                    "returncode": row["details"].get("returncode"),
+                    "probe_config_id": probe.get("config_id"),
+                    "refused_configs": probe.get("refused_configs"),
+                }
+            )
+    a4_probes["counts"] = {key: dict(c) for key, c in sorted(probe_counts.items())}
 
     fidelity: list[dict[str, Any]] = []
     kernels = sorted({r["kernel_id"] for r in rows["fidelity"]})
@@ -263,6 +296,7 @@ def main(argv: list[str] | None = None) -> int:
         "smoke_checks": smoke,
         "smoke_checks_failed": [c for c in smoke if c["ok"] is False],
         "b2_rows": retry,
+        "a4_probes": a4_probes,
         "fidelity": fidelity,
         "fidelity_agreement_counts": dict(agreements),
         "calibration": calibration,

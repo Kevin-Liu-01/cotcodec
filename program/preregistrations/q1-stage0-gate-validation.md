@@ -69,12 +69,12 @@ Version card (`python scripts/q1_version_card.py --markdown`):
 | `schema` | `q1-version-card/1` |
 | `schema_py_sha256` | `c9bae9d502f7b9c83332f95e24fd9934d91bfe6cede47de527f6d584838b3256` |
 | `schema_version` | `q1-schema/1` |
-| `gate_code_sha256` | `13ce463f3251bd7ed9f63ad6e5a07b569cb6147a7ac35e1c30256d869a75a64d` |
+| `gate_code_sha256` | `08df7d53dd480967560166188f371c18f2e197e5816e6867707889a6952750b5` |
 | `gate_data_sha256` | `200fdacd8be621dccbd8c05c777c69e8dbe4dab70e74ae99de923eeef6d5a6af` |
 | `shape_manifest_sha256` | `29e693ee4d77bc86e3ecfdb1000307b3878c023c6c6224f87c4fcfae74a220cb` |
-| `audit_code_sha256` | `02f2b6a0bd961ea13a5fe6640f1cd35fcce1ac84495ddfc8c98cdf9ea4dfe09a` |
+| `audit_code_sha256` | `2d1adf86c265a2e523c9f36aae3f8ca6fd81f7e069ac1d951c03274bdee190b1` |
 | `analysis_sha256` | `472deac3ef1db28098aab2c906c788a31cd324d0a80b3a796fd8c2511946e48c` |
-| `mutator_package_sha256` | `f97a8ca84cda8a910feccc6e3f78b8e32b0b7d4cb8ee35b34c22fd75b4f2ad5a` |
+| `mutator_package_sha256` | `f4aa6e93214126b1fcc82964654833a2da419ff98e7d7b9d27fa24dc2f595296` |
 | `mutator_registry_fingerprint` | `43a1f0a234ad1c4a4421626d740989e01890b878c5ce7f2dec5739e3d43922a6` |
 | `mutator_operators` | `68` |
 | `mutant_split` | `v1/seed=42` |
@@ -1056,7 +1056,99 @@ Each review finding was verified before it was fixed; the verification is in
 10. **Infrastructure retry.** The runner now requeues an infrastructure-failed
     item once (section 10 already required it; the runner did not do it).
 
-## 17. References (accessed 2026-10-06 and 2026-10-07)
+## 17. Pilot (pilot pass, 2026-10-07; infrastructure and cost, not data)
+
+The pilot measures what Stage 0 costs and whether every GPU path works. It
+scores trusted code only (D3, D7): KernelBench reference code, TorchInductor
+output, pre-2025 human-written kernels and deterministic, harness-derived
+mutants and controls of them, with `model: {kind: none}`, one GPU per job.
+Nothing it produces is a Stage 0 result; it is reported with the label
+"pilot, infrastructure".
+
+### 17.1 Registered pilot substrates (`harness/q1/pilot.py`, `q1-pilot/1`)
+
+The draft's pilot ("8 substrates with all their mutants and controls, seeds
+42/43/44") is replaced by a rule written before any pilot GPU job: per
+stratum, candidates ordered by `sha256("q1-pilot/v1/" + substrate_id)`, the
+first that pass the static check and GPU admission are taken, an
+inadmissible pick is replaced by the next and listed. Strata: S1-eval level-1
+activation (1), S1-eval other level 1 (1), S1-eval level 2 (2), S2 FlagGems,
+Liger and Triton tutorial (1 each), any other S2 (1); plus S1-cal level 1 (2)
+and level 2 (2) for the calibration driver. Outcome (job 474): evaluation
+`s1-inductor-L1-25_Swish`, `s1-inductor-L1-3_Batched_matrix_multiplication`,
+`s1-inductor-L2-74_ConvTranspose3d_LeakyReLU_Multiply_LeakyReLU_Max`,
+`s1-inductor-L2-3_ConvTranspose3d_Sum_LayerNorm_AvgPool_GELU`,
+`s2-flaggems-cumsum-L1-89_cumsum`,
+`s2-liger-cross-entropy-L1-95_CrossEntropyLoss`,
+`s2-tutorial-matmul-L1-2_Standard_matrix_multiplication_`,
+`s2-flaggems-mul-scalar-L1-5_Matrix_scalar_multiplication`; calibration
+`s1-inductor-L1-15_Matmul_for_lower_triangular_matrices`,
+`s1-inductor-L1-47_Sum_reduction_over_a_dimension`,
+`s1-inductor-L2-52_Conv2d_Activation_BatchNorm`,
+`s1-inductor-L2-60_ConvTranspose3d_Swish_GroupNorm_HardSwish`. The first
+Triton-tutorial pick, `s2-tutorial-fused-softmax-L1-23_Softmax`, failed GPU
+admission at native shape (`OutOfResources`: 6,291,488 B of shared memory
+for one 393,216-column row, limit 232,448 B) and was replaced by the
+tutorial matmul, as the rule prescribes.
+
+### 17.2 Procedure
+
+1. Image `cotcodec-q1-gates` rebuilt through Slurm from fresh clean clones
+   (CPU-only jobs 472, 487, 507; section 2.3); the pilot jobs ran
+   `cotcodec-q1-gates:74540542` (job 474) and `:fef945dd` (job 518).
+2. Job 474 (`q1-pilot-smoke`, 15 min, 1 GPU): device-mode TorchInductor
+   codegen of the head candidates of every S1 stratum (24 problems), S2
+   build, static check, selection with GPU admission, specialization
+   recording of the 8 evaluation picks, controls, and a gate smoke.
+3. CPU, GPU-less container, image `:45dbb199`:
+   `scripts/q1_prepare_pilot_corpus.py` (pool 936 candidates, compile filter
+   at the recorded specializations, cap 40 at cap seed 42: 260 mutants, 139
+   dev and 121 test; corpus recipe `ca97c351...`), then one study artifact
+   (`144df1af...`, 28,092,379 B: the corpus, KernelGYM@3a84417f and
+   kernel_bench_verified@3fdf6fec read from git objects).
+4. Job 518 (`q1-pilot-cost`, 42 min, 1 GPU): unpack and verify the
+   artifact; smoke (the L2/12 reference-identity control through every gate
+   and audit channel, unmodified KernelBench gate (a) at both revisions, the
+   timing harness, b1 and b2 on the L1/25 cached-output control); fidelity;
+   calibration (A1, M = 16, replicate 42, the four S1-cal picks); scoring in
+   the registered order (`pilot.schedule`: shared-class substrates, one
+   control and two mutants each, then exclusive-class substrates by size,
+   then replicates 43/44, then the rest), cut by the time box; timing.
+5. CPU: `scripts/q1_pilot_cost_card.py` and `scripts/q1_pilot_evidence.py`.
+
+Concurrency: up to four items share the GPU; a problem whose native inputs
+reach 1 GB runs alone (`pilot.exclusive_problem`; gate (c) and A3 draw inputs
+up to twice the native size and replay them in fp64). GPU-seconds of an item
+are its share of the allocation while it runs (the integral of one over the
+number of items running), so concurrent items are not double-charged; raw
+spawn-to-verdict seconds are recorded too.
+
+### 17.3 Findings that changed the harness before scoring (all recorded)
+
+1. **Fixed watchdog limits reject correct large-problem kernels.** In job
+   474, gate (a) and `a_head_1e-2` on the reference-identity control of L1/19
+   (6.4 GB of inputs) timed out at the 180 s correctness limit. Limits are now
+   size-scaled (section 10, watchdog).
+2. **Host fp64 copies made large items slow and memory-bound.** Error
+   statistics, the validity gate's fp64 comparison, the audit's scaled error
+   and NaN/Inf masks, and A4's byte snapshots copied whole outputs to the host
+   (more than 60 GB of resident memory for one L1/19 gate (a) item). They now
+   run in fp64 chunks on the device (`harness/q1/gates/reductions.py`, in
+   `audit_code_sha256`); every function is tested against the previous
+   implementation and the CPU doctor passes (195 items), so no verdict changes.
+3. **Compile filter wall time.** FlagGems cumsum mutants take minutes per
+   kernel in ptxas; the filter now compiles one kernel per worker batch
+   (`compile_pool(batch_size=1)`, identical rows by test): 936 candidates in
+   about 6 minutes on 64 cores instead of hours.
+4. **Signal window.** Job 474's driver ran its last phase past its own
+   budget (a fixed 330 s hard margin) and ended 37 s after the lane's SIGUSR1
+   without a checkpoint marker (`signal_USR1_checkpoint_missing`, exit 0). The
+   hard time box is now capped at the driver's end, and handlers are re-armed
+   and recorded at every phase.
+
+@@PILOT_RESULTS@@
+
+## 19. References (accessed 2026-10-06 and 2026-10-07)
 
 - Measuring the Checker, arXiv 2609.22220 (16.9% missed, family miss rates):
   https://arxiv.org/abs/2609.22220
