@@ -240,3 +240,19 @@ def test_cli_end_to_end_and_exit_codes(tmp_path, capsys):
     assert cli.main(["table", "operators"]) == 0
     out = capsys.readouterr().out
     assert "relu-max-zero-first-remove" in out
+
+
+def test_alternate_cap_seeds_keep_the_frozen_split(built, tmp_path):
+    corpus.select(
+        built / "pool", built / "substrates", tmp_path / "m43", seed=43, require_compile=False
+    )
+    load = lambda root: {  # noqa: E731
+        r["mutant_id"]: r
+        for r in map(json.loads, (root / "mutants.jsonl").read_text().splitlines())
+    }
+    primary, alternate = load(built / "mutants"), load(tmp_path / "m43")
+    shared = set(primary) & set(alternate)
+    assert shared and set(primary) != set(alternate)
+    assert all(primary[m]["split"] == alternate[m]["split"] for m in shared)
+    mutation = json.loads((tmp_path / "m43" / sorted(alternate)[0] / "mutation.json").read_text())
+    assert mutation["seed"] == 43

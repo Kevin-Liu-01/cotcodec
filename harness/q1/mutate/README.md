@@ -76,7 +76,9 @@ refuses unless `--no-require-compile` is passed; the manifest then records
   only on the mutant's content and the declared seed. A secondary
   problem-level split uses the same construction on `problem_id`.
 - **Seed.** `mutation.json.seed` is the cap-sampling seed (42 for the primary
-  corpus). Enumeration and the split hash do not depend on the RNG.
+  corpus; 43 and 44 draw alternate samples). Enumeration does not use the RNG,
+  and the split is frozen at seed 42 for every cap seed, so a mutant has the
+  same half in every sample.
 
 ## Outputs other components read
 
