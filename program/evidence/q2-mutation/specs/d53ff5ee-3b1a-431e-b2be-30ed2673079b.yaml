@@ -1,0 +1,18 @@
+task_id: d53ff5ee-3b1a-431e-b2be-30ed2673079b
+author: blind-model-author-v1
+requirements:
+  - req_id: R0
+    statement: (implicit) The document is saved in place at /home/user/Desktop/presentation_instruction_2023_Feb.docx; apart from letter case, all text is unchanged.
+    check_kind: file_exists
+    observable: For every paragraph and table cell, end_text.lower() == initial_text.lower().
+  - req_id: R1
+    statement: Text that was uppercase is converted to lowercase, e.g. the all-caps instruction paragraph.
+    check_kind: text_run
+    observable: Paragraph 7 reads "prepare a presentation about 2-3 minutes before your presentation date. you need to talk in the front of the classroom. you can use powerpoint, but max 10 chinese characters in each page. marks will be deducted if you read a script from the beginning to the end."
+  - req_id: R2
+    statement: No uppercase letters remain in the document (uniform lowercase).
+    check_kind: text_run
+    observable: No paragraph or table-cell text contains an uppercase letter (e.g. "presentation instruction", "chin9505", "grammar  5%").
+allowed_variations:
+  - '[AMBIGUOUS] "convert all uppercase text to lowercase" can be read narrowly (only all-caps words/segments such as paragraph 7 and "CHIN9505") or broadly (every uppercase letter). R2 encodes the broad reading; record which reading the result follows.'
+  - The case change may be done with real character edits or a lowercase character attribute; the stored text should be lowercase.

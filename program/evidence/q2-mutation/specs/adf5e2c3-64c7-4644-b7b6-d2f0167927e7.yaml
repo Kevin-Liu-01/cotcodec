@@ -1,0 +1,23 @@
+task_id: adf5e2c3-64c7-4644-b7b6-d2f0167927e7
+author: blind-model-author-v1
+requirements:
+  - req_id: R0
+    statement: (implicit) The document is saved in place at /home/user/Desktop/Essay_Writing_English_for_uni.docx; existing references and essay text are otherwise unchanged.
+    check_kind: file_exists
+    observable: File loads; the 13 existing reference entries and the essay paragraphs (except the marker) are unchanged.
+  - req_id: R1
+    statement: The Steinberg et al. (2003) reference is added to the numbered reference list with the exact given text.
+    check_kind: text_run
+    observable: 'A list paragraph in the References section (same numbering as the other entries, lvlText "[%1] ") has text exactly "Steinberg, F. M., Bearden, M. M., & Keen, C. L. (2003). Cocoa and chocolate flavonoids: Implications for cardiovascular health. Journal of the American Dietetic Association, 103(2), 215-223. doi: 10.1053/jada.2003.50028".'
+  - req_id: R2
+    statement: The new entry's position keeps the list consistent; alphabetically and by appending it becomes entry [14].
+    check_kind: paragraph_format
+    observable: The Steinberg entry is the 14th numbered entry (after "Schramm, D. D., ...").
+  - req_id: R3
+    statement: In the fourth essay paragraph, the "<add here>" marker is replaced by a cross-reference showing the new entry's reference number.
+    check_kind: text_run
+    observable: Paragraph "The biological makeup of chocolate ..." contains "Pennington[14]" (or "Pennington [14]") and no longer contains "<add here>"; ideally the number is a REF field pointing to a bookmark on the Steinberg list item.
+allowed_variations:
+  - '[AMBIGUOUS] Whether the cross-reference shows "[14]" (number with list format) or "14"; both use the reference number.'
+  - '[AMBIGUOUS] A literal typed "[14]" instead of a field-based cross-reference reads the same but is not a cross-reference in the LibreOffice sense.'
+  - Formatting of the new entry follows the list.

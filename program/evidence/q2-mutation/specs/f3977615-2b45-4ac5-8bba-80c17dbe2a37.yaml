@@ -1,0 +1,9 @@
+task_id: f3977615-2b45-4ac5-8bba-80c17dbe2a37
+author: blind-model-author-v1
+requirements:
+  - req_id: R1
+    statement: VLC allows multiple instances so a newly launched video plays in its own window.
+    check_kind: config_value
+    observable: ~/.config/vlc/vlcrc has one-instance=0 and one-instance-when-started-from-file=0 (the "Allow only one instance" options disabled).
+allowed_variations:
+  - '[AMBIGUOUS] Enqueue-related options (playlist-enqueue) are not required.'

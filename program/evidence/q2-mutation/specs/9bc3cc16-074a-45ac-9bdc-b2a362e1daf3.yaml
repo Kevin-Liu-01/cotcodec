@@ -1,0 +1,19 @@
+task_id: 9bc3cc16-074a-45ac-9bdc-b2a362e1daf3
+author: blind-model-author-v1
+requirements:
+  - req_id: R1
+    statement: The directory ~/emails.bak exists.
+    check_kind: file_exists
+    observable: /home/user/emails.bak is a directory.
+  - req_id: R2
+    statement: Each email in the Inbox is saved as a separate .eml file in that directory.
+    check_kind: file_exists
+    observable: >-
+      emails.bak contains one .eml file per Inbox message; together their Subjects cover "歡迎使用新的 Outlook.com 帳戶", "A Test E-mail", "Fwd: Your receipt from X (formerly Twitter) #2709-5620" and "Fwd: Interest in OpenAgents, UnifiedSKG".
+  - req_id: R3
+    statement: The .eml files are valid RFC 822 messages matching the originals.
+    check_kind: other
+    observable: Each file parses with Python email; Message-ID/From/Subject equal an Inbox message.
+allowed_variations:
+  - '[AMBIGUOUS] The offline store holds 6 entries (each of 2 messages duplicated); 4 distinct messages are expected to be visible; file count 4 or 6 depending on what the Inbox displays.'
+  - File names (Thunderbird uses the subject).

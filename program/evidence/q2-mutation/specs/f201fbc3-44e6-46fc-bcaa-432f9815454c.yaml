@@ -1,0 +1,10 @@
+task_id: f201fbc3-44e6-46fc-bcaa-432f9815454c
+author: blind-model-author-v1
+requirements:
+  - req_id: R1
+    statement: Replies no longer quote the original message.
+    check_kind: config_value
+    observable: prefs.js has mail.identity.id1.auto_quote == false ("Automatically quote the original message when replying" unchecked).
+allowed_variations:
+  - reply_on_top and other composition settings are not constrained.
+  - '[AMBIGUOUS] Changing only the quote style (e.g. removing ">" via mailnews.display prefs) would not remove quoting entirely and is a different reading.'

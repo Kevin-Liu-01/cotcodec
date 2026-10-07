@@ -1,0 +1,17 @@
+task_id: bc2b57f3-686d-4ec9-87ce-edf850b7e442
+author: blind-model-author-v1
+requirements:
+  - req_id: R0
+    statement: (implicit) /home/user/Desktop/workbook-with-sample-database.xlsx is saved in place with every sheet's content unchanged.
+    check_kind: file_exists
+    observable: File loads; each sheet's cell values equal the initial ones.
+  - req_id: R1
+    statement: The sheets are arranged in the order required by reminder.docx.
+    check_kind: other
+    observable: Sheet order == ReadMe, Raw_data, Beans, Millet, Sorghum, Mkt Gotheye, Mkt Mangaize, Mkt Ouallam, Mkt Tera, Millet spatial integration.
+  - req_id: R2
+    statement: All sheets are kept in one file (none removed or split out).
+    check_kind: other
+    observable: Exactly these 10 sheets.
+allowed_variations:
+  - Active sheet after reordering.

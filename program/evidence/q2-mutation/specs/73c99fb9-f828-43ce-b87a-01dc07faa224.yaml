@@ -1,0 +1,17 @@
+task_id: 73c99fb9-f828-43ce-b87a-01dc07faa224
+author: blind-model-author-v1
+requirements:
+  - req_id: R0
+    statement: (implicit) The presentation is saved in place at /home/user/Desktop/109_4.pptx with 2 slides.
+    check_kind: file_exists
+    observable: File loads; 2 slides.
+  - req_id: R1
+    statement: The content text box (body placeholder, initially empty) on slide 2 contains the text "Page 1".
+    check_kind: text_run
+    observable: The OBJECT/body placeholder on slide 2 has text_frame.text.strip() == "Page 1".
+  - req_id: R2
+    statement: (implicit) Title "Lemon juice" and the table are unchanged.
+    check_kind: table_cell
+    observable: Title text == "Lemon juice"; table 2x3 with cells Product/Price/Features and A/B/C.
+allowed_variations:
+  - Formatting of the added text (bullet, size) follows the placeholder defaults and is not constrained.

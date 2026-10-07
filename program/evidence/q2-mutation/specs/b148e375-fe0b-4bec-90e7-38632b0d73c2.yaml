@@ -1,0 +1,13 @@
+task_id: b148e375-fe0b-4bec-90e7-38632b0d73c2
+author: blind-model-author-v1
+requirements:
+  - req_id: R1
+    statement: A new layer named "Square" is added to the image and saved in /home/user/Desktop/white_background.xcf.
+    check_kind: image_property
+    observable: Parsing the XCF lists a layer named exactly "Square" in addition to the original layer "背景" (800x800).
+  - req_id: R2
+    statement: (implicit) The original layer is kept.
+    check_kind: image_property
+    observable: Layer "背景" still exists with unchanged pixels.
+allowed_variations:
+  - Size, fill and position of the new layer (the name suggests a square but the instruction asks only to add and name it).

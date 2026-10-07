@@ -1,0 +1,13 @@
+task_id: 70745df8-f2f5-42bd-8074-fbc10334fcc5
+author: blind-model-author-v1
+requirements:
+  - req_id: R1
+    statement: VS Code auto-save is enabled with a delay.
+    check_kind: config_value
+    observable: User settings.json has "files.autoSave" == "afterDelay".
+  - req_id: R2
+    statement: The auto-save delay is 500 milliseconds.
+    check_kind: config_value
+    observable: User settings.json has "files.autoSaveDelay" == 500.
+allowed_variations:
+  - '[AMBIGUOUS] Setting the values in a workspace/folder settings file instead of user settings.'

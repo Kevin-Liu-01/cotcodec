@@ -1,0 +1,9 @@
+task_id: e2b5e914-ffe1-44d2-8e92-58f8c5d92bb2
+author: blind-model-author-v1
+requirements:
+  - req_id: R1
+    statement: Python missing-import diagnostics are disabled.
+    check_kind: config_value
+    observable: User settings.json has "python.analysis.diagnosticSeverityOverrides" with "reportMissingImports" == "none".
+allowed_variations:
+  - '[AMBIGUOUS] Equivalent linter-specific settings (e.g. pylint disable import-error) are a different mechanism; record if used.'

@@ -1,0 +1,17 @@
+task_id: 5cfb9197-e72b-454b-900e-c06b0c802b40
+author: blind-model-author-v1
+requirements:
+  - req_id: R0
+    statement: (implicit) The presentation is saved in place at /home/user/Desktop/33_1.pptx with 5 slides.
+    check_kind: file_exists
+    observable: File loads; 5 slides.
+  - req_id: R1
+    statement: The first row of the table on slide 4 reads "T1", "T2", "T3", "T4".
+    check_kind: table_cell
+    observable: Table cells (0,0)..(0,3) text == "T1", "T2", "T3", "T4" (previously "Table 1".."Table 4").
+  - req_id: R2
+    statement: (implicit) The rest of the table and slide are unchanged.
+    check_kind: table_cell
+    observable: Rows 2-4 cell texts equal the initial ones (e.g. row 2 == 42, 49, 74, 12); table still 4x4.
+allowed_variations:
+  - Cell text formatting (font, size, color) is not constrained beyond what editing in place preserves.

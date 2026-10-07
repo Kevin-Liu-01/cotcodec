@@ -1,0 +1,17 @@
+task_id: 455d3c66-7dc6-4537-a39a-36d3e9119df7
+author: blind-model-author-v1
+requirements:
+  - req_id: R1
+    statement: A PNG image named res.png exists on the Desktop.
+    check_kind: file_exists
+    observable: /home/user/Desktop/res.png exists and decodes as a PNG image (PIL format == "PNG").
+  - req_id: R2
+    statement: The PNG is an export of the presentation's (single) slide using default export settings.
+    check_kind: image_property
+    observable: Image aspect ratio matches the slide (47.41 x 26.67 cm, about 1.778:1, tolerance 2%) and the image visibly shows the "Project on a Page / Workforce Skill Set Fund" slide (e.g. compare against a reference render of slide 1).
+  - req_id: R3
+    statement: (implicit) The source presentation is not modified.
+    check_kind: file_exists
+    observable: /home/user/Desktop/wssf-project-plan-on-a-page.pptx still exists with unchanged content.
+allowed_variations:
+  - Pixel dimensions / DPI follow LibreOffice defaults; exact size is not constrained.

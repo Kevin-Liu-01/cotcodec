@@ -1,0 +1,13 @@
+task_id: 227d2f97-562b-4ccb-ae47-a5ec9e142fbb
+author: blind-model-author-v1
+requirements:
+  - req_id: R1
+    statement: A Writer document /home/user/Desktop/image.docx exists.
+    check_kind: file_exists
+    observable: The file exists and opens with python-docx.
+  - req_id: R2
+    statement: The document contains the image from the XCF file (the 1152 x 648 colorful cat picture).
+    check_kind: image_property
+    observable: The docx embeds an image whose pixels closely match the XCF's single layer (resize to common size; high similarity); aspect ratio 16:9.
+allowed_variations:
+  - Embedded format (PNG/JPEG) and displayed size.

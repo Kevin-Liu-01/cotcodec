@@ -1,0 +1,14 @@
+task_id: 47f7c0ce-a5fb-4100-a5e6-65cd0e7429e5
+author: blind-model-author-v1
+requirements:
+  - req_id: R1
+    statement: The video frame at 00:08 of /home/user/Desktop/landscape.mp4 is set as the background of slide 2 of the opened presentation.
+    check_kind: slide_object
+    observable: In /home/user/Desktop/Robotic_Workshop_Infographics.pptx (saved in place), slide 2 has a background picture fill (p:bg with a:blipFill) whose image closely matches the frame at t = 8 s (1920 x 1080 aspect).
+  - req_id: R2
+    statement: Other slides' backgrounds and all slide content are unchanged.
+    check_kind: slide_object
+    observable: 20 slides; slide 2 texts unchanged; other slides' backgrounds equal the initial file.
+allowed_variations:
+  - Saving the extracted frame as a separate file is allowed but not required.
+  - '[AMBIGUOUS] A full-slide picture object placed behind content instead of a true background fill is a weaker reading.'

@@ -1,0 +1,14 @@
+task_id: 02ce9a50-7af2-47ed-8596-af0c230501f8
+author: blind-model-author-v1
+requirements:
+  - req_id: R1
+    statement: A screenshot named ls.png is saved on the Desktop.
+    check_kind: file_exists
+    observable: /home/user/Desktop/ls.png exists and is a valid PNG.
+  - req_id: R2
+    statement: The screenshot shows a terminal in which "ls" was executed in /home/user, with its output.
+    check_kind: image_property
+    observable: OCR of the image contains the "ls" command and the names of /home/user entries (e.g. Desktop, Documents, Downloads).
+allowed_variations:
+  - Whole-screen vs terminal-window-only capture; terminal theme and size.
+  - The Writer document is not required to change.

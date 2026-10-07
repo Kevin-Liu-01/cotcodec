@@ -1,0 +1,13 @@
+task_id: 53ad5833-3455-407b-bbc6-45b4c79ab8fb
+author: blind-model-author-v1
+requirements:
+  - req_id: R1
+    statement: VS Code has the folder /home/user/project open as its workspace folder.
+    check_kind: other
+    observable: The active VS Code window's workspace folder is /home/user/project (e.g. VS Code state storage lists it as the opened folder; window title shows "project").
+  - req_id: R2
+    statement: (implicit) The project files are untouched.
+    check_kind: file_exists
+    observable: /home/user/project/main.py, README.md and .vscode/settings.json are unchanged.
+allowed_variations:
+  - Opening via File > Open Folder, CLI "code /home/user/project", or recent list.

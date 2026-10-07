@@ -1,0 +1,18 @@
+task_id: 0e47de2a-32e0-456c-a366-8c607ef7a9d2
+author: blind-model-author-v1
+requirements:
+  - req_id: R0
+    statement: (implicit) The document is saved in place at /home/user/Desktop/LibreOffice_Open_Source_Word_Processing.docx with unchanged body text.
+    check_kind: file_exists
+    observable: File loads; body paragraph texts equal the initial ones.
+  - req_id: R1
+    statement: Every page shows a page number at the bottom (footer).
+    check_kind: other
+    observable: The section(s) reference a footer part containing a PAGE field (fldSimple instr "PAGE" or fldChar instrText PAGE); no title-page/odd-even setting suppresses it on any page.
+  - req_id: R2
+    statement: The page number is at the left.
+    check_kind: paragraph_format
+    observable: The footer paragraph holding the PAGE field is left-aligned (jc left/start or unset with left-aligned style), and no centered/right copy exists.
+allowed_variations:
+  - Number format (1, 2, 3 vs "Page 1") and font of the footer.
+  - Header content is not constrained.

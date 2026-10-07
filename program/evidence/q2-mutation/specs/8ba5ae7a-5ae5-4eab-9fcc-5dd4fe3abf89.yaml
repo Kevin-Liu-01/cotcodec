@@ -1,0 +1,9 @@
+task_id: 8ba5ae7a-5ae5-4eab-9fcc-5dd4fe3abf89
+author: blind-model-author-v1
+requirements:
+  - req_id: R1
+    statement: VLC's recordings directory is the Desktop.
+    check_kind: config_value
+    observable: ~/.config/vlc/vlcrc has input-record-path=/home/user/Desktop (trailing slash tolerated).
+allowed_variations:
+  - Snapshot directory is not constrained.

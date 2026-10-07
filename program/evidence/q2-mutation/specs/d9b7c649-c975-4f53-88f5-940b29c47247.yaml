@@ -1,0 +1,23 @@
+task_id: d9b7c649-c975-4f53-88f5-940b29c47247
+author: blind-model-author-v1
+requirements:
+  - req_id: R1
+    statement: A Calc report /home/user/Desktop/report.xlsx is created.
+    check_kind: file_exists
+    observable: The file exists and loads.
+  - req_id: R2
+    statement: Columns are sender_name, sender_address, subject, CC, number_of_attachments.
+    check_kind: cell_value
+    observable: A1:E1 == "sender_name", "sender_address", "subject", "CC", "number_of_attachments".
+  - req_id: R3
+    statement: The rows are the latest 5 emails of the local "daily" folder, ordered from earliest to most recent.
+    check_kind: cell_value
+    observable: >-
+      Rows 2-6 == (HKU Bulk Email Delivery System, mail.service@intranet.hku.hk, HKU Daily Email Digest (25 JAN 2024), "", 0),
+      (eNotices System, enotices.daily.digest@hku.hk, HKU Daily Notices (27 JAN 2024), mail.service@intranet.hku.hk, 0),
+      (eNotices System, enotices.daily.digest@hku.hk, HKU Daily Notices (28 JAN 2024), mail.service@intranet.hku.hk, 0),
+      (HKU Bulk Email Delivery System, mail.service@intranet.hku.hk, HKU Daily Email Digest (29 JAN 2024), "", 0),
+      (HKU Bulk Email Delivery System, mail.service@intranet.hku.hk, HKU Daily Email Digest (30 JAN 2024), "", 0).
+allowed_variations:
+  - '[AMBIGUOUS] CC formatting (bare address vs "<address>") and empty CC as blank cell.'
+  - number_of_attachments as number 0.

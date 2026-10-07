@@ -1,0 +1,18 @@
+task_id: 6ada715d-3aae-4a32-a6a7-429b2e43fb93
+author: blind-model-author-v1
+requirements:
+  - req_id: R0
+    statement: (implicit) The document is saved in place at /home/user/Desktop/Viewing_Your_Class_Schedule_and_Textbooks.docx with unchanged text.
+    check_kind: file_exists
+    observable: File loads; paragraph texts unchanged.
+  - req_id: R1
+    statement: The image /home/user/Desktop/1.png is inserted into the document.
+    check_kind: image_property
+    observable: A new embedded image part is pixel-identical to 1.png (512x466) and is referenced by a w:drawing in the body.
+  - req_id: R2
+    statement: The image is placed at the cursor location.
+    check_kind: other
+    observable: The drawing is anchored in the paragraph where the cursor was; the document's only image-less figure slot is the empty paragraph (index 6) directly before "Figure 1 - A student’s schedule displayed in list view", which is the expected location.
+allowed_variations:
+  - '[AMBIGUOUS] Cursor position is not part of the sanitized task; the empty paragraph above the "Figure 1" caption is inferred as the slot. Record the actual anchor paragraph.'
+  - Image display size, inline vs anchored wrapping.

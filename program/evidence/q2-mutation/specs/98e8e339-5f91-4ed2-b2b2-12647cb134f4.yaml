@@ -1,0 +1,18 @@
+task_id: 98e8e339-5f91-4ed2-b2b2-12647cb134f4
+author: blind-model-author-v1
+requirements:
+  - req_id: R1
+    statement: A Writer document /home/user/Desktop/concat.docx exists.
+    check_kind: file_exists
+    observable: The file exists and opens with python-docx.
+  - req_id: R2
+    statement: It contains the contents of all project .txt files (1.txt to 5.txt) concatenated without separators.
+    check_kind: text_run
+    observable: Whitespace-normalized document text == contents of 1.txt, 2.txt, 3.txt, 4.txt, 5.txt joined in that order (each starting "In the vast expanse ...", "The digital revolution ...", "Artistic expression ...", "The pursuit of knowledge ...", "Sustainability is the clarion call ...").
+  - req_id: R3
+    statement: The overall font size is 10 pt.
+    check_kind: text_run
+    observable: Every non-empty run has effective size 10 pt.
+allowed_variations:
+  - Each file's text as its own paragraph or run-on; macOS metadata files (__MACOSX/._*.txt) are not project text files and must not be included.
+  - '[AMBIGUOUS] Ordering by file name (1..5) is assumed.'
