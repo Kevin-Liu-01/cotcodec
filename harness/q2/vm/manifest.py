@@ -51,7 +51,21 @@ SEED_FLAG_RE = re.compile(r"^--[a-z][a-z0-9-]{0,31}$")
 PURPOSES = ("infrastructure-validation", "reference-capture", "development", "acceptance")
 NETWORKS = ("none-netns", "bridge-unpublished")
 CONTAINER_PROFILES = ("default", "large-cpu-mem")
-WORKLOAD_KINDS = ("boot-reset-validation", "rdev-capture")
+WORKLOAD_KINDS = (
+    "boot-reset-validation",
+    "rdev-capture",
+    "inputs-validation",
+    "suite-development",
+    "canary-development",
+)
+# Development runs the Stage-1 executor and harnesses only. L0-raw (validity control
+# C2) and the detection controls (C1) are scored once on frozen code, never in
+# development, so they are not admitted here.
+DEVELOPMENT_LAYERS = ("L0-fixed", "H-OSW-fixed", "H-GA")
+DEVELOPMENT_SEED = 42
+ACCEPTANCE_SEEDS = (43, 44)
+SETTINGS = ("screenshot", "screenshot+a11y")
+CANARY_APPS = ("writer", "chrome", "vscode", "terminal")
 GPU_WORDS = ("gpu", "gpus", "gres", "nvidia", "cuda")
 
 
@@ -230,11 +244,16 @@ def validate_manifest(raw: Any) -> dict[str, Any]:
     else:
         _match(prereg["sha256"], SHA_RE, "preregistration.sha256")
     if purpose == "acceptance":
-        # Confirmatory trials wait for the owner's freeze, and no acceptance
-        # workload exists yet; refuse rather than guess (gauntlet rule 3).
+        # Confirmatory trials (A1-A6, and the scored controls C1-C3) wait for the
+        # owner's freeze of the main preregistration and of both addenda
+        # (q2-action-path-v1-inputs and q2-action-path-v1-executor). Until a
+        # reviewed change after that freeze admits them with a ledger check,
+        # every acceptance manifest is refused (gauntlet rule 3).
         if prereg["status"] != "frozen":
             raise ManifestError("acceptance campaigns require a frozen preregistration")
-        raise ManifestError("no acceptance workload is implemented before the freeze")
+        raise ManifestError(
+            "acceptance is refused until the preregistration and both addenda are frozen"
+        )
 
     source = _require_keys(manifest["source"], "source", {"host_dir", "tree_sha256"})
     _host_path(source["host_dir"], "source.host_dir")
@@ -264,6 +283,10 @@ def validate_manifest(raw: Any) -> dict[str, Any]:
         isinstance(s, bool) or not isinstance(s, int) or s < 0 for s in seeds
     ):
         raise ManifestError("randomness.seeds must be a list of non-negative integers")
+    if set(seeds) & set(ACCEPTANCE_SEEDS):
+        # Seeds 43 and 44 are the preregistered acceptance shuffles; no campaign may
+        # use them before the freeze, whatever its stated purpose.
+        raise ManifestError("seeds 43 and 44 are reserved for acceptance after the freeze")
     if len(set(seeds)) != len(seeds):
         raise ManifestError("randomness.seeds repeats a seed")
     if randomness["contract"] == "deterministic":
@@ -414,7 +437,83 @@ def validate_manifest(raw: Any) -> dict[str, Any]:
         budget = 900 + boot_timeout + settle_timeout + reps * 35 * 6
         if slurm["minutes"] * 60 < budget:
             raise ManifestError("slurm.minutes cannot cover the worst-case capture budget")
+    if workload["kind"] in ("inputs-validation", "suite-development", "canary-development"):
+        _validate_session_workload(manifest, workload, purpose, prereg, randomness, concurrency)
     return manifest
+
+
+def _validate_session_workload(
+    manifest: dict[str, Any],
+    workload: dict[str, Any],
+    purpose: str,
+    prereg: dict[str, Any],
+    randomness: dict[str, Any],
+    concurrency: int,
+) -> None:
+    """Workloads that run cold-booted sessions of the suite (one VM at a time)."""
+    kind = workload["kind"]
+    common = {"kind", "boot_timeout_s", "settle_timeout_s", "cells_sha256", "sessions", "trials",
+              "max_trial_s"}  # fmt: skip
+    if kind == "inputs-validation":
+        _require_keys(workload, "workload", common | {"reps", "canary_readback", "plan_sha256"})
+        if purpose != "infrastructure-validation":
+            raise ManifestError("inputs validation is infrastructure validation")
+        if randomness["contract"] != "deterministic":
+            raise ManifestError("inputs validation is deterministic")
+        _int(workload["reps"], "workload.reps", 1, 10)
+        _bool(workload["canary_readback"], "workload.canary_readback")
+        _match(workload["plan_sha256"], SHA_RE, "workload.plan_sha256")
+    else:
+        extra = {"layer", "cells", "reps", "settings", "session_trials"}
+        if kind == "canary-development":
+            extra = {"apps", "entries", "reps", "session_trials", "measure_targets"}
+        _require_keys(workload, "workload", common | extra)
+        if purpose != "development":
+            raise ManifestError(f"{kind} is a development workload")
+        if randomness["contract"] != "seeded" or randomness["seeds"] != [DEVELOPMENT_SEED]:
+            raise ManifestError("development campaigns use exactly seed 42")
+        if randomness["seed_binding"]["flag"] != "--seed":
+            raise ManifestError("development campaigns bind their seed with --seed")
+        _int(workload["reps"], "workload.reps", 1, 5)
+        _int(workload["session_trials"], "workload.session_trials", 1, 60)
+        if kind == "suite-development":
+            if workload["layer"] not in DEVELOPMENT_LAYERS:
+                raise ManifestError(f"workload.layer must be one of {DEVELOPMENT_LAYERS}")
+            settings = workload["settings"]
+            if not isinstance(settings, list) or not settings or not set(settings) <= set(SETTINGS):
+                raise ManifestError(f"workload.settings must be a non-empty subset of {SETTINGS}")
+            _cell_list(workload["cells"], "workload.cells")
+        else:
+            apps = workload["apps"]
+            if not isinstance(apps, list) or not apps or not set(apps) <= set(CANARY_APPS):
+                raise ManifestError(f"workload.apps must be a non-empty subset of {CANARY_APPS}")
+            _cell_list(workload["entries"], "workload.entries")
+            _bool(workload["measure_targets"], "workload.measure_targets")
+    if prereg["status"] == "absent":
+        raise ManifestError(f"{kind} must name its preregistration draft")
+    if concurrency != 1:
+        raise ManifestError(f"{kind} runs one VM at a time")
+    _match(workload["cells_sha256"], SHA_RE, "workload.cells_sha256")
+    boot_timeout = _int(workload["boot_timeout_s"], "workload.boot_timeout_s", 60, 900)
+    settle_timeout = _int(workload["settle_timeout_s"], "workload.settle_timeout_s", 0, 300)
+    sessions = _int(workload["sessions"], "workload.sessions", 1, 200)
+    trials = _int(workload["trials"], "workload.trials", 1, 20000)
+    max_trial = _int(workload["max_trial_s"], "workload.max_trial_s", 5, 600)
+    budget = 600 + sessions * (boot_timeout + settle_timeout + 240) + trials * max_trial
+    if manifest["slurm"]["minutes"] * 60 < budget:
+        raise ManifestError("slurm.minutes cannot cover the worst-case session budget")
+
+
+def _cell_list(value: Any, where: str) -> None:
+    if value == "all":
+        return
+    if (
+        not isinstance(value, list)
+        or not value
+        or not all(isinstance(v, str) and REPO_PATH_RE.fullmatch(v) for v in value)
+        or len(set(value)) != len(value)
+    ):
+        raise ManifestError(f"{where} must be 'all' or a list of distinct cell ids")
 
 
 def container_labels(

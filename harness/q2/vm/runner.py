@@ -593,6 +593,95 @@ def boot_cycle(config: dict[str, Any]) -> dict[str, Any]:
     return result
 
 
+def session_cycle(config: dict[str, Any]) -> dict[str, Any]:
+    """One cold-booted session of the suite: inputs validation, development or canary."""
+    from harness.q2.vm.suite import Session
+
+    started = time.monotonic()
+    result: dict[str, Any] = {"cycle": config["cycle"], "token": config["token"],
+                              "kind": config["kind"], "setting": config["setting"],
+                              "layer": config.get("layer")}  # fmt: skip
+    result["runner"] = gpu_free_assertion()
+    if not result["runner"]["ok"]:
+        result["error"] = "runner sees an NVIDIA device; refusing to continue"
+        return result
+    client = GuestClient(config["guest_ip"], config["server_port"])
+    boot = wait_for_boot(client, config["t0"], config["boot_timeout_s"])
+    result["boot"] = boot
+    if boot.get("t_screenshot_200") is None:
+        result["error"] = boot.get("error", "boot failed")
+        return result
+    if config["settle_timeout_s"]:
+        result["settle"] = wait_for_settle(client, config["t0"], config["settle_timeout_s"])
+    try:
+        result["facts"] = client.run_script(_guest_script("facts.py"), ["brief"])
+    except GuestError as exc:
+        result["facts"] = {"error": str(exc)[:500]}
+    cells = json.loads(Path(config["cells_path"]).read_text(encoding="utf-8"))
+    config["park"] = cells["guard"]["park_pointer"]
+    a11y = config["setting"] == "screenshot+a11y"
+    kind = config["kind"]
+    if kind == "canary-development":
+        from harness.q2.vm.canary_run import canary_trial
+
+        trials = []
+        for seq, pair in config["trials"]:
+            app, entry = pair.split(":", 1)
+            trial = canary_trial(client, cells["canary"], app, entry, seq)
+            trial["seq"], trial["cell"] = seq, pair
+            trials.append(trial)
+        result["trials"] = trials
+        result["session_wall_s"] = round(time.monotonic() - started, 2)
+        return result
+    session = Session(client, config)
+    result["start"] = session.start()
+    if "error" in result["start"]:
+        result["error"] = result["start"]["error"]
+        return result
+    trials: list[dict[str, Any]] = []
+    if kind == "inputs-validation":
+        from harness.q2.vm.validation import hmp_trial, judge_probe_validation, probe_items
+
+        plan = json.loads(Path(config["plan_path"]).read_text(encoding="utf-8"))
+        l0 = {c["id"]: c for c in cells["layers"]["L0-fixed"]}
+        items = probe_items(plan, l0)
+        seq = 0
+        with HmpClient(port=config["hmp_port"]) as hmp:
+            for _ in range(int(config["reps"])):
+                for item in items:
+                    trials.append(hmp_trial(session, hmp, item, seq))
+                    seq += 1
+        result["stop"] = session.stop()
+        result["judged"] = judge_probe_validation(session, trials, items)
+        result["trials"] = trials
+        if config.get("canary_readback"):
+            from harness.q2.vm.canary_run import canary_trial
+
+            readback = []
+            fixtures_seen = set()
+            for app, spec in cells["canary"]["apps"].items():
+                for entry_id in spec["entries"]:
+                    fixture = cells["canary"]["entries"][entry_id]["fixture"]
+                    if (app, fixture) in fixtures_seen:
+                        continue
+                    fixtures_seen.add((app, fixture))
+                    trial = canary_trial(client, cells["canary"], app, entry_id, seq, no_input=True)
+                    seq += 1
+                    readback.append(trial)
+            result["canary_readback"] = readback
+        result["session_wall_s"] = round(time.monotonic() - started, 2)
+        return result
+    layer = config["layer"]
+    by_id = {c["id"]: c for c in cells["layers"][layer]}
+    for seq, cell_id in config["trials"]:
+        trials.append(session.run_cell(by_id[cell_id], layer, seq, a11y))
+    result["stop"] = session.stop()
+    result["mapping_check"] = session.judge_all(trials, by_id)
+    result["trials"] = trials
+    result["session_wall_s"] = round(time.monotonic() - started, 2)
+    return result
+
+
 def tcp_probe(host: str, port: int, path: str) -> dict[str, Any]:
     client = GuestClient(host, port, timeout=5.0)
     out: dict[str, Any] = {"host": host, "port": port, "runner": gpu_free_assertion()}
@@ -615,17 +704,21 @@ def main(argv: list[str] | None = None) -> int:
     boot.add_argument("--config", type=Path, required=True)
     capture = commands.add_parser("rdev-capture")
     capture.add_argument("--config", type=Path, required=True)
+    session = commands.add_parser("session")
+    session.add_argument("--config", type=Path, required=True)
     probe = commands.add_parser("tcp-probe")
     probe.add_argument("--host", required=True)
     probe.add_argument("--port", type=int, default=5000)
     probe.add_argument("--path", default="/platform")
     probe.add_argument("--out", type=Path, required=True)
     args = parser.parse_args(argv)
-    if args.command in ("boot-cycle", "rdev-capture"):
+    if args.command in ("boot-cycle", "rdev-capture", "session"):
         config = json.loads(args.config.read_text(encoding="utf-8"))
         out_path = Path(config["out"])
+        handler = {"boot-cycle": boot_cycle, "rdev-capture": capture_cycle,
+                   "session": session_cycle}[args.command]  # fmt: skip
         try:
-            result = boot_cycle(config) if args.command == "boot-cycle" else capture_cycle(config)
+            result = handler(config)
         except Exception:  # noqa: BLE001 - every failure is recorded, never swallowed
             result = {"cycle": config.get("cycle"), "error": traceback.format_exc()[-2000:]}
         result["runner_finished_at"] = _now()
