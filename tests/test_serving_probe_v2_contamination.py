@@ -55,6 +55,30 @@ def _snapshots(device: float, *extra: AppRow, n: int = 5, own: float | None = No
     return [AppsSnapshot(float(i), True, (engine, *extra), device) for i in range(n)]
 
 
+#: G0.8's window ends at -8 s; the engine answers /health at -1 s; the reservation
+#: window's listings are at 0 .. 4 s (``_snapshots``).
+G08_END, READY = -8.0, -1.0
+
+
+def _history(device: float, *extra: AppRow, first: float = -5.0) -> list:
+    """An empty G0.8 listing at -10 s, then the engine's PID first listed at ``first``."""
+    engine = AppRow(UUID, ENGINE_PID, "[Not Found]", device - GAP, UNRESOLVED)
+    return [AppsSnapshot(-10.0, True, (), 0.0), AppsSnapshot(first, True, (engine, *extra), device)]
+
+
+def _reserve(samples, snapshots, history=None, *, ready: float = READY):
+    """measure_reservation with the engine started after G0.8 and ready before the warm-up."""
+    device = max((s.memory_used_mib for s in samples), default=0.0)
+    before = _history(device) if history is None else list(history)
+    return cont.measure_reservation(
+        samples,
+        snapshots,
+        history=before + list(snapshots),
+        engine_start_at=G08_END,
+        engine_ready_at=ready,
+    )
+
+
 def _assess(reservation, device_peak, snapshots, needed=1):
     return cont.assess_contamination(
         reservation=reservation,
@@ -108,7 +132,7 @@ def test_v1_evidence_shows_the_false_contamination() -> None:
 def test_v2_pid_mode_keeps_v1s_r3_valid(warmup_peak: float, flagged: bool) -> None:
     _summary, r3 = _v1()
     peak = r3["gpu"]["peak_memory_used_mib"]
-    reservation, verdict = cont.measure_reservation(_samples(warmup_peak), _snapshots(warmup_peak))
+    reservation, verdict = _reserve(_samples(warmup_peak), _snapshots(warmup_peak))
     assert verdict["pass"] and reservation.mode == PID_MODE
     assert reservation.own_pids == frozenset({ENGINE_PID})
     checks, flags, details = _assess(reservation, peak, _snapshots(peak))
@@ -125,15 +149,15 @@ def test_v2_device_mode_needs_the_largest_shape_reservation() -> None:
     """Without attribution, the largest-shape reservation is what admits v1's r3."""
     _summary, r3 = _v1()
     peak = r3["gpu"]["peak_memory_used_mib"]
-    after_warmup, verdict = cont.measure_reservation(_samples(76611.0), [])
+    after_warmup, verdict = _reserve(_samples(76611.0), [], [])
     assert verdict["mode"] == DEVICE_MODE
     assert _assess(after_warmup, peak, [])[0] == {"no_contamination": True}
-    after_smoke, _ = cont.measure_reservation(_samples(74301.0), [])
+    after_smoke, _ = _reserve(_samples(74301.0), [], [])
     assert _assess(after_smoke, peak, [])[0] == {"no_contamination": False}
 
 
 def test_a_small_foreign_process_is_caught_by_pid_inside_the_device_margin() -> None:
-    reservation, _ = cont.measure_reservation(_samples(76611.0), _snapshots(76611.0))
+    reservation, _ = _reserve(_samples(76611.0), _snapshots(76611.0))
     foreign = AppRow(UUID, 99, "[Not Found]", 600.0, UNRESOLVED)
     device = 76611.0 + 600.0
     checks, _flags, details = _assess(reservation, device, _snapshots(device, foreign, own=76311))
@@ -143,7 +167,7 @@ def test_a_small_foreign_process_is_caught_by_pid_inside_the_device_margin() -> 
 
 
 def test_an_unlisted_foreign_process_is_unattributed_memory() -> None:
-    reservation, _ = cont.measure_reservation(_samples(76611.0), _snapshots(76611.0))
+    reservation, _ = _reserve(_samples(76611.0), _snapshots(76611.0))
     assert reservation.unattributed_mib == pytest.approx(GAP)
     device = 76611.0 + 1500.0
     checks, _flags, details = _assess(reservation, device, _snapshots(device, own=76311.0))
@@ -153,7 +177,7 @@ def test_an_unlisted_foreign_process_is_unattributed_memory() -> None:
 
 
 def test_an_engine_tree_pid_is_always_own() -> None:
-    reservation, _ = cont.measure_reservation(_samples(76611.0), _snapshots(76611.0))
+    reservation, _ = _reserve(_samples(76611.0), _snapshots(76611.0))
     child = AppRow(UUID, 7, "VLLM::EngineCore", 200.0, ENGINE)
     checks, _flags, _details = _assess(
         reservation, 76811.0, _snapshots(76811.0, child, own=76311.0)
@@ -162,7 +186,7 @@ def test_an_engine_tree_pid_is_always_own() -> None:
 
 
 def test_pid_mode_needs_enough_readable_snapshots() -> None:
-    reservation, _ = cont.measure_reservation(_samples(76611.0), _snapshots(76611.0))
+    reservation, _ = _reserve(_samples(76611.0), _snapshots(76611.0))
     unreadable = [AppsSnapshot(0.0, False, error="nvidia-smi failed")]
     checks, _flags, _details = _assess(reservation, 76611.0, unreadable, needed=1)
     assert checks["attribution_sampled"] is False
@@ -172,28 +196,112 @@ def test_pid_mode_needs_enough_readable_snapshots() -> None:
 
 
 def test_reservation_modes_and_failures() -> None:
-    assert cont.measure_reservation([], _snapshots(1.0))[0] is None
-    # No readable listing, or an empty one, falls back to the device rule.
+    assert _reserve([], _snapshots(1.0))[0] is None
+    # No readable listing: device rule only, no PID set fixed.
     broken = [AppsSnapshot(0.0, False, error="x")]
-    assert cont.measure_reservation(_samples(5.0), broken)[1]["mode"] == DEVICE_MODE
+    reservation, verdict = _reserve(_samples(5.0), broken, [])
+    assert verdict["mode"] == DEVICE_MODE and verdict["basis"] == cont.BASIS_NO_LISTING
+    assert reservation.pid_check is False
+    assert reservation.detection == cont.DETECT_DEVICE_ONLY
+    # Readable listings that list nothing: device rule, and the (empty) set is fixed.
     empty = [AppsSnapshot(0.0, True, (), 5.0)]
-    assert cont.measure_reservation(_samples(5.0), empty)[0].mode == DEVICE_MODE
+    reservation, verdict = _reserve(_samples(5.0), empty, [])
+    assert reservation.mode == DEVICE_MODE and reservation.basis == cont.BASIS_NOTHING_LISTED
+    assert reservation.pid_check is True and reservation.own_pids == frozenset()
+    # A listed process without a memory figure: device rule, the listed set is fixed.
     no_memory = [
         AppsSnapshot(0.0, True, (AppRow(UUID, ENGINE_PID, "[Not Found]", None, UNRESOLVED),), 5.0)
     ]
-    assert cont.measure_reservation(_samples(5.0), no_memory)[0].mode == DEVICE_MODE
+    reservation, verdict = _reserve(_samples(5.0), no_memory)
+    assert reservation.mode == DEVICE_MODE and reservation.basis == cont.BASIS_NO_MEMORY
+    assert reservation.pid_check is True and reservation.own_pids == frozenset({ENGINE_PID})
+    assert reservation.detection == cont.DETECT_LISTED_OR_DEVICE
     # A process of this container outside the engine fails G0.9.
     other = AppRow(UUID, 12, "python", 500.0, OTHER)
-    reservation, verdict = cont.measure_reservation(_samples(5.0), _snapshots(5.0, other))
+    reservation, verdict = _reserve(_samples(5.0), _snapshots(5.0, other))
     assert reservation is None and "outside the engine" in verdict["reason"]
     # A process list that changes inside the window fails G0.9.
     changing = _snapshots(5.0) + _snapshots(5.0, AppRow(UUID, 99, "[N]", 1.0, UNRESOLVED))
-    reservation, verdict = cont.measure_reservation(_samples(5.0), changing)
+    reservation, verdict = _reserve(_samples(5.0), changing)
     assert reservation is None and "changed" in verdict["reason"]
-    # Container-namespace PIDs in the engine's tree name their own basis.
+    # Container-namespace PIDs in the engine's tree name their own basis and need no
+    # appearance check (no history at all).
     translated = [AppsSnapshot(0.0, True, (AppRow(UUID, 40, "vllm", 4.0, ENGINE),), 5.0)]
-    reservation, _ = cont.measure_reservation(_samples(5.0), translated)
-    assert reservation.basis == "container-namespace PIDs in the engine's process tree"
+    reservation, _ = _reserve(_samples(5.0), translated, [])
+    assert reservation.mode == PID_MODE and reservation.basis == cont.BASIS_CONTAINER
+    assert reservation.detection == cont.DETECT_LISTED_OR_UNATTRIBUTED
+
+
+def test_detection_guarantee_is_recorded_per_basis() -> None:
+    host, verdict = _reserve(_samples(76611.0), _snapshots(76611.0))
+    assert host.basis == cont.BASIS_HOST and host.detection == cont.DETECT_ANY_SIZE
+    assert verdict["foreign_process_detection"] == cont.DETECT_ANY_SIZE
+    assert verdict["appearances"][0]["appeared_while_engine_started"] is True
+
+
+def test_a_pid_first_listed_after_readiness_is_not_the_engines() -> None:
+    """A foreign process that starts during the smoke and stays is not adopted (G0.9 fails)."""
+    foreign = AppRow(UUID, 99, "[Not Found]", 600.0, UNRESOLVED)
+    smoke = AppsSnapshot(0.5 + READY, True, _snapshots(76611.0)[0].rows + (foreign,), 77211.0)
+    window = _snapshots(77211.0, foreign, own=76311.0)
+    reservation, verdict = _reserve(_samples(77211.0), window, _history(76611.0) + [smoke])
+    assert reservation is None and verdict["pass"] is False
+    assert "not first listed between G0.8 and the engine's readiness" in verdict["reason"]
+    late = {entry["pid"]: entry for entry in verdict["appearances"]}
+    assert late[99]["appeared_while_engine_started"] is False
+    assert late[ENGINE_PID]["appeared_while_engine_started"] is True
+    # Listed only from the warm-up on: the same.
+    reservation, verdict = _reserve(_samples(77211.0), window, _history(76611.0))
+    assert reservation is None
+    late = {
+        entry["pid"]: entry["appeared_while_engine_started"] for entry in verdict["appearances"]
+    }
+    assert late == {99: False, ENGINE_PID: True}
+
+
+def test_a_pid_must_be_seen_absent_after_g08_began() -> None:
+    """Without a readable listing that lacks the PID, its appearance is not shown."""
+    engine = AppRow(UUID, ENGINE_PID, "[Not Found]", 76311.0, UNRESOLVED)
+    unreadable_g08 = [
+        AppsSnapshot(-10.0, False, error="nvidia-smi failed"),
+        AppsSnapshot(-5.0, True, (engine,), 76611.0),
+    ]
+    reservation, verdict = _reserve(_samples(76611.0), _snapshots(76611.0), unreadable_g08)
+    assert reservation is None and verdict["appearances"][0]["absent_before"] is False
+    # An empty readable listing after G0.8's window, before the engine's PID, suffices.
+    later_empty = [unreadable_g08[0], AppsSnapshot(-7.0, True, (), 0.0), unreadable_g08[1]]
+    reservation, _ = _reserve(_samples(76611.0), _snapshots(76611.0), later_empty)
+    assert reservation is not None and reservation.mode == PID_MODE
+    # Listed before G0.8 ended (it held the GPU before the engine started): not the engine's.
+    early = [AppsSnapshot(-12.0, True, (), 0.0), AppsSnapshot(-9.0, True, (engine,), 76611.0)]
+    reservation, verdict = _reserve(_samples(76611.0), _snapshots(76611.0), early)
+    assert reservation is None and "not first listed" in verdict["reason"]
+
+
+def test_device_mode_still_catches_a_listed_foreign_pid() -> None:
+    """[N/A] per-process memory switches to the device rule but keeps the PID check."""
+    na_engine = AppRow(UUID, ENGINE_PID, "[Not Found]", None, UNRESOLVED)
+    window = [AppsSnapshot(float(i), True, (na_engine,), 76611.0) for i in range(5)]
+    history = [AppsSnapshot(-10.0, True, (), 0.0), AppsSnapshot(-5.0, True, (na_engine,), 76611.0)]
+    reservation, verdict = _reserve(_samples(76611.0), window, history)
+    assert verdict["mode"] == DEVICE_MODE and reservation.pid_check is True
+    foreign = AppRow(UUID, 99, "[Not Found]", None, UNRESOLVED)
+    point = [AppsSnapshot(float(i), True, (na_engine, foreign), 77211.0) for i in range(5)]
+    checks, _flags, details = _assess(reservation, 77211.0, point)
+    assert checks == {"no_contamination": True, "no_foreign_process": False}
+    assert details["foreign_pids"] == [99]
+    clean = [AppsSnapshot(float(i), True, (na_engine,), 76611.0) for i in range(5)]
+    assert _assess(reservation, 76611.0, clean)[0] == {
+        "no_contamination": True,
+        "no_foreign_process": True,
+    }
+    # NVML listed nothing at G0.9: any PID it lists later is foreign.
+    empty, _ = _reserve(_samples(76611.0), [AppsSnapshot(0.0, True, (), 76611.0)], [])
+    later = [AppsSnapshot(0.0, True, (foreign,), 77211.0)]
+    assert _assess(empty, 77211.0, later)[0]["no_foreign_process"] is False
+    # No readable listing at G0.9: only the device rule, whatever is listed later.
+    broken, _ = _reserve(_samples(76611.0), [AppsSnapshot(0.0, False, error="x")], [])
+    assert _assess(broken, 77211.0, later)[0] == {"no_contamination": True}
 
 
 def test_baseline_needs_an_empty_listing() -> None:

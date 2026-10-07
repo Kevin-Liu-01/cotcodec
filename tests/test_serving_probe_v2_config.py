@@ -51,21 +51,32 @@ def test_live_contract_structure() -> None:
         "r4",
         "a1b",
         "a1c",
+        "f1",
         "r2",
         "a2",
-        "f1",
+        "r1b",
     ]
-    assert [p.point_id for p in phase_points(real)["optional"]] == ["r2", "a2", "f1"]
+    # f1 is required (its absence is not conservative); r1b is X1's same-engine replicate.
+    assert [p.point_id for p in phase_points(real)["required"]][-1] == "f1"
+    assert [p.point_id for p in phase_points(real)["optional"]] == ["r2", "a2", "r1b"]
     assert [p.point_id for p in control.points] == ["x1-smoke", "x1-warmup", "x1-a1", "x1-r1"]
     assert all(is_required(p) for p in control.points)
-    # X1 sends exactly a1a's and r1's requests (same seeds and parameters).
-    for control_id, reference in (("x1-a1", "a1a"), ("x1-r1", "r1")):
+    # X1 sends exactly a1a's and r1's requests (same seeds and parameters), as does r1b.
+    for control_id, reference in (("x1-a1", "a1a"), ("x1-r1", "r1"), ("r1b", "r1")):
         a, b = config.points[control_id], config.points[reference]
         assert a.seed == b.seed
-        assert {k: v for k, v in a.params.items() if k != "control_of"} == dict(b.params)
+
+        def same(params):
+            return {k: v for k, v in params.items() if k not in {"control_of", "required"}}
+
+        assert same(a.params) == same(b.params)
     assert config.points["a-warmup"].params == config.points["x1-warmup"].params
     window = launch_window_check(config, "a")
-    assert window["reserved_minutes"] == pytest.approx(43.5)
+    assert window["reserved_minutes"] == pytest.approx(45.0)
+    assert window["worst_case_slack_minutes"] == pytest.approx(6.0)
+    warmup = config.points["a-warmup"]
+    assert warmup.params["step_list"] == [1, 2, 3, 20]
+    assert warmup.params["stagger_s"] == 2.5 and warmup.params["t_env_s"] == 2.5
     assert window["soft_minutes"] == pytest.approx(51.0)
     assert config.job("a").allocation_minutes == 60
     assert "d8" not in config.points and "a6" not in config.points
@@ -96,6 +107,16 @@ def test_live_contract_structure() -> None:
             "second point must be its replay warm-up",
         ),
         (lambda raw: raw["points"]["a1a"].update(kind="aa", arms=[1, 16]), "not used in v2"),
+        (lambda raw: raw["points"]["r3"].update(step_list=[1, 2]), "only a warm-up lists"),
+        (
+            lambda raw: raw["points"]["a-warmup"].update(step_list=[1, 3, 3, 20]),
+            "strictly increasing",
+        ),
+        (lambda raw: raw["points"]["a-warmup"].update(steps=1), "start_depth is 0"),
+        (
+            lambda raw: raw["points"]["a-warmup"].update(step_list=[1, 2, 3, 19]),
+            "exceeds the warm-up",
+        ),
     ],
 )
 def test_contract_errors_fail_closed(edit, message: str) -> None:
@@ -132,8 +153,10 @@ def test_fixed_replay_prompts_never_depend_on_generated_text() -> None:
     )
     with ThreadPoolExecutor(2) as pool:
         (warm_plan,) = build_fixed_replay_plans(warm, tokenizer, allowed, (64, 36), pool)
-    assert warm_plan.steps == [20]
-    assert count_images(warm_plan.build(20, [])) == 20
+    # r3's first steps, staggered, then the largest shape.
+    assert warm_plan.steps == [1, 2, 3, 20] and len(warm_plan.prebuilt_responses) == 19
+    assert [count_images(warm_plan.build(step, [])) for step in warm_plan.steps] == [1, 2, 3, 20]
+    assert warm_plan.t_env_s == 2.5
     with pytest.raises(ValueError, match="prebuilt history"):
         bare = copy.deepcopy(point)
         object.__setattr__(
@@ -170,6 +193,43 @@ def test_identified_client_digests_prompt_token_ids() -> None:
     assert v2client.request_identity([bare])["basis"] == "prompt-token-count"
     verdict = v2client.compare_identity(identity, v2client.request_identity([bare]))
     assert verdict["identical"] and verdict["basis"] == "prompt-token-count"
+
+
+def test_token_ids_without_text_do_not_time_a_token() -> None:
+    """vLLM sends a chunk per token with return_token_ids; only text times a token (v1)."""
+    import json
+
+    import httpx
+
+    chunks = [
+        {
+            "choices": [{"index": 0, "delta": {"role": "assistant", "content": ""}}],
+            "prompt_token_ids": [5, 6, 7],
+        },
+        {"choices": [{"index": 0, "delta": {}, "token_ids": [101]}]},
+        {"choices": [{"index": 0, "delta": {"content": "ab"}, "token_ids": [102]}]},
+        {"choices": [{"index": 0, "delta": {}, "token_ids": [103]}]},
+        {"choices": [{"index": 0, "delta": {"content": "c"}, "token_ids": [104]}]},
+        {"choices": [], "usage": {"prompt_tokens": 3, "completion_tokens": 4}},
+    ]
+    body = "".join(f"data: {json.dumps(chunk)}\n\n" for chunk in chunks) + "data: [DONE]\n\n"
+    transport = httpx.MockTransport(lambda request: httpx.Response(200, text=body))
+    ticks = iter(float(t) for t in range(100))
+
+    async def send() -> v2client.IdentifiedResult:
+        async with httpx.AsyncClient(transport=transport, base_url="http://x") as client:
+            return await v2client.stream_chat_identified(
+                client,
+                ChatRequest([{"role": "user", "content": "q"}], 4, False, (0,)),
+                model="m",
+                timeout_s=5,
+                clock=lambda: next(ticks),
+            )
+
+    result = asyncio.run(send())
+    # Clock reads: 0 sent; 1 at "ab" (first text chunk, not the bare id chunk); 2 at "c".
+    assert result.first_token_at == 1.0 and result.itl_s == [1.0]
+    assert result.prompt_id_count == 3 and result.completion_tokens == 4
 
 
 def test_open_loop_and_fixed_replay_return_identified_results() -> None:

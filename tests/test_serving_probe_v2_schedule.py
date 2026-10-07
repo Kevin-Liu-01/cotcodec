@@ -78,10 +78,11 @@ def _simulate(
 
 
 #: Wall time per attempt in v1 (job A, Slurm 442), minutes including preparation;
-#: the warm-up and the dummy phase's points are estimated from v1's r4 and x1 points.
+#: the warm-up (r3's steps 1-3, about 0.4 min in v1, then a cold step 20 estimated from
+#: v1's r4 step 18) and the dummy phase's points are estimates; r1b is r1's time.
 V1_DURATIONS = {
     "a-smoke": 0.06,
-    "a-warmup": 0.75,
+    "a-warmup": 1.25,
     "a1a": 0.70,
     "r1": 1.45,
     "r3": 7.58,
@@ -91,8 +92,9 @@ V1_DURATIONS = {
     "r2": 2.0,
     "a2": 1.2,
     "f1": 0.75,
+    "r1b": 1.45,
     "x1-smoke": 0.06,
-    "x1-warmup": 0.75,
+    "x1-warmup": 1.25,
     "x1-a1": 0.68,
     "x1-r1": 1.38,
 }
@@ -103,7 +105,7 @@ def test_static_reservation_fits_the_soft_stop() -> None:
     assert ledger.soft == pytest.approx(51 * 60)
     assert ledger.hard == pytest.approx(56 * 60)
     real, dummy = ledger.phases
-    assert real.reserved_minutes == pytest.approx(4 + 26.5)
+    assert real.reserved_minutes == pytest.approx(4 + 28.0)
     assert dummy.reserved_minutes == pytest.approx(3 + 8)
     assert ledger.bound(0) == pytest.approx((51 - 11) * 60)
     assert ledger.bound(1) == pytest.approx(51 * 60)
@@ -115,12 +117,13 @@ def test_v1s_reruns_no_longer_cut_the_required_points() -> None:
     """v1's r3 and r4 were invalid twice and their reruns cut a1c, r2, f1, a2, d8, a6.
 
     With v1's timings and r3 and r4 invalid on their first attempt, every required
-    first attempt (a1b and a1c included) launches before any rerun, the reruns run
-    from slack, and the optional points and the X1 phase still run.
+    first attempt (a1b, a1c and f1 included) launches before any rerun, the reruns
+    run from slack, and the optional points (r1b last) and the X1 phase still run.
     """
     launched, status = _simulate(V1_DURATIONS, {"r3", "r4"})
     order = [point for point, _kind in launched]
-    assert order.index("a1c") < order.index("r3", order.index("a1c"))
+    assert order.index("f1") < order.index("r3", order.index("a1c"))
+    assert order.index("r2") < order.index("a2") < order.index("r1b") < order.index("x1-smoke")
     assert ("r3", RERUN) in launched and ("r4", RERUN) in launched
     assert all(status[name] == "valid" for name in V1_DURATIONS), status
 
@@ -138,16 +141,18 @@ def test_reruns_are_skipped_rather_than_taking_reserved_time() -> None:
         "r4",
         "a1b",
         "a1c",
+        "f1",
         "x1-smoke",
         "x1-warmup",
         "x1-a1",
         "x1-r1",
     ]
-    # About 5.4 minutes of slack remain: the a1a (cap 1.5) and r4 (3.5) reruns fit,
-    # the r3 rerun (cap 12) does not, and neither does r2 (3.5) after them.
-    assert ("a1a", RERUN) in launched and ("r4", RERUN) in launched
-    assert ("r3", RERUN) not in launched
-    assert status["r3"] == "invalid" and status["r2"] == "not-run"
+    # About 4.1 minutes of slack remain: the a1a rerun (cap 1.5) fits, the r4 (3.5) and
+    # r3 (12) reruns do not; of the optional points only a2 (cap 2) still fits.
+    assert ("a1a", RERUN) in launched
+    assert ("r4", RERUN) not in launched and ("r3", RERUN) not in launched
+    assert status["r3"] == "invalid" and status["r4"] == "invalid"
+    assert (status["r2"], status["a2"], status["r1b"]) == ("not-run", "valid", "not-run")
     assert all(status[name] == "valid" for name in ("x1-a1", "x1-r1"))
 
 

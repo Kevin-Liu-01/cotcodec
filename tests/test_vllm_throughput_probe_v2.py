@@ -30,8 +30,10 @@ from scripts import run_vllm_throughput_probe_v2 as probe
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 CONFIG_PATH = PROJECT_ROOT / "experiments" / "serving" / "serving-throughput-probe-v2.yaml"
-#: CPU flags (front-end-bound, client-bound) can mark a point valid-flagged on a busy host.
+#: CPU flags (front-end-bound, client-bound) can mark a point valid-flagged on a busy host;
+#: no other flag may pass as valid in these tests (see ``_assert_valid``).
 VALID = {"valid", "valid-flagged"}
+CPU_FLAGS = {"front-end-bound", "client-bound"}
 PREREG = PROJECT_ROOT / "program" / "preregistrations" / "serving-throughput-probe-v2.md"
 V1_PREREG = PROJECT_ROOT / "program" / "preregistrations" / "serving-throughput-probe-v1.md"
 ORDER = [
@@ -43,9 +45,10 @@ ORDER = [
     "r4",
     "a1b",
     "a1c",
+    "f1",
     "r2",
     "a2",
-    "f1",
+    "r1b",
     "x1-smoke",
     "x1-warmup",
     "x1-a1",
@@ -104,9 +107,8 @@ def _small_config(tmp_path: Path) -> Path:
             if point.get("start_depth"):
                 point["start_depth"] = 2
         if point.get("role") == "warm-up":
-            point["start_depth"] = 19
-            point["steps"] = 1
-            point["t_env_s"] = 0
+            # The contract's listed steps (1, 2, 3, then the largest shape, 20).
+            assert point["step_list"] == [1, 2, 3, 20] and point["start_depth"] == 0
     path = tmp_path / "contract.yaml"
     path.write_text(yaml.safe_dump(raw, sort_keys=False), encoding="utf-8")
     return path
@@ -187,6 +189,12 @@ def _points(output: Path) -> dict[str, dict[str, Any]]:
     return {p.stem: json.loads(p.read_text()) for p in (output / "points").glob("*.json")}
 
 
+def _assert_valid(record: dict[str, Any], name: str = "") -> None:
+    """Valid, or valid-flagged by the host's CPU load only (never by a contamination flag)."""
+    assert record["status"] in VALID, (name, record["status"])
+    assert set(record.get("flags") or []) <= CPU_FLAGS, (name, record.get("flags"))
+
+
 def _summary(tmp_path: Path) -> dict[str, Any]:
     return json.loads((tmp_path / "outputs" / "probe" / "summary.json").read_text())
 
@@ -217,7 +225,8 @@ def test_job_a_runs_every_point_in_ledger_order(tmp_path: Path) -> None:
     summary = _summary(tmp_path)
     points = _points(tmp_path / "outputs" / "probe")
     assert sorted(points) == sorted(ORDER)
-    assert {record["status"] for record in points.values()} <= {"valid", "valid-flagged"}
+    for name, record in points.items():
+        _assert_valid(record, name)
     launched = [d["point"] for d in summary["launch_decisions"] if d["launched"]]
     assert launched == ORDER
     assert summary["status"] == "complete"
@@ -226,7 +235,12 @@ def test_job_a_runs_every_point_in_ledger_order(tmp_path: Path) -> None:
         verdict = summary["gates"]["G0.9"][phase]
         assert verdict["pass"] is True and verdict["mode"] == "pid"
         assert verdict["basis"].startswith("host-namespace PIDs")
+        assert verdict["appearances"][0]["appeared_while_engine_started"] is True
         assert summary["gates"]["G0.8"][phase]["compute_apps"]["status"] == "empty"
+        # The attribution and what it can detect are reported next to X1.
+        assert summary["x1"]["attribution"][phase]["mode"] == "pid"
+        assert "any size" in summary["x1"]["attribution"][phase]["foreign_process_detection"]
+    assert summary["x1"]["same_engine_replicate"]["used"] is True
     # Every measured point carries the v2 contamination checks, not v1's.
     for name in ORDER:
         checks = points[name]["checks"]
@@ -244,7 +258,7 @@ def test_job_a_runs_every_point_in_ledger_order(tmp_path: Path) -> None:
     assert "text" not in json.dumps(points["r1"]["result"])
     assert not (tmp_path / "outputs" / "checkpoint.ready").exists()
     plan = json.loads((tmp_path / "outputs" / "probe" / "plan.json").read_text())
-    assert plan["launch_window"]["worst_case_slack_minutes"] == pytest.approx(7.5)
+    assert plan["launch_window"]["worst_case_slack_minutes"] == pytest.approx(6.0)
 
 
 def test_v1_false_contamination_does_not_recur_with_own_growth(tmp_path: Path) -> None:
@@ -296,7 +310,7 @@ def test_a_foreign_pid_invalidates_a_point_and_its_rerun_waits_for_slack(tmp_pat
     assert runner.run() == probe.EXIT_OK
     points = _points(tmp_path / "outputs" / "probe")
     a1b = points["a1b"]
-    assert a1b["status"] in VALID
+    _assert_valid(a1b)
     first = a1b["superseded_attempts"][0]
     assert first["status"] == "invalid"
     assert first["checks"]["no_foreign_process"] is False
@@ -342,8 +356,9 @@ def test_device_mode_when_nvml_lists_no_process(tmp_path: Path) -> None:
     assert verdict["mode"] == "device"
     assert verdict["basis"] == "NVML lists no compute process in this container"
     points = _points(tmp_path / "outputs" / "probe")
-    assert set(points["r3"]["checks"]) >= {"no_contamination"}
-    assert points["r3"]["status"] in VALID
+    # NVML listed nothing at G0.9: the device rule, and any PID listed later is foreign.
+    assert set(points["r3"]["checks"]) >= {"no_contamination", "no_foreign_process"}
+    _assert_valid(points["r3"])
 
 
 def test_device_mode_reservation_is_taken_after_the_largest_shape(tmp_path: Path) -> None:
@@ -361,7 +376,7 @@ def test_device_mode_reservation_is_taken_after_the_largest_shape(tmp_path: Path
     summary = _summary(tmp_path)
     assert summary["gates"]["G0.9"]["real"]["device_mib"] == 76611.0
     points = _points(tmp_path / "outputs" / "probe")
-    assert points["r3"]["status"] in VALID
+    _assert_valid(points["r3"])
     assert points["r3"]["contamination"]["device_ceiling_mib"] == 76611.0 + 2048
 
 
@@ -371,6 +386,47 @@ def test_apps_query_failures_fall_back_to_device_mode(tmp_path: Path) -> None:
     summary = _summary(tmp_path)
     assert summary["gates"]["G0.9"]["real"]["mode"] == "device"
     assert summary["gates"]["G0.8"]["real"]["compute_apps"]["status"] == "unavailable"
+
+
+def test_a_foreign_pid_that_appears_during_the_smoke_is_not_adopted(tmp_path: Path) -> None:
+    """A process that starts after the engine is ready and stays fails G0.9 (not own)."""
+    runner, _server, sampler, apps = _runner(tmp_path)
+    original = runner._server_point
+
+    def arrive(point, *args, **kwargs):
+        if point.point_id == "a-smoke":
+            apps.set_extra((AppRow(GPU_UUID, 99, "[Not Found]", 600.0, UNRESOLVED),))
+            sampler.set_memory(sampler.memory + 600.0)
+        return original(point, *args, **kwargs)
+
+    runner._server_point = arrive
+    assert runner.run() == probe.EXIT_PRE_RESULT
+    summary = _summary(tmp_path)
+    verdict = summary["gates"]["G0.9"]["real"]
+    assert verdict["pass"] is False
+    assert "not first listed between G0.8 and the engine's readiness" in verdict["reason"]
+    late = {entry["pid"]: entry for entry in verdict["appearances"]}
+    assert late[99]["appeared_while_engine_started"] is False
+    assert late[99]["first_listed_after_g08_s"] > late[99]["ready_after_g08_s"]
+    assert summary["pre_result_reason"] == "G0.9 failed in phase real"
+    assert _points(tmp_path / "outputs" / "probe")["r3"]["status"] == "not-run"
+
+
+def test_device_mode_without_memory_figures_still_checks_pids(tmp_path: Path) -> None:
+    """[N/A] per-process memory: device rule, and a later foreign PID still invalidates."""
+    runner, _server, sampler, apps = _runner(tmp_path, mode="host-na")
+    _inject_during(runner, apps, sampler, "a1b", AppRow(GPU_UUID, 99, "[N]", None, UNRESOLVED))
+    assert runner.run() == probe.EXIT_OK
+    verdict = _summary(tmp_path)["gates"]["G0.9"]["real"]
+    assert verdict["mode"] == "device" and verdict["pid_check"] is True
+    assert verdict["basis"] == "NVML reports no per-process or device memory"
+    a1b = _points(tmp_path / "outputs" / "probe")["a1b"]
+    first = a1b["superseded_attempts"][0]
+    assert first["status"] == "invalid"
+    assert first["checks"]["no_contamination"] is True
+    assert first["checks"]["no_foreign_process"] is False
+    assert first["contamination"]["foreign_pids"] == [99]
+    _assert_valid(a1b)
 
 
 def test_a_process_listed_before_the_engine_starts_fails_g08(tmp_path: Path) -> None:
@@ -407,9 +463,10 @@ def test_a_container_process_outside_the_engine_fails_g09(tmp_path: Path) -> Non
 def test_reruns_and_optional_points_never_take_reserved_time(tmp_path: Path) -> None:
     """Started 38.8 min ago: the real phase's bound (40 min) is 1.2 min away.
 
-    Every required first attempt still launches; a rerun (cap 1.5 min) and the
-    optional points (caps 1.5 to 3.5 min) do not fit before the bound, so they
-    are not launched, and the dummy-control phase keeps its 11 reserved minutes.
+    Every required first attempt (f1 included) still launches; a rerun (cap 1.5
+    min) and the optional points (caps 2 to 3.5 min) do not fit before the bound,
+    so they are not launched, and the dummy-control phase keeps its 11 reserved
+    minutes.
     """
     started = datetime.now(UTC) - timedelta(minutes=38, seconds=48)
     runner, _server, sampler, apps = _runner(tmp_path, started=started)
@@ -417,15 +474,15 @@ def test_reruns_and_optional_points_never_take_reserved_time(tmp_path: Path) -> 
     assert runner.run() == probe.EXIT_OK
     summary = _summary(tmp_path)
     points = _points(tmp_path / "outputs" / "probe")
-    for name in ("a-smoke", "a-warmup", "a1a", "r1", "r3", "r4", "a1c"):
-        assert points[name]["status"] in VALID, name
+    for name in ("a-smoke", "a-warmup", "a1a", "r1", "r3", "r4", "a1c", "f1"):
+        _assert_valid(points[name], name)
     assert points["a1b"]["status"] == "invalid"
     assert points["a1b"]["rerun"] == "not launched: no slack"
-    for name in ("r2", "a2", "f1"):
+    for name in ("r2", "a2", "r1b"):
         assert points[name]["status"] == "not-run"
         assert points[name]["reason"] == "launch window: no slack for an optional point"
     for name in ("x1-smoke", "x1-warmup", "x1-a1", "x1-r1"):
-        assert points[name]["status"] in VALID, name
+        _assert_valid(points[name], name)
     assert summary["status"] == "complete-with-cuts"
     assert summary["phases"]["real"]["reruns_not_launched"] == ["a1b"]
 
@@ -473,11 +530,49 @@ def test_project_prices_q2_from_job_a_only(tmp_path: Path) -> None:
     assert rungs["qwen3.5-27b"]["multiplier"] == pytest.approx(4.5)
     assert rungs["qwen3.5-35b-a3b"]["multiplier"] == pytest.approx(1.5)
     assert projection["code"]["digest"] == probe.probe_code_digest()["digest"]
+    # The attribution behind "no foreign process" is reported next to X1 and Q2.
+    assert projection["q2"]["attribution"]["mode"] == "pid"
+    assert set(projection["x1"]["attribution"]) == {"real", "dummy-control"}
+    # f1 was valid: no cell carries the front-end flag.
+    assert "frontend_uncorrected" not in projection["q2"]
+    assert not any(probe.FRONTEND_UNCORRECTED in c["flags"] for c in projection["q2"]["cells"])
     # A lane record that is not a clean exit keeps every point out of the budget.
     (run_dir / v1.LANE_TERMINATION_FILE).write_text("reason=workload_failed\nexit_code=1\n")
     refused = probe.project(runner.config, job_a=run_dir / "probe", prereg_check=lambda config: {})
     assert refused["q2"]["decision"] == "incomplete-re-probe"
     assert refused["x1"]["outcome"] == "not-run"
+
+
+def test_project_flags_every_cell_when_f1_is_not_valid(tmp_path: Path) -> None:
+    """Without a valid f1 v1's rule applies no front-end correction; v2 flags every cell."""
+    runner, _server, sampler, _apps = _runner(tmp_path)
+    original = runner._server_point
+
+    def hidden(point, *args, **kwargs):
+        if point.point_id != "f1":
+            return original(point, *args, **kwargs)
+        sampler.set_memory(sampler.memory + 1500.0)
+        try:
+            return original(point, *args, **kwargs)
+        finally:
+            sampler.set_memory(sampler.memory - 1500.0)
+
+    runner._server_point = hidden
+    assert runner.run() == probe.EXIT_OK
+    run_dir = tmp_path / "outputs"
+    assert _points(run_dir / "probe")["f1"]["status"] == "invalid"
+    (run_dir / v1.LANE_TERMINATION_FILE).write_text(
+        "job_id=1\nreason=completed\nexit_code=0\nfinished_at=2026-10-07T00:00:00Z\n"
+    )
+    projection = probe.project(
+        runner.config,
+        job_a=run_dir / "probe",
+        prereg_check=lambda config: {"experiment_id": config.experiment_id, "sha256": "f" * 64},
+    )
+    q2 = projection["q2"]
+    assert q2["frontend_correction"]["ratio"] is None
+    assert all(probe.FRONTEND_UNCORRECTED in cell["flags"] for cell in q2["cells"])
+    assert q2["frontend_uncorrected"]["cells"] == 16
 
 
 def test_acceptance_treats_g09_as_a_phase_gate() -> None:
@@ -503,7 +598,7 @@ def test_run_cli_refuses_wrong_seeds_and_allocation(capsys) -> None:
 def test_plan_and_digest_cli(capsys) -> None:
     assert probe.main(["plan", "--job", "a"]) == 0
     plan = json.loads(capsys.readouterr().out)
-    assert plan["launch_window"]["reserved_minutes"] == pytest.approx(43.5)
+    assert plan["launch_window"]["reserved_minutes"] == pytest.approx(45.0)
     assert plan["required_points"]["dummy-control"] == ["x1-smoke", "x1-warmup", "x1-a1", "x1-r1"]
     assert plan["warmup_dominance"]["real"]["max_images"] == 20
     assert probe.main(["digest"]) == 0
@@ -546,6 +641,31 @@ def test_preregistration_reads_as_frozen_and_states_the_rules_as_coded() -> None
     assert "1.0 GPU-h" in text
     numbers = [int(n) for n in re.findall(r"^(\d+)\. \*\*", raw, flags=re.MULTILINE)]
     assert numbers == list(range(1, len(numbers) + 1)), "design decisions stay numbered in order"
+
+
+def test_preregistration_states_the_coded_window_fallbacks_and_budget() -> None:
+    """The text the owner signs matches what the loader and the rules do."""
+    from harness.serving_probe_v2.config import launch_window_check
+
+    text = " ".join(PREREG.read_text(encoding="utf-8").split())
+    window = launch_window_check(load_config(CONFIG_PATH), "a")
+    assert f"({window['reserved_minutes']:.1f} of 51 minutes" in text
+    assert f"at least {window['worst_case_slack_minutes']:.1f} minutes of slack" in text
+    # G0.9's three device-mode triggers and the appearance rule are registered.
+    for phrase in (
+        "no readable listing in the window",
+        "readable listings that list no process",
+        "without a memory figure",
+        "first listed between the end of the phase's last G0.8 window and the engine's readiness",
+    ):
+        assert phrase in text, phrase
+    assert (
+        "front-end-uncorrected" in text
+        and "f1 | real | a1a with rendered PNGs | 96 | 42 | 1.5 | yes" in text
+    )
+    # v2's GPU time is its own allowance, not D8's cap (which v1 has largely used).
+    assert "D8's probe cap (1.0 GPU-h) is not available to v2" in text
+    assert "D8's probe cap of 1.0 GPU-h" not in text
 
 
 def test_preregistration_draft_freezes_cleanly_and_the_gate_checks_the_ledger(
@@ -595,14 +715,15 @@ def test_a_signal_checkpoints_and_a_resumed_job_finishes(tmp_path: Path) -> None
     assert marker.splitlines()[0] == "trigger=SIGUSR1"
     points = _points(tmp_path / "outputs" / "probe")
     assert points["r4"]["status"] == "interrupted"
-    assert points["r3"]["status"] in VALID
+    _assert_valid(points["r3"])
     summary = _summary(tmp_path)
     assert summary["status"] == "interrupted" and summary["acceptance"]["accepted"] is False
 
     resumed, _server, _sampler, _apps = _runner(tmp_path, config_path=runner.config.path)
     assert resumed.run() == probe.EXIT_OK
     points = _points(tmp_path / "outputs" / "probe")
-    assert {record["status"] for record in points.values()} <= {"valid", "valid-flagged"}
+    for name, record in points.items():
+        _assert_valid(record, name)
     summary = _summary(tmp_path)
     assert "r3" in summary["resumed_terminal_points"]
     launched = [d["point"] for d in summary["launch_decisions"] if d["launched"]]

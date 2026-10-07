@@ -7,6 +7,9 @@ text of ``prebuilt_response_tokens`` tokens from the stream
 ``text_rng(seed, episode, 3, k)`` (v1's stream for its prebuilt history), so a
 step's prompt depends only on the point's seed and parameters. The message
 layouts are v1's (``harness.serving_probe.prompts``).
+
+A warm-up may list its steps (``step_list``) instead of a contiguous range, so
+one episode can replay r3's first steps and then the largest shape.
 """
 
 from __future__ import annotations
@@ -37,6 +40,15 @@ def _images(
     ]
 
 
+def replay_steps(params: Any) -> list[int]:
+    """The steps a replay sends: ``step_list`` when given, else start_depth+1 .. +steps."""
+    listed = params.get("step_list")
+    if listed is not None:
+        return [int(step) for step in listed]
+    depth = int(params["start_depth"])
+    return list(range(depth + 1, depth + int(params["steps"]) + 1))
+
+
 def build_fixed_replay_plans(
     point: PointSpec,
     tokenizer: Any,
@@ -50,9 +62,8 @@ def build_fixed_replay_plans(
     width, height = size
     params = point.params
     episodes = int(params["episodes"])
-    depth = int(params["start_depth"])
-    total = depth + int(params["steps"])
-    measured = list(range(depth + 1, total + 1))
+    measured = replay_steps(params)
+    total = max(measured)
     system = random_text(tokenizer, allowed, text_rng(point.seed), int(params["system_tokens"]))
     all_screens = _images(
         "png-rendered",

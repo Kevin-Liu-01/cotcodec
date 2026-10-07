@@ -124,6 +124,37 @@ def test_outcomes() -> None:
     assert evaluate_x1(_points(r1=noisy), RULE)["reason"] == "replay delta SE above its limit"
 
 
+def test_same_engine_replicate_checks_the_noise_model() -> None:
+    """r1b (r1's requests again on real weights) is X1's measured run-to-run replay check."""
+    r1 = _v1("r1")
+    verdict = evaluate_x1(_points(r1b=_replay(r1, 1.03)), RULE)
+    replicate = verdict["same_engine_replicate"]
+    assert verdict["outcome"] == "pass" and replicate["used"] is True
+    assert replicate["relative_delta"] == pytest.approx(0.03, abs=1e-9)
+    assert replicate["within_replay_threshold"] is True
+    noisy = evaluate_x1(_points(r1b=_replay(r1, 1.09)), RULE)
+    assert noisy["outcome"] == "underpowered"
+    assert noisy["reason"].startswith("the same-engine replicate r1b differs from r1")
+    # Not run, not valid or not comparable: not used, and X1 says it rests on the model.
+    for r1b in (None, {"status": "truncated"}):
+        points = _points() if r1b is None else _points(r1b=r1b)
+        verdict = evaluate_x1(points, RULE)
+        assert verdict["outcome"] == "pass"
+        assert verdict["same_engine_replicate"]["used"] is False
+        assert "noise model is not checked" in verdict["same_engine_replicate"]["reason"]
+    other = {"basis": "prompt-token-ids", "requests": {"0:1": ["cd" * 32, 3684]}}
+    verdict = evaluate_x1(_points(r1b=_replay(r1, 1.09, other)), RULE)
+    assert verdict["outcome"] == "pass" and verdict["same_engine_replicate"]["used"] is False
+    # A fail stays a fail whatever the replicate shows.
+    assert (
+        evaluate_x1(_points(**{"x1-r1": _replay(r1, 1.09)}, r1b=_replay(r1, 1.2)), RULE)["outcome"]
+        == "fail"
+    )
+    # The output records that the thresholds and the noise model are post hoc and modelled.
+    notes = " ".join(verdict["notes"])
+    assert "set after v1's X1 result" in notes and "model-based" in notes
+
+
 def test_prompt_token_sequences_must_be_identical() -> None:
     other = {"basis": "prompt-token-ids", "requests": {"0:1": ["cd" * 32, 3684]}}
     verdict = evaluate_x1(_points(**{"x1-r1": _replay(_v1("r1"), 1.0, other)}), RULE)
@@ -144,14 +175,18 @@ def test_prompt_token_sequences_must_be_identical() -> None:
     assert missing["outcome"] == "not-comparable"
 
 
-def _p_pass(rng, *, cv: float, d_open: float, d_replay: float, draws: int) -> dict[str, float]:
+def _p_pass(
+    rng, *, cv: float, d_open: float, d_replay: float, draws: int, replicate: bool = False
+) -> dict[str, float]:
     r1 = _v1("r1")
     se = replay_mean_se(r1) / (r1["result"]["e2el_ms"]["mean"] / 1000.0)
     counts: dict[str, int] = {}
     for _ in range(draws):
         e = rng.normal(0.0, cv, 4)
-        z = rng.normal(0.0, se, 2)
+        z = rng.normal(0.0, se, 3)
+        extra = {"r1b": _replay(r1, 1 + z[2])} if replicate else {}
         points = _points(
+            **extra,
             a1a=_opened(2.0 * (1 + e[0])),
             a1b=_opened(2.0 * (1 + e[1])),
             a1c=_opened(2.0 * (1 + e[2])),
@@ -170,7 +205,8 @@ def test_operating_characteristics_match_the_preregistration() -> None:
     """Section 7's X1 figures, by Monte Carlo through evaluate_x1 itself.
 
     Replay means carry v1's measured standard error (2.84% per point, from r1's
-    per-step SEs); open-loop throughputs a run-to-run CV.
+    per-step SEs); open-loop throughputs a run-to-run CV. These are model-based:
+    within-run spread stands in for run-to-run noise (r1b is the measured check).
     """
     rng = np.random.default_rng(20261007)
     draws = 2500
@@ -184,3 +220,8 @@ def test_operating_characteristics_match_the_preregistration() -> None:
         assert p.get("pass", 0.0) == pytest.approx(stated, abs=0.035), cv
     p = _p_pass(rng, cv=0.01, d_open=0.08, d_replay=0.0, draws=draws)
     assert p.get("pass", 0.0) <= 0.04
+    # With the same-engine replicate r1b valid (drawn from the same noise model).
+    stated_with_r1b = {0.0: 0.91, 0.05: 0.72, 0.10: 0.31, 0.15: 0.05}
+    for d_replay, stated in stated_with_r1b.items():
+        p = _p_pass(rng, cv=0.01, d_open=0.0, d_replay=d_replay, draws=draws, replicate=True)
+        assert p.get("pass", 0.0) == pytest.approx(stated, abs=0.035), d_replay

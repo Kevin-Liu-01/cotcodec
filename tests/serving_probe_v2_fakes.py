@@ -100,6 +100,7 @@ class FakeApps:
     """Compute-process listings over time; ``mode`` sets how the engine appears.
 
     ``host``: the engine as one unresolved host-namespace PID (NVML in a container);
+    ``host-na``: the same PID without a per-process memory figure (``[N/A]``);
     ``empty``: NVML lists nothing; ``broken``: every query fails.
     """
 
@@ -120,8 +121,8 @@ class FakeApps:
         self.timeline.append((time.perf_counter(), self.engine_rows + self.extra))
 
     def engine_started(self, memory: float) -> None:
-        if self.mode == "host":
-            used = memory - DEVICE_GAP_MIB
+        if self.mode in {"host", "host-na"}:
+            used = memory - DEVICE_GAP_MIB if self.mode == "host" else None
             self.engine_rows = (AppRow(GPU_UUID, ENGINE_HOST_PID, "[Not Found]", used, UNRESOLVED),)
         self._push()
 
@@ -142,7 +143,10 @@ class FakeApps:
         return rows
 
     def window(self, start: float, end: float) -> list[AppsSnapshot]:
-        times = np.arange(start, max(end, start + 0.01), 0.01)
+        """Listings every 10 ms, plus one at every change, so first listings are exact."""
+        grid = np.arange(start, max(end, start + 0.01), 0.01)
+        changes = [when for when, _rows in self.timeline if start <= when <= end]
+        times = sorted({float(t) for t in grid} | set(changes))
         snapshots = []
         for t in times:
             t = float(t)

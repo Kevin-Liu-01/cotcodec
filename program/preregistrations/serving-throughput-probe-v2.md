@@ -32,7 +32,7 @@ after the freeze is a new experiment id.
 - **Contract.** `experiments/serving/serving-throughput-probe-v2.yaml` holds every
   engine flag, point, seed, gate threshold, launch-window reservation and budget
   parameter named below. Its SHA-256 is
-  `cc7da49083bba1d6c82a30680a63c75b826a6244154ff54afb9d68dc1c2ddd50`.
+  `14f25482769c89e7eae5ef0531e7b75baa32f55a50affee3078839f8b29e2f95`.
   Every point file and the summary record the contract SHA-256 they ran under.
 - **Probe code.** `scripts/run_vllm_throughput_probe_v2.py`, every module of
   `harness/serving_probe_v2/`, and the frozen v1 code they import:
@@ -40,7 +40,7 @@ after the freeze is a new experiment id.
   `harness/serving_probe/`. Their digest, the SHA-256 of the compact JSON list of
   [path, file SHA-256] pairs sorted by path (`run_vllm_throughput_probe_v2.py
   digest` prints it), is
-  `db43047b23e04301a7e1bcc0bf419eecb394533883c5b48f3284d7aa7bae6787`.
+  `64493671bed78f0633a01b67dc28d8e47da7d9bc7a7ec90b6efb7a9920012af6`.
 - **Binding.** Gate G0.0 (in the image) and `project` (on the host) verify this
   file against the ledger and refuse unless its frozen text names the contract
   SHA-256 and the probe code digest they compute from the files they run. A
@@ -62,10 +62,15 @@ after the freeze is a new experiment id.
   The driver parses its options with abbreviations disabled.
 - **Data.** Synthetic only: random-token text, rendered PNG screenshots and
   random-pixel JPEG screenshots, all derived from the seeds below.
-- **GPU budget.** Job A: 60 minutes on one H100, 1.0 GPU-h, D8's probe cap. The
-  overlay build: one idle H100 for at most 10 minutes, 0.167 GPU-h, accounted
-  separately as D17 does for v1. Nothing else uses a GPU. With v1's timings job A
-  takes about 27 minutes (design decision 12).
+- **GPU budget.** Job A: 60 minutes on one H100, at most 1.0 GPU-h. The overlay
+  build: one idle H100 for at most 10 minutes, at most 0.167 GPU-h. Nothing else
+  uses a GPU. This is a new allowance of at most 1.167 GPU-h, which the owner's
+  decision entry must grant: D8's probe cap (1.0 GPU-h) is not available to v2,
+  because v1's jobs A and B used 0.6564 GPU-h of it, and v1's overlay build and
+  metadata fetch another 0.0097 GPU-h under D17 (v1 evidence README, "GPU time").
+  With v2 the serving probe's GPU time totals at most 0.6661 + 1.167 = 1.833
+  GPU-h, below the 8 GPU-h gauntlet threshold. With v1's timings job A takes
+  about 28 minutes, about 0.46 GPU-h (design decision 12).
 
 ### Model
 
@@ -85,13 +90,14 @@ accepted complete. Its Q2 projection is "incomplete: re-probe" and its control X
 | r3 (H2 replay) | invalid twice, only `no_contamination` | required | the H2 profile; no Q2 budget without it |
 | r4 (H2 thinking) | invalid twice, only `no_contamination` | required | the thinking penalty of every H2 cell |
 | a1b, a1c (A1 seeds) | truncated, not run | required | the A1 noise multiplier (otherwise at least 1.10 on every cell) and X1's power |
+| f1 (PNG front end) | not run | required | its correction can only raise the open-loop bound, which binds on cells the Q2 decision rests on; absent, no correction is applied, which is not conservative (design decision 3) |
 | r2 (H1 accessibility tree) | not run | optional | conservative fallback in the rules (prompt-proportional x1.5) |
 | a2 (open loop at C=40) | not run | optional | conservative fallback (the slowest valid A1 seed) |
-| f1 (PNG front end) | not run | optional | its correction can only raise the bound; absent, none is applied |
 | d8 (A/A batch invariance) | not run | dropped | reported only in v1; no budget rule reads it |
 | a6 (20 random JPEGs, open loop) | not run | dropped as a point | no budget rule reads it; its 20-image shape is the warm-up's (design decision 5) |
 | a1a, r1 | valid | required, measured fresh | the Q2 rules need a same-id H1 profile and A1 reference; they are also X1's real-weight side |
 | X1 (x1-smoke, x1-a1, x1-r1) | fail, comparison not like for like | required, redesigned | design decisions 8 and 9 |
+| r1b (new: r1's requests again, real weights) | none | optional | X1's measured run-to-run replay check; enters no budget (design decision 9) |
 | job B (Q1, 7 points) | all valid, Q1 within cap | dropped | design decision 2 |
 | job C (27B and 35B-A3B rungs) | not run (X1 fail) | dropped | design decision 2 |
 
@@ -114,9 +120,10 @@ accepted complete. Its Q2 projection is "incomplete: re-probe" and its control X
 
 ## 4. Design decisions
 
-Freezing this file requires the owner's acceptance of design decisions 1 to 24,
-recorded in `program/decisions.md` (as D17 and D18 were for v1). D8's probe cap
-of 1.0 GPU-h and D17's separate accounting of the overlay build stand.
+Freezing this file requires the owner's acceptance of design decisions 1 to 25
+and of v2's GPU allowance (section 1: at most 1.0 GPU-h for job A and 0.167 GPU-h
+for the overlay build), recorded in `program/decisions.md` (as D17 and D18 were
+for v1). v2 does not draw on D8's probe cap, which v1 has largely used.
 
 1. **New id, new files, no reuse.** v2 is `serving-throughput-probe-v2`, with its
    own contract, registration, manifest template, renderer, driver and package
@@ -145,35 +152,61 @@ of 1.0 GPU-h and D17's separate accounting of the overlay build stand.
    so dropping it biases the decision toward rescoping, not toward an
    under-budget, and keeps v2 within one 1.0 GPU-h job.
 3. **Which cells are required.** Required: the cells v1 invalidated or did not
-   deliver that the Q2 decision depends on (r3, r4, a1b, a1c, X1), and the
-   delivered cells the rules need from the same id (a1a, r1). Optional: undelivered
-   cells with a conservative fallback already in the rules (r2, a2, f1). Dropped:
-   cells no rule reads (d8, a6) and the jobs of design decision 2.
+   deliver that the Q2 decision depends on (r3, r4, a1b, a1c, f1, X1), and the
+   delivered cells the rules need from the same id (a1a, r1). f1 is required
+   because its absence is not conservative: v1's rule then applies no front-end
+   correction, and the correction can only raise the open-loop bound. That bound
+   binds on the 9B H1 and H2 screenshot cells when v1's r3 and r4 values are put
+   through the frozen rules (exploratory, as in design decision 2: 0.82 against
+   0.75 GPU-h and 26.5 against 24.7 GPU-h). If f1 is still not valid after its
+   rerun, `project` adds the flag `front-end-uncorrected` to every Q2 cell.
+   Optional: undelivered cells with a conservative fallback already in the rules
+   (r2, a2), and the same-engine replicate r1b, which enters no budget (design
+   decision 9). Dropped: cells no rule reads (d8, a6) and the jobs of design
+   decision 2.
 4. **Foreign processes are identified by PID.** A poller lists the compute
    processes on the GPU (`nvidia-smi --query-compute-apps=gpu_uuid,pid,
    process_name,used_memory`) every 2 s, with the device's `memory.used` read
    right after. G0.8 now also requires that the GPU lists no compute process
-   before an engine starts. At the reservation (G0.9) the listed PIDs are the
-   engine's own when they are in the engine's process tree in this container,
-   or, when NVML reports host-namespace PIDs that `/proc` in the container
-   cannot resolve, when they are the PIDs that appeared on the GPU (empty at G0.8)
-   while the engine started and stayed unchanged through the warm-up. From then
-   on a listed PID outside that set and outside the engine's tree is a foreign
-   process, and the point is contaminated, however little memory it holds. NVML
-   inside a container reporting host PIDs is a user report (section 12), not
-   NVIDIA documentation; the rule records which attribution applied and falls
-   back to the device rule (design decision 5) when NVML lists nothing.
+   before an engine starts. At the reservation (G0.9) a listed PID is the
+   engine's own when it is in the engine's process tree in this container. A PID
+   that `/proc` in the container cannot resolve (NVML reporting a host-namespace
+   PID) is the engine's own only when its first readable listing falls between
+   the end of the phase's last G0.8 window and the engine's readiness (`/health`
+   200), an earlier readable listing from that G0.8 window on did not list it,
+   and it is listed unchanged through the warm-up and the 5 s after it. A PID
+   first listed after the engine was ready (during the smoke or the warm-up), or
+   one whose absence after G0.8 began was never seen, is not the engine's, and
+   G0.9 fails. From G0.9 on, a listed PID outside the set G0.9 fixed and outside
+   the engine's tree is a foreign process, and the point is contaminated however
+   little memory it holds. NVML inside a container reporting host PIDs is a user
+   report (section 12), not NVIDIA documentation. The rule records which
+   attribution applied and when each PID was first listed; the device rule
+   (design decision 5) and its three triggers are in section 5 (G0.9) and section
+   8; what each basis can detect is design decision 25.
 5. **The engine's own growth is bounded by a largest-shape reservation.** v1
    measured its reservation 5 s after a one-image smoke (74,301 MiB); the engine
-   then grew to 75,047 MiB under a1a, 75,807 under r1 and 76,611 under r3's
-   20-screenshot prompts, above 74,301 + 2,048 = 76,349, with no other process
-   on the GPU. In v2 each phase runs a warm-up after its smoke: 20 cold H2
-   requests at step 20 (20 screenshots, 19 prebuilt responses, 48,140 modelled
-   prompt tokens each, 300 output tokens, all in flight at once). The contract
+   then grew to 75,047 MiB under a1a, 75,807 late in r1 and 76,611 early in r3's
+   first attempt, with no other process on the GPU, above 74,301 + 2,048 =
+   76,349. v1's plateau was reached about 17 s after r3's requests began
+   (job A's `samples/nvidia-smi.csv`, 279.1 s after its first sample; r1's
+   requests ended at 256.2 s and r3's preparation took 5.1 s), at about its steps
+   2 to 3: prompts of
+   6,039 to 8,386 tokens with 2 to 3 images, from staggered arrivals that mix
+   prefill and decode, not at the largest shape; memory did not grow through
+   r3's later steps (up to 48,314 tokens and 20 images), r4 or a1b. So in v2
+   each phase runs a warm-up after its smoke in which each of 20 H2 episodes,
+   started 2.5 s apart with `t_env` 2.5 s as in r3, replays steps 1, 2 and 3 and
+   then step 20, the largest registered shape (20 screenshots, 19 prebuilt
+   responses, 48,140 modelled prompt tokens, 300 output tokens). The contract
    loader refuses any later point of the phase whose largest request has more
    prompt tokens, more images, or more tokens in flight (concurrency times prompt
    plus output) than the warm-up. The reservation is the largest device memory
-   over the warm-up and the 5 s after it. With PID attribution ("pid" mode), the
+   over the warm-up and the 5 s after it. Memory growth in v1 did not follow the
+   registered shape dimensions, so no warm-up can be shown to reach the
+   engine's plateau; in device mode r3 at v1's 76,611 MiB is valid if the
+   warm-up reaches at least 74,563 MiB, 262 MiB above v1's smoke reservation and
+   484 below what v1's a1a alone reached. With PID attribution ("pid" mode), the
    engine's own memory above its reservation plus 2,048 MiB is flagged
    (`own-footprint-above-reservation`) and is not contamination. Without it
    ("device" mode) the device peak must stay within the largest-shape reservation
@@ -187,19 +220,40 @@ of 1.0 GPU-h and D17's separate accounting of the overlay build stand.
    step 1 to step 2, r1's mean prompt grew by 2,259 tokens and x1-r1's by 2,052,
    of which 2,042 are the new screenshot, so v1's x1-r1 prompts were 6.6%
    shorter than r1's overall. Every v2 replay (r1, r2, r3, r4,
-   the warm-ups, x1-r1) builds step t from the same seeded prebuilt responses
-   (300 tokens each), so a step's prompt depends only on the point's seed and
-   parameters. The prompts match the 300-token responses the extrapolation
-   already models, and are longer than v1's real-output histories, which can only
-   raise the budget. In r4 the step-18 history is a 300-token prebuilt response,
-   not step 18's 2,048-token thinking output, so the thinking penalty prices the
-   output length alone.
+   the warm-ups, x1-r1, r1b) builds step t from the same seeded prebuilt
+   responses (300 tokens each), so a step's prompt depends only on the point's
+   seed and parameters. The prompts match the 300-token responses the
+   extrapolation already models. For r1 to r3 they are longer than v1's
+   real-output histories (from step 1 to step 2 v1's r1 prompt grew by 217 text
+   tokens besides the new screenshot), which can only raise the budget. r4 moves
+   the other way: its step-19 history carries a 300-token prebuilt response for
+   step 18 instead of step 18's 2,048-token thinking output, so v2's thinking
+   penalty (r4 step 19 minus r3 step 19) loses the prefill of about 1,750 history
+   tokens that v1's carried (v1: r4's step-19 prompt 47,868.75 tokens, r3's
+   45,966.95). The thinking penalty is therefore lower than v1's would have been:
+   it prices the output length alone. v2 takes this choice because it matches
+   the extrapolation, which models every history entry of every cell, H2
+   thinking included, at 300 tokens; v1's penalty carried one thinking output in
+   the history of one step and none in the 17 prebuilt steps before it, which
+   models neither case. It is not shown to be the faithful one. The Qwen3.5-9B
+   chat template at the pinned revision (section 12) drops an assistant turn's
+   reasoning (the text before `</think>`) only before the last user message that
+   is not a tool response; in the H2 layout every later turn is a tool response,
+   so the template keeps the reasoning of every history turn the harness passes
+   back. If a Stage 1 H2 harness passes its thinking back, H2 thinking prompts
+   grow by up to about 1,750 tokens per step more than the profile models (and
+   at T = 100 would pass `max_model_len`), in v1's frozen rules and in v2 alike;
+   Stage 1 must then strip thinking from its history or re-probe.
 8. **Prompt token ids are digested.** Every v2 request sets `return_token_ids`;
    vLLM v0.31.0 then streams the prompt's token ids in the first chunk (section
    12). The client stores, per request, the SHA-256 of those ids (as little-endian
    int64) and the prompt token count, and keeps no text. If the server returned no
    ids, the identity check rests on per-request prompt token counts, and says so.
-   The extra serialisation applies to every point and both phases alike.
+   The extra serialisation applies to every point and both phases alike. With
+   `return_token_ids` vLLM also puts `token_ids` on every generated chunk and
+   sends a chunk even when no text is ready (section 12); v1's points did not set
+   it, so such a token sent no chunk. The v2 client therefore times TTFT, ITL and
+   TPOT on chunks that carry text only, which keeps v1's definitions.
 9. **X1 on identical token sequences, with thresholds from v1's noise.** x1-a1
    and x1-r1 repeat a1a and r1 (same seeds and parameters) on dummy weights. X1
    first requires that every request of x1-a1 and x1-r1 sent exactly the prompt
@@ -212,7 +266,20 @@ of 1.0 GPU-h and D17's separate accounting of the overlay build stand.
    the per-step standard errors recorded in r1 and x1-r1 give 2.84% and 2.70% of
    the mean per point and 3.81% for the difference, and the one step v1 sent
    identically to both engines, step 1, differed by 3.01% with a standard error
-   of 2.61%. Section 8 gives the rule's operating characteristics.
+   of 2.61%. Two cautions. The 8% was chosen after v1's X1 result, which used 5%
+   and measured a confounded 5.89% that 8% would pass; X1's output records this.
+   And the standard errors are within-run: v1's per-step standard errors at r1's
+   steps 2 to 4 are 0.0029, 0.0014 and 0.0018 s on means of 9.06 to 9.96 s,
+   because the 40 batched requests finish together, so the 3.81% comes almost
+   entirely from the spread within steps 5 and 6, and it stands in for
+   run-to-run noise that v1 did not measure. The operating characteristics in
+   section 8 are therefore model-based. As a measured check, the optional point
+   r1b repeats r1's requests on the real-weight engine late in the real phase:
+   when r1b is valid and sent r1's token sequences, X1 is at most
+   "underpowered" if r1b's mean latency differs from r1's by more than the 8%
+   replay threshold. One replicate lowers, and does not remove, the risk of
+   unmodelled run-to-run noise; without a usable r1b, X1 says that it rests on
+   the model.
 10. **What X1 decides in v2.** v2 prices no dummy-weight measurement: the rung
     multipliers use the active-parameter rule and Q1 is not projected. X1's
     outcome is reported, with its identity checks, deltas and standard error, as
@@ -224,7 +291,7 @@ of 1.0 GPU-h and D17's separate accounting of the overlay build stand.
     its start allowance (G0.8 and the engine start: 4 minutes real, 3 dummy) plus
     the wall caps of its required points, and the contract loader refuses a job
     whose preamble (2 minutes, G0.0 to G0.4) and reserved phases do not fit before
-    the soft stop (43.5 of 51 minutes, leaving at least 7.5 minutes of slack). A
+    the soft stop (45.0 of 51 minutes, leaving at least 6.0 minutes of slack). A
     phase may launch until its bound, the soft stop minus the reservations of
     later phases. Required points run first; a required point's first attempt
     launches whenever the bound has not passed. Every point gets at most one
@@ -239,13 +306,18 @@ of 1.0 GPU-h and D17's separate accounting of the overlay build stand.
     caps are about 1.5 to 2.2 times v1's attempt times (preparation included):
     r3 12 minutes (v1 7.6), r4 3.5 (2.4), r1 and x1-r1 2.5 (1.4 each), a1a,
     a1b, a1c, f1 and x1-a1 1.5 (0.7), smokes 1.5 (under 0.1), warm-ups 2.5 (an
-    estimate from v1's cold r4 step 18: 21 s to the first token at 20 concurrent
-    43,811-token requests), r2 3.5 and a2 2 (estimates from r1 and a1a). With v1's
-    times the job takes about 27 minutes (about 0.45 GPU-h).
-13. **Order.** Real phase: smoke, warm-up, a1a, r1, r3, r4, a1b, a1c, then r2,
-    a2, f1. Dummy phase: smoke, warm-up, x1-a1, x1-r1. a1a and r1 follow the
-    warm-up as x1-a1 and x1-r1 do, so both sides of X1 run in the same position;
-    both warm-ups send identical requests (seed 105).
+    estimate: r3's steps 1 to 3 took about 0.4 minutes in v1, and v1's cold r4
+    step 18 took 21 s to the first token at 20 concurrent 43,811-token requests),
+    r2 3.5, a2 2 and r1b 2.5 (estimates from r1 and a1a). With v1's times the job
+    takes about 28 minutes (about 0.46 GPU-h). The allocation is the new allowance
+    of section 1, not D8's cap.
+13. **Order.** Real phase: smoke, warm-up, a1a, r1, r3, r4, a1b, a1c, f1, then
+    the optional r2, a2 and r1b (r1b last: it enters no budget). Dummy phase:
+    smoke, warm-up, x1-a1, x1-r1. a1a and r1 follow the warm-up as x1-a1 and
+    x1-r1 do, so both sides of X1 run in the same position; both warm-ups send
+    identical requests (seed 105). r1b runs later than r1, so its delta to r1
+    carries any drift over the phase as well as run-to-run noise; that can only
+    make X1's replicate condition harder to meet.
 14. **cu129 only.** v1 passed every cu129 gate on this node, so v2 has no
     pre-approved cu130 retry: a gate failure that ends job A as a pre-result ends
     v2 as a pre-result, and another run needs a new id.
@@ -265,31 +337,60 @@ of 1.0 GPU-h and D17's separate accounting of the overlay build stand.
     package and driver they import. The renderer, the overlay builder, the lane
     and `scripts/preregister.py` are fixed by commit X, as in v1.
 19. **Overlay and fetch.** v2 needs a new overlay image (it bakes in X's source):
-    one idle H100 for at most 10 minutes (0.167 GPU-h), accounted separately as
-    D17 does for v1. v2 serves only the cached, receipted Qwen3.5-9B snapshot, so
-    there is no metadata fetch.
+    one idle H100 for at most 10 minutes (0.167 GPU-h), within v2's allowance
+    (section 1) and accounted on its own line, as D17 does for v1. v2 serves only
+    the cached, receipted Qwen3.5-9B snapshot, so there is no metadata fetch. The
+    renderer refuses a build receipt that does not list the v2 plan and the v2
+    args doctor, whose files are not next to it with the SHA-256s it records,
+    whose doctor did not pass, or whose plan was made from another contract, so
+    an image without the v2 driver (v1's, say) cannot be rendered into a job.
 20. **The compute-process poller is the probe's.** The lane's GPU prolog checks
     exclusivity once, on the host, before the container starts; v2 does not change
     the lane. A host-side poller would see every PID in one namespace, but it is a
     lane change with its own review.
-21. **Residual attribution risk.** A foreign process that starts after G0.8 and
-    before the end of the warm-up, and stays, is counted as the engine's own in
-    pid mode and raises the reservation in device mode. The window is a few
-    minutes on a GPU that the lane prolog and G0.8 found idle; the PIDs and their
-    memory are recorded at every snapshot, so such a case is visible in the
-    evidence.
+21. **Residual attribution risk.** A foreign process with a host-namespace PID
+    that starts after G0.8 and before the engine is ready, and stays, is counted
+    as the engine's own in pid mode. One that starts later is not (design
+    decision 4). In device mode, any foreign process present during the warm-up
+    raises the reservation. The first window is the engine start (v1: under 2
+    minutes) on a GPU that the lane prolog and G0.8 found idle; the PIDs, when
+    each was first listed, and their memory are recorded at every snapshot, so
+    such a case is visible in the evidence.
 22. **Resume.** As v1, a resumed job skips terminal points and reruns
     interrupted, failed-infra and not-run points; an invalid point whose rerun
     was still pending when a signal arrived gets that rerun, under the same slack
     rule. No GPU resume run is made (a probe has no training state; D17).
 23. **Fail-closed reservation.** G0.9 fails, and the phase stops, when the warm-up
     is not valid, when the device sampler gave no sample, when a process of this
-    container outside the engine holds the GPU, or when the listed PIDs change
-    inside the reservation window.
+    container outside the engine holds the GPU, when the listed PIDs change
+    inside the reservation window, or when a listed host-namespace PID was not
+    first listed between G0.8 and the engine's readiness (design decision 4).
 24. **What v2 does not change.** Gates G0.0 to G0.7 and G0.8's device
-    conditions, the smoke, the counter and cache checks, the signal-checkpoint marker, the acceptance rule, the lane
-    termination check, the engine settings, the point shapes and seeds of the
-    cells it keeps, and the Q2 rules are v1's.
+    conditions, the smoke, the counter and cache checks, the signal-checkpoint
+    marker, the acceptance rule, the lane termination check, the engine settings,
+    the point shapes and seeds of the cells it keeps, and the Q2 rules are v1's.
+    v2 adds one flag to v1's Q2 output (`front-end-uncorrected`, design decision
+    3) and changes no number in it.
+25. **What "no foreign process" can detect depends on the attribution basis.**
+    G0.9 records the basis and its detection guarantee, and `project` reports
+    both next to X1 and the Q2 outcome. *Host-namespace PIDs* (NVML lists PIDs
+    that `/proc` here cannot resolve): NVML is evidently listing processes outside
+    this container, so another job's process is expected to be listed and is
+    caught at any size. *Container-namespace PIDs only* (every listed PID is in
+    the engine's tree): NVML may be translating PIDs into this container's
+    namespace and omitting other namespaces' processes; a listed foreign process
+    is still caught at any size, but an unlisted one only through unattributed
+    memory above the reservation's plus 1,024 MiB (in v1's sampler trace the
+    device held 689 MiB once the engine's first CUDA context appeared, so a small
+    process can pass). *Device mode* with a fixed PID set
+    (NVML lists nothing, or lists processes without memory): a listed foreign
+    process at any size, an unlisted one only through the device peak above the
+    reservation plus 2,048 MiB. *Device mode without a listing*: the device peak
+    only. Which case holds in the lane's container has not been observed on this
+    host (v1's "only the job's EngineCore" observation came from the host-side
+    prolog, not from inside the container). A host-side poller would remove the
+    ambiguity; it is a lane change (design decision 20) and a stated limitation
+    of v2.
 
 ## 5. Step-0 gates
 
@@ -324,8 +425,17 @@ no number enters a budget. Phase gates (G0.5 to G0.9) are recorded per phase.
 - **G0.9** (new) After the smoke, the phase's warm-up is valid, and over the
   warm-up and the 5 s after it: the device sampler reported at least one sample;
   no process of this container outside the engine is listed; the listed PIDs did
-  not change. It records the reservation (largest device memory), the attribution
-  mode and its basis, the engine's PIDs and memory, and the unaccounted memory.
+  not change; and every listed PID outside the engine's tree was first listed
+  between the end of the phase's last G0.8 window and the engine's readiness,
+  after a readable listing from that G0.8 window on that did not list it (design
+  decision 4). It records the reservation (largest device memory), the attribution
+  mode, its basis and detection guarantee (design decision 25), the engine's PIDs,
+  when each was first listed, their memory, and the unaccounted memory. Pid mode
+  needs readable listings with PIDs and memory figures. Device mode has three
+  triggers, each recorded as the basis: no readable listing in the window (no PID
+  set is fixed); readable listings that list no process (the empty set is fixed);
+  a listed process or the device without a memory figure, such as `[N/A]` (the
+  listed set is fixed).
 
 ## 6. Failure path and acceptance
 
@@ -366,16 +476,17 @@ are reset before every point.
 | Point | Phase | What | Requests | Seed | Cap (min) | Required |
 |---|---|---|---|---|---|---|
 | a-smoke | real | gates G0.6, G0.7: 16 at C=8, 1 PNG, O=64 | 16 | 7 | 1.5 | yes |
-| a-warmup | real | G0.9: 20 cold H2 requests at step 20, O=300, all at once | 20 | 105 | 2.5 | yes |
+| a-warmup | real | G0.9: 20 H2 episodes, 2.5 s apart, steps 1, 2, 3 then 20, O=300 | 80 | 105 | 2.5 | yes |
 | a1a | real | S2 open loop: prefix 1,536 + body 4,608 + 1 random JPEG, O=300, C=16 | 96 | 42 | 1.5 | yes |
 | r1 | real | H1 replay (window 4), V=40, steps 1-6, O=300 | 240 | 101 | 2.5 | yes |
 | r3 | real | H2 replay (folding), V=20, steps 1-24, O=300 | 480 | 103 | 12 | yes |
 | r4 | real | H2 thinking: prebuilt 17 steps, steps 18-19, O=2,048, V=20 | 40 | 104 | 3.5 | yes |
 | a1b | real | a1a shape | 96 | 43 | 1.5 | yes |
 | a1c | real | a1a shape | 96 | 44 | 1.5 | yes |
+| f1 | real | a1a with rendered PNGs | 96 | 42 | 1.5 | yes |
 | r2 | real | r1 plus 6,144 accessibility-tree tokens per step | 240 | 102 | 3.5 | no |
 | a2 | real | a1a shape at C=40 | 160 | 45 | 2 | no |
-| f1 | real | a1a with rendered PNGs | 96 | 42 | 1.5 | no |
+| r1b | real | exactly r1's requests (X1's same-engine replicate) | 240 | 101 | 2.5 | no |
 | x1-smoke | dummy-control | as a-smoke | 16 | 7 | 1.5 | yes |
 | x1-warmup | dummy-control | as a-warmup | 20 | 105 | 2.5 | yes |
 | x1-a1 | dummy-control | exactly a1a's requests | 96 | 42 | 1.5 | yes |
@@ -383,11 +494,11 @@ are reset before every point.
 
 Replay details as v1: system prompt 1,536 tokens shared within a point, task 64
 tokens per episode, action strings 16 tokens, prebuilt responses 300 tokens,
-`t_env` 2.5 s, starts staggered over 2.5 s (not for the warm-ups).
+`t_env` 2.5 s, starts staggered over 2.5 s (the warm-ups too).
 
 **Launch window.** Soft stop at 85% of the allocation (51 minutes after the
 lane's `started_at`), hard stop 4 minutes before its end (56 minutes). Reserved:
-preamble 2, real phase 4 + 26.5, dummy phase 3 + 8 (43.5 minutes). The real
+preamble 2, real phase 4 + 28, dummy phase 3 + 8 (45.0 minutes). The real
 phase's bound is 40 minutes, the dummy phase's 51.
 
 **Minimum detectable effects and power.**
@@ -413,7 +524,9 @@ preemptions; peak KV-cache use and waiting requests; device peak memory, mean
 utilisation, power and SM clock; API-server and client CPU; preparation time. New
 in v2: per request, the prompt-token-id SHA-256 and prompt token count
 (`request_identity`); per point, the compute-process listings summarised
-(`compute_apps`) and the contamination details.
+(`compute_apps`) and the contamination details. TTFT, ITL and TPOT are timed on
+streamed chunks that carry text, v1's definition, although v2 requests set
+`return_token_ids` (design decision 8).
 
 **Validity.** A point is valid only if it ran to its end and: failed is 0;
 completed equals planned; every completion has its requested output length; the
@@ -431,7 +544,14 @@ flags the point (front-end-bound, client-bound) and leaves it valid.
   engine's memory above its reservation plus 2,048 MiB, or a device peak above the
   largest-shape reservation plus 2,048 MiB, is a flag, not a failure.
 - *device mode:* the device peak is at most the largest-shape reservation plus
-  2,048 MiB (`no_contamination`).
+  2,048 MiB (`no_contamination`); and when G0.9 fixed a PID set (NVML listed
+  nothing, or listed processes without memory figures), every PID in a readable
+  listing during the point is in the engine's tree or in that set
+  (`no_foreign_process`). A listing that cannot be read leaves only the device
+  rule; when G0.9 had no readable listing, only the device rule applies.
+- What these checks can detect depends on the basis (design decision 25); the
+  basis and its detection guarantee are reported with every point's details, with
+  G0.9, and next to X1 and the Q2 outcome.
 
 **Infrastructure failures and exclusions** as v1: a point stopped by USR1 or TERM
 is "interrupted"; one stopped by its cap or a deadline without a failed request
@@ -443,23 +563,33 @@ under the ledger of design decision 11; both attempts are kept in full (the
 earlier ones under `superseded_attempts`) and the last stands. Only valid
 (including flagged) points enter a budget.
 
-**Control X1.** Inputs a1a, r1 (real) and x1-a1, x1-r1 (dummy).
-Outcomes, in order: *not-run* (any of the four not valid); *not-comparable* (for
-some request the prompt-token-id digest, or, when the server returned no ids, the
-prompt token count, differs between a1a and x1-a1 or between r1 and x1-r1, or the
-request sets differ); *fail* (open-loop request-throughput delta above 5% or
-mean-replay-latency delta above 8%); *underpowered* (the replay delta's standard
-error, sqrt(SE_r1² + SE_x1-r1²) / mean latency of r1 with each SE = sqrt(sum of
-squared step SEs) / steps, above 5%, or fewer than three valid A1 seeds, or their
-throughput range above 5%); *pass*. Operating characteristics (Monte Carlo through
-`harness/serving_probe_v2/x1.py`, replay means with v1's measured standard error,
-open-loop throughputs with a run-to-run CV of 1%): P(pass) is 0.95 when dummy and
-real weights cost the same, and 0.76, 0.50, 0.33, 0.18 and 0.06 at a true replay
-difference of 5, 8, 10, 12 and 15%; at a true open-loop difference of 8% it is at
-most 0.04. When they cost the same, P(pass) falls to 0.74 at a CV of 2% and 0.41
-at 3%, through both the 5% open-loop threshold and the 5% A1 range condition
-(v1's identical-prompt throughput delta was 0.86%). X1 resolves replay differences of about 15%, not 5%;
-its outcome enters no v2 budget (design decision 10).
+**Control X1.** Inputs a1a, r1 (real) and x1-a1, x1-r1 (dummy), and the optional
+same-engine replicate r1b (real). Outcomes, in order: *not-run* (any of the four
+inputs not valid); *not-comparable* (for some request the prompt-token-id digest,
+or, when the server returned no ids, the prompt token count, differs between a1a
+and x1-a1 or between r1 and x1-r1, or the request sets differ); *fail* (open-loop
+request-throughput delta above 5% or mean-replay-latency delta above 8%);
+*underpowered* (the replay delta's standard error, sqrt(SE_r1² + SE_x1-r1²) / mean
+latency of r1 with each SE = sqrt(sum of squared step SEs) / steps, above 5%, or
+fewer than three valid A1 seeds, or their throughput range above 5%, or r1b valid
+with r1's token sequences and its mean latency more than 8% from r1's); *pass*.
+X1's output records r1b's use and delta, that the 8% replay threshold was set
+after v1's X1 result, and that the operating characteristics are model-based.
+
+Operating characteristics (Monte Carlo through `harness/serving_probe_v2/x1.py`):
+replay means carry v1's measured standard error, open-loop throughputs a run-to-run
+CV of 1%. These figures are model-based: the standard error is v1's within-run,
+per-request spread, which stands in for run-to-run noise that v1 did not measure
+(design decision 9), and the requests are treated as independent. Without a usable
+r1b, P(pass) is 0.95 when dummy and real weights cost the same, and 0.76, 0.50,
+0.33, 0.18 and 0.06 at a true replay difference of 5, 8, 10, 12 and 15%; at a
+true open-loop difference of 8% it is at most 0.04. When they cost the same,
+P(pass) falls to 0.74 at a CV of 2% and 0.41 at 3%, through both the 5% open-loop
+threshold and the 5% A1 range condition (v1's identical-prompt throughput delta
+was 0.86%). With a valid r1b drawn from the same model, P(pass) is 0.91, 0.72,
+0.31 and 0.05 at a true replay difference of 0, 5, 10 and 15%. X1 resolves
+replay differences of about 15%, not 5%; its outcome enters no v2 budget (design
+decision 10).
 
 ## 9. Budget rules and decisions
 
@@ -483,12 +613,16 @@ two, times the A1 noise multiplier.
   × the largest p90 TPOT over r3's last six steps × 1.5; without a valid r2,
   accessibility penalty = r1's steady latency × (6,144 / r1's modelled prompt at
   step 6) × 1.5. Without a valid r1 or r3, no Q2 budget is frozen ("incomplete:
-  re-probe").
+  re-probe"). Without a valid f1 (a required point; design decision 3) v1's rule
+  applies no front-end correction, which is not conservative, and v2 adds the
+  flag `front-end-uncorrected` to every cell.
 - Rung multiplier m: 1 for 9B and 4B; 4.5 for 27B and 1.5 for 35B-A3B
   (active-parameter rule, flagged; design decision 15).
 - r_cell = r_ref / max(P_cell / P_ref, O_cell / O_ref), with r_ref, P_ref, O_ref
   from a2 (else the slowest valid of a1a, a1b, a1c, flagged; else no budget);
   r_ref is multiplied by f1's ratio to a1a when PNG is more than 10% slower.
+- The Q2 output also reports the real phase's attribution mode, basis and
+  detection guarantee (design decision 25).
 - Context check: every primary cell's largest modelled prompt plus its output
   must fit 131,072 tokens, else no budget.
 - Sensitivity table: T in {15, 50, 100}, t_env in {1.5, 2.5, 4.0} s, V in {20, 40}.
@@ -520,16 +654,19 @@ Stage 1 must reuse these engine settings or re-probe.
 ## 11. Reported regardless of outcome
 
 Every gate result with its recorded values, including G0.8's compute-process
-listing and G0.9's reservation, attribution mode and basis; every point with its
+listing and G0.9's reservation, attribution mode, basis, detection guarantee and
+when each PID was first listed; every point with its
 status, attempts (superseded attempts in full), metrics, request identities and
 contamination details, valid or not; every launch decision of the ledger (point,
 kind, time, bound, time needed, launched or not) and every rerun not launched;
 the job's acceptance verdict, eager label and the reasons its points were not
-admitted; X1's identity checks, deltas, standard error and outcome; the A1
+admitted; X1's identity checks, deltas, standard error, same-engine replicate,
+notes and outcome, with the attribution of both phases; the A1
 stability and noise multiplier; the F1 ratio, applied or not; the open-loop
 reference and the binding bound per cell; engine facts per phase; all GPU time
-(the overlay build and job A, each against its cap); the Q2 projection with every
-flag and the sensitivity table; the contract SHA-256, the probe code digest,
+(the overlay build and job A, each against its cap, and the serving probe's
+cumulative total with v1's); the Q2 projection with every flag, the real phase's
+attribution and the sensitivity table; the contract SHA-256, the probe code digest,
 git HEAD, image IDs and this file's ledger row; and every deviation from this
 document.
 
@@ -538,9 +675,10 @@ document.
 | Source | Revision | Size | SHA-256 | License |
 |---|---|---|---|---|
 | vLLM image `vllm/vllm-openai:v0.31.0-cu129`, linux/amd64 | manifest sha256:b18abb2df97b8f798e81862bd93f872ea18613372e2c3adc0cc2ac21e66ac12f | 11,015,410,140 B compressed | image ID 423783aac4fefebfe6b67d6fc2810b88a1d4dc08ed8bba587c80b0d8973e0b8b | vLLM Apache-2.0; CUDA base layers under NVIDIA's container license (used locally) |
-| vLLM `vllm/entrypoints/openai/chat_completion/serving.py`, read 2026-10-07: with `return_token_ids`, the first streamed chunk carries `prompt_token_ids` (lines 553-565); https://github.com/vllm-project/vllm/blob/v0.31.0/vllm/entrypoints/openai/chat_completion/serving.py | tag v0.31.0 | 57,487 B | 532dadea845c77a5a79011027b9989987c3e32467614e993f439f29c924de002 | Apache-2.0 |
+| vLLM `vllm/entrypoints/openai/chat_completion/serving.py`, read 2026-10-07: with `return_token_ids`, the first streamed chunk carries `prompt_token_ids` (lines 553-565), every generated chunk carries `token_ids` (lines 742-755), and a chunk is sent even when no text is ready (lines 702-712); https://github.com/vllm-project/vllm/blob/v0.31.0/vllm/entrypoints/openai/chat_completion/serving.py | tag v0.31.0 | 57,487 B | 532dadea845c77a5a79011027b9989987c3e32467614e993f439f29c924de002 | Apache-2.0 |
 | vLLM `vllm/entrypoints/openai/chat_completion/protocol.py`, read 2026-10-07: `return_token_ids` field (lines 416-424); https://github.com/vllm-project/vllm/blob/v0.31.0/vllm/entrypoints/openai/chat_completion/protocol.py | tag v0.31.0 | 47,050 B | 4bdc71f668e4820d8ae5bae2a153fed0296b430cd6353ace8c0c27cfb982ebc1 | Apache-2.0 |
 | Qwen/Qwen3.5-9B weights (cached) | c202236235762e1c871ad0ccb60c8ee5ba337b9a | 19,329,393,661 B | receipt 0a9e052d561b017c505adf5a1c6fcdc048522660a0db134486b84edbf3de5cb3 | Apache-2.0 |
+| Qwen/Qwen3.5-9B `chat_template.jinja`, read 2026-10-07: an assistant turn's reasoning is rendered only after the last user message that is not a tool response (content wrapped in `tool_response` tags; lines 67-77 and 89-104); https://huggingface.co/Qwen/Qwen3.5-9B/blob/c202236235762e1c871ad0ccb60c8ee5ba337b9a/chat_template.jinja | c202236235762e1c871ad0ccb60c8ee5ba337b9a | 7,756 B | a4aee8afcf2e0711942cf848899be66016f8d14a889ff9ede07bca099c28f715 | Apache-2.0 |
 | NVIDIA developer forum, "Nvidia-smi doesnt show running processes inside the container" (user report, 2025-08-28: `--query-compute-apps` inside a pod lists host PIDs with name `[Not Found]`, driver 575.57.08), read 2026-10-07; https://forums.developer.nvidia.com/t/nvidia-smi-doesnt-show-running-processes-inside-the-container/343361 | not applicable | not stored | not applicable | forum post; cited, not copied |
 | OSWorld `mm_agents/qwen3vl_agent.py` (H1 layout, as v1) | b138d348256078fa634fc3b73567a7337c793e6b | 30,053 B | c9bb34d3ad822168c66133cd97c607d4645b7eff08072e1e45c49dbbad8491b4 | Apache-2.0; one instruction sentence quoted in `harness/serving_probe/prompts.py` with attribution |
 | cua-speedrun `agents/qwen35/agent.py` (H2 layout, as v1) | be17c72c5efbb145d06f86028336fdf2743a3d98 | 31,910 B | 287ce1244a787e71aa89bc9c0efd6bf24c2779b6918be7e7b8ae932bcf9c1bfc | unresolved (no LICENSE file); layout and parameters only |

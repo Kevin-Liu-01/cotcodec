@@ -6,7 +6,11 @@ ID, git SHA, source-capsule SHA-256, image variant). The renderer replaces the
 template's FILL_* sentinels, cross-checks the result against the v2 contract and
 the current lane validator, and refuses to overwrite. v2 has one job (a), no
 dummy-weight metadata pins and no conditional rung job. The receipt parsing is
-v1's (``scripts/render_serving_probe_manifest.py``).
+v1's (``scripts/render_serving_probe_manifest.py``), plus v2's own requirement:
+the receipt must list the v2 plan and the v2 args doctor, both files must sit
+next to it with the SHA-256s it records, the doctor must have passed, and the
+plan must have been made from the contract the manifest runs. A receipt from an
+image without the v2 driver (v1's, say) is refused.
 """
 
 from __future__ import annotations
@@ -39,6 +43,37 @@ from scripts.submit_docker_research_job import validate_manifest  # noqa: E402
 
 RUN_ROOT_PREFIX = "/home/kevin/cotcodec-runs/stage0/serving-throughput-probe-v2/"
 DRIVER = "scripts/run_vllm_throughput_probe_v2.py"
+EXPERIMENT_ID = "serving-throughput-probe-v2"
+#: Build artifacts only an overlay built with the v2 driver has (build_vllm_overlay_on_h100.sh).
+V2_PLAN, V2_DOCTOR = "plan-job-a-v2.json", "vllm-args-doctor-v2.json"
+
+
+def read_v2_build_receipt(path: Path) -> dict[str, str]:
+    """v1's receipt fields plus proof that the image carries and passed the v2 checks."""
+    build = read_build_receipt(path)
+    receipt = json.loads(path.read_text(encoding="utf-8"))
+    artifacts = receipt.get("artifacts")
+    if not isinstance(artifacts, Mapping):
+        raise RenderError("build receipt lists no artifacts")
+    missing = [name for name in (V2_PLAN, V2_DOCTOR) if name not in artifacts]
+    if missing:
+        raise RenderError(
+            f"build receipt lists no {missing}: the image was not built with the v2 driver"
+        )
+    for name in (V2_PLAN, V2_DOCTOR):
+        artifact = path.parent / name
+        if not artifact.is_file():
+            raise RenderError(f"{name} is not next to the build receipt")
+        if sha256_file(artifact) != artifacts[name]:
+            raise RenderError(f"{name} differs from the SHA-256 the build receipt records")
+    doctor = json.loads((path.parent / V2_DOCTOR).read_text(encoding="utf-8"))
+    payload_ok = all(doctor.get(f"v2_payload_thinking_{flag}") is True for flag in (False, True))
+    if doctor.get("pass") is not True or not payload_ok:
+        raise RenderError(f"{V2_DOCTOR} does not report a pass with the v2 payload checks")
+    plan = json.loads((path.parent / V2_PLAN).read_text(encoding="utf-8"))
+    if plan.get("experiment_id") != EXPERIMENT_ID or not plan.get("config_sha256"):
+        raise RenderError(f"{V2_PLAN} is not a serving-throughput-probe-v2 plan")
+    return {**build, "plan_config_sha256": str(plan["config_sha256"])}
 
 
 def render(
@@ -57,12 +92,20 @@ def render(
     leftover = [key for key, value in manifest.items() if "FILL_" in json.dumps(value)]
     if leftover:
         raise RenderError(f"unfilled sentinels remain in {leftover}")
-    check_rendered(manifest, config_root=config_root)
+    config_sha256 = check_rendered(manifest, config_root=config_root)
+    if build.get("plan_config_sha256") != config_sha256:
+        raise RenderError(
+            f"the image's v2 plan was made from contract {build.get('plan_config_sha256')!r}, "
+            f"not {config_sha256}"
+        )
     return manifest
 
 
-def check_rendered(manifest: Mapping[str, Any], *, config_root: Path) -> None:
-    """Cross-check a rendered manifest against the v2 contract and the lane."""
+def check_rendered(manifest: Mapping[str, Any], *, config_root: Path) -> str:
+    """Cross-check a rendered manifest against the v2 contract and the lane.
+
+    Returns the SHA-256 of the contract the manifest runs.
+    """
     if manifest.get("container_profile") != "vllm":
         raise RenderError("the probe runs only in the vllm container profile")
     binding = manifest.get("seed_binding")
@@ -107,6 +150,7 @@ def check_rendered(manifest: Mapping[str, Any], *, config_root: Path) -> None:
         raise RenderError("max_gpu_hours is below the allocation")
     if hours > 1.0 + 1e-9:
         raise RenderError("v2's probe cap is 1.0 GPU-h")
+    return config.sha256
 
 
 def main(argv: Sequence[str] | None = None) -> int:
@@ -117,9 +161,9 @@ def main(argv: Sequence[str] | None = None) -> int:
     args = parser.parse_args(argv)
     template = yaml.safe_load(args.template.read_text(encoding="utf-8"))
     try:
-        build = read_build_receipt(args.build_receipt)
+        build = read_v2_build_receipt(args.build_receipt)
         manifest = render(template, build=build)
-    except (RenderError, ValueError, KeyError) as exc:
+    except (RenderError, ValueError, KeyError, OSError) as exc:
         print(f"FAIL: {exc}", file=sys.stderr)
         return 2
     header = (

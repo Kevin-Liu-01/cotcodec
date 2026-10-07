@@ -5,10 +5,13 @@ validators in ``harness.serving_probe.config`` check them) and adds:
 
 * ``required`` on every point: required points own reserved time in the launch
   window; optional points and every rerun run only from slack;
-* the second point of every phase is its warm-up, a replay of the largest
-  registered prompt shape after which the engine's reservation is measured; the
-  loader refuses a warm-up that any later point of the phase exceeds in prompt
-  tokens per request, images per request or tokens in flight;
+* the second point of every phase is its warm-up, a replay that reaches the
+  largest registered prompt shape, after which the engine's reservation is
+  measured; the loader refuses a warm-up that any later point of the phase
+  exceeds in prompt tokens per request, images per request or tokens in flight.
+  A warm-up may list its steps (``step_list``, strictly increasing, with
+  ``start_depth`` 0 and ``steps`` equal to the list's length), so its episodes
+  replay early small steps, staggered, before the largest one;
 * ``start_minutes`` per phase (G0.8 and the engine start) and ``preamble_minutes``
   (gates G0.0 to G0.4): the preamble plus every phase's start allowance and the
   caps of its required points must fit before the soft stop;
@@ -52,6 +55,7 @@ from harness.serving_probe.prompts import (
     modeled_prompt_tokens,
     visible_images,
 )
+from harness.serving_probe_v2.requests import replay_steps
 
 EXPERIMENT_ID = "serving-throughput-probe-v2"
 #: v2 measures server points only (no offline Q1 job, no A/A point).
@@ -114,8 +118,7 @@ def point_shape(point: PointSpec, image_tokens: int) -> PointShape:
             image_max=int(point.get("image_max", 20)),
             fold_size=int(point.get("fold_size", 10)),
         )
-        first = int(point["start_depth"]) + 1
-        steps = range(first, first + int(point["steps"]))
+        steps = replay_steps(point.params)
         prompt = max(modeled_prompt_tokens(shape, step) for step in steps)
         images = max(visible_images(shape, step) for step in steps)
         concurrency = int(point["episodes"])
@@ -208,6 +211,27 @@ def _check_v2_points(points: Mapping[str, PointSpec]) -> None:
             )
         if point.get("role") not in (None, "warm-up"):
             raise ProbeConfigError(f"point {point.point_id}: unknown role {point.get('role')!r}")
+        listed = point.get("step_list")
+        if listed is not None:
+            if point.get("role") != "warm-up":
+                raise ProbeConfigError(f"point {point.point_id}: only a warm-up lists its steps")
+            if (
+                not isinstance(listed, list)
+                or not listed
+                or not all(
+                    isinstance(step, int) and not isinstance(step, bool) and step >= 1
+                    for step in listed
+                )
+                or any(b <= a for a, b in zip(listed, listed[1:], strict=False))
+            ):
+                raise ProbeConfigError(
+                    f"point {point.point_id}: step_list must be strictly increasing steps >= 1"
+                )
+            if int(point["start_depth"]) != 0 or int(point["steps"]) != len(listed):
+                raise ProbeConfigError(
+                    f"point {point.point_id}: with step_list, start_depth is 0 and steps is "
+                    "the number of listed steps"
+                )
 
 
 def _check_v2_job(job: JobSpec, raw_job: Mapping[str, Any], image_tokens: int) -> None:

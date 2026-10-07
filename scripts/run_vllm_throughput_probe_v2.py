@@ -255,6 +255,25 @@ def plan_payload(config: ProbeConfig, job: JobSpec, model_root: str) -> dict[str
     return plan
 
 
+#: Added by ``project`` to every Q2 cell when F1 is not valid (v1's rule then applies no
+#: front-end correction, which is not conservative: F1 can only raise the open-loop bound).
+FRONTEND_UNCORRECTED = (
+    "front-end-uncorrected (f1 not valid: the open-loop bound has no PNG correction, "
+    "which can only understate it)"
+)
+
+
+def attribution_record(summary: Mapping[str, Any] | None) -> dict[str, Any]:
+    """G0.9's attribution per phase: mode, basis, PID check and what it can detect.
+
+    Reported next to X1 and the Q2 outcome, because what "no foreign process"
+    means depends on the basis (``harness.serving_probe_v2.contamination``).
+    """
+    verdicts = ((summary or {}).get("gates") or {}).get("G0.9") or {}
+    keys = ("pass", "mode", "basis", "pid_check", "foreign_process_detection", "reason")
+    return {phase: {key: verdict.get(key) for key in keys} for phase, verdict in verdicts.items()}
+
+
 def _attempt_summary(record: Mapping[str, Any]) -> dict[str, Any]:
     return {key: record.get(key) for key in ("attempt", "status", "checks", "error")}
 
@@ -286,6 +305,10 @@ class ProbeRunnerV2(v1.ProbeRunner):
         self.ledger: LaunchLedger | None = None
         self._engine: Any = None
         self._last_window: tuple[float, float] | None = None
+        #: The last G0.8 window (perf times) and when the engine answered /health: a
+        #: host-namespace PID is the engine's only if first listed between the two.
+        self._baseline_window: tuple[float, float] | None = None
+        self._engine_ready_at: float | None = None
 
     # -- infrastructure -------------------------------------------------
 
@@ -306,6 +329,7 @@ class ProbeRunnerV2(v1.ProbeRunner):
         start = time.perf_counter()
         self.sleep(float(gates["baseline_duration_s"]))
         end = time.perf_counter()
+        self._baseline_window = (start, end)
         verdict = baseline_verdict(
             self.sampler.window(start, end),
             max_memory_mib=float(gates["baseline_max_memory_used_mib"]),
@@ -461,7 +485,10 @@ class ProbeRunnerV2(v1.ProbeRunner):
             return outcome
         engine_dir = self.output_dir / "engines" / phase.phase_id
         engine_dir.mkdir(parents=True, exist_ok=True)
+        self._engine_ready_at = None
         engine, attempts, stopped_by = self._start_engine(phase, engine_dir, bound)
+        if engine is not None:
+            self._engine_ready_at = time.perf_counter()
         default_mode = engine is not None and not any(
             a.get("eager") for a in attempts if a["ready"]
         )
@@ -766,12 +793,21 @@ class ProbeRunnerV2(v1.ProbeRunner):
                 "pass": False,
                 "reason": f"the largest-shape warm-up ended {warmup.get('status')!r}",
             }
+        if self._baseline_window is None or self._engine_ready_at is None:
+            return None, {"pass": False, "reason": "no G0.8 window or engine readiness time"}
         window_s = float(self.config.section("validity")["reservation_window_s"])
         self.sleep(window_s)
         start, end = self._last_window[0], time.perf_counter()
         samples = self.sampler.window(start, end)
         snapshots = self.apps.window(start, end) if self.apps else []
-        reservation, verdict = cont.measure_reservation(samples, snapshots)
+        history = self.apps.window(self._baseline_window[0], end) if self.apps else []
+        reservation, verdict = cont.measure_reservation(
+            samples,
+            snapshots,
+            history=history,
+            engine_start_at=self._baseline_window[1],
+            engine_ready_at=self._engine_ready_at,
+        )
         verdict["warmup_prompt_tokens_max"] = max(
             (entry[1] for entry in warmup.get("request_identity", {}).get("requests", {}).values()),
             default=None,
@@ -1044,6 +1080,7 @@ class ProbeRunnerV2(v1.ProbeRunner):
         self.summary["point_sha256"] = point_sha256
         limit = float(self.config.section("validity")["unstable_relative_range"])
         self.summary["x1"] = evaluate_x1(points, self.config.section("dummy_admissibility"))
+        self.summary["x1"]["attribution"] = attribution_record(self.summary)
         self.summary["a1_stability"] = budget_rules.stability(points, ("a1a", "a1b", "a1c"), limit)
         if self.ledger is not None:
             self.summary["launch_decisions"] = list(self.ledger.decisions)
@@ -1155,6 +1192,11 @@ def project(
     x1 = evaluate_x1(points or {}, config.section("dummy_admissibility"))
     if points is None:
         x1["reason"] = "job a is not accepted; its points enter no budget"
+    summary_path = job_a / "summary.json"
+    attribution = attribution_record(
+        json.loads(summary_path.read_text(encoding="utf-8")) if summary_path.is_file() else None
+    )
+    x1["attribution"] = attribution
     out: dict[str, Any] = {
         "experiment_id": config.experiment_id,
         "config_sha256": config.sha256,
@@ -1184,10 +1226,11 @@ def project(
         out["q2"] = {
             "decision": "incomplete-re-probe",
             "reason": f"job a is not accepted: {reasons}",
+            "attribution": attribution.get("real"),
         }
         return out
     try:
-        out["q2"] = budget_rules.project_q2(
+        q2 = budget_rules.project_q2(
             budget,
             job_a=points,
             job_c=None,
@@ -1196,7 +1239,16 @@ def project(
             max_model_len=max_model_len,
         )
     except budget_rules.BudgetError as exc:
-        out["q2"] = {"decision": "incomplete-re-probe", "reason": str(exc)}
+        q2 = {"decision": "incomplete-re-probe", "reason": str(exc)}
+    if q2.get("frontend_correction", {}).get("ratio") is None and "cells" in q2:
+        for cell in q2["cells"]:
+            cell["flags"].append(FRONTEND_UNCORRECTED)
+        q2["frontend_uncorrected"] = {
+            "cells": len(q2["cells"]),
+            "open_loop_binding": sum(1 for cell in q2["cells"] if cell["binding"] == "open-loop"),
+        }
+    q2["attribution"] = attribution.get("real")
+    out["q2"] = q2
     return out
 
 
@@ -1293,9 +1345,14 @@ def main(argv: Sequence[str] | None = None) -> int:
             print(f"refused: {exc}", file=sys.stderr)
             return EXIT_PRE_RESULT
         atomic_write_json(args.output, payload)
+        modes = {phase: entry.get("mode") for phase, entry in payload["x1"]["attribution"].items()}
         print(
             json.dumps(
-                {"q2": payload["q2"].get("decision"), "x1": payload["x1"]["outcome"]},
+                {
+                    "q2": payload["q2"].get("decision"),
+                    "x1": payload["x1"]["outcome"],
+                    "attribution": modes,
+                },
                 sort_keys=True,
             )
         )
