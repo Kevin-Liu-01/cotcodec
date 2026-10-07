@@ -50,6 +50,7 @@ RUN ln -sf /usr/bin/python3 /usr/local/bin/python \
     && test "${VLLM_BUILD_COMMIT}" = "${VLLM_COMMIT}" \
     && python scripts/check_harness_env.py \
     && python scripts/run_vllm_throughput_probe.py plan --job a > /dev/null \
+    && python scripts/run_vllm_throughput_probe_v2.py plan --job a > /dev/null \
     && GIT_SHA_VALUE="${GIT_SHA}" SOURCE_SHA_VALUE="${SOURCE_TREE_SHA256}" \
        python infra/research/write_provenance.py /etc/cotcodec-provenance.json \
     && chmod -R a+rX /workspace/cotcodec /etc/cotcodec-provenance.json \
