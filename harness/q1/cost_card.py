@@ -344,6 +344,169 @@ def bootstrap_scoring(
     return {"low": _quantile(totals, 0.025), "high": _quantile(totals, 0.975)}
 
 
+#: Native-size input draws per item, from the gate and channel code (preregistration
+#: sections 5-6): gate (a) variants run 5 KernelBench trials; b1/b2 replay b0's 5
+#: calls and draw once more; c draws its c1 configs plus two draws per c2/c3 shape;
+#: A1 5, A2 7, A3 5, A4 2, A5 about 6; the poison and sanitizer probes 2 and 1.
+DRAWS = {
+    "a": 5,
+    "a_1e-3": 5,
+    "a_head_1e-4": 5,
+    "a_head_1e-2": 5,
+    "a_static": 5,
+    "b1": 6,
+    "b2": 6,
+    "c": 20,
+    "A1": 5,
+    "A2": 7,
+    "A3": 5,
+    "A4": 2,
+    "A4_poison": 2,
+    "A4_sanitizer": 1,
+    "A5": 6,
+}
+
+
+def _gigabytes(problem_id: str | None) -> float:
+    from harness.q1 import pilot
+
+    if not problem_id:
+        return 0.0
+    return (pilot.native_input_bytes(problem_id) or 0) / 1e9
+
+
+def fit_item_costs(items: Iterable[Mapping[str, Any]]) -> dict[str, dict[str, Any]]:
+    """Per gate, GPU-seconds of an item as ``alpha + beta * GB`` (native input GB).
+
+    Least squares over the gate's final scored items when they span problems more
+    than 1 GB apart; otherwise ``beta`` comes from the pooled per-draw slope of the
+    gates that do (scaled by ``DRAWS``), and ``alpha`` is the gate's mean residual.
+    ``beta`` is never negative.
+    """
+    by_gate: dict[str, list[tuple[float, float]]] = defaultdict(list)
+    for item in items:
+        if item["final"] and item["gate"] in SCORING_GATES and item["gpu_seconds"] is not None:
+            by_gate[item["gate"]].append((_gigabytes(item.get("problem_id")), item["gpu_seconds"]))
+    fits: dict[str, dict[str, Any]] = {}
+    per_draw: list[float] = []
+    for gate, points in by_gate.items():
+        xs = [x for x, _ in points]
+        if len(points) >= 3 and max(xs) - min(xs) > 1.0:
+            mx, my = statistics.fmean(xs), statistics.fmean(y for _, y in points)
+            sxx = sum((x - mx) ** 2 for x in xs)
+            beta = max(0.0, sum((x - mx) * (y - my) for x, y in points) / sxx)
+            alpha = max(0.0, my - beta * mx)
+            fits[gate] = {"alpha": alpha, "beta": beta, "n": len(points), "method": "fit"}
+            per_draw.append(beta / DRAWS[gate])
+    slope = statistics.median(per_draw) if per_draw else None
+    for gate, points in by_gate.items():
+        if gate in fits:
+            continue
+        beta = (slope or 0.0) * DRAWS[gate]
+        alpha = max(0.0, statistics.fmean(y - beta * x for x, y in points))
+        fits[gate] = {
+            "alpha": alpha,
+            "beta": beta,
+            "n": len(points),
+            "method": "per-draw-slope" if slope is not None else "mean-no-slope",
+        }
+    for fit in fits.values():
+        fit["alpha"] = round(fit["alpha"], 3)
+        fit["beta"] = round(fit["beta"], 3)
+    return fits
+
+
+def project_scoring(
+    counts: Mapping[str, Any],
+    fits: Mapping[str, Mapping[str, Any]],
+    *,
+    cap: int,
+    survival: float,
+    seeds: int = SEEDS,
+    mutant_seeds: int | None = None,
+) -> dict[str, Any]:
+    """Stage 0 scoring GPU-seconds from per-problem kernel counts and the size model.
+
+    ``mutant_seeds`` (default ``seeds``) lets a trimming rule score mutants at
+    fewer replicates than substrates and controls."""
+    missing = [g for g in SCORING_GATES if g not in fits]
+    alpha = sum(fits[g]["alpha"] for g in SCORING_GATES if g in fits)
+    beta = sum(fits[g]["beta"] for g in SCORING_GATES if g in fits)
+    mutant_seeds = seeds if mutant_seeds is None else mutant_seeds
+    seconds = Counter()
+    kernels = Counter()
+    per_family: Counter[str] = Counter()
+
+    def add(role: str, problem_id: str, n: int, replicates: int) -> None:
+        if n <= 0:
+            return
+        kernels[role] += n
+        seconds[role] += n * replicates * (alpha + beta * _gigabytes(problem_id))
+
+    for row in counts["evaluation_substrates"]:
+        by_family = row.get("cpu_distinct_by_family") or {}
+        families = [f for f in MUTATION_FAMILIES if by_family.get(f)]
+        sizes = [max(0, round(by_family[f] * survival)) for f in families]
+        alloc = waterfill(sizes, cap) if sizes else []
+        for family, k in zip(families, alloc, strict=True):
+            per_family[family] += k
+        add("substrate", row["problem_id"], 1, seeds)
+        add("mutant", row["problem_id"], sum(alloc), mutant_seeds)
+        add("hack-control", row["problem_id"], row["hack_controls"], seeds)
+    for row in counts["identity_controls"]:
+        add("identity-control", row["problem_id"], 1, seeds)
+    add(
+        "adversarial-control",
+        "L1/1_Square_matrix_multiplication_",
+        int(counts.get("adversarial_controls", 3)),
+        seeds,
+    )
+    add("mutant-control", "L1/19_ReLU", int(counts.get("hack_emulating_mutant_controls", 5)), seeds)
+    return {
+        "cap": cap,
+        "seeds": seeds,
+        "mutant_seeds": mutant_seeds,
+        "kernels": dict(kernels),
+        "mutants_per_family": dict(per_family),
+        "gpu_hours_by_role": {k: round(v / 3600, 3) for k, v in seconds.items()},
+        "gpu_hours": round(sum(seconds.values()) / 3600, 3),
+        "missing_gates": missing,
+    }
+
+
+def bootstrap_projection(
+    items: Sequence[Mapping[str, Any]],
+    kinds: Mapping[str, Mapping[str, Any]],
+    counts: Mapping[str, Any],
+    *,
+    cap: int,
+    survival: float,
+    mutant_seeds: int | None = None,
+    resamples: int = 1000,
+    seed: int = 0,
+) -> dict[str, float | None]:
+    """Cluster bootstrap of the projection over pilot parent substrates (each with
+    its mutants and controls), refitting the size model in each resample."""
+    clusters: dict[str, list[Mapping[str, Any]]] = defaultdict(list)
+    for item in items:
+        parent = kinds.get(item["kernel_id"], {}).get("parent", item["kernel_id"])
+        clusters[parent].append(item)
+    keys = sorted(clusters)
+    if len(keys) < 2:
+        return {"low": None, "high": None}
+    rng = random.Random(seed)
+    totals = []
+    for _ in range(resamples):
+        sample = [i for _ in keys for i in clusters[rng.choice(keys)]]
+        fits = fit_item_costs(sample)
+        totals.append(
+            project_scoring(counts, fits, cap=cap, survival=survival, mutant_seeds=mutant_seeds)[
+                "gpu_hours"
+            ]
+        )
+    return {"low": _quantile(totals, 0.025), "high": _quantile(totals, 0.975)}
+
+
 def half_width(n: int, p: float = 0.2, design_effect: float = 2.0) -> float | None:
     """95% normal half-width of a miss rate with a cluster design effect (section 9)."""
     if n <= 0:
@@ -358,6 +521,10 @@ def detectable_difference(n: int, design_effect: float = 2.0) -> float | None:
 
 __all__ = [
     "CAP_GPU_HOURS",
+    "DRAWS",
+    "bootstrap_projection",
+    "fit_item_costs",
+    "project_scoring",
     "RUNGS",
     "SCORING_GATES",
     "bootstrap_scoring",

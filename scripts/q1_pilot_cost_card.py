@@ -157,7 +157,13 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--timing-floor-gpu-hours", type=float, default=0.5)
     parser.add_argument("--replay-gpu-hours", type=float, default=0.5)
     parser.add_argument("--caps", default="40,24,16,12,8,6,4")
-    parser.add_argument("--resamples", type=int, default=2000)
+    parser.add_argument("--resamples", type=int, default=1000)
+    parser.add_argument(
+        "--witness-rate",
+        type=float,
+        default=0.5,
+        help="share of scored mutants the primary audit witnesses (planning value)",
+    )
     args = parser.parse_args(argv)
     smoke = cc.load_job(args.smoke_job / "q1")
     pilot = cc.load_job(args.pilot_job / "q1")
@@ -189,61 +195,88 @@ def main(argv: list[str] | None = None) -> int:
     }
     if ratio["median_c_cumulative_over_b_cumulative"] is not None:
         ratio["c_lite_trigger_2x"] = ratio["median_c_cumulative_over_b_cumulative"] > 2.0
+    all_scored = [i for i in pilot["items"] if i["phase"] in {"scoring", "smoke"}] + smoke_items
+    fits = cc.fit_item_costs(all_scored)
+
+    def model(gate: str, problem_id: str) -> float:
+        fit = fits.get(gate)
+        return 0.0 if fit is None else fit["alpha"] + fit["beta"] * cc._gigabytes(problem_id)
+
+    # Fidelity per kernel: the unmodified upstream runs do the work of our a (44130946),
+    # a_head_1e-4 (423217d9), a + b1 + b2 (KernelGYM's b0, detection and profiling) and
+    # c1 twice (KBV and ours in compatibility mode; c1 is about 4 of c's 20 draws).
+    fidelity_weights = {"a": 2.0, "a_head_1e-4": 1.0, "b1": 1.0, "b2": 1.0, "c": 0.4}
+
+    def fidelity_seconds(problem_id: str) -> float:
+        return sum(w * model(g, problem_id) for g, w in fidelity_weights.items())
+
+    fidelity_problems = (
+        [r["problem_id"] for r in counts["evaluation_substrates"]] * 2
+        + [r["problem_id"] for r in counts["identity_controls"]]
+        + ["L1/1_Square_matrix_multiplication_"] * 3
+    )
+    fidelity_hours = sum(fidelity_seconds(p) for p in fidelity_problems) / 3600
+    calibration_problems = [
+        sid.removeprefix("s1-inductor-").replace("-", "/", 1)
+        for sid in counts["calibration_substrates"]
+    ]
+    calibration_hours = sum(model("A1", p) for p in calibration_problems) / 3600
     fixed_hours = {
         "already_spent_this_pass": args.spent_gpu_hours,
         "admission_full": fixed["admission"]["projected_seconds"] / 3600,
         "specializations_full": fixed["specializations"]["projected_seconds"] / 3600,
-        "calibration_full": fixed["calibration"]["projected_seconds"] / 3600,
+        "fidelity_full": fidelity_hours,
+        "calibration_full": calibration_hours,
         "timing_noise_floor_estimate": args.timing_floor_gpu_hours,
         "audit_hole_replay_cap": args.replay_gpu_hours,
     }
+    fixed_total = sum(fixed_hours.values())
     scenarios = []
     for cap in (int(c) for c in args.caps.split(",")):
-        stage = cc.stage0_kernel_counts(counts, cap=cap, survival=survival["survival"])
-        seconds, borrowed = cc.scoring_seconds(stage["per_class"], means)
-        interval = cc.bootstrap_scoring(kernel_rows, stage["per_class"], resamples=args.resamples)
-        # Fidelity on every evaluation substrate and control plus the first mutant of
-        # every substrate (the trimmed fidelity set), at replicate 42.
-        fidelity_kernels = (
-            stage["per_role"].get("substrate", 0)
-            + stage["per_role"].get("identity-control", 0)
-            + stage["per_role"].get("adversarial-control", 0)
-            + stage["per_role"].get("substrate", 0)
-        )
-        fidelity_mean = fixed["fidelity"]["per_kernel_gpu_seconds"]["mean"] or 0.0
-        fidelity_hours = fidelity_kernels * fidelity_mean / 3600
-        fixed_total = sum(fixed_hours.values()) + fidelity_hours
-        witnessed_test = {
-            family: round(n * 0.5 * 0.5) for family, n in stage["mutants_per_family"].items()
-        }
-        scenarios.append(
-            {
-                "cap": cap,
-                "kernels_per_replicate": stage["per_class"],
-                "roles": stage["per_role"],
-                "mutants_per_family": stage["mutants_per_family"],
-                "scoring_gpu_hours": round(seconds / 3600, 3),
-                "scoring_gpu_hours_95": {
-                    k: (round(v / 3600, 3) if v is not None else None) for k, v in interval.items()
-                },
-                "fidelity_gpu_hours": round(fidelity_hours, 3),
-                "fixed_gpu_hours": round(fixed_total, 3),
-                "total_gpu_hours": round(fixed_total + seconds / 3600, 3),
-                "total_gpu_hours_high": (
-                    round(fixed_total + interval["high"] / 3600, 3)
-                    if interval["high"] is not None
-                    else None
-                ),
-                "borrowed_classes": borrowed,
-                "precision_if_half_witnessed_half_test": {
-                    family: {
-                        "n": n,
-                        "half_width_pp": round(100 * (cc.half_width(n) or 0), 1),
-                    }
-                    for family, n in witnessed_test.items()
-                },
+        for mutant_seeds in (3, 1):
+            projection = cc.project_scoring(
+                counts, fits, cap=cap, survival=survival["survival"], mutant_seeds=mutant_seeds
+            )
+            interval = cc.bootstrap_projection(
+                all_scored,
+                kinds,
+                counts,
+                cap=cap,
+                survival=survival["survival"],
+                mutant_seeds=mutant_seeds,
+                resamples=args.resamples,
+            )
+            witnessed_test = {
+                family: round(n * args.witness_rate * 0.5)
+                for family, n in projection["mutants_per_family"].items()
             }
-        )
+            pooled = sum(witnessed_test.values())
+            scenarios.append(
+                {
+                    **projection,
+                    "scoring_gpu_hours_95": interval,
+                    "fixed_gpu_hours": round(fixed_total, 3),
+                    "total_gpu_hours": round(fixed_total + projection["gpu_hours"], 3),
+                    "total_gpu_hours_high": None
+                    if interval["high"] is None
+                    else round(fixed_total + interval["high"], 3),
+                    "witnessed_test_mutants": witnessed_test,
+                    "precision": {
+                        family: {
+                            "n": n,
+                            "half_width_pp": None if not n else round(100 * cc.half_width(n), 1),
+                        }
+                        for family, n in witnessed_test.items()
+                    },
+                    "pooled_witnessed_test": pooled,
+                    "pooled_half_width_pp": None
+                    if not pooled
+                    else round(100 * cc.half_width(pooled, p=0.17), 1),
+                    "detectable_difference_pp": None
+                    if not pooled
+                    else round(100 * cc.detectable_difference(pooled), 1),
+                }
+            )
     card = {
         "schema": "q1-pilot-cost-card/1",
         "spent_gpu_hours": args.spent_gpu_hours,
@@ -264,6 +297,8 @@ def main(argv: list[str] | None = None) -> int:
         "c_over_b": ratio,
         "fixed_phases": fixed,
         "fixed_gpu_hours": fixed_hours,
+        "size_model": fits,
+        "class_means_cross_check": {k: round(v, 2) for k, v in means.items()},
         "compile_filter": survival,
         "scenarios": scenarios,
         "phases": {
@@ -282,14 +317,16 @@ def main(argv: list[str] | None = None) -> int:
         lines.append(f"| {gate} | {g['n']} | {g['median']} | {g['p95']} | {g['mean']} |")
     lines += [
         "",
-        "| cap | scoring GPU-h | 95% | fixed GPU-h | total GPU-h | high |",
-        "|---:|---:|---|---:|---:|---:|",
+        "| cap | mutant replicates | scoring GPU-h | 95% | fixed GPU-h | total GPU-h | high |",
+        "|---:|---:|---:|---|---:|---:|---:|",
     ]
-    for s in scenarios:
-        band = s["scoring_gpu_hours_95"]
+    for sc in scenarios:
+        band = sc["scoring_gpu_hours_95"]
+        low = None if band["low"] is None else round(band["low"], 2)
+        high = None if band["high"] is None else round(band["high"], 2)
         lines.append(
-            f"| {s['cap']} | {s['scoring_gpu_hours']} | {band['low']}-{band['high']} | "
-            f"{s['fixed_gpu_hours']} | {s['total_gpu_hours']} | {s['total_gpu_hours_high']} |"
+            f"| {sc['cap']} | {sc['mutant_seeds']} | {sc['gpu_hours']} | {low}-{high} | "
+            f"{sc['fixed_gpu_hours']} | {sc['total_gpu_hours']} | {sc['total_gpu_hours_high']} |"
         )
     (args.out / "cost_card.md").write_text("\n".join(lines) + "\n")
     print("\n".join(lines))

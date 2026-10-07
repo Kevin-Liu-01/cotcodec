@@ -111,3 +111,36 @@ def test_projection_counts_and_borrowing() -> None:
     seconds, borrowed = cc.scoring_seconds(stage["per_class"], {"L1-exclusive": 10.0})
     assert borrowed == ["L2-shared"] and seconds == pytest.approx((13 + 7) * 3 * 10.0)
     assert cc.half_width(100) == pytest.approx(0.1109, abs=1e-3)
+
+
+def test_size_model_fits_and_falls_back_to_the_per_draw_slope() -> None:
+    def item(gate: str, problem: str, seconds: float) -> dict:
+        return {"final": True, "gate": gate, "problem_id": problem, "gpu_seconds": seconds}
+
+    small, big = "L2/74_ConvTranspose3d_LeakyReLU_Multiply_LeakyReLU_Max", "L1/19_ReLU"
+    gb = 6442450944 / 1e9
+    items = [item("a", small, 5.0), item("a", small, 5.0), item("a", big, 5.0 + 10.0 * gb)]
+    items += [item("A2", small, 4.0)]
+    fits = cc.fit_item_costs(items)
+    assert fits["a"]["method"] == "fit" and fits["a"]["beta"] == pytest.approx(10.0, rel=1e-2)
+    assert fits["A2"]["method"] == "per-draw-slope"
+    assert fits["A2"]["beta"] == pytest.approx(10.0 / 5 * 7, rel=1e-2)
+    counts = {
+        "evaluation_substrates": [
+            {
+                "problem_id": big,
+                "exclusive": True,
+                "hack_controls": 0,
+                "cpu_distinct_by_family": {"arithmetic": 4},
+            },
+        ],
+        "identity_controls": [],
+        "adversarial_controls": 0,
+        "hack_emulating_mutant_controls": 0,
+    }
+    full = cc.project_scoring(counts, fits, cap=40, survival=1.0)
+    trimmed = cc.project_scoring(counts, fits, cap=2, survival=1.0, mutant_seeds=1)
+    assert full["kernels"] == {"substrate": 1, "mutant": 4}
+    assert trimmed["kernels"] == {"substrate": 1, "mutant": 2}
+    assert trimmed["gpu_hours"] < full["gpu_hours"]
+    assert set(full["missing_gates"]) == set(cc.SCORING_GATES) - {"a", "A2"}
