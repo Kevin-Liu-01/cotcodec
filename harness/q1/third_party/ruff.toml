@@ -1,0 +1,7 @@
+# Vendored upstream code is kept byte-identical to its pinned revision, so it
+# is not linted or formatted here. Our own code lives outside third_party/.
+exclude = ["*"]
+[lint]
+select = []
+[format]
+exclude = ["*"]
