@@ -544,6 +544,17 @@ def _as_list(value: Any) -> list[Any]:
     return list(value) if isinstance(value, list) else [value]
 
 
+# One BLAS/OpenMP thread per scoring process: many processes run side by side
+# and the default (all 208 cores each) oversubscribes the node and timed out a
+# scikit-image checker on the dev split. Recorded in every notes row.
+THREAD_ENV = {
+    "OMP_NUM_THREADS": "1",
+    "OPENBLAS_NUM_THREADS": "1",
+    "MKL_NUM_THREADS": "1",
+    "NUMEXPR_NUM_THREADS": "1",
+}
+
+
 def score_once(
     job: ScoreJob,
     osworld: Path,
@@ -551,6 +562,7 @@ def score_once(
     timeout: float,
     vm_baseline: Path | None = None,
 ) -> dict[str, Any]:
+    os.environ.update(THREAD_ENV)
     ctx = mp.get_context("spawn")
     queue = ctx.Queue()
     payload = {
@@ -630,6 +642,7 @@ def score_job(
         row["harness_revision"] = harness_revision
     notes = {
         "mutant_id": job.mutant_id,
+        "thread_env": THREAD_ENV,
         "nondeterministic": nondeterministic,
         "repeat_scores": [run["score"] for run in runs],
         "repeat_errors": [run["error"] for run in runs],

@@ -141,7 +141,12 @@ def make_jobs(
                     vm in initial and Path(initial[vm]).read_bytes() == Path(local).read_bytes()
                     for vm, local in files.items()
                 ):
+                    # A "gold" byte-identical to the initial state is no answer
+                    # (do-nothing equals it); the task needs a constructed
+                    # positive control and is reported as a task defect.
                     report["gold_equals_initial"].append(task_id)
+                    files = {}
+            if complete and files:
                 jobs.append(
                     {
                         "job_id": f"{task_id}__gold",
@@ -152,7 +157,7 @@ def make_jobs(
                         "candidate_sha256": _sha_files(files),
                     }
                 )
-            else:
+            if not complete:
                 report["no_gold"].append(task_id)
         if "initial" in kinds:
             files = {vm: initial[vm] for vm in result_paths(raw) if vm in initial}
