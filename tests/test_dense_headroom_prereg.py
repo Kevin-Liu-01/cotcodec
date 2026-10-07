@@ -36,6 +36,7 @@ def test_code_table_binds_the_working_tree_until_frozen() -> None:
     table = entry.tabled_code(TEXT)
     assert set(entry.CODE_FILES) <= set(table)
     assert filler.SELF_PATH in table
+    assert set(filler.BOUND_PATHS) <= set(table)  # the lane templates and the ledger verifier
     assert "scripts/summarise_dense_headroom_precheck.py" in table
     assert "scripts/run_dense_headroom_precheck_doctor.py" in table
     if _frozen():
@@ -66,12 +67,21 @@ def test_registered_numbers_appear_in_the_text() -> None:
     assert "| Total | | 0.50 |" in flat
     assert dhd.SOURCE_BUNDLE_SHA256 in TEXT and "278,818,734" in TEXT
     for phrase in ("seeds 42, 43, 44", "NumPy seed 42", "B = 10,000",
-                   "sigma in {0.25, 0.5, 1, 2}", "H1_CX at least 20 with its 99 percent lower "
+                   "sigma in {0.25, 0.35, 0.5, 0.7, 1, 1.4, 2, 2.8, 4}",
+                   "H1_CX at least 20 with its 99 percent lower "
                    "bound at least 10", "at least 30 percent of the questions",
                    "|xi| is at most 2 points and |xi_rel| at most 0.10",
+                   "English ML loss of at least 2.5 points",
+                   "whose 99 percent lower bound is at least 0.5",
+                   "the combined design is INVALID",
+                   "No measurement here removes any of them",
+                   "No budget amendment is possible under this id",
+                   "Every job of a lane counts against that lane's own minutes",
                    "within 0.5 points of the smoke receipt", "1,160 per lane"):
         assert phrase in flat, phrase
-    assert tuple(float(s) for s in (0.25, 0.5, 1, 2)) == dhs.SIGMAS
+    assert "anchor_confound" not in TEXT
+    assert tuple(float(s) for s in (0.25, 0.35, 0.5, 0.7, 1, 1.4, 2, 2.8, 4)) == dhs.SIGMAS
+    assert dhs.NULL_REACH_POINTS == 2.5 and dhd.MIN_JOB_MINUTES == 3
     assert dhs.H1_NEGATIVE_POINTS == 20 and dhs.H1_NEGATIVE_LOWER_POINTS == 10
     assert dhs.NULL_XI_POINTS == 2 and dhs.NULL_XI_REL == 0.10 == dhs.LEX_XI_REL
     assert dhs.FLOOR_G == 0.5 and dhs.CONTROL_SHARE_MIN == 0.30

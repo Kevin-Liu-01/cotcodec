@@ -10,10 +10,13 @@ the block-score null's seeding, multiple choice with a cropped attention cache
 and a copied hybrid cache against a no-cache forward, the statistics and lane
 decisions on hand-made tables, and the GPU entry point end to end on CPU for a
 tiny Qwen3 (attention-only) and a tiny Qwen3.5-style hybrid (gated delta plus
-full attention): a digest mismatch exits 2, wrong seeds exit 2, SIGUSR1 after
-the first chunk exits 75 with the marker, a continuation from the saved chunks
-completes with the uninterrupted run's numbers, and a continuation that
-derives a different artifact exits 3.
+full attention), each under the batch environment (``COTCODEC_OUTPUT_DIR``
+with the job's ``manifest.json``): a digest mismatch exits 2, wrong seeds exit
+2, SIGUSR1 after the first chunk exits 75 with the marker, a continuation from
+the saved chunks (its manifest naming the predecessor and the resume subpath,
+with the batch script's resume receipt) completes with the uninterrupted run's
+numbers, the same continuation without its resume receipt exits 2, and a
+continuation that derives a different artifact exits 3.
 
 Every number is a synthetic-case number. A PASS proves executability and gate
 semantics only; it says nothing about Qwen3-0.6B-Base, Qwen3.5-4B-Base, the
@@ -176,6 +179,25 @@ class TinyRun:
             path = root / f"receipt-{lane_id}.json"
             self.receipts[lane_id] = (path, write_stand_in_receipt(path, dhd.lane_of(lane_id)))
 
+    def batch_files(self, lane_id: str, run_dir: Path, *, predecessor: str | None = None,
+                    resume_receipt: bool = True) -> None:
+        """The batch script's ``manifest.json`` (and ``resume-receipt.json`` for a
+        continuation) in the job's output root, as the submitter flattens them."""
+
+        manifest: dict[str, Any] = {
+            "name": f"doctor-{lane_id}", "seeds": [42, 43, 44], "gpus": 0, "minutes": 0,
+            "model": {"receipt_sha256": self.receipts[lane_id][1]},
+            "study_artifact": {"sha256": self.bundle_sha}}
+        if predecessor is not None:
+            manifest["resume_from_job_id"] = predecessor
+            manifest["resume_subpath"] = dhd.RESUME_SUBPATH
+            if resume_receipt:
+                (run_dir / "resume-receipt.json").write_text(json.dumps(
+                    {"schema_version": 1, "predecessor_job_id": predecessor,
+                     "resume_subpath": dhd.RESUME_SUBPATH}) + "\n", encoding="utf-8")
+        (run_dir / "manifest.json").write_text(json.dumps(manifest, sort_keys=True) + "\n",
+                                               encoding="utf-8")
+
     def argv(self, lane_id: str, run_dir: Path, *, bundle_sha: str | None = None,
              seeds: tuple[str, ...] = ("42", "43", "44")) -> list[str]:
         receipt, receipt_sha = self.receipts[lane_id]
@@ -193,17 +215,22 @@ class TinyRun:
         ]
 
     @staticmethod
-    def env(run_dir: Path) -> dict[str, str]:
+    def env(run_dir: Path, batch: bool = True) -> dict[str, str]:
         env = {k: v for k, v in os.environ.items() if not k.startswith("COTCODEC_")}
         env["COTCODEC_CHECKPOINT_MARKER"] = str(run_dir / "checkpoint.ready")
+        if batch:
+            env["COTCODEC_OUTPUT_DIR"] = str(run_dir)
         env["OMP_NUM_THREADS"] = "2"
         env["PYTHONHASHSEED"] = "0"
         env["HF_HUB_OFFLINE"] = "1"
         return env
 
-    def run(self, lane_id: str, run_dir: Path, timeout: int = 1800,
+    def run(self, lane_id: str, run_dir: Path, timeout: int = 1800, *,
+            predecessor: str | None = None, resume_receipt: bool = True,
             **kwargs: Any) -> subprocess.CompletedProcess:
         run_dir.mkdir(parents=True, exist_ok=True)
+        self.batch_files(lane_id, run_dir, predecessor=predecessor,
+                         resume_receipt=resume_receipt)
         return subprocess.run(self.argv(lane_id, run_dir, **kwargs), env=self.env(run_dir),
                               capture_output=True, text=True, timeout=timeout, check=False)
 
@@ -563,10 +590,10 @@ def case_statistics() -> dict[str, Any]:
         report = dhs.analyse(artifact, results, seeds=seeds, replicates=300)
         verdict = report["decisions"]["lane_class"]
         reads[label] = {"lane_class": verdict, "h1": report["decisions"]["h1_cx_points"],
-                        "anchor_confound": report["decisions"]["anchor_confound"],
+                        "lexical_confound": report["decisions"]["lexical_confound"],
                         "floor": report["decisions"]["floor_candidate"]}
         _check(verdict == expected, f"{label}: {verdict}, expected {expected}", failures)
-    _check(reads["wide"]["anchor_confound"] == "PRESENT",
+    _check(reads["wide"]["lexical_confound"] == "PRESENT",
            "a literal selector with MN-only recall did not flag the anchor confound", failures)
     # Retention: an exact copy of the target keeps G = 1, random keeps 0.
     group = dhs.Group.of([{"pair": "a", "cluster": f"c{i}"} for i in range(5)])
@@ -575,28 +602,39 @@ def case_statistics() -> dict[str, Any]:
            and abs(dhs.retention_interval(rnd, tgt, rnd, group, 200)["point"]) < 1e-12,
            "retention G is wrong", failures)
     # Null verdict rules.
-    good = {"0.5": {"english_ml": {"v1_pass": True}, "xi": {"point": 1.0},
-                    "xi_rel": {"evaluable": True, "point": 0.05}},
-            "2": {"english_ml": {"v1_pass": False}, "xi": {"point": 9.0},
-                  "xi_rel": {"evaluable": True, "point": 0.5}}}
+    good = {"0.25": {"english_ml": {"v1_pass": True, "loss_seed_mean": 0.4},
+                     "xi": {"point": 0.1}, "xi_rel": {"evaluable": True, "point": 0.01}},
+            "0.5": {"english_ml": {"v1_pass": True, "loss_seed_mean": 3.0},
+                    "xi": {"point": 1.0}, "xi_rel": {"evaluable": True, "point": 0.05}},
+            "2": {"english_ml": {"v1_pass": False, "loss_seed_mean": 9.0},
+                  "xi": {"point": 9.0}, "xi_rel": {"evaluable": True, "point": 0.5}}}
     _check(dhs.null_verdict(good)["verdict"] == "CENTRED", "null verdict CENTRED", failures)
+    near_copy = copy.deepcopy(good)
+    near_copy["0.5"]["english_ml"]["loss_seed_mean"] = 2.0
+    _check(dhs.null_verdict(near_copy)["verdict"] == "NOT_EVALUABLE",
+           "a null tested only on near-exact copies of the target was not NOT_EVALUABLE",
+           failures)
     bad = copy.deepcopy(good)
     bad["0.5"]["xi"]["point"] = 3.0
     _check(dhs.null_verdict(bad)["verdict"] == "NOT_CENTRED", "null verdict NOT_CENTRED",
            failures)
     none = copy.deepcopy(good)
-    none["0.5"]["english_ml"]["v1_pass"] = False
+    for sigma in ("0.25", "0.5"):
+        none[sigma]["english_ml"]["v1_pass"] = False
     _check(dhs.null_verdict(none)["verdict"] == "NOT_EVALUABLE", "null verdict NOT_EVALUABLE",
            failures)
     # Combined read.
-    base = {"anchor_confound": "ABSENT", "entity_control": "SUFFICIENT",
+    base = {"lexical_confound": "ABSENT", "entity_control": "SUFFICIENT",
             "null_calibration": {"hs": "CENTRED", "mp": "CENTRED"},
-            "floor_candidate": "VIABLE"}
+            "floor_candidate": "VIABLE", "h2_status": "PASS"}
     combos = {
         ("NEGATIVE_CAPABLE", "NEGATIVE_CAPABLE"): ("NEGATIVE_CAPABLE_V3", "qwen3-0.6b-base"),
         ("GO_ONLY_CAPABLE", "NEGATIVE_CAPABLE"): ("NEGATIVE_CAPABLE_V3", "qwen3.5-4b-base"),
         ("GO_ONLY_CAPABLE", "NOT_VIABLE"): ("GO_ONLY_V3", "qwen3-0.6b-base"),
-        ("NOT_VIABLE", "INVALID"): ("NO_K1_V3", None),
+        ("NOT_VIABLE", "NOT_VIABLE"): ("NO_K1_V3", None),
+        ("NOT_VIABLE", "INVALID"): ("INVALID", None),
+        ("INVALID", "NEGATIVE_CAPABLE"): ("INVALID", None),
+        ("INVALID", "GO_ONLY_CAPABLE"): ("INVALID", None),
     }
     for (small, large), (design, chosen) in combos.items():
         combined = dhs.combined_recommendation({
@@ -604,8 +642,17 @@ def case_statistics() -> dict[str, Any]:
             "qwen3.5-4b-base": {**base, "lane_class": large}})
         _check((combined["design"], combined["base"]) == (design, chosen),
                f"combined read for {small}/{large}: {combined['design']}", failures)
-    _check(dhs.combined_recommendation({"qwen3-0.6b-base": base})["design"] == "INCOMPLETE",
+    _check(dhs.combined_recommendation({"qwen3-0.6b-base": {**base, "lane_class": "NOT_VIABLE"}}
+                                       )["design"] == "INCOMPLETE",
            "a missing lane is not INCOMPLETE", failures)
+    _check(dhs.combined_recommendation({"qwen3-0.6b-base": {**base, "lane_class": "INVALID"}}
+                                       )["design"] == "INVALID",
+           "an INVALID 0.6B lane without the 4B lane is not INVALID", failures)
+    clean = dhs.combined_recommendation({"qwen3-0.6b-base": {**base,
+                                                             "lane_class": "NEGATIVE_CAPABLE"},
+                                         "qwen3.5-4b-base": {**base, "lane_class": "NOT_VIABLE"}})
+    _check("an entity-controlled question set (D26)" in clean["requirements"],
+           "a lexical confound read ABSENT removed D26's entity-controlled set", failures)
     return {"status": "PASS" if not failures else "FAIL", "failures": failures, "reads": reads}
 
 
@@ -638,6 +685,7 @@ def case_end_to_end(tmp: Path) -> dict[str, Any]:
     lane_id = "tiny-hybrid"
     run_dir = tmp / "interrupted"
     run_dir.mkdir(parents=True)
+    run.batch_files(lane_id, run_dir)
     process = subprocess.Popen(run.argv(lane_id, run_dir), env=run.env(run_dir),
                                stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
     eval_dir = run_dir / "dense-precheck" / "checkpoints" / "eval"
@@ -653,12 +701,20 @@ def case_end_to_end(tmp: Path) -> dict[str, Any]:
                                      f"{stderr[-800:]}", failures)
     _check(marker.is_file() and "trigger=SIGUSR1" in marker.read_text(),
            "the interrupted run wrote no marker with the trigger line", failures)
+    saved = run_dir / "dense-precheck" / "checkpoints"
+    # The same continuation without the batch script's resume receipt is refused.
+    unreceipted = tmp / "continued-no-receipt"
+    (unreceipted / "dense-precheck").mkdir(parents=True)
+    if saved.is_dir():
+        shutil.copytree(saved, unreceipted / "dense-precheck" / "checkpoints")
+    refused_cont = run.run(lane_id, unreceipted, predecessor="1", resume_receipt=False)
+    _check(refused_cont.returncode == 2, "a continuation without its resume receipt exited "
+           f"{refused_cont.returncode}", failures)
     resumed = tmp / "continued"
     (resumed / "dense-precheck").mkdir(parents=True)
-    if (run_dir / "dense-precheck" / "checkpoints").is_dir():
-        shutil.copytree(run_dir / "dense-precheck" / "checkpoints",
-                        resumed / "dense-precheck" / "checkpoints")
-    cont = run.run(lane_id, resumed)
+    if saved.is_dir():
+        shutil.copytree(saved, resumed / "dense-precheck" / "checkpoints")
+    cont = run.run(lane_id, resumed, predecessor="1")
     _check(cont.returncode == 0, f"continuation exited {cont.returncode}: {cont.stderr[-800:]}",
            failures)
     if cont.returncode == 0 and lane_id in out:
@@ -667,11 +723,16 @@ def case_end_to_end(tmp: Path) -> dict[str, Any]:
         _check(full["report"]["headroom"] == again["report"]["headroom"]
                and full["decisions"] == again["decisions"],
                "the continuation's read differs from the uninterrupted run", failures)
+        _check(full["hashes"]["job"]["kind"] == "fresh"
+               and again["hashes"]["job"] == {"kind": "continuation",
+                                              "predecessor_job_id": "1", "minutes": 0},
+               f"job kinds recorded {full['hashes']['job']} and {again['hashes']['job']}",
+               failures)
     # A continuation whose artifact differs is an integrity failure.
     forged = tmp / "forged"
     (forged / "dense-precheck" / "checkpoints").mkdir(parents=True)
     (forged / "dense-precheck" / "checkpoints" / "dev-artifact.sha256").write_text("0" * 64)
-    refused = run.run(lane_id, forged)
+    refused = run.run(lane_id, forged, predecessor="1")
     _check(refused.returncode == 3, f"a forged artifact pin exited {refused.returncode}",
            failures)
     del stdout

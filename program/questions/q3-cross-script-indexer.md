@@ -77,7 +77,7 @@ and tokenizer fertility. Next is a dense-only headroom pre-check
 (`program/preregistrations/q3-dense-headroom-precheck-v1.md`, draft): the
 development partition of the K1 bundle only, Qwen3-0.6B-Base and
 Qwen3.5-4B-Base, at most 0.5 GPU-h. Its combined read says whether any K1 v3
-can register a NEGATIVE, on which base, and which controls it needs (an
-entity-controlled MN leg, a null-calibrated statistic, a non-literal floor,
-always a seen-script cross-script condition). Any K1 v3 takes a new id and
-runs the gauntlet.
+can register a NEGATIVE, on which base, and which controls it needs beyond
+D26's, which always apply (an entity-controlled question set, a non-literal
+floor, a seen-script cross-script condition): for example a null-calibrated
+statistic or anchor masking. Any K1 v3 takes a new id and runs the gauntlet.

@@ -213,11 +213,29 @@ def test_lexical_scores_count_context_content_tokens() -> None:
     query = codec.encode("\n\ncab?\n")
     tokens = np.asarray(context + query, dtype=np.uint32)
     q0, q1 = len(context) + 2, len(context) + 6
-    scores = dhd.lexical_block_scores(tokens, len(context), q0, q1, "en", content)
+    scores = dhd.lexical_block_scores(tokens, len(context), q0, q1, ("en", "en"), content)
     # Content ids of "cab?": c, a, b ("?" is symbol-only). Context blocks:
     # [sink a b c] [d ' ' x y] [z ' ' c a] [b ' ' ...] -> 3, 0, 2, 1.
     assert scores[:4].tolist() == [3.0, 0.0, 2.0, 1.0]
     assert scores[len(context) // 4 + 1 :].sum() == 0
+
+
+def test_content_tokens_drop_the_query_languages_stop_ids() -> None:
+    # On a cross-language prompt the query's own function words are not content:
+    # with "c" a stop id of the query language, "cab?" keeps a and b only.
+    codec = dhd.StandInByteCodec()
+    content = dhd.ContentFilter(codec, {"en": codec.encode("e"), "ja": codec.encode("c")})
+    context = [codec.sink] + codec.encode("abcd xyz cab ")
+    query = codec.encode("\n\ncab?\n")
+    tokens = np.asarray(context + query, dtype=np.uint32)
+    q0, q1 = len(context) + 2, len(context) + 6
+    scores = dhd.lexical_block_scores(tokens, len(context), q0, q1, ("en", "ja"), content)
+    assert scores[:4].tolist() == [2.0, 0.0, 1.0, 1.0]
+    assert content.content_ids(codec.encode("cab"), ("ja", "ja")) == codec.encode("ab")
+    with pytest.raises(dhd.DenseDataError):
+        content.content_ids(codec.encode("cab"), "en")  # one language is not enough
+    with pytest.raises(dhd.DenseDataError):
+        content.content_ids(codec.encode("cab"), ("en", "ko"))  # no stop ids for ko
 
 
 def test_stop_ids_tie_break_to_the_lower_id() -> None:

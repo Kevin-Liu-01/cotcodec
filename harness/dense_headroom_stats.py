@@ -29,7 +29,10 @@ BOOTSTRAP_SEED = k1s.BOOTSTRAP_SEED
 REPLICATES = k1s.BOOTSTRAP_REPLICATES
 TARGETS = ("hs", "mp")
 DESCRIPTIVE_TARGETS = ("hs", "mp", "hm")
-SIGMAS: tuple[float, ...] = (0.25, 0.5, 1.0, 2.0)
+# Geometric, ratio about sqrt(2), so that for an English ML loss that grows
+# smoothly with sigma some scale lands between half of V1's tolerance and V1's
+# tolerance (null_verdict's reach rule).
+SIGMAS: tuple[float, ...] = (0.25, 0.35, 0.5, 0.7, 1.0, 1.4, 2.0, 2.8, 4.0)
 BASE_SELECTORS = ("T:hs", "T:mp", "T:hm", "U", "Uk", "rand", "LEX")
 FIXED_SELECTORS = ("T:hs@fixed", "T:mp@fixed", "rand@fixed")
 
@@ -41,6 +44,7 @@ H2A_ACCURACY_POINTS = k1s.H2A_ACCURACY_POINTS  # 30
 H2B_POINTS = k1s.H2B_POINTS  # 5
 NULL_XI_POINTS = 2.0
 NULL_XI_REL = 0.10
+NULL_REACH_POINTS = k1s.V1_TOLERANCE_POINTS / 2  # 2.5: half of V1's 5-point tolerance
 LEX_XI_REL = 0.10
 FLOOR_G = 0.50
 FLOOR_HEADROOM_POINTS = 10.0
@@ -439,9 +443,13 @@ def null_block(prompts: Sequence[Mapping[str, Any]], results: Results, seeds: Se
                           if en_ml else float("nan") for n in names]
             v1_pass = bool(en_ml) and all(v >= target_ml - V1_TOLERANCE_POINTS
                                           for v in ml_by_seed)
+            loss_by_seed = [target_ml - v for v in ml_by_seed]
             per_sigma[f"{sigma:g}"] = {
                 "xi": xi, "xi_rel": xi_rel,
                 "english_ml": {"target": target_ml, "null_by_seed": ml_by_seed,
+                               "loss_by_seed": loss_by_seed,
+                               "loss_seed_mean": (float(np.mean(loss_by_seed)) if en_ml
+                                                  else float("nan")),
                                "v1_pass": v1_pass},
                 "g_mn_controlled": retention_of(mn_controlled, results, names, target,
                                                 replicates),
@@ -452,25 +460,39 @@ def null_block(prompts: Sequence[Mapping[str, Any]], results: Results, seeds: Se
 
 def null_verdict(per_sigma: Mapping[str, Any]) -> dict[str, Any]:
     """CENTRED: at every noise scale whose null passes V1 at every seed, |xi| <= 2
-    points and |xi_rel| <= 0.10 (seed-mean points). NOT_EVALUABLE: no scale
-    passes V1, or xi_rel is not evaluable at one that does."""
+    points and |xi_rel| <= 0.10 (seed-mean points), and at least one of those
+    scales reaches toward the V1 boundary: its seed-mean English ML loss is at
+    least 2.5 points, half of V1's tolerance (otherwise only near-exact copies
+    of the target were tested and centring would be vacuous). NOT_CENTRED: a
+    V1-adequate scale breaks either limit. NOT_EVALUABLE: no scale passes V1,
+    xi_rel is not evaluable at one that does, or every V1-adequate scale is
+    within the limits but none reaches 2.5 points."""
 
     adequate = [s for s, block in per_sigma.items() if block["english_ml"]["v1_pass"]]
+    losses = {s: block["english_ml"].get("loss_seed_mean") for s, block in per_sigma.items()}
     if not adequate:
         return {"verdict": "NOT_EVALUABLE", "reason": "no noise scale passes V1",
-                "adequate_sigmas": []}
+                "adequate_sigmas": [], "english_ml_loss": losses}
     worst_xi, worst_rel = 0.0, 0.0
     for sigma in adequate:
         xi = per_sigma[sigma]["xi"]["point"]
         rel = per_sigma[sigma]["xi_rel"]
         if not (rel.get("evaluable") and math.isfinite(rel["point"])):
             return {"verdict": "NOT_EVALUABLE", "reason": f"xi_rel not evaluable at {sigma}",
-                    "adequate_sigmas": adequate}
+                    "adequate_sigmas": adequate, "english_ml_loss": losses}
         worst_xi = max(worst_xi, abs(float(xi)))
         worst_rel = max(worst_rel, abs(float(rel["point"])))
-    centred = worst_xi <= NULL_XI_POINTS and worst_rel <= NULL_XI_REL
-    return {"verdict": "CENTRED" if centred else "NOT_CENTRED", "adequate_sigmas": adequate,
-            "max_abs_xi": worst_xi, "max_abs_xi_rel": worst_rel}
+    reaching = [s for s in adequate if losses[s] is not None and math.isfinite(losses[s])
+                and losses[s] >= NULL_REACH_POINTS]
+    read = {"adequate_sigmas": adequate, "reaching_sigmas": reaching,
+            "english_ml_loss": losses, "max_abs_xi": worst_xi, "max_abs_xi_rel": worst_rel}
+    if worst_xi > NULL_XI_POINTS or worst_rel > NULL_XI_REL:
+        return {"verdict": "NOT_CENTRED", **read}
+    if not reaching:
+        return {"verdict": "NOT_EVALUABLE",
+                "reason": (f"no V1-adequate noise scale loses at least {NULL_REACH_POINTS:g} "
+                           "points of English ML recall"), **read}
+    return {"verdict": "CENTRED", **read}
 
 
 # --------------------------------------------------------------------------- #
@@ -534,10 +556,15 @@ def entity_block(prompts: Sequence[Mapping[str, Any]], results: Results,
 
 
 def entity_flags(entity: Mapping[str, Any]) -> dict[str, Any]:
-    """ANCHOR_CONFOUND PRESENT: the literal selector alone reads xi_rel >= 0.10
-    (for either target, all families), the NEGATIVE limit of K1 v1. Entity
-    control SUFFICIENT: at least 30 percent of questions are unanchored and on
-    them the literal selector's xi_rel is below 0.10 for both targets."""
+    """lexical_confound PRESENT: the literal selector alone reads xi_rel >= 0.10
+    (for either target, all families), the NEGATIVE limit of K1 v1. The literal
+    selector matches every shared token, so this is a lexical-overlap confound
+    (entity anchors are one source of it, paraphrase overlap another); it is not
+    attributed to entities. entity_control SUFFICIENT: at least 30 percent of
+    questions are unanchored and on them the literal selector's xi_rel is below
+    0.10 for both targets, i.e. removing the anchored questions removes the
+    lexical confound in K1's units. Neither flag ever removes a requirement of a
+    K1 v3 (``combined_recommendation``)."""
 
     lexical = entity["literal_selector"]
 
@@ -560,7 +587,7 @@ def entity_flags(entity: Mapping[str, Any]) -> dict[str, Any]:
         control = "SUFFICIENT"
     else:
         control = "INSUFFICIENT"
-    return {"anchor_confound": confound, "entity_control": control,
+    return {"lexical_confound": confound, "entity_control": control,
             "literal_xi_rel_all": all_rel, "literal_xi_rel_controlled": ctrl_rel}
 
 
@@ -571,9 +598,12 @@ def floor_block(prompts: Sequence[Mapping[str, Any]], results: Results,
     percent lower bound of G(MN) on entity-controlled MN families at least 0.5.
 
     VIABLE when (a) the target's controlled-MN headroom is at least 10 points,
-    (b) the literal selector's controlled G(MN) is below 0.5 (a literal-only
-    selector fails the floor) and (c) some noise scale whose null passes V1 has
-    a controlled G(MN) of at least 0.5 (an adequate selector can pass it).
+    (b) the literal selector's controlled G(MN) point is below 0.5 (a
+    literal-only selector fails the floor, with its point and not only its
+    lower bound below it) and (c) some noise scale whose null passes V1 has a
+    controlled G(MN) whose 99 percent lower bound is at least 0.5: a V1-adequate
+    noisy copy of the target passes the floor exactly as an indexer would be
+    judged. Points and bounds of every reference are reported.
     """
 
     controlled = question_sets(features)["controlled"]
@@ -598,11 +628,15 @@ def floor_block(prompts: Sequence[Mapping[str, Any]], results: Results,
     sigmas = null[target]["sigmas"]
     adequate_pass = [s for s, block in sigmas.items() if block["english_ml"]["v1_pass"]
                      and block["g_mn_controlled"].get("evaluable")
-                     and block["g_mn_controlled"]["point"] >= FLOOR_G]
+                     and block["g_mn_controlled"]["lower"] >= FLOOR_G]
     if not adequate_pass:
-        reasons.append("no V1-adequate null passes the floor")
+        reasons.append("no V1-adequate null's 99 percent lower bound of G(MN) reaches 0.5")
+    nulls = {s: {key: block["g_mn_controlled"].get(key)
+                 for key in ("evaluable", "point", "lower", "upper")}
+             | {"v1_pass": block["english_ml"]["v1_pass"]} for s, block in sigmas.items()}
     return {"candidate_g": FLOOR_G, "target": target,
             "controlled_mn_headroom": headroom, "references": references,
+            "null_g_mn_controlled": nulls,
             "adequate_nulls_passing": adequate_pass,
             "verdict": "VIABLE" if not reasons else "NOT_VIABLE", "reasons": reasons}
 
@@ -817,17 +851,35 @@ def analyse(artifact: Mapping[str, Any], results: Results, *, seeds: Sequence[in
 def combined_recommendation(decisions: Mapping[str, Mapping[str, Any]]) -> dict[str, Any]:
     """Which K1 v3 designs the two lane reads support.
 
-    Base: the first lane, in the registered order (Qwen3-0.6B-Base, then
+    INVALID first: a lane whose K1 smoke reproduction failed shows that the
+    shared selection code path does not reproduce K1 v1's measurement, so no
+    lane's read is a result (the 4B lane runs the same code) and no base, design
+    or stop is read. Then INCOMPLETE when a lane has no completed receipt. Base:
+    the first lane, in the registered order (Qwen3-0.6B-Base, then
     Qwen3.5-4B-Base), that is NEGATIVE_CAPABLE; otherwise the first that is
-    GO_ONLY_CAPABLE (a v3 on it cannot register a NEGATIVE); otherwise none,
-    and no K1 v3 is designed on these bases. Requirements follow from the
-    chosen base's flags; a seen-script cross-script condition is always
-    required (program decision D26) and is not measured here.
+    GO_ONLY_CAPABLE (a v3 on it cannot register a NEGATIVE); otherwise none, and
+    no K1 v3 is designed on these bases.
+
+    Requirements: program decision D26's four are always required (a seen-script
+    cross-script condition, an entity-controlled question set, a non-literal
+    adequacy floor, a new id and the gauntlet). The chosen base's flags only
+    add requirements; no measurement here removes one.
     """
 
+    invalid = [lane for lane in dhd.REGISTERED_ORDER
+               if lane in decisions and decisions[lane]["lane_class"] == "INVALID"]
+    if invalid:
+        return {"design": "INVALID", "base": None, "invalid_lanes": invalid,
+                "lane_classes": {lane: decisions[lane]["lane_class"]
+                                 for lane in dhd.REGISTERED_ORDER if lane in decisions},
+                "reason": "the K1 smoke reproduction failed: the shared selection code path "
+                          "does not reproduce K1 v1's measurement, so neither lane's read is "
+                          "a result; a repair is a new experiment id",
+                "requirements": []}
     missing = [lane for lane in dhd.REGISTERED_ORDER if lane not in decisions]
     if missing:
-        return {"design": "INCOMPLETE", "missing_lanes": missing}
+        return {"design": "INCOMPLETE", "base": None, "missing_lanes": missing,
+                "requirements": []}
     chosen, design = None, "NO_K1_V3"
     for wanted, label in (("NEGATIVE_CAPABLE", "NEGATIVE_CAPABLE_V3"),
                           ("GO_ONLY_CAPABLE", "GO_ONLY_V3")):
@@ -837,25 +889,33 @@ def combined_recommendation(decisions: Mapping[str, Mapping[str, Any]]) -> dict[
                 break
         if chosen:
             break
-    requirements = ["a seen-script cross-script condition (D26; not measurable here)",
-                    "a new experiment id and the research gauntlet (D26)"]
+    requirements: list[str] = []
     if chosen:
         d = decisions[chosen]
-        if d["anchor_confound"] != "ABSENT":
-            requirements.append("an entity-controlled MN leg (anchor confound "
-                                f"{d['anchor_confound']})")
+        requirements = [
+            "a seen-script cross-script condition (D26; not measurable here)",
+            "an entity-controlled question set (D26)",
+            "a new experiment id and the research gauntlet (D26)",
+        ]
+        if d["floor_candidate"] == "VIABLE":
+            requirements.append("the non-literal floor (D26): 99 percent lower bound of G(MN) "
+                                "on entity-controlled families at least 0.5")
+        else:
+            requirements.append("a non-literal adequacy floor (D26), redesigned: the candidate "
+                                f"here is {d['floor_candidate']}")
+        if d["lexical_confound"] != "ABSENT":
+            requirements.append("the GO and NEGATIVE statistics computed on the entity-"
+                                "controlled set, not only reported beside it (lexical confound "
+                                f"{d['lexical_confound']})")
         if d["entity_control"] != "SUFFICIENT":
-            requirements.append("anchor masking or an overlap covariate (entity control "
+            requirements.append("anchor masking or a lexical-overlap covariate (entity control "
                                 f"{d['entity_control']})")
         if any(v != "CENTRED" for v in d["null_calibration"].values()):
             requirements.append("a null-calibrated statistic (block-score null "
                                 f"{d['null_calibration']})")
-        if d["floor_candidate"] == "VIABLE":
-            requirements.append("the non-literal floor: 99 percent lower bound of G(MN) on "
-                                "entity-controlled families at least 0.5")
-        else:
-            requirements.append(f"a redesigned non-literal floor (candidate "
-                                f"{d['floor_candidate']})")
+        if d.get("h2_status") != "PASS":
+            requirements.append("H2 re-tested under K1's bounds on the v3 audit read (the "
+                                f"development read's H2 is {d.get('h2_status')})")
     return {"design": design, "base": chosen,
             "lane_classes": {lane: decisions[lane]["lane_class"]
                              for lane in dhd.REGISTERED_ORDER},

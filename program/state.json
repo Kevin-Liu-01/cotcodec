@@ -73,7 +73,7 @@
     "Spot-check a sample of the Q2 checker-mutation audit as the human rater (decision D9)",
     "Moonshot (Kimi) account is suspended for insufficient balance; recharge it if a Kimi model should be a rater or reviewer (rotate the exposed key at the same time)",
     "The ANTHROPIC_API_KEY on this machine is invalid (HTTP 401); supply a valid key if the Claude rater and gauntlet reviews should use the API rather than the agent harness (D25)",
-    "Accept or amend design decisions 1-14 of the draft q3-dense-headroom-precheck-v1 (program/preregistrations/q3-dense-headroom-precheck-v1.md): two lanes, development partition only, caps 0.15 + 0.35 GPU-h (D26's 0.5), the entity-anchor rule, the literal selector, the block-score null and the floor candidate"
+    "Accept or amend design decisions 1-15 of the draft q3-dense-headroom-precheck-v1 (program/preregistrations/q3-dense-headroom-precheck-v1.md): two lanes, development partition only, caps 0.15 + 0.35 GPU-h (D26's 0.5) with every job of a lane charged to its cap and no amendment under the id, the entity-anchor rule, the lexical-overlap selector, the block-score null with its 2.5-point reach rule, the floor judged on a null's lower bound, H2 gating only on FAIL (decision 5), and D26's K1 v3 requirements kept unconditionally"
   ],
   "gpu_hours_spent_this_program": 1.4099,
   "frozen_registrations": [

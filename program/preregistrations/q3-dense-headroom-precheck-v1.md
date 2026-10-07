@@ -62,22 +62,29 @@ positive or negative.
 Code. The jobs run from the source baked into an image built by
 `infra/slurm/host-single-node/build-architecture-image.sbatch` from a fresh
 clean clone of the commit that holds this file's ledger row. The entry point
-refuses to start unless every file it runs has the SHA-256 tabled here; the
-manifest filler refuses unless every tabled file has this digest in the
-checkout and at the image's commit. The last seven rows are files tabled by
-frozen registrations, imported unchanged: `harness/sparse_indexer_bank.py` by
-`q3-k1-throughput-probe-v1`, the others by `q3-k1-localization-screen-v1`
-(same SHA-256 as in those registrations).
+refuses to start unless every file it runs (the ledger verifier
+`scripts/preregister.py` among them) has the SHA-256 tabled here; the manifest
+filler refuses unless every tabled file has this digest in the checkout and at
+the image's commit. The two lane manifest templates are tabled as well, so
+their argv, run roots, CPUs, memory, mounts and host paths are bound: the
+filler refuses a template with another digest and a filled manifest that is
+not the template with only its `FILL-*` values replaced. The last seven rows
+are files tabled by frozen registrations, imported unchanged:
+`harness/sparse_indexer_bank.py` by `q3-k1-throughput-probe-v1`, the others by
+`q3-k1-localization-screen-v1` (same SHA-256 as in those registrations).
 
 | File | SHA-256 |
 |---|---|
-| scripts/run_dense_headroom_precheck.py | cb1eb03eeae6b86a4e4ae16abe570285ce4ca6b1f887a56108a4e958c026317a |
-| harness/dense_headroom_data.py | 614f4b4cbfcce88f1b29513987ce3526a5a452f80048723210b8c1558d745ae8 |
-| harness/dense_headroom_stats.py | 5b036b99c1edde01fb4bf0826e3656c1071887a34b20bcc80fc410fcfff1cf8d |
+| scripts/run_dense_headroom_precheck.py | 85a22c63be3336121e451d224ea6dae68dc1078f289c0f440bef98eb53669577 |
+| harness/dense_headroom_data.py | 855798b8446c9da545a7b6d812846796f3272947d7da514c5d0ba609617ca78e |
+| harness/dense_headroom_stats.py | 4b6ef113c5141269a565dd4218096dad151a03934aafd56609b3028967d39fba |
 | harness/dense_headroom_torch.py | 6dd8ff1f9cbcbd7d3faaecd1c94ab7908c12e2aea16b480bc56735e4b27547be |
-| scripts/run_dense_headroom_precheck_doctor.py | 57096736b09c36306f032317d46fb44f48a16d741ce674dc340cefcafd1eee30 |
-| scripts/fill_dense_headroom_precheck_manifests.py | 35ea7d9ff969eb2ea942786adef789b219f058fa781bc6b18de7dc19f2016bdd |
-| scripts/summarise_dense_headroom_precheck.py | 2f6210158c586d94a2ea1ccc480f8d42ce957d511a74b248f08883a96fd1d364 |
+| scripts/run_dense_headroom_precheck_doctor.py | 1a02188fefae40d2522840a26662478ed13fd2164f60b40b4b628dc38619cf7c |
+| scripts/fill_dense_headroom_precheck_manifests.py | 48b2726ea1b65d6c4b6cbec6d475ad1801437fecd0bfe7543dc5a9651f8057e4 |
+| scripts/summarise_dense_headroom_precheck.py | abeb73ac69d680e7f3439dc0ee619446bd4e756959f3c35594f9cd3259640145 |
+| scripts/preregister.py | 21fc3ef0ed0958b1600ce742c3b4f8d557d0a298635acb20342710eb814b2c0d |
+| experiments/manifests/q3-dense-headroom-precheck-v1/q3-dense-headroom-0p6b.yaml | 76520f5e6d4ed19aabd43a3b1793effb21b501f3e7a378ccc5ff6d64b4b09ab6 |
+| experiments/manifests/q3-dense-headroom-precheck-v1/q3-dense-headroom-4b.yaml | 7f71ebe5b358dd5cafa7a61e158fc619cc65d6ee2a63c703dd989d6fed4792e0 |
 | harness/sparse_indexer_torch.py | f21301a49634af07d5ae0385c34011400c83af15b984a96238dc6fe1d4ee9457 |
 | harness/sparse_indexer_bank.py | e96653eb3eb5b9876201347c2fa8d452efc3ebb1043a516ac03c366ff8b89f88 |
 | harness/sparse_indexer_k1_runtime.py | 6fbddc91b6f7224f909901edb82278a68f68a208b558526c1a778ec9da6812fd |
@@ -180,13 +187,17 @@ tokens and keeps 12.5 percent for a re-tokenized context.
 - LEX, the literal selector: a block's score is the number of its context
   tokens (sink excluded) that are content tokens of the question; content
   tokens are those that are not among the 100 most frequent token ids of the
-  needle language's development haystack (ties to the lower id) and do not
-  decode on their own to text without a letter or digit. Recall is the exact
-  expectation under uniformly random tie-breaking at the k-th score.
-  Layer-independent.
+  development haystack of the needle language or of the query's language
+  (ties to the lower id; on a cross-script prompt both lists are removed, so
+  the query's own function words are not content) and do not decode on their
+  own to text without a letter or digit. Recall is the exact expectation under
+  uniformly random tie-breaking at the k-th score. Layer-independent. LEX
+  matches every shared token, entities among them: it measures lexical
+  overlap, not entities.
 - N:T:sigma:seed, the block-score null: natural-log block scores of target T
   (hs, mp; floored at 1e-30) plus sigma times standard normal noise, sigma in
-  {0.25, 0.5, 1, 2}, seeds 42, 43, 44; the noise of a (seed, unit, layer) comes
+  {0.25, 0.35, 0.5, 0.7, 1, 1.4, 2, 2.8, 4} (a geometric grid of ratio about
+  the square root of 2), seeds 42, 43, 44; the noise of a (seed, unit, layer) comes
   from a generator seeded with SHA-256 of those three, so its law is identical
   on every leg. It is the identification refuter's null on the measured score
   shapes: a copy of the target with language-agnostic error.
@@ -233,11 +244,16 @@ estimate only, marked not evaluable.
   definitions and combined interval, with LEX in the indexer's place and one
   "seed") against each target, on all families, the controlled and the
   anchored subsets. A LEX xi_rel above 0 is what a selector that matches only
-  shared tokens reads with no cross-lingual matching error at all.
+  shared tokens reads with no cross-lingual matching error at all. It is a
+  lexical-overlap reading (entity anchors are one source of overlap,
+  paraphrase overlap of a same-language question another); only the
+  comparison of the controlled and anchored subsets bears on entities.
 - The block-score null under K1's statistics: for each target and sigma, xi
   and xi_rel with the seed-plus-cluster interval (three seeds), the English ML
   adequacy of K1 v1's V1 rule (null recall at least the target's minus 5
-  points at every seed), and its G(MN) on controlled families.
+  points at every seed), the English ML loss (target minus null) per seed and
+  its seed mean, and its G(MN) on controlled families with its 99 percent
+  interval.
 - Retention G of selector X against target T: macro over pairs of
   (R_X − R_rand) / (R_T − R_rand) on pair means, not evaluable when a pair's
   point target headroom is 1 point or less; replicates floor the denominator
@@ -264,7 +280,7 @@ Per lane (`harness.dense_headroom_stats.classify_lane`):
   not; FAIL otherwise.
 - lane_class:
   - INVALID: the K1 smoke reproduction failed (0.6B lane); the lane is not
-    read further.
+    read further and the combined read is INVALID.
   - NEGATIVE_CAPABLE: H1_CX at least 20 with its 99 percent lower bound at
     least 10, and h2_status not FAIL. A K1 v3 with a NEGATIVE region may be
     designed on this base.
@@ -272,22 +288,32 @@ Per lane (`harness.dense_headroom_stats.classify_lane`):
     NEGATIVE_CAPABLE. A K1 v3 on this base may register GO only; it cannot
     register a NEGATIVE (the inherited H1 at least 20 rule).
   - NOT_VIABLE: otherwise. No K1 v3 on this base.
-- anchor_confound: PRESENT when the literal selector's xi_rel point on all
+- lexical_confound: PRESENT when the literal selector's xi_rel point on all
   families is at least 0.10 (K1 v1's NEGATIVE limit) for either target;
-  ABSENT otherwise; NOT_EVALUABLE when xi_rel is not evaluable.
+  ABSENT otherwise; NOT_EVALUABLE when xi_rel is not evaluable. It is a
+  lexical-overlap confound and is not attributed to entities; ABSENT comes
+  from one heuristic selector and is weak evidence that no confound exists.
 - entity_control: SUFFICIENT when at least 30 percent of the questions are
   unanchored and on them the literal selector's xi_rel point is below 0.10 for
-  both targets; INSUFFICIENT otherwise; NOT_EVALUABLE when not evaluable.
+  both targets (removing the anchored questions removes the lexical confound
+  in K1's units); INSUFFICIENT otherwise; NOT_EVALUABLE when not evaluable.
 - null_calibration per target: CENTRED when, at every sigma whose null passes
   V1 at every seed, the seed-mean |xi| is at most 2 points and |xi_rel| at most
-  0.10; NOT_CENTRED otherwise; NOT_EVALUABLE when no sigma passes V1 or xi_rel
-  is not evaluable at one that does.
+  0.10, and at least one such sigma has a seed-mean English ML loss of at least
+  2.5 points (half of V1's 5-point tolerance), so that the null was tested
+  near the V1 boundary and not only on near-exact copies of the target;
+  NOT_CENTRED when a V1-adequate sigma breaks either limit; NOT_EVALUABLE when
+  no sigma passes V1, xi_rel is not evaluable at one that does, or every
+  V1-adequate sigma is within the limits but none reaches 2.5 points.
 - floor_candidate (an indexer's 99 percent lower bound of G(MN) on
   entity-controlled families at least 0.5, for the chosen target): VIABLE when
   the target's controlled MN headroom is at least 10 points, the literal
-  selector's controlled G(MN) is below 0.5, and some sigma whose null passes V1
-  has a controlled G(MN) of at least 0.5; NOT_VIABLE otherwise (reasons
-  listed); NOT_EVALUABLE when the controlled MN headroom is not evaluable.
+  selector's controlled G(MN) point is below 0.5, and some sigma whose null
+  passes V1 has a controlled G(MN) whose 99 percent lower bound is at least
+  0.5 (a V1-adequate noisy copy of the target passes the floor as an indexer
+  would be judged); NOT_VIABLE otherwise (reasons listed); NOT_EVALUABLE when
+  the controlled MN headroom is not evaluable. The points and both bounds of
+  the literal selector's and every null's G(MN) are reported.
 - fertility_association: STRONG when |Spearman| between needle fertility and
   CX headroom over the seven held-out languages is at least 0.75, WEAK
   otherwise (descriptive; with seven languages it cannot separate fertility
@@ -296,22 +322,35 @@ Per lane (`harness.dense_headroom_stats.classify_lane`):
 Combined read of the two lanes
 (`scripts/summarise_dense_headroom_precheck.py`,
 `harness.dense_headroom_stats.combined_recommendation`), applied once both lane
-receipts exist:
+receipts exist, or once the 0.6B lane's receipt is INVALID:
 
+- INVALID first: if any lane is INVALID (the 0.6B lane's K1 smoke
+  reproduction failed), the combined design is INVALID. The failure means the
+  shared selection code path does not reproduce K1 v1's measurement, and the
+  4B lane runs the same code, so neither lane's read is a result: no base, no
+  design and no stop is read, and a repair is a new experiment id. The 4B lane
+  is not submitted unless the 0.6B lane's receipt reports the smoke
+  reproduction REPRODUCED (Freeze procedure, step 4).
+- Then INCOMPLETE: a lane without a completed, non-void receipt makes the
+  read INCOMPLETE.
 - Base: the first lane in the order Qwen3-0.6B-Base, Qwen3.5-4B-Base that is
   NEGATIVE_CAPABLE (design NEGATIVE_CAPABLE_V3); otherwise the first that is
   GO_ONLY_CAPABLE (design GO_ONLY_V3); otherwise NO_K1_V3: no K1 v3 is
   designed on these bases and Q3's K1 line is reported as stopped for
-  insufficient dense headroom (a pre-result, not a negative). A lane without a
-  completed receipt makes the read INCOMPLETE.
-- Requirements of any K1 v3, always: a seen-script cross-script condition
-  (D26; the bundle's development partition has none, so it is not measured
-  here), a new experiment id and the research gauntlet (D26). From the chosen
-  base's flags: an entity-controlled MN leg unless anchor_confound is ABSENT;
-  anchor masking or an overlap covariate unless entity_control is SUFFICIENT;
+  insufficient dense headroom (a pre-result, not a negative).
+- Requirements of any K1 v3, always, as D26 states them: a seen-script
+  cross-script condition (the bundle's development partition has none, so it
+  is not measured here), an entity-controlled question set, a non-literal
+  adequacy floor (the floor registered here when floor_candidate is VIABLE,
+  otherwise a redesigned one), a new experiment id and the research gauntlet.
+  No measurement here removes any of them; a change to D26 is the program
+  owner's decision in `program/decisions.md`. The chosen base's flags only
+  add: the GO and NEGATIVE statistics computed on the entity-controlled set
+  (not only reported beside it) unless lexical_confound is ABSENT; anchor
+  masking or a lexical-overlap covariate unless entity_control is SUFFICIENT;
   a null-calibrated statistic unless null_calibration is CENTRED for both
-  targets; the floor as registered here when floor_candidate is VIABLE,
-  otherwise a redesigned floor.
+  targets; H2 re-tested under K1's bounds on the v3 audit read unless the
+  chosen base's h2_status is PASS (a POINT_ONLY lane met only the points).
 
 ## Seeds, sample sizes and sensitivity
 
@@ -349,14 +388,41 @@ D26's ceiling of 0.5 GPU-h. Expected use, from K1 v1's smoke timings and the
 model sizes, is about 4 minutes for the 0.6B lane and about 11 for the 4B lane
 (both include start-up: bundle read and artifact derivation, model load, and
 on 4B the first-use Triton compilation); these are estimates, not
-measurements. A lane interrupted by its time-limit signal saves its completed
-chunks and exits 75; one continuation in the same run root
-(`resume_subpath` `dense-precheck/checkpoints`) may use the lane's remaining
-minutes (its limit minus the minutes used, rounded up, minus one) if at least
-3 remain; the filler fills it at most once. A lane that still has no receipt
-is INCOMPLETE; any budget amendment would be recorded in
-`program/decisions.md` before the other lane's read is opened and could
-change only minutes and GPU-hours. A CPU doctor run in the image and the
+measurements.
+
+Every job of a lane counts against that lane's own minutes: its first job, a
+re-run of a void job and its one continuation. All of a lane's jobs run in the
+lane's registered run root (the template's `run_root`). Before filling any
+later job, the filler reads that run root: every job directory must have
+ended (`job.env` and `termination.env`), none may hold a lane receipt, and
+each is charged its elapsed minutes from `job.env` `started_at` to
+`termination.env` `finished_at`, rounded up, plus one (Slurm accounting is off
+on this host; the extra minute covers the prolog before `job.env` and the
+epilogue). A later job gets the lane's minutes minus everything charged, at
+least 3, or is refused and the lane is INCOMPLETE. A job interrupted by a
+signal saves its completed chunks and exits 75; its continuation resumes
+`dense-precheck/checkpoints` of the lane's latest job, which must have ended
+with a confirmed signal checkpoint (exit 75), has at most the lane's minutes
+minus two, and is filled at most once per lane (no job in the run root may
+name a predecessor, and the filler claims each later job's slot in the run
+root exclusively, so a second manifest for the slot is refused whatever the
+output directory). The filler, which reads the run root, is the budget
+authority; the entry point refuses a registered-profile job outside the batch
+script, a continuation manifest without the batch script's resume receipt for
+its predecessor or without the predecessor's pinned development artifact, a
+fresh job that finds checkpoints, and any
+manifest whose GPUs differ from the lane's or whose minutes exceed the lane's
+(the lane's minus two for a continuation) or fall below 3. Because Slurm sends SIGUSR1 three minutes
+before a job's limit, a job interrupted at its time limit has used at least
+its limit minus three minutes and leaves at most two: a lane that overruns its
+minutes ends INCOMPLETE, and a continuation fits only after an earlier
+interruption (a SIGTERM from the operator or the node, or a SIGUSR1 sent by
+hand).
+
+No budget amendment is possible under this id, whatever either lane read: a
+lane without a receipt within its own minutes is INCOMPLETE, and so is the
+combined read. More GPU time is a new experiment id, decided by the program
+owner in `program/decisions.md`. A CPU doctor run in the image and the
 artifact derivation inside each job cost no separate GPU time.
 
 ## Infrastructure failures and exclusions
@@ -366,7 +432,18 @@ code 0:0 (except an exit 75 completed by its one continuation), when a
 start-up check fails (exit 2), on an integrity failure (exit 3), when
 provenance verification fails, or when the orx node lacks its ORX_RESULT line.
 A void lane may be re-run under this id only if no lane receipt was produced
-by it (chunk files no statistic has read do not count), in a new run root.
+by any of its jobs (chunk files no statistic has read do not count), in the
+lane's registered run root and within the lane's remaining minutes (Compute).
+The combined read (`scripts/summarise_dense_headroom_precheck.py`) applies
+these rules to the job that wrote each receipt, from the files beside it:
+`termination.env` reason completed with exit code 0;
+`provenance-verification.txt` PASS for the job's git SHA and source SHA-256,
+which must be the receipt's; the job's `ORX_RESULT ... job=N exit=0` line (N
+its Slurm job id) in a saved orx log; every job in the lane's run root ended
+and exactly one holding a receipt; a continuation's predecessor ended with a
+confirmed signal checkpoint and is recorded in the receipt; and the lane's
+jobs together ran within its minutes. It records each receipt's SHA-256 over
+the file's bytes.
 
 ## Reported regardless of outcome
 
@@ -377,7 +454,8 @@ by it (chunk files no statistic has read do not count), in a new run root.
   per stage; the determinism mode; torch and transformers versions.
 - The entity anchors of every development question.
 - The K1 smoke reproduction, whatever its outcome.
-- The combined read with its requirements, and the GPU-hours used per lane.
+- The combined read with its requirements, and the GPU-hours used per lane:
+  every job in the lane's run root with its elapsed and charged minutes.
 
 ## Freeze procedure
 
@@ -394,11 +472,15 @@ by it (chunk files no statistic has read do not count), in a new run root.
    evidence.
 4. The two lane manifests are filled by
    `scripts/fill_dense_headroom_precheck_manifests.py` and pass the
-   submitter's dry run and test-only run; the 0.6B lane is submitted first,
-   then the 4B lane.
+   submitter's dry run and test-only run; the 0.6B lane is submitted first.
+   The 4B lane is submitted only after the 0.6B lane has a completed receipt
+   whose `smoke_452_reproduction` status is REPRODUCED; otherwise the
+   pre-check ends INVALID and the 4B lane does not run.
 5. The combined read is written by
-   `scripts/summarise_dense_headroom_precheck.py`; `program/state.json` and the
-   Q3 question file are updated.
+   `scripts/summarise_dense_headroom_precheck.py` from the lane receipts and
+   the saved orx logs of their nodes (`--orx-log`; `--run-root` for a lane
+   without a receipt); `program/state.json` and the Q3 question file are
+   updated.
 
 ## Design decisions
 
@@ -424,22 +506,37 @@ Each states the choice and why; all are open for the program owner.
 5. NEGATIVE_CAPABLE needs H1_CX at least 20 (K1's inherited rule, named in
    D26) and its development lower bound at least 10; GO_ONLY_CAPABLE needs at
    least 10. H2 gates only on FAIL (points below K1's thresholds) because the
-   development read cannot reach K1's H2 bounds with useful power.
+   development read cannot reach K1's H2 bounds with useful power. This
+   relaxes K1 v1's development pre-step (reported beside it, unchanged): a lane
+   can be NEGATIVE_CAPABLE or GO_ONLY_CAPABLE while that pre-step reads
+   ESCALATE_OR_STOP. The relaxation is not silent: a chosen base whose
+   h2_status is POINT_ONLY adds the requirement that the v3 re-test H2 under
+   K1's bounds on its audit read. The program owner accepts this explicitly
+   or makes H2 gate on PASS.
 6. The entity-anchor rule is a deterministic English-side rule (capitalised
    words after the first, digit runs, both shared with the passage). Proper
    nouns cannot be detected by case in six of the eight languages; Belebele's
    translation rules carry the English anchors into every translation. It
    misses lower-case entities and counts capitalised common words after the
    first; both are visible in the per-question anchor list.
-7. The literal selector (LEX) measures the anchor confound in K1's own units:
-   its xi_rel on all families against 0.10 (K1's NEGATIVE limit) decides
-   anchor_confound. Stop ids come from the development haystack per language,
-   not from a stop-word list, so the rule is the same for every script.
+7. The literal selector (LEX) measures the lexical-overlap confound in K1's
+   own units: its xi_rel on all families against 0.10 (K1's NEGATIVE limit)
+   decides lexical_confound. It matches every shared token, so the flag is
+   named for lexical overlap and never attributed to entities; an entity-only
+   literal selector would need each language's form of the English anchors,
+   which the bundle does not give. Stop ids come from the development haystack
+   per language, not from a stop-word list, so the rule is the same for every
+   script; the needle's and the query's languages are both removed.
 8. The block-score null uses noise on natural-log block scores, because a
    KL-distilled indexer's scores approximate the log of its target up to a
-   constant; sigma spans 0.25 to 2 and only scales whose null passes K1's V1
-   rule decide null_calibration. The 2-point and 0.10 limits are a fifth of
-   K1's GO threshold and K1's NEGATIVE xi_rel limit.
+   constant; sigma spans 0.25 to 4 on a grid of ratio about 1.4, so that for a
+   loss that grows smoothly with sigma some scale lands between half of V1's
+   tolerance and V1's tolerance. Only scales whose null passes K1's V1 rule
+   decide null_calibration, and one of them must lose at least 2.5 points of
+   English ML recall; otherwise only near-exact copies of the target were
+   tested, their xi is near 0 by construction, and the verdict is
+   NOT_EVALUABLE. The 2-point and 0.10 limits are a fifth of K1's GO threshold
+   and K1's NEGATIVE xi_rel limit.
 9. On Qwen3.5-4B-Base, deterministic torch kernels are requested with
    warn-only, because the gated-delta layers run Triton kernels outside
    torch's deterministic registry and an op without a deterministic kernel
@@ -448,13 +545,22 @@ Each states the choice and why; all are open for the program owner.
 10. The floor candidate is the gauntlet's example (lower bound of G(MN) at
     least 0.5), defined on entity-controlled families so that it measures
     non-literal adequacy, and judged by whether it separates a literal-only
-    selector from a V1-adequate noisy copy of the target.
+    selector (point below 0.5) from a V1-adequate noisy copy of the target
+    whose 99 percent lower bound is at least 0.5, the bound an indexer would be
+    judged by. With about 19 development clusters, and fewer controlled ones,
+    wide intervals make NOT_VIABLE (a redesigned floor) the likely outcome.
 11. The K1 smoke reproduction is a validity gate for the 0.6B lane: same
     tokens, same capture path, K1 v2's equivalence-tested batched selection.
-    A failure means the new code path does not reproduce K1 v1's measurement.
+    A failure means the new code path does not reproduce K1 v1's measurement;
+    the 4B lane runs the same path, so the combined read is INVALID and the 4B
+    lane is not submitted.
 12. Caps 0.15 and 0.35 GPU-h (9 and 21 minutes on one GPU), about twice the
-    estimated use, summing to D26's 0.5 GPU-h; one continuation per lane
-    inside the lane's own minutes.
+    estimated use, summing to D26's 0.5 GPU-h. Every job of a lane (re-runs
+    and its one continuation included) is charged against the lane's own
+    minutes from the run root's timestamps, and no budget amendment is
+    possible under this id. A time-limit interrupt leaves no room for a
+    continuation (the signal comes three minutes before the limit), so a lane
+    that overruns ends INCOMPLETE.
 13. Container profile `default` for the 0.6B lane and `large-cpu-mem` (an exec
     /tmp) for the 4B lane, whose Triton kernels compile and load at first use;
     the entry point also points Triton's and TorchInductor's caches at the run
@@ -462,5 +568,12 @@ Each states the choice and why; all are open for the program owner.
 14. The CPU doctor runs tiny random Qwen3 and Qwen3.5-style models with
     stand-in byte and pair tokenizers on a synthetic bundle built by the real
     K1 builder; on CPU it blocks flash-linear-attention so the gated-delta
-    layers use transformers' torch implementation. It proves executability
-    and gate semantics only, never anything about the real models or data.
+    layers use transformers' torch implementation. Its end-to-end runs use the
+    batch environment (`COTCODEC_OUTPUT_DIR` and the job's `manifest.json`),
+    so a continuation runs with its predecessor and resume receipt. It proves
+    executability and gate semantics only, never anything about the real
+    models or data.
+15. D26's four requirements of a K1 v3 are always required. No flag here
+    removes one: an ABSENT lexical confound comes from one heuristic selector
+    and does not show that entity anchors are absent. Changing D26 is the
+    program owner's decision.

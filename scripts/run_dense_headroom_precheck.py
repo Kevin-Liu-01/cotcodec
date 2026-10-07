@@ -21,8 +21,19 @@ chunks: completed chunks are already on disk, ``receipt-interrupted.json`` is
 written, then the checkpoint marker (``trigger=SIG<name>``), and the job exits
 75. A continuation in the same run root (``resume_subpath``
 ``dense-precheck/checkpoints``) skips completed chunks and refuses a different
-development artifact. Exit codes: 0 complete, 2 startup contract, 3 integrity,
-75 interrupted after a confirmed save.
+development artifact.
+
+Under the batch script (``COTCODEC_OUTPUT_DIR`` set) the job also checks its
+``manifest.json``: the seeds, model receipt and study artifact, and the job's
+kind. A fresh job (the lane's first, or a re-run of a void job) has no resume
+fields and, in the registered profile, the lane's GPUs and at most the lane's
+minutes; a continuation names its predecessor and the registered resume
+subpath, carries the batch script's ``resume-receipt.json`` for that
+predecessor, finds the predecessor's pinned development artifact, and has at
+most the lane's minutes minus two. The filler is the budget authority (it
+charges every ended job of the lane); this check makes the job refuse a
+manifest the filler cannot have produced. Exit codes: 0 complete, 2 startup
+contract, 3 integrity, 75 interrupted after a confirmed save.
 """
 
 from __future__ import annotations
@@ -53,9 +64,10 @@ EXIT_INTEGRITY = 3
 EXIT_CHECKPOINTED = 75
 CHUNK_UNITS = 16
 TINY_REPLICATES = 200
-OUTPUT_SUBDIR = "dense-precheck"
+OUTPUT_SUBDIR = dhd.OUTPUT_SUBDIR
 CODE_FILES = (
     "scripts/run_dense_headroom_precheck.py",
+    "scripts/preregister.py",
     "harness/dense_headroom_data.py",
     "harness/dense_headroom_stats.py",
     "harness/dense_headroom_torch.py",
@@ -212,20 +224,14 @@ def startup_checks(args: argparse.Namespace) -> tuple[dict[str, Any], dhd.Lane, 
     if bundle.get("tokenizer_sha256") != source.sha256:
         raise StartupError("the bundle was not built with the source tokenizer")
     output_root = os.environ.get("COTCODEC_OUTPUT_DIR")
+    job = {"kind": "unmanaged", "predecessor_job_id": None, "minutes": None}
+    if lane.profile == "registered" and not output_root:
+        raise StartupError("the registered profile runs only under the batch script "
+                           "(COTCODEC_OUTPUT_DIR and its manifest.json)")
     if output_root:
-        manifest_path = Path(output_root) / "manifest.json"
-        if not manifest_path.is_file():
-            raise StartupError("the batch manifest is missing from the output root")
-        manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
-        if manifest.get("seeds") != args.seeds:
-            raise StartupError("manifest seeds differ from argv seeds")
-        if manifest.get("model", {}).get("receipt_sha256") != receipt_sha:
-            raise StartupError("manifest receipt digest differs")
-        if manifest.get("study_artifact", {}).get("sha256") != args.expected_evidence_sha256:
-            raise StartupError("manifest study artifact digest differs")
-        if lane.profile == "registered" and (manifest.get("gpus") != lane.gpus
-                                             or manifest.get("minutes") != lane.minutes):
-            raise StartupError("manifest GPUs or minutes differ from the registered lane")
+        job = check_batch_manifest(Path(output_root), lane, args.seeds, receipt_sha,
+                                   args.expected_evidence_sha256,
+                                   args.output_dir / "checkpoints")
     if args.device == "cuda":
         import torch
 
@@ -244,8 +250,61 @@ def startup_checks(args: argparse.Namespace) -> tuple[dict[str, Any], dhd.Lane, 
         "git_sha": os.environ.get("COTCODEC_GIT_SHA", "unknown"),
         "source_sha256": os.environ.get("COTCODEC_SOURCE_SHA256", "unknown"),
         "code": code,
+        "job": job,
     }
     return bundle, lane, hashes, source, lane_codec
+
+
+def check_batch_manifest(output_root: Path, lane: dhd.Lane, seeds: list[int], receipt_sha: str,
+                         evidence_sha: str, checkpoints: Path) -> dict[str, Any]:
+    """The batch manifest of this job against argv and the registered lane.
+
+    Returns the job's kind (``fresh`` or ``continuation``), its predecessor and
+    its minutes. Raises ``StartupError`` on a manifest the filler cannot have
+    produced (see the module docstring).
+    """
+
+    manifest_path = output_root / "manifest.json"
+    if not manifest_path.is_file():
+        raise StartupError("the batch manifest is missing from the output root")
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    if manifest.get("seeds") != seeds:
+        raise StartupError("manifest seeds differ from argv seeds")
+    if manifest.get("model", {}).get("receipt_sha256") != receipt_sha:
+        raise StartupError("manifest receipt digest differs")
+    if manifest.get("study_artifact", {}).get("sha256") != evidence_sha:
+        raise StartupError("manifest study artifact digest differs")
+    predecessor = manifest.get("resume_from_job_id")
+    resume_receipt = output_root / "resume-receipt.json"
+    if predecessor is None:
+        if manifest.get("resume_subpath") is not None or resume_receipt.exists():
+            raise StartupError("resume fields or a resume receipt without a predecessor")
+        if checkpoints.exists():
+            raise StartupError("a fresh job found checkpoints it did not write")
+        kind = "fresh"
+    else:
+        predecessor = str(predecessor)
+        if manifest.get("resume_subpath") != dhd.RESUME_SUBPATH:
+            raise StartupError(f"a continuation resumes only {dhd.RESUME_SUBPATH}")
+        if not resume_receipt.is_file():
+            raise StartupError("a continuation without the batch script's resume receipt")
+        copied = json.loads(resume_receipt.read_text(encoding="utf-8"))
+        if (str(copied.get("predecessor_job_id")) != predecessor
+                or copied.get("resume_subpath") != dhd.RESUME_SUBPATH):
+            raise StartupError("the resume receipt names another predecessor or subpath")
+        if not (checkpoints / "dev-artifact.sha256").is_file():
+            raise StartupError("the continuation found no pinned development artifact")
+        kind = "continuation"
+    minutes = manifest.get("minutes")
+    if lane.profile == "registered":
+        if manifest.get("gpus") != lane.gpus:
+            raise StartupError("manifest GPUs differ from the registered lane")
+        top = lane.minutes - (dhd.CONTINUATION_MIN_CHARGE if kind == "continuation" else 0)
+        if (not isinstance(minutes, int) or isinstance(minutes, bool)
+                or not dhd.MIN_JOB_MINUTES <= minutes <= top):
+            raise StartupError(f"manifest minutes {minutes!r} are outside the lane's "
+                               f"{dhd.MIN_JOB_MINUTES}..{top} for a {kind} job")
+    return {"kind": kind, "predecessor_job_id": predecessor, "minutes": minutes}
 
 
 # --------------------------------------------------------------------------- #
@@ -394,8 +453,10 @@ class Job:
                     options, option_bytes, answer = ([], [], -1)
                     if unit.mc:
                         options, option_bytes, answer = view.options(unit.query_index)
+                    languages = (context["needle_language"],
+                                 view.queries[unit.query_index]["language"])
                     lex = (dhd.lexical_block_scores(tokens, int(context["length"]), q0, q1,
-                                                    context["needle_language"], content)
+                                                    languages, content)
                            if unit.select else None)
                     output = dht.evaluate_unit(
                         model, tokens, q0, q1, n0, n1, layers=layers, k_blocks=k_blocks,
