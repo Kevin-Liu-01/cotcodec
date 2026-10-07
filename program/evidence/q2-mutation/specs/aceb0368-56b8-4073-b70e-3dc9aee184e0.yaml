@@ -1,0 +1,21 @@
+task_id: aceb0368-56b8-4073-b70e-3dc9aee184e0
+author: blind-model-author-v1
+requirements:
+  - req_id: R0
+    statement: (implicit) The opened spreadsheet (exam/grades.xlsx extracted from /home/user/exam.zip) is saved in place; the existing Linda Garcia row and headers are unchanged.
+    check_kind: file_exists
+    observable: grades.xlsx loads; row 1 headers and row 2 (1,0,1,1,1,0,1,0,1,1 / 70) unchanged.
+  - req_id: R1
+    statement: Each remaining student's per-question scores (1 correct, 0 wrong) are recorded against ReferenceAnswers (D,A,C,D,B,C,C,D,D,D).
+    check_kind: cell_value
+    observable: >-
+      Q1..Q10 for rows 3-11: Richard Smith 1,1,0,1,1,0,1,0,1,1; Jennifer Rodriguez 1,1,1,1,0,0,1,0,1,1;
+      Michael Gonzalez 0,1,1,1,1,1,1,0,1,1; Mary Williams 1,1,1,1,0,1,1,1,1,0; Joseph Thomas 1,1,1,0,1,0,0,1,0,1;
+      James Martinez 1,0,1,1,1,0,1,0,1,0; Barbara Wilson 1,1,0,1,1,1,1,1,1,1; Karen Davis 0,1,0,1,0,1,1,0,1,0;
+      David Brown 1,1,1,1,1,1,1,1,1,1.
+  - req_id: R2
+    statement: Total Grade is 10 points per correct answer.
+    check_kind: cell_value
+    observable: M3:M11 == 70, 70, 80, 80, 60, 60, 90, 50, 100.
+allowed_variations:
+  - Formulas or constants for totals.
