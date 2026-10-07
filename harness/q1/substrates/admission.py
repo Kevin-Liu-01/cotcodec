@@ -78,7 +78,10 @@ STRICT_STATIC_PATTERNS = {
     "except": r"\bexcept\s*:|\bexcept\s+\w+",
     "pass": r"\bpass\b",
 }
-#: Small-input budget for CPU checks: largest tensor and total elements.
+#: Small-input budget for CPU checks: shrink until the largest tensor has at most
+#: TARGET_TENSOR_NUMEL elements if the guards allow, and never accept more than
+#: MAX_TENSOR_NUMEL per tensor or MAX_TOTAL_NUMEL in total.
+TARGET_TENSOR_NUMEL = 1 << 14
 MAX_TENSOR_NUMEL = 1 << 18
 MAX_TOTAL_NUMEL = 1 << 20
 INTERP_ATOL = 1e-3
@@ -360,7 +363,9 @@ def choose_small_inputs(problem_source: str, guard_check=None) -> dict[str, Any]
 
     Starting from the native sizes, repeatedly halve (never below 2) the largest
     free size whose halving keeps ``get_inputs`` valid and the substrate's guards
-    satisfied. Deterministic: ties break by name.
+    satisfied, until the largest tensor is at most ``TARGET_TENSOR_NUMEL`` or no
+    size can shrink; accept the result if it is within the hard caps.
+    Deterministic: ties break by name.
     """
     sizes, frozen = shrinkable_sizes(problem_source)
     current = {name: value for name, value in sizes.items() if name not in frozen and value >= 2}
@@ -372,7 +377,7 @@ def choose_small_inputs(problem_source: str, guard_check=None) -> dict[str, Any]
     def fits(result: dict) -> bool:
         return result["max_numel"] <= MAX_TENSOR_NUMEL and result["numel"] <= MAX_TOTAL_NUMEL
 
-    while not fits(state):
+    while state["max_numel"] > TARGET_TENSOR_NUMEL:
         progressed = False
         for name in sorted(current, key=lambda n: (-current[n], n)):
             if current[name] <= 2:
@@ -384,7 +389,9 @@ def choose_small_inputs(problem_source: str, guard_check=None) -> dict[str, Any]
                 break
             tried.append({"override": trial, "problem": result["problem"]})
         if not progressed:
-            return {"override": None, "tried": tried[-3:], "last": current}
+            break
+    if not fits(state):
+        return {"override": None, "tried": tried[-3:], "last": current}
     return {
         "override": current,
         "source": shrunk_source(problem_source, current),
