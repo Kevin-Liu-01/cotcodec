@@ -314,6 +314,14 @@ def main(argv: list[str] | None = None) -> int:
         },
         "audit_version": tiers.audit_version_hash(multiplier=16, multiplier_raised=False),
     }
+    status = journal.status()
+    retries = sum(
+        int(first.get(key, 0))
+        for key in ("contention_timeout_shared", "contention_oom_shared", "infra_failures")
+    )
+    # The hanging fixture times out in a shared slot, is retried alone, and its
+    # final row is that alone attempt (runner contention rule, section 10).
+    hang_rows = [r for r in rows if r["verdict"] == "timeout"]
     timing_rows = [r for r in rows if r["gate"] == "timing"]
     report["timing"] = timing_rows[0]["details"] if timing_rows else None
     checks = {
@@ -323,7 +331,19 @@ def main(argv: list[str] | None = None) -> int:
         "b1_differential": isinstance(report["b1_vs_upstream_kernelgym"], str)
         or all(r["ok"] for r in report["b1_vs_upstream_kernelgym"]),
         "resume_runs_nothing": second["run"] == 0 and second["skipped"] == len(items),
-        "every_item_final": first["run"] == len(items) and first["left_in_queue"] == 0,
+        # Every planned item ends with a final attempt and nothing is left queued. Since
+        # the second review a shared item's watchdog timeout is retried once alone, so
+        # runs = items + retries (the run count alone is not the check).
+        "every_item_final": all(status.get(item.key, {}).get("final") for item in items)
+        and first["left_in_queue"] == 0
+        and first["run"] == len(items) + retries,
+        "shared_timeouts_retried_alone": bool(hang_rows)
+        and all(
+            row["attempt"] == 2 and row["details"].get("item_exclusive") is True
+            if args.slots > 1
+            else row["attempt"] == 1
+            for row in hang_rows
+        ),
         "journal_clean": invalid_lines == 0,
         "calibration": report["calibration"]["no_raise"] == (16, False)
         and report["calibration"]["raise_to_64"] == (64, True),

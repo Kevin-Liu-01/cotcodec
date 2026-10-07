@@ -1679,8 +1679,10 @@ families, all four contract tiers and both TF32 policies.
    instances permuted with seed `sha256("q1-stage0-trim/2/hack/{kind}")`, and
    the three KernelBench adversarial controls, at 42 (P1) and 43 and 44 (P3).
    Controls of out-of-scope problems are not scheduled (section 18.6, item 2).
-6. **Execution.** One GPU and 32 CPUs per lane job and one Stage 0 job at a
-   time (the conditions jobs 518 and 548 measured); 12 capacity units per GPU:
+6. **Execution.** One GPU and 32 CPUs per lane job, item processes not
+   thread-pinned, and one Stage 0 job at a time (the conditions jobs 518 and
+   548 measured; a concurrent Stage 0 job or a multi-GPU job would need a new
+   paired measurement first); 12 capacity units per GPU:
    1 per item below 0.6 GB of native inputs, 3 from 0.6 to 1 GB, all 12 from
    1 GB; size-scaled watchdog limits on every item; contention failures retried
    once alone (section 10). Template:
