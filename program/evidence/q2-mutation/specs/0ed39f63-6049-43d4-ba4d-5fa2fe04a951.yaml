@@ -1,0 +1,13 @@
+task_id: 0ed39f63-6049-43d4-ba4d-5fa2fe04a951
+author: blind-model-author-v1
+requirements:
+  - req_id: R1
+    statement: Every occurrence of the string "text" in /home/user/Desktop/vscode_replace_text.txt is replaced by "test" and the file is saved.
+    check_kind: other
+    observable: The saved file content equals original.replace("text", "test") - all 10 occurrences change, including inside "texts" -> "tests" and "texting" -> "testing"; no "text" remains.
+  - req_id: R2
+    statement: (implicit) Nothing else in the file changes.
+    check_kind: other
+    observable: Apart from the replaced substrings the content (line breaks, punctuation) is byte-identical.
+allowed_variations:
+  - '[AMBIGUOUS] A whole-word-only replacement (leaving "texts"/"texting") is a narrower reading of "places that say text"; record which. Trailing newline at EOF.'

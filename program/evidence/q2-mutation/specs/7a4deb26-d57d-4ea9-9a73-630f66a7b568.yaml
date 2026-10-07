@@ -1,0 +1,14 @@
+task_id: 7a4deb26-d57d-4ea9-9a73-630f66a7b568
+author: blind-model-author-v1
+requirements:
+  - req_id: R1
+    statement: The photo's brightness is reduced and the result saved to /home/user/Desktop/woman_sitting_by_the_tree.png.
+    check_kind: image_property
+    observable: Mean luminance (PIL "L") of the saved image is lower than the original's mean (about 71.6) by a noticeable margin (e.g. at least 3 levels).
+  - req_id: R2
+    statement: (implicit) Same photo, same geometry, not destroyed.
+    check_kind: image_property
+    observable: Size remains 1099 x 730; image is not black (mean luminance > 15) and remains structurally similar to the original.
+allowed_variations:
+  - Tool and amount ("tone down" gives no target value).
+  - '[AMBIGUOUS] Output location not stated; overwriting the source is assumed.'

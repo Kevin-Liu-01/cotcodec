@@ -1,0 +1,13 @@
+task_id: fba2c100-79e8-42df-ae74-b592418d54f4
+author: blind-model-author-v1
+requirements:
+  - req_id: R1
+    statement: A snapshot of the currently shown video frame is saved as /home/user/Desktop/interstellar.png.
+    check_kind: file_exists
+    observable: The file exists and is a valid PNG.
+  - req_id: R2
+    statement: The image is a frame of the Interstellar trailer at the current playback position.
+    check_kind: image_property
+    observable: Image size equals the video resolution (1920 x 1080) and it closely matches a frame of "Interstellar Movie - Official Trailer.mp4" near the player's current time.
+allowed_variations:
+  - '[AMBIGUOUS] The exact frame depends on when the snapshot is taken; any frame near the playback position at task time.'

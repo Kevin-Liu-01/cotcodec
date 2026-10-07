@@ -1,0 +1,9 @@
+task_id: 215dfd39-f493-4bc3-a027-8a97d72c61bf
+author: blind-model-author-v1
+requirements:
+  - req_id: R1
+    statement: VLC no longer shows the cone graphic in the (idle/start) screen of the Qt interface.
+    check_kind: config_value
+    observable: ~/.config/vlc/vlcrc has qt-bgcone=0 ("Display background cone or art" disabled), saved via Preferences.
+allowed_variations:
+  - '[AMBIGUOUS] "splash screen" in VLC most plausibly maps to the background cone shown when idle; no other VLC option controls a startup splash.'

@@ -1,0 +1,13 @@
+task_id: a10b69e1-6034-4a2b-93e1-571d45194f75
+author: blind-model-author-v1
+requirements:
+  - req_id: R1
+    statement: A local folder "COMPANY" exists under Local Folders.
+    check_kind: file_exists
+    observable: ~/.thunderbird/t5q2a5hp.default-release/Mail/Local Folders/COMPANY exists (mbox + .msf).
+  - req_id: R2
+    statement: A local folder "UNIVERSITY" exists under Local Folders.
+    check_kind: file_exists
+    observable: ~/.thunderbird/t5q2a5hp.default-release/Mail/Local Folders/UNIVERSITY exists (mbox + .msf).
+allowed_variations:
+  - Folders must be top-level in Local Folders (not under the IMAP account); exact case as given.
