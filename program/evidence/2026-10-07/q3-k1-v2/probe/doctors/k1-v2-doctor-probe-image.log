@@ -1,0 +1,4 @@
+Writing model shards:   0%|          | 0/1 [00:00<?, ?it/s]Writing model shards: 100%|██████████| 1/1 [00:00<00:00, 659.38it/s]
+Loading weights:   0%|          | 0/46 [00:00<?, ?it/s]Loading weights: 100%|██████████| 46/46 [00:00<00:00, 7363.20it/s]
+Writing model shards:   0%|          | 0/1 [00:00<?, ?it/s]Writing model shards: 100%|██████████| 1/1 [00:00<00:00, 928.56it/s]
+{"status": "K1_V2_DOCTOR_PASS", "case_status": {"bank_equivalence": "PASS", "slot_independence": "PASS", "selection_equivalence": "PASS", "eval_unit_vs_v1": "PASS", "end_to_end": "PASS"}}

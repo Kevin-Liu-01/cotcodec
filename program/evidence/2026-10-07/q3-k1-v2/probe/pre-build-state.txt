@@ -1,0 +1,13 @@
+## pre-build 2026-10-07T17:33:14Z
+JOBID NAME STATE TIME TRES_PER_NODE
+518 q1-pilot-cost RUNNING 25:03 gres:gpu:h100:1
+526 q2ap-dev-l0 RUNNING 8:34 N/A
+index, utilization.gpu [%], memory.used [MiB]
+0, 0 %, 647 MiB
+1, 0 %, 0 MiB
+2, 0 %, 0 MiB
+3, 0 %, 0 MiB
+4, 0 %, 0 MiB
+5, 0 %, 0 MiB
+6, 0 %, 0 MiB
+7, 0 %, 0 MiB
