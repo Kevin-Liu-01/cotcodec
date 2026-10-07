@@ -338,3 +338,89 @@ def test_injection_plan_order_and_tamper() -> None:
     reordered[upload], reordered[reopen] = reordered[reopen], reordered[upload]
     with pytest.raises(vm_injection.InjectionPlanError):
         vm_injection.check_plan(reordered)
+
+
+def test_postconfig_file_steps_write_stdout_to_cache(tmp_path: Path) -> None:
+    cache = tmp_path / "cache"
+    (cache / "t").mkdir(parents=True)
+    (cache / "t" / "inv.pdf").write_bytes(b"same")
+    vm = tmp_path / "vm"
+    (vm / "home/user/r").mkdir(parents=True)
+    (vm / "home/user/r/inv.pdf").write_bytes(b"same")
+    raw = {
+        "evaluator": {
+            "postconfig": [
+                {"type": "activate_window", "parameters": {"window_name": "x"}},
+                {
+                    "type": "execute",
+                    "parameters": {
+                        "command": [
+                            "python",
+                            "-c",
+                            "import pyautogui; pyautogui.hotkey('ctrl', 's')",
+                        ]
+                    },
+                },
+                {
+                    "type": "download",
+                    "parameters": {
+                        "files": [{"path": "/home/user/.inv.pdf", "url": f"{CACHE}/t/inv.pdf"}]
+                    },
+                },
+                {
+                    "type": "execute",
+                    "parameters": {
+                        "command": ["diff", ".inv.pdf", "/home/user/r/inv.pdf"],
+                        "stdout": "diff.out",
+                    },
+                },
+                {
+                    "type": "execute",
+                    "parameters": {"command": ["ls", "-R", "/home/user/r"], "stdout": "ls.out"},
+                },
+                {"type": "execute", "parameters": {"command": ["pip", "install", "x.whl"]}},
+            ]
+        }
+    }
+    out = tmp_path / "taskcache"
+    out.mkdir()
+    unemulated = offline_eval.apply_postconfig_file_steps(raw, cache, vm, out)
+    assert (out / "diff.out").read_text() == ""
+    listing = (out / "ls.out").read_text()
+    # GNU ls -R prints a "/home/user/r:" header (the VM and the container use
+    # GNU ls); BSD ls does not. Either way the host prefix never leaks.
+    assert "inv.pdf" in listing
+    assert str(tmp_path.resolve()) not in listing and str(tmp_path) not in listing
+    assert unemulated == ["pip install x.whl"]
+    (vm / "home/user/r/inv.pdf").write_bytes(b"changed")
+    offline_eval.apply_postconfig_file_steps(raw, cache, vm, out)
+    assert (out / "diff.out").read_text() != ""
+
+
+def test_relational_expected_is_not_a_gold() -> None:
+    raw = {
+        "config": [
+            {
+                "type": "download",
+                "parameters": {
+                    "files": [{"url": f"{CACHE}/g/berry.jpeg", "path": "/home/user/b.png"}]
+                },
+            }
+        ],
+        "evaluator": {
+            "func": "check_image_mirror",
+            "expected": {"type": "cloud_file", "path": f"{CACHE}/g/berry.jpeg", "dest": "b.png"},
+            "result": {"type": "vm_file", "path": "/home/user/b_mirror.png", "dest": "m.png"},
+        },
+    }
+    assert controls.gold_pairs(raw) == ([], False)
+
+
+def test_overlay_skips_top_level_files(tmp_path: Path) -> None:
+    source = tmp_path / "baseline"
+    (source / "home/user/.config/vlc").mkdir(parents=True)
+    (source / "home/user/.config/vlc/vlcrc").write_text("x")
+    (source / "baseline.sha256").write_text("y")
+    vm = tmp_path / "vm"
+    assert offline_eval.overlay_tree(source, vm) == 1
+    assert (vm / "home/user/.config/vlc/vlcrc").exists() and not (vm / "baseline.sha256").exists()
