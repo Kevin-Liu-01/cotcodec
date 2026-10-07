@@ -258,3 +258,36 @@ Append-only. Newest entries at the bottom.
   tests. Froze `q3-k1-throughput-probe-v1` (D20, D22). Projected v2 totals
   under D22's counting rule: about 6.6 GPU-h central, 9.5 conservative; the
   probe's measurement decides between freezing v2 and the gauntlet.
+
+## 2026-10-07 — Q2 evaluator-mutation: second review answered (third draft, not frozen)
+
+- The second adversarial review of `q2-evaluator-mutation-v1` (55/100) found
+  seven blocking defects. Fixed on `stage0/q2-evaluator-mutation` (main's
+  six-row ledger and D1-D23 merged first): K3/K4 now use the two label
+  classes that enter the metrics without an audit gate, with one
+  consequence (the affected metrics leave the headline); a rater runner in
+  the pinned tree (`rater_runner.py`: D23 raters, one call per item,
+  transport-only retries, first-token rule, `unsure` for every non-answer,
+  hashed receipts) plus audit packets (`audit.py`) and the registered
+  headline analysis (`analysis.py`); a seeded K2 sample drawn before scoring,
+  a closed list of explanations and the "offline harness, VM fidelity
+  unverified" fallback; P3 counted at the code's cell-level rule (40 confirm
+  tasks, not 11; K7 power corrected by simulation: 80% needs about 19% at 31
+  tasks); the probe-informed operators probe-touched in code; P1 a
+  replication on 92 save-exposed golds.
+- Dev smoke of the open-weight rater (Qwen3.5-9B, vLLM cu129 overlay built
+  at `ba840b4`, Slurm 566 and 582): 133 dev packets rated once each, all
+  replies parsed, 0.110 GPU-h of its 0.2 cap (0.123 with the overlay
+  build). Exploratory answers: do-nothing shams 6/6 rejected, gold shams 4/6
+  accepted, equivalence mutants 35 accepted / 25 rejected, mostly over
+  save-stage changes visible in the packet difference, so K3 may fire on
+  confirm unless Kevin adjudicates. The Anthropic arm did not run: the API
+  key in the agent environment returns 401.
+- Dev reruns at the new code (`dev-mutants-v5`/`v6`, `dev-controls-v8`/`v9`,
+  CPU only) reproduce v4 except 1-2 mutants per run lost to a UNO bridge
+  fault (`applied`). v8 showed a spurious venv flip on a nondeterministic
+  checker (9219480b), so S1 now confirms candidates at five fresh-process
+  scorings per venv (`dependency_flips.py`).
+- Not frozen: a third review, a working Anthropic key and Kevin's D2/D23
+  sign-offs (prereg section 17) are pending. No confirm or reserve item was
+  sampled, packed, rated, built or scored.
