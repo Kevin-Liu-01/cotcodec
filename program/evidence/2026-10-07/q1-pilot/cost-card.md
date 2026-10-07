@@ -30,11 +30,10 @@
 | shared-cap4-m1-c1-h25 | 6.188 | 4.07-8.95 | 13.968 | 20.156 | 22.916 | False | 63 |
 | shared-cap2-m1-c1-h25 | 4.83 | 3.18-6.98 | 13.968 | 18.798 | 20.95 | False | 63 |
 
-| trimmed rule | in-scope substrates | units | mutants | scoring GPU-h (P1-P7) | fixed GPU-h | total GPU-h (P1-P6) | high | fits | pooled witnessed (planning) | families >= 30 |
+| trimmed rule | in-scope substrates | units | mutants | scoring GPU-h (all buckets) | fixed GPU-h | total GPU-h (without the open extension) | high | fits | pooled witnessed (planning) | families >= 30 |
 |---|---:|---:|---:|---:|---:|---:|---:|---|---:|---:|
-| trim-q60 | 69 | 72 | 395.0 | 12.238 | 2.708 | 11.954 | 15.978 | False | 155 | 5 |
-| trim-q30 | 69 | 72 | 208.0 | 11.572 | 2.708 | 9.791 | 12.871 | False | 80 | 0 |
-| trim-q120 | 69 | 72 | 770.0 | 13.584 | 2.708 | 16.292 | 22.215 | False | 305 | 5 |
-| trim-q60-paired-concurrency | 69 | 72 | 395.0 | 6.285 | 2.54 | 7.368 | 9.392 | True | 155 | 5 |
-| trim-q120-paired-concurrency | 69 | 72 | 770.0 | 6.94 | 2.54 | 9.48 | 12.4 | False | 305 | 5 |
-| trim-q200-paired-concurrency | 69 | 72 | 1193.5 | 9.296 | 2.54 | 11.836 | 15.779 | False | 467 | 5 |
+| trim1-recomputed-paired-concurrency | 69 | 72 | 395.0 | 6.362 | 2.54 | 7.445 | 9.504 | True | 155 | 5 |
+| trim2-paired-concurrency | 69 | 78 | 395.0 | 8.593 | 3.855 | 10.992 | 13.086 | False | 155 | 5 |
+| trim2-measured-4-per-gpu | 69 | 78 | 395.0 | 14.682 | 3.874 | 15.565 | 19.755 | False | 155 | 5 |
+| trim2-q30-paired-concurrency | 69 | 78 | 208.0 | 8.269 | 3.855 | 9.94 | 11.691 | False | 80 | 0 |
+| trim2-no-margin-paired-concurrency | 69 | 72 | 395.0 | 6.57 | 3.816 | 8.93 | 10.893 | False | 155 | 5 |

@@ -84,11 +84,12 @@
     "Moonshot (Kimi) account is suspended for insufficient balance; recharge it if a Kimi model should be a rater or reviewer (rotate the exposed key at the same time)",
     "Review and freeze the integrated Q1 Stage 0 preregistration (q1-stage0-gate-validation on stage0/q1-gates), including the integration decisions in its section 15 and the review fix-pass decisions in its section 16",
     "Decide whether to ask the KernelGYM authors for a licence: gate_b.py was rewritten from the spec after the review found a transliteration (stage0/q1-gates, never pushed); a licence would remove the residual risk",
-    "Q1 Stage 0 budget: the pilot projects the drafted Stage 0 at about 1,056 GPU-h (cap 8). Adopt the trimming rule q1-stage0-trim/1 in preregistration section 18.5 (7.37 GPU-h, hard stop at 8; narrows mutant metrics to problems under 1 GB and about 2.5x wider intervals), or take Stage 0 through the research gauntlet for a larger budget",
-    "Q1 audit policy (D14): the TF32-admissible threshold rejects the TF32 tutorial matmul at every held-out A3 shape (cuBLAS's TF32 error is not tl.dot's); decide the fix (for example a TF32-rounded-input reference) before freezing",
-    "The ANTHROPIC_API_KEY on this machine is invalid (HTTP 401); supply a valid key if the Claude rater and gauntlet reviews should use the API rather than the agent harness (D25)"
+    "Q1 Stage 0 budget: the drafted Stage 0 projects to about 1,056 GPU-h (cap 8). After the second review, the trimming rule q1-stage0-trim/2 (preregistration section 18.7, harness/q1/trim.py) projects 7.60 GPU-h through bucket P3 and 10.99 through P7 (8.70 and 13.09 at the high point), kept under 8 by job caps; it limits mutant metrics to problems below 1 GB (about 155 witnessed test mutants), leaves criterion 3 likely under-powered (about 73 admitted units) and does not schedule the KBV H.1 and hack-emulating mutant controls. Adopt it, fund an engineering pass (references once per problem and draw) and a new paired pilot, or take the gauntlet (blocked by D24)",
+    "Q1 audit policy (D14), preregistration section 18.3 items 6-8: the TF32-admissible threshold rejects the TF32 tutorial matmul at every held-out shape; A5 counts S1 dtype refusals as failures; the TF32-admissible tolerance exceeds 1 on convolution problems (L2/3 T = 2.67). Any change is data-motivated under D26 (validated off the evaluation set; the affected units leave the primary analysis)",
+    "The ANTHROPIC_API_KEY on this machine is invalid (HTTP 401); supply a valid key if the Claude rater and gauntlet reviews should use the API rather than the agent harness (D25)",
+    "Review decisions D26 (Q1 pilot exposure: exposed units stay primary with a sensitivity analysis; D14's precondition can no longer be met) and D27 (KernelBench adversarial kernels and unmodified upstream fidelity code admitted on GPUs under D7)"
   ],
-  "gpu_hours_spent_this_program": 2.150,
+  "gpu_hours_spent_this_program": 2.15,
   "frozen_registrations": [
     "q3-k1-localization-screen-v1",
     "q2-holo3-rerun-audit-v1-posthoc",

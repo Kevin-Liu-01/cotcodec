@@ -2,10 +2,46 @@
  "c_over_b": {
   "c_lite_trigger_2x": false,
   "median_c_cumulative_over_b_cumulative": 1.642,
-  "median_c_marginal_over_b_marginal": 1.353
+  "median_c_marginal_over_b_marginal": 1.353,
+  "pinned_statistic": {
+   "c_lite_triggered": false,
+   "clusters": 9,
+   "interval_95": [
+    1.5214926846292205,
+    2.3215300264825918
+   ],
+   "kernels": 17,
+   "other_readings_reported_only": {
+    "marginal_ratio_of_medians": {
+     "interval_95": [
+      0.7817865609294485,
+      1.8042652014780143
+     ],
+     "value": 1.352866170440862
+    },
+    "median_of_ratios": {
+     "interval_95": [
+      1.5163475703157407,
+      2.1955104143963586
+     ],
+     "value": 2.1115895488872596
+    },
+    "ratio_of_means": {
+     "interval_95": [
+      1.7944770815001623,
+      2.8293620044068635
+     ],
+     "value": 2.38083977379132
+    }
+   },
+   "share_of_resamples_above_2": 0.396,
+   "statistic": "ratio of medians of per-kernel cumulative GPU-seconds, c over b",
+   "value": 1.6424301507136103
+  }
  },
  "censored_items": [
   {
+   "bound_from": "file-mtimes",
    "exclusive": true,
    "gate": "c",
    "gpu_seconds_lower_bound": 676.8,
@@ -15,6 +51,7 @@
    "wall_seconds_lower_bound": 676.8
   },
   {
+   "bound_from": "file-mtimes",
    "exclusive": true,
    "gate": "a_head_1e-4",
    "gpu_seconds_lower_bound": 109.0,
@@ -36,6 +73,7 @@
   "selected": 260,
   "survival": 0.7510683760683761
  },
+ "exposed_sha256": "cb4a0c369d5ae5f3bc5e0c9e52d4ba2ab3f4d27905df4ce86bc3c70489875646",
  "fixed_gpu_hours": {
   "admission_full": 0.5498055555555555,
   "already_spent_this_pass": 0.899,
@@ -67,6 +105,7 @@
    "projected_seconds": 1818.6
   },
   "fidelity": {
+   "allocation_seconds_per_kernel": 27.83,
    "kernels": 11,
    "per_gate": {
     "a": {
@@ -295,7 +334,8 @@
     "n": 11,
     "p95": 35.585,
     "sum": 171.438
-   }
+   },
+   "phase_seconds": 306.143
   },
   "smoke_job_driver_seconds": 753.0,
   "specializations": {
@@ -614,6 +654,24 @@
    "wall_total": 98.007
   }
  ],
+ "large_problem_anchors": {
+  "c_points": [
+   {
+    "gb": 1.342,
+    "gpu_seconds_per_gb": 64.986,
+    "kind": "measured"
+   },
+   {
+    "gb": 4.295,
+    "gpu_seconds_per_gb": 157.58,
+    "kind": "censored lower bound"
+   }
+  ],
+  "kernels": [
+   "s1-inductor-L1-3_Batched_matrix_multiplication"
+  ],
+  "non_c_gpu_seconds_per_gb": 156.774
+ },
  "paired_concurrency": {
   "factors": {
    "A1": 0.455,
@@ -1731,6 +1789,7 @@
   }
  },
  "pilot_job": "/runs/518",
+ "run_records_sha256": "2b4c20c10a9b3329620644b6d1fc58982ea8340fa9238db33c5c4e1c2e020f63",
  "scenarios": [
   {
    "cap": 40,
@@ -2685,7 +2744,7 @@
    }
   }
  ],
- "schema": "q1-pilot-cost-card/1",
+ "schema": "q1-pilot-cost-card/2",
  "size_model": {
   "A1": {
    "alpha": 1.461,
@@ -2780,652 +2839,47 @@
  },
  "smoke_job": "/runs/474",
  "spent_gpu_hours": 0.899,
+ "timing_bias_identity_controls": [
+  {
+   "job": "518",
+   "kernel_id": "ctl-identity-L2-12_Gemm_Multiply_LeakyReLU",
+   "strict_fp32": {
+    "ci95": [
+     0.9657,
+     0.9826
+    ],
+    "median_speedup": 0.974,
+    "rounds_kept": 30
+   },
+   "tf32": {
+    "ci95": [
+     0.8861,
+     1.0437
+    ],
+    "median_speedup": 0.9072,
+    "rounds_kept": 30
+   }
+  }
+ ],
+ "timing_phase_seconds_per_item": 11.254,
  "trimmed": [
   {
-   "budget_stop": {
-    "central": {
-     "completed": [
-      "P1"
-     ],
-     "partial": {
-      "bucket": "P2",
-      "share": 0.916
-     },
-     "test_mutants_scored": 284
-    },
-    "high": {
-     "completed": [
-      "P1"
-     ],
-     "partial": {
-      "bucket": "P2",
-      "share": 0.394
-     },
-     "test_mutants_scored": 122
-    }
-   },
-   "detectable_difference_pp": 10.1,
-   "factors": null,
-   "families_with_30_witnessed_test": 5,
-   "fits_8_gpu_h": false,
-   "fits_8_gpu_h_at_high": false,
-   "fixed_gpu_hours": {
-    "admission_full": 0.55,
-    "already_spent_this_pass": 0.899,
-    "audit_hole_replay_cap": 0.5,
-    "calibration_within_frr_bound": 0.06,
-    "fidelity_sample": 0.288,
-    "specializations_in_scope": 0.177,
-    "timing_noise_floor": 0.234
-   },
-   "frr_extra_substrates": [
-    "s1-inductor-L1-6_Matmul_with_large_K_dimension_",
-    "s1-inductor-L2-32_Conv2d_Scaling_Min",
-    "s1-inductor-L2-42_ConvTranspose2d_GlobalAvgPool_BiasAdd_LogSumExp_Sum_Multiply",
-    "s2-flaggems-mm-L1-6_Matmul_with_large_K_dimension_",
-    "s1-inductor-L1-11_4D_tensor_matrix_multiplication",
-    "s1-inductor-L2-26_ConvTranspose3d_Add_HardSwish",
-    "s1-inductor-L1-3_Batched_matrix_multiplication",
-    "s2-flaggems-bmm-L1-3_Batched_matrix_multiplication",
-    "s1-inductor-L1-42_Max_Pooling_2D",
-    "s1-inductor-L1-44_Average_Pooling_1D"
-   ],
-   "frr_upper_bound_at_zero_rejections": 0.0499,
-   "gpu_hours": 12.238,
-   "gpu_hours_by_priority": {
-    "P1": 2.475,
-    "P2": 3.077,
-    "P3": 0.889,
-    "P4": 1.357,
-    "P5": 0.615,
-    "P6": 0.832,
-    "P7": 2.992
-   },
-   "gpu_hours_by_role": {
-    "adversarial-control": 0.078,
-    "frr-substrate-replicate-42": 0.638,
-    "hack-control": 1.255,
-    "identity-control": 0.713,
-    "mutant": 4.524,
-    "mutant-extension": 2.992,
-    "substrate": 2.036
-   },
-   "in_scope_substrates": 69,
-   "kernels": {
-    "adversarial-control": 3,
-    "frr-substrate-replicate-42": 10,
-    "hack-control": 42.2,
-    "identity-control": 69,
-    "mutant": 395.0,
-    "mutant-extension": 300.0,
-    "substrate": 69
-   },
-   "mutants_per_family": {
-    "arithmetic": {
-     "capped_frame": 789,
-     "dev": 15,
-     "half_width_pp": 20.2,
-     "test": 60,
-     "test_extension_max": 60,
-     "witnessed_test_planning": 30
-    },
-    "boundary": {
-     "capped_frame": 753,
-     "dev": 15,
-     "half_width_pp": 20.2,
-     "test": 60,
-     "test_extension_max": 60,
-     "witnessed_test_planning": 30
-    },
-    "indexing": {
-     "capped_frame": 514,
-     "dev": 15,
-     "half_width_pp": 20.2,
-     "test": 60,
-     "test_extension_max": 60,
-     "witnessed_test_planning": 30
-    },
-    "precision": {
-     "capped_frame": 334,
-     "dev": 15,
-     "half_width_pp": 20.2,
-     "test": 60,
-     "test_extension_max": 60,
-     "witnessed_test_planning": 30
-    },
-    "semantic": {
-     "capped_frame": 313,
-     "dev": 15,
-     "half_width_pp": 20.2,
-     "test": 60,
-     "test_extension_max": 60,
-     "witnessed_test_planning": 30
-    },
-    "synchronization": {
-     "capped_frame": 20,
-     "dev": 10,
-     "half_width_pp": 49.6,
-     "test": 10,
-     "test_extension_max": 0,
-     "witnessed_test_planning": 5
-    }
-   },
-   "n_eval_independent": 72,
-   "name": "trim-q60",
-   "pooled_half_width_pp": 8.4,
-   "pooled_witnessed_test_planning": 155,
-   "priority_cumulative_with_reserve": [
-    {
-     "through": "P1",
-     "total_central": 5.183,
-     "total_high": 6.26
-    },
-    {
-     "through": "P2",
-     "total_central": 8.26,
-     "total_high": 10.676
-    },
-    {
-     "through": "P3",
-     "total_central": 9.149,
-     "total_high": 11.952
-    },
-    {
-     "through": "P4",
-     "total_central": 10.506,
-     "total_high": 13.899
-    },
-    {
-     "through": "P5",
-     "total_central": 11.121,
-     "total_high": 14.782
-    },
-    {
-     "through": "P6",
-     "total_central": 11.953,
-     "total_high": 15.976
-    },
-    {
-     "through": "P7",
-     "total_central": 14.945,
-     "total_high": 20.27
-    }
-   ],
-   "rule": {
-    "adversarial_seeds": 3,
-    "cap": 40,
-    "family_quota_dev": 15,
-    "family_quota_test": 60,
-    "family_quota_test_max": 120,
-    "fidelity_mutants_per_family_tier": 1,
-    "frr_min_units": 72,
-    "hack_fraction": 0.15,
-    "hack_seeds": 3,
-    "identity_seeds": 1,
-    "mutant_robustness_fraction": 0.1,
-    "name": "q1-stage0-trim/1",
-    "priority": [
-     "P1 substrates at replicate 42 (in scope and FRR set), every control at replicate 42",
-     "P2 test-quota mutants at replicate 42",
-     "P3 hack-emulating and adversarial controls at replicates 43 and 44",
-     "P4 in-scope substrates at replicates 43 and 44",
-     "P5 the mutant robustness subsample at replicates 43 and 44",
-     "P6 dev-quota mutants at replicate 42",
-     "P7 further test-split mutants up to family_quota_test_max per family, one family at a time in a seeded round-robin order, at replicate 42, until the stop"
-    ],
-    "scope_bytes": 1000000000,
-    "slots_per_gpu": {
-     "0.6_to_1_GB": 4,
-     "below_0.6_GB": 12,
-     "from_1_GB": "alone"
-    },
-    "stop": "no item starts once the Stage 0 GPU-hours (every job, pilot included) reach 8.0",
-    "substrate_seeds": 3,
-    "timing_floor_items": 80
-   },
-   "scoring_gpu_hours_95": {
-    "high": 17.564,
-    "low": 8.056
-   },
-   "total_gpu_hours": 11.954,
-   "total_gpu_hours_high": 15.978
-  },
-  {
-   "budget_stop": {
-    "central": {
-     "completed": [
-      "P1",
-      "P2",
-      "P3"
-     ],
-     "partial": {
-      "bucket": "P4",
-      "share": 0.257
-     },
-     "test_mutants_scored": 160
-    },
-    "high": {
-     "completed": [
-      "P1"
-     ],
-     "partial": {
-      "bucket": "P2",
-      "share": 0.768
-     },
-     "test_mutants_scored": 123
-    }
-   },
-   "detectable_difference_pp": 19.6,
-   "factors": null,
-   "families_with_30_witnessed_test": 0,
-   "fits_8_gpu_h": false,
-   "fits_8_gpu_h_at_high": false,
-   "fixed_gpu_hours": {
-    "admission_full": 0.55,
-    "already_spent_this_pass": 0.899,
-    "audit_hole_replay_cap": 0.5,
-    "calibration_within_frr_bound": 0.06,
-    "fidelity_sample": 0.288,
-    "specializations_in_scope": 0.177,
-    "timing_noise_floor": 0.234
-   },
-   "frr_extra_substrates": [
-    "s1-inductor-L1-6_Matmul_with_large_K_dimension_",
-    "s1-inductor-L2-32_Conv2d_Scaling_Min",
-    "s1-inductor-L2-42_ConvTranspose2d_GlobalAvgPool_BiasAdd_LogSumExp_Sum_Multiply",
-    "s2-flaggems-mm-L1-6_Matmul_with_large_K_dimension_",
-    "s1-inductor-L1-11_4D_tensor_matrix_multiplication",
-    "s1-inductor-L2-26_ConvTranspose3d_Add_HardSwish",
-    "s1-inductor-L1-3_Batched_matrix_multiplication",
-    "s2-flaggems-bmm-L1-3_Batched_matrix_multiplication",
-    "s1-inductor-L1-42_Max_Pooling_2D",
-    "s1-inductor-L1-44_Average_Pooling_1D"
-   ],
-   "frr_upper_bound_at_zero_rejections": 0.0499,
-   "gpu_hours": 11.572,
-   "gpu_hours_by_priority": {
-    "P1": 2.475,
-    "P2": 1.58,
-    "P3": 0.889,
-    "P4": 1.357,
-    "P5": 0.316,
-    "P6": 0.466,
-    "P7": 4.489
-   },
-   "gpu_hours_by_role": {
-    "adversarial-control": 0.078,
-    "frr-substrate-replicate-42": 0.638,
-    "hack-control": 1.255,
-    "identity-control": 0.713,
-    "mutant": 2.363,
-    "mutant-extension": 4.489,
-    "substrate": 2.036
-   },
-   "in_scope_substrates": 69,
-   "kernels": {
-    "adversarial-control": 3,
-    "frr-substrate-replicate-42": 10,
-    "hack-control": 42.2,
-    "identity-control": 69,
-    "mutant": 208.0,
-    "mutant-extension": 450.0,
-    "substrate": 69
-   },
-   "mutants_per_family": {
-    "arithmetic": {
-     "capped_frame": 789,
-     "dev": 8,
-     "half_width_pp": 28.6,
-     "test": 30,
-     "test_extension_max": 90,
-     "witnessed_test_planning": 15
-    },
-    "boundary": {
-     "capped_frame": 753,
-     "dev": 8,
-     "half_width_pp": 28.6,
-     "test": 30,
-     "test_extension_max": 90,
-     "witnessed_test_planning": 15
-    },
-    "indexing": {
-     "capped_frame": 514,
-     "dev": 8,
-     "half_width_pp": 28.6,
-     "test": 30,
-     "test_extension_max": 90,
-     "witnessed_test_planning": 15
-    },
-    "precision": {
-     "capped_frame": 334,
-     "dev": 8,
-     "half_width_pp": 28.6,
-     "test": 30,
-     "test_extension_max": 90,
-     "witnessed_test_planning": 15
-    },
-    "semantic": {
-     "capped_frame": 313,
-     "dev": 8,
-     "half_width_pp": 28.6,
-     "test": 30,
-     "test_extension_max": 90,
-     "witnessed_test_planning": 15
-    },
-    "synchronization": {
-     "capped_frame": 20,
-     "dev": 8,
-     "half_width_pp": 49.6,
-     "test": 10,
-     "test_extension_max": 0,
-     "witnessed_test_planning": 5
-    }
-   },
-   "n_eval_independent": 72,
-   "name": "trim-q30",
-   "pooled_half_width_pp": 11.6,
-   "pooled_witnessed_test_planning": 80,
-   "priority_cumulative_with_reserve": [
-    {
-     "through": "P1",
-     "total_central": 5.183,
-     "total_high": 6.259
-    },
-    {
-     "through": "P2",
-     "total_central": 6.763,
-     "total_high": 8.526
-    },
-    {
-     "through": "P3",
-     "total_central": 7.652,
-     "total_high": 9.802
-    },
-    {
-     "through": "P4",
-     "total_central": 9.009,
-     "total_high": 11.749
-    },
-    {
-     "through": "P5",
-     "total_central": 9.325,
-     "total_high": 12.202
-    },
-    {
-     "through": "P6",
-     "total_central": 9.791,
-     "total_high": 12.871
-    },
-    {
-     "through": "P7",
-     "total_central": 14.28,
-     "total_high": 19.312
-    }
-   ],
-   "rule": {
-    "adversarial_seeds": 3,
-    "cap": 40,
-    "family_quota_dev": 8,
-    "family_quota_test": 30,
-    "family_quota_test_max": 120,
-    "fidelity_mutants_per_family_tier": 1,
-    "frr_min_units": 72,
-    "hack_fraction": 0.15,
-    "hack_seeds": 3,
-    "identity_seeds": 1,
-    "mutant_robustness_fraction": 0.1,
-    "name": "q1-stage0-trim/1",
-    "priority": [
-     "P1 substrates at replicate 42 (in scope and FRR set), every control at replicate 42",
-     "P2 test-quota mutants at replicate 42",
-     "P3 hack-emulating and adversarial controls at replicates 43 and 44",
-     "P4 in-scope substrates at replicates 43 and 44",
-     "P5 the mutant robustness subsample at replicates 43 and 44",
-     "P6 dev-quota mutants at replicate 42",
-     "P7 further test-split mutants up to family_quota_test_max per family, one family at a time in a seeded round-robin order, at replicate 42, until the stop"
-    ],
-    "scope_bytes": 1000000000,
-    "slots_per_gpu": {
-     "0.6_to_1_GB": 4,
-     "below_0.6_GB": 12,
-     "from_1_GB": "alone"
-    },
-    "stop": "no item starts once the Stage 0 GPU-hours (every job, pilot included) reach 8.0",
-    "substrate_seeds": 3,
-    "timing_floor_items": 80
-   },
-   "scoring_gpu_hours_95": {
-    "high": 16.604,
-    "low": 7.621
-   },
-   "total_gpu_hours": 9.791,
-   "total_gpu_hours_high": 12.871
-  },
-  {
-   "budget_stop": {
-    "central": {
-     "completed": [
-      "P1"
-     ],
-     "partial": {
-      "bucket": "P2",
-      "share": 0.464
-     },
-     "test_mutants_scored": 283
-    },
-    "high": {
-     "completed": [
-      "P1"
-     ],
-     "partial": {
-      "bucket": "P2",
-      "share": 0.199
-     },
-     "test_mutants_scored": 121
-    }
-   },
-   "detectable_difference_pp": 5.1,
-   "factors": null,
-   "families_with_30_witnessed_test": 5,
-   "fits_8_gpu_h": false,
-   "fits_8_gpu_h_at_high": false,
-   "fixed_gpu_hours": {
-    "admission_full": 0.55,
-    "already_spent_this_pass": 0.899,
-    "audit_hole_replay_cap": 0.5,
-    "calibration_within_frr_bound": 0.06,
-    "fidelity_sample": 0.288,
-    "specializations_in_scope": 0.177,
-    "timing_noise_floor": 0.234
-   },
-   "frr_extra_substrates": [
-    "s1-inductor-L1-6_Matmul_with_large_K_dimension_",
-    "s1-inductor-L2-32_Conv2d_Scaling_Min",
-    "s1-inductor-L2-42_ConvTranspose2d_GlobalAvgPool_BiasAdd_LogSumExp_Sum_Multiply",
-    "s2-flaggems-mm-L1-6_Matmul_with_large_K_dimension_",
-    "s1-inductor-L1-11_4D_tensor_matrix_multiplication",
-    "s1-inductor-L2-26_ConvTranspose3d_Add_HardSwish",
-    "s1-inductor-L1-3_Batched_matrix_multiplication",
-    "s2-flaggems-bmm-L1-3_Batched_matrix_multiplication",
-    "s1-inductor-L1-42_Max_Pooling_2D",
-    "s1-inductor-L1-44_Average_Pooling_1D"
-   ],
-   "frr_upper_bound_at_zero_rejections": 0.0499,
-   "gpu_hours": 13.584,
-   "gpu_hours_by_priority": {
-    "P1": 2.475,
-    "P2": 6.069,
-    "P3": 0.889,
-    "P4": 1.357,
-    "P5": 1.214,
-    "P6": 1.58,
-    "P7": 0.0
-   },
-   "gpu_hours_by_role": {
-    "adversarial-control": 0.078,
-    "frr-substrate-replicate-42": 0.638,
-    "hack-control": 1.255,
-    "identity-control": 0.713,
-    "mutant": 8.863,
-    "mutant-extension": 0.0,
-    "substrate": 2.036
-   },
-   "in_scope_substrates": 69,
-   "kernels": {
-    "adversarial-control": 3,
-    "frr-substrate-replicate-42": 10,
-    "hack-control": 42.2,
-    "identity-control": 69,
-    "mutant": 770.0,
-    "mutant-extension": 0.0,
-    "substrate": 69
-   },
-   "mutants_per_family": {
-    "arithmetic": {
-     "capped_frame": 789,
-     "dev": 30,
-     "half_width_pp": 14.3,
-     "test": 120,
-     "test_extension_max": 0,
-     "witnessed_test_planning": 60
-    },
-    "boundary": {
-     "capped_frame": 753,
-     "dev": 30,
-     "half_width_pp": 14.3,
-     "test": 120,
-     "test_extension_max": 0,
-     "witnessed_test_planning": 60
-    },
-    "indexing": {
-     "capped_frame": 514,
-     "dev": 30,
-     "half_width_pp": 14.3,
-     "test": 120,
-     "test_extension_max": 0,
-     "witnessed_test_planning": 60
-    },
-    "precision": {
-     "capped_frame": 334,
-     "dev": 30,
-     "half_width_pp": 14.3,
-     "test": 120,
-     "test_extension_max": 0,
-     "witnessed_test_planning": 60
-    },
-    "semantic": {
-     "capped_frame": 313,
-     "dev": 30,
-     "half_width_pp": 14.3,
-     "test": 120,
-     "test_extension_max": 0,
-     "witnessed_test_planning": 60
-    },
-    "synchronization": {
-     "capped_frame": 20,
-     "dev": 10,
-     "half_width_pp": 49.6,
-     "test": 10,
-     "test_extension_max": 0,
-     "witnessed_test_planning": 5
-    }
-   },
-   "n_eval_independent": 72,
-   "name": "trim-q120",
-   "pooled_half_width_pp": 6.0,
-   "pooled_witnessed_test_planning": 305,
-   "priority_cumulative_with_reserve": [
-    {
-     "through": "P1",
-     "total_central": 5.183,
-     "total_high": 6.262
-    },
-    {
-     "through": "P2",
-     "total_central": 11.252,
-     "total_high": 14.977
-    },
-    {
-     "through": "P3",
-     "total_central": 12.141,
-     "total_high": 16.254
-    },
-    {
-     "through": "P4",
-     "total_central": 13.498,
-     "total_high": 18.202
-    },
-    {
-     "through": "P5",
-     "total_central": 14.712,
-     "total_high": 19.946
-    },
-    {
-     "through": "P6",
-     "total_central": 16.292,
-     "total_high": 22.215
-    },
-    {
-     "through": "P7",
-     "total_central": 16.292,
-     "total_high": 22.215
-    }
-   ],
-   "rule": {
-    "adversarial_seeds": 3,
-    "cap": 40,
-    "family_quota_dev": 30,
-    "family_quota_test": 120,
-    "family_quota_test_max": 120,
-    "fidelity_mutants_per_family_tier": 1,
-    "frr_min_units": 72,
-    "hack_fraction": 0.15,
-    "hack_seeds": 3,
-    "identity_seeds": 1,
-    "mutant_robustness_fraction": 0.1,
-    "name": "q1-stage0-trim/1",
-    "priority": [
-     "P1 substrates at replicate 42 (in scope and FRR set), every control at replicate 42",
-     "P2 test-quota mutants at replicate 42",
-     "P3 hack-emulating and adversarial controls at replicates 43 and 44",
-     "P4 in-scope substrates at replicates 43 and 44",
-     "P5 the mutant robustness subsample at replicates 43 and 44",
-     "P6 dev-quota mutants at replicate 42",
-     "P7 further test-split mutants up to family_quota_test_max per family, one family at a time in a seeded round-robin order, at replicate 42, until the stop"
-    ],
-    "scope_bytes": 1000000000,
-    "slots_per_gpu": {
-     "0.6_to_1_GB": 4,
-     "below_0.6_GB": 12,
-     "from_1_GB": "alone"
-    },
-    "stop": "no item starts once the Stage 0 GPU-hours (every job, pilot included) reach 8.0",
-    "substrate_seeds": 3,
-    "timing_floor_items": 80
-   },
-   "scoring_gpu_hours_95": {
-    "high": 19.507,
-    "low": 8.936
-   },
-   "total_gpu_hours": 16.292,
-   "total_gpu_hours_high": 22.215
-  },
-  {
+   "anchors": null,
    "budget_stop": {
     "central": {
      "completed": [
       "P1",
       "P2",
       "P3",
-      "P4",
       "P5",
-      "P6"
+      "P6",
+      "P7"
      ],
      "partial": {
-      "bucket": "P7",
-      "share": 0.433
+      "bucket": "P8",
+      "share": 0.381
      },
-     "test_mutants_scored": 440
+     "test_mutants_scored": 424
     },
     "high": {
      "completed": [
@@ -3434,12 +2888,13 @@
       "P3"
      ],
      "partial": {
-      "bucket": "P4",
-      "share": 0.581
+      "bucket": "P5",
+      "share": 0.464
      },
      "test_mutants_scored": 310
     }
    },
+   "corrected_for_second_review": false,
    "detectable_difference_pp": 10.1,
    "factors": {
     "A1": 0.455,
@@ -3470,11 +2925,10 @@
     "specializations_in_scope": 0.177,
     "timing_noise_floor": 0.234
    },
-   "frr_extra_substrates": [
+   "frr_core_substrates": [
     "s1-inductor-L1-6_Matmul_with_large_K_dimension_",
     "s1-inductor-L2-32_Conv2d_Scaling_Min",
     "s1-inductor-L2-42_ConvTranspose2d_GlobalAvgPool_BiasAdd_LogSumExp_Sum_Multiply",
-    "s2-flaggems-mm-L1-6_Matmul_with_large_K_dimension_",
     "s1-inductor-L1-11_4D_tensor_matrix_multiplication",
     "s1-inductor-L2-26_ConvTranspose3d_Add_HardSwish",
     "s1-inductor-L1-3_Batched_matrix_multiplication",
@@ -3482,167 +2936,219 @@
     "s1-inductor-L1-42_Max_Pooling_2D",
     "s1-inductor-L1-44_Average_Pooling_1D"
    ],
+   "frr_extra_substrates": [
+    "s1-inductor-L1-6_Matmul_with_large_K_dimension_",
+    "s1-inductor-L2-32_Conv2d_Scaling_Min",
+    "s1-inductor-L2-42_ConvTranspose2d_GlobalAvgPool_BiasAdd_LogSumExp_Sum_Multiply",
+    "s1-inductor-L1-11_4D_tensor_matrix_multiplication",
+    "s1-inductor-L2-26_ConvTranspose3d_Add_HardSwish",
+    "s1-inductor-L1-3_Batched_matrix_multiplication",
+    "s2-flaggems-bmm-L1-3_Batched_matrix_multiplication",
+    "s1-inductor-L1-42_Max_Pooling_2D",
+    "s1-inductor-L1-44_Average_Pooling_1D"
+   ],
+   "frr_margin_substrates": [],
+   "frr_skipped_no_new_unit": [
+    "s2-flaggems-mm-L1-6_Matmul_with_large_K_dimension_"
+   ],
    "frr_upper_bound_at_zero_rejections": 0.0499,
-   "gpu_hours": 6.285,
+   "gpu_hours": 6.362,
    "gpu_hours_by_priority": {
-    "P1": 1.532,
+    "P1": 1.523,
     "P2": 1.498,
-    "P3": 0.433,
-    "P4": 0.661,
-    "P5": 0.3,
-    "P6": 0.405,
-    "P7": 1.457
+    "P3": 0.518,
+    "P5": 0.661,
+    "P6": 0.3,
+    "P7": 0.405,
+    "P8": 1.457
    },
    "gpu_hours_by_role": {
     "adversarial-control": 0.038,
-    "frr-substrate-replicate-42": 0.638,
-    "hack-control": 0.611,
+    "frr-core-replicate-42": 0.587,
+    "hack-control": 0.739,
     "identity-control": 0.347,
-    "mutant": 2.203,
+    "mutant": 1.903,
     "mutant-extension": 1.457,
+    "mutant-robustness": 0.3,
     "substrate": 0.992
    },
    "in_scope_substrates": 69,
    "kernels": {
     "adversarial-control": 3,
-    "frr-substrate-replicate-42": 10,
-    "hack-control": 42.2,
+    "frr-core-replicate-42": 9,
+    "hack-control": 49.0,
     "identity-control": 69,
     "mutant": 395.0,
     "mutant-extension": 300.0,
     "substrate": 69
    },
+   "mutants_exposed_removed": {},
    "mutants_per_family": {
     "arithmetic": {
      "capped_frame": 789,
      "dev": 15,
      "half_width_pp": 20.2,
+     "robustness": 6,
      "test": 60,
      "test_extension_max": 60,
+     "test_frame": 394,
      "witnessed_test_planning": 30
     },
     "boundary": {
      "capped_frame": 753,
      "dev": 15,
      "half_width_pp": 20.2,
+     "robustness": 6,
      "test": 60,
      "test_extension_max": 60,
+     "test_frame": 376,
      "witnessed_test_planning": 30
     },
     "indexing": {
      "capped_frame": 514,
      "dev": 15,
      "half_width_pp": 20.2,
+     "robustness": 6,
      "test": 60,
      "test_extension_max": 60,
+     "test_frame": 257,
      "witnessed_test_planning": 30
     },
     "precision": {
      "capped_frame": 334,
      "dev": 15,
      "half_width_pp": 20.2,
+     "robustness": 6,
      "test": 60,
      "test_extension_max": 60,
+     "test_frame": 167,
      "witnessed_test_planning": 30
     },
     "semantic": {
      "capped_frame": 313,
      "dev": 15,
      "half_width_pp": 20.2,
+     "robustness": 6,
      "test": 60,
      "test_extension_max": 60,
+     "test_frame": 156,
      "witnessed_test_planning": 30
     },
     "synchronization": {
      "capped_frame": 20,
      "dev": 10,
      "half_width_pp": 49.6,
+     "robustness": 1,
      "test": 10,
      "test_extension_max": 0,
+     "test_frame": 10,
      "witnessed_test_planning": 5
     }
    },
    "n_eval_independent": 72,
-   "name": "trim-q60-paired-concurrency",
+   "n_eval_independent_core": 72,
+   "name": "trim1-recomputed-paired-concurrency",
    "pooled_half_width_pp": 8.4,
    "pooled_witnessed_test_planning": 155,
    "priority_cumulative_with_reserve": [
     {
      "through": "P1",
-     "total_central": 4.072,
-     "total_high": 4.714
+     "total_central": 4.063,
+     "total_high": 4.702
     },
     {
      "through": "P2",
-     "total_central": 5.57,
-     "total_high": 6.84
+     "total_central": 5.561,
+     "total_high": 6.829
     },
     {
      "through": "P3",
-     "total_central": 6.003,
-     "total_high": 7.455
-    },
-    {
-     "through": "P4",
-     "total_central": 6.664,
-     "total_high": 8.393
+     "total_central": 6.079,
+     "total_high": 7.565
     },
     {
      "through": "P5",
-     "total_central": 6.964,
-     "total_high": 8.819
+     "total_central": 6.74,
+     "total_high": 8.503
     },
     {
      "through": "P6",
-     "total_central": 7.369,
-     "total_high": 9.393
+     "total_central": 7.04,
+     "total_high": 8.929
     },
     {
      "through": "P7",
-     "total_central": 8.826,
-     "total_high": 11.461
+     "total_central": 7.445,
+     "total_high": 9.504
+    },
+    {
+     "through": "P8",
+     "total_central": 8.902,
+     "total_high": 11.573
     }
    ],
    "rule": {
     "adversarial_seeds": 3,
     "cap": 40,
+    "concurrent_stage0_jobs": 1,
+    "cpus_per_job": 32,
     "family_quota_dev": 15,
     "family_quota_test": 60,
     "family_quota_test_max": 120,
     "fidelity_mutants_per_family_tier": 1,
+    "frr_margin_units": 0,
     "frr_min_units": 72,
+    "gpu_hour_cap_total": 8.0,
+    "gpus_per_job": 1,
     "hack_fraction": 0.15,
     "hack_seeds": 3,
     "identity_seeds": 1,
     "mutant_robustness_fraction": 0.1,
     "name": "q1-stage0-trim/1",
-    "priority": [
-     "P1 substrates at replicate 42 (in scope and FRR set), every control at replicate 42",
-     "P2 test-quota mutants at replicate 42",
-     "P3 hack-emulating and adversarial controls at replicates 43 and 44",
-     "P4 in-scope substrates at replicates 43 and 44",
-     "P5 the mutant robustness subsample at replicates 43 and 44",
-     "P6 dev-quota mutants at replicate 42",
-     "P7 further test-split mutants up to family_quota_test_max per family, one family at a time in a seeded round-robin order, at replicate 42, until the stop"
-    ],
     "scope_bytes": 1000000000,
-    "slots_per_gpu": {
-     "0.6_to_1_GB": 4,
-     "below_0.6_GB": 12,
-     "from_1_GB": "alone"
-    },
-    "stop": "no item starts once the Stage 0 GPU-hours (every job, pilot included) reach 8.0",
+    "slot_capacity": 12,
+    "small_below_bytes": 600000000,
     "substrate_seeds": 3,
-    "timing_floor_items": 80
+    "timing_floor_items": 80,
+    "timing_floor_job_gpus": 8,
+    "timing_floor_timing_gpus": 2,
+    "units_medium": 3,
+    "units_small": 1
    },
    "scoring_gpu_hours_95": {
-    "high": 8.92,
-    "low": 4.184
+    "high": 9.033,
+    "low": 4.234
    },
-   "total_gpu_hours": 7.368,
-   "total_gpu_hours_high": 9.392
+   "total_gpu_hours": 7.445,
+   "total_gpu_hours_high": 9.504,
+   "unscheduled_controls_gpu_hours_at_replicate_42": {
+    "hack-emulating-mutant-controls": 1.474,
+    "kbv-h1-controls": 1.769
+   },
+   "unscheduled_controls_kernels": {
+    "hack-emulating-mutant-controls": 5,
+    "kbv-h1-controls": 6
+   }
   },
   {
+   "anchors": {
+    "c_points": [
+     {
+      "gb": 1.342,
+      "gpu_seconds_per_gb": 64.986,
+      "kind": "measured"
+     },
+     {
+      "gb": 4.295,
+      "gpu_seconds_per_gb": 157.58,
+      "kind": "censored lower bound"
+     }
+    ],
+    "kernels": [
+     "s1-inductor-L1-3_Batched_matrix_multiplication"
+    ],
+    "non_c_gpu_seconds_per_gb": 156.774
+   },
    "budget_stop": {
     "central": {
      "completed": [
@@ -3652,9 +3158,9 @@
      ],
      "partial": {
       "bucket": "P4",
-      "share": 0.819
+      "share": 0.196
      },
-     "test_mutants_scored": 610
+     "test_mutants_scored": 310
     },
     "high": {
      "completed": [
@@ -3662,12 +3168,13 @@
      ],
      "partial": {
       "bucket": "P2",
-      "share": 0.782
+      "share": 0.982
      },
-     "test_mutants_scored": 477
+     "test_mutants_scored": 304
     }
    },
-   "detectable_difference_pp": 5.1,
+   "corrected_for_second_review": true,
+   "detectable_difference_pp": 10.1,
    "factors": {
     "A1": 0.455,
     "A2": 0.448,
@@ -3692,16 +3199,15 @@
     "admission_full": 0.55,
     "already_spent_this_pass": 0.899,
     "audit_hole_replay_cap": 0.5,
-    "calibration_within_frr_bound": 0.041,
-    "fidelity_sample": 0.139,
+    "calibration_within_frr_bound": 0.08,
+    "fidelity_sample": 0.649,
     "specializations_in_scope": 0.177,
-    "timing_noise_floor": 0.234
+    "timing_noise_floor": 1.0
    },
-   "frr_extra_substrates": [
+   "frr_core_substrates": [
     "s1-inductor-L1-6_Matmul_with_large_K_dimension_",
     "s1-inductor-L2-32_Conv2d_Scaling_Min",
     "s1-inductor-L2-42_ConvTranspose2d_GlobalAvgPool_BiasAdd_LogSumExp_Sum_Multiply",
-    "s2-flaggems-mm-L1-6_Matmul_with_large_K_dimension_",
     "s1-inductor-L1-11_4D_tensor_matrix_multiplication",
     "s1-inductor-L2-26_ConvTranspose3d_Add_HardSwish",
     "s1-inductor-L1-3_Batched_matrix_multiplication",
@@ -3709,167 +3215,245 @@
     "s1-inductor-L1-42_Max_Pooling_2D",
     "s1-inductor-L1-44_Average_Pooling_1D"
    ],
-   "frr_upper_bound_at_zero_rejections": 0.0499,
-   "gpu_hours": 6.94,
+   "frr_extra_substrates": [
+    "s1-inductor-L1-6_Matmul_with_large_K_dimension_",
+    "s1-inductor-L2-32_Conv2d_Scaling_Min",
+    "s1-inductor-L2-42_ConvTranspose2d_GlobalAvgPool_BiasAdd_LogSumExp_Sum_Multiply",
+    "s1-inductor-L1-11_4D_tensor_matrix_multiplication",
+    "s1-inductor-L2-26_ConvTranspose3d_Add_HardSwish",
+    "s1-inductor-L1-3_Batched_matrix_multiplication",
+    "s2-flaggems-bmm-L1-3_Batched_matrix_multiplication",
+    "s1-inductor-L1-42_Max_Pooling_2D",
+    "s1-inductor-L1-44_Average_Pooling_1D",
+    "s2-liger-kl-div-L1-98_KLDivLoss",
+    "s1-inductor-L1-43_Max_Pooling_3D",
+    "s1-inductor-L1-5_Matrix_scalar_multiplication",
+    "s1-inductor-L1-89_cumsum",
+    "s1-inductor-L1-90_cumprod",
+    "s1-inductor-L1-92_cumsum_exclusive"
+   ],
+   "frr_margin_substrates": [
+    "s2-liger-kl-div-L1-98_KLDivLoss",
+    "s1-inductor-L1-43_Max_Pooling_3D",
+    "s1-inductor-L1-5_Matrix_scalar_multiplication",
+    "s1-inductor-L1-89_cumsum",
+    "s1-inductor-L1-90_cumprod",
+    "s1-inductor-L1-92_cumsum_exclusive"
+   ],
+   "frr_skipped_no_new_unit": [
+    "s2-flaggems-mm-L1-6_Matmul_with_large_K_dimension_"
+   ],
+   "frr_upper_bound_at_zero_rejections": 0.0462,
+   "gpu_hours": 8.593,
    "gpu_hours_by_priority": {
-    "P1": 1.532,
-    "P2": 2.954,
-    "P3": 0.433,
-    "P4": 0.661,
-    "P5": 0.591,
-    "P6": 0.77,
-    "P7": 0.0
+    "P1": 1.732,
+    "P2": 1.498,
+    "P3": 0.518,
+    "P4": 2.023,
+    "P5": 0.661,
+    "P6": 0.3,
+    "P7": 0.405,
+    "P8": 1.457
    },
    "gpu_hours_by_role": {
     "adversarial-control": 0.038,
-    "frr-substrate-replicate-42": 0.638,
-    "hack-control": 0.611,
+    "frr-core-replicate-42": 0.795,
+    "frr-margin-replicate-42": 2.023,
+    "hack-control": 0.739,
     "identity-control": 0.347,
-    "mutant": 4.315,
-    "mutant-extension": 0.0,
+    "mutant": 1.903,
+    "mutant-extension": 1.457,
+    "mutant-robustness": 0.3,
     "substrate": 0.992
    },
    "in_scope_substrates": 69,
    "kernels": {
     "adversarial-control": 3,
-    "frr-substrate-replicate-42": 10,
-    "hack-control": 42.2,
+    "frr-core-replicate-42": 9,
+    "frr-margin-replicate-42": 6,
+    "hack-control": 49.0,
     "identity-control": 69,
-    "mutant": 770.0,
-    "mutant-extension": 0.0,
+    "mutant": 395.0,
+    "mutant-extension": 300.0,
     "substrate": 69
+   },
+   "mutants_exposed_removed": {
+    "arithmetic/dev": 3,
+    "arithmetic/test": 1,
+    "indexing/dev": 2,
+    "indexing/test": 2
    },
    "mutants_per_family": {
     "arithmetic": {
      "capped_frame": 789,
-     "dev": 30,
-     "half_width_pp": 14.3,
-     "test": 120,
-     "test_extension_max": 0,
-     "witnessed_test_planning": 60
+     "dev": 15,
+     "half_width_pp": 20.2,
+     "robustness": 6,
+     "test": 60,
+     "test_extension_max": 60,
+     "test_frame": 394,
+     "witnessed_test_planning": 30
     },
     "boundary": {
      "capped_frame": 753,
-     "dev": 30,
-     "half_width_pp": 14.3,
-     "test": 120,
-     "test_extension_max": 0,
-     "witnessed_test_planning": 60
+     "dev": 15,
+     "half_width_pp": 20.2,
+     "robustness": 6,
+     "test": 60,
+     "test_extension_max": 60,
+     "test_frame": 376,
+     "witnessed_test_planning": 30
     },
     "indexing": {
      "capped_frame": 514,
-     "dev": 30,
-     "half_width_pp": 14.3,
-     "test": 120,
-     "test_extension_max": 0,
-     "witnessed_test_planning": 60
+     "dev": 15,
+     "half_width_pp": 20.2,
+     "robustness": 6,
+     "test": 60,
+     "test_extension_max": 60,
+     "test_frame": 255,
+     "witnessed_test_planning": 30
     },
     "precision": {
      "capped_frame": 334,
-     "dev": 30,
-     "half_width_pp": 14.3,
-     "test": 120,
-     "test_extension_max": 0,
-     "witnessed_test_planning": 60
+     "dev": 15,
+     "half_width_pp": 20.2,
+     "robustness": 6,
+     "test": 60,
+     "test_extension_max": 60,
+     "test_frame": 167,
+     "witnessed_test_planning": 30
     },
     "semantic": {
      "capped_frame": 313,
-     "dev": 30,
-     "half_width_pp": 14.3,
-     "test": 120,
-     "test_extension_max": 0,
-     "witnessed_test_planning": 60
+     "dev": 15,
+     "half_width_pp": 20.2,
+     "robustness": 6,
+     "test": 60,
+     "test_extension_max": 60,
+     "test_frame": 156,
+     "witnessed_test_planning": 30
     },
     "synchronization": {
      "capped_frame": 20,
      "dev": 10,
      "half_width_pp": 49.6,
+     "robustness": 1,
      "test": 10,
      "test_extension_max": 0,
+     "test_frame": 10,
      "witnessed_test_planning": 5
     }
    },
-   "n_eval_independent": 72,
-   "name": "trim-q120-paired-concurrency",
-   "pooled_half_width_pp": 6.0,
-   "pooled_witnessed_test_planning": 305,
+   "n_eval_independent": 78,
+   "n_eval_independent_core": 72,
+   "name": "trim2-paired-concurrency",
+   "pooled_half_width_pp": 8.4,
+   "pooled_witnessed_test_planning": 155,
    "priority_cumulative_with_reserve": [
     {
      "through": "P1",
-     "total_central": 4.072,
-     "total_high": 4.716
+     "total_central": 5.588,
+     "total_high": 6.096
     },
     {
      "through": "P2",
-     "total_central": 7.026,
-     "total_high": 8.913
+     "total_central": 7.086,
+     "total_high": 8.034
     },
     {
      "through": "P3",
-     "total_central": 7.459,
-     "total_high": 9.528
+     "total_central": 7.604,
+     "total_high": 8.704
     },
     {
      "through": "P4",
-     "total_central": 8.12,
-     "total_high": 10.468
+     "total_central": 9.627,
+     "total_high": 11.321
     },
     {
      "through": "P5",
-     "total_central": 8.711,
-     "total_high": 11.307
+     "total_central": 10.288,
+     "total_high": 12.176
     },
     {
      "through": "P6",
-     "total_central": 9.481,
-     "total_high": 12.401
+     "total_central": 10.588,
+     "total_high": 12.564
     },
     {
      "through": "P7",
-     "total_central": 9.481,
-     "total_high": 12.401
+     "total_central": 10.993,
+     "total_high": 13.088
+    },
+    {
+     "through": "P8",
+     "total_central": 12.45,
+     "total_high": 14.972
     }
    ],
    "rule": {
     "adversarial_seeds": 3,
     "cap": 40,
-    "family_quota_dev": 30,
-    "family_quota_test": 120,
+    "concurrent_stage0_jobs": 1,
+    "cpus_per_job": 32,
+    "family_quota_dev": 15,
+    "family_quota_test": 60,
     "family_quota_test_max": 120,
     "fidelity_mutants_per_family_tier": 1,
+    "frr_margin_units": 6,
     "frr_min_units": 72,
+    "gpu_hour_cap_total": 8.0,
+    "gpus_per_job": 1,
     "hack_fraction": 0.15,
     "hack_seeds": 3,
     "identity_seeds": 1,
     "mutant_robustness_fraction": 0.1,
-    "name": "q1-stage0-trim/1",
-    "priority": [
-     "P1 substrates at replicate 42 (in scope and FRR set), every control at replicate 42",
-     "P2 test-quota mutants at replicate 42",
-     "P3 hack-emulating and adversarial controls at replicates 43 and 44",
-     "P4 in-scope substrates at replicates 43 and 44",
-     "P5 the mutant robustness subsample at replicates 43 and 44",
-     "P6 dev-quota mutants at replicate 42",
-     "P7 further test-split mutants up to family_quota_test_max per family, one family at a time in a seeded round-robin order, at replicate 42, until the stop"
-    ],
+    "name": "q1-stage0-trim/2",
     "scope_bytes": 1000000000,
-    "slots_per_gpu": {
-     "0.6_to_1_GB": 4,
-     "below_0.6_GB": 12,
-     "from_1_GB": "alone"
-    },
-    "stop": "no item starts once the Stage 0 GPU-hours (every job, pilot included) reach 8.0",
+    "slot_capacity": 12,
+    "small_below_bytes": 600000000,
     "substrate_seeds": 3,
-    "timing_floor_items": 80
+    "timing_floor_items": 80,
+    "timing_floor_job_gpus": 8,
+    "timing_floor_timing_gpus": 2,
+    "units_medium": 3,
+    "units_small": 1
    },
    "scoring_gpu_hours_95": {
-    "high": 9.86,
-    "low": 4.615
+    "high": 11.115,
+    "low": 6.617
    },
-   "total_gpu_hours": 9.48,
-   "total_gpu_hours_high": 12.4
+   "total_gpu_hours": 10.992,
+   "total_gpu_hours_high": 13.086,
+   "unscheduled_controls_gpu_hours_at_replicate_42": {
+    "hack-emulating-mutant-controls": 2.813,
+    "kbv-h1-controls": 3.375
+   },
+   "unscheduled_controls_kernels": {
+    "hack-emulating-mutant-controls": 5,
+    "kbv-h1-controls": 6
+   }
   },
   {
+   "anchors": {
+    "c_points": [
+     {
+      "gb": 1.342,
+      "gpu_seconds_per_gb": 64.986,
+      "kind": "measured"
+     },
+     {
+      "gb": 4.295,
+      "gpu_seconds_per_gb": 157.58,
+      "kind": "censored lower bound"
+     }
+    ],
+    "kernels": [
+     "s1-inductor-L1-3_Batched_matrix_multiplication"
+    ],
+    "non_c_gpu_seconds_per_gb": 156.774
+   },
    "budget_stop": {
     "central": {
      "completed": [
@@ -3877,9 +3461,9 @@
      ],
      "partial": {
       "bucket": "P2",
-      "share": 0.87
+      "share": 0.457
      },
-     "test_mutants_scored": 812
+     "test_mutants_scored": 142
     },
     "high": {
      "completed": [
@@ -3887,12 +3471,609 @@
      ],
      "partial": {
       "bucket": "P2",
-      "share": 0.51
+      "share": 0.103
      },
-     "test_mutants_scored": 476
+     "test_mutants_scored": 32
     }
    },
-   "detectable_difference_pp": 3.4,
+   "corrected_for_second_review": true,
+   "detectable_difference_pp": 10.1,
+   "factors": null,
+   "families_with_30_witnessed_test": 5,
+   "fits_8_gpu_h": false,
+   "fits_8_gpu_h_at_high": false,
+   "fixed_gpu_hours": {
+    "admission_full": 0.55,
+    "already_spent_this_pass": 0.899,
+    "audit_hole_replay_cap": 0.5,
+    "calibration_within_frr_bound": 0.099,
+    "fidelity_sample": 0.649,
+    "specializations_in_scope": 0.177,
+    "timing_noise_floor": 1.0
+   },
+   "frr_core_substrates": [
+    "s1-inductor-L1-6_Matmul_with_large_K_dimension_",
+    "s1-inductor-L2-32_Conv2d_Scaling_Min",
+    "s1-inductor-L2-42_ConvTranspose2d_GlobalAvgPool_BiasAdd_LogSumExp_Sum_Multiply",
+    "s1-inductor-L1-11_4D_tensor_matrix_multiplication",
+    "s1-inductor-L2-26_ConvTranspose3d_Add_HardSwish",
+    "s1-inductor-L1-3_Batched_matrix_multiplication",
+    "s2-flaggems-bmm-L1-3_Batched_matrix_multiplication",
+    "s1-inductor-L1-42_Max_Pooling_2D",
+    "s1-inductor-L1-44_Average_Pooling_1D"
+   ],
+   "frr_extra_substrates": [
+    "s1-inductor-L1-6_Matmul_with_large_K_dimension_",
+    "s1-inductor-L2-32_Conv2d_Scaling_Min",
+    "s1-inductor-L2-42_ConvTranspose2d_GlobalAvgPool_BiasAdd_LogSumExp_Sum_Multiply",
+    "s1-inductor-L1-11_4D_tensor_matrix_multiplication",
+    "s1-inductor-L2-26_ConvTranspose3d_Add_HardSwish",
+    "s1-inductor-L1-3_Batched_matrix_multiplication",
+    "s2-flaggems-bmm-L1-3_Batched_matrix_multiplication",
+    "s1-inductor-L1-42_Max_Pooling_2D",
+    "s1-inductor-L1-44_Average_Pooling_1D",
+    "s2-liger-kl-div-L1-98_KLDivLoss",
+    "s1-inductor-L1-43_Max_Pooling_3D",
+    "s1-inductor-L1-5_Matrix_scalar_multiplication",
+    "s1-inductor-L1-89_cumsum",
+    "s1-inductor-L1-90_cumprod",
+    "s1-inductor-L1-92_cumsum_exclusive"
+   ],
+   "frr_margin_substrates": [
+    "s2-liger-kl-div-L1-98_KLDivLoss",
+    "s1-inductor-L1-43_Max_Pooling_3D",
+    "s1-inductor-L1-5_Matrix_scalar_multiplication",
+    "s1-inductor-L1-89_cumsum",
+    "s1-inductor-L1-90_cumprod",
+    "s1-inductor-L1-92_cumsum_exclusive"
+   ],
+   "frr_skipped_no_new_unit": [
+    "s2-flaggems-mm-L1-6_Matmul_with_large_K_dimension_"
+   ],
+   "frr_upper_bound_at_zero_rejections": 0.0462,
+   "gpu_hours": 14.682,
+   "gpu_hours_by_priority": {
+    "P1": 2.72,
+    "P2": 3.077,
+    "P3": 1.066,
+    "P4": 2.023,
+    "P5": 1.357,
+    "P6": 0.615,
+    "P7": 0.832,
+    "P8": 2.992
+   },
+   "gpu_hours_by_role": {
+    "adversarial-control": 0.078,
+    "frr-core-replicate-42": 0.795,
+    "frr-margin-replicate-42": 2.023,
+    "hack-control": 1.52,
+    "identity-control": 0.713,
+    "mutant": 3.909,
+    "mutant-extension": 2.992,
+    "mutant-robustness": 0.615,
+    "substrate": 2.036
+   },
+   "in_scope_substrates": 69,
+   "kernels": {
+    "adversarial-control": 3,
+    "frr-core-replicate-42": 9,
+    "frr-margin-replicate-42": 6,
+    "hack-control": 49.0,
+    "identity-control": 69,
+    "mutant": 395.0,
+    "mutant-extension": 300.0,
+    "substrate": 69
+   },
+   "mutants_exposed_removed": {
+    "arithmetic/dev": 3,
+    "arithmetic/test": 1,
+    "indexing/dev": 2,
+    "indexing/test": 2
+   },
+   "mutants_per_family": {
+    "arithmetic": {
+     "capped_frame": 789,
+     "dev": 15,
+     "half_width_pp": 20.2,
+     "robustness": 6,
+     "test": 60,
+     "test_extension_max": 60,
+     "test_frame": 394,
+     "witnessed_test_planning": 30
+    },
+    "boundary": {
+     "capped_frame": 753,
+     "dev": 15,
+     "half_width_pp": 20.2,
+     "robustness": 6,
+     "test": 60,
+     "test_extension_max": 60,
+     "test_frame": 376,
+     "witnessed_test_planning": 30
+    },
+    "indexing": {
+     "capped_frame": 514,
+     "dev": 15,
+     "half_width_pp": 20.2,
+     "robustness": 6,
+     "test": 60,
+     "test_extension_max": 60,
+     "test_frame": 255,
+     "witnessed_test_planning": 30
+    },
+    "precision": {
+     "capped_frame": 334,
+     "dev": 15,
+     "half_width_pp": 20.2,
+     "robustness": 6,
+     "test": 60,
+     "test_extension_max": 60,
+     "test_frame": 167,
+     "witnessed_test_planning": 30
+    },
+    "semantic": {
+     "capped_frame": 313,
+     "dev": 15,
+     "half_width_pp": 20.2,
+     "robustness": 6,
+     "test": 60,
+     "test_extension_max": 60,
+     "test_frame": 156,
+     "witnessed_test_planning": 30
+    },
+    "synchronization": {
+     "capped_frame": 20,
+     "dev": 10,
+     "half_width_pp": 49.6,
+     "robustness": 1,
+     "test": 10,
+     "test_extension_max": 0,
+     "test_frame": 10,
+     "witnessed_test_planning": 5
+    }
+   },
+   "n_eval_independent": 78,
+   "n_eval_independent_core": 72,
+   "name": "trim2-measured-4-per-gpu",
+   "pooled_half_width_pp": 8.4,
+   "pooled_witnessed_test_planning": 155,
+   "priority_cumulative_with_reserve": [
+    {
+     "through": "P1",
+     "total_central": 6.595,
+     "total_high": 7.57
+    },
+    {
+     "through": "P2",
+     "total_central": 9.672,
+     "total_high": 11.75
+    },
+    {
+     "through": "P3",
+     "total_central": 10.738,
+     "total_high": 13.198
+    },
+    {
+     "through": "P4",
+     "total_central": 12.761,
+     "total_high": 15.946
+    },
+    {
+     "through": "P5",
+     "total_central": 14.118,
+     "total_high": 17.789
+    },
+    {
+     "through": "P6",
+     "total_central": 14.733,
+     "total_high": 18.625
+    },
+    {
+     "through": "P7",
+     "total_central": 15.565,
+     "total_high": 19.755
+    },
+    {
+     "through": "P8",
+     "total_central": 18.557,
+     "total_high": 23.819
+    }
+   ],
+   "rule": {
+    "adversarial_seeds": 3,
+    "cap": 40,
+    "concurrent_stage0_jobs": 1,
+    "cpus_per_job": 32,
+    "family_quota_dev": 15,
+    "family_quota_test": 60,
+    "family_quota_test_max": 120,
+    "fidelity_mutants_per_family_tier": 1,
+    "frr_margin_units": 6,
+    "frr_min_units": 72,
+    "gpu_hour_cap_total": 8.0,
+    "gpus_per_job": 1,
+    "hack_fraction": 0.15,
+    "hack_seeds": 3,
+    "identity_seeds": 1,
+    "mutant_robustness_fraction": 0.1,
+    "name": "q1-stage0-trim/2",
+    "scope_bytes": 1000000000,
+    "slot_capacity": 12,
+    "small_below_bytes": 600000000,
+    "substrate_seeds": 3,
+    "timing_floor_items": 80,
+    "timing_floor_job_gpus": 8,
+    "timing_floor_timing_gpus": 2,
+    "units_medium": 3,
+    "units_small": 1
+   },
+   "scoring_gpu_hours_95": {
+    "high": 19.944,
+    "low": 10.614
+   },
+   "total_gpu_hours": 15.565,
+   "total_gpu_hours_high": 19.755,
+   "unscheduled_controls_gpu_hours_at_replicate_42": {
+    "hack-emulating-mutant-controls": 2.813,
+    "kbv-h1-controls": 3.375
+   },
+   "unscheduled_controls_kernels": {
+    "hack-emulating-mutant-controls": 5,
+    "kbv-h1-controls": 6
+   }
+  },
+  {
+   "anchors": {
+    "c_points": [
+     {
+      "gb": 1.342,
+      "gpu_seconds_per_gb": 64.986,
+      "kind": "measured"
+     },
+     {
+      "gb": 4.295,
+      "gpu_seconds_per_gb": 157.58,
+      "kind": "censored lower bound"
+     }
+    ],
+    "kernels": [
+     "s1-inductor-L1-3_Batched_matrix_multiplication"
+    ],
+    "non_c_gpu_seconds_per_gb": 156.774
+   },
+   "budget_stop": {
+    "central": {
+     "completed": [
+      "P1",
+      "P2",
+      "P3"
+     ],
+     "partial": {
+      "bucket": "P4",
+      "share": 0.556
+     },
+     "test_mutants_scored": 160
+    },
+    "high": {
+     "completed": [
+      "P1",
+      "P2",
+      "P3"
+     ],
+     "partial": {
+      "bucket": "P4",
+      "share": 0.098
+     },
+     "test_mutants_scored": 160
+    }
+   },
+   "corrected_for_second_review": true,
+   "detectable_difference_pp": 19.6,
+   "factors": {
+    "A1": 0.455,
+    "A2": 0.448,
+    "A3": 0.454,
+    "A4": 0.434,
+    "A4_poison": 0.515,
+    "A4_sanitizer": 0.849,
+    "A5": 0.502,
+    "a": 0.519,
+    "a_1e-3": 0.489,
+    "a_head_1e-2": 0.486,
+    "a_head_1e-4": 0.506,
+    "a_static": 0.461,
+    "b1": 0.458,
+    "b2": 0.445,
+    "c": 0.458
+   },
+   "families_with_30_witnessed_test": 0,
+   "fits_8_gpu_h": false,
+   "fits_8_gpu_h_at_high": false,
+   "fixed_gpu_hours": {
+    "admission_full": 0.55,
+    "already_spent_this_pass": 0.899,
+    "audit_hole_replay_cap": 0.5,
+    "calibration_within_frr_bound": 0.08,
+    "fidelity_sample": 0.649,
+    "specializations_in_scope": 0.177,
+    "timing_noise_floor": 1.0
+   },
+   "frr_core_substrates": [
+    "s1-inductor-L1-6_Matmul_with_large_K_dimension_",
+    "s1-inductor-L2-32_Conv2d_Scaling_Min",
+    "s1-inductor-L2-42_ConvTranspose2d_GlobalAvgPool_BiasAdd_LogSumExp_Sum_Multiply",
+    "s1-inductor-L1-11_4D_tensor_matrix_multiplication",
+    "s1-inductor-L2-26_ConvTranspose3d_Add_HardSwish",
+    "s1-inductor-L1-3_Batched_matrix_multiplication",
+    "s2-flaggems-bmm-L1-3_Batched_matrix_multiplication",
+    "s1-inductor-L1-42_Max_Pooling_2D",
+    "s1-inductor-L1-44_Average_Pooling_1D"
+   ],
+   "frr_extra_substrates": [
+    "s1-inductor-L1-6_Matmul_with_large_K_dimension_",
+    "s1-inductor-L2-32_Conv2d_Scaling_Min",
+    "s1-inductor-L2-42_ConvTranspose2d_GlobalAvgPool_BiasAdd_LogSumExp_Sum_Multiply",
+    "s1-inductor-L1-11_4D_tensor_matrix_multiplication",
+    "s1-inductor-L2-26_ConvTranspose3d_Add_HardSwish",
+    "s1-inductor-L1-3_Batched_matrix_multiplication",
+    "s2-flaggems-bmm-L1-3_Batched_matrix_multiplication",
+    "s1-inductor-L1-42_Max_Pooling_2D",
+    "s1-inductor-L1-44_Average_Pooling_1D",
+    "s2-liger-kl-div-L1-98_KLDivLoss",
+    "s1-inductor-L1-43_Max_Pooling_3D",
+    "s1-inductor-L1-5_Matrix_scalar_multiplication",
+    "s1-inductor-L1-89_cumsum",
+    "s1-inductor-L1-90_cumprod",
+    "s1-inductor-L1-92_cumsum_exclusive"
+   ],
+   "frr_margin_substrates": [
+    "s2-liger-kl-div-L1-98_KLDivLoss",
+    "s1-inductor-L1-43_Max_Pooling_3D",
+    "s1-inductor-L1-5_Matrix_scalar_multiplication",
+    "s1-inductor-L1-89_cumsum",
+    "s1-inductor-L1-90_cumprod",
+    "s1-inductor-L1-92_cumsum_exclusive"
+   ],
+   "frr_skipped_no_new_unit": [
+    "s2-flaggems-mm-L1-6_Matmul_with_large_K_dimension_"
+   ],
+   "frr_upper_bound_at_zero_rejections": 0.0462,
+   "gpu_hours": 8.269,
+   "gpu_hours_by_priority": {
+    "P1": 1.732,
+    "P2": 0.77,
+    "P3": 0.518,
+    "P4": 2.023,
+    "P5": 0.661,
+    "P6": 0.154,
+    "P7": 0.227,
+    "P8": 2.185
+   },
+   "gpu_hours_by_role": {
+    "adversarial-control": 0.038,
+    "frr-core-replicate-42": 0.795,
+    "frr-margin-replicate-42": 2.023,
+    "hack-control": 0.739,
+    "identity-control": 0.347,
+    "mutant": 0.997,
+    "mutant-extension": 2.185,
+    "mutant-robustness": 0.154,
+    "substrate": 0.992
+   },
+   "in_scope_substrates": 69,
+   "kernels": {
+    "adversarial-control": 3,
+    "frr-core-replicate-42": 9,
+    "frr-margin-replicate-42": 6,
+    "hack-control": 49.0,
+    "identity-control": 69,
+    "mutant": 208.0,
+    "mutant-extension": 450.0,
+    "substrate": 69
+   },
+   "mutants_exposed_removed": {
+    "arithmetic/dev": 3,
+    "arithmetic/test": 1,
+    "indexing/dev": 2,
+    "indexing/test": 2
+   },
+   "mutants_per_family": {
+    "arithmetic": {
+     "capped_frame": 789,
+     "dev": 8,
+     "half_width_pp": 28.6,
+     "robustness": 3,
+     "test": 30,
+     "test_extension_max": 90,
+     "test_frame": 394,
+     "witnessed_test_planning": 15
+    },
+    "boundary": {
+     "capped_frame": 753,
+     "dev": 8,
+     "half_width_pp": 28.6,
+     "robustness": 3,
+     "test": 30,
+     "test_extension_max": 90,
+     "test_frame": 376,
+     "witnessed_test_planning": 15
+    },
+    "indexing": {
+     "capped_frame": 514,
+     "dev": 8,
+     "half_width_pp": 28.6,
+     "robustness": 3,
+     "test": 30,
+     "test_extension_max": 90,
+     "test_frame": 255,
+     "witnessed_test_planning": 15
+    },
+    "precision": {
+     "capped_frame": 334,
+     "dev": 8,
+     "half_width_pp": 28.6,
+     "robustness": 3,
+     "test": 30,
+     "test_extension_max": 90,
+     "test_frame": 167,
+     "witnessed_test_planning": 15
+    },
+    "semantic": {
+     "capped_frame": 313,
+     "dev": 8,
+     "half_width_pp": 28.6,
+     "robustness": 3,
+     "test": 30,
+     "test_extension_max": 90,
+     "test_frame": 156,
+     "witnessed_test_planning": 15
+    },
+    "synchronization": {
+     "capped_frame": 20,
+     "dev": 8,
+     "half_width_pp": 49.6,
+     "robustness": 1,
+     "test": 10,
+     "test_extension_max": 0,
+     "test_frame": 10,
+     "witnessed_test_planning": 5
+    }
+   },
+   "n_eval_independent": 78,
+   "n_eval_independent_core": 72,
+   "name": "trim2-q30-paired-concurrency",
+   "pooled_half_width_pp": 11.6,
+   "pooled_witnessed_test_planning": 80,
+   "priority_cumulative_with_reserve": [
+    {
+     "through": "P1",
+     "total_central": 5.588,
+     "total_high": 6.087
+    },
+    {
+     "through": "P2",
+     "total_central": 6.358,
+     "total_high": 7.078
+    },
+    {
+     "through": "P3",
+     "total_central": 6.876,
+     "total_high": 7.745
+    },
+    {
+     "through": "P4",
+     "total_central": 8.899,
+     "total_high": 10.351
+    },
+    {
+     "through": "P5",
+     "total_central": 9.56,
+     "total_high": 11.202
+    },
+    {
+     "through": "P6",
+     "total_central": 9.714,
+     "total_high": 11.4
+    },
+    {
+     "through": "P7",
+     "total_central": 9.941,
+     "total_high": 11.692
+    },
+    {
+     "through": "P8",
+     "total_central": 12.126,
+     "total_high": 14.506
+    }
+   ],
+   "rule": {
+    "adversarial_seeds": 3,
+    "cap": 40,
+    "concurrent_stage0_jobs": 1,
+    "cpus_per_job": 32,
+    "family_quota_dev": 8,
+    "family_quota_test": 30,
+    "family_quota_test_max": 120,
+    "fidelity_mutants_per_family_tier": 1,
+    "frr_margin_units": 6,
+    "frr_min_units": 72,
+    "gpu_hour_cap_total": 8.0,
+    "gpus_per_job": 1,
+    "hack_fraction": 0.15,
+    "hack_seeds": 3,
+    "identity_seeds": 1,
+    "mutant_robustness_fraction": 0.1,
+    "name": "q1-stage0-trim/2",
+    "scope_bytes": 1000000000,
+    "slot_capacity": 12,
+    "small_below_bytes": 600000000,
+    "substrate_seeds": 3,
+    "timing_floor_items": 80,
+    "timing_floor_job_gpus": 8,
+    "timing_floor_timing_gpus": 2,
+    "units_medium": 3,
+    "units_small": 1
+   },
+   "scoring_gpu_hours_95": {
+    "high": 10.649,
+    "low": 6.404
+   },
+   "total_gpu_hours": 9.94,
+   "total_gpu_hours_high": 11.691,
+   "unscheduled_controls_gpu_hours_at_replicate_42": {
+    "hack-emulating-mutant-controls": 2.813,
+    "kbv-h1-controls": 3.375
+   },
+   "unscheduled_controls_kernels": {
+    "hack-emulating-mutant-controls": 5,
+    "kbv-h1-controls": 6
+   }
+  },
+  {
+   "anchors": {
+    "c_points": [
+     {
+      "gb": 1.342,
+      "gpu_seconds_per_gb": 64.986,
+      "kind": "measured"
+     },
+     {
+      "gb": 4.295,
+      "gpu_seconds_per_gb": 157.58,
+      "kind": "censored lower bound"
+     }
+    ],
+    "kernels": [
+     "s1-inductor-L1-3_Batched_matrix_multiplication"
+    ],
+    "non_c_gpu_seconds_per_gb": 156.774
+   },
+   "budget_stop": {
+    "central": {
+     "completed": [
+      "P1",
+      "P2",
+      "P3"
+     ],
+     "partial": {
+      "bucket": "P5",
+      "share": 0.658
+     },
+     "test_mutants_scored": 310
+    },
+    "high": {
+     "completed": [
+      "P1"
+     ],
+     "partial": {
+      "bucket": "P2",
+      "share": 0.862
+     },
+     "test_mutants_scored": 267
+    }
+   },
+   "corrected_for_second_review": true,
+   "detectable_difference_pp": 10.1,
    "factors": {
     "A1": 0.455,
     "A2": 0.448,
@@ -3918,15 +4099,14 @@
     "already_spent_this_pass": 0.899,
     "audit_hole_replay_cap": 0.5,
     "calibration_within_frr_bound": 0.041,
-    "fidelity_sample": 0.139,
+    "fidelity_sample": 0.649,
     "specializations_in_scope": 0.177,
-    "timing_noise_floor": 0.234
+    "timing_noise_floor": 1.0
    },
-   "frr_extra_substrates": [
+   "frr_core_substrates": [
     "s1-inductor-L1-6_Matmul_with_large_K_dimension_",
     "s1-inductor-L2-32_Conv2d_Scaling_Min",
     "s1-inductor-L2-42_ConvTranspose2d_GlobalAvgPool_BiasAdd_LogSumExp_Sum_Multiply",
-    "s2-flaggems-mm-L1-6_Matmul_with_large_K_dimension_",
     "s1-inductor-L1-11_4D_tensor_matrix_multiplication",
     "s1-inductor-L2-26_ConvTranspose3d_Add_HardSwish",
     "s1-inductor-L1-3_Batched_matrix_multiplication",
@@ -3934,165 +4114,204 @@
     "s1-inductor-L1-42_Max_Pooling_2D",
     "s1-inductor-L1-44_Average_Pooling_1D"
    ],
+   "frr_extra_substrates": [
+    "s1-inductor-L1-6_Matmul_with_large_K_dimension_",
+    "s1-inductor-L2-32_Conv2d_Scaling_Min",
+    "s1-inductor-L2-42_ConvTranspose2d_GlobalAvgPool_BiasAdd_LogSumExp_Sum_Multiply",
+    "s1-inductor-L1-11_4D_tensor_matrix_multiplication",
+    "s1-inductor-L2-26_ConvTranspose3d_Add_HardSwish",
+    "s1-inductor-L1-3_Batched_matrix_multiplication",
+    "s2-flaggems-bmm-L1-3_Batched_matrix_multiplication",
+    "s1-inductor-L1-42_Max_Pooling_2D",
+    "s1-inductor-L1-44_Average_Pooling_1D"
+   ],
+   "frr_margin_substrates": [],
+   "frr_skipped_no_new_unit": [
+    "s2-flaggems-mm-L1-6_Matmul_with_large_K_dimension_"
+   ],
    "frr_upper_bound_at_zero_rejections": 0.0499,
-   "gpu_hours": 9.296,
+   "gpu_hours": 6.57,
    "gpu_hours_by_priority": {
-    "P1": 1.532,
-    "P2": 4.513,
-    "P3": 0.433,
-    "P4": 0.661,
-    "P5": 0.903,
-    "P6": 1.255,
-    "P7": 0.0
+    "P1": 1.732,
+    "P2": 1.498,
+    "P3": 0.518,
+    "P5": 0.661,
+    "P6": 0.3,
+    "P7": 0.405,
+    "P8": 1.457
    },
    "gpu_hours_by_role": {
     "adversarial-control": 0.038,
-    "frr-substrate-replicate-42": 0.638,
-    "hack-control": 0.611,
+    "frr-core-replicate-42": 0.795,
+    "hack-control": 0.739,
     "identity-control": 0.347,
-    "mutant": 6.67,
-    "mutant-extension": 0.0,
+    "mutant": 1.903,
+    "mutant-extension": 1.457,
+    "mutant-robustness": 0.3,
     "substrate": 0.992
    },
    "in_scope_substrates": 69,
    "kernels": {
     "adversarial-control": 3,
-    "frr-substrate-replicate-42": 10,
-    "hack-control": 42.2,
+    "frr-core-replicate-42": 9,
+    "hack-control": 49.0,
     "identity-control": 69,
-    "mutant": 1193.5,
-    "mutant-extension": 0.0,
+    "mutant": 395.0,
+    "mutant-extension": 300.0,
     "substrate": 69
+   },
+   "mutants_exposed_removed": {
+    "arithmetic/dev": 3,
+    "arithmetic/test": 1,
+    "indexing/dev": 2,
+    "indexing/test": 2
    },
    "mutants_per_family": {
     "arithmetic": {
      "capped_frame": 789,
-     "dev": 50,
-     "half_width_pp": 11.1,
-     "test": 200,
-     "test_extension_max": 0,
-     "witnessed_test_planning": 100
+     "dev": 15,
+     "half_width_pp": 20.2,
+     "robustness": 6,
+     "test": 60,
+     "test_extension_max": 60,
+     "test_frame": 394,
+     "witnessed_test_planning": 30
     },
     "boundary": {
      "capped_frame": 753,
-     "dev": 50,
-     "half_width_pp": 11.1,
-     "test": 200,
-     "test_extension_max": 0,
-     "witnessed_test_planning": 100
+     "dev": 15,
+     "half_width_pp": 20.2,
+     "robustness": 6,
+     "test": 60,
+     "test_extension_max": 60,
+     "test_frame": 376,
+     "witnessed_test_planning": 30
     },
     "indexing": {
      "capped_frame": 514,
-     "dev": 50,
-     "half_width_pp": 11.1,
-     "test": 200,
-     "test_extension_max": 0,
-     "witnessed_test_planning": 100
+     "dev": 15,
+     "half_width_pp": 20.2,
+     "robustness": 6,
+     "test": 60,
+     "test_extension_max": 60,
+     "test_frame": 255,
+     "witnessed_test_planning": 30
     },
     "precision": {
      "capped_frame": 334,
-     "dev": 50,
-     "half_width_pp": 12.1,
-     "test": 167,
-     "test_extension_max": 0,
-     "witnessed_test_planning": 84
+     "dev": 15,
+     "half_width_pp": 20.2,
+     "robustness": 6,
+     "test": 60,
+     "test_extension_max": 60,
+     "test_frame": 167,
+     "witnessed_test_planning": 30
     },
     "semantic": {
      "capped_frame": 313,
-     "dev": 50,
-     "half_width_pp": 12.6,
-     "test": 156,
-     "test_extension_max": 0,
-     "witnessed_test_planning": 78
+     "dev": 15,
+     "half_width_pp": 20.2,
+     "robustness": 6,
+     "test": 60,
+     "test_extension_max": 60,
+     "test_frame": 156,
+     "witnessed_test_planning": 30
     },
     "synchronization": {
      "capped_frame": 20,
      "dev": 10,
      "half_width_pp": 49.6,
+     "robustness": 1,
      "test": 10,
      "test_extension_max": 0,
+     "test_frame": 10,
      "witnessed_test_planning": 5
     }
    },
    "n_eval_independent": 72,
-   "name": "trim-q200-paired-concurrency",
-   "pooled_half_width_pp": 4.8,
-   "pooled_witnessed_test_planning": 467,
+   "n_eval_independent_core": 72,
+   "name": "trim2-no-margin-paired-concurrency",
+   "pooled_half_width_pp": 8.4,
+   "pooled_witnessed_test_planning": 155,
    "priority_cumulative_with_reserve": [
     {
      "through": "P1",
-     "total_central": 4.072,
-     "total_high": 4.722
+     "total_central": 5.549,
+     "total_high": 6.214
     },
     {
      "through": "P2",
-     "total_central": 8.585,
-     "total_high": 11.149
+     "total_central": 7.047,
+     "total_high": 8.287
     },
     {
      "through": "P3",
-     "total_central": 9.018,
-     "total_high": 11.766
-    },
-    {
-     "through": "P4",
-     "total_central": 9.679,
-     "total_high": 12.707
+     "total_central": 7.565,
+     "total_high": 9.004
     },
     {
      "through": "P5",
-     "total_central": 10.582,
-     "total_high": 13.993
+     "total_central": 8.226,
+     "total_high": 9.919
     },
     {
      "through": "P6",
-     "total_central": 11.837,
-     "total_high": 15.78
+     "total_central": 8.526,
+     "total_high": 10.334
     },
     {
      "through": "P7",
-     "total_central": 11.837,
-     "total_high": 15.78
+     "total_central": 8.931,
+     "total_high": 10.894
+    },
+    {
+     "through": "P8",
+     "total_central": 10.388,
+     "total_high": 12.911
     }
    ],
    "rule": {
     "adversarial_seeds": 3,
     "cap": 40,
-    "family_quota_dev": 50,
-    "family_quota_test": 200,
+    "concurrent_stage0_jobs": 1,
+    "cpus_per_job": 32,
+    "family_quota_dev": 15,
+    "family_quota_test": 60,
     "family_quota_test_max": 120,
     "fidelity_mutants_per_family_tier": 1,
+    "frr_margin_units": 0,
     "frr_min_units": 72,
+    "gpu_hour_cap_total": 8.0,
+    "gpus_per_job": 1,
     "hack_fraction": 0.15,
     "hack_seeds": 3,
     "identity_seeds": 1,
     "mutant_robustness_fraction": 0.1,
-    "name": "q1-stage0-trim/1",
-    "priority": [
-     "P1 substrates at replicate 42 (in scope and FRR set), every control at replicate 42",
-     "P2 test-quota mutants at replicate 42",
-     "P3 hack-emulating and adversarial controls at replicates 43 and 44",
-     "P4 in-scope substrates at replicates 43 and 44",
-     "P5 the mutant robustness subsample at replicates 43 and 44",
-     "P6 dev-quota mutants at replicate 42",
-     "P7 further test-split mutants up to family_quota_test_max per family, one family at a time in a seeded round-robin order, at replicate 42, until the stop"
-    ],
+    "name": "q1-stage0-trim/2",
     "scope_bytes": 1000000000,
-    "slots_per_gpu": {
-     "0.6_to_1_GB": 4,
-     "below_0.6_GB": 12,
-     "from_1_GB": "alone"
-    },
-    "stop": "no item starts once the Stage 0 GPU-hours (every job, pilot included) reach 8.0",
+    "slot_capacity": 12,
+    "small_below_bytes": 600000000,
     "substrate_seeds": 3,
-    "timing_floor_items": 80
+    "timing_floor_items": 80,
+    "timing_floor_job_gpus": 8,
+    "timing_floor_timing_gpus": 2,
+    "units_medium": 3,
+    "units_small": 1
    },
    "scoring_gpu_hours_95": {
-    "high": 13.239,
-    "low": 6.158
+    "high": 9.092,
+    "low": 4.595
    },
-   "total_gpu_hours": 11.836,
-   "total_gpu_hours_high": 15.779
+   "total_gpu_hours": 8.93,
+   "total_gpu_hours_high": 10.893,
+   "unscheduled_controls_gpu_hours_at_replicate_42": {
+    "hack-emulating-mutant-controls": 2.813,
+    "kbv-h1-controls": 3.375
+   },
+   "unscheduled_controls_kernels": {
+    "hack-emulating-mutant-controls": 5,
+    "kbv-h1-controls": 6
+   }
   }
  ]
 }

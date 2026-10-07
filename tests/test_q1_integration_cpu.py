@@ -490,6 +490,24 @@ def test_trim_plan_driver_and_report_on_the_cpu_journal(run: dict, tmp_path: Pat
     wrong = [*argv, *budget]
     wrong[wrong.index("--expected-plan-sha256") + 1] = "0" * 64
     assert run_q1_stage0.main(wrong) == 2
+    # The lane path: the corpus as one hash-bound study artifact, unpacked beside
+    # the output (a resumed job copies the output directory only), same plan.
+    from harness.q1 import study_artifact
+
+    trees = {
+        root.name: study_artifact.dir_tree(root, source="q1-test", licence="mixed")
+        for root in run["roots"]
+    }
+    artifact = tmp_path / "study-artifact.json"
+    receipt = study_artifact.write(study_artifact.build(trees, repo_revision="0" * 40), artifact)
+    lane = tmp_path / "lane" / "stage0"
+    lane_argv = ["--output", str(lane), "--seeds", "42", "43", "44", "--plan-only"]
+    lane_argv += ["--evidence", str(artifact), "--expected-evidence-sha256", receipt["sha256"]]
+    for root in run["roots"]:
+        lane_argv += ["--corpus", root.name]
+    assert run_q1_stage0.main(lane_argv) == 0
+    assert (tmp_path / "lane" / "stage0-inputs" / run["roots"][0].name).is_dir()
+    assert json.loads((lane / "plan.json").read_text())["plan_sha256"] == driver_plan["plan_sha256"]
     # The report under the plan: trimmed weights, scheduled controls, sensitivity.
     output = tmp_path / "report.json"
     rargv = ["--journal", str(run["journal"].path), "--output", str(output)]

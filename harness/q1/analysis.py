@@ -811,7 +811,7 @@ def control_checks(
     A control with no rows at all, a missing gate and an unknown gate id each
     count as a failed cell: the criterion needs 100% of cells to hold.
 
-    Under the trimming rule (preregistration section 18.6) ``scheduled`` names the
+    Under the trimming rule (preregistration section 18.7) ``scheduled`` names the
     controls the plan scores at this replicate; the others are listed as
     ``not-scheduled`` and are not cells. Expectations assume a correct parent
     (section 3.4): when the primary tier (G, TF32-admissible) does not accept the

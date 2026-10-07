@@ -202,6 +202,11 @@ def test_plan_runs_buckets_in_order_with_units_and_limits() -> None:
     assert record["plan_sha256"] == trim.plan_digest(record)
     again = trim.plan(list(reversed(_corpus())), rule=rule, exposed=exposed)
     assert again["plan_sha256"] == record["plan_sha256"]
+    # the same corpus unpacked elsewhere (the lane's study artifact) has the same hash
+    from dataclasses import replace
+
+    moved = [replace(r, kernel_path="/elsewhere" + r.kernel_path) for r in _corpus()]
+    assert trim.plan(moved, rule=rule, exposed=exposed)["plan_sha256"] == record["plan_sha256"]
 
 
 def test_ht_weights_use_frame_size_over_scored_including_cut_items() -> None:
