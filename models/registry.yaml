@@ -156,6 +156,111 @@ models:
     - model.safetensors.index.json
     - tokenizer.json
     source_url: https://huggingface.co/Qwen/Qwen3.6-35B-A3B
+  qwen3-8b:
+    backend: huggingface
+    repo_id: Qwen/Qwen3-8B
+    revision: b968826d9c46dd6066d109eabc6255188de91218
+    runtime: vllm-transformers
+    architecture_family: transformer
+    license: apache-2.0
+    access: public
+    trust_remote_code: false
+    publication_eligible: true
+    roles:
+    - q1-throughput-stand-in
+    metadata_files:
+    - LICENSE
+    - README.md
+    - config.json
+    - generation_config.json
+    - merges.txt
+    - tokenizer.json
+    - tokenizer_config.json
+    - vocab.json
+    required_files:
+    - LICENSE
+    - config.json
+    - model.safetensors.index.json
+    - tokenizer.json
+    source_url: https://huggingface.co/Qwen/Qwen3-8B
+    registered_at: '2026-10-07'
+    registered_for: serving-throughput-probe-v1 job B (metadata only; vLLM dummy weights)
+    blocker: >-
+      Registered for its config and tokenizer only. It has Dr. Kernel-8B's layer shapes
+      (decision D5), so its dummy-weight throughput stands in for the unlicensed Q1 policy.
+      No weight download is planned.
+  qwen3.5-27b-fp8:
+    backend: huggingface
+    repo_id: Qwen/Qwen3.5-27B-FP8
+    revision: 97f5941bf617e31c5e237364a8602ce3f03a551a
+    runtime: vllm-sglang
+    architecture_family: gated-deltanet-attention-hybrid
+    license: apache-2.0
+    access: public
+    trust_remote_code: false
+    publication_eligible: true
+    roles:
+    - q2-27b-rung
+    metadata_files:
+    - LICENSE
+    - README.md
+    - chat_template.jinja
+    - config.json
+    - generation_config.json
+    - merges.txt
+    - preprocessor_config.json
+    - tokenizer.json
+    - tokenizer_config.json
+    - video_preprocessor_config.json
+    - vocab.json
+    required_files:
+    - LICENSE
+    - chat_template.jinja
+    - config.json
+    - model.safetensors.index.json
+    - tokenizer.json
+    source_url: https://huggingface.co/Qwen/Qwen3.5-27B-FP8
+    registered_at: '2026-10-07'
+    registered_for: serving-throughput-probe-v1 job C (metadata only; vLLM dummy weights)
+    blocker: >-
+      Metadata only for the dummy-weight rung measurement. The 30.9 GB weights are not
+      fetched; a real-weight Q2 run needs its own approval and a full receipt.
+  qwen3.5-35b-a3b-fp8:
+    backend: huggingface
+    repo_id: Qwen/Qwen3.5-35B-A3B-FP8
+    revision: 9d1823d2dee688a6b25e77009dc727688c44936e
+    runtime: vllm-sglang
+    architecture_family: gated-deltanet-attention-hybrid-moe
+    license: apache-2.0
+    access: public
+    trust_remote_code: false
+    publication_eligible: true
+    roles:
+    - q2-35b-a3b-rung
+    metadata_files:
+    - LICENSE
+    - README.md
+    - chat_template.jinja
+    - config.json
+    - generation_config.json
+    - merges.txt
+    - preprocessor_config.json
+    - tokenizer.json
+    - tokenizer_config.json
+    - video_preprocessor_config.json
+    - vocab.json
+    required_files:
+    - LICENSE
+    - chat_template.jinja
+    - config.json
+    - model.safetensors.index.json
+    - tokenizer.json
+    source_url: https://huggingface.co/Qwen/Qwen3.5-35B-A3B-FP8
+    registered_at: '2026-10-07'
+    registered_for: serving-throughput-probe-v1 job C (metadata only; vLLM dummy weights)
+    blocker: >-
+      Metadata only for the dummy-weight rung measurement; dummy MoE routing is near
+      uniform, so its numbers carry that caveat. The 37.5 GB weights are not fetched.
   gpt-oss-120b:
     backend: huggingface
     repo_id: openai/gpt-oss-120b

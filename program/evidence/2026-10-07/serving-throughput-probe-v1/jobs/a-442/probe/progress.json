@@ -1,0 +1,24 @@
+{
+  "config_sha256": "8e5ad94e08a17a3eacc049150a14a35ef6ab9509a8c32ca6a6b2ac9711f6e931",
+  "job": "a",
+  "points": {
+    "a-smoke": "valid",
+    "a1a": "valid",
+    "a1b": "truncated",
+    "a1c": "not-run",
+    "a2": "not-run",
+    "a6": "not-run",
+    "d8": "not-run",
+    "f1": "not-run",
+    "r1": "valid",
+    "r2": "not-run",
+    "r3": "invalid",
+    "r4": "invalid",
+    "x1-a1": "valid",
+    "x1-r1": "valid",
+    "x1-smoke": "valid"
+  },
+  "signal": null,
+  "state": "complete-with-cuts",
+  "updated_at": "2026-10-07T12:16:58Z"
+}

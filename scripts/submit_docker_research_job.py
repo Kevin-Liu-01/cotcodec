@@ -11,7 +11,8 @@ import os
 import re
 import subprocess
 import sys
-from pathlib import Path
+from fnmatch import fnmatchcase
+from pathlib import Path, PurePosixPath
 from typing import Any
 
 import yaml
@@ -24,16 +25,161 @@ from harness.publication_attestation import (  # noqa: E402
     verify_publication_claim_attestation,
 )
 
+# The archived memory interface. scripts/submit_research_job.py and the batch
+# script carry the same rule; tests keep the three copies in parity.
+ARCHIVED_MEMORY_MESSAGE = (
+    "memory workloads were archived under legacy/ on 2026-10-06; "
+    "restore them from tag legacy-2026-10-06 to submit memory jobs"
+)
+# The whole archive lives under legacy/, so any path or module component named
+# legacy is refused, whatever the file it leads to.
+ARCHIVE_ROOT = "legacy"
+# Matched against every path and dotted-module component, not only after
+# scripts/, so PYTHONPATH, chdir and python -m forms are covered.
+ARCHIVED_MEMORY_NAME_PATTERNS = (
+    "run_memory_*",
+    "run_letta*",
+    "*memory_model*",
+    "memory_trials",
+)
+# Every memory-named entry point the restart archived: the files and packages
+# directly under legacy/scripts, legacy/harness and legacy/infra whose names
+# contain "mem" or "letta", by stem. Exact names, so a live file is refused only
+# if it reuses an archived name; this also covers pre-restart images, where these
+# files still sit at scripts/<name>.py. Tests regenerate the set from legacy/.
+ARCHIVED_MEMORY_ENTRY_POINTS = frozenset(
+    """
+    aggregate_memory_control_matrix aggregate_memorybank_h100_screen
+    analyze_causal_memory_bundle analyze_memory_system_semantic_smokes
+    analyze_memorybank_frozen_controls audit_memforest_published_artifacts
+    audit_mempalace_port_equivalence audit_mempalace_upstream_artifact
+    audit_sodamem_published_artifacts build_mem0_overlay_on_h100 build_mempalace_container
+    causal_memory_trials compare_memory_lifecycle_runs compare_mempalace_reproductions
+    compile_memory_landscape compile_memory_open_job compile_memory_public_docker_job
+    compile_memory_publication_wave compile_memory_replay_doctor_job
+    compile_memorybank_h100_jobs freeze_memory_control_matrix freeze_memory_system_outputs
+    memory-baselines memory_job_admission memory_trials mempalace_control_factory
+    mempalace_upstream_adapter prepare_hermes_observational_memory_context
+    prepare_longmemeval_judge_packet prepare_memory_baseline_context
+    prepare_memory_benchmarks prepare_memory_publication_claim
+    prepare_mempalace_source_context reanalyze_memory_frontier_screen
+    run_allmem_topology_doctor run_causal_memory_holdout run_causal_memory_sensitivity
+    run_hermes_observational_memory_doctor run_infini_memory_lifecycle_doctor
+    run_jiuwen_memory_lifecycle_doctor run_langmem_lifecycle_doctor
+    run_lightmem2_context_paging_doctor run_lightmem_offline_doctor
+    run_longmemeval_official_judge run_mem0_lifecycle_doctor run_memforest_lifecycle_doctor
+    run_memforge_fresh_install_doctor run_memgpt_letta_lifecycle_doctor
+    run_memoria_lifecycle_doctor run_memory_doctors run_memory_frontier_screen
+    run_memory_lifecycle_contract run_memory_model_replay_doctor run_memory_model_screen
+    run_memory_system_smoke run_memory_trials run_memorybank_decay_container
+    run_memorybank_decay_doctor run_mempalace_upstream_reproduction
+    run_recmem_consolidation_doctor run_reference_memory_lifecycle_sidecar
+    run_reference_memory_sidecar run_supermemory_local_doctor
+    seal_infini_memory_lifecycle_evidence seal_jiuwen_memory_lifecycle_evidence
+    seal_langmem_native_lifecycle_evidence seal_lightmem2_context_paging_evidence
+    seal_memforest_artifact_evidence seal_memforest_lifecycle_evidence
+    seal_memgpt_letta_lifecycle_evidence seal_memory_evidence seal_mempalace_runtime_receipt
+    seal_mempalace_sbom_job_receipt seal_sodamem_artifact_evidence submit_mempalace_cpu_job
+    validate_allmem_topology_experiment validate_hermes_observational_memory_experiment
+    validate_infini_memory_lifecycle_experiment validate_jiuwen_memory_lifecycle_experiment
+    validate_langmem_lifecycle_experiment validate_lightmem2_context_paging_experiment
+    validate_lightmem_offline_evidence validate_lightmem_offline_experiment
+    validate_mem0_lifecycle_experiment validate_mem0_persistence
+    validate_memforest_artifact_experiment validate_memforest_lifecycle_experiment
+    validate_memforge_fresh_install_evidence validate_memforge_fresh_install_experiment
+    validate_memgpt_letta_lifecycle_experiment validate_memoria_lifecycle_evidence
+    validate_memoria_lifecycle_experiment validate_memory_experiments
+    validate_memory_lifecycle_experiment validate_memory_persistent_transport
+    validate_memory_portfolio validate_memory_source_contract validate_memory_sources
+    validate_memorybank_decay_evidence validate_memorybank_decay_experiment
+    validate_memorybank_h100_evidence validate_memorybank_h100_experiment
+    validate_recmem_consolidation_evidence validate_recmem_consolidation_experiment
+    validate_sodamem_artifact_experiment validate_supermemory_local_experiment
+    validate_timem_core_evidence validate_timem_core_experiment
+    verify_memory_baseline_sources
+    """.split()  # noqa: SIM905 - same compact block as the batch script
+)
+ARCHIVED_MEMORY_FLAGS = (
+    "--memory-bundle",
+    "--memory-treatment-mode",
+    "--expected-memory-system-id",
+)
+_ARGV_TOKEN_SEPARATORS = re.compile(r"[\s=,;:'\"`()\[\]{}<>|&$]+")
+_MODULE_RE = re.compile(r"[A-Za-z_][A-Za-z0-9_]*(?:\.[A-Za-z_][A-Za-z0-9_]*)*")
+_SCRIPT_SUFFIXES = (".py", ".pyc", ".pyw", ".sh")
 
-def validate_memory_job_admission(admission, *, command, has_memory_bundle):
-    """Memory workloads were archived to legacy/ on 2026-10-06; fail closed for them."""
-    memory_command = any("memory" in str(part) for part in command)
-    if admission is None and not has_memory_bundle and not memory_command:
-        return None
-    raise ValueError(
-        "memory workloads were archived under legacy/ on 2026-10-06; "
-        "restore them from tag legacy-2026-10-06 to submit memory jobs"
-    )
+
+def _argv_name_variants(token: str) -> list[str]:
+    """The token, plus any value glued to a short option (python -mpkg.mod)."""
+
+    variants = [token]
+    if token.startswith("-") and not token.startswith("--"):
+        # Up to three option letters may precede the value, as in -Bmpkg.mod.
+        variants += [token[1 + cut :] for cut in range(4) if token[1 + cut :]]
+    return variants
+
+
+def _name_components(variant: str) -> list[str]:
+    """Path components (with and without a script suffix) and module components."""
+
+    components: list[str] = []
+    for part in PurePosixPath(variant).parts:
+        if part == "/":
+            continue
+        components.append(part)
+        components += [part[: -len(suffix)] for suffix in _SCRIPT_SUFFIXES if part.endswith(suffix)]
+    module = variant[:-3] if variant.endswith(".py") else variant
+    if _MODULE_RE.fullmatch(module):
+        components += module.split(".")
+    return components
+
+
+def archived_memory_reference(argument: str) -> str | None:
+    """Return what an argv element names from the archive, or None.
+
+    The element is split on shell and Python punctuation, a value glued to a
+    short option is tried on its own, and every path or module component is
+    compared with the archive root, the archived memory entry points and the
+    archived name patterns. A long option that is an archived memory flag, or
+    an argparse abbreviation of one, is refused too.
+    """
+
+    for token in _ARGV_TOKEN_SEPARATORS.split(argument):
+        for variant in _argv_name_variants(token):
+            if (
+                variant.startswith("--")
+                and len(variant) > 2
+                and any(flag.startswith(variant) for flag in ARCHIVED_MEMORY_FLAGS)
+            ):
+                return f"the archived memory flag {variant}"
+            for component in _name_components(variant):
+                if component == ARCHIVE_ROOT:
+                    return "the legacy/ archive"
+                if component in ARCHIVED_MEMORY_ENTRY_POINTS or any(
+                    fnmatchcase(component, pattern) for pattern in ARCHIVED_MEMORY_NAME_PATTERNS
+                ):
+                    return f"the archived memory entry point {component}"
+    return None
+
+
+def validate_memory_job_admission(
+    admission: Any, *, command: list[str], has_memory_bundle: bool
+) -> None:
+    """Reject the archived memory interface, not every argv that mentions memory.
+
+    Flags such as vLLM's ``--gpu-memory-utilization`` are admitted; anything
+    under legacy/, the archived memory entry points and name patterns, the
+    archived memory flags, and any memory admission or bundle block are not.
+    """
+
+    if admission is not None:
+        raise ValueError(f"{ARCHIVED_MEMORY_MESSAGE}: memory_source_admission must be absent")
+    if has_memory_bundle:
+        raise ValueError(f"{ARCHIVED_MEMORY_MESSAGE}: memory_bundle must be absent")
+    for index, argument in enumerate(command):
+        reference = archived_memory_reference(str(argument))
+        if reference is not None:
+            raise ValueError(f"{ARCHIVED_MEMORY_MESSAGE}: argv[{index}] names {reference}")
 
 
 BATCH_SCRIPT = PROJECT_ROOT / "infra/slurm/host-single-node/docker-research.sbatch"
@@ -65,6 +211,17 @@ ALLOWED_RUN_ROOTS = (
     Path("/home/kevin/cotcodec-runs"),
     Path("/shared/cotcodec/runs"),
 )
+SEED_OPTIONS = ("--seeds", "--seed", "--assignment-seeds", "--assignment-seed")
+SEED_BINDING_FLAGS = ("--seeds", "--seed", "--assignment-seeds")
+DETERMINISTIC_RANDOMNESS_CONTRACTS = ("deterministic", "deterministic-all-serve")
+RANDOMNESS_CONTRACTS = ("assignment-seed-matrix", *DETERMINISTIC_RANDOMNESS_CONTRACTS)
+# default reproduces the original container flags exactly; see the batch script.
+CONTAINER_PROFILES = ("default", "vllm", "large-cpu-mem")
+REASON_MIN_CHARS = 20
+REASON_MAX_CHARS = 500
+# The batch script exits with this status (EX_TEMPFAIL) when a compute process
+# already holds an allocated GPU and the manifest did not allow sharing.
+FOREIGN_GPU_PROCESS_EXIT_CODE = 75
 
 
 def _verify_claim_admission_files(
@@ -179,50 +336,142 @@ def _validate_command(value: Any) -> list[str]:
     return value
 
 
+def _reason(value: Any, field: str) -> str:
+    if (
+        not isinstance(value, str)
+        or value != value.strip()
+        or not REASON_MIN_CHARS <= len(value) <= REASON_MAX_CHARS
+        or any(ord(character) < 32 or ord(character) == 127 for character in value)
+    ):
+        raise ValueError(
+            f"{field} must be a single-line explanation of {REASON_MIN_CHARS}-"
+            f"{REASON_MAX_CHARS} characters without surrounding whitespace"
+        )
+    return value
+
+
+def _validate_seed_binding(value: Any) -> dict[str, str] | None:
+    if value is None:
+        return None
+    if (
+        not isinstance(value, dict)
+        or set(value) != {"flag"}
+        or value["flag"] not in SEED_BINDING_FLAGS
+    ):
+        raise ValueError(
+            "seed_binding must be exactly {flag: " + " | ".join(SEED_BINDING_FLAGS) + "}"
+        )
+    return {"flag": value["flag"]}
+
+
+def seed_option_abbreviation(argument: str) -> str | None:
+    """Return a long option that argparse would expand to a seed option, or None.
+
+    argparse accepts any unambiguous prefix of a long option by default
+    (allow_abbrev=True), so ``--see 7`` after the bound seeds would replace them.
+    """
+
+    head = argument.split("=", 1)[0]
+    if (
+        head.startswith("--")
+        and len(head) > 2
+        and head not in SEED_OPTIONS
+        and any(option.startswith(head) for option in SEED_OPTIONS)
+    ):
+        return head
+    return None
+
+
 def _validate_seed_execution(
-    command: list[str], seeds: list[int], randomness_contract: str
+    command: list[str],
+    seeds: list[int],
+    randomness_contract: str,
+    seed_binding: dict[str, str] | None,
 ) -> None:
-    """Bind every seeded memory workload to the manifest's declared seeds."""
+    """Require every declared seed to reach the workload through one declared flag."""
 
-    if randomness_contract == "deterministic-all-serve":
+    abbreviated = [
+        head for head in map(seed_option_abbreviation, command) if head is not None
+    ]
+    if abbreviated:
+        raise ValueError(
+            f"seed options must be spelled in full; argparse would expand {abbreviated[0]} "
+            "to a seed option"
+        )
+    inline = [
+        argument
+        for argument in command
+        if "=" in argument and argument.split("=", 1)[0] in SEED_OPTIONS
+    ]
+    if inline:
+        raise ValueError("seed options must be separate argv elements, not --option=value")
+    if randomness_contract in DETERMINISTIC_RANDOMNESS_CONTRACTS:
         if seeds:
-            raise ValueError("deterministic all-SERVE jobs cannot declare seeds")
-        if any(
-            option in command for option in ("--assignment-seed", "--assignment-seeds", "--seeds")
-        ):
-            raise ValueError("deterministic all-SERVE jobs cannot execute seed options")
-        if "scripts/run_memory_model_screen.py" in command and not (
-            "--evaluation-mode" in command
-            and command[command.index("--evaluation-mode") + 1] == "all-serve-benchmark"
-        ):
-            raise ValueError("deterministic model jobs must execute all-SERVE mode")
+            raise ValueError("deterministic jobs cannot declare seeds")
+        if seed_binding is not None:
+            raise ValueError("deterministic jobs cannot declare seed_binding")
+        if any(option in command for option in SEED_OPTIONS):
+            raise ValueError("deterministic jobs cannot execute seed options")
         return
-
-    seed_contracts = {
-        "scripts/run_memory_model_screen.py": "--assignment-seeds",
-        "scripts/run_memory_trials.py": "--assignment-seeds",
-        "scripts/run_memory_model_replay_doctor.py": "--seeds",
-    }
-    active = [(script, option) for script, option in seed_contracts.items() if script in command]
-    if not active:
-        return
-    if len(active) != 1:
-        raise ValueError("command contains multiple seeded memory workloads")
-    _script, seed_option = active[0]
-    forbidden_options = {"--assignment-seed", "--assignment-seeds", "--seeds"} - {seed_option}
-    if command.count(seed_option) != 1 or any(option in command for option in forbidden_options):
-        raise ValueError(f"memory command must execute every manifest seed via {seed_option}")
-    start = command.index(seed_option) + 1
-    executed: list[int] = []
-    for argument in command[start:]:
+    if seed_binding is None:
+        raise ValueError(
+            "manifest declares seeds without seed_binding; bind them with "
+            "seed_binding.flag or use a deterministic randomness_contract with no seeds"
+        )
+    flag = seed_binding["flag"]
+    if command.count(flag) != 1 or any(
+        option in command for option in SEED_OPTIONS if option != flag
+    ):
+        raise ValueError(
+            f"command must pass the manifest seeds through exactly one {flag} "
+            "and no other seed option"
+        )
+    executed: list[str] = []
+    for argument in command[command.index(flag) + 1 :]:
         if argument.startswith("--"):
             break
-        try:
-            executed.append(int(argument))
-        except ValueError as exc:
-            raise ValueError("seed arguments must be integers") from exc
-    if executed != seeds:
-        raise ValueError(f"command assignment seeds {executed} do not match manifest seeds {seeds}")
+        executed.append(argument)
+    if executed != [str(seed) for seed in seeds]:
+        raise ValueError(
+            f"command seeds {executed} after {flag} do not match manifest seeds {seeds}"
+        )
+
+
+def _validate_model(model: Any) -> dict[str, Any]:
+    """Validate a pinned checkpoint or an explicit, justified no-model declaration."""
+
+    if not isinstance(model, dict):
+        raise ValueError(
+            "model must be a mapping; a job without a checkpoint declares "
+            "model: {kind: none, reason: ...}"
+        )
+    if "kind" in model:
+        if model["kind"] != "none" or set(model) != {"kind", "reason"}:
+            raise ValueError("model.kind may only be none, with exactly kind and reason fields")
+        return {"kind": "none", "reason": _reason(model["reason"], "model.reason")}
+    model_id = model.get("model_id")
+    revision = model.get("revision")
+    receipt_sha256 = model.get("receipt_sha256")
+    artifact_root_sha256 = model.get("artifact_root_sha256")
+    if not isinstance(model_id, str) or not MODEL_ID_RE.fullmatch(model_id):
+        raise ValueError("model.model_id must be a safe registry model id")
+    if model_id == "none":
+        raise ValueError("model.model_id none is reserved for model: {kind: none, reason: ...}")
+    if not isinstance(revision, str) or not GIT_RE.fullmatch(revision):
+        raise ValueError("model.revision must be a pinned 40-hex commit")
+    if not isinstance(receipt_sha256, str) or not SHA_RE.fullmatch(receipt_sha256):
+        raise ValueError("model.receipt_sha256 must be a 64-hex digest")
+    if not isinstance(artifact_root_sha256, str) or not SHA_RE.fullmatch(artifact_root_sha256):
+        raise ValueError("model.artifact_root_sha256 must be a 64-hex digest")
+    return {
+        "cache_host_path": _safe_absolute_path(
+            model.get("cache_host_path"), "model.cache_host_path"
+        ),
+        "model_id": model_id,
+        "revision": revision,
+        "receipt_sha256": receipt_sha256,
+        "artifact_root_sha256": artifact_root_sha256,
+    }
 
 
 def _require_command_input(
@@ -351,34 +600,32 @@ def validate_manifest(
         )
 
     randomness_contract = raw.get("randomness_contract", "assignment-seed-matrix")
-    if randomness_contract not in {
-        "assignment-seed-matrix",
-        "deterministic-all-serve",
-    }:
+    if randomness_contract not in RANDOMNESS_CONTRACTS:
         raise ValueError("randomness_contract is unsupported")
     seeds = raw.get("seeds")
     if not isinstance(seeds, list) or not all(
         isinstance(seed, int) and not isinstance(seed, bool) for seed in seeds
     ):
         raise ValueError("seeds must be an integer list")
-    if randomness_contract == "assignment-seed-matrix" and len(set(seeds)) < 3:
-        raise ValueError("seed matrices require at least three distinct integers")
+    if randomness_contract == "assignment-seed-matrix":
+        if len(set(seeds)) < 3:
+            raise ValueError("seed matrices require at least three distinct integers")
+        if len(set(seeds)) != len(seeds):
+            raise ValueError("seed matrices cannot repeat a seed")
+    seed_binding = _validate_seed_binding(raw.get("seed_binding"))
 
-    model = raw.get("model")
-    if not isinstance(model, dict):
-        raise ValueError("model must be a mapping")
-    model_id = model.get("model_id")
-    revision = model.get("revision")
-    receipt_sha256 = model.get("receipt_sha256")
-    artifact_root_sha256 = model.get("artifact_root_sha256")
-    if not isinstance(model_id, str) or not MODEL_ID_RE.fullmatch(model_id):
-        raise ValueError("model.model_id must be a safe registry model id")
-    if not isinstance(revision, str) or not GIT_RE.fullmatch(revision):
-        raise ValueError("model.revision must be a pinned 40-hex commit")
-    if not isinstance(receipt_sha256, str) or not SHA_RE.fullmatch(receipt_sha256):
-        raise ValueError("model.receipt_sha256 must be a 64-hex digest")
-    if not isinstance(artifact_root_sha256, str) or not SHA_RE.fullmatch(artifact_root_sha256):
-        raise ValueError("model.artifact_root_sha256 must be a 64-hex digest")
+    model_manifest = _validate_model(raw.get("model"))
+
+    container_profile = raw.get("container_profile")
+    if container_profile is not None and container_profile not in CONTAINER_PROFILES:
+        raise ValueError("container_profile must be one of " + ", ".join(CONTAINER_PROFILES))
+    allow_shared_gpu = raw.get("allow_shared_gpu", False)
+    if not isinstance(allow_shared_gpu, bool):
+        raise ValueError("allow_shared_gpu must be true or false")
+    if allow_shared_gpu:
+        shared_gpu_reason = _reason(raw.get("shared_gpu_reason"), "shared_gpu_reason")
+    elif raw.get("shared_gpu_reason") is not None:
+        raise ValueError("shared_gpu_reason requires allow_shared_gpu: true")
 
     resume_job_id = raw.get("resume_from_job_id")
     resume_subpath = raw.get("resume_subpath")
@@ -401,14 +648,14 @@ def validate_manifest(
         normalized_subpath = resume_subpath
 
     command = _validate_command(raw.get("command"))
-    # Memory workloads were archived on 2026-10-06; reject them before any
-    # memory-specific seed or bundle checks can produce a misleading error.
+    # Memory workloads were archived on 2026-10-06; reject them before the
+    # seed or bundle checks can produce a misleading error.
     validate_memory_job_admission(
         raw.get("memory_source_admission"),
         command=command,
         has_memory_bundle=raw.get("memory_bundle") is not None,
     )
-    _validate_seed_execution(command, seeds, randomness_contract)
+    _validate_seed_execution(command, seeds, randomness_contract, seed_binding)
     manifest: dict[str, Any] = {
         "schema_version": 1,
         "runtime": RUNTIME,
@@ -420,15 +667,7 @@ def validate_manifest(
         "source_sha256": source_sha256,
         "randomness_contract": randomness_contract,
         "seeds": seeds,
-        "model": {
-            "cache_host_path": _safe_absolute_path(
-                model.get("cache_host_path"), "model.cache_host_path"
-            ),
-            "model_id": model_id,
-            "revision": revision,
-            "receipt_sha256": receipt_sha256,
-            "artifact_root_sha256": artifact_root_sha256,
-        },
+        "model": model_manifest,
         "gpu_type": "h100",
         "gpus": gpus,
         "cpus": cpus,
@@ -437,6 +676,15 @@ def validate_manifest(
         "max_gpu_hours": float(max_gpu_hours),
         "batch_script_sha256": _sha256_file(BATCH_SCRIPT),
     }
+    # Opt-in fields appear only when declared, so a manifest without them
+    # serializes exactly as it did before they existed.
+    if seed_binding is not None:
+        manifest["seed_binding"] = seed_binding
+    if container_profile is not None:
+        manifest["container_profile"] = container_profile
+    if allow_shared_gpu:
+        manifest["allow_shared_gpu"] = True
+        manifest["shared_gpu_reason"] = shared_gpu_reason
     if normalized_job_id is not None:
         manifest["resume_from_job_id"] = normalized_job_id
         manifest["resume_subpath"] = normalized_subpath
@@ -722,12 +970,28 @@ def sbatch_argv(manifest: dict[str, Any], test_only: bool) -> list[str]:
         ),
         "COTCODEC_EXPECTED_GPUS": str(manifest["gpus"]),
         "COTCODEC_BATCH_SHA256": manifest["batch_script_sha256"],
-        "COTCODEC_MODEL_CACHE_HOST_HEX": model["cache_host_path"].encode().hex(),
-        "COTCODEC_MODEL_ID": model["model_id"],
-        "COTCODEC_MODEL_REVISION": model["revision"],
-        "COTCODEC_MODEL_RECEIPT_SHA256": model["receipt_sha256"],
-        "COTCODEC_MODEL_ARTIFACT_ROOT": model["artifact_root_sha256"],
     }
+    if model.get("kind") == "none":
+        # The batch script admits a no-model job only through this explicit
+        # pair; it never infers one from missing model variables.
+        exported["COTCODEC_MODEL_KIND"] = "none"
+        exported["COTCODEC_MODEL_ID"] = "none"
+    else:
+        exported.update(
+            {
+                "COTCODEC_MODEL_CACHE_HOST_HEX": model["cache_host_path"].encode().hex(),
+                "COTCODEC_MODEL_ID": model["model_id"],
+                "COTCODEC_MODEL_REVISION": model["revision"],
+                "COTCODEC_MODEL_RECEIPT_SHA256": model["receipt_sha256"],
+                "COTCODEC_MODEL_ARTIFACT_ROOT": model["artifact_root_sha256"],
+            }
+        )
+    if seed_binding := manifest.get("seed_binding"):
+        exported["COTCODEC_SEED_BINDING_FLAG"] = seed_binding["flag"]
+    if container_profile := manifest.get("container_profile"):
+        exported["COTCODEC_CONTAINER_PROFILE"] = container_profile
+    if manifest.get("allow_shared_gpu") is True:
+        exported["COTCODEC_ALLOW_SHARED_GPU"] = "true"
     if predecessor := manifest.get("resume_from_job_id"):
         exported["COTCODEC_PREDECESSOR_JOB_ID"] = predecessor
         exported["COTCODEC_RESUME_SUBPATH"] = manifest["resume_subpath"]
