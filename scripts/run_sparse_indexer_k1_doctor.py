@@ -8,8 +8,12 @@ the indexer gradient against finite differences, the verdict rules on
 hand-made tables, the data objects (ParaDocs filter, filters, dedup, packing,
 contexts, codec, fail-closed reads), and the GPU entry point end to end on CPU:
 a digest mismatch exits 2; smoke, headroom-dev, the three resume legs (with a
-real SIGUSR1 to the PID-1 parent and a stale marker), 0a-k1 and the extension
-all run on a synthetic bundle built by the real builder code.
+real SIGUSR1 to the PID-1 parent and a stale marker), a SIGUSR1 while workers
+are still starting (exit 75, not a crash), 0a-k1, a fresh-job continuation of
+0a-k1 after the LR freeze, a corrupt final training generation (exit 3, never a
+silent fallback), and the extension (refused for a read that does not call for
+it; otherwise only the V1-failing target is retrained and re-read) all run on a
+synthetic bundle built by the real builder code.
 
 Every number is a synthetic-case number. A PASS proves executability and gate
 semantics only; it says nothing about Qwen3-0.6B-Base, the data or the claim.
@@ -40,6 +44,7 @@ if str(PROJECT_ROOT) not in sys.path:
 from harness import sparse_indexer_data as sid  # noqa: E402
 from harness import sparse_indexer_k1_stats as k1s  # noqa: E402
 from harness import translation_supervised_indexer as tsi  # noqa: E402
+from harness.sparse_indexer_k1_marker import read_checkpoint_marker  # noqa: E402
 
 DOCTOR_NAME = "q3-k1-localization-screen-cpu-doctor"
 EVIDENCE_GRADE = (
@@ -217,6 +222,82 @@ class TinyRun:
 
 def receipt_of(run_dir: Path, name: str = "receipt.json") -> dict[str, Any]:
     return json.loads((run_dir / "phase-0a-k1" / name).read_text(encoding="utf-8"))
+
+
+def copy_checkpoints(source_run: Path, target_run: Path, *drop: str) -> Path:
+    """What the lane's resume copy gives a fresh job: ``phase-0a-k1/checkpoints``."""
+
+    destination = target_run / "phase-0a-k1" / "checkpoints"
+    destination.parent.mkdir(parents=True, exist_ok=True)
+    shutil.copytree(source_run / "phase-0a-k1" / "checkpoints", destination,
+                    ignore=shutil.ignore_patterns(*drop) if drop else None)
+    return destination
+
+
+def _interval(point: float, half: float, evaluable: bool = True) -> dict[str, Any]:
+    return k1s.Interval(point, (point,) * 3, 0.0, half / 3, half / 3, point - half,
+                        point + half, half, point - half, point + half, 2000,
+                        evaluable).as_dict()
+
+
+def rewrite_main_read(path: Path, *, mp_region: str) -> dict[str, Any]:
+    """Synthetic main read: hs fails V1, mp passes V1 with a read in ``mp_region``.
+
+    ``mp_region`` is "go" (the verdict is GO and no extension is called for) or
+    "none" (INCONCLUSIVE, so the registered extension re-reads hs only). The
+    verdict and the extension targets are recomputed with the registered rules,
+    exactly as the extension job re-checks them.
+    """
+
+    payload = json.loads(path.read_text(encoding="utf-8"))
+    reads = {read["target"]: read for read in payload["reads"]}
+    for name, read in reads.items():
+        target_ml = float(read["adequacy"]["target_ml"])
+        offset = -10.0 if name == "hs" else 0.0
+        read["adequacy"]["indexer_ml_by_seed"] = [target_ml + offset] * 3
+        read["integrity_ok"] = True
+    if mp_region == "go":
+        reads["mp"]["xi"], reads["mp"]["xi_rel"] = _interval(15.0, 4.0), _interval(0.3, 0.1)
+    else:
+        reads["mp"]["xi"], reads["mp"]["xi_rel"] = _interval(7.0, 8.0), _interval(0.15, 0.2)
+    payload["headroom"] = {"h1_points": 60.0, "h2a": _interval(55.0, 5.0),
+                           "h2b": _interval(20.0, 10.0)}
+    target_reads = [k1s.TargetRead.from_dict(reads[t]) for t in ("hs", "mp")]
+    verdict = k1s.k1_verdict(target_reads, k1s.HeadroomRead.from_dict(payload["headroom"]))
+    payload["reads"] = [reads["hs"], reads["mp"]]
+    payload["verdict"], payload["reasons"] = verdict.verdict, list(verdict.reasons)
+    payload["extension_targets"] = k1s.extension_targets(verdict, target_reads)
+    path.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+    return payload
+
+
+def final_state(run_dir: Path, worker: int, step: int) -> dict[str, Any]:
+    from safetensors.torch import load_file
+
+    path = (run_dir / "phase-0a-k1" / "checkpoints" / f"worker-{worker}"
+            / f"step-{step:06d}" / "state.safetensors")
+    return load_file(str(path))
+
+
+def signal_during_worker_start(run: TinyRun, run_dir: Path,
+                               delay: float = 0.0) -> subprocess.Popen:
+    """Start resume-test and send SIGUSR1 ``delay`` s after the parent spawned its workers."""
+
+    run_dir.mkdir(parents=True, exist_ok=True)
+    process = subprocess.Popen(run.argv("resume-test", run_dir, "--stop-after-step", "4",
+                                        "--checkpoint-every", "2"),
+                               env=run.env(run_dir), stdout=subprocess.PIPE,
+                               stderr=subprocess.PIPE, text=True)
+    specs = run_dir / "phase-0a-k1" / "worker-specs" / "resume-test"
+    deadline = time.time() + 600
+    while time.time() < deadline and len(list(specs.glob("worker-?.json"))) < 2:
+        if process.poll() is not None:
+            break
+        time.sleep(0.01)
+    time.sleep(delay)
+    if process.poll() is None:
+        process.send_signal(signal.SIGUSR1)
+    return process
 
 
 # --------------------------------------------------------------------------- #
@@ -455,7 +536,32 @@ def case_verdict_tables() -> dict[str, Any]:
     void = k1s.k1_verdict([_read("hs", table, integrity=False)], good).verdict
     outcomes["bug_tell_holds"] = {"verdict": hold, "expected": "HOLD"}
     outcomes["integrity_voids"] = {"verdict": void, "expected": "VOID"}
+    # The V1 extension: GO from a V1-passing target needs no extension; a
+    # NEGATIVE-region target waits for the V1-failing one, which alone is re-read;
+    # a target still failing V1 after the extension is INCONCLUSIVE.
+    go_mp = _read("mp", _table(14, 30, 3, {**target, "ind": (78.0, 50.0)}, 1.0, rng))
+    neg_mp = _read("mp", _table(14, 30, 3, {**target, "ind": (77.0, 67.0)}, 1.0, rng))
+    hs_fail = _read("hs", table, ml=(70.0, 92.0))
+    hs_pass = _read("hs", table)
+    go_first = k1s.k1_verdict([hs_fail, go_mp], good)
+    waiting = k1s.k1_verdict([hs_fail, neg_mp], good)
+    outcomes["v1_fail_with_go_needs_no_extension"] = {
+        "verdict": go_first.verdict, "expected": "GO",
+        "extension_targets": k1s.extension_targets(go_first, [hs_fail, go_mp])}
+    outcomes["v1_fail_extension_rereads_only_that_target"] = {
+        "verdict": waiting.verdict, "expected": "INCONCLUSIVE",
+        "extension_targets": k1s.extension_targets(waiting, [hs_fail, neg_mp])}
+    combined = k1s.combine_after_extension([hs_fail, neg_mp], [hs_pass])
+    outcomes["extension_pass_completes_negative"] = {
+        "verdict": k1s.k1_verdict(combined, good, after_extension=True).verdict,
+        "expected": "NEGATIVE"}
+    outcomes["v1_still_failing_after_extension"] = {
+        "verdict": k1s.k1_verdict([hs_fail], good, after_extension=True).verdict,
+        "expected": "INCONCLUSIVE"}
     gates = {name: row["verdict"] == row["expected"] for name, row in outcomes.items()}
+    gates["extension_targets"] = (
+        outcomes["v1_fail_with_go_needs_no_extension"]["extension_targets"] == []
+        and outcomes["v1_fail_extension_rereads_only_that_target"]["extension_targets"] == ["hs"])
     return {"outcomes": outcomes, "gates": gates}
 
 
@@ -570,8 +676,6 @@ def case_end_to_end(tmp: Path) -> dict[str, Any]:
     stale.write_text("stale marker from a periodic checkpoint\n", encoding="utf-8")
     process.send_signal(signal.SIGUSR1)
     _, r1_err = process.communicate(timeout=600)
-    from harness.sparse_indexer_k1_marker import read_checkpoint_marker
-
     marker = read_checkpoint_marker(stale) if stale.is_file() else {"acks": {}}
     gates["signal_save_exits_75"] = process.returncode == 75
     gates["stale_marker_replaced_after_acks"] = (
@@ -594,30 +698,94 @@ def case_end_to_end(tmp: Path) -> dict[str, Any]:
     else:
         gates["resume_bitwise_equal"] = False
         details["resume_stderr"] = (r0.stderr[-600:], r1_err[-600:], r2.stderr[-600:])
+    # A signal forwarded while the workers are still importing must checkpoint
+    # (exit 75 with a fresh marker), not kill them.
+    early = signal_during_worker_start(run, tmp / "early-signal")
+    _, early_err = early.communicate(timeout=600)
+    early_marker = tmp / "early-signal" / "checkpoint.ready"
+    gates["signal_during_worker_start_checkpoints"] = (
+        early.returncode == 75 and early_marker.is_file()
+        and read_checkpoint_marker(early_marker).get("trigger") == "SIGUSR1")
+    details["early_signal_stderr_tail"] = early_err[-800:] if early.returncode != 75 else ""
     main_run = run.run("0a-k1", tmp / "main")
     gates["main_completes_with_verdict"] = main_run.returncode == 0 and receipt_of(
         tmp / "main")["verdict"]["verdict"] in {
         "GO", "NEGATIVE", "INCONCLUSIVE", "UNINTERPRETABLE", "HOLD", "V1_EXTENSION_REQUIRED"}
-    if main_run.returncode == 0:
-        main_receipt = receipt_of(tmp / "main")
-        details["main"] = {"verdict": main_receipt["verdict"],
-                           "lr_freeze": main_receipt["lr_freeze"]["selected_lr"],
-                           "units": main_receipt["units"]}
-        gates["lr_freeze_hashed_before_audit"] = bool(
-            main_receipt["hashes"].get("lr_freeze_sha256"))
-        ext_dir = tmp / "extension"
-        (ext_dir / "phase-0a-k1").mkdir(parents=True, exist_ok=True)
-        shutil.copytree(tmp / "main" / "phase-0a-k1" / "checkpoints",
-                        ext_dir / "phase-0a-k1" / "checkpoints",
-                        ignore=shutil.ignore_patterns("eval"))
-        extension = run.run("0a-k1-extend", ext_dir)
-        gates["extension_completes"] = extension.returncode == 0 and (
-            ext_dir / "phase-0a-k1" / "receipt-extension.json").is_file()
-        details["extension_stderr_tail"] = extension.stderr[-800:] if extension.returncode else ""
-    else:
+    names = ("lr_freeze_hashed_before_audit", "main_read_persisted",
+             "main_continues_after_freeze", "corrupt_final_generation_fails_closed",
+             "extension_refused_without_v1_failure", "extension_rereads_only_failing_target")
+    if main_run.returncode != 0:
         details["main_stderr_tail"] = main_run.stderr[-1500:]
-        gates["lr_freeze_hashed_before_audit"] = False
-        gates["extension_completes"] = False
+        gates.update({name: False for name in names})
+        return {"gates": gates, "details": details}
+    main_receipt = receipt_of(tmp / "main")
+    main_ckpt = tmp / "main" / "phase-0a-k1" / "checkpoints"
+    details["main"] = {"verdict": main_receipt["verdict"]["verdict"],
+                       "lr_freeze": main_receipt["lr_freeze"]["selected_lr"],
+                       "units": main_receipt["units"]}
+    gates["lr_freeze_hashed_before_audit"] = bool(main_receipt["hashes"].get("lr_freeze_sha256"))
+    gates["main_read_persisted"] = (main_ckpt / "main-read.json").is_file() and (
+        hashlib.sha256((main_ckpt / "main-read.json").read_bytes()).hexdigest()
+        == main_receipt["hashes"].get("main_read_sha256"))
+    # A fresh job continuing the main job after the LR freeze, with half of the
+    # audit evaluation already on disk, reuses it and reproduces the read.
+    resumed_ckpt = copy_checkpoints(tmp / "main", tmp / "main-continued", "main-read.json")
+    chunks = sorted((resumed_ckpt / "eval" / "audit-main").glob("chunk-*.npz"))
+    for chunk in chunks[: len(chunks) // 2]:
+        chunk.unlink()
+    continued = run.run("0a-k1", tmp / "main-continued")
+    if continued.returncode == 0:
+        again = receipt_of(tmp / "main-continued")
+        gates["main_continues_after_freeze"] = (
+            again["verdict"]["verdict"] == main_receipt["verdict"]["verdict"]
+            and again["lr_freeze"] == main_receipt["lr_freeze"]
+            and all(again["targets"][t]["xi"]["point"] == main_receipt["targets"][t]["xi"]["point"]
+                    for t in ("hs", "mp")))
+    else:
+        gates["main_continues_after_freeze"] = False
+        details["main_continued_stderr_tail"] = continued.stderr[-1500:]
+    # A corrupt final training generation is an integrity failure (exit 3); the
+    # evaluation never falls back to an older generation.
+    corrupt_ckpt = copy_checkpoints(tmp / "main", tmp / "main-corrupt", "eval", "lr_freeze.json",
+                                    "main-read.json")
+    final = sorted((corrupt_ckpt / "worker-0").glob("step-*"))[-1] / "state.safetensors"
+    data = bytearray(final.read_bytes())
+    data[-1] ^= 0xFF
+    final.write_bytes(bytes(data))
+    corrupt = run.run("0a-k1", tmp / "main-corrupt")
+    gates["corrupt_final_generation_fails_closed"] = corrupt.returncode == 3 and (
+        "fails its digest check" in corrupt.stderr)
+    details["corrupt_stderr_tail"] = corrupt.stderr[-400:]
+    # The extension refuses a main read that does not call for it ...
+    refused_dir = tmp / "extension-refused"
+    rewrite_main_read(copy_checkpoints(tmp / "main", refused_dir, "eval") / "main-read.json",
+                      mp_region="go")
+    refused = run.run("0a-k1-extend", refused_dir)
+    gates["extension_refused_without_v1_failure"] = refused.returncode == 3 and not (
+        refused_dir / "phase-0a-k1" / "receipt-extension.json").exists()
+    # ... and otherwise retrains and re-reads only the V1-failing target.
+    ext_dir = tmp / "extension"
+    synthetic = rewrite_main_read(
+        copy_checkpoints(tmp / "main", ext_dir, "eval") / "main-read.json", mp_region="none")
+    extension = run.run("0a-k1-extend", ext_dir)
+    if extension.returncode == 0:
+        ext_receipt = receipt_of(ext_dir, "receipt-extension.json")
+        steps = main_receipt["training_workers"][0]["final_step"]
+        before, after = final_state(tmp / "main", 0, steps), final_state(ext_dir, 0, 3 * steps)
+        hs_lr = main_receipt["lr_freeze"]["selected_lr"]["hs"]
+        changed = {name for name in before if "|param|" in name
+                   and not np.array_equal(before[name].numpy(), after[name].numpy())}
+        gates["extension_rereads_only_failing_target"] = (
+            synthetic["extension_targets"] == ["hs"]
+            and ext_receipt["reread_targets"] == ["hs"]
+            and ext_receipt["kept_main_read_targets"] == ["mp"]
+            and set(ext_receipt["targets"]) == {"hs"}
+            and bool(changed) and all(f"|hs|{hs_lr}|" in name for name in changed))
+        details["extension"] = {"verdict": ext_receipt["verdict"]["verdict"],
+                                "changed_parameters": len(changed)}
+    else:
+        gates["extension_rereads_only_failing_target"] = False
+        details["extension_stderr_tail"] = extension.stderr[-1500:]
     return {"gates": gates, "details": details}
 
 

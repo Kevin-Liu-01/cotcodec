@@ -10,6 +10,7 @@ receives (``resume_subpath``).
 Persistent layout under ``<output>/checkpoints``::
 
     worker-<w>/step-<s>/{state.safetensors,meta.json}   two validated generations
+    final/worker-<w>-step-<s>.json                      completion record of a training run
     signal/<token>/worker-<w>.json                      signal-save acknowledgements
     devkl/worker-<w>.json                               stream-dev KL (all 18 indexers)
     lr_freeze.json                                      frozen LR per target (hashed)
@@ -262,22 +263,82 @@ class CheckpointStore:
             shutil.rmtree(self.path(old), ignore_errors=True)
         return digest
 
-    def load_latest(self) -> tuple[int, dict[str, torch.Tensor], dict[str, Any]] | None:
+    def _load_valid(self, step: int) -> tuple[dict[str, torch.Tensor], dict[str, Any]] | None:
         from safetensors.torch import load_file
 
+        directory = self.path(step)
+        try:
+            meta = json.loads((directory / "meta.json").read_text(encoding="utf-8"))
+            if meta.get("step") != step:
+                return None
+            if sha256_file(directory / "state.safetensors") != meta["file_sha256"]:
+                return None
+            tensors = load_file(str(directory / "state.safetensors"))
+            if sit.state_digest(tensors) != meta["state_digest"]:
+                return None
+            return tensors, meta
+        except (OSError, KeyError, ValueError, json.JSONDecodeError):
+            return None
+
+    def load_latest(self) -> tuple[int, dict[str, torch.Tensor], dict[str, Any]] | None:
+        """Newest generation that validates; training resumes may fall back to an older one."""
+
         for step in reversed(self.generations()):
-            directory = self.path(step)
-            try:
-                meta = json.loads((directory / "meta.json").read_text(encoding="utf-8"))
-                if sha256_file(directory / "state.safetensors") != meta["file_sha256"]:
-                    continue
-                tensors = load_file(str(directory / "state.safetensors"))
-                if sit.state_digest(tensors) != meta["state_digest"]:
-                    continue
-                return step, tensors, meta
-            except (OSError, KeyError, ValueError, json.JSONDecodeError):
-                continue
+            loaded = self._load_valid(step)
+            if loaded is not None:
+                return step, loaded[0], loaded[1]
         return None
+
+    def load_step(self, step: int) -> tuple[dict[str, torch.Tensor], dict[str, Any]]:
+        """Exactly generation ``step`` or an integrity error (never an older generation)."""
+
+        loaded = self._load_valid(step)
+        if loaded is None:
+            raise RuntimeContractError(
+                f"{self.root.name}: generation {step} is missing or fails its digest check")
+        return loaded
+
+
+def completion_record_path(ckpt_dir: Path, worker: int, step: int) -> Path:
+    return ckpt_dir / "final" / f"worker-{worker}-step-{step:06d}.json"
+
+
+def write_completion_record(ckpt_dir: Path, worker: int, step: int, state_digest: str,
+                            config: str, reason: str) -> str:
+    """Record that training worker ``worker`` ended at ``step`` with this exact state."""
+
+    return atomic_write_json(completion_record_path(ckpt_dir, worker, step), {
+        "worker": worker, "step": step, "state_digest": state_digest,
+        "config_digest": config, "reason": reason})
+
+
+def load_completed_generation(ckpt_dir: Path, worker: int, step: int
+                              ) -> tuple[dict[str, torch.Tensor], dict[str, Any]]:
+    """The generation a training run completed at ``step``, verified against its record.
+
+    Fails closed: a missing record, a missing or corrupt generation, or a
+    generation whose state digest differs from the record raises
+    RuntimeContractError. It never falls back to an older generation.
+    """
+
+    path = completion_record_path(ckpt_dir, worker, step)
+    try:
+        record = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as exc:
+        raise RuntimeContractError(
+            f"training worker {worker} has no completion record for step {step}") from exc
+    tensors, meta = CheckpointStore(ckpt_dir / f"worker-{worker}").load_step(step)
+    if record.get("step") != step or meta["state_digest"] != record.get("state_digest"):
+        raise RuntimeContractError(
+            f"training worker {worker}: generation {step} differs from its completion record")
+    return tensors, meta
+
+
+def training_completed(ckpt_dir: Path, workers: int, step: int) -> bool:
+    """Every worker has a completion record at ``step`` (the state itself is checked on load)."""
+
+    return all(completion_record_path(ckpt_dir, worker, step).is_file()
+               for worker in range(workers))
 
 
 # --------------------------------------------------------------------------- #
@@ -452,11 +513,19 @@ def run_training_worker(ctx: WorkerContext, spec: TrainSpec, profile: Profile) -
     start_step = 0
     loaded = store.load_latest()
     resume_meta: dict[str, Any] | None = None
+    current_config = config_digest(spec, profile, ctx.hashes)
     if loaded is not None:
         start_step, tensors, resume_meta = loaded
-        allowed = {config_digest(spec, profile, ctx.hashes), *(spec.accept_config_digests or [])}
-        if resume_meta.get("config_digest") not in allowed:
-            raise RuntimeContractError("checkpoint was written under a different configuration")
+        earlier = set(spec.accept_config_digests or [])
+        written_under = resume_meta.get("config_digest")
+        if written_under != current_config:
+            if written_under not in earlier:
+                raise RuntimeContractError(
+                    "checkpoint was written under a different configuration")
+            # Continuing an earlier run (the V1 extension): only from the exact
+            # generation that run completed, never from an older fallback.
+            tensors, resume_meta = load_completed_generation(ctx.ckpt_dir, ctx.worker,
+                                                             start_step)
         bank.load_state(tensors)
     train_tokens = ctx.stage.array("train_tokens")
     n_train = int(train_tokens.shape[0])
@@ -549,7 +618,9 @@ def run_training_worker(ctx: WorkerContext, spec: TrainSpec, profile: Profile) -
                 time.sleep(0.5)
             handle_signal(step)
     final_step = step
-    digest = save(final_step, "final" if final_step >= total_steps else "stop-after-step")
+    reason = "final" if final_step >= total_steps else "stop-after-step"
+    digest = save(final_step, reason)
+    write_completion_record(ctx.ckpt_dir, ctx.worker, final_step, digest, current_config, reason)
     return {"worker": ctx.worker, "final_step": final_step, "state_digest": digest,
             "param_digests": bank.param_digest(), "timings": timings,
             "resumed_from": resume_meta["step"] if resume_meta else None}
@@ -582,11 +653,8 @@ def run_devkl_worker(ctx: WorkerContext, spec: TrainSpec) -> dict:
     ispec = sit.IndexerSpec(d_model=int(config.hidden_size))
     keys = [indexer_key(t, lr, s) for t in spec.targets for lr in spec.lrs for s in spec.seeds]
     bank = IndexerBank(ispec, spec.layers, keys, ctx.device)
-    store = CheckpointStore(ctx.ckpt_dir / f"worker-{ctx.worker}")
-    loaded = store.load_latest()
-    if loaded is None or loaded[0] < spec.steps:
-        raise RuntimeContractError("stream-dev KL needs the final training generation")
-    bank.load_state(loaded[1])
+    tensors, _ = load_completed_generation(ctx.ckpt_dir, ctx.worker, spec.steps)
+    bank.load_state(tensors)
     dev = ctx.stage.array("dev_tokens")
     sums = {f"L{layer:02d}|{key}": 0.0 for layer in spec.layers for key in keys}
     for index in range(dev.shape[0]):
@@ -677,6 +745,7 @@ class EvalSpec:
     lr_freeze_path: str | None
     lr_freeze_sha256: str | None
     train_layers: list[list[int]]
+    final_step: int | None = None  # the training step the indexers must come from
 
 
 def plan_units(prompts: Sequence[Mapping[str, Any]], selection_roles: Iterable[str],
@@ -703,18 +772,20 @@ def load_selected_indexers(ctx: WorkerContext, spec: EvalSpec, n_layers: int,
     if not spec.with_indexers:
         return {}
 
-    assert spec.lr_freeze_path and spec.lr_freeze_sha256
+    if not (spec.lr_freeze_path and spec.lr_freeze_sha256):
+        raise RuntimeContractError("an indexer evaluation needs the hashed LR freeze")
+    if spec.final_step is None:
+        raise RuntimeContractError("an indexer evaluation needs the registered final step")
     path = Path(spec.lr_freeze_path)
     if sha256_file(path) != spec.lr_freeze_sha256:
         raise RuntimeContractError("lr_freeze.json changed after it was frozen")
     freeze = json.loads(path.read_text(encoding="utf-8"))
     out: dict[tuple[int, str, int], sit.BlockIndexer] = {}
     for worker, layers in enumerate(spec.train_layers):
-        store = CheckpointStore(ctx.ckpt_dir / f"worker-{worker}")
-        loaded = store.load_latest()
-        if loaded is None:
-            raise RuntimeContractError(f"training worker {worker} has no final generation")
-        tensors = loaded[1]
+        # Exactly the generation training completed at the registered final
+        # step: a corrupt or missing final generation is an integrity failure,
+        # never a silent fallback to an older one.
+        tensors, _ = load_completed_generation(ctx.ckpt_dir, worker, spec.final_step)
         for layer in layers:
             for target, lr_s in freeze["selected_lr"].items():
                 for seed in spec.seeds:
@@ -1085,6 +1156,7 @@ __all__ = [
     "WorkerContext",
     "atomic_write_json",
     "batch_indices",
+    "completion_record_path",
     "build_family_table",
     "collect_eval",
     "config_digest",
@@ -1094,6 +1166,7 @@ __all__ = [
     "freeze_learning_rates",
     "indexer_key",
     "learning_rate",
+    "load_completed_generation",
     "lr_tag",
     "plan_units",
     "read_checkpoint_marker",
@@ -1106,5 +1179,7 @@ __all__ = [
     "sha256_file",
     "stage_bundle",
     "summarise_headroom",
+    "training_completed",
     "write_checkpoint_marker",
+    "write_completion_record",
 ]

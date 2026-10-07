@@ -14,21 +14,30 @@ Phases:
                   for the interrupted leg); per-worker final state digests.
 ``0a-k1``         train 18 indexers per layer, stream-dev KL, LR freeze (hashed
                   before any audit read), audit evaluation, statistics, verdict.
-``0a-k1-extend``  the registered V1 extension: epochs 2-3 for the frozen-LR
-                  indexers, then one re-evaluation.
+``0a-k1-extend``  the registered V1 extension: only after a main read whose
+                  verdict is V1_EXTENSION_REQUIRED, or INCONCLUSIVE with a
+                  target failing V1; epochs 2-3 for the frozen-LR indexers of
+                  the V1-failing targets only, then one re-read of those
+                  targets. A target that passed V1 keeps its main read.
 
 The process is PID 1 in its container. It installs SIGUSR1/SIGTERM handlers,
 forwards a received signal to its workers, reaps them, and writes the
 checkpoint marker (with the line ``trigger=SIG<name>`` the batch script
 requires) only after every running worker acknowledged a completed
-signal-triggered save (a stale marker is deleted first). Exit codes: 0
-complete, 2 contract violation at startup, 3 integrity failure, 75
-checkpointed and incomplete.
+signal-triggered save (a stale marker is deleted first). Workers are spawned
+with SIGUSR1 and SIGTERM blocked and unblock them only after installing their
+handler, so a signal forwarded while a worker is still starting stays pending
+instead of killing it. A main (0a-k1) job interrupted by a confirmed signal
+checkpoint is continued by a fresh job in the same run root from its
+``checkpoints`` directory: completed training, stream-dev KL, the LR freeze and
+evaluation chunks are reused. Exit codes: 0 complete, 2 contract violation at
+startup, 3 integrity failure, 75 checkpointed and incomplete.
 """
 
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import os
 import signal
@@ -68,6 +77,12 @@ SMOKE_TRAIN_STEPS = 4
 CAPTURE_REL_ERROR_MAX = 1e-2
 EAGER_TV_MAX = 0.10
 MAIN_BUDGET_GPU_HOURS = 2.0
+MAIN_MAX_MINUTES = 30.0
+SIGNAL_LEAD_MINUTES = 3.0  # Slurm sends USR1 180 s before the limit (--signal=B:USR1@180)
+PROJECTION_MARGIN = 1.2  # the registered safety factor on the smoke projection
+EXTENSION_EPOCHS = 3
+MAIN_READ = "main-read.json"
+WORKER_SIGNALS = {signal.SIGUSR1, signal.SIGTERM}
 CODE_FILES = (
     "scripts/run_sparse_indexer_phase0a.py",
     "harness/sparse_indexer_torch.py",
@@ -254,15 +269,25 @@ class Parent:
         children: list[tuple[int, subprocess.Popen]] = []
         n_devices = self._device_count()
         started = time.perf_counter()
-        for spec in specs:
-            worker = int(spec["worker"])
-            path = spec_dir / f"worker-{worker}.json"
-            rt.atomic_write_json(path, spec)
-            env = dict(os.environ)
-            if self.args.device == "cuda":
-                env["CUDA_VISIBLE_DEVICES"] = str(worker % n_devices)
-            children.append((worker, subprocess.Popen(
-                [sys.executable, str(Path(__file__).resolve()), "--worker", str(path)], env=env)))
+        # Children inherit the signal mask across fork and exec. With SIGUSR1
+        # and SIGTERM blocked, a signal forwarded before a worker installed its
+        # handler stays pending (the worker unblocks right after installing it)
+        # instead of killing the worker with the default action. A signal that
+        # reaches this process meanwhile is delivered when the mask is restored.
+        previous_mask = signal.pthread_sigmask(signal.SIG_BLOCK, WORKER_SIGNALS)
+        try:
+            for spec in specs:
+                worker = int(spec["worker"])
+                path = spec_dir / f"worker-{worker}.json"
+                rt.atomic_write_json(path, spec)
+                env = dict(os.environ)
+                if self.args.device == "cuda":
+                    env["CUDA_VISIBLE_DEVICES"] = str(worker % n_devices)
+                children.append((worker, subprocess.Popen(
+                    [sys.executable, str(Path(__file__).resolve()), "--worker", str(path)],
+                    env=env)))
+        finally:
+            signal.pthread_sigmask(signal.SIG_SETMASK, previous_mask)
         token: str | None = None
         running_at_signal: set[int] = set()
         failed = False
@@ -366,15 +391,13 @@ class Parent:
         return self.run_workers(specs, label)
 
     def training_complete(self, shards: list[list[int]], steps: int) -> bool:
-        for worker in range(len(shards)):
-            generations = rt.CheckpointStore(self.ckpt / f"worker-{worker}").generations()
-            if not generations or generations[-1] < steps:
-                return False
-        return True
+        # Completion records, not generation directory names: a generation's
+        # state is verified against its record when it is loaded.
+        return rt.training_completed(self.ckpt, len(shards), steps)
 
     def evaluate(self, staged: rt.StagedData, stage: str, units: list[dict[str, Any]],
                  with_indexers: bool, freeze: tuple[str, str] | None,
-                 shards: list[list[int]], workers: int) -> None:
+                 shards: list[list[int]], workers: int, final_step: int | None = None) -> None:
         per_worker = [units[w::workers] for w in range(workers)]
         specs = []
         for worker, assigned in enumerate(per_worker):
@@ -383,7 +406,8 @@ class Parent:
                 stage=stage, units=assigned, seeds=list(self.args.seeds),
                 with_indexers=with_indexers,
                 lr_freeze_path=freeze[0] if freeze else None,
-                lr_freeze_sha256=freeze[1] if freeze else None, train_layers=shards))
+                lr_freeze_sha256=freeze[1] if freeze else None, train_layers=shards,
+                final_step=final_step))
             specs.append(spec)
         self.run_workers(specs, f"eval-{stage}")
 
@@ -521,7 +545,8 @@ class Parent:
         units, _, _ = self._units(staged, "development", {"dev"}, set(), set())
         units = [unit for unit in units if unit["select"]][:SMOKE_UNITS]
         started = time.perf_counter()
-        self.evaluate(staged, "smoke", units, True, (str(freeze_path), freeze_sha), shards, 1)
+        self.evaluate(staged, "smoke", units, True, (str(freeze_path), freeze_sha), shards, 1,
+                      final_step=int(train_results[0]["final_step"]))
         eval_s = time.perf_counter() - started
         merged = rt.collect_eval(self.ckpt, "smoke", {u["unit"]: u["unit"] for u in units})
         recalls = np.stack([row["recall"] for row in merged["rows"].values()])
@@ -545,8 +570,7 @@ class Parent:
         }
         report["gates"] = gates
         status = "SMOKE_PASS" if all(gates.values()) else "SMOKE_FAIL"
-        if status == "SMOKE_PASS" and report["projection"]["main_gpu_hours"] > (
-                MAIN_BUDGET_GPU_HOURS):
+        if status == "SMOKE_PASS" and not main_fits_budget(report["projection"]):
             status = "SMOKE_PASS_OVER_BUDGET"
         self.write_receipt("receipt.json", {"status": status, **report})
         return EXIT_OK if all(gates.values()) else EXIT_INTEGRITY
@@ -556,7 +580,9 @@ class Parent:
         shards = self.layer_shards(n_layers, self.args.workers)
         steps = self.total_steps(staged)
         freeze_path = self.ckpt / "lr_freeze.json"
+        main_read_path = self.ckpt / MAIN_READ
         training: list[dict[str, Any]] = []
+        main_read: dict[str, Any] | None = None
         if not extension:
             if not self.training_complete(shards, steps):
                 training = self.train(staged, "train", shards, steps)
@@ -571,25 +597,39 @@ class Parent:
             if not freeze_path.is_file():
                 devkl = [json.loads((self.ckpt / "devkl" / f"worker-{w}.json").read_text(
                     encoding="utf-8")) for w in range(len(shards))]
-                freeze = rt.freeze_learning_rates(devkl, TARGETS, rt.LEARNING_RATES,
+                frozen = rt.freeze_learning_rates(devkl, TARGETS, rt.LEARNING_RATES,
                                                   self.args.seeds)
-                freeze["written_before_audit_read"] = True
-                rt.atomic_write_json(freeze_path, freeze)
-            stage = "audit-main"
+                frozen["written_before_audit_read"] = True
+                rt.atomic_write_json(freeze_path, frozen)
+            stage, final_step, read_targets = "audit-main", steps, list(TARGETS)
         else:
             if not freeze_path.is_file():
                 raise RuntimeContractError("the extension needs the main run's LR freeze")
-            freeze = json.loads(freeze_path.read_text(encoding="utf-8"))
-            keys = [rt.indexer_key(t, freeze["selected_lr_value"][t], s)
-                    for t in TARGETS for s in self.args.seeds]
-            total = steps * 3
+            main_read, main_read_sha = load_main_read(main_read_path)
+            self.hashes["main_read_sha256"] = main_read_sha
+            read_targets = list(main_read["extension_targets"])
+            if not read_targets:
+                raise RuntimeContractError(
+                    f"the main read ({main_read['verdict']}) does not call for the V1 extension")
+            if main_read["lr_freeze_sha256"] != rt.sha256_file(freeze_path):
+                raise RuntimeContractError("lr_freeze.json differs from the main read's freeze")
+            selected = json.loads(freeze_path.read_text(encoding="utf-8"))["selected_lr_value"]
+            # Only the V1-failing targets' frozen-LR indexers train on epochs 2-3.
+            keys = [rt.indexer_key(t, selected[t], s)
+                    for t in read_targets for s in self.args.seeds]
+            total = steps * EXTENSION_EPOCHS
             if not self.training_complete(shards, total):
                 accept = [rt.config_digest(self.train_spec(layers, steps), self.profile,
                                            self.hashes) for layers in shards]
-                training = self.train(staged, "train-extension", shards, total, epochs=3,
-                                      train_only=keys, accept_config_digests=accept)
-            stage = "audit-extension"
-        freeze_sha = rt.sha256_file(freeze_path)
+                training = self.train(staged, "train-extension", shards, total,
+                                      epochs=EXTENSION_EPOCHS, train_only=keys,
+                                      accept_config_digests=accept)
+            stage, final_step = "audit-extension", total
+        # The freeze is read back from the bytes whose digest the evaluation
+        # workers verify, on a fresh run and on a resumed one alike.
+        freeze_bytes = freeze_path.read_bytes()
+        freeze_sha = hashlib.sha256(freeze_bytes).hexdigest()
+        freeze = json.loads(freeze_bytes)
         self.hashes["lr_freeze_sha256"] = freeze_sha
         if self.flag.received:
             self.checkpoint_without_workers()
@@ -597,11 +637,42 @@ class Parent:
             staged, "audit", {"main", "same-script", "literal"}, {"main", "absent"},
             {"MN", "CX"})
         self.evaluate(staged, stage, units, True, (str(freeze_path), freeze_sha), shards,
-                      self.args.workers)
+                      self.args.workers, final_step=final_step)
         if self.flag.received:
             self.checkpoint_without_workers()
         results = rt.collect_eval(self.ckpt, stage, prompt_to_unit)
-        report = self.statistics(prompts, results, staged.meta["context_meta"])
+        report, reads, headroom_read = self.statistics(prompts, results,
+                                                       staged.meta["context_meta"],
+                                                       read_targets)
+        if extension:
+            assert main_read is not None
+            main_reads = [k1s.TargetRead.from_dict(r) for r in main_read["reads"]]
+            combined = k1s.combine_after_extension(main_reads, reads)
+            decision_headroom = k1s.HeadroomRead.from_dict(main_read["headroom"])
+            verdict = k1s.k1_verdict(combined, decision_headroom, after_extension=True)
+            # Dense-only gates are not re-read: the main read's headroom decides,
+            # and the recomputation is reported as a determinism check only.
+            report["headroom_recomputed_descriptive"] = report.pop("headroom")
+            report["headroom"] = main_read["headroom_report"]
+            report["main_read"] = main_read
+            report["reread_targets"] = read_targets
+            report["kept_main_read_targets"] = [r.target for r in main_reads
+                                                if r.target not in read_targets]
+        else:
+            verdict = k1s.k1_verdict(reads, headroom_read)
+            ext_targets = k1s.extension_targets(verdict, reads)
+            payload = {"schema": "cotcodec-k1-main-read-v1",
+                       "reads": [read.as_dict() for read in reads],
+                       "headroom": headroom_read.as_dict(),
+                       "headroom_report": report["headroom"],
+                       "verdict": verdict.verdict, "reasons": list(verdict.reasons),
+                       "extension_targets": ext_targets, "lr_freeze_sha256": freeze_sha}
+            # Persisted under checkpoints/ so the extension job (which receives
+            # only that directory) combines with exactly this read.
+            self.hashes["main_read_sha256"] = rt.atomic_write_json(main_read_path, payload)
+            report["extension_targets"] = ext_targets
+        report["verdict"] = {"verdict": verdict.verdict, "reasons": list(verdict.reasons),
+                             "per_target": verdict.per_target}
         report["training_workers"] = [
             {key: result.get(key) for key in ("worker", "final_step", "state_digest", "timings",
                                                "resumed_from")} for result in training]
@@ -614,9 +685,9 @@ class Parent:
                 devkl_all.update(json.loads(path.read_text(encoding="utf-8"))["kl"])
         report["stream_dev_kl"] = devkl_all
         report["bundle_reports"] = self.bundle_reports
-        name = "receipt-extension.json" if extension else "receipt.json"
+        name = "receipt-extension.json" if stage == "audit-extension" else "receipt.json"
         self.write_receipt(name, report)
-        return EXIT_OK if report["verdict"]["verdict"] != "VOID" else EXIT_INTEGRITY
+        return EXIT_OK if verdict.verdict != "VOID" else EXIT_INTEGRITY
 
     def phase_main(self, staged: rt.StagedData) -> int:
         return self._main_flow(staged, extension=False)
@@ -624,8 +695,11 @@ class Parent:
     def phase_extend(self, staged: rt.StagedData) -> int:
         return self._main_flow(staged, extension=True)
 
-    def statistics(self, prompts: list, results: dict,
-                   context_meta: list[dict[str, Any]]) -> dict[str, Any]:
+    def statistics(self, prompts: list, results: dict, context_meta: list[dict[str, Any]],
+                   read_targets: list[str]) -> tuple[dict[str, Any], list[k1s.TargetRead],
+                                                     k1s.HeadroomRead]:
+        """Per-target reads for ``read_targets``, the dense headroom read and descriptives."""
+
         seeds = list(self.args.seeds)
         rows, selectors = results["rows"], results["selectors"]
         k_limit = self.profile.k_blocks * 4 + 3
@@ -634,7 +708,7 @@ class Parent:
         integrity = all(row["max_selected"] <= k_limit for row in rows.values())
         literal_en = [p for p in prompts if p["role"] == "literal" and p["pair"] == "en>en"]
         reads, report = [], {"targets": {}}
-        for target in TARGETS:
+        for target in read_targets:
             table, pair_names = rt.build_family_table(prompts, results, target, seeds, "main",
                                                       "CX")
             xi = k1s.xi_interval(table)
@@ -664,15 +738,13 @@ class Parent:
             }
         headroom = rt.summarise_headroom(prompts, results, TARGETS, "main", "absent")
         headroom_read = k1s.HeadroomRead(headroom["h1_points"], headroom["h2a"], headroom["h2b"])
-        verdict = k1s.k1_verdict(reads, headroom_read)
         report["headroom"] = {"h1_by_target": headroom["h1_by_target"],
                               "h1_points": headroom["h1_points"],
                               "h2a": rt.interval_dict(headroom["h2a"]),
                               "h2b": rt.interval_dict(headroom["h2b"]),
                               "needle_absent_accuracy": headroom["absent_accuracy"]}
-        report["verdict"] = {"verdict": verdict.verdict, "reasons": list(verdict.reasons)}
         report["seed_noise"] = k1s.seed_noise_report(
-            {t: report["targets"][t]["cx_recall_by_seed"] for t in TARGETS})
+            {t: report["targets"][t]["cx_recall_by_seed"] for t in read_targets})
         report["integrity"] = {"selection_within_budget_and_finite": integrity,
                                "k_token_limit": k_limit, "units": results["units"]}
         report["descriptive"] = {
@@ -683,7 +755,36 @@ class Parent:
             "tie_counts": {name: int(sum(int(row["ties"][i]) for row in rows.values()))
                            for i, name in enumerate(selectors)},
         }
-        return report
+        return report, reads, headroom_read
+
+
+def load_main_read(path: Path) -> tuple[dict[str, Any], str]:
+    """The main job's persisted read (``checkpoints/main-read.json``) and its SHA-256.
+
+    The verdict and the extension targets are recomputed from the stored reads
+    and headroom with the registered rules; a disagreement is an integrity
+    failure, so the extension can never run on a read that does not call for it.
+    """
+
+    try:
+        payload = path.read_bytes()
+        main_read = json.loads(payload)
+    except (OSError, json.JSONDecodeError) as exc:
+        raise RuntimeContractError("the extension needs the main job's main-read.json") from exc
+    if main_read.get("schema") != "cotcodec-k1-main-read-v1":
+        raise RuntimeContractError("main-read.json has an unknown schema")
+    try:
+        reads = [k1s.TargetRead.from_dict(read) for read in main_read["reads"]]
+        headroom = k1s.HeadroomRead.from_dict(main_read["headroom"])
+    except (KeyError, TypeError, ValueError) as exc:
+        raise RuntimeContractError("main-read.json does not hold complete reads") from exc
+    if [read.target for read in reads] != list(TARGETS):
+        raise RuntimeContractError("main-read.json must hold one read per registered target")
+    verdict = k1s.k1_verdict(reads, headroom)
+    if (verdict.verdict != main_read.get("verdict")
+            or k1s.extension_targets(verdict, reads) != main_read.get("extension_targets")):
+        raise RuntimeContractError("main-read.json disagrees with the registered verdict rules")
+    return main_read, hashlib.sha256(payload).hexdigest()
 
 
 def smoke_capture_check(args: argparse.Namespace, staged: rt.StagedData,
@@ -797,7 +898,19 @@ def project_main_cost(report: dict[str, Any], n_layers: int, steps: int,
     return {"train_wall_s_per_worker": per_worker, "eval_wall_s": eval_s,
             "startup_allowance_s": 300.0, "main_wall_minutes": wall / 60.0,
             "main_gpu_hours": wall * len(shards) / 3600.0,
+            "required_limit_minutes": PROJECTION_MARGIN * wall / 60.0 + SIGNAL_LEAD_MINUTES,
+            "main_limit_minutes": MAIN_MAX_MINUTES,
+            "rule": f"{PROJECTION_MARGIN} x projected wall + {SIGNAL_LEAD_MINUTES} min signal "
+                    f"lead <= {MAIN_MAX_MINUTES} min (4 GPUs, {MAIN_BUDGET_GPU_HOURS} GPU-h)",
             "note": "single-GPU smoke timings scaled to the registered 4-worker layout"}
+
+
+def main_fits_budget(projection: dict[str, Any]) -> bool:
+    """The registered smoke gate: the main job's fixed 30-minute limit must cover the
+    projection times the margin plus the 180 s signal lead."""
+
+    return (PROJECTION_MARGIN * projection["main_wall_minutes"] + SIGNAL_LEAD_MINUTES
+            <= MAIN_MAX_MINUTES)
 
 
 # --------------------------------------------------------------------------- #
@@ -805,12 +918,10 @@ def project_main_cost(report: dict[str, Any], n_layers: int, steps: int,
 # --------------------------------------------------------------------------- #
 
 
-def worker_main(spec_path: Path) -> int:
+def worker_main(spec_path: Path, flag: rt.SignalFlag) -> int:
     import torch
 
     spec = json.loads(spec_path.read_text(encoding="utf-8"))
-    flag = rt.SignalFlag()
-    flag.install()
     device = torch.device("cuda:0" if spec["device"] == "cuda" else "cpu")
     profile = rt.Profile.registered() if spec["profile"] == "registered" else rt.Profile.tiny()
     ctx = rt.WorkerContext(
@@ -837,7 +948,13 @@ def worker_main(spec_path: Path) -> int:
 def main(argv: list[str] | None = None) -> int:
     argv = list(sys.argv[1:] if argv is None else argv)
     if argv[:1] == ["--worker"]:
-        return worker_main(Path(argv[1]))
+        # The parent spawned this worker with SIGUSR1/SIGTERM blocked; install
+        # the handler first, then unblock, so a signal that arrived during
+        # start-up is delivered to the handler instead of killing the worker.
+        flag = rt.SignalFlag()
+        flag.install()
+        signal.pthread_sigmask(signal.SIG_UNBLOCK, WORKER_SIGNALS)
+        return worker_main(Path(argv[1]), flag)
     args = parse_args(argv)
     parent = Parent(args)
     try:
