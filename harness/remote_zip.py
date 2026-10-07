@@ -27,6 +27,7 @@ from __future__ import annotations
 
 import contextlib
 import hashlib
+import http.client
 import io
 import os
 import struct
@@ -256,7 +257,12 @@ class HFRangeSource:
                     last = exc
                     if exc.code not in (429, 500, 502, 503, 504):
                         break
-                except (urllib.error.URLError, TimeoutError, OSError) as exc:
+                except (
+                    urllib.error.URLError,
+                    TimeoutError,
+                    OSError,
+                    http.client.HTTPException,
+                ) as exc:
                     last = exc
                 else:
                     raise SourceIdentityError(
@@ -298,7 +304,13 @@ class HFRangeSource:
                 last = exc
                 if exc.code not in (401, 403, 408, 410, 429, 500, 502, 503, 504):
                     break
-            except (urllib.error.URLError, TimeoutError, OSError, RemoteFetchError) as exc:
+            except (
+                urllib.error.URLError,
+                TimeoutError,
+                OSError,
+                http.client.HTTPException,  # e.g. IncompleteRead on a truncated reply
+                RemoteFetchError,
+            ) as exc:
                 last = exc
             self.stats.add(retries=1)
             self._sleep(self.backoff_seconds * (2**attempt))

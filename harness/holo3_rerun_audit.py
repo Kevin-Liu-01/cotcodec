@@ -233,7 +233,9 @@ V1_RECORDED: dict[str, Any] = {
 # --------------------------------------------------------------------------- #
 
 PUBLIC_UNSAFE_PATTERNS: tuple[tuple[str, re.Pattern[str]], ...] = (
-    ("ipv4", re.compile(r"(?<![\w.])(?:\d{1,3}\.){3}\d{1,3}(?![\w.])")),
+    # A trailing sentence period is allowed; a fifth dotted group is not.
+    ("ipv4", re.compile(r"(?<![\w.])(?:\d{1,3}\.){3}\d{1,3}(?!\w|\.\d)")),
+    ("aws_private_dns", re.compile(r"\bip-\d{1,3}(?:-\d{1,3}){3}\b")),
     ("aws_security_group", re.compile(r"\bsg-[0-9a-f]{8,17}\b")),
     ("aws_subnet", re.compile(r"\bsubnet-[0-9a-f]{8,17}\b")),
     ("aws_vpc", re.compile(r"\bvpc-[0-9a-f]{8,17}\b")),
@@ -267,7 +269,7 @@ def scrub(text: str) -> str:
 
 
 def assert_public_safe(obj: Any, where: str = "receipt") -> None:
-    """Fail closed if any key or string value matches a forbidden pattern.
+    """Fail closed if any key, string or number matches a forbidden pattern.
 
     The error names the patterns and JSON paths, never the matched text.
     """
@@ -284,6 +286,10 @@ def assert_public_safe(obj: Any, where: str = "receipt") -> None:
                 walk(item, f"{path}[{index}]")
         elif isinstance(value, str):
             for name in public_safety_hits(value):
+                hits.append(f"{path}:{name}")
+        elif isinstance(value, int | float) and not isinstance(value, bool):
+            # A 12-digit account id or a packed address can arrive as a number.
+            for name in public_safety_hits(str(value)):
                 hits.append(f"{path}:{name}")
 
     walk(obj, where)

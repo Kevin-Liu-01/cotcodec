@@ -1,8 +1,11 @@
 from __future__ import annotations
 
 import hashlib
+import math
 import re
 from pathlib import Path
+
+import pytest
 
 from harness import holo3_v2 as v2
 
@@ -28,3 +31,34 @@ def test_v2_draft_freezes_the_rule_lists_the_code_uses() -> None:
         assert f"`{label}`" in text, label
     assert "EXPLORATORY" in text
     assert not re.search(r"\bTBD\b|<[A-Za-z_ -]+>", text)
+
+
+def test_v2_draft_states_the_thresholds_and_reference_the_code_uses() -> None:
+    flat = " ".join(V2.read_text(encoding="utf-8").split())
+    assert (v2.ALPHA_D, v2.ALPHA_A, v2.ALPHA_B) == (0.04, 0.01, 0.025)
+    for alpha in ("0.04", "0.01", "0.025"):
+        assert f"at a fixed alpha of {alpha}" in flat, alpha
+    threshold = v2.SHIFT_LOG_THRESHOLD
+    assert threshold == pytest.approx(math.log(1.10)) and "|m| >= ln(1.10)" in flat
+    assert v2.SHARE_BAR == 0.5 and v2.SPECIFICITY_LIMIT == 0.20
+    assert v2.PROBE_BYTES == 250_000_000 and "250,000,000 compressed bytes" in flat
+    assert v2.PRIMARY_ENV_CRITERIA == ("tool_error", "text")
+    narrow = v2.NARROW_EXPECTED_GETTERS
+    assert narrow == v2.LIVE_OR_CLOCK_GETTERS - {"time_diff_range"}
+    assert "with a type in the L list except `time_diff_range`" in flat
+    ref = v2.REGISTERED_H_REFERENCE
+    assert ref is not None
+    classes = ref["classes"]
+    assert sum(classes.values()) == ref["tasks"]
+    assert classes.get("step_cap", 0) + classes.get("premature_answer", 0) == ref["agent_side"]
+    sentence = (
+        f"{ref['tasks']} unique failures: environment {ref['environment']}, step cap "
+        f"{classes.get('step_cap', 0)}, premature answer {classes.get('premature_answer', 0)}, "
+        f"other {classes.get('other', 0)} (agent-side {ref['agent_side']})."
+    )
+    assert sentence in flat
+    thresholds = v2.rule_b_thresholds(14, ref)
+    assert (
+        f"environment at least {thresholds['environment']} of 14 (the share bar binds) and "
+        f"agent-side at least {thresholds['agent_side']} of 14" in flat
+    )

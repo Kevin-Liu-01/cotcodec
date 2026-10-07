@@ -10,10 +10,13 @@ alone, as
 * ``W`` - not L, but the task touches the live web (v1's URL flag);
 * ``O`` - otherwise,
 
-and tests whether run1-only passes are enriched in L. Rules (a)-(c) read the
-verified-run trajectory tarball: per-trajectory step counts, tool use, text
-signatures of environment trouble, and runs of identical screenshots. Paths
-inside the tarball contain a personal directory name, so the scanner keeps only
+and tests whether run1-only passes are enriched in L *within* v1's URL strata,
+so the URL split already known before registration cannot drive the test.
+Rules (a)-(c) read the verified-run trajectory tarball: per-trajectory step
+counts, tool use, text signatures of environment trouble, and runs of
+identical screenshots. Rule (b) compares the run2-unique failures with the
+unique failures of three exchangeable H Company reruns. Paths inside the
+tarball contain a personal directory name, so the scanner keeps only
 trajectory ids and derived numbers.
 
 The classification rule list below is part of the v2 registration
@@ -25,6 +28,7 @@ from __future__ import annotations
 
 import gzip
 import hashlib
+import itertools
 import json
 import math
 import os
@@ -41,9 +45,19 @@ import numpy as np
 from scipy import stats
 
 from harness import remote_zip
-from harness.holo3_rerun_audit import ALLOWED_URL, URL, holm, web_dependent
+from harness.holo3_rerun_audit import ALLOWED_URL, URL, web_dependent
 
 V2_EXPERIMENT_ID = "q2-holo3-rerun-audit-v2"
+
+# ---- Error rates (fixed; no threshold depends on whether another test ran) - #
+
+ALPHA_D = 0.04  # rule (d); with ALPHA_A a Bonferroni split of 0.05
+ALPHA_A = 0.01  # rule (a); v1's threshold for a behaviour shift
+ALPHA_B = 0.025  # each of rule (b)'s two reference comparisons (Bonferroni within (b))
+SHARE_BAR = 0.5  # rule (d) net share in L; rule (b) class shares
+SHIFT_LOG_THRESHOLD = math.log(1.10)  # rule (a): |mean log step ratio| >= log 1.10
+COVERAGE_BAR = 0.95  # rule (c)
+FINAL_WINDOW_DAYS = 14
 
 # ---- Rule (d): evaluator classes (frozen with the v2 registration) -------- #
 
@@ -62,6 +76,10 @@ LIVE_OR_CLOCK_GETTERS = frozenset(
 LIVE_IF_REMOTE_URL_GETTERS = frozenset({"cloud_file"})  # downloads its URL at evaluation
 CLOCK_METRICS = frozenset({"compare_time_in_speedtest_results"})  # reads the evaluator clock
 CLOCK_RULE_KEYS = frozenset({"relativeTime"})
+# The reviewed plan's narrower L ("expected value obtained at evaluation time
+# from a live URL or a relative-time or date rule"): expected-side getters
+# only. Registered as a sensitivity analysis of rule (d).
+NARROW_EXPECTED_GETTERS = LIVE_OR_CLOCK_GETTERS - {"time_diff_range"}
 
 
 def _as_list(value: Any) -> list[Any]:
@@ -90,11 +108,13 @@ class EvaluatorClass:
     reasons: tuple[str, ...]
     getter_types: tuple[str, ...]
     metric_funcs: tuple[str, ...]
+    narrow_l: bool  # the plan's narrower L (registered sensitivity)
 
 
 def classify_evaluator(config: Mapping[str, Any]) -> EvaluatorClass:
     """Classify one task config. Reads only the config JSON."""
     evaluator = config.get("evaluator") or {}
+    expected = [g for g in _as_list(evaluator.get("expected")) if isinstance(g, Mapping)]
     getters = [g for side in ("result", "expected") for g in _as_list(evaluator.get(side))]
     getter_types = tuple(sorted({str(g.get("type")) for g in getters if isinstance(g, Mapping)}))
     funcs = tuple(sorted({str(f) for f in _as_list(evaluator.get("func"))}))
@@ -112,17 +132,51 @@ def classify_evaluator(config: Mapping[str, Any]) -> EvaluatorClass:
         reasons.append("rule:relativeTime")
     if _remote_urls(evaluator.get("postconfig")):
         reasons.append("postconfig:remote-url")
+    narrow = any(
+        str(g.get("type")) in NARROW_EXPECTED_GETTERS
+        or (str(g.get("type")) in LIVE_IF_REMOTE_URL_GETTERS and _remote_urls(g))
+        for g in expected
+    ) or bool(CLOCK_RULE_KEYS & set(_walk_keys(expected)))
     if reasons:
         label = "L"
     elif web_dependent(config):
         label = "W"
     else:
         label = "O"
-    return EvaluatorClass(label, tuple(sorted(set(reasons))), getter_types, funcs)
+    return EvaluatorClass(label, tuple(sorted(set(reasons))), getter_types, funcs, narrow)
 
 
 def fisher_one_sided(table: Sequence[Sequence[int]]) -> float:
     return float(stats.fisher_exact(np.asarray(table), alternative="greater").pvalue)
+
+
+def _null_sum_distribution(margins: Sequence[tuple[int, int, int]]) -> np.ndarray:
+    """P(sum of per-stratum hypergeometric counts = t), t = 0, 1, ...
+
+    Each stratum is (tasks, run1-only tasks, L tasks); under conditional
+    independence the run1-only count in L is Hypergeom(tasks, run1-only, L).
+    """
+    dist = np.array([1.0])
+    for n, k, n_l in margins:
+        lo, hi = max(0, n_l + k - n), min(k, n_l)
+        pmf = np.zeros(hi + 1)
+        pmf[lo:] = stats.hypergeom(n, k, n_l).pmf(np.arange(lo, hi + 1))
+        dist = np.convolve(dist, pmf)
+    return dist
+
+
+def stratified_exact_p(strata: Sequence[tuple[int, int, int, int]]) -> float:
+    """One-sided exact conditional (Mantel-Haenszel) test of a common odds ratio > 1.
+
+    Each stratum is (a, tasks, run1-only, L): ``a`` run1-only tasks are in L.
+    p = P(sum a >= observed) with every stratum's margins fixed.
+    """
+    dist = _null_sum_distribution([(n, k, n_l) for _, n, k, n_l in strata])
+    observed = sum(a for a, *_ in strata)
+    return float(min(1.0, dist[observed:].sum()))
+
+
+STRATA = ("web", "offline")  # v1's URL flag
 
 
 def rule_d(
@@ -130,12 +184,28 @@ def rule_d(
     s1: Mapping[str, float],
     s2: Mapping[str, float],
     clean: Sequence[str],
+    web: Mapping[str, bool],
 ) -> dict[str, Any]:
-    """Run1-only passes in L vs W+O on the v1 clean set (y = 1[s >= 0.5])."""
+    """Run1-only passes in L vs not L on the v1 clean set, stratified by v1's URL flag."""
     y1 = {t: s1[t] >= 0.5 for t in clean}
     y2 = {t: s2[t] >= 0.5 for t in clean}
     run1_only = {t for t in clean if y1[t] and not y2[t]}
     run2_only = {t for t in clean if y2[t] and not y1[t]}
+    strata: dict[str, dict[str, int]] = {}
+    for name in STRATA:
+        tasks = [t for t in clean if bool(web[t]) == (name == "web")]
+        in_l = [t for t in tasks if classes[t] == "L"]
+        strata[name] = {
+            "tasks": len(tasks),
+            "L": len(in_l),
+            "run1_only": sum(1 for t in tasks if t in run1_only),
+            "run1_only_in_L": sum(1 for t in in_l if t in run1_only),
+            "run2_only": sum(1 for t in tasks if t in run2_only),
+            "run2_only_in_L": sum(1 for t in in_l if t in run2_only),
+        }
+    p = stratified_exact_p(
+        [(s["run1_only_in_L"], s["tasks"], s["run1_only"], s["L"]) for s in strata.values()]
+    )
     in_l = [t for t in clean if classes[t] == "L"]
     rest = [t for t in clean if classes[t] != "L"]
     a = sum(1 for t in in_l if t in run1_only)
@@ -152,13 +222,29 @@ def rule_d(
         for label in ("L", "W", "O")
     }
     return {
-        "table_L_vs_rest_by_run1_only": table,
-        "fisher_one_sided_p": fisher_one_sided(table),
+        "strata": strata,
+        "stratified_exact_one_sided_p": p,
+        "unstratified_table_L_vs_rest_by_run1_only": table,
+        "unstratified_fisher_one_sided_p_descriptive": fisher_one_sided(table),
         "net_flips_all": net_all,
         "net_flips_L": net_l,
         "share_of_net_in_L": (net_l / net_all) if net_all else None,
         "by_class": by_class,
     }
+
+
+RULE_D_LABELS = (
+    "checker-side time-drift candidate",  # enriched in L and L carries >= half the net gap
+    "checker-side enrichment, minority of the gap",  # enriched, but L carries < half
+    "not attributable to checker time-dependence",  # no enrichment at ALPHA_D
+)
+
+
+def rule_d_decision(result: Mapping[str, Any]) -> str:
+    if result["stratified_exact_one_sided_p"] >= ALPHA_D:
+        return RULE_D_LABELS[2]
+    share = result["share_of_net_in_L"]
+    return RULE_D_LABELS[0] if share is not None and share >= SHARE_BAR else RULE_D_LABELS[1]
 
 
 # ---- Rules (a)-(c): trajectory tarball ------------------------------------ #
@@ -226,6 +312,11 @@ class TrajectoryFeatures:
         )
 
     def max_identical_run(self) -> int:
+        """Longest run of identical screenshots.
+
+        Order: the order in which ``actions.json`` references the images; if it
+        references none, ascending image index (the registered fallback).
+        """
         if self.identical_run is not None:
             return self.identical_run
         order = self.image_refs or sorted(self.image_digests)
@@ -333,6 +424,23 @@ def scan_trajectory_tarball(path: Path) -> dict[str, TrajectoryFeatures]:
     return features
 
 
+def _file_checks(path: Path, member: remote_zip.ZipMember, expected_sha256: str):
+    digest = hashlib.sha256()
+    crc = 0
+    size = 0
+    with path.open("rb") as handle:
+        for block in iter(lambda: handle.read(8 << 20), b""):
+            digest.update(block)
+            crc = zlib.crc32(block, crc)
+            size += len(block)
+    checks = {
+        "size": size == member.file_size,
+        "crc32": (crc & 0xFFFFFFFF) == member.crc,
+        "sha256": digest.hexdigest() == expected_sha256,
+    }
+    return checks, {"size": size, "crc32": f"{crc & 0xFFFFFFFF:08x}", "sha256": digest.hexdigest()}
+
+
 def download_stored_member(
     source: remote_zip.RangeSource,
     member: remote_zip.ZipMember,
@@ -344,13 +452,21 @@ def download_stored_member(
     """Resumable download of one STORED member; verifies size, CRC-32 and SHA-256.
 
     Bytes go to ``dest.with_suffix('.part')``; the final name appears only after
-    every check passes.
+    every check passes. A file already at ``dest`` is re-verified, never trusted.
+    Any file that fails a check is removed, so the next attempt starts clean.
     """
+    if dest.exists():
+        checks, info = _file_checks(dest, member, expected_sha256)
+        if not all(checks.values()):
+            dest.unlink()
+            raise remote_zip.ZipIntegrityError(f"existing file failed checks: {checks}")
+        return {**info, "reused_existing_file": True}
     window = remote_zip.stored_member_window(source, member)
     part = dest.with_name(dest.name + ".part")
     part.parent.mkdir(parents=True, exist_ok=True)
     have = part.stat().st_size if part.exists() else 0
     if have > window.size:
+        part.unlink()
         raise remote_zip.ZipIntegrityError("partial download is larger than the member")
     with part.open("ab") as out:
         position = have
@@ -360,23 +476,12 @@ def download_stored_member(
             position += length
             out.flush()
             os.fsync(out.fileno())
-    digest = hashlib.sha256()
-    crc = 0
-    size = 0
-    with part.open("rb") as handle:
-        for block in iter(lambda: handle.read(8 << 20), b""):
-            digest.update(block)
-            crc = zlib.crc32(block, crc)
-            size += len(block)
-    checks = {
-        "size": size == member.file_size,
-        "crc32": (crc & 0xFFFFFFFF) == member.crc,
-        "sha256": digest.hexdigest() == expected_sha256,
-    }
+    checks, info = _file_checks(part, member, expected_sha256)
     if not all(checks.values()):
+        part.unlink()
         raise remote_zip.ZipIntegrityError(f"downloaded member failed checks: {checks}")
     os.replace(part, dest)
-    return {"size": size, "crc32": f"{member.crc:08x}", "sha256": digest.hexdigest()}
+    return {**info, "reused_existing_file": False, "resumed_from_bytes": have}
 
 
 def unique_failures(
@@ -397,9 +502,25 @@ def unique_failures(
     return out
 
 
+# Rule (b)'s pooled H rerun reference (primary criteria, registered order) as
+# computed by the v2-design stage from already-inspected data and registered in
+# the v2 draft. The v2 stage recomputes it and fails a positive control if it
+# differs.
+REGISTERED_H_REFERENCE: dict[str, Any] | None = {
+    "tasks": 30,
+    "environment": 0,
+    "agent_side": 10,
+    "classes": {"other": 20, "premature_answer": 1, "step_cap": 9},
+}
+
 SPECIFICITY_LIMIT = 0.20
 IDENTICAL_SCREENSHOT_RUN = 3
 ENV_CRITERIA = ("tool_error", "text", "screenshots")
+# Criteria the H rerun reference can also be classified with (its screenshots
+# are not read), so only these can decide a rule (b) label.
+PRIMARY_ENV_CRITERIA = ("tool_error", "text")
+CLASSES = ("environment", "step_cap", "premature_answer", "declared_infeasible", "other")
+AGENT_CLASSES = ("step_cap", "premature_answer")
 
 
 def env_criteria(features: TrajectoryFeatures) -> dict[str, bool]:
@@ -414,26 +535,160 @@ def failure_signature(
     mine: TrajectoryFeatures | None,
     other: TrajectoryFeatures | None,
     status: Mapping[str, Any] | None,
-    criteria: Sequence[str] = ENV_CRITERIA,
+    criteria: Sequence[str] = PRIMARY_ENV_CRITERIA,
+    *,
+    step_cap_first: bool = False,
 ) -> str:
     """First matching class in the registered order.
 
-    ``criteria`` are the environment-signature components still in force after
-    the specificity guard (see :func:`rules_abc`).
+    Registered order: environment, step cap, premature answer, declared
+    infeasible, other. ``step_cap_first`` gives the reviewed plan's order
+    (step cap before environment), a registered sensitivity. ``criteria`` are
+    the environment-signature components in force.
     """
     if mine is None or not mine.parsed:
         return "unclassifiable"
-    if mine.steps >= STEP_CAP:
-        return "1_step_cap"
     hits = env_criteria(mine)
-    if any(hits[name] for name in criteria):
-        return "2_environment"
+    environment = any(hits[name] for name in criteria)
+    capped = mine.steps >= STEP_CAP
+    if step_cap_first and capped:
+        return "step_cap"
+    if environment:
+        return "environment"
+    if capped:
+        return "step_cap"
     if other is not None and other.parsed and other.steps and mine.steps <= 0.5 * other.steps:
-        return "3_premature_answer"
+        return "premature_answer"
     message = str((status or {}).get("agp_message", ""))
     if message.startswith("Infeasible") or "FAIL" in str((status or {}).get("agp_actions", "")):
-        return "4_declared_infeasible"
-    return "5_other"
+        return "declared_infeasible"
+    return "other"
+
+
+def composition(labels: Mapping[str, str]) -> dict[str, Any]:
+    counts = Counter(labels.values())
+    n = len(labels)
+    env = counts["environment"]
+    agent = sum(counts[c] for c in AGENT_CLASSES)
+    return {
+        "tasks": n,
+        "classes": dict(sorted(counts.items())),
+        "environment": env,
+        "agent_side": agent,
+        "environment_share": env / n if n else None,
+        "agent_side_share": agent / n if n else None,
+    }
+
+
+def h_unique_failure_labels(
+    h_features: Mapping[str, Mapping[str, TrajectoryFeatures]],
+    h_rewards: Mapping[str, Mapping[str, float]],
+    tasks: Sequence[str],
+    criteria: Sequence[str] = PRIMARY_ENV_CRITERIA,
+    *,
+    step_cap_first: bool = False,
+    runs: Sequence[str] | None = None,
+) -> dict[str, dict[str, str]]:
+    """Signatures of each H run's unique failures (failed; both siblings passed).
+
+    The comparison trajectory for "premature answer" is the first sibling in
+    the registered run order. Missing trajectories are unclassifiable.
+    """
+    tags = list(h_rewards)
+    out: dict[str, dict[str, str]] = {}
+    for tag in runs or tags:
+        others = [o for o in tags if o != tag]
+        labels: dict[str, str] = {}
+        for t in tasks:
+            reward = h_rewards[tag].get(t)
+            if reward is None or reward >= 0.5:
+                continue
+            if not all(h_rewards[o].get(t) is not None and h_rewards[o][t] >= 0.5 for o in others):
+                continue
+            mine = h_features.get(tag, {}).get(t)
+            other = h_features.get(others[0], {}).get(t)
+            labels[t] = failure_signature(
+                mine, other, None, criteria, step_cap_first=step_cap_first
+            )
+        out[tag] = labels
+    return out
+
+
+def rule_b_label(run: Mapping[str, Any], reference: Mapping[str, Any]) -> dict[str, Any]:
+    """Rule (b)'s label: a class share >= 0.5 that also exceeds the H rerun reference.
+
+    Each comparison is a one-sided Fisher exact test of the run's class count
+    against the pooled reference count, at ALPHA_B; environment is checked first.
+    """
+    n, big_n = run["tasks"], reference["tasks"]
+    p = {
+        key: fisher_one_sided([[run[key], n - run[key]], [reference[key], big_n - reference[key]]])
+        if n and big_n
+        else 1.0
+        for key in ("environment", "agent_side")
+    }
+    if not n:
+        verdict = "no unique failures"
+    elif run["environment"] / n >= SHARE_BAR and p["environment"] < ALPHA_B:
+        verdict = "R1-retro: infrastructure"
+    elif run["agent_side"] / n >= SHARE_BAR and p["agent_side"] < ALPHA_B:
+        verdict = "agent-side session variation"
+    else:
+        verdict = "unexplained"
+    return {"fisher_one_sided_p_vs_reference": p, "verdict": verdict}
+
+
+def rule_b_thresholds(n: int, reference: Mapping[str, Any]) -> dict[str, int | None]:
+    """Smallest count of n unique failures at which each label can fire."""
+    out: dict[str, int | None] = {}
+    if not n:
+        return {"environment": None, "agent_side": None}
+    for key in ("environment", "agent_side"):
+        out[key] = next(
+            (
+                k
+                for k in range(n + 1)
+                if k / n >= SHARE_BAR
+                and fisher_one_sided(
+                    [[k, n - k], [reference[key], reference["tasks"] - reference[key]]]
+                )
+                < ALPHA_B
+            ),
+            None,
+        )
+    return out
+
+
+def pooled(compositions: Iterable[Mapping[str, Any]]) -> dict[str, Any]:
+    items = list(compositions)
+    total = {"tasks": 0, "environment": 0, "agent_side": 0}
+    classes: Counter[str] = Counter()
+    for item in items:
+        for key in total:
+            total[key] += item[key]
+        classes.update(item["classes"])
+    n = total["tasks"]
+    return {
+        **total,
+        "classes": dict(sorted(classes.items())),
+        "environment_share": total["environment"] / n if n else None,
+        "agent_side_share": total["agent_side"] / n if n else None,
+    }
+
+
+def h_reference(
+    h_features: Mapping[str, Mapping[str, TrajectoryFeatures]],
+    h_rewards: Mapping[str, Mapping[str, float]],
+    tasks: Sequence[str],
+    criteria: Sequence[str] = PRIMARY_ENV_CRITERIA,
+    *,
+    step_cap_first: bool = False,
+) -> dict[str, Any]:
+    labels = h_unique_failure_labels(
+        h_features, h_rewards, tasks, criteria, step_cap_first=step_cap_first
+    )
+    per_run = {tag: composition(v) for tag, v in labels.items()}
+    return {"per_run": per_run, "pooled": pooled(per_run.values())}
 
 
 def rules_abc(
@@ -445,6 +700,7 @@ def rules_abc(
     s2: Mapping[str, float],
     clean: Sequence[str],
     h_rewards: Mapping[str, Mapping[str, float]],
+    h_features: Mapping[str, Mapping[str, TrajectoryFeatures]],
 ) -> dict[str, Any]:
     def feat(record: Mapping[str, Any] | None) -> TrajectoryFeatures | None:
         trajectory = (record or {}).get("trajectory_id")
@@ -454,34 +710,22 @@ def rules_abc(
     episodes = [(t, status1[t]) for t in s1] + [(t, status2[t]) for t in s2]
     joined = sum(1 for _, record in episodes if feat(record) is not None)
     coverage = joined / len(episodes) if episodes else 0.0
-    coverage_ok = coverage >= 0.95
+    coverage_ok = coverage >= COVERAGE_BAR
 
     pairs = [(t, feat(status1[t]), feat(status2[t])) for t in clean]
     pairs = [(t, a, b) for t, a, b in pairs if a is not None and b is not None]
     steps1 = np.array([a.steps for _, a, _ in pairs], float)
     steps2 = np.array([b.steps for _, _, b in pairs], float)
-    positive = (steps1 > 0) & (steps2 > 0)
-    ratio = float(np.median(steps1[positive] / steps2[positive])) if positive.any() else math.nan
-    if len(pairs) and np.any(steps1 != steps2):
-        p_a = float(stats.wilcoxon(steps1, steps2).pvalue)
-    else:
-        p_a = 1.0
-    rule_a = {
-        "n_pairs": len(pairs),
-        "median_run1": float(np.median(steps1)) if len(pairs) else None,
-        "median_run2": float(np.median(steps2)) if len(pairs) else None,
-        "median_ratio_run1_over_run2": ratio,
-        "wilcoxon_p": p_a,
-        "step_cap_hits": {
-            "run1": int(np.sum(steps1 >= STEP_CAP)),
-            "run2": int(np.sum(steps2 >= STEP_CAP)),
-        },
+    rule_a = {"n_pairs": len(pairs), **step_shift(steps1, steps2)}
+    rule_a["step_cap_hits"] = {
+        "run1": int(np.sum(steps1 >= STEP_CAP)),
+        "run2": int(np.sum(steps2 >= STEP_CAP)),
     }
 
     # Specificity guard, applied before any unique failure is classified: an
     # environment criterion that fires on more than 20% of the episodes of
     # clean tasks both runs passed cannot diagnose an environment failure and
-    # is dropped from class 2 (the classification with it is still reported).
+    # is dropped from the primary classification.
     both_pass = [t for t in clean if s1[t] >= 0.5 and s2[t] >= 0.5]
     pass_episodes = [
         f for t in both_pass for f in (feat(status1[t]), feat(status2[t])) if f is not None
@@ -496,11 +740,11 @@ def rules_abc(
     }
     in_force = tuple(
         name
-        for name in ENV_CRITERIA
+        for name in PRIMARY_ENV_CRITERIA
         if specificity[name] is not None and specificity[name] <= SPECIFICITY_LIMIT
     )
 
-    def classify(failing_run: str, criteria: Sequence[str] = in_force) -> dict[str, Any]:
+    def classify(failing_run: str, criteria: Sequence[str], step_cap_first: bool) -> dict:
         if failing_run == "run2":
             tasks = unique_failures(s2, s1, h_rewards, clean)
             mine_status, other_status = status2, status1
@@ -509,28 +753,27 @@ def rules_abc(
             mine_status, other_status = status1, status2
         labels = {
             t: failure_signature(
-                feat(mine_status[t]), feat(other_status[t]), mine_status[t], criteria
+                feat(mine_status[t]),
+                feat(other_status[t]),
+                mine_status[t],
+                criteria,
+                step_cap_first=step_cap_first,
             )
             for t in tasks
         }
-        counts = Counter(labels.values())
-        n = len(tasks)
-        env_share = counts["2_environment"] / n if n else None
-        agent_share = (counts["1_step_cap"] + counts["3_premature_answer"]) / n if n else None
-        if not n:
-            verdict = "no unique failures"
-        elif env_share is not None and env_share >= 0.5:
-            verdict = "R1-retro: infrastructure"
-        elif agent_share is not None and agent_share >= 0.5:
-            verdict = "agent-side session variation"
-        else:
-            verdict = "unexplained"
+        return composition(labels)
+
+    def labelled(criteria: Sequence[str], step_cap_first: bool) -> dict[str, Any]:
+        run = classify("run2", criteria, step_cap_first)
+        reference = h_reference(
+            h_features, h_rewards, clean, criteria, step_cap_first=step_cap_first
+        )
         return {
-            "tasks": n,
-            "classes": dict(sorted(counts.items())),
-            "environment_share": env_share,
-            "step_cap_plus_premature_share": agent_share,
-            "verdict": verdict,
+            "criteria": list(criteria),
+            "step_cap_first": step_cap_first,
+            "run2_unique_failures": run,
+            "h_reference": reference,
+            **rule_b_label(run, reference["pooled"]),
         }
 
     return {
@@ -547,61 +790,105 @@ def rules_abc(
             "limit": SPECIFICITY_LIMIT,
             "criteria_in_force": list(in_force),
         },
-        "rule_b_run2_unique_failures": classify("run2"),
-        "rule_b_run1_unique_failures": classify("run1"),
-        "rule_b_run2_all_criteria_sensitivity": classify("run2", ENV_CRITERIA),
+        "rule_b_primary": labelled(in_force, False),
+        "rule_b_run1_unique_failures": classify("run1", in_force, False),
+        "rule_b_sensitivity_all_criteria": labelled(ENV_CRITERIA, False),
+        "rule_b_sensitivity_step_cap_first": labelled(in_force, True),
     }
+
+
+def step_shift(steps1: np.ndarray, steps2: np.ndarray) -> dict[str, Any]:
+    """Rule (a)'s test and effect size for paired step counts."""
+    n = len(steps1)
+    positive = (steps1 > 0) & (steps2 > 0)
+    log_ratio = np.log(steps1[positive]) - np.log(steps2[positive])
+    mean_log = float(np.mean(log_ratio)) if positive.any() else math.nan
+    p = float(stats.wilcoxon(steps1, steps2).pvalue) if n and np.any(steps1 != steps2) else 1.0
+    return {
+        "wilcoxon_p": p,
+        "mean_log_ratio_run1_over_run2": mean_log,
+        "geometric_mean_ratio_run1_over_run2": math.exp(mean_log) if positive.any() else math.nan,
+        "median_ratio_run1_over_run2_descriptive": (
+            float(np.median(steps1[positive] / steps2[positive])) if positive.any() else math.nan
+        ),
+        "median_run1": float(np.median(steps1)) if n else None,
+        "median_run2": float(np.median(steps2)) if n else None,
+        "tied_pairs": int(np.sum(steps1 == steps2)),
+    }
+
+
+def rule_a_decision(result: Mapping[str, Any]) -> bool:
+    mean_log = result["mean_log_ratio_run1_over_run2"]
+    return (
+        result["wilcoxon_p"] < ALPHA_A
+        and math.isfinite(mean_log)
+        and abs(mean_log) >= SHIFT_LOG_THRESHOLD
+    )
 
 
 # ---- Design power (inputs are already-inspected data only) ---------------- #
 
 
 def power_rule_d(
+    strata: Mapping[str, Mapping[str, int]],
     *,
-    n_clean: int,
-    run1_only: int,
-    run2_only: int,
-    n_l_values: Sequence[int] = (10, 20, 40, 60),
-    r_l_values: Sequence[float] = (0.15, 0.20, 0.30, 0.40),
-    alpha: float = 0.025,
-    sims: int = 2000,
-    seeds: Sequence[int] = (42, 43, 44),
+    l_tasks: Sequence[tuple[int, int]] = (
+        (10, 0),
+        (20, 0),
+        (30, 0),
+        (0, 20),
+        (0, 40),
+        (10, 20),
+        (20, 40),
+    ),
+    odds_ratios: Sequence[float] = (1.0, 3.0, 5.0, 10.0, 30.0),
 ) -> list[dict[str, Any]]:
-    """Power of rule (d) given the known clean-set flip totals.
+    """Exact power of rule (d) given the stratum margins known before registration.
 
-    L tasks pass in run1 only with probability ``r_l``; the remaining run1-only
-    passes are spread over the other tasks so the expected total matches the
-    observed one; run2-only passes occur at the observed base rate everywhere.
-    ``alpha`` is the worst case under Holm with m = 2. A detection needs the
-    Fisher test and the 50 % net-share condition together.
+    ``strata`` holds, per v1 URL stratum, the clean tasks and their run1-only
+    and run2-only counts. ``l_tasks`` are (L tasks in web, L tasks offline).
+    Under the alternative the run1-only tasks of a stratum fall in L with odds
+    ratio ``psi`` (Fisher's noncentral hypergeometric); run2-only tasks fall in
+    L at random among the rest. Detection: stratified exact p < ALPHA_D and net
+    share >= 0.5. Exact enumeration, no random numbers.
     """
-    q2 = run2_only / n_clean
+    web, off = strata["web"], strata["offline"]
+    net_all = web["run1_only"] + off["run1_only"] - web["run2_only"] - off["run2_only"]
     rows = []
-    for n_l in n_l_values:
-        n_rest = n_clean - n_l
-        for r_l in r_l_values:
-            r_rest = max(0.0, (run1_only - n_l * r_l) / n_rest)
-            per_seed = []
-            for seed in seeds:
-                rng = np.random.default_rng(seed)
-                hits = 0
-                for _ in range(sims):
-                    a = int(rng.binomial(n_l, r_l))
-                    c = int(rng.binomial(n_rest, r_rest))
-                    b_l = int(rng.binomial(n_l - a, q2))
-                    b_rest = int(rng.binomial(n_rest - c, q2))
-                    net_all = (a + c) - (b_l + b_rest)
-                    share = (a - b_l) / net_all if net_all > 0 else -1.0
-                    if share >= 0.5 and fisher_one_sided([[a, n_l - a], [c, n_rest - c]]) < alpha:
-                        hits += 1
-                per_seed.append(hits / sims)
+    for n_l_web, n_l_off in l_tasks:
+        null = _null_sum_distribution(
+            [(web["tasks"], web["run1_only"], n_l_web), (off["tasks"], off["run1_only"], n_l_off)]
+        )
+        tail = np.cumsum(null[::-1])[::-1]
+
+        def joint(stratum: Mapping[str, int], n_l: int, psi: float):
+            n, k, j = stratum["tasks"], stratum["run1_only"], stratum["run2_only"]
+            lo, hi = max(0, n_l + k - n), min(k, n_l)
+            for a in range(lo, hi + 1):
+                # lo == hi: degenerate (no L tasks, or no run1-only tasks)
+                pa = 1.0 if lo == hi else float(stats.nchypergeom_fisher(n, k, n_l, psi).pmf(a))
+                rest = n_l - a
+                b_lo, b_hi = max(0, rest + j - (n - k)), min(j, rest)
+                for b in range(b_lo, b_hi + 1):
+                    yield a, b, pa * float(stats.hypergeom(n - k, j, rest).pmf(b))
+
+        for psi in odds_ratios:
+            power = test_only = 0.0
+            for (a_w, b_w, p_w), (a_o, b_o, p_o) in itertools.product(
+                list(joint(web, n_l_web, psi)), list(joint(off, n_l_off, psi))
+            ):
+                prob = p_w * p_o
+                if tail[a_w + a_o] < ALPHA_D:
+                    test_only += prob
+                    if net_all > 0 and (a_w + a_o - b_w - b_o) / net_all >= SHARE_BAR:
+                        power += prob
             rows.append(
                 {
-                    "n_L": n_l,
-                    "run1_only_rate_in_L": r_l,
-                    "run1_only_rate_elsewhere": r_rest,
-                    "power_by_seed": dict(zip(map(str, seeds), per_seed, strict=True)),
-                    "power_mean": float(np.mean(per_seed)),
+                    "L_tasks_web": n_l_web,
+                    "L_tasks_offline": n_l_off,
+                    "odds_ratio": psi,
+                    "power": round(power, 4),
+                    "power_test_alone": round(test_only, 4),
                 }
             )
     return rows
@@ -611,80 +898,103 @@ def power_rule_a(
     base_pairs: Sequence[tuple[int, int]],
     *,
     n: int,
-    ratios: Sequence[float] = (1.0, 1.05, 1.10, 1.15, 1.20, 1.30),
-    alpha: float = 0.005,
+    scenarios: Sequence[tuple[float, float]] = (
+        (1.0, 1.0),
+        (1.0, 1.05),
+        (1.0, 1.10),
+        (1.0, 1 / 1.10),
+        (1.0, 1.15),
+        (1.0, 1 / 1.15),
+        (1.0, 1.20),
+        (0.2, 2.0),
+        (0.2, 0.5),
+        (0.3, 1.5),
+        (0.3, 0.5),
+        (0.4, 1.5),
+        (0.4, 0.5),
+    ),
     sims: int = 400,
     seeds: Sequence[int] = (42, 43, 44),
 ) -> list[dict[str, Any]]:
     """Power of rule (a) by bootstrapping rerun step-count pairs.
 
     ``base_pairs`` are (steps, steps) for the same task in two reruns that
-    share a harness (the H runs). Run2's steps are scaled by ``ratio`` and
-    capped at the step cap; a detection needs Wilcoxon p < ``alpha`` (worst case
-    under Holm with m = 2 for the 0.01 threshold) and |median ratio - 1| >= 0.10.
+    share a harness (the H runs). In each scenario (fraction, ratio) run2's
+    steps are scaled by ``ratio`` on a random ``fraction`` of the tasks, rounded
+    and capped at the step cap. A detection is rule (a)'s registered decision.
+    The superseded median-of-ratios gate is reported alongside for comparison.
     """
     base = np.asarray(base_pairs, float)
     rows = []
-    for ratio in ratios:
-        per_seed = []
+    for fraction, ratio in scenarios:
+        per_seed, per_seed_old = [], []
         for seed in seeds:
             rng = np.random.default_rng(seed)
-            hits = 0
+            hits = old = 0
             for _ in range(sims):
                 sample = base[rng.integers(0, len(base), size=n)]
                 a = sample[:, 0]
-                b = np.minimum(STEP_CAP, np.maximum(1, np.round(sample[:, 1] * ratio)))
-                if not np.any(a != b):
-                    continue
-                p = float(stats.wilcoxon(a, b).pvalue)
-                med = float(np.median(a / b))
-                if p < alpha and abs(med - 1) >= 0.10:
+                shifted = rng.random(n) < fraction if fraction < 1 else np.ones(n, bool)
+                factor = np.where(shifted, ratio, 1.0)
+                b = np.minimum(STEP_CAP, np.maximum(1, np.round(sample[:, 1] * factor)))
+                result = step_shift(a, b)
+                if rule_a_decision(result):
                     hits += 1
+                median = result["median_ratio_run1_over_run2_descriptive"]
+                if result["wilcoxon_p"] < ALPHA_A and abs(median - 1) >= 0.10:
+                    old += 1
             per_seed.append(hits / sims)
+            per_seed_old.append(old / sims)
         rows.append(
             {
-                "run2_step_ratio": ratio,
+                "fraction_of_tasks_shifted": fraction,
+                "run2_step_factor": round(ratio, 4),
                 "power_by_seed": dict(zip(map(str, seeds), per_seed, strict=True)),
                 "power_mean": float(np.mean(per_seed)),
+                "power_mean_superseded_median_gate": float(np.mean(per_seed_old)),
             }
         )
     return rows
 
 
-def v2_decisions(rule_d_result: Mapping[str, Any], abc: Mapping[str, Any] | None) -> dict[str, Any]:
-    """Holm over (a) and (d), m = 2 always; a test that was not run enters with p = 1."""
-    p_d = float(rule_d_result["fisher_one_sided_p"])
-    p_a = float(abc["rule_a_steps"]["wilcoxon_p"]) if abc else 1.0
-    adj_a, adj_d = holm([p_a, p_d])
-    share = rule_d_result["share_of_net_in_L"]
-    d_fires = adj_d < 0.05 and share is not None and share >= 0.5
+def v2_decisions(
+    rule_d_result: Mapping[str, Any],
+    abc: Mapping[str, Any] | None,
+    *,
+    rule_d_narrow: Mapping[str, Any] | None = None,
+) -> dict[str, Any]:
+    """Decision labels. Fixed error rates: no test's threshold depends on another."""
     out: dict[str, Any] = {
-        "holm_family": ["a", "d"],
-        "p_raw": {"a": p_a, "d": p_d},
-        "p_holm": {"a": adj_a, "d": adj_d},
-        "rule_d": "checker-side time-drift candidate"
-        if d_fires
-        else "not attributable to checker time-dependence",
+        "error_rates": {
+            "rule_d": ALPHA_D,
+            "rule_a": ALPHA_A,
+            "rule_b_each_comparison": ALPHA_B,
+            "scheme": "fixed Bonferroni split; (d) and (a) are judged alone",
+        },
+        "rule_d": rule_d_decision(rule_d_result),
     }
+    if rule_d_narrow is not None:
+        out["rule_d_narrow_L_sensitivity"] = rule_d_decision(rule_d_narrow)
+        out["rule_d_robust_to_L_definition"] = out["rule_d_narrow_L_sensitivity"] == out["rule_d"]
     if abc is None:
         out["rule_a"] = "NOT RUN (trajectory tarball not read)"
         out["rule_b"] = "NOT RUN (trajectory tarball not read)"
         out["rule_c"] = "NOT RUN (trajectory tarball not read)"
         return out
     coverage_ok = abc["rule_c_coverage"]["coverage_ok"]
-    ratio = abc["rule_a_steps"]["median_ratio_run1_over_run2"]
-    shift = adj_a < 0.01 and math.isfinite(ratio) and abs(ratio - 1) >= 0.10
     out["rule_c"] = (
         "coverage ok" if coverage_ok else "coverage-limited: (a) and (b) descriptive only"
     )
+    if not coverage_ok:
+        out["rule_a"] = "descriptive only (coverage < 95%)"
+        out["rule_b"] = "descriptive only (coverage < 95%)"
+        return out
     out["rule_a"] = (
-        ("agent-behaviour shift" if shift else "no agent-behaviour shift")
-        if coverage_ok
-        else "descriptive only (coverage < 95%)"
+        "agent-behaviour shift"
+        if rule_a_decision(abc["rule_a_steps"])
+        else "no agent-behaviour shift"
     )
-    out["rule_b"] = (
-        abc["rule_b_run2_unique_failures"]["verdict"]
-        if coverage_ok
-        else "descriptive only (coverage < 95%)"
-    )
+    out["rule_b"] = abc["rule_b_primary"]["verdict"]
+    out["rule_b_sensitivity_all_criteria"] = abc["rule_b_sensitivity_all_criteria"]["verdict"]
+    out["rule_b_sensitivity_step_cap_first"] = abc["rule_b_sensitivity_step_cap_first"]["verdict"]
     return out
