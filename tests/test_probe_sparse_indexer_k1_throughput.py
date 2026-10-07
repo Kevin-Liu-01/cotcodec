@@ -84,6 +84,9 @@ def test_probe_measures_steady_state_apart_from_startup(complete) -> None:
     assert train["steps"]["steps_skipped"] == budget.STEADY_SKIP_STEPS
     assert len(train["steps"]["step_s_all"]) == 4 and train["steps"]["steps_measured"] == 2
     assert train["extension"]["steps_measured"] == 1 and len(train["devkl"]) == 2
+    split = train["components_descriptive"]
+    assert split["layer"] == 2 and split["slots"] == 18
+    assert split["targets_plus_bank_s"] >= split["enqueue_s"] > 0
     evaluation = complete["arms"]["eval"]
     summary = evaluation["summary"]
     for kind in ("select_only", "select_mc", "mc_only"):
