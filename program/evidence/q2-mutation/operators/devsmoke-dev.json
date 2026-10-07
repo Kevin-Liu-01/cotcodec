@@ -1,0 +1,407 @@
+{
+  "command": "python3 -m harness.q2_mutation.operators.devsmoke --jobs /ro/devjobs/jobs-dev.jsonl --out /out/devsmoke --delta-requirements --profile-template /home/user/.config/libreoffice/4/user",
+  "image_id": "sha256:894b2623dceb43e8468a2adbd6e03a532ea9683d4b7754cd79fa0d58a331f909",
+  "inputs": "harness run dev-controls-raw-v1/jobs-dev.jsonl (gold and initial file per dev task) over the harness file cache inputs/file_cache_1e112283; every file matched the job list's candidate SHA-256 (rejected_hash is empty)",
+  "not_admitted_note": "xlsx.viol.formula_ref_shift: two shifted references left the value unchanged (equivalent mutants). Mutant documents and per-mutant records stay on the host under ~/cotcodec-runs/stage0/q2-evaluator-mutation/operators/runs/; they contain third-party content and are not released.",
+  "null_drift_change_kinds": {
+    "01b269ae-2111-4a07-81fd-3fcd711993b0": {},
+    "12382c62-0cd1-4bf2-bdc8-1d20bf9b2371": {},
+    "2b94c692-6abb-48ae-ab0b-b3e8a19cb340": {
+      "layout": 5
+    },
+    "347ef137-7eeb-4c80-a3bb-0951f26a8aff": {},
+    "415ef462-bed3-493a-ac36-ca8c6d23bf1b": {},
+    "4172ea6e-6b77-4edb-a9cc-c0014bd1603b": {},
+    "4ed5abd0-8b5d-47bd-839f-cacfa15ca37a": {
+      "layout": 184
+    },
+    "5cfb9197-e72b-454b-900e-c06b0c802b40": {
+      "layout": 334
+    },
+    "936321ce-5236-426a-9a20-e0e3c5dc536f": {},
+    "af23762e-2bfd-4a1d-aada-20fa8de9ce07": {
+      "layout": 33,
+      "structure": 1
+    },
+    "bf4e9888-f10f-47af-8dba-76413038b73c": {
+      "layout": 6
+    },
+    "d681960f-7bc3-4286-9913-a8812ba3261a": {},
+    "e4ef0baf-4b52-4590-a47e-d4d464cca2d7": {
+      "layout": 168
+    },
+    "e528b65e-1107-4b8c-8988-490e4fece599": {
+      "format": 2
+    }
+  },
+  "operators": {
+    "docx.alt.para_direct_for_style": {
+      "admitted": 3,
+      "applied": 3,
+      "failed_checks": {},
+      "planned": 3
+    },
+    "docx.eq.doc_property": {
+      "admitted": 6,
+      "applied": 6,
+      "failed_checks": {},
+      "planned": 6
+    },
+    "docx.eq.view_zoom": {
+      "admitted": 6,
+      "applied": 6,
+      "failed_checks": {},
+      "planned": 6
+    },
+    "docx.extra.delete_unrelated_paragraph": {
+      "admitted": 3,
+      "applied": 3,
+      "failed_checks": {},
+      "planned": 3
+    },
+    "docx.extra.edit_unrelated_paragraph": {
+      "admitted": 3,
+      "applied": 3,
+      "failed_checks": {},
+      "planned": 3
+    },
+    "docx.extra.edit_unrelated_table_cell": {
+      "admitted": 3,
+      "applied": 3,
+      "failed_checks": {},
+      "planned": 3
+    },
+    "docx.extra.format_unrelated_run": {
+      "admitted": 3,
+      "applied": 3,
+      "failed_checks": {},
+      "planned": 3
+    },
+    "docx.viol.delete_bound_paragraph": {
+      "admitted": 2,
+      "applied": 2,
+      "failed_checks": {},
+      "planned": 2
+    },
+    "docx.viol.line_spacing_change": {
+      "admitted": 4,
+      "applied": 4,
+      "failed_checks": {},
+      "planned": 4
+    },
+    "docx.viol.para_align_change": {
+      "admitted": 4,
+      "applied": 4,
+      "failed_checks": {},
+      "planned": 4
+    },
+    "docx.viol.text_edit": {
+      "admitted": 3,
+      "applied": 3,
+      "failed_checks": {},
+      "planned": 3
+    },
+    "pptx.alt.textbox_for_placeholder": {
+      "admitted": 6,
+      "applied": 6,
+      "failed_checks": {},
+      "planned": 6
+    },
+    "pptx.eq.doc_property": {
+      "admitted": 18,
+      "applied": 18,
+      "failed_checks": {},
+      "planned": 18
+    },
+    "pptx.eq.subvisible_nudge": {
+      "admitted": 18,
+      "applied": 18,
+      "failed_checks": {},
+      "planned": 18
+    },
+    "pptx.eq.zorder_nonoverlap": {
+      "admitted": 15,
+      "applied": 15,
+      "failed_checks": {},
+      "planned": 15
+    },
+    "pptx.extra.add_textbox": {
+      "admitted": 17,
+      "applied": 17,
+      "failed_checks": {},
+      "planned": 17
+    },
+    "pptx.extra.delete_unrelated_slide": {
+      "admitted": 1,
+      "applied": 1,
+      "failed_checks": {},
+      "planned": 1
+    },
+    "pptx.extra.edit_notes": {
+      "admitted": 2,
+      "applied": 2,
+      "failed_checks": {},
+      "planned": 2
+    },
+    "pptx.extra.edit_unrelated_text": {
+      "admitted": 2,
+      "applied": 2,
+      "failed_checks": {},
+      "planned": 2
+    },
+    "pptx.viol.delete_bound_shape": {
+      "admitted": 13,
+      "applied": 13,
+      "failed_checks": {},
+      "planned": 13
+    },
+    "pptx.viol.drop_char_format": {
+      "admitted": 6,
+      "applied": 6,
+      "failed_checks": {},
+      "planned": 6
+    },
+    "pptx.viol.move_shape": {
+      "admitted": 13,
+      "applied": 13,
+      "failed_checks": {},
+      "planned": 13
+    },
+    "pptx.viol.text_edit": {
+      "admitted": 12,
+      "applied": 12,
+      "failed_checks": {},
+      "planned": 12
+    },
+    "xlsx.alt.absolute_refs": {
+      "admitted": 6,
+      "applied": 6,
+      "failed_checks": {},
+      "planned": 6
+    },
+    "xlsx.alt.literal_for_formula": {
+      "admitted": 6,
+      "applied": 6,
+      "failed_checks": {},
+      "planned": 6
+    },
+    "xlsx.alt.named_style_for_direct": {
+      "admitted": 4,
+      "applied": 4,
+      "failed_checks": {},
+      "planned": 4
+    },
+    "xlsx.alt.plus_chain_to_sum": {
+      "admitted": 3,
+      "applied": 3,
+      "failed_checks": {},
+      "planned": 3
+    },
+    "xlsx.alt.reference_for_literal": {
+      "admitted": 5,
+      "applied": 5,
+      "failed_checks": {},
+      "planned": 5
+    },
+    "xlsx.eq.active_sheet": {
+      "admitted": 1,
+      "applied": 1,
+      "failed_checks": {},
+      "planned": 1
+    },
+    "xlsx.eq.doc_property": {
+      "admitted": 18,
+      "applied": 18,
+      "failed_checks": {},
+      "planned": 18
+    },
+    "xlsx.eq.view_selection": {
+      "admitted": 15,
+      "applied": 15,
+      "failed_checks": {},
+      "planned": 15
+    },
+    "xlsx.eq.view_zoom": {
+      "admitted": 7,
+      "applied": 7,
+      "failed_checks": {},
+      "planned": 7
+    },
+    "xlsx.extra.clear_unrelated_row": {
+      "admitted": 10,
+      "applied": 10,
+      "failed_checks": {},
+      "planned": 10
+    },
+    "xlsx.extra.edit_unrelated_value": {
+      "admitted": 17,
+      "applied": 17,
+      "failed_checks": {},
+      "planned": 17
+    },
+    "xlsx.extra.format_unrelated_cell": {
+      "admitted": 18,
+      "applied": 18,
+      "failed_checks": {},
+      "planned": 18
+    },
+    "xlsx.extra.rename_unrelated_sheet": {
+      "admitted": 1,
+      "applied": 1,
+      "failed_checks": {},
+      "planned": 1
+    },
+    "xlsx.viol.clear_bound_cell": {
+      "admitted": 12,
+      "applied": 12,
+      "failed_checks": {},
+      "planned": 12
+    },
+    "xlsx.viol.formula_ref_shift": {
+      "admitted": 4,
+      "applied": 6,
+      "failed_checks": {
+        "edit_landed": 2
+      },
+      "planned": 6
+    },
+    "xlsx.viol.number_format_change": {
+      "admitted": 7,
+      "applied": 7,
+      "failed_checks": {},
+      "planned": 7
+    },
+    "xlsx.viol.value_perturb": {
+      "admitted": 7,
+      "applied": 7,
+      "failed_checks": {},
+      "planned": 7
+    }
+  },
+  "receipt": {
+    "argv_json_hex": "5b22707974686f6e33222c20222d6d222c20226861726e6573732e71325f6d75746174696f6e2e6f70657261746f72732e646576736d6f6b65222c20222d2d6a6f6273222c20222f726f2f6465766a6f62732f6a6f62732d6465762e6a736f6e6c222c20222d2d6f7574222c20222f6f75742f646576736d6f6b65222c20222d2d64656c74612d726571756972656d656e7473222c20222d2d70726f66696c652d74656d706c617465222c20222f686f6d652f757365722f2e636f6e6669672f6c696272656f66666963652f342f75736572225d",
+    "argv_json_hex_sha256": "84080c6141ea99523fdde5116698692045bcc158a6955f1b5f7cdb3b5353ccee",
+    "batch_sha256": "6aa4e91bc958819a6b2a4718f568a7faee947a4db32dc282b05d4e7174de1bc1",
+    "container_dev_nvidia": [],
+    "exit_status": 0,
+    "finished_at": "2026-10-07T08:00:42Z",
+    "gpus_requested": 0,
+    "image_id": "sha256:894b2623dceb43e8468a2adbd6e03a532ea9683d4b7754cd79fa0d58a331f909",
+    "job_id": "423",
+    "mode": "run",
+    "mounts": "/home/kevin/cotcodec-runs/stage0/q2-evaluator-mutation/operators/src/4a44f5d459d74202c3175278b7278454e3728529:/src:ro /home/kevin/cotcodec-runs/stage0/q2-evaluator-mutation/operators/runs/devsmoke-delta-4a44f5d4-v1:/out:rw /home/kevin/cotcodec-runs/stage0/q2-evaluator-mutation/inputs:/inputs:ro /home/kevin/cotcodec-runs/stage0/q2-evaluator-mutation/runs/dev-controls-raw-v1:/ro/devjobs:ro",
+    "network": "none",
+    "started_at": "2026-10-07T07:56:54Z"
+  },
+  "rejected_hash": [],
+  "slurm_job": "423",
+  "source_revision": "4a44f5d459d74202c3175278b7278454e3728529",
+  "tasks": [
+    {
+      "family": "xlsx",
+      "planned": 25,
+      "status": "ok",
+      "task_id": "01b269ae-2111-4a07-81fd-3fcd711993b0"
+    },
+    {
+      "family": "xlsx",
+      "planned": 17,
+      "status": "ok",
+      "task_id": "12382c62-0cd1-4bf2-bdc8-1d20bf9b2371"
+    },
+    {
+      "family": "pptx",
+      "planned": 16,
+      "status": "ok",
+      "task_id": "2b94c692-6abb-48ae-ab0b-b3e8a19cb340"
+    },
+    {
+      "family": "xlsx",
+      "planned": 15,
+      "status": "ok",
+      "task_id": "347ef137-7eeb-4c80-a3bb-0951f26a8aff"
+    },
+    {
+      "family": "xlsx",
+      "planned": 26,
+      "status": "ok",
+      "task_id": "415ef462-bed3-493a-ac36-ca8c6d23bf1b"
+    },
+    {
+      "family": "xlsx",
+      "planned": 34,
+      "status": "ok",
+      "task_id": "4172ea6e-6b77-4edb-a9cc-c0014bd1603b"
+    },
+    {
+      "family": "pptx",
+      "planned": 27,
+      "status": "ok",
+      "task_id": "4ed5abd0-8b5d-47bd-839f-cacfa15ca37a"
+    },
+    {
+      "family": "pptx",
+      "planned": 21,
+      "status": "ok",
+      "task_id": "5cfb9197-e72b-454b-900e-c06b0c802b40"
+    },
+    {
+      "family": "docx",
+      "planned": 22,
+      "status": "ok",
+      "task_id": "936321ce-5236-426a-9a20-e0e3c5dc536f"
+    },
+    {
+      "family": "pptx",
+      "planned": 24,
+      "status": "ok",
+      "task_id": "af23762e-2bfd-4a1d-aada-20fa8de9ce07"
+    },
+    {
+      "family": "pptx",
+      "planned": 11,
+      "status": "ok",
+      "task_id": "bf4e9888-f10f-47af-8dba-76413038b73c"
+    },
+    {
+      "family": "xlsx",
+      "planned": 26,
+      "status": "ok",
+      "task_id": "d681960f-7bc3-4286-9913-a8812ba3261a"
+    },
+    {
+      "family": "pptx",
+      "planned": 24,
+      "status": "ok",
+      "task_id": "e4ef0baf-4b52-4590-a47e-d4d464cca2d7"
+    },
+    {
+      "family": "docx",
+      "planned": 18,
+      "status": "ok",
+      "task_id": "e528b65e-1107-4b8c-8988-490e4fece599"
+    }
+  ],
+  "totals": {
+    "admitted": 304,
+    "applied": 306,
+    "planned": 306
+  },
+  "touched_task_ids": [
+    "01b269ae-2111-4a07-81fd-3fcd711993b0",
+    "12382c62-0cd1-4bf2-bdc8-1d20bf9b2371",
+    "2b94c692-6abb-48ae-ab0b-b3e8a19cb340",
+    "347ef137-7eeb-4c80-a3bb-0951f26a8aff",
+    "415ef462-bed3-493a-ac36-ca8c6d23bf1b",
+    "4172ea6e-6b77-4edb-a9cc-c0014bd1603b",
+    "4ed5abd0-8b5d-47bd-839f-cacfa15ca37a",
+    "5cfb9197-e72b-454b-900e-c06b0c802b40",
+    "936321ce-5236-426a-9a20-e0e3c5dc536f",
+    "af23762e-2bfd-4a1d-aada-20fa8de9ce07",
+    "bf4e9888-f10f-47af-8dba-76413038b73c",
+    "d681960f-7bc3-4286-9913-a8812ba3261a",
+    "e4ef0baf-4b52-4590-a47e-d4d464cca2d7",
+    "e528b65e-1107-4b8c-8988-490e4fece599"
+  ],
+  "what": "Dev-split smoke of the operator edit primitives on real OSWorld files: 14 development-split tasks whose gold and initial end states are one office file. Document and outside-site operators ran with no requirements; requirement-targeted operators ran against in-memory placeholder requirements bound only to the task's own initial-to-gold changes. Labels are meaningless here and are not reported; no checker ran; no spec was written."
+}
