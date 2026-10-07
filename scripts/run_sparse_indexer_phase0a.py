@@ -19,6 +19,9 @@ Phases:
                   target failing V1; epochs 2-3 for the frozen-LR indexers of
                   the V1-failing targets only, then one re-read of those
                   targets. A target that passed V1 keeps its main read.
+                  It is mandatory when the main read calls for it; its receipt
+                  carries the final verdict, and an extension that is not run
+                  or ends void makes the final verdict INCONCLUSIVE.
 
 The process is PID 1 in its container. It installs SIGUSR1/SIGTERM handlers,
 forwards a received signal to its workers, reaps them, and writes the
@@ -81,6 +84,7 @@ MAIN_MAX_MINUTES = 30.0
 SIGNAL_LEAD_MINUTES = 3.0  # Slurm sends USR1 180 s before the limit (--signal=B:USR1@180)
 PROJECTION_MARGIN = 1.2  # the registered safety factor on the smoke projection
 EXTENSION_EPOCHS = 3
+EXTENSION_LIMIT_MINUTES = 22.0  # q3-k1-extension.yaml; the extension has no continuation
 MAIN_READ = "main-read.json"
 WORKER_SIGNALS = {signal.SIGUSR1, signal.SIGTERM}
 CODE_FILES = (
@@ -650,6 +654,12 @@ class Parent:
             combined = k1s.combine_after_extension(main_reads, reads)
             decision_headroom = k1s.HeadroomRead.from_dict(main_read["headroom"])
             verdict = k1s.k1_verdict(combined, decision_headroom, after_extension=True)
+            # Program decision D16: the extension's combined verdict is final,
+            # except that a void extension makes the final verdict INCONCLUSIVE.
+            final = k1s.final_verdict(k1s.k1_verdict(main_reads, decision_headroom),
+                                      main_reads, verdict)
+            report["final_verdict"] = {"verdict": final.verdict,
+                                       "reasons": list(final.reasons)}
             # Dense-only gates are not re-read: the main read's headroom decides,
             # and the recomputation is reported as a determinism check only.
             report["headroom_recomputed_descriptive"] = report.pop("headroom")
@@ -671,6 +681,10 @@ class Parent:
             # only that directory) combines with exactly this read.
             self.hashes["main_read_sha256"] = rt.atomic_write_json(main_read_path, payload)
             report["extension_targets"] = ext_targets
+            # A read that calls for the extension is not final: the extension is
+            # mandatory, and if it is not run or ends void the final verdict is
+            # INCONCLUSIVE (program decision D16). HOLD is terminal.
+            report["verdict_is_final"] = not ext_targets
         report["verdict"] = {"verdict": verdict.verdict, "reasons": list(verdict.reasons),
                              "per_target": verdict.per_target}
         report["training_workers"] = [
@@ -884,17 +898,24 @@ def project_main_cost(report: dict[str, Any], n_layers: int, steps: int,
 
     shards = sit.balanced_layer_shards(n_layers, 4) if n_layers >= 4 else [list(range(n_layers))]
     train_seqs = steps * profile.batch
+    # The V1 extension: epochs 2-3 for the frozen-LR indexers of the V1-failing
+    # targets only (worst case both targets: one of the three LRs per layer).
+    extension_seqs = (EXTENSION_EPOCHS - 1) * steps * profile.batch
+    extension_share = 1.0 / len(rt.LEARNING_RATES)
     dev_seqs = int(staged.array("dev_tokens").shape[0])
-    per_worker = []
+    per_worker, extension_per_worker = [], []
     for layers in shards:
         prefix = (max(layers) + 1) * teacher_per_layer_seq
         own = len(layers) * (targets_per_layer_seq + indexers_per_layer_seq)
         per_worker.append(train_seqs * (prefix + own) + dev_seqs * (
             prefix + len(layers) * (targets_per_layer_seq + indexers_per_layer_seq / 3)))
+        extension_per_worker.append(extension_seqs * (prefix + len(layers) * (
+            targets_per_layer_seq + indexers_per_layer_seq * extension_share)))
     audit_units = len({(p["context_index"], p["query_index"]) for p in staged.meta["prompts"]
                        if p["partition"] == "audit"})
     eval_s = audit_units * report["recall_smoke"]["eval_wall_s_per_unit"] / len(shards)
     wall = max(per_worker) + eval_s + 300.0
+    extension_wall = max(extension_per_worker) + eval_s + 300.0
     return {"train_wall_s_per_worker": per_worker, "eval_wall_s": eval_s,
             "startup_allowance_s": 300.0, "main_wall_minutes": wall / 60.0,
             "main_gpu_hours": wall * len(shards) / 3600.0,
@@ -902,6 +923,18 @@ def project_main_cost(report: dict[str, Any], n_layers: int, steps: int,
             "main_limit_minutes": MAIN_MAX_MINUTES,
             "rule": f"{PROJECTION_MARGIN} x projected wall + {SIGNAL_LEAD_MINUTES} min signal "
                     f"lead <= {MAIN_MAX_MINUTES} min (4 GPUs, {MAIN_BUDGET_GPU_HOURS} GPU-h)",
+            "extension": {
+                "train_wall_s_per_worker": extension_per_worker,
+                "wall_minutes": extension_wall / 60.0,
+                "gpu_hours": extension_wall * len(shards) / 3600.0,
+                "required_limit_minutes": (PROJECTION_MARGIN * extension_wall / 60.0
+                                           + SIGNAL_LEAD_MINUTES),
+                "limit_minutes": EXTENSION_LIMIT_MINUTES,
+                "fits_limit": (PROJECTION_MARGIN * extension_wall / 60.0 + SIGNAL_LEAD_MINUTES
+                               <= EXTENSION_LIMIT_MINUTES),
+                "note": "descriptive, not a gate: worst case of both targets failing V1 "
+                        "(the frozen-LR indexers of both targets train on epochs 2-3), "
+                        "then the full audit evaluation"},
             "note": "single-GPU smoke timings scaled to the registered 4-worker layout"}
 
 

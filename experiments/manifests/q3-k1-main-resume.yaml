@@ -2,7 +2,8 @@
 # A fresh job in the main job's run root resumes from its phase-0a-k1/checkpoints: completed training,
 # stream-dev KL, the LR freeze and evaluation chunks are reused, not recomputed. Its minutes are 30 minus
 # the minutes the interrupted job used (rounded up, plus one), so both jobs together stay within the
-# main job's 2.0 GPU-h cap; the filler leaves it unfilled if fewer than 5 minutes remain.
+# main job's 2.0 GPU-h cap; the filler leaves it unfilled if fewer than 5 minutes remain, if the
+# pre-main gates fail, or once the run root holds a continuation job (no second continuation, D16).
 # Template: every FILL-* value is written by
 # scripts/fill_sparse_indexer_k1_manifests.py from measured artifacts (image B
 # build receipt, bundle sidecar, frozen preregistration, Slurm job ids). The

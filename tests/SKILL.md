@@ -23,6 +23,8 @@ Each contract proves valid inputs pass and decision-bearing drift fails.
   `test_sparse_indexer_k1_runtime.py`, `test_run_sparse_indexer_phase0a.py`,
   `test_sparse_indexer_k1_doctor.py`) skip without the architecture extra; run
   them inside the research image (CPU, `--network none`).
+  `test_sparse_indexer_k1_prereg.py` binds the K1 preregistration's code table
+  to the working tree until the experiment is frozen.
 
 ## Patterns to follow / invariants
 <!-- agent-docs:fill:patterns -->

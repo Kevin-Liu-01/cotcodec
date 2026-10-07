@@ -65,7 +65,8 @@ dev = [
 ]
 
 [tool.ruff]
-extend-exclude = ["legacy", ".claude/skills", ".agents"]
+# program/evidence holds recorded artifacts (including analysis scripts) verbatim.
+extend-exclude = ["legacy", ".claude/skills", ".agents", "program/evidence"]
 line-length = 100
 target-version = "py311"
 

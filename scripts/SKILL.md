@@ -30,7 +30,11 @@ provenance.
   two-stage bundle builder, `compare_sparse_indexer_resume.py` the R0/R2 check
   and `fill_sparse_indexer_k1_manifests.py` fills `experiments/manifests/` from
   measured artifacts (a resumed leg's predecessor is chosen from its
-  `termination.env`, and it shares the predecessor's run root).
+  `termination.env`, and it shares the predecessor's run root); it fills the
+  main job, its continuation and the extension only after SMOKE_PASS,
+  PROCEED_TO_K1 and an equivalent resume test bound to image B, the bundle,
+  the frozen preregistration and its tabled code digests (program decision
+  D16).
 - `create_source_archive.py`, `verify_compute_provenance.py` and
   `verify_publication_attestation.py` bind source, image and claims.
 

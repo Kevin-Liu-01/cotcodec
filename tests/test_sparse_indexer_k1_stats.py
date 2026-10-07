@@ -198,6 +198,41 @@ def test_extension_rereads_only_v1_failing_targets_and_never_after_go() -> None:
         assert k1s.extension_targets(k1s.Verdict(verdict, ()), [hs_fail, neg_mp]) == []
 
 
+def test_hold_is_terminal_and_never_followed_by_the_extension() -> None:
+    # Pre-freeze audit, blocking defect 1: a HOLD had no registered resolution.
+    t = table({**TARGET, "ind": (78.0, 50.0)})
+    reads = [read("hs", t, ml=(95.0, 92.0)), read("mp", t, ml=(70.0, 92.0))]
+    hold = k1s.k1_verdict(reads, GOOD)
+    assert hold.verdict == "HOLD" and k1s.extension_targets(hold, reads) == []
+    assert k1s.final_verdict(hold, reads, None).verdict == "HOLD"
+    with pytest.raises(k1s.StatsContractError, match="does not call for"):
+        k1s.final_verdict(hold, reads, k1s.Verdict("GO", ()))
+
+
+def test_called_for_extension_is_mandatory_and_a_void_one_is_inconclusive() -> None:
+    # Pre-freeze audit, blocking defect 2: the final verdict was undefined when the
+    # extension was not run or ended void.
+    hs_fail = read("hs", table({**TARGET, "ind": (77.0, 67.0)}, seed=0), ml=(70.0, 92.0))
+    neg_mp = read("mp", table({**TARGET, "ind": (77.0, 67.0)}, seed=1))
+    main = k1s.k1_verdict([hs_fail, neg_mp], GOOD)
+    assert main.verdict == "INCONCLUSIVE"
+    for extension in (None, k1s.Verdict("VOID", ("V3 integrity failed",))):
+        final = k1s.final_verdict(main, [hs_fail, neg_mp], extension)
+        assert final.verdict == "INCONCLUSIVE"
+        assert "not run or ended void" in final.reasons[0]
+    hs_ext = read("hs", table({**TARGET, "ind": (77.0, 67.0)}, seed=0))
+    combined = k1s.k1_verdict(k1s.combine_after_extension([hs_fail, neg_mp], [hs_ext]), GOOD,
+                              after_extension=True)
+    assert k1s.final_verdict(main, [hs_fail, neg_mp], combined) is combined
+    held = k1s.Verdict("HOLD", ("V2 bug tell",))
+    assert k1s.final_verdict(main, [hs_fail, neg_mp], held) is held  # HOLD stays terminal
+    nothing_failed = k1s.k1_verdict([neg_mp], GOOD)
+    assert k1s.final_verdict(nothing_failed, [neg_mp], None) is nothing_failed
+    with pytest.raises(k1s.StatsContractError, match="V1_EXTENSION_REQUIRED"):
+        k1s.final_verdict(main, [hs_fail, neg_mp],
+                          k1s.Verdict("V1_EXTENSION_REQUIRED", ()))
+
+
 def test_reads_round_trip_through_json() -> None:
     import json
 
