@@ -19,6 +19,12 @@ import sys
 from pathlib import Path
 from typing import Any
 
+PROJECT_ROOT = Path(__file__).resolve().parents[1]
+if str(PROJECT_ROOT) not in sys.path:
+    sys.path.insert(0, str(PROJECT_ROOT))
+
+from harness.sparse_indexer_k1_marker import read_checkpoint_marker  # noqa: E402
+
 
 def _receipt(run_dir: Path) -> dict[str, Any]:
     return json.loads((run_dir / "phase-0a-k1" / "receipt.json").read_text(encoding="utf-8"))
@@ -47,7 +53,8 @@ def compare(r0: Path, r1: Path, r2: Path) -> dict[str, Any]:
         termination.get("reason") == "signal_USR1_checkpoint_confirmed"
         and termination.get("exit_code") == "75"
         and termination.get("checkpoint_ready") == "true")
-    marker = json.loads((r1 / "checkpoint.ready").read_text(encoding="utf-8"))
+    marker = read_checkpoint_marker(r1 / "checkpoint.ready")
+    checks["r1_marker_has_usr1_trigger"] = marker.get("trigger") == "SIGUSR1"
     steps = {ack.get("step") for ack in marker.get("acks", {}).values()}
     checks["r1_all_workers_acknowledged_one_step"] = len(steps) == 1 and None not in steps
     report["r1_signal_step"] = sorted(s for s in steps if s is not None)
@@ -62,7 +69,7 @@ def compare(r0: Path, r1: Path, r2: Path) -> dict[str, Any]:
 
 
 def main(argv: list[str] | None = None) -> int:
-    parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
+    parser = argparse.ArgumentParser(description=__doc__.splitlines()[0], allow_abbrev=False)
     parser.add_argument("--r0", type=Path, required=True)
     parser.add_argument("--r1", type=Path, required=True)
     parser.add_argument("--r2", type=Path, required=True)

@@ -11,6 +11,7 @@ from scripts import fill_sparse_indexer_k1_manifests as filler
 from scripts import preregister
 from scripts.compare_sparse_indexer_resume import compare
 from scripts.compare_sparse_indexer_resume import main as compare_main
+from scripts.submit_docker_research_job import sbatch_argv, validate_manifest
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 MANIFESTS = sorted((PROJECT_ROOT / "experiments" / "manifests").glob("q3-k1-*.yaml"))
@@ -87,8 +88,9 @@ def test_compare_requires_bitwise_equality_and_a_confirmed_signal(tmp_path) -> N
     r1.mkdir()
     (r1 / "termination.env").write_text(
         "reason=signal_USR1_checkpoint_confirmed\nexit_code=75\ncheckpoint_ready=true\n")
-    (r1 / "checkpoint.ready").write_text(json.dumps(
-        {"acks": {"0": {"step": 25}, "1": {"step": 25}}}))
+    (r1 / "checkpoint.ready").write_text(
+        "trigger=SIGUSR1\ntoken=t\nacks=" + json.dumps({"0": {"step": 25}, "1": {"step": 25}})
+        + "\n")
     assert compare(r0, r1, r2)["equivalent"]
     _receipt(tmp_path / "r3", {"0": "a", "1": "c"}, {"0": {"L00": "x"}, "1": {"L01": "z"}}, 25)
     report = compare(r0, r1, tmp_path / "r3")
@@ -129,6 +131,12 @@ def test_filler_uses_only_measured_values(tmp_path) -> None:
     assert argv[argv.index("--expected-preregistration-sha256") + 1] == (
         preregister.sha256_file(prereg))
     assert load(out / "q3-k1-resume-r2.yaml")["resume_from_job_id"] == 123
+    # Every filled manifest passes the discovery-lane submitter's validation.
+    for path in sorted(out.glob("q3-k1-*.yaml")):
+        validated = validate_manifest(load(path))
+        assert validated["seed_binding"] == {"flag": "--seeds"}
+        assert validated["container_profile"] == "default"
+        assert sbatch_argv(validated, test_only=True)[-2] == "--test-only"
     assert not (out / "q3-k1-extension.yaml").exists()  # main job id not yet measured
     sidecar.write_text(json.dumps({"sha256": "0" * 64, "size_bytes": 3}))
     assert filler.main(["--image-receipt", str(image), "--bundle", str(bundle),
