@@ -3,17 +3,25 @@
 Rules (preregistered; ``d`` is a free root's native value, see ``problems.py``):
 
 c2, shape variation (each drawn with D1 and D4 at run time):
-- ``S-half``: leading root -> ``max(1, d // 2)``;
+- ``S-half``: leading root -> ``max(2, d // 2)``;
 - ``S-double``: inner root -> ``2 d``, reduced to the largest value whose input
   bytes stay within 2x native;
-- ``S-small``: every free root -> ``max(1, d // 8)``.
+- ``S-small``: every free root -> ``max(2, d // 8)``.
 
 c3, unaligned remainders (each drawn with D1 and D4):
 - ``U1/<root>``: one root -> ``d + 1``;
 - ``U2/<root>``: one root -> ``(d - d mod 128) + 17``;
 - ``U3``: leading root -> 3;
-- matmul problems only: ``MM1``: every free root -> ``(d - d mod 64) + 1``;
+- matmul problems only: ``MM1``: every free root -> ``max(2, (d - d mod 64) + 1)``;
   ``MM17``: every free root -> ``(d - d mod 64) + 17``.
+
+No gate (c) configuration sets a free root below :data:`C_MIN_SIZE` (2).
+Compilers specialise sizes 0 and 1 (Dynamo's 0/1 specialisation), and the S1
+substrates refuse them before any launch, so a size-1 configuration would
+make gate (c) reject a correct, merely specialised kernel for a refusal that
+says nothing about silent wrong output. Degenerate size 1 stays in the audit
+(``A3/lead1``), where a refusal is classified and contract tier G counts it
+as non-general rather than as a fault.
 
 A3, held-out prime shapes for the audit (never seen by a gate):
 - ``lead1``, ``lead5``: leading root -> 1, 5;
@@ -26,8 +34,8 @@ A3, held-out prime shapes for the audit (never seen by a gate):
 Every config is dropped (and logged) if it equals the native shape or exceeds
 2x native input bytes. A3 configs must be disjoint from c: no A3 value may
 equal any value c uses for the same root; colliding values move to the next
-smaller prime (``inner37``/``allprime``) or the next larger prime
-(``lead1``/``lead5``).
+smaller prime (``inner37``/``allprime``; to the next larger one when no
+smaller disjoint prime exists) or the next larger prime (``lead1``/``lead5``).
 """
 
 from __future__ import annotations
@@ -40,6 +48,8 @@ from harness.q1.problems import ProblemAnalysis
 
 MANIFEST_SCHEMA = "q1-shape-manifest/1"
 BYTE_CAP = 2.0
+#: Smallest free-root value any gate (c) configuration uses (see the module docstring).
+C_MIN_SIZE = 2
 
 
 def is_prime(n: int) -> bool:
@@ -77,9 +87,9 @@ def c2_rules(analysis: ProblemAnalysis) -> list[dict[str, Any]]:
     lead, inner = analysis.leading, analysis.inner
     assert lead is not None and inner is not None
     return [
-        _config("c2", "S-half", {lead: max(1, native[lead] // 2)}),
+        _config("c2", "S-half", {lead: max(C_MIN_SIZE, native[lead] // 2)}),
         _config("c2", "S-double", {inner: 2 * native[inner]}),
-        _config("c2", "S-small", {root: max(1, d // 8) for root, d in native.items()}),
+        _config("c2", "S-small", {root: max(C_MIN_SIZE, d // 8) for root, d in native.items()}),
     ]
 
 
@@ -94,7 +104,9 @@ def c3_rules(analysis: ProblemAnalysis) -> list[dict[str, Any]]:
     assert analysis.leading is not None
     configs.append(_config("c3", "U3", {analysis.leading: 3}))
     if analysis.is_matmul:
-        configs.append(_config("c3", "MM1", {r: (d - d % 64) + 1 for r, d in native.items()}))
+        configs.append(
+            _config("c3", "MM1", {r: max(C_MIN_SIZE, (d - d % 64) + 1) for r, d in native.items()})
+        )
         configs.append(_config("c3", "MM17", {r: (d - d % 64) + 17 for r, d in native.items()}))
     return configs
 
@@ -113,9 +125,14 @@ def a3_rules(analysis: ProblemAnalysis, c_values: Mapping[str, set[int]]) -> lis
         return value
 
     def down(root: str, d: int) -> int:
+        taken = c_values.get(root, set()) | {native[root]}
         value = prev_prime(max(2, round(0.37 * d)))
-        while (value in c_values.get(root, set()) or value == native[root]) and value > 2:
+        while value in taken and value > 2:
             value = prev_prime(value - 1)
+        # No disjoint prime at or below the target (c uses 2 for small roots):
+        # take the smallest disjoint prime above it instead of colliding with c.
+        while value in taken:
+            value = next_prime(value + 1)
         return value
 
     def grow(root: str, d: int) -> int:

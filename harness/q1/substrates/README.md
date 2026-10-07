@@ -1,7 +1,8 @@
 # Q1 substrates
 
 The correct-kernel corpus for the Q1 Stage 0 gate validation
-(`program/preregistrations/q1-stage0-substrate-corpus.md`, draft). Two tiers,
+(`program/preregistrations/q1-stage0-gate-validation.md`, section 3, draft; the
+separate substrate-corpus draft was merged into it at integration). Two tiers,
 both outside the R570 rule's scope by decision D3:
 
 - **S1**: TorchInductor-generated Triton for every admissible KernelBench@423217d9

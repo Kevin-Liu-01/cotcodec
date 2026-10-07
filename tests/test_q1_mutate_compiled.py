@@ -8,11 +8,17 @@ a device and never launches anything).
 from __future__ import annotations
 
 import json
+import os
+import subprocess
+import sys
+from pathlib import Path
 
 import pytest
 
 from harness.q1.mutate import compiled
 from tests._q1_mutate_support import toy_text
+
+ROOT = Path(__file__).resolve().parents[1]
 
 
 def test_launch_scope_hash_ignores_device_bodies_only():
@@ -94,10 +100,36 @@ def _relu_record() -> compiled.Specialization:
     return compiled.Specialization("relu_kernel", data)
 
 
-def test_cpu_compile_separates_mutants_and_merges_equivalents(tmp_path, monkeypatch):
+def _compile_in_fresh_process(tmp_path, kernels: list) -> list[dict]:
+    """Compile through the CLI in a fresh interpreter, as the pool's compile step does.
+
+    Other Q1 CPU tests in the same pytest process run kernels under the Triton
+    interpreter, which patches ``triton.language`` process-wide; a compile in
+    this process would then not be isolated.
+    """
+    spec = tmp_path / "specializations.json"
+    spec.write_text(compiled.dump_specializations([_relu_record()], "3.6.0"))
+    env = {k: v for k, v in os.environ.items() if k != "TRITON_INTERPRET"}
+    env.update(
+        TRITON_DISABLE_LINE_INFO="1",
+        TRITON_CACHE_DIR=str(tmp_path / "cache"),
+        PYTHONPATH=str(ROOT),
+    )
+    argv = [sys.executable, "-m", "harness.q1.mutate.compiled", "--spec", str(spec), "--kernels"]
+    done = subprocess.run(
+        [*argv, *map(str, kernels)],
+        capture_output=True,
+        text=True,
+        env=env,
+        cwd=ROOT,
+        check=True,
+        timeout=900,
+    )
+    return [json.loads(line) for line in done.stdout.splitlines() if line.strip()]
+
+
+def test_cpu_compile_separates_mutants_and_merges_equivalents(tmp_path):
     pytest.importorskip("triton")
-    monkeypatch.setenv("TRITON_DISABLE_LINE_INFO", "1")
-    monkeypatch.setenv("TRITON_CACHE_DIR", str(tmp_path / "cache"))
     text = toy_text("relu_where")
     variants = {
         "parent": text,
@@ -107,23 +139,21 @@ def test_cpu_compile_separates_mutants_and_merges_equivalents(tmp_path, monkeypa
         "lt2le": text.replace("mask = offsets < n_elements", "mask = offsets <= n_elements"),
         "relu_removed": text.replace("y = tl.where(x > 0, x, 0.0)", "y = x"),
     }
-    record = _relu_record()
-    hashes = {}
+    paths = []
     for name, source in variants.items():
         path = tmp_path / f"{name}.py"
         path.write_text(source)
-        hashes[name] = compiled.compile_hashes(path, [record])["relu_kernel"]
+        paths.append(path)
+    rows = _compile_in_fresh_process(tmp_path, paths)
+    hashes = {Path(row["kernel"]).stem: row["hashes"]["relu_kernel"] for row in rows}
+    assert set(hashes) == set(variants)
     assert hashes["parent"] == hashes["reformatted"]
     assert hashes["lt2le"] != hashes["parent"]
     assert hashes["relu_removed"] != hashes["parent"]
 
 
-def test_cpu_compile_cli_reports_errors_per_kernel(tmp_path, monkeypatch, capsys):
+def test_cpu_compile_cli_reports_errors_per_kernel(tmp_path):
     pytest.importorskip("triton")
-    monkeypatch.setenv("TRITON_DISABLE_LINE_INFO", "1")
-    monkeypatch.setenv("TRITON_CACHE_DIR", str(tmp_path / "cache"))
-    spec = tmp_path / "specializations.json"
-    spec.write_text(compiled.dump_specializations([_relu_record()], "3.6.0"))
     good = tmp_path / "good.py"
     good.write_text(toy_text("relu_where"))
     bad = tmp_path / "bad.py"
@@ -132,8 +162,7 @@ def test_cpu_compile_cli_reports_errors_per_kernel(tmp_path, monkeypatch, capsys
             "block_start = pid * BLOCK_SIZE", "block_start = pid / BLOCK_SIZE"
         )
     )
-    assert compiled.main(["--spec", str(spec), "--kernels", str(good), str(bad)]) == 0
-    rows = [json.loads(line) for line in capsys.readouterr().out.splitlines()]
+    rows = _compile_in_fresh_process(tmp_path, [good, bad])
     assert "hashes" in rows[0] and "error" in rows[1]
 
 

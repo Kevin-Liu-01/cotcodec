@@ -36,10 +36,6 @@ from harness.q1.runner import (  # noqa: E402
     WorkItem,
     install_signal_handlers,
 )
-from harness.q1.schema import (  # noqa: E402
-    KERNELBENCH_PROBLEMS_REVISION,
-    canonical_json,
-)
 
 SMOKE_PROBLEMS = ("L1/19_ReLU", "L1/95_CrossEntropyLoss", "L2/12_Gemm_Multiply_LeakyReLU")
 GATES = (
@@ -69,33 +65,13 @@ EXPECT = {
 
 
 def write_controls(root: Path) -> dict[str, Path]:
-    paths = {}
-    for problem_id in SMOKE_PROBLEMS:
-        level, number, name = problem_lib.parse_problem_id(problem_id)
-        control_id = f"ctl-identity-L{level}-{number}_{name}"
-        directory = root / control_id
-        directory.mkdir(parents=True, exist_ok=True)
-        source = problem_lib.load_problem_source(problem_id)
-        (directory / "kernel.py").write_text(source + "\n\nModelNew = Model\n", encoding="utf-8")
-        (directory / "control.json").write_text(
-            canonical_json(
-                {
-                    "control_id": control_id,
-                    "problem_id": problem_id,
-                    "level": level,
-                    "kernelbench_revision": KERNELBENCH_PROBLEMS_REVISION,
-                    "control_kind": "reference-identity",
-                    "expected": {"a": "accept", "b1": "reject"},
-                    "source_repo": "https://github.com/ScalingIntelligence/KernelBench",
-                    "source_revision": KERNELBENCH_PROBLEMS_REVISION,
-                    "source_license": "MIT",
-                    "origin_path": f"KernelBench/{problem_lib.problem_relpath(problem_id)}",
-                }
-            ),
-            encoding="utf-8",
-        )
-        paths[problem_id] = directory
-    return paths
+    """Reference-identity controls (``harness.q1.controls``); reused when the run resumes."""
+    from harness.q1.controls import identity_control_id
+    from harness.q1.controls import write_controls as write_core_controls
+
+    if not root.exists():
+        write_core_controls(root, identity=SMOKE_PROBLEMS, adversarial=())
+    return {problem_id: root / identity_control_id(problem_id) for problem_id in SMOKE_PROBLEMS}
 
 
 def main(argv: list[str] | None = None) -> int:

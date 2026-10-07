@@ -23,7 +23,7 @@ python scripts/q1_generate_mutants.py compile --pool-root P --specializations-ro
 uv run python scripts/q1_generate_mutants.py select --pool-root P --substrates-root S \
     --out-root M --controls-root MC --seed 42 --cap 40
 uv run python scripts/q1_generate_mutants.py controls --substrates-root S \
-    --kernelbench-root KB --out-root C
+    --out-root C   # problems: vendored KernelBench@423217d9 unless --kernelbench-root
 uv run python scripts/q1_generate_mutants.py table operators   # or: table rules
 ```
 

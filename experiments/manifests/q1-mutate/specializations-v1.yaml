@@ -14,9 +14,18 @@
 #
 # Untrusted-code status: parent substrates are compiler-generated or
 # human-written kernels admitted by reviewed harness code (decisions D3, D7).
+#
+# Integration (stage0/q1-gates): every Q1 step uses one image, cotcodec-q1-gates
+# rebuilt at the frozen revision, so the specializations recorded here and the
+# CPU compile filter use the same Triton and ptxas as the scoring jobs. The
+# default container profile mounts /tmp noexec, so the Triton cache goes to
+# /outputs. Problems default to the vendored, hash-checked KernelBench@423217d9
+# tree. The substrates root is the admitted corpus; how it reaches this job is
+# an open lane question (no hash-bound input mount exists yet), see
+# program/preregistrations/q1-stage0-gate-validation.md, section 9.
 runtime: docker-single-node-discovery-v1
 name: q1-mutant-specializations-v1
-image_id: FILL-research-image-id
+image_id: FILL-q1-gates-image-id
 git_sha: FILL-git-sha-with-admitted-substrates
 source_sha256: FILL-source-tar-sha256
 container_profile: default
@@ -25,20 +34,22 @@ resources:
   gpus: 1
   cpus: 8
   memory_gb: 64
-  minutes: 60
+  minutes: 30
 budget:
   max_gpu_hours: 0.5
 randomness_contract: deterministic
+seeds: []
 run_root: /home/kevin/cotcodec-runs/stage0/q1-mutate/specializations-v1
 model:
   kind: none
   reason: Records Triton compile specializations of admitted kernel substrates; no model is loaded.
 command:
+  - env
+  - TRITON_CACHE_DIR=/outputs/cache/triton
+  - TORCHINDUCTOR_CACHE_DIR=/outputs/cache/inductor
   - python
   - scripts/q1_record_specializations.py
   - "--substrates-root"
-  - FILL-substrates-root-in-source-capsule
-  - "--kernelbench-root"
-  - FILL-kernelbench-423217d9-root-in-source-capsule
+  - FILL-admitted-substrates-root
   - "--out-root"
   - /outputs/specializations

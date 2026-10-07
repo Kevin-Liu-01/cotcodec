@@ -4,12 +4,12 @@
 # Infrastructure validation only (no mutant, no substrate, no confirmatory data).
 #
 # NOT SUBMITTED. The lane fields used here (container_profile, model kind none,
-# seed_binding, memory_gb, GPU prolog, signal checkpoint) were merged into main
-# at 1f18cae on 2026-10-07, after this branch was cut; the filled template
-# passes main's validate_manifest. Before submitting: merge main into this
-# branch, build a source-overlay image of that revision on top of
-# cotcodec-q1-gates (the lane runs the code embedded in the image and checks
-# its provenance), and submit from a clean host clone (never ~/cotcodec):
+# seed_binding, memory_gb, GPU prolog, signal checkpoint) are on main since
+# 1f18cae, and stage0/q1-gates includes main; the filled template passes
+# validate_manifest (tests/test_q1_integration.py). Before submitting: freeze
+# the preregistration, build a source-overlay image of the frozen revision on
+# top of cotcodec-q1-gates (the lane runs the code embedded in the image and
+# checks its provenance), and submit from a clean host clone (never ~/cotcodec):
 #   uv run python scripts/submit_docker_research_job.py experiments/manifests/q1-core/q1-gate-gpu-smoke.yaml --dry-run
 # Every FILL-* value is written from measured artifacts at submission (image
 # build receipt, source capsule); the submitter rejects FILL-* values, so an

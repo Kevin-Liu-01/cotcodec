@@ -34,8 +34,22 @@ from harness.q1.schema import SchemaError, problem_relpath  # noqa: E402
 NATIVE_SEED = 42
 
 
-def _problem_path(kernelbench_root: Path, problem_id: str) -> Path:
-    return kernelbench_root / "KernelBench" / problem_relpath(problem_id)
+def _problem_path(kernelbench_root: Path | None, problem_id: str) -> Path:
+    """A checkout (``<root>/KernelBench/levelN``), a problem tree (``<root>/levelN``),
+    or, with no root, the vendored KernelBench@423217d9 file after its hash check."""
+    if kernelbench_root is None:
+        from harness.q1 import problems
+
+        try:
+            problems.load_problem_source(problem_id)  # verifies the pinned SHA-256
+        except problems.ProblemError as exc:
+            raise CorpusError(str(exc)) from exc
+        return problems.problem_path(problem_id)
+    relative = problem_relpath(problem_id)
+    for candidate in (kernelbench_root / "KernelBench" / relative, kernelbench_root / relative):
+        if candidate.is_file():
+            return candidate
+    return kernelbench_root / "KernelBench" / relative
 
 
 def _record_one(substrate, problem_path: Path, device: str) -> tuple[list, str]:
@@ -74,7 +88,12 @@ def _record_one(substrate, problem_path: Path, device: str) -> tuple[list, str]:
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--substrates-root", type=Path, required=True)
-    parser.add_argument("--kernelbench-root", type=Path, required=True)
+    parser.add_argument(
+        "--kernelbench-root",
+        type=Path,
+        default=None,
+        help="KernelBench checkout or problem tree; default: the vendored, hash-checked problems",
+    )
     parser.add_argument("--out-root", type=Path, required=True)
     parser.add_argument("--device", default="cuda")
     parser.add_argument("--dry-run", action="store_true")

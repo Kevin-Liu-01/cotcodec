@@ -203,6 +203,7 @@ def _compile_batch(
     argv = [python, "-m", "harness.q1.mutate.compiled", "--spec", str(spec), "--kernels"]
     argv += [str(kernel_dir / f"{n}.py") for n in names]
     env = dict(os.environ, TRITON_DISABLE_LINE_INFO="1")
+    env.pop("TRITON_INTERPRET", None)  # the compile filter compiles; it never interprets
     try:
         done = subprocess.run(
             argv,
@@ -508,25 +509,53 @@ def _mutant_controls(
 # --- 4. hack controls ----------------------------------------------------------
 
 
+def problem_source_for(problem_id: str, kernelbench_root: Path | None) -> str:
+    """Problem text from a KernelBench checkout or problem tree, or the vendored copy.
+
+    ``kernelbench_root`` may be a checkout (``<root>/KernelBench/levelN``) or a
+    problem tree (``<root>/levelN``). ``None`` reads the core's vendored,
+    hash-checked KernelBench@423217d9 problems (``harness.q1.problems``).
+    """
+    if kernelbench_root is None:
+        from harness.q1.problems import ProblemError, load_problem_source
+
+        try:
+            return load_problem_source(problem_id)
+        except ProblemError as exc:
+            raise CorpusError(str(exc)) from exc
+    root = Path(kernelbench_root)
+    relative = problem_relpath(problem_id)
+    for candidate in (root / "KernelBench" / relative, root / relative):
+        if candidate.is_file():
+            return candidate.read_text(encoding="utf-8")
+    raise CorpusError(f"{problem_id}: {relative} not found under {root}")
+
+
 def build_controls(
-    substrates_root: Path, kernelbench_root: Path, out_root: Path, *, kinds: list[str] | None = None
+    substrates_root: Path,
+    kernelbench_root: Path | None,
+    out_root: Path,
+    *,
+    kinds: list[str] | None = None,
 ) -> dict[str, Any]:
-    """Hack-emulating controls for every applicable (substrate, hack kind)."""
-    kernelbench_root = Path(kernelbench_root)
-    revision = _git_head(kernelbench_root)
-    if revision is not None and revision != KERNELBENCH_PROBLEMS_REVISION:
-        raise CorpusError(
-            f"KernelBench checkout is at {revision}, expected {KERNELBENCH_PROBLEMS_REVISION}"
-        )
+    """Hack-emulating controls for every applicable (substrate, hack kind).
+
+    ``kernelbench_root=None`` uses the vendored, hash-checked problems.
+    """
+    revision = None
+    if kernelbench_root is not None:
+        kernelbench_root = Path(kernelbench_root)
+        revision = _git_head(kernelbench_root)
+        if revision is not None and revision != KERNELBENCH_PROBLEMS_REVISION:
+            raise CorpusError(
+                f"KernelBench checkout is at {revision}, expected {KERNELBENCH_PROBLEMS_REVISION}"
+            )
     wanted = [k for k in HACK_KINDS if kinds is None or k.name in kinds]
     substrates = load_substrates(substrates_root)
     with staged_output(out_root) as staging:
         written, skipped = [], []
         for sub in substrates:
-            problem_path = kernelbench_root / "KernelBench" / problem_relpath(sub.problem_id)
-            if not problem_path.is_file():
-                raise CorpusError(f"{sub.problem_id}: {problem_path} not found")
-            problem_source = problem_path.read_text(encoding="utf-8")
+            problem_source = problem_source_for(sub.problem_id, kernelbench_root)
             kernel_text = sub.kernel_path.read_text(encoding="utf-8")
             for kind in wanted:
                 if not applicable(kind, sub.problem_id, problem_source):
@@ -567,7 +596,10 @@ def build_controls(
             "mutator": mutator_identity(),
             "kind": "hack-emulating-wrappers",
             "kernelbench_revision": KERNELBENCH_PROBLEMS_REVISION,
-            "kernelbench_revision_verified": revision is not None,
+            "kernelbench_revision_verified": revision is not None or kernelbench_root is None,
+            "kernelbench_source": "vendored-hash-checked"
+            if kernelbench_root is None
+            else ("git-checkout" if revision is not None else "directory"),
             "controls": written,
             "skipped": skipped,
         }

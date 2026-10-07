@@ -159,6 +159,23 @@ def record_specializations() -> Iterator[list[Specialization]]:
         knobs.runtime.jit_post_compile_hook = previous
 
 
+@contextlib.contextmanager
+def _compiled_mode() -> Iterator[None]:
+    """Hide ``TRITON_INTERPRET`` while kernels are decorated: dedup compiles, never interprets.
+
+    ``triton.jit`` returns an interpreter wrapper instead of a ``JITFunction``
+    when ``TRITON_INTERPRET=1`` is set at decoration time (for example by a CPU
+    test elsewhere in the same process), which would make every recorded
+    function look missing.
+    """
+    saved = os.environ.pop("TRITON_INTERPRET", None)
+    try:
+        yield
+    finally:
+        if saved is not None:
+            os.environ["TRITON_INTERPRET"] = saved
+
+
 def _import_module(path: Path) -> Any:
     name = "q1_compile_" + hashlib.sha256(str(path).encode()).hexdigest()[:16]
     spec = importlib.util.spec_from_file_location(name, path)
@@ -166,7 +183,8 @@ def _import_module(path: Path) -> Any:
         raise CompileHookError(f"cannot import {path}")
     module = importlib.util.module_from_spec(spec)
     sys.modules[name] = module
-    spec.loader.exec_module(module)
+    with _compiled_mode():
+        spec.loader.exec_module(module)
     return module
 
 
@@ -258,6 +276,7 @@ def main(argv: list[str] | None = None) -> int:
     args = parser.parse_args(argv)
     os.environ.setdefault("TRITON_DISABLE_LINE_INFO", "1")
     os.environ.setdefault("TRITON_CACHE_DIR", tempfile.mkdtemp(prefix="q1-triton-cache-"))
+    os.environ.pop("TRITON_INTERPRET", None)  # compile for sm_90, never interpret
     records = load_specializations(args.spec)
 
     def on_alarm(signum: int, frame: Any) -> None:

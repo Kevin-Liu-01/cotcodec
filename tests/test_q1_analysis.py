@@ -102,5 +102,42 @@ def test_splits_are_seeded_and_disjoint() -> None:
     cal, ev = analysis.calibration_split(problems)
     assert len(cal) == 5 and len(ev) == 4 and not set(cal) & set(ev)
     assert analysis.calibration_split(reversed(problems)) == (cal, ev)
-    dev, test = analysis.mutant_split([f"m{i}" for i in range(7)])
-    assert len(dev) == 3 and len(test) == 4 and not set(dev) & set(test)
+    frozen = analysis.s1_split()
+    assert analysis.calibration_split() == (frozen["calibration"], frozen["evaluation"])
+    assert len(frozen["calibration"]) == 98 and len(frozen["evaluation"]) == 98
+    table = {f"m{i}": {"kind": "mutant", "split": "dev" if i % 3 else "test"} for i in range(7)}
+    table["s"] = {"kind": "substrate", "split": None}
+    dev, test = analysis.mutant_split(table)
+    assert len(dev) == 4 and len(test) == 3 and not set(dev) & set(test)
+
+
+def test_control_checks_read_every_gate_kind() -> None:
+    rows = _kernel(
+        "ctl",
+        {"a": "accept", "b1": "reject", "b2": "accept", "c1": "reject"},
+        {"A2": "reject", "A3": "refuse"},
+    )
+    composed = analysis.compose(rows)
+    table = {
+        "ctl": {
+            "kind": "control",
+            "control_kind": "hack-emulating-mutant",
+            "expected": {
+                "a": "accept",
+                "b1": "reject",
+                "b": "reject",
+                "c1": "reject",
+                "c": "reject",
+                "A3": "refuse",
+                "A4": "accept",
+                "audit_N": "reject",
+                "audit_G_strict": "reject",
+                "b_native": "accept",
+            },
+        },
+        "lost": {"kind": "control", "control_kind": "synthetic", "expected": {"a": "reject"}},
+    }
+    result = analysis.control_checks(composed, table)
+    failed = {(cell["control_id"], cell["gate"]): cell["got"] for cell in result["failed"]}
+    assert failed == {("ctl", "b_native"): "missing", ("lost", "a"): "missing"}
+    assert result["cells"] == 11 and result["held"] == 9 and not result["all_hold"]

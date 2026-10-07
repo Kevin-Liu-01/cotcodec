@@ -53,6 +53,7 @@ from typing import Any
 
 from harness.q1.journal import Journal, item_key
 from harness.q1.schema import make_verdict_row, validate_verdict_row
+from harness.q1.versions import row_code_sha256
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 DEFAULT_TIMEOUTS = {"compile": 120.0, "correctness": 180.0, "timing": 300.0}
@@ -304,6 +305,7 @@ class Runner:
                     seed=item.seed,
                     run_id=self.config.run_id,
                     attempt=attempt,
+                    code_sha256=row_code_sha256(item.gate),
                 )
             ]
         for row in rows:

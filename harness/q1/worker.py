@@ -202,6 +202,8 @@ def _rows_for(item: Mapping[str, Any]) -> list[dict[str, Any]]:
     else:
         raise SystemExit(f"unknown gate {gate}")
 
+    from harness.q1.versions import row_code_sha256
+
     rows = []
     for index, outcome in enumerate(outcomes):
         gpu_seconds = outcome.wall_seconds if device.type == "cuda" else 0.0
@@ -218,6 +220,7 @@ def _rows_for(item: Mapping[str, Any]) -> list[dict[str, Any]]:
                 seed=seed,
                 run_id=item["run_id"],
                 attempt=int(item["attempt"]),
+                code_sha256=row_code_sha256(gate),
             )
         )
     return rows

@@ -22,8 +22,10 @@ CPU doctor. The preregistration draft is
 | `doctor_fixtures.py` | core | CPU-only synthetic fixtures for the doctor and tests |
 | `data/` | core | problem hashes, KBV configuration table, shape manifest |
 | `third_party/kernelbench/` | core | verbatim KernelBench files (MIT), see NOTICE |
-| `mutate/` | mutator owner (`stage0/q1-mutate`) | not on this branch |
-| `substrates/` | substrate owner (`stage0/q1-substrates`) | not on this branch |
+| `controls.py` | core | reference-identity and KernelBench adversarial controls (`python -m harness.q1.controls --out-root R`) |
+| `versions.py` | integration | version card named in the preregistration (`scripts/q1_version_card.py`) |
+| `mutate/` | mutator owner (`stage0/q1-mutate`) | Triton AST mutants, compiled dedup, cap and split, hack controls; see `mutate/README.md` |
+| `substrates/` | substrate owner (`stage0/q1-substrates`) | S1 Inductor and S2 human-written substrates, admission, S1 split; see `substrates/README.md` |
 
 ## Interfaces other components depend on
 
@@ -50,9 +52,29 @@ python scripts/build_q1_shape_manifest.py --check
 python scripts/build_q1_kbv_configs.py /path/to/kernel_bench_verified --output harness/q1/data/kbv_hidden_configs.json
 ```
 
-GPU work (smoke, pilot, Stage 0) runs only as Slurm jobs through the Docker
-lane, with the templates in `experiments/manifests/q1-core/`, after the
-stage0/lane submitter is merged and the preregistration is frozen.
+GPU work (smoke, admission, specializations, pilot, Stage 0) runs only as
+Slurm jobs through the Docker lane, with the templates in
+`experiments/manifests/`, after the preregistration is frozen.
+
+## Integration (stage0/q1-gates)
+
+The three components are merged on `stage0/q1-gates`. The pipeline is
+
+```
+substrates (S1 convert, S2 build, admission) -> mutate (pool, compile, select, controls)
+  + controls.py (identity, adversarial) -> runner/worker (gates a-c, audit A1-A5)
+  -> journal -> analysis.py / report_q1_stage0.py
+```
+
+- `tests/test_q1_integration.py` (pure Python) builds real substrates, runs
+  the mutator on them, and checks every hand-off, the splits, the control
+  gate ids, the job manifests and the preregistration's version table.
+- `tests/test_q1_integration_cpu.py` (torch, Triton interpreter, no GPU) runs
+  an S1 and an S2 substrate, five mutants and 15 controls through the real
+  runner and checks verdict rows, ladder, tiers, metrics and every control
+  expectation that does not need `b2`.
+- `scripts/q1_version_card.py --markdown` prints the table the
+  preregistration must name; rerun it after any change to Q1 code or data.
 
 ## NOTICE
 

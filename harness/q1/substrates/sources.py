@@ -11,6 +11,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from pathlib import Path
 
+from harness.q1.problems import EXCLUDED_PROBLEMS as _CORE_EXCLUDED_PROBLEMS
 from harness.q1.schema import KERNELBENCH_PROBLEMS_REVISION, parse_problem_id, problem_relpath
 
 #: Verbatim copies of the pinned S2 upstream files (Apache-2.0, BSD-2-Clause, MIT).
@@ -94,14 +95,10 @@ SOURCES: dict[str, UpstreamSource] = {
 }
 
 #: Problems excluded before any substrate is built (reviewed plan, section 7(i)).
-#: Further exclusions come only from admission, never by hand.
-EXCLUDED_PROBLEMS: dict[str, str] = {
-    "L2/23_Conv3d_GroupNorm_Mean": "constant-zero output (KernelBench-Verified App. I)",
-    "L2/80_Gemm_Max_Subtract_GELU": "constant-zero output (KernelBench-Verified App. I)",
-    "L2/83_Conv3d_GroupNorm_Min_Clamp_Dropout": "constant-zero output (KernelBench-Verified "
-    "App. I)",
-    "L2/66_Matmul_Dropout_Softmax": "training-mode Dropout(p=0.2): the reference is random",
-}
+#: Further exclusions come only from admission, never by hand. The list is the
+#: core's (``harness.q1.problems.EXCLUDED_PROBLEMS``), so the substrate corpus,
+#: the shape manifest and the gate-validation analysis exclude the same problems.
+EXCLUDED_PROBLEMS: dict[str, str] = _CORE_EXCLUDED_PROBLEMS
 
 #: Levels in the Stage 0 corpus.
 LEVELS = (1, 2)
