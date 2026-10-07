@@ -164,11 +164,21 @@ class Session:
             self.guard_src,
         )
         self.baseline_led = self.ready.get("led_mask")
-        return {
+        # Decision 31: the master keyboard's switch to the XTest device happens here,
+        # outside every entry window (guest/guard.py, warmup).
+        warmup = self.run_guest(
+            "guard.py", ["warmup", json.dumps({"sock": self.sock, "reserved": self.reserved})],
+            self.guard_src,
+        )  # fmt: skip
+        out = {
             "tap_ready": {k: tap_ready.get(k) for k in ("pid", "min_keycode", "led_mask")},
             "probe_ready": self.ready,
             "baseline_check": check,
+            "warmup": warmup,
         }
+        if not isinstance(warmup.get("keycode"), int):
+            out["error"] = f"session warm-up failed: {str(warmup)[:300]}"
+        return out
 
     def read_tap(self) -> None:
         script = (

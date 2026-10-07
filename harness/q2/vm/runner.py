@@ -632,6 +632,14 @@ def session_cycle(config: dict[str, Any]) -> dict[str, Any]:
     if kind in ("canary-development", "canary-acceptance"):
         from harness.q2.vm.canary_run import canary_trial
 
+        # Decision 31: the session's first XTest key event happens before any trial.
+        from harness.q2.vm.suite import guest_source
+
+        try:
+            result["warmup"] = client.run_script(guest_source("guard.py"), ["warmup", "{}"])
+        except GuestError as exc:
+            result["error"] = f"session warm-up failed: {str(exc)[:300]}"
+            return result
         trials = []
         measure = bool(config.get("measure_targets"))
         if measure:

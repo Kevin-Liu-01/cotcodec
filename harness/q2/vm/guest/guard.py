@@ -24,6 +24,17 @@ One guest process per side of an entry, so an entry costs two extra
   probe, Escape for a shell overlay) and checks again. It also returns the
   XRecord tap's new records from a byte offset.
 
+Session warm-up (``warmup``, once per session before its first trial, outside
+every entry window; preregistration design decision 31): one XTest press and
+release of a keycode with no keysym, then a wait until the desktop shell
+answers a D-Bus property read twice within ``IDLE_REPLY_S``. The X server's
+master keyboard follows the last slave device that sent a key; the boot leaves
+it on another device, and its switch to the XTest keyboard, at the session's
+first XTest key event, re-sends the keymap and recomputes the modifier state.
+Development run 549 showed a chord whose modifier was that first key lose it
+(``chord_super_d``: the ``d`` press arrived with state 0). The warm-up makes
+that switch happen before any entry; Stage 1 runs it once per boot.
+
 Restoration per declared side effect (preregistration 6.2): ``screencast``:
 the chord again while a screencast file grows (at most three times), then
 Escape; ``closes_window``: the runner relaunches the probe if it is gone;
@@ -31,7 +42,7 @@ Escape; ``closes_window``: the runner relaunches the probe if it is gone;
 ``hot_corner``: Escape; ``lock_state``: none (the entry must leave the LED
 at baseline).
 
-Usage inside the guest: ``python3 -c <bootstrap> <b64> pre|post <json>``.
+Usage inside the guest: ``python3 -c <bootstrap> <b64> pre|post|check|warmup <json>``.
 Prints one JSON object. Everything above ``main`` is pure Python.
 """
 
@@ -43,6 +54,8 @@ import sys
 import time
 
 GROWTH_WINDOW_S = 0.4
+IDLE_REPLY_S = 0.05  # a shell D-Bus reply within this means its main loop is idle
+IDLE_MAX_S = 5.0
 SCREENCAST_DIRS = ("~/Videos/Screencasts", "~/Videos")
 SCREENCAST_SUFFIXES = (".webm", ".mp4", ".mkv")
 PARK_SETTLE_S = 0.03
@@ -175,6 +188,23 @@ class Guard:
             time.sleep(0.02)
         return len(codes)
 
+    def warm_up(self, reserved):
+        """Press and release one keycode that has no keysym (never the probe's reserved one)."""
+        X = self.X
+        info = self.d.display.info
+        first = info.min_keycode
+        rows = self.d.get_keyboard_mapping(first, info.max_keycode - first + 1)
+        empty = [first + i for i, row in enumerate(rows) if not any(row) and first + i != reserved]
+        if not empty:
+            raise RuntimeError("no keycode without a keysym for the warm-up")
+        code = empty[-1]
+        self.xtest.fake_input(self.d, X.KeyPress, code)
+        self.d.sync()
+        time.sleep(0.02)
+        self.xtest.fake_input(self.d, X.KeyRelease, code)
+        self.d.sync()
+        return code
+
     def park(self, x, y):
         self.xtest.fake_input(self.d, self.X.MotionNotify, x=x, y=y)
         self.d.sync()
@@ -235,6 +265,41 @@ class Guard:
         return actions
 
 
+def shell_idle():
+    """D-Bus round trips to GNOME Shell until two in a row answer within IDLE_REPLY_S."""
+    import subprocess
+
+    replies = []
+    prompt = 0
+    deadline = time.monotonic() + IDLE_MAX_S
+    while prompt < 2 and time.monotonic() < deadline:
+        started = time.monotonic()
+        try:
+            done = subprocess.run(
+                ["gdbus", "call", "--session", "--dest", "org.gnome.Shell", "--object-path",
+                 "/org/gnome/Shell", "--method", "org.freedesktop.DBus.Properties.Get",
+                 "org.gnome.Shell", "ShellVersion"],
+                capture_output=True, timeout=10,
+            )  # fmt: skip
+            ok = done.returncode == 0
+        except (OSError, subprocess.TimeoutExpired):
+            ok = False
+        elapsed = round(time.monotonic() - started, 4)
+        replies.append([elapsed, ok])
+        if not ok:
+            break
+        prompt = prompt + 1 if elapsed < IDLE_REPLY_S else 0
+    return {"replies": replies, "idle": prompt >= 2}
+
+
+def run_warmup(config):
+    guard = Guard()
+    result = {"keycode": guard.warm_up(config.get("reserved"))}
+    result["shell"] = shell_idle()
+    result["check"] = guard.check(config["sock"]) if config.get("sock") else None
+    return result
+
+
 def run_pre(config):
     guard = Guard()
     sock = config["sock"]
@@ -281,8 +346,10 @@ def main(argv):
         guard = Guard()
         result = {"check": guard.check(config["sock"])}
         result["violations"] = violations(result["check"], config["led_baseline"])
+    elif mode == "warmup":
+        result = run_warmup(config)
     else:
-        raise SystemExit("mode must be pre, post or check")
+        raise SystemExit("mode must be pre, post, check or warmup")
     result["mode"] = mode
     result["elapsed_s"] = round(time.time() - started, 4)
     print(json.dumps(result, sort_keys=True))
