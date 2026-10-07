@@ -31,11 +31,12 @@ Stages:
 
 A v2 or v2-tarball receipt is labelled CONFIRMATORY only if it ran against the
 repository ledger, committed and unmodified, with the code files unchanged
-since the ledger's ``git_head_at_freeze``, and (when it uses trajectories)
-within 14 days of the freeze. A v2 run with a feature file is CONFIRMATORY only
-if ``--tarball-receipt`` names the CONFIRMATORY v2-tarball receipt that wrote
-that file with the same code and freeze. Otherwise it is labelled
-NON-CONFIRMATORY and names the failed checks.
+since the ledger's ``git_head_at_freeze``, under the registered Python
+major.minor and scipy version, and (when it uses trajectories) within 14 days
+of the freeze. A v2 run with a feature file is CONFIRMATORY only if
+``--tarball-receipt`` names the CONFIRMATORY v2-tarball receipt that wrote that
+file with the same code and freeze. Otherwise it is labelled NON-CONFIRMATORY,
+names the failed checks, and every label inside it says NON-CONFIRMATORY.
 
 Exit codes: 0 PASS, 1 a control or check failed, 2 infrastructure or integrity
 error (fetch, identity, CRC-32, SHA-256 or truncated transfer), 3 refused by a
@@ -237,7 +238,7 @@ def features_from_confirmatory_scan(
             scan["doctor"] == DOCTOR_NAME
             and scan["stage"] == "v2-tarball"
             and scan["status"] == "PASS"
-            and scan["label"] == "v2 CONFIRMATORY"
+            and scan["label"] == v2.CONFIRMATORY_LABEL
             and checks
             and all(checks.values())
             and scan["code"]["files_sha256"] == code_file_hashes()
@@ -249,6 +250,11 @@ def features_from_confirmatory_scan(
         )
     except (OSError, ValueError, KeyError, TypeError, AttributeError):
         return False
+
+
+def interpreter_versions() -> tuple[str, str]:
+    """The running Python major.minor and scipy version."""
+    return f"{sys.version_info.major}.{sys.version_info.minor}", scipy.__version__
 
 
 def confirmatory_checks(
@@ -270,6 +276,8 @@ def confirmatory_checks(
         and _git_ok("diff", "--quiet", "HEAD", "--", rel),
         "code_unchanged_since_freeze": bool(head)
         and _git_ok("diff", "--quiet", str(head), "--", *CODE_FILES),
+        "python_and_scipy_match_registration": interpreter_versions()
+        == (v2.REGISTERED_PYTHON, v2.REGISTERED_SCIPY),
     }
     if uses_trajectories:
         frozen_at = ledger.get("frozen_at")
@@ -827,8 +835,10 @@ def stage_v2(args: argparse.Namespace, ctx: audit.FetchContext, receipt: dict[st
         ]
         keep = set(unprobed) | ((set(s1) | set(s2)) - set(clean))
         probe_abc = run_abc(keep, unprobed)
-        main_decisions = v2.v2_decisions(d, abc, rule_d_narrow=d_narrow)
-        probe_decisions = v2.v2_decisions(d, probe_abc, rule_d_narrow=d_narrow)
+        main_decisions = v2.v2_decisions(d, abc, run_label=receipt["label"], rule_d_narrow=d_narrow)
+        probe_decisions = v2.v2_decisions(
+            d, probe_abc, run_label=receipt["label"], rule_d_narrow=d_narrow
+        )
         results["v2_probe_sensitivity"] = {
             "label": "registered sensitivity: tasks whose trajectories were in the probed region "
             "are excluded",
@@ -842,12 +852,14 @@ def stage_v2(args: argparse.Namespace, ctx: audit.FetchContext, receipt: dict[st
                 for rule in ("rule_a", "rule_b", "rule_c")
             },
         }
+    # The receipt's top-level label, set from the run conditions before any
+    # rule ran: a NON-CONFIRMATORY run carries no confirmatory label inside.
     results["v2"] = {
-        "label": "CONFIRMATORY (v2 rules a-d)",
+        "label": f"{receipt['label']} (rules a-d)",
         "rule_d": d,
         "rule_d_narrow_L_sensitivity": d_narrow,
         "rules_abc": abc,
-        "decisions": v2.v2_decisions(d, abc, rule_d_narrow=d_narrow),
+        "decisions": v2.v2_decisions(d, abc, run_label=receipt["label"], rule_d_narrow=d_narrow),
     }
     sets = opencua(args, ctx, receipt)
     main_z = audit.mcnemar(common, s1, s2).z
@@ -944,7 +956,7 @@ def main(argv: list[str] | None = None, *, context_factory=make_context) -> int:
         "v2": prereg_state(v2.V2_EXPERIMENT_ID, V2_PREREG, args.ledger),
     }
     grade_key = args.stage if args.stage in ("v1", "v2-design") else "v2"
-    label = {"v1": "POST-HOC", "v2-design": "DESIGN"}.get(args.stage, "v2 CONFIRMATORY")
+    label = {"v1": "POST-HOC", "v2-design": "DESIGN"}.get(args.stage, v2.CONFIRMATORY_LABEL)
     checks: dict[str, bool] | None = None
     if args.stage in ("v2", "v2-tarball"):
         confirmatory = preregs["v2"]["ledger"]["frozen"] and not (

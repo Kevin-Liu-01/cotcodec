@@ -116,6 +116,22 @@ def test_design_receipt_is_from_the_current_code_and_matches_its_readme() -> Non
     assert receipt["code"]["git_head"] in V2.read_text(encoding="utf-8")
 
 
+def test_section_4_pins_the_interpreter_the_design_receipt_used() -> None:
+    """Re-audit (2026-10-07): confirmatory runs use the design receipt's Python
+    major.minor and scipy version, and the registration names them."""
+    env = _design()["environment"]
+    assert env["python"].rsplit(".", 1)[0] == v2.REGISTERED_PYTHON
+    assert env["scipy"] == v2.REGISTERED_SCIPY
+    text = V2.read_text(encoding="utf-8")
+    section_4 = text.split("\n## 4. ", 1)[1].split("\n## 5. ", 1)[0]
+    flat = " ".join(section_4.split())
+    assert (
+        f"Python {v2.REGISTERED_PYTHON} (the receipt ran Python {env['python']}) "
+        f"with scipy {v2.REGISTERED_SCIPY}" in flat
+    )
+    assert "running Python major.minor and scipy version" in flat
+
+
 def test_power_tables_in_the_registration_match_the_design_receipt() -> None:
     design = _design()["results"]["v2_design"]
     text = V2.read_text(encoding="utf-8")

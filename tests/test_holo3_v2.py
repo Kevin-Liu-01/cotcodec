@@ -179,6 +179,11 @@ def test_single_stratum_equals_fisher_one_sided() -> None:
     assert v2.stratified_exact_p([(a, n, k, n_l)]) == pytest.approx(v2.fisher_one_sided(table))
 
 
+def decide(rule_d_result, abc, **kwargs):
+    """v2_decisions for a receipt that met every run condition."""
+    return v2.v2_decisions(rule_d_result, abc, run_label=v2.CONFIRMATORY_LABEL, **kwargs)
+
+
 def make_split(web_n=48, web_r1=7, off_n=294, off_r1=16, off_r2=9):
     """Clean set shaped like the known URL split: 7-0 among web tasks, 16-9 offline."""
     clean, web, s1, s2 = [], {}, {}, {}
@@ -226,16 +231,16 @@ def test_rule_d_fires_on_enrichment_within_strata() -> None:
 def test_rule_d_decision_does_not_depend_on_rule_a() -> None:
     """Regression (review finding 2): (d) must not be rescued or sunk by (a)."""
     d = {"stratified_exact_one_sided_p": 0.03, "share_of_net_in_L": 0.6}
-    without_a = v2.v2_decisions(d, None)
-    strong_a = v2.v2_decisions(d, abc_stub(wilcoxon_p=1e-9, coverage_ok=True))
-    limited_a = v2.v2_decisions(d, abc_stub(wilcoxon_p=1e-9, coverage_ok=False))
+    without_a = decide(d, None)
+    strong_a = decide(d, abc_stub(wilcoxon_p=1e-9, coverage_ok=True))
+    limited_a = decide(d, abc_stub(wilcoxon_p=1e-9, coverage_ok=False))
     assert without_a["rule_d"] == strong_a["rule_d"] == limited_a["rule_d"]
     assert without_a["rule_d"] == "checker-side time-drift candidate"  # 0.03 < ALPHA_D
     assert limited_a["rule_a"] == "descriptive only (coverage < 95%)"
     assert limited_a["rule_b"] == "descriptive only (coverage < 95%)"
     assert without_a["rule_a"].startswith("NOT RUN")
     assert "p_holm" not in strong_a
-    weak = v2.v2_decisions({"stratified_exact_one_sided_p": 0.045, "share_of_net_in_L": 1.0}, None)
+    weak = decide({"stratified_exact_one_sided_p": 0.045, "share_of_net_in_L": 1.0}, None)
     assert weak["rule_d"] == "not attributable to checker time-dependence"
 
 
@@ -259,7 +264,7 @@ def test_narrow_l_sensitivity_is_reported() -> None:
     l_tasks = {f"w{i}" for i in range(15)} | {"o0", "o100"}
     broad = {t: ("L" if t in l_tasks else "O") for t in clean}
     narrow = {t: ("L" if t in {"o0"} else "not L") for t in clean}
-    out = v2.v2_decisions(
+    out = decide(
         v2.rule_d(broad, s1, s2, clean, web),
         None,
         rule_d_narrow=v2.rule_d(narrow, s1, s2, clean, web),
@@ -503,9 +508,7 @@ def test_rules_abc_coverage_unique_failures_and_decisions() -> None:
     assert primary["run2_unique_failures"]["environment"] == 3
     assert primary["verdict"] == "R1-retro: infrastructure"
     assert out["rule_a_steps"]["geometric_mean_ratio_run1_over_run2"] == pytest.approx(20 / 30)
-    decisions = v2.v2_decisions(
-        {"stratified_exact_one_sided_p": 0.5, "share_of_net_in_L": 0.0}, out
-    )
+    decisions = decide({"stratified_exact_one_sided_p": 0.5, "share_of_net_in_L": 0.0}, out)
     assert decisions["rule_a"] == "agent-behaviour shift"
     assert decisions["rule_b"] == "R1-retro: infrastructure"
     assert decisions["rule_b_sensitivity_step_cap_first"] == "R1-retro: infrastructure"
@@ -523,9 +526,9 @@ def test_rules_abc_coverage_unique_failures_and_decisions() -> None:
         h_features=h_features,
     )
     assert partial["rule_c_coverage"]["coverage_ok"] is False
-    assert v2.v2_decisions(
-        {"stratified_exact_one_sided_p": 0.5, "share_of_net_in_L": 0.0}, partial
-    )["rule_b"].startswith("descriptive only")
+    assert decide({"stratified_exact_one_sided_p": 0.5, "share_of_net_in_L": 0.0}, partial)[
+        "rule_b"
+    ].startswith("descriptive only")
 
 
 def test_specificity_guard_drops_a_criterion_that_fires_on_passing_episodes() -> None:
@@ -730,20 +733,42 @@ def test_a_checker_side_label_not_robust_to_narrow_l_is_exploratory() -> None:
     l_tasks = {f"w{i}" for i in range(15)} | {"o0", "o100"}
     broad = v2.rule_d({t: ("L" if t in l_tasks else "O") for t in clean}, s1, s2, clean, web)
     narrow_none = v2.rule_d({t: "not L" for t in clean}, s1, s2, clean, web)
-    out = v2.v2_decisions(broad, None, rule_d_narrow=narrow_none)
+    out = decide(broad, None, rule_d_narrow=narrow_none)
     assert out["rule_d"] == "checker-side time-drift candidate"
     assert out["rule_d_robust_to_L_definition"] is False
     assert out["rule_d_evidence"].startswith("EXPLORATORY")
-    robust = v2.v2_decisions(broad, None, rule_d_narrow=broad)
+    robust = decide(broad, None, rule_d_narrow=broad)
     assert robust["rule_d_evidence"] == "CONFIRMATORY"
     # A null primary is not a checker-side label: it stays confirmatory even if
     # the sensitivity differs (it is still reported as not robust).
-    null = v2.v2_decisions(narrow_none, None, rule_d_narrow=broad)
+    null = decide(narrow_none, None, rule_d_narrow=broad)
     assert null["rule_d"] == "not attributable to checker time-dependence"
     assert null["rule_d_robust_to_L_definition"] is False
     assert null["rule_d_evidence"] == "CONFIRMATORY"
-    missing = v2.v2_decisions(broad, None)
+    missing = decide(broad, None)
     assert missing["rule_d_evidence"].startswith("EXPLORATORY")
+
+
+def test_rule_d_evidence_is_never_confirmatory_in_a_non_confirmatory_run() -> None:
+    """Re-audit (2026-10-07): a NON-CONFIRMATORY receipt said "CONFIRMATORY"
+    for any robust or non-checker-side rule (d) label."""
+    clean, web, s1, s2 = make_split()
+    l_tasks = {f"w{i}" for i in range(15)} | {"o0", "o100"}
+    broad = v2.rule_d({t: ("L" if t in l_tasks else "O") for t in clean}, s1, s2, clean, web)
+    narrow_none = v2.rule_d({t: "not L" for t in clean}, s1, s2, clean, web)
+    for label in ("v2 NON-CONFIRMATORY", "DESIGN", "POST-HOC", "", "v2 confirmatory"):
+        for primary, sensitivity in (
+            (broad, broad),  # robust checker-side label
+            (narrow_none, broad),  # null primary
+            (broad, narrow_none),  # checker-side label, not robust
+            (broad, None),  # no sensitivity
+        ):
+            out = v2.v2_decisions(primary, None, run_label=label, rule_d_narrow=sensitivity)
+            assert out["rule_d_evidence"] == "NON-CONFIRMATORY run", (label, out["rule_d"])
+    robust = v2.v2_decisions(broad, None, run_label=v2.CONFIRMATORY_LABEL, rule_d_narrow=broad)
+    assert robust["rule_d_evidence"] == "CONFIRMATORY"
+    with pytest.raises(TypeError):
+        v2.v2_decisions(broad, None, rule_d_narrow=broad)  # the label is required
 
 
 def test_every_rule_d_output_carries_the_blinding_note_and_attainable_share() -> None:
@@ -754,7 +779,7 @@ def test_every_rule_d_output_carries_the_blinding_note_and_attainable_share() ->
     assert "self-attested" in v2.RULE_D_BLINDING_NOTE
     # 20 L tasks inside the URL stratum hold at most its 7 run1-only tasks: share 7/14.
     assert result["max_attainable_share_of_net_in_L"] == pytest.approx(0.5)
-    decisions = v2.v2_decisions(result, None, rule_d_narrow=result)
+    decisions = decide(result, None, rule_d_narrow=result)
     assert decisions["rule_d_blinding"] == v2.RULE_D_BLINDING_NOTE
 
 
@@ -768,7 +793,7 @@ def test_max_attainable_share_counts_forced_run2_only_tasks() -> None:
 
 def test_the_nominal_family_wise_error_rate_is_stated() -> None:
     """D15 condition: the nominal family-wise rate over (a), (b) and (d) is 0.10."""
-    out = v2.v2_decisions({"stratified_exact_one_sided_p": 0.5, "share_of_net_in_L": 0.0}, None)
+    out = decide({"stratified_exact_one_sided_p": 0.5, "share_of_net_in_L": 0.0}, None)
     assert out["error_rates"]["nominal_family_wise_rate_a_b_d"] == pytest.approx(0.10)
     bonferroni_bound = v2.ALPHA_D + v2.ALPHA_A + 2 * v2.ALPHA_B
     assert bonferroni_bound == pytest.approx(v2.NOMINAL_FAMILY_WISE_RATE)
@@ -812,9 +837,7 @@ def test_rule_a_concordant_sensitivity_removes_the_known_outcome_asymmetry() -> 
     concordant = out["rule_a_steps_concordant_tasks"]
     assert concordant["n_pairs"] == 300 and concordant["tied_pairs"] == 300
     assert out["rule_a_steps"]["n_pairs"] == 330
-    decisions = v2.v2_decisions(
-        {"stratified_exact_one_sided_p": 0.5, "share_of_net_in_L": 0.0}, out
-    )
+    decisions = decide({"stratified_exact_one_sided_p": 0.5, "share_of_net_in_L": 0.0}, out)
     assert decisions["rule_a"] == "agent-behaviour shift"
     assert decisions["rule_a_sensitivity_concordant_tasks"] == "no agent-behaviour shift"
     assert decisions["rule_a_robust_to_concordant_tasks"] is False
@@ -863,9 +886,7 @@ def test_rule_b_class_order_robustness_is_reported() -> None:
         h_rewards=h_rewards,
         h_features=h_features,
     )
-    decisions = v2.v2_decisions(
-        {"stratified_exact_one_sided_p": 0.5, "share_of_net_in_L": 0.0}, out
-    )
+    decisions = decide({"stratified_exact_one_sided_p": 0.5, "share_of_net_in_L": 0.0}, out)
     assert decisions["rule_b"] == "R1-retro: infrastructure"
     assert decisions["rule_b_sensitivity_step_cap_first"] == "agent-side session variation"
     assert decisions["rule_b_robust_to_class_order"] is False
