@@ -606,7 +606,7 @@ def _run_on_cpu(path: Path, kernelbench_root: Path, mode: str) -> dict[str, Any]
             expected = reference(*[t.clone() if isinstance(t, torch.Tensor) else t for t in inputs])
         device = "cpu"
     refusal = getattr(kernel_module, "SubstrateRefusal", None)
-    recorder = _InterpreterLaunches() if mode == "interpret" else _CompileOnly()
+    recorder = _InterpreterLaunches(kernel_module) if mode == "interpret" else _CompileOnly()
     with torch.no_grad():
         try:
             with cpu_device_shims(kernel_module, device), recorder:
@@ -829,8 +829,10 @@ class _InterpreterLaunches:
     calls. All three are shims of the check, not of the substrate.
     """
 
-    def __init__(self) -> None:
+    def __init__(self, kernel_module: Any = None) -> None:
         self.launches: list[str] = []
+        self.kernel_module = kernel_module
+        self._module_saved: dict[str, Any] = {}
 
     def __enter__(self):
         import os
@@ -873,8 +875,17 @@ class _InterpreterLaunches:
         self._libdevice_saved = {
             name: getattr(libdevice, name) for name in dir(libdevice) if not name.startswith("_")
         }
-        for name, shim in _libdevice_numpy_shims().items():
+        shims = _libdevice_numpy_shims()
+        originals = {id(value): name for name, value in self._libdevice_saved.items()}
+        for name, shim in shims.items():
             setattr(libdevice, name, shim)
+        if self.kernel_module is not None:
+            # Names imported directly (from ...libdevice import rsqrt) bypass the module.
+            for name, value in list(vars(self.kernel_module).items()):
+                target = originals.get(id(value))
+                if target in shims:
+                    self._module_saved[name] = value
+                    setattr(self.kernel_module, name, shims[target])
         return self
 
     def __exit__(self, *exc):
@@ -885,6 +896,8 @@ class _InterpreterLaunches:
         interpreter._patch_lang_tensor = self._patch_lang_tensor
         for name, value in self._libdevice_saved.items():
             setattr(self._libdevice, name, value)
+        for name, value in self._module_saved.items():
+            setattr(self.kernel_module, name, value)
         return False
 
     def summary(self) -> dict[str, Any]:
