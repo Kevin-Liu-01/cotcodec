@@ -57,6 +57,14 @@ provenance.
   the freeze and, with trajectories, a feature file from a CONFIRMATORY
   `v2-tarball` receipt (`--tarball-receipt`). `v2-design` reads
   already-inspected data only.
+- Q2 action-path suite (`q2-action-path-v1`, CPU-only VM lane, decisions
+  D12 and D13): `submit_vm_campaign.py` validates a VM campaign manifest
+  (`harness/q2/vm/manifest.py`) and submits `vm-campaign.sbatch` with no GRES;
+  run it from the exported source tree the manifest names.
+  `render_q2_action_path_manifest.py` fills a scored campaign's manifest (A1-A6,
+  the ladder, C1-C3) from a local export of the frozen commit and the ledger,
+  and refuses before the freeze; acceptance seeds 43 and 44 stay refused until
+  the registration and both addenda are in the ledger.
 - `create_source_archive.py`, `verify_compute_provenance.py` and
   `verify_publication_attestation.py` bind source, image and claims.
   Archives hold regular files only. `--discovery` leaves out a symlink only
