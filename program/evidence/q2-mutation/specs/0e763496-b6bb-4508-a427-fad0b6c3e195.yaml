@@ -1,0 +1,14 @@
+task_id: 0e763496-b6bb-4508-a427-fad0b6c3e195
+author: blind-model-author-v1
+requirements:
+  - req_id: R0
+    statement: (implicit) The document is saved in place at /home/user/Desktop/Dublin_Zoo_Intro.docx with unchanged text.
+    check_kind: file_exists
+    observable: File loads; paragraph and table texts unchanged.
+  - req_id: R1
+    statement: All text in the document uses the font "Times New Roman".
+    check_kind: text_run
+    observable: Every non-empty run in body paragraphs and in the 11x2 table cells has effective ascii font "Times New Roman" (run rFonts, else style, else document defaults).
+allowed_variations:
+  - Font sizes and other attributes unchanged in expectation, not mentioned.
+  - '[AMBIGUOUS] "throughout the text" naturally includes the table text; restricting to body paragraphs is a weaker reading.'
