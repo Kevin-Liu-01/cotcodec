@@ -21,7 +21,10 @@ spawn, separately from the steady-state times:
 2. ``train``      the binding shard (layers 15-21) as one worker: 8 steps of the
    18-indexer bank (steps 0 and 1 excluded), one checkpoint save, 6 steps with
    the extension's 6 trainable indexers (steps 0 and 1 excluded) and 4
-   stream-dev KL sequences (the first excluded).
+   stream-dev KL sequences (the first excluded); then each other registered
+   worker solo, 4 steps (steps 0 and 1 excluded), which checks the per-layer
+   composition the limits use (``PROBE_INCONSISTENT`` if a worker is more than
+   the 15 percent headroom slower than composed).
 3. ``eval``       one worker with 6 indexers per layer on all 28 layers: 13
    selection-only, 13 selection plus multiple-choice and 13 multiple-choice-only
    units at 34 query rows (the audit mean is 33.2), and 5 selection-only units
@@ -111,17 +114,18 @@ class Shapes:
     option_tokens: int
     concurrent_steps: int
     tolerance_sequence: int
+    solo_steps: int
     timeouts_s: dict[str, float]
 
     @classmethod
     def registered(cls) -> Shapes:
-        return cls("registered", 8192, 4, 2, 8, 6, 4, 13, 34, 5, 220, 8192, 150, 24, 6, 8192,
-                   {"tolerance": 150.0, "train": 180.0, "eval": 150.0, "capture": 120.0,
+        return cls("registered", 8192, 4, 2, 8, 6, 4, 13, 34, 5, 220, 8192, 150, 24, 6, 8192, 4,
+                   {"tolerance": 150.0, "train": 210.0, "eval": 150.0, "capture": 120.0,
                     "concurrent": 240.0})
 
     @classmethod
     def tiny(cls) -> Shapes:
-        return cls("tiny", 64, 2, 2, 4, 3, 2, 3, 5, 2, 9, 120, 6, 3, 3, 128,
+        return cls("tiny", 64, 2, 2, 4, 3, 2, 3, 5, 2, 9, 120, 6, 3, 3, 128, 3,
                    {"tolerance": 600.0, "train": 600.0, "eval": 600.0, "capture": 600.0,
                     "concurrent": 900.0})
 
@@ -250,8 +254,12 @@ def arm_train(spec: dict[str, Any]) -> dict[str, Any]:
     out = Path(spec["out_dir"])
     n_layers = int(json.loads((Path(spec["model_dir"]) / "config.json").read_text())[
         "num_hidden_layers"])
-    layers = shards_for(n_layers)[shapes.binding_shard]
-    teacher = sit.load_teacher(spec["model_dir"], device, max_layer=max(layers))
+    shards = shards_for(n_layers)
+    layers = shards[shapes.binding_shard]
+    # Every weight is loaded; the forward runs the worker's prefix only, as
+    # load_teacher(max_layer=...) arranges for a training worker.
+    teacher = sit.load_teacher(spec["model_dir"], device, max_layer=n_layers - 1)
+    teacher.config.num_hidden_layers = max(layers) + 1
     scaling = rt2.teacher_scaling(teacher.config)
     ispec = sit.IndexerSpec(d_model=int(teacher.config.hidden_size))
     keys = [rt.indexer_key(t, lr, s) for t in sit.TRAINED_TARGETS for lr in rt.LEARNING_RATES
@@ -287,8 +295,23 @@ def arm_train(spec: dict[str, Any]) -> dict[str, Any]:
         _, timing = rt2.devkl_sequence(teacher, layers, params, runs, ispec, tokens, scaling,
                                        device)
         devkl.append(timing)
+    del params, state, state_before
+    # Every other registered worker, solo, with the same per-step timing.
+    solo = {str(shapes.binding_shard): {"layers": layers, "steps": rt2.summarise_steps(
+        records, budget.STEADY_SKIP_STEPS)}}
+    for worker, shard in enumerate(shards):
+        if worker == shapes.binding_shard:
+            continue
+        teacher.config.num_hidden_layers = max(shard) + 1
+        shard_banks = rt2.WorkerBanks(ispec, shard, keys, set(keys), device)
+        shard_records = _train_records(torch, teacher, shard, shard_banks, shapes.solo_steps,
+                                       rng, shapes, profile, scaling, device,
+                                       out / f"probe-solo-loss-{worker}.jsonl")
+        solo[str(worker)] = {"layers": shard, "steps": rt2.summarise_steps(
+            shard_records, budget.STEADY_SKIP_STEPS)}
+        del shard_banks
     return {"layers": layers, "prefix_layers": max(layers) + 1, "batch": shapes.batch,
-            "startup_s": startup_s, "save_s": save_s,
+            "startup_s": startup_s, "save_s": save_s, "solo": solo,
             "steps": rt2.summarise_steps(records, budget.STEADY_SKIP_STEPS),
             "extension": rt2.summarise_steps(ext_records, budget.STEADY_SKIP_STEPS),
             "devkl": devkl, "components_descriptive": components,
@@ -615,8 +638,12 @@ class Probe:
         if status == "PROBE_COMPLETE":
             rates = self.rates()
             payload["rates"] = rates.as_dict()
-            payload["derived_limits"] = budget.derive_limits(rates)
-            payload["limits_table"] = budget.limits_table(payload["derived_limits"])
+            payload["composition_check"] = composition_check(rates, self.results["train"])
+            if not payload["composition_check"]["passed"] and self.args.profile == "registered":
+                status = "PROBE_INCONSISTENT"  # the tiny CPU profile reports it only
+            else:
+                payload["derived_limits"] = budget.derive_limits(rates)
+                payload["limits_table"] = budget.limits_table(payload["derived_limits"])
         payload["status"] = status
         payload["wall_s"] = time.perf_counter() - started
         rt.atomic_write_json(receipt_path, payload)
@@ -624,6 +651,26 @@ class Probe:
                           "total_gpu_hours_with_probe": payload.get("derived_limits", {}).get(
                               "total_gpu_hours_with_probe")}))
         return EXIT_OK if status == "PROBE_COMPLETE" else EXIT_INCOMPLETE
+
+
+def composition_check(rates: budget.Rates, train: dict[str, Any]) -> dict[str, Any]:
+    """Each registered worker's solo steady step against the composition the limits use.
+
+    The probe and the v2 smoke both project a worker's step as
+    ``4 x prefix x teacher + layers x layer step + overhead`` from per-layer
+    rates; a worker slower than that by more than the headroom would make
+    every limit, and the smoke's gate, too short for it.
+    """
+
+    workers = {}
+    for worker, entry in sorted(train["solo"].items()):
+        composed = budget.shard_step_s(rates, entry["layers"])
+        direct = float(entry["steps"]["step_s"])
+        workers[worker] = {"layers": entry["layers"], "direct_step_s": direct,
+                           "composed_step_s": composed, "ratio": direct / composed}
+    limit = 1.0 + budget.HEADROOM
+    return {"workers": workers, "max_ratio": max(w["ratio"] for w in workers.values()),
+            "limit": limit, "passed": all(w["ratio"] <= limit for w in workers.values())}
 
 
 def arm_main(arm: str, spec_path: Path) -> int:
