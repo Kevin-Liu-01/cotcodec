@@ -1,0 +1,5 @@
+{
+  "falsifiability_score": 10,
+  "has_falsifier": true,
+  "largest_defect": "The proposal is trivially true by the properties of deterministic sorting algorithms, making the test scientifically vacuous despite being formally falsifiable."
+}

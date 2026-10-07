@@ -1,0 +1,28 @@
+JobId=617 JobName=owr-smoke-qwen35-9b
+   UserId=kevin(1004) GroupId=kevin(1004) MCS_label=N/A
+   Priority=4294901143 Nice=0 Account=(null) QOS=(null)
+   JobState=TIMEOUT Reason=TimeLimit Dependency=(null)
+   Requeue=1 Restarts=0 BatchFlag=1 Reboot=0 ExitCode=0:9
+   RunTime=00:06:27 TimeLimit=00:06:00 TimeMin=N/A
+   SubmitTime=2026-10-07T20:01:26 EligibleTime=2026-10-07T20:01:26
+   AccrueTime=2026-10-07T20:01:26
+   StartTime=2026-10-07T20:01:27 EndTime=2026-10-07T20:07:54 Deadline=N/A
+   SuspendTime=None SecsPreSuspend=0 LastSchedEval=2026-10-07T20:01:27 Scheduler=Main
+   Partition=research AllocNode:Sid=fal-h100-01:597779
+   ReqNodeList=(null) ExcNodeList=(null)
+   NodeList=fal-h100-01
+   BatchHost=fal-h100-01
+   NumNodes=1 NumCPUs=16 NumTasks=1 CPUs/Task=16 ReqB:S:C:T=0:0:*:*
+   TRES=cpu=16,mem=96G,node=1,billing=16
+   Socks/Node=* NtasksPerN:B:S:C=0:0:*:* CoreSpec=*
+   MinCPUsNode=16 MinMemoryNode=96G MinTmpDiskNode=0
+   Features=(null) DelayBoot=00:00:00
+   OverSubscribe=OK Contiguous=0 Licenses=(null) Network=(null)
+   Command=/home/kevin/cotcodec-runs/stage0/open-weight-reviewer/wt-f74084d3b3fb/infra/slurm/host-single-node/docker-research.sbatch
+   WorkDir=/home/kevin/cotcodec-runs/stage0/open-weight-reviewer/wt-f74084d3b3fb
+   StdErr=/home/kevin/cotcodec-runs/stage0/open-weight-reviewer/runs/smoke/slurm-617.out
+   StdIn=/dev/null
+   StdOut=/home/kevin/cotcodec-runs/stage0/open-weight-reviewer/runs/smoke/slurm-617.out
+   Power=
+   TresPerNode=gres:gpu:h100:1
+   

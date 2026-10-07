@@ -1,0 +1,24 @@
+{
+ "url": "https://arxiv.org/abs/2608.26175",
+ "fetched_at": "2026-10-07T20:58:03Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 43427,
+ "raw_sha256": "546b51751b7a8f8f749e501a0738aa187d5ff7d1134a69acad25cdc04d3c9d64",
+ "raw_stored": false,
+ "extract": {
+  "title": "Lost in Compression: A Controlled Cross-Lingual Audit of Extractive Prompt Compressors",
+  "authors": [
+   "Lukauskas, Mantas"
+  ],
+  "citation_date": "2026/07/27",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Mon, 27 Jul 2026 08:54:11 UTC"
+   }
+  ],
+  "abstract": "Extractive prompt compression promises to cut LLM inference costs by removing low-information tokens, and learned compressors such as LLMLingua-2 report strong results on English benchmarks. Most other languages already pay a token premium: the same content costs 1.3-1.8x more tokens than in English. We ask whether compression closes or widens this gap. Using fully parallel data in ten languages spanning five scripts, with controls budget-matched in the target model's tokenizer, we audit four learned compressors against four deterministic baselines, on eleven target models from ten vendors (over 250,000 evaluation calls). Three of the compressors are trained with English supervision (LLMLingua-2 XLM-R/mBERT; Kompress-v2 from the production Headroom stack); the fourth, XProvence, is trained multilingually. First, the transfer gap is real, replicates across target models and compressor backbones, and is strongly rate-dependent: at a 0.33 keep-rate English retains 57-62% of normalized context utilization while Lithuanian retains 10-24% and Chinese essentially none, despite Chinese having the smallest token premium. Second, the gap tracks compression supervision data, not architecture. All three English-trained compressors show it, deterministic methods show no comparable gap, and the multilingually trained XProvence v1 shows none. Its v2 release, retrained on translated data, empties 92% of Chinese contexts at its aggressive threshold without any warning. Third, in a harder long-context setting, aggressive learned compression drives compressed contexts to or below no-context utility in three of five non-English languages. A translate-then-compress pipeline matches or beats native compression at roughly half the token cost in three of five tested languages. We release all code, compressions, and model outputs. Safe compression budgets are much smaller outside English.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}

@@ -1,0 +1,38 @@
+{
+ "url": "https://arxiv.org/abs/2601.20844",
+ "fetched_at": "2026-10-07T20:58:59Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 43139,
+ "raw_sha256": "c655bec37b335ade6ca0af66af2c6a8e13dbf0fac4cf2c974cfffa55909b9344",
+ "raw_stored": false,
+ "extract": {
+  "title": "$\\mathbb{R}^{2k}$ is Theoretically Large Enough for Embedding-based Top-$k$ Retrieval",
+  "authors": [
+   "Wang, Zihao",
+   "Yin, Hang",
+   "Liu, Lihui",
+   "Tong, Hanghang",
+   "Song, Yangqiu",
+   "Wong, Ginny",
+   "See, Simon"
+  ],
+  "citation_date": "2026/01/28",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Wed, 28 Jan 2026 18:45:43 UTC"
+   },
+   {
+    "version": "v2",
+    "date": "Thu, 29 Jan 2026 03:54:29 UTC"
+   },
+   {
+    "version": "v3",
+    "date": "Tue, 2 Jun 2026 03:19:04 UTC"
+   }
+  ],
+  "abstract": "This paper studies the Minimal Embeddable Dimension (MED): the least dimension in which there exists a configuration of $m$ object vectors so that every subset of size at most $k$ is exactly retrieved by score comparison. Our result shows MED is $\\Theta(k)$, independent of $m$, for inner product, Euclidean distance, and cosine similarity. We then consider Robust MED (RMED), where all vectors are unit normed and an $\\epsilon$ gap of scores is required. We derive the $m$-dependent feasibility ceiling $\\epsilon_\\star(m,k)=m/\\sqrt{k(m-1)(m-k)}$, which approaches $1/\\sqrt{k}$ when $m\\gg k$, and a Gaussian centroid construction gives a robust witness upper bound in the feasible margin regime. Numerical simulation on synthetic top-$2$ retrieval with cyclic polytope and centroid query optimization confirmed our theoretical claims. Experiments on LIMIT and LIMIT-small datasets also show that simple embedding-based retrieval baselines can overfit and outperform the reported single-vector LLM embedding baseline. Both theoretical and empirical findings rule out the lack of exact geometric capacity as the obstruction.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}

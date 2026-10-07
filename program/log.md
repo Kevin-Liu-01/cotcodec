@@ -351,3 +351,48 @@ Append-only. Newest entries at the bottom.
   kappa would be 0.48. Dev packets exported for the Claude rater (outside
   the repository); its answers, a fourth review and Kevin's sign-offs are
   pending. Not frozen.
+
+## 2026-10-07 — Open-weight reviewer tooling: smoke reviewed, exit hung, fixed
+
+- Built `scripts/run_open_weight_review.py` on branch
+  `stage0/open-weight-reviewer` (not pushed): the D23/D24 provider-distinct
+  reviewer, offline vLLM `LLM.generate` in the cu129 overlay, greedy, seed 42
+  primary plus same-batch replicates 43 and 44, one retry with the parse error
+  appended, a fail-closed JSON Schema subset, a receipt (model id, HF revision,
+  model receipt digest, vLLM version, prompt and output SHA-256) and a lane
+  manifest renderer. Default reviewer `qwen3.6-35b-a3b` at TP=1 (64.56 GiB of
+  language-model weights fit one H100); the smoke used `qwen3.5-9b` because a
+  35B-A3B job cannot fit the 0.1 GPU-h smoke cap.
+- Overlay 614 (`f74084d`, image `f760b0fe`). Smoke 617 wrote a `PARSED`
+  review 71 s after its container started (engine init 52.5 s, replicates
+  token-identical), then hung in interpreter shutdown; its reset handlers let
+  PID 1 ignore USR1 and TERM, the job ended TIMEOUT and the container held GPU
+  0 for 88 s after the job until stopped by hand. Smoke GPU time 0.1075 GPU-h
+  by Slurm, 0.1319 physical, over its 0.1 cap.
+- Fix `37f4f2a` (handlers kept, bounded engine close, `os._exit`); overlay 629
+  (image `eda72497`); CPU-only PID-1 checks in that image pass (hang scenario
+  exits 0 in 1.3 s; USR1 and TERM end a generating run with exit 3 and the
+  marker). The GPU re-smoke (`smoke2.yaml`, cap 0.1) is rendered and
+  test-only passed but not submitted. Lane gap noted: a container whose
+  workload ignores TERM outlives a timed-out job.
+- GPU time 0.1589 GPU-h in all (two overlay builds 0.027). Evidence:
+  `program/evidence/2026-10-07/open-weight-reviewer-smoke/`.
+
+## 2026-10-07 — K1 v2 throughput probe and gauntlet wave 1
+
+- The K1 v2 throughput probe (Slurm 543, PROBE_COMPLETE) put v2's caps plus
+  the probe at 8.05 GPU-h under D22, so v2 went to the research gauntlet
+  (D24).
+- Gauntlet wave 1 (`program/gauntlet/2026-10-07-q3-k1-localization-screen-v2.jsonl`,
+  proposal `program/proposals/2026-10-07-q3-k1-localization-screen-v2.md`):
+  three discovery cells (about 157 orx queries, 35 full-text reads; novelty
+  STILL_OPEN, no direct prior through 2026-10-07; SeerAttention 2410.13276 and
+  A.X K2 2608.30181 added as uncited priors), blind discrimination passed,
+  refute-first triad 3 of 3 refuted, reviews 45 (Claude) and 59 (Qwen3.6-35B-A3B,
+  self-hosted, Slurm 640). Honest exit: triad stop plus query and token
+  budgets. Doctor FAIL with the expected trust-store and compute issues.
+- Decision D26: Q3 next runs a dense headroom pre-check under a new id.
+- The open-weight reviewer tooling is merged; its smoke (Slurm 617) hung at
+  vLLM teardown and overran its 0.1 GPU-h cap (0.11 by Slurm); a fix exists
+  but is validated on CPU only. The lane leaves a container alive if Slurm
+  kills the batch script at the time limit; to be fixed.

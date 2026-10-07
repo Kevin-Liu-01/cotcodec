@@ -74,7 +74,7 @@
     "Q2 checker-mutation (q2-evaluator-mutation-v1, fourth draft): sign off the D23/D25 rater lineup (the Claude rater through the agent harness with unfixed sampling while no valid API key exists; public OSWorld task files and renders go to the Claude model), accept the kappa rule's operating characteristics (the 9B open-weight rater disagreed with the labels on 24% of dev items even with saved-start packets; a larger open-weight rater or a gold-validity gate may be needed), and take on the blind adjudication (about 60-90 confirm items, 3-7.5 h)",
     "The ANTHROPIC_API_KEY on this machine is invalid (HTTP 401); supply a valid key if the Claude rater and gauntlet reviews should use the API rather than the agent harness (D25)"
   ],
-  "gpu_hours_spent_this_program": 1.4685,
+  "gpu_hours_spent_this_program": 1.6274,
   "frozen_registrations": [
     "q3-k1-localization-screen-v1",
     "q2-holo3-rerun-audit-v1-posthoc",
@@ -152,6 +152,16 @@
         "650 open-weight rater smoke (133 dev packets, 90 rated)"
       ],
       "outcome": "saved-start packets built (Slurm 644, CPU); 90 of 133 items rated before the lane's USR1 checkpoint signal (8-min limit); 0.083 GPU-h rater + 0.012 overlay, inside the 0.15 allowance"
+    },
+    {
+      "experiment": "open-weight reviewer tooling smoke (D23, D24)",
+      "gpu_hours": 0.1589,
+      "jobs": [
+        "614 overlay build",
+        "617 smoke qwen3.5-9b (TIMEOUT; container outlived the job 88 s)",
+        "629 overlay build of the exit fix"
+      ],
+      "outcome": "review PARSED in 71 s; process hung at exit, smoke over its 0.1 GPU-h cap (0.132 physical); exit fix 37f4f2a CPU-validated as PID 1, GPU re-smoke not run"
     }
   ],
   "results": [
