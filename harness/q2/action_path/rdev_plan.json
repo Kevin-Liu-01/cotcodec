@@ -1,0 +1,393 @@
+{
+  "entries": [
+    {
+      "caps_lock": false,
+      "chords": [
+        [
+          "ret"
+        ]
+      ],
+      "id": "key_enter",
+      "recovery": []
+    },
+    {
+      "caps_lock": false,
+      "chords": [
+        [
+          "esc"
+        ]
+      ],
+      "id": "key_esc",
+      "recovery": []
+    },
+    {
+      "caps_lock": false,
+      "chords": [
+        [
+          "tab"
+        ]
+      ],
+      "id": "key_tab",
+      "recovery": []
+    },
+    {
+      "caps_lock": false,
+      "chords": [
+        [
+          "f5"
+        ]
+      ],
+      "id": "key_f5",
+      "recovery": []
+    },
+    {
+      "caps_lock": false,
+      "chords": [
+        [
+          "up"
+        ]
+      ],
+      "id": "key_arrow_up",
+      "recovery": []
+    },
+    {
+      "caps_lock": false,
+      "chords": [
+        [
+          "left"
+        ]
+      ],
+      "id": "key_arrow_left",
+      "recovery": []
+    },
+    {
+      "caps_lock": false,
+      "chords": [
+        [
+          "home"
+        ]
+      ],
+      "id": "key_home",
+      "recovery": []
+    },
+    {
+      "caps_lock": false,
+      "chords": [
+        [
+          "pgup"
+        ]
+      ],
+      "id": "key_pageup",
+      "recovery": []
+    },
+    {
+      "caps_lock": false,
+      "chords": [
+        [
+          "pgdn"
+        ]
+      ],
+      "id": "key_pagedown",
+      "recovery": []
+    },
+    {
+      "caps_lock": false,
+      "chords": [
+        [
+          "delete"
+        ]
+      ],
+      "id": "key_delete",
+      "recovery": []
+    },
+    {
+      "caps_lock": false,
+      "chords": [
+        [
+          "ctrl",
+          "c"
+        ]
+      ],
+      "id": "chord_ctrl_c",
+      "recovery": []
+    },
+    {
+      "caps_lock": false,
+      "chords": [
+        [
+          "ctrl",
+          "a"
+        ]
+      ],
+      "id": "chord_ctrl_a",
+      "recovery": []
+    },
+    {
+      "caps_lock": false,
+      "chords": [
+        [
+          "ctrl",
+          "shift",
+          "t"
+        ]
+      ],
+      "id": "chord_ctrl_shift_t",
+      "recovery": []
+    },
+    {
+      "caps_lock": false,
+      "chords": [
+        [
+          "ctrl",
+          "shift",
+          "right"
+        ]
+      ],
+      "id": "chord_ctrl_shift_arrow",
+      "recovery": []
+    },
+    {
+      "caps_lock": false,
+      "chords": [
+        [
+          "shift",
+          "tab"
+        ]
+      ],
+      "id": "chord_shift_tab",
+      "recovery": []
+    },
+    {
+      "caps_lock": false,
+      "chords": [
+        [
+          "alt",
+          "f4"
+        ]
+      ],
+      "id": "chord_alt_f4",
+      "recovery": []
+    },
+    {
+      "caps_lock": false,
+      "chords": [
+        [
+          "meta_l",
+          "d"
+        ]
+      ],
+      "id": "chord_super_d",
+      "recovery": [
+        [
+          "meta_l",
+          "d"
+        ]
+      ]
+    },
+    {
+      "caps_lock": false,
+      "chords": [
+        [
+          "f1"
+        ]
+      ],
+      "id": "key_f1",
+      "recovery": [
+        [
+          "esc"
+        ]
+      ]
+    },
+    {
+      "caps_lock": false,
+      "chords": [
+        [
+          "f9"
+        ]
+      ],
+      "id": "key_f9",
+      "recovery": []
+    },
+    {
+      "caps_lock": false,
+      "chords": [
+        [
+          "f12"
+        ]
+      ],
+      "id": "key_f12",
+      "recovery": []
+    },
+    {
+      "caps_lock": false,
+      "chords": [
+        [
+          "insert"
+        ]
+      ],
+      "id": "key_insert",
+      "recovery": []
+    },
+    {
+      "caps_lock": false,
+      "chords": [
+        [
+          "spc"
+        ]
+      ],
+      "id": "key_space_chord",
+      "recovery": []
+    },
+    {
+      "caps_lock": false,
+      "chords": [
+        [
+          "end"
+        ]
+      ],
+      "id": "key_end",
+      "recovery": []
+    },
+    {
+      "caps_lock": false,
+      "chords": [
+        [
+          "down"
+        ]
+      ],
+      "id": "key_arrow_down",
+      "recovery": []
+    },
+    {
+      "caps_lock": false,
+      "chords": [
+        [
+          "right"
+        ]
+      ],
+      "id": "key_arrow_right",
+      "recovery": []
+    },
+    {
+      "caps_lock": false,
+      "chords": [
+        [
+          "ctrl",
+          "home"
+        ]
+      ],
+      "id": "chord_ctrl_home",
+      "recovery": []
+    },
+    {
+      "caps_lock": false,
+      "chords": [
+        [
+          "shift",
+          "left"
+        ]
+      ],
+      "id": "chord_shift_arrow_left",
+      "recovery": []
+    },
+    {
+      "caps_lock": false,
+      "chords": [
+        [
+          "ctrl",
+          "alt",
+          "shift",
+          "r"
+        ]
+      ],
+      "id": "chord_ctrl_alt_shift_r",
+      "recovery": [
+        [
+          "ctrl",
+          "alt",
+          "shift",
+          "r"
+        ]
+      ]
+    },
+    {
+      "caps_lock": false,
+      "chords": [
+        [
+          "alt",
+          "tab"
+        ]
+      ],
+      "id": "chord_alt_tab",
+      "recovery": []
+    },
+    {
+      "caps_lock": false,
+      "chords": [
+        [
+          "kp_enter"
+        ]
+      ],
+      "id": "key_kp_enter",
+      "recovery": []
+    },
+    {
+      "caps_lock": false,
+      "chords": [
+        [
+          "kp_add"
+        ]
+      ],
+      "id": "key_kp_add",
+      "recovery": []
+    },
+    {
+      "caps_lock": false,
+      "chords": [
+        [
+          "shift"
+        ]
+      ],
+      "id": "chord_shift_alone",
+      "recovery": []
+    },
+    {
+      "caps_lock": false,
+      "chords": [
+        [
+          "ctrl"
+        ]
+      ],
+      "id": "chord_ctrl_alone",
+      "recovery": []
+    },
+    {
+      "caps_lock": false,
+      "chords": [
+        [
+          "compose"
+        ]
+      ],
+      "id": "key_menu",
+      "recovery": [
+        [
+          "esc"
+        ]
+      ]
+    },
+    {
+      "caps_lock": true,
+      "chords": [
+        [
+          "caps_lock"
+        ],
+        [
+          "caps_lock"
+        ]
+      ],
+      "id": "caps_lock_roundtrip",
+      "recovery": []
+    }
+  ],
+  "schema": "cotcodec-q2-rdev-plan-v1"
+}

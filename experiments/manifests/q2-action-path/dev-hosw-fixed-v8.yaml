@@ -1,0 +1,69 @@
+# Q2 Stage 0b development (seed 42, never evidence): H-OSW-fixed, every corpus cell, one
+# repetition per setting, at the same commit as dev-l0-fixed-v12 (30d8c7f).
+schema: cotcodec-vm-campaign-v1
+name: q2ap-dev-hosw
+campaign_id: q2ap-dev-hosw-fixed-v8
+experiment_id: q2-action-path-v1
+purpose: development
+preregistration:
+  path: program/preregistrations/q2-action-path-v1.md
+  status: draft
+  sha256: d6457b8bab41126b81deada676bb4937c16c0657884e17174b05571216dc5e88
+git_sha: 30d8c7fd50be11a718abb3bc0c05bb486c34b594
+source:
+  host_dir: /home/kevin/cotcodec-runs/stage0/q2-action-path/src/30d8c7fd50be11a718abb3bc0c05bb486c34b594
+  tree_sha256: 1e662a4a62e2fe05616c8f49981c1904ec611323e119420f77413fcd8406aac5
+run_root: /home/kevin/cotcodec-runs/stage0/q2-action-path/runs
+slurm:
+  cpus: 8
+  memory_gb: 12
+  minutes: 250
+container_profile: default
+model:
+  kind: none
+  reason: development runs of the action-path executor and harness parsers load no model
+randomness:
+  contract: seeded
+  seeds:
+  - 42
+  seed_binding:
+    flag: --seed
+vm:
+  image: happysixd/osworld-docker@sha256:0e6497a9295647cf05bf2b2af522fdd79bdeba2737595259cab310a3bcf6baa9
+  image_id: sha256:fe8d9a5e5ad6c593d059887ea2c790481b3f32dd42fa961f2441cdbbe2c70cf4
+  qcow2:
+    host_path: /home/kevin/cotcodec-runs/stage0/q2-action-path/vm/Ubuntu.qcow2
+    sha256: 6bf667a852b3c307f61d9f09c42559351f45e0607e428b4997becf534cf4d313
+    size_bytes: 24460197888
+    source_url: https://huggingface.co/datasets/xlangai/ubuntu_osworld/resolve/a5d9c3eaae98eebf6e3a0beb84e7e47cf72ae133/Ubuntu.qcow2.zip
+    archive_sha256: b795b6cd4c69b252c1b4f10150a347795555032501b60fd031751ed09b896712
+    revision: a5d9c3eaae98eebf6e3a0beb84e7e47cf72ae133
+    license: apache-2.0
+  ram_size: 4G
+  cpu_cores: 4
+  disk_size: 32G
+  memory_gb: 6
+  network: none-netns
+  guest_ip: 20.20.20.21
+  server_port: 5000
+  hmp_port: 7100
+  concurrency: 1
+runner:
+  image_id: sha256:ac2b5815bcc2ed193116aa2d4bdee773b5a457c545453a6c91956768634a6002
+  memory_gb: 1
+  cpus: 1
+workload:
+  kind: suite-development
+  layer: H-OSW-fixed
+  cells: all
+  reps: 1
+  settings:
+  - screenshot
+  - screenshot+a11y
+  session_trials: 60
+  boot_timeout_s: 300
+  settle_timeout_s: 60
+  cells_sha256: a79073a2f5e6e7d7e109b14d50fb4c1e2791f856504c32cd855911e726a95c95
+  sessions: 4
+  trials: 198
+  max_trial_s: 60
