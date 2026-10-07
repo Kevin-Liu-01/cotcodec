@@ -67,3 +67,32 @@ Append-only. Newest entries at the bottom.
   lane should be treated as untested.
 - `legacy/` is excluded from future images. The D21 doctor test now bounds
   child CPU time instead of wall time. Full suite on the host: 458 passed.
+
+## 2026-10-07 — Q1 gate stack integrated (branch `stage0/q1-gates`, not merged)
+
+- Merged the Q1 core (gates, audit, runner, analysis), mutator and substrate
+  branches. The shared schema was byte-identical on all three
+  (`c9bae9d5...3256`). No GPU job ran.
+- Reconciled what the components disagreed on: the analysis now uses the
+  substrate corpus's S1 split (`b773f218...`) and the mutator's content-hash
+  dev/test split; one exclusion list serves every component; every control's
+  `expected` map is checked by `analysis.control_checks`.
+- Gate (c) no longer sets a free root below 2. The S1 converter refuses sizes
+  below 2 (Dynamo's 0/1 specialisation), so 19 size-1 configurations would have
+  made gate (c) reject correct S1 substrates; two of them (L1/9, L1/11) are in
+  the evaluation half. Audit A3 keeps size 1, where a refusal is classified.
+  The shape manifest was regenerated.
+- The integration tests found three more defects: the mutant compile filter
+  broke when `TRITON_INTERPRET=1` was set in the process (fixed), and the
+  specialization manifest lacked `seeds: []` and asked for 1.0 GPU-h against a
+  0.5 GPU-h budget (fixed).
+- A CPU end-to-end test runs an Inductor ReLU and a Triton-tutorial softmax,
+  five mutants and 15 controls through the real runner. It also showed that
+  gate (a)'s 1e-2 absolute tolerance accepts a negated softmax over 1,024
+  columns; this is recorded as a prediction in the draft.
+- The two component preregistration drafts were merged into
+  `program/preregistrations/q1-stage0-gate-validation.md`, which now names the
+  version card it will freeze. It is a draft; freezing is the program owner's
+  step. Evidence: `program/evidence/2026-10-07/q1-integration-validation.json`
+  (253 Q1 tests in a GPU-less container, 651 passed and 8 skipped on the host,
+  CPU doctor PASS).

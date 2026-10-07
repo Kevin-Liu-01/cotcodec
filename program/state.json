@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-10-06",
+  "updated": "2026-10-07",
   "program": "Checker adequacy and calibrated measurement for verifiable machine work",
   "program_doc": "program/PROGRAM.md",
   "stage": "stage-0",
@@ -16,7 +16,7 @@
       "doc": "program/questions/q1-kernel-gate-strength.md",
       "dossier_key": "C2-kernel-verification-rl",
       "status": "stage-0",
-      "next_action": "Build gates (a), (b), (c) and the independent audit; validate on reference kernels and deterministic mutants",
+      "next_action": "Program owner reviews and freezes q1-stage0-gate-validation (integrated draft on stage0/q1-gates); then the GPU smoke, substrate admission, specialization recording, fidelity, calibration and pilot jobs in that order",
       "first_gpu_experiment": {
         "name": "on-policy false-accept audit",
         "estimated_gpu_hours": 12,
@@ -24,7 +24,10 @@
       },
       "blocked_by": [
         "R580 driver upgrade or written risk acceptance from Kevin"
-      ]
+      ],
+      "stage0_branch": "stage0/q1-gates",
+      "stage0_preregistration_draft": "program/preregistrations/q1-stage0-gate-validation.md",
+      "stage0_evidence": "program/evidence/2026-10-07/q1-integration-validation.json"
     },
     {
       "id": "Q2",
@@ -69,7 +72,8 @@
     "Approve asking the Dr. Kernel and KernelGYM authors to add licenses, or choose another licensed Q1 policy",
     "Decide whether to purge the old host address and the internal corpus inventory from public git history (requires a force-push)",
     "Rotate the Moonshot API key that was pasted into a chat session",
-    "Spot-check a sample of the Q2 checker-mutation audit as the human rater (decision D9)"
+    "Spot-check a sample of the Q2 checker-mutation audit as the human rater (decision D9)",
+    "Review and freeze the integrated Q1 Stage 0 preregistration (q1-stage0-gate-validation on stage0/q1-gates), including the integration decisions in its section 15"
   ],
   "gpu_hours_spent_this_program": 0
 }
