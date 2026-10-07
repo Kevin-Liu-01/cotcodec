@@ -129,3 +129,9 @@ pre-approved with an extra cap of 1.0 GPU-h. No GPU resume run is required
 for a probe with no training state. The prefix-caching-off arm and the TP=2
 real-weight run stay excluded. Design decisions 2-27 of the draft are
 accepted, conditional on job acceptance gating budget entry.
+
+**D18. Serving probe design decisions 1 and 28-36 accepted.** D17 accepted
+decisions 2-27 by number. Decisions 28-36 implement D17's acceptance gating,
+the audit's corrections, the narrowed cu130 retry scope (a retry only after a
+gate failure that ends a job as a pre-result) and the lane-termination check.
+Decision 1 is accepted as written.
