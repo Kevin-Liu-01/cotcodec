@@ -127,12 +127,14 @@ def _list_files(repo: str, revision: str, folder: str) -> list[dict[str, Any]]:
 
 
 def _stream_chunks(url: str, max_bytes: int | None) -> Iterator[bytes]:
+    """File bytes of ``url`` (any transport Content-Encoding is decoded first)."""
+
     import httpx
 
     sent = 0
     with httpx.stream("GET", url, follow_redirects=True, timeout=120.0) as response:
         response.raise_for_status()
-        for chunk in response.iter_raw(1 << 20):
+        for chunk in response.iter_bytes(1 << 20):
             if max_bytes is not None and sent >= max_bytes:
                 return
             if max_bytes is not None and sent + len(chunk) > max_bytes:
@@ -156,7 +158,7 @@ def _download(url: str, destination: Path, expected_sha256: str | None, size: in
     with httpx.stream("GET", url, follow_redirects=True, timeout=300.0) as response:
         response.raise_for_status()
         with temporary.open("wb") as handle:
-            for chunk in response.iter_raw(1 << 22):
+            for chunk in response.iter_bytes(1 << 22):
                 handle.write(chunk)
                 digest.update(chunk)
                 written += len(chunk)
