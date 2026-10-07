@@ -651,10 +651,11 @@ attempts (superseded attempts in full) and metrics, valid or not, including the
 standard error of each replay step mean; each job's acceptance verdict, eager
 label, and the reasons a job's points were not admitted to a budget; the X1
 deltas, seed spread and outcome, with r1's and x1-r1's prompt tokens per
-request; the F1 ratio, applied or not; the D8 agreement rate; A1 and B1 stability and noise
-multipliers; the open-loop reference used and which bound binds in each cell;
-engine facts per phase including eager use and `/tmp` mappings; all
-GPU-allocated time, including the overlay build and metadata fetch allocations;
+request; the F1 ratio, applied or not; the D8 agreement rate; A1 and B1
+stability and noise multipliers; the open-loop reference used and which bound
+binds in each cell; engine facts per phase including eager use and `/tmp`
+mappings; all GPU-allocated time, including the overlay build and metadata
+fetch allocations and any cu130 retry, each against its own cap;
 the Q1 and Q2 projections with every flag and the sensitivity table; the
 contract SHA-256, the probe code digest and git HEAD, image IDs, receipt hashes
 and this file's ledger row; and every deviation from this document.
