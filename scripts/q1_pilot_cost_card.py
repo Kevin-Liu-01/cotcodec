@@ -62,21 +62,32 @@ def survival_from(corpus: Path) -> dict[str, Any]:
     }
 
 
-def fixed_phases(smoke: dict[str, Any], pilot: dict[str, Any], counts: dict[str, Any],
-                 kinds: dict[str, Any]) -> dict[str, Any]:
+def fixed_phases(
+    smoke: dict[str, Any], pilot: dict[str, Any], counts: dict[str, Any], kinds: dict[str, Any]
+) -> dict[str, Any]:
     out: dict[str, Any] = {}
     root = Path(smoke["dir"])
     admission = _phase(smoke, "admission") or {}
-    codegen = [
-        json.loads(line)
-        for line in (root / "records-cuda" / "codegen_log.jsonl").read_text().splitlines()
-        if line.strip()
-    ] if (root / "records-cuda" / "codegen_log.jsonl").exists() else []
-    hook_rows = [
-        json.loads(line)
-        for line in (root / "substrates-built" / "admission_hook.jsonl").read_text().splitlines()
-        if line.strip()
-    ] if (root / "substrates-built" / "admission_hook.jsonl").exists() else []
+    codegen = (
+        [
+            json.loads(line)
+            for line in (root / "records-cuda" / "codegen_log.jsonl").read_text().splitlines()
+            if line.strip()
+        ]
+        if (root / "records-cuda" / "codegen_log.jsonl").exists()
+        else []
+    )
+    hook_rows = (
+        [
+            json.loads(line)
+            for line in (root / "substrates-built" / "admission_hook.jsonl")
+            .read_text()
+            .splitlines()
+            if line.strip()
+        ]
+        if (root / "substrates-built" / "admission_hook.jsonl").exists()
+        else []
+    )
     problems = len([r for r in codegen if r.get("status") not in {"excluded", "exists"}]) or 1
     hooked = len({r["kernel_id"] for r in hook_rows}) or 1
     hook_seconds = sum(r["wall_seconds"] for r in hook_rows) / 2  # two rows per substrate
@@ -106,9 +117,7 @@ def fixed_phases(smoke: dict[str, Any], pilot: dict[str, Any], counts: dict[str,
     }
     smoke_phase = sum(p.get("seconds", 0.0) for p in smoke["phases"]["phases"])
     out["smoke_job_driver_seconds"] = round(smoke_phase, 1)
-    calibration_items = [
-        i for i in pilot["items"] if i["phase"] == "calibration" and i["final"]
-    ]
+    calibration_items = [i for i in pilot["items"] if i["phase"] == "calibration" and i["final"]]
     a1 = [i["gpu_seconds"] for i in calibration_items if i["gpu_seconds"] is not None]
     out["calibration"] = {
         "measured_items": len(a1),
@@ -121,9 +130,9 @@ def fixed_phases(smoke: dict[str, Any], pilot: dict[str, Any], counts: dict[str,
     per_kernel: dict[str, float] = {}
     for item in fidelity_items:
         if item["gate"] in FIDELITY_GATES and item["gpu_seconds"] is not None:
-            per_kernel[item["kernel_id"]] = per_kernel.get(item["kernel_id"], 0.0) + item[
-                "gpu_seconds"
-            ]
+            per_kernel[item["kernel_id"]] = (
+                per_kernel.get(item["kernel_id"], 0.0) + item["gpu_seconds"]
+            )
     out["fidelity"] = {
         "kernels": len(per_kernel),
         "per_gate": cc.gate_stats(fidelity_items),
@@ -139,8 +148,12 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--corpus", type=Path, required=True)
     parser.add_argument("--counts", type=Path, required=True)
     parser.add_argument("--out", type=Path, required=True)
-    parser.add_argument("--spent-gpu-hours", type=float, required=True,
-                        help="GPU-h of every Stage 0 job so far (this pass), from the lane")
+    parser.add_argument(
+        "--spent-gpu-hours",
+        type=float,
+        required=True,
+        help="GPU-h of every Stage 0 job so far (this pass), from the lane",
+    )
     parser.add_argument("--timing-floor-gpu-hours", type=float, default=0.5)
     parser.add_argument("--replay-gpu-hours", type=float, default=0.5)
     parser.add_argument("--caps", default="40,24,16,12,8,6,4")
@@ -156,9 +169,7 @@ def main(argv: list[str] | None = None) -> int:
     kernel_rows = cc.kernel_seed_costs(scoring_items, kinds)
     means = cc.class_means(kernel_rows)
     fixed = fixed_phases(smoke, pilot, counts, kinds)
-    rung = {
-        name: cc.summarize([row[name] for row in kernel_rows]) for name in cc.RUNGS
-    }
+    rung = {name: cc.summarize([row[name] for row in kernel_rows]) for name in cc.RUNGS}
     b_cum = [row["a"] + row["b_marginal"] for row in kernel_rows]
     c_cum = [row["a"] + row["b_marginal"] + row["c_marginal"] for row in kernel_rows]
     ratio = {
@@ -190,9 +201,7 @@ def main(argv: list[str] | None = None) -> int:
     for cap in (int(c) for c in args.caps.split(",")):
         stage = cc.stage0_kernel_counts(counts, cap=cap, survival=survival["survival"])
         seconds, borrowed = cc.scoring_seconds(stage["per_class"], means)
-        interval = cc.bootstrap_scoring(
-            kernel_rows, stage["per_class"], resamples=args.resamples
-        )
+        interval = cc.bootstrap_scoring(kernel_rows, stage["per_class"], resamples=args.resamples)
         # Fidelity on every evaluation substrate and control plus the first mutant of
         # every substrate (the trimmed fidelity set), at replicate 42.
         fidelity_kernels = (
@@ -215,8 +224,7 @@ def main(argv: list[str] | None = None) -> int:
                 "mutants_per_family": stage["mutants_per_family"],
                 "scoring_gpu_hours": round(seconds / 3600, 3),
                 "scoring_gpu_hours_95": {
-                    k: (round(v / 3600, 3) if v is not None else None)
-                    for k, v in interval.items()
+                    k: (round(v / 3600, 3) if v is not None else None) for k, v in interval.items()
                 },
                 "fidelity_gpu_hours": round(fidelity_hours, 3),
                 "fixed_gpu_hours": round(fixed_total, 3),
@@ -265,14 +273,18 @@ def main(argv: list[str] | None = None) -> int:
         "kernel_rows": kernel_rows,
     }
     args.out.mkdir(parents=True, exist_ok=True)
-    (args.out / "cost_card.json").write_text(json.dumps(card, indent=1, sort_keys=True,
-                                                        default=str))
+    (args.out / "cost_card.json").write_text(
+        json.dumps(card, indent=1, sort_keys=True, default=str)
+    )
     lines = ["| gate | n | median GPU-s | p95 GPU-s | mean GPU-s |", "|---|---:|---:|---:|---:|"]
     for gate, stats in card["per_gate_scoring"].items():
         g = stats["gpu_seconds"]
         lines.append(f"| {gate} | {g['n']} | {g['median']} | {g['p95']} | {g['mean']} |")
-    lines += ["", "| cap | scoring GPU-h | 95% | fixed GPU-h | total GPU-h | high |",
-              "|---:|---:|---|---:|---:|---:|"]
+    lines += [
+        "",
+        "| cap | scoring GPU-h | 95% | fixed GPU-h | total GPU-h | high |",
+        "|---:|---:|---|---:|---:|---:|",
+    ]
     for s in scenarios:
         band = s["scoring_gpu_hours_95"]
         lines.append(
