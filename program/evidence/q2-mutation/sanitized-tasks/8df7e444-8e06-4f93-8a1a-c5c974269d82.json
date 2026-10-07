@@ -1,0 +1,22 @@
+{
+  "domain": "multi_apps",
+  "initial_files": [
+    {
+      "path_in_vm": "/home/user/Recruitment_and_retention_of_health_professionals_across_Europe.docx",
+      "sha256": "e7b8c0538a0c9038a7339a186a9d941e49e95cec610d064ad5d3c21272acfaba",
+      "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/1e112283c4ecb08d6fed8069bca7de74fa2f12aa/multi_apps/8df7e444-8e06-4f93-8a1a-c5c974269d82/Recruitment_and_retention_of_health_professionals_across_Europe.docx"
+    },
+    {
+      "path_in_vm": "/home/user/Desktop/reminder.docx",
+      "sha256": "82ecb111c2b6046171f43a2738abdaeaff661c034f1b7723e25019371cef79c1",
+      "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/1e112283c4ecb08d6fed8069bca7de74fa2f12aa/multi_apps/8df7e444-8e06-4f93-8a1a-c5c974269d82/reminder.docx"
+    }
+  ],
+  "instruction": "The guidelines for submitting our essay work are provided in the \"reminder.docx\" on the Desktop. My essay is stored as a docx file in /home/user. Please assist me in organizing the files for submission according to the specified requirements.",
+  "related_apps": [
+    "libreoffice_writer",
+    "os"
+  ],
+  "snapshot": "libreoffice_writer",
+  "task_id": "8df7e444-8e06-4f93-8a1a-c5c974269d82"
+}

@@ -1,0 +1,16 @@
+{
+  "domain": "libreoffice_impress",
+  "initial_files": [
+    {
+      "path_in_vm": "/home/user/Desktop/41_3.pptx",
+      "sha256": "eb02ccbbf5f1c6f706663c1594077b25e8bfc2bafa2c0364e914345b105bc77a",
+      "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/1e112283c4ecb08d6fed8069bca7de74fa2f12aa/libreoffice_impress/39be0d19-634d-4475-8768-09c130f5425d/41_3.pptx"
+    }
+  ],
+  "instruction": "In the \"Features\" slide, insert a table with 5 rows and 2 columns.",
+  "related_apps": [
+    "libreoffice_impress"
+  ],
+  "snapshot": "libreoffice_impress",
+  "task_id": "39be0d19-634d-4475-8768-09c130f5425d"
+}

@@ -1,0 +1,16 @@
+{
+  "domain": "libreoffice_calc",
+  "initial_files": [
+    {
+      "path_in_vm": "/home/user/Keep_Two_decimal_points.xlsx",
+      "sha256": "43bb72a4f7c89180081d2c2cb143115ccab77962c84eded9bf12774676f05e51",
+      "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/1e112283c4ecb08d6fed8069bca7de74fa2f12aa/libreoffice_calc/6e99a1ad-07d2-4b66-a1ce-ece6d99c20a5/Keep_Two_decimal_points.xlsx"
+    }
+  ],
+  "instruction": "Help me format column \"spent\" by keeping two decimal points. ",
+  "related_apps": [
+    "libreoffice calc"
+  ],
+  "snapshot": "libreoffice_calc",
+  "task_id": "6e99a1ad-07d2-4b66-a1ce-ece6d99c20a5"
+}

@@ -1,0 +1,16 @@
+{
+  "domain": "libreoffice_calc",
+  "initial_files": [
+    {
+      "path_in_vm": "/home/user/Zoom_Out_Oversized_Cells.xlsx",
+      "sha256": "5eff9cf0ce47825fcac953282fcbc7cf144f12cf99f1ad6914ae345a0a995967",
+      "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/1e112283c4ecb08d6fed8069bca7de74fa2f12aa/libreoffice_calc/1334ca3e-f9e3-4db8-9ca7-b4c653be7d17/Zoom_Out_Oversized_Cells.xlsx"
+    }
+  ],
+  "instruction": "The cells are so big that I can not click on the cell I want, zoom out a little bit.",
+  "related_apps": [
+    "libreoffice_calc"
+  ],
+  "snapshot": "libreoffice_calc",
+  "task_id": "1334ca3e-f9e3-4db8-9ca7-b4c653be7d17"
+}

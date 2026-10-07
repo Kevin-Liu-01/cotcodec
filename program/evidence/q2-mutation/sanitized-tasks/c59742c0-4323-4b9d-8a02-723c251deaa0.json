@@ -1,0 +1,21 @@
+{
+  "domain": "libreoffice_impress",
+  "initial_files": [
+    {
+      "path_in_vm": "/home/user/Desktop/Mady_and_Mia_Baseball.pptx",
+      "sha256": "7b729ff38799796bb73e412a435f2b97039e871ffd5bad8682bf1ad7a6227fe4",
+      "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/1e112283c4ecb08d6fed8069bca7de74fa2f12aa/libreoffice_impress/c59742c0-4323-4b9d-8a02-723c251deaa0/Mady_and_Mia_Baseball.pptx"
+    },
+    {
+      "path_in_vm": "/home/user/Desktop/Baseball.mp3",
+      "sha256": "1fb0c8d29000f43258714dde1eb9aa06d22f224f5516b255022b1d9ad67e62b6",
+      "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/1e112283c4ecb08d6fed8069bca7de74fa2f12aa/libreoffice_impress/c59742c0-4323-4b9d-8a02-723c251deaa0/Baseball.mp3"
+    }
+  ],
+  "instruction": "I am making PPT about the history of baseball. I want to add an introduction audio named \"Baseball.mp3\" on the Desktop into my PPT, but I do not know how. Could you help me add audio into my presentation file?",
+  "related_apps": [
+    "libreoffice_impress"
+  ],
+  "snapshot": "libreoffice_impress",
+  "task_id": "c59742c0-4323-4b9d-8a02-723c251deaa0"
+}

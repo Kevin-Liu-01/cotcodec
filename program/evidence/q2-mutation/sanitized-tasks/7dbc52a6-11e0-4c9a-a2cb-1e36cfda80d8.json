@@ -1,0 +1,16 @@
+{
+  "domain": "libreoffice_impress",
+  "initial_files": [
+    {
+      "path_in_vm": "/home/user/Desktop/164_3.pptx",
+      "sha256": "54795256cccce007a440d43f71790722005000c29179a6f9b94f3efb608d2b25",
+      "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/1e112283c4ecb08d6fed8069bca7de74fa2f12aa/libreoffice_impress/7dbc52a6-11e0-4c9a-a2cb-1e36cfda80d8/164_3.pptx"
+    }
+  ],
+  "instruction": "On page 2, add a note same to the title into the slide. Make the font of title bold.",
+  "related_apps": [
+    "libreoffice_impress"
+  ],
+  "snapshot": "libreoffice_impress",
+  "task_id": "7dbc52a6-11e0-4c9a-a2cb-1e36cfda80d8"
+}

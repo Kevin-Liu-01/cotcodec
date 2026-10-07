@@ -1,0 +1,57 @@
+{
+  "domain": "multi_apps",
+  "initial_files": [
+    {
+      "path_in_vm": "/home/user/Desktop/students work/Zheng He .docx",
+      "sha256": "1cd5478b23ca18bf9f4711213fdfc2ab6f07412b5646a284247f38aa7d7a7ebc",
+      "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/1e112283c4ecb08d6fed8069bca7de74fa2f12aa/multi_apps/2c1ebcd7-9c6d-4c9a-afad-900e381ecd5e/Zheng%20He%20.docx"
+    },
+    {
+      "path_in_vm": "/home/user/Desktop/students work/cassie.docx",
+      "sha256": "ba92e595b3a2d2147e7fa2bda12d5eb439d4d703ec37262d7ddc15a8e6d65799",
+      "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/1e112283c4ecb08d6fed8069bca7de74fa2f12aa/multi_apps/2c1ebcd7-9c6d-4c9a-afad-900e381ecd5e/cassie.docx"
+    },
+    {
+      "path_in_vm": "/home/user/Desktop/students work/case study.docx",
+      "sha256": "3f5c324a1cc3a42e6b39fe31434f1c14f3afcffe6b57f9d34baec193006e897b",
+      "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/1e112283c4ecb08d6fed8069bca7de74fa2f12aa/multi_apps/2c1ebcd7-9c6d-4c9a-afad-900e381ecd5e/case%20study.docx"
+    },
+    {
+      "path_in_vm": "/home/user/Desktop/Grammar rules PDF/irregularrules02.pdf",
+      "sha256": "8bc8de47fda4dbf497eb63c14565fa6296dc5dcfe18dae5f052ee189738ca6e1",
+      "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/1e112283c4ecb08d6fed8069bca7de74fa2f12aa/multi_apps/2c1ebcd7-9c6d-4c9a-afad-900e381ecd5e/irregularrules02.pdf"
+    },
+    {
+      "path_in_vm": "/home/user/Desktop/Grammar rules PDF/irregularrules01.pdf",
+      "sha256": "cf622918f45eb399a2159ab07c2f93a2919b49a9ab553549cf6c3f3d831b96ef",
+      "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/1e112283c4ecb08d6fed8069bca7de74fa2f12aa/multi_apps/2c1ebcd7-9c6d-4c9a-afad-900e381ecd5e/irregularrules01.pdf"
+    },
+    {
+      "path_in_vm": "/home/user/Desktop/Grammar rules PDF/fragrules.pdf",
+      "sha256": "ca7dfa501f1deb9b08a3bf7e80e5dffb8c5f393c5e883c84b8a8cf40b9ad40b4",
+      "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/1e112283c4ecb08d6fed8069bca7de74fa2f12aa/multi_apps/2c1ebcd7-9c6d-4c9a-afad-900e381ecd5e/fragrules.pdf"
+    },
+    {
+      "path_in_vm": "/home/user/Desktop/Grammar rules PDF/csfsrules.pdf",
+      "sha256": "2ba19089498561dcdfb1255e0c5bd81aa1704dc4021cf518c094150d27fd3dfa",
+      "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/1e112283c4ecb08d6fed8069bca7de74fa2f12aa/multi_apps/2c1ebcd7-9c6d-4c9a-afad-900e381ecd5e/csfsrules.pdf"
+    },
+    {
+      "path_in_vm": "/home/user/Desktop/Public Lecture Teaching Plan.docx",
+      "sha256": "68b07805dbb9859a705948903cc8efd6c6af28d86b35735c57385524bbbe2a3e",
+      "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/1e112283c4ecb08d6fed8069bca7de74fa2f12aa/multi_apps/2c1ebcd7-9c6d-4c9a-afad-900e381ecd5e/Public%20Lecture%20Teaching%20Plan.docx"
+    },
+    {
+      "path_in_vm": "/home/user/Desktop/Course Timetable.xlsx",
+      "sha256": "4f7d5cfa10edf0ea1d5af93aad32e00d7ce21461c1cc63632b0b6e99ee71072d",
+      "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/1e112283c4ecb08d6fed8069bca7de74fa2f12aa/multi_apps/3a93cae4-ad3e-403e-8c12-65303b271818/Course%20Timetable.xlsx"
+    }
+  ],
+  "instruction": "Could you please add a two-hour lecture slot to my weekly course timetable, scheduled for every Wednesday at 12 PM? It seems I accidentally omitted that when setting up my schedule. I'd appreciate you taking care of that for me. Thanks!",
+  "related_apps": [
+    "os",
+    "libreoffice_calc"
+  ],
+  "snapshot": "libreoffice_calc",
+  "task_id": "3a93cae4-ad3e-403e-8c12-65303b271818"
+}

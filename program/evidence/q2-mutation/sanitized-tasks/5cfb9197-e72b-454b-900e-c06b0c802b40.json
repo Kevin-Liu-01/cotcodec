@@ -1,0 +1,16 @@
+{
+  "domain": "libreoffice_impress",
+  "initial_files": [
+    {
+      "path_in_vm": "/home/user/Desktop/33_1.pptx",
+      "sha256": "5c65149ef9a50d76862812b1b445c8923c92122bbf603afc854451ad07cf4c9c",
+      "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/1e112283c4ecb08d6fed8069bca7de74fa2f12aa/libreoffice_impress/5cfb9197-e72b-454b-900e-c06b0c802b40/33_1.pptx"
+    }
+  ],
+  "instruction": "Change the first row of table to \"T1\",\"T2\",\"T3\",\"T4\" on slide 4.",
+  "related_apps": [
+    "libreoffice_impress"
+  ],
+  "snapshot": "libreoffice_impress",
+  "task_id": "5cfb9197-e72b-454b-900e-c06b0c802b40"
+}

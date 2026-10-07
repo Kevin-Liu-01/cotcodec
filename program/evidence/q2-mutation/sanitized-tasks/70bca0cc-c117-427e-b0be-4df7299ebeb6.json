@@ -1,0 +1,16 @@
+{
+  "domain": "libreoffice_impress",
+  "initial_files": [
+    {
+      "path_in_vm": "/home/user/Desktop/71_6.pptx",
+      "sha256": "9a7345e1fa80d38659414aed0fc3b4d488fdd944d607a66c44a4b78d5bcbd684",
+      "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/1e112283c4ecb08d6fed8069bca7de74fa2f12aa/libreoffice_impress/70bca0cc-c117-427e-b0be-4df7299ebeb6/71_6.pptx"
+    }
+  ],
+  "instruction": "Make the background color of slide 2 same as the color of its title.",
+  "related_apps": [
+    "libreoffice_impress"
+  ],
+  "snapshot": "libreoffice_impress",
+  "task_id": "70bca0cc-c117-427e-b0be-4df7299ebeb6"
+}

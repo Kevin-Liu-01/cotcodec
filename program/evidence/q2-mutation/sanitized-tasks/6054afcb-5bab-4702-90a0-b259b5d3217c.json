@@ -1,0 +1,16 @@
+{
+  "domain": "libreoffice_calc",
+  "initial_files": [
+    {
+      "path_in_vm": "/home/user/Date_Budget_Variance_HideNA.xlsx",
+      "sha256": "980d9dfc8a6787799cfd038caa34515642f0a42b895ce49ed17f518bb870266e",
+      "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/1e112283c4ecb08d6fed8069bca7de74fa2f12aa/libreoffice_calc/6054afcb-5bab-4702-90a0-b259b5d3217c/Date_Budget_Variance_HideNA.xlsx"
+    }
+  ],
+  "instruction": "Some data are missed by now and are filled by 'N/A' temporarily. Please hide them in the table for now. Do not delete any cells and filter is not needed.",
+  "related_apps": [
+    "libreoffice calc"
+  ],
+  "snapshot": "libreoffice_calc",
+  "task_id": "6054afcb-5bab-4702-90a0-b259b5d3217c"
+}

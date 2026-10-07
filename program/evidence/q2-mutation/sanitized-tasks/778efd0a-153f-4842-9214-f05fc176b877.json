@@ -1,0 +1,22 @@
+{
+  "domain": "multi_apps",
+  "initial_files": [
+    {
+      "path_in_vm": "/home/user/Desktop/Minimalist_Business_Slides.pptx",
+      "sha256": "662a929926e06d62024feb6df1e01555237fd894f7a173c22d7395fc20dd0f96",
+      "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/1e112283c4ecb08d6fed8069bca7de74fa2f12aa/multi_apps/778efd0a-153f-4842-9214-f05fc176b877/Minimalist_Business_Slides.pptx"
+    },
+    {
+      "path_in_vm": "/home/user/Desktop/planet.mp4",
+      "sha256": "96e39ebcdb9fa37ca6c4c3d3c30a97ff29f1f614a707d32a6182d1bf6783c759",
+      "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/1e112283c4ecb08d6fed8069bca7de74fa2f12aa/multi_apps/778efd0a-153f-4842-9214-f05fc176b877/planet.mp4"
+    }
+  ],
+  "instruction": "I'm using libreoffice impress to write slideshows. I found that the video being played by VLC media player had a good soundtrack. Please extract the audio to planet.wav and use it as background music for this slideshow.",
+  "related_apps": [
+    "libreoffice_impress",
+    "vlc"
+  ],
+  "snapshot": "vlc",
+  "task_id": "778efd0a-153f-4842-9214-f05fc176b877"
+}

@@ -1,0 +1,18 @@
+{
+  "domain": "multi_apps",
+  "initial_files": [
+    {
+      "path_in_vm": "/home/user/OIP.jpg",
+      "sha256": "cd99e73cde26b1578108f9505825aa18f7dd888c01bd1687dd49a540a10b46d2",
+      "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/1e112283c4ecb08d6fed8069bca7de74fa2f12aa/multi_apps/a503b07f-9119-456b-b75d-f5146737d24f/OIP.jpg"
+    }
+  ],
+  "instruction": "I have an image of my receipt located in /home/user. I'm looking to transform it into a PDF file. Can you assist me with this task? Save the resulting PDF as \"receipt.pdf\" on the desktop.",
+  "related_apps": [
+    "os",
+    "gimp",
+    "pdf"
+  ],
+  "snapshot": "os",
+  "task_id": "a503b07f-9119-456b-b75d-f5146737d24f"
+}

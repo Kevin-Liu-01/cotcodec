@@ -1,0 +1,44 @@
+{
+  "domain": "multi_apps",
+  "initial_files": [
+    {
+      "path_in_vm": "/home/user/Desktop/my_bookkeeping.xlsx",
+      "sha256": "6791db3e5410ed6b54e10e591e542d431d331e83b7e893512f18e45c85569e10",
+      "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/1e112283c4ecb08d6fed8069bca7de74fa2f12aa/multi_apps/8e116af7-7db7-4e35-a68b-b0939c066c78/my_bookkeeping.xlsx"
+    },
+    {
+      "path_in_vm": "/home/user/Desktop/receipt_0.jpeg",
+      "sha256": "b35ff62057908666a54a88e82362a326ca8611a534dd7291b5c2e93d6e1dc1f0",
+      "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/1e112283c4ecb08d6fed8069bca7de74fa2f12aa/multi_apps/8e116af7-7db7-4e35-a68b-b0939c066c78/receipt_0.jpeg"
+    },
+    {
+      "path_in_vm": "/home/user/Desktop/receipt_1.jpg",
+      "sha256": "ecd4a6db51ded9b9f62bbc32a31bbfbb86b2b7c8dacd59ebe0ee350ea012204d",
+      "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/1e112283c4ecb08d6fed8069bca7de74fa2f12aa/multi_apps/8e116af7-7db7-4e35-a68b-b0939c066c78/receipt_1.jpg"
+    },
+    {
+      "path_in_vm": "/home/user/Desktop/receipt_2.jpg",
+      "sha256": "bd3a2b3d17750b4fe687074e3e767b734f8c5aeecc1dbbc3405e9875473b8e83",
+      "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/1e112283c4ecb08d6fed8069bca7de74fa2f12aa/multi_apps/8e116af7-7db7-4e35-a68b-b0939c066c78/receipt_2.jpg"
+    },
+    {
+      "path_in_vm": "/home/user/Desktop/receipt_3.pdf",
+      "sha256": "48deb476a3c75fffaf1f231add391db5aa53a359754bfd6bd112672d4879260b",
+      "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/1e112283c4ecb08d6fed8069bca7de74fa2f12aa/multi_apps/8e116af7-7db7-4e35-a68b-b0939c066c78/receipt_3.pdf"
+    },
+    {
+      "path_in_vm": "/home/user/Desktop/receipt_4.jpg",
+      "sha256": "942845ec6310d852bc93510383a57bb5210c71bc89f31ea7ed60e5c1ec6f1d3d",
+      "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/1e112283c4ecb08d6fed8069bca7de74fa2f12aa/multi_apps/8e116af7-7db7-4e35-a68b-b0939c066c78/receipt_4.jpg"
+    }
+  ],
+  "instruction": "Please update my bookkeeping sheet with the recent transactions from the provided folder, detailing my expenses over the past few days.",
+  "related_apps": [
+    "libreoffice_calc",
+    "os",
+    "image",
+    "pdf"
+  ],
+  "snapshot": "libreoffice_calc",
+  "task_id": "8e116af7-7db7-4e35-a68b-b0939c066c78"
+}

@@ -1,0 +1,21 @@
+{
+  "domain": "vlc",
+  "initial_files": [
+    {
+      "path_in_vm": "/home/user/Desktop/lecture.pdf",
+      "sha256": "8a4659725b3f91ace2590603449a656fdc7b66bd344f1aaaf8004f8be550cb50",
+      "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/1e112283c4ecb08d6fed8069bca7de74fa2f12aa/vlc/386dbd0e-0241-4a0a-b6a2-6704fba26b1c/lecture_pdf.pdf"
+    },
+    {
+      "path_in_vm": "/home/user/Desktop/Colorful-Flowers.mp3",
+      "sha256": "cefefd45ff84762fc8cc43c37a8b8288c06d03bcad0f60fc91b927c1eadde0d6",
+      "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/1e112283c4ecb08d6fed8069bca7de74fa2f12aa/vlc/386dbd0e-0241-4a0a-b6a2-6704fba26b1c/Colorful-Flowers%28chosic.com%29.mp3"
+    }
+  ],
+  "instruction": "I am reading lecture note in PDF while a music video is running in VLC media player. But I find I need to switch to the player every time I need to pause/start.Could you help me change the setting to allow pausing the video using keyboard shortcut without minimizing the PDF reader? I want to focus on the lecture note and don't be disturbed by the app switching.",
+  "related_apps": [
+    "vlc"
+  ],
+  "snapshot": "chrome",
+  "task_id": "386dbd0e-0241-4a0a-b6a2-6704fba26b1c"
+}

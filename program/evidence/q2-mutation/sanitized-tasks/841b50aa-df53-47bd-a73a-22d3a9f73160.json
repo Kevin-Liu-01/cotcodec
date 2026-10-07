@@ -1,0 +1,16 @@
+{
+  "domain": "libreoffice_impress",
+  "initial_files": [
+    {
+      "path_in_vm": "/home/user/Desktop/181_2.pptx",
+      "sha256": "3fbf86fae1ab28a8cec5a3193e788c65702f971a955eb0c9179e8c5c8eb2a3a7",
+      "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/1e112283c4ecb08d6fed8069bca7de74fa2f12aa/libreoffice_impress/841b50aa-df53-47bd-a73a-22d3a9f73160/181_2.pptx"
+    }
+  ],
+  "instruction": "Add a note \"APP\" into the slide and give the slide a purple background color.",
+  "related_apps": [
+    "libreoffice_impress"
+  ],
+  "snapshot": "libreoffice_impress",
+  "task_id": "841b50aa-df53-47bd-a73a-22d3a9f73160"
+}

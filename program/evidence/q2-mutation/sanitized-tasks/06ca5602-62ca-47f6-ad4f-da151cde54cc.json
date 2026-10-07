@@ -1,0 +1,16 @@
+{
+  "domain": "gimp",
+  "initial_files": [
+    {
+      "path_in_vm": "/home/user/Desktop/computer.png",
+      "sha256": "86abbfa5cc068d9ed1ea21c15d7a31a72130ec6c6d3e3832355f3bd3f53e015b",
+      "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/1e112283c4ecb08d6fed8069bca7de74fa2f12aa/gimp/06ca5602-62ca-47f6-ad4f-da151cde54cc/computer.png"
+    }
+  ],
+  "instruction": "Could you help me set the image to Palette-Based?",
+  "related_apps": [
+    "gimp"
+  ],
+  "snapshot": "gimp",
+  "task_id": "06ca5602-62ca-47f6-ad4f-da151cde54cc"
+}

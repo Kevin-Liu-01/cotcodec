@@ -1,0 +1,16 @@
+{
+  "domain": "libreoffice_calc",
+  "initial_files": [
+    {
+      "path_in_vm": "/home/user/EntireSummerSales.xlsx",
+      "sha256": "af5da0ac14d0ef8044becabba3392d1a06cb3f64cfba347ed84f862f44d0a93f",
+      "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/1e112283c4ecb08d6fed8069bca7de74fa2f12aa/libreoffice_calc/1de60575-bb6e-4c3d-9e6a-2fa699f9f197/EntireSummerSales.xlsx"
+    }
+  ],
+  "instruction": "Summarize the total revenue for each promotion type in a new sheet (Sheet2) with the promotion names as the column headers using the Pivot Table feature.",
+  "related_apps": [
+    "libreoffice_calc"
+  ],
+  "snapshot": "libreoffice_calc",
+  "task_id": "1de60575-bb6e-4c3d-9e6a-2fa699f9f197"
+}
