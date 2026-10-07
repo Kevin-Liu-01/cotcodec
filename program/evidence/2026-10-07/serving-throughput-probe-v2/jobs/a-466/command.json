@@ -1,0 +1,19 @@
+[
+  "python",
+  "scripts/run_vllm_throughput_probe_v2.py",
+  "run",
+  "--config",
+  "experiments/serving/serving-throughput-probe-v2.yaml",
+  "--job",
+  "a",
+  "--output-dir",
+  "/outputs/probe",
+  "--allocation-minutes",
+  "60",
+  "--image-variant",
+  "cu129",
+  "--seeds",
+  "42",
+  "43",
+  "44"
+]

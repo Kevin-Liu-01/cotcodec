@@ -1,0 +1,1 @@
+{"output": "/home/kevin/cotcodec-runs/stage0/serving-throughput-probe-v2/manifests/a.yaml", "name": "stp-v2-a-q2-qwen35-9b"}
