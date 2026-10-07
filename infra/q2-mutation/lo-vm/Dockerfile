@@ -15,6 +15,9 @@ RUN set -eux; \
     mkdir -p /tmp /var/tmp /var/log/apt /var/lib/apt/lists/partial /var/cache/apt/archives/partial \
              /var/cache/debconf /var/lib/dpkg/updates; \
     chmod 1777 /tmp /var/tmp; \
+    # COPY makes every file root-owned; the profile template must be readable by
+    # the unprivileged runtime user, who copies it into a fresh per-job HOME.
+    chmod -R a+rX /home/user/.config/libreoffice; \
     dpkg-query -W -f='${Package}\t${Version}\t${Status}\n' > /opt/q2/dpkg-before.tsv; \
     dpkg -i /opt/q2/xvfb_21.1.4-2ubuntu1.7~22.04.8_amd64.deb; \
     cp /opt/q2/q2-sources.list /etc/apt/sources.list; \
