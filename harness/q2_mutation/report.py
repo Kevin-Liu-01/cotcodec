@@ -135,6 +135,13 @@ def summarize_run(run: Path) -> dict[str, Any]:
         }
         for flip in agg["dependency_flips"]:
             flip["confirmed_at_repeat_5"] = (flip["task_id"], flip["candidate"]) in confirmed
+        # A candidate the five scorings do not confirm is nondeterministic
+        # (S5), not an S1 flip (preregistration section 5).
+        agg["s5_unstable_at_repeat_5"] = [
+            {"task_id": flip["task_id"], "candidate": flip["candidate"]}
+            for flip in agg["dependency_flips"]
+            if not flip["confirmed_at_repeat_5"]
+        ]
         agg["s1"] = s1
     return {"tasks": dict(sorted(tasks.items())), "aggregate": agg}
 

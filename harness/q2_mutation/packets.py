@@ -15,9 +15,15 @@ A rater sees the instruction, the initial files and the candidate (decision D9,
   so the raters do not share the checkers' blind spots. It is a display aid,
   not a checker: no rule, no comparison with gold;
 * ``diff_lines``: the alignment-aware structural difference of the
-  candidate against the initial file (``operators/_diff.py``, never against
+  candidate against the starting file (``operators/_diff.py``, never against
   gold); if it reports nothing while the snapshots differ, a unified
-  difference of the two listings is shown instead, so no change is hidden;
+  difference of the two listings is shown instead, so no change is hidden.
+  The starting file it compares with is the *saved* starting file when the
+  audit provides one (``artifacts(..., baseline=...)``): the starting file
+  put through the same LibreOffice save steps as the candidate, so changes
+  the save alone makes (the VM profile's default font and language, document
+  defaults) are not shown as edits; their number against the raw starting
+  file is reported as ``save_only_changes``;
 * ``render_command``: the LibreOffice headless PDF conversion and
   ``pdftoppm`` page images (100 dpi, up to 20 pages) run in the LO-VM image
   (the VM's own renderer).
@@ -141,10 +147,41 @@ def _difference(initial: Path, candidate: Path, lines: list[str]) -> list[str]:
     return diff_lines(structure_lines(initial), lines)
 
 
+def change_count(before: Path, after: Path) -> int:
+    """Number of changes from ``before`` to ``after`` (uncapped; listing lines otherwise)."""
+    same_family = before.suffix.lower() == after.suffix.lower()
+    if after.suffix.lower() in OFFICE_SUFFIXES and same_family:
+        from harness.q2_mutation.operators._diff import diff
+
+        try:
+            first, second = office_snapshot(before), office_snapshot(after)
+            if first == second:
+                return 0
+            return max(1, len(diff(first, second)))
+        except Exception:  # noqa: BLE001 - fall back to the listings
+            pass
+    return sum(
+        1
+        for line in difflib.unified_diff(
+            structure_lines(before), structure_lines(after), lineterm="", n=0
+        )
+        if line[:1] in "+-" and not line.startswith(("+++", "---"))
+    )
+
+
 def artifacts(
-    initial: Mapping[str, str], candidate: Mapping[str, str | None]
+    initial: Mapping[str, str],
+    candidate: Mapping[str, str | None],
+    baseline: Mapping[str, str | None] | None = None,
 ) -> dict[str, dict[str, Any]]:
-    """Per VM path: candidate structure and its difference against the initial file."""
+    """Per VM path: candidate structure and its difference against the starting file.
+
+    ``baseline`` maps a VM path to the saved starting file (the starting file
+    put through the same LibreOffice save steps as the candidate). Where it
+    names the path, the difference is against it and ``save_only_changes``
+    counts the changes the save alone made to the raw starting file;
+    elsewhere the difference is against the raw starting file.
+    """
     out: dict[str, dict[str, Any]] = {}
     for vm_path in sorted(candidate):
         local = candidate[vm_path]
@@ -152,14 +189,19 @@ def artifacts(
             out[vm_path] = {"structure": ["file absent in the end state"], "diff_vs_initial": []}
             continue
         lines = structure_lines(Path(local))
-        out[vm_path] = {
-            "structure": lines,
-            "diff_vs_initial": (
-                _difference(Path(initial[vm_path]), Path(local), lines)
-                if vm_path in initial
-                else ["new file"]
-            ),
-        }
+        saved = (baseline or {}).get(vm_path) if vm_path in initial else None
+        entry: dict[str, Any] = {"structure": lines}
+        if vm_path not in initial:
+            entry["diff_vs_initial"] = ["new file"]
+            entry["baseline"] = "none"
+        elif saved:
+            entry["diff_vs_initial"] = _difference(Path(saved), Path(local), lines)
+            entry["baseline"] = "saved"
+            entry["save_only_changes"] = change_count(Path(initial[vm_path]), Path(saved))
+        else:
+            entry["diff_vs_initial"] = _difference(Path(initial[vm_path]), Path(local), lines)
+            entry["baseline"] = "raw"
+        out[vm_path] = entry
     return out
 
 

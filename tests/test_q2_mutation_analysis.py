@@ -135,6 +135,89 @@ def test_p1_and_k6_from_the_controls() -> None:
     assert out["K6"]["adequacy_claim"] is False  # one P5 task is far below 59
 
 
+def test_p1_counts_the_confirm_and_reserve_control_runs_together() -> None:
+    from harness.q2_mutation import report
+
+    def v(verdict: str) -> dict:
+        return {"verdict": verdict, "score": None, "error": None}
+
+    exposed = {"placed_office": ["/home/user/a.docx"], "saves": [], "save_failures": []}
+
+    def run(prefix: str, flips: int, others: int, *, k1_fail: bool = False) -> dict:
+        tasks = {}
+        for n in range(flips + others):
+            tasks[f"{prefix}{n}"] = {
+                "gold_raw_lock": v("pass"),
+                "gold_saved_lock": v("fail" if n < flips else "pass"),
+                "gold_save": exposed,
+                "initial_raw_lock": v("pass" if k1_fail and n == 0 else "fail"),
+            }
+        return {"tasks": tasks, "aggregate": report.aggregate(tasks)}
+
+    confirm, reserve = run("c", 2, 3), run("r", 1, 4, k1_fail=True)
+    splits = {"confirm": list(confirm["tasks"]), "reserve": list(reserve["tasks"])}
+    out = analysis.headline(
+        [_row(0, "t1", "should_pass_equiv", "pass")],
+        controls=confirm,
+        reserve_controls=reserve,
+        splits=splits,
+        decisions={"c0__p1_flip": "accept", "r0__p1_flip": "accept", "c1__p1_flip": "reject"},
+        n_boot=50,
+    )
+    p1 = out["P1"]
+    assert p1["raw_flips"]["events"] == 3 and p1["raw_flips"]["n"] == 10
+    assert p1["confirmed_tasks"] == ["c0", "r0"]
+    assert p1["runs"] == {
+        "confirm": {"n": 5, "flips": ["c0", "c1"]},
+        "reserve": {"n": 5, "flips": ["r0"]},
+    }
+    # K1 is the confirm run's harness check alone (the reserve's failing
+    # do-nothing does not enter it); K6 counts the confirmed flips of both runs.
+    assert out["K1"] == "5/5"
+    assert out["K6"]["confirmed_p1_flips"] == 2 and out["K6"]["p1_runs"] == ["confirm", "reserve"]
+    alone = analysis.headline(
+        [_row(0, "t1", "should_pass_equiv", "pass")], controls=confirm, n_boot=50
+    )
+    assert alone["P1"]["raw_flips"]["n"] == 5 and alone["K6"]["p1_runs"] == ["confirm"]
+    with pytest.raises(ValueError, match="in the confirm and the reserve"):
+        analysis.headline([], controls=confirm, reserve_controls=confirm, n_boot=10)
+    with pytest.raises(ValueError, match="is not a reserve task"):
+        analysis.headline(
+            [],
+            controls=confirm,
+            reserve_controls=reserve,
+            splits={"confirm": splits["confirm"], "reserve": []},
+            n_boot=10,
+        )
+
+
+def test_k2_dropped_family_leaves_and_p2_p5_are_recomputed() -> None:
+    rows = [_row(n, f"a{n}", "should_pass_equiv", "pass", "kept") for n in range(6)]
+    rows += [_row(n, f"b{n}", "should_pass_equiv", "fail", "dropped") for n in range(4)]
+    rows += [_row(9, "b0", "should_fail_violation", "pass", "dropped")]
+    k2 = {
+        "executor_commit": "x",
+        "pairs": 80,
+        "disagreements": [{"checker_family": "dropped", "explanation": None}],
+    }
+    out = analysis.headline(rows, k2=k2, n_boot=100)
+    assert out["exclusions"]["k2"]["families_dropped"] == ["dropped"]
+    # The headline is recomputed without the dropped family's mutants and tasks.
+    assert set(out["P2"]["by_family"]) == {"kept"}
+    assert out["P2"]["pooled"]["rate"] == 0.0 and out["P2"]["pooled"]["tasks"] == 6
+    assert out["P3"]["pooled"] is None
+    assert out["P5"]["n"] == 6 and out["P5"]["events"] == 0
+    assert out["K6"]["p5_tasks"] == 6
+    explore = out["k2_exploratory"]
+    assert explore["families"] == ["dropped"]
+    assert explore["including_dropped_families"]["P5"]["n"] == 10
+    assert explore["including_dropped_families"]["P5"]["events"] == 4
+    assert set(explore["dropped_families_only"]["P2"]["by_family"]) == {"dropped"}
+    assert "dropped" in out["population"]
+    plain = analysis.headline(rows, n_boot=100)
+    assert "k2_exploratory" not in plain and plain["P5"]["n"] == 10
+
+
 def test_k9_and_k5() -> None:
     rows = [_row(0, f"t{n}", "should_pass_equiv", "pass") for n in range(4)]
     rows[0]["lock_null_verdict"] = "fail"

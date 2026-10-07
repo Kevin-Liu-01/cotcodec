@@ -18,14 +18,18 @@ This module fixes, before any rating exists:
   primary venv outside probe-touched cells, the population P2-P5 are computed
   on;
 * the audit sample: disjoint strata in priority order ``alt_solution`` (all
-  should_pass_alt_solution mutants, cap 150), ``disagreement`` (label class
-  and checker verdict disagree, cap 200) and ``agreement`` (100), each item
-  carrying its inclusion probability; plus sham items (10 percent, half
+  should_pass_alt_solution mutants, cap 150), ``violation`` (every
+  should_fail_violation mutant whatever its verdict, cap 200, so the
+  violation K3 group is audited as a census at weight 1),
+  ``disagreement`` (the other label classes where label and checker verdict
+  disagree, cap 200) and ``agreement`` (100 of the rest), each item carrying
+  its inclusion probability; plus sham items (10 percent, half
   LibreOffice-saved gold, half do-nothing, at most two per task) whose answer
   is known, and every P1 gold fixed-point flip (``p1_flip``);
 * the answer rule (``parse_first_token``): the first word of the reply, and
-  ``unsure`` for a refusal, an empty or unparseable reply, a timeout or a
-  request the provider rejected (``answer_for``);
+  ``unsure`` for a refusal, an empty or unparseable reply, a timeout, a
+  request the provider rejected or a response body that is not the
+  provider's JSON (``answer_for``);
 * the blind packet: instruction, initial files and the candidate only.
   Never gold, checker verdict, operator, family or label;
 * the human spot-check sample for Kevin;
@@ -90,9 +94,13 @@ RATERS: tuple[Mapping[str, str], ...] = (
 )
 RATER_IDS = tuple(r["rater_id"] for r in RATERS)
 ANSWERS = ("accept", "reject", "unsure")
-STRATA = ("alt_solution", "disagreement", "agreement")
+STRATA = ("alt_solution", "violation", "disagreement", "agreement")
 EXTRA_STRATA = ("sham", "p1_flip")
-CAPS = {"alt_solution": 150, "disagreement": 200, "agreement": 100}
+# The violation stratum is a census (cap 200): in a shared agreement stratum
+# the violation K3 group drew about one item in three and stayed under the
+# registered minimum at the expected confirm size (third review; operating
+# characteristics in program/evidence/q2-mutation/integration/audit-design-v1/).
+CAPS = {"alt_solution": 150, "violation": 200, "disagreement": 200, "agreement": 100}
 SHAM_FRACTION = 0.10
 # Label classes whose label error is K3/K4: the classes that enter P2-P5
 # without an audit gate.
@@ -174,6 +182,8 @@ def stratum_of(candidate: Candidate) -> str | None:
         return None
     if candidate.label == "should_pass_alt_solution":
         return "alt_solution"
+    if candidate.label == "should_fail_violation":
+        return "violation"
     passes = candidate.verdict == "pass"
     if (candidate.label in SHOULD_PASS_LABELS and not passes) or (
         candidate.label in SHOULD_FAIL_LABELS and passes
@@ -297,6 +307,7 @@ NON_ANSWER_OUTCOMES = (
     "timeout",
     "transport_exhausted",
     "request_rejected",
+    "malformed_response",
     "unrated",
 )
 

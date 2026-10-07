@@ -5,7 +5,9 @@ freeze so no analysis choice is made after a confirmatory verdict is read:
 
 * P1 (replication only): saved-gold flips among golds exposed to the save
   stage (``report.p1_counted``), raw and audit-confirmed, with exact
-  Clopper-Pearson intervals;
+  Clopper-Pearson intervals, over the confirm and the reserve control runs
+  together (``p1_over_controls``: counts and flips are summed, the two runs'
+  tasks must be disjoint and belong to their splits); K1 stays confirm-only;
 * P2: evaluable ``should_pass_equiv`` mutants plus the
   ``should_pass_alt_solution`` mutants the audit accepted; event: not pass;
 * P3: evaluable ``should_fail_violation`` mutants; event: pass;
@@ -20,8 +22,11 @@ freeze so no analysis choice is made after a confirmatory verdict is read:
   percentile bootstrap (10,000 resamples, seed 42); a family rate is
   inferential only with at least 8 tasks and 20 mutants (the family floor);
 * K2: a checker family with an unexplained in-VM/offline disagreement leaves
-  the headline; without a K2 report the headline is labelled
-  ``offline harness, VM fidelity unverified``;
+  the headline: P2-P5 (pooled, per family and P5's tasks) are recomputed
+  without that family's mutants, K6 reads the recomputed P5, and the
+  dropped family's tables and the pooled rates including it are reported as
+  exploratory (``k2_exploratory``); without a K2 report the headline is
+  labelled ``offline harness, VM fidelity unverified``;
 * K3 (single rule): when K3 fires for ``should_pass_equiv``, P2 and P5 leave
   the headline and are reported as exploratory; for
   ``should_fail_violation``, P3 and P5; when kappa is below 0.6, P2-P5. K4
@@ -244,62 +249,136 @@ def headline_exclusions(
     }
 
 
-def headline(
-    outcomes: Sequence[Mapping[str, Any]],
-    *,
-    controls: Mapping[str, Any] | None = None,
-    audit: Mapping[str, Any] | None = None,
-    decisions: Mapping[str, str] | None = None,
-    k2: Mapping[str, Any] | None = None,
-    primary: str = "lock",
-    n_boot: int = 10_000,
-    seed: int = 42,
+def mutation_metrics(
+    rows: Sequence[Mapping[str, Any]],
+    decisions: Mapping[str, str] | None,
+    primary: str,
+    n_boot: int,
+    seed: int,
 ) -> dict[str, Any]:
-    units, gate = metric_units(outcomes, decisions, primary)
+    """P2-P5 and the audit gate counts on one set of outcome rows."""
+    units, gate = metric_units(rows, decisions, primary)
     tables = {metric: rate_table(units[metric], n_boot, seed) for metric in ("P2", "P3", "P4")}
     tables["P4"]["unresolved_as_events"] = _ci(
         [Unit(t, e) for t, _, e in gate.pop("P4_unresolved_as_events")], n_boot, seed
     )
-    p5 = p5_escapes(outcomes, primary)
-    out: dict[str, Any] = {
-        "primary_dep_set": primary,
-        "population": (
-            "evaluable, outside probe-touched cells (probe cells and probe-informed operators)"
-        ),
+    return {
         "audit_gate": gate,
         "P2": tables["P2"],
         "P3": tables["P3"],
         "P4": tables["P4"],
-        "P5": p5,
+        "P5": p5_escapes(rows, primary),
+    }
+
+
+def p1_over_controls(
+    runs: Sequence[tuple[str, Mapping[str, Any]]],
+    decisions: Mapping[str, str] | None,
+    primary: str,
+    splits: Mapping[str, Sequence[str]] | None = None,
+) -> dict[str, Any]:
+    """P1 over the control runs ``(split, summary)``: the confirm and the reserve run.
+
+    Counted golds and flips are summed over the runs (each run counts only its
+    own golds, ``report.aggregate``); a task in two runs, or in a run of another
+    split than ``splits`` gives it, is refused. A flip is audit-confirmed when
+    its ``<task>__p1_flip`` decision is accept.
+    """
+    from harness.q2_mutation.report import p1_flip_tasks
+
+    seen: dict[str, str] = {}
+    n = 0
+    flips: list[str] = []
+    per_run: dict[str, Any] = {}
+    not_exposed: list[str] = []
+    not_counted: list[str] = []
+    for split, summary in runs:
+        tasks = summary["tasks"]
+        for task in tasks:
+            if task in seen:
+                raise ValueError(f"task {task} is in the {seen[task]} and the {split} control run")
+            if splits is not None and task not in set(splits.get(split, ())):
+                raise ValueError(f"task {task} of the {split} control run is not a {split} task")
+            seen[task] = split
+        agg = summary["aggregate"][primary]
+        run_flips = p1_flip_tasks(tasks, primary)
+        n += int(agg["gold_fixed_point_n"])
+        flips += run_flips
+        not_exposed += list(agg.get("gold_fixed_point_not_exposed", []))
+        not_counted += list(agg.get("gold_fixed_point_not_counted", []))
+        per_run[split] = {"n": int(agg["gold_fixed_point_n"]), "flips": run_flips}
+    flips = sorted(flips)
+    confirmed = [t for t in flips if (decisions or {}).get(f"{t}__p1_flip") == "accept"]
+    return {
+        "role": "pre-specified replication of the scoping round trip (no confirmatory part)",
+        "runs": per_run,
+        "raw_flips": _exact(len(flips), n),
+        "audit_confirmed_flips": _exact(len(confirmed), n),
+        "flip_tasks": flips,
+        "confirmed_tasks": confirmed,
+        "not_exposed": sorted(not_exposed),
+        "not_counted": sorted(not_counted),
+    }
+
+
+def headline(
+    outcomes: Sequence[Mapping[str, Any]],
+    *,
+    controls: Mapping[str, Any] | None = None,
+    reserve_controls: Mapping[str, Any] | None = None,
+    audit: Mapping[str, Any] | None = None,
+    decisions: Mapping[str, str] | None = None,
+    k2: Mapping[str, Any] | None = None,
+    splits: Mapping[str, Sequence[str]] | None = None,
+    primary: str = "lock",
+    n_boot: int = 10_000,
+    seed: int = 42,
+) -> dict[str, Any]:
+    exclusions = headline_exclusions(audit, k2)
+    dropped = set(exclusions["k2"]["families_dropped"])
+    kept = [r for r in outcomes if str(r.get("checker_family")) not in dropped]
+    metrics = mutation_metrics(kept, decisions, primary, n_boot, seed)
+    p5 = metrics["P5"]
+    out: dict[str, Any] = {
+        "primary_dep_set": primary,
+        "population": (
+            "evaluable, outside probe-touched cells (probe cells and probe-informed operators)"
+            + (f"; K2-dropped families left out: {sorted(dropped)}" if dropped else "")
+        ),
+        **metrics,
         "K5": k5(outcomes),
         "K9": k9(outcomes, primary),
-        "exclusions": headline_exclusions(audit, k2),
+        "exclusions": exclusions,
     }
+    if dropped:
+        out["k2_exploratory"] = {
+            "families": sorted(dropped),
+            "including_dropped_families": mutation_metrics(
+                outcomes, decisions, primary, n_boot, seed
+            ),
+            "dropped_families_only": mutation_metrics(
+                [r for r in outcomes if str(r.get("checker_family")) in dropped],
+                decisions,
+                primary,
+                n_boot,
+                seed,
+            ),
+        }
     p1 = None
     if controls is not None:
-        from harness.q2_mutation.report import p1_flip_tasks
-
-        tasks = controls["tasks"]
-        agg = controls["aggregate"][primary]
-        flips = p1_flip_tasks(tasks, primary)
-        confirmed = [t for t in flips if (decisions or {}).get(f"{t}__p1_flip") == "accept"]
-        n = int(agg["gold_fixed_point_n"])
-        p1 = {
-            "role": "pre-specified replication of the scoping round trip (no confirmatory part)",
-            "raw_flips": _exact(len(flips), n),
-            "audit_confirmed_flips": _exact(len(confirmed), n),
-            "flip_tasks": flips,
-            "confirmed_tasks": confirmed,
-            "not_exposed": agg.get("gold_fixed_point_not_exposed", []),
-            "not_counted": agg.get("gold_fixed_point_not_counted", []),
-        }
-        out["K1"] = agg["k1_gold_pass_and_do_nothing_fail"]
+        runs = [("confirm", controls)]
+        if reserve_controls is not None:
+            runs.append(("reserve", reserve_controls))
+        p1 = p1_over_controls(runs, decisions, primary, splits)
+        # K1 is a harness check of the confirm control run only.
+        out["K1"] = controls["aggregate"][primary]["k1_gold_pass_and_do_nothing_fail"]
     out["P1"] = p1
     confirmed_flips = len(p1["confirmed_tasks"]) if p1 else None
     out["K6"] = {
         "p5_tasks": p5["n"],
         "p5_escapes": p5["events"],
         "confirmed_p1_flips": confirmed_flips,
+        "p1_runs": sorted(p1["runs"]) if p1 else [],
         "adequacy_claim": bool(
             p5["n"] >= K6_MIN_TASKS
             and p5["events"] == 0
@@ -313,7 +392,17 @@ def headline(
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0], allow_abbrev=False)
     parser.add_argument("--outcomes", type=Path, required=True)
-    parser.add_argument("--controls-summary", type=Path)
+    parser.add_argument("--controls-summary", type=Path, help="confirm control run summary")
+    parser.add_argument(
+        "--reserve-controls-summary",
+        type=Path,
+        help="reserve control run summary (P1 and K6 count its golds; K1 does not)",
+    )
+    parser.add_argument(
+        "--splits",
+        type=Path,
+        default=Path(__file__).resolve().parents[2] / "program/evidence/q2-mutation/splits.json",
+    )
     parser.add_argument("--audit-summary", type=Path)
     parser.add_argument("--decisions", type=Path)
     parser.add_argument("--k2-report", type=Path)
@@ -342,6 +431,8 @@ def main(argv: list[str] | None = None) -> int:
     result = headline(
         outcomes,
         controls=load(args.controls_summary),
+        reserve_controls=load(args.reserve_controls_summary),
+        splits=load(args.splits) if args.splits and args.splits.is_file() else None,
         audit=load(args.audit_summary),
         decisions=decisions,
         k2=load(args.k2_report),
