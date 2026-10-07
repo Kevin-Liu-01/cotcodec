@@ -82,7 +82,7 @@ table's.
 |---|---|
 | harness/sparse_indexer_bank.py | e96653eb3eb5b9876201347c2fa8d452efc3ebb1043a516ac03c366ff8b89f88 |
 | harness/sparse_indexer_k1_budget_v2.py | c86568a62fe12cbcb5ad91eed25fc0afd9e9a09078a43345b18277e6922ea4fe |
-| harness/sparse_indexer_k1_equivalence_v2.py | 8117734933c10ff5027b5b1d3a15289d1bd45452c6bac2a2214a89daccd33d78 |
+| harness/sparse_indexer_k1_equivalence_v2.py | 3c8b6caf8dc14fb62096cfa205e2e459f774227a73229e5d62e72bdb6ff3e9a1 |
 | harness/sparse_indexer_k1_runtime_v2.py | 5bd8cb0a5e05fa49c82da1154d7ae7bb335741a0da84d78953ac36377f2a8547 |
 | scripts/run_sparse_indexer_phase0a_v2.py | 0848c071f517ec1eb3b16a948b20e05d16221ccd046a88b36cdfbf697f3ec721 |
 | scripts/run_sparse_indexer_k1_v2_doctor.py | 78b9644faa542e8b44453e21e5fed433b8dd88fc83461ab83e5157f31aa6502e |
@@ -559,7 +559,9 @@ to 36).
   v1's evaluation loop within 4e-6 recall points
   (`tests/test_sparse_indexer_bank.py`, the v2 doctor). On the H100 the
   throughput probe gates the same comparisons at the registered shapes under
-  TF32 (`q3-k1-throughput-probe-v1`, "Arms"). Floating-point summation order
+  TF32, with tolerances for TF32 rounding (the parameters after a full step
+  are reported there, the Adam step on identical inputs is gated;
+  `q3-k1-throughput-probe-v1`, "Arms"). Floating-point summation order
   differs, so a near-tie selection can differ from what v1's code would have
   produced; no v1 result exists to compare with.
 
@@ -1087,7 +1089,11 @@ a defect in the plan review's list.
 36. Equivalence evidence: float64 tolerances 1e-12 (loss, clip norm) and 1e-11
     (gradients, post-step parameters), Adam bit for bit, slot independence
     bit for bit, selection exactly equal, and the device gates of the probe
-    under TF32. Equivalence means the same function: summation order differs,
+    under TF32 (loss 1e-3, clip norm and gradients 1e-2, the Adam step on
+    identical inputs 1e-6, chunked targets 1e-4, slot independence and the
+    selection rule exact, the dense recall of one unit 1e-3 points). The
+    probe's gates are part of its registration and decide whether any limit
+    exists. Equivalence means the same function: summation order differs,
     so near-tie selections can differ from what v1's code would have
     produced; there is no v1 result to reproduce.
 37. Limits from the probe by the explicit formula in "Compute". Reason: v1's

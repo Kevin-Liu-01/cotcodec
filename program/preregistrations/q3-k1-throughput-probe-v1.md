@@ -41,7 +41,7 @@ needed.
 | scripts/probe_sparse_indexer_k1_throughput.py | a3207e10ea1662a3111c43d1378eb4d58cd166c96644bc7f4bd4af66a756115f |
 | harness/sparse_indexer_bank.py | e96653eb3eb5b9876201347c2fa8d452efc3ebb1043a516ac03c366ff8b89f88 |
 | harness/sparse_indexer_k1_budget_v2.py | c86568a62fe12cbcb5ad91eed25fc0afd9e9a09078a43345b18277e6922ea4fe |
-| harness/sparse_indexer_k1_equivalence_v2.py | 8117734933c10ff5027b5b1d3a15289d1bd45452c6bac2a2214a89daccd33d78 |
+| harness/sparse_indexer_k1_equivalence_v2.py | 3c8b6caf8dc14fb62096cfa205e2e459f774227a73229e5d62e72bdb6ff3e9a1 |
 | harness/sparse_indexer_k1_runtime_v2.py | 5bd8cb0a5e05fa49c82da1154d7ae7bb335741a0da84d78953ac36377f2a8547 |
 | harness/sparse_indexer_torch.py | f21301a49634af07d5ae0385c34011400c83af15b984a96238dc6fe1d4ee9457 |
 | harness/sparse_indexer_k1_runtime.py | 6fbddc91b6f7224f909901edb82278a68f68a208b558526c1a778ec9da6812fd |
@@ -102,15 +102,15 @@ determinism settings (deterministic algorithms, TF32 matmuls allowed, no
    | KL loss, bank against v1's per-indexer forward and `kl_block_loss` on the same targets | max relative difference 1e-3 |
    | Per-indexer gradient-norm (clip) | max relative difference 1e-2 |
    | Every gradient tensor before clipping, per indexer | relative Frobenius difference 1e-2 |
-   | Parameters after one Adam step | relative Frobenius difference 1e-3 |
    | Adam step on identical clipped gradients and states, three steps | max relative difference 1e-6 (bitwise reported) |
    | Chunked targets against v1's `sequence_targets` | max relative difference 1e-4, and no mass in a dropped block |
    | Changing one indexer's parameters | every other indexer's loss and gradients bit-identical |
    | Block selection and the U and U_k unions on the device | equal to v1's functions on the CPU, exactly (exact ties and signed zeros included) |
    | One selection unit (34 query rows), `evaluate_unit` against v1's evaluation loop | dense selectors, U, U_k and the random baseline within 1e-3 recall points; indexer columns reported |
 
-   A failed gate ends the probe `PROBE_TOLERANCE_FAIL`: no rates are reported
-   and no limit exists.
+   The parameters after one Adam step of the full path are reported, not
+   gated (decision 8). A failed gate ends the probe `PROBE_TOLERANCE_FAIL`: no
+   rates are reported and no limit exists.
 2. **train** (180 s). The binding shard of the registered layout (layers 15
    to 21: 7 trained layers behind a 22-layer teacher prefix) as one worker on
    the GPU: 8 steps of the 18-indexer bank at batch 4 x 8,192 tokens (steps 0
@@ -253,7 +253,13 @@ is reported with its receipt; a rerun is a new id.
    coupled clip norm, a shared Adam state or a wrong target (all O(1)
    differences) fail. Slot independence and the selection rule are exact. The
    Adam step is elementwise and bitwise on the CPU (tested); on the device
-   bitwise equality is reported and the gate allows float32 rounding.
+   bitwise equality is reported and the gate allows float32 rounding. The
+   parameters after a full step are not gated on the device: Adam's first step
+   is about the learning rate times the sign of each gradient element, so a
+   rounding difference in a near-zero gradient element flips that element's
+   whole update, and the head-gate matrix starts at zero, so its post-step
+   value is that update alone; the step on identical inputs and the gradients
+   are gated instead (in float64 the post-step parameters are gated at 1e-11).
 9. Considered and not built: CUDA graphs (the bank already removes the
    per-indexer launches and host synchronisations; capturing autograd adds a
    memory-pool and determinism path of its own), one teacher forward shared by

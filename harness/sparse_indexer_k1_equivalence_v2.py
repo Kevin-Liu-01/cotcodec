@@ -12,9 +12,9 @@ is visible.
 
 Gates (``TOLERANCES``):
 
-* loss, clip norm, gradients and post-step parameters of the 18 registered
-  indexers of one layer, against v1's per-indexer forward, ``kl_block_loss``,
-  ``clip_grad_norm_`` and ``torch.optim.Adam`` on the same targets;
+* loss, clip norm and gradients of the 18 registered indexers of one layer,
+  against v1's per-indexer forward, ``kl_block_loss`` and ``clip_grad_norm_``
+  on the same targets (the parameters after one Adam step are reported);
 * the Adam step on identical clipped gradients and states (bitwise is
   reported; the gate allows float32 rounding);
 * changing one indexer leaves every other indexer's KL and gradients bit-identical;
@@ -43,11 +43,17 @@ TOLERANCES: dict[str, float] = {
     "loss_max_rel": 1e-3,
     "clip_norm_max_rel": 1e-2,
     "grad_max_rel_fro": 1e-2,
-    "param_after_step_max_rel_fro": 1e-3,
     "adam_step_max_rel": 1e-6,
     "targets_max_rel": 1e-4,
     "dense_recall_points": 1e-3,
 }
+# The parameters after one Adam step are reported, not gated, on the device:
+# Adam's first step is about lr x sign(gradient), so a TF32 rounding difference
+# in a near-zero gradient element flips that element's whole update, and the
+# gate W_w starts at zero, so its post-step value is that update alone. The step
+# itself is gated on identical inputs ("adam_step_max_rel") and the gradients
+# are gated ("grad_max_rel_fro"); in float64 the post-step parameters are gated
+# at 1e-11 (tests/test_sparse_indexer_bank.py, the v2 doctor).
 CHECK_LAYER = 15  # a layer of the binding shard (layers 15-21)
 
 
@@ -204,8 +210,6 @@ def device_check(teacher: Any, device: torch.device, *, profile: rt.Profile,
         "loss": path["loss_max_rel"] <= TOLERANCES["loss_max_rel"],
         "clip_norm": path["clip_norm_max_rel"] <= TOLERANCES["clip_norm_max_rel"],
         "gradients": max(path["grad_max_rel_fro"].values()) <= TOLERANCES["grad_max_rel_fro"],
-        "params_after_step": max(path["param_after_step_max_rel_fro"].values())
-        <= TOLERANCES["param_after_step_max_rel_fro"],
         "adam_step": report["adam"]["adam_step_max_rel"] <= TOLERANCES["adam_step_max_rel"],
         "targets": worst <= TOLERANCES["targets_max_rel"] and dropped == 0.0,
         "independence": all(report["independence"].values()),
