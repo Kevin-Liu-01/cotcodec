@@ -99,6 +99,9 @@ class WorkItem:
     #: Run alone on its device (no other item of this runner on the same slot
     #: device at the same time), e.g. a problem whose inputs fill the GPU.
     exclusive: bool = False
+    #: Per-item phase limits overriding the runner's (a preregistered size rule,
+    #: e.g. ``harness.q1.pilot.watchdog_limits``); ``None`` keeps the defaults.
+    timeouts: dict[str, float] | None = None
 
     @property
     def key(self) -> str:
@@ -387,7 +390,7 @@ class Runner:
             with self._lock:
                 self._children.add(process)
             try:
-                phase, timed_out = self._watch(process, read_fd)
+                phase, timed_out = self._watch(process, read_fd, item.timeouts)
             finally:
                 with self._lock:
                     self._children.discard(process)
@@ -439,15 +442,24 @@ class Runner:
             row["details"]["item_started_at"] = round(started_at, 3)
             row["details"]["item_ended_at"] = round(started_at + wall, 3)
             row["details"]["item_exclusive"] = item.exclusive
+            if item.timeouts:
+                row["details"]["item_timeouts"] = dict(item.timeouts)
         rows[-1]["details"]["item_final"] = True
         return [validate_verdict_row(row) for row in rows], healthy
 
-    def _watch(self, process: subprocess.Popen, read_fd: int) -> tuple[str, bool]:
+    def _watch(
+        self,
+        process: subprocess.Popen,
+        read_fd: int,
+        overrides: Mapping[str, float] | None = None,
+    ) -> tuple[str, bool]:
         phase = "compile"
         phase_start = time.monotonic()
         buffer = b""
         while True:
-            limit = self.config.timeouts.get(phase, DEFAULT_TIMEOUTS[phase])
+            limit = (overrides or {}).get(
+                phase, self.config.timeouts.get(phase, DEFAULT_TIMEOUTS[phase])
+            )
             remaining = limit - (time.monotonic() - phase_start)
             if remaining <= 0:
                 with contextlib.suppress(ProcessLookupError):

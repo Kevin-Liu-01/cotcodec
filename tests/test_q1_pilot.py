@@ -79,34 +79,42 @@ def test_order_mutants_round_robins_families() -> None:
     assert len(ordered) == 9
 
 
-def test_schedule_tiers_and_kernel_contiguity() -> None:
+def test_schedule_puts_shared_problems_first_and_large_ones_by_size() -> None:
+    def kernel(kid: str, pid: str) -> dict[str, str]:
+        return {"kernel_id": kid, "kernel_path": f"/c/{kid}/kernel.py", "problem_id": pid}
+
+    # L2/74 (17 MB) is shared; L1/19 (6.4 GB) and L1/3 (1.3 GB) are exclusive.
     subs = [
-        {"kernel_id": f"s{i}", "kernel_path": f"/c/s{i}/kernel.py", "problem_id": "L1/1_Op1"}
-        for i in range(2)
+        kernel("big", "L1/19_ReLU"),
+        kernel("small", "L2/74_ConvTranspose3d_LeakyReLU_Multiply_LeakyReLU_Max"),
+        kernel("mid", "L1/3_Batched_matrix_multiplication"),
     ]
-    controls = {
-        "s0": [{"kernel_id": "s0.hack.a", "kernel_path": "/x", "problem_id": "L1/1_Op1"}],
-        "s1": [],
-    }
+    controls = {"small": [kernel("small.hack.a", subs[1]["problem_id"])], "big": [], "mid": []}
     mutants = {
-        "s0": [
-            {
-                "kernel_id": f"s0.m{i}",
-                "kernel_path": "/m",
-                "problem_id": "L1/1_Op1",
-                "family": "arithmetic",
-            }
-            for i in range(2)
+        "small": [
+            {**kernel(f"small.m{i}", subs[1]["problem_id"]), "family": "arithmetic"}
+            for i in range(3)
         ],
-        "s1": [],
+        "big": [{**kernel("big.m0", "L1/19_ReLU"), "family": "boundary"}],
+        "mid": [],
     }
     plan = pilot.schedule(subs, controls, mutants, gates=("a", "b1"))
     tiers = [item.tier for item in plan]
     assert tiers == sorted(tiers, key=lambda t: int(t[1]))
-    assert [i.kernel_id for i in plan if i.tier == "P0"] == ["s0", "s0", "s1", "s1"]
-    assert {i.seed for i in plan if i.tier == "P3"} == {43, 44}
-    first, second = (m["kernel_id"] for m in pilot.order_mutants(mutants["s0"]))
-    assert [i.kernel_id for i in plan if i.tier == "P2"] == [first, first]
-    assert [i.kernel_id for i in plan if i.tier == "P4"] == [second, second]
+    assert [i.kernel_id for i in plan if i.tier == "P0"] == ["small", "small"]
+    assert [i.kernel_id for i in plan if i.tier == "P1"] == ["small.hack.a"] * 2
+    ordered = [m["kernel_id"] for m in pilot.order_mutants(mutants["small"])]
+    assert [i.kernel_id for i in plan if i.tier == "P2"] == [k for k in ordered[:2] for _ in "ab"]
+    assert [i.kernel_id for i in plan if i.tier == "P3"] == ["mid", "mid", "big", "big"]
+    assert {i.seed for i in plan if i.tier == "P4"} == {43, 44}
+    assert [i.kernel_id for i in plan if i.tier == "P5"] == [ordered[2]] * 2 + ["big.m0"] * 2
     keys = [(i.kernel_id, i.gate, i.seed) for i in plan]
     assert len(keys) == len(set(keys))
+
+
+def test_watchdog_limits_grow_with_input_size() -> None:
+    small = pilot.watchdog_limits("L2/74_ConvTranspose3d_LeakyReLU_Multiply_LeakyReLU_Max")
+    big = pilot.watchdog_limits("L1/19_ReLU")
+    assert small["correctness"] >= 180.0 and big["correctness"] > 1000.0
+    assert pilot.exclusive_problem("L1/19_ReLU")
+    assert not pilot.exclusive_problem("L2/74_ConvTranspose3d_LeakyReLU_Multiply_LeakyReLU_Max")

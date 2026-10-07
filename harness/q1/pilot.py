@@ -25,19 +25,23 @@ substrates): runs A1 at M = 16 and replicate 42 only, to exercise the
 calibration driver and measure its cost. Its mutants are never scored here.
 
 **Schedule.** Work is ordered so that a time box cuts it at a deterministic
-point and every kernel's gates run together: tier P0 (every pilot substrate,
-every scoring gate, replicate 42), P1 (controls, one per substrate per
-round), P2 (mutants, one per substrate per round, families taken in schema
-order so that every family appears early), P3 (replicates 43 and 44 of the P0
-substrates), then the remaining mutants and controls. Items the time box cuts
-are counted and listed, never silently dropped.
+point and every kernel's gates run together (``schedule``): shared-class
+substrates first (inputs below 1 GB, several items side by side), then one
+control and two mutants of each, then the exclusive-class substrates in
+ascending input size, then replicates 43 and 44, then the rest. Items the time
+box cuts are counted and listed, never silently dropped. Problems whose
+native inputs reach 1 GB run alone on the GPU (``exclusive_problem``) and get
+watchdog limits that grow with input size (``watchdog_limits``).
 """
 
 from __future__ import annotations
 
 import hashlib
+import json
 from collections.abc import Callable, Iterable, Mapping, Sequence
 from dataclasses import dataclass
+from functools import lru_cache
+from pathlib import Path
 from typing import Any
 
 from harness.q1.mutate.fixtures import ELEMENTWISE_ACTIVATIONS
@@ -80,12 +84,32 @@ REPLICATE_SEEDS = (43, 44)
 EXCLUSIVE_INPUT_BYTES = 1_000_000_000
 
 
+@lru_cache(maxsize=1)
+def _shape_manifest() -> dict[str, Any]:
+    path = Path(__file__).resolve().parent / "data" / "shape_manifest.json"
+    return json.loads(path.read_text(encoding="utf-8"))
+
+
 def native_input_bytes(problem_id: str) -> int | None:
     """Native ``get_inputs()`` bytes from the committed shape manifest (meta device)."""
-    from harness.q1.gates.gate_c import shape_manifest
-
-    entry = shape_manifest()["problems"].get(problem_id, {})
+    entry = _shape_manifest()["problems"].get(problem_id, {})
     return (entry.get("native") or {}).get("input_bytes")
+
+
+#: Watchdog rule for the pilot (measured in job 1: gate (a) on the L1/19 reference-
+#: identity control needed more than the default 180 s correctness limit, because
+#: KernelBench's CPU ``get_inputs`` for 6.4 GB of inputs dominates). Limits grow with
+#: native input size: ``base + per_gb * GB`` per phase.
+WATCHDOG_BASE = {"compile": 120.0, "correctness": 180.0, "timing": 300.0}
+WATCHDOG_PER_GB = {"compile": 30.0, "correctness": 150.0, "timing": 60.0}
+
+
+def watchdog_limits(problem_id: str) -> dict[str, float]:
+    gigabytes = (native_input_bytes(problem_id) or 0) / 1e9
+    return {
+        phase: round(WATCHDOG_BASE[phase] + WATCHDOG_PER_GB[phase] * gigabytes, 1)
+        for phase in WATCHDOG_BASE
+    }
 
 
 def exclusive_problem(problem_id: str) -> bool:
@@ -232,11 +256,25 @@ def schedule(
     mutants: Mapping[str, Sequence[Mapping[str, Any]]],
     *,
     gates: Sequence[str] = SCORING_GATES,
+    mutant_rounds: int = 2,
 ) -> list[PlannedItem]:
     """The pilot's scoring order. ``substrates``: pilot evaluation substrates in
     selection order (``kernel_id``, ``kernel_path``, ``problem_id``);
     ``controls`` and ``mutants``: per substrate id, kernels with the same keys
-    (mutants also ``family``)."""
+    (mutants also ``family``).
+
+    Shared-class substrates (inputs below 1 GB) come first because several run
+    side by side; exclusive ones (each holds the GPU alone) follow in ascending
+    input size, so the time box always measures every gate on the small
+    problems and as many gates as fit on the large ones:
+
+    - P0: shared substrates, every gate, replicate 42;
+    - P1: one control per shared substrate (round robin);
+    - P2: ``mutant_rounds`` rounds of one mutant per shared substrate;
+    - P3: exclusive substrates, ascending native input bytes, every gate;
+    - P4: replicates 43 and 44 of the shared substrates;
+    - P5: the remaining mutants and controls, shared substrates first.
+    """
 
     def items(tier: str, kernel: Mapping[str, Any], seed: int) -> list[PlannedItem]:
         return [
@@ -246,21 +284,37 @@ def schedule(
             for gate in gates
         ]
 
+    shared = [s for s in substrates if not exclusive_problem(s["problem_id"])]
+    large = sorted(
+        (s for s in substrates if exclusive_problem(s["problem_id"])),
+        key=lambda s: native_input_bytes(s["problem_id"]) or 0,
+    )
     plan: list[PlannedItem] = []
-    for substrate in substrates:
+    for substrate in shared:
         plan += items("P0", substrate, PRIMARY_SEED)
-    control_groups = [list(controls.get(s["kernel_id"], ())) for s in substrates]
-    mutant_groups = [order_mutants(mutants.get(s["kernel_id"], ())) for s in substrates]
-    for kernel in _round_robin([group[:1] for group in control_groups]):
+    control_groups = {s["kernel_id"]: list(controls.get(s["kernel_id"], ())) for s in substrates}
+    mutant_groups = {
+        s["kernel_id"]: order_mutants(mutants.get(s["kernel_id"], ())) for s in substrates
+    }
+    for kernel in _round_robin([control_groups[s["kernel_id"]][:1] for s in shared]):
         plan += items("P1", kernel, PRIMARY_SEED)
-    for kernel in _round_robin([group[:1] for group in mutant_groups]):
+    for kernel in _round_robin([mutant_groups[s["kernel_id"]][:mutant_rounds] for s in shared]):
         plan += items("P2", kernel, PRIMARY_SEED)
-    for substrate in substrates:
+    for substrate in large:
+        plan += items("P3", substrate, PRIMARY_SEED)
+    for substrate in shared:
         for seed in REPLICATE_SEEDS:
-            plan += items("P3", substrate, seed)
-    rest = _round_robin([m[1:] + c[1:] for m, c in zip(mutant_groups, control_groups, strict=True)])
+            plan += items("P4", substrate, seed)
+    rest = _round_robin(
+        [
+            mutant_groups[s["kernel_id"]][mutant_rounds:] + control_groups[s["kernel_id"]][1:]
+            for s in shared
+        ]
+    ) + _round_robin(
+        [mutant_groups[s["kernel_id"]] + control_groups[s["kernel_id"]] for s in large]
+    )
     for kernel in rest:
-        plan += items("P4", kernel, PRIMARY_SEED)
+        plan += items("P5", kernel, PRIMARY_SEED)
     return plan
 
 

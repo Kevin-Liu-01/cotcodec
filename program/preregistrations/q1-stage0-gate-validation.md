@@ -69,10 +69,10 @@ Version card (`python scripts/q1_version_card.py --markdown`):
 | `schema` | `q1-version-card/1` |
 | `schema_py_sha256` | `c9bae9d502f7b9c83332f95e24fd9934d91bfe6cede47de527f6d584838b3256` |
 | `schema_version` | `q1-schema/1` |
-| `gate_code_sha256` | `470f9d25f813d810695c26f185b61584c98ad833d9b917baed1c1b33fb88e732` |
+| `gate_code_sha256` | `ef06c848ad0423a47d2b53bb3fff9a0efe96139095a488b57203587b72e38c18` |
 | `gate_data_sha256` | `200fdacd8be621dccbd8c05c777c69e8dbe4dab70e74ae99de923eeef6d5a6af` |
 | `shape_manifest_sha256` | `29e693ee4d77bc86e3ecfdb1000307b3878c023c6c6224f87c4fcfae74a220cb` |
-| `audit_code_sha256` | `3c1abf346c84f5d963e589f0007191e740d05de4ade0abcd7c2b4eb08ce61e02` |
+| `audit_code_sha256` | `cc059b75161412742e043286f4b0eadfa03c027ce627bf467fc447ec97e1af64` |
 | `analysis_sha256` | `472deac3ef1db28098aab2c906c788a31cd324d0a80b3a796fd8c2511946e48c` |
 | `mutator_package_sha256` | `f97a8ca84cda8a910feccc6e3f78b8e32b0b7d4cb8ee35b34c22fd75b4f2ad5a` |
 | `mutator_registry_fingerprint` | `43a1f0a234ad1c4a4421626d740989e01890b878c5ce7f2dec5739e3d43922a6` |
@@ -111,8 +111,15 @@ recording, the mutant compile filter, scoring, timing): `cotcodec-q1-gates`
 rebuilt from `infra/q1-gates/Dockerfile` at the frozen revision, on
 `cotcodec-research@sha256:02965f3d696d4e516a7cd6d5c03434e9098139738748ae778ed967215db7be6d`
 (torch 2.11.0+cu128, git 70d99e998b4955e0049d13a98d77ae1b14db1f45; Triton
-3.6.0; Python 3.12.3; compile target sm_90). Its image ID is recorded in every
-job manifest. Hardware: `fal-h100-01`, 8 x H100 80GB, driver 570.148.08.
+3.6.0; Python 3.12.3; compile target sm_90). The image embeds the committed
+source at that revision with the lane's provenance (labels
+`org.opencontainers.image.revision` and `source-tree-sha256`, the SHA-256 of
+`git archive`, and `/etc/cotcodec-provenance.json`), so a lane job runs exactly
+the frozen code; it is built only by
+`infra/slurm/host-single-node/build-q1-gates-image.sbatch` (a CPU-only Slurm job
+from a fresh clean clone, never `~/cotcodec`) and pushed to the host's private
+registry, which gives it a content digest. Its image ID and digest are recorded
+in every job manifest and receipt. Hardware: `fal-h100-01`, 8 x H100 80GB, driver 570.148.08.
 CPU-only steps run in GPU-less containers (no `--gpus`, `--network=none`,
 no `/dev/nvidia*` visible; decision D12).
 
@@ -748,8 +755,11 @@ the report on the CPU end-to-end journal.
   142b986) with `model: {kind: none}`, an explicit `memory_gb`, either
   `container_profile: large-cpu-mem` or a Triton cache redirected to
   `/outputs`, `seed_binding` where seeds are declared, from a clean host clone
-  and a source-overlay image of the frozen revision. Templates (all fail closed
-  until their `FILL-*` values are written from measured artifacts):
+  and the lane-ready `cotcodec-q1-gates` image of the frozen revision (section
+  2.3). Templates (all fail closed until their `FILL-*` values are written from
+  measured artifacts):
+  `experiments/manifests/q1-core/q1-pilot-smoke.template.yaml` and
+  `q1-pilot-cost.template.yaml` (the pilot, section 17),
   `experiments/manifests/q1-substrate-admission.yaml`,
   `experiments/manifests/q1-mutate/specializations-v1.yaml`,
   `experiments/manifests/q1-core/q1-gate-gpu-smoke.yaml`,
@@ -768,15 +778,39 @@ the report on the CPU end-to-end journal.
   pilot's projection is expected to exceed 8: in that case the research
   gauntlet runs before the full run, or the configuration shrinks (c-lite) by
   an addendum.
-- **Corpus hand-off.** The lane has no hash-bound input mount for a built
-  corpus. Admitted substrates, specializations and the selected mutants reach
-  later jobs either inside the source capsule (committed at a recorded
-  revision) or through a reviewed lane extension; each job records the
-  manifest hashes it read, and a corpus whose hashes differ from the recorded
-  ones is not admissible.
+- **Corpus hand-off** (solved in the pilot pass). The lane mounts one
+  read-only, SHA-256-checked study artifact per job (`study_artifact`, at most
+  512 MiB, at `/inputs/study-artifact.json`). Every Stage 0 job that needs
+  inputs another job or a CPU step produced receives them as one such
+  artifact (`harness/q1/study_artifact.py`, `scripts/q1_study_artifact.py`):
+  a JSON document of named trees, each file with its SHA-256 (and, for an
+  upstream clone, its git blob id, read from the object store at the pinned
+  revision so a working-tree edit cannot leak in), a tree hash per tree and a
+  manifest hash over all of them. The job checks the lane's file hash, the
+  manifest, every tree and every file before it unpacks them read-only, and
+  records the receipt. The artifact is host-only run input and is never
+  committed or pushed (it may hold the unlicensed KernelGYM clone for
+  `b_native`). What is committed instead: the human-written S2 sources are
+  vendored verbatim with their licence files (FlagGems Apache-2.0, no NOTICE
+  at the tag; Liger-Kernel BSD-2-Clause with its NOTICE; Triton tutorials MIT;
+  all 22 files re-verified byte for byte against the pinned upstream commits
+  in the pilot pass), the S2 build is deterministic pure Python, and the
+  corpus recipe (`corpus_recipe.json`: the SHA-256 of every file of every
+  substrate, mutant and control directory, every mutant's operator, site,
+  family and dedup hash, and the hashes of the pool, compile-filter and
+  selection records) is committed as evidence, so any later job's corpus is
+  checked against it. A corpus whose hashes differ from the recorded ones is
+  not admissible. KernelGYM, KernelBench-M and Dr. Kernel code is never
+  vendored.
 - **Watchdog per item**: compile 120 s, correctness 180 s, timing 300 s; the
   first timeout ends that kernel's gate or channel item. A timeout is a
-  rejection by that gate and an A4 failure for the audit.
+  rejection by that gate and an A4 failure for the audit. **Pilot finding
+  (section 17.4):** on a reference-identity control of L1/19 (6.4 GB of
+  inputs) gate (a) timed out at 180 s, so these fixed limits would reject
+  correct large-problem kernels. The limits are therefore a function of the
+  problem's native input bytes `B` (from the committed shape manifest),
+  `harness.q1.pilot.watchdog_limits`: compile `120 + 30 B/GB` s, correctness
+  `180 + 150 B/GB` s, timing `300 + 60 B/GB` s (unchanged below 0.1 GB).
 - **Crash attribution.** A post-load crash counts as a rejection only when
   it is attributable to the candidate. The worker runs candidate code only
   while the gate or channel runs; a worker process that dies (signal,
