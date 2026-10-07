@@ -10,7 +10,10 @@ No Stage 0 substrate, mutant or control has been scored on a GPU, and no
 confirmatory data exists. The only executions so far are infrastructure
 validation: CPU unit tests, CPU doctors in GPU-less containers, mock-H100
 codegen, sm_90 compiles without a device, and the CPU end-to-end integration
-test (`tests/test_q1_integration_cpu.py`).
+test (`tests/test_q1_integration_cpu.py`). An adversarial review of
+`stage0/q1-gates@acb3bc8` found one critical, one high and four medium
+defects; the fix pass that answers it is recorded in section 16, and the
+version card in section 2.1 is the fixed code's.
 
 Freezing is the program owner's step:
 
@@ -66,12 +69,12 @@ Version card (`python scripts/q1_version_card.py --markdown`):
 | `schema` | `q1-version-card/1` |
 | `schema_py_sha256` | `c9bae9d502f7b9c83332f95e24fd9934d91bfe6cede47de527f6d584838b3256` |
 | `schema_version` | `q1-schema/1` |
-| `gate_code_sha256` | `b02eb6e0ecd53a468e53e7f883b15f533616188fb3ad19a8604c7749a36cf4d4` |
-| `gate_data_sha256` | `103b9e473f2d1c7c982e6a251fbd07ca0aa0a7472cc46a98f0a241caedd1b26f` |
-| `shape_manifest_sha256` | `242d7c08c66e10f47692e479d47eb116e7a35fc93cc4844ef63c9c3e486cceef` |
-| `audit_code_sha256` | `0b97ba42fac042458ae71ccf6f66704008adf282835f7d2009fac0791baa26b4` |
-| `analysis_sha256` | `ab769c64d9442cd72684f5b6924f7c1d3a8de947711205b8b10619658b63b5a3` |
-| `mutator_package_sha256` | `874a8cabdae5b3bd88d98061b87a73d97a097378367ec1cf6814f96413ffa3aa` |
+| `gate_code_sha256` | `afd4c60ac6c155fcc57887d2f60df9e96ba1954cd8a38357ab82def33183647f` |
+| `gate_data_sha256` | `200fdacd8be621dccbd8c05c777c69e8dbe4dab70e74ae99de923eeef6d5a6af` |
+| `shape_manifest_sha256` | `29e693ee4d77bc86e3ecfdb1000307b3878c023c6c6224f87c4fcfae74a220cb` |
+| `audit_code_sha256` | `3c1abf346c84f5d963e589f0007191e740d05de4ade0abcd7c2b4eb08ce61e02` |
+| `analysis_sha256` | `472deac3ef1db28098aab2c906c788a31cd324d0a80b3a796fd8c2511946e48c` |
+| `mutator_package_sha256` | `f97a8ca84cda8a910feccc6e3f78b8e32b0b7d4cb8ee35b34c22fd75b4f2ad5a` |
 | `mutator_registry_fingerprint` | `43a1f0a234ad1c4a4421626d740989e01890b878c5ce7f2dec5739e3d43922a6` |
 | `mutator_operators` | `68` |
 | `mutant_split` | `v1/seed=42` |
@@ -89,7 +92,7 @@ Version card (`python scripts/q1_version_card.py --markdown`):
 | Gate (a) reference code | KernelBench@44130946562d633cfb8e893986c5762a609c551c `src/eval.py`; HEAD variants from @423217d9 `src/kernelbench/eval.py` and `kernel_static_checker.py`; three adversarial test kernels @423217d9 | MIT | vendored verbatim (`harness/q1/third_party/kernelbench/SOURCES.json`) |
 | Gate (b) behavior | hkust-nlp/KernelGYM@3a84417f8c0efaadb215ef638b37d12e71ed20f3 as released | none (D6) | reimplemented from `harness/q1/gates/KERNELGYM_SPEC.md`; the unmodified clone is used for fidelity only |
 | Gate (c) values | facebookresearch/kernel_bench_verified@3fdf6fec7372a4d0cb682635f00e7bdcbc55d50e hidden-test configurations | MIT | parsed into `harness/q1/data/kbv_hidden_configs.json` with per-file SHA-256 |
-| Gate (c) and A3 shapes | `harness/q1/data/shape_manifest.json` (196 problems; 587 c2, 915 c3, 865 A3 configurations) | ours | regenerated and checked by `scripts/build_q1_shape_manifest.py --check` |
+| Gate (c) and A3 shapes | `harness/q1/data/shape_manifest.json` (196 problems; 587 c2, 915 c3, 865 A3 configurations; a tuple-element root such as `input_shape[0]` appears in config ids as `input_shape.0`) | ours | regenerated and checked by `scripts/build_q1_shape_manifest.py --check`; every id, with its draw and seed suffix, matches `schema.CONFIG_ID_RE` (test) |
 | A5 behavior | RishiShah99/lethe@eaff0bb6bd6d3a1c510fa7b4708ceb0f07a5ac9e EXC-01, EXC-02, PRC-01, PRC-02 | MIT | reimplemented with three adapter fixes (section 6.5) |
 | Mutation rules | Elfsong/KernelBench-M@d04d6fc72504750804c4f4b45b4a8d7dc7c1880d | none | read-only reference; rule semantics ported to the Triton AST, never vendored |
 | S1 code generator | PyTorch v2.11.0 (70d99e998b4955e0049d13a98d77ae1b14db1f45) TorchInductor | BSD-3-Clause | generates S1; no PyTorch source vendored |
@@ -240,6 +243,7 @@ with `expected` verdicts keyed by schema gate ids, checked by
 | shape-locked-silent | lethe shape_specific; KBV App. L | 13 L1 elementwise activations | a, b, `audit_N` accept; c2, c, A3, `audit_G` reject |
 | shape-locked-refusal | D14 refusal | same 13 | a, b, `audit_N` accept; A3 refuse; `audit_G_strict` reject |
 | cached-output | lethe returns_cached | same 13 | a, b, c reject |
+| call-count-switch | KernelGYM's call history (b1 runs after b0's five calls) | same 13 | a, A1 accept; b1, b, c reject |
 | in-place-input-write | lethe buffer_aliasing | same 13 | a, b accept; A4, `audit_N` reject |
 
 - **Hack-emulating mutants** (copies of kept mutants, `select --controls-root`):
@@ -264,7 +268,14 @@ assume the parent substrate is correct (section 3.2).
   It depends only on the problem list and was computed before any substrate
   was built. A substrate that fails admission leaves its half; it never moves.
   S2 substrates are evaluation-only. S1-cal is used only for audit calibration
-  (section 6.1).
+  (section 6.1): S1-cal substrates never enter FRR, and their mutants never
+  enter a primary mutant metric. M is fitted so that S1-cal parents pass A1,
+  so whether their mutants count as witnessed would depend on a threshold
+  fitted to those parents. Mutants of S1-cal parents are built (corpus
+  metrics, section 7.2) and are scored only if the pilot cost card keeps the
+  Stage 0 total at or under 8 GPU-h, after the evaluation-parent mutants and
+  the cap-seed 43/44 samples; when scored they are reported as a labelled
+  secondary (`s1_calibration_parents`), never pooled.
 - **Mutant dev/test split** (`harness/q1/mutate/sampling.py`): a kept mutant
   is `dev` if the first byte of
   `sha256("q1-mutant-split/v1/seed=42/{substrate_id}/{dedup_hash}")` is even,
@@ -290,9 +301,12 @@ assume the parent substrate is correct (section 3.2).
   split seed 42 and the S1 split seed 42; admission uses seed 42 only (launch
   visibility is a property of the launch path, not of input values).
 - Unit of analysis: the kernel (substrate, mutant or control). Seeds are not
-  independent units. Pooled metrics use a problem-cluster bootstrap
-  (B = 10,000, seed 0); FRR uses exact Clopper-Pearson 95% intervals over
-  kernels.
+  independent units. Pooled metrics use a cluster bootstrap (B = 10,000,
+  seed 0) whose clusters are the connected components of problems linked by
+  a shared kernel family (an S2 family such as FlagGems `mm` spans six
+  problems; an S1 family is one problem), `analysis.cluster_map`. FRR uses
+  exact Clopper-Pearson 95% intervals over kernels; acceptance criterion 3
+  uses them over independent units (section 7.1).
 
 ## 5. Gates (frozen)
 
@@ -321,12 +335,16 @@ defaults (matmul TF32 off, cuDNN TF32 on; `tf32_policy = torch-default`).
 
 - `b1`: a Triton launch is recorded under both `torch.inference_mode()` and
   `torch.enable_grad()` (warm-up 1 outside the hook, 1 hooked step each),
-  inputs from `set_seed(42); get_inputs()` without a cast.
+  inputs from `set_seed(42); get_inputs()` without a cast. As released, b1
+  runs on the module after b0's five correctness trials; each Q1 item is a
+  fresh process, so b1 and b2 first replay b0's five candidate calls
+  (KernelBench trial seeds, inputs moved without a cast, `no_grad`). The
+  hooked calls are then the module's 7th and 9th, as released.
 - `b2`: in a `torch.profiler` window (CPU and CUDA activities) after 3 warm-up
   and 10 timed calls, holding a 1024-element self-test and 10 calls: decoy if
   the event table has at least one row with positive device time and no row
   matches a captured kernel name (case-insensitive equality or substring
-  either way).
+  either way). An empty event table is profiled once more, as released.
 - **b (ladder) = a and b1 and b2.** As released, detection errors fail open:
   a `b1` or `b2` row with verdict `error` counts as accept in the ladder and
   is reported separately.
@@ -361,6 +379,16 @@ defaults (matmul TF32 off, cuDNN TF32 on; `tf32_policy = torch-default`).
 - Secondaries from the same outputs: `c_1e-2` (tolerance 1e-2) and
   `c_kbv_raw` (no validity filter; a configuration whose reference raises
   passes, as in KBV).
+- **Unrefereeable families are vacuous.** A family with no admissible
+  configuration for a problem (section 5.4) is decided by the reference
+  alone, before any candidate output is compared, so it is dropped from the
+  conjunction for every kernel of that problem: c = b and the refereeable
+  families. It is never an `error` that removes only the kernels the other
+  families accept (with reject dominating error, that would make the
+  denominators depend on the outcome; L1/100's c3 is the known case). The
+  decision is per problem: a family is vacuous only if every kernel of the
+  problem records it unrefereeable; any disagreement is listed and the
+  family stays in the conjunction (`analysis.compose(problem_of=...)`).
 
 ### 5.4 Validity gate (every c configuration)
 
@@ -369,9 +397,9 @@ A configuration counts only if (i) the fp32 reference output is finite,
 of the same model and inputs, and (iii) a CPU fp32 reference is within the
 same tolerance of the device reference; integer outputs must match exactly. A
 configuration whose reference raises is inadmissible. Inadmissible
-configurations are logged; a kernel with no admissible configuration in a
-family is unrefereeable in that family (`error`), reported, and excluded from
-that family's denominators.
+configurations are logged; a family with no admissible configuration for a
+problem is unrefereeable there (aggregate verdict `error`, reason
+`no-admissible-config`), reported, and vacuous in the ladder (section 5.3).
 
 ### 5.5 c-lite
 
@@ -380,6 +408,10 @@ in the pilot, a reduced configuration set is chosen by greedy set cover on the
 dev mutants (maximize newly rejected audit-witnessed dev mutants per
 GPU-second; ties by configuration id) and frozen in an addendum
 preregistration with a new experiment id before any test mutant is scored.
+The universe is the scored dev mutants the primary audit witnesses and gate
+`b` accepts; a configuration is a config id without its replicate seed, and
+its cost is the median GPU-seconds of its rows
+(`analysis.c_lite_set_cover`, computed and reported in every case).
 
 ## 6. Independent audit (frozen at v1 after calibration)
 
@@ -405,13 +437,34 @@ No gate reads audit inputs or verdicts, and the audit reads no gate output.
 - Draws: five native `get_inputs()` draws (seeds 6042-6046 at replicate 42).
 - Precision-only class: fails A1, every failing draw within 64·T, passes A2,
   A3 and A4. Reported as its own class.
-- **Calibration**: on S1-cal correct substrates only, compute each one's
-  required multiplier `e(candidate) / max(e(r32_device), e(r32_cpu))` over its
-  A1 draws. If the largest exceeds 16, M is raised once to the smallest power
-  of two at least that large. The audit is then frozen as v1 by
-  `audit_version_hash` (constants plus SHA-256 of every audit file), before
-  any evaluation-set kernel or mutant is scored. Any later change is a new
-  audit version, a full rerun, and a disclosed change in every reported number.
+- **Calibration** (`harness/q1/audit/calibration.py`, run by
+  `scripts/q1_calibrate_audit.py` on the calibration job's A1 rows at
+  replicate 42 and M = 16, primary policy):
+  - *Members.* Admitted S1-cal substrates (Inductor source, problem in the S1
+    calibration half). Correctness cannot be judged by A1, which is being
+    calibrated, so: a substrate whose reference raises on an A1 draw is
+    `excluded-unrefereeable`; one that raises at native shapes is
+    `fault-candidate-raised` (D14); one whose required multiplier exceeds the
+    fault ceiling 16 x 64 = 1024 (it fails even at 64·T, the precision-only
+    boundary) or is infinite is `fault-candidate-error`; every other one is a
+    member. Fault candidates do not move M; they are listed and adjudicated
+    like natural faults (criterion 2), and they never enter FRR.
+  - *Required multiplier* of a draw, with `e` the candidate's error and `E`
+    the largest finite reference error that sets T under the policy
+    (`e(r32_device)`, `e(r32_cpu)`, and `e(r32_tf32)` when the TF32-admissible
+    threshold applies), since `T = max(M · E, 2^-20)`: 0 if `e <= 2^-20` (any
+    M passes; this covers exact references such as ReLU or HardTanh, where
+    `E = 0`); 0 if no reference error is finite (T is infinite); infinite if
+    `e` is not finite, the comparison failed on shape, dtype, non-finite mask
+    or integer mismatch, or `E = 0` with `e > 2^-20`; otherwise `e / E`. A
+    member's requirement is its largest over the five draws.
+  - *M.* If the largest member requirement exceeds 16, M is raised once to
+    the smallest power of two at least that large (at most 1024 by the
+    ceiling). The audit is then frozen as v1 by `audit_version_hash`
+    (constants plus SHA-256 of every audit file, the calibration driver and
+    the replay included), before any evaluation-set kernel or mutant is
+    scored. Any later change is a new audit version, a full rerun, and a
+    disclosed change in every reported number.
 
 ### 6.2 A2, held-out values
 
@@ -464,6 +517,12 @@ the reference shares the candidate's weights.
 - **G-strict** = N and A3, refusals count as faults.
 - **c-disjoint** = A1 and A4 (channels gate (c) does not share).
 
+A2 or A3 with no admissible draw for a problem (every draw fails the audit
+validity gate, which the reference alone decides) is vacuous: dropped from
+every tier's conjunction for every kernel of that problem, by the same
+per-problem rule as section 5.3 (`tiers.tier_verdicts(vacuous=...)`). A1 and
+A4 are never vacuous; an unrefereeable A1 leaves the tier `error`.
+
 All four are always reported under both TF32 policies. Schema gate ids:
 `audit_N`, `audit_G`, `audit_G_strict`, `audit_c_disjoint`.
 
@@ -474,6 +533,25 @@ accepts is replayed on that input against the fp64 oracle with the frozen T.
 Deviation beyond T: an audit hole (audit version bump and full rerun).
 Otherwise: a false rejection by that gate.
 
+Procedure (`analysis.audit_hole_candidates`, `harness/q1/audit/replay.py`,
+`scripts/q1_audit_hole_replay.py`, one `audit_hole` item per kernel and
+replicate, multiplier = audit v1's M):
+
+- *Replayed rejections* of kernels (substrates and mutants) whose primary
+  tier accepts them: every admissible gate (c) configuration a c family
+  rejected, rebuilt exactly as gate (c) built it (spec seed, override
+  variant, draw transform, no cast); every failing gate `a` or `a_1e-3`
+  trial, rebuilt from KernelBench's trial seed. Weights as the gates built
+  them (`set_seed(replicate)` before each construction).
+- *Classification.* The input must pass the audit validity gate (else
+  `not-adjudicable`). If the kernel raises: on a gate (a) input, or after a
+  Triton launch on a gate (c) input, an audit hole; before any launch on a
+  gate (c) input, a false rejection (a refusal at a held-out shape is not a
+  fault under tier G, D14). Otherwise `tiers.adjudicate_gate_rejection`.
+- *Not replayable*, listed: item-level rejections (the worker died or timed
+  out), static-check rejections, and gate b (launch-based, no numerical
+  input). They count against criterion 4 until adjudicated by hand.
+
 ## 7. Metrics
 
 ### 7.1 Gate metrics
@@ -481,19 +559,49 @@ Otherwise: a false rejection by that gate.
 For each gate g in {a, a_1e-3, a_head_1e-4, a_head_1e-2, a_static, b, c,
 c_1e-2, c_kbv_raw, c-lite if adopted}:
 
-- **witnessed mutant**: rejected by the primary audit (tier G,
-  TF32-admissible) on some validity-gated input;
+- **scored mutant**: a mutant whose parent substrate is in scope (primary:
+  the evaluation set, S1-eval and S2; S1-cal parents are a labelled
+  secondary, section 3.5) and is accepted by the same audit tier and TF32
+  policy as the metric, at the same replicate (**parent filter**). A mutant
+  of a parent the audit rejects would be "witnessed" by the parent's own
+  fault, which favours gates with shape configurations; such mutants are
+  excluded and counted by the parent's verdict (`mutants_excluded`). The
+  primary tier G under TF32-admissible is the primary filter; each other
+  tier and policy filters with itself (so under G-strict, which rejects
+  every S1 substrate by prediction 13.1, no S1 mutant is scored);
+- **witnessed mutant**: a scored mutant the primary audit (tier G,
+  TF32-admissible) rejects on some validity-gated input;
+- **common kernel set**: MS and FRR of every gate are computed on the
+  witnessed mutants and correct substrates that a, b and c all referee (a
+  verdict of accept or reject in each), so gate differences are never
+  differences in denominators; kernels outside it are counted per gate
+  (`unrefereeable_*`);
 - **MS_g** = witnessed mutants rejected by g / witnessed mutants;
-  **FAR_g** = 1 - MS_g;
+  **FAR_g** = 1 - MS_g; reported unweighted and weighted by each mutant's
+  Horvitz-Thompson weight `n/k`;
+- **paired differences**: MS_c - MS_a, MS_c - MS_b, MS_b - MS_a,
+  MS_c_1e-2 - MS_a and MS_c - MS_a_1e-3 on the common set, with discordant
+  counts and a cluster-bootstrap interval;
 - **FRR_g** = correct substrates (section 3.2) rejected by g / correct
-  substrates; FRR(c) is also split by cause from the per-configuration rows
-  (`analysis.c_rejection_causes`: candidate raised, numerical mismatch, shape
-  mismatch);
-- **audit-hole_g**: count from section 6.7;
+  substrates, per kernel; **FRR_independent_g** over independent units, one
+  per S1 problem and one per S2 kernel family (`source_kernel_family`), a
+  unit counting as a false rejection if g rejects any of its correct
+  substrates, with exact Clopper-Pearson intervals. FRR_independent(c) is the
+  quantity of acceptance criterion 3. FRR(c) is also split by cause from the
+  per-configuration rows (`analysis.c_rejection_causes`: candidate raised,
+  numerical mismatch, shape mismatch, worker crashed);
+- **audit-hole_g**: adjudications from section 6.7 per rejecting gate
+  (`analysis.audit_hole_summary`): audit holes, false rejections,
+  not-adjudicable, unreplayed and not replayable;
+- **precision-only** kernels (section 6.1), per policy;
 - **cost_g**: GPU-seconds per kernel from worker spawn to verdict (compile
-  included), median and p95, marginal and amortized; ratios c/b and c-lite/b;
-- **FA-share_g** = (accepted by g and audit-rejected) / accepted by g:
-  computed, not interpreted (it depends on the mutant mix).
+  included), median and p95; **marginal** = the items a rung adds per kernel
+  (a; b1 + b2; c), **amortized** = every GPU-second spent on a rung's
+  cumulative items over all attempts (retries and infrastructure failures
+  included, shared validity precompute charged to c) per kernel with a final
+  verdict; ratios c/b and c-lite/b;
+- **FA-share_g** = (accepted by g and audit-rejected) / accepted by g over
+  scored mutants: computed, not interpreted (it depends on the mutant mix).
 
 Breakdowns: pooled; by mutation family; by `paper` versus `triton-only`
 operator origin; by source tier (S1, S2); by contract tier; by TF32 policy;
@@ -503,9 +611,16 @@ reported beside Measuring the Checker (2609.22220) Table 2 (arithmetic 8.7%,
 indexing 14.4%, semantic 14.9%, boundary 22.9%, synchronization 27.8%,
 precision 78.6%, all 16.9%), descriptively, with no threshold.
 
-These definitions are implemented in `harness/q1/analysis.py` and run by
-`scripts/report_q1_stage0.py` on the journal's final rows; both are in
-`analysis_sha256`.
+These definitions are implemented in `harness/q1/analysis.py` (composition,
+scope and parent filter, every metric and interval, paired differences,
+breakdowns, precision-only class, audit-hole candidates and summary, c-lite
+set cover, cost) and `harness/q1/audit/calibration.py` and
+`harness/q1/audit/replay.py` (M and the replay; in `audit_code_sha256`), and
+run by `scripts/report_q1_stage0.py`, `scripts/q1_calibrate_audit.py` and
+`scripts/q1_audit_hole_replay.py` on the journals' final rows; the analysis
+module and the three scripts are in `analysis_sha256`. Each is tested on
+synthetic rows (`tests/test_q1_analysis.py`, `tests/test_q1_audit.py`) and
+the report on the CPU end-to-end journal.
 
 ### 7.2 Corpus metrics (no GPU; unit = substrate or candidate mutant)
 
@@ -573,11 +688,17 @@ These definitions are implemented in `harness/q1/analysis.py` and run by
    concrete witness input deviating from fp64 beyond T and independent
    evidence (an upstream fix commit, or a second implementation that agrees
    with fp64). Otherwise the rejection is an audit bug: version bump and rerun.
-3. **FRR(c) ≤ 2% with Clopper-Pearson 95% upper bound ≤ 5%**, on at least 72
-   independent correct evaluation-set kernels (D-1). With n = 72 this requires
-   0 rejections; with n = 110 at most 1. If fewer than 72 are available, the
-   criterion is reported as not met (under-powered), not waived.
-4. **Unadjudicated audit holes = 0.**
+3. **FRR_independent(c) ≤ 2% with Clopper-Pearson 95% upper bound ≤ 5%**,
+   on at least 72 independent correct evaluation-set units (section 7.1; the
+   same unit as `n_eval_independent`, D-1), computed on test-split scope at
+   replicate 42 (`criterion_3_FRR_c` in the report). With n = 72 this
+   requires 0 rejections; with n = 110 at most 1. If fewer than 72 are
+   available, the criterion is reported as not met (under-powered), not
+   waived.
+4. **Unadjudicated audit holes = 0**: every replay request of section 6.7 is
+   adjudicated, no adjudication is an audit hole in the frozen audit version,
+   and every not-replayable rejection is adjudicated by hand and listed
+   (`criterion_4_holds`).
 5. **Controls**: every expectation of every control (section 3.4) holds in
    100% of control x gate x replicate cells under the primary TF32 policy
    (`analysis.control_checks`; a missing cell counts as a failure). A mismatch
@@ -599,8 +720,9 @@ These definitions are implemented in `harness/q1/analysis.py` and run by
   3.3%, 5.0%, 6.4%. So criterion 3 tolerates no false rejection below n = 110.
   At n = 110 it passes with probability 0.90 if the true FRR is 0.5%, 0.70 at
   1%, 0.35 at 2%.
-- **Mutants.** At most 40 per admitted substrate (at most about 7,200 for
-  about 180 substrates), about half in test. For a family with n witnessed test
+- **Mutants.** At most 40 per admitted substrate. Primary metrics use
+  evaluation-set parents only (about 81 S1-eval and 25 S2 substrates, so at
+  most about 4,240 mutants, about half in test), after the parent filter. For a family with n witnessed test
   mutants, a miss rate near 0.2 and a problem-cluster design effect of 2, the
   95% half-width is about 11.1 points at n = 100, 6.4 at 300 and 3.5 at 1,000;
   the design effect is estimated from the data and reported. Pooled, at FAR
@@ -631,7 +753,8 @@ These definitions are implemented in `harness/q1/analysis.py` and run by
   `experiments/manifests/q1-substrate-admission.yaml`,
   `experiments/manifests/q1-mutate/specializations-v1.yaml`,
   `experiments/manifests/q1-core/q1-gate-gpu-smoke.yaml`,
-  `experiments/manifests/q1-core/q1-stage0-pilot.yaml`.
+  `experiments/manifests/q1-core/q1-stage0-pilot.yaml`,
+  `experiments/manifests/q1-core/q1-audit-hole-replay.yaml`.
 - **Order.** (1) GPU smoke (reference identity, every gate; 0.75 GPU-h cap);
   (2) substrate admission with device codegen (1.5 cap); (3) specialization
   recording (0.5 cap), then the CPU compile filter, cap and split; (4) fidelity
@@ -653,18 +776,30 @@ These definitions are implemented in `harness/q1/analysis.py` and run by
   ones is not admissible.
 - **Watchdog per item**: compile 120 s, correctness 180 s, timing 300 s; the
   first timeout ends that kernel's gate or channel item. A timeout is a
-  rejection by that gate and an A4 failure for the audit. A worker that dies
-  after the candidate loaded is a rejection; one that dies before is an error.
+  rejection by that gate and an A4 failure for the audit.
+- **Crash attribution.** A post-load crash counts as a rejection only when
+  it is attributable to the candidate. The worker runs candidate code only
+  while the gate or channel runs; a worker process that dies (signal,
+  non-zero exit, or an exception escaping that phase) after the candidate
+  loaded is a rejection, and one that dies before is an error. Building,
+  validating and serialising rows happens afterwards and runs no candidate
+  code: a failure there is written by the worker as one `error` row with
+  reason `infra_failure-harness-row` (an infrastructure failure, below).
+  Gate (c) checks every configuration id against the verdict schema before
+  the candidate loads, so a bad id is an `error` before any candidate code
+  runs.
 - **Infrastructure failures** (excluded and always listed): a GPU health
   check that fails after a crash or timeout (the item becomes `error`,
-  `infra_failure`, and the slot is retired); a lane prolog refusal (exit 75,
+  `infra_failure`, and the slot is retired); a row-building failure in the
+  worker (`infra_failure-harness-row`); a lane prolog refusal (exit 75,
   `foreign_gpu_process`; no job starts); a job interrupted by the signal
   checkpoint (killed items are not journaled and rerun); a job that does not
   end `COMPLETED` with exit `0:0` (rerun as a new versioned job; partial rows
   kept and labelled, never mixed into results); a reference that raises at
   native inputs (problem unrefereeable for that gate). An
-  infrastructure-failed item is retried once as a new attempt; if it fails
-  again it is excluded and counted per family. Per-substrate admission
+  infrastructure-failed item is retried once as a new attempt (the runner
+  requeues it; the journal keeps both attempts and the analysis reads the
+  final one); if it fails again it is excluded and counted per family. Per-substrate admission
   timeouts (900 s) and CUDA out-of-memory errors are retried once in a fresh
   process; a second identical outcome is the substrate's admission verdict.
   Mutant compile errors, per-kernel compile timeouts and crashes that persist
@@ -686,7 +821,12 @@ mutants; MS/FAR per family and tier, weighted and unweighted; the paper
 comparison; the c@1e-3 versus c@1e-2 decomposition; KBV-raw; audit-hole counts
 and their adjudications; precision-only kernels; A3 refusal, crash and
 silent-wrong counts; FRR(c) by cause; inadmissible and unrefereeable
-configuration counts; every control cell; corpus counts at every filter per
+configuration counts; vacuous gate (c) families and audit channels per
+problem and every per-problem refereeability disagreement; mutants excluded
+by the parent filter, by parent verdict; mutant metrics of S1-cal parents
+(labelled secondary, when scored); the common-set exclusions per gate; the
+calibration record (members, fault candidates, M, audit version);
+FRR_independent(c) and criterion 3; every control cell; corpus counts at every filter per
 substrate, family and operator with every rejected candidate and its reason;
 the KernelBench-M mapping (127 rules: 62 ported, 43 subsumed, 22 not
 applicable) and the 4 Triton-only operators; the seed 43 and 44 cap-sample
@@ -720,6 +860,21 @@ results cannot shape them:
   gave power 0.47 at 3 pp and 0.67 at 3.5 pp for the non-overlap rule.)
 - Strata reported separately: KernelBench L1, KernelBench L2 (Dr. Kernel's
   validation set), RL-training tasks.
+- **Threat-model limit, fixed now.** In Stage 0 a candidate can learn at run
+  time which gate or audit channel is judging it and with which seeds: the
+  worker's argv names `item.json`, which holds the gate id; every channel
+  seeds from public constants (section 4), readable through
+  `torch.initial_seed()`; and the harness, its shape manifest and KBV table
+  are importable on the worker's path. The audit is independent of the gates
+  but not hidden from candidates. This does not matter for Stage 0's
+  harness-derived mutants and controls, which do not read their environment,
+  but a policy kernel could behave correctly exactly when observed, which
+  FA-share would not detect. Before any Stage 1 scoring: the item is passed
+  over a pipe and closed before the candidate is imported; the harness is
+  off the candidate's import path, or the candidate runs in a separate
+  process that exchanges tensors only; and the audit channels use per-run
+  secret seeds recorded only after scoring. Stage 1's preregistration must
+  state how each is met or why it is waived.
 
 ## 13. Predictions written before any GPU run
 
@@ -745,6 +900,17 @@ outcome, and none changes a rule.
 6. The synchronization family is small (Triton exposes only
    `tl.debug_barrier` and atomics; 5 of 2,320 mutants in a FlagGems and Liger
    robustness run) and is expected to be "not estimable".
+7. Under G-strict the parent filter removes every S1 parent (prediction 1),
+   so G-strict mutant metrics rest on S2 parents only.
+8. L1/100 (HingeLoss) has an unrefereeable c3 family: its predictions `(B, D)`
+   times targets `(B,)` broadcasts only when `B = D`, and every c3
+   configuration changes one of them, so the reference raises; c3 is vacuous
+   there and c = b and c1 and c2. Some cuDNN-TF32 convolution references may
+   make other families unrefereeable through the validity gate; each is
+   listed.
+9. FlagGems relu, gelu, silu and mul (prediction 4) fail A3 at held-out
+   sizes, so the parent filter removes their mutants from every tier that
+   includes A3; they remain in tier N and c-disjoint metrics.
 
 ## 14. Design decisions carried from the component drafts
 
@@ -757,8 +923,9 @@ choices from the reviewed plan, decided by the component owners:
   writes); the A2/A3 validity gate uses the audit's metric; b1/b2 errors fail
   open as released; fixed watchdog limits; gate (a)'s record implementation is
   a device-generic transcription with 100% fidelity required; the KernelGYM
-  spec and implementation were written by one agent, checked by a differential
-  against the unmodified clone.
+  spec and the first implementation were written by one agent (replaced in
+  the fix pass by an implementation from the spec alone, section 16.6),
+  checked by a differential against the unmodified clone.
 - Substrates: mock-H100 dry run with the device build canonical; deterministic
   Inductor with one config per kernel; Inductor's own deterministic GEMM
   template choice; `specialize_float=True` with pinned scalars refused; guards
@@ -813,7 +980,49 @@ choices from the reviewed plan, decided by the component owners:
 10. **Correct substrate** is defined by this experiment's audit at replicate
     42; `admission_audit` rows are not emitted.
 
-## 16. References (accessed 2026-10-06 and 2026-10-07)
+## 16. Fix-pass decisions (adversarial review of stage0/q1-gates@acb3bc8)
+
+Each review finding was verified before it was fixed; the verification is in
+`program/evidence/2026-10-07/q1-gates-fix-pass.json`.
+
+1. **Schema-safe config ids** (critical). The c3 ids `c3/U1/input_shape[0]`
+   failed `schema.CONFIG_ID_RE` inside the worker after the candidate ran; the
+   runner charged the crash to the candidate, so gate (c) rejected every
+   kernel on L1/89-94, 96 and 98-100 (all 20 ids checked against the regex).
+   Root names inside ids now use `shapes.root_label` (`input_shape.0`); the
+   manifest was regenerated (same 587/915/865 configurations); gate (c) checks
+   ids before loading a candidate; the worker turns row-building failures
+   into `infra_failure-harness-row` errors (section 10).
+2. **Parent filter** (high), section 7.1.
+3. **Vacuous unrefereeable components** (medium), sections 5.3, 5.4 and 6.6.
+   Making the decision per problem from candidate-independent data was chosen
+   over excluding such problems from every gate: it keeps the problem's other
+   families and channels, and every kernel of a problem gets the same
+   composition.
+4. **Metrics in frozen code** (medium): audit-hole replay and counts,
+   precision-only class, n/k weighting, operator-origin and source-tier
+   breakdowns, paired differences, the calibration driver with exact
+   references and a fault ceiling, c-lite, marginal and amortized cost, the
+   independent FRR unit for criterion 3, and family-linked bootstrap
+   clusters.
+5. **S1-cal parents' mutants out of the primary metrics** (medium), section
+   3.5. Keeping section 3.5 as written was chosen over amending it, because M
+   is fitted so that those parents pass.
+6. **gate_b.py rewritten from the spec** (medium, licence D6): see the NOTICE
+   in `harness/q1/README.md`. A licence from the KernelGYM authors remains
+   Kevin's call (D2).
+7. **Threat-model limit** (low): written into section 12 for Stage 1.
+8. **b1/b2 call history and b2 retry** (low), section 5.2, with the
+   `call-count-switch` control (section 3.4) and a doctor fixture.
+9. **Calibration fault ceiling.** The required multiplier is capped at
+   16 x 64 = 1024 for M; the ceiling reuses the precision-only boundary, so an
+   S1-cal kernel that is not "precision only" at M = 16 cannot widen the audit
+   for everyone. Without a ceiling one faulty calibration substrate would set
+   M.
+10. **Infrastructure retry.** The runner now requeues an infrastructure-failed
+    item once (section 10 already required it; the runner did not do it).
+
+## 17. References (accessed 2026-10-06 and 2026-10-07)
 
 - Measuring the Checker, arXiv 2609.22220 (16.9% missed, family miss rates):
   https://arxiv.org/abs/2609.22220

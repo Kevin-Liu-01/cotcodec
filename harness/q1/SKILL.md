@@ -31,6 +31,15 @@ deterministic mutants. The draft preregistration is
 <!-- agent-docs:fill:patterns -->
 
 - Never edit `schema.py` from a component branch; record a needed change.
+- Config ids must match `schema.CONFIG_ID_RE` where they are made
+  (`shapes.root_label`); the worker never lets a row-building failure become a
+  candidate rejection.
+- Mutant metrics need the parent filter and one kernel set across gates;
+  unrefereeable families and A2/A3 channels are vacuous per problem
+  (`analysis.compose(problem_of=...)`).
+- `gates/gate_b.py` is a spec-only rewrite (KernelGYM has no licence): change
+  it from `KERNELGYM_SPEC.md` and black-box probes of the clone, never from
+  KernelGYM's source.
 - Splits come from their owners (`substrates/split.py`, `mutate/sampling.py`);
   the analysis never re-derives them.
 - Agent-written Triton never runs with GPU access (D3, D7). CPU fixtures run
@@ -47,6 +56,9 @@ deterministic mutants. The draft preregistration is
 | Run the CPU doctor | `experiments/manifests/q1-core/q1-gate-doctor-cpu.md` |
 | Change shape rules | Edit `shapes.py`, then `scripts/build_q1_shape_manifest.py --write` in a container |
 | Build controls | `python -m harness.q1.controls --out-root R` |
+| Calibrate the audit (M, audit v1) | `scripts/q1_calibrate_audit.py --journal CAL --corpus C --output audit-v1.json` |
+| Adjudicate gate rejections of audit-accepted kernels | `scripts/q1_audit_hole_replay.py --journal J --corpus C --output O --multiplier M --seeds 42 43 44` |
+| Write the Stage 0 report | `scripts/report_q1_stage0.py --journal J --corpus C --replay-journal O/journal.jsonl --calibration audit-v1.json --output R` |
 
 ## Gotchas
 <!-- agent-docs:fill:gotchas -->

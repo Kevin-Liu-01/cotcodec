@@ -340,9 +340,11 @@ def calibrate_multiplier(
 ) -> tuple[int, bool]:
     """Smallest power of two >= ``base`` that admits every calibration kernel.
 
-    ``required_multipliers[k]`` is ``e(candidate_k) / max(e(r32 refs))`` for
-    correct calibration-split substrate ``k``. Returns ``(M, raised)``. The
-    raise is allowed once; the caller records it in the audit version.
+    ``required_multipliers[k]`` is calibration member ``k``'s requirement from
+    ``calibration.required_multiplier`` (which handles exact references and
+    the T floor); the driver (``calibration.calibrate``) leaves infinite and
+    over-ceiling requirements out as fault candidates. Returns ``(M, raised)``.
+    The raise is allowed once; the caller records it in the audit version.
     """
     need = max([float(base), *required_multipliers]) if required_multipliers else float(base)
     if not math.isfinite(need):

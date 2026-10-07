@@ -11,6 +11,8 @@ c2, shape variation (each drawn with D1 and D4 at run time):
 c3, unaligned remainders (each drawn with D1 and D4):
 - ``U1/<root>``: one root -> ``d + 1``;
 - ``U2/<root>``: one root -> ``(d - d mod 128) + 17``;
+  (``<root>`` is :func:`root_label`: a tuple element ``input_shape[0]`` is
+  written ``input_shape.0``, so every id matches ``schema.CONFIG_ID_RE``);
 - ``U3``: leading root -> 3;
 - matmul problems only: ``MM1``: every free root -> ``max(2, (d - d mod 64) + 1)``;
   ``MM17``: every free root -> ``(d - d mod 64) + 17``.
@@ -41,10 +43,12 @@ smaller disjoint prime exists) or the next larger prime (``lead1``/``lead5``).
 from __future__ import annotations
 
 import math
+import re
 from collections.abc import Callable, Mapping
 from typing import Any
 
 from harness.q1.problems import ProblemAnalysis
+from harness.q1.schema import CONFIG_ID_RE
 
 MANIFEST_SCHEMA = "q1-shape-manifest/1"
 BYTE_CAP = 2.0
@@ -76,8 +80,25 @@ def next_prime(n: int) -> int:
     return n
 
 
+def root_label(root: str) -> str:
+    """A free root's name as it appears inside a config id.
+
+    Tuple elements are roots named ``input_shape[0]`` (``problems.py``), and
+    ``[``/``]`` are not allowed by ``schema.CONFIG_ID_RE``, so ``name[i]`` is
+    written ``name.i``. Root names are Python identifiers otherwise, so the
+    label cannot collide with another root. Overrides keep the real name.
+    """
+    label = re.sub(r"\[([0-9]+)\]", r".\1", root)
+    if not re.fullmatch(r"[A-Za-z_][A-Za-z0-9_.]*", label):
+        raise ValueError(f"free root {root!r} has no config-id-safe label")
+    return label
+
+
 def _config(family: str, name: str, overrides: Mapping[str, int]) -> dict[str, Any]:
-    return {"config_id": f"{family}/{name}", "overrides": dict(sorted(overrides.items()))}
+    config_id = f"{family}/{name}"
+    if not CONFIG_ID_RE.fullmatch(config_id):
+        raise ValueError(f"config id {config_id!r} does not match schema.CONFIG_ID_RE")
+    return {"config_id": config_id, "overrides": dict(sorted(overrides.items()))}
 
 
 def c2_rules(analysis: ProblemAnalysis) -> list[dict[str, Any]]:
@@ -99,8 +120,8 @@ def c3_rules(analysis: ProblemAnalysis) -> list[dict[str, Any]]:
         return []
     configs = []
     for root, d in native.items():
-        configs.append(_config("c3", f"U1/{root}", {root: d + 1}))
-        configs.append(_config("c3", f"U2/{root}", {root: (d - d % 128) + 17}))
+        configs.append(_config("c3", f"U1/{root_label(root)}", {root: d + 1}))
+        configs.append(_config("c3", f"U2/{root_label(root)}", {root: (d - d % 128) + 17}))
     assert analysis.leading is not None
     configs.append(_config("c3", "U3", {analysis.leading: 3}))
     if analysis.is_matmul:

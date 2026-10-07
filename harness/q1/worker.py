@@ -35,12 +35,15 @@ WORK_GATES = (
     "A4_poison",
     "A4_sanitizer",
     "timing",
+    "audit_hole",
 )
+GATE_A_VARIANTS = ("a", "a_1e-3", "a_head_1e-4", "a_head_1e-2", "a_static")
+#: ``details.reason`` of the row written when building or serialising rows fails.
+HARNESS_ROW_FAILURE = "infra_failure-harness-row"
 
 
-def _rows_for(item: Mapping[str, Any]) -> list[dict[str, Any]]:
-    import torch
-
+def _outcomes_for(item: Mapping[str, Any]) -> tuple[list[Any], dict[int, str], Any]:
+    """Run the item's gate or channel. Candidate code runs only inside this function."""
     from harness.q1 import problems as problem_lib
     from harness.q1.gates.common import GateOutcome, report_phase, resolve_device
 
@@ -62,7 +65,7 @@ def _rows_for(item: Mapping[str, Any]) -> list[dict[str, Any]]:
 
     outcomes: list[GateOutcome]
     policy_of: dict[int, str] = {}
-    if gate.startswith("a"):
+    if gate in GATE_A_VARIANTS:
         from harness.q1.gates.gate_a import run_gate_a
 
         outcomes = [
@@ -199,11 +202,36 @@ def _rows_for(item: Mapping[str, Any]) -> list[dict[str, Any]]:
             subject.cleanup()
         outcomes = [GateOutcome("timing", f"native/seed-{seed}", "accept", details=result)]
         policy_of[0] = "not-applicable"
+    elif gate == "audit_hole":
+        from harness.q1.audit import replay
+
+        outcomes = replay.run_replays(
+            problem_id,
+            problem_source,
+            kernel_source,
+            replicate_seed=seed,
+            device=device,
+            rejections=list(options.get("rejections", [])),
+            multiplier=float(options.get("multiplier", 16)),
+            manifest_path=options.get("manifest_path"),
+        )
+        for index, outcome in enumerate(outcomes):
+            policy_of[index] = outcome.details.get("policy", "tf32-admissible")
     else:
         raise SystemExit(f"unknown gate {gate}")
+    return outcomes, policy_of, device
+
+
+def _rows_from(
+    item: Mapping[str, Any], outcomes: list[Any], policy_of: Mapping[int, str], device: Any
+) -> list[dict[str, Any]]:
+    """Verdict rows from finished outcomes. Pure harness code: no candidate code runs here."""
+    import torch
 
     from harness.q1.versions import row_code_sha256
 
+    seed = int(item["seed"])
+    gate = item["gate"]
     rows = []
     for index, outcome in enumerate(outcomes):
         gpu_seconds = outcome.wall_seconds if device.type == "cuda" else 0.0
@@ -237,11 +265,48 @@ def main(argv: list[str] | None = None) -> int:
         return 2
     from harness.q1.schema import dump_verdict_row
 
-    rows = _rows_for(item)
-    with Path(args[1]).open("w", encoding="utf-8") as handle:
-        for row in rows:
-            handle.write(dump_verdict_row(row))
+    # Candidate code runs only in _outcomes_for. An exception there propagates
+    # and the runner attributes the dead worker by phase (preregistration
+    # section 10). Building, validating and serialising rows afterwards is
+    # harness code: a failure there is an infrastructure failure, never a
+    # candidate rejection, so it becomes one ``error`` row.
+    outcomes, policy_of, device = _outcomes_for(item)
+    try:
+        text = "".join(
+            dump_verdict_row(row) for row in _rows_from(item, outcomes, policy_of, device)
+        )
+    except Exception as exc:  # harness fault after every candidate call returned
+        text = dump_verdict_row(harness_failure_row(item, exc, outcomes=len(outcomes)))
+    Path(args[1]).write_text(text, encoding="utf-8")
     return 0
+
+
+def harness_failure_row(item: Mapping[str, Any], exc: BaseException, **facts: Any) -> dict:
+    """The single ``error`` row written when row construction or serialisation fails."""
+    from harness.q1.gates.outcome import exception_details
+    from harness.q1.schema import make_verdict_row
+    from harness.q1.versions import row_code_sha256
+
+    seed = int(item["seed"])
+    return make_verdict_row(
+        kernel_id=item["kernel_id"],
+        gate=item["gate"],
+        config_id=f"item/seed-{seed}",
+        verdict="error",
+        tf32_policy="not-applicable",
+        gpu_seconds=0.0,
+        wall_seconds=0.0,
+        details={
+            "reason": HARNESS_ROW_FAILURE,
+            "item_key": item.get("item_key"),
+            **facts,
+            **exception_details(exc),
+        },
+        seed=seed,
+        run_id=item["run_id"],
+        attempt=int(item["attempt"]),
+        code_sha256=row_code_sha256(item["gate"]),
+    )
 
 
 if __name__ == "__main__":

@@ -150,3 +150,95 @@ def test_watchdog_timeout_and_crash_rows(tmp_path: Path) -> None:
     assert hang["verdict"] == "timeout" and hang["details"]["phase"] == "correctness"
     assert hang["wall_seconds"] < 60
     assert crash["verdict"] == "reject" and crash["details"]["reason"] == "worker-crashed"
+
+
+def test_harness_row_fault_is_retried_once_and_never_a_rejection(tmp_path: Path) -> None:
+    """A row the schema refuses is a harness fault: two attempts, both ``error``."""
+    from harness.q1 import problems as problem_lib
+    from harness.q1 import shapes
+
+    items = _items(tmp_path, ["relu_correct"], ("A3",))
+    problem_id = items[0].problem_id
+    source = fx.PROBLEMS[problem_id]
+    analysis = problem_lib.analyze_problem(problem_id, source)
+    entry = shapes.build_problem_manifest(
+        analysis,
+        problem_sha256="0" * 64,
+        input_bytes=lambda o: int(
+            problem_lib.meta_input_summary(problem_lib.override_constants(source, analysis, o))[
+                "input_bytes"
+            ]
+        ),
+    )
+    entry["A3"][0]["config_id"] = "A3/lead[1]"  # not allowed by schema.CONFIG_ID_RE
+    manifest = tmp_path / "manifest.json"
+    manifest.write_text(json.dumps({"problems": {problem_id: entry}}))
+    items[0].options = {"manifest_path": str(manifest)}
+    config = RunnerConfig(
+        journal_path=tmp_path / "journal.jsonl",
+        extra_env={"TRITON_INTERPRET": "1"},
+        health_check=False,
+        workdir=tmp_path,
+    )
+    summary = Runner(config).run(items)
+    assert summary["infra_failures"] == 2 and summary["crashes"] == 0
+    journal = Journal(config.journal_path)
+    rows, _ = journal.read()
+    assert [r["attempt"] for r in rows] == [1, 2]
+    (final,) = journal.final_rows()
+    assert final["verdict"] == "error" and final["attempt"] == 2
+    assert final["details"]["reason"] == "infra_failure-harness-row"
+
+
+def test_gate_c_runs_tuple_element_roots_end_to_end(tmp_path: Path) -> None:
+    """Review finding: c3 ids built from ``input_shape[0]`` crashed the worker, so gate (c)
+    rejected a correct kernel on 10 L1 problems. Shrunk L1/89 cumsum through the runner."""
+    from harness.q1 import problems as problem_lib
+    from harness.q1 import shapes
+
+    problem_id = "L1/89_cumsum"
+    source = problem_lib.load_problem_source(problem_id)
+    small = source.replace("batch_size = 32768", "batch_size = 64").replace(
+        "input_shape = (32768,)", "input_shape = (64,)"
+    )
+    assert small != source
+    analysis = problem_lib.analyze_problem(problem_id, small)
+    entry = shapes.build_problem_manifest(
+        analysis,
+        problem_sha256="0" * 64,
+        input_bytes=lambda o: int(
+            problem_lib.meta_input_summary(problem_lib.override_constants(small, analysis, o))[
+                "input_bytes"
+            ]
+        ),
+    )
+    assert "c3/U1/input_shape.0" in {c["config_id"] for c in entry["c3"]}
+    (tmp_path / "problem.py").write_text(small)
+    (tmp_path / "manifest.json").write_text(json.dumps({"problems": {problem_id: entry}}))
+    kernel = tmp_path / "kernel.py"
+    kernel.write_text(
+        small + "\n\nclass ModelNew(Model):\n    def forward(self, x):\n"
+        "        return torch.cumsum(x, dim=self.dim)\n"
+    )
+    items = [
+        WorkItem(
+            kernel_id="correct-cumsum",
+            kernel_path=str(kernel),
+            problem_id=problem_id,
+            gate="c",
+            problem_source_path=str(tmp_path / "problem.py"),
+            options={"manifest_path": str(tmp_path / "manifest.json")},
+        )
+    ]
+    config = RunnerConfig(
+        journal_path=tmp_path / "journal.jsonl",
+        extra_env={"TRITON_INTERPRET": "1"},
+        health_check=False,
+        workdir=tmp_path,
+    )
+    summary = Runner(config).run(items)
+    assert summary["crashes"] == 0
+    rows = Journal(config.journal_path).final_rows()
+    aggregates = {r["gate"]: r["verdict"] for r in rows if r["config_id"] == "aggregate"}
+    assert aggregates["c3"] == "accept" and aggregates["c2"] == "accept", aggregates
+    assert any("input_shape.0" in r["config_id"] for r in rows if r["gate"] == "c3")

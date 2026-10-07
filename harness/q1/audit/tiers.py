@@ -8,7 +8,12 @@ Contract tiers (decision D14; primary = G):
 - **c-disjoint** = A1 and A4 (the audit channels gate (c) does not share).
 
 A channel verdict ``error`` (no admissible draw, reference failure) makes the
-tier ``error`` unless another channel already rejects.
+tier ``error`` unless another channel already rejects. The exception is a
+channel the caller declares *vacuous*: A2 or A3 with no admissible draw for
+the problem, which the reference alone decides (validity is computed before
+the candidate runs). A vacuous channel is dropped from every tier's
+conjunction, so whether a kernel enters a denominator never depends on what
+the other channels said about it. A1 and A4 are never vacuous.
 
 Precision-only rejection: the kernel fails A1 but passes A1 at 64·T and
 passes A2, A3 and A4; reported as its own class.
@@ -26,7 +31,7 @@ from __future__ import annotations
 
 import hashlib
 import json
-from collections.abc import Mapping
+from collections.abc import Collection, Mapping
 from pathlib import Path
 from typing import Any
 
@@ -40,6 +45,8 @@ AUDIT_FILES = (
     "audit/tiers.py",
     "audit/poison_alloc.c",
     "audit/gpu_probes.py",
+    "audit/calibration.py",
+    "audit/replay.py",
 )
 
 
@@ -50,12 +57,20 @@ def _conjoin(verdicts: list[str]) -> str:
     return "accept"
 
 
-def tier_verdicts(channels: Mapping[str, str]) -> dict[str, str]:
+VACUOUS_ALLOWED = ("A2", "A3")
+
+
+def tier_verdicts(channels: Mapping[str, str], *, vacuous: Collection[str] = ()) -> dict[str, str]:
     """Tier verdicts from channel aggregate verdicts for one TF32 policy.
 
     ``channels`` maps ``A1``..``A4`` to ``accept``/``reject``/``refuse``/
-    ``error``/``timeout``. Only A3 may legitimately ``refuse``.
+    ``error``/``timeout``. Only A3 may legitimately ``refuse``. Channels in
+    ``vacuous`` (only A2 and A3 are allowed) are left out of the conjunctions.
     """
+    unknown = set(vacuous) - set(VACUOUS_ALLOWED)
+    if unknown:
+        raise ValueError(f"only {VACUOUS_ALLOWED} may be vacuous, not {sorted(unknown)}")
+    channels = {**channels, **{name: "accept" for name in vacuous}}
     a1, a2, a3, a4 = (channels.get(name, "error") for name in ("A1", "A2", "A3", "A4"))
 
     def strict(verdict: str) -> str:
