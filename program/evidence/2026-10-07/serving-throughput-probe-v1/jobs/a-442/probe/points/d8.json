@@ -1,0 +1,25 @@
+{
+  "attempt": 0,
+  "config_sha256": "8e5ad94e08a17a3eacc049150a14a35ef6ab9509a8c32ca6a6b2ac9711f6e931",
+  "eager": false,
+  "experiment_id": "serving-throughput-probe-v1",
+  "job": "a",
+  "kind": "aa",
+  "params": {
+    "arms": [
+      1,
+      16
+    ],
+    "body_tokens": 4608,
+    "image_kind": "png-rendered",
+    "images": 1,
+    "output_tokens": 128,
+    "prefix_tokens": 1536,
+    "requests": 16,
+    "thinking": false
+  },
+  "point_id": "d8",
+  "reason": "stop rule: launch deadline",
+  "seed": 47,
+  "status": "not-run"
+}

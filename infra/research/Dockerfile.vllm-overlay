@@ -1,0 +1,57 @@
+# Discovery-only vLLM serving overlay for the docker-research lane.
+#
+# Base: vLLM v0.31.0 (commit db9527a46873454610df6dbedf79a36d6bf1a7f6), CUDA 12.9.1
+# build, pinned by the linux/amd64 manifest digest. The builder
+# (scripts/build_vllm_overlay_on_h100.sh) asserts the local base image ID before
+# building with --pull=false --network=none, so nothing is fetched here.
+#
+# The stock image cannot run in the lane: it has ENTRYPOINT ["vllm","serve"],
+# WORKDIR /vllm-workspace, no `python` executable, vLLM's own revision label and
+# no /etc/cotcodec-provenance.json. This overlay resets the entrypoint and
+# workdir, adds the cotcodec source capsule and provenance, and relabels the
+# image with the cotcodec revision. It is used locally and never pushed.
+ARG VLLM_BASE_IMAGE=docker.io/vllm/vllm-openai@sha256:b18abb2df97b8f798e81862bd93f872ea18613372e2c3adc0cc2ac21e66ac12f
+FROM ${VLLM_BASE_IMAGE}
+
+ARG VLLM_BASE_IMAGE
+ARG GIT_SHA=unknown
+ARG GIT_TREE=unknown
+ARG SOURCE_TREE_SHA256=unknown
+ARG BASE_IMAGE_ID=unknown
+ARG VLLM_VERSION=0.31.0
+ARG VLLM_COMMIT=db9527a46873454610df6dbedf79a36d6bf1a7f6
+
+LABEL org.opencontainers.image.title="cotcodec-vllm-overlay" \
+      org.opencontainers.image.revision="${GIT_SHA}" \
+      org.opencontainers.image.version="cotcodec-vllm-overlay-${VLLM_VERSION}" \
+      org.opencontainers.image.url="https://github.com/Kevin-Liu-01/cotcodec" \
+      org.opencontainers.image.source="https://github.com/Kevin-Liu-01/cotcodec" \
+      org.opencontainers.image.cotcodec-git-sha="${GIT_SHA}" \
+      org.opencontainers.image.cotcodec-git-tree="${GIT_TREE}" \
+      org.opencontainers.image.source-tree-sha256="${SOURCE_TREE_SHA256}" \
+      org.opencontainers.image.cotcodec-runtime-profile="vllm-overlay" \
+      org.opencontainers.image.cotcodec-base-image="${VLLM_BASE_IMAGE}" \
+      org.opencontainers.image.cotcodec-base-image-id="${BASE_IMAGE_ID}" \
+      org.opencontainers.image.cotcodec-upstream-vllm-version="${VLLM_VERSION}" \
+      org.opencontainers.image.cotcodec-upstream-vllm-commit="${VLLM_COMMIT}" \
+      org.opencontainers.image.cotcodec-dev-dependencies="false"
+
+ENTRYPOINT []
+CMD ["python", "scripts/check_harness_env.py"]
+WORKDIR /workspace/cotcodec
+COPY . /workspace/cotcodec
+
+# vllm_overlay_fixups.py removes torchcodec only if importing it raises OSError (the
+# v0.31.0-cu129 image ships a CUDA 13 build that breaks `vllm serve` at import time) and
+# then imports vLLM's serving entry points; its record is copied into the build receipt.
+RUN ln -sf /usr/bin/python3 /usr/local/bin/python \
+    && python infra/research/vllm_overlay_fixups.py /etc/cotcodec-vllm-overlay-fixups.json \
+    && python -c "import httpx, numpy, PIL, yaml, vllm; assert vllm.__version__ == '${VLLM_VERSION}', vllm.__version__" \
+    && test "${VLLM_BUILD_COMMIT}" = "${VLLM_COMMIT}" \
+    && python scripts/check_harness_env.py \
+    && python scripts/run_vllm_throughput_probe.py plan --job a > /dev/null \
+    && python scripts/run_vllm_throughput_probe_v2.py plan --job a > /dev/null \
+    && GIT_SHA_VALUE="${GIT_SHA}" SOURCE_SHA_VALUE="${SOURCE_TREE_SHA256}" \
+       python infra/research/write_provenance.py /etc/cotcodec-provenance.json \
+    && chmod -R a+rX /workspace/cotcodec /etc/cotcodec-provenance.json \
+       /etc/cotcodec-vllm-overlay-fixups.json

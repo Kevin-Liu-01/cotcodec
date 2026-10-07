@@ -1,0 +1,156 @@
+{
+  "api_server_cpu_pct": 39.029447288465576,
+  "attempt": 1,
+  "attempts": [
+    {
+      "attempt": 1,
+      "checks": {
+        "all_completed": true,
+        "caches_reset": true,
+        "counters_match": true,
+        "fixed_output_lengths": true,
+        "gpu_sampled": true,
+        "no_failures": true
+      },
+      "error": null,
+      "status": "valid"
+    }
+  ],
+  "cache_reset": {
+    "attempts": 1,
+    "encoder": true,
+    "mm": true,
+    "prefix": true
+  },
+  "checks": {
+    "all_completed": true,
+    "caches_reset": true,
+    "counters_match": true,
+    "fixed_output_lengths": true,
+    "gpu_sampled": true,
+    "no_failures": true
+  },
+  "client_cpu_pct": 6.284402529498695,
+  "config_sha256": "8e5ad94e08a17a3eacc049150a14a35ef6ab9509a8c32ca6a6b2ac9711f6e931",
+  "counter_check": {
+    "client_output_tokens": 1024,
+    "client_prompt_tokens": 63699,
+    "generation_delta": 1024.0,
+    "pass": true,
+    "prompt_delta": 63699.0,
+    "prompt_matched": 63699
+  },
+  "counters": {
+    "prefix_cache_hit_rate": 0.24038053972589837,
+    "vllm:generation_tokens": 1024.0,
+    "vllm:mm_cache_hits": 0.0,
+    "vllm:mm_cache_queries": 15.0,
+    "vllm:num_preemptions": 0.0,
+    "vllm:prefix_cache_hits": 15312.0,
+    "vllm:prefix_cache_queries": 63699.0,
+    "vllm:prompt_tokens": 63699.0,
+    "vllm:prompt_tokens_cached": 15312.0,
+    "vllm:request_success": 16.0
+  },
+  "eager": false,
+  "experiment_id": "serving-throughput-probe-v1",
+  "finished_at": "2026-10-07T11:50:52Z",
+  "flags": [],
+  "gates": {
+    "G0.6": {
+      "image_differential": {
+        "expected": 2040,
+        "image_tokens": 2042,
+        "pass": true,
+        "relative_tolerance": 0.02
+      },
+      "pass": true,
+      "smoke_ok": true
+    },
+    "G0.7": {
+      "client_output_tokens": 1024,
+      "client_prompt_tokens": 63699,
+      "generation_delta": 1024.0,
+      "pass": true,
+      "prompt_delta": 63699.0,
+      "prompt_matched": 63699
+    }
+  },
+  "gpu": {
+    "mean_power_w": 511.99666666666667,
+    "mean_sm_clock_mhz": 1807.5,
+    "mean_utilization_pct": 82.83333333333333,
+    "min_sm_clock_mhz": 1560.0,
+    "peak_memory_used_mib": 74301.0,
+    "samples": 6
+  },
+  "job": "a",
+  "kind": "smoke-server",
+  "kv_cache_usage_peak": 0.01982378854625555,
+  "num_requests_waiting_peak": 0.0,
+  "params": {
+    "body_tokens": 512,
+    "concurrency": 8,
+    "image_kind": "png-rendered",
+    "images": 1,
+    "output_tokens": 64,
+    "prefix_tokens": 1536,
+    "requests": 16,
+    "thinking": false
+  },
+  "point_id": "a-smoke",
+  "prep_s": 0.22825947497040033,
+  "ran_to_end": true,
+  "result": {
+    "completed": 16,
+    "duration_s": 3.008512190543115,
+    "e2el_ms": {
+      "mean": 1477.8297212906182,
+      "p50": 1472.3141249269247,
+      "p90": 1535.8117343857884,
+      "p99": 1541.460407152772,
+      "sd": 53.27933328012495,
+      "se": 13.319833320031238
+    },
+    "errors": [],
+    "failed": 0,
+    "itl_ms": {
+      "mean": 9.009539619058607,
+      "p50": 7.347653154283762,
+      "p90": 7.680284511297941,
+      "p99": 41.030879653988826,
+      "sd": 18.15207060904383,
+      "se": 0.5717364834811277
+    },
+    "not_sent": 0,
+    "output_throughput": 340.36757544769705,
+    "output_tokens": 1024,
+    "planned": 16,
+    "prompt_tokens": 63699,
+    "request_errors": 0,
+    "request_throughput": 5.318243366370266,
+    "short_outputs": 0,
+    "total_token_throughput": 21513.29158759892,
+    "tpot_ms": {
+      "mean": 9.017733353493174,
+      "p50": 7.4460604375908295,
+      "p90": 13.227699191442559,
+      "p99": 15.181055976935323,
+      "sd": 2.683075324756226,
+      "se": 0.6707688311890565
+    },
+    "ttft_ms": {
+      "mean": 909.7125200205483,
+      "p50": 964.2956047318876,
+      "p90": 1066.7099268175662,
+      "p99": 1076.2646687217057,
+      "sd": 179.42315811724515,
+      "se": 44.85578952931129
+    }
+  },
+  "seed": 7,
+  "started_at": "2026-10-07T11:50:49Z",
+  "status": "valid",
+  "stop_reason": null,
+  "superseded_attempts": []
+}

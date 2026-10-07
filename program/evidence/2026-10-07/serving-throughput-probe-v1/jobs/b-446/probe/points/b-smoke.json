@@ -1,0 +1,107 @@
+{
+  "abort": null,
+  "attempt": 1,
+  "attempts": [
+    {
+      "attempt": 1,
+      "checks": {
+        "all_completed": true,
+        "caches_reset": true,
+        "counters_match": true,
+        "fixed_output_lengths": true,
+        "gpu_sampled": true,
+        "no_failures": true
+      },
+      "error": null,
+      "status": "valid"
+    }
+  ],
+  "cache_reset": {
+    "prefix": true
+  },
+  "checks": {
+    "all_completed": true,
+    "caches_reset": true,
+    "counters_match": true,
+    "fixed_output_lengths": true,
+    "gpu_sampled": true,
+    "no_failures": true
+  },
+  "config_sha256": "8e5ad94e08a17a3eacc049150a14a35ef6ab9509a8c32ca6a6b2ac9711f6e931",
+  "counter_check": {
+    "client_output_tokens": 1024,
+    "client_prompt_tokens": 4096,
+    "generation_delta": 1024.0,
+    "pass": true,
+    "prompt_delta": 4096.0,
+    "prompt_matched": 4096
+  },
+  "counters": {
+    "prefix_cache_hit_rate": 0.0,
+    "vllm:generation_tokens": 1024.0,
+    "vllm:mm_cache_hits": 0.0,
+    "vllm:mm_cache_queries": 0.0,
+    "vllm:num_preemptions": 0.0,
+    "vllm:prefix_cache_hits": 0.0,
+    "vllm:prefix_cache_queries": 4096.0,
+    "vllm:prompt_tokens": 4096.0,
+    "vllm:prompt_tokens_cached": 0.0,
+    "vllm:request_success": 16.0
+  },
+  "eager": false,
+  "experiment_id": "serving-throughput-probe-v1",
+  "finished_at": "2026-10-07T11:50:36Z",
+  "flags": [],
+  "gates": {
+    "G0.6": {
+      "pass": true,
+      "smoke_ok": true
+    },
+    "G0.7": {
+      "client_output_tokens": 1024,
+      "client_prompt_tokens": 4096,
+      "generation_delta": 1024.0,
+      "pass": true,
+      "prompt_delta": 4096.0,
+      "prompt_matched": 4096
+    }
+  },
+  "gpu": {
+    "mean_power_w": 201.64,
+    "mean_sm_clock_mhz": 1590.0,
+    "mean_utilization_pct": 97.0,
+    "min_sm_clock_mhz": 1590.0,
+    "peak_memory_used_mib": 72417.0,
+    "samples": 1
+  },
+  "job": "b",
+  "kind": "smoke-offline",
+  "params": {
+    "input_tokens": 256,
+    "n": 1,
+    "output_tokens": 64,
+    "prompts": 16,
+    "temperature": 0.0
+  },
+  "point_id": "b-smoke",
+  "prep_s": 0.0006915591657161713,
+  "ran_to_end": true,
+  "result": {
+    "completed": 16,
+    "completions": 16,
+    "completions_per_s": 22.322817854298325,
+    "duration_s": 0.7167553892359138,
+    "failed": 0,
+    "gpu_s_per_completion": 0.04479721182724461,
+    "output_throughput": 1428.6603426750928,
+    "output_tokens": 1024,
+    "planned": 16,
+    "prompt_tokens": 4096,
+    "short_outputs": 0
+  },
+  "seed": 7,
+  "started_at": "2026-10-07T11:50:35Z",
+  "status": "valid",
+  "stop_reason": null,
+  "superseded_attempts": []
+}

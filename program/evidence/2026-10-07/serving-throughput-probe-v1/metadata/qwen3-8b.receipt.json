@@ -1,0 +1,55 @@
+{
+  "artifact_root_sha256": "a872f4dc37328ca2593192866f245537e4668add78ba0719c1ef41fd8bb0fa97",
+  "backend": "huggingface",
+  "files": [
+    {
+      "bytes": 11343,
+      "path": "LICENSE",
+      "sha256": "832dd9e00a68dd83b3c3fb9f5588dad7dcf337a0db50f7d9483f310cd292e92e"
+    },
+    {
+      "bytes": 16660,
+      "path": "README.md",
+      "sha256": "0f36caaff9c2516411a7738db384606263ba653c1e63e61d72f511606164d5a6"
+    },
+    {
+      "bytes": 728,
+      "path": "config.json",
+      "sha256": "f7c4eadfbbf522470667b797a3c89be2524832d2d599797248dc304fff447c30"
+    },
+    {
+      "bytes": 239,
+      "path": "generation_config.json",
+      "sha256": "2325da0f15bb848e018c5ae071b7943332e9f871d6b60e2ed22ca97d4cb993d2"
+    },
+    {
+      "bytes": 1671853,
+      "path": "merges.txt",
+      "sha256": "8831e4f1a044471340f7c0a83d7bd71306a5b867e95fd870f74d0c5308a904d5"
+    },
+    {
+      "bytes": 11422654,
+      "path": "tokenizer.json",
+      "sha256": "aeb13307a71acd8fe81861d94ad54ab689df773318809eed3cbe794b4492dae4"
+    },
+    {
+      "bytes": 9732,
+      "path": "tokenizer_config.json",
+      "sha256": "d5d09f07b48c3086c508b30d1c9114bd1189145b74e982a265350c923acd8101"
+    },
+    {
+      "bytes": 2776833,
+      "path": "vocab.json",
+      "sha256": "ca10d7e9fb3ed18575dd1e277a2579c16d108e32f27439684afa0e10b1440910"
+    }
+  ],
+  "mode": "metadata",
+  "model_id": "qwen3-8b",
+  "publication_eligible": false,
+  "registry_sha256": "cf7a91100128b408f762b125a8a980ebd8eb7503638999aded4cfdab17a3d2f2",
+  "repo_id": "Qwen/Qwen3-8B",
+  "revision": "b968826d9c46dd6066d109eabc6255188de91218",
+  "schema_version": 1,
+  "total_bytes": 15910042,
+  "trust_remote_code": false
+}
