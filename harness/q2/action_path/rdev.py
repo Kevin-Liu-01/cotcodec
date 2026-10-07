@@ -51,6 +51,19 @@ def project(events: list[dict[str, Any]]) -> list[list[Any]]:
     return out
 
 
+def balanced(projection: list[list[Any]]) -> bool:
+    """Every key pressed in the window is released in it, and nothing is released unpressed."""
+    held: dict[str, int] = {}
+    for kind, name, _ in projection:
+        if kind == "KeyPress":
+            held[name] = held.get(name, 0) + 1
+        else:
+            if not held.get(name):
+                return False
+            held[name] -= 1
+    return not any(held.values())
+
+
 def build_plan(catalog: dict[str, Any]) -> dict[str, Any]:
     entries = []
     for entry in catalog["entries"]:
@@ -89,13 +102,14 @@ def summarize_capture(capture: dict[str, Any]) -> dict[str, Any]:
     entries = {}
     for entry_id, projections in by_entry.items():
         first = projections[0]
-        stable = all(p == first for p in projections) and bool(first)
+        stable = all(p == first for p in projections) and bool(first) and balanced(first)
         stable = stable and all(guards[entry_id]) and all(caps.get(entry_id, [True]))
         entries[entry_id] = {
             "reps": len(projections),
             "stable": stable,
             "events": first if stable else None,
             "distinct_projections": len({json.dumps(p) for p in projections}),
+            "balanced": balanced(first),
             "guard_clean": sum(guards[entry_id]),
             "caps_led_ok": sum(caps[entry_id]) if entry_id in caps else None,
         }

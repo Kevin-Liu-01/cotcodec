@@ -108,3 +108,24 @@ def entry_gating(actions: list[Action]) -> tuple[bool, list[str]]:
                 + "; ".join(f"{name}: {why}" for name, (_, why) in verdicts.items())
             )
     return gating, reasons
+
+
+def harness_expressible(entries: list[tuple[str, list[Action]]]) -> dict[str, dict[str, object]]:
+    """Per Stage-1 harness: the catalog entries it can express, and why the others fail."""
+    out: dict[str, dict[str, object]] = {}
+    for name in HARNESSES:
+        expressible_ids: list[str] = []
+        excluded: dict[str, list[str]] = {}
+        for entry_id, actions in entries:
+            reasons = [
+                f"action {i} ({a.op}): {why}"
+                for i, a in enumerate(actions)
+                for ok, why in [expressible(name, a)]
+                if not ok
+            ]
+            if reasons:
+                excluded[entry_id] = reasons
+            else:
+                expressible_ids.append(entry_id)
+        out[name] = {"expressible": expressible_ids, "excluded": excluded}
+    return out

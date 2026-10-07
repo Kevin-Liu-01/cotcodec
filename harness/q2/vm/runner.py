@@ -396,6 +396,9 @@ def rdev_capture(client: GuestClient, config: dict[str, Any]) -> dict[str, Any]:
                         leds.append(read_led(client))
                 time.sleep(0.5)
                 mark["end"] = _now()
+                # Quiet gap so recovery input cannot fall inside the entry's window
+                # (job 387 showed recovery presses leaking across the boundary).
+                time.sleep(0.6)
                 if entry["recovery"]:
                     for chord in entry["recovery"]:
                         hmp.sendkey("-".join(chord), hold_ms=100)
