@@ -22,14 +22,22 @@ GPU-hours spent by the program are in `program/state.json`
 - `stage0/k1-v2`: batched K1 engineering, a synthetic throughput probe and
   draft v2 registrations (D20).
 - `stage0/q2-action-path`: every suite component written and validated in
-  development (seed 42, jobs 482-637, CPU only; nothing frozen). Development
-  found and fixed a compositor repaint loss, a first-key modifier loss, Chrome
-  and VS Code readiness issues and a ladder that could never qualify a rung;
-  the 44 development mutants behave as predicted. One decision is Kevin's
-  before the freeze: the OSWorld guest server crashed once in 7,969
-  `/accessibility` calls, which would very likely fail A4 as registered
-  (options in `program/preregistrations/q2-action-path-v1-inputs.md`,
-  section 6).
+  development (seed 42, jobs 482-637 and 662-667, CPU only; nothing frozen).
+  Development found and fixed a compositor repaint loss, a first-key modifier
+  loss, Chrome and VS Code readiness issues and a ladder that could never
+  qualify a rung. Of the 44 development mutant runs (at `b603347`, before the
+  final executor), 42 were killed and M12 and M13 on H-OSW-fixed (comment-only,
+  predicted equivalent) were not; three predicted killers did not kill
+  (another cell killed each). A review of `2b492cd` found two blockers and
+  several gaps, fixed at `30d8c7f` (registration section 17): C2 is judged on
+  the event and text channels, C3 counts only clean kills, admission checks
+  every pinned file, reruns and end states are rules, and a guest-server
+  restart now costs one entry (tap relaunched; run 662 injected the fault).
+  Final development runs 662-667 at `30d8c7f` passed every in-spec cell. One
+  decision is Kevin's before the freeze: the OSWorld guest server crashed
+  once in 8,114 `/accessibility` calls, which would very likely fail A4 as
+  registered (options 1-5 in
+  `program/preregistrations/q2-action-path-v1-inputs.md`, section 6).
 - `stage0/q1-gates`: gates, audit, mutator and substrates integrated; GPU
   smoke and pilot cost card next. Projected Stage 0 total 9-10 GPU-h.
 - `stage0/q2-evaluator-mutation`: faithful-save harness, blind specs for 205
@@ -39,10 +47,14 @@ GPU-hours spent by the program are in `program/state.json`
 
 1. Freeze and run the K1 throughput probe, then set K1 v2 limits from it.
 2. After Kevin's A4 decision, freeze `q2-action-path-v1`, then `-inputs`,
-   then `-executor` (`scripts/preregister.py freeze`); score C2, then C1 and
-   C3, then run A1-A6 and the ladder (manifests:
-   `scripts/render_q2_action_path_manifest.py`; verdicts:
-   `harness/q2/action_path/acceptance.py`).
+   then `-executor` (`scripts/preregister.py freeze`); score C2 (it renders
+   with only the inputs addendum frozen), then C1 and C3, then run A1-A6 and
+   the ladder (manifests: `scripts/render_q2_action_path_manifest.py`, from an
+   export of the commit that records the ledger rows; verdicts:
+   `harness/q2/action_path/acceptance.py`). Start
+   `scripts/record_slurm_end_states.sh RUN_ROOT/slurm-state JOB...` on the
+   host right after each submission; the batch script's own end record stands
+   in when Slurm has forgotten a job.
 3. Run the Q1 pilot cost card; trim under 8 GPU-h with a registered rule or
    run the gauntlet.
 4. Freeze and run the checker-mutation campaign.

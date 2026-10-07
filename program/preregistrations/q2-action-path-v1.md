@@ -56,10 +56,12 @@ addenda, each its own ledger entry made with `scripts/preregister.py`:
   guard, the canary driver (app launch, fixture writing and read-back for
   `canary.yaml`), the two detection controls' translators (H-OSW-up's
   PyAutoGUI strings to IR, H-GA-buggy's action dicts to IR) with the
-  unmodified upstream parsers they read, the code that judges a trial, and
-  the VM lane every scored campaign runs on. Its own validation is
-  infrastructure only (HMP input into the probe, no-input canary read-back;
-  job 484).
+  unmodified upstream parsers they read, the code that judges a trial, the
+  acceptance analysis that turns campaigns into the verdicts of A1-A6, C1-C4
+  and N* (`acceptance.py`, decision 32; frozen here so that C2's analysis is
+  fixed before C2 is scored, decision 34), and the VM lane every scored
+  campaign runs on. Its own validation is infrastructure only (HMP input into
+  the probe, no-input canary read-back; job 484).
 - **`q2-action-path-v1-executor`** (`program/preregistrations/q2-action-path-v1-executor.md`),
   frozen when development ends and before the scored C1 and C3 runs and the
   first acceptance trial: the file digests of L0-fixed, the H-OSW-fixed and
@@ -67,15 +69,20 @@ addenda, each its own ledger entry made with `scripts/preregister.py`:
   batch script, pinned again), the regression corpus (`suite_cells.json` and
   its generator), the mutation kit, `harness_design_diffs.md`, the canary
   target coordinates (`canary_targets.json`), the acceptance analysis
-  (`acceptance.py`, decision 32) and the VM-hour sizing with the measured
+  (`acceptance.py`, pinned again) and the VM-hour sizing with the measured
   trial times it uses (`vm_hours.py`, decision 33); its ledger row's git head
-  is the executor SHA.
+  is the executor SHA. A repair attempt k (section 11) runs under its own
+  executor addendum (`q2-action-path-v1-executor-a2`, then `-a3`).
 
 Both addenda were written in one development pass with L0-fixed, before any
 freeze, not in the order the first draft gave (design decision 25).
 Acceptance and scored-control campaigns are admitted by `manifest.py` only
 when the ledger freezes this file and the addenda they need (C2: inputs;
-C1, C3 and A1-A6: both), checked by the submitter and again inside the job.
+C1, C3 and A1-A6: both), every file the frozen tables of those registrations
+list holds its frozen digest in the exported source tree, and, for every
+campaign that needs the executor addendum, no file under `harness/q2/`
+(Markdown aside) is left unpinned (design decision 35); the submitter checks
+this and the job checks it again.
 
 Every acceptance and scored-control receipt verifies this file, every
 addendum frozen by then, and the runner image ID.
@@ -310,7 +317,9 @@ only if all of these hold:
 
 An entry passes a pass at k of k repetitions. Any mixed result is FLAKY and
 counts as a failure. An entry that is PASS in one setting and not another is
-a failure of that setting.
+a failure of that setting. Validity control C2 reads L0-raw trials under its
+own rule (section 8, design decision 34); every other criterion uses this
+section as written.
 
 ## 6. Infrastructure failures and the guard
 
@@ -323,7 +332,11 @@ retry can run the action twice); a `/screenshot` failure, meaning no valid image
 after `DesktopEnv`'s own three attempts; in the screenshot-plus-accessibility
 setting, an `/accessibility` failure, meaning no tree after its three attempts;
 a restart of the guest server during an entry (the guard's two reports name
-different server processes);
+different server processes, or, when the guard before the entry could not
+run, its report after the entry names a server other than the last one
+seen); a `DesktopEnv.reset` observation (taken before each suite session's
+first trial, design decision 30) that `DesktopEnv`'s retries do not deliver,
+charged to the session's first trial;
 the probe absent at a guard; the QEMU monitor unreachable during a reference
 capture; a key event inside an entry's window on a keycode range the tap's
 `mapping_check` marks unverified; a campaign receipt with `infra_gates_pass`
@@ -339,8 +352,23 @@ accessibility calls over runs 484-541), and each session now takes
 
 Infrastructure failures are **not excluded** from any gating verdict: an entry
 that hits one fails that repetition. They are counted and reported separately.
-A whole campaign that ends with a non-COMPLETED Slurm state is rerun as a new
-attempt with a new output path, and both attempts are reported.
+
+**End state and reruns** (design decision 37). A campaign counts only when it
+ended COMPLETED with exit code 0:0, its receipt's `infra_gates_pass` is true,
+`System.qcow2` is unchanged and nothing labelled was left. Slurm accounting is
+off on this host and Slurm forgets a finished job within minutes, so the end
+state is read from the batch script's own last record (`driver_exit=0
+labelled_containers_left=0` in the run directory's `preflight.txt`, written
+immediately before it exits 0; a job ended by a signal, a time limit or a
+node failure never writes it) and, when the operator or a watcher read it in
+time, from `scontrol show job`; when both exist they must agree. A campaign
+that does not count may be rerun once, as a new attempt with a new output
+path; a campaign that counted is never rerun, and no campaign has a third
+attempt. Every trial of every attempt is reported, and a failed trial in an
+earlier attempt counts against its criterion exactly as if the attempt had
+counted: cancelling or rerunning a campaign never removes a failure. The
+only exception is a concurrency-ladder rung aborted on foreign load (section
+9).
 
 ### 6.2 Entry guard
 
@@ -475,7 +503,26 @@ Each control is scored once, at the point named, and only on frozen code.
   `type_combining`, `type_emoji_zwj`, `key_kp_enter`, `click_button_back`,
   `click_button_forward`; every other entry passes, notably every click, drag
   and hold on buttons 1-3, `type_shell_hostile` and `type_symbols_shifted`.
-  An entry fails unless it is PASS in 5 of 5 repetitions. **Any deviation in
+  An entry fails unless it is PASS in 5 of 5 repetitions, where an L0-raw
+  trial is judged on the event and text channels (design decision 34): it is
+  PASS under section 5's conditions 1, 2, 4 and 5 and the infrastructure rule
+  of section 6.1, with two differences. Condition 3 (the marker in the last
+  step's screenshot) is reported but not judged, and an R-dev projection is
+  compared with the modifier state of every key release left out (key
+  presses keep theirs). Both are timing effects of the transport, not of the
+  key and button names C2 predicts: L0-raw has none of L0-fixed's settling
+  (no key hold, no repaint request, no quiet-screen wait; PyAutoGUI's own
+  0.1 s pause only), and development showed what that does to L0-fixed
+  (job 486, with no settle and no hold: `chord_ctrl_alt_shift_r`'s four
+  releases arrived with no modifier state while its presses matched, and the
+  screenshots of `type_with_correction` and `no_action_control` showed a
+  stale marker; job 489, with a 0.1 s
+  settle: `type_plain`'s marker stale in 1 of 2; runs 504-541, with the quiet
+  wait but no repaint request: 31 of 941 typing trials). Every predicted
+  failure is a missing or wrong event or text, so the rule keeps every
+  prediction testable. `acceptance.c2` applies it (frozen in the inputs
+  addendum, before C2 runs) and also reports the section-5 verdicts.
+  **Any deviation in
   either direction invalidates the suite for q2-action-path-v1**; the
   investigation is reported but never rescues v1, and a corrected prediction
   can only enter a new preregistration. When: once, after the inputs addendum
@@ -487,16 +534,32 @@ Each control is scored once, at the point named, and only on frozen code.
   H-GA), whether the mutant is scored, excluded (it can change only cells
   outside that harness's spec; M01 on H-GA) or not applicable (no code path;
   M13 and M28 on H-GA), and which cells can kill it. A scored mutant is killed
-  when at least one of its layer's cells is not PASS; outside-spec cells run
-  and are reported but never kill. A mutant is equivalent only if its XRecord
-  stream without timestamps, text buffer and terminal action are
-  byte-identical to the unmutated code's on every cell of its layer.
+  when at least one of its layer's cells that can kill is not PASS in the
+  mutant's run without an infrastructure failure on that cell, and the
+  unmutated reference run of the same layer (run with the mutants, same
+  source tree) passed that cell without one (design decision 36). A failing
+  cell with an infrastructure failure never kills, and a cell the reference
+  did not pass cleanly never kills; both are reported per mutant. Outside-spec
+  cells run and are reported but never kill. A mutant is equivalent only if
+  its XRecord stream without timestamps, text buffer and terminal action are
+  byte-identical to the unmutated code's on every cell of its layer; a mutant
+  neither killed nor equivalent survives, whatever the reason.
   Required: 100% of scored, non-equivalent mutants killed. The detection
   controls H-OSW-up and H-GA-buggy are not mutated: they carry known defects
   and have no spec they are expected to pass. When: once, after the executor
   addendum is frozen, at the frozen executor and adapter SHA with the frozen
   corpus, seed-42 order, N = 1, screenshot setting. Development runs of the
-  mutants are informative only.
+  mutants are informative only. The scored run repeats development's
+  conditions (the same seed-42 order and setting; development ran every
+  mutant on its predicted kill cells at `b603347` and saw 42 of 44 killed and
+  M12 and M13 on H-OSW-fixed equivalent, as predicted), so its outcome is
+  largely known in advance: C3 checks that the frozen code and the frozen
+  kit still detect every mutant, and is reported as that, not as an
+  independent estimate of the suite's sensitivity. M12 and M13 on
+  H-OSW-fixed are comment-only patches, because that harness's own prompt
+  already declares the behaviour the operator would introduce; they stay
+  scored and predicted equivalent as negative controls of the equivalence
+  rule (a no-op mutant must come out equivalent, never killed).
 - **C4 (R-dev agreement).** For every key, chord and Caps Lock entry with a
   reference, L0-fixed's projected stream equals the reference, in every A1
   trial. Entries without a stable reference are listed as self-specified in
@@ -588,11 +651,22 @@ aborts if, at any of the host snapshots the driver takes before and after
 every session, a Slurm job other than the rung's own is running that was not
 running at the rung's first snapshot (a foreign job started), or the running
 foreign Slurm jobs hold more than 8 CPUs in total (foreign load); the
-snapshots go into the receipt. An aborted rung is rerun as a new attempt and
-both attempts are reported; it neither qualifies nor disqualifies its N. VMs
-are pinned to CPUs from their Slurm allocation; the ladder never exceeds 160
-vCPUs. If N* < 40, the program kill criterion applies: cut the Stage-1 task
-count before adding GPUs. Changed before the freeze: the draft ran each rung
+snapshots go into the receipt. The abort is decided by `acceptance.foreign_abort`
+from those snapshots alone, never by the operator, and while a rung runs the
+operator submits no Slurm job of any kind. An aborted rung is rerun once as a
+new attempt and both attempts are reported; the aborted attempt neither
+qualifies nor disqualifies its N, and its failed trials are reported but not
+counted (the one exception to section 6.1's rule). A rung that aborts twice,
+or a rung that ran without aborting and is rerun anyway, does not qualify.
+VMs are pinned to CPUs from their Slurm allocation; the ladder never exceeds
+160 vCPUs. The N runners of a rung (and of A4 at N*) share
+`manifest.runner_cpus(N)` CPUs, half a CPU per runner rounded up, at most 20
+(1, 4, 8, 12, 16 and 20 CPUs at N = 1, 8, 16, 24, 32 and 40; development at
+N = 8 used 4), so a rung's step p95 measures the VMs rather than starved
+runners; `manifest.py` refuses any other count for a scored campaign, and
+every receipt records the CPU sets (design decision 38). If N* < 40, the
+program kill criterion applies: cut the Stage-1 task count before adding
+GPUs. Changed before the freeze: the draft ran each rung
 on A1's seed-43 shuffle alone, 18 sessions, which can never show 20 cold boots
 and never loads more than 18 VMs, so no rung above N = 1 could have qualified
 (design decision 29).
@@ -615,7 +689,11 @@ and never loads more than 18 VMs, so no rung above N = 1 could have qualified
   8). Seeds 43 and 44 are refused for every campaign until the ledger admits
   acceptance.
 - **Freeze of the executor.** When development ends, the git SHA of L0-fixed
-  and the adapters is frozen in `q2-action-path-v1-executor`.
+  and the adapters is frozen in `q2-action-path-v1-executor`. The ledger row
+  is written after that commit, so scored campaigns run from an export of the
+  later commit that records the row; what ties that export to the frozen code
+  is the admission check of every pinned file's content (design decision 35),
+  not the SHA the manifest names.
 - **Seeds 43 and 44: acceptance.** Fresh VMs (every session is a cold boot of
   a new container), the frozen executor SHA, both observation settings.
   Stress, volume and canary orders use `random.Random(43)`. There is no
@@ -625,12 +703,20 @@ and never loads more than 18 VMs, so no rung above N = 1 could have qualified
 
 - A failed acceptance attempt is repaired only as a new versioned attempt
   (`-a2`, then `-a3`) with a new output path and a new executor SHA frozen in a
-  new executor addendum. The catalog, its references, G, the volume plan, the
-  canary and the predictions stay frozen.
+  new executor addendum, `q2-action-path-v1-executor-a2` (then `-a3`), at
+  `program/preregistrations/q2-action-path-v1-executor-a2.md`; a campaign's
+  `workload.attempt` names the addendum `manifest.py` requires
+  (`manifest.executor_addendum`). The catalog, its references, G, the volume
+  plan, the canary and the predictions stay frozen, and so do the inputs
+  addendum's components (probe, guard, judge, analysis and lane): a repair
+  that needs one of them changed is a new preregistration. A repair attempt
+  is not a rerun (section 6.1): it changes the executor, and every earlier
+  attempt is reported.
 - If any gating entry still fails at the third attempt, the affected layer is
   not admitted and Stage 1 does not start.
 - A failed validity control (C1-C4) is not repaired within v1; the suite is
-  invalid and a corrected suite is a new preregistration.
+  invalid and a corrected suite is a new preregistration (`manifest.py`
+  refuses a C1-C3 campaign with an attempt other than 1).
 - If the reset sentinel fails, it is debugged before any concurrency work.
 - A finding that a harness "bug" is a design difference goes into
   `harness_design_diffs.md` and never relaxes a verdict after the fact.
@@ -642,13 +728,20 @@ including development-run counts; FLAKY entries with their pass fractions;
 infrastructure failures by type, including unverified tap ranges; the
 mutation score per operator and per layer with the observed killers next to
 the predicted ones, and every excluded or not-applicable pair with its
-reason; the L0-raw prediction table against the observed results; the R-dev
+reason, each mutant's cells that failed with an infrastructure failure, and
+each cell the unmutated reference did not pass cleanly; the statement that
+C3 repeated development's conditions; the L0-raw prediction table against the
+observed results under C2's rule and under section 5 as written; the R-dev
 reference stability per entry; which entries rest on a self-specified oracle;
 per-app canary results; the A4 per-class action counts and bounds, per-entry
 bounds and per-session results; the concurrency table (boot p50/p95, step
 p50/p95, CPU steal and utilization, overlay growth, pass rate per rung, the
 host snapshots and any aborted rung with its reason); observation retries by
-type; each session's warm-up and reset-observation records; every design
+type; each session's warm-up and reset-observation records, with the trials
+charged for an undelivered reset observation; every attempt of every
+campaign, rerun or repaired, with its end state (batch record and, when read,
+Slurm state) and its failed trials; every guest-server restart with the
+probe and tap relaunches it caused; every design
 difference per harness; every non-gating entry's results; and the certified
 keysym set.
 
@@ -827,8 +920,9 @@ here with its reason.
     acceptance or scored-control campaign only when
     `program/preregistrations/ledger.jsonl` (hash chain verified) freezes this
     file and the addenda it needs with the digests the manifest names and the
-    source tree holds; the submitter and the job both check. The acceptance
-    code is therefore frozen in the executor addendum and needs no change
+    source tree holds, and every file their frozen tables pin holds its
+    digest there (decision 35); the submitter and the job both check. The
+    acceptance code is therefore frozen in the addenda and needs no change
     after the freeze. Seeds 43 and 44 are refused for every other campaign,
     and development admits only L0-fixed, H-OSW-fixed, H-GA and the canary.
 27. **The corpus uses one tool call per turn.** Both prompts ask for a single
@@ -868,15 +962,74 @@ here with its reason.
     `DesktopEnv.reset`; without it an agent's first key chord of an episode
     can lose its modifier.
 32. **The acceptance analysis is code.** `acceptance.py` (frozen in the
-    executor addendum) applies sections 5-9 to campaign receipts: Slurm end
-    states, infrastructure gates, the realized order of each criterion, the
-    kill and equivalence rules of C3 and the ladder's N*, including the
-    foreign-load abort. The draft had prose rules and no code; a test drives
-    every rule on synthetic campaigns.
+    inputs addendum, before C2 is scored, and pinned again in the executor
+    addendum) applies sections 5-9 to campaign receipts: end states,
+    reruns, infrastructure gates, the realized order of each criterion, C2's
+    reading of L0-raw trials, the kill and equivalence rules of C3 and the
+    ladder's N*, including the foreign-load abort. The draft had prose rules
+    and no code; a test drives every rule on synthetic campaigns. It was
+    first frozen with the executor, after C2; the review of `2b492cd` noted
+    that this would have left C2's analysis open after C2's data existed.
 33. **Cost from measured trial times.** `vm_hours.py` sizes every scored
     campaign from the development runs' measured per-entry trial times and
     session overheads (section 9, "Cost"); `trial_times.json` and
     `vm_hours.json` are frozen in the executor addendum.
+34. **C2 is judged on the event and text channels.** The prediction is about
+    PyAutoGUI's key and button names and its handling of non-ASCII text,
+    which change which events and text reach the guest. L0-raw also lacks
+    every settling step development added to L0-fixed, so its screenshots
+    can lag the probe's last drawing and its chords release their keys a few
+    milliseconds after pressing them, while the shell may be grabbing the
+    keyboard for a side effect. Development measured both on L0-fixed
+    without those steps (section 8, C2), and neither is something the
+    prediction could state from code reading. Under the strict section-5
+    reading, C2 would have failed v1 with probability of about 0.84 or more
+    on stale markers alone: L0-fixed with the quiet wait but without the
+    repaint request lost the last drawing in 3.3% of typing trials, and C2
+    runs 60 predicted-pass typing trials (12 entries, 5 repetitions) with
+    neither (1 - 0.967^60 = 0.87). The rule keeps every predicted failure
+    testable (each is a missing or wrong event or text) and leaves the
+    transport as it is, so
+    L0-raw is still the natural upstream call; giving it L0-fixed's settling
+    would have made it a different control. The section-5 verdicts are
+    reported beside it.
+35. **Admission checks content, not only registrations.** `manifest.check_ledger`
+    verifies, besides the ledger rows and the registrations' own digests,
+    every file listed in the frozen table of each registration a campaign
+    needs, in the exported source tree it runs from, and, for a campaign that
+    needs the executor addendum, that no file under `harness/q2/` (Markdown
+    aside; the package `__init__.py` files are pinned in the inputs addendum)
+    is outside those tables. Before this, an edit to `l0_fixed.py` after the
+    freeze, with the Markdown files unchanged, would have been admitted.
+    The manifest's `git_sha` is not compared with the executor row's
+    `git_head_at_freeze`: the row is written after that commit, so the export
+    that holds the row is always a later commit; the content check is what
+    binds the run to the frozen code.
+36. **A C3 kill is a clean kill.** An infrastructure failure (a missing tap
+    window, a guest-server restart, an absent probe) says nothing about the
+    mutant, and a cell the unmutated code also fails cannot attribute its
+    failure to the mutation. Kills are counted only from cells that fail
+    without an infrastructure failure where the reference run passed
+    cleanly; the rest is reported per mutant.
+37. **End state and reruns are rules, not operator choices.** The batch
+    script's own last record decides the end state when Slurm has forgotten
+    the job; one rerun at most, only of a campaign that did not count; every
+    failed trial of every attempt counts (section 6.1). Without this, a
+    failing campaign could be cancelled and run again, and the Slurm state
+    the analysis required could be lost minutes after the job ended.
+38. **Runner CPUs are registered.** The N runners of a rung share
+    `manifest.runner_cpus(N)` CPUs (section 9); the renderer's default was one
+    CPU for any N, so a rung's step p95 could have measured runner starvation.
+39. **A guest-server restart costs the entry it hits, not the session.** The
+    restart stops the tap with the probe; the session relaunched only the
+    probe, so every later trial of the session lost its oracle channel (55
+    trials in run 622). The session now relaunches the tap into a new file
+    when its process is gone, checks each tap's records against that tap's
+    own keymap (`suite.segment_check`), and charges a restart that happens
+    between entries to the next entry. Development run 662 killed the guest
+    server on purpose after the tenth trial of each session: only the next
+    trial failed in each session (inputs addendum, section 5). This changes
+    no verdict rule; it changes how much of a session one restart costs.
 
 ## 15. Changes after the 2026-10-07 review
 
@@ -944,15 +1097,21 @@ work of writing the acceptance code found these, all before any freeze:
    walks the accessibility tree from a thread pool, and its systemd unit
    (`Restart=on-failure`, default `KillMode`) then stops every process the
    server launched, including the probe and the tap, and restarts the server
-   5 s later. Run 622 saw this once in the 7,969 accessibility calls of runs
-   484-622 (one later session charged with 55 failed trials, its tap gone).
+   5 s later. Run 622 saw this once in the 8,114 accessibility calls of runs
+   484-622 (one later session charged with 55 failed trials, its tap gone;
+   the first count, 7,969, missed some calls).
    A restart during an entry is now an infrastructure failure of its own
    type (section 6.1; the guard reports the server's process id). With that
    rate, A4's 64,028 zero-failure trials (36,550 accessibility calls)
-   would expect about 4.6 restarts, so A4 as registered would pass with
-   probability about 0.01 on this alone. The rule is left as registered; whether to change the
+   would expect about 4.5 restarts, so A4 as registered would pass with
+   probability about 0.01 on this alone; the rate rests on one event, and
+   its exact 95% interval puts the expected number of restarts in A4
+   between about 0.11 and 25 (pass probability between about 0.89 and
+   zero). The rule is left as registered; whether to change the
    runtime, the observation settings or the criterion is the owner's decision
-   before the freeze (the inputs addendum lists the options).
+   before the freeze (the inputs addendum, section 6, lists the options).
+   Since the review of `2b492cd` a restart costs the entry it hits, not the
+   rest of the session (decision 39).
 10. Writer once read back "done", the emoji, then a space, for "done", a
     space, then the emoji (run 620, on a loaded host): the two arrived in
     Writer in the other order although the executor typed them in order. That
@@ -961,3 +1120,58 @@ work of writing the acceptance code found these, all before any freeze:
     input-method daemon (IBus) sits between X and GTK applications. Reported,
     not changed; at that rate A6's 80 Writer trials would see it with
     probability about 0.2.
+
+## 17. Changes after the 2026-10-07 review of `2b492cd`
+
+An independent review of the branch at `2b492cd` found it not ready to
+freeze. Each finding and its disposition (the fix commits and development
+runs 662-667 are in the inputs and executor addenda):
+
+1. C2's prediction ignored the timing failures development had found in
+   L0-fixed, so v1 would very likely have failed C2 for a reason unrelated to
+   the names it tests: fixed by judging C2 on the event and text channels
+   (section 8, decision 34). The prediction file is unchanged.
+2. The A4 decision about guest-server restarts: still the owner's decision
+   (state.json, pending decisions). The single-event uncertainty is stated
+   (section 16, item 9); a boot-time accessibility warm-up is added to the
+   options, with the evidence against it; the tap is now relaunched with the
+   probe, so a restart costs one entry (decision 39).
+3. C3 counted infrastructure failures as kills, and its outcome was largely
+   seen in development: kills are clean kills against a clean reference
+   (decision 36), and the report says C3 repeats development's conditions
+   (section 8).
+4. The lane did not check the code it ran against the frozen digests:
+   admission now checks every pinned file and, with the executor addendum,
+   refuses unpinned files (decision 35). Comparing the manifest's `git_sha`
+   with the executor row's git head was not adopted, because the row's own
+   commit can never contain it (section 10).
+5. Reruns, aborts and the Slurm end state left the operator choices: one
+   rerun at most, only of a campaign that did not count, failures of every
+   attempt count, the end state comes from the batch script's own record or
+   the watcher `scripts/record_slurm_end_states.sh` (section 6.1, decision
+   37); a rung aborts only on the snapshots, the
+   operator submits nothing during a rung, and an aborted rung is rerun once
+   (section 9); repair attempts name their executor addenda (section 11).
+6. The reset observation was recorded but never judged: an undelivered one
+   is an infrastructure failure charged to the session's first trial
+   (section 6.1).
+7. The template-rendering check was always skipped (no jinja2 in the dev
+   extra): jinja2 added; the check runs.
+8. M12 and M13 on H-OSW-fixed are comment-only patches: kept, scored and
+   predicted equivalent, as negative controls of the equivalence rule, with
+   the reason stated (section 8 and `mutation_operators.yaml`).
+9. The ladder's runner CPUs were not registered: registered per N (section
+   9, decision 38).
+10. The branch had not merged main, the NOTICE was stale and ruff's exclusion
+    covered the project-written H-OSW-fixed copy: main merged, NOTICE
+    corrected, the copy linted with only its upstream typing style and line
+    length exempt.
+11. Found while fixing: C2 could not have been submitted between the inputs
+    and the executor freeze, because `manifest.py` required both addenda in
+    every acceptance manifest and the renderer omitted the unfrozen one; an
+    acceptance manifest now carries the inputs addendum and, once frozen, the
+    executor addendum, and each campaign's needs are checked
+    (`check_ledger`).
+12. Found while fixing: a restart between two entries left the guard before
+    the next entry unable to run, so the restart was not typed; it is now
+    charged to the next entry as `guest_server_restart` (section 6.1).

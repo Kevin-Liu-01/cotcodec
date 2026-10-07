@@ -5277,8 +5277,350 @@
    },
    "trials": 60,
    "wall_s": 631.9
+  },
+  {
+   "boot_s": {
+    "max": 18.817,
+    "n": 2,
+    "p50": 18.258,
+    "p95": 18.817
+   },
+   "boots_ok": 2,
+   "campaign_id": "q2ap-dev-l0-restart-v1",
+   "cell_counts": {
+    "FAIL": 2,
+    "FLAKY": 0,
+    "PASS": 54
+   },
+   "concurrency": 1,
+   "cycles": 2,
+   "driver_exit": "0",
+   "git_sha": "30d8c7fd50be11a718abb3bc0c05bb486c34b594",
+   "infra_failures": {
+    "channel_missing": 2,
+    "execute": 2,
+    "guard_script": 2,
+    "guest_server_restart": 2,
+    "probe_absent": 2,
+    "tap_window_missing": 2
+   },
+   "infra_gates_pass": true,
+   "job": 662,
+   "job_tres": "TRES=cpu=8,mem=12G,node=1,billing=8",
+   "kind": "suite-development",
+   "labelled_containers_left": 0,
+   "layer": "L0-fixed",
+   "mutant": null,
+   "no_gpu_all": true,
+   "not_pass": [
+    "screenshot+a11y|type_long_200",
+    "screenshot|type_long_200"
+   ],
+   "observation_retries": {},
+   "purpose": "development",
+   "qcow2_unchanged": true,
+   "receipt_sha256": "84485f0a1d4e06071d8672d3221565f453bd1a8f4a18b79c130db9c4b5175616",
+   "seeds": [
+    42
+   ],
+   "slurm": {
+    "ExitCode": "0:0",
+    "JobState": "COMPLETED"
+   },
+   "step_s": {
+    "n": 74,
+    "p50": 2.0135,
+    "p95": 3.0364
+   },
+   "trial_s": {
+    "n": 56,
+    "p50": 2.2521,
+    "p95": 12.7802,
+    "sum": 157.97
+   },
+   "trials": 56,
+   "wall_s": 242.5
+  },
+  {
+   "boot_s": {
+    "max": 19.059,
+    "n": 8,
+    "p50": 17.958,
+    "p95": 19.059
+   },
+   "boots_ok": 8,
+   "campaign_id": "q2ap-dev-l0-fixed-v12",
+   "cell_counts": {
+    "FAIL": 0,
+    "FLAKY": 0,
+    "PASS": 200
+   },
+   "concurrency": 1,
+   "cycles": 8,
+   "driver_exit": "0",
+   "git_sha": "30d8c7fd50be11a718abb3bc0c05bb486c34b594",
+   "infra_failures": {},
+   "infra_gates_pass": true,
+   "job": 663,
+   "job_tres": "TRES=cpu=8,mem=12G,node=1,billing=8",
+   "kind": "suite-development",
+   "labelled_containers_left": 0,
+   "layer": "L0-fixed",
+   "mutant": null,
+   "no_gpu_all": true,
+   "not_pass": [],
+   "observation_retries": {},
+   "purpose": "development",
+   "qcow2_unchanged": true,
+   "receipt_sha256": "50e35da2dd198884836cbce2dd03ced01129c7d3c6cf2a6f0ba9b6257e4af9e0",
+   "seeds": [
+    42
+   ],
+   "slurm": {
+    "ExitCode": "0:0",
+    "JobState": "COMPLETED"
+   },
+   "step_s": {
+    "n": 512,
+    "p50": 1.8121,
+    "p95": 2.7446
+   },
+   "trial_s": {
+    "n": 400,
+    "p50": 2.2107,
+    "p95": 5.1368,
+    "sum": 903.3
+   },
+   "trials": 400,
+   "wall_s": 1129.1
+  },
+  {
+   "boot_s": {
+    "max": 19.332,
+    "n": 14,
+    "p50": 18.755,
+    "p95": 19.332
+   },
+   "boots_ok": 14,
+   "campaign_id": "q2ap-dev-l0-fixed-n8-v4",
+   "cell_counts": {
+    "FAIL": 0,
+    "FLAKY": 0,
+    "PASS": 200
+   },
+   "concurrency": 8,
+   "cycles": 14,
+   "driver_exit": "0",
+   "git_sha": "30d8c7fd50be11a718abb3bc0c05bb486c34b594",
+   "infra_failures": {},
+   "infra_gates_pass": true,
+   "job": 664,
+   "job_tres": "TRES=cpu=36,mem=58G,node=1,billing=36",
+   "kind": "suite-development",
+   "labelled_containers_left": 0,
+   "layer": "L0-fixed",
+   "mutant": null,
+   "no_gpu_all": true,
+   "not_pass": [],
+   "observation_retries": {},
+   "purpose": "development",
+   "qcow2_unchanged": true,
+   "receipt_sha256": "e63bcb495c5339c33ef9194277f7531a6123b4a6491cd5a3de235c9927cd06a5",
+   "seeds": [
+    42
+   ],
+   "slurm": {
+    "ExitCode": "0:0",
+    "JobState": "COMPLETED"
+   },
+   "step_s": {
+    "n": 1024,
+    "p50": 1.905,
+    "p95": 2.787
+   },
+   "trial_s": {
+    "n": 800,
+    "p50": 2.3171,
+    "p95": 4.9927,
+    "sum": 1810.25
+   },
+   "trials": 800,
+   "wall_s": 356.7
+  },
+  {
+   "boot_s": {
+    "max": 19.967,
+    "n": 4,
+    "p50": 18.623,
+    "p95": 19.967
+   },
+   "boots_ok": 4,
+   "campaign_id": "q2ap-dev-hosw-fixed-v8",
+   "cell_counts": {
+    "FAIL": 4,
+    "FLAKY": 0,
+    "PASS": 194
+   },
+   "concurrency": 1,
+   "cycles": 4,
+   "driver_exit": "0",
+   "git_sha": "30d8c7fd50be11a718abb3bc0c05bb486c34b594",
+   "infra_failures": {},
+   "infra_gates_pass": true,
+   "job": 665,
+   "job_tres": "TRES=cpu=8,mem=12G,node=1,billing=8",
+   "kind": "suite-development",
+   "labelled_containers_left": 0,
+   "layer": "H-OSW-fixed",
+   "mutant": null,
+   "no_gpu_all": true,
+   "not_pass": [
+    "screenshot+a11y|R03",
+    "screenshot+a11y|R09",
+    "screenshot|R03",
+    "screenshot|R09"
+   ],
+   "observation_retries": {},
+   "purpose": "development",
+   "qcow2_unchanged": true,
+   "receipt_sha256": "00e64e9808458bd9075b02c4b4f53e60c83e1f6df1399efa20201ce0a88bd996",
+   "seeds": [
+    42
+   ],
+   "slurm": {
+    "ExitCode": "0:0",
+    "JobState": "COMPLETED"
+   },
+   "step_s": {
+    "n": 300,
+    "p50": 1.7571,
+    "p95": 2.6247
+   },
+   "trial_s": {
+    "n": 198,
+    "p50": 2.2384,
+    "p95": 6.5947,
+    "sum": 503.44
+   },
+   "trials": 198,
+   "wall_s": 638.1
+  },
+  {
+   "boot_s": {
+    "max": 19.038,
+    "n": 4,
+    "p50": 18.48,
+    "p95": 19.038
+   },
+   "boots_ok": 4,
+   "campaign_id": "q2ap-dev-hga-v8",
+   "cell_counts": {
+    "FAIL": 8,
+    "FLAKY": 0,
+    "PASS": 178
+   },
+   "concurrency": 1,
+   "cycles": 4,
+   "driver_exit": "0",
+   "git_sha": "30d8c7fd50be11a718abb3bc0c05bb486c34b594",
+   "infra_failures": {},
+   "infra_gates_pass": true,
+   "job": 666,
+   "job_tres": "TRES=cpu=8,mem=12G,node=1,billing=8",
+   "kind": "suite-development",
+   "labelled_containers_left": 0,
+   "layer": "H-GA",
+   "mutant": null,
+   "no_gpu_all": true,
+   "not_pass": [
+    "screenshot+a11y|R02",
+    "screenshot+a11y|R04",
+    "screenshot+a11y|R06",
+    "screenshot+a11y|R10",
+    "screenshot|R02",
+    "screenshot|R04",
+    "screenshot|R06",
+    "screenshot|R10"
+   ],
+   "observation_retries": {},
+   "purpose": "development",
+   "qcow2_unchanged": true,
+   "receipt_sha256": "3536d9d56aff9afaef5006fb11d37ef1ed7fd9bd7b161786d793071773353537",
+   "seeds": [
+    42
+   ],
+   "slurm": {
+    "ExitCode": "0:0",
+    "JobState": "COMPLETED"
+   },
+   "step_s": {
+    "n": 274,
+    "p50": 1.9251,
+    "p95": 2.6673
+   },
+   "trial_s": {
+    "n": 186,
+    "p50": 2.3154,
+    "p95": 6.3913,
+    "sum": 464.46
+   },
+   "trials": 186,
+   "wall_s": 598.4
+  },
+  {
+   "boot_s": {
+    "max": 19.252,
+    "n": 1,
+    "p50": 19.252,
+    "p95": 19.252
+   },
+   "boots_ok": 1,
+   "campaign_id": "q2ap-dev-canary-v10",
+   "cell_counts": {
+    "FAIL": 0,
+    "FLAKY": 0,
+    "PASS": 60
+   },
+   "concurrency": 1,
+   "cycles": 1,
+   "driver_exit": "0",
+   "git_sha": "30d8c7fd50be11a718abb3bc0c05bb486c34b594",
+   "infra_failures": {},
+   "infra_gates_pass": true,
+   "job": 667,
+   "job_tres": "TRES=cpu=8,mem=12G,node=1,billing=8",
+   "kind": "canary-development",
+   "labelled_containers_left": 0,
+   "layer": null,
+   "mutant": null,
+   "no_gpu_all": true,
+   "not_pass": [],
+   "observation_retries": {},
+   "purpose": "development",
+   "qcow2_unchanged": true,
+   "receipt_sha256": "e80c6ee8c3265380e8e0f4e00d02084dc07b8359debc691d5e342b4844df0b7b",
+   "seeds": [
+    42
+   ],
+   "slurm": {
+    "ExitCode": "0:0",
+    "JobState": "COMPLETED"
+   },
+   "step_s": {
+    "n": 0,
+    "p50": null,
+    "p95": null
+   },
+   "trial_s": {
+    "n": 60,
+    "p50": 8.181,
+    "p95": 17.568,
+    "sum": 590.7
+   },
+   "trials": 60,
+   "wall_s": 648.2
   }
  ],
- "note": "Development runs of q2-action-path-v1 (seed 42, never evidence), one row per Slurm job, extracted from each run directory's manifest.json, preflight.txt and receipt.json under ~/cotcodec-runs/stage0/q2-action-path/runs/<job>/ on the H100 host; receipt_sha256 is the SHA-256 of that receipt. not_pass lists setting|cell pairs that were not PASS in every repetition (outside-spec R cells of the harness layers fail by design).",
+ "note": "Development runs of q2-action-path-v1 (jobs 482-637, and 662-667 after the review of 2b492cd) (seed 42, never evidence), one row per Slurm job, extracted from each run directory's manifest.json, preflight.txt and receipt.json under ~/cotcodec-runs/stage0/q2-action-path/runs/<job>/ on the H100 host; receipt_sha256 is the SHA-256 of that receipt. not_pass lists setting|cell pairs that were not PASS in every repetition (outside-spec R cells of the harness layers fail by design).",
  "schema": "cotcodec-q2-development-runs-v1"
 }

@@ -81,6 +81,10 @@ extend-exclude = [
 line-length = 100
 target-version = "py311"
 
+[tool.ruff.format]
+# The patched H-OSW-fixed copy keeps upstream's layout so its marked changes stay diffable.
+exclude = ["harness/q2/action_path/upstream/osworld_bfd62bdc_fixed.py"]
+
 [tool.ruff.lint]
 select = ["E", "F", "I", "UP", "B", "SIM"]
 

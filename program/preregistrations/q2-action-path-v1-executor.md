@@ -35,7 +35,7 @@ Frozen with this file (SHA-256 of the committed bytes):
 | `harness/q2/action_path/vm_hours.py` | `757981ef219f62f7f423d1ff9d02f75fd042c5c0063669f724337d2a96c270ab` |
 | `harness/q2/action_path/trial_times.json` | `a33ca2e024d6f24a31a60ff62053be1fb197af48c996ae99fb75aff4d20217e5` |
 | `harness/q2/action_path/vm_hours.json` | `fbe10c0f7c0f31c0a0db9ce3e626209f7746505320e835b0b79277d20e8ec011` |
-| `harness/q2/action_path/acceptance.py` | `9e70d23b673134950f978b0406c396de71c68ea7bda317af15997ec53a1ed761` |
+| `harness/q2/action_path/acceptance.py` | `f8c8e8ea0cb1595d25a65cb40da8ab635b2b34274c048f591fa4cd63a656813b` |
 | `scripts/render_q2_action_path_manifest.py` | `a1a25e43d0f749313b67842d9d34a9011f180b0b3624de587a57cbcb8040382f` |
 | `experiments/manifests/q2-action-path/dev-l0-fixed-v10.yaml` | `0a4f908e67631483687740cfba3266b829f3c5d2577b08b676a5fa022186ad92` |
 | `harness/q2/vm/guest/probe.py` | `ba5c0f1d364c80d5f8190f3c357b915cd504d754891285c3772ba959a804efeb` |
@@ -138,10 +138,19 @@ at the executor SHA, seed-42 order, N = 1, screenshot setting, one repetition
 per cell, plus the unmutated reference run for the equivalence rule.
 Offline, every parser mutant changes the IR of at least one of its predicted
 kill cells, and the two pairs predicted equivalent (M12 and M13 on
-H-OSW-fixed) change none (`tests/test_q2_mutants.py`).
+H-OSW-fixed) change none (`tests/test_q2_mutants.py`). Those two patches only
+mark a line: H-OSW's own prompt declares triple-click as double-click and
+hscroll as vertical scroll, so the unmutated parser already does what the
+operators would introduce. They stay scored and predicted equivalent as
+negative controls of the equivalence rule, with that reason in
+`mutation_operators.yaml`. A kill counts only as a clean kill against the
+unmutated reference run (main preregistration, section 8 and design
+decision 36).
 
 Development (informative only, jobs 553-602 at `b603347`, one session per
-mutant on its predicted kill cells, screenshot setting): all 42 mutants not
+mutant on its predicted kill cells, screenshot setting; `b603347` predates
+the warm-up and the final repaint request, so these runs are not the frozen
+executor): all 42 mutants not
 predicted equivalent failed at least one predicted kill cell; M12 and M13 on
 H-OSW-fixed passed their declared cells (R08, R10) and the control cell run
 with them. Three predicted killers did not kill: `scroll_ctrl_down_3` for M01
@@ -160,12 +169,15 @@ for Writer and Chrome; for VS Code, from a screenshot of the opened fixture).
 ## 7. Acceptance analysis (`acceptance.py`)
 
 The decision rules of the main preregistration's sections 5-9 as code (design
-decision 32): which campaigns count (Slurm COMPLETED 0:0, infrastructure gates,
-`System.qcow2` unchanged, nothing leaked), that each criterion ran exactly its
-realized order, A1-A6, C1-C4 with C3's kill and equivalence rules, and the
-ladder's N* with the foreign-load abort. Its verdicts are the ones reported;
+decision 32): which campaigns count (COMPLETED 0:0 from the batch script's own
+record or Slurm, infrastructure gates, `System.qcow2` unchanged, nothing
+leaked), the rerun rules, that each criterion ran exactly its realized order
+from one source tree, A1-A6, C1-C4 with C2's reading of L0-raw trials and C3's
+clean-kill and equivalence rules, and the ladder's N* with the foreign-load
+abort and its rerun cap. Its verdicts are the ones reported;
 `tests/test_q2_acceptance_analysis.py` drives every rule on synthetic
-campaigns.
+campaigns. It is frozen in the inputs addendum (before C2 is scored) and
+pinned again here.
 
 `scripts/render_q2_action_path_manifest.py` writes each scored campaign's
 manifest from a local export of the frozen commit: the ledger's digests, the
@@ -174,7 +186,10 @@ limit from the lane's worst-case budget (an A4 that would exceed 24 hours is
 split into session ranges). It validates the manifest with the ledger and
 refuses before the freeze. The VM and runner pins come from the last
 development manifest at the candidate executor (`dev-l0-fixed-v10.yaml`),
-which carries the main preregistration's section 2.1 pins.
+which carries the main preregistration's section 2.1 pins. The runner CPUs
+are `manifest.runner_cpus(N)` (main section 9), and a repair attempt k's
+manifest pins `q2-action-path-v1-executor-a2` (or `-a3`); C2's manifest can be
+rendered as soon as the inputs addendum is frozen and pins only it.
 
 ## 8. VM time (`vm_hours.py`, `trial_times.json`, `vm_hours.json`)
 
@@ -188,8 +203,20 @@ preregistration's section 9 cites its totals.
 
 Listed in `program/evidence/2026-10-07/q2-action-path-stage0b/README.md`
 with every job's outcome, and per job in `development-runs.json` there. The
-last development runs (jobs 633-637) ran at `82af567`; every file a VM
-campaign executes (`harness/q2/vm/`, `l0_fixed.py`, `executor.py`,
-`adapters.py`, `upstream/`, `corpus.py`, `suite_cells.json`, the batch script
-and the submitter) must be byte-identical at the freeze commit: run there,
-`git diff 82af567 HEAD --` over those paths prints nothing.
+last development runs ran at `30d8c7f`, the commit that answered the review
+of `2b492cd`: L0-fixed on one VM (job 663) and on 8 VMs (664), H-OSW-fixed
+(665), H-GA (666), the canary (667) and the guest-server fault injection
+(662). Every in-spec cell passed in every repetition and setting; the only
+failures were the outside-spec R cells of each harness and, in job 662, the
+one trial after each injected restart. The runs before them (jobs 633-637)
+ran at `82af567`, whose executor, adapters, corpus and guest code are
+identical; between the two commits only the session, runner, driver and
+manifest code changed among the files a campaign executes (inputs addendum,
+section 5), so the VM-hour sizing measured at `82af567` (section 8) stands.
+
+Every file a VM campaign executes must be byte-identical at the freeze
+commit to `30d8c7f`: run there,
+`git diff --stat 30d8c7f HEAD -- harness/q2 infra/slurm/host-single-node/vm-campaign.sbatch scripts/submit_vm_campaign.py`
+may list only files no campaign executes: the analysis and sizing files
+(`acceptance.py`, `vm_hours.py`, `trial_times.json`, `vm_hours.json`) and
+Markdown files. Anything else needs new development runs before the freeze.
