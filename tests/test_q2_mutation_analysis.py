@@ -207,3 +207,77 @@ def test_k2_sample_is_seeded_stratified_and_verdict_free() -> None:
 )
 def test_infra_reasons_are_kept_apart_from_checker_errors(run: dict, reason: str | None) -> None:
     assert offline_eval.infra_reason(run) == reason
+
+
+def _write(path, rows) -> None:
+    import json
+
+    path.write_text("".join(json.dumps(r) + "\n" for r in rows), encoding="utf-8")
+
+
+def test_s1_flips_need_five_agreeing_scorings_per_venv(tmp_path) -> None:
+    from harness.q2_mutation import dependency_flips
+
+    prefix = str(tmp_path / "mut")
+    ids = ["a", "b", "c", "d"]
+    lock = {"a": "pass", "b": "pass", "c": "pass", "d": "fail"}
+    scout = {"a": "fail", "b": "fail", "c": "fail", "d": "fail"}
+    for arm, verdicts in (("lock", lock), ("scout", scout)):
+        _write(
+            tmp_path / f"mut-verdicts-{arm}.jsonl",
+            [{"mutant_id": i, "verdict": verdicts[i]} for i in ids],
+        )
+        _write(
+            tmp_path / f"mut-notes-{arm}.jsonl",
+            [{"mutant_id": i, "nondeterministic": i == "c"} for i in ids],
+        )
+    _write(tmp_path / "jobs.jsonl", [{"mutant_id": i, "files": {}} for i in ids])
+    # c is already nondeterministic at repeat 2 and d agrees: only a and b are candidates.
+    assert dependency_flips.candidates(prefix) == ["a", "b"]
+
+    def score(jobs, s1_prefix, workers) -> None:
+        sent = [json_row["mutant_id"] for json_row in _jsonl(jobs)]
+        assert sent == ["a", "b"] and s1_prefix == f"{prefix}-s1"
+        for arm in ("lock", "scout"):
+            rows = []
+            for i in sent:
+                if arm == "lock":
+                    scores = [1.0] * 5 if i == "a" else [1.0, 0.0, 1.0, 1.0, 1.0]
+                else:
+                    scores = [0.0] * 5
+                rows.append(
+                    {
+                        "mutant_id": i,
+                        "repeat_scores": scores,
+                        "repeat_errors": [None] * 5,
+                        "infra_failed": False,
+                    }
+                )
+            _write(tmp_path / f"mut-s1-notes-{arm}.jsonl", rows)
+
+    result = dependency_flips.run(tmp_path / "jobs.jsonl", prefix, 4, score=score)
+    assert [r["mutant_id"] for r in result["confirmed"]] == ["a"]
+    assert [r["mutant_id"] for r in result["unstable"]] == ["b"]
+    assert (tmp_path / "mut-s1.json").is_file()
+
+
+def _jsonl(path) -> list:
+    import json
+
+    return [json.loads(line) for line in path.read_text().splitlines() if line]
+
+
+def test_s1_without_candidates_scores_nothing(tmp_path) -> None:
+    from harness.q2_mutation import dependency_flips
+
+    for arm in ("lock", "scout"):
+        _write(
+            tmp_path / f"raw-verdicts-{arm}.jsonl", [{"mutant_id": "t__gold", "verdict": "pass"}]
+        )
+    _write(tmp_path / "jobs.jsonl", [{"mutant_id": "t__gold", "files": {}}])
+
+    def score(*_args) -> None:
+        raise AssertionError("no candidate, no rescoring")
+
+    result = dependency_flips.run(tmp_path / "jobs.jsonl", str(tmp_path / "raw"), 4, score=score)
+    assert result["candidates"] == [] and result["confirmed"] == []

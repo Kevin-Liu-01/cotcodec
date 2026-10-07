@@ -1482,6 +1482,10 @@ def cmd_report(args: argparse.Namespace) -> int:
         scoring_jobs=read_jsonl(scoring_path) if scoring_path.is_file() else [],
         n_boot=args.n_boot,
     )
+    s1 = run / "mut-s1.json"
+    if s1.is_file():
+        # S1 counts only the candidates confirmed at five scorings per venv.
+        summary["s1"] = json.loads(s1.read_text(encoding="utf-8"))
     write_jsonl(run / "outcomes.jsonl", outcomes)
     write_json(run / "report.json", summary)
     print(json.dumps({k: summary[k] for k in ("planned", "admitted", "status")}, sort_keys=True))

@@ -7,8 +7,9 @@
 #      UNO application, purity against the null mutant, deduplication, then the
 #      GUI-faithful save stage (reach.sh) on admitted mutants and null mutants;
 #   3. metric image: the K2 fidelity sample (job list only, no verdict), merge
-#      saved files, score under both venvs (VerdictRow JSONL), re-check
-#      operator purity on the saved files, report.
+#      saved files, score under both venvs (VerdictRow JSONL), rescore S1
+#      candidates five times per venv (dependency_flips), re-check operator
+#      purity on the saved files, report.
 # Jobs 2 and 3 depend on the previous job succeeding. Every container is
 # GPU-less and network-less (q2-mutation-cpu.sbatch, decisions D12 and D13).
 #
@@ -66,6 +67,8 @@ a3=$(hex "${frozen_env[@]}" sh -c "${guard} && ${py} -m harness.q2_mutation.camp
      --jobs /ro/build/scoring-jobs.jsonl --lo-rows \$(ls /ro/build/lo/reachability-*.jsonl) \
      --out /out/jobs-saved.jsonl --path-map /out/=/ro/build/ \
   && /src/infra/q2-mutation/run/score.sh /out/jobs-saved.jsonl /out/mut ${workers} 2 \
+  && ${py} -m harness.q2_mutation.dependency_flips --jobs /out/jobs-saved.jsonl --prefix /out/mut \
+     --workers ${workers} \
   && ${py} -m harness.q2_mutation.campaign recheck --mutations /ro/build/mutations.jsonl \
      --admission /ro/build/admission.jsonl --saved-jobs /out/jobs-saved.jsonl --out /out/recheck.jsonl \
   && ${py} -m harness.q2_mutation.campaign report --run /out --mutations /ro/build/mutations.jsonl \
