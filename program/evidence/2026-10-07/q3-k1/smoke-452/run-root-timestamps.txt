@@ -1,0 +1,27 @@
+Smoke job 452 (q3-k1-localization-screen-v1): file birth/modify times in the host run root, read-only, captured 2026-10-07.
+Run root: /home/kevin/cotcodec-runs/translation-supervised-sparse-indexer/k1-screen-v1/smoke/452
+Command: stat -c '%n|size=%s|birth=%w|mod=%y' <file>  (ext4 birth times; UTC)
+
+container-created-inspect.json|size=19084|birth=2026-10-07 11:53:55.640226750 +0000|mod=2026-10-07 11:53:55.653226428 +0000
+phase-0a-k1/worker-specs/smoke-train/worker-0.json|size=1571|birth=2026-10-07 11:54:25.665480903 +0000|mod=2026-10-07 11:54:25.665480903 +0000
+phase-0a-k1/train-loss-worker-0.jsonl|size=74901|birth=2026-10-07 11:54:52.012826416 +0000|mod=2026-10-07 11:55:36.044732633 +0000
+phase-0a-k1/checkpoints/worker-0/step-000004|size=4096|birth=2026-10-07 11:55:36.063732161 +0000|mod=2026-10-07 11:55:48.085433533 +0000
+phase-0a-k1/checkpoints/worker-0/step-000004/state.safetensors|size=3991177832|birth=2026-10-07 11:55:40.325626292 +0000|mod=2026-10-07 11:55:42.049583468 +0000
+phase-0a-k1/checkpoints/worker-0/step-000004/meta.json|size=1281|birth=2026-10-07 11:55:47.905438005 +0000|mod=2026-10-07 11:55:47.905438005 +0000
+phase-0a-k1/checkpoints/final/worker-0-step-000004.json|size=235|birth=2026-10-07 11:55:48.167431497 +0000|mod=2026-10-07 11:55:48.167431497 +0000
+phase-0a-k1/worker-specs/smoke-train/worker-0.result.json|size=45662|birth=2026-10-07 11:55:49.447399701 +0000|mod=2026-10-07 11:55:49.448399676 +0000
+phase-0a-k1/checkpoints/smoke-lr.json|size=130|birth=2026-10-07 11:55:50.530372800 +0000|mod=2026-10-07 11:55:50.530372800 +0000
+phase-0a-k1/worker-specs/eval-smoke/worker-0.json|size=6024|birth=2026-10-07 11:55:50.537372626 +0000|mod=2026-10-07 11:55:50.537372626 +0000
+phase-0a-k1/checkpoints/eval/smoke|size=4096|birth=2026-10-07 11:56:06.243982463 +0000|mod=2026-10-07 11:56:16.908717543 +0000
+phase-0a-k1/checkpoints/eval/smoke/chunk-bdc3b65f3d00404c.npz|size=31312|birth=2026-10-07 11:56:16.904717643 +0000|mod=2026-10-07 11:56:16.905717618 +0000
+phase-0a-k1/worker-specs/eval-smoke/worker-0.result.json|size=55|birth=2026-10-07 11:56:16.911717469 +0000|mod=2026-10-07 11:56:16.911717469 +0000
+phase-0a-k1/receipt.json|size=10156|birth=2026-10-07 11:56:17.775696007 +0000|mod=2026-10-07 11:56:17.775696007 +0000
+container-final-inspect.json|size=19645|birth=2026-10-07 11:56:18.750671788 +0000|mod=2026-10-07 11:56:18.761671514 +0000
+termination.env|size=128|birth=2026-10-07 11:56:18.792670745 +0000|mod=2026-10-07 11:56:18.794670695 +0000
+container State.StartedAt 2026-10-07T11:53:55.677718637Z FinishedAt 2026-10-07T11:56:18.657909358Z
+eval-smoke units 20 select 20 mc 0
+train-loss lines 4 (steps 0-3; birth = end of step 0, mod = end of step 3)
+
+Audit and development evaluation units (bundle k1-bundle-v1.json metadata only: roles, partitions, context and query indices; unit = (context, query) as in plan_units):
+audit prompts 11540 units 9010 select 8710 mc 5360 select+mc 5060 mc-only 300 contexts with a selection unit 2990 query rows per selection unit mean 33.2 median 21 max 220
+development prompts 1120 units 1000 select 440 mc 840 select+mc 280 mc-only 560 contexts with a selection unit 160 query rows per selection unit mean 38.6 median 21 max 140

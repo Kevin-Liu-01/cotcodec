@@ -1,0 +1,54 @@
+# Q3 K1 throughput probe (q3-k1-throughput-probe-v1): synthetic token ids at the registered shapes on one GPU,
+# measurement only. It reads no bundle, no Belebele and no partition, so it binds no study artifact. Arms:
+# the registered TF32 device tolerance gates, the binding shard's training steps (18 and 6 trainable indexers),
+# stream-dev KL, a checkpoint save, evaluation units of each kind, v1's capture check, and the four registered
+# shards sharing the GPU. Its receipt gives the v2 job limits by harness/sparse_indexer_k1_budget_v2.py.
+# Template: every FILL-* value is written by scripts/fill_sparse_indexer_k1_probe_manifest.py from measured
+# artifacts (the probe image's build receipt and the frozen probe preregistration). The submitter rejects every
+# FILL-* value, so an unfilled template fails closed. Fields container_profile and seed_binding follow the
+# discovery-lane submitter (container_profile default: 8 GB /tmp, 64 MB /dev/shm; seed_binding binds the
+# --seeds argv, the indexer initialisation seeds, to the declared seeds).
+runtime: docker-single-node-discovery-v1
+name: q3-k1-throughput-probe
+image_id: FILL-probe-image-id
+git_sha: FILL-probe-image-git-sha
+source_sha256: FILL-probe-image-source-tar-sha256
+container_profile: default
+resources:
+  gpu_type: h100
+  gpus: 1
+  cpus: 16
+  memory_gb: 96
+  minutes: 9
+budget:
+  max_gpu_hours: 0.15
+randomness_contract: assignment-seed-matrix
+seeds: [42, 43, 44]
+seed_binding:
+  flag: "--seeds"
+run_root: /home/kevin/cotcodec-runs/translation-supervised-sparse-indexer/k1-throughput-probe-v1
+model:
+  model_id: qwen3-0.6b-base
+  revision: da87bfb608c14b7cf20ba1ce41287e8de496c0cd
+  cache_host_path: /home/kevin/cotcodec-runs/hf-cache
+  receipt_sha256: e7f36f05e6c87ec50b3736cf133fda60775abccb38f60fa9d3c134c432cf46df
+  artifact_root_sha256: 7040f418762c61dd00b540e482527e0d8c8a916cce80eee56408bd10a6179ae0
+command:
+  - python
+  - scripts/probe_sparse_indexer_k1_throughput.py
+  - "--output-dir"
+  - /outputs/probe
+  - "--model-dir"
+  - /model-cache/cotcodec-models/qwen3-0.6b-base
+  - "--receipt"
+  - /model-cache/cotcodec-receipts/qwen3-0.6b-base.json
+  - "--expected-receipt-sha256"
+  - e7f36f05e6c87ec50b3736cf133fda60775abccb38f60fa9d3c134c432cf46df
+  - "--preregistration"
+  - program/preregistrations/q3-k1-throughput-probe-v1.md
+  - "--expected-preregistration-sha256"
+  - "FILL-preregistration-sha256"
+  - "--seeds"
+  - "42"
+  - "43"
+  - "44"

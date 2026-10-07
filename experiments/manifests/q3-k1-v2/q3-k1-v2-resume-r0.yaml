@@ -1,0 +1,72 @@
+# Q3 K1 v2 resume test R0: uninterrupted training to step 40 (four workers share one GPU); its limit lets it finish before USR1.
+# Template: every FILL-* value is written by
+# scripts/fill_sparse_indexer_k1_v2_manifests.py from measured artifacts (the v2 image B
+# build receipt, the bundle sidecar, the frozen v2 preregistration, the contract's probe-derived
+# job limits, Slurm job ids). The submitter rejects every FILL-* value, so an unfilled template
+# fails closed. Fields container_profile, seed_binding and memory_gb follow the discovery-lane
+# submitter (container_profile default: 8 GB /tmp, 64 MB /dev/shm; seed_binding binds the --seeds
+# argv to the declared seeds).
+runtime: docker-single-node-discovery-v1
+name: q3-k1-v2-resume-r0
+image_id: FILL-image-b2-image-id
+git_sha: FILL-image-b2-git-sha
+source_sha256: FILL-image-b2-source-tar-sha256
+container_profile: default
+resources:
+  gpu_type: h100
+  gpus: 1
+  cpus: 16
+  memory_gb: 64
+  minutes: FILL-limit-resume-r0-minutes
+budget:
+  max_gpu_hours: FILL-limit-resume-r0-gpu-hours
+randomness_contract: assignment-seed-matrix
+seeds: [42, 43, 44]
+seed_binding:
+  flag: "--seeds"
+run_root: /home/kevin/cotcodec-runs/translation-supervised-sparse-indexer/k1-screen-v2/resume-r0
+model:
+  model_id: qwen3-0.6b-base
+  revision: da87bfb608c14b7cf20ba1ce41287e8de496c0cd
+  cache_host_path: /home/kevin/cotcodec-runs/hf-cache
+  receipt_sha256: e7f36f05e6c87ec50b3736cf133fda60775abccb38f60fa9d3c134c432cf46df
+  artifact_root_sha256: 7040f418762c61dd00b540e482527e0d8c8a916cce80eee56408bd10a6179ae0
+study_artifact:
+  source_id: q3-k1-bundle-v1
+  revision: FILL-bundle-commit-git-sha
+  license: LicenseRef-cotcodec-k1-bundle-v1
+  host_path: /home/kevin/cotcodec-runs/translation-supervised-sparse-indexer/inputs/k1-bundle-v1.json
+  sha256: FILL-bundle-sha256
+  size_bytes: FILL-bundle-size-bytes
+command:
+  - python
+  - scripts/run_sparse_indexer_phase0a_v2.py
+  - experiments/architectures/translation-supervised-sparse-indexer-k1-screen-v2.yaml
+  - "--phase"
+  - resume-test
+  - "--output-dir"
+  - /outputs/phase-0a-k1
+  - "--evidence"
+  - /inputs/study-artifact.json
+  - "--expected-evidence-sha256"
+  - "FILL-bundle-sha256"
+  - "--model-dir"
+  - /model-cache/cotcodec-models/qwen3-0.6b-base
+  - "--receipt"
+  - /model-cache/cotcodec-receipts/qwen3-0.6b-base.json
+  - "--expected-receipt-sha256"
+  - e7f36f05e6c87ec50b3736cf133fda60775abccb38f60fa9d3c134c432cf46df
+  - "--preregistration"
+  - program/preregistrations/q3-k1-localization-screen-v2.md
+  - "--expected-preregistration-sha256"
+  - "FILL-preregistration-sha256"
+  - "--seeds"
+  - "42"
+  - "43"
+  - "44"
+  - "--workers"
+  - "4"
+  - "--stop-after-step"
+  - "40"
+  - "--checkpoint-every"
+  - "10"
