@@ -211,3 +211,47 @@ Append-only. Newest entries at the bottom.
   tests. Froze `q3-k1-throughput-probe-v1` (D20, D22). Projected v2 totals
   under D22's counting rule: about 6.6 GPU-h central, 9.5 conservative; the
   probe's measurement decides between freezing v2 and the gauntlet.
+
+## 2026-10-07 — Action-path suite: development complete, one decision before the freeze
+
+- Q2 Stage 0b (branch `stage0/q2-action-path`), development only (seed 42,
+  never evidence), every job CPU-only through `vm-campaign.sbatch` with the
+  VM in its own network namespace (D12, D13): jobs 482-637, driver exit 0
+  for every job after 482, no GPU in any job's TRES, `System.qcow2`
+  unchanged, no labelled container or volume left.
+- Found and fixed in development: the compositor sometimes never painted the
+  probe's last drawing (31 of 941 typing trials, 3.3%; L0-fixed now
+  re-damages the top-level windows after each action, and 2,114 typing
+  trials since showed none); a session's first XTest key changes the master
+  keyboard device and stripped `chord_super_d`'s modifier (runs 549 and 574,
+  the same sessions on 8 VMs and on one; every session now warms the
+  keyboard up first); Chrome's outdated-build bubble (a launch flag); VS
+  Code dropping its first keys while loading on a busy host (the canary waits
+  until the app is idle); the boot's first `/accessibility` call answering
+  500 (Stage 1's reset observation is reproduced; recovered retries are
+  reported, not failures, as section 6.1 says).
+- Found while writing the acceptance code: the concurrency ladder could never
+  qualify a rung above N = 1 (18 sessions against 20 required boots); rungs
+  now repeat the seed-43 order until every VM is busy. Added the acceptance
+  analysis as code (`acceptance.py`), a manifest renderer that refuses
+  before the freeze, and tests that freeze a scratch ledger to exercise
+  admission; the repository ledger still refuses every acceptance campaign
+  and seeds 43 and 44.
+- Open, for Kevin before the freeze: the OSWorld guest server crashed once in
+  7,969 `/accessibility` calls (thread-pool tree walk; systemd then stops
+  everything it launched). A4 as registered (zero failures over 36,550
+  accessibility calls) would pass with probability about 0.01; options in the
+  inputs addendum's section 6. Writer once swapped a space and the emoji
+  after it (1 of 336 Writer trials), reported.
+- At the final runtime commit every in-spec cell of L0-fixed (one VM and 8
+  VMs), H-OSW-fixed, H-GA and the canary passed in every repetition and
+  setting (jobs 633-637); the stress and volume samples at `81fd5f3` (jobs
+  618-622, 2,600 trials on 8 VMs) failed only in the one session the
+  guest-server crash broke.
+- The 44 scored mutants on their predicted kill cells (informative): 42
+  killed, M12 and M13 on H-OSW-fixed unchanged (predicted equivalent).
+- VM time from measured trial times (`vm_hours.json`): A4 44.0 VM-hours,
+  all scored campaigns 67.3 VM-hours, CPU only.
+- Nothing frozen. Next: Kevin's A4 decision, then the owner freezes
+  `q2-action-path-v1`, `-inputs` and `-executor`; C2, then C1 and C3, then
+  A1-A6 and the ladder.

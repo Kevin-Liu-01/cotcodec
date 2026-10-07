@@ -33,6 +33,8 @@ Frozen with this file (SHA-256 of the committed bytes):
 | `harness/q2/action_path/canary_targets.json` | `a49782274cf7c3dec0b6ceca64564207824220b2dc1572387f98339b0d4805f6` |
 | `harness/q2/vm/guest/canary_targets.py` | `8b7233391b1da78092326c11d394f0385ee42052835a83554c76260e4201aab3` |
 | `harness/q2/action_path/vm_hours.py` | `757981ef219f62f7f423d1ff9d02f75fd042c5c0063669f724337d2a96c270ab` |
+| `harness/q2/action_path/trial_times.json` | `a33ca2e024d6f24a31a60ff62053be1fb197af48c996ae99fb75aff4d20217e5` |
+| `harness/q2/action_path/vm_hours.json` | `fbe10c0f7c0f31c0a0db9ce3e626209f7746505320e835b0b79277d20e8ec011` |
 | `harness/q2/action_path/acceptance.py` | `9dac21a9c166a866c25e803fd8025a328da43e67320632cdc7d8c553d8a1a632` |
 | `scripts/render_q2_action_path_manifest.py` | `bc56bf3f5e57f8270da62bef1a2e3261a16c4bf40b63c1fe74a37bf5ca52ed2e` |
 | `experiments/manifests/q2-action-path/dev-l0-fixed-v10.yaml` | `0a4f908e67631483687740cfba3266b829f3c5d2577b08b676a5fa022186ad92` |
@@ -91,8 +93,8 @@ the screen frozen during keymap rebuilds without the shell wait, and runs
 504-541 the last drawing of about 4% of typing trials never painted without
 the repaint request (runs 537-541 ran with a nudge that raised and was
 skipped, a control: their typing trials failed the same way); from run 545 on,
-with the repaint request working, no typing trial did (the reason for each
-step is in the executor's source).
+with the repaint request working, none of 2,114 typing trials did (the reason
+for each step is in the executor's source).
 
 Before a session's first trial the runner runs the guard's keyboard warm-up
 (inputs addendum; main preregistration design decision 31). It is not part of
@@ -186,4 +188,9 @@ preregistration's section 9 cites its totals.
 ## 9. Development record (seed 42, never evidence)
 
 Listed in `program/evidence/2026-10-07/q2-action-path-stage0b/README.md`
-with every job's outcome, and per job in `development-runs.json` there.
+with every job's outcome, and per job in `development-runs.json` there. The
+last development runs (jobs 633-637) ran at `82af567`; every file a VM
+campaign executes (`harness/q2/vm/`, `l0_fixed.py`, `executor.py`,
+`adapters.py`, `upstream/`, `corpus.py`, `suite_cells.json`, the batch script
+and the submitter) must be byte-identical at the freeze commit: run there,
+`git diff 82af567 HEAD --` over those paths prints nothing.

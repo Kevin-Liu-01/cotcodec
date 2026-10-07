@@ -11,6 +11,7 @@ summaries extracted from the job receipts, with the receipt SHA-256 recorded.
 | `boot-reset-report.json` | Jobs 369 (smoke), 372 (bridge exposure) and 374 (22 cold boots): boot and settle times, reset sentinel, isolation, guest facts, HMP reachability |
 | `rdev-capture-report.json` | Jobs 387 (superseded) and 393 (reference): the R-dev capture of the 35 key, chord and Caps Lock entries, 5 repetitions each; job 468, the same plan re-captured with the rewritten tap |
 | `tap-selftest-report.json` | Jobs 467, 469, 470 and 471: the rewritten XRecord tap's oracle self-test after the review |
+| `development-runs.json` | Jobs 482-632: inputs validation and development (seed 42, never evidence), one row per job |
 
 ## What the runs show
 
@@ -95,3 +96,70 @@ device in any container.
   rewritten tap (commit a1aade3, whose tap `main` is the one committed): 35 of
   35 entries stable, and all 35 projections identical to job 393's, so
   `rdev_reference.json` is unchanged. `COMPLETED`, exit `0:0`.
+
+## Development (seed 42, never evidence; jobs 482-637)
+
+Development runs iterate the executor, the harness adapters and the canary
+before the freeze (preregistration section 10). None of them is evidence for
+A1-A6 or C1-C4; they are listed so a reader can see what changed in response
+to what. Every job ran as a CPU-only Slurm job through `vm-campaign.sbatch`
+(no GRES in its TRES; `no_gpu_all` true), with the VM in its own network
+namespace, `System.qcow2` unchanged and no labelled container or volume left;
+every driver exited 0 except job 482, which stopped before any container
+started. `development-runs.json` has one row per job (campaign, commit, cells
+not PASS, infrastructure failures, observation retries, trial and step times,
+Slurm end state where it was read before Slurm forgot the job, receipt
+SHA-256).
+
+What the development runs found and what changed (commits on
+`stage0/q2-action-path`; the preregistration's section 16 lists the same):
+
+| Jobs | Commit | Finding | Change |
+|---|---|---|---|
+| 486-499 | `29b056e`-`7c1bb02` | screenshots one compositor frame behind; the screen frozen while GNOME Shell rebuilt its keymap after Unicode typing; chord releases losing their modifiers; H-OSW-fixed's `wait` and edge whitespace | quiet-screen wait, shell barrier, 0.1 s key hold, two more H-OSW-fixed own-spec fixes |
+| 501-522 | `7c1bb02`-`fe92765` | Chrome's accessibility text stale; VS Code's walkthrough over the file; Chrome's "Can't update Chrome" bubble | Chrome read back from its mirrored title, the walkthrough off, a flag that keeps the bubble closed |
+| 504-541 | `1ce92a6`-`bde1f82` | the probe's last drawing never painted in 31 of 941 typing trials (3.3%) | L0-fixed re-damages every top-level window after each action (working from `a1d7e10`; at `bde1f82` the nudge raised and was skipped, so 537-541 are a control) |
+| 537 | `bde1f82` | the boot's first `/accessibility` call answered HTTP 500, its retry 200 | the reset observation before a session's first trial; a delivered retry is reported, not a failure (section 6.1) |
+| 549, 574 | `b603347`, `dba0580` | `chord_super_d` lost its Super modifier when its Super_L press was the session's first key (8 VMs and one VM, the same 14 sessions, the same two failures) | the guard's keyboard warm-up before every session (from `a6623ae`; 609 and 610 ran the same sessions clean) |
+| 553-602 | `b603347` | the 44 mutants on their predicted kill cells: 42 killed, M12 and M13 on H-OSW-fixed passing (predicted equivalent); three predicted killers did not kill | none (predictions stay; C3 reports predicted next to observed) |
+| 613 | `81fd5f3` | on a loaded host VS Code dropped the first keys of three trials while still loading | the canary waits until the app's processes are idle (`59697b3`) |
+| 620, 631-632 | `091b33e` | Writer put an emoji before the space typed ahead of it, in 1 of the 336 Writer trials of runs 501-632 (job 620; jobs 631-632 typed every Writer entry five times without it) | none; reported (GNOME's input-method daemon sits between X and GTK applications) |
+| 622 | `81fd5f3` | the guest server crashed inside `/accessibility`; systemd stopped everything it had launched (probe and tap) and restarted it, so one session's 55 trials were charged | restarts typed as `guest_server_restart` (`d0c4cec`); A4's exposure is a decision for the owner (inputs addendum, section 6) |
+| 545-632 | `a1d7e10`-`091b33e` | the nudge's `DamageAdd` on InputOnly windows drew a `BadMatch` error on almost every action (harmless; those windows have no contents) | InputOnly windows skipped (`d0c4cec`) |
+
+The final validation, at `81fd5f3` (with the warm-up), at `091b33e` (the
+canary's idle wait) and at `82af567` (the final runtime commit; the files the
+VMs run differ from `81fd5f3` only in the canary's idle wait, the guard's
+server report and the nudge's InputOnly skip). Outside-spec R cells fail by
+design (preregistration section 3):
+
+| Job | Commit | Campaign | Trials | Cells PASS | Not PASS |
+|---|---|---|---:|---:|---|
+| 609 | `81fd5f3` | L0-fixed, all 100 entries, 4 repetitions per setting, one VM | 800 | 200 of 200 | none |
+| 610 | `81fd5f3` | L0-fixed, the same 14 sessions on 8 concurrent VMs | 800 | 200 of 200 | none |
+| 611 | `81fd5f3` | H-OSW-fixed, every corpus cell, 2 repetitions per setting | 396 | 194 of 198 | R03 (outside spec), R09 (outside spec) |
+| 612 | `81fd5f3` | H-GA, every corpus cell, 2 repetitions per setting | 372 | 178 of 186 | R02 (outside spec), R04 (outside spec), R06 (outside spec), R10 (outside spec) |
+| 618 | `81fd5f3` | L0-fixed, A3's 30 stress entries, 5 repetitions per setting, 8 VMs | 300 | 60 of 60 | none |
+| 621 | `81fd5f3` | the same, a second job | 300 | 60 of 60 | none |
+| 619 | `81fd5f3` | L0-fixed, all 100 entries, 5 repetitions per setting, 8 VMs | 1000 | 200 of 200 | none |
+| 622 | `81fd5f3` | the same, a second job | 1000 | 151 of 200 | 49 cells, all from the one session the guest-server restart broke (tap window missing 55, channel missing 6, probe absent 1) |
+| 613 | `81fd5f3` | canary, every app and entry, 2 repetitions (without the idle wait) | 120 | 57 of 60 | vscode:triple_click_line, vscode:type_emoji, vscode:type_symbols_shifted |
+| 620 | `091b33e` | canary, every app and entry, 2 repetitions (with the idle wait) | 120 | 59 of 60 | writer:type_emoji |
+| 631 | `091b33e` | canary, the 16 Writer entries, 5 repetitions | 80 | 16 of 16 | none |
+| 632 | `091b33e` | the same, a second job | 80 | 16 of 16 | none |
+| 633 | `82af567` | L0-fixed, all 100 entries, 2 repetitions per setting, one VM | 400 | 200 of 200 | none |
+| 634 | `82af567` | L0-fixed, all 100 entries, 4 repetitions per setting, 8 VMs | 800 | 200 of 200 | none |
+| 635 | `82af567` | H-OSW-fixed, every corpus cell, 1 repetition per setting | 198 | 194 of 198 | R03 (outside spec), R09 (outside spec) |
+| 636 | `82af567` | H-GA, every corpus cell, 1 repetition per setting | 186 | 178 of 186 | R02 (outside spec), R04 (outside spec), R06 (outside spec), R10 (outside spec) |
+| 637 | `82af567` | canary, every app and entry, 1 repetition | 60 | 60 of 60 | none |
+
+From job 545 on (the working repaint request), no trial ended on a stale
+marker: 0 of 2,114 typing trials (one-sided 95% upper bound 0.14%),
+against 31 of 941 in runs 504-541.
+
+The acceptance analysis (`acceptance.py`) run over these receipts for
+information: job 609's 280 key, chord and Caps Lock trials all matched their
+R-dev reference (what C4 will check in A1); and job 610's host snapshots
+show two foreign Slurm jobs starting and foreign jobs holding 72 CPUs, so a
+ladder rung run under those conditions would abort (section 9). The ladder
+needs a quiet host.

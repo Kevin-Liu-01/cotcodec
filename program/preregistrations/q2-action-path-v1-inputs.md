@@ -218,8 +218,10 @@ in every report.
 Main section 16, item 9: in development the OSWorld guest server crashed once
 in 7,969 `/accessibility` calls (its tree walk runs on a thread pool), and its
 systemd unit then stopped every process the server had launched. A crash is an
-infrastructure failure (section 6.1), and A4 needs zero failures over about
-42,000 accessibility calls, about five expected crashes at that rate. The
+infrastructure failure (main section 6.1), and A4 needs zero failures over
+36,550 accessibility calls (36,016 steps and 534 reset observations in its
+screenshot-plus-accessibility sessions): about 4.6 expected crashes at that
+rate, so A4 would pass with probability about 0.01. The
 registration keeps the strict rule; the options the owner can take before the
 freeze, each with its cost:
 
