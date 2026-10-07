@@ -35,6 +35,7 @@ import torch
 
 from harness import sparse_indexer_k1_stats as k1s
 from harness import sparse_indexer_torch as sit
+from harness.sparse_indexer_k1_marker import read_checkpoint_marker, write_checkpoint_marker
 
 LEARNING_RATES: tuple[float, ...] = (3e-4, 1e-3, 3e-3)
 PREFERRED_LR = 1e-3
@@ -1095,6 +1096,7 @@ __all__ = [
     "learning_rate",
     "lr_tag",
     "plan_units",
+    "read_checkpoint_marker",
     "reference_and_literal_rows",
     "run_devkl_worker",
     "run_eval_worker",
@@ -1104,4 +1106,5 @@ __all__ = [
     "sha256_file",
     "stage_bundle",
     "summarise_headroom",
+    "write_checkpoint_marker",
 ]

@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import json
 import shutil
 import signal
 import subprocess
@@ -13,6 +12,7 @@ import yaml
 pytest.importorskip("torch")
 pytest.importorskip("transformers")
 
+from harness.sparse_indexer_k1_marker import read_checkpoint_marker  # noqa: E402
 from scripts.run_sparse_indexer_k1_doctor import TinyRun, receipt_of  # noqa: E402
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
@@ -74,7 +74,9 @@ def test_signal_checkpoint_and_fresh_job_resume_are_bitwise(tiny, tmp_path) -> N
     process.send_signal(signal.SIGUSR1)
     _, err = process.communicate(timeout=600)
     assert process.returncode == 75, err[-2000:]
-    ack = json.loads(marker.read_text())
+    text = marker.read_text()
+    assert "\ntrigger=SIGUSR1\n" in "\n" + text  # the batch script's confirmation line
+    ack = read_checkpoint_marker(marker)
     assert {a["step"] for a in ack["acks"].values()} == {2} and len(ack["acks"]) == 2
     r2_dir = tmp_path / "r2"
     (r2_dir / "phase-0a-k1").mkdir(parents=True)

@@ -19,7 +19,8 @@ Phases:
 
 The process is PID 1 in its container. It installs SIGUSR1/SIGTERM handlers,
 forwards a received signal to its workers, reaps them, and writes the
-checkpoint marker only after every running worker acknowledged a completed
+checkpoint marker (with the line ``trigger=SIG<name>`` the batch script
+requires) only after every running worker acknowledged a completed
 signal-triggered save (a stale marker is deleted first). Exit codes: 0
 complete, 2 contract violation at startup, 3 integrity failure, 75
 checkpointed and incomplete.
@@ -71,6 +72,7 @@ CODE_FILES = (
     "scripts/run_sparse_indexer_phase0a.py",
     "harness/sparse_indexer_torch.py",
     "harness/sparse_indexer_k1_runtime.py",
+    "harness/sparse_indexer_k1_marker.py",
     "harness/sparse_indexer_k1_stats.py",
     "harness/sparse_indexer_data.py",
     "harness/translation_supervised_indexer.py",
@@ -82,7 +84,8 @@ class StartupError(RuntimeError):
 
 
 def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
+    # allow_abbrev=False: a prefix such as --see must never reach a seed option.
+    parser = argparse.ArgumentParser(description=__doc__.splitlines()[0], allow_abbrev=False)
     parser.add_argument("contract", type=Path)
     parser.add_argument("--phase", choices=PHASES, required=True)
     parser.add_argument("--output-dir", type=Path, required=True)
@@ -231,9 +234,9 @@ class Parent:
         return token
 
     def _write_marker(self, token: str, acks: dict[str, Any]) -> None:
-        payload = {"token": token, "signal": self.flag.received, "acks": acks,
-                   "written_at": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())}
-        rt.atomic_write_json(self.marker, payload)
+        # Written only here, after every running worker acknowledged its
+        # signal-triggered save; periodic saves never touch this file.
+        rt.write_checkpoint_marker(self.marker, str(self.flag.received), token, acks)
 
     def checkpoint_without_workers(self) -> None:
         """A signal outside a worker stage: all state is already on disk."""

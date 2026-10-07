@@ -570,11 +570,13 @@ def case_end_to_end(tmp: Path) -> dict[str, Any]:
     stale.write_text("stale marker from a periodic checkpoint\n", encoding="utf-8")
     process.send_signal(signal.SIGUSR1)
     _, r1_err = process.communicate(timeout=600)
-    marker = json.loads(stale.read_text(encoding="utf-8")) if stale.is_file() else {}
+    from harness.sparse_indexer_k1_marker import read_checkpoint_marker
+
+    marker = read_checkpoint_marker(stale) if stale.is_file() else {"acks": {}}
     gates["signal_save_exits_75"] = process.returncode == 75
     gates["stale_marker_replaced_after_acks"] = (
-        marker.get("token") is not None and len(marker.get("acks", {})) == 2
-        and {a.get("step") for a in marker["acks"].values()} == {2})
+        marker.get("trigger") == "SIGUSR1" and marker.get("token") is not None
+        and len(marker["acks"]) == 2 and {a.get("step") for a in marker["acks"].values()} == {2})
     gates["periodic_checkpoints_write_no_marker"] = not (tmp / "r0" / "checkpoint.ready").exists()
     r2_dir = tmp / "r2"
     (r2_dir / "phase-0a-k1").mkdir(parents=True, exist_ok=True)
@@ -620,7 +622,7 @@ def case_end_to_end(tmp: Path) -> dict[str, Any]:
 
 
 def main(argv: list[str] | None = None) -> int:
-    parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
+    parser = argparse.ArgumentParser(description=__doc__.splitlines()[0], allow_abbrev=False)
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--skip-end-to-end", action="store_true")
     args = parser.parse_args(argv)
