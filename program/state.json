@@ -33,7 +33,7 @@
       "doc": "program/questions/q2-calibrated-cua-instrument.md",
       "dossier_key": "S1-calibrated-cua-instrument",
       "status": "stage-0-running",
-      "next_action": "Owner freezes q2-action-path-v1, then -inputs, then -executor (development complete on stage0/q2-action-path); then C2, C1 and C3, A1-A6 and the ladder. Rescope Stage 1 from the measured cost card (closed-loop VM time dominates); the checker-mutation kit continues",
+      "next_action": "Kevin decides how A4 treats guest-server restarts (inputs addendum section 6); then the owner freezes q2-action-path-v1, -inputs and -executor (development complete on stage0/q2-action-path) and runs C2, C1 and C3, A1-A6 and the ladder. Rescope Stage 1 from the measured cost card (closed-loop VM time dominates); the checker-mutation kit continues",
       "first_gpu_experiment": {
         "name": "Qwen3.5 ladder (as dossier-designed)",
         "measured_projection_gpu_hours": 431.5,
@@ -56,8 +56,8 @@
       "title": "Cross-script sparse-indexer recall",
       "doc": "program/questions/q3-cross-script-indexer.md",
       "dossier_key": "E6-d21-translation-supervised-indexer",
-      "status": "stage-0-probe",
-      "next_action": "Run the frozen K1 v2 throughput probe; derive v2 limits under D22; freeze v2 if the caps stay under 8 GPU-h, else run the gauntlet",
+      "status": "stage-0-gauntlet",
+      "next_action": "Run the bounded research gauntlet for q3-k1-localization-screen-v2 (8.05 GPU-h under D22); admission waits on Kevin (D24)",
       "first_gpu_experiment": {
         "name": "K1 localization screen",
         "registration": "q3-k1-localization-screen-v1",
@@ -69,6 +69,7 @@
     }
   ],
   "pending_decisions_for_kevin": [
+    "Gauntlet admission for experiments over 8 GPU-h: set up the protected trust store (Ed25519 reviewer keys pinned by CI) the gauntlet needs for a 100, or rule on admitting gauntleted designs below 100 (blocks K1 v2 at 8.05 GPU-h, Q2 Stage 1, possibly Q1 Stage 0; decision D24)",
     "Approve or decline the R580 driver upgrade request to the host administrator, or give written risk acceptance for scoring Q1 policy kernels",
     "Approve disclosure of the Letta findings to letta-ai once the current-main recheck is complete (draft kept privately)",
     "Approve telling xlang-ai about OSWorld checker defects found in Q2 Stage 0a, and about the hardcoded Surfer-H API key in public OSWorld source",
@@ -78,7 +79,7 @@
     "Moonshot (Kimi) account is suspended for insufficient balance; recharge it if a Kimi model should be a rater or reviewer (rotate the exposed key at the same time)",
     "Before freezing q2-action-path-v1: decide how A4 treats OSWorld guest-server restarts inside /accessibility (1 in 7,969 calls in development; A4 as registered would very likely fail on them); options in program/preregistrations/q2-action-path-v1-inputs.md section 6"
   ],
-  "gpu_hours_spent_this_program": 1.196,
+  "gpu_hours_spent_this_program": 1.251,
   "frozen_registrations": [
     "q3-k1-localization-screen-v1",
     "q2-holo3-rerun-audit-v1-posthoc",
@@ -128,6 +129,16 @@
         "516 GPU tests"
       ],
       "outcome": "3/3 passed; largest observed/tolerance ratio 7.9e-3"
+    },
+    {
+      "experiment": "q3-k1-throughput-probe-v1",
+      "gpu_hours": 0.055,
+      "jobs": [
+        "533 image build (CPU)",
+        "534/536 doctors (CPU)",
+        "543 probe"
+      ],
+      "outcome": "PROBE_COMPLETE; v2 caps plus probe 8.05 GPU-h under D22: gauntlet applies"
     }
   ],
   "results": [
