@@ -99,3 +99,33 @@ reported as a secondary. The primary contract tier is "never silently wrong
 at held-out shapes". A kernel that refuses an unsupported shape is not
 counted as silently wrong. Both are fixed in the Stage 0 preregistration
 before any mutant is scored.
+
+## 2026-10-07
+
+**D15. Holo3 v2 sign-offs.** The 5.75 GB verified-run tarball read is
+approved under D1, once v2 is frozen and its freeze gate checks the repository
+ledger. Design decisions 1-14 of the v2 draft are accepted, with two
+conditions: a checker-side label that is not robust to the narrow-L
+sensitivity is reported as exploratory, and the nominal family-wise error
+rate over rules (a), (b) and (d) (0.10) is stated. The v1 post-hoc record is
+frozen together with v2.
+
+**D16. Q3 K1 sign-offs.** Design decisions 1-25 of the K1 draft are accepted
+(budget 2.65 GPU-h plus a conditional 1.5 GPU-h extension, below the gauntlet
+threshold). A HOLD is terminal for the experiment id. The V1 extension is
+mandatory when the main read calls for it, and an extension that is not run
+or ends void makes the verdict INCONCLUSIVE. Budget amendments after
+SMOKE_PASS_OVER_BUDGET, or a second continuation, are declined by default;
+any amendment would be recorded here before audit statistics exist and may
+change only minutes and GPU-hours, never rules. The manifest filler must
+enforce SMOKE_PASS, PROCEED_TO_K1 and resume equivalence before it fills the
+main job.
+
+**D17. Serving probe sign-offs.** D8 is amended: the overlay image build and
+the metadata fetch (about 0.33 GPU-h of idle H100 allocation) are accounted
+separately from the 1.0 GPU-h probe cap. If a cu129 gate fails, one cu130
+retry (9.04 GB image, overlay rebuild, rerun of the failed job) is
+pre-approved with an extra cap of 1.0 GPU-h. No GPU resume run is required
+for a probe with no training state. The prefix-caching-off arm and the TP=2
+real-weight run stay excluded. Design decisions 2-27 of the draft are
+accepted, conditional on job acceptance gating budget entry.
