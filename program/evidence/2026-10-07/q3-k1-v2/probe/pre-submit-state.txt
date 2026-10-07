@@ -1,0 +1,18 @@
+## pre-submit probe 2026-10-07T18:53:32Z
+537 q2ap-dev-l0 RUNNING 0:23 N/A
+538 q2ap-dev-l0 RUNNING 0:20 N/A
+539 q2ap-dev-canary RUNNING 0:20 N/A
+540 q2ap-dev-hosw RUNNING 0:20 N/A
+541 q2ap-dev-hga RUNNING 0:20 N/A
+index, utilization.gpu [%], memory.used [MiB]
+0, 0 %, 0 MiB
+1, 0 %, 0 MiB
+2, 0 %, 0 MiB
+3, 0 %, 0 MiB
+4, 0 %, 0 MiB
+5, 0 %, 0 MiB
+6, 0 %, 0 MiB
+7, 0 %, 0 MiB
+compute-apps:
+gpu_uuid, pid, used_gpu_memory [MiB]
+ls: cannot access '/home/kevin/cotcodec-runs/translation-supervised-sparse-indexer/k1-throughput-probe-v1': No such file or directory

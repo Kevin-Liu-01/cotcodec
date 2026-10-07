@@ -1,0 +1,20 @@
+[
+  "python",
+  "scripts/probe_sparse_indexer_k1_throughput.py",
+  "--output-dir",
+  "/outputs/probe",
+  "--model-dir",
+  "/model-cache/cotcodec-models/qwen3-0.6b-base",
+  "--receipt",
+  "/model-cache/cotcodec-receipts/qwen3-0.6b-base.json",
+  "--expected-receipt-sha256",
+  "e7f36f05e6c87ec50b3736cf133fda60775abccb38f60fa9d3c134c432cf46df",
+  "--preregistration",
+  "program/preregistrations/q3-k1-throughput-probe-v1.md",
+  "--expected-preregistration-sha256",
+  "45b9b1347c5093bae0f06665d7d88ed122fe2711d993a9d0e2d133918ae42e51",
+  "--seeds",
+  "42",
+  "43",
+  "44"
+]

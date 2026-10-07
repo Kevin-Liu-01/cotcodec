@@ -1,0 +1,7 @@
+{
+  "device": "cuda",
+  "model_dir": "/model-cache/cotcodec-models/qwen3-0.6b-base",
+  "out_dir": "/outputs/probe",
+  "profile": "registered",
+  "spawned_at": 1791399231.906605
+}
