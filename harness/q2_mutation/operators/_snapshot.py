@@ -771,6 +771,7 @@ def _docx_paragraph(p: ET.Element, style_names: dict[str, str]) -> dict:
         style = style_names.get(style_id, style_id)
     pieces = [(_run_text(r), _docx_rpr(r.find(q("w", "rPr")), style_names)) for r in _docx_runs(p)]
     drawings = sum(1 for _ in p.iter(q("w", "drawing"))) + sum(1 for _ in p.iter(q("w", "pict")))
+    section_break = ppr is not None and ppr.find(q("w", "sectPr")) is not None
     block = {
         "type": "p",
         "text": "".join(text for text, _ in pieces),
@@ -780,6 +781,8 @@ def _docx_paragraph(p: ET.Element, style_names: dict[str, str]) -> dict:
     }
     if drawings:
         block["drawings"] = drawings
+    if section_break:
+        block["section_break"] = True
     return block
 
 

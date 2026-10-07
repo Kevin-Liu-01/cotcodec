@@ -1,15 +1,49 @@
 """Q2 evaluator-mutation operator catalog.
 
 Operators are grouped by document family (``xlsx``, ``docx``, ``pptx``,
-``text``, ``config``) and by nominal label class: equivalence (E),
-alternative valid solution (A), requirement violation (R) and unrequested
-extra change (F, ABC-style). Each operator takes a blind-author requirement
-(or an outside site), proposes a deterministic seeded recipe, states its
-purity footprint and derives its label from the spec alone.
-
-``catalog()`` returns the frozen description of every operator together with
-a hash over the descriptions and the operator source files; the
+``text``, ``config``) and by nominal label class: equivalence (E,
+``*.eq.*``), alternative valid solution (A, ``*.alt.*``), requirement
+violation (R, ``*.viol.*``) and unrequested extra change (F, ``*.extra.*``,
+ABC-style). ``catalog()`` returns the frozen description of every operator
+with a hash over the descriptions and the operator source files; the
 preregistration records that hash.
+
+Inputs per task file: the LibreOffice-saved gold (the base), the
+LibreOffice-saved initial file (the task delta is their structural diff) and
+the blind author's requirement spec. Operators never read checker code or
+verdicts.
+
+Labels come from the spec only. Every witness argument starts with its rule:
+
+* ``W-E-SILENT`` / ``W-E-ALLOWED`` / ``W-E-CONFLICT``: an E change touches an
+  aspect no requirement mentions (equiv), the spec lists as unconstrained
+  (equiv), or a requirement mentions (ambiguous).
+* ``W-A-SILENT`` / ``W-A-ALLOWED`` / ``W-A-PINNED`` / ``W-A-MENTIONED``: an A
+  change preserves the bound observable; the requirement is silent on the
+  mechanism (alt), the spec frees it (alt), requires the replaced mechanism
+  (violation), or mentions it (ambiguous). ``W-A-REPRESENTATION`` and
+  ``W-A-STRUCTURE`` mark A changes that render identically but change stored
+  text or placeholder structure (ambiguous unless the spec frees them).
+* ``W-R-PINNED`` / ``W-R-TEXT`` / ``W-R-WEAK-BINDING`` / ``W-R-UNPINNED``: an R
+  change moves a bound observable off gold; a violation needs the requirement
+  to pin the attacked aspect (by keyword, quote or check kind) and a binding
+  of high or medium confidence, otherwise ambiguous.
+* ``W-F-UNREQUESTED`` / ``W-F-COSMETIC`` / ``W-F-ALLOWED``: an F change edits
+  a unit outside every binding and outside the task delta; content changes
+  are should_fail_extra_change and cosmetic ones ambiguous; if the spec frees
+  the aspect, a cosmetic change is equiv and a content change ambiguous.
+
+Purity checks (all must pass for admission), judged against the null mutant
+(the base saved once more through the same path, because LibreOffice is not a
+load-save fixed point): ``applied``, ``survived_save``, ``edit_landed``,
+``no_collateral_change``, and where declared ``forbidden_kinds_absent``,
+``observable_preserved``, ``appearance_preserved``, ``same_items``,
+``expected_values``, ``expected_deltas``, ``expected_formulas``.
+
+Planning is deterministic: at most three sites per (task, operator), ordered
+by a hash of (task, operator), seeded 42, 43, 44. Recipes carry SHA-256
+digests of the text they expect, not document text; mutant documents stay on
+the host and are never released.
 """
 
 from __future__ import annotations

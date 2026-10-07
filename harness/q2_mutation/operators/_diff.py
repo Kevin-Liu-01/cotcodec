@@ -226,6 +226,7 @@ def _diff_paragraph(d: _Differ, loc: str, a: dict, b: dict) -> None:
     ):
         d.add(f"{loc}/spans", FORMAT, "changed", a.get("spans"), b.get("spans"))
     d.leaf(f"{loc}/drawings", STRUCTURE, a.get("drawings"), b.get("drawings"))
+    d.leaf(f"{loc}/section_break", LAYOUT, a.get("section_break"), b.get("section_break"))
 
 
 def _block_coarse(block: dict) -> Any:

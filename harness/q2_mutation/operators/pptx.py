@@ -61,6 +61,10 @@ def shape_address(unit: str) -> dict:
     return out
 
 
+def slide_of(unit: str) -> str:
+    return "/".join(unit.split("/")[:2])
+
+
 def shape_unit(unit: str) -> str:
     return "/".join(unit.split("/")[:4])
 
@@ -280,10 +284,12 @@ class TextboxForPlaceholder(Operator):
             ],
             expectation=Expectation(
                 allow=[f"slides/{slide}/shapes/*"],
-                must_change=[where.unit, f"slides/{slide}/shapes/+*"],
+                must_change=[f"slides/{slide}/shapes/*"],
                 must_equal=[(f"{new_loc}/text", shape["text"]),
                             (f"{new_loc}/off", shape["off"]),
-                            (f"{new_loc}/ext", shape["ext"])],
+                            (f"{new_loc}/ext", shape["ext"]),
+                            (f"{new_loc}/placeholder", None),
+                            (f"{new_loc}/kind", "sp")],
                 int_tolerance=2 * EMU_PER_HMM,
             ),
             facts={"unit": where.unit, "placeholder": shape["placeholder"]["type"],
@@ -545,7 +551,8 @@ class MoveShape(Operator):
             steps=[{"op": "pptx.move_shape", **shape_address(where.unit), "dx_emu": dx,
                     "dy_emu": dy, "expect_sha256": text_sha256(shape.get("text", ""))}],
             expectation=Expectation(
-                allow=[f"{where.unit}/off"],
+                # Moving a group moves its children, whose offsets are absolute.
+                allow=[f"{where.unit}/off", f"{where.unit}/children/*/off"],
                 must_change=[f"{where.unit}/off"],
                 deltas=[(f"{where.unit}/off", [dx, dy])],
             ),
@@ -577,7 +584,11 @@ class DeleteBoundShape(Operator):
         return Build(
             steps=[{"op": "pptx.delete_shape", **shape_address(where.unit),
                     "expect_sha256": text_sha256(shape.get("text", ""))}],
-            expectation=Expectation(allow=[where.unit], must_change=[where.unit]),
+            expectation=Expectation(
+                # LibreOffice regenerates placeholder names from the export order.
+                allow=[where.unit, f"{slide_of(where.unit)}/shapes/*/name"],
+                must_change=[where.unit],
+            ),
             facts={"unit": where.unit, "name": shape.get("name", "")},
         )
 
@@ -677,7 +688,7 @@ class AddTextbox(Operator):
             steps=[{"op": "pptx.add_textbox", "slide": s, "x_emu": x, "y_emu": y,
                     "w_emu": box_w, "h_emu": box_h, "paras": [text]}],
             expectation=Expectation(
-                allow=[f"slides/{s}/shapes/+*"],
+                allow=[f"slides/{s}/shapes/+*", f"slides/{s}/shapes/*/name"],
                 must_change=[f"slides/{s}/shapes/+*"],
                 must_equal=[(f"slides/{s}/shapes/{count}/text", text)],
             ),
