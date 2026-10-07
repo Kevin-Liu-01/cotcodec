@@ -168,8 +168,11 @@ bytes.
 **Scoring.** The unmodified pinned `DesktopEnv.evaluate()` with a stubbed VM:
 one non-FAIL action, the offline file-cache shim for `get_cloud_file` (other
 URLs refused), live getters refused. Each candidate is scored in fresh
-processes twice; a candidate is scored five times when the two disagree or
-when it enters the dependency-flip analysis.
+processes twice (`score.sh`, `--repeat 2`); a candidate whose two scorings
+disagree is `nondeterministic` (S5) and leaves P2-P5. Every candidate whose
+verdicts differ between the venvs is rescored five times in fresh processes
+in each venv after the run (`offline_eval --repeat 5`) before it counts for
+S1.
 
 **Verdicts.** `pass` iff score == 1.0; `fail` otherwise; `error` iff
 `evaluate()` raised (OSWorld's `run.py` logs and skips such a task, so an
