@@ -389,6 +389,7 @@
  },
  "inputs": {
   "canary.yaml": "58a6a994d124847717fd24e9510edaee1c5f2a56bdab92240d79501eaf966206",
+  "canary_targets.json": "6728df75fcf6e0e5d03aea1318bbe43455c0b8b62b4c1810647f45bbd979f844",
   "catalog.yaml": "5934c4281cb85a8309be32cb98442b038054a2bba0e7ec3755e20112710b7bba",
   "expressible_entries.json": "380e058e9aced24e30cbfc93ebace901a5cb02b567b42f0cceb7543c87c822ac",
   "gating_set.json": "fe2afcaa5fcb6710f54510555633bcd86bc8d516f01211253cfd46271fdf5a6a"

@@ -20,6 +20,7 @@ Standard library only; Python 3.10 compatible.
 
 from __future__ import annotations
 
+import base64
 import json
 import time
 from typing import Any
@@ -80,6 +81,53 @@ def resolve_targets(entry: dict[str, Any], targets: dict[str, Any]) -> list[dict
     return out
 
 
+CANARY_LIB = "/tmp/q2ap_canary_lib"
+
+
+def install_canary_module(client: GuestClient) -> dict[str, Any]:
+    """Write the frozen guest canary driver where the development measurement imports it."""
+    script = (
+        "import base64,os,sys\nos.makedirs(sys.argv[1],exist_ok=True)\n"
+        "open(os.path.join(sys.argv[1],'canary.py'),'w').write(base64.b64decode(sys.argv[2]).decode())\n"
+        "print('{\"ok\": true}')\n"
+    )
+    encoded = base64.b64encode(guest_source("canary.py").encode("utf-8")).decode("ascii")
+    try:
+        return client.run_script(script, [CANARY_LIB, encoded])
+    except GuestError as exc:
+        return {"ok": False, "error": str(exc)[-300:]}
+
+
+def measure_targets(
+    client: GuestClient, app: str, entry_id: str, trial: int, shot_dir: str | None
+) -> dict[str, Any]:
+    """Development only: the target from accessibility extents, and a screenshot for review."""
+    out: dict[str, Any] = {}
+    if app in ("writer", "chrome"):
+        config = {"app": app, "entry": entry_id, "canary_dir": CANARY_LIB}
+        try:
+            out["extents"] = client.run_script(
+                guest_source("canary_targets.py"), ["extents", json.dumps(config)]
+            )
+        except GuestError as exc:
+            out["extents"] = {"ok": False, "error": str(exc)[-300:]}
+    if shot_dir:
+        path = f"/tmp/q2ap_canary_shot_{trial}.png"
+        try:
+            client.run_script(
+                guest_source("canary_targets.py"), ["shot", json.dumps({"path": path})]
+            )
+            status, payload = client.read_file(path)
+            if status == 200:
+                name = f"{shot_dir}/canary-{trial:03d}-{app}-{entry_id}.png"
+                with open(name, "wb") as handle:
+                    handle.write(payload)
+                out["screenshot"] = name
+        except (GuestError, OSError) as exc:
+            out["screenshot_error"] = str(exc)[-300:]
+    return out
+
+
 def canary_trial(
     client: GuestClient,
     canary: dict[str, Any],
@@ -87,6 +135,8 @@ def canary_trial(
     entry_id: str,
     trial: int,
     no_input: bool = False,
+    measure: bool = False,
+    shot_dir: str | None = None,
 ) -> dict[str, Any]:
     spec = canary["apps"][app]
     entry = canary["entries"][entry_id]
@@ -94,7 +144,7 @@ def canary_trial(
     record: dict[str, Any] = {"app": app, "entry": entry_id, "trial": trial, "no_input": no_input}
     expect = entry["fixture_text"] if no_input else entry["expect"]
     actions = [] if no_input else resolve_targets(entry, spec.get("targets") or {})
-    if actions is None:
+    if actions is None and not measure:
         record["status"] = "unmeasured"
         return record
     config = {
@@ -120,6 +170,15 @@ def canary_trial(
         )
         if not waited.get("ok"):
             infra.append("app_not_ready")
+    if measure and not infra and entry.get("needs_targets"):
+        record["measured"] = measure_targets(client, app, entry_id, trial, shot_dir)
+        target = ((record["measured"].get("extents") or {}).get("target")) or None
+        if actions is None and target:
+            actions = resolve_targets(entry, {entry["needs_targets"]: target})
+    if actions is None:
+        record["status"] = "unmeasured"
+        actions = []
+        infra.append("unmeasured")
     steps: list[dict[str, Any]] = []
     errors: list[str] = []
     if not infra and not no_input:

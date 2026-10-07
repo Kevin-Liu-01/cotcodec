@@ -39,7 +39,6 @@ copy `upstream/osworld_bfd62bdc_fixed.py`). H-GA is gym-anything `aae6f7607`
 | both | the 0-999 grid is scaled by the screenshot's size / 999 and truncated (`int`); the IR boundary then clamps to the screen (`ir.clamp_point`), so 999 lands on the last pixel as it does upstream (R14) | every pointer cell |
 | both | every `<tool_call>` block of a response is executed, in order (R05-R07) | multi-call turns |
 | H-OSW | `left_click_drag` drags from the current pointer to `coordinate` (duration 0.5 s unless `duration` is given); a two-point catalog drag is rendered as `mouse_move` then `left_click_drag` | drag cells |
-| H-OSW | `wait` becomes `WAIT`, which `DesktopEnv.step` turns into `time.sleep(pause)` with Stage 1's `pause = 0.0`; the model's `time` is not used | `click_double_slow` (the two clicks are separate steps with a screenshot between them, so their gap still exceeds 500 ms) |
 | H-OSW | a click without a coordinate clicks at the current pointer; `mouse_move` without one moves to (0, 0) | none in the corpus |
 | H-GA | `wait` sets the step's wait time and the step returns only the wait, dropping the response's other actions; a parse with no action and no `Action:` line becomes a one-second wait | `click_double_slow` uses one call per turn, so nothing is dropped; R10's `hscroll` turn yields a one-second wait without an `Action:` line and nothing with one (outside spec) |
 | H-GA | `terminate` reports its status in `metadata.status`; the adapter maps `failure` to `terminate(failure)` (R11) | R11 |
@@ -55,5 +54,9 @@ copy `upstream/osworld_bfd62bdc_fixed.py`). H-GA is gym-anything `aae6f7607`
    whitespace (only the one wrapping newline the chat template adds is
    trimmed); upstream stripped all edge whitespace, so `type_spaces` could
    never pass.
+5. `wait` waits its `time`: upstream emitted `WAIT`, which `DesktopEnv.step`
+   turns into `time.sleep(pause)`, a no-op at Stage 1's `pause = 0.0`
+   (development run 491: `click_double_slow`'s clicks came 381 ms apart
+   against the catalog's 500 ms minimum).
 
 H-GA is unmodified; its adapter only maps action dicts to the IR.

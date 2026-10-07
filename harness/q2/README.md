@@ -37,6 +37,21 @@ settings; and a volume certification split from development runs.
 | `action_path/volume.py`, `volume_plan.json` | A4 volume plan: per-class action counts, sessions and bounds, and the pinned order digest |
 | `action_path/canary.yaml` | A6 cross-app canary: app settings, fixtures and expected final text |
 | `action_path/build_derived.py` | Regenerates `gating_set.json`, `expressible_entries.json`, `rdev_plan.json` and `volume_plan.json` (tests check them byte for byte) |
+| `vm/guest/probe.py` | Guest probe: fullscreen event log, text buffer, marker block, entry delimiters (inputs addendum) |
+| `vm/guest/guard.py` | Entry guard: checks (a)-(d), pointer park, side-effect restorations, probe control (inputs addendum) |
+| `vm/marker.py` | Stdlib PNG row decoder and marker reader (inputs addendum) |
+| `vm/guest/canary.py`, `vm/canary_run.py` | Cross-app canary driver: fixtures, profiles, launch, wait, read-back, close (inputs addendum) |
+| `vm/guest/canary_targets.py` | Development tool: the canary's pointer targets from accessibility extents and screenshots |
+| `vm/desktop.py` | OSWorld `b138d348` `DesktopEnv.step` and controller calls on the standard library |
+| `vm/suite.py`, `vm/validation.py` | Session engine (tap, probe, guards, actions, marker, judging) and the HMP validation of the inputs components |
+| `vm/guest/l0_fixed.py`, `action_path/executor.py` | L0-fixed: the XTest executor and its base64 `DesktopEnv.step` transport (executor addendum) |
+| `action_path/controls.py`, `action_path/keynames.py` | C1 detection-control translators (H-OSW-up, H-GA-buggy) and upstream key-name resolution (inputs addendum) |
+| `action_path/adapters.py` | Stage-1 harness layers to IR: H-OSW-fixed and H-GA (executor addendum) |
+| `action_path/upstream/` | Vendored upstream parsers (byte-for-byte line ranges, `vendor.py`, `PROVENANCE.json`) and the marked H-OSW-fixed copy |
+| `action_path/corpus.py`, `build_suite.py`, `suite_cells.json`, `qwen35_chat_template.jinja` | Qwen3.5 template corpus and every cell the runner executes (executor addendum) |
+| `action_path/verdict.py`, `action_path/order.py` | Trial verdicts (sections 4.3, 5, 6) and seeded run orders and sessions |
+| `action_path/mutants.py` | Suite-mutation kit: the 44 scored mutants of `mutation_operators.yaml` as anchored patches |
+| `action_path/harness_design_diffs.md` | Every design difference of each Stage-1 harness |
 | `../../infra/slurm/host-single-node/vm-campaign.sbatch` | CPU-only Slurm entry point for VM work |
 | `../../infra/q2-vm-runner/Dockerfile`, `image-lock.json` | GPU-less runner image (stdlib Python only); the lock records the saved image tarball and its package versions |
 | `../../scripts/submit_vm_campaign.py` | Submitter-side validator and `sbatch` renderer for VM manifests |
@@ -135,7 +150,25 @@ licence.
   it, and the full permission notice is reproduced in that file.
 * **PyAutoGUI 0.9.54** (BSD-3-Clause): read for the L0-raw prediction; the
   key and button names in `action_path/l0_raw.py` are PyAutoGUI's public API
-  names; no code is copied.
+  names, and `action_path/keynames.py` lists its `keyboardMapping` names as
+  data; no code is copied.
+* **Vendored parsers** (`action_path/upstream/`): `osworld_bfd62bdc.py` holds
+  line ranges of OSWorld `bfd62bdc` `mm_agents/qwen35vl_agent.py` (Apache-2.0,
+  notice in the file, extraction marked as a change under section 4(b));
+  `osworld_bfd62bdc_fixed.py` is a modified copy of that extract with every
+  change marked; `gym_anything_aae6f7607.py` and `gym_anything_bf965cde0.py`
+  hold line ranges of gym-anything `agents/agents/qwen35vl.py` and
+  `agents/shared/qwen_computer_use.py` (MIT, Copyright (c) 2026 cmu-l3, notice
+  in each file). `vendor.py` writes them from the pinned upstream files and
+  `PROVENANCE.json` records every range's SHA-256. `desktop.py` copies
+  OSWorld's `PYAUTOGUI_PKGS_PREFIX` string (Apache-2.0).
+* **Qwen3.5-9B chat template** (`action_path/qwen35_chat_template.jinja`,
+  Apache-2.0, `Qwen/Qwen3.5-9B` at `c202236`, 7,756 B, SHA-256
+  `a4aee8afcf2e0711942cf848899be66016f8d14a889ff9ede07bca099c28f715`): copied
+  unchanged so a test can render the corpus through it.
+* The L0-fixed executor's spare-keycode typing follows the idea of
+  gym-anything's `_KEYBOARD_XLIB_PREAMBLE` (MIT); its code and its
+  `_NAME` key table (data, in `keynames.py`) are not copied otherwise.
 
 ## External sources
 
