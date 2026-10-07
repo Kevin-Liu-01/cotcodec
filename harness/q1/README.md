@@ -18,6 +18,7 @@ CPU doctor. The preregistration draft is
 | `audit/` | core | A1 fp64 oracle (D14 dual TF32 policy, calibration), A2 values, A3 shapes with refusal classification, A4 contracts and dual-poison allocator, A5 lethe-style checks, tiers |
 | `runner.py`, `worker.py`, `journal.py` | core | one subprocess per item, phase watchdog, kill-and-resume journal, signal checkpoint |
 | `timing.py` | core | randomized paired timing with L2 flush and CUDA events |
+| `analysis.py` | core | ladder composition, tiers, preregistered splits, MS/FAR/FRR/FA-share, cost |
 | `doctor_fixtures.py` | core | CPU-only synthetic fixtures for the doctor and tests |
 | `data/` | core | problem hashes, KBV configuration table, shape manifest |
 | `third_party/kernelbench/` | core | verbatim KernelBench files (MIT), see NOTICE |

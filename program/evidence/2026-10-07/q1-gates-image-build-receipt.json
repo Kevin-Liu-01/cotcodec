@@ -1,0 +1,11 @@
+{
+  "job_id": "412",
+  "git_sha": "adda2feb439cb003d68fc834c05b93d6b6d59a8f",
+  "source_tar_sha256": "c559db9a52abc2361650db84583ca73e8ad1f7383b56f1144f5be895bcb7400a",
+  "tag": "cotcodec-q1-gates:adda2feb",
+  "image_id": "sha256:b6d73b76aaf92a7afd2c0b3d95379f9ce48c50ad39744f231720888d01f72195",
+  "base_image_id": "sha256:3804466639c13f132be4b0369de4d3395b9d5ea2d3dc100cd38884c75197fe29",
+  "network_during_build": true,
+  "pushed": false,
+  "evidence_grade": "infrastructure-only"
+}

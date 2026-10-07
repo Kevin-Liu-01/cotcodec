@@ -221,8 +221,11 @@ storage shared between the five live outputs; no output sharing storage with
 an input; inputs byte-identical after each call; dual poison (outputs
 byte-identical when fresh `torch.empty*` allocations are filled with 0x00 and
 with 0xFF; on GPU additionally through the `CUDAPluggableAllocator` in
-`audit/poison_alloc.c`); `compute-sanitizer --tool memcheck` clean at the
-smallest A3 configuration; no watchdog timeout.
+`audit/poison_alloc.c`, run by `audit/gpu_probes.py` in two fresh processes);
+`compute-sanitizer --tool memcheck` clean at the smallest A3 configuration (by
+input bytes); no watchdog timeout. A4 is the conjunction of the in-process,
+poison-allocator and sanitizer rows. A sanitizer run that does not complete
+(exit code other than 0 or 86) is reported as `error`, not as a fault.
 
 ### 5.5 A5 (secondary tier)
 
@@ -269,6 +272,11 @@ c_1e-2, c_kbv_raw, c-lite if adopted}:
 
 Breakdowns: pooled; by mutation family; by source tier (S1, S2); by contract
 tier; by TF32 policy; c@1e-3 versus c@1e-2.
+
+These definitions are implemented in `harness/q1/analysis.py` (ladder
+composition, tiers, splits, intervals, cost) and run by
+`scripts/report_q1_stage0.py` on the journal's final rows; that code is part
+of the frozen revision.
 
 ## 7. Stage 0 acceptance (all required before any Stage 1 work)
 

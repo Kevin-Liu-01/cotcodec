@@ -36,7 +36,21 @@ from harness.q1.schema import (  # noqa: E402
 )
 
 SMOKE_PROBLEMS = ("L1/19_ReLU", "L1/95_CrossEntropyLoss", "L2/12_Gemm_Multiply_LeakyReLU")
-GATES = ("a", "a_head_1e-4", "a_static", "b1", "b2", "c", "A1", "A2", "A3", "A4", "A5")
+GATES = (
+    "a",
+    "a_head_1e-4",
+    "a_static",
+    "b1",
+    "b2",
+    "c",
+    "A1",
+    "A2",
+    "A3",
+    "A4",
+    "A4_poison",
+    "A4_sanitizer",
+    "A5",
+)
 EXPECT = {
     "a": "accept",
     "b1": "reject",
