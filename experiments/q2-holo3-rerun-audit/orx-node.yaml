@@ -1,0 +1,12 @@
+# orx node contract for the Holo3 rerun audit (Q2 Stage 0c follow-up).
+# To run it as an OpenResearch node, copy this file to experiments/orx/node.yaml
+# on a branch named orx/q2-holo3-rerun-audit and run the fixed command
+#   uv run --locked python scripts/orx_run.py
+# The default stage (v1) reproduces the POST-HOC v1 analysis and the
+# EXPLORATORY OpenCUA reference from about 0.2 GB of range reads. It needs CPU
+# and network only. The v2 stages refuse to run until
+# q2-holo3-rerun-audit-v2 is frozen in program/preregistrations/ledger.jsonl.
+kind: cpu-doctor
+direction: q2-holo3-rerun-audit
+doctor: scripts/run_holo3_rerun_audit_doctor.py
+args: ["--stage", "v1", "--h-steps"]

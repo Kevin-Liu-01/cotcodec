@@ -1,0 +1,156 @@
+{
+  "api_server_cpu_pct": 46.84593343798007,
+  "attempt": 1,
+  "attempts": [
+    {
+      "attempt": 1,
+      "checks": {
+        "all_completed": true,
+        "caches_reset": true,
+        "counters_match": true,
+        "fixed_output_lengths": true,
+        "gpu_sampled": true,
+        "no_failures": true
+      },
+      "error": null,
+      "status": "valid"
+    }
+  ],
+  "cache_reset": {
+    "attempts": 1,
+    "encoder": true,
+    "mm": true,
+    "prefix": true
+  },
+  "checks": {
+    "all_completed": true,
+    "caches_reset": true,
+    "counters_match": true,
+    "fixed_output_lengths": true,
+    "gpu_sampled": true,
+    "no_failures": true
+  },
+  "client_cpu_pct": 4.648833089265199,
+  "config_sha256": "8e5ad94e08a17a3eacc049150a14a35ef6ab9509a8c32ca6a6b2ac9711f6e931",
+  "counter_check": {
+    "client_output_tokens": 1024,
+    "client_prompt_tokens": 63699,
+    "generation_delta": 1024.0,
+    "pass": true,
+    "prompt_delta": 63699.0,
+    "prompt_matched": 63699
+  },
+  "counters": {
+    "prefix_cache_hit_rate": 0.24038053972589837,
+    "vllm:generation_tokens": 1024.0,
+    "vllm:mm_cache_hits": 0.0,
+    "vllm:mm_cache_queries": 15.0,
+    "vllm:num_preemptions": 0.0,
+    "vllm:prefix_cache_hits": 15312.0,
+    "vllm:prefix_cache_queries": 63699.0,
+    "vllm:prompt_tokens": 63699.0,
+    "vllm:prompt_tokens_cached": 15312.0,
+    "vllm:request_success": 16.0
+  },
+  "eager": false,
+  "experiment_id": "serving-throughput-probe-v1",
+  "finished_at": "2026-10-07T12:14:47Z",
+  "flags": [],
+  "gates": {
+    "G0.6": {
+      "image_differential": {
+        "expected": 2040,
+        "image_tokens": 2042,
+        "pass": true,
+        "relative_tolerance": 0.02
+      },
+      "pass": true,
+      "smoke_ok": true
+    },
+    "G0.7": {
+      "client_output_tokens": 1024,
+      "client_prompt_tokens": 63699,
+      "generation_delta": 1024.0,
+      "pass": true,
+      "prompt_delta": 63699.0,
+      "prompt_matched": 63699
+    }
+  },
+  "gpu": {
+    "mean_power_w": 524.4933333333333,
+    "mean_sm_clock_mhz": 1837.5,
+    "mean_utilization_pct": 97.0,
+    "min_sm_clock_mhz": 1695.0,
+    "peak_memory_used_mib": 74195.0,
+    "samples": 6
+  },
+  "job": "a",
+  "kind": "smoke-server",
+  "kv_cache_usage_peak": 0.016991818753933297,
+  "num_requests_waiting_peak": 0.0,
+  "params": {
+    "body_tokens": 512,
+    "concurrency": 8,
+    "image_kind": "png-rendered",
+    "images": 1,
+    "output_tokens": 64,
+    "prefix_tokens": 1536,
+    "requests": 16,
+    "thinking": false
+  },
+  "point_id": "x1-smoke",
+  "prep_s": 0.2097419798374176,
+  "ran_to_end": true,
+  "result": {
+    "completed": 16,
+    "duration_s": 2.7820526445284486,
+    "e2el_ms": {
+      "mean": 1381.3267908408307,
+      "p50": 1369.7151471860707,
+      "p90": 1517.086433712393,
+      "p99": 1542.9505878593773,
+      "sd": 103.895045445956,
+      "se": 25.973761361489
+    },
+    "errors": [],
+    "failed": 0,
+    "itl_ms": {
+      "mean": 10.480642064139396,
+      "p50": 7.343723904341459,
+      "p90": 7.570065092295408,
+      "p99": 136.7480441927913,
+      "sd": 21.162984311869717,
+      "se": 0.66723361784293
+    },
+    "not_sent": 0,
+    "output_throughput": 368.0735524591648,
+    "output_tokens": 1024,
+    "planned": 16,
+    "prompt_tokens": 63699,
+    "request_errors": 0,
+    "request_throughput": 5.75114925717445,
+    "short_outputs": 0,
+    "total_token_throughput": 23264.477085756367,
+    "tpot_ms": {
+      "mean": 10.467194463311147,
+      "p50": 8.734922523477247,
+      "p90": 16.76933312167724,
+      "p99": 19.237321389040776,
+      "sd": 3.979236331726868,
+      "se": 0.994809082931717
+    },
+    "ttft_ms": {
+      "mean": 721.8935396522284,
+      "p50": 792.3944452777505,
+      "p90": 991.8918632902205,
+      "p99": 993.0293873883784,
+      "sd": 270.1624571128337,
+      "se": 67.54061427820842
+    }
+  },
+  "seed": 7,
+  "started_at": "2026-10-07T12:14:44Z",
+  "status": "valid",
+  "stop_reason": null,
+  "superseded_attempts": []
+}

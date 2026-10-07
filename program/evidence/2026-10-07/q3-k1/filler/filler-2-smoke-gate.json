@@ -1,0 +1,56 @@
+{
+  "blocked": {
+    "q3-k1-extension.yaml": [
+      "smoke: smoke status is SMOKE_PASS_OVER_BUDGET, not SMOKE_PASS",
+      "smoke: 1.2 x projected wall + 3 min is 121.61, over 30 min",
+      "headroom_dev: no --headroom-dev-run-root was given",
+      "resume_equivalence: the resume test needs --r0-run-root and --r1-run-root"
+    ],
+    "q3-k1-main-resume.yaml": [
+      "smoke: smoke status is SMOKE_PASS_OVER_BUDGET, not SMOKE_PASS",
+      "smoke: 1.2 x projected wall + 3 min is 121.61, over 30 min",
+      "headroom_dev: no --headroom-dev-run-root was given",
+      "resume_equivalence: the resume test needs --r0-run-root and --r1-run-root"
+    ],
+    "q3-k1-main.yaml": [
+      "smoke: smoke status is SMOKE_PASS_OVER_BUDGET, not SMOKE_PASS",
+      "smoke: 1.2 x projected wall + 3 min is 121.61, over 30 min",
+      "headroom_dev: no --headroom-dev-run-root was given",
+      "resume_equivalence: the resume test needs --r0-run-root and --r1-run-root"
+    ]
+  },
+  "filled": [
+    "/home/kevin/cotcodec-runs/ops/q3-k1/filled-2/q3-k1-headroom-dev.yaml",
+    "/home/kevin/cotcodec-runs/ops/q3-k1/filled-2/q3-k1-resume-r0.yaml",
+    "/home/kevin/cotcodec-runs/ops/q3-k1/filled-2/q3-k1-resume-r1.yaml",
+    "/home/kevin/cotcodec-runs/ops/q3-k1/filled-2/q3-k1-smoke.yaml"
+  ],
+  "notes": [],
+  "pre_main_gates": {
+    "headroom_dev": {
+      "passed": false,
+      "problems": [
+        "no --headroom-dev-run-root was given"
+      ]
+    },
+    "resume_equivalence": {
+      "passed": false,
+      "problems": [
+        "the resume test needs --r0-run-root and --r1-run-root"
+      ]
+    },
+    "smoke": {
+      "job_id": "452",
+      "passed": false,
+      "problems": [
+        "smoke status is SMOKE_PASS_OVER_BUDGET, not SMOKE_PASS",
+        "1.2 x projected wall + 3 min is 121.61, over 30 min"
+      ]
+    }
+  },
+  "skipped": {
+    "q3-k1-resume-r2.yaml": [
+      "FILL-resume-r1-job-id"
+    ]
+  }
+}

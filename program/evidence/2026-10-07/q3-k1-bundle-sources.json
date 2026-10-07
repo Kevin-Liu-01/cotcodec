@@ -1,0 +1,1027 @@
+{
+  "bundle": {
+    "built_from_git_sha": "668673dc6162103969d266a3d12dab6ed853dc7c",
+    "eval_counts": {
+      "by_role": {
+        "absent": 300,
+        "dev": 560,
+        "dev-absent": 280,
+        "dev-nohaystack": 280,
+        "literal": 200,
+        "main": 6440,
+        "same-script": 4600
+      },
+      "contexts": 3744,
+      "prompts": 12660,
+      "queries": 3350
+    },
+    "file": "k1-bundle-v1.json",
+    "license": "LicenseRef-cotcodec-k1-bundle-v1",
+    "reports": {
+      "dedup": {
+        "bi-en-de": {
+          "checked": 2637,
+          "removed_exact_50gram": 0,
+          "removed_held_out_latin_function_words": 0,
+          "removed_held_out_script": 1,
+          "removed_minhash": 0
+        },
+        "bi-en-es": {
+          "checked": 2299,
+          "removed_exact_50gram": 0,
+          "removed_held_out_latin_function_words": 0,
+          "removed_held_out_script": 0,
+          "removed_minhash": 0
+        },
+        "bi-en-fr": {
+          "checked": 3548,
+          "removed_exact_50gram": 0,
+          "removed_held_out_latin_function_words": 1,
+          "removed_held_out_script": 0,
+          "removed_minhash": 0
+        },
+        "bi-en-hi": {
+          "checked": 14845,
+          "removed_exact_50gram": 0,
+          "removed_held_out_latin_function_words": 0,
+          "removed_held_out_script": 17,
+          "removed_minhash": 0
+        },
+        "bi-en-km": {
+          "checked": 11646,
+          "removed_exact_50gram": 0,
+          "removed_held_out_latin_function_words": 0,
+          "removed_held_out_script": 38,
+          "removed_minhash": 0
+        },
+        "bi-en-pl": {
+          "checked": 3606,
+          "removed_exact_50gram": 0,
+          "removed_held_out_latin_function_words": 2,
+          "removed_held_out_script": 16,
+          "removed_minhash": 0
+        },
+        "bi-en-th": {
+          "checked": 28165,
+          "removed_exact_50gram": 0,
+          "removed_held_out_latin_function_words": 0,
+          "removed_held_out_script": 79,
+          "removed_minhash": 0
+        },
+        "haystack-bn": {
+          "checked": 4000,
+          "removed_exact_50gram": 0,
+          "removed_held_out_latin_function_words": 0,
+          "removed_held_out_script": 0,
+          "removed_minhash": 0
+        },
+        "haystack-el": {
+          "checked": 4000,
+          "removed_exact_50gram": 0,
+          "removed_held_out_latin_function_words": 0,
+          "removed_held_out_script": 0,
+          "removed_minhash": 0
+        },
+        "haystack-en": {
+          "checked": 4000,
+          "removed_exact_50gram": 0,
+          "removed_held_out_latin_function_words": 0,
+          "removed_held_out_script": 0,
+          "removed_minhash": 0
+        },
+        "haystack-he": {
+          "checked": 4000,
+          "removed_exact_50gram": 0,
+          "removed_held_out_latin_function_words": 0,
+          "removed_held_out_script": 0,
+          "removed_minhash": 0
+        },
+        "haystack-id": {
+          "checked": 4000,
+          "removed_exact_50gram": 0,
+          "removed_held_out_latin_function_words": 0,
+          "removed_held_out_script": 0,
+          "removed_minhash": 0
+        },
+        "haystack-it": {
+          "checked": 4000,
+          "removed_exact_50gram": 0,
+          "removed_held_out_latin_function_words": 0,
+          "removed_held_out_script": 0,
+          "removed_minhash": 0
+        },
+        "haystack-ja": {
+          "checked": 4000,
+          "removed_exact_50gram": 0,
+          "removed_held_out_latin_function_words": 0,
+          "removed_held_out_script": 0,
+          "removed_minhash": 0
+        },
+        "haystack-ka": {
+          "checked": 4000,
+          "removed_exact_50gram": 0,
+          "removed_held_out_latin_function_words": 0,
+          "removed_held_out_script": 0,
+          "removed_minhash": 0
+        },
+        "haystack-ko": {
+          "checked": 4000,
+          "removed_exact_50gram": 0,
+          "removed_held_out_latin_function_words": 0,
+          "removed_held_out_script": 0,
+          "removed_minhash": 0
+        },
+        "haystack-nl": {
+          "checked": 4000,
+          "removed_exact_50gram": 0,
+          "removed_held_out_latin_function_words": 0,
+          "removed_held_out_script": 0,
+          "removed_minhash": 0
+        },
+        "haystack-sw": {
+          "checked": 4000,
+          "removed_exact_50gram": 0,
+          "removed_held_out_latin_function_words": 0,
+          "removed_held_out_script": 0,
+          "removed_minhash": 0
+        },
+        "haystack-ta": {
+          "checked": 4000,
+          "removed_exact_50gram": 0,
+          "removed_held_out_latin_function_words": 0,
+          "removed_held_out_script": 0,
+          "removed_minhash": 0
+        },
+        "haystack-tr": {
+          "checked": 4000,
+          "removed_exact_50gram": 0,
+          "removed_held_out_latin_function_words": 0,
+          "removed_held_out_script": 0,
+          "removed_minhash": 0
+        },
+        "mono-ar": {
+          "checked": 1556,
+          "removed_exact_50gram": 0,
+          "removed_held_out_latin_function_words": 0,
+          "removed_held_out_script": 2,
+          "removed_minhash": 0
+        },
+        "mono-de": {
+          "checked": 1714,
+          "removed_exact_50gram": 0,
+          "removed_held_out_latin_function_words": 0,
+          "removed_held_out_script": 2,
+          "removed_minhash": 0
+        },
+        "mono-es": {
+          "checked": 1739,
+          "removed_exact_50gram": 0,
+          "removed_held_out_latin_function_words": 0,
+          "removed_held_out_script": 1,
+          "removed_minhash": 0
+        },
+        "mono-fr": {
+          "checked": 1811,
+          "removed_exact_50gram": 0,
+          "removed_held_out_latin_function_words": 0,
+          "removed_held_out_script": 1,
+          "removed_minhash": 0
+        },
+        "mono-hi": {
+          "checked": 853,
+          "removed_exact_50gram": 0,
+          "removed_held_out_latin_function_words": 0,
+          "removed_held_out_script": 0,
+          "removed_minhash": 0
+        },
+        "mono-km": {
+          "checked": 814,
+          "removed_exact_50gram": 0,
+          "removed_held_out_latin_function_words": 0,
+          "removed_held_out_script": 1,
+          "removed_minhash": 0
+        },
+        "mono-pl": {
+          "checked": 1552,
+          "removed_exact_50gram": 0,
+          "removed_held_out_latin_function_words": 1,
+          "removed_held_out_script": 1,
+          "removed_minhash": 0
+        },
+        "mono-ru": {
+          "checked": 1333,
+          "removed_exact_50gram": 0,
+          "removed_held_out_latin_function_words": 0,
+          "removed_held_out_script": 0,
+          "removed_minhash": 0
+        },
+        "mono-th": {
+          "checked": 1051,
+          "removed_exact_50gram": 0,
+          "removed_held_out_latin_function_words": 0,
+          "removed_held_out_script": 3,
+          "removed_minhash": 0
+        },
+        "mono-zh": {
+          "checked": 1565,
+          "removed_exact_50gram": 0,
+          "removed_held_out_latin_function_words": 0,
+          "removed_held_out_script": 17,
+          "removed_minhash": 0
+        }
+      },
+      "eval_texts_indexed": 84178,
+      "quota": {
+        "bilingual": {
+          "collected_tokens": {
+            "en-de": 1811488,
+            "en-es": 1812104,
+            "en-fr": 1811412,
+            "en-hi": 1759460,
+            "en-km": 1552984,
+            "en-pl": 1811464,
+            "en-th": 1758426
+          },
+          "cross_script_shortfall": 207442,
+          "packed_share_by_pair": {
+            "en-de": 0.1464143434780407,
+            "en-es": 0.1474708596630148,
+            "en-fr": 0.147138787377656,
+            "en-hi": 0.14328919113230687,
+            "en-km": 0.12619683991758776,
+            "en-pl": 0.14606873460864364,
+            "en-th": 0.14342124382275026
+          },
+          "packed_tokens_by_pair": {
+            "en-de": 1546716,
+            "en-es": 1557877,
+            "en-fr": 1554369,
+            "en-hi": 1513702,
+            "en-km": 1333139,
+            "en-pl": 1543065,
+            "en-th": 1515097
+          },
+          "pair_quota": 1759426,
+          "same_script_refill_quota": 1811287
+        },
+        "mono-ar": {
+          "quota": 1230615,
+          "tokens": 1230667
+        },
+        "mono-de": {
+          "quota": 1230615,
+          "tokens": 1230860
+        },
+        "mono-es": {
+          "quota": 1230615,
+          "tokens": 1230628
+        },
+        "mono-fr": {
+          "quota": 1230615,
+          "tokens": 1230901
+        },
+        "mono-hi": {
+          "quota": 1230615,
+          "tokens": 1231806
+        },
+        "mono-km": {
+          "quota": 1230615,
+          "tokens": 1231463
+        },
+        "mono-pl": {
+          "quota": 1230615,
+          "tokens": 1231404
+        },
+        "mono-ru": {
+          "quota": 1230615,
+          "tokens": 1232509
+        },
+        "mono-th": {
+          "quota": 1230615,
+          "tokens": 1231851
+        },
+        "mono-zh": {
+          "quota": 1230615,
+          "tokens": 1231802
+        }
+      }
+    },
+    "sha256": "919d016b87ad862f8f156e9537c9a39e2864dab0e6c605307d100d25a199dd2d",
+    "size_bytes": 278818734
+  },
+  "date": "2026-10-07",
+  "note": "identifiers, sizes and digests only; no source text",
+  "raw_manifest_sha256": "808e6c2477cafbe672273f004f0dafad4b1cb83780bb83114f971f6a34819189",
+  "schema": "cotcodec-k1-source-ledger-v1",
+  "sources": {
+    "belebele": {
+      "files": {
+        "data/arb_Arab.jsonl": {
+          "bytes": 2847724,
+          "hub_size": 2847724,
+          "lfs_sha256": null,
+          "sha256": "a2282b0974826172b1ce76a5d9e362091cfc8a7a25023df2d011f88f588b56e0"
+        },
+        "data/ben_Beng.jsonl": {
+          "bytes": 3235932,
+          "hub_size": 3235932,
+          "lfs_sha256": null,
+          "sha256": "cd8be5c2a52d0d3847ff0c2837f3186bbc32f9d19439acd17304cc8c94665896"
+        },
+        "data/ell_Grek.jsonl": {
+          "bytes": 3877226,
+          "hub_size": 3877226,
+          "lfs_sha256": null,
+          "sha256": "c36ce23ad2069b3d2085ee2a5ad72bf23c717d209d290e3c65c671b145efb02c"
+        },
+        "data/eng_Latn.jsonl": {
+          "bytes": 836071,
+          "hub_size": 836071,
+          "lfs_sha256": null,
+          "sha256": "15af884c2b5994fdc71199e79d553a1864b08ce1b31894aa87f6be925a064a31"
+        },
+        "data/heb_Hebr.jsonl": {
+          "bytes": 2509933,
+          "hub_size": 2509933,
+          "lfs_sha256": null,
+          "sha256": "134b45d6201d67633a9d49882238c55630558c717b184679151ac9f92bda79a3"
+        },
+        "data/hin_Deva.jsonl": {
+          "bytes": 3124631,
+          "hub_size": 3124631,
+          "lfs_sha256": null,
+          "sha256": "41d34aab7f8fc4d57dc5d61fb36c3ce6ce230fe8e1c156c4d3cff0ba4710ed8f"
+        },
+        "data/ind_Latn.jsonl": {
+          "bytes": 880428,
+          "hub_size": 880428,
+          "lfs_sha256": null,
+          "sha256": "14b16460324ca9b70f0fba56068a9860b1b5db00b6791acc4069aad69d8ab641"
+        },
+        "data/ita_Latn.jsonl": {
+          "bytes": 953661,
+          "hub_size": 953661,
+          "lfs_sha256": null,
+          "sha256": "008c504767f4f2eaea6938a5ec75a617634cea8386b64ebfb16ee7b9a12aba27"
+        },
+        "data/jpn_Jpan.jsonl": {
+          "bytes": 1716297,
+          "hub_size": 1716297,
+          "lfs_sha256": null,
+          "sha256": "c5cc2184b7468196ea8a1c37382ab9e80640edd410266a381a42a05cbc0d2605"
+        },
+        "data/kat_Geor.jsonl": {
+          "bytes": 3600630,
+          "hub_size": 3600630,
+          "lfs_sha256": null,
+          "sha256": "70a3adb38b9573d27f9e32e5c78f888bfdd73efdd7854261f089312b3c14990d"
+        },
+        "data/khm_Khmr.jsonl": {
+          "bytes": 3998068,
+          "hub_size": 3998068,
+          "lfs_sha256": null,
+          "sha256": "af41fc3a36343ea0f83b5ecf089e952e8f712dad22081783e562e50965b16cd7"
+        },
+        "data/kor_Hang.jsonl": {
+          "bytes": 1534047,
+          "hub_size": 1534047,
+          "lfs_sha256": null,
+          "sha256": "e995f945e9dd7a87ed9c2c727b3fac01cf0e82fa94989cf448266d4f1c136fe2"
+        },
+        "data/nld_Latn.jsonl": {
+          "bytes": 894273,
+          "hub_size": 894273,
+          "lfs_sha256": null,
+          "sha256": "433401ef696d756034f55944acde55f570abc6c3e6be180e5b93310a9cbe79eb"
+        },
+        "data/swh_Latn.jsonl": {
+          "bytes": 863130,
+          "hub_size": 863130,
+          "lfs_sha256": null,
+          "sha256": "c7b1c735c1b555f7d12219b7c16ceff3bc9f76d61f1736097acbefe055349813"
+        },
+        "data/tam_Taml.jsonl": {
+          "bytes": 3893367,
+          "hub_size": 3893367,
+          "lfs_sha256": null,
+          "sha256": "f950eb23a6e7001087d0dbc3ebc892f1b92a99cfc35b929b4cdfb07288037044"
+        },
+        "data/tha_Thai.jsonl": {
+          "bytes": 3370632,
+          "hub_size": 3370632,
+          "lfs_sha256": null,
+          "sha256": "d668fa174428e09ed03b47028cb30f6fd0032017fc4b1b589c242f15bc8a73e3"
+        },
+        "data/tur_Latn.jsonl": {
+          "bytes": 1108518,
+          "hub_size": 1108518,
+          "lfs_sha256": null,
+          "sha256": "0a592307498d7999eb7be60b7ac3a037545b6ce400f85c61bdb1b88b790e4567"
+        },
+        "data/zho_Hans.jsonl": {
+          "bytes": 1285910,
+          "hub_size": 1285910,
+          "lfs_sha256": null,
+          "sha256": "f3b7915eaa27e44225979ffd38708c5beee63d28bea27a91253e5fe68e2fa147"
+        }
+      },
+      "license": "CC-BY-SA-4.0",
+      "repo": "facebook/belebele",
+      "revision": "7899cdfa4e1e0d733fd77c848e2c273cb1d32be2"
+    },
+    "fineweb": {
+      "files": {
+        "data/CC-MAIN-2025-26/004_00046.parquet": {
+          "bytes": 346989930,
+          "hub_size": 346989930,
+          "lfs_sha256": "d03f6709616402aa559379f7a9716f0cf10bc5b271c643c0b53c5f02e8634c21",
+          "sha256": "d03f6709616402aa559379f7a9716f0cf10bc5b271c643c0b53c5f02e8634c21"
+        }
+      },
+      "license": "ODC-By-1.0 (plus Common Crawl terms of use)",
+      "repo": "HuggingFaceFW/fineweb",
+      "revision": "9bb295ddab0e05d785b879661af7260fed5140fc"
+    },
+    "fineweb-2": {
+      "files": {
+        "data/arb_Arab/test/000_00000.parquet": {
+          "bytes": 75444408,
+          "hub_size": 75444408,
+          "lfs_sha256": "a84851f790551b08c141eab938448961812582629dbbabc737d997d519b3ed39",
+          "sha256": "a84851f790551b08c141eab938448961812582629dbbabc737d997d519b3ed39"
+        },
+        "data/ben_Beng/test/000_00000.parquet": {
+          "bytes": 94475656,
+          "hub_size": 94475656,
+          "lfs_sha256": "b2c5a237061c8e9d0fb999f376dc23e417eacae316f5667cd0653bb2f6e477c2",
+          "sha256": "b2c5a237061c8e9d0fb999f376dc23e417eacae316f5667cd0653bb2f6e477c2"
+        },
+        "data/cmn_Hani/test/000_00000.parquet": {
+          "bytes": 86798945,
+          "hub_size": 86798945,
+          "lfs_sha256": "22a90c471e09c8e938f3e070ff590864e74e01cc3c5cdf01c2713157fcdb43aa",
+          "sha256": "22a90c471e09c8e938f3e070ff590864e74e01cc3c5cdf01c2713157fcdb43aa"
+        },
+        "data/deu_Latn/test/000_00000.parquet": {
+          "bytes": 104264728,
+          "hub_size": 104264728,
+          "lfs_sha256": "f370564f527a10cf125f267d8f10175d6a6366390480620e90a469bbf80a2a46",
+          "sha256": "f370564f527a10cf125f267d8f10175d6a6366390480620e90a469bbf80a2a46"
+        },
+        "data/ell_Grek/test/000_00000.parquet": {
+          "bytes": 56274823,
+          "hub_size": 56274823,
+          "lfs_sha256": "539c94b15d95fdf96bfaacbe3b49ff532a0b66b92ae2dcae654d0de28eb9b196",
+          "sha256": "539c94b15d95fdf96bfaacbe3b49ff532a0b66b92ae2dcae654d0de28eb9b196"
+        },
+        "data/fra_Latn/test/000_00000.parquet": {
+          "bytes": 67031593,
+          "hub_size": 67031593,
+          "lfs_sha256": "11092a613abd05127de63c3d8f859811b656138dbc007c259fc5dd275e626daa",
+          "sha256": "11092a613abd05127de63c3d8f859811b656138dbc007c259fc5dd275e626daa"
+        },
+        "data/heb_Hebr/test/000_00000.parquet": {
+          "bytes": 46114357,
+          "hub_size": 46114357,
+          "lfs_sha256": "fd55546f3e475e44f071b1d49bd4fa61131483d42e58352b82febf42778abe8c",
+          "sha256": "fd55546f3e475e44f071b1d49bd4fa61131483d42e58352b82febf42778abe8c"
+        },
+        "data/hin_Deva/test/000_00000.parquet": {
+          "bytes": 88669788,
+          "hub_size": 88669788,
+          "lfs_sha256": "e74822e82fa3f8fe3360e5510b907c79eb75e112f9fc5f6d568746002a2ee75c",
+          "sha256": "e74822e82fa3f8fe3360e5510b907c79eb75e112f9fc5f6d568746002a2ee75c"
+        },
+        "data/ind_Latn/test/000_00000.parquet": {
+          "bytes": 58341633,
+          "hub_size": 58341633,
+          "lfs_sha256": "40f3caf17a32269c4e7530563e43df1ad25609d03b471f7357f9d01f8f290116",
+          "sha256": "40f3caf17a32269c4e7530563e43df1ad25609d03b471f7357f9d01f8f290116"
+        },
+        "data/ita_Latn/test/000_00000.parquet": {
+          "bytes": 63821346,
+          "hub_size": 63821346,
+          "lfs_sha256": "2daa4433781837cb71c9d2caa23ac89c0f6c2228fe4366ad54df3002b7e40c42",
+          "sha256": "2daa4433781837cb71c9d2caa23ac89c0f6c2228fe4366ad54df3002b7e40c42"
+        },
+        "data/jpn_Jpan/test/000_00000.parquet": {
+          "bytes": 48225826,
+          "hub_size": 48225826,
+          "lfs_sha256": "94f0f433bdb30d9c0a08c6610c48a2ba157275766a9ae100dbb518ade718bdb4",
+          "sha256": "94f0f433bdb30d9c0a08c6610c48a2ba157275766a9ae100dbb518ade718bdb4"
+        },
+        "data/kat_Geor/test/000_00000.parquet": {
+          "bytes": 58558132,
+          "hub_size": 58558132,
+          "lfs_sha256": "dd8724bd5b95fba030497b86232c1cbaca78cd544b3f0c94e4e3bbee80978455",
+          "sha256": "dd8724bd5b95fba030497b86232c1cbaca78cd544b3f0c94e4e3bbee80978455"
+        },
+        "data/khm_Khmr/test/000_00000.parquet": {
+          "bytes": 24178741,
+          "hub_size": 24178741,
+          "lfs_sha256": "26ae4e654770b07e24a4ef6b8ef3a01c84076a920f1922ac014364ab411b84f0",
+          "sha256": "26ae4e654770b07e24a4ef6b8ef3a01c84076a920f1922ac014364ab411b84f0"
+        },
+        "data/kor_Hang/test/000_00000.parquet": {
+          "bytes": 54028075,
+          "hub_size": 54028075,
+          "lfs_sha256": "65097577414fce64b8aa722d1e223bd80961ad16f8c9f1a1941ce7d47af548a2",
+          "sha256": "65097577414fce64b8aa722d1e223bd80961ad16f8c9f1a1941ce7d47af548a2"
+        },
+        "data/nld_Latn/test/000_00000.parquet": {
+          "bytes": 43884680,
+          "hub_size": 43884680,
+          "lfs_sha256": "a41f864de27c6e716f3f47334273899bcb21829d01369f9e3eb36fa9f7857fcf",
+          "sha256": "a41f864de27c6e716f3f47334273899bcb21829d01369f9e3eb36fa9f7857fcf"
+        },
+        "data/pol_Latn/test/000_00000.parquet": {
+          "bytes": 56463099,
+          "hub_size": 56463099,
+          "lfs_sha256": "70579d75902b50faa3a3fc6127357f1436719fcb71252b7c5b71a3c37b2d40da",
+          "sha256": "70579d75902b50faa3a3fc6127357f1436719fcb71252b7c5b71a3c37b2d40da"
+        },
+        "data/rus_Cyrl/test/000_00000.parquet": {
+          "bytes": 104147671,
+          "hub_size": 104147671,
+          "lfs_sha256": "b26be652265af931e203a7e8a40d249217b672b78a40243b144b0f447a674178",
+          "sha256": "b26be652265af931e203a7e8a40d249217b672b78a40243b144b0f447a674178"
+        },
+        "data/spa_Latn/test/000_00000.parquet": {
+          "bytes": 59698497,
+          "hub_size": 59698497,
+          "lfs_sha256": "c191b0aee83970d38a37a940e34ff28c5f964796ec7c33929dda50da8ebde98f",
+          "sha256": "c191b0aee83970d38a37a940e34ff28c5f964796ec7c33929dda50da8ebde98f"
+        },
+        "data/swh_Latn/test/000_00000.parquet": {
+          "bytes": 15153844,
+          "hub_size": 15153844,
+          "lfs_sha256": "691a5e068adafa26cafad5ae79675997a2742ad056dd1df19729ef0975673906",
+          "sha256": "691a5e068adafa26cafad5ae79675997a2742ad056dd1df19729ef0975673906"
+        },
+        "data/tam_Taml/test/000_00000.parquet": {
+          "bytes": 71465017,
+          "hub_size": 71465017,
+          "lfs_sha256": "bba0eb727be01a334ae38f1cee3275ce55fb7c9c7d1e4a20b0b8bad5509c96d1",
+          "sha256": "bba0eb727be01a334ae38f1cee3275ce55fb7c9c7d1e4a20b0b8bad5509c96d1"
+        },
+        "data/tha_Thai/test/000_00000.parquet": {
+          "bytes": 51285472,
+          "hub_size": 51285472,
+          "lfs_sha256": "34102d27b6068605a62a69e7fae8f7d3f4e67165720afd8fb685a2eb5e85ff1b",
+          "sha256": "34102d27b6068605a62a69e7fae8f7d3f4e67165720afd8fb685a2eb5e85ff1b"
+        },
+        "data/tur_Latn/test/000_00000.parquet": {
+          "bytes": 52871101,
+          "hub_size": 52871101,
+          "lfs_sha256": "f7d4fed3841bb1bd396aa1ea136c598f84cc07afa3208b3560faccb07ae10d1c",
+          "sha256": "f7d4fed3841bb1bd396aa1ea136c598f84cc07afa3208b3560faccb07ae10d1c"
+        }
+      },
+      "license": "ODC-By-1.0 (plus Common Crawl terms of use)",
+      "repo": "HuggingFaceFW/fineweb-2",
+      "revision": "af9c13333eb981300149d5ca60a8e9d659b276b9"
+    },
+    "paradocs": {
+      "filter": {
+        "frequency_cutoff": 100,
+        "lid_cutoff": 0.5,
+        "min_avg_score": 0.0,
+        "minimum_size": 2
+      },
+      "filter_tool_reimplemented_from": "rewicks/ParaDocs@88f4ed95dadc577605e775ad447eefde5229d611",
+      "license": "Apache-2.0 packaging (README); underlying ParaCrawl text is not owned by the packager; ParaCrawl's CC0 covers its packaging only",
+      "pairs": {
+        "en-de": {
+          "bytes_consumed": 30408704,
+          "collect_quota_tokens": 3078996,
+          "doc_lines_percentiles": {
+            "10": 2.0,
+            "50": 9.0,
+            "90": 91.0,
+            "99": 600.6200000000008
+          },
+          "files": [
+            {
+              "bytes_consumed": 30408704,
+              "filter": {
+                "breaks_empty": 0,
+                "breaks_frequency": 0,
+                "breaks_lid": 0,
+                "breaks_malformed": 0,
+                "breaks_none": 0,
+                "documents": 5120,
+                "kept_documents": 5120,
+                "kept_lines": 215998,
+                "lines": 215999
+              },
+              "hub_size": 4607510346,
+              "lfs_sha256": "35e20f6f64023fa2a581b9251a11e4e1280dbeaf5cc5ed7b4e148dfc03458e5f",
+              "path": "data/en-de/strict/000.gz"
+            }
+          ],
+          "filtered_file_sha256": "8b7cf93d21d994ec206640037f79861bf72c5f4bed7372f3522ba8ef936bc21a",
+          "kept_documents": 5120,
+          "kept_item_tokens": 3210103,
+          "source_folder": "strict",
+          "stop_reason": "quota-met"
+        },
+        "en-es": {
+          "bytes_consumed": 32243712,
+          "collect_quota_tokens": 3078996,
+          "doc_lines_percentiles": {
+            "10": 3.0,
+            "50": 18.0,
+            "90": 120.0,
+            "99": 808.2000000000007
+          },
+          "files": [
+            {
+              "bytes_consumed": 32243712,
+              "filter": {
+                "breaks_empty": 0,
+                "breaks_frequency": 0,
+                "breaks_lid": 0,
+                "breaks_malformed": 0,
+                "breaks_none": 0,
+                "documents": 4096,
+                "kept_documents": 4096,
+                "kept_lines": 238355,
+                "lines": 238356
+              },
+              "hub_size": 4535140493,
+              "lfs_sha256": "6d706cca146c29b303c4226c53202c2ad116458172276424897db0080e4da24c",
+              "path": "data/en-es/strict/000.gz"
+            }
+          ],
+          "filtered_file_sha256": "d63d40f8e92f0a5feef1fed3797bb7db396a20f2b043909b7e50ac5ac96c6fa8",
+          "kept_documents": 4096,
+          "kept_item_tokens": 3109184,
+          "source_folder": "strict",
+          "stop_reason": "quota-met"
+        },
+        "en-fr": {
+          "bytes_consumed": 15859712,
+          "collect_quota_tokens": 3078996,
+          "doc_lines_percentiles": {
+            "10": 2.0,
+            "50": 6.0,
+            "90": 23.0,
+            "99": 280.0700000000015
+          },
+          "files": [
+            {
+              "bytes_consumed": 15859712,
+              "filter": {
+                "breaks_empty": 0,
+                "breaks_frequency": 0,
+                "breaks_lid": 0,
+                "breaks_malformed": 0,
+                "breaks_none": 0,
+                "documents": 6400,
+                "kept_documents": 6400,
+                "kept_lines": 116970,
+                "lines": 116971
+              },
+              "hub_size": 3882987542,
+              "lfs_sha256": "aee907477d2c5e92fc2445bd29d5defd0149c31cbbed1d384182b29e4e8ee960",
+              "path": "data/en-fr/strict/000.gz"
+            }
+          ],
+          "filtered_file_sha256": "8a37c96c8cf3f0f2dc3d0cd5621920a5bd46db931af7f30d2460bcab3af123c0",
+          "kept_documents": 6400,
+          "kept_item_tokens": 3143573,
+          "source_folder": "strict",
+          "stop_reason": "quota-met"
+        },
+        "en-hi": {
+          "bytes_consumed": 7494905291,
+          "collect_quota_tokens": 1759426,
+          "doc_lines_percentiles": {
+            "10": 2.0,
+            "50": 2.0,
+            "90": 2.0,
+            "99": 5.0
+          },
+          "files": [
+            {
+              "bytes_consumed": 3165022562,
+              "filter": {
+                "breaks_empty": 0,
+                "breaks_frequency": 25806830,
+                "breaks_lid": 9013392,
+                "breaks_malformed": 0,
+                "breaks_none": 10033314,
+                "documents": 5139294,
+                "kept_documents": 6397,
+                "kept_lines": 13566,
+                "lines": 49999999
+              },
+              "hub_size": 3165022562,
+              "lfs_sha256": "550414273a14ded7532b473e3beafc37820bb505117bfee442758b4fad6c58c8",
+              "path": "data/en-hi/all/paracrawl/000.gz"
+            },
+            {
+              "bytes_consumed": 3023094889,
+              "filter": {
+                "breaks_empty": 0,
+                "breaks_frequency": 26122008,
+                "breaks_lid": 7568034,
+                "breaks_malformed": 0,
+                "breaks_none": 11679472,
+                "documents": 4624320,
+                "kept_documents": 5576,
+                "kept_lines": 11742,
+                "lines": 50000000
+              },
+              "hub_size": 3023094889,
+              "lfs_sha256": "9d73aa3e1e17a3fc20d76c890d54144d7c44570b08fe981986b2d01413b059a5",
+              "path": "data/en-hi/all/paracrawl/001.gz"
+            },
+            {
+              "bytes_consumed": 1306787840,
+              "filter": {
+                "breaks_empty": 0,
+                "breaks_frequency": 11585035,
+                "breaks_lid": 3135499,
+                "breaks_malformed": 0,
+                "breaks_none": 4678223,
+                "documents": 1828266,
+                "kept_documents": 3072,
+                "kept_lines": 6247,
+                "lines": 21230199
+              },
+              "hub_size": 3186227857,
+              "lfs_sha256": "0444be790f5446a6cf577c05a6240fa1883803cfd8ca11f0976cb7d6b1a2212e",
+              "path": "data/en-hi/all/paracrawl/002.gz"
+            }
+          ],
+          "filtered_file_sha256": "cbf63cc93c99a2ca8ffef1e424ef0609d32c8111dc555e0c40aef3dd012f230b",
+          "kept_documents": 15045,
+          "kept_item_tokens": 1779230,
+          "source_folder": "all/paracrawl",
+          "stop_reason": "quota-met"
+        },
+        "en-km": {
+          "bytes_consumed": 4104691058,
+          "collect_quota_tokens": 1759426,
+          "doc_lines_percentiles": {
+            "10": 2.0,
+            "50": 2.0,
+            "90": 3.0,
+            "99": 6.0
+          },
+          "files": [
+            {
+              "bytes_consumed": 2901552061,
+              "filter": {
+                "breaks_empty": 0,
+                "breaks_frequency": 26613634,
+                "breaks_lid": 7903242,
+                "breaks_malformed": 0,
+                "breaks_none": 10190571,
+                "documents": 5283184,
+                "kept_documents": 7947,
+                "kept_lines": 17315,
+                "lines": 49999999
+              },
+              "hub_size": 2901552061,
+              "lfs_sha256": "61b6de3d0ff00dbe9d3bc6226acb037d76e401679837fa5da2b7671d963e7a4b",
+              "path": "data/en-km/all/paracrawl/000.gz"
+            },
+            {
+              "bytes_consumed": 1203138997,
+              "filter": {
+                "breaks_empty": 0,
+                "breaks_frequency": 12332838,
+                "breaks_lid": 3367880,
+                "breaks_malformed": 0,
+                "breaks_none": 1757985,
+                "documents": 2093629,
+                "kept_documents": 3699,
+                "kept_lines": 8353,
+                "lines": 19556986
+              },
+              "hub_size": 1203138997,
+              "lfs_sha256": "d6f314594e70effd592195aadafb5da519912864f9288eadf0fc17f163040c29",
+              "path": "data/en-km/all/paracrawl/001.gz"
+            }
+          ],
+          "filtered_file_sha256": "00b5a363f813da220bd0c1447018cb49904838a36b94e1427d495fc4d3ec9c0a",
+          "kept_documents": 11646,
+          "kept_item_tokens": 1557005,
+          "source_folder": "all/paracrawl",
+          "stop_reason": "files-ended"
+        },
+        "en-pl": {
+          "bytes_consumed": 59506688,
+          "collect_quota_tokens": 3078996,
+          "doc_lines_percentiles": {
+            "10": 2.0,
+            "50": 3.0,
+            "90": 147.3000000000011,
+            "99": 655.4599999999991
+          },
+          "files": [
+            {
+              "bytes_consumed": 59506688,
+              "filter": {
+                "breaks_empty": 0,
+                "breaks_frequency": 0,
+                "breaks_lid": 0,
+                "breaks_malformed": 0,
+                "breaks_none": 0,
+                "documents": 9728,
+                "kept_documents": 9728,
+                "kept_lines": 444852,
+                "lines": 444853
+              },
+              "hub_size": 590344676,
+              "lfs_sha256": "2d18319cefc7ba55a03a84777d43246999906ad92f7f293892962eff119856d0",
+              "path": "data/en-pl/strict/000.gz"
+            }
+          ],
+          "filtered_file_sha256": "cc4b1df3a0c9825fce9d83cc8988b421b0e1be2b030331213b65c1c22e9925a7",
+          "kept_documents": 9728,
+          "kept_item_tokens": 3116328,
+          "source_folder": "strict",
+          "stop_reason": "quota-met"
+        },
+        "en-th": {
+          "bytes_consumed": 6340670165,
+          "collect_quota_tokens": 1759426,
+          "doc_lines_percentiles": {
+            "10": 2.0,
+            "50": 2.0,
+            "90": 2.0,
+            "99": 4.0
+          },
+          "files": [
+            {
+              "bytes_consumed": 2971138912,
+              "filter": {
+                "breaks_empty": 0,
+                "breaks_frequency": 21108653,
+                "breaks_lid": 12385812,
+                "breaks_malformed": 0,
+                "breaks_none": 9498556,
+                "documents": 6990885,
+                "kept_documents": 14488,
+                "kept_lines": 30581,
+                "lines": 49999999
+              },
+              "hub_size": 2971138912,
+              "lfs_sha256": "0d47d7948b11e0e64a4abfebeee439ab42b912842208785904a9290bce0bee42",
+              "path": "data/en-th/all/paracrawl/000.gz"
+            },
+            {
+              "bytes_consumed": 3017209717,
+              "filter": {
+                "breaks_empty": 0,
+                "breaks_frequency": 21665401,
+                "breaks_lid": 11688590,
+                "breaks_malformed": 0,
+                "breaks_none": 9958980,
+                "documents": 6673920,
+                "kept_documents": 12141,
+                "kept_lines": 25250,
+                "lines": 50000000
+              },
+              "hub_size": 3017209717,
+              "lfs_sha256": "ba61c47951552ba5fc888e9faa179cbd5a4ef6dea54c50f88e1cadc7c031a775",
+              "path": "data/en-th/all/paracrawl/001.gz"
+            },
+            {
+              "bytes_consumed": 352321536,
+              "filter": {
+                "breaks_empty": 0,
+                "breaks_frequency": 2851133,
+                "breaks_lid": 1682685,
+                "breaks_malformed": 0,
+                "breaks_none": 8723,
+                "documents": 881410,
+                "kept_documents": 1536,
+                "kept_lines": 3147,
+                "lines": 5425562
+              },
+              "hub_size": 3087034620,
+              "lfs_sha256": "1017391c1faf98f4f5c8b9f5acae5ea8d40810b3498a5492f91608f68d14115c",
+              "path": "data/en-th/all/paracrawl/002.gz"
+            }
+          ],
+          "filtered_file_sha256": "4add655f8e90511423a18a420c2e506f9cda39ae5ee40731e49c5f3bd9a318cb",
+          "kept_documents": 28165,
+          "kept_item_tokens": 1765090,
+          "source_folder": "all/paracrawl",
+          "stop_reason": "quota-met"
+        }
+      },
+      "repo": "jhu-clsp/paradocs",
+      "revision": "f80095affa44545d18d0d64a574f9b8679017196"
+    }
+  },
+  "tokenizer_sha256": "c0382117ea329cdf097041132f6d735924b697924d6f6fc3945713e96ce87539",
+  "yield_probe_2026_10_07": {
+    "note": "1 GB per cross-script all/paracrawl pair; 200 MB per same-script pair (all/paracrawl heads kept nothing; strict reported separately); token counts before the 512-token side cap",
+    "pairs": {
+      "en-de": {
+        "bytes_consumed": 200000000,
+        "files": [
+          "data/en-de/all/paracrawl/000.gz"
+        ],
+        "kept_documents": 0,
+        "kept_item_tokens_per_gb": 0,
+        "kept_item_tokens_uncapped": 0
+      },
+      "en-es": {
+        "bytes_consumed": 200000000,
+        "files": [
+          "data/en-es/all/paracrawl/000.gz"
+        ],
+        "kept_documents": 0,
+        "kept_item_tokens_per_gb": 0,
+        "kept_item_tokens_uncapped": 0
+      },
+      "en-fr": {
+        "bytes_consumed": 200000000,
+        "files": [
+          "data/en-fr/all/paracrawl/000.gz"
+        ],
+        "kept_documents": 0,
+        "kept_item_tokens_per_gb": 0,
+        "kept_item_tokens_uncapped": 0
+      },
+      "en-hi": {
+        "bytes_consumed": 1000000000,
+        "files": [
+          "data/en-hi/all/paracrawl/000.gz"
+        ],
+        "kept_documents": 2182,
+        "kept_item_tokens_per_gb": 206703,
+        "kept_item_tokens_uncapped": 206703
+      },
+      "en-km": {
+        "bytes_consumed": 1000000000,
+        "files": [
+          "data/en-km/all/paracrawl/000.gz"
+        ],
+        "kept_documents": 2661,
+        "kept_item_tokens_per_gb": 331407,
+        "kept_item_tokens_uncapped": 331407
+      },
+      "en-pl": {
+        "bytes_consumed": 200000000,
+        "files": [
+          "data/en-pl/all/paracrawl/000.gz"
+        ],
+        "kept_documents": 0,
+        "kept_item_tokens_per_gb": 0,
+        "kept_item_tokens_uncapped": 0
+      },
+      "en-th": {
+        "bytes_consumed": 1000000000,
+        "files": [
+          "data/en-th/all/paracrawl/000.gz"
+        ],
+        "kept_documents": 4347,
+        "kept_item_tokens_per_gb": 278595,
+        "kept_item_tokens_uncapped": 278595
+      },
+      "strict:en-de": {
+        "bytes_consumed": 200000000,
+        "files": [
+          "data/en-de/strict/000.gz"
+        ],
+        "kept_documents": 81878,
+        "kept_item_tokens_per_gb": 511533165,
+        "kept_item_tokens_uncapped": 102306633
+      },
+      "strict:en-es": {
+        "bytes_consumed": 200000000,
+        "files": [
+          "data/en-es/strict/000.gz"
+        ],
+        "kept_documents": 37917,
+        "kept_item_tokens_per_gb": 515385580,
+        "kept_item_tokens_uncapped": 103077116
+      },
+      "strict:en-fr": {
+        "bytes_consumed": 200000000,
+        "files": [
+          "data/en-fr/strict/000.gz"
+        ],
+        "kept_documents": 179329,
+        "kept_item_tokens_per_gb": 502083620,
+        "kept_item_tokens_uncapped": 100416724
+      },
+      "strict:en-pl": {
+        "bytes_consumed": 200000000,
+        "files": [
+          "data/en-pl/strict/000.gz"
+        ],
+        "kept_documents": 523541,
+        "kept_item_tokens_per_gb": 540200880,
+        "kept_item_tokens_uncapped": 108040176
+      }
+    }
+  }
+}
