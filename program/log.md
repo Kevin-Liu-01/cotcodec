@@ -40,3 +40,15 @@ Append-only. Newest entries at the bottom.
 - Scoping workflow launched for six Stage-0 items: evaluator mutation kit,
   Holo3 archive diff, Q3 K1, Q1 gate stack, action-path suite and VM runtime,
   and the serving throughput probe.
+- Clarified the R570 rule: "untrusted model-generated code" means code a model
+  produces as the object of study (sampled kernels, rollouts), not reviewed,
+  committed harness code (decision D7). Decisions D1-D11 are in
+  `program/decisions.md`.
+- A private recheck confirmed two security-relevant observations about a
+  third-party agent-memory library on its current main branch. Details are
+  kept privately pending coordinated disclosure, which needs Kevin's go-ahead.
+  Mentions that named the issue class were redacted from the public dossier,
+  backlog and handoff; earlier commits still contain the short mention.
+- Scoping of all six Stage-0 items finished with adversarial review. The job
+  lane upgrade and builds for the Holo3 follow-up, serving probe and Q3 K1
+  are running on separate branches.

@@ -35,7 +35,7 @@ host checkout itself was not touched.
 - Ask the host administrator for the R580 driver upgrade, or give written risk
   acceptance for Q1's audit of model-generated kernels.
 - Approve the ~14.9 GB Holo3 trajectory download for Q2.
-- Approve disclosing the Letta symlink and deletion-residue findings to
+- Approve disclosing the two security-relevant Letta findings to
   letta-ai.
 - Decide whether to purge the old host address and the internal corpus
   inventory from public git history. That needs a force-push.
