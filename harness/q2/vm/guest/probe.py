@@ -49,7 +49,10 @@ the runner only decompresses the first rows of the PNG to read it.
 Control. A UNIX socket in the state directory takes one JSON command per
 connection and answers one JSON line: ``ping``, ``begin``, ``end``, ``state``,
 ``activate`` and ``quit``. ``ready.json`` is written once the window is
-mapped.
+mapped. ``begin`` returns only once the screen shows the new marker (read
+back from the root window, as a screenshot reads it; ``visible_s``), so an
+entry never starts from a stale screen; ``end`` reports the marker the screen
+shows at that moment (``screen_marker``, a diagnostic).
 
 Usage inside the guest: ``python3 -c <bootstrap> <b64> <state_dir>``.
 
@@ -425,6 +428,32 @@ class Probe:
         self.drawn = (self.seq, crc)
         self.counters["redraws"] += 1
 
+    def screen_marker(self):
+        """The marker as the screen shows it now ((seq, crc) or None): one row of the root.
+
+        Read from the root window the way a screenshot reads it, so it includes the
+        compositor's latency.
+        """
+        x0, y0 = MARKER_ORIGIN
+        width = MARKER_BITS * CELL
+        image = self.root.get_image(x0, y0 + CELL // 2, width, 1, self.X.ZPixmap, 0xFFFFFFFF)
+        data = image.data
+        step = len(data) // width
+        bits = []
+        for index in range(MARKER_BITS):
+            offset = (index * CELL + CELL // 2) * step
+            bits.append(1 if sum(data[offset : offset + 3]) < 3 * 128 else 0)
+        return parse_marker_bits(bits)
+
+    def await_marker(self, timeout=2.0):
+        """Seconds until the screen shows the drawn marker (None if it never does)."""
+        started = time.monotonic()
+        while time.monotonic() - started < timeout:
+            if self.screen_marker() == self.drawn:
+                return round(time.monotonic() - started, 4)
+            time.sleep(0.01)
+        return None
+
     def state(self):
         X = self.X
         focus = self.d.get_input_focus().focus
@@ -528,7 +557,15 @@ class Probe:
             self.buffer = []
             self.window_events = []
             self.draw_marker()
-            return {"ok": True, "seq": seq, "drawn": list(self.drawn), "state": self.state()}
+            # The entry starts from a screen that already shows its sequence number.
+            visible = self.await_marker()
+            return {
+                "ok": True,
+                "seq": seq,
+                "drawn": list(self.drawn),
+                "visible_s": visible,
+                "state": self.state(),
+            }
         if op == "end":
             seq = int(request["seq"])
             if seq != self.seq or self.window_events is None:
@@ -543,6 +580,7 @@ class Probe:
                 "text": text,
                 "crc": text_crc(text),
                 "drawn": list(self.drawn) if self.drawn else None,
+                "screen_marker": list(self.screen_marker() or []) or None,
                 "state": self.state(),
                 "counters": dict(self.counters),
             }
