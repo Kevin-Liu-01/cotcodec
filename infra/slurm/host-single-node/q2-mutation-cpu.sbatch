@@ -26,7 +26,8 @@
 #   run    Q2M_IMAGE_ID=sha256:<64 hex>  Q2M_ARGV_JSON_HEX=<hex of JSON argv>
 #          Q2M_SOURCE=<code dir, ro at /src>  Q2M_RUN_DIR=<output dir, rw at /out>
 #          optional Q2M_INPUTS=<dir, ro at /inputs>
-#          optional Q2M_EXTRA_RO="<host>:<container>[,<host>:<container>...]"
+#          optional Q2M_EXTRA_RO="<host>:<container>[+<host>:<container>...]"
+#          ("+" separates mounts because sbatch --export splits on commas)
 #          optional Q2M_TMPFS_SIZE (default 32g)
 set -Eeuo pipefail
 umask 022
@@ -122,7 +123,7 @@ if [[ -n "${Q2M_INPUTS:-}" ]]; then
   mount_log+=" ${Q2M_INPUTS}:/inputs:ro"
 fi
 if [[ -n "${Q2M_EXTRA_RO:-}" ]]; then
-  IFS=',' read -r -a extra <<<"${Q2M_EXTRA_RO}"
+  IFS='+' read -r -a extra <<<"${Q2M_EXTRA_RO}"
   for pair in "${extra[@]}"; do
     host="${pair%%:*}"
     target="${pair#*:}"
