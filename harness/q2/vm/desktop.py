@@ -143,12 +143,21 @@ def step(
         "screenshot": round(t_shot - t_exec, 4),
         "total": round(time.monotonic() - started, 4),
     }
+    record["screenshot_ok"] = screenshot is not None
     record["infra"] = infra_failures(record, a11y)
+    record["retried"] = observation_retries(record, a11y)
     return record, screenshot
 
 
 def infra_failures(record: dict[str, Any], a11y: bool) -> list[str]:
-    """Infrastructure failure types of one step (preregistration 6.1)."""
+    """Infrastructure failure types of one step (preregistration 6.1).
+
+    ``execute``: the first ``/execute`` attempt is not HTTP 200 within 30 s (a later
+    attempt could run the action twice). ``screenshot``: no valid image after
+    ``DesktopEnv``'s attempts. ``accessibility`` (screenshot+a11y setting): no tree after
+    its attempts. An observation that a retry delivers is what Stage 1 would see; it is
+    not a failure and is counted by ``observation_retries`` (reported per campaign).
+    """
     out = []
     execute = record.get("execute")
     if execute is not None:
@@ -159,11 +168,20 @@ def infra_failures(record: dict[str, Any], a11y: bool) -> list[str]:
             or first.get("elapsed_s", 0) > INFRA_EXECUTE_S
         ):
             out.append("execute")
-    shots = record.get("screenshot_attempts") or [{}]
-    if shots[0].get("status") != 200 or len(shots) > 1:
+    if not record.get("screenshot_ok"):
         out.append("screenshot")
-    if a11y:
-        trees = record.get("accessibility_attempts") or [{}]
-        if trees[0].get("status") != 200 or len(trees) > 1:
-            out.append("accessibility")
+    if a11y and record.get("accessibility_bytes") is None:
+        out.append("accessibility")
+    return out
+
+
+def observation_retries(record: dict[str, Any], a11y: bool) -> list[str]:
+    """Observations ``DesktopEnv``'s retries delivered after a failed first attempt."""
+    out = []
+    shots = record.get("screenshot_attempts") or [{}]
+    if record.get("screenshot_ok") and (shots[0].get("status") != 200 or len(shots) > 1):
+        out.append("screenshot")
+    trees = record.get("accessibility_attempts") or [{}]
+    if a11y and record.get("accessibility_bytes") is not None and len(trees) > 1:
+        out.append("accessibility")
     return out

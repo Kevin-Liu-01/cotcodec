@@ -195,8 +195,9 @@ def judge(cell: dict[str, Any], obs: dict[str, Any]) -> dict[str, Any]:
     ``obs`` keys: ``probe_events`` (dicts), ``tap_events`` (dicts), ``text``,
     ``end_pointer``, ``marker`` ({"ok", "seq", "crc"}), ``probe_final`` ([seq,
     crc]), ``guard_violations`` ({"pre": [...], "post": [...]}), ``infra``
-    (list of infrastructure failure types), ``errors`` (executor or harness
-    errors), ``terminal`` (None, "success" or "failure").
+    (list of infrastructure failure types), ``retried`` (observations a retry
+    delivered; reported, never a failure), ``errors`` (executor or harness errors),
+    ``terminal`` (None, "success" or "failure").
     """
     expect = cell["expect"]
     reasons: list[str] = []
@@ -237,7 +238,12 @@ def judge(cell: dict[str, Any], obs: dict[str, Any]) -> dict[str, Any]:
     if cell.get("terminal") != obs.get("terminal"):
         reasons.append(f"terminal {obs.get('terminal')} != {cell.get('terminal')}")
     reasons += [f"infra: {kind}" for kind in infra]
-    return {"pass": not reasons, "reasons": reasons, "infra": sorted(set(infra))}
+    return {
+        "pass": not reasons,
+        "reasons": reasons,
+        "infra": sorted(set(infra)),
+        "retried": sorted(obs.get("retried") or []),
+    }
 
 
 def rdev_agreement(expect: dict[str, Any], tap_events: list[dict[str, Any]]) -> bool | None:

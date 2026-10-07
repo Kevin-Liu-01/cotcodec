@@ -654,6 +654,18 @@ def session_cycle(config: dict[str, Any]) -> dict[str, Any]:
     if "error" in result["start"]:
         result["error"] = result["start"]["error"]
         return result
+    if kind != "inputs-validation":
+        # OSWorld's DesktopEnv.reset ends with an observation (_get_obs), so a Stage-1
+        # episode's first step never makes the boot's first /screenshot or /accessibility
+        # call. The same observation is taken here, recorded and not judged (development
+        # run 537: the boot's first /accessibility call answered HTTP 500, its retry 200).
+        from harness.q2.vm import desktop
+
+        _, shot_attempts = desktop.get_screenshot(client)
+        result["reset_observation"] = {"screenshot_attempts": shot_attempts}
+        if a11y:
+            _, tree_attempts = desktop.get_accessibility_tree(client)
+            result["reset_observation"]["accessibility_attempts"] = tree_attempts
     trials: list[dict[str, Any]] = []
     if kind == "inputs-validation":
         from harness.q2.vm.validation import hmp_trial, judge_probe_validation, probe_items

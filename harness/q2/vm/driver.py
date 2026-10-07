@@ -831,6 +831,7 @@ def session_summary(records: list[dict[str, Any]]) -> dict[str, Any]:
     """Per-cell outcome over every session, infrastructure failures by type, and timings."""
     by_cell: dict[str, list[bool]] = {}
     infra: dict[str, int] = {}
+    retried: dict[str, int] = {}
     totals: list[float] = []
     steps: list[float] = []
     runner_errors = []
@@ -846,6 +847,8 @@ def session_summary(records: list[dict[str, Any]]) -> dict[str, Any]:
             by_cell.setdefault(key, []).append(bool(judged.get("pass")))
             for kind in judged.get("infra") or []:
                 infra[kind] = infra.get(kind, 0) + 1
+            for kind in judged.get("retried") or []:
+                retried[kind] = retried.get(kind, 0) + 1
             timing = trial.get("timing_s")
             if isinstance(timing, dict):
                 totals.append(float(timing.get("total", 0)))
@@ -871,6 +874,7 @@ def session_summary(records: list[dict[str, Any]]) -> dict[str, Any]:
             s: sum(1 for v in cells.values() if v == s) for s in ("PASS", "FLAKY", "FAIL")
         },
         "infra_failures": infra,
+        "observation_retries": retried,
         "trial_s": {
             "n": len(totals),
             "p50": percentile(totals, 50),
