@@ -94,7 +94,7 @@ under `~/cotcodec-runs/stage0/q2-action-path/runs/<job>/`.
 | 470 | `tap-selftest-v3.yaml` | diagnostic: the server's row was XKB's four-column core view of the same mapping (gate false) |
 | 471 | `tap-selftest-v4.yaml` | rows compared under the core protocol's rules: see the evidence README |
 | 482-484 | `inputs-validation-v1/v2.yaml` | HMP input into the probe, guard and marker, and no-input canary read-back: 76 of 76 and 16 of 16 (inputs addendum, section 3) |
-| 486-613 | `dev-*.yaml` | development at seed 42 (never evidence): L0-fixed, H-OSW-fixed, H-GA, the canary, 8 concurrent VMs, and the 44 mutants on their predicted kill cells |
+| 486-622 | `dev-*.yaml` | development at seed 42 (never evidence): L0-fixed, H-OSW-fixed, H-GA, the canary, 8 concurrent VMs, and the 44 mutants on their predicted kill cells |
 
 Summaries: `program/evidence/2026-10-07/q2-action-path-stage0b/` (development:
 `development-runs.json` and the README's development section).
