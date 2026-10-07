@@ -135,3 +135,20 @@ decisions 2-27 by number. Decisions 28-36 implement D17's acceptance gating,
 the audit's corrections, the narrowed cu130 retry scope (a retry only after a
 gate failure that ends a job as a pre-result) and the lane-termination check.
 Decision 1 is accepted as written.
+
+**D19. Serving probe v2 budget.** `serving-throughput-probe-v2` gets its own
+allowance of 1.0 GPU-h for the probe job plus 0.167 GPU-h for the overlay
+build, separate from D8's v1 cap (v1 used 0.666). It is frozen only after a
+fresh pre-freeze audit.
+
+**D20. K1 successor: same design, engineering-only, measured first.** The
+successor to `q3-k1-localization-screen-v1` keeps every registered design
+decision accepted under D16, including the three-LR grid, and changes only
+code efficiency (batched indexer bank, vectorised evaluation), limits and
+caps, under a new id. A separate synthetic-token throughput probe (no
+Belebele or partition reads, at most 0.15 GPU-h) runs first under its own
+id; the v2 limits and caps are then set from its measurement, with real
+headroom for the smoke gate and a budget gate for the mandatory extension.
+The LR grid is not dropped while the conservative total stays under 8 GPU-h.
+If the measured total would exceed 8 GPU-h, v2 goes through the research
+gauntlet instead of being cut.
