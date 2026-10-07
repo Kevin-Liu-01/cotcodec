@@ -152,3 +152,12 @@ headroom for the smoke gate and a budget gate for the mandatory extension.
 The LR grid is not dropped while the conservative total stays under 8 GPU-h.
 If the measured total would exceed 8 GPU-h, v2 goes through the research
 gauntlet instead of being cut.
+
+**D21. Serving probe v2 design decisions 1-25 accepted.** This includes
+dropping jobs B and C (v1's Q1 decision cannot change, and leaving out job C
+can only push the Q2 decision toward rescoping), cu129 only with no cu130
+retry (cu129 passed every gate in v1), and no GPU resume run. The X1 replay
+threshold moved from v1's 5% to 8% after v1 measured 5.89%. That is accepted
+only because v2 collects fresh data on identical prompt token sequences, the
+8% is calibrated to v1's measured run-to-run noise (about 2 standard errors),
+and the registration discloses that it was chosen after v1's result.
