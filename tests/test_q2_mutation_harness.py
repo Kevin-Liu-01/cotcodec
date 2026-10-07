@@ -203,7 +203,12 @@ def test_merge_lo_excludes_infra_failures() -> None:
         {"job_id": "t__initial", "mutant_id": "t__initial", "task_id": TASK, "files": {"/a": "/y"}},
     ]
     rows = [
-        {"job_id": "t__gold", "outputs": {"/a": "/saved", "/a.csv": "/csv"}, "lo_build": "7.3.7.2"},
+        {
+            "job_id": "t__gold",
+            "outputs": {"/a": "/saved", "/a.csv": "/csv"},
+            "lo_build": "7.3.7.2",
+            "saves": [{"written": True}],
+        },
         {"job_id": "t__initial", "infra_error": "Timeout"},
     ]
     merged, excluded = controls.merge_lo(jobs, rows)
@@ -249,7 +254,8 @@ def test_parse_execute_variants() -> None:
     assert enter[0].arg == "enter"
     typed = reachability.parse_execute(["python3", "-c", 'import pyautogui; pyautogui.write("x")'])
     assert typed[0].kind == "unemulated"
-    assert reachability.parse_execute(["rm", "-rf", "/x"])[0].kind == "unemulated"
+    assert reachability.parse_execute(["rm", "-rf", "/x"])[0].kind == "metric_side"
+    assert reachability.parse_execute(["pip", "install", "x"])[0].kind == "unemulated"
     assert reachability.window_title_for("/home/user/a.pptx") == "a.pptx - LibreOffice Impress"
 
 
@@ -462,3 +468,45 @@ def test_report_aggregate_counts_fixed_point_and_flips() -> None:
         "slower_than_0_5s": 1,
         "with_dialog": 0,
     }
+
+
+def test_merge_lo_marks_untouched_jobs_unsaved() -> None:
+    jobs = [
+        {"job_id": "t__gold", "mutant_id": "t__gold", "task_id": TASK, "files": {"/a.png": "/x"}}
+    ]
+    rows = [{"job_id": "t__gold", "outputs": {}, "lo_build": "7.3.7.2", "saves": [], "events": []}]
+    merged, _ = controls.merge_lo(jobs, rows)
+    assert merged[0]["saved_via"] == "none" and merged[0]["lo_build"] is None
+
+
+def test_derived_outputs_of_convert() -> None:
+    argv = [
+        "libreoffice",
+        "--convert-to",
+        CSV_FILTER,
+        "--outdir",
+        "/home/user",
+        "/home/user/a.xlsx",
+    ]
+    assert reachability.derived_outputs(argv) == [("/home/user", "a", "csv")]
+    assert reachability.derived_outputs(["libreoffice", "--headless"]) == []
+
+
+def test_file_only_postconfig_is_metric_side() -> None:
+    plan = reachability.build_plan(
+        {
+            "evaluator": {
+                "postconfig": [
+                    {"type": "download", "parameters": {"files": []}},
+                    {
+                        "type": "execute",
+                        "parameters": {"command": ["diff", "a", "b"], "stdout": "d"},
+                    },
+                    {"type": "close_window", "parameters": {"window_name": "x"}},
+                ]
+            }
+        },
+        [],
+    )
+    assert plan["metric_side"] == ["postconfig download", "diff a b"]
+    assert plan["unemulated"] == ["postconfig close_window"]
