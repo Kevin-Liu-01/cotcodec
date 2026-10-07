@@ -26,7 +26,10 @@ GPU-hours spent by the program are in `program/state.json`
 - `stage0/q1-gates`: gates, audit, mutator and substrates integrated; GPU
   smoke and pilot cost card next. Projected Stage 0 total 9-10 GPU-h.
 - `stage0/q2-evaluator-mutation`: faithful-save harness, blind specs for 205
-  tasks, operator catalog; integration in progress.
+  tasks, operator catalog, campaign driver; first review fixed and the dev
+  campaign rerun (`dev-mutants-v4`, `dev-controls-v7`). The
+  `q2-evaluator-mutation-v1` draft awaits a second review and Kevin's D2/D9
+  confirmation before the freeze.
 
 ## Next actions
 
