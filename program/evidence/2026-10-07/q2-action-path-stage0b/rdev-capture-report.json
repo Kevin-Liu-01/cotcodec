@@ -508,6 +508,27 @@
       "slurm": "COMPLETED ExitCode=0:0 (scontrol)",
       "status": "reference: copied to harness/q2/action_path/rdev_reference.json",
       "trials": 175
+    },
+    "468": {
+      "campaign_id": "q2ap-rdev-capture-v3",
+      "entries_differing": [],
+      "entries_identical_to_job_393": 35,
+      "entries_total": 35,
+      "git_sha": "a1aade376cba407cca7c75f286807587b96f92a4",
+      "infra_gates_pass": true,
+      "labelled_containers_left": [],
+      "no_gpu_all": true,
+      "qcow2_unchanged": true,
+      "qemu": "9.1.0Debian 1:9.1.0+ds-8",
+      "rdev": {
+        "entries": 35,
+        "stable": 35,
+        "unstable": []
+      },
+      "rdev_reference_sha256": "80f80382baa6de1069a50b1c9116dd5e8de81dccb65c84417b0450d6485fdb00",
+      "receipt_sha256": "bc55596a826a2d902c30a7129803eb8c605e01cdf47be46bff293f2fd80b01b3",
+      "slurm": "COMPLETED ExitCode=0:0 (scontrol)",
+      "status": "check only: the 35 projections equal job 393's, so rdev_reference.json is unchanged"
     }
   },
   "note": "Reference capture for the oracle; no system under test ran.",

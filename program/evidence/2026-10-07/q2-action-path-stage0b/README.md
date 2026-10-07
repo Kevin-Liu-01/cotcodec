@@ -9,7 +9,8 @@ summaries extracted from the job receipts, with the receipt SHA-256 recorded.
 | File | What it is |
 |---|---|
 | `boot-reset-report.json` | Jobs 369 (smoke), 372 (bridge exposure) and 374 (22 cold boots): boot and settle times, reset sentinel, isolation, guest facts, HMP reachability |
-| `rdev-capture-report.json` | Jobs 387 (superseded) and 393 (reference): the R-dev capture of the 35 key, chord and Caps Lock entries, 5 repetitions each |
+| `rdev-capture-report.json` | Jobs 387 (superseded) and 393 (reference): the R-dev capture of the 35 key, chord and Caps Lock entries, 5 repetitions each; job 468, the same plan re-captured with the rewritten tap |
+| `tap-selftest-report.json` | Jobs 467, 469, 470 and 471: the rewritten XRecord tap's oracle self-test after the review |
 
 ## What the runs show
 
@@ -60,3 +61,37 @@ was read, and their driver exit codes are 0.
   the entry's window, so `key_f1`, `key_menu`, `chord_super_d` and
   `chord_ctrl_alt_shift_r` ended with a stray press; the reference now also
   requires every press to be released in the window, and 387 is superseded.
+
+## After the review (jobs 467-471)
+
+The review of 2026-10-07 found that the XRecord tap read keysyms from a keymap
+cached when it connected, so a keycode remapped later (the technique the
+planned executor uses for Unicode text) would be projected with its old
+keysym. The tap was rewritten to record core `ChangeKeyboardMapping` requests
+in the same RECORD stream and keep its own keymap; these jobs validate it.
+All ran as CPU-only Slurm jobs through `vm-campaign.sbatch`, VM image by
+digest, qcow2 unchanged, no labelled container or volume left, no NVIDIA
+device in any container.
+
+- **Self-test (jobs 467, 469, 470, 471; 15 cycles in all):** in each cycle a
+  guest fixture remapped spare keycode 248 to `eacute`, then U+0416, then
+  NoSymbol, pressing it with XTest after each change. In 15 of 15 cycles the
+  tap reported exactly 233, 16778262 and 0 for the six events; a keymap read
+  at tap start (the old behaviour) gives 0 for all six.
+- **The mapping check took three iterations, all recorded.** Every cycle saw
+  one keyboard MappingNotify for the whole range 8-255 that no core request
+  explains: the server re-sends the keymap when the master keyboard switches
+  from the PS/2 device (HMP input earlier in the cycle) to the XTest device.
+  Job 467 counted it as an unseen change; job 469 compared it by raw rows and
+  found a difference only at keycode 248; job 470 recorded the rows: the tap
+  had written `[eacute] * 7` and the server read back `[eacute] * 4 +
+  [NoSymbol] * 3`, XKB's core view of the same mapping. Rows are now compared
+  under the core protocol's keysym-list rules. Job 471 (5 cycles, commit
+  54317d6) passed every gate, `COMPLETED`, exit `0:0`: 4 explained and 1
+  benign notify per cycle, reset sentinel 4 of 4 pristine, boots 17.3-21.1 s.
+  Jobs 467, 469 and 470 failed only their tap gate, by the check then in
+  force; their Slurm states were purged before they were read.
+- **R-dev re-capture (job 468):** the job-393 plan, 5 repetitions, with the
+  rewritten tap (commit a1aade3, whose tap `main` is the one committed): 35 of
+  35 entries stable, and all 35 projections identical to job 393's, so
+  `rdev_reference.json` is unchanged. `COMPLETED`, exit `0:0`.

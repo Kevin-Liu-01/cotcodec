@@ -9,7 +9,8 @@ No acceptance trial may run before that ledger entry exists.
   criterion it implements: "No GPU episodes until the action-path suite passes
   100%" (`program/questions/q2-calibrated-cua-instrument.md`), read here as
   100% of the gating set G defined in section 4.
-- Drafted: 2026-10-07, on branch `stage0/q2-action-path`.
+- Drafted: 2026-10-07, on branch `stage0/q2-action-path`. Revised the same day
+  after an independent review (section 15 lists what changed and why).
 - Reviewed plan this follows: the Stage-0 workflow's reviewed plan
   `q2-action-path-and-vm`, corrected order (catalog and expectations before any
   executor; independent device reference; mutation testing of the suite; one
@@ -23,7 +24,7 @@ is correct enough that Stage-1 task outcomes can be attributed to the model,
 the harness design and the observation type rather than to dropped, reordered
 or wrong input. It does not measure any model. Its outputs are pass or fail
 verdicts per layer, the suite's own mutation score, and upper bounds on
-residual per-action failure rates.
+residual failure rates per Stage-1 action class and per VM boot.
 
 ## 2. Frozen inputs
 
@@ -39,33 +40,61 @@ residual per-action failure rates.
 | Network layout | `none-netns`: VM container with `--network none` and no published ports; the runner joins its namespace (decision D13) |
 | Step pause | `DesktopEnv.step(action, pause=0.0)`, the Stage-1 value (OSWorld `bfd62bdc` `run_multienv_qwen35vl.py`, `--sleep_after_execution` default 0.0) |
 | Observation settings | both `require_a11y_tree=False` (screenshot) and `require_a11y_tree=True` (screenshot plus accessibility tree) |
-| Lane | `infra/slurm/host-single-node/vm-campaign.sbatch` through `scripts/submit_vm_campaign.py` (decision D12), GPU-less runner image built from `infra/q2-vm-runner/Dockerfile` |
+| Lane | `infra/slurm/host-single-node/vm-campaign.sbatch` through `scripts/submit_vm_campaign.py` (decision D12) |
+| Runner image | GPU-less image `sha256:ac2b5815bcc2ed193116aa2d4bdee773b5a457c545453a6c91956768634a6002`, kept as a `docker save` tarball (SHA-256 `ec434c04f03b8534e7ef61e1e88a6721b687ad8c3959e24a1dfea10d76d427b3`) and recorded with its package versions in `infra/q2-vm-runner/image-lock.json` |
 
-### 2.2 Suite inputs
+### 2.2 Suite inputs and when each is frozen
 
-These files are frozen by their SHA-256 in two addenda, each its own ledger
-entry made with `scripts/preregister.py`. `q2-action-path-v1-inputs` lists
-the catalog, its R-dev references, G, the expressible sets, the operators,
-the L0-raw prediction, and the probe, guard and marker code; it is frozen
-before any L0-fixed code is written. `q2-action-path-v1-executor` lists the
-git SHA and file digests of L0-fixed, the L0-raw translator and the harness
-adapters, the regression corpus and `harness_design_diffs.md`; it is frozen
-when development ends and before the first acceptance trial. Every acceptance
-receipt verifies this file and both addenda.
+Every suite input that exists when this file is frozen is pinned here by its
+SHA-256 (table below), so freezing this file freezes them; the ledger row adds
+the repository's git head. Inputs that cannot exist yet are frozen in two
+addenda, each its own ledger entry made with `scripts/preregister.py`:
 
-| File | Content at drafting time |
+- **`q2-action-path-v1-inputs`**, frozen after this file and before any
+  L0-fixed code is written: the guest probe (event log, text buffer, marker
+  block), the marker decoder, the entry guard, the canary driver (app launch,
+  fixture writing and read-back for `canary.yaml`), and the two detection
+  controls' translators (H-OSW-up's PyAutoGUI strings to IR, H-GA-buggy's
+  action dicts to IR). Its own validation is infrastructure only (HMP input
+  into the probe, no-input canary read-back).
+- **`q2-action-path-v1-executor`**, frozen when development ends and before
+  the scored C1 and C3 runs and the first acceptance trial: the git SHA and file
+  digests of L0-fixed, the H-OSW-fixed and H-GA adapters, the acceptance
+  workload code (`harness/q2/vm/*.py` and the batch script), the regression
+  corpus, `harness_design_diffs.md`, and the canary target coordinates
+  (`canary.yaml`, `targeting`).
+
+Every acceptance and scored-control receipt verifies this file, every
+addendum frozen by then, and the runner image ID.
+
+Frozen with this file (SHA-256 of the committed bytes):
+
+| File | SHA-256 |
 |---|---|
-| `harness/q2/action_path/catalog.yaml` | 100 entries, status draft; the 35 key, chord and Caps Lock entries carry the R-dev streams of job 393 (section 4.3); it already validates as frozen |
-| `harness/q2/action_path/gating_set.json` | G = 86 entries, 14 non-gating with reasons |
-| `harness/q2/action_path/expressible_entries.json` | per-harness expressible sets (H-OSW 85, H-GA 80) with exclusion reasons |
-| `harness/q2/action_path/rdev_plan.json`, `rdev.py` | the HMP chords per key entry and the projection and stability rules |
-| `harness/q2/action_path/mutation_operators.yaml` | 28 operators and the equivalence rule |
-| `harness/q2/action_path/l0_raw_prediction.yaml` | the predicted L0-raw failing set |
-| `harness/q2/action_path/ir.py`, `vocab.py`, `catalog.py` | IR, vocabularies, validator |
-| `harness/q2/action_path/rdev_reference.json` | produced by the reference capture (section 4.3) and copied into the catalog |
-| Guest probe, guard and marker code | digests in `q2-action-path-v1-inputs` |
-| Harness adapters and regression corpus | section 3; digests in `q2-action-path-v1-executor` |
-| L0-fixed executor | its git SHA is frozen in `q2-action-path-v1-executor` when development ends (section 10); acceptance uses only that SHA |
+| `harness/q2/action_path/catalog.yaml` | `5934c4281cb85a8309be32cb98442b038054a2bba0e7ec3755e20112710b7bba` |
+| `harness/q2/action_path/rdev_reference.json` | `5cc48d5177a7f07baed36b90ab76ce3e10de835b42596fc6a53427add49b518a` |
+| `harness/q2/action_path/rdev_plan.json` | `5c9b7215c89aadfa6308bdd94c629a716c7c822a8ca626315157e84bd1495d89` |
+| `harness/q2/action_path/gating_set.json` | `fe2afcaa5fcb6710f54510555633bcd86bc8d516f01211253cfd46271fdf5a6a` |
+| `harness/q2/action_path/expressible_entries.json` | `380e058e9aced24e30cbfc93ebace901a5cb02b567b42f0cceb7543c87c822ac` |
+| `harness/q2/action_path/volume_plan.json` | `9567d257b769273788153c4193981f1c7eb1e8664b4d1ef36389b4fbd211802a` |
+| `harness/q2/action_path/mutation_operators.yaml` | `eabef01f55e51e9d8f774ba58206bfff394bee0f8c506b8e9cd6dab79cd4ea57` |
+| `harness/q2/action_path/l0_raw_prediction.yaml` | `8b947acafeae1d2bf4fda5a715888556d9ca672e57d488a4c31dadc420f9302a` |
+| `harness/q2/action_path/canary.yaml` | `58a6a994d124847717fd24e9510edaee1c5f2a56bdab92240d79501eaf966206` |
+| `harness/q2/action_path/keysyms.json` | `a1ea436d9bd4ae8d9fbc8305772f7dca776858b023092ce1cea059a693924acb` |
+| `harness/q2/action_path/ir.py` | `33dc24771b823597eef453a4994faf730d0364bd090488aa13e9de5e3498d305` |
+| `harness/q2/action_path/vocab.py` | `f26dd7d34988aebf8e8bbeb3ea118e6da3b9d37505ba8433a6eb6d9f0f186792` |
+| `harness/q2/action_path/catalog.py` | `2223a05b4e88dbc8af52751c9c87b10db99a121cdb93e5289979c657bf92126b` |
+| `harness/q2/action_path/rdev.py` | `c526f7ed5b8cc560c5419f9f5e25541b46178f2c375b24cbbee84e0093daab83` |
+| `harness/q2/action_path/l0_raw.py` | `391249f7900dfc327947505526b22710f7dd6bf70f71a230d9865ae7da174f84` |
+| `harness/q2/action_path/volume.py` | `91cbbb7f2bf7cd8715ae7c3c88fb8744ff40bd89955283eb680578c24d2a09c7` |
+| `harness/q2/action_path/build_catalog.py` | `f7b5b9650c8d416b99507ebaf8522f8075aad928ead7e4c3b702bd2ee63435d8` |
+| `harness/q2/action_path/build_derived.py` | `c3e05c8f72c3f49849be7ce59a7b655067c61679e5dbdfa8ac2c130c5299c4e0` |
+| `harness/q2/vm/guest/xrecord_tap.py` | `6a6e9453f138776b0717a9087767be0f97460f1ea0d5302f31e21ae1a4a80a74` |
+| `infra/q2-vm-runner/image-lock.json` | `380f721b03b8941f30a792b67e804d6a2bf4b424c0131c630594af824c0131a4` |
+
+A test (`tests/test_q2_prereg_inputs.py`) recomputes every digest in this table
+from the repository, so no listed file can change without changing this file.
+After the freeze, a change to any of them is a new preregistration.
 
 ## 3. Layers under test
 
@@ -77,25 +106,39 @@ the L0-raw control.
 | Layer | Definition |
 |---|---|
 | L0-fixed | the project's executor: one base64-transported guest script per IR action sent through `DesktopEnv.step`; holds within one process with release in `finally`; XTest buttons 1-9; explicit key-name map, unknown keys raise; zero spare keycodes raises |
-| L0-raw (control) | each IR action as its natural PyAutoGUI 0.9.54 call, one `DesktopEnv.step` per IR action, translation fixed in `l0_raw_prediction.yaml` |
-| H-OSW-up (control) | OSWorld `bfd62bdc` `Qwen35VLAgent.parse_response`, unmodified; its PyAutoGUI strings are mapped call-for-call to IR by a fixed translator, then run on L0-fixed |
-| H-GA-buggy (control) | gym-anything `bf965cde0` `agents/agents/qwen35vl.py` with `agents/shared/qwen_computer_use.py`, unmodified; its action dicts are mapped to IR by a fixed translator |
+| L0-raw (control) | each IR action as its natural PyAutoGUI 0.9.54 call, one `DesktopEnv.step` per IR action, built by `l0_raw.py` (frozen with this file) |
+| H-OSW-up (control) | OSWorld `bfd62bdc` `Qwen35VLAgent.parse_response`, unmodified; its PyAutoGUI strings are mapped call-for-call to IR by a fixed translator (inputs addendum), then run on L0-fixed |
+| H-GA-buggy (control) | gym-anything `bf965cde0` `agents/agents/qwen35vl.py` with `agents/shared/qwen_computer_use.py`, unmodified; its action dicts are mapped to IR by a fixed translator (inputs addendum) |
 | H-OSW-fixed (Stage-1 harness) | `bfd62bdc` with its emit boundary patched to IR and only its own-spec bugs fixed: terminate(status=failure) becomes FAIL; key names go through an explicit map and unknown names raise; text goes through the IR `type` action. Changes are marked under Apache-2.0 §4 |
 | H-GA (Stage-1 harness) | gym-anything `aae6f7607`, unmodified; an adapter maps its action dicts to IR and `metadata.status == "failure"` to terminate(failure) |
+
+**IR boundary rules (both Stage-1 harnesses, frozen here).** (1) Every pointer
+coordinate a harness produces passes through `ir.clamp_point` before it
+becomes IR: truncate to an integer, then clamp to x in 0-1919 and y in 0-1079.
+Both harnesses scale the 0-999 grid with `int(v * size / 999)`, so 999 becomes
+1920 or 1080, one pixel off screen; upstream, PyAutoGUI passes that point to
+XTest and the X server clamps it to the last pixel. The clamp reproduces that
+upstream behaviour while the IR itself still rejects off-screen points. It is
+neither a harness fix nor a design difference. (2) Key names map to X keysym
+names; the IR accepts every name X.Org's `keysymdef.h` defines
+(`keysyms.json`, 2,109 names) and stores aliases under one canonical name.
 
 **Per-harness spec.** A harness is judged against its own system-prompt tool
 description. Where that description is silent, Table 21 semantics apply. A
 deviation the description itself declares (H-OSW: triple_click "simulated as
 double-click", hscroll "mapped to regular scroll"; H-GA: scroll magnitude 1 to
-10 per call) is a design difference, logged as part of the harness factor in
-`harness_design_diffs.md`, never fixed and never counted as a failure. A
-parameter an action's description does not mention is outside that action's
-spec. Expressible sets computed by `vocab.py`: H-OSW 85 entries, H-GA 80.
+10 per call, which its parser enforces by clamping to 10) is a design
+difference, logged as part of the harness factor in `harness_design_diffs.md`,
+never fixed and never counted as a failure. A parameter an action's
+description does not mention is outside that action's spec. Expressible sets
+computed by `vocab.py`: H-OSW 85 entries, H-GA 79 (`scroll_down_25` is outside
+H-GA's declared magnitude).
 
 **Regression set R (Table 20 call forms).** Each case is a rendered model
 response. Expected IR follows Table 21 semantics, except where the harness's
-own prompt declares a deviation or does not cover the call form; those cells
-are design differences.
+own prompt declares a deviation (judged against the declared behaviour) or
+does not cover the call form (outside spec). The status of each cell is also
+in `mutation_operators.yaml` (`regression_cases`), which a test checks.
 
 | Case | H-OSW-fixed | H-GA |
 |---|---|---|
@@ -112,17 +155,23 @@ are design differences.
 | R11 terminate(status=failure) gives FAIL | gating | gating |
 | R12 type with non-ASCII text (the five Unicode catalog strings) | gating | gating |
 | R13 key `kp_enter`, `menu`, `super` (one call each) | gating | gating |
-| R14 left_click at (999, 999) lands on (1919, 1079) | gating | gating |
+| R14 left_click at (999, 999) lands on (1919, 1079), exactly (0 px tolerance) | gating | gating |
 
 Outside-spec cells still run and are reported with the IR each harness emits.
+Pointer positions are judged within ±2 px except R14, which is exact: scaling
+by width/1000 instead of /999 (mutation operator M24) moves the corner by one
+or two pixels, inside the usual tolerance.
 
 **Corpus.** Each harness-expressible catalog entry and each R case is rendered
 as a model response with the official template of `Qwen/Qwen3.5-9B` at
 `c202236235762e1c871ad0ccb60c8ee5ba337b9a` (`chat_template.jinja`, XML tool
 calls, list values rendered as JSON), plus three perturbations: an
 `Action:` sentence before the calls, a closed think block before the calls,
-and (H-GA only, which documents it) the JSON tool-call fallback. Real model
-responses enter only in a later preregistration.
+and (H-GA only, which documents it) the JSON tool-call fallback. A catalog
+pixel is rendered as the 0-999 grid value whose scaled pixel is nearest to it
+(ties to the smaller value); the rendering error is at most one pixel, inside
+the ±2 px tolerance. Real model responses enter only in a later
+preregistration.
 
 ## 4. Catalog, gating set and oracles
 
@@ -147,16 +196,25 @@ They run in every pass and are reported; they do not gate.
 
 ### 4.3 Oracles
 
-- **Pointer and scroll entries:** the catalog's own expectation: X button
-  numbers, counts and order; press and release positions within ±2 px; wheel
-  buttons 4-7 with their counts; modifier masks on button events; the timing
-  bounds `min_gap_ms` and `max_gap_ms` (double and triple clicks: successive
-  presses within 300 ms); at least 3 motion events inside drags; the final
-  pointer position within ±2 px where given.
+- **Pointer and scroll entries (self-specified oracle):** the catalog's own
+  expectation: X button numbers, counts and order; press and release positions
+  within ±2 px; wheel buttons 4-7 with their counts; modifier masks on button
+  events; the timing bounds `min_gap_ms` and `max_gap_ms` (double and triple
+  clicks: successive presses within 300 ms); at least 3 motion events inside
+  drags; the final pointer position within ±2 px where given. These
+  expectations were written by the suite's authors, not measured on an
+  independent device, and every report labels these entries (and the pointer
+  part of mixed entries) "self-specified oracle". The one convention an
+  independent device can check, the numbering, was checked: in job 374, HMP
+  `mouse_button` left, middle and right reached X as buttons 1, 2 and 3, and
+  HMP wheel `dz` −1 and +1 as buttons 5 and 4, in 22 of 22 boots, which is
+  the catalog's convention. Design decision 11 says why no R-dev reference
+  was captured for pointer entries.
 - **Text entries:** code-point equality, no normalization, between the
   catalog's `text` and what the probe's text buffer gained, under the
   catalog's buffer rules (printable code points appended; Return and KP_Enter
-  append `\n`; Tab appends `\t`; BackSpace deletes the last code point).
+  append `\n`; Tab appends `\t`; BackSpace deletes the last code point). The
+  expected string is the typed string itself.
 - **Key, chord and Caps Lock entries (35):** the R-dev reference. Each entry's
   `rdev_input` chords are sent through the QEMU human monitor (`sendkey`) of a
   fresh VM, 5 repetitions, and the guest's XRecord stream is recorded. The
@@ -165,22 +223,49 @@ They run in every pass and are reported; they do not gate.
   removed. An entry gets a reference only if all 5 repetitions give the same
   projection, every key pressed in the window is released in it, and the guard
   after the entry is clean; otherwise it is labelled "self-specified oracle"
-  and its claim is downgraded in every report. Caps Lock additionally requires the Caps LED bit
-  to toggle on and back off. Infrastructure validation (job 374) measured the
-  HMP path: `sendkey` reaches X for letters, Shift chords, KP_Enter (keycode
-  104), KP_Add (86), the 102nd key (94, `less`), Caps Lock with LED toggle, and
-  qcode `compose` gives Menu (135) while qcode `menu` gives no event; HMP
-  `mouse_button` reaches X buttons 1-3 and HMP wheel input gives buttons 4 and
-  5. HMP cannot produce buttons 8 and 9, so those entries keep catalog
-  expectations.
+  and its claim is downgraded in every report. Caps Lock additionally requires
+  the Caps LED bit to toggle on and back off. Infrastructure validation (job
+  374) measured the HMP path: `sendkey` reaches X for letters, Shift chords,
+  KP_Enter (keycode 104), KP_Add (86), the 102nd key (94, `less`), Caps Lock
+  with LED toggle, and qcode `compose` gives Menu (135) while qcode `menu`
+  gives no event.
 - The R-dev capture is a reference measurement on the input device, not a
-  trial of any system under test. It runs before any L0-fixed code exists, and
-  the catalog with its references is frozen in `q2-action-path-v1-inputs`
-  before development of L0-fixed starts. Job 393 captured all 35 entries:
-  every one stable over 5 repetitions, balanced, with a clean guard, and the
-  Caps Lock LED toggling on and back off in 5 of 5. An earlier capture (job
-  387) let the first recovery press of four side-effect entries fall inside
-  their windows; it is superseded and kept on the host.
+  trial of any system under test. Job 393 captured all 35 entries: every one
+  stable over 5 repetitions, balanced, with a clean guard, and the Caps Lock
+  LED toggling on and back off in 5 of 5. An earlier capture (job 387) let the
+  first recovery press of four side-effect entries fall inside their windows;
+  it is superseded and kept on the host. Job 468 re-captured the same plan
+  with the rewritten tap (section 4.4) to check that the tap change leaves the
+  reference unchanged (section 13).
+
+### 4.4 The XRecord oracle channel
+
+`harness/q2/vm/guest/xrecord_tap.py` (frozen with this file) records, in the X
+server's processing order, the core device events and every core
+`ChangeKeyboardMapping` request, and resolves keysyms from its own keymap: the
+full mapping read at start, updated by each recorded request in stream order.
+A key event is therefore projected with the mapping in force when the server
+processed it, including after a spare keycode is remapped. The raw keycode
+and every mapping change are recorded, so any projection can be recomputed.
+A second connection records each keyboard MappingNotify with the keymap it
+then reads. A MappingNotify that no recorded core request explains is benign
+when that keymap equals the tap's table under the core protocol's keysym-list
+rules (`core_groups`): the server re-sends the whole keymap when the master
+keyboard switches between the PS/2 and the XTest device, in XKB's
+four-column core form. Otherwise the range is unverified (section 6.1).
+
+### 4.5 Certified keysyms
+
+The IR accepts every X keysym name, but A1-A6 certify only the 33 keysyms the
+gating entries use: `Alt_L`, `BackSpace`, `Caps_Lock`, `Control_L`,
+`Delete`, `Down`, `End`, `Escape`, `F1`, `F4`, `F5`, `F9`, `F12`, `Home`,
+`Insert`, `KP_Add`, `KP_Enter`, `Left`, `Menu`, `Next`, `Prior`, `Return`,
+`Right`, `Shift_L`, `Super_L`, `Tab`, `Up`, `a`, `c`, `d`, `r`, `space`, `t`
+(`catalog.certified_keysyms`). Text is certified per code point class through
+the typing entries. No claim is made for a key or chord action naming any
+other keysym; the Stage-1 preregistration must count, per episode, the key
+actions that name an uncertified keysym and report them as uncertified
+action-path exposure.
 
 ## 5. Unit and verdict
 
@@ -210,9 +295,10 @@ a failure of that setting.
 An infrastructure failure is any of: a boot that does not serve a valid
 `/screenshot` within 300 s of container start; an `/execute` call that does not
 return HTTP 200 within 30 s; a `/screenshot` failure; the probe absent at a
-guard; the QEMU monitor unreachable during a reference capture; a campaign
-receipt with `infra_gates_pass` false or a Slurm state other than COMPLETED
-with exit code 0:0.
+guard; the QEMU monitor unreachable during a reference capture; a key event
+inside an entry's window on a keycode range the tap's `mapping_check` marks
+unverified; a campaign receipt with `infra_gates_pass` false or a Slurm state
+other than COMPLETED with exit code 0:0.
 
 Infrastructure failures are **not excluded** from any gating verdict: an entry
 that hits one fails that repetition. They are counted and reported separately.
@@ -225,9 +311,13 @@ Before and after every entry: (a) `XQueryKeymap` shows no pressed key and the
 pointer shows no pressed button; (b) the LED mask equals the session baseline;
 (c) the probe window is mapped, focused and covers 1920x1080 at (0, 0); (d) no
 GNOME screen recording is running (no file in `~/Videos/Screencasts` is
-growing). After an entry with a declared side effect the guard first runs
-that effect's restoration (screencast: the chord again, until no file grows;
-closes_window: relaunch the probe; shows_desktop and switches_window:
+growing); (e) before the entry, outside its window, the pointer is moved to
+the catalog's `guard.park_pointer` (1234, 777), a point no entry uses (a test
+checks it), so an entry that moves the pointer always produces motion:
+`move_only` ends where `drag_vertical` ends, and without the park it would see
+no motion after it. After an entry with a declared side effect the guard first
+runs that effect's restoration (screencast: the chord again, until no file
+grows; closes_window: relaunch the probe; shows_desktop and switches_window:
 re-activate the probe; hot_corner: Escape; lock_state: none, the entry must
 leave the LED at baseline) and then requires a clean state. Any violation is
 charged as a failure to the preceding entry, and the guard restores state
@@ -235,14 +325,20 @@ charged as a failure to the preceding entry, and the guard restores state
 
 ## 7. Acceptance criteria (gate Stage-1 GPU episodes)
 
+Every acceptance campaign runs its realized trial order in **sessions** of at
+most 60 consecutive trials, near-equal in size (`ceil(n / 60)` sessions for n
+trials), each session a cold boot of a new VM container in one observation
+setting. The session counts below follow from that rule.
+
 - **A1 (runtime layer).** L0-fixed passes 100% of G at 5 repetitions in the
   seed-43 and seed-44 shuffles, each under both observation settings, at N = 1
   VM; and passes the seed-43 shuffle under both observation settings at the
-  operating concurrency N* (section 9). Trials at N = 1: 86 x 5 x 2 x 2 =
-  3,440.
+  operating concurrency N* (section 9). All 100 entries run; G gates. Trials at
+  N = 1: 100 x 5 x 2 x 2 = 2,000 in 36 sessions (gating trials 1,720).
 - **A2 (harness layer).** H-OSW-fixed and H-GA each pass 100% of their
-  expressible entries (85 and 80) and of their gating R cells, 5 repetitions,
-  judged against their own spec, under both observation settings.
+  expressible entries (85 and 79) and of their gating and declared-deviation R
+  cells, 5 repetitions, judged against their own spec, under both observation
+  settings.
 - **A3 (stress).** 30 timing- and state-sensitive entries, 60 repetitions
   each, zero failures, on L0-fixed and on each Stage-1 harness where the entry
   is expressible: `click_double_left`, `click_triple_left`, `click_ctrl_left`,
@@ -255,82 +351,150 @@ charged as a failure to the preceding entry, and the guard restores state
   `type_symbols_shifted`, `type_unicode_bmp`, `type_emoji_zwj`,
   `type_combining`, `type_long_500`, `type_with_correction`, `seq_long_mixed`.
   Repetitions are split evenly between the two observation settings.
-- **A4 (volume).** 6,020 pooled L0-fixed trials, zero failures: each G entry 70
-  times (35 per observation setting), order shuffled with
-  `random.Random(43)`, spread over the N* VMs.
+- **A4 (volume).** L0-fixed runs `volume_plan.json` (built by `volume.py`)
+  with zero failures: 64,028 trials over the 86 G entries, each entry's
+  repetitions split evenly between the observation settings, in 1,068
+  sessions (534 per setting), order fixed by `random.Random(43)` (`sessions`,
+  SHA-256 of the realized order `87a70e10bb18d8d81bde77b1c9ce89cc5c8cb212dc6d22f3b36c30964d2e82dd`),
+  spread over the N* VMs. Every G entry runs at least 70 times; each of the
+  seven Stage-1 device-action classes (left click; other click: right,
+  middle, double, triple or with modifiers; move; drag; scroll; type; key or
+  chord) gets at least 10,148 executed actions. What this bounds is in section 9.
 - **A5 (reset and hygiene).** A boot-reset campaign at the frozen source SHA
   shows 20 of 20 pristine reset-sentinel checks; every acceptance campaign's
   receipt shows `System.qcow2` unchanged and zero leaked labelled containers
   or volumes.
-- **A6 (cross-app canary).** L0-fixed passes 100% of the canary in each app
-  present in the image (boot report): LibreOffice Writer, Google Chrome on a
-  local `file://` page with a textarea, Visual Studio Code, GNOME Terminal; 5
-  repetitions per app and entry. Canary entries (the strings are those of the
-  named catalog entries): `type_plain`, `type_symbols_shifted`,
-  `type_unicode_bmp`, `type_emoji`, `type_combining`, `type_rtl`,
-  `type_multiline_tabs`, `type_with_correction`, `type_long_200`,
-  `key_kp_enter` (must insert one newline), select-all then copy then End then
-  paste (text doubled), triple-click a line then type `X` (line replaced),
-  drag-select a word then type `Y` (word replaced), `chord_ctrl_home` then type
-  `Z` (inserted at the start), `type_spaces`, `type_digits`. GNOME Terminal
-  runs the text entries and `key_kp_enter` only (its editing chords mean
-  something else), into `cat > file`. State is read back from the saved file
-  (Writer: plain-text export; Chrome: the textarea value through the
-  accessibility tree; VS Code and Terminal: the saved file) with code-point
-  equality.
+- **A6 (cross-app canary).** L0-fixed passes 100% of `canary.yaml` (frozen
+  with this file) in each of LibreOffice Writer, Google Chrome (a local
+  `file://` textarea page), Visual Studio Code and GNOME Terminal, 5
+  repetitions per app and entry, screenshot setting. `canary.yaml` fixes each
+  app's configuration (autocorrect, auto-closing, auto-indent and completion
+  off, so the app does not rewrite typed text), each fixture's initial text,
+  each entry's actions and its exact expected final text, and the read-back
+  (Writer: paragraph texts joined with `\n` from the accessibility tree;
+  Chrome: the textarea value from the accessibility tree; VS Code: the saved
+  file; Terminal: the file written by `cat`). The entries are the text
+  entries `type_plain`, `type_symbols_shifted`, `type_unicode_bmp`,
+  `type_emoji`, `type_combining`, `type_rtl`, `type_multiline_tabs`,
+  `type_with_correction`, `type_long_200`, `type_spaces`, `type_digits`
+  (expected: the catalog string), `key_kp_enter` (expected `\n`), and four
+  composites: `select_all_copy_end_paste` on "copy me" (expected "copy
+  mecopy me"), `triple_click_line` on "replace this line" then type X
+  (expected "X"), `drag_select_word` on "keep word keep", select "word", then
+  type Y (expected "keep Y keep"), and `ctrl_home_insert` on two lines "line
+  a" and "line b" then type Z (expected "Zline a" and "line b"). GNOME
+  Terminal runs the text entries and `key_kp_enter` only. Single-line
+  fixtures keep triple-click and drag-select semantics the same in every app.
+  The two pointer composites' target coordinates are measured in development
+  and frozen in the executor addendum; their expected text is frozen here.
+  Each read-back is validated before the inputs addendum with no input at all
+  (every fixture reads back unchanged).
 
 All of A1-A6 must hold. If any fails, Stage 1 does not start.
 
 ## 8. Validity controls
 
 If any control fails, the suite is invalid and no acceptance may be claimed.
+Each control is scored once, at the point named, and only on frozen code.
 
 - **C1 (detection).** H-GA-buggy (whose prompt also takes modifiers in
   `text`) fails R01 (middle click gives no action), R02 (Ctrl is pressed and
   released before the click) and each of R05, R06 and R07 (only the first call
-  runs) in 5 of 5 repetitions.
-  H-OSW-up, judged against Table 21 semantics, fails R08 (triple click), R09
-  (scroll at a coordinate), R10 (hscroll) and R11 (terminate failure) in 5 of
-  5. These are deterministic parser defects, so 1 to 4 of 5 is itself a defect.
+  runs) in 5 of 5 repetitions. H-OSW-up, judged against Table 21 semantics,
+  fails R08 (triple click), R09 (scroll at a coordinate), R10 (hscroll) and
+  R11 (terminate failure) in 5 of 5. These are deterministic parser defects,
+  so 1 to 4 of 5 is itself a defect. When: after the executor addendum is
+  frozen and before the first acceptance trial, with the control translators
+  frozen in the inputs addendum, on the frozen L0-fixed, N = 1, screenshot
+  setting, R cases in seed-42 shuffle order. Earlier runs are informative
+  only, and the translators cannot change after them.
 - **C2 (L0-raw prediction).** L0-raw fails exactly the set in
   `l0_raw_prediction.yaml`: `type_unicode_bmp`, `type_emoji`, `type_rtl`,
   `type_combining`, `type_emoji_zwj`, `key_kp_enter`, `click_button_back`,
-  `click_button_forward`; everything else passes, notably
-  `type_shell_hostile` and `type_symbols_shifted`. Any deviation in either
-  direction is reported and explained before acceptance. The prediction is
-  never edited.
-- **C3 (mutation score).** Every operator in `mutation_operators.yaml` (28),
-  applied to L0-fixed and, for parser and both-layer operators, to each of the
-  four harness parsers, yields a mutant that is killed (some entry or R case
-  fails, or the guard fires) unless it is equivalent under the frozen
-  equivalence rule (byte-identical XRecord stream without timestamps, text
-  buffer and terminal action on every entry). Required: 100% of non-equivalent
-  mutants killed. Mutants run in development sessions at seed 42; they are not
-  acceptance trials.
+  `click_button_forward`; every other entry passes, notably every click, drag
+  and hold on buttons 1-3, `type_shell_hostile` and `type_symbols_shifted`.
+  An entry fails unless it is PASS in 5 of 5 repetitions. **Any deviation in
+  either direction invalidates the suite for q2-action-path-v1**; the
+  investigation is reported but never rescues v1, and a corrected prediction
+  can only enter a new preregistration. When: once, after the inputs addendum
+  is frozen (it needs the probe, guard and marker), with the translator and
+  the prediction frozen here, N = 1, screenshot setting, the 100 entries in
+  the seed-42 shuffle.
+- **C3 (mutation score).** `mutation_operators.yaml` (frozen here) fixes, for
+  each of the 28 operators and each scored layer (L0-fixed, H-OSW-fixed,
+  H-GA), whether the mutant is scored, excluded (it can change only cells
+  outside that harness's spec; M01 on H-GA) or not applicable (no code path;
+  M13 and M28 on H-GA), and which cells can kill it. A scored mutant is killed
+  when at least one of its layer's cells is not PASS; outside-spec cells run
+  and are reported but never kill. A mutant is equivalent only if its XRecord
+  stream without timestamps, text buffer and terminal action are
+  byte-identical to the unmutated code's on every cell of its layer.
+  Required: 100% of scored, non-equivalent mutants killed. The detection
+  controls H-OSW-up and H-GA-buggy are not mutated: they carry known defects
+  and have no spec they are expected to pass. When: once, after the executor
+  addendum is frozen, at the frozen executor and adapter SHA with the frozen
+  corpus, seed-42 order, N = 1, screenshot setting. Development runs of the
+  mutants are informative only.
 - **C4 (R-dev agreement).** For every key, chord and Caps Lock entry with a
-  reference, L0-fixed's projected stream equals the reference. Entries
-  without a stable reference are listed as self-specified in every report.
+  reference, L0-fixed's projected stream equals the reference, in every A1
+  trial. Entries without a stable reference are listed as self-specified in
+  every report.
 
 ## 9. Sample sizes, power and concurrency
 
-**Zero-failure bounds.** With n trials and no failure, the one-sided 95%
-upper bound on the per-trial failure probability is 1 - 0.05^(1/n): n = 5
-gives 45.1%; 20 gives 13.9%; 60 gives 4.9%; 3,440 gives 0.087%; 6,020 gives
+**Zero-failure bounds.** With n trials (or actions, or sessions) and no
+failure, the one-sided upper confidence bound at level 1 − α on the failure
+probability is 1 − α^(1/n). At α = 0.05: n = 5 gives 45.1%; 20 gives 13.9%;
+60 gives 4.9%; 70 gives 4.2%; 90 gives 3.3%; 276 gives 1.08%; 6,020 gives
 0.050%.
 
-**Why these sizes.** The Stage-1 paired minimum detectable effect is about
-7-8 pp (estimate, `program/questions/q2-calibrated-cua-instrument.md`). An
-episode of about 20 actions with independent per-action failure rate p loses
-about 20p of its successes, so keeping action-path loss at or below 1 pp needs
-p ≤ 5 x 10^-4, which zero failures in 6,020 trials (A4) bounds. Gym-anything
-PR #53 reports intermittent entries failing 4-20% of the time that 5
-repetitions missed; the 60-repetition stress subset (A3) detects a 5% failure
-rate with probability 1 - 0.95^60 = 95.4%, and the 20 A1 repetitions per entry
-detect a 10% rate with probability 1 - 0.9^20 = 87.8%.
+**Target.** The Stage-1 paired minimum detectable effect is about 7-8 pp
+(estimate, `program/questions/q2-calibrated-cua-instrument.md`). The suite
+should keep the action path's loss per Stage-1 episode of up to 20 device
+actions near 1.5 pp, about a fifth of that effect, whatever mix of actions the
+episode uses. By the union bound an episode loses at most 20·p_max + b, where
+p_max is the largest per-action failure rate over the action classes and b
+the per-boot failure rate (Stage-1 episodes are cold boots, so a failure that
+strikes once per boot needs power over boots, not over trials).
+
+**What A4 bounds.** Eight statements are made together at family-wise 95%
+(Bonferroni, α = 0.05 / 8 = 0.00625 each), all following from zero failures:
+
+- For each of the seven action classes, the per-action failure rate over the
+  catalog's instances of that class, weighted as the plan weights them, is at
+  most 5 × 10^-4. This needs 10,148 executed actions per class
+  (`volume.ACTIONS_PER_CLASS`); the plan gives 10,148 to 10,216.
+- The per-session (per-boot) failure rate is at most 0.5%. This needs 1,013
+  sessions (`volume.MIN_SESSIONS`); the plan has 1,068 (bound 0.47%).
+- Together: 20 × 5 × 10^-4 + 0.5% = 1.5 pp per 20-action episode.
+
+What A4 does not bound: any single entry at that level. Each entry's own
+bound (A4 alone, α = 0.05) is listed in `volume_plan.json`: 4.2% for the six
+mixed entries (70 trials), 1.08% for each key entry (276), 0.49% for each
+typing entry (608), 0.36% for each left-click entry (830), 0.30% for each
+scroll entry (1,008), 0.24% for each other-click entry (1,260), 0.15% for each
+drag entry (2,002) and 0.030% for `move_only` (10,078). An entry failing 1% of
+the time therefore passes A1 and A4 together with probability 0.99^90 = 40%
+if it is a mixed entry, and 0.99^296 = 5.1% if it is a key entry. Nor does A4
+bound the rate of Stage-1 instances (coordinates, strings, chords) that the
+catalog does not contain; the class bounds are over the catalog's instances.
+The bound treats actions within a session as independent; failure modes that
+are correlated within a boot are what the per-session bound covers. The
+earlier draft's claim that 6,020 uniform trials bound "p ≤ 5 × 10^-4 per
+action" was wrong: they bound only the uniform-mixture rate.
+
+**Other sizes.** Gym-anything PR #53 reports intermittent entries failing
+4-20% of the time that 5 repetitions missed; the 60-repetition stress subset
+(A3) detects a 5% failure rate with probability 1 − 0.95^60 = 95.4%, and the
+20 A1 repetitions per entry detect a 10% rate with probability 1 − 0.9^20 =
+87.8%.
 
 **Cost.** One entry trial takes about 1-3 s of VM time (measured `/execute`
-no-op 15 ms, `/screenshot` 0.56 s, `/accessibility` 1.3 s median in job 374).
-A1 + A2 + A3 + A4 total about 21,000 trials, under 20 VM-hours, CPU only.
+no-op 15 ms, `/screenshot` 0.56 s, `/accessibility` 1.3 s median in job 374);
+a session adds a cold boot of about 20 s plus settling and probe start, under
+45 s. A1 + A2 + A3 + A4 total about 74,000 trials in about 1,250 sessions,
+roughly 40-80 VM-hours, CPU only (no GPU is used anywhere in this
+experiment).
 
 **Concurrency rule.** N* is the largest N in {1, 8, 16, 24, 32, 40} such that,
 at that rung: at least 20 cold boots were measured; boot p95 (container start
@@ -347,23 +511,30 @@ program kill criterion applies: cut the Stage-1 task count before adding GPUs.
   `rng = random.Random(s)`; for each of the 5 repetitions, `ids` = the 100
   catalog IDs in catalog order, `rng.shuffle(ids)`, appended. It is computed
   by Python 3.10.12 in the runner image, and the realized order file's SHA-256
-  goes into each receipt.
+  goes into each receipt. The order is cut into sessions as in section 7.
 - **Seed 42: development, never evidence.** Catalog order and the seed-42
-  shuffle; L0-fixed, the probe, the guard and the adapters may be iterated
-  freely; mutation scoring (C3) and the L0-raw control (C2) run here.
+  shuffle; L0-fixed, the adapters and the canary target coordinates may be
+  iterated freely. The probe, guard, marker, canary driver and control
+  translators are frozen in the inputs addendum before development starts.
+  C2 is scored once at seed 42 after the inputs addendum; C1 and C3 are scored
+  once after the executor addendum (section 8).
 - **Freeze of the executor.** When development ends, the git SHA of L0-fixed
   and the adapters is frozen in `q2-action-path-v1-executor`.
-- **Seeds 43 and 44: acceptance.** Fresh VMs (every cycle is a cold boot of a
-  new container), the frozen executor SHA, both observation settings. Stress
-  and volume orders use `random.Random(43)`. There is no unseeded randomness.
+- **Seeds 43 and 44: acceptance.** Fresh VMs (every session is a cold boot of
+  a new container), the frozen executor SHA, both observation settings.
+  Stress, volume and canary orders use `random.Random(43)`. There is no
+  unseeded randomness.
 
 ## 11. Repairs and kill criteria
 
 - A failed acceptance attempt is repaired only as a new versioned attempt
   (`-a2`, then `-a3`) with a new output path and a new executor SHA frozen in a
-  new executor addendum. The catalog, its references, G and the predictions stay frozen.
+  new executor addendum. The catalog, its references, G, the volume plan, the
+  canary and the predictions stay frozen.
 - If any gating entry still fails at the third attempt, the affected layer is
   not admitted and Stage 1 does not start.
+- A failed validity control (C1-C4) is not repaired within v1; the suite is
+  invalid and a corrected suite is a new preregistration.
 - If the reset sentinel fails, it is debugged before any concurrency work.
 - A finding that a harness "bug" is a design difference goes into
   `harness_design_diffs.md` and never relaxes a verdict after the fact.
@@ -372,12 +543,16 @@ program kill criterion applies: cut the Stage-1 task count before adding GPUs.
 
 Per-entry tables for every layer, attempt, shuffle and observation setting,
 including development-run counts; FLAKY entries with their pass fractions;
-infrastructure failures by type; the mutation score per operator and per
-layer, with the observed killers next to the predicted ones; the L0-raw
-prediction table against the observed results; the R-dev reference stability
-per entry; per-app canary results; the concurrency table (boot p50/p95, step
+infrastructure failures by type, including unverified tap ranges; the
+mutation score per operator and per layer with the observed killers next to
+the predicted ones, and every excluded or not-applicable pair with its
+reason; the L0-raw prediction table against the observed results; the R-dev
+reference stability per entry; which entries rest on a self-specified oracle;
+per-app canary results; the A4 per-class action counts and bounds, per-entry
+bounds and per-session results; the concurrency table (boot p50/p95, step
 p50/p95, CPU steal and utilization, overlay growth, pass rate per rung); every
-design difference per harness; and every non-gating entry's results.
+design difference per harness; every non-gating entry's results; and the
+certified keysym set.
 
 ## 13. Infrastructure validation already done (not evidence for A1-A6)
 
@@ -393,10 +568,25 @@ Allowed before the freeze and reported as infrastructure validation only:
   on Docker's default bridge reached the guest's `/platform` through the
   image's DNAT (HTTP 200), which is the exposure decision D13 records; the
   fallback is therefore not used.
+- Job 456 (3 cycles, run by the reviewer at a4c76ca): reproduced job 374's
+  boot, sentinel and HMP results.
+- Jobs 467, 469, 470 and 471 (15 cycles): the tap's oracle self-test
+  (section 4.4). One spare keycode remapped to `eacute`, U+0416 and NoSymbol
+  and pressed with XTest after each change: the tap reported all six events'
+  keysyms correctly in 15 of 15 cycles, where a keymap read at tap start gives
+  0x0 for all six. The first three jobs failed their gate on the mapping
+  check, which was refined twice (unexplained MappingNotify events judged by
+  content, then under the core protocol's keysym-list rules after job 470
+  showed XKB's four-column form of the same row); job 471 (5 cycles) passed
+  every gate. Summaries: `program/evidence/2026-10-07/q2-action-path-stage0b/`.
+- Job 468: the R-dev plan re-captured with the rewritten tap: 35 of 35
+  entries stable, and every projection identical to job 393's, so the
+  reference file is unchanged.
 
 ## 14. Design decisions
 
-Each was open in the reviewed plan and is settled here with its reason.
+Each was open in the reviewed plan or raised by the review, and is settled
+here with its reason.
 
 1. **Lane:** CPU-only Slurm jobs through `vm-campaign.sbatch` (decision D12).
    The shared Docker submitter requires a GPU.
@@ -407,22 +597,30 @@ Each was open in the reviewed plan and is settled here with its reason.
    web-free by construction. No Docker network is created (D13).
 3. **H-GA is aae6f7607 unmodified.** Its documented deviations (one-point
    drags degrade to a two-point drag at the target, no hscroll, coordinate-less
-   middle, double and triple clicks dropped, terminate failure reported through
-   metadata) fall outside its own prompt's spec or are handled by the adapter,
-   so they are excluded from its expressible set with a recorded effect rather
-   than patched. Patching would turn it into a different harness.
+   middle, double and triple clicks dropped, scroll magnitude clamped to 10,
+   terminate failure reported through metadata) fall outside its own prompt's
+   spec, are declared by it, or are handled by the adapter, so they are
+   excluded from its expressible set with a recorded effect rather than
+   patched. Patching would turn it into a different harness.
 4. **H-OSW-fixed fixes only own-spec bugs.** Terminate failure, key names and
    non-ASCII text are fixed; triple-as-double and hscroll-as-scroll are
    declared in its own prompt and stay as design differences; `keys` on
    clicks and coordinates on scroll are not in its prompt and are not added.
 5. **Step pause 0.0 s**, the upstream Stage-1 run-script value, so the
    visual check tests the screenshots Stage 1 will see.
-6. **L0-raw uses natural PyAutoGUI calls with PyAutoGUI's own key names**
-   (where one exists), so it tests the runtime path rather than a harness's
-   name mapping; harness name mapping is tested at the harness layer.
-7. **Volume mix is uniform over G.** Weighting by mined Qwen3.5 action
-   frequencies needs a range read of a 25.3 GB archive; that can enter a later
-   preregistration. Uniform weighting puts the bound on every G entry.
+6. **L0-raw uses natural PyAutoGUI calls with PyAutoGUI's own names** for
+   keys and buttons (where one exists), so it tests the runtime path rather
+   than a harness's name mapping; harness name mapping is tested at the
+   harness layer. Buttons 8 and 9 have no PyAutoGUI name and are passed as
+   integers; PyAutoGUI 0.9.54 `_normalizeButton` calls `button.lower()` first,
+   so those calls raise before sending anything. The draft passed every
+   button as an integer, which would have failed every click for a reason
+   unrelated to the runtime; the translator is now code frozen with this file.
+7. **Volume is planned per action class, not uniformly over G.** A mined
+   Qwen3.5 action mix would need a range read of a 25.3 GB archive and would
+   still be another harness's mix; a bound that holds for every class holds
+   for every mix. Seven classes plus the per-boot bound at family-wise 95%
+   give 10,148 actions per class and 1,013 sessions (section 9).
 8. **Menu key reference uses QEMU qcode `compose`.** Measured: qcode `menu`
    gives no X event, `compose` gives keysym Menu (keycode 135).
 9. **Keymap-dependent predictions use the measured keymap.** C2 predicts
@@ -431,3 +629,69 @@ Each was open in the reviewed plan and is settled here with its reason.
    shift set.
 10. **Infrastructure failures count as failures** for gating and are
     reported separately, never excluded.
+11. **Pointer entries keep a self-specified oracle, labelled as such.** An
+    R-dev reference through HMP cannot reproduce them: `mouse_move` is
+    relative and passes through the guest's pointer acceleration, so HMP
+    cannot place a press at a catalog coordinate; `sendkey` releases its keys
+    on its own timer, so a modifier held across a button event (the Table 20
+    order) cannot be produced deterministically; the gap bounds would measure
+    monitor latency; and HMP pointer input passes through evdev and libinput
+    (where, for example, natural scrolling applies) while XTest does not, so
+    it is a different path. What an independent device can check, button and
+    wheel numbering, was checked in job 374 and matches the catalog.
+12. **IR-boundary clamp.** Harness coordinates are clamped to the screen
+    before they become IR (`ir.clamp_point`), which reproduces what X does
+    with PyAutoGUI's off-screen point upstream; without it R14 would fail by
+    construction in both harnesses, and with it R14 is judged exactly so
+    that M24 stays killable.
+13. **The IR accepts every X keysym name; certification covers 33.** A closed
+    table would make legitimate Stage-1 key actions fail at the IR boundary
+    without being counted; accepting every name and certifying a stated set
+    moves that exposure into an explicit Stage-1 count.
+14. **C2 is strict.** Any deviation from the frozen prediction invalidates
+    v1. The alternative, reporting a deviation without consequence, would
+    let an unexplained miss in either direction pass as a footnote.
+15. **C3 scores L0-fixed and the two Stage-1 parsers only**, with per-layer
+    kill cells; the detection controls are not mutated, and a mutant that can
+    change only outside-spec cells is excluded by name before any run.
+16. **The guard parks the pointer** at (1234, 777) before every entry, so an
+    entry's motion never depends on where the previous entry left the
+    pointer.
+17. **The tap tracks keymap changes in the RECORD stream** (core
+    `ChangeKeyboardMapping` requests) instead of trusting a per-connection
+    cache, and judges other MappingNotify events by content; the planned
+    executor types Unicode by remapping spare keycodes, which the old tap
+    would have projected as 0x0.
+18. **The runner image is kept as a saved tarball** because its Dockerfile's
+    apt step is not reproducible; the lock records every package version.
+
+## 15. Changes after the 2026-10-07 review
+
+The review found the draft not ready to freeze. Each finding and its
+disposition:
+
+1. L0-raw prediction wrong for integer buttons: fixed (design decision 6;
+   `l0_raw.py` frozen here; reasons corrected).
+2. A4 power claim misstated: fixed (section 9 restated; per-class and
+   per-boot plan, decision 7).
+3. R14 and H-GA `scroll_down_25` failing by construction: fixed (decision 12;
+   H-GA expressible set 79).
+4. C3 kill semantics undefined for outside-spec cells and control parsers:
+   fixed (section 8, decision 15).
+5. Analysis choices left open: C2 rule chosen (decision 14); input digests in
+   this file (section 2.2); control translators, tap and canary driver
+   frozen before use (sections 2.2 and 8); canary fixtures and expected text
+   frozen (`canary.yaml`).
+6. Tap keymap snapshot never refreshed: fixed (section 4.4, decision 17;
+   jobs 467-471).
+7. Pointer oracles unlabelled: labelled self-specified, decision 11.
+8. Closed IR keysym table: fixed (section 4.5, decision 13).
+9. Tap structure followed an LGPL example without attribution: credited in
+   the NOTICE and the tap rewritten.
+10. Runner image not rebuildable: tarball and lock kept (decision 18).
+11. Incomplete source table: completed in `harness/q2/README.md`.
+12. Found while fixing: `move_only` could see no motion after
+    `drag_vertical`; fixed by the pointer park (decision 16).
+13. Found while fixing: the draft counted A1's gating trials at N = 1 as
+    3,440 (and bounded them at 0.087%); 86 x 5 x 2 x 2 is 1,720. Section 7
+    now gives the trial and session counts.
