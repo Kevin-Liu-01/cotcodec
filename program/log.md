@@ -88,3 +88,23 @@ Append-only. Newest entries at the bottom.
   rules run within 14 days of the freeze, under Python 3.14 with scipy 1.18.0.
 - Merged the serving-throughput probe and froze `serving-throughput-probe-v1`
   (sign-offs D17, D18). Full suite on the host: 848 passed.
+
+## 2026-10-07 — Serving-throughput probe run (serving-throughput-probe-v1)
+
+- Ran the frozen registration from a fresh host clone of `80a87ee` (contract
+  and probe digest verified). Overlay image `sha256:fa1906ad...` built under
+  Slurm 439 (cu129; torchcodec removed, args doctor pass); metadata for
+  Qwen3-8B, Qwen3.5-27B-FP8 and Qwen3.5-35B-A3B-FP8 fetched under Slurm 444.
+- Job A (Slurm 442, 28 min 32 s) and job B (Slurm 446, 10 min 51 s) both
+  COMPLETED 0:0, lane `reason=completed`, and accepted; all gates passed,
+  no eager fallback. X1 failed (replay latency delta 5.89% > 5%; 1 of 3 A1
+  seeds valid), so job C was not rendered and no cu130 retry applied.
+- Projection: Q1 within cap (2.92 GPU-h single turn, 10.21 three turns,
+  x1.5 for X1); Q2 incomplete, re-probe: r3 and r4 failed only the
+  contamination check, because the engine's own footprint under 20-screenshot
+  prompts (76,611 MiB) exceeded the post-smoke reservation plus 2 GiB
+  (76,349 MiB). Fixing that rule needs a new experiment id.
+- GPU time 0.666 GPU-h: probe 0.656 (cap 1.0), build and fetch 0.010
+  (cap 0.333). The capsule omitted the 27 tracked `.agents/skills` symlinks,
+  which the discovery archiver refuses. Evidence:
+  `program/evidence/2026-10-07/serving-throughput-probe-v1/`.

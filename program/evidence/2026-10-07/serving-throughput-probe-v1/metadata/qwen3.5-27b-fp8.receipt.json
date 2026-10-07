@@ -1,0 +1,70 @@
+{
+  "artifact_root_sha256": "68225af91ddb94fae24fbc99132b61f718c20f276f99ba6ed38c1470b046a6dc",
+  "backend": "huggingface",
+  "files": [
+    {
+      "bytes": 11343,
+      "path": "LICENSE",
+      "sha256": "50cbab8a892c5f2993b8c7351a99182507472def3b1374558308605d99b86b32"
+    },
+    {
+      "bytes": 92691,
+      "path": "README.md",
+      "sha256": "c0d0fdb510cbf32ca9043d391fcf33d4c3ff2215e4235128823c9722ab3dece4"
+    },
+    {
+      "bytes": 7756,
+      "path": "chat_template.jinja",
+      "sha256": "a4aee8afcf2e0711942cf848899be66016f8d14a889ff9ede07bca099c28f715"
+    },
+    {
+      "bytes": 19710,
+      "path": "config.json",
+      "sha256": "53f7e06eebbfe64e70eb0b0979f3da31de9aff6870594e9cf731ba3961501adc"
+    },
+    {
+      "bytes": 244,
+      "path": "generation_config.json",
+      "sha256": "303aba891d66ab63908a7b3cc9163bcb835fdf8b9f6301c73216f3f1eb3992dd"
+    },
+    {
+      "bytes": 3353259,
+      "path": "merges.txt",
+      "sha256": "a9d356d7bdf1ef4949e3e748e95b8e10ad9d4e2e838eddc38a0a7b6b94d1db8d"
+    },
+    {
+      "bytes": 390,
+      "path": "preprocessor_config.json",
+      "sha256": "27225450ac9c6529872ee1924fcb0962ff5634834f817040f444118116f4e516"
+    },
+    {
+      "bytes": 12807982,
+      "path": "tokenizer.json",
+      "sha256": "5f9e4d4901a92b997e463c1f46055088b6cca5ca61a6522d1b9f64c4bb81cb42"
+    },
+    {
+      "bytes": 16710,
+      "path": "tokenizer_config.json",
+      "sha256": "316230d6a809701f4db5ea8f8fc862bc3a6f3229c937c174e674ff3ca0a64ac8"
+    },
+    {
+      "bytes": 385,
+      "path": "video_preprocessor_config.json",
+      "sha256": "7768af27c1fafa9cc9011c1dc20067e03f8915e03b63504550e11d5066986d13"
+    },
+    {
+      "bytes": 6722759,
+      "path": "vocab.json",
+      "sha256": "ce99b4cb2983d118806ce0a8b777a35b093e2000a503ebde25853284c9dfa003"
+    }
+  ],
+  "mode": "metadata",
+  "model_id": "qwen3.5-27b-fp8",
+  "publication_eligible": false,
+  "registry_sha256": "cf7a91100128b408f762b125a8a980ebd8eb7503638999aded4cfdab17a3d2f2",
+  "repo_id": "Qwen/Qwen3.5-27B-FP8",
+  "revision": "97f5941bf617e31c5e237364a8602ce3f03a551a",
+  "schema_version": 1,
+  "total_bytes": 23033229,
+  "trust_remote_code": false
+}
