@@ -41,6 +41,7 @@
     },
     "verified_members_match_sha256sums": {
       "members_checked": 1448,
+      "mismatched": 0,
       "status": "PASS"
     }
   },
@@ -48,15 +49,20 @@
     "code_files_dirty": false,
     "files_sha256": {
       "harness/holo3_rerun_audit.py": "785aa90eb59d81933a976986808da575844c689c796b6324085fded647a194dd",
-      "harness/holo3_v2.py": "4e4200f6434b3f677fdaf8330fbcea000192981a42b8d2ace6092b3e313e85ea",
+      "harness/holo3_v2.py": "0ea7a0041d8da049cce6138435a9fb27c65dc31e8d436322e7b05802e2a13194",
       "harness/osworld_source.py": "ae4f358e2d3c23ebf35d3df5d3e02886f25870196a0d9f5cab3b1d2a30cc44a7",
       "harness/remote_zip.py": "534b84c97b54b83a8fce225bfecf2a23aaa7cd2501b0030121043caf857b2061",
-      "scripts/run_holo3_rerun_audit_doctor.py": "6c7a5577d5ff96c2001261260f38d8cebd53a5d5c0c0afaeac56047b376799c5"
+      "scripts/run_holo3_rerun_audit_doctor.py": "214599fb0cdaa1bddfb9a58bb409809e6d29faed93be8984c48e70e2084ef754"
     },
-    "git_head": "7192c20aff1f318b2f200b8b10ef6235557669f4"
+    "git_head": "0b0211678a6197107d064f3fdc9d4e41866e89d5"
   },
   "doctor": "holo3-rerun-audit",
-  "elapsed_seconds": 117.271,
+  "elapsed_seconds": 157.419,
+  "environment": {
+    "numpy": "2.5.2",
+    "python": "3.14.6",
+    "scipy": "1.18.0"
+  },
   "evidence_grade": "DESIGN INPUTS from already-inspected data only (v1 totals and URL strata, H Company rewards and actions.json). No evaluator is classified and no tarball byte is read.",
   "inputs": {
     "archives": {
@@ -159,6 +165,7 @@
       44
     ],
     "sign_flip_draws": 1000000,
+    "tarball_receipt": false,
     "trajectory_features": false
   },
   "preregistrations": {
@@ -190,6 +197,12 @@
       "runs": 2
     },
     "v2_design": {
+      "clean_outcome_counts": {
+        "both_fail": 50,
+        "both_pass": 260,
+        "run1_only": 23,
+        "run2_only": 9
+      },
       "clean_tasks": 342,
       "h_step_baseline": [
         {
@@ -237,6 +250,24 @@
       ],
       "label": "v2 design inputs from already-inspected data (v1 totals and URL strata, H runs)",
       "net_flips_all": 14,
+      "rule_a_outcome_pools": {
+        "both_fail": {
+          "pairs": 318,
+          "step_cap_share_of_second": 0.44654088050314467
+        },
+        "both_pass": {
+          "pairs": 1604,
+          "step_cap_share_of_second": 0.008728179551122194
+        },
+        "run1_only": {
+          "pairs": 106,
+          "step_cap_share_of_second": 0.27358490566037735
+        },
+        "run2_only": {
+          "pairs": 106,
+          "step_cap_share_of_second": 0.09433962264150944
+        }
+      },
       "rule_a_power": [
         {
           "fraction_of_tasks_shifted": 1.0,
@@ -259,6 +290,17 @@
           "power_mean": 0.03666666666666667,
           "power_mean_superseded_median_gate": 0.0,
           "run2_step_factor": 1.05
+        },
+        {
+          "fraction_of_tasks_shifted": 1.0,
+          "power_by_seed": {
+            "42": 0.0,
+            "43": 0.0,
+            "44": 0.0025
+          },
+          "power_mean": 0.0008333333333333334,
+          "power_mean_superseded_median_gate": 0.0,
+          "run2_step_factor": 0.9524
         },
         {
           "fraction_of_tasks_shifted": 1.0,
@@ -314,6 +356,17 @@
           "power_mean": 1.0,
           "power_mean_superseded_median_gate": 1.0,
           "run2_step_factor": 1.2
+        },
+        {
+          "fraction_of_tasks_shifted": 1.0,
+          "power_by_seed": {
+            "42": 0.995,
+            "43": 0.99,
+            "44": 0.9975
+          },
+          "power_mean": 0.9941666666666666,
+          "power_mean_superseded_median_gate": 1.0,
+          "run2_step_factor": 0.8333
         },
         {
           "fraction_of_tasks_shifted": 0.2,
@@ -379,6 +432,218 @@
           },
           "power_mean": 1.0,
           "power_mean_superseded_median_gate": 0.6149999999999999,
+          "run2_step_factor": 0.5
+        }
+      ],
+      "rule_a_power_by_outcome": [
+        {
+          "decisions_differ_mean": 0.0008333333333333334,
+          "fraction_of_tasks_shifted": 1.0,
+          "mean_m": -0.017469342776827265,
+          "mean_m_concordant_tasks": -0.000986990040187751,
+          "power_by_seed": {
+            "42": 0.0025,
+            "43": 0.0,
+            "44": 0.0
+          },
+          "power_mean": 0.0008333333333333334,
+          "power_mean_concordant_tasks": 0.0,
+          "run2_step_factor": 1.0
+        },
+        {
+          "decisions_differ_mean": 0.030833333333333334,
+          "fraction_of_tasks_shifted": 1.0,
+          "mean_m": -0.04442203314212612,
+          "mean_m_concordant_tasks": -0.027349911514484293,
+          "power_by_seed": {
+            "42": 0.03,
+            "43": 0.0325,
+            "44": 0.0425
+          },
+          "power_mean": 0.035,
+          "power_mean_concordant_tasks": 0.004166666666666667,
+          "run2_step_factor": 1.05
+        },
+        {
+          "decisions_differ_mean": 0.006666666666666667,
+          "fraction_of_tasks_shifted": 1.0,
+          "mean_m": 0.015647349127059482,
+          "mean_m_concordant_tasks": 0.030894714201395806,
+          "power_by_seed": {
+            "42": 0.0,
+            "43": 0.0025,
+            "44": 0.005
+          },
+          "power_mean": 0.0025,
+          "power_mean_concordant_tasks": 0.009166666666666668,
+          "run2_step_factor": 0.9524
+        },
+        {
+          "decisions_differ_mean": 0.24083333333333332,
+          "fraction_of_tasks_shifted": 1.0,
+          "mean_m": -0.10831963757898899,
+          "mean_m_concordant_tasks": -0.09317981499000523,
+          "power_by_seed": {
+            "42": 0.72,
+            "43": 0.66,
+            "44": 0.7
+          },
+          "power_mean": 0.6933333333333334,
+          "power_mean_concordant_tasks": 0.46416666666666667,
+          "run2_step_factor": 1.1
+        },
+        {
+          "decisions_differ_mean": 0.2525,
+          "fraction_of_tasks_shifted": 1.0,
+          "mean_m": 0.07580170245913997,
+          "mean_m_concordant_tasks": 0.09193955710151235,
+          "power_by_seed": {
+            "42": 0.195,
+            "43": 0.26,
+            "44": 0.245
+          },
+          "power_mean": 0.2333333333333333,
+          "power_mean_concordant_tasks": 0.4575,
+          "run2_step_factor": 0.9091
+        },
+        {
+          "decisions_differ_mean": 0.05416666666666667,
+          "fraction_of_tasks_shifted": 1.0,
+          "mean_m": -0.1470255884800816,
+          "mean_m_concordant_tasks": -0.13260440952805205,
+          "power_by_seed": {
+            "42": 0.9725,
+            "43": 0.9675,
+            "44": 0.955
+          },
+          "power_mean": 0.965,
+          "power_mean_concordant_tasks": 0.9258333333333333,
+          "run2_step_factor": 1.15
+        },
+        {
+          "decisions_differ_mean": 0.08416666666666667,
+          "fraction_of_tasks_shifted": 1.0,
+          "mean_m": 0.13369643978966142,
+          "mean_m_concordant_tasks": 0.15103162677810747,
+          "power_by_seed": {
+            "42": 0.9125,
+            "43": 0.895,
+            "44": 0.9125
+          },
+          "power_mean": 0.9066666666666667,
+          "power_mean_concordant_tasks": 0.9891666666666666,
+          "run2_step_factor": 0.8696
+        },
+        {
+          "decisions_differ_mean": 0.0033333333333333335,
+          "fraction_of_tasks_shifted": 1.0,
+          "mean_m": -0.18138676520912553,
+          "mean_m_concordant_tasks": -0.1674230648737536,
+          "power_by_seed": {
+            "42": 1.0,
+            "43": 1.0,
+            "44": 1.0
+          },
+          "power_mean": 1.0,
+          "power_mean_concordant_tasks": 0.9966666666666667,
+          "run2_step_factor": 1.2
+        },
+        {
+          "decisions_differ_mean": 0.0008333333333333334,
+          "fraction_of_tasks_shifted": 1.0,
+          "mean_m": 0.17349154100446604,
+          "mean_m_concordant_tasks": 0.1907982583742257,
+          "power_by_seed": {
+            "42": 0.9975,
+            "43": 1.0,
+            "44": 1.0
+          },
+          "power_mean": 0.9991666666666666,
+          "power_mean_concordant_tasks": 1.0,
+          "run2_step_factor": 0.8333
+        },
+        {
+          "decisions_differ_mean": 0.10333333333333333,
+          "fraction_of_tasks_shifted": 0.2,
+          "mean_m": -0.13919150194886803,
+          "mean_m_concordant_tasks": -0.12487455429591415,
+          "power_by_seed": {
+            "42": 0.9025,
+            "43": 0.92,
+            "44": 0.91
+          },
+          "power_mean": 0.9108333333333333,
+          "power_mean_concordant_tasks": 0.8308333333333334,
+          "run2_step_factor": 2.0
+        },
+        {
+          "decisions_differ_mean": 0.16666666666666666,
+          "fraction_of_tasks_shifted": 0.2,
+          "mean_m": 0.12224380299948708,
+          "mean_m_concordant_tasks": 0.1392623179392052,
+          "power_by_seed": {
+            "42": 0.7575,
+            "43": 0.7775,
+            "44": 0.75
+          },
+          "power_mean": 0.7616666666666667,
+          "power_mean_concordant_tasks": 0.915,
+          "run2_step_factor": 0.5
+        },
+        {
+          "decisions_differ_mean": 0.15583333333333335,
+          "fraction_of_tasks_shifted": 0.3,
+          "mean_m": -0.12499554618231003,
+          "mean_m_concordant_tasks": -0.11012496913065435,
+          "power_by_seed": {
+            "42": 0.8475,
+            "43": 0.8525,
+            "44": 0.8375
+          },
+          "power_mean": 0.8458333333333333,
+          "power_mean_concordant_tasks": 0.715,
+          "run2_step_factor": 1.5
+        },
+        {
+          "decisions_differ_mean": 0.0025,
+          "fraction_of_tasks_shifted": 0.3,
+          "mean_m": 0.19175943035889598,
+          "mean_m_concordant_tasks": 0.2087974198898045,
+          "power_by_seed": {
+            "42": 1.0,
+            "43": 1.0,
+            "44": 0.9925
+          },
+          "power_mean": 0.9975,
+          "power_mean_concordant_tasks": 1.0,
+          "run2_step_factor": 0.5
+        },
+        {
+          "decisions_differ_mean": 0.03416666666666667,
+          "fraction_of_tasks_shifted": 0.4,
+          "mean_m": -0.16102132276004044,
+          "mean_m_concordant_tasks": -0.14673844891171317,
+          "power_by_seed": {
+            "42": 0.9825,
+            "43": 0.98,
+            "44": 0.99
+          },
+          "power_mean": 0.9841666666666665,
+          "power_mean_concordant_tasks": 0.9566666666666667,
+          "run2_step_factor": 1.5
+        },
+        {
+          "decisions_differ_mean": 0.0,
+          "fraction_of_tasks_shifted": 0.4,
+          "mean_m": 0.2609889259349336,
+          "mean_m_concordant_tasks": 0.2780589670673947,
+          "power_by_seed": {
+            "42": 1.0,
+            "43": 1.0,
+            "44": 1.0
+          },
+          "power_mean": 1.0,
+          "power_mean_concordant_tasks": 1.0,
           "run2_step_factor": 0.5
         }
       ],
@@ -655,244 +920,361 @@
           }
         }
       },
+      "rule_b_power": {
+        "assumption": "each of the run2-unique failures falls in the class independently with the given share; full coverage; for agent-side, no environment failures",
+        "rows": [
+          {
+            "at_reference_share": true,
+            "class": "environment",
+            "power": 0.0,
+            "share": 0.0,
+            "threshold": 7
+          },
+          {
+            "at_reference_share": false,
+            "class": "environment",
+            "power": 0.093282,
+            "share": 0.3,
+            "threshold": 7
+          },
+          {
+            "at_reference_share": false,
+            "class": "environment",
+            "power": 0.307548,
+            "share": 0.4,
+            "threshold": 7
+          },
+          {
+            "at_reference_share": false,
+            "class": "environment",
+            "power": 0.604736,
+            "share": 0.5,
+            "threshold": 7
+          },
+          {
+            "at_reference_share": false,
+            "class": "environment",
+            "power": 0.84986,
+            "share": 0.6,
+            "threshold": 7
+          },
+          {
+            "at_reference_share": false,
+            "class": "environment",
+            "power": 0.968531,
+            "share": 0.7,
+            "threshold": 7
+          },
+          {
+            "at_reference_share": false,
+            "class": "environment",
+            "power": 0.997603,
+            "share": 0.8,
+            "threshold": 7
+          },
+          {
+            "at_reference_share": false,
+            "class": "environment",
+            "power": 0.999983,
+            "share": 0.9,
+            "threshold": 7
+          },
+          {
+            "at_reference_share": true,
+            "class": "agent_side",
+            "power": 0.00404,
+            "share": 0.333333,
+            "threshold": 10
+          },
+          {
+            "at_reference_share": false,
+            "class": "agent_side",
+            "power": 0.001666,
+            "share": 0.3,
+            "threshold": 10
+          },
+          {
+            "at_reference_share": false,
+            "class": "agent_side",
+            "power": 0.01751,
+            "share": 0.4,
+            "threshold": 10
+          },
+          {
+            "at_reference_share": false,
+            "class": "agent_side",
+            "power": 0.089783,
+            "share": 0.5,
+            "threshold": 10
+          },
+          {
+            "at_reference_share": false,
+            "class": "agent_side",
+            "power": 0.279257,
+            "share": 0.6,
+            "threshold": 10
+          },
+          {
+            "at_reference_share": false,
+            "class": "agent_side",
+            "power": 0.584201,
+            "share": 0.7,
+            "threshold": 10
+          },
+          {
+            "at_reference_share": false,
+            "class": "agent_side",
+            "power": 0.87016,
+            "share": 0.8,
+            "threshold": 10
+          },
+          {
+            "at_reference_share": false,
+            "class": "agent_side",
+            "power": 0.99077,
+            "share": 0.9,
+            "threshold": 10
+          }
+        ]
+      },
       "rule_d_power_exact": [
         {
           "L_tasks_offline": 0,
           "L_tasks_web": 10,
           "odds_ratio": 1.0,
-          "power": 0.0,
-          "power_test_alone": 0.0266
+          "power": 2e-06,
+          "power_test_alone": 0.026577
         },
         {
           "L_tasks_offline": 0,
           "L_tasks_web": 10,
           "odds_ratio": 3.0,
-          "power": 0.0004,
-          "power_test_alone": 0.2637
+          "power": 0.000359,
+          "power_test_alone": 0.263685
         },
         {
           "L_tasks_offline": 0,
           "L_tasks_web": 10,
           "odds_ratio": 5.0,
-          "power": 0.0026,
-          "power_test_alone": 0.4962
+          "power": 0.002592,
+          "power_test_alone": 0.496176
         },
         {
           "L_tasks_offline": 0,
           "L_tasks_web": 10,
           "odds_ratio": 10.0,
-          "power": 0.0214,
-          "power_test_alone": 0.7964
+          "power": 0.021422,
+          "power_test_alone": 0.796395
         },
         {
           "L_tasks_offline": 0,
           "L_tasks_web": 10,
           "odds_ratio": 30.0,
-          "power": 0.1817,
-          "power_test_alone": 0.982
+          "power": 0.18172,
+          "power_test_alone": 0.981974
         },
         {
           "L_tasks_offline": 0,
           "L_tasks_web": 20,
           "odds_ratio": 1.0,
-          "power": 0.0011,
-          "power_test_alone": 0.0158
+          "power": 0.001053,
+          "power_test_alone": 0.015793
         },
         {
           "L_tasks_offline": 0,
           "L_tasks_web": 20,
           "odds_ratio": 3.0,
-          "power": 0.0377,
-          "power_test_alone": 0.2138
+          "power": 0.037737,
+          "power_test_alone": 0.213845
         },
         {
           "L_tasks_offline": 0,
           "L_tasks_web": 20,
           "odds_ratio": 5.0,
-          "power": 0.1108,
-          "power_test_alone": 0.4209
+          "power": 0.110776,
+          "power_test_alone": 0.420947
         },
         {
           "L_tasks_offline": 0,
           "L_tasks_web": 20,
           "odds_ratio": 10.0,
-          "power": 0.2947,
-          "power_test_alone": 0.7073
+          "power": 0.294692,
+          "power_test_alone": 0.707262
         },
         {
           "L_tasks_offline": 0,
           "L_tasks_web": 20,
           "odds_ratio": 30.0,
-          "power": 0.6416,
-          "power_test_alone": 0.941
+          "power": 0.641588,
+          "power_test_alone": 0.940996
         },
         {
           "L_tasks_offline": 0,
           "L_tasks_web": 30,
           "odds_ratio": 1.0,
-          "power": 0.0276,
-          "power_test_alone": 0.0276
+          "power": 0.027649,
+          "power_test_alone": 0.027649
         },
         {
           "L_tasks_offline": 0,
           "L_tasks_web": 30,
           "odds_ratio": 3.0,
-          "power": 0.2257,
-          "power_test_alone": 0.2257
+          "power": 0.225729,
+          "power_test_alone": 0.225729
         },
         {
           "L_tasks_offline": 0,
           "L_tasks_web": 30,
           "odds_ratio": 5.0,
-          "power": 0.3881,
-          "power_test_alone": 0.3881
+          "power": 0.388102,
+          "power_test_alone": 0.388102
         },
         {
           "L_tasks_offline": 0,
           "L_tasks_web": 30,
           "odds_ratio": 10.0,
-          "power": 0.6084,
-          "power_test_alone": 0.6084
+          "power": 0.608379,
+          "power_test_alone": 0.608379
         },
         {
           "L_tasks_offline": 0,
           "L_tasks_web": 30,
           "odds_ratio": 30.0,
-          "power": 0.8422,
-          "power_test_alone": 0.8422
+          "power": 0.842237,
+          "power_test_alone": 0.842237
         },
         {
           "L_tasks_offline": 20,
           "L_tasks_web": 0,
           "odds_ratio": 1.0,
-          "power": 0.0,
-          "power_test_alone": 0.0168
+          "power": 1.2e-05,
+          "power_test_alone": 0.016778
         },
         {
           "L_tasks_offline": 20,
           "L_tasks_web": 0,
           "odds_ratio": 3.0,
-          "power": 0.0042,
-          "power_test_alone": 0.2645
+          "power": 0.004188,
+          "power_test_alone": 0.264477
         },
         {
           "L_tasks_offline": 20,
           "L_tasks_web": 0,
           "odds_ratio": 5.0,
-          "power": 0.034,
-          "power_test_alone": 0.5629
+          "power": 0.034019,
+          "power_test_alone": 0.562916
         },
         {
           "L_tasks_offline": 20,
           "L_tasks_web": 0,
           "odds_ratio": 10.0,
-          "power": 0.2488,
-          "power_test_alone": 0.9036
+          "power": 0.248814,
+          "power_test_alone": 0.903643
         },
         {
           "L_tasks_offline": 20,
           "L_tasks_web": 0,
           "odds_ratio": 30.0,
-          "power": 0.8752,
-          "power_test_alone": 0.9993
+          "power": 0.875209,
+          "power_test_alone": 0.999338
         },
         {
           "L_tasks_offline": 40,
           "L_tasks_web": 0,
           "odds_ratio": 1.0,
-          "power": 0.0009,
-          "power_test_alone": 0.0124
+          "power": 0.000881,
+          "power_test_alone": 0.012386
         },
         {
           "L_tasks_offline": 40,
           "L_tasks_web": 0,
           "odds_ratio": 3.0,
-          "power": 0.0873,
-          "power_test_alone": 0.3479
+          "power": 0.087283,
+          "power_test_alone": 0.347861
         },
         {
           "L_tasks_offline": 40,
           "L_tasks_web": 0,
           "odds_ratio": 5.0,
-          "power": 0.3134,
-          "power_test_alone": 0.7084
+          "power": 0.313418,
+          "power_test_alone": 0.708353
         },
         {
           "L_tasks_offline": 40,
           "L_tasks_web": 0,
           "odds_ratio": 10.0,
-          "power": 0.7571,
-          "power_test_alone": 0.9686
+          "power": 0.757128,
+          "power_test_alone": 0.968596
         },
         {
           "L_tasks_offline": 40,
           "L_tasks_web": 0,
           "odds_ratio": 30.0,
-          "power": 0.9928,
-          "power_test_alone": 1.0
+          "power": 0.992807,
+          "power_test_alone": 0.999954
         },
         {
           "L_tasks_offline": 20,
           "L_tasks_web": 10,
           "odds_ratio": 1.0,
-          "power": 0.0036,
-          "power_test_alone": 0.0252
+          "power": 0.003606,
+          "power_test_alone": 0.025248
         },
         {
           "L_tasks_offline": 20,
           "L_tasks_web": 10,
           "odds_ratio": 3.0,
-          "power": 0.2066,
-          "power_test_alone": 0.4773
+          "power": 0.206598,
+          "power_test_alone": 0.477311
         },
         {
           "L_tasks_offline": 20,
           "L_tasks_web": 10,
           "odds_ratio": 5.0,
-          "power": 0.5481,
-          "power_test_alone": 0.82
+          "power": 0.548112,
+          "power_test_alone": 0.819954
         },
         {
           "L_tasks_offline": 20,
           "L_tasks_web": 10,
           "odds_ratio": 10.0,
-          "power": 0.9243,
-          "power_test_alone": 0.9892
+          "power": 0.924278,
+          "power_test_alone": 0.989212
         },
         {
           "L_tasks_offline": 20,
           "L_tasks_web": 10,
           "odds_ratio": 30.0,
-          "power": 0.9998,
-          "power_test_alone": 1.0
+          "power": 0.999777,
+          "power_test_alone": 0.999997
         },
         {
           "L_tasks_offline": 40,
           "L_tasks_web": 20,
           "odds_ratio": 1.0,
-          "power": 0.0319,
-          "power_test_alone": 0.0343
+          "power": 0.031899,
+          "power_test_alone": 0.034276
         },
         {
           "L_tasks_offline": 40,
           "L_tasks_web": 20,
           "odds_ratio": 3.0,
-          "power": 0.6432,
-          "power_test_alone": 0.6638
+          "power": 0.643246,
+          "power_test_alone": 0.663773
         },
         {
           "L_tasks_offline": 40,
           "L_tasks_web": 20,
           "odds_ratio": 5.0,
-          "power": 0.9255,
-          "power_test_alone": 0.9358
+          "power": 0.925507,
+          "power_test_alone": 0.935806
         },
         {
           "L_tasks_offline": 40,
           "L_tasks_web": 20,
           "odds_ratio": 10.0,
-          "power": 0.9981,
-          "power_test_alone": 0.9987
+          "power": 0.998064,
+          "power_test_alone": 0.998739
         },
         {
           "L_tasks_offline": 40,
@@ -905,6 +1287,19 @@
       "rule_d_share_bound": {
         "max_share_from_web_stratum": 0.5,
         "note": "an L set inside the web stratum can carry at most the web stratum's run1-only tasks"
+      },
+      "rule_d_size_all_allocations": {
+        "allocations": 14455,
+        "alpha": 0.04,
+        "grid_step": [
+          1,
+          1
+        ],
+        "max_size": 0.039996,
+        "max_size_at": [
+          24,
+          34
+        ]
       },
       "unique_failures": {
         "run1": 2,
@@ -925,7 +1320,7 @@
     }
   },
   "stage": "v2-design",
-  "started_at": "2026-10-07T08:14:31.643381+00:00",
+  "started_at": "2026-10-07T10:27:59.733272+00:00",
   "status": "PASS",
   "transfer": {
     "bytes": 134007022,

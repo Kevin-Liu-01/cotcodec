@@ -1,6 +1,6 @@
 # Holo3 rerun audit: v2 design inputs
 
-Q2 Stage 0c follow-up. These are the design numbers that the draft
+Q2 Stage 0c follow-up. These are the design numbers that the registration
 `program/preregistrations/q2-holo3-rerun-audit-v2.md` quotes in sections 3
 and 6. They come from already-inspected data only: v1 totals and URL strata,
 and the H Company runs' rewards and `actions.json`. The stage classifies no
@@ -18,33 +18,45 @@ rules the adversarial review rejected.
 | Item | Value |
 |---|---|
 | Command | `uv run --locked python scripts/run_holo3_rerun_audit_doctor.py --stage v2-design --cache-dir CACHE --output receipt-v2-design.json`, with `CACHE` a fresh, empty directory |
-| Code | commit `7192c20aff1f318b2f200b8b10ef6235557669f4`, code files clean, fresh clone on the H100 host (CPU only, no GPU, no Slurm) |
-| Started | 2026-10-07T08:14:31Z, 117 s |
+| Code | commit `0b0211678a6197107d064f3fdc9d4e41866e89d5` (the code the pre-freeze audit's fixes produced), code files clean, fresh clone from a git bundle on the H100 host (CPU only, no GPU, no Slurm) |
+| Environment | Python 3.14.6, numpy 2.5.2, scipy 1.18.0 (recorded in the receipt) |
+| Started | 2026-10-07T10:27:59Z, 157 s |
 | Transfer | 134,007,022 B in 968 range requests, 0 retries, cold cache |
-| Receipt SHA-256 | `0b48edeeaabcce27edd58d4ba32271b5e10c4613826e5ebc2e449335f954addf` |
-| Controls | 6 of 6 PASS: 20 Holo3 domain cells and totals, leaderboard sheet, `SHA256SUMS` (1,449 members), package summaries, registered H reference, receipt public safety |
+| Receipt SHA-256 | `c6ced5fc9e214aef396e6460e244c0a1a1d293978df4a02511dfca8c8757ac16` |
+| Controls | 6 of 6 PASS: 20 Holo3 domain cells and totals, leaderboard sheet, `SHA256SUMS` (1,448 members recomputed), package summaries, registered H reference, receipt public safety |
 
-A dry run of the same stage from an uncommitted copy of the code gave an
-identical `results.v2_design`.
+This receipt supersedes the one generated at 08:14:31Z from commit
+`7192c20aff1f318b2f200b8b10ef6235557669f4` (SHA-256
+`0b48edeeaabcce27edd58d4ba32271b5e10c4613826e5ebc2e449335f954addf`, kept in
+git history). The pre-freeze audit changed the tool-error and text criteria,
+added rule (a)'s power given the known outcome pattern, rule (d)'s size over
+every allocation of L and rule (b)'s power. Every number the earlier receipt
+held is reproduced unchanged, including the registered H reference.
 
 ## Main numbers
 
-- Clean set 342 tasks. URL stratum 48 tasks (run1-only 7, run2-only 0);
-  other 294 (16, 9); net 14. A URL-based L can carry a share of at most 0.5.
+- Clean set 342 tasks: 260 pass in both runs, 50 fail in both, 23 run1-only,
+  9 run2-only. URL stratum 48 tasks (run1-only 7, run2-only 0); other 294
+  (16, 9); net 14. A URL-based L can carry a share of at most 0.5.
 - Rule (d) exact power table (stratified exact test at 0.04 plus the 0.5
-  share bar): `results.v2_design.rule_d_power_exact`.
-- Rule (a) power (Wilcoxon at 0.01 plus |mean ln step ratio| >= ln 1.10),
-  uniform and subset shifts, with the superseded median-ratio gate beside it:
-  `results.v2_design.rule_a_power`. A 1.5x shift on 30% of tasks: 0.83 (old
-  gate 0.00).
-- H step baseline: mean ln ratio -0.031, -0.021, +0.009; Wilcoxon p 0.24,
-  0.56, 0.69; 153, 167 and 160 tied pairs.
+  share bar): `results.v2_design.rule_d_power_exact`. Over all 14,455
+  allocations of L the test's size is at most 0.039996 (24 L tasks in the URL
+  stratum, 34 elsewhere): `results.v2_design.rule_d_size_all_allocations`.
+- Rule (a) power given the known outcome pattern (each clean task draws an H
+  rerun step pair with the same outcomes): `results.v2_design.rule_a_power_by_outcome`.
+  No change: mean m -0.017, false-label rate 0.001. Uniform 15%: 0.965 run2
+  longer, 0.907 run2 shorter; uniform 10%: 0.693 and 0.233. Concordant-task
+  sensitivity beside each. The outcome-blind bootstrap stays in
+  `results.v2_design.rule_a_power` for comparison.
+- H step baseline (rule (a)'s step definition): mean ln ratio -0.031, -0.021,
+  +0.009; Wilcoxon p 0.24, 0.56, 0.69; 153, 167 and 160 tied pairs.
 - Rule (b) H reference on clean tasks (registered): 30 unique failures,
   environment 0, step cap 9, premature answer 1, other 20. Run2-unique
   failures 14 (run1-unique 2). Label thresholds: environment >= 7 of 14,
   agent-side >= 10 of 14. Each H run against the other two: no label; the
   superseded share-only rule labelled `072452` "agent-side session
-  variation".
+  variation". Power: `results.v2_design.rule_b_power` (environment share 0.5:
+  0.60; agent-side share 0.7: 0.58; agent-side at the reference's 1/3: 0.004).
 - Failing H trajectories with a text signature that also hit the step cap:
   4 of 7, 4 of 10, 1 of 7. Text criterion on passing clean H episodes: 1.1%
   (812 episodes); tool-error keys: 0%.
@@ -63,7 +75,7 @@ Read at the same pins as the 2026-10-06 bundle, which has the full table
 
 ## Public-repository hygiene
 
-The receipt holds input hashes, counts and derived numbers only. It passes
-`assert_public_safe`, which now also rejects an IPv4 address before a
-sentence period, AWS private DNS names, and 12-digit ids stored as numbers.
-The 2026-10-06 receipt and matrix pass the stricter scan too.
+The receipt holds input hashes, counts, derived numbers and library versions
+only. It passes `assert_public_safe`, which rejects IPv4 addresses (including
+one before a sentence period), AWS private DNS names, and 12-digit ids stored
+as numbers. The 2026-10-06 receipt and matrix pass the same scan.

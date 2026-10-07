@@ -1,12 +1,12 @@
 # q2-holo3-rerun-audit-v2: why do the two Holo3 maintainer runs differ?
 
-**Status: DRAFT for the program owner's review. Not frozen.** Freeze it with
-`uv run python scripts/preregister.py freeze q2-holo3-rerun-audit-v2 program/preregistrations/q2-holo3-rerun-audit-v2.md`
-before anyone (a) applies the evaluator rule list below to the real task
-configs or (b) reads any byte of the verified-run trajectory tarball beyond
-the region named in section 2. The doctor refuses both until the ledger holds
-this file (`scripts/run_holo3_rerun_audit_doctor.py --stage v2` and
-`--stage v2-tarball` exit 3 otherwise).
+**Status: frozen in `program/preregistrations/ledger.jsonl`; see the ledger
+row for the freeze time and `git_head_at_freeze`.** The doctor
+(`scripts/run_holo3_rerun_audit_doctor.py`) applies the evaluator rule list
+below to the real task configs only in `--stage v2`, and reads the
+verified-run trajectory tarball beyond the region named in section 2 only in
+`--stage v2-tarball`. Both stages exit 3 unless this file is frozen in that
+repository ledger, whatever ledger `--ledger` names.
 
 - **Experiment id:** `q2-holo3-rerun-audit-v2`
 - **Question (Q2 Stage 0c follow-up):** the two OSWorld-Verified rows for
@@ -20,7 +20,9 @@ this file (`scripts/run_holo3_rerun_audit_doctor.py --stage v2` and
   `harness/holo3_rerun_audit.py`, `harness/holo3_v2.py`,
   `harness/remote_zip.py`, `harness/osworld_source.py`, at the commit the
   ledger records as `git_head_at_freeze`.
-- **Related records:** `q2-holo3-rerun-audit-v1-posthoc` (POST-HOC; D10).
+- **Related records:** `q2-holo3-rerun-audit-v1-posthoc` (POST-HOC; D10),
+  frozen in the same ledger (D15). Owner sign-offs: D15 in
+  `program/decisions.md`.
 
 ## 1. Data
 
@@ -57,7 +59,10 @@ Read before this registration (none of it can be tested confirmatorily here):
   external reference in section 5 is therefore EXPLORATORY.
 - The first ~232 MB of the compressed tarball (scout, for its structure;
   14 trajectory directories, 6 from run1 and 8 from run2) and the first 8 MB
-  (reviewer, 2 directories). Their step counts may have been seen.
+  (reviewer, 2 directories). Their step counts may have been seen. No
+  committed record lists the member names seen there, so the member layout
+  the scanner expects (section 4) is checked when the tarball is scanned, not
+  before.
 
 Not read by anyone:
 
@@ -138,10 +143,18 @@ Decision, at a fixed alpha of 0.04:
 The unstratified one-sided Fisher test of L vs not L is reported as
 descriptive only.
 
+Every rule (d) output carries the note "blinding to the class-outcome join is
+self-attested" (section 2) and the largest net share the observed L
+allocation could carry (in each stratum, as many run1-only tasks in L as L
+holds, run2-only tasks only where L leaves no room for other tasks). Per D15,
+a checker-side label (either of the first two) that the narrow-L sensitivity
+(section 5) does not reproduce is reported as EXPLORATORY, not as a
+confirmatory result.
+
 ### Rule (a): agent behaviour shift
 
-Steps = the number of entries with an `action` key in a trajectory's
-`actions.json`. Over clean tasks whose run1 and run2 trajectories both join
+Steps = the number of entries in a trajectory's `actions.json` that are JSON
+objects with an `action` key. Over clean tasks whose run1 and run2 trajectories both join
 (section 4): two-sided Wilcoxon signed-rank test of run1 vs run2 steps (scipy
 default, zero differences dropped), and the effect size m = mean over tasks
 of ln(run1 steps) - ln(run2 steps) (tasks with a zero count excluded from m).
@@ -149,7 +162,11 @@ of ln(run1 steps) - ln(run2 steps) (tasks with a zero count excluded from m).
 Decision, at a fixed alpha of 0.01: **"agent-behaviour shift"** if p < 0.01
 and |m| >= ln(1.10); otherwise **"no agent-behaviour shift"**. The median of
 the per-task step ratios, the geometric-mean ratio exp(m) and the number of
-tied pairs are reported as descriptive.
+tied pairs are reported as descriptive. The 23 run1-only and 9 run2-only
+clean tasks pair a passing with a failing episode, and failing episodes run longer, so the known
+outcomes alone move m towards run2 being longer; section 5 registers the
+same test on concordant tasks as a sensitivity and section 6 states power by
+direction.
 
 ### Rule (b): failure signatures of the unique failures
 
@@ -160,7 +177,8 @@ the first class that applies to its run2 trajectory:
 
 1. **environment:** any environment criterion in force (below);
 2. **step cap:** at least 100 steps, whatever the final tool;
-3. **premature answer:** steps at most 0.5 times the run1 trajectory's steps;
+3. **premature answer:** steps at most 0.5 times the run1 trajectory's steps
+   (this class cannot fire when the run1 trajectory does not join or parse);
 4. **declared infeasible:** run2's `status.json` has an `agp_message`
    starting with `Infeasible` or `FAIL` among `agp_actions`;
 5. **other.**
@@ -173,15 +191,21 @@ Environment criteria. The primary classification uses the two criteria that
 can also be applied to the H Company reference (whose screenshots are not
 read):
 
-- tool error: an entry carrying a non-empty key named `error`, `exception`,
-  `traceback` or `tool_error` (at any depth);
-- text: a match, case-insensitive, of any pattern below in the `reasoning`,
-  `thought` or `note` text of any entry.
+- tool error: an entry carrying, at any depth, a key named exactly `error`,
+  `exception`, `traceback` or `tool_error` (case-sensitive) whose value is
+  non-empty: not null, false, zero, an empty string, an empty list or an
+  empty object;
+- text: a case-insensitive match of any pattern below within the
+  `reasoning`, the `thought` or the `note` text of an entry, each field
+  matched on its own (no match spans two fields); a pattern counts once per
+  entry.
 
 A third criterion, screenshots (at least 3 consecutive screenshots whose
 decompressed PNG bytes have the same SHA-256, in the order the trajectory's
 `actions.json` references them, or in ascending image index if it references
-none), enters only the all-criteria sensitivity (section 5).
+none), enters only the all-criteria sensitivity (section 5). If no joined
+episode has a screenshot under the member layout of section 4, that
+sensitivity is reported as NOT RUN.
 
 Text patterns (label: regular expression):
 
@@ -208,7 +232,8 @@ The labels are `captcha`, `unusual_traffic`, `access_denied`,
 for each criterion, compute the share of episodes of clean tasks that both
 runs passed (y = 1 in run1 and run2; 260 tasks, up to 520 episodes) on which
 it fires. A primary criterion that fires on more than 20% of them is not in
-force. The screenshot share is reported too.
+force. The screenshot share is reported too, and each share is also reported
+per run as a descriptive number.
 
 **H rerun reference.** The three H Company runs are exchangeable reruns of
 the same agent. For each H run, its unique failures are the clean tasks it
@@ -249,9 +274,11 @@ decision label, and nothing else depends on their numbers.
 
 Fixed and independent of which tests run: rule (d) at 0.04 and rule (a) at
 0.01 (a Bonferroni split of 0.05 over the two hypothesis tests); rule (b)'s
-two reference comparisons at 0.025 each. No test's threshold depends on
-whether another test ran or on its p-value, so the owner's decision on the
-tarball read cannot change rule (d)'s verdict. Rule (c) is a gate.
+two reference comparisons at 0.025 each. The nominal family-wise error rate
+over rules (a), (b) and (d) is therefore 0.10 (the Bonferroni bound 0.04 +
+0.01 + 2 x 0.025; D15). No test's threshold depends on whether another test
+ran or on its p-value, so whether the tarball is read cannot change rule
+(d)'s verdict. Rule (c) is a gate.
 
 ## 4. Joining, exclusions, run conditions and infrastructure failures
 
@@ -259,21 +286,40 @@ tarball read cannot change rule (d)'s verdict. Rule (c) is a gate.
   by the same code (`harness/holo3_rerun_audit.py`, `build_v1_matrix`).
 - Trajectory join: `status.json` `trajectory_id` of the merged run1 record
   and of run2, matched to the trajectory directory name in the tarball.
-- The tarball is downloaded to the host's persistent run root with resume,
-  then accepted only if its size, CRC-32 and SHA-256 all match section 1. A
+- Before fetching any tarball byte, the doctor checks the package's entry
+  for it against the size, CRC-32 and SHA-256 of section 1. The tarball is
+  then downloaded to the host's persistent run root with resume, and
+  accepted only if its size, CRC-32 and SHA-256 all match section 1. A
   partial or complete file that fails a check is deleted; a file already in
   place is re-verified, never trusted. A failed check is an infrastructure
   failure: the download is repeated, and if it cannot pass, (a) to (c) are
   reported as NOT RUN, never as negative.
-- Any doctor exit code 2 (fetch, identity, integrity or truncated-transfer
-  error) is an infrastructure failure. The run is repeated with a new output
-  path; no code or rule is edited to make a run pass.
+- Member layout: the scanner reads members named
+  `{trajectory_id}/actions.json` and `{trajectory_id}/images/{index}.png`,
+  each optionally gzipped, at any depth, and records how many members of each
+  kind it saw (no names). If no `actions.json` matches, coverage is 0 and
+  rule (c) makes (a) and (b) descriptive; if no joined episode has a matched
+  screenshot, the all-criteria sensitivity is NOT RUN. The feature file must
+  pass the same public-safety scan as a receipt, or it is not written
+  (exit 1).
+- Any doctor exit code 2 is an infrastructure failure: a fetch, identity or
+  truncated-transfer error, or an integrity error (a member read fails its
+  zip CRC-32, a verified-package member does not match `SHA256SUMS`, the
+  leaderboard sheet does not match its SHA-256, or the tarball entry differs
+  from section 1). The run is repeated with a new output path and an empty
+  cache; no code or rule is edited to make a run pass. If the repeat fails
+  with the same error on the same input, v2 is reported as NOT RUN
+  (integrity).
 - Positive controls that must pass for any v2 number to be read (exit 1
-  otherwise): all 20 Holo3 per-domain leaderboard cells and both totals; all
-  18 OpenCUA turn totals map one-to-one onto their leaderboard rows; every
-  verified-package member matches `SHA256SUMS`; every member read passes its
-  zip CRC-32; the leaderboard sheet matches its SHA-256 and the cited cells;
-  the pooled H rerun reference equals the registered one (section 3).
+  otherwise): all 20 Holo3 per-domain leaderboard cells and both totals; the
+  cited leaderboard cells; all 18 OpenCUA turn totals map one-to-one onto
+  their leaderboard rows; the `SHA256SUMS` case, which rechecks every
+  verified-package member read (a mismatch found while reading already
+  exits 2); the blob manifest of the 361 task
+  configs read at `f7230379` equals the one v1 read at `c7e54d24`
+  (`3d4ae6da235e1d6627e72b389cda9fead93dbe9966ac8a3a3e23a1f39762bbf1`); the
+  pooled H rerun reference equals the registered one (section 3); the
+  receipt passes the public-safety scan.
 - **A run that exits 1 yields no v2 result.** Its rule outputs are not read
   or reported as results; the failing control is reported. Inputs and code
   are pinned, so a repeat would fail the same way: the cause is investigated,
@@ -283,10 +329,16 @@ tarball read cannot change rule (d)'s verdict. Rule (c) is a gate.
   against the repository ledger (`program/preregistrations/ledger.jsonl`),
   committed and unmodified; with the five code files unchanged since the
   ledger's `git_head_at_freeze`; with the OpenCUA control (the doctor refuses
-  `--skip-opencua` in v2); and, for a run that uses trajectories, within 14
-  days of `frozen_at`. The doctor checks each condition, records them under
-  `confirmatory_checks`, and labels any run that fails one "v2
-  NON-CONFIRMATORY".
+  `--skip-opencua` in v2); for a run that uses trajectories, within 14 days
+  of `frozen_at`; and, for a v2 run given a feature file, with
+  `--tarball-receipt` naming the v2-tarball receipt that wrote it, which
+  must be a PASS labelled "v2 CONFIRMATORY" with every run condition true,
+  the same five code-file hashes and ledger row, the section 1 tarball
+  SHA-256 and the feature file's SHA-256. The doctor checks each condition,
+  records them under `confirmatory_checks`, and labels any run that fails
+  one "v2 NON-CONFIRMATORY". Runs use a clone whose history contains
+  `git_head_at_freeze` (in a shallow clone the code check fails closed).
+  Each receipt records the Python, numpy and scipy versions.
 
 ## 5. Sensitivity and exploratory analyses
 
@@ -298,12 +350,17 @@ robust to that choice):
   expected side: a getter in `evaluator.expected` with a type in the L list
   except `time_diff_range`, a `cloud_file` getter in `evaluator.expected`
   with a remote URL, or a `relativeTime` key inside `evaluator.expected`.
-  Rule (d) is repeated with this L.
+  Rule (d) is repeated with this L. A checker-side primary label it does not
+  reproduce is reported as EXPLORATORY (D15; section 3).
+- **Concordant tasks (rule (a)).** Rule (a)'s test and decision on the clean
+  tasks with the same outcome in both runs (260 both pass, 50 both fail),
+  which carry no offset from the known run1-only vs run2-only imbalance.
 - **Probe region.** Rules (a) to (c) repeated after dropping every clean task
   whose run1 or run2 trajectory has its `actions.json` within the first
   250,000,000 compressed bytes of the tarball (this covers the 232 MB read
-  before registration); rule (b)'s H reference is recomputed on the same
-  tasks.
+  before registration); a trajectory that has screenshots but no
+  `actions.json` counts as probed. Rule (b)'s H reference is recomputed on
+  the same tasks.
 - **All criteria.** Rule (b) with all three environment criteria
   (screenshots included, no guard), against the reference with the same
   criteria. The reference cannot fire the screenshot criterion, so this
@@ -334,7 +391,8 @@ Exploratory (labelled EXPLORATORY in every output):
 Rules (a), (b) and (d) use exact or rank tests and no random numbers. The
 design numbers below come from already-read inputs only (v1 totals and URL
 strata; the H Company runs' rewards and step counts), computed by
-`scripts/run_holo3_rerun_audit_doctor.py --stage v2-design` (receipt in
+`scripts/run_holo3_rerun_audit_doctor.py --stage v2-design` at commit
+`0b0211678a6197107d064f3fdc9d4e41866e89d5` (receipt in
 `program/evidence/2026-10-07/holo3-v2-design/`). They supersede the
 `results.v2_design` section of the v1 receipt.
 
@@ -350,46 +408,69 @@ enumeration. In brackets: the test alone, without the share bar.
 | 10, 0 | 0.000 (0.027) | 0.000 (0.264) | 0.003 (0.496) | 0.021 (0.796) | 0.182 (0.982) |
 | 20, 0 | 0.001 (0.016) | 0.038 (0.214) | 0.111 (0.421) | 0.295 (0.707) | 0.642 (0.941) |
 | 30, 0 | 0.028 (0.028) | 0.226 (0.226) | 0.388 (0.388) | 0.608 (0.608) | 0.842 (0.842) |
-| 0, 20 | 0.000 (0.017) | 0.004 (0.265) | 0.034 (0.563) | 0.249 (0.904) | 0.875 (0.999) |
+| 0, 20 | 0.000 (0.017) | 0.004 (0.264) | 0.034 (0.563) | 0.249 (0.904) | 0.875 (0.999) |
 | 0, 40 | 0.001 (0.012) | 0.087 (0.348) | 0.313 (0.708) | 0.757 (0.969) | 0.993 (1.000) |
 | 10, 20 | 0.004 (0.025) | 0.207 (0.477) | 0.548 (0.820) | 0.924 (0.989) | 1.000 (1.000) |
 | 20, 40 | 0.032 (0.034) | 0.643 (0.664) | 0.926 (0.936) | 0.998 (0.999) | 1.000 (1.000) |
 
-The psi = 1 column is the false-label rate: at most 0.032 for the candidate
-label and 0.034 for either enrichment label. If L lies inside
-the URL stratum, the candidate label needs all 7 URL-stratum run1-only tasks
-in L, so even large enrichment there is often labelled "minority of the gap";
-a null or minority result with small L is weak evidence, and the report will
-say so.
+The psi = 1 column is the false-label rate in these allocations: at most
+0.032 for the candidate label and 0.034 for either enrichment label. Over
+every allocation of L (0 to 48 tasks in the URL stratum and 0 to 294
+elsewhere, 14,455 allocations), the test's false-positive rate is at most
+0.039996 (24 and 34 L tasks), below 0.04 as an exact conditional test must
+be, and the candidate label cannot fire more often. If L lies inside the URL
+stratum, the candidate label needs all 7 URL-stratum run1-only tasks in L
+(power 0.18 to 0.84 even at psi = 30 above), so even large enrichment there
+is often labelled "minority of the gap". The rule (d) output states the
+largest share its L allocation could carry, and the report says when the
+candidate label was out of reach. A null or minority result with small L is
+weak evidence, and the report says so.
 
-**Rule (a), power** by bootstrapping 342 task pairs from the H Company
-reruns' step counts (1,073 pairs over the three run pairs; 400 simulations
-per seed, seeds 42, 43 and 44). Run2's steps are multiplied by a factor on a
-random fraction of the tasks, then rounded and capped at 100. The H reruns
+**Rule (a), power given the known outcome pattern.** The clean set's
+outcomes are known: 260 tasks pass in both runs, 50 fail in both, 23 are
+run1-only and 9 run2-only. Failing episodes run longer than passing ones: in
+the H Company reruns, 27% of the failing episodes of discordant pairs and
+45% of both-fail episodes reach the 100-step cap, against 0.9% of both-pass
+episodes. Each simulated clean task therefore draws a step pair from the H
+Company rerun pairs with the same outcomes (802 both-pass and 159 both-fail
+pairs, each in both orders, and 106 discordant pairs oriented by outcome,
+over the three run pairs), with steps counted as in rule (a). Run2's steps are then
+multiplied by a factor on a random fraction of the tasks, rounded and capped
+at 100 (400 simulations per seed, seeds 42, 43 and 44). The H reruns
 themselves give m = -0.031, -0.021 and +0.009 and Wilcoxon p of 0.24, 0.56
-and 0.69, with 43-47% of tasks at identical counts. Mean power (and, in
-brackets, the superseded median-of-ratios gate):
+and 0.69, with 43-47% of tasks at identical counts. With no change in
+behaviour the known outcomes give a mean m of -0.017 (about a fifth of
+ln 1.10) and a false-label rate of 0.001; on concordant tasks m is -0.001
+and the rate 0.000. Mean power, primary rule and (in brackets) the
+concordant-task sensitivity:
 
-| Shift | Power |
+| Run2 steps | Power |
 |---|---:|
-| none (factor 1.00, all tasks) | 0.004 (0.000) |
-| 1.05, all tasks | 0.037 (0.000) |
-| 1.10, all tasks | 0.658 (0.129) |
-| 1/1.10, all tasks | 0.268 (0.038) |
-| 1.15, all tasks | 0.966 (1.000) |
-| 1/1.15, all tasks | 0.917 (1.000) |
-| 1.20, all tasks | 1.000 (1.000) |
-| 2.0 on 20% of tasks | 0.913 (0.000) |
-| 0.5 on 20% of tasks | 0.773 (0.000) |
-| 1.5 on 30% of tasks | 0.833 (0.000) |
-| 0.5 on 30% of tasks | 0.998 (0.013) |
-| 1.5 on 40% of tasks | 0.988 (0.079) |
-| 0.5 on 40% of tasks | 1.000 (0.615) |
+| x1.05, all tasks | 0.035 (0.004) |
+| /1.05, all tasks | 0.003 (0.009) |
+| x1.10, all tasks | 0.693 (0.464) |
+| /1.10, all tasks | 0.233 (0.458) |
+| x1.15, all tasks | 0.965 (0.926) |
+| /1.15, all tasks | 0.907 (0.989) |
+| x1.20, all tasks | 1.000 (0.997) |
+| /1.20, all tasks | 0.999 (1.000) |
+| x2.0 on 20% of tasks | 0.911 (0.831) |
+| x0.5 on 20% of tasks | 0.762 (0.915) |
+| x1.5 on 30% of tasks | 0.846 (0.715) |
+| x0.5 on 30% of tasks | 0.998 (1.000) |
+| x1.5 on 40% of tasks | 0.984 (0.957) |
+| x0.5 on 40% of tasks | 1.000 (1.000) |
 
-So rule (a) detects a uniform change of 15% in either direction (power >=
-0.92), and a 1.5x to 2x increase or a halving confined to 20-30% of tasks
-(power >= 0.77). At a uniform 10% the threshold sits on the effect, so power
-is 0.27-0.66.
+Power depends on the direction. A uniform 15% change is detected with power
+0.97 if run2 is longer and 0.91 if it is shorter; a uniform 10% change with
+0.69 and 0.23; a 5% lengthening of run2 is labelled a shift with probability
+0.035, a 5% shortening with 0.003. A uniform 20% change in either direction
+and each subset shift in the table (2x on 20%, 1.5x on 30-40% and a halving
+on 20-40% of tasks) are detected with power at least 0.76. The primary and
+concordant decisions differ in 0.1% of simulations with no change and in up
+to 25% at a uniform 10% change, where both sit on the threshold. The outcome-blind bootstrap of
+all H rerun pairs (`results.v2_design.rule_a_power`), which this replaces,
+gave 0.966 and 0.917 at 15% and 0.658 and 0.268 at 10%.
 
 **Rule (b)** decides on 14 tasks against the registered reference of 30
 (section 3): environment needs at least 7 of 14 and agent-side at least 10
@@ -402,36 +483,50 @@ with a text hit, 4 of 7, 4 of 10 and 1 of 7 also hit the step cap, which is
 why the environment class now comes first. Every H trajectory ends with
 `answer`.
 
+Power of rule (b) (exact binomial, full coverage): if each of the 14
+run2-unique failures is an environment failure with probability 0.3, 0.4,
+0.5, 0.6 or 0.7, the infrastructure label fires with probability 0.09, 0.31,
+0.60, 0.85 or 0.97. If each is agent-side with probability 0.5, 0.6, 0.7, 0.8
+or 0.9 and none is an environment failure, the agent-side label fires with
+probability 0.09, 0.28, 0.58, 0.87 or 0.99, and with 0.004 at the
+reference's own agent-side share of 1/3. Unclassifiable tasks stay in the
+denominator and lower these numbers.
+
 ## 7. Reported regardless of outcome
 
 Every quantity named in sections 3 to 6, the evaluator class, narrow-L flag
-and reasons of each task, both stratum tables, the specificity-guard shares,
-the coverage fraction, the H reference composition per run, the positive
-controls, the run-condition checks, input hashes and transfer totals, in a
-dated evidence bundle under `program/evidence/` with the doctor receipt. A
+and reasons of each task, both stratum tables, the largest attainable net
+share in L, the specificity-guard shares (pooled and per run), the coverage
+fraction, the tarball member-layout counts, the H reference composition per
+run, every sensitivity with its robustness flag, the positive controls, the
+run-condition checks, input hashes, library versions and transfer totals, in
+a dated evidence bundle under `program/evidence/` with the doctor receipts. A
 rule that cannot run is reported as NOT RUN with the reason.
 
 ## 8. Timing
 
-The owner decides on the 5.75 GB tarball read before the first v2 run and
-records the decision in `program/decisions.md`; because the error rates are
-fixed, that decision cannot change rule (d)'s verdict. The final v2 result is
-the doctor run that includes rules (a) to (c) if the tarball is read within
-14 days of the freeze; otherwise it is the rule (d) run, with (a) to (c) NOT
-RUN. Both runs are kept if both happen.
+D15 (`program/decisions.md`) approves the 5.75 GB tarball read under D1,
+for after this freeze; because the error rates are fixed, whether it happens
+cannot change rule (d)'s verdict. The final v2 result is the doctor run that
+includes rules (a) to (c) if the tarball is read and scanned within 14 days
+of the freeze; otherwise it is the rule (d) run, with (a) to (c) NOT RUN.
+Both runs are kept if both happen.
 
 ## Design decisions
 
-Choices this draft makes where the reviewed plan left them open or where it
-departs from the plan. Each needs the owner's acceptance at freeze.
+Choices this registration makes where the reviewed plan left them open or
+where it departs from the plan. Decisions 1-14 are accepted in D15
+(`program/decisions.md`), with its two conditions applied in sections 3 and
+5; decisions 15-21 record the changes made after the pre-freeze audit of
+2026-10-07.
 
 1. **The tarball read is part of v2, behind an explicit switch.** The plan
-   made the 5.75 GB read optional pending the owner's OK. Rules (a) to (c)
-   carry most of v2's confirmatory value, the data is public and MIT, and D1
-   authorises recorded research downloads to the host. The doctor still
-   requires `--allow-large-download` and a frozen v2. If the owner withholds
-   the download, (a) to (c) are NOT RUN and (d) stands alone at its own
-   alpha.
+   made the 5.75 GB read optional pending the owner's OK, which D15 gives
+   under D1. Rules (a) to (c) carry most of v2's confirmatory value and the
+   data is public and MIT. The doctor still requires `--allow-large-download`
+   and v2 frozen in the repository ledger. If the read does not happen within
+   14 days of the freeze, (a) to (c) are NOT RUN and (d) stands alone at its
+   own alpha.
 2. **L is broader than "expected value fetched live", and the plan's L is a
    sensitivity.** Result-side getters that reload a live page at evaluation
    time (`active_tab_info`, `page_info`), clock-reading metrics, and
@@ -468,7 +563,8 @@ departs from the plan. Each needs the owner's acceptance at freeze.
    claims an excess over the reference. The specificity guard (20% of
    both-pass episodes) still applies to the two primary criteria.
 9. **Probe-region sensitivity** covers the tarball bytes read before
-   registration instead of discarding those trajectories outright.
+   registration instead of discarding those trajectories outright; a
+   trajectory without an `actions.json` counts as probed.
 10. **"Premature answer" has no final-tool condition**, because every H
     Company trajectory ends with `answer`; the plan's step ratio alone
     defines it.
@@ -482,5 +578,39 @@ departs from the plan. Each needs the owner's acceptance at freeze.
     for the maintainers' OSWorld revision; its `evaluation_examples/` equals
     the commit v1 used, so the W/O split is the same in both.
 14. **Run conditions are enforced by the doctor**, not by convention: a run
-    on another ledger, with changed code, without the OpenCUA control or
-    outside the 14-day window is labelled NON-CONFIRMATORY or refused.
+    on another ledger, with changed code, without the OpenCUA control,
+    outside the 14-day window or with a feature file that no confirmatory
+    scan wrote is labelled NON-CONFIRMATORY or refused.
+15. **The freeze gate reads the repository ledger.** Both v2 stages refuse
+    unless this file is frozen in `program/preregistrations/ledger.jsonl`,
+    whatever `--ledger` names, so a freeze in a scratch ledger can no longer
+    unblind the class-outcome join or start the tarball download.
+16. **The feature file's provenance is a run condition.** A v2 run given a
+    feature file is confirmatory only if `--tarball-receipt` names the
+    confirmatory v2-tarball receipt that wrote it, with the same code, freeze
+    and tarball (section 4). Without this, a feature file from edited
+    scanning code or written by hand could carry a confirmatory label.
+17. **Rule (a) gets a concordant-task sensitivity and power by direction.**
+    The known 23 vs 9 discordance pairs passing with longer failing
+    episodes, which offsets m towards run2 being longer and makes power
+    depend on the direction. The primary rule stays on all clean tasks; the
+    concordant-task sensitivity has no such offset, and section 6 states
+    power given the known outcomes.
+18. **Rule (d) outputs carry their limits.** Every output states that
+    blinding to the class-outcome join is self-attested and the largest net
+    share its L allocation could carry, and a checker-side label not
+    reproduced by the narrow-L sensitivity is EXPLORATORY (D15).
+19. **The environment criteria are exact.** A tool-error key must match
+    exactly, case included, and have a non-empty value; the text patterns
+    are matched within each field, never across fields. The earlier code
+    counted `{"error": false}` and `Error` keys, and joined the fields.
+20. **Integrity errors are infrastructure failures with a stopping rule.**
+    CRC-32, `SHA256SUMS`, leaderboard SHA-256 and tarball-literal mismatches
+    exit 2 and are repeated once from an empty cache; a repeat that fails the
+    same way makes v2 NOT RUN (integrity). The `SHA256SUMS` case is
+    recomputed rather than recorded as a pass.
+21. **Pinned inputs are asserted in code.** The tarball's size, CRC-32 and
+    SHA-256 from section 1 are checked before any byte is fetched; the v2
+    config blob manifest must equal v1's (design decision 13); the feature
+    file passes the public-safety scan; and the tarball's member layout is
+    counted, so an unexpected layout shows in the receipt.
