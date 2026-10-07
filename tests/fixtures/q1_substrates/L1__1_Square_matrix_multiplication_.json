@@ -1,0 +1,271 @@
+{
+ "codegen_seconds": 0.288,
+ "device_properties": {
+  "L2_cache_size": 52428800,
+  "major": 9,
+  "max_threads_per_block": 1024,
+  "max_threads_per_multi_processor": 2048,
+  "minor": 0,
+  "multi_processor_count": 132,
+  "name": "NVIDIA H100 80GB HBM3",
+  "regs_per_multiprocessor": 65536,
+  "shared_memory_per_block": 49152,
+  "shared_memory_per_block_optin": 232448,
+  "shared_memory_per_multiprocessor": 233472,
+  "total_memory": 85520809984,
+  "warp_size": 32
+ },
+ "eager_output": {
+  "count": 1,
+  "kind": "tensor"
+ },
+ "fw_metadata": {
+  "available": true,
+  "is_rng_op_functionalized": false,
+  "keep_input_mutations": true,
+  "mutated_inp_runtime_indices": [],
+  "mutated_inputs": [],
+  "num_intermediate_bases": 0,
+  "num_outputs_rng_offset": 0,
+  "output_types": [
+   "non_alias"
+  ]
+ },
+ "gemm_choice_rule": "AlgorithmSelectorCache.pick_deterministic_choice (Inductor deterministic mode; no benchmarking)",
+ "gemm_retry": {
+  "default_kernels": [],
+  "reason": "default codegen called a library GEMM"
+ },
+ "graph_outputs": 1,
+ "guards": {
+  "expressions": [
+   "s55*s85 <= 2147483647",
+   "s55*s86 <= 2147483647",
+   "s84 == s55",
+   "s85*s86 <= 2147483647"
+  ],
+  "symbol_hints": {
+   "s55": 4096,
+   "s84": 4096,
+   "s85": 4096,
+   "s86": 4096
+  },
+  "symbol_ranges": {
+   "s55": [
+    2,
+    null
+   ],
+   "s84": [
+    2,
+    null
+   ],
+   "s85": [
+    2,
+    null
+   ],
+   "s86": [
+    2,
+    null
+   ]
+  },
+  "symbol_sources": {
+   "s55": "L['B'].size()[0]",
+   "s84": "L['A'].size()[1]",
+   "s85": "L['A'].size()[0]",
+   "s86": "L['B'].size()[1]"
+  }
+ },
+ "input_draw": "meta",
+ "inputs": [
+  {
+   "dtype": "float32",
+   "kind": "tensor",
+   "shape": [
+    4096,
+    4096
+   ]
+  },
+  {
+   "dtype": "float32",
+   "kind": "tensor",
+   "shape": [
+    4096,
+    4096
+   ]
+  }
+ ],
+ "kernels": [
+  {
+   "compile_options": {
+    "debug": true,
+    "enable_fp_fusion": true,
+    "enable_reflect_ftz": true,
+    "launch_cooperative_grid": false,
+    "launch_pdl": false,
+    "sanitize_overflow": false
+   },
+   "configs": [
+    {
+     "kwargs": {},
+     "maxnreg": null,
+     "num_ctas": 1,
+     "num_stages": 1,
+     "num_warps": 2
+    }
+   ],
+   "constants": {},
+   "constexpr_params": [],
+   "device": {
+    "cc": 90,
+    "index": 0,
+    "major": 9,
+    "max_threads_per_block": 1024,
+    "max_threads_per_multi_processor": 2048,
+    "multi_processor_count": 132,
+    "regs_per_multiprocessor": 65536,
+    "type": "cuda",
+    "warp_size": 32
+   },
+   "grid": {
+    "prefix": [],
+    "type": "FixedGrid",
+    "x": "_grid_0",
+    "y": "_grid_1",
+    "z": "_grid_2"
+   },
+   "grid_type": "FixedGrid",
+   "heuristic": "template",
+   "heuristic_type": "TEMPLATE",
+   "inductor_meta": {
+    "are_deterministic_algorithms_enabled": false,
+    "assert_indirect_indexing": true,
+    "autotune_local_cache": true,
+    "autotune_pointwise": false,
+    "autotune_remote_cache": null,
+    "backend_hash": "91D1D1166449D9E2EB66EB9770C9E2C3B0FEB787341F27FEB4D3F0338DA50336",
+    "config_args": {
+     "ACC_TYPE": "tl.float32",
+     "ALLOW_TF32": false,
+     "BLOCK_K": 16,
+     "BLOCK_M": 32,
+     "BLOCK_N": 32,
+     "EVEN_K": false,
+     "GROUP_M": 8,
+     "USE_FAST_ACCUM": false
+    },
+    "deterministic": true,
+    "dynamic_scale_rblock": true,
+    "extra_launcher_args": [
+     "_grid_0",
+     "_grid_1",
+     "_grid_2"
+    ],
+    "fixed_grid": [
+     "_grid_0",
+     "_grid_1",
+     "_grid_2"
+    ],
+    "force_disable_caches": true,
+    "force_filter_reduction_configs": false,
+    "grid_type": "FixedGrid",
+    "kernel_name": "triton_tem_fused_mm_0",
+    "max_autotune": true,
+    "max_autotune_pointwise": false,
+    "min_split_scan_rblock": 256,
+    "mix_order_reduction_allow_multi_stages": false,
+    "spill_threshold": 16,
+    "store_cubin": false
+   },
+   "name": "triton_tem_fused_mm_0",
+   "params": [
+    "arg_A",
+    "arg_B",
+    "out_ptr0",
+    "ks0",
+    "ks1",
+    "ks2"
+   ],
+   "signature": {
+    "arg_A": "*fp32",
+    "arg_B": "*fp32",
+    "ks0": "i32",
+    "ks1": "i32",
+    "ks2": "i32",
+    "out_ptr0": "*fp32"
+   },
+   "size_hints": null,
+   "source": "\nimport triton\nimport triton.language as tl\n\nfrom torch._inductor.runtime import triton_helpers, triton_heuristics\nfrom torch._inductor.runtime.triton_helpers import libdevice, math as tl_math\nfrom torch._inductor.runtime.hints import AutotuneHint, ReductionHint, TileHint, DeviceProperties\n\n@triton_heuristics.template(\n\nnum_stages=1,\nnum_warps=2,\ntriton_meta={'signature': {'arg_A': '*fp32', 'arg_B': '*fp32', 'out_ptr0': '*fp32', 'ks0': 'i32', 'ks1': 'i32', 'ks2': 'i32'}, 'device': DeviceProperties(type='cuda', index=0, multi_processor_count=132, cc=90, major=9, regs_per_multiprocessor=65536, max_threads_per_multi_processor=2048, max_threads_per_block=1024, warp_size=32), 'constants': {}, 'configs': [{(0,): [['tt.divisibility', 16]], (1,): [['tt.divisibility', 16]], (2,): [['tt.divisibility', 16]]}]},\ninductor_meta={'kernel_name': 'triton_tem_fused_mm_0', 'backend_hash': '91D1D1166449D9E2EB66EB9770C9E2C3B0FEB787341F27FEB4D3F0338DA50336', 'assert_indirect_indexing': True, 'autotune_local_cache': True, 'autotune_pointwise': False, 'autotune_remote_cache': None, 'force_disable_caches': True, 'dynamic_scale_rblock': True, 'max_autotune': True, 'max_autotune_pointwise': False, 'min_split_scan_rblock': 256, 'spill_threshold': 16, 'store_cubin': False, 'deterministic': True, 'force_filter_reduction_configs': False, 'mix_order_reduction_allow_multi_stages': False, 'are_deterministic_algorithms_enabled': False, 'grid_type': 'FixedGrid', 'fixed_grid': ['_grid_0', '_grid_1', '_grid_2'], 'extra_launcher_args': ['_grid_0', '_grid_1', '_grid_2'], 'config_args': {'EVEN_K': False, 'USE_FAST_ACCUM': False, 'ACC_TYPE': 'tl.float32', 'BLOCK_M': 32, 'BLOCK_N': 32, 'BLOCK_K': 16, 'GROUP_M': 8, 'ALLOW_TF32': False}},\n\n)\n@triton.jit\ndef triton_tem_fused_mm_0(arg_A, arg_B, out_ptr0, ks0, ks1, ks2):\n    EVEN_K : tl.constexpr = False\n    USE_FAST_ACCUM : tl.constexpr = False\n    ACC_TYPE : tl.constexpr = tl.float32\n    BLOCK_M : tl.constexpr = 32\n    BLOCK_N : tl.constexpr = 32\n    BLOCK_K : tl.constexpr = 16\n    GROUP_M : tl.constexpr = 8\n    ALLOW_TF32 : tl.constexpr = False\n    INDEX_DTYPE : tl.constexpr = tl.int32\n    A = arg_A\n    B = arg_B\n\n    M = ks0\n    N = ks1\n    K = ks2\n    if M * N == 0:\n        # early exit due to zero-size input(s)\n        return\n    stride_am = ks2\n    stride_ak = 1\n    stride_bk = ks1\n    stride_bn = 1\n\n    # based on triton.ops.matmul\n    pid = tl.program_id(0).to(INDEX_DTYPE)\n    grid_m = (M + BLOCK_M - 1) // BLOCK_M\n    grid_n = (N + BLOCK_N - 1) // BLOCK_N\n\n    # re-order program ID for better L2 performance\n    width = GROUP_M * grid_n\n    group_id = pid // width\n    group_size = min(grid_m - group_id * GROUP_M, GROUP_M)\n    pid_m = group_id * GROUP_M + (pid % group_size)\n    pid_n = (pid % width) // (group_size)\n    tl.assume(pid_m >= 0)\n    tl.assume(pid_n >= 0)\n\n    rm = pid_m * BLOCK_M + tl.arange(0, BLOCK_M)\n    rn = pid_n * BLOCK_N + tl.arange(0, BLOCK_N)\n    if ((stride_am == 1 and stride_ak == M) or (stride_am == K and stride_ak == 1)) and (M >= BLOCK_M and K > 1):\n        offs_a_m = tl.max_contiguous(tl.multiple_of(rm % M, BLOCK_M), BLOCK_M)\n    else:\n        offs_a_m = rm % M\n    if ((stride_bk == 1 and stride_bn == K) or (stride_bk == N and stride_bn == 1)) and (N >= BLOCK_N and K > 1):\n        offs_b_n = tl.max_contiguous(tl.multiple_of(rn % N, BLOCK_N), BLOCK_N)\n    else:\n        offs_b_n = rn % N\n    offs_k = tl.arange(0, BLOCK_K)\n    acc = tl.zeros((BLOCK_M, BLOCK_N), dtype=ACC_TYPE)\n\n    for k_idx in range(0, tl.cdiv(K, BLOCK_K)):\n\n        a_mask = offs_k[None, :] < (K - k_idx * BLOCK_K)\n        b_mask = offs_k[:, None] < (K - k_idx * BLOCK_K)\n\n        a_k_idx_vals = offs_k[None, :] + (k_idx * BLOCK_K)\n        b_k_idx_vals = offs_k[:, None] + (k_idx * BLOCK_K)\n\n        idx_m = offs_a_m[:, None]\n        idx_n = a_k_idx_vals\n        xindex = idx_n + idx_m*ks2\n        a = tl.load(A + (xindex), mask=a_mask, other=0.0)\n\n        idx_m = b_k_idx_vals\n        idx_n = offs_b_n[None, :]\n        xindex = idx_n + idx_m*ks1\n        b = tl.load(B + (xindex), mask=b_mask, other=0.0)\n\n\n        acc += tl.dot(a, b, allow_tf32=ALLOW_TF32, out_dtype=ACC_TYPE)\n\n\n    # rematerialize rm and rn to save registers\n    rm = pid_m * BLOCK_M + tl.arange(0, BLOCK_M)\n    rn = pid_n * BLOCK_N + tl.arange(0, BLOCK_N)\n    idx_m = rm[:, None]\n    idx_n = rn[None, :]\n    mask = (idx_m < M) & (idx_n < N)\n\n    # inductor generates a suffix\n    xindex = idx_n + idx_m*ks1\n    tl.store(out_ptr0 + (tl.broadcast_to(xindex, [BLOCK_M, BLOCK_N])), acc, mask)\n"
+  }
+ ],
+ "mock_patches": [
+  "torch.cuda.{is_available,device_count,current_device,get_device_properties,get_device_capability,get_device_name,_lazy_init,set_device,is_initialized,get_rng_state,set_rng_state}",
+  "torch._C._cuda_getDevice",
+  "torch.cuda.device.__enter__/__exit__ (no device switch)",
+  "torch._dynamo.device_interface.CudaInterface device, stream and property queries",
+  "torch.accelerator.is_available -> False (Dynamo stream tracking off)",
+  "torch._subclasses.fake_tensor.init_gpu_context -> no-op",
+  "triton.runtime.driver.active -> codegen-only driver targeting GPUTarget('cuda', 90, 32)",
+  "Inductor joint-graph and post-grad pattern tables initialised before the patch is armed"
+ ],
+ "mode": "mock-h100",
+ "module_types": [
+  "Model"
+ ],
+ "output_code": "# AOT ID: ['1_inference']\nfrom ctypes import c_void_p, c_long, c_int\nimport torch\nimport math\nimport random\nimport os\nimport tempfile\nfrom math import inf, nan\nfrom cmath import nanj\nfrom torch._inductor.hooks import run_intermediate_hooks\nfrom torch._inductor.utils import maybe_profile\nfrom torch._inductor.codegen.memory_planning import _align as align\nfrom torch import device, empty_strided\nfrom torch._inductor.async_compile import AsyncCompile\nfrom torch._inductor.select_algorithm import extern_kernels\nfrom torch._C import _cuda_getCurrentRawStream as get_raw_stream\nimport triton\nimport triton.language as tl\nfrom torch._inductor.runtime.triton_heuristics import start_graph, end_graph\nfrom torch._C import _cuda_getCurrentRawStream as get_raw_stream\n\naten = torch.ops.aten\ninductor_ops = torch.ops.inductor\n_quantized = torch.ops._quantized\nassert_size_stride = torch._C._dynamo.guards.assert_size_stride\nassert_alignment = torch._C._dynamo.guards.assert_alignment\nempty_strided_cpu = torch._C._dynamo.guards._empty_strided_cpu\nempty_strided_cpu_pinned = torch._C._dynamo.guards._empty_strided_cpu_pinned\nempty_strided_cuda = torch._C._dynamo.guards._empty_strided_cuda\nempty_strided_xpu = torch._C._dynamo.guards._empty_strided_xpu\nempty_strided_mtia = torch._C._dynamo.guards._empty_strided_mtia\nreinterpret_tensor = torch._C._dynamo.guards._reinterpret_tensor\nalloc_from_pool = torch.ops.inductor._alloc_from_pool\nasync_compile = AsyncCompile()\nempty_strided_p2p = torch._C._distributed_c10d._SymmetricMemory.empty_strided_p2p\n\n\n# kernel path: /out/records-all/.inductor-cache/L1__1_Square_matrix_multiplication_.json/tmp8djkw6bw/dw/cdwfllsgvtt7pilyruudip2q4dw5nv2eiifxjogt2rutxyfaw2af.py\n# Topologically Sorted Source Nodes: [matmul], Original ATen: [aten.mm]\n# Source node to ATen node mapping:\n#   matmul => mm\n# Graph fragment:\n#   %arg2_1 : Tensor \"f32[s85, s55][s55, 1]cuda:0\" = PlaceHolder[target=arg2_1]\n#   %arg4_1 : Tensor \"f32[s55, s86][s86, 1]cuda:0\" = PlaceHolder[target=arg4_1]\n#   %mm : Tensor \"f32[s85, s86][s86, 1]cuda:0\"[num_users=1] = call_function[target=torch.ops.aten.mm.default](args = (%arg2_1, %arg4_1), kwargs = {})\n#   return %mm\ntriton_tem_fused_mm_0 = async_compile.triton('triton_tem_fused_mm_0', '''\nimport triton\nimport triton.language as tl\n\nfrom torch._inductor.runtime import triton_helpers, triton_heuristics\nfrom torch._inductor.runtime.triton_helpers import libdevice, math as tl_math\nfrom torch._inductor.runtime.hints import AutotuneHint, ReductionHint, TileHint, DeviceProperties\n\n@triton_heuristics.template(\n\nnum_stages=1,\nnum_warps=2,\ntriton_meta={'signature': {'arg_A': '*fp32', 'arg_B': '*fp32', 'out_ptr0': '*fp32', 'ks0': 'i32', 'ks1': 'i32', 'ks2': 'i32'}, 'device': DeviceProperties(type='cuda', index=0, multi_processor_count=132, cc=90, major=9, regs_per_multiprocessor=65536, max_threads_per_multi_processor=2048, max_threads_per_block=1024, warp_size=32), 'constants': {}, 'configs': [{(0,): [['tt.divisibility', 16]], (1,): [['tt.divisibility', 16]], (2,): [['tt.divisibility', 16]]}]},\ninductor_meta={'kernel_name': 'triton_tem_fused_mm_0', 'backend_hash': '91D1D1166449D9E2EB66EB9770C9E2C3B0FEB787341F27FEB4D3F0338DA50336', 'assert_indirect_indexing': True, 'autotune_local_cache': True, 'autotune_pointwise': False, 'autotune_remote_cache': None, 'force_disable_caches': True, 'dynamic_scale_rblock': True, 'max_autotune': True, 'max_autotune_pointwise': False, 'min_split_scan_rblock': 256, 'spill_threshold': 16, 'store_cubin': False, 'deterministic': True, 'force_filter_reduction_configs': False, 'mix_order_reduction_allow_multi_stages': False, 'are_deterministic_algorithms_enabled': False, 'grid_type': 'FixedGrid', 'fixed_grid': ['_grid_0', '_grid_1', '_grid_2'], 'extra_launcher_args': ['_grid_0', '_grid_1', '_grid_2'], 'config_args': {'EVEN_K': False, 'USE_FAST_ACCUM': False, 'ACC_TYPE': 'tl.float32', 'BLOCK_M': 32, 'BLOCK_N': 32, 'BLOCK_K': 16, 'GROUP_M': 8, 'ALLOW_TF32': False}},\n\n)\n@triton.jit\ndef triton_tem_fused_mm_0(arg_A, arg_B, out_ptr0, ks0, ks1, ks2):\n    EVEN_K : tl.constexpr = False\n    USE_FAST_ACCUM : tl.constexpr = False\n    ACC_TYPE : tl.constexpr = tl.float32\n    BLOCK_M : tl.constexpr = 32\n    BLOCK_N : tl.constexpr = 32\n    BLOCK_K : tl.constexpr = 16\n    GROUP_M : tl.constexpr = 8\n    ALLOW_TF32 : tl.constexpr = False\n    INDEX_DTYPE : tl.constexpr = tl.int32\n    A = arg_A\n    B = arg_B\n\n    M = ks0\n    N = ks1\n    K = ks2\n    if M * N == 0:\n        # early exit due to zero-size input(s)\n        return\n    stride_am = ks2\n    stride_ak = 1\n    stride_bk = ks1\n    stride_bn = 1\n\n    # based on triton.ops.matmul\n    pid = tl.program_id(0).to(INDEX_DTYPE)\n    grid_m = (M + BLOCK_M - 1) // BLOCK_M\n    grid_n = (N + BLOCK_N - 1) // BLOCK_N\n\n    # re-order program ID for better L2 performance\n    width = GROUP_M * grid_n\n    group_id = pid // width\n    group_size = min(grid_m - group_id * GROUP_M, GROUP_M)\n    pid_m = group_id * GROUP_M + (pid % group_size)\n    pid_n = (pid % width) // (group_size)\n    tl.assume(pid_m >= 0)\n    tl.assume(pid_n >= 0)\n\n    rm = pid_m * BLOCK_M + tl.arange(0, BLOCK_M)\n    rn = pid_n * BLOCK_N + tl.arange(0, BLOCK_N)\n    if ((stride_am == 1 and stride_ak == M) or (stride_am == K and stride_ak == 1)) and (M >= BLOCK_M and K > 1):\n        offs_a_m = tl.max_contiguous(tl.multiple_of(rm % M, BLOCK_M), BLOCK_M)\n    else:\n        offs_a_m = rm % M\n    if ((stride_bk == 1 and stride_bn == K) or (stride_bk == N and stride_bn == 1)) and (N >= BLOCK_N and K > 1):\n        offs_b_n = tl.max_contiguous(tl.multiple_of(rn % N, BLOCK_N), BLOCK_N)\n    else:\n        offs_b_n = rn % N\n    offs_k = tl.arange(0, BLOCK_K)\n    acc = tl.zeros((BLOCK_M, BLOCK_N), dtype=ACC_TYPE)\n\n    for k_idx in range(0, tl.cdiv(K, BLOCK_K)):\n\n        a_mask = offs_k[None, :] < (K - k_idx * BLOCK_K)\n        b_mask = offs_k[:, None] < (K - k_idx * BLOCK_K)\n\n        a_k_idx_vals = offs_k[None, :] + (k_idx * BLOCK_K)\n        b_k_idx_vals = offs_k[:, None] + (k_idx * BLOCK_K)\n\n        idx_m = offs_a_m[:, None]\n        idx_n = a_k_idx_vals\n        xindex = idx_n + idx_m*ks2\n        a = tl.load(A + (xindex), mask=a_mask, other=0.0)\n\n        idx_m = b_k_idx_vals\n        idx_n = offs_b_n[None, :]\n        xindex = idx_n + idx_m*ks1\n        b = tl.load(B + (xindex), mask=b_mask, other=0.0)\n\n\n        acc += tl.dot(a, b, allow_tf32=ALLOW_TF32, out_dtype=ACC_TYPE)\n\n\n    # rematerialize rm and rn to save registers\n    rm = pid_m * BLOCK_M + tl.arange(0, BLOCK_M)\n    rn = pid_n * BLOCK_N + tl.arange(0, BLOCK_N)\n    idx_m = rm[:, None]\n    idx_n = rn[None, :]\n    mask = (idx_m < M) & (idx_n < N)\n\n    # inductor generates a suffix\n    xindex = idx_n + idx_m*ks1\n    tl.store(out_ptr0 + (tl.broadcast_to(xindex, [BLOCK_M, BLOCK_N])), acc, mask)\n''', device_str='cuda')\n\n\nasync_compile.wait(globals())\ndel async_compile\n\nclass Runner:\n    def __init__(self, partitions):\n        self.partitions = partitions\n\n    def recursively_apply_fns(self, fns):\n        new_callables = []\n        for fn, c in zip(fns, self.partitions):\n            new_callables.append(fn(c))\n        self.partitions = new_callables\n\n    def call(self, args):\n        arg0_1, arg1_1, arg2_1, arg3_1, arg4_1 = args\n        args.clear()\n        s85 = arg0_1\n        s84 = arg1_1\n        s86 = arg3_1\n        arg2_1_size = arg2_1.size()\n        s55 = arg2_1_size[1]\n        assert_size_stride(arg2_1, (s85, s55), (s55, 1))\n        assert_size_stride(arg4_1, (s55, s86), (s86, 1))\n        with torch.cuda._DeviceGuard(0):\n            torch.cuda.set_device(0)\n            buf0 = empty_strided_cuda((s85, s86), (s86, 1), torch.float32)\n            # Topologically Sorted Source Nodes: [matmul], Original ATen: [aten.mm]\n            stream0 = get_raw_stream(0)\n            triton_tem_fused_mm_0.run(arg2_1, arg4_1, buf0, s85, s86, s55, ((31 + s85) // 32)*((31 + s86) // 32), 1, 1, stream=stream0)\n            del arg2_1\n            del arg4_1\n        return (buf0, )\n\nrunner = Runner(partitions=[])\ncall = runner.call\nrecursively_apply_fns = runner.recursively_apply_fns\n\n\ndef get_args():\n    from torch._dynamo.testing import rand_strided\n    arg0_1 = 4096\n    arg1_1 = 4096\n    arg2_1 = rand_strided((4096, 4096), (4096, 1), device='cuda:0', dtype=torch.float32)\n    arg3_1 = 4096\n    arg4_1 = rand_strided((4096, 4096), (4096, 1), device='cuda:0', dtype=torch.float32)\n    return [arg0_1, arg1_1, arg2_1, arg3_1, arg4_1]\n\n\ndef benchmark_compiled_module(args, times=10, repeat=10):\n    from torch._inductor.utils import print_performance\n    fn = lambda: call(list(args))\n    return print_performance(fn, times=times, repeat=repeat)\n\n\nif __name__ == \"__main__\":\n    from torch._inductor.wrapper_benchmark import compiled_module_main\n    args = get_args()\n    compiled_module_main('None', lambda times, repeat: benchmark_compiled_module(args, times=times, repeat=repeat))\n",
+ "placeholders": [
+  {
+   "kind": "int",
+   "name": "s85",
+   "source": "L['A'].size()[0]"
+  },
+  {
+   "kind": "int",
+   "name": "s84",
+   "source": "L['A'].size()[1]"
+  },
+  {
+   "device_type": "cuda",
+   "dtype": "float32",
+   "kind": "tensor",
+   "name": "l_a_",
+   "ndim": 2,
+   "source": "L['A']"
+  },
+  {
+   "kind": "int",
+   "name": "s86",
+   "source": "L['B'].size()[1]"
+  },
+  {
+   "device_type": "cuda",
+   "dtype": "float32",
+   "kind": "tensor",
+   "name": "l_b_",
+   "ndim": 2,
+   "source": "L['B']"
+  }
+ ],
+ "problem_id": "L1/1_Square_matrix_multiplication_",
+ "problem_path": "1_Square_matrix_multiplication_.py",
+ "problem_source": "import torch\nimport torch.nn as nn\n\nclass Model(nn.Module):\n    \"\"\"\n    Simple model that performs a single square matrix multiplication (C = A * B)\n    \"\"\"\n    def __init__(self):\n        super(Model, self).__init__()\n    \n    def forward(self, A: torch.Tensor, B: torch.Tensor) -> torch.Tensor:\n        \"\"\"\n        Performs the matrix multiplication.\n\n        Args:\n            A (torch.Tensor): Input matrix A of shape (N, N).\n            B (torch.Tensor): Input matrix B of shape (N, N).\n\n        Returns:\n            torch.Tensor: Output matrix C of shape (N, N).\n        \"\"\"\n        return torch.matmul(A, B)\n\nN = 2048 * 2\n\ndef get_inputs():\n    A = torch.rand(N, N)\n    B = torch.rand(N, N)\n    return [A, B]\n\ndef get_init_inputs():\n    return []  # No special initialization inputs needed",
+ "record_version": "q1-inductor-codegen/1",
+ "settings": {
+  "deterministic": true,
+  "dynamic": true,
+  "dynamo.assume_static_by_default": false,
+  "force_disable_caches": true,
+  "fullgraph": true,
+  "fx.use_duck_shape": false,
+  "grad_mode": "no_grad",
+  "joint_graph_constant_folding": true,
+  "max_autotune": true,
+  "max_autotune_gemm_backends": "TRITON",
+  "triton.autotune_pointwise": false
+ },
+ "versions": {
+  "python": "3.12.3",
+  "torch": "2.11.0+cu128",
+  "torch_git": "70d99e998b4955e0049d13a98d77ae1b14db1f45",
+  "triton": "3.6.0"
+ }
+}
