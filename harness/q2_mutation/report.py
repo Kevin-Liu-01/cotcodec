@@ -1,5 +1,11 @@
 """Summarize a control run: raw and saved verdicts, gold fixed point, flips, saves.
 
+P1 (the gold fixed point) counts only golds the save stage can change: a gold
+whose candidate places at least one office file of ``LO_SAVE_EXTENSIONS``
+(``save_exposed``). A gold of media, images, archives, PDF or text files is
+byte-identical after the save stage, so it is listed as not exposed and never
+counted.
+
 Inputs are the files a ``submit_controls.sh`` run writes:
 ``raw/raw-verdicts-{lock,scout}.jsonl``, ``saved/saved-verdicts-{lock,scout}.jsonl``,
 ``raw/raw-notes-*.jsonl``, ``saved/saved-notes-*.jsonl`` and
@@ -11,12 +17,13 @@ from __future__ import annotations
 
 import argparse
 import json
+import posixpath
 from collections import Counter
 from collections.abc import Mapping
 from pathlib import Path
 from typing import Any
 
-from harness.q2_mutation.reachability import save_failures, step_may_write
+from harness.q2_mutation.reachability import LO_SAVE_EXTENSIONS, save_failures, step_may_write
 from harness.q2_mutation.schema import read_verdict_rows
 from harness.q2_mutation.stats import clopper_pearson
 
@@ -88,6 +95,11 @@ def summarize_run(run: Path) -> dict[str, Any]:
         unemulated = list((row.get("plan") or {}).get("unemulated", []))
         entry[f"{kind}_save"] = {
             "infra_error": row.get("infra_error"),
+            "placed_office": sorted(
+                path
+                for path in placed
+                if posixpath.splitext(path)[1].lower() in LO_SAVE_EXTENSIONS
+            ),
             "save_failures": save_failures(placed, row),
             "unemulated_writes": any(step_may_write(str(step)) for step in unemulated),
             "saves": [
@@ -127,6 +139,36 @@ def infra_failed(t: Mapping[str, Any], *keys: str) -> bool:
     return any(bool((t.get(key) or {}).get("infra_failed")) for key in keys)
 
 
+def save_exposed(t: Mapping[str, Any], kind: str) -> bool:
+    """The candidate places an office file the save stage rewrites (P1's population)."""
+    return bool((t.get(f"{kind}_save") or {}).get("placed_office"))
+
+
+def p1_counted(t: Mapping[str, Any], arm: str) -> bool:
+    """A gold P1 counts: exposed to the save, saved without failure, no timeout."""
+    return (
+        f"gold_raw_{arm}" in t
+        and f"gold_saved_{arm}" in t
+        and save_exposed(t, "gold")
+        and save_ok(t, "gold")
+        and not infra_failed(t, f"gold_raw_{arm}", f"gold_saved_{arm}")
+    )
+
+
+def p1_flip(t: Mapping[str, Any], arm: str) -> bool:
+    """The raw gold passes and the GUI-faithfully saved gold does not."""
+    return (
+        p1_counted(t, arm)
+        and t[f"gold_raw_{arm}"]["verdict"] == "pass"
+        and t[f"gold_saved_{arm}"]["verdict"] != "pass"
+    )
+
+
+def p1_flip_tasks(tasks: Mapping[str, Mapping[str, Any]], arm: str = "lock") -> list[str]:
+    """Tasks whose gold flipped under ``arm`` (unemulated tasks excluded); the audit adds them."""
+    return sorted(k for k, t in tasks.items() if not unemulated_task(t) and p1_flip(t, arm))
+
+
 def aggregate(tasks: Mapping[str, Mapping[str, Any]]) -> dict[str, Any]:
     out: dict[str, Any] = {
         "excluded_unemulated": sorted(k for k, t in tasks.items() if unemulated_task(t)),
@@ -142,21 +184,12 @@ def aggregate(tasks: Mapping[str, Mapping[str, Any]]) -> dict[str, Any]:
             and t[f"initial_raw_{arm}"]["verdict"] == "fail"
             for t in both
         )
-        # P1 counts a gold only if its GUI-faithful save wrote every office file
-        # and neither scoring timed out; the others are listed, never counted.
-        fixed = {
-            k: t
-            for k, t in gold.items()
-            if f"gold_saved_{arm}" in t
-            and save_ok(t, "gold")
-            and not infra_failed(t, f"gold_raw_{arm}", f"gold_saved_{arm}")
-        }
-        flips = [
-            t
-            for t in fixed.values()
-            if t[f"gold_raw_{arm}"]["verdict"] == "pass"
-            and t[f"gold_saved_{arm}"]["verdict"] != "pass"
-        ]
+        # P1 counts a gold only if it places an office file the save stage
+        # rewrites, its GUI-faithful save wrote every office file and neither
+        # scoring timed out; the others are listed, never counted.
+        fixed = {k: t for k, t in gold.items() if p1_counted(t, arm)}
+        flips = [t for t in fixed.values() if p1_flip(t, arm)]
+        not_exposed = sorted(k for k, t in gold.items() if not save_exposed(t, "gold"))
         dn_saved_pass = [
             t for t in initial if t.get(f"initial_saved_{arm}", {}).get("verdict") == "pass"
         ]
@@ -176,7 +209,8 @@ def aggregate(tasks: Mapping[str, Mapping[str, Any]]) -> dict[str, Any]:
             "gold_fixed_point_flip_clopper_pearson95": (
                 list(clopper_pearson(len(flips), len(fixed))) if fixed else None
             ),
-            "gold_fixed_point_not_counted": sorted(set(gold) - set(fixed)),
+            "gold_fixed_point_not_exposed": not_exposed,
+            "gold_fixed_point_not_counted": sorted(set(gold) - set(fixed) - set(not_exposed)),
             "gold_save_failed": sorted(
                 k for k, t in gold.items() if "gold_save" in t and not save_ok(t, "gold")
             ),

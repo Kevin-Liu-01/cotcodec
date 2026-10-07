@@ -550,7 +550,7 @@ def test_classify(
     [
         ({"save_failed": True}, "save_failed"),
         ({"unemulated": True}, "unemulated"),
-        ({"infra_failed": True}, "infra_timeout"),
+        ({"infra_failed": True}, "infra_failed"),
         ({"save_failed": True, "infra_failed": True}, "save_failed"),
     ],
 )
@@ -628,7 +628,7 @@ def test_report_never_scores_an_unsaved_office_mutant() -> None:
         n_boot=100,
     )
     status = {o["mutant_id"]: o["lock_status"] for o in outcomes}
-    assert status == {ids[0]: "save_failed", ids[1]: "save_failed", ids[2]: "infra_timeout"}
+    assert status == {ids[0]: "save_failed", ids[1]: "save_failed", ids[2]: "infra_failed"}
     assert summary["save_stage_exclusions"] == [{"mutant_id": ids[0], "kind": "save_failed"}]
     # The null mutant's save failing excludes every mutant of the target.
     _, summary = campaign.build_report(

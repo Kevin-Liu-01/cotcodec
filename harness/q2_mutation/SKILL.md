@@ -28,9 +28,11 @@ scores it. Runbook: `README.md` in this directory.
   `offline_eval.py` scores; `report.py` summarizes control runs (K1, P1).
 - `operators/` is the 64-operator catalog with its stdlib snapshot, diff and
   purity oracle; its sources are hashed into `catalog_sha256`.
-- `raters.py`, `packets.py` and `stats.py` hold the D9 audit: sample, blind
-  packet (built from the operators' snapshot), consensus, adjudication and the
-  K3 bound.
+- `raters.py`, `packets.py` and `stats.py` hold the D9/D23 audit: sample, blind
+  packet (built from the operators' snapshot), answer rule, consensus,
+  adjudication and the K3 bound; `audit.py` builds samples, packets and the
+  summary; `rater_runner.py` makes the model calls (one per rater per item,
+  hashed receipts); `analysis.py` is the registered headline.
 
 ## Patterns to follow / invariants
 <!-- agent-docs:fill:patterns -->

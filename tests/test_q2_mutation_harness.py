@@ -437,6 +437,7 @@ def test_packets_are_blind() -> None:
         )
     assert sorted(raters.rater_order(["a", "b", "c"], "r1")) == ["a", "b", "c"]
     assert raters.RATERS[0]["provider"] != raters.RATERS[1]["provider"]
+    assert raters.RATERS[1]["role"] == "independent"
 
 
 def test_consensus_and_summary() -> None:
@@ -455,25 +456,124 @@ def test_consensus_and_summary() -> None:
     assert summary.n_unresolved == 1
     # The unresolved item counts as a label error until Kevin adjudicates it;
     # dropping it is only the sensitivity estimate.
-    assert summary.label_error["should_fail"].estimate == pytest.approx(1 / 6)
-    assert summary.label_error_resolved_only["should_fail"].estimate == 0.0
-    assert summary.label_error_unresolved_as_wrong["should_fail"] == pytest.approx(1 / 6)
-    assert summary.sham_accuracy == {"model-rater-anthropic": 1.0, "model-rater-openai": 0.0}
+    group = "should_fail_violation"
+    assert summary.label_error[group].estimate == pytest.approx(1 / 6)
+    assert summary.label_error_resolved_only[group].estimate == 0.0
+    assert summary.label_error_unresolved_as_wrong[group] == pytest.approx(1 / 6)
+    assert summary.sham_accuracy == {"model-rater-anthropic": 1.0, "model-rater-open-weight": 0.0}
     # Each rater on its own: the dissent of one rater stays visible.
-    assert summary.per_rater["model-rater-anthropic"]["should_fail"]["contradicts_label"] == (
+    assert summary.per_rater["model-rater-anthropic"][group]["contradicts_label"] == (
         pytest.approx(1 / 6)
     )
-    assert summary.per_rater["model-rater-openai"]["should_fail"]["contradicts_label"] == 0.0
-    # Six items on six tasks are too few to audit a group: K3 fires.
-    assert summary.k3["should_fail"].sufficient is False
-    assert summary.k3_fires["should_fail"] is True
+    assert summary.per_rater["model-rater-open-weight"][group]["contradicts_label"] == 0.0
+    # Six items on six tasks are too few to audit a group: K3 fires; the
+    # equivalence group has no item at all and fires as well.
+    assert summary.k3[group].sufficient is False
+    assert summary.k3_fires == {"should_pass_equiv": True, "should_fail_violation": True}
+    assert summary.k3["should_pass_equiv"] is None
+    assert summary.decisions["m5"] == "unresolved"
     adjudicated = raters.summarize(
         sample, labels, ratings, adjudicated={"m5": "reject"}, n_boot=200
     )
     assert adjudicated.n_adjudicated == 1
-    assert adjudicated.label_error["should_fail"].estimate == 0.0
+    assert adjudicated.label_error[group].estimate == 0.0
+    assert adjudicated.decisions["m5"] == "reject"
     with pytest.raises(ValueError, match="accept or reject"):
         raters.summarize(sample, labels, ratings, adjudicated={"m5": "unsure"}, n_boot=200)
+
+
+def test_k3_groups_are_the_ungated_label_classes() -> None:
+    """Rejected alternative solutions never fire K3; they are S6 and gate P2."""
+    sample, labels, ratings = [], {}, {}
+    for i in range(40):
+        key = f"e{i}"
+        sample.append(raters.Sampled(key, f"t{i % 10}", "agreement", 1.0))
+        labels[key], ratings[key] = "should_pass_equiv", ("accept", "accept")
+    for i in range(40):
+        key = f"v{i}"
+        sample.append(raters.Sampled(key, f"t{i % 10}", "agreement", 1.0))
+        labels[key], ratings[key] = "should_fail_violation", ("reject", "reject")
+    for i in range(30):  # every alternative solution rejected by both raters
+        key = f"a{i}"
+        sample.append(raters.Sampled(key, f"t{i % 10}", "alt_solution", 1.0))
+        labels[key], ratings[key] = "should_pass_alt_solution", ("reject", "reject")
+    for i in range(4):
+        key = f"x{i}"
+        sample.append(raters.Sampled(key, f"t{i}", "disagreement", 1.0))
+        labels[key] = "should_fail_extra_change"
+        ratings[key] = ("reject", "reject") if i < 3 else ("accept", "reject")
+    sample.append(raters.Sampled("t1__p1_flip", "t1", "p1_flip", 1.0))
+    ratings["t1__p1_flip"] = ("accept", "accept")
+    summary = raters.summarize(sample, labels, ratings, n_boot=200)
+    assert set(summary.k3) == {"should_pass_equiv", "should_fail_violation"}
+    assert summary.k3_fires == {"should_pass_equiv": False, "should_fail_violation": False}
+    assert summary.k4_fires is False
+    alt = summary.by_label_class["should_pass_alt_solution"]
+    assert alt["n"] == 30 and alt["reject"] == 30 and alt["gate_share"] == 0.0
+    extra = summary.by_label_class["should_fail_extra_change"]
+    assert extra["reject"] == 3 and extra["unresolved"] == 1
+    assert extra["gate_share"] == pytest.approx(0.75)
+    assert summary.p1_flips == {"t1__p1_flip": "accept"}
+    assert summary.decisions["a0"] == "reject" and summary.decisions["x3"] == "unresolved"
+
+
+def test_kappa_below_threshold_fires_both_groups() -> None:
+    sample, labels, ratings = [], {}, {}
+    for i in range(60):
+        key = f"e{i}"
+        sample.append(raters.Sampled(key, f"t{i % 12}", "agreement", 1.0))
+        labels[key] = "should_pass_equiv" if i % 2 else "should_fail_violation"
+        ratings[key] = ("accept", "reject") if i % 3 == 0 else ("unsure", "accept")
+    summary = raters.summarize(sample, labels, ratings, n_boot=100)
+    assert summary.kappa is not None and summary.kappa < raters.KAPPA_MIN
+    assert summary.kappa_fires and all(summary.k3_fires.values())
+
+
+@pytest.mark.parametrize(
+    ("text", "answer", "status"),
+    [
+        ("accept. The table matches.", "accept", "ok"),
+        ("**Reject** - cell B2 was changed.", "reject", "ok"),
+        ("  Unsure: the render is blank", "unsure", "ok"),
+        ("- accept", "accept", "ok"),
+        ("Answer: accept", "unsure", "unparseable"),
+        ("I would accept this.", "unsure", "unparseable"),
+        ("acceptable", "unsure", "unparseable"),
+        ("", "unsure", "empty"),
+        (None, "unsure", "empty"),
+        ("123", "unsure", "unparseable"),
+    ],
+)
+def test_first_token_rule(text: str | None, answer: str, status: str) -> None:
+    assert raters.parse_first_token(text) == (answer, status)
+
+
+def test_non_answers_map_to_unsure() -> None:
+    for outcome in ("refusal", "timeout", "transport_exhausted", "request_rejected", "unrated"):
+        assert raters.answer_for(outcome, "accept") == ("unsure", outcome)
+    assert raters.answer_for("ok", "reject because") == ("reject", "ok")
+    with pytest.raises(ValueError, match="unknown call outcome"):
+        raters.answer_for("weird", None)
+
+
+def test_audit_pool_and_sampler_add_p1_flips() -> None:
+    outcomes = [
+        {"mutant_id": "m1", "task_id": "t1", "label": "should_pass_equiv",
+         "lock_status": "evaluable", "lock_verdict": "pass", "probe_touched": False},
+        {"mutant_id": "m2", "task_id": "t1", "label": "should_pass_equiv",
+         "lock_status": "evaluable", "lock_verdict": "fail", "probe_touched": True},
+        {"mutant_id": "m3", "task_id": "t2", "label": "should_fail_violation",
+         "lock_status": "null_not_pass", "lock_verdict": "fail", "probe_touched": False},
+        {"mutant_id": "m4", "task_id": "t2", "label": "should_fail_violation",
+         "lock_status": "evaluable", "lock_verdict": "pass", "probe_touched": False},
+    ]
+    pool = raters.audit_candidates(outcomes)
+    assert [c.mutant_id for c in pool] == ["m1", "m4"]
+    sample = raters.draw_audit_sample(pool, p1_flip_tasks=["t9", "t9"])
+    strata = {s.mutant_id: s.stratum for s in sample}
+    assert strata["m1"] == "agreement" and strata["m4"] == "disagreement"
+    assert strata["t9__p1_flip"] == "p1_flip"
+    assert sum(1 for s in sample if s.stratum == "sham") == 1
 
 
 def test_k3_bound_fires_without_observed_errors_when_the_sample_is_small() -> None:
@@ -683,16 +783,17 @@ def test_report_aggregate_counts_fixed_point_and_flips() -> None:
             "gold_raw_scout": v("pass", 1.0),
             "initial_raw_scout": v("pass", 1.0),
             "gold_save": {
+                "placed_office": ["/home/user/a.docx"],
                 "saves": [
                     {"written": True, "changed": True, "seconds_to_write": 0.8, "dialogs": []}
-                ]
+                ],
             },
         },
         "t2": {
             "gold_raw_lock": v("pass", 1.0),
             "initial_raw_lock": v("fail", 0.0),
             "gold_saved_lock": v("pass", 1.0),
-            "gold_save": {"saves": [], "save_failures": []},
+            "gold_save": {"placed_office": ["/home/user/b.xlsx"], "saves": [], "save_failures": []},
         },
         # The gold's save never happened: its "saved" verdict is on pre-save
         # bytes and must not count as a fixed-point outcome.
@@ -700,7 +801,19 @@ def test_report_aggregate_counts_fixed_point_and_flips() -> None:
             "gold_raw_lock": v("pass", 1.0),
             "initial_raw_lock": v("fail", 0.0),
             "gold_saved_lock": v("fail", 0.0),
-            "gold_save": {"saves": [], "save_failures": ["open failed: /home/user/a.docx"]},
+            "gold_save": {
+                "placed_office": ["/home/user/a.docx"],
+                "saves": [],
+                "save_failures": ["open failed: /home/user/a.docx"],
+            },
+        },
+        # A text gold: the save stage cannot change it, so it is not exposed
+        # and never a P1 outcome (it still counts for K1).
+        "t6": {
+            "gold_raw_lock": v("pass", 1.0),
+            "initial_raw_lock": v("fail", 0.0),
+            "gold_saved_lock": v("pass", 1.0),
+            "gold_save": {"placed_office": [], "saves": [], "save_failures": []},
         },
         # A postconfig types a file name the harness cannot replay: excluded.
         "t4": {
@@ -717,11 +830,13 @@ def test_report_aggregate_counts_fixed_point_and_flips() -> None:
     }
     out = report.aggregate(tasks)
     assert out["excluded_unemulated"] == ["t4"]
-    assert out["lock"]["k1_gold_pass_and_do_nothing_fail"] == "3/3"
+    assert out["lock"]["k1_gold_pass_and_do_nothing_fail"] == "4/4"
     assert out["lock"]["k1_infra_excluded"] == 1
     assert out["lock"]["gold_fixed_point_flips"] == 1 and out["lock"]["gold_fixed_point_n"] == 2
     assert out["lock"]["gold_save_failed"] == ["t3"]
-    assert out["lock"]["gold_fixed_point_not_counted"] == ["t3", "t5"]
+    assert out["lock"]["gold_fixed_point_not_exposed"] == ["t5", "t6"]
+    assert out["lock"]["gold_fixed_point_not_counted"] == ["t3"]
+    assert report.p1_flip_tasks(tasks) == ["t1"]
     low, high = out["lock"]["gold_fixed_point_flip_clopper_pearson95"]
     assert low == pytest.approx(0.0126, abs=1e-3) and high == pytest.approx(0.9874, abs=1e-3)
     assert [f["candidate"] for f in out["dependency_flips"]] == ["initial_raw"]

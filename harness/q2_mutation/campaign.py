@@ -30,6 +30,9 @@ place, and only reads what that place may read:
 ``recheck`` (metric image)
     Operator purity re-run on the saved mutant against the saved null mutant
     (admission rule and S3/K5 of the preregistration).
+``k2-sample`` (anywhere)
+    The seeded K2 fidelity sample, drawn from ``scoring-jobs.jsonl`` alone
+    (no verdict exists or is read), stratified over task domains.
 ``report`` (anywhere)
     Joins labels, admission, post-save purity and verdicts into one outcome
     per mutant and the exploratory tables of a development run.
@@ -135,6 +138,13 @@ PROBE_OPERATOR_MAP: dict[str, tuple[str, ...]] = {
     "mutants:R-REVERT": ("*.viol.*",),
     "mutants_v2:R-REVERT": ("*.viol.*",),
 }
+# Operators designed after a scoping probe showed what they test (catalog
+# provenance "probe_informed"). Their cells are exploratory on every task, as
+# if a probe had touched them (preregistration section 12); a test keeps this
+# set equal to the catalog's.
+PROBE_INFORMED_OPERATORS = frozenset(
+    {"docx.extra.edit_unrelated_table_cell", "pptx.viol.table_cell_text"}
+)
 
 # Code whose bytes the preregistration pins (README and SKILL files excluded so
 # a documentation fix does not move the pin).
@@ -1037,6 +1047,9 @@ def probe_touched_cells(probe: Mapping[str, Any]) -> dict[str, list[str]]:
 
 
 def is_probe_touched(cells: Mapping[str, Sequence[str]], task_id: str, operator: str) -> bool:
+    """A probe cell, or a probe-informed operator anywhere: both are exploratory."""
+    if operator in PROBE_INFORMED_OPERATORS:
+        return True
     return any(fnmatch.fnmatchcase(operator, pattern) for pattern in cells.get(task_id, ()))
 
 
@@ -1058,10 +1071,12 @@ def classify(
     save of the mutant or of its null mutant did not write every office file,
     or an office candidate reached the scorer unsaved) | unemulated (the task
     has a setup or postconfig step the harness cannot replay and that may write
-    a file the checker reads) | not_scored | normalized | infra_timeout (the
-    mutant's or its null mutant's scoring timed out after its retries) |
+    a file the checker reads) | not_scored | normalized | infra_failed (the
+    mutant's or its null mutant's scoring timed out after its retries, or
+    failed for a harness cause: the scoring process died without a result, a
+    live getter, a refused network fetch; ``offline_eval.score_job``) |
     null_not_pass | error | nondeterministic | ambiguous | evaluable. The first
-    three and infra_timeout are infrastructure exclusions (preregistration
+    three and infra_failed are infrastructure exclusions (preregistration
     section 8). event is set only for evaluable mutants: FN / FN_alt / FP_R /
     FP_F when the checker disagrees with the label, 'ok' when it agrees.
     """
@@ -1078,7 +1093,7 @@ def classify(
     if not post_save.get("post_save_admitted"):
         return "normalized", None
     if infra_failed:
-        return "infra_timeout", None
+        return "infra_failed", None
     if null_verdict is None or null_verdict["verdict"] != "pass":
         return "null_not_pass", None
     if verdict["verdict"] == "error":
@@ -1220,6 +1235,7 @@ def build_report(
             "post_save_admitted": post.get(mutant_id, {}).get("post_save_admitted"),
             "post_save_failed": post.get(mutant_id, {}).get("post_save_failed"),
             "saved_via": saved_via.get(mutant_id),
+            "probe_informed": record["operator"] in PROBE_INFORMED_OPERATORS,
             "probe_touched": is_probe_touched(probe_cells, record["task_id"], record["operator"]),
         }
         for arm in arms:
@@ -1305,7 +1321,12 @@ def build_report(
             other = [arm for arm in arms if arm != primary][0]
             for r in outcomes:
                 first, second = r[f"{primary}_verdict"], r[f"{other}_verdict"]
-                if first and second and first != second:
+                # S1 counts a flip only when each venv's repeated scorings agree.
+                unstable = any(
+                    notes.get(arm, {}).get(r["mutant_id"], {}).get("nondeterministic")
+                    for arm in arms
+                )
+                if first and second and first != second and not unstable:
                     flips.append(r["mutant_id"])
         summary["venv_disagreements"] = flips
         task_escape: dict[str, bool] = defaultdict(bool)
@@ -1338,12 +1359,107 @@ def build_report(
             )
             for op in sorted({r["operator"] for r in outcomes})
         }
+        # The registered design sizes (preregistration section 6): P5 and P2
+        # pooled, the two largest families, and the P3 / P4 pools.
         summary["mdr_reference"] = {
             f"{n}_tasks_icc_{icc_value}": round(minimum_detectable_rate(0.05, n, 3.0, icc_value), 4)
-            for n in (21, 33, 120)
-            for icc_value in (0.3, 0.5, 0.8)
+            for n in (59, 31, 21, 13)
+            for icc_value in (0.13, 0.5, 1.0)
         }
     return outcomes, summary
+
+
+K2_PAIRS = 80
+K2_MIN_DOMAINS = 3
+K2_PER_TASK = 4
+
+
+def k2_sample(
+    jobs: Sequence[Mapping[str, Any]],
+    domain_of: Mapping[str, str],
+    *,
+    n: int = K2_PAIRS,
+    seed: int = 42,
+) -> list[dict[str, Any]]:
+    """The K2 fidelity sample: ``n`` scoring jobs over at least three task domains.
+
+    Drawn from the build's job list only (admitted mutants and null mutants),
+    before and without any verdict. Each domain's jobs are shuffled with
+    ``random.Random(f"{seed}:k2:{domain}")``; jobs are then taken round-robin
+    over the sorted domains, at most ``K2_PER_TASK`` per task, and if the cap
+    leaves fewer than ``n`` the remainder is filled round-robin without it.
+    """
+    import random
+
+    pool: dict[str, list[Mapping[str, Any]]] = defaultdict(list)
+    for job in sorted(jobs, key=lambda j: str(j["job_id"])):
+        if job.get("kind") in ("mutant", "null"):
+            pool[domain_of[str(job["task_id"])]].append(job)
+    if len(pool) < K2_MIN_DOMAINS:
+        raise CampaignError(f"K2 needs at least {K2_MIN_DOMAINS} domains, found {len(pool)}")
+    queues = {}
+    for domain in sorted(pool):
+        queue = list(pool[domain])
+        random.Random(f"{seed}:k2:{domain}").shuffle(queue)
+        queues[domain] = queue
+    chosen: list[Mapping[str, Any]] = []
+    taken: set[str] = set()
+    for capped in (True, False):
+        per_task = Counter(str(j["task_id"]) for j in chosen)
+        progress = True
+        while len(chosen) < n and progress:
+            progress = False
+            for domain in sorted(queues):
+                for job in queues[domain]:
+                    job_id = str(job["job_id"])
+                    task = str(job["task_id"])
+                    if job_id in taken or (capped and per_task[task] >= K2_PER_TASK):
+                        continue
+                    chosen.append(job)
+                    taken.add(job_id)
+                    per_task[task] += 1
+                    progress = True
+                    break
+                if len(chosen) >= n:
+                    break
+    return [
+        {
+            "job_id": job["job_id"],
+            "mutant_id": job["mutant_id"],
+            "task_id": job["task_id"],
+            "domain": domain_of[str(job["task_id"])],
+            "kind": job["kind"],
+            "candidate_sha256": job.get("candidate_sha256"),
+        }
+        for job in chosen
+    ]
+
+
+def cmd_k2_sample(args: argparse.Namespace) -> int:
+    jobs = read_jsonl(args.jobs)
+    domains = {
+        path.stem: json.loads(path.read_text(encoding="utf-8"))["domain"]
+        for path in Path(args.sanitized).glob("*.json")
+    }
+    out = Path(args.out)
+    try:
+        rows = k2_sample(jobs, domains, n=args.n, seed=args.seed)
+        status = "drawn"
+    except CampaignError as exc:
+        rows, status = [], f"not drawn: {exc}"
+    write_jsonl(out, rows)
+    summary = {
+        "status": status,
+        "pairs": len(rows),
+        "by_domain": dict(Counter(r["domain"] for r in rows)),
+        "tasks": len({r["task_id"] for r in rows}),
+        "jobs_sha256": sha256_file(args.jobs),
+        "sample_sha256": sha256_file(out),
+        "seed": args.seed,
+    }
+    write_json(out.with_suffix(".summary.json"), summary)
+    print(json.dumps(summary, sort_keys=True))
+    return 0
 
 
 def cmd_report(args: argparse.Namespace) -> int:
@@ -1428,6 +1544,7 @@ OUTCOME_KEYS = frozenset(
         "post_save_failed",
         "saved_via",
         "probe_touched",
+        "probe_informed",
         "checker_family",
     }
 )
@@ -1739,6 +1856,14 @@ def main(argv: list[str] | None = None) -> int:
     rc.add_argument("--saved-jobs", required=True)
     rc.add_argument("--out", required=True)
     rc.set_defaults(func=cmd_recheck)
+
+    k2 = sub.add_parser("k2-sample", help="seeded K2 fidelity sample from the job list")
+    k2.add_argument("--jobs", required=True, help="build/scoring-jobs.jsonl")
+    k2.add_argument("--sanitized", required=True, help="sanitized task export (domains)")
+    k2.add_argument("--out", required=True)
+    k2.add_argument("--n", type=int, default=K2_PAIRS)
+    k2.add_argument("--seed", type=int, default=42)
+    k2.set_defaults(func=cmd_k2_sample)
 
     rp = sub.add_parser("report", help="outcomes and exploratory tables of one run")
     rp.add_argument("--run", required=True)

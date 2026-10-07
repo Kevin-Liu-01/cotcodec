@@ -625,6 +625,20 @@ def score_once(
     return out
 
 
+def infra_reason(run: Mapping[str, Any]) -> str | None:
+    """Why a scoring run failed for a harness cause, or None (a checker verdict)."""
+    if run.get("infra_timeout"):
+        return "timeout"
+    error = str(run.get("error") or "")
+    if error.startswith("worker exit"):
+        return "worker_died"
+    if error.startswith("LiveStateRequired"):
+        return "live_state_required"
+    if error.startswith("OfflineNetworkRefused"):
+        return "network_refused"
+    return None
+
+
 def score_job(
     job: ScoreJob,
     *,
@@ -653,7 +667,10 @@ def score_job(
     first = runs[0]
     # A timeout that survived its retries is an infrastructure failure (section 8),
     # kept apart from a checker exception although both leave verdict "error".
-    infra_failed = any(run.get("infra_timeout") for run in runs)
+    # So are the harness causes: a scoring process that died without a result
+    # (an OOM kill or a crash), a live getter and a refused network fetch.
+    reasons = sorted({reason for run in runs if (reason := infra_reason(run))})
+    infra_failed = bool(reasons)
     nondeterministic = any(
         (run["score"], run["error"] is None) != (first["score"], first["error"] is None)
         for run in runs[1:]
@@ -685,6 +702,7 @@ def score_job(
         "thread_env": THREAD_ENV,
         "infra_timeouts": infra_timeouts,
         "infra_failed": infra_failed,
+        "infra_reasons": reasons,
         "nondeterministic": nondeterministic,
         "repeat_scores": [run["score"] for run in runs],
         "repeat_errors": [run["error"] for run in runs],

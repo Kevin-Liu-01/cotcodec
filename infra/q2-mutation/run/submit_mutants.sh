@@ -6,8 +6,9 @@
 #   2. LO-VM image: base / initial / null saves, planning with the blind specs,
 #      UNO application, purity against the null mutant, deduplication, then the
 #      GUI-faithful save stage (reach.sh) on admitted mutants and null mutants;
-#   3. metric image: merge saved files, score under both venvs (VerdictRow
-#      JSONL), re-check operator purity on the saved files, report.
+#   3. metric image: the K2 fidelity sample (job list only, no verdict), merge
+#      saved files, score under both venvs (VerdictRow JSONL), re-check
+#      operator purity on the saved files, report.
 # Jobs 2 and 3 depend on the previous job succeeding. Every container is
 # GPU-less and network-less (q2-mutation-cpu.sbatch, decisions D12 and D13).
 #
@@ -56,7 +57,12 @@ j2=$(sbatch --parsable --dependency=afterok:"${j1}" --cpus-per-task="${workers}"
   --export=ALL,Q2M_MODE=run,Q2M_IMAGE_ID="${lo}",Q2M_ARGV_JSON_HEX="${a2}",Q2M_SOURCE="${src}",Q2M_RUN_DIR="${run}/build",Q2M_INPUTS="${root}/inputs",Q2M_EXTRA_RO="${run}/prep:/ro/prep",Q2M_TMPFS_SIZE=32g \
   "${batch}")
 
-a3=$(hex "${frozen_env[@]}" sh -c "${guard} && ${py} -m harness.q2_mutation.campaign merge \
+# The K2 fidelity sample is drawn from the build's job list before any
+# verdict exists (campaign k2-sample; preregistration section 10).
+a3=$(hex "${frozen_env[@]}" sh -c "${guard} && ${py} -m harness.q2_mutation.campaign k2-sample \
+     --jobs /ro/build/scoring-jobs.jsonl --sanitized /src/program/evidence/q2-mutation/sanitized-tasks \
+     --out /out/k2-sample.jsonl \
+  && ${py} -m harness.q2_mutation.campaign merge \
      --jobs /ro/build/scoring-jobs.jsonl --lo-rows \$(ls /ro/build/lo/reachability-*.jsonl) \
      --out /out/jobs-saved.jsonl --path-map /out/=/ro/build/ \
   && /src/infra/q2-mutation/run/score.sh /out/jobs-saved.jsonl /out/mut ${workers} 2 \
