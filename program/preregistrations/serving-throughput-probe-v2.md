@@ -32,7 +32,7 @@ after the freeze is a new experiment id.
 - **Contract.** `experiments/serving/serving-throughput-probe-v2.yaml` holds every
   engine flag, point, seed, gate threshold, launch-window reservation and budget
   parameter named below. Its SHA-256 is
-  `14f25482769c89e7eae5ef0531e7b75baa32f55a50affee3078839f8b29e2f95`.
+  `9224ccdcfc9c2667f28860f8f4c5c94f4e2121b3d7dd47c8b68acd4bde26257a`.
   Every point file and the summary record the contract SHA-256 they ran under.
 - **Probe code.** `scripts/run_vllm_throughput_probe_v2.py`, every module of
   `harness/serving_probe_v2/`, and the frozen v1 code they import:
@@ -196,7 +196,7 @@ for v1). v2 does not draw on D8's probe cap, which v1 has largely used.
    prefill and decode, not at the largest shape; memory did not grow through
    r3's later steps (up to 48,314 tokens and 20 images), r4 or a1b. So in v2
    each phase runs a warm-up after its smoke in which each of 20 H2 episodes,
-   started 2.5 s apart with `t_env` 2.5 s as in r3, replays steps 1, 2 and 3 and
+   with starts staggered over 2.5 s and `t_env` 2.5 s as in r3, replays steps 1, 2 and 3 and
    then step 20, the largest registered shape (20 screenshots, 19 prebuilt
    responses, 48,140 modelled prompt tokens, 300 output tokens). The contract
    loader refuses any later point of the phase whose largest request has more
@@ -482,7 +482,7 @@ are reset before every point.
 | Point | Phase | What | Requests | Seed | Cap (min) | Required |
 |---|---|---|---|---|---|---|
 | a-smoke | real | gates G0.6, G0.7: 16 at C=8, 1 PNG, O=64 | 16 | 7 | 1.5 | yes |
-| a-warmup | real | G0.9: 20 H2 episodes, 2.5 s apart, steps 1, 2, 3 then 20, O=300 | 80 | 105 | 2.5 | yes |
+| a-warmup | real | G0.9: 20 H2 episodes, starts staggered over 2.5 s as in r3, steps 1, 2, 3 then 20, O=300 | 80 | 105 | 2.5 | yes |
 | a1a | real | S2 open loop: prefix 1,536 + body 4,608 + 1 random JPEG, O=300, C=16 | 96 | 42 | 1.5 | yes |
 | r1 | real | H1 replay (window 4), V=40, steps 1-6, O=300 | 240 | 101 | 2.5 | yes |
 | r3 | real | H2 replay (folding), V=20, steps 1-24, O=300 | 480 | 103 | 12 | yes |
@@ -494,7 +494,7 @@ are reset before every point.
 | a2 | real | a1a shape at C=40 | 160 | 45 | 2 | no |
 | r1b | real | exactly r1's requests (X1's same-engine replicate) | 240 | 101 | 2.5 | no |
 | x1-smoke | dummy-control | as a-smoke | 16 | 7 | 1.5 | yes |
-| x1-warmup | dummy-control | as a-warmup | 20 | 105 | 2.5 | yes |
+| x1-warmup | dummy-control | as a-warmup | 80 | 105 | 2.5 | yes |
 | x1-a1 | dummy-control | exactly a1a's requests | 96 | 42 | 1.5 | yes |
 | x1-r1 | dummy-control | exactly r1's requests | 240 | 101 | 2.5 | yes |
 
