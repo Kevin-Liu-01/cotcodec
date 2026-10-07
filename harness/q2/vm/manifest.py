@@ -48,10 +48,10 @@ HF_URL_RE = re.compile(
 LICENSE_RE = re.compile(r"^[A-Za-z0-9][A-Za-z0-9.+-]{0,63}$")
 SEED_FLAG_RE = re.compile(r"^--[a-z][a-z0-9-]{0,31}$")
 
-PURPOSES = ("infrastructure-validation", "development", "acceptance")
+PURPOSES = ("infrastructure-validation", "reference-capture", "development", "acceptance")
 NETWORKS = ("none-netns", "bridge-unpublished")
 CONTAINER_PROFILES = ("default", "large-cpu-mem")
-WORKLOAD_KINDS = ("boot-reset-validation",)
+WORKLOAD_KINDS = ("boot-reset-validation", "rdev-capture")
 GPU_WORDS = ("gpu", "gpus", "gres", "nvidia", "cuda")
 
 
@@ -391,6 +391,26 @@ def validate_manifest(raw: Any) -> dict[str, Any]:
         budget = 600 + cycles * (boot_timeout + settle_timeout + 120)
         if slurm["minutes"] * 60 < budget:
             raise ManifestError("slurm.minutes cannot cover the worst-case cycle budget")
+    if workload["kind"] == "rdev-capture":
+        _require_keys(
+            workload,
+            "workload",
+            {"kind", "reps", "boot_timeout_s", "settle_timeout_s", "plan_sha256"},
+        )
+        reps = _int(workload["reps"], "workload.reps", 1, 20)
+        boot_timeout = _int(workload["boot_timeout_s"], "workload.boot_timeout_s", 60, 900)
+        settle_timeout = _int(workload["settle_timeout_s"], "workload.settle_timeout_s", 0, 300)
+        _match(workload["plan_sha256"], SHA_RE, "workload.plan_sha256")
+        if purpose != "reference-capture":
+            raise ManifestError("an R-dev capture is a reference capture")
+        if prereg["status"] == "absent":
+            raise ManifestError("a reference capture must name its preregistration draft")
+        if concurrency != 1 or randomness["contract"] != "deterministic":
+            raise ManifestError("an R-dev capture runs one VM, deterministically")
+        # 35 entries x reps x at most 6 s each, plus boot, settle and slack.
+        budget = 900 + boot_timeout + settle_timeout + reps * 35 * 6
+        if slurm["minutes"] * 60 < budget:
+            raise ManifestError("slurm.minutes cannot cover the worst-case capture budget")
     return manifest
 
 

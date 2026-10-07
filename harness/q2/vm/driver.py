@@ -33,6 +33,7 @@ import time
 from pathlib import Path
 from typing import Any
 
+from harness.q2.action_path.rdev import summarize_capture
 from harness.q2.vm.manifest import (
     ManifestError,
     container_labels,
@@ -44,6 +45,7 @@ from harness.q2.vm.manifest import (
 DOCKER = "docker"
 RUNNER_TIMEOUT_SLACK_S = 900
 FALLBACK_MARKER = "falling back to usermode"
+RDEV_PLAN = "harness/q2/action_path/rdev_plan.json"
 SENTINEL_BLINK = "1777"  # harness/q2/vm/guest/sentinel.py writes this gsettings value
 
 
@@ -143,6 +145,7 @@ def runner_run_argv(
     cpuset: str | None,
     uid: int,
     gid: int,
+    subcommand: str = "boot-cycle",
 ) -> list[str]:
     runner = manifest["runner"]
     argv = [
@@ -191,7 +194,7 @@ def runner_run_argv(
         "-s",
         "-m",
         "harness.q2.vm.runner",
-        "boot-cycle",
+        subcommand,
         "--config",
         config_in_container,
     ]
@@ -512,11 +515,22 @@ def run_cycle(
             "hmp_port": vm["hmp_port"],
             "boot_timeout_s": workload["boot_timeout_s"],
             "settle_timeout_s": workload["settle_timeout_s"],
-            "latency_reps": workload["latency_reps"],
-            "hmp_input_check": workload["hmp_input_check"],
-            "full_facts": cycle == 0,
             "out": f"/out/cycle-{cycle:02d}.json",
         }
+        if workload["kind"] == "boot-reset-validation":
+            subcommand = "boot-cycle"
+            config.update(
+                latency_reps=workload["latency_reps"],
+                hmp_input_check=workload["hmp_input_check"],
+                full_facts=cycle == 0,
+            )
+        else:
+            subcommand = "rdev-capture"
+            config.update(
+                plan_path="/src/" + RDEV_PLAN,
+                plan_sha256=workload["plan_sha256"],
+                reps=workload["reps"],
+            )
         config_path = cycles_dir / f"config-{cycle:02d}.json"
         config_path.write_text(json.dumps(config, indent=2, sort_keys=True), encoding="utf-8")
         runner_argv = runner_run_argv(
@@ -529,8 +543,11 @@ def run_cycle(
             cpuset=cpus["runner"],
             uid=os.getuid(),
             gid=os.getgid(),
+            subcommand=subcommand,
         )
         budget = workload["boot_timeout_s"] + workload["settle_timeout_s"] + RUNNER_TIMEOUT_SLACK_S
+        if subcommand == "rdev-capture":
+            budget += workload["reps"] * 60 * 6
         try:
             completed = run(runner_argv, timeout=budget, check=False)
             record["runner_rc"] = completed.returncode
@@ -542,7 +559,7 @@ def run_cycle(
         result_path = cycles_dir / f"cycle-{cycle:02d}.json"
         if result_path.exists():
             record["runner_result"] = json.loads(result_path.read_text(encoding="utf-8"))
-        if workload["exposure_probe"]:
+        if workload.get("exposure_probe"):
             target = bridge_ip(name)
             record["exposure_target_is_bridge_ip"] = bool(target)
             if target:
@@ -737,11 +754,18 @@ def main(argv: list[str] | None = None) -> int:
     dangling_before = run([DOCKER, "volume", "ls", "-q", "--filter", "dangling=true"], timeout=60)
     receipt["dangling_volumes_before"] = len(dangling_before.stdout.split())
 
+    workload = manifest["workload"]
+    if workload["kind"] == "rdev-capture":
+        plan_path = Path(args.source_dir) / RDEV_PLAN
+        if hashlib.sha256(plan_path.read_bytes()).hexdigest() != workload["plan_sha256"]:
+            raise DriverError("R-dev plan digest does not match the manifest")
+    cycles = workload.get("cycles", 1)
+
     records: list[dict[str, Any]] = []
     verdicts: list[dict[str, Any]] = []
     tokens: list[str] = []
     prev = None
-    for cycle in range(manifest["workload"]["cycles"]):
+    for cycle in range(cycles):
         record = run_cycle(manifest, args.job_id, cycle, prev, run_dir, args.source_dir, cpus)
         verdict = cycle_verdict(record, tokens)
         records.append(record)
@@ -784,6 +808,33 @@ def main(argv: list[str] | None = None) -> int:
         and receipt["qcow2_unchanged"]
         and not receipt["labelled_containers_left"]
     )
+    if workload["kind"] == "rdev-capture":
+        # One boot, no reset check; the capture itself is summarized below.
+        infra_ok = (
+            summary["boots_ok"] == summary["cycles"]
+            and summary["no_gpu_all"]
+            and summary["no_published_ports_all"]
+            and summary["containers_removed_all"]
+            and not summary["leaked_volumes"]
+            and receipt["qcow2_unchanged"]
+            and not receipt["labelled_containers_left"]
+        )
+        capture = ((records[0].get("runner_result") or {}).get("capture")) or {}
+        if capture.get("trials"):
+            capture["job_id"] = args.job_id
+            reference = summarize_capture(capture)
+            (run_dir / "rdev_reference.json").write_text(
+                json.dumps(reference, indent=2, sort_keys=True), encoding="utf-8"
+            )
+            entries = reference["entries"].values()
+            summary["rdev"] = {
+                "entries": len(reference["entries"]),
+                "stable": sum(1 for e in entries if e["stable"]),
+                "unstable": sorted(k for k, e in reference["entries"].items() if not e["stable"]),
+            }
+        else:
+            infra_ok = False
+            summary["rdev"] = {"error": capture.get("error", "no capture trials")}
     summary["infra_gates_pass"] = infra_ok
     receipt["summary"] = summary
     receipt["verdicts"] = verdicts
