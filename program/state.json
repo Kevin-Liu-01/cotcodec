@@ -61,8 +61,8 @@
       "title": "Cross-script sparse-indexer recall",
       "doc": "program/questions/q3-cross-script-indexer.md",
       "dossier_key": "E6-d21-translation-supervised-indexer",
-      "status": "stage-0-probe",
-      "next_action": "Run the frozen K1 v2 throughput probe; derive v2 limits under D22; freeze v2 if the caps stay under 8 GPU-h, else run the gauntlet",
+      "status": "stage-0-gauntlet",
+      "next_action": "Run the bounded research gauntlet for q3-k1-localization-screen-v2 (8.05 GPU-h under D22); admission waits on Kevin (D24)",
       "first_gpu_experiment": {
         "name": "K1 localization screen",
         "registration": "q3-k1-localization-screen-v1",
@@ -74,6 +74,7 @@
     }
   ],
   "pending_decisions_for_kevin": [
+    "Gauntlet admission for experiments over 8 GPU-h: set up the protected trust store (Ed25519 reviewer keys pinned by CI) the gauntlet needs for a 100, or rule on admitting gauntleted designs below 100 (blocks K1 v2 at 8.05 GPU-h, Q2 Stage 1, possibly Q1 Stage 0; decision D24)",
     "Approve or decline the R580 driver upgrade request to the host administrator, or give written risk acceptance for scoring Q1 policy kernels",
     "Approve disclosure of the Letta findings to letta-ai once the current-main recheck is complete (draft kept privately)",
     "Approve telling xlang-ai about OSWorld checker defects found in Q2 Stage 0a, and about the hardcoded Surfer-H API key in public OSWorld source",
@@ -84,9 +85,10 @@
     "Review and freeze the integrated Q1 Stage 0 preregistration (q1-stage0-gate-validation on stage0/q1-gates), including the integration decisions in its section 15 and the review fix-pass decisions in its section 16",
     "Decide whether to ask the KernelGYM authors for a licence: gate_b.py was rewritten from the spec after the review found a transliteration (stage0/q1-gates, never pushed); a licence would remove the residual risk",
     "Q1 Stage 0 budget: the pilot projects the drafted Stage 0 at about 1,056 GPU-h (cap 8). Adopt the trimming rule q1-stage0-trim/1 in preregistration section 18.5 (7.37 GPU-h, hard stop at 8; narrows mutant metrics to problems under 1 GB and about 2.5x wider intervals), or take Stage 0 through the research gauntlet for a larger budget",
-    "Q1 audit policy (D14): the TF32-admissible threshold rejects the TF32 tutorial matmul at every held-out A3 shape (cuBLAS's TF32 error is not tl.dot's); decide the fix (for example a TF32-rounded-input reference) before freezing"
+    "Q1 audit policy (D14): the TF32-admissible threshold rejects the TF32 tutorial matmul at every held-out A3 shape (cuBLAS's TF32 error is not tl.dot's); decide the fix (for example a TF32-rounded-input reference) before freezing",
+    "The ANTHROPIC_API_KEY on this machine is invalid (HTTP 401); supply a valid key if the Claude rater and gauntlet reviews should use the API rather than the agent harness (D25)"
   ],
-  "gpu_hours_spent_this_program": 2.095,
+  "gpu_hours_spent_this_program": 2.150,
   "frozen_registrations": [
     "q3-k1-localization-screen-v1",
     "q2-holo3-rerun-audit-v1-posthoc",
@@ -136,6 +138,16 @@
         "516 GPU tests"
       ],
       "outcome": "3/3 passed; largest observed/tolerance ratio 7.9e-3"
+    },
+    {
+      "experiment": "q3-k1-throughput-probe-v1",
+      "gpu_hours": 0.055,
+      "jobs": [
+        "533 image build (CPU)",
+        "534/536 doctors (CPU)",
+        "543 probe"
+      ],
+      "outcome": "PROBE_COMPLETE; v2 caps plus probe 8.05 GPU-h under D22: gauntlet applies"
     },
     {
       "experiment": "q1-stage0 pilot pass (stage0/q1-gates)",
