@@ -68,7 +68,9 @@ LO_APP_TITLES = {
 HOTKEY_RE = re.compile(r"pyautogui\.hotkey\(\s*\[?\s*([^)\]]*)\]?\s*\)")
 PRESS_RE = re.compile(r"pyautogui\.press\(\s*\[?\s*['\"]([a-z0-9]+)['\"]\s*\]?\s*\)")
 SLEEP_RE = re.compile(r"time\.sleep\(\s*([0-9.]+)\s*\)")
-XDOTOOL_KEYS = {"ctrl": "ctrl", "shift": "shift", "alt": "alt", "enter": "Return", "s": "s"}
+# Keys are kept in pyautogui's names and sent with pyautogui itself, from the
+# VM's own installation (PyAutoGUI 0.9.54, python-xlib 0.33, XTEST), exactly
+# as the postconfig command does in the VM.
 
 
 # --- planning (pure) --------------------------------------------------------
@@ -94,7 +96,7 @@ def resolve_vm_path(path: str) -> str:
 
 def _keys_from_hotkey(arg_text: str) -> str:
     keys = [token.strip().strip("'\"") for token in arg_text.split(",") if token.strip()]
-    return "+".join(XDOTOOL_KEYS.get(key, key) for key in keys)
+    return "+".join(keys)
 
 
 def parse_execute(command: Any) -> list[Step]:
@@ -121,7 +123,7 @@ def parse_execute(command: Any) -> list[Step]:
             else:
                 press = PRESS_RE.search(text)
                 key = press.group(1) if press else ""
-                steps.append(Step("key", XDOTOOL_KEYS.get(key, key)))
+                steps.append(Step("key", key))
         return steps or [Step("unemulated", f"python -c: {code[:80]}")]
     if argv[0] in ("libreoffice", "soffice") and "--convert-to" in argv:
         return [Step("convert", argv=tuple(argv))]
@@ -224,7 +226,8 @@ class Display:
             "PATH": os.environ.get("PATH", "/usr/bin:/bin"),
             "LANG": "en_US.UTF-8",
             "LC_ALL": "en_US.UTF-8",
-            "SAL_USE_VCLPLUGIN": os.environ.get("SAL_USE_VCLPLUGIN", "gen"),
+            # The VM runs LibreOffice under GNOME with the gtk3 VCL plugin.
+            "SAL_USE_VCLPLUGIN": os.environ.get("Q2M_VCL_PLUGIN", "gtk3"),
         }
         return env
 
@@ -340,8 +343,21 @@ class LoSession:
         return ok
 
     def key(self, combo: str) -> None:
-        subprocess.run(["xdotool", "key", "--clearmodifiers", combo], env=self.env, check=False)
-        self._event("key", combo=combo)
+        """Send keys through pyautogui (XTEST), as the VM's postconfig does."""
+        keys = [key for key in combo.split("+") if key]
+        call = (
+            f"pyautogui.hotkey({keys!r}[0], *{keys!r}[1:])"
+            if len(keys) > 1
+            else (f"pyautogui.press({keys[0]!r})")
+        )
+        result = subprocess.run(
+            ["python3", "-c", f"import pyautogui; {call}"],
+            env=self.env,
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+        self._event("key", combo=combo, returncode=result.returncode, stderr=result.stderr[-200:])
 
     def wait_written(
         self, path: Path, before: tuple[float, int] | None, timeout: float
@@ -545,10 +561,13 @@ def main(argv: list[str] | None = None) -> int:
                 try:
                     result = run_job(session, job, raw, args.out / "files")
                 except Exception as exc:  # noqa: BLE001 - an infrastructure failure, recorded
+                    import traceback
+
                     result = {
                         "job_id": job["job_id"],
                         "task_id": job["task_id"],
                         "infra_error": repr(exc),
+                        "traceback_tail": traceback.format_exc()[-1200:],
                     }
                 result["lo_build"] = build
                 result["seconds"] = round(time.monotonic() - started, 3)

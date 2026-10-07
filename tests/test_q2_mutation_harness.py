@@ -246,7 +246,7 @@ def test_parse_execute_variants() -> None:
     enter = reachability.parse_execute(
         ["python3", "-c", 'import pyautogui; pyautogui.press(["enter"]);']
     )
-    assert enter[0].arg == "Return"
+    assert enter[0].arg == "enter"
     typed = reachability.parse_execute(["python3", "-c", 'import pyautogui; pyautogui.write("x")'])
     assert typed[0].kind == "unemulated"
     assert reachability.parse_execute(["rm", "-rf", "/x"])[0].kind == "unemulated"
