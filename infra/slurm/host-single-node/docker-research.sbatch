@@ -13,6 +13,11 @@
 set -Eeuo pipefail
 umask 077
 
+# Exit status 2 is an admission or configuration failure found by this script.
+# Exit status 75 (EX_TEMPFAIL) means a compute process already held an allocated
+# GPU before the container started; resubmit once the GPU is idle.
+foreign_gpu_process_exit_code=75
+
 : "${COTCODEC_IMAGE_ID:?Set an exact local Docker sha256 image ID}"
 : "${COTCODEC_COMMAND_JSON_HEX:?Set the hex-encoded JSON argv}"
 : "${COTCODEC_MANIFEST_JSON_HEX:?Set the hex-encoded validated manifest}"
@@ -20,30 +25,62 @@ umask 077
 : "${COTCODEC_GIT_SHA:?Set the embedded 40-hex source revision}"
 : "${COTCODEC_SOURCE_SHA256:?Set the embedded source archive digest}"
 : "${COTCODEC_BATCH_SHA256:?Set the audited batch script digest}"
-: "${COTCODEC_MODEL_CACHE_HOST_HEX:?Set the hex-encoded model cache path}"
-: "${COTCODEC_MODEL_ID:?Set the reviewed model registry id}"
-: "${COTCODEC_MODEL_REVISION:?Set the pinned model revision}"
-: "${COTCODEC_MODEL_RECEIPT_SHA256:?Set the model receipt digest}"
-: "${COTCODEC_MODEL_ARTIFACT_ROOT:?Set the model artifact root}"
+: "${COTCODEC_MODEL_ID:?Set the reviewed model registry id, or none for a no-model job}"
 : "${COTCODEC_EXPECTED_GPUS:?Set the requested H100 count}"
 : "${COTCODEC_RANDOMNESS_CONTRACT:?Set the validated randomness contract}"
 : "${COTCODEC_SEEDS:?Set the colon-delimited assignment seeds}"
+
+# A job runs without a model checkpoint only when the submitter exported the
+# explicit COTCODEC_MODEL_KIND=none for model: {kind: none, reason: ...}.
+# Missing model variables never imply it.
+model_kind=checkpoint
+if [[ "${COTCODEC_MODEL_KIND+set}" == set ]]; then
+  if [[ "${COTCODEC_MODEL_KIND}" != none ]]; then
+    echo "COTCODEC_MODEL_KIND may only be none" >&2
+    exit 2
+  fi
+  model_kind=none
+fi
+case "${model_kind}" in
+  checkpoint)
+    : "${COTCODEC_MODEL_CACHE_HOST_HEX:?Set the hex-encoded model cache path}"
+    : "${COTCODEC_MODEL_REVISION:?Set the pinned model revision}"
+    : "${COTCODEC_MODEL_RECEIPT_SHA256:?Set the model receipt digest}"
+    : "${COTCODEC_MODEL_ARTIFACT_ROOT:?Set the model artifact root}"
+    if [[ "${COTCODEC_MODEL_ID}" == none ]]; then
+      echo "COTCODEC_MODEL_ID=none requires COTCODEC_MODEL_KIND=none" >&2
+      exit 2
+    fi
+    ;;
+  none)
+    if [[ "${COTCODEC_MODEL_ID}" != none \
+      || "${COTCODEC_MODEL_CACHE_HOST_HEX+set}" == set \
+      || "${COTCODEC_MODEL_REVISION+set}" == set \
+      || "${COTCODEC_MODEL_RECEIPT_SHA256+set}" == set \
+      || "${COTCODEC_MODEL_ARTIFACT_ROOT+set}" == set ]]; then
+      echo "a no-model job sets COTCODEC_MODEL_ID=none and no model cache, revision or receipt" >&2
+      exit 2
+    fi
+    ;;
+esac
 
 if [[ ! "${COTCODEC_IMAGE_ID}" =~ ^sha256:[0-9a-f]{64}$ ]]; then
   echo "COTCODEC_IMAGE_ID must be an exact local Docker image ID" >&2
   exit 2
 fi
-for value in \
-  "${COTCODEC_SOURCE_SHA256}" \
-  "${COTCODEC_BATCH_SHA256}" \
-  "${COTCODEC_MODEL_RECEIPT_SHA256}" \
-  "${COTCODEC_MODEL_ARTIFACT_ROOT}"; do
+sha256_values=("${COTCODEC_SOURCE_SHA256}" "${COTCODEC_BATCH_SHA256}")
+revision_values=("${COTCODEC_GIT_SHA}")
+if [[ "${model_kind}" == checkpoint ]]; then
+  sha256_values+=("${COTCODEC_MODEL_RECEIPT_SHA256}" "${COTCODEC_MODEL_ARTIFACT_ROOT}")
+  revision_values+=("${COTCODEC_MODEL_REVISION}")
+fi
+for value in "${sha256_values[@]}"; do
   if [[ ! "${value}" =~ ^[0-9a-f]{64}$ ]]; then
     echo "all SHA-256 values must be lowercase 64-hex digests" >&2
     exit 2
   fi
 done
-for value in "${COTCODEC_GIT_SHA}" "${COTCODEC_MODEL_REVISION}"; do
+for value in "${revision_values[@]}"; do
   if [[ ! "${value}" =~ ^[0-9a-f]{40}$ ]]; then
     echo "git and model revisions must be lowercase 40-hex commits" >&2
     exit 2
@@ -57,69 +94,307 @@ if [[ ! "${COTCODEC_EXPECTED_GPUS}" =~ ^[1-8]$ ]]; then
   echo "COTCODEC_EXPECTED_GPUS must be in [1,8]" >&2
   exit 2
 fi
-python - "${COTCODEC_COMMAND_JSON_HEX}" "${COTCODEC_SEEDS}" "${COTCODEC_RANDOMNESS_CONTRACT}" <<'PY'
+
+# Container profiles. default keeps the original flags exactly; its /tmp is a
+# noexec tmpfs (Docker's default for --tmpfs), so JIT caches that dlopen
+# compiled objects (Triton, TorchInductor) must live under /outputs.
+container_profile="${COTCODEC_CONTAINER_PROFILE-default}"
+case "${container_profile}" in
+  default)
+    container_tmpfs=/tmp:rw,nosuid,nodev,size=8g
+    container_pids_limit=4096
+    container_shm_args=()
+    ;;
+  vllm)
+    container_tmpfs=/tmp:rw,exec,nosuid,nodev,size=32g
+    container_pids_limit=8192
+    container_shm_args=(--shm-size 16g)
+    ;;
+  large-cpu-mem)
+    container_tmpfs=/tmp:rw,exec,nosuid,nodev,size=8g
+    container_pids_limit=4096
+    container_shm_args=()
+    ;;
+  *)
+    echo "COTCODEC_CONTAINER_PROFILE is not a registered container profile" >&2
+    exit 2
+    ;;
+esac
+
+# The archive (legacy/) is part of the image's source tree but of no live
+# workload. Every container gets an empty read-only tmpfs over it, so archived
+# code cannot run even when an argv hides its path from the admission rule below
+# (for example inside python -c). Docker creates the mount point if an image has
+# no legacy/ directory.
+archive_mask=/workspace/cotcodec/legacy:ro,noexec,nosuid,nodev,size=64k
+
+allow_shared_gpu=false
+if [[ "${COTCODEC_ALLOW_SHARED_GPU+set}" == set ]]; then
+  if [[ "${COTCODEC_ALLOW_SHARED_GPU}" != true ]]; then
+    echo "COTCODEC_ALLOW_SHARED_GPU may only be true" >&2
+    exit 2
+  fi
+  allow_shared_gpu=true
+fi
+
+# Re-check the submitter's admission decisions against the hex-encoded
+# manifest: archived memory interface, seed binding, opt-in fields, model kind,
+# GPU count, and the Slurm memory limit (no fallback when it is missing).
+python - <<'PY'
 import json
+import os
+import re
 import sys
+from fnmatch import fnmatchcase
+from pathlib import PurePosixPath
+
+env = os.environ
+
+
+def fail(message):
+    print(message, file=sys.stderr)
+    raise SystemExit(2)
+
+
+def valid_reason(value):
+    return (
+        isinstance(value, str)
+        and value == value.strip()
+        and 20 <= len(value) <= 500
+        and not any(ord(character) < 32 or ord(character) == 127 for character in value)
+    )
+
 
 try:
-    command = json.loads(bytes.fromhex(sys.argv[1]))
-except (ValueError, UnicodeDecodeError, json.JSONDecodeError) as exc:
-    raise SystemExit("command is not valid hex-encoded JSON") from exc
-if not isinstance(command, list) or not all(isinstance(arg, str) for arg in command):
-    raise SystemExit("command must be a JSON argv list")
-randomness_contract = sys.argv[3]
-if randomness_contract == "deterministic-all-serve":
-    if sys.argv[2] != "none":
-        raise SystemExit("deterministic all-SERVE jobs cannot declare seeds")
-    declared = []
-    if any(option in command for option in ("--assignment-seed", "--assignment-seeds", "--seeds")):
-        raise SystemExit("deterministic all-SERVE jobs cannot execute seed options")
-    if "scripts/run_memory_model_screen.py" in command and not (
-        "--evaluation-mode" in command
-        and command[command.index("--evaluation-mode") + 1] == "all-serve-benchmark"
-    ):
-        raise SystemExit("deterministic model jobs must execute all-SERVE mode")
-elif randomness_contract == "assignment-seed-matrix":
-    try:
-        declared = [int(value) for value in sys.argv[2].split(":")]
-    except ValueError as exc:
-        raise SystemExit("declared seeds must be colon-delimited integers") from exc
+    command = json.loads(bytes.fromhex(env["COTCODEC_COMMAND_JSON_HEX"]))
+    manifest = json.loads(bytes.fromhex(env["COTCODEC_MANIFEST_JSON_HEX"]))
+except (ValueError, UnicodeDecodeError):
+    fail("command or manifest is not valid hex-encoded JSON")
+if not isinstance(command, list) or not command or not all(isinstance(arg, str) for arg in command):
+    fail("command must be a JSON argv list")
+if not isinstance(manifest, dict) or manifest.get("command") != command:
+    fail("the manifest does not bind the exported command")
+
+# BEGIN archived-memory-rule: mirrors validate_memory_job_admission in both
+# submitters; tests execute this block and keep the three copies in parity.
+archived = (
+    "memory workloads were archived under legacy/ on 2026-10-06; "
+    "restore them from tag legacy-2026-10-06 to submit memory jobs"
+)
+archive_root = "legacy"
+name_patterns = ("run_memory_*", "run_letta*", "*memory_model*", "memory_trials")
+archived_entry_points = frozenset(
+    """
+    aggregate_memory_control_matrix aggregate_memorybank_h100_screen
+    analyze_causal_memory_bundle analyze_memory_system_semantic_smokes
+    analyze_memorybank_frozen_controls audit_memforest_published_artifacts
+    audit_mempalace_port_equivalence audit_mempalace_upstream_artifact
+    audit_sodamem_published_artifacts build_mem0_overlay_on_h100 build_mempalace_container
+    causal_memory_trials compare_memory_lifecycle_runs compare_mempalace_reproductions
+    compile_memory_landscape compile_memory_open_job compile_memory_public_docker_job
+    compile_memory_publication_wave compile_memory_replay_doctor_job
+    compile_memorybank_h100_jobs freeze_memory_control_matrix freeze_memory_system_outputs
+    memory-baselines memory_job_admission memory_trials mempalace_control_factory
+    mempalace_upstream_adapter prepare_hermes_observational_memory_context
+    prepare_longmemeval_judge_packet prepare_memory_baseline_context
+    prepare_memory_benchmarks prepare_memory_publication_claim
+    prepare_mempalace_source_context reanalyze_memory_frontier_screen
+    run_allmem_topology_doctor run_causal_memory_holdout run_causal_memory_sensitivity
+    run_hermes_observational_memory_doctor run_infini_memory_lifecycle_doctor
+    run_jiuwen_memory_lifecycle_doctor run_langmem_lifecycle_doctor
+    run_lightmem2_context_paging_doctor run_lightmem_offline_doctor
+    run_longmemeval_official_judge run_mem0_lifecycle_doctor run_memforest_lifecycle_doctor
+    run_memforge_fresh_install_doctor run_memgpt_letta_lifecycle_doctor
+    run_memoria_lifecycle_doctor run_memory_doctors run_memory_frontier_screen
+    run_memory_lifecycle_contract run_memory_model_replay_doctor run_memory_model_screen
+    run_memory_system_smoke run_memory_trials run_memorybank_decay_container
+    run_memorybank_decay_doctor run_mempalace_upstream_reproduction
+    run_recmem_consolidation_doctor run_reference_memory_lifecycle_sidecar
+    run_reference_memory_sidecar run_supermemory_local_doctor
+    seal_infini_memory_lifecycle_evidence seal_jiuwen_memory_lifecycle_evidence
+    seal_langmem_native_lifecycle_evidence seal_lightmem2_context_paging_evidence
+    seal_memforest_artifact_evidence seal_memforest_lifecycle_evidence
+    seal_memgpt_letta_lifecycle_evidence seal_memory_evidence seal_mempalace_runtime_receipt
+    seal_mempalace_sbom_job_receipt seal_sodamem_artifact_evidence submit_mempalace_cpu_job
+    validate_allmem_topology_experiment validate_hermes_observational_memory_experiment
+    validate_infini_memory_lifecycle_experiment validate_jiuwen_memory_lifecycle_experiment
+    validate_langmem_lifecycle_experiment validate_lightmem2_context_paging_experiment
+    validate_lightmem_offline_evidence validate_lightmem_offline_experiment
+    validate_mem0_lifecycle_experiment validate_mem0_persistence
+    validate_memforest_artifact_experiment validate_memforest_lifecycle_experiment
+    validate_memforge_fresh_install_evidence validate_memforge_fresh_install_experiment
+    validate_memgpt_letta_lifecycle_experiment validate_memoria_lifecycle_evidence
+    validate_memoria_lifecycle_experiment validate_memory_experiments
+    validate_memory_lifecycle_experiment validate_memory_persistent_transport
+    validate_memory_portfolio validate_memory_source_contract validate_memory_sources
+    validate_memorybank_decay_evidence validate_memorybank_decay_experiment
+    validate_memorybank_h100_evidence validate_memorybank_h100_experiment
+    validate_recmem_consolidation_evidence validate_recmem_consolidation_experiment
+    validate_sodamem_artifact_experiment validate_supermemory_local_experiment
+    validate_timem_core_evidence validate_timem_core_experiment
+    verify_memory_baseline_sources
+    """.split()
+)
+memory_flags = ("--memory-bundle", "--memory-treatment-mode", "--expected-memory-system-id")
+token_separators = re.compile(r"[\s=,;:'\"`()\[\]{}<>|&$]+")
+module_re = re.compile(r"[A-Za-z_][A-Za-z0-9_]*(?:\.[A-Za-z_][A-Za-z0-9_]*)*")
+script_suffixes = (".py", ".pyc", ".pyw", ".sh")
+
+
+def name_variants(token):
+    variants = [token]
+    if token.startswith("-") and not token.startswith("--"):
+        variants += [token[1 + cut :] for cut in range(4) if token[1 + cut :]]
+    return variants
+
+
+def name_components(variant):
+    components = []
+    for part in PurePosixPath(variant).parts:
+        if part == "/":
+            continue
+        components.append(part)
+        components += [part[: -len(suffix)] for suffix in script_suffixes if part.endswith(suffix)]
+    module = variant[:-3] if variant.endswith(".py") else variant
+    if module_re.fullmatch(module):
+        components += module.split(".")
+    return components
+
+
+def archived_reference(argument):
+    for token in token_separators.split(argument):
+        for variant in name_variants(token):
+            if (
+                variant.startswith("--")
+                and len(variant) > 2
+                and any(flag.startswith(variant) for flag in memory_flags)
+            ):
+                return "the archived memory flag " + variant
+            for component in name_components(variant):
+                if component == archive_root:
+                    return "the legacy/ archive"
+                if component in archived_entry_points or any(
+                    fnmatchcase(component, pattern) for pattern in name_patterns
+                ):
+                    return "the archived memory entry point " + component
+    return None
+# END archived-memory-rule
+
+if (
+    manifest.get("memory_source_admission") is not None
+    or manifest.get("memory_bundle") is not None
+    or "COTCODEC_MEMORY_BUNDLE_HOST_HEX" in env
+    or "COTCODEC_MEMORY_BUNDLE_SHA256" in env
+):
+    fail(archived + ": memory inputs are not admitted")
+for index, argument in enumerate(command):
+    reference = archived_reference(argument)
+    if reference is not None:
+        fail(f"{archived}: argv[{index}] names {reference}")
+
+# Seed binding.
+seed_options = ("--seeds", "--seed", "--assignment-seeds", "--assignment-seed")
+binding_flags = ("--seeds", "--seed", "--assignment-seeds")
+contract = env["COTCODEC_RANDOMNESS_CONTRACT"]
+if manifest.get("randomness_contract") != contract:
+    fail("randomness contract differs from the manifest")
+binding_flag = env.get("COTCODEC_SEED_BINDING_FLAG")
+expected_binding = None if binding_flag is None else {"flag": binding_flag}
+if manifest.get("seed_binding") != expected_binding:
+    fail("seed binding differs from the manifest")
+
+
+def seed_abbreviation(argument):
+    # argparse expands any unambiguous prefix of a long option (allow_abbrev).
+    head = argument.split("=", 1)[0]
+    return (
+        head.startswith("--")
+        and len(head) > 2
+        and head not in seed_options
+        and any(option.startswith(head) for option in seed_options)
+    )
+
+
+if any(seed_abbreviation(argument) for argument in command):
+    fail("seed options must be spelled in full, not as an argparse abbreviation")
+if any("=" in argument and argument.split("=", 1)[0] in seed_options for argument in command):
+    fail("seed options must be separate argv elements")
+if contract in ("deterministic", "deterministic-all-serve"):
+    if env["COTCODEC_SEEDS"] != "none" or manifest.get("seeds") != []:
+        fail("deterministic jobs cannot declare seeds")
+    if binding_flag is not None:
+        fail("deterministic jobs cannot declare a seed binding")
+    if any(option in command for option in seed_options):
+        fail("deterministic jobs cannot execute seed options")
+elif contract == "assignment-seed-matrix":
+    if not re.fullmatch(r"-?[0-9]+(?::-?[0-9]+)*", env["COTCODEC_SEEDS"]):
+        fail("declared seeds must be colon-delimited integers")
+    declared = env["COTCODEC_SEEDS"].split(":")
+    if declared != [str(seed) for seed in manifest.get("seeds", [])]:
+        fail("declared seeds differ from the manifest")
     if len(declared) < 3 or len(declared) != len(set(declared)):
-        raise SystemExit("at least three distinct declared seeds are required")
-else:
-    raise SystemExit("unsupported randomness contract")
-seed_contracts = {
-    "scripts/run_memory_model_screen.py": "--assignment-seeds",
-    "scripts/run_memory_trials.py": "--assignment-seeds",
-    "scripts/run_memory_model_replay_doctor.py": "--seeds",
-}
-active = [
-    (script, option)
-    for script, option in seed_contracts.items()
-    if script in command
-]
-if active and randomness_contract == "assignment-seed-matrix":
-    if len(active) != 1:
-        raise SystemExit("command contains multiple seeded memory workloads")
-    _, seed_option = active[0]
-    forbidden = {"--assignment-seed", "--assignment-seeds", "--seeds"} - {
-        seed_option
-    }
-    if command.count(seed_option) != 1 or any(option in command for option in forbidden):
-        raise SystemExit(
-            f"memory command does not execute declared seeds via {seed_option}"
-        )
-    start = command.index(seed_option) + 1
+        fail("at least three distinct declared seeds are required")
+    if binding_flag not in binding_flags:
+        fail("declared seeds require a registered seed binding flag")
+    if command.count(binding_flag) != 1 or any(
+        option in command for option in seed_options if option != binding_flag
+    ):
+        fail(f"command does not execute declared seeds via exactly one {binding_flag}")
     executed = []
-    for argument in command[start:]:
+    for argument in command[command.index(binding_flag) + 1 :]:
         if argument.startswith("--"):
             break
-        try:
-            executed.append(int(argument))
-        except ValueError as exc:
-            raise SystemExit("executed seed is not an integer") from exc
+        executed.append(argument)
     if executed != declared:
-        raise SystemExit("executed seeds do not exactly match declared seeds")
+        fail("executed seeds do not exactly match declared seeds")
+else:
+    fail("unsupported randomness contract")
+
+# Opt-in container profile and shared-GPU admission.
+if manifest.get("container_profile") != env.get("COTCODEC_CONTAINER_PROFILE"):
+    fail("container profile differs from the manifest")
+if env.get("COTCODEC_ALLOW_SHARED_GPU") == "true":
+    if manifest.get("allow_shared_gpu") is not True or not valid_reason(
+        manifest.get("shared_gpu_reason")
+    ):
+        fail("shared-GPU admission differs from the manifest or lacks a reason")
+elif "allow_shared_gpu" in manifest or "shared_gpu_reason" in manifest:
+    fail("shared-GPU admission differs from the manifest")
+
+# Model kind.
+model = manifest.get("model")
+if not isinstance(model, dict):
+    fail("the manifest has no model block")
+if env.get("COTCODEC_MODEL_KIND") == "none":
+    if (
+        model.get("kind") != "none"
+        or set(model) != {"kind", "reason"}
+        or not valid_reason(model.get("reason"))
+        or env["COTCODEC_MODEL_ID"] != "none"
+    ):
+        fail("no-model admission differs from the manifest")
+elif (
+    "kind" in model
+    or model.get("model_id") != env["COTCODEC_MODEL_ID"]
+    or model.get("revision") != env.get("COTCODEC_MODEL_REVISION")
+    or model.get("receipt_sha256") != env.get("COTCODEC_MODEL_RECEIPT_SHA256")
+    or model.get("artifact_root_sha256") != env.get("COTCODEC_MODEL_ARTIFACT_ROOT")
+    or str(model.get("cache_host_path", "")).encode().hex()
+    != env.get("COTCODEC_MODEL_CACHE_HOST_HEX")
+):
+    fail("model checkpoint differs from the manifest")
+
+# Resources: GPU count and the explicit memory limit.
+if manifest.get("gpus") != int(env["COTCODEC_EXPECTED_GPUS"]):
+    fail("GPU count differs from the manifest")
+memory_gb = manifest.get("memory_gb")
+if not isinstance(memory_gb, int) or isinstance(memory_gb, bool) or not 1 <= memory_gb <= 1700:
+    fail("manifest memory_gb is invalid")
+slurm_memory_mb = env.get("SLURM_MEM_PER_NODE", "")
+if not re.fullmatch(r"[1-9][0-9]*", slurm_memory_mb):
+    fail("Slurm did not export SLURM_MEM_PER_NODE; refusing to guess the memory limit")
+if int(slurm_memory_mb) != memory_gb * 1024:
+    fail("SLURM_MEM_PER_NODE differs from the manifest memory_gb")
 PY
 actual_batch_sha256="$(sha256sum "$0" | cut -d' ' -f1)"
 if [[ "${actual_batch_sha256}" != "${COTCODEC_BATCH_SHA256}" ]]; then
@@ -146,34 +421,40 @@ print(value, end="")
 PY
 }
 
-model_cache_host="$(decode_host_path "${COTCODEC_MODEL_CACHE_HOST_HEX}")"
 run_root_host="$(decode_host_path "${COTCODEC_RUN_ROOT_HEX}")"
 run_dir="${run_root_host}/${SLURM_JOB_ID}"
 mkdir -p "${run_dir}"
 chmod 700 "${run_dir}"
-if [[ ! -d "${model_cache_host}" || -L "${model_cache_host}" ]]; then
-  echo "model cache must be a regular non-symlink directory" >&2
-  exit 2
-fi
-model_snapshot="${model_cache_host}/cotcodec-models/${COTCODEC_MODEL_ID}"
-model_receipt="${model_cache_host}/cotcodec-receipts/${COTCODEC_MODEL_ID}.json"
-if [[ ! -d "${model_snapshot}" || -L "${model_snapshot}" ]]; then
-  echo "pinned model snapshot is missing or is a symlink" >&2
-  exit 2
-fi
-if [[ ! -f "${model_receipt}" || -L "${model_receipt}" ]]; then
-  echo "pinned model receipt is missing or is a symlink" >&2
-  exit 2
-fi
-actual_receipt_sha256="$(sha256sum "${model_receipt}" | cut -d' ' -f1)"
-if [[ "${actual_receipt_sha256}" != "${COTCODEC_MODEL_RECEIPT_SHA256}" ]]; then
-  echo "model receipt digest mismatch" >&2
-  exit 2
-fi
-python - "${model_receipt}" \
-  "${COTCODEC_MODEL_ID}" \
-  "${COTCODEC_MODEL_REVISION}" \
-  "${COTCODEC_MODEL_ARTIFACT_ROOT}" <<'PY'
+
+# A no-model job mounts no model cache and verifies no receipt.
+model_cache_host=""
+model_receipt=""
+model_cache_mount=()
+if [[ "${model_kind}" == checkpoint ]]; then
+  model_cache_host="$(decode_host_path "${COTCODEC_MODEL_CACHE_HOST_HEX}")"
+  if [[ ! -d "${model_cache_host}" || -L "${model_cache_host}" ]]; then
+    echo "model cache must be a regular non-symlink directory" >&2
+    exit 2
+  fi
+  model_snapshot="${model_cache_host}/cotcodec-models/${COTCODEC_MODEL_ID}"
+  model_receipt="${model_cache_host}/cotcodec-receipts/${COTCODEC_MODEL_ID}.json"
+  if [[ ! -d "${model_snapshot}" || -L "${model_snapshot}" ]]; then
+    echo "pinned model snapshot is missing or is a symlink" >&2
+    exit 2
+  fi
+  if [[ ! -f "${model_receipt}" || -L "${model_receipt}" ]]; then
+    echo "pinned model receipt is missing or is a symlink" >&2
+    exit 2
+  fi
+  actual_receipt_sha256="$(sha256sum "${model_receipt}" | cut -d' ' -f1)"
+  if [[ "${actual_receipt_sha256}" != "${COTCODEC_MODEL_RECEIPT_SHA256}" ]]; then
+    echo "model receipt digest mismatch" >&2
+    exit 2
+  fi
+  python - "${model_receipt}" \
+    "${COTCODEC_MODEL_ID}" \
+    "${COTCODEC_MODEL_REVISION}" \
+    "${COTCODEC_MODEL_ARTIFACT_ROOT}" <<'PY'
 import json
 import pathlib
 import sys
@@ -191,6 +472,8 @@ for key, value in expected.items():
     if receipt.get(key) != value:
         raise SystemExit(f"model receipt field {key!r} does not match the manifest")
 PY
+  model_cache_mount=(--volume "${model_cache_host}:/model-cache:ro")
+fi
 
 memory_bundle_host=""
 memory_bundle_mount=()
@@ -336,8 +619,9 @@ if [[ -n "${COTCODEC_PUBLICATION_CAPSULE_HOST_HEX:-}" \
     || -z "${COTCODEC_CLAIM_WAVE_HOST_HEX:-}" \
     || ! "${COTCODEC_MEMORY_CONTROL_ID:-}" =~ ^[a-z0-9][a-z0-9.-]{0,79}$ \
     || ! "${COTCODEC_MEMORY_SYSTEM_ID:-}" =~ ^[a-z0-9][a-z0-9.-]{0,79}$ \
-    || -z "${memory_bundle_host}" ]]; then
-    echo "claim admission requires every capsule, matrix, control, and bundle field" >&2
+    || -z "${memory_bundle_host}" \
+    || "${model_kind}" != checkpoint ]]; then
+    echo "claim admission requires every capsule, matrix, control, bundle and model field" >&2
     exit 2
   fi
   publication_capsule_host="$(decode_host_path \
@@ -562,8 +846,10 @@ for line in job_env_path.read_text(encoding="utf-8").splitlines():
         "source_sha256",
         "image_id",
         "batch_script_sha256",
+        "model_kind",
         "model_receipt_sha256",
         "model_artifact_root",
+        "container_profile",
         "memory_bundle_sha256",
         "memory_bundle_semantic_sha256",
         "public_benchmark_sha256",
@@ -590,8 +876,10 @@ expected = {
     "source_sha256": os.environ["COTCODEC_SOURCE_SHA256"],
     "image_id": os.environ["COTCODEC_IMAGE_ID"],
     "batch_script_sha256": os.environ["COTCODEC_BATCH_SHA256"],
-    "model_receipt_sha256": os.environ["COTCODEC_MODEL_RECEIPT_SHA256"],
-    "model_artifact_root": os.environ["COTCODEC_MODEL_ARTIFACT_ROOT"],
+    "model_kind": os.environ.get("COTCODEC_MODEL_KIND", "checkpoint"),
+    "model_receipt_sha256": os.environ.get("COTCODEC_MODEL_RECEIPT_SHA256", "none"),
+    "model_artifact_root": os.environ.get("COTCODEC_MODEL_ARTIFACT_ROOT", "none"),
+    "container_profile": os.environ.get("COTCODEC_CONTAINER_PROFILE", "default"),
     "memory_bundle_sha256": os.environ.get("COTCODEC_MEMORY_BUNDLE_SHA256", "none"),
     "memory_bundle_semantic_sha256": os.environ.get(
         "COTCODEC_MEMORY_BUNDLE_SEMANTIC_SHA256", "none"
@@ -672,7 +960,9 @@ for filename, variable in (
         json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8"
     )
 PY
-cp "${model_receipt}" "${run_dir}/model-receipt.json"
+if [[ "${model_kind}" == checkpoint ]]; then
+  cp "${model_receipt}" "${run_dir}/model-receipt.json"
+fi
 cp "$0" "${run_dir}/docker-research.sbatch"
 if [[ -n "${publication_capsule_host}" ]]; then
   cp "${publication_capsule_host}" "${run_dir}/publication-capsule.json"
@@ -700,10 +990,11 @@ docker image inspect "${COTCODEC_IMAGE_ID}" > "${run_dir}/image-inspect.json"
   echo "source_sha256=${COTCODEC_SOURCE_SHA256}"
   echo "image_id=${COTCODEC_IMAGE_ID}"
   echo "batch_script_sha256=${COTCODEC_BATCH_SHA256}"
+  echo "model_kind=${model_kind}"
   echo "model_id=${COTCODEC_MODEL_ID}"
-  echo "model_revision=${COTCODEC_MODEL_REVISION}"
-  echo "model_receipt_sha256=${COTCODEC_MODEL_RECEIPT_SHA256}"
-  echo "model_artifact_root=${COTCODEC_MODEL_ARTIFACT_ROOT}"
+  echo "model_revision=${COTCODEC_MODEL_REVISION:-none}"
+  echo "model_receipt_sha256=${COTCODEC_MODEL_RECEIPT_SHA256:-none}"
+  echo "model_artifact_root=${COTCODEC_MODEL_ARTIFACT_ROOT:-none}"
   echo "memory_bundle_sha256=${COTCODEC_MEMORY_BUNDLE_SHA256:-none}"
   echo "memory_bundle_semantic_sha256=${COTCODEC_MEMORY_BUNDLE_SEMANTIC_SHA256:-none}"
   echo "public_benchmark_id=${COTCODEC_PUBLIC_BENCHMARK_ID:-none}"
@@ -727,17 +1018,26 @@ docker image inspect "${COTCODEC_IMAGE_ID}" > "${run_dir}/image-inspect.json"
   echo "memory_system_id=${COTCODEC_MEMORY_SYSTEM_ID:-none}"
   echo "randomness_contract=${COTCODEC_RANDOMNESS_CONTRACT}"
   echo "seeds=${COTCODEC_SEEDS:-unknown}"
+  echo "seed_binding_flag=${COTCODEC_SEED_BINDING_FLAG:-none}"
+  echo "container_profile=${container_profile}"
+  echo "allow_shared_gpu=${allow_shared_gpu}"
+  echo "memory_limit_mb=${SLURM_MEM_PER_NODE}"
   echo "started_at=$(date -u +%Y-%m-%dT%H:%M:%SZ)"
   echo "nodelist=${SLURM_JOB_NODELIST}"
   echo "gpu_devices=${gpu_devices}"
 } > "${run_dir}/job.env"
 
 checkpoint_marker="${run_dir}/checkpoint.ready"
+checkpoint_wait_seconds=120
 termination_file="${run_dir}/termination.env"
 container_name="cotcodec-${SLURM_JOB_ID}"
 container_created=false
 termination_reason="starting"
+# true only after forward_signal confirmed a fresh, signal-triggered marker in
+# this job. A marker that merely exists (stale, periodic or copied) never sets it.
+signal_checkpoint_confirmed=false
 
+# shellcheck disable=SC2329  # reached through the signal and EXIT traps
 write_termination() {
   local exit_code="$1"
   {
@@ -745,35 +1045,103 @@ write_termination() {
     echo "reason=${termination_reason}"
     echo "exit_code=${exit_code}"
     echo "finished_at=$(date -u +%Y-%m-%dT%H:%M:%SZ)"
-    echo "checkpoint_ready=$([[ -f "${checkpoint_marker}" ]] && echo true || echo false)"
+    echo "checkpoint_ready=${signal_checkpoint_confirmed}"
+    echo "checkpoint_marker_present=$([[ -f "${checkpoint_marker}" ]] && echo true || echo false)"
   } > "${termination_file}"
 }
 
-forward_signal() {
-  local signal_name="$1"
-  termination_reason="signal_${signal_name}_checkpoint_requested"
-  if [[ "${container_created}" == true ]] \
+# shellcheck disable=SC2329  # reached through the signal and EXIT traps
+container_running() {
+  [[ "${container_created}" == true ]] \
     && [[ "$(docker inspect --format '{{.State.Running}}' "${container_name}" 2>/dev/null \
-      || echo false)" == true ]]; then
-    docker kill --signal "${signal_name}" "${container_name}" >/dev/null 2>&1 || true
+      || echo false)" == true ]]
+}
+
+# Identity of the checkpoint marker as device:inode:size:mtime (nanoseconds),
+# or "absent". An atomic write (temporary file plus rename) always changes it.
+# shellcheck disable=SC2329  # reached through the signal and EXIT traps
+checkpoint_marker_identity() {
+  if [[ -f "${checkpoint_marker}" && ! -L "${checkpoint_marker}" ]]; then
+    stat -c '%d:%i:%s:%.9Y' "${checkpoint_marker}" 2>/dev/null || echo absent
+  else
+    echo absent
   fi
-  local waited=0
-  while [[ ! -f "${checkpoint_marker}" && "${waited}" -lt 120 ]]; do
+}
+
+# A marker confirms the checkpoint requested by signal SIG<name> only when all
+# of these hold:
+#   1. it is a different file version from the one recorded just before the
+#      signal was sent (so a stale marker never confirms);
+#   2. its mtime is not earlier than that moment;
+#   3. its content has the line trigger=SIG<name>, which only the workload's
+#      handler for this signal writes (so a periodic save that lands in the same
+#      window, or a marker without a trigger, never confirms);
+#   4. it did not change while its content was read.
+# shellcheck disable=SC2329  # reached through the signal and EXIT traps
+checkpoint_marker_is_fresh() {
+  local before="$1" requested_ns="$2" signal_name="$3" current mtime_ns content
+  current="$(checkpoint_marker_identity)"
+  if [[ "${current}" == absent || "${current}" == "${before}" ]]; then
+    return 1
+  fi
+  mtime_ns="${current##*:}"
+  mtime_ns="${mtime_ns/./}"
+  if [[ ! "${mtime_ns}" =~ ^[0-9]+$ ]] || (( 10#${mtime_ns} < requested_ns )); then
+    return 1
+  fi
+  content="$(timeout 5 head -c 4096 -- "${checkpoint_marker}" 2>/dev/null)" || return 1
+  [[ "$(checkpoint_marker_identity)" == "${current}" ]] || return 1
+  [[ $'\n'"${content}"$'\n' == *$'\n'"trigger=SIG${signal_name}"$'\n'* ]]
+}
+
+# shellcheck disable=SC2329  # reached through the signal and EXIT traps
+forward_signal() {
+  local signal_name="$1" marker_before requested_ns waited=0
+  if ! container_running; then
+    # Keep an earlier confirmation: the container is gone because of it.
+    if [[ "${signal_checkpoint_confirmed}" != true ]]; then
+      termination_reason="signal_${signal_name}_not_forwarded"
+    fi
+    return 0
+  fi
+  termination_reason="signal_${signal_name}_checkpoint_requested"
+  # Record the marker and the clock as late as possible but still before the
+  # signal: the workload's handler may finish before `docker kill` returns, so
+  # a snapshot taken after it could hide the real checkpoint.
+  marker_before="$(checkpoint_marker_identity)"
+  requested_ns="$(date +%s%N)"
+  if ! docker kill --signal "${signal_name}" "${container_name}" >/dev/null 2>&1; then
+    termination_reason="signal_${signal_name}_not_forwarded"
+    return 0
+  fi
+  while true; do
+    if checkpoint_marker_is_fresh "${marker_before}" "${requested_ns}" "${signal_name}"; then
+      signal_checkpoint_confirmed=true
+      termination_reason="signal_${signal_name}_checkpoint_confirmed"
+      break
+    fi
+    if ! container_running; then
+      if checkpoint_marker_is_fresh "${marker_before}" "${requested_ns}" "${signal_name}"; then
+        signal_checkpoint_confirmed=true
+        termination_reason="signal_${signal_name}_checkpoint_confirmed"
+      else
+        termination_reason="signal_${signal_name}_checkpoint_missing"
+      fi
+      break
+    fi
+    if [[ "${waited}" -ge "${checkpoint_wait_seconds}" ]]; then
+      termination_reason="signal_${signal_name}_checkpoint_timeout"
+      break
+    fi
     sleep 2
     waited=$((waited + 2))
   done
-  if [[ -f "${checkpoint_marker}" ]]; then
-    termination_reason="signal_${signal_name}_checkpoint_confirmed"
-  else
-    termination_reason="signal_${signal_name}_checkpoint_timeout"
-  fi
-  if [[ "${container_created}" == true ]] \
-    && [[ "$(docker inspect --format '{{.State.Running}}' "${container_name}" 2>/dev/null \
-      || echo false)" == true ]]; then
+  if container_running; then
     docker kill --signal TERM "${container_name}" >/dev/null 2>&1 || true
   fi
 }
 
+# shellcheck disable=SC2329  # reached through the signal and EXIT traps
 on_exit() {
   local exit_code="$?"
   if [[ "${container_created}" == true ]]; then
@@ -801,7 +1169,8 @@ if [[ -z "${cpu_list}" ]]; then
   echo "could not determine the Slurm CPU affinity" >&2
   exit 2
 fi
-memory_limit_mb="${SLURM_MEM_PER_NODE:-65536}"
+# The early admission check proved SLURM_MEM_PER_NODE equals memory_gb * 1024.
+memory_limit_mb="${SLURM_MEM_PER_NODE:?Slurm memory limit is unavailable}"
 if [[ ! "${memory_limit_mb}" =~ ^[1-9][0-9]*$ ]]; then
   echo "Slurm memory limit is unavailable" >&2
   exit 2
@@ -813,16 +1182,93 @@ if [[ "${gpu_count}" -gt 1 ]]; then
   docker_gpu_request="\"device=${gpu_devices}\""
 fi
 
+# $COTCODEC_MODEL_ID is expanded by the container's shell, not this one.
+# shellcheck disable=SC2016
+if [[ "${model_kind}" == checkpoint ]]; then
+  container_script='python scripts/verify_compute_provenance.py > /outputs/provenance-verification.txt && bash scripts/check_compute_env.sh container > /outputs/container-doctor.txt && python scripts/fetch_open_model.py --model-root /model-cache/cotcodec-models --receipt-root /model-cache/cotcodec-receipts verify "$COTCODEC_MODEL_ID" > /outputs/model-verification.txt && exec python scripts/exec_research_workload.py'
+else
+  container_script='python scripts/verify_compute_provenance.py > /outputs/provenance-verification.txt && bash scripts/check_compute_env.sh container > /outputs/container-doctor.txt && exec python scripts/exec_research_workload.py'
+fi
+
+# Foreign-process prolog. Slurm 21.08 here has no device cgroups, so an
+# allocation does not prove the GPUs are idle. Refuse to start when any compute
+# process already holds an allocated GPU (timing and contention integrity),
+# unless the manifest declared allow_shared_gpu with a reason.
+count_foreign_gpu_processes() {
+  local allocated_uuids
+  allocated_uuids="$(nvidia-smi -i "${gpu_devices}" --query-gpu=uuid \
+    --format=csv,noheader)" || return 1
+  nvidia-smi --query-compute-apps=gpu_uuid,pid,process_name,used_memory \
+    --format=csv,noheader > "${run_dir}/gpu-compute-apps-prolog.csv" || return 1
+  python - "${run_dir}/gpu-compute-apps-prolog.csv" "${COTCODEC_EXPECTED_GPUS}" \
+    "${allocated_uuids}" <<'PY'
+import pathlib
+import re
+import sys
+
+uuid_re = re.compile(r"GPU-[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}")
+allocated = [line.strip() for line in sys.argv[3].splitlines() if line.strip()]
+if (
+    len(allocated) != int(sys.argv[2])
+    or len(set(allocated)) != len(allocated)
+    or not all(uuid_re.fullmatch(value) for value in allocated)
+):
+    raise SystemExit("nvidia-smi did not report one UUID per allocated GPU")
+foreign = 0
+for line in pathlib.Path(sys.argv[1]).read_text(encoding="utf-8").splitlines():
+    row = line.strip()
+    if not row or row == "No running processes found":
+        continue
+    gpu_uuid = row.split(",", 1)[0].strip()
+    if not uuid_re.fullmatch(gpu_uuid):
+        raise SystemExit("unparseable nvidia-smi compute-apps row")
+    if gpu_uuid in allocated:
+        foreign += 1
+print(foreign)
+PY
+}
+
+if foreign_gpu_processes="$(count_foreign_gpu_processes)"; then
+  :
+else
+  foreign_gpu_processes=unknown
+fi
+if [[ "${foreign_gpu_processes}" == 0 ]]; then
+  gpu_prolog_decision=exclusive
+elif [[ "${allow_shared_gpu}" == true ]]; then
+  gpu_prolog_decision=shared_allowed
+  echo "allocated GPUs are not verifiably idle (foreign compute processes: ${foreign_gpu_processes}); continuing because the manifest set allow_shared_gpu" >&2
+else
+  gpu_prolog_decision=refused
+fi
+{
+  echo "foreign_compute_processes=${foreign_gpu_processes}"
+  echo "allow_shared_gpu=${allow_shared_gpu}"
+  echo "decision=${gpu_prolog_decision}"
+} > "${run_dir}/gpu-prolog.env"
+if [[ "${gpu_prolog_decision}" == refused ]]; then
+  if [[ "${foreign_gpu_processes}" == unknown ]]; then
+    termination_reason="gpu_prolog_unavailable"
+    echo "could not list GPU compute processes; refusing to start without allow_shared_gpu" >&2
+    exit 2
+  fi
+  termination_reason="foreign_gpu_process"
+  echo "refusing to start: ${foreign_gpu_processes} foreign compute process(es) hold allocated GPUs" >&2
+  exit "${foreign_gpu_process_exit_code}"
+fi
+
 docker create \
   --name "${container_name}" \
   --entrypoint /bin/bash \
   --gpus "${docker_gpu_request}" \
   --network none \
   --read-only \
-  --tmpfs /tmp:rw,nosuid,nodev,size=8g \
+  --tmpfs "${container_tmpfs}" \
+  "${container_shm_args[@]}" \
+  --tmpfs "${archive_mask}" \
   --cap-drop ALL \
   --security-opt no-new-privileges \
-  --pids-limit 4096 \
+  --pids-limit "${container_pids_limit}" \
   --cpuset-cpus "${cpu_list}" \
   --memory "${memory_limit_mb}m" \
   --memory-swap "${memory_limit_mb}m" \
@@ -848,22 +1294,42 @@ docker create \
   --env HF_HOME=/tmp/huggingface \
   --env PYTHONUNBUFFERED=1 \
   --volume "${run_dir}:/outputs:rw" \
-  --volume "${model_cache_host}:/model-cache:ro" \
+  "${model_cache_mount[@]}" \
   "${memory_bundle_mount[@]}" \
   "${public_benchmark_mount[@]}" \
   "${study_artifact_mount[@]}" \
   "${claim_admission_mounts[@]}" \
   "${COTCODEC_IMAGE_ID}" \
-  -lc 'python scripts/verify_compute_provenance.py > /outputs/provenance-verification.txt && bash scripts/check_compute_env.sh container > /outputs/container-doctor.txt && python scripts/fetch_open_model.py --model-root /model-cache/cotcodec-models --receipt-root /model-cache/cotcodec-receipts verify "$COTCODEC_MODEL_ID" > /outputs/model-verification.txt && exec python scripts/exec_research_workload.py' \
+  -lc "${container_script}" \
   > "${run_dir}/container-id.txt"
 container_created=true
 docker inspect "${container_name}" > "${run_dir}/container-created-inspect.json"
 
 termination_reason="running"
-set +e
-docker start --attach "${container_name}"
-workload_exit_code="$?"
-set -e
+# Bash runs a trap only after the foreground command returns, so a foreground
+# `docker start --attach` would hold SIGUSR1 until the workload had exited.
+# Waiting on a background client lets forward_signal run while the workload is
+# alive: `wait` returns early (status > 128) after each trapped signal.
+docker start --attach "${container_name}" &
+docker_client_pid=$!
+while true; do
+  wait_status=0
+  wait "${docker_client_pid}" || wait_status=$?
+  if [[ "${wait_status}" -eq 127 ]] || ! kill -0 "${docker_client_pid}" 2>/dev/null; then
+    break
+  fi
+done
+# The container's recorded exit code is authoritative; the client's status
+# may be a signal-interrupted `wait`.
+exited_state_re='^exited ([0-9]+)$'
+container_state="$(docker inspect --format '{{.State.Status}} {{.State.ExitCode}}' \
+  "${container_name}" 2>/dev/null || echo unknown)"
+if [[ "${container_state}" =~ ${exited_state_re} ]]; then
+  workload_exit_code="${BASH_REMATCH[1]}"
+else
+  echo "the Docker client returned before the container exited (${container_state})" >&2
+  workload_exit_code=1
+fi
 if [[ "${termination_reason}" == running ]]; then
   if [[ "${workload_exit_code}" -eq 0 ]]; then
     termination_reason="completed"

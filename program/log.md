@@ -52,3 +52,18 @@ Append-only. Newest entries at the bottom.
 - Scoping of all six Stage-0 items finished with adversarial review. The job
   lane upgrade and builds for the Holo3 follow-up, serving probe and Q3 K1
   are running on separate branches.
+
+## 2026-10-07 — Lane upgrade merged
+
+- Merged the hardened Docker discovery lane (branch `stage0/lane`): opt-in
+  `seed_binding`, `container_profile` (`default`, `vllm`, `large-cpu-mem`),
+  `model: {kind: none}`, explicit memory limits, a foreign-GPU-process prolog,
+  signal checkpoints confirmed only by a fresh `trigger=` marker, and a precise
+  archived-memory rule with `legacy/` masked inside containers. An adversarial
+  review found five bypasses; all were fixed with regression tests.
+- The lane work found a pre-existing bug: Bash deferred the SIGUSR1 trap while
+  `docker start --attach` ran in the foreground, so signal checkpoints never
+  reached a live workload. Earlier signal-checkpoint evidence from the old
+  lane should be treated as untested.
+- `legacy/` is excluded from future images. The D21 doctor test now bounds
+  child CPU time instead of wall time. Full suite on the host: 458 passed.
