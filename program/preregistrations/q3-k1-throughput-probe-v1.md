@@ -38,7 +38,7 @@ needed.
 
 | File | SHA-256 |
 |---|---|
-| scripts/probe_sparse_indexer_k1_throughput.py | a3207e10ea1662a3111c43d1378eb4d58cd166c96644bc7f4bd4af66a756115f |
+| scripts/probe_sparse_indexer_k1_throughput.py | ab748f876d7abbc4832238ffab9cfe8c1a4cf0d68dd02706a7cd52282cb1e113 |
 | harness/sparse_indexer_bank.py | e96653eb3eb5b9876201347c2fa8d452efc3ebb1043a516ac03c366ff8b89f88 |
 | harness/sparse_indexer_k1_budget_v2.py | c86568a62fe12cbcb5ad91eed25fc0afd9e9a09078a43345b18277e6922ea4fe |
 | harness/sparse_indexer_k1_equivalence_v2.py | 3c8b6caf8dc14fb62096cfa205e2e459f774227a73229e5d62e72bdb6ff3e9a1 |
@@ -111,7 +111,7 @@ determinism settings (deterministic algorithms, TF32 matmuls allowed, no
    The parameters after one Adam step of the full path are reported, not
    gated (decision 8). A failed gate ends the probe `PROBE_TOLERANCE_FAIL`: no
    rates are reported and no limit exists.
-2. **train** (180 s). The binding shard of the registered layout (layers 15
+2. **train** (210 s). The binding shard of the registered layout (layers 15
    to 21: 7 trained layers behind a 22-layer teacher prefix) as one worker on
    the GPU: 8 steps of the 18-indexer bank at batch 4 x 8,192 tokens (steps 0
    and 1 excluded from every steady-state mean), one checkpoint save of the
@@ -126,7 +126,10 @@ determinism settings (deterministic algorithms, TF32 matmuls allowed, no
    targets alone, the targets plus the bank's forward and backward, the
    host's time to enqueue the latter, and the clipping; three repeats, the
    last reported): an enqueue time close to the wall time would show the
-   bank launch-bound, which no rate depends on.
+   bank launch-bound, which no rate depends on. Then each of the other three
+   registered workers ([0-7], [8-14], [22-27]) runs solo in the same process
+   for 4 steps of the 18-indexer bank behind its own teacher prefix (steps 0
+   and 1 excluded), so every worker's steady step time is measured directly.
 3. **eval** (150 s). One worker with 6 indexers per layer on all 28 layers
    (the frozen-learning-rate layout of the audit evaluation): 13 selection-only,
    13 selection plus multiple-choice and 13 multiple-choice-only units at 34
@@ -166,6 +169,14 @@ arm completed and the tolerance gates passed, the rates (seconds):
 | `concurrent_step_s` | concurrent: the slowest worker's steady step time |
 | `concurrent_startup_s` | concurrent: the slowest worker's spawn to first step |
 
+Composition check. The limits, like the v2 smoke, project a worker's step as
+4 x its teacher prefix x `teacher_layer_seq_s` + its layers x `layer_step_s` +
+`step_overhead_s`. The receipt compares that composition with every
+worker's directly measured solo step; if any worker is slower than composed
+by more than the 15 percent headroom, the per-layer model would make every
+limit and the smoke's gate too short for that worker, and the probe ends
+`PROBE_INCONSISTENT` (rates reported, no limits).
+
 For convenience it also writes the limits and caps that
 `derive_limits` gives for these rates and whether the caps with the probe
 exceed 8 GPU-hours. The formula itself, and what the limits mean, belong to
@@ -181,6 +192,9 @@ differ.
   run and no rate is reported. The v2 code is not equivalent enough on the
   device as registered; the defect is investigated and any fix needs new code
   digests and a new probe id.
+- `PROBE_INCONSISTENT` (exit 3): every arm completed but the composition
+  check failed; the rates are reported, no limit is derived, and the v2 code
+  or its projection must change before a new probe id.
 - `PROBE_INCOMPLETE` (exit 3): an arm failed, timed out or was stopped by a
   signal. No rate is reported. A rerun needs a new id and a new budget line
   from the program owner (D20 gives this probe 0.15 GPU-h).
@@ -225,11 +239,14 @@ is reported with its receipt; a rerun is a new id.
    distribution. The v2 smoke re-measures every rate on the registered data
    and gates the main job and the extension against the limits, with 15
    percent headroom for that difference.
-2. One binding shard instead of four solo shards. The design review found
-   worker 2 (layers 15-21) binding under the batched engine; per-layer rates
-   compose to every shard as `4 x prefix x teacher + layers x layer_step +
-   overhead`, the same composition the v2 smoke uses, so the probe and the
-   smoke project with one formula.
+2. Rates from one binding shard, checked on all four. The design review
+   found worker 2 (layers 15-21) binding under the batched engine; its
+   per-layer rates compose to every shard as `4 x prefix x teacher + layers x
+   layer_step + overhead`, the same composition the v2 smoke uses (the smoke
+   trains all 28 layers in one worker and cannot time the shards), so the
+   probe and the smoke project with one formula. The other three workers are
+   timed solo to check that composition, and a worker more than the
+   headroom slower than composed ends the probe without limits.
 3. Steady state excludes steps 0 and 1, and the first unit of each evaluation
    kind; start-up is measured from the spawn. v1's smoke counted the
    evaluation worker's 15.7 s start-up in its per-unit rate (1.361 s instead

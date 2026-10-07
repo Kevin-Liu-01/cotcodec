@@ -93,6 +93,13 @@ def test_probe_measures_steady_state_apart_from_startup(complete) -> None:
         assert summary[kind]["units"] == 3 and summary[kind]["measured"] == 2
     assert summary["selection_mean_rows"] == 5.0
     assert evaluation["select_only_long_mean_s"] is not None
+    assert set(train["solo"]) == {"0", "1", "2", "3"}
+    assert all(entry["steps"]["steps_measured"] >= 1 for entry in train["solo"].values())
+    check = complete["composition_check"]
+    assert set(check["workers"]) == {"0", "1", "2", "3"}
+    # The registered composition counts 4 sequences per step; the tiny profile runs 2,
+    # so the binding worker's composed step can only exceed its measured one.
+    assert 0 < check["workers"]["2"]["ratio"] <= 1.0 + 1e-9
     concurrent = complete["arms"]["concurrent"]
     assert [w["layers"] for w in concurrent] == [[0], [1], [2], [3]]
     assert all(w["startup_s"] > 0 for w in concurrent)
@@ -126,3 +133,16 @@ def test_a_signal_stops_the_probe_incomplete(probe, tmp_path) -> None:
     receipt = json.loads((out / "receipt.json").read_text())
     assert receipt["status"] == "PROBE_INCOMPLETE" and "rates" not in receipt
     assert any("SIGUSR1" in reason for reason in receipt["failures"].values())
+
+
+def test_composition_check_flags_a_worker_slower_than_composed() -> None:
+    from scripts import probe_sparse_indexer_k1_throughput as probe
+
+    rates = budget.scenario_rates("central")
+    solo = {str(w): {"layers": list(layers),
+                     "steps": {"step_s": budget.shard_step_s(rates, layers)}}
+            for w, layers in enumerate(budget.SHARDS)}
+    assert probe.composition_check(rates, {"solo": solo})["passed"]
+    solo["0"]["steps"]["step_s"] *= 1 + budget.HEADROOM + 0.01
+    check = probe.composition_check(rates, {"solo": solo})
+    assert not check["passed"] and check["max_ratio"] > 1.15
