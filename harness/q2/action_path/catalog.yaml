@@ -553,7 +553,13 @@ entries:
     rdev_input:
     - [ret]
     intended_keysyms: [Return]
-    events: null
+    events:
+    - - KeyPress
+      - Return
+      - []
+    - - KeyRelease
+      - Return
+      - []
 - id: key_esc
   group: keys_chords
   observable: app
@@ -567,7 +573,13 @@ entries:
     rdev_input:
     - [esc]
     intended_keysyms: [Escape]
-    events: null
+    events:
+    - - KeyPress
+      - Escape
+      - []
+    - - KeyRelease
+      - Escape
+      - []
 - id: key_tab
   group: keys_chords
   observable: app
@@ -581,7 +593,13 @@ entries:
     rdev_input:
     - [tab]
     intended_keysyms: [Tab]
-    events: null
+    events:
+    - - KeyPress
+      - Tab
+      - []
+    - - KeyRelease
+      - Tab
+      - []
 - id: key_f5
   group: keys_chords
   observable: app
@@ -595,7 +613,13 @@ entries:
     rdev_input:
     - [f5]
     intended_keysyms: [F5]
-    events: null
+    events:
+    - - KeyPress
+      - F5
+      - []
+    - - KeyRelease
+      - F5
+      - []
 - id: key_arrow_up
   group: keys_chords
   observable: app
@@ -609,7 +633,13 @@ entries:
     rdev_input:
     - [up]
     intended_keysyms: [Up]
-    events: null
+    events:
+    - - KeyPress
+      - Up
+      - []
+    - - KeyRelease
+      - Up
+      - []
 - id: key_arrow_left
   group: keys_chords
   observable: app
@@ -623,7 +653,13 @@ entries:
     rdev_input:
     - [left]
     intended_keysyms: [Left]
-    events: null
+    events:
+    - - KeyPress
+      - Left
+      - []
+    - - KeyRelease
+      - Left
+      - []
 - id: key_home
   group: keys_chords
   observable: app
@@ -637,7 +673,13 @@ entries:
     rdev_input:
     - [home]
     intended_keysyms: [Home]
-    events: null
+    events:
+    - - KeyPress
+      - Home
+      - []
+    - - KeyRelease
+      - Home
+      - []
 - id: key_pageup
   group: keys_chords
   observable: app
@@ -651,7 +693,13 @@ entries:
     rdev_input:
     - [pgup]
     intended_keysyms: [Prior]
-    events: null
+    events:
+    - - KeyPress
+      - Prior
+      - []
+    - - KeyRelease
+      - Prior
+      - []
 - id: key_pagedown
   group: keys_chords
   observable: app
@@ -665,7 +713,13 @@ entries:
     rdev_input:
     - [pgdn]
     intended_keysyms: [Next]
-    events: null
+    events:
+    - - KeyPress
+      - Next
+      - []
+    - - KeyRelease
+      - Next
+      - []
 - id: key_delete
   group: keys_chords
   observable: app
@@ -679,7 +733,13 @@ entries:
     rdev_input:
     - [delete]
     intended_keysyms: [Delete]
-    events: null
+    events:
+    - - KeyPress
+      - Delete
+      - []
+    - - KeyRelease
+      - Delete
+      - []
 - id: chord_ctrl_c
   group: keys_chords
   observable: app
@@ -693,7 +753,19 @@ entries:
     rdev_input:
     - [ctrl, c]
     intended_keysyms: [Control_L, c]
-    events: null
+    events:
+    - - KeyPress
+      - Control_L
+      - []
+    - - KeyPress
+      - c
+      - [Control]
+    - - KeyRelease
+      - c
+      - [Control]
+    - - KeyRelease
+      - Control_L
+      - [Control]
 - id: chord_ctrl_a
   group: keys_chords
   observable: app
@@ -707,7 +779,19 @@ entries:
     rdev_input:
     - [ctrl, a]
     intended_keysyms: [Control_L, a]
-    events: null
+    events:
+    - - KeyPress
+      - Control_L
+      - []
+    - - KeyPress
+      - a
+      - [Control]
+    - - KeyRelease
+      - a
+      - [Control]
+    - - KeyRelease
+      - Control_L
+      - [Control]
 - id: chord_ctrl_shift_t
   group: keys_chords
   observable: app
@@ -721,7 +805,25 @@ entries:
     rdev_input:
     - [ctrl, shift, t]
     intended_keysyms: [Control_L, Shift_L, t]
-    events: null
+    events:
+    - - KeyPress
+      - Control_L
+      - []
+    - - KeyPress
+      - Shift_L
+      - [Control]
+    - - KeyPress
+      - t
+      - [Shift, Control]
+    - - KeyRelease
+      - t
+      - [Shift, Control]
+    - - KeyRelease
+      - Shift_L
+      - [Shift, Control]
+    - - KeyRelease
+      - Control_L
+      - [Control]
 - id: chord_ctrl_shift_arrow
   group: keys_chords
   observable: app
@@ -735,7 +837,25 @@ entries:
     rdev_input:
     - [ctrl, shift, right]
     intended_keysyms: [Control_L, Shift_L, Right]
-    events: null
+    events:
+    - - KeyPress
+      - Control_L
+      - []
+    - - KeyPress
+      - Shift_L
+      - [Control]
+    - - KeyPress
+      - Right
+      - [Shift, Control]
+    - - KeyRelease
+      - Right
+      - [Shift, Control]
+    - - KeyRelease
+      - Shift_L
+      - [Shift, Control]
+    - - KeyRelease
+      - Control_L
+      - [Control]
 - id: chord_shift_tab
   group: keys_chords
   observable: app
@@ -749,7 +869,19 @@ entries:
     rdev_input:
     - [shift, tab]
     intended_keysyms: [Shift_L, Tab]
-    events: null
+    events:
+    - - KeyPress
+      - Shift_L
+      - []
+    - - KeyPress
+      - Tab
+      - [Shift]
+    - - KeyRelease
+      - Tab
+      - [Shift]
+    - - KeyRelease
+      - Shift_L
+      - [Shift]
 - id: chord_alt_f4
   group: keys_chords
   observable: raw-only
@@ -763,7 +895,19 @@ entries:
     rdev_input:
     - [alt, f4]
     intended_keysyms: [Alt_L, F4]
-    events: null
+    events:
+    - - KeyPress
+      - Alt_L
+      - []
+    - - KeyPress
+      - F4
+      - [Mod1]
+    - - KeyRelease
+      - F4
+      - [Mod1]
+    - - KeyRelease
+      - Alt_L
+      - [Mod1]
 - id: chord_super_d
   group: keys_chords
   observable: raw-only
@@ -777,7 +921,19 @@ entries:
     rdev_input:
     - [meta_l, d]
     intended_keysyms: [Super_L, d]
-    events: null
+    events:
+    - - KeyPress
+      - Super_L
+      - []
+    - - KeyPress
+      - d
+      - [Mod4]
+    - - KeyRelease
+      - d
+      - [Mod4]
+    - - KeyRelease
+      - Super_L
+      - [Mod4]
 - id: key_f1
   group: keys_chords
   observable: app
@@ -791,7 +947,13 @@ entries:
     rdev_input:
     - [f1]
     intended_keysyms: [F1]
-    events: null
+    events:
+    - - KeyPress
+      - F1
+      - []
+    - - KeyRelease
+      - F1
+      - []
 - id: key_f9
   group: keys_chords
   observable: app
@@ -805,7 +967,13 @@ entries:
     rdev_input:
     - [f9]
     intended_keysyms: [F9]
-    events: null
+    events:
+    - - KeyPress
+      - F9
+      - []
+    - - KeyRelease
+      - F9
+      - []
 - id: key_f12
   group: keys_chords
   observable: app
@@ -819,7 +987,13 @@ entries:
     rdev_input:
     - [f12]
     intended_keysyms: [F12]
-    events: null
+    events:
+    - - KeyPress
+      - F12
+      - []
+    - - KeyRelease
+      - F12
+      - []
 - id: key_insert
   group: keys_chords
   observable: app
@@ -833,7 +1007,13 @@ entries:
     rdev_input:
     - [insert]
     intended_keysyms: [Insert]
-    events: null
+    events:
+    - - KeyPress
+      - Insert
+      - []
+    - - KeyRelease
+      - Insert
+      - []
 - id: key_space_chord
   group: keys_chords
   observable: app
@@ -847,7 +1027,13 @@ entries:
     rdev_input:
     - [spc]
     intended_keysyms: [space]
-    events: null
+    events:
+    - - KeyPress
+      - space
+      - []
+    - - KeyRelease
+      - space
+      - []
   note: space sent as a key action, not as typed text
 - id: key_end
   group: keys_chords
@@ -862,7 +1048,13 @@ entries:
     rdev_input:
     - [end]
     intended_keysyms: [End]
-    events: null
+    events:
+    - - KeyPress
+      - End
+      - []
+    - - KeyRelease
+      - End
+      - []
 - id: key_arrow_down
   group: keys_chords
   observable: app
@@ -876,7 +1068,13 @@ entries:
     rdev_input:
     - [down]
     intended_keysyms: [Down]
-    events: null
+    events:
+    - - KeyPress
+      - Down
+      - []
+    - - KeyRelease
+      - Down
+      - []
 - id: key_arrow_right
   group: keys_chords
   observable: app
@@ -890,7 +1088,13 @@ entries:
     rdev_input:
     - [right]
     intended_keysyms: [Right]
-    events: null
+    events:
+    - - KeyPress
+      - Right
+      - []
+    - - KeyRelease
+      - Right
+      - []
 - id: chord_ctrl_home
   group: keys_chords
   observable: app
@@ -904,7 +1108,19 @@ entries:
     rdev_input:
     - [ctrl, home]
     intended_keysyms: [Control_L, Home]
-    events: null
+    events:
+    - - KeyPress
+      - Control_L
+      - []
+    - - KeyPress
+      - Home
+      - [Control]
+    - - KeyRelease
+      - Home
+      - [Control]
+    - - KeyRelease
+      - Control_L
+      - [Control]
 - id: chord_shift_arrow_left
   group: keys_chords
   observable: app
@@ -918,7 +1134,19 @@ entries:
     rdev_input:
     - [shift, left]
     intended_keysyms: [Shift_L, Left]
-    events: null
+    events:
+    - - KeyPress
+      - Shift_L
+      - []
+    - - KeyPress
+      - Left
+      - [Shift]
+    - - KeyRelease
+      - Left
+      - [Shift]
+    - - KeyRelease
+      - Shift_L
+      - [Shift]
 - id: chord_ctrl_alt_shift_r
   group: keys_chords
   observable: raw-only
@@ -932,7 +1160,31 @@ entries:
     rdev_input:
     - [ctrl, alt, shift, r]
     intended_keysyms: [Control_L, Alt_L, Shift_L, r]
-    events: null
+    events:
+    - - KeyPress
+      - Control_L
+      - []
+    - - KeyPress
+      - Alt_L
+      - [Control]
+    - - KeyPress
+      - Shift_L
+      - [Control, Mod1]
+    - - KeyPress
+      - r
+      - [Shift, Control, Mod1]
+    - - KeyRelease
+      - r
+      - [Shift, Control, Mod1]
+    - - KeyRelease
+      - Shift_L
+      - [Shift, Control, Mod1]
+    - - KeyRelease
+      - Alt_L
+      - [Control, Mod1]
+    - - KeyRelease
+      - Control_L
+      - [Control]
   note: GNOME binds this chord to its screen recorder; the guard stops a recording
 - id: chord_alt_tab
   group: keys_chords
@@ -947,7 +1199,19 @@ entries:
     rdev_input:
     - [alt, tab]
     intended_keysyms: [Alt_L, Tab]
-    events: null
+    events:
+    - - KeyPress
+      - Alt_L
+      - []
+    - - KeyPress
+      - Tab
+      - [Mod1]
+    - - KeyRelease
+      - Tab
+      - [Mod1]
+    - - KeyRelease
+      - Alt_L
+      - [Mod1]
 - id: key_kp_enter
   group: keys_chords
   observable: app
@@ -961,7 +1225,13 @@ entries:
     rdev_input:
     - [kp_enter]
     intended_keysyms: [KP_Enter]
-    events: null
+    events:
+    - - KeyPress
+      - KP_Enter
+      - []
+    - - KeyRelease
+      - KP_Enter
+      - []
 - id: key_kp_add
   group: keys_chords
   observable: app
@@ -975,7 +1245,13 @@ entries:
     rdev_input:
     - [kp_add]
     intended_keysyms: [KP_Add]
-    events: null
+    events:
+    - - KeyPress
+      - KP_Add
+      - []
+    - - KeyRelease
+      - KP_Add
+      - []
 - id: chord_shift_alone
   group: keys_chords
   observable: app
@@ -989,7 +1265,13 @@ entries:
     rdev_input:
     - [shift]
     intended_keysyms: [Shift_L]
-    events: null
+    events:
+    - - KeyPress
+      - Shift_L
+      - []
+    - - KeyRelease
+      - Shift_L
+      - [Shift]
 - id: chord_ctrl_alone
   group: keys_chords
   observable: app
@@ -1003,7 +1285,13 @@ entries:
     rdev_input:
     - [ctrl]
     intended_keysyms: [Control_L]
-    events: null
+    events:
+    - - KeyPress
+      - Control_L
+      - []
+    - - KeyRelease
+      - Control_L
+      - [Control]
 - id: key_menu
   group: keys_chords
   observable: app
@@ -1017,7 +1305,13 @@ entries:
     rdev_input:
     - [compose]
     intended_keysyms: [Menu]
-    events: null
+    events:
+    - - KeyPress
+      - Menu
+      - []
+    - - KeyRelease
+      - Menu
+      - []
 - id: scroll_down_1
   group: scrolls
   observable: app
@@ -1471,7 +1765,19 @@ entries:
     - [caps_lock]
     - [caps_lock]
     intended_keysyms: [Caps_Lock, Caps_Lock]
-    events: null
+    events:
+    - - KeyPress
+      - Caps_Lock
+      - []
+    - - KeyRelease
+      - Caps_Lock
+      - []
+    - - KeyPress
+      - Caps_Lock
+      - []
+    - - KeyRelease
+      - Caps_Lock
+      - []
     caps_lock_final: 'off'
 - id: type_plain
   group: typing

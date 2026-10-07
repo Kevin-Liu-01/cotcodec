@@ -9,7 +9,7 @@ summaries extracted from the job receipts, with the receipt SHA-256 recorded.
 | File | What it is |
 |---|---|
 | `boot-reset-report.json` | Jobs 369 (smoke), 372 (bridge exposure) and 374 (22 cold boots): boot and settle times, reset sentinel, isolation, guest facts, HMP reachability |
-| `rdev-capture-report.json` | Job 387: the R-dev reference capture summary (35 key, chord and Caps Lock entries, 5 repetitions) |
+| `rdev-capture-report.json` | Jobs 387 (superseded) and 393 (reference): the R-dev capture of the 35 key, chord and Caps Lock entries, 5 repetitions each |
 
 ## What the runs show
 
@@ -50,3 +50,12 @@ the queue before their state was read, and their driver exit codes are 0.
   GIMP, VLC and Thunderbird; no `xdotool`.
 - **Disk growth per boot:** copy-on-write overlay about 66 MB; `/storage`
   7.3 MB (the image's sparse data disk and UEFI variables).
+- **R-dev reference (job 393):** QEMU `sendkey` for the 35 key, chord and
+  Caps Lock entries, 5 repetitions in one boot (175 windows, 175 clean
+  guards): all 35 projections identical across repetitions and balanced; the
+  Caps Lock LED went on and back off in 5 of 5. The streams are in
+  `harness/q2/action_path/rdev_reference.json` and in the catalog. Job 387
+  ran the same plan but sent each side-effect entry's recovery chord inside
+  the entry's window, so `key_f1`, `key_menu`, `chord_super_d` and
+  `chord_ctrl_alt_shift_r` ended with a stray press; the reference now also
+  requires every press to be released in the window, and 387 is superseded.

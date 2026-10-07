@@ -23,7 +23,7 @@ settings; and a volume certification split from development runs.
 | `vm/guest_http.py` | Client for the OSWorld guest server (`/screenshot`, `/execute`, `/setup/launch`, ...) |
 | `vm/guest/*.py` | Scripts shipped to the guest as base64 argv: facts, reset sentinel, XRecord tap |
 | `action_path/ir.py` | Canonical action IR (Table 21 vocabulary plus explicit holds) |
-| `action_path/catalog.yaml` | The 100-entry catalog (draft; key entries await R-dev references) |
+| `action_path/catalog.yaml` | The 100-entry catalog (draft for the owner's freeze; key entries carry the job-393 R-dev streams) |
 | `action_path/catalog.py` | Catalog loader, validator and hash |
 | `action_path/build_catalog.py` | Author tool that writes `catalog.yaml`; a test checks it reproduces the file byte for byte |
 | `action_path/rdev.py`, `rdev_plan.json` | R-dev reference: HMP chords per key entry, projection and stability rules |
@@ -57,6 +57,18 @@ SHA-256 and the source tree's SHA-256, starts the VM image by digest with
 UID), and on exit removes only containers labelled `cotcodec.slurm_job=<id>`.
 CPU sets come from the job's own Slurm allocation. Raw outputs stay on the host
 under `~/cotcodec-runs/stage0/q2-action-path/runs/<job>/`.
+
+## What has run (all CPU-only Slurm jobs, 2026-10-07)
+
+| Job | Manifest | Result |
+|---|---|---|
+| 369 | `boot-reset-smoke-v1.yaml` | lane smoke, 2 cold boots, every infrastructure gate passed |
+| 372 | `bridge-exposure-v1.yaml` | the D13 fallback: another container reached the guest server |
+| 374 | `boot-reset-v1.yaml` | 22 cold boots (p50 18.3 s, p95 20.8 s), 21/21 pristine resets, HMP reachability |
+| 387 | `rdev-capture-v1.yaml` | R-dev capture, superseded (recovery presses leaked into four windows) |
+| 393 | `rdev-capture-v2.yaml` | R-dev reference: 35 of 35 entries stable over 5 repetitions |
+
+Summaries: `program/evidence/2026-10-07/q2-action-path-stage0b/`.
 
 ## Isolation facts measured (jobs 369, 372, 374)
 
