@@ -36,6 +36,12 @@ attestation helpers. It starts small after the 2026-10-06 restart.
   (h2) message layouts, the streaming client and episode replay, metric parsing
   and the preregistered budget rules. Only `cuda_doctor.py` and
   `triton_kernels.py` import torch or Triton.
+- `serving_probe_v2/` is serving-throughput-probe-v2, built beside the frozen
+  v1 package (never edit `serving_probe/`: its digest is frozen with v1): the
+  v2 contract loader, the contamination rule (foreign processes by PID, own
+  growth against a largest-shape reservation), the launch-window ledger, the
+  identified client with prebuilt replay history, and control X1 on identical
+  prompt token sequences.
 - The old agent loops, conditions, metrics, routing and memory trials are in
   `legacy/harness/`.
 

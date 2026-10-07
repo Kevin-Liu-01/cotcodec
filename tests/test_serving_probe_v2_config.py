@@ -1,0 +1,216 @@
+"""The v2 contract loader, the prebuilt-history replay builder and the identified client."""
+
+from __future__ import annotations
+
+import asyncio
+import copy
+from concurrent.futures import ThreadPoolExecutor
+from pathlib import Path
+
+import pytest
+import yaml
+from serving_probe_fakes import WordTokenizer
+from serving_probe_v2_fakes import FakeVllmIds, prompt_ids
+
+from harness.serving_probe.client import ChatRequest, StopToken
+from harness.serving_probe.config import ProbeConfigError
+from harness.serving_probe.prompts import allowed_token_ids, count_images
+from harness.serving_probe_v2 import client as v2client
+from harness.serving_probe_v2.config import (
+    is_required,
+    launch_window_check,
+    load_config,
+    phase_points,
+    validate_config,
+)
+from harness.serving_probe_v2.requests import build_fixed_replay_plans
+
+PROJECT_ROOT = Path(__file__).resolve().parents[1]
+CONFIG = PROJECT_ROOT / "experiments" / "serving" / "serving-throughput-probe-v2.yaml"
+
+
+def _raw() -> dict:
+    return copy.deepcopy(yaml.safe_load(CONFIG.read_text(encoding="utf-8")))
+
+
+def _validate(raw: dict):
+    return validate_config(raw, path=CONFIG, sha256="0" * 64)
+
+
+def test_live_contract_structure() -> None:
+    config = load_config(CONFIG)
+    assert config.experiment_id == "serving-throughput-probe-v2"
+    assert set(config.jobs) == {"a"}
+    real, control = config.job("a").phases
+    assert [p.point_id for p in real.points] == [
+        "a-smoke",
+        "a-warmup",
+        "a1a",
+        "r1",
+        "r3",
+        "r4",
+        "a1b",
+        "a1c",
+        "r2",
+        "a2",
+        "f1",
+    ]
+    assert [p.point_id for p in phase_points(real)["optional"]] == ["r2", "a2", "f1"]
+    assert [p.point_id for p in control.points] == ["x1-smoke", "x1-warmup", "x1-a1", "x1-r1"]
+    assert all(is_required(p) for p in control.points)
+    # X1 sends exactly a1a's and r1's requests (same seeds and parameters).
+    for control_id, reference in (("x1-a1", "a1a"), ("x1-r1", "r1")):
+        a, b = config.points[control_id], config.points[reference]
+        assert a.seed == b.seed
+        assert {k: v for k, v in a.params.items() if k != "control_of"} == dict(b.params)
+    assert config.points["a-warmup"].params == config.points["x1-warmup"].params
+    window = launch_window_check(config, "a")
+    assert window["reserved_minutes"] == pytest.approx(43.5)
+    assert window["soft_minutes"] == pytest.approx(51.0)
+    assert config.job("a").allocation_minutes == 60
+    assert "d8" not in config.points and "a6" not in config.points
+    assert set(config.models) == {"qwen3.5-9b"}
+
+
+@pytest.mark.parametrize(
+    ("edit", "message"),
+    [
+        (lambda raw: raw["points"]["r3"].update(episodes=21), "exceeds the warm-up"),
+        (lambda raw: raw["points"]["r2"].update(a11y_tokens=40000), "exceeds the warm-up"),
+        (lambda raw: raw["points"]["r3"].update(max_minutes=20), "exceeds the soft stop"),
+        (lambda raw: raw["jobs"]["a"].update(allocation_minutes=50), "exceeds the soft stop"),
+        (lambda raw: raw["points"]["a1b"].update(required=False), "listed after an optional"),
+        (lambda raw: raw["points"]["r1"].pop("history"), "prebuilt history"),
+        (lambda raw: raw["points"]["a1a"].pop("required"), "required must be"),
+        (
+            lambda raw: raw["vllm"]["image_variants"].update(
+                cu130=dict(raw["vllm"]["image_variants"]["cu129"])
+            ),
+            "cu129 image only",
+        ),
+        (lambda raw: raw["validity"].update(reruns_per_invalid_point=2), "one rerun per point"),
+        (lambda raw: raw["jobs"]["a"]["phases"][0].update(reserve_minutes=9), "start_minutes"),
+        (lambda raw: raw.update(experiment_id="serving-throughput-probe-v1"), "experiment_id"),
+        (
+            lambda raw: raw["jobs"]["a"]["phases"][0]["points"].remove("a-warmup"),
+            "second point must be its replay warm-up",
+        ),
+        (lambda raw: raw["points"]["a1a"].update(kind="aa", arms=[1, 16]), "not used in v2"),
+    ],
+)
+def test_contract_errors_fail_closed(edit, message: str) -> None:
+    raw = _raw()
+    edit(raw)
+    with pytest.raises(ProbeConfigError, match=message):
+        _validate(raw)
+
+
+def test_fixed_replay_prompts_never_depend_on_generated_text() -> None:
+    config = load_config(CONFIG)
+    point = config.points["r1"]
+    small = copy.deepcopy(point)
+    object.__setattr__(
+        small,
+        "params",
+        {**point.params, "episodes": 2, "system_tokens": 8, "task_tokens": 4, "action_tokens": 2},
+    )
+    tokenizer = WordTokenizer()
+    allowed = allowed_token_ids(tokenizer)
+    with ThreadPoolExecutor(2) as pool:
+        first = build_fixed_replay_plans(small, tokenizer, allowed, (64, 36), pool)
+        second = build_fixed_replay_plans(small, tokenizer, allowed, (64, 36), pool)
+    plan = first[0]
+    assert plan.steps == [1, 2, 3, 4, 5, 6] and len(plan.prebuilt_responses) == 5
+    for step in plan.steps:
+        a = plan.build(step, ["generated by the real engine"] * 6)
+        b = second[0].build(step, ["something else from dummy weights"] * 6)
+        assert a == b
+        assert count_images(a) == min(step, 5)
+    warm = copy.deepcopy(config.points["a-warmup"])
+    object.__setattr__(
+        warm, "params", {**warm.params, "episodes": 1, "system_tokens": 8, "task_tokens": 4}
+    )
+    with ThreadPoolExecutor(2) as pool:
+        (warm_plan,) = build_fixed_replay_plans(warm, tokenizer, allowed, (64, 36), pool)
+    assert warm_plan.steps == [20]
+    assert count_images(warm_plan.build(20, [])) == 20
+    with pytest.raises(ValueError, match="prebuilt history"):
+        bare = copy.deepcopy(point)
+        object.__setattr__(
+            bare, "params", {k: v for k, v in point.params.items() if k != "history"}
+        )
+        build_fixed_replay_plans(bare, tokenizer, allowed, (64, 36), None)
+
+
+def test_identified_client_digests_prompt_token_ids() -> None:
+    server = FakeVllmIds()
+    messages = [{"role": "user", "content": [{"type": "text", "text": "w5 w6 w7"}]}]
+
+    async def send(srv) -> v2client.IdentifiedResult:
+        async with srv.async_client() as client:
+            return await v2client.stream_chat_identified(
+                client, ChatRequest(messages, 3, False, (0, 1)), model="m", timeout_s=5
+            )
+
+    result = asyncio.run(send(server))
+    assert result.ok and result.completion_tokens == 3
+    assert server.bodies[-1]["return_token_ids"] is True
+    assert server.bodies[-1]["min_tokens"] == 3 and server.bodies[-1]["ignore_eos"] is True
+    expected = prompt_ids(messages)[: result.prompt_tokens]
+    assert result.prompt_ids_sha256 == v2client.token_ids_sha256(expected)
+    assert result.prompt_id_count == len(expected)
+    assert result.text == ""  # generated text is not kept
+    identity = v2client.request_identity([result])
+    assert identity == {
+        "basis": "prompt-token-ids",
+        "requests": {"0:1": [result.prompt_ids_sha256, result.prompt_tokens]},
+    }
+    # A server that returns no ids leaves the identity on prompt-token counts.
+    bare = asyncio.run(send(FakeVllmIds(return_prompt_ids=False)))
+    assert v2client.request_identity([bare])["basis"] == "prompt-token-count"
+    verdict = v2client.compare_identity(identity, v2client.request_identity([bare]))
+    assert verdict["identical"] and verdict["basis"] == "prompt-token-count"
+
+
+def test_open_loop_and_fixed_replay_return_identified_results() -> None:
+    server = FakeVllmIds()
+    config = load_config(CONFIG)
+    point = copy.deepcopy(config.points["r1"])
+    object.__setattr__(
+        point,
+        "params",
+        {
+            **point.params,
+            "episodes": 2,
+            "steps": 2,
+            "system_tokens": 8,
+            "task_tokens": 4,
+            "action_tokens": 2,
+            "t_env_s": 0.0,
+            "stagger_s": 0.0,
+            "prebuilt_response_tokens": 4,
+            "output_tokens": 3,
+        },
+    )
+    tokenizer = WordTokenizer()
+    allowed = allowed_token_ids(tokenizer)
+    with ThreadPoolExecutor(2) as pool:
+        plans = build_fixed_replay_plans(point, tokenizer, allowed, (64, 36), pool)
+
+    async def go():
+        async with server.async_client() as client:
+            stop = StopToken(deadline=None)
+            replay = await v2client.run_fixed_replay(
+                client, plans, model="m", timeout_s=5, stop=stop
+            )
+            requests = [ChatRequest(plans[0].build(1, []), 3, False, (i,)) for i in range(3)]
+            opened = await v2client.run_open_loop(
+                client, requests, concurrency=2, model="m", timeout_s=5, stop=stop
+            )
+            return replay, opened
+
+    (records, *_rest), (results, _start, _end, unlaunched) = asyncio.run(go())
+    assert len(records) == 4 and unlaunched == 0
+    keys = sorted(v2client.request_identity([r.result for r in records])["requests"])
+    assert keys == ["0:1", "0:2", "1:1", "1:2"]
+    assert all(r.prompt_ids_sha256 for r in results)
