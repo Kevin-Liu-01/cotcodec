@@ -96,6 +96,39 @@ def test_checkpoint_store_keeps_two_generations_and_skips_corrupt(tmp_path) -> N
     assert step == 20 and float(tensors["x"][0]) == 20.0 and meta["step"] == 20
 
 
+def test_load_step_never_falls_back_to_an_older_generation(tmp_path) -> None:
+    store = rt.CheckpointStore(tmp_path / "worker-0")
+    for step in (4, 6):
+        store.save(step, {"x": torch.full((3,), float(step))}, {"config_digest": "c"})
+    tensors, meta = store.load_step(6)
+    assert float(tensors["x"][0]) == 6.0 and meta["step"] == 6
+    data = bytearray((store.path(6) / "state.safetensors").read_bytes())
+    data[-1] ^= 0xFF
+    (store.path(6) / "state.safetensors").write_bytes(bytes(data))
+    with pytest.raises(rt.RuntimeContractError, match="fails its digest check"):
+        store.load_step(6)
+    with pytest.raises(rt.RuntimeContractError):
+        store.load_step(8)
+    assert store.load_latest()[0] == 4  # training resumes may still fall back
+
+
+def test_completed_generation_must_match_its_record(tmp_path) -> None:
+    ckpt = tmp_path / "checkpoints"
+    store = rt.CheckpointStore(ckpt / "worker-1")
+    digest = store.save(6, {"x": torch.ones(2)}, {"config_digest": "c"})
+    assert not rt.training_completed(ckpt, 2, 6)
+    with pytest.raises(rt.RuntimeContractError, match="no completion record"):
+        rt.load_completed_generation(ckpt, 1, 6)
+    rt.write_completion_record(ckpt, 1, 6, digest, "c", "final")
+    tensors, _ = rt.load_completed_generation(ckpt, 1, 6)
+    assert float(tensors["x"][0]) == 1.0
+    rt.write_completion_record(ckpt, 1, 6, "0" * 64, "c", "final")
+    with pytest.raises(rt.RuntimeContractError, match="differs from its completion record"):
+        rt.load_completed_generation(ckpt, 1, 6)
+    rt.write_completion_record(ckpt, 0, 6, digest, "c", "final")
+    assert rt.training_completed(ckpt, 2, 6) and not rt.training_completed(ckpt, 2, 18)
+
+
 def test_indexer_bank_round_trip_is_bitwise(tmp_path) -> None:
     spec = sit.IndexerSpec(d_model=16, heads=2, dim=8, rope_dims=8)
     keys = ["hs|1e-3|42", "mp|3e-3|43"]
