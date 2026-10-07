@@ -25,6 +25,16 @@ SESSION_TRIALS = 60
 DEVELOPMENT_SEED = 42
 ACCEPTANCE_SEEDS = (43, 44)
 SETTINGS = ("screenshot", "screenshot+a11y")
+# A3's 30 timing- and state-sensitive entries (preregistration section 7, A3).
+STRESS_ENTRIES = (
+    "click_double_left", "click_triple_left", "click_ctrl_left", "click_shift_left",
+    "click_alt_left", "click_ctrl_shift_right", "click_burst_5", "click_double_slow",
+    "drag_short", "drag_slow_small", "drag_long_diagonal", "chord_ctrl_c", "chord_ctrl_shift_t",
+    "chord_ctrl_shift_arrow", "chord_shift_tab", "chord_shift_alone", "chord_ctrl_alone",
+    "key_kp_enter", "key_menu", "caps_lock_roundtrip", "scroll_ctrl_down_3", "scroll_shift_down_3",
+    "scroll_down_then_up_net_zero", "type_symbols_shifted", "type_unicode_bmp", "type_emoji_zwj",
+    "type_combining", "type_long_500", "type_with_correction", "seq_long_mixed",
+)  # fmt: skip
 
 
 class OrderError(ValueError):

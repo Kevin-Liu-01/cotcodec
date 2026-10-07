@@ -57,7 +57,26 @@ WORKLOAD_KINDS = (
     "inputs-validation",
     "suite-development",
     "canary-development",
+    "suite-acceptance",
+    "canary-acceptance",
 )
+PREREG_ID = "q2-action-path-v1"
+ADDENDA_IDS = {"inputs": "q2-action-path-v1-inputs", "executor": "q2-action-path-v1-executor"}
+# What each scored campaign needs frozen in the ledger (preregistration sections 2.2 and 8):
+# C2 runs after the inputs addendum; C1, C3 and every acceptance criterion after both.
+CRITERIA = {
+    # criterion: (layers, seeds, reps, settings, cells, addenda)
+    "A1": (("L0-fixed",), (43, 44), (5,), "both", "all", ("inputs", "executor")),
+    "A2": (("H-OSW-fixed", "H-GA"), (43,), (5,), "both", "all", ("inputs", "executor")),
+    "A3": (("L0-fixed", "H-OSW-fixed", "H-GA"), (43,), (30,), "both", "stress",
+           ("inputs", "executor")),
+    "A4": (("L0-fixed",), (43,), (1,), "both", "volume", ("inputs", "executor")),
+    "ladder": (("L0-fixed",), (43,), (5,), "both", "all", ("inputs", "executor")),
+    "C1": (("H-OSW-up", "H-GA-buggy"), (42,), (5,), "screenshot", "all", ("inputs", "executor")),
+    "C2": (("L0-raw",), (42,), (5,), "screenshot", "all", ("inputs",)),
+    "C3": (("L0-fixed", "H-OSW-fixed", "H-GA"), (42,), (1,), "screenshot", "all",
+           ("inputs", "executor")),
+}  # fmt: skip
 # Development runs the Stage-1 executor and harnesses only. L0-raw (validity control
 # C2) and the detection controls (C1) are scored once on frozen code, never in
 # development, so they are not admitted here.
@@ -194,9 +213,81 @@ def _gib(size: str) -> int:
     return int(size[:-1])
 
 
-def validate_manifest(raw: Any) -> dict[str, Any]:
-    """Return the manifest unchanged if admissible, else raise ManifestError."""
+def ledger_view(source_dir: str, paths: list[str]) -> dict[str, Any]:
+    """The frozen rows of ``program/preregistrations/ledger.jsonl`` and the files' digests.
+
+    Verifies the ledger's hash chain the way ``scripts/preregister.py`` writes it
+    (each row's ``hash`` is the SHA-256 of its other fields as sorted compact JSON,
+    and ``previous_hash`` links the rows); a broken chain raises ManifestError.
+    """
+    ledger_path = os.path.join(source_dir, "program", "preregistrations", "ledger.jsonl")
+    rows: dict[str, dict[str, str]] = {}
+    previous = "0" * 64
+    if os.path.exists(ledger_path):
+        with open(ledger_path, encoding="utf-8") as handle:
+            for number, line in enumerate(handle, 1):
+                if not line.strip():
+                    continue
+                row = json.loads(line)
+                body = {k: v for k, v in row.items() if k != "hash"}
+                digest = hashlib.sha256(
+                    json.dumps(body, sort_keys=True, separators=(",", ":")).encode()
+                ).hexdigest()
+                if row.get("previous_hash") != previous or row.get("hash") != digest:
+                    raise ManifestError(f"ledger line {number}: broken hash chain")
+                rows[row["experiment_id"]] = {"path": row["path"], "sha256": row["sha256"]}
+                previous = row["hash"]
+    files = {}
+    for path in paths:
+        full = os.path.join(source_dir, path)
+        if os.path.isfile(full) and not os.path.islink(full):
+            with open(full, "rb") as handle:
+                files[path] = hashlib.sha256(handle.read()).hexdigest()
+    return {"rows": rows, "files": files}
+
+
+def ledger_paths(raw: dict[str, Any]) -> list[str]:
+    """The files an acceptance manifest pins (for ``ledger_view``)."""
+    paths = [str((raw.get("preregistration") or {}).get("path"))]
+    for pin in (raw.get("addenda") or {}).values():
+        if isinstance(pin, dict):
+            paths.append(str(pin.get("path")))
+    return paths
+
+
+def check_ledger(manifest: dict[str, Any], ledger: dict[str, Any], needed: tuple[str, ...]) -> None:
+    """Acceptance admission: the ledger freezes the preregistration and the needed addenda.
+
+    ``ledger`` is ``{"rows": {experiment_id: {"path", "sha256"}}, "files": {path: sha256}}``,
+    built by the caller from ``program/preregistrations/ledger.jsonl`` (hash chain
+    verified) and the source tree's files. Every row must match the manifest's digest
+    and the file in the source tree.
+    """
+    rows, files = ledger.get("rows") or {}, ledger.get("files") or {}
+    wanted = [(PREREG_ID, manifest["preregistration"])]
+    for key in needed:
+        wanted.append((ADDENDA_IDS[key], manifest["addenda"][key]))
+    for experiment_id, pin in wanted:
+        row = rows.get(experiment_id)
+        if row is None:
+            raise ManifestError(f"{experiment_id} is not frozen in the ledger")
+        if row["path"] != pin["path"] or row["sha256"] != pin["sha256"]:
+            raise ManifestError(f"{experiment_id}: the manifest and the ledger disagree")
+        if files.get(pin["path"]) != pin["sha256"]:
+            raise ManifestError(f"{pin['path']} changed after it was frozen")
+
+
+def validate_manifest(raw: Any, ledger: dict[str, Any] | None = None) -> dict[str, Any]:
+    """Return the manifest unchanged if admissible, else raise ManifestError.
+
+    Acceptance manifests (A1-A6 and the scored controls) also need ``ledger``
+    (see ``check_ledger``); without it, or before the owner's freeze, they are
+    refused.
+    """
     _no_gpu_words(raw)
+    optional = (
+        {"addenda"} if isinstance(raw, dict) and raw.get("purpose") == "acceptance" else set()
+    )
     manifest = _require_keys(
         raw,
         "manifest",
@@ -218,6 +309,7 @@ def validate_manifest(raw: Any) -> dict[str, Any]:
             "runner",
             "workload",
         },
+        optional,
     )
     if manifest["schema"] != SCHEMA:
         raise ManifestError(f"schema must be {SCHEMA}")
@@ -245,15 +337,22 @@ def validate_manifest(raw: Any) -> dict[str, Any]:
         _match(prereg["sha256"], SHA_RE, "preregistration.sha256")
     if purpose == "acceptance":
         # Confirmatory trials (A1-A6, and the scored controls C1-C3) wait for the
-        # owner's freeze of the main preregistration and of both addenda
-        # (q2-action-path-v1-inputs and q2-action-path-v1-executor). Until a
-        # reviewed change after that freeze admits them with a ledger check,
-        # every acceptance manifest is refused (gauntlet rule 3).
+        # owner's freeze of the main preregistration and of the addenda they need
+        # (q2-action-path-v1-inputs, q2-action-path-v1-executor). Admission is a
+        # ledger check (check_ledger) made by the submitter and again inside the
+        # job; without it every acceptance manifest is refused (gauntlet rule 3).
         if prereg["status"] != "frozen":
             raise ManifestError("acceptance campaigns require a frozen preregistration")
-        raise ManifestError(
-            "acceptance is refused before the freeze of the preregistration and both addenda"
-        )
+        if ledger is None:
+            raise ManifestError(
+                "acceptance is refused before the freeze of the preregistration and both addenda"
+                " (no ledger check was made)"
+            )
+        addenda = _require_keys(manifest.get("addenda"), "addenda", set(ADDENDA_IDS))
+        for key in ADDENDA_IDS:
+            pin = _require_keys(addenda[key], f"addenda.{key}", {"path", "sha256"})
+            _match(pin["path"], REPO_PATH_RE, f"addenda.{key}.path")
+            _match(pin["sha256"], SHA_RE, f"addenda.{key}.sha256")
 
     source = _require_keys(manifest["source"], "source", {"host_dir", "tree_sha256"})
     _host_path(source["host_dir"], "source.host_dir")
@@ -295,9 +394,9 @@ def validate_manifest(raw: Any) -> dict[str, Any]:
         _match(binding["flag"], SEED_FLAG_RE, "randomness.seed_binding.flag")
     else:
         raise ManifestError("randomness.contract must be deterministic or seeded")
-    if set(seeds) & set(ACCEPTANCE_SEEDS):
-        # Seeds 43 and 44 are the preregistered acceptance shuffles; no campaign may
-        # use them before the freeze, whatever its stated purpose.
+    if set(seeds) & set(ACCEPTANCE_SEEDS) and purpose != "acceptance":
+        # Seeds 43 and 44 are the preregistered acceptance shuffles: only an acceptance
+        # campaign, admitted by the ledger check after the freeze, may use them.
         raise ManifestError("seeds 43 and 44 are reserved for acceptance after the freeze")
 
     vm = _require_keys(
@@ -376,8 +475,8 @@ def validate_manifest(raw: Any) -> dict[str, Any]:
 
     if slurm["cpus"] < concurrency * cores + runner_cpus:
         raise ManifestError("slurm.cpus must cover concurrency x cpu_cores plus the runner")
-    if slurm["memory_gb"] < concurrency * vm_mem + runner_mem + 2:
-        raise ManifestError("slurm.memory_gb must cover every VM, the runner and 2 GiB slack")
+    if slurm["memory_gb"] < concurrency * (vm_mem + runner_mem) + 2:
+        raise ManifestError("slurm.memory_gb must cover every VM, its runner and 2 GiB slack")
 
     workload = manifest["workload"]
     if not isinstance(workload, dict) or workload.get("kind") not in WORKLOAD_KINDS:
@@ -439,7 +538,74 @@ def validate_manifest(raw: Any) -> dict[str, Any]:
             raise ManifestError("slurm.minutes cannot cover the worst-case capture budget")
     if workload["kind"] in ("inputs-validation", "suite-development", "canary-development"):
         _validate_session_workload(manifest, workload, purpose, prereg, randomness, concurrency)
+    if workload["kind"] in ("suite-acceptance", "canary-acceptance"):
+        needed = _validate_acceptance_workload(manifest, workload, purpose, randomness)
+        assert ledger is not None  # purpose acceptance was checked above
+        check_ledger(manifest, ledger, needed)
+    elif purpose == "acceptance":
+        raise ManifestError("acceptance campaigns use an acceptance workload")
     return manifest
+
+
+def _validate_acceptance_workload(
+    manifest: dict[str, Any],
+    workload: dict[str, Any],
+    purpose: str,
+    randomness: dict[str, Any],
+) -> tuple[str, ...]:
+    """Fixed shape of each preregistered campaign; returns the addenda it needs frozen."""
+    if purpose != "acceptance":
+        raise ManifestError(f"{workload['kind']} is an acceptance workload")
+    common = {"kind", "boot_timeout_s", "settle_timeout_s", "cells_sha256", "sessions", "trials",
+              "max_trial_s", "attempt", "session_trials"}  # fmt: skip
+    seeds = randomness["seeds"]
+    if randomness["contract"] != "seeded" or len(seeds) != 1:
+        raise ManifestError("an acceptance campaign declares exactly one seed")
+    if workload["kind"] == "canary-acceptance":
+        _require_keys(workload, "workload", common | {"apps", "reps"})
+        if seeds != [43] or workload["reps"] != 5 or workload["apps"] != list(CANARY_APPS):
+            raise ManifestError("A6 runs every app, 5 repetitions, in the seed-43 order")
+        needed: tuple[str, ...] = ("inputs", "executor")
+    else:
+        _require_keys(
+            workload, "workload",
+            common | {"criterion", "layer", "reps", "settings", "cells", "mutant", "session_range"},
+        )  # fmt: skip
+        criterion = workload["criterion"]
+        if criterion not in CRITERIA:
+            raise ManifestError(f"workload.criterion must be one of {sorted(CRITERIA)}")
+        layers, allowed_seeds, reps, settings, cells, needed = CRITERIA[criterion]
+        if workload["layer"] not in layers or seeds[0] not in allowed_seeds:
+            raise ManifestError(f"{criterion}: layer or seed outside the preregistration")
+        if workload["reps"] not in reps:
+            raise ManifestError(f"{criterion}: repetitions outside the preregistration")
+        want = list(SETTINGS) if settings == "both" else [settings]
+        if workload["settings"] != want:
+            raise ManifestError(f"{criterion} runs the settings {want}")
+        if workload["cells"] != cells:
+            raise ManifestError(f"{criterion} runs the cells {cells!r}")
+        if (workload["mutant"] is not None) != (criterion == "C3"):
+            raise ManifestError("only C3 names a mutant (or 'none' for its reference run)")
+        span = workload["session_range"]
+        if span is not None and (
+            not isinstance(span, list) or len(span) != 2 or not 0 <= span[0] < span[1]
+        ):
+            raise ManifestError("workload.session_range must be null or [start, end)")
+    _int(workload["attempt"], "workload.attempt", 1, 3)
+    _int(workload["session_trials"], "workload.session_trials", 1, 60)
+    _match(workload["cells_sha256"], SHA_RE, "workload.cells_sha256")
+    boot_timeout = _int(workload["boot_timeout_s"], "workload.boot_timeout_s", 60, 900)
+    settle_timeout = _int(workload["settle_timeout_s"], "workload.settle_timeout_s", 0, 300)
+    sessions = _int(workload["sessions"], "workload.sessions", 1, 2000)
+    trials = _int(workload["trials"], "workload.trials", 1, 100000)
+    max_trial = _int(workload["max_trial_s"], "workload.max_trial_s", 5, 600)
+    concurrency = manifest["vm"]["concurrency"]
+    budget = (
+        600 + (sessions * (boot_timeout + settle_timeout + 240) + trials * max_trial) / concurrency
+    )
+    if manifest["slurm"]["minutes"] * 60 < budget:
+        raise ManifestError("slurm.minutes cannot cover the worst-case session budget")
+    return needed
 
 
 def _validate_session_workload(

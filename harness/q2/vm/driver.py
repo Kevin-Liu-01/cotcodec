@@ -38,6 +38,8 @@ from harness.q2.action_path.rdev import summarize_capture
 from harness.q2.vm.manifest import (
     ManifestError,
     container_labels,
+    ledger_paths,
+    ledger_view,
     manifest_sha256,
     parse_cpuset,
     validate_manifest,
@@ -48,7 +50,14 @@ RUNNER_TIMEOUT_SLACK_S = 900
 FALLBACK_MARKER = "falling back to usermode"
 RDEV_PLAN = "harness/q2/action_path/rdev_plan.json"
 CELLS = "harness/q2/action_path/suite_cells.json"
-SESSION_KINDS = ("inputs-validation", "suite-development", "canary-development")
+SESSION_KINDS = (
+    "inputs-validation",
+    "suite-development",
+    "canary-development",
+    "suite-acceptance",
+    "canary-acceptance",
+)
+VOLUME_PLAN = "harness/q2/action_path/volume_plan.json"
 SENTINEL_BLINK = "1777"  # harness/q2/vm/guest/sentinel.py writes this gsettings value
 
 
@@ -317,6 +326,41 @@ def format_cpuset(cpus: list[int]) -> str:
     return ",".join(parts)
 
 
+def plan_cpusets_multi(
+    manifest: dict[str, Any], allocated: list[int], nodes: dict[int, set[int]]
+) -> list[dict[str, Any]]:
+    """One CPU set per concurrent VM (``cpu_cores`` each); the runners share the rest."""
+    vm = manifest["vm"]
+    count, need_vm = vm["concurrency"], vm["cpu_cores"]
+    pool = sorted(allocated)
+    if "cpuset_cpus" in vm:
+        requested = parse_cpuset(vm["cpuset_cpus"])
+        if not set(requested) <= set(pool):
+            raise DriverError("vm.cpuset_cpus is not inside this job's Slurm allocation")
+        pool = requested + [cpu for cpu in pool if cpu not in requested]
+    runner_need = manifest["runner"]["cpus"]
+    if len(pool) < count * need_vm + runner_need:
+        raise DriverError("Slurm allocation is too small for the VMs and the runners")
+    runner_cpus = pool[count * need_vm : count * need_vm + runner_need]
+    out = []
+    for index in range(count):
+        vm_cpus = pool[index * need_vm : (index + 1) * need_vm]
+        vm_nodes = {node for node, cpus in nodes.items() if set(vm_cpus) & cpus}
+        mems = vm.get("cpuset_mems")
+        if mems is None and len(vm_nodes) == 1:
+            mems = str(next(iter(vm_nodes)))
+        out.append(
+            {
+                "allocated": format_cpuset(pool),
+                "vm": format_cpuset(vm_cpus),
+                "runner": format_cpuset(runner_cpus),
+                "vm_mems": mems,
+                "vm_numa_nodes": sorted(vm_nodes),
+            }
+        )
+    return out
+
+
 def plan_cpusets(
     manifest: dict[str, Any], allocated: list[int], nodes: dict[int, set[int]]
 ) -> dict[str, Any]:
@@ -491,6 +535,8 @@ def session_plan(manifest: dict[str, Any], cells: dict[str, Any]) -> list[dict[s
         return [
             {"setting": "screenshot", "index": i, "trials": []} for i in range(workload["sessions"])
         ]
+    if kind == "suite-acceptance":
+        raise DriverError("suite-acceptance plans come from acceptance_plan")
     seed = manifest["randomness"]["seeds"][0]
     if kind == "suite-development":
         layer_cells = [c["id"] for c in cells["layers"][workload["layer"]]]
@@ -505,9 +551,46 @@ def session_plan(manifest: dict[str, Any], cells: dict[str, Any]) -> list[dict[s
     pairs = []
     for app in workload["apps"]:
         for entry in canary["apps"][app]["entries"]:
-            if workload["entries"] == "all" or entry in workload["entries"]:
+            every = kind == "canary-acceptance" or workload["entries"] == "all"
+            if every or entry in workload["entries"]:
                 pairs.append(f"{app}:{entry}")
+    if kind == "canary-acceptance":
+        return run_order.plan(
+            pairs, seed, workload["reps"], ["screenshot"], workload["session_trials"],
+            acceptance=True,
+        )  # fmt: skip
     return run_order.plan(pairs, seed, workload["reps"], ["screenshot"], workload["session_trials"])
+
+
+def acceptance_plan(
+    manifest: dict[str, Any], cells: dict[str, Any], volume_plan: dict[str, Any]
+) -> list[dict[str, Any]]:
+    """Sessions of a suite-acceptance campaign, as the preregistration fixes them."""
+    from harness.q2.action_path import volume
+
+    workload = manifest["workload"]
+    criterion, layer = workload["criterion"], workload["layer"]
+    seed = manifest["randomness"]["seeds"][0]
+    cell_layer = "L0-fixed" if layer == "L0-raw" else layer
+    ids = [c["id"] for c in cells["layers"][cell_layer]]
+    if criterion == "A3":
+        ids = [i for i in ids if i in run_order.STRESS_ENTRIES]
+    if criterion == "A4":
+        realized = volume.sessions(volume_plan, seed)
+        plan = []
+        for setting in run_order.SETTINGS:
+            for index, chunk in enumerate(realized[setting]):
+                trials = [[seq, cell] for seq, cell in enumerate(chunk)]
+                plan.append({"setting": setting, "index": index, "trials": trials})
+    else:
+        plan = run_order.plan(
+            ids, seed, workload["reps"], workload["settings"], workload["session_trials"],
+            acceptance=seed in run_order.ACCEPTANCE_SEEDS,
+        )  # fmt: skip
+    span = workload.get("session_range")
+    if span is not None:
+        plan = plan[span[0] : span[1]]
+    return plan
 
 
 def run_cycle(
@@ -576,6 +659,8 @@ def run_cycle(
                 layer=workload.get("layer"),
                 reps=workload.get("reps"),
                 canary_readback=workload.get("canary_readback", False),
+                mutant=workload.get("mutant"),
+                criterion=workload.get("criterion"),
                 measure_targets=workload.get("measure_targets", False),
                 tap_duration_s=600
                 + (len(session["trials"]) + workload.get("reps", 0) * 40) * workload["max_trial_s"],
@@ -808,7 +893,11 @@ def main(argv: list[str] | None = None) -> int:
     if not re.fullmatch(r"[1-9][0-9]{0,19}", args.job_id):
         raise SystemExit("job id must be numeric")
     try:
-        manifest = validate_manifest(json.loads(args.manifest.read_text(encoding="utf-8")))
+        raw = json.loads(args.manifest.read_text(encoding="utf-8"))
+        ledger = None
+        if raw.get("purpose") == "acceptance":
+            ledger = ledger_view(args.source_dir, ledger_paths(raw))
+        manifest = validate_manifest(raw, ledger)
     except ManifestError as exc:
         raise SystemExit(f"manifest rejected inside the job: {exc}") from exc
     run_dir: Path = args.run_dir
@@ -876,7 +965,12 @@ def main(argv: list[str] | None = None) -> int:
         cells_path = Path(args.source_dir) / CELLS
         if hashlib.sha256(cells_path.read_bytes()).hexdigest() != workload["cells_sha256"]:
             raise DriverError("suite_cells.json digest does not match the manifest")
-        plan = session_plan(manifest, json.loads(cells_path.read_text(encoding="utf-8")))
+        cells_data = json.loads(cells_path.read_text(encoding="utf-8"))
+        if workload["kind"] == "suite-acceptance":
+            volume_plan = json.loads((Path(args.source_dir) / VOLUME_PLAN).read_text())
+            plan = acceptance_plan(manifest, cells_data, volume_plan)
+        else:
+            plan = session_plan(manifest, cells_data)
         trials = sum(len(s["trials"]) for s in plan)
         if workload["kind"] != "inputs-validation" and (
             len(plan) != workload["sessions"] or trials != workload["trials"]
@@ -893,20 +987,48 @@ def main(argv: list[str] | None = None) -> int:
     verdicts: list[dict[str, Any]] = []
     tokens: list[str] = []
     prev = None
-    for cycle in range(cycles):
-        record = run_cycle(
-            manifest, args.job_id, cycle, prev, run_dir, args.source_dir, cpus,
-            session=plan[cycle] if plan else None,
-        )  # fmt: skip
-        verdict = cycle_verdict(record, tokens)
-        records.append(record)
-        verdicts.append(verdict)
-        tokens.append(record["token"])
-        prev = record["token"]
+
+    def finish(cycle: int, record: dict[str, Any]) -> None:
         (run_dir / "cycles" / f"record-{cycle:02d}.json").write_text(
             json.dumps(record, indent=2, sort_keys=True), encoding="utf-8"
         )
-        print(json.dumps({"cycle_verdict": verdict}, sort_keys=True), flush=True)
+
+    if manifest["vm"]["concurrency"] == 1:
+        for cycle in range(cycles):
+            record = run_cycle(
+                manifest, args.job_id, cycle, prev, run_dir, args.source_dir, cpus,
+                session=plan[cycle] if plan else None,
+            )  # fmt: skip
+            verdict = cycle_verdict(record, tokens)
+            records.append(record)
+            verdicts.append(verdict)
+            tokens.append(record["token"])
+            prev = record["token"]
+            finish(cycle, record)
+            print(json.dumps({"cycle_verdict": verdict}, sort_keys=True), flush=True)
+    else:
+        # N concurrent VMs (the concurrency ladder and A4 at N*): worker k runs sessions
+        # k, k + N, ... on its own VM CPU set; every session is still a cold boot.
+        from concurrent.futures import ThreadPoolExecutor
+
+        slices = plan_cpusets_multi(manifest, allocated, numa_nodes())
+        receipt["cpusets"] = slices
+        by_cycle: dict[int, dict[str, Any]] = {}
+
+        def worker(index: int) -> None:
+            for cycle in range(index, cycles, len(slices)):
+                record = run_cycle(
+                    manifest, args.job_id, cycle, None, run_dir, args.source_dir, slices[index],
+                    session=plan[cycle],
+                )  # fmt: skip
+                by_cycle[cycle] = record
+                finish(cycle, record)
+
+        with ThreadPoolExecutor(max_workers=len(slices)) as pool:
+            list(pool.map(worker, range(len(slices))))
+        for cycle in sorted(by_cycle):
+            records.append(by_cycle[cycle])
+            verdicts.append(cycle_verdict(by_cycle[cycle], []))
 
     receipt["qcow2_sha256_after"] = sha256_file(qcow2["host_path"])
     receipt["qcow2_unchanged"] = receipt["qcow2_sha256_after"] == receipt["qcow2_sha256_before"]
