@@ -13,11 +13,21 @@ Registered statistics (preregistration ``q3-k1-localization-screen-v1``):
 * ``xi_rel_T`` = macro over pairs of ``G(MN) - G(CX)`` where
   ``G(c) = (R_ind(c) - R_rand(c)) / (R_T(c) - R_rand(c))`` on pair condition
   means (scale-free co-statistic: the share of the target's above-chance recall
-  the indexer keeps).
-* Decision interval = point +/- z_{0.995} * sqrt(se_cluster^2 + s_seed^2 / n_seeds),
+  the indexer keeps). Evaluability is decided once, on the point pair means:
+  if any pair has ``R_T(c) - R_rand(c) <= 1`` point, ``xi_rel_T`` is not
+  evaluable. Inside bootstrap replicates the denominator is
+  ``max(R_T(c) - R_rand(c), 1)`` so a replicate never divides by a vanishing or
+  negative headroom; the number of replicates in which that floor was active
+  is reported (``clipped_replicates``).
+* Decision interval = point +/- t_{0.995, df} * sqrt(se_cluster^2 + s_seed^2 / n_seeds),
   where se_cluster is the SD of a passage-cluster bootstrap (B = 10,000,
-  NumPy seed 42, macro-averaging inside each replicate, seeds held fixed) and
-  s_seed is the SD of the per-seed statistics.
+  NumPy seed 42, macro-averaging inside each replicate, seeds held fixed),
+  s_seed is the SD of the per-seed statistics and df is the
+  Welch-Satterthwaite degrees of freedom of the two variance components
+  (``n_clusters - 1`` for the cluster term, ``n_seeds - 1`` for the seed term).
+  With three seeds a seed-dominated interval uses df close to 2, so the
+  interval keeps its 99 percent coverage instead of the ~88 percent a normal
+  quantile would give.
 """
 
 from __future__ import annotations
@@ -36,7 +46,8 @@ from harness.translation_supervised_indexer import pooled_seed_sd, sigma_upper_b
 FloatArray = NDArray[np.float64]
 IntArray = NDArray[np.int64]
 
-Z_99 = float(stats.norm.ppf(0.995))
+CONFIDENCE = 0.99
+Z_99 = float(stats.norm.ppf(0.5 + CONFIDENCE / 2))
 BOOTSTRAP_REPLICATES = 10_000
 BOOTSTRAP_SEED = 42
 
@@ -190,18 +201,31 @@ def xi_point(table: FamilyTable, seed_index: int | None = None) -> float:
     return float(_macro(design.pair_means(family_excess(table, seed_index))))
 
 
-def _retention(ind: FloatArray, tgt: FloatArray, rnd: FloatArray) -> FloatArray:
+def _retention(ind: FloatArray, tgt: FloatArray, rnd: FloatArray, *, clip: bool) -> FloatArray:
     headroom = tgt - rnd
     with np.errstate(invalid="ignore", divide="ignore"):
+        if clip:
+            # Bootstrap replicates: the registered floor bounds the denominator.
+            return (ind - rnd) / np.maximum(headroom, HEADROOM_FLOOR_POINTS)
         return np.where(headroom > HEADROOM_FLOOR_POINTS, (ind - rnd) / headroom, np.nan)
 
 
-def _xi_rel_from_means(means: Mapping[str, FloatArray]) -> FloatArray:
-    g_mn = _retention(means["ind_mn"], means["tgt_mn"], means["rand_mn"])
-    g_cx = _retention(means["ind_cx"], means["tgt_cx"], means["rand_cx"])
+def _xi_rel_from_means(means: Mapping[str, FloatArray], *, clip: bool = False) -> FloatArray:
+    g_mn = _retention(means["ind_mn"], means["tgt_mn"], means["rand_mn"], clip=clip)
+    g_cx = _retention(means["ind_cx"], means["tgt_cx"], means["rand_cx"], clip=clip)
     diff = g_mn - g_cx
-    # A pair without target headroom makes xi_rel non-evaluable (NaN), not smaller.
+    # At the point estimate a pair without target headroom makes xi_rel
+    # non-evaluable (NaN), not smaller.
     return np.where(np.isnan(diff).any(axis=-1), np.nan, diff.mean(axis=-1))
+
+
+def _floor_active(means: Mapping[str, FloatArray]) -> FloatArray:
+    """Per replicate: whether any pair's target headroom is at or below the floor."""
+
+    with np.errstate(invalid="ignore"):
+        low_mn = means["tgt_mn"] - means["rand_mn"] <= HEADROOM_FLOOR_POINTS
+        low_cx = means["tgt_cx"] - means["rand_cx"] <= HEADROOM_FLOOR_POINTS
+    return (low_mn | low_cx).any(axis=-1)
 
 
 def xi_rel_point(table: FamilyTable, seed_index: int | None = None) -> float:
@@ -238,12 +262,50 @@ class Interval:
     percentile_upper: float
     replicates: int
     evaluable: bool
+    df: float = math.inf
+    quantile: float = Z_99
+    clipped_replicates: int = 0
 
     def as_dict(self) -> dict[str, Any]:
         return asdict(self)
 
+    @classmethod
+    def from_dict(cls, payload: Mapping[str, Any]) -> Interval:
+        values = {name: payload[name] for name in cls.__dataclass_fields__ if name in payload}
+        values["per_seed"] = tuple(float(v) for v in values.get("per_seed", ()))
+        return cls(**values)
 
-def _combine(point: float, per_seed: Sequence[float], boot: FloatArray) -> Interval:
+
+def welch_satterthwaite_df(se_cluster: float, s_seed: float, n_seeds: int,
+                           n_clusters: int) -> float:
+    """Degrees of freedom of ``se_cluster^2 + s_seed^2 / n_seeds``.
+
+    The cluster term has ``n_clusters - 1`` degrees of freedom and the seed term
+    ``n_seeds - 1``; a term that is zero (or has no degrees of freedom) drops out.
+    """
+
+    v_cluster = se_cluster**2
+    v_seed = s_seed**2 / n_seeds if n_seeds > 0 else 0.0
+    denominator = 0.0
+    if v_cluster > 0.0 and n_clusters > 1:
+        denominator += v_cluster**2 / (n_clusters - 1)
+    if v_seed > 0.0 and n_seeds > 1:
+        denominator += v_seed**2 / (n_seeds - 1)
+    if denominator == 0.0:
+        return math.inf
+    return (v_cluster + v_seed) ** 2 / denominator
+
+
+def decision_quantile(df: float) -> float:
+    """Two-sided 99 percent quantile of Student t with ``df`` (normal when infinite)."""
+
+    if not math.isfinite(df):
+        return Z_99
+    return float(stats.t.ppf(0.5 + CONFIDENCE / 2, df))
+
+
+def _combine(point: float, per_seed: Sequence[float], boot: FloatArray, n_clusters: int,
+             clipped: int = 0) -> Interval:
     finite = boot[np.isfinite(boot)]
     evaluable = (
         math.isfinite(point)
@@ -254,12 +316,15 @@ def _combine(point: float, per_seed: Sequence[float], boot: FloatArray) -> Inter
     if not evaluable:
         nan = float("nan")
         return Interval(point, tuple(per_seed), nan, nan, nan, nan, nan, nan, nan, nan,
-                        int(boot.size), False)
+                        int(boot.size), False, nan, nan, int(clipped))
     s_seed = float(np.std(per_seed, ddof=1)) if len(per_seed) > 1 else 0.0
     se_cluster = float(np.std(finite, ddof=1))
-    se_total = math.sqrt(se_cluster**2 + s_seed**2 / max(len(per_seed), 1))
-    half = Z_99 * se_total
-    lo, hi = np.percentile(finite, [0.5, 99.5])
+    n_seeds = max(len(per_seed), 1)
+    se_total = math.sqrt(se_cluster**2 + s_seed**2 / n_seeds)
+    df = welch_satterthwaite_df(se_cluster, s_seed, n_seeds, n_clusters)
+    quantile = decision_quantile(df)
+    half = quantile * se_total
+    lo, hi = np.percentile(finite, [0.5, 99.5])  # the 99 percent percentile interval
     return Interval(
         point=point,
         per_seed=tuple(float(v) for v in per_seed),
@@ -273,6 +338,9 @@ def _combine(point: float, per_seed: Sequence[float], boot: FloatArray) -> Inter
         percentile_upper=float(hi),
         replicates=int(boot.size),
         evaluable=True,
+        df=df,
+        quantile=quantile,
+        clipped_replicates=int(clipped),
     )
 
 
@@ -283,7 +351,7 @@ def xi_interval(
     weights = _cluster_weights(design.n_clusters, replicates, seed)
     boot = _macro(design.pair_means(family_excess(table), weights))
     per_seed = [xi_point(table, s) for s in range(table.n_seeds)]
-    return _combine(xi_point(table), per_seed, boot)
+    return _combine(xi_point(table), per_seed, boot, design.n_clusters)
 
 
 def xi_rel_interval(
@@ -299,9 +367,14 @@ def xi_rel_interval(
         "rand_mn": design.pair_means(table.rand_mn, weights),
         "rand_cx": design.pair_means(table.rand_cx, weights),
     }
-    boot = _xi_rel_from_means(means)
+    point = xi_rel_point(table)
     per_seed = [xi_rel_point(table, s) for s in range(table.n_seeds)]
-    return _combine(xi_rel_point(table), per_seed, boot)
+    if not math.isfinite(point):
+        # Registered rule: evaluability is decided on the point pair means only.
+        return _combine(point, per_seed, np.full(replicates, np.nan), design.n_clusters)
+    boot = _xi_rel_from_means(means, clip=True)
+    clipped = int(_floor_active(means).sum())
+    return _combine(point, per_seed, boot, design.n_clusters, clipped)
 
 
 def macro_mean_interval(
@@ -320,7 +393,7 @@ def macro_mean_interval(
     weights = _cluster_weights(design.n_clusters, replicates, seed)
     point = float(_macro(design.pair_means(values)))
     boot = _macro(design.pair_means(values, weights))
-    interval = _combine(point, [point], boot)
+    interval = _combine(point, [point], boot, design.n_clusters)
     # Without a seed term the decision interval is the percentile interval.
     return Interval(
         point=interval.point,
@@ -335,6 +408,8 @@ def macro_mean_interval(
         percentile_upper=interval.percentile_upper,
         replicates=interval.replicates,
         evaluable=interval.evaluable,
+        df=interval.df,
+        quantile=interval.quantile,
     )
 
 
@@ -356,6 +431,14 @@ class AdequacyRead:
 
     indexer_ml_by_seed: tuple[float, ...]
     target_ml: float
+
+    def as_dict(self) -> dict[str, Any]:
+        return {"indexer_ml_by_seed": list(self.indexer_ml_by_seed), "target_ml": self.target_ml}
+
+    @classmethod
+    def from_dict(cls, payload: Mapping[str, Any]) -> AdequacyRead:
+        return cls(tuple(float(v) for v in payload["indexer_ml_by_seed"]),
+                   float(payload["target_ml"]))
 
     @property
     def v1_pass(self) -> bool:
@@ -388,6 +471,15 @@ class HeadroomRead:
     def h2b_pass(self) -> bool:
         return self.h2b.evaluable and self.h2b.lower > 0.0 and self.h2b.point >= H2B_POINTS
 
+    def as_dict(self) -> dict[str, Any]:
+        return {"h1_points": self.h1_points, "h2a": self.h2a.as_dict(),
+                "h2b": self.h2b.as_dict()}
+
+    @classmethod
+    def from_dict(cls, payload: Mapping[str, Any]) -> HeadroomRead:
+        return cls(float(payload["h1_points"]), Interval.from_dict(payload["h2a"]),
+                   Interval.from_dict(payload["h2b"]))
+
 
 @dataclass(frozen=True)
 class TargetRead:
@@ -419,6 +511,16 @@ class TargetRead:
             and self.xi_rel.upper < NEGATIVE_XI_REL_UPPER
         )
 
+    def as_dict(self) -> dict[str, Any]:
+        return {"target": self.target, "xi": self.xi.as_dict(), "xi_rel": self.xi_rel.as_dict(),
+                "adequacy": self.adequacy.as_dict(), "integrity_ok": self.integrity_ok}
+
+    @classmethod
+    def from_dict(cls, payload: Mapping[str, Any]) -> TargetRead:
+        return cls(str(payload["target"]), Interval.from_dict(payload["xi"]),
+                   Interval.from_dict(payload["xi_rel"]),
+                   AdequacyRead.from_dict(payload["adequacy"]), bool(payload["integrity_ok"]))
+
 
 @dataclass(frozen=True)
 class Verdict:
@@ -427,8 +529,18 @@ class Verdict:
     per_target: dict[str, dict[str, Any]] = field(default_factory=dict)
 
 
-def k1_verdict(reads: Sequence[TargetRead], headroom: HeadroomRead) -> Verdict:
-    """Apply the registered K1-screen rules in their registered order."""
+def k1_verdict(reads: Sequence[TargetRead], headroom: HeadroomRead, *,
+               after_extension: bool = False) -> Verdict:
+    """Apply the registered K1-screen rules in their registered order.
+
+    Order: VOID (any V3 failure), HOLD (any V2 bug tell), UNINTERPRETABLE
+    (H1 below 10, H2a or H2b failing), then V1_EXTENSION_REQUIRED when no target
+    passes V1, then GO from any target that passes V1, then NEGATIVE (every
+    target passes V1 and is in the NEGATIVE region, and H1 >= 20), else
+    INCONCLUSIVE. ``after_extension=True`` is the combined read after the one
+    registered V1 extension: a target still failing V1 cannot request another
+    extension, so V1_EXTENSION_REQUIRED becomes INCONCLUSIVE.
+    """
 
     if not reads:
         raise StatsContractError("the verdict needs at least one target read")
@@ -460,6 +572,10 @@ def k1_verdict(reads: Sequence[TargetRead], headroom: HeadroomRead) -> Verdict:
         return Verdict("UNINTERPRETABLE", tuple(reasons), per_target)
     adequate = [read for read in reads if read.adequacy.v1_pass]
     if not adequate:
+        if after_extension:
+            return Verdict("INCONCLUSIVE",
+                           ("V1 failed for every target after the registered extension",),
+                           per_target)
         return Verdict("V1_EXTENSION_REQUIRED", ("V1 failed for every target",), per_target)
     go_targets = [read.target for read in adequate if read.go]
     if go_targets:
@@ -474,7 +590,12 @@ def k1_verdict(reads: Sequence[TargetRead], headroom: HeadroomRead) -> Verdict:
                        per_target)
     failing_v1 = [read.target for read in reads if not read.adequacy.v1_pass]
     if failing_v1:
-        reasons.append("V1 failed for " + ", ".join(failing_v1) + "; extension rule applies")
+        if after_extension:
+            reasons.append("V1 still failed for " + ", ".join(failing_v1)
+                           + " after the registered extension")
+        else:
+            reasons.append("V1 failed for " + ", ".join(failing_v1)
+                           + "; the registered extension applies")
     if not headroom.h1_negative_ready:
         reasons.append(f"H1 {headroom.h1_points:.2f} below {H1_NEGATIVE_POINTS} blocks NEGATIVE")
     for read in reads:
@@ -487,6 +608,36 @@ def k1_verdict(reads: Sequence[TargetRead], headroom: HeadroomRead) -> Verdict:
         if go_side_disagrees or negative_side_disagrees:
             reasons.append(f"{read.target}: xi and xi_rel classifications disagree")
     return Verdict("INCONCLUSIVE", tuple(reasons) or ("no registered region reached",), per_target)
+
+
+EXTENSION_ELIGIBLE_VERDICTS = ("V1_EXTENSION_REQUIRED", "INCONCLUSIVE")
+
+
+def extension_targets(verdict: Verdict, reads: Sequence[TargetRead]) -> list[str]:
+    """Targets the registered V1 extension retrains and re-reads (possibly none).
+
+    The extension runs only after a main read whose verdict is
+    V1_EXTENSION_REQUIRED, or INCONCLUSIVE with at least one target failing V1.
+    It covers exactly the targets that failed V1; a target that passed V1 keeps
+    its main read and is never re-read.
+    """
+
+    if verdict.verdict not in EXTENSION_ELIGIBLE_VERDICTS:
+        return []
+    return [read.target for read in reads if not read.adequacy.v1_pass]
+
+
+def combine_after_extension(main_reads: Sequence[TargetRead],
+                            extension_reads: Sequence[TargetRead]) -> list[TargetRead]:
+    """Main reads for targets that passed V1, extension reads for the rest (main order)."""
+
+    by_target = {read.target: read for read in extension_reads}
+    expected = {read.target for read in main_reads if not read.adequacy.v1_pass}
+    if set(by_target) != expected:
+        raise StatsContractError(
+            f"the extension must re-read exactly the V1-failing targets {sorted(expected)}, "
+            f"not {sorted(by_target)}")
+    return [by_target.get(read.target, read) for read in main_reads]
 
 
 def attribution_label(xi_cx: float, xi_cs: float) -> str:
@@ -529,11 +680,15 @@ __all__ = [
     "TargetRead",
     "Verdict",
     "attribution_label",
+    "combine_after_extension",
+    "decision_quantile",
+    "extension_targets",
     "family_excess",
     "k1_verdict",
     "macro_mean_interval",
     "se_cluster_of_macro",
     "seed_noise_report",
+    "welch_satterthwaite_df",
     "xi_interval",
     "xi_point",
     "xi_rel_interval",
