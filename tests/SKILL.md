@@ -39,6 +39,8 @@ Each contract proves valid inputs pass and decision-bearing drift fails.
 - `serving_probe_fakes.py` (not collected) holds a word tokenizer, a fake
   vLLM server on `httpx.MockTransport` and a stand-in for vLLM's offline request
   bookkeeping for the serving-probe tests.
+- `serving_probe_v2_fakes.py` (not collected) adds the v2 fakes: a server that
+  streams prompt token ids, and device and compute-process timelines.
 
 ## Patterns to follow / invariants
 <!-- agent-docs:fill:patterns -->
