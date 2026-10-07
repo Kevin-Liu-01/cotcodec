@@ -410,8 +410,22 @@ class LoSession:
 
 
 def lo_version(soffice: str) -> str:
+    """``soffice --version`` plus the libreoffice-core package version.
+
+    Ubuntu's 0ubuntu0.22.04.4 and 0ubuntu0.22.04.13 both report
+    "LibreOffice 7.3.7.2 30(Build:2)", so the version line alone does not
+    identify the build.
+    """
     out = subprocess.run([soffice, "--version"], capture_output=True, text=True, timeout=120)
-    return out.stdout.strip().splitlines()[0] if out.stdout.strip() else "unknown"
+    line = out.stdout.strip().splitlines()[0] if out.stdout.strip() else "unknown"
+    deb = subprocess.run(
+        ["dpkg-query", "-W", "-f", "${Version}", "libreoffice-core"],
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    package = deb.stdout.strip() if deb.returncode == 0 and deb.stdout.strip() else "unknown"
+    return f"{line}; libreoffice-core {package}"
 
 
 def run_job(
