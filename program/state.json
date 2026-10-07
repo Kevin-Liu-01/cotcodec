@@ -50,8 +50,8 @@
       "title": "Cross-script sparse-indexer recall",
       "doc": "program/questions/q3-cross-script-indexer.md",
       "dossier_key": "E6-d21-translation-supervised-indexer",
-      "status": "stage-0-redesign",
-      "next_action": "Design a rescoped K1 successor (new id) from the measured smoke timings; decide whether it fits under 8 GPU-h or goes through the gauntlet",
+      "status": "stage-0-probe",
+      "next_action": "Run the frozen K1 v2 throughput probe; derive v2 limits under D22; freeze v2 if the caps stay under 8 GPU-h, else run the gauntlet",
       "first_gpu_experiment": {
         "name": "K1 localization screen",
         "registration": "q3-k1-localization-screen-v1",
@@ -76,7 +76,9 @@
     "q3-k1-localization-screen-v1",
     "q2-holo3-rerun-audit-v1-posthoc",
     "q2-holo3-rerun-audit-v2",
-    "serving-throughput-probe-v1"
+    "serving-throughput-probe-v1",
+    "serving-throughput-probe-v2",
+    "q3-k1-throughput-probe-v1"
   ],
   "infrastructure": {
     "serving_probe": "v1 and v2 done (1.15 GPU-h): cu129 vLLM works on R570; Q1 sampling within cap; Q2 ladder needs rescoping",
