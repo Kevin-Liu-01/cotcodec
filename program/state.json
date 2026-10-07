@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-10-06",
+  "updated": "2026-10-07",
   "program": "Checker adequacy and calibrated measurement for verifiable machine work",
   "program_doc": "program/PROGRAM.md",
   "stage": "stage-0",
@@ -15,15 +15,16 @@
       "title": "Kernel correctness-gate strength",
       "doc": "program/questions/q1-kernel-gate-strength.md",
       "dossier_key": "C2-kernel-verification-rl",
-      "status": "stage-0",
-      "next_action": "Build gates (a), (b), (c) and the independent audit; validate on reference kernels and deterministic mutants",
+      "status": "stage-0-build",
+      "next_action": "Integrate gates, audit, mutator and substrates (branch stage0/q1-gates); freeze q1-stage0-gate-validation; run the gate validation on human-written and compiler-generated kernels",
       "first_gpu_experiment": {
         "name": "on-policy false-accept audit",
         "estimated_gpu_hours": 12,
         "gauntlet_required": true
       },
       "blocked_by": [
-        "R580 driver upgrade or written risk acceptance from Kevin"
+        "Stage 1 scoring of policy kernels: R580 driver upgrade or written risk acceptance (Kevin)",
+        "Q1 policy license (Dr. Kernel-8B has none; Kevin, D5)"
       ]
     },
     {
@@ -31,16 +32,16 @@
       "title": "Calibrated computer-use instrument",
       "doc": "program/questions/q2-calibrated-cua-instrument.md",
       "dossier_key": "S1-calibrated-cua-instrument",
-      "status": "stage-0",
-      "next_action": "Evaluator mutation kit on OSWorld-Verified checkers; port the cua-speedrun action-path suite",
+      "status": "stage-0-running",
+      "next_action": "Holo3 v2 rules running (Slurm job 438); action-path suite and checker-mutation kit being built (branches stage0/q2-action-path, stage0/q2-evaluator-mutation)",
       "first_gpu_experiment": {
         "name": "Qwen3.5 four-size ladder",
         "estimated_gpu_hours": 60,
         "gauntlet_required": true
       },
       "blocked_by": [
-        "Kevin's OK for the ~14.9 GB Holo3 trajectory download",
-        "action-path suite at 100%"
+        "action-path suite at 100% before any GPU episode",
+        "Stage 1 noise anchor reworded to OpenCUA (D11) before the gauntlet"
       ]
     },
     {
@@ -48,18 +49,16 @@
       "title": "Cross-script sparse-indexer recall",
       "doc": "program/questions/q3-cross-script-indexer.md",
       "dossier_key": "E6-d21-translation-supervised-indexer",
-      "status": "stage-0",
-      "next_action": "Write scripts/run_sparse_indexer_phase0a.py; rebuild image with tilelang and peft; fetch qwen3-0.6b-base receipt",
+      "status": "stage-0-running",
+      "next_action": "Operate the frozen K1 screen: image B, doctor, smoke, headroom pre-check, resume test, main read",
       "first_gpu_experiment": {
         "name": "K1 localization screen",
-        "estimated_gpu_hours": 1.5,
+        "registration": "q3-k1-localization-screen-v1",
+        "cap_gpu_hours": 2.65,
+        "conditional_extension_gpu_hours": 1.5,
         "gauntlet_required": false
       },
-      "blocked_by": [
-        "GPU entry point",
-        "rebuilt digest-pinned image",
-        "checkpoint receipt"
-      ]
+      "blocked_by": []
     }
   ],
   "pending_decisions_for_kevin": [
@@ -71,5 +70,15 @@
     "Rotate the Moonshot API key that was pasted into a chat session",
     "Spot-check a sample of the Q2 checker-mutation audit as the human rater (decision D9)"
   ],
-  "gpu_hours_spent_this_program": 0
+  "gpu_hours_spent_this_program": 0,
+  "frozen_registrations": [
+    "q3-k1-localization-screen-v1",
+    "q2-holo3-rerun-audit-v1-posthoc",
+    "q2-holo3-rerun-audit-v2",
+    "serving-throughput-probe-v1"
+  ],
+  "infrastructure": {
+    "serving_probe": "serving-throughput-probe-v1 frozen; operating",
+    "lane": "hardened discovery lane merged 2026-10-07"
+  }
 }
