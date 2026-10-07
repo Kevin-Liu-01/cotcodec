@@ -662,6 +662,7 @@ def run_cycle(
                 mutant=workload.get("mutant"),
                 criterion=workload.get("criterion"),
                 measure_targets=workload.get("measure_targets", False),
+                kill_guest_server_after_seq=workload.get("kill_guest_server_after_seq"),
                 tap_duration_s=600
                 + (len(session["trials"]) + workload.get("reps", 0) * 40) * workload["max_trial_s"],
             )

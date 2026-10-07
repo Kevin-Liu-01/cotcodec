@@ -1,23 +1,35 @@
 """Acceptance analysis of q2-action-path-v1: A1-A6, C1-C4 and the concurrency N*.
 
 This module restates the preregistration's decision rules (sections 5-9 of
-``program/preregistrations/q2-action-path-v1.md``) as code, frozen with the executor
-addendum before any acceptance trial, so the verdicts are computed the way the text
-says and nothing is chosen after the data. It reads campaign run directories as the
-VM lane writes them (``manifest.json``, ``receipt.json``, ``cycles/cycle-NN.json``,
-``cycles/record-NN.json``) and the Slurm end state of each job, which the job cannot
-record about itself: the operator reads it with ``scontrol show job`` and passes it in.
+``program/preregistrations/q2-action-path-v1.md``) as code, frozen with the inputs
+addendum (and pinned again by the executor addendum) before any scored campaign runs,
+C2 included, so the verdicts are computed the way the text says and nothing is chosen
+after the data. It reads campaign run directories as the VM lane writes them
+(``manifest.json``, ``receipt.json``, ``preflight.txt``, ``cycles/cycle-NN.json``,
+``cycles/record-NN.json``).
 
 Rules that apply to every criterion:
 
-* a campaign counts only if its Slurm state is COMPLETED with exit code 0:0, its
-  receipt's ``infra_gates_pass`` is true, ``System.qcow2`` is unchanged and no
-  labelled container or volume was left (sections 6.1 and 7, A5);
+* a campaign counts only if it ended COMPLETED with exit code 0:0, its receipt's
+  ``infra_gates_pass`` is true, ``System.qcow2`` is unchanged and no labelled container
+  or volume was left (sections 6.1 and 7, A5). The end state is read from the batch
+  script's own last record (``driver_exit=0 labelled_containers_left=0`` in
+  ``preflight.txt``, written just before it exits 0; a job killed by a signal, a time
+  limit or a node failure never writes it), and from Slurm when the operator read it in
+  time, in which case both must agree;
 * a trial is PASS only as ``verdict.judge`` judged it, infrastructure failures
-  included (section 6.1); an entry is PASS only at k of k repetitions, and an entry
-  that is PASS in one observation setting and not the other fails (section 5);
+  included (section 6.1); a session whose ``DesktopEnv.reset`` observation was not
+  delivered charges its first trial (``reset_observation``); an entry is PASS only at k
+  of k repetitions, and an entry that is PASS in one observation setting and not the
+  other fails (section 5);
+* reruns (section 6.1): a campaign may be rerun once, as a new attempt with a new
+  output path, and only when the earlier attempt did not count (a ladder rung also when
+  it aborted on foreign load); every trial of every attempt is reported, and a failed
+  trial in an earlier attempt counts against the criterion (an aborted rung's do not);
 * the trials a criterion runs must be exactly the realized order its manifest
-  declares (``order.plan`` or ``volume.sessions``), so a campaign cut short cannot pass.
+  declares (``order.plan`` or ``volume.sessions``), so a campaign cut short cannot pass,
+  and every campaign of a criterion runs one source tree (git SHA, tree digest and
+  repair attempt).
 
 Standard library plus the suite's own modules; Python 3.10 compatible.
 """
@@ -28,7 +40,8 @@ import glob
 import json
 import math
 import os
-from collections.abc import Iterable
+import re
+from collections.abc import Callable, Iterable
 from pathlib import Path
 from typing import Any
 
@@ -52,6 +65,14 @@ C1_MUST_FAIL = {
 }
 SETTINGS = order.SETTINGS
 C3_LAYERS = ("L0-fixed", "H-OSW-fixed", "H-GA")  # the scored layers (section 8, C3)
+MAX_ATTEMPTS = 2  # section 6.1: a campaign runs at most twice (one rerun)
+BATCH_END = re.compile(r"^driver_exit=(\d+) labelled_containers_left=(\d+)$", re.M)
+# Section 8, C2 (design decision 34): an L0-raw trial is judged on the event and text
+# channels. The marker (section 5, condition 3) is reported, not judged, and an R-dev
+# projection is compared without the modifier state of key releases.
+C2_EXCUSED = ("marker ",)
+C2_RDEV = "R-dev projection differs"
+STATE_BITS = (("Shift", 1), ("Control", 4), ("Mod1", 8), ("Mod4", 64))
 
 
 # --- loading ----------------------------------------------------------------------------------
@@ -62,8 +83,31 @@ def _read(path: str) -> Any:
         return json.load(handle)
 
 
-def load(run_dir: str, slurm: dict[str, str]) -> dict[str, Any]:
-    """One campaign: manifest, receipt, Slurm end state and its sessions' trials."""
+def batch_end(run_dir: str) -> dict[str, int] | None:
+    """The batch script's own last record, or None when it never reached its end."""
+    path = os.path.join(run_dir, "preflight.txt")
+    if not os.path.exists(path):
+        return None
+    with open(path, encoding="utf-8") as handle:
+        found = BATCH_END.findall(handle.read())
+    if not found:
+        return None
+    driver_exit, left = found[-1]
+    return {"driver_exit": int(driver_exit), "labelled_containers_left": int(left)}
+
+
+def load(
+    run_dir: str,
+    slurm: dict[str, str] | None = None,
+    earlier: list[dict[str, Any]] | None = None,
+) -> dict[str, Any]:
+    """One campaign: manifest, receipt, end state and its sessions' trials.
+
+    ``slurm`` is the job's Slurm end state (``{"state", "exit_code"}``) when the operator
+    read it with ``scontrol show job`` before Slurm forgot the job; without it the batch
+    script's own record decides. ``earlier`` holds the loaded earlier attempts of the same
+    campaign (section 6.1), oldest first.
+    """
     manifest = _read(os.path.join(run_dir, "manifest.json"))
     receipt = _read(os.path.join(run_dir, "receipt.json"))
     sessions = []
@@ -73,23 +117,57 @@ def load(run_dir: str, slurm: dict[str, str]) -> dict[str, Any]:
         cycle = _read(path)
         record_path = path.replace("cycle-", "record-")
         record = _read(record_path) if os.path.exists(record_path) else {}
+        trials = [_trial(t, cycle.get("setting")) for t in cycle.get("trials") or []]
+        reset = reset_observation(cycle.get("reset_observation"), cycle.get("setting"))
+        if reset is not None and not reset["delivered"] and trials:
+            # Section 6.1: a reset observation DesktopEnv's retries did not deliver is an
+            # infrastructure failure of the boot, charged to the session's first trial.
+            trials[0]["pass"] = False
+            trials[0]["infra"] = sorted({*trials[0]["infra"], "reset_observation"})
         sessions.append(
             {
                 "cycle": cycle.get("cycle"),
                 "setting": cycle.get("setting"),
                 "boot_s": (cycle.get("boot") or {}).get("t_screenshot_200"),
                 "error": cycle.get("error"),
-                "trials": [_trial(t, cycle.get("setting")) for t in cycle.get("trials") or []],
+                "reset_observation": reset,
+                "trials": trials,
                 "snapshots": [record.get("host_before"), record.get("host_after")],
             }
         )
     return {
         "job": str(receipt.get("job_id")),
+        "run_dir": run_dir,
         "manifest": manifest,
         "receipt": receipt,
         "slurm": slurm,
+        "batch": batch_end(run_dir),
         "sessions": sessions,
+        "earlier": list(earlier or []),
     }
+
+
+def reset_observation(raw: dict[str, Any] | None, setting: str | None) -> dict[str, Any] | None:
+    """Whether ``DesktopEnv.reset``'s observation was delivered, and which parts retried."""
+    if not raw:
+        return None
+
+    def delivered(attempts: list[dict[str, Any]], flag: Any) -> bool:
+        if isinstance(flag, bool):
+            return flag
+        # Older records carry only the attempts: delivered when the last one answered 200.
+        return bool(attempts) and attempts[-1].get("status") == 200
+
+    shots = raw.get("screenshot_attempts") or []
+    ok = delivered(shots, raw.get("screenshot_ok"))
+    retried = ["screenshot"] if ok and len(shots) > 1 else []
+    if setting == "screenshot+a11y":
+        trees = raw.get("accessibility_attempts") or []
+        tree_ok = delivered(trees, raw.get("accessibility_ok"))
+        ok = ok and tree_ok
+        if tree_ok and len(trees) > 1:
+            retried.append("accessibility")
+    return {"delivered": ok, "retried": retried}
 
 
 def _trial(raw: dict[str, Any], setting: str | None) -> dict[str, Any]:
@@ -105,8 +183,10 @@ def _trial(raw: dict[str, Any], setting: str | None) -> dict[str, Any]:
         "pass": bool(verdict.get("pass")),
         "infra": list(verdict.get("infra") or []),
         "retried": list(verdict.get("retried") or []),
+        "reasons": verdict.get("reasons"),
         "c4": raw.get("c4"),
         "events": [r[:-1] for r in raw.get("tap_window") or [] if _device(r)],
+        "probe_events": end.get("events") if end.get("ok") else None,
         "text": end.get("text"),
         "terminal": raw.get("terminal"),
         "steps_s": [s for s in steps if isinstance(s, int | float)],
@@ -122,12 +202,30 @@ def _device(record: list[Any]) -> bool:
 # --- shared rules -----------------------------------------------------------------------------
 
 
-def campaign_problems(campaign: dict[str, Any]) -> list[str]:
-    """Why a campaign cannot count at all (empty when it can)."""
+def end_state_problems(campaign: dict[str, Any]) -> list[str]:
+    """Whether the job ended COMPLETED with exit code 0:0 (section 6.1)."""
     out = []
-    slurm = campaign.get("slurm") or {}
-    if slurm.get("state") != "COMPLETED" or slurm.get("exit_code") != "0:0":
-        out.append(f"job {campaign['job']}: Slurm {slurm.get('state')} {slurm.get('exit_code')}")
+    job = campaign["job"]
+    slurm = campaign.get("slurm")
+    batch = campaign.get("batch")
+    if slurm is not None and (slurm.get("state") != "COMPLETED" or slurm.get("exit_code") != "0:0"):
+        out.append(f"job {job}: Slurm {slurm.get('state')} {slurm.get('exit_code')}")
+    if batch is None:
+        if slurm is None:
+            out.append(f"job {job}: end state unknown (no batch record and no Slurm state)")
+        else:
+            out.append(f"job {job}: the batch script never recorded its end")
+    elif batch.get("driver_exit") != 0 or batch.get("labelled_containers_left") != 0:
+        out.append(
+            f"job {job}: batch script ended with driver_exit={batch.get('driver_exit')} "
+            f"labelled_containers_left={batch.get('labelled_containers_left')}"
+        )
+    return out
+
+
+def counting_problems(campaign: dict[str, Any]) -> list[str]:
+    """Why this attempt cannot count at all, ignoring its earlier attempts (empty = it can)."""
+    out = end_state_problems(campaign)
     receipt = campaign["receipt"]
     summary = receipt.get("summary") or {}
     if summary.get("infra_gates_pass") is not True:
@@ -137,6 +235,62 @@ def campaign_problems(campaign: dict[str, Any]) -> list[str]:
     if receipt.get("labelled_containers_left") or summary.get("leaked_volumes"):
         out.append(f"job {campaign['job']}: labelled containers or volumes left")
     return out
+
+
+def failed_trials(campaign: dict[str, Any]) -> list[tuple[str, int, str]]:
+    return [
+        (session["setting"], trial["seq"], trial["cell"])
+        for session in campaign["sessions"]
+        for trial in session["trials"]
+        if not trial["pass"]
+    ]
+
+
+def campaign_problems(
+    campaign: dict[str, Any],
+    rerun_allowed: Callable[[dict[str, Any]], bool] | None = None,
+    earlier_failures_count: Callable[[dict[str, Any]], bool] | None = None,
+) -> list[str]:
+    """Why a campaign cannot count at all (empty when it can), its reruns included.
+
+    Section 6.1: at most ``MAX_ATTEMPTS`` attempts; an earlier attempt may be rerun only
+    when it did not count (``rerun_allowed``; the ladder also admits a foreign-load
+    abort), and its failed trials count against the criterion unless
+    ``earlier_failures_count`` says otherwise (an aborted rung's do not).
+    """
+    rerun_allowed = rerun_allowed or (lambda prev: bool(counting_problems(prev)))
+    earlier_failures_count = earlier_failures_count or (lambda prev: True)
+    out = counting_problems(campaign)
+    earlier = campaign.get("earlier") or []
+    if len(earlier) + 1 > MAX_ATTEMPTS:
+        out.append(f"job {campaign['job']}: {len(earlier) + 1} attempts (at most {MAX_ATTEMPTS})")
+    for previous in earlier:
+        if not rerun_allowed(previous):
+            out.append(
+                f"job {campaign['job']}: earlier attempt {previous['job']} counted and was rerun"
+            )
+        failed = failed_trials(previous)
+        if failed and earlier_failures_count(previous):
+            out.append(
+                f"job {campaign['job']}: earlier attempt {previous['job']} has "
+                f"{len(failed)} failed trials, first {failed[:3]}"
+            )
+    return out
+
+
+def version_problems(campaigns: list[dict[str, Any]], what: str) -> list[str]:
+    """Every campaign of one criterion runs one source tree and one repair attempt."""
+    versions = {
+        (
+            c["manifest"].get("git_sha"),
+            (c["manifest"].get("source") or {}).get("tree_sha256"),
+            (c["manifest"].get("workload") or {}).get("attempt"),
+        )
+        for c in campaigns
+    }
+    if len(versions) > 1:
+        return [f"{what}: campaigns ran {len(versions)} different source trees or attempts"]
+    return []
 
 
 def realized(campaign: dict[str, Any]) -> list[tuple[str, int, str]]:
@@ -187,10 +341,11 @@ def _verdict(problems: list[str], extra: dict[str, Any]) -> dict[str, Any]:
 def _check_plan(
     campaigns: list[dict[str, Any]], want: list[tuple[str, int, str]], what: str
 ) -> list[str]:
+    out = version_problems(campaigns, what)
     got = [row for c in campaigns for row in realized(c)]
     if got != want:
-        return [f"{what}: the trials run ({len(got)}) are not the realized order ({len(want)})"]
-    return []
+        out.append(f"{what}: the trials run ({len(got)}) are not the realized order ({len(want)})")
+    return out
 
 
 def _layer_ids(layer: str) -> list[str]:
@@ -391,24 +546,102 @@ def c1(by_layer: dict[str, list[dict[str, Any]]]) -> dict[str, Any]:
     return _verdict(problems, {"cells": table})
 
 
+def _keysym_name(value: Any) -> str:
+    from harness.q2.action_path.ir import CANONICAL_NAME
+
+    return CANONICAL_NAME.get(int(value or 0), f"0x{int(value or 0):x}")
+
+
+def _states(state: Any) -> list[str]:
+    return [name for name, bit in STATE_BITS if int(state or 0) & bit]
+
+
+def c2_projection(trial: dict[str, Any], cell: dict[str, Any]) -> list[list[Any]] | None:
+    """The trial's R-dev projection with the modifier state of key releases left out.
+
+    The channel is the one ``verdict.judge`` reads: the probe's event log for ``observable:
+    app`` cells (``[kind, keycode, state, x, y, time, keysym0, ...]``), the XRecord window for
+    ``raw-only`` cells (``[kind, keycode, state, keysym0]`` once the timestamp is dropped).
+    """
+    if cell.get("observable", "app") == "app":
+        records = trial.get("probe_events")
+        keysym_at = 6
+    else:
+        records = trial.get("events")
+        keysym_at = 3
+    if records is None:
+        return None
+    out: list[list[Any]] = []
+    for record in records:
+        kind = record[0]
+        if kind not in ("KeyPress", "KeyRelease"):
+            continue
+        keysym = _keysym_name(record[keysym_at] if len(record) > keysym_at else 0)
+        out.append([kind, keysym] if kind == "KeyRelease" else [kind, keysym, _states(record[2])])
+    return out
+
+
+def c2_reference(cell: dict[str, Any]) -> list[list[Any]] | None:
+    events = (cell.get("expect") or {}).get("events")
+    if (cell.get("expect") or {}).get("oracle") != "rdev" or events is None:
+        return None
+    return [[e[0], e[1]] if e[0] == "KeyRelease" else [e[0], e[1], list(e[2])] for e in events]
+
+
+def c2_trial_pass(trial: dict[str, Any], cell: dict[str, Any]) -> bool:
+    """C2's reading of one L0-raw trial (section 8, design decision 34).
+
+    PASS under section 5 is PASS here. Otherwise the trial passes only when it has no
+    infrastructure failure and every reason it failed is excused: a marker reason
+    (condition 3 is reported, not judged, for L0-raw), or an R-dev projection difference
+    that disappears when key releases are compared without their modifier state.
+    """
+    if trial["pass"]:
+        return True
+    if trial.get("infra") or trial.get("reasons") is None:
+        return False
+    remaining = [r for r in trial["reasons"] if not r.startswith(C2_EXCUSED)]
+    if any(r.startswith(C2_RDEV) for r in remaining):
+        reference = c2_reference(cell)
+        if reference is not None and c2_projection(trial, cell) == reference:
+            remaining = [r for r in remaining if not r.startswith(C2_RDEV)]
+    return not remaining
+
+
 def c2(campaigns: list[dict[str, Any]]) -> dict[str, Any]:
-    """L0-raw fails exactly the predicted set (an entry fails unless PASS 5 of 5)."""
+    """L0-raw fails exactly the predicted set (an entry fails unless PASS 5 of 5).
+
+    Each trial is read by ``c2_trial_pass``; the section-5 verdicts (marker included) are
+    reported next to it as ``strict_entries``.
+    """
     import yaml
 
     problems: list[str] = []
     predicted = set(yaml.safe_load(PREDICTION.read_text(encoding="utf-8"))["predicted_fail"])
+    cells = {c["id"]: c for c in _cells()["layers"]["L0-fixed"]}
     for c in campaigns:
         problems += campaign_problems(c)
     plan = order.plan(_layer_ids("L0-raw"), 42, 5, ["screenshot"])
     problems += _check_plan(campaigns, expected(plan), "C2")
-    status = {cell: entry_status(v) for cell, v in outcomes(campaigns).items()}
+    flags: dict[str, dict[str, list[bool]]] = {}
+    for c in campaigns:
+        for session in c["sessions"]:
+            for trial in session["trials"]:
+                flags.setdefault(trial["cell"], {}).setdefault(session["setting"], []).append(
+                    c2_trial_pass(trial, cells[trial["cell"]])
+                )
+    status = {cell: entry_status(v) for cell, v in flags.items()}
+    strict = {cell: entry_status(v) for cell, v in outcomes(campaigns).items()}
     observed = {cell for cell, s in status.items() if s != "PASS"}
     if observed != predicted:
         problems.append(
             f"L0-raw failing set deviates: unpredicted failures {sorted(observed - predicted)}, "
             f"predicted but passing {sorted(predicted - observed)}"
         )
-    return _verdict(problems, {"entries": status, "predicted_fail": sorted(predicted)})
+    return _verdict(
+        problems,
+        {"entries": status, "strict_entries": strict, "predicted_fail": sorted(predicted)},
+    )
 
 
 def _signature(campaigns: list[dict[str, Any]]) -> dict[str, list[Any]]:
@@ -423,20 +656,56 @@ def _signature(campaigns: list[dict[str, Any]]) -> dict[str, list[Any]]:
     return out
 
 
+def _cell_results(campaigns: list[dict[str, Any]]) -> dict[str, dict[str, Any]]:
+    """Per cell: its status over the repetitions and whether any trial had an infra failure."""
+    out: dict[str, dict[str, Any]] = {}
+    for cell, flags in outcomes(campaigns).items():
+        out[cell] = {"status": entry_status(flags), "infra": False}
+    for c in campaigns:
+        for session in c["sessions"]:
+            for trial in session["trials"]:
+                if trial["infra"]:
+                    out[trial["cell"]]["infra"] = True
+    return out
+
+
 def c3(
     mutants: dict[tuple[str, str], list[dict[str, Any]]],
     references: dict[str, list[dict[str, Any]]],
 ) -> dict[str, Any]:
-    """Every scored, non-equivalent mutant is killed by a cell of its layer that can kill."""
+    """Every scored, non-equivalent mutant is killed by a cell of its layer that can kill.
+
+    A cell kills a mutant only when the mutant's run fails it without an infrastructure
+    failure and the unmutated reference run passed it cleanly (section 8). A failing cell
+    with an infrastructure failure never kills; it is reported under ``infra_cells``, and a
+    mutant with no clean kill is equivalent (byte-identical signature on every cell) or
+    survives.
+    """
     import yaml
 
     from harness.q2.action_path import mutants as kit
 
     problems: list[str] = []
     operators = yaml.safe_load(OPERATORS.read_text(encoding="utf-8"))
+    predicted_cells = {
+        (op["id"], layer): list(spec.get("kill_cells") or [])
+        for op in operators["operators"]
+        for layer, spec in (op.get("applies") or {}).items()
+    }
     cells = _cells()
+    for layer in C3_LAYERS:
+        if not references.get(layer):
+            problems.append(f"no unmutated reference run on {layer}")
+    for campaigns in references.values():
+        for c in campaigns:
+            problems += campaign_problems(c)
+    for layer, campaigns in references.items():
+        plan = order.plan(_layer_ids(layer), 42, 1, ["screenshot"])
+        problems += _check_plan(campaigns, expected(plan), f"C3 reference {layer}")
+    reference_results = {layer: _cell_results(c) for layer, c in references.items()}
     table = {}
     for operator, layer in kit.scored_pairs(operators):
+        key = f"{operator} {layer}"
         campaigns = mutants.get((operator, layer)) or []
         if not campaigns:
             problems.append(f"{operator} on {layer}: no run")
@@ -445,25 +714,41 @@ def c3(
             problems += campaign_problems(c)
         plan = order.plan(_layer_ids(layer), 42, 1, ["screenshot"])
         problems += _check_plan(campaigns, expected(plan), f"C3 {operator} {layer}")
+        problems += version_problems(
+            campaigns + (references.get(layer) or []), f"C3 {operator} {layer} and its reference"
+        )
         can_kill = {
             c["id"]
             for c in cells["layers"][layer]
             if layer == "L0-fixed" or c["status"] in ("gating", "declared")
         }
-        status = {cell: entry_status(v) for cell, v in outcomes(campaigns).items()}
-        killers = sorted(cell for cell, s in status.items() if s != "PASS" and cell in can_kill)
+        reference = reference_results.get(layer) or {}
+        killers, infra_cells, reference_not_clean = [], [], []
+        for cell, result in sorted(_cell_results(campaigns).items()):
+            if result["status"] == "PASS" or cell not in can_kill:
+                continue
+            if result["infra"]:
+                infra_cells.append(cell)
+                continue
+            ref = reference.get(cell)
+            if ref is None or ref["status"] != "PASS" or ref["infra"]:
+                reference_not_clean.append(cell)
+                continue
+            killers.append(cell)
+        entry = {
+            "killers": killers,
+            "predicted_killers": predicted_cells.get((operator, layer), []),
+            "infra_cells": infra_cells,
+            "reference_not_clean": reference_not_clean,
+        }
         if killers:
-            table[f"{operator} {layer}"] = {"outcome": "killed", "killers": killers}
-            continue
-        reference = references.get(layer) or []
-        if reference and _signature(campaigns) == _signature(reference):
-            table[f"{operator} {layer}"] = {"outcome": "equivalent", "killers": []}
+            entry["outcome"] = "killed"
+        elif references.get(layer) and _signature(campaigns) == _signature(references[layer]):
+            entry["outcome"] = "equivalent"
         else:
-            table[f"{operator} {layer}"] = {"outcome": "survived", "killers": []}
+            entry["outcome"] = "survived"
             problems.append(f"{operator} on {layer} survived and is not equivalent")
-    for campaigns in references.values():
-        for c in campaigns:
-            problems += campaign_problems(c)
+        table[key] = entry
     return _verdict(problems, {"mutants": table})
 
 
@@ -526,10 +811,26 @@ def rung(campaigns: list[dict[str, Any]], step_p95_n1: float) -> dict[str, Any]:
 
     problems: list[str] = []
     n = campaigns[0]["manifest"]["vm"]["concurrency"]
+
+    def rerun_allowed(previous: dict[str, Any]) -> bool:
+        # Section 9: an aborted rung (or one that did not count) is rerun once.
+        return bool(counting_problems(previous)) or bool(foreign_abort(previous))
+
+    earlier = []
     for c in campaigns:
-        problems += campaign_problems(c)
+        problems += campaign_problems(
+            c, rerun_allowed, earlier_failures_count=lambda prev: not foreign_abort(prev)
+        )
         if c["manifest"]["vm"]["concurrency"] != n:
             problems.append("a rung's campaigns run at one concurrency")
+        for previous in c.get("earlier") or []:
+            earlier.append(
+                {
+                    "job": previous["job"],
+                    "abort_reasons": foreign_abort(previous),
+                    "failed_trials": len(failed_trials(previous)),
+                }
+            )
     aborts = sorted({r for c in campaigns for r in foreign_abort(c)})
     plan = order.plan(_layer_ids("L0-fixed"), 43, ladder_reps(n), list(SETTINGS), acceptance=True)
     problems += _check_plan(campaigns, expected(plan), f"rung N={n}")
@@ -556,6 +857,7 @@ def rung(campaigns: list[dict[str, Any]], step_p95_n1: float) -> dict[str, Any]:
         "boots": len(boots),
         "boot_p95_s": boot_p95,
         "step_p95_s": step_p95,
+        "earlier_attempts": earlier,
     }
 
 

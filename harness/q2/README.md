@@ -126,13 +126,16 @@ licence.
   are never presented as reproducing the paper's 83/11 or 94/94.
 * **KernelGYM, KernelBench-M, Dr. Kernel**: not used by this item.
 * **gym-anything** (MIT, Copyright (c) 2026 cmu-l3) at bf965cde0 and
-  aae6f7607: read for the harness vocabulary and documented deviations; nothing
-  vendored in this change. If the L0-fixed executor later vendors the
-  `_KEYBOARD_XLIB_PREAMBLE`, it will carry the MIT notice.
+  aae6f7607: read for the harness vocabulary and documented deviations; its two
+  parsers are vendored as line ranges with the MIT notice (see "Vendored
+  parsers" below). The L0-fixed executor does not vendor its
+  `_KEYBOARD_XLIB_PREAMBLE`.
 * **OSWorld** (Apache-2.0, no NOTICE file) at b138d348 and bfd62bdc: read for
   the provider, controller, guest-server API and the Qwen3.5 agent's prompt;
-  the clients here are written from the observed HTTP behaviour. A patched
-  harness copy, when added, will keep the header and mark changes (§4).
+  the clients here are written from the observed HTTP behaviour. The Qwen3.5
+  agent's parser is vendored, and its patched H-OSW-fixed copy keeps the
+  header and marks every change under section 4(b) (see "Vendored parsers"
+  below); `vm/desktop.py` copies `PYAUTOGUI_PKGS_PREFIX`.
 * **QEMU 9.1.0** (GPLv2) and OVMF run inside the pinned image; nothing is
   redistributed.
 * **xlangai/ubuntu_osworld** qcow2: run only, never republished; it bundles
