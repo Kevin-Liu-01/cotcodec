@@ -651,6 +651,16 @@ def test_preregistration_reads_as_frozen_and_states_the_rules_as_coded() -> None
     # client.percentile_summary records the SE; project() admits accepted jobs only.
     assert "standard error of each step mean" in text
     assert "**Accepted jobs only**" in text
+    # job_admission() also reads the lane's termination.env (lane_termination).
+    assert "`termination.env`" in text and "`reason=completed` and `exit_code=0`" in text
+    # The cu130 retry answers only a gate failure that ends the job (section 5).
+    assert "A gate failure on the cu129 image ends a job as a pre-result" in text
+    assert "does not end the job and triggers no cu130 retry" in text
+    assert "rerun's output replaces the failed job's output in the projection" in text
+    # Budget figures as D8 and D17 state them.
+    assert "D8 expects 0.75 GPU-h" in text and "0.333 GPU-h" in text
+    for stale in ("expected about 0.8", "cap 0.33 GPU-h", "A gate from G0.2 to G0.8 fails"):
+        assert stale not in text
     numbers = [int(n) for n in re.findall(r"^(\d+)\. \*\*", raw, flags=re.MULTILINE)]
     assert numbers == list(range(1, len(numbers) + 1)), "design decisions stay numbered in order"
 
@@ -781,6 +791,17 @@ def _frozen(config) -> dict[str, Any]:
     return {"experiment_id": config.experiment_id, "sha256": "f" * 64}
 
 
+def _lane_finished(run_dir: Path, reason: str = "completed", exit_code: int = 0) -> Path:
+    """Write the termination.env the lane's batch script leaves when it exits."""
+    path = run_dir / probe.LANE_TERMINATION_FILE
+    path.write_text(
+        f"job_id=1\nreason={reason}\nexit_code={exit_code}\n"
+        "finished_at=2026-10-07T00:40:00Z\ncheckpoint_ready=false\n"
+        "checkpoint_marker_present=false\n"
+    )
+    return path
+
+
 def test_plan_and_project_cli(tmp_path: Path, capsys) -> None:
     assert probe.main(["plan", "--job", "a"]) == 0
     plan = json.loads(capsys.readouterr().out)
@@ -790,6 +811,7 @@ def test_plan_and_project_cli(tmp_path: Path, capsys) -> None:
     assert runner.run() == probe.EXIT_OK
     capsys.readouterr()
     config = runner.config
+    _lane_finished(tmp_path / "outputs")
     job_a = tmp_path / "outputs" / "probe"
     projection = probe.project(config, job_a=job_a, job_b=None, job_c=None, prereg_check=_frozen)
     assert projection["q2"]["decision"] in {
@@ -1288,6 +1310,7 @@ def _complete_job_a(tmp_path: Path):
     tmp_path.mkdir(parents=True, exist_ok=True)
     runner, _server, _engines = _runner(tmp_path)
     assert runner.run() == probe.EXIT_OK
+    _lane_finished(tmp_path / "outputs")
     return runner.config, tmp_path / "outputs" / "probe"
 
 
@@ -1321,16 +1344,28 @@ def test_project_uses_no_point_of_an_interrupted_job_a(tmp_path: Path) -> None:
     runner, _server, _engines = _runner(tmp_path)
     _interrupt_after(runner, "a1c")
     assert runner.run() == probe.EXIT_INTERRUPTED
+    _lane_finished(
+        tmp_path / "outputs",
+        reason="signal_USR1_checkpoint_confirmed",
+        exit_code=probe.EXIT_INTERRUPTED,
+    )
     job_a = tmp_path / "outputs" / "probe"
     assert _points(job_a)["r1"]["status"] in {"valid", "valid-flagged"}
     projection = _project(runner.config, job_a)
     assert projection["jobs"]["a"]["accepted"] is False
     assert projection["jobs"]["a"]["status"] == "interrupted"
+    assert any("signal_USR1" in reason for reason in projection["jobs"]["a"]["reasons"])
     assert projection["x1"]["outcome"] == "not-run"
     assert projection["q2"]["decision"] == "incomplete-re-probe"
     assert "total_gpu_hours" not in projection["q2"]
     assert "job a is not accepted" in projection["q2"]["reason"]
     assert projection["q1"]["decision"] == "incomplete-re-probe"
+    # Section 10: A1 stability is still reported, from the job's own summary.
+    summary = json.loads((job_a / "summary.json").read_text())
+    reported = projection["a1_stability"]
+    assert "reported only" in reported["source"]
+    assert {k: v for k, v in reported.items() if k != "source"} == summary["a1_stability"]
+    assert reported["valid"] == 3 and "noise_multiplier" in reported
 
 
 def test_project_uses_no_point_of_a_job_without_a_summary(tmp_path: Path) -> None:
@@ -1341,6 +1376,8 @@ def test_project_uses_no_point_of_a_job_without_a_summary(tmp_path: Path) -> Non
     assert projection["jobs"]["a"]["accepted"] is False
     assert "no summary.json" in projection["jobs"]["a"]["reasons"][0]
     assert projection["q2"]["decision"] == "incomplete-re-probe"
+    assert projection["a1_stability"]["recorded"] is None
+    assert projection["a1_stability"]["reason"] == "no summary.json"
 
 
 def test_project_refuses_point_files_changed_after_the_summary(tmp_path: Path) -> None:
@@ -1394,7 +1431,58 @@ def test_project_uses_no_point_of_an_unaccepted_job_b(tmp_path: Path) -> None:
     assert projection["jobs"]["b"]["accepted"] is False
     assert projection["q1"]["decision"] == "incomplete-re-probe"
     assert "job b is not accepted" in projection["q1"]["reason"]
-    assert projection["b1_stability"] is None
+    # Section 10: B1 stability is reported from the crashed job's own summary.
+    assert "admitted points" in accepted["b1_stability"]["source"]
+    reported = projection["b1_stability"]
+    assert "reported only" in reported["source"]
+    assert reported["metric"] == "completions_per_s" and reported["valid"] == 3
+    assert reported["noise_multiplier"] == accepted["b1_stability"]["noise_multiplier"]
+    assert _project(config, job_a)["b1_stability"] is None  # job b not supplied
+
+
+def test_project_admits_a_job_only_when_the_lane_recorded_a_clean_exit(tmp_path: Path) -> None:
+    # Section 5: the lane's termination.env must record reason=completed, exit_code=0.
+    config, job_a = _complete_job_a(tmp_path / "a")
+    termination = job_a.parent / probe.LANE_TERMINATION_FILE
+    admitted = _project(config, job_a)
+    assert admitted["jobs"]["a"]["accepted"] is True
+    assert admitted["jobs"]["a"]["lane_termination"]["fields"]["reason"] == "completed"
+    assert admitted["q2"]["decision"] != "incomplete-re-probe"
+    refused_cases = {
+        "missing": None,
+        "timeout": "job_id=1\nreason=signal_TERM_checkpoint_missing\nexit_code=143\n",
+        "failed": "job_id=1\nreason=completed\nexit_code=1\n",
+        "repeated": "job_id=1\nreason=workload_failed\nreason=completed\nexit_code=0\n",
+    }
+    for case, text in refused_cases.items():
+        termination.unlink(missing_ok=True)
+        if text is not None:
+            termination.write_text(text)
+        projection = _project(config, job_a)
+        assert projection["jobs"]["a"]["accepted"] is False, case
+        assert any(probe.LANE_TERMINATION_FILE in r for r in projection["jobs"]["a"]["reasons"])
+        assert projection["q2"]["decision"] == "incomplete-re-probe", case
+        assert "reported only" in projection["a1_stability"]["source"], case
+    # A link to another run's clean record is not this run's record.
+    elsewhere = _lane_finished(tmp_path)
+    termination.unlink()
+    termination.symlink_to(elsewhere)
+    assert _project(config, job_a)["jobs"]["a"]["accepted"] is False
+    termination.unlink()
+    _lane_finished(job_a.parent)
+    assert _project(config, job_a)["jobs"]["a"]["accepted"] is True
+
+    job_b = _job_b_points()
+    clean = write_job_dir(tmp_path / "b", config, "b", job_b)
+    assert _project(config, job_a, clean)["jobs"]["b"]["accepted"] is True
+    unfinished = write_job_dir(tmp_path / "b-unfinished", config, "b", job_b, lane_finished=False)
+    projection = _project(config, job_a, unfinished)
+    assert projection["jobs"]["b"]["accepted"] is False
+    assert projection["q1"]["decision"] == "incomplete-re-probe"
+    killed = write_job_dir(
+        tmp_path / "b-killed", config, "b", job_b, termination={"reason": "workload_failed"}
+    )
+    assert _project(config, job_a, killed)["jobs"]["b"]["accepted"] is False
 
 
 def test_project_treats_an_unaccepted_job_c_as_not_run(tmp_path: Path) -> None:
@@ -1430,6 +1518,11 @@ def test_job_c_gate_needs_an_accepted_job_a_with_an_x1_pass(tmp_path: Path) -> N
     failing["x1-a1"]["result"]["request_throughput"] = 2.5
     verdict = probe.job_c_gate(config, write_job_dir(tmp_path / "fail", config, "a", failing))
     assert verdict["submit"] is False and verdict["x1"]["outcome"] == "fail"
+    unfinished = write_job_dir(
+        tmp_path / "unfinished", config, "a", x1_passing_job_a_points(), lane_finished=False
+    )
+    verdict = probe.job_c_gate(config, unfinished)
+    assert verdict["submit"] is False and verdict["x1"]["outcome"] == "not-run"
 
 
 def test_g02_expects_exactly_one_gpu_whatever_the_lane_says(tmp_path: Path, monkeypatch) -> None:

@@ -12,8 +12,9 @@
 # Fetch metadata-only snapshots (config, tokenizer, processor, license; no weights) for
 # the dummy-weight engines of serving-throughput-probe-v1, one srun step per model,
 # through fetch-model-metadata-in-docker.sh. Network is needed for the Hub; nothing runs
-# on the GPU and the container gets no GPU. The allocation time counts toward the probe's
-# GPU-hour accounting. COTCODEC_REPO must be a clean checkout (never ~/cotcodec).
+# on the GPU and the container gets no GPU. The allocation time is recorded as its own
+# line in the probe's gpu_hours_spent, separate from the 1.0 GPU-h probe cap (decision
+# D17). COTCODEC_REPO must be a clean checkout (never ~/cotcodec).
 set -Eeuo pipefail
 umask 022
 : "${SLURM_JOB_ID:?Run through Slurm}"

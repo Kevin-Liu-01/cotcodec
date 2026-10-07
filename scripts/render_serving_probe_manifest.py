@@ -206,7 +206,10 @@ def main(argv: Sequence[str] | None = None) -> int:
     parser.add_argument(
         "--job-a-output",
         type=Path,
-        help="job A's probe output directory (required for job C: accepted, X1 passed)",
+        help=(
+            "job A's probe output directory, inside the lane run directory that holds its "
+            "termination.env (required for job C: accepted, X1 passed)"
+        ),
     )
     parser.add_argument("--output", type=Path, required=True)
     args = parser.parse_args(argv)

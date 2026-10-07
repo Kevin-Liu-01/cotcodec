@@ -2241,22 +2241,61 @@ def load_job_points(directory: Path, config: ProbeConfig, job_id: str) -> dict[s
     return points
 
 
+LANE_TERMINATION_FILE = "termination.env"
+
+
+def lane_termination(directory: Path) -> dict[str, Any]:
+    """The lane's record of how the Slurm job that wrote ``directory`` ended.
+
+    The lane mounts its run directory at /outputs and the manifests point the
+    driver at /outputs/probe, so the batch script's termination.env (written when
+    the script exits) sits in the job output directory's parent. Section 5 needs
+    ``reason=completed`` and ``exit_code=0``; anything else, a missing or
+    symlinked file or a repeated key, is a ``problem``.
+    """
+    path = directory.resolve().parent / LANE_TERMINATION_FILE
+    out: dict[str, Any] = {"path": str(path), "fields": None, "problem": None}
+    if path.is_symlink() or not path.is_file():
+        out["problem"] = f"no lane {LANE_TERMINATION_FILE} in the run directory {path.parent}"
+        return out
+    fields: dict[str, str] = {}
+    for line in path.read_text(encoding="utf-8").splitlines():
+        key, separator, value = line.partition("=")
+        if not separator:
+            continue
+        if key in fields:
+            out["problem"] = f"lane {LANE_TERMINATION_FILE} repeats {key!r}"
+            return out
+        fields[key] = value
+    out["fields"] = fields
+    if fields.get("reason") != "completed" or fields.get("exit_code") != "0":
+        out["problem"] = (
+            f"lane {LANE_TERMINATION_FILE} records reason={fields.get('reason')!r} "
+            f"exit_code={fields.get('exit_code')!r}, not completed and 0"
+        )
+    return out
+
+
 def job_admission(directory: Path, config: ProbeConfig, job_id: str) -> dict[str, Any]:
     """Whether a job's points may enter a budget (preregistration sections 5 and 8).
 
     Admitted (``accepted``) only when summary.json exists and belongs to this
     experiment, contract and job; records ``acceptance.accepted: true``; the
     acceptance recomputed from its own status and gates agrees; the driver's exit
-    code is 0; and it lists the SHA-256 of exactly the point files on disk. A job
-    that fails any of these is reported with its reasons, and none of its points
-    enters a budget.
+    code is 0; it lists the SHA-256 of exactly the point files on disk; and the
+    lane's termination.env in the run directory records ``reason=completed`` and
+    ``exit_code=0`` (:func:`lane_termination`). A job that fails any of these is
+    reported with its reasons, and none of its points enters a budget.
     """
     path = directory / "summary.json"
+    termination = lane_termination(directory)
     if not path.is_file():
         return {
             "summary": None,
+            "lane_termination": termination,
             "accepted": False,
-            "reasons": ["no summary.json (the driver did not finish)"],
+            "reasons": ["no summary.json (the driver did not finish)"]
+            + ([termination["problem"]] if termination["problem"] else []),
         }
     summary = json.loads(path.read_text(encoding="utf-8"))
     if (
@@ -2289,6 +2328,8 @@ def job_admission(directory: Path, config: ProbeConfig, job_id: str) -> dict[str
             name for name in set(listed) | set(on_disk) if listed.get(name) != on_disk.get(name)
         )
         reasons.append(f"point files differ from those the summary lists: {changed}")
+    if termination["problem"]:
+        reasons.append(termination["problem"])
     return {
         "summary_sha256": sha256_file(path),
         "status": summary.get("status"),
@@ -2296,6 +2337,7 @@ def job_admission(directory: Path, config: ProbeConfig, job_id: str) -> dict[str
         "acceptance": recorded,
         "eager": summary.get("eager"),
         "image_variant": summary.get("image_variant"),
+        "lane_termination": termination,
         "accepted": not reasons,
         "reasons": reasons,
     }
@@ -2323,6 +2365,40 @@ def job_c_gate(config: ProbeConfig, job_a: Path) -> dict[str, Any]:
     }
 
 
+def seed_stability_report(
+    job_id: str,
+    directory: Path | None,
+    points: Mapping[str, Mapping[str, Any]] | None,
+    *,
+    seeds: Sequence[str],
+    summary_key: str,
+    limit: float,
+    metric: str = "request_throughput",
+) -> dict[str, Any] | None:
+    """A1 or B1 seed stability, reported whether or not the job is admitted (section 10).
+
+    An admitted job's (``points`` given) is computed from its points, and its
+    noise multiplier enters the budget. A job that is not admitted reports what
+    its own summary.json recorded, labelled as reported only; none of it enters
+    a budget. ``None`` when the job's directory was not supplied.
+    """
+    if directory is None:
+        return None
+    if points is not None:
+        return {
+            **budget_rules.stability(points, seeds, limit, metric=metric),
+            "source": f"job {job_id}'s admitted points (enters the budget)",
+        }
+    source = f"job {job_id}'s summary.json (job not admitted: reported only, enters no budget)"
+    path = directory / "summary.json"
+    if not path.is_file():
+        return {"source": source, "recorded": None, "reason": "no summary.json"}
+    recorded = json.loads(path.read_text(encoding="utf-8")).get(summary_key)
+    if not isinstance(recorded, Mapping):
+        return {"source": source, "recorded": None, "reason": f"summary.json has no {summary_key}"}
+    return {**recorded, "source": source}
+
+
 def project(
     config: ProbeConfig,
     *,
@@ -2337,7 +2413,8 @@ def project(
     code (the G0.0 check), and refuses point files from another contract, job or
     experiment. Only an admitted job's points enter a budget (:func:`job_admission`):
     job A not admitted gives X1 not-run and no Q2 budget, job B not admitted (or not
-    given) no Q1 budget, and job C not admitted is treated as not run. The output
+    given) no Q1 budget, and job C not admitted is treated as not run. A1 and B1
+    stability are reported either way (:func:`seed_stability_report`). The output
     records the ledger row, the code digest and git HEAD.
     """
     try:
@@ -2379,10 +2456,13 @@ def project(
         "jobs": jobs,
         "budget_inputs": inputs,
         "x1": x1,
-        "a1_stability": (
-            None
-            if points_a is None
-            else budget_rules.stability(points_a, ("a1a", "a1b", "a1c"), limit)
+        "a1_stability": seed_stability_report(
+            "a",
+            job_a,
+            points_a,
+            seeds=("a1a", "a1b", "a1c"),
+            summary_key="a1_stability",
+            limit=limit,
         ),
     }
     max_model_len = max(
@@ -2404,12 +2484,14 @@ def project(
         except budget_rules.BudgetError as exc:
             out["q2"] = {"decision": "incomplete-re-probe", "reason": str(exc)}
     points_b = used.get("b")
-    out["b1_stability"] = (
-        None
-        if points_b is None
-        else budget_rules.stability(
-            points_b, ("b1a", "b1b", "b1c"), limit, metric="completions_per_s"
-        )
+    out["b1_stability"] = seed_stability_report(
+        "b",
+        job_b,
+        points_b,
+        seeds=("b1a", "b1b", "b1c"),
+        summary_key="b1_stability",
+        limit=limit,
+        metric="completions_per_s",
     )
     if points_b is None:
         out["q1"] = {"decision": "incomplete-re-probe", "reason": f"job b is {inputs['b']}"}

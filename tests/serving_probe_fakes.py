@@ -199,18 +199,42 @@ def write_job_dir(
     *,
     status: str = "complete",
     exit_code: int = 0,
+    termination: dict[str, Any] | None = None,
+    lane_finished: bool = True,
 ) -> Any:
-    """Write point files and a finished summary.json for one job, as the driver does.
+    """Write one job's lane run directory as the lane and the driver leave it.
 
-    ``points`` maps point ids to partial records (``status`` and ``result``); the
-    identity fields the projection checks are filled in here. Returns the directory.
+    ``directory`` is the lane's run directory (mounted at /outputs). The driver's
+    point files and finished summary.json go to ``directory / "probe"``, and the
+    lane's termination.env to ``directory`` unless ``lane_finished`` is false. Its
+    fields default to the batch script's own for the driver's ``exit_code``
+    (``completed`` for 0, else ``workload_failed``); ``termination`` overrides
+    them. ``points`` maps point ids to partial records (``status`` and
+    ``result``); the identity fields the projection checks are filled in here.
+    Returns the probe output directory.
     """
     import hashlib
     from pathlib import Path
 
+    from harness.serving_probe import budget
     from scripts import run_vllm_throughput_probe as probe
 
-    directory = Path(directory)
+    run_dir = Path(directory)
+    if lane_finished:
+        run_dir.mkdir(parents=True, exist_ok=True)
+        fields = {
+            "job_id": "1234",
+            "reason": "completed" if exit_code == 0 else "workload_failed",
+            "exit_code": exit_code,
+            "finished_at": "2026-10-07T00:00:00Z",
+            "checkpoint_ready": "false",
+            "checkpoint_marker_present": "false",
+            **(termination or {}),
+        }
+        (run_dir / probe.LANE_TERMINATION_FILE).write_text(
+            "".join(f"{key}={value}\n" for key, value in fields.items()), encoding="utf-8"
+        )
+    directory = run_dir / "probe"
     (directory / "points").mkdir(parents=True, exist_ok=True)
     shas = {}
     for point_id, record in points.items():
@@ -236,6 +260,14 @@ def write_job_dir(
         "eager": False,
         "image_variant": "cu129",
     }
+    # The seed stability the driver records in a finished summary (_finalize).
+    limit = float(config.section("validity")["unstable_relative_range"])
+    if job_id == "a":
+        summary["a1_stability"] = budget.stability(points, ("a1a", "a1b", "a1c"), limit)
+    if job_id == "b":
+        summary["b1_stability"] = budget.stability(
+            points, ("b1a", "b1b", "b1c"), limit, metric="completions_per_s"
+        )
     summary["acceptance"] = probe.job_acceptance(summary)
     (directory / "summary.json").write_text(json.dumps(summary), encoding="utf-8")
     return directory

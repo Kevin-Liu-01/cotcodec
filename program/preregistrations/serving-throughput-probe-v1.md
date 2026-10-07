@@ -31,7 +31,7 @@ code after the freeze is a new experiment id.
   `harness/serving_probe/` (budget rules in `budget.py`). Their digest, the
   SHA-256 of the compact JSON list of [path, file SHA-256] pairs sorted by path
   (`run_vllm_throughput_probe.py digest` prints it), is
-  `16bde053544ae46b8dba032f9e63056f5ea258ab45ebea417bcd72fcf3a6b8b7`.
+  `15b7a73b39dca0bf03959b8943450dc1d862ed6f5a158adcbca8fe763c817277`.
   The digest covers these files only (design decision 36).
 - **Binding.** Gate G0.0 (in the image) and the `project` step (on the host)
   both verify this file against the ledger and refuse unless its frozen text
@@ -112,13 +112,14 @@ amends D8 (design decision 2) and pre-approves the cu130 retry (section 5).
 1. **Experiment id** is `serving-throughput-probe-v1` (the item name), not the
    plan's `vllm-throughput-probe-v1`.
 2. **Budget (decisions D8 and D17).** Jobs A and B are capped by Slurm `--time`
-   at 40 and 20 minutes, together exactly 1.0 GPU-h (expected about 0.8); the
-   manifests' `max_gpu_hours` of 0.67 and 0.34 are those allocations rounded up.
-   Job C is the optional 0.5 GPU-h extension and runs only if X1 passes. The
-   overlay build and the metadata fetch each hold one idle H100 for at most 10
-   minutes; D17 amends D8 so that they are accounted separately from the 1.0
-   GPU-h probe cap, as separate lines in `gpu_hours_spent` (cap 0.33 GPU-h
-   together). A cu130 retry has its own cap (section 5).
+   at 40 and 20 minutes, together exactly D8's 1.0 GPU-h cap (D8 expects 0.75
+   GPU-h; D17 changes neither figure); the manifests' `max_gpu_hours` of 0.67
+   and 0.34 are those allocations rounded up. Job C is the optional 0.5 GPU-h
+   extension and runs only if X1 passes. The overlay build and the metadata
+   fetch each hold one idle H100 for at most 10 minutes; D17 amends D8 so that
+   they are accounted separately from the 1.0 GPU-h probe cap, as separate
+   lines in `gpu_hours_spent`. Together they hold at most 20 minutes, 0.333
+   GPU-h (D17's "about 0.33"). A cu130 retry has its own cap (section 5).
 3. **One client for every server point.** The plan used `vllm bench serve` for
    the random-mm brackets and a custom client for replays. Here one asyncio
    client sends every server request. Reasons: identical timing and token
@@ -263,9 +264,14 @@ amends D8 (design decision 2) and pre-approves the cu130 retry (section 5).
     gate that was never recorded counts as failed); records driver exit code 0;
     and lists the SHA-256 of exactly the point files on disk, which the driver
     writes into the summary when it finishes. A later resubmission that dies
-    part-way therefore cannot add points under an earlier accepted summary. A
-    job that is not admitted is reported with its reasons, and none of its
-    points enters a budget (section 8 states the consequence for each job).
+    part-way therefore cannot add points under an earlier accepted summary. The
+    lane's `termination.env` in the job's run directory (the parent of the
+    driver's output directory `/outputs/probe`) must also record
+    `reason=completed` and `exit_code=0`, so a job whose lane record is missing,
+    or shows a signal or a failed workload, is not admitted whatever its
+    summary says. A job that is not admitted is reported with its reasons, and
+    none of its points enters a budget (section 8 states the consequence for
+    each job).
 33. **Job C gating is enforced.** The manifest renderer
     (`scripts/render_serving_probe_manifest.py`) renders job C only from job A's
     output directory (`--job-a-output`), and only when job A is admitted by the
@@ -340,37 +346,44 @@ and no number from that job enters a budget.
   recorded as not passed and `eager_fallback: true` (design decision 27).
   Stage 1 must then also run eager, or wait for the R580 driver.
 - **Acceptance of a job.** Slurm `JobState=COMPLETED` with `ExitCode=0:0`
-  (checked with `sacct` and the lane's `termination.env` when the outputs are
-  collected), and `summary.json` showing `acceptance.accepted: true` (status
-  complete or complete-with-cuts, G0.0 to G0.4 passed). Nothing else is
-  required, and nothing less is accepted. The projection enforces the summary
-  side (design decision 32): it also requires driver exit code 0 and the
-  SHA-256 of exactly the point files on disk. Points of a job that is not
+  (checked with `sacct` when the outputs are collected), the lane's
+  `termination.env` recording `reason=completed` and `exit_code=0`, and
+  `summary.json` showing `acceptance.accepted: true` (status complete or
+  complete-with-cuts, G0.0 to G0.4 passed). Nothing else is required, and
+  nothing less is accepted. The projection enforces the lane record and the
+  summary side (design decision 32): it also requires driver exit code 0 and
+  the SHA-256 of exactly the point files on disk. Points of a job that is not
   accepted (pre-result, crashed, interrupted, Slurm TIMEOUT, no summary) are
   kept and reported but enter no budget; the projections that need them are
   "incomplete: re-probe" (section 8), and any resubmission needs the owner's
   approval of the extra GPU time.
-- **A gate from G0.2 to G0.8 fails on the cu129 image** (G0.5 only when the
-  eager start fails too): one retry with the vLLM v0.31.0 default (cu130)
-  image, linux/amd64 manifest
+- **A gate failure on the cu129 image ends a job as a pre-result:** G0.2, G0.3
+  or G0.4, or G0.5 to G0.8 in the job's primary phase (job A's real-weight
+  phase, job B's only phase; G0.5 only when the eager start fails too). Then
+  there is one retry with the vLLM v0.31.0 default (cu130) image, linux/amd64
+  manifest
   sha256:a4a4c0437bf7240089da5f08aa370c4aee17ae5290f7a3b468825ee26c4c3a6b
   (image ID sha256:c76d0e2225a4b1cb1e2109ace39639f55e714abd1a7a427acc8b0bbd7f6a83b3,
   9,035,211,086 bytes compressed),
   through the same overlay builder with `COTCODEC_VLLM_VARIANT=cu130`, which sets
   `VLLM_ENABLE_CUDA_COMPATIBILITY=1`. Decision D17 pre-approves this retry, its
   download included, with its own cap of 1.0 GPU-h on top of the probe cap:
-  the overlay rebuild and one rerun of the job whose gate failed. A job that
-  has not run yet when the retry starts runs on cu130 under the probe cap. Each
-  job's summary records its image variant. A G0.0 or G0.1 failure (the
-  preregistration or the lane's provenance) is not a runtime failure: its job
-  is resubmitted on the same image once the cause is fixed, which, like any
-  resubmission, needs the owner's approval of the extra GPU time.
+  the overlay rebuild and one rerun of the job that ended as a pre-result. The
+  rerun's output replaces the failed job's output in the projection (`project`
+  is given the rerun's directory for that job); the failed job's output is
+  kept and reported. A job that has not run yet when the retry starts runs on
+  cu130 under the probe cap. Each job's summary records its image variant. A
+  G0.0 or G0.1 failure (the preregistration or the lane's provenance) is not a
+  runtime failure: its job is resubmitted on the same image once the cause is
+  fixed, which, like any resubmission, needs the owner's approval of the extra
+  GPU time.
 - **That fails too:** the probe is classified "pre-result: vLLM runtime blocked on
   R570", no further GPU time is spent, and the R580 upgrade is escalated.
-- A gate failure in job A's dummy-weight phase or in one of job C's phases does
-  not stop the job; that phase's points are recorded as not run. X1 is then
-  not-run; a job C rung whose phase did not run keeps the active-parameter rule
-  (section 8).
+- **A gate failure in a non-primary phase** (job A's dummy-weight X1 phase, or
+  either of job C's rung phases) does not end the job and triggers no cu130
+  retry: that phase's points are recorded as not run, and the job can still be
+  accepted. X1 is then not-run; a job C rung whose phase did not run keeps the
+  active-parameter rule (section 8).
 - No vLLM v0.25.1 number from the earlier program is used.
 
 ## 6. Points, seeds and sample sizes
@@ -652,13 +665,15 @@ standard error of each replay step mean; each job's acceptance verdict, eager
 label, and the reasons a job's points were not admitted to a budget; the X1
 deltas, seed spread and outcome, with r1's and x1-r1's prompt tokens per
 request; the F1 ratio, applied or not; the D8 agreement rate; A1 and B1
-stability and noise multipliers; the open-loop reference used and which bound
-binds in each cell; engine facts per phase including eager use and `/tmp`
-mappings; all GPU-allocated time, including the overlay build and metadata
-fetch allocations and any cu130 retry, each against its own cap;
-the Q1 and Q2 projections with every flag and the sensitivity table; the
-contract SHA-256, the probe code digest and git HEAD, image IDs, receipt hashes
-and this file's ledger row; and every deviation from this document.
+stability and noise multipliers (for a job that is not admitted, as its own
+`summary.json` recorded them, labelled reported only); the open-loop
+reference used and which bound binds in each cell; engine facts per phase
+including eager use and `/tmp` mappings; all GPU-allocated time, including the
+overlay build and metadata fetch allocations and any cu130 retry, each against
+its own cap; the Q1 and Q2 projections with every flag and the sensitivity
+table; the contract SHA-256, the probe code digest and git HEAD, image IDs,
+receipt hashes and this file's ledger row; and every deviation from this
+document.
 
 ## 11. External sources
 
