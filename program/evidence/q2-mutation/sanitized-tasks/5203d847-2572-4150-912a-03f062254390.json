@@ -1,0 +1,16 @@
+{
+  "domain": "thunderbird",
+  "initial_files": [
+    {
+      "path_in_vm": "/home/user/thunderbird-profile.tar.gz",
+      "sha256": "8a714a4102d6f3aa604c0fd2bb96e63ba51594485977ed5c8dd19af846ae07e8",
+      "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/1e112283c4ecb08d6fed8069bca7de74fa2f12aa/thunderbird/dd84e895-72fd-4023-a336-97689ded257c/thunderbird-profile.tar.gz"
+    }
+  ],
+  "instruction": "Create a local folder called \"Promotions\" and create a filter to auto move the inbox emails whose subject contains “discount” to the new folder",
+  "related_apps": [
+    "thunderbird"
+  ],
+  "snapshot": "thunderbird",
+  "task_id": "5203d847-2572-4150-912a-03f062254390"
+}

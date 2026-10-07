@@ -1,0 +1,16 @@
+{
+  "domain": "vs_code",
+  "initial_files": [
+    {
+      "path_in_vm": "/home/user/Desktop/test.py",
+      "sha256": "e7d4e1fdee6722fc07fa402ab026a7158f4b94f5760cca332523d5378d152888",
+      "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/1e112283c4ecb08d6fed8069bca7de74fa2f12aa/vs_code/ec71221e-ac43-46f9-89b8-ee7d80f7e1c5/test.py"
+    }
+  ],
+  "instruction": "Please help me increase the indent of line 2 to line 10 by one tab.",
+  "related_apps": [
+    "vscode"
+  ],
+  "snapshot": "vscode",
+  "task_id": "ec71221e-ac43-46f9-89b8-ee7d80f7e1c5"
+}

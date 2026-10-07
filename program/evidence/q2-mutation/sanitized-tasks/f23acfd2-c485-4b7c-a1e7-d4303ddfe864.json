@@ -1,0 +1,16 @@
+{
+  "domain": "libreoffice_impress",
+  "initial_files": [
+    {
+      "path_in_vm": "/home/user/Desktop/69_4.pptx",
+      "sha256": "c443ffe641805559b1ac6e97882a1ae68cd337ac453554c8da44532d9d7b8fbb",
+      "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/1e112283c4ecb08d6fed8069bca7de74fa2f12aa/libreoffice_impress/f23acfd2-c485-4b7c-a1e7-d4303ddfe864/69_4.pptx"
+    }
+  ],
+  "instruction": "Add a bullet point to the content of this slide.",
+  "related_apps": [
+    "libreoffice_impress"
+  ],
+  "snapshot": "libreoffice_impress",
+  "task_id": "f23acfd2-c485-4b7c-a1e7-d4303ddfe864"
+}

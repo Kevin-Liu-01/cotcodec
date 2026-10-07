@@ -1,0 +1,16 @@
+{
+  "domain": "libreoffice_impress",
+  "initial_files": [
+    {
+      "path_in_vm": "/home/user/Desktop/16_2.pptx",
+      "sha256": "63093912c1dc5da7cf0bc6b7fca084f91796092ab5a9f2e83de82451be87ed55",
+      "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/1e112283c4ecb08d6fed8069bca7de74fa2f12aa/libreoffice_impress/a434992a-89df-4577-925c-0c58b747f0f4/16_2.pptx"
+    }
+  ],
+  "instruction": "Change the font size of the content to 12, and change the font color to orange. Change the slide's background to red.",
+  "related_apps": [
+    "libreoffice_impress"
+  ],
+  "snapshot": "libreoffice_impress",
+  "task_id": "a434992a-89df-4577-925c-0c58b747f0f4"
+}

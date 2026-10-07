@@ -1,0 +1,10 @@
+{
+  "domain": "vlc",
+  "initial_files": [],
+  "instruction": "Can you disable the cone icon in the splash screen? I am tired of its skeuomorphic design.",
+  "related_apps": [
+    "vlc"
+  ],
+  "snapshot": "chrome",
+  "task_id": "215dfd39-f493-4bc3-a027-8a97d72c61bf"
+}

@@ -1,0 +1,16 @@
+{
+  "domain": "libreoffice_calc",
+  "initial_files": [
+    {
+      "path_in_vm": "/home/user/Freeze_row_column.xlsx",
+      "sha256": "d70cd1383ae8bf74de2903cc7ffd616aca6d29f3c3483d426b28a42ff87ec51b",
+      "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/1e112283c4ecb08d6fed8069bca7de74fa2f12aa/libreoffice_calc/4188d3a4-077d-46b7-9c86-23e1a036f6c1/Freeze_row_column2.xlsx"
+    }
+  ],
+  "instruction": "Help me freeze the range A1:B1 on this sheet to keep the headers always visible",
+  "related_apps": [
+    "libreoffice_calc"
+  ],
+  "snapshot": "libreoffice_calc",
+  "task_id": "4188d3a4-077d-46b7-9c86-23e1a036f6c1"
+}

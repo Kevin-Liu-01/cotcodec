@@ -1,0 +1,10 @@
+{
+  "domain": "vs_code",
+  "initial_files": [],
+  "instruction": "Please help me modify the setting of VS Code to keep my cursor focused on the debug console when debugging in VS Code, instead of automatically focusing back on the Editor.",
+  "related_apps": [
+    "vscode"
+  ],
+  "snapshot": "vscode",
+  "task_id": "9439a27b-18ae-42d8-9778-5f68f891805e"
+}

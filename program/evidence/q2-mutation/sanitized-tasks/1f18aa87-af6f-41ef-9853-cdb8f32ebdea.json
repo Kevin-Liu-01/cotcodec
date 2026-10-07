@@ -1,0 +1,62 @@
+{
+  "domain": "multi_apps",
+  "initial_files": [
+    {
+      "path_in_vm": "/home/user/Desktop/Grammer test 1.docx",
+      "sha256": "93723b8c1945bc35f107b0584b74260366facfabfff82e94cf7f5311b40a0540",
+      "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/1e112283c4ecb08d6fed8069bca7de74fa2f12aa/multi_apps/1f18aa87-af6f-41ef-9853-cdb8f32ebdea/Grammer%20test%201.docx"
+    },
+    {
+      "path_in_vm": "/home/user/Desktop/Grammer test 2.docx",
+      "sha256": "be1d67a96abeb4acf18e5da65096012265c0e8984656a662a22ca74ae1d353cd",
+      "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/1e112283c4ecb08d6fed8069bca7de74fa2f12aa/multi_apps/1f18aa87-af6f-41ef-9853-cdb8f32ebdea/Grammar%20test%202.docx"
+    },
+    {
+      "path_in_vm": "/home/user/Desktop/Grammer test 3.docx",
+      "sha256": "1082be28dfff8dac1a339d89908c6e2a29a144090b357927d2b5bff342aca2b5",
+      "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/1e112283c4ecb08d6fed8069bca7de74fa2f12aa/multi_apps/1f18aa87-af6f-41ef-9853-cdb8f32ebdea/Grammer%20test%203.docx"
+    },
+    {
+      "path_in_vm": "/home/user/Desktop/Answer.docx",
+      "sha256": "3f11099a8cd8530384f3e166d8a1df2861c6e65caaced80a0af65319034d7f44",
+      "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/1e112283c4ecb08d6fed8069bca7de74fa2f12aa/multi_apps/1f18aa87-af6f-41ef-9853-cdb8f32ebdea/Answer.docx"
+    },
+    {
+      "path_in_vm": "/home/user/Desktop/Grammar rules PDF/irregularrules02.pdf",
+      "sha256": "8bc8de47fda4dbf497eb63c14565fa6296dc5dcfe18dae5f052ee189738ca6e1",
+      "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/1e112283c4ecb08d6fed8069bca7de74fa2f12aa/multi_apps/2c1ebcd7-9c6d-4c9a-afad-900e381ecd5e/irregularrules02.pdf"
+    },
+    {
+      "path_in_vm": "/home/user/Desktop/Grammar rules PDF/irregularrules01.pdf",
+      "sha256": "cf622918f45eb399a2159ab07c2f93a2919b49a9ab553549cf6c3f3d831b96ef",
+      "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/1e112283c4ecb08d6fed8069bca7de74fa2f12aa/multi_apps/2c1ebcd7-9c6d-4c9a-afad-900e381ecd5e/irregularrules01.pdf"
+    },
+    {
+      "path_in_vm": "/home/user/Desktop/Grammar rules PDF/fragrules.pdf",
+      "sha256": "ca7dfa501f1deb9b08a3bf7e80e5dffb8c5f393c5e883c84b8a8cf40b9ad40b4",
+      "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/1e112283c4ecb08d6fed8069bca7de74fa2f12aa/multi_apps/2c1ebcd7-9c6d-4c9a-afad-900e381ecd5e/fragrules.pdf"
+    },
+    {
+      "path_in_vm": "/home/user/Desktop/Grammar rules PDF/csfsrules.pdf",
+      "sha256": "2ba19089498561dcdfb1255e0c5bd81aa1704dc4021cf518c094150d27fd3dfa",
+      "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/1e112283c4ecb08d6fed8069bca7de74fa2f12aa/multi_apps/2c1ebcd7-9c6d-4c9a-afad-900e381ecd5e/csfsrules.pdf"
+    },
+    {
+      "path_in_vm": "/home/user/Desktop/Public Lecture Teaching Plan.docx",
+      "sha256": "68b07805dbb9859a705948903cc8efd6c6af28d86b35735c57385524bbbe2a3e",
+      "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/1e112283c4ecb08d6fed8069bca7de74fa2f12aa/multi_apps/2c1ebcd7-9c6d-4c9a-afad-900e381ecd5e/Public%20Lecture%20Teaching%20Plan.docx"
+    },
+    {
+      "path_in_vm": "/home/user/Desktop/Course Timetable.xlsx",
+      "sha256": "be24552315b6709a1eb8532439f05c6ff5e4376653fef1ba99bda231e9a8c9c3",
+      "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/1e112283c4ecb08d6fed8069bca7de74fa2f12aa/multi_apps/2c1ebcd7-9c6d-4c9a-afad-900e381ecd5e/Course%20Timetable.xlsx"
+    }
+  ],
+  "instruction": "I've prepared some grammar tests and placed them in the 'Grammar test' folder. I've already provided the multiple-choice answers for Test 1 in the 'answer doc' file. Could you please follow the same format to write out the answers for the remaining two tests in the doc file? This way, I can distribute them to the students as a reference. Thank you.",
+  "related_apps": [
+    "os",
+    "libreoffice_writer"
+  ],
+  "snapshot": "libreoffice_calc",
+  "task_id": "1f18aa87-af6f-41ef-9853-cdb8f32ebdea"
+}

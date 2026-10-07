@@ -1,0 +1,17 @@
+{
+  "domain": "multi_apps",
+  "initial_files": [
+    {
+      "path_in_vm": "/home/user/Desktop/stock.xlsx",
+      "sha256": "b334b8009f3b71582201a471bdfc725f8e380bf538be52321fa04073e644dff5",
+      "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/1e112283c4ecb08d6fed8069bca7de74fa2f12aa/multi_apps/7f35355e-02a6-45b5-b140-f0be698bcf85/stock.xlsx"
+    }
+  ],
+  "instruction": "Export the table to a CSV file and then write code to find the median Stock Price after filling empty Stock Price values with the average Stock Price. Save only the numeric result in \"result.txt\".",
+  "related_apps": [
+    "libreoffice_calc",
+    "vs_code"
+  ],
+  "snapshot": "libreoffice_calc",
+  "task_id": "7f35355e-02a6-45b5-b140-f0be698bcf85"
+}

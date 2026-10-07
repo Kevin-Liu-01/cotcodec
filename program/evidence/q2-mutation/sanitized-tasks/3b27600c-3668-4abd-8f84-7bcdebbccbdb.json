@@ -1,0 +1,16 @@
+{
+  "domain": "libreoffice_impress",
+  "initial_files": [
+    {
+      "path_in_vm": "/home/user/Desktop/lec17-gui-events.pptx",
+      "sha256": "97439c9e711e67ad20a4223916c7f47e4ff8000b30d442035c9fe0eae4f14f76",
+      "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/1e112283c4ecb08d6fed8069bca7de74fa2f12aa/libreoffice_impress/3b27600c-3668-4abd-8f84-7bcdebbccbdb/lec17-gui-events.pptx"
+    }
+  ],
+  "instruction": "Please make the background blue on all my slides. I was stuck by finding the entrance to do that for a while...",
+  "related_apps": [
+    "libreoffice_impress"
+  ],
+  "snapshot": "libreoffice_impress",
+  "task_id": "3b27600c-3668-4abd-8f84-7bcdebbccbdb"
+}

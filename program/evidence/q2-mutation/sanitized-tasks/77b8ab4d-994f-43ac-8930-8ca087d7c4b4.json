@@ -1,0 +1,16 @@
+{
+  "domain": "gimp",
+  "initial_files": [
+    {
+      "path_in_vm": "/home/user/Desktop/The_Lost_River_Of_Dreams.jpg",
+      "sha256": "884c9747c1e21ccdfc6663121758f1dbe358a1852483868fd76b6401ba349496",
+      "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/1e112283c4ecb08d6fed8069bca7de74fa2f12aa/gimp/77b8ab4d-994f-43ac-8930-8ca087d7c4b4/The_Lost_River_Of_Dreams.jpg"
+    }
+  ],
+  "instruction": "Could you assist me in placing my photo on the desktop and renaming it to export.jpg?",
+  "related_apps": [
+    "gimp"
+  ],
+  "snapshot": "gimp",
+  "task_id": "77b8ab4d-994f-43ac-8930-8ca087d7c4b4"
+}
