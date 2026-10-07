@@ -166,6 +166,8 @@ of life.
   over 8 GPU-hours.
 - Every GPU run uses a digest-pinned image, Slurm, persistent checkpoints and a
   fresh-job resume test. See [`../docs/operations.md`](../docs/operations.md).
-- No model-generated code runs with GPU access on the R570 stack.
+- No untrusted model-generated code (sampled kernels, policy rollouts) runs
+  with GPU access on the R570 stack. Reviewed, committed harness code is
+  project code.
 - This repository is public. No secrets, host addresses, employer-internal
   material or private datasets.

@@ -56,8 +56,10 @@ sparse-attention indexers. Details: `program/PROGRAM.md`.
    through `scripts/submit_docker_research_job.py`, persistent checkpoints and
    a fresh-job resume test. `tmux` owns the operator session; Slurm owns the
    workload. Never use `orx --backend slurm` for GPU work.
-3. **Untrusted code.** No model-generated code runs with GPU access while the
-   node is on the R570 driver.
+3. **Untrusted code.** No untrusted model-generated code (sampled kernels,
+   policy rollouts, programs produced during an experiment) runs with GPU
+   access while the node is on the R570 driver. Reviewed, tested, committed
+   harness code is project code.
 4. **No root.** The research account has no root. Never use `docker` group
    membership to change the host. Admin work is listed in `docs/h100-node.md`.
 5. **Gauntlet.** New directions, new mechanisms and any run over 8 GPU-hours
