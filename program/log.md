@@ -263,3 +263,37 @@ Append-only. Newest entries at the bottom.
   tests. Froze `q3-k1-throughput-probe-v1` (D20, D22). Projected v2 totals
   under D22's counting rule: about 6.6 GPU-h central, 9.5 conservative; the
   probe's measurement decides between freezing v2 and the gauntlet.
+
+## 2026-10-07 — Q1 Stage 0 pilot pass: GPU paths validated, cost card measured (branch `stage0/q1-gates`, not merged)
+
+- Three one-GPU lane jobs on trusted code only (KernelBench references,
+  TorchInductor output, pre-2025 human-written kernels and harness-derived
+  mutants and controls; model kind none): 474 smoke and admission, 518 pilot
+  cost, 548 paired concurrency re-measurement. 0.899 GPU-h of the pass's 1.0;
+  image builds 472, 487, 507 and 544 CPU-only from fresh clones.
+- Corpus hand-off: S2 sources vendored with their licences (22 files
+  re-verified against the pinned commits), the corpus recipe committed, and one
+  hash-bound study artifact per job (28 MB, host-only; it carries the
+  unmodified KernelGYM and KBV clones for fidelity).
+- Validated on the GPU: admission and device codegen, specializations, the
+  identity control through all 15 gates and channels, fidelity against
+  unmodified KernelBench (a 11/11; a_head_1e-4 9/11 plus 2 listed in
+  advance), KernelGYM (decoy 5/5 comparable) and KBV (c1 11/11), calibration
+  on S1-cal (M stays 16), the poison allocator, compute-sanitizer, b2 and the
+  timing harness.
+- Found and fixed: compute-sanitizer never ran on S1 kernels (they refuse
+  `A3/lead1`), so A4 and every tier were `error` for all S1 kernels; the probe
+  now skips refused shapes (job 548: 6/6 S1 kernels accepted at `A3/lead5`).
+  b2 rows record profile attempts (the retry is unreachable on a working
+  GPU); timing now runs before scoring.
+- Open (owner): the TF32-admissible threshold rejects the TF32 tutorial
+  matmul at every held-out shape; A5 counts S1 dtype refusals as failures.
+- Cost card: c/b = 1.64 (no c-lite). Stage 0 as drafted projects to about
+  1,056 GPU-h (scoring 95% interval 671-1,359), far above the 8 GPU-h cap and
+  a lower bound (gate (c) on a 4.3 GB problem ran over 676 s). 12 items per
+  GPU halve small-problem cost with identical verdicts (ratio 0.493 on 240
+  paired items). Proposed rule `q1-stage0-trim/1` (preregistration section
+  18.5): 7.37 GPU-h through its last fixed bucket, a hard stop at 8, every gate,
+  family, tier and policy kept, mutant metrics narrowed to problems under 1 GB
+  with about 2.5 times wider intervals; or the gauntlet. Evidence:
+  `program/evidence/2026-10-07/q1-pilot/`.

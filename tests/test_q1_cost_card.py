@@ -149,3 +149,102 @@ def test_size_model_fits_and_falls_back_to_the_per_draw_slope() -> None:
     assert full["n_eval_independent"] == 1
     shared = cc.project_scoring(counts, fits, cap=40, survival=1.0, scope="shared")
     assert shared["gpu_hours"] == 0 and shared["n_eval_independent"] == 0
+
+
+def _job_item(key: str, gpu: float, wall: float, verdicts: dict, phase: str = "scoring") -> dict:
+    kernel, gate, seed = key.rsplit("|", 2)
+    return {
+        "phase": phase,
+        "item_key": key,
+        "kernel_id": kernel,
+        "gate": gate,
+        "final": True,
+        "gpu_seconds": gpu,
+        "wall": wall,
+        "verdicts": Counter(verdicts),
+    }
+
+
+def test_pair_jobs_reports_ratios_and_verdict_differences() -> None:
+    base = [
+        _job_item("k|a|seed-42", 2.0, 8.0, {"accept": 1}),
+        _job_item("k|A4|seed-42", 4.0, 8.0, {"accept": 2, "error": 1}),
+        _job_item("only-base|a|seed-42", 1.0, 4.0, {"accept": 1}),
+    ]
+    other = [
+        _job_item("k|a|seed-42", 1.0, 12.0, {"accept": 1}),
+        _job_item("k|A4|seed-42", 1.0, 12.0, {"accept": 3}),
+    ]
+    paired = cc.pair_jobs(base, other)
+    assert paired["items_in_both"] == 2 and paired["only_base"] == 1
+    assert paired["per_gate"]["a"]["gpu_seconds_ratio_median"] == 0.5
+    assert paired["per_gate"]["a"]["wall_ratio_median"] == 1.5
+    assert paired["gpu_seconds_ratio_total"] == pytest.approx(2.0 / 6.0, abs=1e-3)
+    assert [d["item_key"] for d in paired["verdict_differences"]] == ["k|A4|seed-42"]
+
+
+def test_censored_items_are_recovered_as_lower_bounds(tmp_path: Path) -> None:
+    import os
+
+    phase = tmp_path / "q1" / "scoring"
+    (phase / "items" / "q1item-a").mkdir(parents=True)
+    (phase / "items" / "q1item-b").mkdir(parents=True)
+    done = {"details": {"item_key": "k|a|seed-42"}}
+    (phase / "journal.jsonl").write_text(json.dumps(done) + "\n")
+    (phase / "items" / "q1item-a" / "item.json").write_text(
+        json.dumps({"item_key": "k|a|seed-42", "gate": "a", "exclusive": True})
+    )
+    killed = phase / "items" / "q1item-b" / "item.json"
+    killed.write_text(
+        json.dumps({"item_key": "k|c|seed-42", "gate": "c", "exclusive": True, "problem_id": "p"})
+    )
+    (phase / "summary.json").write_text("{}")
+    os.utime(killed, (1000.0, 1000.0))
+    os.utime(phase / "summary.json", (1675.0, 1675.0))
+    (censored,) = cc.censored_items(tmp_path / "q1")
+    assert censored["item_key"] == "k|c|seed-42"
+    assert censored["gpu_seconds_lower_bound"] == 675.0
+
+
+def test_trimmed_projection_keeps_every_family_and_reaches_the_frr_units() -> None:
+    fits = {gate: {"alpha": 1.0, "beta": 10.0} for gate in cc.SCORING_GATES}
+    small = "L2/74_ConvTranspose3d_LeakyReLU_Multiply_LeakyReLU_Max"
+    big = "L1/19_ReLU"
+
+    def row(sid: str, problem: str, nbytes: int, exclusive: bool, fams: dict) -> dict:
+        return {
+            "substrate_id": sid,
+            "problem_id": problem,
+            "source_kind": "inductor",
+            "native_input_bytes": nbytes,
+            "exclusive": exclusive,
+            "hack_controls": 4,
+            "cpu_distinct_by_family": fams,
+        }
+
+    counts = {
+        "evaluation_substrates": [
+            row("s1-a", small, 16_777_216, False, {"arithmetic": 200, "boundary": 3}),
+            row("s1-b", big, 6_442_450_944, True, {"arithmetic": 50}),
+        ],
+        "identity_controls": [
+            {"problem_id": small, "exclusive": False},
+            {"problem_id": big, "exclusive": True},
+        ],
+        "adversarial_controls": 3,
+    }
+    rule = {**cc.TRIM_RULE, "frr_min_units": 2, "family_quota_test": 10, "family_quota_dev": 2}
+    out = cc.project_trimmed(counts, fits, survival=1.0, rule=rule)
+    assert out["n_eval_independent"] == 2 and out["frr_extra_substrates"] == ["s1-b"]
+    fam = out["mutants_per_family"]
+    assert fam["arithmetic"]["test"] == 10 and fam["arithmetic"]["dev"] == 2
+    assert fam["boundary"]["test"] == 2  # fewer than the quota: all of the frame's half
+    assert out["kernels"]["frr-substrate-replicate-42"] == 1
+    halved = cc.project_trimmed(
+        counts, fits, survival=1.0, rule=rule, factors=dict.fromkeys(cc.SCORING_GATES, 0.5)
+    )
+    assert halved["gpu_hours"] < out["gpu_hours"]
+    assert (
+        halved["gpu_hours_by_role"]["frr-substrate-replicate-42"]
+        == out["gpu_hours_by_role"]["frr-substrate-replicate-42"]
+    )  # exclusive problems are not scaled by the concurrency factor

@@ -69,3 +69,18 @@ deterministic mutants. The draft preregistration is
   floored at 2 for that reason, while audit A3 keeps size 1.
 - Gate (a)'s absolute tolerance 1e-2 hides errors on outputs far below 1e-2
   (softmax over many columns).
+- Any probe that runs a candidate at a held-out shape must skip shapes the
+  candidate refuses before launch (S1 refuses size 1 and fp16/bf16): the
+  pilot's compute-sanitizer probe did not, and A4 was `error` for every S1
+  kernel until `gpu_probes.run_first_accepted`. A5 still counts dtype
+  refusals as failures (open, preregistration section 18.3).
+- Cost is dominated by native input size and per-process overhead, not GPU
+  compute: items of problems under 0.6 GB cost half as many GPU-seconds at 12
+  per GPU as at 4 with identical verdicts (pilot job 548); problems of 1 GB or
+  more run alone and can take over 10 minutes per gate (c on L1/89).
+- A worker crash after the candidate loads is a rejection, so a concurrency-
+  induced CUDA out-of-memory error would be charged to the candidate; it must
+  become an infrastructure failure before running more than 4 items per GPU
+  on problems above 0.6 GB.
+- The runner never journals an item it kills at the hard deadline;
+  `cost_card.censored_items` recovers it as a lower bound.

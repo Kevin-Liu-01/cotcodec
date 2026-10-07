@@ -9,9 +9,12 @@
 driver's ``q1/`` tree and the lane's ``job.env``/``termination.env``).
 Outputs ``cost_card.json`` and ``cost_card.md``: per-gate GPU-seconds (median,
 p95) of the scored items, per-kernel cost by rung, the c/b ratio, the measured
-fixed phases, and the projected Stage 0 total against the 8 GPU-h cap with a
-cluster-bootstrap interval, under the drafted design and under the trimming
-rule's grid of mutant caps.
+fixed phases, items a time box killed (lower bounds), and the projected Stage 0
+total against the 8 GPU-h cap with a cluster-bootstrap interval, under the
+drafted design and a grid of simple trims, and under the proposed trimming rule
+``q1-stage0-trim/1`` (``cost_card.TRIM_RULE``) at the measured cost and, when
+``--pair-job`` names a paired re-run of the same items at another concurrency,
+at that job's measured per-gate cost ratio.
 """
 
 from __future__ import annotations
@@ -141,10 +144,164 @@ def fixed_phases(
     return out
 
 
+def trimmed_fixed_hours(
+    counts: dict[str, Any],
+    fits: dict[str, Any],
+    fixed: dict[str, Any],
+    projection: dict[str, Any],
+    args: argparse.Namespace,
+    *,
+    factors: dict[str, float] | None,
+    rule: dict[str, Any],
+    timing_item_seconds: float | None = None,
+) -> dict[str, float]:
+    """Fixed phases under the trimming rule (GPU-h): admission of every problem
+    (corpus metrics), specializations of in-scope parents, calibration on the
+    S1-cal substrates within the FRR set's largest input size, a registered
+    fidelity sample (every in-scope evaluation substrate, the three adversarial
+    controls and one test mutant per family and source tier), the timing noise
+    floor (``timing_floor_items`` timing items at the measured GPU-seconds of one)
+    and the audit-hole replay cap (the draft's cap, not measured)."""
+    from harness.q1 import pilot
+
+    def seconds(problem_id: str, gates: dict[str, float]) -> float:
+        return sum(
+            weight * cc.kernel_replicate_seconds(fits, problem_id, factors=factors, gates=(gate,))
+            for gate, weight in gates.items()
+        )
+
+    scope = int(rule["scope_bytes"])
+    rows = counts["evaluation_substrates"]
+    in_scope = [r for r in rows if int(r.get("native_input_bytes") or 0) < scope]
+    largest = max(
+        [
+            int(r.get("native_input_bytes") or 0)
+            for r in rows
+            if r["substrate_id"] in set(projection["frr_extra_substrates"])
+        ]
+        or [scope - 1]
+    )
+    spec = fixed["specializations"]
+    per_spec = (spec["measured_seconds"] or 0.0) / max(1, spec["substrates"])
+    calibration = [
+        sid.removeprefix("s1-inductor-").replace("-", "/", 1)
+        for sid in counts["calibration_substrates"]
+    ]
+    calibration = [p for p in calibration if (pilot.native_input_bytes(p) or 0) <= largest]
+    fidelity_gates = {"a": 2.0, "a_head_1e-4": 1.0, "b1": 1.0, "b2": 1.0, "c": 0.4}
+    fidelity = sum(seconds(r["problem_id"], fidelity_gates) for r in in_scope)
+    fidelity += 3 * seconds("L1/1_Square_matrix_multiplication_", fidelity_gates)
+    mean_substrate = fidelity / max(1, len(in_scope))
+    fidelity += 12 * int(rule["fidelity_mutants_per_family_tier"]) * mean_substrate
+    return {
+        "already_spent_this_pass": args.spent_gpu_hours,
+        "admission_full": fixed["admission"]["projected_seconds"] / 3600,
+        "specializations_in_scope": per_spec * len(in_scope) / 3600,
+        "calibration_within_frr_bound": sum(seconds(p, {"A1": 1.0}) for p in calibration) / 3600,
+        "fidelity_sample": fidelity / 3600,
+        "timing_noise_floor": timing_floor_hours(rule, timing_item_seconds, args),
+        "audit_hole_replay_cap": args.replay_gpu_hours,
+    }
+
+
+def bootstrap_trimmed(
+    items: list[dict[str, Any]],
+    kinds: dict[str, Any],
+    counts: dict[str, Any],
+    survival: float,
+    rule: dict[str, Any],
+    factors: dict[str, float] | None,
+    args: argparse.Namespace,
+    seed: int = 0,
+) -> dict[str, float | None]:
+    """Cluster bootstrap of the trimmed scoring projection over pilot parents
+    (each with its mutants and controls), refitting the size model each time."""
+    import random
+    from collections import defaultdict
+
+    clusters: dict[str, list[dict[str, Any]]] = defaultdict(list)
+    for item in items:
+        parent = kinds.get(item["kernel_id"], {}).get("parent", item["kernel_id"])
+        clusters[parent].append(item)
+    keys = sorted(clusters)
+    if len(keys) < 2:
+        return {"low": None, "high": None}
+    rng = random.Random(seed)
+    totals = []
+    for _ in range(args.resamples):
+        sample = [i for _ in keys for i in clusters[rng.choice(keys)]]
+        fits = cc.fit_item_costs(sample)
+        totals.append(
+            cc.project_trimmed(counts, fits, survival=survival, rule=rule, factors=factors)[
+                "gpu_hours"
+            ]
+        )
+    totals.sort()
+    return {
+        "low": round(totals[int(0.025 * (len(totals) - 1))], 3),
+        "high": round(totals[int(round(0.975 * (len(totals) - 1)))], 3),
+    }
+
+
+def stop_point(
+    projection: dict[str, Any], fixed_total: float, scale: float | None
+) -> dict[str, Any]:
+    """Where the rule's 8 GPU-h stop falls (central and high projection): the last
+    priority bucket that completes, the share of the next one that runs, and the
+    test-split mutants scored (P2 plus the P7 extension that fits)."""
+    buckets = projection["gpu_hours_by_priority"]
+    test_quota = sum(v["test"] for v in projection["mutants_per_family"].values())
+    extension = sum(v["test_extension_max"] for v in projection["mutants_per_family"].values())
+    out: dict[str, Any] = {}
+    for label, factor in (("central", 1.0), ("high", scale)):
+        if factor is None:
+            out[label] = None
+            continue
+        room = cc.CAP_GPU_HOURS - fixed_total
+        completed, partial = [], None
+        for name, hours in buckets.items():
+            hours *= factor
+            if hours <= room:
+                room -= hours
+                completed.append(name)
+                continue
+            partial = {"bucket": name, "share": round(room / hours, 3) if hours else 0.0}
+            break
+        scored_test = test_quota if "P2" in completed else None
+        if scored_test is not None:
+            if "P7" in completed:
+                scored_test += extension
+            elif partial and partial["bucket"] == "P7":
+                scored_test += round(extension * partial["share"])
+        if partial and partial["bucket"] == "P2":
+            scored_test = round(test_quota * partial["share"])
+        out[label] = {
+            "completed": completed,
+            "partial": partial,
+            "test_mutants_scored": scored_test,
+        }
+    return out
+
+
+def timing_floor_hours(
+    rule: dict[str, Any], timing_item_seconds: float | None, args: argparse.Namespace
+) -> float:
+    """The noise floor at the measured GPU-seconds of one timing item (it runs
+    alone on its GPU), else the draft's estimate."""
+    if timing_item_seconds is None:
+        return args.timing_floor_gpu_hours
+    return int(rule["timing_floor_items"]) * timing_item_seconds / 3600
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0], allow_abbrev=False)
     parser.add_argument("--smoke-job", type=Path, required=True)
     parser.add_argument("--pilot-job", type=Path, required=True)
+    parser.add_argument(
+        "--pair-job",
+        type=Path,
+        help="a paired re-run of a prefix of the pilot job's scoring items (concurrency)",
+    )
     parser.add_argument("--corpus", type=Path, required=True)
     parser.add_argument("--counts", type=Path, required=True)
     parser.add_argument("--out", type=Path, required=True)
@@ -326,8 +483,130 @@ def main(argv: list[str] | None = None) -> int:
                 else round(100 * cc.detectable_difference(pooled), 1),
             }
         )
+    censored = cc.censored_items(args.pilot_job / "q1") + cc.censored_items(args.smoke_job / "q1")
+    paired = None
+    factors = None
+    if args.pair_job is not None:
+        other = cc.load_job(args.pair_job / "q1")
+        paired = cc.pair_jobs(pilot["items"], other["items"])
+        censored += cc.censored_items(args.pair_job / "q1")
+        factors = {
+            gate: v["gpu_seconds_ratio_median"]
+            for gate, v in paired["per_gate"].items()
+            if v["gpu_seconds_ratio_median"] is not None
+        }
+        paired["factors"] = factors
+        paired["timing_items"] = cc.gate_stats(
+            [i for i in other["items"] if i["phase"] == "timing"]
+        )
+        paired["phases"] = other["phases"]
+    timing_items = [
+        i["gpu_seconds"]
+        for job in ([other] if args.pair_job is not None else []) + [pilot]
+        for i in job["items"]
+        if i["phase"] in {"timing", "smoke-timing"} and i["final"] and i["gpu_seconds"]
+    ]
+    timing_seconds = statistics.median(timing_items) if timing_items else None
+    trimmed = []
+    for label, quota_test, quota_dev, fac in (
+        ("trim-q60", 60, 15, None),
+        ("trim-q30", 30, 8, None),
+        ("trim-q120", 120, 30, None),
+        ("trim-q60-paired-concurrency", 60, 15, factors),
+        ("trim-q120-paired-concurrency", 120, 30, factors),
+        ("trim-q200-paired-concurrency", 200, 50, factors),
+    ):
+        if label.endswith("paired-concurrency") and not factors:
+            continue
+        rule = {**cc.TRIM_RULE, "family_quota_test": quota_test, "family_quota_dev": quota_dev}
+        projection = cc.project_trimmed(
+            counts,
+            fits,
+            survival=survival["survival"],
+            rule=rule,
+            factors=fac,
+            witness_rate=args.witness_rate,
+        )
+        fixed_trim = trimmed_fixed_hours(
+            counts,
+            fits,
+            fixed,
+            projection,
+            args,
+            factors=fac,
+            rule=rule,
+            timing_item_seconds=timing_seconds,
+        )
+        interval = bootstrap_trimmed(
+            all_scored, kinds, counts, survival["survival"], rule, fac, args
+        )
+        # The P7 extension is open-ended by design (the stop cuts it), so the rule
+        # "fits" when everything through P6 fits.
+        extension = projection["gpu_hours_by_priority"].get("P7", 0.0)
+        core = projection["gpu_hours"] - extension
+        total = round(sum(fixed_trim.values()) + core, 3)
+        high = (
+            None
+            if interval["high"] is None
+            else round(
+                sum(fixed_trim.values())
+                + core * interval["high"] / max(projection["gpu_hours"], 1e-9),
+                3,
+            )
+        )
+        # Under the rule's stop, scoring halts when the Stage 0 total would pass 8 GPU-h
+        # with the timing floor and the replay cap held in reserve; where the stop
+        # falls at the central and at the high projection.
+        before = sum(
+            v
+            for k, v in fixed_trim.items()
+            if k not in {"timing_noise_floor", "audit_hole_replay_cap"}
+        )
+        reserve = fixed_trim["timing_noise_floor"] + fixed_trim["audit_hole_replay_cap"]
+        scale = (
+            interval["high"] / projection["gpu_hours"]
+            if interval["high"] and projection["gpu_hours"]
+            else None
+        )
+        cumulative = []
+        running = before + reserve
+        for bucket, hours in projection["gpu_hours_by_priority"].items():
+            running_high = None
+            running += hours
+            if scale is not None:
+                running_high = (
+                    before
+                    + reserve
+                    + scale
+                    * sum(v for k, v in projection["gpu_hours_by_priority"].items() if k <= bucket)
+                )
+            cumulative.append(
+                {
+                    "through": bucket,
+                    "total_central": round(running, 3),
+                    "total_high": None if running_high is None else round(running_high, 3),
+                }
+            )
+        stop = stop_point(projection, before + reserve, scale)
+        trimmed.append(
+            {
+                "name": label,
+                **projection,
+                "priority_cumulative_with_reserve": cumulative,
+                "budget_stop": stop,
+                "scoring_gpu_hours_95": interval,
+                "fixed_gpu_hours": {k: round(v, 3) for k, v in fixed_trim.items()},
+                "total_gpu_hours": total,
+                "total_gpu_hours_high": high,
+                "fits_8_gpu_h": total <= cc.CAP_GPU_HOURS,
+                "fits_8_gpu_h_at_high": None if high is None else high <= cc.CAP_GPU_HOURS,
+            }
+        )
     card = {
         "schema": "q1-pilot-cost-card/1",
+        "censored_items": censored,
+        "paired_concurrency": paired,
+        "trimmed": trimmed,
         "spent_gpu_hours": args.spent_gpu_hours,
         "smoke_job": str(args.smoke_job),
         "pilot_job": str(args.pilot_job),
@@ -377,6 +656,21 @@ def main(argv: list[str] | None = None) -> int:
             f"| {sc['name']} | {sc['gpu_hours']} | {low}-{high} | {sc['fixed_gpu_hours']} | "
             f"{sc['total_gpu_hours']} | {sc['total_gpu_hours_high']} | {sc['fits_8_gpu_h']} | "
             f"{sc['n_eval_independent']} |"
+        )
+    lines += [
+        "",
+        "| trimmed rule | in-scope substrates | units | mutants | scoring GPU-h (P1-P7) "
+        "| fixed GPU-h | total GPU-h (P1-P6) | high | fits | pooled witnessed (planning) "
+        "| families >= 30 |",
+        "|---|---:|---:|---:|---:|---:|---:|---:|---|---:|---:|",
+    ]
+    for sc in trimmed:
+        lines.append(
+            f"| {sc['name']} | {sc['in_scope_substrates']} | {sc['n_eval_independent']} | "
+            f"{sc['kernels'].get('mutant')} | {sc['gpu_hours']} | "
+            f"{round(sum(sc['fixed_gpu_hours'].values()), 3)} | {sc['total_gpu_hours']} | "
+            f"{sc['total_gpu_hours_high']} | {sc['fits_8_gpu_h']} | "
+            f"{sc['pooled_witnessed_test_planning']} | {sc['families_with_30_witnessed_test']} |"
         )
     (args.out / "cost_card.md").write_text("\n".join(lines) + "\n")
     print("\n".join(lines))

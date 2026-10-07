@@ -47,15 +47,28 @@ its section 15 lists the integration decisions and section 16 the fixes made
 after the adversarial review (evidence:
 `program/evidence/2026-10-07/q1-gates-fix-pass.json`). Do not push
 `stage0/q1-gates` until Kevin has seen the gate (b) licence note in
-`harness/q1/README.md` (NOTICE). Next, in order:
+`harness/q1/README.md` (NOTICE).
 
-1. Review and freeze the draft (`scripts/preregister.py freeze ...`), after
-   checking `python scripts/q1_version_card.py --markdown` against its table.
-2. Rebuild `cotcodec-q1-gates` at the frozen revision, then submit the GPU
-   smoke, substrate admission and specialization recording through the lane
-   from a clean host clone (templates in `experiments/manifests/`).
-3. Decide how built corpora reach later jobs: the lane has no hash-bound input
-   mount yet (preregistration section 10).
+The pilot pass is done (preregistration sections 17-18, evidence
+`program/evidence/2026-10-07/q1-pilot/`): three one-GPU lane jobs (474, 518,
+548; 0.899 GPU-h) validated every GPU path on trusted code, the corpus reaches
+jobs as one hash-bound study artifact, and the cost card is measured. Stage 0
+as drafted projects to about 1,056 GPU-h against the 8 GPU-h cap. Next, in
+order:
+
+1. Kevin decides the budget: adopt the trimming rule `q1-stage0-trim/1`
+   (section 18.5; 7.37 GPU-h, hard stop at 8) or run the gauntlet for a larger
+   Stage 0. Then fold the chosen rule into sections 3-10.
+2. Kevin decides the two open audit findings (section 18.3, items 6 and 7):
+   the TF32-admissible threshold for `tl.dot` at held-out shapes, and A5's
+   handling of dtype refusals. Implement, then rerun the CPU doctor.
+3. Implement CUDA out-of-memory as an infrastructure failure retried alone
+   (needed for 12 items per GPU), then freeze the draft
+   (`scripts/preregister.py freeze ...`) after checking
+   `python scripts/q1_version_card.py --markdown` against its table.
+4. Rebuild `cotcodec-q1-gates` at the frozen revision (CPU-only build job
+   from a fresh clone) and run Stage 0 in the registered order with the
+   study-artifact hand-off (`scripts/q1_study_artifact.py`).
 
 ## Waiting on Kevin
 
@@ -65,8 +78,10 @@ upgrade or written risk acceptance (Q1 Stage 1 scoring), outward disclosures
 policy, a git-history purge, rotating the Moonshot key, and a human spot check
 of the model-rated mutation audit.
 
-Also for Q1: review and freeze the integrated Q1 Stage 0 preregistration
-(`stage0/q1-gates`), and see the gate (b) licence note before it is pushed.
+Also for Q1: the Stage 0 budget decision (trimming rule or gauntlet), the two
+open audit findings, then review and freeze the integrated Q1 Stage 0
+preregistration (`stage0/q1-gates`); see the gate (b) licence note before it is
+pushed.
 
 ## Host checkouts
 

@@ -64,6 +64,10 @@ RUNGS = {
 }
 CAP_GPU_HOURS = 8.0
 SEEDS = 3
+#: Problems below this many native input bytes run 12 items per GPU under the
+#: trimming rule (measured in job 548 up to 0.54 GB); larger shared-class problems
+#: run 4 per GPU (as in job 518), exclusive ones alone.
+CONCURRENCY_BELOW_BYTES = 600_000_000
 
 
 # --- loading -------------------------------------------------------------------
@@ -552,6 +556,330 @@ def bootstrap_projection(
     return {"low": _quantile(totals, 0.025), "high": _quantile(totals, 0.975)}
 
 
+# --- censored items, paired jobs and the trimming rule ---------------------------
+
+
+def censored_items(job_dir: Path) -> list[dict[str, Any]]:
+    """Items a time box killed before they wrote any journal row (lower bounds).
+
+    The runner never journals an item it kills at the hard deadline, so its
+    GPU time would vanish from the card. Each such item left an item directory
+    with ``item.json`` and no journal row; it ran at least from that file's
+    mtime to the phase's ``summary.json`` mtime (written when the runner
+    returned). Exclusive items held the GPU alone, so for them this is GPU
+    time; shared items are listed with their raw wall time only.
+    """
+    root = Path(job_dir)
+    out: list[dict[str, Any]] = []
+    for journal in sorted(root.glob("*/journal.jsonl")):
+        phase_dir = journal.parent
+        summary = phase_dir / "summary.json"
+        if not summary.exists():
+            continue
+        journaled = set()
+        for line in journal.read_text(encoding="utf-8").splitlines():
+            if line.strip():
+                journaled.add(json.loads(line)["details"]["item_key"])
+        for item_path in sorted(phase_dir.glob("items/*/item.json")):
+            item = json.loads(item_path.read_text(encoding="utf-8"))
+            if item.get("item_key") in journaled:
+                continue
+            wall = summary.stat().st_mtime - item_path.stat().st_mtime
+            exclusive = bool(item.get("exclusive"))
+            out.append(
+                {
+                    "phase": phase_dir.name,
+                    "item_key": item.get("item_key"),
+                    "gate": item.get("gate"),
+                    "problem_id": item.get("problem_id"),
+                    "exclusive": exclusive,
+                    "wall_seconds_lower_bound": round(wall, 1),
+                    "gpu_seconds_lower_bound": round(wall, 1) if exclusive else None,
+                }
+            )
+    return out
+
+
+def pair_jobs(
+    base: Sequence[Mapping[str, Any]], other: Sequence[Mapping[str, Any]], *, phase: str = "scoring"
+) -> dict[str, Any]:
+    """Item-by-item comparison of two runs of the same items (same keys).
+
+    Per gate: the median ratio of GPU-seconds and of raw wall seconds
+    (``other / base``) over items final in both, and whether each item's
+    verdict multiset is identical. A concurrency change must not change a
+    verdict; any difference is listed.
+    """
+
+    def finals(items: Sequence[Mapping[str, Any]]) -> dict[str, Mapping[str, Any]]:
+        return {
+            i["item_key"]: i
+            for i in items
+            if i["phase"] == phase and i["final"] and i["gpu_seconds"] is not None
+        }
+
+    left, right = finals(base), finals(other)
+    common = sorted(set(left) & set(right))
+    by_gate: dict[str, dict[str, list[float]]] = defaultdict(lambda: defaultdict(list))
+    differences = []
+    for key in common:
+        a, b = left[key], right[key]
+        gate = a["gate"]
+        if a["gpu_seconds"] > 0:
+            by_gate[gate]["gpu"].append(b["gpu_seconds"] / a["gpu_seconds"])
+        if a["wall"]:
+            by_gate[gate]["wall"].append((b["wall"] or 0.0) / a["wall"])
+        by_gate[gate]["base_gpu"].append(a["gpu_seconds"])
+        by_gate[gate]["other_gpu"].append(b["gpu_seconds"])
+        if dict(a["verdicts"]) != dict(b["verdicts"]):
+            differences.append(
+                {"item_key": key, "base": dict(a["verdicts"]), "other": dict(b["verdicts"])}
+            )
+    gates = {
+        gate: {
+            "n": len(v["gpu"]),
+            "gpu_seconds_ratio_median": round(statistics.median(v["gpu"]), 3) if v["gpu"] else None,
+            "wall_ratio_median": round(statistics.median(v["wall"]), 3) if v["wall"] else None,
+            "base_gpu_seconds_sum": round(sum(v["base_gpu"]), 2),
+            "other_gpu_seconds_sum": round(sum(v["other_gpu"]), 2),
+        }
+        for gate, v in sorted(by_gate.items())
+    }
+    base_sum = sum(left[k]["gpu_seconds"] for k in common)
+    other_sum = sum(right[k]["gpu_seconds"] for k in common)
+    return {
+        "items_in_both": len(common),
+        "only_base": len(set(left) - set(right)),
+        "only_other": len(set(right) - set(left)),
+        "gpu_seconds_base": round(base_sum, 1),
+        "gpu_seconds_other": round(other_sum, 1),
+        "gpu_seconds_ratio_total": round(other_sum / base_sum, 3) if base_sum else None,
+        "per_gate": gates,
+        "verdict_differences": differences,
+    }
+
+
+#: The proposed trimming rule (``q1-stage0-trim/1``), as drafted for the
+#: preregistration (section 18): every gate, family, contract tier and TF32
+#: policy is kept; what shrinks is which problems and kernels are scored, and at
+#: how many replicates.
+TRIM_RULE: dict[str, Any] = {
+    "name": "q1-stage0-trim/1",
+    "scope_bytes": 1_000_000_000,
+    "frr_min_units": 72,
+    "family_quota_test": 60,
+    "family_quota_test_max": 120,
+    "family_quota_dev": 15,
+    "cap": 40,
+    "mutant_robustness_fraction": 0.1,
+    "substrate_seeds": 3,
+    "identity_seeds": 1,
+    "hack_fraction": 0.15,
+    "hack_seeds": 3,
+    "adversarial_seeds": 3,
+    "fidelity_mutants_per_family_tier": 1,
+    "timing_floor_items": 80,
+    "slots_per_gpu": {"below_0.6_GB": 12, "0.6_to_1_GB": 4, "from_1_GB": "alone"},
+    "priority": [
+        "P1 substrates at replicate 42 (in scope and FRR set), every control at replicate 42",
+        "P2 test-quota mutants at replicate 42",
+        "P3 hack-emulating and adversarial controls at replicates 43 and 44",
+        "P4 in-scope substrates at replicates 43 and 44",
+        "P5 the mutant robustness subsample at replicates 43 and 44",
+        "P6 dev-quota mutants at replicate 42",
+        "P7 further test-split mutants up to family_quota_test_max per family, one family at a"
+        " time in a seeded round-robin order, at replicate 42, until the stop",
+    ],
+    "stop": "no item starts once the Stage 0 GPU-hours (every job, pilot included) reach 8.0",
+}
+
+
+def _unit(row: Mapping[str, Any]) -> str:
+    return (
+        row["problem_id"]
+        if row["source_kind"] == "inductor"
+        else "s2:" + _s2_family(row["substrate_id"])
+    )
+
+
+def kernel_replicate_seconds(
+    fits: Mapping[str, Mapping[str, Any]],
+    problem_id: str,
+    *,
+    factors: Mapping[str, float] | None = None,
+    gates: Sequence[str] = SCORING_GATES,
+    factor_below_bytes: int = CONCURRENCY_BELOW_BYTES,
+) -> float:
+    """Size-model GPU-seconds of one kernel at one replicate (every scoring gate).
+
+    ``factors`` (per gate) scale problems whose native inputs are below
+    ``factor_below_bytes`` only, as measured by a paired re-run at another
+    concurrency (the largest problem in that re-run had 0.54 GB of inputs);
+    larger shared problems keep the measured 4-per-GPU cost and exclusive
+    problems run alone.
+    """
+    from harness.q1 import pilot
+
+    shared = (pilot.native_input_bytes(problem_id) or 0) < factor_below_bytes
+    gb = _gigabytes(problem_id)
+    total = 0.0
+    for gate in gates:
+        fit = fits.get(gate)
+        if fit is None:
+            continue
+        seconds = fit["alpha"] + fit["beta"] * gb
+        if shared and factors and gate in factors:
+            seconds *= factors[gate]
+        total += seconds
+    return total
+
+
+def project_trimmed(
+    counts: Mapping[str, Any],
+    fits: Mapping[str, Mapping[str, Any]],
+    *,
+    survival: float,
+    rule: Mapping[str, Any] = TRIM_RULE,
+    factors: Mapping[str, float] | None = None,
+    witness_rate: float = 0.5,
+) -> dict[str, Any]:
+    """Scoring GPU-hours, kernel counts and precision under the trimming rule.
+
+    - **Scope.** Mutants, hack-emulating controls, identity controls, the
+      KernelBench adversarial controls and replicates 43/44 only on problems
+      whose native inputs are below ``scope_bytes`` (the pilot's shared class).
+    - **FRR set.** The in-scope evaluation substrates, plus the out-of-scope ones
+      in ascending native input bytes (ties by substrate id) until
+      ``n_eval_independent`` reaches ``frr_min_units``; those extra substrates
+      are scored at replicate 42 only (criterion 3 is at replicate 42).
+    - **Mutants.** Per family, a simple random sample without replacement of
+      ``family_quota_test`` test-split and ``family_quota_dev`` dev-split
+      mutants from the capped (cap 40, cap seed 42) mutants of in-scope
+      evaluation parents (all of them where fewer exist), at replicate 42; a
+      ``mutant_robustness_fraction`` subsample of the test ones also at 43 and
+      44; then (P7, cut by the budget stop) further test-split mutants up to
+      ``family_quota_test_max`` per family. Expected cost uses the family's
+      frame (each parent's capped allocation).
+    - **Controls.** Identity controls at ``identity_seeds`` replicates; each
+      hack-control kind on a ``hack_fraction`` sample of its applicable
+      in-scope substrates at ``hack_seeds`` replicates; adversarial controls at
+      ``adversarial_seeds``.
+    """
+    scope = int(rule["scope_bytes"])
+    rows = counts["evaluation_substrates"]
+
+    def bytes_of(row: Mapping[str, Any]) -> int:
+        return int(row.get("native_input_bytes") or 0)
+
+    def cost(problem_id: str) -> float:
+        return kernel_replicate_seconds(fits, problem_id, factors=factors)
+
+    in_scope = [r for r in rows if bytes_of(r) < scope]
+    units = {_unit(r) for r in in_scope}
+    frr_extra = []
+    for row in sorted(
+        (r for r in rows if bytes_of(r) >= scope), key=lambda r: (bytes_of(r), r["substrate_id"])
+    ):
+        if len(units) >= int(rule["frr_min_units"]):
+            break
+        frr_extra.append(row)
+        units.add(_unit(row))
+    seconds: Counter[str] = Counter()
+    priority: Counter[str] = Counter()
+    kernels: Counter[str] = Counter()
+
+    def add(role: str, bucket: str, value: float) -> None:
+        seconds[role] += value
+        priority[bucket] += value
+
+    extra_seeds = int(rule["substrate_seeds"]) - 1
+    for row in in_scope:
+        add("substrate", "P1", cost(row["problem_id"]))
+        add("substrate", "P4", extra_seeds * cost(row["problem_id"]))
+        kernels["substrate"] += 1
+    for row in frr_extra:
+        add("frr-substrate-replicate-42", "P1", cost(row["problem_id"]))
+        kernels["frr-substrate-replicate-42"] += 1
+    # Mutant frame: each in-scope parent's capped allocation per family.
+    frame: dict[str, list[tuple[str, float]]] = defaultdict(list)
+    for row in in_scope:
+        by_family = row.get("cpu_distinct_by_family") or {}
+        families = [f for f in MUTATION_FAMILIES if by_family.get(f)]
+        sizes = [max(0, round(by_family[f] * survival)) for f in families]
+        alloc = waterfill(sizes, int(rule["cap"])) if sizes else []
+        for family, k in zip(families, alloc, strict=True):
+            if k:
+                frame[family].append((row["problem_id"], float(k)))
+    per_family: dict[str, dict[str, Any]] = {}
+    robustness = float(rule["mutant_robustness_fraction"])
+    for family in MUTATION_FAMILIES:
+        entries = frame.get(family, [])
+        available = sum(k for _, k in entries)
+        test = min(float(rule["family_quota_test"]), available / 2)
+        dev = min(float(rule["family_quota_dev"]), available / 2)
+        mean_cost = sum(k * cost(p) for p, k in entries) / available if available else 0.0
+        extra = max(0.0, min(float(rule.get("family_quota_test_max", 0)), available / 2) - test)
+        add("mutant", "P2", test * mean_cost)
+        add("mutant", "P5", 2 * robustness * test * mean_cost)
+        add("mutant", "P6", dev * mean_cost)
+        add("mutant-extension", "P7", extra * mean_cost)
+        kernels["mutant"] += test + dev
+        kernels["mutant-extension"] += extra
+        witnessed = test * witness_rate
+        per_family[family] = {
+            "capped_frame": round(available),
+            "test": round(test),
+            "test_extension_max": round(extra),
+            "dev": round(dev),
+            "witnessed_test_planning": round(witnessed),
+            "half_width_pp": None
+            if witnessed < 1
+            else round(100 * half_width(round(witnessed)), 1),
+        }
+    identity_seeds = int(rule["identity_seeds"])
+    for row in counts["identity_controls"]:
+        if not row["exclusive"]:
+            add("identity-control", "P1", cost(row["problem_id"]))
+            add("identity-control", "P3", (identity_seeds - 1) * cost(row["problem_id"]))
+            kernels["identity-control"] += 1
+    hack = float(rule["hack_fraction"])
+    for row in in_scope:
+        n = row["hack_controls"] * hack
+        add("hack-control", "P1", n * cost(row["problem_id"]))
+        add("hack-control", "P3", n * (int(rule["hack_seeds"]) - 1) * cost(row["problem_id"]))
+        kernels["hack-control"] += n
+    adversarial = int(counts.get("adversarial_controls", 3))
+    adversarial_cost = adversarial * cost("L1/1_Square_matrix_multiplication_")
+    add("adversarial-control", "P1", adversarial_cost)
+    add("adversarial-control", "P3", (int(rule["adversarial_seeds"]) - 1) * adversarial_cost)
+    kernels["adversarial-control"] += adversarial
+    pooled = sum(v["witnessed_test_planning"] for v in per_family.values())
+    n_units = len(units)
+    return {
+        "rule": dict(rule),
+        "factors": dict(factors) if factors else None,
+        "in_scope_substrates": len(in_scope),
+        "frr_extra_substrates": [r["substrate_id"] for r in frr_extra],
+        "n_eval_independent": n_units,
+        "frr_upper_bound_at_zero_rejections": round(1 - 0.025 ** (1 / n_units), 4)
+        if n_units
+        else None,
+        "kernels": {k: round(v, 1) for k, v in kernels.items()},
+        "mutants_per_family": per_family,
+        "pooled_witnessed_test_planning": pooled,
+        "pooled_half_width_pp": None if not pooled else round(100 * half_width(pooled, p=0.17), 1),
+        "detectable_difference_pp": None
+        if not pooled
+        else round(100 * detectable_difference(pooled), 1),
+        "families_with_30_witnessed_test": sum(
+            1 for v in per_family.values() if v["witnessed_test_planning"] >= 30
+        ),
+        "gpu_hours_by_role": {k: round(v / 3600, 3) for k, v in seconds.items()},
+        "gpu_hours_by_priority": {k: round(priority[k] / 3600, 3) for k in sorted(priority)},
+        "gpu_hours": round(sum(seconds.values()) / 3600, 3),
+    }
+
+
 def half_width(n: int, p: float = 0.2, design_effect: float = 2.0) -> float | None:
     """95% normal half-width of a miss rate with a cluster design effect (section 9)."""
     if n <= 0:
@@ -566,6 +894,11 @@ def detectable_difference(n: int, design_effect: float = 2.0) -> float | None:
 
 __all__ = [
     "CAP_GPU_HOURS",
+    "TRIM_RULE",
+    "censored_items",
+    "kernel_replicate_seconds",
+    "pair_jobs",
+    "project_trimmed",
     "DRAWS",
     "bootstrap_projection",
     "fit_item_costs",

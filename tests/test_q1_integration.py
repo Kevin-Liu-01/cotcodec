@@ -238,6 +238,7 @@ Q1_MANIFESTS = (
     "experiments/manifests/q1-core/q1-audit-hole-replay.yaml",
     "experiments/manifests/q1-core/q1-pilot-smoke.template.yaml",
     "experiments/manifests/q1-core/q1-pilot-cost.template.yaml",
+    "experiments/manifests/q1-core/q1-pilot-concurrency.template.yaml",
 )
 
 
