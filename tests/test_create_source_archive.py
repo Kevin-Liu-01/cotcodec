@@ -29,9 +29,7 @@ def _repo(tmp_path: Path) -> Path:
 
 def test_publication_archive_is_commit_only_and_deterministic(tmp_path: Path) -> None:
     root = _repo(tmp_path)
-    head = subprocess.check_output(
-        ["git", "rev-parse", "HEAD"], cwd=root, text=True
-    ).strip()
+    head = subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=root, text=True).strip()
     first = create_archive(
         root,
         tmp_path / "first.tar.gz",
@@ -49,16 +47,15 @@ def test_publication_archive_is_commit_only_and_deterministic(tmp_path: Path) ->
     assert first["git_sha"] == head
     assert first["worktree_clean"] is True
     assert first["mode"] == "publication"
-    with gzip.open(first["archive"], "rb") as stream, tarfile.open(
-        fileobj=stream, mode="r:"
-    ) as archive:
+    with (
+        gzip.open(first["archive"], "rb") as stream,
+        tarfile.open(fileobj=stream, mode="r:") as archive,
+    ):
         assert sorted(archive.getnames()) == ["research.py", "uv.lock"]
 
 
 @pytest.mark.parametrize("dirty_kind", ["modified", "staged", "untracked"])
-def test_publication_archive_rejects_every_dirty_state(
-    tmp_path: Path, dirty_kind: str
-) -> None:
+def test_publication_archive_rejects_every_dirty_state(tmp_path: Path, dirty_kind: str) -> None:
     root = _repo(tmp_path)
     if dirty_kind == "untracked":
         (root / "untracked.txt").write_text("no\n", encoding="utf-8")
@@ -76,9 +73,7 @@ def test_publication_archive_rejects_every_dirty_state(
 
 def test_publication_ref_must_be_checked_out_head(tmp_path: Path) -> None:
     root = _repo(tmp_path)
-    old = subprocess.check_output(
-        ["git", "rev-parse", "HEAD"], cwd=root, text=True
-    ).strip()
+    old = subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=root, text=True).strip()
     (root / "research.py").write_text("print('next')\n", encoding="utf-8")
     _run(root, "git", "add", "research.py")
     _run(root, "git", "commit", "-qm", "next")
@@ -101,9 +96,10 @@ def test_discovery_archive_remains_explicit_and_includes_untracked(tmp_path: Pat
     )
     assert receipt["mode"] == "discovery"
     assert receipt["worktree_clean"] is False
-    with gzip.open(receipt["archive"], "rb") as stream, tarfile.open(
-        fileobj=stream, mode="r:"
-    ) as archive:
+    with (
+        gzip.open(receipt["archive"], "rb") as stream,
+        tarfile.open(fileobj=stream, mode="r:") as archive,
+    ):
         assert "draft.py" in archive.getnames()
 
 
@@ -123,16 +119,12 @@ def test_source_receipt_is_durable_and_never_overwritten(tmp_path: Path) -> None
 
 
 @pytest.mark.parametrize("attribute", ["export-ignore", "export-subst"])
-def test_publication_rejects_git_archive_transformations(
-    tmp_path: Path, attribute: str
-) -> None:
+def test_publication_rejects_git_archive_transformations(tmp_path: Path, attribute: str) -> None:
     root = _repo(tmp_path)
     target = "research.py"
     if attribute == "export-subst":
         (root / target).write_text("$Format:%H$\n", encoding="utf-8")
-    (root / ".gitattributes").write_text(
-        f"{target} {attribute}\n", encoding="utf-8"
-    )
+    (root / ".gitattributes").write_text(f"{target} {attribute}\n", encoding="utf-8")
     _run(root, "git", "add", ".")
     _run(root, "git", "commit", "-qm", attribute)
     with pytest.raises(ValueError, match="differ from the committed file tree"):
