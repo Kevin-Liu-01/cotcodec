@@ -125,3 +125,9 @@ def test_driver_session_plan_matches_declared_counts():
     assert {s["setting"] for s in plan} == {"screenshot", "screenshot+a11y"}
     with pytest.raises(driver.DriverError):
         driver.session_plan(development(cells=["not_a_cell"]), CELLS)
+
+
+def test_development_may_run_a_mutant_for_information():
+    validate_manifest(development(mutant="M02-button-swap-left-right"))
+    with pytest.raises(ManifestError):
+        validate_manifest(development(mutant="rm -rf"))

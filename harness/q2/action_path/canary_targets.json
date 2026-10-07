@@ -17,6 +17,23 @@
     "y": 150
    }
   },
+  "vscode": {
+   "drag_select_word": {
+    "duration_ms": 500,
+    "from": [
+     609,
+     284
+    ],
+    "to": [
+     640,
+     284
+    ]
+   },
+   "triple_click_line": {
+    "x": 650,
+    "y": 284
+   }
+  },
   "writer": {
    "drag_select_word": {
     "duration_ms": 500,
@@ -37,7 +54,8 @@
  },
  "measured": {
   "chrome": "development runs 501 and 506: accessibility character extents (DESKTOP_COORDS) agree with the screenshots: 'this' spans x 215-273, 'word' x 171-229, glyph centre y 150 (24 px monospace, 14.4 px per character from x 100); run 506's screenshot after the drag shows 'keep Y keep'",
-  "writer": "development run 501 screenshot (canary-040, canary-053): the fixture line's glyph centre is y 292; 'this' spans x 703-734 and 'word' x 679-710 (Liberation Mono 10 pt, 7.94 px per character from x 639); the accessibility extents had the right x but y 24 px too high"
+  "vscode": "development run 515 screenshots (canary-013, canary-041, editor ready): the fixture line's glyphs span y 277-291 (centre 284); 'this' spans x 634-665 and 'word' x 608-640 (14 px monospace, 8.43 px per character from x 565.5)",
+  "writer": "development run 501 screenshot (canary-040, canary-053): the fixture line's glyph centre is y 292; 'this' spans x 703-734 and 'word' x 679-710 (Liberation Mono 10 pt, 7.94 px per character from x 639); the accessibility extents had the right x but y 24 px too high; run 515 (these targets): 'this' 704-733, 'word' 679-709, glyph rows 288-299, both composites passed"
  },
  "note": "Screen targets of the canary's two pointer composites, measured in development (harness/q2/vm/guest/canary_targets.py) and frozen in the executor addendum. An app without a measured target runs those entries as unmeasured (a failure).",
  "schema": "cotcodec-q2-canary-targets-v1"

@@ -29,14 +29,14 @@ Frozen with this file (SHA-256 of the committed bytes):
 
 | File | SHA-256 |
 |---|---|
-| `harness/q2/vm/guest/probe.py` | `6f72a9a87327f5e7a8039f671b5989e28e6eca90232cb66bf979d770416df808` |
+| `harness/q2/vm/guest/probe.py` | `ba5c0f1d364c80d5f8190f3c357b915cd504d754891285c3772ba959a804efeb` |
 | `harness/q2/vm/guest/guard.py` | `129b93d7ab7cccf91469ce56b4f4a3aefc3ed3697b4d169c96219c423cdfa984` |
-| `harness/q2/vm/guest/canary.py` | `8db6dde085001fc13d75ddfdb13ee6765cc2523f3211164a889c7e8affa1d0f1` |
+| `harness/q2/vm/guest/canary.py` | `fbe21671a085b1eb58a8de08e4de1b46ce7c19d340576364814253e4a5305099` |
 | `harness/q2/vm/guest/facts.py` | `4a071a39d4586a58b62419796a57b678568bdbc3bfd77ec6d50e841414dcd255` |
 | `harness/q2/vm/guest/sentinel.py` | `98f46a7faafc58e9c65466b19ae3547288fc8829378ad7aa169b09a17161b18b` |
 | `harness/q2/vm/guest/tap_selftest.py` | `7e051c0bcb45ba81c2b1fb855a9dc70115957fafa3ec7f333c8b3be5ab3bf835` |
 | `harness/q2/vm/marker.py` | `b786b347fc5573425f14090bd67621294ac5c84671bf67f47e663d693ab17fb9` |
-| `harness/q2/vm/canary_run.py` | `8ebb89e4d0141173d633756a020495ffa28c1d7f2984baf59b733a3db1f54ebc` |
+| `harness/q2/vm/canary_run.py` | `295bdd0916869adf79015bc6da6cba4aff2a0ab9f0dab089e4ed3a3565abb119` |
 | `harness/q2/vm/suite.py` | `030690b601ca75bd855ef0d95f99537ef6b4f3801e44cc20695675c5a6b52baf` |
 | `harness/q2/vm/desktop.py` | `0076eca035ecd3944e41d999c3c3eafe4bc5b0735d2313864c5a58638797aed4` |
 | `harness/q2/vm/validation.py` | `2ab5508e5a42269d447312e481b58c9f491d815d73e4977ba9c55d235231116f` |
@@ -44,7 +44,7 @@ Frozen with this file (SHA-256 of the committed bytes):
 | `harness/q2/vm/hmp.py` | `34b10c2661c6cf40039ca172a704fb5613d0a805e60223acc729f040caf4776a` |
 | `harness/q2/vm/runner.py` | `d3826ede838558a7fd43edec047fe9fd75140d88796d2518676f8913cc1fe218` |
 | `harness/q2/vm/driver.py` | `416c543afbb93aafc0206a4897148649122b5b5a8591bfdfd82dbf30d0b9910f` |
-| `harness/q2/vm/manifest.py` | `182a299873f71986b2fd1b7647647e433581904662438d6b566913f05cc17fe3` |
+| `harness/q2/vm/manifest.py` | `519a0ca7573faf1ca3ba3ababe9d83023cf3b672a923d78cb0d44164f646ded4` |
 | `harness/q2/action_path/verdict.py` | `313471d6e87cb0c2dd8c649903f31a03cb57312da53a6c5202ca63894057a57e` |
 | `harness/q2/action_path/order.py` | `346d47374aec1b088ebe5eee6cec33f634819228a32b0a6b71ca2cb9159778cb` |
 | `harness/q2/action_path/controls.py` | `d96e7b2acdecfef134c08c22f23113c8d78fae9d8a35d0e5ad826a2f0af9cc72` |
@@ -174,4 +174,17 @@ results.
 
 ## 5. Changes after L0-fixed development runs
 
-None yet.
+The first L0-fixed development run (job 486) ran at commit `29b056e`. Every
+later change to a file listed in section 1 (from `git log 29b056e..`):
+
+| Commit | File | Change and reason |
+|---|---|---|
+| `e026893` | `guest/probe.py` | `begin` returns only once the screen shows the entry's marker (read back from the root window), and `end` reports the marker the screen shows. Run 486: `no_action_control`'s screenshot, taken right after `begin`, still showed the previous entry's marker; the probe's own drawing reaches the screen one compositor frame later (72 ms median). No verdict rule changed. |
+| `7c1bb02` | `canary_run.py`, `runner.py` | Development-only measurement of the canary's pointer targets (accessibility extents and screenshots, `guest/canary_targets.py`); acceptance runs never take this path. |
+| `1ce92a6` | `guest/canary.py`, `canary_run.py` | Read-backs retry for 5 s; VS Code's read-back waits until the saved file changed and is stable; screenshots after the pointer composites (development only). Run 501: VS Code's file was read before its save landed, and Chrome's accessibility node was missing right after typing. |
+| `44a30dd` | `guest/canary.py` | Chrome is read back from the window title the page mirrors its value into (with `canary.yaml`'s page and read-back changed in the main preregistration); VS Code is ready when its status bar shows the text editor's items (and `canary.yaml` turns its first-run walkthrough off). Runs 501 and 506: Chrome's accessibility text stayed at the fixture after edits the screen showed (`keep Y keep` on screen, `keep word keep` read back), and the walkthrough took the keyboard from the file. |
+
+None of these changes touches how an event, a text buffer or a marker is
+judged; the probe change makes the no-action entry's screenshot start from a
+settled screen, and the canary changes make the read-back report what the app
+holds.

@@ -323,6 +323,8 @@ class Probe:
             "outside_events": 0,
         }
         self.drawn = None
+        self.last_input_t = None
+        self.last_draw_t = None
         self.atoms = {
             name: self.d.intern_atom(name)
             for name in (
@@ -426,6 +428,7 @@ class Probe:
             self.win.poly_fill_rectangle(self.black, cells)
         self.d.flush()
         self.drawn = (self.seq, crc)
+        self.last_draw_t = time.time()
         self.counters["redraws"] += 1
 
     def screen_marker(self):
@@ -480,6 +483,7 @@ class Probe:
         kind = self.EVENT_KINDS.get(ev.type)
         if kind is not None:
             record = [kind, ev.detail, ev.state, ev.root_x, ev.root_y, ev.time]
+            self.last_input_t = time.time()
             if kind in ("KeyPress", "KeyRelease"):
                 row = self.keymap.get(ev.detail) or []
                 keysym = select_keysym(row, ev.state, self.numlock_mask)
@@ -581,6 +585,9 @@ class Probe:
                 "crc": text_crc(text),
                 "drawn": list(self.drawn) if self.drawn else None,
                 "screen_marker": list(self.screen_marker() or []) or None,
+                "last_input_t": self.last_input_t,
+                "last_draw_t": self.last_draw_t,
+                "end_t": time.time(),
                 "state": self.state(),
                 "counters": dict(self.counters),
             }

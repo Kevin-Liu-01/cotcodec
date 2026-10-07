@@ -38,6 +38,7 @@ import signal
 import subprocess
 import sys
 import time
+import urllib.parse
 
 CANARY_DIR = "/home/user/canary"
 TRIAL_ROOT = "/tmp/q2ap_canary"
@@ -263,11 +264,30 @@ def _chrome_title(d):
             continue
         title = prop.value.decode("utf-8", "replace") if prop and prop.value else ""
         if title.startswith("Q2AP:") and title.endswith(" - Google Chrome"):
+            encoded = title[len("Q2AP:") : -len(" - Google Chrome")]
             try:
-                return json.loads(title[len("Q2AP:") : -len(" - Google Chrome")])
-            except ValueError:
+                return urllib.parse.unquote(encoded, encoding="utf-8", errors="strict")
+            except UnicodeDecodeError:
                 return None
     return None
+
+
+def _titles(d):
+    """Every client window's title (diagnostics when the mirror is missing)."""
+    from Xlib import X
+
+    name = d.intern_atom("_NET_WM_NAME")
+    utf8 = d.intern_atom("UTF8_STRING")
+    root = d.screen().root
+    clients = root.get_full_property(d.intern_atom("_NET_CLIENT_LIST"), X.AnyPropertyType)
+    out = []
+    for wid in clients.value if clients else []:
+        try:
+            prop = d.create_resource_object("window", wid).get_full_property(name, utf8)
+        except Exception:  # noqa: BLE001
+            continue
+        out.append(prop.value.decode("utf-8", "replace")[:300] if prop and prop.value else "")
+    return out
 
 
 def chrome_readback():
@@ -285,7 +305,7 @@ def chrome_readback():
         time.sleep(0.1)
     if isinstance(last, str):
         return {"ok": True, "text": last, "unstable": True}
-    return {"ok": False, "error": "no mirrored title"}
+    return {"ok": False, "error": "no mirrored title", "titles": _titles(d)}
 
 
 def wait_window(config):

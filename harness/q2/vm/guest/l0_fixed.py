@@ -560,6 +560,7 @@ class Executor:
                 pass
             else:
                 raise ValueError(f"L0-fixed has no device action for {op!r}")
+            self.log["t_events_done"] = time.time()
             if op != "wait":
                 ended = time.monotonic()
                 if self.log["remaps"]:
@@ -581,6 +582,7 @@ def run_action(action):
     log = Executor().run(action)
     log["op"] = action["op"]
     log["elapsed_s"] = round(time.time() - started, 4)
+    log["t_end"] = time.time()
     print(json.dumps(log, sort_keys=True))
 
 

@@ -52,7 +52,7 @@ apps:
       style="position:fixed;inset:0;font:24px monospace"></textarea><script>
       const t=document.getElementById("t");t.value=FIXTURE;t.addEventListener("keydown",
       e=>{if(e.key==="Tab"){e.preventDefault();document.execCommand("insertText",false,"\t")}});
-      const show=()=>{document.title="Q2AP:"+JSON.stringify(t.value)};show();
+      const show=()=>{document.title="Q2AP:"+encodeURIComponent(t.value)};show();
       t.addEventListener("input",show);
       </script>
     page_note: >-
@@ -60,9 +60,11 @@ apps:
       focus; the page mirrors the textarea's value into its title on every input event
     readback: >-
       the textarea's value as the page mirrors it into the window title (_NET_WM_NAME
-      "Q2AP:" + JSON + " - Google Chrome"), read when it has been stable for 0.5 s. Changed
-      before the freeze: development runs 501 and 506 showed the accessibility tree's text
-      stale after edits and missing right after typing, while the screen showed the edit
+      "Q2AP:" + encodeURIComponent(value) + " - Google Chrome", percent-decoded as UTF-8),
+      read when it has been stable for 0.5 s. Changed before the freeze: development runs
+      501 and 506 showed the accessibility tree's text stale after edits and missing right
+      after typing, while the screen showed the edit; run 515 showed that a JSON title loses
+      runs of spaces (document.title collapses whitespace), so the value is percent-encoded
     finish_keys: []
     entries: all
   vscode:

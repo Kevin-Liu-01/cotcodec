@@ -47,6 +47,7 @@ HF_URL_RE = re.compile(
 )
 LICENSE_RE = re.compile(r"^[A-Za-z0-9][A-Za-z0-9.+-]{0,63}$")
 SEED_FLAG_RE = re.compile(r"^--[a-z][a-z0-9-]{0,31}$")
+MUTANT_RE = re.compile(r"^M[0-9]{2}-[a-z0-9-]{3,60}$")
 
 PURPOSES = ("infrastructure-validation", "reference-capture", "development", "acceptance")
 NETWORKS = ("none-netns", "bridge-unpublished")
@@ -631,9 +632,14 @@ def _validate_session_workload(
         _match(workload["plan_sha256"], SHA_RE, "workload.plan_sha256")
     else:
         extra = {"layer", "cells", "reps", "settings", "session_trials"}
+        optional: set[str] = {"mutant"}
         if kind == "canary-development":
             extra = {"apps", "entries", "reps", "session_trials", "measure_targets"}
-        _require_keys(workload, "workload", common | extra)
+            optional = set()
+        _require_keys(workload, "workload", common | extra, optional)
+        mutant = workload.get("mutant")
+        if mutant is not None and (not isinstance(mutant, str) or not MUTANT_RE.fullmatch(mutant)):
+            raise ManifestError("workload.mutant must be an operator id such as M02-...")
         if purpose != "development":
             raise ManifestError(f"{kind} is a development workload")
         if randomness["contract"] != "seeded" or randomness["seeds"] != [DEVELOPMENT_SEED]:
