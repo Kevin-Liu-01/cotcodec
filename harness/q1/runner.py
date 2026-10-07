@@ -8,6 +8,10 @@
   shared queue; a ``cuda:N`` slot runs its child with
   ``CUDA_VISIBLE_DEVICES=N`` and device ``cuda:0`` inside. Timing items run
   only on the dedicated timing slots, and correctness items never do.
+  Several slots may name the same device; an item marked ``exclusive`` (a
+  problem whose inputs alone fill much of the GPU) then waits until the
+  device is empty and runs alone (``DeviceShare``), so concurrency can never
+  turn a neighbour's memory use into a candidate's out-of-memory rejection.
 - **Watchdog.** Phases ``compile`` (from spawn), ``correctness`` and
   ``timing`` have their own limits (default 120 s, 180 s, 300 s). The child
   reports phase changes on a pipe; phases only move forward. On expiry the
@@ -29,6 +33,10 @@
 - **Journal.** Rows are appended to the append-only journal
   (``journal.py``); resume skips finished items and reruns the rest with the
   next attempt number.
+- **Time boxes.** ``soft_deadline`` stops slots from taking new items;
+  ``hard_deadline`` kills running children (not journaled, like a signal,
+  but no checkpoint marker is written). Every row records
+  ``item_wall_seconds`` (spawn to verdict) for the cost card.
 - **Signals.** Under the lane's checkpoint contract (docs/operations.md), SIGUSR1
   or SIGTERM stops scheduling and kills running children (their items are not
   journaled and rerun on resume). Once the journal is complete, the runner
@@ -88,6 +96,9 @@ class WorkItem:
     seed: int = 42
     problem_source_path: str | None = None
     options: dict[str, Any] = field(default_factory=dict)
+    #: Run alone on its device (no other item of this runner on the same slot
+    #: device at the same time), e.g. a problem whose inputs fill the GPU.
+    exclusive: bool = False
 
     @property
     def key(self) -> str:
@@ -111,6 +122,52 @@ class RunnerConfig:
     workdir: Path | None = None
     checkpoint_marker: Path | None = None
     progress_path: Path | None = None
+    #: ``time.monotonic()`` after which slots take no new item (a time box;
+    #: unstarted items stay queued and are counted in ``left_in_queue``).
+    soft_deadline: float | None = None
+    #: ``time.monotonic()`` after which running children are killed; their
+    #: items are not journaled (as on a signal) and are counted as cut.
+    hard_deadline: float | None = None
+
+
+class DeviceShare:
+    """Readers-writer admission per device: shared items run together up to the
+    slot count; an exclusive item waits until the device is empty and blocks new
+    items until it finishes (writer preference, so it cannot starve)."""
+
+    def __init__(self) -> None:
+        self._cond = threading.Condition()
+        self._running = 0
+        self._exclusive = False
+        self._waiting_exclusive = 0
+
+    def acquire(self, exclusive: bool, stopped: threading.Event) -> bool:
+        with self._cond:
+            if exclusive:
+                self._waiting_exclusive += 1
+                try:
+                    while self._running or self._exclusive:
+                        if stopped.is_set():
+                            return False
+                        self._cond.wait(0.5)
+                finally:
+                    self._waiting_exclusive -= 1
+                self._exclusive = True
+            else:
+                while self._exclusive or self._waiting_exclusive:
+                    if stopped.is_set():
+                        return False
+                    self._cond.wait(0.5)
+                self._running += 1
+            return True
+
+    def release(self, exclusive: bool) -> None:
+        with self._cond:
+            if exclusive:
+                self._exclusive = False
+            else:
+                self._running -= 1
+            self._cond.notify_all()
 
 
 def _set_pdeathsig() -> None:
@@ -133,7 +190,20 @@ class Runner:
         self.retired_slots: list[str] = []
         self.stopped = threading.Event()
         self.trigger: str | None = None
+        self.expired = False
         self._children: set[subprocess.Popen] = set()
+        self._shares: dict[str, DeviceShare] = {}
+
+    def expire(self) -> None:
+        """Hard time box: stop scheduling and kill children, without a signal trigger
+        (no checkpoint marker is written for a time box)."""
+        self.expired = True
+        self.stopped.set()
+        with self._lock:
+            children = list(self._children)
+        for child in children:
+            with contextlib.suppress(ProcessLookupError, PermissionError):
+                os.killpg(child.pid, signal.SIGKILL)
 
     def stop(self, trigger: str = "SIGUSR1") -> None:
         """Stop scheduling and kill running children; their items rerun on resume."""
@@ -205,6 +275,12 @@ class Runner:
             raise ValueError("timing items need at least one timing slot")
         for thread in threads:
             thread.start()
+        if self.config.hard_deadline is not None:
+            while any(thread.is_alive() for thread in threads):
+                if time.monotonic() >= self.config.hard_deadline:
+                    self.expire()
+                    break
+                time.sleep(0.5)
         for thread in threads:
             thread.join()
         return {
@@ -212,15 +288,33 @@ class Runner:
             "retired_slots": self.retired_slots,
             "run_id": self.config.run_id,
             "left_in_queue": correctness.qsize() + timing.qsize(),
+            "time_boxed": self.expired
+            or (
+                self.config.soft_deadline is not None
+                and time.monotonic() >= self.config.soft_deadline
+                and correctness.qsize() + timing.qsize() > 0
+            ),
         }
 
     def _slot_loop(self, slot: str, work: queue.Queue) -> None:
         while not self.stopped.is_set():
+            if (
+                self.config.soft_deadline is not None
+                and time.monotonic() >= self.config.soft_deadline
+            ):
+                return
             try:
                 item, attempt = work.get_nowait()
             except queue.Empty:
                 return
-            rows, healthy = self.execute(item, attempt, slot)
+            with self._lock:
+                share = self._shares.setdefault(slot, DeviceShare())
+            if not share.acquire(item.exclusive, self.stopped):
+                return  # stopped while waiting; the item reruns on resume
+            try:
+                rows, healthy = self.execute(item, attempt, slot)
+            finally:
+                share.release(item.exclusive)
             if self.stopped.is_set():
                 return  # an interrupted item is not journaled; it reruns on resume
             infra = is_infra_failure(rows)
@@ -276,6 +370,7 @@ class Runner:
         env = self._env(slot)
         env["Q1_PHASE_FD"] = str(write_fd)
         start = time.monotonic()
+        started_at = time.time()
         log_path = workdir / "worker.log"
         with log_path.open("wb") as log:
             process = subprocess.Popen(
@@ -338,6 +433,12 @@ class Runner:
         for row in rows:
             row["details"]["item_key"] = item.key
             row["details"].setdefault("slot", slot)
+            # Cost accounting (preregistration section 7.1): the slot is held from
+            # worker spawn to verdict, compile and process start-up included.
+            row["details"]["item_wall_seconds"] = round(wall, 3)
+            row["details"]["item_started_at"] = round(started_at, 3)
+            row["details"]["item_ended_at"] = round(started_at + wall, 3)
+            row["details"]["item_exclusive"] = item.exclusive
         rows[-1]["details"]["item_final"] = True
         return [validate_verdict_row(row) for row in rows], healthy
 

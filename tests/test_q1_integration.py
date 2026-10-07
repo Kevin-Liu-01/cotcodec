@@ -236,6 +236,8 @@ Q1_MANIFESTS = (
     "experiments/manifests/q1-core/q1-gate-gpu-smoke.yaml",
     "experiments/manifests/q1-core/q1-stage0-pilot.yaml",
     "experiments/manifests/q1-core/q1-audit-hole-replay.yaml",
+    "experiments/manifests/q1-core/q1-pilot-smoke.template.yaml",
+    "experiments/manifests/q1-core/q1-pilot-cost.template.yaml",
 )
 
 
@@ -244,7 +246,15 @@ def _fill(value, key: str = ""):
         return {k: _fill(v, k) for k, v in value.items()}
     if isinstance(value, list):
         return [_fill(v, key) for v in value]
+    if value == "FILL-study-artifact-sha256":
+        return "d" * 64
+    if value == "FILL-study-artifact-size":
+        return 1024
     if isinstance(value, str) and value.startswith("FILL-"):
+        if key in {"git_sha", "revision"}:
+            return "a" * 40
+        if key == "host_path":
+            return "/home/kevin/cotcodec-runs/stage0/q1-gates/pilot/" + value.removeprefix("FILL-")
         if key == "image_id":
             return "sha256:" + "c" * 64
         if key == "git_sha":
