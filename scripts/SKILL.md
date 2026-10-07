@@ -23,6 +23,8 @@ provenance.
   `research_direction_doctor.py` fail closed on contract drift.
 - `run_translation_supervised_indexer_doctor.py` is Q3's CPU doctor;
   `fla_throughput_doctor.py` measures training throughput on the node.
+- `run_holo3_rerun_audit_doctor.py` is Q2's Holo3 rerun audit; its v2 stages
+  refuse to run until `q2-holo3-rerun-audit-v2` is frozen in the ledger.
 - `create_source_archive.py`, `verify_compute_provenance.py` and
   `verify_publication_attestation.py` bind source, image and claims.
 
