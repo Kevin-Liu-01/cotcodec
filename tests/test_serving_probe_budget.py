@@ -4,6 +4,7 @@ import copy
 import math
 from pathlib import Path
 
+import numpy as np
 import pytest
 
 from harness.serving_probe import budget as rules
@@ -420,3 +421,88 @@ def test_relative_helpers() -> None:
     with pytest.raises(rules.BudgetError):
         rules.relative_delta(1.0, 0.0)
     assert math.isclose(rules.relative_delta(1.05, 1.0), 0.05)
+
+
+def test_a11y_penalty_is_the_larger_of_the_last_two_step_means() -> None:
+    # Section 8: the larger of r2's last two step means minus the larger of r1's,
+    # floored at 0; a mean of the last two would give 1.5 s here, not 1.0 s.
+    points = _job_a()
+    points["r1"] = _replay("r1", {1: 1.0, 2: 1.0, 3: 1.0, 4: 1.0, 5: 3.0, 6: 4.0})
+    points["r2"] = _replay("r2", {1: 1.0, 2: 1.0, 3: 1.0, 4: 1.0, 5: 5.0, 6: 5.0})
+    profiles = rules.build_profiles(points, **PROFILE_ARGS)
+    think = profiles["h2-thinking-screenshot"].additive_s
+    assert profiles["h2-thinking-a11y"].additive_s - think == pytest.approx(1.0)
+    points["r2"] = _replay("r2", {1: 1.0, 2: 1.0, 3: 1.0, 4: 1.0, 5: 3.5, 6: 3.9})
+    profiles = rules.build_profiles(points, **PROFILE_ARGS)
+    assert profiles["h2-thinking-a11y"].additive_s == pytest.approx(think)  # floored at 0
+    # Fallback: r1's steady latency (the larger of its last two step means, 4.0 s)
+    # times 6,144 over r1's modelled prompt at its last step (13,026), times 1.5.
+    points["r2"]["status"] = "invalid"
+    profiles = rules.build_profiles(points, **PROFILE_ARGS)
+    assert profiles["h1-a11y"].additive_s == pytest.approx(4.0 * 6144 / 13026 * 1.5)
+
+
+def _x1_draw(errors: np.ndarray, d_throughput: float, d_latency: float) -> dict:
+    a1a, a1b, a1c, x1a1, r1, x1r1 = (float(value) for value in errors)
+
+    def opened(rate: float) -> dict:
+        return {"status": "valid", "result": {"request_throughput": rate}}
+
+    def replay(latency: float) -> dict:
+        return {"status": "valid", "result": {"e2el_ms": {"mean": latency * 1000.0}}}
+
+    return {
+        "a1a": opened(a1a),
+        "a1b": opened(a1b),
+        "a1c": opened(a1c),
+        "x1-a1": opened(x1a1 * (1 + d_throughput)),
+        "r1": replay(r1),
+        "x1-r1": replay(x1r1 * (1 + d_latency)),
+    }
+
+
+def test_x1_operating_characteristics_match_the_preregistration() -> None:
+    """Section 6's X1 figures, by Monte Carlo through budget.evaluate_x1 itself.
+
+    Each throughput or mean latency is its true value times 1 + N(0, CV^2).
+    """
+    rng = np.random.default_rng(20261007)
+    draws = 3000
+
+    def p_pass(cv: float, d_throughput: float, d_latency: float) -> float:
+        errors = 1 + rng.normal(0.0, cv, size=(draws, 6))
+        verdicts = [
+            rules.evaluate_x1(_x1_draw(row, d_throughput, d_latency), max_relative_delta=0.05)
+            for row in errors
+        ]
+        return sum(verdict["outcome"] == "pass" for verdict in verdicts) / draws
+
+    stated_equal = {0.01: 0.998, 0.02: 0.71, 0.03: 0.33, 0.04: 0.15}
+    stated_one_metric = {0.01: 0.02, 0.02: 0.12, 0.03: 0.11, 0.04: 0.07}
+    for cv, stated in stated_equal.items():
+        assert p_pass(cv, 0.0, 0.0) == pytest.approx(stated, abs=0.03)
+        one_metric = max(
+            p_pass(cv, d_throughput, d_latency)
+            for d_throughput, d_latency in ((-0.08, 0), (0.08, 0), (0, 0.08), (0, -0.08))
+        )
+        assert one_metric == pytest.approx(stated_one_metric[cv], abs=0.03)
+        assert p_pass(cv, -0.08, 0.08) <= 0.03 + 0.015
+    # The former claim ("at most 0.03 with a true 8% difference") fails for one metric.
+    assert p_pass(0.02, 0.0, 0.08) > 0.06
+
+
+def test_x1_reports_the_replay_prompt_lengths_next_to_the_deltas() -> None:
+    # x1-r1's history carries dummy-weight outputs, which may re-tokenise to other
+    # lengths; the prompt sizes of both arms are reported with the X1 deltas.
+    points = _job_a()
+    for name, tokens in (("r1", 2400.0), ("x1-r1", 2460.0)):
+        points[name]["result"].update({"prompt_tokens": tokens * 240, "completed": 240})
+        for step, entry in points[name]["result"]["per_step"].items():
+            entry["mean_prompt_tokens"] = tokens + int(step)
+    verdict = rules.evaluate_x1(points, max_relative_delta=0.05)
+    assert verdict["outcome"] == "pass"
+    prompts = verdict["replay_prompt_tokens"]
+    assert prompts["r1_per_request"] == pytest.approx(2400.0)
+    assert prompts["x1_r1_per_request"] == pytest.approx(2460.0)
+    assert prompts["relative_delta"] == pytest.approx(0.025)
+    assert prompts["per_step"]["6"] == [2406.0, 2466.0]

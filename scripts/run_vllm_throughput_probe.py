@@ -107,6 +107,11 @@ ACCEPTED_JOB_STATUSES = {"complete", "complete-with-cuts"}
 MEMORY_RELEASED_MIB = 1024.0
 #: Gates recorded once per phase (the others are recorded once per job).
 PHASE_GATES = ("G0.5", "G0.6", "G0.7", "G0.8")
+#: Job-level gates an accepted job must have recorded as passed.
+JOB_GATES = ("G0.0", "G0.1", "G0.2", "G0.3", "G0.4")
+#: G0.2 demands exactly one visible H100, whatever GPU count the lane's environment
+#: carries (the probe is TP=1 everywhere; preregistration section 4).
+EXPECTED_GPUS = 1
 #: The code whose digest the preregistration names: every module of the probe
 #: package and this driver. Any change to them after freezing is a new experiment.
 PROBE_CODE_GLOBS = ("harness/serving_probe/*.py", "scripts/run_vllm_throughput_probe.py")
@@ -1017,7 +1022,7 @@ class ProbeRunner:
             "--max-error",
             str(gates["matmul_max_normalized_error"]),
             "--expected-gpus",
-            os.environ.get("COTCODEC_EXPECTED_GPUS", "1"),
+            str(EXPECTED_GPUS),
             "--expected-vllm-version",
             str(vllm["version"]),
             "--expected-vllm-commit",
@@ -1876,7 +1881,9 @@ class ProbeRunner:
     def _offline_point(
         self, point: PointSpec, engine: Any, allowed: np.ndarray, deadline: float
     ) -> dict[str, Any]:
+        prep_start = time.perf_counter()
         prompts = build_offline_prompts(point, allowed)
+        prep_s = time.perf_counter() - prep_start
         n = int(point["n"])
         output_tokens = int(point["output_tokens"])
         input_tokens = int(point["input_tokens"])
@@ -1941,6 +1948,7 @@ class ProbeRunner:
         )
         ran_to_end = stop_reason is None and completions == planned
         out: dict[str, Any] = {
+            "prep_s": prep_s,
             "cache_reset": reset,
             "result": result,
             "counters": deltas,
@@ -1962,11 +1970,16 @@ class ProbeRunner:
             if self.sampler is not None:
                 self.sampler.stop()
         points: dict[str, dict[str, Any]] = {}
+        point_sha256: dict[str, str] = {}
         if self.points_dir.is_dir():
             for path in sorted(self.points_dir.glob("*.json")):
                 record = json.loads(path.read_text(encoding="utf-8"))
                 points[record["point_id"]] = record
+                point_sha256[path.stem] = sha256_file(path)
         self.summary["points"] = {name: record.get("status") for name, record in points.items()}
+        # The projection admits this job's points only if the files on disk are
+        # exactly these (a later, unfinished resubmission cannot slip points in).
+        self.summary["point_sha256"] = point_sha256
         validity = self.config.section("validity")
         limit = float(validity["unstable_relative_range"])
         if self.job.job_id == "a":
@@ -2009,16 +2022,22 @@ class ProbeRunner:
 def job_acceptance(summary: Mapping[str, Any]) -> dict[str, Any]:
     """Whether a finished job's points may enter a budget (preregistration section 5).
 
-    Accepted: status complete or complete-with-cuts, every job-level gate (G0.0 to
-    G0.4) passed, and every phase-level gate passed except G0.5 when the eager
-    fallback started the engine (the job is then labelled eager). A phase whose
+    Accepted: status complete or complete-with-cuts and every job-level gate (G0.0
+    to G0.4) recorded as passed; a gate that was never recorded counts as failed.
+    G0.5 not passed with the eager fallback labels the job eager. A phase whose
     gate failed has all its points not-run; it is listed, and only blocks
     acceptance when it is the primary phase (which ends the job as a pre-result).
+    The projection additionally requires exit code 0 and the recorded point files
+    (:func:`job_admission`).
     """
     gates = summary.get("gates", {})
-    job_gates = {gate: verdict for gate, verdict in gates.items() if gate not in PHASE_GATES}
     job_gate_failures = sorted(
-        gate for gate, verdict in job_gates.items() if not verdict.get("pass")
+        {gate for gate in JOB_GATES if not (gates.get(gate) or {}).get("pass")}
+        | {
+            gate
+            for gate, verdict in gates.items()
+            if gate not in PHASE_GATES and not verdict.get("pass")
+        }
     )
     phase_failures: dict[str, list[str]] = {}
     eager_phases = []
@@ -2222,20 +2241,85 @@ def load_job_points(directory: Path, config: ProbeConfig, job_id: str) -> dict[s
     return points
 
 
-def job_summary(directory: Path, config: ProbeConfig, job_id: str) -> dict[str, Any]:
-    """The job's status and acceptance, from summary.json when the driver finished."""
+def job_admission(directory: Path, config: ProbeConfig, job_id: str) -> dict[str, Any]:
+    """Whether a job's points may enter a budget (preregistration sections 5 and 8).
+
+    Admitted (``accepted``) only when summary.json exists and belongs to this
+    experiment, contract and job; records ``acceptance.accepted: true``; the
+    acceptance recomputed from its own status and gates agrees; the driver's exit
+    code is 0; and it lists the SHA-256 of exactly the point files on disk. A job
+    that fails any of these is reported with its reasons, and none of its points
+    enters a budget.
+    """
     path = directory / "summary.json"
     if not path.is_file():
-        return {"summary": None, "note": "no summary.json (the driver did not finish)"}
+        return {
+            "summary": None,
+            "accepted": False,
+            "reasons": ["no summary.json (the driver did not finish)"],
+        }
     summary = json.loads(path.read_text(encoding="utf-8"))
-    if summary.get("config_sha256") != config.sha256 or summary.get("job") != job_id:
-        raise ProjectionError(f"{path} belongs to another contract or job")
+    if (
+        summary.get("experiment_id") != config.experiment_id
+        or summary.get("config_sha256") != config.sha256
+        or summary.get("job") != job_id
+    ):
+        raise ProjectionError(f"{path} belongs to another experiment, contract or job")
+    reasons: list[str] = []
+    recorded = summary.get("acceptance") or {}
+    if recorded.get("accepted") is not True:
+        reasons.append(
+            f"summary records acceptance.accepted {recorded.get('accepted')!r} "
+            f"(status {summary.get('status')!r})"
+        )
+    recomputed = job_acceptance(summary)
+    if not recomputed["accepted"]:
+        reasons.append(
+            f"acceptance recomputed from the summary is false (status "
+            f"{summary.get('status')!r}, job gate failures {recomputed['job_gate_failures']})"
+        )
+    if summary.get("exit_code") != EXIT_OK:
+        reasons.append(f"driver exit code {summary.get('exit_code')!r}")
+    on_disk = {p.stem: sha256_file(p) for p in sorted((directory / "points").glob("*.json"))}
+    listed = summary.get("point_sha256")
+    if not isinstance(listed, Mapping):
+        reasons.append("summary lists no point SHA-256s")
+    elif dict(listed) != on_disk:
+        changed = sorted(
+            name for name in set(listed) | set(on_disk) if listed.get(name) != on_disk.get(name)
+        )
+        reasons.append(f"point files differ from those the summary lists: {changed}")
     return {
         "summary_sha256": sha256_file(path),
         "status": summary.get("status"),
-        "acceptance": summary.get("acceptance"),
+        "exit_code": summary.get("exit_code"),
+        "acceptance": recorded,
         "eager": summary.get("eager"),
         "image_variant": summary.get("image_variant"),
+        "accepted": not reasons,
+        "reasons": reasons,
+    }
+
+
+def _x1(config: ProbeConfig, points: Mapping[str, Mapping[str, Any]]) -> dict[str, Any]:
+    return budget_rules.evaluate_x1(
+        points,
+        max_relative_delta=float(config.section("dummy_admissibility")["max_relative_delta"]),
+    )
+
+
+def job_c_gate(config: ProbeConfig, job_a: Path) -> dict[str, Any]:
+    """Job C is submitted only after an accepted job A whose control X1 passed.
+
+    The manifest renderer calls this before it renders job C (design decision 33).
+    """
+    points = load_job_points(job_a, config, "a")
+    admission = job_admission(job_a, config, "a")
+    x1 = _x1(config, points if admission["accepted"] else {})
+    return {
+        "job_a": admission,
+        "x1": x1,
+        "submit": bool(admission["accepted"] and x1["outcome"] == "pass"),
     }
 
 
@@ -2251,7 +2335,10 @@ def project(
 
     Refuses unless the frozen preregistration names this contract and this probe
     code (the G0.0 check), and refuses point files from another contract, job or
-    experiment. The output records the ledger row, the code digest and git HEAD.
+    experiment. Only an admitted job's points enter a budget (:func:`job_admission`):
+    job A not admitted gives X1 not-run and no Q2 budget, job B not admitted (or not
+    given) no Q1 budget, and job C not admitted is treated as not run. The output
+    records the ledger row, the code digest and git HEAD.
     """
     try:
         prereg = (prereg_check or verify_preregistration)(config)
@@ -2259,45 +2346,74 @@ def project(
         raise ProjectionError(f"projection refused: {exc}") from exc
     budget = config.section("budget")
     limit = float(config.section("validity")["unstable_relative_range"])
-    points_a = load_job_points(job_a, config, "a")
-    points_b = load_job_points(job_b, config, "b") if job_b is not None else None
-    points_c = load_job_points(job_c, config, "c") if job_c is not None else None
-    x1 = budget_rules.evaluate_x1(
-        points_a,
-        max_relative_delta=float(config.section("dummy_admissibility")["max_relative_delta"]),
-    )
+    directories = {
+        name: directory
+        for name, directory in (("a", job_a), ("b", job_b), ("c", job_c))
+        if directory is not None
+    }
+    # Foreign point files are refused whether or not the job is admitted.
+    loaded = {
+        name: load_job_points(directory, config, name) for name, directory in directories.items()
+    }
+    jobs = {name: job_admission(directory, config, name) for name, directory in directories.items()}
+    used = {name: points for name, points in loaded.items() if jobs[name]["accepted"]}
+    inputs: dict[str, str] = {}
+    for name in ("a", "b", "c"):
+        if name not in jobs:
+            inputs[name] = "not supplied"
+        elif jobs[name]["accepted"]:
+            inputs[name] = "used"
+        else:
+            inputs[name] = "not accepted, points reported only: " + "; ".join(jobs[name]["reasons"])
+    if "c" in jobs and "c" not in used:
+        inputs["c"] += " (treated as not run: the active-parameter rule applies)"
+    points_a = used.get("a")
+    x1 = _x1(config, points_a or {})
+    if points_a is None:
+        x1["reason"] = "job a is not accepted; its points enter no budget"
     out: dict[str, Any] = {
         "experiment_id": config.experiment_id,
         "config_sha256": config.sha256,
         "preregistration": prereg,
         "code": {**probe_code_digest(), "git": git_revision()},
-        "jobs": {
-            name: job_summary(directory, config, name)
-            for name, directory in (("a", job_a), ("b", job_b), ("c", job_c))
-            if directory is not None
-        },
+        "jobs": jobs,
+        "budget_inputs": inputs,
         "x1": x1,
-        "a1_stability": budget_rules.stability(points_a, ("a1a", "a1b", "a1c"), limit),
+        "a1_stability": (
+            None
+            if points_a is None
+            else budget_rules.stability(points_a, ("a1a", "a1b", "a1c"), limit)
+        ),
     }
     max_model_len = max(
         int(config.engines[phase.engine.engine_id].flags["max_model_len"])
         for phase in config.job("a").phases
     )
-    try:
-        out["q2"] = budget_rules.project_q2(
-            budget,
-            job_a=points_a,
-            job_c=points_c,
-            x1_outcome=x1["outcome"],
-            unstable_limit=limit,
-            max_model_len=max_model_len,
-        )
-    except budget_rules.BudgetError as exc:
-        out["q2"] = {"decision": "incomplete-re-probe", "reason": str(exc)}
-    if points_b is not None:
-        out["b1_stability"] = budget_rules.stability(
+    if points_a is None:
+        out["q2"] = {"decision": "incomplete-re-probe", "reason": f"job a is {inputs['a']}"}
+    else:
+        try:
+            out["q2"] = budget_rules.project_q2(
+                budget,
+                job_a=points_a,
+                job_c=used.get("c"),
+                x1_outcome=x1["outcome"],
+                unstable_limit=limit,
+                max_model_len=max_model_len,
+            )
+        except budget_rules.BudgetError as exc:
+            out["q2"] = {"decision": "incomplete-re-probe", "reason": str(exc)}
+    points_b = used.get("b")
+    out["b1_stability"] = (
+        None
+        if points_b is None
+        else budget_rules.stability(
             points_b, ("b1a", "b1b", "b1c"), limit, metric="completions_per_s"
         )
+    )
+    if points_b is None:
+        out["q1"] = {"decision": "incomplete-re-probe", "reason": f"job b is {inputs['b']}"}
+    else:
         try:
             out["q1"] = budget_rules.project_q1(
                 budget, job_b=points_b, x1_outcome=x1["outcome"], unstable_limit=limit

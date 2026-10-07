@@ -6,6 +6,7 @@ from pathlib import Path
 
 import pytest
 import yaml
+from serving_probe_fakes import write_job_dir, x1_passing_job_a_points
 
 from harness.serving_probe.config import load_config
 from scripts import render_serving_probe_manifest as renderer
@@ -51,6 +52,11 @@ def _template(job: str) -> dict:
     return yaml.safe_load((TEMPLATES / f"{job}.template.yaml").read_text(encoding="utf-8"))
 
 
+def _job_a_output(tmp_path: Path, **kwargs) -> Path:
+    """A finished job A directory whose control X1 passed (the gate job C needs)."""
+    return write_job_dir(tmp_path / "job-a", CONFIG, "a", x1_passing_job_a_points(), **kwargs)
+
+
 def test_templates_are_rejected_by_the_lane_until_rendered() -> None:
     for job in ("a", "b", "c"):
         with pytest.raises(ValueError, match="image_id"):
@@ -64,7 +70,8 @@ def test_rendered_manifests_pass_the_lane_and_bind_the_contract(tmp_path: Path, 
         renderer.read_metadata_receipt(_metadata_receipt(tmp_path, model))
         for model in CONFIG.job(job).pinned_models()
     )
-    manifest = renderer.render(_template(job), build=build, pins=pins)
+    job_a = _job_a_output(tmp_path) if job == "c" else None
+    manifest = renderer.render(_template(job), build=build, pins=pins, job_a_output=job_a)
     validated = validate_manifest(dict(manifest), verify_claim_files=False)
     contract_job = CONFIG.job(job)
     assert validated["minutes"] == contract_job.allocation_minutes
@@ -145,3 +152,64 @@ def test_render_cli_writes_once(tmp_path: Path, capsys) -> None:
     assert output.read_text().startswith("# Rendered from")
     assert renderer.main(args) == 2
     assert "refusing to overwrite" in capsys.readouterr().err
+
+
+def _job_c_pins(tmp_path: Path) -> dict:
+    return dict(
+        renderer.read_metadata_receipt(_metadata_receipt(tmp_path, model))
+        for model in CONFIG.job("c").pinned_models()
+    )
+
+
+def test_job_c_renders_only_after_an_accepted_job_a_with_an_x1_pass(tmp_path: Path) -> None:
+    # Design decisions 21 and 33: job C is submitted only after control X1 passed.
+    build = renderer.read_build_receipt(_build_receipt(tmp_path))
+    pins = _job_c_pins(tmp_path)
+    with pytest.raises(renderer.RenderError, match="job A"):
+        renderer.render(_template("c"), build=build, pins=pins)
+    interrupted = write_job_dir(
+        tmp_path / "interrupted",
+        CONFIG,
+        "a",
+        x1_passing_job_a_points(),
+        status="interrupted",
+        exit_code=3,
+    )
+    with pytest.raises(renderer.RenderError, match="not accepted"):
+        renderer.render(_template("c"), build=build, pins=pins, job_a_output=interrupted)
+    failing = x1_passing_job_a_points()
+    failing["x1-r1"]["result"]["e2el_ms"]["mean"] *= 1.2
+    failed = write_job_dir(tmp_path / "failed", CONFIG, "a", failing)
+    with pytest.raises(renderer.RenderError, match="X1 fail"):
+        renderer.render(_template("c"), build=build, pins=pins, job_a_output=failed)
+    rendered = renderer.render(
+        _template("c"), build=build, pins=pins, job_a_output=_job_a_output(tmp_path)
+    )
+    assert rendered["command"][rendered["command"].index("--job") + 1] == "c"
+
+
+def test_render_refuses_more_than_one_gpu(tmp_path: Path) -> None:
+    build = renderer.read_build_receipt(_build_receipt(tmp_path))
+    two = _template("a")
+    two["resources"]["gpus"] = 2
+    two["budget"]["max_gpu_hours"] = 2.0
+    with pytest.raises(renderer.RenderError, match="exactly one GPU"):
+        renderer.render(two, build=build, pins={})
+
+
+def test_render_cli_takes_the_job_a_output_for_job_c(tmp_path: Path) -> None:
+    receipts = [
+        arg
+        for model in CONFIG.job("c").pinned_models()
+        for arg in ("--metadata-receipt", str(_metadata_receipt(tmp_path, model)))
+    ]
+    base = [
+        "--template",
+        str(TEMPLATES / "c.template.yaml"),
+        "--build-receipt",
+        str(_build_receipt(tmp_path)),
+        *receipts,
+    ]
+    assert renderer.main([*base, "--output", str(tmp_path / "c-none.yaml")]) == 2
+    job_a = ["--job-a-output", str(_job_a_output(tmp_path))]
+    assert renderer.main([*base, *job_a, "--output", str(tmp_path / "c.yaml")]) == 0

@@ -1,9 +1,8 @@
 # Preregistration: serving-throughput-probe-v1
 
-Status: DRAFT for the program owner's review. Not frozen. Freeze with
-`uv run python scripts/preregister.py freeze serving-throughput-probe-v1 program/preregistrations/serving-throughput-probe-v1.md`
-and commit the ledger row before any job of this experiment is submitted. A
-material change after freezing is a new experiment id.
+Status: frozen in program/preregistrations/ledger.jsonl; see the ledger row for
+the freeze time. A material change to this file, to the contract or to the probe
+code after the freeze is a new experiment id.
 
 ## 1. Identity
 
@@ -19,9 +18,10 @@ material change after freezing is a new experiment id.
 - **Code revision.** Jobs run from the source capsule of a commit X of `main`
   that contains this file's ledger row (X is pushed, then cloned on the host).
   X is recorded in each job's manifest (`git_sha`), provenance verification and
-  the evidence bundle. X may differ from the freeze commit only outside the
-  probe code and the contract: both must be byte-identical to what this file
-  names below, and the driver checks this.
+  the evidence bundle. The overlay image bakes in X's source, so it is built
+  from X, after the freeze. X may differ from the freeze commit only outside
+  the probe code and the contract: both must be byte-identical to what this
+  file names below, and the driver checks this.
 - **Contract.** `experiments/serving/serving-throughput-probe-v1.yaml` holds every
   engine flag, point, seed, gate threshold and budget parameter named below. Its
   SHA-256 is
@@ -31,7 +31,8 @@ material change after freezing is a new experiment id.
   `harness/serving_probe/` (budget rules in `budget.py`). Their digest, the
   SHA-256 of the compact JSON list of [path, file SHA-256] pairs sorted by path
   (`run_vllm_throughput_probe.py digest` prints it), is
-  `e2a08231356cce6e3177c7a6c11c6ab64bf14d6dc7a5052ac92eb1a81ffbada5`.
+  `16bde053544ae46b8dba032f9e63056f5ea258ab45ebea417bcd72fcf3a6b8b7`.
+  The digest covers these files only (design decision 36).
 - **Binding.** Gate G0.0 (in the image) and the `project` step (on the host)
   both verify this file against the ledger and refuse unless its frozen text
   names the contract SHA-256 and the probe code digest they compute from the
@@ -102,17 +103,22 @@ itself has no license and stays out of receipted runs (decision D5).
 
 ## 3. Design decisions
 
-Choices the reviewed plan left to the owner, or where this draft departs from
-it, each with its reason. The owner can overrule any of them before freezing.
+Choices the reviewed plan left to the owner, or where this preregistration
+departs from it, each with its reason. Decision D17 (`program/decisions.md`)
+records the owner's acceptance of design decisions 2 to 27, conditional on job
+acceptance gating budget entry (design decision 32 implements it); D17 also
+amends D8 (design decision 2) and pre-approves the cu130 retry (section 5).
 
 1. **Experiment id** is `serving-throughput-probe-v1` (the item name), not the
    plan's `vllm-throughput-probe-v1`.
-2. **Budget (decision D8).** Jobs A and B are capped by Slurm `--time` at 40 and
-   20 minutes, together 1.0 GPU-h (expected about 0.8). Job C is the optional
-   0.5 GPU-h extension and runs only if X1 passes. The overlay build and the
-   metadata fetch each hold one idle H100 for at most 10 minutes; D8 does not
-   mention them, so they are counted in `gpu_hours_spent` as separate lines
-   (cap 0.33 GPU-h together) rather than inside the 1.0 cap.
+2. **Budget (decisions D8 and D17).** Jobs A and B are capped by Slurm `--time`
+   at 40 and 20 minutes, together exactly 1.0 GPU-h (expected about 0.8); the
+   manifests' `max_gpu_hours` of 0.67 and 0.34 are those allocations rounded up.
+   Job C is the optional 0.5 GPU-h extension and runs only if X1 passes. The
+   overlay build and the metadata fetch each hold one idle H100 for at most 10
+   minutes; D17 amends D8 so that they are accounted separately from the 1.0
+   GPU-h probe cap, as separate lines in `gpu_hours_spent` (cap 0.33 GPU-h
+   together). A cu130 retry has its own cap (section 5).
 3. **One client for every server point.** The plan used `vllm bench serve` for
    the random-mm brackets and a custom client for replays. Here one asyncio
    client sends every server request. Reasons: identical timing and token
@@ -163,7 +169,11 @@ it, each with its reason. The owner can overrule any of them before freezing.
     seed points are valid, and their spread is at most 5%. Fewer valid seeds or
     a larger spread makes X1 "underpowered", treated as not passed. Section 6
     gives the rule's operating characteristics; a false fail only makes the
-    budgets more conservative (×1.5) and skips job C.
+    budgets more conservative (×1.5) and skips job C. At a run-to-run CV of 2%
+    or 3%, X1 passes only 71% or 33% of the time even when dummy and real
+    weights cost the same, so the likely outcome is no job C and ×1.5 on Q1,
+    which moves Q1's effective single-turn cut from 6 to about 4 GPU-h of true
+    cost (section 6). That consequence is conservative and part of the rule.
 13. **Offline sampling uses the engine seed (42), not per-request seeds.**
     Per-request seeds force a slower per-request sampler path. Prompt content is
     seeded per point.
@@ -178,8 +188,8 @@ it, each with its reason. The owner can overrule any of them before freezing.
     reported but not applied: the rendered PNGs are simpler than real desktop
     screenshots, so a faster PNG path must not lower the budget.
 17. **Resume test.** Resume (skip terminal points, refuse a different contract)
-    is tested on CPU with a fake engine; no GPU resume run is planned, because
-    a probe has no training state to restore. The owner may require one.
+    is tested on CPU with a fake engine; no GPU resume run is made, because a
+    probe has no training state to restore (decision D17 requires none).
 18. **Metadata fetch** uses a new script (`fetch-model-metadata-in-docker.sh`)
     instead of a mode switch in `fetch-model-in-docker.sh`, so the existing
     full-weight path is unchanged.
@@ -189,11 +199,14 @@ it, each with its reason. The owner can overrule any of them before freezing.
 20. **Image download.** The reviewed plan asked for Kevin's OK on the 11.02 GB
     cu129 image; decision D1 authorises public research downloads and the image
     is already on the host (image ID above). The 9.04 GB cu130 image is pulled
-    only on the failure path in section 5, recorded like any download.
-21. **Job C gating.** D8 budgets the 0.5 GPU-h extension; this draft makes it
-    conditional on X1 passing, because without X1 its dummy-weight numbers
-    would carry the 1.5 multiplier anyway and add little over the
-    active-parameter rule.
+    only on the failure path in section 5; decision D17 pre-approves that
+    download together with the retry's GPU time, and it is recorded like any
+    download.
+21. **Job C gating.** D8 budgets the 0.5 GPU-h extension; this preregistration
+    makes it conditional on X1 passing, because without X1 its dummy-weight
+    numbers would carry the 1.5 multiplier anyway and add little over the
+    active-parameter rule. The manifest renderer enforces the condition (design
+    decision 33).
 22. **Excluded arms.** The plan's optional prefix-caching-off arm and TP=2 real
     weight run on the cached Qwen3.6-35B-A3B are not part of this experiment;
     each would need its own approval and a new experiment id.
@@ -223,7 +236,8 @@ it, each with its reason. The owner can overrule any of them before freezing.
     `acceptance.accepted: true`: status complete or complete-with-cuts and gates
     G0.0 to G0.4 passed. An eager-fallback job is accepted and labelled eager
     (section 5). A non-primary phase whose gate failed contributes no points
-    (they are not-run) and is listed, without rejecting the job.
+    (they are not-run) and is listed, without rejecting the job. The projection
+    enforces this (design decision 32).
 28. **Checkpoint marker.** The driver follows the lane's signal-checkpoint
     contract (docs/operations.md): `checkpoint.ready` is written only after a
     USR1 or TERM, after progress is saved, as text whose first line is
@@ -242,6 +256,36 @@ it, each with its reason. The owner can overrule any of them before freezing.
     of the same length (6 tokens), and the tool-response tags are the Qwen3.5
     chat template's own. The one OSWorld sentence used is quoted with its
     Apache-2.0 attribution.
+32. **Acceptance gates budget entry (D17's condition).** `project` admits a
+    job's points only if its `summary.json` exists and belongs to this
+    experiment, contract and job; records `acceptance.accepted: true`; agrees
+    with the acceptance recomputed from its own status and gates (a job-level
+    gate that was never recorded counts as failed); records driver exit code 0;
+    and lists the SHA-256 of exactly the point files on disk, which the driver
+    writes into the summary when it finishes. A later resubmission that dies
+    part-way therefore cannot add points under an earlier accepted summary. A
+    job that is not admitted is reported with its reasons, and none of its
+    points enters a budget (section 8 states the consequence for each job).
+33. **Job C gating is enforced.** The manifest renderer
+    (`scripts/render_serving_probe_manifest.py`) renders job C only from job A's
+    output directory (`--job-a-output`), and only when job A is admitted by the
+    rule of design decision 32 and X1 evaluated on its points is "pass". It also
+    refuses any manifest whose GPU count is not 1.
+34. **Exactly one GPU in G0.2.** The CUDA doctor expects one visible H100
+    whatever GPU count the lane's environment carries (the lane sets it from the
+    manifest), so a job given more GPUs fails G0.2 instead of passing with them.
+35. **Replay dispersion is recorded.** Every latency, TTFT, TPOT and ITL summary
+    records the sample standard deviation (n − 1) and the standard error of its
+    mean (SD / √n) next to the mean and percentiles, so section 6's standard
+    error of each replay step mean is in every replay point file. Raw
+    per-request latencies are not stored.
+36. **Digest scope.** The probe-code digest covers the probe package and its
+    driver only. Shared lane code that G0.0 and G0.1 call
+    (`scripts/preregister.py`, `scripts/fetch_open_model.py`),
+    `models/registry.yaml` and the manifest renderer are outside it, so an
+    unrelated change merged to `main` between the freeze and a job does not stop
+    the experiment. They are fixed by the commit X recorded in every manifest,
+    and the projection records git HEAD.
 
 ## 4. Step-0 gates
 
@@ -255,10 +299,11 @@ and no number from that job enters a budget.
   doctor printed `STATUS PASS`, and its bound-model verification reports the
   contract's model id, revision, artifact root and mode `full`. For jobs B and C,
   every pinned metadata receipt verifies as described in design decision 9.
-- **G0.2** `cuInit` returns 0; exactly one H100 is visible; the image's vLLM
-  version is 0.31.0 and `VLLM_BUILD_COMMIT` equals the commit above. Recorded:
-  `cuDriverGetVersion`, the realpath of the mapped `libcuda`, whether it is the
-  image's forward-compatibility library, and `ldconfig -p` lines for libcuda.
+- **G0.2** `cuInit` returns 0; exactly one H100 is visible (design decision
+  34); the image's vLLM version is 0.31.0 and `VLLM_BUILD_COMMIT` equals the
+  commit above. Recorded: `cuDriverGetVersion`, the realpath of the mapped
+  `libcuda`, whether it is the image's forward-compatibility library, and
+  `ldconfig -p` lines for libcuda.
 - **G0.3** The G0.3 metric (design decision 11) is below 0.01 and the product is
   finite.
 - **G0.4** A Triton kernel compiles into the cache under the job's output
@@ -274,6 +319,8 @@ and no number from that job enters a budget.
   plus text minus the same text alone is within 2,040 ± 2% (1,999.2 to 2,080.8);
   the exact value is recorded. The smoke point must also pass section 7's
   validity checks other than the reservation (cache resets, device samples).
+  An invalid smoke point gets section 7's single rerun, so G0.6 and G0.7 have
+  at most two attempts per phase; both attempts are kept.
 - **G0.7** For the smoke, and for every later point as a validity condition: the
   `/metrics` (or `LLM.get_metrics`) generation-token delta equals the client's
   output-token total exactly, and the prompt-token delta is within 1% of the
@@ -292,24 +339,38 @@ and no number from that job enters a budget.
   starts eager. Its points are admissible: the job is accepted with G0.5
   recorded as not passed and `eager_fallback: true` (design decision 27).
   Stage 1 must then also run eager, or wait for the R580 driver.
-- **Acceptance of a job.** Slurm `JobState=COMPLETED` with `ExitCode=0:0`, and
-  `summary.json` showing `acceptance.accepted: true` (status complete or
-  complete-with-cuts, G0.0 to G0.4 passed). Nothing else is required, and
-  nothing less is accepted. Points of a job that is not accepted (pre-result,
-  crashed, interrupted, Slurm TIMEOUT) are kept and reported but enter no
-  budget; the projections that need them are "incomplete: re-probe", and any
-  resubmission needs the owner's approval of the extra GPU time.
-- **Any other gate fails on the cu129 image:** one retry of the job with the
-  vLLM v0.31.0 default (cu130) image, linux/amd64 manifest
+- **Acceptance of a job.** Slurm `JobState=COMPLETED` with `ExitCode=0:0`
+  (checked with `sacct` and the lane's `termination.env` when the outputs are
+  collected), and `summary.json` showing `acceptance.accepted: true` (status
+  complete or complete-with-cuts, G0.0 to G0.4 passed). Nothing else is
+  required, and nothing less is accepted. The projection enforces the summary
+  side (design decision 32): it also requires driver exit code 0 and the
+  SHA-256 of exactly the point files on disk. Points of a job that is not
+  accepted (pre-result, crashed, interrupted, Slurm TIMEOUT, no summary) are
+  kept and reported but enter no budget; the projections that need them are
+  "incomplete: re-probe" (section 8), and any resubmission needs the owner's
+  approval of the extra GPU time.
+- **A gate from G0.2 to G0.8 fails on the cu129 image** (G0.5 only when the
+  eager start fails too): one retry with the vLLM v0.31.0 default (cu130)
+  image, linux/amd64 manifest
   sha256:a4a4c0437bf7240089da5f08aa370c4aee17ae5290f7a3b468825ee26c4c3a6b
   (image ID sha256:c76d0e2225a4b1cb1e2109ace39639f55e714abd1a7a427acc8b0bbd7f6a83b3,
-  9,035,211,086 bytes compressed, a download that needs its own approval),
+  9,035,211,086 bytes compressed),
   through the same overlay builder with `COTCODEC_VLLM_VARIANT=cu130`, which sets
-  `VLLM_ENABLE_CUDA_COMPATIBILITY=1`.
+  `VLLM_ENABLE_CUDA_COMPATIBILITY=1`. Decision D17 pre-approves this retry, its
+  download included, with its own cap of 1.0 GPU-h on top of the probe cap:
+  the overlay rebuild and one rerun of the job whose gate failed. A job that
+  has not run yet when the retry starts runs on cu130 under the probe cap. Each
+  job's summary records its image variant. A G0.0 or G0.1 failure (the
+  preregistration or the lane's provenance) is not a runtime failure: its job
+  is resubmitted on the same image once the cause is fixed, which, like any
+  resubmission, needs the owner's approval of the extra GPU time.
 - **That fails too:** the probe is classified "pre-result: vLLM runtime blocked on
   R570", no further GPU time is spent, and the R580 upgrade is escalated.
 - A gate failure in job A's dummy-weight phase or in one of job C's phases does
-  not stop the job; that phase's points are recorded as not run.
+  not stop the job; that phase's points are recorded as not run. X1 is then
+  not-run; a job C rung whose phase did not run keeps the active-parameter rule
+  (section 8).
 - No vLLM v0.25.1 number from the earlier program is used.
 
 ## 6. Points, seeds and sample sizes
@@ -365,8 +426,8 @@ VM time `t_env` 2.5 s between an episode's steps, starts staggered over 2.5 s.
 | b1c | b1a | 8 x 8 | 44 | 3 |
 | b3 | turn 2: I=4,096, O=4,096 (lowest priority) | 8 x 8 | 47 | 4 |
 
-I=1,152 is the scout's measured median of Dr. Kernel's first-turn prompt on
-KernelBench levels 1 and 2 (p50 1,092 and 1,140 tokens).
+I=1,152 (9 × 128) rounds up the scout's measured medians of Dr. Kernel's
+first-turn prompt on KernelBench levels 1 and 2 (p50 1,092 and 1,140 tokens).
 
 **Job C** (optional; same engine settings as job A, dummy weights, TP=1): phase
 rung-27b runs c27-smoke, c27-a1 (a1a shape, seed 42, cap 6) and c27-r1 (r1,
@@ -379,26 +440,49 @@ seed 101, cap 9); phase rung-35b (7 minutes reserved) runs c35-smoke, c35-a1
   the rule as coded (200,000 draws; each throughput or mean latency is the true
   value times 1 + N(0, CV²), independently): with dummy weights exactly like
   real ones, P(pass) is 0.998, 0.71, 0.33 and 0.15 at a run-to-run CV of 1%, 2%,
-  3% and 4%; with a true 8% difference, P(pass) is at most 0.03 at any of these
-  CVs. The run-to-run CV on this node is unknown before the probe; the A1 seed
-  spread reports it. A non-pass is conservative (×1.5 on dummy-weight numbers,
-  no job C), never a loss of validity. X1 is measured on the hybrid 9B VLM in
-  server mode and also governs the dense Qwen3-8B offline numbers of job B: it
-  is the probe's only check of dummy weights, and applying a non-pass to job B
-  can only raise the Q1 budget.
+  3% and 4%. With a true 8% difference in one of the two metrics (throughput
+  or latency, either sign), P(pass) is at most 0.02, 0.12, 0.11 and 0.07 at
+  these CVs; with 8% in both, at most 0.03. With a true 5% difference in one
+  metric, P(pass) is about 0.50 at a CV of 1%. The run-to-run CV on this node
+  is unknown before the probe; the A1 seed spread reports it. A non-pass is
+  conservative (×1.5 on dummy-weight numbers, no job C), never a loss of
+  validity; at a CV of 2% to 3% it is the likely outcome even with identical
+  costs (design decision 12). X1 is measured on the hybrid 9B VLM in server
+  mode and also governs the dense Qwen3-8B offline numbers of job B: it is the
+  probe's only check of dummy weights, and applying a non-pass to job B can
+  only raise the Q1 budget.
 - Per-step replay latency: V=40 (H1) or V=20 (H2) requests per step; the
-  standard error of a step mean is reported. With a coefficient of variation of
-  0.3, that is about 5% (V=40) or 7% (V=20) of the mean.
+  standard error of each step mean (sample SD over the step's requests divided
+  by √V) is recorded in the point (design decision 35). With a coefficient of
+  variation of 0.3, that is about 5% (V=40) or 7% (V=20) of the mean.
 - A1 and B1 throughput: three seeds each. If all three are valid and their
   range is at most 10% of the mean, the noise multiplier is 1. A range above
   10% is flagged UNSTABLE and the multiplier is max/min of the three. With
   fewer than three valid, it is the larger of 1.10 and max/min of the valid
   ones. A1's multiplier applies to every Q2 cell, B1's to both Q1 totals
-  (section 8).
+  (section 8). With three valid seeds and normal noise, P(UNSTABLE) is 0.000,
+  0.001, 0.048, 0.33 and 0.65 at a run-to-run CV of 1%, 2%, 3%, 5% and 8%, and
+  the mean multiplier is 1.0001 at 2% and 1.048 at 5% (Monte Carlo, 200,000
+  draws). The multiplier steps from 1 to about 1.105 as the range crosses 10%,
+  and is at least 1.10 whenever a seed is not valid.
 - D8 agreement rate: 16 prompts, resolution 1/16 (6.25 points).
 - The budget decisions (section 8) change only when a projection crosses 90 or
   15 GPU-h (Q2) or 6 and 12 GPU-h (Q1). The sensitivity table shows how far the
   assumptions, not the measurement noise, move the projection.
+- Decision operating characteristics, from a Monte Carlo through the budget code
+  on synthetic job A and job B points (within-step CV 0.3 over V requests and a
+  per-point run factor at the stated run-to-run CV). Q2 (300 replicates per
+  cell): P(rescope) at a true total of 0.85, 0.95, 1.00, 1.05 and 1.15 × 90
+  GPU-h is 0.00, 0.19, 0.56, 0.83 and 1.00 at a CV of 2% (0.17, 0.47, 0.72,
+  0.88 and 1.00 at 5%); P(over-estimate) at 0.85, 1.00 and 1.15 × 15 GPU-h is
+  1.00, 0.43 and 0.00 at 2%. The decision is reliable outside about ±10-15% of
+  either threshold. The projection is biased upward (median measured/true
+  1.005-1.011 at 2%, 1.04-1.06 at 5%) by the larger-of-two extrapolation and
+  the noise multiplier. Q1 (2,000 replicates per cell): with X1 passed, P(cut)
+  at a true single-turn cost of 0.9, 1.0 and 1.1 × 6 GPU-h is 0.002, 0.49 and
+  1.00 at 2%; without an X1 pass the ×1.5 moves the effective cut to about 4
+  GPU-h of true cost (P(cut) 0.51 at 0.667 × 6 and 0.99 at 0.70 × 6 at 2%, and
+  already 0.24 at 0.6 × 6 at 5%).
 
 ## 7. Metrics, validity and dummy admissibility
 
@@ -436,8 +520,9 @@ point with a failed request, goes through the validity checks and is "invalid".
 A failed request (an HTTP error, a transport error or a stream without usage) is
 a request error, counted in the point; an exception outside the requests (the
 engine died, or its metrics or cache endpoints failed) makes the point
-"failed-infra". A point never launched because of a deadline, a gate or an
-engine failure is "not-run". An invalid point is rerun once with the same seed
+"failed-infra" and ends its phase (the phase's remaining points are not-run).
+A point never launched because of a deadline, a gate or an engine failure is
+"not-run". An invalid point is rerun once with the same seed
 if the phase's launch deadline allows and the engine is alive; both attempts
 are kept in full (the first, with all its metrics, under
 `superseded_attempts`) and the second stands. Only valid (including flagged)
@@ -451,7 +536,10 @@ are valid, and their throughput range is at most 5% of its mean. Outcomes:
 pass, fail (a delta above 5%), underpowered (deltas within 5% but fewer than
 three valid A1 seeds or a wider range), not-run (a1a, r1, x1-a1 or x1-r1 not
 valid). Anything but pass multiplies every dummy-weight number (jobs B and C)
-by 1.5 in the budgets. Job C is submitted only after a pass.
+by 1.5 in the budgets. Job C is submitted only after a pass (design decision
+33). Reported with the deltas: the mean prompt tokens per request of r1 and
+x1-r1, overall and per step, because x1-r1's history carries dummy-weight
+outputs, which may re-tokenise to other lengths.
 
 ## 8. Budget rules and decisions
 
@@ -474,16 +562,20 @@ two, times the A1 noise multiplier n_A1 (section 6).
   reference step, never down.
 - Profiles: H1 screenshot from r1; H1 accessibility tree from r2; H2 screenshot
   from r3 plus the thinking penalty (r4 step 19 minus r3 step 19, floored at 0);
-  H2 accessibility tree adds the accessibility penalty (the mean of r2's last two
-  steps minus that of r1's, floored at 0) to the H2 thinking profile.
+  H2 accessibility tree adds the accessibility penalty (the larger of r2's last
+  two step means minus the larger of r1's last two step means, floored at 0) to
+  the H2 thinking profile.
 - Fallbacks, each flagged: if r4 is not valid, thinking penalty = (2,048 − 300)
   × the largest p90 TPOT over r3's last six steps × 1.5. If r2 is not valid,
-  accessibility penalty = r1's steady latency × (6,144 / r1's modelled prompt
-  tokens at step 6) × 1.5. If r1 or r3 is not valid, no Q2 budget is frozen and
-  the outcome is "incomplete: re-probe".
+  accessibility penalty = r1's steady latency (the larger of its last two step
+  means) × (6,144 / r1's modelled prompt tokens at its last step, step 6) ×
+  1.5. If r1 or r3 is not valid, no Q2 budget is frozen and the outcome is
+  "incomplete: re-probe".
 - Rung multiplier m: 1 for 9B and for 4B (conservative). For 27B and 35B-A3B,
   the a1a throughput divided by the rung's A1 throughput from job C, times 1.5
-  unless X1 passed; without job C, max(1, active parameters / 9B) × 1.5, that is
+  unless X1 passed; a measured ratio below 1 is used as measured. Without that
+  ratio (job C not run or not accepted, its rung phase not run, or a1a or the
+  rung's A1 point not valid), max(1, active parameters / 9B) × 1.5, that is
   4.5 for 27B and 1.5 for 35B-A3B.
 - r_cell = r_ref / max(P_cell / P_ref, O_cell / O_ref). r_ref, P_ref and O_ref
   are a2's request throughput and its mean prompt and output tokens per
@@ -492,6 +584,8 @@ two, times the A1 noise multiplier n_A1 (section 6).
   O_cell is the cell's output tokens: 300 for H1 and 2,048 for the H2 (thinking)
   cells. If f1's request throughput divided by a1a's is below 0.90, r_ref is
   multiplied by that ratio (design decision 16); otherwise F1 is reported only.
+  If f1 or a1a is not valid, no correction is applied, and the projection
+  records why.
 - If a2 is not valid, the reference is whichever of a1a, a1b and a1c is valid
   with the lowest request throughput, flagged; if none is valid, no Q2 budget is
   frozen ("incomplete: re-probe").
@@ -504,6 +598,12 @@ two, times the A1 noise multiplier n_A1 (section 6).
 - Sensitivity table: T in {15, 50, 100}, t_env in {1.5, 2.5, 4.0} s, V in {20, 40}
   per replica (V above the measured value is not extrapolated; such rows reuse
   the measured V).
+
+**Accepted jobs only** (section 5, design decision 32). If job A is not
+accepted, none of its points enters a budget: X1 is not-run and no Q2 budget is
+frozen ("incomplete: re-probe"). If job B is not accepted, no Q1 budget is
+frozen. A job C that is not accepted is treated as not run, so the
+active-parameter rule prices both rungs.
 
 **Q2 decision.** If the 16-cell total exceeds 90 GPU-h (the dossier's upper
 range), Stage 1 is rescoped before the gauntlet (non-thinking mode, a smaller
@@ -518,17 +618,18 @@ noise multiplier n_B1 (b1a, b1b, b1c completions per second; section 6).
 
 **Q1 decision.** If 2,000 single-turn completions exceed 6 GPU-h (half the
 dossier's 12 GPU-h central estimate), or the three-turn total exceeds 12 GPU-h,
-turns, max_tokens or the task count are cut before the gauntlet. If b2 or b6 is
-not valid, no Q1 budget is frozen ("incomplete: re-probe"). The Q1 policy
-license (D5) is not resolved by this probe.
+turns, max_tokens or the task count are cut before the gauntlet. If job B is
+not accepted, or b2 or b6 is not valid, no Q1 budget is frozen ("incomplete:
+re-probe"). The Q1 policy license (D5) is not resolved by this probe.
 
 Stage 1 must reuse these engine settings or re-probe.
 
 ## 9. Stop rules
 
 - No point is launched after 85% of the allocation (from the lane's
-  `started_at`); a phase with later reserved phases stops launching and truncates
-  its running point at that mark minus the later reserves.
+  `started_at` in `job.env`; if `job.env` cannot be read, from driver start,
+  recorded in the summary); a phase with later reserved phases stops launching
+  and truncates its running point at that mark minus the later reserves.
 - Every running point is truncated at its wall cap or at the allocation end
   minus 4 minutes; in-flight requests get 30 s, then are cancelled.
 - USR1 or TERM (the lane sends USR1 180 s before the end): no new request,
@@ -537,17 +638,20 @@ Stage 1 must reuse these engine settings or re-probe.
   `trigger=SIGUSR1` or `trigger=SIGTERM`, design decision 28), then engines
   stop. An offline point is stopped at once and its requests aborted.
 - Slurm `--time` is the hard cap: job A 40 min (0.67 GPU-h budgeted), job B
-  20 min (0.34), job C 30 min (0.5). A Slurm TIMEOUT classifies the job
-  "incomplete": its points are kept and reported, and enter no budget
-  (section 5, Acceptance).
+  20 min (0.34), job C 30 min (0.5); jobs A and B together hold exactly 1.0
+  GPU-h, and their budgeted 0.67 and 0.34 are rounded up. A Slurm TIMEOUT
+  classifies the job "incomplete": its points are kept and reported, and enter
+  no budget (section 5, Acceptance).
 - A prefix-caching-off arm and TP=2 runs are not part of this experiment.
 
 ## 10. Reported regardless of outcome
 
 Every gate result with its recorded values; every point with its status,
-attempts (superseded attempts in full) and metrics, valid or not; each job's
-acceptance verdict and eager label; the X1 deltas, seed spread and outcome; the
-F1 ratio, applied or not; the D8 agreement rate; A1 and B1 stability and noise
+attempts (superseded attempts in full) and metrics, valid or not, including the
+standard error of each replay step mean; each job's acceptance verdict, eager
+label, and the reasons a job's points were not admitted to a budget; the X1
+deltas, seed spread and outcome, with r1's and x1-r1's prompt tokens per
+request; the F1 ratio, applied or not; the D8 agreement rate; A1 and B1 stability and noise
 multipliers; the open-loop reference used and which bound binds in each cell;
 engine facts per phase including eager use and `/tmp` mappings; all
 GPU-allocated time, including the overlay build and metadata fetch allocations;

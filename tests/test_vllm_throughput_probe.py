@@ -5,6 +5,7 @@ import copy
 import io
 import json
 import os
+import re
 import shutil
 import signal
 import subprocess
@@ -17,7 +18,7 @@ from typing import Any
 import numpy as np
 import pytest
 import yaml
-from serving_probe_fakes import FakeVllm, WordTokenizer
+from serving_probe_fakes import FakeVllm, WordTokenizer, write_job_dir, x1_passing_job_a_points
 
 from harness.serving_probe.client import RequestResult
 from harness.serving_probe.config import load_config
@@ -627,6 +628,31 @@ def test_preregistration_names_the_live_probe_code_digest() -> None:
     assert code["digest"] in PREREG.read_text(encoding="utf-8")
     assert "scripts/run_vllm_throughput_probe.py" in code["files"]
     assert "harness/serving_probe/budget.py" in code["files"]
+
+
+def test_preregistration_reads_as_frozen_and_states_the_rules_as_coded() -> None:
+    raw = PREREG.read_text(encoding="utf-8")
+    text = " ".join(raw.split())
+    status = raw.split("\n## 1.", 1)[0]
+    assert "Status: frozen in program/preregistrations/ledger.jsonl" in status
+    for stale in ("DRAFT", "Not frozen", "not frozen", "Freeze with"):
+        assert stale not in status
+    for stale in ("can overrule any of them before freezing", "The owner may require"):
+        assert stale not in text
+    # budget.build_profiles: the larger of the last two step means, not their mean.
+    assert (
+        "the larger of r2's last two step means minus the larger of r1's last two step means"
+        in text
+    )
+    assert "steady latency (the larger of its last two step means)" in text
+    # test_serving_probe_budget.test_x1_operating_characteristics_match_the_preregistration
+    assert "P(pass) is at most 0.02, 0.12, 0.11 and 0.07" in text
+    assert "with a true 8% difference, P(pass) is at most 0.03 at any of these CVs" not in text
+    # client.percentile_summary records the SE; project() admits accepted jobs only.
+    assert "standard error of each step mean" in text
+    assert "**Accepted jobs only**" in text
+    numbers = [int(n) for n in re.findall(r"^(\d+)\. \*\*", raw, flags=re.MULTILINE)]
+    assert numbers == list(range(1, len(numbers) + 1)), "design decisions stay numbered in order"
 
 
 def _copy_tree(root: Path) -> None:
@@ -1241,3 +1267,206 @@ def test_an_invalid_smoke_in_a_control_phase_fails_g06_without_rejecting_the_job
     points = _points(tmp_path / "outputs" / "probe")
     assert {points[name]["status"] for name in ("x1-a1", "x1-r1")} == {"not-run"}
     assert summary["x1"]["outcome"] == "not-run"
+
+
+# -- job acceptance gates budget entry (preregistration sections 5 and 8, decision D17) --
+
+
+def _interrupt_after(runner, point_id: str) -> None:
+    """Deliver the lane's USR1 right after ``point_id`` is recorded."""
+    original = runner._record
+
+    def record(point, rec):
+        original(point, rec)
+        if point.point_id == point_id:
+            runner.note_signal("SIGUSR1")
+
+    runner._record = record
+
+
+def _complete_job_a(tmp_path: Path):
+    tmp_path.mkdir(parents=True, exist_ok=True)
+    runner, _server, _engines = _runner(tmp_path)
+    assert runner.run() == probe.EXIT_OK
+    return runner.config, tmp_path / "outputs" / "probe"
+
+
+def _project(config, job_a: Path, job_b: Path | None = None, job_c: Path | None = None):
+    return probe.project(config, job_a=job_a, job_b=job_b, job_c=job_c, prereg_check=_frozen)
+
+
+def _offline(completions: int, duration_s: float) -> dict[str, Any]:
+    return {
+        "status": "valid",
+        "result": {
+            "completions": completions,
+            "duration_s": duration_s,
+            "completions_per_s": completions / duration_s,
+        },
+    }
+
+
+def _job_b_points() -> dict[str, dict[str, Any]]:
+    return {
+        "b2": _offline(32, 60.0),
+        "b3": _offline(64, 50.0),
+        "b6": _offline(24, 90.0),
+        "b1a": _offline(64, 30.0),
+        "b1b": _offline(64, 30.3),
+        "b1c": _offline(64, 30.1),
+    }
+
+
+def test_project_uses_no_point_of_an_interrupted_job_a(tmp_path: Path) -> None:
+    runner, _server, _engines = _runner(tmp_path)
+    _interrupt_after(runner, "a1c")
+    assert runner.run() == probe.EXIT_INTERRUPTED
+    job_a = tmp_path / "outputs" / "probe"
+    assert _points(job_a)["r1"]["status"] in {"valid", "valid-flagged"}
+    projection = _project(runner.config, job_a)
+    assert projection["jobs"]["a"]["accepted"] is False
+    assert projection["jobs"]["a"]["status"] == "interrupted"
+    assert projection["x1"]["outcome"] == "not-run"
+    assert projection["q2"]["decision"] == "incomplete-re-probe"
+    assert "total_gpu_hours" not in projection["q2"]
+    assert "job a is not accepted" in projection["q2"]["reason"]
+    assert projection["q1"]["decision"] == "incomplete-re-probe"
+
+
+def test_project_uses_no_point_of_a_job_without_a_summary(tmp_path: Path) -> None:
+    config, job_a = _complete_job_a(tmp_path)
+    assert _project(config, job_a)["q2"]["decision"] != "incomplete-re-probe"
+    (job_a / "summary.json").unlink()  # the driver was killed before it finished
+    projection = _project(config, job_a)
+    assert projection["jobs"]["a"]["accepted"] is False
+    assert "no summary.json" in projection["jobs"]["a"]["reasons"][0]
+    assert projection["q2"]["decision"] == "incomplete-re-probe"
+
+
+def test_project_refuses_point_files_changed_after_the_summary(tmp_path: Path) -> None:
+    config, job_a = _complete_job_a(tmp_path)
+    path = job_a / "points" / "a2.json"
+    record = json.loads(path.read_text())
+    record["result"]["request_throughput"] *= 10
+    path.write_text(json.dumps(record))
+    projection = _project(config, job_a)
+    assert projection["jobs"]["a"]["accepted"] is False
+    assert any("a2" in reason for reason in projection["jobs"]["a"]["reasons"])
+    assert projection["q2"]["decision"] == "incomplete-re-probe"
+
+
+def test_project_recomputes_acceptance_from_the_summary(tmp_path: Path) -> None:
+    config, job_a = _complete_job_a(tmp_path)
+    path = job_a / "summary.json"
+    original = json.loads(path.read_text())
+    assert original["point_sha256"] == {
+        p.stem: probe.sha256_file(p) for p in (job_a / "points").glob("*.json")
+    }
+    # A recorded verdict that its own status and gates contradict is not trusted.
+    edited = copy.deepcopy(original)
+    edited["status"] = "interrupted"
+    path.write_text(json.dumps(edited))
+    assert _project(config, job_a)["jobs"]["a"]["accepted"] is False
+    edited = copy.deepcopy(original)
+    del edited["gates"]["G0.3"]
+    path.write_text(json.dumps(edited))
+    projection = _project(config, job_a)
+    assert projection["jobs"]["a"]["accepted"] is False
+    assert projection["q2"]["decision"] == "incomplete-re-probe"
+    edited = copy.deepcopy(original)
+    edited["exit_code"] = probe.EXIT_INTERRUPTED
+    path.write_text(json.dumps(edited))
+    assert _project(config, job_a)["jobs"]["a"]["accepted"] is False
+    path.write_text(json.dumps(original))
+    assert _project(config, job_a)["jobs"]["a"]["accepted"] is True
+
+
+def test_project_uses_no_point_of_an_unaccepted_job_b(tmp_path: Path) -> None:
+    config, job_a = _complete_job_a(tmp_path / "a")
+    job_b = write_job_dir(tmp_path / "b", config, "b", _job_b_points())
+    accepted = _project(config, job_a, job_b)
+    assert accepted["jobs"]["b"]["accepted"] is True
+    assert accepted["q1"]["decision"] in {"within-cap", "cut-turns-tokens-or-tasks-before-gauntlet"}
+    crashed = write_job_dir(
+        tmp_path / "b-crashed", config, "b", _job_b_points(), status="crashed", exit_code=1
+    )
+    projection = _project(config, job_a, crashed)
+    assert projection["jobs"]["b"]["accepted"] is False
+    assert projection["q1"]["decision"] == "incomplete-re-probe"
+    assert "job b is not accepted" in projection["q1"]["reason"]
+    assert projection["b1_stability"] is None
+
+
+def test_project_treats_an_unaccepted_job_c_as_not_run(tmp_path: Path) -> None:
+    config, job_a = _complete_job_a(tmp_path / "a")
+    rungs = {
+        "c27-a1": {"status": "valid", "result": {"request_throughput": 0.5}},
+        "c35-a1": {"status": "valid", "result": {"request_throughput": 3.0}},
+    }
+    job_c = write_job_dir(tmp_path / "c", config, "c", rungs)
+    measured = _project(config, job_a, job_c=job_c)
+    assert measured["q2"]["rungs"]["qwen3.5-27b"]["basis"].startswith("job-c open-loop ratio")
+    interrupted = write_job_dir(
+        tmp_path / "c-int", config, "c", rungs, status="interrupted", exit_code=3
+    )
+    projection = _project(config, job_a, job_c=interrupted)
+    assert projection["jobs"]["c"]["accepted"] is False
+    assert "treated as not run" in projection["budget_inputs"]["c"]
+    for rung in ("qwen3.5-27b", "qwen3.5-35b-a3b"):
+        assert projection["q2"]["rungs"][rung]["basis"].startswith("unmeasured")
+    assert projection["q2"]["rungs"]["qwen3.5-27b"]["multiplier"] == pytest.approx(4.5)
+
+
+def test_job_c_gate_needs_an_accepted_job_a_with_an_x1_pass(tmp_path: Path) -> None:
+    config = load_config(CONFIG_PATH)
+    passing = write_job_dir(tmp_path / "pass", config, "a", x1_passing_job_a_points())
+    assert probe.job_c_gate(config, passing)["submit"] is True
+    interrupted = write_job_dir(
+        tmp_path / "int", config, "a", x1_passing_job_a_points(), status="interrupted", exit_code=3
+    )
+    verdict = probe.job_c_gate(config, interrupted)
+    assert verdict["submit"] is False and verdict["x1"]["outcome"] == "not-run"
+    failing = x1_passing_job_a_points()
+    failing["x1-a1"]["result"]["request_throughput"] = 2.5
+    verdict = probe.job_c_gate(config, write_job_dir(tmp_path / "fail", config, "a", failing))
+    assert verdict["submit"] is False and verdict["x1"]["outcome"] == "fail"
+
+
+def test_g02_expects_exactly_one_gpu_whatever_the_lane_says(tmp_path: Path, monkeypatch) -> None:
+    runner, _server, _engines = _runner(tmp_path)
+    runner.output_dir.mkdir(parents=True, exist_ok=True)
+    monkeypatch.setenv("COTCODEC_EXPECTED_GPUS", "2")
+    commands: list[list[str]] = []
+
+    class Done:
+        pid = 0
+        returncode = 0
+
+        def __init__(self, command, **_kwargs):
+            commands.append(list(command))
+
+        def poll(self):
+            return 0
+
+    monkeypatch.setattr(probe.subprocess, "Popen", Done)
+    report = probe.ProbeRunner._default_doctor(runner, tmp_path / "doctor.json", {})
+    assert report["pass"] is False  # no report was written
+    (command,) = commands
+    assert command[command.index("--expected-gpus") + 1] == "1"
+
+
+def test_offline_points_record_their_preparation_time(tmp_path: Path) -> None:
+    model_root, receipt_root, pin = _metadata_snapshot(
+        tmp_path, "qwen3-8b", "b968826d9c46dd6066d109eabc6255188de91218", "Qwen/Qwen3-8B"
+    )
+    receipt, root = pin.split(":")
+    runner, _server, _engines = _runner(
+        tmp_path,
+        "b",
+        pins={"qwen3-8b": (receipt, root)},
+        model_root=model_root,
+        receipt_root=receipt_root,
+    )
+    assert runner.run() == probe.EXIT_OK
+    points = _points(tmp_path / "outputs" / "probe")
+    assert all(record["prep_s"] >= 0.0 for record in points.values())
