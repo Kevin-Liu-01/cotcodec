@@ -73,3 +73,31 @@ def test_export_is_intact_dev_only_and_consistent(run: Path) -> None:
         assert dict(Counter(o[f"{arm}_status"] for o in outcomes)) == report["status"][arm]
     assert report["planned"] == len(released)
     assert report["admitted"] == sum(1 for o in outcomes if o["admitted"])
+
+
+@pytest.mark.parametrize("run", RUNS, ids=lambda p: p.name)
+def test_no_evaluable_office_mutant_was_scored_unsaved(run: Path) -> None:
+    """Every evaluable office mutant's verdict row says the GUI-faithful save ran."""
+    released = {r["mutant_id"]: r for r in _jsonl(run / "mutations.release.jsonl")}
+    path = run / "verdicts-lock.jsonl"
+    rows = {r.mutant_id: r for r in read_verdict_rows(path.read_text().splitlines())}
+    for outcome in _jsonl(run / "outcomes.jsonl"):
+        if outcome["lock_status"] != "evaluable":
+            continue
+        if released[outcome["mutant_id"]]["family"] in {"xlsx", "docx", "pptx"}:
+            assert rows[outcome["mutant_id"]].saved_via == "gui_faithful_lo_save"
+
+
+def test_reviewed_run_names_what_each_recipe_was_applied_to() -> None:
+    """From dev-mutants-v4 on, release rows carry the applier input (section 16)."""
+    run = INTEGRATION / "dev-mutants-v4"
+    manifest = json.loads((run / "manifest.json").read_text(encoding="utf-8"))
+    rows = _jsonl(run / "mutations.release.jsonl")
+    assert {r["applied_to"] for r in rows} == {manifest["apply_to"]} == {"gold"}
+    targets = {t["target_id"]: t for t in _jsonl(run / "targets-built.jsonl")}
+    for row in rows:
+        assert len(row["applied_input_sha256"]) == 64
+        if row["family"] != "text":
+            # Office recipes were planned on the base but applied to the gold.
+            assert row["applied_input_sha256"] != row["recipe_release"]["input_sha256"]
+    assert all(t["status"] == "planned" for t in targets.values())
