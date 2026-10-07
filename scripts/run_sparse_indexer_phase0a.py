@@ -754,6 +754,10 @@ def smoke_capture_check(args: argparse.Namespace, staged: rt.StagedData,
     out["max_rel_output_error"] = worst_rel
     out["max_layer_mean_tv"] = worst_tv
     out["thresholds"] = {"rel_output_error": CAPTURE_REL_ERROR_MAX, "mean_tv": EAGER_TV_MAX}
+    eager_rows.clear()
+    del teacher, captured
+    if device.type == "cuda":
+        torch.cuda.empty_cache()  # the training worker shares this GPU next
     return out
 
 
