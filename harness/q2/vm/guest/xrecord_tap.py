@@ -210,7 +210,17 @@ def mapping_check(records):
                 if not _rows_differ(ahead, key[0], rows):
                     differ = []
         if differ:
-            unverified.append({"range": list(key), "keycodes": differ[:20]})
+            detail = []
+            if keymap is not None and rows:
+                for code in differ[:5]:
+                    detail.append(
+                        {
+                            "keycode": code,
+                            "tap": keymap.rows.get(code),
+                            "server": rows[code - key[0]],
+                        }
+                    )
+            unverified.append({"range": list(key), "keycodes": differ[:20], "rows": detail})
         else:
             benign += 1
     keyboard = sum(
