@@ -146,3 +146,25 @@ def test_composition_check_flags_a_worker_slower_than_composed() -> None:
     solo["0"]["steps"]["step_s"] *= 1 + budget.HEADROOM + 0.01
     check = probe.composition_check(rates, {"solo": solo})
     assert not check["passed"] and check["max_ratio"] > 1.15
+
+
+def test_a_cut_concurrent_arm_is_replaced_by_its_registered_bound(probe, tmp_path) -> None:
+    from scripts import probe_sparse_indexer_k1_throughput as module
+
+    out = tmp_path / "bounded"
+    process = subprocess.Popen(probe.argv(out), env=probe.env(), stdout=subprocess.PIPE,
+                               stderr=subprocess.PIPE, text=True)
+    deadline = time.time() + 1200
+    while time.time() < deadline and not (out / "arms" / "concurrent-0.json").exists():
+        if process.poll() is not None:
+            break
+        time.sleep(0.2)
+    process.send_signal(signal.SIGUSR1)
+    _, err = process.communicate(timeout=600)
+    receipt = json.loads((out / "receipt.json").read_text())
+    assert process.returncode == 0, err[-2000:]
+    assert receipt["status"] == "PROBE_COMPLETE" and receipt["concurrent_bound_used"] is True
+    solo = receipt["arms"]["train"]["solo"]
+    assert receipt["rates"]["concurrent_step_s"] == pytest.approx(
+        module.CONCURRENT_BOUND_FACTOR * sum(e["steps"]["step_s"] for e in solo.values()))
+    assert set(receipt["failures"]) == {"concurrent"}

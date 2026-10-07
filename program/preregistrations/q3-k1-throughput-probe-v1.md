@@ -38,7 +38,7 @@ needed.
 
 | File | SHA-256 |
 |---|---|
-| scripts/probe_sparse_indexer_k1_throughput.py | ab748f876d7abbc4832238ffab9cfe8c1a4cf0d68dd02706a7cd52282cb1e113 |
+| scripts/probe_sparse_indexer_k1_throughput.py | 8d854319d92798609ca8f7cb4ee6a54fa8359c6124af6bea70fbab1c688dfc5c |
 | harness/sparse_indexer_bank.py | e96653eb3eb5b9876201347c2fa8d452efc3ebb1043a516ac03c366ff8b89f88 |
 | harness/sparse_indexer_k1_budget_v2.py | c86568a62fe12cbcb5ad91eed25fc0afd9e9a09078a43345b18277e6922ea4fe |
 | harness/sparse_indexer_k1_equivalence_v2.py | 3c8b6caf8dc14fb62096cfa205e2e459f774227a73229e5d62e72bdb6ff3e9a1 |
@@ -144,7 +144,15 @@ determinism settings (deterministic algorithms, TF32 matmuls allowed, no
 5. **concurrent** (240 s). The four registered shards ([0-7], [8-14],
    [15-21], [22-27]) as four workers started together on the one GPU (the
    resume legs' layout), 6 steps each of the 18-indexer bank (steps 0 and 1
-   excluded); each worker's start-up, steady step time and peak memory.
+   excluded); each worker's start-up, steady step time and peak memory. If
+   this last arm is cut by its timeout or by Slurm's USR1, the resume legs are
+   priced by a registered bound instead (`concurrent_step_s` = 1.25 x the sum
+   of the four workers' solo steps, `concurrent_startup_s` = 2 x the training
+   start-up; v1 measured four workers sharing a GPU at 15.07 s per step
+   against 15.06 s for the sum of their solo steps), and the receipt sets
+   `concurrent_bound_used`. If it fails otherwise (an error such as running
+   out of memory), the probe is incomplete: the resume legs' layout does not
+   run.
 
 ## Outputs
 
@@ -166,8 +174,8 @@ arm completed and the tolerance gates passed, the rates (seconds):
 | `eval_select_s`, `eval_select_mc_s`, `eval_mc_only_s` | eval: mean seconds per unit of each kind |
 | `eval_rows` | eval: mean query rows of the measured selection units (34) |
 | `capture_check_s` | capture: the check's wall time |
-| `concurrent_step_s` | concurrent: the slowest worker's steady step time |
-| `concurrent_startup_s` | concurrent: the slowest worker's spawn to first step |
+| `concurrent_step_s` | concurrent: the slowest worker's steady step time (or the bound above) |
+| `concurrent_startup_s` | concurrent: the slowest worker's spawn to first step (or the bound above) |
 
 Composition check. The limits, like the v2 smoke, project a worker's step as
 4 x its teacher prefix x `teacher_layer_seq_s` + its layers x `layer_step_s` +
@@ -186,8 +194,10 @@ differ.
 
 ## Outcomes
 
-- `PROBE_COMPLETE` (exit 0): every arm completed and every tolerance gate
-  passed; the rates and limits are reported.
+- `PROBE_COMPLETE` (exit 0): every arm completed (the concurrent arm may
+  instead have been cut by the time limit and replaced by its registered
+  bound) and every tolerance gate and the composition check passed; the rates
+  and limits are reported.
 - `PROBE_TOLERANCE_FAIL` (exit 3): a device gate failed; the later arms do not
   run and no rate is reported. The v2 code is not equivalent enough on the
   device as registered; the defect is investigated and any fix needs new code
@@ -203,8 +213,8 @@ differ.
   study artifact in the manifest, more than one GPU) exits 2 before any work.
 
 Slurm's USR1 (180 s before the 9-minute limit) or a SIGTERM stops the probe at
-once: it kills the running arm, writes a `PROBE_INCOMPLETE` receipt and exits
-3. The probe holds no state worth saving, so it writes no checkpoint marker
+once: it kills the running arm and writes its receipt, `PROBE_INCOMPLETE`
+(exit 3) unless only the concurrent arm was cut (then the bound applies). The probe holds no state worth saving, so it writes no checkpoint marker
 (the lane records `signal_USR1_checkpoint_missing`). The expected wall time is
 3 to 5 minutes (central and conservative design scenarios).
 
@@ -286,8 +296,10 @@ is reported with its receipt; a rerun is a new id.
    forward (at most about 5 percent). If the probe's caps exceed 8 GPU-hours,
    the gauntlet decides what happens next, not a silent change of code.
 10. One GPU and 9 minutes (0.15 GPU-h, D20), with per-arm timeouts and the
-    concurrent arm last, so a slow probe loses the least important arm first
-    and reports `PROBE_INCOMPLETE` rather than a partial rate.
+    concurrent arm last, so a slow probe loses the least important arm first:
+    that arm alone may be replaced by a registered, conservative bound
+    computed from measured solo steps; any other missing arm leaves
+    `PROBE_INCOMPLETE` rather than a partial rate.
 11. The probe binds the code it measured: its receipt records the digests and
     the v2 manifest filler refuses limits from a probe that measured other
     code.
