@@ -1,0 +1,21 @@
+task_id: 986fc832-6af2-417c-8845-9272b3a1528b
+author: blind-model-author-v1
+requirements:
+  - req_id: R0
+    statement: (implicit) The presentation is saved in place at /home/user/Desktop/154_3.pptx (1 slide) with unchanged texts.
+    check_kind: file_exists
+    observable: File loads; title "GPT", body paragraph and 3x2 table texts unchanged.
+  - req_id: R1
+    statement: The body text (content placeholder paragraph "Generative Pre-trained Transformer 3 ...") is underlined.
+    check_kind: text_run
+    observable: All runs of the body placeholder have underline set (u="sng").
+  - req_id: R2
+    statement: The title and the table text are NOT underlined.
+    check_kind: text_run
+    observable: Title runs and all table-cell runs have no underline.
+  - req_id: R3
+    statement: All text on the slide - title, body and table cells - has the LibreOffice palette color "Dark Red 2".
+    check_kind: text_run
+    observable: Every non-empty run in the title, body and every table cell has color 8D281E (LibreOffice standard palette "Dark Red 2"; confirm the hex against the pinned build's standard.soc).
+allowed_variations:
+  - Bold state of the title and table formatting other than color/underline are not constrained (expected unchanged).

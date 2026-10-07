@@ -1,0 +1,14 @@
+task_id: a097acff-6266-4291-9fbd-137af7ecd439
+author: blind-model-author-v1
+requirements:
+  - req_id: R1
+    statement: The open slides are saved as pre.pptx on the Desktop.
+    check_kind: file_exists
+    observable: /home/user/Desktop/pre.pptx exists and is a valid PowerPoint (pptx/OOXML) file loadable by python-pptx.
+  - req_id: R2
+    statement: The saved file has the same slides and content as the source presentation.
+    check_kind: slide_object
+    observable: Slide count and per-slide texts of pre.pptx equal those of /home/user/Downloads/Secrets-of-Monetizing-Video.pptx.
+allowed_variations:
+  - Whether the original file in Downloads remains (Save As keeps it) is not constrained.
+  - Internal XML differences from LibreOffice re-serialization.

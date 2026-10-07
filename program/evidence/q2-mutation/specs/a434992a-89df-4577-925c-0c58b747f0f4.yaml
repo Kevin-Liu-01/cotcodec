@@ -1,0 +1,26 @@
+task_id: a434992a-89df-4577-925c-0c58b747f0f4
+author: blind-model-author-v1
+requirements:
+  - req_id: R0
+    statement: (implicit) The presentation is saved in place at /home/user/Desktop/16_2.pptx (1 slide) with unchanged texts.
+    check_kind: file_exists
+    observable: File loads; texts unchanged.
+  - req_id: R1
+    statement: The content text ("Neural networks are a set of algorithms ...") is 12 pt.
+    check_kind: text_run
+    observable: All runs of the content placeholder have size 12 pt.
+  - req_id: R2
+    statement: The content text is orange.
+    check_kind: text_run
+    observable: All runs of the content placeholder have an orange color (LibreOffice palette "Orange", see allowed variations).
+  - req_id: R3
+    statement: The slide background is red.
+    check_kind: slide_object
+    observable: Slide 1 has a solid background fill FF0000 (palette "Red").
+  - req_id: R4
+    statement: (implicit) The title ("Neural Network") keeps its size and color.
+    check_kind: text_run
+    observable: Title runs remain 44 pt and 000000.
+allowed_variations:
+  - '[AMBIGUOUS] "orange" has no hex value; LibreOffice palette "Orange" (#FF8000 in recent builds) and CSS orange #FFA500 are both plausible; record the hex.'
+  - '[AMBIGUOUS] "the content" is read as the body placeholder only, not the title.'
