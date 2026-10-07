@@ -1,0 +1,149 @@
+{
+  "attempts": [
+    {
+      "attempt": 1,
+      "batch_size": 3,
+      "finish_reason": "stop",
+      "generate_s": 1.216,
+      "output_file": "raw-output-attempt-1.txt",
+      "output_sha256": "cb4c30698980b59fd55ee4385c874441060dda55a2b28f423a3d0a67cdd58254",
+      "output_token_count": 40,
+      "output_token_ids_sha256": "26b1794b07bced3949f5cc841575a47e0607d6f227fe5648b19f9277c49c6a1a",
+      "parse": {
+        "extraction": "bare",
+        "ok": true
+      },
+      "prompt_token_count": 243,
+      "prompt_token_ids_sha256": "2d784a538b7599ba8fb2be24c8175b8793d1500121fe0a8732d5b2603eb57e50",
+      "rendered_prompt_sha256": "19d1f8664fde8fe9f4b5e9e634112f972cdb62ede44c168a2d5cbcb55c37fc93",
+      "seed": 42,
+      "user_message_file": "user-message-attempt-1.txt",
+      "user_message_sha256": "11e93af6d2ee961ee84553a86ee4bde597230bef3bcbba826c2fef4463e53332"
+    }
+  ],
+  "engine": {
+    "enforce_eager": false,
+    "gpu_memory_utilization": 0.95,
+    "max_model_len": 131072,
+    "max_tokens": 512,
+    "seeds": [
+      42,
+      43,
+      44
+    ],
+    "temperature": 0.0,
+    "tensor_parallel_size": 1,
+    "thinking": false
+  },
+  "engine_close": "closed",
+  "files": {
+    "parsed.json": "9c785cd7ae724c8304eb0fc6fb628d8fd9b184832ab30b956e0703a003f809be",
+    "prompt.txt": "57aa5a523845602fc824a9ed1387ef67f4d5c81e7814c4c2882f6352cdb81f14",
+    "raw-output-attempt-1.txt": "cb4c30698980b59fd55ee4385c874441060dda55a2b28f423a3d0a67cdd58254",
+    "replicate-seed-43.txt": "cb4c30698980b59fd55ee4385c874441060dda55a2b28f423a3d0a67cdd58254",
+    "replicate-seed-44.txt": "cb4c30698980b59fd55ee4385c874441060dda55a2b28f423a3d0a67cdd58254",
+    "schema.json": "0430f51410d25ec19c9649ccec2ef951b3d28c65792b2bb2d88d5424816d2eff",
+    "user-message-attempt-1.txt": "11e93af6d2ee961ee84553a86ee4bde597230bef3bcbba826c2fef4463e53332"
+  },
+  "finished_at": "2026-10-07T22:12:46Z",
+  "kind": "open-weight-review-receipt",
+  "lane": {
+    "expected_gpus": "1",
+    "git_sha": "00961e5b2842f6f38d505dfdba1f074cea985165",
+    "model_id": "qwen3.6-35b-a3b",
+    "source_sha256": "f5bf819b04ca7f3805a719bc13932eecbd80ebb74fa91e91de6170fdecfae355"
+  },
+  "llm_kwargs": {
+    "disable_log_stats": true,
+    "dtype": "auto",
+    "enforce_eager": false,
+    "gpu_memory_utilization": 0.95,
+    "language_model_only": true,
+    "max_model_len": 131072,
+    "max_num_seqs": 8,
+    "model": "/model-cache/cotcodec-models/qwen3.6-35b-a3b",
+    "seed": 42,
+    "tensor_parallel_size": 1,
+    "tokenizer": "/model-cache/cotcodec-models/qwen3.6-35b-a3b",
+    "trust_remote_code": false
+  },
+  "model": {
+    "artifact_root_sha256": "8ac6d764b84034f4ed0df3f2388c9180afceab806f7e75f5d1e43a73bdd2736b",
+    "model_id": "qwen3.6-35b-a3b",
+    "publication_eligible": true,
+    "receipt_sha256": "18c2a12881bf613c7110439b8e765ff89a4c060a1fb60aee62bb7250890ce1f9",
+    "repo_id": "Qwen/Qwen3.6-35B-A3B",
+    "revision": "995ad96eacd98c81ed38be0c5b274b04031597b0",
+    "spot_checked_files": [
+      "config.json",
+      "tokenizer_config.json",
+      "chat_template.jinja"
+    ],
+    "total_bytes": 71926865825
+  },
+  "output_file": "raw-output-attempt-1.txt",
+  "output_sha256": "cb4c30698980b59fd55ee4385c874441060dda55a2b28f423a3d0a67cdd58254",
+  "parsed_file": "parsed.json",
+  "parsed_sha256": "9c785cd7ae724c8304eb0fc6fb628d8fd9b184832ab30b956e0703a003f809be",
+  "prompt_format": "owr-user-message-v1",
+  "prompt_sha256": "57aa5a523845602fc824a9ed1387ef67f4d5c81e7814c4c2882f6352cdb81f14",
+  "replicates": [
+    {
+      "finish_reason": "stop",
+      "identical_to_primary": true,
+      "output_file": "replicate-seed-43.txt",
+      "output_sha256": "cb4c30698980b59fd55ee4385c874441060dda55a2b28f423a3d0a67cdd58254",
+      "output_token_count": 40,
+      "output_token_ids_sha256": "26b1794b07bced3949f5cc841575a47e0607d6f227fe5648b19f9277c49c6a1a",
+      "seed": 43
+    },
+    {
+      "finish_reason": "stop",
+      "identical_to_primary": true,
+      "output_file": "replicate-seed-44.txt",
+      "output_sha256": "cb4c30698980b59fd55ee4385c874441060dda55a2b28f423a3d0a67cdd58254",
+      "output_token_count": 40,
+      "output_token_ids_sha256": "26b1794b07bced3949f5cc841575a47e0607d6f227fe5648b19f9277c49c6a1a",
+      "seed": 44
+    }
+  ],
+  "replicates_identical": true,
+  "request": {
+    "label": "loadcheck-35b",
+    "prompt_bytes": 189,
+    "prompt_sha256": "57aa5a523845602fc824a9ed1387ef67f4d5c81e7814c4c2882f6352cdb81f14",
+    "request_sha256": "2ed616d35e724443fb43983809844bd15158b6df1abd7d42e491b72468ae192d",
+    "schema_sha256": "0430f51410d25ec19c9649ccec2ef951b3d28c65792b2bb2d88d5424816d2eff",
+    "source": "evidence"
+  },
+  "runtime": {
+    "chat_template_sha256": "e84f32a23fdda27689f868aa4a1a5621f41133e51a48d7f3efcbea2839574259",
+    "gpu_names": [
+      "NVIDIA H100 80GB HBM3"
+    ],
+    "resolved": {
+      "block_size": 1056,
+      "dtype": "torch.bfloat16",
+      "enable_prefix_caching": true,
+      "enforce_eager": false,
+      "max_model_len": 131072,
+      "num_gpu_blocks": 385,
+      "tensor_parallel_size": 1
+    },
+    "torch_version": "2.13.0+cu129",
+    "transformers_version": "5.17.0",
+    "vllm_version": "0.31.0"
+  },
+  "sampling": {
+    "max_tokens": 512,
+    "temperature": 0.0
+  },
+  "schema_version": 1,
+  "signals_received": [],
+  "started_at": "2026-10-07T22:11:05Z",
+  "status": "PARSED",
+  "timings_s": {
+    "engine_init": 96.525
+  },
+  "validator": "cotcodec-json-schema-subset-v1"
+}
