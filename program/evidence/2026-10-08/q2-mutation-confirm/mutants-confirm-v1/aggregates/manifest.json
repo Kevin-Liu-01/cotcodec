@@ -1,0 +1,49 @@
+{
+ "apply_to": "gold",
+ "confirmatory": false,
+ "experiment_id": "q2-evaluator-mutation-v1",
+ "exported_sha256": {
+  "build-summary.json": "af942877f31572b484816845be6cdb3b9055461c487a503cc88f042a1b84aeb6",
+  "mutations.release.jsonl": "137902b04b17d4cbcd43d00f0c7d8ba24373285304dc0ae0ab97938140935e1c",
+  "notes-summary.json": "de597827720bce5aacffa6e51f649510f425bbd89cf558f52da5fe0f881ee823",
+  "outcomes.jsonl": "b1bd6a87f1d80d8eca79af417801b359a88d02dfeb04d1f282d6859bdde0be88",
+  "reachability-summary.json": "2f492bb17ba7055d5dc2d0854a280d27680193c4da3ef9c7462a6d44442ebbf7",
+  "receipts.json": "611a5bbcdb0c8225d0c76bf09db9da2a19332c50b11b5128f05cc3bb9963dd04",
+  "recheck-summary.json": "6aa0faa09047c7a78443de36860009ee03dc2eacdfea072ae66393ad2c04c401",
+  "report.json": "62c576979c5d1458955fdf5654deab688ab3cf280610d67bf22b85a2ec0ced11",
+  "targets-built.jsonl": "47691926ceba707050dd783bc012c86a56b8524fb37a6b865bd340176b0d4f6f",
+  "targets.json": "d016094e597f3358f4b2c08592d19b92638e70c100c4a5a71061d6851713945b",
+  "verdicts-lock.jsonl": "e9289a954d5aee21156d0b317267b6f818f630b140ac5337e8fae0cc4c66b021",
+  "verdicts-scout.jsonl": "d4f32e83ad591cc364eb0ccfcc9a2a31ac5a4eff2fa55e227b308c90b9445285"
+ },
+ "git_sha": "65bc2e2bf7bbe4027e6751ff22840ecdf8e40fa1",
+ "redaction": {
+  "min_chars": 32,
+  "rule": "free-text leaves (whitespace or non-ASCII) of at least min_chars in a recipe become {redacted_sha256, chars}; long quoted spans in witness arguments likewise; purity-check details and reachability events are dropped"
+ },
+ "run": "confirm-mutants-v1",
+ "slurm_jobs": [
+  794,
+  795,
+  796
+ ],
+ "source_sha256": {
+  "build/admission.jsonl": "95ec8ee3905dbb249af42a5e8118052a0c1bac9f8b5e918fe4b1ca8b4d272cb0",
+  "build/build-summary.json": "af942877f31572b484816845be6cdb3b9055461c487a503cc88f042a1b84aeb6",
+  "build/mutations.jsonl": "b7f74aed0e6369004b6e1894bf6277fb5635c5d7a3fefe31064a0112e584d3e5",
+  "build/scoring-jobs.jsonl": "9c2426b7dce17f6357950b0bdb2560ce1a20005a5702a49b5058d840fa811b14",
+  "build/targets-built.jsonl": "47691926ceba707050dd783bc012c86a56b8524fb37a6b865bd340176b0d4f6f",
+  "prep/targets.report.json": "d016094e597f3358f4b2c08592d19b92638e70c100c4a5a71061d6851713945b",
+  "score/jobs-saved.excluded.jsonl": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "score/jobs-saved.jsonl": "d89b59609b4fe54e4bacaca3a02f5124a3acb1ee0a50b8df81f63e9a0e812f8c",
+  "score/mut-notes-lock.jsonl": "9ceafd12aff21f236765f172880c85b3d243eac16587aada3eb525731fca801e",
+  "score/mut-notes-scout.jsonl": "9ceafd12aff21f236765f172880c85b3d243eac16587aada3eb525731fca801e",
+  "score/mut-verdicts-lock.jsonl": "4c1c05cd3698b61c7d7ab5c69083d2a68a0a0d581920d8570a4efee8c63a0057",
+  "score/mut-verdicts-scout.jsonl": "00e8aa6a8093f2b0ed4799ea365b8f4fdbdbf5c82814cfb5d3d705734ee0b09b",
+  "score/outcomes.jsonl": "b1bd6a87f1d80d8eca79af417801b359a88d02dfeb04d1f282d6859bdde0be88",
+  "score/recheck.jsonl": "b0f0a2689012606a5b6aa96e3d5a6193588103ac074d26a4807edaf5e4feff91",
+  "score/report.json": "62c576979c5d1458955fdf5654deab688ab3cf280610d67bf22b85a2ec0ced11",
+  "submitted.json": "d14aac1fb3e3cc6593077aa8334eac267e769d19f84fad23b34b8e5d3d2fd257"
+ },
+ "split": "confirm"
+}

@@ -269,7 +269,7 @@
       "doc": "program/questions/q2-calibrated-cua-instrument.md",
       "dossier_key": "S1-calibrated-cua-instrument",
       "status": "stage-0-running",
-      "next_action": "D40: q2-action-path-v1 is invalid (C2 job 768: chord_super_d failed 5/5 under L0-raw, predicted to pass; press-state loss verified real at the X event level). Build q2-action-path-v2 (prediction corrected and disclosed, C2 read as a reproduction test on a new order seed, renderer run-root parameter), review, freeze, then C2, C1, C3, A1-A6, the ladder on a quiet host, A4 and A7. The checker-mutation study is a descriptive protocol (D34, D35, D38; reviews 55, 62, 56, 57, 64, 80, 90): freeze q2-evaluator-mutation-v1, then its confirm campaign, which needs Kevin's adjudication of the pool and the human spot check (D9). Stage 1 must be rescoped (431.5 GPU-h as designed) and go through the gauntlet (D24).",
+      "next_action": "D40: q2-action-path-v1 is invalid (C2 job 768: chord_super_d failed 5/5 under L0-raw, predicted to pass; press-state loss verified real at the X event level). Build q2-action-path-v2 (prediction corrected and disclosed, C2 read as a reproduction test on a new order seed, renderer run-root parameter), review, freeze, then C2, C1, C3, A1-A6, the ladder on a quiet host, A4 and A7. The checker-mutation study (q2-evaluator-mutation-v1, a descriptive protocol under D35 and D38) is frozen (ledger row 11, 65bc2e2) and its confirm campaign's CPU stage A1 ran (branch ops/q2-mutation-confirm): K1 70/74 PASS, P1 raw 4/92 flips, 1,232 confirm mutants admitted and scored (888 evaluable). Next: the audit (submit_audit.sh with a fresh salt, the overlay and the open-weight rater within 3.0 GPU-h, the isolated Claude rating as one workflow session, collect, ingest, summarize), then the registered analysis; Kevin adjudicates the pool and does the human spot check (D9). Stage 1 must be rescoped (431.5 GPU-h as designed) and go through the gauntlet (D24).",
       "first_gpu_experiment": {
         "name": "Qwen3.5 ladder (as dossier-designed)",
         "measured_projection_gpu_hours": 431.5,
@@ -285,6 +285,37 @@
         "status": "v1 frozen 2026-10-08 (ledger rows 8-10) and invalid: C2 failed (job 768; chord_super_d unpredicted); v2 under D40",
         "branch": "stage0/q2-action-path-d30 (from main, which holds stage0/q2-action-path)",
         "development_jobs": "482-637, 662-667 and 694-708 (seed 42, CPU only, never evidence; 703-708 at the D30 runtime commit 7653799, 694 at 34f79e4, 695-699 cancelled while booting)"
+      },
+      "checker_mutation_confirm": {
+        "registration": "q2-evaluator-mutation-v1 (ledger row 11, frozen at 65bc2e2; descriptive protocol, D35, D38)",
+        "branch": "ops/q2-mutation-confirm (not merged)",
+        "evidence": "program/evidence/2026-10-08/q2-mutation-confirm/README.md",
+        "stage_a1": {
+          "jobs": [
+            "781-783 confirm-controls-v1",
+            "791-793 reserve-controls-v1",
+            "794-796 confirm-mutants-v1"
+          ],
+          "k1": "70/74 lock-exact (94.6%, threshold 90%): PASS",
+          "p1_raw": "4/92 flips (confirm 3/67, reserve 1/25), Clopper-Pearson 95% 1.2-10.8%; audit-confirmed share pending",
+          "mutants": {
+            "targets": 68,
+            "planned": 1289,
+            "admitted": 1232,
+            "evaluable_lock": 888,
+            "evaluable_outside_probe_cells": 444,
+            "null_not_pass_targets": 7,
+            "normalized": 23,
+            "save_failed": 0,
+            "infra_failed": 0,
+            "nondeterministic": 0,
+            "s1_candidates": 0
+          },
+          "census_preview": "134 real items on 33 tasks (36 fn_equiv, 93 alt_gate, 5 fp_violation) plus shams and 4 P1 flips; capacity 1,139",
+          "held_until_ingest": "~/cotcodec-runs/stage0/q2-evaluator-mutation/scratch/held-after-isolated-ingest-confirm-v1/ (digests in held/SHA256SUMS)",
+          "gpu_hours": 0.0
+        },
+        "status": "stage A1 complete; audit not started"
       }
     },
     {
@@ -317,7 +348,7 @@
     "Decide whether to purge the old host address and the internal corpus inventory from public git history (requires a force-push)",
     "Spot-check a sample of the Q2 checker-mutation audit as the human rater (decision D9)",
     "Moonshot (Kimi) account is suspended for insufficient balance; recharge it if a Kimi model should be a rater or reviewer (rotate the exposed key at the same time)",
-    "Q2 checker-mutation (q2-evaluator-mutation-v1, ninth draft, D35 and D38): D34 (i) fired after the one rater retry (dev kappa 0.066 under the registered ingest, 0.575 with the resumed harness's relay turn excepted), so the study is a pre-specified descriptive protocol (D35) implemented on stage0/q2-evaluator-mutation. The sixth review scored the eighth draft 80/100; D38 accepted its choices (census audit with seeded stratified fallback, gold shams for every audited task, the relay frame registered under D35's constraints, difference-first packets, the registered transcript entry and attachment types) and had its minor items fixed in the ninth draft (fallback at the largest budget that fits; a registered collector of every rating transcript; relay frames checked across calls files and recorded verbatim; one workflow session with one fresh, answer-blind re-rate of relay-voided items, both results reported; concordant contradictions of every candidate kind to the pool; interrupted attempts answer only through a structured answer). Kevin's remaining items (prereg section 17): adjudicate the pool (about 16 items, 10-40, 0.5-3.5 h; if a resume brings a different relay frame, every relay-voided item joins it, 113 against 24 on the development analogue), the human spot check (about 35 items, D9), the outward actions, and the carried-over sign-offs (the D23/D25/D27 rater lineup with unfixed Claude sampling and public OSWorld files sent to the Claude model, P1 with reserve-split golds, the spec release, the D34 rules as implemented). The narrow re-check scored the ninth draft 90 (ready to freeze, no blocking defect) and its minor items are fixed; then re-merge main and freeze",
+    "Q2 checker-mutation (q2-evaluator-mutation-v1, ninth draft, D35 and D38): D34 (i) fired after the one rater retry (dev kappa 0.066 under the registered ingest, 0.575 with the resumed harness's relay turn excepted), so the study is a pre-specified descriptive protocol (D35) implemented on stage0/q2-evaluator-mutation. The sixth review scored the eighth draft 80/100; D38 accepted its choices (census audit with seeded stratified fallback, gold shams for every audited task, the relay frame registered under D35's constraints, difference-first packets, the registered transcript entry and attachment types) and had its minor items fixed in the ninth draft (fallback at the largest budget that fits; a registered collector of every rating transcript; relay frames checked across calls files and recorded verbatim; one workflow session with one fresh, answer-blind re-rate of relay-voided items, both results reported; concordant contradictions of every candidate kind to the pool; interrupted attempts answer only through a structured answer). Kevin's remaining items (prereg section 17): adjudicate the pool (about 16 items, 10-40, 0.5-3.5 h; if a resume brings a different relay frame, every relay-voided item joins it, 113 against 24 on the development analogue), the human spot check (about 35 items, D9), the outward actions, and the carried-over sign-offs (the D23/D25/D27 rater lineup with unfixed Claude sampling and public OSWorld files sent to the Claude model, P1 with reserve-split golds, the spec release, the D34 rules as implemented). The narrow re-check scored the ninth draft 90 (ready to freeze, no blocking defect); it was frozen on main at 65bc2e2 (ledger row 11), and the confirm campaign's CPU stage ran (K1 70/74 PASS, P1 raw 4/92, 1,232 mutants admitted, census preview 134 real items on 33 tasks); Kevin's items above follow the audit",
     "The ANTHROPIC_API_KEY on this machine is invalid (HTTP 401); supply a valid key if the Claude rater and gauntlet reviews should use the API rather than the agent harness (D25)",
     "Decide whether to ask the KernelGYM authors for a licence: gate_b.py was rewritten from the spec after the review found a transliteration (stage0/q1-gates, never pushed); a licence would remove the residual risk",
     "Q1 after D41: Stage 0 as drafted is withdrawn (gauntlet wave 1 honest exit at 45; the TF32-admissible audit metric cannot separate correct TF32 matmul/conv outputs from destroyed ones; projected 20-25 GPU-h high under the safe execution policy). A CPU-only audit-metric study on stored non-evaluation data is running; its recommendation, a small S1-cal GPU pilot and any successor Stage 0 (new id, fresh gauntlet, D24) are yours to approve. Stage 1 also needs the R580 driver upgrade or risk acceptance",
@@ -334,7 +365,8 @@
     "q3-dense-headroom-precheck-v1",
     "q2-action-path-v1",
     "q2-action-path-v1-inputs",
-    "q2-action-path-v1-executor"
+    "q2-action-path-v1-executor",
+    "q2-evaluator-mutation-v1"
   ],
   "infrastructure": {
     "serving_probe": "v1 and v2 done (1.15 GPU-h): cu129 vLLM works on R570; Q1 sampling within cap; Q2 ladder needs rescoping",
@@ -511,6 +543,17 @@
       ],
       "outcome": "review PARSED on attempt 1, total 45, replicates token-identical; wave score 45 (lower of 47 and 45); honest exit (query budget, triad 3/3 refuted); reviewer inference only, not Stage 0 work",
       "basis": "physical (scontrol RunTime 00:03:26 on 1 H100; 0.25 GPU-h cap)"
+    },
+    {
+      "experiment": "q2-evaluator-mutation-v1 confirm campaign stage A1 (K1, P1, confirm mutants; CPU only)",
+      "gpu_hours": 0.0,
+      "jobs": [
+        "781-783 confirm-controls-v1 (CPU)",
+        "791-793 reserve-controls-v1 (CPU)",
+        "794-796 confirm-mutants-v1 (CPU)"
+      ],
+      "outcome": "K1 70/74 PASS; P1 raw 4/92; 1,289 planned, 1,232 admitted, 888 evaluable (444 outside probe cells); no save, scoring or infrastructure failure; no S1 candidate",
+      "basis": "physical: CPU-only Slurm lane (D12), no GPU requested, no /dev/nvidia* in any receipt"
     }
   ],
   "results": [
