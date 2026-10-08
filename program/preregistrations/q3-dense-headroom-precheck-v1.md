@@ -1,11 +1,10 @@
 # Q3 dense headroom pre-check (q3-dense-headroom-precheck-v1)
 
-Status: DRAFT, not frozen. Built under program decision D26 on branch
-`stage0/q3-dense-precheck`. No GPU job of this experiment runs before this file
-is frozen in `program/preregistrations/ledger.jsonl`; every job verifies this
-file's digest against its ledger row at start-up and refuses code whose
-SHA-256 differs from the table below. The design decisions at the end are
-left to the program owner.
+Status: frozen in program/preregistrations/ledger.jsonl; see the ledger row
+for the freeze time and `git_head_at_freeze`. Design decisions accepted, four
+amended, in D32 (`program/decisions.md`). No GPU job of this experiment runs
+before the freeze; every job verifies this file's digest against its ledger
+row at start-up and refuses code whose SHA-256 differs from the table below.
 
 ## Purpose and claim level
 
@@ -76,12 +75,12 @@ are files tabled by frozen registrations, imported unchanged:
 | File | SHA-256 |
 |---|---|
 | scripts/run_dense_headroom_precheck.py | 85a22c63be3336121e451d224ea6dae68dc1078f289c0f440bef98eb53669577 |
-| harness/dense_headroom_data.py | 855798b8446c9da545a7b6d812846796f3272947d7da514c5d0ba609617ca78e |
-| harness/dense_headroom_stats.py | 4b6ef113c5141269a565dd4218096dad151a03934aafd56609b3028967d39fba |
+| harness/dense_headroom_data.py | ee78549e257631035aef0d52c5243f6bae969fd2c4f4a1e43bb8779bdf524003 |
+| harness/dense_headroom_stats.py | a94d1ceee80fe3e95f2f36af0cbda51644846594d5fc9ccf69fcb90c8215d195 |
 | harness/dense_headroom_torch.py | 6dd8ff1f9cbcbd7d3faaecd1c94ab7908c12e2aea16b480bc56735e4b27547be |
 | scripts/run_dense_headroom_precheck_doctor.py | 1a02188fefae40d2522840a26662478ed13fd2164f60b40b4b628dc38619cf7c |
-| scripts/fill_dense_headroom_precheck_manifests.py | 48b2726ea1b65d6c4b6cbec6d475ad1801437fecd0bfe7543dc5a9651f8057e4 |
-| scripts/summarise_dense_headroom_precheck.py | abeb73ac69d680e7f3439dc0ee619446bd4e756959f3c35594f9cd3259640145 |
+| scripts/fill_dense_headroom_precheck_manifests.py | 0c5505cce47c972b0631011d5c9c069341e1830b84ab6838be9a37b693cb9266 |
+| scripts/summarise_dense_headroom_precheck.py | 0a4663a19877ed13bf06ffda09ac810ad66d31cb7e56471aa73a5a6001b8daaf |
 | scripts/preregister.py | 21fc3ef0ed0958b1600ce742c3b4f8d557d0a298635acb20342710eb814b2c0d |
 | experiments/manifests/q3-dense-headroom-precheck-v1/q3-dense-headroom-0p6b.yaml | 76520f5e6d4ed19aabd43a3b1793effb21b501f3e7a378ccc5ff6d64b4b09ab6 |
 | experiments/manifests/q3-dense-headroom-precheck-v1/q3-dense-headroom-4b.yaml | 7f71ebe5b358dd5cafa7a61e158fc619cc65d6ee2a63c703dd989d6fed4792e0 |
@@ -309,11 +308,14 @@ Per lane (`harness.dense_headroom_stats.classify_lane`):
   entity-controlled families at least 0.5, for the chosen target): VIABLE when
   the target's controlled MN headroom is at least 10 points, the literal
   selector's controlled G(MN) point is below 0.5, and some sigma whose null
-  passes V1 has a controlled G(MN) whose 99 percent lower bound is at least
-  0.5 (a V1-adequate noisy copy of the target passes the floor as an indexer
-  would be judged); NOT_VIABLE otherwise (reasons listed); NOT_EVALUABLE when
-  the controlled MN headroom is not evaluable. The points and both bounds of
-  the literal selector's and every null's G(MN) are reported.
+  passes V1 and whose seed-mean English ML loss is at least 2.5 points (the
+  reach rule of null_calibration) has a controlled G(MN) whose 99 percent
+  lower bound is at least 0.5 (a realistically imperfect, V1-adequate noisy
+  copy of the target passes the floor as an indexer would be judged, not only
+  the near-exact copy at sigma 0.25); NOT_VIABLE otherwise (reasons listed);
+  NOT_EVALUABLE when the controlled MN headroom is not evaluable. The points
+  and both bounds of the literal selector's and every null's G(MN) are
+  reported, with each null's English ML loss.
 - fertility_association: STRONG when |Spearman| between needle fertility and
   CX headroom over the seven held-out languages is at least 0.75, WEAK
   otherwise (descriptive; with seven languages it cannot separate fertility
@@ -330,7 +332,8 @@ receipts exist, or once the 0.6B lane's receipt is INVALID:
   4B lane runs the same code, so neither lane's read is a result: no base, no
   design and no stop is read, and a repair is a new experiment id. The 4B lane
   is not submitted unless the 0.6B lane's receipt reports the smoke
-  reproduction REPRODUCED (Freeze procedure, step 4).
+  reproduction REPRODUCED (Freeze procedure, step 4); the filler refuses to
+  fill the 4B lane without that receipt.
 - Then INCOMPLETE: a lane without a completed, non-void receipt makes the
   read INCOMPLETE.
 - Base: the first lane in the order Qwen3-0.6B-Base, Qwen3.5-4B-Base that is
@@ -388,33 +391,49 @@ D26's ceiling of 0.5 GPU-h. Expected use, from K1 v1's smoke timings and the
 model sizes, is about 4 minutes for the 0.6B lane and about 11 for the 4B lane
 (both include start-up: bundle read and artifact derivation, model load, and
 on 4B the first-use Triton compilation); these are estimates, not
-measurements.
+measurements. Slurm sends SIGUSR1 three minutes before a job's limit, and the
+signal ends the job wherever it lands: in the evaluation loop the job saves a
+checkpoint that no continuation can use (at most two of the lane's minutes
+remain), and in the statistics phase it leaves none; either way the job is
+void. A job's useful time is therefore its limit minus three minutes: 6 and 18
+minutes for the two lanes' first jobs, about 1.5 and 1.6 times the estimates.
 
 Every job of a lane counts against that lane's own minutes: its first job, a
 re-run of a void job and its one continuation. All of a lane's jobs run in the
 lane's registered run root (the template's `run_root`). Before filling any
-later job, the filler reads that run root: every job directory must have
-ended (`job.env` and `termination.env`), none may hold a lane receipt, and
-each is charged its elapsed minutes from `job.env` `started_at` to
-`termination.env` `finished_at`, rounded up, plus one (Slurm accounting is off
-on this host; the extra minute covers the prolog before `job.env` and the
-epilogue). A later job gets the lane's minutes minus everything charged, at
-least 3, or is refused and the lane is INCOMPLETE. A job interrupted by a
-signal saves its completed chunks and exits 75; its continuation resumes
-`dense-precheck/checkpoints` of the lane's latest job, which must have ended
-with a confirmed signal checkpoint (exit 75), has at most the lane's minutes
-minus two, and is filled at most once per lane (no job in the run root may
-name a predecessor, and the filler claims each later job's slot in the run
-root exclusively, so a second manifest for the slot is refused whatever the
-output directory). The filler, which reads the run root, is the budget
-authority; the entry point refuses a registered-profile job outside the batch
-script, a continuation manifest without the batch script's resume receipt for
-its predecessor or without the predecessor's pinned development artifact, a
-fresh job that finds checkpoints, and any
-manifest whose GPUs differ from the lane's or whose minutes exceed the lane's
-(the lane's minus two for a continuation) or fall below 3. Because Slurm sends SIGUSR1 three minutes
-before a job's limit, a job interrupted at its time limit has used at least
-its limit minus three minutes and leaves at most two: a lane that overruns its
+job, the filler reads that run root: every job directory must have ended
+(`job.env` and `termination.env`), none may hold a lane receipt, and each is
+charged its elapsed minutes from `job.env` `started_at` to `termination.env`
+`finished_at`, rounded up, plus one (Slurm accounting is off on this host; the
+extra minute covers the prolog before `job.env` and the epilogue). A later job
+gets the lane's minutes minus everything charged, at least 5 (the three-minute
+SIGUSR1 lead plus two useful minutes), or is refused and the lane is
+INCOMPLETE. A job interrupted by a signal saves its completed chunks and exits
+75; its continuation resumes `dense-precheck/checkpoints` of the lane's latest
+job, which must have ended with a confirmed signal checkpoint (exit 75), has
+at most the lane's minutes minus two, and is filled at most once per lane (no
+job in the run root may name a predecessor).
+
+The filler claims every job's slot in the run root exclusively, the first
+job's included (slot 0), so a second manifest for a slot is refused whatever
+the output directory. Each filled manifest is submitted once. A job is matched
+to its claim by its `manifest.json` (name, minutes, image and predecessor). A
+lane with a job that has no claim, a job whose elapsed minutes exceed its
+claim's minutes, or two jobs on one claim (a filled manifest submitted again)
+is void and cannot be read under this id: the filler fills no further job of
+it, and the lane is INCOMPLETE. The entry point cannot refuse a manifest whose
+claim is missing or already used, because its container sees only its own job
+directory, not the lane's run root; the summariser's void rule is the
+backstop, applied after the GPU time is spent.
+
+The filler, which reads the run root, is the budget authority; the entry point
+refuses a registered-profile job outside the batch script, a continuation
+manifest without the batch script's resume receipt for its predecessor or
+without the predecessor's pinned development artifact, a fresh job that finds
+checkpoints, and any manifest whose GPUs differ from the lane's or whose
+minutes exceed the lane's (the lane's minus two for a continuation) or fall
+below 5. Because a job interrupted at its time limit has used at least its
+limit minus three minutes and leaves at most two, a lane that overruns its
 minutes ends INCOMPLETE, and a continuation fits only after an earlier
 interruption (a SIGTERM from the operator or the node, or a SIGUSR1 sent by
 hand).
@@ -432,8 +451,9 @@ code 0:0 (except an exit 75 completed by its one continuation), when a
 start-up check fails (exit 2), on an integrity failure (exit 3), when
 provenance verification fails, or when the orx node lacks its ORX_RESULT line.
 A void lane may be re-run under this id only if no lane receipt was produced
-by any of its jobs (chunk files no statistic has read do not count), in the
-lane's registered run root and within the lane's remaining minutes (Compute).
+by any of its jobs (chunk files no statistic has read do not count) and each
+of its jobs ran on its own fill claim, in the lane's registered run root and
+within the lane's remaining minutes (Compute).
 The combined read (`scripts/summarise_dense_headroom_precheck.py`) applies
 these rules to the job that wrote each receipt, from the files beside it:
 `termination.env` reason completed with exit code 0;
@@ -441,9 +461,11 @@ these rules to the job that wrote each receipt, from the files beside it:
 which must be the receipt's; the job's `ORX_RESULT ... job=N exit=0` line (N
 its Slurm job id) in a saved orx log; every job in the lane's run root ended
 and exactly one holding a receipt; a continuation's predecessor ended with a
-confirmed signal checkpoint and is recorded in the receipt; and the lane's
-jobs together ran within its minutes. It records each receipt's SHA-256 over
-the file's bytes.
+confirmed signal checkpoint and is recorded in the receipt; the lane's jobs
+together ran within its minutes; and every job of the lane, the first
+included, ran on its own fill claim and within the claim's minutes, with no
+claim carrying two jobs (Compute). It records each receipt's SHA-256 over the
+file's bytes.
 
 ## Reported regardless of outcome
 
@@ -460,9 +482,12 @@ the file's bytes.
 ## Freeze procedure
 
 1. The program owner accepts or amends the design decisions below (a
-   decision in `program/decisions.md`). The code table above is recomputed
-   from the final code; `tests/test_dense_headroom_prereg.py` binds it to the
-   working tree.
+   decision in `program/decisions.md`; D32). Before step 2 the status
+   paragraph at the top of this file is rewritten to the frozen wording
+   (frozen in the ledger, decisions accepted in that decision) and the lead-in
+   of the design decisions to say they were accepted, because a frozen file
+   cannot be edited. The code table above is recomputed from the final code;
+   `tests/test_dense_headroom_prereg.py` binds it to the working tree.
 2. This file is frozen with
    `uv run python scripts/preregister.py freeze q3-dense-headroom-precheck-v1 program/preregistrations/q3-dense-headroom-precheck-v1.md`
    and committed with its ledger row.
@@ -472,10 +497,13 @@ the file's bytes.
    evidence.
 4. The two lane manifests are filled by
    `scripts/fill_dense_headroom_precheck_manifests.py` and pass the
-   submitter's dry run and test-only run; the 0.6B lane is submitted first.
-   The 4B lane is submitted only after the 0.6B lane has a completed receipt
-   whose `smoke_452_reproduction` status is REPRODUCED; otherwise the
-   pre-check ends INVALID and the 4B lane does not run.
+   submitter's dry run and test-only run; each filled manifest is submitted
+   once, and the 0.6B lane is submitted first. The 4B lane is filled
+   (`--small-lane-receipt`) and submitted only after the 0.6B lane has a
+   completed receipt whose `smoke_452_reproduction` status is REPRODUCED; the
+   filler refuses it otherwise. If the reproduction fails, the pre-check ends
+   INVALID and the 4B lane does not run; if the 0.6B lane ends without a
+   receipt, the 4B lane does not run either and the read is INCOMPLETE.
 5. The combined read is written by
    `scripts/summarise_dense_headroom_precheck.py` from the lane receipts and
    the saved orx logs of their nodes (`--orx-log`; `--run-root` for a lane
@@ -484,11 +512,18 @@ the file's bytes.
 
 ## Design decisions
 
-Each states the choice and why; all are open for the program owner.
+Each states the choice and why. All were accepted in D32
+(`program/decisions.md`); decisions 1, 10, 12 and 13 were amended there and
+are stated here as amended.
 
-1. Two lanes, both always run. D26 names both bases. The 4B lane is not
-   conditional on the 0.6B result because a NEGATIVE-capable v3 may exist on
-   one and not the other, and the combined rule needs both.
+1. Two lanes, both run unless the 0.6B smoke reproduction fails (amended in
+   D32). The 4B lane is filled and submitted after the 0.6B lane's receipt
+   reports the K1 smoke reproduction REPRODUCED (the filler checks it; Freeze
+   procedure, step 4). If the reproduction fails, the 4B lane is not
+   submitted and the combined read is INVALID (decision 11). The 4B lane never
+   depends on the 0.6B lane's headroom result: D26 names both bases, a
+   NEGATIVE-capable v3 may exist on one and not the other, and the combined
+   rule needs both.
 2. Development partition only, from the K1 bundle only (D26). The bundle's
    development prompts are K1 v1's 20 development questions; no new Belebele
    question, haystack or language is read. Consequence: no seen-script
@@ -542,29 +577,44 @@ Each states the choice and why; all are open for the program owner.
    torch's deterministic registry and an op without a deterministic kernel
    would otherwise end the job; the receipt records the mode. Nothing read
    here depends on bitwise reproducibility.
-10. The floor candidate is the gauntlet's example (lower bound of G(MN) at
-    least 0.5), defined on entity-controlled families so that it measures
-    non-literal adequacy, and judged by whether it separates a literal-only
-    selector (point below 0.5) from a V1-adequate noisy copy of the target
-    whose 99 percent lower bound is at least 0.5, the bound an indexer would be
-    judged by. With about 19 development clusters, and fewer controlled ones,
-    wide intervals make NOT_VIABLE (a redesigned floor) the likely outcome.
+10. The floor candidate (amended in D32) is the gauntlet's example (lower
+    bound of G(MN) at least 0.5), defined on entity-controlled families so
+    that it measures non-literal adequacy, and judged by whether it separates
+    a literal-only selector (point below 0.5) from a V1-adequate noisy copy of
+    the target whose 99 percent lower bound is at least 0.5, the bound an
+    indexer would be judged by. The noisy copy must meet decision 8's reach
+    rule: its seed-mean English ML loss is at least 2.5 points. The near-exact
+    copy at sigma 0.25 passes whenever the other two conditions hold, so
+    without the reach rule VIABLE would not show that the floor admits a
+    realistically imperfect selector. With about 19 development clusters, and
+    fewer controlled ones, wide intervals make NOT_VIABLE (a redesigned floor)
+    the likely outcome.
 11. The K1 smoke reproduction is a validity gate for the 0.6B lane: same
     tokens, same capture path, K1 v2's equivalence-tested batched selection.
     A failure means the new code path does not reproduce K1 v1's measurement;
     the 4B lane runs the same path, so the combined read is INVALID and the 4B
     lane is not submitted.
-12. Caps 0.15 and 0.35 GPU-h (9 and 21 minutes on one GPU), about twice the
-    estimated use, summing to D26's 0.5 GPU-h. Every job of a lane (re-runs
-    and its one continuation included) is charged against the lane's own
-    minutes from the run root's timestamps, and no budget amendment is
-    possible under this id. A time-limit interrupt leaves no room for a
-    continuation (the signal comes three minutes before the limit), so a lane
-    that overruns ends INCOMPLETE.
-13. Container profile `default` for the 0.6B lane and `large-cpu-mem` (an exec
-    /tmp) for the 4B lane, whose Triton kernels compile and load at first use;
-    the entry point also points Triton's and TorchInductor's caches at the run
-    directory.
+12. Caps 0.15 and 0.35 GPU-h (9 and 21 minutes on one GPU), summing to
+    D26's 0.5 GPU-h (amended in D32). SIGUSR1 arrives three minutes before
+    the limit and ends the job wherever it lands, without a usable
+    checkpoint, so the useful window is the limit minus three minutes: 6 and
+    18 minutes, about 1.5 and 1.6 times the estimated use. Every job of a lane
+    (re-runs and its one continuation included) is charged against the lane's
+    own minutes from the run root's timestamps, gets at least 5 minutes (2
+    useful after the signal's lead) or is refused, and no budget amendment is
+    possible under this id. Every job, the first included, takes an exclusive
+    filler claim, and each filled manifest is submitted once; a lane with a
+    job without a claim, a job that ran longer than its claim's minutes, or
+    two jobs on one claim is void. The entry point cannot check claims (its
+    container sees only its own job directory), so the summariser's void is
+    the backstop. A time-limit interrupt leaves no room for a continuation, so
+    a lane that overruns ends INCOMPLETE.
+13. Container profiles `default` and `large-cpu-mem` (amended in D32):
+    `default` for the 0.6B lane, `large-cpu-mem` (an exec /tmp) for the 4B
+    lane, whose Triton kernels compile and load at first use. Only Triton's
+    cache moves to the run directory; the entry point sets the cache
+    variables with `setdefault`, so TorchInductor's cache stays at the batch
+    script's `/tmp/torchinductor`, and nothing here calls `torch.compile`.
 14. The CPU doctor runs tiny random Qwen3 and Qwen3.5-style models with
     stand-in byte and pair tokenizers on a synthetic bundle built by the real
     K1 builder; on CPU it blocks flash-linear-attention so the gated-delta
