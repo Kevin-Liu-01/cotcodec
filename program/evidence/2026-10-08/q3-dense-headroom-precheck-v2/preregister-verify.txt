@@ -1,0 +1,50 @@
+at=2026-10-08T13:20:58Z head=ed5d5a93dffc3e8cf777c1933330ef7229eda5d6
+$ uv run --locked python scripts/preregister.py verify q3-dense-headroom-precheck-v2
+Using CPython 3.14.6
+Creating virtual environment at: .venv
+Installed 50 packages in 55ms
+{
+  "experiment_id": "q3-dense-headroom-precheck-v2",
+  "frozen_at": "2026-10-08T13:17:30.036243+00:00",
+  "git_head_at_freeze": "0a068a179ef656562317161b7a7aa47a08d4bfb5",
+  "hash": "a68af989bfadb17ddb540ff0fa1c4dc64f62357812158580e1d25ddc5a41a2e1",
+  "path": "program/preregistrations/q3-dense-headroom-precheck-v2.md",
+  "previous_hash": "dc39bfa2f68e0fd57a213e0972266a4db60428e00d6c4e6bca8e576f35ec6439",
+  "sha256": "982e66bac55d8ad45f2eaaf26fde37ef0bb9a1e32eb9be81098128ce8b787287"
+}
+exit=0
+$ uv run --locked python scripts/preregister.py check-chain
+{"rows": 12, "status": "PASS"}
+exit=0
+$ sha256sum program/preregistrations/q3-dense-headroom-precheck-v2.md
+982e66bac55d8ad45f2eaaf26fde37ef0bb9a1e32eb9be81098128ce8b787287  program/preregistrations/q3-dense-headroom-precheck-v2.md
+$ sha256sum -c (the registration code table, 27 rows)
+scripts/run_dense_headroom_precheck_v2.py: OK
+harness/dense_headroom_v2.py: OK
+harness/dense_headroom_v2_lanes.py: OK
+harness/dense_headroom_torch_v2.py: OK
+scripts/run_dense_headroom_precheck_v2_doctor.py: OK
+scripts/dense_headroom_v2_signal_shim.py: OK
+scripts/fill_dense_headroom_precheck_v2_manifests.py: OK
+scripts/summarise_dense_headroom_precheck_v2.py: OK
+scripts/preregister.py: OK
+experiments/manifests/q3-dense-headroom-precheck-v2/q3-dense-headroom-v2-0p6b.yaml: OK
+experiments/manifests/q3-dense-headroom-precheck-v2/q3-dense-headroom-v2-4b.yaml: OK
+experiments/manifests/q3-dense-headroom-precheck-v2/q3-dense-headroom-v2-timing-4b.yaml: OK
+experiments/manifests/q3-dense-headroom-precheck-v2/q3-dense-headroom-v2-timing-2-4b.yaml: OK
+harness/dense_headroom_data.py: OK
+harness/dense_headroom_stats.py: OK
+harness/dense_headroom_torch.py: OK
+scripts/run_dense_headroom_precheck.py: OK
+scripts/run_dense_headroom_precheck_doctor.py: OK
+scripts/fill_dense_headroom_precheck_manifests.py: OK
+scripts/summarise_dense_headroom_precheck.py: OK
+harness/sparse_indexer_torch.py: OK
+harness/sparse_indexer_bank.py: OK
+harness/sparse_indexer_k1_runtime.py: OK
+harness/sparse_indexer_k1_marker.py: OK
+harness/sparse_indexer_k1_stats.py: OK
+harness/sparse_indexer_data.py: OK
+harness/translation_supervised_indexer.py: OK
+exit=0
+porcelain_lines_after=0

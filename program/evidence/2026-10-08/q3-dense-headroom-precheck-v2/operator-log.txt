@@ -1,0 +1,142 @@
+q3-dense-headroom-precheck-v2 operator log (UTC, 2026-10-08). Host: fal-h100-01. Operator: Claude (subagent), freeze procedure steps 3-5.
+Registration program/preregistrations/q3-dense-headroom-precheck-v2.md sha256 982e66bac55d8ad45f2eaaf26fde37ef0bb9a1e32eb9be81098128ce8b787287
+Ledger row 12, hash a68af989bfadb17ddb540ff0fa1c4dc64f62357812158580e1d25ddc5a41a2e1, git_head_at_freeze 0a068a1; freeze commit (holds the row)
+ed5d5a93dffc3e8cf777c1933330ef7229eda5d6, main and origin/main at the start. ~/cotcodec untouched; no sudo; nothing pushed.
+
+Before acting (session-restart check)
+13:19:27  host read-only: queue empty; 8 GPUs 0 % and 0 MiB; no compute processes. ~/cotcodec-runs/q3-dense-headroom-precheck-v2/ held only
+          the two timing run roots (timing-qwen3.5-4b-base, timing-2-qwen3.5-4b-base); neither lane run root existed. Locally no
+          ops/q3-dense-v2 branch existed. No earlier attempt to recover.
+13:20:41  local worktree /Users/kevinliu/repos/cotcodec-wt-ops-q3-dense-v2 on new branch ops/q3-dense-v2 from main ed5d5a9.
+
+Step 3: clone, image, CPU doctor
+13:20:47  pre-clone state (states/pre-clone-state.txt): queue empty, GPUs idle, lane run roots absent.
+13:20:49  fresh clone of main (https://github.com/Kevin-Liu-01/cotcodec.git) into ~/cotcodec-runs/stage0/q3-dense-v2/lanes-repo, detached
+          at ed5d5a93dffc3e8cf777c1933330ef7229eda5d6, tree a5358a41, 0 porcelain lines, origin/main ed5d5a93 (clone.txt).
+13:20:58  in the clone: `uv run --locked python scripts/preregister.py verify q3-dense-headroom-precheck-v2` exit 0 (sha256 982e66ba...,
+          hash a68af989..., git_head_at_freeze 0a068a1); `check-chain` {"rows": 12, "status": "PASS"}; the registration's 27 tabled files
+          `sha256sum -c` OK (code-table.sha256 extracted from the frozen file); still 0 porcelain lines (preregister-verify.txt).
+13:21:03  inputs (inputs-check.txt): K1 bundle 278,818,734 bytes at the registered host path; model receipts e7f36f05... (0.6B) and
+          253a1418... (4B) equal the registration's.
+13:21:10  pre-build state; image build submitted from the clone: Slurm 855, `sbatch --parsable --export=ALL,COTCODEC_REPO=<clone>
+          infra/slurm/host-single-node/build-architecture-image.sbatch` (CPU only: 16 CPUs, 64G, no GRES).
+13:31:14  build 855 COMPLETED 0:0, RunTime 00:10:04 (image/scontrol-855.txt). Receipt (image/image-build-receipt-855.json): tag
+          cotcodec-research:ed5d5a93-architecture, image id sha256:500f3b027173a2d772b7d6ea00ea667dbe1bc956df51e3c2c4455d9c08a2714b,
+          git ed5d5a93, tree a5358a41, source tar 53458dd1fff517cd45c48893d02f933c9ad5d3fa506468bae18c1066ebc14ffc, loopback-registry
+          digest sha256:13a9de83.... Versions torch 2.11.0+cu128, transformers 5.15.0, flash-linear-attention 0.5.2, triton 3.6.0: the
+          versions line is identical to image 723's (v1 job 727). uv.lock, pyproject.toml, infra/research/Dockerfile and the batch script
+          are unchanged between a369e6d and ed5d5a9.
+13:31:25  checks (image/image-checks-855.txt): clone HEAD ed5d5a93, tree a5358a41, clean; `git archive HEAD | sha256sum` 53458dd1...
+          (equal to the receipt); image label org.opencontainers.image.revision ed5d5a93...; image created 13:22:16Z, after the
+          freeze row (13:17:30Z).
+13:31:31  pre-doctor state; v2 CPU doctor in the image (doctor/run-doctor-in-image.sh): srun step Slurm 856 (research partition,
+          32 CPUs, 96G, no GPU, 50 min), docker run --rm --network none --user <uid:gid>, USER/LOGNAME cotcodec, HOME=/tmp,
+          HF_HUB_OFFLINE=1, PYTHONDONTWRITEBYTECODE=1, OMP_NUM_THREADS=8, image 500f3b02..., the source baked into the image.
+13:34:32  Slurm 856 COMPLETED 0:0, RunTime 00:03:01. DENSE_V2_DOCTOR_PASS, 12/12 cases (codecs, features, derive, statistics, selectors,
+          multiple_choice, equivalence, v1_gate, end_to_end, job_binding, usr1_displaced, timing_profile), exit 0. Receipt
+          doctor/doctor-cpu-image-500f3b02.json sha256 0240cfe36533242edfc77bdda48b6756a0b67829f6f4fd04c0f9ba4c796887fc; its 10 code
+          digests equal the frozen table.
+
+Step 4: the Qwen3-0.6B-Base lane
+13:34:48  pre-fill state (states/pre-fill-0p6b-state.txt): queue empty; GPUs idle; the lane run root
+          ~/cotcodec-runs/q3-dense-headroom-precheck-v2/qwen3-0.6b-base did not exist.
+13:34:48  filler from the clone: `uv run --locked python scripts/fill_dense_headroom_precheck_v2_manifests.py --lane qwen3-0.6b-base
+          --image-receipt <build 855 receipt> --output <ops>/filled` (run root: the template's), exit 0, stderr empty. It created the run
+          root with fill-claims/after-0.json (slot 0, kind first, 12 minutes, image 500f3b02..., manifest_sha256 a449b93e...). Diff against
+          the template: only the four FILL values (image id 500f3b02..., git sha ed5d5a93..., source tar 53458dd1..., preregistration
+          982e66ba... = the ledger row's sha256). Filled manifest sha256 a449b93efb83dcf1370fd7e071955e2122f727e738649441f334738d26e7b434.
+13:35     from the clone: submitter --dry-run exit 0 (filler/precheck-0p6b-dry-run.json: gpu_hours 0.2, --gres=gpu:h100:1,
+          --cpus-per-task=16, --mem=64G, --time=00:12:00, --signal=B:USR1@180, --no-requeue, output in the lane run root) and --test-only
+          exit 0. Neither created a job directory (the run root still held only fill-claims).
+13:35     orx node created: 72c5f6c4-e750-402c-9503-d5bd7d042370 "Q3 dense pre-check v2 0.6B lane (q3-dense-headroom-precheck-v2)" (new
+          root, --baseline), branch orx/q3-dense-pre-check-v2-0-6b-lane-q3-dense-headroo, created at ed5d5a9 (no reset needed). Node commit
+          253ad85 adds experiments/orx/node.yaml (v1's 0.6B node.yaml with only the manifest path changed; kind slurm-manifest) and
+          experiments/manifests/filled/q3-dense-headroom-v2-0p6b.yaml (byte-identical to the filler's output, sha256 a449b93e...).
+          Worktree /Users/kevinliu/repos/cotcodec-wt-orx-q3-dense-v2-0p6b. Not pushed.
+13:35:31  pre-submit state (states/pre-submit-0p6b-state.txt): queue empty; GPUs idle; no compute processes; run root holds only fill-claims.
+13:35:31  `orx exp run 72c5f6c4 --backend ssh --host fal-h100-01` -> orx run 391e80aa-63c4-4955-981f-0a0cd60d4702 (commit 253ad85): dry-run,
+          test-only, submit -> Slurm 859 (PENDING briefly, StartTime 13:35:39). Submitted once.
+13:35:50  job 859 start-up (read only): job.env started_at 13:35:40Z, job_id 859, image 500f3b02..., git ed5d5a93..., batch script
+          2a10c9c7...; gpu-prolog decision=exclusive, foreign_compute_processes=0; GPU 0.
+13:40:19  Slurm 859 COMPLETED 0:0, RunTime 00:04:40 (limit 12). termination.env: reason=completed exit_code=0 checkpoint_ready=false
+          container_killed_by=none, finished_at 13:40:19Z (279 s from job.env). provenance-verification PASS (git ed5d5a93, source
+          53458dd1). model-verification full, artifact root 7040f418.... orx: ORX_SLURM_TERMINAL 859 state=COMPLETED exit_code=0:0;
+          ORX_RESULT kind=slurm-manifest direction=translation-supervised-sparse-indexer job=859 exit=0; run 391e80aa done.
+          Receipt 859/dense-precheck/receipt.json sha256 d39ca464b13e6ac9dad78082b50319247caeeecf02ae790f59bd522da82f06b9: status
+          PRECHECK_COMPLETE, profile registered, lane qwen3-0.6b-base, slurm_job_id "859", slurm_job_id_source job.env, hashes.job kind
+          fresh (12 min, no predecessor), preregistration 982e66ba..., ledger_row_hash a68af989..., git ed5d5a93, source 53458dd1, bundle
+          919d016b..., dev artifact c1c455d8...; its 15 code digests equal the frozen table. Determinism strict; attention backends all
+          enabled (the 0.6B lane never switches them); signals blocked in every thread from the start, 0 handler replacements, none
+          received. Coverage 1,160 units (600 selection, 1,000 multiple choice), within budget. Stage walls (s): derive 1.8, model load
+          2.9, A-main 132.4 (440 units), B-absent 53.4 (280), C-literal 36.0 (160), D-nohaystack 39.6 (280), statistics 1.2.
+13:40     gate read (helpers/read-gate.py from the clone, read only; it calls the registered harness.dense_headroom_v2.v1_reproduction
+          against the committed job-727 receipt bfe4a7c3...; lane-0p6b-859/gate-read-859.json):
+          job-727 reproduction REPRODUCED: 3,128 numeric leaves, max gap 0.0 (exact), 1,029 other leaves equal, 0 mismatches, fields
+          report, decisions, coverage, artifact_counts, selectors, attention_layers and hashes.dev_artifact_sha256 (c1c455d8... = v1's).
+          smoke_452_reproduction REPRODUCED (20 units, tolerance 0.5 points): T:hs 26.4506 vs 26.4506, T:mp 26.0806 vs 26.0806, T:hm
+          26.2663 vs 26.2663, rand 12.4803 vs 12.4803 (gaps 3e-7 to 7e-7 points); U 66.5404, Uk 9.7459 reported.
+          Lane decisions (equal to job 727's): lane_class NOT_VIABLE (H1_CX 12.25 on target hs, 99% lower 8.98; h2_status FAIL),
+          lexical_confound NOT_EVALUABLE, entity_control NOT_EVALUABLE, null_calibration NOT_EVALUABLE x2, floor NOT_VIABLE,
+          fertility STRONG. Charged minutes (filler rule ceil(279/60)+1): 6 of the lane's 12.
+DECISION (operator, under the registration): both validity gates pass, so freeze step 4 fills and submits the 4B lane.
+
+Step 4: the Qwen3.5-4B-Base lane
+13:40:56  pre-fill state (states/pre-fill-4b-state.txt): queue empty; GPUs idle; the lane run root qwen3.5-4b-base did not exist.
+13:40:56  filler from the clone with `--lane qwen3.5-4b-base --image-receipt <build 855 receipt> --output <ops>/filled --small-lane-receipt
+          <0.6B run root>/859/dense-precheck/receipt.json` (sha256 d39ca464...), exit 0, stderr empty (the filler's own check: completed,
+          bound to its job from job.env, smoke 452 REPRODUCED, job 727 REPRODUCED). Run root created with fill-claims/after-0.json (slot 0,
+          kind first, 32 minutes, image 500f3b02..., manifest_sha256 e3653d19...). Diff against the template: only the four FILL values.
+          Filled manifest sha256 e3653d19256c2964b4dede81b85202cf63e849500f5ad96d0a0baa017c2e41fd.
+13:41     from the clone: --dry-run exit 0 (gpu_hours 0.5333 = 32/60, --gres=gpu:h100:1, --cpus-per-task=16, --mem=96G, --time=00:32:00,
+          --signal=B:USR1@180, --no-requeue, container profile large-cpu-mem) and --test-only exit 0. No job directory created.
+13:41     orx node created: e312036d-56c3-4e93-83e5-ef3924443f4e "Q3 dense pre-check v2 4B lane (q3-dense-headroom-precheck-v2)" (new root,
+          --baseline), branch orx/q3-dense-pre-check-v2-4b-lane-q3-dense-headroom at ed5d5a9; node commit 98a98a9 adds node.yaml (v1's 4B
+          node.yaml with only the manifest path changed) and experiments/manifests/filled/q3-dense-headroom-v2-4b.yaml (byte-identical,
+          e3653d19...). Worktree /Users/kevinliu/repos/cotcodec-wt-orx-q3-dense-v2-4b. Not pushed.
+13:41:24  pre-submit state (states/pre-submit-4b-state.txt): queue empty; GPUs idle; run root holds only fill-claims.
+13:41:25  `orx exp run e312036d --backend ssh --host fal-h100-01` -> orx run a3fae5af-e8f6-4b33-9a00-f6908ad67c13 (commit 98a98a9): dry-run,
+          test-only, submit -> Slurm 862 (StartTime 13:41:30). Submitted once.
+13:41:52  job 862 start-up (read only): job.env started_at 13:41:32Z, gpu_devices 0, slurm_time_left_seconds 1919, hard_stop_at 14:13:00Z;
+          gpu-prolog exclusive, 0 foreign processes; provenance PASS.
+13:41-13:51  read-only samples every 30 s (lane-4b-862/observe-862.txt): GPU 0 at 27-100 % during evaluation, 9.6-13.2 GB; A-main's 28
+          chunks done by 13:46:51, B-absent's 18 by 13:48:52, C-literal's 10 by 13:49:52, D-nohaystack's 18 by 13:50:52.
+13:50:47  Slurm 862 COMPLETED 0:0, RunTime 00:09:17 (limit 32). termination.env: reason=completed exit_code=0 checkpoint_ready=false
+          container_killed_by=none, finished_at 13:50:47Z (555 s from job.env). provenance PASS (ed5d5a93, 53458dd1). orx:
+          ORX_SLURM_TERMINAL 862 state=COMPLETED exit_code=0:0; ORX_RESULT kind=slurm-manifest direction=translation-supervised-sparse-indexer
+          job=862 exit=0.
+          Receipt 862/dense-precheck/receipt.json sha256 db56b1dac18653753fb98097a92e370721036562103bdcb57e2d891431e0f7d9: PRECHECK_COMPLETE,
+          registered, qwen3.5-4b-base, slurm_job_id "862" from job.env, job kind fresh (32 min), same preregistration, ledger row, git,
+          source and bundle as 859; dev artifact b5210f79... (equal to v1 job 730's and both timing jobs'); 49 to 10,481 tokens per
+          context, 66 dropped tail bytes. Determinism warn_only (decision 9). Attention backends: cudnn false, flash, mem_efficient and
+          math true. attention_backend_check (unit c320-q0, 47.2 s): max |recall difference| 1.152 points, max |option score difference|
+          0.0111; k_blocks, max_selected, ties and the answer the same. Signals: blocked in every thread from the start; the guard found
+          the OS-level SIGUSR1 and SIGTERM handlers replaced 64.76 s in (A-main chunk 0, after the first Triton compiles) and repaired
+          them; no signal received. Coverage 1,160 units within budget. Stage walls (s): derive 4.5, model load 7.0, A-main 231.6 (0.526 s
+          per unit), B-absent 122.6 (0.438), C-literal 41.9 (0.262), D-nohaystack 82.5 (0.295), statistics 0.9.
+          Lane decisions: lane_class NEGATIVE_CAPABLE (H1_CX 42.15 on target hs, 99% lower 35.76; h2_status POINT_ONLY), lexical_confound
+          PRESENT, entity_control INSUFFICIENT, null_calibration CENTRED for hs and mp, floor_candidate VIABLE, fertility STRONG.
+          Charged minutes ceil(555/60)+1 = 11 of the lane's 32. The continuation and re-run rules did not arise (no signal, no void).
+
+Step 5: combined read
+13:51:59  from the clone (HEAD ed5d5a93, clean): `uv run --locked python scripts/summarise_dense_headroom_precheck_v2.py <0.6B run
+          root>/859/dense-precheck/receipt.json <4B run root>/862/dense-precheck/receipt.json --orx-log <orx log 391e80aa> --orx-log <orx log
+          a3fae5af> --output <ops>/summary/combined-read.json`: exit 0, stderr empty, stdout the combined read
+          {"design": "NEGATIVE_CAPABLE_V3", "base": "qwen3.5-4b-base", lane_classes 0.6B NOT_VIABLE, 4B NEGATIVE_CAPABLE, seven
+          requirements}. combined-read.json sha256 d656d29f4ef4fd9b64e39d25ebac99cf1d6d26ea4d6940eeb760c0d5d5f0b221: v1_job_727_reproduction
+          REPRODUCED (as above), gpu_usage 0.6B 279 s / 6 charged minutes, 4B 555 s / 11, claim_problems [] for both, within_cap true,
+          gpu_hours_used 0.2317. No code, registration, manifest or receipt was edited.
+13:52:07  post-run state (states/post-run-state.txt): queue empty; GPUs idle; no cotcodec-859 or cotcodec-862 container left; each lane run
+          root holds one job directory, its fill claim and its slurm-N.out; the clone has 0 porcelain lines.
+13:53:36  Slurm query of 854-863 (slurm-records.txt): only 862 still held; 855, 856 and 859 were recorded when they ended. Ids 857, 858,
+          860 and 861 were purged before they could be read (two ids before each lane job, matching the two --test-only calls per lane).
+
+GPU-hours of this operation: used 0.2317 (859 279 s = 0.0775, 862 555 s = 0.1542); charged under the registration's rule 0.2833 (859 6 min =
+  0.1000, 862 11 min = 0.1833) against caps 0.20 and 0.5333. With both timing jobs (766 0.0569, 810 0.045) v2 used 0.3336 GPU-h physical and
+  0.4333 charged, against registered caps of 0.933 and D36's 1.5. Jobs 855 and 856 were CPU only.
+
+Evidence copies: 33 committed files (both receipts, every job.env, termination.env, gpu-prolog.env, manifest, command, provenance and model
+  verification, container logs, dev-artifact digests, slurm-N.out, fill claims, both orx logs, the build receipt, the doctor receipt, the
+  combined read and both filled manifests) are byte-identical to the host originals by SHA-256. Lane files named *.env on the host are stored
+  here as *.env.txt, content unchanged.
+Host originals: ~/cotcodec-runs/q3-dense-headroom-precheck-v2/{qwen3-0.6b-base,qwen3.5-4b-base}/ and ~/cotcodec-runs/stage0/q3-dense-v2/
+  (lanes-repo the clone, lanes-ops the operator files); orx logs ~/.orx/runs/{391e80aa-...,a3fae5af-...}/log.
