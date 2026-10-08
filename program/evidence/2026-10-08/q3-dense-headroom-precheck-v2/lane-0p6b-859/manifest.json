@@ -1,0 +1,70 @@
+{
+  "batch_script_sha256": "2a10c9c72c22ab6dd5135061ff1b9b50977a468687180353d8cd7273acbaf1ec",
+  "command": [
+    "python",
+    "scripts/run_dense_headroom_precheck_v2.py",
+    "--lane",
+    "qwen3-0.6b-base",
+    "--output-dir",
+    "/outputs/dense-precheck",
+    "--evidence",
+    "/inputs/study-artifact.json",
+    "--expected-evidence-sha256",
+    "919d016b87ad862f8f156e9537c9a39e2864dab0e6c605307d100d25a199dd2d",
+    "--source-tokenizer",
+    "/model-cache/cotcodec-models/qwen3-0.6b-base/tokenizer.json",
+    "--model-dir",
+    "/model-cache/cotcodec-models/qwen3-0.6b-base",
+    "--receipt",
+    "/model-cache/cotcodec-receipts/qwen3-0.6b-base.json",
+    "--expected-receipt-sha256",
+    "e7f36f05e6c87ec50b3736cf133fda60775abccb38f60fa9d3c134c432cf46df",
+    "--preregistration",
+    "program/preregistrations/q3-dense-headroom-precheck-v2.md",
+    "--expected-preregistration-sha256",
+    "982e66bac55d8ad45f2eaaf26fde37ef0bb9a1e32eb9be81098128ce8b787287",
+    "--seeds",
+    "42",
+    "43",
+    "44"
+  ],
+  "container_profile": "default",
+  "cpus": 16,
+  "git_sha": "ed5d5a93dffc3e8cf777c1933330ef7229eda5d6",
+  "gpu_type": "h100",
+  "gpus": 1,
+  "image_id": "sha256:500f3b027173a2d772b7d6ea00ea667dbe1bc956df51e3c2c4455d9c08a2714b",
+  "max_gpu_hours": 0.2,
+  "memory_gb": 64,
+  "minutes": 12,
+  "model": {
+    "artifact_root_sha256": "7040f418762c61dd00b540e482527e0d8c8a916cce80eee56408bd10a6179ae0",
+    "cache_host_path": "/home/kevin/cotcodec-runs/hf-cache",
+    "model_id": "qwen3-0.6b-base",
+    "receipt_sha256": "e7f36f05e6c87ec50b3736cf133fda60775abccb38f60fa9d3c134c432cf46df",
+    "revision": "da87bfb608c14b7cf20ba1ce41287e8de496c0cd"
+  },
+  "name": "q3-dense-headroom-v2-0p6b",
+  "randomness_contract": "assignment-seed-matrix",
+  "run_root": "/home/kevin/cotcodec-runs/q3-dense-headroom-precheck-v2/qwen3-0.6b-base",
+  "runtime": "docker-single-node-discovery-v1",
+  "schema_version": 1,
+  "seed_binding": {
+    "flag": "--seeds"
+  },
+  "seeds": [
+    42,
+    43,
+    44
+  ],
+  "source_sha256": "53458dd1fff517cd45c48893d02f933c9ad5d3fa506468bae18c1066ebc14ffc",
+  "study_artifact": {
+    "container_path": "/inputs/study-artifact.json",
+    "host_path": "/home/kevin/cotcodec-runs/translation-supervised-sparse-indexer/inputs/k1-bundle-v1.json",
+    "license": "LicenseRef-cotcodec-k1-bundle-v1",
+    "revision": "ec81fe3292d8559251adb273cb4e6ec5b070c162",
+    "sha256": "919d016b87ad862f8f156e9537c9a39e2864dab0e6c605307d100d25a199dd2d",
+    "size_bytes": 278818734,
+    "source_id": "q3-k1-bundle-v1"
+  }
+}

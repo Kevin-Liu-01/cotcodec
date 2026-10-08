@@ -1,0 +1,189 @@
+{
+  "combined": {
+    "base": "qwen3.5-4b-base",
+    "design": "NEGATIVE_CAPABLE_V3",
+    "lane_classes": {
+      "qwen3-0.6b-base": "NOT_VIABLE",
+      "qwen3.5-4b-base": "NEGATIVE_CAPABLE"
+    },
+    "requirements": [
+      "a seen-script cross-script condition (D26; not measurable here)",
+      "an entity-controlled question set (D26)",
+      "a new experiment id and the research gauntlet (D26)",
+      "the non-literal floor (D26): 99 percent lower bound of G(MN) on entity-controlled families at least 0.5",
+      "the GO and NEGATIVE statistics computed on the entity-controlled set, not only reported beside it (lexical confound PRESENT)",
+      "anchor masking or a lexical-overlap covariate (entity control INSUFFICIENT)",
+      "H2 re-tested under K1's bounds on the v3 audit read (the development read's H2 is POINT_ONLY)"
+    ]
+  },
+  "experiment_id": "q3-dense-headroom-precheck-v2",
+  "gpu_hours_used": 0.2316666666666667,
+  "gpu_usage": {
+    "qwen3-0.6b-base": {
+      "cap_gpu_hours": 0.2,
+      "cap_minutes": 12,
+      "charged_minutes": 6,
+      "claim_problems": [],
+      "elapsed_seconds": 279.0,
+      "gpu_hours_used": 0.0775,
+      "jobs": [
+        {
+          "charged_minutes": 6,
+          "checkpoint_ready": false,
+          "elapsed_seconds": 279.0,
+          "exit_code": "0",
+          "has_receipt": true,
+          "job_id": "859",
+          "manifest": {
+            "image_id": "sha256:500f3b027173a2d772b7d6ea00ea667dbe1bc956df51e3c2c4455d9c08a2714b",
+            "minutes": 12,
+            "name": "q3-dense-headroom-v2-0p6b",
+            "predecessor_job_id": null
+          },
+          "predecessor_job_id": null,
+          "reason": "completed"
+        }
+      ],
+      "within_cap": true
+    },
+    "qwen3.5-4b-base": {
+      "cap_gpu_hours": 0.5333333333333333,
+      "cap_minutes": 32,
+      "charged_minutes": 11,
+      "claim_problems": [],
+      "elapsed_seconds": 555.0,
+      "gpu_hours_used": 0.15416666666666667,
+      "jobs": [
+        {
+          "charged_minutes": 11,
+          "checkpoint_ready": false,
+          "elapsed_seconds": 555.0,
+          "exit_code": "0",
+          "has_receipt": true,
+          "job_id": "862",
+          "manifest": {
+            "image_id": "sha256:500f3b027173a2d772b7d6ea00ea667dbe1bc956df51e3c2c4455d9c08a2714b",
+            "minutes": 32,
+            "name": "q3-dense-headroom-v2-4b",
+            "predecessor_job_id": null
+          },
+          "predecessor_job_id": null,
+          "reason": "completed"
+        }
+      ],
+      "within_cap": true
+    }
+  },
+  "lanes": {
+    "qwen3-0.6b-base": {
+      "decisions": {
+        "entity_control": "NOT_EVALUABLE",
+        "fertility_association": "STRONG",
+        "floor_candidate": "NOT_VIABLE",
+        "h1_cx_lower": 8.982191529058131,
+        "h1_cx_points": 12.250147648453733,
+        "h1_cx_target": "hs",
+        "h2_status": "FAIL",
+        "lane_class": "NOT_VIABLE",
+        "lexical_confound": "NOT_EVALUABLE",
+        "literal_xi_rel_all": [
+          null,
+          null
+        ],
+        "literal_xi_rel_controlled": [
+          null,
+          0.35656207651763955
+        ],
+        "null_calibration": {
+          "hs": "NOT_EVALUABLE",
+          "mp": "NOT_EVALUABLE"
+        }
+      },
+      "dev_artifact_sha256": "c1c455d81425cc9ea25345ecf2bbea3e0b604853da51ea046fe315fe4b3f9e71",
+      "lane_class_for_combined_read": "NOT_VIABLE",
+      "predecessor_job_id": null,
+      "receipt_sha256": "d39ca464b13e6ac9dad78082b50319247caeeecf02ae790f59bd522da82f06b9",
+      "slurm_job_id": "859"
+    },
+    "qwen3.5-4b-base": {
+      "decisions": {
+        "entity_control": "INSUFFICIENT",
+        "fertility_association": "STRONG",
+        "floor_candidate": "VIABLE",
+        "h1_cx_lower": 35.75518313866641,
+        "h1_cx_points": 42.15200220165509,
+        "h1_cx_target": "hs",
+        "h2_status": "POINT_ONLY",
+        "lane_class": "NEGATIVE_CAPABLE",
+        "lexical_confound": "PRESENT",
+        "literal_xi_rel_all": [
+          0.26486832683320244,
+          0.27403768903319436
+        ],
+        "literal_xi_rel_controlled": [
+          0.23549152870374737,
+          0.24458587948460098
+        ],
+        "null_calibration": {
+          "hs": "CENTRED",
+          "mp": "CENTRED"
+        }
+      },
+      "dev_artifact_sha256": "b5210f7935e87cc95cfb9fc56baa39d8e8162b81f8a501e49aac0c989fbfe82f",
+      "lane_class_for_combined_read": "NEGATIVE_CAPABLE",
+      "predecessor_job_id": null,
+      "receipt_sha256": "db56b1dac18653753fb98097a92e370721036562103bdcb57e2d891431e0f7d9",
+      "slurm_job_id": "862"
+    }
+  },
+  "preregistration_sha256": "982e66bac55d8ad45f2eaaf26fde37ef0bb9a1e32eb9be81098128ce8b787287",
+  "v1_job_727_reproduction": {
+    "fields": [
+      "report",
+      "decisions",
+      "coverage",
+      "artifact_counts",
+      "selectors",
+      "attention_layers",
+      "hashes.dev_artifact_sha256"
+    ],
+    "max_numeric_gap": 0.0,
+    "mismatch_count": 0,
+    "mismatches": [],
+    "numeric_leaves": 3128,
+    "other_leaves": 1029,
+    "status": "REPRODUCED",
+    "tolerance": 1e-06,
+    "v1_job": "727",
+    "v1_receipt_sha256": "bfe4a7c33cca3cf106370876f2843239c7c88a4f3c4fb70798f8a8d6404508ba"
+  },
+  "v1_small_lane_reported_beside": {
+    "decisions": {
+      "entity_control": "NOT_EVALUABLE",
+      "fertility_association": "STRONG",
+      "floor_candidate": "NOT_VIABLE",
+      "h1_cx_lower": 8.982191529058131,
+      "h1_cx_points": 12.250147648453733,
+      "h1_cx_target": "hs",
+      "h2_status": "FAIL",
+      "lane_class": "NOT_VIABLE",
+      "lexical_confound": "NOT_EVALUABLE",
+      "literal_xi_rel_all": [
+        null,
+        null
+      ],
+      "literal_xi_rel_controlled": [
+        null,
+        0.35656207651763955
+      ],
+      "null_calibration": {
+        "hs": "NOT_EVALUABLE",
+        "mp": "NOT_EVALUABLE"
+      }
+    },
+    "experiment_id": "q3-dense-headroom-precheck-v1",
+    "receipt": "program/evidence/2026-10-08/q3-dense-headroom-precheck/lane-0p6b-727/receipt.json",
+    "receipt_sha256": "bfe4a7c33cca3cf106370876f2843239c7c88a4f3c4fb70798f8a8d6404508ba",
+    "slurm_job_id": "727"
+  }
+}
