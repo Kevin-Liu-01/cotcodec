@@ -1450,3 +1450,18 @@ def test_c3_reads_kills_from_the_counting_attempt_and_the_reference_over_every_a
     result = acc.c3(lone, rerun_reference)
     assert not result["pass"] and result["mutants"][key]["outcome"] == "survived"
     assert result["mutants"][key]["reference_not_clean"] == ["key_enter"]
+
+
+def test_c4_counts_an_earlier_a1_attempts_mismatch():
+    """C4 reads the tap's stream, which A1 does not judge for an entry the probe
+    observes, so an earlier attempt's projection mismatch must count (section 6.1)."""
+    counting = campaign(a1_plan(43))
+    _nth(counting, SHOT, "key_enter", 0)["c4"] = True
+    earlier = _uncounted(counting, "43a")
+    earlier["sessions"] = earlier["sessions"][:2]
+    counting["earlier"] = [earlier]
+    result = acc.c4([counting])
+    assert result["pass"] and result["trials_checked"] == 2
+    _nth(earlier, SHOT, "key_enter", 0)["c4"] = False
+    result = acc.c4([counting])
+    assert not result["pass"] and result["problems"] == ["job 43a screenshot key_enter"]

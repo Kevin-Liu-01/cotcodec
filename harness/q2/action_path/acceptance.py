@@ -1269,10 +1269,15 @@ def c3(
 
 
 def c4(a1_campaigns: Iterable[dict[str, Any]]) -> dict[str, Any]:
-    """In every A1 trial of an entry with an R-dev reference, the projection matches."""
+    """In every A1 trial of an entry with an R-dev reference, the projection matches.
+
+    Every attempt's trials count (section 6.1): C4 reads the tap's stream, which A1 does
+    not judge for an entry the probe observes, so an earlier attempt's mismatch there
+    would otherwise disappear with a rerun.
+    """
     problems: list[str] = []
     checked = 0
-    for c in a1_campaigns:
+    for c in every_attempt(a1_campaigns):
         for session in c["sessions"]:
             for trial in session["trials"]:
                 if trial["c4"] is None:
