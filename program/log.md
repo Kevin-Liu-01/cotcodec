@@ -2317,3 +2317,65 @@ they say so.)
   `6f690bb5...` (was `e2856952...`), the addenda's unchanged. The
   repository ledger is unchanged. Nothing frozen or pushed. No GPU.
 - Next: as before (review, then freeze v2, `-inputs`, `-executor`).
+
+## 2026-10-08 — Q3 dense headroom pre-check v2 operated (freeze steps 3-5, branch `ops/q3-dense-v2`): NEGATIVE_CAPABLE_V3 on Qwen3.5-4B-Base
+
+- Registration `q3-dense-headroom-precheck-v2` (ledger row 12, SHA-256
+  `982e66ba...`, row hash `a68af989...`, `git_head_at_freeze` `0a068a1`,
+  freeze commit `ed5d5a9`; D36, D42, D44). Evidence:
+  `program/evidence/2026-10-08/q3-dense-headroom-precheck-v2/` (README,
+  operator log, image and doctor receipts, filled manifests, claims,
+  receipts, termination and provenance files, orx logs, squeue and
+  nvidia-smi snapshots, summariser output).
+- Step 3: a fresh clone of main at `ed5d5a9` on the host
+  (`~/cotcodec-runs/stage0/q3-dense-v2/lanes-repo`) passed
+  `preregister.py verify`, `check-chain` (12 rows) and all 27 tabled
+  digests. Image build Slurm 855 (CPU only): `sha256:500f3b02...`, source
+  tar `53458dd1...`, library versions identical to v1's image 723. v2 CPU
+  doctor Slurm 856 in that image (`--network none`, no GPU, baked source):
+  DENSE_V2_DOCTOR_PASS, 12/12, code digests equal the table.
+- Step 4, Qwen3-0.6B-Base: filled on the host (slot-0 claim, 12 minutes;
+  only the four FILL values differ), dry-run and test-only passed, submitted
+  once by orx node `72c5f6c4` (commit `253ad85`, ssh backend) as Slurm 859:
+  COMPLETED 0:0 in 279 s, provenance PASS, ORX_RESULT exit 0. Receipt
+  `d39ca464...` bound to 859 from `job.env`. The validity gate held: v1's
+  job-727 receipt was reproduced exactly (3,128 numeric leaves, largest gap
+  0.0, 1,029 other leaves equal, development artifact `c1c455d8...`), and K1
+  smoke 452 was reproduced (gaps below 1e-6 points). Decisions equal job
+  727's: NOT_VIABLE (H1_CX 12.25, lower 8.98; `h2_status` FAIL).
+- Step 4, Qwen3.5-4B-Base: filled with `--small-lane-receipt` 859 (slot-0
+  claim, 32 minutes), dry-run and test-only passed, submitted once by orx
+  node `e312036d` (commit `98a98a9`) as Slurm 862: COMPLETED 0:0 in 555 s,
+  provenance PASS, ORX_RESULT exit 0. Receipt `db56b1da...` bound to 862.
+  Run details:
+  - 0.26-0.53 s per unit by stage, GPU at 27-100 percent when sampled.
+  - cuDNN's attention off; `attention_backend_check` within 1.15 recall
+    points and 0.011 in an option score of cuDNN's, same answer.
+  - The guard repaired Triton's replaced SIGUSR1 and SIGTERM handlers 64.8 s
+    in; no signal arrived.
+
+  Decisions:
+  - NEGATIVE_CAPABLE: H1_CX 42.15, 99% interval 35.76 to 48.20.
+  - `h2_status` POINT_ONLY: H2a 49.64, H2b 8.57 with lower bound -9.29.
+  - Lexical confound PRESENT (literal xi_rel 0.26-0.27; 0.24 on controlled
+    families) and entity control INSUFFICIENT.
+  - Null calibration CENTRED for hs and mp.
+  - Floor VIABLE; fertility STRONG.
+
+  No re-run or continuation arose.
+- Step 5: the registered summariser ran from the clone with both receipts
+  and both orx logs and exited 0. Combined read: NEGATIVE_CAPABLE_V3 on
+  qwen3.5-4b-base. The requirements are D26's (a seen-script cross-script
+  condition, an entity-controlled question set, the non-literal floor, a new
+  id and the gauntlet) plus three from the flags: statistics computed on the
+  entity-controlled set, anchor masking or a lexical-overlap covariate, and
+  H2 re-tested on the v3 audit read. The read covers the development
+  partition only and is not a K1 result.
+- GPU time: 0.2317 GPU-h used (859 0.0775, 862 0.1542), 0.2833 charged
+  under the registration's rule (6 and 11 minutes). Ledger rows use the
+  physical figures. Program total 4.6247. With both timing jobs, v2 used
+  0.3336 (0.4333 charged) of its 0.933 registered caps. Jobs 855 and 856
+  were CPU only.
+- Decision for Kevin (pending in `program/state.json`): whether to open a K1
+  v3 on Qwen3.5-4B-Base under a new id and the gauntlet. Nothing pushed; the
+  orx node branches are local.

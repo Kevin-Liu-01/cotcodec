@@ -1,0 +1,12 @@
+13,15c13,15
+< image_id: FILL-image-id
+< git_sha: FILL-image-git-sha
+< source_sha256: FILL-image-source-tar-sha256
+---
+> image_id: sha256:500f3b027173a2d772b7d6ea00ea667dbe1bc956df51e3c2c4455d9c08a2714b
+> git_sha: ed5d5a93dffc3e8cf777c1933330ef7229eda5d6
+> source_sha256: 53458dd1fff517cd45c48893d02f933c9ad5d3fa506468bae18c1066ebc14ffc
+65c65
+<   - "FILL-preregistration-sha256"
+---
+>   - "982e66bac55d8ad45f2eaaf26fde37ef0bb9a1e32eb9be81098128ce8b787287"

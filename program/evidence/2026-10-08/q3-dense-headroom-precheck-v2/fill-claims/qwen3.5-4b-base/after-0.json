@@ -1,0 +1,11 @@
+{
+  "charged_minutes": 0,
+  "image_id": "sha256:500f3b027173a2d772b7d6ea00ea667dbe1bc956df51e3c2c4455d9c08a2714b",
+  "kind": "first",
+  "lane": "qwen3.5-4b-base",
+  "manifest_name": "q3-dense-headroom-v2-4b",
+  "manifest_sha256": "e3653d19256c2964b4dede81b85202cf63e849500f5ad96d0a0baa017c2e41fd",
+  "minutes": 32,
+  "predecessor_job_id": null,
+  "slot": 0
+}

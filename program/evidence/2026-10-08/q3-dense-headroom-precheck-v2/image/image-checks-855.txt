@@ -1,0 +1,6 @@
+at=2026-10-08T13:31:25Z
+clone_head=ed5d5a93dffc3e8cf777c1933330ef7229eda5d6 tree=a5358a41b91409b6ea39e13ca44089cfe48eaf3d porcelain_lines=0
+git_archive_HEAD_sha256=53458dd1fff517cd45c48893d02f933c9ad5d3fa506468bae18c1066ebc14ffc
+image_label_revision=ed5d5a93dffc3e8cf777c1933330ef7229eda5d6
+image_created=2026-10-08T13:22:16.024477637Z
+image_tags=[127.0.0.1:5000/cotcodec-research:ed5d5a93-architecture cotcodec-research:ed5d5a93-architecture]
