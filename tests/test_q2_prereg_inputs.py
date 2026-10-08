@@ -41,11 +41,29 @@ def test_every_pinned_input_matches_its_digest(doc):
         assert actual == digest, f"{relative} changed; refresh {doc.name}"
 
 
+FROZEN_STATUS = (
+    "**Status: frozen in `program/preregistrations/ledger.jsonl`; see the ledger\n"
+    "row for the freeze time and `git_head_at_freeze`.**"
+)
+FREEZE_ORDER = ("`q2-action-path-v1`", "`q2-action-path-v1-inputs`", "`q2-action-path-v1-executor`")
+
+
 @pytest.mark.parametrize("doc", DOCS, ids=lambda d: d.stem)
-def test_drafts_pass_the_freeze_lint(doc):
+def test_drafts_pass_the_freeze_lint_with_the_frozen_status(doc):
+    """A frozen file cannot be edited, so each status paragraph has the frozen wording
+    before the freeze (decision D39, as D32 required for Q3): the ledger row, the freeze
+    order and what may not run before the row exists."""
     text = doc.read_text(encoding="utf-8")
     assert not LINT.search(text)
-    assert "**Status: DRAFT. Not frozen.**" in text
+    status = text.split("\n\n")[1]
+    assert status.startswith(FROZEN_STATUS)
+    for stale in ("DRAFT", "Draft", "Not frozen", "not frozen", "owner reviews", "owner freezes"):
+        assert stale not in status
+    positions = [status.find(name) for name in FREEZE_ORDER]
+    assert -1 not in positions and positions == sorted(positions), positions
+    assert "No acceptance trial" in status and "may run before this row exists" in status
+    controls = "no C1 or C3" if doc == EXECUTOR else "no C2, C1 or C3"
+    assert controls in status
 
 
 CODE = {"ir.py", "vocab.py", "catalog.py", "rdev.py", "l0_raw.py", "volume.py"}

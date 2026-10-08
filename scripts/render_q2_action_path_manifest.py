@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Render one scored q2-action-path-v1 campaign manifest (acceptance, scored control or A5).
 
-After the owner's freeze, every scored campaign of the preregistration (A1-A6, the
+After the owner's freeze, every scored campaign of the preregistration (A1-A7, the
 concurrency ladder, C1-C3) runs from a manifest that ``harness/q2/vm/manifest.py`` admits
 only when the ledger freezes the preregistration and the addenda it needs. This script
 fills such a manifest from a local export of the frozen commit (``--source-dir``): the
