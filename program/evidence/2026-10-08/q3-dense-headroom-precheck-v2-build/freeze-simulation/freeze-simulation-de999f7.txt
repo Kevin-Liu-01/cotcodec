@@ -1,0 +1,10 @@
+q3-dense-headroom-precheck-v2 freeze simulation (2026-10-08, scratch clone of stage0/q3-dense-v2 at de999f7; the real ledger is untouched)
+1. Status paragraph rewritten to the frozen wording (simulation text naming a hypothetical D37).
+2. scripts/preregister.py freeze q3-dense-headroom-precheck-v2 ... -> exit 0; row:
+{"experiment_id": "q3-dense-headroom-precheck-v2", "frozen_at": "2026-10-08T07:50:44.334397+00:00", "git_head_at_freeze": "de999f73670e5e2323e28460e9c8a3179d7ad56a", "hash": "f8624620ff041b78a5879fec8a417d71f5713a7ba0401cb5fb78c5c847ce86be", "path": "program/preregistrations/q3-dense-headroom-precheck-v2.md", "previous_hash": "0533bf7f73a8d6785b2cc57edbf15f68e2087b517e6e79dc986f787ad391c708", "sha256": "c2d3710715ad06cb03570afb1d2ee159895a4f975a9376ac7fbcadb3ac0ebfdf"}
+3. verify -> exit 0; check-chain -> {"rows": 8, "status": "PASS"}
+4. Simulated freeze commit 714f2f7; tests/test_dense_headroom_v2_prereg.py and tests/test_dense_headroom_prereg.py in frozen mode: 12 passed
+5. Entry point code-table check against the frozen file: no differing file
+6. Filler, 0.6B lane, fake image receipt at the simulated freeze commit: exit 0, filled manifest differs from the template only in the four FILL values (sha256 427c29cc...)
+7. Filler, 4B lane without --small-lane-receipt: exit 2 (refused)
+8. Submitter --dry-run on the filled 0.6B manifest: exit 0

@@ -1,0 +1,74 @@
+........................................................................ [  3%]
+.....s...........s..........................s........................... [  6%]
+...................................s.................................... [  9%]
+........................................................................ [ 12%]
+........................................................................ [ 16%]
+........................................................................ [ 19%]
+.....................................................................sss [ 22%]
+s....................................................................... [ 25%]
+........................................................................ [ 29%]
+........................................................................ [ 32%]
+........................................................................ [ 35%]
+........................................................................ [ 38%]
+.............................................................s.......... [ 41%]
+........................................................................ [ 45%]
+........................................................................ [ 48%]
+........................................................................ [ 51%]
+........................................................................ [ 54%]
+........................................................................ [ 58%]
+........................................................................ [ 61%]
+...........................ss........................................... [ 64%]
+........................................................................ [ 67%]
+........................................................................ [ 70%]
+..s........................s.......................................s.... [ 74%]
+......................................................................ss [ 77%]
+.s.....s..s............................................................. [ 80%]
+........................................................................ [ 83%]
+........................................................................ [ 87%]
+........................................................................ [ 90%]
+........................................................................ [ 93%]
+........................................................................ [ 96%]
+.......................................................................  [100%]
+=========================== short test summary info ============================
+SKIPPED [1] tests/test_dense_headroom_torch.py:10: could not import 'torch': No module named 'torch'
+SKIPPED [1] tests/test_dense_headroom_v2_torch.py:11: could not import 'torch': No module named 'torch'
+SKIPPED [1] tests/test_probe_sparse_indexer_k1_throughput.py:15: could not import 'torch': No module named 'torch'
+SKIPPED [1] tests/test_q1_audit.py:15: could not import 'torch': No module named 'torch'
+SKIPPED [1] tests/test_q1_gates.py:15: could not import 'torch': No module named 'torch'
+SKIPPED [1] tests/test_q1_integration_cpu.py:46: could not import 'torch': No module named 'torch'
+SKIPPED [1] tests/test_q1_kbv_native.py:19: could not import 'torch': No module named 'torch'
+SKIPPED [1] tests/test_q1_mutate_controls_runtime.py:18: could not import 'torch': No module named 'torch'
+SKIPPED [1] tests/test_q1_reductions.py:9: could not import 'torch': No module named 'torch'
+SKIPPED [1] tests/test_q1_refstore.py:17: could not import 'torch': No module named 'torch'
+SKIPPED [1] tests/test_q1_refstore_equivalence.py:29: could not import 'torch': No module named 'torch'
+SKIPPED [1] tests/test_q1_refstore_semantics.py:29: could not import 'torch': No module named 'torch'
+SKIPPED [1] tests/test_q1_runner.py:19: could not import 'torch': No module named 'torch'
+SKIPPED [1] tests/test_run_sparse_indexer_phase0a.py:14: could not import 'torch': No module named 'torch'
+SKIPPED [1] tests/test_run_sparse_indexer_phase0a_v2.py:16: could not import 'torch': No module named 'torch'
+SKIPPED [1] tests/test_sparse_indexer_bank.py:13: could not import 'torch': No module named 'torch'
+SKIPPED [1] tests/test_sparse_indexer_bank_gpu.py:19: could not import 'torch': No module named 'torch'
+SKIPPED [1] tests/test_sparse_indexer_k1_doctor.py:10: could not import 'torch': No module named 'torch'
+SKIPPED [1] tests/test_sparse_indexer_k1_runtime.py:8: could not import 'torch': No module named 'torch'
+SKIPPED [1] tests/test_sparse_indexer_k1_v2_doctor.py:10: could not import 'torch': No module named 'torch'
+SKIPPED [1] tests/test_sparse_indexer_torch.py:8: could not import 'torch': No module named 'torch'
+SKIPPED [1] tests/test_dense_headroom_data.py:56: could not import 'tokenizers': No module named 'tokenizers'
+SKIPPED [1] tests/test_dense_headroom_data.py:200: could not import 'torch': No module named 'torch'
+SKIPPED [1] tests/test_dense_headroom_manifests.py:467: the registration is frozen; the image commit checks apply instead
+SKIPPED [1] tests/test_dense_headroom_v2_usr1_pid1.py:120: needs Docker and COTCODEC_USR1_PID1_IMAGE (a research image with torch and triton)
+SKIPPED [1] tests/test_q1_mutate_compiled.py:132: could not import 'triton': No module named 'triton'
+SKIPPED [1] tests/test_q1_mutate_compiled.py:156: could not import 'triton': No module named 'triton'
+SKIPPED [1] tests/test_q1_mutate_compiled.py:171: could not import 'triton': No module named 'triton'
+SKIPPED [1] tests/test_q1_mutate_compiled.py:194: could not import 'triton': No module named 'triton'
+SKIPPED [1] tests/test_q2_mutation_campaign.py:484: frozen: the guard now checks the ledger digest instead
+SKIPPED [1] tests/test_run_dense_headroom_precheck.py:43: could not import 'torch': No module named 'torch'
+SKIPPED [1] tests/test_run_dense_headroom_precheck.py:54: could not import 'torch': No module named 'torch'
+SKIPPED [1] tests/test_sparse_indexer_k1_budget_v2.py:18: could not import 'torch': No module named 'torch'
+SKIPPED [1] tests/test_sparse_indexer_k1_bundle.py:128: could not import 'pyarrow': No module named 'pyarrow'
+SKIPPED [1] tests/test_sparse_indexer_k1_prereg.py:30: once frozen, receipts and the filler bind the digests
+SKIPPED [1] tests/test_sparse_indexer_k1_v2_prereg.py:127: could not import 'torch': No module named 'torch'
+SKIPPED [1] tests/test_sparse_indexer_k1_v2_prereg.py:147: could not import 'torch': No module named 'torch'
+SKIPPED [1] tests/test_sparse_indexer_k1_v2_prereg.py:160: once frozen, the probe filler binds the digests
+SKIPPED [1] tests/test_sparse_indexer_k1_v2_prereg.py:233: could not import 'torch': No module named 'torch'
+SKIPPED [1] tests/test_sparse_indexer_k1_v2_prereg.py:278: could not import 'torch': No module named 'torch'
+2212 passed, 40 skipped in 256.93s (0:04:16)
+exit=0

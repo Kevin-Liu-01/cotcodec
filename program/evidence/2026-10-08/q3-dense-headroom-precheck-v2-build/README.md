@@ -131,8 +131,27 @@ frozen commit (freeze procedure), not these.
   1,824 passed, 36 skipped, 1 failed, the Linux-only stub-sbatch binding test,
   whose workload program did not start (the inner receipt code at column 0
   defeated `textwrap.dedent`; the Mac skips the test). Fixed in `50153d0`;
-  the file then passed on the host (3 passed). The full suite at the final
-  head is in `tests/host-suite-final/`.
+  the file then passed on the host (3 passed).
+- `tests/host-suite-final/pytest-full-f2510dd.log`: the full suite at
+  `f2510dd` (main merged, state and evidence committed), fresh
+  `~/cotcodec-scratch/` directory from a bundle clone plus an rsync of the
+  worktree without `.venv`/`.git` (clean tree), `uv sync --locked --extra dev`,
+  Slurm 788 (CPU): 2,212 passed, 40 skipped, 0 failed. The dev extra has no
+  torch, so the torch tests skip there.
+- `tests/torch-in-image-776/pytest-torch-image-776.log`: the torch-dependent
+  dense tests (`test_dense_headroom_v2_torch`, `test_dense_headroom_torch`,
+  `test_run_dense_headroom_precheck`, `test_dense_headroom_data`,
+  `test_dense_headroom_v2_timing`, `test_dense_headroom_v2_signals`,
+  `test_dense_headroom_v2_prereg`) inside image 776 on CPU (`--network none`,
+  pytest's pure-Python packages mounted read-only, since the image has no
+  pytest): 43 passed. The first attempt
+  (`pytest-torch-image-776-without-USER.log`, 7 failed) ran as a uid with no
+  passwd entry and without `USER`/`LOGNAME`, so an import's
+  `getpass.getuser()` failed and torch's re-import then raised "Artifact of
+  type=precompile already registered"; the doctor wrapper and the batch
+  path set both variables. Setting them was the only change.
+- Locally (macOS, `.venv`): the v2, v1 dense and preregister tests 105
+  passed, 7 skipped; `ruff check .` clean.
 
 ## Freeze simulation
 

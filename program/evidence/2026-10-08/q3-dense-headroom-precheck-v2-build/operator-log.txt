@@ -31,7 +31,14 @@ preregistration ledger untouched.
 ~08:25        full suite at e6e81e7 (fresh scratch, uv sync --locked --extra dev, srun CPU step):
               1824 passed, 36 skipped, 1 failed (stub-sbatch binding test: workload program
               indented). Fixed in 50153d0; the file passed on the host (3 passed).
-later         main merged into the branch (30f9c7c); freeze simulation on a scratch clone and the
-              full suite at the final head (see freeze-simulation/ and tests/host-suite-final/).
+~08:33        main merged into the branch locally (30f9c7c); state, log and evidence committed
+              (f2510dd).
+08:35         freeze simulated on a local scratch clone of f2510dd (ledger copy of 11 rows):
+              check-chain 12 rows PASS (freeze-simulation/).
+08:37-08:41   full suite at f2510dd in a fresh scratch directory, Slurm 788 (CPU):
+              2212 passed, 40 skipped, 0 failed (tests/host-suite-final/).
+08:42-08:45   torch-dependent dense tests inside image 776 (srun CPU steps, --network none):
+              first attempt without USER/LOGNAME 7 failed (environment), then 43 passed
+              (tests/torch-in-image-776/).
 
 GPU use in this build: Slurm 766 only, 205 s physical on one GPU (0.0569 GPU-h).
