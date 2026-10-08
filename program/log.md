@@ -2287,3 +2287,33 @@ they say so.)
 - Next: review of D45's implementation, then freeze v2, `-inputs`,
   `-executor` and run C2 (seed 45), C1, C3, A1-A6, the ladder on a quiet
   host, A4 and A7.
+
+## 2026-10-08 — Q2 action path v2: section 27's claim on D45's repeat corrected (branch `stage0/q2-action-path-v2`)
+
+- Review finding: section 27 (to be frozen) and the D45 bundle's README
+  item 3 said every cell's events read without their state equal those of
+  the D43 job it repeats. They do not: section 12's report (`by_entry`) has
+  job 845 at 29 in `chord_super_d`, 19 in `chord_alt_f4`, 20 in
+  `chord_alt_tab` and 40 in `chord_ctrl_alt_shift_r`, job 830 at 30, 18, 20
+  and 40 (108 in both). What is equal per cell is the number of trials with
+  an event read without its state (10 of 10 in each shell chord), as
+  `d45-development-runs.json` counts it. The earlier entry's "every cell as
+  in the D43 job it repeats" holds in that sense only.
+- Fix at `50f3861` (text and tests): section 27 and the README state the
+  trial-level equality and both jobs' per-entry event counts, and why they
+  differ (one 845 `chord_super_d` trial queued two events, not three; the
+  `chord_alt_f4` Alt_L release was recorded with its state, Mod1 and Mod2,
+  in one trial of 845 and two of 830). New tests: the committed
+  `section12-report.json` equals the analysis on the records for jobs 830
+  and 845, per entry and per event; section 27 and the README state the
+  trial-level equality and the report's per-entry counts (the test fails on
+  the old wording). No campaign-executed file changed (`git diff --stat
+  c74eae0` over the lane lists nothing), so no run was repeated.
+- Checks (`checks/checks-50f3861.json`): ruff clean; Q2 tests 647 passed, 1
+  skipped; validators PASS; full suite on the host from a fresh
+  `~/cotcodec-scratch/` export 2283 passed, 40 skipped; freeze lint of v2,
+  `-inputs`, `-executor` in order on a scratch copy of main's 12-row
+  ledger: 15 rows, chain PASS, every row verifies; main registration digest
+  `6f690bb5...` (was `e2856952...`), the addenda's unchanged. The
+  repository ledger is unchanged. Nothing frozen or pushed. No GPU.
+- Next: as before (review, then freeze v2, `-inputs`, `-executor`).
