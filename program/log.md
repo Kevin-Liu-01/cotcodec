@@ -908,3 +908,54 @@ Append-only. Newest entries at the bottom.
   untouched. No GPU time, no host access.
 - Next: freeze (steps 2-5). The binding doctor run is still the one in the
   image built from the freeze commit.
+
+## 2026-10-08 — Q2 evaluator-mutation: D35 applied (seventh draft, a descriptive protocol; not frozen)
+
+- Basis: the fifth review (64/100; scores 55, 62, 56, 57, 64) and decision
+  D35 on main (`64591fd`). Main merged first (`ba1e24e`): `log.md` kept both
+  sides, HANDOFF takes main's refresh with the checker-mutation bullet
+  updated, and the branch's `ledger.jsonl` equals main's (7 rows,
+  check-chain PASS). GPU total from the ledger rows: 3.0108 (unchanged).
+- (i) `analysis.D34_DEV_EXIT` always takes P2-P5 out of the confirmatory
+  headline ("D34 (i): development kappa below 0.6"); K6's adequacy claim is
+  retired (always blocked), K6b and K7 are descriptive, K4 is reported and
+  stops nothing. A test ties the constant to the recorded dev summary
+  (κ 0.0663 registered, 0.5752 relay excepted).
+- (ii) `analysis.checker_candidates`: false-negative candidates (evaluable
+  should_pass_equiv and should_pass_alt_solution mutants outside probe cells
+  that the checker fails) and false-positive candidates (evaluable
+  should-fail mutants it passes), each with its audit decision and reading
+  and its task's gold-defect flag; counts and task-equal shares with the
+  task-cluster bootstrap pooled, per label, family and operator; confirmed
+  shares when every candidate was audited.
+- (iii) `raters.draw_audit_sample` is a census of the candidate events, P2's
+  gate, the shams (a gold sham for every audited task) and the P1 flips;
+  above the 3.0 GPU-h cap's capacity at the planning rate
+  (`raters.audit_capacity`, 1,139 items) a seeded stratified sample over
+  candidate type × checker family (`raters.allocate`), disclosed in the
+  sample summary (`audit_scope`). Dev-scaled expectation: about 205 items,
+  0.62 GPU-h planned; adjudication pool about 16 items (10-40), 0.5-3.5 h.
+- (iv) `rater_runner.audit_transcript` checks every user turn: one rendered
+  template, and only the harness relay frame (`RELAY_PREAMBLE`, once, before
+  the task turn, no item id) besides it; `ingest-isolated` reads every
+  transcript of an item (`{item}.jsonl`, `{item}.<agent>.jsonl`, several
+  directories), allows one to answer, voids items with a relay frame when
+  the run's frames differ (unanswered items' transcripts included) and
+  records the relay digests in each call and the receipt. The fifth review's
+  probe (a later user turn naming the item's label) now voids. The relay
+  frame and its dev content are disclosed in section 9. Dev is not
+  re-ingested: the registered κ 0.066 stays as recorded. A scratch-only check
+  ran the new audit over the 158 dev transcript copies (format check, nothing
+  written): no void reason, one relay digest (`8e7dbd00`) in 110.
+- (v) `rater_runner.packet_parts` puts the differences before the listings
+  (label-blind, disclosed as postdating the dev results).
+- Minor: `render_rater_manifest` takes the lane memory per model (160 GiB for
+  Qwen3.6-35B-A3B) and the cap from `raters.AUDIT_GPU_HOURS`; sections 6, 9,
+  10, 13, 15 and 17, the status note, state.json (Q2 pending decision and
+  next action, D34 ledger outcome) and HANDOFF refreshed; review log added.
+- Checks: ruff clean; local Q2 tests 349 passed, 17 skipped; host full suite
+  and the freeze-lint against a scratch ledger copy recorded in
+  `program/evidence/q2-mutation/integration/d35-protocol/`. No GPU, nothing
+  pushed or frozen.
+- Next: a fresh review of the seventh draft, Kevin's sign-offs (section 17),
+  re-merge main, freeze.
