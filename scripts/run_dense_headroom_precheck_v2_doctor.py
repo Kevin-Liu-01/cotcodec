@@ -31,7 +31,9 @@ from ``scripts/run_dense_headroom_precheck_doctor.py``, plus v2's cases:
   answers a SIGUSR1 after the first chunk with exit 75 and the marker; v1's
   entry point under the same shim does not answer it (job 730's failure).
 * ``timing_profile``: the development timing job's profile on the tiny hybrid:
-  the registered subset (the first two chunks of every stage, round robin),
+  first the lane's ``attention_backend_check`` (D42 (ii); cuDNN's attention
+  left off after it), then the registered subset (the first two chunks of
+  every stage, round robin),
   v1's path on units of every stage equal to v2's bit for bit, the diagnostics,
   then a SIGUSR1 answered with exit 75, the marker and ``timing-receipt.json``,
   and no lane receipt.
@@ -533,9 +535,21 @@ def case_timing_profile(tmp: Path) -> dict[str, Any]:
            "timing receipt job fields", failures)
     _check(all("parts" in u and "prefill_forward" in u["parts"] for u in timing["units"]),
            "unit component timings missing", failures)
+    # D42 (ii): the lane's start-up, its attention_backend_check included, runs first.
+    check = timing.get("attention_backend_check") or {}
+    _check(bool(check.get("same_fields")) and all(check["same_fields"].values())
+           and check.get("seconds", 0) > 0,  # on CPU both runs use one backend
+           f"the timing job's attention backend check: {check}", failures)
+    _check(timing.get("attention_backends", {}).get("cudnn") is False
+           and timing.get("attention_backends_after_check", {}).get("cudnn") is False,
+           f"cuDNN SDPA left enabled: {timing.get('attention_backends_after_check')}", failures)
+    _check(timing.get("backend_check_started_after_s", 1e9)
+           < timing.get("evaluation_started_after_s", 0),
+           "the backend check did not run before the first unit", failures)
     return {"status": "PASS" if not failures else "FAIL", "failures": failures,
             "signal_sent": sent, "exit": process.returncode, "units": len(timing["units"]),
             "reference": timing["reference"],
+            "attention_backend_check": check,
             "torch_profiles": {k: v["status"] for k, v in timing["torch_profiles"].items()}}
 
 

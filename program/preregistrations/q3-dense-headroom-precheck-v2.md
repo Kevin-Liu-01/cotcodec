@@ -138,8 +138,8 @@ clean clone of the commit that holds this file's ledger row. The entry point
 refuses to start unless every file it runs (the ledger verifier
 `scripts/preregister.py` among them) has the SHA-256 tabled here; the manifest
 filler refuses unless every tabled file has this digest in the checkout and at
-the image's commit. The three manifest templates are tabled (the two lanes and
-the development timing job), so their argv, run roots, CPUs, memory, mounts
+the image's commit. The four manifest templates are tabled (the two lanes and
+the two development timing jobs), so their argv, run roots, CPUs, memory, mounts
 and host paths are bound: the filler refuses a template with another digest
 and a filled manifest that is not the template with only its `FILL-*` values
 replaced. The rows from `harness/dense_headroom_data.py` down are files tabled
@@ -153,18 +153,19 @@ v2's), doctor, filler and summariser by `q3-dense-headroom-precheck-v1`,
 
 | File | SHA-256 |
 |---|---|
-| scripts/run_dense_headroom_precheck_v2.py | 058caf287ea8012504a63f95a963ba136810e693d7acda80cb2ae592175e7a37 |
+| scripts/run_dense_headroom_precheck_v2.py | e36e021b70834a2ede73ab7542ab8f5e45ace2c5c554d7e489d2a3a7bf8ae2ba |
 | harness/dense_headroom_v2.py | 49f340ac46c80fa312d10e29bb3eaa45d95e574b9a598f47379b0e1effa5b5e1 |
-| harness/dense_headroom_v2_lanes.py | 0bc91f380eee9aa191a7f9c6c74d9f19d596fc8fad3c8fb9c013a55f8c5d0f7f |
+| harness/dense_headroom_v2_lanes.py | c08b906271667b82ed20def1e24390485252f4c96f21b3c845646da120baf8e0 |
 | harness/dense_headroom_torch_v2.py | 34963c32746c9d6b4384cb32b9ab37b1a4966b4586923ba43da036bdc6da0cbe |
-| scripts/run_dense_headroom_precheck_v2_doctor.py | 58b336c798cf2d640cdf27b456336d08b01fcca23af4f715e792788fb8f4e727 |
+| scripts/run_dense_headroom_precheck_v2_doctor.py | 52011a26dd2b318465a5aaddb9fcaad2bd8ea8b98599377fa7584d52f547d697 |
 | scripts/dense_headroom_v2_signal_shim.py | 40be0760437253ca7290b358245d8ce61ff5c9886e930a833a3768765c620fa1 |
-| scripts/fill_dense_headroom_precheck_v2_manifests.py | ce39a3f5e4e7d28eed5e306935ca8a86ed0bf2b3866bc85987e4e44148911be7 |
+| scripts/fill_dense_headroom_precheck_v2_manifests.py | 56c28491988c5a2422e4fb8127d74d62ef557f9cb1b622ab6d50c151001ad6e2 |
 | scripts/summarise_dense_headroom_precheck_v2.py | cd5b6af45a93cf1b04faaffe1dfd72b82d9a7cb3ffcfed2e512de04a8ce2deae |
 | scripts/preregister.py | 21fc3ef0ed0958b1600ce742c3b4f8d557d0a298635acb20342710eb814b2c0d |
 | experiments/manifests/q3-dense-headroom-precheck-v2/q3-dense-headroom-v2-0p6b.yaml | bf28d0b75d13d4b0ea825b481f3c9f8d17026dae8ce0d24b910c4d7f178c4cc1 |
 | experiments/manifests/q3-dense-headroom-precheck-v2/q3-dense-headroom-v2-4b.yaml | e92f76a16be411fb26750cb47a3131e493a549a7270631c9b95c7fe9fc1fc005 |
 | experiments/manifests/q3-dense-headroom-precheck-v2/q3-dense-headroom-v2-timing-4b.yaml | 007b64f91a53eefcbadeaf0971a46701769210d7d1b34383a7f78f70af353c6c |
+| experiments/manifests/q3-dense-headroom-precheck-v2/q3-dense-headroom-v2-timing-2-4b.yaml | 3fc8874d0cdee6992aa937a00e8308d4d1b451c9625079314aaf6dca6b323093 |
 | harness/dense_headroom_data.py | ee78549e257631035aef0d52c5243f6bae969fd2c4f4a1e43bb8779bdf524003 |
 | harness/dense_headroom_stats.py | a94d1ceee80fe3e95f2f36af0cbda51644846594d5fc9ccf69fcb90c8215d195 |
 | harness/dense_headroom_torch.py | 6dd8ff1f9cbcbd7d3faaecd1c94ab7908c12e2aea16b480bc56735e4b27547be |
@@ -515,10 +516,11 @@ freeze; `attention_backend_check` is the only check of the switch, and it is des
 
 | Job | GPUs x minutes | Cap (GPU-h) |
 |---|---|---|
-| Development timing job (before the freeze; done) | 1 x 6 | 0.10 |
+| Development timing job (D36; before the freeze; done, Slurm 766) | 1 x 6 | 0.10 |
+| Second development timing job (D42 (ii); before the freeze) | 1 x 6 | 0.10 |
 | Qwen3-0.6B-Base lane | 1 x 12 | 0.20 |
 | Qwen3.5-4B-Base lane | 1 x 45 | 0.75 |
-| Total | | 1.05 |
+| Total | | 1.15 |
 
 The total is the sum of the registered caps, D22's counting rule, within
 D36's v2 cap of 1.5 GPU-h (the timing job included); with v1's 0.4189 GPU-h
