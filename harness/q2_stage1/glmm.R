@@ -115,7 +115,9 @@ if (!inherits(full, "error")) {
     not_converged <- 0L
     for (b in seq_len(n_boot)) {
       db <- d
-      db$y <- as.numeric(sims[[b]])
+      # A binomial fit simulates a (successes, failures) matrix per draw; keep the successes.
+      sb <- sims[[b]]
+      db$y <- if (is.matrix(sb)) as.numeric(sb[, 1]) else as.numeric(sb)
       fb <- fit_model(full_formula, db)
       if (inherits(fb, "error")) {
         failed <- failed + 1L

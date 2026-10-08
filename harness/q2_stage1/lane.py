@@ -151,6 +151,9 @@ def validate_manifest(raw: Mapping[str, Any], source_dir: Path) -> dict[str, Any
         else:
             _require(str(engine.get("bridge_dir", "")).startswith(RUN_ROOT), "bridge_dir")
             _require(isinstance(engine.get("gpu_cap_min"), int), "engine.gpu_cap_min")
+            if "{gpu_job_id}" in str(engine["bridge_dir"]):
+                _require(str(engine.get("gpu_job_id_file", "")).startswith(RUN_ROOT),
+                         "engine.gpu_job_id_file is required with {gpu_job_id}")  # fmt: skip
     _require(m.get("step_cap", STEP_CAP) == STEP_CAP, "step_cap is 15 (section 5.3)")
     _require(m.get("settle_after_reset_s", 60) == SETTLE_AFTER_RESET_S, "settle after reset 60 s")
     _require(m.get("settle_before_eval_s", 20) == SETTLE_BEFORE_EVAL_S, "settle before eval 20 s")
@@ -392,11 +395,25 @@ class Lane:
             )  # fmt: skip
             self._wait_for(self.engine_dir / "engine.sock", 60)
             return
-        self.engine_dir = Path(engine["bridge_dir"])
+        self.engine_dir = self.resolve_bridge_dir(engine)
         ready = self.engine_dir / "ready.json"
         self._wait_for(ready, float(engine.get("ready_timeout_s", 1800)))
         status = json.loads(ready.read_text(encoding="utf-8"))
         self.usr1_epoch = float(status["t_start"]) + engine["gpu_cap_min"] * 60 - 180
+
+    def resolve_bridge_dir(self, engine: Mapping[str, Any]) -> Path:
+        """The GPU job's bridge directory. The VM job is submitted first, so the GPU job's id
+        (its run directory) is not known then: ``bridge_dir`` may hold ``{gpu_job_id}``,
+        read from ``gpu_job_id_file`` once the operator has submitted the GPU job."""
+        template = str(engine["bridge_dir"])
+        if "{gpu_job_id}" not in template:
+            return Path(template)
+        id_file = Path(engine["gpu_job_id_file"])
+        self._wait_for(id_file, float(engine.get("ready_timeout_s", 1800)))
+        job = id_file.read_text(encoding="utf-8").strip()
+        if not re.fullmatch(r"[1-9][0-9]{0,19}", job):
+            raise LaneError(f"{id_file} does not hold a Slurm job id")
+        return Path(template.replace("{gpu_job_id}", job))
 
     def _wait_for(self, path: Path, seconds: float) -> None:
         end = self.clock() + seconds
