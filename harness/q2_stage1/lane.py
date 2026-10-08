@@ -56,6 +56,7 @@ DEV_ONLY_PURPOSES = ("development", "a0a", "a0b")
 OSWORLD_COMMIT = "b138d348256078fa634fc3b73567a7337c793e6b"
 SPLITS = "program/evidence/q2-mutation/splits.json"
 LEDGER = "program/preregistrations/ledger.jsonl"
+REGISTRATION = "program/preregistrations/q2-stage1-rescoped-v1.md"
 # Action-path v2 section 2.1 (the runtime S1a inherits; registration section 4).
 VM_PINS = {
     "image": "happysixd/osworld-docker@sha256:"
@@ -185,7 +186,101 @@ def validate_manifest(raw: Mapping[str, Any], source_dir: Path) -> dict[str, Any
     if fill is not None:
         _require(purpose == "a1", "only an A1 job fills")
         _require(isinstance(fill.get("blocks"), list), "fill.blocks")
+    check_plan_slots(m, source_dir)
     return m
+
+
+def check_plan_slots(m: Mapping[str, Any], source_dir: Path) -> None:
+    """A registered job's slots (and fill blocks) are the plan's, rendered by
+    ``plan.a0a_slots`` and ``plan.a1_slots`` (raises ``LaneError``).
+
+    A0a: the manifest names N* (the accepted attempt's ladder value); V is A1's, the dev
+    tasks follow the committed setup-check records (G0 item 5). A1: the manifest names the
+    frozen plan file in the source tree and its digest, which the registration must state
+    as the frozen plan; a session-2 job names both session-1 jobs' record files, from which
+    the extension blocks it runs are recomputed. The anchor (A0b, ANC) is UNAVAILABLE and
+    has no runner, so those purposes are refused.
+    """
+    from harness.q2_stage1 import plan as P
+
+    purpose, engine = m["purpose"], m.get("engine") or {}
+    _require(purpose not in ("a0b", "anc"),
+             "the anchor is UNAVAILABLE (G0 item 9.6) and no anchor runner is built")  # fmt: skip
+    if purpose == "a0a":
+        n_star = m.get("n_star")
+        _require(isinstance(n_star, int) and not isinstance(n_star, bool), "n_star is required")
+        v = P.a1_concurrency(n_star)
+        _require(v is not None, "N* < 16: S1a does not start (G0 item 1)")
+        _require(m["vm"]["concurrency"] == v, f"A0a runs one wave at A1's V = {v}")
+        _require(engine.get("gpu_cap_min") == P.CAP_MINUTES["A0a"], "A0a's GPU cap is 25")
+        splits = json.loads((source_dir / SPLITS).read_text(encoding="utf-8"))
+        lines = (source_dir / P.SETUP_CHECK_RECORDS).read_text(encoding="utf-8").splitlines()
+        rows = [json.loads(line) for line in lines if line.strip()]
+        expected = P.a0a_slots(splits["dev"], P.setup_ok_from_records(rows), v)
+        _require(m["slots"] == expected, "A0a's slots differ from plan.a0a_slots")
+        _require(m.get("fill") is None, "A0a does not fill")
+        return
+    if purpose != "a1":
+        return
+    plan = load_frozen_plan(m, source_dir)
+    constants = plan["constants"]
+    a1 = m.get("a1") or {}
+    size, session = a1.get("size"), a1.get("session")
+    _require(m["vm"]["concurrency"] == constants["a1_v"], f"A1 runs at V = {constants['a1_v']}")
+    cap = constants["a1_cap_min"]
+    _require(engine.get("gpu_cap_min") == cap, f"A1's GPU cap is T_A1 = {cap}")
+    s2_blocks = None
+    if session == "S2":
+        s2_blocks = session_two_blocks(a1, plan)
+    try:
+        slots, fill = P.a1_slots(plan, size, session, s2_blocks)
+    except P.PlanError as exc:
+        raise LaneError(str(exc)) from exc
+    _require(m["slots"] == slots, f"A1 {size} {session}: slots differ from plan.a1_slots")
+    _require(m.get("fill") == fill, f"A1 {size} {session}: fill differs from plan.a1_slots")
+
+
+def load_frozen_plan(m: Mapping[str, Any], source_dir: Path) -> dict[str, Any]:
+    from harness.q2_stage1 import plan as P
+
+    ref = m.get("plan") or {}
+    path, sha = ref.get("path"), ref.get("sha256")
+    _require(isinstance(path, str) and not path.startswith("/") and ".." not in Path(path).parts,
+             "plan.path must name the plan file inside the source tree")  # fmt: skip
+    _require(isinstance(sha, str) and bool(HEX64.fullmatch(sha)), "plan.sha256")
+    data = json.loads((source_dir / path).read_text(encoding="utf-8"))
+    body = {k: v for k, v in data.items() if k != "plan_sha256"}
+    _require(data.get("plan_sha256") == P.digest(body) == sha,
+             "the plan file does not match its digest")  # fmt: skip
+    _require(data.get("status") == "frozen-constants", "A1 runs from the frozen plan")
+    text = (source_dir / REGISTRATION).read_text(encoding="utf-8")
+    _require(f"Frozen plan SHA-256: `{sha}`" in text,
+             "the registration does not name this plan as the frozen plan")  # fmt: skip
+    return data
+
+
+def session_two_blocks(a1: Mapping[str, Any], plan: Mapping[str, Any]) -> list[int]:
+    """The extension blocks both session-1 jobs completed (section 5.6), recomputed from
+    their record files, which must hold the declared list."""
+    from harness.q2_stage1 import plan as P
+    from harness.q2_stage1.records import completed_extension_blocks
+
+    files = a1.get("s1_records") or []
+    _require(isinstance(files, list) and files, "a session-2 job names the S1 record files")
+    rows: list[dict[str, Any]] = []
+    for item in files:
+        path = Path(str(item.get("path", "")))
+        _require(str(path).startswith(RUN_ROOT), "s1_records outside the run root")
+        _require(sha256_file(path) == item.get("sha256"), f"{path} does not match its digest")
+        rows += [json.loads(x) for x in path.read_text(encoding="utf-8").splitlines() if x.strip()]
+    jobs = {P.a1_job(size, "S1") for size in P.SIZES}
+    s1 = [r for r in rows if r.get("job") in jobs]
+    _require({r["job"] for r in s1} == jobs, f"s1_records must hold both S1 jobs {sorted(jobs)}")
+    planned = {int(k): v for k, v in plan["extension_blocks"].items()}
+    blocks = completed_extension_blocks(s1, planned, sessions=("S1",))
+    declared = f"s2_extension_blocks must be {blocks}, the blocks both S1 jobs completed"
+    _require(a1.get("s2_extension_blocks") == blocks, declared)
+    return blocks
 
 
 # --------------------------------------------------------------------------- queue

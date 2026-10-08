@@ -192,9 +192,12 @@ def _slot_final(rec: Mapping[str, Any] | None) -> bool:
 
 
 def completed_extension_blocks(
-    records: Iterable[Mapping[str, Any]], planned: Mapping[int, Sequence[str]]
+    records: Iterable[Mapping[str, Any]],
+    planned: Mapping[int, Sequence[str]],
+    sessions: Sequence[str] = SESSIONS,
 ) -> list[int]:
-    """Extension blocks every slot of which reached a final state in all four A1 jobs.
+    """Extension blocks every slot of which reached a final state in all four A1 jobs (or,
+    with ``sessions=("S1",)``, in both session-1 jobs: the blocks session 2 runs, 5.6).
 
     A slot is final when its last attempt is scored, or is an infrastructure loss after the
     re-queue (attempt 2); a cap-truncated or undispatched slot is not.
@@ -204,7 +207,7 @@ def completed_extension_blocks(
     for block, tasks in sorted(planned.items()):
         ok = True
         for z in SIZES:
-            for s in SESSIONS:
+            for s in sessions:
                 for t in tasks:
                     for h in HARNESSES:
                         for r in RERUNS:

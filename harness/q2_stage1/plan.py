@@ -496,6 +496,120 @@ def digest(value: Any) -> str:
     return hashlib.sha256(payload).hexdigest()
 
 
+# --------------------------------------------------------------------------- lane slots
+# The episode slots of every registered VM job, rendered from the plan (sections 5.4-5.6,
+# 6.1). ``lane.validate_manifest`` refuses an A0a or A1 manifest whose slots (and fill
+# blocks) differ from these, so the base, the dev-task choice, the block orders, the
+# rerun-to-block mapping that same-block and cross-block D_b rely on (rerun r is block r)
+# and the extension sub-blocks are enforced by code, not by hand-written manifests.
+
+A0A_JOB = "A0a"
+A0A_SIZE = "9B"
+A0A_SESSION = "S1"
+FILL_BLOCK_EPISODES = 32  # section 5.6: 8 tasks x 2 harnesses x 2 reruns
+SETUP_CHECK_RECORDS = "program/evidence/2026-10-08/q2-stage1-g0/setup-check/setup.jsonl"
+
+
+def a1_job(size: str, session: str) -> str:
+    return f"A1-{size}-{session}"
+
+
+def block_slots(
+    job: str,
+    size: str,
+    session: str,
+    block: str,
+    rerun: int,
+    cells: Sequence[Sequence[str]],
+    extension_block: int | None = None,
+) -> list[dict[str, Any]]:
+    """One block's slots in its seeded order; slot ids are ``<job>:<block>:<index>``."""
+    return [
+        {
+            "slot": f"{job}:{block}:{i:03d}",
+            "job": job,
+            "size": size,
+            "session": session,
+            "task_id": task,
+            "harness": harness,
+            "rerun": rerun,
+            "block": block,
+            "extension_block": extension_block,
+        }
+        for i, (task, harness) in enumerate(cells)
+    ]
+
+
+def setup_ok_from_records(rows: Iterable[Mapping[str, Any]]) -> dict[str, bool]:
+    """G0 item 5's verdict per task from the setup check's records."""
+    return {str(r["task_id"]): r.get("status") == "setup_ok" for r in rows}
+
+
+def a0a_slots(dev_ids: Sequence[str], setup_ok: Mapping[str, bool], v: int) -> list[dict]:
+    """A0a (section 6.1): 9B, the first V/4 dev tasks of ``dev_tasks`` x 2 harnesses x 2
+    reruns = V episodes, one wave at A1's V. Rerun r is block ``a0a.r``, each block in the
+    seeded order ``block_order(tasks, "S1", "9B", "a0a.r")``."""
+    if v not in (16, 20):
+        raise PlanError("A0a runs at A1's V, 16 or 20 (section 5.5)")
+    tasks = dev_tasks(dev_ids, setup_ok, v // 4)
+    out: list[dict[str, Any]] = []
+    for rerun in (1, 2):
+        block = f"a0a.{rerun}"
+        cells = block_order(tasks, A0A_SESSION, A0A_SIZE, block)
+        out += block_slots(A0A_JOB, A0A_SIZE, A0A_SESSION, block, rerun, cells)
+    return out
+
+
+def a1_slots(
+    plan: Mapping[str, Any],
+    size: str,
+    session: str,
+    s2_blocks: Sequence[int] | None = None,
+) -> tuple[list[dict[str, Any]], dict[str, Any] | None]:
+    """One A1 job's slots and fill blocks from the frozen plan file (sections 5.5-5.6).
+
+    Base blocks b1 (rerun 1) then b2 (rerun 2), each in its seeded order. A session-1 job
+    gets every extension block, in the extension order, as fill blocks of two sub-blocks
+    (``x<b>.1`` rerun 1, ``x<b>.2`` rerun 2), queued only while ``fill_allowed`` holds. A
+    session-2 job runs, after its base, exactly ``s2_blocks`` (the extension blocks both
+    session-1 jobs completed, ``records.completed_extension_blocks(..., sessions=("S1",))``)
+    in the same order, with no fill decision of its own.
+    """
+    if size not in SIZES or session not in SESSION_SEED:
+        raise PlanError(f"unknown A1 job {size} {session}")
+    orders, job = plan["episode_orders"], a1_job(size, session)
+    if digest(orders) != plan["episode_orders_sha256"]:
+        raise PlanError("the plan's episode orders do not match their digest")
+    slots: list[dict[str, Any]] = []
+    for rerun, block in ((1, "b1"), (2, "b2")):
+        slots += block_slots(job, size, session, block, rerun, orders[f"{session}:{size}:{block}"])
+    extension = sorted(int(b) for b in plan["extension_blocks"])
+
+    def sub_blocks(b: int) -> list[dict[str, Any]]:
+        out = []
+        for rerun in (1, 2):
+            label = f"x{b:02d}.{rerun}"
+            cells = orders[f"{session}:{size}:{label}"]
+            rows = block_slots(job, size, session, label, rerun, cells, b)
+            out.append({"label": label, "slots": rows})
+        return out
+
+    if session == "S1":
+        if s2_blocks is not None:
+            raise PlanError("a session-1 job fills by the rule; it takes no block list")
+        blocks = [{"label": f"x{b:02d}", "sub_blocks": sub_blocks(b)} for b in extension]
+        return slots, {"blocks": blocks, "block_episodes": FILL_BLOCK_EPISODES}
+    if s2_blocks is None:
+        raise PlanError("a session-2 job needs the extension blocks both S1 jobs completed")
+    unknown = sorted(set(s2_blocks) - set(extension))
+    if unknown or len(set(s2_blocks)) != len(s2_blocks):
+        raise PlanError(f"session-2 extension blocks outside the plan: {unknown}")
+    for b in sorted(s2_blocks):
+        for sub in sub_blocks(b):
+            slots += sub["slots"]
+    return slots, None
+
+
 # --------------------------------------------------------------------------- engines
 
 
@@ -632,6 +746,7 @@ def render_plan(
         "flagged_tasks": [t for t in FLAGGED_TASKS if t in pool],
         "task_domains": {t: domain[t] for t in pool},
         "size_order": size_order(),
+        "episode_orders": orders,
         "episode_orders_sha256": digest(orders),
         "anchor_order": anchor,
         "anchor_order_sha256": digest(anchor),
