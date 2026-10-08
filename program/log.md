@@ -1004,3 +1004,55 @@ Append-only. Newest entries at the bottom.
   disabling the gate (c) replay and A5's per-call check).
 - Waiting on Kevin: sign-off of `q1-stage0-exec/2` and the store policy, the
   budget path, D14 findings 18.3 items 6-8, D28/D29.
+
+## 2026-10-08 — D39 applied to the action-path registrations (not frozen)
+
+- Merged main (D37-D39, the Q1 D31 engineering pass) into
+  `stage0/q2-action-path-d30` (`a367b7a`): `log.md` keeps both sides;
+  `state.json` takes main's Q1 and Q3 entries and pending-decision list,
+  with the branch's Q2 entry (the action-path freeze item stays resolved by
+  D30, D33 and D39); `HANDOFF.md` is main's with the action-path bullet
+  brought up to date; the ledger and `decisions.md` equal main's (7 rows,
+  `01e0220e`, chain PASS).
+- `acceptance.py` (`280ccbf`), decision D39 on the final pre-freeze
+  verifier's finding: a C3 mutant is equivalent only if its counting
+  attempt's stream signature equals the reference's and every earlier
+  attempt's does on each cell it ran without an infrastructure failure;
+  kills stay the counting attempt's. Each earlier attempt reports its
+  differing cells and the cells left out for an infrastructure failure.
+  `load` reads a receipt, cycle or record file that does not parse as
+  missing (an empty receipt, a session not run, a session without host
+  snapshots), lists it under `unreadable`, and the attempt does not count.
+- Text (`e565cb2`, `578131d`; main preregistration section 23): sections
+  6.1, 8 and 12 and design decision 45 state both rules; section 12's
+  per-rung excused count reads over every rerun that did not abort
+  (aborted attempts' counts in `earlier_attempts`); sections 20 and 22 and
+  design decision 44 point to D39 for the confirmation of D33's per-entry
+  reading, and section 21 points to section 23. The three status lines
+  have the frozen wording (the ledger row, the freeze order v1, then
+  `-inputs`, then `-executor`, and what may not run before the row), and
+  `tests/test_q2_prereg_inputs.py` requires it. Both addenda pin
+  `acceptance.py` at `39c59210`; the inputs addendum has a section 5 row
+  for `280ccbf`, and the executor addendum's sections 7 and 9 name D39.
+- Checks: both new tests fail on the previous `acceptance.py` (the
+  verifier's probe reads equivalent; the loader raises on a record cut
+  inside a multi-byte character). Mac (worktree `.venv`): the Q2 tests
+  with the preregistration, VM-campaign and Holo3 tests, 351 passed; ruff
+  check and format clean on the changed Python files. Host, fresh
+  `~/cotcodec-scratch/` directories (rsync without `.venv` and `.git`, `uv
+  sync --locked --extra dev`): ruff check clean and the whole suite 1,890
+  passed, 37 skipped, at `e565cb2` and again at `578131d`. The final loader
+  re-read runs 694 and 703-708 and the cancelled 695-699 read-only, next to
+  the loader at `ae2a6d7`: nothing changed but the new `unreadable` list,
+  empty in every run; all 996 receipt, cycle and record files in the 124
+  development run directories parse. All 85 frozen-table digests (20 main,
+  34 inputs, 31 executor) match; `git diff --stat 7653799 HEAD` over
+  `harness/q2`, the sbatch and the submitter lists only
+  `harness/q2/README.md` and `acceptance.py`, and no file imports
+  `acceptance.py`. Freezing v1, then `-inputs`, then `-executor` into a
+  scratch copy of the ledger at `578131d` verified with the chain intact
+  (10 rows; SHA-256 v1 `ab0a5139`, inputs `ca7cadf7`, executor
+  `a9f97469`); in a scratch clone frozen step by step, only A5 is admitted
+  after v1, C2 after `-inputs`, and every scored campaign after `-executor`
+  except A7 under attempt 2. The repository ledger is unchanged (7 rows).
+- Nothing is frozen and nothing is pushed. No GPU, no VM job.
