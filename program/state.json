@@ -351,6 +351,22 @@
           },
           "gpu_hours": 0.0
         }
+      },
+      "stage1_s1a": {
+        "registration": "q2-stage1-rescoped-v1 (draft, not frozen; no ledger row)",
+        "branch": "stage0/q2-stage1-rescope",
+        "status": "G0 items 2-9 and 12 built and tested on CPU (D49 iv); a fresh independent audit must read the draft before any freeze; G0 item 1 waits for the action-path v2 acceptance verdict; no GPU job and no GPU episode has run",
+        "g0_results": {
+          "fetch_lane_and_receipts": "fetch-model-cpu.sbatch (22685e5e...), job 971 CPU only: Qwen3.5-4B receipt efc88487..., OpenCUA-7B receipt 8109da82... (16.6 GB); remote code read and hashed",
+          "episode_driver_and_bridge": "harness/q2_stage1 driver, agents (checked against upstream-recorded messages), engine, bridge, lane, osworld_live; dev smoke job 978 with the scripted fake engine: 3/3 episodes scored end to end; rescoring job 983 matched live 3/3",
+          "offline_setup_check": "job 982: 148 of 148 setups completed offline (116 pool, 32 dev); the only confirm-task contact before the freeze",
+          "capture_and_rescoring": "osworld_live capture sweep and rescore.py (capture, merge)",
+          "zinv": "validated in its third run (job 1000): 29/29 confirmed z-order mutants pass, 256/256 other items keep the original verdict, 291/291 raw verdicts reproduced; runs 980 (0/29) and 995 (26/29) kept and disclosed",
+          "anchor": "UNAVAILABLE before any GPU job: G0 9.6 excludes 110 of 116 tasks (the public runs predate b138d348 by 14 months: 36 configs and many checker definitions differ); 9.3 dry run (job 998): vLLM 0.31.0 with transformers 5.17.0 cannot load OpenCUA-7B's remote tokenizer; 9.5 the pinned agent cannot reproduce the public runs' L2 system prompt",
+          "glmm": "glmm.R in image b15584f3... (R 4.4.2, glmmTMB 1.1.10); acceptance fit job 984 converged (200 refits)"
+        },
+        "consequence": "branch 'anchor unavailable before A0b': pre-freeze jobs O1 and A0a only; T_A1 111 min; K_base 32 at the card's high price, so D47's 32-task floor holds without the section 18 item 18 amendment",
+        "evidence": "program/evidence/2026-10-08/q2-stage1-g0/"
       }
     },
     {
@@ -406,7 +422,7 @@
     "The checker-mutation blind specs (program/evidence/q2-mutation/specs/, public on main since 2026-10-07) quote short passages of OSWorld file-cache documents. The registration lists their release as your sign-off, but they were published with the integration branch before that sign-off. Confirm the release, or ask for removal (a history purge needs a force-push, as with the other purge item)",
     "Q2 action path: q2-action-path-v2 (+ -inputs, -executor) is frozen (2026-10-08, ledger rows 13-15) under D40, D43 and D45. v1's C2 failure of chord_super_d was in the XRecord tap's record of key events queued during GNOME Shell's synchronous grab, not in delivery; v2's judge reads such an event without its state only after a processed press in its window. Still open for you: whether a later registration should observe the shell's side of a grabbed chord directly, and the job 851 unprovoked guest-server restart (the lane's second) beside the D30 development rate",
     "Q3: q3-dense-headroom-precheck-v2 read NEGATIVE_CAPABLE_V3 on Qwen3.5-4B-Base (development partition; program/evidence/2026-10-08/q3-dense-headroom-precheck-v2/README.md). Decide whether to open a K1 v3 on that base (new experiment id and the research gauntlet, D26), with the read's requirements: a seen-script cross-script condition, an entity-controlled question set, the non-literal floor (99% lower bound of G(MN) on controlled families at least 0.5), GO and NEGATIVE statistics computed on the entity-controlled set, anchor masking or a lexical-overlap covariate, and H2 re-tested under K1's bounds on the audit read",
-    "Q2 Stage 1 S1a draft (q2-stage1-rescoped-v1, branch stage0/q2-stage1-rescope, revised after three pre-freeze reviews): sign off section 18 items 17 (DR1 as a ladder decision in place of the 122B-A10B swap, and DR5 with M frozen at 0.13 in place of the 'paired MDE about 7-8 pp' kill line) and 18 (amend D47's 'at least 32 confirm tasks' to at least 24 by the A0 rule: with the OpenCUA anchor running, the corrected caps give 24 at the card's high price; without the amendment S1a can freeze only when the anchor is unavailable). The program must also admit the pre-freeze jobs O1, A0a and A0b (as D36) and decide on OpenCUA-7B's --trust-remote-code (D29-style)"
+    "Q2 Stage 1 S1a draft (q2-stage1-rescoped-v1, branch stage0/q2-stage1-rescope; G0 build done 2026-10-08, not frozen): sign off section 18 item 17 (DR1 as a ladder decision in place of the 122B-A10B swap, and DR5 with M frozen at 0.13 in place of the 'paired MDE about 7-8 pp' kill line). Item 18's amendment is no longer needed: the G0 build found the OpenCUA-7B anchor UNAVAILABLE before any GPU job (G0 9.6: at most 6 of 116 tasks keep the config and checker the public runs were scored with; 9.3's dry run: vLLM 0.31/transformers 5.17 cannot load its tokenizer), so S1a runs unanchored with the 32-task floor D47 states. A fresh independent audit (D49 iv) must read the draft, including section 22's G0 build changes (the episode container is the checker-mutation metric image; today's date kept in the prompt; FAIL for both harnesses; the slow-execute rule; zinv's pairing rule and its three validation runs), before any freeze"
   ],
   "gpu_hours_spent_this_program": 4.6816,
   "frozen_registrations": [

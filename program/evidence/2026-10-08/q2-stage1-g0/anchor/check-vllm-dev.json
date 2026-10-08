@@ -1,0 +1,23 @@
+{
+ "checks": {
+  "config_architectures": [
+   "OpenCUAForConditionalGeneration"
+  ],
+  "config_class": "OpenCUAConfig",
+  "hf_error": "ValueError: unk_token should not be set in dumping mode when additional_special_tokens is None",
+  "max_position_embeddings": 128000,
+  "registry_lists_opencua": true,
+  "vllm_error": "RuntimeError: Failed to infer device type, please set the environment variable `VLLM_LOGGING_LEVEL=DEBUG` to turn on verbose logging to help debug the issue.",
+  "vllm_tokenizer_error": "ValueError: unk_token should not be set in dumping mode when additional_special_tokens is None",
+  "vllm_tokenizer_loader": "vllm.tokenizers"
+ },
+ "model_dir": "/ro/opencua-7b",
+ "ok": false,
+ "remote_code_pinned": true,
+ "remote_code_sha256": {
+  "configuration_opencua.py": "12892d04cf561ddf85fbb166088cf6ec2c3edbfed86152461a25ed82f14ef560",
+  "modeling_opencua.py": "fb8fcf59150cd659d7cb54151f32b49e18bbd2c662fbe93daf78afc33f0a1b53",
+  "processing_opencua.py": "58198678600fd5a81aab6838321ab56b663f6f2c29918af1bac03ac2378b1b99",
+  "tokenization_opencua.py": "7386c9fb5b45a5e5a63fab059dd3c4650c1a229d7e1ce5e14ead276e6be9f3db"
+ }
+}

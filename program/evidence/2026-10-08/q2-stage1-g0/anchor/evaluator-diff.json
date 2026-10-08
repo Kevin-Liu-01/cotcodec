@@ -1,0 +1,3241 @@
+{
+ "config_differs": [
+  "035f41ba-6653-43ab-aa63-c86d449d62e5",
+  "04578141-1d42-4146-b9cf-6fab4ce5fd74",
+  "04d9aeaf-7bed-4024-bedb-e10e6f00eb7f",
+  "06ca5602-62ca-47f6-ad4f-da151cde54cc",
+  "09a37c51-e625-49f4-a514-20a773797a8a",
+  "0bf05a7d-b28b-44d2-955a-50b41e24012a",
+  "1273e544-688f-496b-8d89-3e0f40aa0606",
+  "185f29bd-5da0-40a6-b69c-ba7f4e0324ef",
+  "21df9241-f8d7-4509-b7f1-37e501a823f7",
+  "26a8440e-c166-4c50-aef4-bfb77314b46b",
+  "2a729ded-3296-423d-aec4-7dd55ed5fbb3",
+  "30e3e107-1cfb-46ee-a755-2cd080d7ba6a",
+  "37608790-6147-45d0-9f20-1137bb35703d",
+  "4e6fcf72-daf3-439f-a232-c434ce416af6",
+  "4f07fbe9-70de-4927-a4d5-bb28bc12c52c",
+  "554785e9-4523-4e7a-b8e1-8016f565f56a",
+  "5ac2891a-eacd-4954-b339-98abba077adb",
+  "77b8ab4d-994f-43ac-8930-8ca087d7c4b4",
+  "7a4deb26-d57d-4ea9-9a73-630f66a7b568",
+  "7e287123-70ca-47b9-8521-47db09b69b14",
+  "7efeb4b1-3d19-4762-b163-63328d66303b",
+  "881deb30-9549-4583-a841-8270c65f2a17",
+  "88fe4b2d-3040-4c70-9a70-546a47764b48",
+  "8b1ce5f2-59d2-4dcc-b0b0-666a714b9a14",
+  "8df7e444-8e06-4f93-8a1a-c5c974269d82",
+  "982d12a5-beab-424f-8d38-d2a48429e511",
+  "a434992a-89df-4577-925c-0c58b747f0f4",
+  "a5bbbcd5-b398-4c91-83d4-55e1e31bbb81",
+  "a669ef01-ded5-4099-9ea9-25e99b569840",
+  "a9f325aa-8c05-4e4f-8341-9e4358565f4f",
+  "b8adbc24-cef2-4b15-99d5-ecbe7ff445eb",
+  "d38192b0-17dc-4e1d-99c3-786d0117de77",
+  "dfac9ee8-9bc4-4cdc-b465-4a4bfcd2f397",
+  "e2dd0213-26db-4349-abe5-d5667bfd725c",
+  "e8172110-ec08-421b-a6f5-842e6451911f",
+  "ecb0df7a-4e8d-4a03-b162-053391d3afaf"
+ ],
+ "config_or_metric_differs": [
+  "0326d92d-d218-48a8-9ca1-981cd6d064c7",
+  "035f41ba-6653-43ab-aa63-c86d449d62e5",
+  "04578141-1d42-4146-b9cf-6fab4ce5fd74",
+  "04d9aeaf-7bed-4024-bedb-e10e6f00eb7f",
+  "06ca5602-62ca-47f6-ad4f-da151cde54cc",
+  "0810415c-bde4-4443-9047-d5f70165a697",
+  "08aced46-45a2-48d7-993b-ed3fb5b32302",
+  "09a37c51-e625-49f4-a514-20a773797a8a",
+  "0a211154-fda0-48d0-9274-eaac4ce5486d",
+  "0a2e43bf-b26c-4631-a966-af9dfa12c9e5",
+  "0bf05a7d-b28b-44d2-955a-50b41e24012a",
+  "10a730d5-d414-4b40-b479-684bed1ae522",
+  "1273e544-688f-496b-8d89-3e0f40aa0606",
+  "1334ca3e-f9e3-4db8-9ca7-b4c653be7d17",
+  "185f29bd-5da0-40a6-b69c-ba7f4e0324ef",
+  "1e8df695-bd1b-45b3-b557-e7d599cf7597",
+  "21ab7b40-77c2-4ae6-8321-e00d3a086c73",
+  "21df9241-f8d7-4509-b7f1-37e501a823f7",
+  "26150609-0da3-4a7d-8868-0faf9c5f01bb",
+  "26a8440e-c166-4c50-aef4-bfb77314b46b",
+  "2a729ded-3296-423d-aec4-7dd55ed5fbb3",
+  "30e3e107-1cfb-46ee-a755-2cd080d7ba6a",
+  "3161d64e-3120-47b4-aaad-6a764a92493b",
+  "358aa0a7-6677-453f-ae35-e440f004c31e",
+  "37608790-6147-45d0-9f20-1137bb35703d",
+  "3a93cae4-ad3e-403e-8c12-65303b271818",
+  "3f49d2cc-f400-4e7d-90cc-9b18e401cc31",
+  "4188d3a4-077d-46b7-9c86-23e1a036f6c1",
+  "42e0a640-4f19-4b28-973d-729602b5a4a7",
+  "4c26e3f3-3a14-4d86-b44a-d3cedebbb487",
+  "4de54231-e4b5-49e3-b2ba-61a0bec721c0",
+  "4e6fcf72-daf3-439f-a232-c434ce416af6",
+  "4f07fbe9-70de-4927-a4d5-bb28bc12c52c",
+  "51719eea-10bc-4246-a428-ac7c433dd4b3",
+  "51b11269-2ca8-4b2a-9163-f21758420e78",
+  "53ad5833-3455-407b-bbc6-45b4c79ab8fb",
+  "550ce7e7-747b-495f-b122-acdc4d0b8e54",
+  "554785e9-4523-4e7a-b8e1-8016f565f56a",
+  "57667013-ea97-417c-9dce-2713091e6e2a",
+  "5ac2891a-eacd-4954-b339-98abba077adb",
+  "5c1a6c3d-c1b3-47cb-9b01-8d1b7544ffa1",
+  "5df7b33a-9f77-4101-823e-02f863e1c1ae",
+  "66399b0d-8fda-4618-95c4-bfc6191617e9",
+  "70bca0cc-c117-427e-b0be-4df7299ebeb6",
+  "73c99fb9-f828-43ce-b87a-01dc07faa224",
+  "77b8ab4d-994f-43ac-8930-8ca087d7c4b4",
+  "7a4deb26-d57d-4ea9-9a73-630f66a7b568",
+  "7ae48c60-f143-4119-b659-15b8f485eb9a",
+  "7e287123-70ca-47b9-8521-47db09b69b14",
+  "7e429b8d-a3f0-4ed0-9b58-08957d00b127",
+  "7efeb4b1-3d19-4762-b163-63328d66303b",
+  "81c425f5-78f3-4771-afd6-3d2973825947",
+  "881deb30-9549-4583-a841-8270c65f2a17",
+  "88fe4b2d-3040-4c70-9a70-546a47764b48",
+  "8b1ce5f2-59d2-4dcc-b0b0-666a714b9a14",
+  "8df7e444-8e06-4f93-8a1a-c5c974269d82",
+  "8e116af7-7db7-4e35-a68b-b0939c066c78",
+  "982d12a5-beab-424f-8d38-d2a48429e511",
+  "9cf05d24-6bd9-4dae-8967-f67d88f5d38a",
+  "9ec204e4-f0a3-42f8-8458-b772a6797cab",
+  "a01fbce3-2793-461f-ab86-43680ccbae25",
+  "a434992a-89df-4577-925c-0c58b747f0f4",
+  "a53f80cd-4a90-4490-8310-097b011433f6",
+  "a5bbbcd5-b398-4c91-83d4-55e1e31bbb81",
+  "a669ef01-ded5-4099-9ea9-25e99b569840",
+  "a9f325aa-8c05-4e4f-8341-9e4358565f4f",
+  "af2d657a-e6b3-4c6a-9f67-9e3ed015974c",
+  "b21acd93-60fd-4127-8a43-2f5178f4a830",
+  "b8adbc24-cef2-4b15-99d5-ecbe7ff445eb",
+  "bc2b57f3-686d-4ec9-87ce-edf850b7e442",
+  "c867c42d-a52d-4a24-8ae3-f75d256b5618",
+  "d38192b0-17dc-4e1d-99c3-786d0117de77",
+  "dfac9ee8-9bc4-4cdc-b465-4a4bfcd2f397",
+  "e2dd0213-26db-4349-abe5-d5667bfd725c",
+  "e8172110-ec08-421b-a6f5-842e6451911f",
+  "eb303e01-261e-4972-8c07-c9b4e7a4922a",
+  "ecb0df7a-4e8d-4a03-b162-053391d3afaf",
+  "edb61b14-a854-4bf5-a075-c8075c11293a",
+  "f9584479-3d0d-4c79-affa-9ad7afdd8850"
+ ],
+ "desktop_env_evaluate_equal": false,
+ "excluded": [
+  "02ce9a50-7af2-47ed-8596-af0c230501f8",
+  "0326d92d-d218-48a8-9ca1-981cd6d064c7",
+  "035f41ba-6653-43ab-aa63-c86d449d62e5",
+  "04578141-1d42-4146-b9cf-6fab4ce5fd74",
+  "04d9aeaf-7bed-4024-bedb-e10e6f00eb7f",
+  "06ca5602-62ca-47f6-ad4f-da151cde54cc",
+  "0810415c-bde4-4443-9047-d5f70165a697",
+  "08aced46-45a2-48d7-993b-ed3fb5b32302",
+  "09a37c51-e625-49f4-a514-20a773797a8a",
+  "0a211154-fda0-48d0-9274-eaac4ce5486d",
+  "0a2e43bf-b26c-4631-a966-af9dfa12c9e5",
+  "0bf05a7d-b28b-44d2-955a-50b41e24012a",
+  "0f84bef9-9790-432e-92b7-eece357603fb",
+  "10a730d5-d414-4b40-b479-684bed1ae522",
+  "1273e544-688f-496b-8d89-3e0f40aa0606",
+  "1334ca3e-f9e3-4db8-9ca7-b4c653be7d17",
+  "185f29bd-5da0-40a6-b69c-ba7f4e0324ef",
+  "1e8df695-bd1b-45b3-b557-e7d599cf7597",
+  "1f18aa87-af6f-41ef-9853-cdb8f32ebdea",
+  "21ab7b40-77c2-4ae6-8321-e00d3a086c73",
+  "21df9241-f8d7-4509-b7f1-37e501a823f7",
+  "227d2f97-562b-4ccb-ae47-a5ec9e142fbb",
+  "26150609-0da3-4a7d-8868-0faf9c5f01bb",
+  "26a8440e-c166-4c50-aef4-bfb77314b46b",
+  "2a729ded-3296-423d-aec4-7dd55ed5fbb3",
+  "2cd43775-7085-45d8-89fa-9e35c0a915cf",
+  "2fe4b718-3bd7-46ec-bdce-b184f5653624",
+  "30e3e107-1cfb-46ee-a755-2cd080d7ba6a",
+  "3161d64e-3120-47b4-aaad-6a764a92493b",
+  "337d318b-aa07-4f4f-b763-89d9a2dd013f",
+  "358aa0a7-6677-453f-ae35-e440f004c31e",
+  "37608790-6147-45d0-9f20-1137bb35703d",
+  "3a93cae4-ad3e-403e-8c12-65303b271818",
+  "3b27600c-3668-4abd-8f84-7bcdebbccbdb",
+  "3ef2b351-8a84-4ff2-8724-d86eae9b842e",
+  "3f49d2cc-f400-4e7d-90cc-9b18e401cc31",
+  "4188d3a4-077d-46b7-9c86-23e1a036f6c1",
+  "42e0a640-4f19-4b28-973d-729602b5a4a7",
+  "455d3c66-7dc6-4537-a39a-36d3e9119df7",
+  "47f7c0ce-a5fb-4100-a5e6-65cd0e7429e5",
+  "4c26e3f3-3a14-4d86-b44a-d3cedebbb487",
+  "4de54231-e4b5-49e3-b2ba-61a0bec721c0",
+  "4e6fcf72-daf3-439f-a232-c434ce416af6",
+  "4f07fbe9-70de-4927-a4d5-bb28bc12c52c",
+  "51719eea-10bc-4246-a428-ac7c433dd4b3",
+  "51b11269-2ca8-4b2a-9163-f21758420e78",
+  "51f5801c-18b3-4f25-b0c3-02f85507a078",
+  "5203d847-2572-4150-912a-03f062254390",
+  "53ad5833-3455-407b-bbc6-45b4c79ab8fb",
+  "550ce7e7-747b-495f-b122-acdc4d0b8e54",
+  "554785e9-4523-4e7a-b8e1-8016f565f56a",
+  "57667013-ea97-417c-9dce-2713091e6e2a",
+  "5ac2891a-eacd-4954-b339-98abba077adb",
+  "5c1a6c3d-c1b3-47cb-9b01-8d1b7544ffa1",
+  "5df7b33a-9f77-4101-823e-02f863e1c1ae",
+  "66399b0d-8fda-4618-95c4-bfc6191617e9",
+  "6ada715d-3aae-4a32-a6a7-429b2e43fb93",
+  "6ed0a554-cbee-4b44-84ea-fd6c042f4fe1",
+  "6f81754e-285d-4ce0-b59e-af7edb02d108",
+  "70745df8-f2f5-42bd-8074-fbc10334fcc5",
+  "70bca0cc-c117-427e-b0be-4df7299ebeb6",
+  "72b810ef-4156-4d09-8f08-a0cf57e7cefe",
+  "73c99fb9-f828-43ce-b87a-01dc07faa224",
+  "778efd0a-153f-4842-9214-f05fc176b877",
+  "77b8ab4d-994f-43ac-8930-8ca087d7c4b4",
+  "7a4deb26-d57d-4ea9-9a73-630f66a7b568",
+  "7ae48c60-f143-4119-b659-15b8f485eb9a",
+  "7e287123-70ca-47b9-8521-47db09b69b14",
+  "7e429b8d-a3f0-4ed0-9b58-08957d00b127",
+  "7efeb4b1-3d19-4762-b163-63328d66303b",
+  "81c425f5-78f3-4771-afd6-3d2973825947",
+  "881deb30-9549-4583-a841-8270c65f2a17",
+  "88fe4b2d-3040-4c70-9a70-546a47764b48",
+  "8b1ce5f2-59d2-4dcc-b0b0-666a714b9a14",
+  "8df7e444-8e06-4f93-8a1a-c5c974269d82",
+  "8e116af7-7db7-4e35-a68b-b0939c066c78",
+  "930fdb3b-11a8-46fe-9bac-577332e2640e",
+  "982d12a5-beab-424f-8d38-d2a48429e511",
+  "9b7bc335-06b5-4cd3-9119-1a649c478509",
+  "9cf05d24-6bd9-4dae-8967-f67d88f5d38a",
+  "9ec204e4-f0a3-42f8-8458-b772a6797cab",
+  "a01fbce3-2793-461f-ab86-43680ccbae25",
+  "a434992a-89df-4577-925c-0c58b747f0f4",
+  "a503b07f-9119-456b-b75d-f5146737d24f",
+  "a53f80cd-4a90-4490-8310-097b011433f6",
+  "a5bbbcd5-b398-4c91-83d4-55e1e31bbb81",
+  "a669ef01-ded5-4099-9ea9-25e99b569840",
+  "a9f325aa-8c05-4e4f-8341-9e4358565f4f",
+  "aa3a8974-2e85-438b-b29e-a64df44deb4b",
+  "adf5e2c3-64c7-4644-b7b6-d2f0167927e7",
+  "af2d657a-e6b3-4c6a-9f67-9e3ed015974c",
+  "b21acd93-60fd-4127-8a43-2f5178f4a830",
+  "b8adbc24-cef2-4b15-99d5-ecbe7ff445eb",
+  "bc2b57f3-686d-4ec9-87ce-edf850b7e442",
+  "c59742c0-4323-4b9d-8a02-723c251deaa0",
+  "c867c42d-a52d-4a24-8ae3-f75d256b5618",
+  "d38192b0-17dc-4e1d-99c3-786d0117de77",
+  "d53ff5ee-3b1a-431e-b2be-30ed2673079b",
+  "dfac9ee8-9bc4-4cdc-b465-4a4bfcd2f397",
+  "e2b5e914-ffe1-44d2-8e92-58f8c5d92bb2",
+  "e2dd0213-26db-4349-abe5-d5667bfd725c",
+  "e8172110-ec08-421b-a6f5-842e6451911f",
+  "eb303e01-261e-4972-8c07-c9b4e7a4922a",
+  "ec71221e-ac43-46f9-89b8-ee7d80f7e1c5",
+  "ecb0df7a-4e8d-4a03-b162-053391d3afaf",
+  "ecc2413d-8a48-416e-a3a2-d30106ca36cb",
+  "edb61b14-a854-4bf5-a075-c8075c11293a",
+  "f178a4a9-d090-4b56-bc4c-4b72a61a035d",
+  "f9584479-3d0d-4c79-affa-9ad7afdd8850",
+  "fba2c100-79e8-42df-ae74-b592418d54f4"
+ ],
+ "excluded_count": 110,
+ "function_difference_counts": {
+  "getters.get_audio_in_slide": 2,
+  "getters.get_background_image_in_slide": 1,
+  "getters.get_cloud_file": 84,
+  "getters.get_vm_file": 103,
+  "getters.get_vscode_config": 1,
+  "metrics.check_brightness_decrease_and_structure_sim": 2,
+  "metrics.check_continuation_line_indent_no_bullet": 1,
+  "metrics.check_json": 1,
+  "metrics.check_play_and_exit": 1,
+  "metrics.check_python_file_by_test_suite": 1,
+  "metrics.check_structure_sim_with_threshold": 1,
+  "metrics.check_textbox_on_leftside": 1,
+  "metrics.check_thunderbird_prefs": 1,
+  "metrics.compare_archive": 1,
+  "metrics.compare_config": 2,
+  "metrics.compare_docx_tables": 2,
+  "metrics.compare_line_spacing": 2,
+  "metrics.compare_pdf_form_fields": 1,
+  "metrics.compare_pptx_files": 18,
+  "metrics.compare_pptx_files_tolerant": 1,
+  "metrics.compare_table": 33,
+  "metrics.compare_zip_files": 1
+ },
+ "per_task": {
+  "02ce9a50-7af2-47ed-8596-af0c230501f8": {
+   "config_equal": true,
+   "config_keys_differing": [],
+   "config_present_at_public": true,
+   "definitions_differing": {
+    "getters.get_vm_file": [
+     "desktop_env/evaluators/getters/file.py::get_vm_file"
+    ]
+   },
+   "excluded": true,
+   "functions": [
+    "getters.get_rule",
+    "getters.get_vm_file",
+    "metrics.compare_image_text"
+   ],
+   "functions_differing": [
+    "getters.get_vm_file"
+   ]
+  },
+  "0326d92d-d218-48a8-9ca1-981cd6d064c7": {
+   "config_equal": true,
+   "config_keys_differing": [],
+   "config_present_at_public": true,
+   "definitions_differing": {
+    "getters.get_cloud_file": [
+     "desktop_env/evaluators/getters/file.py::get_cloud_file"
+    ],
+    "getters.get_vm_file": [
+     "desktop_env/evaluators/getters/file.py::get_vm_file"
+    ],
+    "metrics.compare_table": [
+     "desktop_env/evaluators/metrics/table.py::_normalize_phone_digits",
+     "desktop_env/evaluators/metrics/table.py::_normalize_website_domain",
+     "desktop_env/evaluators/metrics/table.py::compare_table",
+     "desktop_env/evaluators/metrics/utils.py::_match_value_to_rule"
+    ]
+   },
+   "excluded": true,
+   "functions": [
+    "getters.get_cloud_file",
+    "getters.get_vm_file",
+    "metrics.compare_table"
+   ],
+   "functions_differing": [
+    "getters.get_cloud_file",
+    "getters.get_vm_file",
+    "metrics.compare_table"
+   ]
+  },
+  "035f41ba-6653-43ab-aa63-c86d449d62e5": {
+   "config_equal": false,
+   "config_keys_differing": [
+    "instruction"
+   ],
+   "config_present_at_public": true,
+   "definitions_differing": {
+    "getters.get_cloud_file": [
+     "desktop_env/evaluators/getters/file.py::get_cloud_file"
+    ],
+    "getters.get_vm_file": [
+     "desktop_env/evaluators/getters/file.py::get_vm_file"
+    ],
+    "metrics.compare_table": [
+     "desktop_env/evaluators/metrics/table.py::_normalize_phone_digits",
+     "desktop_env/evaluators/metrics/table.py::_normalize_website_domain",
+     "desktop_env/evaluators/metrics/table.py::compare_table",
+     "desktop_env/evaluators/metrics/utils.py::_match_value_to_rule"
+    ]
+   },
+   "excluded": true,
+   "functions": [
+    "getters.get_cloud_file",
+    "getters.get_vm_file",
+    "metrics.compare_table"
+   ],
+   "functions_differing": [
+    "getters.get_cloud_file",
+    "getters.get_vm_file",
+    "metrics.compare_table"
+   ]
+  },
+  "04578141-1d42-4146-b9cf-6fab4ce5fd74": {
+   "config_equal": false,
+   "config_keys_differing": [
+    "evaluator",
+    "instruction"
+   ],
+   "config_present_at_public": true,
+   "definitions_differing": {
+    "getters.get_cloud_file": [
+     "desktop_env/evaluators/getters/file.py::get_cloud_file"
+    ],
+    "getters.get_vm_file": [
+     "desktop_env/evaluators/getters/file.py::get_vm_file"
+    ],
+    "metrics.compare_pptx_files": [
+     "desktop_env/evaluators/metrics/slides.py::compare_pptx_files"
+    ]
+   },
+   "excluded": true,
+   "functions": [
+    "getters.get_cloud_file",
+    "getters.get_vm_file",
+    "metrics.compare_pptx_files"
+   ],
+   "functions_differing": [
+    "getters.get_cloud_file",
+    "getters.get_vm_file",
+    "metrics.compare_pptx_files"
+   ]
+  },
+  "04d9aeaf-7bed-4024-bedb-e10e6f00eb7f": {
+   "config_equal": false,
+   "config_keys_differing": [
+    "instruction"
+   ],
+   "config_present_at_public": true,
+   "definitions_differing": {
+    "getters.get_cloud_file": [
+     "desktop_env/evaluators/getters/file.py::get_cloud_file"
+    ],
+    "getters.get_vm_file": [
+     "desktop_env/evaluators/getters/file.py::get_vm_file"
+    ],
+    "metrics.compare_table": [
+     "desktop_env/evaluators/metrics/table.py::_normalize_phone_digits",
+     "desktop_env/evaluators/metrics/table.py::_normalize_website_domain",
+     "desktop_env/evaluators/metrics/table.py::compare_table",
+     "desktop_env/evaluators/metrics/utils.py::_match_value_to_rule"
+    ]
+   },
+   "excluded": true,
+   "functions": [
+    "getters.get_cloud_file",
+    "getters.get_vm_file",
+    "metrics.compare_table"
+   ],
+   "functions_differing": [
+    "getters.get_cloud_file",
+    "getters.get_vm_file",
+    "metrics.compare_table"
+   ]
+  },
+  "06ca5602-62ca-47f6-ad4f-da151cde54cc": {
+   "config_equal": false,
+   "config_keys_differing": [
+    "evaluator"
+   ],
+   "config_present_at_public": true,
+   "definitions_differing": {
+    "getters.get_cloud_file": [
+     "desktop_env/evaluators/getters/file.py::get_cloud_file"
+    ],
+    "getters.get_vm_file": [
+     "desktop_env/evaluators/getters/file.py::get_vm_file"
+    ]
+   },
+   "excluded": true,
+   "functions": [
+    "getters.get_cloud_file",
+    "getters.get_vm_file",
+    "metrics.check_palette_and_structure_sim"
+   ],
+   "functions_differing": [
+    "getters.get_cloud_file",
+    "getters.get_vm_file"
+   ]
+  },
+  "0810415c-bde4-4443-9047-d5f70165a697": {
+   "config_equal": true,
+   "config_keys_differing": [],
+   "config_present_at_public": true,
+   "definitions_differing": {
+    "getters.get_cloud_file": [
+     "desktop_env/evaluators/getters/file.py::get_cloud_file"
+    ],
+    "getters.get_vm_file": [
+     "desktop_env/evaluators/getters/file.py::get_vm_file"
+    ],
+    "metrics.compare_line_spacing": [
+     "desktop_env/evaluators/metrics/docs.py::compare_line_spacing"
+    ]
+   },
+   "excluded": true,
+   "functions": [
+    "getters.get_cloud_file",
+    "getters.get_vm_file",
+    "metrics.compare_line_spacing"
+   ],
+   "functions_differing": [
+    "getters.get_cloud_file",
+    "getters.get_vm_file",
+    "metrics.compare_line_spacing"
+   ]
+  },
+  "08aced46-45a2-48d7-993b-ed3fb5b32302": {
+   "config_equal": true,
+   "config_keys_differing": [],
+   "config_present_at_public": true,
+   "definitions_differing": {
+    "getters.get_cloud_file": [
+     "desktop_env/evaluators/getters/file.py::get_cloud_file"
+    ],
+    "getters.get_vm_file": [
+     "desktop_env/evaluators/getters/file.py::get_vm_file"
+    ],
+    "metrics.compare_pptx_files": [
+     "desktop_env/evaluators/metrics/slides.py::compare_pptx_files"
+    ]
+   },
+   "excluded": true,
+   "functions": [
+    "getters.get_cloud_file",
+    "getters.get_vm_file",
+    "metrics.compare_pptx_files"
+   ],
+   "functions_differing": [
+    "getters.get_cloud_file",
+    "getters.get_vm_file",
+    "metrics.compare_pptx_files"
+   ]
+  },
+  "09a37c51-e625-49f4-a514-20a773797a8a": {
+   "config_equal": false,
+   "config_keys_differing": [
+    "instruction"
+   ],
+   "config_present_at_public": true,
+   "definitions_differing": {
+    "getters.get_cloud_file": [
+     "desktop_env/evaluators/getters/file.py::get_cloud_file"
+    ],
+    "getters.get_vm_file": [
+     "desktop_env/evaluators/getters/file.py::get_vm_file"
+    ]
+   },
+   "excluded": true,
+   "functions": [
+    "getters.get_cloud_file",
+    "getters.get_vm_file",
+    "metrics.compare_images"
+   ],
+   "functions_differing": [
+    "getters.get_cloud_file",
+    "getters.get_vm_file"
+   ]
+  },
+  "0a211154-fda0-48d0-9274-eaac4ce5486d": {
+   "config_equal": true,
+   "config_keys_differing": [],
+   "config_present_at_public": true,
+   "definitions_differing": {
+    "getters.get_cloud_file": [
+     "desktop_env/evaluators/getters/file.py::get_cloud_file"
+    ],
+    "getters.get_vm_file": [
+     "desktop_env/evaluators/getters/file.py::get_vm_file"
+    ],
+    "metrics.compare_pptx_files": [
+     "desktop_env/evaluators/metrics/slides.py::compare_pptx_files"
+    ]
+   },
+   "excluded": true,
+   "functions": [
+    "getters.get_cloud_file",
+    "getters.get_vm_file",
+    "metrics.compare_pptx_files"
+   ],
+   "functions_differing": [
+    "getters.get_cloud_file",
+    "getters.get_vm_file",
+    "metrics.compare_pptx_files"
+   ]
+  },
+  "0a2e43bf-b26c-4631-a966-af9dfa12c9e5": {
+   "config_equal": true,
+   "config_keys_differing": [],
+   "config_present_at_public": true,
+   "definitions_differing": {
+    "getters.get_cloud_file": [
+     "desktop_env/evaluators/getters/file.py::get_cloud_file"
+    ],
+    "getters.get_vm_file": [
+     "desktop_env/evaluators/getters/file.py::get_vm_file"
+    ],
+    "metrics.compare_table": [
+     "desktop_env/evaluators/metrics/table.py::_normalize_phone_digits",
+     "desktop_env/evaluators/metrics/table.py::_normalize_website_domain",
+     "desktop_env/evaluators/metrics/table.py::compare_table",
+     "desktop_env/evaluators/metrics/utils.py::_match_value_to_rule"
+    ]
+   },
+   "excluded": true,
+   "functions": [
+    "getters.get_cloud_file",
+    "getters.get_vm_file",
+    "metrics.compare_table"
+   ],
+   "functions_differing": [
+    "getters.get_cloud_file",
+    "getters.get_vm_file",
+    "metrics.compare_table"
+   ]
+  },
+  "0bf05a7d-b28b-44d2-955a-50b41e24012a": {
+   "config_equal": false,
+   "config_keys_differing": [
+    "instruction"
+   ],
+   "config_present_at_public": true,
+   "definitions_differing": {
+    "getters.get_cloud_file": [
+     "desktop_env/evaluators/getters/file.py::get_cloud_file"
+    ],
+    "getters.get_vm_file": [
+     "desktop_env/evaluators/getters/file.py::get_vm_file"
+    ],
+    "metrics.compare_table": [
+     "desktop_env/evaluators/metrics/table.py::_normalize_phone_digits",
+     "desktop_env/evaluators/metrics/table.py::_normalize_website_domain",
+     "desktop_env/evaluators/metrics/table.py::compare_table",
+     "desktop_env/evaluators/metrics/utils.py::_match_value_to_rule"
+    ]
+   },
+   "excluded": true,
+   "functions": [
+    "getters.get_cloud_file",
+    "getters.get_vm_file",
+    "metrics.compare_table"
+   ],
+   "functions_differing": [
+    "getters.get_cloud_file",
+    "getters.get_vm_file",
+    "metrics.compare_table"
+   ]
+  },
+  "0f84bef9-9790-432e-92b7-eece357603fb": {
+   "config_equal": true,
+   "config_keys_differing": [],
+   "config_present_at_public": true,
+   "definitions_differing": {
+    "getters.get_vm_file": [
+     "desktop_env/evaluators/getters/file.py::get_vm_file"
+    ]
+   },
+   "excluded": true,
+   "functions": [
+    "getters.get_vm_file",
+    "metrics.check_presenter_console_disable"
+   ],
+   "functions_differing": [
+    "getters.get_vm_file"
+   ]
+  },
+  "10a730d5-d414-4b40-b479-684bed1ae522": {
+   "config_equal": true,
+   "config_keys_differing": [],
+   "config_present_at_public": true,
+   "definitions_differing": {
+    "getters.get_vm_file": [
+     "desktop_env/evaluators/getters/file.py::get_vm_file"
+    ],
+    "metrics.check_thunderbird_prefs": [
+     "desktop_env/evaluators/metrics/utils.py::_match_value_to_rule"
+    ]
+   },
+   "excluded": true,
+   "functions": [
+    "getters.get_rule",
+    "getters.get_vm_file",
+    "metrics.check_thunderbird_prefs"
+   ],
+   "functions_differing": [
+    "getters.get_vm_file",
+    "metrics.check_thunderbird_prefs"
+   ]
+  },
+  "1273e544-688f-496b-8d89-3e0f40aa0606": {
+   "config_equal": false,
+   "config_keys_differing": [
+    "instruction"
+   ],
+   "config_present_at_public": true,
+   "definitions_differing": {
+    "getters.get_cloud_file": [
+     "desktop_env/evaluators/getters/file.py::get_cloud_file"
+    ],
+    "getters.get_vm_file": [
+     "desktop_env/evaluators/getters/file.py::get_vm_file"
+    ],
+    "metrics.compare_table": [
+     "desktop_env/evaluators/metrics/table.py::_normalize_phone_digits",
+     "desktop_env/evaluators/metrics/table.py::_normalize_website_domain",
+     "desktop_env/evaluators/metrics/table.py::compare_table",
+     "desktop_env/evaluators/metrics/utils.py::_match_value_to_rule"
+    ]
+   },
+   "excluded": true,
+   "functions": [
+    "getters.get_cloud_file",
+    "getters.get_vm_file",
+    "metrics.compare_table"
+   ],
+   "functions_differing": [
+    "getters.get_cloud_file",
+    "getters.get_vm_file",
+    "metrics.compare_table"
+   ]
+  },
+  "1334ca3e-f9e3-4db8-9ca7-b4c653be7d17": {
+   "config_equal": true,
+   "config_keys_differing": [],
+   "config_present_at_public": true,
+   "definitions_differing": {
+    "getters.get_cloud_file": [
+     "desktop_env/evaluators/getters/file.py::get_cloud_file"
+    ],
+    "getters.get_vm_file": [
+     "desktop_env/evaluators/getters/file.py::get_vm_file"
+    ],
+    "metrics.compare_table": [
+     "desktop_env/evaluators/metrics/table.py::_normalize_phone_digits",
+     "desktop_env/evaluators/metrics/table.py::_normalize_website_domain",
+     "desktop_env/evaluators/metrics/table.py::compare_table",
+     "desktop_env/evaluators/metrics/utils.py::_match_value_to_rule"
+    ]
+   },
+   "excluded": true,
+   "functions": [
+    "getters.get_cloud_file",
+    "getters.get_vm_file",
+    "metrics.compare_table"
+   ],
+   "functions_differing": [
+    "getters.get_cloud_file",
+    "getters.get_vm_file",
+    "metrics.compare_table"
+   ]
+  },
+  "185f29bd-5da0-40a6-b69c-ba7f4e0324ef": {
+   "config_equal": false,
+   "config_keys_differing": [
+    "evaluator"
+   ],
+   "config_present_at_public": true,
+   "definitions_differing": {
+    "getters.get_vm_file": [
+     "desktop_env/evaluators/getters/file.py::get_vm_file"
+    ],
+    "metrics.compare_pdf_form_fields": [
+     "desktop_env/evaluators/metrics/chrome.py::_CHARACTERISTICS_PFF",
+     "desktop_env/evaluators/metrics/chrome.py::_DATE_FMTS_PFF",
+     "desktop_env/evaluators/metrics/chrome.py::_DATE_KEYS_PFF",
+     "desktop_env/evaluators/metrics/chrome.py::_INFO_WIDGETS_PFF",
+     "desktop_env/evaluators/metrics/chrome.py::_MARK_GLYPHS_PFF",
+     "desktop_env/evaluators/metrics/chrome.py::_RATING_COLS_PFF",
+     "desktop_env/evaluators/metrics/chrome.py::_date_in_text_pff",
+     "desktop_env/evaluators/metrics/chrome.py::_is_mark_pff",
+     "desktop_env/evaluators/metrics/chrome.py::_norm_pff",
+     "desktop_env/evaluators/metrics/chrome.py::_parse_date_pff",
+     "desktop_env/evaluators/metrics/chrome.py::_score_one_pff",
+     "desktop_env/evaluators/metrics/chrome.py::compare_pdf_form_fields",
+     "desktop_env/evaluators/metrics/chrome.py::logger",
+     "desktop_env/evaluators/metrics::compare_pdf_form_fields"
+    ]
+   },
+   "excluded": true,
+   "functions": [
+    "getters.get_rule",
+    "getters.get_vm_file",
+    "metrics.compare_pdf_form_fields"
+   ],
+   "functions_differing": [
+    "getters.get_vm_file",
+    "metrics.compare_pdf_form_fields"
+   ]
+  },
+  "1e8df695-bd1b-45b3-b557-e7d599cf7597": {
+   "config_equal": true,
+   "config_keys_differing": [],
+   "config_present_at_public": true,
+   "definitions_differing": {
+    "getters.get_cloud_file": [
+     "desktop_env/evaluators/getters/file.py::get_cloud_file"
+    ],
+    "getters.get_vm_file": [
+     "desktop_env/evaluators/getters/file.py::get_vm_file"
+    ],
+    "metrics.compare_table": [
+     "desktop_env/evaluators/metrics/table.py::_normalize_phone_digits",
+     "desktop_env/evaluators/metrics/table.py::_normalize_website_domain",
+     "desktop_env/evaluators/metrics/table.py::compare_table",
+     "desktop_env/evaluators/metrics/utils.py::_match_value_to_rule"
+    ]
+   },
+   "excluded": true,
+   "functions": [
+    "getters.get_cloud_file",
+    "getters.get_vm_file",
+    "metrics.compare_table"
+   ],
+   "functions_differing": [
+    "getters.get_cloud_file",
+    "getters.get_vm_file",
+    "metrics.compare_table"
+   ]
+  },
+  "1f18aa87-af6f-41ef-9853-cdb8f32ebdea": {
+   "config_equal": true,
+   "config_keys_differing": [],
+   "config_present_at_public": true,
+   "definitions_differing": {
+    "getters.get_cloud_file": [
+     "desktop_env/evaluators/getters/file.py::get_cloud_file"
+    ],
+    "getters.get_vm_file": [
+     "desktop_env/evaluators/getters/file.py::get_vm_file"
+    ]
+   },
+   "excluded": true,
+   "functions": [
+    "getters.get_cloud_file",
+    "getters.get_vm_file",
+    "metrics.compare_docx_files"
+   ],
+   "functions_differing": [
+    "getters.get_cloud_file",
+    "getters.get_vm_file"
+   ]
+  },
+  "21ab7b40-77c2-4ae6-8321-e00d3a086c73": {
+   "config_equal": true,
+   "config_keys_differing": [],
+   "config_present_at_public": true,
+   "definitions_differing": {
+    "getters.get_cloud_file": [
+     "desktop_env/evaluators/getters/file.py::get_cloud_file"
+    ],
+    "getters.get_vm_file": [
+     "desktop_env/evaluators/getters/file.py::get_vm_file"
+    ],
+    "metrics.compare_table": [
+     "desktop_env/evaluators/metrics/table.py::_normalize_phone_digits",
+     "desktop_env/evaluators/metrics/table.py::_normalize_website_domain",
+     "desktop_env/evaluators/metrics/table.py::compare_table",
+     "desktop_env/evaluators/metrics/utils.py::_match_value_to_rule"
+    ]
+   },
+   "excluded": true,
+   "functions": [
+    "getters.get_cloud_file",
+    "getters.get_vm_file",
+    "metrics.compare_table"
+   ],
+   "functions_differing": [
+    "getters.get_cloud_file",
+    "getters.get_vm_file",
+    "metrics.compare_table"
+   ]
+  },
+  "21df9241-f8d7-4509-b7f1-37e501a823f7": {
+   "config_equal": false,
+   "config_keys_differing": [
+    "instruction"
+   ],
+   "config_present_at_public": true,
+   "definitions_differing": {
+    "getters.get_cloud_file": [
+     "desktop_env/evaluators/getters/file.py::get_cloud_file"
+    ],
+    "getters.get_vm_file": [
+     "desktop_env/evaluators/getters/file.py::get_vm_file"
+    ],
+    "metrics.compare_table": [
+     "desktop_env/evaluators/metrics/table.py::_normalize_phone_digits",
+     "desktop_env/evaluators/metrics/table.py::_normalize_website_domain",
+     "desktop_env/evaluators/metrics/table.py::compare_table",
+     "desktop_env/evaluators/metrics/utils.py::_match_value_to_rule"
+    ]
+   },
+   "excluded": true,
+   "functions": [
+    "getters.get_cloud_file",
+    "getters.get_vm_file",
+    "metrics.compare_table"
+   ],
+   "functions_differing": [
+    "getters.get_cloud_file",
+    "getters.get_vm_file",
+    "metrics.compare_table"
+   ]
+  },
+  "227d2f97-562b-4ccb-ae47-a5ec9e142fbb": {
+   "config_equal": true,
+   "config_keys_differing": [],
+   "config_present_at_public": true,
+   "definitions_differing": {
+    "getters.get_cloud_file": [
+     "desktop_env/evaluators/getters/file.py::get_cloud_file"
+    ],
+    "getters.get_vm_file": [
+     "desktop_env/evaluators/getters/file.py::get_vm_file"
+    ]
+   },
+   "excluded": true,
+   "functions": [
+    "getters.get_cloud_file",
+    "getters.get_vm_file",
+    "metrics.compare_docx_images"
+   ],
+   "functions_differing": [
+    "getters.get_cloud_file",
+    "getters.get_vm_file"
+   ]
+  },
+  "26150609-0da3-4a7d-8868-0faf9c5f01bb": {
+   "config_equal": true,
+   "config_keys_differing": [],
+   "config_present_at_public": true,
+   "definitions_differing": {
+    "getters.get_cloud_file": [
+     "desktop_env/evaluators/getters/file.py::get_cloud_file"
+    ],
+    "getters.get_vm_file": [
+     "desktop_env/evaluators/getters/file.py::get_vm_file"
+    ],
+    "metrics.check_python_file_by_test_suite": [
+     "desktop_env/evaluators/metrics/vscode.py::check_python_file_by_test_suite"
+    ]
+   },
+   "excluded": true,
+   "functions": [
+    "getters.get_cloud_file",
+    "getters.get_vm_file",
+    "metrics.check_python_file_by_test_suite"
+   ],
+   "functions_differing": [
+    "getters.get_cloud_file",
+    "getters.get_vm_file",
+    "metrics.check_python_file_by_test_suite"
+   ]
+  },
+  "26a8440e-c166-4c50-aef4-bfb77314b46b": {
+   "config_equal": false,
+   "config_keys_differing": [
+    "instruction"
+   ],
+   "config_present_at_public": true,
+   "definitions_differing": {
+    "getters.get_cloud_file": [
+     "desktop_env/evaluators/getters/file.py::get_cloud_file"
+    ],
+    "getters.get_vm_file": [
+     "desktop_env/evaluators/getters/file.py::get_vm_file"
+    ],
+    "metrics.compare_table": [
+     "desktop_env/evaluators/metrics/table.py::_normalize_phone_digits",
+     "desktop_env/evaluators/metrics/table.py::_normalize_website_domain",
+     "desktop_env/evaluators/metrics/table.py::compare_table",
+     "desktop_env/evaluators/metrics/utils.py::_match_value_to_rule"
+    ]
+   },
+   "excluded": true,
+   "functions": [
+    "getters.get_cloud_file",
+    "getters.get_vm_file",
+    "metrics.compare_table"
+   ],
+   "functions_differing": [
+    "getters.get_cloud_file",
+    "getters.get_vm_file",
+    "metrics.compare_table"
+   ]
+  },
+  "2a729ded-3296-423d-aec4-7dd55ed5fbb3": {
+   "config_equal": false,
+   "config_keys_differing": [
+    "config",
+    "evaluator"
+   ],
+   "config_present_at_public": true,
+   "definitions_differing": {
+    "getters.get_cloud_file": [
+     "desktop_env/evaluators/getters/file.py::get_cloud_file"
+    ],
+    "getters.get_vm_file": [
+     "desktop_env/evaluators/getters/file.py::get_vm_file"
+    ]
+   },
+   "excluded": true,
+   "functions": [
+    "getters.get_cloud_file",
+    "getters.get_vm_file",
+    "metrics.check_structure_sim"
+   ],
+   "functions_differing": [
+    "getters.get_cloud_file",
+    "getters.get_vm_file"
+   ]
+  },
+  "2cd43775-7085-45d8-89fa-9e35c0a915cf": {
+   "config_equal": true,
+   "config_keys_differing": [],
+   "config_present_at_public": true,
+   "definitions_differing": {
+    "getters.get_vm_file": [
+     "desktop_env/evaluators/getters/file.py::get_vm_file"
+    ]
+   },
+   "excluded": true,
+   "functions": [
+    "getters.get_rule",
+    "getters.get_vm_file",
+    "metrics.check_auto_saving_time"
+   ],
+   "functions_differing": [
+    "getters.get_vm_file"
+   ]
+  },
+  "2fe4b718-3bd7-46ec-bdce-b184f5653624": {
+   "config_equal": true,
+   "config_keys_differing": [],
+   "config_present_at_public": true,
+   "definitions_differing": {
+    "getters.get_cloud_file": [
+     "desktop_env/evaluators/getters/file.py::get_cloud_file"
+    ],
+    "getters.get_vm_file": [
+     "desktop_env/evaluators/getters/file.py::get_vm_file"
+    ]
+   },
+   "excluded": true,
+   "functions": [
+    "getters.get_cloud_file",
+    "getters.get_vm_file",
+    "metrics.compare_images"
+   ],
+   "functions_differing": [
+    "getters.get_cloud_file",
+    "getters.get_vm_file"
+   ]
+  },
+  "30e3e107-1cfb-46ee-a755-2cd080d7ba6a": {
+   "config_equal": false,
+   "config_keys_differing": [
+    "evaluator",
+    "instruction"
+   ],
+   "config_present_at_public": true,
+   "definitions_differing": {
+    "getters.get_cloud_file": [
+     "desktop_env/evaluators/getters/file.py::get_cloud_file"
+    ],
+    "getters.get_vm_file": [
+     "desktop_env/evaluators/getters/file.py::get_vm_file"
+    ],
+    "metrics.compare_table": [
+     "desktop_env/evaluators/metrics/table.py::_normalize_phone_digits",
+     "desktop_env/evaluators/metrics/table.py::_normalize_website_domain",
+     "desktop_env/evaluators/metrics/table.py::compare_table",
+     "desktop_env/evaluators/metrics/utils.py::_match_value_to_rule"
+    ]
+   },
+   "excluded": true,
+   "functions": [
+    "getters.get_cloud_file",
+    "getters.get_vm_file",
+    "metrics.compare_table"
+   ],
+   "functions_differing": [
+    "getters.get_cloud_file",
+    "getters.get_vm_file",
+    "metrics.compare_table"
+   ]
+  },
+  "3161d64e-3120-47b4-aaad-6a764a92493b": {
+   "config_equal": true,
+   "config_keys_differing": [],
+   "config_present_at_public": true,
+   "definitions_differing": {
+    "getters.get_cloud_file": [
+     "desktop_env/evaluators/getters/file.py::get_cloud_file"
+    ],
+    "getters.get_vm_file": [
+     "desktop_env/evaluators/getters/file.py::get_vm_file"
+    ],
+    "metrics.compare_pptx_files": [
+     "desktop_env/evaluators/metrics/slides.py::compare_pptx_files"
+    ]
+   },
+   "excluded": true,
+   "functions": [
+    "getters.get_cloud_file",
+    "getters.get_vm_file",
+    "metrics.compare_pptx_files"
+   ],
+   "functions_differing": [
+    "getters.get_cloud_file",
+    "getters.get_vm_file",
+    "metrics.compare_pptx_files"
+   ]
+  },
+  "337d318b-aa07-4f4f-b763-89d9a2dd013f": {
+   "config_equal": true,
+   "config_keys_differing": [],
+   "config_present_at_public": true,
+   "definitions_differing": {
+    "getters.get_cloud_file": [
+     "desktop_env/evaluators/getters/file.py::get_cloud_file"
+    ],
+    "getters.get_vm_file": [
+     "desktop_env/evaluators/getters/file.py::get_vm_file"
+    ]
+   },
+   "excluded": true,
+   "functions": [
+    "getters.get_cloud_file",
+    "getters.get_vm_file",
+    "metrics.compare_pdfs"
+   ],
+   "functions_differing": [
+    "getters.get_cloud_file",
+    "getters.get_vm_file"
+   ]
+  },
+  "358aa0a7-6677-453f-ae35-e440f004c31e": {
+   "config_equal": true,
+   "config_keys_differing": [],
+   "config_present_at_public": true,
+   "definitions_differing": {
+    "getters.get_cloud_file": [
+     "desktop_env/evaluators/getters/file.py::get_cloud_file"
+    ],
+    "getters.get_vm_file": [
+     "desktop_env/evaluators/getters/file.py::get_vm_file"
+    ],
+    "metrics.compare_pptx_files": [
+     "desktop_env/evaluators/metrics/slides.py::compare_pptx_files"
+    ]
+   },
+   "excluded": true,
+   "functions": [
+    "getters.get_cloud_file",
+    "getters.get_vm_file",
+    "metrics.compare_pptx_files"
+   ],
+   "functions_differing": [
+    "getters.get_cloud_file",
+    "getters.get_vm_file",
+    "metrics.compare_pptx_files"
+   ]
+  },
+  "37608790-6147-45d0-9f20-1137bb35703d": {
+   "config_equal": false,
+   "config_keys_differing": [
+    "instruction"
+   ],
+   "config_present_at_public": true,
+   "definitions_differing": {
+    "getters.get_cloud_file": [
+     "desktop_env/evaluators/getters/file.py::get_cloud_file"
+    ],
+    "getters.get_vm_file": [
+     "desktop_env/evaluators/getters/file.py::get_vm_file"
+    ],
+    "metrics.compare_table": [
+     "desktop_env/evaluators/metrics/table.py::_normalize_phone_digits",
+     "desktop_env/evaluators/metrics/table.py::_normalize_website_domain",
+     "desktop_env/evaluators/metrics/table.py::compare_table",
+     "desktop_env/evaluators/metrics/utils.py::_match_value_to_rule"
+    ]
+   },
+   "excluded": true,
+   "functions": [
+    "getters.get_cloud_file",
+    "getters.get_vm_file",
+    "metrics.compare_table"
+   ],
+   "functions_differing": [
+    "getters.get_cloud_file",
+    "getters.get_vm_file",
+    "metrics.compare_table"
+   ]
+  },
+  "3a93cae4-ad3e-403e-8c12-65303b271818": {
+   "config_equal": true,
+   "config_keys_differing": [],
+   "config_present_at_public": true,
+   "definitions_differing": {
+    "getters.get_cloud_file": [
+     "desktop_env/evaluators/getters/file.py::get_cloud_file"
+    ],
+    "getters.get_vm_file": [
+     "desktop_env/evaluators/getters/file.py::get_vm_file"
+    ],
+    "metrics.compare_table": [
+     "desktop_env/evaluators/metrics/table.py::_normalize_phone_digits",
+     "desktop_env/evaluators/metrics/table.py::_normalize_website_domain",
+     "desktop_env/evaluators/metrics/table.py::compare_table",
+     "desktop_env/evaluators/metrics/utils.py::_match_value_to_rule"
+    ]
+   },
+   "excluded": true,
+   "functions": [
+    "getters.get_cloud_file",
+    "getters.get_vm_file",
+    "metrics.compare_table"
+   ],
+   "functions_differing": [
+    "getters.get_cloud_file",
+    "getters.get_vm_file",
+    "metrics.compare_table"
+   ]
+  },
+  "3b27600c-3668-4abd-8f84-7bcdebbccbdb": {
+   "config_equal": true,
+   "config_keys_differing": [],
+   "config_present_at_public": true,
+   "definitions_differing": {
+    "getters.get_vm_file": [
+     "desktop_env/evaluators/getters/file.py::get_vm_file"
+    ]
+   },
+   "excluded": true,
+   "functions": [
+    "getters.get_rule",
+    "getters.get_vm_file",
+    "metrics.evaluate_presentation_fill_to_rgb_distance"
+   ],
+   "functions_differing": [
+    "getters.get_vm_file"
+   ]
+  },
+  "3ef2b351-8a84-4ff2-8724-d86eae9b842e": {
+   "config_equal": true,
+   "config_keys_differing": [],
+   "config_present_at_public": true,
+   "definitions_differing": {
+    "getters.get_vm_file": [
+     "desktop_env/evaluators/getters/file.py::get_vm_file"
+    ]
+   },
+   "excluded": true,
+   "functions": [
+    "getters.get_vm_file",
+    "metrics.is_first_line_centered"
+   ],
+   "functions_differing": [
+    "getters.get_vm_file"
+   ]
+  },
+  "3f49d2cc-f400-4e7d-90cc-9b18e401cc31": {
+   "config_equal": true,
+   "config_keys_differing": [],
+   "config_present_at_public": true,
+   "definitions_differing": {
+    "getters.get_vm_file": [
+     "desktop_env/evaluators/getters/file.py::get_vm_file"
+    ],
+    "metrics.check_json": [
+     "desktop_env/evaluators/metrics/utils.py::_match_value_to_rule"
+    ]
+   },
+   "excluded": true,
+   "functions": [
+    "getters.get_rule",
+    "getters.get_vm_file",
+    "metrics.check_json"
+   ],
+   "functions_differing": [
+    "getters.get_vm_file",
+    "metrics.check_json"
+   ]
+  },
+  "4188d3a4-077d-46b7-9c86-23e1a036f6c1": {
+   "config_equal": true,
+   "config_keys_differing": [],
+   "config_present_at_public": true,
+   "definitions_differing": {
+    "getters.get_cloud_file": [
+     "desktop_env/evaluators/getters/file.py::get_cloud_file"
+    ],
+    "getters.get_vm_file": [
+     "desktop_env/evaluators/getters/file.py::get_vm_file"
+    ],
+    "metrics.compare_table": [
+     "desktop_env/evaluators/metrics/table.py::_normalize_phone_digits",
+     "desktop_env/evaluators/metrics/table.py::_normalize_website_domain",
+     "desktop_env/evaluators/metrics/table.py::compare_table",
+     "desktop_env/evaluators/metrics/utils.py::_match_value_to_rule"
+    ]
+   },
+   "excluded": true,
+   "functions": [
+    "getters.get_cloud_file",
+    "getters.get_vm_file",
+    "metrics.compare_table"
+   ],
+   "functions_differing": [
+    "getters.get_cloud_file",
+    "getters.get_vm_file",
+    "metrics.compare_table"
+   ]
+  },
+  "42e0a640-4f19-4b28-973d-729602b5a4a7": {
+   "config_equal": true,
+   "config_keys_differing": [],
+   "config_present_at_public": true,
+   "definitions_differing": {
+    "getters.get_cloud_file": [
+     "desktop_env/evaluators/getters/file.py::get_cloud_file"
+    ],
+    "getters.get_vm_file": [
+     "desktop_env/evaluators/getters/file.py::get_vm_file"
+    ],
+    "metrics.compare_table": [
+     "desktop_env/evaluators/metrics/table.py::_normalize_phone_digits",
+     "desktop_env/evaluators/metrics/table.py::_normalize_website_domain",
+     "desktop_env/evaluators/metrics/table.py::compare_table",
+     "desktop_env/evaluators/metrics/utils.py::_match_value_to_rule"
+    ]
+   },
+   "excluded": true,
+   "functions": [
+    "getters.get_cloud_file",
+    "getters.get_vm_file",
+    "metrics.compare_table"
+   ],
+   "functions_differing": [
+    "getters.get_cloud_file",
+    "getters.get_vm_file",
+    "metrics.compare_table"
+   ]
+  },
+  "455d3c66-7dc6-4537-a39a-36d3e9119df7": {
+   "config_equal": true,
+   "config_keys_differing": [],
+   "config_present_at_public": true,
+   "definitions_differing": {
+    "getters.get_cloud_file": [
+     "desktop_env/evaluators/getters/file.py::get_cloud_file"
+    ],
+    "getters.get_vm_file": [
+     "desktop_env/evaluators/getters/file.py::get_vm_file"
+    ]
+   },
+   "excluded": true,
+   "functions": [
+    "getters.get_cloud_file",
+    "getters.get_vm_file",
+    "metrics.compare_images"
+   ],
+   "functions_differing": [
+    "getters.get_cloud_file",
+    "getters.get_vm_file"
+   ]
+  },
+  "47f7c0ce-a5fb-4100-a5e6-65cd0e7429e5": {
+   "config_equal": true,
+   "config_keys_differing": [],
+   "config_present_at_public": true,
+   "definitions_differing": {
+    "getters.get_background_image_in_slide": [
+     "desktop_env/evaluators/getters/file.py::get_vm_file"
+    ],
+    "getters.get_cloud_file": [
+     "desktop_env/evaluators/getters/file.py::get_cloud_file"
+    ]
+   },
+   "excluded": true,
+   "functions": [
+    "getters.get_background_image_in_slide",
+    "getters.get_cloud_file",
+    "metrics.compare_images"
+   ],
+   "functions_differing": [
+    "getters.get_background_image_in_slide",
+    "getters.get_cloud_file"
+   ]
+  },
+  "4c26e3f3-3a14-4d86-b44a-d3cedebbb487": {
+   "config_equal": true,
+   "config_keys_differing": [],
+   "config_present_at_public": true,
+   "definitions_differing": {
+    "getters.get_cloud_file": [
+     "desktop_env/evaluators/getters/file.py::get_cloud_file"
+    ],
+    "getters.get_vm_file": [
+     "desktop_env/evaluators/getters/file.py::get_vm_file"
+    ],
+    "metrics.check_brightness_decrease_and_structure_sim": [
+     "desktop_env/evaluators/metrics/gimp.py::structure_check_by_mse"
+    ]
+   },
+   "excluded": true,
+   "functions": [
+    "getters.get_cloud_file",
+    "getters.get_vm_file",
+    "metrics.check_brightness_decrease_and_structure_sim"
+   ],
+   "functions_differing": [
+    "getters.get_cloud_file",
+    "getters.get_vm_file",
+    "metrics.check_brightness_decrease_and_structure_sim"
+   ]
+  },
+  "4de54231-e4b5-49e3-b2ba-61a0bec721c0": {
+   "config_equal": true,
+   "config_keys_differing": [],
+   "config_present_at_public": true,
+   "definitions_differing": {
+    "getters.get_cloud_file": [
+     "desktop_env/evaluators/getters/file.py::get_cloud_file"
+    ],
+    "getters.get_vm_file": [
+     "desktop_env/evaluators/getters/file.py::get_vm_file"
+    ],
+    "metrics.compare_table": [
+     "desktop_env/evaluators/metrics/table.py::_normalize_phone_digits",
+     "desktop_env/evaluators/metrics/table.py::_normalize_website_domain",
+     "desktop_env/evaluators/metrics/table.py::compare_table",
+     "desktop_env/evaluators/metrics/utils.py::_match_value_to_rule"
+    ]
+   },
+   "excluded": true,
+   "functions": [
+    "getters.get_cloud_file",
+    "getters.get_vm_file",
+    "metrics.compare_table"
+   ],
+   "functions_differing": [
+    "getters.get_cloud_file",
+    "getters.get_vm_file",
+    "metrics.compare_table"
+   ]
+  },
+  "4e6fcf72-daf3-439f-a232-c434ce416af6": {
+   "config_equal": false,
+   "config_keys_differing": [
+    "instruction"
+   ],
+   "config_present_at_public": true,
+   "definitions_differing": {
+    "getters.get_vm_file": [
+     "desktop_env/evaluators/getters/file.py::get_vm_file"
+    ],
+    "metrics.compare_table": [
+     "desktop_env/evaluators/metrics/table.py::_normalize_phone_digits",
+     "desktop_env/evaluators/metrics/table.py::_normalize_website_domain",
+     "desktop_env/evaluators/metrics/table.py::compare_table",
+     "desktop_env/evaluators/metrics/utils.py::_match_value_to_rule"
+    ]
+   },
+   "excluded": true,
+   "functions": [
+    "getters.get_vm_file",
+    "metrics.compare_table"
+   ],
+   "functions_differing": [
+    "getters.get_vm_file",
+    "metrics.compare_table"
+   ]
+  },
+  "4f07fbe9-70de-4927-a4d5-bb28bc12c52c": {
+   "config_equal": false,
+   "config_keys_differing": [
+    "instruction"
+   ],
+   "config_present_at_public": true,
+   "definitions_differing": {
+    "getters.get_cloud_file": [
+     "desktop_env/evaluators/getters/file.py::get_cloud_file"
+    ],
+    "getters.get_vm_file": [
+     "desktop_env/evaluators/getters/file.py::get_vm_file"
+    ],
+    "metrics.compare_table": [
+     "desktop_env/evaluators/metrics/table.py::_normalize_phone_digits",
+     "desktop_env/evaluators/metrics/table.py::_normalize_website_domain",
+     "desktop_env/evaluators/metrics/table.py::compare_table",
+     "desktop_env/evaluators/metrics/utils.py::_match_value_to_rule"
+    ]
+   },
+   "excluded": true,
+   "functions": [
+    "getters.get_cloud_file",
+    "getters.get_vm_file",
+    "metrics.compare_table"
+   ],
+   "functions_differing": [
+    "getters.get_cloud_file",
+    "getters.get_vm_file",
+    "metrics.compare_table"
+   ]
+  },
+  "51719eea-10bc-4246-a428-ac7c433dd4b3": {
+   "config_equal": true,
+   "config_keys_differing": [],
+   "config_present_at_public": true,
+   "definitions_differing": {
+    "getters.get_cloud_file": [
+     "desktop_env/evaluators/getters/file.py::get_cloud_file"
+    ],
+    "getters.get_vm_file": [
+     "desktop_env/evaluators/getters/file.py::get_vm_file"
+    ],
+    "metrics.compare_table": [
+     "desktop_env/evaluators/metrics/table.py::_normalize_phone_digits",
+     "desktop_env/evaluators/metrics/table.py::_normalize_website_domain",
+     "desktop_env/evaluators/metrics/table.py::compare_table",
+     "desktop_env/evaluators/metrics/utils.py::_match_value_to_rule"
+    ]
+   },
+   "excluded": true,
+   "functions": [
+    "getters.get_cloud_file",
+    "getters.get_vm_file",
+    "metrics.compare_table"
+   ],
+   "functions_differing": [
+    "getters.get_cloud_file",
+    "getters.get_vm_file",
+    "metrics.compare_table"
+   ]
+  },
+  "51b11269-2ca8-4b2a-9163-f21758420e78": {
+   "config_equal": true,
+   "config_keys_differing": [],
+   "config_present_at_public": true,
+   "definitions_differing": {
+    "getters.get_cloud_file": [
+     "desktop_env/evaluators/getters/file.py::get_cloud_file"
+    ],
+    "getters.get_vm_file": [
+     "desktop_env/evaluators/getters/file.py::get_vm_file"
+    ],
+    "metrics.compare_table": [
+     "desktop_env/evaluators/metrics/table.py::_normalize_phone_digits",
+     "desktop_env/evaluators/metrics/table.py::_normalize_website_domain",
+     "desktop_env/evaluators/metrics/table.py::compare_table",
+     "desktop_env/evaluators/metrics/utils.py::_match_value_to_rule"
+    ]
+   },
+   "excluded": true,
+   "functions": [
+    "getters.get_cloud_file",
+    "getters.get_vm_file",
+    "metrics.compare_table"
+   ],
+   "functions_differing": [
+    "getters.get_cloud_file",
+    "getters.get_vm_file",
+    "metrics.compare_table"
+   ]
+  },
+  "51f5801c-18b3-4f25-b0c3-02f85507a078": {
+   "config_equal": true,
+   "config_keys_differing": [],
+   "config_present_at_public": true,
+   "definitions_differing": {
+    "getters.get_cloud_file": [
+     "desktop_env/evaluators/getters/file.py::get_cloud_file"
+    ],
+    "getters.get_vm_file": [
+     "desktop_env/evaluators/getters/file.py::get_vm_file"
+    ]
+   },
+   "excluded": true,
+   "functions": [
+    "getters.get_cloud_file",
+    "getters.get_vm_file",
+    "metrics.compare_docx_files"
+   ],
+   "functions_differing": [
+    "getters.get_cloud_file",
+    "getters.get_vm_file"
+   ]
+  },
+  "5203d847-2572-4150-912a-03f062254390": {
+   "config_equal": true,
+   "config_keys_differing": [],
+   "config_present_at_public": true,
+   "definitions_differing": {
+    "getters.get_vm_file": [
+     "desktop_env/evaluators/getters/file.py::get_vm_file"
+    ]
+   },
+   "excluded": true,
+   "functions": [
+    "getters.get_rule",
+    "getters.get_vm_file",
+    "metrics.check_thunderbird_filter"
+   ],
+   "functions_differing": [
+    "getters.get_vm_file"
+   ]
+  },
+  "53ad5833-3455-407b-bbc6-45b4c79ab8fb": {
+   "config_equal": true,
+   "config_keys_differing": [],
+   "config_present_at_public": true,
+   "definitions_differing": {
+    "getters.get_vscode_config": [
+     "desktop_env/evaluators/getters/file.py::get_vm_file",
+     "desktop_env/evaluators/getters/general.py::get_vm_command_line",
+     "desktop_env/evaluators/getters/general.py::logger",
+     "desktop_env/evaluators/getters/vscode.py::get_vm_command_line",
+     "desktop_env/evaluators/getters/vscode.py::get_vscode_config",
+     "desktop_env/evaluators/getters/vscode.py::logger"
+    ],
+    "metrics.compare_config": [
+     "desktop_env/evaluators/metrics/vscode.py::_is_subset",
+     "desktop_env/evaluators/metrics/vscode.py::compare_config"
+    ]
+   },
+   "excluded": true,
+   "functions": [
+    "getters.get_rule",
+    "getters.get_vscode_config",
+    "metrics.compare_config"
+   ],
+   "functions_differing": [
+    "getters.get_vscode_config",
+    "metrics.compare_config"
+   ]
+  },
+  "550ce7e7-747b-495f-b122-acdc4d0b8e54": {
+   "config_equal": true,
+   "config_keys_differing": [],
+   "config_present_at_public": true,
+   "definitions_differing": {
+    "getters.get_cloud_file": [
+     "desktop_env/evaluators/getters/file.py::get_cloud_file"
+    ],
+    "getters.get_vm_file": [
+     "desktop_env/evaluators/getters/file.py::get_vm_file"
+    ],
+    "metrics.compare_pptx_files": [
+     "desktop_env/evaluators/metrics/slides.py::compare_pptx_files"
+    ]
+   },
+   "excluded": true,
+   "functions": [
+    "getters.get_cloud_file",
+    "getters.get_vm_file",
+    "metrics.compare_pptx_files"
+   ],
+   "functions_differing": [
+    "getters.get_cloud_file",
+    "getters.get_vm_file",
+    "metrics.compare_pptx_files"
+   ]
+  },
+  "554785e9-4523-4e7a-b8e1-8016f565f56a": {
+   "config_equal": false,
+   "config_keys_differing": [
+    "evaluator"
+   ],
+   "config_present_at_public": true,
+   "definitions_differing": {
+    "getters.get_cloud_file": [
+     "desktop_env/evaluators/getters/file.py::get_cloud_file"
+    ],
+    "getters.get_vm_file": [
+     "desktop_env/evaluators/getters/file.py::get_vm_file"
+    ]
+   },
+   "excluded": true,
+   "functions": [
+    "getters.get_cloud_file",
+    "getters.get_vm_file",
+    "metrics.check_saturation_increase_and_structure_sim"
+   ],
+   "functions_differing": [
+    "getters.get_cloud_file",
+    "getters.get_vm_file"
+   ]
+  },
+  "57667013-ea97-417c-9dce-2713091e6e2a": {
+   "config_equal": true,
+   "config_keys_differing": [],
+   "config_present_at_public": true,
+   "definitions_differing": {
+    "getters.get_cloud_file": [
+     "desktop_env/evaluators/getters/file.py::get_cloud_file"
+    ],
+    "getters.get_vm_file": [
+     "desktop_env/evaluators/getters/file.py::get_vm_file"
+    ],
+    "metrics.compare_pptx_files": [
+     "desktop_env/evaluators/metrics/slides.py::compare_pptx_files"
+    ]
+   },
+   "excluded": true,
+   "functions": [
+    "getters.get_cloud_file",
+    "getters.get_vm_file",
+    "metrics.compare_pptx_files"
+   ],
+   "functions_differing": [
+    "getters.get_cloud_file",
+    "getters.get_vm_file",
+    "metrics.compare_pptx_files"
+   ]
+  },
+  "5ac2891a-eacd-4954-b339-98abba077adb": {
+   "config_equal": false,
+   "config_keys_differing": [
+    "config",
+    "evaluator"
+   ],
+   "config_present_at_public": true,
+   "definitions_differing": {
+    "metrics.check_play_and_exit": [
+     "desktop_env/evaluators/metrics/vlc.py::check_play_and_exit",
+     "desktop_env/evaluators/metrics/vlc.py::logger",
+     "desktop_env/evaluators/metrics::check_play_and_exit"
+    ]
+   },
+   "excluded": true,
+   "functions": [
+    "getters.get_rule",
+    "getters.get_vlc_config",
+    "metrics.check_play_and_exit"
+   ],
+   "functions_differing": [
+    "metrics.check_play_and_exit"
+   ]
+  },
+  "5c1a6c3d-c1b3-47cb-9b01-8d1b7544ffa1": {
+   "config_equal": true,
+   "config_keys_differing": [],
+   "config_present_at_public": true,
+   "definitions_differing": {
+    "getters.get_cloud_file": [
+     "desktop_env/evaluators/getters/file.py::get_cloud_file"
+    ],
+    "getters.get_vm_file": [
+     "desktop_env/evaluators/getters/file.py::get_vm_file"
+    ],
+    "metrics.compare_pptx_files": [
+     "desktop_env/evaluators/metrics/slides.py::compare_pptx_files"
+    ]
+   },
+   "excluded": true,
+   "functions": [
+    "getters.get_cloud_file",
+    "getters.get_vm_file",
+    "metrics.compare_pptx_files"
+   ],
+   "functions_differing": [
+    "getters.get_cloud_file",
+    "getters.get_vm_file",
+    "metrics.compare_pptx_files"
+   ]
+  },
+  "5df7b33a-9f77-4101-823e-02f863e1c1ae": {
+   "config_equal": true,
+   "config_keys_differing": [],
+   "config_present_at_public": true,
+   "definitions_differing": {
+    "getters.get_cloud_file": [
+     "desktop_env/evaluators/getters/file.py::get_cloud_file"
+    ],
+    "getters.get_vm_file": [
+     "desktop_env/evaluators/getters/file.py::get_vm_file"
+    ],
+    "metrics.compare_archive": [
+     "desktop_env/evaluators/metrics/chrome.py::compare_archive"
+    ]
+   },
+   "excluded": true,
+   "functions": [
+    "getters.get_cloud_file",
+    "getters.get_vm_file",
+    "metrics.compare_archive"
+   ],
+   "functions_differing": [
+    "getters.get_cloud_file",
+    "getters.get_vm_file",
+    "metrics.compare_archive"
+   ]
+  },
+  "66399b0d-8fda-4618-95c4-bfc6191617e9": {
+   "config_equal": true,
+   "config_keys_differing": [],
+   "config_present_at_public": true,
+   "definitions_differing": {
+    "getters.get_cloud_file": [
+     "desktop_env/evaluators/getters/file.py::get_cloud_file"
+    ],
+    "getters.get_vm_file": [
+     "desktop_env/evaluators/getters/file.py::get_vm_file"
+    ],
+    "metrics.compare_docx_tables": [
+     "desktop_env/evaluators/metrics/docs.py::compare_docx_tables"
+    ]
+   },
+   "excluded": true,
+   "functions": [
+    "getters.get_cloud_file",
+    "getters.get_vm_file",
+    "metrics.compare_docx_tables"
+   ],
+   "functions_differing": [
+    "getters.get_cloud_file",
+    "getters.get_vm_file",
+    "metrics.compare_docx_tables"
+   ]
+  },
+  "6ada715d-3aae-4a32-a6a7-429b2e43fb93": {
+   "config_equal": true,
+   "config_keys_differing": [],
+   "config_present_at_public": true,
+   "definitions_differing": {
+    "getters.get_cloud_file": [
+     "desktop_env/evaluators/getters/file.py::get_cloud_file"
+    ],
+    "getters.get_vm_file": [
+     "desktop_env/evaluators/getters/file.py::get_vm_file"
+    ]
+   },
+   "excluded": true,
+   "functions": [
+    "getters.get_cloud_file",
+    "getters.get_vm_file",
+    "metrics.compare_docx_images"
+   ],
+   "functions_differing": [
+    "getters.get_cloud_file",
+    "getters.get_vm_file"
+   ]
+  },
+  "6ed0a554-cbee-4b44-84ea-fd6c042f4fe1": {
+   "config_equal": true,
+   "config_keys_differing": [],
+   "config_present_at_public": true,
+   "definitions_differing": {
+    "getters.get_vm_file": [
+     "desktop_env/evaluators/getters/file.py::get_vm_file"
+    ]
+   },
+   "excluded": true,
+   "functions": [
+    "getters.get_rule",
+    "getters.get_vm_file",
+    "metrics.check_json_settings"
+   ],
+   "functions_differing": [
+    "getters.get_vm_file"
+   ]
+  },
+  "6f81754e-285d-4ce0-b59e-af7edb02d108": {
+   "config_equal": true,
+   "config_keys_differing": [],
+   "config_present_at_public": true,
+   "definitions_differing": {
+    "getters.get_cloud_file": [
+     "desktop_env/evaluators/getters/file.py::get_cloud_file"
+    ],
+    "getters.get_vm_file": [
+     "desktop_env/evaluators/getters/file.py::get_vm_file"
+    ]
+   },
+   "excluded": true,
+   "functions": [
+    "getters.get_cloud_file",
+    "getters.get_vm_file",
+    "metrics.compare_unique_train_records"
+   ],
+   "functions_differing": [
+    "getters.get_cloud_file",
+    "getters.get_vm_file"
+   ]
+  },
+  "70745df8-f2f5-42bd-8074-fbc10334fcc5": {
+   "config_equal": true,
+   "config_keys_differing": [],
+   "config_present_at_public": true,
+   "definitions_differing": {
+    "getters.get_vm_file": [
+     "desktop_env/evaluators/getters/file.py::get_vm_file"
+    ]
+   },
+   "excluded": true,
+   "functions": [
+    "getters.get_rule",
+    "getters.get_vm_file",
+    "metrics.check_json_settings"
+   ],
+   "functions_differing": [
+    "getters.get_vm_file"
+   ]
+  },
+  "70bca0cc-c117-427e-b0be-4df7299ebeb6": {
+   "config_equal": true,
+   "config_keys_differing": [],
+   "config_present_at_public": true,
+   "definitions_differing": {
+    "getters.get_cloud_file": [
+     "desktop_env/evaluators/getters/file.py::get_cloud_file"
+    ],
+    "getters.get_vm_file": [
+     "desktop_env/evaluators/getters/file.py::get_vm_file"
+    ],
+    "metrics.compare_pptx_files": [
+     "desktop_env/evaluators/metrics/slides.py::compare_pptx_files"
+    ]
+   },
+   "excluded": true,
+   "functions": [
+    "getters.get_cloud_file",
+    "getters.get_vm_file",
+    "metrics.compare_pptx_files"
+   ],
+   "functions_differing": [
+    "getters.get_cloud_file",
+    "getters.get_vm_file",
+    "metrics.compare_pptx_files"
+   ]
+  },
+  "72b810ef-4156-4d09-8f08-a0cf57e7cefe": {
+   "config_equal": true,
+   "config_keys_differing": [],
+   "config_present_at_public": true,
+   "definitions_differing": {
+    "getters.get_cloud_file": [
+     "desktop_env/evaluators/getters/file.py::get_cloud_file"
+    ],
+    "getters.get_vm_file": [
+     "desktop_env/evaluators/getters/file.py::get_vm_file"
+    ]
+   },
+   "excluded": true,
+   "functions": [
+    "getters.get_cloud_file",
+    "getters.get_vm_file",
+    "metrics.evaluate_strike_through_last_paragraph"
+   ],
+   "functions_differing": [
+    "getters.get_cloud_file",
+    "getters.get_vm_file"
+   ]
+  },
+  "73c99fb9-f828-43ce-b87a-01dc07faa224": {
+   "config_equal": true,
+   "config_keys_differing": [],
+   "config_present_at_public": true,
+   "definitions_differing": {
+    "getters.get_cloud_file": [
+     "desktop_env/evaluators/getters/file.py::get_cloud_file"
+    ],
+    "getters.get_vm_file": [
+     "desktop_env/evaluators/getters/file.py::get_vm_file"
+    ],
+    "metrics.compare_pptx_files": [
+     "desktop_env/evaluators/metrics/slides.py::compare_pptx_files"
+    ]
+   },
+   "excluded": true,
+   "functions": [
+    "getters.get_cloud_file",
+    "getters.get_vm_file",
+    "metrics.compare_pptx_files"
+   ],
+   "functions_differing": [
+    "getters.get_cloud_file",
+    "getters.get_vm_file",
+    "metrics.compare_pptx_files"
+   ]
+  },
+  "778efd0a-153f-4842-9214-f05fc176b877": {
+   "config_equal": true,
+   "config_keys_differing": [],
+   "config_present_at_public": true,
+   "definitions_differing": {
+    "getters.get_audio_in_slide": [
+     "desktop_env/evaluators/getters/file.py::get_vm_file"
+    ],
+    "getters.get_cloud_file": [
+     "desktop_env/evaluators/getters/file.py::get_cloud_file"
+    ]
+   },
+   "excluded": true,
+   "functions": [
+    "getters.get_audio_in_slide",
+    "getters.get_cloud_file",
+    "metrics.compare_audios"
+   ],
+   "functions_differing": [
+    "getters.get_audio_in_slide",
+    "getters.get_cloud_file"
+   ]
+  },
+  "77b8ab4d-994f-43ac-8930-8ca087d7c4b4": {
+   "config_equal": false,
+   "config_keys_differing": [
+    "evaluator"
+   ],
+   "config_present_at_public": true,
+   "definitions_differing": {
+    "getters.get_cloud_file": [
+     "desktop_env/evaluators/getters/file.py::get_cloud_file"
+    ],
+    "getters.get_vm_file": [
+     "desktop_env/evaluators/getters/file.py::get_vm_file"
+    ]
+   },
+   "excluded": true,
+   "functions": [
+    "getters.get_cloud_file",
+    "getters.get_vm_file",
+    "metrics.check_file_exists_and_structure_sim"
+   ],
+   "functions_differing": [
+    "getters.get_cloud_file",
+    "getters.get_vm_file"
+   ]
+  },
+  "7a4deb26-d57d-4ea9-9a73-630f66a7b568": {
+   "config_equal": false,
+   "config_keys_differing": [
+    "evaluator"
+   ],
+   "config_present_at_public": true,
+   "definitions_differing": {
+    "getters.get_cloud_file": [
+     "desktop_env/evaluators/getters/file.py::get_cloud_file"
+    ],
+    "getters.get_vm_file": [
+     "desktop_env/evaluators/getters/file.py::get_vm_file"
+    ],
+    "metrics.check_brightness_decrease_and_structure_sim": [
+     "desktop_env/evaluators/metrics/gimp.py::structure_check_by_mse"
+    ]
+   },
+   "excluded": true,
+   "functions": [
+    "getters.get_cloud_file",
+    "getters.get_vm_file",
+    "metrics.check_brightness_decrease_and_structure_sim"
+   ],
+   "functions_differing": [
+    "getters.get_cloud_file",
+    "getters.get_vm_file",
+    "metrics.check_brightness_decrease_and_structure_sim"
+   ]
+  },
+  "7ae48c60-f143-4119-b659-15b8f485eb9a": {
+   "config_equal": true,
+   "config_keys_differing": [],
+   "config_present_at_public": true,
+   "definitions_differing": {
+    "getters.get_cloud_file": [
+     "desktop_env/evaluators/getters/file.py::get_cloud_file"
+    ],
+    "getters.get_vm_file": [
+     "desktop_env/evaluators/getters/file.py::get_vm_file"
+    ],
+    "metrics.compare_pptx_files": [
+     "desktop_env/evaluators/metrics/slides.py::compare_pptx_files"
+    ]
+   },
+   "excluded": true,
+   "functions": [
+    "getters.get_cloud_file",
+    "getters.get_vm_file",
+    "metrics.compare_pptx_files"
+   ],
+   "functions_differing": [
+    "getters.get_cloud_file",
+    "getters.get_vm_file",
+    "metrics.compare_pptx_files"
+   ]
+  },
+  "7b7617bd-57cc-468e-9c91-40c4ec2bcb3d": {
+   "config_equal": true,
+   "config_keys_differing": [],
+   "config_present_at_public": true,
+   "definitions_differing": {},
+   "excluded": false,
+   "functions": [
+    "getters.get_gimp_config_file",
+    "getters.get_rule",
+    "metrics.check_config_status"
+   ],
+   "functions_differing": []
+  },
+  "7e287123-70ca-47b9-8521-47db09b69b14": {
+   "config_equal": false,
+   "config_keys_differing": [
+    "evaluator",
+    "instruction"
+   ],
+   "config_present_at_public": true,
+   "definitions_differing": {
+    "getters.get_cloud_file": [
+     "desktop_env/evaluators/getters/file.py::get_cloud_file"
+    ],
+    "getters.get_vm_file": [
+     "desktop_env/evaluators/getters/file.py::get_vm_file"
+    ],
+    "metrics.compare_table": [
+     "desktop_env/evaluators/metrics/table.py::_normalize_phone_digits",
+     "desktop_env/evaluators/metrics/table.py::_normalize_website_domain",
+     "desktop_env/evaluators/metrics/table.py::compare_table",
+     "desktop_env/evaluators/metrics/utils.py::_match_value_to_rule"
+    ]
+   },
+   "excluded": true,
+   "functions": [
+    "getters.get_cloud_file",
+    "getters.get_vm_file",
+    "metrics.compare_table"
+   ],
+   "functions_differing": [
+    "getters.get_cloud_file",
+    "getters.get_vm_file",
+    "metrics.compare_table"
+   ]
+  },
+  "7e429b8d-a3f0-4ed0-9b58-08957d00b127": {
+   "config_equal": true,
+   "config_keys_differing": [],
+   "config_present_at_public": true,
+   "definitions_differing": {
+    "getters.get_cloud_file": [
+     "desktop_env/evaluators/getters/file.py::get_cloud_file"
+    ],
+    "getters.get_vm_file": [
+     "desktop_env/evaluators/getters/file.py::get_vm_file"
+    ],
+    "metrics.compare_table": [
+     "desktop_env/evaluators/metrics/table.py::_normalize_phone_digits",
+     "desktop_env/evaluators/metrics/table.py::_normalize_website_domain",
+     "desktop_env/evaluators/metrics/table.py::compare_table",
+     "desktop_env/evaluators/metrics/utils.py::_match_value_to_rule"
+    ]
+   },
+   "excluded": true,
+   "functions": [
+    "getters.get_cloud_file",
+    "getters.get_vm_file",
+    "metrics.compare_table"
+   ],
+   "functions_differing": [
+    "getters.get_cloud_file",
+    "getters.get_vm_file",
+    "metrics.compare_table"
+   ]
+  },
+  "7efeb4b1-3d19-4762-b163-63328d66303b": {
+   "config_equal": false,
+   "config_keys_differing": [
+    "instruction"
+   ],
+   "config_present_at_public": true,
+   "definitions_differing": {
+    "getters.get_cloud_file": [
+     "desktop_env/evaluators/getters/file.py::get_cloud_file"
+    ],
+    "getters.get_vm_file": [
+     "desktop_env/evaluators/getters/file.py::get_vm_file"
+    ],
+    "metrics.compare_table": [
+     "desktop_env/evaluators/metrics/table.py::_normalize_phone_digits",
+     "desktop_env/evaluators/metrics/table.py::_normalize_website_domain",
+     "desktop_env/evaluators/metrics/table.py::compare_table",
+     "desktop_env/evaluators/metrics/utils.py::_match_value_to_rule"
+    ]
+   },
+   "excluded": true,
+   "functions": [
+    "getters.get_cloud_file",
+    "getters.get_vm_file",
+    "metrics.compare_table"
+   ],
+   "functions_differing": [
+    "getters.get_cloud_file",
+    "getters.get_vm_file",
+    "metrics.compare_table"
+   ]
+  },
+  "81c425f5-78f3-4771-afd6-3d2973825947": {
+   "config_equal": true,
+   "config_keys_differing": [],
+   "config_present_at_public": true,
+   "definitions_differing": {
+    "getters.get_cloud_file": [
+     "desktop_env/evaluators/getters/file.py::get_cloud_file"
+    ],
+    "getters.get_vm_file": [
+     "desktop_env/evaluators/getters/file.py::get_vm_file"
+    ],
+    "metrics.compare_docx_tables": [
+     "desktop_env/evaluators/metrics/docs.py::compare_docx_tables"
+    ]
+   },
+   "excluded": true,
+   "functions": [
+    "getters.get_cloud_file",
+    "getters.get_vm_file",
+    "metrics.compare_docx_tables"
+   ],
+   "functions_differing": [
+    "getters.get_cloud_file",
+    "getters.get_vm_file",
+    "metrics.compare_docx_tables"
+   ]
+  },
+  "881deb30-9549-4583-a841-8270c65f2a17": {
+   "config_equal": false,
+   "config_keys_differing": [
+    "config",
+    "evaluator",
+    "instruction"
+   ],
+   "config_present_at_public": true,
+   "definitions_differing": {
+    "getters.get_cloud_file": [
+     "desktop_env/evaluators/getters/file.py::get_cloud_file"
+    ],
+    "getters.get_vm_file": [
+     "desktop_env/evaluators/getters/file.py::get_vm_file"
+    ],
+    "metrics.compare_table": [
+     "desktop_env/evaluators/metrics/table.py::_normalize_phone_digits",
+     "desktop_env/evaluators/metrics/table.py::_normalize_website_domain",
+     "desktop_env/evaluators/metrics/table.py::compare_table",
+     "desktop_env/evaluators/metrics/utils.py::_match_value_to_rule"
+    ]
+   },
+   "excluded": true,
+   "functions": [
+    "getters.get_cloud_file",
+    "getters.get_vm_file",
+    "metrics.compare_table"
+   ],
+   "functions_differing": [
+    "getters.get_cloud_file",
+    "getters.get_vm_file",
+    "metrics.compare_table"
+   ]
+  },
+  "88fe4b2d-3040-4c70-9a70-546a47764b48": {
+   "config_equal": false,
+   "config_keys_differing": [
+    "evaluator"
+   ],
+   "config_present_at_public": true,
+   "definitions_differing": {
+    "getters.get_cloud_file": [
+     "desktop_env/evaluators/getters/file.py::get_cloud_file"
+    ],
+    "getters.get_vm_file": [
+     "desktop_env/evaluators/getters/file.py::get_vm_file"
+    ]
+   },
+   "excluded": true,
+   "functions": [
+    "getters.get_cloud_file",
+    "getters.get_vm_file",
+    "metrics.compare_docx_files"
+   ],
+   "functions_differing": [
+    "getters.get_cloud_file",
+    "getters.get_vm_file"
+   ]
+  },
+  "8b1ce5f2-59d2-4dcc-b0b0-666a714b9a14": {
+   "config_equal": false,
+   "config_keys_differing": [
+    "instruction"
+   ],
+   "config_present_at_public": true,
+   "definitions_differing": {
+    "getters.get_cloud_file": [
+     "desktop_env/evaluators/getters/file.py::get_cloud_file"
+    ],
+    "getters.get_vm_file": [
+     "desktop_env/evaluators/getters/file.py::get_vm_file"
+    ],
+    "metrics.compare_table": [
+     "desktop_env/evaluators/metrics/table.py::_normalize_phone_digits",
+     "desktop_env/evaluators/metrics/table.py::_normalize_website_domain",
+     "desktop_env/evaluators/metrics/table.py::compare_table",
+     "desktop_env/evaluators/metrics/utils.py::_match_value_to_rule"
+    ]
+   },
+   "excluded": true,
+   "functions": [
+    "getters.get_cloud_file",
+    "getters.get_vm_file",
+    "metrics.compare_table"
+   ],
+   "functions_differing": [
+    "getters.get_cloud_file",
+    "getters.get_vm_file",
+    "metrics.compare_table"
+   ]
+  },
+  "8df7e444-8e06-4f93-8a1a-c5c974269d82": {
+   "config_equal": false,
+   "config_keys_differing": [
+    "evaluator"
+   ],
+   "config_present_at_public": true,
+   "definitions_differing": {
+    "getters.get_cloud_file": [
+     "desktop_env/evaluators/getters/file.py::get_cloud_file"
+    ],
+    "getters.get_vm_file": [
+     "desktop_env/evaluators/getters/file.py::get_vm_file"
+    ],
+    "metrics.compare_zip_files": [
+     "desktop_env/evaluators/metrics/vscode.py::compare_pdf_content"
+    ]
+   },
+   "excluded": true,
+   "functions": [
+    "getters.get_cloud_file",
+    "getters.get_vm_file",
+    "metrics.compare_zip_files"
+   ],
+   "functions_differing": [
+    "getters.get_cloud_file",
+    "getters.get_vm_file",
+    "metrics.compare_zip_files"
+   ]
+  },
+  "8e116af7-7db7-4e35-a68b-b0939c066c78": {
+   "config_equal": true,
+   "config_keys_differing": [],
+   "config_present_at_public": true,
+   "definitions_differing": {
+    "getters.get_cloud_file": [
+     "desktop_env/evaluators/getters/file.py::get_cloud_file"
+    ],
+    "getters.get_vm_file": [
+     "desktop_env/evaluators/getters/file.py::get_vm_file"
+    ],
+    "metrics.compare_table": [
+     "desktop_env/evaluators/metrics/table.py::_normalize_phone_digits",
+     "desktop_env/evaluators/metrics/table.py::_normalize_website_domain",
+     "desktop_env/evaluators/metrics/table.py::compare_table",
+     "desktop_env/evaluators/metrics/utils.py::_match_value_to_rule"
+    ]
+   },
+   "excluded": true,
+   "functions": [
+    "getters.get_cloud_file",
+    "getters.get_vm_file",
+    "metrics.compare_table"
+   ],
+   "functions_differing": [
+    "getters.get_cloud_file",
+    "getters.get_vm_file",
+    "metrics.compare_table"
+   ]
+  },
+  "9195653c-f4aa-453d-aa95-787f6ccfaae9": {
+   "config_equal": true,
+   "config_keys_differing": [],
+   "config_present_at_public": true,
+   "definitions_differing": {},
+   "excluded": false,
+   "functions": [
+    "getters.get_rule",
+    "getters.get_vlc_config",
+    "metrics.check_qt_max_volume"
+   ],
+   "functions_differing": []
+  },
+  "930fdb3b-11a8-46fe-9bac-577332e2640e": {
+   "config_equal": true,
+   "config_keys_differing": [],
+   "config_present_at_public": true,
+   "definitions_differing": {
+    "getters.get_vm_file": [
+     "desktop_env/evaluators/getters/file.py::get_vm_file"
+    ]
+   },
+   "excluded": true,
+   "functions": [
+    "getters.get_rule",
+    "getters.get_vm_file",
+    "metrics.check_json_keybindings"
+   ],
+   "functions_differing": [
+    "getters.get_vm_file"
+   ]
+  },
+  "982d12a5-beab-424f-8d38-d2a48429e511": {
+   "config_equal": false,
+   "config_keys_differing": [
+    "evaluator"
+   ],
+   "config_present_at_public": true,
+   "definitions_differing": {
+    "getters.get_vm_file": [
+     "desktop_env/evaluators/getters/file.py::get_vm_file"
+    ],
+    "metrics.compare_config": [
+     "desktop_env/evaluators/metrics/vscode.py::_is_subset",
+     "desktop_env/evaluators/metrics/vscode.py::compare_config"
+    ]
+   },
+   "excluded": true,
+   "functions": [
+    "getters.get_rule",
+    "getters.get_vm_file",
+    "metrics.compare_config"
+   ],
+   "functions_differing": [
+    "getters.get_vm_file",
+    "metrics.compare_config"
+   ]
+  },
+  "9b7bc335-06b5-4cd3-9119-1a649c478509": {
+   "config_equal": true,
+   "config_keys_differing": [],
+   "config_present_at_public": true,
+   "definitions_differing": {
+    "getters.get_vm_file": [
+     "desktop_env/evaluators/getters/file.py::get_vm_file"
+    ]
+   },
+   "excluded": true,
+   "functions": [
+    "getters.get_rule",
+    "getters.get_vm_file",
+    "metrics.check_thunderbird_filter"
+   ],
+   "functions_differing": [
+    "getters.get_vm_file"
+   ]
+  },
+  "9bc3cc16-074a-45ac-9bdc-b2a362e1daf3": {
+   "config_equal": true,
+   "config_keys_differing": [],
+   "config_present_at_public": true,
+   "definitions_differing": {},
+   "excluded": false,
+   "functions": [
+    "getters.get_cache_file",
+    "getters.get_rule",
+    "metrics.check_list"
+   ],
+   "functions_differing": []
+  },
+  "9cf05d24-6bd9-4dae-8967-f67d88f5d38a": {
+   "config_equal": true,
+   "config_keys_differing": [],
+   "config_present_at_public": true,
+   "definitions_differing": {
+    "getters.get_cloud_file": [
+     "desktop_env/evaluators/getters/file.py::get_cloud_file"
+    ],
+    "getters.get_vm_file": [
+     "desktop_env/evaluators/getters/file.py::get_vm_file"
+    ],
+    "metrics.compare_pptx_files": [
+     "desktop_env/evaluators/metrics/slides.py::compare_pptx_files"
+    ]
+   },
+   "excluded": true,
+   "functions": [
+    "getters.get_cloud_file",
+    "getters.get_vm_file",
+    "metrics.compare_pptx_files"
+   ],
+   "functions_differing": [
+    "getters.get_cloud_file",
+    "getters.get_vm_file",
+    "metrics.compare_pptx_files"
+   ]
+  },
+  "9ec204e4-f0a3-42f8-8458-b772a6797cab": {
+   "config_equal": true,
+   "config_keys_differing": [],
+   "config_present_at_public": true,
+   "definitions_differing": {
+    "getters.get_cloud_file": [
+     "desktop_env/evaluators/getters/file.py::get_cloud_file"
+    ],
+    "getters.get_vm_file": [
+     "desktop_env/evaluators/getters/file.py::get_vm_file"
+    ],
+    "metrics.compare_pptx_files": [
+     "desktop_env/evaluators/metrics/slides.py::compare_pptx_files"
+    ]
+   },
+   "excluded": true,
+   "functions": [
+    "getters.get_cloud_file",
+    "getters.get_vm_file",
+    "metrics.compare_pptx_files"
+   ],
+   "functions_differing": [
+    "getters.get_cloud_file",
+    "getters.get_vm_file",
+    "metrics.compare_pptx_files"
+   ]
+  },
+  "a01fbce3-2793-461f-ab86-43680ccbae25": {
+   "config_equal": true,
+   "config_keys_differing": [],
+   "config_present_at_public": true,
+   "definitions_differing": {
+    "getters.get_cloud_file": [
+     "desktop_env/evaluators/getters/file.py::get_cloud_file"
+    ],
+    "getters.get_vm_file": [
+     "desktop_env/evaluators/getters/file.py::get_vm_file"
+    ],
+    "metrics.compare_table": [
+     "desktop_env/evaluators/metrics/table.py::_normalize_phone_digits",
+     "desktop_env/evaluators/metrics/table.py::_normalize_website_domain",
+     "desktop_env/evaluators/metrics/table.py::compare_table",
+     "desktop_env/evaluators/metrics/utils.py::_match_value_to_rule"
+    ]
+   },
+   "excluded": true,
+   "functions": [
+    "getters.get_cloud_file",
+    "getters.get_vm_file",
+    "metrics.compare_table"
+   ],
+   "functions_differing": [
+    "getters.get_cloud_file",
+    "getters.get_vm_file",
+    "metrics.compare_table"
+   ]
+  },
+  "a434992a-89df-4577-925c-0c58b747f0f4": {
+   "config_equal": false,
+   "config_keys_differing": [
+    "evaluator"
+   ],
+   "config_present_at_public": true,
+   "definitions_differing": {
+    "getters.get_cloud_file": [
+     "desktop_env/evaluators/getters/file.py::get_cloud_file"
+    ],
+    "getters.get_vm_file": [
+     "desktop_env/evaluators/getters/file.py::get_vm_file"
+    ],
+    "metrics.compare_pptx_files_tolerant": [
+     "desktop_env/evaluators/metrics/slides.py::compare_pptx_files",
+     "desktop_env/evaluators/metrics/slides.py::compare_pptx_files_tolerant",
+     "desktop_env/evaluators/metrics/slides.py::debug_logger",
+     "desktop_env/evaluators/metrics/slides.py::enable_debug_logging",
+     "desktop_env/evaluators/metrics/slides.py::get_all_text_shapes",
+     "desktop_env/evaluators/metrics::compare_pptx_files_tolerant"
+    ]
+   },
+   "excluded": true,
+   "functions": [
+    "getters.get_cloud_file",
+    "getters.get_vm_file",
+    "metrics.compare_pptx_files_tolerant"
+   ],
+   "functions_differing": [
+    "getters.get_cloud_file",
+    "getters.get_vm_file",
+    "metrics.compare_pptx_files_tolerant"
+   ]
+  },
+  "a503b07f-9119-456b-b75d-f5146737d24f": {
+   "config_equal": true,
+   "config_keys_differing": [],
+   "config_present_at_public": true,
+   "definitions_differing": {
+    "getters.get_cloud_file": [
+     "desktop_env/evaluators/getters/file.py::get_cloud_file"
+    ],
+    "getters.get_vm_file": [
+     "desktop_env/evaluators/getters/file.py::get_vm_file"
+    ]
+   },
+   "excluded": true,
+   "functions": [
+    "getters.get_cloud_file",
+    "getters.get_vm_file",
+    "metrics.compare_pdf_images"
+   ],
+   "functions_differing": [
+    "getters.get_cloud_file",
+    "getters.get_vm_file"
+   ]
+  },
+  "a53f80cd-4a90-4490-8310-097b011433f6": {
+   "config_equal": true,
+   "config_keys_differing": [],
+   "config_present_at_public": true,
+   "definitions_differing": {
+    "getters.get_cloud_file": [
+     "desktop_env/evaluators/getters/file.py::get_cloud_file"
+    ],
+    "getters.get_vm_file": [
+     "desktop_env/evaluators/getters/file.py::get_vm_file"
+    ],
+    "metrics.compare_pptx_files": [
+     "desktop_env/evaluators/metrics/slides.py::compare_pptx_files"
+    ]
+   },
+   "excluded": true,
+   "functions": [
+    "getters.get_cloud_file",
+    "getters.get_vm_file",
+    "metrics.compare_pptx_files"
+   ],
+   "functions_differing": [
+    "getters.get_cloud_file",
+    "getters.get_vm_file",
+    "metrics.compare_pptx_files"
+   ]
+  },
+  "a5bbbcd5-b398-4c91-83d4-55e1e31bbb81": {
+   "config_equal": false,
+   "config_keys_differing": [
+    "instruction"
+   ],
+   "config_present_at_public": true,
+   "definitions_differing": {},
+   "excluded": true,
+   "functions": [
+    "getters.get_rule",
+    "getters.get_vlc_config",
+    "metrics.check_qt_minimal_view"
+   ],
+   "functions_differing": []
+  },
+  "a669ef01-ded5-4099-9ea9-25e99b569840": {
+   "config_equal": false,
+   "config_keys_differing": [
+    "evaluator"
+   ],
+   "config_present_at_public": true,
+   "definitions_differing": {
+    "getters.get_vm_file": [
+     "desktop_env/evaluators/getters/file.py::get_vm_file"
+    ],
+    "metrics.check_continuation_line_indent_no_bullet": [
+     "desktop_env/evaluators/metrics/slides.py::check_continuation_line_indent_no_bullet",
+     "desktop_env/evaluators/metrics::check_continuation_line_indent_no_bullet"
+    ]
+   },
+   "excluded": true,
+   "functions": [
+    "getters.get_vm_file",
+    "metrics.check_continuation_line_indent_no_bullet"
+   ],
+   "functions_differing": [
+    "getters.get_vm_file",
+    "metrics.check_continuation_line_indent_no_bullet"
+   ]
+  },
+  "a9f325aa-8c05-4e4f-8341-9e4358565f4f": {
+   "config_equal": false,
+   "config_keys_differing": [
+    "instruction"
+   ],
+   "config_present_at_public": true,
+   "definitions_differing": {
+    "getters.get_cloud_file": [
+     "desktop_env/evaluators/getters/file.py::get_cloud_file"
+    ],
+    "getters.get_vm_file": [
+     "desktop_env/evaluators/getters/file.py::get_vm_file"
+    ],
+    "metrics.compare_table": [
+     "desktop_env/evaluators/metrics/table.py::_normalize_phone_digits",
+     "desktop_env/evaluators/metrics/table.py::_normalize_website_domain",
+     "desktop_env/evaluators/metrics/table.py::compare_table",
+     "desktop_env/evaluators/metrics/utils.py::_match_value_to_rule"
+    ]
+   },
+   "excluded": true,
+   "functions": [
+    "getters.get_cloud_file",
+    "getters.get_vm_file",
+    "metrics.compare_table"
+   ],
+   "functions_differing": [
+    "getters.get_cloud_file",
+    "getters.get_vm_file",
+    "metrics.compare_table"
+   ]
+  },
+  "aa3a8974-2e85-438b-b29e-a64df44deb4b": {
+   "config_equal": true,
+   "config_keys_differing": [],
+   "config_present_at_public": true,
+   "definitions_differing": {
+    "getters.get_cloud_file": [
+     "desktop_env/evaluators/getters/file.py::get_cloud_file"
+    ],
+    "getters.get_vm_file": [
+     "desktop_env/evaluators/getters/file.py::get_vm_file"
+    ]
+   },
+   "excluded": true,
+   "functions": [
+    "getters.get_cloud_file",
+    "getters.get_rule",
+    "getters.get_vm_file",
+    "metrics.check_pdf_pages",
+    "metrics.compare_pdfs"
+   ],
+   "functions_differing": [
+    "getters.get_cloud_file",
+    "getters.get_vm_file"
+   ]
+  },
+  "adf5e2c3-64c7-4644-b7b6-d2f0167927e7": {
+   "config_equal": true,
+   "config_keys_differing": [],
+   "config_present_at_public": true,
+   "definitions_differing": {
+    "getters.get_cloud_file": [
+     "desktop_env/evaluators/getters/file.py::get_cloud_file"
+    ],
+    "getters.get_vm_file": [
+     "desktop_env/evaluators/getters/file.py::get_vm_file"
+    ]
+   },
+   "excluded": true,
+   "functions": [
+    "getters.get_cloud_file",
+    "getters.get_vm_file",
+    "metrics.compare_docx_files"
+   ],
+   "functions_differing": [
+    "getters.get_cloud_file",
+    "getters.get_vm_file"
+   ]
+  },
+  "af2d657a-e6b3-4c6a-9f67-9e3ed015974c": {
+   "config_equal": true,
+   "config_keys_differing": [],
+   "config_present_at_public": true,
+   "definitions_differing": {
+    "getters.get_cloud_file": [
+     "desktop_env/evaluators/getters/file.py::get_cloud_file"
+    ],
+    "getters.get_vm_file": [
+     "desktop_env/evaluators/getters/file.py::get_vm_file"
+    ],
+    "metrics.compare_pptx_files": [
+     "desktop_env/evaluators/metrics/slides.py::compare_pptx_files"
+    ]
+   },
+   "excluded": true,
+   "functions": [
+    "getters.get_cloud_file",
+    "getters.get_vm_file",
+    "metrics.compare_pptx_files"
+   ],
+   "functions_differing": [
+    "getters.get_cloud_file",
+    "getters.get_vm_file",
+    "metrics.compare_pptx_files"
+   ]
+  },
+  "b148e375-fe0b-4bec-90e7-38632b0d73c2": {
+   "config_equal": true,
+   "config_keys_differing": [],
+   "config_present_at_public": true,
+   "definitions_differing": {},
+   "excluded": false,
+   "functions": [
+    "getters.get_gimp_config_file",
+    "getters.get_rule",
+    "metrics.check_config_status"
+   ],
+   "functions_differing": []
+  },
+  "b21acd93-60fd-4127-8a43-2f5178f4a830": {
+   "config_equal": true,
+   "config_keys_differing": [],
+   "config_present_at_public": true,
+   "definitions_differing": {
+    "getters.get_cloud_file": [
+     "desktop_env/evaluators/getters/file.py::get_cloud_file"
+    ],
+    "getters.get_vm_file": [
+     "desktop_env/evaluators/getters/file.py::get_vm_file"
+    ],
+    "metrics.compare_line_spacing": [
+     "desktop_env/evaluators/metrics/docs.py::compare_line_spacing"
+    ]
+   },
+   "excluded": true,
+   "functions": [
+    "getters.get_cloud_file",
+    "getters.get_vm_file",
+    "metrics.compare_line_spacing"
+   ],
+   "functions_differing": [
+    "getters.get_cloud_file",
+    "getters.get_vm_file",
+    "metrics.compare_line_spacing"
+   ]
+  },
+  "b8adbc24-cef2-4b15-99d5-ecbe7ff445eb": {
+   "config_equal": false,
+   "config_keys_differing": [
+    "evaluator",
+    "instruction"
+   ],
+   "config_present_at_public": true,
+   "definitions_differing": {
+    "getters.get_cloud_file": [
+     "desktop_env/evaluators/getters/file.py::get_cloud_file"
+    ],
+    "getters.get_vm_file": [
+     "desktop_env/evaluators/getters/file.py::get_vm_file"
+    ],
+    "metrics.compare_pptx_files": [
+     "desktop_env/evaluators/metrics/slides.py::compare_pptx_files"
+    ]
+   },
+   "excluded": true,
+   "functions": [
+    "getters.get_cloud_file",
+    "getters.get_vm_file",
+    "metrics.compare_pptx_files"
+   ],
+   "functions_differing": [
+    "getters.get_cloud_file",
+    "getters.get_vm_file",
+    "metrics.compare_pptx_files"
+   ]
+  },
+  "bc2b57f3-686d-4ec9-87ce-edf850b7e442": {
+   "config_equal": true,
+   "config_keys_differing": [],
+   "config_present_at_public": true,
+   "definitions_differing": {
+    "getters.get_cloud_file": [
+     "desktop_env/evaluators/getters/file.py::get_cloud_file"
+    ],
+    "getters.get_vm_file": [
+     "desktop_env/evaluators/getters/file.py::get_vm_file"
+    ],
+    "metrics.compare_table": [
+     "desktop_env/evaluators/metrics/table.py::_normalize_phone_digits",
+     "desktop_env/evaluators/metrics/table.py::_normalize_website_domain",
+     "desktop_env/evaluators/metrics/table.py::compare_table",
+     "desktop_env/evaluators/metrics/utils.py::_match_value_to_rule"
+    ]
+   },
+   "excluded": true,
+   "functions": [
+    "getters.get_cloud_file",
+    "getters.get_vm_file",
+    "metrics.compare_table"
+   ],
+   "functions_differing": [
+    "getters.get_cloud_file",
+    "getters.get_vm_file",
+    "metrics.compare_table"
+   ]
+  },
+  "c59742c0-4323-4b9d-8a02-723c251deaa0": {
+   "config_equal": true,
+   "config_keys_differing": [],
+   "config_present_at_public": true,
+   "definitions_differing": {
+    "getters.get_audio_in_slide": [
+     "desktop_env/evaluators/getters/file.py::get_vm_file"
+    ],
+    "getters.get_vm_file": [
+     "desktop_env/evaluators/getters/file.py::get_vm_file"
+    ]
+   },
+   "excluded": true,
+   "functions": [
+    "getters.get_audio_in_slide",
+    "getters.get_vm_file",
+    "metrics.compare_audios"
+   ],
+   "functions_differing": [
+    "getters.get_audio_in_slide",
+    "getters.get_vm_file"
+   ]
+  },
+  "c867c42d-a52d-4a24-8ae3-f75d256b5618": {
+   "config_equal": true,
+   "config_keys_differing": [],
+   "config_present_at_public": true,
+   "definitions_differing": {
+    "getters.get_cloud_file": [
+     "desktop_env/evaluators/getters/file.py::get_cloud_file"
+    ],
+    "getters.get_vm_file": [
+     "desktop_env/evaluators/getters/file.py::get_vm_file"
+    ],
+    "metrics.compare_table": [
+     "desktop_env/evaluators/metrics/table.py::_normalize_phone_digits",
+     "desktop_env/evaluators/metrics/table.py::_normalize_website_domain",
+     "desktop_env/evaluators/metrics/table.py::compare_table",
+     "desktop_env/evaluators/metrics/utils.py::_match_value_to_rule"
+    ]
+   },
+   "excluded": true,
+   "functions": [
+    "getters.get_cloud_file",
+    "getters.get_vm_file",
+    "metrics.compare_csv",
+    "metrics.compare_table"
+   ],
+   "functions_differing": [
+    "getters.get_cloud_file",
+    "getters.get_vm_file",
+    "metrics.compare_table"
+   ]
+  },
+  "d06f0d4d-2cd5-4ede-8de9-598629438c6e": {
+   "config_equal": true,
+   "config_keys_differing": [],
+   "config_present_at_public": true,
+   "definitions_differing": {},
+   "excluded": false,
+   "functions": [
+    "getters.get_rule",
+    "getters.get_vlc_config",
+    "metrics.check_qt_slider_colours"
+   ],
+   "functions_differing": []
+  },
+  "d38192b0-17dc-4e1d-99c3-786d0117de77": {
+   "config_equal": false,
+   "config_keys_differing": [
+    "evaluator"
+   ],
+   "config_present_at_public": true,
+   "definitions_differing": {},
+   "excluded": true,
+   "functions": [
+    "getters.get_cache_file",
+    "getters.get_rule",
+    "metrics.check_list"
+   ],
+   "functions_differing": []
+  },
+  "d53ff5ee-3b1a-431e-b2be-30ed2673079b": {
+   "config_equal": true,
+   "config_keys_differing": [],
+   "config_present_at_public": true,
+   "definitions_differing": {
+    "getters.get_cloud_file": [
+     "desktop_env/evaluators/getters/file.py::get_cloud_file"
+    ],
+    "getters.get_vm_file": [
+     "desktop_env/evaluators/getters/file.py::get_vm_file"
+    ]
+   },
+   "excluded": true,
+   "functions": [
+    "getters.get_cloud_file",
+    "getters.get_vm_file",
+    "metrics.compare_docx_files"
+   ],
+   "functions_differing": [
+    "getters.get_cloud_file",
+    "getters.get_vm_file"
+   ]
+  },
+  "dfac9ee8-9bc4-4cdc-b465-4a4bfcd2f397": {
+   "config_equal": false,
+   "config_keys_differing": [
+    "evaluator"
+   ],
+   "config_present_at_public": true,
+   "definitions_differing": {},
+   "excluded": true,
+   "functions": [
+    "getters.get_cache_file",
+    "getters.get_rule",
+    "metrics.check_csv"
+   ],
+   "functions_differing": []
+  },
+  "e2b5e914-ffe1-44d2-8e92-58f8c5d92bb2": {
+   "config_equal": true,
+   "config_keys_differing": [],
+   "config_present_at_public": true,
+   "definitions_differing": {
+    "getters.get_vm_file": [
+     "desktop_env/evaluators/getters/file.py::get_vm_file"
+    ]
+   },
+   "excluded": true,
+   "functions": [
+    "getters.get_rule",
+    "getters.get_vm_file",
+    "metrics.check_json_settings"
+   ],
+   "functions_differing": [
+    "getters.get_vm_file"
+   ]
+  },
+  "e2dd0213-26db-4349-abe5-d5667bfd725c": {
+   "config_equal": false,
+   "config_keys_differing": [
+    "instruction"
+   ],
+   "config_present_at_public": true,
+   "definitions_differing": {
+    "getters.get_vm_file": [
+     "desktop_env/evaluators/getters/file.py::get_vm_file"
+    ],
+    "metrics.check_textbox_on_leftside": [
+     "desktop_env/evaluators/metrics/gimp.py::check_textbox_on_leftside"
+    ]
+   },
+   "excluded": true,
+   "functions": [
+    "getters.get_vm_file",
+    "metrics.check_textbox_on_leftside"
+   ],
+   "functions_differing": [
+    "getters.get_vm_file",
+    "metrics.check_textbox_on_leftside"
+   ]
+  },
+  "e8172110-ec08-421b-a6f5-842e6451911f": {
+   "config_equal": false,
+   "config_keys_differing": [
+    "config",
+    "evaluator"
+   ],
+   "config_present_at_public": true,
+   "definitions_differing": {
+    "getters.get_cloud_file": [
+     "desktop_env/evaluators/getters/file.py::get_cloud_file"
+    ],
+    "getters.get_vm_file": [
+     "desktop_env/evaluators/getters/file.py::get_vm_file"
+    ],
+    "metrics.check_structure_sim_with_threshold": [
+     "desktop_env/evaluators/metrics/gimp.py::check_structure_sim_with_threshold",
+     "desktop_env/evaluators/metrics::check_structure_sim_with_threshold"
+    ]
+   },
+   "excluded": true,
+   "functions": [
+    "getters.get_cloud_file",
+    "getters.get_vm_file",
+    "metrics.check_structure_sim_with_threshold"
+   ],
+   "functions_differing": [
+    "getters.get_cloud_file",
+    "getters.get_vm_file",
+    "metrics.check_structure_sim_with_threshold"
+   ]
+  },
+  "eb303e01-261e-4972-8c07-c9b4e7a4922a": {
+   "config_equal": true,
+   "config_keys_differing": [],
+   "config_present_at_public": true,
+   "definitions_differing": {
+    "getters.get_cloud_file": [
+     "desktop_env/evaluators/getters/file.py::get_cloud_file"
+    ],
+    "getters.get_vm_file": [
+     "desktop_env/evaluators/getters/file.py::get_vm_file"
+    ],
+    "metrics.compare_pptx_files": [
+     "desktop_env/evaluators/metrics/slides.py::compare_pptx_files"
+    ]
+   },
+   "excluded": true,
+   "functions": [
+    "getters.get_cloud_file",
+    "getters.get_vm_file",
+    "metrics.compare_pptx_files"
+   ],
+   "functions_differing": [
+    "getters.get_cloud_file",
+    "getters.get_vm_file",
+    "metrics.compare_pptx_files"
+   ]
+  },
+  "ec71221e-ac43-46f9-89b8-ee7d80f7e1c5": {
+   "config_equal": true,
+   "config_keys_differing": [],
+   "config_present_at_public": true,
+   "definitions_differing": {
+    "getters.get_cloud_file": [
+     "desktop_env/evaluators/getters/file.py::get_cloud_file"
+    ],
+    "getters.get_vm_file": [
+     "desktop_env/evaluators/getters/file.py::get_vm_file"
+    ]
+   },
+   "excluded": true,
+   "functions": [
+    "getters.get_cloud_file",
+    "getters.get_vm_file",
+    "metrics.compare_text_file"
+   ],
+   "functions_differing": [
+    "getters.get_cloud_file",
+    "getters.get_vm_file"
+   ]
+  },
+  "ecb0df7a-4e8d-4a03-b162-053391d3afaf": {
+   "config_equal": false,
+   "config_keys_differing": [
+    "evaluator",
+    "instruction"
+   ],
+   "config_present_at_public": true,
+   "definitions_differing": {
+    "getters.get_cloud_file": [
+     "desktop_env/evaluators/getters/file.py::get_cloud_file"
+    ],
+    "getters.get_vm_file": [
+     "desktop_env/evaluators/getters/file.py::get_vm_file"
+    ],
+    "metrics.compare_table": [
+     "desktop_env/evaluators/metrics/table.py::_normalize_phone_digits",
+     "desktop_env/evaluators/metrics/table.py::_normalize_website_domain",
+     "desktop_env/evaluators/metrics/table.py::compare_table",
+     "desktop_env/evaluators/metrics/utils.py::_match_value_to_rule"
+    ]
+   },
+   "excluded": true,
+   "functions": [
+    "getters.get_cloud_file",
+    "getters.get_vm_file",
+    "metrics.compare_table"
+   ],
+   "functions_differing": [
+    "getters.get_cloud_file",
+    "getters.get_vm_file",
+    "metrics.compare_table"
+   ]
+  },
+  "ecc2413d-8a48-416e-a3a2-d30106ca36cb": {
+   "config_equal": true,
+   "config_keys_differing": [],
+   "config_present_at_public": true,
+   "definitions_differing": {
+    "getters.get_vm_file": [
+     "desktop_env/evaluators/getters/file.py::get_vm_file"
+    ]
+   },
+   "excluded": true,
+   "functions": [
+    "getters.get_rule",
+    "getters.get_vm_file",
+    "metrics.contains_page_break"
+   ],
+   "functions_differing": [
+    "getters.get_vm_file"
+   ]
+  },
+  "edb61b14-a854-4bf5-a075-c8075c11293a": {
+   "config_equal": true,
+   "config_keys_differing": [],
+   "config_present_at_public": true,
+   "definitions_differing": {
+    "getters.get_cloud_file": [
+     "desktop_env/evaluators/getters/file.py::get_cloud_file"
+    ],
+    "getters.get_vm_file": [
+     "desktop_env/evaluators/getters/file.py::get_vm_file"
+    ],
+    "metrics.compare_pptx_files": [
+     "desktop_env/evaluators/metrics/slides.py::compare_pptx_files"
+    ]
+   },
+   "excluded": true,
+   "functions": [
+    "getters.get_cloud_file",
+    "getters.get_vm_file",
+    "metrics.compare_pptx_files"
+   ],
+   "functions_differing": [
+    "getters.get_cloud_file",
+    "getters.get_vm_file",
+    "metrics.compare_pptx_files"
+   ]
+  },
+  "f178a4a9-d090-4b56-bc4c-4b72a61a035d": {
+   "config_equal": true,
+   "config_keys_differing": [],
+   "config_present_at_public": true,
+   "definitions_differing": {
+    "getters.get_vm_file": [
+     "desktop_env/evaluators/getters/file.py::get_vm_file"
+    ]
+   },
+   "excluded": true,
+   "functions": [
+    "getters.get_rule",
+    "getters.get_vm_file",
+    "metrics.find_default_font"
+   ],
+   "functions_differing": [
+    "getters.get_vm_file"
+   ]
+  },
+  "f3977615-2b45-4ac5-8bba-80c17dbe2a37": {
+   "config_equal": true,
+   "config_keys_differing": [],
+   "config_present_at_public": true,
+   "definitions_differing": {},
+   "excluded": false,
+   "functions": [
+    "getters.get_rule",
+    "getters.get_vlc_config",
+    "metrics.check_one_instance_when_started_from_file"
+   ],
+   "functions_differing": []
+  },
+  "f9584479-3d0d-4c79-affa-9ad7afdd8850": {
+   "config_equal": true,
+   "config_keys_differing": [],
+   "config_present_at_public": true,
+   "definitions_differing": {
+    "getters.get_cloud_file": [
+     "desktop_env/evaluators/getters/file.py::get_cloud_file"
+    ],
+    "getters.get_vm_file": [
+     "desktop_env/evaluators/getters/file.py::get_vm_file"
+    ],
+    "metrics.compare_table": [
+     "desktop_env/evaluators/metrics/table.py::_normalize_phone_digits",
+     "desktop_env/evaluators/metrics/table.py::_normalize_website_domain",
+     "desktop_env/evaluators/metrics/table.py::compare_table",
+     "desktop_env/evaluators/metrics/utils.py::_match_value_to_rule"
+    ]
+   },
+   "excluded": true,
+   "functions": [
+    "getters.get_cloud_file",
+    "getters.get_vm_file",
+    "metrics.compare_table"
+   ],
+   "functions_differing": [
+    "getters.get_cloud_file",
+    "getters.get_vm_file",
+    "metrics.compare_table"
+   ]
+  },
+  "fba2c100-79e8-42df-ae74-b592418d54f4": {
+   "config_equal": true,
+   "config_keys_differing": [],
+   "config_present_at_public": true,
+   "definitions_differing": {
+    "getters.get_cloud_file": [
+     "desktop_env/evaluators/getters/file.py::get_cloud_file"
+    ],
+    "getters.get_vm_file": [
+     "desktop_env/evaluators/getters/file.py::get_vm_file"
+    ]
+   },
+   "excluded": true,
+   "functions": [
+    "getters.get_cloud_file",
+    "getters.get_vm_file",
+    "metrics.compare_images"
+   ],
+   "functions_differing": [
+    "getters.get_cloud_file",
+    "getters.get_vm_file"
+   ]
+  }
+ },
+ "pinned_revision": "b138d348256078fa634fc3b73567a7337c793e6b",
+ "public_revision": "00804f811874ea34ddfdd2e6b3a2fe307311f57c",
+ "public_revision_basis": "not recorded in the archive; inferred from the run window",
+ "rule": "a task leaves the anchor reading when its config or the AST (docstrings, comments and layout removed) of any checker definition it reaches differs",
+ "schema": "q2-stage1a-anchor-evaluator-diff-v1",
+ "tasks": 116
+}

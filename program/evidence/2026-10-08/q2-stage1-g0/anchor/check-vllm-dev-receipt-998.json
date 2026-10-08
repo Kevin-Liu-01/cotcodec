@@ -1,0 +1,16 @@
+{
+  "job_id": "998",
+  "mode": "run",
+  "lane": "s1a-cpu",
+  "image_id": "sha256:7d4595f98601d50f7393c447a1d0618d55cda1b7cf60e2d016ab5c6f47cc872e",
+  "argv_json_hex_sha256": "0664862e8116497e944cb638bb06054023bd0021518dc02b979f70e8e8613e01",
+  "argv_json_hex": "5b22707974686f6e33222c20222d6d222c20226861726e6573732e71325f7374616765312e616e63686f72222c2022636865636b2d766c6c6d222c20222d2d6d6f64656c2d646972222c20222f726f2f6f70656e6375612d3762222c20222d2d6f7574222c20222f6f75742f636865636b2d766c6c6d2e6a736f6e225d",
+  "mounts": "/home/kevin/cotcodec-runs/stage0/q2-stage1/src/6c5948e91e9e3e799c28280b70bc6a79c57dc00d:/src:ro /home/kevin/cotcodec-runs/stage0/q2-stage1/g0/anchor-check-dev-v2:/out:rw /home/kevin/cotcodec-runs/hf-cache/cotcodec-models/opencua-7b:/ro/opencua-7b:ro",
+  "network": "none",
+  "gpus_requested": 0,
+  "container_dev_nvidia": [],
+  "batch_sha256": "3880d337ad5bb0dc3c0edfc39f41811028118ef574c75efb08faa023dc6dee33",
+  "exit_status": 0,
+  "started_at": "2026-10-08T18:22:17Z",
+  "finished_at": "2026-10-08T18:22:25Z"
+}
