@@ -1640,3 +1640,54 @@ Append-only. Newest entries at the bottom.
   Records in `program/evidence/q2-mutation/integration/d38-recheck-fixes/`.
   No GPU, nothing pushed or frozen.
 - Next: Kevin's remaining items (section 17), re-merge main, freeze.
+
+## 2026-10-08 — Q3 dense pre-check v2 built and timed (D36; branch `stage0/q3-dense-v2`, draft, not frozen)
+
+- Registration `program/preregistrations/q3-dense-headroom-precheck-v2.md`
+  (DRAFT): v1's Data, Selectors, Metrics and statistics, Decision rules and
+  seeds sections carried verbatim except two named substitutions, v1's
+  decisions 1-11 and 13-15 verbatim, decision 12's caps amended; "Changes from
+  v1 (D36)", v1's outcome (INCOMPLETE; job 727's receipt `bfe4a7c3...`), a
+  26-row code table (v1's and K1's rows equal their frozen registrations'),
+  new decisions 16-21 awaiting acceptance. Templates under
+  `experiments/manifests/q3-dense-headroom-precheck-v2/`.
+- Job binding: receipts take `job_id` from the run directory's `job.env`
+  (written by the unchanged batch script before `docker create`); the
+  summariser requires source `job.env`. A Linux test runs the real batch
+  script against stub host tools, writes v2's and v1's receipts in the
+  container environment and feeds them to v1's `check_job` (v2 accepted, v1
+  refused as in job 727). Live: Slurm 766's receipt is bound to 766.
+- SIGUSR1: Triton's LLVM `RegisterHandlers` replaces CPython's OS-level
+  handlers at the first kernel compile and swallows SIGUSR1; `getsignal`
+  does not see it. v2 blocks SIGUSR1/SIGTERM from process start (when the
+  entry point runs as the program) and consumes them at chunk boundaries.
+  Verified: doctor `usr1_displaced`, the entry point as a container's PID 1
+  with a real Triton compile (images 770 and 776: v2 exit 75 with marker, v1
+  exit 0 without), and Slurm 766 (`signal_USR1_checkpoint_confirmed`).
+- CPU bottleneck: not the cache copy (5 ms per unit) or the selectors
+  (43 ms). torch 2.11 sends Qwen3.5's head-dim-256 attention to cuDNN, which
+  builds a graph per new sequence length (about 0.7 s of CPU per forward,
+  GPU idle). Fix on the hybrid lane only: `enable_cudnn_sdp(False)`, the one
+  change not bit-equal (reported per receipt by `attention_backend_check`,
+  not gated; no v1 4B number exists). Every other evaluation change is
+  bit-equal to v1 (unit tests, doctor `equivalence`, `end_to_end` with
+  tolerance 0, and two real 4B units in Slurm 766). The 0.6B lane is
+  unchanged and must reproduce job 727 to 1e-6 and smoke 452 (gate in the
+  filler and summariser).
+- Timing job Slurm 766 (image `3f2cc537...` from `71dc954`, CPU-only build
+  763): 205 s, 0.0569 GPU-h physical (5 minutes charged); 2 of 8 subset
+  chunks, cold units 3.6-4.1 s; ended by Slurm's SIGUSR1 with a confirmed
+  checkpoint. It ran before the cause was known, so the fixed 4B path is
+  untimed: its limit (45 min) applies D36's rule to twice the warm-unit
+  projection (0.52 s x 1,160 + 5 s). 0.6B 12 min from job 727's 278 s.
+  Registered caps 1.05 GPU-h of D36's 1.5.
+- Checks: CPU doctor 12/12 in images 763, 770 and 776 (`e6e81e7`, Slurm
+  778). Host suite at `e6e81e7`: 1,824 passed, 36 skipped, 1 failed (the
+  Linux-only binding test's workload program did not start; fixed in
+  `50153d0`, then passed). Main merged into the branch (`30f9c7c`; no tabled
+  file changed on main). Freeze simulated on a scratch clone only.
+- State: Q3 `stage-0-precheck-v2-draft`; ledger row 0.0569 GPU-h; program
+  total 3.983. Evidence
+  `program/evidence/2026-10-08/q3-dense-headroom-precheck-v2-build/`.
+- Next: Kevin accepts or amends decisions 16-21 and the limits (and whether
+  the fixed 4B path is timed first); then merge and freeze steps 2-5.

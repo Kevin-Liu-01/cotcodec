@@ -2,7 +2,9 @@
 
 Status: Stage 0. The dense headroom pre-check
 (`q3-dense-headroom-precheck-v1`) ran on 2026-10-08 and ended INCOMPLETE with
-no combined read; the next step is the program owner's (see the last
+no combined read. Its successor `q3-dense-headroom-precheck-v2` (D36) is a
+draft on branch `stage0/q3-dense-v2`, built and timed but not frozen; the
+program owner accepts its decisions 16-21 and limits next (see the last
 section). Role: preemptible backfill, first in the backfill queue. Dossier
 entry: `E6-d21-translation-supervised-indexer`, rank 3, BACKFILL. Carried
 over from direction D21; its premises all held.
@@ -111,3 +113,38 @@ image built from `a369e6d` passed the CPU doctor (7/7).
 - GPU time: 0.419 GPU-h used, 0.467 charged under the registration's rule.
 
 Any successor takes a new experiment id and is the program owner's decision.
+
+## Dense pre-check v2 built (2026-10-08): draft, not frozen
+
+D36 asked for a successor with v1's design unchanged and three repairs.
+Branch `stage0/q3-dense-v2`; registration
+`program/preregistrations/q3-dense-headroom-precheck-v2.md` (draft); evidence
+`program/evidence/2026-10-08/q3-dense-headroom-precheck-v2-build/README.md`.
+
+- Job binding: receipts take their Slurm job from the `job.env` the batch
+  script writes before the container starts (the batch script is unchanged).
+  An end-to-end test runs the real batch script against stub host tools and
+  feeds the receipt to the summariser's job check.
+- SIGUSR1: job 730 ignored it because Triton's LLVM replaces CPython's
+  process-wide signal handlers at the first kernel compile (shown in the
+  image). v2 blocks SIGUSR1 and SIGTERM from process start and consumes them
+  at chunk boundaries. Verified as a container's PID 1 with a real Triton
+  compile (v2 answers, v1 does not) and live on the GPU: the timing job
+  answered Slurm's SIGUSR1 with a confirmed checkpoint.
+- CPU bottleneck: not the cache copy (5 ms per unit) or the selectors (43 ms).
+  torch 2.11 sends Qwen3.5's head-dimension-256 attention to cuDNN, which
+  builds a new graph for every new sequence length, about 0.7 s of CPU per
+  forward with the GPU idle. Timing job (Slurm 766, 0.057 GPU-h): cold units
+  3.6-4.1 s; a reused prefill length 0.11 s against 0.8 s; units re-evaluated
+  with cached graphs 0.51 s. v2 turns cuDNN's attention off on the 4B lane
+  (not bit-equal to cuDNN; the receipt reports the difference on the first
+  unit). The fixed path was not timed: the 4B limit (45 minutes) applies D36's
+  rule to twice the warm-unit projection.
+- Validity gate: v2's 0.6B lane must reproduce job 727's receipt statistics to
+  1e-6 (every numeric leaf of report, decisions, coverage, counts) and smoke
+  452; the 0.6B code path is unchanged.
+- Limits and caps: 0.6B 12 minutes, 4B 45 minutes, timing job 6; 1.05 GPU-h
+  of D36's 1.5.
+
+Next: the program owner accepts or amends decisions 16-21 and the limits
+(including whether to time the fixed 4B path first), then freeze steps 2-5.

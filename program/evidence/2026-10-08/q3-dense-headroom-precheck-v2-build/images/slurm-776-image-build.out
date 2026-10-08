@@ -1,0 +1,32 @@
+{
+  "job_id": "776",
+  "git_sha": "e6e81e7deea0c93aa56289b6d3488fc18de446e3",
+  "git_tree": "441a91996cd66871d96f4cf9ee903e06684d65d4",
+  "source_tar_sha256": "bb56bc546706f3911e9e80a953313204e64e59d08401bd79ceabdb1727c226c3",
+  "tag": "cotcodec-research:e6e81e7d-architecture",
+  "image_id": "sha256:62e229be3d922ef15a6f4862a698a47edd44284a83b094ff875c0c2a51cd9c19",
+  "repo_digest": "127.0.0.1:5000/cotcodec-research@sha256:0c0314542c545e584de1e75c9d10fd66dc8132868dc60fbfe1871eb75c82487d",
+  "uv_extra": "architecture",
+  "network_during_build": true,
+  "evidence_grade": "infrastructure-only"
+}
+
+==========
+== CUDA ==
+==========
+
+CUDA Version 12.8.1
+
+Container image Copyright (c) 2016-2023, NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+
+This container image and its contents are governed by the NVIDIA Deep Learning Container License.
+By pulling and using the container, you accept the terms and conditions of this license:
+https://developer.nvidia.com/ngc/nvidia-deep-learning-container-license
+
+A copy of this license is made available in this container at /NGC-DL-CONTAINER-LICENSE for your convenience.
+
+WARNING: The NVIDIA Driver was not detected.  GPU functionality will not be available.
+   Use the NVIDIA Container Toolkit to start this container with GPU support; see
+   https://docs.nvidia.com/datacenter/cloud-native/ .
+
+{'torch': '2.11.0+cu128', 'transformers': '5.15.0', 'flash-linear-attention': '0.5.2', 'fla-core': '0.5.2', 'triton': '3.6.0', 'tilelang': '0.1.13', 'peft': '0.21.2', 'pyarrow': '25.0.1', 'tokenizers': '0.22.2', 'safetensors': '0.8.0', 'numpy': '2.5.2', 'scipy': '1.18.0'}

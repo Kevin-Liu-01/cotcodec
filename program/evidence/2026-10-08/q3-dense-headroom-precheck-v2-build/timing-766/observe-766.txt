@@ -1,0 +1,21 @@
+07:32:19 state=RUNNING gpu0=[0 %, 0 MiB] workload_cpu_nlwp=[78.9 31] progress=
+07:32:29 state=RUNNING gpu0=[0 %, 0 MiB] workload_cpu_nlwp=[85.4 32] progress=
+07:32:39 state=RUNNING gpu0=[90 %, 9341 MiB] workload_cpu_nlwp=[85.9 34] progress=
+07:32:50 state=RUNNING gpu0=[48 %, 9597 MiB] workload_cpu_nlwp=[85.4 34] progress=
+07:33:00 state=RUNNING gpu0=[0 %, 9597 MiB] workload_cpu_nlwp=[85.0 34] progress=
+07:33:10 state=RUNNING gpu0=[20 %, 9669 MiB] workload_cpu_nlwp=[84.7 34] progress=
+07:33:20 state=RUNNING gpu0=[0 %, 9671 MiB] workload_cpu_nlwp=[84.5 34] progress=
+07:33:30 state=RUNNING gpu0=[0 %, 9673 MiB] workload_cpu_nlwp=[86.6 34] progress=
+07:33:40 state=RUNNING gpu0=[0 %, 9677 MiB] workload_cpu_nlwp=[87.2 34] progress=
+07:33:50 state=RUNNING gpu0=[0 %, 9679 MiB] workload_cpu_nlwp=[88.6 34] progress=
+07:34:01 state=RUNNING gpu0=[0 %, 9681 MiB] workload_cpu_nlwp=[89.7 34] progress=
+07:34:11 state=RUNNING gpu0=[13 %, 9683 MiB] workload_cpu_nlwp=[90.7 34] progress=
+07:34:21 state=RUNNING gpu0=[0 %, 9685 MiB] workload_cpu_nlwp=[91.5 34] progress=
+07:34:31 state=RUNNING gpu0=[0 %, 9697 MiB] workload_cpu_nlwp=[92.2 37] progress={"chunks":1,"last":["A-main",0,"subset"],"seconds":127.68283551931381,"subset_complete":false,"units":16}
+07:34:41 state=RUNNING gpu0=[0 %, 9697 MiB] workload_cpu_nlwp=[92.8 37] progress={"chunks":1,"last":["A-main",0,"subset"],"seconds":127.68283551931381,"subset_complete":false,"units":16}
+07:34:51 state=RUNNING gpu0=[1 %, 9699 MiB] workload_cpu_nlwp=[92.8 37] progress={"chunks":1,"last":["A-main",0,"subset"],"seconds":127.68283551931381,"subset_complete":false,"units":16}
+07:35:01 state=RUNNING gpu0=[0 %, 9699 MiB] workload_cpu_nlwp=[93.3 37] progress={"chunks":1,"last":["A-main",0,"subset"],"seconds":127.68283551931381,"subset_complete":false,"units":16}
+07:35:12 state=RUNNING gpu0=[0 %, 9703 MiB] workload_cpu_nlwp=[93.7 37] progress={"chunks":1,"last":["A-main",0,"subset"],"seconds":127.68283551931381,"subset_complete":false,"units":16}
+07:35:22 state=RUNNING gpu0=[0 %, 9703 MiB] workload_cpu_nlwp=[94.1 37] progress={"chunks":1,"last":["A-main",0,"subset"],"seconds":127.68283551931381,"subset_complete":false,"units":16}
+07:35:32 state=RUNNING gpu0=[0 %, 0 MiB] workload_cpu_nlwp=[] progress={"chunks":2,"last":["B-absent",0,"subset"],"seconds":195.37515158299357,"subset_complete":false,"units":32}
+07:35:42 state= gpu0=[0 %, 0 MiB] workload_cpu_nlwp=[] progress={"chunks":2,"last":["B-absent",0,"subset"],"seconds":195.37515158299357,"subset_complete":false,"units":32}

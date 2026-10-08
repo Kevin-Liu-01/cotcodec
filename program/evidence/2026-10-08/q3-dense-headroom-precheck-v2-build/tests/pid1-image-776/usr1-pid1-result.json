@@ -1,0 +1,44 @@
+{
+  "v2": {
+    "sent": true,
+    "exited": true,
+    "exit_code": 75,
+    "marker": "trigger=SIGUSR1\ntoken=1791447868-1\nwritten_at=2026-10-08T08:24:28Z\nacks={\"chunks_on_disk\":2}\n",
+    "shim": {
+      "after": {
+        "SIGTERM": "0x70f269bcb100",
+        "SIGUSR1": "0x70f269bc97e0"
+      },
+      "before": {
+        "SIGTERM": "0x6e79b0",
+        "SIGUSR1": "0x6e79b0"
+      },
+      "displaced": true,
+      "mode": "triton",
+      "pid": 1,
+      "python_getsignal_unchanged": true
+    },
+    "logs": "\nLoading weights:   0%|          | 0/52 [00:00<?, ?it/s]\nLoading weights: 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 52/52 [00:00<00:00, 8213.60it/s]\nINTERRUPTED: completed chunks saved; marker written; exit 75\n"
+  },
+  "v1": {
+    "sent": true,
+    "exited": true,
+    "exit_code": 0,
+    "marker": null,
+    "shim": {
+      "after": {
+        "SIGTERM": "0x719d8f6cb100",
+        "SIGUSR1": "0x719d8f6c97e0"
+      },
+      "before": {
+        "SIGTERM": "0x6e79b0",
+        "SIGUSR1": "0x6e79b0"
+      },
+      "displaced": true,
+      "mode": "triton",
+      "pid": 1,
+      "python_getsignal_unchanged": true
+    },
+    "logs": "\nLoading weights:   0%|          | 0/52 [00:00<?, ?it/s]\nLoading weights: 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 52/52 [00:00<00:00, 8018.82it/s]\n"
+  }
+}

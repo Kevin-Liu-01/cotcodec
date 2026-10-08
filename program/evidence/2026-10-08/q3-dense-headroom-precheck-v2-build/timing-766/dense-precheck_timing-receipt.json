@@ -1,0 +1,1413 @@
+{
+  "experiment_id": "q3-dense-headroom-precheck-v2",
+  "hashes": {
+    "bundle_sha256": "919d016b87ad862f8f156e9537c9a39e2864dab0e6c605307d100d25a199dd2d",
+    "code": {
+      "harness/dense_headroom_data.py": "ee78549e257631035aef0d52c5243f6bae969fd2c4f4a1e43bb8779bdf524003",
+      "harness/dense_headroom_stats.py": "a94d1ceee80fe3e95f2f36af0cbda51644846594d5fc9ccf69fcb90c8215d195",
+      "harness/dense_headroom_torch.py": "6dd8ff1f9cbcbd7d3faaecd1c94ab7908c12e2aea16b480bc56735e4b27547be",
+      "harness/dense_headroom_torch_v2.py": "34963c32746c9d6b4384cb32b9ab37b1a4966b4586923ba43da036bdc6da0cbe",
+      "harness/dense_headroom_v2.py": "49f340ac46c80fa312d10e29bb3eaa45d95e574b9a598f47379b0e1effa5b5e1",
+      "harness/dense_headroom_v2_lanes.py": "f17cdfae96977daac68f03b3acd860340d04839d17fd2caed763b076a17df279",
+      "harness/sparse_indexer_bank.py": "e96653eb3eb5b9876201347c2fa8d452efc3ebb1043a516ac03c366ff8b89f88",
+      "harness/sparse_indexer_data.py": "8b180e1ca0ba67d29587e3ffc5f5e46720376de6d1a52348f82b8789ab929faa",
+      "harness/sparse_indexer_k1_marker.py": "7bc69aa4d27a7d6de92f69a2f7b8e71d98b32101a2f34709fbaef2bdf84c3f1a",
+      "harness/sparse_indexer_k1_runtime.py": "6fbddc91b6f7224f909901edb82278a68f68a208b558526c1a778ec9da6812fd",
+      "harness/sparse_indexer_k1_stats.py": "b9949b4b24502ad30d576938e88cd39d0fdcfc2be90eeedf52a68c76430f36b8",
+      "harness/sparse_indexer_torch.py": "f21301a49634af07d5ae0385c34011400c83af15b984a96238dc6fe1d4ee9457",
+      "harness/translation_supervised_indexer.py": "dee5318d254d962380e2de051eed227a97db10bfaa40eb0c12467e9a289e0cd5",
+      "scripts/preregister.py": "21fc3ef0ed0958b1600ce742c3b4f8d557d0a298635acb20342710eb814b2c0d",
+      "scripts/run_dense_headroom_precheck_v2.py": "fbfdfbbcfc9d2188a61c48641acd7b3cb689d8b65c07116a697d2d8c639ae103"
+    },
+    "dev_artifact_sha256": "b5210f7935e87cc95cfb9fc56baa39d8e8162b81f8a501e49aac0c989fbfe82f",
+    "git_sha": "71dc9545ed889c3c613500b04b92b0ef674ae128",
+    "job": {
+      "kind": "fresh",
+      "minutes": 6,
+      "predecessor_job_id": null,
+      "slurm_job_id": "766",
+      "slurm_job_id_source": "job.env"
+    },
+    "lane_tokenizer_sha256": "fe000e3ed39ed12b8d2481d527d44f93c65d37e87645d2dcc80d1bf9d50d2927",
+    "ledger_row_hash": null,
+    "preregistration_sha256": null,
+    "receipt_sha256": "253a14185bcff0762b8a43944635a550055d3346fe16c416d6bcfe4460793cfe",
+    "source_sha256": "3b5a1fce171467f202140add568712dc2746598f4eb8c39a5f720da2981dec06",
+    "source_tokenizer_sha256": "c0382117ea329cdf097041132f6d735924b697924d6f6fc3945713e96ce87539"
+  },
+  "lane": {
+    "artifact_root_sha256": "c7fbfd6bd1c73b9a0080decf794f5e4333c955f2704591affc61b0a9ac850e42",
+    "attention_layers": [
+      3,
+      7,
+      11,
+      15,
+      19,
+      23,
+      27,
+      31
+    ],
+    "cap_gpu_hours": 1.0,
+    "container_profile": "large-cpu-mem",
+    "gpus": 1,
+    "lane_id": "qwen3.5-4b-base",
+    "minutes": 60,
+    "model_id": "qwen3.5-4b-base",
+    "n_layers": 32,
+    "profile": "registered",
+    "receipt_sha256": "253a14185bcff0762b8a43944635a550055d3346fe16c416d6bcfe4460793cfe",
+    "retokenize": true,
+    "revision": "1001bb4d826a52d1f399e183466143f4da7b741b",
+    "tokenizer_sha256": "fe000e3ed39ed12b8d2481d527d44f93c65d37e87645d2dcc80d1bf9d50d2927"
+  },
+  "profile": "timing",
+  "seeds": [
+    42,
+    43,
+    44
+  ],
+  "signals": {
+    "blocked_in_every_thread_from_start": true,
+    "handler_replacement_count": 2,
+    "handler_replacements": [
+      {
+        "found": "0x715e887a67e0",
+        "signal": "SIGUSR1",
+        "t": 65.604,
+        "where": ""
+      },
+      {
+        "found": "0x715e887a8100",
+        "signal": "SIGTERM",
+        "t": 65.604,
+        "where": ""
+      }
+    ],
+    "polls": 41,
+    "received": "SIGUSR1",
+    "received_after_s": 160.7509337477386,
+    "via": "pending"
+  },
+  "slurm_job_id": "766",
+  "slurm_job_id_source": "job.env",
+  "timing": {
+    "artifact_counts": {
+      "context_length": {
+        "max": 10481,
+        "min": 49
+      },
+      "contexts": 480,
+      "development_questions": 20,
+      "dropped_tail_bytes": 66,
+      "prompts_by_role": {
+        "dev": 560,
+        "dev-absent": 280,
+        "dev-literal": 160,
+        "dev-nohaystack": 280
+      },
+      "queries": 320
+    },
+    "attention_layers": [
+      3,
+      7,
+      11,
+      15,
+      19,
+      23,
+      27,
+      31
+    ],
+    "chunks": [
+      {
+        "busiest_threads": [
+          {
+            "name": "python",
+            "ticks": 9975,
+            "tid": "1"
+          },
+          {
+            "name": "cuda-EvtHandlr",
+            "ticks": 3,
+            "tid": "70"
+          },
+          {
+            "name": "python",
+            "ticks": 0,
+            "tid": "26"
+          },
+          {
+            "name": "python",
+            "ticks": 0,
+            "tid": "27"
+          },
+          {
+            "name": "python",
+            "ticks": 0,
+            "tid": "28"
+          }
+        ],
+        "chunk": 0,
+        "cpu_seconds": 99.77300359099999,
+        "phase": "subset",
+        "profiled": false,
+        "seconds": 108.2529868138954,
+        "stage": "A-main",
+        "units": 16
+      },
+      {
+        "busiest_threads": [
+          {
+            "name": "python",
+            "ticks": 5420,
+            "tid": "1"
+          },
+          {
+            "name": "cuda-EvtHandlr",
+            "ticks": 2,
+            "tid": "70"
+          },
+          {
+            "name": "python",
+            "ticks": 0,
+            "tid": "26"
+          },
+          {
+            "name": "python",
+            "ticks": 0,
+            "tid": "27"
+          },
+          {
+            "name": "python",
+            "ticks": 0,
+            "tid": "28"
+          }
+        ],
+        "chunk": 0,
+        "cpu_seconds": 54.22575630699998,
+        "phase": "subset",
+        "profiled": false,
+        "seconds": 54.204749441705644,
+        "stage": "B-absent",
+        "units": 16
+      }
+    ],
+    "determinism": "warn_only",
+    "dev_artifact_matches_v1_job_730": true,
+    "evaluation_started_after_s": 19.42643381562084,
+    "hybrid": true,
+    "process_seconds": 195.37557600066066,
+    "profiles": {
+      "v1-reference:c320-q0": "         221551 function calls (208308 primitive calls) in 0.504 seconds\n\n   Ordered by: internal time\n   List reduced from 437 to 30 due to restriction <30>\n\n   ncalls  tottime  percall  cumtime  percall filename:lineno(function)\n     1245    0.077    0.000    0.077    0.000 {built-in method torch._C._nn.linear}\n        7    0.030    0.004    0.030    0.004 {built-in method torch.as_tensor}\n     1217    0.018    0.000    0.018    0.000 {method 'float' of 'torch._C.TensorBase' objects}\n     1089    0.013    0.000    0.013    0.000 {method 'to' of 'torch._C.TensorBase' objects}\n      672    0.011    0.000    0.050    0.000 /workspace/cotcodec/.venv/lib/python3.12/site-packages/triton/runtime/autotuner.py:212(run)\n      405    0.010    0.000    0.023    0.000 /workspace/cotcodec/.venv/lib/python3.12/site-packages/transformers/models/qwen3_5/modeling_qwen3_5.py:726(_norm)\n      120    0.009    0.000    0.265    0.002 /workspace/cotcodec/.venv/lib/python3.12/site-packages/transformers/models/qwen3_5/modeling_qwen3_5.py:431(forward)\n      672    0.009    0.000    0.034    0.000 /workspace/cotcodec/.venv/lib/python3.12/site-packages/triton/runtime/jit.py:695(run)\n      405    0.009    0.000    0.051    0.000 /workspace/cotcodec/.venv/lib/python3.12/site-packages/transformers/models/qwen3_5/modeling_qwen3_5.py:729(forward)\n      575    0.008    0.000    0.008    0.000 {method 'mean' of 'torch._C.TensorBase' objects}\n      120    0.007    0.000    0.025    0.000 /workspace/cotcodec/.venv/lib/python3.12/site-packages/transformers/models/qwen3_5/modeling_qwen3_5.py:175(forward)\n      672    0.007    0.000    0.009    0.000 /workspace/cotcodec/.venv/lib/python3.12/site-packages/fla/ops/utils/cache.py:158(build)\n      525    0.007    0.000    0.007    0.000 {method 'pow' of 'torch._C.TensorBase' objects}\n      576    0.007    0.000    0.007    0.000 {built-in method torch.empty_like}\n      120    0.006    0.000    0.006    0.000 {built-in method torch.conv1d}\n   4964/4    0.006    0.000    0.032    0.008 /usr/lib/python3.12/copy.py:118(deepcopy)\n      405    0.006    0.000    0.006    0.000 {method 'type_as' of 'torch._C.TensorBase' objects}\n   2670/5    0.006    0.000    0.406    0.081 /workspace/cotcodec/.venv/lib/python3.12/site-packages/torch/nn/modules/module.py:1783(_call_impl)\n      240    0.006    0.000    0.006    0.000 {method 'repeat_interleave' of 'torch._C.TensorBase' objects}\n      448    0.005    0.000    0.005    0.000 {method 'new_empty' of 'torch._C.TensorBase' objects}\n       40    0.005    0.000    0.005    0.000 {built-in method torch._C._nn.scaled_dot_product_attention}\n      573    0.005    0.000    0.005    0.000 {built-in method torch.rsqrt}\n      160    0.005    0.000    0.395    0.002 /workspace/cotcodec/.venv/lib/python3.12/site-packages/transformers/models/qwen3_5/modeling_qwen3_5.py:753(forward)\n      366    0.005    0.000    0.005    0.000 {built-in method torch.cat}\n     1026    0.005    0.000    0.005    0.000 {method 'reshape' of 'torch._C.TensorBase' objects}\n      400    0.005    0.000    0.005    0.000 {built-in method torch._C._nn.silu}\n       24    0.004    0.000    0.016    0.001 /workspace/cotcodec/harness/sparse_indexer_bank.py:540(select_blocks)\n   768/96    0.004    0.000    0.131    0.001 /workspace/cotcodec/.venv/lib/python3.12/site-packages/fla/ops/backends/__init__.py:171(wrapper)\n      284    0.004    0.000    0.004    0.000 {method 'sum' of 'torch._C.TensorBase' objects}\n      256    0.004    0.000    0.004    0.000 {method 'copy_' of 'torch._C.StorageBase' objects}\n\n\n         221551 function calls (208308 primitive calls) in 0.504 seconds\n\n   Ordered by: cumulative time\n   List reduced from 437 to 40 due to restriction <40>\n\n   ncalls  tottime  percall  cumtime  percall filename:lineno(function)\n        1    0.000    0.000    0.511    0.511 /workspace/cotcodec/scripts/run_dense_headroom_precheck_v2.py:498(evaluate)\n        1    0.000    0.000    0.510    0.510 /workspace/cotcodec/harness/dense_headroom_torch.py:213(evaluate_unit)\n   2670/5    0.003    0.000    0.406    0.081 /workspace/cotcodec/.venv/lib/python3.12/site-packages/torch/nn/modules/module.py:1775(_wrapped_call_impl)\n   2670/5    0.006    0.000    0.406    0.081 /workspace/cotcodec/.venv/lib/python3.12/site-packages/torch/nn/modules/module.py:1783(_call_impl)\n        5    0.000    0.000    0.406    0.081 /workspace/cotcodec/.venv/lib/python3.12/site-packages/transformers/utils/generic.py:933(wrapper)\n        5    0.000    0.000    0.406    0.081 /workspace/cotcodec/.venv/lib/python3.12/site-packages/transformers/models/qwen3_5/modeling_qwen3_5.py:1588(forward)\n        5    0.000    0.000    0.405    0.081 /workspace/cotcodec/.venv/lib/python3.12/site-packages/transformers/utils/generic.py:1006(wrapper)\n        5    0.000    0.000    0.405    0.081 /workspace/cotcodec/.venv/lib/python3.12/site-packages/transformers/utils/output_capturing.py:231(wrapper)\n        5    0.001    0.000    0.405    0.081 /workspace/cotcodec/.venv/lib/python3.12/site-packages/transformers/models/qwen3_5/modeling_qwen3_5.py:1144(forward)\n      160    0.000    0.000    0.397    0.002 /workspace/cotcodec/.venv/lib/python3.12/site-packages/transformers/modeling_layers.py:79(__call__)\n      160    0.005    0.000    0.395    0.002 /workspace/cotcodec/.venv/lib/python3.12/site-packages/transformers/models/qwen3_5/modeling_qwen3_5.py:753(forward)\n        1    0.002    0.002    0.356    0.356 /workspace/cotcodec/harness/dense_headroom_torch.py:191(option_scores)\n      120    0.002    0.000    0.268    0.002 /workspace/cotcodec/.venv/lib/python3.12/site-packages/transformers/integrations/accelerate.py:935(wrapped)\n      120    0.009    0.000    0.265    0.002 /workspace/cotcodec/.venv/lib/python3.12/site-packages/transformers/models/qwen3_5/modeling_qwen3_5.py:431(forward)\n      240    0.001    0.000    0.157    0.001 /workspace/cotcodec/.venv/lib/python3.12/site-packages/transformers/integrations/hub_kernels.py:794(wrapped)\n   864/96    0.003    0.000    0.132    0.001 /workspace/cotcodec/.venv/lib/python3.12/site-packages/torch/_dynamo/eval_frame.py:1240(_fn)\n   768/96    0.004    0.000    0.131    0.001 /workspace/cotcodec/.venv/lib/python3.12/site-packages/fla/ops/backends/__init__.py:171(wrapper)\n       96    0.001    0.000    0.129    0.001 /workspace/cotcodec/.venv/lib/python3.12/site-packages/fla/ops/gated_delta_rule/chunk.py:395(chunk_gated_delta_rule)\n       96    0.001    0.000    0.128    0.001 /workspace/cotcodec/.venv/lib/python3.12/site-packages/torch/autograd/function.py:580(apply)\n       96    0.003    0.000    0.126    0.001 {built-in method apply}\n   192/96    0.003    0.000    0.123    0.001 /workspace/cotcodec/.venv/lib/python3.12/site-packages/fla/utils/_decorators.py:116(wrapper)\n       96    0.000    0.000    0.116    0.001 /workspace/cotcodec/.venv/lib/python3.12/site-packages/torch/amp/autocast_mode.py:476(decorate_fwd)\n       96    0.001    0.000    0.116    0.001 /workspace/cotcodec/.venv/lib/python3.12/site-packages/fla/ops/gated_delta_rule/chunk.py:255(forward)\n       96    0.001    0.000    0.080    0.001 /workspace/cotcodec/.venv/lib/python3.12/site-packages/fla/ops/gated_delta_rule/chunk.py:33(chunk_gated_delta_rule_fwd)\n     1245    0.001    0.000    0.079    0.000 /workspace/cotcodec/.venv/lib/python3.12/site-packages/torch/nn/modules/linear.py:130(forward)\n     1245    0.077    0.000    0.077    0.000 {built-in method torch._C._nn.linear}\n        1    0.002    0.002    0.069    0.069 /workspace/cotcodec/harness/dense_headroom_torch.py:121(select_unit)\n      672    0.002    0.000    0.068    0.000 /workspace/cotcodec/.venv/lib/python3.12/site-packages/triton/runtime/jit.py:370(<lambda>)\n      672    0.003    0.000    0.062    0.000 /workspace/cotcodec/.venv/lib/python3.12/site-packages/fla/ops/utils/cache.py:374(run)\n      405    0.009    0.000    0.051    0.000 /workspace/cotcodec/.venv/lib/python3.12/site-packages/transformers/models/qwen3_5/modeling_qwen3_5.py:729(forward)\n      672    0.011    0.000    0.050    0.000 /workspace/cotcodec/.venv/lib/python3.12/site-packages/triton/runtime/autotuner.py:212(run)\n      480    0.003    0.000    0.048    0.000 /workspace/cotcodec/.venv/lib/python3.12/site-packages/triton/runtime/autotuner.py:456(run)\n       40    0.000    0.000    0.044    0.001 /workspace/cotcodec/.venv/lib/python3.12/site-packages/torch/nn/modules/module.py:1795(inner)\n       40    0.002    0.000    0.043    0.001 /workspace/cotcodec/.venv/lib/python3.12/site-packages/transformers/models/qwen3_5/modeling_qwen3_5.py:656(forward)\n      160    0.003    0.000    0.035    0.000 /workspace/cotcodec/.venv/lib/python3.12/site-packages/transformers/models/qwen3_5/modeling_qwen3_5.py:715(forward)\n      672    0.009    0.000    0.034    0.000 /workspace/cotcodec/.venv/lib/python3.12/site-packages/triton/runtime/jit.py:695(run)\n   4964/4    0.006    0.000    0.032    0.008 /usr/lib/python3.12/copy.py:118(deepcopy)\n    260/4    0.001    0.000    0.032    0.008 /usr/lib/python3.12/copy.py:247(_reconstruct)\n    964/4    0.002    0.000    0.032    0.008 /usr/lib/python3.12/copy.py:217(_deepcopy_dict)\n        4    0.000    0.000    0.032    0.008 /usr/lib/python3.12/copy.py:191(_deepcopy_list)\n\n\n",
+      "v1-reference:c320-q20": "         252902 function calls (239275 primitive calls) in 0.509 seconds\n\n   Ordered by: internal time\n   List reduced from 434 to 30 due to restriction <30>\n\n   ncalls  tottime  percall  cumtime  percall filename:lineno(function)\n     1245    0.073    0.000    0.073    0.000 {built-in method torch._C._nn.linear}\n        7    0.031    0.004    0.031    0.004 {built-in method torch.as_tensor}\n     1217    0.017    0.000    0.017    0.000 {method 'float' of 'torch._C.TensorBase' objects}\n      840    0.013    0.000    0.060    0.000 /workspace/cotcodec/.venv/lib/python3.12/site-packages/triton/runtime/autotuner.py:212(run)\n      840    0.011    0.000    0.041    0.000 /workspace/cotcodec/.venv/lib/python3.12/site-packages/triton/runtime/jit.py:695(run)\n      945    0.011    0.000    0.011    0.000 {method 'to' of 'torch._C.TensorBase' objects}\n      120    0.009    0.000    0.277    0.002 /workspace/cotcodec/.venv/lib/python3.12/site-packages/transformers/models/qwen3_5/modeling_qwen3_5.py:431(forward)\n      405    0.009    0.000    0.022    0.000 /workspace/cotcodec/.venv/lib/python3.12/site-packages/transformers/models/qwen3_5/modeling_qwen3_5.py:726(_norm)\n      840    0.008    0.000    0.011    0.000 /workspace/cotcodec/.venv/lib/python3.12/site-packages/fla/ops/utils/cache.py:158(build)\n      405    0.008    0.000    0.048    0.000 /workspace/cotcodec/.venv/lib/python3.12/site-packages/transformers/models/qwen3_5/modeling_qwen3_5.py:729(forward)\n      720    0.008    0.000    0.008    0.000 {built-in method torch.empty_like}\n      575    0.008    0.000    0.008    0.000 {method 'mean' of 'torch._C.TensorBase' objects}\n      120    0.007    0.000    0.025    0.000 /workspace/cotcodec/.venv/lib/python3.12/site-packages/transformers/models/qwen3_5/modeling_qwen3_5.py:175(forward)\n      525    0.006    0.000    0.006    0.000 {method 'pow' of 'torch._C.TensorBase' objects}\n      120    0.006    0.000    0.006    0.000 {built-in method torch.conv1d}\n      405    0.006    0.000    0.006    0.000 {method 'type_as' of 'torch._C.TensorBase' objects}\n   4964/4    0.005    0.000    0.030    0.007 /usr/lib/python3.12/copy.py:118(deepcopy)\n      496    0.005    0.000    0.005    0.000 {method 'new_empty' of 'torch._C.TensorBase' objects}\n      240    0.005    0.000    0.005    0.000 {method 'repeat_interleave' of 'torch._C.TensorBase' objects}\n       40    0.005    0.000    0.005    0.000 {built-in method torch._C._nn.scaled_dot_product_attention}\n     1042    0.005    0.000    0.005    0.000 {method 'reshape' of 'torch._C.TensorBase' objects}\n  960/120    0.005    0.000    0.157    0.001 /workspace/cotcodec/.venv/lib/python3.12/site-packages/fla/ops/backends/__init__.py:171(wrapper)\n   2670/5    0.005    0.000    0.412    0.082 /workspace/cotcodec/.venv/lib/python3.12/site-packages/torch/nn/modules/module.py:1783(_call_impl)\n      160    0.005    0.000    0.402    0.003 /workspace/cotcodec/.venv/lib/python3.12/site-packages/transformers/models/qwen3_5/modeling_qwen3_5.py:753(forward)\n      366    0.005    0.000    0.005    0.000 {built-in method torch.cat}\n      525    0.005    0.000    0.005    0.000 {built-in method torch.rsqrt}\n      400    0.005    0.000    0.005    0.000 {built-in method torch._C._nn.silu}\n       24    0.004    0.000    0.017    0.001 /workspace/cotcodec/harness/sparse_indexer_bank.py:540(select_blocks)\n 1080/120    0.004    0.000    0.158    0.001 /workspace/cotcodec/.venv/lib/python3.12/site-packages/torch/_dynamo/eval_frame.py:1240(_fn)\n      600    0.004    0.000    0.057    0.000 /workspace/cotcodec/.venv/lib/python3.12/site-packages/triton/runtime/autotuner.py:456(run)\n\n\n         252902 function calls (239275 primitive calls) in 0.509 seconds\n\n   Ordered by: cumulative time\n   List reduced from 434 to 40 due to restriction <40>\n\n   ncalls  tottime  percall  cumtime  percall filename:lineno(function)\n        1    0.000    0.000    0.517    0.517 /workspace/cotcodec/scripts/run_dense_headroom_precheck_v2.py:498(evaluate)\n        1    0.000    0.000    0.517    0.517 /workspace/cotcodec/harness/dense_headroom_torch.py:213(evaluate_unit)\n   2670/5    0.003    0.000    0.412    0.082 /workspace/cotcodec/.venv/lib/python3.12/site-packages/torch/nn/modules/module.py:1775(_wrapped_call_impl)\n   2670/5    0.005    0.000    0.412    0.082 /workspace/cotcodec/.venv/lib/python3.12/site-packages/torch/nn/modules/module.py:1783(_call_impl)\n        5    0.000    0.000    0.412    0.082 /workspace/cotcodec/.venv/lib/python3.12/site-packages/transformers/utils/generic.py:933(wrapper)\n        5    0.000    0.000    0.412    0.082 /workspace/cotcodec/.venv/lib/python3.12/site-packages/transformers/models/qwen3_5/modeling_qwen3_5.py:1588(forward)\n        5    0.000    0.000    0.411    0.082 /workspace/cotcodec/.venv/lib/python3.12/site-packages/transformers/utils/generic.py:1006(wrapper)\n        5    0.000    0.000    0.411    0.082 /workspace/cotcodec/.venv/lib/python3.12/site-packages/transformers/utils/output_capturing.py:231(wrapper)\n        5    0.001    0.000    0.411    0.082 /workspace/cotcodec/.venv/lib/python3.12/site-packages/transformers/models/qwen3_5/modeling_qwen3_5.py:1144(forward)\n      160    0.000    0.000    0.403    0.003 /workspace/cotcodec/.venv/lib/python3.12/site-packages/transformers/modeling_layers.py:79(__call__)\n      160    0.005    0.000    0.402    0.003 /workspace/cotcodec/.venv/lib/python3.12/site-packages/transformers/models/qwen3_5/modeling_qwen3_5.py:753(forward)\n        1    0.002    0.002    0.361    0.361 /workspace/cotcodec/harness/dense_headroom_torch.py:191(option_scores)\n      120    0.002    0.000    0.279    0.002 /workspace/cotcodec/.venv/lib/python3.12/site-packages/transformers/integrations/accelerate.py:935(wrapped)\n      120    0.009    0.000    0.277    0.002 /workspace/cotcodec/.venv/lib/python3.12/site-packages/transformers/models/qwen3_5/modeling_qwen3_5.py:431(forward)\n      240    0.001    0.000    0.172    0.001 /workspace/cotcodec/.venv/lib/python3.12/site-packages/transformers/integrations/hub_kernels.py:794(wrapped)\n 1080/120    0.004    0.000    0.158    0.001 /workspace/cotcodec/.venv/lib/python3.12/site-packages/torch/_dynamo/eval_frame.py:1240(_fn)\n  960/120    0.005    0.000    0.157    0.001 /workspace/cotcodec/.venv/lib/python3.12/site-packages/fla/ops/backends/__init__.py:171(wrapper)\n      120    0.001    0.000    0.154    0.001 /workspace/cotcodec/.venv/lib/python3.12/site-packages/fla/ops/gated_delta_rule/chunk.py:395(chunk_gated_delta_rule)\n      120    0.001    0.000    0.153    0.001 /workspace/cotcodec/.venv/lib/python3.12/site-packages/torch/autograd/function.py:580(apply)\n      120    0.003    0.000    0.150    0.001 {built-in method apply}\n  240/120    0.004    0.000    0.147    0.001 /workspace/cotcodec/.venv/lib/python3.12/site-packages/fla/utils/_decorators.py:116(wrapper)\n      120    0.000    0.000    0.139    0.001 /workspace/cotcodec/.venv/lib/python3.12/site-packages/torch/amp/autocast_mode.py:476(decorate_fwd)\n      120    0.001    0.000    0.138    0.001 /workspace/cotcodec/.venv/lib/python3.12/site-packages/fla/ops/gated_delta_rule/chunk.py:255(forward)\n      120    0.001    0.000    0.095    0.001 /workspace/cotcodec/.venv/lib/python3.12/site-packages/fla/ops/gated_delta_rule/chunk.py:33(chunk_gated_delta_rule_fwd)\n      840    0.002    0.000    0.081    0.000 /workspace/cotcodec/.venv/lib/python3.12/site-packages/triton/runtime/jit.py:370(<lambda>)\n      840    0.003    0.000    0.075    0.000 /workspace/cotcodec/.venv/lib/python3.12/site-packages/fla/ops/utils/cache.py:374(run)\n     1245    0.001    0.000    0.075    0.000 /workspace/cotcodec/.venv/lib/python3.12/site-packages/torch/nn/modules/linear.py:130(forward)\n     1245    0.073    0.000    0.073    0.000 {built-in method torch._C._nn.linear}\n        1    0.002    0.002    0.072    0.072 /workspace/cotcodec/harness/dense_headroom_torch.py:121(select_unit)\n      840    0.013    0.000    0.060    0.000 /workspace/cotcodec/.venv/lib/python3.12/site-packages/triton/runtime/autotuner.py:212(run)\n      600    0.004    0.000    0.057    0.000 /workspace/cotcodec/.venv/lib/python3.12/site-packages/triton/runtime/autotuner.py:456(run)\n      405    0.008    0.000    0.048    0.000 /workspace/cotcodec/.venv/lib/python3.12/site-packages/transformers/models/qwen3_5/modeling_qwen3_5.py:729(forward)\n       40    0.000    0.000    0.043    0.001 /workspace/cotcodec/.venv/lib/python3.12/site-packages/torch/nn/modules/module.py:1795(inner)\n       40    0.002    0.000    0.042    0.001 /workspace/cotcodec/.venv/lib/python3.12/site-packages/transformers/models/qwen3_5/modeling_qwen3_5.py:656(forward)\n      840    0.011    0.000    0.041    0.000 /workspace/cotcodec/.venv/lib/python3.12/site-packages/triton/runtime/jit.py:695(run)\n      240    0.003    0.000    0.037    0.000 /workspace/cotcodec/.venv/lib/python3.12/site-packages/fla/modules/l2norm.py:147(l2norm_fwd)\n      160    0.002    0.000    0.033    0.000 /workspace/cotcodec/.venv/lib/python3.12/site-packages/transformers/models/qwen3_5/modeling_qwen3_5.py:715(forward)\n      120    0.001    0.000    0.032    0.000 /workspace/cotcodec/.venv/lib/python3.12/site-packages/fla/ops/gated_delta_rule/chunk_fwd.py:331(chunk_gated_delta_rule_fwd_intra)\n        7    0.031    0.004    0.031    0.004 {built-in method torch.as_tensor}\n   4964/4    0.005    0.000    0.030    0.007 /usr/lib/python3.12/copy.py:118(deepcopy)\n\n\n"
+    },
+    "reference": [
+      {
+        "bitwise_equal": true,
+        "stage": "A-main",
+        "unit": "c320-q0",
+        "v1_seconds": 0.5106994304805994
+      },
+      {
+        "bitwise_equal": true,
+        "stage": "A-main",
+        "unit": "c320-q20",
+        "v1_seconds": 0.5174155524000525
+      }
+    ],
+    "status": "TIMING_INTERRUPTED",
+    "subset": [
+      {
+        "chunk": 0,
+        "stage": "A-main",
+        "units": [
+          "c320-q0",
+          "c320-q20",
+          "c321-q1",
+          "c321-q21",
+          "c322-q2",
+          "c322-q22",
+          "c323-q3",
+          "c323-q23",
+          "c324-q4",
+          "c324-q24",
+          "c325-q5",
+          "c325-q25",
+          "c326-q6",
+          "c326-q26",
+          "c327-q7",
+          "c327-q27"
+        ]
+      },
+      {
+        "chunk": 0,
+        "stage": "B-absent",
+        "units": [
+          "c0-q0",
+          "c1-q1",
+          "c2-q2",
+          "c3-q3",
+          "c4-q4",
+          "c5-q5",
+          "c6-q6",
+          "c7-q7",
+          "c8-q8",
+          "c9-q9",
+          "c10-q10",
+          "c11-q11",
+          "c12-q12",
+          "c13-q13",
+          "c14-q14",
+          "c15-q15"
+        ]
+      },
+      {
+        "chunk": 0,
+        "stage": "C-literal",
+        "units": [
+          "c320-q160",
+          "c321-q161",
+          "c322-q162",
+          "c323-q163",
+          "c324-q164",
+          "c325-q165",
+          "c326-q166",
+          "c327-q167",
+          "c328-q168",
+          "c329-q169",
+          "c330-q170",
+          "c331-q171",
+          "c332-q172",
+          "c333-q173",
+          "c334-q174",
+          "c335-q175"
+        ]
+      },
+      {
+        "chunk": 0,
+        "stage": "D-nohaystack",
+        "units": [
+          "c160-q0",
+          "c161-q1",
+          "c162-q2",
+          "c163-q3",
+          "c164-q4",
+          "c165-q5",
+          "c166-q6",
+          "c167-q7",
+          "c168-q8",
+          "c169-q9",
+          "c170-q10",
+          "c171-q11",
+          "c172-q12",
+          "c173-q13",
+          "c174-q14",
+          "c175-q15"
+        ]
+      },
+      {
+        "chunk": 1,
+        "stage": "A-main",
+        "units": [
+          "c328-q8",
+          "c328-q28",
+          "c329-q9",
+          "c329-q29",
+          "c330-q10",
+          "c330-q30",
+          "c331-q11",
+          "c331-q31",
+          "c332-q12",
+          "c332-q32",
+          "c333-q13",
+          "c333-q33",
+          "c334-q14",
+          "c334-q34",
+          "c335-q15",
+          "c335-q35"
+        ]
+      },
+      {
+        "chunk": 1,
+        "stage": "B-absent",
+        "units": [
+          "c16-q16",
+          "c17-q17",
+          "c18-q18",
+          "c19-q19",
+          "c20-q0",
+          "c21-q1",
+          "c22-q2",
+          "c23-q3",
+          "c24-q4",
+          "c25-q5",
+          "c26-q6",
+          "c27-q7",
+          "c28-q8",
+          "c29-q9",
+          "c30-q10",
+          "c31-q11"
+        ]
+      },
+      {
+        "chunk": 1,
+        "stage": "C-literal",
+        "units": [
+          "c336-q176",
+          "c337-q177",
+          "c338-q178",
+          "c339-q179",
+          "c340-q180",
+          "c341-q181",
+          "c342-q182",
+          "c343-q183",
+          "c344-q184",
+          "c345-q185",
+          "c346-q186",
+          "c347-q187",
+          "c348-q188",
+          "c349-q189",
+          "c350-q190",
+          "c351-q191"
+        ]
+      },
+      {
+        "chunk": 1,
+        "stage": "D-nohaystack",
+        "units": [
+          "c176-q16",
+          "c177-q17",
+          "c178-q18",
+          "c179-q19",
+          "c180-q0",
+          "c181-q1",
+          "c182-q2",
+          "c183-q3",
+          "c184-q4",
+          "c185-q5",
+          "c186-q6",
+          "c187-q7",
+          "c188-q8",
+          "c189-q9",
+          "c190-q10",
+          "c191-q11"
+        ]
+      }
+    ],
+    "torch_profiles": {
+      "v1": {
+        "by_device": "-------------------------------------------------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  \n                                                   Name    Self CPU %      Self CPU   CPU total %     CPU total  CPU time avg     Self CUDA   Self CUDA %    CUDA total  CUDA time avg    # of Calls  \n-------------------------------------------------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  \n                                               aten::mm        16.86%      70.925ms        18.83%      79.221ms      63.683us      50.644ms        28.84%      50.644ms      40.710us          1244  \n                                            aten::copy_         2.61%      10.964ms        14.06%      59.180ms      17.493us      33.031ms        18.81%      33.031ms       9.764us          3383  \nvoid at::native::elementwise_kernel<128, 4, at::nati...         0.00%       0.000us         0.00%       0.000us       0.000us      17.920ms        10.20%      17.920ms      27.654us           648  \n                                              aten::mul         2.34%       9.829ms         4.14%      17.428ms       9.082us      15.997ms         9.11%      15.997ms       8.336us          1919  \n                                            aten::fill_         3.47%      14.605ms         9.39%      39.521ms       5.531us      15.704ms         8.94%      15.706ms       2.198us          7146  \n              nvjet_tst_256x152_64x4_2x1_v_bz_coopA_TNT         0.00%       0.000us         0.00%       0.000us       0.000us      14.620ms         8.32%      14.620ms     228.443us            64  \n              nvjet_tst_256x152_64x4_1x2_h_bz_coopA_TNT         0.00%       0.000us         0.00%       0.000us       0.000us      10.418ms         5.93%      10.418ms     162.774us            64  \n                         aten::_cudnn_attention_forward         0.40%       1.663ms         0.81%       3.426ms      85.644us      10.196ms         5.81%      10.432ms     260.803us            40  \ncudnn_generated_fort_native_sdpa_sm90_flash_fprop_wg...         0.00%       0.000us         0.00%       0.000us       0.000us      10.162ms         5.79%      10.162ms     254.049us            40  \n                            ChunkGatedDeltaRuleFunction        18.93%      79.639ms        25.12%     105.698ms     880.818us       9.703ms         5.53%      17.579ms     146.489us           120  \nvoid at::native::vectorized_elementwise_kernel<8, at...         0.00%       0.000us         0.00%       0.000us       0.000us       9.306ms         5.30%       9.306ms       3.134us          2969  \n              nvjet_tst_256x160_64x4_1x2_h_bz_coopA_TNT         0.00%       0.000us         0.00%       0.000us       0.000us       8.957ms         5.10%       8.957ms     159.949us            56  \nvoid at::native::elementwise_kernel<128, 2, at::nati...         0.00%       0.000us         0.00%       0.000us       0.000us       8.762ms         4.99%       8.762ms       8.281us          1058  \nvoid at::native::unrolled_elementwise_kernel<at::nat...         0.00%       0.000us         0.00%       0.000us       0.000us       8.332ms         4.74%       8.332ms       6.288us          1325  \n                                aten::_conv_depthwise2d         0.16%     690.425us         1.12%       4.709ms      39.239us       8.208ms         4.67%       9.003ms      75.021us           120  \nvoid at::native::(anonymous namespace)::conv_depthwi...         0.00%       0.000us         0.00%       0.000us       0.000us       8.208ms         4.67%       8.208ms      68.403us           120  \n                                             aten::silu         0.64%       2.678ms         1.10%       4.649ms      11.621us       5.416ms         3.08%       5.416ms      13.541us           400  \nvoid at::native::vectorized_elementwise_kernel<4, at...         0.00%       0.000us         0.00%       0.000us       0.000us       5.259ms         2.99%       5.259ms       2.125us          2475  \n                                             aten::mean         1.20%       5.032ms         1.77%       7.463ms      12.980us       4.297ms         2.45%       4.297ms       7.474us           575  \n                                              aten::add         2.35%       9.871ms         3.96%      16.652ms       9.676us       4.261ms         2.43%       4.261ms       2.476us          1721  \n-------------------------------------------------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  \nSelf CPU time total: 420.767ms\nSelf CUDA time total: 175.625ms\n",
+        "by_self_cpu": "-------------------------------------------------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  \n                                                   Name    Self CPU %      Self CPU   CPU total %     CPU total  CPU time avg     Self CUDA   Self CUDA %    CUDA total  CUDA time avg    # of Calls  \n-------------------------------------------------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  \n                            ChunkGatedDeltaRuleFunction        18.93%      79.639ms        25.12%     105.698ms     880.818us       9.703ms         5.53%      17.579ms     146.489us           120  \n                                       cudaLaunchKernel        17.78%      74.811ms        17.86%      75.164ms       4.055us       0.000us         0.00%       0.000us       0.000us         18538  \n                                               aten::mm        16.86%      70.925ms        18.83%      79.221ms      63.683us      50.644ms        28.84%      50.644ms      40.710us          1244  \n                                  cudaStreamSynchronize         8.17%      34.385ms         8.17%      34.385ms       1.274ms       0.000us         0.00%       0.000us       0.000us            27  \n                                            aten::fill_         3.47%      14.605ms         9.39%      39.521ms       5.531us      15.704ms         8.94%      15.706ms       2.198us          7146  \n                                            aten::copy_         2.61%      10.964ms        14.06%      59.180ms      17.493us      33.031ms        18.81%      33.031ms       9.764us          3383  \n                                    aten::empty_strided         2.53%      10.628ms         7.28%      30.650ms       9.758us       0.000us         0.00%       8.158ms       2.597us          3141  \n                                       cuLaunchKernelEx         2.52%      10.613ms         2.52%      10.613ms       4.994us       0.000us         0.00%       0.000us       0.000us          2125  \n                                              aten::add         2.35%       9.871ms         3.96%      16.652ms       9.676us       4.261ms         2.43%       4.261ms       2.476us          1721  \n                                            aten::empty         2.34%       9.849ms         5.91%      24.867ms       7.832us       0.000us         0.00%       5.766ms       1.816us          3175  \n                                              aten::mul         2.34%       9.829ms         4.14%      17.428ms       9.082us      15.997ms         9.11%      15.997ms       8.336us          1919  \n                                             aten::mean         1.20%       5.032ms         1.77%       7.463ms      12.980us       4.297ms         2.45%       4.297ms       7.474us           575  \n                                         aten::_to_copy         1.06%       4.469ms        17.78%      74.802ms      32.508us       0.000us         0.00%      19.546ms       8.495us          2301  \n                                              aten::pow         1.03%       4.345ms         1.62%       6.834ms      13.018us       3.913ms         2.23%       3.913ms       7.453us           525  \n                                        cudaMemcpyAsync         0.89%       3.760ms         0.89%       3.760ms       8.487us       0.000us         0.00%       0.000us       0.000us           443  \n                                             aten::view         0.79%       3.329ms         0.79%       3.329ms       1.104us       0.000us         0.00%       0.000us       0.000us          3014  \n                                           aten::matmul         0.78%       3.290ms        20.54%      86.434ms      68.708us       0.000us         0.00%      51.190ms      40.692us          1258  \n                                              aten::cat         0.71%       2.976ms         1.17%       4.931ms      12.359us       3.499ms         1.99%       3.499ms       8.770us           399  \n                                             aten::silu         0.64%       2.678ms         1.10%       4.649ms      11.621us       5.416ms         3.08%       5.416ms      13.541us           400  \n                                            aten::rsqrt         0.58%       2.425ms         1.09%       4.576ms       8.717us     908.466us         0.52%     908.466us       1.730us           525  \n                                       aten::as_strided         0.53%       2.209ms         0.53%       2.209ms       0.417us       0.000us         0.00%       0.000us       0.000us          5302  \n                                          aten::reshape         0.46%       1.952ms         1.56%       6.568ms       2.832us       0.000us         0.00%       3.526ms       1.520us          2319  \n                                        aten::transpose         0.44%       1.853ms         0.65%       2.716ms       1.638us       0.000us         0.00%       0.000us       0.000us          1658  \n                                                aten::t         0.44%       1.849ms         0.84%       3.545ms       2.848us       0.000us         0.00%       0.000us       0.000us          1245  \n                                          aten::resize_         0.43%       1.817ms         1.96%       8.247ms      20.066us       0.000us         0.00%       1.628ms       3.961us           411  \n                                            aten::slice         0.42%       1.762ms         0.52%       2.178ms       2.283us       0.000us         0.00%       0.000us       0.000us           954  \n                         aten::_cudnn_attention_forward         0.40%       1.663ms         0.81%       3.426ms      85.644us      10.196ms         5.81%      10.432ms     260.803us            40  \n                                               aten::to         0.39%       1.645ms        18.17%      76.446ms      21.558us       0.000us         0.00%      19.546ms       5.512us          3546  \n                                           aten::linear         0.35%       1.464ms        21.35%      89.819ms      72.144us       0.000us         0.00%      51.067ms      41.018us          1245  \n                                        aten::unsqueeze         0.34%       1.452ms         0.44%       1.868ms       1.801us       0.000us         0.00%       0.000us       0.000us          1037  \n-------------------------------------------------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  \nSelf CPU time total: 420.767ms\nSelf CUDA time total: 175.625ms\n",
+        "status": "ok"
+      },
+      "v2": {
+        "by_device": "-------------------------------------------------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  \n                                                   Name    Self CPU %      Self CPU   CPU total %     CPU total  CPU time avg     Self CUDA   Self CUDA %    CUDA total  CUDA time avg    # of Calls  \n-------------------------------------------------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  \n                                               aten::mm        16.15%      67.136ms        18.12%      75.320ms      60.547us      50.608ms        28.78%      50.608ms      40.682us          1244  \n                                            aten::copy_         2.57%      10.664ms        14.61%      60.760ms      17.998us      33.005ms        18.77%      33.032ms       9.784us          3376  \nvoid at::native::elementwise_kernel<128, 4, at::nati...         0.00%       0.000us         0.00%       0.000us       0.000us      17.945ms        10.20%      17.945ms      27.693us           648  \n                                              aten::mul         2.36%       9.803ms         4.28%      17.813ms       9.283us      16.003ms         9.10%      16.071ms       8.375us          1919  \n                                            aten::fill_         3.26%      13.561ms         9.71%      40.370ms       6.092us      15.916ms         9.05%      15.944ms       2.406us          6627  \n              nvjet_tst_256x152_64x4_2x1_v_bz_coopA_TNT         0.00%       0.000us         0.00%       0.000us       0.000us      14.596ms         8.30%      14.596ms     228.065us            64  \n              nvjet_tst_256x152_64x4_1x2_h_bz_coopA_TNT         0.00%       0.000us         0.00%       0.000us       0.000us      10.391ms         5.91%      10.391ms     162.364us            64  \n                         aten::_cudnn_attention_forward         0.38%       1.586ms         0.82%       3.412ms      85.302us      10.216ms         5.81%      10.932ms     273.288us            40  \ncudnn_generated_fort_native_sdpa_sm90_flash_fprop_wg...         0.00%       0.000us         0.00%       0.000us       0.000us      10.180ms         5.79%      10.180ms     254.500us            40  \n                            ChunkGatedDeltaRuleFunction        18.87%      78.445ms        25.06%     104.197ms     868.312us       9.701ms         5.52%      17.562ms     146.352us           120  \nvoid at::native::vectorized_elementwise_kernel<8, at...         0.00%       0.000us         0.00%       0.000us       0.000us       9.474ms         5.39%       9.474ms       3.191us          2969  \n              nvjet_tst_256x160_64x4_1x2_h_bz_coopA_TNT         0.00%       0.000us         0.00%       0.000us       0.000us       8.942ms         5.09%       8.942ms     159.687us            56  \nvoid at::native::elementwise_kernel<128, 2, at::nati...         0.00%       0.000us         0.00%       0.000us       0.000us       8.767ms         4.99%       8.767ms       8.287us          1058  \nvoid at::native::unrolled_elementwise_kernel<at::nat...         0.00%       0.000us         0.00%       0.000us       0.000us       8.354ms         4.75%       8.354ms       6.305us          1325  \n                                aten::_conv_depthwise2d         0.16%     680.894us         1.12%       4.666ms      38.885us       8.160ms         4.64%       8.956ms      74.631us           120  \nvoid at::native::(anonymous namespace)::conv_depthwi...         0.00%       0.000us         0.00%       0.000us       0.000us       8.160ms         4.64%       8.160ms      67.998us           120  \n                                             aten::silu         0.64%       2.653ms         1.19%       4.937ms      12.343us       5.417ms         3.08%       5.417ms      13.543us           400  \nvoid at::native::vectorized_elementwise_kernel<4, at...         0.00%       0.000us         0.00%       0.000us       0.000us       5.296ms         3.01%       5.296ms       2.146us          2468  \n                                             aten::mean         1.16%       4.804ms         1.76%       7.298ms      12.692us       4.305ms         2.45%       4.305ms       7.488us           575  \n                                              aten::add         2.30%       9.571ms         3.94%      16.362ms       9.507us       4.267ms         2.43%       4.268ms       2.480us          1721  \n-------------------------------------------------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  \nSelf CPU time total: 415.735ms\nSelf CUDA time total: 175.858ms\n",
+        "by_self_cpu": "-------------------------------------------------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  \n                                                   Name    Self CPU %      Self CPU   CPU total %     CPU total  CPU time avg     Self CUDA   Self CUDA %    CUDA total  CUDA time avg    # of Calls  \n-------------------------------------------------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  \n                            ChunkGatedDeltaRuleFunction        18.87%      78.445ms        25.06%     104.197ms     868.312us       9.701ms         5.52%      17.562ms     146.352us           120  \n                                       cudaLaunchKernel        18.14%      75.435ms        18.75%      77.946ms       4.206us       0.000us         0.00%     186.625us       0.010us         18531  \n                                               aten::mm        16.15%      67.136ms        18.12%      75.320ms      60.547us      50.608ms        28.78%      50.608ms      40.682us          1244  \n                                  cudaStreamSynchronize         8.74%      36.315ms         8.74%      36.315ms       2.270ms       0.000us         0.00%       0.000us       0.000us            16  \n                                            aten::fill_         3.26%      13.561ms         9.71%      40.370ms       6.092us      15.916ms         9.05%      15.944ms       2.406us          6627  \n                                    aten::empty_strided         2.81%      11.662ms         8.29%      34.467ms      10.167us       0.000us         0.00%       8.706ms       2.568us          3390  \n                                            aten::copy_         2.57%      10.664ms        14.61%      60.760ms      17.998us      33.005ms        18.77%      33.032ms       9.784us          3376  \n                                       cuLaunchKernelEx         2.56%      10.635ms         2.58%      10.731ms       5.050us       0.000us         0.00%     656.448us       0.309us          2125  \n                                              aten::mul         2.36%       9.803ms         4.28%      17.813ms       9.283us      16.003ms         9.10%      16.071ms       8.375us          1919  \n                                              aten::add         2.30%       9.571ms         3.94%      16.362ms       9.507us       4.267ms         2.43%       4.268ms       2.480us          1721  \n                                            aten::empty         1.88%       7.828ms         5.04%      20.970ms       8.712us       0.000us         0.00%       5.449ms       2.264us          2407  \n                                             aten::mean         1.16%       4.804ms         1.76%       7.298ms      12.692us       4.305ms         2.45%       4.305ms       7.488us           575  \n                                         aten::_to_copy         1.03%       4.278ms        18.89%      78.552ms      34.243us       0.000us         0.00%      19.615ms       8.550us          2294  \n                                              aten::pow         1.02%       4.244ms         1.64%       6.812ms      12.975us       3.920ms         2.23%       3.920ms       7.468us           525  \n                                        cudaMemcpyAsync         0.84%       3.473ms         0.84%       3.473ms       8.040us       0.000us         0.00%       0.000us       0.000us           432  \n                                             aten::view         0.79%       3.283ms         0.79%       3.283ms       1.089us       0.000us         0.00%       0.000us       0.000us          3014  \n                                           aten::matmul         0.76%       3.155ms        19.82%      82.380ms      65.485us       0.000us         0.00%      51.580ms      41.002us          1258  \n                                              aten::cat         0.71%       2.935ms         1.18%       4.910ms      12.305us       3.505ms         1.99%       3.556ms       8.911us           399  \n                                             aten::silu         0.64%       2.653ms         1.19%       4.937ms      12.343us       5.417ms         3.08%       5.417ms      13.543us           400  \n                                            aten::rsqrt         0.56%       2.345ms         1.13%       4.696ms       8.946us     906.141us         0.52%     910.108us       1.734us           525  \n                                Activity Buffer Request         0.53%       2.203ms         0.53%       2.203ms       1.102ms       2.944us         0.00%       2.944us       1.472us             2  \n                                       aten::as_strided         0.52%       2.181ms         0.52%       2.181ms       0.412us       0.000us         0.00%       0.000us       0.000us          5294  \n                                               aten::to         0.50%       2.076ms        19.39%      80.628ms      22.731us       0.000us         0.00%      19.615ms       5.530us          3547  \n                                          aten::reshape         0.49%       2.036ms         1.59%       6.602ms       2.847us       0.000us         0.00%       3.541ms       1.527us          2319  \n                                        aten::transpose         0.46%       1.907ms         0.66%       2.757ms       1.663us       0.000us         0.00%       0.000us       0.000us          1658  \n                                          aten::resize_         0.45%       1.861ms         1.96%       8.167ms      19.871us       0.000us         0.00%       1.642ms       3.995us           411  \n                                            aten::slice         0.43%       1.780ms         0.53%       2.203ms       2.309us       0.000us         0.00%       0.000us       0.000us           954  \n                                                aten::t         0.41%       1.724ms         0.83%       3.469ms       2.786us       0.000us         0.00%       0.000us       0.000us          1245  \n                         aten::_cudnn_attention_forward         0.38%       1.586ms         0.82%       3.412ms      85.302us      10.216ms         5.81%      10.932ms     273.288us            40  \n                                           aten::linear         0.34%       1.433ms        20.63%      85.746ms      68.873us       0.000us         0.00%      51.454ms      41.328us          1245  \n-------------------------------------------------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  \nSelf CPU time total: 415.735ms\nSelf CUDA time total: 175.858ms\n",
+        "status": "ok"
+      }
+    },
+    "units": [
+      {
+        "chunk": 0,
+        "context_tokens": 3769,
+        "mc": true,
+        "options": 4,
+        "parts": {
+          "inputs": {
+            "cpu_s": 0.0023044460000001266,
+            "wall_s": 0.0023036878556013107
+          },
+          "mc_cache_copy": {
+            "cpu_s": 0.005390321000000142,
+            "wall_s": 0.0053954049944877625
+          },
+          "mc_option_forward": {
+            "cpu_s": 15.382158490999998,
+            "wall_s": 18.480916026979685
+          },
+          "prefill_forward": {
+            "cpu_s": 23.615157441999997,
+            "wall_s": 29.00687579996884
+          },
+          "select": {
+            "cpu_s": 0.20997799600000633,
+            "wall_s": 0.2099282080307603
+          }
+        },
+        "phase": "subset",
+        "seconds": 47.70578085258603,
+        "select": true,
+        "stage": "A-main",
+        "unit": "c320-q0"
+      },
+      {
+        "chunk": 0,
+        "context_tokens": 3778,
+        "mc": true,
+        "options": 4,
+        "parts": {
+          "inputs": {
+            "cpu_s": 0.0003639879999965956,
+            "wall_s": 0.0003644125536084175
+          },
+          "mc_cache_copy": {
+            "cpu_s": 0.005322525000011069,
+            "wall_s": 0.005328711122274399
+          },
+          "mc_option_forward": {
+            "cpu_s": 3.0830322009999875,
+            "wall_s": 3.0822977758944035
+          },
+          "prefill_forward": {
+            "cpu_s": 0.8439850330000027,
+            "wall_s": 0.8438608050346375
+          },
+          "select": {
+            "cpu_s": 0.034089334999997334,
+            "wall_s": 0.03408823814243078
+          }
+        },
+        "phase": "subset",
+        "seconds": 3.966169257648289,
+        "select": true,
+        "stage": "A-main",
+        "unit": "c320-q20"
+      },
+      {
+        "chunk": 0,
+        "context_tokens": 3716,
+        "mc": true,
+        "options": 4,
+        "parts": {
+          "inputs": {
+            "cpu_s": 0.00025019599999609454,
+            "wall_s": 0.0002507641911506653
+          },
+          "mc_cache_copy": {
+            "cpu_s": 0.004773161999992226,
+            "wall_s": 0.004777317866683006
+          },
+          "mc_option_forward": {
+            "cpu_s": 1.1205584420000037,
+            "wall_s": 1.1204124968498945
+          },
+          "prefill_forward": {
+            "cpu_s": 0.8354207699999989,
+            "wall_s": 0.8351230127736926
+          },
+          "select": {
+            "cpu_s": 0.031588382999999,
+            "wall_s": 0.031554137356579304
+          }
+        },
+        "phase": "subset",
+        "seconds": 1.992325364612043,
+        "select": true,
+        "stage": "A-main",
+        "unit": "c321-q1"
+      },
+      {
+        "chunk": 0,
+        "context_tokens": 3727,
+        "mc": true,
+        "options": 4,
+        "parts": {
+          "inputs": {
+            "cpu_s": 0.00024313299999789706,
+            "wall_s": 0.0002434365451335907
+          },
+          "mc_cache_copy": {
+            "cpu_s": 0.005104954999993083,
+            "wall_s": 0.005109298974275589
+          },
+          "mc_option_forward": {
+            "cpu_s": 4.0826093809999975,
+            "wall_s": 4.081826155073941
+          },
+          "prefill_forward": {
+            "cpu_s": 0.8247604539999998,
+            "wall_s": 0.8244915092363954
+          },
+          "select": {
+            "cpu_s": 0.03196918000000437,
+            "wall_s": 0.031968011520802975
+          }
+        },
+        "phase": "subset",
+        "seconds": 4.943937135860324,
+        "select": true,
+        "stage": "A-main",
+        "unit": "c321-q21"
+      },
+      {
+        "chunk": 0,
+        "context_tokens": 3632,
+        "mc": true,
+        "options": 4,
+        "parts": {
+          "inputs": {
+            "cpu_s": 0.0002833589999937658,
+            "wall_s": 0.0002839546650648117
+          },
+          "mc_cache_copy": {
+            "cpu_s": 0.005316352000008351,
+            "wall_s": 0.005324114114046097
+          },
+          "mc_option_forward": {
+            "cpu_s": 3.2531479769999834,
+            "wall_s": 3.2523776944726706
+          },
+          "prefill_forward": {
+            "cpu_s": 0.8371606620000023,
+            "wall_s": 0.8368829675018787
+          },
+          "select": {
+            "cpu_s": 0.032020982000005915,
+            "wall_s": 0.032017940655350685
+          }
+        },
+        "phase": "subset",
+        "seconds": 4.1271797670051455,
+        "select": true,
+        "stage": "A-main",
+        "unit": "c322-q2"
+      },
+      {
+        "chunk": 0,
+        "context_tokens": 3652,
+        "mc": true,
+        "options": 4,
+        "parts": {
+          "inputs": {
+            "cpu_s": 0.000284138999987249,
+            "wall_s": 0.0002846596762537956
+          },
+          "mc_cache_copy": {
+            "cpu_s": 0.004949193000001628,
+            "wall_s": 0.004955105483531952
+          },
+          "mc_option_forward": {
+            "cpu_s": 3.8182379889999964,
+            "wall_s": 3.817750913091004
+          },
+          "prefill_forward": {
+            "cpu_s": 0.8275753839999993,
+            "wall_s": 0.8276624958962202
+          },
+          "select": {
+            "cpu_s": 0.03614591000000189,
+            "wall_s": 0.03614481911063194
+          }
+        },
+        "phase": "subset",
+        "seconds": 4.687052150256932,
+        "select": true,
+        "stage": "A-main",
+        "unit": "c322-q22"
+      },
+      {
+        "chunk": 0,
+        "context_tokens": 3614,
+        "mc": true,
+        "options": 4,
+        "parts": {
+          "inputs": {
+            "cpu_s": 0.0002891989999938005,
+            "wall_s": 0.0002894345670938492
+          },
+          "mc_cache_copy": {
+            "cpu_s": 0.005002953000001753,
+            "wall_s": 0.005008313804864883
+          },
+          "mc_option_forward": {
+            "cpu_s": 3.185530564000004,
+            "wall_s": 3.1845442382618785
+          },
+          "prefill_forward": {
+            "cpu_s": 0.8131564069999939,
+            "wall_s": 0.8129543690010905
+          },
+          "select": {
+            "cpu_s": 0.0320120150000065,
+            "wall_s": 0.031976078636944294
+          }
+        },
+        "phase": "subset",
+        "seconds": 4.035017838701606,
+        "select": true,
+        "stage": "A-main",
+        "unit": "c323-q3"
+      },
+      {
+        "chunk": 0,
+        "context_tokens": 3625,
+        "mc": true,
+        "options": 4,
+        "parts": {
+          "inputs": {
+            "cpu_s": 0.0002579390000079229,
+            "wall_s": 0.0002582557499408722
+          },
+          "mc_cache_copy": {
+            "cpu_s": 0.005166524000017603,
+            "wall_s": 0.0051744356751441956
+          },
+          "mc_option_forward": {
+            "cpu_s": 2.9485345409999724,
+            "wall_s": 2.948315874673426
+          },
+          "prefill_forward": {
+            "cpu_s": 0.8200249249999985,
+            "wall_s": 0.8198862951248884
+          },
+          "select": {
+            "cpu_s": 0.03322993300000121,
+            "wall_s": 0.03322830703109503
+          }
+        },
+        "phase": "subset",
+        "seconds": 3.807097149081528,
+        "select": true,
+        "stage": "A-main",
+        "unit": "c323-q23"
+      },
+      {
+        "chunk": 0,
+        "context_tokens": 3769,
+        "mc": true,
+        "options": 4,
+        "parts": {
+          "inputs": {
+            "cpu_s": 0.0002812740000024405,
+            "wall_s": 0.0002817763015627861
+          },
+          "mc_cache_copy": {
+            "cpu_s": 0.005378503000017076,
+            "wall_s": 0.005385063588619232
+          },
+          "mc_option_forward": {
+            "cpu_s": 4.3180051259999885,
+            "wall_s": 4.317559076473117
+          },
+          "prefill_forward": {
+            "cpu_s": 0.11349739400000658,
+            "wall_s": 0.11355353146791458
+          },
+          "select": {
+            "cpu_s": 0.030021477999994772,
+            "wall_s": 0.03001995198428631
+          }
+        },
+        "phase": "subset",
+        "seconds": 4.467071418650448,
+        "select": true,
+        "stage": "A-main",
+        "unit": "c324-q4"
+      },
+      {
+        "chunk": 0,
+        "context_tokens": 3784,
+        "mc": true,
+        "options": 4,
+        "parts": {
+          "inputs": {
+            "cpu_s": 0.00027597900000841946,
+            "wall_s": 0.00027652736753225327
+          },
+          "mc_cache_copy": {
+            "cpu_s": 0.005071011999987718,
+            "wall_s": 0.005078868940472603
+          },
+          "mc_option_forward": {
+            "cpu_s": 3.8110623020000105,
+            "wall_s": 3.8107183016836643
+          },
+          "prefill_forward": {
+            "cpu_s": 0.8221906879999921,
+            "wall_s": 0.8221685066819191
+          },
+          "select": {
+            "cpu_s": 0.031947333000005074,
+            "wall_s": 0.03193303104490042
+          }
+        },
+        "phase": "subset",
+        "seconds": 4.670420561917126,
+        "select": true,
+        "stage": "A-main",
+        "unit": "c324-q24"
+      },
+      {
+        "chunk": 0,
+        "context_tokens": 3695,
+        "mc": true,
+        "options": 4,
+        "parts": {
+          "inputs": {
+            "cpu_s": 0.00026606500000525557,
+            "wall_s": 0.00026635918766260147
+          },
+          "mc_cache_copy": {
+            "cpu_s": 0.005026837000016826,
+            "wall_s": 0.005036617629230022
+          },
+          "mc_option_forward": {
+            "cpu_s": 2.9826203189999774,
+            "wall_s": 2.982449905015528
+          },
+          "prefill_forward": {
+            "cpu_s": 0.8120251039999999,
+            "wall_s": 0.8119943076744676
+          },
+          "select": {
+            "cpu_s": 0.03236091200000146,
+            "wall_s": 0.032359497621655464
+          }
+        },
+        "phase": "subset",
+        "seconds": 3.8323535788804293,
+        "select": true,
+        "stage": "A-main",
+        "unit": "c325-q5"
+      },
+      {
+        "chunk": 0,
+        "context_tokens": 3722,
+        "mc": true,
+        "options": 4,
+        "parts": {
+          "inputs": {
+            "cpu_s": 0.00029813599999783946,
+            "wall_s": 0.0002985028550028801
+          },
+          "mc_cache_copy": {
+            "cpu_s": 0.00484239900001171,
+            "wall_s": 0.004848874174058437
+          },
+          "mc_option_forward": {
+            "cpu_s": 2.7479585029999924,
+            "wall_s": 2.748217560350895
+          },
+          "prefill_forward": {
+            "cpu_s": 0.8196010940000065,
+            "wall_s": 0.8197019528597593
+          },
+          "select": {
+            "cpu_s": 0.03160650399999554,
+            "wall_s": 0.03159141633659601
+          }
+        },
+        "phase": "subset",
+        "seconds": 3.604857205413282,
+        "select": true,
+        "stage": "A-main",
+        "unit": "c325-q25"
+      },
+      {
+        "chunk": 0,
+        "context_tokens": 3794,
+        "mc": true,
+        "options": 4,
+        "parts": {
+          "inputs": {
+            "cpu_s": 0.00024322499999129832,
+            "wall_s": 0.00024347007274627686
+          },
+          "mc_cache_copy": {
+            "cpu_s": 0.004844820999991839,
+            "wall_s": 0.004851624369621277
+          },
+          "mc_option_forward": {
+            "cpu_s": 2.1667802330000114,
+            "wall_s": 2.1671947864815593
+          },
+          "prefill_forward": {
+            "cpu_s": 0.8394301090000056,
+            "wall_s": 0.8393666492775083
+          },
+          "select": {
+            "cpu_s": 0.029746314999997026,
+            "wall_s": 0.02971821092069149
+          }
+        },
+        "phase": "subset",
+        "seconds": 3.0415651751682162,
+        "select": true,
+        "stage": "A-main",
+        "unit": "c326-q6"
+      },
+      {
+        "chunk": 0,
+        "context_tokens": 3816,
+        "mc": true,
+        "options": 4,
+        "parts": {
+          "inputs": {
+            "cpu_s": 0.00023815600000887116,
+            "wall_s": 0.00023825746029615402
+          },
+          "mc_cache_copy": {
+            "cpu_s": 0.004950342000029195,
+            "wall_s": 0.004956898279488087
+          },
+          "mc_option_forward": {
+            "cpu_s": 2.9722789029999745,
+            "wall_s": 2.971251679584384
+          },
+          "prefill_forward": {
+            "cpu_s": 0.8329949630000044,
+            "wall_s": 0.8328526429831982
+          },
+          "select": {
+            "cpu_s": 0.03173659599998757,
+            "wall_s": 0.031735582277178764
+          }
+        },
+        "phase": "subset",
+        "seconds": 3.841285986825824,
+        "select": true,
+        "stage": "A-main",
+        "unit": "c326-q26"
+      },
+      {
+        "chunk": 0,
+        "context_tokens": 3719,
+        "mc": true,
+        "options": 4,
+        "parts": {
+          "inputs": {
+            "cpu_s": 0.0002938270000072407,
+            "wall_s": 0.00029426906257867813
+          },
+          "mc_cache_copy": {
+            "cpu_s": 0.005119350000001077,
+            "wall_s": 0.005127130076289177
+          },
+          "mc_option_forward": {
+            "cpu_s": 3.7775222850000034,
+            "wall_s": 3.775775920599699
+          },
+          "prefill_forward": {
+            "cpu_s": 0.8180172689999949,
+            "wall_s": 0.8178354613482952
+          },
+          "select": {
+            "cpu_s": 0.029810389999994413,
+            "wall_s": 0.02980914618819952
+          }
+        },
+        "phase": "subset",
+        "seconds": 4.6291169840842485,
+        "select": true,
+        "stage": "A-main",
+        "unit": "c327-q7"
+      },
+      {
+        "chunk": 0,
+        "context_tokens": 3726,
+        "mc": true,
+        "options": 4,
+        "parts": {
+          "inputs": {
+            "cpu_s": 0.00029272099999388956,
+            "wall_s": 0.0002935100346803665
+          },
+          "mc_cache_copy": {
+            "cpu_s": 0.005074886999992145,
+            "wall_s": 0.005081304349005222
+          },
+          "mc_option_forward": {
+            "cpu_s": 4.041748988000009,
+            "wall_s": 4.040346625261009
+          },
+          "prefill_forward": {
+            "cpu_s": 0.8172006820000064,
+            "wall_s": 0.816905764862895
+          },
+          "select": {
+            "cpu_s": 0.0314439550000003,
+            "wall_s": 0.031395685859024525
+          }
+        },
+        "phase": "subset",
+        "seconds": 4.894313242286444,
+        "select": true,
+        "stage": "A-main",
+        "unit": "c327-q27"
+      },
+      {
+        "chunk": 0,
+        "context_tokens": 3788,
+        "mc": true,
+        "options": 4,
+        "parts": {
+          "inputs": {
+            "cpu_s": 0.00028523099999233636,
+            "wall_s": 0.0002851830795407295
+          },
+          "mc_cache_copy": {
+            "cpu_s": 0.006108589000035636,
+            "wall_s": 0.006114372052252293
+          },
+          "mc_option_forward": {
+            "cpu_s": 2.406749738999963,
+            "wall_s": 2.405703133903444
+          },
+          "prefill_forward": {
+            "cpu_s": 0.8358204769999986,
+            "wall_s": 0.8352896785363555
+          }
+        },
+        "phase": "subset",
+        "seconds": 3.2476382460445166,
+        "select": false,
+        "stage": "B-absent",
+        "unit": "c0-q0"
+      },
+      {
+        "chunk": 0,
+        "context_tokens": 3688,
+        "mc": true,
+        "options": 4,
+        "parts": {
+          "inputs": {
+            "cpu_s": 0.00029694000002677967,
+            "wall_s": 0.00029730238020420074
+          },
+          "mc_cache_copy": {
+            "cpu_s": 0.005735753999999815,
+            "wall_s": 0.005740608088672161
+          },
+          "mc_option_forward": {
+            "cpu_s": 1.0721064509999962,
+            "wall_s": 1.0714313508942723
+          },
+          "prefill_forward": {
+            "cpu_s": 0.8073731479999822,
+            "wall_s": 0.8070313837379217
+          }
+        },
+        "phase": "subset",
+        "seconds": 1.884650026448071,
+        "select": false,
+        "stage": "B-absent",
+        "unit": "c1-q1"
+      },
+      {
+        "chunk": 0,
+        "context_tokens": 3596,
+        "mc": true,
+        "options": 4,
+        "parts": {
+          "inputs": {
+            "cpu_s": 0.00024858100002234096,
+            "wall_s": 0.0002487730234861374
+          },
+          "mc_cache_copy": {
+            "cpu_s": 0.005955577000008816,
+            "wall_s": 0.005929918028414249
+          },
+          "mc_option_forward": {
+            "cpu_s": 3.128627363999982,
+            "wall_s": 3.1275943210348487
+          },
+          "prefill_forward": {
+            "cpu_s": 0.808138342999996,
+            "wall_s": 0.8078423794358969
+          }
+        },
+        "phase": "subset",
+        "seconds": 3.9418136440217495,
+        "select": false,
+        "stage": "B-absent",
+        "unit": "c2-q2"
+      },
+      {
+        "chunk": 0,
+        "context_tokens": 3611,
+        "mc": true,
+        "options": 4,
+        "parts": {
+          "inputs": {
+            "cpu_s": 0.0002932609999959368,
+            "wall_s": 0.000293610617518425
+          },
+          "mc_cache_copy": {
+            "cpu_s": 0.006065722000016649,
+            "wall_s": 0.006072917953133583
+          },
+          "mc_option_forward": {
+            "cpu_s": 2.9198186889999818,
+            "wall_s": 2.9186858544126153
+          },
+          "prefill_forward": {
+            "cpu_s": 0.8067408550000152,
+            "wall_s": 0.8065578546375036
+          }
+        },
+        "phase": "subset",
+        "seconds": 3.7317914040759206,
+        "select": false,
+        "stage": "B-absent",
+        "unit": "c3-q3"
+      },
+      {
+        "chunk": 0,
+        "context_tokens": 3684,
+        "mc": true,
+        "options": 4,
+        "parts": {
+          "inputs": {
+            "cpu_s": 0.0002716350000184775,
+            "wall_s": 0.0002717413008213043
+          },
+          "mc_cache_copy": {
+            "cpu_s": 0.005931973000002699,
+            "wall_s": 0.005878257565200329
+          },
+          "mc_option_forward": {
+            "cpu_s": 3.7825306400000045,
+            "wall_s": 3.7809802405536175
+          },
+          "prefill_forward": {
+            "cpu_s": 0.8006696459999887,
+            "wall_s": 0.8004673207178712
+          }
+        },
+        "phase": "subset",
+        "seconds": 4.58780456893146,
+        "select": false,
+        "stage": "B-absent",
+        "unit": "c4-q4"
+      },
+      {
+        "chunk": 0,
+        "context_tokens": 3657,
+        "mc": true,
+        "options": 4,
+        "parts": {
+          "inputs": {
+            "cpu_s": 0.00028996900002198345,
+            "wall_s": 0.0002900296822190285
+          },
+          "mc_cache_copy": {
+            "cpu_s": 0.0062210600000298655,
+            "wall_s": 0.006228283978998661
+          },
+          "mc_option_forward": {
+            "cpu_s": 2.9101662479999675,
+            "wall_s": 2.9090165738016367
+          },
+          "prefill_forward": {
+            "cpu_s": 0.8025433009999858,
+            "wall_s": 0.8022826323285699
+          }
+        },
+        "phase": "subset",
+        "seconds": 3.718036439269781,
+        "select": false,
+        "stage": "B-absent",
+        "unit": "c5-q5"
+      },
+      {
+        "chunk": 0,
+        "context_tokens": 3685,
+        "mc": true,
+        "options": 4,
+        "parts": {
+          "inputs": {
+            "cpu_s": 0.00032545999999911146,
+            "wall_s": 0.00032566022127866745
+          },
+          "mc_cache_copy": {
+            "cpu_s": 0.005996585000076493,
+            "wall_s": 0.006004053167998791
+          },
+          "mc_option_forward": {
+            "cpu_s": 2.605160205999937,
+            "wall_s": 2.604308186098933
+          },
+          "prefill_forward": {
+            "cpu_s": 0.8241902689999847,
+            "wall_s": 0.8239840744063258
+          }
+        },
+        "phase": "subset",
+        "seconds": 3.4347644299268723,
+        "select": false,
+        "stage": "B-absent",
+        "unit": "c6-q6"
+      },
+      {
+        "chunk": 0,
+        "context_tokens": 3735,
+        "mc": true,
+        "options": 4,
+        "parts": {
+          "inputs": {
+            "cpu_s": 0.00024777999999514577,
+            "wall_s": 0.00024795159697532654
+          },
+          "mc_cache_copy": {
+            "cpu_s": 0.005973852000010993,
+            "wall_s": 0.005981414578855038
+          },
+          "mc_option_forward": {
+            "cpu_s": 3.754870894999982,
+            "wall_s": 3.7534442907199264
+          },
+          "prefill_forward": {
+            "cpu_s": 0.8008720500000095,
+            "wall_s": 0.8006176948547363
+          }
+        },
+        "phase": "subset",
+        "seconds": 4.560487711802125,
+        "select": false,
+        "stage": "B-absent",
+        "unit": "c7-q7"
+      },
+      {
+        "chunk": 0,
+        "context_tokens": 3600,
+        "mc": true,
+        "options": 4,
+        "parts": {
+          "inputs": {
+            "cpu_s": 0.00027203100000861014,
+            "wall_s": 0.000272129662334919
+          },
+          "mc_cache_copy": {
+            "cpu_s": 0.005768560000007028,
+            "wall_s": 0.005775452591478825
+          },
+          "mc_option_forward": {
+            "cpu_s": 2.908113315999998,
+            "wall_s": 2.9067828468978405
+          },
+          "prefill_forward": {
+            "cpu_s": 0.8263905869999917,
+            "wall_s": 0.8263554964214563
+          }
+        },
+        "phase": "subset",
+        "seconds": 3.739335278980434,
+        "select": false,
+        "stage": "B-absent",
+        "unit": "c8-q8"
+      },
+      {
+        "chunk": 0,
+        "context_tokens": 3805,
+        "mc": true,
+        "options": 4,
+        "parts": {
+          "inputs": {
+            "cpu_s": 0.0002679739999962294,
+            "wall_s": 0.0002682497724890709
+          },
+          "mc_cache_copy": {
+            "cpu_s": 0.005853498999954354,
+            "wall_s": 0.00585971400141716
+          },
+          "mc_option_forward": {
+            "cpu_s": 1.876415660000049,
+            "wall_s": 1.875741919502616
+          },
+          "prefill_forward": {
+            "cpu_s": 0.7993150899999932,
+            "wall_s": 0.7990260059013963
+          }
+        },
+        "phase": "subset",
+        "seconds": 2.681041941046715,
+        "select": false,
+        "stage": "B-absent",
+        "unit": "c9-q9"
+      },
+      {
+        "chunk": 0,
+        "context_tokens": 3717,
+        "mc": true,
+        "options": 4,
+        "parts": {
+          "inputs": {
+            "cpu_s": 0.0002548630000092089,
+            "wall_s": 0.00025520753115415573
+          },
+          "mc_cache_copy": {
+            "cpu_s": 0.005925509999997303,
+            "wall_s": 0.005933002568781376
+          },
+          "mc_option_forward": {
+            "cpu_s": 3.1419261609999865,
+            "wall_s": 3.1400873381644487
+          },
+          "prefill_forward": {
+            "cpu_s": 0.8046512850000056,
+            "wall_s": 0.8044752776622772
+          }
+        },
+        "phase": "subset",
+        "seconds": 3.950951029546559,
+        "select": false,
+        "stage": "B-absent",
+        "unit": "c10-q10"
+      },
+      {
+        "chunk": 0,
+        "context_tokens": 3556,
+        "mc": true,
+        "options": 4,
+        "parts": {
+          "inputs": {
+            "cpu_s": 0.00027541299999711555,
+            "wall_s": 0.00027546845376491547
+          },
+          "mc_cache_copy": {
+            "cpu_s": 0.005835835999988603,
+            "wall_s": 0.005844101309776306
+          },
+          "mc_option_forward": {
+            "cpu_s": 3.1524272700000324,
+            "wall_s": 3.1505820946767926
+          },
+          "prefill_forward": {
+            "cpu_s": 0.800711390999993,
+            "wall_s": 0.8003087909892201
+          }
+        },
+        "phase": "subset",
+        "seconds": 3.957201475277543,
+        "select": false,
+        "stage": "B-absent",
+        "unit": "c11-q11"
+      },
+      {
+        "chunk": 0,
+        "context_tokens": 3736,
+        "mc": true,
+        "options": 4,
+        "parts": {
+          "inputs": {
+            "cpu_s": 0.00027383700000882527,
+            "wall_s": 0.00027393270283937454
+          },
+          "mc_cache_copy": {
+            "cpu_s": 0.0030452490000243415,
+            "wall_s": 0.0030494527891278267
+          },
+          "mc_option_forward": {
+            "cpu_s": 1.2497380359999681,
+            "wall_s": 1.2491904068738222
+          },
+          "prefill_forward": {
+            "cpu_s": 0.8078907899999876,
+            "wall_s": 0.8078698189929128
+          }
+        },
+        "phase": "subset",
+        "seconds": 2.060668734833598,
+        "select": false,
+        "stage": "B-absent",
+        "unit": "c12-q12"
+      },
+      {
+        "chunk": 0,
+        "context_tokens": 3682,
+        "mc": true,
+        "options": 4,
+        "parts": {
+          "inputs": {
+            "cpu_s": 0.00024689899998975307,
+            "wall_s": 0.00024737603962421417
+          },
+          "mc_cache_copy": {
+            "cpu_s": 0.006330612000027713,
+            "wall_s": 0.006302681751549244
+          },
+          "mc_option_forward": {
+            "cpu_s": 2.208286413999957,
+            "wall_s": 2.2073832796886563
+          },
+          "prefill_forward": {
+            "cpu_s": 0.8302069519999975,
+            "wall_s": 0.8298687329515815
+          }
+        },
+        "phase": "subset",
+        "seconds": 3.0440232874825597,
+        "select": false,
+        "stage": "B-absent",
+        "unit": "c13-q13"
+      },
+      {
+        "chunk": 0,
+        "context_tokens": 3770,
+        "mc": true,
+        "options": 4,
+        "parts": {
+          "inputs": {
+            "cpu_s": 0.00030710699999758617,
+            "wall_s": 0.0003072712570428848
+          },
+          "mc_cache_copy": {
+            "cpu_s": 0.0055689459999825885,
+            "wall_s": 0.005574324168264866
+          },
+          "mc_option_forward": {
+            "cpu_s": 1.3308195910000222,
+            "wall_s": 1.3306052526459098
+          },
+          "prefill_forward": {
+            "cpu_s": 0.8135203880000006,
+            "wall_s": 0.8130513709038496
+          }
+        },
+        "phase": "subset",
+        "seconds": 2.1497191060334444,
+        "select": false,
+        "stage": "B-absent",
+        "unit": "c14-q14"
+      },
+      {
+        "chunk": 0,
+        "context_tokens": 3706,
+        "mc": true,
+        "options": 4,
+        "parts": {
+          "inputs": {
+            "cpu_s": 0.0002702289999945151,
+            "wall_s": 0.00027055200189352036
+          },
+          "mc_cache_copy": {
+            "cpu_s": 0.005633182000025272,
+            "wall_s": 0.005638469010591507
+          },
+          "mc_option_forward": {
+            "cpu_s": 2.670713568999986,
+            "wall_s": 2.670129413716495
+          },
+          "prefill_forward": {
+            "cpu_s": 0.8353351639999858,
+            "wall_s": 0.8351244190707803
+          }
+        },
+        "phase": "subset",
+        "seconds": 3.511360856704414,
+        "select": false,
+        "stage": "B-absent",
+        "unit": "c15-q15"
+      }
+    ],
+    "versions": {
+      "device": "NVIDIA H100 80GB HBM3",
+      "torch": "2.11.0+cu128"
+    }
+  },
+  "timings_s": {
+    "derive": 4.662965264171362,
+    "model_load": 7.144105948507786,
+    "process_to_startup": 1.5310358628630638,
+    "startup": 3.38376432005316
+  }
+}
