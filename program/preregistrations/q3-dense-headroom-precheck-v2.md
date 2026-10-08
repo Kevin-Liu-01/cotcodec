@@ -140,7 +140,7 @@ v2's), doctor, filler and summariser by `q3-dense-headroom-precheck-v1`,
 
 | File | SHA-256 |
 |---|---|
-| scripts/run_dense_headroom_precheck_v2.py | 93fb4d4bca4b0b8fad1bb56351c6c8ad7c5fbe501fc7cba5814047252fc60154 |
+| scripts/run_dense_headroom_precheck_v2.py | dadab67fa371835d80c7291dded84519371f2a6b889840b0ca4c24ae2ad27e31 |
 | harness/dense_headroom_v2.py | 49f340ac46c80fa312d10e29bb3eaa45d95e574b9a598f47379b0e1effa5b5e1 |
 | harness/dense_headroom_v2_lanes.py | 375b8f426c1f42dc14cbd16fc1bec91a772860a8286a58f109de01ae1caca7e8 |
 | harness/dense_headroom_torch_v2.py | 34963c32746c9d6b4384cb32b9ab37b1a4966b4586923ba43da036bdc6da0cbe |
