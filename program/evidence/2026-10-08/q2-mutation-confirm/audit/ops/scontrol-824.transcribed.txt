@@ -1,0 +1,10 @@
+Job 824 (q2m-rater-confirm-audit-v1-s001) had aged out of slurmctld (scontrol: "Invalid job id
+specified"; accounting storage is disabled on this host) when the evidence was collected at
+2026-10-08T11:02Z. These fields were read from `scontrol show job 824` shortly after it
+completed (before 11:01Z) and are transcribed here; the lane's own job.env (started_at) and
+termination.env (finished_at, reason, exit_code) in ../open-weight/s001/lane/ agree.
+
+   JobState=COMPLETED Reason=None Dependency=(null)
+   Requeue=0 Restarts=0 BatchFlag=1 Reboot=0 ExitCode=0:0
+   RunTime=00:06:21 TimeLimit=00:13:00 TimeMin=N/A
+   StartTime=2026-10-08T10:46:40 EndTime=2026-10-08T10:53:01 Deadline=N/A
