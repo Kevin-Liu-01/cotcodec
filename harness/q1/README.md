@@ -16,7 +16,12 @@ CPU doctor. The preregistration draft is
 | `gates/b_native.py` | core | runs an unmodified KernelGYM clone (fidelity only) |
 | `gates/gate_c.py` | core | KBV values (c1), shapes (c2), unaligned remainders (c3), validity gate |
 | `audit/` | core | A1 fp64 oracle (D14 dual TF32 policy, calibration), A2 values, A3 shapes with refusal classification, A4 contracts and dual-poison allocator, A5 lethe-style checks, tiers |
-| `runner.py`, `worker.py`, `journal.py` | core | one subprocess per item, phase watchdog, kill-and-resume journal, signal checkpoint |
+| `runner.py`, `worker.py`, `journal.py` | core | one subprocess per item, phase watchdog, kill-and-resume journal, signal checkpoint; item requirements and per-item journals (reference items) |
+| `refstore.py` | engineering pass (decision D31) | reference store: reference items compute gate (c)'s references and validity gate and the audit's fp64, device, TF32 and CPU fp32 references and A5's reference calls once per problem, replicate and channel; consumers read the entry or compute inline (gate (a) always inline since the D31 review; in `gate_code_sha256` and `audit_code_sha256`) |
+| `faults.py` | D31 review fix pass | the one list of GPU resource-failure text the runner's contention rule, its health check and the reference store share |
+| `memory.py`, `memory_table.json` | D31 review fix pass | execution policy `q1-stage0-exec/2`: per-item capacity units from estimated (or measured) peak GPU memory; the meta-device table is built by `scripts/q1_memory_table.py` (in `driver_sha256`) |
+| `refschedule.py` | engineering pass (D31) | which items share an entry (groups of at least two kernels), where reference items go, what each consumer requires (driver) |
+| `repilot.py` | engineering pass (D31) | the re-pilot rule `q1-repilot/1` (S1-cal problems with no evaluation unit, paired inline and store arms) and the twin-row comparison (driver) |
 | `timing.py` | core | randomized paired timing with L2 flush and CUDA events |
 | `analysis.py` | core, integration | ladder composition with vacuous unrefereeable components, tiers, splits, parent filter and mutant scope, MS (weighted and unweighted)/FAR/FRR/FRR_independent/FA-share on one kernel set, paired differences, breakdowns, precision-only class, audit-hole candidates and summary, c-lite set cover, marginal and amortized cost |
 | `audit/calibration.py`, `audit/replay.py` | integration | M calibration driver (members, fault ceiling, exact references) and the audit-hole replay (`scripts/q1_calibrate_audit.py`, `scripts/q1_audit_hole_replay.py`) |
@@ -36,7 +41,9 @@ CPU doctor. The preregistration draft is
 - Problem access: `problems.load_problem_source(problem_id)` (hash-checked),
   `problems.analyze_problem`, `problems.override_constants`.
 - Work items: `runner.WorkItem(kernel_id, kernel_path, problem_id, gate, seed,
-  problem_source_path, options)`; gates and channels in `worker.WORK_GATES`.
+  problem_source_path, options, exclusive, timeouts, units, requires, journal,
+  memory_bytes)`;
+  gates and channels in `worker.WORK_GATES` (reference items: `ref_*`).
 - Phase reporting for the watchdog: `gates.outcome.report_phase`.
 - Seeds: `gates.outcome.channel_seed(base, replicate, index)`.
 
@@ -98,6 +105,54 @@ substrates (S1 convert, S2 build, admission) -> mutate (pool, compile, select, c
   now replays b0's five candidate calls before b1/b2, plus b2's empty-profile
   retry; `relu_call_count_switch` (doctor) and `call-count-switch` (hack
   control) check it.
+
+## Reference store (decision D31)
+
+Gate (c) and audit channels A1, A2, A3 and A5 compare a candidate with
+references computed on its own inputs, and none of those references depends on
+the candidate. `refstore.py` computes them once per problem, replicate and
+channel in a **reference item** (gates `ref_c`, `ref_A1`, `ref_A2`, `ref_A3`,
+`ref_A5`; no candidate loads) with the same functions the inline path calls
+(`gate_c.reference_configs`, `audit.run.reference_draws`,
+`lethe_contracts.reference_results`) and writes an entry; a **consumer** item
+draws its inputs as before, reads the entry and runs the candidate. Gate (a) is
+not a consumer (D31 review): upstream KernelBench computes the reference in the
+candidate's process. The store is an optimisation only:
+
+- an entry is usable only if no reference call raised, changed an input it
+  received or the CPU/CUDA RNG state, no stored output aliases an input, and
+  every output is a tensor or tuple/list of tensors; a resource failure writes
+  no entry (the reference row carries the text, so the runner retries a shared
+  reference item alone while its consumers wait); an unusable entry keeps no
+  tensors;
+- the TF32/cuDNN switches and a fingerprint of each draw's inputs are checked
+  before every draw (A5: before every stored reference call), and a consumer
+  computes inline from the first draw it cannot use; gate (c) first replays the
+  reference forwards the store skipped;
+- disk: groups over `refschedule.ENTRY_CAP_BYTES` compute inline, entries are
+  written only within `refstore.STORE_CAP_BYTES`, and the Stage 0 driver
+  deletes an entry's tensors after its last consumer;
+- consumers add nothing to verdict rows; what they used is in
+  `<store>/uses/`, and reference rows go to `references.jsonl`, never to the
+  scoring journal;
+- `tests/test_q1_refstore_equivalence.py` (doctor corpus) and
+  `tests/test_q1_integration_cpu.py::test_reference_store_rows_equal_inline_rows`
+  (committed fixtures) prove identical verdict rows except timing and run
+  fields, for kernels with defined behaviour that leave process-global state
+  alone; `tests/test_q1_refstore_semantics.py` covers a stateful reference with
+  a switch flip, A5 integer inputs written in place and raising references. The
+  exceptions are a kernel that reads memory it never wrote (its rows depend on
+  allocator history; the inline path does not reproduce them either, and A4
+  rejects such a kernel either way) and a candidate that changes process-global
+  state at import (the store's reference comes from a clean process);
+  `program/evidence/2026-10-07/q1-engineering-d31/` holds the differential
+  against main's code.
+
+`scripts/run_q1_stage0.py` uses the store unless `--reference-store off`;
+`refschedule.with_references` gives every (problem, replicate, channel) read by
+at least two pending kernels one reference item, placed before its first
+consumer. The store lives beside the output, so a resumed job recomputes what
+its pending items need.
 
 ## NOTICE
 

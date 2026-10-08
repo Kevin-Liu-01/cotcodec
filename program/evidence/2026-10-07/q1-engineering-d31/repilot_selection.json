@@ -1,0 +1,270 @@
+{
+ "builds": {
+  "L1/10_3D_tensor_matrix_multiplication": {
+   "built": true,
+   "problem_id": "L1/10_3D_tensor_matrix_multiplication",
+   "substrate_id": "s1-inductor-L1-10_3D_tensor_matrix_multiplication"
+  },
+  "L1/18_Matmul_with_transposed_both": {
+   "built": true,
+   "problem_id": "L1/18_Matmul_with_transposed_both",
+   "substrate_id": "s1-inductor-L1-18_Matmul_with_transposed_both"
+  },
+  "L2/100_ConvTranspose3d_Clamp_Min_Divide": {
+   "built": true,
+   "problem_id": "L2/100_ConvTranspose3d_Clamp_Min_Divide",
+   "substrate_id": "s1-inductor-L2-100_ConvTranspose3d_Clamp_Min_Divide"
+  },
+  "L2/46_Conv2d_Subtract_Tanh_Subtract_AvgPool": {
+   "built": true,
+   "problem_id": "L2/46_Conv2d_Subtract_Tanh_Subtract_AvgPool",
+   "substrate_id": "s1-inductor-L2-46_Conv2d_Subtract_Tanh_Subtract_AvgPool"
+  },
+  "L2/59_Matmul_Swish_Scaling": {
+   "built": true,
+   "problem_id": "L2/59_Matmul_Swish_Scaling",
+   "substrate_id": "s1-inductor-L2-59_Matmul_Swish_Scaling"
+  },
+  "L2/77_ConvTranspose3d_Scale_BatchNorm_GlobalAvgPool": {
+   "built": true,
+   "problem_id": "L2/77_ConvTranspose3d_Scale_BatchNorm_GlobalAvgPool",
+   "substrate_id": "s1-inductor-L2-77_ConvTranspose3d_Scale_BatchNorm_GlobalAvgPool"
+  },
+  "L2/87_Conv2d_Subtract_Subtract_Mish": {
+   "built": true,
+   "problem_id": "L2/87_Conv2d_Subtract_Subtract_Mish",
+   "substrate_id": "s1-inductor-L2-87_Conv2d_Subtract_Subtract_Mish"
+  },
+  "L2/95_Matmul_Add_Swish_Tanh_GELU_Hardtanh": {
+   "built": true,
+   "problem_id": "L2/95_Matmul_Add_Swish_Tanh_GELU_Hardtanh",
+   "substrate_id": "s1-inductor-L2-95_Matmul_Add_Swish_Tanh_GELU_Hardtanh"
+  }
+ },
+ "candidates": {
+  "L1-below-0.6GB": [
+   "L1/10_3D_tensor_matrix_multiplication",
+   "L1/18_Matmul_with_transposed_both",
+   "L1/15_Matmul_for_lower_triangular_matrices"
+  ],
+  "L2-0-0.05GB": [
+   "L2/59_Matmul_Swish_Scaling",
+   "L2/95_Matmul_Add_Swish_Tanh_GELU_Hardtanh",
+   "L2/55_Matmul_MaxPool_Sum_Scale",
+   "L2/75_Gemm_GroupNorm_Min_BiasAdd",
+   "L2/24_Conv3d_Min_Softmax",
+   "L2/72_ConvTranspose3d_BatchNorm_AvgPool_AvgPool",
+   "L2/70_Gemm_Sigmoid_Scaling_ResidualAdd",
+   "L2/56_Matmul_Sigmoid_Sum",
+   "L2/60_ConvTranspose3d_Swish_GroupNorm_HardSwish",
+   "L2/97_Matmul_BatchNorm_BiasAdd_Divide_Swish",
+   "L2/18_Matmul_Sum_Max_AvgPool_LogSumExp_LogSumExp",
+   "L2/20_ConvTranspose3d_Sum_ResidualAdd_Multiply_ResidualAdd",
+   "L2/96_ConvTranspose3d_Multiply_Max_GlobalAvgPool_Clamp",
+   "L2/99_Matmul_GELU_Softmax",
+   "L2/6_Conv3d_Softmax_MaxPool_MaxPool",
+   "L2/88_Gemm_GroupNorm_Swish_Multiply_Swish",
+   "L2/81_Gemm_Swish_Divide_Clamp_Tanh_Clamp"
+  ],
+  "L2-0.05-0.2GB": [
+   "L2/77_ConvTranspose3d_Scale_BatchNorm_GlobalAvgPool",
+   "L2/34_ConvTranspose3d_LayerNorm_GELU_Scaling",
+   "L2/78_ConvTranspose3d_Max_Max_Sum",
+   "L2/57_Conv2d_ReLU_HardSwish",
+   "L2/48_Conv3d_Scaling_Tanh_Multiply_Sigmoid",
+   "L2/53_Gemm_Scaling_Hardtanh_GELU",
+   "L2/61_ConvTranspose3d_ReLU_GroupNorm",
+   "L2/71_Conv2d_Divide_LeakyReLU",
+   "L2/73_Conv2d_BatchNorm_Scaling",
+   "L2/51_Gemm_Subtract_GlobalAvgPool_LogSumExp_GELU_ResidualAdd"
+  ],
+  "L2-0.2-0.4GB": [
+   "L2/100_ConvTranspose3d_Clamp_Min_Divide",
+   "L2/87_Conv2d_Subtract_Subtract_Mish",
+   "L2/8_Conv3d_Divide_Max_GlobalAvgPool_BiasAdd_Sum",
+   "L2/52_Conv2d_Activation_BatchNorm",
+   "L2/43_Conv3d_Max_LogSumExp_ReLU",
+   "L2/47_Conv3d_Mish_Tanh",
+   "L2/40_Matmul_Scaling_ResidualAdd"
+  ],
+  "L2-0.4-0.6GB": [
+   "L2/46_Conv2d_Subtract_Tanh_Subtract_AvgPool",
+   "L2/2_ConvTranspose2d_BiasAdd_Clamp_Scaling_Clamp_Divide",
+   "L2/5_ConvTranspose2d_Subtract_Tanh",
+   "L2/31_Conv2d_Min_Add_Multiply"
+  ]
+ },
+ "mutants": {
+  "s1-inductor-L1-10_3D_tensor_matrix_multiplication": "s1-inductor-L1-10_3D_tensor_matrix_multiplication.acc-minus.L114C8",
+  "s1-inductor-L1-18_Matmul_with_transposed_both": "s1-inductor-L1-18_Matmul_with_transposed_both.load-offset-off1.L109C20",
+  "s1-inductor-L2-100_ConvTranspose3d_Clamp_Min_Divide": "s1-inductor-L2-100_ConvTranspose3d_Clamp_Min_Divide.plus2minus.L67C13",
+  "s1-inductor-L2-46_Conv2d_Subtract_Tanh_Subtract_AvgPool": "s1-inductor-L2-46_Conv2d_Subtract_Tanh_Subtract_AvgPool.lt2gt.L88C21",
+  "s1-inductor-L2-59_Matmul_Swish_Scaling": "s1-inductor-L2-59_Matmul_Swish_Scaling.mask-bound-minus1.L123C20",
+  "s1-inductor-L2-77_ConvTranspose3d_Scale_BatchNorm_GlobalAvgPool": "s1-inductor-L2-77_ConvTranspose3d_Scale_BatchNorm_GlobalAvgPool.const0to1.L87C37",
+  "s1-inductor-L2-87_Conv2d_Subtract_Subtract_Mish": "s1-inductor-L2-87_Conv2d_Subtract_Subtract_Mish.mul2plus.L61C39",
+  "s1-inductor-L2-95_Matmul_Add_Swish_Tanh_GELU_Hardtanh": "s1-inductor-L2-95_Matmul_Add_Swish_Tanh_GELU_Hardtanh.plus2minus.L78C14"
+ },
+ "order": [
+  {
+   "kernels": [
+    "s1-inductor-L1-10_3D_tensor_matrix_multiplication",
+    "ctl-identity-L1-10_3D_tensor_matrix_multiplication",
+    "s1-inductor-L1-10_3D_tensor_matrix_multiplication.acc-minus.L114C8"
+   ],
+   "native_input_bytes": 140509184,
+   "problem_id": "L1/10_3D_tensor_matrix_multiplication"
+  },
+  {
+   "kernels": [
+    "s1-inductor-L1-18_Matmul_with_transposed_both",
+    "ctl-identity-L1-18_Matmul_with_transposed_both",
+    "s1-inductor-L1-18_Matmul_with_transposed_both.load-offset-off1.L109C20"
+   ],
+   "native_input_bytes": 201326592,
+   "problem_id": "L1/18_Matmul_with_transposed_both"
+  },
+  {
+   "kernels": [
+    "s1-inductor-L2-59_Matmul_Swish_Scaling",
+    "ctl-identity-L2-59_Matmul_Swish_Scaling",
+    "s1-inductor-L2-59_Matmul_Swish_Scaling.mask-bound-minus1.L123C20"
+   ],
+   "native_input_bytes": 16777216,
+   "problem_id": "L2/59_Matmul_Swish_Scaling"
+  },
+  {
+   "kernels": [
+    "s1-inductor-L2-95_Matmul_Add_Swish_Tanh_GELU_Hardtanh",
+    "ctl-identity-L2-95_Matmul_Add_Swish_Tanh_GELU_Hardtanh",
+    "s1-inductor-L2-95_Matmul_Add_Swish_Tanh_GELU_Hardtanh.plus2minus.L78C14"
+   ],
+   "native_input_bytes": 33554432,
+   "problem_id": "L2/95_Matmul_Add_Swish_Tanh_GELU_Hardtanh"
+  },
+  {
+   "kernels": [
+    "s1-inductor-L2-77_ConvTranspose3d_Scale_BatchNorm_GlobalAvgPool",
+    "ctl-identity-L2-77_ConvTranspose3d_Scale_BatchNorm_GlobalAvgPool",
+    "s1-inductor-L2-77_ConvTranspose3d_Scale_BatchNorm_GlobalAvgPool.const0to1.L87C37"
+   ],
+   "native_input_bytes": 67108864,
+   "problem_id": "L2/77_ConvTranspose3d_Scale_BatchNorm_GlobalAvgPool"
+  },
+  {
+   "kernels": [
+    "s1-inductor-L2-100_ConvTranspose3d_Clamp_Min_Divide",
+    "ctl-identity-L2-100_ConvTranspose3d_Clamp_Min_Divide",
+    "s1-inductor-L2-100_ConvTranspose3d_Clamp_Min_Divide.plus2minus.L67C13"
+   ],
+   "native_input_bytes": 226492416,
+   "problem_id": "L2/100_ConvTranspose3d_Clamp_Min_Divide"
+  },
+  {
+   "kernels": [
+    "s1-inductor-L2-87_Conv2d_Subtract_Subtract_Mish",
+    "ctl-identity-L2-87_Conv2d_Subtract_Subtract_Mish",
+    "s1-inductor-L2-87_Conv2d_Subtract_Subtract_Mish.mul2plus.L61C39"
+   ],
+   "native_input_bytes": 268435456,
+   "problem_id": "L2/87_Conv2d_Subtract_Subtract_Mish"
+  },
+  {
+   "kernels": [
+    "s1-inductor-L2-46_Conv2d_Subtract_Tanh_Subtract_AvgPool",
+    "ctl-identity-L2-46_Conv2d_Subtract_Tanh_Subtract_AvgPool",
+    "s1-inductor-L2-46_Conv2d_Subtract_Tanh_Subtract_AvgPool.lt2gt.L88C21"
+   ],
+   "native_input_bytes": 536870912,
+   "problem_id": "L2/46_Conv2d_Subtract_Tanh_Subtract_AvgPool"
+  }
+ ],
+ "problems": [
+  "L1/10_3D_tensor_matrix_multiplication",
+  "L1/18_Matmul_with_transposed_both",
+  "L2/59_Matmul_Swish_Scaling",
+  "L2/95_Matmul_Add_Swish_Tanh_GELU_Hardtanh",
+  "L2/77_ConvTranspose3d_Scale_BatchNorm_GlobalAvgPool",
+  "L2/100_ConvTranspose3d_Clamp_Min_Divide",
+  "L2/87_Conv2d_Subtract_Subtract_Mish",
+  "L2/46_Conv2d_Subtract_Tanh_Subtract_AvgPool"
+ ],
+ "repo_revision": "8e9d2574a3332114109e6b21bd0d041a9868b471",
+ "rule": "q1-repilot/1",
+ "strata": [
+  {
+   "chosen": [
+    "L1/10_3D_tensor_matrix_multiplication",
+    "L1/18_Matmul_with_transposed_both"
+   ],
+   "replaced_not_built": [],
+   "stratum": "L1-below-0.6GB"
+  },
+  {
+   "chosen": [
+    "L2/59_Matmul_Swish_Scaling",
+    "L2/95_Matmul_Add_Swish_Tanh_GELU_Hardtanh"
+   ],
+   "replaced_not_built": [],
+   "stratum": "L2-0-0.05GB"
+  },
+  {
+   "chosen": [
+    "L2/77_ConvTranspose3d_Scale_BatchNorm_GlobalAvgPool"
+   ],
+   "replaced_not_built": [],
+   "stratum": "L2-0.05-0.2GB"
+  },
+  {
+   "chosen": [
+    "L2/100_ConvTranspose3d_Clamp_Min_Divide",
+    "L2/87_Conv2d_Subtract_Subtract_Mish"
+   ],
+   "replaced_not_built": [],
+   "stratum": "L2-0.2-0.4GB"
+  },
+  {
+   "chosen": [
+    "L2/46_Conv2d_Subtract_Tanh_Subtract_AvgPool"
+   ],
+   "replaced_not_built": [],
+   "stratum": "L2-0.4-0.6GB"
+  }
+ ],
+ "strata_rule": [
+  [
+   "L1-below-0.6GB",
+   1,
+   0,
+   600000000,
+   2
+  ],
+  [
+   "L2-0-0.05GB",
+   2,
+   0,
+   50000000,
+   2
+  ],
+  [
+   "L2-0.05-0.2GB",
+   2,
+   50000000,
+   200000000,
+   1
+  ],
+  [
+   "L2-0.2-0.4GB",
+   2,
+   200000000,
+   400000000,
+   2
+  ],
+  [
+   "L2-0.4-0.6GB",
+   2,
+   400000000,
+   600000000,
+   1
+  ]
+ ]
+}

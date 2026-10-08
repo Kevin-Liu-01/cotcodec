@@ -1,0 +1,96 @@
+{
+ "per_problem_and_arm": {
+  "L1/18_Matmul_with_transposed_both [inline]": {
+   "worker_crashed_attempts": 3
+  },
+  "L1/18_Matmul_with_transposed_both [store]": {
+   "worker_crashed_attempts": 2
+  },
+  "L2/100_ConvTranspose3d_Clamp_Min_Divide [inline]": {
+   "failed_health_checks": 2,
+   "never_final": 22,
+   "oom_shared_then_alone": 22,
+   "worker_crashed_attempts": 7
+  },
+  "L2/100_ConvTranspose3d_Clamp_Min_Divide [reference]": {
+   "never_final": 1,
+   "oom_shared_then_alone": 1
+  },
+  "L2/100_ConvTranspose3d_Clamp_Min_Divide [store]": {
+   "failed_health_checks": 1,
+   "never_final": 28,
+   "not_started_time_box": 3,
+   "oom_shared_then_alone": 27,
+   "worker_crashed_attempts": 2
+  },
+  "L2/46_Conv2d_Subtract_Tanh_Subtract_AvgPool [inline]": {
+   "not_started_time_box": 34
+  },
+  "L2/46_Conv2d_Subtract_Tanh_Subtract_AvgPool [reference]": {
+   "not_started_time_box": 7
+  },
+  "L2/46_Conv2d_Subtract_Tanh_Subtract_AvgPool [store]": {
+   "not_started_time_box": 35
+  },
+  "L2/59_Matmul_Swish_Scaling [inline]": {
+   "never_final": 7,
+   "oom_shared_then_alone": 11,
+   "worker_crashed_attempts": 6
+  },
+  "L2/59_Matmul_Swish_Scaling [reference]": {
+   "never_final": 1,
+   "oom_shared_then_alone": 1
+  },
+  "L2/59_Matmul_Swish_Scaling [store]": {
+   "failed_health_checks": 1,
+   "never_final": 7,
+   "not_started_time_box": 3,
+   "oom_shared_then_alone": 11,
+   "worker_crashed_attempts": 6
+  },
+  "L2/87_Conv2d_Subtract_Subtract_Mish [inline]": {
+   "never_final": 13,
+   "oom_shared_then_alone": 12,
+   "timeout_shared_then_alone": 1,
+   "worker_crashed_attempts": 6
+  },
+  "L2/87_Conv2d_Subtract_Subtract_Mish [reference]": {
+   "never_final": 1,
+   "oom_shared_then_alone": 1
+  },
+  "L2/87_Conv2d_Subtract_Subtract_Mish [store]": {
+   "failed_health_checks": 1,
+   "never_final": 13,
+   "not_started_time_box": 3,
+   "oom_shared_then_alone": 11,
+   "timeout_shared_then_alone": 2,
+   "worker_crashed_attempts": 2
+  }
+ },
+ "runner_summary": {
+  "contention_oom_shared": 97,
+  "contention_timeout_shared": 3,
+  "crashes": 39,
+  "deferred_by_deadline": 178,
+  "infra_failures": 5,
+  "items": 776,
+  "left_in_queue": 178,
+  "retired_slots": [
+   "cuda:0",
+   "cuda:0",
+   "cuda:0",
+   "cuda:0",
+   "cuda:0"
+  ],
+  "run": 699,
+  "timeouts": 3
+ },
+ "totals": {
+  "failed_health_checks": 5,
+  "never_final": 93,
+  "not_started_time_box": 85,
+  "oom_shared_then_alone": 97,
+  "timeout_shared_then_alone": 3,
+  "worker_crashed_attempts": 34
+ }
+}

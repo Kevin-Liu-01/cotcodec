@@ -28,7 +28,22 @@ criterion 3, was not implemented in the Stage 0 driver and projected its fixed
 phases too low; its fix pass is section 18.6, and section 18.7 registers
 `q1-stage0-trim/2` and its corrected projection (about 7.6 GPU-h through its
 bucket P3, 11.0 through P7; the stop keeps the run under 8) for the owner's
-decision.
+decision. The engineering pass of decision D31 (section 18.8, branch
+`stage0/q1-engineering-d31`) computes references once per problem and draw and
+re-piloted on non-evaluation kernels only (Slurm 713, 0.330 GPU-h). The store
+reproduces inline verdict rows only for kernels with defined behaviour that do
+not touch process-global state; it saves little at in-scope sizes, and the high
+estimate through P3 stays above 8 GPU-h in every scenario (8.56 at the
+references-free bound, which uses a ratio chosen after the data, post hoc), so
+Stage 0 is not admitted under D31. The re-pilot also found that the registered
+12-per-GPU execution runs out of GPU memory on some in-scope-sized problems. An
+adversarial review of that pass found the execution unsafe and the store's
+semantics overstated; its fix pass (section 18.9, no GPU used) registers the
+memory-aware execution policy `q1-stage0-exec/2` and a health check that never
+retires a slot on memory contention, takes gate (a) out of the store and tightens
+the store's rules. Under `q1-stage0-exec/2` the projection rises (model-based,
+through P3: 10.46 GPU-h central and 12.31 high without the store, 11.10 high at
+the references-free bound): Stage 0 is still not admitted under D31.
 
 Freezing is the program owner's step:
 
@@ -87,12 +102,12 @@ Version card (`python scripts/q1_version_card.py --markdown`):
 | `schema` | `q1-version-card/2` |
 | `schema_py_sha256` | `c9bae9d502f7b9c83332f95e24fd9934d91bfe6cede47de527f6d584838b3256` |
 | `schema_version` | `q1-schema/1` |
-| `gate_code_sha256` | `0f3fd3cdb324c0f05adf60fb0d9cebc2a010ecd2b1f334db995498be1137f7f1` |
+| `gate_code_sha256` | `b5f4fa74e23c72fc48cb110d2f61a842611bb6fd89dac831f32802938f6757cb` |
 | `gate_data_sha256` | `c9f5ecfa38f5528f0bf13202496389d8039428b8683b821c03267719ba6da85a` |
 | `shape_manifest_sha256` | `29e693ee4d77bc86e3ecfdb1000307b3878c023c6c6224f87c4fcfae74a220cb` |
-| `audit_code_sha256` | `8ed89f1548d5003da9398b494d29d239afab97fb9f921f32c688541d16fc7100` |
+| `audit_code_sha256` | `b10a62f729108372cdde1c431196894cc5a4d12441a7f7433eba3e70443c214c` |
 | `analysis_sha256` | `60d5371d199bb4ee288a9cb79fd4ef284539833214deb0d929106659460fca54` |
-| `driver_sha256` | `1d52945095f80690aada6c09b5e279c61e1f1c48c6fe9d72c7481a3e7c7fde30` |
+| `driver_sha256` | `aa2f365d7ebdbbb1e8e2200e418bf27dcabc094951d46932fbc052fc4bb8e93f` |
 | `trim_rule` | `q1-stage0-trim/2` |
 | `mutator_package_sha256` | `f4aa6e93214126b1fcc82964654833a2da419ff98e7d7b9d27fa24dc2f595296` |
 | `mutator_registry_fingerprint` | `43a1f0a234ad1c4a4421626d740989e01890b878c5ce7f2dec5739e3d43922a6` |
@@ -840,7 +855,15 @@ the report on the CPU end-to-end journal.
   `q1-stage0-trim/1`; after the second review section 18.7 replaces it with
   `q1-stage0-trim/2` (7.60 GPU-h through its bucket P3 and 10.99 through P7
   at the central projection, kept under 8 by job caps), or the gauntlet
-  (blocked under D24 until the trust store exists).
+  (blocked under D24 until the trust store exists). **Engineering pass (D31,
+  section 18.8):** with references computed once per problem and draw and the
+  re-pilot's 0.330 GPU-h in the fixed part, the high estimate through P3 is
+  8.81-9.85 GPU-h with the store and 9.03 without it (8.56 at the
+  references-free bound, post hoc ratio): Stage 0 is not admitted under D31.
+  Those numbers assume the old 12-per-GPU execution (`q1-stage0-exec/1`), which
+  is not safe; under the registered `q1-stage0-exec/2` (section 18.9) the
+  model-based estimate through P3 is 10.46 central and 12.31 high without the
+  store.
 - **Corpus hand-off** (solved in the pilot pass). The lane mounts one
   read-only, SHA-256-checked study artifact per job (`study_artifact`, at most
   512 MiB, at `/inputs/study-artifact.json`). Every Stage 0 job that needs
@@ -877,9 +900,12 @@ the report on the CPU end-to-end journal.
   Stage 0 driver (`scripts/run_q1_stage0.py`) attaches them to every item.
   **Contention** (second review, finding 3): an item that ran in a shared
   concurrency class (fewer capacity units than its GPU has) and either timed
-  out or shows a CUDA out-of-memory error is an infrastructure failure
+  out or shows a GPU resource failure (CUDA out-of-memory, or a cuBLAS, cuDNN,
+  cuFFT, cuSOLVER or cuSPARSE allocation or initialisation failure; one list,
+  `harness/q1/faults.py`, D31 review) is an infrastructure failure
   (`infra_failure-timeout-shared`, `infra_failure-oom-shared`) and runs once
-  more alone, also after a resume; alone, its outcome is final.
+  more alone, also after a resume; alone, its outcome is final. Concurrency
+  follows `q1-stage0-exec/2` (section 18.9).
 - **Crash attribution.** A post-load crash counts as a rejection only when
   it is attributable to the candidate. The worker runs candidate code only
   while the gate or channel runs; a worker process that dies (signal,
@@ -892,8 +918,10 @@ the report on the CPU end-to-end journal.
   the candidate loads, so a bad id is an `error` before any candidate code
   runs.
 - **Infrastructure failures** (excluded and always listed): a GPU health
-  check that fails after a crash or timeout (the item becomes `error`,
-  `infra_failure`, and the slot is retired); a row-building failure in the
+  check that fails after a crash or timeout and fails again when repeated
+  alone on the drained GPU (the item becomes `error`, `infra_failure`, and the
+  GPU takes no further item in that job; a check that fails only under
+  contention retires nothing, section 18.9); a row-building failure in the
   worker (`infra_failure-harness-row`); a lane prolog refusal (exit 75,
   `foreign_gpu_process`; no job starts); a job interrupted by the signal
   checkpoint (killed items are not journaled and rerun); a job that does not
@@ -1682,10 +1710,14 @@ families, all four contract tiers and both TF32 policies.
 6. **Execution.** One GPU and 32 CPUs per lane job, item processes not
    thread-pinned, and one Stage 0 job at a time (the conditions jobs 518 and
    548 measured; a concurrent Stage 0 job or a multi-GPU job would need a new
-   paired measurement first); 12 capacity units per GPU:
-   1 per item below 0.6 GB of native inputs, 3 from 0.6 to 1 GB, all 12 from
-   1 GB; size-scaled watchdog limits on every item; contention failures retried
-   once alone (section 10). Template:
+   paired measurement first); 12 capacity units per GPU, each item holding the
+   units its estimated peak GPU memory needs under the execution policy
+   `q1-stage0-exec/2` (section 18.9; amended by the D31 review's fix pass and
+   awaiting the owner's sign-off). As first registered (`q1-stage0-exec/1`) an
+   item held 1 unit below 0.6 GB of native inputs, 3 from 0.6 to 1 GB and all
+   12 from 1 GB; that rule is now the floor of `/2`, and it still orders each
+   bucket. Size-scaled watchdog limits on every item; contention failures
+   retried once alone (section 10). Template:
    `experiments/manifests/q1-core/q1-stage0-trim-job.template.yaml`.
 7. **Order and stop.** P1 in-scope substrates, identity controls, the hack
    sample and the adversarial controls at 42, then the FRR core at 42; P2 the
@@ -1694,8 +1726,9 @@ families, all four contract tiers and both TF32 policies.
    robustness subsample at 43 and 44; P7 the dev quota at 42; P8 the test
    extension at 42. The plan (`--plan-only`, CPU) records `plan_sha256`; every
    scoring job checks it. A job refuses to start unless the Stage 0 GPU-hours
-   already spent (Slurm allocations of every finished Stage 0 job, the pilot's
-   0.899 included), its own cap (its Slurm limit times its GPUs, the manifest's
+   already spent (Slurm allocations of every finished Stage 0 job: the pilot's
+   0.899 and the D31 re-pilot's 0.330, 1.229 so far; the job refuses a value
+   below the Stage 0 entries of `program/state.json`'s GPU ledger), its own cap (its Slurm limit times its GPUs, the manifest's
    `max_gpu_hours`) and the reserve (the timing floor and the audit-hole replay
    cap, 1.5 GPU-h) sum to at most 8.0 (`trim.budget_check`); Slurm ends it at
    its limit, so the caps bound the spend. Inside a job an item starts only if
@@ -1768,10 +1801,391 @@ larger budget, which under D24 cannot reach 100 until Kevin sets up the
 protected trust store or rules on admission; (b) an engineering pass that
 computes references, validity and fp64 replays once per problem and draw
 instead of once per kernel and gate (they dominate large items), followed by
-a new paired pilot measurement; (c) accept `/2` with the consequences above.
+a new paired pilot measurement (done under D31, section 18.8: it does not bring
+the high estimate under 8 GPU-h, and section 18.9 makes the cost higher still);
+(c) accept `/2` with the consequences above.
 Adopting `/2` changes sections 3.3, 3.4, 3.5, 4, 8.1, 8.2 (criteria 1, 3 and
 5), 10 and 12's inputs, and needs the owner's sign-off before the draft is
 frozen; findings 18.3.6 to 18.3.8 need D14 decisions first in any case.
+
+### 18.8 Engineering pass and re-pilot (decision D31; branch `stage0/q1-engineering-d31`)
+
+D31: before admission, an engineering-only pass computes references once per
+problem and draw, then a re-pilot of at most 0.5 GPU-h on S1-cal and other
+non-evaluation kernels sets the projection; Stage 0 is admitted only if the
+high estimate is within 8 GPU-h. No registered quantity, gate, tolerance,
+family, tier or sample changed: `trim.plan` and its `plan_sha256` are
+untouched, and so is every verdict rule. Evidence:
+`program/evidence/2026-10-07/q1-engineering-d31/` (`repilot-713.json` is the
+summary; the recorded analysis scripts sit beside their outputs).
+
+1. **Reference store** (`harness/q1/refstore.py`, `harness/q1/refschedule.py`).
+   Gate (a) variants, gate (c) and audit channels A1, A2, A3 and A5 compare a
+   candidate with references computed on its own inputs, and none of those
+   depends on the candidate. A reference item (gates `ref_a`, `ref_a_head`,
+   `ref_c`, `ref_A1`, `ref_A2`, `ref_A3`, `ref_A5`; no candidate loads) computes
+   them once per problem, replicate and channel with the functions the inline
+   path calls: the device fp32 reference outputs of the five KernelBench trials
+   (no-cast and fp32-cast families), gate (c)'s reference outputs and validity
+   gate (fp64 replay, CPU fp32), the audit's fp64 oracle with its device, TF32
+   and CPU fp32 references, error scalars, op record and validity reasons, and
+   A5's reference calls. Consumers draw their inputs as before, read the entry
+   and run the candidate. An entry is usable only if no reference call changed
+   an input or the CPU/CUDA RNG state, no stored output aliases an input, every
+   output is a tensor or tuple/list of tensors and no resource failure occurred;
+   the TF32/cuDNN switches are re-checked before every draw, and a consumer
+   computes inline from the first draw it cannot use. Consumers add nothing to
+   verdict rows (their reads go to the store's `uses/` folder, reference rows
+   to `references.jsonl`). One reference item serves each (problem, replicate,
+   channel) that at least two pending kernels read; the runner starts a
+   consumer once its reference item has left the queue. `run_q1_stage0.py`
+   uses the store unless `--reference-store off`. This item describes the store
+   as job 713 ran it; the fix pass (section 18.9) took the gate (a) variants out
+   of it (they compute inline, as upstream KernelBench does), made any raised
+   reference an unusable entry, writes no entry after a resource failure, adds
+   input fingerprints and a replay of skipped reference forwards, and bounds the
+   store on disk.
+2. **Equivalence on the CPU.** On the doctor's synthetic corpus (four problems,
+   22 candidates, 866 rows) the store reproduces every inline row except the 35
+   of `relu_empty_tail`, a kernel that leaves an output element unwritten
+   (`tests/test_q1_refstore_equivalence.py`); on the committed integration
+   fixtures (S1 ReLU and S2 softmax, five mutants, 16 controls) every row is
+   identical and every consumer used the store for every draw
+   (`tests/test_q1_integration_cpu.py::test_reference_store_rows_equal_inline_rows`).
+   Against main@47f5fbc (the code before the pass), `main_differential.py`: main
+   run twice inline agrees on 847 of 866 row keys and this branch's store on 830;
+   both disagreements are `relu_empty_tail` only, whose rows main does not
+   reproduce either. Timing, run identity and process-specific text (temporary
+   file names, object addresses) are excluded. Scope (D31 review, finding 3):
+   these corpora hold no candidate that touches process-global state. The store
+   reproduces inline rows only for kernels with defined behaviour that leave
+   process-global state alone; the review's CPU probes found rows that differ
+   for a candidate that replaces a torch function when imported (the store's
+   reference is computed in a clean process), a candidate that writes an integer
+   input in place between A5's checks, and a stateful reference whose candidate
+   flips a tracked switch mid-item. The fix pass removes the last two
+   differences and documents the first (section 18.9).
+3. **Re-pilot** (rule `q1-repilot/1`, `harness/q1/repilot.py`; written before the
+   job). Eight S1-cal problems with no evaluation unit of any tier, in five
+   strata following the in-scope mix (L1/10 and L1/18; L2/59, L2/95, L2/77,
+   L2/100, L2/87 and L2/46; 0.017-0.537 GB of native inputs), each with its
+   S1-cal substrate, reference-identity control and one mutant (24 kernels);
+   every scoring item at replicate 42 twice, inline and through the store
+   (the twin's kernel id is the kernel id plus `.store`), twins adjacent in the
+   queue, 12 units on one GPU, size-scaled watchdog limits. Built by CPU-only Slurm job 710 (image
+   `cotcodec-q1-gates:8e9d2574`) and run as lane job 713 (manifest
+   `q1-repilot-d31-8e9d2574.yaml`): `COMPLETED 0:0`, 19 min 48 s on one GPU,
+   **0.330 GPU-h** of D31's 0.5. 699 of 776 planned items ran; the time box cut
+   L2/46 (0.537 GB) after 21 of its items (10 twin pairs of its substrate, gates
+   a, b, c, A1 and A2), so paired sizes reach 0.537 GB for those gates, 0.268 GB
+   for A4 poison, A4 sanitizer and A5, and 0.201 GB for A3 and A4 (corrected in
+   the fix pass; this item first said L2/46 never started). The exposure ledger
+   entry for the job is `repilot-713-exposure.json`: 24 kernels of 8 problems,
+   all in the S1 calibration half, none in the evaluation half, none with an S2
+   substrate, none in `pilot_exposed.json`; Stage 0's audit calibration (section
+   6.1) runs on S1-cal substrates and lists these eight as re-pilot-exposed.
+4. **Equivalence on the GPU.** Of 843 twin row pairs, 698 are identical and 828
+   have the same verdict. Every one of the 145 differing rows is explained
+   (`classify_twins.py`, `repilot-713-twins.json`), and none is a store error,
+   but the store does change some rows (D31 review, finding 3): 62 are L2/77,
+   whose inline references are not reproducible (three inline items gave three
+   different `e_r32_device` values for the same draw; cuDNN's ConvTranspose3d),
+   and the store gives every kernel of the problem one shared realization of
+   that nondeterministic reference (whether that is acceptable is the owner's
+   call); 71 belong to four mutants that A4 finds faulty in both arms (they read
+   memory they never wrote or past their inputs), whose rows follow allocator
+   history, which the store changes: 10 verdicts differ (L2/95 `plus2minus`: A1
+   accept to reject on 4 draws, A2 accept to reject, A3 reject to accept or
+   refuse; L1/18's load-offset mutant hit an illegal address, so A5 went reject
+   to error), which shifts `analysis.sanitizer_shift`; 7 are A4 probe rows,
+   identical code in both arms (4 verdict differences under memory pressure); 3
+   are memory contention (L2/100's store twin of A5 ended `error` with every
+   check `na`: the reference's out-of-memory error was dropped from the row, so
+   the runner never retried it; two L2/59 rows retried alone); 2 differ only in
+   the order of the static checker's warning set. The three KernelBench
+   adversarial controls have not run under the store on a GPU. Gate (a)'s
+   store/inline cost ratios were 0.96-1.03, and through the store its references
+   no longer came from the candidate's process as upstream's do; the fix pass
+   takes gate (a) out of the store.
+5. **Measured GPU-seconds per item** (pairs final in both arms, 12 units per
+   GPU; `cost-card-d31.json`, `repilot`):
+
+   | Gate | Pairs | Inline GPU-s (median / sum) | Store GPU-s (median / sum) | Store/inline (same-mode pairs) |
+   |---|---:|---:|---:|---:|
+   | a | 18 | 0.73 / 16.5 | 0.73 / 15.7 | 0.96 |
+   | a_1e-3 | 19 | 0.73 / 17.5 | 0.72 / 16.9 | 0.97 |
+   | a_head_1e-4 | 19 | 0.72 / 17.1 | 0.70 / 17.6 | 1.03 |
+   | a_head_1e-2 | 18 | 0.70 / 15.7 | 0.69 / 30.5 | 1.03 |
+   | a_static | 20 | 0.66 / 14.2 | 0.65 / 28.5 | 0.97 |
+   | b1 | 20 | 0.72 / 15.8 | 0.71 / 15.9 | not a consumer |
+   | b2 | 21 | 0.79 / 20.1 | 0.84 / 20.0 | not a consumer |
+   | c | 14 | 1.78 / 34.6 | 1.14 / 20.2 | 0.58 |
+   | A1 | 16 | 1.21 / 28.9 | 0.83 / 21.6 | 0.75 |
+   | A2 | 14 | 1.40 / 31.9 | 1.03 / 26.5 | 0.83 |
+   | A3 | 13 | 0.95 / 38.9 | 0.76 / 36.4 | 0.94 |
+   | A4 | 14 | 0.88 / 26.4 | 0.76 / 26.2 | not a consumer |
+   | A4_poison | 20 | 1.52 / 39.2 | 1.49 / 36.7 | not a consumer |
+   | A4_sanitizer | 19 | 0.97 / 21.9 | 0.99 / 21.9 | not a consumer |
+   | A5 | 17 | 0.76 / 26.0 | 0.75 / 23.2 | 0.89 |
+
+   (The a_head_1e-2 and a_static store sums include two L2/59 twins retried
+   alone after an out-of-memory error; the same-mode ratio leaves them out.)
+   Reference items cost 77.0 GPU-s over seven problems (median per channel 0.32
+   to 2.0 GPU-s; about 5 + 51 x GB seconds per problem and replicate). Over all
+   262 pairs the store arm with its references cost 434.6 GPU-s against 364.7
+   inline (x1.19). The store saves where references are expensive (gate c 42%,
+   A1 25%, A2 17%), but an item's cost is mostly its process, imports and input
+   draws, so at in-scope sizes a group needs about six kernels before the
+   references pay for themselves.
+6. **Finding: GPU memory at 12 units per GPU.** On three of the eight problems
+   (L2/100, L2/59, L2/87; 0.017-0.27 GB of native inputs, so parameters and
+   activations, not inputs, fill the GPU) 97 items' shared attempts met a CUDA
+   out-of-memory error (45 inline, 49 store, 3 reference) and were queued to run
+   alone, 3 timed out shared, and 5 of the 12 slots were retired because the
+   post-crash health check could not get GPU memory. The registered execution
+   (one unit per item below 0.6 GB, measured in job 548 on four problems with
+   small footprints) therefore does not hold for every in-scope problem: such
+   items pay a wasted shared attempt and then run alone, and a failed health
+   check under contention retires a healthy slot. Every projection below applies
+   the job-548 factor and is a lower bound for such problems. A memory-aware
+   unit rule, and a health check that does not mistake contention for a fault,
+   are needed before any Stage 0 job, whichever path is taken. The D31 review
+   added three more failure paths (section 18.9, finding 1): A5 dropped a
+   reference's exception text, so an out-of-memory error there was never seen
+   as contention; 10 of the 13 failed reference items wrote a permanent unusable
+   entry that their retries could not replace (37 of 189 consumer lookups fell
+   back inline); and the 5 slots were retired after crashes under memory
+   pressure (4 of the 5 crashed items' logs show an out-of-memory error; the
+   old runner did not record the health check's own output). 93 items never
+   became final. The
+   fix pass registers `q1-stage0-exec/2` and a contention-safe health check
+   (section 18.9).
+7. **Projection** (`scripts/q1_pilot_cost_card.py --repilot-job`, 1,000
+   resamples; the store's ratio and reference costs are resampled over the
+   re-pilot's problems, independently of the pilot's clusters; fixed phases now
+   hold 1.229 GPU-h spent, the re-pilot included). Totals in GPU-h with the fixed
+   phases; "high" is the uniform-scale convention of 18.7 with the bootstrap's
+   own 97.5% point of the cumulative total in parentheses:
+
+   | Scenario | Through P3 central | Through P3 high | Through P7 central | Through P7 high |
+   |---|---:|---:|---:|---:|
+   | trim/2 without the store | 7.93 | 9.03 (9.22) | 11.32 | 13.42 (13.21) |
+   | store, size-model ratio (pre-specified), references per bucket | 8.43 | 9.66 (9.85) | 11.89 | 14.14 (13.92) |
+   | store, size-model ratio (pre-specified), references once per job | 8.19 | 9.38 (9.60) | 12.00 | 14.33 (14.10) |
+   | store, constant ratio per gate (post hoc), per bucket | 8.07 | 9.16 (9.34) | 11.50 | 13.56 (13.36) |
+   | store, constant ratio per gate (post hoc), once per job | 7.78 | 8.81 (8.99) | 11.41 | 13.49 (13.27) |
+   | references-free bound (post hoc ratio), once per job | 7.56 | 8.56 (8.74) | 10.78 | 12.72 (12.51) |
+
+   Registration status of the rows: the store's linear (size-model) ratio and
+   the per-bucket and per-job modes were written before job 713 ran (commit
+   864de8d at 01:25Z, image `8e9d2574`; job 713 submitted at 01:37Z); the
+   constant ratio per gate and the references-free bound were added after the
+   data were seen and are post hoc, and the bound row uses the post hoc ratio
+   (with the pre-specified ratio and free references it is 9.08 high). The
+   pre-specified model divides two per-gate size models fitted on three kernels
+   per problem, and its slopes are not just noisy but contaminated: store twins
+   on the three problems that ran out of memory fell back inline after unusable
+   entries, so the store arm's slopes exceed the inline ones (gate c 8.68 vs
+   3.64 GPU-s per GB) and the linear ratio reaches or exceeds 1 from about 0.3 GB (c 1.26,
+   A1 1.29, A2 1.23 at 0.54 GB). Every row assumes the old 12-per-GPU execution
+   (`q1-stage0-exec/1`) and the pilot's size model, which under-predicts the
+   re-pilot's own final inline items by 1.72x (292 predicted against 502
+   measured GPU-s; 0.95x without the three problems that ran out of memory; the
+   fix pass's transfer check, section 18.9). None of the rows bounds a design
+   that amortises process start-up, imports or input draws, which item 5 names
+   as most of an item's cost.
+8. **D31 verdict: Stage 0 is not admitted.** The high estimate through P3
+   (every in-scope substrate and scheduled control at replicate 42, the FRR
+   core, the full test quota and the control replicates) is above 8 GPU-h in
+   every scenario, 8.56 at the lowest, which is the bound for any way of
+   computing references once; with the store as built it is 9.38-9.85, and
+   without it 9.03. The re-pilot's own 0.33 GPU-h now sits in the fixed part,
+   so even the central estimate through P3 is at 7.56-8.43. Item 6 and the
+   transfer check (item 7) make all of these lower bounds, and under the safe
+   execution policy of section 18.9 the estimate rises to 10.46 central and
+   12.31 high without the store. Under D31 Stage 0 therefore waits on the
+   gauntlet (D24) or on the program owner. Scope reductions are the owner's
+   call, change registered quantities, and only cuts that act on buckets P1-P3
+   move the D31 criterion: the test quota (P2), the FRR core (P1), the hack
+   fraction (P1, P3) and the control replicates (P3). Dropping the FRR margin
+   acts on P4 only (through P3 7.89 central, 9.33 high, against 9.03 for
+   trim/2). A 30-per-family test quota gives 7.21 and 8.07 under the old
+   execution and 9.10 and 10.51 under `q1-stage0-exec/2` (model-based). Any
+   such cut needs a re-measurement under `q1-stage0-exec/2` to be credible. The
+   engineering pass stays (with the fix pass's changes; `--reference-store off`
+   restores the inline path exactly).
+9. **Version card.** Section 2.1 is regenerated: `gate_code_sha256`,
+   `audit_code_sha256` (the store is in both) and `driver_sha256` (scheduling,
+   the re-pilot rule, driver and cost card) changed; schema, data, shape
+   manifest, analysis, mutator and substrates did not. Every row of job 713
+   carries the current gate and audit code hashes (`0e3ecd3a...`,
+   `71a30ddb...`); the job ran with driver hash `c0feaee0...`, and the cost
+   card's post hoc variants (item 7) moved it on. The fix pass (section 18.9)
+   changed gate, audit and driver code again; section 2.1 is regenerated from
+   it.
+
+### 18.9 D31 review and its fix pass (execution policy `q1-stage0-exec/2`; no GPU used)
+
+An adversarial review of `stage0/q1-engineering-d31@f7373aa` found that the
+registered execution could not run a Stage 0 job safely, that the projection
+rests on a cost model the re-pilot itself contradicts, and that section 18.8
+overstated the store's equivalence. Every finding was checked against job
+713's journals, its reference journal and the store's use records before it
+was fixed (`program/evidence/2026-10-07/q1-engineering-d31/fixpass/`). This
+fix pass changes execution and the reference store only: no gate, tolerance,
+family, tier, sample, seed, frame, bucket or priority order changed, and no GPU
+job ran. Because item 6 of section 18.7 is registered text, the execution
+policy below needs the owner's sign-off before the freeze.
+
+1. **Execution policy `q1-stage0-exec/2`** (finding 1, high; `harness/q1/memory.py`,
+   `harness/q1/runner.py`, `harness/q1/faults.py`).
+   - *Units from memory.* An item's estimated peak GPU memory is
+     `context + k_P P + k_I I + k_A A + k_O O + R` with `P` the reference
+     model's parameter and buffer bytes, `I`, `O` and `A` the input, output and
+     largest single-activation bytes, and `R` the fp64 reduction scratch
+     (`min(2.5 GB, 5 A)`), all measured on the meta device for every problem
+     and every c2, c3 and A3 configuration (`harness/q1/memory_table.json`,
+     built by `scripts/q1_memory_table.py`; context 1 GB). Gate profiles:
+     `variants-fp64` (c, A1, A2, A3 and their reference items: largest sizes,
+     `k = 5, 3, 4, 4`), `native-fp32` (the gate (a) variants, b1, b2, A4, A4
+     poison, A5, timing: native sizes, `k = 4, 2, 2, 3`), `variants-fp32` (A4
+     sanitizer, which runs at a held-out shape). The item holds
+     `ceil(peak / (0.8 x 85 GB / 12))` of the GPU's 12 units, never fewer than
+     `q1-stage0-exec/1` gave it and never more than 12, so a problem's items per
+     GPU are `floor(12 / units)`, chosen from its memory. A measured peak
+     (the runner now records each worker's peak CUDA memory in `memory.jsonl`;
+     `--measured-memory` in `run_q1_stage0.py`) replaces the estimate with a 25%
+     margin. On job 713's problems the rule gives L2/59, L2/87 and L2/100 (the
+     three that ran out of memory) 7-11 units on gate c and A1-A3 and 3-7 on
+     the other gates, L2/46 2-4, and the four others 1 unit on every gate.
+     Of the 69 in-scope substrates, 42 get more than one unit on some gate. The
+     estimates are conservative: in job 713 the sum of the running items'
+     estimates reached 404 GB without an out-of-memory error (peaks do not
+     coincide), but one occurred at an estimated 123 GB (24 units under this
+     rule), so they cannot be shrunk by more than about 1.5x without readmitting
+     it (`fixpass/memory-calibration.json`).
+   - *Free-memory guard.* Before an item starts, the runner reads the GPU's
+     used memory (`nvidia-smi`, present in the lane's containers) and waits while
+     `max(used, estimates of this runner's running items) + its estimate`
+     exceeds 68 GB, unless nothing of the runner is running on the GPU (no
+     deadlock). An unreadable reading admits on units alone and is counted.
+   - *Health check.* After a crash or timeout the check (one 4 KiB CUDA
+     allocation in a fresh process) runs after the item's units are released. A
+     failed check never retires a slot by itself: the slot drains the GPU (no
+     new item starts; running ones finish) and repeats the check alone after 2,
+     5 and 10 s. Passing alone, nothing is retired and the crashed item's own row
+     stands (with a resource failure in its log it is retried alone as
+     contention). Failing alone, the item is an infrastructure failure and the
+     GPU takes no further item in that job: `gpu-health-fault` when the failure
+     is not an allocation failure, `gpu-memory-held` when even the drained GPU
+     cannot allocate (memory held outside the runner). The check's output is
+     recorded.
+   - *One resource-failure list* for the runner's contention rule and the
+     store: CUDA out-of-memory and the cuBLAS, cuDNN, cuFFT, cuSOLVER and
+     cuSPARSE allocation and initialisation failures. A5's `na` checks now
+     record the reference's exception text (`na_reasons`), so an out-of-memory
+     error in an A5 reference call is retried alone like any other.
+   - *Reference items and resource failures.* A reference call that meets a
+     resource failure writes no entry; the reference row carries the text
+     (`reference-resource-failure`), so a shared reference item is retried alone
+     while its consumers keep waiting (a retry is still pending).
+   Tests: `tests/test_q1_execution_policy.py` (units, plan, guard, a crash under
+   contention whose check passes alone, allocation and fault failures alone,
+   markers, schedule caps, janitor, cost multiplier),
+   `tests/test_q1_refstore_semantics.py`.
+2. **Cost model** (finding 2, high). Confirmed: with the card's size model and
+   job-548 factors, the pilot model predicts the re-pilot's 284 final inline
+   items at 292 GPU-s against 502 measured (x1.72); x0.95 without the three
+   problems that ran out of memory, x3.42 on them. A size model by memory
+   (parameters, inputs and outputs) instead of input bytes over-predicts by
+   x3.7 (x0.27) and is not adopted. Under `q1-stage0-exec/2` (units and
+   `cost_card.concurrency_multiplier`: the job-548 factor at 12 per GPU, the size
+   model at 4, `4/k` below 4 per GPU as an upper bound) the model predicts the
+   same items at 621 GPU-s (x0.81 measured; x0.85 on the three problems, whose
+   final attempts ran alone), so the policy projection below is not biased low
+   on this evidence; it is still model-based. Paired support: the twins reach
+   0.537 GB for gates a, b, c, A1 and A2 (1 in-scope substrate above), 0.268
+   GB for A4 poison, A4 sanitizer and A5 (7 substrates above, 27% of the
+   per-substrate model cost) and 0.201 GB for A3 and A4 (19 above, 53%).
+3. **Store semantics** (finding 3, medium). Gate (a) is no longer a consumer
+   (`refstore.CONSUMERS`: c, A1, A2, A3, A5; `gate_a.py` is back to its pre-D31
+   code): upstream KernelBench computes the reference in the candidate's process,
+   and the store saved nothing there. A consumer checks a fingerprint of each
+   draw's inputs (weighted sums on the device, then SHA-256) against the entry
+   and computes inline from the first mismatch; A5 re-checks before every stored
+   reference call, because it passes integer inputs to the candidate by identity;
+   gate (c) replays the reference forwards the store skipped (RNG state kept)
+   before its first inline configuration, so a stateful reference reaches its
+   inline state (A1-A3 never run the original reference module). The CPU cases
+   of the review that differed now give identical rows, except the documented
+   one: a candidate that changes process-global state at import (for example
+   by replacing a torch function) is judged by c and A1-A5 against a reference
+   computed in a clean process, where inline it would be judged against the
+   altered one. Also documented, not fixed: rows of memory-unsafe kernels follow
+   allocator history (18.8 item 4), L2/77's nondeterministic cuDNN reference is
+   shared as one realization (owner's call), and the three KernelBench
+   adversarial controls have not run under the store on a GPU.
+4. **Raised and unusable entries** (finding 4). A reference that raises (at any
+   draw or any of A5's calls) makes the entry unusable, so consumers compute
+   inline instead of every consumer becoming `error`; an unusable entry stores
+   no tensors (schema `q1-refstore/2`).
+5. **Labels** (finding 5). The references-free row is "references-free bound
+   (post hoc ratio)" in the header, 18.8 item 7 and `program/state.json`; 18.8
+   item 7 says which rows were written before job 713 and why the linear slopes
+   are contaminated.
+6. **Disk** (finding 6). Job 713's store wrote 124.6 GB for seven problems
+   (L2/100 80 GB). Now a group whose estimated entry (stored outputs per draw
+   from the memory table, fp64 for the audit oracle) exceeds 50 GB computes
+   inline (`refschedule.ENTRY_CAP_BYTES`); an entry is written only while the
+   store's tensors stay within 400 GB (`refstore.STORE_CAP_BYTES`, under 2% of
+   the run volume's free space), otherwise it is unusable (`store-cap`); an
+   entry's tensors are deleted once its last consumer has left the queue, and
+   the job records its estimated total and peak live footprint
+   (`reference-schedule.json`).
+7. **Scope reductions** (finding 7): 18.8 item 8 now lists only cuts that act
+   on P1-P3.
+8. **Exposure** (finding 8): `repilot-713-exposure.json` (18.8 item 3).
+9. **Housekeeping** (finding 9). Main (D32-D35) is merged into the branch. The
+   Stage 0 driver's example and section 18.7 name 1.229 GPU-h spent, and a
+   scoring job refuses a spent value below the Stage 0 entries of the GPU
+   ledger in `program/state.json` (`trim.stage0_spent_gpu_hours`).
+
+**Projection under the corrected design** (`fixpass/projection_fixpass.py`,
+`projection-fixpass.json`; through P3, GPU-h with the fixed phases, central /
+high; "high" uses the bootstrap scale of the matching registered scenario, the
+no-store scale for the policy's no-store row):
+
+| Scenario | Execution | Through P3 central | Through P3 high |
+|---|---|---:|---:|
+| trim/2 without the store (registered, reproduced) | exec/1 | 7.93 | 9.03 |
+| store without gate (a), linear ratio (pre-specified), per job | exec/1 | 8.01 | 9.15 |
+| store without gate (a), constant ratio (post hoc), per job | exec/1 | 7.74 | 8.76 |
+| references-free bound without gate (a) (post hoc ratio) | exec/1 | 7.56 | 8.56 |
+| trim/2 without the store, scoring x1.72 (transfer sensitivity) | exec/1 | 10.62 | 12.51 |
+| trim/2 without the store (model-based) | exec/2 | 10.46 | 12.31 |
+| store without gate (a), linear ratio (pre-specified), per job | exec/2 | 10.66 | 12.58 |
+| store without gate (a), constant ratio (post hoc), per job | exec/2 | 9.71 | 11.30 |
+| references-free bound without gate (a) (post hoc ratio) | exec/2 | 9.53 | 11.10 |
+
+The old-execution rows (exec/1) are not runnable as registered (finding 1);
+they are kept so the change is visible. **D31 verdict: unchanged, Stage 0 is
+not admitted.** No correction brings the high estimate through P3 within 8
+GPU-h: taking gate (a) out of the store moves the store rows by at most 0.23
+GPU-h (9.38 to 9.15 with the pre-specified ratio), and the safe execution
+raises every row by 2.0-2.7 GPU-h central and 2.5-3.4 high. The policy rows rest
+on the memory table and on concurrency multipliers that no job has measured
+between 1 and 11 items per GPU; a Stage 0 job, or any scope reduction, needs a
+re-measurement under `q1-stage0-exec/2` first.
+
+**Still open before any freeze**, whatever the budget path: the owner's
+sign-off on `q1-stage0-exec/2` (it amends 18.7 item 6) and on the store policy
+(on or off for c and A1-A5; L2/77's shared realization; a GPU check of the
+three adversarial controls under the store), the D14 findings 18.3 items 6-8,
+adoption of trim/2, and the reviews of D28 and D29. Section 2.1 is regenerated
+for this pass's code. Checks: on the host, the full suite (1834 passed, 37
+skipped) and `ruff check .`; every Q1 test file in a CPU-only, network-less
+container of image `cotcodec-q1-gates:8e9d2574` (402 passed). Findings and
+dispositions: `fixpass/review-fix-pass.json`.
 
 ## 19. References (accessed 2026-10-06 and 2026-10-07)
 

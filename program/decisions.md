@@ -412,3 +412,74 @@ and be hashed into the receipt; every transcript of an item, interrupted ones
 included, is ingested and audited, and at most one may answer; (v) packets
 put the difference section before the file listings, a label-blind format
 change disclosed with the dev results it postdates.
+
+**D36. Q3 dense pre-check: v1 ended INCOMPLETE on two code defects; a v2
+with the same design.** `q3-dense-headroom-precheck-v1` ran (jobs 727 and
+730, 0.42 GPU-h) and gave no combined read. The 0.6B lane's receipt is valid
+(K1 smoke 452 reproduced to 1e-6 points), but every receipt the frozen code
+can write has a null Slurm job id, which the summariser rejects; and the 4B
+lane ran CPU-bound (GPU idle, one core busy, about 61 s per 16-unit chunk
+against an 11-minute estimate for the lane) and ignored SIGUSR1, so it was
+void. Neither is a design question, and the 4B lane is the informative one:
+on 0.6B a NEGATIVE-capable K1 v3 already looks excluded descriptively (H1_CX
+12.25, 99% upper bound 15.6) and H2 fails because the model barely answers
+cross-script questions. Decided: a successor `q3-dense-headroom-precheck-v2`
+keeps v1's data, statistics, decision rules, thresholds and D32's
+amendments unchanged. Its code (i) binds each receipt to its Slurm job, with
+an end-to-end test that feeds a batch-produced receipt to the summariser;
+(ii) honours SIGUSR1 on the 4B path, with a test that loads the 4B
+dependencies and runs the entry point as the container's PID 1; and (iii)
+removes the CPU bottleneck without changing any computed quantity, shown by
+bit-level tests on small inputs and by a registered validity gate: v2's 0.6B
+lane must reproduce v1's job-727 statistics (to 1e-6) as well as smoke 452.
+Before the freeze, one development timing job of at most 0.1 GPU-h measures
+the fixed 4B path; the 4B lane's limit is then at least twice the measured
+time plus start-up, with the one continuation kept. Both lanes run under
+v2; v1's 0.6B receipt is reported beside v2's. The v2 cap is 1.5 GPU-h,
+timing job included, which with v1 stays far below 8 GPU-h. Any K1 v3 still
+needs a new id and the gauntlet (D26).
+
+**D37. Q1 Stage 0 after D31: safe execution, one validation job, then the
+gauntlet.** The D31 re-pilot (job 713, 0.33 GPU-h) and its review confirm
+that Stage 0 is not admitted: through bucket P3 the high estimate is 9.03
+GPU-h without the reference store and 9.15-9.66 with it, no registered
+execution change brings it under 8, and the pilot cost model under-predicts
+the re-pilot's own items by 1.72x, so every projection is biased low. The
+re-pilot also showed that the registered 12-items-per-GPU rule (trim/2 item
+6) is unsafe: out-of-memory failures on 3 of 8 problems, healthy slots
+retired under contention, and silent `na` results in A5. Decided: (i) the
+execution policy `q1-stage0-exec/2` (memory-sized items per GPU, a free-memory
+guard, a health check that drains and retries before retiring a slot, one
+resource-failure marker list) replaces trim/2 item 6; it changes execution
+only, never a gate, tolerance, family, tier, sample or rule; (ii) the
+reference store serves gate (c) and A1-A5 but not gate (a), whose fidelity to
+upstream KernelBench needs the reference in the candidate's process; one
+shared realization per problem and draw of a nondeterministic reference is
+accepted and disclosed; (iii) one validation job under exec/2, on the
+re-pilot's non-evaluation kernels plus the three KernelBench adversarial
+controls under the store, within the 0.17 GPU-h left of D31's 0.5, measures
+the policy's safety and cost; (iv) D31 stands: Stage 0 waits on the gauntlet
+under D24, and a gauntlet wave on the Stage 0 design runs now, so the
+admission ruling (Kevin's) has a scored, reviewed package. D14's audit policy
+stays as registered (D31).
+
+**D38. Checker-mutation protocol: the eighth draft's choices, and the minor
+items fixed before the freeze.** The sixth review scored the D35 protocol 80
+(scores 55, 62, 56, 57, 64, 80) and its one blocker, user messages delivered
+as harness attachments, is fixed by a registered allow-list of entry and
+attachment types that fails closed. Accepted as implemented: the census audit
+with its seeded stratified fallback; gold shams for every audited task (wider
+than D34's K3 tasks); the relay frame registered under D35's constraints; and
+the difference-first packet order. Because a freeze pins this code, the
+review's minor items are fixed rather than recorded: the fallback takes the
+largest budget that fits; a registered collector maps every transcript of the
+rating run to its item and refuses any it cannot map; audit summarize refuses
+calls files whose relay frames differ, and the receipt records the relayed
+text verbatim; concordant contradictions join the adjudication pool for every
+candidate kind, not only the K3 groups; an interrupted attempt counts as
+answering only through a structured answer; and stale text is corrected. The
+confirm rating runs as one workflow session; if a resume brings a different
+relay frame, the items it voids are re-rated once in a fresh, unresumed run,
+answer-blind, and both results are reported. Kevin's own items stay his: the
+adjudication pool (about 16 items) and the human spot check (about 35 items,
+D9).
