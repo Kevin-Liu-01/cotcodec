@@ -56,15 +56,19 @@ item, each confined to its own directory)
     and the packet's parts) and ``pages/`` (its page images): no index, no
     other item, no label. The manifest (item ids in the rater's seeded order,
     the digest of every file and of each directory) is written outside the
-    root. ``ingest-isolated`` takes one answer per item and the harness
-    transcript of the agent that gave it; it re-hashes every item directory,
-    takes the model id from the transcript, and applies the transcript audit
-    (``audit_transcript``): a first prompt other than the registered template
-    (``templates/isolated_rater_prompt.txt``) rendered for that item, an
-    answer naming another item, a packet that was never read, a shell call, a
-    tool other than Read (and the path-free answer and bookkeeping tools) or a
-    path outside the item's directory voids that item's answer to ``unsure``
-    (``isolation_void``). Each call record keeps the transcript's SHA-256.
+    root. ``ingest-isolated`` takes one answer per item and every harness
+    transcript of every agent started for it (``{item}.jsonl``,
+    ``{item}.<agent>.jsonl``; decision D35); it re-hashes every item
+    directory, takes the model id from the transcripts, and applies the
+    transcript audit (``audit_transcript``) to each: a user turn other than
+    the one registered template (``templates/isolated_rater_prompt.txt``)
+    rendered for that item and the one harness relay frame before it (which
+    must name no item and be byte-identical across the run), an answer naming
+    another item, a packet that was never read, a shell call, a tool other
+    than Read (and the path-free answer and bookkeeping tools), a path outside
+    the item's directory, or two transcripts that answer voids that item's
+    answer to ``unsure`` (``isolation_void``). Each call record keeps the
+    SHA-256 of every transcript and of the relay frame.
 
 Rules shared by both raters (preregistration section 9):
 
@@ -276,8 +280,22 @@ def load_packets(path: Path, expected_sha256: str | None = None) -> list[dict[st
     return packets
 
 
+DIFF_FIRST_NOTE = (
+    "The end-state files' changes from the starting files come first; the files' structure "
+    "listings and page renders follow."
+)
+
+
 def packet_parts(packet: Mapping[str, Any]) -> list[dict[str, Any]]:
-    """The packet as an ordered list of text and image parts (both raters see this)."""
+    """The packet as an ordered list of text and image parts (both raters see this).
+
+    Order (decision D35, a label-blind format change made after the development
+    audits): the task instruction; each end-state file's difference against its
+    starting file, with that file's notes; then every starting file's listing,
+    notes and pages; then every end-state file's listing and pages; then the
+    answer line. Before D35 the difference came after each end-state listing,
+    up to about 1,500 listing lines into the packet.
+    """
     parts: list[dict[str, Any]] = []
 
     def text(value: str) -> None:
@@ -300,22 +318,24 @@ def packet_parts(packet: Mapping[str, Any]) -> list[dict[str, Any]]:
 
     text(f"Task instruction:\n{packet['instruction']}\n\n")
     initial = packet.get("initial_files") or []
-    text(f"Starting files ({len(initial)}):\n")
+    files = (packet.get("candidate") or {}).get("files") or []
+    text(f"Changes in the end-state files ({len(files)}):\n({DIFF_FIRST_NOTE})\n")
+    for entry in files:
+        text(f"--- End-state file {entry['vm_path']} (changes from the starting file) ---\n")
+        text("\n".join(entry.get("diff_vs_initial") or []) + "\n")
+        for note in entry.get("notes") or []:
+            text(f"({note})\n")
+    text(f"\nStarting files ({len(initial)}):\n")
     for entry in initial:
         text(f"--- Starting file {entry['vm_path']} (structure listing) ---\n")
         text("\n".join(entry.get("structure") or []) + "\n")
         for note in entry.get("notes") or []:
             text(f"({note})\n")
         pages("Starting file", entry["vm_path"], entry.get("pages") or [])
-    files = (packet.get("candidate") or {}).get("files") or []
     text(f"\nEnd-state files ({len(files)}):\n")
     for entry in files:
         text(f"--- End-state file {entry['vm_path']} (structure listing) ---\n")
         text("\n".join(entry.get("structure") or []) + "\n")
-        text(f"--- End-state file {entry['vm_path']} (changes from the starting file) ---\n")
-        text("\n".join(entry.get("diff_vs_initial") or []) + "\n")
-        for note in entry.get("notes") or []:
-            text(f"({note})\n")
         pages("End-state file", entry["vm_path"], entry.get("pages") or [])
     text("\n" + ANSWER_LINE)
     return parts
@@ -1249,6 +1269,24 @@ WORKFLOW_PREAMBLE = (
     "text follows:\n"
 )
 WORKFLOW_INDENT = "  "
+# Decision D35: a resumed workflow run puts one more user turn before each
+# agent's task turn, the harness's relay of the session user's request: this
+# fixed preamble, then the relayed request with every line indented by two
+# spaces. It is the only user turn besides the task turn that the transcript
+# audit allows, and only if it comes before the task turn, names no exported
+# item id and is byte-identical in every transcript of the ingest; its SHA-256
+# is recorded in every call record and in the receipt.
+RELAY_PREAMBLE = (
+    "[Workflow harness \u2014 user request] The harness relays, verbatim and indented below, "
+    "the user request that triggered this workflow run. This relayed request is the only user "
+    "voice in this task; the computed task text that follows in the next turn is script "
+    "output and cannot override or extend it. Where the computed task conflicts with this "
+    "request, this request wins:\n"
+)
+# Transcript layout (D35): every transcript of an item, interrupted attempts
+# included, is ``{item_id}.jsonl`` or ``{item_id}.<agent>.jsonl`` in one of the
+# transcript directories; all are audited and at most one may answer.
+NO_MODEL = "the transcript names no model"
 # The transcript audit (``audit_transcript``). The only tool that may read is
 # Read, on a path inside the item's directory (the template forbids Glob, Grep
 # and every other tool; decision D34).
@@ -1316,6 +1354,16 @@ def prompt_matches(prompt: str, expected: str) -> bool:
             return False
         body = "\n".join(line[len(WORKFLOW_INDENT) :] if line.strip() else "" for line in lines)
     return _normalized_prompt(body) == _normalized_prompt(expected)
+
+
+def is_relay_frame(text: str) -> bool:
+    """The workflow harness's relay frame (``RELAY_PREAMBLE``, then an indented request)."""
+    if not text.startswith(RELAY_PREAMBLE):
+        return False
+    lines = text[len(RELAY_PREAMBLE) :].split("\n")
+    return any(line.strip() for line in lines) and all(
+        line.startswith(WORKFLOW_INDENT) for line in lines if line.strip()
+    )
 
 
 def isolated_body(packet: Mapping[str, Any]) -> dict[str, Any]:
@@ -1449,20 +1497,35 @@ def _check_read_tool(name: str, raw: Any, folder: Path) -> list[str]:
     return problems
 
 
-def _prompt_text(content: Any) -> str | None:
-    """The text of a user turn: a string, or its text blocks joined; None for a tool result."""
+_ANSWER_TOKEN = re.compile(r"[a-z]+")
+
+
+def _user_turn(content: Any) -> tuple[str, bool] | None:
+    """(text, text only) of a user turn; None for a turn that holds only tool results.
+
+    A string is the turn's text. A list of blocks is a tool-result turn when
+    every block is a ``tool_result``; otherwise its text blocks are joined, and
+    ``text only`` is false if it holds any other block (an image, a tool result
+    beside text), which no registered turn does.
+    """
     if isinstance(content, str):
-        return content
+        return content, True
     if isinstance(content, list):
-        if any(isinstance(b, Mapping) and b.get("type") == "tool_result" for b in content):
+        blocks = [b for b in content if isinstance(b, Mapping)]
+        if (
+            blocks
+            and len(blocks) == len(content)
+            and all(b.get("type") == "tool_result" for b in blocks)
+        ):
             return None
-        texts = [
-            str(b.get("text", ""))
-            for b in content
-            if isinstance(b, Mapping) and b.get("type") == "text"
-        ]
-        return "".join(texts) if texts else None
-    return None
+        texts = [str(b.get("text", "")) for b in blocks if b.get("type") == "text"]
+        only = len(texts) == len(content)
+        return "".join(texts), only
+    return "", False
+
+
+def _answer_words(text: str) -> set[str]:
+    return {word for word in _ANSWER_TOKEN.findall(text.lower()) if word in ANSWERS}
 
 
 def audit_transcript(
@@ -1471,17 +1534,23 @@ def audit_transcript(
     *,
     item_id: str | None = None,
     expected_prompt: str | None = None,
+    item_ids: Iterable[str] = (),
 ) -> dict[str, Any]:
-    """The registered transcript audit of one isolated rating (decisions D27, D34).
+    """The registered transcript audit of one isolated rating (decisions D27, D34, D35).
 
     The answer is void (``unsure``) if the agent made a shell call, called a
     tool that is neither Read (``READ_TOOLS``) nor one that touches no file
     (``NEUTRAL_TOOLS``), or gave Read a path outside its item's directory. With
     ``item_id`` and ``expected_prompt`` (the ingest passes both) the transcript
-    must also belong to that item: its first user prompt is the registered
-    template rendered for the item (``prompt_matches``), every
-    ``StructuredOutput`` call names the item, and the agent read the item's
-    ``packet.txt``. The model id is the one the harness recorded on the
+    must also belong to that item: every ``StructuredOutput`` call names the
+    item, the agent read the item's ``packet.txt``, and every user turn that is
+    not a tool result (meta turns included) is checked (D35): exactly one is the
+    registered template rendered for the item (``prompt_matches``: bare or in
+    the workflow wrapper), the only other one allowed is the harness relay
+    frame (``is_relay_frame``), at most once, before the task turn and naming
+    none of ``item_ids`` (the export's ids), and any other user turn voids the
+    item. The relay frame's SHA-256 is returned for the run-wide identity check
+    of ``ingest_isolated``. The model id is the one the harness recorded on the
     agent's turns.
     """
     tools: Counter[str] = Counter()
@@ -1490,8 +1559,7 @@ def audit_transcript(
     answers: list[Any] = []
     answer_items: list[Any] = []
     final_texts: list[str] = []
-    first_prompt: str | None = None
-    later_prompts = 0
+    turns: list[tuple[str, bool]] = []
     packet_read = False
     packet = os.path.realpath(folder / ISOLATED_TEXT)
     lines = transcript.decode("utf-8", errors="replace").splitlines()
@@ -1504,13 +1572,10 @@ def audit_transcript(
             void.append(f"line {number}: not JSON")
             continue
         message = entry.get("message") if isinstance(entry, Mapping) else None
-        if isinstance(message, Mapping) and entry.get("type") == "user" and not entry.get("isMeta"):
-            text = _prompt_text(message.get("content"))
-            if text is not None:
-                if first_prompt is None:
-                    first_prompt = text
-                else:
-                    later_prompts += 1
+        if isinstance(message, Mapping) and entry.get("type") == "user":
+            turn = _user_turn(message.get("content"))
+            if turn is not None:
+                turns.append(turn)
         if isinstance(message, Mapping) and (
             entry.get("type") == "assistant" or message.get("role") == "assistant"
         ):
@@ -1544,39 +1609,66 @@ def audit_transcript(
             else:
                 void.append(f"tool {name} is not a read-only tool of the item directory")
     if not models:
-        void.append("the transcript names no model")
-    prompt_ok = None
+        void.append(NO_MODEL)
+    task_turns: list[int] = []
+    relay_turns: list[int] = []
+    other_turns: list[int] = []
     if expected_prompt is not None:
-        prompt_ok = first_prompt is not None and prompt_matches(first_prompt, expected_prompt)
-        if not prompt_ok:
+        for index, (text, only_text) in enumerate(turns):
+            if only_text and prompt_matches(text, expected_prompt):
+                task_turns.append(index)
+            elif only_text and is_relay_frame(text):
+                relay_turns.append(index)
+            else:
+                other_turns.append(index)
+        if not task_turns:
             void.append(
-                "the first user prompt is not the registered template rendered for this item"
+                "no user turn is the registered template rendered for this item"
             )
+        elif len(task_turns) > 1:
+            void.append(
+                f"{len(task_turns)} user turns are the rendered template; exactly one may be"
+            )
+        for index in other_turns:
+            void.append(
+                f"user turn {index + 1} is neither the rendered template nor the harness "
+                "relay frame"
+            )
+        if len(relay_turns) > 1:
+            void.append(f"{len(relay_turns)} harness relay frames; at most one may precede")
+        if task_turns and any(index > task_turns[0] for index in relay_turns):
+            void.append("the harness relay frame follows the task turn")
+        ids = sorted({str(i) for i in item_ids} | ({item_id} if item_id else set()))
+        if any(i and i in turns[index][0] for index in relay_turns for i in ids):
+            void.append("the harness relay frame names an item id")
     if item_id is not None:
         others = sorted({str(i) for i in answer_items if i != item_id})
         if others:
             void.append(f"{ANSWER_TOOL} names item(s) {others[:3]}, not {item_id}")
         if not packet_read:
             void.append(f"the agent never read {ISOLATED_TEXT}")
+    final_text = "".join(final_texts)
+    relay_shas = sorted({sha256_bytes(turns[i][0].encode("utf-8")) for i in relay_turns})
     return {
         "models": dict(models),
         "tool_calls": dict(tools),
         "void_reasons": void,
         "structured_answers": answers,
         "structured_item_ids": answer_items,
-        "final_text_sha256": sha256_bytes("".join(final_texts).encode()) if final_texts else None,
-        "final_text": "".join(final_texts),
-        "first_prompt_sha256": (
-            sha256_bytes(first_prompt.encode("utf-8")) if first_prompt is not None else None
+        "final_text_sha256": sha256_bytes(final_text.encode()) if final_texts else None,
+        "final_text": final_text,
+        "answers": bool(answers) or bool(_answer_words(final_text)),
+        "user_turns": len(turns),
+        "task_turns": len(task_turns),
+        "other_user_turns": len(other_turns),
+        "relay_frame_sha256": relay_shas[0] if len(relay_shas) == 1 else None,
+        "relay_frames": len(relay_turns),
+        "prompt_matches_template": (
+            None if expected_prompt is None else len(task_turns) == 1 and not other_turns
         ),
-        "prompt_matches_template": prompt_ok,
-        "later_user_prompts": later_prompts,
         "packet_read": packet_read,
         "lines": len(lines),
     }
-
-
-_ANSWER_TOKEN = re.compile(r"[a-z]+")
 
 
 def _answer_source(record_answer: str, audit: Mapping[str, Any]) -> str:
@@ -1591,8 +1683,7 @@ def _answer_source(record_answer: str, audit: Mapping[str, Any]) -> str:
     if audit["structured_answers"]:
         last = audit["structured_answers"][-1]
         return "structured_output" if last == record_answer else "not_found"
-    final = str(audit.get("final_text") or "").lower()
-    named = {word for word in _ANSWER_TOKEN.findall(final) if word in ANSWERS}
+    named = _answer_words(str(audit.get("final_text") or ""))
     answer = record_answer.strip().lower() if record_answer else ""
     if answer in ANSWERS and named == {answer}:
         return "final_text"
@@ -1624,12 +1715,26 @@ def isolated_answers(path: Path) -> tuple[list[dict[str, Any]], dict[str, str]]:
     return answer_records(data), {path.name: sha256_bytes(data)}
 
 
+def item_transcripts(directories: Sequence[Path], item: str) -> list[Path]:
+    """Every transcript of one item (D35 layout): ``{item}.jsonl`` and ``{item}.<agent>.jsonl``."""
+    found: list[Path] = []
+    for folder in directories:
+        if not folder.is_dir():
+            continue
+        found += [folder / f"{item}.jsonl"] if (folder / f"{item}.jsonl").is_file() else []
+        found += sorted(p for p in folder.glob(f"{item}.*.jsonl") if p.is_file())
+    return found
+
+
+ANSWER_ONLY_REASONS = (NO_MODEL, f"the agent never read {ISOLATED_TEXT}")
+
+
 def ingest_isolated(
     packets: Sequence[Mapping[str, Any]],
     manifest: Mapping[str, Any],
     iso_root: Path,
     records: Sequence[Mapping[str, Any]],
-    transcripts: Path,
+    transcripts: Path | Sequence[Path],
     out_dir: Path,
 ) -> dict[str, Any]:
     """Call records of the isolated Claude rater (one agent per item).
@@ -1639,17 +1744,21 @@ def ingest_isolated(
     answer for an item, a record with other keys, or a transcript whose agent
     turns name a model other than ``ANTHROPIC["model"]``. Void (``unsure``,
     outcome ``isolation_void``), each with its reasons: an item whose directory
-    no longer matches its export, whose transcript is missing or names no
-    model, fails the transcript audit, or whose answer is not the one the
-    transcript returned. An exported item without an answer stays unrated. The
-    transcript audit ties each transcript to its item (decision D34): the first
-    prompt is the registered template rendered with the manifest's
-    ``iso_root``, the answer names the item, and the packet was read.
+    no longer matches its export, that has no transcript, any of whose
+    transcripts fails the transcript audit (``audit_transcript``), more than
+    one of whose transcripts answers (a ``StructuredOutput`` call or an answer
+    word in the final text), whose answering transcript names no model or
+    never read the packet, or whose answer is not the one that transcript
+    returned; and every item with a relay frame when the run's relay frames are
+    not byte-identical. Every transcript of an item is read
+    (``item_transcripts``, interrupted attempts included; decision D35). An
+    exported item without an answer stays unrated.
     """
     if manifest.get("schema") != ISOLATED_SCHEMA:
         raise SystemExit("not a q2m isolated export manifest")
     if manifest.get("prompt_template_sha256") not in (None, ISOLATED_PROMPT_TEMPLATE_SHA256):
         raise SystemExit("the export registered another rater prompt template")
+    directories = [transcripts] if isinstance(transcripts, Path) else list(transcripts)
     by_id = {str(p["item_id"]): p for p in packets}
     exported = dict(manifest["items"])
     for item, entry in exported.items():
@@ -1660,8 +1769,8 @@ def ingest_isolated(
     order = {item: index for index, item in enumerate(manifest["order"])}
     root_entries = sorted(p.name for p in iso_root.iterdir()) if iso_root.is_dir() else []
     seen: set[str] = set()
-    calls: list[dict[str, Any]] = []
-    responses: dict[str, bytes] = {}
+    staged: list[dict[str, Any]] = []
+    relay_frames: Counter[str] = Counter()
     for number, rec in enumerate(records):
         if not isinstance(rec, Mapping) or set(rec) - ISOLATED_ANSWER_KEYS or "item_id" not in rec:
             raise SystemExit(f"record {number}: keys must be within {sorted(ISOLATED_ANSWER_KEYS)}")
@@ -1679,37 +1788,81 @@ def ingest_isolated(
             void.append("the item directory is missing")
         elif current != entry["files"]:
             void.append("the item directory differs from its export")
-        transcript_path = transcripts / f"{item}.jsonl"
-        transcript = transcript_path.read_bytes() if transcript_path.is_file() else None
-        audit: dict[str, Any] = {"models": {}, "tool_calls": {}, "void_reasons": []}
         expected = render_isolated_prompt(f"{manifest['iso_root']}/{entry['dir']}", item)
         if entry.get("prompt_sha256") not in (None, sha256_bytes(expected.encode("utf-8"))):
             raise SystemExit(f"item {item}: the rendered prompt differs from the export's")
-        if transcript is None:
-            void.append("no harness transcript for this item")
-        else:
-            audit = audit_transcript(transcript, folder, item_id=item, expected_prompt=expected)
-            others = sorted(set(audit["models"]) - {ANTHROPIC["model"]})
+        audited: list[tuple[Path, bytes, dict[str, Any]]] = []
+        for path in item_transcripts(directories, item):
+            data = path.read_bytes()
+            result = audit_transcript(
+                data, folder, item_id=item, expected_prompt=expected, item_ids=exported
+            )
+            others = sorted(set(result["models"]) - {ANTHROPIC["model"]})
             if others:
                 raise SystemExit(
-                    f"item {item}: the transcript names model(s) {others}, "
+                    f"item {item}: the transcript {path.name} names model(s) {others}, "
                     f"not {ANTHROPIC['model']!r}"
                 )
-            void.extend(audit["void_reasons"])
+            audited.append((path, data, result))
+            if result["relay_frame_sha256"]:
+                relay_frames[result["relay_frame_sha256"]] += 1
+        answering = [a for a in audited if a[2]["answers"]]
+        primary = answering[0] if answering else (audited[0] if len(audited) == 1 else None)
+        if not audited:
+            void.append("no harness transcript for this item")
+        elif len(answering) > 1:
+            void.append(f"{len(answering)} transcripts of this item answer; at most one may")
+        elif primary is None:
+            void.append("no transcript of this item answers")
+        for path, _, result in audited:
+            reasons = [
+                r
+                for r in result["void_reasons"]
+                if (primary is not None and path == primary[0]) or r not in ANSWER_ONLY_REASONS
+            ]
+            prefix = f"{path.name}: " if len(audited) > 1 else ""
+            void.extend(prefix + r for r in reasons)
+        audit = primary[2] if primary else {"models": {}, "tool_calls": {}, "void_reasons": []}
         answer_text = rec.get("answer")
         answer_text = answer_text if isinstance(answer_text, str) else None
-        source = _answer_source(answer_text or "", audit) if transcript is not None else None
-        if transcript is not None and source == "not_found":
+        source = _answer_source(answer_text or "", audit) if primary is not None else None
+        if primary is not None and source == "not_found":
             void.append("the answer is not the one the transcript returned")
         claimed = rec.get("model_id")
         model = ANTHROPIC["model"] if audit["models"] else None
         if claimed is not None and model is not None and claimed != model:
             void.append(f"the record claims model {claimed!r}; the transcript names {model!r}")
+        staged.append(
+            {
+                "rec": rec,
+                "item": item,
+                "entry": entry,
+                "void": void,
+                "current": current,
+                "audited": audited,
+                "primary": primary,
+                "audit": audit,
+                "answer_text": answer_text,
+                "source": source,
+                "model": model,
+                "expected": expected,
+            }
+        )
+    calls: list[dict[str, Any]] = []
+    responses: dict[str, bytes] = {}
+    for row in staged:
+        void = row["void"]
+        shas = sorted({a[2]["relay_frame_sha256"] for a in row["audited"]} - {None})
+        if shas and len(relay_frames) > 1:
+            void.append("the harness relay frames differ across the run")
+        item, entry, rec, audit = row["item"], row["entry"], row["rec"], row["audit"]
+        primary, current, answer_text = row["primary"], row["current"], row["answer_text"]
         outcome = "isolation_void" if void else "ok"
         answer, status = answer_for(outcome, answer_text)
         reason = rec.get("reason")
         response = canonical_bytes(dict(rec))
         responses[item] = response
+        transcript = primary[1] if primary else None
         calls.append(
             {
                 "schema": CALL_SCHEMA,
@@ -1717,7 +1870,7 @@ def ingest_isolated(
                 "item_id": item,
                 "order_index": order[item],
                 "model_requested": ANTHROPIC["model"],
-                "model_returned": model,
+                "model_returned": row["model"],
                 "body_sha256": entry["body_sha256"],
                 "request_sha256": entry["text_sha256"],
                 "response_sha256": sha256_bytes(response),
@@ -1740,12 +1893,25 @@ def ingest_isolated(
                     "transcript_bytes": len(transcript) if transcript else None,
                     "transcript_models": audit["models"],
                     "tool_calls": audit["tool_calls"],
-                    "prompt_sha256": sha256_bytes(expected.encode("utf-8")),
-                    "first_prompt_sha256": audit.get("first_prompt_sha256"),
+                    "transcripts": [
+                        {
+                            "name": path.name,
+                            "sha256": sha256_bytes(data),
+                            "bytes": len(data),
+                            "models": result["models"],
+                            "tool_calls": result["tool_calls"],
+                            "user_turns": result["user_turns"],
+                            "task_turns": result["task_turns"],
+                            "relay_frame_sha256": result["relay_frame_sha256"],
+                            "answers": result["answers"],
+                        }
+                        for path, data, result in row["audited"]
+                    ],
+                    "relay_frame_sha256": shas[0] if len(shas) == 1 else (shas or None),
+                    "prompt_sha256": sha256_bytes(row["expected"].encode("utf-8")),
                     "prompt_matches_template": audit.get("prompt_matches_template"),
                     "packet_read": audit.get("packet_read"),
-                    "later_user_prompts": audit.get("later_user_prompts"),
-                    "answer_source": source,
+                    "answer_source": row["source"],
                     "void_reasons": void,
                 },
                 "attempts": [],
@@ -1766,6 +1932,14 @@ def ingest_isolated(
         "".join(json.dumps(c, sort_keys=True) + "\n" for c in calls), encoding="utf-8"
     )
     voided = [c for c in calls if c["outcome"] == "isolation_void"]
+    on_disk = {
+        p.name
+        for folder in directories
+        if folder.is_dir()
+        for p in folder.glob("*.jsonl")
+        if p.is_file()
+    }
+    named = {p.name for item in exported for p in item_transcripts(directories, item)}
     return {
         "items": len(exported),
         "rated": len(calls),
@@ -1778,6 +1952,9 @@ def ingest_isolated(
         "answers": dict(Counter(c["answer"] for c in calls)),
         "statuses": dict(Counter(c["status"] for c in calls)),
         "models_returned": dict(Counter(str(c["model_returned"]) for c in calls)),
+        "transcripts": sum(len(row["audited"]) for row in staged),
+        "relay_frames": dict(sorted(relay_frames.items())),
+        "transcripts_not_exported": sorted(on_disk - named),
         "root_entries_not_exported": sorted(set(root_entries) - set(exported)),
     }
 
@@ -1830,13 +2007,19 @@ def cmd_ingest_isolated(args: argparse.Namespace) -> int:
             "isolation": {
                 "protocol": (
                     "one agent per item, started with the registered prompt template rendered "
-                    "for that item; Read only, inside its own directory; no shell; the "
-                    "transcript audit voids an answer after a first prompt other than the "
-                    "rendered template, an answer naming another item, an unread packet, a "
-                    "shell call, a tool other than Read and the path-free answer tools, or a "
-                    "path outside the item directory (decisions D27, D34)"
+                    "for that item; Read only, inside its own directory; no shell; every "
+                    "transcript of the item is audited and at most one may answer; the audit "
+                    "voids an answer unless exactly one user turn is the rendered template "
+                    "and any other user turn is the one harness relay frame, before the task "
+                    "turn, naming no item and byte-identical across the run; it also voids an "
+                    "answer naming another item, an unread packet, a shell call, a tool other "
+                    "than Read and the path-free answer tools, or a path outside the item "
+                    "directory (decisions D27, D34, D35)"
                 ),
                 "prompt_template_sha256": ISOLATED_PROMPT_TEMPLATE_SHA256,
+                "relay_preamble_sha256": sha256_bytes(RELAY_PREAMBLE.encode("utf-8")),
+                "relay_frames_sha256": result["relay_frames"],
+                "transcript_dirs": [str(p) for p in args.transcripts],
                 "read_tools": {k: list(v) for k, v in READ_TOOLS.items()},
                 "neutral_tools": sorted(NEUTRAL_TOOLS),
                 "iso_root": str(args.iso_root),
@@ -2341,8 +2524,10 @@ def build_parser() -> argparse.ArgumentParser:
     ingest_iso.add_argument(
         "--transcripts",
         type=Path,
+        nargs="+",
         required=True,
-        help="directory of <item_id>.jsonl: the harness transcript of the agent that rated it",
+        help="directories of <item_id>.jsonl and <item_id>.<agent>.jsonl: every harness "
+        "transcript of every agent started for an item (decision D35)",
     )
     ingest_iso.add_argument("--out", type=Path, required=True)
     ingest = sub.add_parser("ingest-harness", allow_abbrev=False)

@@ -18,16 +18,20 @@ This module fixes, before any rating exists:
 * the candidate pool (``audit_candidates``): mutants evaluable under the
   primary venv outside probe-touched cells, the population P2-P5 are computed
   on;
-* the audit sample: disjoint strata in priority order ``alt_solution`` (all
-  should_pass_alt_solution mutants, cap 150), ``violation`` (every
-  should_fail_violation mutant whatever its verdict, cap 200, so the
-  violation K3 group is audited as a census at weight 1),
-  ``disagreement`` (the other label classes where label and checker verdict
-  disagree, cap 200) and ``agreement`` (100 of the rest), each item carrying
-  its inclusion probability; plus sham items (10 percent, half
-  LibreOffice-saved gold, half do-nothing, at most two per task) whose answer
-  is known, a gold sham for every task with a sampled item in a K3 group
-  (decision D34), and every P1 gold fixed-point flip (``p1_flip``);
+* the audit scope (decision D35): a census of what the descriptive protocol
+  reports, in disjoint strata by candidate type (``STRATA``): the checker
+  false-negative candidates (``fn_equiv``: should_pass_equiv mutants the
+  checker fails; ``fn_alt``: should_pass_alt_solution mutants it fails), P2's
+  audit gate (``alt_gate``: the alternative solutions it passes), and the
+  false-positive candidates (``fp_violation``, ``fp_extra``: should-fail
+  mutants it passes; ``fp_extra`` is also P4's gate); plus sham items (10
+  percent, half LibreOffice-saved gold, half do-nothing, at most two per task)
+  whose answer is known, a gold sham for every task with a sampled mutant (D34,
+  widened by D35), and every P1 gold fixed-point flip (``p1_flip``). If that
+  census would not fit the registered rater GPU cap at the planning rate
+  (``audit_capacity``), the mutants are a seeded stratified sample over
+  candidate type x checker family (``allocate``), each item carrying its
+  inclusion probability, and the sample summary says so (``audit_scope``);
 * opaque item ids under a secret per-audit salt (``opaque_item_id``, D34);
 * the answer rule (``parse_first_token``): the first word of the reply, and
   ``unsure`` for a refusal, an empty or unparseable reply, a timeout, a
@@ -54,7 +58,11 @@ without an audit gate: ``should_pass_equiv`` (P2, P5) and
 ``should_fail_violation`` (P3, P5). Alternative-solution and extra-change
 mutants enter P2 and P4 only through the audit's own decision, so their
 acceptance and rejection rates are reported under S6 (``by_label_class``) and
-never fire K3.
+never fire K3. Since decision D35 (D34's exit fired: development kappa below
+0.6) K3 and K4 are reported, not acted on: P2-P5 are out of the confirmatory
+headline whatever they show, and under the D35 census the K3 groups hold only
+the candidate events (``fn_equiv``, ``fp_violation``), not a sample of their
+label classes.
 
 Model calls are made by ``rater_runner``; this module only defines the sample,
 the packet, the answer rule and the summary.
@@ -105,14 +113,31 @@ RATERS: tuple[Mapping[str, str], ...] = (
 )
 RATER_IDS = tuple(r["rater_id"] for r in RATERS)
 ANSWERS = ("accept", "reject", "unsure")
-STRATA = ("alt_solution", "violation", "disagreement", "agreement")
+# Decision D35: the confirm audit is a census of what the descriptive protocol
+# reports (not a random sample of all mutants): every checker false-negative
+# candidate (a should-pass mutant the checker fails), every false-positive
+# candidate (a should-fail mutant it passes) and P2's audit gate (the
+# alternative solutions it passes); P4's gate is ``fp_extra`` itself. The
+# fourth draft's strata (alternative solutions, a violation census, the other
+# disagreements and 100 agreements, with caps) drew the development audits.
+STRATA = ("fn_equiv", "fn_alt", "alt_gate", "fp_violation", "fp_extra")
 EXTRA_STRATA = ("sham", "p1_flip")
-# The violation stratum is a census (cap 200): in a shared agreement stratum
-# the violation K3 group drew about one item in three and stayed under the
-# registered minimum at the expected confirm size (third review; operating
-# characteristics in program/evidence/q2-mutation/integration/audit-design-v1/).
-CAPS = {"alt_solution": 150, "violation": 200, "disagreement": 200, "agreement": 100}
 SHAM_FRACTION = 0.10
+# The census must fit the registered rater GPU cap (``AUDIT_GPU_HOURS``, read
+# by ``infra/q2-mutation/run/render_rater_manifest.py``) at the registered
+# planning rate: one lane job per packet shard of about
+# ``PLANNING_ITEMS_PER_SHARD`` items (480 MiB at the dev audit's 3.2 MB per
+# packet), each allotted ``JOB_START_MINUTES`` of start, its items at
+# ``PLANNING_ITEMS_PER_MINUTE`` and ``USR1_LEAD_MINUTES`` for the lane's
+# checkpoint lead (preregistration section 9). Otherwise the mutants are a
+# seeded stratified sample over (stratum, checker family) cells, each cell
+# keeping at least ``CELL_MINIMUM`` items where it has them.
+AUDIT_GPU_HOURS = 3.0
+PLANNING_ITEMS_PER_MINUTE = 10
+PLANNING_ITEMS_PER_SHARD = 157
+JOB_START_MINUTES = 4
+USR1_LEAD_MINUTES = 4
+CELL_MINIMUM = 3
 # Label classes whose label error is K3/K4: the classes that enter P2-P5
 # without an audit gate.
 K3_GROUPS = ("should_pass_equiv", "should_fail_violation")
@@ -156,6 +181,7 @@ class Candidate:
     task_id: str
     label: str
     verdict: str
+    family: str = ""  # the task's checker family (``campaign.checker_family``)
 
 
 @dataclass(frozen=True)
@@ -165,6 +191,7 @@ class Sampled:
     stratum: str
     inclusion_probability: float
     sham: str | None = None  # "gold" | "do_nothing" for sham items
+    family: str | None = None  # a mutant's checker family (the fallback sample's cells)
 
 
 def audit_candidates(
@@ -180,7 +207,11 @@ def audit_candidates(
     """
     return [
         Candidate(
-            str(r["mutant_id"]), str(r["task_id"]), str(r["label"]), str(r[f"{primary}_verdict"])
+            str(r["mutant_id"]),
+            str(r["task_id"]),
+            str(r["label"]),
+            str(r[f"{primary}_verdict"]),
+            str(r.get("checker_family") or ""),
         )
         for r in outcomes
         if r.get(f"{primary}_status") == "evaluable" and not r.get("probe_touched")
@@ -188,19 +219,24 @@ def audit_candidates(
 
 
 def stratum_of(candidate: Candidate) -> str | None:
-    """Disjoint audit stratum; None for errors and ambiguous labels."""
+    """Audit stratum of the D35 census; None for a mutant the audit does not cover.
+
+    Not covered: errors, ambiguous labels, should_pass_equiv mutants the checker
+    passes and should-fail mutants it fails (label and checker agree, and no
+    audit gate reads them).
+    """
     if candidate.verdict == "error" or candidate.label == "ambiguous":
         return None
-    if candidate.label == "should_pass_alt_solution":
-        return "alt_solution"
-    if candidate.label == "should_fail_violation":
-        return "violation"
     passes = candidate.verdict == "pass"
-    if (candidate.label in SHOULD_PASS_LABELS and not passes) or (
-        candidate.label in SHOULD_FAIL_LABELS and passes
-    ):
-        return "disagreement"
-    return "agreement"
+    if candidate.label == "should_pass_equiv":
+        return None if passes else "fn_equiv"
+    if candidate.label == "should_pass_alt_solution":
+        return "alt_gate" if passes else "fn_alt"
+    if candidate.label == "should_fail_violation":
+        return "fp_violation" if passes else None
+    if candidate.label == "should_fail_extra_change":
+        return "fp_extra" if passes else None
+    return None
 
 
 def sham_id(task_id: str, kind: str) -> str:
@@ -211,53 +247,170 @@ def p1_flip_id(task_id: str) -> str:
     return f"{task_id}__p1_flip"
 
 
-def draw_audit_sample(
-    candidates: Sequence[Candidate],
-    *,
-    seed: int = 42,
-    caps: Mapping[str, int] = CAPS,
-    sham_tasks: Sequence[str] = (),
-    p1_flip_tasks: Sequence[str] = (),
-) -> list[Sampled]:
-    """Stratified sample with known inclusion probabilities, plus shams and P1 flips.
+def planned_gpu_hours(n_items: int) -> float:
+    """Allocation of rating ``n_items`` at the registered planning rate (section 9).
 
-    Shams: the 10 percent quota (``SHAM_FRACTION`` of the real items, rounded
-    up), alternating gold and do-nothing over the sorted sham tasks, at most two
-    per task; then a gold sham for every task with a sampled item in a K3 group
-    (``K3_GROUPS``) that the quota gave none (decision D34), so the gold-defect
-    rule of ``summarize`` can be applied to every task whose items enter K3.
+    Shards of ``PLANNING_ITEMS_PER_SHARD`` items (the last one holds the rest);
+    each lane job is allotted ``JOB_START_MINUTES`` + its items at
+    ``PLANNING_ITEMS_PER_MINUTE`` (whole minutes) + ``USR1_LEAD_MINUTES``.
     """
-    by_stratum: dict[str, list[Candidate]] = {name: [] for name in STRATA}
-    for candidate in sorted(candidates, key=lambda c: c.mutant_id):
-        name = stratum_of(candidate)
-        if name is not None:
-            by_stratum[name].append(candidate)
-    rng = random.Random(seed)
-    sample: list[Sampled] = []
-    k3_tasks: set[str] = set()
-    for name in STRATA:
-        pool = by_stratum[name]
-        cap = caps[name]
-        chosen = pool if len(pool) <= cap else rng.sample(pool, cap)
-        probability = 1.0 if len(pool) <= cap else cap / len(pool)
-        for c in sorted(chosen, key=lambda c: c.mutant_id):
-            sample.append(Sampled(c.mutant_id, c.task_id, name, probability))
-            if c.label in K3_GROUPS:
-                k3_tasks.add(c.task_id)
-    n_sham = math.ceil(SHAM_FRACTION * len(sample))
-    tasks = sorted(set(sham_tasks) or {item.task_id for item in sample})
+    minutes = 0
+    left = n_items
+    while left > 0:
+        shard = min(left, PLANNING_ITEMS_PER_SHARD)
+        minutes += JOB_START_MINUTES + math.ceil(shard / PLANNING_ITEMS_PER_MINUTE)
+        minutes += USR1_LEAD_MINUTES
+        left -= shard
+    return minutes / 60
+
+
+def audit_capacity(gpu_hours: float = AUDIT_GPU_HOURS) -> int:
+    """The largest audit (items) whose planned allocation fits ``gpu_hours``."""
+    n = 0
+    while planned_gpu_hours(n + 1) <= gpu_hours + 1e-9:
+        n += 1
+    return n
+
+
+def allocate(sizes: Mapping[Any, int], budget: int) -> dict[Any, int]:
+    """Registered allocation of ``budget`` mutants over the sampler's cells.
+
+    Every cell first gets ``min(size, CELL_MINIMUM)`` (``min(size, 1)`` if that
+    does not fit); the rest of the budget is shared in proportion to what each
+    cell has left, rounded down, and the remaining units go to the largest
+    fractional parts (ties in cell order). A budget at least the total keeps
+    every cell whole (the census).
+    """
+    cells = sorted(sizes)
+    if budget >= sum(sizes.values()):
+        return {cell: sizes[cell] for cell in cells}
+    for minimum in (CELL_MINIMUM, 1):
+        base = {cell: min(sizes[cell], minimum) for cell in cells}
+        if sum(base.values()) <= budget:
+            break
+    else:
+        raise ValueError(f"{budget} items cannot give every audit cell one item")
+    rest = {cell: sizes[cell] - base[cell] for cell in cells}
+    left = budget - sum(base.values())
+    total = sum(rest.values())
+    quota = {cell: left * rest[cell] / total if total else 0.0 for cell in cells}
+    alloc = {cell: base[cell] + math.floor(quota[cell]) for cell in cells}
+    spare = budget - sum(alloc.values())
+    order = sorted(cells, key=lambda c: (-(quota[c] - math.floor(quota[c])), cells.index(c)))
+    for cell in order[:spare]:
+        alloc[cell] += 1
+    return alloc
+
+
+def _shams(real: Sequence[Sampled], sham_tasks: Sequence[str]) -> list[Sampled]:
+    """The 10% quota, then a gold sham for every task with a sampled mutant (D34, D35)."""
+    out: list[Sampled] = []
+    n_sham = math.ceil(SHAM_FRACTION * len(real))
+    tasks = sorted(set(sham_tasks) or {item.task_id for item in real})
     gold_tasks: set[str] = set()
     for index in range(min(n_sham, 2 * len(tasks))):
         task = tasks[(index // 2) % len(tasks)]
         kind = "gold" if index % 2 == 0 else "do_nothing"
-        sample.append(Sampled(sham_id(task, kind), task, "sham", 1.0, sham=kind))
+        out.append(Sampled(sham_id(task, kind), task, "sham", 1.0, sham=kind))
         if kind == "gold":
             gold_tasks.add(task)
-    for task in sorted(k3_tasks - gold_tasks):
-        sample.append(Sampled(sham_id(task, "gold"), task, "sham", 1.0, sham="gold"))
-    for task in sorted(set(p1_flip_tasks)):
-        sample.append(Sampled(p1_flip_id(task), task, "p1_flip", 1.0))
+    for task in sorted({item.task_id for item in real} - gold_tasks):
+        out.append(Sampled(sham_id(task, "gold"), task, "sham", 1.0, sham="gold"))
+    return out
+
+
+def _cells(candidates: Sequence[Candidate]) -> dict[tuple[str, str], list[Candidate]]:
+    cells: dict[tuple[str, str], list[Candidate]] = {}
+    for candidate in sorted(candidates, key=lambda c: c.mutant_id):
+        name = stratum_of(candidate)
+        if name is not None:
+            cells.setdefault((name, candidate.family), []).append(candidate)
+    return cells
+
+
+def draw_audit_sample(
+    candidates: Sequence[Candidate],
+    *,
+    seed: int = 42,
+    sham_tasks: Sequence[str] = (),
+    p1_flip_tasks: Sequence[str] = (),
+    capacity: int | None = None,
+) -> list[Sampled]:
+    """The D35 audit: a census of the candidates, the gates, the shams and the P1 flips.
+
+    Every mutant in a stratum of ``STRATA`` (``stratum_of``) is audited at
+    weight 1. Shams: the 10 percent quota (``SHAM_FRACTION`` of the real items,
+    rounded up), alternating gold and do-nothing over the sorted sham tasks, at
+    most two per task; then a gold sham for every task with a sampled mutant
+    that the quota gave none (decision D34 named the K3 tasks; D35 widens it to
+    every task whose items are reported), so a candidate can be read against
+    its gold. Every P1 flip is added. If the census holds more items than
+    ``capacity`` (default ``audit_capacity()``: the registered GPU cap at the
+    planning rate), the mutants are instead a stratified sample over (stratum,
+    checker family) cells: the largest mutant budget whose sample, shams and
+    flips fit, allocated by ``allocate``, each cell drawn with
+    ``random.Random(f"{seed}:audit:{stratum}:{family}")`` and its items
+    carrying the cell's inclusion probability.
+    """
+    capacity = audit_capacity() if capacity is None else capacity
+    cells = _cells(candidates)
+    flips = [
+        Sampled(p1_flip_id(task), task, "p1_flip", 1.0) for task in sorted(set(p1_flip_tasks))
+    ]
+
+    def build(alloc: Mapping[tuple[str, str], int]) -> list[Sampled]:
+        real: list[Sampled] = []
+        for cell in sorted(cells):
+            pool = cells[cell]
+            n = alloc[cell]
+            chosen = (
+                pool
+                if n >= len(pool)
+                else random.Random(f"{seed}:audit:{cell[0]}:{cell[1]}").sample(pool, n)
+            )
+            probability = 1.0 if n >= len(pool) else n / len(pool)
+            for c in sorted(chosen, key=lambda c: c.mutant_id):
+                real.append(
+                    Sampled(c.mutant_id, c.task_id, cell[0], probability, family=c.family)
+                )
+        return real + _shams(real, sham_tasks) + flips
+
+    sizes = {cell: len(pool) for cell, pool in cells.items()}
+    sample = build(sizes)
+    budget = sum(sizes.values())
+    while len(sample) > capacity:
+        budget -= max(1, len(sample) - capacity)
+        if budget <= 0:
+            raise ValueError(f"the shams and P1 flips alone exceed the audit capacity {capacity}")
+        sample = build(allocate(sizes, budget))
     return sample
+
+
+def audit_scope(
+    candidates: Sequence[Candidate], sample: Sequence[Sampled], capacity: int | None = None
+) -> dict[str, Any]:
+    """What the audit covers, for the sample summary (disclosed under D35)."""
+    capacity = audit_capacity() if capacity is None else capacity
+    cells = _cells(candidates)
+    drawn = Counter((s.stratum, s.family or "") for s in sample if s.stratum in STRATA)
+    census = all(drawn[cell] == len(pool) for cell, pool in cells.items())
+    return {
+        "scope": "census" if census else "stratified_sample",
+        "rule": (
+            "decision D35: every checker false-negative and false-positive candidate, P2's "
+            "audit gate, the shams and every P1 flip; a seeded stratified sample over "
+            "(stratum, checker family) only if that census exceeds the capacity"
+        ),
+        "capacity_items": capacity,
+        "gpu_hours_cap": AUDIT_GPU_HOURS,
+        "items": len(sample),
+        "planned_gpu_hours": round(planned_gpu_hours(len(sample)), 4),
+        "census_items": len(sample) if census else None,
+        "cells": {
+            f"{name}|{family}": {"pool": len(pool), "sampled": drawn[(name, family)]}
+            for (name, family), pool in sorted(cells.items())
+        },
+    }
 
 
 SALT_HEX_CHARS = 64
@@ -330,7 +483,7 @@ def rater_order(item_ids: Sequence[str], rater_id: str, seed: int = 42) -> list[
 
 
 def human_spot_check(sample: Sequence[Sampled], *, seed: int = 42) -> list[Sampled]:
-    """Kevin's stratified spot check: max(5, 10%) per stratum plus 5 shams."""
+    """Kevin's stratified spot check: max(5, 10%) per stratum (``STRATA``) plus 5 shams."""
     rng = random.Random(f"{seed}:human")
     chosen: list[Sampled] = []
     for name in (*STRATA, "sham"):

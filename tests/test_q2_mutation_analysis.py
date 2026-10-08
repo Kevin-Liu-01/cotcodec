@@ -75,18 +75,28 @@ def test_family_floor_decides_k7_and_k6b() -> None:
         rows.append(_row(0, f"c{t}", "should_pass_equiv", "pass", "wide"))
     out = analysis.headline(rows, n_boot=300)
     p3 = out["P3"]["by_family"]
-    assert p3["big"]["inferential"] and p3["big"]["k7_unreliable"]
-    # Five tasks are below the 8-task floor: descriptive, K7 does not apply.
-    assert not p3["small"]["inferential"] and not p3["small"]["k7_unreliable"]
+    assert p3["big"]["above_family_floor"] and p3["big"]["k7_unreliable"]
+    # Five tasks are below the 8-task floor: K7 is not computed there.
+    assert not p3["small"]["above_family_floor"] and not p3["small"]["k7_unreliable"]
     wide = out["P2"]["by_family"]["wide"]
     assert wide["k6b_no_detected_error"] and wide["zero_event_upper_bound"] < 0.10
     assert out["P5"]["n"] == 45 and out["P5"]["events"] == 15
+    # Decision D35: K6b and K7 are descriptive flags, collected per metric.
+    assert out["K7"] == {
+        "role": analysis.DESCRIPTIVE,
+        "families": {"P2": [], "P3": ["big"], "P4": []},
+    }
+    assert out["K6b"]["role"] == analysis.DESCRIPTIVE and out["K6b"]["families"]["P2"] == ["wide"]
 
 
 def test_k3_single_rule_and_k2_label() -> None:
     pending = analysis.headline_exclusions(None, None)
     assert pending["audit"] == "pending"
     assert pending["k2"]["label"] == analysis.K2_UNVERIFIED
+    assert pending["metrics_leaving_headline"]["P3"] == [
+        analysis.D34_DEV_EXIT_REASON,
+        "audit pending",
+    ]
     fired = analysis.headline_exclusions(
         {
             "kappa_fires": False,
@@ -101,10 +111,125 @@ def test_k3_single_rule_and_k2_label() -> None:
             ],
         },
     )
-    assert set(fired["metrics_leaving_headline"]) == {"P2", "P5"}
+    # The D34 exit removes every metric; the K3 reasons are reported beside it.
+    leaving = fired["metrics_leaving_headline"]
+    assert leaving["P2"] == [analysis.D34_DEV_EXIT_REASON, "K3: should_pass_equiv label error"]
+    assert leaving["P3"] == leaving["P4"] == [analysis.D34_DEV_EXIT_REASON]
+    assert leaving["P5"][1:] == ["K3: should_pass_equiv label error"]
     assert fired["k2"]["families_dropped"] == ["compare_pptx_files"]
     kappa = analysis.headline_exclusions({"kappa_fires": True, "k3_fires": {}}, None)
-    assert set(kappa["metrics_leaving_headline"]) == {"P2", "P3", "P4", "P5"}
+    assert all(
+        reasons == [analysis.D34_DEV_EXIT_REASON, "K3: rater kappa below 0.6"]
+        for reasons in kappa["metrics_leaving_headline"].values()
+    )
+
+
+def test_d34_exit_keeps_p2_p5_out_of_the_confirmatory_headline_whatever_the_audit() -> None:
+    """Decision D35 (i): a clean confirm audit cannot bring P2-P5 back."""
+    rows = [_row(n, f"t{n}", "should_pass_equiv", "pass") for n in range(10)]
+    clean = {"kappa_fires": False, "k3_fires": {}, "k4_fires": False}
+    for audit in (clean, {**clean, "k4_fires": True}, None):
+        out = analysis.headline(rows, audit=audit, n_boot=50)
+        exclusions = out["exclusions"]
+        assert exclusions["confirmatory_metrics"] == []
+        assert set(exclusions["metrics_leaving_headline"]) == {"P2", "P3", "P4", "P5"}
+        for reasons in exclusions["metrics_leaving_headline"].values():
+            assert reasons[0] == "D34 (i): development kappa below 0.6"
+        assert exclusions["d34_dev_exit"]["fired"] is True
+        # K4 is reported and stops nothing.
+        assert out["K4"] == {
+            "fires": bool(audit and audit["k4_fires"]),
+            "role": "reported only; not a stop (D35)",
+        }
+        assert "k4_stop" not in exclusions
+        assert out["metrics_role"].startswith("exploratory")
+        assert out["P1"] is None and "replication" in out["descriptive_outputs"]["P1"]
+
+
+def test_the_registered_d34_exit_matches_the_recorded_development_audit() -> None:
+    """The constant restates the recorded dev result (kappa 0.066 stays as recorded)."""
+    import json
+    from pathlib import Path
+
+    root = Path(__file__).resolve().parents[1]
+    summary = json.loads((root / analysis.D34_DEV_EXIT["evidence"]).read_text(encoding="utf-8"))
+    d34 = summary["d34_i"]
+    assert d34["fires_registered"] and d34["fires_relay_excepted"]
+    assert round(d34["kappa_registered"], 4) == analysis.D34_DEV_EXIT["kappa_registered"]
+    assert round(d34["kappa_relay_excepted"], 4) == (
+        analysis.D34_DEV_EXIT["kappa_relay_excepted_sensitivity"]
+    )
+    assert max(d34["kappa_registered"], d34["kappa_relay_excepted"]) < 0.6
+    assert analysis.D34_DEV_EXIT["metrics"] == analysis.METRICS == ("P2", "P3", "P4", "P5")
+
+
+def test_checker_candidates_are_listed_with_their_audit_decisions() -> None:
+    """Decision D35 (ii): FN and FP candidates, each with its audit decision."""
+    rows = [
+        _row(1, "t1", "should_pass_equiv", "fail", "fa", operator="eq.a"),
+        _row(2, "t1", "should_pass_equiv", "pass", "fa", operator="eq.a"),
+        _row(3, "t2", "should_pass_equiv", "fail", "fb", operator="eq.b"),
+        _row(4, "t2", "should_pass_alt_solution", "fail", "fb", operator="alt.a"),
+        _row(5, "t3", "should_pass_alt_solution", "pass", "fa", operator="alt.a"),
+        _row(6, "t3", "should_fail_violation", "pass", "fa", operator="viol.a"),
+        _row(7, "t3", "should_fail_violation", "fail", "fa", operator="viol.a"),
+        _row(8, "t4", "should_fail_extra_change", "pass", "fb", operator="extra.a"),
+        # Outside the population: probe-touched, not evaluable, ambiguous.
+        _row(9, "t4", "should_pass_equiv", "fail", "fb", probe_touched=True),
+        _row(10, "t4", "should_fail_extra_change", "pass", "fb", probe_touched=True),
+        _row(11, "t4", "should_pass_equiv", "fail", "fb", lock_status="null_not_pass"),
+        _row(12, "t4", "ambiguous", "pass", "fb"),
+    ]
+    decisions = {
+        "t1__op__1": "accept",  # FN confirmed
+        "t2__op__3": "reject",  # FN label contradicted
+        "t2__op__4": "unresolved",
+        "t3__op__5": "accept",  # P2's gate, not a candidate
+        "t3__op__6": "reject",  # FP confirmed
+        "t4__op__8": "accept",  # FP label contradicted
+    }
+    audit = {"kappa_fires": False, "k3_fires": {}, "gold_defects": {"tasks": ["t2"]}}
+    out = analysis.headline(rows, audit=audit, decisions=decisions, n_boot=200)
+    cand = out["checker_candidates"]
+    assert cand["role"] == analysis.DESCRIPTIVE
+    fn, fp = cand["false_negative"], cand["false_positive"]
+    assert [(e["mutant_id"], e["audit_decision"], e["audit_reading"]) for e in fn["events"]] == [
+        ("t1__op__1", "accept", "confirmed"),
+        ("t2__op__3", "reject", "label_contradicted"),
+        ("t2__op__4", "unresolved", "unresolved"),
+    ]
+    assert [e["gold_defect_task"] for e in fn["events"]] == [False, True, True]
+    assert [(e["mutant_id"], e["audit_reading"]) for e in fp["events"]] == [
+        ("t3__op__6", "confirmed"),
+        ("t4__op__8", "label_contradicted"),
+    ]
+    assert fn["mutants"] == 5 and fn["tasks"] == 3 and fp["mutants"] == 3
+    assert fn["counts"]["by_label"] == {"should_pass_equiv": 2, "should_pass_alt_solution": 1}
+    assert fn["counts"]["audit"]["by_family"]["fb"] == {"label_contradicted": 1, "unresolved": 1}
+    assert fn["counts"]["audit"]["by_operator"]["eq.a"] == {"confirmed": 1}
+    # Task-equal candidate shares: t1 1/2, t2 2/2, t3 0/1.
+    assert fn["candidate_share"]["pooled"]["rate"] == pytest.approx((0.5 + 1 + 0) / 3)
+    assert fn["candidate_share"]["pooled"]["events"] == 3
+    assert fn["candidate_share"]["by_operator"]["alt.a"]["rate"] == pytest.approx(0.5)
+    assert set(fn["candidate_share"]["by_family"]) == {"fa", "fb"}
+    assert fn["candidate_share"]["by_label"]["should_pass_equiv"]["mutants"] == 3
+    # Every candidate was audited: the confirmed share is reported (t1 only).
+    assert fn["audit_census"] is True
+    assert fn["confirmed_share"]["pooled"]["rate"] == pytest.approx((0.5 + 0 + 0) / 3)
+    assert fp["confirmed_share"]["pooled"]["events"] == 1
+    # Probe-touched candidate events are counted apart and never audited.
+    touched = cand["probe_touched_events"]
+    assert touched["false_negative"] == {"fb": 1} and touched["false_positive"] == {"fb": 1}
+    # Without an audit decision for every candidate there is no confirmed share.
+    partial = analysis.checker_candidates(rows, {"t1__op__1": "accept"}, "lock", 50, 42)
+    assert partial["false_negative"]["audit_census"] is False
+    assert partial["false_negative"]["confirmed_share"] is None
+    assert partial["false_negative"]["counts"]["by_audit_reading"] == {
+        "confirmed": 1,
+        "not_audited": 2,
+    }
+    pending = analysis.checker_candidates(rows, None, "lock", 50, 42)
+    assert pending["false_positive"]["audit_census"] is False
 
 
 def test_gold_defects_are_reported_with_a_p2_sensitivity() -> None:
@@ -153,11 +278,11 @@ def test_p1_and_k6_from_the_controls() -> None:
     assert out["K6"]["adequacy_claim"] is False  # one P5 task is far below 59
 
 
-def test_k6_adequacy_needs_p5_in_the_headline(monkeypatch: pytest.MonkeyPatch) -> None:
+def test_k6_adequacy_claim_is_retired_and_reported_as_blocked() -> None:
+    """Decision D35 (i): no adequacy claim, whatever P5 and the audit show."""
     from harness.q2_mutation import report
 
-    monkeypatch.setattr(analysis, "K6_MIN_TASKS", 3)
-    rows = [_row(0, f"t{n}", "should_fail_violation", "fail") for n in range(4)]
+    rows = [_row(0, f"t{n}", "should_fail_violation", "fail") for n in range(80)]
     tasks = {
         "g1": {
             "gold_raw_lock": {"verdict": "pass", "score": None, "error": None},
@@ -169,22 +294,18 @@ def test_k6_adequacy_needs_p5_in_the_headline(monkeypatch: pytest.MonkeyPatch) -
     }
     controls = {"tasks": tasks, "aggregate": report.aggregate(tasks)}
     clean = {"kappa_fires": False, "k3_fires": {}, "k4_fires": False}
-
-    def k6(audit: dict | None) -> dict:
-        return analysis.headline(rows, controls=controls, audit=audit, n_boot=50)["K6"]
-
-    assert k6(clean)["adequacy_claim"] is True and k6(clean)["blocked_by"] == []
-    # P5 leaving the headline (K3 label error, kappa, a pending audit) or a K4
-    # stop withdraws the claim, whatever P5 shows.
     for audit in (
+        clean,
         {**clean, "k3_fires": {"should_fail_violation": True}},
-        {**clean, "k3_fires": {"should_pass_equiv": True}},
         {**clean, "kappa_fires": True},
         {**clean, "k4_fires": True},
         None,
     ):
-        out = k6(audit)
-        assert out["adequacy_claim"] is False and out["blocked_by"], audit
+        out = analysis.headline(rows, controls=controls, audit=audit, n_boot=50)["K6"]
+        assert out["p5_tasks"] == 80 and out["p5_escapes"] == 0
+        assert out["adequacy_claim"] is False, audit
+        assert out["blocked_by"][:2] == [analysis.K6_RETIRED, analysis.D34_DEV_EXIT_REASON]
+        assert not any("K4" in reason for reason in out["blocked_by"])
 
 
 def test_p1_counts_the_confirm_and_reserve_control_runs_together() -> None:
@@ -266,6 +387,11 @@ def test_k2_dropped_family_leaves_and_p2_p5_are_recomputed() -> None:
     assert explore["including_dropped_families"]["P5"]["events"] == 4
     assert set(explore["dropped_families_only"]["P2"]["by_family"]) == {"dropped"}
     assert "dropped" in out["population"]
+    # The candidates follow K2 too: the dropped family's are reported apart.
+    kept_fn = out["checker_candidates"]["false_negative"]
+    assert kept_fn["events"] == [] and kept_fn["mutants"] == 6
+    dropped_fn = explore["dropped_families_candidates"]["false_negative"]
+    assert len(dropped_fn["events"]) == 4
     plain = analysis.headline(rows, n_boot=100)
     assert "k2_exploratory" not in plain and plain["P5"]["n"] == 10
 
