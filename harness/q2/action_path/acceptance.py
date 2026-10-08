@@ -35,7 +35,12 @@ Rules that apply to every criterion:
   at the plan's 39,036 calls (decision D33);
 * reruns (section 6.1): a campaign may be rerun once, as a new attempt with a new
   output path, and only when the earlier attempt did not count (a ladder rung also when
-  it aborted on foreign load or lacks host snapshots); every trial of every attempt is
+  it aborted on foreign load or lacks host snapshots). An attempt here is one run of a
+  campaign, the first or its rerun; a repair attempt (section 11) is a new executor
+  version, and every rule below, D33's limits included, runs within one repair attempt.
+  A job killed before its driver wrote ``receipt.json`` is still an attempt: it is read
+  from its manifest, its batch record and the sessions it finished, and cannot count.
+  Every trial of every attempt is
   reported, and a failed trial in an earlier attempt counts against the criterion
   exactly as if that attempt had counted: on the cells the criterion judges, less the
   trials it excuses (only a rung aborted on foreign load has none that count; a rung
@@ -141,6 +146,19 @@ def batch_end(run_dir: str) -> dict[str, int] | None:
     return {"driver_exit": int(driver_exit), "labelled_containers_left": int(left)}
 
 
+def preflight_job(run_dir: str) -> str:
+    """The job id the batch script recorded (``job_id=`` in ``preflight.txt``) before the
+    driver started; the run directory's name (the lane names it after the job) without
+    one."""
+    path = os.path.join(run_dir, "preflight.txt")
+    if os.path.exists(path):
+        with open(path, encoding="utf-8") as handle:
+            found = re.search(r"^job_id=(\S+)$", handle.read(), re.M)
+        if found:
+            return found.group(1)
+    return os.path.basename(os.path.normpath(run_dir))
+
+
 def recorded_slurm_state(run_dir: str, job: str) -> dict[str, str] | None:
     """The end state ``scripts/record_slurm_end_states.sh`` caught for this job, if any.
 
@@ -172,11 +190,21 @@ def load(
     the watcher's record is used if there is one, and without either the batch script's
     own record decides. ``earlier`` holds the loaded earlier attempts of the same
     campaign (section 6.1), oldest first.
+
+    The driver writes ``receipt.json`` last, so a job ended by a signal, a time limit or a
+    node failure has none. It is still an attempt (section 6.1): its receipt reads as
+    empty (so it cannot count), its job id comes from the batch script's ``job_id=`` line
+    in ``preflight.txt``, written before the driver starts, and its finished sessions are
+    read. A session the kill cut short has no ``cycle-NN.json``; the runner keeps its
+    trials unjudged in ``cycle-NN.trials.jsonl`` (no verdict without the session's tap
+    stream), so they are not read.
     """
     manifest = _read(os.path.join(run_dir, "manifest.json"))
-    receipt = _read(os.path.join(run_dir, "receipt.json"))
+    receipt_path = os.path.join(run_dir, "receipt.json")
+    receipt = _read(receipt_path) if os.path.exists(receipt_path) else {}
+    job = str(receipt.get("job_id") or preflight_job(run_dir))
     if slurm is None:
-        slurm = recorded_slurm_state(run_dir, str(receipt.get("job_id")))
+        slurm = recorded_slurm_state(run_dir, job)
     sessions = []
     paths = glob.glob(os.path.join(run_dir, "cycles", "cycle-[0-9][0-9]*.json"))
     # Cycle numbers are plan indices; sort them as numbers (cycle-100 after cycle-99).
@@ -212,7 +240,7 @@ def load(
             }
         )
     return {
-        "job": str(receipt.get("job_id")),
+        "job": job,
         "run_dir": run_dir,
         "manifest": manifest,
         "receipt": receipt,
@@ -494,6 +522,25 @@ def _excused_total(campaigns: Iterable[dict[str, Any]]) -> int:
     return sum(excused_trials(campaigns).values())
 
 
+def excused_repetitions(campaigns: Iterable[dict[str, Any]]) -> dict[str, list[dict[str, Any]]]:
+    """cell -> each excused (restart-only) trial in the given attempts: its job, session
+    (``cycle``), observation setting and sequence number (section 12)."""
+    out: dict[str, list[dict[str, Any]]] = {}
+    for campaign in campaigns:
+        for session in campaign["sessions"]:
+            for trial in session["trials"]:
+                if restart_only(trial):
+                    out.setdefault(trial["cell"], []).append(
+                        {
+                            "job": campaign["job"],
+                            "cycle": session.get("cycle"),
+                            "setting": session["setting"],
+                            "seq": trial["seq"],
+                        }
+                    )
+    return out
+
+
 def entry_status(flags_by_setting: dict[str, list[bool]], excused: int = 0) -> str:
     """Section 5 over an entry's counted repetitions.
 
@@ -563,7 +610,7 @@ def _judge_entries(
     judged: set[str],
     what: str,
     problems: list[str],
-    excused: dict[str, int] | None = None,
+    pool: list[dict[str, Any]] | None = None,
 ) -> tuple[dict[str, str], dict[str, Any]]:
     """A1-A3's shared rules (section 5, decisions D30 and D33) over one seed's (A1) or one
     layer's (A2, A3) campaigns: which count, each entry's status on its counted
@@ -571,20 +618,38 @@ def _judge_entries(
 
     A restart-only trial is excused: left out of its entry's k of k and listed in the
     restart report. A second excused trial in one entry, over both observation settings
-    and every attempt (and, for A1, both seeds' shuffles: ``excused``), fails the entry
+    and every rerun (and, for A1, both seeds' shuffles: ``pool``, the attempts whose
+    excused trials count; every attempt of ``campaigns`` by default), fails the entry
     (``RESTART_LIMIT``). An earlier attempt's failed trials count on the judged cells,
     less its excused ones (section 6.1).
+
+    ``entries_over_restart_limit`` (section 12) lists every entry with more than
+    ``MAX_EXCUSED_PER_ENTRY`` excused trials in ``pool``, or whose status is
+    ``RESTART_LIMIT``, whatever its status (a counted failure makes it FLAKY or FAIL
+    first) and whether or not the criterion judges it, with each excused repetition.
     """
     for c in campaigns:
         problems += campaign_problems(c, excused=restart_only, judged=judged)
-    status = entry_table(campaigns, excused)
+    attempts = every_attempt(campaigns) if pool is None else pool
+    counts = excused_trials(attempts)
+    status = entry_table(campaigns, counts)
     failing = sorted(cell for cell in judged if status.get(cell) != "PASS")
     if failing:
         problems.append(f"{what} not PASS: {failing}")
-    limit = sorted(cell for cell in judged if status.get(cell) == RESTART_LIMIT)
+    repetitions = excused_repetitions(attempts)
+    over = [
+        {
+            "cell": cell,
+            "status": status[cell],
+            "judged": cell in judged,
+            "excused": repetitions.get(cell, []),
+        }
+        for cell in sorted(status)
+        if counts.get(cell, 0) > MAX_EXCUSED_PER_ENTRY or status[cell] == RESTART_LIMIT
+    ]
     report = _restart_report(campaigns)
     report["excused_trials"] = _excused_total(every_attempt(campaigns))
-    report["entries_over_restart_limit"] = limit
+    report["entries_over_restart_limit"] = over
     return status, report
 
 
@@ -593,12 +658,14 @@ def a1(by_seed: dict[int, list[dict[str, Any]]]) -> dict[str, Any]:
 
     Each gating entry is judged per seed on its counted repetitions (decision D33); its
     excused trials are counted over both seeds' shuffles, so an entry loses at most one of
-    its 20 repetitions in A1 to a restart.
+    its 20 repetitions in A1 to a restart. That limit is A1's at N = 1; A1 at N* > 1 is
+    read from the ladder rung N* under the rung's rule (``rung``: at most two excused
+    trials in the rung, which may both be in one entry; section 9).
     """
     problems: list[str] = []
     gating = _gating()
     ids = _layer_ids("L0-fixed")
-    pooled = excused_trials(every_attempt(c for seed in (43, 44) for c in by_seed.get(seed) or []))
+    pooled = every_attempt(c for seed in (43, 44) for c in by_seed.get(seed) or [])
     table, reports = {}, {}
     for seed in (43, 44):
         campaigns = by_seed.get(seed) or []
@@ -739,6 +806,12 @@ def a4(campaigns: list[dict[str, Any]], n_star: int) -> dict[str, Any]:
     one slower than ``DesktopEnv``'s retries, leaves another failure in the trial it hits,
     and that trial counts (design decision 40). Unlike A1-A3 and the ladder (decision D33),
     A4 sets no limit on excused trials: A7 bounds the restarts themselves.
+
+    ``restart_only_trials`` counts the excused trials of every attempt (section 12;
+    ``restart_only_trials_counting``, those of the counting attempts). A7 runs under
+    attempt 1 only (section 11), so under a repair attempt A4 also reports its own
+    restarts per accessibility call against A7's bound (``repair_restart_rate``),
+    reported and not judged.
     """
     from harness.q2.action_path import volume
 
@@ -766,18 +839,62 @@ def a4(campaigns: list[dict[str, Any]], n_star: int) -> dict[str, Any]:
     ]
     if failed:
         problems.append(f"A4: {len(failed)} failed trials, first {failed[:5]}")
+    report = _restart_report(campaigns)
+    attempt = max((_attempt(c) for c in campaigns), default=1)
     return _verdict(
         problems,
         {
             "trials": len(trials),
             "failures": len(failed),
-            "restart_only_trials": sum(1 for t in trials if restart_only(t)),
-            "guest_server": _restart_report(campaigns),
+            "restart_only_trials": _excused_total(every_attempt(campaigns)),
+            "restart_only_trials_counting": sum(1 for t in trials if restart_only(t)),
+            "guest_server": report,
+            "repair_restart_rate": repair_restart_rate(campaigns, report, attempt),
             "class_actions": plan_data["class_actions"],
             "class_upper_bound_family_95": plan_data["class_upper_bound_family_95"],
             "boot_upper_bound_family_95": plan_data["boot_upper_bound_family_95"],
         },
     )
+
+
+def _attempt(campaign: dict[str, Any]) -> int:
+    """The repair attempt (section 11) a campaign ran under; 1 when its manifest names none."""
+    return int((campaign["manifest"].get("workload") or {}).get("attempt") or 1)
+
+
+def repair_restart_rate(
+    campaigns: list[dict[str, Any]], report: dict[str, Any], attempt: int
+) -> dict[str, Any] | None:
+    """Under a repair attempt, A4's restarts per accessibility call against A7's bound.
+
+    Reported, not judged. A7 runs under attempt 1 only and is not re-judged (section 11),
+    and A4 excuses restart-only trials without a limit, so a repair attempt's executor
+    that itself caused restarts during observation calls would otherwise go unmeasured.
+    A7's rule is applied to A4's record: the restarts of every attempt (every session,
+    the screenshot setting's included) over the accessibility calls of the counting
+    attempts, with the exact one-sided 95% upper bound against ``OBSERVATION_BOUND``.
+    None under attempt 1, which A7 judges.
+    """
+    if attempt <= 1:
+        return None
+    restarts, calls = report["restarts"], report["accessibility_calls_counting"]
+    upper = poisson_upper(restarts) / calls if calls else None
+    return {
+        "attempt": attempt,
+        "restarts": restarts,
+        "restarts_accessibility_setting": sum(
+            s.get("restarts") or 0
+            for a in every_attempt(campaigns)
+            for s in a["sessions"]
+            if s["setting"] == "screenshot+a11y"
+        ),
+        "accessibility_calls": calls,
+        "rate": restarts / calls if calls else None,
+        "upper_95": upper,
+        "bound": OBSERVATION_BOUND,
+        "within_bound": upper is not None and upper <= OBSERVATION_BOUND,
+        "judged": False,
+    }
 
 
 def _tiled(
@@ -895,7 +1012,7 @@ def a7(campaigns: list[dict[str, Any]], n_star: int) -> dict[str, Any]:
         if c["manifest"]["vm"]["concurrency"] != n_star:
             problems.append(f"job {c['job']}: A7 runs at N* = {n_star}")
         for attempt in [*c.get("earlier", []), c]:
-            if int((attempt["manifest"].get("workload") or {}).get("attempt") or 1) != 1:
+            if _attempt(attempt) != 1:
                 problems.append(f"job {attempt['job']}: A7 runs under attempt 1 only")
     ordered = _tiled(campaigns, len(full), "A7", problems)
     problems += _check_plan(ordered, expected(full), "A7")
@@ -938,7 +1055,15 @@ def a7(campaigns: list[dict[str, Any]], n_star: int) -> dict[str, Any]:
 
 
 def a5(boot_reset: dict[str, Any] | None, acceptance: list[dict[str, Any]], sha: str) -> dict:
-    """20 of 20 pristine reset checks at the frozen SHA; every acceptance receipt clean."""
+    """20 of 20 pristine reset checks at the frozen SHA; every acceptance receipt clean.
+
+    Judged on the counting attempts' receipts only. An earlier attempt's receipt is
+    reported, not judged (``earlier_attempts``): a job killed by a signal, a time limit or
+    a node failure can leave labelled containers by design (a kill or a node failure that
+    skips the batch script's cleanup, and a killed job writes no receipt at all), so
+    judging it would make one killed job fail A5 with no repair. Such an attempt did not
+    count, and section 6.1 reads its end state.
+    """
     problems: list[str] = []
     if boot_reset is None:
         problems.append("no boot-reset campaign")
@@ -962,7 +1087,20 @@ def a5(boot_reset: dict[str, Any] | None, acceptance: list[dict[str, Any]], sha:
             "leaked_volumes"
         ):
             problems.append(f"job {c['job']}: leaked labelled containers or volumes")
-    return _verdict(problems, {})
+    earlier = [
+        {
+            "job": previous["job"],
+            "rerun_as": c["job"],
+            "receipt": bool(previous["receipt"]),
+            "qcow2_unchanged": previous["receipt"].get("qcow2_unchanged"),
+            "labelled_containers_left": previous["receipt"].get("labelled_containers_left"),
+            "leaked_volumes": (previous["receipt"].get("summary") or {}).get("leaked_volumes"),
+            "batch": previous.get("batch"),
+        }
+        for c in [*([boot_reset] if boot_reset else []), *acceptance]
+        for previous in c.get("earlier") or []
+    ]
+    return _verdict(problems, {"earlier_attempts": earlier})
 
 
 def a6(campaigns: list[dict[str, Any]]) -> dict[str, Any]:
@@ -1303,6 +1441,15 @@ def foreign_abort(campaign: dict[str, Any]) -> list[str]:
 
     These are the only two reasons that abort a rung. With no host snapshot there is no
     abort to read (empty); ``snapshot_problems`` reports the missing snapshots instead.
+
+    Known limitation (section 9): ``driver.snapshot_host`` runs ``squeue`` without
+    checking its exit status and records only the rows of other jobs
+    (``squeue_foreign``). A ``squeue`` that exits non-zero with no output therefore
+    records an empty list, which reads as no foreign load, and a snapshot cannot tell
+    it from an idle queue: the snapshot keeps neither the exit status nor the job's own
+    row, which a successful ``squeue`` always lists. This module cannot detect it, and
+    the driver is frozen (byte-identical to ``7653799``). A ``squeue`` that times out
+    or is missing raises in the driver, and that job does not count.
     """
     own = campaign["job"]
     snapshots = [s for session in campaign["sessions"] for s in session["snapshots"] if s]

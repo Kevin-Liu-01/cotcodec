@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import copy
 import json
+import os
 from pathlib import Path
 
 import pytest
@@ -1040,7 +1041,9 @@ def test_a1_fails_an_entry_on_its_second_excused_trial():
     result = acc.a1(good)
     assert not result["pass"]
     assert result["entries"][43]["key_enter"] == "RESTART_LIMIT"
-    assert result["guest_server"][43]["entries_over_restart_limit"] == ["key_enter"]
+    (over,) = result["guest_server"][43]["entries_over_restart_limit"]
+    assert (over["cell"], over["status"], over["judged"]) == ("key_enter", "RESTART_LIMIT", True)
+    assert [(r["job"], r["setting"]) for r in over["excused"]] == [("43", A11Y), ("43", A11Y)]
     assert any("key_enter" in p for p in result["problems"])
     # The limit is per entry (D33), not per setting or per seed: one excused trial in each
     # setting, or one in each seed's shuffle, is a second excused trial in that entry.
@@ -1207,7 +1210,9 @@ def test_a2_and_a3_judge_entries_on_their_counted_repetitions():
     result = acc.a3(runs)
     assert not result["pass"]
     assert result["entries"]["L0-fixed"]["type_long_500"] == "RESTART_LIMIT"
-    assert result["guest_server"]["L0-fixed"]["entries_over_restart_limit"] == ["type_long_500"]
+    over = result["guest_server"]["L0-fixed"]["entries_over_restart_limit"]
+    assert [(row["cell"], len(row["excused"])) for row in over] == [("type_long_500", 2)]
+    assert result["guest_server"]["H-GA"]["entries_over_restart_limit"] == []
 
 
 def _rung(n: int, **kwargs) -> dict:
@@ -1465,3 +1470,157 @@ def test_c4_counts_an_earlier_a1_attempts_mismatch():
     _nth(earlier, SHOT, "key_enter", 0)["c4"] = False
     result = acc.c4([counting])
     assert not result["pass"] and result["problems"] == ["job 43a screenshot key_enter"]
+
+
+# --- wording and reporting closed before the freeze (main section 22) --------------------------
+
+
+def test_entries_over_the_restart_limit_are_listed_whatever_their_status():
+    """Section 12: every entry with two or more excused trials is listed with its excused
+    repetitions, also when a counted failure made it FLAKY or FAIL first, and also when
+    the criterion does not judge it; in A1 the repetitions are pooled over both seeds."""
+    good = _a1_good()
+    for nth in (0, 1):
+        _hit(_nth(good[43][0], A11Y, "key_enter", nth), *RESTART_ONLY)
+    _nth(good[43][0], SHOT, "key_enter", 2)["pass"] = False  # a counted failure as well
+    result = acc.a1(good)
+    assert not result["pass"] and result["entries"][43]["key_enter"] == "FLAKY"
+    (over,) = result["guest_server"][43]["entries_over_restart_limit"]
+    assert (over["cell"], over["status"], len(over["excused"])) == ("key_enter", "FLAKY", 2)
+    # A non-gating entry over the limit is listed and marked as not judged.
+    soft = _a1_good()
+    for nth in (0, 1):
+        _hit(_nth(soft[44][0], SHOT, "click_button_back", nth), *RESTART_ONLY)
+    result = acc.a1(soft)
+    assert result["pass"]
+    (over,) = result["guest_server"][44]["entries_over_restart_limit"]
+    assert over["cell"] == "click_button_back" and over["judged"] is False
+    # One excused trial in each seed's shuffle: listed under both seeds, with both.
+    seeds = _a1_good()
+    _hit(_nth(seeds[43][0], A11Y, "type_plain", 0), *RESTART_ONLY)
+    _hit(_nth(seeds[44][0], SHOT, "type_plain", 3), *RESTART_AND_TREE)
+    result = acc.a1(seeds)
+    for seed in (43, 44):
+        (over,) = result["guest_server"][seed]["entries_over_restart_limit"]
+        assert over["status"] == "RESTART_LIMIT"
+        assert sorted((r["job"], r["setting"]) for r in over["excused"]) == [
+            ("43", A11Y), ("44", SHOT)
+        ]  # fmt: skip
+    # One excused trial is within the limit and not listed.
+    one = _a1_good()
+    _hit(_nth(one[43][0], A11Y, "key_enter", 0), *RESTART_ONLY)
+    assert acc.a1(one)["guest_server"][43]["entries_over_restart_limit"] == []
+
+
+def test_a4_counts_its_excused_trials_over_every_attempt():
+    """Section 12: A4 reports its excused trials over every attempt, as the other
+    criteria do, and those of the counting attempts beside them."""
+    halves = _a4_halves()
+    earlier = copy.deepcopy(halves[0])
+    earlier["job"], earlier["batch"], earlier["slurm"] = "0", None, None
+    earlier["sessions"] = earlier["sessions"][:4]
+    _hit(earlier["sessions"][1]["trials"][2], *RESTART_ONLY)
+    halves[0]["earlier"] = [earlier]
+    _hit(halves[1]["sessions"][60]["trials"][7], *RESTART_AND_TREE)
+    result = acc.a4(halves, 8)
+    assert result["pass"], result["problems"]
+    assert result["restart_only_trials"] == 2 and result["restart_only_trials_counting"] == 1
+
+
+def test_a4_reports_its_restart_rate_against_a7s_bound_under_a_repair_attempt():
+    """A7 runs under attempt 1 only, so under a repair attempt A4 reports its own
+    restarts per accessibility call against A7's bound, on A7's rule (restarts of every
+    attempt, calls of the counting attempts), reported and not judged."""
+    halves = _a4_halves()
+    for c in halves:
+        for session in c["sessions"]:
+            session["accessibility_calls"] = 68 if session["setting"] == A11Y else 0
+    calls = sum(s["accessibility_calls"] for c in halves for s in c["sessions"])
+    assert acc.a4(halves, 8)["repair_restart_rate"] is None  # attempt 1: A7 judges it
+    for c in halves:
+        c["manifest"]["workload"]["attempt"] = 2
+    a11y = [s for c in halves for s in c["sessions"] if s["setting"] == A11Y]
+    assert calls == 534 * 68
+    for session in a11y[:6]:
+        session["restarts"] = 1
+    earlier = copy.deepcopy(halves[0])
+    earlier["job"], earlier["batch"], earlier["slurm"] = "0", None, None
+    earlier["sessions"] = [copy.deepcopy(a11y[20])]
+    earlier["sessions"][0]["restarts"] = 2
+    halves[0]["earlier"] = [earlier]
+    result = acc.a4(halves, 8)
+    assert result["pass"], result["problems"]  # reported, never judged
+    rate = result["repair_restart_rate"]
+    assert rate["attempt"] == 2 and rate["judged"] is False
+    assert rate["restarts"] == 8 and rate["restarts_accessibility_setting"] == 8
+    assert rate["accessibility_calls"] == calls  # the earlier attempt's calls are not added
+    assert rate["upper_95"] == pytest.approx(acc.poisson_upper(8) / calls)
+    assert rate["bound"] == acc.OBSERVATION_BOUND and rate["within_bound"] is True
+    # Over A7's bound: still reported only, and a restart in a screenshot-setting session
+    # counts toward the rate as well.
+    shot = next(s for s in halves[1]["sessions"] if s["setting"] == SHOT)
+    shot["restarts"] = 1
+    for session in a11y[:40]:
+        session["restarts"] = 1
+    result = acc.a4(halves, 8)
+    rate = result["repair_restart_rate"]
+    assert result["pass"] and rate["within_bound"] is False
+    assert rate["restarts"] == 43 and rate["restarts_accessibility_setting"] == 42
+
+
+def test_a5_reports_earlier_attempts_receipts_without_judging_them():
+    """A5 judges the counting attempts' receipts; an earlier attempt's is reported (a
+    killed job can leave labelled containers by design, and writes no receipt)."""
+    reset = campaign([], job="5")
+    reset["receipt"]["summary"].update(sentinel_reset_checks=20, sentinel_pristine=20)
+    other = campaign([], job="6")
+    killed = _uncounted(other, "4")
+    killed["receipt"] = {}
+    dirty = _uncounted(other, "3")
+    dirty["receipt"]["labelled_containers_left"] = ["c"]
+    rerun = dict(other, earlier=[killed])
+    reset_rerun = dict(reset, earlier=[dirty])
+    result = acc.a5(reset_rerun, [rerun], "a" * 40)
+    assert result["pass"], result["problems"]
+    rows = {row["job"]: row for row in result["earlier_attempts"]}
+    assert rows["4"]["receipt"] is False and rows["4"]["rerun_as"] == "6"
+    assert rows["3"]["labelled_containers_left"] == ["c"] and rows["3"]["rerun_as"] == "5"
+    # The counting attempt's own receipt is still judged.
+    rerun["receipt"] = dict(rerun["receipt"], qcow2_unchanged=False)
+    assert not acc.a5(reset_rerun, [rerun], "a" * 40)["pass"]
+
+
+def test_load_reads_an_attempt_killed_before_its_driver_wrote_a_receipt(tmp_path):
+    """The driver writes receipt.json last, so a job ended by a signal, a time limit or a
+    node failure has none (development runs 695-699). Such an attempt must load: it
+    cannot count, its job id comes from the batch script's preflight record, and its
+    finished sessions' failed trials count against a rerun (section 6.1)."""
+    failing = {"pass": False, "infra": [], "reasons": ["text 'a' != 'b'"]}
+    cycle = {
+        "cycle": 0,
+        "setting": "screenshot",
+        "boot": {"t_screenshot_200": 20.0},
+        "trials": [{"seq": 0, "cell": "key_enter", "verdict": failing}],
+    }
+    run = _write_run(tmp_path, cycle, "job_id=695\nbatch_sha256=x\n")
+    os.remove(os.path.join(run, "receipt.json"))
+    killed = acc.load(run)
+    assert killed["job"] == "695" and killed["receipt"] == {} and killed["batch"] is None
+    problems = acc.counting_problems(killed)
+    assert any("end state unknown" in p for p in problems)
+    assert any("infra_gates_pass is not true" in p for p in problems)
+    assert acc.failed_trials(killed) == [("screenshot", 0, "key_enter")]
+    # As an earlier attempt it may be rerun, and its gating failure counts.
+    rerun = dict(campaign(a1_plan(43), job="709"), earlier=[killed])
+    result = acc.a1({43: [rerun], 44: [campaign(a1_plan(44), job="710")]})
+    assert not result["pass"]
+    assert any("earlier attempt 695 has 1 failed" in p for p in result["problems"])
+    assert not any("counted and was rerun" in p for p in result["problems"])
+    # A job killed while its first VM booted has no finished session at all.
+    booting = tmp_path / "booting" / "696"
+    (booting / "cycles").mkdir(parents=True)
+    (booting / "manifest.json").write_text(json.dumps({"vm": {"concurrency": 1}}))
+    (booting / "cycles" / "cycle-00.trials.jsonl").write_text('{"seq": 0}\n')
+    loaded = acc.load(str(booting))
+    assert loaded["job"] == "696" and loaded["sessions"] == []  # named after its directory
+    assert acc.counting_problems(loaded)
