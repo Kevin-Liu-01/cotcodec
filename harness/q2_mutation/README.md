@@ -179,7 +179,12 @@ The transcript audit voids an item's answer (`isolation_void`, `unsure`)
 unless, in every transcript of the item, exactly one user turn is the template
 rendered for that item (bare or in the workflow harness's wrapper) and any
 other user turn is the harness relay frame (`RELAY_PREAMBLE`, once, before the
-task turn, naming no item id, byte-identical across the run; D35). It also
+task turn, naming no item id, byte-identical across the run; D35). Any entry
+whose message has the role user is a user turn, whatever its entry type, and
+an entry type outside `TRANSCRIPT_ENTRY_TYPES` (user, assistant, attachment)
+or an attachment type outside `HARNESS_ATTACHMENT_TYPES` (the fifteen of the
+D34 development rating) voids the item: a message sent to a running agent
+arrives as a `queued_command` attachment (sixth review). It also
 voids on two transcripts that answer, a StructuredOutput naming another item, a
 packet.txt never read, a shell call, a tool other than Read (and the
 path-free StructuredOutput, ToolSearch, TodoWrite), a path outside the item
