@@ -175,7 +175,7 @@
     "Q1 Stage 0 after D31 and its review: not admitted (preregistration sections 18.8-18.9). Under the corrected, memory-aware execution q1-stage0-exec/2 the model-based estimate through P3 is 10.46 GPU-h central and 12.31 high without the store (11.10 high at the references-free bound, post hoc ratio). Choose: the gauntlet (blocked by D24 until the trust store exists or you rule on admission), a scope reduction that acts on P1-P3 (test quota, FRR core, hack fraction, control replicates; a 30-per-family quota still projects 9.10 central, 10.51 high), or a new engineering pass and re-pilot beyond D31 (for example one process per kernel for its gates). Before any Stage 0 job: sign off q1-stage0-exec/2 (it amends trim/2 item 6) and the store policy (on or off for c and A1-A5; L2/77's shared realization of a nondeterministic cuDNN reference; a GPU check of the three KernelBench adversarial controls under the store), and fund a re-measurement under q1-stage0-exec/2",
     "Review the decisions taken on your behalf since the restart, D1-D37 in program/decisions.md; the recent ones are D28 (Q1 pilot exposure), D29 (upstream test code on GPUs), D30 and D33 (action-path guest-server restarts), D31 and D37 (Q1 Stage 0 budget path), D32 and D36 (Q3 dense pre-check), D34 and D35 (checker-mutation raters; the study became descriptive)"
   ],
-  "gpu_hours_spent_this_program": 3.1857,
+  "gpu_hours_spent_this_program": 3.2429,
   "frozen_registrations": [
     "q3-k1-localization-screen-v1",
     "q2-holo3-rerun-audit-v1-posthoc",
@@ -305,6 +305,15 @@
         "713 q1-repilot-d31"
       ],
       "outcome": "COMPLETED 0:0 in 19 min 48 s of the 0.5 GPU-h cap; S1-cal and controls only (D28); 843 twin rows, 828 same verdict, every difference explained and none by the store; store saves c 42%, A1 25%, A2 17% but its reference items cost about as much at in-scope sizes; trim/2 high through P3 stays above 8 in every scenario; CUDA OOM on 3 of 8 problems at 12 per GPU"
+    },
+    {
+      "experiment": "Q1 Stage 0 gauntlet wave 1 open-weight review (D24, D37)",
+      "gpu_hours": 0.0572,
+      "jobs": [
+        "775 qwen3.6-35b-a3b review"
+      ],
+      "outcome": "review PARSED on attempt 1, total 45, replicates token-identical; wave score 45 (lower of 47 and 45); honest exit (query budget, triad 3/3 refuted); reviewer inference only, not Stage 0 work",
+      "basis": "physical (scontrol RunTime 00:03:26 on 1 H100; 0.25 GPU-h cap)"
     }
   ],
   "results": [
