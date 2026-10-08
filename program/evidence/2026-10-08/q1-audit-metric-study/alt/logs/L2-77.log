@@ -1,0 +1,6 @@
+run L2/77 A1/native/seed-6042
+done L2/77 A1/native/seed-6042 499.2s
+run L2/77 A2/uniform8/seed-4043
+done L2/77 A2/uniform8/seed-4043 531.1s
+run L2/77 A3/inner137/seed-5044
+done L2/77 A3/inner137/seed-5044 844.8s

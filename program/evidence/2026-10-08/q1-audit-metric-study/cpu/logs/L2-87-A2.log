@@ -1,0 +1,10 @@
+run L2/87 A2/randn/seed-4042
+done L2/87 A2/randn/seed-4042 98.4s
+run L2/87 A2/uniform8/seed-4043
+done L2/87 A2/uniform8/seed-4043 99.1s
+run L2/87 A2/spiky/seed-4045
+done L2/87 A2/spiky/seed-4045 124.7s
+run L2/87 A2/ties/seed-4046
+done L2/87 A2/ties/seed-4046 153.3s
+run L2/87 A2/constrows/seed-4048
+done L2/87 A2/constrows/seed-4048 118.4s
