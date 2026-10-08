@@ -2,7 +2,9 @@
 
 This module restates the preregistration's decision rules (sections 5-9 of
 ``program/preregistrations/q2-action-path-v2.md``, which keeps v1's rules; decision D40
-changes only C2's prediction file and order seed) as code, frozen with the inputs
+changes only C2's prediction file and order seed, and decision D43 how the judge, and so
+C2's and C4's readings, treat a key event the tap recorded without the guard's lock bit)
+as code, frozen with the inputs
 addendum (and pinned again by the executor addendum) before any scored campaign runs,
 C2 included, so the verdicts are computed the way the text says and nothing is chosen
 after the data. It reads campaign run directories as the VM lane writes them
@@ -73,14 +75,14 @@ from pathlib import Path
 from typing import Any
 
 from harness.q2.action_path import order
+from harness.q2.action_path.verdict import GUARD_LOCKED_MODS
 from harness.q2.vm import suite
 
 ROOT = Path(__file__).resolve().parents[3]
 CELLS = ROOT / "harness/q2/action_path/suite_cells.json"
 GATING = ROOT / "harness/q2/action_path/gating_set.json"
 VOLUME_PLAN = ROOT / "harness/q2/action_path/volume_plan.json"
-# q2-action-path-v2 (decision D40): C2 reads v2's prediction (v1's, with chord_super_d moved
-# to the predicted failures) on its own order seed.
+# q2-action-path-v2 (decisions D40 and D43): C2 reads v2's prediction on its own order seed.
 PREDICTION = ROOT / "harness/q2/action_path/l0_raw_prediction_v2.yaml"
 C2_SEED = order.C2_SEED
 OPERATORS = ROOT / "harness/q2/action_path/mutation_operators.yaml"
@@ -1221,8 +1223,13 @@ def c2_projection(trial: dict[str, Any], cell: dict[str, Any]) -> list[list[Any]
     The channel is the one ``verdict.judge`` reads: the probe's event log for ``observable:
     app`` cells (``[kind, keycode, state, x, y, time, keysym0, ...]``), the XRecord window for
     ``raw-only`` cells (``[kind, keycode, state, keysym0]`` once the timestamp is dropped).
+    On the XRecord window a key press recorded without the guard's lock bit also leaves its
+    state out, as ``verdict.judge`` reads it (decision D43,
+    ``verdict.modifier_state_observable``). An element without a state matches a reference
+    element on its kind and keysym (``c2_matches``).
     """
-    if cell.get("observable", "app") == "app":
+    tap = cell.get("observable", "app") != "app"
+    if not tap:
         records = trial.get("probe_events")
         keysym_at = 6
     else:
@@ -1236,8 +1243,19 @@ def c2_projection(trial: dict[str, Any], cell: dict[str, Any]) -> list[list[Any]
         if kind not in ("KeyPress", "KeyRelease"):
             continue
         keysym = _keysym_name(record[keysym_at] if len(record) > keysym_at else 0)
-        out.append([kind, keysym] if kind == "KeyRelease" else [kind, keysym, _states(record[2])])
+        observed = not tap or int(record[2] or 0) & GUARD_LOCKED_MODS == GUARD_LOCKED_MODS
+        if kind == "KeyRelease" or not observed:
+            out.append([kind, keysym])
+        else:
+            out.append([kind, keysym, _states(record[2])])
     return out
+
+
+def c2_matches(projection: list[list[Any]] | None, reference: list[list[Any]] | None) -> bool:
+    """Element by element: equal, or, for an element without a state, equal kind and keysym."""
+    if projection is None or reference is None or len(projection) != len(reference):
+        return False
+    return all(got == want[: len(got)] for got, want in zip(projection, reference, strict=True))
 
 
 def c2_reference(cell: dict[str, Any]) -> list[list[Any]] | None:
@@ -1253,17 +1271,18 @@ def c2_trial_pass(trial: dict[str, Any], cell: dict[str, Any]) -> bool:
     PASS under section 5 is PASS here. Otherwise the trial passes only when it has no
     infrastructure failure and every reason it failed is excused: a marker reason
     (condition 3 is reported, not judged, for L0-raw), or an R-dev projection difference
-    that disappears when key releases are compared without their modifier state.
+    that disappears when key releases are compared without their modifier state (and, on the
+    XRecord window, key presses recorded without the guard's lock bit, which the judge
+    already reads without theirs; decision D43).
     """
     if trial["pass"]:
         return True
     if trial.get("infra") or trial.get("reasons") is None:
         return False
     remaining = [r for r in trial["reasons"] if not r.startswith(C2_EXCUSED)]
-    if any(r.startswith(C2_RDEV) for r in remaining):
-        reference = c2_reference(cell)
-        if reference is not None and c2_projection(trial, cell) == reference:
-            remaining = [r for r in remaining if not r.startswith(C2_RDEV)]
+    rdev = any(r.startswith(C2_RDEV) for r in remaining)
+    if rdev and c2_matches(c2_projection(trial, cell), c2_reference(cell)):
+        remaining = [r for r in remaining if not r.startswith(C2_RDEV)]
     return not remaining
 
 

@@ -670,6 +670,7 @@ def run_cycle(
                 measure_targets=workload.get("measure_targets", False),
                 kill_guest_server_after_seq=workload.get("kill_guest_server_after_seq"),
                 kill_guest_server_during_seq=workload.get("kill_guest_server_during_seq"),
+                fault_drop_modifier=workload.get("fault_drop_modifier"),
                 tap_duration_s=600
                 + (len(session["trials"]) + workload.get("reps", 0) * 40) * workload["max_trial_s"],
             )

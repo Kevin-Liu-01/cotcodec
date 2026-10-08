@@ -439,8 +439,8 @@ class Session:
         """Run IR dicts through L0-fixed (or the L0-raw control); returns (shot, terminal, errors).
 
         L0-raw (validity control C2) sends ``l0_raw.translate``'s PyAutoGUI command for
-        each action through the same ``DesktopEnv.step``; it is only ever scored, never
-        developed (manifest.py admits no L0-raw development run).
+        each action through the same ``DesktopEnv.step``. Besides C2, manifest.py admits it
+        only in development at seed 42 (q2-action-path-v2, decision D40).
         """
         shot = None
         errors: list[str] = []
