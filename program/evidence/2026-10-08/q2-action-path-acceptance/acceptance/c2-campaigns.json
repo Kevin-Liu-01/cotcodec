@@ -1,0 +1,765 @@
+[
+  {
+    "batch": {
+      "driver_exit": 0,
+      "labelled_containers_left": 0
+    },
+    "boot_s": [
+      17.153,
+      17.084,
+      17.292,
+      17.171,
+      17.904,
+      17.204,
+      17.104,
+      17.134,
+      17.202
+    ],
+    "campaign_id": "q2ap-v1-c2-l0raw-a1",
+    "counting_problems": [],
+    "criterion": "C2",
+    "earlier_attempts": [],
+    "failed_trials": [
+      {
+        "cell": "type_combining",
+        "cycle": 0,
+        "infra": [],
+        "reasons": [
+          "text 'e a n' != 'e\u0301 a\u0308 n\u0303'"
+        ],
+        "seq": 2,
+        "setting": "screenshot"
+      },
+      {
+        "cell": "chord_ctrl_alt_shift_r",
+        "cycle": 0,
+        "infra": [],
+        "reasons": [
+          "R-dev projection differs: [['KeyPress', 'Control_L', []], ['KeyPress', 'Alt_L', ['Control']], ['KeyPress', 'Shift_L', ['Control', 'Mod1']], ['KeyPress', 'r', ['Shift', 'Control', 'Mod1']], ['KeyRelease', 'r', []], ['KeyRelease', 'Shift_L', []], ['KeyRelease', 'Alt_L', []], ['KeyRelease', 'Control_L', []]] != [['KeyPress', 'Control_L', []], ['KeyPress', 'Alt_L', ['Control']], ['KeyPress', 'Shift_L', ['Control', 'Mod1']], ['KeyPress', 'r', ['Shift', 'Control', 'Mod1']], ['KeyRelease', 'r', ['Shift', 'Control', 'Mod1']], ['KeyRelease', 'Shift_L', ['Shift', 'Control', 'Mod1']], ['KeyRelease', 'Alt_L', ['Control', 'Mod1']], ['KeyRelease', 'Control_L', ['Control']]]"
+        ],
+        "seq": 13,
+        "setting": "screenshot"
+      },
+      {
+        "cell": "chord_super_d",
+        "cycle": 0,
+        "infra": [],
+        "reasons": [
+          "R-dev projection differs: [['KeyPress', 'Super_L', []], ['KeyPress', 'd', []], ['KeyRelease', 'd', []], ['KeyRelease', 'Super_L', []]] != [['KeyPress', 'Super_L', []], ['KeyPress', 'd', ['Mod4']], ['KeyRelease', 'd', ['Mod4']], ['KeyRelease', 'Super_L', ['Mod4']]]"
+        ],
+        "seq": 15,
+        "setting": "screenshot"
+      },
+      {
+        "cell": "type_emoji_zwj",
+        "cycle": 0,
+        "infra": [],
+        "reasons": [
+          "text ' ' != '\ud83d\udc69\\u200d\ud83d\udcbb \ud83d\udc68\\u200d\ud83d\udc69\\u200d\ud83d\udc67'"
+        ],
+        "seq": 17,
+        "setting": "screenshot"
+      },
+      {
+        "cell": "chord_alt_f4",
+        "cycle": 0,
+        "infra": [],
+        "reasons": [
+          "R-dev projection differs: [['KeyPress', 'Alt_L', []], ['KeyPress', 'F4', ['Mod1']], ['KeyRelease', 'F4', []], ['KeyRelease', 'Alt_L', ['Mod1']]] != [['KeyPress', 'Alt_L', []], ['KeyPress', 'F4', ['Mod1']], ['KeyRelease', 'F4', ['Mod1']], ['KeyRelease', 'Alt_L', ['Mod1']]]"
+        ],
+        "seq": 35,
+        "setting": "screenshot"
+      },
+      {
+        "cell": "click_button_back",
+        "cycle": 0,
+        "infra": [],
+        "reasons": [
+          "error: executor rc=1: ib/python3.10/site-packages/pyautogui/__init__.py\", line 984, in click\n    button = _normalizeButton(button)\n  File \"/home/user/.local/lib/python3.10/site-packages/pyautogui/__init__.py\", line 850, in _normalizeButton\n    button = button.lower()\nAttributeError: 'int' object has no attribute 'lower'\n",
+          "events differ: expected [['ButtonPress', 8, 960, 540], ['ButtonRelease', 8, 960, 540]], observed []"
+        ],
+        "seq": 54,
+        "setting": "screenshot"
+      },
+      {
+        "cell": "key_kp_enter",
+        "cycle": 1,
+        "infra": [],
+        "reasons": [
+          "R-dev projection differs: [] != [['KeyPress', 'KP_Enter', []], ['KeyRelease', 'KP_Enter', []]]"
+        ],
+        "seq": 0,
+        "setting": "screenshot"
+      },
+      {
+        "cell": "seq_type_chord_type",
+        "cycle": 1,
+        "infra": [],
+        "reasons": [
+          "marker [10, 25265] != probe final [10, 54837]"
+        ],
+        "seq": 10,
+        "setting": "screenshot"
+      },
+      {
+        "cell": "type_rtl",
+        "cycle": 1,
+        "infra": [],
+        "reasons": [
+          "text '  ' != '\u05e9\u05dc\u05d5\u05dd \u05e2\u05d5\u05dc\u05dd \u0645\u0631\u062d\u0628\u0627'",
+          "marker [12, 50578] != probe final [12, 16267]"
+        ],
+        "seq": 12,
+        "setting": "screenshot"
+      },
+      {
+        "cell": "chord_alt_tab",
+        "cycle": 1,
+        "infra": [],
+        "reasons": [
+          "R-dev projection differs: [['KeyPress', 'Alt_L', []], ['KeyPress', 'Tab', ['Mod1']], ['KeyRelease', 'Tab', []], ['KeyRelease', 'Alt_L', []]] != [['KeyPress', 'Alt_L', []], ['KeyPress', 'Tab', ['Mod1']], ['KeyRelease', 'Tab', ['Mod1']], ['KeyRelease', 'Alt_L', ['Mod1']]]"
+        ],
+        "seq": 16,
+        "setting": "screenshot"
+      },
+      {
+        "cell": "type_emoji",
+        "cycle": 1,
+        "infra": [],
+        "reasons": [
+          "text 'ok  done ' != 'ok \ud83d\ude80 done \ud83c\udf89'"
+        ],
+        "seq": 19,
+        "setting": "screenshot"
+      },
+      {
+        "cell": "type_unicode_bmp",
+        "cycle": 1,
+        "infra": [],
+        "reasons": [
+          "text 'crme brle, r, , , ' != 'cr\u00e8me br\u00fbl\u00e9e, \u00c6r\u00f8, \u03a9\u03bc\u03ad\u03b3\u03b1, \u0416\u0443\u043a, \u65e5\u672c\u8a9e'"
+        ],
+        "seq": 34,
+        "setting": "screenshot"
+      },
+      {
+        "cell": "click_button_forward",
+        "cycle": 1,
+        "infra": [],
+        "reasons": [
+          "error: executor rc=1: ib/python3.10/site-packages/pyautogui/__init__.py\", line 984, in click\n    button = _normalizeButton(button)\n  File \"/home/user/.local/lib/python3.10/site-packages/pyautogui/__init__.py\", line 850, in _normalizeButton\n    button = button.lower()\nAttributeError: 'int' object has no attribute 'lower'\n",
+          "events differ: expected [['ButtonPress', 9, 960, 540], ['ButtonRelease', 9, 960, 540]], observed []"
+        ],
+        "seq": 36,
+        "setting": "screenshot"
+      },
+      {
+        "cell": "chord_alt_tab",
+        "cycle": 1,
+        "infra": [],
+        "reasons": [
+          "R-dev projection differs: [['KeyPress', 'Alt_L', []], ['KeyPress', 'Tab', ['Mod1']], ['KeyRelease', 'Tab', []], ['KeyRelease', 'Alt_L', []]] != [['KeyPress', 'Alt_L', []], ['KeyPress', 'Tab', ['Mod1']], ['KeyRelease', 'Tab', ['Mod1']], ['KeyRelease', 'Alt_L', ['Mod1']]]"
+        ],
+        "seq": 44,
+        "setting": "screenshot"
+      },
+      {
+        "cell": "seq_type_chord_type",
+        "cycle": 2,
+        "infra": [],
+        "reasons": [
+          "marker [0, 25265] != probe final [0, 54837]"
+        ],
+        "seq": 0,
+        "setting": "screenshot"
+      },
+      {
+        "cell": "chord_alt_f4",
+        "cycle": 2,
+        "infra": [],
+        "reasons": [
+          "R-dev projection differs: [['KeyPress', 'Alt_L', []], ['KeyPress', 'F4', ['Mod1']], ['KeyRelease', 'F4', []], ['KeyRelease', 'Alt_L', []]] != [['KeyPress', 'Alt_L', []], ['KeyPress', 'F4', ['Mod1']], ['KeyRelease', 'F4', ['Mod1']], ['KeyRelease', 'Alt_L', ['Mod1']]]"
+        ],
+        "seq": 1,
+        "setting": "screenshot"
+      },
+      {
+        "cell": "type_unicode_bmp",
+        "cycle": 2,
+        "infra": [],
+        "reasons": [
+          "text 'crme brle, r, , , ' != 'cr\u00e8me br\u00fbl\u00e9e, \u00c6r\u00f8, \u03a9\u03bc\u03ad\u03b3\u03b1, \u0416\u0443\u043a, \u65e5\u672c\u8a9e'"
+        ],
+        "seq": 15,
+        "setting": "screenshot"
+      },
+      {
+        "cell": "chord_super_d",
+        "cycle": 2,
+        "infra": [],
+        "reasons": [
+          "R-dev projection differs: [['KeyPress', 'Super_L', []], ['KeyPress', 'd', []], ['KeyRelease', 'd', []], ['KeyRelease', 'Super_L', []]] != [['KeyPress', 'Super_L', []], ['KeyPress', 'd', ['Mod4']], ['KeyRelease', 'd', ['Mod4']], ['KeyRelease', 'Super_L', ['Mod4']]]"
+        ],
+        "seq": 20,
+        "setting": "screenshot"
+      },
+      {
+        "cell": "type_emoji_zwj",
+        "cycle": 2,
+        "infra": [],
+        "reasons": [
+          "text ' ' != '\ud83d\udc69\\u200d\ud83d\udcbb \ud83d\udc68\\u200d\ud83d\udc69\\u200d\ud83d\udc67'"
+        ],
+        "seq": 27,
+        "setting": "screenshot"
+      },
+      {
+        "cell": "click_button_back",
+        "cycle": 2,
+        "infra": [],
+        "reasons": [
+          "error: executor rc=1: ib/python3.10/site-packages/pyautogui/__init__.py\", line 984, in click\n    button = _normalizeButton(button)\n  File \"/home/user/.local/lib/python3.10/site-packages/pyautogui/__init__.py\", line 850, in _normalizeButton\n    button = button.lower()\nAttributeError: 'int' object has no attribute 'lower'\n",
+          "events differ: expected [['ButtonPress', 8, 960, 540], ['ButtonRelease', 8, 960, 540]], observed []"
+        ],
+        "seq": 30,
+        "setting": "screenshot"
+      },
+      {
+        "cell": "type_emoji",
+        "cycle": 2,
+        "infra": [],
+        "reasons": [
+          "text 'ok  done ' != 'ok \ud83d\ude80 done \ud83c\udf89'"
+        ],
+        "seq": 35,
+        "setting": "screenshot"
+      },
+      {
+        "cell": "chord_ctrl_alt_shift_r",
+        "cycle": 2,
+        "infra": [],
+        "reasons": [
+          "R-dev projection differs: [['KeyPress', 'Control_L', []], ['KeyPress', 'Alt_L', ['Control']], ['KeyPress', 'Shift_L', ['Control', 'Mod1']], ['KeyPress', 'r', ['Shift', 'Control', 'Mod1']], ['KeyRelease', 'r', []], ['KeyRelease', 'Shift_L', []], ['KeyRelease', 'Alt_L', []], ['KeyRelease', 'Control_L', []]] != [['KeyPress', 'Control_L', []], ['KeyPress', 'Alt_L', ['Control']], ['KeyPress', 'Shift_L', ['Control', 'Mod1']], ['KeyPress', 'r', ['Shift', 'Control', 'Mod1']], ['KeyRelease', 'r', ['Shift', 'Control', 'Mod1']], ['KeyRelease', 'Shift_L', ['Shift', 'Control', 'Mod1']], ['KeyRelease', 'Alt_L', ['Control', 'Mod1']], ['KeyRelease', 'Control_L', ['Control']]]"
+        ],
+        "seq": 36,
+        "setting": "screenshot"
+      },
+      {
+        "cell": "type_rtl",
+        "cycle": 2,
+        "infra": [],
+        "reasons": [
+          "text '  ' != '\u05e9\u05dc\u05d5\u05dd \u05e2\u05d5\u05dc\u05dd \u0645\u0631\u062d\u0628\u0627'"
+        ],
+        "seq": 43,
+        "setting": "screenshot"
+      },
+      {
+        "cell": "click_button_forward",
+        "cycle": 3,
+        "infra": [],
+        "reasons": [
+          "error: executor rc=1: ib/python3.10/site-packages/pyautogui/__init__.py\", line 984, in click\n    button = _normalizeButton(button)\n  File \"/home/user/.local/lib/python3.10/site-packages/pyautogui/__init__.py\", line 850, in _normalizeButton\n    button = button.lower()\nAttributeError: 'int' object has no attribute 'lower'\n",
+          "events differ: expected [['ButtonPress', 9, 960, 540], ['ButtonRelease', 9, 960, 540]], observed []"
+        ],
+        "seq": 19,
+        "setting": "screenshot"
+      },
+      {
+        "cell": "key_kp_enter",
+        "cycle": 3,
+        "infra": [],
+        "reasons": [
+          "R-dev projection differs: [] != [['KeyPress', 'KP_Enter', []], ['KeyRelease', 'KP_Enter', []]]"
+        ],
+        "seq": 22,
+        "setting": "screenshot"
+      },
+      {
+        "cell": "type_combining",
+        "cycle": 3,
+        "infra": [],
+        "reasons": [
+          "text 'e a n' != 'e\u0301 a\u0308 n\u0303'"
+        ],
+        "seq": 29,
+        "setting": "screenshot"
+      },
+      {
+        "cell": "type_emoji",
+        "cycle": 3,
+        "infra": [],
+        "reasons": [
+          "text 'ok  done ' != 'ok \ud83d\ude80 done \ud83c\udf89'"
+        ],
+        "seq": 38,
+        "setting": "screenshot"
+      },
+      {
+        "cell": "type_combining",
+        "cycle": 4,
+        "infra": [],
+        "reasons": [
+          "text 'e a n' != 'e\u0301 a\u0308 n\u0303'"
+        ],
+        "seq": 1,
+        "setting": "screenshot"
+      },
+      {
+        "cell": "key_kp_enter",
+        "cycle": 4,
+        "infra": [],
+        "reasons": [
+          "R-dev projection differs: [] != [['KeyPress', 'KP_Enter', []], ['KeyRelease', 'KP_Enter', []]]"
+        ],
+        "seq": 3,
+        "setting": "screenshot"
+      },
+      {
+        "cell": "chord_super_d",
+        "cycle": 4,
+        "infra": [],
+        "reasons": [
+          "R-dev projection differs: [['KeyPress', 'Super_L', []], ['KeyPress', 'd', []], ['KeyRelease', 'd', []], ['KeyRelease', 'Super_L', []]] != [['KeyPress', 'Super_L', []], ['KeyPress', 'd', ['Mod4']], ['KeyRelease', 'd', ['Mod4']], ['KeyRelease', 'Super_L', ['Mod4']]]"
+        ],
+        "seq": 7,
+        "setting": "screenshot"
+      },
+      {
+        "cell": "chord_alt_f4",
+        "cycle": 4,
+        "infra": [],
+        "reasons": [
+          "R-dev projection differs: [['KeyPress', 'Alt_L', []], ['KeyPress', 'F4', ['Mod1']], ['KeyRelease', 'F4', []], ['KeyRelease', 'Alt_L', []]] != [['KeyPress', 'Alt_L', []], ['KeyPress', 'F4', ['Mod1']], ['KeyRelease', 'F4', ['Mod1']], ['KeyRelease', 'Alt_L', ['Mod1']]]"
+        ],
+        "seq": 10,
+        "setting": "screenshot"
+      },
+      {
+        "cell": "click_button_forward",
+        "cycle": 4,
+        "infra": [],
+        "reasons": [
+          "error: executor rc=1: ib/python3.10/site-packages/pyautogui/__init__.py\", line 984, in click\n    button = _normalizeButton(button)\n  File \"/home/user/.local/lib/python3.10/site-packages/pyautogui/__init__.py\", line 850, in _normalizeButton\n    button = button.lower()\nAttributeError: 'int' object has no attribute 'lower'\n",
+          "events differ: expected [['ButtonPress', 9, 960, 540], ['ButtonRelease', 9, 960, 540]], observed []"
+        ],
+        "seq": 12,
+        "setting": "screenshot"
+      },
+      {
+        "cell": "type_unicode_bmp",
+        "cycle": 4,
+        "infra": [],
+        "reasons": [
+          "text 'crme brle, r, , , ' != 'cr\u00e8me br\u00fbl\u00e9e, \u00c6r\u00f8, \u03a9\u03bc\u03ad\u03b3\u03b1, \u0416\u0443\u043a, \u65e5\u672c\u8a9e'"
+        ],
+        "seq": 16,
+        "setting": "screenshot"
+      },
+      {
+        "cell": "type_emoji_zwj",
+        "cycle": 4,
+        "infra": [],
+        "reasons": [
+          "text ' ' != '\ud83d\udc69\\u200d\ud83d\udcbb \ud83d\udc68\\u200d\ud83d\udc69\\u200d\ud83d\udc67'"
+        ],
+        "seq": 29,
+        "setting": "screenshot"
+      },
+      {
+        "cell": "click_button_back",
+        "cycle": 4,
+        "infra": [],
+        "reasons": [
+          "error: executor rc=1: ib/python3.10/site-packages/pyautogui/__init__.py\", line 984, in click\n    button = _normalizeButton(button)\n  File \"/home/user/.local/lib/python3.10/site-packages/pyautogui/__init__.py\", line 850, in _normalizeButton\n    button = button.lower()\nAttributeError: 'int' object has no attribute 'lower'\n",
+          "events differ: expected [['ButtonPress', 8, 960, 540], ['ButtonRelease', 8, 960, 540]], observed []"
+        ],
+        "seq": 46,
+        "setting": "screenshot"
+      },
+      {
+        "cell": "type_shell_hostile",
+        "cycle": 4,
+        "infra": [],
+        "reasons": [
+          "marker [53, 51830] != probe final [53, 14917]"
+        ],
+        "seq": 53,
+        "setting": "screenshot"
+      },
+      {
+        "cell": "type_rtl",
+        "cycle": 5,
+        "infra": [],
+        "reasons": [
+          "text '  ' != '\u05e9\u05dc\u05d5\u05dd \u05e2\u05d5\u05dc\u05dd \u0645\u0631\u062d\u0628\u0627'",
+          "marker [7, 50578] != probe final [7, 16267]"
+        ],
+        "seq": 7,
+        "setting": "screenshot"
+      },
+      {
+        "cell": "chord_alt_tab",
+        "cycle": 5,
+        "infra": [],
+        "reasons": [
+          "R-dev projection differs: [['KeyPress', 'Alt_L', []], ['KeyPress', 'Tab', ['Mod1']], ['KeyRelease', 'Tab', []], ['KeyRelease', 'Alt_L', []]] != [['KeyPress', 'Alt_L', []], ['KeyPress', 'Tab', ['Mod1']], ['KeyRelease', 'Tab', ['Mod1']], ['KeyRelease', 'Alt_L', ['Mod1']]]"
+        ],
+        "seq": 17,
+        "setting": "screenshot"
+      },
+      {
+        "cell": "chord_ctrl_alt_shift_r",
+        "cycle": 5,
+        "infra": [],
+        "reasons": [
+          "R-dev projection differs: [['KeyPress', 'Control_L', []], ['KeyPress', 'Alt_L', ['Control']], ['KeyPress', 'Shift_L', ['Control', 'Mod1']], ['KeyPress', 'r', ['Shift', 'Control', 'Mod1']], ['KeyRelease', 'r', []], ['KeyRelease', 'Shift_L', []], ['KeyRelease', 'Alt_L', []], ['KeyRelease', 'Control_L', []]] != [['KeyPress', 'Control_L', []], ['KeyPress', 'Alt_L', ['Control']], ['KeyPress', 'Shift_L', ['Control', 'Mod1']], ['KeyPress', 'r', ['Shift', 'Control', 'Mod1']], ['KeyRelease', 'r', ['Shift', 'Control', 'Mod1']], ['KeyRelease', 'Shift_L', ['Shift', 'Control', 'Mod1']], ['KeyRelease', 'Alt_L', ['Control', 'Mod1']], ['KeyRelease', 'Control_L', ['Control']]]"
+        ],
+        "seq": 19,
+        "setting": "screenshot"
+      },
+      {
+        "cell": "chord_ctrl_alt_shift_r",
+        "cycle": 5,
+        "infra": [],
+        "reasons": [
+          "R-dev projection differs: [['KeyPress', 'Control_L', []], ['KeyPress', 'Alt_L', ['Control']], ['KeyPress', 'Shift_L', ['Control', 'Mod1']], ['KeyPress', 'r', ['Shift', 'Control', 'Mod1']], ['KeyRelease', 'r', []], ['KeyRelease', 'Shift_L', []], ['KeyRelease', 'Alt_L', []], ['KeyRelease', 'Control_L', []]] != [['KeyPress', 'Control_L', []], ['KeyPress', 'Alt_L', ['Control']], ['KeyPress', 'Shift_L', ['Control', 'Mod1']], ['KeyPress', 'r', ['Shift', 'Control', 'Mod1']], ['KeyRelease', 'r', ['Shift', 'Control', 'Mod1']], ['KeyRelease', 'Shift_L', ['Shift', 'Control', 'Mod1']], ['KeyRelease', 'Alt_L', ['Control', 'Mod1']], ['KeyRelease', 'Control_L', ['Control']]]"
+        ],
+        "seq": 20,
+        "setting": "screenshot"
+      },
+      {
+        "cell": "type_rtl",
+        "cycle": 5,
+        "infra": [],
+        "reasons": [
+          "text '  ' != '\u05e9\u05dc\u05d5\u05dd \u05e2\u05d5\u05dc\u05dd \u0645\u0631\u062d\u0628\u0627'"
+        ],
+        "seq": 26,
+        "setting": "screenshot"
+      },
+      {
+        "cell": "type_emoji",
+        "cycle": 5,
+        "infra": [],
+        "reasons": [
+          "text 'ok  done ' != 'ok \ud83d\ude80 done \ud83c\udf89'"
+        ],
+        "seq": 33,
+        "setting": "screenshot"
+      },
+      {
+        "cell": "chord_alt_f4",
+        "cycle": 5,
+        "infra": [],
+        "reasons": [
+          "R-dev projection differs: [['KeyPress', 'Alt_L', []], ['KeyPress', 'F4', ['Mod1']], ['KeyRelease', 'F4', []], ['KeyRelease', 'Alt_L', []]] != [['KeyPress', 'Alt_L', []], ['KeyPress', 'F4', ['Mod1']], ['KeyRelease', 'F4', ['Mod1']], ['KeyRelease', 'Alt_L', ['Mod1']]]"
+        ],
+        "seq": 36,
+        "setting": "screenshot"
+      },
+      {
+        "cell": "chord_super_d",
+        "cycle": 5,
+        "infra": [],
+        "reasons": [
+          "R-dev projection differs: [['KeyPress', 'Super_L', []], ['KeyPress', 'd', []], ['KeyRelease', 'd', []], ['KeyRelease', 'Super_L', []]] != [['KeyPress', 'Super_L', []], ['KeyPress', 'd', ['Mod4']], ['KeyRelease', 'd', ['Mod4']], ['KeyRelease', 'Super_L', ['Mod4']]]"
+        ],
+        "seq": 45,
+        "setting": "screenshot"
+      },
+      {
+        "cell": "click_button_forward",
+        "cycle": 5,
+        "infra": [],
+        "reasons": [
+          "error: executor rc=1: ib/python3.10/site-packages/pyautogui/__init__.py\", line 984, in click\n    button = _normalizeButton(button)\n  File \"/home/user/.local/lib/python3.10/site-packages/pyautogui/__init__.py\", line 850, in _normalizeButton\n    button = button.lower()\nAttributeError: 'int' object has no attribute 'lower'\n",
+          "events differ: expected [['ButtonPress', 9, 960, 540], ['ButtonRelease', 9, 960, 540]], observed []"
+        ],
+        "seq": 46,
+        "setting": "screenshot"
+      },
+      {
+        "cell": "type_emoji_zwj",
+        "cycle": 5,
+        "infra": [],
+        "reasons": [
+          "text ' ' != '\ud83d\udc69\\u200d\ud83d\udcbb \ud83d\udc68\\u200d\ud83d\udc69\\u200d\ud83d\udc67'"
+        ],
+        "seq": 48,
+        "setting": "screenshot"
+      },
+      {
+        "cell": "chord_alt_tab",
+        "cycle": 6,
+        "infra": [],
+        "reasons": [
+          "R-dev projection differs: [['KeyPress', 'Alt_L', []], ['KeyPress', 'Tab', ['Mod1']], ['KeyRelease', 'Tab', []], ['KeyRelease', 'Alt_L', []]] != [['KeyPress', 'Alt_L', []], ['KeyPress', 'Tab', ['Mod1']], ['KeyRelease', 'Tab', ['Mod1']], ['KeyRelease', 'Alt_L', ['Mod1']]]"
+        ],
+        "seq": 1,
+        "setting": "screenshot"
+      },
+      {
+        "cell": "key_kp_enter",
+        "cycle": 6,
+        "infra": [],
+        "reasons": [
+          "R-dev projection differs: [] != [['KeyPress', 'KP_Enter', []], ['KeyRelease', 'KP_Enter', []]]"
+        ],
+        "seq": 17,
+        "setting": "screenshot"
+      },
+      {
+        "cell": "type_combining",
+        "cycle": 6,
+        "infra": [],
+        "reasons": [
+          "text 'e a n' != 'e\u0301 a\u0308 n\u0303'"
+        ],
+        "seq": 26,
+        "setting": "screenshot"
+      },
+      {
+        "cell": "click_button_back",
+        "cycle": 6,
+        "infra": [],
+        "reasons": [
+          "error: executor rc=1: ib/python3.10/site-packages/pyautogui/__init__.py\", line 984, in click\n    button = _normalizeButton(button)\n  File \"/home/user/.local/lib/python3.10/site-packages/pyautogui/__init__.py\", line 850, in _normalizeButton\n    button = button.lower()\nAttributeError: 'int' object has no attribute 'lower'\n",
+          "events differ: expected [['ButtonPress', 8, 960, 540], ['ButtonRelease', 8, 960, 540]], observed []"
+        ],
+        "seq": 29,
+        "setting": "screenshot"
+      },
+      {
+        "cell": "type_unicode_bmp",
+        "cycle": 6,
+        "infra": [],
+        "reasons": [
+          "text 'crme brle, r, , , ' != 'cr\u00e8me br\u00fbl\u00e9e, \u00c6r\u00f8, \u03a9\u03bc\u03ad\u03b3\u03b1, \u0416\u0443\u043a, \u65e5\u672c\u8a9e'"
+        ],
+        "seq": 49,
+        "setting": "screenshot"
+      },
+      {
+        "cell": "key_kp_enter",
+        "cycle": 7,
+        "infra": [],
+        "reasons": [
+          "R-dev projection differs: [] != [['KeyPress', 'KP_Enter', []], ['KeyRelease', 'KP_Enter', []]]"
+        ],
+        "seq": 14,
+        "setting": "screenshot"
+      },
+      {
+        "cell": "chord_alt_tab",
+        "cycle": 7,
+        "infra": [],
+        "reasons": [
+          "R-dev projection differs: [['KeyPress', 'Alt_L', []], ['KeyPress', 'Tab', ['Mod1']], ['KeyRelease', 'Tab', []], ['KeyRelease', 'Alt_L', []]] != [['KeyPress', 'Alt_L', []], ['KeyPress', 'Tab', ['Mod1']], ['KeyRelease', 'Tab', ['Mod1']], ['KeyRelease', 'Alt_L', ['Mod1']]]"
+        ],
+        "seq": 22,
+        "setting": "screenshot"
+      },
+      {
+        "cell": "type_symbols_shifted",
+        "cycle": 7,
+        "infra": [],
+        "reasons": [
+          "marker [35, 57590] != probe final [35, 40487]"
+        ],
+        "seq": 35,
+        "setting": "screenshot"
+      },
+      {
+        "cell": "type_emoji",
+        "cycle": 7,
+        "infra": [],
+        "reasons": [
+          "text 'ok  done ' != 'ok \ud83d\ude80 done \ud83c\udf89'"
+        ],
+        "seq": 46,
+        "setting": "screenshot"
+      },
+      {
+        "cell": "chord_ctrl_alt_shift_r",
+        "cycle": 7,
+        "infra": [],
+        "reasons": [
+          "R-dev projection differs: [['KeyPress', 'Control_L', []], ['KeyPress', 'Alt_L', ['Control']], ['KeyPress', 'Shift_L', ['Control', 'Mod1']], ['KeyPress', 'r', ['Shift', 'Control', 'Mod1']], ['KeyRelease', 'r', []], ['KeyRelease', 'Shift_L', []], ['KeyRelease', 'Alt_L', []], ['KeyRelease', 'Control_L', []]] != [['KeyPress', 'Control_L', []], ['KeyPress', 'Alt_L', ['Control']], ['KeyPress', 'Shift_L', ['Control', 'Mod1']], ['KeyPress', 'r', ['Shift', 'Control', 'Mod1']], ['KeyRelease', 'r', ['Shift', 'Control', 'Mod1']], ['KeyRelease', 'Shift_L', ['Shift', 'Control', 'Mod1']], ['KeyRelease', 'Alt_L', ['Control', 'Mod1']], ['KeyRelease', 'Control_L', ['Control']]]"
+        ],
+        "seq": 47,
+        "setting": "screenshot"
+      },
+      {
+        "cell": "type_unicode_bmp",
+        "cycle": 8,
+        "infra": [],
+        "reasons": [
+          "text 'crme brle, r, , , ' != 'cr\u00e8me br\u00fbl\u00e9e, \u00c6r\u00f8, \u03a9\u03bc\u03ad\u03b3\u03b1, \u0416\u0443\u043a, \u65e5\u672c\u8a9e'"
+        ],
+        "seq": 4,
+        "setting": "screenshot"
+      },
+      {
+        "cell": "chord_alt_f4",
+        "cycle": 8,
+        "infra": [],
+        "reasons": [
+          "R-dev projection differs: [['KeyPress', 'Alt_L', []], ['KeyPress', 'F4', ['Mod1']], ['KeyRelease', 'F4', []], ['KeyRelease', 'Alt_L', []]] != [['KeyPress', 'Alt_L', []], ['KeyPress', 'F4', ['Mod1']], ['KeyRelease', 'F4', ['Mod1']], ['KeyRelease', 'Alt_L', ['Mod1']]]"
+        ],
+        "seq": 8,
+        "setting": "screenshot"
+      },
+      {
+        "cell": "click_button_forward",
+        "cycle": 8,
+        "infra": [],
+        "reasons": [
+          "error: executor rc=1: ib/python3.10/site-packages/pyautogui/__init__.py\", line 984, in click\n    button = _normalizeButton(button)\n  File \"/home/user/.local/lib/python3.10/site-packages/pyautogui/__init__.py\", line 850, in _normalizeButton\n    button = button.lower()\nAttributeError: 'int' object has no attribute 'lower'\n",
+          "events differ: expected [['ButtonPress', 9, 960, 540], ['ButtonRelease', 9, 960, 540]], observed []"
+        ],
+        "seq": 11,
+        "setting": "screenshot"
+      },
+      {
+        "cell": "type_emoji_zwj",
+        "cycle": 8,
+        "infra": [],
+        "reasons": [
+          "text ' ' != '\ud83d\udc69\\u200d\ud83d\udcbb \ud83d\udc68\\u200d\ud83d\udc69\\u200d\ud83d\udc67'"
+        ],
+        "seq": 14,
+        "setting": "screenshot"
+      },
+      {
+        "cell": "type_shell_hostile",
+        "cycle": 8,
+        "infra": [],
+        "reasons": [
+          "marker [15, 51830] != probe final [15, 14917]"
+        ],
+        "seq": 15,
+        "setting": "screenshot"
+      },
+      {
+        "cell": "type_combining",
+        "cycle": 8,
+        "infra": [],
+        "reasons": [
+          "text 'e a n' != 'e\u0301 a\u0308 n\u0303'"
+        ],
+        "seq": 26,
+        "setting": "screenshot"
+      },
+      {
+        "cell": "chord_super_d",
+        "cycle": 8,
+        "infra": [],
+        "reasons": [
+          "R-dev projection differs: [['KeyPress', 'Super_L', []], ['KeyPress', 'd', []], ['KeyRelease', 'd', []], ['KeyRelease', 'Super_L', []]] != [['KeyPress', 'Super_L', []], ['KeyPress', 'd', ['Mod4']], ['KeyRelease', 'd', ['Mod4']], ['KeyRelease', 'Super_L', ['Mod4']]]"
+        ],
+        "seq": 33,
+        "setting": "screenshot"
+      },
+      {
+        "cell": "click_button_back",
+        "cycle": 8,
+        "infra": [],
+        "reasons": [
+          "error: executor rc=1: ib/python3.10/site-packages/pyautogui/__init__.py\", line 984, in click\n    button = _normalizeButton(button)\n  File \"/home/user/.local/lib/python3.10/site-packages/pyautogui/__init__.py\", line 850, in _normalizeButton\n    button = button.lower()\nAttributeError: 'int' object has no attribute 'lower'\n",
+          "events differ: expected [['ButtonPress', 8, 960, 540], ['ButtonRelease', 8, 960, 540]], observed []"
+        ],
+        "seq": 38,
+        "setting": "screenshot"
+      },
+      {
+        "cell": "type_rtl",
+        "cycle": 8,
+        "infra": [],
+        "reasons": [
+          "text '  ' != '\u05e9\u05dc\u05d5\u05dd \u05e2\u05d5\u05dc\u05dd \u0645\u0631\u062d\u0628\u0627'",
+          "marker [53, 50578] != probe final [53, 16267]"
+        ],
+        "seq": 53,
+        "setting": "screenshot"
+      }
+    ],
+    "git_sha": "a9948ee3d5093fed3ed7e948a58cf3492310140d",
+    "infra_gates_pass": true,
+    "infra_types": {},
+    "job": "768",
+    "jobs": [
+      "768"
+    ],
+    "labelled_containers_left": [],
+    "layer": "L0-raw",
+    "manifest_json_sha256": "470e10b734171e2a2a38d18257e3242769def5c202bad8d4279a833a804c68c4",
+    "mutant": null,
+    "observation_retries": {},
+    "qcow2_unchanged": true,
+    "receipt_sha256": "6c93952251d9caad0810b122b248d3e87dddf9ed2612043050af713b2b2d557a",
+    "reset_observations": [
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      }
+    ],
+    "restarts": 0,
+    "session_errors": [],
+    "sessions": 9,
+    "slurm": {
+      "exit_code": "0:0",
+      "state": "COMPLETED"
+    },
+    "step_s": {
+      "n": 640,
+      "p50": 0.223,
+      "p95": 1.1897
+    },
+    "tree_sha256": "dec8044728811d293762dc2dc8bae6a0cae9f3c82afad118dbf24b701646ab74",
+    "trials": 500,
+    "trials_pass": 435,
+    "unreadable": []
+  }
+]
