@@ -1,0 +1,105 @@
+== before overlay build at 2026-10-07T19:59:05Z
+-- squeue -h -o "%i %j %T %M %b"
+574 q2ap-dev-l0 RUNNING 31:38 N/A
+605 cotcodec-q2-mutation-cpu RUNNING 6:44 N/A
+609 q2ap-dev-l0 RUNNING 9:42 N/A
+611 q2ap-dev-hosw RUNNING 9:42 N/A
+612 q2ap-dev-hga RUNNING 9:42 N/A
+613 q2ap-dev-canary RUNNING 9:41 N/A
+-- nvidia-smi --query-gpu=index,utilization.gpu,memory.used --format=csv
+index, utilization.gpu [%], memory.used [MiB]
+0, 0 %, 0 MiB
+1, 0 %, 0 MiB
+2, 0 %, 0 MiB
+3, 0 %, 0 MiB
+4, 0 %, 0 MiB
+5, 0 %, 0 MiB
+6, 0 %, 0 MiB
+7, 0 %, 0 MiB
+-- nvidia-smi --query-compute-apps=pid,process_name,used_memory --format=csv
+pid, process_name, used_gpu_memory [MiB]
+== before smoke submit at 2026-10-07T20:01:25Z
+-- squeue -h -o "%i %j %T %M %b"
+574 q2ap-dev-l0 RUNNING 33:58 N/A
+605 cotcodec-q2-mutation-cpu RUNNING 9:04 N/A
+609 q2ap-dev-l0 RUNNING 12:02 N/A
+611 q2ap-dev-hosw RUNNING 12:02 N/A
+612 q2ap-dev-hga RUNNING 12:02 N/A
+613 q2ap-dev-canary RUNNING 12:01 N/A
+-- nvidia-smi --query-gpu=index,utilization.gpu,memory.used --format=csv
+index, utilization.gpu [%], memory.used [MiB]
+0, 0 %, 0 MiB
+1, 0 %, 0 MiB
+2, 0 %, 0 MiB
+3, 0 %, 0 MiB
+4, 0 %, 0 MiB
+5, 0 %, 0 MiB
+6, 0 %, 0 MiB
+7, 0 %, 0 MiB
+-- nvidia-smi --query-compute-apps=pid,process_name,used_memory --format=csv
+pid, process_name, used_gpu_memory [MiB]
+== before overlay build 37f4f2a at 2026-10-07T20:13:43Z
+-- squeue -h -o "%i %j %T %M %b"
+625 cotcodec-q2-mutation-cpu PENDING 0:00 N/A
+627 cotcodec-q2-mutation-cpu PENDING 0:00 N/A
+628 cotcodec-q2-mutation-cpu PENDING 0:00 N/A
+609 q2ap-dev-l0 RUNNING 24:20 N/A
+620 q2ap-dev-canary RUNNING 5:03 N/A
+621 q2ap-dev-l0-n8 RUNNING 4:25 N/A
+622 q2ap-dev-l0-n8 RUNNING 4:23 N/A
+624 cotcodec-q2-mutation-cpu RUNNING 2:07 N/A
+626 cotcodec-q2-mutation-cpu RUNNING 2:09 N/A
+-- nvidia-smi --query-gpu=index,utilization.gpu,memory.used --format=csv
+index, utilization.gpu [%], memory.used [MiB]
+0, 0 %, 0 MiB
+1, 0 %, 0 MiB
+2, 0 %, 0 MiB
+3, 0 %, 0 MiB
+4, 0 %, 0 MiB
+5, 0 %, 0 MiB
+6, 0 %, 0 MiB
+7, 0 %, 0 MiB
+-- nvidia-smi --query-compute-apps=pid,process_name,used_memory --format=csv
+pid, process_name, used_gpu_memory [MiB]
+== overlay build 00961e5b2842 at 2026-10-07T22:05:38Z
+-- squeue -h -o "%i %j %T %M %b"
+-- nvidia-smi --query-gpu=index,utilization.gpu,memory.used --format=csv
+index, utilization.gpu [%], memory.used [MiB]
+0, 0 %, 0 MiB
+1, 0 %, 0 MiB
+2, 0 %, 0 MiB
+3, 0 %, 0 MiB
+4, 0 %, 0 MiB
+5, 0 %, 0 MiB
+6, 0 %, 0 MiB
+7, 0 %, 0 MiB
+-- nvidia-smi --query-compute-apps=pid,process_name,used_memory --format=csv
+pid, process_name, used_gpu_memory [MiB]
+== smoke2-00961e5b2842 (qwen3.5-9b, image 8c59da42) at 2026-10-07T22:07:26Z
+-- squeue -h -o "%i %j %T %M %b"
+-- nvidia-smi --query-gpu=index,utilization.gpu,memory.used --format=csv
+index, utilization.gpu [%], memory.used [MiB]
+0, 0 %, 0 MiB
+1, 0 %, 0 MiB
+2, 0 %, 0 MiB
+3, 0 %, 0 MiB
+4, 0 %, 0 MiB
+5, 0 %, 0 MiB
+6, 0 %, 0 MiB
+7, 0 %, 0 MiB
+-- nvidia-smi --query-compute-apps=pid,process_name,used_memory --format=csv
+pid, process_name, used_gpu_memory [MiB]
+== loadcheck-35b-00961e5b2842 (qwen3.6-35b-a3b TP=1, image 8c59da42) at 2026-10-07T22:10:11Z
+-- squeue -h -o "%i %j %T %M %b"
+-- nvidia-smi --query-gpu=index,utilization.gpu,memory.used --format=csv
+index, utilization.gpu [%], memory.used [MiB]
+0, 0 %, 0 MiB
+1, 0 %, 0 MiB
+2, 0 %, 0 MiB
+3, 0 %, 0 MiB
+4, 0 %, 0 MiB
+5, 0 %, 0 MiB
+6, 0 %, 0 MiB
+7, 0 %, 0 MiB
+-- nvidia-smi --query-compute-apps=pid,process_name,used_memory --format=csv
+pid, process_name, used_gpu_memory [MiB]

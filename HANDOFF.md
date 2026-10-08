@@ -51,6 +51,15 @@ GPU-hours spent by the program are in `program/state.json`
   smoke and pilot cost card next. Projected Stage 0 total 9-10 GPU-h.
 - `stage0/q2-evaluator-mutation`: faithful-save harness, blind specs for 205
   tasks, operator catalog; integration in progress.
+- `stage0/q3-dense-precheck`: draft `q3-dense-headroom-precheck-v1` (D26),
+  dense only on the K1 bundle's development partition, Qwen3-0.6B-Base and
+  Qwen3.5-4B-Base, caps 0.15 + 0.35 GPU-h; code, lane templates and CPU doctor
+  (PASS in the image). Review fix pass done (continuations runnable, INVALID
+  ends the read, D26 requirements unconditional, floor on the null's lower
+  bound, null reach rule, every job charged to its lane). Waits on Kevin's
+  acceptance of its design decisions 1-15, then freeze, image, doctor, the
+  0.6B lane, the 4B lane only if the smoke reproduction holds, and the
+  combined read.
 
 ## Next actions
 
