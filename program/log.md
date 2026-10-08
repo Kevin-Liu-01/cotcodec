@@ -749,4 +749,10 @@ Append-only. Newest entries at the bottom.
   sessions of each run), FAIL to `RESTART_LIMIT`, still a failure; read as a
   rung, their gating failures drop to `drag_short` alone (the trial after
   the between-entry kill). 704-708 are unchanged.
+- Checks at `4831a87`: the Q2 tests on the Mac, 279 passed; on the host, from
+  an rsync of the worktree (`uv sync --locked --extra dev`), ruff clean and
+  the whole suite 1,846 passed, 34 skipped. Freezing the three drafts into a
+  scratch copy of the ledger verified with the chain intact (SHA-256 v1
+  `9d885227`, inputs `5d257de7`, executor `2c26e7b4`); the repository ledger
+  is unchanged (7 rows).
 - Nothing is frozen and nothing is pushed. No GPU, no VM job.
