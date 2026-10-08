@@ -607,6 +607,59 @@ Append-only. Newest entries at the bottom.
   and the saved orx logs and hashes receipts over their bytes.
 - Waiting on Kevin: the draft's design decisions 1-15.
 
+## 2026-10-07 — D30 applied to the action-path registrations (not frozen)
+
+- Branch `stage0/q2-action-path-d30` applies decision D30 before the freeze
+  (main preregistration section 18). A4 does not count a trial whose only
+  failure is a guest-server restart (with the tree it left undelivered); it
+  reports every restart and the development rate (1 in 8,114 calls, exact
+  95% interval 3.1 x 10^-6 to 6.9 x 10^-4).
+- New criterion A7: at most 5 x 10^-4 restarts per accessibility call on the
+  exact one-sided 95% Poisson bound, from a dedicated campaign (L0-fixed on
+  G, 360 seed-43 repetitions, accessibility setting, 39,036 planned calls;
+  pass at 12 restarts or fewer: probability 0.999 at the development rate,
+  0.81 at half the bound, at most 0.05 at the bound). 31.1 VM-hours, CPU
+  only; scored campaigns now total 98.4 VM-hours. It gates the
+  screenshot-plus-accessibility setting and has no repair attempt.
+- The probe and the tap start in their own systemd scopes (`systemd-run
+  --user --scope`), outside `osworld.service`. Development (seed 42, CPU
+  only): runs 694 and 703 killed the server inside and between entries; the
+  probe and the tap ran on, only the entries hit failed, and the trial killed
+  inside showed the restart alone. Final validation at `7653799` (jobs
+  703-708) passed every in-spec cell, no restart in 1,070 calls
+  (`program/evidence/2026-10-07/q2-action-path-stage0b/README.md`).
+- Stage 1 counts restarts per episode as infrastructure failures.
+- Left unchanged on purpose: A1-A3 and the ladder still fail on a restart;
+  at the development rate their 16,639 accessibility calls see none with
+  probability about 0.13. Kevin's call before the freeze.
+
+## 2026-10-07 — Review fixes on the D30 branch (not frozen)
+
+- An independent review of `stage0/q2-action-path-d30` at `13c6790` found it
+  not ready to freeze; dispositions are in main preregistration section 19.
+- Fixed in `acceptance.py` (`13ad91e`; the only code changed, and no
+  campaign executes it, so the byte-identity check against `7653799` still
+  holds): A7 sums the
+  restarts of every attempt but divides by the counting attempts' calls only
+  (pooling had let a cancel-and-rerun raise the pass probability at the bound
+  from 0.048 to about 0.071 in simulation) and refuses an attempt other than
+  1; the undelivered reset observation is charged as a reason as well as a
+  type, and `restart_only` checks both; a restart across the reset
+  observation that left only its tree undelivered is excused on A4's terms;
+  the restart report names each hit trial's session and every session whose
+  restarts hit no trial.
+- Registered: A7 runs at attempt 1's N* after attempt 1's full ladder and is
+  not re-judged when a later attempt's N* differs; A4's exclusion covers only
+  restarts the observation retries absorb (about 10 s against a measured
+  5.6-6.0 s), and the remainder is not sized.
+- Corrected: A4 has 36,515 accessibility calls, not 36,550 (an earlier
+  2026-10-07 entry and the inputs addendum gave 36,550); the probabilities
+  do not change at the precision given. The boot-time restart precedes every
+  session's first counter read in all 34 development sessions (the boot's
+  facts read named the session's server process); its cause is not recorded.
+- Still open for Kevin before the freeze: whether D30's exclusion extends to
+  A1-A3 and the ladder.
+
 ## 2026-10-07 — Q1 Stage 0 engineering pass and re-pilot (D31)
 
 - Branch `stage0/q1-engineering-d31` (not merged, not pushed). Reference store
@@ -681,6 +734,182 @@ Append-only. Newest entries at the bottom.
   untouched. No GPU time, no host access.
 - Next: freeze (steps 2-5). The binding doctor run is still the one in the
   image built from the freeze commit.
+
+## 2026-10-07 — D33 applied to the action-path registrations (not frozen)
+
+- Decision D33 (`program/decisions.md`, on main at `7229df1`) settles the
+  question D30 left open: A1-A3 and the concurrency ladder excuse a trial
+  whose only failures are a guest-server restart during an observation call
+  and the tree it left undelivered (or the same fault across the reset
+  observation), as A4 does; a restart during `/execute` or a guard still
+  counts. Applied on `stage0/q2-action-path-d30` (main preregistration
+  section 20, design decision 44).
+- A1-A3 judge an entry on its counted repetitions; an excused trial alone
+  never makes it FLAKY, and a second excused trial in one entry fails it
+  (`RESTART_LIMIT`). The limit is counted over both observation settings,
+  every attempt and, in A1, both shuffles, because D33 says an entry "needs
+  all but at most one of its repetitions counted"; the working brief's
+  "per setting, per campaign" reading would let an A1 entry lose 4 of its 20
+  repetitions and was not adopted. Flagged for the owner to confirm at the
+  freeze (state.json); the pass probabilities differ by under 10^-4.
+- A ladder rung reads "every gating trial passes" over its counted gating
+  trials and does not qualify with more than two excused trials over its
+  attempts (an aborted attempt aside); excused trials' steps stay in the
+  step p95; the foreign-load abort is unchanged. Every excused trial is
+  listed in its criterion's restart report.
+- A7's rules from `13ad91e` match D33; its call count is now capped at the
+  plan's 39,036. Found while applying D33: an earlier attempt's failures had
+  counted on every cell, so an outside-spec R cell's expected failure in an
+  earlier A2 attempt would have failed every rerun; they now count only on
+  judged cells, less excused trials.
+- Exposure (section 9): no restart is no longer a pass condition for A1-A3
+  and the ladder (it had probability about 0.13 at the development rate).
+  Some A1-A3 entry reaches its limit with probability 0.004 at the
+  development rate (0.015 at half A7's bound, 0.057 at the bound); some rung
+  exceeds two excused trials with 0.013 (0.083, 0.37), the N = 40 rung 0.007
+  (0.044, 0.21). Restarts outside an observation call or slower than the
+  retries stay unsized; D33 accepts them.
+- Code: `acceptance.py` only (`3ad255a`, with its tests), which no campaign
+  executes, so the byte-identity check against `7653799` still lists only
+  `harness/q2/README.md` and `acceptance.py`; both addenda carry its new
+  digest. The D33 loader re-read development runs 694 and 703-708: the only
+  status change is `chord_ctrl_c` in 694 and 703 (killed inside in both
+  sessions of each run), FAIL to `RESTART_LIMIT`, still a failure; read as a
+  rung, their gating failures drop to `drag_short` alone (the trial after
+  the between-entry kill). 704-708 are unchanged.
+- Checks at `4831a87`: the Q2 tests on the Mac, 279 passed; on the host, from
+  an rsync of the worktree (`uv sync --locked --extra dev`), ruff clean and
+  the whole suite 1,846 passed, 34 skipped. Freezing the three drafts into a
+  scratch copy of the ledger verified with the chain intact (SHA-256 v1
+  `9d885227`, inputs `5d257de7`, executor `2c26e7b4`); the repository ledger
+  is unchanged (7 rows).
+- Nothing is frozen and nothing is pushed. No GPU, no VM job.
+
+## 2026-10-07 — Correction to the D33 entry's re-read of runs 694 and 703 (not frozen)
+
+- The entry above says that, read as a ladder rung, the gating failures of
+  development runs 694 and 703 drop to `drag_short` alone. They do not. The
+  re-read script skipped entries with no counted trial, but the rung rule
+  (`acceptance.rung`) does not read a gating entry with no counted trial as
+  passing. Both of `chord_ctrl_c`'s trials in each run are excused, so the
+  gating entries not PASS stay `chord_ctrl_c` and `drag_short` (recomputed on
+  the host with `rung`'s own reading at `acceptance.py` `cb38018d`). Its two
+  excused trials are within a rung's limit. A scored rung cannot reach that
+  case: each entry runs at least 12 trials and at most two may be excused.
+  Main preregistration section 20, item 8, now says this, and lists the
+  reset-observation test of `4831a87` among the tests. Every other re-read
+  result stands.
+- The main draft's SHA-256 is now `683626ec` (it was `9d885227` in the
+  entry above); a fresh freeze of all three drafts into a scratch copy of
+  the ledger verified with the chain intact, and the repository ledger is
+  unchanged (7 rows). No code changed.
+
+## 2026-10-07 — Fixes after the review of the D33 pass (not frozen)
+
+- The review of the D33 pass (head `59bd551`) found two defects in
+  `acceptance.py` and one wrong number; fixing them found a third defect.
+  All are fixed before the freeze with no scored data (main preregistration
+  section 21, design decision 45).
+- Validity controls after a rerun: C1-C3 counted every failed trial of an
+  earlier attempt, so the by-design failures of C1's known-defect cells,
+  C2's predicted set and each mutant's kills made any rerun of a C1-C3
+  campaign fail its control (the mechanism D33's pass fixed for A2). Each
+  control now reads an earlier attempt by its own rule: C1 counts a
+  known-defect cell that passed in any attempt, never its failures; C2
+  counts an earlier failure only outside the predicted set, read by
+  `c2_trial_pass`; C3 reads kills and equivalence from the counting attempt,
+  reports each earlier attempt, and a cell the reference did not pass
+  cleanly in any attempt cannot kill (`a3ee335`).
+- Rung without host snapshots: `foreign_abort` returned "no host snapshots"
+  and `rung` read it as a foreign-load abort, dropping that attempt's gating
+  failures and excused trials and allowing a rerun that could qualify.
+  Section 9 registers two abort reasons only. Now an attempt missing any
+  session's snapshots does not qualify and may be rerun, and its trials
+  count (`snapshot_problems`, `a3ee335`).
+- Found while fixing: C4 read the counting A1 attempts only, though it
+  judges the tap's stream, which A1 does not judge for probe-observed
+  entries; it now reads every attempt (`c9b4771`).
+- Corrected number: the per-setting, per-shuffle reading of D33's limit was
+  said to change the pass probabilities by less than 10^-4 (also in the D33
+  entry above). Recomputed independently, it lowers the probability that
+  some A1-A3 entry reaches its limit by 8.1 x 10^-5 at the development
+  rate, 3.3 x 10^-4 at half A7's bound and 1.25 x 10^-3 at the bound (A1
+  only; rungs unchanged). Section 9, design decision 44, section 20 item 2
+  and state.json now say this.
+- No issue rejected; the two control findings were the same defect.
+- Checks at `4619666`: each new test fails on the `acceptance.py` before it;
+  the reviewers' probes now give the registered outcomes. Q2 tests on the
+  Mac, 284 passed. On the host, from an rsync of the worktree into a fresh
+  `~/cotcodec-scratch/` directory (`uv sync --locked --extra dev`), ruff
+  check clean and the whole suite 1,851 passed, 34 skipped. The loader read
+  development runs 694 and 703-708 read-only: every session has its host
+  snapshots, so the snapshot change alters nothing there (each still reads
+  as foreign load, as before: the host ran other campaigns and users' jobs).
+  `acceptance.py` is still the only code file changed since `7653799`
+  besides `harness/q2/README.md`; no lane file imports it. Both addenda pin
+  its digest `ced21d32`. Freezing the three drafts into a scratch copy of
+  the ledger verified with the chain intact (SHA-256 v1 `4e41abe0`, inputs
+  `aaceb3e8`, executor `ef074616`); the repository ledger is unchanged (7
+  rows).
+- Nothing is frozen and nothing is pushed. No GPU, no VM job.
+
+## 2026-10-07 — The D33 reviews' remaining notes closed before the freeze (not frozen)
+
+- Merged main (D34, D35) into `stage0/q2-action-path-d30` (`6c5915d`), and
+  again after main moved on (D36 and the Q3 pre-check's operation,
+  `e643aec`, below this entry); the branch's ledger and decision log equal
+  main's (7 rows, chain PASS). The Q3 entries of `state.json` are main's:
+  this branch changed none of them, and the second merge brought main's
+  update of them.
+- Wording (main preregistration section 22): the excused reason set shows a
+  restart during or after the entry's observation calls, before its post
+  guard, and excusing the latter is harmless because every action had
+  completed (section 6.1); "every rerun" where sections 6.1, 12, 20 and
+  design decision 44 mean reruns, with section 6.1 defining an attempt as a
+  run within one repair attempt; A1 at N* is read from the rung under the
+  rung's rule (two excused trials per rung), A1 at N = 1 allows one per
+  entry (sections 6.1, 7); section 20 item 2 states D33's per-entry reading
+  plainly, as D33's author confirmed, and the pending item for it is gone
+  from `state.json`; A5 stays judged on the counting attempts' receipts,
+  with earlier ones reported (a killed job can leave labelled containers by
+  design); a failed `squeue` in a host snapshot reads as no foreign load and
+  cannot be detected (the snapshot keeps neither the exit status nor the
+  job's own row; checked on runs 694 and 703-708), stated in section 9 as a
+  known limitation.
+- `acceptance.py` (`2518241`): reports, not judged, per section 12:
+  `entries_over_restart_limit` lists every entry with two or more excused
+  trials whatever its status, with its excused repetitions; A4's
+  `restart_only_trials` counts every rerun; under a repair attempt A4 gives
+  its restarts per accessibility call against A7's bound
+  (`repair_restart_rate`); A5 lists earlier attempts' receipts. Found while
+  closing the A5 note: `load` opened `receipt.json` unconditionally, but
+  the driver writes it last, so a killed attempt (runs 695-699 have none)
+  could not be read at all. It is now read from its manifest, its batch
+  record (`job_id=`) and its finished sessions, and does not count (design
+  decision 46).
+- Checks at `56b0738`: each new test fails on the `acceptance.py` before
+  it. On the Mac, the Q2 tests with the preregistration, VM-campaign and
+  Holo3 tests, 349 passed; ruff check and format clean on the changed
+  files. On the host, from an rsync of the worktree into a fresh
+  `~/cotcodec-scratch/` directory (`uv sync --locked --extra dev`), ruff
+  check clean and the whole suite 1,856 passed, 34 skipped, at `56b0738`
+  and again at the merge `e643aec` (another fresh directory). The final
+  loader re-read runs 694 and 703-708 read-only next to the previous one
+  (`ced21d32`): nothing changed but the
+  new list's form (`chord_ctrl_c` in 694 and 703 listed with status
+  `RESTART_LIMIT` and its two excused repetitions); runs 695-699, which the
+  old loader could not read, read as CANCELLED attempts with no finished
+  session. `acceptance.py` is still the only code file changed since
+  `7653799` besides `harness/q2/README.md`; no lane file imports it. Both
+  addenda pin its digest `0f476864`, and all 85 frozen-table digests match.
+  Freezing the three drafts into a scratch copy of the ledger, at
+  `56b0738` and again at `e643aec`, verified with the chain intact (10
+  rows; SHA-256 v1 `1001591d`, inputs `98a4bc53`, executor `05829878`, the
+  same at both); the repository ledger is unchanged (7 rows).
+- Open for the orchestrator: the three drafts' status lines still read
+  "DRAFT. Not frozen." (D32 had the Q3 draft's line rewritten before its
+  freeze).
+- Nothing is frozen and nothing is pushed. No GPU, no VM job.
 
 ## 2026-10-08 — Q3 dense headroom pre-check operated (freeze steps 3-5, branch `ops/q3-dense`): INCOMPLETE, no combined read
 
@@ -775,3 +1004,55 @@ Append-only. Newest entries at the bottom.
   disabling the gate (c) replay and A5's per-call check).
 - Waiting on Kevin: sign-off of `q1-stage0-exec/2` and the store policy, the
   budget path, D14 findings 18.3 items 6-8, D28/D29.
+
+## 2026-10-08 — D39 applied to the action-path registrations (not frozen)
+
+- Merged main (D37-D39, the Q1 D31 engineering pass) into
+  `stage0/q2-action-path-d30` (`a367b7a`): `log.md` keeps both sides;
+  `state.json` takes main's Q1 and Q3 entries and pending-decision list,
+  with the branch's Q2 entry (the action-path freeze item stays resolved by
+  D30, D33 and D39); `HANDOFF.md` is main's with the action-path bullet
+  brought up to date; the ledger and `decisions.md` equal main's (7 rows,
+  `01e0220e`, chain PASS).
+- `acceptance.py` (`280ccbf`), decision D39 on the final pre-freeze
+  verifier's finding: a C3 mutant is equivalent only if its counting
+  attempt's stream signature equals the reference's and every earlier
+  attempt's does on each cell it ran without an infrastructure failure;
+  kills stay the counting attempt's. Each earlier attempt reports its
+  differing cells and the cells left out for an infrastructure failure.
+  `load` reads a receipt, cycle or record file that does not parse as
+  missing (an empty receipt, a session not run, a session without host
+  snapshots), lists it under `unreadable`, and the attempt does not count.
+- Text (`e565cb2`, `578131d`; main preregistration section 23): sections
+  6.1, 8 and 12 and design decision 45 state both rules; section 12's
+  per-rung excused count reads over every rerun that did not abort
+  (aborted attempts' counts in `earlier_attempts`); sections 20 and 22 and
+  design decision 44 point to D39 for the confirmation of D33's per-entry
+  reading, and section 21 points to section 23. The three status lines
+  have the frozen wording (the ledger row, the freeze order v1, then
+  `-inputs`, then `-executor`, and what may not run before the row), and
+  `tests/test_q2_prereg_inputs.py` requires it. Both addenda pin
+  `acceptance.py` at `39c59210`; the inputs addendum has a section 5 row
+  for `280ccbf`, and the executor addendum's sections 7 and 9 name D39.
+- Checks: both new tests fail on the previous `acceptance.py` (the
+  verifier's probe reads equivalent; the loader raises on a record cut
+  inside a multi-byte character). Mac (worktree `.venv`): the Q2 tests
+  with the preregistration, VM-campaign and Holo3 tests, 351 passed; ruff
+  check and format clean on the changed Python files. Host, fresh
+  `~/cotcodec-scratch/` directories (rsync without `.venv` and `.git`, `uv
+  sync --locked --extra dev`): ruff check clean and the whole suite 1,890
+  passed, 37 skipped, at `e565cb2` and again at `578131d`. The final loader
+  re-read runs 694 and 703-708 and the cancelled 695-699 read-only, next to
+  the loader at `ae2a6d7`: nothing changed but the new `unreadable` list,
+  empty in every run; all 996 receipt, cycle and record files in the 124
+  development run directories parse. All 85 frozen-table digests (20 main,
+  34 inputs, 31 executor) match; `git diff --stat 7653799 HEAD` over
+  `harness/q2`, the sbatch and the submitter lists only
+  `harness/q2/README.md` and `acceptance.py`, and no file imports
+  `acceptance.py`. Freezing v1, then `-inputs`, then `-executor` into a
+  scratch copy of the ledger at `578131d` verified with the chain intact
+  (10 rows; SHA-256 v1 `ab0a5139`, inputs `ca7cadf7`, executor
+  `a9f97469`); in a scratch clone frozen step by step, only A5 is admitted
+  after v1, C2 after `-inputs`, and every scored campaign after `-executor`
+  except A7 under attempt 2. The repository ledger is unchanged (7 rows).
+- Nothing is frozen and nothing is pushed. No GPU, no VM job.

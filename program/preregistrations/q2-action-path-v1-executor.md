@@ -1,17 +1,21 @@
 # q2-action-path-v1-executor: executor addendum to q2-action-path-v1
 
-**Status: DRAFT. Not frozen.** The program owner freezes it when development
-ends, after `q2-action-path-v1` and `q2-action-path-v1-inputs`, with
-`uv run python scripts/preregister.py freeze q2-action-path-v1-executor program/preregistrations/q2-action-path-v1-executor.md`.
-The scored C1 and C3 runs and every acceptance trial (A1-A6, the concurrency
-ladder) wait for this ledger entry.
+**Status: frozen in `program/preregistrations/ledger.jsonl`; see the ledger
+row for the freeze time and `git_head_at_freeze`.** The three registrations
+are frozen in this order, each with its own row: `q2-action-path-v1`, then
+`q2-action-path-v1-inputs`, then `q2-action-path-v1-executor` (this
+addendum; `uv run python scripts/preregister.py freeze` with each id and its
+path). No acceptance trial (A1-A7, the concurrency ladder) and no C1 or C3
+run may run before this row exists; C2 needs only the inputs addendum.
 
 - Experiment id: `q2-action-path-v1-executor`, an addendum to
   `q2-action-path-v1` (section 2.2). It changes no rule of that file; it pins
   what that file says is frozen when development ends.
-- Drafted: 2026-10-07, on branch `stage0/q2-action-path`. The ledger row's
-  `git_head_at_freeze` is the executor SHA every scored campaign must run
-  from (its receipt records the exported tree's digest).
+- Drafted: 2026-10-07, on branch `stage0/q2-action-path`; decisions D30, D33
+  and D39 applied before the freeze on branch `stage0/q2-action-path-d30`
+  (sections 7 and 9). The
+  ledger row's `git_head_at_freeze` is the executor SHA every scored campaign
+  must run from (its receipt records the exported tree's digest).
 
 ## 1. Frozen files
 
@@ -32,22 +36,22 @@ Frozen with this file (SHA-256 of the committed bytes):
 | `harness/q2/action_path/harness_design_diffs.md` | `245dcfcf7b9393bd1c7f03a57360d9443c6478fb8c513bf64835196c4e59b61f` |
 | `harness/q2/action_path/canary_targets.json` | `a49782274cf7c3dec0b6ceca64564207824220b2dc1572387f98339b0d4805f6` |
 | `harness/q2/vm/guest/canary_targets.py` | `8b7233391b1da78092326c11d394f0385ee42052835a83554c76260e4201aab3` |
-| `harness/q2/action_path/vm_hours.py` | `757981ef219f62f7f423d1ff9d02f75fd042c5c0063669f724337d2a96c270ab` |
+| `harness/q2/action_path/vm_hours.py` | `58b7379377ae87a72c85076ee87441fbb2da12042a15e9ae4aa62f67365074b1` |
 | `harness/q2/action_path/trial_times.json` | `a33ca2e024d6f24a31a60ff62053be1fb197af48c996ae99fb75aff4d20217e5` |
-| `harness/q2/action_path/vm_hours.json` | `fbe10c0f7c0f31c0a0db9ce3e626209f7746505320e835b0b79277d20e8ec011` |
-| `harness/q2/action_path/acceptance.py` | `f8c8e8ea0cb1595d25a65cb40da8ab635b2b34274c048f591fa4cd63a656813b` |
-| `scripts/render_q2_action_path_manifest.py` | `a1a25e43d0f749313b67842d9d34a9011f180b0b3624de587a57cbcb8040382f` |
+| `harness/q2/action_path/vm_hours.json` | `5fc0617303a2782c02e67888be4584261239e5f90268e4e39d7524aff625636e` |
+| `harness/q2/action_path/acceptance.py` | `39c59210db94a4d47da3ad9f32f235c4532dee8e2c31aa604acc175acc3e4d7e` |
+| `scripts/render_q2_action_path_manifest.py` | `8c0e17ac68ed30455faf45232fa160711078990a1c4532a38d45d532c58fbe98` |
 | `experiments/manifests/q2-action-path/dev-l0-fixed-v10.yaml` | `0a4f908e67631483687740cfba3266b829f3c5d2577b08b676a5fa022186ad92` |
 | `harness/q2/vm/guest/probe.py` | `ba5c0f1d364c80d5f8190f3c357b915cd504d754891285c3772ba959a804efeb` |
 | `harness/q2/vm/guest/guard.py` | `0ef7e2e6d5025e4937b0611a9c33e7ff8776428aad04338015ea287917f7ca62` |
 | `harness/q2/vm/guest/canary.py` | `32742019db56b4f09905c50c71159c2ef3fe024a044d07f4bffb31cd41fcea1e` |
 | `harness/q2/vm/marker.py` | `b786b347fc5573425f14090bd67621294ac5c84671bf67f47e663d693ab17fb9` |
 | `harness/q2/vm/canary_run.py` | `295bdd0916869adf79015bc6da6cba4aff2a0ab9f0dab089e4ed3a3565abb119` |
-| `harness/q2/vm/suite.py` | `bb6691e6f5adbdfa30614111c4229e91d5deeefb99713d1177e9d7a2de3d6488` |
+| `harness/q2/vm/suite.py` | `6d0831210e5efb41a94399c73fdd7b80b65a4208cef9721993882336b69cc924` |
 | `harness/q2/vm/desktop.py` | `67030d6b5d79753e2db65b33bc12af2b5faaee2eacbaa5e49b4eb2de0a31c188` |
-| `harness/q2/vm/runner.py` | `fe055443652b5d58c654bcd5cb90dcc48d3a3dab6806bd3b2c7c7de1cb56b2ca` |
-| `harness/q2/vm/driver.py` | `05402b4405bd8e08debc61aa164b699b742e1aec9cccfb8f529da23debc7f142` |
-| `harness/q2/vm/manifest.py` | `075791bc9bb5c96db337a3d387d0f856c082477e58b41a85cb73ab3f4bebb5bb` |
+| `harness/q2/vm/runner.py` | `0b20f70d9681c7772223d0ecb4d449743a9be3260a1054a99bc9849241a82c9f` |
+| `harness/q2/vm/driver.py` | `7a4b1d685954fa42915259025bca6a66d3b5ba5070949ff46ccdba1512ae24b2` |
+| `harness/q2/vm/manifest.py` | `c927267716affd1d5b3fc72b94411b4111ce6e45c02507c2a11b5f19f2f391a6` |
 | `infra/slurm/host-single-node/vm-campaign.sbatch` | `3d86820d176e3a9f0699814a19f62154cde00f88da1777a33c804e884288ac8a` |
 | `scripts/submit_vm_campaign.py` | `f08aafc8bc693cd6eb6850ff972a3401f3bddc99f3c14e03187b4d313fcc5917` |
 
@@ -168,23 +172,44 @@ for Writer and Chrome; for VS Code, from a screenshot of the opened fixture).
 
 ## 7. Acceptance analysis (`acceptance.py`)
 
-The decision rules of the main preregistration's sections 5-9 as code (design
-decision 32): which campaigns count (COMPLETED 0:0 from the batch script's own
-record or Slurm, infrastructure gates, `System.qcow2` unchanged, nothing
-leaked), the rerun rules, that each criterion ran exactly its realized order
-from one source tree, A1-A6, C1-C4 with C2's reading of L0-raw trials and C3's
-clean-kill and equivalence rules, and the ladder's N* with the foreign-load
-abort and its rerun cap. Its verdicts are the ones reported;
-`tests/test_q2_acceptance_analysis.py` drives every rule on synthetic
-campaigns. It is frozen in the inputs addendum (before C2 is scored) and
-pinned again here.
+The decision rules of the main preregistration's sections 5-9 as code
+(design decision 32): which campaigns count (COMPLETED 0:0 from the batch
+script's own record or Slurm, infrastructure gates, `System.qcow2`
+unchanged, nothing leaked), the rerun rules, that each criterion ran exactly
+its realized order from one source tree, A1-A7 (A1-A4 and the ladder not
+counting a trial whose only failure is a guest-server restart, during the
+entry or across the session's reset observation, decisions D30 and D33;
+A1-A3 judging an entry on its counted repetitions and failing it on a second
+excused trial, and a rung not qualifying with more than two; A7's restarts
+of every attempt per accessibility call of the counting attempts, capped at
+the plan's 39,036, on the exact one-sided 95% Poisson bound, under attempt 1
+only), C1-C4 with C2's reading of L0-raw trials and C3's clean-kill and
+equivalence rules (a mutant is equivalent only if the counting attempt's
+streams match the reference's on every cell and each earlier attempt's on
+the cells it ran without an infrastructure failure, decision D39), each control reading an earlier attempt by its own
+rule (main design decision 45), and the ladder's N* with the foreign-load
+abort and its rerun cap, a rung attempt without host snapshots not
+qualifying but counting its trials. It reads an attempt killed before its
+driver wrote a receipt from its manifest, batch record and finished sessions
+(main design decision 46), reads a receipt, cycle or record file that does
+not parse as missing, the attempt not counting (decision D39), and reports
+without judging every A1-A3 entry with two or more excused trials, A4's
+excused trials over every rerun, A4's restarts per accessibility call
+against A7's bound under a repair attempt, and each earlier attempt's
+receipt beside A5 (main sections 11, 12 and 22). Its verdicts are the ones
+reported; `tests/test_q2_acceptance_analysis.py` drives every rule on
+synthetic campaigns. It is frozen in the inputs addendum (before C2 is
+scored) and pinned again here.
 
 `scripts/render_q2_action_path_manifest.py` writes each scored campaign's
 manifest from a local export of the frozen commit: the ledger's digests, the
 source tree digest, the realized order's session and trial counts and a Slurm
 limit from the lane's worst-case budget (an A4 that would exceed 24 hours is
 split into session ranges). It validates the manifest with the ledger and
-refuses before the freeze. The VM and runner pins come from the last
+refuses before the freeze. A7, like A4, runs at N* and is split into
+session ranges when one job's budget would exceed 24 hours; its N* is attempt
+1's, from attempt 1's A1 campaigns and full ladder (main section 11). The VM
+and runner pins come from the last
 development manifest at the candidate executor (`dev-l0-fixed-v10.yaml`),
 which carries the main preregistration's section 2.1 pins. The runner CPUs
 are `manifest.runner_cpus(N)` (main section 9), and a repair attempt k's
@@ -197,26 +222,49 @@ rendered as soon as the inputs addendum is frozen and pins only it.
 session overheads and canary times of the final development runs at the
 candidate executor, with each receipt's SHA-256; `vm_hours.json` is
 `vm_hours.py plan` over it (a test checks the file reproduces), and the main
-preregistration's section 9 cites its totals.
+preregistration's section 9 cites its totals. A7 (decision D30) is sized from
+the same measured times as A4's accessibility-setting trials (31.1 VM-hours;
+98.4 VM-hours for every campaign).
 
 ## 9. Development record (seed 42, never evidence)
 
 Listed in `program/evidence/2026-10-07/q2-action-path-stage0b/README.md`
 with every job's outcome, and per job in `development-runs.json` there. The
-last development runs ran at `30d8c7f`, the commit that answered the review
-of `2b492cd`: L0-fixed on one VM (job 663) and on 8 VMs (664), H-OSW-fixed
-(665), H-GA (666), the canary (667) and the guest-server fault injection
-(662). Every in-spec cell passed in every repetition and setting; the only
-failures were the outside-spec R cells of each harness and, in job 662, the
-one trial after each injected restart. The runs before them (jobs 633-637)
-ran at `82af567`, whose executor, adapters, corpus and guest code are
-identical; between the two commits only the session, runner, driver and
-manifest code changed among the files a campaign executes (inputs addendum,
-section 5), so the VM-hour sizing measured at `82af567` (section 8) stands.
+last development runs ran at `7653799`, the commit that applied decision D30
+to the files a campaign executes (the probe and the tap in their own systemd
+scopes, the server's restart counter, A7's plan and admission): the
+guest-server fault injection, inside the tenth trial and after the twentieth
+of each session (job 703), L0-fixed on one VM (704) and on 8 VMs (705),
+H-OSW-fixed (706), H-GA (707) and the canary (708). Every in-spec cell passed
+in every repetition and setting; the only failures were the outside-spec R
+cells of each harness and, in job 703, the two trials each session's kills
+hit (the one killed inside with `guest_server_restart` alone). Job 694 ran
+the fault injection at `34f79e4`, which differs from `7653799` only in
+`manifest.py`'s A7 repair refusal and a comment in `suite.py`, with the same
+outcome; jobs 695-699, the other five campaigns at `34f79e4`, were cancelled
+while booting when that refusal was added. Before D30 the final runs were
+662-667 at `30d8c7f` and 633-637 at `82af567`. The executor, adapters,
+corpus and guest code are identical at all three commits; among the files a
+campaign executes only the session, runner, driver and manifest code
+changed (and the wording of `mutation_operators.yaml`'s rules; inputs
+addendum, section 5), so the VM-hour sizing measured at `82af567` (section
+8) stands. The scopes act only when a session starts; steps ran 6-8% slower
+than at `30d8c7f` (p95 2.92 s on one VM against job 663's 2.74 s, 3.02 s on 8
+VMs against 664's 2.79 s; mean trial 2.35 s against the sizing's 2.28 s)
+while the host ran the other campaigns of this pass and other users'
+processes (load average up to 180 on 208 CPUs during 704's last session).
 
 Every file a VM campaign executes must be byte-identical at the freeze
-commit to `30d8c7f`: run there,
-`git diff --stat 30d8c7f HEAD -- harness/q2 infra/slurm/host-single-node/vm-campaign.sbatch scripts/submit_vm_campaign.py`
+commit to `7653799`: run there,
+`git diff --stat 7653799 HEAD -- harness/q2 infra/slurm/host-single-node/vm-campaign.sbatch scripts/submit_vm_campaign.py`
 may list only files no campaign executes: the analysis and sizing files
 (`acceptance.py`, `vm_hours.py`, `trial_times.json`, `vm_hours.json`) and
 Markdown files. Anything else needs new development runs before the freeze.
+On `stage0/q2-action-path-d30`, after the D33 change (`3ad255a`), the
+fixes after its review (`a3ee335`, `c9b4771`; main section 21), the notes
+closed before the freeze (`2518241`; main section 22) and decision D39
+(`280ccbf`; main section 23), it still lists `harness/q2/README.md` and
+`harness/q2/action_path/acceptance.py` only: `acceptance.py` is the only
+code file changed since `7653799`, and no campaign executes it (no file of
+the lane imports it; it reads the run directories afterwards), so the
+development runs at `7653799` stand.

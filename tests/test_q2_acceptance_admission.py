@@ -255,6 +255,51 @@ def test_acceptance_plans_match_the_preregistered_counts(frozen_tree):
     assert sum(len(s["trials"]) for s in plan) == 30 * 30 * 2
 
 
+def a7_manifest(**changes) -> dict:
+    """Criterion A7 (decision D30): G, 360 seed-43 shuffles, screenshot-plus-accessibility."""
+    from harness.q2.vm.manifest import OBSERVATION_REPS
+
+    workload = {
+        "reps": OBSERVATION_REPS,
+        "settings": ["screenshot+a11y"],
+        "cells": "gating",
+        "sessions": 516,
+        "trials": 30960,
+    }
+    workload.update(changes)
+    return acceptance("A7", concurrency=workload.pop("concurrency", 40), **workload)
+
+
+def test_the_observation_service_campaign_is_admitted_as_registered(frozen_tree):
+    from harness.q2.action_path import acceptance as analysis
+
+    manifest = a7_manifest()
+    validate_manifest(manifest, _ledger(frozen_tree, manifest))
+    plan = driver.acceptance_plan(manifest, CELLS, VOLUME)
+    assert plan == analysis.observation_plan()
+    calls = sum(
+        len([a for a in cell["actions"] if a["op"] != "terminate"])
+        for session in plan
+        for _, cell_id in session["trials"]
+        for cell in CELLS["layers"]["L0-fixed"]
+        if cell["id"] == cell_id
+    )
+    # Section 9: 38,520 step calls and 516 reset observations, 39,036 accessibility calls.
+    assert calls == 38520 and calls + len(plan) == 39036
+    one = a7_manifest(concurrency=1, session_range=[0, 20], sessions=20, trials=1200)
+    validate_manifest(one, _ledger(frozen_tree, one))
+    for changes, message in (
+        ({"settings": ["screenshot", "screenshot+a11y"]}, "settings"),
+        ({"cells": "all"}, "cells"),
+        ({"reps": 5}, "repetitions"),
+        ({"concurrency": 12}, "concurrency"),
+        ({"attempt": 2}, "A7 has no repair attempts"),
+    ):
+        bad = a7_manifest(**changes)
+        with pytest.raises(ManifestError, match=message):
+            validate_manifest(bad, _ledger(frozen_tree, bad))
+
+
 def test_development_may_run_concurrent_vms_only_for_the_suite():
     manifest = base_manifest()
     manifest["purpose"] = "development"
@@ -386,9 +431,13 @@ def test_the_guest_server_fault_hook_is_development_only(frozen_tree):
         "kill_guest_server_after_seq": 0,
     }
     validate_manifest(manifest)
-    manifest["workload"]["kill_guest_server_after_seq"] = "0"
-    with pytest.raises(ManifestError, match="kill_guest_server_after_seq"):
-        validate_manifest(manifest)
-    a1 = acceptance(kill_guest_server_after_seq=0)
-    with pytest.raises(ManifestError, match="unknown"):
-        validate_manifest(a1, _ledger(frozen_tree, a1))
+    manifest["workload"]["kill_guest_server_during_seq"] = 1
+    validate_manifest(manifest)
+    for hook in ("kill_guest_server_after_seq", "kill_guest_server_during_seq"):
+        bad = copy.deepcopy(manifest)
+        bad["workload"][hook] = "0"
+        with pytest.raises(ManifestError, match=hook):
+            validate_manifest(bad)
+        a1 = acceptance(**{hook: 0})
+        with pytest.raises(ManifestError, match="unknown"):
+            validate_manifest(a1, _ledger(frozen_tree, a1))
