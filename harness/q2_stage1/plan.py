@@ -36,6 +36,8 @@ USR1_LEAD_MIN = 3  # --signal=B:USR1@180
 LAUNCH_PLAN_MIN = 6  # planning value of L (job start to first dispatched request)
 REQUEUE_FACTOR = 1.05  # DR0 tolerates up to 5% first-attempt loss per cell
 A0A_FACTOR = 1.25
+# The base floor (section 6.2; D47, D49 (i)): 32 without the anchor, whatever is amended;
+# 24 only while the anchor runs and the item 18 amendment is signed (pass k_floor=24).
 K_FLOOR = 24
 K_MAX = 32
 EPISODES_PER_TASK_PER_JOB = 4  # 2 harnesses x 2 within-session reruns
@@ -197,6 +199,7 @@ class FreezeConstants:
     launch_a0a_min: float
     a1_cap_min: int
     k_base: int
+    k_floor: int
     anchor_tasks: int
     anchor_runs: bool
     total_cap_min: int
@@ -214,15 +217,17 @@ def freeze_constants(
     anchor_available: bool,
     launch_a0b_min: float | None = None,
     longest_a0b_slot_min: float | None = None,
-    k_floor: int = K_FLOOR,
+    k_floor: int = K_MAX,
 ) -> FreezeConstants:
     """The registered constants from the A0 records (no outcome is read).
 
-    ``k_floor`` is 24 once D47's floor is amended (registration section 18, item 18) and
-    32 until then.
+    The floor follows the branch (section 6.2; D47, D49 (i)): 32 when the anchor does not
+    run, whatever ``k_floor`` says; 24 only when the anchor runs and ``k_floor=24`` is
+    passed, which needs the item 18 amendment (section 18). K_base below the floor sends the
+    draft back to review.
     """
     if k_floor not in (K_FLOOR, K_MAX):
-        raise PlanError("the floor is 24 (D47 amended) or 32 (D47 as written)")
+        raise PlanError("the floor is 24 (anchor running, item 18 signed) or 32")
     v = a1_concurrency(n_star)
     if v is None:
         raise PlanError("N* < 16: S1a does not start")
@@ -234,8 +239,10 @@ def freeze_constants(
     c = c_a0a(a0a_slot_seconds, v)
     cp = c_proj(v, c)
     k = k_base(cap, launch_a0a_min, cp)
-    if k < k_floor:
-        raise PlanError(f"K_base {k} is below the floor {k_floor}: back to review")
+    floor = k_floor if runs else K_MAX
+    if k < floor:
+        branch = "the anchor runs" if runs else "the anchor does not run"
+        raise PlanError(f"K_base {k} is below the floor {floor} ({branch}): back to review")
     total = total_cap_minutes(prefreeze_caps, runs, cap)
     if total > GPU_MINUTES_LIMIT:
         raise PlanError("the caps exceed 8 GPU-h")
@@ -247,6 +254,7 @@ def freeze_constants(
         launch_a0a_min=launch_a0a_min,
         a1_cap_min=cap,
         k_base=k,
+        k_floor=floor,
         anchor_tasks=n_anchor if runs else 0,
         anchor_runs=runs,
         total_cap_min=total,

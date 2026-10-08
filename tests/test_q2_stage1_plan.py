@@ -96,40 +96,59 @@ def test_freeze_constants_branches():
     pre = [3, 25, 26]
     fc = P.freeze_constants(
         n_star=40, a0a_slot_seconds=slots, launch_a0a_min=4, prefreeze_caps=pre,
-        anchor_available=True, launch_a0b_min=5, longest_a0b_slot_min=10.0,
+        anchor_available=True, launch_a0b_min=5, longest_a0b_slot_min=10.0, k_floor=24,
     )  # fmt: skip
     assert fc.anchor_runs and fc.anchor_tasks == 96 and fc.a1_cap_min == 91 and fc.k_base == 24
-    assert fc.total_cap_min <= 478
+    assert fc.total_cap_min <= 478 and fc.k_floor == 24
     off = P.freeze_constants(
         n_star=40, a0a_slot_seconds=slots, launch_a0a_min=4, prefreeze_caps=[3, 25],
         anchor_available=False,
     )  # fmt: skip
     assert not off.anchor_runs and off.a1_cap_min == 111 and off.k_base == 32
-    with pytest.raises(P.PlanError, match="floor 32"):
+    assert off.k_floor == 32
+    with pytest.raises(P.PlanError, match="floor 32"):  # the default: item 18 not signed
         P.freeze_constants(
             n_star=40, a0a_slot_seconds=slots, launch_a0a_min=4, prefreeze_caps=pre,
-            anchor_available=True, launch_a0b_min=5, longest_a0b_slot_min=10.0, k_floor=32,
+            anchor_available=True, launch_a0b_min=5, longest_a0b_slot_min=10.0,
         )  # fmt: skip
     with pytest.raises(P.PlanError, match="floor is 24"):
         P.freeze_constants(
             n_star=40, a0a_slot_seconds=slots, launch_a0a_min=4, prefreeze_caps=[3, 25],
             anchor_available=False, k_floor=16,
         )  # fmt: skip
-    small = P.freeze_constants(
-        n_star=16, a0a_slot_seconds=[700.0] * 16, launch_a0a_min=4, prefreeze_caps=pre,
-        anchor_available=True, launch_a0b_min=5, longest_a0b_slot_min=10.0,
-    )  # fmt: skip
-    assert not small.anchor_runs and small.anchor_tasks == 0 and small.a1_cap_min == 104
+    # N* = 16: A0b ran but n = 48 < 58, so the anchor does not run and the floor is 32
+    # even with k_floor=24; V = 16's high price cannot reach 32 in 104 minutes.
+    for floor in (24, 32):
+        with pytest.raises(P.PlanError, match="floor 32 .the anchor does not run"):
+            P.freeze_constants(
+                n_star=16, a0a_slot_seconds=[700.0] * 16, launch_a0a_min=4, prefreeze_caps=pre,
+                anchor_available=True, launch_a0b_min=5, longest_a0b_slot_min=10.0,
+                k_floor=floor,
+            )  # fmt: skip
     with pytest.raises(P.PlanError, match="floor"):
         P.freeze_constants(
             n_star=40, a0a_slot_seconds=[1100.0] * 20, launch_a0a_min=6, prefreeze_caps=pre,
-            anchor_available=True, launch_a0b_min=5, longest_a0b_slot_min=10.0,
+            anchor_available=True, launch_a0b_min=5, longest_a0b_slot_min=10.0, k_floor=24,
         )  # fmt: skip
     with pytest.raises(P.PlanError, match="N"):
         P.freeze_constants(
             n_star=8, a0a_slot_seconds=slots, launch_a0a_min=4, prefreeze_caps=pre,
             anchor_available=False,
         )  # fmt: skip
+
+
+def test_unanchored_floor_is_32_at_the_cards_high_slot():
+    """The branch S1a is in (anchor unavailable before A0b, T_A1 = 111): an A0a slot at the
+    card's high value (743.12 s at V = 20) prices K_base at 24, below the floor of 32, so the
+    draft goes back to review; K = 32 needs a mean A0a slot of at most about 728 s."""
+    common = dict(n_star=40, launch_a0a_min=6, prefreeze_caps=[3, 25], anchor_available=False)
+    for floor in (24, 32):  # no k_floor lowers the unanchored floor
+        with pytest.raises(P.PlanError, match="K_base 24 is below the floor 32"):
+            P.freeze_constants(a0a_slot_seconds=[743.12] * 20, k_floor=floor, **common)
+    fc = P.freeze_constants(a0a_slot_seconds=[728.0] * 20, **common)
+    assert fc.k_base == 32 and fc.k_floor == 32 and fc.a1_cap_min == 111
+    with pytest.raises(P.PlanError, match="back to review"):
+        P.freeze_constants(a0a_slot_seconds=[729.0] * 20, **common)
 
 
 def test_prices_equal_the_cost_analysis():
@@ -229,7 +248,7 @@ def test_renderer_draft_and_freeze_modes(tmp_path):
             {
                 "n_star": 40, "a0a_slot_seconds": [640.0] * 20, "launch_a0a_min": 4,
                 "prefreeze_caps": [3, 25, 26], "anchor_available": True,
-                "launch_a0b_min": 5, "longest_a0b_slot_min": 10.0,
+                "launch_a0b_min": 5, "longest_a0b_slot_min": 10.0, "k_floor": 24,
             }
         )
     )  # fmt: skip

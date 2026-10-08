@@ -87,8 +87,9 @@ rescoring, the corrected comparator, the anchor's CPU checks and the GLMM.
   bootstrap resamples; the untruncated X is reported beside it.
 - The sign-flip tests are the primary X and session tests; the label
   permutations lose their size under a session excess and are sensitivities.
-- The K floor is 24 only once D47 is amended (registration section 18, item
-  18); pass `k_floor=32` to `freeze_constants` until then.
+- The K floor follows the anchor branch (section 6.2; D47, D49 (i)): 32 when the
+  anchor does not run, whatever is passed; 24 only when it runs and `k_floor=24` is
+  passed after item 18 is signed. `freeze_constants` defaults to 32.
 - The episode runner imports OSWorld (in the metric image) lazily; tests use
   fakes for the guest, the engine and the OSWorld session. AF_UNIX paths must
   stay short (tests use `/tmp`).
