@@ -1,0 +1,5119 @@
+{
+ "guard_mods": {
+  "16": 4394
+ },
+ "guard_violations": {
+  "post violations c": 22
+ },
+ "runs": [
+  {
+   "batch_end": {
+    "driver_exit": 0,
+    "labelled_left": 0
+   },
+   "c4": {
+    "False": 10,
+    "True": 100
+   },
+   "campaign_id": "q2ap-v2-d43-l0raw-sample-v1",
+   "cells": {
+    "caps_lock_roundtrip": {
+     "infra": {},
+     "pass": 10,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 10
+    },
+    "chord_alt_f4": {
+     "infra": {},
+     "pass": 10,
+     "reasons": {},
+     "state_not_observed": 10,
+     "trials": 10
+    },
+    "chord_alt_tab": {
+     "infra": {},
+     "pass": 10,
+     "reasons": {},
+     "state_not_observed": 10,
+     "trials": 10
+    },
+    "chord_ctrl_alone": {
+     "infra": {},
+     "pass": 10,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 10
+    },
+    "chord_ctrl_alt_shift_r": {
+     "infra": {},
+     "pass": 10,
+     "reasons": {},
+     "state_not_observed": 10,
+     "trials": 10
+    },
+    "chord_ctrl_c": {
+     "infra": {},
+     "pass": 10,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 10
+    },
+    "chord_ctrl_shift_t": {
+     "infra": {},
+     "pass": 10,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 10
+    },
+    "chord_shift_tab": {
+     "infra": {},
+     "pass": 10,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 10
+    },
+    "chord_super_d": {
+     "infra": {},
+     "pass": 10,
+     "reasons": {},
+     "state_not_observed": 10,
+     "trials": 10
+    },
+    "click_left_center": {
+     "infra": {},
+     "pass": 10,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 10
+    },
+    "drag_short": {
+     "infra": {},
+     "pass": 10,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 10
+    },
+    "key_enter": {
+     "infra": {},
+     "pass": 10,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 10
+    },
+    "key_kp_enter": {
+     "infra": {},
+     "pass": 0,
+     "reasons": {
+      "R-dev projection differs: [...]": 10
+     },
+     "state_not_observed": 0,
+     "trials": 10
+    },
+    "scroll_down_3": {
+     "infra": {},
+     "pass": 10,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 10
+    },
+    "seq_type_chord_type": {
+     "infra": {},
+     "pass": 1,
+     "reasons": {
+      "marker [...]": 9
+     },
+     "state_not_observed": 0,
+     "trials": 10
+    },
+    "type_plain": {
+     "infra": {},
+     "pass": 10,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 10
+    },
+    "type_symbols_shifted": {
+     "infra": {},
+     "pass": 10,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 10
+    },
+    "type_unicode_bmp": {
+     "infra": {},
+     "pass": 0,
+     "reasons": {
+      "text 'crme brle, r, , , ' != 'cr\u00e8me br\u00fbl\u00e9e, \u00c6r\u00f8, \u03a9\u03bc\u03ad\u03b3\u03b1, \u0416\u0443\u043a, \u65e5\u672c\u8a9e'": 10
+     },
+     "state_not_observed": 0,
+     "trials": 10
+    }
+   },
+   "concurrency": 1,
+   "fault_drop_modifier": null,
+   "git_sha": "126ff8bf9c407e9bdf419f4051c0b36f40392dd3",
+   "infra_gates_pass": true,
+   "job": "830",
+   "kind": "suite-development",
+   "labelled_containers_left": [],
+   "layer": "L0-raw",
+   "manifest_sha256": "304e49981bc7715de5bbbb0dd7da6b8b857e7870a519593359e2eb3a4e4571bf",
+   "no_gpu_all": true,
+   "passed": 151,
+   "qcow2_unchanged": true,
+   "receipt_sha256": "508d3afa8bf9df979fb93fe3c97f73595941a44b0ad5f622e66ee879b8fd92b4",
+   "server_id_changes": 0,
+   "sessions": 4,
+   "slurm": {
+    "ExitCode": "0:0",
+    "JobState": "COMPLETED",
+    "RunTime": "00:07:28",
+    "TRES": "cpu=6,mem=12G,node=1,billing=6"
+   },
+   "source_tree_sha256": "a303c1e213b01ad7187a6d4e33a46b1a19cfd30304ff326e993c0ea18b1d86c3",
+   "trials": 180
+  },
+  {
+   "batch_end": {
+    "driver_exit": 0,
+    "labelled_left": 0
+   },
+   "c4": {
+    "True": 110
+   },
+   "campaign_id": "q2ap-v2-d43-l0fixed-sample-n8-v1",
+   "cells": {
+    "caps_lock_roundtrip": {
+     "infra": {},
+     "pass": 10,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 10
+    },
+    "chord_alt_f4": {
+     "infra": {},
+     "pass": 10,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 10
+    },
+    "chord_alt_tab": {
+     "infra": {},
+     "pass": 10,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 10
+    },
+    "chord_ctrl_alone": {
+     "infra": {},
+     "pass": 10,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 10
+    },
+    "chord_ctrl_alt_shift_r": {
+     "infra": {},
+     "pass": 10,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 10
+    },
+    "chord_ctrl_c": {
+     "infra": {},
+     "pass": 10,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 10
+    },
+    "chord_ctrl_shift_t": {
+     "infra": {},
+     "pass": 10,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 10
+    },
+    "chord_shift_tab": {
+     "infra": {},
+     "pass": 10,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 10
+    },
+    "chord_super_d": {
+     "infra": {},
+     "pass": 10,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 10
+    },
+    "click_left_center": {
+     "infra": {},
+     "pass": 10,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 10
+    },
+    "drag_short": {
+     "infra": {},
+     "pass": 10,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 10
+    },
+    "key_enter": {
+     "infra": {},
+     "pass": 10,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 10
+    },
+    "key_kp_enter": {
+     "infra": {},
+     "pass": 10,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 10
+    },
+    "scroll_down_3": {
+     "infra": {},
+     "pass": 10,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 10
+    },
+    "seq_type_chord_type": {
+     "infra": {},
+     "pass": 10,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 10
+    },
+    "type_plain": {
+     "infra": {},
+     "pass": 10,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 10
+    },
+    "type_symbols_shifted": {
+     "infra": {},
+     "pass": 10,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 10
+    },
+    "type_unicode_bmp": {
+     "infra": {},
+     "pass": 10,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 10
+    }
+   },
+   "concurrency": 8,
+   "fault_drop_modifier": null,
+   "git_sha": "126ff8bf9c407e9bdf419f4051c0b36f40392dd3",
+   "infra_gates_pass": true,
+   "job": "831",
+   "kind": "suite-development",
+   "labelled_containers_left": [],
+   "layer": "L0-fixed",
+   "manifest_sha256": "88ec9b8151a7e25782e57c4ce3cf89329710569c6538d8377c84ac361f44eab2",
+   "no_gpu_all": true,
+   "passed": 180,
+   "qcow2_unchanged": true,
+   "receipt_sha256": "29411ea7a2d2df092a3e353d26c3eb2d3acc047159877d6d62fa6016c5bc1b93",
+   "server_id_changes": 0,
+   "sessions": 18,
+   "slurm": {
+    "ExitCode": "0:0",
+    "JobState": "COMPLETED",
+    "RunTime": "00:03:13",
+    "TRES": "cpu=36,mem=58G,node=1,billing=36"
+   },
+   "source_tree_sha256": "a303c1e213b01ad7187a6d4e33a46b1a19cfd30304ff326e993c0ea18b1d86c3",
+   "trials": 180
+  },
+  {
+   "batch_end": {
+    "driver_exit": 0,
+    "labelled_left": 0
+   },
+   "c4": {
+    "False": 70
+   },
+   "campaign_id": "q2ap-v2-d43-drop-omit-v1",
+   "cells": {
+    "chord_alt_f4": {
+     "infra": {},
+     "pass": 0,
+     "reasons": {
+      "R-dev projection differs: [...]": 10
+     },
+     "state_not_observed": 0,
+     "trials": 10
+    },
+    "chord_alt_tab": {
+     "infra": {},
+     "pass": 0,
+     "reasons": {
+      "R-dev projection differs: [...]": 10
+     },
+     "state_not_observed": 0,
+     "trials": 10
+    },
+    "chord_ctrl_alt_shift_r": {
+     "infra": {},
+     "pass": 0,
+     "reasons": {
+      "R-dev projection differs: [...]": 10
+     },
+     "state_not_observed": 0,
+     "trials": 10
+    },
+    "chord_ctrl_c": {
+     "infra": {},
+     "pass": 0,
+     "reasons": {
+      "R-dev projection differs: [...]": 10
+     },
+     "state_not_observed": 0,
+     "trials": 10
+    },
+    "chord_ctrl_shift_t": {
+     "infra": {},
+     "pass": 0,
+     "reasons": {
+      "R-dev projection differs: [...]": 10
+     },
+     "state_not_observed": 0,
+     "trials": 10
+    },
+    "chord_shift_tab": {
+     "infra": {},
+     "pass": 0,
+     "reasons": {
+      "R-dev projection differs: [...]": 10
+     },
+     "state_not_observed": 0,
+     "trials": 10
+    },
+    "chord_super_d": {
+     "infra": {},
+     "pass": 0,
+     "reasons": {
+      "R-dev projection differs: [...]": 10
+     },
+     "state_not_observed": 0,
+     "trials": 10
+    }
+   },
+   "concurrency": 1,
+   "fault_drop_modifier": "omit",
+   "git_sha": "126ff8bf9c407e9bdf419f4051c0b36f40392dd3",
+   "infra_gates_pass": true,
+   "job": "832",
+   "kind": "suite-development",
+   "labelled_containers_left": [],
+   "layer": "L0-fixed",
+   "manifest_sha256": "55f9b51fdc244c81e98d0fe121e231a6415258186b223f6fe7d0e158f38b6ffc",
+   "no_gpu_all": true,
+   "passed": 0,
+   "qcow2_unchanged": true,
+   "receipt_sha256": "2b3368e13f7d2f470c51f7f4d1ca1d3c6feaebfb2b3b05bec80d87dca8f04a47",
+   "server_id_changes": 0,
+   "sessions": 2,
+   "slurm": {
+    "ExitCode": "0:0",
+    "JobState": "COMPLETED",
+    "RunTime": "00:04:01",
+    "TRES": "cpu=6,mem=12G,node=1,billing=6"
+   },
+   "source_tree_sha256": "a303c1e213b01ad7187a6d4e33a46b1a19cfd30304ff326e993c0ea18b1d86c3",
+   "trials": 70
+  },
+  {
+   "batch_end": {
+    "driver_exit": 0,
+    "labelled_left": 0
+   },
+   "c4": {
+    "False": 70
+   },
+   "campaign_id": "q2ap-v2-d43-drop-release-first-v1",
+   "cells": {
+    "chord_alt_f4": {
+     "infra": {},
+     "pass": 0,
+     "reasons": {
+      "R-dev projection differs: [...]": 10
+     },
+     "state_not_observed": 0,
+     "trials": 10
+    },
+    "chord_alt_tab": {
+     "infra": {},
+     "pass": 0,
+     "reasons": {
+      "R-dev projection differs: [...]": 10
+     },
+     "state_not_observed": 0,
+     "trials": 10
+    },
+    "chord_ctrl_alt_shift_r": {
+     "infra": {},
+     "pass": 0,
+     "reasons": {
+      "R-dev projection differs: [...]": 10
+     },
+     "state_not_observed": 0,
+     "trials": 10
+    },
+    "chord_ctrl_c": {
+     "infra": {},
+     "pass": 0,
+     "reasons": {
+      "R-dev projection differs: [...]": 10,
+      "guard post: c": 8,
+      "marker unreadable: [...]": 8
+     },
+     "state_not_observed": 0,
+     "trials": 10
+    },
+    "chord_ctrl_shift_t": {
+     "infra": {},
+     "pass": 0,
+     "reasons": {
+      "R-dev projection differs: [...]": 10,
+      "guard post: c": 6,
+      "marker unreadable: [...]": 6
+     },
+     "state_not_observed": 0,
+     "trials": 10
+    },
+    "chord_shift_tab": {
+     "infra": {},
+     "pass": 0,
+     "reasons": {
+      "R-dev projection differs: [...]": 10,
+      "guard post: c": 8,
+      "marker unreadable: [...]": 10
+     },
+     "state_not_observed": 0,
+     "trials": 10
+    },
+    "chord_super_d": {
+     "infra": {},
+     "pass": 0,
+     "reasons": {
+      "R-dev projection differs: [...]": 10
+     },
+     "state_not_observed": 0,
+     "trials": 10
+    }
+   },
+   "concurrency": 1,
+   "fault_drop_modifier": "release_first",
+   "git_sha": "126ff8bf9c407e9bdf419f4051c0b36f40392dd3",
+   "infra_gates_pass": true,
+   "job": "833",
+   "kind": "suite-development",
+   "labelled_containers_left": [],
+   "layer": "L0-fixed",
+   "manifest_sha256": "4d1e4253e77ad403ee702ede5ce483f6865297d5c1e877cc51b028ec316917d0",
+   "no_gpu_all": true,
+   "passed": 0,
+   "qcow2_unchanged": true,
+   "receipt_sha256": "020fb405c29fd34adf7dd2db9b15d4bceaa7b9a0e7db521239c2a20061412738",
+   "server_id_changes": 0,
+   "sessions": 2,
+   "slurm": {
+    "ExitCode": "0:0",
+    "JobState": "COMPLETED",
+    "RunTime": "00:05:55",
+    "TRES": "cpu=6,mem=12G,node=1,billing=6"
+   },
+   "source_tree_sha256": "a303c1e213b01ad7187a6d4e33a46b1a19cfd30304ff326e993c0ea18b1d86c3",
+   "trials": 70
+  },
+  {
+   "batch_end": {
+    "driver_exit": 0,
+    "labelled_left": 0
+   },
+   "c4": {
+    "True": 24
+   },
+   "campaign_id": "q2ap-v2-d43-l0-restart-v1",
+   "cells": {
+    "caps_lock_roundtrip": {
+     "infra": {},
+     "pass": 2,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 2
+    },
+    "chord_alt_f4": {
+     "infra": {},
+     "pass": 2,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 2
+    },
+    "chord_alt_tab": {
+     "infra": {},
+     "pass": 2,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 2
+    },
+    "chord_ctrl_alt_shift_r": {
+     "infra": {},
+     "pass": 2,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 2
+    },
+    "chord_ctrl_c": {
+     "infra": {
+      "guest_server_restart": 2
+     },
+     "pass": 0,
+     "reasons": {
+      "infra: guest_server_restart": 2
+     },
+     "state_not_observed": 0,
+     "trials": 2
+    },
+    "chord_ctrl_shift_t": {
+     "infra": {},
+     "pass": 2,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 2
+    },
+    "chord_super_d": {
+     "infra": {},
+     "pass": 2,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 2
+    },
+    "click_ctrl_left": {
+     "infra": {},
+     "pass": 2,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 2
+    },
+    "click_double_left": {
+     "infra": {},
+     "pass": 2,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 2
+    },
+    "click_right": {
+     "infra": {},
+     "pass": 2,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 2
+    },
+    "drag_short": {
+     "infra": {
+      "channel_missing": 2,
+      "execute": 2,
+      "guard_script": 2,
+      "guest_server_restart": 2,
+      "probe_absent": 2,
+      "tap_window_missing": 2
+     },
+     "pass": 0,
+     "reasons": {
+      "0 motion events < 3": 2,
+      "events differ: expected [...]": 2,
+      "final pointer not observed": 2,
+      "infra: channel_missing": 2,
+      "infra: execute": 2,
+      "infra: guard_script": 2,
+      "infra: guest_server_restart": 2,
+      "infra: probe_absent": 2,
+      "infra: tap_window_missing": 2,
+      "marker [...]": 2
+     },
+     "state_not_observed": 0,
+     "trials": 2
+    },
+    "drag_vertical": {
+     "infra": {},
+     "pass": 2,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 2
+    },
+    "key_enter": {
+     "infra": {},
+     "pass": 2,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 2
+    },
+    "key_f5": {
+     "infra": {},
+     "pass": 2,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 2
+    },
+    "key_kp_enter": {
+     "infra": {},
+     "pass": 2,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 2
+    },
+    "key_menu": {
+     "infra": {},
+     "pass": 2,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 2
+    },
+    "key_tab": {
+     "infra": {},
+     "pass": 2,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 2
+    },
+    "move_only": {
+     "infra": {},
+     "pass": 2,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 2
+    },
+    "no_action_control": {
+     "infra": {},
+     "pass": 2,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 2
+    },
+    "scroll_ctrl_down_3": {
+     "infra": {},
+     "pass": 2,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 2
+    },
+    "scroll_down_3": {
+     "infra": {},
+     "pass": 2,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 2
+    },
+    "seq_long_mixed": {
+     "infra": {},
+     "pass": 2,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 2
+    },
+    "type_emoji": {
+     "infra": {},
+     "pass": 2,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 2
+    },
+    "type_long_200": {
+     "infra": {},
+     "pass": 2,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 2
+    },
+    "type_plain": {
+     "infra": {},
+     "pass": 2,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 2
+    },
+    "type_spaces": {
+     "infra": {},
+     "pass": 2,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 2
+    },
+    "type_unicode_bmp": {
+     "infra": {},
+     "pass": 2,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 2
+    },
+    "type_with_correction": {
+     "infra": {},
+     "pass": 2,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 2
+    }
+   },
+   "concurrency": 1,
+   "fault_drop_modifier": null,
+   "git_sha": "126ff8bf9c407e9bdf419f4051c0b36f40392dd3",
+   "infra_gates_pass": true,
+   "job": "834",
+   "kind": "suite-development",
+   "labelled_containers_left": [],
+   "layer": "L0-fixed",
+   "manifest_sha256": "e92140a5f202e446ff0e441519822d6bb9e6eb8e22e7cef81d13c9e826ce17cc",
+   "no_gpu_all": true,
+   "passed": 52,
+   "qcow2_unchanged": true,
+   "receipt_sha256": "19cd597e632de57510c593fd8cdb5049c3cd0951cccd692c320675b8a2ffd45e",
+   "server_id_changes": 4,
+   "sessions": 2,
+   "slurm": {
+    "ExitCode": "0:0",
+    "JobState": "COMPLETED",
+    "RunTime": "00:04:19",
+    "TRES": "cpu=8,mem=12G,node=1,billing=8"
+   },
+   "source_tree_sha256": "a303c1e213b01ad7187a6d4e33a46b1a19cfd30304ff326e993c0ea18b1d86c3",
+   "trials": 56
+  },
+  {
+   "batch_end": {
+    "driver_exit": 0,
+    "labelled_left": 0
+   },
+   "c4": {
+    "True": 140
+   },
+   "campaign_id": "q2ap-v2-d43-l0-fixed-v1",
+   "cells": {
+    "caps_lock_roundtrip": {
+     "infra": {},
+     "pass": 4,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 4
+    },
+    "chord_alt_f4": {
+     "infra": {},
+     "pass": 4,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 4
+    },
+    "chord_alt_tab": {
+     "infra": {},
+     "pass": 4,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 4
+    },
+    "chord_ctrl_a": {
+     "infra": {},
+     "pass": 4,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 4
+    },
+    "chord_ctrl_alone": {
+     "infra": {},
+     "pass": 4,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 4
+    },
+    "chord_ctrl_alt_shift_r": {
+     "infra": {},
+     "pass": 4,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 4
+    },
+    "chord_ctrl_c": {
+     "infra": {},
+     "pass": 4,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 4
+    },
+    "chord_ctrl_home": {
+     "infra": {},
+     "pass": 4,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 4
+    },
+    "chord_ctrl_shift_arrow": {
+     "infra": {},
+     "pass": 4,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 4
+    },
+    "chord_ctrl_shift_t": {
+     "infra": {},
+     "pass": 4,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 4
+    },
+    "chord_shift_alone": {
+     "infra": {},
+     "pass": 4,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 4
+    },
+    "chord_shift_arrow_left": {
+     "infra": {},
+     "pass": 4,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 4
+    },
+    "chord_shift_tab": {
+     "infra": {},
+     "pass": 4,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 4
+    },
+    "chord_super_d": {
+     "infra": {},
+     "pass": 4,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 4
+    },
+    "click_alt_left": {
+     "infra": {},
+     "pass": 4,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 4
+    },
+    "click_burst_5": {
+     "infra": {},
+     "pass": 4,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 4
+    },
+    "click_button_back": {
+     "infra": {},
+     "pass": 4,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 4
+    },
+    "click_button_forward": {
+     "infra": {},
+     "pass": 4,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 4
+    },
+    "click_corner_bottomright": {
+     "infra": {},
+     "pass": 4,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 4
+    },
+    "click_corner_topleft": {
+     "infra": {},
+     "pass": 4,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 4
+    },
+    "click_ctrl_left": {
+     "infra": {},
+     "pass": 4,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 4
+    },
+    "click_ctrl_shift_right": {
+     "infra": {},
+     "pass": 4,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 4
+    },
+    "click_double_left": {
+     "infra": {},
+     "pass": 4,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 4
+    },
+    "click_double_slow": {
+     "infra": {},
+     "pass": 4,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 4
+    },
+    "click_left_center": {
+     "infra": {},
+     "pass": 4,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 4
+    },
+    "click_middle": {
+     "infra": {},
+     "pass": 4,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 4
+    },
+    "click_right": {
+     "infra": {},
+     "pass": 4,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 4
+    },
+    "click_shift_left": {
+     "infra": {},
+     "pass": 4,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 4
+    },
+    "click_then_type": {
+     "infra": {},
+     "pass": 4,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 4
+    },
+    "click_triple_left": {
+     "infra": {},
+     "pass": 4,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 4
+    },
+    "click_two_positions_ordered": {
+     "infra": {},
+     "pass": 4,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 4
+    },
+    "drag_alt_held": {
+     "infra": {},
+     "pass": 4,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 4
+    },
+    "drag_ctrl_held": {
+     "infra": {},
+     "pass": 4,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 4
+    },
+    "drag_long_diagonal": {
+     "infra": {},
+     "pass": 4,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 4
+    },
+    "drag_middle_button": {
+     "infra": {},
+     "pass": 4,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 4
+    },
+    "drag_multipoint_l_shape": {
+     "infra": {},
+     "pass": 4,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 4
+    },
+    "drag_right_button": {
+     "infra": {},
+     "pass": 4,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 4
+    },
+    "drag_shift_held": {
+     "infra": {},
+     "pass": 4,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 4
+    },
+    "drag_short": {
+     "infra": {},
+     "pass": 4,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 4
+    },
+    "drag_slow_small": {
+     "infra": {},
+     "pass": 4,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 4
+    },
+    "drag_to_corner": {
+     "infra": {},
+     "pass": 4,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 4
+    },
+    "drag_vertical": {
+     "infra": {},
+     "pass": 4,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 4
+    },
+    "key_arrow_down": {
+     "infra": {},
+     "pass": 4,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 4
+    },
+    "key_arrow_left": {
+     "infra": {},
+     "pass": 4,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 4
+    },
+    "key_arrow_right": {
+     "infra": {},
+     "pass": 4,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 4
+    },
+    "key_arrow_up": {
+     "infra": {},
+     "pass": 4,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 4
+    },
+    "key_delete": {
+     "infra": {},
+     "pass": 4,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 4
+    },
+    "key_end": {
+     "infra": {},
+     "pass": 4,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 4
+    },
+    "key_enter": {
+     "infra": {},
+     "pass": 4,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 4
+    },
+    "key_esc": {
+     "infra": {},
+     "pass": 4,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 4
+    },
+    "key_f1": {
+     "infra": {},
+     "pass": 4,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 4
+    },
+    "key_f12": {
+     "infra": {},
+     "pass": 4,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 4
+    },
+    "key_f5": {
+     "infra": {},
+     "pass": 4,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 4
+    },
+    "key_f9": {
+     "infra": {},
+     "pass": 4,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 4
+    },
+    "key_home": {
+     "infra": {},
+     "pass": 4,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 4
+    },
+    "key_insert": {
+     "infra": {},
+     "pass": 4,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 4
+    },
+    "key_kp_add": {
+     "infra": {},
+     "pass": 4,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 4
+    },
+    "key_kp_enter": {
+     "infra": {},
+     "pass": 4,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 4
+    },
+    "key_menu": {
+     "infra": {},
+     "pass": 4,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 4
+    },
+    "key_pagedown": {
+     "infra": {},
+     "pass": 4,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 4
+    },
+    "key_pageup": {
+     "infra": {},
+     "pass": 4,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 4
+    },
+    "key_space_chord": {
+     "infra": {},
+     "pass": 4,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 4
+    },
+    "key_tab": {
+     "infra": {},
+     "pass": 4,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 4
+    },
+    "mixed_gesture_state": {
+     "infra": {},
+     "pass": 4,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 4
+    },
+    "move_only": {
+     "infra": {},
+     "pass": 4,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 4
+    },
+    "no_action_control": {
+     "infra": {},
+     "pass": 4,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 4
+    },
+    "press_hold_release_left": {
+     "infra": {},
+     "pass": 4,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 4
+    },
+    "press_hold_release_right": {
+     "infra": {},
+     "pass": 4,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 4
+    },
+    "scroll_at_offcenter_position": {
+     "infra": {},
+     "pass": 4,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 4
+    },
+    "scroll_ctrl_down_3": {
+     "infra": {},
+     "pass": 4,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 4
+    },
+    "scroll_diagonal": {
+     "infra": {},
+     "pass": 4,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 4
+    },
+    "scroll_down_1": {
+     "infra": {},
+     "pass": 4,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 4
+    },
+    "scroll_down_10": {
+     "infra": {},
+     "pass": 4,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 4
+    },
+    "scroll_down_25": {
+     "infra": {},
+     "pass": 4,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 4
+    },
+    "scroll_down_3": {
+     "infra": {},
+     "pass": 4,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 4
+    },
+    "scroll_down_then_up_net_zero": {
+     "infra": {},
+     "pass": 4,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 4
+    },
+    "scroll_left_3": {
+     "infra": {},
+     "pass": 4,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 4
+    },
+    "scroll_right_3": {
+     "infra": {},
+     "pass": 4,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 4
+    },
+    "scroll_shift_down_3": {
+     "infra": {},
+     "pass": 4,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 4
+    },
+    "scroll_up_3": {
+     "infra": {},
+     "pass": 4,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 4
+    },
+    "seq_drag_then_click": {
+     "infra": {},
+     "pass": 4,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 4
+    },
+    "seq_long_mixed": {
+     "infra": {},
+     "pass": 4,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 4
+    },
+    "seq_type_chord_type": {
+     "infra": {},
+     "pass": 4,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 4
+    },
+    "type_combining": {
+     "infra": {},
+     "pass": 4,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 4
+    },
+    "type_digits": {
+     "infra": {},
+     "pass": 4,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 4
+    },
+    "type_emoji": {
+     "infra": {},
+     "pass": 4,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 4
+    },
+    "type_emoji_zwj": {
+     "infra": {},
+     "pass": 4,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 4
+    },
+    "type_long_200": {
+     "infra": {},
+     "pass": 4,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 4
+    },
+    "type_long_500": {
+     "infra": {},
+     "pass": 4,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 4
+    },
+    "type_mixed_case": {
+     "infra": {},
+     "pass": 4,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 4
+    },
+    "type_multiline_tabs": {
+     "infra": {},
+     "pass": 4,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 4
+    },
+    "type_plain": {
+     "infra": {},
+     "pass": 4,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 4
+    },
+    "type_repeated_chars": {
+     "infra": {},
+     "pass": 4,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 4
+    },
+    "type_rtl": {
+     "infra": {},
+     "pass": 4,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 4
+    },
+    "type_shell_hostile": {
+     "infra": {},
+     "pass": 4,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 4
+    },
+    "type_single_char": {
+     "infra": {},
+     "pass": 4,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 4
+    },
+    "type_spaces": {
+     "infra": {},
+     "pass": 4,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 4
+    },
+    "type_symbols_shifted": {
+     "infra": {},
+     "pass": 4,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 4
+    },
+    "type_unicode_bmp": {
+     "infra": {},
+     "pass": 4,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 4
+    },
+    "type_with_correction": {
+     "infra": {},
+     "pass": 4,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 4
+    }
+   },
+   "concurrency": 1,
+   "fault_drop_modifier": null,
+   "git_sha": "126ff8bf9c407e9bdf419f4051c0b36f40392dd3",
+   "infra_gates_pass": true,
+   "job": "835",
+   "kind": "suite-development",
+   "labelled_containers_left": [],
+   "layer": "L0-fixed",
+   "manifest_sha256": "a7d52c3686c5dd0e8c2dd3cd0eb34877f13e680cb692e7e27e797990a557534a",
+   "no_gpu_all": true,
+   "passed": 400,
+   "qcow2_unchanged": true,
+   "receipt_sha256": "2b2ecc54ce40e5d339db5b66091c9b56c6731e1e21bc21b182f73f0956de2a5a",
+   "server_id_changes": 0,
+   "sessions": 8,
+   "slurm": {
+    "ExitCode": "0:0",
+    "JobState": "COMPLETED",
+    "RunTime": "00:18:28",
+    "TRES": "cpu=8,mem=12G,node=1,billing=8"
+   },
+   "source_tree_sha256": "a303c1e213b01ad7187a6d4e33a46b1a19cfd30304ff326e993c0ea18b1d86c3",
+   "trials": 400
+  },
+  {
+   "batch_end": {
+    "driver_exit": 0,
+    "labelled_left": 0
+   },
+   "c4": {
+    "True": 280
+   },
+   "campaign_id": "q2ap-v2-d43-l0-fixed-n8-v1",
+   "cells": {
+    "caps_lock_roundtrip": {
+     "infra": {},
+     "pass": 8,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 8
+    },
+    "chord_alt_f4": {
+     "infra": {},
+     "pass": 8,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 8
+    },
+    "chord_alt_tab": {
+     "infra": {},
+     "pass": 8,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 8
+    },
+    "chord_ctrl_a": {
+     "infra": {},
+     "pass": 8,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 8
+    },
+    "chord_ctrl_alone": {
+     "infra": {},
+     "pass": 8,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 8
+    },
+    "chord_ctrl_alt_shift_r": {
+     "infra": {},
+     "pass": 8,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 8
+    },
+    "chord_ctrl_c": {
+     "infra": {},
+     "pass": 8,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 8
+    },
+    "chord_ctrl_home": {
+     "infra": {},
+     "pass": 8,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 8
+    },
+    "chord_ctrl_shift_arrow": {
+     "infra": {},
+     "pass": 8,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 8
+    },
+    "chord_ctrl_shift_t": {
+     "infra": {},
+     "pass": 8,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 8
+    },
+    "chord_shift_alone": {
+     "infra": {},
+     "pass": 8,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 8
+    },
+    "chord_shift_arrow_left": {
+     "infra": {},
+     "pass": 8,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 8
+    },
+    "chord_shift_tab": {
+     "infra": {},
+     "pass": 8,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 8
+    },
+    "chord_super_d": {
+     "infra": {},
+     "pass": 8,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 8
+    },
+    "click_alt_left": {
+     "infra": {},
+     "pass": 8,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 8
+    },
+    "click_burst_5": {
+     "infra": {},
+     "pass": 8,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 8
+    },
+    "click_button_back": {
+     "infra": {},
+     "pass": 8,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 8
+    },
+    "click_button_forward": {
+     "infra": {},
+     "pass": 8,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 8
+    },
+    "click_corner_bottomright": {
+     "infra": {},
+     "pass": 8,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 8
+    },
+    "click_corner_topleft": {
+     "infra": {},
+     "pass": 8,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 8
+    },
+    "click_ctrl_left": {
+     "infra": {},
+     "pass": 8,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 8
+    },
+    "click_ctrl_shift_right": {
+     "infra": {},
+     "pass": 8,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 8
+    },
+    "click_double_left": {
+     "infra": {},
+     "pass": 8,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 8
+    },
+    "click_double_slow": {
+     "infra": {},
+     "pass": 8,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 8
+    },
+    "click_left_center": {
+     "infra": {},
+     "pass": 8,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 8
+    },
+    "click_middle": {
+     "infra": {},
+     "pass": 8,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 8
+    },
+    "click_right": {
+     "infra": {},
+     "pass": 8,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 8
+    },
+    "click_shift_left": {
+     "infra": {},
+     "pass": 8,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 8
+    },
+    "click_then_type": {
+     "infra": {},
+     "pass": 8,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 8
+    },
+    "click_triple_left": {
+     "infra": {},
+     "pass": 8,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 8
+    },
+    "click_two_positions_ordered": {
+     "infra": {},
+     "pass": 8,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 8
+    },
+    "drag_alt_held": {
+     "infra": {},
+     "pass": 8,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 8
+    },
+    "drag_ctrl_held": {
+     "infra": {},
+     "pass": 8,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 8
+    },
+    "drag_long_diagonal": {
+     "infra": {},
+     "pass": 8,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 8
+    },
+    "drag_middle_button": {
+     "infra": {},
+     "pass": 8,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 8
+    },
+    "drag_multipoint_l_shape": {
+     "infra": {},
+     "pass": 8,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 8
+    },
+    "drag_right_button": {
+     "infra": {},
+     "pass": 8,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 8
+    },
+    "drag_shift_held": {
+     "infra": {},
+     "pass": 8,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 8
+    },
+    "drag_short": {
+     "infra": {},
+     "pass": 8,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 8
+    },
+    "drag_slow_small": {
+     "infra": {},
+     "pass": 8,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 8
+    },
+    "drag_to_corner": {
+     "infra": {},
+     "pass": 8,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 8
+    },
+    "drag_vertical": {
+     "infra": {},
+     "pass": 8,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 8
+    },
+    "key_arrow_down": {
+     "infra": {},
+     "pass": 8,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 8
+    },
+    "key_arrow_left": {
+     "infra": {},
+     "pass": 8,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 8
+    },
+    "key_arrow_right": {
+     "infra": {},
+     "pass": 8,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 8
+    },
+    "key_arrow_up": {
+     "infra": {},
+     "pass": 8,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 8
+    },
+    "key_delete": {
+     "infra": {},
+     "pass": 8,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 8
+    },
+    "key_end": {
+     "infra": {},
+     "pass": 8,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 8
+    },
+    "key_enter": {
+     "infra": {},
+     "pass": 8,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 8
+    },
+    "key_esc": {
+     "infra": {},
+     "pass": 8,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 8
+    },
+    "key_f1": {
+     "infra": {},
+     "pass": 8,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 8
+    },
+    "key_f12": {
+     "infra": {},
+     "pass": 8,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 8
+    },
+    "key_f5": {
+     "infra": {},
+     "pass": 8,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 8
+    },
+    "key_f9": {
+     "infra": {},
+     "pass": 8,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 8
+    },
+    "key_home": {
+     "infra": {},
+     "pass": 8,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 8
+    },
+    "key_insert": {
+     "infra": {},
+     "pass": 8,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 8
+    },
+    "key_kp_add": {
+     "infra": {},
+     "pass": 8,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 8
+    },
+    "key_kp_enter": {
+     "infra": {},
+     "pass": 8,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 8
+    },
+    "key_menu": {
+     "infra": {},
+     "pass": 8,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 8
+    },
+    "key_pagedown": {
+     "infra": {},
+     "pass": 8,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 8
+    },
+    "key_pageup": {
+     "infra": {},
+     "pass": 8,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 8
+    },
+    "key_space_chord": {
+     "infra": {},
+     "pass": 8,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 8
+    },
+    "key_tab": {
+     "infra": {},
+     "pass": 8,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 8
+    },
+    "mixed_gesture_state": {
+     "infra": {},
+     "pass": 8,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 8
+    },
+    "move_only": {
+     "infra": {},
+     "pass": 8,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 8
+    },
+    "no_action_control": {
+     "infra": {},
+     "pass": 8,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 8
+    },
+    "press_hold_release_left": {
+     "infra": {},
+     "pass": 8,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 8
+    },
+    "press_hold_release_right": {
+     "infra": {},
+     "pass": 8,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 8
+    },
+    "scroll_at_offcenter_position": {
+     "infra": {},
+     "pass": 8,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 8
+    },
+    "scroll_ctrl_down_3": {
+     "infra": {},
+     "pass": 8,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 8
+    },
+    "scroll_diagonal": {
+     "infra": {},
+     "pass": 8,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 8
+    },
+    "scroll_down_1": {
+     "infra": {},
+     "pass": 8,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 8
+    },
+    "scroll_down_10": {
+     "infra": {},
+     "pass": 8,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 8
+    },
+    "scroll_down_25": {
+     "infra": {},
+     "pass": 8,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 8
+    },
+    "scroll_down_3": {
+     "infra": {},
+     "pass": 8,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 8
+    },
+    "scroll_down_then_up_net_zero": {
+     "infra": {},
+     "pass": 8,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 8
+    },
+    "scroll_left_3": {
+     "infra": {},
+     "pass": 8,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 8
+    },
+    "scroll_right_3": {
+     "infra": {},
+     "pass": 8,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 8
+    },
+    "scroll_shift_down_3": {
+     "infra": {},
+     "pass": 8,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 8
+    },
+    "scroll_up_3": {
+     "infra": {},
+     "pass": 8,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 8
+    },
+    "seq_drag_then_click": {
+     "infra": {},
+     "pass": 8,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 8
+    },
+    "seq_long_mixed": {
+     "infra": {},
+     "pass": 8,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 8
+    },
+    "seq_type_chord_type": {
+     "infra": {},
+     "pass": 8,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 8
+    },
+    "type_combining": {
+     "infra": {},
+     "pass": 8,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 8
+    },
+    "type_digits": {
+     "infra": {},
+     "pass": 8,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 8
+    },
+    "type_emoji": {
+     "infra": {},
+     "pass": 8,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 8
+    },
+    "type_emoji_zwj": {
+     "infra": {},
+     "pass": 8,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 8
+    },
+    "type_long_200": {
+     "infra": {},
+     "pass": 8,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 8
+    },
+    "type_long_500": {
+     "infra": {},
+     "pass": 8,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 8
+    },
+    "type_mixed_case": {
+     "infra": {},
+     "pass": 8,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 8
+    },
+    "type_multiline_tabs": {
+     "infra": {},
+     "pass": 8,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 8
+    },
+    "type_plain": {
+     "infra": {},
+     "pass": 8,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 8
+    },
+    "type_repeated_chars": {
+     "infra": {},
+     "pass": 8,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 8
+    },
+    "type_rtl": {
+     "infra": {},
+     "pass": 8,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 8
+    },
+    "type_shell_hostile": {
+     "infra": {},
+     "pass": 8,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 8
+    },
+    "type_single_char": {
+     "infra": {},
+     "pass": 8,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 8
+    },
+    "type_spaces": {
+     "infra": {},
+     "pass": 8,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 8
+    },
+    "type_symbols_shifted": {
+     "infra": {},
+     "pass": 8,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 8
+    },
+    "type_unicode_bmp": {
+     "infra": {},
+     "pass": 8,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 8
+    },
+    "type_with_correction": {
+     "infra": {},
+     "pass": 8,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 8
+    }
+   },
+   "concurrency": 8,
+   "fault_drop_modifier": null,
+   "git_sha": "126ff8bf9c407e9bdf419f4051c0b36f40392dd3",
+   "infra_gates_pass": true,
+   "job": "836",
+   "kind": "suite-development",
+   "labelled_containers_left": [],
+   "layer": "L0-fixed",
+   "manifest_sha256": "d8ce6a13e0aa275c495ded98057c9c986d4f2476f1a8ef0440920b84fdc347f7",
+   "no_gpu_all": true,
+   "passed": 800,
+   "qcow2_unchanged": true,
+   "receipt_sha256": "5830beeac3bd8dff35e24f0853819c8040899235082c4bdd5d2aa90bedc358e2",
+   "server_id_changes": 0,
+   "sessions": 14,
+   "slurm": {
+    "ExitCode": "0:0",
+    "JobState": "COMPLETED",
+    "RunTime": "00:05:58",
+    "TRES": "cpu=36,mem=58G,node=1,billing=36"
+   },
+   "source_tree_sha256": "a303c1e213b01ad7187a6d4e33a46b1a19cfd30304ff326e993c0ea18b1d86c3",
+   "trials": 800
+  },
+  {
+   "batch_end": {
+    "driver_exit": 0,
+    "labelled_left": 0
+   },
+   "c4": {
+    "True": 70
+   },
+   "campaign_id": "q2ap-v2-d43-hosw-fixed-v1",
+   "cells": {
+    "R01": {
+     "infra": {},
+     "pass": 2,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 2
+    },
+    "R02": {
+     "infra": {},
+     "pass": 2,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 2
+    },
+    "R03": {
+     "infra": {},
+     "pass": 0,
+     "reasons": {
+      "events differ: expected [...]": 2
+     },
+     "state_not_observed": 0,
+     "trials": 2
+    },
+    "R04": {
+     "infra": {},
+     "pass": 2,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 2
+    },
+    "R05": {
+     "infra": {},
+     "pass": 2,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 2
+    },
+    "R06": {
+     "infra": {},
+     "pass": 2,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 2
+    },
+    "R07": {
+     "infra": {},
+     "pass": 2,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 2
+    },
+    "R08": {
+     "infra": {},
+     "pass": 2,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 2
+    },
+    "R09": {
+     "infra": {},
+     "pass": 0,
+     "reasons": {
+      "events differ: expected [...]": 2,
+      "final pointer [...]": 2
+     },
+     "state_not_observed": 0,
+     "trials": 2
+    },
+    "R10": {
+     "infra": {},
+     "pass": 2,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 2
+    },
+    "R11": {
+     "infra": {},
+     "pass": 2,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 2
+    },
+    "R12": {
+     "infra": {},
+     "pass": 2,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 2
+    },
+    "R13": {
+     "infra": {},
+     "pass": 2,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 2
+    },
+    "R14": {
+     "infra": {},
+     "pass": 2,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 2
+    },
+    "caps_lock_roundtrip": {
+     "infra": {},
+     "pass": 2,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 2
+    },
+    "chord_alt_f4": {
+     "infra": {},
+     "pass": 2,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 2
+    },
+    "chord_alt_tab": {
+     "infra": {},
+     "pass": 2,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 2
+    },
+    "chord_ctrl_a": {
+     "infra": {},
+     "pass": 2,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 2
+    },
+    "chord_ctrl_alone": {
+     "infra": {},
+     "pass": 2,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 2
+    },
+    "chord_ctrl_alt_shift_r": {
+     "infra": {},
+     "pass": 2,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 2
+    },
+    "chord_ctrl_c": {
+     "infra": {},
+     "pass": 2,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 2
+    },
+    "chord_ctrl_home": {
+     "infra": {},
+     "pass": 2,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 2
+    },
+    "chord_ctrl_shift_arrow": {
+     "infra": {},
+     "pass": 2,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 2
+    },
+    "chord_ctrl_shift_t": {
+     "infra": {},
+     "pass": 2,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 2
+    },
+    "chord_shift_alone": {
+     "infra": {},
+     "pass": 2,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 2
+    },
+    "chord_shift_arrow_left": {
+     "infra": {},
+     "pass": 2,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 2
+    },
+    "chord_shift_tab": {
+     "infra": {},
+     "pass": 2,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 2
+    },
+    "chord_super_d": {
+     "infra": {},
+     "pass": 2,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 2
+    },
+    "click_alt_left": {
+     "infra": {},
+     "pass": 2,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 2
+    },
+    "click_burst_5": {
+     "infra": {},
+     "pass": 2,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 2
+    },
+    "click_corner_bottomright": {
+     "infra": {},
+     "pass": 2,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 2
+    },
+    "click_corner_topleft": {
+     "infra": {},
+     "pass": 2,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 2
+    },
+    "click_ctrl_left": {
+     "infra": {},
+     "pass": 2,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 2
+    },
+    "click_ctrl_shift_right": {
+     "infra": {},
+     "pass": 2,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 2
+    },
+    "click_double_left": {
+     "infra": {},
+     "pass": 2,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 2
+    },
+    "click_double_slow": {
+     "infra": {},
+     "pass": 2,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 2
+    },
+    "click_left_center": {
+     "infra": {},
+     "pass": 2,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 2
+    },
+    "click_middle": {
+     "infra": {},
+     "pass": 2,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 2
+    },
+    "click_right": {
+     "infra": {},
+     "pass": 2,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 2
+    },
+    "click_shift_left": {
+     "infra": {},
+     "pass": 2,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 2
+    },
+    "click_then_type": {
+     "infra": {},
+     "pass": 2,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 2
+    },
+    "click_two_positions_ordered": {
+     "infra": {},
+     "pass": 2,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 2
+    },
+    "drag_long_diagonal": {
+     "infra": {},
+     "pass": 2,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 2
+    },
+    "drag_short": {
+     "infra": {},
+     "pass": 2,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 2
+    },
+    "drag_slow_small": {
+     "infra": {},
+     "pass": 2,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 2
+    },
+    "drag_to_corner": {
+     "infra": {},
+     "pass": 2,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 2
+    },
+    "drag_vertical": {
+     "infra": {},
+     "pass": 2,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 2
+    },
+    "key_arrow_down": {
+     "infra": {},
+     "pass": 2,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 2
+    },
+    "key_arrow_left": {
+     "infra": {},
+     "pass": 2,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 2
+    },
+    "key_arrow_right": {
+     "infra": {},
+     "pass": 2,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 2
+    },
+    "key_arrow_up": {
+     "infra": {},
+     "pass": 2,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 2
+    },
+    "key_delete": {
+     "infra": {},
+     "pass": 2,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 2
+    },
+    "key_end": {
+     "infra": {},
+     "pass": 2,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 2
+    },
+    "key_enter": {
+     "infra": {},
+     "pass": 2,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 2
+    },
+    "key_esc": {
+     "infra": {},
+     "pass": 2,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 2
+    },
+    "key_f1": {
+     "infra": {},
+     "pass": 2,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 2
+    },
+    "key_f12": {
+     "infra": {},
+     "pass": 2,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 2
+    },
+    "key_f5": {
+     "infra": {},
+     "pass": 2,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 2
+    },
+    "key_f9": {
+     "infra": {},
+     "pass": 2,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 2
+    },
+    "key_home": {
+     "infra": {},
+     "pass": 2,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 2
+    },
+    "key_insert": {
+     "infra": {},
+     "pass": 2,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 2
+    },
+    "key_kp_add": {
+     "infra": {},
+     "pass": 2,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 2
+    },
+    "key_kp_enter": {
+     "infra": {},
+     "pass": 2,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 2
+    },
+    "key_menu": {
+     "infra": {},
+     "pass": 2,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 2
+    },
+    "key_pagedown": {
+     "infra": {},
+     "pass": 2,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 2
+    },
+    "key_pageup": {
+     "infra": {},
+     "pass": 2,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 2
+    },
+    "key_space_chord": {
+     "infra": {},
+     "pass": 2,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 2
+    },
+    "key_tab": {
+     "infra": {},
+     "pass": 2,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 2
+    },
+    "move_only": {
+     "infra": {},
+     "pass": 2,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 2
+    },
+    "no_action_control": {
+     "infra": {},
+     "pass": 2,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 2
+    },
+    "scroll_at_offcenter_position": {
+     "infra": {},
+     "pass": 2,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 2
+    },
+    "scroll_ctrl_down_3": {
+     "infra": {},
+     "pass": 2,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 2
+    },
+    "scroll_down_1": {
+     "infra": {},
+     "pass": 2,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 2
+    },
+    "scroll_down_10": {
+     "infra": {},
+     "pass": 2,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 2
+    },
+    "scroll_down_25": {
+     "infra": {},
+     "pass": 2,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 2
+    },
+    "scroll_down_3": {
+     "infra": {},
+     "pass": 2,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 2
+    },
+    "scroll_down_then_up_net_zero": {
+     "infra": {},
+     "pass": 2,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 2
+    },
+    "scroll_shift_down_3": {
+     "infra": {},
+     "pass": 2,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 2
+    },
+    "scroll_up_3": {
+     "infra": {},
+     "pass": 2,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 2
+    },
+    "seq_drag_then_click": {
+     "infra": {},
+     "pass": 2,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 2
+    },
+    "seq_long_mixed": {
+     "infra": {},
+     "pass": 2,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 2
+    },
+    "seq_type_chord_type": {
+     "infra": {},
+     "pass": 2,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 2
+    },
+    "type_combining": {
+     "infra": {},
+     "pass": 2,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 2
+    },
+    "type_digits": {
+     "infra": {},
+     "pass": 2,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 2
+    },
+    "type_emoji": {
+     "infra": {},
+     "pass": 2,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 2
+    },
+    "type_emoji_zwj": {
+     "infra": {},
+     "pass": 2,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 2
+    },
+    "type_long_200": {
+     "infra": {},
+     "pass": 2,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 2
+    },
+    "type_long_500": {
+     "infra": {},
+     "pass": 2,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 2
+    },
+    "type_mixed_case": {
+     "infra": {},
+     "pass": 2,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 2
+    },
+    "type_multiline_tabs": {
+     "infra": {},
+     "pass": 2,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 2
+    },
+    "type_plain": {
+     "infra": {},
+     "pass": 2,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 2
+    },
+    "type_repeated_chars": {
+     "infra": {},
+     "pass": 2,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 2
+    },
+    "type_rtl": {
+     "infra": {},
+     "pass": 2,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 2
+    },
+    "type_shell_hostile": {
+     "infra": {},
+     "pass": 2,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 2
+    },
+    "type_single_char": {
+     "infra": {},
+     "pass": 2,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 2
+    },
+    "type_spaces": {
+     "infra": {},
+     "pass": 2,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 2
+    },
+    "type_symbols_shifted": {
+     "infra": {},
+     "pass": 2,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 2
+    },
+    "type_unicode_bmp": {
+     "infra": {},
+     "pass": 2,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 2
+    },
+    "type_with_correction": {
+     "infra": {},
+     "pass": 2,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 2
+    }
+   },
+   "concurrency": 1,
+   "fault_drop_modifier": null,
+   "git_sha": "126ff8bf9c407e9bdf419f4051c0b36f40392dd3",
+   "infra_gates_pass": true,
+   "job": "837",
+   "kind": "suite-development",
+   "labelled_containers_left": [],
+   "layer": "H-OSW-fixed",
+   "manifest_sha256": "17c4d6e0b138533002f2117b8caebf6834116489e7983f4f43e3bc21b65a7e17",
+   "no_gpu_all": true,
+   "passed": 194,
+   "qcow2_unchanged": true,
+   "receipt_sha256": "a5f356fddde85c74edb7970dc9846a6f403f3cb4f7c52e5a134601cffdbefaf1",
+   "server_id_changes": 0,
+   "sessions": 4,
+   "slurm": {
+    "ExitCode": "0:0",
+    "JobState": "COMPLETED",
+    "RunTime": "00:10:33",
+    "TRES": "cpu=8,mem=12G,node=1,billing=8"
+   },
+   "source_tree_sha256": "a303c1e213b01ad7187a6d4e33a46b1a19cfd30304ff326e993c0ea18b1d86c3",
+   "trials": 198
+  },
+  {
+   "batch_end": {
+    "driver_exit": 0,
+    "labelled_left": 0
+   },
+   "c4": {
+    "True": 70
+   },
+   "campaign_id": "q2ap-v2-d43-hga-v1",
+   "cells": {
+    "R01": {
+     "infra": {},
+     "pass": 2,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 2
+    },
+    "R02": {
+     "infra": {},
+     "pass": 0,
+     "reasons": {
+      "events differ: expected [...]": 2
+     },
+     "state_not_observed": 0,
+     "trials": 2
+    },
+    "R03": {
+     "infra": {},
+     "pass": 2,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 2
+    },
+    "R04": {
+     "infra": {},
+     "pass": 0,
+     "reasons": {
+      "events differ: expected [...]": 2
+     },
+     "state_not_observed": 0,
+     "trials": 2
+    },
+    "R05": {
+     "infra": {},
+     "pass": 2,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 2
+    },
+    "R06": {
+     "infra": {},
+     "pass": 0,
+     "reasons": {
+      "0 motion events < 3": 2,
+      "events differ: expected [...]": 2
+     },
+     "state_not_observed": 0,
+     "trials": 2
+    },
+    "R07": {
+     "infra": {},
+     "pass": 2,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 2
+    },
+    "R08": {
+     "infra": {},
+     "pass": 2,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 2
+    },
+    "R09": {
+     "infra": {},
+     "pass": 2,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 2
+    },
+    "R10": {
+     "infra": {},
+     "pass": 0,
+     "reasons": {
+      "events differ: expected [...]": 2
+     },
+     "state_not_observed": 0,
+     "trials": 2
+    },
+    "R11": {
+     "infra": {},
+     "pass": 2,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 2
+    },
+    "R12": {
+     "infra": {},
+     "pass": 2,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 2
+    },
+    "R13": {
+     "infra": {},
+     "pass": 2,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 2
+    },
+    "R14": {
+     "infra": {},
+     "pass": 2,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 2
+    },
+    "caps_lock_roundtrip": {
+     "infra": {},
+     "pass": 2,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 2
+    },
+    "chord_alt_f4": {
+     "infra": {},
+     "pass": 2,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 2
+    },
+    "chord_alt_tab": {
+     "infra": {},
+     "pass": 2,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 2
+    },
+    "chord_ctrl_a": {
+     "infra": {},
+     "pass": 2,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 2
+    },
+    "chord_ctrl_alone": {
+     "infra": {},
+     "pass": 2,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 2
+    },
+    "chord_ctrl_alt_shift_r": {
+     "infra": {},
+     "pass": 2,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 2
+    },
+    "chord_ctrl_c": {
+     "infra": {},
+     "pass": 2,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 2
+    },
+    "chord_ctrl_home": {
+     "infra": {},
+     "pass": 2,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 2
+    },
+    "chord_ctrl_shift_arrow": {
+     "infra": {},
+     "pass": 2,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 2
+    },
+    "chord_ctrl_shift_t": {
+     "infra": {},
+     "pass": 2,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 2
+    },
+    "chord_shift_alone": {
+     "infra": {},
+     "pass": 2,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 2
+    },
+    "chord_shift_arrow_left": {
+     "infra": {},
+     "pass": 2,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 2
+    },
+    "chord_shift_tab": {
+     "infra": {},
+     "pass": 2,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 2
+    },
+    "chord_super_d": {
+     "infra": {},
+     "pass": 2,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 2
+    },
+    "click_burst_5": {
+     "infra": {},
+     "pass": 2,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 2
+    },
+    "click_corner_bottomright": {
+     "infra": {},
+     "pass": 2,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 2
+    },
+    "click_corner_topleft": {
+     "infra": {},
+     "pass": 2,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 2
+    },
+    "click_double_left": {
+     "infra": {},
+     "pass": 2,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 2
+    },
+    "click_double_slow": {
+     "infra": {},
+     "pass": 2,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 2
+    },
+    "click_left_center": {
+     "infra": {},
+     "pass": 2,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 2
+    },
+    "click_middle": {
+     "infra": {},
+     "pass": 2,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 2
+    },
+    "click_right": {
+     "infra": {},
+     "pass": 2,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 2
+    },
+    "click_then_type": {
+     "infra": {},
+     "pass": 2,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 2
+    },
+    "click_triple_left": {
+     "infra": {},
+     "pass": 2,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 2
+    },
+    "click_two_positions_ordered": {
+     "infra": {},
+     "pass": 2,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 2
+    },
+    "drag_long_diagonal": {
+     "infra": {},
+     "pass": 2,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 2
+    },
+    "drag_short": {
+     "infra": {},
+     "pass": 2,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 2
+    },
+    "drag_slow_small": {
+     "infra": {},
+     "pass": 2,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 2
+    },
+    "drag_to_corner": {
+     "infra": {},
+     "pass": 2,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 2
+    },
+    "drag_vertical": {
+     "infra": {},
+     "pass": 2,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 2
+    },
+    "key_arrow_down": {
+     "infra": {},
+     "pass": 2,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 2
+    },
+    "key_arrow_left": {
+     "infra": {},
+     "pass": 2,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 2
+    },
+    "key_arrow_right": {
+     "infra": {},
+     "pass": 2,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 2
+    },
+    "key_arrow_up": {
+     "infra": {},
+     "pass": 2,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 2
+    },
+    "key_delete": {
+     "infra": {},
+     "pass": 2,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 2
+    },
+    "key_end": {
+     "infra": {},
+     "pass": 2,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 2
+    },
+    "key_enter": {
+     "infra": {},
+     "pass": 2,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 2
+    },
+    "key_esc": {
+     "infra": {},
+     "pass": 2,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 2
+    },
+    "key_f1": {
+     "infra": {},
+     "pass": 2,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 2
+    },
+    "key_f12": {
+     "infra": {},
+     "pass": 2,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 2
+    },
+    "key_f5": {
+     "infra": {},
+     "pass": 2,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 2
+    },
+    "key_f9": {
+     "infra": {},
+     "pass": 2,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 2
+    },
+    "key_home": {
+     "infra": {},
+     "pass": 2,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 2
+    },
+    "key_insert": {
+     "infra": {},
+     "pass": 2,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 2
+    },
+    "key_kp_add": {
+     "infra": {},
+     "pass": 2,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 2
+    },
+    "key_kp_enter": {
+     "infra": {},
+     "pass": 2,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 2
+    },
+    "key_menu": {
+     "infra": {},
+     "pass": 2,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 2
+    },
+    "key_pagedown": {
+     "infra": {},
+     "pass": 2,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 2
+    },
+    "key_pageup": {
+     "infra": {},
+     "pass": 2,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 2
+    },
+    "key_space_chord": {
+     "infra": {},
+     "pass": 2,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 2
+    },
+    "key_tab": {
+     "infra": {},
+     "pass": 2,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 2
+    },
+    "move_only": {
+     "infra": {},
+     "pass": 2,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 2
+    },
+    "no_action_control": {
+     "infra": {},
+     "pass": 2,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 2
+    },
+    "scroll_at_offcenter_position": {
+     "infra": {},
+     "pass": 2,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 2
+    },
+    "scroll_down_1": {
+     "infra": {},
+     "pass": 2,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 2
+    },
+    "scroll_down_10": {
+     "infra": {},
+     "pass": 2,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 2
+    },
+    "scroll_down_3": {
+     "infra": {},
+     "pass": 2,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 2
+    },
+    "scroll_down_then_up_net_zero": {
+     "infra": {},
+     "pass": 2,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 2
+    },
+    "scroll_up_3": {
+     "infra": {},
+     "pass": 2,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 2
+    },
+    "seq_drag_then_click": {
+     "infra": {},
+     "pass": 2,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 2
+    },
+    "seq_long_mixed": {
+     "infra": {},
+     "pass": 2,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 2
+    },
+    "seq_type_chord_type": {
+     "infra": {},
+     "pass": 2,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 2
+    },
+    "type_combining": {
+     "infra": {},
+     "pass": 2,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 2
+    },
+    "type_digits": {
+     "infra": {},
+     "pass": 2,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 2
+    },
+    "type_emoji": {
+     "infra": {},
+     "pass": 2,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 2
+    },
+    "type_emoji_zwj": {
+     "infra": {},
+     "pass": 2,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 2
+    },
+    "type_long_200": {
+     "infra": {},
+     "pass": 2,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 2
+    },
+    "type_long_500": {
+     "infra": {},
+     "pass": 2,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 2
+    },
+    "type_mixed_case": {
+     "infra": {},
+     "pass": 2,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 2
+    },
+    "type_multiline_tabs": {
+     "infra": {},
+     "pass": 2,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 2
+    },
+    "type_plain": {
+     "infra": {},
+     "pass": 2,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 2
+    },
+    "type_repeated_chars": {
+     "infra": {},
+     "pass": 2,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 2
+    },
+    "type_rtl": {
+     "infra": {},
+     "pass": 2,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 2
+    },
+    "type_shell_hostile": {
+     "infra": {},
+     "pass": 2,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 2
+    },
+    "type_single_char": {
+     "infra": {},
+     "pass": 2,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 2
+    },
+    "type_spaces": {
+     "infra": {},
+     "pass": 2,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 2
+    },
+    "type_symbols_shifted": {
+     "infra": {},
+     "pass": 2,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 2
+    },
+    "type_unicode_bmp": {
+     "infra": {},
+     "pass": 2,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 2
+    },
+    "type_with_correction": {
+     "infra": {},
+     "pass": 2,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 2
+    }
+   },
+   "concurrency": 1,
+   "fault_drop_modifier": null,
+   "git_sha": "126ff8bf9c407e9bdf419f4051c0b36f40392dd3",
+   "infra_gates_pass": true,
+   "job": "838",
+   "kind": "suite-development",
+   "labelled_containers_left": [],
+   "layer": "H-GA",
+   "manifest_sha256": "1747cc5fe18bc388436e5aa8032f90b10e891045950486e0b1dd5ef6d1dc1851",
+   "no_gpu_all": true,
+   "passed": 178,
+   "qcow2_unchanged": true,
+   "receipt_sha256": "5dda308fbfcac23f704edb2399229855f22f7bac692227a55a65a4e62e83eca8",
+   "server_id_changes": 0,
+   "sessions": 4,
+   "slurm": {
+    "ExitCode": "0:0",
+    "JobState": "COMPLETED",
+    "RunTime": "00:09:57",
+    "TRES": "cpu=8,mem=12G,node=1,billing=8"
+   },
+   "source_tree_sha256": "a303c1e213b01ad7187a6d4e33a46b1a19cfd30304ff326e993c0ea18b1d86c3",
+   "trials": 186
+  },
+  {
+   "batch_end": {
+    "driver_exit": 0,
+    "labelled_left": 0
+   },
+   "c4": {},
+   "campaign_id": "q2ap-v2-d43-canary-v1",
+   "cells": {
+    "chrome:ctrl_home_insert": {
+     "infra": {},
+     "pass": 1,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 1
+    },
+    "chrome:drag_select_word": {
+     "infra": {},
+     "pass": 1,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 1
+    },
+    "chrome:key_kp_enter": {
+     "infra": {},
+     "pass": 1,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 1
+    },
+    "chrome:select_all_copy_end_paste": {
+     "infra": {},
+     "pass": 1,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 1
+    },
+    "chrome:triple_click_line": {
+     "infra": {},
+     "pass": 1,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 1
+    },
+    "chrome:type_combining": {
+     "infra": {},
+     "pass": 1,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 1
+    },
+    "chrome:type_digits": {
+     "infra": {},
+     "pass": 1,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 1
+    },
+    "chrome:type_emoji": {
+     "infra": {},
+     "pass": 1,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 1
+    },
+    "chrome:type_long_200": {
+     "infra": {},
+     "pass": 1,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 1
+    },
+    "chrome:type_multiline_tabs": {
+     "infra": {},
+     "pass": 1,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 1
+    },
+    "chrome:type_plain": {
+     "infra": {},
+     "pass": 1,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 1
+    },
+    "chrome:type_rtl": {
+     "infra": {},
+     "pass": 1,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 1
+    },
+    "chrome:type_spaces": {
+     "infra": {},
+     "pass": 1,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 1
+    },
+    "chrome:type_symbols_shifted": {
+     "infra": {},
+     "pass": 1,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 1
+    },
+    "chrome:type_unicode_bmp": {
+     "infra": {},
+     "pass": 1,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 1
+    },
+    "chrome:type_with_correction": {
+     "infra": {},
+     "pass": 1,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 1
+    },
+    "terminal:key_kp_enter": {
+     "infra": {},
+     "pass": 1,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 1
+    },
+    "terminal:type_combining": {
+     "infra": {},
+     "pass": 1,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 1
+    },
+    "terminal:type_digits": {
+     "infra": {},
+     "pass": 1,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 1
+    },
+    "terminal:type_emoji": {
+     "infra": {},
+     "pass": 1,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 1
+    },
+    "terminal:type_long_200": {
+     "infra": {},
+     "pass": 1,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 1
+    },
+    "terminal:type_multiline_tabs": {
+     "infra": {},
+     "pass": 1,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 1
+    },
+    "terminal:type_plain": {
+     "infra": {},
+     "pass": 1,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 1
+    },
+    "terminal:type_rtl": {
+     "infra": {},
+     "pass": 1,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 1
+    },
+    "terminal:type_spaces": {
+     "infra": {},
+     "pass": 1,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 1
+    },
+    "terminal:type_symbols_shifted": {
+     "infra": {},
+     "pass": 1,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 1
+    },
+    "terminal:type_unicode_bmp": {
+     "infra": {},
+     "pass": 1,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 1
+    },
+    "terminal:type_with_correction": {
+     "infra": {},
+     "pass": 1,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 1
+    },
+    "vscode:ctrl_home_insert": {
+     "infra": {},
+     "pass": 1,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 1
+    },
+    "vscode:drag_select_word": {
+     "infra": {},
+     "pass": 1,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 1
+    },
+    "vscode:key_kp_enter": {
+     "infra": {},
+     "pass": 1,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 1
+    },
+    "vscode:select_all_copy_end_paste": {
+     "infra": {},
+     "pass": 1,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 1
+    },
+    "vscode:triple_click_line": {
+     "infra": {},
+     "pass": 1,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 1
+    },
+    "vscode:type_combining": {
+     "infra": {},
+     "pass": 1,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 1
+    },
+    "vscode:type_digits": {
+     "infra": {},
+     "pass": 1,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 1
+    },
+    "vscode:type_emoji": {
+     "infra": {},
+     "pass": 1,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 1
+    },
+    "vscode:type_long_200": {
+     "infra": {},
+     "pass": 1,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 1
+    },
+    "vscode:type_multiline_tabs": {
+     "infra": {},
+     "pass": 1,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 1
+    },
+    "vscode:type_plain": {
+     "infra": {},
+     "pass": 1,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 1
+    },
+    "vscode:type_rtl": {
+     "infra": {},
+     "pass": 1,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 1
+    },
+    "vscode:type_spaces": {
+     "infra": {},
+     "pass": 1,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 1
+    },
+    "vscode:type_symbols_shifted": {
+     "infra": {},
+     "pass": 1,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 1
+    },
+    "vscode:type_unicode_bmp": {
+     "infra": {},
+     "pass": 1,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 1
+    },
+    "vscode:type_with_correction": {
+     "infra": {},
+     "pass": 1,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 1
+    },
+    "writer:ctrl_home_insert": {
+     "infra": {},
+     "pass": 1,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 1
+    },
+    "writer:drag_select_word": {
+     "infra": {},
+     "pass": 1,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 1
+    },
+    "writer:key_kp_enter": {
+     "infra": {},
+     "pass": 1,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 1
+    },
+    "writer:select_all_copy_end_paste": {
+     "infra": {},
+     "pass": 1,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 1
+    },
+    "writer:triple_click_line": {
+     "infra": {},
+     "pass": 1,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 1
+    },
+    "writer:type_combining": {
+     "infra": {},
+     "pass": 1,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 1
+    },
+    "writer:type_digits": {
+     "infra": {},
+     "pass": 1,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 1
+    },
+    "writer:type_emoji": {
+     "infra": {},
+     "pass": 1,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 1
+    },
+    "writer:type_long_200": {
+     "infra": {},
+     "pass": 1,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 1
+    },
+    "writer:type_multiline_tabs": {
+     "infra": {},
+     "pass": 1,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 1
+    },
+    "writer:type_plain": {
+     "infra": {},
+     "pass": 1,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 1
+    },
+    "writer:type_rtl": {
+     "infra": {},
+     "pass": 1,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 1
+    },
+    "writer:type_spaces": {
+     "infra": {},
+     "pass": 1,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 1
+    },
+    "writer:type_symbols_shifted": {
+     "infra": {},
+     "pass": 1,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 1
+    },
+    "writer:type_unicode_bmp": {
+     "infra": {},
+     "pass": 1,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 1
+    },
+    "writer:type_with_correction": {
+     "infra": {},
+     "pass": 1,
+     "reasons": {},
+     "state_not_observed": 0,
+     "trials": 1
+    }
+   },
+   "concurrency": 1,
+   "fault_drop_modifier": null,
+   "git_sha": "126ff8bf9c407e9bdf419f4051c0b36f40392dd3",
+   "infra_gates_pass": true,
+   "job": "839",
+   "kind": "canary-development",
+   "labelled_containers_left": [],
+   "layer": null,
+   "manifest_sha256": "dbc0c6a1a8d971b4225effb54690888ad55af5f6272b99978c90ff637b283de4",
+   "no_gpu_all": true,
+   "passed": 60,
+   "qcow2_unchanged": true,
+   "receipt_sha256": "219124807dca71bcc130aaaf1c7ea97d6ef1f0667cf73b463911176b84816ed3",
+   "server_id_changes": 0,
+   "sessions": 1,
+   "slurm": {
+    "ExitCode": "0:0",
+    "JobState": "COMPLETED",
+    "RunTime": "00:10:45",
+    "TRES": "cpu=8,mem=12G,node=1,billing=8"
+   },
+   "source_tree_sha256": "a303c1e213b01ad7187a6d4e33a46b1a19cfd30304ff326e993c0ea18b1d86c3",
+   "trials": 60
+  }
+ ],
+ "unobserved_events": [
+  {
+   "after_grab_ms": 1,
+   "cell": "chord_alt_tab",
+   "job": "830",
+   "keysym0": 65289,
+   "kind": "KeyRelease",
+   "layer": "L0-raw",
+   "state": 0
+  },
+  {
+   "after_grab_ms": 1,
+   "cell": "chord_alt_tab",
+   "job": "830",
+   "keysym0": 65513,
+   "kind": "KeyRelease",
+   "layer": "L0-raw",
+   "state": 0
+  },
+  {
+   "after_grab_ms": 2,
+   "cell": "chord_super_d",
+   "job": "830",
+   "keysym0": 100,
+   "kind": "KeyPress",
+   "layer": "L0-raw",
+   "state": 0
+  },
+  {
+   "after_grab_ms": 3,
+   "cell": "chord_super_d",
+   "job": "830",
+   "keysym0": 100,
+   "kind": "KeyRelease",
+   "layer": "L0-raw",
+   "state": 0
+  },
+  {
+   "after_grab_ms": 3,
+   "cell": "chord_super_d",
+   "job": "830",
+   "keysym0": 65515,
+   "kind": "KeyRelease",
+   "layer": "L0-raw",
+   "state": 0
+  },
+  {
+   "after_grab_ms": 0,
+   "cell": "chord_alt_f4",
+   "job": "830",
+   "keysym0": 65473,
+   "kind": "KeyRelease",
+   "layer": "L0-raw",
+   "state": 0
+  },
+  {
+   "after_grab_ms": 0,
+   "cell": "chord_ctrl_alt_shift_r",
+   "job": "830",
+   "keysym0": 114,
+   "kind": "KeyRelease",
+   "layer": "L0-raw",
+   "state": 0
+  },
+  {
+   "after_grab_ms": 1,
+   "cell": "chord_ctrl_alt_shift_r",
+   "job": "830",
+   "keysym0": 65505,
+   "kind": "KeyRelease",
+   "layer": "L0-raw",
+   "state": 0
+  },
+  {
+   "after_grab_ms": 1,
+   "cell": "chord_ctrl_alt_shift_r",
+   "job": "830",
+   "keysym0": 65513,
+   "kind": "KeyRelease",
+   "layer": "L0-raw",
+   "state": 0
+  },
+  {
+   "after_grab_ms": 1,
+   "cell": "chord_ctrl_alt_shift_r",
+   "job": "830",
+   "keysym0": 65507,
+   "kind": "KeyRelease",
+   "layer": "L0-raw",
+   "state": 0
+  },
+  {
+   "after_grab_ms": 0,
+   "cell": "chord_ctrl_alt_shift_r",
+   "job": "830",
+   "keysym0": 114,
+   "kind": "KeyRelease",
+   "layer": "L0-raw",
+   "state": 0
+  },
+  {
+   "after_grab_ms": 0,
+   "cell": "chord_ctrl_alt_shift_r",
+   "job": "830",
+   "keysym0": 65505,
+   "kind": "KeyRelease",
+   "layer": "L0-raw",
+   "state": 0
+  },
+  {
+   "after_grab_ms": 1,
+   "cell": "chord_ctrl_alt_shift_r",
+   "job": "830",
+   "keysym0": 65513,
+   "kind": "KeyRelease",
+   "layer": "L0-raw",
+   "state": 0
+  },
+  {
+   "after_grab_ms": 1,
+   "cell": "chord_ctrl_alt_shift_r",
+   "job": "830",
+   "keysym0": 65507,
+   "kind": "KeyRelease",
+   "layer": "L0-raw",
+   "state": 0
+  },
+  {
+   "after_grab_ms": 0,
+   "cell": "chord_alt_tab",
+   "job": "830",
+   "keysym0": 65289,
+   "kind": "KeyRelease",
+   "layer": "L0-raw",
+   "state": 0
+  },
+  {
+   "after_grab_ms": 0,
+   "cell": "chord_alt_tab",
+   "job": "830",
+   "keysym0": 65513,
+   "kind": "KeyRelease",
+   "layer": "L0-raw",
+   "state": 0
+  },
+  {
+   "after_grab_ms": 1,
+   "cell": "chord_super_d",
+   "job": "830",
+   "keysym0": 100,
+   "kind": "KeyPress",
+   "layer": "L0-raw",
+   "state": 0
+  },
+  {
+   "after_grab_ms": 1,
+   "cell": "chord_super_d",
+   "job": "830",
+   "keysym0": 100,
+   "kind": "KeyRelease",
+   "layer": "L0-raw",
+   "state": 0
+  },
+  {
+   "after_grab_ms": 1,
+   "cell": "chord_super_d",
+   "job": "830",
+   "keysym0": 65515,
+   "kind": "KeyRelease",
+   "layer": "L0-raw",
+   "state": 0
+  },
+  {
+   "after_grab_ms": 1,
+   "cell": "chord_alt_f4",
+   "job": "830",
+   "keysym0": 65473,
+   "kind": "KeyRelease",
+   "layer": "L0-raw",
+   "state": 0
+  },
+  {
+   "after_grab_ms": 1,
+   "cell": "chord_alt_f4",
+   "job": "830",
+   "keysym0": 65513,
+   "kind": "KeyRelease",
+   "layer": "L0-raw",
+   "state": 0
+  },
+  {
+   "after_grab_ms": 1,
+   "cell": "chord_alt_f4",
+   "job": "830",
+   "keysym0": 65473,
+   "kind": "KeyRelease",
+   "layer": "L0-raw",
+   "state": 0
+  },
+  {
+   "after_grab_ms": 1,
+   "cell": "chord_ctrl_alt_shift_r",
+   "job": "830",
+   "keysym0": 114,
+   "kind": "KeyRelease",
+   "layer": "L0-raw",
+   "state": 0
+  },
+  {
+   "after_grab_ms": 1,
+   "cell": "chord_ctrl_alt_shift_r",
+   "job": "830",
+   "keysym0": 65505,
+   "kind": "KeyRelease",
+   "layer": "L0-raw",
+   "state": 0
+  },
+  {
+   "after_grab_ms": 1,
+   "cell": "chord_ctrl_alt_shift_r",
+   "job": "830",
+   "keysym0": 65513,
+   "kind": "KeyRelease",
+   "layer": "L0-raw",
+   "state": 0
+  },
+  {
+   "after_grab_ms": 1,
+   "cell": "chord_ctrl_alt_shift_r",
+   "job": "830",
+   "keysym0": 65507,
+   "kind": "KeyRelease",
+   "layer": "L0-raw",
+   "state": 0
+  },
+  {
+   "after_grab_ms": 1,
+   "cell": "chord_super_d",
+   "job": "830",
+   "keysym0": 100,
+   "kind": "KeyPress",
+   "layer": "L0-raw",
+   "state": 0
+  },
+  {
+   "after_grab_ms": 2,
+   "cell": "chord_super_d",
+   "job": "830",
+   "keysym0": 100,
+   "kind": "KeyRelease",
+   "layer": "L0-raw",
+   "state": 0
+  },
+  {
+   "after_grab_ms": 2,
+   "cell": "chord_super_d",
+   "job": "830",
+   "keysym0": 65515,
+   "kind": "KeyRelease",
+   "layer": "L0-raw",
+   "state": 0
+  },
+  {
+   "after_grab_ms": 1,
+   "cell": "chord_alt_tab",
+   "job": "830",
+   "keysym0": 65289,
+   "kind": "KeyRelease",
+   "layer": "L0-raw",
+   "state": 0
+  },
+  {
+   "after_grab_ms": 1,
+   "cell": "chord_alt_tab",
+   "job": "830",
+   "keysym0": 65513,
+   "kind": "KeyRelease",
+   "layer": "L0-raw",
+   "state": 0
+  },
+  {
+   "after_grab_ms": 0,
+   "cell": "chord_ctrl_alt_shift_r",
+   "job": "830",
+   "keysym0": 114,
+   "kind": "KeyRelease",
+   "layer": "L0-raw",
+   "state": 0
+  },
+  {
+   "after_grab_ms": 0,
+   "cell": "chord_ctrl_alt_shift_r",
+   "job": "830",
+   "keysym0": 65505,
+   "kind": "KeyRelease",
+   "layer": "L0-raw",
+   "state": 0
+  },
+  {
+   "after_grab_ms": 1,
+   "cell": "chord_ctrl_alt_shift_r",
+   "job": "830",
+   "keysym0": 65513,
+   "kind": "KeyRelease",
+   "layer": "L0-raw",
+   "state": 0
+  },
+  {
+   "after_grab_ms": 1,
+   "cell": "chord_ctrl_alt_shift_r",
+   "job": "830",
+   "keysym0": 65507,
+   "kind": "KeyRelease",
+   "layer": "L0-raw",
+   "state": 0
+  },
+  {
+   "after_grab_ms": 1,
+   "cell": "chord_super_d",
+   "job": "830",
+   "keysym0": 100,
+   "kind": "KeyPress",
+   "layer": "L0-raw",
+   "state": 0
+  },
+  {
+   "after_grab_ms": 2,
+   "cell": "chord_super_d",
+   "job": "830",
+   "keysym0": 100,
+   "kind": "KeyRelease",
+   "layer": "L0-raw",
+   "state": 0
+  },
+  {
+   "after_grab_ms": 2,
+   "cell": "chord_super_d",
+   "job": "830",
+   "keysym0": 65515,
+   "kind": "KeyRelease",
+   "layer": "L0-raw",
+   "state": 0
+  },
+  {
+   "after_grab_ms": 1,
+   "cell": "chord_alt_tab",
+   "job": "830",
+   "keysym0": 65289,
+   "kind": "KeyRelease",
+   "layer": "L0-raw",
+   "state": 0
+  },
+  {
+   "after_grab_ms": 1,
+   "cell": "chord_alt_tab",
+   "job": "830",
+   "keysym0": 65513,
+   "kind": "KeyRelease",
+   "layer": "L0-raw",
+   "state": 0
+  },
+  {
+   "after_grab_ms": 0,
+   "cell": "chord_alt_f4",
+   "job": "830",
+   "keysym0": 65473,
+   "kind": "KeyRelease",
+   "layer": "L0-raw",
+   "state": 0
+  },
+  {
+   "after_grab_ms": 1,
+   "cell": "chord_alt_f4",
+   "job": "830",
+   "keysym0": 65513,
+   "kind": "KeyRelease",
+   "layer": "L0-raw",
+   "state": 0
+  },
+  {
+   "after_grab_ms": 1,
+   "cell": "chord_super_d",
+   "job": "830",
+   "keysym0": 100,
+   "kind": "KeyPress",
+   "layer": "L0-raw",
+   "state": 0
+  },
+  {
+   "after_grab_ms": 1,
+   "cell": "chord_super_d",
+   "job": "830",
+   "keysym0": 100,
+   "kind": "KeyRelease",
+   "layer": "L0-raw",
+   "state": 0
+  },
+  {
+   "after_grab_ms": 1,
+   "cell": "chord_super_d",
+   "job": "830",
+   "keysym0": 65515,
+   "kind": "KeyRelease",
+   "layer": "L0-raw",
+   "state": 0
+  },
+  {
+   "after_grab_ms": 0,
+   "cell": "chord_alt_tab",
+   "job": "830",
+   "keysym0": 65289,
+   "kind": "KeyRelease",
+   "layer": "L0-raw",
+   "state": 0
+  },
+  {
+   "after_grab_ms": 0,
+   "cell": "chord_alt_tab",
+   "job": "830",
+   "keysym0": 65513,
+   "kind": "KeyRelease",
+   "layer": "L0-raw",
+   "state": 0
+  },
+  {
+   "after_grab_ms": 0,
+   "cell": "chord_ctrl_alt_shift_r",
+   "job": "830",
+   "keysym0": 114,
+   "kind": "KeyRelease",
+   "layer": "L0-raw",
+   "state": 0
+  },
+  {
+   "after_grab_ms": 1,
+   "cell": "chord_ctrl_alt_shift_r",
+   "job": "830",
+   "keysym0": 65505,
+   "kind": "KeyRelease",
+   "layer": "L0-raw",
+   "state": 0
+  },
+  {
+   "after_grab_ms": 1,
+   "cell": "chord_ctrl_alt_shift_r",
+   "job": "830",
+   "keysym0": 65513,
+   "kind": "KeyRelease",
+   "layer": "L0-raw",
+   "state": 0
+  },
+  {
+   "after_grab_ms": 1,
+   "cell": "chord_ctrl_alt_shift_r",
+   "job": "830",
+   "keysym0": 65507,
+   "kind": "KeyRelease",
+   "layer": "L0-raw",
+   "state": 0
+  },
+  {
+   "after_grab_ms": 0,
+   "cell": "chord_alt_f4",
+   "job": "830",
+   "keysym0": 65473,
+   "kind": "KeyRelease",
+   "layer": "L0-raw",
+   "state": 0
+  },
+  {
+   "after_grab_ms": 0,
+   "cell": "chord_alt_f4",
+   "job": "830",
+   "keysym0": 65513,
+   "kind": "KeyRelease",
+   "layer": "L0-raw",
+   "state": 0
+  },
+  {
+   "after_grab_ms": 0,
+   "cell": "chord_alt_tab",
+   "job": "830",
+   "keysym0": 65289,
+   "kind": "KeyRelease",
+   "layer": "L0-raw",
+   "state": 0
+  },
+  {
+   "after_grab_ms": 0,
+   "cell": "chord_alt_tab",
+   "job": "830",
+   "keysym0": 65513,
+   "kind": "KeyRelease",
+   "layer": "L0-raw",
+   "state": 0
+  },
+  {
+   "after_grab_ms": 1,
+   "cell": "chord_super_d",
+   "job": "830",
+   "keysym0": 100,
+   "kind": "KeyPress",
+   "layer": "L0-raw",
+   "state": 0
+  },
+  {
+   "after_grab_ms": 2,
+   "cell": "chord_super_d",
+   "job": "830",
+   "keysym0": 100,
+   "kind": "KeyRelease",
+   "layer": "L0-raw",
+   "state": 0
+  },
+  {
+   "after_grab_ms": 2,
+   "cell": "chord_super_d",
+   "job": "830",
+   "keysym0": 65515,
+   "kind": "KeyRelease",
+   "layer": "L0-raw",
+   "state": 0
+  },
+  {
+   "after_grab_ms": 1,
+   "cell": "chord_alt_f4",
+   "job": "830",
+   "keysym0": 65473,
+   "kind": "KeyRelease",
+   "layer": "L0-raw",
+   "state": 0
+  },
+  {
+   "after_grab_ms": 1,
+   "cell": "chord_alt_f4",
+   "job": "830",
+   "keysym0": 65513,
+   "kind": "KeyRelease",
+   "layer": "L0-raw",
+   "state": 0
+  },
+  {
+   "after_grab_ms": 0,
+   "cell": "chord_ctrl_alt_shift_r",
+   "job": "830",
+   "keysym0": 114,
+   "kind": "KeyRelease",
+   "layer": "L0-raw",
+   "state": 0
+  },
+  {
+   "after_grab_ms": 0,
+   "cell": "chord_ctrl_alt_shift_r",
+   "job": "830",
+   "keysym0": 65505,
+   "kind": "KeyRelease",
+   "layer": "L0-raw",
+   "state": 0
+  },
+  {
+   "after_grab_ms": 1,
+   "cell": "chord_ctrl_alt_shift_r",
+   "job": "830",
+   "keysym0": 65513,
+   "kind": "KeyRelease",
+   "layer": "L0-raw",
+   "state": 0
+  },
+  {
+   "after_grab_ms": 1,
+   "cell": "chord_ctrl_alt_shift_r",
+   "job": "830",
+   "keysym0": 65507,
+   "kind": "KeyRelease",
+   "layer": "L0-raw",
+   "state": 0
+  },
+  {
+   "after_grab_ms": 0,
+   "cell": "chord_ctrl_alt_shift_r",
+   "job": "830",
+   "keysym0": 114,
+   "kind": "KeyRelease",
+   "layer": "L0-raw",
+   "state": 0
+  },
+  {
+   "after_grab_ms": 1,
+   "cell": "chord_ctrl_alt_shift_r",
+   "job": "830",
+   "keysym0": 65505,
+   "kind": "KeyRelease",
+   "layer": "L0-raw",
+   "state": 0
+  },
+  {
+   "after_grab_ms": 1,
+   "cell": "chord_ctrl_alt_shift_r",
+   "job": "830",
+   "keysym0": 65513,
+   "kind": "KeyRelease",
+   "layer": "L0-raw",
+   "state": 0
+  },
+  {
+   "after_grab_ms": 1,
+   "cell": "chord_ctrl_alt_shift_r",
+   "job": "830",
+   "keysym0": 65507,
+   "kind": "KeyRelease",
+   "layer": "L0-raw",
+   "state": 0
+  },
+  {
+   "after_grab_ms": 0,
+   "cell": "chord_alt_tab",
+   "job": "830",
+   "keysym0": 65289,
+   "kind": "KeyRelease",
+   "layer": "L0-raw",
+   "state": 0
+  },
+  {
+   "after_grab_ms": 0,
+   "cell": "chord_alt_tab",
+   "job": "830",
+   "keysym0": 65513,
+   "kind": "KeyRelease",
+   "layer": "L0-raw",
+   "state": 0
+  },
+  {
+   "after_grab_ms": 1,
+   "cell": "chord_super_d",
+   "job": "830",
+   "keysym0": 100,
+   "kind": "KeyPress",
+   "layer": "L0-raw",
+   "state": 0
+  },
+  {
+   "after_grab_ms": 2,
+   "cell": "chord_super_d",
+   "job": "830",
+   "keysym0": 100,
+   "kind": "KeyRelease",
+   "layer": "L0-raw",
+   "state": 0
+  },
+  {
+   "after_grab_ms": 2,
+   "cell": "chord_super_d",
+   "job": "830",
+   "keysym0": 65515,
+   "kind": "KeyRelease",
+   "layer": "L0-raw",
+   "state": 0
+  },
+  {
+   "after_grab_ms": 0,
+   "cell": "chord_alt_f4",
+   "job": "830",
+   "keysym0": 65473,
+   "kind": "KeyRelease",
+   "layer": "L0-raw",
+   "state": 0
+  },
+  {
+   "after_grab_ms": 1,
+   "cell": "chord_alt_f4",
+   "job": "830",
+   "keysym0": 65513,
+   "kind": "KeyRelease",
+   "layer": "L0-raw",
+   "state": 0
+  },
+  {
+   "after_grab_ms": 1,
+   "cell": "chord_alt_f4",
+   "job": "830",
+   "keysym0": 65473,
+   "kind": "KeyRelease",
+   "layer": "L0-raw",
+   "state": 0
+  },
+  {
+   "after_grab_ms": 1,
+   "cell": "chord_alt_f4",
+   "job": "830",
+   "keysym0": 65513,
+   "kind": "KeyRelease",
+   "layer": "L0-raw",
+   "state": 0
+  },
+  {
+   "after_grab_ms": 1,
+   "cell": "chord_ctrl_alt_shift_r",
+   "job": "830",
+   "keysym0": 114,
+   "kind": "KeyRelease",
+   "layer": "L0-raw",
+   "state": 0
+  },
+  {
+   "after_grab_ms": 1,
+   "cell": "chord_ctrl_alt_shift_r",
+   "job": "830",
+   "keysym0": 65505,
+   "kind": "KeyRelease",
+   "layer": "L0-raw",
+   "state": 0
+  },
+  {
+   "after_grab_ms": 1,
+   "cell": "chord_ctrl_alt_shift_r",
+   "job": "830",
+   "keysym0": 65513,
+   "kind": "KeyRelease",
+   "layer": "L0-raw",
+   "state": 0
+  },
+  {
+   "after_grab_ms": 1,
+   "cell": "chord_ctrl_alt_shift_r",
+   "job": "830",
+   "keysym0": 65507,
+   "kind": "KeyRelease",
+   "layer": "L0-raw",
+   "state": 0
+  },
+  {
+   "after_grab_ms": 2,
+   "cell": "chord_super_d",
+   "job": "830",
+   "keysym0": 100,
+   "kind": "KeyPress",
+   "layer": "L0-raw",
+   "state": 0
+  },
+  {
+   "after_grab_ms": 2,
+   "cell": "chord_super_d",
+   "job": "830",
+   "keysym0": 100,
+   "kind": "KeyRelease",
+   "layer": "L0-raw",
+   "state": 0
+  },
+  {
+   "after_grab_ms": 2,
+   "cell": "chord_super_d",
+   "job": "830",
+   "keysym0": 65515,
+   "kind": "KeyRelease",
+   "layer": "L0-raw",
+   "state": 0
+  },
+  {
+   "after_grab_ms": 0,
+   "cell": "chord_alt_tab",
+   "job": "830",
+   "keysym0": 65289,
+   "kind": "KeyRelease",
+   "layer": "L0-raw",
+   "state": 0
+  },
+  {
+   "after_grab_ms": 0,
+   "cell": "chord_alt_tab",
+   "job": "830",
+   "keysym0": 65513,
+   "kind": "KeyRelease",
+   "layer": "L0-raw",
+   "state": 0
+  },
+  {
+   "after_grab_ms": 1,
+   "cell": "chord_ctrl_alt_shift_r",
+   "job": "830",
+   "keysym0": 114,
+   "kind": "KeyRelease",
+   "layer": "L0-raw",
+   "state": 0
+  },
+  {
+   "after_grab_ms": 1,
+   "cell": "chord_ctrl_alt_shift_r",
+   "job": "830",
+   "keysym0": 65505,
+   "kind": "KeyRelease",
+   "layer": "L0-raw",
+   "state": 0
+  },
+  {
+   "after_grab_ms": 1,
+   "cell": "chord_ctrl_alt_shift_r",
+   "job": "830",
+   "keysym0": 65513,
+   "kind": "KeyRelease",
+   "layer": "L0-raw",
+   "state": 0
+  },
+  {
+   "after_grab_ms": 1,
+   "cell": "chord_ctrl_alt_shift_r",
+   "job": "830",
+   "keysym0": 65507,
+   "kind": "KeyRelease",
+   "layer": "L0-raw",
+   "state": 0
+  },
+  {
+   "after_grab_ms": 1,
+   "cell": "chord_super_d",
+   "job": "830",
+   "keysym0": 100,
+   "kind": "KeyPress",
+   "layer": "L0-raw",
+   "state": 0
+  },
+  {
+   "after_grab_ms": 1,
+   "cell": "chord_super_d",
+   "job": "830",
+   "keysym0": 100,
+   "kind": "KeyRelease",
+   "layer": "L0-raw",
+   "state": 0
+  },
+  {
+   "after_grab_ms": 2,
+   "cell": "chord_super_d",
+   "job": "830",
+   "keysym0": 65515,
+   "kind": "KeyRelease",
+   "layer": "L0-raw",
+   "state": 0
+  },
+  {
+   "after_grab_ms": 0,
+   "cell": "chord_alt_tab",
+   "job": "830",
+   "keysym0": 65289,
+   "kind": "KeyRelease",
+   "layer": "L0-raw",
+   "state": 0
+  },
+  {
+   "after_grab_ms": 1,
+   "cell": "chord_alt_tab",
+   "job": "830",
+   "keysym0": 65513,
+   "kind": "KeyRelease",
+   "layer": "L0-raw",
+   "state": 0
+  },
+  {
+   "after_grab_ms": 0,
+   "cell": "chord_alt_f4",
+   "job": "830",
+   "keysym0": 65473,
+   "kind": "KeyRelease",
+   "layer": "L0-raw",
+   "state": 0
+  },
+  {
+   "after_grab_ms": 0,
+   "cell": "chord_alt_f4",
+   "job": "830",
+   "keysym0": 65513,
+   "kind": "KeyRelease",
+   "layer": "L0-raw",
+   "state": 0
+  },
+  {
+   "after_grab_ms": 1,
+   "cell": "chord_super_d",
+   "job": "830",
+   "keysym0": 100,
+   "kind": "KeyPress",
+   "layer": "L0-raw",
+   "state": 0
+  },
+  {
+   "after_grab_ms": 2,
+   "cell": "chord_super_d",
+   "job": "830",
+   "keysym0": 100,
+   "kind": "KeyRelease",
+   "layer": "L0-raw",
+   "state": 0
+  },
+  {
+   "after_grab_ms": 2,
+   "cell": "chord_super_d",
+   "job": "830",
+   "keysym0": 65515,
+   "kind": "KeyRelease",
+   "layer": "L0-raw",
+   "state": 0
+  },
+  {
+   "after_grab_ms": 1,
+   "cell": "chord_alt_tab",
+   "job": "830",
+   "keysym0": 65289,
+   "kind": "KeyRelease",
+   "layer": "L0-raw",
+   "state": 0
+  },
+  {
+   "after_grab_ms": 1,
+   "cell": "chord_alt_tab",
+   "job": "830",
+   "keysym0": 65513,
+   "kind": "KeyRelease",
+   "layer": "L0-raw",
+   "state": 0
+  },
+  {
+   "after_grab_ms": 0,
+   "cell": "chord_ctrl_alt_shift_r",
+   "job": "830",
+   "keysym0": 114,
+   "kind": "KeyRelease",
+   "layer": "L0-raw",
+   "state": 0
+  },
+  {
+   "after_grab_ms": 0,
+   "cell": "chord_ctrl_alt_shift_r",
+   "job": "830",
+   "keysym0": 65505,
+   "kind": "KeyRelease",
+   "layer": "L0-raw",
+   "state": 0
+  },
+  {
+   "after_grab_ms": 0,
+   "cell": "chord_ctrl_alt_shift_r",
+   "job": "830",
+   "keysym0": 65513,
+   "kind": "KeyRelease",
+   "layer": "L0-raw",
+   "state": 0
+  },
+  {
+   "after_grab_ms": 0,
+   "cell": "chord_ctrl_alt_shift_r",
+   "job": "830",
+   "keysym0": 65507,
+   "kind": "KeyRelease",
+   "layer": "L0-raw",
+   "state": 0
+  },
+  {
+   "after_grab_ms": 0,
+   "cell": "chord_alt_f4",
+   "job": "830",
+   "keysym0": 65473,
+   "kind": "KeyRelease",
+   "layer": "L0-raw",
+   "state": 0
+  },
+  {
+   "after_grab_ms": 0,
+   "cell": "chord_alt_f4",
+   "job": "830",
+   "keysym0": 65513,
+   "kind": "KeyRelease",
+   "layer": "L0-raw",
+   "state": 0
+  }
+ ]
+}

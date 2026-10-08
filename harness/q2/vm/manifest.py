@@ -61,8 +61,8 @@ WORKLOAD_KINDS = (
     "suite-acceptance",
     "canary-acceptance",
 )
-PREREG_ID = "q2-action-path-v1"
-ADDENDA_IDS = {"inputs": "q2-action-path-v1-inputs", "executor": "q2-action-path-v1-executor"}
+PREREG_ID = "q2-action-path-v2"
+ADDENDA_IDS = {"inputs": "q2-action-path-v2-inputs", "executor": "q2-action-path-v2-executor"}
 PREREG_DIR = "program/preregistrations"
 # The frozen digest tables of the preregistration and its addenda ("Frozen with this
 # file" followed by rows of `path` and `sha256`). Admission checks every listed file of
@@ -79,6 +79,9 @@ MAX_RUNNER_CPUS = 20
 # A7, the observation-service campaign (decision D30): repetitions of the gating set G in the
 # screenshot-plus-accessibility setting, sized in preregistration section 9.
 OBSERVATION_REPS = 360
+# Validity control C2's own order seed (decision D40), admitted for C2 only; no v1 campaign
+# or development run used it.
+C2_SEED = 45
 # What each scored campaign needs frozen in the ledger (preregistration sections 2.2 and 8):
 # C2 runs after the inputs addendum; C1, C3 and every acceptance criterion after both.
 CRITERIA = {
@@ -92,7 +95,7 @@ CRITERIA = {
            ("inputs", "executor")),
     "ladder": (("L0-fixed",), (43,), "rung", "both", "all", ("inputs", "executor")),
     "C1": (("H-OSW-up", "H-GA-buggy"), (42,), (5,), "screenshot", "all", ("inputs", "executor")),
-    "C2": (("L0-raw",), (42,), (5,), "screenshot", "all", ("inputs",)),
+    "C2": (("L0-raw",), (C2_SEED,), (5,), "screenshot", "all", ("inputs",)),
     "C3": (("L0-fixed", "H-OSW-fixed", "H-GA"), (42,), (1,), "screenshot", "all",
            ("inputs", "executor")),
 }  # fmt: skip
@@ -110,8 +113,8 @@ CONCURRENCY = {"A4": (1, *LADDER_RUNGS), "A7": (1, *LADDER_RUNGS), "ladder": LAD
 def executor_addendum(attempt: int) -> tuple[str, str]:
     """(experiment id, path) of the executor addendum a repair attempt runs under.
 
-    Attempt 1 runs under ``q2-action-path-v1-executor``; a repair attempt k (section 11)
-    under ``q2-action-path-v1-executor-a<k>``, frozen in its own ledger row.
+    Attempt 1 runs under ``q2-action-path-v2-executor``; a repair attempt k (section 11)
+    under ``q2-action-path-v2-executor-a<k>``, frozen in its own ledger row.
     """
     suffix = "" if attempt == 1 else f"-a{attempt}"
     experiment = f"{ADDENDA_IDS['executor']}{suffix}"
@@ -132,12 +135,18 @@ def ladder_reps(concurrency: int) -> int:
     return reps
 
 
-# Development runs the Stage-1 executor and harnesses only. L0-raw (validity control
-# C2) and the detection controls (C1) are scored once on frozen code, never in
-# development, so they are not admitted here.
-DEVELOPMENT_LAYERS = ("L0-fixed", "H-OSW-fixed", "H-GA")
+# Development runs the Stage-1 executor and harnesses, and (q2-action-path-v2, decision D40)
+# L0-raw at seed 42, to characterise the mechanism of v1's C2 result; v2's C2 is a
+# reproduction test on its own seed, not an a-priori prediction test. The detection
+# controls (C1) are scored once on frozen code, never in development, so they are not
+# admitted here.
+DEVELOPMENT_LAYERS = ("L0-fixed", "H-OSW-fixed", "H-GA", "L0-raw")
 DEVELOPMENT_SEED = 42
+# Decision D43: the development-only executor fault that drops chord modifiers.
+DROP_MODIFIER_MODES = ("omit", "release_first")
 ACCEPTANCE_SEEDS = (43, 44)
+# Seeds only a scored campaign may use: the acceptance shuffles and C2's order.
+RESERVED_SEEDS = (*ACCEPTANCE_SEEDS, C2_SEED)
 SETTINGS = ("screenshot", "screenshot+a11y")
 CANARY_APPS = ("writer", "chrome", "vscode", "terminal")
 GPU_WORDS = ("gpu", "gpus", "gres", "nvidia", "cuda")
@@ -469,7 +478,7 @@ def validate_manifest(raw: Any, ledger: dict[str, Any] | None = None) -> dict[st
     if purpose == "acceptance":
         # Confirmatory trials (A1-A6, and the scored controls C1-C3) wait for the
         # owner's freeze of the main preregistration and of the addenda they need
-        # (q2-action-path-v1-inputs, q2-action-path-v1-executor). Admission is a
+        # (q2-action-path-v2-inputs, q2-action-path-v2-executor). Admission is a
         # ledger check (check_ledger) made by the submitter and again inside the
         # job; without it every acceptance manifest is refused (gauntlet rule 3).
         if prereg["status"] != "frozen":
@@ -527,10 +536,11 @@ def validate_manifest(raw: Any, ledger: dict[str, Any] | None = None) -> dict[st
         _match(binding["flag"], SEED_FLAG_RE, "randomness.seed_binding.flag")
     else:
         raise ManifestError("randomness.contract must be deterministic or seeded")
-    if set(seeds) & set(ACCEPTANCE_SEEDS) and purpose != "acceptance":
-        # Seeds 43 and 44 are the preregistered acceptance shuffles: only an acceptance
-        # campaign, admitted by the ledger check after the freeze, may use them.
-        raise ManifestError("seeds 43 and 44 are reserved for acceptance after the freeze")
+    if set(seeds) & set(RESERVED_SEEDS) and purpose != "acceptance":
+        # Seeds 43 and 44 are the preregistered acceptance shuffles and seed 45 is C2's order
+        # (decision D40): only a scored campaign, admitted by the ledger check after the
+        # freeze, may use them (C2's seed only C2, by CRITERIA).
+        raise ManifestError("seeds 43, 44 and 45 are reserved for scored campaigns")
 
     vm = _require_keys(
         manifest["vm"],
@@ -733,7 +743,7 @@ def _validate_acceptance_workload(
             raise ManifestError("workload.session_range must be null or [start, end)")
     attempt = _int(workload["attempt"], "workload.attempt", 1, 3)
     if attempt != 1 and workload.get("criterion") in ("C1", "C2", "C3"):
-        # Section 11: a failed validity control is not repaired within v1.
+        # Section 11: a failed validity control is not repaired within the suite version.
         raise ManifestError("validity controls C1-C3 have no repair attempts")
     if attempt != 1 and workload.get("criterion") == "A7":
         # Decision D30: A7 bounds the upstream observation service, which no executor repair
@@ -787,6 +797,7 @@ def _validate_session_workload(
             "mutant",
             "kill_guest_server_after_seq",
             "kill_guest_server_during_seq",
+            "fault_drop_modifier",
         }
         if kind == "canary-development":
             extra = {"apps", "entries", "reps", "session_trials", "measure_targets"}
@@ -801,6 +812,18 @@ def _validate_session_workload(
             # the tap survive in their scopes (decision D30; never in acceptance).
             if hook in workload:
                 _int(workload[hook], f"workload.{hook}", 0, 20000)
+        if "fault_drop_modifier" in workload:
+            # Development only (decision D43): the L0-fixed executor drops chord modifiers
+            # (runner.drop_modifier_source), the judge's negative case; never in acceptance.
+            if workload["fault_drop_modifier"] not in DROP_MODIFIER_MODES:
+                raise ManifestError(
+                    f"workload.fault_drop_modifier must be one of {DROP_MODIFIER_MODES}"
+                )
+            hooks = {"mutant", "kill_guest_server_after_seq", "kill_guest_server_during_seq"}
+            if workload.get("layer") != "L0-fixed" or any(workload.get(h) for h in hooks):
+                raise ManifestError(
+                    "fault_drop_modifier needs the L0-fixed layer and no mutant or other fault"
+                )
         if purpose != "development":
             raise ManifestError(f"{kind} is a development workload")
         if randomness["contract"] != "seeded" or randomness["seeds"] != [DEVELOPMENT_SEED]:

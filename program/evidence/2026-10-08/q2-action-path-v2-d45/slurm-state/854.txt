@@ -1,0 +1,27 @@
+JobId=854 JobName=q2ap-v2-d45-final
+   UserId=kevin(1004) GroupId=kevin(1004) MCS_label=N/A
+   Priority=4294900906 Nice=0 Account=(null) QOS=(null)
+   JobState=COMPLETED Reason=None Dependency=(null)
+   Requeue=1 Restarts=0 BatchFlag=1 Reboot=0 ExitCode=0:0
+   RunTime=00:10:45 TimeLimit=01:50:00 TimeMin=N/A
+   SubmitTime=2026-10-08T12:55:01 EligibleTime=2026-10-08T12:55:01
+   AccrueTime=2026-10-08T12:55:01
+   StartTime=2026-10-08T12:55:03 EndTime=2026-10-08T13:05:48 Deadline=N/A
+   SuspendTime=None SecsPreSuspend=0 LastSchedEval=2026-10-08T12:55:03 Scheduler=Main
+   Partition=research AllocNode:Sid=fal-h100-01:499579
+   ReqNodeList=(null) ExcNodeList=(null)
+   NodeList=fal-h100-01
+   BatchHost=fal-h100-01
+   NumNodes=1 NumCPUs=8 NumTasks=1 CPUs/Task=8 ReqB:S:C:T=0:0:*:*
+   TRES=cpu=8,mem=12G,node=1,billing=8
+   Socks/Node=* NtasksPerN:B:S:C=0:0:*:* CoreSpec=*
+   MinCPUsNode=8 MinMemoryNode=12G MinTmpDiskNode=0
+   Features=(null) DelayBoot=00:00:00
+   OverSubscribe=OK Contiguous=0 Licenses=(null) Network=(null)
+   Command=/home/kevin/cotcodec-runs/q2-action-path-v2/dev/src/c74eae0aabb09fc5bc25e168758b529ede2a1410/infra/slurm/host-single-node/vm-campaign.sbatch
+   WorkDir=/home/kevin/cotcodec-runs/q2-action-path-v2/dev/src/c74eae0aabb09fc5bc25e168758b529ede2a1410
+   StdErr=/home/kevin/cotcodec-runs/q2-action-path-v2/dev/runs/slurm-854.out
+   StdIn=/dev/null
+   StdOut=/home/kevin/cotcodec-runs/q2-action-path-v2/dev/runs/slurm-854.out
+   Power=
+   

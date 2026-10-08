@@ -30,12 +30,31 @@ honest exit: all three refuters refuted, query budget spent).
   bottleneck removed without changing results (gated by reproducing v1 job 727
   to 1e-6), the 4B lane sized from a timing job of at most 0.1 GPU-h; cap 1.5
   GPU-h. Then review, freeze and operate.
-- **Q2 action path** (D40): `q2-action-path-v2` on `stage0/q2-action-path-v2`.
-  It keeps v1 except that the L0-raw prediction lists `chord_super_d` as a
-  failure, disclosed as informed by v1's C2, so v2's C2 is a reproduction test
-  on a new order seed; and the renderer takes the run root as a parameter.
-  Then freeze and run C2, C1, C3, A1-A6, the ladder on a quiet host (no other
-  Slurm job may start during a rung), A4 and A7 (about 98 VM-hours, CPU only).
+- **Q2 action path** (D40, D43, D45): `q2-action-path-v2` (+ `-inputs`,
+  `-executor`) is drafted on `stage0/q2-action-path-v2` and freeze-linted in
+  order against a scratch ledger; not frozen. Its C2 is a reproduction test on
+  its own seed (45), disclosed as informed by v1's C2, and the renderer takes
+  `--host-root`. Seed-42 development (jobs 784-787; v2 section 26) showed that
+  v1's C2 failure is in the tap's record, not in delivery (D43 corrects the
+  cause D40 and the v1 row above state): GNOME Shell grabs Super_L
+  synchronously, the next key is queued and RECORD reports it with state 0,
+  while the shell still shows the desktop. D43 (`126ff8b`) and D45 (`c74eae0`)
+  are implemented (v2 section 27): the judge reads a key event the tap
+  recorded without the guard-guaranteed Mod2 (Num Lock), after a key press it
+  recorded with Mod2 in the same window, on kind, keycode, keysym and order
+  only (otherwise its state is judged as recorded, so a grab already active
+  before an entry now fails a chord); C2, C3's equivalence comparison and C4
+  read the tap the same way; every criterion reports the events read without
+  state; the guard checks Mod2 (condition f); C2's prediction keeps v1's
+  failing set. Development at `c74eae0` (jobs 845-854, 2.4 VM-h, CPU only,
+  repeating D43's 830-839) passed the shell chords under L0-raw, failed all
+  140 chords with a dropped modifier, and repeated v1's final runs 703-708
+  with the same outcomes but one restart-only trial (job 851: an unprovoked
+  guest-server restart during an observation call). The executor addendum's
+  byte-identity rule names `c74eae0`. Next: review D45's implementation, then
+  freeze v2, `-inputs`, `-executor` and run C2, C1, C3, A1-A6, the ladder on a
+  quiet host (no other Slurm job may start during a rung), A4 and A7 (about 98
+  VM-hours, CPU only).
 - **Q2 checker mutation** (D34, D35, D38): the study is now a descriptive
   protocol (development kappa 0.066 registered, 0.575 relay-excepted, below
   0.6, so P2-P5 left the confirmatory headline). Ninth draft re-checked at 90;

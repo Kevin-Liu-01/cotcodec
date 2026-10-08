@@ -1,0 +1,79 @@
+# q2-action-path-v2 development (seed 42, never evidence; decision D43), at 126ff8b:
+# Negative case: L0-fixed with the development fault fault_drop_modifier=omit (the
+# executor drops a chord's modifiers) on the four shell-grabbed and three ungrabbed chords,
+# 5 repetitions per setting, one VM. Every trial is expected to fail.
+schema: cotcodec-vm-campaign-v1
+name: q2ap-v2-d43
+campaign_id: q2ap-v2-d43-drop-omit-v1
+experiment_id: q2-action-path-v2
+purpose: development
+preregistration:
+  path: program/preregistrations/q2-action-path-v2.md
+  status: draft
+  sha256: a39d1b4d4b56d1a59e7d07eea09e931404ea2c17d3ee43dfeb5caf40972ea923
+git_sha: 126ff8bf9c407e9bdf419f4051c0b36f40392dd3
+source:
+  host_dir: /home/kevin/cotcodec-runs/q2-action-path-v2/dev/src/126ff8bf9c407e9bdf419f4051c0b36f40392dd3
+  tree_sha256: a303c1e213b01ad7187a6d4e33a46b1a19cfd30304ff326e993c0ea18b1d86c3
+run_root: /home/kevin/cotcodec-runs/q2-action-path-v2/dev/runs
+slurm:
+  cpus: 5
+  memory_gb: 12
+  minutes: 490
+container_profile: default
+model:
+  kind: none
+  reason: development runs of the action-path executor and controls load no model
+randomness:
+  contract: seeded
+  seeds:
+  - 42
+  seed_binding:
+    flag: --seed
+vm:
+  image: happysixd/osworld-docker@sha256:0e6497a9295647cf05bf2b2af522fdd79bdeba2737595259cab310a3bcf6baa9
+  image_id: sha256:fe8d9a5e5ad6c593d059887ea2c790481b3f32dd42fa961f2441cdbbe2c70cf4
+  qcow2:
+    host_path: /home/kevin/cotcodec-runs/stage0/q2-action-path/vm/Ubuntu.qcow2
+    sha256: 6bf667a852b3c307f61d9f09c42559351f45e0607e428b4997becf534cf4d313
+    size_bytes: 24460197888
+    source_url: https://huggingface.co/datasets/xlangai/ubuntu_osworld/resolve/a5d9c3eaae98eebf6e3a0beb84e7e47cf72ae133/Ubuntu.qcow2.zip
+    archive_sha256: b795b6cd4c69b252c1b4f10150a347795555032501b60fd031751ed09b896712
+    revision: a5d9c3eaae98eebf6e3a0beb84e7e47cf72ae133
+    license: apache-2.0
+  ram_size: 4G
+  cpu_cores: 4
+  disk_size: 32G
+  memory_gb: 6
+  network: none-netns
+  guest_ip: 20.20.20.21
+  server_port: 5000
+  hmp_port: 7100
+  concurrency: 1
+runner:
+  image_id: sha256:ac2b5815bcc2ed193116aa2d4bdee773b5a457c545453a6c91956768634a6002
+  memory_gb: 1
+  cpus: 1
+workload:
+  kind: suite-development
+  layer: L0-fixed
+  cells:
+  - chord_super_d
+  - chord_alt_f4
+  - chord_alt_tab
+  - chord_ctrl_alt_shift_r
+  - chord_ctrl_c
+  - chord_shift_tab
+  - chord_ctrl_shift_t
+  reps: 5
+  settings:
+  - screenshot
+  - screenshot+a11y
+  session_trials: 60
+  boot_timeout_s: 300
+  settle_timeout_s: 60
+  cells_sha256: a79073a2f5e6e7d7e109b14d50fb4c1e2791f856504c32cd855911e726a95c95
+  sessions: 2
+  trials: 70
+  max_trial_s: 60
+  fault_drop_modifier: omit

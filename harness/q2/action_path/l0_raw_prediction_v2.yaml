@@ -1,0 +1,191 @@
+# Predicted outcome of the L0-raw control (validity control C2) of q2-action-path-v2
+# (decisions D40 and D43). This is v1's prediction (`l0_raw_prediction.yaml`, frozen with
+# q2-action-path-v1 and written from code reading before any L0-raw trial existed), and its
+# failing set and predicted passes are v1's. chord_super_d stays a predicted pass, but its
+# reason is NOT a priori. v1 predicted it to pass and it failed 5 of 5 in v1's C2 (job 768,
+# seed 42, 2026-10-08): the XRecord tap records the d press, queued under GNOME Shell's
+# synchronous grab, with core state 0 (q2-action-path-v2, section 26). Decision D43, taken
+# after that run, has v2's judge read a key event the tap records without the guard's lock
+# bit (Mod2) on its kind, keycode, keysym and order only (decision D45: only when a key press
+# recorded with Mod2 comes before it in its window), and under that rule the same records
+# pass (section 27). The entry's prediction is therefore informed by v1's C2 and by
+# seed-42 development, and v2's C2 is a reproduction test of the L0-raw failing set on a new
+# order seed (45), not an a-priori prediction test; v1's C2 is the a-priori result (one
+# unpredicted failure, chord_super_d). C2 passes only if the observed failing set equals
+# predicted_fail exactly; a deviation in either direction invalidates the suite for
+# q2-action-path-v2 (preregistration section 8). This file and the translator
+# `harness/q2/action_path/l0_raw.py` (unchanged from v1) are frozen by their SHA-256 in the
+# v2 main preregistration. Everything below is v1's text except the status line, the three
+# basis notes v1_c2, shell_grab and d43_judge (which also states decision D45), and
+# chord_super_d's reason.
+#
+# v1's header follows.
+#
+# Predicted outcome of the L0-raw control (validity control C2), written from
+# code reading before any L0-raw trial exists. C2 passes only if the observed
+# failing set equals predicted_fail exactly; a deviation in either direction
+# invalidates the suite for q2-action-path-v1 (preregistration section 8). The
+# file and the translator `harness/q2/action_path/l0_raw.py` are frozen by their
+# SHA-256 in the main preregistration, so neither can change after C2 is seen.
+#
+# L0-raw: each IR action becomes the natural PyAutoGUI 0.9.54 call (one
+# DesktopEnv.step per IR action, built by l0_raw.py) and is sent unchanged
+# through OSWorld b138d348's DesktopEnv.step -> PythonController.execute_python_command,
+# i.e. `python -c <PYAUTOGUI_PKGS_PREFIX + command>` posted to the guest's
+# /execute with shell=False. Strings are embedded with json.dumps(ensure_ascii=False),
+# the convention of OSWorld's bfd62bdc Qwen3.5 agent.
+#
+# Corrected before the freeze (review of 2026-10-07): the draft passed the IR's
+# integer button to PyAutoGUI. PyAutoGUI 0.9.54 _normalizeButton runs
+# `button = button.lower()` before any range check, so every integer button
+# raises AttributeError; buttons 1-3 now use PyAutoGUI's own names.
+schema: cotcodec-q2-l0-raw-prediction-v1
+status: frozen with q2-action-path-v2 (v1's prediction; chord_super_d's reason informed by v1's C2 and D43)
+basis:
+  osworld: >-
+    b138d348256078fa634fc3b73567a7337c793e6b desktop_env/controllers/python.py:
+    PYAUTOGUI_PKGS_PREFIX sets FAILSAFE=False and patches isShiftCharacter with a
+    Linux shift set that excludes '<'; execute_python_command posts
+    ["python", "-c", ...] with "shell": false.
+  pyautogui: >-
+    PyAutoGUI 0.9.54 sdist (sha256 dd1d29e8fd118941cb193f74df57e5c6ff8e9253b99c7b04f39cfc69f3ae04b2),
+    pyautogui/_pyautogui_x11.py: keyboardMapping has no entry for non-ASCII characters or
+    for 'kp_enter'; _keyDown returns silently for unmapped keys; BUTTON_NAME_MAPPING
+    covers buttons 1-7 only; _vscroll uses 4 (up) / 5 (down) and _hscroll 6 (left) / 7 (right).
+    pyautogui/__init__.py: click, mouseDown, mouseUp, doubleClick and tripleClick call
+    _normalizeButton, whose first statement is `button = button.lower()`, so an int button
+    raises AttributeError before any event is sent; 'left', 'middle', 'right' pass.
+  buttons: >-
+    'left', 'middle' and 'right' pass _normalizeButton and map to X buttons 1, 2 and 3
+    through BUTTON_NAME_MAPPING, so every click, drag and hold on buttons 1-3 is predicted
+    to pass; only the two entries on buttons 8 and 9 are predicted to fail.
+  python_xlib: >-
+    0.33 in the guest; Display.keysym_to_keycode returns the keycode with the lowest
+    (index, keycode) pair.
+  guest_facts: >-
+    Boot report (VM campaign job 374, cycle 0): Ubuntu 22.04.3, Xorg, GNOME Shell 42.9,
+    xkb rules evdev, model pc105, layout us,us; xmodmap keycode 94 = less greater, keycode
+    59 = comma less, keycode 60 = period greater; pyautogui 0.9.54; /usr/bin/python serves
+    /execute.
+  v1_c2: >-
+    q2-action-path-v1's C2 (job 768, L0-raw, 100 entries x 5, seed-42 shuffle, screenshot
+    setting): every v1 prediction held except chord_super_d, which failed 5 of 5 on its
+    R-dev projection. Its tap windows show Super_L KeyPress with state 16 (Mod2, the NumLock
+    baseline), then the d KeyPress 0 to 1 ms later (server time) with state 0, and the d and
+    Super_L releases with state 0 as well.
+  shell_grab: >-
+    GNOME Shell 42.9 (mutter 42.9, src/core/keybindings.c) grabs its overlay key Super_L and
+    every keybinding (Super+d is show-desktop) with XIGrabKeycode in XIGrabModeSync, so the X
+    server freezes the keyboard when the grab activates and queues later key events until
+    the shell calls XIAllowEvents; on the overlay key it answers XISyncDevice. The X server's
+    RECORD extension reports a queued event when it is queued (dix/events.c EnqueueEvent),
+    before its state is computed (Xi/exevents.c ProcessDeviceEvent), and not again when the
+    queue is replayed, so the tap records it with core state 0.
+  d43_judge: >-
+    Decisions D43 and D45 (after v1's C2): the entry guard guarantees Num Lock locked, Mod2
+    in every processed key event (conditions b and f), so a key event the tap records
+    without Mod2 after a key press it records with Mod2 in the same window (decision D45's
+    narrowing) is read as recorded while queued under a synchronous grab that activated after
+    that processed press (in development, always a shell grab its entry's own press of the
+    grab key activated; what the judge still does not check is in q2-action-path-v2, section
+    27, case 6); v2's judge (harness/q2/action_path/verdict.py, modifier_state_observable)
+    reads such an event on its kind, keycode, keysym and order only, and C2's reading of the
+    tap window leaves its state out too (acceptance.py, c2_projection). A key event without
+    Mod2 that no such press precedes, as under a synchronous grab already active before the
+    entry's first key, is judged on its state as recorded. Every other event, and every event
+    on the probe's channel, is judged as in v1.
+translation:
+  module: harness/q2/action_path/l0_raw.py
+  move: pyautogui.moveTo(x, y)
+  click: optional keyDown(mod) for each modifier; pyautogui.click(x, y, clicks=n, button=NAME) (tripleClick(x, y, button=NAME) for n=3); keyUp in reverse; one step
+  button_down: pyautogui.mouseDown(x, y, button=NAME)
+  button_up: pyautogui.mouseUp(x, y, button=NAME)
+  drag: keyDown(mods); moveTo(p0) unless from_current; mouseDown(button=NAME); moveTo(p_i, duration=d/(k-1)) for each later point; mouseUp(button=NAME); keyUp(mods); one step
+  scroll: keyDown(mods); pyautogui.scroll(-wheel_y, x, y) and/or pyautogui.hscroll(wheel_x, x, y); keyUp(mods); one step
+  key: pyautogui.press(name) for one key, pyautogui.hotkey(*names) for a chord
+  key_down: pyautogui.keyDown(name) per key
+  key_up: pyautogui.keyUp(name) per key, in the listed order
+  type: pyautogui.typewrite(text)
+  wait: time.sleep(ms / 1000)
+button_names:
+  # IR button -> the PyAutoGUI button argument (NAME above). PyAutoGUI names
+  # buttons 1-3 only; 8 and 9 have no name and are passed as the integer.
+  1: left
+  2: middle
+  3: right
+  8: 8
+  9: 9
+key_names:
+  # IR keysym -> the PyAutoGUI name sent. Where PyAutoGUI has no name, the
+  # lowercase keysym name is sent unchanged, as an upstream harness would.
+  Return: enter
+  Escape: esc
+  Tab: tab
+  BackSpace: backspace
+  Delete: delete
+  Insert: insert
+  Home: home
+  End: end
+  Prior: pageup
+  Next: pagedown
+  Up: up
+  Down: down
+  Left: left
+  Right: right
+  space: space
+  Control_L: ctrl
+  Shift_L: shift
+  Alt_L: alt
+  Super_L: winleft
+  Menu: apps
+  KP_Add: add
+  KP_Enter: kp_enter
+  Caps_Lock: capslock
+  F1: f1
+  F4: f4
+  F5: f5
+  F9: f9
+  F12: f12
+predicted_fail:
+  - type_unicode_bmp
+  - type_emoji
+  - type_rtl
+  - type_combining
+  - type_emoji_zwj
+  - key_kp_enter
+  - click_button_back
+  - click_button_forward
+predicted_unsupported: []
+predicted_pass_notable:
+  - type_shell_hostile
+  - type_symbols_shifted
+  - key_menu
+  - key_kp_add
+  - caps_lock_roundtrip
+  - chord_super_d
+reasons:
+  type_unicode_bmp: every non-ASCII code point is absent from keyboardMapping and is skipped silently
+  type_emoji: astral code points are absent from keyboardMapping and are skipped silently
+  type_rtl: Hebrew and Arabic code points are skipped; only the spaces are typed
+  type_combining: the combining marks U+0301, U+0308 and U+0303 are skipped
+  type_emoji_zwj: emoji and U+200D are skipped
+  key_kp_enter: "PyAutoGUI has no KP_Enter name; 'kp_enter' is unmapped and dropped without an event"
+  click_button_back: "PyAutoGUI has no name for button 8, so the int is passed; _normalizeButton calls 8.lower(), raises AttributeError and nothing is sent"
+  click_button_forward: "PyAutoGUI has no name for button 9, so the int is passed; _normalizeButton calls 9.lower(), raises AttributeError and nothing is sent"
+  type_shell_hostile: /execute runs an argv with shell=False, so no shell expansion can occur
+  type_symbols_shifted: "with the b138d348 Linux shift set, '<' is typed unshifted on keycode 94 (less), '>' shifted on keycode 60"
+  key_menu: "'apps' maps to the Menu keysym (keycode 135)"
+  key_kp_add: "'add' maps to KP_Add (keycode 86)"
+  caps_lock_roundtrip: "'capslock' maps to Caps_Lock (keycode 66); two presses toggle the lock on and off"
+  chord_super_d: >-
+    Informed by v1's C2 (job 768), decision D43 and seed-42 development, not a priori. 'winleft'
+    maps to Super_L (keycode 133), and pyautogui.hotkey('winleft', 'd') presses Super_L and d
+    with no interval and no hold, so the d press reaches X within about 2 ms of the Super_L
+    press. The shell's synchronous grab on Super_L (its overlay key) has frozen the keyboard
+    by then, so the d press, the d release and the Super_L release are queued, and the XRecord
+    tap records each with core state 0, without Mod2 (and so without Mod4), after the Super_L
+    press, which it records with Mod2 (processed; decision D45). The shell itself
+    received Super+d: it showed the desktop and no key reached the probe, as under L0-fixed.
+    Under D43 the judge reads those three events on kind, keycode, keysym and order, which
+    the tap records correctly (Super_L press, d press, d release, Super_L release), so the
+    entry passes. v1's C2 records and job 784's, re-judged with v2's judge, pass 15 of 15.

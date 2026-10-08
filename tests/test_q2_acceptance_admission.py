@@ -1,7 +1,8 @@
 """Acceptance admission (preregistration sections 7-10, decision 26): ledger, seeds, ladder.
 
 Acceptance and scored-control campaigns are admitted only when the ledger freezes the main
-preregistration and the addenda they need; seeds 43 and 44 are refused for everything else.
+preregistration and the addenda they need; seeds 43 and 44 are refused for everything else,
+and seed 45 for everything but C2 (q2-action-path-v2, decision D40).
 These tests build a ledger with ``scripts/preregister.py`` in a temporary tree, so the
 admitted path is exercised before the real freeze, and check that the repository's own
 ledger still refuses every acceptance campaign.
@@ -39,10 +40,11 @@ from tests.test_vm_campaign import base_manifest
 ROOT = Path(__file__).resolve().parents[1]
 PREREGS = ROOT / "program/preregistrations"
 FILES = {
-    PREREG_ID: "program/preregistrations/q2-action-path-v1.md",
-    ADDENDA_IDS["inputs"]: "program/preregistrations/q2-action-path-v1-inputs.md",
-    ADDENDA_IDS["executor"]: "program/preregistrations/q2-action-path-v1-executor.md",
+    PREREG_ID: "program/preregistrations/q2-action-path-v2.md",
+    ADDENDA_IDS["inputs"]: "program/preregistrations/q2-action-path-v2-inputs.md",
+    ADDENDA_IDS["executor"]: "program/preregistrations/q2-action-path-v2-executor.md",
 }
+C2_SEED = 45  # decision D40: C2's own order seed
 CELLS = json.loads((ROOT / "harness/q2/action_path/suite_cells.json").read_text())
 VOLUME = json.loads((ROOT / "harness/q2/action_path/volume_plan.json").read_text())
 
@@ -129,8 +131,10 @@ def _ledger(tree: Path, manifest: dict) -> dict:
 
 def test_the_repository_ledger_admits_acceptance_only_after_the_freeze():
     """Before the owner's freeze the real ledger refuses every acceptance
-    campaign; once the three registrations are frozen (2026-10-08, rows 8-10)
-    they are frozen together and the real ledger admits A1 at seeds 43 and 44."""
+    campaign; once the three registrations are frozen (v1's were, 2026-10-08,
+    rows 8-10; this file now checks v2's, decision D40) they are frozen
+    together and the real ledger admits A1 at seeds 43 and 44. v1's frozen
+    rows admit no v2 campaign."""
     rows = [json.loads(line) for line in (PREREGS / "ledger.jsonl").read_text().splitlines()]
     frozen = {row["experiment_id"] for row in rows} & set(FILES)
     for seed in (43, 44):
@@ -166,7 +170,9 @@ def test_admission_needs_every_addendum_and_matching_digests(frozen_tree):
     with pytest.raises(ManifestError, match="disagree"):
         validate_manifest(other, view)
     # C2 needs only the inputs addendum.
-    c2 = acceptance("C2", seed=42, layer="L0-raw", settings=["screenshot"], sessions=9, trials=500)
+    c2 = acceptance(
+        "C2", seed=C2_SEED, layer="L0-raw", settings=["screenshot"], sessions=9, trials=500
+    )
     c2_view = copy.deepcopy(_ledger(frozen_tree, c2))
     del c2_view["rows"][ADDENDA_IDS["executor"]]
     validate_manifest(c2, c2_view)
@@ -341,9 +347,10 @@ def test_development_may_run_concurrent_vms_only_for_the_suite():
     )
     with pytest.raises(ManifestError, match="one VM at a time"):
         validate_manifest(canary)
-    manifest["randomness"]["seeds"] = [43]
-    with pytest.raises(ManifestError, match="reserved for acceptance"):
-        validate_manifest(manifest)
+    for seed in (43, 44, C2_SEED):
+        manifest["randomness"]["seeds"] = [seed]
+        with pytest.raises(ManifestError, match="reserved for scored campaigns"):
+            validate_manifest(manifest)
 
 
 # --- fix pass after the 2026-10-07 review of 2b492cd ---------------------------------------------
@@ -366,13 +373,17 @@ def test_admission_refuses_files_no_frozen_table_pins(frozen_tree):
     with pytest.raises(ManifestError, match="files no frozen table pins"):
         validate_manifest(manifest, _ledger(frozen_tree, manifest))
     # C2 needs only the main registration and the inputs addendum; their tables still hold.
-    c2 = acceptance("C2", seed=42, layer="L0-raw", settings=["screenshot"], sessions=9, trials=500)
+    c2 = acceptance(
+        "C2", seed=C2_SEED, layer="L0-raw", settings=["screenshot"], sessions=9, trials=500
+    )
     validate_manifest(c2, _ledger(frozen_tree, c2))
 
 
 def test_c2_is_admitted_before_the_executor_freeze_with_the_inputs_addendum_only(tmp_path):
     tree = export_tree(tmp_path, freeze=(PREREG_ID, ADDENDA_IDS["inputs"]))
-    c2 = acceptance("C2", seed=42, layer="L0-raw", settings=["screenshot"], sessions=9, trials=500)
+    c2 = acceptance(
+        "C2", seed=C2_SEED, layer="L0-raw", settings=["screenshot"], sessions=9, trials=500
+    )
     del c2["addenda"]["executor"]
     validate_manifest(c2, _ledger(tree, c2))
     a1 = acceptance()
@@ -384,7 +395,7 @@ def test_c2_is_admitted_before_the_executor_freeze_with_the_inputs_addendum_only
 def test_a_repair_attempt_runs_under_its_own_executor_addendum(tmp_path):
     tree = export_tree(tmp_path)
     experiment, path = executor_addendum(2)
-    assert experiment == "q2-action-path-v1-executor-a2"
+    assert experiment == "q2-action-path-v2-executor-a2"
     repair = acceptance(attempt=2)
     with pytest.raises(ManifestError, match="runs under"):
         validate_manifest(repair, _ledger(tree, repair))
@@ -397,7 +408,7 @@ def test_a_repair_attempt_runs_under_its_own_executor_addendum(tmp_path):
     preregister.freeze(tree / path, experiment, ledger=ledger, root=tree)
     repair["addenda"]["executor"] = {"path": path, "sha256": _sha(tree / path)}
     validate_manifest(repair, _ledger(tree, repair))
-    # Validity controls are never repaired within v1 (section 11).
+    # Validity controls are never repaired within the suite version (section 11).
     c3 = acceptance("C3", seed=42, settings=["screenshot"], reps=1, mutant="none", attempt=2)
     with pytest.raises(ManifestError, match="no repair attempts"):
         validate_manifest(c3, _ledger(tree, c3))
@@ -448,3 +459,33 @@ def test_the_guest_server_fault_hook_is_development_only(frozen_tree):
         a1 = acceptance(**{hook: 0})
         with pytest.raises(ManifestError, match="unknown"):
             validate_manifest(a1, _ledger(frozen_tree, a1))
+
+
+def test_c2_runs_its_own_seed_and_no_other_campaign_does(frozen_tree):
+    """Decision D40: v2's C2 runs the seed-45 order, which no v1 campaign or development run
+    used; seed 42 (v1's C2 order) is refused for C2, and seed 45 for every other campaign."""
+    from harness.q2.vm import manifest as lane
+
+    assert lane.C2_SEED == order.C2_SEED == C2_SEED
+    assert lane.CRITERIA["C2"][1] == (C2_SEED,)
+    assert all(C2_SEED not in spec[1] for name, spec in lane.CRITERIA.items() if name != "C2")
+    shape = {"layer": "L0-raw", "settings": ["screenshot"], "sessions": 9, "trials": 500}
+    c2 = acceptance("C2", seed=C2_SEED, **shape)
+    validate_manifest(c2, _ledger(frozen_tree, c2))
+    old = acceptance("C2", seed=42, **shape)
+    with pytest.raises(ManifestError, match="layer or seed"):
+        validate_manifest(old, _ledger(frozen_tree, old))
+    for criterion, changes in (
+        ("A1", {}),
+        ("C1", {"layer": "H-OSW-up", "settings": ["screenshot"], "sessions": 2, "trials": 70}),
+        ("C3", {"settings": ["screenshot"], "reps": 1, "mutant": "none"}),
+    ):
+        other = acceptance(criterion, seed=C2_SEED, **changes)
+        with pytest.raises(ManifestError, match="layer or seed"):
+            validate_manifest(other, _ledger(frozen_tree, other))
+    plan = driver.acceptance_plan(c2, CELLS, VOLUME)
+    assert len(plan) == 9 and sum(len(s["trials"]) for s in plan) == 500
+    assert plan == order.plan(
+        [c["id"] for c in CELLS["layers"]["L0-fixed"]], C2_SEED, 5, ["screenshot"], criterion="C2"
+    )
+    assert plan != order.plan([c["id"] for c in CELLS["layers"]["L0-fixed"]], 42, 5, ["screenshot"])

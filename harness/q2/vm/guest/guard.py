@@ -7,6 +7,12 @@ Preregistration section 6.2. Before and after every entry the guard checks:
 (c) the probe window is mapped, focused and covers 1920x1080 at (0, 0);
 (d) no GNOME screen recording is running (no file under the screencast
     directory grows over ``GROWTH_WINDOW_S``);
+(f) Num Lock's modifier, Mod2 (``NUMLOCK_MOD``), is in the logical modifier
+    state (``QueryPointer``'s mask; with no key pressed, (a), a lock or latch);
+    with (b), whose baseline has the Num Lock LED on in every session, Mod2 is
+    locked (decision D43: the judge reads a key event the XRecord tap recorded
+    without Mod2 as recorded while queued under a grab, so the guard must
+    guarantee that every processed key event inside an entry carries it);
 
 and before the entry, outside its window, it moves the pointer to the
 catalog's ``guard.park_pointer`` (e), so an entry that moves the pointer always
@@ -60,6 +66,7 @@ SCREENCAST_DIRS = ("~/Videos/Screencasts", "~/Videos")
 SCREENCAST_SUFFIXES = (".webm", ".mp4", ".mkv")
 PARK_SETTLE_S = 0.03
 CAPS_LED_BIT, NUM_LED_BIT = 1, 2
+NUMLOCK_MOD = 0x10  # Mod2, the modifier Num_Lock is mapped to (the probe's numlock_mask)
 CAPS_LOCK, NUM_LOCK, ESCAPE = 0xFFE5, 0xFF7F, 0xFF1B
 SCREENCAST_CHORD = (0xFFE3, 0xFFE9, 0xFFE1, 0x72)  # Control_L, Alt_L, Shift_L, r
 
@@ -86,6 +93,8 @@ def violations(check, baseline_led):
         out.append("c")
     if (check.get("screencast") or {}).get("growing"):
         out.append("d")
+    if not int(check.get("mods") or 0) & NUMLOCK_MOD:
+        out.append("f")
     return out
 
 
@@ -168,6 +177,7 @@ class Guard:
         return {
             "keys": keys,
             "buttons": pressed_buttons(pointer.mask),
+            "mods": pointer.mask & 0xFF,  # the logical modifier state (condition f)
             "led_mask": self.d.get_keyboard_control().led_mask,
             "pointer": [pointer.root_x, pointer.root_y],
             "probe": probe if probe and probe.get("ok") else {"absent": True},

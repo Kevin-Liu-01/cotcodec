@@ -1,0 +1,316 @@
+{
+  "campaign_id": "q2ap-v2-d43-canary-v1",
+  "cpusets": {
+    "allocated": "86-93",
+    "runner": "90",
+    "vm": "86-89",
+    "vm_mems": "0",
+    "vm_numa_nodes": [
+      0
+    ]
+  },
+  "dangling_volumes_after": 0,
+  "dangling_volumes_before": 0,
+  "docker": {
+    "cgroup_version": "2",
+    "default_runtime": "runc",
+    "runtimes": [
+      "io.containerd.runc.v2",
+      "runc"
+    ],
+    "server_version": "28.3.1"
+  },
+  "driver_python": "3.10.12",
+  "finished_at": 1791458546.4443502,
+  "git_sha": "126ff8bf9c407e9bdf419f4051c0b36f40392dd3",
+  "host_end": {
+    "containers_ours": 0,
+    "containers_running_total": 3,
+    "loadavg": [
+      "4.75",
+      "9.10",
+      "7.59"
+    ],
+    "squeue_foreign": [
+      [
+        "835",
+        "kevin",
+        "RUNNING",
+        "8",
+        "N/A",
+        "q2ap-v2-d43-final"
+      ]
+    ],
+    "t": 1791458546.4194748
+  },
+  "host_start": {
+    "containers_ours": 0,
+    "containers_running_total": 35,
+    "loadavg": [
+      "3.00",
+      "1.06",
+      "1.76"
+    ],
+    "squeue_foreign": [
+      [
+        "830",
+        "kevin",
+        "RUNNING",
+        "6",
+        "N/A",
+        "q2ap-v2-d43"
+      ],
+      [
+        "831",
+        "kevin",
+        "RUNNING",
+        "36",
+        "N/A",
+        "q2ap-v2-d43"
+      ],
+      [
+        "832",
+        "kevin",
+        "RUNNING",
+        "6",
+        "N/A",
+        "q2ap-v2-d43"
+      ],
+      [
+        "833",
+        "kevin",
+        "RUNNING",
+        "6",
+        "N/A",
+        "q2ap-v2-d43"
+      ],
+      [
+        "834",
+        "kevin",
+        "RUNNING",
+        "8",
+        "N/A",
+        "q2ap-v2-d43-final"
+      ],
+      [
+        "835",
+        "kevin",
+        "RUNNING",
+        "8",
+        "N/A",
+        "q2ap-v2-d43-final"
+      ],
+      [
+        "836",
+        "kevin",
+        "RUNNING",
+        "36",
+        "N/A",
+        "q2ap-v2-d43-final"
+      ],
+      [
+        "837",
+        "kevin",
+        "RUNNING",
+        "8",
+        "N/A",
+        "q2ap-v2-d43-final"
+      ],
+      [
+        "838",
+        "kevin",
+        "RUNNING",
+        "8",
+        "N/A",
+        "q2ap-v2-d43-final"
+      ]
+    ],
+    "t": 1791457921.7596374
+  },
+  "job_id": "839",
+  "labelled_containers_left": [],
+  "manifest_sha256": "7cc175086e2ff4cf7ea8d1da3b09f9c47b033e9b577d48b9aa1a49f982ffa43b",
+  "qcow2_info": {
+    "actual-size": 24460201984,
+    "format": "qcow2",
+    "virtual-size": 53687091200
+  },
+  "qcow2_sha256_after": "6bf667a852b3c307f61d9f09c42559351f45e0607e428b4997becf534cf4d313",
+  "qcow2_sha256_before": "6bf667a852b3c307f61d9f09c42559351f45e0607e428b4997becf534cf4d313",
+  "qcow2_unchanged": true,
+  "schema": "cotcodec-vm-campaign-receipt-v1",
+  "session_plan_sha256": "2a2109b13e5979c912791533708ea094c978025eb4b38eda92fc9f0391943d19",
+  "source_tree_sha256": "a303c1e213b01ad7187a6d4e33a46b1a19cfd30304ff326e993c0ea18b1d86c3",
+  "started_at": 1791457902.4389527,
+  "summary": {
+    "boot_s": {
+      "max": 19.963,
+      "n": 1,
+      "p50": 19.963,
+      "p95": 19.963
+    },
+    "boots_ok": 1,
+    "containers_removed_all": true,
+    "cycles": 1,
+    "distinct_boot_ids": 1,
+    "errors": [],
+    "hmp_cycles_all_ok": 0,
+    "hmp_step_pass_counts": {},
+    "infra_gates_pass": true,
+    "latency_s": {
+      "accessibility_s": {
+        "n": 0,
+        "p50": null,
+        "p95": null
+      },
+      "execute_noop_s": {
+        "n": 0,
+        "p50": null,
+        "p95": null
+      },
+      "screenshot_s": {
+        "n": 0,
+        "p50": null,
+        "p95": null
+      }
+    },
+    "leaked_volumes": [],
+    "nat_modes": [
+      "nat"
+    ],
+    "no_gpu_all": true,
+    "no_published_ports_all": true,
+    "sentinel_pristine": 0,
+    "sentinel_readback_dconf": 0,
+    "sentinel_readback_file": 0,
+    "sentinel_readback_gsettings": 0,
+    "sentinel_reset_checks": 0,
+    "sessions": {
+      "accessibility_calls": 0,
+      "cell_counts": {
+        "FAIL": 0,
+        "FLAKY": 0,
+        "PASS": 60
+      },
+      "cells": {
+        "screenshot|chrome:ctrl_home_insert": "PASS",
+        "screenshot|chrome:drag_select_word": "PASS",
+        "screenshot|chrome:key_kp_enter": "PASS",
+        "screenshot|chrome:select_all_copy_end_paste": "PASS",
+        "screenshot|chrome:triple_click_line": "PASS",
+        "screenshot|chrome:type_combining": "PASS",
+        "screenshot|chrome:type_digits": "PASS",
+        "screenshot|chrome:type_emoji": "PASS",
+        "screenshot|chrome:type_long_200": "PASS",
+        "screenshot|chrome:type_multiline_tabs": "PASS",
+        "screenshot|chrome:type_plain": "PASS",
+        "screenshot|chrome:type_rtl": "PASS",
+        "screenshot|chrome:type_spaces": "PASS",
+        "screenshot|chrome:type_symbols_shifted": "PASS",
+        "screenshot|chrome:type_unicode_bmp": "PASS",
+        "screenshot|chrome:type_with_correction": "PASS",
+        "screenshot|terminal:key_kp_enter": "PASS",
+        "screenshot|terminal:type_combining": "PASS",
+        "screenshot|terminal:type_digits": "PASS",
+        "screenshot|terminal:type_emoji": "PASS",
+        "screenshot|terminal:type_long_200": "PASS",
+        "screenshot|terminal:type_multiline_tabs": "PASS",
+        "screenshot|terminal:type_plain": "PASS",
+        "screenshot|terminal:type_rtl": "PASS",
+        "screenshot|terminal:type_spaces": "PASS",
+        "screenshot|terminal:type_symbols_shifted": "PASS",
+        "screenshot|terminal:type_unicode_bmp": "PASS",
+        "screenshot|terminal:type_with_correction": "PASS",
+        "screenshot|vscode:ctrl_home_insert": "PASS",
+        "screenshot|vscode:drag_select_word": "PASS",
+        "screenshot|vscode:key_kp_enter": "PASS",
+        "screenshot|vscode:select_all_copy_end_paste": "PASS",
+        "screenshot|vscode:triple_click_line": "PASS",
+        "screenshot|vscode:type_combining": "PASS",
+        "screenshot|vscode:type_digits": "PASS",
+        "screenshot|vscode:type_emoji": "PASS",
+        "screenshot|vscode:type_long_200": "PASS",
+        "screenshot|vscode:type_multiline_tabs": "PASS",
+        "screenshot|vscode:type_plain": "PASS",
+        "screenshot|vscode:type_rtl": "PASS",
+        "screenshot|vscode:type_spaces": "PASS",
+        "screenshot|vscode:type_symbols_shifted": "PASS",
+        "screenshot|vscode:type_unicode_bmp": "PASS",
+        "screenshot|vscode:type_with_correction": "PASS",
+        "screenshot|writer:ctrl_home_insert": "PASS",
+        "screenshot|writer:drag_select_word": "PASS",
+        "screenshot|writer:key_kp_enter": "PASS",
+        "screenshot|writer:select_all_copy_end_paste": "PASS",
+        "screenshot|writer:triple_click_line": "PASS",
+        "screenshot|writer:type_combining": "PASS",
+        "screenshot|writer:type_digits": "PASS",
+        "screenshot|writer:type_emoji": "PASS",
+        "screenshot|writer:type_long_200": "PASS",
+        "screenshot|writer:type_multiline_tabs": "PASS",
+        "screenshot|writer:type_plain": "PASS",
+        "screenshot|writer:type_rtl": "PASS",
+        "screenshot|writer:type_spaces": "PASS",
+        "screenshot|writer:type_symbols_shifted": "PASS",
+        "screenshot|writer:type_unicode_bmp": "PASS",
+        "screenshot|writer:type_with_correction": "PASS"
+      },
+      "guest_server_restarts": 0,
+      "infra_failures": {},
+      "observation_retries": {},
+      "runner_errors": [],
+      "sessions": [
+        {
+          "accessibility_calls": 0,
+          "cycle": 0,
+          "guest_server_restarts": 0,
+          "passed": 60,
+          "probe_relaunches": null,
+          "setting": "screenshot",
+          "tap_relaunches": null,
+          "trials": 60,
+          "wall_s": 607.14
+        }
+      ],
+      "step_s": {
+        "n": 0,
+        "p50": null,
+        "p95": null
+      },
+      "trial_s": {
+        "n": 60,
+        "p50": 8.377,
+        "p95": 17.766,
+        "sum": 582.04
+      }
+    },
+    "settled_s": {
+      "n": 1,
+      "p50": 25.338,
+      "p95": 25.338
+    },
+    "tap_selftest_ok": 0
+  },
+  "verdicts": [
+    {
+      "boot_id": "e924ee17-c479-4bda-956b-cd69b7b6cc9f",
+      "boot_s": 19.963,
+      "booted": true,
+      "container_removed": true,
+      "cycle": 0,
+      "error": null,
+      "hmp_ok": null,
+      "hmp_steps": {},
+      "leaked_volumes": [],
+      "nat_mode": "nat",
+      "no_gpu": true,
+      "no_published_ports": true,
+      "sentinel_leftovers": [],
+      "sentinel_pristine": true,
+      "sentinel_readback_dconf": false,
+      "sentinel_readback_file": false,
+      "sentinel_readback_gsettings": false,
+      "settled_s": 25.338,
+      "tap_selftest_ok": null
+    }
+  ]
+}

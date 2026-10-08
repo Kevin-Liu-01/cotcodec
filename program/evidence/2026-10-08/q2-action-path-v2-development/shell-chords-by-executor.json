@@ -1,0 +1,153 @@
+{
+ "shell_grabbed": {
+  "chord_super_d": {
+   "L0-raw": {
+    "trials": 15,
+    "pass": 0,
+    "state_after_first_key": {
+     "P0 R0 R0": 15
+    }
+   },
+   "L0-fixed": {
+    "trials": 30,
+    "pass": 30,
+    "state_after_first_key": {
+     "P80 R80 R80": 30
+    }
+   }
+  },
+  "chord_alt_f4": {
+   "L0-raw": {
+    "trials": 15,
+    "pass": 0,
+    "state_after_first_key": {
+     "P24 R0 R24": 1,
+     "P24 R0 R0": 14
+    }
+   },
+   "L0-fixed": {
+    "trials": 30,
+    "pass": 30,
+    "state_after_first_key": {
+     "P24 R24 R24": 30
+    }
+   }
+  },
+  "chord_alt_tab": {
+   "L0-raw": {
+    "trials": 15,
+    "pass": 0,
+    "state_after_first_key": {
+     "P24 R0 R0": 15
+    }
+   },
+   "L0-fixed": {
+    "trials": 30,
+    "pass": 30,
+    "state_after_first_key": {
+     "P24 R24 R24": 30
+    }
+   }
+  },
+  "chord_ctrl_alt_shift_r": {
+   "L0-raw": {
+    "trials": 15,
+    "pass": 0,
+    "state_after_first_key": {
+     "P20 P28 P29 R0 R0 R0 R0": 15
+    }
+   },
+   "L0-fixed": {
+    "trials": 30,
+    "pass": 30,
+    "state_after_first_key": {
+     "P20 P28 P29 R29 R29 R28 R20": 30
+    }
+   }
+  }
+ },
+ "other_chords": {
+  "chord_ctrl_a": {
+   "L0-raw": {
+    "trials": 15,
+    "pass": 15,
+    "state_after_first_key": {
+     "P20 R20 R20": 15
+    }
+   }
+  },
+  "chord_ctrl_alone": {
+   "L0-raw": {
+    "trials": 15,
+    "pass": 15,
+    "state_after_first_key": {
+     "R20": 15
+    }
+   }
+  },
+  "chord_ctrl_c": {
+   "L0-raw": {
+    "trials": 15,
+    "pass": 15,
+    "state_after_first_key": {
+     "P20 R20 R20": 15
+    }
+   }
+  },
+  "chord_ctrl_home": {
+   "L0-raw": {
+    "trials": 15,
+    "pass": 15,
+    "state_after_first_key": {
+     "P20 R20 R20": 15
+    }
+   }
+  },
+  "chord_ctrl_shift_arrow": {
+   "L0-raw": {
+    "trials": 15,
+    "pass": 15,
+    "state_after_first_key": {
+     "P20 P21 R21 R21 R20": 15
+    }
+   }
+  },
+  "chord_ctrl_shift_t": {
+   "L0-raw": {
+    "trials": 15,
+    "pass": 15,
+    "state_after_first_key": {
+     "P20 P21 R21 R21 R20": 15
+    }
+   }
+  },
+  "chord_shift_alone": {
+   "L0-raw": {
+    "trials": 15,
+    "pass": 15,
+    "state_after_first_key": {
+     "R17": 15
+    }
+   }
+  },
+  "chord_shift_arrow_left": {
+   "L0-raw": {
+    "trials": 15,
+    "pass": 15,
+    "state_after_first_key": {
+     "P17 R17 R17": 15
+    }
+   }
+  },
+  "chord_shift_tab": {
+   "L0-raw": {
+    "trials": 15,
+    "pass": 15,
+    "state_after_first_key": {
+     "P17 R17 R17": 15
+    }
+   }
+  }
+ },
+ "note": "P/R = key press/release; the number is its core state (16 = Mod2, NumLock; 20 = Control+Mod2; 24 = Mod1+Mod2; 80 = Mod4+Mod2; 0 = no bit at all)"
+}

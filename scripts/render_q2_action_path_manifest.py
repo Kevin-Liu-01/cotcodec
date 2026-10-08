@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Render one scored q2-action-path-v1 campaign manifest (acceptance, scored control or A5).
+"""Render one scored q2-action-path-v2 campaign manifest (acceptance, scored control or A5).
 
 After the owner's freeze, every scored campaign of the preregistration (A1-A7, the
 concurrency ladder, C1-C3) runs from a manifest that ``harness/q2/vm/manifest.py`` admits
@@ -11,8 +11,14 @@ the lane's own worst-case budget. It then validates the result with the ledger, 
 the submitter will, and refuses before the freeze. A5's boot-reset campaign is rendered as
 the infrastructure validation it is (21 cold boots, 20 reset checks) at the frozen SHA.
 
+The operator names the host run root (``--host-root``); the export is expected at
+``HOST_ROOT/src/<git sha>`` and the run directories go under ``HOST_ROOT/runs``. There is no
+default: a manifest rendered without it is refused, and so is the development root
+(``DEVELOPMENT_ROOT``), which v1's renderer hard-coded (decision D40).
+
     python3 scripts/render_q2_action_path_manifest.py A1 --seed 43 --source-dir EXPORT \\
-        --git-sha SHA --out experiments/manifests/q2-action-path/a1-seed43-a1.yaml
+        --git-sha SHA --host-root /home/kevin/cotcodec-runs/q2-action-path-v2 \\
+        --out experiments/manifests/q2-action-path/a1-seed43-a1.yaml
 
 The VM, runner and image pins come from ``TEMPLATE`` (the last development manifest at the
 candidate executor), which carries the preregistration's section 2.1 pins.
@@ -51,13 +57,14 @@ from harness.q2.vm.manifest import (  # noqa: E402
 
 TEMPLATE = PROJECT_ROOT / "experiments/manifests/q2-action-path/dev-l0-fixed-v10.yaml"
 PREREG_PATHS = {
-    PREREG_ID: "program/preregistrations/q2-action-path-v1.md",
-    ADDENDA_IDS["inputs"]: "program/preregistrations/q2-action-path-v1-inputs.md",
-    ADDENDA_IDS["executor"]: "program/preregistrations/q2-action-path-v1-executor.md",
+    PREREG_ID: "program/preregistrations/q2-action-path-v2.md",
+    ADDENDA_IDS["inputs"]: "program/preregistrations/q2-action-path-v2-inputs.md",
+    ADDENDA_IDS["executor"]: "program/preregistrations/q2-action-path-v2-executor.md",
 }
 CELLS = "harness/q2/action_path/suite_cells.json"
 VOLUME_PLAN = "harness/q2/action_path/volume_plan.json"
-HOST_ROOT = "/home/kevin/cotcodec-runs/stage0/q2-action-path"
+# Where development runs live; a scored campaign never writes there (decision D40).
+DEVELOPMENT_ROOT = "/home/kevin/cotcodec-runs/stage0/q2-action-path"
 MAX_MINUTES = 1440
 CHOICES = (*CRITERIA, "A6", "A5")
 
@@ -70,9 +77,20 @@ def _minutes(seconds: float) -> int:
     return int(math.ceil(seconds / 60.0 / 10.0) * 10)
 
 
+def host_root(value: str | None) -> str:
+    """The operator's host run root for a scored campaign: required, never the development root."""
+    if not value:
+        raise ManifestError("name the host run root with --host-root (there is no default)")
+    root = value.rstrip("/")
+    if root == DEVELOPMENT_ROOT or root.startswith(DEVELOPMENT_ROOT + "/"):
+        raise ManifestError(f"{root} is in the development run root; name a scored-run root")
+    return root
+
+
 def render(args: argparse.Namespace) -> dict[str, Any]:
     import yaml
 
+    root = host_root(args.host_root)
     source_dir = Path(args.source_dir)
     template = yaml.safe_load(TEMPLATE.read_text(encoding="utf-8"))
     rows = ledger_rows(source_dir)
@@ -94,10 +112,10 @@ def render(args: argparse.Namespace) -> dict[str, Any]:
         },
         "git_sha": args.git_sha,
         "source": {
-            "host_dir": f"{HOST_ROOT}/src/{args.git_sha}",
+            "host_dir": f"{root}/src/{args.git_sha}",
             "tree_sha256": source_tree_sha256(str(source_dir)),
         },
-        "run_root": template["run_root"],
+        "run_root": f"{root}/runs",
         "slurm": {},
         "container_profile": template["container_profile"],
         "model": {
@@ -199,6 +217,12 @@ def parse_args(argv: list[str] | None) -> argparse.Namespace:
     parser.add_argument("criterion", choices=CHOICES)
     parser.add_argument("--source-dir", required=True, help="local export of the frozen commit")
     parser.add_argument("--git-sha", required=True)
+    parser.add_argument(
+        "--host-root",
+        default=None,
+        help="the host run root (export at HOST_ROOT/src/<sha>, runs under HOST_ROOT/runs); "
+        "required, and never the development root",
+    )
     parser.add_argument("--seed", type=int, default=43)
     parser.add_argument("--layer")
     parser.add_argument("--concurrency", type=int, default=1)
@@ -228,7 +252,7 @@ def main(argv: list[str] | None = None) -> int:
         print(f"refused: {exc}", file=sys.stderr)
         return 2
     header = (
-        f"# q2-action-path-v1 {args.criterion} (seed {args.seed}, attempt {args.attempt}), "
+        f"# q2-action-path-v2 {args.criterion} (seed {args.seed}, attempt {args.attempt}), "
         "rendered by scripts/render_q2_action_path_manifest.py\n"
     )
     args.out.write_text(
