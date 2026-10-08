@@ -1714,3 +1714,13 @@ Append-only. Newest entries at the bottom.
   changes and is cited, and that the four shell-grabbed chords' reference
   states after the grab key are never empty. No VM job, no GPU, nothing
   frozen, pushed or merged to main.
+- Checks at `32d083c`: freeze-linted v2, then `-inputs`, then `-executor`
+  against a scratch copy of the ledger (main file `a39d1b4d...`, inputs
+  `14466f5e...` and executor `b624d20e...` unchanged); the three rows chain
+  onto row 11, the chain checks at 14 rows, and v1's and v2's rows verify.
+  The step-by-step admission simulation on an export of `32d083c` admits
+  the same campaigns at every stage as before (nothing before the freeze;
+  A5 after v2; C2 at seed 45 after `-inputs`; 72 of 83 cases after
+  `-executor`, with every negative case refused). The repository ledger is
+  unchanged (11 rows). Q2 tests 610 passed, 21 skipped; full suite 2167
+  passed, 84 skipped; ruff clean.
