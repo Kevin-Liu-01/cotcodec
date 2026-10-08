@@ -63,7 +63,7 @@ Frozen with this file (SHA-256 of the committed bytes):
 | `harness/q2/action_path/upstream/PROVENANCE.json` | `5bef93df835c560b1f8dc6e8cfe7d6c207ba7fbe2e26c861541878563062744d` |
 | `infra/slurm/host-single-node/vm-campaign.sbatch` | `3d86820d176e3a9f0699814a19f62154cde00f88da1777a33c804e884288ac8a` |
 | `scripts/submit_vm_campaign.py` | `f08aafc8bc693cd6eb6850ff972a3401f3bddc99f3c14e03187b4d313fcc5917` |
-| `harness/q2/action_path/acceptance.py` | `0ef925cfc8c5a13b18e35d2ddfc8b3634e1edb09117dd5681e12be7ec08cf665` |
+| `harness/q2/action_path/acceptance.py` | `ced21d32fba8145000f48069502475f60eca2dbeb23a99fa415d192319d5248a` |
 | `harness/__init__.py` | `17dac2704be26050e324aa36aba6d2c855abbd592e4d72f750b9b6e9c4399fec` |
 | `harness/q2/__init__.py` | `0932bda132c1dab03f40e460874a6827c4609424815e65eedcfefd3cd0b943a1` |
 | `harness/q2/action_path/__init__.py` | `8ce4d0afdd20f6b09dbb4e9d40d24acead2fc1992fccebd1ddf3891ec402613f` |
