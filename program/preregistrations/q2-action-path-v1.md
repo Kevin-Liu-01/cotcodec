@@ -425,10 +425,26 @@ earlier attempt counts against its criterion exactly as if the attempt had
 counted: cancelling or rerunning a campaign never removes a failure. Like a
 counting attempt's trials, it counts on the cells the criterion judges (G
 for A1 and the ladder, the in-spec cells for A2, the stress entries for A3,
-every trial for A4) and not when the criterion excuses it, and an earlier
-attempt's excused trials count toward A1-A3's and the ladder's limits above,
-so a rerun never resets them (decision D33). The only exception is a
-concurrency-ladder rung aborted on foreign load (section 9). The same holds
+every trial for A4 and A6) and not when the criterion excuses it, and an
+earlier attempt's excused trials count toward A1-A3's and the ladder's
+limits above, so a rerun never resets them (decision D33). The validity
+controls read an earlier attempt's trials by their own rules, because their
+known-defect cells, predicted failures and kills fail by design and such a
+failure is not one against them (design decision 45): in C1 each
+known-defect cell must fail in every trial of every attempt (an earlier
+pass counts against C1, an earlier failure does not, and C1 judges no other
+cell); in C2 an earlier failure counts only on a cell outside the predicted
+set, read as C2 reads every trial (`acceptance.c2_trial_pass`), and the
+predicted cells are judged on the counting attempt; in C3 a mutant's kills
+and its equivalence are read from its counting attempt and each earlier
+attempt is reported, while a cell the unmutated reference failed, or failed
+with an infrastructure failure, in any of the reference's attempts cannot
+kill; C4 reads every A1 trial of every attempt. An earlier attempt never
+supplies what a control needs (C1's and C2's required failures, C3's
+kills). The only exception is a concurrency-ladder
+rung aborted
+on foreign load (section 9); a rung attempt missing its host snapshots is
+not aborted, and its trials count. The same holds
 for A7's count of restarts, which sums the restarts of every attempt but
 divides by the accessibility calls of the counting attempts only, capped at
 the plan's 39,036 calls: an attempt that was cancelled or did not count adds
@@ -647,7 +663,8 @@ Each control is scored once, at the point named, and only on frozen code.
   unmutated reference run of the same layer (run with the mutants, same
   source tree) passed that cell without one (design decision 36). A failing
   cell with an infrastructure failure never kills, and a cell the reference
-  did not pass cleanly never kills; both are reported per mutant. Outside-spec
+  did not pass cleanly (in any of its attempts, section 6.1) never kills;
+  both are reported per mutant. Outside-spec
   cells run and are reported but never kill. A mutant is equivalent only if
   its XRecord stream without timestamps, text buffer and terminal action are
   byte-identical to the unmutated code's on every cell of its layer; a mutant
@@ -670,8 +687,8 @@ Each control is scored once, at the point named, and only on frozen code.
   rule (a no-op mutant must come out equivalent, never killed).
 - **C4 (R-dev agreement).** For every key, chord and Caps Lock entry with a
   reference, L0-fixed's projected stream equals the reference, in every A1
-  trial. Entries without a stable reference are listed as self-specified in
-  every report.
+  trial of every attempt (section 6.1). Entries without a stable reference
+  are listed as self-specified in every report.
 
 ## 9. Sample sizes, power and concurrency
 
@@ -779,8 +796,12 @@ call, or one slower than `DesktopEnv`'s retries (about 10 s against a
 measured 5.6 to 6.0 s), still counts in the trial it hits, and one during a
 post guard can cost the next entry too. D33 states this remainder and
 accepts it. Counting the limit per observation setting and per shuffle
-instead (design decision 44) would change these probabilities by less than
-10^-4, because only the accessibility setting calls the service.
+instead (design decision 44) would lower the probability that some A1-A3
+entry reaches its limit by about 8 x 10^-5 at the development rate, 3 x
+10^-4 at half A7's bound and 1.2 x 10^-3 at the bound (0.0036, 0.0146 and
+0.0557 instead of 0.0037, 0.0149 and 0.0569). Only A1's limit would change,
+because only the accessibility setting calls the service and A2 and A3 run
+one shuffle per layer; the rung probabilities are unchanged.
 
 **Other sizes.** Gym-anything PR #53 reports intermittent entries failing
 4-20% of the time that 5 repetitions missed; the 60-repetition stress subset
@@ -825,7 +846,8 @@ itself). A rung qualifies when: at least 20 cold boots were measured; boot p95
 step p95 (both shuffles pooled, excused trials included); every counted
 gating trial passes (non-gating entries are reported); at most two of its
 trials were excused for a guest-server restart (decision D33, section 6.1);
-its campaigns count under section 6.1; and no foreign-load abort occurred. A rung
+its campaigns count under section 6.1; every session's host snapshots are
+present; and no foreign-load abort occurred. A rung
 aborts if, at any of the host snapshots the driver takes before and after
 every session, a Slurm job other than the rung's own is running that was not
 running at the rung's first snapshot (a foreign job started), or the running
@@ -838,6 +860,14 @@ qualifies nor disqualifies its N, and its failed and excused trials are
 reported but not counted (the one exception to section 6.1's rule; D33 left
 the abort rule unchanged). A rung that aborts twice,
 or a rung that ran without aborting and is rerun anyway, does not qualify.
+Only a foreign job starting and foreign load abort a rung. The driver
+writes a session's host snapshots into its record file after the VM's
+teardown, so a job killed while its first sessions ran, or a run directory
+copied without its record files, lacks them for those sessions. Such an
+attempt cannot show that no abort occurred, so it does not count for its
+rung: it does not qualify and may be rerun once. It is not an abort, so its
+failed and excused trials count under section 6.1
+(`acceptance.snapshot_problems`; design decision 45).
 VMs are pinned to CPUs from their Slurm allocation; the ladder never exceeds
 160 vCPUs. The N runners of a rung (and of A4 and A7 at N*) share
 `manifest.runner_cpus(N)` CPUs, half a CPU per runner rounded up, at most 20
@@ -934,14 +964,17 @@ infrastructure failures by type, including unverified tap ranges; the
 mutation score per operator and per layer with the observed killers next to
 the predicted ones, and every excluded or not-applicable pair with its
 reason, each mutant's cells that failed with an infrastructure failure, and
-each cell the unmutated reference did not pass cleanly; the statement that
+each cell the unmutated reference did not pass cleanly, and each mutant's
+earlier attempts with their failed cells and whether their streams matched
+the reference's; the statement that
 C3 repeated development's conditions; the L0-raw prediction table against the
 observed results under C2's rule and under section 5 as written; the R-dev
 reference stability per entry; which entries rest on a self-specified oracle;
 per-app canary results; the A4 per-class action counts and bounds, per-entry
 bounds and per-session results; the concurrency table (boot p50/p95, step
 p50/p95, CPU steal and utilization, overlay growth, pass rate per rung, the
-host snapshots and any aborted rung with its reason); observation retries by
+host snapshots, any aborted rung with its reason and any rung attempt
+missing host snapshots); observation retries by
 type; each session's warm-up and reset-observation records, with the trials
 charged for an undelivered reset observation; every attempt of every
 campaign, rerun or repaired, with its end state (batch record and, when read,
@@ -1337,11 +1370,39 @@ here with its reason.
     settings, every attempt and, in A1, both shuffles. A reading that
     allowed one excused trial per setting and per campaign would let an A1
     entry lose up to 4 of its 20 repetitions (2 shuffles x 2 settings),
-    which D33's text rules out; it was not adopted (it changes the pass
-    probabilities by less than 10^-4, section 9). An earlier attempt's
+    which D33's text rules out; it was not adopted (it would lower the
+    probability that some A1-A3 entry reaches its limit by about 8 x 10^-5
+    at the development rate, 3 x 10^-4 at half A7's bound and 1.2 x 10^-3
+    at the bound, section 9). An earlier attempt's
     failed trials now count only on the cells the criterion judges, as a
     counting attempt's would (section 6.1): before, an expected failure of
     an outside-spec R cell in an earlier A2 attempt failed every rerun.
+45. **An earlier attempt is read by its criterion's own rule** (review of
+    the D33 pass). Section 6.1 counts an earlier attempt's failed trials
+    "exactly as if the attempt had counted". Read as every failed trial on
+    every cell, that made every rerun of a validity control fail: C1's
+    known-defect cells, C2's predicted failures and each mutant's kills fail
+    by design, so one C1-C3 campaign that did not count (a boot over 300 s,
+    a runner error, a time limit or a node failure, among about 50) would
+    have invalidated the suite, and a failed control is not repaired within
+    v1 (section 11). Each control now reads an earlier attempt by its own
+    rule: a C1 defect that passed in any attempt fails C1, an unpredicted C2
+    failure in any attempt fails C2, and a cell the C3 reference did not
+    pass cleanly in any attempt cannot kill, while C1's and C2's required
+    failures and C3's kills and equivalence are read from the counting
+    attempt. A mutant's earlier attempt is reported with whether its streams
+    matched the reference's but does not decide equivalence: an attempt that
+    did not count may carry infrastructure failures (a lost tap window, for
+    one) whose streams differ for reasons that say nothing about the mutant,
+    and judging them would bring back the defect this decision removes. C4,
+    whose mismatches are never by design, now reads every attempt, as A1-A4
+    do (section 21, item 4). The same review found that the ladder read a
+    rung attempt with no host snapshots as a foreign-load abort, whose
+    failed and excused trials do not count; section 9 registers two abort
+    reasons and missing snapshots is neither, so a rerun could have dropped
+    the gating failure or the excused trials of an attempt that otherwise
+    counted. Such an attempt now counts its trials, does not qualify and may
+    be rerun (`acceptance.snapshot_problems`).
 
 ## 15. Changes after the 2026-10-07 review
 
@@ -1653,8 +1714,12 @@ item 5, before the freeze. Applied on branch `stage0/q2-action-path-d30`:
    in one entry counts as a failure") and section 5's entry over both
    settings rule that reading out, so the registered limit is per entry
    (design decision 44). Should the owner have meant the wider reading, D33
-   is amended before the freeze; the pass probabilities differ by less than
-   10^-4 (section 9).
+   is amended before the freeze; under it the probability that some A1-A3
+   entry reaches its limit would be lower by about 8 x 10^-5 at the
+   development rate, 3 x 10^-4 at half A7's bound and 1.2 x 10^-3 at the
+   bound, with the rung probabilities unchanged (section 9; first given
+   here as less than 10^-4, which holds at the development rate only;
+   section 21).
 3. **The ladder.** "Every gating trial passes" reads over a rung's counted
    gating trials; a rung with more than two excused trials, gating or not,
    over its attempts (an aborted attempt aside) does not qualify; excused
@@ -1717,3 +1782,63 @@ item 5, before the freeze. Applied on branch `stage0/q2-action-path-d30`:
    cannot reach that case: each entry runs at least 12 trials there
    (r_N >= 6 per setting) and at most two may be excused. Every other
    entry's status in 694 and 703-708 is unchanged.
+
+## 21. Changes after the 2026-10-07 review of the D33 pass
+
+The review of the D33 pass (branch head `59bd551`) found two defects in
+the acceptance analysis and one wrong number, and fixing them found a
+third defect; all are fixed before the freeze with no scored data (code in
+`acceptance.py`, with `tests/test_q2_acceptance_analysis.py`, commits
+`a3ee335` and `c9b4771`):
+
+1. **Reruns of the validity controls** (section 6.1, design decision 45).
+   C1-C3 counted every failed trial of an earlier attempt, so the expected
+   failures of C1's known-defect cells, of C2's predicted set and of each
+   mutant's kill cells made any rerun of a C1-C3 campaign fail its control,
+   the mechanism section 20, item 6, fixed for A2. Each control now reads
+   an earlier attempt by its own rule: C1 counts a known-defect cell that
+   passed in an earlier attempt and never its failures; C2 counts an
+   earlier failure only on a cell outside the predicted set, read by
+   `c2_trial_pass`; C3 reads a mutant's kills and equivalence from the
+   counting attempt and reports each earlier attempt (its failed cells and
+   whether its streams matched the reference's), and a cell the reference
+   did not pass cleanly in any of its attempts cannot kill.
+2. **A rung attempt without host snapshots** (section 9). `foreign_abort`
+   returned "no host snapshots" for an attempt with none, and the rung rule
+   read that as a foreign-load abort: the attempt's gating failures (since
+   `81fd5f3`) and excused trials (since `3ad255a`) were dropped and a rerun
+   was allowed, so a rerun could qualify after an attempt that otherwise
+   counted and failed. Only the two registered reasons abort now. An
+   attempt missing the snapshots of any session does not qualify and may be
+   rerun, and its failed and excused trials count
+   (`acceptance.snapshot_problems`).
+3. **The exposure of the per-setting, per-shuffle reading** (section 9,
+   design decision 44, section 20, item 2). The text said that reading
+   changed the pass probabilities by less than 10^-4. Recomputed twice
+   (once by the review, once independently for this change), it would lower
+   the probability that some A1-A3 entry reaches its limit by 8.1 x 10^-5
+   at the development rate, 3.3 x 10^-4 at half A7's bound and 1.25 x 10^-3
+   at the bound; only A1's limit is affected and the rung probabilities are
+   unchanged. Text only.
+4. **C4 over every attempt** (section 6.1; found while fixing item 1).
+   C4 read the counting A1 attempts only. It reads the tap's stream, which
+   A1 does not judge for an entry the probe observes (its trials are judged
+   on the probe's log), so a projection mismatch in an earlier A1 attempt
+   on such an entry would have disappeared with the rerun. C4 now reads
+   every attempt. No mismatch is by design, and a trial that lost its tap
+   has an infrastructure failure on a gating entry that already counts
+   against A1, so this adds no case in which a rerun alone fails C4.
+5. **Code, tests and checks.** `acceptance.py` is still the only code file
+   changed since `7653799`, and no campaign executes it, so the executor
+   addendum's byte-identity check lists only `harness/q2/README.md` and
+   `acceptance.py` and the development runs at `7653799` stand; both
+   addenda pin its new digest. New tests drive a rung attempt without
+   snapshots (alone; as an earlier attempt that is clean, carries a gating
+   failure or carries three excused trials; one session's snapshots
+   missing; a foreign-load abort still dropping its trials), and C1, C2 and
+   C3 reruns that pass with their by-design failures and fail on an earlier
+   pass of a known defect, an unpredicted earlier failure (and not on a
+   marker-only one), a counting mutant attempt that kills nothing however
+   its earlier attempt fared, or an earlier reference failure on the only
+   killing cell, and an earlier A1 attempt's C4 mismatch counting. Each
+   new test fails on the `acceptance.py` before it.

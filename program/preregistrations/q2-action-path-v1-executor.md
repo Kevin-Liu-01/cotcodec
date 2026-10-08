@@ -181,8 +181,11 @@ on its counted repetitions and failing it on a second excused trial, and a
 rung not qualifying with more than two; A7's restarts of every attempt per
 accessibility call of the counting attempts, capped at the plan's 39,036, on
 the exact one-sided 95% Poisson bound, under attempt 1 only), C1-C4 with
-C2's reading of L0-raw trials and C3's clean-kill and equivalence rules, and
-the ladder's N* with the foreign-load abort and its rerun cap. Its verdicts
+C2's reading of L0-raw trials and C3's clean-kill and equivalence rules,
+each control reading an earlier attempt by its own rule (main design
+decision 45), and the ladder's N* with the foreign-load abort and its rerun
+cap, a rung attempt without host snapshots not qualifying but counting its
+trials. Its verdicts
 are the ones reported;
 `tests/test_q2_acceptance_analysis.py` drives every rule on synthetic
 campaigns. It is frozen in the inputs addendum (before C2 is scored) and
@@ -247,7 +250,8 @@ commit to `7653799`: run there,
 may list only files no campaign executes: the analysis and sizing files
 (`acceptance.py`, `vm_hours.py`, `trial_times.json`, `vm_hours.json`) and
 Markdown files. Anything else needs new development runs before the freeze.
-On `stage0/q2-action-path-d30`, after the D33 change (`3ad255a`), it still
+On `stage0/q2-action-path-d30`, after the D33 change (`3ad255a`) and the
+fixes after its review (`a3ee335`, `c9b4771`; main section 21), it still
 lists `harness/q2/README.md` and `harness/q2/action_path/acceptance.py`
 only: `acceptance.py` is the only code file changed since `7653799`, and no
 campaign executes it (no file of the lane imports it; it reads the run
