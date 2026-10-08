@@ -687,6 +687,124 @@ def test_audit_summarize_end_to_end(tmp_path: Path) -> None:
             rater_runner.merge_calls([tmp_path / "anon" / "calls.jsonl"], rater_id)
 
 
+def _framed(item: str, answer: str, relay: str | None, void: list[str] | None = None) -> dict:
+    """An isolated-path call record with its relay-frame digest and void reasons."""
+    call = _call("model-rater-anthropic", item, answer)
+    if void:
+        call.update(answer="unsure", status="isolation_void", outcome="isolation_void")
+    call["extra"] = {"relay_frame_sha256": relay, "void_reasons": void or []}
+    return call
+
+
+def test_audit_summarize_checks_one_relay_frame_and_reports_the_rerate(tmp_path: Path) -> None:
+    """Decision D38: one relay frame across the calls files; a relay re-rate beside it."""
+    rows = [
+        {
+            "mutant_id": f"m{n}",
+            "task_id": f"t{n}",
+            "stratum": "fp_violation",
+            "inclusion_probability": 1.0,
+            "sham": None,
+            "item_id": f"i{n}",
+            "label": "should_fail_violation",
+            "verdict": "pass",
+        }
+        for n in range(4)
+    ]
+    audit.write_jsonl(tmp_path / "sample.jsonl", rows)
+    audit.write_jsonl(
+        tmp_path / "open.jsonl",
+        [_call("model-rater-open-weight", f"i{n}", "reject") for n in range(4)],
+    )
+    frame_a, frame_b = "a" * 64, "b" * 64
+
+    def summarize(*anthropic: Path, out: str, extra: tuple = ()) -> int:
+        argv = ["summarize", "--sample", str(tmp_path / "sample.jsonl"), "--n-boot", "50"]
+        argv += ["--anthropic-calls", *map(str, anthropic)]
+        argv += ["--open-calls", str(tmp_path / "open.jsonl"), "--out", str(tmp_path / out)]
+        return audit.main([*argv, *extra])
+
+    # Two ingests, each with one frame of its own: refused at the summary.
+    audit.write_jsonl(tmp_path / "s0.jsonl", [_framed("i0", "reject", frame_a)])
+    audit.write_jsonl(tmp_path / "s1.jsonl", [_framed("i1", "reject", frame_b)])
+    with pytest.raises(SystemExit, match="different harness relay frames"):
+        summarize(tmp_path / "s0.jsonl", tmp_path / "s1.jsonl", out="o1")
+    # Several digests on one record count too.
+    audit.write_jsonl(tmp_path / "s2.jsonl", [_framed("i0", "reject", [frame_a, frame_b])])
+    with pytest.raises(SystemExit, match="different harness relay frames"):
+        summarize(tmp_path / "s2.jsonl", out="o2")
+    # One frame (and records without one) passes and is recorded.
+    audit.write_jsonl(tmp_path / "s1.jsonl", [_framed("i1", "reject", frame_a)])
+    assert summarize(tmp_path / "s0.jsonl", tmp_path / "s1.jsonl", out="o3") == 0
+    summary = json.loads((tmp_path / "o3" / "audit-summary.json").read_text())
+    assert summary["relay_frames_sha256"] == {frame_a: 2}
+    assert summary["calls_files"]["model-rater-anthropic"][0]["relay_frames_sha256"] == [frame_a]
+
+    # One ingest whose frames differed voided its framed items (the registered result);
+    # those records do not refuse the summary, and their re-rate is reported beside it.
+    mismatch = [rater_runner.RELAY_MISMATCH]
+    calls = [
+        _framed("i0", "reject", frame_a, mismatch),
+        _framed("i1", "reject", frame_b, mismatch),
+        _framed("i2", "reject", None),
+        _framed("i3", "accept", None),
+    ]
+    audit.write_jsonl(tmp_path / "ingest" / "calls.jsonl", calls)
+    listing = {
+        "schema": rater_runner.RERATE_SCHEMA,
+        "calls_sha256": rater_runner.sha256_file(tmp_path / "ingest" / "calls.jsonl"),
+        "items": ["i0", "i1"],
+    }
+    (tmp_path / "rerate.json").write_text(json.dumps(listing), encoding="utf-8")
+    audit.write_jsonl(
+        tmp_path / "rerated.jsonl", [_framed("i0", "reject", None), _framed("i1", "accept", None)]
+    )
+    # Kevin adjudicates the union of both pools: i0 is in the registered pool only.
+    audit.write_jsonl(
+        tmp_path / "adj.jsonl",
+        [{"item_id": "i0", "answer": "reject"}, {"item_id": "i1", "answer": "reject"}],
+    )
+    rerate = ["--rerate-list", str(tmp_path / "rerate.json")]
+    rerate += ["--rerate-calls", str(tmp_path / "rerated.jsonl")]
+    adjudications = ["--adjudications", str(tmp_path / "adj.jsonl")]
+    ingested = tmp_path / "ingest" / "calls.jsonl"
+    assert summarize(ingested, out="o4", extra=(*rerate, *adjudications)) == 0
+    registered = json.loads((tmp_path / "o4" / "audit-summary.json").read_text())
+    rerated = json.loads((tmp_path / "o4" / "rerate" / "audit-summary.json").read_text())
+    statuses = registered["answer_status"]["model-rater-anthropic"]
+    assert statuses == {"isolation_void": 2, "ok": 2}
+    assert rerated["answer_status"]["model-rater-anthropic"] == {"ok": 4}
+    assert registered["rerate"]["items"] == 2
+    assert registered["rerate"]["kappa"] == rerated["kappa"]
+    decisions = {
+        r["key"]: r["decision"] for r in audit.read_jsonl(tmp_path / "o4" / "decisions.jsonl")
+    }
+    again = {
+        r["key"]: r["decision"]
+        for r in audit.read_jsonl(tmp_path / "o4" / "rerate" / "decisions.jsonl")
+    }
+    # Registered: i0 and i1 are void (unsure) and split; Kevin's answers decide them.
+    assert decisions == {"m0": "reject", "m1": "reject", "m2": "reject", "m3": "unresolved"}
+    # Re-rated: i0 both reject (out of the pool), i1 splits and Kevin decides it.
+    assert again == {"m0": "reject", "m1": "reject", "m2": "reject", "m3": "unresolved"}
+    assert registered["n_adjudicated"] == 2 and rerated["n_adjudicated"] == 1
+    audit.write_jsonl(tmp_path / "adj2.jsonl", [{"item_id": "i2", "answer": "reject"}])
+
+    def refused(match: str, *args: str, calls_path: Path = ingested) -> None:
+        with pytest.raises(SystemExit, match=match):
+            summarize(calls_path, out="o5", extra=args)
+
+    refused("outside both pools", *rerate, "--adjudications", str(tmp_path / "adj2.jsonl"))
+
+    refused("go together", "--rerate-list", str(tmp_path / "rerate.json"))
+    # A re-rate list of another ingest, a re-rate record outside it, or a resumed re-rate.
+    refused("none of the Anthropic calls files", *rerate, calls_path=tmp_path / "s0.jsonl")
+    audit.write_jsonl(tmp_path / "rerated.jsonl", [_framed("i2", "reject", None)])
+    refused("not on the re-rate list", *rerate)
+    audit.write_jsonl(tmp_path / "rerated.jsonl", [_framed("i0", "reject", frame_a)])
+    refused("fresh, unresumed", *rerate)
+
+
 def test_render_rater_manifest_passes_the_lane_validator(tmp_path: Path) -> None:
     sys.path.insert(0, str(ROOT / "scripts"))
     sys.path.insert(0, str(ROOT / "infra" / "q2-mutation" / "run"))
@@ -1130,6 +1248,34 @@ def test_isolated_export_holds_one_item_per_directory(tmp_path: Path) -> None:
         rater_runner.export_isolated(items, root)
 
 
+def test_isolated_export_of_a_relay_rerate_holds_only_the_listed_items(tmp_path: Path) -> None:
+    """Decision D38: the relay-voided items are exported again for a fresh run."""
+    items = [_packet(f"i{n}") for n in range(4)]
+    packets = tmp_path / "packets-000.jsonl"
+    packets.write_text("".join(json.dumps(p) + "\n" for p in items), encoding="utf-8")
+    listing = {"schema": rater_runner.RERATE_SCHEMA, "calls_sha256": "c" * 64}
+    listing["items"] = ["i1", "i3"]
+    rerate = tmp_path / "rerate.json"
+    rerate.write_text(json.dumps(listing), encoding="utf-8")
+    argv = ["export-isolated", "--packets", str(packets), "--rerate-list", str(rerate)]
+    out = ["--iso-root", str(tmp_path / "iso"), "--manifest-out", str(tmp_path / "m.json")]
+    assert rater_runner.main([*argv, *out]) == 0
+    manifest = json.loads((tmp_path / "m.json").read_text())
+    assert sorted(manifest["items"]) == ["i1", "i3"]
+    assert sorted(p.name for p in (tmp_path / "iso").iterdir()) == ["i1", "i3"]
+    assert manifest["rerate"] == {
+        "list_sha256": rater_runner.sha256_file(tmp_path / "rerate.json"),
+        "calls_sha256": "c" * 64,
+        "items": ["i1", "i3"],
+    }
+    for bad in ({**listing, "items": ["i9"]}, {**listing, "items": []}, {"items": ["i1"]}):
+        (tmp_path / "rerate.json").write_text(json.dumps(bad), encoding="utf-8")
+        with pytest.raises(SystemExit, match="re-rate list"):
+            rater_runner.main(
+                [*argv, "--iso-root", str(tmp_path / "x"), "--manifest-out", str(tmp_path / "y")]
+            )
+
+
 def _prompt_entry(text: str) -> dict:
     return {"type": "user", "message": {"role": "user", "content": text}}
 
@@ -1360,6 +1506,37 @@ def _attachment(kind: str | None, **fields: Any) -> dict:
     return {"type": "attachment", "attachment": body}
 
 
+def _collection(
+    manifest: dict, directories: list[Path], answered: set[str] = frozenset()
+) -> dict:
+    """The collection manifest ``collect-transcripts`` would write for these files.
+
+    ``{item}.jsonl`` is the agent that answered (a journal result);
+    ``{item}.{agent}.jsonl`` is an attempt without one unless named in ``answered``.
+    """
+    agents = []
+    for folder in directories:
+        for path in sorted(folder.glob("*.jsonl")):
+            parts = path.name.split(".")
+            item = parts[0]
+            agent = parts[1] if len(parts) == 3 else f"a{item}"
+            agents.append(
+                {
+                    "agent_id": agent,
+                    "item_id": item,
+                    "file": path.name,
+                    "sha256": rater_runner.sha256_file(path),
+                    "bytes": path.stat().st_size,
+                    "answered": len(parts) == 2 or path.name in answered,
+                }
+            )
+    return {
+        "schema": rater_runner.COLLECTION_SCHEMA,
+        "iso_root": manifest["iso_root"],
+        "agents": agents,
+    }
+
+
 def test_transcript_audit_registers_entry_and_attachment_types(tmp_path: Path) -> None:
     """Sixth review: a mid-run message arrives as a ``queued_command`` attachment."""
     assert rater_runner.HARNESS_ATTACHMENT_TYPES == DEV_ATTACHMENT_TYPES
@@ -1489,6 +1666,10 @@ def test_isolated_ingest_takes_the_model_from_the_transcript_and_voids_breaches(
     manifest_path.write_text(json.dumps(manifest), encoding="utf-8")
     packets = tmp_path / "packets-000.jsonl"
     packets.write_text("".join(json.dumps(p) + "\n" for p in items), encoding="utf-8")
+    collection_path = tmp_path / "collection.json"
+    collection = _collection(manifest, [transcripts])
+    collection["export_manifest_sha256"] = rater_runner.sha256_file(manifest_path)
+    collection_path.write_text(json.dumps(collection), encoding="utf-8")
     out = tmp_path / "rater"
     argv = [
         "ingest-isolated",
@@ -1502,9 +1683,18 @@ def test_isolated_ingest_takes_the_model_from_the_transcript_and_voids_breaches(
         str(answers),
         "--transcripts",
         str(transcripts),
+        "--collection",
+        str(collection_path),
         "--out",
         str(out),
     ]
+    # A collection made for another export manifest is refused.
+    collection_path.write_text(
+        json.dumps({**collection, "export_manifest_sha256": "0" * 64}), encoding="utf-8"
+    )
+    with pytest.raises(SystemExit, match="another export manifest"):
+        rater_runner.main(argv)
+    collection_path.write_text(json.dumps(collection), encoding="utf-8")
     assert rater_runner.main(argv) == 0
     calls = rater_runner.read_calls(out / "calls.jsonl")
     assert calls["i0"]["answer"] == "accept" and calls["i0"]["outcome"] == "ok"
@@ -1535,37 +1725,38 @@ def test_isolated_ingest_takes_the_model_from_the_transcript_and_voids_breaches(
     assert summary["i1"] == ("unsure", "isolation_void") and summary["i4"] == ("unsure", "unrated")
 
     # Another model in a transcript refuses the whole ingest; so does a second answer.
+    def ingest(records: list, out: Path) -> dict:
+        collected = _collection(manifest, [transcripts])
+        return rater_runner.ingest_isolated(
+            items, manifest, root, records, transcripts, out, collection=collected
+        )
+
     records = [{"item_id": "i0", "answer": "accept"}]
     write("i0", _use("StructuredOutput", item_id="i0", answer="accept"), model="claude-sonnet-5")
     with pytest.raises(SystemExit, match="names model"):
-        rater_runner.ingest_isolated(items, manifest, root, records, transcripts, tmp_path / "x")
+        ingest(records, tmp_path / "x")
     write("i0", _use("StructuredOutput", item_id="i0", answer="accept"))
     with pytest.raises(SystemExit, match="second answer"):
-        rater_runner.ingest_isolated(
-            items, manifest, root, records * 2, transcripts, tmp_path / "y"
-        )
+        ingest(records * 2, tmp_path / "y")
     # The transcript of another item's agent, filed under i0, is void.
     other = rater_runner.render_isolated_prompt(str(root / "i1"), "i1")
     write("i0", _use("StructuredOutput", item_id="i0", answer="accept"), prompt=other)
-    result = rater_runner.ingest_isolated(
-        items, manifest, root, records, transcripts, tmp_path / "w"
-    )
+    result = ingest(records, tmp_path / "w")
     row = rater_runner.read_calls(tmp_path / "w" / "calls.jsonl")["i0"]
     assert result["void"] == 1 and row["extra"]["prompt_matches_template"] is False
     write("i0", _use("StructuredOutput", item_id="i0", answer="accept"))
     # A changed item directory voids that item.
     (root / "i0").chmod(0o755)
     (root / "i0" / "note.txt").write_text("label: should_pass_equiv")
-    result = rater_runner.ingest_isolated(
-        items, manifest, root, records, transcripts, tmp_path / "z"
-    )
+    result = ingest(records, tmp_path / "z")
     assert result["void"] == 1
     row = rater_runner.read_calls(tmp_path / "z" / "calls.jsonl")["i0"]
     assert "the item directory differs from its export" in row["extra"]["void_reasons"]
 
 
 def test_isolated_ingest_audits_every_transcript_and_the_relay_frame(tmp_path: Path) -> None:
-    """Decision D35 (iv): every attempt is audited, at most one answers, one relay frame."""
+    """Decisions D35 (iv) and D38: every attempt is audited, at most one answers, one relay
+    frame, recorded verbatim; relay-voided items are listed for the re-rate."""
     items = [_packet(f"i{n}") for n in range(6)]
     root = tmp_path / "iso"
     manifest = rater_runner.export_isolated(items, root)
@@ -1584,6 +1775,12 @@ def test_isolated_ingest_audits_every_transcript_and_the_relay_frame(tmp_path: P
     def answer(item: str, value: str = "accept") -> dict:
         return _use("StructuredOutput", item_id=item, answer=value)
 
+    def ingest(out: Path, answered: set[str] = frozenset()) -> dict:
+        collected = _collection(manifest, [done, interrupted], answered)
+        return rater_runner.ingest_isolated(
+            items, manifest, root, records, [done, interrupted], out, collection=collected
+        )
+
     # i0: a resumed agent (relay frame first) answers; an interrupted attempt did not.
     write(done / "i0.jsonl", "i0", answer("i0"), relay=_relay())
     write(interrupted / "i0.a1b2.jsonl", "i0")
@@ -1597,21 +1794,46 @@ def test_isolated_ingest_audits_every_transcript_and_the_relay_frame(tmp_path: P
         "i2",
         _use("Read", file_path=str(root / "i3" / "packet.txt")),
     )
-    # i3: a clean unresumed agent; i4: an interrupted attempt only.
+    # i3: a clean unresumed agent, and an interrupted attempt whose last text
+    # names an answer word without a structured answer (D38: not an answer).
     write(done / "i3.jsonl", "i3", answer("i3"))
+    write(interrupted / "i3.beef.jsonl", "i3", {"type": "text", "text": "reject"})
+    # i4: an interrupted attempt only.
     write(interrupted / "i4.0a0b.jsonl", "i4")
-    # A transcript of no exported item is reported, not read.
-    write(done / "zz.jsonl", "i5", answer("i5"))
     records = [{"item_id": f"i{n}", "answer": "accept"} for n in range(5)]
+    # A transcript the collection does not list refuses the ingest (D38).
+    collected = _collection(manifest, [done, interrupted])
+    write(done / "zz.jsonl", "i5", answer("i5"))
+    with pytest.raises(SystemExit, match="the collection does not list"):
+        rater_runner.ingest_isolated(
+            items, manifest, root, records, [done, interrupted], tmp_path / "o0",
+            collection=collected,
+        )
+    (done / "zz.jsonl").unlink()
+    # So does a listed transcript that is missing or changed.
+    (interrupted / "i4.0a0b.jsonl").rename(tmp_path / "aside.jsonl")
+    with pytest.raises(SystemExit, match="lists are missing"):
+        rater_runner.ingest_isolated(
+            items, manifest, root, records, [done, interrupted], tmp_path / "o0",
+            collection=collected,
+        )
+    (tmp_path / "aside.jsonl").rename(interrupted / "i4.0a0b.jsonl")
+    write(interrupted / "i4.0a0b.jsonl", "i4", answer("i4"))
+    with pytest.raises(SystemExit, match="differs from its collected copy"):
+        rater_runner.ingest_isolated(
+            items, manifest, root, records, [done, interrupted], tmp_path / "o0",
+            collection=collected,
+        )
+    write(interrupted / "i4.0a0b.jsonl", "i4")
     out = tmp_path / "out"
-    result = rater_runner.ingest_isolated(
-        items, manifest, root, records, [done, interrupted], out
-    )
+    result = ingest(out)
     calls = rater_runner.read_calls(out / "calls.jsonl")
     assert calls["i0"]["outcome"] == "ok" and calls["i0"]["answer"] == "accept"
     extra = calls["i0"]["extra"]
     assert [t["name"] for t in extra["transcripts"]] == ["i0.jsonl", "i0.a1b2.jsonl"]
     assert [t["answers"] for t in extra["transcripts"]] == [True, False]
+    assert [t["journal_result"] for t in extra["transcripts"]] == [True, False]
+    assert [t["agent_id"] for t in extra["transcripts"]] == ["ai0", "a1b2"]
     relay_sha = rater_runner.sha256_bytes(_relay().encode())
     assert extra["relay_frame_sha256"] == relay_sha
     assert extra["transcript_sha256"] == rater_runner.sha256_file(done / "i0.jsonl")
@@ -1621,27 +1843,39 @@ def test_isolated_ingest_audits_every_transcript_and_the_relay_frame(tmp_path: P
     reasons = calls["i2"]["extra"]["void_reasons"]
     assert any(r.startswith("i2.e5f6.jsonl: Read file_path=") for r in reasons), reasons
     assert calls["i3"]["outcome"] == "ok" and calls["i3"]["extra"]["relay_frame_sha256"] is None
+    assert [t["answers"] for t in calls["i3"]["extra"]["transcripts"]] == [True, False]
     # One unanswered attempt: its answer cannot be found in it.
     assert calls["i4"]["extra"]["void_reasons"] == [
         "the answer is not the one the transcript returned"
     ]
     assert result["relay_frames"] == {relay_sha: 1}
-    assert result["transcripts"] == 8 and result["transcripts_not_exported"] == ["zz.jsonl"]
-    assert result["unrated"] == ["i5"]
+    assert result["transcripts"] == 9 and result["transcripts_not_exported"] == []
+    assert result["transcripts_answering"] == 5 and result["unrated"] == ["i5"]
+    assert result["relay_rerate_items"] == []
+    # Had the journal a result for the attempt with the answer word, it would answer.
+    result = ingest(tmp_path / "out1", answered={"i3.beef.jsonl"})
+    calls = rater_runner.read_calls(tmp_path / "out1" / "calls.jsonl")
+    assert "2 transcripts of this item answer; at most one may" in calls["i3"]["extra"][
+        "void_reasons"
+    ]
 
-    # Relay frames that differ across the run void every item that has one.
+    # Relay frames that differ across the run void every item that has one; the
+    # items voided for that alone are the re-rate list (D38).
     write(done / "i3.jsonl", "i3", answer("i3"), relay=_relay("continue the work."))
-    result = rater_runner.ingest_isolated(
-        items, manifest, root, records, [done, interrupted], tmp_path / "out2"
-    )
+    result = ingest(tmp_path / "out2")
     calls = rater_runner.read_calls(tmp_path / "out2" / "calls.jsonl")
     for item in ("i0", "i3"):
-        assert "the harness relay frames differ across the run" in calls[item]["extra"][
-            "void_reasons"
-        ]
-    assert len(result["relay_frames"]) == 2
+        assert calls[item]["extra"]["void_reasons"] == [rater_runner.RELAY_MISMATCH]
+    assert len(result["relay_frames"]) == 2 and result["relay_rerate_items"] == ["i0", "i3"]
+    rerate = json.loads((tmp_path / "out2" / "rerate.json").read_text())
+    assert rerate["schema"] == rater_runner.RERATE_SCHEMA and rerate["items"] == ["i0", "i3"]
+    assert rerate["calls_sha256"] == rater_runner.sha256_file(tmp_path / "out2" / "calls.jsonl")
+    assert [r["text"] for r in result["relay_frames_verbatim"]] == sorted(
+        [_relay(), _relay("continue the work.")],
+        key=lambda text: rater_runner.sha256_bytes(text.encode()),
+    )
 
-    # The CLI takes several transcript directories and records the relay digests.
+    # The CLI takes several transcript directories and records the relay frame verbatim.
     write(done / "i3.jsonl", "i3", answer("i3"), relay=_relay())
     manifest_path = tmp_path / "iso-manifest.json"
     manifest_path.write_text(json.dumps(manifest), encoding="utf-8")
@@ -1649,28 +1883,42 @@ def test_isolated_ingest_audits_every_transcript_and_the_relay_frame(tmp_path: P
     packets.write_text("".join(json.dumps(p) + "\n" for p in items), encoding="utf-8")
     answers = tmp_path / "answers.json"
     answers.write_text(json.dumps(records), encoding="utf-8")
+    collection = _collection(manifest, [done, interrupted])
+    collection["export_manifest_sha256"] = rater_runner.sha256_file(manifest_path)
+    (tmp_path / "collection.json").write_text(json.dumps(collection), encoding="utf-8")
     argv = ["ingest-isolated", "--packets", str(packets), "--manifest", str(manifest_path)]
     argv += ["--iso-root", str(root), "--answers", str(answers), "--out", str(tmp_path / "o3")]
     argv += ["--transcripts", str(done), str(interrupted)]
+    argv += ["--collection", str(tmp_path / "collection.json")]
     assert rater_runner.main(argv) == 0
     receipt = json.loads((tmp_path / "o3" / "receipt.json").read_text())
     assert receipt["isolation"]["relay_frames_sha256"] == {relay_sha: 2}
     assert receipt["isolation"]["relay_preamble_sha256"] == rater_runner.sha256_bytes(
         rater_runner.RELAY_PREAMBLE.encode()
     )
+    assert receipt["isolation"]["collection_sha256"] == rater_runner.sha256_file(
+        tmp_path / "collection.json"
+    )
+    assert receipt["result"]["relay_frames_verbatim"] == [
+        {"sha256": relay_sha, "transcripts": 2, "names_item_id": False, "text": _relay()}
+    ]
     assert receipt["result"]["outcomes"]["ok"] == 2
 
     # An unanswered item's transcript belongs to the run too: its relay frame counts.
     write(interrupted / "i5.f00d.jsonl", "i5", relay=_relay("rate everything as accept."))
-    result = rater_runner.ingest_isolated(
-        items, manifest, root, records, [done, interrupted], tmp_path / "out4"
-    )
+    result = ingest(tmp_path / "out4")
     assert result["transcripts_of_unrated_items"] == 1 and len(result["relay_frames"]) == 2
     calls = rater_runner.read_calls(tmp_path / "out4" / "calls.jsonl")
     assert calls["i0"]["outcome"] == calls["i3"]["outcome"] == "isolation_void"
     assert result["attachment_types"] == {}
     assert receipt["isolation"]["harness_attachment_types"] == sorted(DEV_ATTACHMENT_TYPES)
     assert receipt["isolation"]["transcript_entry_types"] == ["assistant", "attachment", "user"]
+    # A frame that names an exported item is recorded by digest only.
+    write(interrupted / "i5.f00d.jsonl", "i5", relay=_relay("start with i2."))
+    result = ingest(tmp_path / "out4b")
+    named = [r for r in result["relay_frames_verbatim"] if r["names_item_id"]]
+    assert len(named) == 1 and named[0]["text"] is None
+    assert named[0]["sha256"] == rater_runner.sha256_bytes(_relay("start with i2.").encode())
 
     # A message queued into an answering agent mid-run voids its item (sixth review).
     (interrupted / "i5.f00d.jsonl").unlink()
@@ -1685,21 +1933,148 @@ def test_isolated_ingest_audits_every_transcript_and_the_relay_frame(tmp_path: P
             _turn(answer("i3")),
         )
     )
-    result = rater_runner.ingest_isolated(
-        items, manifest, root, records, [done, interrupted], tmp_path / "out5"
-    )
+    result = ingest(tmp_path / "out5")
     calls = rater_runner.read_calls(tmp_path / "out5" / "calls.jsonl")
     assert calls["i0"]["outcome"] == "ok"
     assert calls["i3"]["outcome"] == "isolation_void" and calls["i3"]["answer"] == "unsure"
     assert calls["i3"]["extra"]["void_reasons"] == [
-        "attachment 'queued_command' (commandMode 'prompt') is not a registered harness "
-        "attachment type (line 5)"
+        "i3.jsonl: attachment 'queued_command' (commandMode 'prompt') is not a registered "
+        "harness attachment type (line 5)"
     ]
     assert calls["i3"]["extra"]["transcripts"][0]["attachment_types"] == {
         "date": 1,
         "queued_command": 1,
     }
     assert result["attachment_types"] == {"date": 1, "queued_command": 1}
+
+
+def _run_dir(tmp_path: Path, root: Path, agents: dict, results: set[str]) -> Path:
+    """A rating workflow run: agent-<id>.jsonl per agent and the run's journal."""
+    run = tmp_path / "wf_run"
+    run.mkdir()
+    lines = [{"type": "launched"}]
+    for agent, (item, blocks, relay) in agents.items():
+        prompt = rater_runner.render_isolated_prompt(str(root / item), item)
+        entries = [_prompt_entry(relay)] if relay is not None else []
+        read = _use("Read", file_path=str(root / item / "packet.txt"))
+        entries += [_prompt_entry(_wrapped(prompt)), _turn(read, *blocks)]
+        (run / f"agent-{agent}.jsonl").write_bytes(_transcript(*entries))
+        (run / f"agent-{agent}.meta.json").write_text("{}", encoding="utf-8")
+        lines.append({"type": "started", "key": agent, "agentId": agent, "label": item})
+    for agent in sorted(results):
+        lines.append({"type": "result", "key": agent, "agentId": agent, "result": {}})
+    (run / "journal.jsonl").write_text(
+        "".join(json.dumps(line) + "\n" for line in lines), encoding="utf-8"
+    )
+    return run
+
+
+def test_transcript_collector_maps_every_agent_of_the_run_to_its_item(tmp_path: Path) -> None:
+    """Decision D38: a registered collector replaces copying transcripts by hand."""
+    items = [_packet(f"i{n}") for n in range(4)]
+    root = tmp_path / "iso"
+    manifest = rater_runner.export_isolated(items, root)
+    manifest_path = tmp_path / "iso-manifest.json"
+    manifest_path.write_text(json.dumps(manifest), encoding="utf-8")
+
+    def answer(item: str, value: str = "accept") -> dict:
+        return _use("StructuredOutput", item_id=item, answer=value, reason="r")
+
+    agents = {
+        "a01": ("i0", [], None),  # interrupted, no result
+        "a02": ("i0", [answer("i0")], _relay()),  # resumed, answered
+        "a03": ("i1", [answer("i1", "reject")], _relay()),
+        "a04": ("i2", [answer("i2")], _relay()),
+        "a05": ("i2", [answer("i2", "reject")], _relay()),  # a second answer for i2
+    }
+    run = _run_dir(tmp_path, root, agents, {"a02", "a03", "a04", "a05"})
+    out = tmp_path / "collected"
+    collection_path = tmp_path / "collection.json"
+    argv = ["collect-transcripts", "--run-dir", str(run), "--manifest", str(manifest_path)]
+    with pytest.raises(SystemExit, match="outside the transcript directory"):
+        rater_runner.main([*argv, "--out", str(out), "--collection-out", str(out / "c.json")])
+    assert not out.exists()
+    argv += ["--out", str(out), "--collection-out", str(collection_path)]
+    assert rater_runner.main(argv) == 0
+    collection = json.loads(collection_path.read_text())
+    assert collection["export_manifest_sha256"] == rater_runner.sha256_file(manifest_path)
+    assert collection["journal_sha256"] == rater_runner.sha256_file(run / "journal.jsonl")
+    by_agent = {row["agent_id"]: row for row in collection["agents"]}
+    assert {a: (r["item_id"], r["file"], r["answered"]) for a, r in by_agent.items()} == {
+        "a01": ("i0", "i0.a01.jsonl", False),
+        "a02": ("i0", "i0.jsonl", True),
+        "a03": ("i1", "i1.jsonl", True),
+        "a04": ("i2", "i2.a04.jsonl", True),
+        "a05": ("i2", "i2.a05.jsonl", True),
+    }
+    assert collection["exported_items_without_transcript"] == ["i3"]
+    assert sorted(p.name for p in out.iterdir()) == sorted(r["file"] for r in by_agent.values())
+    for agent, row in by_agent.items():
+        source = (run / f"agent-{agent}.jsonl").read_bytes()
+        assert (out / row["file"]).read_bytes() == source  # byte-exact
+        assert row["sha256"] == rater_runner.sha256_bytes(source)
+
+    # The collected layout is what ingest-isolated reads; i2's two answers void it.
+    packets = tmp_path / "packets-000.jsonl"
+    packets.write_text("".join(json.dumps(p) + "\n" for p in items), encoding="utf-8")
+    answers = tmp_path / "answers.json"
+    records = [
+        {"item_id": "i0", "answer": "accept"},
+        {"item_id": "i1", "answer": "reject"},
+        {"item_id": "i2", "answer": "accept"},
+    ]
+    answers.write_text(json.dumps(records), encoding="utf-8")
+    ingest = ["ingest-isolated", "--packets", str(packets), "--manifest", str(manifest_path)]
+    ingest += ["--iso-root", str(root), "--answers", str(answers), "--transcripts", str(out)]
+    ingest += ["--collection", str(collection_path)]
+    assert rater_runner.main([*ingest, "--out", str(tmp_path / "rater")]) == 0
+    calls = rater_runner.read_calls(tmp_path / "rater" / "calls.jsonl")
+    assert calls["i0"]["outcome"] == calls["i1"]["outcome"] == "ok"
+    assert "2 transcripts of this item answer; at most one may" in calls["i2"]["extra"][
+        "void_reasons"
+    ]
+    # A listed transcript missing from the directory refuses the ingest.
+    (out / "i0.a01.jsonl").rename(tmp_path / "aside.jsonl")
+    with pytest.raises(SystemExit, match="lists are missing: \\['i0.a01.jsonl'\\]"):
+        rater_runner.main([*ingest, "--out", str(tmp_path / "rater2")])
+    (tmp_path / "aside.jsonl").rename(out / "i0.a01.jsonl")
+
+    def refused(run_dir: Path, match: str) -> None:
+        with pytest.raises(SystemExit, match=match):
+            rater_runner.collect_transcripts(run_dir, manifest, tmp_path / "never")
+        assert not (tmp_path / "never").exists()
+
+    # An agent of the run that maps to no exported item: refused (a non-rater agent).
+    (tmp_path / "wf_run").rename(tmp_path / "wf_ok")
+    stray = dict(agents)
+    stray["a06"] = ("i3", [], None)
+    run2 = _run_dir(tmp_path, root, stray, set())
+    (run2 / "agent-a06.jsonl").write_bytes(
+        _transcript(_prompt_entry("[Workflow harness] review the branch."), _turn())
+    )
+    refused(run2, "agent a06 .*rendered prompt of no exported item")
+    # Two items' prompts in one transcript.
+    two = rater_runner.render_isolated_prompt(str(root / "i3"), "i3")
+    (run2 / "agent-a06.jsonl").write_bytes(
+        _transcript(
+            _prompt_entry(_wrapped(rater_runner.render_isolated_prompt(str(root / "i1"), "i1"))),
+            _prompt_entry(_wrapped(two)),
+            _turn(),
+        )
+    )
+    refused(run2, "rendered prompt of items \\['i1', 'i3'\\]")
+    # A transcript of an agent the journal never started, and a started agent without one.
+    (run2 / "agent-a06.jsonl").write_bytes((tmp_path / "wf_ok" / "agent-a01.jsonl").read_bytes())
+    (run2 / "agent-a07.jsonl").write_bytes(b"")
+    refused(run2, "never started: \\['a07'\\]")
+    (run2 / "agent-a07.jsonl").unlink()
+    (run2 / "agent-a03.jsonl").unlink()
+    refused(run2, "without a transcript: \\['a03'\\]")
+    (run2 / "journal.jsonl").unlink()
+    refused(run2, "journal is missing")
+    # A collection into a directory that is not empty is refused.
+    with pytest.raises(SystemExit, match="not empty"):
+        rater_runner.collect_transcripts(tmp_path / "wf_ok", manifest, out)
 
 
 def test_a_stop_signal_ends_the_run_inside_its_grace(tmp_path: Path) -> None:

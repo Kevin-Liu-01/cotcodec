@@ -29,8 +29,8 @@ scores it. Runbook: `README.md` in this directory.
 - `operators/` is the 64-operator catalog with its stdlib snapshot, diff and
   purity oracle; its sources are hashed into `catalog_sha256`.
 - `raters.py`, `packets.py` and `stats.py` hold the D9/D23 audit: the D35
-  census of the checker candidates and P2's gate (stratified fallback above
-  the GPU cap's capacity), blind
+  census of the checker candidates and P2's gate (stratified fallback at the
+  largest budget that fits the GPU cap's capacity, D38), blind
   packet (built from the operators' snapshot), answer rule, consensus,
   adjudication and the K3 bound; `audit.py` builds samples, saved-start
   baselines, packets fitted to the token budget and the summary (one calls
@@ -40,7 +40,8 @@ scores it. Runbook: `README.md` in this directory.
   agent-harness Claude rater one item per directory with a transcript audit
   tied to the registered prompt template `templates/isolated_rater_prompt.txt`
   (D25, D27, D34) that checks every user turn and every transcript of an item
-  (D35); `analysis.py` is the registered analysis, descriptive since D35
+  (D35), collected from the rating run by `collect-transcripts` (D38);
+  `analysis.py` is the registered analysis, descriptive since D35
   (`D34_DEV_EXIT` keeps P2-P5 out of the confirmatory headline;
   `checker_candidates` is the descriptive output).
 
@@ -84,8 +85,14 @@ scores it. Runbook: `README.md` in this directory.
   under the isolation root; the manifest lives outside it. Start each agent
   with the registered template rendered for its item, verbatim (the audit
   needs exactly one user turn equal to it; the only other turn allowed is the
-  harness relay frame of a resumed run). Keep every agent's transcript, the
-  interrupted ones as `<item>.<agent id>.jsonl`: all are audited (D35).
+  harness relay frame of a resumed run). Run the rating as one workflow
+  session of rater agents only, and take the transcripts with
+  `rater_runner collect-transcripts` (D38), never by hand: it maps every
+  `agent-*.jsonl` to its item, refuses one it cannot map, writes
+  `<item>.jsonl` and `<item>.<agent id>.jsonl` and the manifest
+  `ingest-isolated --collection` checks; all are audited (D35). A resume
+  with another session request voids every framed item; re-rate the
+  `rerate.json` items once in a fresh, unresumed session (D38).
   Never message a rater agent while it runs: the harness delivers the message
   as a `queued_command` attachment, which voids the item, as does any entry
   or attachment type outside `rater_runner.TRANSCRIPT_ENTRY_TYPES` and

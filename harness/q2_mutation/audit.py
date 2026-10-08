@@ -42,7 +42,13 @@
     ``decisions.jsonl`` (the final decision per mutant, which the headline
     analysis reads to gate P2 and P4), the gold defects (D34) and Kevin's
     blind adjudication pool (``adjudication-pool.jsonl``: item ids only, in
-    the pool's seeded order; ``raters.adjudication_pool``).
+    the pool's seeded order; ``raters.adjudication_pool``). The calls files
+    must carry one harness relay frame between them (decision D38,
+    ``rater_runner.check_relay_frames``). With ``--rerate-list`` (the
+    ``rerate.json`` of an ingest whose relay frames differed) and
+    ``--rerate-calls`` (the ingest of the fresh, unresumed re-rate of those
+    items), a second summary with the re-rated answers is written to
+    ``rerate/`` beside the registered one (D38: both are reported).
 """
 
 from __future__ import annotations
@@ -829,26 +835,22 @@ def summary_dict(summary: raters.AuditSummary) -> dict[str, Any]:
     return data
 
 
-def cmd_summarize(args: argparse.Namespace) -> int:
-    from harness.q2_mutation.rater_runner import calls_files_record, merged_answers
-
-    sample, labels, item_of = load_sample(Path(args.sample))
-    shards = {
-        raters.RATER_IDS[0]: [Path(p) for p in args.anthropic_calls],
-        raters.RATER_IDS[1]: [Path(p) for p in args.open_calls],
-    }
-    first = merged_answers(shards[raters.RATER_IDS[0]], item_of.values(), raters.RATER_IDS[0])
-    second = merged_answers(shards[raters.RATER_IDS[1]], item_of.values(), raters.RATER_IDS[1])
+def _write_summary(
+    out: Path,
+    sample: Sequence[raters.Sampled],
+    labels: Mapping[str, str],
+    item_of: Mapping[str, str],
+    answers: Sequence[Mapping[str, tuple[str, str]]],
+    adjudicated: Mapping[str, str],
+    args: argparse.Namespace,
+    extra: Mapping[str, Any],
+) -> dict[str, Any]:
+    """One audit summary (``audit-summary.json``, ``decisions.jsonl``, the pool) into ``out``."""
+    first, second = answers
     ratings = {key: (first[item][0], second[item][0]) for key, item in item_of.items()}
-    adjudicated: dict[str, str] = {}
-    if args.adjudications:
-        key_of = {item: key for key, item in item_of.items()}
-        for row in read_jsonl(Path(args.adjudications)):
-            adjudicated[key_of[row["item_id"]]] = row["answer"]
     summary = raters.summarize(
         sample, labels, ratings, adjudicated=adjudicated, n_boot=args.n_boot, seed=args.seed
     )
-    out = Path(args.out)
     out.mkdir(parents=True, exist_ok=True)
     pool = raters.adjudication_pool(sample, labels, ratings, seed=args.seed)
     write_jsonl(out / "adjudication-pool.jsonl", [{"item_id": item_of[key]} for key, _ in pool])
@@ -859,7 +861,7 @@ def cmd_summarize(args: argparse.Namespace) -> int:
     result = {
         **summary_dict(summary),
         "raters": [dict(r) for r in raters.RATERS],
-        "calls_files": {rid: calls_files_record(paths) for rid, paths in shards.items()},
+        **extra,
         "answer_status": statuses,
         "human_spot_check": "pending",
         "label": "model raters (decisions D9, D23); the human spot check is pending",
@@ -875,6 +877,129 @@ def cmd_summarize(args: argparse.Namespace) -> int:
                 {**summary.decisions, **summary.sham_decisions}.items()
             )
         ],
+    )
+    return result
+
+
+def _pool_keys(
+    sample: Sequence[raters.Sampled],
+    labels: Mapping[str, str],
+    item_of: Mapping[str, str],
+    answers: Sequence[Mapping[str, tuple[str, str]]],
+    seed: int,
+) -> set[str]:
+    first, second = answers
+    ratings = {key: (first[item][0], second[item][0]) for key, item in item_of.items()}
+    return {key for key, _ in raters.adjudication_pool(sample, labels, ratings, seed=seed)}
+
+
+def cmd_summarize(args: argparse.Namespace) -> int:
+    from harness.q2_mutation.rater_runner import (
+        RERATE_SCHEMA,
+        calls_files_record,
+        check_relay_frames,
+        merge_calls,
+        merged_answers,
+        relay_digests,
+    )
+    from harness.q2_mutation.raters import answer_for
+
+    sample, labels, item_of = load_sample(Path(args.sample))
+    shards = {
+        raters.RATER_IDS[0]: [Path(p) for p in args.anthropic_calls],
+        raters.RATER_IDS[1]: [Path(p) for p in args.open_calls],
+    }
+    # Decision D38: one harness relay frame across every calls file merged here.
+    relay = check_relay_frames([*shards[raters.RATER_IDS[0]], *shards[raters.RATER_IDS[1]]])
+    first = merged_answers(shards[raters.RATER_IDS[0]], item_of.values(), raters.RATER_IDS[0])
+    second = merged_answers(shards[raters.RATER_IDS[1]], item_of.values(), raters.RATER_IDS[1])
+    rerated = None
+    if (args.rerate_list is None) != (args.rerate_calls is None):
+        raise SystemExit("--rerate-list and --rerate-calls go together")
+    if args.rerate_list is not None:
+        # Decision D38: the items a relay-frame mismatch voided, re-rated once in a
+        # fresh unresumed run; both results are reported.
+        listing_bytes = Path(args.rerate_list).read_bytes()
+        listing = json.loads(listing_bytes)
+        if not isinstance(listing, dict) or listing.get("schema") != RERATE_SCHEMA:
+            raise SystemExit(f"{args.rerate_list}: not a q2m relay re-rate list")
+        own = {sha256_file(p) for p in shards[raters.RATER_IDS[0]] if p.is_file()}
+        if listing.get("calls_sha256") not in own:
+            raise SystemExit("the re-rate list belongs to none of the Anthropic calls files")
+        wanted = [str(i) for i in listing["items"]]
+        if set(wanted) - set(item_of.values()):
+            raise SystemExit("the re-rate list names items outside the sample")
+        paths = [Path(p) for p in args.rerate_calls]
+        records = merge_calls(paths, raters.RATER_IDS[0])
+        stray = sorted(set(records) - set(wanted))
+        if stray:
+            raise SystemExit(f"re-rate records for items not on the re-rate list: {stray[:5]}")
+        framed = sorted(item for item, row in records.items() if relay_digests(row))
+        if framed:
+            raise SystemExit(
+                f"re-rate records carry a harness relay frame: {framed[:5]}; the re-rate "
+                "runs in a fresh, unresumed workflow session"
+            )
+        first_rerated = dict(first)
+        for item in wanted:
+            row = records.get(item)
+            first_rerated[item] = (
+                (row["answer"], row["status"]) if row else answer_for("unrated", None)
+            )
+        rerated = {
+            "list_sha256": hashlib.sha256(listing_bytes).hexdigest(),
+            "items": len(wanted),
+            "calls_files": calls_files_record(paths),
+            "answers": (first_rerated, second),
+        }
+    adjudicated: dict[str, str] = {}
+    if args.adjudications:
+        key_of = {item: key for key, item in item_of.items()}
+        for row in read_jsonl(Path(args.adjudications)):
+            adjudicated[key_of[row["item_id"]]] = row["answer"]
+    out = Path(args.out)
+    calls_files = {rid: calls_files_record(paths) for rid, paths in shards.items()}
+    extra: dict[str, Any] = {"calls_files": calls_files, "relay_frames_sha256": relay}
+    registered_adjudicated = adjudicated
+    if rerated is not None:
+        # Kevin adjudicates the union of both pools; each summary reads its own.
+        pools = [
+            _pool_keys(sample, labels, item_of, answers, args.seed)
+            for answers in ((first, second), rerated["answers"])
+        ]
+        stray = sorted(set(adjudicated) - pools[0] - pools[1])
+        if stray:
+            raise SystemExit(f"adjudications for items outside both pools: {stray[:5]}")
+        registered_adjudicated = {k: v for k, v in adjudicated.items() if k in pools[0]}
+        rerated_adjudicated = {k: v for k, v in adjudicated.items() if k in pools[1]}
+        rerate_result = _write_summary(
+            out / "rerate",
+            sample,
+            labels,
+            item_of,
+            rerated["answers"],
+            rerated_adjudicated,
+            args,
+            {
+                "calls_files": calls_files,
+                "rerate": {k: v for k, v in rerated.items() if k != "answers"},
+                "result": "re-rated: the relay-voided items' answers from the fresh run (D38)",
+            },
+        )
+        extra["rerate"] = {
+            **{k: v for k, v in rerated.items() if k != "answers"},
+            "summary": "rerate/audit-summary.json",
+            "kappa": rerate_result["kappa"],
+        }
+    result = _write_summary(
+        out,
+        sample,
+        labels,
+        item_of,
+        (first, second),
+        registered_adjudicated,
+        args,
+        extra,
     )
     print(
         json.dumps(
@@ -940,6 +1065,15 @@ def main(argv: list[str] | None = None) -> int:
         nargs="+",
         required=True,
         help="calls.jsonl of the open-weight rater, one per shard (one lane job per shard)",
+    )
+    summ.add_argument(
+        "--rerate-list",
+        help="rerate.json of the Anthropic ingest whose relay frames differed (decision D38)",
+    )
+    summ.add_argument(
+        "--rerate-calls",
+        nargs="+",
+        help="calls.jsonl of the fresh, unresumed re-rate run of those items (decision D38)",
     )
     summ.add_argument("--adjudications", help="JSONL of Kevin's blind answers: item_id, answer")
     summ.add_argument("--out", required=True)
