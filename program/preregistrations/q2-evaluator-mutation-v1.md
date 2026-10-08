@@ -1,7 +1,7 @@
 # q2-evaluator-mutation-v1: OSWorld-Verified checker mutation audit
 
-**Status: DRAFT (eighth draft), not frozen: a pre-specified descriptive
-protocol under decision D35.** Every pin below is filled from the integration
+**Status: DRAFT (ninth draft), not frozen: a pre-specified descriptive
+protocol under decisions D35 and D38.** Every pin below is filled from the integration
 branch `stage0/q2-evaluator-mutation`, and no value is left open. Six
 adversarial reviews have read the earlier drafts (scores 55, 62, 56, 57, 64 and
 80; the review log is at the end of section 17). The fourth review found that D27's
@@ -71,18 +71,63 @@ reviewer lane gives it, instead of a fixed 128 GiB); and the review log
 The sixth review (80/100) read the seventh draft and found one blocking
 defect: the transcript audit read only entries of type user, so a message
 sent to a rater while it ran, which the agent harness delivers as a
-`queued_command` attachment, passed the audit. This eighth draft registers
+`queued_command` attachment, passed the audit. The eighth draft registers
 the transcript's entry types and harness attachment types and voids any
 other (item 4 above, section 9: `rater_runner.TRANSCRIPT_ENTRY_TYPES` and
 `HARNESS_ATTACHMENT_TYPES`). Rerun over the 158 development transcript
 copies, the audit finds no void and no attachment type outside the list
-(3,304 attachments of the fifteen types). The sixth review's minor items are
-listed in section 17 and are not changed in this draft.
+(3,304 attachments of the fifteen types).
+
+Decision D38 (program/decisions.md) accepted the eighth draft's choices as
+implemented (the census audit with its seeded stratified fallback, gold shams
+for every audited task, the relay frame registered under D35's constraints,
+the difference-first packet order and the registered entry and attachment
+types) and, because a freeze pins this code, had the sixth review's minor
+items fixed before the freeze. This ninth draft fixes them:
+
+6. The fallback sample takes the largest mutant budget whose sample, shams
+   and P1 flips fit the capacity, found by search (section 9,
+   `raters.draw_audit_sample`); the eighth draft's single subtraction stopped
+   at 251 items of a 300-item capacity on the review's synthetic pool.
+7. A registered collector, `rater_runner collect-transcripts`, maps every
+   agent transcript of the rating workflow run to its item by its rendered
+   task turn, refuses any it cannot map, copies each byte-exact into the
+   layout the ingest reads and writes a manifest of every agent (item,
+   SHA-256, whether it answered, from the run's journal); `ingest-isolated`
+   takes that manifest and refuses a listed transcript that is missing or
+   changed, or one it does not list (section 9). Copying transcripts by hand
+   was an unregistered step. Over copies of the 158 development transcripts
+   the collector maps every one and reproduces the hand-copied layout file
+   for file, and the audit then finds no void and 142 answering transcripts
+   (`integration/d38-fixes/`).
+8. `audit summarize` refuses calls files that carry different relay frames
+   between them (two ingests with one frame each passed before), and the
+   ingest receipt records each relay frame verbatim: it is harness text, the
+   relayed session request, and a frame that names an item id is kept by
+   digest only (section 9).
+9. A mutant of any candidate kind on which both raters agree against its
+   label joins Kevin's adjudication pool, not only the K3 groups' items
+   (sections 4 and 9); the development census's pool is unchanged by it.
+10. An interrupted attempt (no result in the run's journal) answers only
+   through a structured answer, never through an answer word in its final
+   text (section 9).
+11. The confirm rating runs as one workflow session; if a resume brings a
+   different relay frame, the items it voids are re-rated once in a fresh,
+   unresumed run, chosen by that void reason alone (answer-blind), and both
+   results are reported (section 9: `rerate.json`, `export-isolated
+   --rerate-list`, `audit summarize --rerate-list --rerate-calls`).
+12. Stale text: section 10's K2 consequence (K6 no longer reads P5) and the
+   development evidence README's open relay decision (D35 and D38 decided
+   it).
+
+Kevin's remaining items are listed in section 17: adjudicating the pool,
+the human spot check, the outward actions and the sign-offs carried over
+from earlier drafts.
 
 The registered analysis is code (`harness/q2_mutation/analysis.py`), so no
-choice is left to make after a result is read. After a fresh review of this
-draft that finds no blocking defect and Kevin's sign-offs (section 17), merge
-main once more (so the ledger does not fork) and freeze with
+choice is left to make after a result is read. After a narrow re-check of
+this draft that finds no blocking defect and Kevin's sign-offs (section 17),
+merge main once more (so the ledger does not fork) and freeze with
 
 ```bash
 uv run python scripts/preregister.py freeze q2-evaluator-mutation-v1 \
@@ -148,7 +193,7 @@ differ from the pins:
 {
  "q2m_pins": 1,
  "experiment_id": "q2-evaluator-mutation-v1",
- "code_tree_sha256": "d50be4df851f0d9d0946e84638493277bc69eac585068d64697fad67c7bfd717",
+ "code_tree_sha256": "50edcc45eafa8f5921d2fa59384dbe617eaaf64653ab84b130f50f7445a4c3cc",
  "operator_catalog_sha256": "3a5ff94953f7b672059b0f6b063064b97a438de166fd664903e239a12f65b46f",
  "operator_catalog_version": "q2-mut-operators-v1",
  "operators": 64,
@@ -349,7 +394,13 @@ section 12). The registered computation is `harness/q2_mutation/analysis.py`
   section 9), with what the decision says: confirmed (a false-negative
   candidate decided accept, a false-positive candidate decided reject), label
   contradicted (the opposite decision), unresolved, or not audited; and with
-  whether its task is a gold-defect task (section 9). Reported for each kind
+  whether its task is a gold-defect task (section 9). A label-contradicted
+  reading never rests on the raters' consensus alone: an audited mutant of
+  any stratum (the candidate kinds `fn_equiv`, `fn_alt`, `fp_violation` and
+  `fp_extra`, and P2's gate `alt_gate`) that both raters decide against its
+  label goes to Kevin's blind adjudication pool, and his answer decides it
+  (D38; D34 sent only the equivalence and violation items; until he answers,
+  the consensus stands). Reported for each kind
   (false negative, false positive): counts by label, audit reading, checker
   family and operator; the candidate share (the share of the kind's evaluable
   mutants that are candidates, a task-equal mean with the task-cluster
@@ -623,7 +674,7 @@ first that applies in this order:
 
 A checker exception is not an infrastructure failure; it is verdict `error`.
 
-## 9. Audit (decisions D9, D23, D25, D27, D34 and D35)
+## 9. Audit (decisions D9, D23, D25, D27, D34, D35 and D38)
 
 - Raters (D23), labelled "model raters" in every result:
   - Anthropic rater (`model-rater-anthropic`), model `claude-opus-5-5`, by
@@ -673,11 +724,31 @@ A checker exception is not an infrastructure failure; it is verdict `error`.
         packet and every page image; to follow the rater instructions in the
         packet; and to answer accept, reject or unsure with a one-sentence
         reason through the structured output with its item id. The agent
-        returns `{item_id, answer, reason}`. Every harness transcript of every
-        agent started for an item is kept outside the root (D35): the agent
-        that answered as `{item_id}.jsonl`, any other attempt (an interrupted
-        or repeated agent) as `{item_id}.{agent_id}.jsonl`, in one or more
-        transcript directories (`rater_runner.item_transcripts`).
+        returns `{item_id, answer, reason}`. The confirm rating runs as one
+        workflow session whose agents are the raters only (D38). Every
+        harness transcript of every agent started for an item is kept outside
+        the root (D35), collected by `rater_runner collect-transcripts` (D38)
+        from the workflow run's directory (one `agent-{id}.jsonl` per agent
+        and the run's `journal.jsonl`): each transcript is mapped to its item
+        by its rendered task turn (a user turn whose task text, bare or in
+        the workflow wrapper, is the registered template, its SHA-256
+        checked, rendered with that item's directory and id), and the
+        collector refuses, writing nothing, a transcript that maps to no
+        exported item or to two, an agent the journal never started and a
+        started agent without a transcript. It copies every transcript
+        byte-exact into a new directory, the agent that answered (a result
+        line in the journal) as `{item_id}.jsonl` and any other attempt (an
+        interrupted or repeated agent) as `{item_id}.{agent_id}.jsonl` (both
+        keep the agent id if two agents answered for one item), and writes
+        a collection manifest of every agent: its item, file, SHA-256, size
+        and whether it answered, with the journal's and the export
+        manifest's SHA-256. `ingest-isolated` takes that manifest
+        (`--collection`) and refuses a collection of another export, a
+        listed transcript missing from the transcript directories or
+        differing from its collected copy, and a transcript there that the
+        manifest does not list (`rater_runner.item_transcripts` reads the
+        layout). Copying the transcripts by hand, as for the development
+        rating, was an unregistered step (sixth review).
       - Transcript audit (`rater_runner.audit_transcript`, applied by
         `ingest-isolated` to every item): any shell call (any tool whose name
         contains bash, shell, terminal or powershell), any Read of a path
@@ -719,8 +790,12 @@ A checker exception is not an infrastructure failure; it is verdict `error`.
         Every `StructuredOutput` call must name the item's id, and the agent
         that answered must have read the item's `packet.txt`. Otherwise the
         item is void. Every transcript of the item is audited this way, and
-        at most one may answer (a `StructuredOutput` call, or an answer word
-        in its final text); a reason found in another attempt voids the
+        at most one may answer: a `StructuredOutput` call answers, and so
+        does an answer word in the final text of an agent with a result in
+        the run's journal; an interrupted attempt (no result) answers only
+        through a `StructuredOutput` call, never through its final text
+        (D38; on the development rating none of the 16 interrupted attempts
+        named an answer word). A reason found in another attempt voids the
         item too (that attempt need not have read the packet or reached a
         model turn). So is an item whose directory no longer hashes to its
         export, an item without a transcript, an item none of whose several
@@ -741,10 +816,13 @@ A checker exception is not an infrastructure failure; it is verdict `error`.
         digest and the void reasons (request digest: the exported
         `packet.txt`; body digest: the rebuilt request; response digest: the
         canonical answer record); the receipt records the relay preamble's
-        SHA-256, every relay frame's SHA-256 with its count, the registered
-        entry and attachment types, the count of every attachment type in
-        the run's transcripts, and transcripts in the directories that
-        belong to no exported item. An exported item without an answer is
+        SHA-256, every relay frame's SHA-256 with its count and its text
+        verbatim (D38: the frame is harness text, the relayed session
+        request, not document text; a frame that names an exported item id,
+        which voids its items, is kept by digest only), the collection
+        manifest's SHA-256, the registered entry and attachment types, the
+        count of every attachment type in the run's transcripts, and the
+        re-rate list below (`rerate.json` beside the calls). An exported item without an answer is
         `unrated` (`unsure`). Transcripts and reasons quote document text and
         are never committed.
       - Harness relay frame (D35). When a workflow run is resumed after the
@@ -769,7 +847,39 @@ A checker exception is not an infrastructure failure; it is verdict `error`.
         (section 15). From this draft on it is allowed only under the rules
         above (`rater_runner.is_relay_frame`); any other relayed text, a
         second frame, a frame after the task turn or one naming an item id
-        voids the item.
+        voids the item. Because the receipt records the frame verbatim and
+        is released (section 16), the session request that starts or
+        resumes the confirm rating is written for the record: it names no
+        item, label, verdict or answer and holds nothing private.
+      - One session, and the relay re-rate (D38). The confirm rating runs as
+        one workflow session. If the session restarts and a resume brings a
+        relay frame that differs from another in the run, the ingest voids
+        every item with a frame (above) and lists in `rerate.json` the items
+        whose only void reason is that the frames differ: chosen by that
+        reason alone, never by an answer, so the list is answer-blind. Those
+        items are re-rated once in a fresh, unresumed workflow run:
+        `export-isolated --rerate-list rerate.json` exports only them into a
+        new isolation root (the manifest records the list's SHA-256),
+        then `collect-transcripts` and `ingest-isolated` as above. Both
+        results are reported: the registered summary, in which those items
+        stay `unsure` (`isolation_void`), and beside it `audit summarize
+        --rerate-list rerate.json --rerate-calls {calls}`'s second summary
+        (`rerate/`), in which the fresh answers replace them; the analysis
+        is run on each. The re-rate list must belong to one of the
+        summary's Anthropic calls files (its `calls_sha256`), a re-rate
+        record for an item not on the list is refused, and so is a re-rate
+        record that carries a relay frame (the re-rate run is never
+        resumed). Kevin adjudicates the union of both pools, and each
+        summary reads his answers for its own pool. There is no second
+        re-rate.
+      - Relay identity across calls files (D38). `ingest-isolated` checks the
+        frames of one run; `audit summarize` also refuses Anthropic or
+        open-weight calls files that carry more than one relay-frame digest
+        between them (`rater_runner.check_relay_frames`; the records an
+        ingest already voided for differing frames are not counted, since
+        their answers are `unsure` and the re-rate above covers them), so
+        two ingests with one frame each cannot both count. The digests are
+        recorded per calls file in the audit summary.
       - Item ids (D34): `raters.opaque_item_id` is the first 16 hex
         characters of SHA-256 of `q2-audit:{salt}:{key}`, where the salt is
         32 random bytes (64 hex characters) generated on the host for each
@@ -932,8 +1042,9 @@ A checker exception is not an infrastructure failure; it is verdict `error`.
   its own seeded order. The audit summary takes one `calls.jsonl` per packet
   shard and rater (`audit summarize --anthropic-calls ... --open-calls ...`)
   and merges them (`rater_runner.merge_calls`); an item with records in two
-  files, a record of the other rater or a record for an item outside the
-  sample is refused, and an item no file rated is `unrated`.
+  files, a record of the other rater, a record for an item outside the
+  sample and calls files with different relay frames (D38, above) are
+  refused, and an item no file rated is `unrated`.
 - Blind packet (`harness/q2_mutation/audit.py`, built in the LO-VM image):
   the task instruction, every starting file of the task and every end-state
   file of the candidate, each with its structure listing; for each end-state
@@ -1048,7 +1159,15 @@ A checker exception is not an infrastructure failure; it is verdict `error`.
   (with its shams and P1 flips) holds more items than the capacity above
   (1,139), the mutants become a seeded stratified sample over (stratum,
   checker family) cells. The mutant budget is the largest whose sample, shams
-  and P1 flips fit the capacity; `raters.allocate` gives every cell
+  and P1 flips fit the capacity, found by search (D38;
+  `raters.draw_audit_sample`, `raters.stratified_sample`): every mutant adds
+  one item and the shams and flips only add, so no budget above the capacity
+  less the P1 flips fits, and the budgets are tried downward from there until
+  one fits (the sham count depends on the tasks a draw reaches, so the size
+  is not monotone in the budget; the eighth draft's single subtraction of
+  the overshoot stopped at 251, 462 and 672 items for capacities of 300, 500
+  and 700 on the sixth review's synthetic pool of 1,800 candidates on 60
+  tasks, where the search fills all three); `raters.allocate` gives every cell
   min(size, 3) items (min(size, 1) if that does not fit), shares the rest in
   proportion to what each cell has left (rounded down, the remaining units
   to the largest fractional parts, ties in cell order), and each cell is
@@ -1069,12 +1188,16 @@ A checker exception is not an infrastructure failure; it is verdict `error`.
   Kevin or counted as a label error, never dropped.
 - Decision per item (`raters.final_decision`): both raters accept → accept;
   both reject → reject; otherwise unresolved. Kevin's blind adjudication pool
-  (`raters.adjudication_pool`, D34) holds three kinds of item: every real
-  item (mutant or P1 flip) on which the raters split; every real item of a
-  K3 group on which both raters agree against its label (a violation both
-  accept, an equivalence mutant both reject; on the D27 rerate 3 of 26
-  violation items were both-accept, which no rule sent to Kevin); and every
-  gold sham on which the raters split. The pool is mixed in one seeded order
+  (`raters.adjudication_pool`, D34, widened by D38) holds three kinds of
+  item: every real item (mutant or P1 flip) on which the raters split; every
+  audited mutant of any label class, so of every stratum (`fn_equiv`,
+  `fn_alt`, `alt_gate`, `fp_violation`, `fp_extra`), on which both raters
+  agree against its label (a should-fail mutant both accept, a should-pass
+  mutant both reject; on the D27 rerate 3 of 26 violation items were
+  both-accept, which no rule sent to Kevin; D34 took only the K3 groups'
+  items, so an alternative solution both rejected or an extra change both
+  accepted was read as label-contradicted on the raters' consensus alone);
+  and every gold sham on which the raters split. The pool is mixed in one seeded order
   (`random.Random("42:adjudication")`) and written as item ids only
   (`adjudication-pool.jsonl`); Kevin sees each item's packet, blind to the
   label, the verdict, the operator, whether it is a sham, why it is in the
@@ -1120,8 +1243,15 @@ A checker exception is not an infrastructure failure; it is verdict `error`.
   (confirmed candidates), the 3 passed violations all split, 1 of the 28
   passed alternative solutions split, the P1 flip and the gold shams of the
   8 audited tasks were all both accepted; so 4 of the 50 census items (8%)
-  would enter the pool, against 24 of the 142 items of the D34 audit. Scaled
-  four times (section 6), the confirm pool is about 16 items (a range of
+  would enter the pool, against 24 of the 142 items of the D34 audit. D38's
+  wider pool adds nothing there: the 27 alternative solutions the raters
+  agreed on were both accepted and the census held no extra change, so no
+  item outside the K3 groups had a concordant contradiction (the D34 audit's
+  28 alternative solutions and 6 extra changes had none either, so its pools
+  of 24 and 113 items are unchanged under the wider rule). It can add
+  confirm items where both raters reject an alternative solution or accept
+  an extra change. Scaled four times (section 6), the confirm pool is about
+  16 items (a range of
   about 10 to 40 allows for other tasks and checkers), roughly 0.5 to 3.5
   hours at an assumed 3 to 5 minutes per item; the fifth draft's sampler
   projected 43 to 134 items. Under the registered dev ingest, where the relay turn voided 110
@@ -1183,7 +1313,10 @@ flags; K5, K8 and K9 are unchanged.
     headline. P2-P5 are then recomputed without that family's mutants: the
     pooled rates, the family tables and P5's tasks (a task's checker family
     is its set of metric functions, so a dropped family takes its tasks out
-    of P5), and K6 reads the recomputed P5. The dropped family's own tables
+    of P5), and the checker candidates of that family are reported apart
+    (section 4). K6 no longer reads P5: D35 retired its adequacy claim, so
+    the recomputed P5 is reported as exploratory and decides nothing. The
+    dropped family's own tables
     and the pooled rates that include it are reported as exploratory
     (`analysis.headline` `k2_exploratory`). Fallback: if no K2 report exists
     when the result is written, the headline is labelled "offline harness,
@@ -1475,7 +1608,19 @@ and the deviations below.
   instead of the earlier stratified sample of all mutants; the transcript
   audit checks every user turn and every transcript of an item, allowing only
   the registered harness relay frame besides the task turn; and the packet
-  puts the difference before the listings.
+  puts the difference before the listings. After the sixth review the
+  transcript audit also registers the transcript's entry and harness
+  attachment types and voids any other.
+- Decision D38 (after the sixth review) kept those choices and fixed the
+  review's minor items before the freeze: the fallback's budget is the
+  largest that fits, found by search; a registered collector takes every
+  transcript of the rating run, and the ingest checks its manifest; an
+  interrupted attempt answers only through a structured answer; relay frames
+  must agree across the calls files of the summary and are recorded
+  verbatim; the confirm rating is one workflow session, with one fresh,
+  unresumed, answer-blind re-rate of items a differing relay frame voids,
+  both results reported; and concordant contradictions of every candidate
+  kind go to Kevin's pool, not only the K3 groups' items.
 - Two operators were restricted after the third review (D27):
   `pptx.eq.zorder_nonoverlap` (a swap could move a shape above or below an
   overlapping shape stacked between the pair) and
@@ -1922,7 +2067,9 @@ the decisions, the audit summary, Kevin's adjudication pool (item ids only)
 and, after the isolated ingest, the audit's salt (its SHA-256 is committed
 before); the analysis result, which lists every checker candidate (mutant
 id, task, operator, checker family, label, verdict and audit decision; D35);
-and every transcript's SHA-256 with the relay frames' digests. Not released: mutant documents, base
+and every transcript's SHA-256 with the relay frames' digests and text
+(D38), the transcript collection manifest and the relay re-rate list. Not
+released: mutant documents, base
 files, full recipes, gold or initial files, saved baselines, audit packets,
 exported harness files and renders, and raw rater responses and reasons
 (they may quote document text).
@@ -1992,53 +2139,61 @@ exported harness files and renders, and raw rater responses and reasons
       freeze): its one blocking defect (harness attachment entries, the
       `queued_command` channel for a message sent to a running agent among
       them, were outside the transcript audit) is answered in this eighth
-      draft (status note, section 9). Its minor items stay open for Kevin and
-      a later pass: the stratified fallback's budget is not the largest that
-      fits, as section 9 says (the fallback is not expected to run: about
-      205 items against 1,139); the copying of transcripts out of the
-      workflow directory is an unregistered step (an omitted interrupted
-      attempt cannot be detected); relay-frame identity is checked within
-      one ingest, not across several Anthropic calls files at `audit
-      summarize`, and the relayed request is recorded only as a hash; a
-      concordant contradiction goes to the pool only for the equivalence
-      and violation candidates (section 4 does not say so); a second resume
-      with another session request voids every item with a relay frame, and
-      an answer word in an interrupted attempt's final text counts as
-      answering; section 10's K2 consequence still mentions K6 reading the
-      recomputed P5.
-- [ ] A narrow re-check of this eighth draft (the sixth review's probe as a
-      test, the rerun over the 158 development transcripts, the pin refresh
-      and the freeze lint); record any new score in the review log below and
-      use the lowest.
-- [ ] Kevin's sign-offs: D2 (upstream defect reports and other outward
-      disclosures stay unsent while this runs); the D23/D25/D27 rater lineup,
-      including the agent-harness path with unfixed sampling, the isolation
-      protocol and its transcript audit, treating the earlier dev Claude
-      answers as non-blind exploratory evidence, and sending public OSWorld
-      task files and their renders to the Anthropic model (section 9); P1 as
-      a replication that uses reserve-split golds; release of the specs,
-      which quote short passages of file-cache documents; under D34, the
+      draft (status note, section 9). Its minor items were recorded there
+      for a later pass.
+- [x] Decision D38 (2026-10-08): the eighth draft's choices accepted as
+      implemented (the census audit with its seeded stratified fallback,
+      gold shams for every audited task, the relay frame registered under
+      D35's constraints, the difference-first packet order, the registered
+      transcript entry and attachment types), and the sixth review's minor
+      items fixed before the freeze in this ninth draft (status note items
+      6-12), each with tests: the fallback's budget is the largest that fits
+      (section 9); a registered transcript collector replaces copying by
+      hand, and the ingest checks its manifest (section 9); `audit
+      summarize` refuses calls files with different relay frames, and the
+      receipt records the relayed text verbatim (section 9); concordant
+      contradictions of every candidate kind go to Kevin's pool (sections 4
+      and 9); an interrupted attempt answers only through a structured
+      answer (section 9); the confirm rating runs as one workflow session,
+      with one answer-blind re-rate of relay-voided items in a fresh,
+      unresumed run and both results reported (section 9); section 10's K2
+      consequence no longer has K6 reading P5. Rerun over copies of the 158
+      development transcripts (scratch only, nothing ingested), the
+      collector maps all 158 to their items, its layout equals the
+      hand-copied one file for file, and the audit finds no void and 142
+      answering transcripts (`integration/d38-fixes/`).
+- [ ] A narrow re-check of this ninth draft (D38's fixes and their tests,
+      the collector rerun over the 158 development transcripts, the pin
+      refresh and the freeze lint); record any new score in the review log
+      below and use the lowest.
+- [ ] Kevin's remaining items (D38). His own work: adjudicating the whole
+      pool (about 16 items, 10 to 40, roughly 0.5 to 3.5 hours at 3 to 5
+      minutes per item; with D38 it also holds every candidate kind's
+      concordant contradictions) and the human spot check of D9 (about 35
+      items at the expected census, whose result stays pending until done;
+      recommendation: the registered stratified sample, max(5, 10%) per D35
+      stratum plus 5 shams, with every item on which the raters split or a
+      rater answered `unsure` added). The outward actions, which stay his:
+      the disclosures to Letta and xlang-ai (D2: upstream defect reports and
+      other outward disclosures stay unsent while this runs), the licence
+      requests, any purge of git history, rotating the exposed Moonshot key,
+      and a valid Anthropic API key if the API path should replace the
+      agent harness. The sign-offs carried over from earlier drafts: the
+      D23/D25/D27 rater lineup, including the agent-harness path with
+      unfixed sampling, the isolation protocol and its transcript audit,
+      treating the earlier dev Claude answers as non-blind exploratory
+      evidence, and sending public OSWorld task files and their renders to
+      the Anthropic model (section 9); P1 as a replication that uses
+      reserve-split golds; release of the specs, which quote short passages
+      of file-cache documents; and the D34 rules as implemented: the
       thinking-on rater configuration, the gold-defect rule, the
       concordant-contradiction pool, the new-file text difference, the
       save-drift rule (which also hides `pptx.eq.subvisible_nudge`'s edit in
       the count line), the off-slide rule (it does not reach the fourth
       review's afb440d9, and two 4ed5abd0 deletions stay both-accept), the
-      salted ids, the injected harness context and the 3.0 GPU-h rater cap;
-      and under D35, the descriptive protocol (no confirmatory claim; P2-P5
-      exploratory; K6 retired; K4 reported only; K6b and K7 descriptive), the
-      checker candidates as the descriptive output, the census audit scope
-      and its registered stratified fallback, the relay-frame rule of the
-      transcript audit (the harness relay frame registered under
-      constraints, rather than requiring unresumed rating runs), every
-      transcript of an item audited, the registered transcript entry types
-      and harness attachment types (any other type voids the item, so a
-      harness version that adds one voids every item that receives it), the difference-first packet, the
-      adjudication workload (about 16 pool items, 10 to 40, roughly 0.5 to
-      3.5 hours) and the ownership and size of the human spot check (about
-      35 items at the expected census), whose result stays pending until
-      done. Recommendation for the spot check: the registered stratified
-      sample, max(5, 10%) per D35 stratum plus 5 shams, with every item on
-      which the raters split or a rater answered `unsure` added.
+      salted ids, the injected harness context and the 3.0 GPU-h rater cap.
+      D35 (the descriptive protocol) and D38 (the eighth draft's choices and
+      these fixes) are decided.
 - [ ] Merge main immediately before the freeze (main has moved during each
       review), then freeze.
 
@@ -2053,7 +2208,7 @@ score is the one recorded):
 | Third review of the fourth draft (2026-10-07) | fourth | 56 | no | fifth draft (D27) |
 | Fourth adversarial review (2026-10-07) | fifth | 57 | no | sixth draft (D34) |
 | Fifth adversarial review (2026-10-08) | sixth | 64 | no | seventh draft (D35) |
-| Sixth adversarial review (2026-10-08) | seventh | 80 | no | eighth draft |
+| Sixth adversarial review (2026-10-08) | seventh | 80 | no | eighth draft (blocker); ninth draft (minor items, D38) |
 
 Scores so far: 55, 62, 56, 57, 64, 80; the lowest is 55.
 

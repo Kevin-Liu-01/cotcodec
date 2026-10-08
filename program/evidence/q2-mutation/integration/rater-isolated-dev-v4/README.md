@@ -36,9 +36,13 @@ turn that follows is the rendered template exactly, but it is the second user
 turn, so the registered rule voids them. The 32 `ok` items are the agents
 that completed before the session ended (no relay turn); the 16 interrupted
 agents also had none. The relay turn names no item, label, verdict or other
-rater's answer. The registered rule is unchanged here; whether to register
-the relay turn, or to require fresh (unresumed) rating runs, is open for
-Kevin before the freeze.
+rater's answer. The registered rule is unchanged here. Decisions D35 and D38
+settled the question for the confirm audit (it was open for Kevin when this
+was written): the relay frame is registered under constraints (prereg
+section 9: once, before the task turn, naming no item, byte-identical across
+the run and recorded verbatim), and the confirm rating runs as one workflow
+session; if a resume brings a different frame, the items it voids are
+re-rated once in a fresh, unresumed run and both results are reported.
 
 ## Findings (exploratory)
 
