@@ -186,3 +186,31 @@ def test_d43_development_manifests_are_seed_42_development_at_126ff8b():
         old = yaml.safe_load((v1 / f"{v1_stem}.yaml").read_text(encoding="utf-8"))
         for key in ("workload", "slurm", "vm", "runner"):
             assert manifests[stem][key] == old[key], (stem, key)
+
+
+def test_d45_development_manifests_repeat_d43s_at_c74eae0():
+    """Decision D45 changed the judge, so the ten D43 development runs (jobs 830-839) were
+    repeated at c74eae0 (main section 27, jobs 845-854): each D45 manifest equals its D43
+    manifest except for the names, the commit, the exported tree and the registration digest
+    at that commit; workloads, VMs, runner and Slurm resources are unchanged."""
+    import yaml
+
+    from harness.q2.vm.manifest import validate_manifest
+
+    folder = ROOT / "experiments/manifests/q2-action-path-v2"
+    d45 = {p.stem: yaml.safe_load(p.read_text(encoding="utf-8"))
+           for p in sorted(folder.glob("d45-*.yaml"))}  # fmt: skip
+    assert len(d45) == 10
+    for stem, manifest in d45.items():
+        validate_manifest(manifest)
+        d43 = yaml.safe_load((folder / f"{stem.replace('d45-', 'd43-', 1)}.yaml").read_text())
+        assert manifest["git_sha"] == "c74eae0aabb09fc5bc25e168758b529ede2a1410", stem
+        assert manifest["purpose"] == "development" and manifest["randomness"]["seeds"] == [42]
+        assert manifest["campaign_id"] == d43["campaign_id"].replace("-d43-", "-d45-", 1)
+        assert manifest["name"] == d43["name"].replace("-d43", "-d45", 1)
+        assert manifest["source"]["host_dir"].endswith("/src/" + manifest["git_sha"])
+        assert manifest["preregistration"]["path"] == d43["preregistration"]["path"]
+        for key in ("workload", "vm", "runner", "slurm", "run_root", "model", "randomness"):
+            assert manifest[key] == d43[key], (stem, key)
+        changed = {k for k in manifest if manifest[k] != d43.get(k)}
+        assert changed <= {"name", "campaign_id", "git_sha", "source", "preregistration"}, stem

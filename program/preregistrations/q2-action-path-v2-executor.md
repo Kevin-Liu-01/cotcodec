@@ -12,7 +12,7 @@ run may run before this row exists; C2 needs only the inputs addendum.
   `q2-action-path-v2` (section 2.2). It changes no rule of that file; it pins
   what that file says is frozen when development ends. It is v1's executor
   addendum (`q2-action-path-v1-executor`, ledger row 10) with the changes
-  decisions D40 and D43 make (section 10).
+  decisions D40, D43 and D45 make (section 10).
 - Drafted: 2026-10-08, on branch `stage0/q2-action-path-v2`, from v1's frozen
   text. v1's addendum was drafted on 2026-10-07 on branch
   `stage0/q2-action-path`, with decisions D30, D33 and D39 applied before its
@@ -175,36 +175,39 @@ for Writer and Chrome; for VS Code, from a screenshot of the opened fixture).
 
 ## 7. Acceptance analysis (`acceptance.py`)
 
-The decision rules of the main preregistration's sections 5-9 as code
-(design decision 32): which campaigns count (COMPLETED 0:0 from the batch
-script's own record or Slurm, infrastructure gates, `System.qcow2`
-unchanged, nothing leaked), the rerun rules, that each criterion ran exactly
-its realized order from one source tree, A1-A7 (A1-A4 and the ladder not
-counting a trial whose only failure is a guest-server restart, during the
-entry or across the session's reset observation, decisions D30 and D33;
-A1-A3 judging an entry on its counted repetitions and failing it on a second
-excused trial, and a rung not qualifying with more than two; A7's restarts
-of every attempt per accessibility call of the counting attempts, capped at
-the plan's 39,036, on the exact one-sided 95% Poisson bound, under attempt 1
-only), C1-C4 with C2's reading of L0-raw trials (including the judge's
-reading of key events the tap recorded without the guard's lock bit, decision
-D43) and C3's clean-kill and
-equivalence rules (a mutant is equivalent only if the counting attempt's
-streams match the reference's on every cell and each earlier attempt's on
-the cells it ran without an infrastructure failure, decision D39), each control reading an earlier attempt by its own
-rule (main design decision 45), and the ladder's N* with the foreign-load
-abort and its rerun cap, a rung attempt without host snapshots not
-qualifying but counting its trials. It reads an attempt killed before its
-driver wrote a receipt from its manifest, batch record and finished sessions
-(main design decision 46), reads a receipt, cycle or record file that does
-not parse as missing, the attempt not counting (decision D39), and reports
-without judging every A1-A3 entry with two or more excused trials, A4's
-excused trials over every rerun, A4's restarts per accessibility call
-against A7's bound under a repair attempt, and each earlier attempt's
-receipt beside A5 (main sections 11, 12 and 22). Its verdicts are the ones
-reported; `tests/test_q2_acceptance_analysis.py` drives every rule on
-synthetic campaigns. It is frozen in the inputs addendum (before C2 is
-scored) and pinned again here.
+The decision rules of the main preregistration's sections 5-9 as code (design
+decision 32): which campaigns count (COMPLETED 0:0 from the batch script's own
+record or Slurm, infrastructure gates, `System.qcow2` unchanged, nothing
+leaked), the rerun rules, that each criterion ran exactly its realized order
+from one source tree, A1-A7 (A1-A4 and the ladder not counting a trial whose
+only failure is a guest-server restart, during the entry or across the
+session's reset observation, decisions D30 and D33; A1-A3 judging an entry on
+its counted repetitions and failing it on a second excused trial, and a rung
+not qualifying with more than two; A7's restarts of every attempt per
+accessibility call of the counting attempts, capped at the plan's 39,036, on
+the exact one-sided 95% Poisson bound, under attempt 1 only), C1-C4 with C2's
+reading of L0-raw trials (including the judge's reading of key events the tap
+recorded without the guard's lock bit, decisions D43 and D45) and C3's
+clean-kill and equivalence rules (a mutant is equivalent only if the counting
+attempt's streams match the reference's on every cell and each earlier
+attempt's on the cells it ran without an infrastructure failure, decision D39,
+a key event's state compared as the judge reads it, decision D45), each
+control reading an earlier attempt by its own rule (main design decision 45),
+and the ladder's N* with the foreign-load abort and its rerun cap, a rung
+attempt without host snapshots not qualifying but counting its trials. It
+reads an attempt killed before its driver wrote a receipt from its manifest,
+batch record and finished sessions (main design decision 46), reads a receipt,
+cycle or record file that does not parse as missing, the attempt not counting
+(decision D39), and reports without judging every A1-A3 entry with two or more
+excused trials, A4's excused trials over every rerun, A4's restarts per
+accessibility call against A7's bound under a repair attempt, each earlier
+attempt's receipt beside A5 (main sections 11, 12 and 22), and, in every
+criterion, each key event read without its state with its offset from the
+preceding processed press and each key event without Mod2 that no such press
+preceded (`state_not_observed_report`, main section 12, decision D45). Its
+verdicts are the ones reported; `tests/test_q2_acceptance_analysis.py` drives
+every rule on synthetic campaigns. It is frozen in the inputs addendum (before
+C2 is scored) and pinned again here.
 
 `scripts/render_q2_action_path_manifest.py` writes each scored campaign's
 manifest from a local export of the frozen commit: the ledger's digests, the
@@ -242,7 +245,7 @@ v1; its seed-45 order runs the same 500 trials in the same 9 sessions, so its
 ## 9. Development record (seed 42, never evidence)
 
 The first paragraph is v1's record, kept; the second states v1's rule; the
-rest is v2's rule (decisions D40 and D43).
+rest is v2's rule (decisions D40, D43 and D45).
 
 Listed in `program/evidence/2026-10-07/q2-action-path-stage0b/README.md`
 with every job's outcome, and per job in `development-runs.json` there. The
@@ -276,23 +279,23 @@ v1's freeze commit to `7653799`; the `git diff --stat` below listed only
 campaign executes `acceptance.py`; no file of the lane imports it), so the
 development runs at `7653799` stood.
 
-v2's rule (decisions D40 and D43). Every file a VM campaign executes must be byte-identical at v2's freeze commit to `126ff8b`, the commit of v2's
-final development runs (jobs 830-839; main section 27). Run at the freeze
-commit,
+v2's rule (decisions D40, D43 and D45). Every file a VM campaign executes must
+be byte-identical at v2's freeze commit to `c74eae0`, the commit of v2's final
+development runs (jobs 845-854; main section 27). Run at the freeze commit,
 
-`git diff --stat 126ff8b HEAD -- harness/q2 infra/slurm/host-single-node/vm-campaign.sbatch scripts/submit_vm_campaign.py`
+`git diff --stat c74eae0 HEAD -- harness/q2 infra/slurm/host-single-node/vm-campaign.sbatch scripts/submit_vm_campaign.py`
 
 may list only the analysis and sizing files (`acceptance.py`, `vm_hours.py`,
 `trial_times.json`, `vm_hours.json`), the prediction files (which only
-`acceptance.py` reads) and Markdown files. Anything else needs new
-development runs before the freeze. On `stage0/q2-action-path-v2` it lists
-exactly `harness/q2/action_path/l0_raw_prediction_v2.yaml` (section 24, item
-1 of the main registration: `chord_super_d`'s reason and the basis notes,
-written after the runs).
+`acceptance.py` reads) and Markdown files. Anything else needs new development
+runs before the freeze. On `stage0/q2-action-path-v2` it lists nothing: every
+file under `harness/q2/`, the prediction file's notes included, is as
+`c74eae0` holds it (`c74eae0` itself holds D45's changes to `verdict.py`,
+`acceptance.py` and `l0_raw_prediction_v2.yaml`).
 
 Why the final development runs were repeated. Against `7653799`, the commit
 of v1's final development runs (jobs 703-708), the files a campaign executes
-that differ at `126ff8b`, each with its reason, are:
+that differ at `126ff8b` and at `c74eae0`, each with its reason, are:
 
 - `harness/q2/action_path/order.py` (D40): C2's own order seed, 45, built
   only for criterion C2;
@@ -302,10 +305,10 @@ that differ at `126ff8b`, each with its reason, are:
 - `harness/q2/vm/driver.py` (D40, D43): the L0-raw development plan (the
   L0-fixed cells), the criterion passed to the order, and the fault passed to
   the runner;
-- `harness/q2/action_path/verdict.py` (D43): a key event the XRecord tap
-  recorded without Mod2 is judged on kind, keycode, keysym and order, not
-  its state (the trial verdict and C4), and each verdict reports those
-  events;
+- `harness/q2/action_path/verdict.py` (D43, D45): a key event the XRecord
+  tap recorded without Mod2, after a key press it recorded with Mod2 in the
+  same window (D45), is judged on kind, keycode, keysym and order, not its
+  state (the trial verdict and C4), and each verdict reports those events;
 - `harness/q2/vm/guest/guard.py` (D43): condition (f), Mod2 in the logical
   modifier state, and the `mods` field of each check;
 - `harness/q2/vm/runner.py` (D43): the development-only fault, applied as an
@@ -315,31 +318,54 @@ that differ at `126ff8b`, each with its reason, are:
 
 Against `e66bf16`, where v2's first development runs ran (jobs 784-787), the
 same D43 files differ (`verdict.py`, `guard.py`, `runner.py`, `driver.py`,
-`manifest.py`, `suite.py`). `verdict.py` and `guard.py` judge every trial
-and run before and after every entry, so the runs at `7653799` and
-`e66bf16` no longer stand for the code the campaigns will execute. Jobs
-834-839 repeat 703-708 at `126ff8b` with their workloads and Slurm resources
-unchanged: the guest-server fault injection (834: 52 of 56, the two trials
-each session's kills hit, as 703), L0-fixed on one VM and on 8 (835: 400 of
-400; 836: 800 of 800), H-OSW-fixed (837: 194 of 198, R03 and R09 outside
-spec) and H-GA (838: 178 of 186, R02, R04, R06 and R10 outside spec), and
-the canary (839: 60 of 60). Every in-spec cell passed in every repetition
-and setting, the only failures are 703-708's, no trial of those layers read
-an event without its state, C4 agreed in 140 of 140 and 280 of 280 key,
-chord and Caps Lock trials, every guard check read Mod2, and step p95 was
-2.71 s on one VM and 2.76 s on 8 (704: 2.92 s, 705: 3.02 s). Jobs 830-833
-ran the L0-raw and L0-fixed samples and the negative case D43 asked for
-(main section 27). The executor, the adapters, the corpus and the other guest
-code are identical at `7653799`, `e66bf16` and `126ff8b`, so the VM-hour
-sizing measured at `82af567` (section 8) stands. The renderer
+`manifest.py`, `suite.py`). `verdict.py` and `guard.py` judge every trial and
+run before and after every entry, so the runs at `7653799` and `e66bf16` no
+longer stand for the code the campaigns will execute. Jobs 834-839 repeated
+703-708 at `126ff8b` with their workloads and Slurm resources unchanged: the
+guest-server fault injection (834: 52 of 56, the two trials each session's
+kills hit, as 703), L0-fixed on one VM and on 8 (835: 400 of 400; 836: 800 of
+800), H-OSW-fixed (837: 194 of 198, R03 and R09 outside spec) and H-GA (838:
+178 of 186, R02, R04, R06 and R10 outside spec), and the canary (839: 60 of
+60). Every in-spec cell passed in every repetition and setting, the only
+failures are 703-708's, no trial of those layers read an event without its
+state, C4 agreed in 140 of 140 and 280 of 280 key, chord and Caps Lock trials,
+every guard check read Mod2, and step p95 was 2.71 s on one VM and 2.76 s on 8
+(704: 2.92 s, 705: 3.02 s). Jobs 830-833 ran the L0-raw and L0-fixed samples
+and the negative case D43 asked for (main section 27).
+
+Against `126ff8b`, where the D43 development ran (jobs 830-839), only
+`verdict.py` differs among the files a campaign executes (decision D45: a key
+event without Mod2 is read without its state only after a key press recorded
+with Mod2 in its window, and its docstrings state the precondition), with
+`acceptance.py` (C2's reading and C3's comparison by the same rule, section
+12's report) and the prediction file's notes, which no campaign executes.
+`verdict.py` judges every trial, so jobs 845-854 repeat 830-839 at `c74eae0`
+with their workloads and Slurm resources unchanged: the L0-raw and L0-fixed
+samples (845: 151 of 180, the shell chords passing with their queued events
+read without state, each after a processed press; 846: 180 of 180), the
+negative case (847 and 848: 0 of 140, nothing read without its state), the
+guest-server fault injection (849: 52 of 56, as 834), L0-fixed on one VM and
+on 8 (850: 400 of 400; 851: 799 of 800, the one failure a trial whose only
+failure was an unprovoked guest-server restart during an observation call,
+which A1-A4 and the ladder excuse; main section 27), H-OSW-fixed (852: 194 of
+198) and H-GA (853: 178 of 186) with only the outside-spec R cells failing,
+and the canary (854: 60 of 60). Every other cell's outcome equals the D43
+job's it repeats, no L0-fixed or harness trial read an event without its
+state, C4 agreed in 140 of 140 and 280 of 280 key, chord and Caps Lock trials,
+every guard check read Mod2, and step p95 was 2.71 s on one VM and 2.77 s on
+8.
+
+The executor, the adapters, the corpus and the other guest code are identical
+at `7653799`, `e66bf16`, `126ff8b` and `c74eae0`, so the VM-hour sizing
+measured at `82af567` (section 8) stands. The renderer
 (`scripts/render_q2_action_path_manifest.py`) is run by the operator before
 submission, not by a campaign.
 
 ## 10. Changes from v1 (D40)
 
 Decision D40 changes three things in the main preregistration (its section
-24), and decision D43 changes the judge and the guard (its section 27). In
-this addendum:
+24), decision D43 changes the judge and the guard, and decision D45 narrows
+the judge's rule and applies it to C3 (its section 27). In this addendum:
 
 1. **Ids and paths.** This file is `q2-action-path-v2-executor`, an addendum
    to `q2-action-path-v2`, frozen after `q2-action-path-v2-inputs`; a repair
@@ -349,17 +375,19 @@ this addendum:
    `scripts/render_q2_action_path_manifest.py` (the host run root as a
    parameter, v2's paths), `harness/q2/vm/driver.py` and
    `harness/q2/vm/manifest.py` (as in the inputs addendum, section 5); for
-   D43, `harness/q2/vm/guest/guard.py` (condition f), `harness/q2/vm/runner.py`
-   (the development fault) and `harness/q2/vm/suite.py` (a docstring), with
-   `driver.py`, `manifest.py` and `acceptance.py` changed again. Every other
-   row is v1's digest: L0-fixed, the adapters, the vendored parsers, the
-   corpus, the mutation kit, the design differences, the canary targets and
-   the VM-hour sizing are unchanged.
+   D43, `harness/q2/vm/guest/guard.py` (condition f),
+   `harness/q2/vm/runner.py` (the development fault) and
+   `harness/q2/vm/suite.py` (a docstring), with `driver.py`, `manifest.py` and
+   `acceptance.py` changed again; D45 changes `acceptance.py` again (C3's
+   comparison and section 12's report) and adds no row. Every other row is
+   v1's digest: L0-fixed, the adapters, the vendored parsers, the corpus, the
+   mutation kit, the design differences, the canary targets and the VM-hour
+   sizing are unchanged.
 3. **The byte-identity rule** (section 9) names every file a campaign
-   executes that differs from v1's final development commit (`7653799`) or
-   v2's first (`e66bf16`), why, and the commit they must all equal now
-   (`126ff8b`), where v2's final development runs (jobs 830-839, repeating
-   703-708) ran.
+   executes that differs from v1's final development commit (`7653799`), v2's
+   first (`e66bf16`) or D43's (`126ff8b`), why, and the commit they must all
+   equal now (`c74eae0`), where v2's final development runs (jobs 845-854,
+   repeating D43's 830-839 and so v1's 703-708) ran.
 4. **Text.** Section 7 describes the renderer's host-root parameter and
    corrects what v1 said about the addenda C2's manifest pins (the renderer
    pins every addendum the ledger holds, as v1's evidence for job 768
