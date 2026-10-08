@@ -634,3 +634,28 @@ reports section 12 promises (each event read without its state, its offset
 from the preceding processed press) are produced by the analysis. Because
 the judge changes, the seed-42 final development runs are repeated at the
 new commit and the executor addendum's byte-identity statement names it.
+
+**D46. Q1 Stage 0 closes on the audit-metric study; Q1 GPU spend stops until
+Stage 1 can run.** The CPU-only study D41 ordered (branch
+`stage0/q1-audit-metric`, evidence under `program/evidence/2026-10-08/`,
+replicated by an independent critic and attacked by an adversarial one, no
+evaluation unit touched) found the registered audit's failure analytic: its
+metric scores an all-zeros output at 1/(1+kappa) = 0.999 for any reference,
+and TF32 noise on cancelling sums pushes the threshold above that on most L2
+problems, so no threshold or multiplier repairs it. A noise-relative
+normaliser (rule `q1-audit-metric/2`: max-abs and blockwise error over the
+largest error of a yardstick of correct references, a floor, and a decoy
+determinacy gate) certifies gross destruction cleanly, but under TF32 valid
+algorithms already sit up to about 45-50 times the yardstick while a 1%
+fault scores a median of about 15, so most 1%-level faults (239 of 272) fall
+in an ambiguous band. With the measurement design largely occupied by
+"Measuring the Checker", Stage 0 projected at 20-25 GPU-h, and its only
+consumer, Stage 1, blocked by the R580 driver and the policy licence, a
+successor Stage 0 is not worth funding now. Decided: Q1 Stage 0 is closed
+with this study as its outcome (a limiting result: under a TF32-admissible
+policy a tolerance audit can certify that a kernel is not grossly wrong, not
+that it is correct to 1%); no further Q1 GPU job runs until Stage 1 can. If
+Q1 is revived: Kevin rules on D14 (is TF32 truncation admissible), rule /2
+is the audit design, an S1-cal-only GPU pilot of about 1.2 GPU-h tests it on
+real kernels first, and any reduced Stage 0 takes a new id and a fresh
+gauntlet.
