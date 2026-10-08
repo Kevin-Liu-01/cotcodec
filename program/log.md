@@ -2484,7 +2484,7 @@ they say so.)
   OSWorld setup and evaluation with final-state capture (`osworld_live.py`), offline
   rescoring and the comparator validation (`rescore.py`), the reworked
   `compare_pptx_files_zinv` (`zinv.py`), the anchor's CPU checks (`anchor.py`) and the
-  GLMM input (`glmm.py`). 191 S1a tests (140 new); `design_diffs.md` lists every difference from
+  GLMM input (`glmm.py`). 193 S1a tests (142 new); `design_diffs.md` lists every difference from
   the upstream harnesses.
 - Reviewed the stopped attempt's work line by line: kept `fetch-model-cpu.sbatch` (it had
   run as job 971: Qwen3.5-4B re-receipted, OpenCUA-7B fetched, 16.6 GB, D1), the GLMM
@@ -2515,5 +2515,14 @@ they say so.)
   5.7's status; section 20 code table filled for the G0 files; section 22 gains a "G0
   build" table for the fresh audit. Still TBD: the status line, G0 item 1, the frozen plan,
   the executor row, the section 6.2 constants and the v2 acceptance evidence.
+- Self-review fixes after the evidence commit: a transport loss behind which the guest
+  server restarted is recorded as `guest_server_restart` (D30; `faad20f`), and a vLLM stream
+  that ends before `[DONE]` is a retried transport error instead of a short completion
+  (`9837c54`); code table refreshed.
+- Tests on `9837c54`: S1a 192 passed, 1 skipped locally; the full suite on the host in a
+  fresh `~/cotcodec-scratch/` export under `srun -c 8` (no GRES): 2,476 passed, 41
+  skipped; ruff clean except the two K1 v3 evidence scripts merged from `main`, which fail
+  there too (not touched here). The `a869b98` run (2,474 passed) linted `.venv` because its
+  `--exclude` replaced ruff's defaults; rerun with `--extend-exclude`.
 - Not done: no freeze, no push, no GPU job. Next: the fresh pre-freeze audit (D49 iv), then
   O1 and A0a after the action-path suite passes.
