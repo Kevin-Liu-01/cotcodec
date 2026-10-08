@@ -142,6 +142,8 @@ def ladder_reps(concurrency: int) -> int:
 # admitted here.
 DEVELOPMENT_LAYERS = ("L0-fixed", "H-OSW-fixed", "H-GA", "L0-raw")
 DEVELOPMENT_SEED = 42
+# Decision D43: the development-only executor fault that drops chord modifiers.
+DROP_MODIFIER_MODES = ("omit", "release_first")
 ACCEPTANCE_SEEDS = (43, 44)
 # Seeds only a scored campaign may use: the acceptance shuffles and C2's order.
 RESERVED_SEEDS = (*ACCEPTANCE_SEEDS, C2_SEED)
@@ -795,6 +797,7 @@ def _validate_session_workload(
             "mutant",
             "kill_guest_server_after_seq",
             "kill_guest_server_during_seq",
+            "fault_drop_modifier",
         }
         if kind == "canary-development":
             extra = {"apps", "entries", "reps", "session_trials", "measure_targets"}
@@ -809,6 +812,18 @@ def _validate_session_workload(
             # the tap survive in their scopes (decision D30; never in acceptance).
             if hook in workload:
                 _int(workload[hook], f"workload.{hook}", 0, 20000)
+        if "fault_drop_modifier" in workload:
+            # Development only (decision D43): the L0-fixed executor drops chord modifiers
+            # (runner.drop_modifier_source), the judge's negative case; never in acceptance.
+            if workload["fault_drop_modifier"] not in DROP_MODIFIER_MODES:
+                raise ManifestError(
+                    f"workload.fault_drop_modifier must be one of {DROP_MODIFIER_MODES}"
+                )
+            hooks = {"mutant", "kill_guest_server_after_seq", "kill_guest_server_during_seq"}
+            if workload.get("layer") != "L0-fixed" or any(workload.get(h) for h in hooks):
+                raise ManifestError(
+                    "fault_drop_modifier needs the L0-fixed layer and no mutant or other fault"
+                )
         if purpose != "development":
             raise ManifestError(f"{kind} is a development workload")
         if randomness["contract"] != "seeded" or randomness["seeds"] != [DEVELOPMENT_SEED]:
