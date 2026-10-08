@@ -715,3 +715,22 @@ container with no network. (iv) The G0 components the draft still lists as TBD
 check, the final-state capture and rescoring tool, the compare_pptx_files
 order-invariant comparator, the GLMM script) are built and tested on CPU now,
 and a fresh independent audit reads the draft before any freeze.
+
+**D50. Q3 K1 v3 paused after its second gauntlet wave; whether K1 continues
+is Kevin's.** The repair under D48 and a fresh gauntlet run scored 55 (the
+trajectory is 45 for K1 v2, 51 and 55) and exited honestly (wave and token
+caps; all three refuters refuted). The NEGATIVE that D48 targeted is now
+substantially identified (two-sided bands, a layer-resolved seed term,
+literal-free statistics), but GO is not: its guard against long-range literal
+spill relies on a statistic that two independent model-free checks on the
+development text find evaluable for only 19-22% of controlled families,
+below the 40% it needs, and without it GO's false-positive rates return to
+wave 1's; the screen's unconditional chance of any verdict is about 0.1-0.3.
+The same class of defect, one decisive verdict's identification plus low
+decisiveness, has recurred in three consecutive K1 waves, and admission would
+be Kevin's under D24 in any case. Decided: K1 v3 stops here with its draft,
+proposal and gauntlet record as the package. The dense pre-check v2 result
+(NEGATIVE_CAPABLE_V3 on Qwen3.5-4B-Base, with its seven requirements and the
+verifier's caveats) stands as Q3's Stage 0 outcome. Kevin decides whether K1
+continues (fix GO's identification and decisiveness in the draft, then a
+third wave) or Q3 stops at this pre-result.
