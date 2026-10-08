@@ -3,12 +3,13 @@
 Status: Stage 0. The dense headroom pre-check
 (`q3-dense-headroom-precheck-v1`) ran on 2026-10-08 and ended INCOMPLETE with
 no combined read. Its successor `q3-dense-headroom-precheck-v2` (D36, D42,
-D44) is a draft on branch `stage0/q3-dense-v2`, built and timed but not
-frozen: D42 and D44 accept its decisions 16-21, with the limits measured on
-the fixed 4B path and the 4B limit at the largest estimate (see the last
-section). Role: preemptible backfill, first in the backfill queue. Dossier
-entry: `E6-d21-translation-supervised-indexer`, rank 3, BACKFILL. Carried
-over from direction D21; its premises all held.
+D44) was frozen at `ed5d5a9` and operated the same day: both lanes completed.
+Its combined read is NEGATIVE_CAPABLE_V3 on Qwen3.5-4B-Base, with seven
+requirements (see the last section). A K1 v3 on that base needs a new
+experiment id, the research gauntlet and the program owner's decision (D26).
+Role: preemptible backfill, first in the backfill queue. Dossier entry:
+`E6-d21-translation-supervised-indexer`, rank 3, BACKFILL. Carried over from
+direction D21; its premises all held.
 
 ## Question
 
@@ -160,3 +161,51 @@ Branch `stage0/q3-dense-v2`; registration
 Next: freeze with the status and lead-in naming D42 and D44 (simulated on a
 scratch clone: check-chain PASS, frozen-mode tests pass), image from the
 frozen commit, doctor, the 0.6B lane, then the 4B lane.
+
+## Dense pre-check v2 operated (2026-10-08): NEGATIVE_CAPABLE_V3 on Qwen3.5-4B-Base
+
+Freeze steps 3-5 ran on branch `ops/q3-dense-v2`
+(`program/evidence/2026-10-08/q3-dense-headroom-precheck-v2/README.md`). The
+image was built from the frozen commit `ed5d5a9` (Slurm 855, CPU only) and
+passed the v2 CPU doctor 12/12 (Slurm 856).
+
+- **Qwen3-0.6B-Base lane** (Slurm 859, 279 s of 12 minutes): complete. It
+  reproduced v1's job-727 receipt exactly: 3,128 numeric leaves with a
+  largest gap of 0.0, and the same development artifact. It also reproduced
+  K1 smoke 452. Its decisions equal job 727's: NOT_VIABLE (H1_CX 12.25;
+  `h2_status` FAIL).
+- **Qwen3.5-4B-Base lane** (Slurm 862, 555 s of 32 minutes): complete. It
+  ran 0.26-0.53 s per unit by stage, against job 730's roughly 3.8 s, with
+  cuDNN's attention off. The descriptive `attention_backend_check` stayed
+  within 1.15 recall points and 0.011 in an option score of cuDNN's, with
+  the same answer. The signal guard repaired Triton's replaced handlers.
+  Decisions:
+  - NEGATIVE_CAPABLE: H1_CX 42.15 points on target hs, 99 percent interval
+    35.76 to 48.20; MN minus CX only 2.23.
+  - `h2_status` POINT_ONLY: CX accuracy 49.6; H2b 8.6 with lower bound -9.3.
+  - Lexical confound PRESENT: the literal selector's xi_rel is 0.26-0.27 on
+    all families and 0.24 on entity-controlled families.
+  - Entity control INSUFFICIENT.
+  - Null calibration CENTRED for both targets.
+  - Floor VIABLE: a V1-adequate noisy copy losing 2.57 English ML points has
+    a controlled G(MN) lower bound of 0.93, against 0.24 for the literal
+    selector.
+  - Fertility association STRONG (Spearman -0.89 over seven languages).
+- **Combined read** (registered summariser, exit 0): NEGATIVE_CAPABLE_V3 on
+  qwen3.5-4b-base. A K1 v3 on that base may register a NEGATIVE region. Its
+  requirements are D26's four plus three from the flags:
+  - a seen-script cross-script condition;
+  - an entity-controlled question set;
+  - the non-literal floor (99 percent lower bound of G(MN) on controlled
+    families at least 0.5);
+  - a new id and the gauntlet;
+  - GO and NEGATIVE statistics computed on the entity-controlled set;
+  - anchor masking or a lexical-overlap covariate;
+  - H2 re-tested under K1's bounds on the audit read.
+- **GPU time:** 0.232 GPU-h used and 0.283 charged for the two lanes. v2 in
+  all: 0.334 used and 0.433 charged, against caps of 0.933 and D36's 1.5.
+
+The read covers the development partition only (20 questions, 20 passage
+clusters). It says which K1 v3 designs the dense headroom supports. It is not
+a K1 result and says nothing about whether an indexer loses more cross-script
+recall than its target. Next: the program owner decides on a K1 v3.

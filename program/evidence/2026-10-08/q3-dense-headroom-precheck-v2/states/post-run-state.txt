@@ -1,0 +1,63 @@
+2026-10-08T13:52:07Z
+             JOBID PARTITION     NAME     USER ST       TIME  NODES NODELIST(REASON)
+0, 0 %, 0 MiB
+1, 0 %, 0 MiB
+2, 0 %, 0 MiB
+3, 0 %, 0 MiB
+4, 0 %, 0 MiB
+5, 0 %, 0 MiB
+6, 0 %, 0 MiB
+7, 0 %, 0 MiB
+compute-apps:
+docker containers named cotcodec-859/862:
+(end)
+lane run roots:
+/home/kevin/cotcodec-runs/q3-dense-headroom-precheck-v2/qwen3-0.6b-base
+/home/kevin/cotcodec-runs/q3-dense-headroom-precheck-v2/qwen3-0.6b-base/859
+/home/kevin/cotcodec-runs/q3-dense-headroom-precheck-v2/qwen3-0.6b-base/859/command.json
+/home/kevin/cotcodec-runs/q3-dense-headroom-precheck-v2/qwen3-0.6b-base/859/container-created-inspect.json
+/home/kevin/cotcodec-runs/q3-dense-headroom-precheck-v2/qwen3-0.6b-base/859/container-doctor.txt
+/home/kevin/cotcodec-runs/q3-dense-headroom-precheck-v2/qwen3-0.6b-base/859/container-final-inspect.json
+/home/kevin/cotcodec-runs/q3-dense-headroom-precheck-v2/qwen3-0.6b-base/859/container-id.txt
+/home/kevin/cotcodec-runs/q3-dense-headroom-precheck-v2/qwen3-0.6b-base/859/container.log
+/home/kevin/cotcodec-runs/q3-dense-headroom-precheck-v2/qwen3-0.6b-base/859/dense-precheck
+/home/kevin/cotcodec-runs/q3-dense-headroom-precheck-v2/qwen3-0.6b-base/859/docker-research.sbatch
+/home/kevin/cotcodec-runs/q3-dense-headroom-precheck-v2/qwen3-0.6b-base/859/gpu-compute-apps-prolog.csv
+/home/kevin/cotcodec-runs/q3-dense-headroom-precheck-v2/qwen3-0.6b-base/859/gpu-prolog.env
+/home/kevin/cotcodec-runs/q3-dense-headroom-precheck-v2/qwen3-0.6b-base/859/image-inspect.json
+/home/kevin/cotcodec-runs/q3-dense-headroom-precheck-v2/qwen3-0.6b-base/859/job.env
+/home/kevin/cotcodec-runs/q3-dense-headroom-precheck-v2/qwen3-0.6b-base/859/manifest.json
+/home/kevin/cotcodec-runs/q3-dense-headroom-precheck-v2/qwen3-0.6b-base/859/model-receipt.json
+/home/kevin/cotcodec-runs/q3-dense-headroom-precheck-v2/qwen3-0.6b-base/859/model-verification.txt
+/home/kevin/cotcodec-runs/q3-dense-headroom-precheck-v2/qwen3-0.6b-base/859/provenance-verification.txt
+/home/kevin/cotcodec-runs/q3-dense-headroom-precheck-v2/qwen3-0.6b-base/859/study-artifact.json
+/home/kevin/cotcodec-runs/q3-dense-headroom-precheck-v2/qwen3-0.6b-base/859/system.txt
+/home/kevin/cotcodec-runs/q3-dense-headroom-precheck-v2/qwen3-0.6b-base/859/termination.env
+/home/kevin/cotcodec-runs/q3-dense-headroom-precheck-v2/qwen3-0.6b-base/fill-claims
+/home/kevin/cotcodec-runs/q3-dense-headroom-precheck-v2/qwen3-0.6b-base/fill-claims/after-0.json
+/home/kevin/cotcodec-runs/q3-dense-headroom-precheck-v2/qwen3-0.6b-base/slurm-859.out
+/home/kevin/cotcodec-runs/q3-dense-headroom-precheck-v2/qwen3.5-4b-base
+/home/kevin/cotcodec-runs/q3-dense-headroom-precheck-v2/qwen3.5-4b-base/862
+/home/kevin/cotcodec-runs/q3-dense-headroom-precheck-v2/qwen3.5-4b-base/862/command.json
+/home/kevin/cotcodec-runs/q3-dense-headroom-precheck-v2/qwen3.5-4b-base/862/container-created-inspect.json
+/home/kevin/cotcodec-runs/q3-dense-headroom-precheck-v2/qwen3.5-4b-base/862/container-doctor.txt
+/home/kevin/cotcodec-runs/q3-dense-headroom-precheck-v2/qwen3.5-4b-base/862/container-final-inspect.json
+/home/kevin/cotcodec-runs/q3-dense-headroom-precheck-v2/qwen3.5-4b-base/862/container-id.txt
+/home/kevin/cotcodec-runs/q3-dense-headroom-precheck-v2/qwen3.5-4b-base/862/container.log
+/home/kevin/cotcodec-runs/q3-dense-headroom-precheck-v2/qwen3.5-4b-base/862/dense-precheck
+/home/kevin/cotcodec-runs/q3-dense-headroom-precheck-v2/qwen3.5-4b-base/862/docker-research.sbatch
+/home/kevin/cotcodec-runs/q3-dense-headroom-precheck-v2/qwen3.5-4b-base/862/gpu-compute-apps-prolog.csv
+/home/kevin/cotcodec-runs/q3-dense-headroom-precheck-v2/qwen3.5-4b-base/862/gpu-prolog.env
+/home/kevin/cotcodec-runs/q3-dense-headroom-precheck-v2/qwen3.5-4b-base/862/image-inspect.json
+/home/kevin/cotcodec-runs/q3-dense-headroom-precheck-v2/qwen3.5-4b-base/862/job.env
+/home/kevin/cotcodec-runs/q3-dense-headroom-precheck-v2/qwen3.5-4b-base/862/manifest.json
+/home/kevin/cotcodec-runs/q3-dense-headroom-precheck-v2/qwen3.5-4b-base/862/model-receipt.json
+/home/kevin/cotcodec-runs/q3-dense-headroom-precheck-v2/qwen3.5-4b-base/862/model-verification.txt
+/home/kevin/cotcodec-runs/q3-dense-headroom-precheck-v2/qwen3.5-4b-base/862/provenance-verification.txt
+/home/kevin/cotcodec-runs/q3-dense-headroom-precheck-v2/qwen3.5-4b-base/862/study-artifact.json
+/home/kevin/cotcodec-runs/q3-dense-headroom-precheck-v2/qwen3.5-4b-base/862/system.txt
+/home/kevin/cotcodec-runs/q3-dense-headroom-precheck-v2/qwen3.5-4b-base/862/termination.env
+/home/kevin/cotcodec-runs/q3-dense-headroom-precheck-v2/qwen3.5-4b-base/fill-claims
+/home/kevin/cotcodec-runs/q3-dense-headroom-precheck-v2/qwen3.5-4b-base/fill-claims/after-0.json
+/home/kevin/cotcodec-runs/q3-dense-headroom-precheck-v2/qwen3.5-4b-base/slurm-862.out
+clone porcelain_lines=0

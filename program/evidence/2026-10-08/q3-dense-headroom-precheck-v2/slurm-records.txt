@@ -1,0 +1,36 @@
+q3-dense-headroom-precheck-v2 operation: Slurm records (UTC). Accounting is off on this host; scontrol keeps a finished job for a few minutes.
+Records saved by helpers/wait-job.sh (or right after the step) when each job ended:
+== image/scontrol-855.txt
+JobId=855 JobName=cotcodec-build-arch-image JobState=COMPLETED ExitCode=0:0 RunTime=00:10:04 TimeLimit=03:00:00 StartTime=2026-10-08T13:21:10 EndTime=2026-10-08T13:31:14 NumCPUs=16 TRES=cpu=16,mem=64G,node=1,billing=16 
+== doctor/scontrol-856.txt
+JobId=856 JobName=dense-v2-cpu-doctor JobState=COMPLETED ExitCode=0:0 RunTime=00:03:01 TimeLimit=00:50:00 StartTime=2026-10-08T13:31:31 EndTime=2026-10-08T13:34:32 NumCPUs=32 TRES=cpu=32,mem=96G,node=1,billing=32 
+== lane-0p6b-859/scontrol-859.txt
+JobId=859 JobName=q3-dense-headroom-v2-0p6b JobState=COMPLETED ExitCode=0:0 RunTime=00:04:40 TimeLimit=00:12:00 StartTime=2026-10-08T13:35:39 EndTime=2026-10-08T13:40:19 NumCPUs=16 TRES=cpu=16,mem=64G,node=1,billing=16 TresPerNode=gres:gpu:h100:1 
+== lane-4b-862/scontrol-862.txt
+JobId=862 JobName=q3-dense-headroom-v2-4b JobState=COMPLETED ExitCode=0:0 RunTime=00:09:17 TimeLimit=00:32:00 StartTime=2026-10-08T13:41:30 EndTime=2026-10-08T13:50:47 NumCPUs=16 TRES=cpu=16,mem=96G,node=1,billing=16 TresPerNode=gres:gpu:h100:1 
+
+Query of ids 854-863 at the end of the operation (purged ids print Invalid):
+2026-10-08T13:53:36Z
+== 854
+Invalid 
+== 855
+Invalid 
+== 856
+Invalid 
+== 857
+Invalid 
+== 858
+Invalid 
+== 859
+Invalid 
+== 860
+Invalid 
+== 861
+Invalid 
+== 862
+JobId=862 JobName=q3-dense-headroom-v2-4b JobState=COMPLETED ExitCode=0:0 RunTime=00:09:17 TimeLimit=00:32:00 StartTime=2026-10-08T13:41:30 EndTime=2026-10-08T13:50:47 NumCPUs=16 TRES=cpu=16,mem=96G,node=1,billing=16 Command=/home/kevin/.orx/runs/a3fae5af-e8f6-4b33-9a00-f6908ad67c13/repo/infra/slurm/host-single-node/docker-research.sbatch WorkDir=/home/kevin/.orx/runs/a3fae5af-e8f6-4b33-9a00-f6908ad67c13/repo 
+== 863
+Invalid 
+             JOBID PARTITION     NAME     USER ST       TIME  NODES NODELIST(REASON)
+
+GPU jobs of this experiment: 859 and 862 only (TRES cpu/mem; the GPU is requested as --gres=gpu:h100:1, see filler/precheck-*-dry-run.json; gpu_devices=0 in each job.env). 855 (image build) and 856 (CPU doctor step) requested no GPU. Ids 857, 858, 860 and 861 were purged before they could be read; each run root holds exactly one job directory and one slurm-N.out, and each orx log shows one real submission (859, 862). The pattern (two ids before each lane job) matches the two --test-only calls per lane (the operator's from the clone and the orx node's), as v1's verifier noted for 725/726 and 728/729; not confirmed.

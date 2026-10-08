@@ -1,0 +1,12 @@
+2026-10-08T13:40:56Z
+             JOBID PARTITION     NAME     USER ST       TIME  NODES NODELIST(REASON)
+0, 0 %, 0 MiB
+1, 0 %, 0 MiB
+2, 0 %, 0 MiB
+3, 0 %, 0 MiB
+4, 0 %, 0 MiB
+5, 0 %, 0 MiB
+6, 0 %, 0 MiB
+7, 0 %, 0 MiB
+compute-apps:
+ls: cannot access '/home/kevin/cotcodec-runs/q3-dense-headroom-precheck-v2/qwen3.5-4b-base': No such file or directory

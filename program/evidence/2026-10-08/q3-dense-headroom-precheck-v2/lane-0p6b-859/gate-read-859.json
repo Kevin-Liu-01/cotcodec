@@ -1,0 +1,124 @@
+{
+  "decisions": {
+    "entity_control": "NOT_EVALUABLE",
+    "fertility_association": "STRONG",
+    "floor_candidate": "NOT_VIABLE",
+    "h1_cx_lower": 8.982191529058131,
+    "h1_cx_points": 12.250147648453733,
+    "h1_cx_target": "hs",
+    "h2_status": "FAIL",
+    "lane_class": "NOT_VIABLE",
+    "lexical_confound": "NOT_EVALUABLE",
+    "literal_xi_rel_all": [
+      null,
+      null
+    ],
+    "literal_xi_rel_controlled": [
+      null,
+      0.35656207651763955
+    ],
+    "null_calibration": {
+      "hs": "NOT_EVALUABLE",
+      "mp": "NOT_EVALUABLE"
+    }
+  },
+  "experiment_id": "q3-dense-headroom-precheck-v2",
+  "hashes": {
+    "bundle_sha256": "919d016b87ad862f8f156e9537c9a39e2864dab0e6c605307d100d25a199dd2d",
+    "code": {
+      "harness/dense_headroom_data.py": "ee78549e257631035aef0d52c5243f6bae969fd2c4f4a1e43bb8779bdf524003",
+      "harness/dense_headroom_stats.py": "a94d1ceee80fe3e95f2f36af0cbda51644846594d5fc9ccf69fcb90c8215d195",
+      "harness/dense_headroom_torch.py": "6dd8ff1f9cbcbd7d3faaecd1c94ab7908c12e2aea16b480bc56735e4b27547be",
+      "harness/dense_headroom_torch_v2.py": "34963c32746c9d6b4384cb32b9ab37b1a4966b4586923ba43da036bdc6da0cbe",
+      "harness/dense_headroom_v2.py": "49f340ac46c80fa312d10e29bb3eaa45d95e574b9a598f47379b0e1effa5b5e1",
+      "harness/dense_headroom_v2_lanes.py": "7b75d305489e36386d1a11b654764954a08d1dbb6158ec4ba4b38202cccc8881",
+      "harness/sparse_indexer_bank.py": "e96653eb3eb5b9876201347c2fa8d452efc3ebb1043a516ac03c366ff8b89f88",
+      "harness/sparse_indexer_data.py": "8b180e1ca0ba67d29587e3ffc5f5e46720376de6d1a52348f82b8789ab929faa",
+      "harness/sparse_indexer_k1_marker.py": "7bc69aa4d27a7d6de92f69a2f7b8e71d98b32101a2f34709fbaef2bdf84c3f1a",
+      "harness/sparse_indexer_k1_runtime.py": "6fbddc91b6f7224f909901edb82278a68f68a208b558526c1a778ec9da6812fd",
+      "harness/sparse_indexer_k1_stats.py": "b9949b4b24502ad30d576938e88cd39d0fdcfc2be90eeedf52a68c76430f36b8",
+      "harness/sparse_indexer_torch.py": "f21301a49634af07d5ae0385c34011400c83af15b984a96238dc6fe1d4ee9457",
+      "harness/translation_supervised_indexer.py": "dee5318d254d962380e2de051eed227a97db10bfaa40eb0c12467e9a289e0cd5",
+      "scripts/preregister.py": "21fc3ef0ed0958b1600ce742c3b4f8d557d0a298635acb20342710eb814b2c0d",
+      "scripts/run_dense_headroom_precheck_v2.py": "e36e021b70834a2ede73ab7542ab8f5e45ace2c5c554d7e489d2a3a7bf8ae2ba"
+    },
+    "dev_artifact_sha256": "c1c455d81425cc9ea25345ecf2bbea3e0b604853da51ea046fe315fe4b3f9e71",
+    "git_sha": "ed5d5a93dffc3e8cf777c1933330ef7229eda5d6",
+    "job": {
+      "kind": "fresh",
+      "minutes": 12,
+      "predecessor_job_id": null,
+      "slurm_job_id": "859",
+      "slurm_job_id_source": "job.env"
+    },
+    "lane_tokenizer_sha256": "c0382117ea329cdf097041132f6d735924b697924d6f6fc3945713e96ce87539",
+    "ledger_row_hash": "a68af989bfadb17ddb540ff0fa1c4dc64f62357812158580e1d25ddc5a41a2e1",
+    "preregistration_sha256": "982e66bac55d8ad45f2eaaf26fde37ef0bb9a1e32eb9be81098128ce8b787287",
+    "receipt_sha256": "e7f36f05e6c87ec50b3736cf133fda60775abccb38f60fa9d3c134c432cf46df",
+    "source_sha256": "53458dd1fff517cd45c48893d02f933c9ad5d3fa506468bae18c1066ebc14ffc",
+    "source_tokenizer_sha256": "c0382117ea329cdf097041132f6d735924b697924d6f6fc3945713e96ce87539"
+  },
+  "lane": "qwen3-0.6b-base",
+  "profile": "registered",
+  "receipt": "/home/kevin/cotcodec-runs/q3-dense-headroom-precheck-v2/qwen3-0.6b-base/859/dense-precheck/receipt.json",
+  "receipt_sha256": "d39ca464b13e6ac9dad78082b50319247caeeecf02ae790f59bd522da82f06b9",
+  "slurm_job_id": "859",
+  "slurm_job_id_source": "job.env",
+  "smoke_452_reproduction": {
+    "gaps": {
+      "T:hm": -5.110965233257048e-07,
+      "T:hs": -5.667946076926e-07,
+      "T:mp": -6.692450718048804e-07,
+      "U": -1.4151845704191146e-06,
+      "Uk": -2.0195397532063453e-07,
+      "rand": -3.3378601038691613e-07
+    },
+    "gated": [
+      "T:hs",
+      "T:mp",
+      "T:hm",
+      "rand"
+    ],
+    "recomputed": {
+      "T:hm": 26.266317962635576,
+      "T:hs": 26.45064028627405,
+      "T:mp": 26.080628359680333,
+      "U": 66.54043360352516,
+      "Uk": 9.745942126300983,
+      "rand": 12.480333375930787
+    },
+    "smoke_452": {
+      "T:hm": 26.2663184737321,
+      "T:hs": 26.45064085306866,
+      "T:mp": 26.080629028925404,
+      "U": 66.54043501870973,
+      "Uk": 9.745942328254959,
+      "rand": 12.480333709716797
+    },
+    "status": "REPRODUCED",
+    "tolerance_points": 0.5,
+    "units": 20
+  },
+  "status": "PRECHECK_COMPLETE",
+  "v1_dev_artifact_sha256": "c1c455d81425cc9ea25345ecf2bbea3e0b604853da51ea046fe315fe4b3f9e71",
+  "v1_job_727_reproduction": {
+    "fields": [
+      "report",
+      "decisions",
+      "coverage",
+      "artifact_counts",
+      "selectors",
+      "attention_layers",
+      "hashes.dev_artifact_sha256"
+    ],
+    "max_numeric_gap": 0.0,
+    "mismatch_count": 0,
+    "mismatches": [],
+    "numeric_leaves": 3128,
+    "other_leaves": 1029,
+    "status": "REPRODUCED",
+    "tolerance": 1e-06,
+    "v1_job": "727",
+    "v1_receipt_sha256": "bfe4a7c33cca3cf106370876f2843239c7c88a4f3c4fb70798f8a8d6404508ba"
+  }
+}

@@ -1,0 +1,4 @@
+at=2026-10-08T13:21:03Z
+-rw-r--r-- 1 kevin kevin 278818734 Oct  7 11:36 /home/kevin/cotcodec-runs/translation-supervised-sparse-indexer/inputs/k1-bundle-v1.json
+e7f36f05e6c87ec50b3736cf133fda60775abccb38f60fa9d3c134c432cf46df  /home/kevin/cotcodec-runs/hf-cache/cotcodec-receipts/qwen3-0.6b-base.json
+253a14185bcff0762b8a43944635a550055d3346fe16c416d6bcfe4460793cfe  /home/kevin/cotcodec-runs/hf-cache/cotcodec-receipts/qwen3.5-4b-base.json
