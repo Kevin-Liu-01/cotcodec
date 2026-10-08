@@ -199,3 +199,19 @@ def test_prereg_pins_block_holds_only_checked_keys() -> None:
         )
     )
     assert declared["specs_branch_commit"] == provenance["specs_head"]
+
+
+def test_prereg_states_the_d35_protocol_its_relay_frame_and_its_review_log() -> None:
+    """Decision D35: the exit, the relay frame and the review scores are written down."""
+    from harness.q2_mutation import analysis, rater_runner, raters
+
+    text = _text()
+    flat = " ".join(text.split())
+    assert "D35" in text and f'"{analysis.D34_DEV_EXIT_REASON}"' in flat
+    # The registered relay frame is disclosed verbatim (section 9).
+    preamble = " ".join(rater_runner.RELAY_PREAMBLE.split())
+    assert f'"{preamble.removesuffix(":")}:"' in flat
+    assert "8e7dbd00c14db448bb1272f7bbf2c908dbd8b4a39d83445792b7d5f8cb6fe5fa" in text
+    # The census capacity and the scores of every review so far.
+    assert f"{raters.audit_capacity():,} items" in flat
+    assert "Scores so far: 55, 62, 56, 57, 64; the lowest is 55." in text
