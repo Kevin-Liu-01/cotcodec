@@ -17,13 +17,16 @@ only that, with the operator's own notion of "cannot paint the same pixel"
 
 For each slide pair (by index), the agent's deck (``file1``) is aligned to the reference
 (``file2``): for each reference shape in order, the first not-yet-placed agent shape that
-is the same shape as far as the comparator looks (element kind and shape type equal; every
-text run equal unless the task sets ``examine_text`` false; left, top, width and height
-equal within the comparator's own ``approximately_tolerance``, 0.5% by default, unless the
-task sets ``examine_shape`` false, so a LibreOffice save's rounding or auto-fit does not hide
-it) is taken, and it may move ahead of the agent shapes it skips only if it is apart from
-each of them. Matching only proposes an order: the original comparator, with the task's
-options, still decides every attribute of every pair. So the
+is the same shape as far as the comparator looks is taken: element kind and shape type
+equal; the stripped text equal unless the task sets ``examine_text`` false; and left, top,
+width and height equal within the comparator's own ``approximately_tolerance`` (0.5% by
+default, so a LibreOffice save's 0.02 mm rounding does not hide it) when the task examines
+geometry (``examine_shape``, on by default, or any other option that reads position or
+size); when it does not (an auto-fit may then change a text box's height), geometry only
+breaks ties between shapes of equal kind and text. The taken shape may move ahead of the
+agent shapes it skips only if it is apart from each of them. Matching only proposes an
+order: the original comparator, with the task's options, still decides every attribute of
+every pair. So the
 alignment changes the relative order of a pair only when the pair is apart, which is exactly
 the swaps the operator calls equivalent; overlapping shapes keep their order and a visible
 stacking change still fails. If any reference shape finds no such agent shape, that slide is
@@ -85,27 +88,55 @@ class Matching:
 
     @classmethod
     def from_options(cls, options: dict[str, Any]) -> Matching:
+        geometry = bool(options.get("examine_shape", True)) or any(
+            bool(options.get(name, False)) for name in GEOMETRY_OPTIONS
+        )
         return cls(
             tolerance=float(options.get("approximately_tolerance", TOLERANCE)),
             text=bool(options.get("examine_text", True)),
-            geometry=bool(options.get("examine_shape", True)),
+            geometry=geometry,
         )
 
 
-def same_shape(a: ShapeKey, b: ShapeKey, rule: Matching | float = TOLERANCE) -> bool:
-    rule = rule if isinstance(rule, Matching) else Matching(tolerance=rule)
+# compare_pptx_files options that read a shape's position or size besides examine_shape.
+GEOMETRY_OPTIONS = (
+    "examine_shape_for_shift_size",
+    "examine_image_size",
+    "examine_modify_height",
+    "examine_title_bottom_position",
+    "examine_table_bottom_position",
+    "examine_right_position",
+    "examine_top_position",
+)
+
+
+def _as_rule(rule: Matching | float) -> Matching:
+    return rule if isinstance(rule, Matching) else Matching(tolerance=rule)
+
+
+def same_kind_and_text(a: ShapeKey, b: ShapeKey, rule: Matching | float = TOLERANCE) -> bool:
+    rule = _as_rule(rule)
     if a.signature[:2] != b.signature[:2]:
         return False
-    if rule.text and a.signature[2:] != b.signature[2:]:
-        return False
-    if not rule.geometry:
-        return True
+    return not rule.text or a.signature[2:] == b.signature[2:]
+
+
+def close_geometry(a: ShapeKey, b: ShapeKey, rule: Matching | float = TOLERANCE) -> bool:
+    rule = _as_rule(rule)
     if a.geometry is None or b.geometry is None:
         return a.geometry is None and b.geometry is None
     return all(
         approximately_equal(x, y, rule.tolerance)
         for x, y in zip(a.geometry, b.geometry, strict=True)
     )
+
+
+def same_shape(a: ShapeKey, b: ShapeKey, rule: Matching | float = TOLERANCE) -> bool:
+    """The same shape as far as the comparator examines it."""
+    rule = _as_rule(rule)
+    if not same_kind_and_text(a, b, rule):
+        return False
+    return not rule.geometry or close_geometry(a, b, rule)
 
 
 _XFRM_PATHS = {
@@ -158,10 +189,17 @@ def apart(a: ShapeKey, b: ShapeKey) -> bool:
     return r1 + c <= l2 or r2 + c <= l1 or b1 + c <= t2 or b2 + c <= t1
 
 
+def text_key(element: Any) -> str:
+    """The shape's text as the comparator compares it (stripped; an empty run, or none, is
+    no text), with every run's text joined, nested shapes included."""
+    texts = [(node.text or "").strip() for node in element.iter(f"{A_NS}t")]
+    return " ".join(t for t in texts if t)
+
+
 def shape_key(shape: Any) -> ShapeKey:
     element = shape._element
     tag = element.tag.rsplit("}", 1)[-1]
-    texts = tuple(node.text or "" for node in element.iter(f"{A_NS}t"))
+    texts = text_key(element)
     try:
         kind = int(shape.shape_type) if shape.shape_type is not None else None
     except Exception:  # noqa: BLE001 - unrecognized graphic frames raise NotImplementedError
@@ -181,20 +219,21 @@ def align_order(
     moving a shape only past shapes it is apart from; None when there is none."""
     if len(source) != len(target):
         return None
+    rule = _as_rule(rule)
     remaining = list(range(len(source)))
     order: list[int] = []
     for want in target:
-        pick = None
-        for position, index in enumerate(remaining):
-            if not same_shape(source[index], want, rule):
-                continue
-            skipped = remaining[:position]
-            if all(apart(source[index], source[other]) for other in skipped):
-                pick = position
-            break  # the first signature match only: identical shapes keep their order
-        if pick is None:
+        candidates = [i for i in remaining if same_kind_and_text(source[i], want, rule)]
+        close = [i for i in candidates if close_geometry(source[i], want, rule)]
+        # Geometry decides when the comparator examines it; otherwise it only breaks ties.
+        candidates = close if (rule.geometry or close) else candidates
+        if not candidates:
             return None
-        order.append(remaining.pop(pick))
+        index = candidates[0]  # the first match: identical shapes keep their order
+        position = remaining.index(index)
+        if not all(apart(source[index], source[other]) for other in remaining[:position]):
+            return None
+        order.append(remaining.pop(position))
     return order
 
 
