@@ -61,11 +61,13 @@ provenance.
   `experiments/manifests/q3-dense-headroom-precheck-v1/` (tabled templates,
   only `FILL-*` values replaced; caps sum to 0.5 GPU-h; every job of a lane is
   charged against its minutes from the run root's `job.env` and
-  `termination.env`; a later job claims its slot in the run root; one
-  continuation per lane); `summarise_dense_headroom_precheck.py` applies the
-  void rules from each job's files and the saved orx logs and combines the
-  lane receipts into the K1 v3 design read (INVALID when the 0.6B smoke
-  reproduction fails).
+  `termination.env`; every job, the first included, claims its slot in the
+  run root and each filled manifest is submitted once; one continuation per
+  lane; the 4B lane needs the 0.6B receipt with the smoke reproduction
+  REPRODUCED, `--small-lane-receipt`); `summarise_dense_headroom_precheck.py`
+  applies the void rules from each job's files, its fill claim and the saved
+  orx logs and combines the lane receipts into the K1 v3 design read (INVALID
+  when the 0.6B smoke reproduction fails).
 - `run_holo3_rerun_audit_doctor.py` is Q2's Holo3 rerun audit; its v2 stages
   refuse to run until `q2-holo3-rerun-audit-v2` is frozen in the repository
   ledger (a scratch `--ledger` alone does not open the gate), and a v2 receipt

@@ -659,3 +659,50 @@ Append-only. Newest entries at the bottom.
   facts read named the session's server process); its cause is not recorded.
 - Still open for Kevin before the freeze: whether D30's exclusion extends to
   A1-A3 and the ladder.
+
+## 2026-10-07 — Q3 dense headroom pre-check: D32 applied, design accepted with four amendments (branch `stage0/q3-dense-d32`, not frozen)
+
+- Basis: the second fresh pre-freeze audit
+  (`program/evidence/2026-10-07/q3-dense-headroom-precheck/prefreeze-audit-2.json`).
+  Its one blocking defect is fixed: the registration's status paragraph now
+  has the frozen wording (as K1 v1 and v2 had before their freezes), the
+  design-decision lead-in says the decisions were accepted in D32, and freeze
+  step 1 includes this rewrite. The registration test accepts either wording
+  until the freeze; once frozen it requires `Status: frozen` and a D32 that
+  names the experiment id.
+- D32 (`program/decisions.md`, on main at `7229df1`): decisions 2-9, 11, 14
+  and 15 accepted as drafted (decision 5's H2 relaxation explicitly); 1, 10,
+  12 and 13 amended. This branch applies it to the registration and code.
+- Decision 1: both lanes run unless the 0.6B smoke reproduction fails. The
+  filler now refuses the 4B lane without `--small-lane-receipt`, a completed
+  0.6B receipt of this registration whose `smoke_452_reproduction` is
+  REPRODUCED. Freeze step 4 now says the read is INCOMPLETE, not INVALID,
+  when the 0.6B lane ends without a receipt (as the combined rule computes).
+- Decision 10: the floor's condition (c) counts only nulls that meet decision
+  8's reach rule (V1-adequate, seed-mean English ML loss at least 2.5 points),
+  through one shared `reaching_sigmas` used by the null verdict too.
+- Decision 12: every job, the first included, takes an exclusive fill claim;
+  each filled manifest is submitted once. A job is matched to its claim by its
+  `manifest.json`; a lane with a job without a claim, a job over its claim's
+  minutes, or two jobs on one claim is void in the summariser, and the filler
+  fills no further job of it. The entry point cannot check claims (its
+  container mounts only its own job directory), so the summariser is the
+  backstop. The useful window (limit minus the 3-minute SIGUSR1 lead) is 6
+  and 18 minutes; `MIN_JOB_MINUTES` is now 5.
+- Decision 13: text only; only Triton's cache moves to the run directory.
+- Digests changed: `harness/dense_headroom_data.py`,
+  `harness/dense_headroom_stats.py`,
+  `scripts/fill_dense_headroom_precheck_manifests.py`,
+  `scripts/summarise_dense_headroom_precheck.py`. The entry point, torch
+  module, doctor, templates and the seven imported rows are unchanged; the
+  entry point's import closure still equals its `CODE_FILES`.
+- Checks on the Mac, CPU only: the whole suite 1757 passed, 79 skipped
+  (host-only and torch tests); all dense test files 107 passed in an offline
+  scratch environment with torch 2.11.0 and transformers 5.15.0. The CPU
+  doctor reads DENSE_DOCTOR_FAIL in the default environment (no torch: the
+  selectors, multiple-choice and end-to-end cases) and DENSE_DOCTOR_PASS, all
+  seven cases, in the torch environment. A freeze into a scratch copy of the
+  ledger verified, with the status line `Status: frozen`; the real ledger is
+  untouched. No GPU time, no host access.
+- Next: freeze (steps 2-5). The binding doctor run is still the one in the
+  image built from the freeze commit.
