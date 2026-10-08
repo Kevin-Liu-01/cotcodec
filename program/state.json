@@ -269,7 +269,7 @@
       "doc": "program/questions/q2-calibrated-cua-instrument.md",
       "dossier_key": "S1-calibrated-cua-instrument",
       "status": "stage-0-running",
-      "next_action": "D40: q2-action-path-v1 is invalid (C2 job 768: chord_super_d failed 5/5 under L0-raw, predicted to pass). q2-action-path-v2 (+ -inputs, -executor) is drafted on stage0/q2-action-path-v2 with D43 implemented (126ff8b): the judge reads a key event the tap recorded without the guard-guaranteed Mod2 on kind, keycode, keysym and order only, and the guard checks Mod2. Seed-42 development (jobs 830-839, 2.4 VM-h) passed the shell chords under L0-raw with their queued events read without state, failed every chord with a dropped modifier (140/140), and repeated v1's final runs 703-708 with the same outcomes. C2 keeps v1's failing set on its own seed 45 (a reproduction test, disclosed as informed by v1's C2). Review, then freeze v2, -inputs, -executor; then C2 (seed 45), C1, C3, A1-A6, the ladder on a quiet host, A4 and A7. The checker-mutation study (q2-evaluator-mutation-v1, a descriptive protocol under D35 and D38) is frozen (ledger row 11, 65bc2e2) and its confirm campaign's CPU stage A1 ran (branch ops/q2-mutation-confirm): K1 70/74 PASS, P1 raw 4/92 flips, 1,232 confirm mutants admitted and scored (888 evaluable). Next: the audit (submit_audit.sh with a fresh salt, the overlay and the open-weight rater within 3.0 GPU-h, the isolated Claude rating as one workflow session, collect, ingest, summarize), then the registered analysis; Kevin adjudicates the pool and does the human spot check (D9). Stage 1 must be rescoped (431.5 GPU-h as designed) and go through the gauntlet (D24).",
+      "next_action": "D40: q2-action-path-v1 is invalid (C2 job 768: chord_super_d failed 5/5 under L0-raw, predicted to pass). q2-action-path-v2 (+ -inputs, -executor) is drafted on stage0/q2-action-path-v2 with D43 implemented (126ff8b): the judge reads a key event the tap recorded without the guard-guaranteed Mod2 on kind, keycode, keysym and order only, and the guard checks Mod2. Seed-42 development (jobs 830-839, 2.4 VM-h) passed the shell chords under L0-raw with their queued events read without state, failed every chord with a dropped modifier (140/140), and repeated v1's final runs 703-708 with the same outcomes. C2 keeps v1's failing set on its own seed 45 (a reproduction test, disclosed as informed by v1's C2). Review, then freeze v2, -inputs, -executor; then C2 (seed 45), C1, C3, A1-A6, the ladder on a quiet host, A4 and A7. The checker-mutation study (q2-evaluator-mutation-v1, a descriptive protocol under D35 and D38; ledger row 11, 65bc2e2) has run through the registered analysis on branch ops/q2-mutation-confirm: stage A1 (K1 70/74 PASS, 1,232 confirm mutants), A2 (178-item census, open-weight rater) and B (isolated Claude rating wf_138e30b5-c1a, collector, ingest 177 ok + 1 isolation_void, salt revealed, held files released, audit summary kappa 0.343, analysis). Descriptive outputs: P1 raw 4/92, audit-confirmed 3/92; 36 checker false-negative candidates (all pptx.eq.zorder_nonoverlap on compare_pptx_files, 30 confirmed, 6 unresolved) and 5 false-positive candidates (2 confirmed, 3 label-contradicted by both raters). Next: Kevin adjudicates the 34-item pool and does the 25-item human spot check (D9); then audit summarize --adjudications and the analysis are rerun. Stage 1 must be rescoped (431.5 GPU-h as designed) and go through the gauntlet (D24).",
       "first_gpu_experiment": {
         "name": "Qwen3.5 ladder (as dossier-designed)",
         "measured_projection_gpu_hours": 431.5,
@@ -283,7 +283,7 @@
       "action_path_suite": {
         "registration": "q2-action-path-v2 (+ -inputs, -executor addenda), successor of q2-action-path-v1 (D40)",
         "status": "v1 frozen 2026-10-08 (ledger rows 8-10) and invalid: C2 failed (job 768; chord_super_d unpredicted). v2 drafted under D40 (code e66bf16); D43 implemented at 126ff8b: the judge reads a key event the XRecord tap recorded without the guard-guaranteed Mod2 (Num Lock) on kind, keycode, keysym and order only, the guard checks Mod2 (condition f), C2's prediction keeps v1's failing set (chord_super_d passes under the rule, disclosed as informed by v1's C2), and seed-42 development (jobs 830-839) passed the positive and negative cases and repeated v1's final runs 703-708 with the same outcomes. Freeze-linted in order against a scratch copy of the ledger; not frozen",
-        "branch": "stage0/q2-action-path-v2 (from main at 124573a; main merged in at 65bc2e2 and 692b83d)",
+        "branch": "stage0/q2-action-path-v2 (from main at 124573a; main merged in at 65bc2e2, 692b83d and 1d2cbe0)",
         "development_jobs": "482-637, 662-667 and 694-708 (v1, seed 42, CPU only, never evidence; 703-708 at the D30 runtime commit 7653799, 694 at 34f79e4, 695-699 cancelled while booting); 784-787 (v2 development under D40 at e66bf16, seed 42, CPU only, 1.0 VM-h: L0-raw on the 13 chords, L0-fixed on chord_super_d at 8 and 16 VMs); 830-839 (D43 development at 126ff8b, seed 42, CPU only, 2.4 VM-h: L0-raw and L0-fixed samples, the drop-modifier negative case, v1's final runs 703-708 repeated as 834-839)"
       },
       "checker_mutation_confirm": {
@@ -315,7 +315,42 @@
           "held_until_ingest": "~/cotcodec-runs/stage0/q2-evaluator-mutation/scratch/held-after-isolated-ingest-confirm-v1/ (digests in held/SHA256SUMS)",
           "gpu_hours": 0.0
         },
-        "status": "stage A1 complete; audit not started"
+        "status": "stage B complete (isolated Claude rating, collector, ingest, salt revealed, held files released, audit summary, registered analysis); Kevin's adjudication (34 items) and human spot check (25 items) pending",
+        "stage_a2": {
+          "audit_id": "confirm-audit-v1",
+          "evidence": "program/evidence/2026-10-08/q2-mutation-confirm/audit/README.md",
+          "jobs": [
+            "815 sample/baselines/packets (CPU)",
+            "816 overlay (refused, 1 s)",
+            "817 overlay",
+            "819 doctor (CPU)",
+            "823-824 open-weight rater"
+          ],
+          "salt_sha256": "194ee66ccc11f93c16bffdc7cf54d0b0f5398f35cbdb3541bb9d9d511c40451e",
+          "scope": "census, 178 items (134 real on 33 tasks: 36 fn_equiv, 5 fp_violation, 93 alt_gate; 4 p1_flip; 40 shams: 33 gold, 7 do-nothing); capacity 1,139; no fallback",
+          "packets": "2 shards: 133 items 47d17b52..., 45 items f91104b4...; 16 shortened, none over budget",
+          "overlay_image": "sha256:7d4595f98601d50f7393c447a1d0618d55cda1b7cf60e2d016ab5c6f47cc872e (capsule a8559f89...)",
+          "open_weight": "178/178 rated: 172 ok, 6 thinking_unfinished (unsure), 0 unrated; clean exits; calls held on the host (8c8db172..., 52ba6865...)",
+          "isolated_export": "178 items, manifest f9c91d57... outside the root; template 0e9d4eb6...",
+          "gpu_hours": 0.365
+        },
+        "stage_b": {
+          "evidence": "program/evidence/2026-10-08/q2-mutation-confirm/results/README.md (audit steps in audit/README.md, section Stage B)",
+          "rating_run": "wf_138e30b5-c1a: one unresumed workflow session, 178 rater agents (rate:0-177), all answered, journal bb12d4bd...",
+          "collection": "178 transcripts mapped to 178 items, none unmappable (3a48f6f0...)",
+          "ingest": "calls 2120e6ce...: 177 ok, 1 isolation_void (fd455942d783ba01: a Read of a mistyped non-existent path outside its item directory); no relay frame, no re-rate; model claude-opus-5-5 only; the 15 registered attachment types only",
+          "salt": "revealed (audit/salt.hex); SHA-256 194ee66c... matches; 178/178 item ids recompute",
+          "held_released": "A1 18 files (results/released/) and A2 7 files (audit/released/), every digest equal to held/SHA256SUMS and audit/held/SHA256SUMS",
+          "audit_summary": "kappa 0.343 on 138 real items (raw agreement 82.6%); sham accuracy Claude 0.90, Qwen 0.975; 24/138 unresolved; K3 fires (both groups and kappa) and K4 fires, reported only (D35); no gold-defect task decided (4 gold shams split)",
+          "p1": "raw 4/92 (4.35%, 1.20-10.76%); audit-confirmed 3/92 (3.26%, 0.68-9.23%); final (no P1 flip in the pool)",
+          "checker_candidates": "FN 36 (30 confirmed, 6 unresolved; candidate share 12.4%, 7.2-18.3%; compare_pptx_files 40.2%; pptx.eq.zorder_nonoverlap 36/40); FP 5 violations (2 confirmed, 3 label-contradicted pending Kevin; 5.9%, 0.8-12.3%); probe-touched FP events 28 unaudited",
+          "exploratory": "P2 12.4% (7.2-18.3%, 327 mutants, 60 tasks); P3 6.1% (0.8-13.1%); P4 0/5; P5 17/60 (28.3%, 17.5-41.4%); K6b compare_table P2; K7 compare_pptx_files P2; K9 7/68 does not fire; K2 offline harness, VM fidelity unverified",
+          "pending_for_kevin": {
+            "adjudication_pool": "34 items (24 splits, 6 concordant contradictions, 4 split gold shams), audit/audit-summary/adjudication-pool.jsonl",
+            "human_spot_check": "25 items, audit/released/confirm-audit-v1/spot-check.jsonl (7 also in the pool)"
+          },
+          "gpu_hours": 0.0
+        }
       }
     },
     {
@@ -343,19 +378,20 @@
     "Gauntlet admission for experiments over 8 GPU-h (D24): set up the protected trust store (Ed25519 reviewer keys pinned by CI) the gauntlet needs for a 100, or rule on admitting gauntleted designs below 100. It blocks Q1 Stage 0 (not admitted under D31; a gauntlet wave on its design runs under D37), Q2 Stage 1 and any K1 v3",
     "Approve or decline the R580 driver upgrade request to the host administrator, or give written risk acceptance for scoring Q1 policy kernels",
     "Approve disclosure of the Letta findings to letta-ai once the current-main recheck is complete (draft kept privately)",
-    "Approve telling xlang-ai about OSWorld checker defects found in Q2 Stage 0a, and about the hardcoded Surfer-H API key in public OSWorld source",
+    "Approve telling xlang-ai about OSWorld checker defects found in Q2 Stage 0a, and about the hardcoded Surfer-H API key in public OSWorld source. New since 2026-10-08: the frozen checker-mutation study found compare_pptx_files fails 35 of 36 equivalent edits that only reorder non-overlapping shapes (30 confirmed by both model raters; evidence program/evidence/2026-10-08/q2-mutation-confirm/results/), and a GUI-faithful LibreOffice save flips 3 of 92 reference golds from pass to fail (model-confirmed)",
     "Approve asking the Dr. Kernel and KernelGYM authors to add licenses, or choose another licensed Q1 policy",
     "Decide whether to purge the old host address and the internal corpus inventory from public git history (requires a force-push)",
-    "Spot-check a sample of the Q2 checker-mutation audit as the human rater (decision D9)",
+    "Spot-check the 25-item human sample of the Q2 checker-mutation confirm audit (decision D9; program/evidence/2026-10-08/q2-mutation-confirm/audit/released/confirm-audit-v1/spot-check.jsonl; 7 of the 25 are also in the adjudication pool)",
     "Moonshot (Kimi) account is suspended for insufficient balance; recharge it if a Kimi model should be a rater or reviewer (rotate the exposed key at the same time)",
-    "Q2 checker-mutation (q2-evaluator-mutation-v1, ninth draft, D35 and D38): D34 (i) fired after the one rater retry (dev kappa 0.066 under the registered ingest, 0.575 with the resumed harness's relay turn excepted), so the study is a pre-specified descriptive protocol (D35) implemented on stage0/q2-evaluator-mutation. The sixth review scored the eighth draft 80/100; D38 accepted its choices (census audit with seeded stratified fallback, gold shams for every audited task, the relay frame registered under D35's constraints, difference-first packets, the registered transcript entry and attachment types) and had its minor items fixed in the ninth draft (fallback at the largest budget that fits; a registered collector of every rating transcript; relay frames checked across calls files and recorded verbatim; one workflow session with one fresh, answer-blind re-rate of relay-voided items, both results reported; concordant contradictions of every candidate kind to the pool; interrupted attempts answer only through a structured answer). Kevin's remaining items (prereg section 17): adjudicate the pool (about 16 items, 10-40, 0.5-3.5 h; if a resume brings a different relay frame, every relay-voided item joins it, 113 against 24 on the development analogue), the human spot check (about 35 items, D9), the outward actions, and the carried-over sign-offs (the D23/D25/D27 rater lineup with unfixed Claude sampling and public OSWorld files sent to the Claude model, P1 with reserve-split golds, the spec release, the D34 rules as implemented). The narrow re-check scored the ninth draft 90 (ready to freeze, no blocking defect); it was frozen on main at 65bc2e2 (ledger row 11), and the confirm campaign's CPU stage ran (K1 70/74 PASS, P1 raw 4/92, 1,232 mutants admitted, census preview 134 real items on 33 tasks); Kevin's items above follow the audit",
+    "Q2 checker-mutation (q2-evaluator-mutation-v1, frozen at 65bc2e2, descriptive under D35 and D38): the confirm audit and the registered analysis have run (program/evidence/2026-10-08/q2-mutation-confirm/results/README.md). Adjudicate the 34-item blind pool (24 splits, 6 concordant contradictions, 4 split gold shams; ids only in audit/audit-summary/adjudication-pool.jsonl), answering from the packets before reading the released sample, decisions or results (they name labels and decisions); your answers decide 6 unresolved false-negative candidates (30-36 confirmed), 3 false-positive candidates the raters both accepted (2-5 confirmed), 21 alternative solutions at P2's gate (72-93 in P2) and 4 split gold shams (0-4 gold-defect tasks); kappa (0.343), P1 (3/92 confirmed), P3-P5 do not change. Then audit summarize --adjudications and the analysis are rerun. Still yours as well: the outward actions and the carried-over sign-offs of prereg section 17 (the D23/D25/D27 rater lineup with unfixed Claude sampling and public OSWorld files sent to the Claude model, P1 with reserve-split golds, the spec release, the D34 rules as implemented)",
     "The ANTHROPIC_API_KEY on this machine is invalid (HTTP 401); supply a valid key if the Claude rater and gauntlet reviews should use the API rather than the agent harness (D25)",
     "Decide whether to ask the KernelGYM authors for a licence: gate_b.py was rewritten from the spec after the review found a transliteration (stage0/q1-gates, never pushed); a licence would remove the residual risk",
     "Q1 after D41: Stage 0 as drafted is withdrawn (gauntlet wave 1 honest exit at 45; the TF32-admissible audit metric cannot separate correct TF32 matmul/conv outputs from destroyed ones; projected 20-25 GPU-h high under the safe execution policy). A CPU-only audit-metric study on stored non-evaluation data is running; its recommendation, a small S1-cal GPU pilot and any successor Stage 0 (new id, fresh gauntlet, D24) are yours to approve. Stage 1 also needs the R580 driver upgrade or risk acceptance",
-    "Review the decisions taken on your behalf since the restart, D1-D43 in program/decisions.md; the recent ones are D28 (Q1 pilot exposure), D29 (upstream test code on GPUs), D30, D33, D39, D40 and D43 (action path: guest-server restarts, freeze details, v1 invalid on C2 and its v2, the corrected cause of that failure and v2's judge rule), D31, D37 and D41 (Q1 Stage 0 budget path and withdrawal), D32, D36 and D42 (Q3 dense pre-check, its v2 and the v2 4B attention backend), D34, D35 and D38 (checker-mutation raters; the study became descriptive)",
+    "Review the decisions taken on your behalf since the restart, D1-D44 in program/decisions.md; the recent ones are D28-D29 (Q1 pilot exposure, upstream test code on GPUs), D30, D33, D39, D40 and D43 (action path: restarts, freeze details, v1 invalid on C2, the corrected cause and the v2 judge rule), D31, D37 and D41 (Q1 Stage 0 budget path and withdrawal), D32, D36, D42 and D44 (Q3 dense pre-check and its v2), D34, D35 and D38 (checker-mutation raters; the study became descriptive)",
+    "The checker-mutation blind specs (program/evidence/q2-mutation/specs/, public on main since 2026-10-07) quote short passages of OSWorld file-cache documents. The registration lists their release as your sign-off, but they were published with the integration branch before that sign-off. Confirm the release, or ask for removal (a history purge needs a force-push, as with the other purge item)",
     "Q2 action path (D43; q2-action-path-v2 sections 26-27): v1's C2 failure of chord_super_d is in the XRecord tap's record, not in delivery: GNOME Shell grabs Super_L and its keybindings synchronously, the X server queues the next key, and RECORD reports a queued event before its state is computed (state 0, without Num Lock's Mod2); the shell still showed the desktop. D43 is implemented on stage0/q2-action-path-v2 (126ff8b): the judge reads such an event on kind, keycode, keysym and order only, the guard now guarantees Mod2, and seed-42 development passed the positive and negative cases (jobs 830-839). Review it before v2's freeze, and decide whether a later registration should observe the shell's side of a grabbed chord directly."
   ],
-  "gpu_hours_spent_this_program": 3.9261,
+  "gpu_hours_spent_this_program": 4.2911,
   "frozen_registrations": [
     "q3-k1-localization-screen-v1",
     "q2-holo3-rerun-audit-v1-posthoc",
@@ -557,6 +593,27 @@
       "basis": "physical: CPU-only Slurm lane (D12), no GPU requested, no /dev/nvidia* in any receipt"
     },
     {
+      "experiment": "q2-evaluator-mutation-v1 confirm campaign stage A2 (audit census, overlay, open-weight rater; isolated export)",
+      "gpu_hours": 0.365,
+      "jobs": [
+        "815 confirm-audit-v1 sample, baselines, packets (CPU)",
+        "816 overlay build (refused by the extractor before any build, 1 s)",
+        "817 overlay build (43 s)",
+        "819 args and image-input doctor (CPU)",
+        "823 open-weight rater shard 000 (14 min 49 s)",
+        "824 open-weight rater shard 001 (6 min 21 s)"
+      ],
+      "outcome": "census 178 items (36 fn_equiv, 5 fp_violation, 93 alt_gate, 4 P1 flips, 40 shams); Qwen3.6-35B-A3B thinking on rated 178/178 (172 ok, 6 thinking_unfinished, 0 unrated), both jobs ended on their own (reason=completed, exit 0); 0.584 of the 3.0 GPU-h rater cap allocated in the ledger; isolated export of 178 items ready for the Claude rating",
+      "basis": "physical (scontrol RunTime x 1 H100: 1 + 43 + 889 + 381 s = 1,314 s); rater 0.3528 of 3.0, overlay 0.0122 of 0.167"
+    },
+    {
+      "experiment": "q2-evaluator-mutation-v1 confirm campaign stage B (isolated Claude rating ingest, audit summary, registered analysis)",
+      "gpu_hours": 0.0,
+      "jobs": [],
+      "outcome": "Claude rater through the agent harness (wf_138e30b5-c1a: 178 agents, 21,100,472 tokens, 532.9 s); collector, ingest, salt check, release, summary and analysis ran locally; no host job",
+      "basis": "no GPU requested; the host was only read (held files, salt)"
+    },
+    {
       "experiment": "q2-action-path-v2 development (D40 and D43; seed 42; CPU only)",
       "gpu_hours": 0.0,
       "jobs": [
@@ -601,6 +658,13 @@
       "label": "HONEST EXIT",
       "outcome": "score 45 (47 and 45); 3/3 refuters refuted; fatal defect F1: the TF32-admissible audit metric cannot separate correct TF32 matmul/conv outputs from destroyed ones on most L2 problems; Stage 0 withdrawn (D41)",
       "evidence": "program/gauntlet/2026-10-08-q1-stage0-gate-validation.jsonl"
+    },
+    {
+      "registration": "q2-evaluator-mutation-v1",
+      "date": "2026-10-08",
+      "label": "DESCRIPTIVE (D35); adjudication and human spot check pending",
+      "outcome": "P1 raw 4/92 (4.35%), audit-confirmed 3/92 (3.26%, 0.68-9.23%); checker FN candidates 36, all pptx.eq.zorder_nonoverlap on compare_pptx_files(_tolerant): 30 confirmed, 6 unresolved, candidate share 12.4% (7.2-18.3%); FP candidates 5 violations: 2 confirmed, 3 label-contradicted by both raters (pending Kevin), 5.9% (0.8-12.3%); P2-P5 exploratory (D34 (i)); kappa 0.343; K1 PASS, K9 no, K2 unverified",
+      "evidence": "program/evidence/2026-10-08/q2-mutation-confirm/results/README.md"
     }
   ]
 }

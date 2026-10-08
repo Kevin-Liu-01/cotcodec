@@ -1,0 +1,5363 @@
+{
+ "aggregate": {
+  "dependency_flips": [],
+  "excluded_unemulated": [
+   "2373b66a-092d-44cb-bfd7-82e86e7a3b4d",
+   "734d6579-c07d-47a8-9ae2-13339795476b",
+   "82e3c869-49f6-4305-a7ce-f3e64a0618e7",
+   "d16c99dc-2a1e-46f2-b350-d97c86c85c15",
+   "f723c744-e62c-4ae6-98d1-750d3cd7d79d"
+  ],
+  "lock": {
+   "do_nothing_saved_passes": 0,
+   "gold_fixed_point_flip_clopper_pearson95": [
+    0.0010121996993108784,
+    0.20351691392241394
+   ],
+   "gold_fixed_point_flips": 1,
+   "gold_fixed_point_n": 25,
+   "gold_fixed_point_not_counted": [],
+   "gold_fixed_point_not_exposed": [
+    "0ed39f63-6049-43d4-ba4d-5fa2fe04a951",
+    "3aaa4e37-dc91-482e-99af-132a612d40f3",
+    "4bcb1253-a636-4df4-8cb0-a35c04dfef31",
+    "8f080098-ddb1-424c-b438-4e96e5e4786e",
+    "91190194-f406-4cd6-b3f9-c43fac942b22",
+    "d68204bf-11c1-4b13-b48b-d303c73d4bf6",
+    "f918266a-b3e0-4914-865d-4faa564f1aef"
+   ],
+   "gold_raw_verdicts": {
+    "fail": 1,
+    "pass": 31
+   },
+   "gold_save_failed": [],
+   "gold_saved_verdicts": {
+    "fail": 2,
+    "pass": 23
+   },
+   "k1_gold_pass_and_do_nothing_fail": "31/32",
+   "k1_infra_excluded": 0,
+   "tasks_with_gold": 32,
+   "tasks_with_initial": 48
+  },
+  "s1": {
+   "raw": {
+    "candidates": [],
+    "confirmed": [],
+    "rule": "verdicts differ between venvs and 5 fresh-process scorings agree within each venv",
+    "unstable": []
+   },
+   "saved": {
+    "candidates": [],
+    "confirmed": [],
+    "rule": "verdicts differ between venvs and 5 fresh-process scorings agree within each venv",
+    "unstable": []
+   }
+  },
+  "s5_unstable_at_repeat_5": [],
+  "save_infra_errors": [],
+  "saves": {
+   "changed_bytes": 52,
+   "n": 52,
+   "slower_than_0_5s": 0,
+   "with_dialog": 0,
+   "written": 52
+  },
+  "scout": {
+   "do_nothing_saved_passes": 0,
+   "gold_fixed_point_flip_clopper_pearson95": [
+    0.0010121996993108784,
+    0.20351691392241394
+   ],
+   "gold_fixed_point_flips": 1,
+   "gold_fixed_point_n": 25,
+   "gold_fixed_point_not_counted": [],
+   "gold_fixed_point_not_exposed": [
+    "0ed39f63-6049-43d4-ba4d-5fa2fe04a951",
+    "3aaa4e37-dc91-482e-99af-132a612d40f3",
+    "4bcb1253-a636-4df4-8cb0-a35c04dfef31",
+    "8f080098-ddb1-424c-b438-4e96e5e4786e",
+    "91190194-f406-4cd6-b3f9-c43fac942b22",
+    "d68204bf-11c1-4b13-b48b-d303c73d4bf6",
+    "f918266a-b3e0-4914-865d-4faa564f1aef"
+   ],
+   "gold_raw_verdicts": {
+    "fail": 1,
+    "pass": 31
+   },
+   "gold_save_failed": [],
+   "gold_saved_verdicts": {
+    "fail": 2,
+    "pass": 23
+   },
+   "k1_gold_pass_and_do_nothing_fail": "31/32",
+   "k1_infra_excluded": 0,
+   "tasks_with_gold": 32,
+   "tasks_with_initial": 48
+  },
+  "venv_differences_from_nondeterministic_checkers": []
+ },
+ "tasks": {
+  "00fa164e-2612-4439-992e-157d019a8436": {
+   "checker_funcs": [
+    "compare_docx_tables"
+   ],
+   "gold_raw_lock": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 1.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "pass"
+   },
+   "gold_raw_scout": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 1.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "pass"
+   },
+   "gold_save": {
+    "derived_outputs": [
+     "/home/user/Documents/awesome-desktop/awe_desk_env.docx"
+    ],
+    "failures": [],
+    "infra_error": null,
+    "placed_office": [
+     "/home/user/Documents/awesome-desktop/awe_desk_env.docx"
+    ],
+    "save_failures": [],
+    "saves": [
+     {
+      "changed": true,
+      "dialogs": [],
+      "reason": "postconfig",
+      "seconds_to_write": 0.0,
+      "written": true
+     }
+    ],
+    "unemulated": [],
+    "unemulated_writes": false
+   },
+   "gold_saved_lock": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 1.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "pass"
+   },
+   "gold_saved_scout": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 1.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "pass"
+   },
+   "initial_raw_lock": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 0.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "fail"
+   },
+   "initial_raw_scout": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 0.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "fail"
+   },
+   "initial_save": {
+    "derived_outputs": [
+     "/home/user/Documents/awesome-desktop/awe_desk_env.docx"
+    ],
+    "failures": [],
+    "infra_error": null,
+    "placed_office": [
+     "/home/user/Documents/awesome-desktop/awe_desk_env.docx"
+    ],
+    "save_failures": [],
+    "saves": [
+     {
+      "changed": true,
+      "dialogs": [],
+      "reason": "postconfig",
+      "seconds_to_write": 0.0,
+      "written": true
+     }
+    ],
+    "unemulated": [],
+    "unemulated_writes": false
+   },
+   "initial_saved_lock": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 0.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "fail"
+   },
+   "initial_saved_scout": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 0.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "fail"
+   }
+  },
+  "05dd4c1d-c489-4c85-8389-a7836c4f0567": {
+   "checker_funcs": [
+    "compare_pptx_files",
+    "compare_pptx_files"
+   ],
+   "gold_raw_lock": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 1.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "pass"
+   },
+   "gold_raw_scout": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 1.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "pass"
+   },
+   "gold_save": {
+    "derived_outputs": [
+     "/home/user/Desktop/38_1.pptx"
+    ],
+    "failures": [],
+    "infra_error": null,
+    "placed_office": [
+     "/home/user/Desktop/38_1.pptx"
+    ],
+    "save_failures": [],
+    "saves": [
+     {
+      "changed": true,
+      "dialogs": [],
+      "reason": "postconfig",
+      "seconds_to_write": 0.1,
+      "written": true
+     }
+    ],
+    "unemulated": [],
+    "unemulated_writes": false
+   },
+   "gold_saved_lock": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 1.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "pass"
+   },
+   "gold_saved_scout": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 1.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "pass"
+   },
+   "initial_raw_lock": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 0.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "fail"
+   },
+   "initial_raw_scout": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 0.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "fail"
+   },
+   "initial_save": {
+    "derived_outputs": [
+     "/home/user/Desktop/38_1.pptx"
+    ],
+    "failures": [],
+    "infra_error": null,
+    "placed_office": [
+     "/home/user/Desktop/38_1.pptx"
+    ],
+    "save_failures": [],
+    "saves": [
+     {
+      "changed": true,
+      "dialogs": [],
+      "reason": "postconfig",
+      "seconds_to_write": 0.1,
+      "written": true
+     }
+    ],
+    "unemulated": [],
+    "unemulated_writes": false
+   },
+   "initial_saved_lock": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 0.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "fail"
+   },
+   "initial_saved_scout": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 0.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "fail"
+   }
+  },
+  "0b17a146-2934-46c7-8727-73ff6b6483e8": {
+   "checker_funcs": [
+    "compare_docx_files",
+    "compare_subscript_contains"
+   ],
+   "gold_raw_lock": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 1.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "pass"
+   },
+   "gold_raw_scout": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 1.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "pass"
+   },
+   "gold_save": {
+    "derived_outputs": [
+     "/home/user/Desktop/H2O_Factsheet_WA.docx"
+    ],
+    "failures": [],
+    "infra_error": null,
+    "placed_office": [
+     "/home/user/Desktop/H2O_Factsheet_WA.docx"
+    ],
+    "save_failures": [],
+    "saves": [
+     {
+      "changed": true,
+      "dialogs": [],
+      "reason": "postconfig",
+      "seconds_to_write": 0.0,
+      "written": true
+     }
+    ],
+    "unemulated": [],
+    "unemulated_writes": false
+   },
+   "gold_saved_lock": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 1.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "pass"
+   },
+   "gold_saved_scout": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 1.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "pass"
+   },
+   "initial_raw_lock": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 0.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "fail"
+   },
+   "initial_raw_scout": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 0.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "fail"
+   },
+   "initial_save": {
+    "derived_outputs": [
+     "/home/user/Desktop/H2O_Factsheet_WA.docx"
+    ],
+    "failures": [],
+    "infra_error": null,
+    "placed_office": [
+     "/home/user/Desktop/H2O_Factsheet_WA.docx"
+    ],
+    "save_failures": [],
+    "saves": [
+     {
+      "changed": true,
+      "dialogs": [],
+      "reason": "postconfig",
+      "seconds_to_write": 0.0,
+      "written": true
+     }
+    ],
+    "unemulated": [],
+    "unemulated_writes": false
+   },
+   "initial_saved_lock": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 0.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "fail"
+   },
+   "initial_saved_scout": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 0.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "fail"
+   }
+  },
+  "0cecd4f3-74de-457b-ba94-29ad6b5dafb6": {
+   "checker_funcs": [
+    "compare_table"
+   ],
+   "gold_raw_lock": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 1.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "pass"
+   },
+   "gold_raw_scout": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 1.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "pass"
+   },
+   "gold_save": {
+    "derived_outputs": [
+     "/home/user/copy_sheet_insert.xlsx"
+    ],
+    "failures": [],
+    "infra_error": null,
+    "placed_office": [
+     "/home/user/copy_sheet_insert.xlsx"
+    ],
+    "save_failures": [],
+    "saves": [
+     {
+      "changed": true,
+      "dialogs": [],
+      "reason": "postconfig",
+      "seconds_to_write": 0.301,
+      "written": true
+     }
+    ],
+    "unemulated": [],
+    "unemulated_writes": false
+   },
+   "gold_saved_lock": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 1.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "pass"
+   },
+   "gold_saved_scout": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 1.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "pass"
+   },
+   "initial_raw_lock": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 0.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "fail"
+   },
+   "initial_raw_scout": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 0.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "fail"
+   },
+   "initial_save": {
+    "derived_outputs": [
+     "/home/user/copy_sheet_insert.xlsx"
+    ],
+    "failures": [],
+    "infra_error": null,
+    "placed_office": [
+     "/home/user/copy_sheet_insert.xlsx"
+    ],
+    "save_failures": [],
+    "saves": [
+     {
+      "changed": true,
+      "dialogs": [],
+      "reason": "postconfig",
+      "seconds_to_write": 0.301,
+      "written": true
+     }
+    ],
+    "unemulated": [],
+    "unemulated_writes": false
+   },
+   "initial_saved_lock": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 0.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "fail"
+   },
+   "initial_saved_scout": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 0.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "fail"
+   }
+  },
+  "0e763496-b6bb-4508-a427-fad0b6c3e195": {
+   "checker_funcs": [
+    "compare_font_names"
+   ],
+   "initial_raw_lock": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 0.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "fail"
+   },
+   "initial_raw_scout": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 0.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "fail"
+   },
+   "initial_save": {
+    "derived_outputs": [
+     "/home/user/Desktop/Dublin_Zoo_Intro.docx"
+    ],
+    "failures": [],
+    "infra_error": null,
+    "placed_office": [
+     "/home/user/Desktop/Dublin_Zoo_Intro.docx"
+    ],
+    "save_failures": [],
+    "saves": [
+     {
+      "changed": true,
+      "dialogs": [],
+      "reason": "postconfig",
+      "seconds_to_write": 0.0,
+      "written": true
+     }
+    ],
+    "unemulated": [],
+    "unemulated_writes": false
+   },
+   "initial_saved_lock": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 0.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "fail"
+   },
+   "initial_saved_scout": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 0.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "fail"
+   }
+  },
+  "0ed39f63-6049-43d4-ba4d-5fa2fe04a951": {
+   "checker_funcs": [
+    "compare_text_file"
+   ],
+   "gold_raw_lock": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 1.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "pass"
+   },
+   "gold_raw_scout": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 1.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "pass"
+   },
+   "gold_save": {
+    "derived_outputs": [],
+    "failures": [],
+    "infra_error": null,
+    "placed_office": [],
+    "save_failures": [],
+    "saves": [],
+    "unemulated": [],
+    "unemulated_writes": false
+   },
+   "gold_saved_lock": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 1.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "pass"
+   },
+   "gold_saved_scout": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 1.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "pass"
+   },
+   "initial_raw_lock": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 0.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "fail"
+   },
+   "initial_raw_scout": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 0.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "fail"
+   },
+   "initial_save": {
+    "derived_outputs": [],
+    "failures": [],
+    "infra_error": null,
+    "placed_office": [],
+    "save_failures": [],
+    "saves": [],
+    "unemulated": [],
+    "unemulated_writes": false
+   },
+   "initial_saved_lock": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 0.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "fail"
+   },
+   "initial_saved_scout": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 0.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "fail"
+   }
+  },
+  "1954cced-e748-45c4-9c26-9855b97fbc5e": {
+   "checker_funcs": [
+    "compare_table"
+   ],
+   "gold_raw_lock": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 1.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "pass"
+   },
+   "gold_raw_scout": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 1.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "pass"
+   },
+   "gold_save": {
+    "derived_outputs": [
+     "/home/user/Invoices.xlsx"
+    ],
+    "failures": [],
+    "infra_error": null,
+    "placed_office": [
+     "/home/user/Invoices.xlsx"
+    ],
+    "save_failures": [],
+    "saves": [
+     {
+      "changed": true,
+      "dialogs": [],
+      "reason": "postconfig",
+      "seconds_to_write": 0.301,
+      "written": true
+     }
+    ],
+    "unemulated": [],
+    "unemulated_writes": false
+   },
+   "gold_saved_lock": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 1.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "pass"
+   },
+   "gold_saved_scout": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 1.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "pass"
+   },
+   "initial_raw_lock": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 0.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "fail"
+   },
+   "initial_raw_scout": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 0.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "fail"
+   },
+   "initial_save": {
+    "derived_outputs": [
+     "/home/user/Invoices.xlsx"
+    ],
+    "failures": [],
+    "infra_error": null,
+    "placed_office": [
+     "/home/user/Invoices.xlsx"
+    ],
+    "save_failures": [],
+    "saves": [
+     {
+      "changed": true,
+      "dialogs": [],
+      "reason": "postconfig",
+      "seconds_to_write": 0.201,
+      "written": true
+     }
+    ],
+    "unemulated": [],
+    "unemulated_writes": false
+   },
+   "initial_saved_lock": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 0.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "fail"
+   },
+   "initial_saved_scout": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 0.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "fail"
+   }
+  },
+  "1d17d234-e39d-4ed7-b46f-4417922a4e7c": {
+   "checker_funcs": [
+    "compare_table"
+   ],
+   "gold_raw_lock": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 1.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "pass"
+   },
+   "gold_raw_scout": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 1.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "pass"
+   },
+   "gold_save": {
+    "derived_outputs": [
+     "/home/user/FutureValue.xlsx"
+    ],
+    "failures": [],
+    "infra_error": null,
+    "placed_office": [
+     "/home/user/FutureValue.xlsx"
+    ],
+    "save_failures": [],
+    "saves": [
+     {
+      "changed": true,
+      "dialogs": [],
+      "reason": "postconfig",
+      "seconds_to_write": 0.201,
+      "written": true
+     }
+    ],
+    "unemulated": [],
+    "unemulated_writes": false
+   },
+   "gold_saved_lock": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 1.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "pass"
+   },
+   "gold_saved_scout": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 1.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "pass"
+   },
+   "initial_raw_lock": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 0.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "fail"
+   },
+   "initial_raw_scout": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 0.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "fail"
+   },
+   "initial_save": {
+    "derived_outputs": [
+     "/home/user/FutureValue.xlsx"
+    ],
+    "failures": [],
+    "infra_error": null,
+    "placed_office": [
+     "/home/user/FutureValue.xlsx"
+    ],
+    "save_failures": [],
+    "saves": [
+     {
+      "changed": true,
+      "dialogs": [],
+      "reason": "postconfig",
+      "seconds_to_write": 0.2,
+      "written": true
+     }
+    ],
+    "unemulated": [],
+    "unemulated_writes": false
+   },
+   "initial_saved_lock": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 0.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "fail"
+   },
+   "initial_saved_scout": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 0.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "fail"
+   }
+  },
+  "1de60575-bb6e-4c3d-9e6a-2fa699f9f197": {
+   "checker_funcs": [
+    "compare_table"
+   ],
+   "gold_raw_lock": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 1.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "pass"
+   },
+   "gold_raw_scout": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 1.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "pass"
+   },
+   "gold_save": {
+    "derived_outputs": [
+     "/home/user/EntireSummerSales.xlsx"
+    ],
+    "failures": [],
+    "infra_error": null,
+    "placed_office": [
+     "/home/user/EntireSummerSales.xlsx"
+    ],
+    "save_failures": [],
+    "saves": [
+     {
+      "changed": true,
+      "dialogs": [],
+      "reason": "postconfig",
+      "seconds_to_write": 0.301,
+      "written": true
+     }
+    ],
+    "unemulated": [],
+    "unemulated_writes": false
+   },
+   "gold_saved_lock": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 1.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "pass"
+   },
+   "gold_saved_scout": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 1.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "pass"
+   },
+   "initial_raw_lock": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 0.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "fail"
+   },
+   "initial_raw_scout": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 0.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "fail"
+   },
+   "initial_save": {
+    "derived_outputs": [
+     "/home/user/EntireSummerSales.xlsx"
+    ],
+    "failures": [],
+    "infra_error": null,
+    "placed_office": [
+     "/home/user/EntireSummerSales.xlsx"
+    ],
+    "save_failures": [],
+    "saves": [
+     {
+      "changed": true,
+      "dialogs": [],
+      "reason": "postconfig",
+      "seconds_to_write": 0.301,
+      "written": true
+     }
+    ],
+    "unemulated": [],
+    "unemulated_writes": false
+   },
+   "initial_saved_lock": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 0.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "fail"
+   },
+   "initial_saved_scout": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 0.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "fail"
+   }
+  },
+  "215dfd39-f493-4bc3-a027-8a97d72c61bf": {
+   "checker_funcs": [
+    "check_qt_bgcone"
+   ],
+   "initial_raw_lock": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 0.0,
+    "setup_unemulated": [
+     "python -c import pyautogui; import time; pyautogui.click({SCREEN_WIDTH_HALF}, {SCREEN_HEIGHT_HALF}); time.sleep(0.5);"
+    ],
+    "unemulated_writes": false,
+    "verdict": "fail"
+   },
+   "initial_raw_scout": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 0.0,
+    "setup_unemulated": [
+     "python -c import pyautogui; import time; pyautogui.click({SCREEN_WIDTH_HALF}, {SCREEN_HEIGHT_HALF}); time.sleep(0.5);"
+    ],
+    "unemulated_writes": false,
+    "verdict": "fail"
+   },
+   "initial_save": {
+    "derived_outputs": [],
+    "failures": [],
+    "infra_error": null,
+    "placed_office": [],
+    "save_failures": [],
+    "saves": [],
+    "unemulated": [
+     "postconfig launch",
+     "postconfig launch"
+    ],
+    "unemulated_writes": false
+   },
+   "initial_saved_lock": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 0.0,
+    "setup_unemulated": [
+     "python -c import pyautogui; import time; pyautogui.click({SCREEN_WIDTH_HALF}, {SCREEN_HEIGHT_HALF}); time.sleep(0.5);"
+    ],
+    "unemulated_writes": false,
+    "verdict": "fail"
+   },
+   "initial_saved_scout": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 0.0,
+    "setup_unemulated": [
+     "python -c import pyautogui; import time; pyautogui.click({SCREEN_WIDTH_HALF}, {SCREEN_HEIGHT_HALF}); time.sleep(0.5);"
+    ],
+    "unemulated_writes": false,
+    "verdict": "fail"
+   }
+  },
+  "21760ecb-8f62-40d2-8d85-0cee5725cb72": {
+   "checker_funcs": [
+    "check_transition"
+   ],
+   "initial_raw_lock": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 0.0,
+    "setup_unemulated": [
+     "python -c import pyautogui; import time;  time.sleep(4); pyautogui.doubleClick(x={SCREEN_WIDTH_HALF}, y={SCREEN_HEIGHT_HALF}); time.sleep(0.5);pyautogui.mouseDo"
+    ],
+    "unemulated_writes": false,
+    "verdict": "fail"
+   },
+   "initial_raw_scout": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 0.0,
+    "setup_unemulated": [
+     "python -c import pyautogui; import time;  time.sleep(4); pyautogui.doubleClick(x={SCREEN_WIDTH_HALF}, y={SCREEN_HEIGHT_HALF}); time.sleep(0.5);pyautogui.mouseDo"
+    ],
+    "unemulated_writes": false,
+    "verdict": "fail"
+   },
+   "initial_save": {
+    "derived_outputs": [
+     "/home/user/Desktop/Ch4 Video Effect.pptx"
+    ],
+    "failures": [],
+    "infra_error": null,
+    "placed_office": [
+     "/home/user/Desktop/Ch4 Video Effect.pptx"
+    ],
+    "save_failures": [],
+    "saves": [
+     {
+      "changed": true,
+      "dialogs": [],
+      "reason": "postconfig",
+      "seconds_to_write": 0.301,
+      "written": true
+     }
+    ],
+    "unemulated": [],
+    "unemulated_writes": false
+   },
+   "initial_saved_lock": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 0.0,
+    "setup_unemulated": [
+     "python -c import pyautogui; import time;  time.sleep(4); pyautogui.doubleClick(x={SCREEN_WIDTH_HALF}, y={SCREEN_HEIGHT_HALF}); time.sleep(0.5);pyautogui.mouseDo"
+    ],
+    "unemulated_writes": false,
+    "verdict": "fail"
+   },
+   "initial_saved_scout": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 0.0,
+    "setup_unemulated": [
+     "python -c import pyautogui; import time;  time.sleep(4); pyautogui.doubleClick(x={SCREEN_WIDTH_HALF}, y={SCREEN_HEIGHT_HALF}); time.sleep(0.5);pyautogui.mouseDo"
+    ],
+    "unemulated_writes": false,
+    "verdict": "fail"
+   }
+  },
+  "2373b66a-092d-44cb-bfd7-82e86e7a3b4d": {
+   "checker_funcs": [
+    "file_contains",
+    "check_line_number"
+   ],
+   "initial_raw_lock": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 0.0,
+    "setup_unemulated": [
+     "echo {CLIENT_PASSWORD} | sudo -S apt-get update",
+     "echo {CLIENT_PASSWORD} | sudo -S apt-get install sysstat"
+    ],
+    "unemulated_writes": true,
+    "verdict": "fail"
+   },
+   "initial_raw_scout": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 0.0,
+    "setup_unemulated": [
+     "echo {CLIENT_PASSWORD} | sudo -S apt-get update",
+     "echo {CLIENT_PASSWORD} | sudo -S apt-get install sysstat"
+    ],
+    "unemulated_writes": true,
+    "verdict": "fail"
+   },
+   "initial_save": {
+    "derived_outputs": [],
+    "failures": [],
+    "infra_error": null,
+    "placed_office": [],
+    "save_failures": [],
+    "saves": [],
+    "unemulated": [],
+    "unemulated_writes": false
+   },
+   "initial_saved_lock": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 0.0,
+    "setup_unemulated": [
+     "echo {CLIENT_PASSWORD} | sudo -S apt-get update",
+     "echo {CLIENT_PASSWORD} | sudo -S apt-get install sysstat"
+    ],
+    "unemulated_writes": true,
+    "verdict": "fail"
+   },
+   "initial_saved_scout": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 0.0,
+    "setup_unemulated": [
+     "echo {CLIENT_PASSWORD} | sudo -S apt-get update",
+     "echo {CLIENT_PASSWORD} | sudo -S apt-get install sysstat"
+    ],
+    "unemulated_writes": true,
+    "verdict": "fail"
+   }
+  },
+  "357ef137-7eeb-4c80-a3bb-0951f26a8aff": {
+   "checker_funcs": [
+    "compare_table"
+   ],
+   "initial_raw_lock": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 0.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "fail"
+   },
+   "initial_raw_scout": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 0.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "fail"
+   },
+   "initial_save": {
+    "derived_outputs": [
+     "/home/user/Multiply_Time_Number.xlsx"
+    ],
+    "failures": [],
+    "infra_error": null,
+    "placed_office": [
+     "/home/user/Multiply_Time_Number.xlsx"
+    ],
+    "save_failures": [],
+    "saves": [
+     {
+      "changed": true,
+      "dialogs": [],
+      "reason": "postconfig",
+      "seconds_to_write": 0.2,
+      "written": true
+     }
+    ],
+    "unemulated": [],
+    "unemulated_writes": false
+   },
+   "initial_saved_lock": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 0.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "fail"
+   },
+   "initial_saved_scout": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 0.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "fail"
+   }
+  },
+  "386dbd0e-0241-4a0a-b6a2-6704fba26b1c": {
+   "checker_funcs": [
+    "check_global_key_play_pause"
+   ],
+   "initial_raw_lock": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 0.0,
+    "setup_unemulated": [
+     "python -c import pyautogui; pyautogui.press('f11');",
+     "python -c import pyautogui; import time; pyautogui.click({SCREEN_WIDTH_HALF}, {SCREEN_HEIGHT_HALF}); time.sleep(0.5);"
+    ],
+    "unemulated_writes": false,
+    "verdict": "fail"
+   },
+   "initial_raw_scout": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 0.0,
+    "setup_unemulated": [
+     "python -c import pyautogui; pyautogui.press('f11');",
+     "python -c import pyautogui; import time; pyautogui.click({SCREEN_WIDTH_HALF}, {SCREEN_HEIGHT_HALF}); time.sleep(0.5);"
+    ],
+    "unemulated_writes": false,
+    "verdict": "fail"
+   },
+   "initial_save": {
+    "derived_outputs": [],
+    "failures": [],
+    "infra_error": null,
+    "placed_office": [],
+    "save_failures": [],
+    "saves": [],
+    "unemulated": [
+     "postconfig launch",
+     "postconfig launch"
+    ],
+    "unemulated_writes": false
+   },
+   "initial_saved_lock": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 0.0,
+    "setup_unemulated": [
+     "python -c import pyautogui; pyautogui.press('f11');",
+     "python -c import pyautogui; import time; pyautogui.click({SCREEN_WIDTH_HALF}, {SCREEN_HEIGHT_HALF}); time.sleep(0.5);"
+    ],
+    "unemulated_writes": false,
+    "verdict": "fail"
+   },
+   "initial_saved_scout": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 0.0,
+    "setup_unemulated": [
+     "python -c import pyautogui; pyautogui.press('f11');",
+     "python -c import pyautogui; import time; pyautogui.click({SCREEN_WIDTH_HALF}, {SCREEN_HEIGHT_HALF}); time.sleep(0.5);"
+    ],
+    "unemulated_writes": false,
+    "verdict": "fail"
+   }
+  },
+  "39be0d19-634d-4475-8768-09c130f5425d": {
+   "checker_funcs": [
+    "compare_pptx_files"
+   ],
+   "gold_raw_lock": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 1.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "pass"
+   },
+   "gold_raw_scout": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 1.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "pass"
+   },
+   "gold_save": {
+    "derived_outputs": [
+     "/home/user/Desktop/41_3.pptx"
+    ],
+    "failures": [],
+    "infra_error": null,
+    "placed_office": [
+     "/home/user/Desktop/41_3.pptx"
+    ],
+    "save_failures": [],
+    "saves": [
+     {
+      "changed": true,
+      "dialogs": [],
+      "reason": "postconfig",
+      "seconds_to_write": 0.0,
+      "written": true
+     }
+    ],
+    "unemulated": [],
+    "unemulated_writes": false
+   },
+   "gold_saved_lock": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 1.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "pass"
+   },
+   "gold_saved_scout": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 1.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "pass"
+   },
+   "initial_raw_lock": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 0.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "fail"
+   },
+   "initial_raw_scout": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 0.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "fail"
+   },
+   "initial_save": {
+    "derived_outputs": [
+     "/home/user/Desktop/41_3.pptx"
+    ],
+    "failures": [],
+    "infra_error": null,
+    "placed_office": [
+     "/home/user/Desktop/41_3.pptx"
+    ],
+    "save_failures": [],
+    "saves": [
+     {
+      "changed": true,
+      "dialogs": [],
+      "reason": "postconfig",
+      "seconds_to_write": 0.0,
+      "written": true
+     }
+    ],
+    "unemulated": [],
+    "unemulated_writes": false
+   },
+   "initial_saved_lock": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 0.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "fail"
+   },
+   "initial_saved_scout": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 0.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "fail"
+   }
+  },
+  "3a7c8185-25c1-4941-bd7b-96e823c9f21f": {
+   "checker_funcs": [
+    "compare_table"
+   ],
+   "gold_raw_lock": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 1.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "pass"
+   },
+   "gold_raw_scout": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 1.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "pass"
+   },
+   "gold_save": {
+    "derived_outputs": [
+     "/home/user/BoomerangSales.xlsx"
+    ],
+    "failures": [],
+    "infra_error": null,
+    "placed_office": [
+     "/home/user/BoomerangSales.xlsx"
+    ],
+    "save_failures": [],
+    "saves": [
+     {
+      "changed": true,
+      "dialogs": [],
+      "reason": "postconfig",
+      "seconds_to_write": 0.301,
+      "written": true
+     }
+    ],
+    "unemulated": [],
+    "unemulated_writes": false
+   },
+   "gold_saved_lock": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 0.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "fail"
+   },
+   "gold_saved_scout": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 0.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "fail"
+   },
+   "initial_raw_lock": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 0.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "fail"
+   },
+   "initial_raw_scout": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 0.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "fail"
+   },
+   "initial_save": {
+    "derived_outputs": [
+     "/home/user/BoomerangSales.xlsx"
+    ],
+    "failures": [],
+    "infra_error": null,
+    "placed_office": [
+     "/home/user/BoomerangSales.xlsx"
+    ],
+    "save_failures": [],
+    "saves": [
+     {
+      "changed": true,
+      "dialogs": [],
+      "reason": "postconfig",
+      "seconds_to_write": 0.301,
+      "written": true
+     }
+    ],
+    "unemulated": [],
+    "unemulated_writes": false
+   },
+   "initial_saved_lock": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 0.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "fail"
+   },
+   "initial_saved_scout": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 0.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "fail"
+   }
+  },
+  "3aaa4e37-dc91-482e-99af-132a612d40f3": {
+   "checker_funcs": [
+    "compare_csv"
+   ],
+   "gold_raw_lock": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 1.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "pass"
+   },
+   "gold_raw_scout": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 1.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "pass"
+   },
+   "gold_save": {
+    "derived_outputs": [],
+    "failures": [],
+    "infra_error": null,
+    "placed_office": [],
+    "save_failures": [],
+    "saves": [],
+    "unemulated": [],
+    "unemulated_writes": false
+   },
+   "gold_saved_lock": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 1.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "pass"
+   },
+   "gold_saved_scout": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 1.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "pass"
+   },
+   "initial_raw_lock": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 0.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "fail"
+   },
+   "initial_raw_scout": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 0.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "fail"
+   },
+   "initial_save": {
+    "derived_outputs": [],
+    "failures": [],
+    "infra_error": null,
+    "placed_office": [],
+    "save_failures": [],
+    "saves": [],
+    "unemulated": [],
+    "unemulated_writes": false
+   },
+   "initial_saved_lock": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 0.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "fail"
+   },
+   "initial_saved_scout": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 0.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "fail"
+   }
+  },
+  "4bcb1253-a636-4df4-8cb0-a35c04dfef31": {
+   "checker_funcs": [
+    "compare_pdfs",
+    "compare_pdfs",
+    "compare_pdfs",
+    "compare_pdfs"
+   ],
+   "gold_raw_lock": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 1.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "pass"
+   },
+   "gold_raw_scout": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 1.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "pass"
+   },
+   "gold_save": {
+    "derived_outputs": [],
+    "failures": [],
+    "infra_error": null,
+    "placed_office": [],
+    "save_failures": [],
+    "saves": [],
+    "unemulated": [],
+    "unemulated_writes": false
+   },
+   "gold_saved_lock": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 1.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "pass"
+   },
+   "gold_saved_scout": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 1.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "pass"
+   },
+   "initial_raw_lock": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 0.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "fail"
+   },
+   "initial_raw_scout": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 0.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "fail"
+   },
+   "initial_save": {
+    "derived_outputs": [],
+    "failures": [],
+    "infra_error": null,
+    "placed_office": [],
+    "save_failures": [],
+    "saves": [],
+    "unemulated": [],
+    "unemulated_writes": false
+   },
+   "initial_saved_lock": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 0.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "fail"
+   },
+   "initial_saved_scout": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 0.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "fail"
+   }
+  },
+  "535364ea-05bd-46ea-9937-9f55c68507e8": {
+   "checker_funcs": [
+    "compare_table"
+   ],
+   "gold_raw_lock": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 1.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "pass"
+   },
+   "gold_raw_scout": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 1.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "pass"
+   },
+   "gold_save": {
+    "derived_outputs": [
+     "/home/user/SummerSales.xlsx"
+    ],
+    "failures": [],
+    "infra_error": null,
+    "placed_office": [
+     "/home/user/SummerSales.xlsx"
+    ],
+    "save_failures": [],
+    "saves": [
+     {
+      "changed": true,
+      "dialogs": [],
+      "reason": "postconfig",
+      "seconds_to_write": 0.2,
+      "written": true
+     }
+    ],
+    "unemulated": [],
+    "unemulated_writes": false
+   },
+   "gold_saved_lock": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 1.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "pass"
+   },
+   "gold_saved_scout": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 1.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "pass"
+   },
+   "initial_raw_lock": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 0.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "fail"
+   },
+   "initial_raw_scout": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 0.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "fail"
+   },
+   "initial_save": {
+    "derived_outputs": [
+     "/home/user/SummerSales.xlsx"
+    ],
+    "failures": [],
+    "infra_error": null,
+    "placed_office": [
+     "/home/user/SummerSales.xlsx"
+    ],
+    "save_failures": [],
+    "saves": [
+     {
+      "changed": true,
+      "dialogs": [],
+      "reason": "postconfig",
+      "seconds_to_write": 0.201,
+      "written": true
+     }
+    ],
+    "unemulated": [],
+    "unemulated_writes": false
+   },
+   "initial_saved_lock": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 0.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "fail"
+   },
+   "initial_saved_scout": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 0.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "fail"
+   }
+  },
+  "5d901039-a89c-4bfb-967b-bf66f4df075e": {
+   "checker_funcs": [
+    "check_image_stretch_and_center"
+   ],
+   "initial_raw_lock": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 0.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "fail"
+   },
+   "initial_raw_scout": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 0.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "fail"
+   },
+   "initial_save": {
+    "derived_outputs": [
+     "/home/user/Desktop/CPD_Background_Investigation_Process.pptx"
+    ],
+    "failures": [],
+    "infra_error": null,
+    "placed_office": [
+     "/home/user/Desktop/CPD_Background_Investigation_Process.pptx"
+    ],
+    "save_failures": [],
+    "saves": [
+     {
+      "changed": true,
+      "dialogs": [],
+      "reason": "postconfig",
+      "seconds_to_write": 0.1,
+      "written": true
+     }
+    ],
+    "unemulated": [],
+    "unemulated_writes": false
+   },
+   "initial_saved_lock": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 0.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "fail"
+   },
+   "initial_saved_scout": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 0.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "fail"
+   }
+  },
+  "6054afcb-5bab-4702-90a0-b259b5d3217c": {
+   "checker_funcs": [
+    "compare_table"
+   ],
+   "gold_raw_lock": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 1.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "pass"
+   },
+   "gold_raw_scout": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 1.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "pass"
+   },
+   "gold_save": {
+    "derived_outputs": [
+     "/home/user/Date_Budget_Variance_HideNA.xlsx"
+    ],
+    "failures": [],
+    "infra_error": null,
+    "placed_office": [
+     "/home/user/Date_Budget_Variance_HideNA.xlsx"
+    ],
+    "save_failures": [],
+    "saves": [
+     {
+      "changed": true,
+      "dialogs": [],
+      "reason": "postconfig",
+      "seconds_to_write": 0.201,
+      "written": true
+     }
+    ],
+    "unemulated": [],
+    "unemulated_writes": false
+   },
+   "gold_saved_lock": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 1.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "pass"
+   },
+   "gold_saved_scout": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 1.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "pass"
+   },
+   "initial_raw_lock": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 0.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "fail"
+   },
+   "initial_raw_scout": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 0.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "fail"
+   },
+   "initial_save": {
+    "derived_outputs": [
+     "/home/user/Date_Budget_Variance_HideNA.xlsx"
+    ],
+    "failures": [],
+    "infra_error": null,
+    "placed_office": [
+     "/home/user/Date_Budget_Variance_HideNA.xlsx"
+    ],
+    "save_failures": [],
+    "saves": [
+     {
+      "changed": true,
+      "dialogs": [],
+      "reason": "postconfig",
+      "seconds_to_write": 0.201,
+      "written": true
+     }
+    ],
+    "unemulated": [],
+    "unemulated_writes": false
+   },
+   "initial_saved_lock": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 0.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "fail"
+   },
+   "initial_saved_scout": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 0.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "fail"
+   }
+  },
+  "734d6579-c07d-47a8-9ae2-13339795476b": {
+   "checker_funcs": [
+    "check_green_background"
+   ],
+   "initial_raw_lock": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 0.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "fail"
+   },
+   "initial_raw_scout": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 0.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "fail"
+   },
+   "initial_save": {
+    "derived_outputs": [],
+    "failures": [],
+    "infra_error": null,
+    "placed_office": [],
+    "save_failures": [],
+    "saves": [],
+    "unemulated": [
+     "pyautogui.write: import time; import pyautogui; time.sleep(1);pyautogui.write(\"green_background_w"
+    ],
+    "unemulated_writes": true
+   },
+   "initial_saved_lock": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 0.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "fail"
+   },
+   "initial_saved_scout": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 0.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "fail"
+   }
+  },
+  "7767eef2-56a3-4cea-8c9f-48c070c7d65b": {
+   "checker_funcs": [
+    "check_config_status"
+   ],
+   "initial_raw_lock": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 0.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "fail"
+   },
+   "initial_raw_scout": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 0.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "fail"
+   },
+   "initial_save": {
+    "derived_outputs": [],
+    "failures": [],
+    "infra_error": null,
+    "placed_office": [],
+    "save_failures": [],
+    "saves": [],
+    "unemulated": [],
+    "unemulated_writes": false
+   },
+   "initial_saved_lock": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 0.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "fail"
+   },
+   "initial_saved_scout": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 0.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "fail"
+   }
+  },
+  "7a4e4bc8-922c-4c84-865c-25ba34136be1": {
+   "checker_funcs": [
+    "compare_table"
+   ],
+   "gold_raw_lock": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 1.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "pass"
+   },
+   "gold_raw_scout": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 1.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "pass"
+   },
+   "gold_save": {
+    "derived_outputs": [
+     "/home/user/Name_Order_Id_move_column.xlsx"
+    ],
+    "failures": [],
+    "infra_error": null,
+    "placed_office": [
+     "/home/user/Name_Order_Id_move_column.xlsx"
+    ],
+    "save_failures": [],
+    "saves": [
+     {
+      "changed": true,
+      "dialogs": [],
+      "reason": "postconfig",
+      "seconds_to_write": 0.2,
+      "written": true
+     }
+    ],
+    "unemulated": [],
+    "unemulated_writes": false
+   },
+   "gold_saved_lock": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 1.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "pass"
+   },
+   "gold_saved_scout": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 1.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "pass"
+   },
+   "initial_raw_lock": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 0.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "fail"
+   },
+   "initial_raw_scout": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 0.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "fail"
+   },
+   "initial_save": {
+    "derived_outputs": [
+     "/home/user/Name_Order_Id_move_column.xlsx"
+    ],
+    "failures": [],
+    "infra_error": null,
+    "placed_office": [
+     "/home/user/Name_Order_Id_move_column.xlsx"
+    ],
+    "save_failures": [],
+    "saves": [
+     {
+      "changed": true,
+      "dialogs": [],
+      "reason": "postconfig",
+      "seconds_to_write": 0.2,
+      "written": true
+     }
+    ],
+    "unemulated": [],
+    "unemulated_writes": false
+   },
+   "initial_saved_lock": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 0.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "fail"
+   },
+   "initial_saved_scout": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 0.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "fail"
+   }
+  },
+  "7dbc52a6-11e0-4c9a-a2cb-1e36cfda80d8": {
+   "checker_funcs": [
+    "compare_pptx_files"
+   ],
+   "gold_raw_lock": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 1.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "pass"
+   },
+   "gold_raw_scout": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 1.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "pass"
+   },
+   "gold_save": {
+    "derived_outputs": [
+     "/home/user/Desktop/164_3.pptx"
+    ],
+    "failures": [],
+    "infra_error": null,
+    "placed_office": [
+     "/home/user/Desktop/164_3.pptx"
+    ],
+    "save_failures": [],
+    "saves": [
+     {
+      "changed": true,
+      "dialogs": [],
+      "reason": "postconfig",
+      "seconds_to_write": 0.0,
+      "written": true
+     }
+    ],
+    "unemulated": [],
+    "unemulated_writes": false
+   },
+   "gold_saved_lock": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 1.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "pass"
+   },
+   "gold_saved_scout": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 1.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "pass"
+   },
+   "initial_raw_lock": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 0.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "fail"
+   },
+   "initial_raw_scout": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 0.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "fail"
+   },
+   "initial_save": {
+    "derived_outputs": [
+     "/home/user/Desktop/164_3.pptx"
+    ],
+    "failures": [],
+    "infra_error": null,
+    "placed_office": [
+     "/home/user/Desktop/164_3.pptx"
+    ],
+    "save_failures": [],
+    "saves": [
+     {
+      "changed": true,
+      "dialogs": [],
+      "reason": "postconfig",
+      "seconds_to_write": 0.0,
+      "written": true
+     }
+    ],
+    "unemulated": [],
+    "unemulated_writes": false
+   },
+   "initial_saved_lock": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 0.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "fail"
+   },
+   "initial_saved_scout": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 0.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "fail"
+   }
+  },
+  "7f35355e-02a6-45b5-b140-f0be698bcf85": {
+   "checker_funcs": [
+    "compare_result_files"
+   ],
+   "initial_raw_lock": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 0.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "fail"
+   },
+   "initial_raw_scout": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 0.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "fail"
+   },
+   "initial_save": {
+    "derived_outputs": [],
+    "failures": [],
+    "infra_error": null,
+    "placed_office": [],
+    "save_failures": [],
+    "saves": [],
+    "unemulated": [],
+    "unemulated_writes": false
+   },
+   "initial_saved_lock": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 0.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "fail"
+   },
+   "initial_saved_scout": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 0.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "fail"
+   }
+  },
+  "82e3c869-49f6-4305-a7ce-f3e64a0618e7": {
+   "checker_funcs": [
+    "compare_image_list"
+   ],
+   "initial_raw_lock": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [
+     "unzip /home/user/Desktop/presenter.zip -d /home/user/Desktop [failed: [Errno 2] No such file or directory: '/tmp/q2m-jgp3x6ht/vm/home/user/Desktop/presenter.zip']"
+    ],
+    "score": 0.0,
+    "setup_unemulated": [],
+    "unemulated_writes": true,
+    "verdict": "fail"
+   },
+   "initial_raw_scout": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [
+     "unzip /home/user/Desktop/presenter.zip -d /home/user/Desktop [failed: [Errno 2] No such file or directory: '/tmp/q2m-23rla6a_/vm/home/user/Desktop/presenter.zip']"
+    ],
+    "score": 0.0,
+    "setup_unemulated": [],
+    "unemulated_writes": true,
+    "verdict": "fail"
+   },
+   "initial_save": {
+    "derived_outputs": [],
+    "failures": [],
+    "infra_error": null,
+    "placed_office": [],
+    "save_failures": [],
+    "saves": [],
+    "unemulated": [],
+    "unemulated_writes": false
+   },
+   "initial_saved_lock": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [
+     "unzip /home/user/Desktop/presenter.zip -d /home/user/Desktop [failed: [Errno 2] No such file or directory: '/tmp/q2m-hjdakyly/vm/home/user/Desktop/presenter.zip']"
+    ],
+    "score": 0.0,
+    "setup_unemulated": [],
+    "unemulated_writes": true,
+    "verdict": "fail"
+   },
+   "initial_saved_scout": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [
+     "unzip /home/user/Desktop/presenter.zip -d /home/user/Desktop [failed: [Errno 2] No such file or directory: '/tmp/q2m-7ellgl1c/vm/home/user/Desktop/presenter.zip']"
+    ],
+    "score": 0.0,
+    "setup_unemulated": [],
+    "unemulated_writes": true,
+    "verdict": "fail"
+   }
+  },
+  "841b50aa-df53-47bd-a73a-22d3a9f73160": {
+   "checker_funcs": [
+    "compare_pptx_files"
+   ],
+   "gold_raw_lock": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 1.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "pass"
+   },
+   "gold_raw_scout": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 1.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "pass"
+   },
+   "gold_save": {
+    "derived_outputs": [
+     "/home/user/Desktop/181_2.pptx"
+    ],
+    "failures": [],
+    "infra_error": null,
+    "placed_office": [
+     "/home/user/Desktop/181_2.pptx"
+    ],
+    "save_failures": [],
+    "saves": [
+     {
+      "changed": true,
+      "dialogs": [],
+      "reason": "postconfig",
+      "seconds_to_write": 0.0,
+      "written": true
+     }
+    ],
+    "unemulated": [],
+    "unemulated_writes": false
+   },
+   "gold_saved_lock": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 1.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "pass"
+   },
+   "gold_saved_scout": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 1.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "pass"
+   },
+   "initial_raw_lock": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 0.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "fail"
+   },
+   "initial_raw_scout": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 0.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "fail"
+   },
+   "initial_save": {
+    "derived_outputs": [
+     "/home/user/Desktop/181_2.pptx"
+    ],
+    "failures": [],
+    "infra_error": null,
+    "placed_office": [
+     "/home/user/Desktop/181_2.pptx"
+    ],
+    "save_failures": [],
+    "saves": [
+     {
+      "changed": true,
+      "dialogs": [],
+      "reason": "postconfig",
+      "seconds_to_write": 0.0,
+      "written": true
+     }
+    ],
+    "unemulated": [],
+    "unemulated_writes": false
+   },
+   "initial_saved_lock": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 0.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "fail"
+   },
+   "initial_saved_scout": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 0.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "fail"
+   }
+  },
+  "8472fece-c7dd-4241-8d65-9b3cd1a0b568": {
+   "checker_funcs": [
+    "evaluate_colored_words_in_tables"
+   ],
+   "gold_raw_lock": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 0.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "fail"
+   },
+   "gold_raw_scout": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 0.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "fail"
+   },
+   "gold_save": {
+    "derived_outputs": [
+     "/home/user/Desktop/Dolch_Sight_Words_Primer.docx"
+    ],
+    "failures": [],
+    "infra_error": null,
+    "placed_office": [
+     "/home/user/Desktop/Dolch_Sight_Words_Primer.docx"
+    ],
+    "save_failures": [],
+    "saves": [
+     {
+      "changed": true,
+      "dialogs": [],
+      "reason": "postconfig",
+      "seconds_to_write": 0.0,
+      "written": true
+     }
+    ],
+    "unemulated": [],
+    "unemulated_writes": false
+   },
+   "gold_saved_lock": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 0.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "fail"
+   },
+   "gold_saved_scout": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 0.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "fail"
+   },
+   "initial_raw_lock": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 0.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "fail"
+   },
+   "initial_raw_scout": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 0.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "fail"
+   },
+   "initial_save": {
+    "derived_outputs": [
+     "/home/user/Desktop/Dolch_Sight_Words_Primer.docx"
+    ],
+    "failures": [],
+    "infra_error": null,
+    "placed_office": [
+     "/home/user/Desktop/Dolch_Sight_Words_Primer.docx"
+    ],
+    "save_failures": [],
+    "saves": [
+     {
+      "changed": true,
+      "dialogs": [],
+      "reason": "postconfig",
+      "seconds_to_write": 0.0,
+      "written": true
+     }
+    ],
+    "unemulated": [],
+    "unemulated_writes": false
+   },
+   "initial_saved_lock": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 0.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "fail"
+   },
+   "initial_saved_scout": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 0.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "fail"
+   }
+  },
+  "8979838c-54a5-4454-a2b8-3d135a1a5c8f": {
+   "checker_funcs": [
+    "compare_pptx_files"
+   ],
+   "gold_raw_lock": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 1.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "pass"
+   },
+   "gold_raw_scout": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 1.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "pass"
+   },
+   "gold_save": {
+    "derived_outputs": [
+     "/home/user/Desktop/186_3.pptx"
+    ],
+    "failures": [],
+    "infra_error": null,
+    "placed_office": [
+     "/home/user/Desktop/186_3.pptx"
+    ],
+    "save_failures": [],
+    "saves": [
+     {
+      "changed": true,
+      "dialogs": [],
+      "reason": "postconfig",
+      "seconds_to_write": 0.0,
+      "written": true
+     }
+    ],
+    "unemulated": [],
+    "unemulated_writes": false
+   },
+   "gold_saved_lock": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 1.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "pass"
+   },
+   "gold_saved_scout": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 1.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "pass"
+   },
+   "initial_raw_lock": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 0.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "fail"
+   },
+   "initial_raw_scout": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 0.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "fail"
+   },
+   "initial_save": {
+    "derived_outputs": [
+     "/home/user/Desktop/186_3.pptx"
+    ],
+    "failures": [],
+    "infra_error": null,
+    "placed_office": [
+     "/home/user/Desktop/186_3.pptx"
+    ],
+    "save_failures": [],
+    "saves": [
+     {
+      "changed": true,
+      "dialogs": [],
+      "reason": "postconfig",
+      "seconds_to_write": 0.0,
+      "written": true
+     }
+    ],
+    "unemulated": [],
+    "unemulated_writes": false
+   },
+   "initial_saved_lock": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 0.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "fail"
+   },
+   "initial_saved_scout": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 0.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "fail"
+   }
+  },
+  "8f080098-ddb1-424c-b438-4e96e5e4786e": {
+   "checker_funcs": [
+    "compare_audios"
+   ],
+   "gold_raw_lock": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 1.0,
+    "setup_unemulated": [
+     "python -c import pyautogui; import time; pyautogui.click({SCREEN_WIDTH_HALF}, {SCREEN_HEIGHT_HALF}); time.sleep(0.5);"
+    ],
+    "unemulated_writes": false,
+    "verdict": "pass"
+   },
+   "gold_raw_scout": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 1.0,
+    "setup_unemulated": [
+     "python -c import pyautogui; import time; pyautogui.click({SCREEN_WIDTH_HALF}, {SCREEN_HEIGHT_HALF}); time.sleep(0.5);"
+    ],
+    "unemulated_writes": false,
+    "verdict": "pass"
+   },
+   "gold_save": {
+    "derived_outputs": [],
+    "failures": [],
+    "infra_error": null,
+    "placed_office": [],
+    "save_failures": [],
+    "saves": [],
+    "unemulated": [],
+    "unemulated_writes": false
+   },
+   "gold_saved_lock": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 1.0,
+    "setup_unemulated": [
+     "python -c import pyautogui; import time; pyautogui.click({SCREEN_WIDTH_HALF}, {SCREEN_HEIGHT_HALF}); time.sleep(0.5);"
+    ],
+    "unemulated_writes": false,
+    "verdict": "pass"
+   },
+   "gold_saved_scout": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 1.0,
+    "setup_unemulated": [
+     "python -c import pyautogui; import time; pyautogui.click({SCREEN_WIDTH_HALF}, {SCREEN_HEIGHT_HALF}); time.sleep(0.5);"
+    ],
+    "unemulated_writes": false,
+    "verdict": "pass"
+   },
+   "initial_raw_lock": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 0.0,
+    "setup_unemulated": [
+     "python -c import pyautogui; import time; pyautogui.click({SCREEN_WIDTH_HALF}, {SCREEN_HEIGHT_HALF}); time.sleep(0.5);"
+    ],
+    "unemulated_writes": false,
+    "verdict": "fail"
+   },
+   "initial_raw_scout": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 0.0,
+    "setup_unemulated": [
+     "python -c import pyautogui; import time; pyautogui.click({SCREEN_WIDTH_HALF}, {SCREEN_HEIGHT_HALF}); time.sleep(0.5);"
+    ],
+    "unemulated_writes": false,
+    "verdict": "fail"
+   },
+   "initial_save": {
+    "derived_outputs": [],
+    "failures": [],
+    "infra_error": null,
+    "placed_office": [],
+    "save_failures": [],
+    "saves": [],
+    "unemulated": [],
+    "unemulated_writes": false
+   },
+   "initial_saved_lock": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 0.0,
+    "setup_unemulated": [
+     "python -c import pyautogui; import time; pyautogui.click({SCREEN_WIDTH_HALF}, {SCREEN_HEIGHT_HALF}); time.sleep(0.5);"
+    ],
+    "unemulated_writes": false,
+    "verdict": "fail"
+   },
+   "initial_saved_scout": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 0.0,
+    "setup_unemulated": [
+     "python -c import pyautogui; import time; pyautogui.click({SCREEN_WIDTH_HALF}, {SCREEN_HEIGHT_HALF}); time.sleep(0.5);"
+    ],
+    "unemulated_writes": false,
+    "verdict": "fail"
+   }
+  },
+  "91190194-f406-4cd6-b3f9-c43fac942b22": {
+   "checker_funcs": [
+    "check_structure_sim"
+   ],
+   "gold_raw_lock": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 1.0,
+    "setup_unemulated": [
+     "python -c import pyautogui; import time; pyautogui.hotkey(\"ctrl\", \"alt\", \"t\"); time.sleep(0.5);"
+    ],
+    "unemulated_writes": false,
+    "verdict": "pass"
+   },
+   "gold_raw_scout": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 1.0,
+    "setup_unemulated": [
+     "python -c import pyautogui; import time; pyautogui.hotkey(\"ctrl\", \"alt\", \"t\"); time.sleep(0.5);"
+    ],
+    "unemulated_writes": false,
+    "verdict": "pass"
+   },
+   "gold_save": {
+    "derived_outputs": [],
+    "failures": [],
+    "infra_error": null,
+    "placed_office": [],
+    "save_failures": [],
+    "saves": [],
+    "unemulated": [],
+    "unemulated_writes": false
+   },
+   "gold_saved_lock": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 1.0,
+    "setup_unemulated": [
+     "python -c import pyautogui; import time; pyautogui.hotkey(\"ctrl\", \"alt\", \"t\"); time.sleep(0.5);"
+    ],
+    "unemulated_writes": false,
+    "verdict": "pass"
+   },
+   "gold_saved_scout": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 1.0,
+    "setup_unemulated": [
+     "python -c import pyautogui; import time; pyautogui.hotkey(\"ctrl\", \"alt\", \"t\"); time.sleep(0.5);"
+    ],
+    "unemulated_writes": false,
+    "verdict": "pass"
+   },
+   "initial_raw_lock": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 0.0,
+    "setup_unemulated": [
+     "python -c import pyautogui; import time; pyautogui.hotkey(\"ctrl\", \"alt\", \"t\"); time.sleep(0.5);"
+    ],
+    "unemulated_writes": false,
+    "verdict": "fail"
+   },
+   "initial_raw_scout": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 0.0,
+    "setup_unemulated": [
+     "python -c import pyautogui; import time; pyautogui.hotkey(\"ctrl\", \"alt\", \"t\"); time.sleep(0.5);"
+    ],
+    "unemulated_writes": false,
+    "verdict": "fail"
+   },
+   "initial_save": {
+    "derived_outputs": [],
+    "failures": [],
+    "infra_error": null,
+    "placed_office": [],
+    "save_failures": [],
+    "saves": [],
+    "unemulated": [],
+    "unemulated_writes": false
+   },
+   "initial_saved_lock": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 0.0,
+    "setup_unemulated": [
+     "python -c import pyautogui; import time; pyautogui.hotkey(\"ctrl\", \"alt\", \"t\"); time.sleep(0.5);"
+    ],
+    "unemulated_writes": false,
+    "verdict": "fail"
+   },
+   "initial_saved_scout": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 0.0,
+    "setup_unemulated": [
+     "python -c import pyautogui; import time; pyautogui.hotkey(\"ctrl\", \"alt\", \"t\"); time.sleep(0.5);"
+    ],
+    "unemulated_writes": false,
+    "verdict": "fail"
+   }
+  },
+  "9439a27b-18ae-42d8-9778-5f68f891805e": {
+   "checker_funcs": [
+    "check_json_settings"
+   ],
+   "initial_raw_lock": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 0.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "fail"
+   },
+   "initial_raw_scout": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 0.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "fail"
+   },
+   "initial_save": {
+    "derived_outputs": [],
+    "failures": [],
+    "infra_error": null,
+    "placed_office": [],
+    "save_failures": [],
+    "saves": [],
+    "unemulated": [],
+    "unemulated_writes": false
+   },
+   "initial_saved_lock": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 0.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "fail"
+   },
+   "initial_saved_scout": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 0.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "fail"
+   }
+  },
+  "986fc832-6af2-417c-8845-9272b3a1528b": {
+   "checker_funcs": [
+    "compare_pptx_files"
+   ],
+   "gold_raw_lock": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 1.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "pass"
+   },
+   "gold_raw_scout": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 1.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "pass"
+   },
+   "gold_save": {
+    "derived_outputs": [
+     "/home/user/Desktop/154_3.pptx"
+    ],
+    "failures": [],
+    "infra_error": null,
+    "placed_office": [
+     "/home/user/Desktop/154_3.pptx"
+    ],
+    "save_failures": [],
+    "saves": [
+     {
+      "changed": true,
+      "dialogs": [],
+      "reason": "postconfig",
+      "seconds_to_write": 0.0,
+      "written": true
+     }
+    ],
+    "unemulated": [],
+    "unemulated_writes": false
+   },
+   "gold_saved_lock": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 1.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "pass"
+   },
+   "gold_saved_scout": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 1.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "pass"
+   },
+   "initial_raw_lock": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 0.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "fail"
+   },
+   "initial_raw_scout": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 0.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "fail"
+   },
+   "initial_save": {
+    "derived_outputs": [
+     "/home/user/Desktop/154_3.pptx"
+    ],
+    "failures": [],
+    "infra_error": null,
+    "placed_office": [
+     "/home/user/Desktop/154_3.pptx"
+    ],
+    "save_failures": [],
+    "saves": [
+     {
+      "changed": true,
+      "dialogs": [],
+      "reason": "postconfig",
+      "seconds_to_write": 0.0,
+      "written": true
+     }
+    ],
+    "unemulated": [],
+    "unemulated_writes": false
+   },
+   "initial_saved_lock": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 0.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "fail"
+   },
+   "initial_saved_scout": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 0.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "fail"
+   }
+  },
+  "98e8e339-5f91-4ed2-b2b2-12647cb134f4": {
+   "checker_funcs": [
+    "compare_docx_files"
+   ],
+   "gold_raw_lock": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 1.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "pass"
+   },
+   "gold_raw_scout": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 1.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "pass"
+   },
+   "gold_save": {
+    "derived_outputs": [
+     "/home/user/Desktop/concat.docx"
+    ],
+    "failures": [],
+    "infra_error": null,
+    "placed_office": [
+     "/home/user/Desktop/concat.docx"
+    ],
+    "save_failures": [],
+    "saves": [
+     {
+      "changed": true,
+      "dialogs": [],
+      "reason": "agent_save",
+      "seconds_to_write": 0.0,
+      "written": true
+     }
+    ],
+    "unemulated": [],
+    "unemulated_writes": false
+   },
+   "gold_saved_lock": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 1.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "pass"
+   },
+   "gold_saved_scout": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 1.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "pass"
+   },
+   "initial_raw_lock": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 0.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "fail"
+   },
+   "initial_raw_scout": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 0.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "fail"
+   },
+   "initial_save": {
+    "derived_outputs": [],
+    "failures": [],
+    "infra_error": null,
+    "placed_office": [],
+    "save_failures": [],
+    "saves": [],
+    "unemulated": [],
+    "unemulated_writes": false
+   },
+   "initial_saved_lock": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 0.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "fail"
+   },
+   "initial_saved_scout": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 0.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "fail"
+   }
+  },
+  "a097acff-6266-4291-9fbd-137af7ecd439": {
+   "checker_funcs": [
+    "compare_pptx_files"
+   ],
+   "initial_raw_lock": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 0.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "fail"
+   },
+   "initial_raw_scout": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 0.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "fail"
+   },
+   "initial_save": {
+    "derived_outputs": [],
+    "failures": [],
+    "infra_error": null,
+    "placed_office": [],
+    "save_failures": [],
+    "saves": [],
+    "unemulated": [],
+    "unemulated_writes": false
+   },
+   "initial_saved_lock": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 0.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "fail"
+   },
+   "initial_saved_scout": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 0.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "fail"
+   }
+  },
+  "a10b69e1-6034-4a2b-93e1-571d45194f75": {
+   "checker_funcs": [
+    "check_list"
+   ],
+   "initial_raw_lock": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 0.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "fail"
+   },
+   "initial_raw_scout": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 0.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "fail"
+   },
+   "initial_save": {
+    "derived_outputs": [],
+    "failures": [],
+    "infra_error": null,
+    "placed_office": [],
+    "save_failures": [],
+    "saves": [],
+    "unemulated": [],
+    "unemulated_writes": false
+   },
+   "initial_saved_lock": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 0.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "fail"
+   },
+   "initial_saved_scout": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 0.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "fail"
+   }
+  },
+  "abed40dc-063f-4598-8ba5-9fe749c0615d": {
+   "checker_funcs": [
+    "compare_table"
+   ],
+   "gold_raw_lock": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 1.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "pass"
+   },
+   "gold_raw_scout": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 1.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "pass"
+   },
+   "gold_save": {
+    "derived_outputs": [
+     "/home/user/Names_Duplicate_Unique.xlsx"
+    ],
+    "failures": [],
+    "infra_error": null,
+    "placed_office": [
+     "/home/user/Names_Duplicate_Unique.xlsx"
+    ],
+    "save_failures": [],
+    "saves": [
+     {
+      "changed": true,
+      "dialogs": [],
+      "reason": "postconfig",
+      "seconds_to_write": 0.1,
+      "written": true
+     }
+    ],
+    "unemulated": [],
+    "unemulated_writes": false
+   },
+   "gold_saved_lock": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 1.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "pass"
+   },
+   "gold_saved_scout": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 1.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "pass"
+   },
+   "initial_raw_lock": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 0.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "fail"
+   },
+   "initial_raw_scout": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 0.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "fail"
+   },
+   "initial_save": {
+    "derived_outputs": [
+     "/home/user/Names_Duplicate_Unique.xlsx"
+    ],
+    "failures": [],
+    "infra_error": null,
+    "placed_office": [
+     "/home/user/Names_Duplicate_Unique.xlsx"
+    ],
+    "save_failures": [],
+    "saves": [
+     {
+      "changed": true,
+      "dialogs": [],
+      "reason": "postconfig",
+      "seconds_to_write": 0.1,
+      "written": true
+     }
+    ],
+    "unemulated": [],
+    "unemulated_writes": false
+   },
+   "initial_saved_lock": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 0.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "fail"
+   },
+   "initial_saved_scout": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 0.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "fail"
+   }
+  },
+  "aceb0368-56b8-4073-b70e-3dc9aee184e0": {
+   "checker_funcs": [
+    "compare_table"
+   ],
+   "gold_raw_lock": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 1.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "pass"
+   },
+   "gold_raw_scout": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 1.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "pass"
+   },
+   "gold_save": {
+    "derived_outputs": [
+     "/home/user/exam/grades.xlsx"
+    ],
+    "failures": [],
+    "infra_error": null,
+    "placed_office": [
+     "/home/user/exam/grades.xlsx"
+    ],
+    "save_failures": [],
+    "saves": [
+     {
+      "changed": true,
+      "dialogs": [],
+      "reason": "agent_save",
+      "seconds_to_write": 0.2,
+      "written": true
+     }
+    ],
+    "unemulated": [],
+    "unemulated_writes": false
+   },
+   "gold_saved_lock": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 1.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "pass"
+   },
+   "gold_saved_scout": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 1.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "pass"
+   },
+   "initial_raw_lock": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 0.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "fail"
+   },
+   "initial_raw_scout": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 0.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "fail"
+   },
+   "initial_save": {
+    "derived_outputs": [],
+    "failures": [],
+    "infra_error": null,
+    "placed_office": [],
+    "save_failures": [],
+    "saves": [],
+    "unemulated": [],
+    "unemulated_writes": false
+   },
+   "initial_saved_lock": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 0.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "fail"
+   },
+   "initial_saved_scout": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 0.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "fail"
+   }
+  },
+  "c6bf789c-ba3a-4209-971d-b63abf0ab733": {
+   "checker_funcs": [
+    "check_json_settings"
+   ],
+   "initial_raw_lock": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 0.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "fail"
+   },
+   "initial_raw_scout": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 0.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "fail"
+   },
+   "initial_save": {
+    "derived_outputs": [],
+    "failures": [],
+    "infra_error": null,
+    "placed_office": [],
+    "save_failures": [],
+    "saves": [],
+    "unemulated": [],
+    "unemulated_writes": false
+   },
+   "initial_saved_lock": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 0.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "fail"
+   },
+   "initial_saved_scout": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 0.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "fail"
+   }
+  },
+  "c82632a4-56b6-4db4-9dd1-3820ee3388e4": {
+   "checker_funcs": [
+    "compare_pptx_files"
+   ],
+   "gold_raw_lock": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 1.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "pass"
+   },
+   "gold_raw_scout": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 1.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "pass"
+   },
+   "gold_save": {
+    "derived_outputs": [
+     "/home/user/Desktop/31_2.pptx"
+    ],
+    "failures": [],
+    "infra_error": null,
+    "placed_office": [
+     "/home/user/Desktop/31_2.pptx"
+    ],
+    "save_failures": [],
+    "saves": [
+     {
+      "changed": true,
+      "dialogs": [],
+      "reason": "postconfig",
+      "seconds_to_write": 0.0,
+      "written": true
+     }
+    ],
+    "unemulated": [],
+    "unemulated_writes": false
+   },
+   "gold_saved_lock": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 1.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "pass"
+   },
+   "gold_saved_scout": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 1.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "pass"
+   },
+   "initial_raw_lock": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 0.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "fail"
+   },
+   "initial_raw_scout": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 0.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "fail"
+   },
+   "initial_save": {
+    "derived_outputs": [
+     "/home/user/Desktop/31_2.pptx"
+    ],
+    "failures": [],
+    "infra_error": null,
+    "placed_office": [
+     "/home/user/Desktop/31_2.pptx"
+    ],
+    "save_failures": [],
+    "saves": [
+     {
+      "changed": true,
+      "dialogs": [],
+      "reason": "postconfig",
+      "seconds_to_write": 0.0,
+      "written": true
+     }
+    ],
+    "unemulated": [],
+    "unemulated_writes": false
+   },
+   "initial_saved_lock": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 0.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "fail"
+   },
+   "initial_saved_scout": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 0.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "fail"
+   }
+  },
+  "ce88f674-ab7a-43da-9201-468d38539e4a": {
+   "checker_funcs": [
+    "check_slide_orientation_Portrait"
+   ],
+   "initial_raw_lock": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 0.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "fail"
+   },
+   "initial_raw_scout": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 0.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "fail"
+   },
+   "initial_save": {
+    "derived_outputs": [
+     "/home/user/Desktop/AM_Last_Page_Template.pptx"
+    ],
+    "failures": [],
+    "infra_error": null,
+    "placed_office": [
+     "/home/user/Desktop/AM_Last_Page_Template.pptx"
+    ],
+    "save_failures": [],
+    "saves": [
+     {
+      "changed": true,
+      "dialogs": [],
+      "reason": "postconfig",
+      "seconds_to_write": 0.0,
+      "written": true
+     }
+    ],
+    "unemulated": [],
+    "unemulated_writes": false
+   },
+   "initial_saved_lock": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 0.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "fail"
+   },
+   "initial_saved_scout": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 0.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "fail"
+   }
+  },
+  "d16c99dc-2a1e-46f2-b350-d97c86c85c15": {
+   "checker_funcs": [
+    "check_image_size",
+    "check_structure_sim_resized"
+   ],
+   "initial_raw_lock": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 0.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "fail"
+   },
+   "initial_raw_scout": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 0.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "fail"
+   },
+   "initial_save": {
+    "derived_outputs": [],
+    "failures": [],
+    "infra_error": null,
+    "placed_office": [],
+    "save_failures": [],
+    "saves": [],
+    "unemulated": [
+     "pyautogui.write: import time; import pyautogui; pyautogui.write(\"resized\");time.sleep(1);pyautogu"
+    ],
+    "unemulated_writes": true
+   },
+   "initial_saved_lock": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 0.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "fail"
+   },
+   "initial_saved_scout": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 0.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "fail"
+   }
+  },
+  "d68204bf-11c1-4b13-b48b-d303c73d4bf6": {
+   "checker_funcs": [
+    "check_structure_sim"
+   ],
+   "gold_raw_lock": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 1.0,
+    "setup_unemulated": [
+     "python -c import pyautogui; import time; pyautogui.hotkey(\"ctrl\", \"alt\", \"t\"); time.sleep(0.5);"
+    ],
+    "unemulated_writes": false,
+    "verdict": "pass"
+   },
+   "gold_raw_scout": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 1.0,
+    "setup_unemulated": [
+     "python -c import pyautogui; import time; pyautogui.hotkey(\"ctrl\", \"alt\", \"t\"); time.sleep(0.5);"
+    ],
+    "unemulated_writes": false,
+    "verdict": "pass"
+   },
+   "gold_save": {
+    "derived_outputs": [],
+    "failures": [],
+    "infra_error": null,
+    "placed_office": [],
+    "save_failures": [],
+    "saves": [],
+    "unemulated": [],
+    "unemulated_writes": false
+   },
+   "gold_saved_lock": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 1.0,
+    "setup_unemulated": [
+     "python -c import pyautogui; import time; pyautogui.hotkey(\"ctrl\", \"alt\", \"t\"); time.sleep(0.5);"
+    ],
+    "unemulated_writes": false,
+    "verdict": "pass"
+   },
+   "gold_saved_scout": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 1.0,
+    "setup_unemulated": [
+     "python -c import pyautogui; import time; pyautogui.hotkey(\"ctrl\", \"alt\", \"t\"); time.sleep(0.5);"
+    ],
+    "unemulated_writes": false,
+    "verdict": "pass"
+   },
+   "initial_raw_lock": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 0.0,
+    "setup_unemulated": [
+     "python -c import pyautogui; import time; pyautogui.hotkey(\"ctrl\", \"alt\", \"t\"); time.sleep(0.5);"
+    ],
+    "unemulated_writes": false,
+    "verdict": "fail"
+   },
+   "initial_raw_scout": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 0.0,
+    "setup_unemulated": [
+     "python -c import pyautogui; import time; pyautogui.hotkey(\"ctrl\", \"alt\", \"t\"); time.sleep(0.5);"
+    ],
+    "unemulated_writes": false,
+    "verdict": "fail"
+   },
+   "initial_save": {
+    "derived_outputs": [],
+    "failures": [],
+    "infra_error": null,
+    "placed_office": [],
+    "save_failures": [],
+    "saves": [],
+    "unemulated": [],
+    "unemulated_writes": false
+   },
+   "initial_saved_lock": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 0.0,
+    "setup_unemulated": [
+     "python -c import pyautogui; import time; pyautogui.hotkey(\"ctrl\", \"alt\", \"t\"); time.sleep(0.5);"
+    ],
+    "unemulated_writes": false,
+    "verdict": "fail"
+   },
+   "initial_saved_scout": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 0.0,
+    "setup_unemulated": [
+     "python -c import pyautogui; import time; pyautogui.hotkey(\"ctrl\", \"alt\", \"t\"); time.sleep(0.5);"
+    ],
+    "unemulated_writes": false,
+    "verdict": "fail"
+   }
+  },
+  "d9b7c649-c975-4f53-88f5-940b29c47247": {
+   "checker_funcs": [
+    "compare_table"
+   ],
+   "gold_raw_lock": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 1.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "pass"
+   },
+   "gold_raw_scout": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 1.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "pass"
+   },
+   "gold_save": {
+    "derived_outputs": [
+     "/home/user/Desktop/report.xlsx"
+    ],
+    "failures": [],
+    "infra_error": null,
+    "placed_office": [
+     "/home/user/Desktop/report.xlsx"
+    ],
+    "save_failures": [],
+    "saves": [
+     {
+      "changed": true,
+      "dialogs": [],
+      "reason": "agent_save",
+      "seconds_to_write": 0.1,
+      "written": true
+     }
+    ],
+    "unemulated": [],
+    "unemulated_writes": false
+   },
+   "gold_saved_lock": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 1.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "pass"
+   },
+   "gold_saved_scout": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 1.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "pass"
+   },
+   "initial_raw_lock": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 0.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "fail"
+   },
+   "initial_raw_scout": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 0.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "fail"
+   },
+   "initial_save": {
+    "derived_outputs": [],
+    "failures": [],
+    "infra_error": null,
+    "placed_office": [],
+    "save_failures": [],
+    "saves": [],
+    "unemulated": [],
+    "unemulated_writes": false
+   },
+   "initial_saved_lock": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 0.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "fail"
+   },
+   "initial_saved_scout": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 0.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "fail"
+   }
+  },
+  "dd84e895-72fd-4023-a336-97689ded257c": {
+   "checker_funcs": [
+    "run_sqlite3"
+   ],
+   "initial_raw_lock": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 0.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "fail"
+   },
+   "initial_raw_scout": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 0.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "fail"
+   },
+   "initial_save": {
+    "derived_outputs": [],
+    "failures": [],
+    "infra_error": null,
+    "placed_office": [],
+    "save_failures": [],
+    "saves": [],
+    "unemulated": [
+     "postconfig close_window"
+    ],
+    "unemulated_writes": false
+   },
+   "initial_saved_lock": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 0.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "fail"
+   },
+   "initial_saved_scout": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 0.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "fail"
+   }
+  },
+  "e246f6d8-78d7-44ac-b668-fcf47946cb50": {
+   "checker_funcs": [
+    "check_italic_font_size_14"
+   ],
+   "gold_raw_lock": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 1.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "pass"
+   },
+   "gold_raw_scout": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 1.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "pass"
+   },
+   "gold_save": {
+    "derived_outputs": [
+     "/home/user/Desktop/Y22-2119-assign4.docx"
+    ],
+    "failures": [],
+    "infra_error": null,
+    "placed_office": [
+     "/home/user/Desktop/Y22-2119-assign4.docx"
+    ],
+    "save_failures": [],
+    "saves": [
+     {
+      "changed": true,
+      "dialogs": [],
+      "reason": "postconfig",
+      "seconds_to_write": 0.0,
+      "written": true
+     }
+    ],
+    "unemulated": [],
+    "unemulated_writes": false
+   },
+   "gold_saved_lock": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 1.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "pass"
+   },
+   "gold_saved_scout": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 1.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "pass"
+   },
+   "initial_raw_lock": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 0.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "fail"
+   },
+   "initial_raw_scout": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 0.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "fail"
+   },
+   "initial_save": {
+    "derived_outputs": [
+     "/home/user/Desktop/Y22-2119-assign4.docx"
+    ],
+    "failures": [],
+    "infra_error": null,
+    "placed_office": [
+     "/home/user/Desktop/Y22-2119-assign4.docx"
+    ],
+    "save_failures": [],
+    "saves": [
+     {
+      "changed": true,
+      "dialogs": [],
+      "reason": "postconfig",
+      "seconds_to_write": 0.0,
+      "written": true
+     }
+    ],
+    "unemulated": [],
+    "unemulated_writes": false
+   },
+   "initial_saved_lock": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 0.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "fail"
+   },
+   "initial_saved_scout": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 0.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "fail"
+   }
+  },
+  "ea98c5d7-3cf9-4f9b-8ad3-366b58e0fcae": {
+   "checker_funcs": [
+    "check_json_keybindings"
+   ],
+   "initial_raw_lock": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 0.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "fail"
+   },
+   "initial_raw_scout": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 0.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "fail"
+   },
+   "initial_save": {
+    "derived_outputs": [],
+    "failures": [],
+    "infra_error": null,
+    "placed_office": [],
+    "save_failures": [],
+    "saves": [],
+    "unemulated": [],
+    "unemulated_writes": false
+   },
+   "initial_saved_lock": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 0.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "fail"
+   },
+   "initial_saved_scout": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 0.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "fail"
+   }
+  },
+  "eb03d19a-b88d-4de4-8a64-ca0ac66f426b": {
+   "checker_funcs": [
+    "compare_table"
+   ],
+   "gold_raw_lock": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 1.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "pass"
+   },
+   "gold_raw_scout": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 1.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "pass"
+   },
+   "gold_save": {
+    "derived_outputs": [
+     "/home/user/Students_Class_Subject_Marks.xlsx"
+    ],
+    "failures": [],
+    "infra_error": null,
+    "placed_office": [
+     "/home/user/Students_Class_Subject_Marks.xlsx"
+    ],
+    "save_failures": [],
+    "saves": [
+     {
+      "changed": true,
+      "dialogs": [],
+      "reason": "postconfig",
+      "seconds_to_write": 0.2,
+      "written": true
+     }
+    ],
+    "unemulated": [],
+    "unemulated_writes": false
+   },
+   "gold_saved_lock": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 1.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "pass"
+   },
+   "gold_saved_scout": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 1.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "pass"
+   },
+   "initial_raw_lock": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 0.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "fail"
+   },
+   "initial_raw_scout": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 0.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "fail"
+   },
+   "initial_save": {
+    "derived_outputs": [
+     "/home/user/Students_Class_Subject_Marks.xlsx"
+    ],
+    "failures": [],
+    "infra_error": null,
+    "placed_office": [
+     "/home/user/Students_Class_Subject_Marks.xlsx"
+    ],
+    "save_failures": [],
+    "saves": [
+     {
+      "changed": true,
+      "dialogs": [],
+      "reason": "postconfig",
+      "seconds_to_write": 0.1,
+      "written": true
+     }
+    ],
+    "unemulated": [],
+    "unemulated_writes": false
+   },
+   "initial_saved_lock": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 0.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "fail"
+   },
+   "initial_saved_scout": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 0.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "fail"
+   }
+  },
+  "f201fbc3-44e6-46fc-bcaa-432f9815454c": {
+   "checker_funcs": [
+    "check_thunderbird_prefs"
+   ],
+   "initial_raw_lock": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 0.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "fail"
+   },
+   "initial_raw_scout": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 0.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "fail"
+   },
+   "initial_save": {
+    "derived_outputs": [],
+    "failures": [],
+    "infra_error": null,
+    "placed_office": [],
+    "save_failures": [],
+    "saves": [],
+    "unemulated": [
+     "postconfig close_window"
+    ],
+    "unemulated_writes": false
+   },
+   "initial_saved_lock": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 0.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "fail"
+   },
+   "initial_saved_scout": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 0.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "fail"
+   }
+  },
+  "f23acfd2-c485-4b7c-a1e7-d4303ddfe864": {
+   "checker_funcs": [
+    "compare_pptx_files",
+    "compare_pptx_files",
+    "compare_pptx_files",
+    "compare_pptx_files"
+   ],
+   "gold_raw_lock": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 1.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "pass"
+   },
+   "gold_raw_scout": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 1.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "pass"
+   },
+   "gold_save": {
+    "derived_outputs": [
+     "/home/user/Desktop/69_4.pptx"
+    ],
+    "failures": [],
+    "infra_error": null,
+    "placed_office": [
+     "/home/user/Desktop/69_4.pptx"
+    ],
+    "save_failures": [],
+    "saves": [
+     {
+      "changed": true,
+      "dialogs": [],
+      "reason": "postconfig",
+      "seconds_to_write": 0.0,
+      "written": true
+     }
+    ],
+    "unemulated": [],
+    "unemulated_writes": false
+   },
+   "gold_saved_lock": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 1.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "pass"
+   },
+   "gold_saved_scout": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 1.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "pass"
+   },
+   "initial_raw_lock": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 0.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "fail"
+   },
+   "initial_raw_scout": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 0.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "fail"
+   },
+   "initial_save": {
+    "derived_outputs": [
+     "/home/user/Desktop/69_4.pptx"
+    ],
+    "failures": [],
+    "infra_error": null,
+    "placed_office": [
+     "/home/user/Desktop/69_4.pptx"
+    ],
+    "save_failures": [],
+    "saves": [
+     {
+      "changed": true,
+      "dialogs": [],
+      "reason": "postconfig",
+      "seconds_to_write": 0.0,
+      "written": true
+     }
+    ],
+    "unemulated": [],
+    "unemulated_writes": false
+   },
+   "initial_saved_lock": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 0.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "fail"
+   },
+   "initial_saved_scout": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 0.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "fail"
+   }
+  },
+  "f723c744-e62c-4ae6-98d1-750d3cd7d79d": {
+   "checker_funcs": [
+    "check_contrast_increase_and_structure_sim"
+   ],
+   "initial_raw_lock": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 0.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "fail"
+   },
+   "initial_raw_scout": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 0.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "fail"
+   },
+   "initial_save": {
+    "derived_outputs": [],
+    "failures": [],
+    "infra_error": null,
+    "placed_office": [],
+    "save_failures": [],
+    "saves": [],
+    "unemulated": [
+     "pyautogui.write: import time; import pyautogui; time.sleep(1);pyautogui.write(\"berries_contrast\")"
+    ],
+    "unemulated_writes": true
+   },
+   "initial_saved_lock": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 0.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "fail"
+   },
+   "initial_saved_scout": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 0.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "fail"
+   }
+  },
+  "f918266a-b3e0-4914-865d-4faa564f1aef": {
+   "checker_funcs": [
+    "compare_text_file"
+   ],
+   "gold_raw_lock": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 1.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "pass"
+   },
+   "gold_raw_scout": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 1.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "pass"
+   },
+   "gold_save": {
+    "derived_outputs": [],
+    "failures": [],
+    "infra_error": null,
+    "placed_office": [],
+    "save_failures": [],
+    "saves": [],
+    "unemulated": [],
+    "unemulated_writes": false
+   },
+   "gold_saved_lock": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 1.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "pass"
+   },
+   "gold_saved_scout": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 1.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "pass"
+   },
+   "initial_raw_lock": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 0.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "fail"
+   },
+   "initial_raw_scout": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 0.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "fail"
+   },
+   "initial_save": {
+    "derived_outputs": [],
+    "failures": [],
+    "infra_error": null,
+    "placed_office": [],
+    "save_failures": [],
+    "saves": [],
+    "unemulated": [],
+    "unemulated_writes": false
+   },
+   "initial_saved_lock": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 0.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "fail"
+   },
+   "initial_saved_scout": {
+    "error": null,
+    "infra_failed": false,
+    "nondeterministic": false,
+    "postconfig_unemulated": [],
+    "score": 0.0,
+    "setup_unemulated": [],
+    "unemulated_writes": false,
+    "verdict": "fail"
+   }
+  }
+ }
+}

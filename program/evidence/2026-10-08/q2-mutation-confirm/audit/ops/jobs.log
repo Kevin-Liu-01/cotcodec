@@ -1,0 +1,7 @@
+overlay job 816 submitted 2026-10-08T10:42:43Z git=65bc2e2 capsule=a8559f89 builder=aa43283e757695384e0548d060a18b98f07a3af06f583efdb2d709f677e1a96d extractor=9b4d21a83beac8913dc06a946cf43ea31d77326e65d04957fad66d7b97d8c3cb
+overlay job 817 submitted 2026-10-08T10:44:05Z git=65bc2e2 capsule=a8559f89 (r2 receipt, selected_ref HEAD) builder=aa43283e757695384e0548d060a18b98f07a3af06f583efdb2d709f677e1a96d extractor=9b4d21a83beac8913dc06a946cf43ea31d77326e65d04957fad66d7b97d8c3cb
+args-doctor job 819 (CPU) submitted 2026-10-08T10:45:19Z image=7d4595f9 git=65bc2e2 model-dir=qwen36-meta (12 files re-hashed equal to receipt 18c2a128)
+open rater confirm-audit-v1 shard 000 job 823 submitted 2026-10-08T10:46:39Z image=7d4595f9 git=65bc2e2 packets=47d17b52 items=133 minutes=22 cap=0.367 thinking=on
+open rater confirm-audit-v1 shard 001 job 824 submitted 2026-10-08T10:46:39Z image=7d4595f9 git=65bc2e2 packets=f91104b4 items=45 minutes=13 cap=0.217 thinking=on
+open rater shard 000 job 823 finished 2026-10-08T11:01:29Z reason=completed exit=0 RunTime=00:14:49 rated 133/133 (127 ok, 6 thinking_unfinished) calls=8c8db172
+open rater shard 001 job 824 finished 2026-10-08T10:53:01Z reason=completed exit=0 RunTime=00:06:21 rated 45/45 (45 ok) calls=52ba6865

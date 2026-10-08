@@ -1865,3 +1865,73 @@ they say so.)
   14 rows, chain PASS, v1's, the checker-mutation and v2's rows verify; the
   repository ledger is unchanged (11 rows). Nothing frozen, pushed or
   merged. No GPU, no VM job.
+
+## 2026-10-08 — Q2 evaluator-mutation: confirm campaign stage A2 (audit census, open-weight rater, isolated export)
+
+- Operator run of the frozen `q2-evaluator-mutation-v1` (ledger row 11,
+  `65bc2e2`), branch `ops/q2-mutation-confirm`, evidence
+  `program/evidence/2026-10-08/q2-mutation-confirm/audit/`. Every container
+  ran from the staged export or a clean clone of `65bc2e2`.
+- Salt (D34): 64 hex characters written on the host (mode 600 in a mode-700
+  directory, nothing else in it, never printed); SHA-256 `194ee66c...`
+  committed, the salt revealed after the isolated ingest.
+- Sample, baselines, packets (`submit_audit.sh` with `reserve-controls-v1`,
+  Slurm 815, CPU, 2 min 25 s): the census, 178 items (36 `fn_equiv`, 5
+  `fp_violation`, 93 `alt_gate`, all 4 P1 flips of both runs, 33 gold and 7
+  do-nothing shams), no fallback (capacity 1,139); 33 baseline saves, none
+  failed; two packet shards (133 and 45 items), 16 packets shortened, none
+  over budget. The sample summary is held (it names the P1 flip tasks); a
+  redacted copy is committed.
+- Overlay: capsule `a8559f89...` (3,744 files, clean); job 816 was refused by
+  the extractor in 1 s because the first receipt named the commit instead of
+  `HEAD`; the same archive with a `HEAD` receipt built as 817 (43 s, image
+  `7d4595f9...`, provenance PASS). CPU doctor 819: pass, 918 tokens per page.
+- Open-weight rater (Qwen3.6-35B-A3B, thinking on, registered sampling, 160
+  GiB, limits 22 and 13 minutes from the GPU ledger, 0.584 of 3.0 GPU-h
+  allocated): 823 rated 133/133 in 14 min 49 s, 824 rated 45/45 in 6 min
+  21 s; 172 `ok`, 6 `thinking_unfinished` (unsure), 0 unrated, no retry;
+  both ended on their own (`reason=completed`, exit 0), no container left.
+  Per-item calls held on the host; receipts and aggregates committed.
+- Isolated export (`rater_runner export-isolated` at `65bc2e2`): 178 item
+  directories under a fresh root in the session scratchpad, manifest
+  `f9c91d57...` outside it, template `0e9d4eb6...` as pinned; the exported,
+  sampled and rated id sets are equal.
+- GPU 0.365 GPU-h physical (rater 0.3528, overlay 0.0122); program total
+  4.2911. Nothing pushed or merged.
+- Next: the isolated Claude rating as one workflow session of rater agents
+  only, then `collect-transcripts`, `ingest-isolated`, `audit summarize`, the
+  registered analysis, Kevin's pool and spot check.
+
+## 2026-10-08 — Q2 evaluator-mutation: confirm stage B (isolated Claude rating ingest, audit summary, registered analysis)
+
+- Operator run of the frozen `q2-evaluator-mutation-v1` (ledger row 11,
+  `65bc2e2`), branch `ops/q2-mutation-confirm`, evidence
+  `program/evidence/2026-10-08/q2-mutation-confirm/audit/` (section Stage B)
+  and `.../results/`. Every command ran locally from a fresh `git archive` of
+  `65bc2e2` (pins equal the frozen block). No GPU; the host was only read.
+- Isolated Claude rating: workflow run `wf_138e30b5-c1a`, one unresumed
+  session of 178 rater agents (`rate:0`-`177`), every one answered.
+  `collect-transcripts`: 178 transcripts mapped to 178 items, none
+  unmappable. `ingest-isolated` (both packet copies, manifest `f9c91d57...`,
+  root re-hashed, collection `3a48f6f0...`): 177 `ok`, 1 `isolation_void`
+  (`fd455942d783ba01`: one Read of a mistyped, non-existent path outside the
+  item directory; the registered rule voids it, and it is in the pool as a
+  split); no relay frame, nothing to re-rate; model `claude-opus-5-5` only;
+  only the 15 registered attachment types.
+- Salt revealed: SHA-256 `194ee66c...` matches, 178/178 item ids recompute.
+  Held files released after their digests checked (A1 18/18, A2 7/7).
+- `audit summarize`: κ 0.343 on 138 real items (raw agreement 82.6%); sham
+  accuracy Claude 0.90, Qwen 0.975; 24 real items unresolved; K3 fires for
+  both groups and κ, K4 fires (reported only, D35); no gold defect decided.
+- Registered analysis (`--controls-summary`, `--reserve-controls-summary`):
+  P1 raw 4/92 (4.35%), audit-confirmed 3/92 (3.26%, 0.68-9.23%). Checker
+  false-negative candidates 36, all `pptx.eq.zorder_nonoverlap` on
+  `compare_pptx_files`(`_tolerant`): 30 confirmed, 6 unresolved; candidate
+  share 12.4% (7.2-18.3%), `compare_pptx_files` 40.2%. False-positive
+  candidates 5 violations: 2 confirmed, 3 label-contradicted by both raters
+  (pending Kevin); 5.9% (0.8-12.3%). Exploratory (D34 (i)): P2 12.4%, P3
+  6.1%, P4 0/5, P5 17/60. K2 "offline harness, VM fidelity unverified".
+- Pending for Kevin: the 34-item adjudication pool (24 splits, 6 concordant
+  contradictions, 4 split gold shams) and the 25-item human spot check (7
+  overlap); then `audit summarize --adjudications` and the analysis rerun.
+  Nothing pushed or merged.

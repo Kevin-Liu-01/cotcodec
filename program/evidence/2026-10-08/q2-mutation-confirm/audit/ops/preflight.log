@@ -1,0 +1,40 @@
+== overlay preflight 2026-10-08T10:42:43Z
+ JOBID                           NAME ST       TIME TIME_LIMIT TRES_PER_NODE
+   814                q3v2-host-suite  R      13:34      30:00 N/A
+   815       cotcodec-q2-mutation-cpu  R       0:51    3:00:00 N/A
+index, utilization.gpu [%], memory.used [MiB]
+0, 0 %, 0 MiB
+1, 0 %, 0 MiB
+2, 0 %, 0 MiB
+3, 0 %, 0 MiB
+4, 0 %, 0 MiB
+5, 0 %, 0 MiB
+6, 0 %, 0 MiB
+7, 0 %, 0 MiB
+gpu_uuid, pid, process_name, used_gpu_memory [MiB]
+== overlay r2 preflight 2026-10-08T10:44:05Z
+ JOBID                           NAME ST       TIME TIME_LIMIT TRES_PER_NODE
+   814                q3v2-host-suite  R      14:56      30:00 N/A
+   815       cotcodec-q2-mutation-cpu  R       2:13    3:00:00 N/A
+index, utilization.gpu [%], memory.used [MiB]
+0, 0 %, 0 MiB
+1, 0 %, 0 MiB
+2, 0 %, 0 MiB
+3, 0 %, 0 MiB
+4, 0 %, 0 MiB
+5, 0 %, 0 MiB
+6, 0 %, 0 MiB
+7, 0 %, 0 MiB
+gpu_uuid, pid, process_name, used_gpu_memory [MiB]
+== confirm rater preflight 2026-10-08T10:46:39Z
+ JOBID                           NAME ST       TIME TIME_LIMIT TRES_PER_NODE
+index, utilization.gpu [%], memory.used [MiB]
+0, 0 %, 0 MiB
+1, 0 %, 0 MiB
+2, 0 %, 0 MiB
+3, 0 %, 0 MiB
+4, 0 %, 0 MiB
+5, 0 %, 0 MiB
+6, 0 %, 0 MiB
+7, 0 %, 0 MiB
+gpu_uuid, pid, process_name, used_gpu_memory [MiB]

@@ -1,0 +1,7 @@
+72a491a549de6f02b3c4d7ff483b2cd8ffa0dea65f1ef10098225ae3d49170db  ./confirm-audit-v1/baseline-jobs.jsonl
+5a6e38c54a34f6476ea3a07ff3f00c381075db71d19ccaaef01da25dcdde253e  ./confirm-audit-v1/items.jsonl
+1a74f5c4c51c4c678cbf19c2d2b70df098ed7e0879227dc8975dbd06dcf9ba96  ./confirm-audit-v1/sample-summary.json
+2723e87926d33a2268c49b29886e2486280fe23532c5ffb353d34566970ea21d  ./confirm-audit-v1/sample.jsonl
+d55c21798d529d07bd7cec4d13dff4bf855969d8b8e2bc19af64b62cf74d62ff  ./confirm-audit-v1/spot-check.jsonl
+8c8db1721edc3729e33fb5c6fae30d0ee3c3282b1d33b8563569c5851f2b4b43  ./open-weight/calls-s000.jsonl
+52ba6865308392013c7e010c5e723a1a7b782d3b5de6143421c6936d0f24239f  ./open-weight/calls-s001.jsonl
