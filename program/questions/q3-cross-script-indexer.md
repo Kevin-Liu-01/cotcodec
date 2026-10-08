@@ -2,10 +2,11 @@
 
 Status: Stage 0. The dense headroom pre-check
 (`q3-dense-headroom-precheck-v1`) ran on 2026-10-08 and ended INCOMPLETE with
-no combined read. Its successor `q3-dense-headroom-precheck-v2` (D36, D42) is
-a draft on branch `stage0/q3-dense-v2`, built and timed but not frozen: D42
-accepts its decisions 16-21 after a narrow re-check of the limits, now
-measured on the fixed 4B path (see the last section). Role: preemptible backfill, first in the backfill queue. Dossier
+no combined read. Its successor `q3-dense-headroom-precheck-v2` (D36, D42,
+D44) is a draft on branch `stage0/q3-dense-v2`, built and timed but not
+frozen: D42 and D44 accept its decisions 16-21, with the limits measured on
+the fixed 4B path and the 4B limit at the largest estimate (see the last
+section). Role: preemptible backfill, first in the backfill queue. Dossier
 entry: `E6-d21-translation-supervised-indexer`, rank 3, BACKFILL. Carried
 over from direction D21; its premises all held.
 
@@ -150,11 +151,12 @@ Branch `stage0/q3-dense-v2`; registration
   1e-6 (every numeric leaf of report, decisions, coverage, counts) and smoke
   452; the 0.6B code path is unchanged.
 - Limits and caps by D36's rule, both measured: 0.6B 12 minutes (job 727), 4B
-  30 minutes (Slurm 810: 769 s evaluation with length scaling and a compile
-  allowance, 79 s start-up; completes at up to 1.3 s per unit), two timing
-  jobs of 6; 0.90 GPU-h of D36's 1.5. v2 used 0.102 GPU-h physical so far.
+  32 minutes (D44: the largest of three estimates from Slurm 810, stage-mean
+  scaling 769 s / 30 minutes, a per-stage line fit 789 s / 31, the larger of
+  the two per stage 824 s / 32; 79 s start-up; completes at up to 1.4 s per
+  unit), two timing jobs of 6; cap 32/60 GPU-h for the 4B lane, 0.933 GPU-h
+  of D36's 1.5 in all. v2 used 0.102 GPU-h physical so far.
 
-Next: the narrow re-check of the measured limits (D42 (iii)), then merge and
-freeze with the status and lead-in naming D42 (simulated on a scratch clone:
-check-chain PASS, frozen-mode tests pass), image from the frozen commit,
-doctor, the 0.6B lane, then the 4B lane.
+Next: freeze with the status and lead-in naming D42 and D44 (simulated on a
+scratch clone: check-chain PASS, frozen-mode tests pass), image from the
+frozen commit, doctor, the 0.6B lane, then the 4B lane.

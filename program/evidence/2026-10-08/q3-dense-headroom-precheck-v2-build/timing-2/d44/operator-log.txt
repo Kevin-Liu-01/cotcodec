@@ -1,0 +1,31 @@
+q3-dense-headroom-precheck-v2, D44: operations (UTC, 2026-10-08)
+No GPU job and no image build; host runs were Slurm CPU steps from a fresh ~/cotcodec-scratch clone
+of a bundle; ~/cotcodec untouched; no sudo; nothing pushed; the real preregistration ledger
+untouched (1052d58b... before and after every local simulation). squeue showed no other job
+whenever it was checked.
+
+12:06         main at 1a45703 (D44).
+12:09         local: main merged into the branch (cb9fc68): program/log.md both sides in time order
+              (main's Q2 confirm A2 entry, committed 11:07, before this branch's timing-2 and
+              estimator-sensitivity entries); program/state.json main's entries plus the branch's Q3
+              entries; GPU total 4.393 recomputed from the 22 ledger rows. Main changed no tabled file
+              and not the ledger.
+12:21         local: D44 implemented and committed (da31db7); ruff clean; local dense, preregister and
+              v2 tests 186 passed, 15 skipped; validators PASS.
+12:21-12:26   bundle of da31db7 copied; fresh clone ~/cotcodec-scratch/q3v2-suite-da31db7 (clean);
+              Slurm 841 host suite (timing-2/tests/host-suite.sh): 2,218 passed, 40 skipped, 0 failed.
+12:28-12:31   Slurm 842 (d44/tests/image-tests-mounted.sh): image 825 (8c3f076, the latest) with the
+              clone's harness/, scripts/, tests/, experiments/ and program/ mounted read-only over
+              /workspace/cotcodec (the image's .venv kept), CPU, network none: the torch-dependent
+              dense tests 57 passed (55 at 8c3f076 plus ddb3d02's and da31db7's new manifests tests).
+12:31-12:33   Slurm 843: the v2 CPU doctor the same way: DENSE_V2_DOCTOR_PASS, 12/12.
+local         freeze simulations on scratch clones of da31db7 (d44/freeze-simulation/): full
+              (check-chain 12 rows PASS, frozen-mode tests 31 passed), status-only, wrong-dec and
+              d42-only (each fails the frozen-mode test as intended); lanes-after-freeze on the full
+              clone (code table matches; fills; dry runs 0.2 and 0.5333 GPU-h); the full suite in
+              the frozen clone (macOS): 2,171 passed, 87 skipped, 0 failed. Real ledger 1052d58b...
+              before and after.
+
+The PID-1 SIGUSR1 test was not re-run: it runs the image's own entry point (8c3f076), and D44
+changed no file on the signal path (only the lanes module's 4B figures and cap, the 4B template,
+the registration and tests).
