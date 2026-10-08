@@ -83,7 +83,9 @@ item, each confined to its own directory)
     answers only through a ``StructuredOutput`` call. The items an ingest
     voided only because the run's relay frames differ are listed in
     ``rerate.json`` for one fresh, unresumed re-rate (``export-isolated
-    --rerate-list``), reported beside the registered result.
+    --rerate-list``), reported beside the registered result; ``export-isolated``
+    and ``audit summarize`` recompute that list from the ingest's calls file
+    and refuse one that differs (``check_rerate_list``).
 
 Rules shared by both raters (preregistration section 9):
 
@@ -118,6 +120,7 @@ import hashlib
 import json
 import os
 import re
+import shutil
 import signal
 import subprocess
 import sys
@@ -1928,13 +1931,18 @@ def collect_transcripts(
     ``isolated_prompt_template``) rendered for an exported item, with that
     item's directory and id. Refused, and nothing written: an export manifest
     of another schema or template, a transcript whose turns are the rendered
-    prompt of no exported item or of two, an agent the journal never started,
-    a started agent without a transcript, and an output directory that is not
-    new. An agent answered if the journal has a result line for it. The copies
-    are byte-exact: the agent that answered for an item is ``{item}.jsonl``,
-    every other agent of the item (an interrupted attempt, a second answer) is
-    ``{item}.{agent}.jsonl``; if two agents answered for one item, both keep
-    their agent id (``ingest-isolated`` voids the item). Returns the
+    prompt of no exported item or of two, an agent the journal never started
+    (or started twice), a started agent without a transcript, an output
+    directory that is not new, and a transcript that changes while it is
+    copied or a copy that differs from its source. The copies are written to
+    a staging directory beside ``out_dir`` and renamed into place only when
+    every copy checks, so a refusal leaves no output directory behind (an
+    empty one that existed stays empty). An agent answered if the journal has
+    a result line for it. The copies are byte-exact: the agent that answered
+    for an item is ``{item}.jsonl``, every other agent of the item (an
+    interrupted attempt, a second answer) is ``{item}.{agent}.jsonl``; if two
+    agents answered for one item, both keep their agent id
+    (``ingest-isolated`` voids the item). Returns the
     collection manifest: every agent with its item, file, SHA-256, size and
     whether it answered.
     """
@@ -2001,15 +2009,29 @@ def collect_transcripts(
             )
     if out_dir.exists() and any(out_dir.iterdir()):
         raise SystemExit(f"{out_dir} is not empty; collect into a new directory")
-    out_dir.mkdir(parents=True, exist_ok=True)
-    for row in agents:
-        data = files[row["agent_id"]].read_bytes()
-        if sha256_bytes(data) != row["sha256"]:
-            raise SystemExit(f"{files[row['agent_id']]} changed while it was collected")
-        target = out_dir / row["file"]
-        target.write_bytes(data)
-        if sha256_file(target) != row["sha256"]:
-            raise SystemExit(f"{target}: the copy differs from its source")
+    # The copies go to a staging directory beside out_dir, renamed into place
+    # only when every copy checks, so a refusal below leaves nothing behind.
+    created = [p for p in (out_dir.parent, *out_dir.parent.parents) if not p.exists()]
+    out_dir.parent.mkdir(parents=True, exist_ok=True)
+    staging = out_dir.parent / f".{out_dir.name}.collecting-{os.getpid()}-{time.time_ns()}"
+    staging.mkdir()
+    try:
+        for row in agents:
+            data = files[row["agent_id"]].read_bytes()
+            if sha256_bytes(data) != row["sha256"]:
+                raise SystemExit(f"{files[row['agent_id']]} changed while it was collected")
+            target = staging / row["file"]
+            target.write_bytes(data)
+            if sha256_file(target) != row["sha256"]:
+                raise SystemExit(f"{out_dir / row['file']}: the copy differs from its source")
+        # rename(2) replaces an empty out_dir and refuses one that is no longer empty.
+        os.rename(staging, out_dir)
+    except BaseException:
+        shutil.rmtree(staging, ignore_errors=True)
+        for parent in created:  # the directories made above, deepest first
+            with contextlib.suppress(OSError):
+                parent.rmdir()
+        raise
     return {
         "schema": COLLECTION_SCHEMA,
         "rule": (
@@ -2088,6 +2110,48 @@ RERATE_RULE = (
     "are re-rated once in a fresh, unresumed workflow run, chosen by that reason alone "
     "(answer-blind); the registered result and the re-rated one are both reported"
 )
+
+
+def relay_rerate_items(calls: Iterable[Mapping[str, Any]]) -> list[str]:
+    """The re-rate list of decision D38, sorted: items whose only void reason is the relay mismatch.
+
+    Chosen by that reason alone, never by an answer (answer-blind). An item
+    voided for the relay mismatch and for any other reason stays void and is
+    not re-rated.
+    """
+    items: list[str] = []
+    for call in calls:
+        extra = call.get("extra")
+        reasons = extra.get("void_reasons") if isinstance(extra, Mapping) else None
+        if reasons == [RELAY_MISMATCH]:
+            items.append(str(call["item_id"]))
+    return sorted(items)
+
+
+def check_rerate_list(listing: Mapping[str, Any], calls_path: Path) -> list[str]:
+    """The items of a re-rate list, recomputed from the calls file it was written from (D38).
+
+    Refused: a calls file that is missing or is not the one the list names
+    (``calls_sha256``), and a list whose items are not exactly the items that
+    file voids for the relay mismatch alone (``relay_rerate_items``, in its
+    sorted order), so an edited list cannot choose which items are re-rated.
+    """
+    if not calls_path.is_file() or listing.get("calls_sha256") != sha256_file(calls_path):
+        raise SystemExit(
+            f"{calls_path}: not the calls file the re-rate list was written from (calls_sha256)"
+        )
+    expected = relay_rerate_items(read_calls(calls_path).values())
+    items = listing.get("items")
+    listed = [str(item) for item in items] if isinstance(items, list) else None
+    if listed != expected:
+        only_listed = sorted(set(listed or []) - set(expected))
+        only_voided = sorted(set(expected) - set(listed or []))
+        raise SystemExit(
+            "the re-rate list differs from the items its calls file voids for the relay "
+            f"mismatch alone (on the list only: {only_listed[:5]}; in the calls file only: "
+            f"{only_voided[:5]}); it must be exactly the ingest's rerate.json"
+        )
+    return expected
 
 
 def _relay_record(sha: str, count: int, text: str, item_ids: Iterable[str]) -> dict[str, Any]:
@@ -2353,9 +2417,7 @@ def ingest_isolated(
     calls_path.write_text(
         "".join(json.dumps(c, sort_keys=True) + "\n" for c in calls), encoding="utf-8"
     )
-    rerate = sorted(
-        c["item_id"] for c in calls if c["extra"]["void_reasons"] == [RELAY_MISMATCH]
-    )
+    rerate = relay_rerate_items(calls)
     (out_dir / "rerate.json").write_text(
         json.dumps(
             {
@@ -2420,7 +2482,9 @@ def cmd_export_isolated(args: argparse.Namespace) -> int:
         rerate = json.loads(data)
         if not isinstance(rerate, dict) or rerate.get("schema") != RERATE_SCHEMA:
             raise SystemExit(f"{args.rerate_list}: not a q2m relay re-rate list")
-        wanted = [str(item) for item in rerate["items"]]
+        # The ingest writes rerate.json beside its calls.jsonl; the items are
+        # recomputed from that file, so an edited list is refused.
+        wanted = check_rerate_list(rerate, args.rerate_list.parent / "calls.jsonl")
         known = {str(p["item_id"]) for p in packets}
         absent = sorted(set(wanted) - known)
         if absent or not wanted:
@@ -3024,7 +3088,8 @@ def build_parser() -> argparse.ArgumentParser:
     iso.add_argument(
         "--rerate-list",
         type=Path,
-        help="rerate.json of an isolated ingest: export only its items for the D38 re-rate",
+        help="rerate.json of an isolated ingest, beside its calls.jsonl (the items are "
+        "recomputed from it): export only those items for the D38 re-rate",
     )
     collect = sub.add_parser("collect-transcripts", allow_abbrev=False)
     collect.add_argument(
