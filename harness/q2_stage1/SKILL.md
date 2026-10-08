@@ -45,8 +45,10 @@ rescoring, the corrected comparator, the anchor's CPU checks and the GLMM.
   - `engine.py` is the client over the bridge socket; `bridge.py` is the GPU
     job's workload (vLLM plus the socket forwarder, D13); `fake_engine.py`
     stands in for vLLM in tests and the development smoke only.
-  - `lane.py` is the VM job's host process (`s1a-vm.sbatch`): manifest rules,
-    continuous dispatch, re-queue, stop, fill rule, snapshots, submission.
+  - `lane.py` is the VM job's host process (`s1a-vm.sbatch`): manifest rules
+    (registered jobs' slots must be the plan's), continuous dispatch, re-queue, stop,
+    fill rule, snapshots, submission. `scripts/render_q2_stage1_manifest.py` renders a
+    registered job's manifest from the plan, and the GPU half from its template.
   - `rescore.py` rescores captured states raw and corrected, merges
     `corrected_score` into records, and validates `zinv.py` on the stored
     checker-mutation confirm campaign.
@@ -76,7 +78,7 @@ rescoring, the corrected comparator, the anchor's CPU checks and the GLMM.
 | Change an estimator, rule or the plan | Run `uv run pytest -q tests/test_q2_stage1_*.py`, then update section 20 of the registration |
 | Re-run operating characteristics | `program/proposals/evidence/2026-10-08-q2-stage1-rescoped/analysis/sim_s1a_v2.py` (sections in parallel, then `merge`) |
 | Fill the freeze constants | On the host, `python3 -m harness.q2_stage1.plan a0a-gates --run-dir <A0a run> --action-path-step-p95 <accepted attempt's step_p95_n1_s>` gives `a0a_gates`; then `scripts/render_q2_stage1_plan.py --constants a0.json --dev-setup dev.json --out plan.json` |
-| Run a VM job (dev smoke, setup check, A0, A1) | Write a lane manifest (`experiments/manifests/q2-stage1/`), check `squeue`, then on the host from the exported tree `python3 -E -s -m harness.q2_stage1.lane submit MANIFEST --source-dir .`; a registered job takes exactly `plan.vm_job_cpus(V)` CPUs, and a temporary host-load cap (`--host-load-max-cpus 8`) is for development and setup-check jobs only |
+| Run a VM job (dev smoke, setup check, A0, A1) | A0a and A1: render the lane manifest from the plan (`scripts/render_q2_stage1_manifest.py vm --purpose a0a --n-star N` or `--purpose a1 --plan <frozen plan> --size Z --session S1`, S2 with `--s1-records`); the lane refuses slots that differ. Development and setup checks: write it by hand (`experiments/manifests/q2-stage1/`). Check `squeue`, then on the host from the exported tree `python3 -E -s -m harness.q2_stage1.lane submit MANIFEST --source-dir .`; a registered job takes exactly `plan.vm_job_cpus(V)` CPUs, and a temporary host-load cap (`--host-load-max-cpus 8`) is for development and setup-check jobs only |
 | Rescore captures / validate the comparator | `s1a-cpu.sbatch` run mode, metric image: `python -m harness.q2_stage1.rescore capture|merge|validate-zinv` |
 | Change a harness client | Regenerate nothing: `tests/test_q2_stage1_agents.py` must still match the upstream fixture; record any intended difference in `design_diffs.md` |
 

@@ -292,7 +292,10 @@ S1a does **not** answer:
     section 20) writes the draw, the seeded orders, the anchor order, the
     engine and sampling arguments and, at the freeze, the constants and the job
     list. Draft plan SHA-256 (K = 32, no constants):
-    `671f2b143c6036a98895f6f0edab242e758ce82718c2b9908650a937642a9a86`. Frozen plan SHA-256: TBD.
+    `39a1c8a9b2bcdb9fa469d1d4fb70135d1d61aed73e646c3058f0ed71211ad2aa`. Frozen plan SHA-256: TBD.
+    Every registered VM job's lane manifest is rendered from the plan by
+    `scripts/render_q2_stage1_manifest.py` (section 5.5), and the lane refuses one
+    whose slots differ.
 11. **Analysis code** (`harness/q2_stage1/`: `estimators.py`, `records.py`,
     `rules.py`, `plan.py`, `analysis.py`), committed and tested on CPU
     (section 20).
@@ -499,6 +502,19 @@ The full list is `harness/q2/action_path/harness_design_diffs.md`.
   qualified on the probe desktop with no engine running, so it is an upper
   bound: A0a's step-p95 gate (section 6.2) checks V under S1a's load. Two
   sizes at once (244 CPUs at V = 20) and ANC at V = 40 (212) do not fit.
+- **Slots from the plan.** Every registered VM job's slots are rendered from the
+  plan (`plan.a0a_slots`, `plan.a1_slots`; `scripts/render_q2_stage1_manifest.py`),
+  and `lane.validate_manifest` refuses an A0a or A1 manifest whose slots or fill
+  blocks differ. A0a: the first V/4 tasks of `plan.dev_tasks` (from the committed
+  setup-check records) x 2 harnesses, rerun r in block `a0a.r`, each block in the
+  seeded order `block_order(tasks, "S1", "9B", "a0a.r")`, at A1's V for the N* the
+  manifest names. A1: the frozen plan file (its digest must be the one this file
+  states at the freeze); rerun r is block `br`, each in `plan.episode_orders`;
+  session 1 carries every extension block as fill blocks `x<b>.1` and `x<b>.2`
+  (reruns 1 and 2); session 2 runs, after its base, exactly the blocks both
+  session-1 jobs completed, which the lane recomputes from their record files
+  (`records.completed_extension_blocks(..., sessions=("S1",))`). The anchor
+  purposes are refused while the anchor is UNAVAILABLE (no anchor runner is built).
 - **Quiet host.** While an S1a job runs, the operator submits no other Slurm
   job. Every block records host snapshots (time, load average, foreign Slurm
   jobs and their CPUs, container counts).
@@ -1364,10 +1380,11 @@ row (the test fails otherwise), and the freeze pins them.
 |---|---|
 | `harness/q2_stage1/__init__.py` | `0e2190149cf640fac07dab26332a26f696374ff4400c23aab82e8cf766f3b334` |
 | `harness/q2_stage1/estimators.py` | `b43334b0511d17505a24893d65ce79cd55a58351a2a056075ed5b002007d36b3` |
-| `harness/q2_stage1/records.py` | `8605320d5968d671cebbd9f6212adf89244c76ec74566ab92c470930886fd614` |
+| `harness/q2_stage1/records.py` | `b15d1931c06bdffa6166dac6ff2f3dc828103cad87002773a228f8d32f9ce228` |
 | `harness/q2_stage1/rules.py` | `a671d2c3871bc18d255af8e8efe86f823aa7e54640c5c75cf9d95c39b587a225` |
-| `harness/q2_stage1/plan.py` | `d865b73637b24b548af466c0fe114543d2301d07285b57092c58216f2736b4a2` |
+| `harness/q2_stage1/plan.py` | `f5921ab68f96983feceeb69e30342ef7db5e10aba1898f978f49bf422c0604e3` |
 | `harness/q2_stage1/analysis.py` | `f5b1ce8f3c6bf7366f3114180696859e3226bde6d405df7ce2b3122861cde401` |
+| `scripts/render_q2_stage1_manifest.py` | `f33335c9d7ccd486a2b0b85b124c088f07c2271f65ce9a22329f778cb2a4dc07` |
 | `scripts/render_q2_stage1_plan.py` | `3c9ef228e5df0b8a6b5e7f927f37689cc5d9a41b6ce8294737a39674089fbfac` |
 | `scripts/submit_docker_research_job.py` | `660271655aa22ebd387a023e25d21e6a809c22699ec6314d9d535be74e17a994` |
 | `harness/q2/vm/manifest.py` | `f238f12bdb8470919c8892eff46fe8b721e1e0c83ad08a60c0293ed8da3b9e2e` |
@@ -1381,7 +1398,7 @@ row (the test fails otherwise), and the freeze pins them.
 | `harness/q2_stage1/bridge.py` | `dceacda3d6882223b0f0cfe54dd28f1674d1bf99527083420c0f29976a68692d` |
 | `harness/q2_stage1/fake_engine.py` | `02e0b66e7b67b3647dc853c4069de21ce3e6234ed01ec4e3842afbd42cd89a00` |
 | `harness/q2_stage1/osworld_live.py` | `18511ebbf19ab36cb2060228355ea1cd7387dce7023835965341871228205f4f` |
-| `harness/q2_stage1/lane.py` | `d566af005e5cbf2f47eaadb07bbff3116b585e92a12a8f6fbf35ad07261e88b1` |
+| `harness/q2_stage1/lane.py` | `0ec9d57654034ee8ee5dd7050334e853b9a4f0648ad861a95616f783ddafedea` |
 | `harness/q2_stage1/rescore.py` | `d240db03e969c8aa5bb97403c5005cd4c9e96016599a78f70e97850415893737` |
 | `harness/q2_stage1/zinv.py` | `64899d5056f4791008c2a10c38a7b0fbb94fbe912d20a702ec74851a0ca7f655` |
 | `harness/q2_stage1/anchor.py` | `6c0a31cf1abb261a3522573847ee6dc1798925143b286cf9c02a3550f1c93b7a` |
@@ -1509,6 +1526,7 @@ the fresh audit D49 (iv) requires.
 | C4 | The pinned GPU-engine template declared `randomness_contract: deterministic` with `seeds: [42]`, which the docker submitter refuses once the `FILL_*` slots are filled, so no GPU half of a pair could be submitted | Fixed: `seeds: []` (the engine seed reaches vLLM through `plan.CARD_ENGINE_FLAGS`, `--seed 42`); hex fields quoted so YAML cannot read one as a number; a test fills the template for 9B, 4B and the anchor and passes it through the submitter's `validate_manifest` and `sbatch_argv` (`--gres=gpu:h100:1`, 32 CPUs, `--signal=B:USR1@180`, `--dependency=after:<VM job>`) | `gpu-engine.template.yaml` |
 | C5 | The K_base floor in the branch S1a is in (anchor unavailable before A0b) was 24 in code (`freeze_constants` defaulted to `K_FLOOR`), 32 in D49 (i), and ambiguous in section 6.2 and item 18's note, so the documented procedure would have frozen K = 24 without the anchor | Fixed: the floor follows the branch (32 without the anchor, whatever is signed; 24 only with the anchor running and `k_floor=24` passed after item 18); `freeze_constants` defaults to 32 and records the floor applied; section 6.2, item 18 and section 19 state D49 (i) and that K = 32 needs a mean A0a slot of at most about 728 s, below the card's high slot of 743 s, so going back to review after A0a is a live outcome; a test runs the issue's case | 6.2, 18, 19; `plan.py` |
 | C6 | The truncation and concurrency gates of section 6.2 existed only as text: `freeze_constants` read neither, episode records could not tell a cap hit without a tool call, and section 15's label counted any cap hit | Fixed: `plan.a0a_gates` computes both from A0a's step logs (per-harness share of turns at the cap without a complete tool call; the action path's p95 statistic over every `DesktopEnv.step`), `freeze_constants` requires the result and refuses a failed or unreadable gate; records gain `truncated_no_tool_call_steps`, and section 15's label uses the gate's definition beside the plain cap-hit rate; a CLI reads the host run directory | 6.2, 7.3, 15; `plan.py`, `driver.py`, `records.py`, `analysis.py`, `lane.py` |
+| C7 | No registered code turned the frozen plan into lane manifests, and the lane checked only that a slot's task was in the dev split or the pool, so the base, the dev-task choice, the block orders, the rerun-to-block mapping (same- and cross-block D_b) and the extension sub-blocks were enforced by nothing; the plan file stored the orders' digest but not the orders | Fixed: `plan.a0a_slots` and `plan.a1_slots` render every registered job's slots and fill blocks; the plan file now holds `episode_orders`; `scripts/render_q2_stage1_manifest.py` renders the lane manifest (and the GPU half from the template); `lane.validate_manifest` requires N* for A0a and the frozen plan file, its digest as stated in the registration, for A1, recomputes session 2's blocks from both session-1 record files, refuses any slot or fill difference, and refuses the anchor purposes; tests cover A0a, A1-S1 (fill) and A1-S2 | 3.1 item 10, 5.5; `plan.py`, `lane.py`, `records.py`, `render_q2_stage1_manifest.py` |
 | C8 | Today's date in the system prompt was left open: between-session pairs (at least 12 h apart) almost always see a different date and weekday and within-session pairs the same one, so D_b, the session excess (P1), u_zt and ρ were confounded with a deterministic prompt change | Fixed, option (a): one date, `plan.PROMPT_DATE` = 2026-10-08, for every A0a, A0b, ANC and A1 episode through the lane manifest's `date`, which `validate_manifest` requires for those purposes; the plan file records it; the guest's own clock stays unpinned and is disclosed | 5.2, 9, 19, 3.1 item 10 (draft plan digest); `plan.py`, `lane.py`, `design_diffs.md` |
 
 Slots read TBD until the freeze: the status line; G0 item 1 (accepted attempt); item 10
