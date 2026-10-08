@@ -2233,3 +2233,57 @@ they say so.)
   rewritten to the frozen wording naming D42 and D44, image from the frozen
   commit, doctor, the 0.6B lane (job 727 to 1e-6 and smoke 452), then the 4B
   lane (32 minutes), and the combined read.
+
+## 2026-10-08 — Q2 action path v2: D45 implemented, development repeated at `c74eae0` (branch `stage0/q2-action-path-v2`)
+
+- Merged main twice (at `26067a7`: D44, D45 and the checker-mutation confirm
+  stages A2 and B; at `e09e362`: D46 and the frozen
+  `q3-dense-headroom-precheck-v2`, ledger row 12). `program/decisions.md` is
+  main's file exactly; `state.json` is main's plus the branch's Q2 entries,
+  the GPU total recomputed (4.393, unchanged by this branch's 0.0 GPU-h
+  rows). v1's files are unchanged.
+- D45 (i)-(iii) at `c74eae0`: `verdict.py` reads a key event the tap
+  recorded without Mod2 without its state only when a key press recorded
+  with Mod2 comes before it in the same window (`modifier_state_observable`,
+  `state_not_observed`, `rdev_matches`, `match_events`); its docstrings state
+  that a grab already active before an entry's first key is now judged on
+  the recorded state, and that a grab activating inside an entry after a
+  processed press is still taken to be the shell's. `acceptance.py`: C2's
+  reading (`c2_projection`, `c2_matches`) and C3's stream signature and
+  earlier-attempt comparison (`_stream`, `_events_equal`) read the state by
+  the same rule; every criterion returns `state_not_observed_report` (each
+  event read without its state with its offset from the preceding processed
+  press; each event without Mod2 no processed press preceded). Prediction
+  file notes name D45; frozen-table digests refreshed.
+- Tests on real records: the 280 development events still read without
+  state (and only they); job 785's `chord_super_d` with every key state 0
+  (case 6) now fails, with C4 and C2's reading; the C3 slow-answer probe
+  leaves M12 and M13 equivalent and C3 passing (counting attempt, earlier
+  attempt or reference), a processed `d` press without Mod4 still makes M12
+  survive; the dropped-modifier records (832/833, 847/848) still fail.
+- Development at `c74eae0` (seed 42, CPU only, `vm-campaign.sbatch`, jobs
+  845-854 repeating 830-839 with unchanged workloads, all COMPLETED 0:0,
+  gates passed, 2.4 VM-h): every cell as in the D43 job it repeats, except
+  one trial of 851 (L0-fixed, 8 VMs) that failed with `guest_server_restart`
+  alone: an unprovoked guest-server restart during an `/accessibility` call
+  (restart-only, excused in A1-A4 and the ladder; the lane's second after
+  run 622; one in the 2,726 non-injected calls of 830-839 and 845-854). 845:
+  151/180 with 108 events read without state, each 0-3 ms after a processed
+  press; 846: 180/180; 847-848: 0/140, nothing read without state; 849-854:
+  52/56, 400/400, 799/800, 194/198, 178/186, 60/60. Section 12's report from
+  the analysis over job 768 and every v2 run: no event without Mod2 lacks a
+  preceding processed press.
+- Registrations: sections 4.4, 5, 8 (C2, C3, C4), 10, 12, 24, 26 and 27
+  (now D43's and D45's), design decisions 47 and 48 updated and 49 added;
+  inputs addendum rows for `c74eae0`; the executor addendum's byte-identity
+  rule names `c74eae0` (`git diff --stat c74eae0` over the lane lists
+  nothing). Evidence: `program/evidence/2026-10-08/q2-action-path-v2-d45/`.
+- Checks at `e09e362` (`checks/checks-e09e362.json`): ruff clean; Q2 tests
+  645 passed, 1 skipped; validators PASS; full suite on the host from a
+  fresh `~/cotcodec-scratch/` export 2281 passed, 40 skipped; freeze lint of
+  v2, `-inputs`, `-executor` in order on a scratch copy of main's 12-row
+  ledger: 15 rows, chain PASS, every row verifies; the repository ledger is
+  unchanged. Nothing frozen or pushed. No GPU.
+- Next: review of D45's implementation, then freeze v2, `-inputs`,
+  `-executor` and run C2 (seed 45), C1, C3, A1-A6, the ladder on a quiet
+  host, A4 and A7.
