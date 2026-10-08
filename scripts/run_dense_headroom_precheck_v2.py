@@ -31,12 +31,13 @@ modules are imported byte for byte), and three repairs:
 
 Profiles: ``registered`` (the lanes; the frozen preregistration and its code
 table are verified at start-up), ``tiny`` (the CPU doctor) and ``timing``
-(the one development timing job of D36, before the freeze: the 4B lane's
-model and inputs, the registered subset of development units in round-robin
-stage order with per-unit component timings, a v1-path reference on the
-first units of each stage compared bit for bit, then the lane's other chunks
-until a signal, which it answers exactly as a lane does; it writes
-``timing-receipt.json`` and never a lane receipt).
+(the development timing jobs of D36 and D42, before the freeze: the 4B lane's
+model and inputs; first the lane's start-up as the lane runs it, including
+its one ``attention_backend_check`` (D42 (ii)); then the registered subset of
+development units in round-robin stage order with per-unit component timings,
+a v1-path reference on the first units of each stage compared bit for bit,
+then the lane's other chunks until a signal, which it answers exactly as a
+lane does; it writes ``timing-receipt.json`` and never a lane receipt).
 
 Exit codes: 0 complete, 2 startup contract, 3 integrity, 75 interrupted after
 a confirmed save.
@@ -648,7 +649,7 @@ class Job:
     # ---------------------------------------------------------- timing job
 
     def timing_run(self, artifact: dict[str, Any], lane_codec: Any) -> int:
-        """The development timing job (D36): see the module docstring."""
+        """The development timing jobs (D36, D42): see the module docstring."""
 
         import torch
 
@@ -670,7 +671,8 @@ class Job:
             "subset": [{"stage": s, "chunk": i, "units": [u.unit_id for u in c]}
                        for s, i, c in subset],
             "chunks": [], "units": [], "reference": [], "profiles": {}, "torch_profiles": {},
-            "evaluation_started_after_s": time.perf_counter() - PROCESS_STARTED,
+            "attention_backends": self.attention_backends, "attention_backend_check": None,
+            "model_loaded_after_s": time.perf_counter() - PROCESS_STARTED,
             "versions": {"torch": torch.__version__,
                          "device": (torch.cuda.get_device_name(0) if device.type == "cuda"
                                     else "cpu")},
@@ -747,7 +749,23 @@ class Job:
                                         "v1_seconds": seconds, "bitwise_equal": equal})
 
         try:
-            # 1. The first subset chunk (A-main 0; its first unit pays the kernel compiles).
+            # 0. The lane's start-up as evaluate_and_read runs it (D42 (ii)): on the hybrid
+            #    lane one attention_backend_check (cuDNN's attention on, then off) before any
+            #    unit, so its first-use compiles land where the lane's do. A failure is
+            #    recorded in the timing receipt and ends the job as it would end the lane.
+            if hybrid:
+                report["backend_check_started_after_s"] = time.perf_counter() - PROCESS_STARTED
+                try:
+                    report["attention_backend_check"] = self.attention_backend_check(
+                        view, units, content, model, device, layers, scaling, names, dht2)
+                except Exception as exc:
+                    report["attention_backend_check"] = {
+                        "status": f"failed: {type(exc).__name__}: {exc}"[:500]}
+                    finish("TIMING_FAILED_BACKEND_CHECK")
+                    raise
+                report["attention_backends_after_check"] = attention_backends()
+            report["evaluation_started_after_s"] = time.perf_counter() - PROCESS_STARTED
+            # 1. The first subset chunk (A-main 0).
             stage, index, chunk = subset[0]
             run_chunk(stage, index, chunk, "subset", profile=False)
             # 2. Diagnostics early, so that a job still CPU-bound records why before the

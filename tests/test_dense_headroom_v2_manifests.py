@@ -22,6 +22,7 @@ from scripts import submit_docker_research_job as submitter
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 TEMPLATES = {lane: filler.TEMPLATE_DIR / name for lane, name in filler.TEMPLATES.items()}
 TIMING = filler.TEMPLATE_DIR / filler.TIMING_TEMPLATE
+TIMING_2 = filler.TEMPLATE_DIR / filler.TIMING_TEMPLATES[2]
 FAKE = {"FILL-image-id": "sha256:" + "a" * 64, "FILL-image-git-sha": "b" * 40,
         "FILL-image-source-tar-sha256": "c" * 64, "FILL-preregistration-sha256": "d" * 64}
 IP = re.compile(r"\b\d{1,3}(?:\.\d{1,3}){3}\b")
@@ -86,17 +87,41 @@ def test_the_timing_template_runs_the_4b_lane_with_the_timing_profile() -> None:
     submitter.validate_manifest(manifest, verify_claim_files=False)
 
 
-def test_the_timing_job_is_filled_once(tmp_path: Path) -> None:
+def test_the_second_timing_job_is_the_first_in_its_own_run_root() -> None:
+    """D42 (ii): the fixed path's timing job runs the first's manifest in a fresh
+    run root under its own name, so it is filled, claimed and charged apart."""
+
+    first, second = _filled(TIMING), _filled(TIMING_2)
+    filler.check_timing_resources(second)
+    submitter.validate_manifest(second, verify_claim_files=False)
+    assert set(filler.TIMING_TEMPLATES) == {1, 2} and filler.TIMING_TEMPLATES[1] == TIMING.name
+    assert len(filler.TIMING_TEMPLATES) == lanes.TIMING_JOBS
+    assert second["name"] == "q3-dense-headroom-v2-timing-2-4b" != first["name"]
+    assert second["run_root"].endswith(f"/{dv2.EXPERIMENT_ID}/timing-2-qwen3.5-4b-base")
+    assert second["run_root"] != first["run_root"]
+    assert {k: v for k, v in second.items() if k not in ("name", "run_root")} == {
+        k: v for k, v in first.items() if k not in ("name", "run_root")}
+    text = TIMING_2.read_text(encoding="utf-8")
+    assert not IP.search(text)
+    assert sorted(set(re.findall(r"FILL-[a-z0-9-]+", text))) == sorted(filler.TIMING_VALUES)
+    assert f"{filler.TEMPLATE_PREFIX}/{TIMING_2.name}" in filler.BOUND_PATHS
+
+
+@pytest.mark.parametrize("job", [1, 2])
+def test_each_timing_job_is_filled_once(tmp_path: Path, job: int) -> None:
     image = tmp_path / "receipt.json"
     image.write_text(json.dumps({"image_id": FAKE["FILL-image-id"],
                                  "git_sha": FAKE["FILL-image-git-sha"],
                                  "source_tar_sha256": FAKE["FILL-image-source-tar-sha256"]}))
     run_root = tmp_path / "timing-root"
-    target = filler.fill_timing(image, tmp_path / "out", run_root=run_root)
+    target = filler.fill_timing(image, tmp_path / "out", run_root=run_root, job=job)
+    assert target.name == filler.TIMING_TEMPLATES[job]
     assert (run_root / "fill-claims" / "after-0.json").is_file()
     assert not re.findall(r"FILL-[a-z0-9-]+", target.read_text())
     with pytest.raises(filler.FillError, match="allows one"):
-        filler.fill_timing(image, tmp_path / "other", run_root=run_root)
+        filler.fill_timing(image, tmp_path / "other", run_root=run_root, job=job)
+    with pytest.raises(filler.FillError, match="no development timing job"):
+        filler.fill_timing(image, tmp_path / "third", run_root=tmp_path / "r3", job=3)
 
 
 def test_limits_follow_d36_and_fit_the_cap() -> None:

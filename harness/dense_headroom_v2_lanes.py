@@ -20,7 +20,7 @@ window only if the fixed path averages at most about 2.1 s per unit
 (``large_lane_break_even_unit_s``); above that it ends INCOMPLETE. Every job
 of a lane (its first job, a re-run of a void job and its one continuation) is
 charged against the lane's minutes, as in v1. The v2 cap is 1.5 GPU-h in
-total, the timing job included.
+total, both development timing jobs included (D36, D42).
 """
 
 from __future__ import annotations
@@ -98,11 +98,13 @@ def large_lane_break_even_unit_s() -> float:
     useful_s = (LARGE_LANE_MINUTES - dhd.USR1_LEAD_MINUTES) * 60.0
     return (useful_s - basis["start_up_s"] - basis["statistics_bound_s"]) / basis["units"]
 
-# The development timing job (D36): one job, 1 GPU, at most 0.1 GPU-h, on the
-# 4B lane's model, container profile and inputs.
+# The development timing jobs: D36's (Slurm 766, the path before the fix) and
+# D42's (the fixed path), each 1 GPU, at most 0.1 GPU-h, on the 4B lane's model,
+# container profile and inputs, each in its own run root.
 TIMING_LANE = "qwen3.5-4b-base"
 TIMING_MINUTES = 6
 TIMING_CAP_GPU_HOURS = 0.1
+TIMING_JOBS = 2
 
 
 def lane_of(lane_id: str) -> dhd.Lane:
@@ -113,7 +115,10 @@ def lane_of(lane_id: str) -> dhd.Lane:
 
 
 def registered_caps_total() -> float:
-    return round(sum(lane.cap_gpu_hours for lane in LANES.values()) + TIMING_CAP_GPU_HOURS, 6)
+    """The lanes' caps plus both timing jobs' (D22's counting rule; D36's 1.5 holds them all)."""
+
+    return round(sum(lane.cap_gpu_hours for lane in LANES.values())
+                 + TIMING_JOBS * TIMING_CAP_GPU_HOURS, 6)
 
 
 __all__ = [
@@ -125,6 +130,7 @@ __all__ = [
     "SMALL_LANE_MINUTES",
     "SMALL_LANE_V1_JOB",
     "TIMING_CAP_GPU_HOURS",
+    "TIMING_JOBS",
     "TIMING_LANE",
     "TIMING_MINUTES",
     "TOTAL_CAP_GPU_HOURS",

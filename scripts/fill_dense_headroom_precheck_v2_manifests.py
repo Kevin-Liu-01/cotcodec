@@ -2,8 +2,8 @@
 """Fill q3-dense-headroom-precheck-v2's manifests from measured artifacts only.
 
 Templates: ``experiments/manifests/q3-dense-headroom-precheck-v2/*.yaml``: the
-two lanes (tabled in the frozen preregistration) and the development timing
-job (D36; filled before the freeze). Their ``FILL-*`` values are the image's
+two lanes (tabled in the frozen preregistration) and the two development
+timing jobs (D36 and D42 (ii); filled before the freeze). Their ``FILL-*`` values are the image's
 ID, git SHA and source-tar SHA-256 (from its build receipt) and, for a lane,
 the frozen preregistration's SHA-256 (which must equal its ledger row).
 
@@ -16,16 +16,18 @@ minutes from its run root; every job, the first included, claims its slot
 exclusively; a continuation follows a confirmed signal checkpoint, at most
 once per lane. The lanes' minutes and caps are v2's
 (``harness/dense_headroom_v2_lanes.py``), and the caps plus the timing job's
-sum to at most 1.5 GPU-h (D36).
+sum to at most 1.5 GPU-h (D36; both timing jobs included, D42).
 
 The Qwen3.5-4B-Base lane is filled only with ``--small-lane-receipt``: the
 Qwen3-0.6B-Base lane's completed receipt of this registration, bound to its
 Slurm job, whose K1 smoke-452 reproduction is REPRODUCED and which reproduces
 v1's job-727 receipt statistics (the registered validity gate).
 
-``--timing`` fills the development timing job instead: before the freeze, no
-preregistration, the timing template with its three image values, one claim
-(slot 0 of the timing run root) so that it is submitted once.
+``--timing [N]`` fills development timing job N instead (1, the default: D36's,
+Slurm 766; 2: D42's, which times the fixed 4B path): before the freeze, no
+preregistration, that job's template with its three image values, one claim
+(slot 0 of that job's own run root) so that it is submitted once and
+accounted apart from the other.
 
 Exit codes: 0 filled, 2 an input is missing or inconsistent.
 """
@@ -57,11 +59,14 @@ TEMPLATE_DIR = PROJECT_ROOT / "experiments" / "manifests" / "q3-dense-headroom-p
 TEMPLATE_PREFIX = "experiments/manifests/q3-dense-headroom-precheck-v2"
 TEMPLATES = {"qwen3-0.6b-base": "q3-dense-headroom-v2-0p6b.yaml",
              "qwen3.5-4b-base": "q3-dense-headroom-v2-4b.yaml"}
-TIMING_TEMPLATE = "q3-dense-headroom-v2-timing-4b.yaml"
+TIMING_TEMPLATE = "q3-dense-headroom-v2-timing-4b.yaml"  # D36's timing job (Slurm 766)
+# Development timing job number -> template; each template has its own run root (D42 (ii)).
+TIMING_TEMPLATES = {1: TIMING_TEMPLATE, 2: "q3-dense-headroom-v2-timing-2-4b.yaml"}
 SELF_PATH = "scripts/fill_dense_headroom_precheck_v2_manifests.py"
 BOUND_PATHS = (SELF_PATH, "scripts/fill_dense_headroom_precheck_manifests.py",
                "scripts/preregister.py",
-               *(f"{TEMPLATE_PREFIX}/{name}" for name in (*TEMPLATES.values(), TIMING_TEMPLATE)))
+               *(f"{TEMPLATE_PREFIX}/{name}"
+                 for name in (*TEMPLATES.values(), *TIMING_TEMPLATES.values())))
 GATED_LANE, GATING_LANE = "qwen3.5-4b-base", "qwen3-0.6b-base"
 TIMING_VALUES = ("FILL-image-id", "FILL-image-git-sha", "FILL-image-source-tar-sha256")
 
@@ -177,12 +182,14 @@ def check_timing_resources(manifest: dict[str, Any]) -> None:
 
 
 def fill_timing(image_receipt: Path, output: Path, *, template_dir: Path = TEMPLATE_DIR,
-                run_root: Path | None = None) -> Path:
-    """The development timing job's manifest (before the freeze)."""
+                run_root: Path | None = None, job: int = 1) -> Path:
+    """Development timing job ``job``'s manifest (before the freeze)."""
 
+    if job not in TIMING_TEMPLATES:
+        raise FillError(f"no development timing job {job!r}; jobs {sorted(TIMING_TEMPLATES)}")
     check_budget()
     values = _image_values(image_receipt)
-    template = template_dir / TIMING_TEMPLATE
+    template = template_dir / TIMING_TEMPLATES[job]
     raw = template.read_text(encoding="utf-8")
     if sorted(set(re.findall(r"FILL-[a-z0-9-]+", raw))) != sorted(TIMING_VALUES):
         raise FillError("the timing template must hold exactly the three image values")
@@ -192,7 +199,8 @@ def fill_timing(image_receipt: Path, output: Path, *, template_dir: Path = TEMPL
     check_timing_resources(manifest)
     run_root = run_root or Path(manifest["run_root"])
     if v1f.lane_jobs(run_root) or v1f.read_claims(run_root):
-        raise FillError(f"{run_root} already holds the timing job; D36 allows one")
+        raise FillError(f"{run_root} already holds timing job {job}; each timing run root "
+                        f"allows one job (D36, D42)")
     plan = v1f.NextJob("first", lanes.TIMING_MINUTES, 0, None, 0)
     target = _write(output, template.name, text)
     v1f.claim_slot(run_root, lanes.LANES[lanes.TIMING_LANE], plan, text, values["FILL-image-id"])
@@ -247,8 +255,10 @@ def fill(lane_id: str, image_receipt: Path, repo_root: Path, output: Path, *,
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0], allow_abbrev=False)
     parser.add_argument("--lane", choices=sorted(lanes.LANES), default=None)
-    parser.add_argument("--timing", action="store_true",
-                        help="fill the development timing job (before the freeze)")
+    parser.add_argument("--timing", type=int, nargs="?", const=1, default=None,
+                        choices=sorted(TIMING_TEMPLATES),
+                        help="fill development timing job N (1: D36's, 2: D42's; before the "
+                             "freeze)")
     parser.add_argument("--image-receipt", type=Path, required=True)
     parser.add_argument("--repo-root", type=Path, default=PROJECT_ROOT)
     parser.add_argument("--output", type=Path, required=True)
@@ -258,12 +268,13 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--small-lane-receipt", type=Path, default=None,
                         help=f"for {GATED_LANE}: the {GATING_LANE} lane's receipt.json")
     args = parser.parse_args(argv)
-    if args.timing == (args.lane is not None):
+    if (args.timing is not None) == (args.lane is not None):
         print("FAIL: give exactly one of --lane and --timing", file=sys.stderr)
         return 2
     try:
-        if args.timing:
-            target = fill_timing(args.image_receipt, args.output, run_root=args.run_root)
+        if args.timing is not None:
+            target = fill_timing(args.image_receipt, args.output, run_root=args.run_root,
+                                 job=args.timing)
         else:
             target = fill(args.lane, args.image_receipt, args.repo_root, args.output,
                           continuation_of=args.continuation_of, run_root=args.run_root,
