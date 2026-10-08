@@ -381,3 +381,34 @@ section 9. (v) The rater GPU cap is re-measured with thinking on and
 registered so the 807-item maximum fits; the experiment's total stays under
 8 GPU-h, or it goes to the gauntlet (D24). Adjudication of the pool stays
 Kevin's.
+
+**D35. Checker-mutation study: D34's exit fired; freeze it as a descriptive
+protocol.** Development kappa after the thinking-on rerate is 0.066 under
+the registered ingest and 0.575 with the workflow harness's relay turn
+excepted (a sensitivity: after a session restart the harness put a
+byte-identical relay of the session request before every resumed rater's
+task, and the registered first-prompt rule voided those 110 otherwise clean
+transcripts). Both are below 0.6, so D34 (i) applies: no other rater is
+tried, and P2-P5 leave the confirmatory headline; the registered 0.066 stays
+as recorded. The fifth review (score 64; scores 55, 62, 56, 57, 64) judged
+the study still worth running as a pre-specified descriptive protocol,
+because the catalog, blind labels, sampler and analysis can be locked before
+any confirm mutant exists. Decided: (i) the analysis code encodes the exit
+(P2-P5 always excluded from the confirmatory headline, K6's adequacy claim
+retired, K6b and K7 descriptive, K4 reported but no longer a stop); (ii) the
+descriptive outputs are pre-specified: P1 (replication only, as before), the
+checker false-negative candidates (evaluable should-pass mutants, equivalence
+outside probe cells and alternative solutions, that the checker fails) and
+false-positive candidates (evaluable should-fail mutants it passes), each
+listed with its audit decision, with per-family and per-operator counts and
+task-equal shares with intervals, and S1-S7; (iii) the confirm audit covers
+every candidate event, every P1 flip, the audit gates and the shams (a census
+of what is reported, not a random sample of all mutants), within the
+registered 3.0 GPU-h rater cap, and Kevin adjudicates its pool; (iv) the
+transcript audit checks every user turn: exactly one equals the rendered
+template, and the only other turn allowed is the harness relay frame, which
+must precede the task turn, be byte-identical across the run, name no item
+and be hashed into the receipt; every transcript of an item, interrupted ones
+included, is ingested and audited, and at most one may answer; (v) packets
+put the difference section before the file listings, a label-blind format
+change disclosed with the dev results it postdates.
