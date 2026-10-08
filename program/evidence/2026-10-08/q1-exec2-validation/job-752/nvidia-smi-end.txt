@@ -1,0 +1,4 @@
+index, name, memory.used [MiB], memory.total [MiB], utilization.gpu [%]
+0, NVIDIA H100 80GB HBM3, 0 MiB, 81559 MiB, 0 %
+
+pid, used_gpu_memory [MiB]

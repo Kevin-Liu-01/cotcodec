@@ -2187,6 +2187,120 @@ skipped) and `ruff check .`; every Q1 test file in a CPU-only, network-less
 container of image `cotcodec-q1-gates:8e9d2574` (402 passed). Findings and
 dispositions: `fixpass/review-fix-pass.json`.
 
+### 18.10 Validation job under `q1-stage0-exec/2` (decision D37 iii; branch `stage0/q1-exec2-validation`)
+
+D37 (iii): one validation job under `q1-stage0-exec/2`, on the re-pilot's
+non-evaluation kernels plus the three KernelBench adversarial controls under the
+store, within the 0.17 GPU-h left of D31's 0.5, measures the policy's safety and
+cost. This subsection registers the job's rule and analysis before the job runs
+(results follow in the same subsection once it has run). It changes no gate,
+tolerance, family, tier, sample, seed, verdict rule or version-card entry: the job
+runs section 2.1's gate, audit and driver code (`b5f4fa74...`, `b10a62f7...`,
+`aa2f365d...`); the rule and its driver sit outside the card and their hashes are
+recorded in the job's `plan.json`.
+
+1. **Rule `q1-exec2-validation/1`** (`harness/q1/exec2_validation.py`;
+   driver `scripts/run_q1_exec2_validation.py`; template
+   `experiments/manifests/q1-core/q1-exec2-validation.template.yaml`). Kernels: the
+   re-pilot's 24 (job 713's study artifact `391d60f5...`, unchanged) and the three
+   adversarial controls, written in the job from the image's vendored files and
+   checked against `SOURCES.json`. Re-pilot kernels get all 15 scoring gates at
+   replicate 42 through the store (gate (a) inline); the adversarial controls get the
+   store's consumer gates (c, A1, A2, A3, A5), which never ran on them, each with an
+   inline twin (`.inline`); their other gates read no reference, so the store cannot
+   change them, and their registered expectations were checked in job 518. Execution
+   is a Stage 0 job's: 12 units on one GPU from `trim.item_units`, the free-memory
+   guard at `memory.budget_bytes()` (68 GB), the contention-safe health check, the
+   store with its janitor and caps, size-scaled watchdog limits.
+2. **Order.** Adversarial items first, then the re-pilot kernels in rounds
+   (substrates, identity controls, mutants), each round in ascending model cost of a
+   kernel replicate under `q1-stage0-exec/2` (L2/95, L2/77, L1/10, L1/18, L2/59,
+   L2/46, L2/100, L2/87; the D31 card's size model with `concurrency_multiplier`).
+   The cap cannot hold every item (433 items; the model alone puts the 24 re-pilot
+   kernels near 0.2 GPU-h), so the time box cuts the problems the model expects to be
+   most expensive, and every problem reached has its substrate first.
+3. **Finding before the job (CPU): the adversarial controls share an extension
+   name.** All three vendored kernels call `load_inline(name="fast_matmul")` with
+   different sources, and every worker of a job shares the container's torch
+   extension directory. Torch writes the sources into that directory before its
+   build lock and imports the library after it (torch 2.11 in the image), so two of
+   them in flight at once can load each other's library. The rule chains them (each
+   adversarial kernel's items require every item of the previous one). Stage 0's
+   plan schedules the three consecutively at one unit each (P1, P3), so a Stage 0 job
+   needs the same chaining or a per-item extension directory before its adversarial
+   rows can be trusted; that is an owner's change to execution, not made here.
+4. **Time box.** Ten minutes on one GPU (0.1667 GPU-h). Items are not fitted to their
+   watchdog limits (every limit exceeds the box); slots stop taking items 330 s after
+   the driver starts and anything still running at 390 s is killed and recorded in
+   `cut.jsonl` (censored cost), so the job ends before the lane's SIGUSR1.
+5. **Analysis** (`program/evidence/2026-10-08/q1-exec2-validation/analyze_exec2_validation.py`,
+   committed with the rule). Safety: resource failures per item attempt (shared or
+   alone), contention retries, crashes and timeouts, health-check events and
+   outcomes, retired slots and devices, memory-guard waits, A5 `na` checks with
+   their reasons, items started, final, never final, cut and never started, the
+   store's lookups, measured peak memory against each estimate and the largest
+   concurrent sum. Cost: each final item's GPU-seconds against the fix pass's
+   `q1-stage0-exec/2` model (the size model, `concurrency_multiplier` at the item's
+   units, the pre-specified linear store ratio where it read the store, reference
+   items by the store model's fits), per gate, regime, problem and overall, and
+   paired with the same store items in job 713 (`q1-stage0-exec/1`). Adversarial
+   controls: store against inline rows per consumer gate. Projection through P3 and
+   P7, central and high, with this job's GPU-hours in the fixed part: the two model
+   rows of 18.9 (A without the store, B with it), then **C (primary)**, B's scoring
+   scaled by R = measured over B-predicted GPU-seconds of every final re-pilot item
+   (scoring and reference items; adversarial controls reported apart), with R's
+   2.5% and 97.5% points from a bootstrap over the problems reached; D, per-gate
+   scales; E, A scaled by the store-independent gates' ratio. C-E scale a model by a
+   partial sample the order selected, and say so.
+
+**Results (job 752; evidence `program/evidence/2026-10-08/q1-exec2-validation/`).**
+
+6. **Run.** Image `cotcodec-q1-gates:23a87683` from CPU-only build 746 (fresh clone of
+   `23a8768`); a CPU-only check in that image reproduced the plan (433 items,
+   `items_sha256 633b2753...`, card hashes equal to section 2.1). Slurm 752: dry-run,
+   test-only, one submission; `COMPLETED 0:0`, 393 s on one H100, **0.1092 GPU-h**
+   (D31's 0.5 now holds 0.439). 122 items started and all became final, one reference
+   item was cut at the hard deadline and 310 never started. Reached: the adversarial
+   items, the substrates of L2/95, L2/77 and L1/10 (15 gates), L1/18's substrate (10
+   gates) and 10 non-consumer gates plus two reference items of L2/59's substrate. Not
+   reached: L2/87, L2/100, L2/46, L2/59's consumers, every identity control and mutant.
+7. **Safety where it ran.** No GPU resource failure (0 item attempts, shared or alone),
+   no contention retry, no failed health check, no slot or device retired, no memory-
+   guard wait, no A5 `na`; the largest concurrent sum of measured peaks was 24.2 GB
+   against the 68 GB guard budget; measured peaks reached at most 1.12 times their
+   estimate (gate c on L1/1 and L1/10, still inside one unit). 64 of 65 re-pilot items
+   that also ran in job 713 have identical verdict rows; the exception is L2/59's
+   substrate on `A4_poison`, a reject in 713 (`CUDA error: invalid argument` under the
+   poison allocator at 12 per GPU, text the resource-failure list does not contain)
+   and an accept here. A5 gives `error` on `non_default_stream` in both arms (PRC-01
+   and PRC-02 cannot copy a candidate holding a CUDA extension module). The policy is
+   validated at 12 and 2 items per GPU only; the 4-11-unit items that ran out of
+   memory in 713 were not reached.
+8. **Adversarial controls under the store.** All 15 consumer-gate aggregates agree with
+   the inline twins: `result_reuse` and `zero_out` are rejected by c, A1, A2, A3 and A5;
+   `non_default_stream` is accepted by c and A1-A3 and gets A5 `error`. Rows differ only
+   for `result_reuse` (an uninitialised `torch.empty` output, the allocator-history
+   exception of 18.8 item 4): inline, gate (c) accepted 7 of 16 configurations with
+   error 0.0 because the freed reference output was reused; through the store all 16
+   reject.
+9. **Cost and projection.** Over the 87 final re-pilot items the measured GPU-seconds
+   are R = 2.425 times the fix pass's `q1-stage0-exec/2` model with the pre-specified
+   store ratio (bootstrap over the five problems reached: 1.14-4.84): 1.96 on the
+   one-unit items of four light problems, which ran while the adversarial controls
+   compiled their CUDA extensions on the same CPUs, and 6.35 on L2/59's 6-unit items
+   (2 per GPU, run after that phase; its 4.3 GB of parameters set the process cost the
+   input-sized model misses). Projection with this job in the fixed part (central /
+   high, GPU-h): model rows A (no store) 10.57 / 12.41 through P3 and 15.16 / 18.35
+   through P7, B (store) 10.77 / 12.69 and 15.67 / 19.06; **primary C, B scaled by R:
+   19.99 / 24.66 through P3 and 31.89 / 40.10 through P7** (11.68 / 13.87 and
+   17.27 / 21.13 at R's lower bootstrap point); D (per-gate scales) 18.14 / 22.26 and
+   27.04 / 33.81; E (store-independent ratio 3.475) 26.11 / 32.51 and 42.05 / 53.13;
+   post hoc regime splits F and G 34-35 central through P3. No row is within 8 GPU-h
+   through P3. The exec/2 projection of 18.9 is biased low; **D31 verdict unchanged:
+   Stage 0 is not admitted**, and any further budget path needs a cost model that
+   prices per-process cost by parameter and output memory, and a measurement that
+   reaches the 4-11-unit problems.
+
 ## 19. References (accessed 2026-10-06 and 2026-10-07)
 
 - Measuring the Checker, arXiv 2609.22220 (16.9% missed, family miss rates):

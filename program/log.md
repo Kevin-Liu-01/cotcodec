@@ -1089,3 +1089,50 @@ Append-only. Newest entries at the bottom.
   records, the verdict JSON, the campaign summary, the SHA-256 of the 49
   raw files left on the host, and the operator scripts). 0.17 VM-hours, no
   GPU. Nothing pushed or merged.
+
+## 2026-10-08 — Q1 D37 (iii): the validation job under `q1-stage0-exec/2` (branch `stage0/q1-exec2-validation`, not merged, not pushed)
+
+- Rule `q1-exec2-validation/1` registered before the job (preregistration 18.10,
+  commit `23a8768`; `harness/q1/exec2_validation.py`, driver
+  `scripts/run_q1_exec2_validation.py`, pre-specified analysis in the evidence
+  folder): the re-pilot's 24 S1-cal kernels (job 713's artifact, unchanged), all 15
+  gates through the store (gate (a) inline), and the three KernelBench adversarial
+  controls on the store's consumer gates with inline twins; adversarial first, then
+  the re-pilot kernels in rounds by ascending exec/2 model cost; 10-minute box, items
+  started until 330 s, killed at 390 s. Section 2.1 unchanged (the job ran the card's
+  gate, audit and driver code).
+- Finding before the job: the three adversarial kernels call
+  `load_inline(name="fast_matmul")` with different sources and share the container's
+  extension directory, so concurrent items can load each other's library; the rule
+  chains them. Stage 0's plan runs them concurrently and needs the same fix (owner's
+  call).
+- Image `cotcodec-q1-gates:23a87683` from CPU-only build 746 (fresh clone); CPU check
+  in the image reproduced the plan (433 items, `633b2753...`). Recorded `squeue` and
+  `nvidia-smi` (idle node), dry-run, test-only, one submission: Slurm 752
+  `COMPLETED 0:0`, 393 s, **0.1092 GPU-h** physical (cap 0.1667; D31's 0.5 now 0.439).
+- Safety where it ran (122 items, all final; 1 cut at the hard deadline; 310 never
+  started): no GPU resource failure, contention retry, failed health check, slot or
+  device retirement, memory-guard wait or A5 `na`; largest concurrent measured peak
+  24.2 GB; measured peaks at most 1.12x their estimate (gate c on L1/1 and L1/10).
+  Covered 12 and 2 items per GPU only: L2/87, L2/100, L2/46, L2/59's consumers,
+  identity controls and mutants not reached. 64 of 65 items also in job 713 kept
+  their verdict rows; L2/59 `A4_poison` went from a 713 reject (`CUDA error: invalid
+  argument` under the poison allocator, not in the resource-failure list) to accept.
+- Adversarial controls: all 15 consumer-gate aggregates equal through the store and
+  inline (`result_reuse`, `zero_out` rejected; `non_default_stream` accepted by c,
+  A1-A3, A5 `error` in both arms because A5 cannot copy a candidate holding an
+  extension module). Rows differ only for `result_reuse` (allocator history): inline,
+  gate c accepted 7 of 16 configurations by reusing the freed reference output; the
+  store arm rejected all 16.
+- Cost: measured GPU-seconds are 2.425x the exec/2 model over the 87 re-pilot items
+  (1.96 on one-unit items run during the adversarial CUDA compiles; 6.35 on L2/59 at 2
+  per GPU, whose 4.3 GB of parameters the input-sized model misses). Projection with
+  this job in the fixed part, central / high: model 10.57 / 12.41 (no store) and
+  10.77 / 12.69 (store) through P3; **primary (store model x R) 19.99 / 24.66 through
+  P3, 31.89 / 40.10 through P7**; 11.68 central through P3 at R's bootstrap lower
+  point. D31 verdict unchanged: Stage 0 not admitted.
+- GPU ledger row added (Stage 0 spent 1.3381); two tests that pin the ledger value
+  updated. The analysis script's adversarial grouping was fixed after the job (it
+  grouped by row gate and missed gate c's `c1`-`c3` rows); post hoc regime split and
+  exposure entry written after the data. Evidence:
+  `program/evidence/2026-10-08/q1-exec2-validation/`.

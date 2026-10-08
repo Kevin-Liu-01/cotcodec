@@ -1,0 +1,405 @@
+{
+ "consequence": "No evaluation unit was scored. The re-pilot kernels scored here are S1-cal substrates already exposed by job 713 (no identity control or mutant was reached). The adversarial controls run on L1/1, whose problem has an S2 evaluation substrate; no S2 kernel was loaded, and the L1/1 reference items run only the KernelBench reference. The three controls were already listed in pilot_exposed.json (job 518).",
+ "job": 752,
+ "journal_sha256": "c29c49d65c0807c46969fb1f5fa0cabdf7e8329e9272bd82b29bab36ca84d249",
+ "kernels": [
+  {
+   "gates_scored": [
+    "A1",
+    "A2",
+    "A3",
+    "A4",
+    "A4_poison",
+    "A4_sanitizer",
+    "A5",
+    "a",
+    "a_1e-3",
+    "a_head_1e-2",
+    "a_head_1e-4",
+    "a_static",
+    "b1",
+    "b2",
+    "c"
+   ],
+   "kernel_id": "s1-inductor-L1-10_3D_tensor_matrix_multiplication",
+   "pilot_exposed_control": false,
+   "problem_has_s2_substrate": false,
+   "problem_id": "L1/10_3D_tensor_matrix_multiplication",
+   "role": "repilot",
+   "s1_half": "calibration",
+   "verdict_rows": {
+    "accept": 65,
+    "refuse": 3,
+    "reject": 1
+   }
+  },
+  {
+   "gates_scored": [],
+   "kernel_id": "ctl-identity-L1-10_3D_tensor_matrix_multiplication",
+   "pilot_exposed_control": false,
+   "problem_has_s2_substrate": false,
+   "problem_id": "L1/10_3D_tensor_matrix_multiplication",
+   "role": "repilot",
+   "s1_half": "calibration",
+   "verdict_rows": {}
+  },
+  {
+   "gates_scored": [],
+   "kernel_id": "s1-inductor-L1-10_3D_tensor_matrix_multiplication.acc-minus.L114C8",
+   "pilot_exposed_control": false,
+   "problem_has_s2_substrate": false,
+   "problem_id": "L1/10_3D_tensor_matrix_multiplication",
+   "role": "repilot",
+   "s1_half": "calibration",
+   "verdict_rows": {}
+  },
+  {
+   "gates_scored": [
+    "A4",
+    "A4_poison",
+    "A4_sanitizer",
+    "a",
+    "a_1e-3",
+    "a_head_1e-2",
+    "a_head_1e-4",
+    "a_static",
+    "b1",
+    "b2"
+   ],
+   "kernel_id": "s1-inductor-L1-18_Matmul_with_transposed_both",
+   "pilot_exposed_control": false,
+   "problem_has_s2_substrate": false,
+   "problem_id": "L1/18_Matmul_with_transposed_both",
+   "role": "repilot",
+   "s1_half": "calibration",
+   "verdict_rows": {
+    "accept": 10
+   }
+  },
+  {
+   "gates_scored": [],
+   "kernel_id": "ctl-identity-L1-18_Matmul_with_transposed_both",
+   "pilot_exposed_control": false,
+   "problem_has_s2_substrate": false,
+   "problem_id": "L1/18_Matmul_with_transposed_both",
+   "role": "repilot",
+   "s1_half": "calibration",
+   "verdict_rows": {}
+  },
+  {
+   "gates_scored": [],
+   "kernel_id": "s1-inductor-L1-18_Matmul_with_transposed_both.load-offset-off1.L109C20",
+   "pilot_exposed_control": false,
+   "problem_has_s2_substrate": false,
+   "problem_id": "L1/18_Matmul_with_transposed_both",
+   "role": "repilot",
+   "s1_half": "calibration",
+   "verdict_rows": {}
+  },
+  {
+   "gates_scored": [
+    "A4",
+    "A4_poison",
+    "A4_sanitizer",
+    "a",
+    "a_1e-3",
+    "a_head_1e-2",
+    "a_head_1e-4",
+    "a_static",
+    "b1",
+    "b2"
+   ],
+   "kernel_id": "s1-inductor-L2-59_Matmul_Swish_Scaling",
+   "pilot_exposed_control": false,
+   "problem_has_s2_substrate": false,
+   "problem_id": "L2/59_Matmul_Swish_Scaling",
+   "role": "repilot",
+   "s1_half": "calibration",
+   "verdict_rows": {
+    "accept": 10
+   }
+  },
+  {
+   "gates_scored": [],
+   "kernel_id": "ctl-identity-L2-59_Matmul_Swish_Scaling",
+   "pilot_exposed_control": false,
+   "problem_has_s2_substrate": false,
+   "problem_id": "L2/59_Matmul_Swish_Scaling",
+   "role": "repilot",
+   "s1_half": "calibration",
+   "verdict_rows": {}
+  },
+  {
+   "gates_scored": [],
+   "kernel_id": "s1-inductor-L2-59_Matmul_Swish_Scaling.mask-bound-minus1.L123C20",
+   "pilot_exposed_control": false,
+   "problem_has_s2_substrate": false,
+   "problem_id": "L2/59_Matmul_Swish_Scaling",
+   "role": "repilot",
+   "s1_half": "calibration",
+   "verdict_rows": {}
+  },
+  {
+   "gates_scored": [
+    "A1",
+    "A2",
+    "A3",
+    "A4",
+    "A4_poison",
+    "A4_sanitizer",
+    "A5",
+    "a",
+    "a_1e-3",
+    "a_head_1e-2",
+    "a_head_1e-4",
+    "a_static",
+    "b1",
+    "b2",
+    "c"
+   ],
+   "kernel_id": "s1-inductor-L2-95_Matmul_Add_Swish_Tanh_GELU_Hardtanh",
+   "pilot_exposed_control": false,
+   "problem_has_s2_substrate": false,
+   "problem_id": "L2/95_Matmul_Add_Swish_Tanh_GELU_Hardtanh",
+   "role": "repilot",
+   "s1_half": "calibration",
+   "verdict_rows": {
+    "accept": 43,
+    "error": 7,
+    "refuse": 3,
+    "reject": 1
+   }
+  },
+  {
+   "gates_scored": [],
+   "kernel_id": "ctl-identity-L2-95_Matmul_Add_Swish_Tanh_GELU_Hardtanh",
+   "pilot_exposed_control": false,
+   "problem_has_s2_substrate": false,
+   "problem_id": "L2/95_Matmul_Add_Swish_Tanh_GELU_Hardtanh",
+   "role": "repilot",
+   "s1_half": "calibration",
+   "verdict_rows": {}
+  },
+  {
+   "gates_scored": [],
+   "kernel_id": "s1-inductor-L2-95_Matmul_Add_Swish_Tanh_GELU_Hardtanh.plus2minus.L78C14",
+   "pilot_exposed_control": false,
+   "problem_has_s2_substrate": false,
+   "problem_id": "L2/95_Matmul_Add_Swish_Tanh_GELU_Hardtanh",
+   "role": "repilot",
+   "s1_half": "calibration",
+   "verdict_rows": {}
+  },
+  {
+   "gates_scored": [
+    "A1",
+    "A2",
+    "A3",
+    "A4",
+    "A4_poison",
+    "A4_sanitizer",
+    "A5",
+    "a",
+    "a_1e-3",
+    "a_head_1e-2",
+    "a_head_1e-4",
+    "a_static",
+    "b1",
+    "b2",
+    "c"
+   ],
+   "kernel_id": "s1-inductor-L2-77_ConvTranspose3d_Scale_BatchNorm_GlobalAvgPool",
+   "pilot_exposed_control": false,
+   "problem_has_s2_substrate": false,
+   "problem_id": "L2/77_ConvTranspose3d_Scale_BatchNorm_GlobalAvgPool",
+   "role": "repilot",
+   "s1_half": "calibration",
+   "verdict_rows": {
+    "accept": 41,
+    "error": 7,
+    "reject": 3
+   }
+  },
+  {
+   "gates_scored": [],
+   "kernel_id": "ctl-identity-L2-77_ConvTranspose3d_Scale_BatchNorm_GlobalAvgPool",
+   "pilot_exposed_control": false,
+   "problem_has_s2_substrate": false,
+   "problem_id": "L2/77_ConvTranspose3d_Scale_BatchNorm_GlobalAvgPool",
+   "role": "repilot",
+   "s1_half": "calibration",
+   "verdict_rows": {}
+  },
+  {
+   "gates_scored": [],
+   "kernel_id": "s1-inductor-L2-77_ConvTranspose3d_Scale_BatchNorm_GlobalAvgPool.const0to1.L87C37",
+   "pilot_exposed_control": false,
+   "problem_has_s2_substrate": false,
+   "problem_id": "L2/77_ConvTranspose3d_Scale_BatchNorm_GlobalAvgPool",
+   "role": "repilot",
+   "s1_half": "calibration",
+   "verdict_rows": {}
+  },
+  {
+   "gates_scored": [],
+   "kernel_id": "s1-inductor-L2-100_ConvTranspose3d_Clamp_Min_Divide",
+   "pilot_exposed_control": false,
+   "problem_has_s2_substrate": false,
+   "problem_id": "L2/100_ConvTranspose3d_Clamp_Min_Divide",
+   "role": "repilot",
+   "s1_half": "calibration",
+   "verdict_rows": {}
+  },
+  {
+   "gates_scored": [],
+   "kernel_id": "ctl-identity-L2-100_ConvTranspose3d_Clamp_Min_Divide",
+   "pilot_exposed_control": false,
+   "problem_has_s2_substrate": false,
+   "problem_id": "L2/100_ConvTranspose3d_Clamp_Min_Divide",
+   "role": "repilot",
+   "s1_half": "calibration",
+   "verdict_rows": {}
+  },
+  {
+   "gates_scored": [],
+   "kernel_id": "s1-inductor-L2-100_ConvTranspose3d_Clamp_Min_Divide.plus2minus.L67C13",
+   "pilot_exposed_control": false,
+   "problem_has_s2_substrate": false,
+   "problem_id": "L2/100_ConvTranspose3d_Clamp_Min_Divide",
+   "role": "repilot",
+   "s1_half": "calibration",
+   "verdict_rows": {}
+  },
+  {
+   "gates_scored": [],
+   "kernel_id": "s1-inductor-L2-87_Conv2d_Subtract_Subtract_Mish",
+   "pilot_exposed_control": false,
+   "problem_has_s2_substrate": false,
+   "problem_id": "L2/87_Conv2d_Subtract_Subtract_Mish",
+   "role": "repilot",
+   "s1_half": "calibration",
+   "verdict_rows": {}
+  },
+  {
+   "gates_scored": [],
+   "kernel_id": "ctl-identity-L2-87_Conv2d_Subtract_Subtract_Mish",
+   "pilot_exposed_control": false,
+   "problem_has_s2_substrate": false,
+   "problem_id": "L2/87_Conv2d_Subtract_Subtract_Mish",
+   "role": "repilot",
+   "s1_half": "calibration",
+   "verdict_rows": {}
+  },
+  {
+   "gates_scored": [],
+   "kernel_id": "s1-inductor-L2-87_Conv2d_Subtract_Subtract_Mish.mul2plus.L61C39",
+   "pilot_exposed_control": false,
+   "problem_has_s2_substrate": false,
+   "problem_id": "L2/87_Conv2d_Subtract_Subtract_Mish",
+   "role": "repilot",
+   "s1_half": "calibration",
+   "verdict_rows": {}
+  },
+  {
+   "gates_scored": [],
+   "kernel_id": "s1-inductor-L2-46_Conv2d_Subtract_Tanh_Subtract_AvgPool",
+   "pilot_exposed_control": false,
+   "problem_has_s2_substrate": false,
+   "problem_id": "L2/46_Conv2d_Subtract_Tanh_Subtract_AvgPool",
+   "role": "repilot",
+   "s1_half": "calibration",
+   "verdict_rows": {}
+  },
+  {
+   "gates_scored": [],
+   "kernel_id": "ctl-identity-L2-46_Conv2d_Subtract_Tanh_Subtract_AvgPool",
+   "pilot_exposed_control": false,
+   "problem_has_s2_substrate": false,
+   "problem_id": "L2/46_Conv2d_Subtract_Tanh_Subtract_AvgPool",
+   "role": "repilot",
+   "s1_half": "calibration",
+   "verdict_rows": {}
+  },
+  {
+   "gates_scored": [],
+   "kernel_id": "s1-inductor-L2-46_Conv2d_Subtract_Tanh_Subtract_AvgPool.lt2gt.L88C21",
+   "pilot_exposed_control": false,
+   "problem_has_s2_substrate": false,
+   "problem_id": "L2/46_Conv2d_Subtract_Tanh_Subtract_AvgPool",
+   "role": "repilot",
+   "s1_half": "calibration",
+   "verdict_rows": {}
+  },
+  {
+   "gates_scored": [
+    "A1",
+    "A2",
+    "A3",
+    "A5",
+    "c"
+   ],
+   "kernel_id": "ctl-kernelbench-result-reuse-L1-1",
+   "pilot_exposed_control": true,
+   "problem_has_s2_substrate": true,
+   "problem_id": "L1/1_Square_matrix_multiplication_",
+   "role": "adversarial",
+   "s1_half": "calibration",
+   "verdict_rows": {
+    "accept": 8,
+    "error": 2,
+    "reject": 78
+   }
+  },
+  {
+   "gates_scored": [
+    "A1",
+    "A2",
+    "A3",
+    "A5",
+    "c"
+   ],
+   "kernel_id": "ctl-kernelbench-zero-out-L1-1",
+   "pilot_exposed_control": true,
+   "problem_has_s2_substrate": true,
+   "problem_id": "L1/1_Square_matrix_multiplication_",
+   "role": "adversarial",
+   "s1_half": "calibration",
+   "verdict_rows": {
+    "accept": 2,
+    "error": 2,
+    "reject": 84
+   }
+  },
+  {
+   "gates_scored": [
+    "A1",
+    "A2",
+    "A3",
+    "A5",
+    "c"
+   ],
+   "kernel_id": "ctl-kernelbench-non-default-stream-L1-1",
+   "pilot_exposed_control": true,
+   "problem_has_s2_substrate": true,
+   "problem_id": "L1/1_Square_matrix_multiplication_",
+   "role": "adversarial",
+   "s1_half": "calibration",
+   "verdict_rows": {
+    "accept": 84,
+    "error": 4
+   }
+  }
+ ],
+ "replicate": 42,
+ "rule": "q1-exec2-validation/1",
+ "s1_split_sha256": "b773f218f174e3bb8ab4fcde4f4e6318d870ef020e6b86bce807362c5292a0b2",
+ "schema": "q1-exposure-ledger-entry/1",
+ "summary": {
+  "kernels_planned": 27,
+  "kernels_scored": 8,
+  "scored_adversarial_controls": 3,
+  "scored_repilot_with_s2_substrate": 0,
+  "scored_s1_calibration_repilot": 5,
+  "scored_s1_evaluation": 0
+ }
+}
