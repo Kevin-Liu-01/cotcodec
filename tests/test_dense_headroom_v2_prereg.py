@@ -184,12 +184,16 @@ def test_status_and_decisions() -> None:
     d44 = _log_entry(44)
     assert d44 and dv2.EXPERIMENT_ID in d44 and "32 minutes" in d44 and "largest" in d44
     assert lanes.LARGE_LANE_MINUTES == 32
-    for name, paragraph in (("status", status), ("lead-in", lead_in)):
+    # The lead-in's own first sentence cites D44 for decision 12's caps, so the
+    # acceptance check reads only its part about decisions 16-21.
+    lead_in_16_21 = lead_in[lead_in.index("Decisions 16-21"):]
+    for name, paragraph in (("status", status), ("lead-in", lead_in_16_21)):
         assert 42 in _accepting_decisions(paragraph), f"the {name} does not name D42"
         assert 44 in _naming_decisions(paragraph), f"the {name} does not name D44"
-    if _frozen():
+    if _frozen() or status.startswith("Status: frozen"):
         # Freeze procedure, step 1: the status paragraph and the lead-in of the
-        # design decisions were rewritten to the frozen wording, naming D42 and D44.
+        # design decisions were rewritten to the frozen wording, naming D42 and D44
+        # (checked from the rewrite on, so the commit before the ledger row passes).
         assert status.startswith("Status: frozen")
         flat = _flat(TEXT)
         for draft in ("DRAFT", "wait for the program owner", "waits for the program owner",
