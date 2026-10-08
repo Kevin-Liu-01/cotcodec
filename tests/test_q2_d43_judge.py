@@ -390,18 +390,35 @@ def test_the_fault_is_admitted_for_l0_fixed_development_only(tmp_path):
 
 
 D43_DEV = _trials("trials-d43-dev.json")
+D43_SOURCES = json.loads((RECORDS / "trials-d43-dev.json").read_text(encoding="utf-8"))["sources"]
+# Decision D45: the D43 development set repeated at c74eae0 (jobs 845-854; 845-848's chords).
+_D45 = json.loads(
+    (ROOT / "program/evidence/2026-10-08/q2-action-path-v2-d45/records/trials-d45-dev.json")
+    .read_text(encoding="utf-8")
+)  # fmt: skip
+D45_DEV, D45_SOURCES = _D45["trials"], _D45["sources"]
 
 
 def _dev(job: str, cell: str | None = None) -> list[dict]:
-    return [r for r in D43_DEV if r["job"] == job and (cell is None or r["trial"]["cell"] == cell)]
+    return [r for r in D43_DEV + D45_DEV
+            if r["job"] == job and (cell is None or r["trial"]["cell"] == cell)]  # fmt: skip
 
 
-def test_d43_development_runs_judge_as_the_runner_did_at_the_development_commit():
-    """Jobs 830-833 ran at 126ff8b, D43's judge: D45's judge gives every chord trial the
-    verdict, the events read without state and the C4 value the runner recorded (decision
-    D45 changes none of the 280 development events read without their state)."""
-    assert len(D43_DEV) == 300
-    for row in D43_DEV:
+@pytest.mark.parametrize(
+    ("rows", "sha"),
+    [(D43_DEV, "126ff8bf9c407e9bdf419f4051c0b36f40392dd3"),
+     (D45_DEV, "c74eae0aabb09fc5bc25e168758b529ede2a1410")],
+    ids=["d43-830-833", "d45-845-848"],
+)  # fmt: skip
+def test_development_runs_judge_as_the_runner_did_at_the_development_commit(rows, sha):
+    """Jobs 830-833 ran at 126ff8b, D43's judge, and jobs 845-848 at c74eae0, D45's: this
+    judge gives every chord trial of both the verdict, the events read without state and the
+    C4 value the runner recorded (decision D45 changes none of the 280 development events
+    read without their state, and the repeated runs read the same 108)."""
+    assert len(rows) == 300
+    sources = D43_SOURCES if rows is D43_DEV else D45_SOURCES
+    assert {source["git_sha"] for source in sources} == {sha}
+    for row in rows:
         new = _judge(row)
         old = row["runner_verdict"]
         assert (new["pass"], new["reasons"], new["state_not_observed"]) == (
@@ -410,12 +427,14 @@ def test_d43_development_runs_judge_as_the_runner_did_at_the_development_commit(
         assert new["c4"] == row["runner_c4"]
 
 
-def test_d43_l0_raw_shell_chords_pass_with_queued_events_and_l0_fixed_has_none():
-    """Job 830 (L0-raw): the four shell-grabbed chords pass 10 of 10, every event read without
-    its state comes after the grab key; the four ungrabbed chords pass with every state read.
-    Job 831 (L0-fixed, 8 VMs): every chord passes and no event is read without its state."""
+@pytest.mark.parametrize(("raw", "fixed"), [("830", "831"), ("845", "846")])
+def test_l0_raw_shell_chords_pass_with_queued_events_and_l0_fixed_has_none(raw, fixed):
+    """Jobs 830 and 845 (L0-raw): the four shell-grabbed chords pass 10 of 10, every event
+    read without its state comes after the grab key and after a key press recorded with Mod2
+    (decision D45); the four ungrabbed chords pass with every state read. Jobs 831 and 846
+    (L0-fixed, 8 VMs): every chord passes and no event is read without its state."""
     for cell, key in SHELL_GRAB_KEY.items():
-        rows = _dev("830", cell)
+        rows = _dev(raw, cell)
         assert len(rows) == 10
         for row in rows:
             verdict_ = row["runner_verdict"]
@@ -425,32 +444,39 @@ def test_d43_l0_raw_shell_chords_pass_with_queued_events_and_l0_fixed_has_none()
             grab = presses.index(key)
             assert all(i > grab for i in verdict_["state_not_observed"])
             assert all(keys[i]["state"] == 0 for i in verdict_["state_not_observed"])
+            assert keys[grab]["state"] & MOD2
+            first = min(verdict_["state_not_observed"])
+            assert all(k["state"] & MOD2 for k in keys[:first])
     for cell in ("chord_ctrl_c", "chord_shift_tab", "chord_ctrl_shift_t", "chord_ctrl_alone"):
-        for row in _dev("830", cell):
+        for row in _dev(raw, cell):
             assert row["runner_verdict"]["pass"]
             assert row["runner_verdict"]["state_not_observed"] == []
             assert all(k["state"] & MOD2 for k in _keys(row["window"]))
-    rows = _dev("831")
+    rows = _dev(fixed)
     assert len(rows) == 80
     assert all(r["runner_verdict"]["pass"] and not r["runner_verdict"]["state_not_observed"]
                for r in rows)  # fmt: skip
 
 
-@pytest.mark.parametrize("job", ["832", "833"])
-def test_d43_negative_case_every_chord_with_a_dropped_modifier_fails(job):
-    """Jobs 832 (``omit``) and 833 (``release_first``): every chord, grabbed or not, fails in
-    10 of 10 trials, C4 disagrees, and no key event is read without its state: with the
-    modifier dropped the shell's grab never holds a key back."""
+FAULT = {"832": "omit", "833": "release_first", "847": "omit", "848": "release_first"}
+
+
+@pytest.mark.parametrize("job", sorted(FAULT))
+def test_negative_case_every_chord_with_a_dropped_modifier_fails(job):
+    """Jobs 832 and 847 (``omit``), 833 and 848 (``release_first``; 847 and 848 repeat them at
+    D45's commit): every chord, grabbed or not, fails in 10 of 10 trials, C4 disagrees, and
+    no key event is read without its state: with the modifier dropped the shell's grab never
+    holds a key back."""
     rows = _dev(job)
     assert len(rows) == 70
-    assert {r["fault"] for r in rows} == {"omit" if job == "832" else "release_first"}
+    assert {r["fault"] for r in rows} == {FAULT[job]}
     for row in rows:
         verdict_ = row["runner_verdict"]
         assert not verdict_["pass"] and verdict_["state_not_observed"] == []
         assert row["runner_c4"] is False
         assert all(k["state"] & MOD2 for k in _keys(row["window"]))
     super_d = _dev(job, "chord_super_d")
-    if job == "832":
+    if FAULT[job] == "omit":
         # The grab key is never pressed: `d` alone, processed with Mod2 and without Mod4.
         for row in super_d:
             assert [(k["kind"], _name(k), k["state"]) for k in _keys(row["window"])] == [
@@ -570,13 +596,15 @@ def test_a_grab_already_active_before_the_entry_now_fails():
     assert guard.violations(clean, 2) == []
 
 
-def test_job_833_shows_the_guard_blind_to_a_grab_on_the_keyboard():
-    """Section 27, case 6: in both sessions of job 833 (`release_first`), after
-    `chord_super_d`'s Super_L was pressed and released alone (opening the shell's overview),
-    the probe received no key event in seq 3-21 and 28-34 while every pre check was clean;
-    the tap recorded every key event with Mod2 (that grab did not freeze the keyboard), every
-    trial failed, and the 22 lost-focus post checks all fall in those spans."""
-    rows = _dev("833")
+@pytest.mark.parametrize("job", ["833", "848"])
+def test_job_833_shows_the_guard_blind_to_a_grab_on_the_keyboard(job):
+    """Section 27, case 6: in both sessions of job 833 (`release_first`), and again in job 848
+    at D45's commit, after `chord_super_d`'s Super_L was pressed and released alone (opening
+    the shell's overview), the probe received no key event in seq 3-21 and 28-34 while every
+    pre check was clean; the tap recorded every key event with Mod2 (that grab did not freeze
+    the keyboard), every trial failed, and the 22 lost-focus post checks all fall in those
+    spans."""
+    rows = _dev(job)
     spans = set(range(3, 22)) | set(range(28, 35))
     for cycle in ("00", "01"):
         session = sorted((r for r in rows if r["cycle"] == cycle), key=lambda r: r["trial"]["seq"])
@@ -712,22 +740,33 @@ def test_c3_leaves_m12_and_m13_equivalent_after_a_slow_shell_answer():
     assert result["mutants"][f"{no_ops[0][0]} H-OSW-fixed"]["outcome"] == "survived"
 
 
-def test_section_12_reports_every_event_read_without_its_state():
+@pytest.mark.parametrize("job", ["830", "845"])
+def test_section_12_reports_every_event_read_without_its_state(job):
     """Decision D45 (iii): the analysis reports each key event read without its state with
     its offset from the preceding processed press, and each trial with an event without Mod2
     that no processed press preceded. Job 830's real L0-raw chord records: the 108 events of the
     four shell chords, each 0-3 ms after the processed press of its grab key, every one read
-    so by the trial's verdict, and no event without Mod2 left unpreceded."""
-    rows = _dev("830")
+    so by the trial's verdict, and no event without Mod2 left unpreceded; job 845 repeats it
+    at D45's commit (in one of its `chord_super_d` trials the `d` press was processed, with
+    Mod4, 1 ms after Super_L, and only the two releases after it were queued)."""
+    rows = _dev(job)
     report = acceptance.state_not_observed_report([_c3_attempt(r, r["window"]) for r in rows])
     assert report["trials"] == len(rows) == 80  # the chord trials (records hold chords only)
     assert report["no_processed_press_before"] == []
     events = [(t["cell"], e) for t in report["read_without_state"] for e in t["events"]]
     assert len(events) == 108
+    presses = Counter()
     for cell, event in events:
-        assert event["press_keysym"] == SHELL_GRAB_KEY[cell]
+        presses[(cell, event["press_keysym"])] += 1
         assert 0 <= event["after_press_ms"] <= 3 and event["in_verdict"] is True
         assert event["state"] == 0
+    expected = {(cell, key): n for cell, key, n in (
+        ("chord_super_d", "Super_L", 30), ("chord_alt_f4", "F4", 18), ("chord_alt_tab", "Tab", 20),
+        ("chord_ctrl_alt_shift_r", "r", 40))}  # fmt: skip
+    if job == "845":
+        expected.update({("chord_super_d", "Super_L"): 27, ("chord_super_d", "d"): 2})
+        expected[("chord_alt_f4", "F4")] = 19
+    assert presses == expected
     assert report["by_entry"] == {
         cell: {"trials_read_without_state": 10, "events_read_without_state": n,
                "trials_no_processed_press_before": 0, "events_no_processed_press_before": 0}

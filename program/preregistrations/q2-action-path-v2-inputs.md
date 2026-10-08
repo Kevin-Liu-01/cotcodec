@@ -12,7 +12,7 @@ No acceptance trial and no C2, C1 or C3 run may run before this row exists
   (`program/preregistrations/q2-action-path-v2.md`, section 2.2). It changes no
   rule of that file; it pins the components that file says are frozen here.
   It is v1's inputs addendum (`q2-action-path-v1-inputs`, ledger row 9) with
-  the changes decisions D40 and D43 make (section 7).
+  the changes decisions D40, D43 and D45 make (section 7).
 - Drafted: 2026-10-08, on branch `stage0/q2-action-path-v2`, from v1's frozen
   text. v1's addendum was drafted on 2026-10-07 on branch
   `stage0/q2-action-path`, with decisions D30, D33 and D39 applied before its
@@ -186,45 +186,50 @@ file equals it), so freezing the catalog fixes them.
   process is gone too, it still relaunches the tap into a new file, each in
   a new scope, before relaunching the probe, and `segment_check` judges each
   tap's records against that tap's own keymap. `verdict.py` applies sections
-  4.3 and 5: on the XRecord stream a key event recorded without Mod2, the
-  lock bit the guard guarantees, is read as recorded while queued under a
-  synchronous grab (in development, always a shell grab its entry's own
-  press of the grab key activated; main section 27, case 6, states what
-  neither the judge nor the guard checks) and is judged on its kind,
-  keycode (through its keysym) and order, not its modifier state (decision
-  D43, `modifier_state_observable`); every other event, and every event on
-  the probe's channel, is judged as before, and each verdict reports the key
-  events read without their state (`state_not_observed`). C4
-  (`rdev_agreement`) reads the tap the same way; C3's equivalence comparison
-  in `acceptance.py` does not (main section 27).
+  4.3 and 5: on the XRecord stream a key event recorded without Mod2, the lock
+  bit the guard guarantees, after a key press recorded with Mod2 in the same
+  window, is read as recorded while queued under a synchronous grab that
+  activated after that processed press (in development, always a shell grab
+  its entry's own press of the grab key activated; main section 27, case 6,
+  states what neither the judge nor the guard checks) and is judged on its
+  kind, keycode (through its keysym) and order, not its modifier state
+  (decisions D43 and D45, `modifier_state_observable`); a key event without
+  Mod2 that no such press precedes is judged on its state as recorded, as is
+  every other event and every event on the probe's channel, and each verdict
+  reports the key events read without their state (`state_not_observed`). C4
+  (`rdev_agreement`) reads the tap the same way, and so do C2's reading and,
+  since decision D45, C3's equivalence comparison in `acceptance.py` (main
+  section 27).
 - **Acceptance analysis** (`acceptance.py`). The main preregistration's
   sections 5-9 as code (its design decision 32): end states from the batch
   script's own record and, when read, Slurm; the rerun rules; an undelivered
   reset observation charged to the session's first trial; the realized order
   and one source tree per criterion; A1-A6, with A1-A4 and the ladder not
-  counting a trial whose only failure is a guest-server restart (decisions
-  D30 and D33), A1-A3 judging an entry on its counted repetitions and failing
-  it on a second excused trial, and a ladder rung not qualifying with more
-  than two; A7, the restarts per accessibility call on the exact one-sided
-  95% Poisson bound, its calls capped at the plan's 39,036; C1; C2's
-  reading of L0-raw trials (main section 8, decision 34, with the judge's
-  reading of key events the tap recorded without the guard's lock bit,
-  decision D43); C3's clean kills
-  (decision 36) and its equivalence, which needs the counting attempt's
-  streams to match the reference's on every cell and each earlier
-  attempt's on the cells it ran without an infrastructure failure
-  (decision D39); C4; each control reading an earlier attempt by
-  its own rule (main design decision 45); and the ladder's N* with the
-  foreign-load abort and its rerun cap, a rung attempt without host
-  snapshots not qualifying but counting its trials. An attempt killed
-  before its driver wrote a receipt is read from its manifest, batch record
-  and finished sessions and does not count (main design decision 46), and
-  a receipt, cycle or record file that does not parse reads as missing and
-  its attempt does not count (decision D39). Reported and not judged:
-  every A1-A3 entry with two or more excused trials and its excused
-  repetitions, A4's excused trials over every rerun and, under a repair
-  attempt, A4's restarts per accessibility call against A7's bound, and
-  each earlier attempt's receipt beside A5.
+  counting a trial whose only failure is a guest-server restart (decisions D30
+  and D33), A1-A3 judging an entry on its counted repetitions and failing it
+  on a second excused trial, and a ladder rung not qualifying with more than
+  two; A7, the restarts per accessibility call on the exact one-sided 95%
+  Poisson bound, its calls capped at the plan's 39,036; C1; C2's reading of
+  L0-raw trials (main section 8, decision 34, with the judge's reading of key
+  events the tap recorded without the guard's lock bit, decisions D43 and
+  D45); C3's clean kills (decision 36) and its equivalence, which needs the
+  counting attempt's streams to match the reference's on every cell and each
+  earlier attempt's on the cells it ran without an infrastructure failure
+  (decision D39), a key event's state compared as the judge reads it (decision
+  D45); C4; each control reading an earlier attempt by its own rule (main
+  design decision 45); and the ladder's N* with the foreign-load abort and its
+  rerun cap, a rung attempt without host snapshots not qualifying but counting
+  its trials. An attempt killed before its driver wrote a receipt is read from
+  its manifest, batch record and finished sessions and does not count (main
+  design decision 46), and a receipt, cycle or record file that does not parse
+  reads as missing and its attempt does not count (decision D39). Reported and
+  not judged: every A1-A3 entry with two or more excused trials and its
+  excused repetitions, A4's excused trials over every rerun and, under a
+  repair attempt, A4's restarts per accessibility call against A7's bound,
+  each earlier attempt's receipt beside A5, and, in every criterion, each key
+  event read without its state with its offset from the preceding processed
+  press and each key event without Mod2 that no such press preceded
+  (`state_not_observed_report`, main section 12, decision D45).
 - **Lane** (`runner.py`, `driver.py`, `manifest.py`, the batch script and
   the submitter). Every campaign runs as a CPU-only Slurm job (decisions
   D12, D13). `manifest.py` admits an acceptance or scored-control campaign
@@ -286,8 +291,8 @@ results.
 
 The first L0-fixed development run (job 486) ran at commit `29b056e`. Every
 later change to a file listed in section 1 (from `git log 29b056e..`); the
-rows up to `280ccbf` are v1's, the rows after it v2's (decisions D40 and
-D43):
+rows up to `280ccbf` are v1's, the rows after it v2's (decisions D40, D43 and
+D45):
 
 | Commit | File | Change and reason |
 |---|---|---|
@@ -322,6 +327,8 @@ D43):
 | `126ff8b` | `runner.py`, `driver.py`, `manifest.py` | Decision D43: the development-only executor fault `fault_drop_modifier` (section 2, lane), passed through by the driver and admitted by `manifest.py` for L0-fixed suite development at seed 42 only, never with a mutant or another fault, and never in a scored campaign (its fixed workload keys refuse it). No other admission or plan changed. |
 | `126ff8b` | `suite.py` | `run_actions`' docstring said that no L0-raw development run is admitted, which D40 made untrue; corrected with the D43 runs, since every file a campaign executes was to be re-baselined at this commit anyway. No code changed. |
 | `126ff8b` | `acceptance.py` | Decision D43: C2's reading of an L0-raw trial (`c2_projection`, `c2_matches`) leaves out the state of a key press the tap recorded without the guard's lock bit, as `verdict.judge` does; the docstrings name D43. `tests/test_q2_d43_judge.py` and `tests/test_q2_acceptance_analysis.py` drive it. No file a campaign executes reads it. |
+| `c74eae0` | `verdict.py` | Decision D45, recorded after two adversarial reviews of D43's implementation, before v2's freeze: a key event the tap recorded without Mod2 is read without its state only when a key press recorded with Mod2 comes before it in the same window (`modifier_state_observable` takes that condition, `carries_guard_lock_bit` names the bit); otherwise its state is judged as recorded, so a synchronous grab already active before an entry's first key, which queues every key event of the entry, now fails a chord instead of passing it unseen (main section 27, case 6). The docstrings state what the rule still does not check. None of the 280 development events read without their state changes (`tests/test_q2_d43_judge.py`); because the judge changed, the D43 development set was repeated at this commit (jobs 845-854; executor addendum, section 9). |
+| `c74eae0` | `acceptance.py` | Decision D45: C2's reading of the tap window and C3's stream signature and earlier-attempt comparison read a key event's state by the same rule (`tap_state_unread`, `_stream`, `_events_equal`), so a slow shell answer in a no-op mutant's run or the reference run no longer keeps the mutant from being equivalent; every criterion's analysis returns section 12's report (`state_not_observed_report`: each event read without its state with its offset from the preceding processed press, each event without Mod2 no such press preceded). `tests/test_q2_d43_judge.py` drives each on real records and `tests/test_q2_acceptance_analysis.py` on synthetic campaigns. No file a campaign executes reads it. |
 
 The probe change makes the no-action entry's screenshot start from a settled
 screen, the canary changes make the read-back report what the app holds, and
@@ -363,7 +370,12 @@ while the shell's grab held it is no longer judged on the state the tap
 could not observe, and the guard now guarantees the bit that tells such an
 event apart. Because the judge, the guard and the lane changed, the final
 development runs were repeated at `126ff8b` (executor addendum, section 9;
-main section 27).
+main section 27). D45's rows (`c74eae0`) answer the two reviews of D43's
+implementation, not a scored outcome: the judge reads an event without its
+state only after a processed key press in its window, which can only make a
+trial fail that D43's rule would have passed, C3's comparison reads the
+state as the judge does, and the analysis reports both; because the judge
+changed again, the D43 development set was repeated at `c74eae0`.
 
 ## 6. A decision before the freeze: guest-server restarts and A4
 
@@ -452,8 +464,8 @@ entries) is stated with A4 and accepted (main sections 6.1, 9 and 20).
 ## 7. Changes from v1 (D40)
 
 Decision D40 changes three things in the main preregistration (its section
-24), and decision D43 changes the judge and the guard (its section 27). In
-this addendum:
+24), decision D43 changes the judge and the guard, and decision D45 narrows
+the judge's rule and applies it to C3 (its section 27). In this addendum:
 
 1. **Ids and paths.** This file is `q2-action-path-v2-inputs`, an addendum to
    `q2-action-path-v2`, frozen after it and before
@@ -468,18 +480,21 @@ this addendum:
    the tap), `harness/q2/vm/guest/guard.py` (condition f),
    `harness/q2/vm/runner.py` (the development fault), `harness/q2/vm/suite.py`
    (a docstring), with `manifest.py`, `driver.py` and `acceptance.py` changed
-   again. Every other row is v1's digest. All but `acceptance.py` are files a
-   campaign executes; the executor addendum's byte-identity rule names them
-   (its section 9).
+   again; for D45, `verdict.py` (the preceding processed press) and
+   `acceptance.py` (C2 and C3 by the same rule, section 12's report) again,
+   adding no row. Every other row is v1's digest. All but `acceptance.py` are
+   files a campaign executes; the executor addendum's byte-identity rule names
+   them (its section 9).
 3. **Text.** Section 2's lane paragraph states the seed-45 and L0-raw
    development rules and the development fault; its guard, judging and
-   acceptance paragraphs state D43's changes; section 5 adds v2's rows after
-   v1's.
+   acceptance paragraphs state D43's and D45's changes; section 5 adds v2's
+   rows after v1's.
 4. **Unchanged.** The probe, the entry delimiters, the marker decoder, the
    guard's other conditions (pointer park, side-effect restorations,
    warm-up), the canary driver, the detection-control translators and their
-   vendored parsers, the judging of every event D43 does not name, and the
-   acceptance analysis's rules, apart from C2's prediction file and seed and
-   D43's reading of the tap. v1's validation before its freeze (section 3, job 484) and its
-   decision record on guest-server restarts (section 6, decisions D30 and D33)
-   carry over unchanged.
+   vendored parsers, the judging of every event D43 and D45 do not name, and
+   the acceptance analysis's rules, apart from C2's prediction file and seed
+   and the reading of the tap D43 and D45 decide (C2, C3 and C4). v1's
+   validation before its freeze (section 3, job 484) and its decision record
+   on guest-server restarts (section 6, decisions D30 and D33) carry over
+   unchanged.

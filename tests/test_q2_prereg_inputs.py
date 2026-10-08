@@ -216,10 +216,13 @@ def test_d43_is_main_s_decision_and_the_branch_s_draft_does_not_survive():
         assert "D43" in text, doc.name
 
 
-def test_section_27_records_d43_and_its_development():
+SECTION_27 = "## 27. Changes for decisions D43 and D45 (2026-10-08)"
+
+
+def test_section_27_records_d43_d45_and_their_development():
     text = PREREG.read_text(encoding="utf-8")
-    assert text.count("## 27. Changes for decision D43") == 1
-    section = " ".join(text.split("## 27. Changes for decision D43", 1)[1].split())
+    assert text.count(SECTION_27) == 1
+    section = " ".join(text.split(SECTION_27, 1)[1].split())
     for phrase in (
         "modifier_state_observable",
         "condition (f)",
@@ -230,6 +233,15 @@ def test_section_27_records_d43_and_its_development():
         "Jobs 834-839 repeat v1's final development runs 703-708",
         "| 832 | `q2ap-v2-d43-drop-omit-v1` |",
         "| 833 | `q2ap-v2-d43-drop-release-first-v1` |",
+        # Decision D45: the narrowed rule, C3, the report and the repeated development.
+        "after a key press it recorded with Mod2 in the same window",
+        "**C3's equivalence test (decision D45).**",
+        "`acceptance.state_not_observed_report`",
+        "c74eae0",
+        "Jobs 849-854 repeat 834-839",
+        "| 847 | `q2ap-v2-d45-drop-omit-v1` |",
+        "| 848 | `q2ap-v2-d45-drop-release-first-v1` |",
+        "program/evidence/2026-10-08/q2-action-path-v2-d45/",
     ):
         assert phrase in section, phrase
 
@@ -292,7 +304,8 @@ def test_the_repeat_check_catches_the_garbled_section_26_sentence():
 def test_v2s_changes_and_what_they_leave_are_stated_consistently():
     """The header and section 15 name the same sections as v2's, the last of which is 27;
     section 24's lists of what is unchanged name D43's reading of the tap as the exception,
-    and C3's equivalence comparison as what D43 leaves (sections 8, 26 and 27)."""
+    and C3's equivalence comparison as reading the state as the judge does since D45
+    (sections 8, 26 and 27), where D43 alone had left it comparing the recorded state."""
     text = PREREG.read_text(encoding="utf-8")
     flat = " ".join(text.split())
     last = max(int(n) for n in re.findall(r"^## (\d+)\. ", text, flags=re.M))
@@ -304,33 +317,49 @@ def test_v2s_changes_and_what_they_leave_are_stated_consistently():
     for item in (item6, item8):
         assert "apart from D43's reading of the tap (item 9 and section 27" in item, item
     assert "every other criterion are unchanged." not in item6
-    assert "C3's equivalence comparison is unchanged and still reads the recorded state" in item8
+    assert "C3's stream comparison" in item6
+    assert "C3's equivalence comparison reads the tap's state as the judge does" in item8
     c3 = _between(text, "- **C3 (mutation score).**", "- **C4 (R-dev agreement).**")
-    assert "decision D43 leaves this comparison unchanged" in c3
+    assert "reads a recorded key event's state as the judge does (decision D45)" in c3
     section26 = " ".join(text.split("## 26.", 1)[1].split("## 27.", 1)[0].split())
-    assert "One comparison still reads the recorded state: C3's equivalence test" in section26
+    assert "Under D43 alone, C3's equivalence test still compared" in section26
     section27 = " ".join(text.split("## 27.", 1)[1].split())
-    assert "**What the rule does not reach: C3's equivalence test.**" in section27
-    assert "up to 6.7%" in section27 and "whether D43 covers it stays with Kevin" in section27
+    assert "**C3's equivalence test (decision D45).**" in section27
+    assert "up to 6.7%" in section27 and "now leaves M12 and M13 equivalent" in section27
+    for stale in (
+        "One comparison still reads the recorded state",
+        "decision D43 leaves this comparison unchanged",
+        "C3's equivalence comparison is unchanged",
+        "whether D43 covers it stays with Kevin",
+        "**What the rule does not reach",
+    ):
+        assert stale not in " ".join(text.split()), stale
     # 1 - (1 - 0.023)^3: the three `chord_super_d` trials of C3's H-OSW-fixed reference run
     # and M12's and M13's runs, at section 26's bound per trial.
     assert round(1 - (1 - 0.023) ** 3, 3) == 0.067
 
 
 def test_the_rules_precondition_is_stated_as_observed_not_checked():
-    """D43's rule reads every key event without Mod2 as queued under a grab its entry's own
-    grab key activated. That held for every development event but is a property of this
-    guest's clients, which neither the judge nor the guard checks: sections 4.4 and 27 and
-    design decision 47 say so, and section 27 lists a grab already active before the entry
-    as a sixth case (tests/test_q2_d43_judge.py checks the numbers)."""
+    """D43's rule read every key event without Mod2 as queued under a grab its entry's own
+    grab key activated; D45 reads one so only after a processed key press in its window, so a
+    grab already active before the entry (section 27, case 6) now fails a chord. That the grab
+    which queued an event after a processed press was the shell's, activated by the entry's
+    own key, held for every development event but is a property of this guest's clients,
+    which neither the judge nor the guard checks: sections 4.4 and 27 and design decisions 47
+    and 49 say so (tests/test_q2_d43_judge.py checks the numbers)."""
     text = PREREG.read_text(encoding="utf-8")
     section44 = _between(text, "### 4.4 The XRecord oracle channel", "### 4.5")
     assert "That is a property of this guest's clients, not of the X server" in section44
     assert "neither the judge nor the guard checks it" in section44
     assert "each of the 280 key events recorded without Mod2 in development" in section44
+    assert "a chord fails (decision D45)" in section44
     decision47 = _between(text, "47. **The judge does not read a modifier state", "48. **")
-    assert "which neither the judge nor the guard checks" in decision47
+    assert "What the rule still rests on, unchecked" in decision47
     assert "(section 27, case 6)" in decision47
+    decision49 = _between(text, "49. **D45: the rule needs a processed press", "## 15.")
+    for phrase in ("(i) an event is read without its state only when a key press", "(ii)",
+                   "(iii)", "`c74eae0` (jobs 845-854"):  # fmt: skip
+        assert phrase in decision49, phrase
     section27 = " ".join(text.split("## 27.", 1)[1].split())
     assert "Among this guest's clients, as development observed them" in section27
     case6_start = "6. A synchronous grab already active when the entry's first key arrives."
@@ -342,14 +371,18 @@ def test_the_rules_precondition_is_stated_as_observed_not_checked():
         "Job 833",
         "seq 3-21",
         "280",
-        "whether to adopt it stays with Kevin",
-        "byte-identical to `126ff8b`",
+        "Under D45 none follows a processed press",
+        "the chord fails, C4 disagrees, C2's reading fails",
+        "What D45 leaves:",
     ):
         assert phrase in case6, phrase
     for stale in (
         "A key event is queued only while a shell grab holds the keyboard, and a grab",
         "recorded without Mod2 was recorded while queued under a shell grab",
         "A queued event needs an active shell grab",
+        "whether to adopt it stays with Kevin",
+        "byte-identical to `126ff8b`",
+        "The rule is D43's as worded",
     ):
         assert stale not in " ".join(text.split()), stale
     for path in (INPUTS, ROOT / "harness/q2/action_path/l0_raw_prediction_v2.yaml"):
@@ -430,3 +463,27 @@ def test_draft_passes_the_freeze_lint_and_states_the_committed_numbers():
     listed = re.search(pattern, text, re.S)
     assert listed is not None
     assert sorted(re.findall(r"`([^`]+)`", listed.group(1))) == sorted(certified)
+
+
+def test_d45_is_mains_decision_and_the_registrations_apply_it():
+    """D45 (main, unedited here) narrows D43's rule and applies it to C3, with section 12's
+    reports; the three registrations and the prediction file cite it, and the executor
+    addendum's byte-identity rule names the commit the D45 development ran at."""
+    log = (ROOT / "program/decisions.md").read_text(encoding="utf-8")
+    d45 = " ".join(log.split("**D45. ", 1)[1].split())
+    for phrase in (
+        "an event is read without its state only when a key press recorded with Mod2 comes "
+        "before it in the same window",
+        "The same narrowed rule applies inside C3's stream signature and earlier-attempt "
+        "comparison",
+        "the seed-42 final development runs are repeated at the new commit",
+    ):
+        assert phrase in d45, phrase
+    for doc in (*DOCS, ROOT / "harness/q2/action_path/l0_raw_prediction_v2.yaml"):
+        assert "D45" in doc.read_text(encoding="utf-8"), doc.name
+    executor = " ".join(EXECUTOR.read_text(encoding="utf-8").split())
+    assert executor.count("v2's rule (decisions D40, D43 and D45). Every file") == 1
+    rule = executor.split("v2's rule (decisions D40, D43 and D45). Every file", 1)[1]
+    assert rule.startswith(" a VM campaign executes must be byte-identical at v2's freeze "
+                           "commit to `c74eae0`")  # fmt: skip
+    assert "git diff --stat c74eae0 HEAD --" in rule
