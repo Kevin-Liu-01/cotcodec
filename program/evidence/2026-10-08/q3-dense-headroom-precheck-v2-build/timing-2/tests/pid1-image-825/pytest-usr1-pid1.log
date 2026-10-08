@@ -1,0 +1,8 @@
+start=2026-10-08T10:59:32Z image=sha256:2364f2da450d16b5882869eb79b950c964cf5295d7fe0ed9ab70df14dcf6d0ea head=8c3f076f387f55b375ab05a3624a7dea606d71f1
+.                                                                        [100%]
+==================================== PASSES ====================================
+=========================== short test summary info ============================
+PASSED tests/test_dense_headroom_v2_usr1_pid1.py::test_usr1_reaches_pid1_after_triton_replaced_the_handler
+1 passed in 44.91s
+exit=0
+end=2026-10-08T11:00:17Z

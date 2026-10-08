@@ -1,0 +1,40 @@
+status TIMING_INTERRUPTED job 810 job.env
+signals {"blocked_in_every_thread_from_start": true, "handler_replacement_count": 2, "handler_replacements": [{"found": "0x7f44b37c87e0", "signal": "SIGUSR1", "t": 65.369, "where": "subset:A-main:0"}, {"found": "0x7f44b37ca100", "signal": "SIGTERM", "t": 65.369, "where": "subset:A-main:0"}], "polls": 180, "received": "SIGUSR1", "received_after_s": 150.60663845203817, "via": "pending"}
+code git 87242fa788c7105db35ee311a2d34b8fc36283c0 source b8bee28bb4c04dfe9f0301b0854848e7d99e51320deb7876f794751b91dece25
+timings_s {'derive': 4.64, 'model_load': 7.11, 'process_to_startup': 1.66, 'startup': 3.45}
+attention_backends {'cudnn': False, 'flash': True, 'math': True, 'mem_efficient': True} after check {'cudnn': False, 'flash': True, 'math': True, 'mem_efficient': True}
+attention_backend_check {"max_abs_difference": {"mc_scores": 0.011060237884521484, "recall": 1.1522636413574219}, "same_fields": {"k_blocks": true, "max_selected": true, "mc_correct": true, "mc_scores": false, "recall": false, "ties": true}, "seconds": 47.437365705147386, "unit": "c320-q0"}
+dev artifact equals job 730's: True b5210f7935e87cc95cfb9fc56baa39d8e8162b81f8a501e49aac0c989fbfe82f
+versions {'device': 'NVIDIA H100 80GB HBM3', 'torch': '2.11.0+cu128'}
+model_loaded_after_s: 19.591787920333445
+backend_check_started_after_s: 19.591865602880716
+evaluation_started_after_s: 67.02960005681962
+subset_finished_after_s: 128.18281416222453
+process_seconds: 152.27987649664283
+wall {"slurm_start": "2026-10-08T10:12:44", "slurm_end": "2026-10-08T10:15:28", "slurm_runtime": "00:02:44", "job_env_started_at": "2026-10-08T10:12:46Z", "termination_finished_at": "2026-10-08T10:15:28Z", "termination_reason": "signal_USR1_checkpoint_confirmed", "exit_code": "75", "job_wall_s": 162.0, "process_s": 152.27987649664283, "outside_process_s": 9.720123503357172, "slurm_start_to_job_env_s": 2.0, "gpu_hours_physical_job_env": 0.045}
+start-up {"slurm_start_to_job_env_s": 2.0, "outside_process_s": 9.720123503357172, "process_to_first_unit_s": 67.02960005681962, "of_which_backend_check_s": 47.437365705147386, "model_loaded_after_s": 19.591787920333445, "start_up_s": 78.74972356017679}
+chunk A-main 0 subset  6.32 cpu 6.32 [('python', 633), ('python', 0), ('python', 0)]
+chunk B-absent 0 subset  5.99 cpu 5.99 [('python', 599), ('python', 0), ('python', 0)]
+chunk C-literal 0 subset  9.79 cpu 8.4 [('python', 839), ('python', 0), ('python', 0)]
+chunk D-nohaystack 0 subset  5.43 cpu 5.43 [('python', 545), ('python', 0), ('python', 0)]
+chunk A-main 1 subset  6.57 cpu 6.57 [('python', 657), ('python', 0), ('python', 0)]
+chunk B-absent 1 subset  6.08 cpu 6.08 [('python', 608), ('python', 0), ('python', 0)]
+chunk C-literal 1 subset  2.49 cpu 2.5 [('python', 249), ('cuda-EvtHandlr', 1), ('python', 0)]
+chunk D-nohaystack 1 subset  5.41 cpu 5.41 [('python', 541), ('cuda-EvtHandlr', 1), ('python', 0)]
+chunk A-main 2 continue prof 7.92 cpu 7.92 [('python', 793), ('python', 0), ('python', 0)]
+chunk B-absent 2 continue prof 15.14 cpu 13.85 [('python', 1384), ('python', 0), ('python', 0)]
+reference [{"bitwise_equal": true, "stage": "A-main", "unit": "c320-q0", "v1_seconds": 0.49080943409353495}, {"bitwise_equal": true, "stage": "A-main", "unit": "c320-q20", "v1_seconds": 0.5189588665962219}, {"bitwise_equal": true, "stage": "B-absent", "unit": "c0-q0", "v1_seconds": 0.4457324668765068}, {"bitwise_equal": true, "stage": "C-literal", "unit": "c320-q160", "v1_seconds": 0.16104283556342125}, {"bitwise_equal": true, "stage": "D-nohaystack", "unit": "c160-q0", "v1_seconds": 0.41700939647853374}]
+torch profiles {'v1': 'ok', 'v2': 'ok'}
+A-main {"cold_n": 47, "cold_mean_s": 0.4346, "cold_median_s": 0.4216, "cold_max_s": 0.5243, "cold_first_s": 0.4049, "cold_tokens_mean": 3723.4468, "lane_units": 440, "lane_tokens_mean": 6606.9682, "lane_tokens_max": 10508, "fit_seconds_per_token": 0.0002, "fit_intercept_s": -0.1607, "fit_lane_mean_s": 0.8957, "per_unit_s_entering_rule": 0.8957, "stage_estimate_s": 394.1121}
+   parts per cold unit (wall, cpu): {'inputs': (0.0, 0.0), 'mc_cache_copy': (0.006, 0.006), 'mc_option_forward': (0.274, 0.274), 'prefill_forward': (0.116, 0.116), 'select': (0.037, 0.037)}
+   warm: [('c320-q0', 0.366, 'v2'), ('c320-q0', 0.491, 'v1'), ('c320-q20', 0.519, 'v1')]
+B-absent {"cold_n": 48, "cold_mean_s": 0.5664, "cold_median_s": 0.3853, "cold_max_s": 7.636, "cold_first_s": 0.395, "cold_tokens_mean": 4493.5208, "lane_units": 280, "lane_tokens_mean": 6973.6857, "lane_tokens_max": 10470, "fit_seconds_per_token": 0.0002, "fit_intercept_s": -0.5101, "fit_lane_mean_s": 1.1605, "per_unit_s_entering_rule": 1.1605, "stage_estimate_s": 324.9496}
+   parts per cold unit (wall, cpu): {'inputs': (0.0, 0.0), 'mc_cache_copy': (0.007, 0.007), 'mc_option_forward': (0.275, 0.275), 'prefill_forward': (0.284, 0.257)}
+   warm: [('c0-q0', 0.446, 'v1')]
+C-literal {"cold_n": 32, "cold_mean_s": 0.3835, "cold_median_s": 0.1559, "cold_max_s": 7.4287, "cold_first_s": 7.4287, "cold_tokens_mean": 3765.3438, "lane_units": 160, "lane_tokens_mean": 5990.2125, "lane_tokens_max": 10601, "fit_seconds_per_token": 0.0033, "fit_intercept_s": -11.9552, "fit_lane_mean_s": 7.6741, "per_unit_s_entering_rule": 7.6741, "stage_estimate_s": 1227.8612}
+   parts per cold unit (wall, cpu): {'inputs': (0.0, 0.0), 'prefill_forward': (0.344, 0.3), 'select': (0.04, 0.04)}
+   warm: [('c320-q160', 0.161, 'v1')]
+D-nohaystack {"cold_n": 32, "cold_mean_s": 0.3387, "cold_median_s": 0.3455, "cold_max_s": 0.37, "cold_first_s": 0.3369, "cold_tokens_mean": 239.5, "lane_units": 280, "lane_tokens_mean": 181.1571, "lane_tokens_max": 568, "fit_seconds_per_token": 0.0, "fit_intercept_s": 0.3387, "fit_lane_mean_s": 0.3387, "per_unit_s_entering_rule": 0.3387, "stage_estimate_s": 94.8467}
+   parts per cold unit (wall, cpu): {'inputs': (0.0, 0.0), 'mc_cache_copy': (0.005, 0.005), 'mc_option_forward': (0.257, 0.257), 'prefill_forward': (0.076, 0.076)}
+   warm: [('c160-q0', 0.417, 'v1')]
+rule {"every_stage_measured": true, "evaluation_s": 2041.7696277087139, "statistics_bound_s": 5.0, "evaluation_and_statistics_s": 2046.7696277087139, "start_up_s": 78.74972356017679, "minutes": 73, "cap_gpu_hours": 1.2167, "useful_window_s": 4200.0, "lane_units": 1160, "break_even_unit_s": 3.548491617620537, "caps_total_gpu_hours": 1.6167, "cap": 1.5}

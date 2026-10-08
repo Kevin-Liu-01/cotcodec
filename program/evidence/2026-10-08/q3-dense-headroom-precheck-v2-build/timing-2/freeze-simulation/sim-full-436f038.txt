@@ -1,0 +1,24 @@
+real ledger before: 1052d58b5b6648dd
+clone of 436f03858c61932126990ab8594965170977bc17 mode=full
+ledger rows before:       11 head q2-evaluator-mutation-v1 dc39bfa2f68e0fd5
+full rewritten with D42
+{
+  "experiment_id": "q3-dense-headroom-precheck-v2",
+  "frozen_at": "2026-10-08T11:22:40.368562+00:00",
+  "git_head_at_freeze": "c97d5c7d047f08fdc9bcf43f53b1d6fcfe9aa66d",
+  "hash": "b3e3869f5e166150b9bdd498f02393ecb110ef5f092f8207e935df5b89285108",
+  "path": "program/preregistrations/q3-dense-headroom-precheck-v2.md",
+  "previous_hash": "dc39bfa2f68e0fd57a213e0972266a4db60428e00d6c4e6bca8e576f35ec6439",
+  "sha256": "bd9d79f7ed63e281305f7c6c8b4f9f9e59af557fa641eabeda5f25ce2ec5cd41"
+}
+freeze exit=0
+verify exit=0
+{"rows": 12, "status": "PASS"}
+check-chain exit=0
+simulated freeze commit d94fb83bd1b2dcd8bb7d78e6bb4a11d6d1149deb
+frozen file contains 'DRAFT': False
+frozen file contains 'wait for the program owner': False
+frozen file contains 'still to be done': False
+29 passed in 21.54s
+pytest exit=0
+real ledger after: 1052d58b5b6648dd

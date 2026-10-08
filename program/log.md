@@ -1641,6 +1641,96 @@ Append-only. Newest entries at the bottom.
   No GPU, nothing pushed or frozen.
 - Next: Kevin's remaining items (section 17), re-merge main, freeze.
 
+## 2026-10-08 — Q3 dense pre-check v2 built and timed (D36; branch `stage0/q3-dense-v2`, draft, not frozen)
+
+- Registration `program/preregistrations/q3-dense-headroom-precheck-v2.md`
+  (DRAFT): v1's Data, Selectors, Metrics and statistics, Decision rules and
+  seeds sections carried verbatim except two named substitutions, v1's
+  decisions 1-11 and 13-15 verbatim, decision 12's caps amended; "Changes from
+  v1 (D36)", v1's outcome (INCOMPLETE; job 727's receipt `bfe4a7c3...`), a
+  26-row code table (v1's and K1's rows equal their frozen registrations'),
+  new decisions 16-21 awaiting acceptance. Templates under
+  `experiments/manifests/q3-dense-headroom-precheck-v2/`.
+- Job binding: receipts take `job_id` from the run directory's `job.env`
+  (written by the unchanged batch script before `docker create`); the
+  summariser requires source `job.env`. A Linux test runs the real batch
+  script against stub host tools, writes v2's and v1's receipts in the
+  container environment and feeds them to v1's `check_job` (v2 accepted, v1
+  refused as in job 727). Live: Slurm 766's receipt is bound to 766.
+- SIGUSR1: Triton's LLVM `RegisterHandlers` replaces CPython's OS-level
+  handlers at the first kernel compile and swallows SIGUSR1; `getsignal`
+  does not see it. v2 blocks SIGUSR1/SIGTERM from process start (when the
+  entry point runs as the program) and consumes them at chunk boundaries.
+  Verified: doctor `usr1_displaced`, the entry point as a container's PID 1
+  with a real Triton compile (images 770 and 776: v2 exit 75 with marker, v1
+  exit 0 without), and Slurm 766 (`signal_USR1_checkpoint_confirmed`).
+- CPU bottleneck: not the cache copy (5 ms per unit) or the selectors
+  (43 ms). torch 2.11 sends Qwen3.5's head-dim-256 attention to cuDNN, which
+  builds a graph per new sequence length (about 0.7 s of CPU per forward,
+  GPU idle). Fix on the hybrid lane only: `enable_cudnn_sdp(False)`, the one
+  change not bit-equal (reported per receipt by `attention_backend_check`,
+  not gated; no v1 4B number exists). Every other evaluation change is
+  bit-equal to v1 (unit tests, doctor `equivalence`, `end_to_end` with
+  tolerance 0, and two real 4B units in Slurm 766). The 0.6B lane is
+  unchanged and must reproduce job 727 to 1e-6 and smoke 452 (gate in the
+  filler and summariser).
+- Timing job Slurm 766 (image `3f2cc537...` from `71dc954`, CPU-only build
+  763): 205 s, 0.0569 GPU-h physical (5 minutes charged); 2 of 8 subset
+  chunks, cold units 3.6-4.1 s; ended by Slurm's SIGUSR1 with a confirmed
+  checkpoint. It ran before the cause was known, so the fixed 4B path is
+  untimed: its limit (45 min) applies D36's rule to twice the warm-unit
+  projection (0.52 s x 1,160 + 5 s). 0.6B 12 min from job 727's 278 s.
+  Registered caps 1.05 GPU-h of D36's 1.5.
+- Checks: CPU doctor 12/12 in images 763, 770 and 776 (`e6e81e7`, Slurm
+  778). Host suite at `e6e81e7`: 1,824 passed, 36 skipped, 1 failed (the
+  Linux-only binding test's workload program did not start; fixed in
+  `50153d0`, then passed). Main merged into the branch (`30f9c7c`; no tabled
+  file changed on main). Host suite at `f2510dd` (Slurm 788, fresh scratch):
+  2,212 passed, 40 skipped, 0 failed; the torch-dependent dense tests inside
+  image 776 (CPU): 43 passed. Freeze simulated on a scratch clone of
+  `f2510dd` only: chained onto main's ledger head (`dc39bfa2...`),
+  check-chain 12 rows PASS, entry code table no differences, 0.6B fill ok,
+  4B fill refused without the small-lane receipt, dry run ok, full suite in
+  the frozen clone 2,165 passed, 87 skipped (macOS). The real ledger is
+  unchanged.
+- State: Q3 `stage-0-precheck-v2-draft`; ledger row 0.0569 GPU-h; program
+  total 3.983. Evidence
+  `program/evidence/2026-10-08/q3-dense-headroom-precheck-v2-build/`.
+- Next: Kevin accepts or amends decisions 16-21 and the limits (and whether
+  the fixed 4B path is timed first); then merge and freeze steps 2-5.
+
+## 2026-10-08 — Q3 dense pre-check v2: review fixes (branch `stage0/q3-dense-v2`, draft, not frozen)
+
+- A review found six blocking issues, all real, none needing a GPU job;
+  limits, caps and computed quantities unchanged. Fixed at `b8977d9`.
+- The 4B lane's cuDNN switch (decision 18) changes computed quantities, so it
+  departs from D36 (iii): decision 18 retitled; decisions 18 and 19 say the
+  job-727 gate and smoke 452 do not cover the 4B attention backend and the
+  descriptive `attention_backend_check` is the only check; v1's carried
+  "same code" wording is qualified in decision 18 (kept verbatim).
+- The 4B limit is projected, not measured: job 766 ran the path before the
+  fix (cuDNN on), and the fixed path has never run on a GPU. Decisions 20
+  and 21, Compute, Changes item 6, the lanes module (`LARGE_LANE_PROJECTED`,
+  `large_lane_break_even_unit_s`: about 2.1 s per unit) and the 4B template
+  say so. No GPU job: the timing allowance has 1 of its 6 minutes left
+  (766 charged 5), below the 5 any job needs.
+- Freeze step 1 now rewrites the design-decision lead-in as well as the
+  status; in frozen mode the prereg test refuses draft wording and requires
+  the status and lead-in to name a decision after D36 that names the
+  experiment and amends D36 (iii). Simulated on scratch clones: the
+  registered procedure passes (check-chain 12 rows PASS, 26 frozen-mode
+  tests, fills and dry run as before); the old status-only procedure and a
+  wrong decision both fail the test.
+- Checks at `b8977d9`: host suite 2,213 passed, 40 skipped, 0 failed; image
+  801 (CPU build), doctor 12/12, torch tests in the image 52 passed, PID-1
+  SIGUSR1 test passed. Evidence `program/evidence/2026-10-08/q3-dense-headroom-precheck-v2-build/README.md`
+  ("Review fixes").
+- Next (Kevin): one decision that accepts or amends decisions 16-21 and the
+  limits, amends D36 (iii) for the 4B lane (or requires another fix), and
+  either amends D36's timing rule for the 4B lane or authorises a second
+  timing job of the fixed path (at most 0.1 GPU-h, a fresh timing run root);
+  then freeze with that decision named in the status and the lead-in.
+
 ## 2026-10-08 — Q2 evaluator-mutation: confirm campaign stage A1 (K1, P1, confirm mutants; CPU only)
 
 - Operator run of the frozen `q2-evaluator-mutation-v1` (ledger row 11,
@@ -1719,6 +1809,55 @@ Append-only. Newest entries at the bottom.
 - Next: the isolated Claude rating as one workflow session of rater agents
   only, then `collect-transcripts`, `ingest-isolated`, `audit summarize`, the
   registered analysis, Kevin's pool and spot check.
+
+## 2026-10-08 — Q3 dense pre-check v2: second timing job of the fixed 4B path (D42; branch `stage0/q3-dense-v2`, draft, not frozen)
+
+- Main (`18fe252`, D42) merged in (`175d35e`); only `program/decisions.md`
+  had changed on main. GPU total recomputed from the ledger rows.
+- D42 (ii) implemented at `87242fa`: the timing profile starts with the
+  lane's own `attention_backend_check` (cuDNN on, then off) before any unit;
+  a second timing template with a fresh run root (`timing-2-qwen3.5-4b-base`),
+  filler `--timing 2`; the caps count both timing jobs.
+- Image 806 (CPU-only build from a fresh clone of `87242fa`); v2 CPU doctor
+  12/12 in it. One timing job, filled once, dry run, `--test-only`, submitted
+  once: Slurm 810, 162 s, 0.045 GPU-h physical (4 minutes charged), exit 75
+  on Slurm's SIGUSR1 at a chunk boundary, receipt bound to job 810.
+- The fixed path runs on the GPU. Start-up 78.7 s to the first unit, of which
+  the backend check 47.4 s with the first-use compiles; on `c320-q0` cuDNN's
+  attention and the lane's differ by at most 1.15 recall points and 0.011 in
+  an option score, same answer; memory-efficient attention in the torch
+  profiles. First evaluations: medians 0.42 (A-main), 0.39 (B-absent), 0.16
+  (C-literal), 0.35 s (D-nohaystack) per unit; re-evaluated units the same
+  (no per-shape cost left); two one-off compiles of 7.4 and 7.6 s. The same
+  chunks took 6 s against 54-108 s in Slurm 766. One Python thread busy; GPU
+  0-95 percent, mean 31 percent. v1's path bit-equal on five units (every
+  stage).
+- 4B limit by D36's rule: 769 s evaluation and statistics (per-stage means
+  scaled up to the lane's context lengths, a compile allowance, 5 s
+  statistics) and 79 s start-up give 30 minutes (0.50 GPU-h); 0.6B stays 12.
+  Caps with both timing jobs 0.90 of D36's 1.5. A first analysis pass with
+  per-stage token fits, whose slopes the two compiles set (measured lengths
+  span only 3,600-3,950 tokens in two stages), gave 73 minutes; it was
+  discarded for that reason and is kept in the evidence. Lanes module (a measurement
+  again, bound by a test to the committed analysis), 4B template,
+  registration (status and lead-in name D42; Compute; decisions 12, 18, 20,
+  21; Changes; both timing jobs' results) and code table updated (`7ab5b8b`).
+- Host suite at `7ab5b8b` hung in the in-process guard test (a
+  process-directed signal can be taken by another pytest thread between the
+  guard's sigpending and sigwait); the test now sends thread-directed
+  signals (`8c3f076`; no tabled file changed). At `8c3f076`: host suite
+  2,216 passed, 40 skipped, 0 failed; image 825, doctor 12/12, torch tests in
+  the image 55 passed, PID-1 test passed. Freeze simulated on scratch clones
+  naming the real D42: check-chain 12 rows PASS, frozen-mode tests pass, 0.6B
+  and 4B fills and dry runs (0.2 and 0.5 GPU-h) ok; status-only and a wrong
+  decision fail the test; full suite in the frozen clone 2,169 passed, 87
+  skipped. Real ledger unchanged. Main (`692b83d`, D43) merged in again
+  (`436f038`): host suite 2,216 passed, 40 skipped; full freeze simulation
+  check-chain PASS.
+- State: ledger row 0.045 GPU-h; program total 4.028; v2 used 0.1019 GPU-h.
+  Evidence `program/evidence/2026-10-08/q3-dense-headroom-precheck-v2-build/timing-2/README.md`.
+- Next: the narrow re-check of the measured limits (D42 (iii)), then merge
+  and freeze naming D42.
 
 ## 2026-10-08 — Q2 evaluator-mutation: confirm stage B (isolated Claude rating ingest, audit summary, registered analysis)
 
@@ -1827,3 +1966,88 @@ Append-only. Newest entries at the bottom.
   record this study as Stage 0's outcome; if Q1 is revived, D14 truncation ruling, then
   the pilot, then a reduced Stage 0 with a fresh gauntlet. No GPU used; nothing pushed or
   merged.
+
+## 2026-10-08 — Q3 dense pre-check v2: the 4B limit's estimator sensitivity disclosed (branch `stage0/q3-dense-v2`, draft, not frozen)
+
+- The narrow re-check of the measured limits found that Compute said the
+  discarded first analysis pass and the registered one "differ only in how
+  the two compiles are treated" (the timing-2 README too). They also scale
+  differently: the first pass took the larger of a per-stage least-squares
+  line in tokens (at the lane's mean) and the stage mean; the registered
+  estimator scales the stage mean in proportion to length, and was chosen
+  after the first pass came out over D36's cap (73 minutes).
+- Recomputed from Slurm 810's receipt and `analysis.json`
+  (`timing-2/limit-recheck/estimator-sensitivity.py`, standard library; it
+  reproduces both committed analyses): with the compiles treated as
+  registered, the line fit gives 678 s against 658 s for the stages, 27.62
+  against 26.95 minutes before rounding, so 31 minutes against 30. The
+  increase is all A-main's (+55 s; it has no compile): its measured units
+  span only 211 tokens (3,614-3,825), slope 0.16 ms per token, 3.3 times
+  B-absent's 0.048 over 3,551-8,313 tokens. The larger of the two in every
+  stage gives 32. Proportional scaling over-predicts B-absent's measured
+  8,310-token units (0.78 s against 0.60 s). At any of these estimates the
+  lane's first job ends in about 14-15 of its 27 useful minutes.
+- Fixed in text only (`ddb3d02`; no GPU job, no tabled file changed):
+  Compute's parenthetical and decision 20 disclose both differences, the 31
+  minutes, the 32-minute bound and why proportional scaling is registered;
+  the 4B limit stays 30 minutes (0.50 GPU-h; caps 0.90 of 1.5). A new
+  manifests test recomputes both estimators from the receipt and binds the
+  disclosure.
+- Checks at `ddb3d02`: local dense, preregister and v2 tests 185 passed, 15
+  skipped; ruff clean. Freeze simulated on scratch clones naming D42:
+  check-chain 12 rows PASS, frozen-mode tests 30 passed, code table matches,
+  fills and dry runs (0.2 and 0.5 GPU-h) as before; status-only and a wrong
+  decision fail the test; full suite in the frozen clone 2,170 passed, 87
+  skipped. Real ledger unchanged.
+- Next: close the narrow re-check (D42 (iii)); then merge and freeze naming
+  D42.
+
+## 2026-10-08 — Q3 dense pre-check v2: D44 implemented, the 4B limit 32 minutes (branch `stage0/q3-dense-v2`, draft, not frozen)
+
+- Main (`1a45703`, D44; Q2 confirm stage A2) merged in (`cb9fc68`):
+  `program/log.md` both sides in time order, `program/state.json` main's
+  entries and this branch's Q3 entries; the GPU total recomputed from the 22
+  ledger rows is 4.393. Main changed no tabled file and not the ledger.
+- D44 implemented at `da31db7` (no GPU job): the lanes module records all
+  three estimates of the 4B lane from Slurm 810 (stage-mean scaling 769 s,
+  30 minutes; line fit 789 s, 31; the larger of the two per stage 824 s, 32)
+  and sets the limit at their maximum, 32 minutes (useful window 29 minutes,
+  break-even 1.43 s per unit). A lane's cap is now its minutes / 60 exactly:
+  32/60 GPU-h for the 4B lane, because a cap rounded to 0.5333 is below 1 x
+  32 / 60 and the submitter and the filler's budget check would refuse it;
+  the filler's check is unchanged. Registered caps 0.933 of D36's 1.5 GPU-h.
+  4B template 32 minutes, `max_gpu_hours` 32/60. Registration: Changes 6 and
+  10, Compute (the three estimates and D44's choice; table 1 x 32, 0.53,
+  total 0.93), decisions 12 and 20, freeze step 1 (the status paragraph and
+  the lead-in name D42 and D44 at the freeze; the frozen-mode test refuses
+  them otherwise); the draft status and lead-in say D44 closed the re-check
+  and keep their draft wording until the freeze; code table re-rendered
+  (only the lanes module and the 4B template changed). Tests bind the three
+  estimates to the receipt, the module and `estimator-sensitivity.json`,
+  check the exact cap and the refusal of a rounded one, and require the
+  status and the lead-in to name D42 and D44 in draft and frozen mode.
+- Checks at `da31db7`: ruff clean; local dense, preregister and v2 tests 186
+  passed, 15 skipped; host suite (Slurm 841, fresh scratch clone) 2,218
+  passed, 40 skipped, 0 failed; in image 825 with the new head's code
+  mounted (CPU, network none) the torch-dependent dense tests 57 passed
+  (Slurm 842) and the v2 CPU doctor 12/12 (Slurm 843).
+- Freeze simulated on scratch clones of `da31db7` with the frozen wording
+  naming D42 and D44: check-chain 12 rows PASS, frozen-mode tests 31 passed,
+  code table matches, 0.6B and 4B fills as registered, dry runs 0.2 and
+  0.5333 GPU-h (`--time=00:12:00`, `--time=00:32:00`); full suite in the
+  frozen clone 2,171 passed, 87 skipped. The lead-in left in draft, D41 in
+  place of D42, and the wording naming D42 only each fail the frozen-mode
+  test. Real ledger `1052d58b...` before and after.
+- Main moved to `1d2cbe0` (D45; Q2 confirm stage B: decisions, log, state
+  and evidence only) and was merged in again (`85cf0f5`; this log in time
+  order, state merged cleanly, GPU total 4.393 from the 23 ledger rows). At
+  `85cf0f5`: host suite (Slurm 844) 2,218 passed, 40 skipped; full-mode
+  freeze simulation check-chain PASS, frozen-mode tests 31 passed, the
+  frozen file's SHA-256 equal to `da31db7`'s.
+- GPU: none. Nothing pushed. Evidence
+  `program/evidence/2026-10-08/q3-dense-headroom-precheck-v2-build/timing-2/README.md`
+  ("D44") and `timing-2/d44/`.
+- Next: freeze with the status paragraph and the design-decision lead-in
+  rewritten to the frozen wording naming D42 and D44, image from the frozen
+  commit, doctor, the 0.6B lane (job 727 to 1e-6 and smoke 452), then the 4B
+  lane (32 minutes), and the combined read.

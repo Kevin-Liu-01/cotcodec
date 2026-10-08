@@ -1,0 +1,28 @@
+entry-point code-table check: differing []
+{"filled": "SCRATCH/sim-run/filled/q3-dense-headroom-v2-0p6b.yaml", "sha256": "49b446830d85d3cb9360e12cc923dc81ce897230e911bf963b03f81ad03b4d87"}
+fill 0.6B exit=0
+FAIL: qwen3.5-4b-base is filled only with --small-lane-receipt, the qwen3-0.6b-base lane's receipt (smoke 452 and job 727 reproduced)
+fill 4B without the 0.6B receipt exit=2
+stand-in 0.6B receipt: v1 job 727's statistics, bound to stand-in job 999, frozen digest ecd5992ccac3e855
+{"filled": "SCRATCH/sim-run/filled/q3-dense-headroom-v2-4b.yaml", "sha256": "4dfc629dd701b877ba5147168feaa5e975474f74dd44b96dd8c1a4faaa8127a4"}
+fill 4B with the stand-in 0.6B receipt exit=0
+< image_id: FILL-image-id
+< git_sha: FILL-image-git-sha
+< source_sha256: FILL-image-source-tar-sha256
+> image_id: sha256:ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
+> git_sha: d63eb8316bd8a867ed83f417a24c81f4541bd2a1
+> source_sha256: a757e3b05c1550ee7d3c621332537ff4ad8b4597bf36121ebedc942765b993d4
+<   - "FILL-preregistration-sha256"
+>   - "ecd5992ccac3e855f4fe9dad3711ba66db59b7ff792a402aebd394c998ebf129"
+dry run q3-dense-headroom-v2-0p6b.yaml exit=0 gpu_hours=0.2
+"--time=00:12:00"
+< image_id: FILL-image-id
+< git_sha: FILL-image-git-sha
+< source_sha256: FILL-image-source-tar-sha256
+> image_id: sha256:ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
+> git_sha: d63eb8316bd8a867ed83f417a24c81f4541bd2a1
+> source_sha256: a757e3b05c1550ee7d3c621332537ff4ad8b4597bf36121ebedc942765b993d4
+<   - "FILL-preregistration-sha256"
+>   - "ecd5992ccac3e855f4fe9dad3711ba66db59b7ff792a402aebd394c998ebf129"
+dry run q3-dense-headroom-v2-4b.yaml exit=0 gpu_hours=0.5
+"--time=00:30:00"

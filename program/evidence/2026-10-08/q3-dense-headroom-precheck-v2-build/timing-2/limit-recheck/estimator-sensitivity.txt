@@ -1,0 +1,15 @@
+A-main        lane 440 units at  6607.0 tokens; measured 47 units 3,614-3,825 tokens, mean 0.4346 s at  3723.4
+              registered 0.7712 s/unit; line fit 0.1599 ms/token -> 0.8957 s/unit (+54.8 s for the stage); first pass 0.1599 ms/token -> 0.8957 s/unit
+B-absent      lane 280 units at  6973.7 tokens; measured 47 units 3,551-8,313 tokens, mean 0.4160 s at  4412.3
+              registered 0.6574 s/unit; line fit 0.0479 ms/token -> 0.5387 s/unit (-33.2 s for the stage); first pass 0.2396 ms/token -> 1.1605 s/unit
+C-literal     lane 160 units at  5990.2 tokens; measured 31 units 3,607-3,922 tokens, mean 0.1562 s at  3763.1
+              registered 0.2487 s/unit; line fit 0.0372 ms/token -> 0.2390 s/unit (-1.5 s for the stage); first pass 3.2769 ms/token -> 7.6741 s/unit
+D-nohaystack  lane 280 units at   181.2 tokens; measured 32 units 127-426 tokens, mean 0.3387 s at   239.5
+              registered 0.3387 s/unit; line fit 0.0000 ms/token -> 0.3387 s/unit (+0.0 s for the stage); first pass 0.0000 ms/token -> 0.3387 s/unit
+B-absent short (< 5,000 tokens): 40 units, 3730 tokens, unit 0.383 s, prefill 0.116 s, option forwards 0.261 s, chunks ['continue:2', 'subset:0', 'subset:1']
+B-absent long (> 8,000 tokens): 7 units, 8309 tokens, unit 0.603 s, prefill 0.247 s, option forwards 0.347 s, chunks ['continue:2']
+B-absent proportional scaling at the long units' length: 0.783 s against 0.603 s measured
+registered                         stages   658.1 s, evaluation and statistics   769.2 s, (2 x that + 78.7) / 60 =  26.95 -> 30 minutes; one pass with start-up 14.1 min
+line_fit_compiles_as_registered    stages   678.0 s, evaluation and statistics   789.2 s, (2 x that + 78.7) / 60 =  27.62 -> 31 minutes; one pass with start-up 14.5 min
+larger_of_the_two_per_stage        stages   712.8 s, evaluation and statistics   823.9 s, (2 x that + 78.7) / 60 =  28.78 -> 32 minutes; one pass with start-up 15.0 min
+first_pass_as_run                  stages  2041.8 s, evaluation and statistics  2046.8 s, (2 x that + 78.7) / 60 =  69.54 -> 73 minutes; one pass with start-up 35.4 min

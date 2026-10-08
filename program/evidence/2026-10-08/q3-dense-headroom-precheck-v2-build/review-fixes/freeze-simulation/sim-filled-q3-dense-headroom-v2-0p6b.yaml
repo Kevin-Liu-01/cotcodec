@@ -1,0 +1,69 @@
+# q3-dense-headroom-precheck-v2, Qwen3-0.6B-Base lane (program decision D36).
+# v1's lane (same inputs, model, argv shape, CPUs, memory and profile) on v2's entry point,
+# 1 GPU x 12 minutes under a 0.2 GPU-h cap: twice job 727's measured 262 s of evaluation and
+# statistics, plus its 16 s of start-up, plus the 3-minute SIGUSR1 lead, rounded up. v2's caps
+# and the timing job sum to at most 1.5 GPU-h (D36).
+# Template: every FILL-* value is written by scripts/fill_dense_headroom_precheck_v2_manifests.py
+# from measured artifacts (the image build receipt and the frozen preregistration's ledger
+# row). The submitter rejects every FILL-* value, so an unfilled template fails closed.
+# Seeds 42, 43, 44 seed the block-score null selectors (the only randomness); the bootstrap
+# uses NumPy seed 42 as registered.
+runtime: docker-single-node-discovery-v1
+name: q3-dense-headroom-v2-0p6b
+image_id: sha256:ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
+git_sha: a4b748c8da40d796966e1f48252eb524581913f4
+source_sha256: 41672ca1145ab3bf15f39a5d1396759183e75804e6f2558ba10f7a80dc66c79c
+container_profile: default
+resources:
+  gpu_type: h100
+  gpus: 1
+  cpus: 16
+  memory_gb: 64
+  minutes: 12
+budget:
+  max_gpu_hours: 0.2
+randomness_contract: assignment-seed-matrix
+seeds: [42, 43, 44]
+seed_binding:
+  flag: "--seeds"
+run_root: /home/kevin/cotcodec-runs/q3-dense-headroom-precheck-v2/qwen3-0.6b-base
+model:
+  model_id: qwen3-0.6b-base
+  revision: da87bfb608c14b7cf20ba1ce41287e8de496c0cd
+  cache_host_path: /home/kevin/cotcodec-runs/hf-cache
+  receipt_sha256: e7f36f05e6c87ec50b3736cf133fda60775abccb38f60fa9d3c134c432cf46df
+  artifact_root_sha256: 7040f418762c61dd00b540e482527e0d8c8a916cce80eee56408bd10a6179ae0
+study_artifact:
+  source_id: q3-k1-bundle-v1
+  revision: ec81fe3292d8559251adb273cb4e6ec5b070c162
+  license: LicenseRef-cotcodec-k1-bundle-v1
+  host_path: /home/kevin/cotcodec-runs/translation-supervised-sparse-indexer/inputs/k1-bundle-v1.json
+  sha256: 919d016b87ad862f8f156e9537c9a39e2864dab0e6c605307d100d25a199dd2d
+  size_bytes: 278818734
+command:
+  - python
+  - scripts/run_dense_headroom_precheck_v2.py
+  - "--lane"
+  - qwen3-0.6b-base
+  - "--output-dir"
+  - /outputs/dense-precheck
+  - "--evidence"
+  - /inputs/study-artifact.json
+  - "--expected-evidence-sha256"
+  - 919d016b87ad862f8f156e9537c9a39e2864dab0e6c605307d100d25a199dd2d
+  - "--source-tokenizer"
+  - /model-cache/cotcodec-models/qwen3-0.6b-base/tokenizer.json
+  - "--model-dir"
+  - /model-cache/cotcodec-models/qwen3-0.6b-base
+  - "--receipt"
+  - /model-cache/cotcodec-receipts/qwen3-0.6b-base.json
+  - "--expected-receipt-sha256"
+  - e7f36f05e6c87ec50b3736cf133fda60775abccb38f60fa9d3c134c432cf46df
+  - "--preregistration"
+  - program/preregistrations/q3-dense-headroom-precheck-v2.md
+  - "--expected-preregistration-sha256"
+  - "0c60a3db6fd4697da6a35707584a6986aa8ed41cd0ecdf8108a7e694c7ecc5c1"
+  - "--seeds"
+  - "42"
+  - "43"
+  - "44"

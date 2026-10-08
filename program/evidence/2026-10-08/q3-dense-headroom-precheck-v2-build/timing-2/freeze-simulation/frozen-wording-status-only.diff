@@ -1,0 +1,38 @@
+diff --git a/program/preregistrations/q3-dense-headroom-precheck-v2.md b/program/preregistrations/q3-dense-headroom-precheck-v2.md
+index 90ae606..7fadc93 100644
+--- a/program/preregistrations/q3-dense-headroom-precheck-v2.md
++++ b/program/preregistrations/q3-dense-headroom-precheck-v2.md
+@@ -3,18 +3,15 @@
+-Status: DRAFT, not frozen. The design is v1's (`q3-dense-headroom-precheck-v1`,
+-frozen 2026-10-08 after D32), kept unchanged by program decision D36
+-(`program/decisions.md`). Program decision D42 accepts the repairs and limits
+-listed under "Changes from v1 (D36)" and design decisions 16-21 as amended by
+-it, after a narrow re-check of the measured limits, which is still to be
+-done. D42 amends D36 (iii) for the Qwen3.5-4B-Base lane (decision 18:
+-PyTorch's flash, memory-efficient or math attention in place of cuDNN's, not
+-bit-equal, its effect reported by the descriptive `attention_backend_check`)
+-and authorised a second development timing job of the fixed 4B path, whose
+-measurement (Slurm 810) sets the 4B limit by D36's rule (decisions 20 and
+-21). No lane job of this experiment runs before the freeze; every lane job
+-verifies this file's digest against its ledger row at start-up and refuses
+-code whose SHA-256 differs from the table below. Both development timing jobs
+-ran before the freeze (Compute): Slurm 766 on the 4B path as it was before
+-the fix (cuDNN's attention on) and Slurm 810 on the fixed path (cuDNN's
+-attention off). At the freeze this paragraph and the lead-in of the design
+-decisions are rewritten to the frozen wording, naming D42 (Freeze procedure,
+-step 1).
++Status: frozen in program/preregistrations/ledger.jsonl; see the ledger row
++for the freeze time and `git_head_at_freeze`. FREEZE SIMULATION ONLY (scratch
++clone). The design is v1's (`q3-dense-headroom-precheck-v1`, frozen 2026-10-08
++after D32), kept unchanged by program decision D36 (`program/decisions.md`).
++The repairs and limits listed under "Changes from v1 (D36)" and design
++decisions 16-21 were accepted in D42, as amended by it, after a narrow
++re-check of the measured limits; D42 amends D36 (iii) for the
++Qwen3.5-4B-Base lane (decision 18) and authorised the second development
++timing job, whose measurement of the fixed path (Slurm 810) sets the 4B limit
++by D36's rule (decisions 20 and 21). No lane job of this experiment ran before
++the freeze; every lane job verifies this file's digest against its ledger row
++at start-up and refuses code whose SHA-256 differs from the table below. Both
++development timing jobs ran before the freeze (Compute): Slurm 766 on the 4B
++path as it was before the fix (cuDNN's attention on) and Slurm 810 on the
++fixed path (cuDNN's attention off).

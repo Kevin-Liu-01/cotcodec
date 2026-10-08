@@ -1,0 +1,23 @@
+clone of b8977d9d188cb7aa8c72414fe8ddd566627c614f mode=status-only
+ledger rows before:       11
+status-only rewritten
+{
+  "experiment_id": "q3-dense-headroom-precheck-v2",
+  "frozen_at": "2026-10-08T09:28:53.740083+00:00",
+  "git_head_at_freeze": "f217144da14b00eb3baeb6e906f67a01bfa9b2b1",
+  "hash": "1bce8e69898f2c4ca9d25b0c3335a30e5aeb70f844ba62ff2267c185d41ee63e",
+  "path": "program/preregistrations/q3-dense-headroom-precheck-v2.md",
+  "previous_hash": "dc39bfa2f68e0fd57a213e0972266a4db60428e00d6c4e6bca8e576f35ec6439",
+  "sha256": "62e40128cd6b54e52208356553e1e34e119e8ca00c1e9f75e6664c857918b475"
+}
+freeze exit=0
+verify exit=0
+{"rows": 12, "status": "PASS"}
+check-chain exit=0
+simulated freeze commit c9b8c5ade38da6d29f51c5b9ad3a0236ee4ad69a
+frozen file contains 'DRAFT': False
+frozen file contains 'wait for the program owner': True
+E               AssertionError: the frozen file still says 'wait for the program owner'
+FAILED tests/test_dense_headroom_v2_prereg.py::test_status_and_decisions - As...
+1 failed, 25 passed in 27.53s
+pytest exit=1
