@@ -104,6 +104,40 @@ def test_a_changed_shape_is_not_realigned(tmp_path):
     moved_b = ("B", 12 * CM, 3 * CM, 4 * CM, 2 * CM)
     agent = deck(tmp_path / "agent.pptx", [moved_b, A])
     assert zinv.aligned_deck(str(agent), str(ref)) is None
+    edited_b = ("B2", 12 * CM, 1 * CM, 4 * CM, 2 * CM)
+    agent = deck(tmp_path / "agent2.pptx", [edited_b, A])
+    assert zinv.aligned_deck(str(agent), str(ref)) is None
+
+
+def test_a_save_rounding_of_the_geometry_still_matches(tmp_path):
+    """LibreOffice rounds to 1/100 mm (360 EMU): widths 720 EMU apart are the same shape."""
+    ref = deck(tmp_path / "ref.pptx", [A, B, C])
+    rounded = [(t, x, y, w + 720, h + 360) for t, x, y, w, h in (B, A, C)]
+    agent = deck(tmp_path / "agent.pptx", rounded)
+    assert zinv.aligned_deck(str(agent), str(ref)) is not None
+    tight = zinv.aligned_deck(str(agent), str(ref), 0.0)
+    assert tight is None
+
+
+def test_matching_follows_what_the_task_examines(tmp_path):
+    """With examine_shape false (an auto-fit changed a text box's height), shapes still pair."""
+    ref = deck(tmp_path / "ref.pptx", [A, B, C])
+    taller = [(t, x, y, w, h * 2) for t, x, y, w, h in (B, A, C)]
+    agent = deck(tmp_path / "agent.pptx", taller)
+    assert zinv.aligned_deck(str(agent), str(ref)) is None
+    loose = zinv.Matching.from_options({"examine_shape": False})
+    assert zinv.aligned_deck(str(agent), str(ref), loose) is not None
+    seen = []
+    zinv.compare_pptx_files_zinv(
+        str(agent), str(ref), _original=lambda f1, f2, **o: seen.append((f1, o)),
+        examine_shape=False,
+    )  # fmt: skip
+    assert seen[0][0] != str(agent) and seen[0][1] == {"examine_shape": False}
+
+
+def test_approximate_equality_is_the_comparators():
+    assert zinv.approximately_equal(1000, 1004) and not zinv.approximately_equal(1000, 1006)
+    assert zinv.approximately_equal(0, 0) and not zinv.approximately_equal(0, 1)
 
 
 def test_placeholder_without_its_own_frame_never_moves(tmp_path):
@@ -112,13 +146,15 @@ def test_placeholder_without_its_own_frame_never_moves(tmp_path):
     title = slide.shapes.title
     assert zinv.shape_box(title._element) is None
     key = zinv.shape_key(title)
-    other = zinv.ShapeKey(signature=("x",), box=(0, 0, 1, 1))
+    other = zinv.ShapeKey(signature=("x",), geometry=(0, 0, 1, 1), box=(0, 0, 1, 1))
     assert not zinv.apart(key, other)
 
 
 def test_align_order_keeps_identical_shapes_in_order():
-    k = zinv.ShapeKey(signature=("same",), box=(0, 0, 10, 10))
-    far = zinv.ShapeKey(signature=("far",), box=(10**7, 0, 10**7 + 10, 10))
+    k = zinv.ShapeKey(signature=("same",), geometry=(0, 0, 10, 10), box=(0, 0, 10, 10))
+    far = zinv.ShapeKey(
+        signature=("far",), geometry=(10**7, 0, 10, 10), box=(10**7, 0, 10**7 + 10, 10)
+    )
     assert zinv.align_order([k, k, far], [k, k, far]) == [0, 1, 2]
     assert zinv.align_order([far, k], [k, far]) == [1, 0]
     assert zinv.align_order([k], [k, far]) is None
