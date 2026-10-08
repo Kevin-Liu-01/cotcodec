@@ -1,0 +1,28 @@
+{
+ "url": "https://arxiv.org/abs/2609.35378",
+ "fetched_at": "2026-10-08T15:17:36Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 41664,
+ "raw_sha256": "bbe7e17ead5ff8f0f3f9d584c5d6c5d712108937570d039d98b8c57614026009",
+ "raw_stored": false,
+ "extract": {
+  "title": "Multilinguality in Hybrid Attention LLMs",
+  "authors": [
+   "Bandarkar, Lucas",
+   "Hu, Junlin",
+   "Yang, Chenyuan",
+   "Fayyaz, Mohsen",
+   "Peng, Nanyun"
+  ],
+  "citation_date": "2026/09/28",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Mon, 28 Sep 2026 15:14:07 UTC"
+   }
+  ],
+  "abstract": "In response to the growing demand for long sequences in agentic and reasoning use cases, many state-of-the-art LLMs combine multiple variants of attention to mitigate the quadratic complexity of traditional softmax attention. These hybrid attention LLMs aim to balance the strengths and limitations of full attention and alternatives based on recurrence. This work presents a first study of how hybrid attention impacts the multilinguality of LLMs. Beyond the impact on long sequences in poorly tokenized languages, our study is motivated by the possibility that the inductive biases of the recurrent state alter linguistic processing. Our interpretability analysis confirms this, showing that cross-lingual representations in hybrid models develop in patterns tied to the ordering of recurrent and full-attention layers. Across diverse models, we notably observe a pronounced spike in cross-lingual alignment around the first full-attention layer. These findings lead us to question the conventional ordering of attention layers. In distillation experiments on multilingual data, all alternative layer orderings outperform the standard throughout training, learning up to 2.5X faster. These stark, replicable results prompt our theory that multilingual models would benefit from starting with a full-attention layer rather than recurrent layers.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}

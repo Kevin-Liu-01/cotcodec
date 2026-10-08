@@ -1,0 +1,28 @@
+{
+ "url": "https://arxiv.org/abs/2606.07703",
+ "fetched_at": "2026-10-08T15:17:28Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 44882,
+ "raw_sha256": "f9337d65b52b4f48616bfccd3ce8a3980182c64d2c6fb4602f1f51ecaac65d4a",
+ "raw_stored": false,
+ "extract": {
+  "title": "How Much Dense Attention is Necessary? Oracle-Guided Sparse Prefill for Full/GQA Layers in Hybrid Long-Context Models",
+  "authors": [
+   "Wang, Hongxing",
+   "Razanajato, Harenome",
+   "Zhang, Zhen",
+   "Yuan, Yujie",
+   "Liu, Hongsheng"
+  ],
+  "citation_date": "2026/06/05",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Fri, 5 Jun 2026 09:13:52 UTC"
+   }
+  ],
+  "abstract": "Long-context prefill remains expensive because full/GQA layers still score the historical sequence, even in hybrid models with local, sparse, linear, or recurrent components. We study how much dense attention is needed to preserve task-level behavior under explicit support granularity and top-k budgets. We introduce an attention-mass top-k oracle for existing GQA checkpoints: for each layer and query position, it computes dense attention, selects head-averaged token support, and recomputes attention only on that support. The oracle is a diagnostic reference, not a deployable accelerator, and separates sparse-budget feasibility from indexer error and runtime realization effects. On Qwen-family retrieval-heavy evaluations, the longest per-query oracle rows stay within 1 point of dense, and a Qwen3.5-9B RULER-style sweep from 4K to 100K stays within 0.48 points. Guided by the oracle, we derive a head-collapsed auxiliary indexer trained by KL distillation from dense attention-mass distributions while keeping the backbone frozen. With separately distilled Qwen3.5-0.8B and Qwen3.5-9B indexers, the reported 16K/32K validation macro gaps are +2.04 and +1.13 points, treated as quality preservation rather than improvement; fused selection-block-shared support can introduce a larger realization gap. Preliminary single-card TTFT measurements show distilled-indexer sparse serving speedups of 1.71x for Qwen3.5-0.8B on NPU and 1.93x for Qwen3.5-9B on GPU against its dense FlashAttention-2 baseline. Additional random-init stress rows reach 3.44x, indicating sparse-runtime headroom but not validated output quality. This first release separates oracle feasibility, distilled-indexer quality, and runtime headroom, leaving a fully matched quality-latency frontier to future work.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}

@@ -1,0 +1,37 @@
+{
+ "url": "https://arxiv.org/abs/2610.09025",
+ "fetched_at": "2026-10-08T15:17:40Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 42784,
+ "raw_sha256": "7f66e6db3ecf8b627d70dfc67ca19be52e15ad99b696a6379003fb3cdd7bae08",
+ "raw_stored": false,
+ "extract": {
+  "title": "SPIN: Shadow Predictive Indexer for Sparse Attention",
+  "authors": [
+   "Fu, Yao",
+   "Chang, Cyrus",
+   "Zhao, Ritchie",
+   "Long, Bryce",
+   "Li, Yueying",
+   "Kamani, Mahdi",
+   "Jain, Samkit",
+   "Raman, Rahul",
+   "Safavi, Tara",
+   "Gupta, Shreya",
+   "Fashi, Parsa Ashrafi",
+   "Lee, Minseok",
+   "Demouth, Julien",
+   "Rouhani, Bita Darvish"
+  ],
+  "citation_date": "2026/10/06",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Tue, 6 Oct 2026 19:23:10 UTC"
+   }
+  ],
+  "abstract": "Indexer-based sparse attention reduces the cost of core attention by passing only a fixed, small number of important tokens to it. However, the indexer must still score the entire KV cache at every decoding step. This scoring overhead becomes a major bottleneck as the context length grows. We propose SPIN (Shadow Predictive Indexer) to reduce this indexer overhead. SPIN uses lightweight, history-based prediction to identify important KV blocks, avoiding the need to score the full KV cache at every decoding step. SPIN treats KV blocks and speculative decoding as first-class design and implementation considerations. Across extensive evaluations on long-context and agentic benchmarks, SPIN achieves 30-40% sparsity while preserving task quality. In end-to-end vLLM serving, SPIN improves output throughput by up to 14.9% and reduces median inter-token latency by up to 13.2%.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}

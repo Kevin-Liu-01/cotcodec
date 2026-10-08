@@ -1,0 +1,30 @@
+{
+ "url": "https://arxiv.org/abs/2608.25089",
+ "fetched_at": "2026-10-08T15:17:32Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 40982,
+ "raw_sha256": "95e855dd75f6e328e8e9ec440852d6b07c0dcbd3ca2eb60523b00112192d80a7",
+ "raw_stored": false,
+ "extract": {
+  "title": "Apples to Apples? Towards Comparable Crosslingual Language Model Evaluation",
+  "authors": [
+   "Yang, Xiulin",
+   "Wilcox, Ethan Gotlieb",
+   "Arnett, Catherine"
+  ],
+  "citation_date": "2026/08/25",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Tue, 25 Aug 2026 19:36:15 UTC"
+   },
+   {
+    "version": "v2",
+    "date": "Sun, 30 Aug 2026 15:53:47 UTC"
+   }
+  ],
+  "abstract": "Crosslingual evaluation of language models that enables fair comparisons remains a fundamental challenge in multilingual NLP. Existing studies adopt a variety of downstream tasks and intrinsic metrics with different theoretical justifications, yet there has been little empirical investigation into whether these approaches yield meaningful crosslingual conclusions. We systematically examine crosslingual evaluation approaches using controlled monolingual language models trained on parallel data with varying tokenizer vocabulary sizes and model sizes, and further validate our findings on multilingual LLMs. We further discuss challenges in achieving comparable downstream evaluation across languages. Our results show that several widely used normalized metrics introduce crosslinguistic biases rooted in tokenization, encoding, and orthographic differences. In contrast, sentence-level negative log-likelihood computed over semantically equivalent sequences provides more meaningful and consistent crosslingual comparisons.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}

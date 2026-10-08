@@ -1,0 +1,12 @@
+{
+ "url": "https://huggingface.co/datasets/facebook/belebele/tree/7899cdfa4e1e0d733fd77c848e2c273cb1d32be2",
+ "fetched_at": "2026-10-08T15:17:48Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 228392,
+ "raw_sha256": "8d0ec564223b6f6af5e871db8eda01df7ddabff625c3067a9c51f17feec22ede",
+ "raw_stored": false,
+ "extract": {
+  "html_title": "facebook/belebele at 7899cdfa4e1e0d733fd77c848e2c273cb1d32be2"
+ }
+}

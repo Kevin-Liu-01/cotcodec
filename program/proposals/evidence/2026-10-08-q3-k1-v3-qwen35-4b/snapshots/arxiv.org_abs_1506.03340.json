@@ -1,0 +1,38 @@
+{
+ "url": "https://arxiv.org/abs/1506.03340",
+ "fetched_at": "2026-10-08T15:17:05Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 41939,
+ "raw_sha256": "e34c5de920253ea57ccbc7098cf951c956b521dea39e2e34775e4949ca23eb82",
+ "raw_stored": false,
+ "extract": {
+  "title": "Teaching Machines to Read and Comprehend",
+  "authors": [
+   "Hermann, Karl Moritz",
+   "Kočiský, Tomáš",
+   "Grefenstette, Edward",
+   "Espeholt, Lasse",
+   "Kay, Will",
+   "Suleyman, Mustafa",
+   "Blunsom, Phil"
+  ],
+  "citation_date": "2015/06/10",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Wed, 10 Jun 2015 14:54:39 UTC"
+   },
+   {
+    "version": "v2",
+    "date": "Thu, 1 Oct 2015 15:04:49 UTC"
+   },
+   {
+    "version": "v3",
+    "date": "Thu, 19 Nov 2015 15:43:23 UTC"
+   }
+  ],
+  "abstract": "Teaching machines to read natural language documents remains an elusive challenge. Machine reading systems can be tested on their ability to answer questions posed on the contents of documents that they have seen, but until now large scale training and test datasets have been missing for this type of evaluation. In this work we define a new methodology that resolves this bottleneck and provides large scale supervised reading comprehension data. This allows us to develop a class of attention based deep neural networks that learn to read real documents and answer complex questions with minimal prior knowledge of language structure.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}

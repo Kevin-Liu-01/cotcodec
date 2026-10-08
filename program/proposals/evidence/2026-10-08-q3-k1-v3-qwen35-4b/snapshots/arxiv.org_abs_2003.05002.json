@@ -1,0 +1,30 @@
+{
+ "url": "https://arxiv.org/abs/2003.05002",
+ "fetched_at": "2026-10-08T15:17:10Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 42006,
+ "raw_sha256": "9ffde4aa47fb1c61ed80c60b4723474b8238d97345cb78490a374641ca74001e",
+ "raw_stored": false,
+ "extract": {
+  "title": "TyDi QA: A Benchmark for Information-Seeking Question Answering in Typologically Diverse Languages",
+  "authors": [
+   "Clark, Jonathan H.",
+   "Choi, Eunsol",
+   "Collins, Michael",
+   "Garrette, Dan",
+   "Kwiatkowski, Tom",
+   "Nikolaev, Vitaly",
+   "Palomaki, Jennimaria"
+  ],
+  "citation_date": "2020/03/10",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Tue, 10 Mar 2020 21:11:53 UTC"
+   }
+  ],
+  "abstract": "Confidently making progress on multilingual modeling requires challenging, trustworthy evaluations. We present TyDi QA---a question answering dataset covering 11 typologically diverse languages with 204K question-answer pairs. The languages of TyDi QA are diverse with regard to their typology---the set of linguistic features each language expresses---such that we expect models performing well on this set to generalize across a large number of the world's languages. We present a quantitative analysis of the data quality and example-level qualitative linguistic analyses of observed language phenomena that would not be found in English-only corpora. To provide a realistic information-seeking task and avoid priming effects, questions are written by people who want to know the answer, but don't know the answer yet, and the data is collected directly in each language without the use of translation.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}

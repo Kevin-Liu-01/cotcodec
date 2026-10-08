@@ -1,0 +1,12 @@
+{
+ "url": "https://huggingface.co/datasets/HuggingFaceFW/fineweb-2/tree/af9c13333eb981300149d5ca60a8e9d659b276b9",
+ "fetched_at": "2026-10-08T15:17:45Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 1671994,
+ "raw_sha256": "e73d890972d3cfab3a93ee73a904c2db65e104a41ea6da34241f2c16413a516e",
+ "raw_stored": false,
+ "extract": {
+  "html_title": "HuggingFaceFW/fineweb-2 at af9c13333eb981300149d5ca60a8e9d659b276b9"
+ }
+}
