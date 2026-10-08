@@ -1,16 +1,18 @@
 # q2-action-path-v1-executor: executor addendum to q2-action-path-v1
 
-**Status: DRAFT. Not frozen.** The program owner freezes it when development
-ends, after `q2-action-path-v1` and `q2-action-path-v1-inputs`, with
-`uv run python scripts/preregister.py freeze q2-action-path-v1-executor program/preregistrations/q2-action-path-v1-executor.md`.
-The scored C1 and C3 runs and every acceptance trial (A1-A7, the concurrency
-ladder) wait for this ledger entry.
+**Status: frozen in `program/preregistrations/ledger.jsonl`; see the ledger
+row for the freeze time and `git_head_at_freeze`.** The three registrations
+are frozen in this order, each with its own row: `q2-action-path-v1`, then
+`q2-action-path-v1-inputs`, then `q2-action-path-v1-executor` (this
+addendum; `uv run python scripts/preregister.py freeze` with each id and its
+path). No acceptance trial (A1-A7, the concurrency ladder) and no C1 or C3
+run may run before this row exists; C2 needs only the inputs addendum.
 
 - Experiment id: `q2-action-path-v1-executor`, an addendum to
   `q2-action-path-v1` (section 2.2). It changes no rule of that file; it pins
   what that file says is frozen when development ends.
-- Drafted: 2026-10-07, on branch `stage0/q2-action-path`; decisions D30 and
-  D33 applied before the freeze on branch `stage0/q2-action-path-d30`
+- Drafted: 2026-10-07, on branch `stage0/q2-action-path`; decisions D30, D33
+  and D39 applied before the freeze on branch `stage0/q2-action-path-d30`
   (sections 7 and 9). The
   ledger row's `git_head_at_freeze` is the executor SHA every scored campaign
   must run from (its receipt records the exported tree's digest).
@@ -37,7 +39,7 @@ Frozen with this file (SHA-256 of the committed bytes):
 | `harness/q2/action_path/vm_hours.py` | `58b7379377ae87a72c85076ee87441fbb2da12042a15e9ae4aa62f67365074b1` |
 | `harness/q2/action_path/trial_times.json` | `a33ca2e024d6f24a31a60ff62053be1fb197af48c996ae99fb75aff4d20217e5` |
 | `harness/q2/action_path/vm_hours.json` | `5fc0617303a2782c02e67888be4584261239e5f90268e4e39d7524aff625636e` |
-| `harness/q2/action_path/acceptance.py` | `0f4768643812370dcac3765812ca88f811d81068c72c37162cdcacf771938cc8` |
+| `harness/q2/action_path/acceptance.py` | `39c59210db94a4d47da3ad9f32f235c4532dee8e2c31aa604acc175acc3e4d7e` |
 | `scripts/render_q2_action_path_manifest.py` | `8c0e17ac68ed30455faf45232fa160711078990a1c4532a38d45d532c58fbe98` |
 | `experiments/manifests/q2-action-path/dev-l0-fixed-v10.yaml` | `0a4f908e67631483687740cfba3266b829f3c5d2577b08b676a5fa022186ad92` |
 | `harness/q2/vm/guest/probe.py` | `ba5c0f1d364c80d5f8190f3c357b915cd504d754891285c3772ba959a804efeb` |
@@ -170,31 +172,34 @@ for Writer and Chrome; for VS Code, from a screenshot of the opened fixture).
 
 ## 7. Acceptance analysis (`acceptance.py`)
 
-The decision rules of the main preregistration's sections 5-9 as code (design
-decision 32): which campaigns count (COMPLETED 0:0 from the batch script's own
-record or Slurm, infrastructure gates, `System.qcow2` unchanged, nothing
-leaked), the rerun rules, that each criterion ran exactly its realized order
-from one source tree, A1-A7 (A1-A4 and the ladder not counting a trial whose
-only failure is a guest-server restart, during the entry or across the
-session's reset observation, decisions D30 and D33; A1-A3 judging an entry
-on its counted repetitions and failing it on a second excused trial, and a
-rung not qualifying with more than two; A7's restarts of every attempt per
-accessibility call of the counting attempts, capped at the plan's 39,036, on
-the exact one-sided 95% Poisson bound, under attempt 1 only), C1-C4 with
-C2's reading of L0-raw trials and C3's clean-kill and equivalence rules,
-each control reading an earlier attempt by its own rule (main design
-decision 45), and the ladder's N* with the foreign-load abort and its rerun
-cap, a rung attempt without host snapshots not qualifying but counting its
-trials. It reads an attempt killed before its driver wrote a receipt from
-its manifest, batch record and finished sessions (main design decision
-46), and reports without judging every A1-A3 entry with two or more excused
-trials, A4's excused trials over every rerun, A4's restarts per
-accessibility call against A7's bound under a repair attempt, and each
-earlier attempt's receipt beside A5 (main sections 11, 12 and 22). Its verdicts
-are the ones reported;
-`tests/test_q2_acceptance_analysis.py` drives every rule on synthetic
-campaigns. It is frozen in the inputs addendum (before C2 is scored) and
-pinned again here.
+The decision rules of the main preregistration's sections 5-9 as code
+(design decision 32): which campaigns count (COMPLETED 0:0 from the batch
+script's own record or Slurm, infrastructure gates, `System.qcow2`
+unchanged, nothing leaked), the rerun rules, that each criterion ran exactly
+its realized order from one source tree, A1-A7 (A1-A4 and the ladder not
+counting a trial whose only failure is a guest-server restart, during the
+entry or across the session's reset observation, decisions D30 and D33;
+A1-A3 judging an entry on its counted repetitions and failing it on a second
+excused trial, and a rung not qualifying with more than two; A7's restarts
+of every attempt per accessibility call of the counting attempts, capped at
+the plan's 39,036, on the exact one-sided 95% Poisson bound, under attempt 1
+only), C1-C4 with C2's reading of L0-raw trials and C3's clean-kill and
+equivalence rules (a mutant is equivalent only if every attempt's streams
+match the reference's on the cells each ran without an infrastructure
+failure, decision D39), each control reading an earlier attempt by its own
+rule (main design decision 45), and the ladder's N* with the foreign-load
+abort and its rerun cap, a rung attempt without host snapshots not
+qualifying but counting its trials. It reads an attempt killed before its
+driver wrote a receipt from its manifest, batch record and finished sessions
+(main design decision 46), reads a receipt, cycle or record file that does
+not parse as missing, the attempt not counting (decision D39), and reports
+without judging every A1-A3 entry with two or more excused trials, A4's
+excused trials over every rerun, A4's restarts per accessibility call
+against A7's bound under a repair attempt, and each earlier attempt's
+receipt beside A5 (main sections 11, 12 and 22). Its verdicts are the ones
+reported; `tests/test_q2_acceptance_analysis.py` drives every rule on
+synthetic campaigns. It is frozen in the inputs addendum (before C2 is
+scored) and pinned again here.
 
 `scripts/render_q2_action_path_manifest.py` writes each scored campaign's
 manifest from a local export of the frozen commit: the ledger's digests, the
@@ -256,9 +261,10 @@ may list only files no campaign executes: the analysis and sizing files
 (`acceptance.py`, `vm_hours.py`, `trial_times.json`, `vm_hours.json`) and
 Markdown files. Anything else needs new development runs before the freeze.
 On `stage0/q2-action-path-d30`, after the D33 change (`3ad255a`), the
-fixes after its review (`a3ee335`, `c9b4771`; main section 21) and the
-notes closed before the freeze (`2518241`; main section 22), it still
-lists `harness/q2/README.md` and `harness/q2/action_path/acceptance.py`
-only: `acceptance.py` is the only code file changed since `7653799`, and no
-campaign executes it (no file of the lane imports it; it reads the run
-directories afterwards), so the development runs at `7653799` stand.
+fixes after its review (`a3ee335`, `c9b4771`; main section 21), the notes
+closed before the freeze (`2518241`; main section 22) and decision D39
+(`280ccbf`; main section 23), it still lists `harness/q2/README.md` and
+`harness/q2/action_path/acceptance.py` only: `acceptance.py` is the only
+code file changed since `7653799`, and no campaign executes it (no file of
+the lane imports it; it reads the run directories afterwards), so the
+development runs at `7653799` stand.

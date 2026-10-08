@@ -1,8 +1,11 @@
 # q2-action-path-v1: action-path suite on the nested-KVM desktop runtime
 
-**Status: DRAFT. Not frozen.** The program owner reviews and freezes it with
-`uv run python scripts/preregister.py freeze q2-action-path-v1 program/preregistrations/q2-action-path-v1.md`.
-No acceptance trial may run before that ledger entry exists.
+**Status: frozen in `program/preregistrations/ledger.jsonl`; see the ledger
+row for the freeze time and `git_head_at_freeze`.** The three registrations
+are frozen in this order, each with its own row: `q2-action-path-v1` (this
+file), then `q2-action-path-v1-inputs`, then `q2-action-path-v1-executor`
+(`uv run python scripts/preregister.py freeze` with each id and its path).
+No acceptance trial and no C2, C1 or C3 run may run before this row exists.
 
 - Experiment id: `q2-action-path-v1`
 - Question: Q2 (calibrated computer-use instrument), Stage 0b. Program kill
@@ -11,8 +14,9 @@ No acceptance trial may run before that ledger entry exists.
   100% of the gating set G defined in section 4.
 - Drafted: 2026-10-07, on branch `stage0/q2-action-path`. Revised the same day
   after an independent review (section 15 lists what changed and why), and
-  again to apply decisions D30 and D33 on guest-server restarts before the
-  freeze (branch `stage0/q2-action-path-d30`; sections 18 and 20).
+  again to apply decisions D30 and D33 on guest-server restarts and D39's
+  freeze details before the freeze (branch `stage0/q2-action-path-d30`;
+  sections 18, 20 and 23).
 - Reviewed plan this follows: the Stage-0 workflow's reviewed plan
   `q2-action-path-and-vm`, corrected order (catalog and expectations before any
   executor; independent device reference; mutation testing of the suite; one
@@ -423,63 +427,72 @@ end; a session's restart count is the larger of that counter's difference and
 the number of changes of server process across its guard reports
 (`suite.session_restarts`).
 
-**End state and reruns** (design decision 37). A campaign counts only when it
-ended COMPLETED with exit code 0:0, its receipt's `infra_gates_pass` is true,
-`System.qcow2` is unchanged and nothing labelled was left. Slurm accounting is
-off on this host and Slurm forgets a finished job within minutes, so the end
-state is read from the batch script's own last record (`driver_exit=0
-labelled_containers_left=0` in the run directory's `preflight.txt`, written
-immediately before it exits 0; a job ended by a signal, a time limit or a
-node failure never writes it) and, when the operator or a watcher read it in
-time, from `scontrol show job`; when both exist they must agree. A campaign
-that does not count may be rerun once, as a new attempt with a new output
-path; a campaign that counted is never rerun, and no campaign has a third
-attempt. In this section an attempt of a campaign is one of its runs, the
-first or its rerun (the earlier attempt and the counting attempt), always
-under one executor: a repair attempt (section 11) is a new executor
-version, never a rerun, and every rule here, D33's limits included, runs
-within one repair attempt. A job killed before its driver wrote its
-receipt (the driver writes it last) is still an attempt: the analysis reads
-it from its manifest, its batch record and the sessions it finished
-(`acceptance.load`), and it does not count; a session the kill cut short
-left only unjudged trial records (the runner judges a session's trials at
-its end, against the tap's stream), so its trials are reported as not run.
-Every trial of every attempt is reported, and a failed trial in an
-earlier attempt counts against its criterion exactly as if the attempt had
-counted: cancelling or rerunning a campaign never removes a failure. Like a
-counting attempt's trials, it counts on the cells the criterion judges (G
-for A1 and the ladder, the in-spec cells for A2, the stress entries for A3,
-every trial for A4 and A6) and not when the criterion excuses it, and an
-earlier attempt's excused trials count toward A1-A3's and the ladder's
-limits above, so a rerun never resets them (decision D33). The validity
-controls read an earlier attempt's trials by their own rules, because their
-known-defect cells, predicted failures and kills fail by design and such a
-failure is not one against them (design decision 45): in C1 each
-known-defect cell must fail in every trial of every attempt (an earlier
-pass counts against C1, an earlier failure does not, and C1 judges no other
-cell); in C2 an earlier failure counts only on a cell outside the predicted
-set, read as C2 reads every trial (`acceptance.c2_trial_pass`), and the
-predicted cells are judged on the counting attempt; in C3 a mutant's kills
-and its equivalence are read from its counting attempt and each earlier
-attempt is reported, while a cell the unmutated reference failed, or failed
+**End state and reruns** (design decision 37). A campaign counts only when
+it ended COMPLETED with exit code 0:0, its receipt's `infra_gates_pass` is
+true, `System.qcow2` is unchanged and nothing labelled was left. Slurm
+accounting is off on this host and Slurm forgets a finished job within
+minutes, so the end state is read from the batch script's own last record
+(`driver_exit=0 labelled_containers_left=0` in the run directory's
+`preflight.txt`, written immediately before it exits 0; a job ended by a
+signal, a time limit or a node failure never writes it) and, when the
+operator or a watcher read it in time, from `scontrol show job`; when both
+exist they must agree. A campaign that does not count may be rerun once, as
+a new attempt with a new output path; a campaign that counted is never
+rerun, and no campaign has a third attempt. In this section an attempt of a
+campaign is one of its runs, the first or its rerun (the earlier attempt and
+the counting attempt), always under one executor: a repair attempt (section
+11) is a new executor version, never a rerun, and every rule here, D33's
+limits included, runs within one repair attempt. A job killed before its
+driver wrote its receipt (the driver writes it last) is still an attempt:
+the analysis reads it from its manifest, its batch record and the sessions
+it finished (`acceptance.load`), and it does not count; a session the kill
+cut short left only unjudged trial records (the runner judges a session's
+trials at its end, against the tap's stream), so its trials are reported as
+not run. The driver and the runner write a run's receipt, cycle and record
+files whole but not atomically, so a kill during a write can leave one cut
+short. Such a file, one that does not parse, is read as missing (decision
+D39): a receipt as no receipt, a cycle file as a session not run, a record
+file as a session without host snapshots. The analysis lists each one
+(`unreadable`), and the attempt does not count, so a write cut short can
+never leave a criterion without a verdict. Every trial of every attempt is
+reported, and a failed trial in an earlier attempt counts against its
+criterion exactly as if the attempt had counted: cancelling or rerunning a
+campaign never removes a failure. Like a counting attempt's trials, it
+counts on the cells the criterion judges (G for A1 and the ladder, the
+in-spec cells for A2, the stress entries for A3, every trial for A4 and A6)
+and not when the criterion excuses it, and an earlier attempt's excused
+trials count toward A1-A3's and the ladder's limits above, so a rerun never
+resets them (decision D33). The validity controls read an earlier attempt's
+trials by their own rules, because their known-defect cells, predicted
+failures and kills fail by design and such a failure is not one against them
+(design decision 45): in C1 each known-defect cell must fail in every trial
+of every attempt (an earlier pass counts against C1, an earlier failure does
+not, and C1 judges no other cell); in C2 an earlier failure counts only on a
+cell outside the predicted set, read as C2 reads every trial
+(`acceptance.c2_trial_pass`), and the predicted cells are judged on the
+counting attempt; in C3 a mutant's kills are read from its counting attempt,
+and it is equivalent only if its counting attempt's stream signature equals
+the reference's and so does each earlier attempt's on every cell that
+attempt ran without an infrastructure failure (decision D39; each earlier
+attempt is reported), while a cell the unmutated reference failed, or failed
 with an infrastructure failure, in any of the reference's attempts cannot
 kill; C4 reads every A1 trial of every attempt. An earlier attempt never
-supplies what a control needs (C1's and C2's required failures, C3's
-kills). The only exception is a concurrency-ladder
-rung aborted
-on foreign load (section 9); a rung attempt missing its host snapshots is
-not aborted, and its trials count. The same holds
-for A7's count of restarts, which sums the restarts of every attempt but
-divides by the accessibility calls of the counting attempts only, capped at
-the plan's 39,036 calls: an attempt that was cancelled or did not count adds
-its restarts and none of its calls, so stopping a run and rerunning it can
-never raise A7's chance of passing (section 7, design decision 41). A5 is
-judged on the counting attempts' receipts only: a killed job can leave
-labelled containers by design (a kill or a node failure can skip the batch
-script's cleanup) and writes no receipt, so judging an earlier attempt's
-receipt would let one killed job fail A5 with no repair. Each earlier
-attempt's receipt (or its absence) is reported with A5 (`acceptance.a5`,
-`earlier_attempts`), and that attempt, which did not count, is read above.
+supplies what a control needs (C1's and C2's required failures, C3's kills),
+and it can take a C3 mutant's equivalence away, never give it. The only
+exception is a concurrency-ladder rung aborted on foreign load (section 9);
+a rung attempt missing its host snapshots is not aborted, and its trials
+count. The same holds for A7's count of restarts, which sums the restarts of
+every attempt but divides by the accessibility calls of the counting
+attempts only, capped at the plan's 39,036 calls: an attempt that was
+cancelled or did not count adds its restarts and none of its calls, so
+stopping a run and rerunning it can never raise A7's chance of passing
+(section 7, design decision 41). A5 is judged on the counting attempts'
+receipts only: a killed job can leave labelled containers by design (a kill
+or a node failure can skip the batch script's cleanup) and writes no
+receipt, so judging an earlier attempt's receipt would let one killed job
+fail A5 with no repair. Each earlier attempt's receipt (or its absence) is
+reported with A5 (`acceptance.a5`, `earlier_attempts`), and that attempt,
+which did not count, is read above.
 
 ### 6.2 Entry guard
 
@@ -700,7 +713,12 @@ Each control is scored once, at the point named, and only on frozen code.
   both are reported per mutant. Outside-spec
   cells run and are reported but never kill. A mutant is equivalent only if
   its XRecord stream without timestamps, text buffer and terminal action are
-  byte-identical to the unmutated code's on every cell of its layer; a mutant
+  byte-identical to the unmutated code's on every cell of its layer in its
+  counting attempt, and in each earlier attempt (section 6.1) on every cell
+  that attempt ran without an infrastructure failure (decision D39): kills
+  are read from the counting attempt only, and a stream that differed in an
+  attempt that did not count keeps the mutant from being equivalent, so a
+  rerun can never turn a survivor into an equivalent mutant. A mutant
   neither killed nor equivalent survives, whatever the reason.
   Required: 100% of scored, non-equivalent mutants killed. The detection
   controls H-OSW-up and H-GA-buggy are not mutated: they carry known defects
@@ -1021,8 +1039,10 @@ mutation score per operator and per layer with the observed killers next to
 the predicted ones, and every excluded or not-applicable pair with its
 reason, each mutant's cells that failed with an infrastructure failure, and
 each cell the unmutated reference did not pass cleanly, and each mutant's
-earlier attempts with their failed cells and whether their streams matched
-the reference's; the statement that
+earlier attempts with their failed cells, whether their streams matched
+the reference's, the cells whose stream differed without an infrastructure
+failure (any of which keeps the mutant from being equivalent, decision
+D39) and the cells left out for an infrastructure failure; the statement that
 C3 repeated development's conditions; the L0-raw prediction table against the
 observed results under C2's rule and under section 5 as written; the R-dev
 reference stability per entry; which entries rest on a self-specified oracle;
@@ -1034,15 +1054,19 @@ missing host snapshots); observation retries by
 type; each session's warm-up and reset-observation records, with the trials
 charged for an undelivered reset observation; every attempt of every
 campaign, rerun or repaired, with its end state (batch record and, when read,
-Slurm state) and its failed trials; every guest-server restart with the
-entry it hit (inside the entry or across the session's reset observation),
-its session, any probe or tap relaunch and, in A1-A4 and the ladder,
-whether the trial counted or was excused (decisions D30 and D33), so every
-excused trial is listed in its criterion's restart report; per criterion
-and per rung, the number of excused trials over every rerun (A4's as well,
-beside those of its counting attempts), and in A1-A3 every entry with two
-or more excused trials, whatever its status (a counted failure makes it
-FLAKY or FAIL first) and whether or not the criterion judges it, with its
+Slurm state), any run file that did not parse and was read as missing
+(`unreadable`, section 6.1) and its failed trials; every guest-server
+restart with the entry it hit (inside the entry or across the session's
+reset observation), its session, any probe or tap relaunch and, in A1-A4
+and the ladder, whether the trial counted or was excused (decisions D30
+and D33), so every excused trial is listed in its criterion's restart
+report; per criterion,
+the number of excused trials over every rerun (A4's as well, beside those
+of its counting attempts), and per rung over every rerun that did not
+abort; aborted attempts' counts are in `earlier_attempts`; in A1-A3 every
+entry with two or more excused trials, whatever its status (a counted
+failure makes it FLAKY or FAIL first) and whether or not the criterion
+judges it, with its
 excused repetitions (`entries_over_restart_limit`); under a repair
 attempt, A4's restarts per accessibility call against A7's bound (section
 11); each earlier attempt's receipt, or its absence, with A5 (section 6.1);
@@ -1429,7 +1453,8 @@ here with its reason.
     repetitions per entry over both shuffles. So the limit counts excused
     trials over all of an entry's repetitions in the criterion: both
     settings, every rerun and, in A1, both shuffles. D33's author confirmed
-    before the freeze that this per-entry reading is the one D33 means. A
+    before the freeze that this per-entry reading is the one D33 means;
+    decision D39 (`program/decisions.md`) records the confirmation. A
     reading that allowed one excused trial per setting and per campaign
     would let an A1
     entry lose up to 4 of its 20 repetitions (2 shuffles x 2 settings),
@@ -1452,12 +1477,20 @@ here with its reason.
     rule: a C1 defect that passed in any attempt fails C1, an unpredicted C2
     failure in any attempt fails C2, and a cell the C3 reference did not
     pass cleanly in any attempt cannot kill, while C1's and C2's required
-    failures and C3's kills and equivalence are read from the counting
-    attempt. A mutant's earlier attempt is reported with whether its streams
-    matched the reference's but does not decide equivalence: an attempt that
-    did not count may carry infrastructure failures (a lost tap window, for
-    one) whose streams differ for reasons that say nothing about the mutant,
-    and judging them would bring back the defect this decision removes. C4,
+    failures and C3's kills are read from the counting attempt. C3's
+    equivalence fails closed (decision D39, section 23): the counting
+    attempt's streams must equal the reference's on every cell, and each
+    earlier attempt's on every cell it ran without an infrastructure
+    failure. This pass had first read equivalence from the counting attempt
+    alone, because an attempt that did not count may carry infrastructure
+    failures (a lost tap window, for one) whose streams differ for reasons
+    that say nothing about the mutant. That reason covers only the cells
+    with an infrastructure failure, which are left out; on the others an
+    earlier difference is as much the mutant's as a counting one, and
+    ignoring it let a cancel and rerun turn a survivor whose stream varies
+    between runs into an equivalent mutant, the rescue design decision 37
+    rules out. Kills stay the counting attempt's, so an earlier attempt can
+    take equivalence away and never supply a kill. C4,
     whose mismatches are never by design, now reads every attempt, as A1-A4
     do (section 21, item 4). The same review found that the ladder read a
     rung attempt with no host snapshots as a foreign-load abort, whose
@@ -1789,12 +1822,13 @@ item 5, before the freeze. Applied on branch `stage0/q2-action-path-d30`:
    is the one D33 means: D33's text says an entry "needs all but at most
    one of its repetitions counted: a second excused trial in one entry
    counts as a failure", section 5 judges one entry over both settings,
-   and D33's author confirmed the reading before the freeze (section 22;
-   design decision 44). The working brief for this pass had read the limit
-   "per setting, per campaign"; that reading is not registered. It would
-   have lowered the probability that some A1-A3 entry reaches its limit by
-   about 8 x 10^-5 at the development rate, 3 x 10^-4 at half A7's bound
-   and 1.2 x 10^-3 at the bound, with the rung probabilities unchanged
+   and D33's author confirmed the reading before the freeze, as decision
+   D39 records (sections 22 and 23; design decision 44). The working brief
+   for this pass had read the limit "per setting, per campaign"; that
+   reading is not registered. It would have lowered the probability that
+   some A1-A3 entry reaches its limit by about 8 x 10^-5 at the
+   development rate, 3 x 10^-4 at half A7's bound and 1.2 x 10^-3 at the
+   bound, with the rung probabilities unchanged
    (section 9; first given here as less than 10^-4, which holds at the
    development rate only; section 21).
 3. **The ladder.** "Every gating trial passes" reads over a rung's counted
@@ -1938,7 +1972,8 @@ here before the freeze, with no scored data (code in `acceptance.py`, with
    wider reading, D33 is amended before the freeze"). D33's author
    confirmed that the per-entry reading is the one D33 means, so the text
    states it plainly, and the pending item for it is removed from
-   `program/state.json`.
+   `program/state.json`. Decision D39 (`program/decisions.md`) records the
+   confirmation (section 23).
 3. **"Attempt"** (sections 6.1, 12, 20 and design decision 44). Where those
    sections mean a campaign's first run and its rerun they now say "every
    rerun", and section 6.1 defines an attempt of a campaign as one of its
@@ -2010,3 +2045,98 @@ here before the freeze, with no scored data (code in `acceptance.py`, with
    its name. The cancelled runs 695-699, which the old loader could not
    read (no `receipt.json`), now read as attempts with no finished session,
    Slurm state CANCELLED 143:0 and no batch end, which cannot count.
+
+## 23. Changes for decision D39 (2026-10-07)
+
+The final pre-freeze verifier of branch head `ae2a6d7` found one defect in
+the acceptance analysis and one freeze blocker in the text, and noted three
+smaller items. Decision D39 (`program/decisions.md`) settled them before
+the freeze, with no scored data (code in `acceptance.py`, with
+`tests/test_q2_acceptance_analysis.py`, commit `280ccbf`):
+
+1. **C3 equivalence fails closed** (sections 6.1, 8 and 12; design
+   decision 45; `acceptance.c3`). C3 read a mutant's equivalence from its
+   counting attempt alone and only reported an earlier attempt's streams.
+   A mutant that survived in an attempt that did not count (one cancelled
+   mid-run, say) therefore came out equivalent if its rerun happened to
+   match the reference, and C3 passed: a cancel and rerun removed a
+   failure, which section 6.1 says never happens and design decision 37
+   exists to prevent. The verifier's synthetic probe showed it: an
+   L0-fixed mutant whose counting attempt matched the reference and killed
+   nothing, with an earlier attempt that hit its time limit and in which
+   `type_plain` passed with different text, read as equivalent, and so did
+   one whose only clean kill was in the earlier attempt. Now a mutant is
+   equivalent only if its counting attempt's stream signature equals the
+   reference's on every cell and every earlier attempt's stream equals the
+   reference's on each cell it ran without an infrastructure failure. A
+   trial with an infrastructure failure is not compared, because its
+   stream may differ for reasons that say nothing about the mutant (design
+   decision 45 gave that reason for ignoring earlier attempts altogether;
+   it covers only those trials). Kills stay the counting attempt's, so an
+   earlier attempt can take equivalence away but never supply a kill. Both
+   probe cases now survive and fail C3, the outcome the same streams get
+   in a counting attempt; an earlier attempt that differs only on cells
+   with an infrastructure failure leaves the mutant equivalent. Each
+   earlier attempt is reported with the cells whose stream differed and
+   the cells not compared (section 12). The cost: a stream that varies
+   between runs on a cell without an infrastructure failure now keeps a
+   mutant from being equivalent in any attempt, not only in the counting
+   one. Only M12 and M13 on H-OSW-fixed are predicted equivalent
+   (comment-only patches, section 8); every other scored mutant is
+   predicted killed, and a counting attempt's kill makes earlier streams
+   irrelevant. Development saw both equivalent, so the added exposure
+   arises only if their campaign is rerun and the rerun's earlier attempt
+   shows a stream difference.
+2. **An unparseable run file** (section 6.1; `acceptance.load`). The
+   driver and the runner write `receipt.json`, `cycle-NN.json` and
+   `record-NN.json` whole but not atomically, so a kill during a write can
+   leave one cut short, and `load` then raised on it: a criterion with
+   such an attempt would have had no verdict, and the frozen analysis no
+   repair (the concern of design decision 46, in a narrower window). Such
+   a file now reads as missing: a receipt as no receipt, a cycle file as a
+   session not run (its trials and restarts are not read, as for a session
+   the kill cut short), a record file as a session without host snapshots.
+   The analysis lists each one with its attempt (`unreadable`), and the
+   attempt does not count, whatever its end state, so it may be rerun.
+3. **Status lines** (all three registrations; `tests/test_q2_prereg_inputs.py`).
+   Each status paragraph read "DRAFT. Not frozen.", and a frozen file
+   cannot be edited; D32 called the same a freeze blocker for Q3, whose
+   line was rewritten before its freeze (`de5657c`). Each now has the
+   frozen wording: the ledger row, the freeze order (`q2-action-path-v1`,
+   then `q2-action-path-v1-inputs`, then `q2-action-path-v1-executor`) and
+   what may not run before that row exists. The test requires it.
+4. **The record of D33's reading** (sections 20 and 22, design decision
+   44). Those sections said D33's author confirmed the per-entry reading of
+   the A1-A3 limit, and the only record was this branch's log. D39 records
+   the confirmation in `program/decisions.md`, and the three places now
+   point to it.
+5. **Section 12's per-rung count.** Section 12 said each rung's excused
+   trials are counted over every rerun; `acceptance.rung` counts them over
+   every rerun that did not abort (an aborted attempt's trials never count,
+   section 9) and gives each earlier attempt's count, aborted or not, in
+   `earlier_attempts`. The text now says so. Text only.
+6. **Code, tests and checks.** `acceptance.py` is still the only code file
+   changed since `7653799`, and no campaign executes it, so the executor
+   addendum's byte-identity check lists only `harness/q2/README.md` and
+   `acceptance.py` and the development runs at `7653799` stand; both
+   addenda pin its new digest. New tests drive the verifier's probe (an
+   earlier attempt that timed out, in which `type_plain` passed with
+   different text: survived and C3 fails, as when the same streams are
+   the counting attempt's), an earlier-only clean kill next to a counting
+   attempt identical to the reference (survived), an earlier attempt whose
+   only differences are on cells with an infrastructure failure
+   (equivalent) and the same with a clean difference elsewhere (survived),
+   an earlier attempt cut short (compared on the cells it reached), a
+   counting kill (killed whatever the earlier streams), and unparseable
+   receipt, cycle and record files (a record cut inside a multi-byte
+   character, a cycle file cut short, an empty receipt, a receipt that is
+   not an object), read as an earlier attempt that may be rerun and whose
+   readable gating failure counts. Each fails on the `acceptance.py`
+   before it. The final loader read development runs 694 and 703-708 and
+   the cancelled 695-699 again, next to the loader before it (at
+   `ae2a6d7`): restarts, accessibility calls, the trials each restart hit,
+   every entry's status, the rung reading, the entries over the limit,
+   snapshots, the abort reading and the counting problems are unchanged;
+   the only difference is the new list of unreadable files, empty in every
+   run. Every receipt, cycle and record file in the 124 development run
+   directories on the host (996 files) parses.

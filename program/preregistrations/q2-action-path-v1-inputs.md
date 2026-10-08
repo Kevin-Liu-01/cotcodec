@@ -1,15 +1,18 @@
 # q2-action-path-v1-inputs: inputs addendum to q2-action-path-v1
 
-**Status: DRAFT. Not frozen.** The program owner freezes it after
-`q2-action-path-v1` with
-`uv run python scripts/preregister.py freeze q2-action-path-v1-inputs program/preregistrations/q2-action-path-v1-inputs.md`.
-Validity control C2 may be scored only after this ledger entry exists.
+**Status: frozen in `program/preregistrations/ledger.jsonl`; see the ledger
+row for the freeze time and `git_head_at_freeze`.** The three registrations
+are frozen in this order, each with its own row: `q2-action-path-v1`, then
+`q2-action-path-v1-inputs` (this addendum), then `q2-action-path-v1-executor`
+(`uv run python scripts/preregister.py freeze` with each id and its path).
+No acceptance trial and no C2, C1 or C3 run may run before this row exists
+(C2 needs only this addendum and the main registration).
 
 - Experiment id: `q2-action-path-v1-inputs`, an addendum to `q2-action-path-v1`
   (`program/preregistrations/q2-action-path-v1.md`, section 2.2). It changes no
   rule of that file; it pins the components that file says are frozen here.
-- Drafted: 2026-10-07, on branch `stage0/q2-action-path`; decisions D30 and
-  D33 applied before the freeze on branch `stage0/q2-action-path-d30`
+- Drafted: 2026-10-07, on branch `stage0/q2-action-path`; decisions D30, D33
+  and D39 applied before the freeze on branch `stage0/q2-action-path-d30`
   (sections 5 and 6).
 - What it freezes: the guest probe (event log, text buffer, marker block,
   entry delimiters), the marker decoder, the entry guard (including the
@@ -63,7 +66,7 @@ Frozen with this file (SHA-256 of the committed bytes):
 | `harness/q2/action_path/upstream/PROVENANCE.json` | `5bef93df835c560b1f8dc6e8cfe7d6c207ba7fbe2e26c861541878563062744d` |
 | `infra/slurm/host-single-node/vm-campaign.sbatch` | `3d86820d176e3a9f0699814a19f62154cde00f88da1777a33c804e884288ac8a` |
 | `scripts/submit_vm_campaign.py` | `f08aafc8bc693cd6eb6850ff972a3401f3bddc99f3c14e03187b4d313fcc5917` |
-| `harness/q2/action_path/acceptance.py` | `0f4768643812370dcac3765812ca88f811d81068c72c37162cdcacf771938cc8` |
+| `harness/q2/action_path/acceptance.py` | `39c59210db94a4d47da3ad9f32f235c4532dee8e2c31aa604acc175acc3e4d7e` |
 | `harness/__init__.py` | `17dac2704be26050e324aa36aba6d2c855abbd592e4d72f750b9b6e9c4399fec` |
 | `harness/q2/__init__.py` | `0932bda132c1dab03f40e460874a6827c4609424815e65eedcfefd3cd0b943a1` |
 | `harness/q2/action_path/__init__.py` | `8ce4d0afdd20f6b09dbb4e9d40d24acead2fc1992fccebd1ddf3891ec402613f` |
@@ -187,12 +190,16 @@ file equals it), so freezing the catalog fixes them.
   than two; A7, the restarts per accessibility call on the exact one-sided
   95% Poisson bound, its calls capped at the plan's 39,036; C1; C2's
   reading of L0-raw trials (main section 8, decision 34); C3's clean kills
-  (decision 36); C4; each control reading an earlier attempt by its own rule
-  (main design decision 45); and the ladder's N* with the foreign-load abort
-  and its rerun cap, a rung attempt without host snapshots not qualifying
-  but counting its trials. An attempt killed before its driver wrote a
-  receipt is read from its manifest, batch record and finished sessions
-  and does not count (main design decision 46). Reported and not judged:
+  (decision 36) and its equivalence, which needs every attempt's streams
+  to match the reference's on the cells each ran without an infrastructure
+  failure (decision D39); C4; each control reading an earlier attempt by
+  its own rule (main design decision 45); and the ladder's N* with the
+  foreign-load abort and its rerun cap, a rung attempt without host
+  snapshots not qualifying but counting its trials. An attempt killed
+  before its driver wrote a receipt is read from its manifest, batch record
+  and finished sessions and does not count (main design decision 46), and
+  a receipt, cycle or record file that does not parse reads as missing and
+  its attempt does not count (decision D39). Reported and not judged:
   every A1-A3 entry with two or more excused trials and its excused
   repetitions, A4's excused trials over every rerun and, under a repair
   attempt, A4's restarts per accessibility call against A7's bound, and
@@ -273,6 +280,7 @@ later change to a file listed in section 1 (from `git log 29b056e..`):
 | `a3ee335` | `acceptance.py` | After the review of the D33 pass, before any freeze and with no scored data (main section 21, design decision 45): C1-C3 counted every failed trial of an earlier attempt, so the by-design failures of C1's known-defect cells, C2's predicted set and each mutant's kills made any rerun of a C1-C3 campaign fail its control; each control now reads an earlier attempt by its own rule (C1: a known-defect cell that passed counts, its failures never; C2: an earlier failure counts only outside the predicted set, read by `c2_trial_pass`; C3: kills and equivalence from the counting attempt, earlier attempts reported, a cell the reference did not pass cleanly in any attempt cannot kill). A rung attempt with no host snapshots had been read as a foreign-load abort, dropping its gating failures and excused trials; only the two registered reasons abort now, and an attempt missing snapshots does not qualify, may be rerun and counts its trials (`snapshot_problems`). `tests/test_q2_acceptance_analysis.py` drives each case. No file a campaign executes changed. |
 | `c9b4771` | `acceptance.py` | Found while fixing the above: C4 read the counting A1 attempts only, though it judges the tap's stream, which A1 does not judge for an entry the probe observes; it now reads every attempt (main section 21). A test drives it. No file a campaign executes changed. |
 | `2518241` | `acceptance.py` | Closing the reviews' non-blocking notes before the freeze, with no scored data (main section 22, design decision 46). `load` opened `receipt.json` unconditionally, and the driver writes it last, so an attempt killed by a signal, a time limit or a node failure (development runs 695-699 have no receipt) could not be read; it is now read from its manifest, its batch record (`job_id=` in `preflight.txt`) and its finished sessions, and does not count. Reported, not judged: `entries_over_restart_limit` lists every entry with two or more excused trials whatever its status, with its excused repetitions (it had listed `RESTART_LIMIT` entries by name only); A4's `restart_only_trials` counts every rerun (it had counted the counting attempts only); under a repair attempt A4 gives its restarts per accessibility call against A7's bound (`repair_restart_rate`); A5 lists each earlier attempt's receipt and stays judged on the counting attempts. `foreign_abort` documents that a failed `squeue` in a host snapshot cannot be detected (main section 9). `tests/test_q2_acceptance_analysis.py` drives each case. No file a campaign executes changed. |
+| `280ccbf` | `acceptance.py` | Decision D39, recorded in `program/decisions.md` before the freeze on the final pre-freeze verifier's finding, with no scored data (main section 23). C3 read a mutant's equivalence from its counting attempt alone, so a mutant that survived in an attempt that did not count came out equivalent when its rerun matched the reference; a mutant is now equivalent only if its counting attempt's streams equal the reference's and every earlier attempt's do on each cell it ran without an infrastructure failure, and kills stay the counting attempt's. `load` raised on a receipt, cycle or record file a kill cut short (the driver and the runner write them non-atomically); such a file now reads as missing (`unreadable`), and the attempt does not count. `tests/test_q2_acceptance_analysis.py` drives both, with the verifier's probe; the final loader read runs 694, 695-699 and 703-708 again with nothing changed but the new, empty list. No file a campaign executes changed. |
 
 The probe change makes the no-action entry's screenshot start from a settled
 screen, the canary changes make the read-back report what the app holds, and
@@ -298,7 +306,11 @@ the D33 pass: they change how C1-C4 and a rung read an earlier attempt,
 never how a trial is judged. `2518241` closes the reviews' remaining notes:
 it lets the analysis read an attempt killed before its receipt (which it
 could not read at all) and adds reports that judge nothing; it changes no
-trial verdict and no criterion's rule. No scored campaign has run.
+trial verdict and no criterion's rule. `280ccbf` applies decision D39 on
+the final pre-freeze verifier's finding: C3's equivalence now needs every
+attempt's streams to match the reference's (it can only make C3 stricter),
+and a run file a kill cut short reads as missing instead of stopping the
+analysis; it changes no trial verdict. No scored campaign has run.
 
 ## 6. A decision before the freeze: guest-server restarts and A4
 
