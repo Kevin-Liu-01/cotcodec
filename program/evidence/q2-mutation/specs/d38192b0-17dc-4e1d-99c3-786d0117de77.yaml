@@ -1,0 +1,13 @@
+task_id: d38192b0-17dc-4e1d-99c3-786d0117de77
+author: blind-model-author-v1
+requirements:
+  - req_id: R1
+    statement: The open email being composed has ~/aws-bill.pdf attached.
+    check_kind: other
+    observable: The Thunderbird compose window's attachment list contains aws-bill.pdf (file /home/user/aws-bill.pdf), observable via the UI/accessibility tree.
+  - req_id: R2
+    statement: The compose window remains open and the message is not sent.
+    check_kind: other
+    observable: The compose window still exists; no new message in Sent/Outbox; its body text still equals the prepared draft body.
+allowed_variations:
+  - Saving a draft is neither requested nor forbidden.

@@ -1,0 +1,26 @@
+{
+ "url": "https://arxiv.org/abs/2609.19611",
+ "fetched_at": "2026-10-08T07:31:35Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 41460,
+ "raw_sha256": "662209e58e9b492a000b694b0c289c27b512c43451f5f86e12ef2ce2881b88dd",
+ "raw_stored": false,
+ "extract": {
+  "title": "The Output-Space Hypothesis: Enumerative Equivalence Checking for Tensor Programs",
+  "authors": [
+   "Biberstein, Paul",
+   "Devietti, Joseph",
+   "Naik, Mayur"
+  ],
+  "citation_date": "2026/09/17",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Thu, 17 Sep 2026 02:54:30 UTC"
+   }
+  ],
+  "abstract": "Tensor programs, as used in deep learning models, are a prime target for optimization, as small performance improvements can have a large impact across training or inference workloads. However, such optimizations are complicated and can produce subtle bugs. Traditionally, correctness is assumed when differential testing against a reference on random inputs fails to reveal bugs. However, the inputs to these programs are massive tensors, and finding bugs can require generating extremely low likelihood inputs with precise relationships among their values. We propose a novel way to find bugs more consistently by flipping the quantifiers. Rather than generating a single input and checking all output tensor locations for equivalence, what if you could check a single output tensor location's equivalence for all inputs? We implement this idea in a system, \\dirigo, by using a novel symbolic execution strategy. We demonstrate that \\dirigo can find bugs effectively in a public dataset of 6,988 AI-written CUDA kernels that are all marked correct by differential testing. Of these, \\dirigo finds 600 kernels that are actually buggy, and finds 97.3\\% of those bugs within two minutes.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}

@@ -1,0 +1,9 @@
+task_id: 9d425400-e9b2-4424-9a4b-d4c7abac4140
+author: blind-model-author-v1
+requirements:
+  - req_id: R1
+    statement: Editor tabs wrap over multiple lines when they exceed the available space.
+    check_kind: config_value
+    observable: User settings.json has "workbench.editor.wrapTabs" == true.
+allowed_variations:
+  - Other tab settings unchanged.

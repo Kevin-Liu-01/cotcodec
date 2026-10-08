@@ -1,0 +1,6 @@
+overlay job 566 submitted 2026-10-07T19:25:17Z git=ba840b4
+args-doctor job 573 (CPU) 2026-10-07T19:27:14Z
+open rater dev smoke job 582 submitted 2026-10-07T19:29:19Z image=6bc53f50 git=ba840b4
+overlay job 646 submitted 2026-10-07T21:48:43Z git=4b9b45d
+args-doctor job 647 (CPU) 2026-10-07T21:49:56Z image=0fe3f452 git=4b9b45d
+open rater dev smoke v2 job 650 submitted 2026-10-07T21:52:36Z image=0fe3f452 git=4b9b45d

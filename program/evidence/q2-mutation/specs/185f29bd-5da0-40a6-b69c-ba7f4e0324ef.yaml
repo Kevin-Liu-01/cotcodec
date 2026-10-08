@@ -1,0 +1,23 @@
+task_id: 185f29bd-5da0-40a6-b69c-ba7f4e0324ef
+author: blind-model-author-v1
+requirements:
+  - req_id: R1
+    statement: One filled PDF evaluation form exists per employee in the spreadsheet, named after the employee.
+    check_kind: file_exists
+    observable: Seven PDFs exist - "John Doe.pdf", "Emily Johnson.pdf", "Michael Brown.pdf", "Linda Green.pdf", "David Wilson.pdf", "Sophia Carter.pdf", "Alex Lee.pdf" (expected next to the inputs on /home/user/Desktop).
+  - req_id: R2
+    statement: Each PDF is the standardized review_template.pdf form with the employee's information fields filled from the spreadsheet row.
+    check_kind: other
+    observable: 'Form fields EMPLOYEE NAMERow1, EMPLOYEE IDRow1, DATE OF CURRENT REVIEWRow1, POSITION HELDRow1, DEPARTMENTRow1, DATE OF LAST REVIEWRow1, REVIEWER NAMERow1, REVIEWER TITLERow1, DATE SUBMITTEDRow1 hold that row''s values as displayed (e.g. John Doe: 12345, 2023-04-01, Analyst, Finance, 2022-04-01, Jane Smith, Senior Manager, 2023-04-02).'
+  - req_id: R3
+    statement: For each of the 17 characteristics, the column matching the rating gets the mark "√" and the other three columns stay empty.
+    check_kind: other
+    observable: For characteristic C with rating R in {Unsatisfactory, Satisfactory, Good, Excellent}, field "<R uppercased><C>" == "√" and the other three "<X><C>" fields are empty (e.g. John Doe - GOODWorks to Full Potential == "√", EXCELLENTWork Consistency == "√").
+  - req_id: R4
+    statement: The forms keep the template's uniform look (same single-page template, not a re-typed document).
+    check_kind: other
+    observable: Each PDF has 1 page and the same field set (109 fields) as review_template.pdf; values are visible when rendered.
+allowed_variations:
+  - Flattened PDFs are acceptable only if the rendered text shows the same values (field inspection then falls back to text extraction).
+  - Date rendering exactly as in the sheet (yyyy-mm-dd) is expected; other date formats are a gray zone.
+  - '[AMBIGUOUS] Output folder not stated; Desktop is assumed.'

@@ -1,0 +1,18 @@
+task_id: 841b50aa-df53-47bd-a73a-22d3a9f73160
+author: blind-model-author-v1
+requirements:
+  - req_id: R0
+    statement: (implicit) The presentation is saved in place at /home/user/Desktop/181_2.pptx (1 slide) with the table unchanged.
+    check_kind: file_exists
+    observable: File loads; table 2x3 with header Features/Description/Benefits.
+  - req_id: R1
+    statement: The slide has speaker notes "APP".
+    check_kind: slide_object
+    observable: notes_slide.notes_text_frame.text.strip() == "APP".
+  - req_id: R2
+    statement: The slide background is purple.
+    check_kind: slide_object
+    observable: >-
+      Slide 1 has a solid background fill in purple (LibreOffice palette "Purple" #800080; see allowed variations).
+allowed_variations:
+  - '[AMBIGUOUS] "purple" has no hex value; #800080 (palette Purple) is the default reading, other clearly purple hues are a gray zone.'

@@ -1,0 +1,9 @@
+{
+ "doctor": "Compute",
+ "status": "FAIL",
+ "evaluated_on": "2026-10-08",
+ "evaluated_by": "wave-1 single synthesis owner (Claude agent); not an independent review",
+ "pass_condition": "Image digest, Slurm dry-run, seeds, quota, checkpoint, and cost plan specified",
+ "evidence": "The D37 validation job (Slurm 752, 0.1092 GPU-h, digest-pinned image from CPU-only build 746, submitter dry-run and test-only exit 0, provenance PASS, COMPLETED 0:0) measured the exec/2 cost at R = 2.425 times the model (bootstrap 1.14-4.84); the primary projection through P3 is 19.99 GPU-h central and 24.66 high against an 8 GPU-h cap, so Stage 0 is not admitted (D31, D37) and the registered stop ends inside P1 under rows C, D and E and 3% into P2 at R's 2.5% point (synthesis estimate). No Stage 0 image, filled scoring manifest, smoke or dry-run exists (they need a freeze, which needs admission). No executable evidence is an orx experiment node. The deterministic doctor's manifest schema rejects the executed Docker-lane manifest (image_id, not image). No signed compute attestation can exist (D24).",
+ "remediation": "Kevin's admission ruling at a cap of about 12-25 GPU-h, or an engineering pass that amortises per-process cost (one persistent worker per problem and channel) followed by a re-measurement that reaches the 4-11-unit problems (L2/87, L2/100, L2/46); then freeze, build the Stage 0 image, fill and dry-run the scoring manifest, and run it as an orx slurm-manifest node."
+}

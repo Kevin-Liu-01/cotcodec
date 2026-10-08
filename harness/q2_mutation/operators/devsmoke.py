@@ -1,0 +1,235 @@
+"""Dev-split smoke test of the document and outside-site operators on real OSWorld files.
+
+Harness validation only. For each development-split task whose gold and
+initial end states are one office file at the same VM path (as listed in the
+harness's control jobs), it:
+
+1. checks both files against the job list's candidate SHA-256;
+2. saves gold (the base), initial, and the base once more (the null mutant)
+   through ``uno_apply.py`` in the LO-VM image;
+3. plans the operators that need no requirement (``document`` and
+   ``outside`` targets) against an empty, unserialized requirement set; with
+   ``--delta-requirements`` it also plans the requirement-targeted operators
+   against placeholder requirements bound only to the task's own
+   initial-to-gold changes (one per check kind), to exercise their edit
+   primitives on real files. These placeholders are never written out as specs;
+4. applies the recipes and runs the purity checks against the null mutant.
+
+It reports per operator how many recipes applied and passed purity, and the
+snapshot-level drift between base and null mutant. It never runs a checker.
+Without the blind author's spec (the default) labels mean nothing and are not
+reported; with ``--specs-dir`` it plans every operator against the real specs
+and reports labels, witness rules and requirement bindings for the dev split.
+The task ids it touched are listed so the confirmatory analysis can mark them.
+
+Usage (inside the LO-VM image)::
+
+    python3 -m harness.q2_mutation.operators.devsmoke --jobs /ro/devjobs/jobs-dev.jsonl \
+        --out /out/devsmoke --profile-template /home/user/.config/libreoffice/4/user
+"""
+
+from __future__ import annotations
+
+import argparse
+import hashlib
+import json
+from collections import Counter, defaultdict
+from pathlib import Path
+
+from harness.q2_mutation.operators import registry
+from harness.q2_mutation.operators._diff import diff
+from harness.q2_mutation.operators._snapshot import SnapshotError, snapshot
+from harness.q2_mutation.operators.pipeline import (
+    apply_manifest,
+    is_admitted,
+    make_context,
+    plan_task,
+    resave_row,
+    verify,
+    write_jsonl,
+)
+from harness.q2_mutation.operators.validate import run_uno
+from harness.q2_mutation.schema import Requirement, RequirementSpec
+
+OFFICE_SUFFIXES = {".xlsx": "xlsx", ".docx": "docx", ".pptx": "pptx"}
+NO_SPEC_AUTHOR = "operator-devsmoke-no-requirements"
+SMOKE_KINDS = {
+    "xlsx": ("cell_value", "cell_format"),
+    "docx": ("text_run", "paragraph_format"),
+    "pptx": ("text_run", "slide_object", "table_cell"),
+}
+
+
+def smoke_spec(task_id: str, family: str, with_requirements: bool) -> RequirementSpec:
+    """An in-memory requirement set for harness smoke runs; never serialized as a spec."""
+    if not with_requirements:
+        return RequirementSpec(task_id, NO_SPEC_AUTHOR, (), ())
+    placeholder = "harness smoke placeholder, bound to the task's own changes"
+    reqs = tuple(
+        Requirement(f"SMOKE-{kind}", placeholder, kind, placeholder)
+        for kind in SMOKE_KINDS[family]
+    )
+    return RequirementSpec(task_id, NO_SPEC_AUTHOR, reqs, ())
+
+
+def candidate_sha256(vm_path: str, local: str) -> str:
+    """The harness job list's candidate digest for a one-file candidate."""
+    digest = hashlib.sha256()
+    digest.update(vm_path.encode())
+    digest.update(hashlib.sha256(Path(local).read_bytes()).digest())
+    return digest.hexdigest()
+
+
+def task_pairs(jobs: list[dict]) -> list[dict]:
+    by_task: dict[str, dict[str, dict]] = defaultdict(dict)
+    for job in jobs:
+        by_task[job["task_id"]][job["kind"]] = job
+    pairs = []
+    for task_id, kinds in sorted(by_task.items()):
+        gold, initial = kinds.get("gold"), kinds.get("initial")
+        if not gold or not initial or len(gold["files"]) != 1 or len(initial["files"]) != 1:
+            continue
+        (vm_path, gold_file), = gold["files"].items()
+        (vm_initial, initial_file), = initial["files"].items()
+        family = OFFICE_SUFFIXES.get(Path(vm_path).suffix.lower())
+        if family is None or vm_path != vm_initial:
+            continue
+        pairs.append({"task_id": task_id, "family": family, "vm_path": vm_path,
+                      "gold": gold_file, "gold_sha256": gold["candidate_sha256"],
+                      "initial": initial_file, "initial_sha256": initial["candidate_sha256"]})
+    return pairs
+
+
+def main(argv: list[str] | None = None) -> int:
+    parser = argparse.ArgumentParser(description=__doc__.split("\n")[0])
+    parser.add_argument("--jobs", required=True)
+    parser.add_argument("--out", required=True)
+    parser.add_argument("--soffice", default="/usr/bin/soffice")
+    parser.add_argument("--display", default=":99")
+    parser.add_argument("--profile-template", default=None)
+    parser.add_argument("--timeout", type=int, default=240)
+    parser.add_argument("--delta-requirements", action="store_true",
+                        help="also smoke requirement-targeted operators on delta sites")
+    parser.add_argument("--specs-dir", default=None,
+                        help="blind specs as <task_id>.json; plan every operator with them")
+    args = parser.parse_args(argv)
+    root = Path(args.out)
+    root.mkdir(parents=True, exist_ok=True)
+    jobs = [json.loads(line) for line in Path(args.jobs).read_text().splitlines() if line.strip()]
+    pairs = []
+    rejected = []
+    for pair in task_pairs(jobs):
+        ok = (candidate_sha256(pair["vm_path"], pair["gold"]) == pair["gold_sha256"]
+              and candidate_sha256(pair["vm_path"], pair["initial"]) == pair["initial_sha256"])
+        (pairs if ok else rejected).append(pair)
+    name_of = {p["task_id"]: Path(p["vm_path"]).name for p in pairs}
+
+    def rel(kind: str, task_id: str) -> str:
+        return f"saved/{kind}/{task_id}/{name_of[task_id]}"
+
+    rows = []
+    for p in pairs:
+        rows.append({"mutant_id": f"{p['task_id']}-base", "family": p["family"],
+                     "input": p["gold"],
+                     "output": rel("base", p["task_id"]), "steps": []})
+        rows.append({"mutant_id": f"{p['task_id']}-initial", "family": p["family"],
+                     "input": p["initial"], "output": rel("initial", p["task_id"]), "steps": []})
+    saved = run_uno(root, rows, "resave", args)
+    null_rows = [
+        resave_row(f"{p['task_id']}-null", p["family"], rel("base", p["task_id"]),
+                   rel("null", p["task_id"]))
+        for p in pairs if saved.get(f"{p['task_id']}-base", {}).get("status") == "ok"
+    ]
+    nulls = run_uno(root, null_rows, "null", args)
+
+    ops = registry()
+    real_specs = args.specs_dir is not None
+    with_requirements = args.delta_requirements or real_specs
+    targets = {"document", "outside"} | ({"requirement"} if with_requirements else set())
+    wanted = [name for name, cls in ops.items() if cls.target in targets]
+    summary: dict = {"tasks": [], "rejected_hash": [p["task_id"] for p in rejected],
+                     "null_drift": {}, "operators": {}, "bindings": {},
+                     "mode": "real-specs" if real_specs else "smoke"}
+    plans = []
+    for p in pairs:
+        task_id = p["task_id"]
+        base = root / rel("base", task_id)
+        initial = root / rel("initial", task_id)
+        if nulls.get(f"{task_id}-null", {}).get("status") != "ok" or not initial.exists():
+            summary["tasks"].append({"task_id": task_id, "status": "save-failed"})
+            continue
+        try:
+            drift = diff(snapshot(base, p["family"]), snapshot(root / rel("null", task_id),
+                                                              p["family"]))
+            if real_specs:
+                spec_path = Path(args.specs_dir) / f"{task_id}.json"
+                if not spec_path.exists():
+                    summary["tasks"].append({"task_id": task_id, "status": "no-spec"})
+                    continue
+                spec = RequirementSpec.from_dict(json.loads(spec_path.read_text()))
+            else:
+                spec = smoke_spec(task_id, p["family"], args.delta_requirements)
+            ctx = make_context(task_id, spec, base, initial, p["family"], p["vm_path"])
+            kinds = {r.req_id: r.check_kind for r in spec.requirements}
+            summary["bindings"][task_id] = {
+                rid: {"check_kind": kinds[rid], "method": b.method,
+                      "confidence": b.confidence, "units": len(b.units)}
+                for rid, b in ctx.bindings.items()
+            }
+            records, _skips = plan_task(ctx, operators=wanted)
+        except (SnapshotError, ValueError, KeyError) as exc:
+            summary["tasks"].append({"task_id": task_id, "status": f"snapshot: {exc}"[:300]})
+            continue
+        summary["null_drift"][task_id] = Counter(c.kind for c in drift)
+        summary["tasks"].append({"task_id": task_id, "family": p["family"], "status": "ok",
+                                 "planned": len(records)})
+        plans.append((p, base, records))
+    office_rows = []
+    for p, _base, records in plans:
+        office_rows += apply_manifest(records, rel("base", p["task_id"]), "mutants")
+    applied = run_uno(root, office_rows, "apply", args) if office_rows else {}
+
+    per_op: dict[str, Counter] = defaultdict(Counter)
+    failures: dict[str, Counter] = defaultdict(Counter)
+    examples: dict[str, list[str]] = defaultdict(list)
+    results = []
+    for p, base, records in plans:
+        reference = root / rel("null", p["task_id"])
+        for record in records:
+            mutant = root / "mutants" / record["mutant_id"] / base.name
+            log = applied.get(record["mutant_id"])
+            done = verify(record, reference, mutant if mutant.exists() else None, log)
+            results.append(done)
+            op = record["operator"]
+            per_op[op]["planned"] += 1
+            per_op[op]["applied"] += int(bool(log and log.get("status") == "ok"))
+            per_op[op]["admitted"] += int(is_admitted(done))
+            if real_specs:
+                per_op[op][f"label:{record['label']}"] += 1
+                if is_admitted(done):
+                    per_op[op][f"admitted:{record['label']}"] += 1
+            for item in done["purity_checks"]:
+                if not item["passed"]:
+                    failures[op][item["name"]] += 1
+                    examples[op].append(f"{p['task_id'][:8]} {item['name']}: "
+                                        f"{item['detail'][:240]}")
+    write_jsonl(root / "results.jsonl", results)
+    for op in sorted(per_op):
+        summary["operators"][op] = {**per_op[op], "failed_checks": dict(failures[op]),
+                                    "examples": examples[op][:5]}
+    if real_specs:
+        summary["witness_rules"] = dict(Counter(
+            r["witness"]["argument"].split(":", 1)[0] for r in results
+        ))
+    summary["touched_task_ids"] = sorted(p["task_id"] for p, _b, _r in plans)
+    (root / "summary.json").write_text(json.dumps(summary, indent=2, sort_keys=True))
+    for op, info in sorted(summary["operators"].items()):
+        print(f"{op:45s} planned={info['planned']} applied={info['applied']} "
+              f"admitted={info['admitted']} failed={info['failed_checks']}")
+    print(json.dumps({"tasks": len(summary["tasks"]), "rejected": summary["rejected_hash"],
+                      "null_drift": summary["null_drift"]}, indent=1)[:3000])
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

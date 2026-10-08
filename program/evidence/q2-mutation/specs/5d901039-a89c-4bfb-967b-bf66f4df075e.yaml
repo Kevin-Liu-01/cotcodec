@@ -1,0 +1,23 @@
+task_id: 5d901039-a89c-4bfb-967b-bf66f4df075e
+author: blind-model-author-v1
+requirements:
+  - req_id: R0
+    statement: (implicit) The presentation is saved in place at /home/user/Desktop/CPD_Background_Investigation_Process.pptx with 4 slides.
+    check_kind: file_exists
+    observable: File loads; 4 slides; texts unchanged.
+  - req_id: R1
+    statement: The rectangular Columbus image on slide 1 (picture "Picture 2", the cropped city-skyline image, initially 11.64 x 8.61 cm at 10.58, 1.39) is enlarged to fill the slide (25.4 x 19.05 cm).
+    check_kind: image_property
+    observable: That picture's displayed width >= 25.4 cm - 0.1 or height >= 19.05 cm - 0.1, and it is not smaller than the slide in the other dimension by more than the aspect mismatch allows (about 0.26 cm for a fit-to-width result of 25.4 x 18.79 cm).
+  - req_id: R2
+    statement: The image keeps its proportion (no distortion).
+    check_kind: image_property
+    observable: Displayed width/height equals the original displayed ratio 11.64/8.61 = 1.352 within 1% (crop unchanged).
+  - req_id: R3
+    statement: The image is centered on the slide.
+    check_kind: image_property
+    observable: Picture center (left + width/2, top + height/2) is within 0.2 cm of the slide center (12.7, 9.525) cm.
+allowed_variations:
+  - '[AMBIGUOUS] "fill the entire page, keeping its proportion" may mean fit (one dimension equals the slide, tiny bands on the other) or cover (both dimensions >= slide, overflow off-slide). Both keep the ratio and center.'
+  - Z-order of the enlarged image relative to the other logos/text and whether other objects remain visible are not specified.
+  - Other pictures on slide 1 (police badges, City of Columbus logo) are not the target and are expected unchanged.

@@ -1,0 +1,16 @@
+{
+  "domain": "libreoffice_calc",
+  "initial_files": [
+    {
+      "path_in_vm": "/home/user/Calendar_Highlight_Weekend_Days.xlsx",
+      "sha256": "a29c48e75f1b5894100a15e9ce204a0a599c7ce9bc5a8101d226dd1c4d68f70f",
+      "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/1e112283c4ecb08d6fed8069bca7de74fa2f12aa/libreoffice_calc/8b1ce5f2-59d2-4dcc-b0b0-666a714b9a14/Calendar_Highlight_Weekend_Days.xlsx"
+    }
+  ],
+  "instruction": "Given a partial calendar, please highlight all the weekends (Satureday & Sunday) by setting the cell background as red (#ff0000). Finish the work and don't touch irrelevant regions, even if they are blank.",
+  "related_apps": [
+    "libreoffice calc"
+  ],
+  "snapshot": "libreoffice_calc",
+  "task_id": "8b1ce5f2-59d2-4dcc-b0b0-666a714b9a14"
+}

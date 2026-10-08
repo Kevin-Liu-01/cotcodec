@@ -1,0 +1,31 @@
+task_id: 04578141-1d42-4146-b9cf-6fab4ce5fd74
+author: blind-model-author-v1
+requirements:
+  - req_id: R0
+    statement: (implicit) The presentation is saved in place at /home/user/Desktop/45_2.pptx (pptx) with 22 slides and unchanged text.
+    check_kind: file_exists
+    observable: File loads with python-pptx; 22 slides; all shape texts equal the initial ones.
+  - req_id: R1
+    statement: On slide 1 the top-most text box ("NEW PR DUCT", top 1.23 cm) has all its text in yellow.
+    check_kind: text_run
+    observable: Every non-empty run of that shape has solid color FFFF00.
+  - req_id: R2
+    statement: The middle text box ("LAUNCH", top 7.48 cm) has all its text in red.
+    check_kind: text_run
+    observable: Every non-empty run has color FF0000.
+  - req_id: R3
+    statement: The bottom text box ("PR JECT PR POSAL", top 20.64 cm) has all its text in green.
+    check_kind: text_run
+    observable: Every non-empty run has the plain "green" color (see R3-AMB).
+  - req_id: R3-AMB
+    statement: '[AMBIGUOUS] "green, no variations" does not fix the RGB value: LibreOffice standard-palette "Green" is #00A933, pure RGB green is #00FF00, CSS green is #008000. Yellow (#FFFF00) and red (#FF0000) coincide across these conventions.'
+    check_kind: text_run
+    observable: >-
+      Record the hex used for the bottom box; #00A933 (LO palette Green) or #00FF00 are the two defensible readings; dark/light palette variants (e.g. Dark Green 1, Light Green 2) are explicitly excluded.
+  - req_id: R4
+    statement: (implicit) Other text and other slides keep their original colors.
+    check_kind: text_run
+    observable: Runs on slides 2-22 keep their initial colors.
+allowed_variations:
+  - Font, size and position of the boxes are unchanged in expectation but not mentioned.
+  - Colors may be applied at run or paragraph/list-style level as long as the rendered text color matches.

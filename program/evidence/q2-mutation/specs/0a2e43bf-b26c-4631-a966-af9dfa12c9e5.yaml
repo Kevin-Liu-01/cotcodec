@@ -1,0 +1,19 @@
+task_id: 0a2e43bf-b26c-4631-a966-af9dfa12c9e5
+author: blind-model-author-v1
+requirements:
+  - req_id: R0
+    statement: (implicit) The workbook is persisted at /home/user/SalesRep.xlsx with Sheet1 A1:G11 unchanged.
+    check_kind: file_exists
+    observable: File loads; Sheet1 A1:G11 values equal the initial values.
+  - req_id: R1
+    statement: A new row labeled "Total" holds the monthly total sales (column sums for Jan..Jun).
+    check_kind: cell_value
+    observable: A row (expected row 12, directly under the data) has A == "Total" and B:G computed values == 4852, 4587, 3943, 3857, 4677, 4243.
+  - req_id: R2
+    statement: A line chart shows the monthly totals with the months on the x-axis.
+    check_kind: other
+    observable: A chart part contains c:lineChart with a series whose values reference the Total row B:G (6 points) and whose categories reference the month headers B1:G1 (Jan..Jun).
+allowed_variations:
+  - Totals may be formulas (=SUM(B2:B11)) or constants.
+  - Chart title, legend, placement, size, colors and axis titles are not constrained.
+  - The Total row position is expected directly underneath the data; the instruction says only "a new row".

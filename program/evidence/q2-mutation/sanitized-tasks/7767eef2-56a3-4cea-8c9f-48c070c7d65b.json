@@ -1,0 +1,10 @@
+{
+  "domain": "gimp",
+  "initial_files": [],
+  "instruction": "Please help change GIMP's theme from dark to light.",
+  "related_apps": [
+    "gimp"
+  ],
+  "snapshot": "gimp",
+  "task_id": "7767eef2-56a3-4cea-8c9f-48c070c7d65b"
+}

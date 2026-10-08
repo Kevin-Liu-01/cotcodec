@@ -1,0 +1,14 @@
+task_id: 5203d847-2572-4150-912a-03f062254390
+author: blind-model-author-v1
+requirements:
+  - req_id: R1
+    statement: A local folder named "Promotions" exists.
+    check_kind: file_exists
+    observable: ~/.thunderbird/t5q2a5hp.default-release/Mail/Local Folders/Promotions (mbox file) exists (with its .msf).
+  - req_id: R2
+    statement: A message filter moves inbox emails whose subject contains "discount" to Promotions.
+    check_kind: config_value
+    observable: 'A msgFilterRules.dat (of the outlook IMAP account whose Inbox is meant) contains an enabled filter with condition "AND (subject,contains,discount)", action "Move to folder" targeting mailbox://nobody@Local%20Folders/Promotions, and type including incoming/new mail (e.g. type="17" or any value including 1).'
+allowed_variations:
+  - Filter name.
+  - '[AMBIGUOUS] Case sensitivity is Thunderbird default (case-insensitive contains).'

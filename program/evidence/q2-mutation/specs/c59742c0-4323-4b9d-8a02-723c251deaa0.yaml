@@ -1,0 +1,19 @@
+task_id: c59742c0-4323-4b9d-8a02-723c251deaa0
+author: blind-model-author-v1
+requirements:
+  - req_id: R0
+    statement: (implicit) The presentation is saved in place at /home/user/Desktop/Mady_and_Mia_Baseball.pptx with its 8 slides and texts unchanged.
+    check_kind: file_exists
+    observable: File loads; 8 slides; texts unchanged.
+  - req_id: R1
+    statement: The audio file Baseball.mp3 from the Desktop is inserted into the presentation as an audio object.
+    check_kind: slide_object
+    observable: A slide contains a media/audio shape (p:pic with a:audioFile or p14:media extension) whose relationship targets either an embedded media part identical to Baseball.mp3 (366 s MP3) or a link to /home/user/Desktop/Baseball.mp3.
+  - req_id: R2
+    statement: As an introduction audio, it is placed on the first slide.
+    check_kind: slide_object
+    observable: The audio object is on slide 1.
+allowed_variations:
+  - '[AMBIGUOUS] Embedded vs linked media; LibreOffice may link by default. Both put the audio "into" the presentation for playback on this machine.'
+  - '[AMBIGUOUS] Slide choice: "introduction audio" suggests slide 1; another slide is a weaker reading.'
+  - Autoplay/loop settings and icon position are not constrained.

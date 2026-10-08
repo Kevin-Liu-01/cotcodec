@@ -1,0 +1,18 @@
+{
+  "domain": "multi_apps",
+  "initial_files": [
+    {
+      "path_in_vm": "/home/user/Desktop/PPT-Template_widescreen.pptx",
+      "sha256": "e625afeec91cd3f412e8df3859345b27ce7e1a415e5a40af29a7334f27645c4c",
+      "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/1e112283c4ecb08d6fed8069bca7de74fa2f12aa/multi_apps/4c26e3f3-3a14-4d86-b44a-d3cedebbb487/PPT-Template_widescreen.pptx"
+    }
+  ],
+  "instruction": "I've noticed that the image on the second slide is too dim. Can you please enhance its brightness for me? Save the adjusted image on the Desktop and name it \"background.png\". Thank you!",
+  "related_apps": [
+    "gimp",
+    "libreoffice_impress",
+    "os"
+  ],
+  "snapshot": "libreoffice_impress",
+  "task_id": "4c26e3f3-3a14-4d86-b44a-d3cedebbb487"
+}

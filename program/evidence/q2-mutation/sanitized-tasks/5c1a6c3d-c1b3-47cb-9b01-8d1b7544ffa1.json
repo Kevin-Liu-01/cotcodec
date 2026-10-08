@@ -1,0 +1,16 @@
+{
+  "domain": "libreoffice_impress",
+  "initial_files": [
+    {
+      "path_in_vm": "/home/user/Desktop/39_2.pptx",
+      "sha256": "731e79b5e13883c2878015d34b28fb7746f1b6aa15fb9db16116c9ba60ec8013",
+      "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/1e112283c4ecb08d6fed8069bca7de74fa2f12aa/libreoffice_impress/5c1a6c3d-c1b3-47cb-9b01-8d1b7544ffa1/39_2.pptx"
+    }
+  ],
+  "instruction": "Bold the text on slide 1. Make the title of size 44pt and underline it on slide 1.",
+  "related_apps": [
+    "libreoffice_impress"
+  ],
+  "snapshot": "libreoffice_impress",
+  "task_id": "5c1a6c3d-c1b3-47cb-9b01-8d1b7544ffa1"
+}

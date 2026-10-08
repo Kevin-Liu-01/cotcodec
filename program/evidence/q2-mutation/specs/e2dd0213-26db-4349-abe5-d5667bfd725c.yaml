@@ -1,0 +1,14 @@
+task_id: e2dd0213-26db-4349-abe5-d5667bfd725c
+author: blind-model-author-v1
+requirements:
+  - req_id: R1
+    statement: The text layer "Thanks World" is moved to the left side of the image.
+    check_kind: image_property
+    observable: In the saved /home/user/Desktop/orange_background.xcf the text layer (422 x 77, initially at offset x=976 on a 2192-px-wide canvas) has offset x + width <= 1096 (fully in the left half), or at least its center x < 1096.
+  - req_id: R2
+    statement: (implicit) The text layer's content and the background layer are unchanged.
+    check_kind: image_property
+    observable: Text layer still reads "Thanks World" (same size); layer "orange_background.png" unchanged.
+allowed_variations:
+  - Vertical position of the text layer.
+  - '[AMBIGUOUS] Exact horizontal target ("left side") and whether the result is also exported to PNG.'

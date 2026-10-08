@@ -149,7 +149,7 @@ def test_plan_items_carry_units_and_estimates_without_changing_order() -> None:
 def test_stage0_spend_is_read_from_the_ledger() -> None:
     state = json.loads((ROOT / "program/state.json").read_text())
     spent = trim.stage0_spent_gpu_hours(state["gpu_hours_ledger"])
-    assert spent == pytest.approx(0.8989 + 0.33)
+    assert spent == pytest.approx(0.8989 + 0.33 + 0.1092)
     assert trim.stage0_spent_gpu_hours([{"experiment": "q2-x", "gpu_hours": 9}]) == 0.0
 
 

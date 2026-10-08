@@ -1,0 +1,34 @@
+{
+ "url": "https://arxiv.org/abs/2507.05687",
+ "fetched_at": "2026-10-08T07:30:19Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 44770,
+ "raw_sha256": "231a88c00772cab1368bf580fbb121c0e3358b0c478e4f11b44d9de37f198f2e",
+ "raw_stored": false,
+ "extract": {
+  "title": "AutoTriton: Automatic Triton Programming with Reinforcement Learning in LLMs",
+  "authors": [
+   "Li, Shangzhan",
+   "Wang, Zefan",
+   "He, Ye",
+   "Li, Yuxuan",
+   "Shi, Qi",
+   "Li, Jianling",
+   "Hu, Yonggang",
+   "Che, Wanxiang",
+   "Han, Xu",
+   "Liu, Zhiyuan",
+   "Sun, Maosong"
+  ],
+  "citation_date": "2025/07/08",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Tue, 8 Jul 2025 05:38:24 UTC"
+   }
+  ],
+  "abstract": "Kernel development in deep learning requires optimizing computational units across hardware while balancing memory management, parallelism, and hardware-specific optimizations through extensive empirical tuning. Although domain-specific languages like Triton simplify GPU programming by abstracting low-level details, developers must still manually tune critical parameters such as tile sizes and memory access patterns through iterative experimentation, creating substantial barriers to optimal performance and wider adoption. In this work, we introduce AutoTriton, the first model dedicated to Triton programming powered by reinforcement learning (RL). AutoTriton performs supervised fine-tuning (SFT) to be equipped with essential Triton programming expertise using a high-quality data gathering pipeline, and conducts RL with Group Relative Policy Optimization (GRPO) algorithm, combining a rule-based reward and an execution-based reward to further improve Triton programming ability, sequentially. Experiments across five evaluation channels of TritonBench and KernelBench illustrate that our 8B model AutoTriton achieves performance comparable to mainstream large models, including Claude-4-Sonnet and DeepSeek-R1-0528. Further experimental analysis demonstrates the crucial role of each module within AutoTriton, including the SFT stage, the RL stage, and the reward design strategy. These findings underscore the promise of RL for automatically generating high-performance kernels, and since high-performance kernels are core components of AI systems, this breakthrough establishes an important foundation for building more efficient AI systems. The model and code will be available at this https URL .",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}

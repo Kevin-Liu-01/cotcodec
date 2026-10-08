@@ -1,0 +1,9 @@
+task_id: 7b7617bd-57cc-468e-9c91-40c4ec2bcb3d
+author: blind-model-author-v1
+requirements:
+  - req_id: R1
+    statement: GIMP's minimal number of undo levels is set to 100.
+    check_kind: config_value
+    observable: ~/.config/GIMP/2.10/gimprc contains (undo-levels 100).
+allowed_variations:
+  - Maximum undo memory is not constrained.

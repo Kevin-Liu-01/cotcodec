@@ -1,0 +1,16 @@
+{
+  "domain": "libreoffice_calc",
+  "initial_files": [
+    {
+      "path_in_vm": "/home/user/FutureValue.xlsx",
+      "sha256": "10bf193a7f5de4f534acb34ad4de622b7556bdc1b523b9c832fd6119b56d2211",
+      "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/1e112283c4ecb08d6fed8069bca7de74fa2f12aa/libreoffice_calc/1d17d234-e39d-4ed7-b46f-4417922a4e7c/FutureValue.xlsx"
+    }
+  ],
+  "instruction": "Create a new sheet named \"Sheet2\" and merge cells A1:C1 to write the header \"Investment Summary\". Beneath that, merge cells A2:B2 to write \"High Interest Rate\" and merge cells C2:D2 to form \"Low Interest Rate\".",
+  "related_apps": [
+    "libreoffice_calc"
+  ],
+  "snapshot": "libreoffice_calc",
+  "task_id": "1d17d234-e39d-4ed7-b46f-4417922a4e7c"
+}

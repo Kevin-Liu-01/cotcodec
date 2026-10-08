@@ -1,0 +1,544 @@
+{
+ "admitted": 271,
+ "by_operator": {
+  "docx.alt.char_style_for_direct": {
+   "should_pass_alt_solution:evaluable:ok": 3
+  },
+  "docx.alt.highlight_as_shading": {
+   "should_pass_alt_solution:evaluable:ok": 3
+  },
+  "docx.alt.para_direct_for_style": {
+   "should_pass_alt_solution:evaluable:ok": 1,
+   "should_pass_alt_solution:not_admitted:None": 2
+  },
+  "docx.eq.doc_property": {
+   "should_pass_equiv:evaluable:ok": 12
+  },
+  "docx.eq.view_zoom": {
+   "should_pass_equiv:evaluable:ok": 12
+  },
+  "docx.extra.delete_unrelated_paragraph": {
+   "should_fail_extra_change:evaluable:FP_F": 3
+  },
+  "docx.extra.edit_unrelated_paragraph": {
+   "should_fail_extra_change:evaluable:FP_F": 3
+  },
+  "docx.extra.edit_unrelated_table_cell": {
+   "should_fail_extra_change:evaluable:ok": 3
+  },
+  "docx.extra.format_unrelated_run": {
+   "ambiguous:ambiguous:None": 3
+  },
+  "docx.viol.delete_bound_paragraph": {
+   "should_fail_violation:evaluable:ok": 8
+  },
+  "docx.viol.drop_char_format": {
+   "ambiguous:ambiguous:None": 3,
+   "should_fail_violation:evaluable:FP_R": 3
+  },
+  "docx.viol.text_edit": {
+   "should_fail_violation:evaluable:ok": 9
+  },
+  "pptx.alt.case_via_format": {
+   "ambiguous:ambiguous:None": 3,
+   "ambiguous:null_not_pass:None": 1
+  },
+  "pptx.alt.textbox_for_placeholder": {
+   "ambiguous:ambiguous:None": 1,
+   "ambiguous:null_not_pass:None": 3
+  },
+  "pptx.eq.doc_property": {
+   "should_pass_equiv:evaluable:ok": 12,
+   "should_pass_equiv:null_not_pass:None": 3
+  },
+  "pptx.eq.subvisible_nudge": {
+   "should_pass_equiv:evaluable:ok": 12,
+   "should_pass_equiv:null_not_pass:None": 3
+  },
+  "pptx.eq.zorder_nonoverlap": {
+   "should_pass_equiv:evaluable:FN": 6,
+   "should_pass_equiv:evaluable:ok": 3,
+   "should_pass_equiv:null_not_pass:None": 3
+  },
+  "pptx.extra.add_textbox": {
+   "should_fail_extra_change:evaluable:ok": 12,
+   "should_fail_extra_change:null_not_pass:None": 3
+  },
+  "pptx.viol.delete_bound_shape": {
+   "ambiguous:ambiguous:None": 1,
+   "should_fail_violation:evaluable:ok": 6,
+   "should_fail_violation:null_not_pass:None": 3
+  },
+  "pptx.viol.drop_char_format": {
+   "ambiguous:ambiguous:None": 5,
+   "ambiguous:null_not_pass:None": 3,
+   "should_fail_violation:normalized:None": 1
+  },
+  "pptx.viol.move_shape": {
+   "ambiguous:ambiguous:None": 1,
+   "ambiguous:null_not_pass:None": 3
+  },
+  "pptx.viol.text_edit": {
+   "should_fail_violation:evaluable:ok": 6,
+   "should_fail_violation:null_not_pass:None": 3
+  },
+  "text.eq.trailing_newline": {
+   "ambiguous:ambiguous:None": 1
+  },
+  "xlsx.alt.absolute_refs": {
+   "should_pass_alt_solution:evaluable:ok": 6
+  },
+  "xlsx.alt.literal_for_formula": {
+   "should_pass_alt_solution:evaluable:ok": 6
+  },
+  "xlsx.alt.named_style_for_direct": {
+   "should_pass_alt_solution:evaluable:ok": 6
+  },
+  "xlsx.alt.plus_chain_to_sum": {
+   "should_pass_alt_solution:evaluable:ok": 3
+  },
+  "xlsx.eq.active_sheet": {
+   "should_pass_equiv:evaluable:ok": 1
+  },
+  "xlsx.eq.doc_property": {
+   "ambiguous:ambiguous:None": 3,
+   "should_pass_equiv:evaluable:ok": 18
+  },
+  "xlsx.eq.view_selection": {
+   "should_pass_equiv:evaluable:ok": 18
+  },
+  "xlsx.eq.view_zoom": {
+   "should_pass_equiv:evaluable:ok": 8
+  },
+  "xlsx.extra.edit_unrelated_value": {
+   "should_fail_extra_change:evaluable:ok": 3
+  },
+  "xlsx.extra.format_unrelated_cell": {
+   "ambiguous:ambiguous:None": 3
+  },
+  "xlsx.viol.clear_bound_cell": {
+   "should_fail_violation:evaluable:ok": 12
+  },
+  "xlsx.viol.drop_char_format": {
+   "ambiguous:ambiguous:None": 3
+  },
+  "xlsx.viol.formula_ref_shift": {
+   "should_fail_violation:evaluable:ok": 4,
+   "should_fail_violation:not_admitted:None": 2
+  },
+  "xlsx.viol.number_format_change": {
+   "should_fail_violation:evaluable:ok": 6
+  },
+  "xlsx.viol.value_perturb": {
+   "should_fail_violation:evaluable:ok": 7
+  }
+ },
+ "icc_by_event": {
+  "FN": 0.2831402831402832,
+  "FN_alt": null,
+  "FP_F": 1.0,
+  "FP_R": 0.12616426756985602
+ },
+ "icc_max_defined": 1.0,
+ "labels_admitted": {
+  "ambiguous": 37,
+  "should_fail_extra_change": 27,
+  "should_fail_violation": 68,
+  "should_pass_alt_solution": 28,
+  "should_pass_equiv": 111
+ },
+ "mdr_reference": {
+  "120_tasks_icc_0.3": 0.09,
+  "120_tasks_icc_0.5": 0.0952,
+  "120_tasks_icc_0.8": 0.1022,
+  "21_tasks_icc_0.3": 0.1558,
+  "21_tasks_icc_0.5": 0.1703,
+  "21_tasks_icc_0.8": 0.1899,
+  "33_tasks_icc_0.3": 0.1318,
+  "33_tasks_icc_0.5": 0.1429,
+  "33_tasks_icc_0.8": 0.1579
+ },
+ "mean_evaluable_mutants_per_task": 8.8,
+ "normalization_by_operator": {
+  "docx.alt.char_style_for_direct": {
+   "checked": 3,
+   "normalized": 0
+  },
+  "docx.alt.highlight_as_shading": {
+   "checked": 3,
+   "normalized": 0
+  },
+  "docx.alt.para_direct_for_style": {
+   "checked": 1,
+   "normalized": 0
+  },
+  "docx.eq.doc_property": {
+   "checked": 12,
+   "normalized": 0
+  },
+  "docx.eq.view_zoom": {
+   "checked": 12,
+   "normalized": 0
+  },
+  "docx.extra.delete_unrelated_paragraph": {
+   "checked": 3,
+   "normalized": 0
+  },
+  "docx.extra.edit_unrelated_paragraph": {
+   "checked": 3,
+   "normalized": 0
+  },
+  "docx.extra.edit_unrelated_table_cell": {
+   "checked": 3,
+   "normalized": 0
+  },
+  "docx.extra.format_unrelated_run": {
+   "checked": 3,
+   "normalized": 0
+  },
+  "docx.viol.delete_bound_paragraph": {
+   "checked": 8,
+   "normalized": 0
+  },
+  "docx.viol.drop_char_format": {
+   "checked": 6,
+   "normalized": 0
+  },
+  "docx.viol.text_edit": {
+   "checked": 9,
+   "normalized": 0
+  },
+  "pptx.alt.case_via_format": {
+   "checked": 4,
+   "normalized": 0
+  },
+  "pptx.alt.textbox_for_placeholder": {
+   "checked": 4,
+   "normalized": 0
+  },
+  "pptx.eq.doc_property": {
+   "checked": 15,
+   "normalized": 0
+  },
+  "pptx.eq.subvisible_nudge": {
+   "checked": 15,
+   "normalized": 0
+  },
+  "pptx.eq.zorder_nonoverlap": {
+   "checked": 12,
+   "normalized": 0
+  },
+  "pptx.extra.add_textbox": {
+   "checked": 15,
+   "normalized": 0
+  },
+  "pptx.viol.delete_bound_shape": {
+   "checked": 10,
+   "normalized": 0
+  },
+  "pptx.viol.drop_char_format": {
+   "checked": 9,
+   "normalized": 1
+  },
+  "pptx.viol.move_shape": {
+   "checked": 4,
+   "normalized": 0
+  },
+  "pptx.viol.text_edit": {
+   "checked": 9,
+   "normalized": 0
+  },
+  "text.eq.trailing_newline": {
+   "checked": 1,
+   "normalized": 0
+  },
+  "xlsx.alt.absolute_refs": {
+   "checked": 6,
+   "normalized": 0
+  },
+  "xlsx.alt.literal_for_formula": {
+   "checked": 6,
+   "normalized": 0
+  },
+  "xlsx.alt.named_style_for_direct": {
+   "checked": 6,
+   "normalized": 0
+  },
+  "xlsx.alt.plus_chain_to_sum": {
+   "checked": 3,
+   "normalized": 0
+  },
+  "xlsx.eq.active_sheet": {
+   "checked": 1,
+   "normalized": 0
+  },
+  "xlsx.eq.doc_property": {
+   "checked": 21,
+   "normalized": 0
+  },
+  "xlsx.eq.view_selection": {
+   "checked": 18,
+   "normalized": 0
+  },
+  "xlsx.eq.view_zoom": {
+   "checked": 8,
+   "normalized": 0
+  },
+  "xlsx.extra.edit_unrelated_value": {
+   "checked": 3,
+   "normalized": 0
+  },
+  "xlsx.extra.format_unrelated_cell": {
+   "checked": 3,
+   "normalized": 0
+  },
+  "xlsx.viol.clear_bound_cell": {
+   "checked": 12,
+   "normalized": 0
+  },
+  "xlsx.viol.drop_char_format": {
+   "checked": 3,
+   "normalized": 0
+  },
+  "xlsx.viol.formula_ref_shift": {
+   "checked": 4,
+   "normalized": 0
+  },
+  "xlsx.viol.number_format_change": {
+   "checked": 6,
+   "normalized": 0
+  },
+  "xlsx.viol.value_perturb": {
+   "checked": 7,
+   "normalized": 0
+  }
+ },
+ "null_verdicts": {
+  "lock": {
+   "01b269ae-2111-4a07-81fd-3fcd711993b0__22b3dc30": "pass",
+   "12382c62-0cd1-4bf2-bdc8-1d20bf9b2371__898c28c7": "pass",
+   "20236825-b5df-46e7-89bf-62e1d640a897__f48218f5": "pass",
+   "347ef137-7eeb-4c80-a3bb-0951f26a8aff__aa75b23a": "pass",
+   "4172ea6e-6b77-4edb-a9cc-c0014bd1603b__b22e770d": "pass",
+   "4ed5abd0-8b5d-47bd-839f-cacfa15ca37a__fb4e51d6": "pass",
+   "5bc63fb9-276a-4439-a7c1-9dc76401737f__257bb958": "pass",
+   "5cfb9197-e72b-454b-900e-c06b0c802b40__3fc44236": "pass",
+   "6e99a1ad-07d2-4b66-a1ce-ece6d99c20a5__1e32407e": "pass",
+   "936321ce-5236-426a-9a20-e0e3c5dc536f__b5cdda11": "pass",
+   "af23762e-2bfd-4a1d-aada-20fa8de9ce07__8ec4cc5b": "fail",
+   "b5062e3e-641c-4e3a-907b-ac864d2e7652__f0abf1ec": "pass",
+   "bb83cab4-e5c7-42c7-a67b-e46068032b86__6c6bf7d3": "pass",
+   "bf4e9888-f10f-47af-8dba-76413038b73c__f4908ffc": "pass",
+   "d681960f-7bc3-4286-9913-a8812ba3261a__1caa0cc3": "pass",
+   "e4ef0baf-4b52-4590-a47e-d4d464cca2d7__749651fa": "pass",
+   "e528b65e-1107-4b8c-8988-490e4fece599__9c7bcce4": "pass"
+  },
+  "scout": {
+   "01b269ae-2111-4a07-81fd-3fcd711993b0__22b3dc30": "pass",
+   "12382c62-0cd1-4bf2-bdc8-1d20bf9b2371__898c28c7": "pass",
+   "20236825-b5df-46e7-89bf-62e1d640a897__f48218f5": "pass",
+   "347ef137-7eeb-4c80-a3bb-0951f26a8aff__aa75b23a": "pass",
+   "4172ea6e-6b77-4edb-a9cc-c0014bd1603b__b22e770d": "pass",
+   "4ed5abd0-8b5d-47bd-839f-cacfa15ca37a__fb4e51d6": "pass",
+   "5bc63fb9-276a-4439-a7c1-9dc76401737f__257bb958": "pass",
+   "5cfb9197-e72b-454b-900e-c06b0c802b40__3fc44236": "pass",
+   "6e99a1ad-07d2-4b66-a1ce-ece6d99c20a5__1e32407e": "pass",
+   "936321ce-5236-426a-9a20-e0e3c5dc536f__b5cdda11": "pass",
+   "af23762e-2bfd-4a1d-aada-20fa8de9ce07__8ec4cc5b": "fail",
+   "b5062e3e-641c-4e3a-907b-ac864d2e7652__f0abf1ec": "pass",
+   "bb83cab4-e5c7-42c7-a67b-e46068032b86__6c6bf7d3": "pass",
+   "bf4e9888-f10f-47af-8dba-76413038b73c__f4908ffc": "pass",
+   "d681960f-7bc3-4286-9913-a8812ba3261a__1caa0cc3": "pass",
+   "e4ef0baf-4b52-4590-a47e-d4d464cca2d7__749651fa": "pass",
+   "e528b65e-1107-4b8c-8988-490e4fece599__9c7bcce4": "pass"
+  }
+ },
+ "planned": 275,
+ "primary_dep_set": "lock",
+ "rates_exploratory": {
+  "FN": {
+   "by_checker": {
+    "compare_docx_files": {
+     "high": 0.0,
+     "low": 0.0,
+     "mutants": 6,
+     "rate": 0.0,
+     "tasks": 2
+    },
+    "compare_docx_files_and_ignore_new_lines": {
+     "high": 0.0,
+     "low": 0.0,
+     "mutants": 3,
+     "rate": 0.0,
+     "tasks": 1
+    },
+    "compare_docx_tables": {
+     "high": 0.0,
+     "low": 0.0,
+     "mutants": 3,
+     "rate": 0.0,
+     "tasks": 1
+    },
+    "compare_pptx_files": {
+     "high": 0.5,
+     "low": 0.0,
+     "mutants": 15,
+     "rate": 0.3333,
+     "tasks": 3
+    },
+    "compare_pptx_files_robust": {
+     "high": 0.0,
+     "low": 0.0,
+     "mutants": 6,
+     "rate": 0.0,
+     "tasks": 1
+    },
+    "compare_table": {
+     "high": 0.0,
+     "low": 0.0,
+     "mutants": 27,
+     "rate": 0.0,
+     "tasks": 7
+    }
+   },
+   "pooled": {
+    "high": 0.1667,
+    "low": 0.0,
+    "mutants": 60,
+    "rate": 0.0667,
+    "tasks": 15
+   }
+  },
+  "FN_alt": {
+   "by_checker": {
+    "compare_docx_files": {
+     "high": 0.0,
+     "low": 0.0,
+     "mutants": 4,
+     "rate": 0.0,
+     "tasks": 1
+    },
+    "compare_docx_files_and_ignore_new_lines": {
+     "high": 0.0,
+     "low": 0.0,
+     "mutants": 3,
+     "rate": 0.0,
+     "tasks": 1
+    },
+    "compare_table": {
+     "high": 0.0,
+     "low": 0.0,
+     "mutants": 21,
+     "rate": 0.0,
+     "tasks": 3
+    }
+   },
+   "pooled": {
+    "high": 0.0,
+    "low": 0.0,
+    "mutants": 28,
+    "rate": 0.0,
+    "tasks": 5
+   }
+  },
+  "FP_F": {
+   "by_checker": {
+    "compare_docx_tables": {
+     "high": 1.0,
+     "low": 1.0,
+     "mutants": 3,
+     "rate": 1.0,
+     "tasks": 1
+    },
+    "compare_pptx_files": {
+     "high": 0.0,
+     "low": 0.0,
+     "mutants": 9,
+     "rate": 0.0,
+     "tasks": 3
+    },
+    "compare_pptx_files_robust": {
+     "high": 0.0,
+     "low": 0.0,
+     "mutants": 3,
+     "rate": 0.0,
+     "tasks": 1
+    },
+    "compare_table": {
+     "high": 0.0,
+     "low": 0.0,
+     "mutants": 3,
+     "rate": 0.0,
+     "tasks": 1
+    }
+   },
+   "pooled": {
+    "high": 0.5,
+    "low": 0.0,
+    "mutants": 18,
+    "rate": 0.1667,
+    "tasks": 6
+   }
+  },
+  "FP_R": {
+   "by_checker": {
+    "compare_docx_files": {
+     "high": 0.0,
+     "low": 0.0,
+     "mutants": 11,
+     "rate": 0.0,
+     "tasks": 2
+    },
+    "compare_docx_files_and_ignore_new_lines": {
+     "high": 0.3333,
+     "low": 0.3333,
+     "mutants": 9,
+     "rate": 0.3333,
+     "tasks": 1
+    },
+    "compare_pptx_files": {
+     "high": 0.0,
+     "low": 0.0,
+     "mutants": 3,
+     "rate": 0.0,
+     "tasks": 1
+    },
+    "compare_pptx_files_robust": {
+     "high": 0.0,
+     "low": 0.0,
+     "mutants": 3,
+     "rate": 0.0,
+     "tasks": 1
+    }
+   },
+   "pooled": {
+    "high": 0.2,
+    "low": 0.0,
+    "mutants": 26,
+    "rate": 0.0667,
+    "tasks": 5
+   }
+  }
+ },
+ "status": {
+  "lock": {
+   "ambiguous": 27,
+   "evaluable": 215,
+   "normalized": 1,
+   "not_admitted": 4,
+   "null_not_pass": 28
+  },
+  "scout": {
+   "ambiguous": 27,
+   "evaluable": 215,
+   "normalized": 1,
+   "not_admitted": 4,
+   "null_not_pass": 28
+  }
+ },
+ "task_escape": {
+  "tasks": 15,
+  "with_escape": 3
+ },
+ "venv_disagreements": []
+}

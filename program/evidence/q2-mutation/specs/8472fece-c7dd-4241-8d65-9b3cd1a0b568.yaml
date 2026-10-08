@@ -1,0 +1,21 @@
+task_id: 8472fece-c7dd-4241-8d65-9b3cd1a0b568
+author: blind-model-author-v1
+requirements:
+  - req_id: R0
+    statement: (implicit) The document is saved in place at /home/user/Desktop/Dolch_Sight_Words_Primer.docx with the word table text unchanged.
+    check_kind: file_exists
+    observable: File loads; the 11x5 table holds the same 52 words in the same cells.
+  - req_id: R1
+    statement: Words starting with a vowel (a, e, i, o, u) are red.
+    check_kind: text_run
+    observable: Runs of "all", "am", "eat", "are", "on", "at", "our", "ate", "out", "into", "under" have color FF0000.
+  - req_id: R2
+    statement: Words starting with a non-vowel are blue.
+    check_kind: text_run
+    observable: Runs of the other 41 words (do, no, say, want, now, she, was, four, so, well, get, soon, went, good, that, what, be, have, please, there, white, black, he, pretty, they, who, brown, ran, this, will, but, like, ride, too, with, came, must, saw, yes, did, new) have color 0000FF.
+  - req_id: R3
+    statement: (implicit) Text outside the word list (title and introductory paragraph) keeps its colors.
+    check_kind: text_run
+    observable: Paragraphs 0-1 keep color 2A3139 / 4D5968.
+allowed_variations:
+  - '[AMBIGUOUS] Exact shades: "red"/"blue" read as FF0000/0000FF; LibreOffice palette "Blue" is 2A6099 - a palette-blue result is a gray zone. "y" (e.g. "yes") is treated as a non-vowel.'

@@ -1,0 +1,14 @@
+task_id: 2373b66a-092d-44cb-bfd7-82e86e7a3b4d
+author: blind-model-author-v1
+requirements:
+  - req_id: R1
+    statement: The output of sar CPU monitoring is saved to /home/user/Desktop/System_Resources_Report.txt.
+    check_kind: file_exists
+    observable: The file exists and contains sar CPU report output (header with "%user", "%system", "%idle" columns).
+  - req_id: R2
+    statement: CPU statistics were collected every second for 30 seconds.
+    check_kind: other
+    observable: The report has 30 sample lines (plus header and an "Average" line) with timestamps 1 second apart, consistent with "sar -u 1 30" (or "sar 1 30").
+allowed_variations:
+  - Installing sysstat if missing is implied.
+  - Additional sar flags that keep CPU statistics are acceptable.

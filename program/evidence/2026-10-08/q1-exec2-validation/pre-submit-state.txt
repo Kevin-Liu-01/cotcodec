@@ -1,0 +1,24 @@
+recorded_at=2026-10-08T06:45:28Z
+## squeue
+   JOBID PARTITION                           NAME     USER ST       TIME TIME_LIMIT NODELIST(REASON) TRES_PER_NODE
+## nvidia-smi
+index, memory.used [MiB], memory.total [MiB], utilization.gpu [%]
+0, 0 MiB, 81559 MiB, 0 %
+1, 0 MiB, 81559 MiB, 0 %
+2, 0 MiB, 81559 MiB, 0 %
+3, 0 MiB, 81559 MiB, 0 %
+4, 0 MiB, 81559 MiB, 0 %
+5, 0 MiB, 81559 MiB, 0 %
+6, 0 MiB, 81559 MiB, 0 %
+7, 0 MiB, 81559 MiB, 0 %
+gpu_uuid, pid, used_gpu_memory [MiB]
+recorded_at=2026-10-08T06:45:45Z
+   JOBID PARTITION                           NAME     USER ST       TIME TIME_LIMIT NODELIST(REASON) TRES_PER_NODE
+0, 0 MiB, 0 %
+1, 0 MiB, 0 %
+2, 0 MiB, 0 %
+3, 0 MiB, 0 %
+4, 0 MiB, 0 %
+5, 0 MiB, 0 %
+6, 0 MiB, 0 %
+7, 0 MiB, 0 %

@@ -1,0 +1,30 @@
+{
+ "consumers_with_store": 129,
+ "disk": {
+  "entries_bytes_estimate": 287782731776,
+  "entry_cap_bytes": 50000000000,
+  "groups_inline_over_entry_cap": [
+   {
+    "bytes": 97295564800,
+    "channel": "c",
+    "problem_id": "L2/100_ConvTranspose3d_Clamp_Min_Divide",
+    "seed": 42
+   },
+   {
+    "bytes": 67649929216,
+    "channel": "c",
+    "problem_id": "L2/87_Conv2d_Subtract_Subtract_Mish",
+    "seed": 42
+   }
+  ],
+  "peak_live_bytes_estimate": 282481819648
+ },
+ "reference_items": {
+  "ref_A1": 9,
+  "ref_A2": 9,
+  "ref_A3": 9,
+  "ref_A5": 9,
+  "ref_c": 7
+ },
+ "store": "/outputs/q1-refstore"
+}

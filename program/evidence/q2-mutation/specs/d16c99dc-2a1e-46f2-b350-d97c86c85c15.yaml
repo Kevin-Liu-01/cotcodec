@@ -1,0 +1,18 @@
+task_id: d16c99dc-2a1e-46f2-b350-d97c86c85c15
+author: blind-model-author-v1
+requirements:
+  - req_id: R1
+    statement: The dog layer (layer "dog_with_background.png", 1578 x 948, the one showing the husky; the other layer "New layer" is fully transparent) is scaled to a height of 512 px.
+    check_kind: image_property
+    observable: In the saved result the dog layer's height == 512 px.
+  - req_id: R2
+    statement: The original aspect ratio is kept.
+    check_kind: image_property
+    observable: Dog layer width == round(1578 * 512 / 948) == 852 px (+-1).
+  - req_id: R3
+    statement: (implicit) The dog content is scaled, not cropped.
+    check_kind: image_property
+    observable: The scaled layer, resized back, resembles the original dog photo (high similarity).
+allowed_variations:
+  - '[AMBIGUOUS] Result location: saving dog_with_background_two_layers.xcf (layer geometry visible) vs exporting dog_with_background.png (only the flattened composite, where the dog area is 852x512); record which.'
+  - Canvas size may stay 1578 x 948 (Scale Layer) or be cropped/scaled; interpolation method is not constrained.

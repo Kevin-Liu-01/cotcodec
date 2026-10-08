@@ -1,0 +1,30 @@
+task_id: a53f80cd-4a90-4490-8310-097b011433f6
+author: blind-model-author-v1
+requirements:
+  - req_id: R0
+    statement: (implicit) The presentation is saved in place at /home/user/Desktop/21_0.pptx with 5 slides.
+    check_kind: file_exists
+    observable: File loads; 5 slides.
+  - req_id: R1
+    statement: The titles of slides 2 and 3 are black.
+    check_kind: text_run
+    observable: Runs of slide 2 "How to Use This Presentation" and slide 3 "Add an Agenda Page" have color 000000.
+  - req_id: R2
+    statement: The titles of slides 2 and 3 are bold.
+    check_kind: text_run
+    observable: Those runs have bold == true.
+  - req_id: R3
+    statement: All personal contact information on slide 4 is deleted - address, phone, e-mail, social handle and website text boxes.
+    check_kind: slide_object
+    observable: No shape on slide 4 contains "123 Anywhere St", "123-456-7890", "hello@reallygreatsite.com", "@reallygreatsite" or "reallygreatsite.com".
+  - req_id: R4
+    statement: The five small contact icons next to that information on slide 4 are deleted too.
+    check_kind: slide_object
+    observable: The freeform icons "Google Shape;468..472" (about 1 cm, at x of about 2.9 cm) are absent from slide 4.
+  - req_id: R5
+    statement: (implicit) Other content (slide 4 heading "Contact Us", the large picture and decorative shapes; other slides' text) remains.
+    check_kind: slide_object
+    observable: '"Contact Us" text, picture "Google Shape;467;p35" and the other slides'' texts are still present.'
+allowed_variations:
+  - '[AMBIGUOUS] Whether the "Contact Us" heading counts as personal information; keeping it is the conservative reading.'
+  - Title text of slide 1 and the bodies of slides 2-3 are not constrained.

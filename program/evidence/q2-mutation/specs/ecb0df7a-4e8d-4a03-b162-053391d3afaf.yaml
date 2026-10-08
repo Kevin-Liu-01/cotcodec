@@ -1,0 +1,18 @@
+task_id: ecb0df7a-4e8d-4a03-b162-053391d3afaf
+author: blind-model-author-v1
+requirements:
+  - req_id: R0
+    statement: (implicit) The workbook is persisted at /home/user/Order_Id_Mark_Pass_Fail.xlsx with cell values unchanged.
+    check_kind: file_exists
+    observable: File loads; B1:D29 values equal initial values (D2:D29 still empty).
+  - req_id: R1
+    statement: The record cells of the "Pass/Fail/Held" column (D2:D29) have list data validation offering exactly Pass, Fail, Held as a drop-down.
+    check_kind: config_value
+    observable: A dataValidation with type="list", formula1 "Pass,Fail,Held" (quoted list, any order) or a range containing exactly those three texts, whose sqref covers D2:D29; showDropDown not suppressing the in-cell list.
+  - req_id: R2
+    statement: Validation is not applied to irrelevant regions (explicit "don't touch irrelevant regions").
+    check_kind: config_value
+    observable: No validation sqref covers the header D1 or cells outside column D; coverage beyond D29 is a gray zone (see allowed variations).
+allowed_variations:
+  - '[AMBIGUOUS] Applying validation to the whole column D (including empty rows below 29) is arguably "the cells in this column"; strict reading is D2:D29.'
+  - Error-alert / input-help messages are not constrained.

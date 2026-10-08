@@ -1,0 +1,13 @@
+task_id: 8f080098-ddb1-424c-b438-4e96e5e4786e
+author: blind-model-author-v1
+requirements:
+  - req_id: R1
+    statement: An MP3 file named "Baby Justin Bieber.mp3" is saved on the Desktop.
+    check_kind: file_exists
+    observable: "/home/user/Desktop/Baby Justin Bieber.mp3 exists and ffprobe reports format mp3 with an mp3 audio stream (no video stream other than optional cover art)."
+  - req_id: R2
+    statement: The MP3 contains the song from the music video (its full audio track).
+    check_kind: other
+    observable: Duration about 219 s (within 2 s of the video's 219.06 s) and the audio correlates with the video's audio track.
+allowed_variations:
+  - Bitrate/sample rate.

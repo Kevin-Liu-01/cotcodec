@@ -1,0 +1,13 @@
+task_id: 0f84bef9-9790-432e-92b7-eece357603fb
+author: blind-model-author-v1
+requirements:
+  - req_id: R1
+    statement: The Impress presenter console (current/next slide screen) is disabled so a slide show uses only one monitor for the presentation.
+    check_kind: config_value
+    observable: In the LibreOffice user profile (~/.config/libreoffice/4/user/registrymodifications.xcu) the Impress option "Enable Presenter Console" is off, i.e. an item for /org.openoffice.Office.Impress/Misc/Start with prop EnablePresenterScreen = false.
+  - req_id: R2
+    statement: (implicit) The presentation file is not altered.
+    check_kind: file_exists
+    observable: /home/user/Desktop/multimedia_classroom_podium-2020.pptx content unchanged (23 slides).
+allowed_variations:
+  - '[AMBIGUOUS] The instruction is a how-to question; the expected end state is the setting actually changed. Alternative routes (choosing a single presentation display in Slide Show settings) leave a different trace.'

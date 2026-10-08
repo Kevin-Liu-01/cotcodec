@@ -1,0 +1,18 @@
+task_id: 9ec204e4-f0a3-42f8-8458-b772a6797cab
+author: blind-model-author-v1
+requirements:
+  - req_id: R0
+    statement: (implicit) The presentation is saved in place at /home/user/Desktop/MLA_Workshop_061X_Works_Cited.pptx.
+    check_kind: file_exists
+    observable: File loads.
+  - req_id: R1
+    statement: The deck now has 26 slides; slides 1-24 are the originals in original order.
+    check_kind: slide_object
+    observable: len(slides) == 26; texts of slides 1-24 equal the initial slides 1-24.
+  - req_id: R2
+    statement: Slide 25 is a duplicate of original slide 23 ("Now you...") and slide 26 is a duplicate of original slide 24 ("Works Cited").
+    check_kind: slide_object
+    observable: Slide 25 title "Now you…" and body texts equal slide 23; slide 26 title "Works Cited " and body texts equal slide 24 (same layout and shapes).
+allowed_variations:
+  - Duplicated slides may get new internal names/ids.
+  - Speaker notes of duplicates are expected to be copied but are not mentioned.

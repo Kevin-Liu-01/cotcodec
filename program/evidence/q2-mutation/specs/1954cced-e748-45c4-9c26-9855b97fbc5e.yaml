@@ -1,0 +1,22 @@
+task_id: 1954cced-e748-45c4-9c26-9855b97fbc5e
+author: blind-model-author-v1
+requirements:
+  - req_id: R0
+    statement: (implicit) The workbook is persisted at /home/user/Invoices.xlsx with Sheet1 A1:G19 unchanged.
+    check_kind: file_exists
+    observable: File loads; Sheet1 values equal the initial values.
+  - req_id: R1
+    statement: A new sheet named "Sheet2" exists.
+    check_kind: other
+    observable: Sheet names include "Sheet2".
+  - req_id: R2
+    statement: Sheet2 contains a pivot table (not hand-typed values) whose row field is "Invoice No." and whose data field is a count.
+    check_kind: other
+    observable: The xlsx contains a pivotTable part whose location is on Sheet2; its rowFields reference the "Invoice No." cache field and its dataField uses subtotal="count" (or countNums).
+  - req_id: R3
+    statement: The pivot output shows how many times each invoice number appears.
+    check_kind: cell_value
+    observable: Sheet2 cells list 10500 -> 1, 10501 -> 4, 10502 -> 2, 10503 -> 4, 10504 -> 2, 10505 -> 5 (grand total 18 if shown).
+allowed_variations:
+  - The counted data field may be any column (count of Invoice No., Date, etc.) since every row has values; the counts are identical.
+  - Pivot anchor cell on Sheet2, grand-total rows/columns, and pivot style are not constrained.

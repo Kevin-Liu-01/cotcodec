@@ -1,0 +1,87 @@
+{
+ "argv": [
+  "sh",
+  "-c",
+  "/src/infra/q2-mutation/run/make_jobs.sh dev /out/jobs-dev.jsonl && cd /src && /opt/venv-lock/bin/python -m harness.q2_mutation.campaign targets --src /src --osworld /inputs/OSWorld --jobs /out/jobs-dev.jsonl --split dev --out /out --count-only && /src/infra/q2-mutation/run/make_jobs.sh confirm /out/jobs-confirm.jsonl && cd /src && /opt/venv-lock/bin/python -m harness.q2_mutation.campaign targets --src /src --osworld /inputs/OSWorld --jobs /out/jobs-confirm.jsonl --split confirm --out /out --count-only && /src/infra/q2-mutation/run/make_jobs.sh reserve /out/jobs-reserve.jsonl && cd /src && /opt/venv-lock/bin/python -m harness.q2_mutation.campaign targets --src /src --osworld /inputs/OSWorld --jobs /out/jobs-reserve.jsonl --split reserve --out /out --count-only && true"
+ ],
+ "container_dev_nvidia": [],
+ "control_job_reports": {
+  "confirm": {
+   "gold_equals_initial": 0,
+   "no_gold": 43
+  },
+  "dev": {
+   "gold_equals_initial": 1,
+   "no_gold": 12
+  },
+  "reserve": {
+   "gold_equals_initial": 0,
+   "no_gold": 21
+  }
+ },
+ "exit_status": 0,
+ "finished_at": "2026-10-07T14:34:17Z",
+ "git_sha": "e1f3f637e894acdc12968fe7a4875e25e21766ab",
+ "gpus_requested": 0,
+ "image_id": "sha256:2006c1a9247e4911a82508cd22e9d9a7efc5c13e35a20e8a03baac7112876230",
+ "network": "none",
+ "run": "target-counts-v1",
+ "slurm_job": "457",
+ "splits": {
+  "confirm": {
+   "skipped": {
+    "derived by a postconfig conversion (mutate its source instead)": 5,
+    "no complete gold": 43,
+    "no operator family for this file type": 11
+   },
+   "split": "confirm",
+   "targets": 68,
+   "targets_by_family": {
+    "docx": 13,
+    "pptx": 22,
+    "text": 1,
+    "xlsx": 32
+   },
+   "targets_without_initial": 6,
+   "tasks": 120,
+   "tasks_with_target": 67
+  },
+  "dev": {
+   "skipped": {
+    "derived by a postconfig conversion (mutate its source instead)": 1,
+    "no complete gold": 13,
+    "no operator family for this file type": 3
+   },
+   "split": "dev",
+   "targets": 17,
+   "targets_by_family": {
+    "docx": 4,
+    "pptx": 5,
+    "text": 1,
+    "xlsx": 7
+   },
+   "targets_without_initial": 4,
+   "tasks": 32,
+   "tasks_with_target": 17
+  },
+  "reserve": {
+   "skipped": {
+    "no complete gold": 21,
+    "no operator family for this file type": 7
+   },
+   "split": "reserve",
+   "targets": 28,
+   "targets_by_family": {
+    "docx": 5,
+    "pptx": 8,
+    "text": 3,
+    "xlsx": 12
+   },
+   "targets_without_initial": 5,
+   "tasks": 53,
+   "tasks_with_target": 28
+  }
+ },
+ "started_at": "2026-10-07T14:34:15Z",
+ "what": "Mutation-target counts per split, made before the preregistration freeze without specs, mutants or checkers (campaign targets --count-only on the harness control jobs). Sizes the confirmatory design."
+}

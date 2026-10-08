@@ -1,0 +1,9 @@
+task_id: 5ac2891a-eacd-4954-b339-98abba077adb
+author: blind-model-author-v1
+requirements:
+  - req_id: R1
+    statement: VLC does not quit at the end of playback.
+    check_kind: config_value
+    observable: ~/.config/vlc/vlcrc has play-and-exit=0 (or the option commented out at its default 0).
+allowed_variations:
+  - Related playlist options (play-and-stop, repeat) are not constrained.

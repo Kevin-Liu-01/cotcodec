@@ -1,0 +1,63 @@
+{
+ "adversarial_phase_ends_seconds": 249.3,
+ "by_phase": {
+  "after_the_adversarial_controls": {
+   "items": 12,
+   "measured_gpu_seconds": 114.79,
+   "measured_over_model": 7.793,
+   "model_gpu_seconds": 14.73,
+   "problems": [
+    "L2/59_Matmul_Swish_Scaling"
+   ]
+  },
+  "overlapping_the_adversarial_controls": {
+   "items": 75,
+   "measured_gpu_seconds": 105.44,
+   "measured_over_model": 1.386,
+   "model_gpu_seconds": 76.08,
+   "problems": [
+    "L1/10_3D_tensor_matrix_multiplication",
+    "L1/18_Matmul_with_transposed_both",
+    "L2/77_ConvTranspose3d_Scale_BatchNorm_GlobalAvgPool",
+    "L2/95_Matmul_Add_Swish_Tanh_GELU_Hardtanh"
+   ]
+  }
+ },
+ "gpu_seconds_by_group": {
+  "adversarial_controls_and_their_references": 149.7,
+  "repilot_references": 58.6,
+  "repilot_scoring": 161.6
+ },
+ "label": "post hoc (written after the data were seen)",
+ "projection_rows": [
+  {
+   "P3_central": 35.33,
+   "P3_high": 44.56,
+   "P3_scoring_central": 31.033,
+   "P7_central": 51.69,
+   "P7_high": 65.79,
+   "P7_scoring_central": 47.397,
+   "fixed_gpu_hours": 4.294,
+   "high_scale_from": "trim2-store-per-job-paired-concurrency",
+   "note": "post hoc; L2/59 alone sets the low ratio",
+   "scenario": "F: 12-per-GPU items x1.955, fewer x6.349, references x1.533"
+  },
+  {
+   "P3_central": 34.26,
+   "P3_high": 43.17,
+   "P3_scoring_central": 29.962,
+   "P7_central": 50.12,
+   "P7_high": 63.75,
+   "P7_scoring_central": 45.824,
+   "fixed_gpu_hours": 4.294,
+   "high_scale_from": "trim2-store-per-job-paired-concurrency",
+   "note": "post hoc; L2/59 alone sets the low ratio",
+   "scenario": "G: 12-per-GPU items at the model, fewer x6.349, references x1.533"
+  }
+ ],
+ "ratios": {
+  "12_per_gpu": 1.955,
+  "fewer_than_12_per_gpu": 6.349,
+  "references": 1.533
+ }
+}

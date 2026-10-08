@@ -1,0 +1,19 @@
+task_id: d681960f-7bc3-4286-9913-a8812ba3261a
+author: blind-model-author-v1
+requirements:
+  - req_id: R0
+    statement: (implicit) The workbook is persisted at /home/user/Student_Grades_and_Remarks.xlsx; the scale table D1:E7 and student data D9:E23 unchanged.
+    check_kind: file_exists
+    observable: File loads; D1:E7, D9:F9, D10:E23 equal initial values.
+  - req_id: R1
+    statement: Each student's "Message" (F10:F23) is the remark of the highest scale threshold not exceeding the student's marks.
+    check_kind: cell_value
+    observable: >-
+      F10:F23 == Pass, Excellent, Pass, Fail, Above average, Average, Pass, Average, Fail, Above average, Fail, Average,
+      Exceptional!, Pass (for marks 42, 94, 33, 6, 86, 67, 59, 60, 10, 85, 5, 73, 100, 32).
+  - req_id: R2
+    statement: No irrelevant cells are touched, even blank ones (explicit).
+    check_kind: cell_value
+    observable: Columns A:C, G+, row 8 and rows 24+ remain empty.
+allowed_variations:
+  - Approximate-match VLOOKUP/LOOKUP formulas or constants.

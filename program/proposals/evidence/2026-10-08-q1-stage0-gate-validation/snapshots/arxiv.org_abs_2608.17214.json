@@ -1,0 +1,24 @@
+{
+ "url": "https://arxiv.org/abs/2608.17214",
+ "fetched_at": "2026-10-08T07:31:22Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 42002,
+ "raw_sha256": "528e976aa45feff9c0baf2d218190826558e5c5005e349f0e9f5610e9644c882",
+ "raw_stored": false,
+ "extract": {
+  "title": "Oracles That Cannot Fail: Anchoring and the Expectation That Moves With the Fault",
+  "authors": [
+   "Canedo, Arquimedes"
+  ],
+  "citation_date": "2026/08/17",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Mon, 17 Aug 2026 23:56:16 UTC"
+   }
+  ],
+  "abstract": "A test oracle that obtains its expected value from the system it is judging cannot fail. If a fault moves measurement and expectation together the comparison cancels exactly, and no generated input will reveal it. The defect is in the oracle and not in the input space. We call this oracle anchoring. An expectation is specification-anchored when composed from values fixed outside the code under mutation, and state-anchored when it flows, directly or transitively, from that code. The expected-value form is named in the test-smell literature but not measured in any study we retrieved. We name three further channels by which such a value reaches a verdict, restrict the predicate to values flowing from the mutate target, and measure it. The subject is a deployed air traffic control simulator with 12 model-free property suites. Across 4 modules and 366 mutants these add 3 mutants of detection over the hand-written tests, while remaining 6 to 33 times as efficient per test. We then intervene three times, predicting each outcome first. Re-anchoring one holding oracle on published procedure, changing no production code, recovers 8 of 46; state-anchoring a healthy debounce oracle costs 4 of 19; and a reference model on that population kills exactly what specification anchoring kills, placing the risk in anchoring and not in model-freedom. Of 6 instances ablated, the two sizing their comparison carry 11 of the 12 recovered mutants. The published smell rule would revert our repair. Writing the oracle this analysis said was missing then exposed two defects deployment had not surfaced. All measurements come from one system by one author.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}

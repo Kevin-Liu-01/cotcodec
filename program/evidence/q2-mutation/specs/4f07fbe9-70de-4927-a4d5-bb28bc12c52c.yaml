@@ -1,0 +1,21 @@
+task_id: 4f07fbe9-70de-4927-a4d5-bb28bc12c52c
+author: blind-model-author-v1
+requirements:
+  - req_id: R0
+    statement: (implicit) The workbook is persisted at /home/user/Padding_Decimals_In_Formular.xlsx.
+    check_kind: file_exists
+    observable: File exists and loads.
+  - req_id: R1
+    statement: The text cell D1 shows the price with exactly two decimals, i.e. "The price is 19.50 euros."
+    check_kind: cell_value
+    observable: Computed value of D1 == "The price is 19.50 euros.".
+  - req_id: R2
+    statement: The text still uses the numeric value from C1 (not a hard-coded string).
+    check_kind: cell_value
+    observable: D1 is a formula that references C1 (e.g. ="The price is "&TEXT(C1;"0.00")&" euros."); changing C1 would change D1.
+  - req_id: R3
+    statement: B1 and C1 are unchanged and no other cells are touched (explicit).
+    check_kind: cell_value
+    observable: B1 == "PRICE", C1 == 19.5 with format 0.00; all other cells empty.
+allowed_variations:
+  - The exact function used (TEXT, FIXED, DOLLAR-free formatting) as long as the result string matches.

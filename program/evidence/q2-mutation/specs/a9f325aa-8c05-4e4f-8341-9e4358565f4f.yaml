@@ -1,0 +1,20 @@
+task_id: a9f325aa-8c05-4e4f-8341-9e4358565f4f
+author: blind-model-author-v1
+requirements:
+  - req_id: R0
+    statement: (implicit) The workbook is persisted at /home/user/Movie_title_garbage_clean.xlsx; column B (garbage titles) and headers are unchanged.
+    check_kind: file_exists
+    observable: File loads; B1:B29 and C1 equal initial values.
+  - req_id: R1
+    statement: Each Clean Movie Title (C2:C29) is the garbage title with leading/trailing whitespace removed, internal runs of whitespace collapsed to one space, and each word capitalized (first letter upper, rest lower).
+    check_kind: cell_value
+    observable: >-
+      C2 "Minions In Black"; C3 "The Dragon With The Girl Tattoo"; C7 "21 Pump Street"; C21 "The Good, The Better And The Best";
+      C29 "Dumblodore: Dumb And Dumber"; in general C == " ".join(w[0].upper()+w[1:].lower() for w in B.split()).
+  - req_id: R2
+    statement: No irrelevant cells are touched, even blank ones (explicit).
+    check_kind: cell_value
+    observable: Column A, columns D+ and rows 30+ remain empty.
+allowed_variations:
+  - Formulas (=PROPER(TRIM(B2))) or constants.
+  - '[AMBIGUOUS] Hyphenated word in row 27: per-word capitalization gives "Edge Of Puip-fre Fiction" while LibreOffice PROPER() gives "Edge Of Puip-Fre Fiction"; both are defensible readings of "first letter of each word".'

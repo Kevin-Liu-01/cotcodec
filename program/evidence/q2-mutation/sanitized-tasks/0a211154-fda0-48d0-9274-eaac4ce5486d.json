@@ -1,0 +1,16 @@
+{
+  "domain": "libreoffice_impress",
+  "initial_files": [
+    {
+      "path_in_vm": "/home/user/Desktop/13_0.pptx",
+      "sha256": "ee71e0e479db834ca959f260c70e1058f3e47dce28b62a4b2faf8c42715c1958",
+      "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/1e112283c4ecb08d6fed8069bca7de74fa2f12aa/libreoffice_impress/0a211154-fda0-48d0-9274-eaac4ce5486d/13_0_.pptx"
+    }
+  ],
+  "instruction": "Set the background color to yellow for any slide that contains one or more images of real people, and set the title of slide 2 as \"Let's start\".",
+  "related_apps": [
+    "libreoffice_impress"
+  ],
+  "snapshot": "libreoffice_impress",
+  "task_id": "0a211154-fda0-48d0-9274-eaac4ce5486d"
+}

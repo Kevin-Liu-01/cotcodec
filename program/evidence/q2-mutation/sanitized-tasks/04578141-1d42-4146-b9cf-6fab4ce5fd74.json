@@ -1,0 +1,16 @@
+{
+  "domain": "libreoffice_impress",
+  "initial_files": [
+    {
+      "path_in_vm": "/home/user/Desktop/45_2.pptx",
+      "sha256": "0cc143e4f7587ecd5b7af54ff6e0b9cd40c0a32c485340f6e8ce0b082571ccb1",
+      "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/1e112283c4ecb08d6fed8069bca7de74fa2f12aa/libreoffice_impress/04578141-1d42-4146-b9cf-6fab4ce5fd74/45_2.pptx"
+    }
+  ],
+  "instruction": "Change the text color in the textboxes to on slide 1 yellow, red, and green, respectively, in top-to-bottom order. Use exactly these colors—no variations (e.g., no dark red, light green, etc.).",
+  "related_apps": [
+    "libreoffice_impress"
+  ],
+  "snapshot": "libreoffice_impress",
+  "task_id": "04578141-1d42-4146-b9cf-6fab4ce5fd74"
+}

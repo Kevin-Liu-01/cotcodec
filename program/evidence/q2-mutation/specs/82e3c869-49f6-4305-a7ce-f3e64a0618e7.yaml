@@ -1,0 +1,21 @@
+task_id: 82e3c869-49f6-4305-a7ce-f3e64a0618e7
+author: blind-model-author-v1
+requirements:
+  - req_id: R1
+    statement: The folder /home/user/Desktop/presenter contains copies of the photos showing the presenter (young man in a black T-shirt, glasses and mask, speaking at the screen).
+    check_kind: file_exists
+    observable: presenter/ contains exactly DSC00495.jpg, DSC00554.jpg, DSC00574.jpg and DSC00657.jpg, byte-identical to the originals.
+  - req_id: R2
+    statement: Photos not featuring the presenter are excluded.
+    check_kind: file_exists
+    observable: DSC00454.jpg (an older host presenting HKU-IDS) and DSC00659.jpg (audience) are not in presenter/.
+  - req_id: R3
+    statement: The originals stay in the seminar folder (copy, not move).
+    check_kind: file_exists
+    observable: All 6 files remain in "/home/user/Desktop/IDS LLM seminar".
+  - req_id: R4
+    statement: The folder is compressed into /home/user/Desktop/presenter.zip.
+    check_kind: file_exists
+    observable: presenter.zip exists and lists the same 4 JPGs (under a presenter/ prefix or at root).
+allowed_variations:
+  - '[AMBIGUOUS] DSC00554 shows the presenter small at the front of the room, and DSC00657 shows him beside a second person; both count as featuring him. DSC00659 shows an audience member with a microphone who is not judged to be the presenter.'

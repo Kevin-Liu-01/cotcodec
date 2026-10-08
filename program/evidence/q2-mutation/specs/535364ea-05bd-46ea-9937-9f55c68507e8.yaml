@@ -1,0 +1,23 @@
+task_id: 535364ea-05bd-46ea-9937-9f55c68507e8
+author: blind-model-author-v1
+requirements:
+  - req_id: R0
+    statement: (implicit) The workbook is persisted at /home/user/SummerSales.xlsx with Sheet1 unchanged.
+    check_kind: file_exists
+    observable: File loads; Sheet1 A1:G30 equal initial values.
+  - req_id: R1
+    statement: A new sheet named "Sheet2" holds two pivot tables.
+    check_kind: other
+    observable: Exactly two pivotTable parts are located on Sheet2.
+  - req_id: R2
+    statement: One pivot table shows total revenue per product.
+    check_kind: other
+    observable: A pivot with row field Product and data sum of "Revenue ($)"; values Aspen 479.13, Bellen 23.25, Carlota 298.05, Crested Beaut 75.62, Doublers 240.99, FlatTop 28.92, Majectic Beaut 28.28, Quad 707.82, Sunbell 200.15, Sunset 143.89, Sunshine 142.05.
+  - req_id: R3
+    statement: The other pivot table shows total revenue per sales channel.
+    check_kind: other
+    observable: A pivot with row field "Sales Channel" and data sum of "Revenue ($)"; values E-mail Coupon 75.62, In Store Sales 649.16, Web Site Sales 1643.37 (grand total 2368.15).
+allowed_variations:
+  - Relative placement of the two pivots (side by side or stacked) and their order.
+  - Grand total rows, pivot styles and number formats.
+  - '[AMBIGUOUS] "showing the total revenue for each product and sales channel" could also be read as one cross-tab; the explicit "two pivot tables" fixes the one-per-dimension reading.'

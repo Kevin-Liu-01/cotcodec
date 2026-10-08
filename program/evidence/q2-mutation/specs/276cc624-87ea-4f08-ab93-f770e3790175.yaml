@@ -1,0 +1,10 @@
+task_id: 276cc624-87ea-4f08-ab93-f770e3790175
+author: blind-model-author-v1
+requirements:
+  - req_id: R1
+    statement: The user-level VS Code setting for the code-wrapping line length is 50 characters.
+    check_kind: config_value
+    observable: ~/.config/Code/User/settings.json (valid JSON/JSONC) has "editor.wordWrapColumn" == 50.
+allowed_variations:
+  - '[AMBIGUOUS] Whether "editor.wordWrap" must also be set to "wordWrapColumn"/"bounded" for the column to take effect; the instruction only asks for the line length.'
+  - Other existing user settings are preserved.

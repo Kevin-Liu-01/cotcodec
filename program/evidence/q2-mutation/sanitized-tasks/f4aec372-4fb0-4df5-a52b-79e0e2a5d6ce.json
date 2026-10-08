@@ -1,0 +1,21 @@
+{
+  "domain": "gimp",
+  "initial_files": [
+    {
+      "path_in_vm": "/home/user/Desktop/Triangle_On_The_Side.png",
+      "sha256": "77d0eb7a65794fc72173bd158e14668c01613cae62324464c6dcbe244201d0bf",
+      "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/1e112283c4ecb08d6fed8069bca7de74fa2f12aa/gimp/f4aec372-4fb0-4df5-a52b-79e0e2a5d6ce/Triangle_On_The_Side.png"
+    },
+    {
+      "path_in_vm": "/home/user/Desktop/Triangle_On_The_Side.xcf",
+      "sha256": "69465bf3e952ba7dacc22547cce379a7ac3ac7e5a4edd9e25d08c441209155c5",
+      "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/1e112283c4ecb08d6fed8069bca7de74fa2f12aa/gimp/f4aec372-4fb0-4df5-a52b-79e0e2a5d6ce/Triangle_On_The_Side.xcf"
+    }
+  ],
+  "instruction": "Help me choose the yellow triangle and positioning it at the center of my picture.",
+  "related_apps": [
+    "gimp"
+  ],
+  "snapshot": "gimp",
+  "task_id": "f4aec372-4fb0-4df5-a52b-79e0e2a5d6ce"
+}

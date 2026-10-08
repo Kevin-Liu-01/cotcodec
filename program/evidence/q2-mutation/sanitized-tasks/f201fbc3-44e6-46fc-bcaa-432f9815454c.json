@@ -1,0 +1,16 @@
+{
+  "domain": "thunderbird",
+  "initial_files": [
+    {
+      "path_in_vm": "/home/user/thunderbird-profile.tar.gz",
+      "sha256": "8a714a4102d6f3aa604c0fd2bb96e63ba51594485977ed5c8dd19af846ae07e8",
+      "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/1e112283c4ecb08d6fed8069bca7de74fa2f12aa/thunderbird/dd84e895-72fd-4023-a336-97689ded257c/thunderbird-profile.tar.gz"
+    }
+  ],
+  "instruction": "When I reply to an email, it quotes the original message but offsets it with an indentation and \">\" character. I find this unnecessary and distracting. Could you just remove the quoting entirely so my replies start with a clean slate?",
+  "related_apps": [
+    "thunderbird"
+  ],
+  "snapshot": "thunderbird",
+  "task_id": "f201fbc3-44e6-46fc-bcaa-432f9815454c"
+}
