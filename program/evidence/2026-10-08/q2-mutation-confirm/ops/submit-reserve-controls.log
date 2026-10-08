@@ -1,0 +1,8 @@
+== reserve controls preflight 2026-10-08T08:51:39Z
+ 08:51:39 up 68 days,  9:37, 61 users,  load average: 6.69, 12.93, 11.82
+{"frozen": true, "ledger_hash": "dc39bfa2f68e0fd57a213e0972266a4db60428e00d6c4e6bca8e576f35ec6439", "split": "reserve"}
+{"run": "reserve-controls-v1", "split": "reserve", "git_sha": "65bc2e2bf7bbe4027e6751ff22840ecdf8e40fa1", "jobs": [791, 792, 793]}
+submitted 2026-10-08T08:51:39Z
+791 cotcodec-q2-mutation-cpu PENDING 0:00 3:00:00 (null)
+792 cotcodec-q2-mutation-cpu PENDING 0:00 3:00:00 afterok:791(unfulfilled)
+793 cotcodec-q2-mutation-cpu PENDING 0:00 3:00:00 afterok:792(unfulfilled)

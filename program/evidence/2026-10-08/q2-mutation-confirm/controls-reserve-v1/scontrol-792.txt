@@ -1,0 +1,28 @@
+JobId=792 JobName=cotcodec-q2-mutation-cpu
+   UserId=kevin(1004) GroupId=kevin(1004) MCS_label=N/A
+   Priority=4294900968 Nice=0 Account=(null) QOS=(null)
+   JobState=COMPLETED Reason=None Dependency=(null)
+   Requeue=1 Restarts=0 BatchFlag=1 Reboot=0 ExitCode=0:0
+   RunTime=00:00:40 TimeLimit=03:00:00 TimeMin=N/A
+   SubmitTime=2026-10-08T08:51:39 EligibleTime=2026-10-08T08:55:54
+   AccrueTime=Unknown
+   StartTime=2026-10-08T08:55:54 EndTime=2026-10-08T08:56:34 Deadline=N/A
+   SuspendTime=None SecsPreSuspend=0 LastSchedEval=2026-10-08T08:55:54 Scheduler=Main
+   Partition=research AllocNode:Sid=fal-h100-01:3795146
+   ReqNodeList=(null) ExcNodeList=(null)
+   NodeList=fal-h100-01
+   BatchHost=fal-h100-01
+   NumNodes=1 NumCPUs=16 NumTasks=1 CPUs/Task=16 ReqB:S:C:T=0:0:*:*
+   TRES=cpu=16,mem=96G,node=1,billing=16
+   Socks/Node=* NtasksPerN:B:S:C=0:0:*:* CoreSpec=*
+   MinCPUsNode=16 MinMemoryNode=96G MinTmpDiskNode=0
+   Features=(null) DelayBoot=00:00:00
+   OverSubscribe=OK Contiguous=0 Licenses=(null) Network=(null)
+   Command=/home/kevin/cotcodec-runs/stage0/q2-evaluator-mutation/src/65bc2e2bf7bbe4027e6751ff22840ecdf8e40fa1/infra/slurm/host-single-node/q2-mutation-cpu.sbatch
+   WorkDir=/home/kevin/cotcodec-runs/stage0/q2-evaluator-mutation
+   StdErr=/home/kevin/cotcodec-runs/stage0/q2-evaluator-mutation/slurm/slurm-cotcodec-q2-mutation-cpu-792.out
+   StdIn=/dev/null
+   StdOut=/home/kevin/cotcodec-runs/stage0/q2-evaluator-mutation/slurm/slurm-cotcodec-q2-mutation-cpu-792.out
+   Power=
+   
+
