@@ -83,7 +83,7 @@ def test_registered_numbers_equal_the_code():
         assert f"{price:.6f}" in text, (v, price)
     for v, price in P.PRICE_CENTRAL.items():
         assert f"{price:.6f}" in text, (v, price)
-    assert f"If K_base < {P.K_FLOOR}" in text
+    assert f"If K_base < {P.K_MAX}" in text and f"K_base < {P.K_FLOOR} goes back" in text
     assert "min(p_δ, p_X) <= 0.025" in text and rules.ALPHA / len(rules.DR2_FAMILY) == 0.025
     assert "within ±7.5 pp" in text and rules.EQUIVALENCE_MARGIN == 0.075
     assert "below 0.12" in text and rules.PI_EQUIVALENCE_BOUND == 0.12

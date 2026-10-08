@@ -1,0 +1,89 @@
+{
+  "schema": "q2-stage1a-lane-v1",
+  "experiment_id": "q2-stage1-rescoped-v1",
+  "purpose": "development",
+  "name": "dev-smoke-v1",
+  "note": "Development smoke of the S1a VM lane with the scripted fake engine (no model, no GPU): a click then terminate(success) on two dev-split tasks under both harnesses. Never evidence for any estimand.",
+  "run_root": "/home/kevin/cotcodec-runs/stage0/q2-stage1/runs",
+  "vm": {
+    "image": "happysixd/osworld-docker@sha256:0e6497a9295647cf05bf2b2af522fdd79bdeba2737595259cab310a3bcf6baa9",
+    "image_id": "sha256:fe8d9a5e5ad6c593d059887ea2c790481b3f32dd42fa961f2441cdbbe2c70cf4",
+    "qcow2": {
+      "host_path": "/home/kevin/cotcodec-runs/stage0/q2-action-path/vm/Ubuntu.qcow2",
+      "sha256": "6bf667a852b3c307f61d9f09c42559351f45e0607e428b4997becf534cf4d313",
+      "size_bytes": 24460197888
+    },
+    "ram_size": "4G",
+    "cpu_cores": 4,
+    "disk_size": "32G",
+    "memory_gb": 6,
+    "network": "none-netns",
+    "guest_ip": "20.20.20.21",
+    "server_port": 5000,
+    "hmp_port": 7100,
+    "concurrency": 1
+  },
+  "episode_image_id": "sha256:2006c1a9247e4911a82508cd22e9d9a7efc5c13e35a20e8a03baac7112876230",
+  "episode_python": "/opt/venv-lock/bin/python",
+  "osworld": {
+    "host_dir": "/home/kevin/cotcodec-runs/stage0/q2-evaluator-mutation/inputs/OSWorld",
+    "commit": "b138d348256078fa634fc3b73567a7337c793e6b"
+  },
+  "file_cache": {
+    "host_dir": "/home/kevin/cotcodec-runs/stage0/q2-evaluator-mutation/inputs/file_cache_1e112283/files"
+  },
+  "engine": {
+    "kind": "fake",
+    "script": {
+      "replies": [
+        "<think>\nThe slide is open.\n</think>\n\nAction: Click the slide.\n<tool_call>\n<function=computer_use>\n<parameter=action>\nleft_click\n</parameter>\n<parameter=coordinate>\n[500, 500]\n</parameter>\n</function>\n</tool_call>",
+        "<think>\nDone.\n</think>\n\nAction: Finish.\n<tool_call>\n<function=computer_use>\n<parameter=action>\nterminate\n</parameter>\n<parameter=status>\nsuccess\n</parameter>\n</function>\n</tool_call>"
+      ]
+    }
+  },
+  "mode": "episode",
+  "step_cap": 15,
+  "settle_after_reset_s": 60,
+  "settle_before_eval_s": 20,
+  "episode_timeout_s": 1200,
+  "slots": [
+    {
+      "slot": "dev-smoke:dev1:0",
+      "job": "dev-smoke-v1",
+      "size": "9B",
+      "session": "S1",
+      "task_id": "2b94c692-6abb-48ae-ab0b-b3e8a19cb340",
+      "harness": "H-OSW-fixed",
+      "rerun": 1,
+      "block": "dev1",
+      "extension_block": null
+    },
+    {
+      "slot": "dev-smoke:dev1:1",
+      "job": "dev-smoke-v1",
+      "size": "9B",
+      "session": "S1",
+      "task_id": "2b94c692-6abb-48ae-ab0b-b3e8a19cb340",
+      "harness": "H-GA",
+      "rerun": 1,
+      "block": "dev1",
+      "extension_block": null
+    },
+    {
+      "slot": "dev-smoke:dev1:2",
+      "job": "dev-smoke-v1",
+      "size": "9B",
+      "session": "S1",
+      "task_id": "01b269ae-2111-4a07-81fd-3fcd711993b0",
+      "harness": "H-GA",
+      "rerun": 1,
+      "block": "dev1",
+      "extension_block": null
+    }
+  ],
+  "slurm": {
+    "cpus": 8,
+    "memory_gb": 16,
+    "minutes": 45
+  }
+}

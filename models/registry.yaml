@@ -896,3 +896,41 @@ models:
     registered_for: directions 19-22 phase-0 pilots (gauntlet 2026-09-01)
     blocker: 'custom modeling code must be reviewed and vendored before execution; no artifact receipt
       yet: run fetch_open_model.py fetch --metadata-only then fetch/verify on persistent storage'
+  opencua-7b:
+    backend: huggingface
+    repo_id: xlangai/OpenCUA-7B
+    revision: a2efb7d2b104d477a4a2666a357e79550a28aafc
+    runtime: vllm-transformers-remote-code
+    architecture_family: qwen2.5-vl-opencua
+    license: mit
+    access: public
+    trust_remote_code: true
+    publication_eligible: false
+    roles:
+    - q2-stage1a-runtime-anchor
+    metadata_files:
+    - README.md
+    - config.json
+    - configuration_opencua.py
+    - generation_config.json
+    - modeling_opencua.py
+    - preprocessor_config.json
+    - processing_opencua.py
+    - tokenization_opencua.py
+    - tokenizer_config.json
+    required_files:
+    - config.json
+    - configuration_opencua.py
+    - modeling_opencua.py
+    - processing_opencua.py
+    - tokenization_opencua.py
+    - tiktoken.model
+    - tokenizer_config.json
+    - model.safetensors.index.json
+    source_url: https://huggingface.co/xlangai/OpenCUA-7B
+    registered_at: '2026-10-08'
+    registered_for: q2-stage1-rescoped-v1 OpenCUA-7B runtime anchor (D11, D49 iii)
+    blocker: 'remote code (configuration_, modeling_, processing_, tokenization_opencua.py) is third-party
+      serving code admitted under D49 (iii): read and hashed before use (receipt and
+      program/evidence/2026-10-08/q2-stage1-g0/opencua-remote-code/), run only in a container with no
+      network; never executed on a GPU before the S1a freeze'

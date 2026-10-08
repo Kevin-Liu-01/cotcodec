@@ -1,0 +1,683 @@
+{
+ "rows": [
+  {
+   "task": "dfac9ee8",
+   "getters": [
+    "cache_file"
+   ],
+   "postconfig": [
+    "download",
+    "execute"
+   ],
+   "mode": "dead",
+   "pinned": {
+    "raised": "AssertionError",
+    "message": "",
+    "old_rule_transport": false,
+    "new_rule_transport": false,
+    "guest_request_errors": 20
+   },
+   "live": {
+    "raised": "TransportFailure",
+    "message": "evaluate: 20 guest transport failure(s), first GET /terminal: ConnectionError: HTTPConnectionPool(host='127.0.0.1', port=5999): Max retries exceeded with url: /",
+    "old_rule_transport": true,
+    "new_rule_transport": true,
+    "guest_request_errors": 20
+   },
+   "old_runner": "scored (metric_exception, 0)",
+   "new_runner": "transport"
+  },
+  {
+   "task": "dfac9ee8",
+   "getters": [
+    "cache_file"
+   ],
+   "postconfig": [
+    "download",
+    "execute"
+   ],
+   "mode": "half",
+   "pinned": {
+    "raised": "Exception",
+    "message": "Setup step 1 failed: _download_setup - ('Connection aborted.', RemoteDisconnected('Remote end closed connection without response'))",
+    "old_rule_transport": false,
+    "new_rule_transport": true,
+    "guest_request_errors": 1
+   },
+   "live": {
+    "raised": "TransportFailure",
+    "message": "evaluate: 1 guest transport failure(s), first POST /setup/upload: ConnectionError: ('Connection aborted.', RemoteDisconnected('Remote end closed connection with",
+    "old_rule_transport": true,
+    "new_rule_transport": true,
+    "guest_request_errors": 1
+   },
+   "old_runner": "scored (metric_exception, 0)",
+   "new_runner": "transport"
+  },
+  {
+   "task": "9bc3cc16",
+   "getters": [
+    "cache_file"
+   ],
+   "postconfig": [
+    "command"
+   ],
+   "mode": "dead",
+   "pinned": {
+    "raised": "AssertionError",
+    "message": "",
+    "old_rule_transport": false,
+    "new_rule_transport": false,
+    "guest_request_errors": 20
+   },
+   "live": {
+    "raised": "TransportFailure",
+    "message": "evaluate: 20 guest transport failure(s), first GET /terminal: ConnectionError: HTTPConnectionPool(host='127.0.0.1', port=5999): Max retries exceeded with url: /",
+    "old_rule_transport": true,
+    "new_rule_transport": true,
+    "guest_request_errors": 20
+   },
+   "old_runner": "scored (metric_exception, 0)",
+   "new_runner": "transport"
+  },
+  {
+   "task": "9bc3cc16",
+   "getters": [
+    "cache_file"
+   ],
+   "postconfig": [
+    "command"
+   ],
+   "mode": "half",
+   "pinned": {
+    "raised": "AssertionError",
+    "message": "",
+    "old_rule_transport": false,
+    "new_rule_transport": false,
+    "guest_request_errors": 1
+   },
+   "live": {
+    "raised": "TransportFailure",
+    "message": "evaluate: 1 guest transport failure(s), first POST /setup/execute: ConnectionError: ('Connection aborted.', RemoteDisconnected('Remote end closed connection wit",
+    "old_rule_transport": true,
+    "new_rule_transport": true,
+    "guest_request_errors": 1
+   },
+   "old_runner": "scored (metric_exception, 0)",
+   "new_runner": "transport"
+  },
+  {
+   "task": "d38192b0",
+   "getters": [
+    "cache_file"
+   ],
+   "postconfig": [
+    "download",
+    "execute",
+    "execute"
+   ],
+   "mode": "dead",
+   "pinned": {
+    "raised": "AssertionError",
+    "message": "",
+    "old_rule_transport": false,
+    "new_rule_transport": false,
+    "guest_request_errors": 20
+   },
+   "live": {
+    "raised": "TransportFailure",
+    "message": "evaluate: 20 guest transport failure(s), first GET /terminal: ConnectionError: HTTPConnectionPool(host='127.0.0.1', port=5999): Max retries exceeded with url: /",
+    "old_rule_transport": true,
+    "new_rule_transport": true,
+    "guest_request_errors": 20
+   },
+   "old_runner": "scored (metric_exception, 0)",
+   "new_runner": "transport"
+  },
+  {
+   "task": "d38192b0",
+   "getters": [
+    "cache_file"
+   ],
+   "postconfig": [
+    "download",
+    "execute",
+    "execute"
+   ],
+   "mode": "half",
+   "pinned": {
+    "raised": "Exception",
+    "message": "Setup step 1 failed: _download_setup - ('Connection aborted.', RemoteDisconnected('Remote end closed connection without response'))",
+    "old_rule_transport": false,
+    "new_rule_transport": true,
+    "guest_request_errors": 1
+   },
+   "live": {
+    "raised": "TransportFailure",
+    "message": "evaluate: 1 guest transport failure(s), first POST /setup/upload: ConnectionError: ('Connection aborted.', RemoteDisconnected('Remote end closed connection with",
+    "old_rule_transport": true,
+    "new_rule_transport": true,
+    "guest_request_errors": 1
+   },
+   "old_runner": "scored (metric_exception, 0)",
+   "new_runner": "transport"
+  },
+  {
+   "task": "7b7617bd",
+   "getters": [
+    "gimp_config_file"
+   ],
+   "postconfig": [
+    "execute",
+    "sleep"
+   ],
+   "mode": "dead",
+   "pinned": {
+    "raised": "TypeError",
+    "message": "'NoneType' object is not subscriptable",
+    "old_rule_transport": false,
+    "new_rule_transport": false,
+    "guest_request_errors": 23
+   },
+   "live": {
+    "raised": "TransportFailure",
+    "message": "evaluate: 23 guest transport failure(s), first GET /terminal: ConnectionError: HTTPConnectionPool(host='127.0.0.1', port=5999): Max retries exceeded with url: /",
+    "old_rule_transport": true,
+    "new_rule_transport": true,
+    "guest_request_errors": 23
+   },
+   "old_runner": "scored (metric_exception, 0)",
+   "new_runner": "transport"
+  },
+  {
+   "task": "7b7617bd",
+   "getters": [
+    "gimp_config_file"
+   ],
+   "postconfig": [
+    "execute",
+    "sleep"
+   ],
+   "mode": "half",
+   "pinned": {
+    "raised": "TypeError",
+    "message": "'NoneType' object is not subscriptable",
+    "old_rule_transport": false,
+    "new_rule_transport": false,
+    "guest_request_errors": 4
+   },
+   "live": {
+    "raised": "TransportFailure",
+    "message": "evaluate: 4 guest transport failure(s), first POST /setup/execute: ConnectionError: ('Connection aborted.', RemoteDisconnected('Remote end closed connection wit",
+    "old_rule_transport": true,
+    "new_rule_transport": true,
+    "guest_request_errors": 4
+   },
+   "old_runner": "scored (metric_exception, 0)",
+   "new_runner": "transport"
+  },
+  {
+   "task": "5ac2891a",
+   "getters": [
+    "vlc_config"
+   ],
+   "postconfig": [],
+   "mode": "dead",
+   "pinned": {
+    "raised": "TypeError",
+    "message": "'NoneType' object is not subscriptable",
+    "old_rule_transport": false,
+    "new_rule_transport": false,
+    "guest_request_errors": 23
+   },
+   "live": {
+    "raised": "TransportFailure",
+    "message": "evaluate: 23 guest transport failure(s), first GET /terminal: ConnectionError: HTTPConnectionPool(host='127.0.0.1', port=5999): Max retries exceeded with url: /",
+    "old_rule_transport": true,
+    "new_rule_transport": true,
+    "guest_request_errors": 23
+   },
+   "old_runner": "scored (metric_exception, 0)",
+   "new_runner": "transport"
+  },
+  {
+   "task": "5ac2891a",
+   "getters": [
+    "vlc_config"
+   ],
+   "postconfig": [],
+   "mode": "half",
+   "pinned": {
+    "raised": "TypeError",
+    "message": "'NoneType' object is not subscriptable",
+    "old_rule_transport": false,
+    "new_rule_transport": false,
+    "guest_request_errors": 3
+   },
+   "live": {
+    "raised": "TransportFailure",
+    "message": "evaluate: 3 guest transport failure(s), first POST /execute: ConnectionError: ('Connection aborted.', RemoteDisconnected('Remote end closed connection without r",
+    "old_rule_transport": true,
+    "new_rule_transport": true,
+    "guest_request_errors": 3
+   },
+   "old_runner": "scored (metric_exception, 0)",
+   "new_runner": "transport"
+  },
+  {
+   "task": "53ad5833",
+   "getters": [
+    "vscode_config"
+   ],
+   "postconfig": [
+    "activate_window"
+   ],
+   "mode": "dead",
+   "pinned": {
+    "raised": "TypeError",
+    "message": "'NoneType' object is not subscriptable",
+    "old_rule_transport": false,
+    "new_rule_transport": false,
+    "guest_request_errors": 23
+   },
+   "live": {
+    "raised": "TransportFailure",
+    "message": "evaluate: 23 guest transport failure(s), first GET /terminal: ConnectionError: HTTPConnectionPool(host='127.0.0.1', port=5999): Max retries exceeded with url: /",
+    "old_rule_transport": true,
+    "new_rule_transport": true,
+    "guest_request_errors": 23
+   },
+   "old_runner": "scored (metric_exception, 0)",
+   "new_runner": "transport"
+  },
+  {
+   "task": "53ad5833",
+   "getters": [
+    "vscode_config"
+   ],
+   "postconfig": [
+    "activate_window"
+   ],
+   "mode": "half",
+   "pinned": {
+    "raised": "TypeError",
+    "message": "'NoneType' object is not subscriptable",
+    "old_rule_transport": false,
+    "new_rule_transport": false,
+    "guest_request_errors": 4
+   },
+   "live": {
+    "raised": "TransportFailure",
+    "message": "evaluate: 4 guest transport failure(s), first POST /setup/activate_window: ConnectionError: ('Connection aborted.', RemoteDisconnected('Remote end closed connec",
+    "old_rule_transport": true,
+    "new_rule_transport": true,
+    "guest_request_errors": 4
+   },
+   "old_runner": "scored (metric_exception, 0)",
+   "new_runner": "transport"
+  },
+  {
+   "task": "c59742c0",
+   "getters": [
+    "audio_in_slide"
+   ],
+   "postconfig": [
+    "activate_window",
+    "sleep",
+    "execute",
+    "sleep"
+   ],
+   "mode": "dead",
+   "pinned": {
+    "raised": "AttributeError",
+    "message": "'NoneType' object has no attribute 'seek'",
+    "old_rule_transport": false,
+    "new_rule_transport": false,
+    "guest_request_errors": 23
+   },
+   "live": {
+    "raised": "TransportFailure",
+    "message": "evaluate: 24 guest transport failure(s), first GET /terminal: ConnectionError: HTTPConnectionPool(host='127.0.0.1', port=5999): Max retries exceeded with url: /",
+    "old_rule_transport": true,
+    "new_rule_transport": true,
+    "guest_request_errors": 23
+   },
+   "old_runner": "scored (metric_exception, 0)",
+   "new_runner": "transport"
+  },
+  {
+   "task": "c59742c0",
+   "getters": [
+    "audio_in_slide"
+   ],
+   "postconfig": [
+    "activate_window",
+    "sleep",
+    "execute",
+    "sleep"
+   ],
+   "mode": "half",
+   "pinned": {
+    "raised": "AttributeError",
+    "message": "'NoneType' object has no attribute 'seek'",
+    "old_rule_transport": false,
+    "new_rule_transport": false,
+    "guest_request_errors": 5
+   },
+   "live": {
+    "raised": "TransportFailure",
+    "message": "evaluate: 6 guest transport failure(s), first POST /setup/activate_window: ConnectionError: ('Connection aborted.', RemoteDisconnected('Remote end closed connec",
+    "old_rule_transport": true,
+    "new_rule_transport": true,
+    "guest_request_errors": 5
+   },
+   "old_runner": "scored (metric_exception, 0)",
+   "new_runner": "transport"
+  },
+  {
+   "task": "47f7c0ce",
+   "getters": [
+    "background_image_in_slide"
+   ],
+   "postconfig": [
+    "activate_window",
+    "sleep",
+    "execute",
+    "sleep"
+   ],
+   "mode": "dead",
+   "pinned": {
+    "raised": "AttributeError",
+    "message": "'NoneType' object has no attribute 'seek'",
+    "old_rule_transport": false,
+    "new_rule_transport": false,
+    "guest_request_errors": 23
+   },
+   "live": {
+    "raised": "TransportFailure",
+    "message": "evaluate: 24 guest transport failure(s), first GET /terminal: ConnectionError: HTTPConnectionPool(host='127.0.0.1', port=5999): Max retries exceeded with url: /",
+    "old_rule_transport": true,
+    "new_rule_transport": true,
+    "guest_request_errors": 23
+   },
+   "old_runner": "scored (metric_exception, 0)",
+   "new_runner": "transport"
+  },
+  {
+   "task": "47f7c0ce",
+   "getters": [
+    "background_image_in_slide"
+   ],
+   "postconfig": [
+    "activate_window",
+    "sleep",
+    "execute",
+    "sleep"
+   ],
+   "mode": "half",
+   "pinned": {
+    "raised": "AttributeError",
+    "message": "'NoneType' object has no attribute 'seek'",
+    "old_rule_transport": false,
+    "new_rule_transport": false,
+    "guest_request_errors": 5
+   },
+   "live": {
+    "raised": "TransportFailure",
+    "message": "evaluate: 6 guest transport failure(s), first POST /setup/activate_window: ConnectionError: ('Connection aborted.', RemoteDisconnected('Remote end closed connec",
+    "old_rule_transport": true,
+    "new_rule_transport": true,
+    "guest_request_errors": 5
+   },
+   "old_runner": "scored (metric_exception, 0)",
+   "new_runner": "transport"
+  },
+  {
+   "task": "035f41ba",
+   "getters": [
+    "vm_file"
+   ],
+   "postconfig": [
+    "activate_window",
+    "sleep",
+    "execute",
+    "sleep"
+   ],
+   "mode": "dead",
+   "pinned": {
+    "returned": "0.0",
+    "guest_request_errors": 23
+   },
+   "live": {
+    "raised": "TransportFailure",
+    "message": "evaluate: 24 guest transport failure(s), first GET /terminal: ConnectionError: HTTPConnectionPool(host='127.0.0.1', port=5999): Max retries exceeded with url: /",
+    "old_rule_transport": true,
+    "new_rule_transport": true,
+    "guest_request_errors": 23
+   },
+   "old_runner": "scored 0.0",
+   "new_runner": "transport"
+  },
+  {
+   "task": "035f41ba",
+   "getters": [
+    "vm_file"
+   ],
+   "postconfig": [
+    "activate_window",
+    "sleep",
+    "execute",
+    "sleep"
+   ],
+   "mode": "half",
+   "pinned": {
+    "returned": "0.0",
+    "guest_request_errors": 5
+   },
+   "live": {
+    "raised": "TransportFailure",
+    "message": "evaluate: 6 guest transport failure(s), first POST /setup/activate_window: ConnectionError: ('Connection aborted.', RemoteDisconnected('Remote end closed connec",
+    "old_rule_transport": true,
+    "new_rule_transport": true,
+    "guest_request_errors": 5
+   },
+   "old_runner": "scored 0.0",
+   "new_runner": "transport"
+  },
+  {
+   "task": "0a211154",
+   "getters": [
+    "vm_file"
+   ],
+   "postconfig": [
+    "activate_window",
+    "sleep",
+    "execute",
+    "sleep"
+   ],
+   "mode": "dead",
+   "pinned": {
+    "returned": "0",
+    "guest_request_errors": 23
+   },
+   "live": {
+    "raised": "TransportFailure",
+    "message": "evaluate: 24 guest transport failure(s), first GET /terminal: ConnectionError: HTTPConnectionPool(host='127.0.0.1', port=5999): Max retries exceeded with url: /",
+    "old_rule_transport": true,
+    "new_rule_transport": true,
+    "guest_request_errors": 23
+   },
+   "old_runner": "scored 0",
+   "new_runner": "transport"
+  },
+  {
+   "task": "0a211154",
+   "getters": [
+    "vm_file"
+   ],
+   "postconfig": [
+    "activate_window",
+    "sleep",
+    "execute",
+    "sleep"
+   ],
+   "mode": "half",
+   "pinned": {
+    "returned": "0",
+    "guest_request_errors": 5
+   },
+   "live": {
+    "raised": "TransportFailure",
+    "message": "evaluate: 6 guest transport failure(s), first POST /setup/activate_window: ConnectionError: ('Connection aborted.', RemoteDisconnected('Remote end closed connec",
+    "old_rule_transport": true,
+    "new_rule_transport": true,
+    "guest_request_errors": 5
+   },
+   "old_runner": "scored 0",
+   "new_runner": "transport"
+  },
+  {
+   "task": "0bf05a7d",
+   "getters": [
+    "vm_file"
+   ],
+   "postconfig": [
+    "activate_window",
+    "sleep",
+    "execute",
+    "sleep",
+    "execute"
+   ],
+   "mode": "dead",
+   "pinned": {
+    "returned": "0.0",
+    "guest_request_errors": 26
+   },
+   "live": {
+    "raised": "TransportFailure",
+    "message": "evaluate: 28 guest transport failure(s), first GET /terminal: ConnectionError: HTTPConnectionPool(host='127.0.0.1', port=5999): Max retries exceeded with url: /",
+    "old_rule_transport": true,
+    "new_rule_transport": true,
+    "guest_request_errors": 26
+   },
+   "old_runner": "scored 0.0",
+   "new_runner": "transport"
+  },
+  {
+   "task": "0bf05a7d",
+   "getters": [
+    "vm_file"
+   ],
+   "postconfig": [
+    "activate_window",
+    "sleep",
+    "execute",
+    "sleep",
+    "execute"
+   ],
+   "mode": "half",
+   "pinned": {
+    "returned": "0.0",
+    "guest_request_errors": 9
+   },
+   "live": {
+    "raised": "TransportFailure",
+    "message": "evaluate: 11 guest transport failure(s), first POST /setup/activate_window: ConnectionError: ('Connection aborted.', RemoteDisconnected('Remote end closed conne",
+    "old_rule_transport": true,
+    "new_rule_transport": true,
+    "guest_request_errors": 9
+   },
+   "old_runner": "scored 0.0",
+   "new_runner": "transport"
+  },
+  {
+   "task": "185f29bd",
+   "getters": [
+    "vm_file"
+   ],
+   "postconfig": [],
+   "mode": "dead",
+   "pinned": {
+    "returned": "0.0",
+    "guest_request_errors": 41
+   },
+   "live": {
+    "raised": "TransportFailure",
+    "message": "evaluate: 48 guest transport failure(s), first GET /terminal: ConnectionError: HTTPConnectionPool(host='127.0.0.1', port=5999): Max retries exceeded with url: /",
+    "old_rule_transport": true,
+    "new_rule_transport": true,
+    "guest_request_errors": 41
+   },
+   "old_runner": "scored 0.0",
+   "new_runner": "transport"
+  },
+  {
+   "task": "185f29bd",
+   "getters": [
+    "vm_file"
+   ],
+   "postconfig": [],
+   "mode": "half",
+   "pinned": {
+    "returned": "0.0",
+    "guest_request_errors": 21
+   },
+   "live": {
+    "raised": "TransportFailure",
+    "message": "evaluate: 28 guest transport failure(s), first POST /file: ConnectionError: ('Connection aborted.', RemoteDisconnected('Remote end closed connection without res",
+    "old_rule_transport": true,
+    "new_rule_transport": true,
+    "guest_request_errors": 21
+   },
+   "old_runner": "scored 0.0",
+   "new_runner": "transport"
+  },
+  {
+   "task": "26150609",
+   "getters": [
+    "vm_file"
+   ],
+   "postconfig": [],
+   "mode": "dead",
+   "pinned": {
+    "returned": "0.0",
+    "guest_request_errors": 32
+   },
+   "live": {
+    "raised": "TransportFailure",
+    "message": "evaluate: 36 guest transport failure(s), first GET /terminal: ConnectionError: HTTPConnectionPool(host='127.0.0.1', port=5999): Max retries exceeded with url: /",
+    "old_rule_transport": true,
+    "new_rule_transport": true,
+    "guest_request_errors": 32
+   },
+   "old_runner": "scored 0.0",
+   "new_runner": "transport"
+  },
+  {
+   "task": "26150609",
+   "getters": [
+    "vm_file"
+   ],
+   "postconfig": [],
+   "mode": "half",
+   "pinned": {
+    "returned": "0.0",
+    "guest_request_errors": 12
+   },
+   "live": {
+    "raised": "TransportFailure",
+    "message": "evaluate: 16 guest transport failure(s), first POST /file: ConnectionError: ('Connection aborted.', RemoteDisconnected('Remote end closed connection without res",
+    "old_rule_transport": true,
+    "new_rule_transport": true,
+    "guest_request_errors": 12
+   },
+   "old_runner": "scored 0.0",
+   "new_runner": "transport"
+  }
+ ],
+ "summary": {
+  "rows": 26,
+  "old_runner_scored": 26,
+  "new_runner_transport": 26
+ }
+}

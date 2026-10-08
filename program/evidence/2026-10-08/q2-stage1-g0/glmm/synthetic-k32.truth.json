@@ -1,0 +1,18 @@
+{
+ "k": 32,
+ "rows": 512,
+ "seed": 42,
+ "truth": {
+  "harness_GA": 0.0,
+  "intercept": -1.0,
+  "sd_harness_session": 0.05,
+  "sd_session": 0.1,
+  "sd_task": 1.5,
+  "sd_task_harness": 1.0,
+  "sd_task_harness_session": 0.3,
+  "sd_task_session": 0.3,
+  "sd_task_size": 0.3,
+  "sd_task_size_harness": 0.2,
+  "size_9B": 0.5
+ }
+}

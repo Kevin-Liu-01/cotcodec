@@ -2576,3 +2576,99 @@ they say so.)
   this run's token overrun. The Q3 pending-decision line in
   `program/state.json` was left unchanged to avoid merge conflicts; update it
   at merge.
+
+## 2026-10-08 — Q2 S1a G0 build (branch `stage0/q2-stage1-rescope`, draft, not frozen; D49 iv)
+
+- Built and tested on CPU every G0 item of `q2-stage1-rescoped-v1` the draft listed as TBD,
+  in `harness/q2_stage1/` (nothing under `harness/q2/` changed): the episode runner
+  (`driver.py`; harness clients in `agents.py`, checked against message lists recorded from
+  the unmodified upstream agents), the engine client and the D13 bridge (`engine.py`,
+  `bridge.py`), the VM lane (`lane.py`, `infra/slurm/host-single-node/s1a-vm.sbatch`), live
+  OSWorld setup and evaluation with final-state capture (`osworld_live.py`), offline
+  rescoring and the comparator validation (`rescore.py`), the reworked
+  `compare_pptx_files_zinv` (`zinv.py`), the anchor's CPU checks (`anchor.py`) and the
+  GLMM input (`glmm.py`). 193 S1a tests (142 new); `design_diffs.md` lists every difference from
+  the upstream harnesses.
+- Reviewed the stopped attempt's work line by line: kept `fetch-model-cpu.sbatch` (it had
+  run as job 971: Qwen3.5-4B re-receipted, OpenCUA-7B fetched, 16.6 GB, D1), the GLMM
+  Dockerfile (built as job 972) and the `opencua-7b` registry entry; fixed
+  `s1a-cpu.sbatch` (the read-write mount may no longer come from the model cache) and
+  `glmm.R` (a binomial `simulate` returns a successes-failures matrix); kept the
+  python-pptx dev dependency; reworked `zinv.py`. No job of that attempt was still running.
+- Host jobs, all CPU only (no GRES, GPU-less containers), at most one VM job at a time, at
+  most 8 CPUs each, next to the running action-path v2 campaigns: 978 (dev smoke with the
+  scripted fake engine: 3/3 episodes scored end to end), 982 (G0 item 5: 148/148 setups
+  completed offline; the only confirm-task contact), 983 (offline rescoring of the smoke:
+  3/3 match live), 980/995/1000 (zinv validation: 0/29, 26/29, then 29/29 confirmed
+  mutants with 256/256 other items unchanged; the first two runs are kept and the 29 were
+  development set as well as gate), 984 (GLMM acceptance on synthetic data, 200 refits),
+  987/998 (anchor dry run in the existing overlay image), several small diagnostic jobs
+  (979, 981, 985, 986, 988, 989, 992-994, 999) and the anchor's git reads under srun.
+  One 2-second version check (`python3 -c "import vllm"`) ran as a bare `docker run
+  --network none` outside Slurm; no GPU was requested.
+- Findings that change the plan: the OpenCUA-7B anchor is UNAVAILABLE before any GPU job
+  (G0 9.6: the public runs predate `b138d348` by 14 months; 110 of 116 tasks differ in
+  config or checker, at most 6 remain readable against the 58 required; also 9.3's dry
+  run: vLLM 0.31.0 with transformers 5.17.0 cannot load its remote tokenizer, and 9.5:
+  the pinned agent cannot reproduce the public runs' L2 prompt). So A0b and ANC are not
+  submitted, T_A1 is 111 minutes and K_base 32 at the card's high price, and D47's floor
+  of 32 holds without the item 18 amendment. The episode container is the checker-mutation
+  metric image (the stdlib runner image lacks Pillow and OSWorld).
+- Registration: G0 items 2-6, 8, 9 and 12 filled; section 4's runner row replaced; section
+  5.7's status; section 20 code table filled for the G0 files; section 22 gains a "G0
+  build" table for the fresh audit. Still TBD: the status line, G0 item 1, the frozen plan,
+  the executor row, the section 6.2 constants and the v2 acceptance evidence.
+- Self-review fixes after the evidence commit: a transport loss behind which the guest
+  server restarted is recorded as `guest_server_restart` (D30; `faad20f`), and a vLLM stream
+  that ends before `[DONE]` is a retried transport error instead of a short completion
+  (`9837c54`); code table refreshed.
+- Tests on `9837c54`: S1a 192 passed, 1 skipped locally; the full suite on the host in a
+  fresh `~/cotcodec-scratch/` export under `srun -c 8` (no GRES): 2,476 passed, 41
+  skipped; ruff clean except the two K1 v3 evidence scripts merged from `main`, which fail
+  there too (not touched here). The `a869b98` run (2,474 passed) linted `.venv` because its
+  `--exclude` replaced ruff's defaults; rerun with `--extend-exclude`.
+- Not done: no freeze, no push, no GPU job. Next: the fresh pre-freeze audit (D49 iv), then
+  O1 and A0a after the action-path suite passes.
+
+## 2026-10-08 — Q2 S1a G0 build: correctness and readiness review fixed (branch `stage0/q2-stage1-rescope`, draft, not frozen)
+
+- A further review of the G0 build returned eight blocking items; each is fixed with tests
+  (registration section 22, "Correctness and readiness review", C1-C8), none rejected:
+  - C1 (`61d02d9`): transport failures the pinned OSWorld checker swallows (`get_vm_file`
+    returns `None`; postconfig steps log or re-wrap a `ConnectionError`) were scored as the
+    agent's outcome. Every guest request that raises is now recorded, and setup,
+    `evaluate()` and the capture sweep end in a transport loss when any of theirs failed;
+    `is_transport_error` reads the exception chain; the restart check runs again after the
+    capture, and an identity check that cannot reach the server is a transport loss.
+    Job 1010 (CPU only, no VM, metric image) ran the pinned code on 13 pool tasks against a
+    dead and a half-dead guest: the old rule scored 26 of 26 runs, the fix records 26 of
+    26 as transport losses.
+  - C2 (`483b3c0`): `type` text with a control character L0-fixed cannot type (a CRLF `\r`,
+    ESC, C1) is an agent-caused `IRError`, not an `executor_device` loss.
+  - C3 (`7929fae`): registered VM jobs take section 5.5's CPUs (90 at V = 20) and a limit
+    of the GPU cap plus 10 minutes; the 8-CPU host-load cap is an operator flag for
+    development and setup checks only.
+  - C4 (`6d20be1`): the GPU-engine template's `seeds: []` (the submitter refused
+    `deterministic` with seeds); a filled template passes the submitter for 9B, 4B and the
+    anchor.
+  - C5 (`2b9100d`): the K floor follows the anchor branch (32 without the anchor whatever
+    item 18 says, D49 i); K = 32 needs a mean A0a slot of at most about 728 s at V = 20,
+    below the card's high slot of 743 s, so going back to review after A0a is a live
+    outcome.
+  - C6 (`de4f80f`): A0a's truncation and concurrency gates computed by `plan.a0a_gates`
+    and enforced by `freeze_constants`; section 15's label uses the gate's definition.
+  - C7 (`e43549d`): every registered VM job's slots rendered from the plan
+    (`plan.a0a_slots`, `plan.a1_slots`, `scripts/render_q2_stage1_manifest.py`) and the
+    lane refuses any that differ; session 2's blocks recomputed from the session-1 records.
+  - C8 (`0e2d192`): the system-prompt date is pinned to 2026-10-08 for every registered
+    episode (option a), so the session excess is not confounded with a calendar change.
+- Found and left for the audit (`ee531b6`): base task `26150609`'s setup step `pip install
+  pygame` cannot succeed offline (OSWorld logs it and goes on, as upstream); scoring is
+  unaffected, but the agent's VM lacks pygame. Whether that is a setup failure (which for a
+  base task sends the draft back to review) is the audit's and Kevin's call.
+- Tests on `e43549d`: S1a 237 passed, 1 skipped locally (45 new); the host full suite in a
+  fresh `~/cotcodec-scratch/` export under `srun -c 8` (no GRES): 2,521 passed, 41 skipped;
+  ruff clean on the S1a code, scripts and tests. Jobs: 1010 (the transport check) and the
+  test run; at most one of mine at a time, beside the action-path acceptance job.
+- Not done: no freeze, no push, no GPU job. Next: the fresh pre-freeze audit (D49 iv), then
+  O1 and A0a after the action-path suite passes.

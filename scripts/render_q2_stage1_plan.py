@@ -3,9 +3,10 @@
 
 Draft mode (no ``--constants``) writes the K = 32 draw, the orders and the engine and
 sampling arguments. Freeze mode reads the A0 measurements (``--constants``, a JSON object
-with n_star, a0a_slot_seconds, launch_a0a_min, prefreeze_caps, anchor_available and, when
-the anchor is available, launch_a0b_min and longest_a0b_slot_min), applies the registered
-rules of preregistration section 6.2 and writes the frozen constants, the base and the job
+with n_star, a0a_slot_seconds, launch_a0a_min, prefreeze_caps, anchor_available, a0a_gates
+(``python -m harness.q2_stage1.plan a0a-gates``) and, when the anchor is available,
+launch_a0b_min and longest_a0b_slot_min), applies the registered rules of preregistration
+section 6.2 (gates, floor, K-rule) and writes the frozen constants, the base and the job
 list. Nothing is submitted; the output is never overwritten.
 """
 

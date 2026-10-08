@@ -1,0 +1,92 @@
+{
+ "dispatched": [
+  "dev-smoke:dev1:0#1",
+  "dev-smoke:dev1:1#1",
+  "dev-smoke:dev1:2#1"
+ ],
+ "fill": [],
+ "job_id": "978",
+ "name": "dev-smoke-v1",
+ "purpose": "development",
+ "records": 3,
+ "schema": "q2-stage1a-lane-receipt-v1",
+ "snapshots": [
+  {
+   "block": "start",
+   "containers_ours": 0,
+   "containers_running_total": 3,
+   "loadavg": [
+    "1.98",
+    "2.14",
+    "1.76"
+   ],
+   "squeue_foreign": [
+    [
+     "974",
+     "kevin",
+     "RUNNING",
+     "6",
+     "N/A",
+     "q2ap-v2-a2"
+    ]
+   ],
+   "t": 1791481358.3606608
+  },
+  {
+   "block": "dev1",
+   "containers_ours": 0,
+   "containers_running_total": 3,
+   "loadavg": [
+    "1.98",
+    "2.14",
+    "1.76"
+   ],
+   "squeue_foreign": [
+    [
+     "974",
+     "kevin",
+     "RUNNING",
+     "6",
+     "N/A",
+     "q2ap-v2-a2"
+    ]
+   ],
+   "t": 1791481358.8899584
+  },
+  {
+   "block": "end",
+   "containers_ours": 0,
+   "containers_running_total": 4,
+   "loadavg": [
+    "8.98",
+    "5.95",
+    "3.45"
+   ],
+   "squeue_foreign": [
+    [
+     "974",
+     "kevin",
+     "RUNNING",
+     "6",
+     "N/A",
+     "q2ap-v2-a2"
+    ],
+    [
+     "980",
+     "kevin",
+     "RUNNING",
+     "8",
+     "N/A",
+     "s1a-zinv-validation"
+    ]
+   ],
+   "t": 1791481701.723503
+  }
+ ],
+ "statuses": {
+  "scored": 3
+ },
+ "stopped": false,
+ "t_end": 1791481701.7520387,
+ "t_start": 1791481358.3606594
+}

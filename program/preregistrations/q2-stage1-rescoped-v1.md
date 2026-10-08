@@ -108,9 +108,18 @@ S1a does **not** answer:
    revision `a2efb7d2b104d477a4a2666a357e79550a28aafc`, about 16 GB) are fetched and receipted by a CPU-only
    Slurm job with no `--gres` line that asserts, as `vm-campaign.sbatch` does,
    that no GPU is visible. The existing fetch lanes request a GPU and are not
-   used. Lane script and its SHA-256: TBD. 4B receipt SHA-256: TBD. OpenCUA-7B
-   receipt SHA-256: TBD. The 9B receipt exists (revision
-   `c202236235762e1c871ad0ccb60c8ee5ba337b9a`).
+   used. Lane script: `infra/slurm/host-single-node/fetch-model-cpu.sbatch`,
+   SHA-256 `22685e5e4dc9f88cd9d6ba7aec7189a89500a4f80d2464b8df86e08e76e33c6d`. It ran as
+   job 971 (2026-10-08; TRES `cpu=8,mem=16G`, no GRES, Docker runtime runc, no
+   `/dev/nvidia*` in its container; source `9d4205a`). 4B receipt SHA-256:
+   `efc8848734965680b20cbd5995ae1fffb0f194de50cc40ad8da560938e84a81a` (artifact root
+   `3b8a075149bffe4dea784db5b4b37bc0896688cba0b3de7d8d0f6e8ae6157b9e`, 9,342,907,469 B; the
+   snapshot already on the host re-verified, the files equal the earlier receipt's). OpenCUA-7B
+   receipt SHA-256: `8109da82afc90b04b91f40cae4338c0e91dc1215d0a924c48e030e007ea6a2bd`
+   (artifact root `b3dd62bff3bbd7f3e71f13cf61552d8fd4919febaf1ff34e5c11e4ba5c65a4be`, 40
+   files, 16,587,131,875 B); its four remote-code files are read and hashed in
+   `program/evidence/2026-10-08/q2-stage1-g0/opencua-remote-code/README.md`. The 9B receipt
+   exists (revision `c202236235762e1c871ad0ccb60c8ee5ba337b9a`).
 3. **Episode driver** (`harness/q2_stage1/`, outside `harness/q2/`: every
    file under `harness/q2/` must be pinned by a frozen action-path table before
    an acceptance campaign is admitted, design decision 35 of action-path v2),
@@ -133,27 +142,59 @@ S1a does **not** answer:
    - writes the episode records of `harness/q2_stage1/records.py` (schema
      `q2-stage1a-episode-v1`) and the step logs of section 7.3;
    - runs on the certified L0-fixed executor through the frozen IR.
-   Every difference from upstream is recorded in
-   `harness/q2/action_path/harness_design_diffs.md`. Driver file digests: TBD.
+   Every difference from upstream is recorded in `harness/q2_stage1/design_diffs.md`
+   (the action-path file `harness/q2/action_path/harness_design_diffs.md` keeps the
+   action-path differences S1a inherits; it is pinned by a frozen action-path table and
+   cannot take S1a's). The harness clients (`agents.py`) are checked against message lists
+   recorded from the unmodified upstream agents (`tests/fixtures/q2_stage1/`). The runner
+   runs in the checker-mutation study's metric image (section 4, "Episode container").
+   Driver file digests: section 20 (`driver.py`, `agents.py`, `engine.py`,
+   `osworld_live.py`, `lane.py`, `s1a-vm.sbatch`). Development smoke (job 978, 2026-10-08,
+   CPU only, the scripted fake engine, dev tasks `2b94c692` and `01b269ae` under both
+   harnesses): 3 of 3 episodes scored end to end (cold boot 18 s, setup 11 s, warm-up
+   0.2 s, both settles, a click and `terminate`, `DesktopEnv.evaluate()`, capture,
+   teardown; slot 114 s); offline rescoring (job 983) matched the live score on 3 of 3.
 4. **Engine bridge under D13.** Runners join each VM container's
    `--network none` namespace, so they reach the engine only through a
    Unix-domain socket. The socket is bind-mounted into each GPU-less runner
    and forwarded to the engine's port, which is bound to 127.0.0.1 only. No
-   Docker network is created. The remaining exposure is recorded.
+   Docker network is created. Built: `harness/q2_stage1/bridge.py` (the GPU job's
+   workload: engine, `/health`, forwarder, `ready.json`, stop on the VM job's `vm.done` or
+   the lane's USR1 with `usr1.json` and the checkpoint marker), `engine.py` (the client)
+   and the lane's resolution of the GPU job's bridge directory
+   (`experiments/manifests/q2-stage1/gpu-engine.template.yaml` gives the pairing). The
+   remaining exposure: any process of the research account on the host can connect to the
+   socket (mode 0600) while it exists; the host is single-user (D13).
 5. **Offline task setup, setup only.** For every one of the 116 pool tasks and
    every one of the 32 dev-split tasks, the task's setup is run once on one VM
    from the pinned file cache (the mutation study's `file-cache-receipts.tsv`,
    447 files with SHA-256), with no model call and no checker run. This is the
    only contact any job has with a confirm task before the freeze. A pool task
    whose setup fails offline is reported; a base task among them sends the
-   draft back to review.
+   draft back to review. Built: `driver.py` `mode: setup-only` through the lane
+   (`experiments/manifests/q2-stage1/setup-check-v1.json`, one attempt per task, no
+   re-queue). Ran as job 982 (2026-10-08, CPU only, one VM at a time, source `ac6c7cd`,
+   79 minutes): **148 of 148 setups completed offline** (116 pool, 32 dev; cold boot median
+   18.3 s; setup median 11.4 s including OSWorld's import, longest 120 s, task `26150609`;
+   slot median 31 s); no model call, no agent action, no checker run, no container left.
+   In base task `26150609` one step (`pip install pygame`) failed offline and OSWorld went
+   on, as upstream would; section 22 ("Found while fixing") leaves that to the audit.
+   Records: `program/evidence/2026-10-08/q2-stage1-g0/setup-check/setup.jsonl` (SHA-256
+   `51fa959aa74fa94ae807f5fb7882c1e6ef7760e832025658c16abdfdaec5b16e`). With every dev
+   task passing, A0a's dev tasks are the first V/4 of the seeded dev order: `6a33f9b9`,
+   `bf4e9888`, `d681960f`, `4172ea6e` and, at V = 20, `12382c62`.
 6. **Final-state capture and offline rescoring.** After the checker runs, the
    files the checker read are copied off the VM and hashed, and a CPU tool
    rescores a captured state with the raw and the corrected checker, so every
-   verdict can be checked offline. Tool digest: TBD.
+   verdict can be checked offline. Built: `osworld_live.py` (capture: every file the
+   checker's `get_file` returned, the absent ones, and the task cache, hashed; a capture
+   sweep runs every result getter after `evaluate()`, so an `and` that stopped early or a
+   `FAIL` still leaves every input captured) and `rescore.py` (`capture`, `merge`). Tool
+   digests: section 20.
 7. **Per-episode cost logging** (section 7.3).
 8. **Corrected comparator** `compare_pptx_files_zinv`. It ignores shape order
-   only among shapes whose frames do not overlap. It is validated on CPU on the
+   only among shapes whose frames are apart (the mutation operator's rule: known frames,
+   widened by rotation, more than 2 mm apart). It is validated on CPU on the
    stored confirm mutants and golds before the freeze:
    - it passes the 29 audit-confirmed `pptx.eq.zorder_nonoverlap` mutants
      checked by `compare_pptx_files`;
@@ -163,7 +204,25 @@ S1a does **not** answer:
      to tune it;
    - `compare_pptx_files_tolerant` is not corrected (its one confirmed z-order
      false negative, task `a434992a`, is flagged instead, section 8).
-   Comparator digest: TBD.
+   Comparator: `harness/q2_stage1/zinv.py`, SHA-256
+   `64899d5056f4791008c2a10c38a7b0fbb94fbe912d20a702ec74851a0ca7f655` (section 20). Shapes
+   are paired as the comparator examines them (kind; stripped text; geometry within its own
+   tolerance when the task examines geometry, else geometry breaks ties); a shape moves past
+   another only if the two are apart by the operator's rule (`zorder_pair_is_inert`: known,
+   rotation-widened frames more than 2 mm apart). Validation (`rescore.py validate-zinv`,
+   the pinned `DesktopEnv.evaluate()` with the stub VM in the metric image, every evaluable
+   mutant, gold and do-nothing state of the 16 tasks whose every metric is
+   `compare_pptx_files`: 291 items) **passes** in its third run (job 1000, 2026-10-08):
+   the 29 confirmed mutants pass, the 256 other items (214 mutants, 21 golds, 21
+   do-nothing states) keep the original verdict, the fresh raw scoring reproduces the
+   stored verdict on 291 of 291, and the 6 unresolved candidates are reported (all 6 pass
+   under the correction). The first two runs failed the gate and are kept: job 980 (0 of
+   29: exact frames never matched the raw golds, which a LibreOffice save rounds by 720
+   EMU) and job 995 (26 of 29: an empty text run counted as text, and text-only pairing
+   kept two identical pictures in their swapped order where `examine_modify_height` reads
+   geometry); each fix came from the confirmed mutants that failed, so the 29 are a
+   development set as much as a gate, and no run changed the verdict of any other item.
+   Evidence: `program/evidence/2026-10-08/q2-stage1-g0/zinv/`.
 9. **Anchor feasibility** (section 5.7), on CPU:
    1. the vLLM v0.31.0 registry lists `OpenCUAForConditionalGeneration`;
    2. a D29-style decision admits OpenCUA-7B's remote code (`--trust-remote-code`,
@@ -182,23 +241,82 @@ S1a does **not** answer:
       level, history type, image history length, coordinate type, system
       prompt choice (`--use_old_sys_prompt`), sampling, max tokens and pause
       after each step; a setting the archive does not record takes the pinned
-      runner's default. Recorded values: TBD;
+      runner's default. Recorded values (`anchor.py public-settings`, the three runs'
+      `args.json` agree; `program/evidence/2026-10-08/q2-stage1-g0/anchor/public-settings.json`):
+      CoT level `l2`, history `action_history`, 3 history images, coordinate type
+      `qwen25`, temperature 0, top_p 0.9, max_tokens 2,048, no stop token, 15 steps,
+      **3.0 s after each step** (the pinned runner's default is 5.0 s), 1920x1080,
+      provider `aws`, `test_nogdrive.json`; served model names `opencua-7b-15step-2`,
+      `-3` and `-4`; run window 2025-07-29 09:47 to 2025-07-30 05:03 (the runner's clock,
+      no zone). Not recorded: the system prompt choice (`--use_old_sys_prompt` did not exist
+      then), so the rule gives the runner default (the V2 prompt family). Finding
+      (`anchor.py prompt-check`): neither choice at `bfd62bdc` reproduces the L2 system
+      prompt the public runs' agent sent (`mm_agents/opencua_agent.py` at `00804f8`,
+      `AGNET_SYS_PROMPT_L2`): the old-prompt option adds a password sentence and changes
+      `terminate`'s status enum from `fail` to `failure` (L1 and L3 are equal), and the
+      default is a different template;
    6. the public runs' OSWorld revision, if the archive records it, is compared
       with `b138d348` for the 116 tasks' configs and evaluators; tasks with any
-      difference leave the anchor reading. Revision and excluded tasks: TBD.
-   If 1, 2, 4 or 5 fails, A0b and ANC are not submitted and the anchor is
-   UNAVAILABLE before any GPU job; if 3 fails, the same holds after O1. The A1
-   caps then follow the remainder rule of section 6.1.
+      difference leave the anchor reading. Revision: not recorded in the archive;
+      inferred `00804f811874ea34ddfdd2e6b3a2fe307311f57c` (`main` when the runs began; no
+      commit touched `evaluation_examples/` or `desktop_env/evaluators/` from 2025-07-27
+      until `dd488c7` at 2025-07-30 06:07 UTC, which is inside the compared range).
+      Compared (`anchor.py evaluator-diff`, on the host's OSWorld clone): each task's
+      config, and the AST (docstrings, comments and layout removed) of every metric and
+      getter definition the task reaches inside `desktop_env/evaluators`. Excluded tasks:
+      **110 of 116** (`program/evidence/2026-10-08/q2-stage1-g0/anchor/evaluator-diff.json`):
+      36 configs differ (21 instructions, 21 evaluator specifications, 4 setup
+      configurations), 79 tasks differ in their config or a metric function
+      (`compare_table` 33, `compare_pptx_files` 18, ...), and `get_vm_file` (103 tasks) and
+      `get_cloud_file` (84) changed (atomic writes). `DesktopEnv.evaluate` differs in the
+      proxy flag and a dict-form `FAIL` only. At most 6 tasks remain readable (37 even if
+      the getter refactors were ignored), fewer than the 58 section 5.7 requires.
+   If 1, 2, 4, 5 or 6 fails (6 fails when fewer than 58 tasks remain readable), A0b and
+   ANC are not submitted and the anchor is UNAVAILABLE before any GPU job; if 3 fails, the
+   same holds after O1. The A1 caps then follow the remainder rule of section 6.1.
+   **Outcome (2026-10-08): item 6 fails, so the anchor is UNAVAILABLE before any GPU
+   job**, A0b and ANC are not submitted, and the branch is "anchor unavailable before
+   A0b" (T_A1 111 minutes, total caps 478 minutes, K_base 32 at the card's high price;
+   section 6.1). Item 3's development dry run fails as well (below). Items 1, 2 and 4
+   pass: the vLLM v0.31.0 registry lists the architecture (dry run below); D49 (iii)
+   admits the remote code, read and hashed in
+   `program/evidence/2026-10-08/q2-stage1-g0/opencua-remote-code/README.md`; the archive
+   listing holds 1,079 `result.txt` members. Item 3 is built (`anchor.py check-vllm`,
+   which refuses a snapshot whose remote code differs from the reviewed hashes); its
+   development dry run (job 998 from `6c5948e`, CPU only, no network, the existing overlay
+   `sha256:7d4595f98601d50f7393c447a1d0618d55cda1b7cf60e2d016ab5c6f47cc872e`: vLLM
+   0.31.0, transformers 5.17.0) loaded `AutoConfig` but not the tokenizer (`ValueError:
+   unk_token should not be set in dumping mode when additional_special_tokens is None`,
+   also through vLLM's own `vllm.tokenizers.get_tokenizer`, so the engine could not load
+   it), and vLLM's `ModelConfig` validation cannot run without a device ("Failed to infer
+   device type"), so that part of item 3 cannot run CPU-only as written.
 10. **Plan file.** `scripts/render_q2_stage1_plan.py` (committed and tested,
     section 20) writes the draw, the seeded orders, the anchor order, the
     engine and sampling arguments and, at the freeze, the constants and the job
     list. Draft plan SHA-256 (K = 32, no constants):
-    `c2ada66080d0fc69670bfc1d52640b440b00e2321062428fa6cd9a1053d3a555`. Frozen plan SHA-256: TBD.
+    `39a1c8a9b2bcdb9fa469d1d4fb70135d1d61aed73e646c3058f0ed71211ad2aa`. Frozen plan SHA-256: TBD.
+    Every registered VM job's lane manifest is rendered from the plan by
+    `scripts/render_q2_stage1_manifest.py` (section 5.5), and the lane refuses one
+    whose slots differ.
 11. **Analysis code** (`harness/q2_stage1/`: `estimators.py`, `records.py`,
     `rules.py`, `plan.py`, `analysis.py`), committed and tested on CPU
     (section 20).
 12. **GLMM.** The glmmTMB script and a pinned CPU container that runs it,
-    tested on synthetic data. Script and container digests: TBD.
+    tested on synthetic data. Script: `harness/q2_stage1/glmm.R` (section 20; 200
+    parametric-bootstrap refits by default); input writer `glmm.py`. Container:
+    `infra/q2-stage1/glmm/Dockerfile` (SHA-256
+    `e4a09458264a58a783ec91fed91b8e500c83a91c826fbaaa10b9ceb998df86b4`; `rocker/r-ver:4.4.2`
+    by digest, CRAN pinned to the 2025-02-27 Posit snapshot), built by job 972 as
+    `sha256:b15584f3954f1c83fc3e5067e29c57c5c55e3b2a50ef28e4e68a394e595aabed` (R 4.4.2,
+    glmmTMB 1.1.10, TMB 1.9.16; package lock `/opt/q2/r-packages.json`, SHA-256
+    `abb8871de4549732cd396dc60fc1f2aec78bf1fffad788cb841e8bf61668bfc7`). Acceptance on
+    synthetic data from the registered generative model (32 tasks, 512 episodes):
+    job 984 (2026-10-08, 5 min 49 s, CPU only, no network): both fits converged with
+    positive-definite Hessians; 200 refits used, none failed, 42 not converged (reported);
+    estimated variances task 2.82 (generating 2.25), task:harness 0.50 (1.00),
+    task:session 0.43 (0.09), every other component near 0; the task:harness
+    likelihood-ratio test gives chi-square 2.64 (p 0.104, boundary-corrected 0.052).
+    Evidence: `program/evidence/2026-10-08/q2-stage1-g0/glmm/`.
 
 ### 3.2 Before any confirm-split episode
 
@@ -217,7 +335,8 @@ S1a does **not** answer:
 |---|---|
 | OSWorld runtime | `xlang-ai/OSWorld` at `b138d348256078fa634fc3b73567a7337c793e6b` (as action-path v2) |
 | VM image, guest disk, VM settings, lane | as `q2-action-path-v2` section 2.1 (VM image `happysixd/osworld-docker@sha256:0e6497a9295647cf05bf2b2af522fdd79bdeba2737595259cab310a3bcf6baa9`, 4 cores per VM) |
-| Runner image | `sha256:ac2b5815bcc2ed193116aa2d4bdee773b5a457c545453a6c91956768634a6002` (`infra/q2-vm-runner/image-lock.json`) |
+| Episode container | the checker-mutation study's metric image `sha256:2006c1a9247e4911a82508cd22e9d9a7efc5c13e35a20e8a03baac7112876230` (`infra/q2-mutation/metric/Dockerfile`: OSWorld `b138d348`'s `uv.lock` in `/opt/venv-lock`, Python 3.12.13, Pillow 11.0.0, python-pptx 1.0.2), run GPU-less, read-only, with no capabilities in the VM container's network namespace (`harness/q2_stage1/lane.py`). It replaces the action-path suite's stdlib runner image `sha256:ac2b5815...` for S1a: the harness clients need Pillow for the upstream image processing and the checker needs OSWorld's environment; the transport code it runs is the certified standard-library code, unchanged (`harness/q2_stage1/design_diffs.md`) |
+| OSWorld tree and file cache | the checker-mutation study's inputs: the OSWorld checkout at `b138d348` and the file cache at `1e112283` (447 files, `file-cache-receipts.tsv`), mounted read-only |
 | Executor, IR, harness adapters | file digests of the accepted attempt's executor addendum (G0 item 1), by ledger row: TBD |
 | H-OSW-fixed upstream | OSWorld `bfd62bdc5a3319809a236dc90ddbbaf3cb4b7e06` `mm_agents/qwen35vl_agent.py`, SHA-256 `1f39be92cf5461d9671ab9307a69c05691abf0226aa6b53d2af332003a5096fe`; `lib_run_single.py` `6d27d0fed9f4cbc69332cb3a01de3394b486f33d0309316f69c93036a161f74c`; `scripts/python/run_multienv_qwen35vl.py` `a3bf2a6343f470d1c0b55b136ddea58b0d3bfe5970760025add39e8275ba6bb1` (fetched 2026-10-08; the agent equals `harness/q2/action_path/upstream/PROVENANCE.json`) |
 | H-GA upstream | gym-anything `aae6f7607e0f3d9d6306e1fefbad92bda99ca99a` `agents/agents/qwen35vl.py`, SHA-256 `93666f2751d99dfee0034700f65385ca2db1544e3d9a0d194807050d2edea1a5` (equal to PROVENANCE); its base `agents/agents/qwen3vl.py` `264f6666014ab76f2b9a805739fc12d48e2d76ca9c1b1575f207a16112804010`; runner `agents/evaluation/run_single.py` `f0baa3e86dc0fef7fe600ed1f7446854b598796ec5bbb69cfca9aa9787caf041` (fetched 2026-10-08) |
@@ -280,6 +399,7 @@ unless the last column says S1a matches them:
 | Upstream token budget | 32,768 | 2,048 | matched: 2,048 |
 | Upstream settle | 60 s after reset, 20 s before evaluation | none (`post_reset_observation_delay` 0.0) | matched: 60 s and 20 s for both |
 | Upstream step cap | 50 | task-dependent | matched: 15 |
+| Date in the system prompt | today (the runner's clock) | today | matched and pinned: Thursday, October 08, 2026 for every A0a, ANC and A1 episode (`plan.PROMPT_DATE`, the lane manifest's `date`), so no pair differs in prompt text |
 
 The full list is `harness/q2/action_path/harness_design_diffs.md`.
 
@@ -368,7 +488,10 @@ The full list is `harness/q2/action_path/harness_design_diffs.md`.
   takes 32 (the card's lane); a VM job takes 4V plus `runner_cpus(V)`
   (`harness/q2/vm/manifest.py`). The summed CPUs of co-running S1a jobs must
   stay at or below 200, which leaves the ladder's 8-CPU foreign allowance
-  (`plan.check_cpus`).
+  (`plan.check_cpus`). The lane's submission refuses a registered VM job (A0a,
+  A0b, ANC, A1) whose CPUs are not exactly 4V + `runner_cpus(V)`, or whose limit
+  is not its GPU cap plus 10 minutes (`lane.check_slurm`); a temporary host-load
+  CPU cap is an operator flag for development and setup-check jobs only.
 
   | N* | A1 and A0a V | Sizes | CPUs while A1 runs | ANC V | CPUs while ANC runs |
   |---|---|---|---:|---:|---:|
@@ -381,6 +504,19 @@ The full list is `harness/q2/action_path/harness_design_diffs.md`.
   qualified on the probe desktop with no engine running, so it is an upper
   bound: A0a's step-p95 gate (section 6.2) checks V under S1a's load. Two
   sizes at once (244 CPUs at V = 20) and ANC at V = 40 (212) do not fit.
+- **Slots from the plan.** Every registered VM job's slots are rendered from the
+  plan (`plan.a0a_slots`, `plan.a1_slots`; `scripts/render_q2_stage1_manifest.py`),
+  and `lane.validate_manifest` refuses an A0a or A1 manifest whose slots or fill
+  blocks differ. A0a: the first V/4 tasks of `plan.dev_tasks` (from the committed
+  setup-check records) x 2 harnesses, rerun r in block `a0a.r`, each block in the
+  seeded order `block_order(tasks, "S1", "9B", "a0a.r")`, at A1's V for the N* the
+  manifest names. A1: the frozen plan file (its digest must be the one this file
+  states at the freeze); rerun r is block `br`, each in `plan.episode_orders`;
+  session 1 carries every extension block as fill blocks `x<b>.1` and `x<b>.2`
+  (reruns 1 and 2); session 2 runs, after its base, exactly the blocks both
+  session-1 jobs completed, which the lane recomputes from their record files
+  (`records.completed_extension_blocks(..., sessions=("S1",))`). The anchor
+  purposes are refused while the anchor is UNAVAILABLE (no anchor runner is built).
 - **Quiet host.** While an S1a job runs, the operator submits no other Slurm
   job. Every block records host snapshots (time, load average, foreign Slurm
   jobs and their CPUs, container counts).
@@ -410,6 +546,13 @@ The full list is `harness/q2/action_path/harness_design_diffs.md`.
     with every estimand and never enters a decision rule.
 
 ### 5.7 The OpenCUA-7B anchor (D11)
+
+**Status (2026-10-08): UNAVAILABLE before any GPU job** by G0 item 9.6 (at most 6 of the
+116 tasks have the config and checker the public runs were scored with, fewer than the 58
+read tasks below). A0b and ANC are not submitted; every S1a output carries the label "not
+externally anchored" (DR-A); the caps follow the "anchor unavailable before A0b" branch of
+section 6.1. The design below stays for the record and for any successor that pins the
+public runs' own revision.
 
 - **Agent.** OpenCUA-7B with the upstream OSWorld OpenCUA agent and runner
   (section 4), at the settings of the public run (G0 item 9.5): CoT level L2,
@@ -512,23 +655,39 @@ The rules, applied by `plan.freeze_constants` to the A0 records only:
   where T_A1 is the A1 cap of section 6.1, 3 minutes is the USR1 lead, L_A0a is
   A0a's time from job start to its first request, 4 episodes per task per job,
   and 1.05 allows the re-queues DR0 tolerates.
-- **Floor.** If K_base < 24, the draft is not frozen and goes back to review.
-  D47 says "at least 32 confirm tasks"; the floor of 24 needs its amendment
-  (section 18, item 18), and until then the floor is 32
-  (`plan.freeze_constants(..., k_floor=32)`).
+- **Floor (D47; D49 (i)).** Without the anchor, the branch S1a is in since G0 item
+  9.6: If K_base < 32, the draft is not frozen and goes back to review; no amendment
+  lowers this floor. With the anchor running, the floor is 24 (K_base < 24 goes back to
+  review) once the item 18 amendment is signed (D49 (i) states it), and 32 until then.
+  `plan.freeze_constants` takes the floor from the branch: it defaults to 32 and applies
+  `k_floor=24` only when the anchor runs. In the unanchored branch (T_A1 = 111 minutes)
+  K_base = 32 needs c_A0a of at most about 0.01012 GPU-h, a mean A0a slot of at most
+  about 728 s at V = 20 and L_A0a = 6 minutes; the card's own high slot (743 s) gives 24,
+  so going back to review after A0a is a live outcome. At V = 16 the card's high price
+  alone gives 24 unless L_A0a is under 4 minutes.
 - **Truncation gate.** If more than 20% of A0a's steps under either harness
   end at 2,048 tokens without a complete tool call, the draft is not frozen.
-  The gate is measured on 9B only; 4B's truncation is reported per cell
-  (section 15).
+  Per harness, the share is A0a's model turns whose reply hit the cap and held
+  no complete `<tool_call>` block (`truncated` and not `complete_tool_call` in
+  the step log) over all its model turns, in A0a's completed episodes (those
+  c_A0a counts). The gate is measured on 9B only; 4B's truncation is reported
+  per cell (section 15), by the same definition.
 - **Concurrency gate.** If A0a's `DesktopEnv.step` p95 exceeds twice the
-  action-path A1 step p95, the draft is not frozen.
+  action-path A1 step p95, the draft is not frozen. Both are the action path's
+  statistic: the ceil(0.95 n)-th smallest `timing_s.total` of every
+  `DesktopEnv.step` (A0a: every executed action of its completed episodes,
+  harnesses pooled; the action path: the accepted attempt's `step_p95_n1_s`).
+- Both gates are computed by `plan.a0a_gates` from A0a's step logs
+  (`python -m harness.q2_stage1.plan a0a-gates` on the host), and
+  `plan.freeze_constants` refuses to set the constants when either fails or
+  cannot be read.
 - **Anchor size** n by section 5.7.
 - **Plumbing and repeats.** A defect A0a or A0b shows in the driver, bridge or
   checker path is fixed before the freeze. Any change after A0 to the engine
   launcher, the episode driver, either harness client or the checker
   invocation requires that A0 job to be repeated; its cap enters the remainder
-  rule, and the constants are recomputed. If K_base falls below 24, the draft
-  goes back to review.
+  rule, and the constants are recomputed. If K_base falls below the floor, the
+  draft goes back to review.
 
 The constants (filled from the A0 records at the freeze):
 
@@ -576,7 +735,7 @@ An episode is one (size, task, harness, session, block) slot. It runs:
 6. the 20-second settle;
 7. evaluation with OSWorld `b138d348`'s `DesktopEnv.evaluate()` (the
    task's checker);
-8. final-state capture;
+8. final-state capture, then the guest-server restart check again;
 9. teardown.
 
 An anchor episode runs the upstream OpenCUA runner instead of steps 3-6
@@ -597,6 +756,14 @@ An episode is **lost to infrastructure** if any of these occurs:
   a file because of transport;
 - the runner crashes.
 
+The pinned OSWorld code swallows most transport errors (its `get_vm_file` returns `None`,
+its postconfig steps log a failed request and go on), so the runner does not read them from
+the checker's outcome: any guest request of task setup, of `DesktopEnv.evaluate()`
+(postconfig included) or of the capture that fails in transport makes the episode a loss,
+whatever the checker returned (`osworld_live`). The restart check runs after the 20 s
+settle and again after the capture; a check that cannot reach the guest server, there or at
+the warm-up, is a transport loss.
+
 These are the `INFRASTRUCTURE_TYPES` of `records.py`. Handling:
 
 - A lost episode is re-queued once, at the end of its block. A second loss
@@ -607,7 +774,8 @@ These are the `INFRASTRUCTURE_TYPES` of `records.py`. Handling:
 **Agent-caused events are not infrastructure** and never count toward DR0:
 
 - An `IRError` raised from model output (an unknown key name, a non-modifier
-  key with a click, any invalid translated action) is handled in the episode
+  key with a click, `type` text holding a control character the certified
+  executor cannot type, any invalid translated action) is handled in the episode
   under that harness's rule for an unparseable reply: no action that step for
   H-OSW-fixed, a one-second wait for H-GA. The whole turn's actions are
   dropped. Counted per episode (`ir_errors`) and reported per (size, harness).
@@ -635,7 +803,8 @@ Per episode:
 
 - boot, setup, warm-up, evaluation and teardown times, and the slot
   occupancy from dispatch to teardown;
-- steps used and how the episode ended;
+- steps used and how the episode ended; steps whose reply hit 2,048 tokens,
+  and of those the ones without a complete tool call;
 - the checker score, and whether the metric raised;
 - the hashes of the checker's input files;
 - guest-server restart counts;
@@ -706,6 +875,10 @@ Every quantity is task-weighted over the analysis set. The code is
    - D_b is also reported on same-block pairs (block 1 with 1, 2 with 2) and on
      cross-block pairs. Block 1 always precedes block 2, so a drift within a
      job falls fully in D_w but only partly in D_b.
+   - The system-prompt date is pinned (section 5.2), so no pair differs in
+     prompt text. The guest's own clock is not pinned: whatever the desktop
+     shows of the date and time can differ in every pair, and the date part of
+     it only between sessions. That is part of the environment D_b includes.
 2. **Harness main effect.** d̄_t is the mean over the available (size,
    session) cells of d_zts; δ = mean_t d̄_t. Per size, δ_z = mean_t mean_s d_zts.
 3. **Mean squared per-task harness effect.**
@@ -1043,10 +1216,13 @@ sessions x 2 reruns is justified by power (section 10), not by habit.
   metric-exception-missing sensitivity.
 - The cost card of section 9 item 10, against the card's central and high
   prices.
-- Truncation rates per cell. A size whose truncation share exceeds 20% under
-  either harness has its δ labelled truncation-confounded. δ on episodes
-  without truncation is reported as a description of a mediator (truncation
-  follows the harness), not as a de-confounded effect.
+- Truncation rates per cell: the share of steps whose reply hit 2,048 tokens,
+  and the share that hit it without a complete tool call. A size whose share of
+  steps ending at 2,048 tokens without a complete tool call (A0a's gate
+  definition, section 6.2) exceeds 20% under either harness has its δ labelled
+  truncation-confounded (`analysis.truncation_labels`). δ on episodes without
+  truncation is reported as a description of a mediator (truncation follows the
+  harness), not as a de-confounded effect.
 - Uncertified action-path exposure per episode and per harness, and δ by
   exposure stratum (descriptive).
 - First divergence, checker-input-hash discordance and offline rescoring
@@ -1123,9 +1299,13 @@ floor.
     the kill criteria are unchanged until Kevin rules.
 18. **(Kevin)** D47 states "at least 32 confirm tasks". With the anchor
     running, the A0 rule gives 24 at the card's high price (section 6.1). The
-    proposed amendment: "a base of at least 24 confirm tasks by the A0 rule
-    (32 when the anchor is unavailable and the price allows)". Without it the
-    floor is 32, and S1a can freeze only when the anchor is unavailable.
+    proposed amendment, as D49 (i) states it: "a base of at least 24 confirm tasks
+    with the anchor running, and at least 32 without it". Without the amendment the
+    floor is 32 in both branches, and S1a can freeze only when the anchor is
+    unavailable. (2026-10-08: G0 item 9.6 makes the anchor unavailable before any GPU
+    job, so the floor is 32 whether or not this item is signed. If A0a's price
+    lowers K_base below 32, the draft goes back to review; the amendment does not
+    apply without the anchor.)
 19. Caps of section 6.1 with the remainder rule, and the A0-derived K_base
     rule of section 6.2 (it can only lower K).
 20. The OpenCUA-7B anchor on the upstream action path, sized from A0b, read
@@ -1161,7 +1341,14 @@ floor.
   per episode, which the 2,048-token assumption on every step partly offsets;
   A0a measures the real cost on 9B only and in one wave.
 - **Base size.** When the anchor runs, the A0 rule gives 24 base tasks at the
-  card's high price; 32 needs the anchor's minutes.
+  card's high price; 32 needs the anchor's minutes. Without the anchor the floor is
+  32, and a mean A0a slot above about 728 s (the card's high slot is 743 s) sends the
+  draft back to review rather than to a smaller base.
+- **Prompt date pinned.** Both upstream agents put today's date in the system
+  prompt; S1a pins it to Thursday, October 08, 2026 for every A0a and A1
+  episode, so the session excess (P1) is not confounded with a calendar change
+  in the prompt. The model may see a prompt date that differs from the date on
+  the guest's own clock.
 - **Upstream defaults lowered.** max_tokens 2,048 departs from H-OSW's
   upstream default, and greedy thinking can loop and truncate. Truncation is
   logged; the A0 gate covers 9B only.
@@ -1187,29 +1374,46 @@ floor.
 
 Committed and tested on CPU before the freeze (`tests/test_q2_stage1_*.py`;
 `tests/test_q2_stage1_prereg.py` checks this table against the tree until the
-freeze). Files the G0 items add are listed with TBD and filled at the freeze.
+freeze). The G0 items' files (from `harness/q2_stage1/driver.py` on) are filled from the
+tree they were built and run from on 2026-10-08; a change before the freeze refreshes the
+row (the test fails otherwise), and the freeze pins them.
 
 | File | SHA-256 |
 |---|---|
-| `harness/q2_stage1/__init__.py` | `32b1b2018961fe01ffde9e1e434c4a48764a61b9958bd8862aa70d635ca62572` |
+| `harness/q2_stage1/__init__.py` | `0e2190149cf640fac07dab26332a26f696374ff4400c23aab82e8cf766f3b334` |
 | `harness/q2_stage1/estimators.py` | `b43334b0511d17505a24893d65ce79cd55a58351a2a056075ed5b002007d36b3` |
-| `harness/q2_stage1/records.py` | `90cb3cb023892ef5f63e9e53631b9f3b196ade4875689c4f0cc7421cd50c91b8` |
+| `harness/q2_stage1/records.py` | `b15d1931c06bdffa6166dac6ff2f3dc828103cad87002773a228f8d32f9ce228` |
 | `harness/q2_stage1/rules.py` | `a671d2c3871bc18d255af8e8efe86f823aa7e54640c5c75cf9d95c39b587a225` |
-| `harness/q2_stage1/plan.py` | `63e88517faa38967922c3a7d727ad25396c96804ca57343d28dd7065e9c7bb79` |
-| `harness/q2_stage1/analysis.py` | `c56ff404c31d36f68aa43e97d1cfa3b8d10bff250524b6baa07c882cf5647cfb` |
-| `scripts/render_q2_stage1_plan.py` | `7f4b828c69449ec1caa32b7659309c78776bf3a1ec844ce83d327cd5f7e4e30f` |
+| `harness/q2_stage1/plan.py` | `f5921ab68f96983feceeb69e30342ef7db5e10aba1898f978f49bf422c0604e3` |
+| `harness/q2_stage1/analysis.py` | `f5b1ce8f3c6bf7366f3114180696859e3226bde6d405df7ce2b3122861cde401` |
+| `scripts/render_q2_stage1_manifest.py` | `f33335c9d7ccd486a2b0b85b124c088f07c2271f65ce9a22329f778cb2a4dc07` |
+| `scripts/render_q2_stage1_plan.py` | `3c9ef228e5df0b8a6b5e7f927f37689cc5d9a41b6ce8294737a39674089fbfac` |
 | `scripts/submit_docker_research_job.py` | `660271655aa22ebd387a023e25d21e6a809c22699ec6314d9d535be74e17a994` |
 | `harness/q2/vm/manifest.py` | `f238f12bdb8470919c8892eff46fe8b721e1e0c83ad08a60c0293ed8da3b9e2e` |
 | `program/proposals/evidence/2026-10-08-q2-stage1-rescoped/analysis/cost_s1a.py` | `704cae408ff536ccb0c3f1415adad8f54037a4fcf3fc9d23684e40c71f7e4e35` |
 | `program/proposals/evidence/2026-10-08-q2-stage1-rescoped/analysis/cost_s1a.json` | `843a123b2d8e98e34d9f20388edc132e673ba9c93b01645c7668c98d2d80e144` |
 | `program/proposals/evidence/2026-10-08-q2-stage1-rescoped/analysis/sim_s1a_v2.py` | `19574910a06026b0b042aaf251e0988a72ed0484fa5833a8ca7597e3ba646a4c` |
 | `program/proposals/evidence/2026-10-08-q2-stage1-rescoped/analysis/sim_s1a_v2.json` | `e3c52beb5c6160e5e364ef307fb3c6353c226ffb7b762d9cc534f8fc86239d9e` |
-| `harness/q2_stage1/driver.py` | TBD |
-| `harness/q2_stage1/bridge.py` | TBD |
-| `harness/q2_stage1/rescore.py` | TBD |
-| `harness/q2_stage1/zinv.py` | TBD |
-| `harness/q2_stage1/glmm.R` | TBD |
-| `infra/slurm/host-single-node/fetch-model-cpu.sbatch` | TBD |
+| `harness/q2_stage1/driver.py` | `6709d0d2280cf82a3aa7b257430aeb9f35790f1a63653b0408674759ae2d9d17` |
+| `harness/q2_stage1/agents.py` | `8e72acbd79645b45ccd95cd213d5f8564d7114af538561e28219c12cf0eb0ba1` |
+| `harness/q2_stage1/engine.py` | `3e0942349a8fc5b2aef5294a28c029ca318acff88f4cd897df274bb6e3b51bf9` |
+| `harness/q2_stage1/bridge.py` | `dceacda3d6882223b0f0cfe54dd28f1674d1bf99527083420c0f29976a68692d` |
+| `harness/q2_stage1/fake_engine.py` | `02e0b66e7b67b3647dc853c4069de21ce3e6234ed01ec4e3842afbd42cd89a00` |
+| `harness/q2_stage1/osworld_live.py` | `18511ebbf19ab36cb2060228355ea1cd7387dce7023835965341871228205f4f` |
+| `harness/q2_stage1/lane.py` | `0ec9d57654034ee8ee5dd7050334e853b9a4f0648ad861a95616f783ddafedea` |
+| `harness/q2_stage1/rescore.py` | `d240db03e969c8aa5bb97403c5005cd4c9e96016599a78f70e97850415893737` |
+| `harness/q2_stage1/zinv.py` | `64899d5056f4791008c2a10c38a7b0fbb94fbe912d20a702ec74851a0ca7f655` |
+| `harness/q2_stage1/anchor.py` | `6c0a31cf1abb261a3522573847ee6dc1798925143b286cf9c02a3550f1c93b7a` |
+| `harness/q2_stage1/glmm.py` | `73e4d0f9100262eb0efe828a14308d2b45c17a3c827b476392b5045dfe1377e8` |
+| `harness/q2_stage1/glmm.R` | `e3ea337c77bf6a8b9289047b62cfc51053a5f666fe51795071a1ae317f36681d` |
+| `harness/q2_stage1/design_diffs.md` | `ef0ab3e8f4285cab130bb855dc4e082a5ea73adea6ede68c697ed2177f888309` |
+| `infra/slurm/host-single-node/s1a-vm.sbatch` | `53fcd31d87678c6f5b4c929e6d843e5bc3177cac122842876f563e5191b09d45` |
+| `infra/slurm/host-single-node/s1a-cpu.sbatch` | `3880d337ad5bb0dc3c0edfc39f41811028118ef574c75efb08faa023dc6dee33` |
+| `infra/slurm/host-single-node/fetch-model-cpu.sbatch` | `22685e5e4dc9f88cd9d6ba7aec7189a89500a4f80d2464b8df86e08e76e33c6d` |
+| `infra/q2-stage1/glmm/Dockerfile` | `e4a09458264a58a783ec91fed91b8e500c83a91c826fbaaa10b9ceb998df86b4` |
+| `experiments/manifests/q2-stage1/gpu-engine.template.yaml` | `4b1140d53232db46f4a8be02e4f85b0e47fbdf87ce9f3a94a28b2e5fe789fe66` |
+| `scripts/q2_stage1_upstream_fixture.py` | `bea62922d74f09b559d0fd8a3a16387df4862a532a2c62ffc6697271bedb9e89` |
+| `tests/fixtures/q2_stage1/upstream_messages.json` | `0e10574ba44b4ae2e28b1c580faa80783060f5a16b013f360a10871d4198ba03` |
 
 ## 21. Sources (fetched 2026-10-08; hashes in the proposal's evidence bundle)
 
@@ -1288,8 +1492,57 @@ Non-blocking items:
 | R3 missing data in δ | Fixed (section 10.1) |
 | R3 section 17 sentence conditional | Fixed: the base-size limitation states the branch |
 
-Slots read TBD until the freeze: the status line; G0 items 1 (accepted
-attempt), 2 (lane, receipts), 3 (driver digests), 6 (rescoring tool), 8
-(comparator), 9.5 (public run settings), 9.6 (revision and excluded tasks),
-10 (frozen plan), 12 (GLMM); section 4's executor row; section 6.2's
-constants; section 20's G0 files; section 21's v2 acceptance evidence.
+### G0 build (2026-10-08, D49 iv; CPU only, no GPU job)
+
+What building G0 items 2-9 and 12 found, and what changed in this file because of it. None
+of it has had the fresh pre-freeze audit D49 (iv) requires; each row is for that audit.
+
+| Finding | Change here | Where |
+|---|---|---|
+| Every file under `harness/q2/` is pinned by a frozen action-path table, so S1a's differences from upstream cannot go in `harness_design_diffs.md` there | They are in `harness/q2_stage1/design_diffs.md` | 3.1 item 3 |
+| The harness clients need Pillow (upstream image processing) and the checker needs OSWorld's locked environment; the stdlib runner image has neither | The episode container is the checker-mutation metric image; the certified transport code runs in it unchanged (Python 3.12 instead of 3.10) | 4 |
+| The upstream system prompts carry today's date, so between-session pairs on different days differ in their first prompt | Kept as upstream and recorded per episode (`date_line`); the first-divergence analysis (section 9 item 11) reads a changed date as an environment divergence. Pinning the date is the alternative, for the audit. Superseded by C8 below: the date is pinned | 9 |
+| H-GA reports `terminate(failure)` in metadata; S1a scores with OSWorld's evaluator | `FAIL` in OSWorld's action history for both harnesses (0 for a feasible task); the state's verdict is still captured and rescored offline | `design_diffs.md` |
+| The certified IR refuses a `wait` over 10 s (`ir.MAX_WAIT_MS`) | Handled as the harness's unparseable reply (agent-caused, `ir_errors`) | 7.2 |
+| The action-path rule counts a first `/execute` answered after 30 s as a loss; a long `type` is agent behaviour | Under S1a only a failed or retried `/execute`, or a missing screenshot, is a transport loss; a slow one is recorded (`slow_execute`) | 7.2 |
+| `and` stops at the first failing metric and `FAIL` returns before any getter, so the files the checker read may not cover every metric | A capture sweep runs every result getter after `evaluate()` | 3.1 item 6 |
+| The public runs' L2 system prompt is reproduced by neither prompt choice of the pinned anchor agent | Recorded (9.5) | 3.1 item 9 |
+| The public runs predate `b138d348` by 14 months: 36 task configs and many checker definitions changed | Item 6 now makes the anchor UNAVAILABLE before any GPU job when fewer than 58 tasks remain readable; it does (at most 6) | 3.1 item 9, 5.7, 6.1 |
+| vLLM v0.31.0 with transformers 5.17.0 cannot load OpenCUA-7B's remote tokenizer, and its `ModelConfig` validation needs a device (dry run, job 998; `check-vllm-dev.json`) | Recorded (9.3); moot while item 6 fails | 3.1 item 9 |
+| The VM job must start before the GPU job, so the GPU job's run directory (the bridge) is unknown when the VM job is submitted | The lane reads the GPU job's id from a file the operator writes after submitting it (`gpu-engine.template.yaml`) | 3.1 item 4 |
+| GLMM: a binomial `simulate` returns a successes-failures matrix per draw | `glmm.R` keeps the successes column | 3.1 item 12 |
+| The comparator's validation failed twice before it passed (exact frames; empty text runs; text-only pairing under `examine_modify_height`) | Shapes are paired as the comparator examines them; the 29 confirmed mutants served as development set and gate, disclosed; no run changed another item's verdict | 3.1 item 8 |
+| G0 item 8 said the comparator "ignores shape order only among shapes whose frames do not overlap" | The rule is now the mutation operator's: frames widened by rotation and more than 2 mm apart, unknown frames never apart | 3.1 item 8 |
+
+### Correctness and readiness review of the G0 build (2026-10-08)
+
+A further review of the G0 build (correctness and readiness lenses) returned eight blocking
+items; each is fixed below with tests, none rejected. Like the G0 build table, this is for
+the fresh audit D49 (iv) requires.
+
+| Item | Finding (short) | Disposition | Where |
+|---|---|---|---|
+| C1 | Transport failures in the checker scored as agent outcomes: OSWorld's `get_vm_file` swallows `TransportFailure` (155 of 173 result getters over the pool and dev tasks), postconfig steps swallow or re-wrap a `ConnectionError`, `is_transport_error` read only the top-level type, and nothing re-checked the guest server after evaluation | Fixed: every guest-bound request that raises is recorded; setup, `evaluate()` and the capture sweep end in a transport loss when any of theirs failed; the exception chain is read; the restart check runs again after the capture, and an identity check that cannot reach the server is a transport loss. Tests drive the real `LiveTask` against a guest that resets connections, with a stand-in package that follows the pinned code's error handling; job 1010 ran the pinned OSWorld code (metric image, CPU only, no VM) on 13 pool tasks against a dead and a half-dead guest: the old rule scored 26 of 26 runs (0, or a metric exception scored 0), the fix records 26 of 26 as transport losses (`program/evidence/2026-10-08/q2-stage1-g0/transport-check/`) | 7.1, 7.2; `osworld_live.py`, `driver.py`, `design_diffs.md` |
+| C2 | Control characters in typed text (a `\r` from CRLF line ends, ESC, C1 controls) pass the IR, make the guest executor exit non-zero and were recorded as `executor_device` losses, re-queued and, under greedy decoding, lost again, counting toward DR0 | Fixed: a `type` action whose text holds a code point L0-fixed refuses is an `IRError` from model output, handled by the harness's unparseable-reply rule and counted in `ir_errors`; a test checks the rule equals the guest's `char_keysym` | 7.2; `agents.py`, `design_diffs.md` |
+| C3 | The lane's `submit` capped every VM job at 8 CPUs (`MAX_JOB_CPUS`, a temporary host-load rule hard-coded and never registered), so A0a and every A1 job (90 CPUs at V = 20) could not be submitted through the code of record | Fixed: `lane.check_slurm` requires a registered job's CPUs to equal `plan.vm_job_cpus(V)` and fit `plan.check_cpus([V], 1)`, and its limit to be the GPU cap plus 10 minutes; the host-load cap is `--host-load-max-cpus`, refused for any purpose but development and setup-check; tests cover V = 20 at 90 CPUs, V = 16 at 72 and the committed development manifests under the 8-CPU flag | 5.5; `lane.py` |
+| C4 | The pinned GPU-engine template declared `randomness_contract: deterministic` with `seeds: [42]`, which the docker submitter refuses once the `FILL_*` slots are filled, so no GPU half of a pair could be submitted | Fixed: `seeds: []` (the engine seed reaches vLLM through `plan.CARD_ENGINE_FLAGS`, `--seed 42`); hex fields quoted so YAML cannot read one as a number; a test fills the template for 9B, 4B and the anchor and passes it through the submitter's `validate_manifest` and `sbatch_argv` (`--gres=gpu:h100:1`, 32 CPUs, `--signal=B:USR1@180`, `--dependency=after:<VM job>`) | `gpu-engine.template.yaml` |
+| C5 | The K_base floor in the branch S1a is in (anchor unavailable before A0b) was 24 in code (`freeze_constants` defaulted to `K_FLOOR`), 32 in D49 (i), and ambiguous in section 6.2 and item 18's note, so the documented procedure would have frozen K = 24 without the anchor | Fixed: the floor follows the branch (32 without the anchor, whatever is signed; 24 only with the anchor running and `k_floor=24` passed after item 18); `freeze_constants` defaults to 32 and records the floor applied; section 6.2, item 18 and section 19 state D49 (i) and that K = 32 needs a mean A0a slot of at most about 728 s, below the card's high slot of 743 s, so going back to review after A0a is a live outcome; a test runs the issue's case | 6.2, 18, 19; `plan.py` |
+| C6 | The truncation and concurrency gates of section 6.2 existed only as text: `freeze_constants` read neither, episode records could not tell a cap hit without a tool call, and section 15's label counted any cap hit | Fixed: `plan.a0a_gates` computes both from A0a's step logs (per-harness share of turns at the cap without a complete tool call; the action path's p95 statistic over every `DesktopEnv.step`), `freeze_constants` requires the result and refuses a failed or unreadable gate; records gain `truncated_no_tool_call_steps`, and section 15's label uses the gate's definition beside the plain cap-hit rate; a CLI reads the host run directory | 6.2, 7.3, 15; `plan.py`, `driver.py`, `records.py`, `analysis.py`, `lane.py` |
+| C7 | No registered code turned the frozen plan into lane manifests, and the lane checked only that a slot's task was in the dev split or the pool, so the base, the dev-task choice, the block orders, the rerun-to-block mapping (same- and cross-block D_b) and the extension sub-blocks were enforced by nothing; the plan file stored the orders' digest but not the orders | Fixed: `plan.a0a_slots` and `plan.a1_slots` render every registered job's slots and fill blocks; the plan file now holds `episode_orders`; `scripts/render_q2_stage1_manifest.py` renders the lane manifest (and the GPU half from the template); `lane.validate_manifest` requires N* for A0a and the frozen plan file, its digest as stated in the registration, for A1, recomputes session 2's blocks from both session-1 record files, refuses any slot or fill difference, and refuses the anchor purposes; tests cover A0a, A1-S1 (fill) and A1-S2 | 3.1 item 10, 5.5; `plan.py`, `lane.py`, `records.py`, `render_q2_stage1_manifest.py` |
+| C8 | Today's date in the system prompt was left open: between-session pairs (at least 12 h apart) almost always see a different date and weekday and within-session pairs the same one, so D_b, the session excess (P1), u_zt and ρ were confounded with a deterministic prompt change | Fixed, option (a): one date, `plan.PROMPT_DATE` = 2026-10-08, for every A0a, A0b, ANC and A1 episode through the lane manifest's `date`, which `validate_manifest` requires for those purposes; the plan file records it; the guest's own clock stays unpinned and is disclosed | 5.2, 9, 19, 3.1 item 10 (draft plan digest); `plan.py`, `lane.py`, `design_diffs.md` |
+
+Found while fixing (not one of the eight; reported for the audit, not changed): G0 item 5
+counts base task `26150609` (multi_apps, the Snake game) as a completed setup, but its
+second step, `pip install pygame`, cannot succeed with no network: the guest answered with
+an error after 120 s (the item's longest setup) and OSWorld's `command` step logged it and
+went on, as it would upstream (setup-check container log, job 982). Its checker runs the
+task's test suite in the metric image, which has pygame (the mutation study scored its gold
+offline), so scoring is unaffected; but the agent's VM lacks the pygame that the upstream
+online setup installs, so the agent cannot run the game there. No other pool or dev task's
+setup or postconfig needs the network (`d38192b0` installs a wheel the file cache supplies).
+Whether this is "a setup that fails offline", which for a base task sends the draft back to
+review (G0 item 5), is for the audit and Kevin.
+
+Slots read TBD until the freeze: the status line; G0 item 1 (accepted attempt); item 10
+(frozen plan); section 4's executor row; section 6.2's constants; section 21's v2
+acceptance evidence.

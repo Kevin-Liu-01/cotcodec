@@ -14,8 +14,9 @@ import json
 import math
 import random
 from collections import Counter
-from collections.abc import Mapping, Sequence
+from collections.abc import Iterable, Mapping, Sequence
 from dataclasses import dataclass
+from pathlib import Path
 from typing import Any
 
 from harness.q2.vm.manifest import HOST_CPUS, runner_cpus
@@ -36,12 +37,18 @@ USR1_LEAD_MIN = 3  # --signal=B:USR1@180
 LAUNCH_PLAN_MIN = 6  # planning value of L (job start to first dispatched request)
 REQUEUE_FACTOR = 1.05  # DR0 tolerates up to 5% first-attempt loss per cell
 A0A_FACTOR = 1.25
+# The base floor (section 6.2; D47, D49 (i)): 32 without the anchor, whatever is amended;
+# 24 only while the anchor runs and the item 18 amendment is signed (pass k_floor=24).
 K_FLOOR = 24
 K_MAX = 32
 EPISODES_PER_TASK_PER_JOB = 4  # 2 harnesses x 2 within-session reruns
 ANCHOR_MIN_TASKS = 58
 ANCHOR_POOL = 116
 ANCHOR_DISPATCH_MARGIN = 1.25
+# A0a's gates (section 6.2): the share of model turns that end at 2,048 tokens without a
+# complete tool call, per harness, and DesktopEnv.step's p95 against the action path's.
+TRUNCATION_GATE = 0.20
+STEP_P95_FACTOR = 2.0
 
 # ---- Prices, GPU-h per episode (cost_s1a.json, key "s1a_v2_prices") --------------- #
 # T = 15, H2-thinking-screenshot profile, slot = steps + setup (central 90 s, high 180 s)
@@ -52,6 +59,14 @@ PRICE_HIGH = {16: 0.012901, 20: 0.011274}
 # rule (x1.5) plus the pinned runner's sleeps (60 s, 20 s, 5 s after each of 15 steps).
 ANCHOR_SLOT_MIN = {"central": 11.29, "high": 13.17}
 A0A_SLOT_HIGH_MIN = 12.39  # 9B slot at the high price, V = 16
+
+# ---- Prompt date (sections 5.2, 9; design_diffs.md) -------------------------------- #
+# Both upstream agents put today's date in the system prompt. S1a pins one date for every
+# A0a, ANC and A1 episode, so between-session pairs (at least 12 h apart, usually on
+# different days) and within-session pairs see the same prompt; a date change would
+# otherwise be a deterministic prompt change confounded with the session.
+PROMPT_DATE = "2026-10-08"  # a Thursday; the draft date
+PINNED_DATE_PURPOSES = ("a0a", "a0b", "anc", "a1")
 
 # ---- CPUs (section 5.5) ------------------------------------------------------------ #
 GPU_JOB_CPUS = 32
@@ -186,6 +201,102 @@ def fill_allowed(c_job_h: float, minutes_to_usr1: float, block_episodes: int = 3
     return 1.5 * c_job_h * 60 * block_episodes <= minutes_to_usr1 - 10
 
 
+def quantile(values: Sequence[float], q: float) -> float | None:
+    """The action path's quantile (``acceptance.quantile``): the ceil(q n)-th smallest."""
+    if not values:
+        return None
+    ordered = sorted(values)
+    return ordered[max(1, math.ceil(q * len(ordered))) - 1]
+
+
+def a0a_gates(
+    episodes: Iterable[Mapping[str, Any]], action_path_step_p95_s: float
+) -> dict[str, Any]:
+    """A0a's truncation and concurrency gates (section 6.2) from its step logs.
+
+    ``episodes`` holds A0a's completed (scored) episodes, as for c_A0a, each
+    ``{"harness": ..., "steps": [rows of its steps.jsonl]}``. Per harness, the truncation
+    share is the model turns whose reply hit the token cap without a complete tool call
+    (``truncated`` and not ``complete_tool_call``) over all its model turns. The step p95
+    is the action path's statistic (``quantile`` at 0.95 of every ``DesktopEnv.step``'s
+    ``timing_s.total``, harnesses pooled), the one the accepted attempt's A1 step p95
+    (``action_path_step_p95_s``, its ``step_p95_n1_s``) uses. A gate that cannot be read
+    (no turn under a harness, no timed step) does not hold.
+    """
+    if not (isinstance(action_path_step_p95_s, int | float) and action_path_step_p95_s > 0):
+        raise PlanError("the action path's A1 step p95 must be a positive number of seconds")
+    turns = dict.fromkeys(HARNESSES, 0)
+    cut = dict.fromkeys(HARNESSES, 0)
+    times: list[float] = []
+    for episode in episodes:
+        harness = episode["harness"]
+        if harness not in turns:
+            raise PlanError(f"unknown harness {harness}")
+        for row in episode["steps"]:
+            turns[harness] += 1
+            cut[harness] += int(bool(row.get("truncated")) and not row.get("complete_tool_call"))
+            for executed in row.get("executed") or []:
+                total = (executed.get("timing_s") or {}).get("total")
+                if isinstance(total, int | float) and not isinstance(total, bool):
+                    times.append(float(total))
+    share = {h: (cut[h] / turns[h] if turns[h] else None) for h in HARNESSES}
+    p95 = quantile(times, 0.95)
+    out = {
+        "turns": turns,
+        "truncated_without_tool_call": cut,
+        "truncation_share": share,
+        "truncation_gate": TRUNCATION_GATE,
+        "steps_timed": len(times),
+        "step_p95_s": p95,
+        "action_path_step_p95_s": float(action_path_step_p95_s),
+        "step_p95_limit_s": STEP_P95_FACTOR * float(action_path_step_p95_s),
+    }
+    out["problems"] = a0a_gate_problems(out)
+    return out
+
+
+def a0a_gate_problems(gates: Mapping[str, Any]) -> list[str]:
+    """What fails in an ``a0a_gates`` result, re-read from its numbers."""
+    problems = []
+    share = gates.get("truncation_share") or {}
+    for harness in HARNESSES:
+        value = share.get(harness)
+        if not isinstance(value, int | float):
+            problems.append(f"truncation gate: no {harness} turn in A0a")
+        elif value > TRUNCATION_GATE:
+            problems.append(
+                f"truncation gate: {value:.3f} of {harness}'s turns hit the token cap without "
+                f"a complete tool call (above {TRUNCATION_GATE})"
+            )
+    p95, reference = gates.get("step_p95_s"), gates.get("action_path_step_p95_s")
+    if not isinstance(p95, int | float) or not isinstance(reference, int | float):
+        problems.append("concurrency gate: no timed DesktopEnv.step or no action-path p95")
+    elif p95 > STEP_P95_FACTOR * reference:
+        problems.append(
+            f"concurrency gate: DesktopEnv.step p95 {p95:.3f} s above {STEP_P95_FACTOR} x "
+            f"the action path's {reference:.3f} s"
+        )
+    return problems
+
+
+def load_a0a_episodes(run_dir: Path) -> list[dict[str, Any]]:
+    """A0a's completed episodes and their step logs from a lane run directory (the host's
+    ``episodes.jsonl`` and ``episodes/<slot>.a<attempt>/steps.jsonl``)."""
+    out = []
+    lines = (run_dir / "episodes.jsonl").read_text(encoding="utf-8").splitlines()
+    for line in lines:
+        if not line.strip():
+            continue
+        record = json.loads(line)
+        if record.get("status") != "scored":
+            continue
+        name = f"{str(record['slot']).replace(':', '_')}.a{record['attempt']}"
+        steps = run_dir / "episodes" / name / "steps.jsonl"
+        rows = [json.loads(x) for x in steps.read_text(encoding="utf-8").splitlines() if x.strip()]
+        out.append({"harness": record["harness"], "slot": record["slot"], "steps": rows})
+    return out
+
+
 @dataclass(frozen=True)
 class FreezeConstants:
     """What section 3.2 writes into the registration before the freeze."""
@@ -197,9 +308,13 @@ class FreezeConstants:
     launch_a0a_min: float
     a1_cap_min: int
     k_base: int
+    k_floor: int
     anchor_tasks: int
     anchor_runs: bool
     total_cap_min: int
+    truncation_share: dict[str, float]
+    a0a_step_p95_s: float
+    action_path_step_p95_s: float
 
     def as_dict(self) -> dict[str, Any]:
         return {k: getattr(self, k) for k in self.__dataclass_fields__}
@@ -212,17 +327,24 @@ def freeze_constants(
     launch_a0a_min: float,
     prefreeze_caps: Sequence[int],
     anchor_available: bool,
+    a0a_gates: Mapping[str, Any],
     launch_a0b_min: float | None = None,
     longest_a0b_slot_min: float | None = None,
-    k_floor: int = K_FLOOR,
+    k_floor: int = K_MAX,
 ) -> FreezeConstants:
     """The registered constants from the A0 records (no outcome is read).
 
-    ``k_floor`` is 24 once D47's floor is amended (registration section 18, item 18) and
-    32 until then.
+    The floor follows the branch (section 6.2; D47, D49 (i)): 32 when the anchor does not
+    run, whatever ``k_floor`` says; 24 only when the anchor runs and ``k_floor=24`` is
+    passed, which needs the item 18 amendment (section 18). K_base below the floor sends the
+    draft back to review. ``a0a_gates`` is ``a0a_gates(...)``'s result; a failed truncation
+    or concurrency gate stops the freeze too.
     """
     if k_floor not in (K_FLOOR, K_MAX):
-        raise PlanError("the floor is 24 (D47 amended) or 32 (D47 as written)")
+        raise PlanError("the floor is 24 (anchor running, item 18 signed) or 32")
+    problems = a0a_gate_problems(a0a_gates)
+    if problems:
+        raise PlanError("A0a's gates do not hold, not frozen: " + "; ".join(problems))
     v = a1_concurrency(n_star)
     if v is None:
         raise PlanError("N* < 16: S1a does not start")
@@ -234,8 +356,10 @@ def freeze_constants(
     c = c_a0a(a0a_slot_seconds, v)
     cp = c_proj(v, c)
     k = k_base(cap, launch_a0a_min, cp)
-    if k < k_floor:
-        raise PlanError(f"K_base {k} is below the floor {k_floor}: back to review")
+    floor = k_floor if runs else K_MAX
+    if k < floor:
+        branch = "the anchor runs" if runs else "the anchor does not run"
+        raise PlanError(f"K_base {k} is below the floor {floor} ({branch}): back to review")
     total = total_cap_minutes(prefreeze_caps, runs, cap)
     if total > GPU_MINUTES_LIMIT:
         raise PlanError("the caps exceed 8 GPU-h")
@@ -247,9 +371,13 @@ def freeze_constants(
         launch_a0a_min=launch_a0a_min,
         a1_cap_min=cap,
         k_base=k,
+        k_floor=floor,
         anchor_tasks=n_anchor if runs else 0,
         anchor_runs=runs,
         total_cap_min=total,
+        truncation_share={h: round(float(v), 6) for h, v in a0a_gates["truncation_share"].items()},
+        a0a_step_p95_s=float(a0a_gates["step_p95_s"]),
+        action_path_step_p95_s=float(a0a_gates["action_path_step_p95_s"]),
     )
 
 
@@ -366,6 +494,120 @@ def episode_orders(draw: Mapping[str, Any]) -> dict[str, list[list[str]]]:
 def digest(value: Any) -> str:
     payload = json.dumps(value, sort_keys=True, separators=(",", ":")).encode()
     return hashlib.sha256(payload).hexdigest()
+
+
+# --------------------------------------------------------------------------- lane slots
+# The episode slots of every registered VM job, rendered from the plan (sections 5.4-5.6,
+# 6.1). ``lane.validate_manifest`` refuses an A0a or A1 manifest whose slots (and fill
+# blocks) differ from these, so the base, the dev-task choice, the block orders, the
+# rerun-to-block mapping that same-block and cross-block D_b rely on (rerun r is block r)
+# and the extension sub-blocks are enforced by code, not by hand-written manifests.
+
+A0A_JOB = "A0a"
+A0A_SIZE = "9B"
+A0A_SESSION = "S1"
+FILL_BLOCK_EPISODES = 32  # section 5.6: 8 tasks x 2 harnesses x 2 reruns
+SETUP_CHECK_RECORDS = "program/evidence/2026-10-08/q2-stage1-g0/setup-check/setup.jsonl"
+
+
+def a1_job(size: str, session: str) -> str:
+    return f"A1-{size}-{session}"
+
+
+def block_slots(
+    job: str,
+    size: str,
+    session: str,
+    block: str,
+    rerun: int,
+    cells: Sequence[Sequence[str]],
+    extension_block: int | None = None,
+) -> list[dict[str, Any]]:
+    """One block's slots in its seeded order; slot ids are ``<job>:<block>:<index>``."""
+    return [
+        {
+            "slot": f"{job}:{block}:{i:03d}",
+            "job": job,
+            "size": size,
+            "session": session,
+            "task_id": task,
+            "harness": harness,
+            "rerun": rerun,
+            "block": block,
+            "extension_block": extension_block,
+        }
+        for i, (task, harness) in enumerate(cells)
+    ]
+
+
+def setup_ok_from_records(rows: Iterable[Mapping[str, Any]]) -> dict[str, bool]:
+    """G0 item 5's verdict per task from the setup check's records."""
+    return {str(r["task_id"]): r.get("status") == "setup_ok" for r in rows}
+
+
+def a0a_slots(dev_ids: Sequence[str], setup_ok: Mapping[str, bool], v: int) -> list[dict]:
+    """A0a (section 6.1): 9B, the first V/4 dev tasks of ``dev_tasks`` x 2 harnesses x 2
+    reruns = V episodes, one wave at A1's V. Rerun r is block ``a0a.r``, each block in the
+    seeded order ``block_order(tasks, "S1", "9B", "a0a.r")``."""
+    if v not in (16, 20):
+        raise PlanError("A0a runs at A1's V, 16 or 20 (section 5.5)")
+    tasks = dev_tasks(dev_ids, setup_ok, v // 4)
+    out: list[dict[str, Any]] = []
+    for rerun in (1, 2):
+        block = f"a0a.{rerun}"
+        cells = block_order(tasks, A0A_SESSION, A0A_SIZE, block)
+        out += block_slots(A0A_JOB, A0A_SIZE, A0A_SESSION, block, rerun, cells)
+    return out
+
+
+def a1_slots(
+    plan: Mapping[str, Any],
+    size: str,
+    session: str,
+    s2_blocks: Sequence[int] | None = None,
+) -> tuple[list[dict[str, Any]], dict[str, Any] | None]:
+    """One A1 job's slots and fill blocks from the frozen plan file (sections 5.5-5.6).
+
+    Base blocks b1 (rerun 1) then b2 (rerun 2), each in its seeded order. A session-1 job
+    gets every extension block, in the extension order, as fill blocks of two sub-blocks
+    (``x<b>.1`` rerun 1, ``x<b>.2`` rerun 2), queued only while ``fill_allowed`` holds. A
+    session-2 job runs, after its base, exactly ``s2_blocks`` (the extension blocks both
+    session-1 jobs completed, ``records.completed_extension_blocks(..., sessions=("S1",))``)
+    in the same order, with no fill decision of its own.
+    """
+    if size not in SIZES or session not in SESSION_SEED:
+        raise PlanError(f"unknown A1 job {size} {session}")
+    orders, job = plan["episode_orders"], a1_job(size, session)
+    if digest(orders) != plan["episode_orders_sha256"]:
+        raise PlanError("the plan's episode orders do not match their digest")
+    slots: list[dict[str, Any]] = []
+    for rerun, block in ((1, "b1"), (2, "b2")):
+        slots += block_slots(job, size, session, block, rerun, orders[f"{session}:{size}:{block}"])
+    extension = sorted(int(b) for b in plan["extension_blocks"])
+
+    def sub_blocks(b: int) -> list[dict[str, Any]]:
+        out = []
+        for rerun in (1, 2):
+            label = f"x{b:02d}.{rerun}"
+            cells = orders[f"{session}:{size}:{label}"]
+            rows = block_slots(job, size, session, label, rerun, cells, b)
+            out.append({"label": label, "slots": rows})
+        return out
+
+    if session == "S1":
+        if s2_blocks is not None:
+            raise PlanError("a session-1 job fills by the rule; it takes no block list")
+        blocks = [{"label": f"x{b:02d}", "sub_blocks": sub_blocks(b)} for b in extension]
+        return slots, {"blocks": blocks, "block_episodes": FILL_BLOCK_EPISODES}
+    if s2_blocks is None:
+        raise PlanError("a session-2 job needs the extension blocks both S1 jobs completed")
+    unknown = sorted(set(s2_blocks) - set(extension))
+    if unknown or len(set(s2_blocks)) != len(s2_blocks):
+        raise PlanError(f"session-2 extension blocks outside the plan: {unknown}")
+    for b in sorted(s2_blocks):
+        for sub in sub_blocks(b):
+            slots += sub["slots"]
+    return slots, None
 
 
 # --------------------------------------------------------------------------- engines
@@ -504,12 +746,14 @@ def render_plan(
         "flagged_tasks": [t for t in FLAGGED_TASKS if t in pool],
         "task_domains": {t: domain[t] for t in pool},
         "size_order": size_order(),
+        "episode_orders": orders,
         "episode_orders_sha256": digest(orders),
         "anchor_order": anchor,
         "anchor_order_sha256": digest(anchor),
         "engine_argv": {size: engine_argv(MODEL_DIRS[size], SERVED_NAME) for size in SIZES},
         "anchor_engine_argv": engine_argv(MODEL_DIRS["anchor"], SERVED_NAME, anchor=True),
         "sampling": {h: sampling(h) for h in HARNESSES},
+        "prompt_date": PROMPT_DATE,
         "caps_minutes": dict(CAP_MINUTES),
     }
     if dev_setup_ok is not None:
@@ -524,3 +768,26 @@ def render_plan(
             plan["dev_tasks_a0a"] = dev_tasks(dev_ids, dev_setup_ok, constants.a1_v // 4)
     plan["plan_sha256"] = digest(plan)
     return plan
+
+
+# --------------------------------------------------------------------------- command line
+
+
+def main(argv: list[str] | None = None) -> int:
+    """``a0a-gates``: A0a's gates from its lane run directory (on the host), as the
+    ``a0a_gates`` input of the freeze constants (``scripts/render_q2_stage1_plan.py``)."""
+    import argparse
+
+    parser = argparse.ArgumentParser(description="S1a plan tools")
+    sub = parser.add_subparsers(dest="command", required=True)
+    gates = sub.add_parser("a0a-gates", help="A0a's truncation and concurrency gates")
+    gates.add_argument("--run-dir", type=Path, required=True)
+    gates.add_argument("--action-path-step-p95", type=float, required=True)
+    args = parser.parse_args(argv)
+    result = a0a_gates(load_a0a_episodes(args.run_dir), args.action_path_step_p95)
+    print(json.dumps(result, indent=1, sort_keys=True))
+    return 3 if result["problems"] else 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

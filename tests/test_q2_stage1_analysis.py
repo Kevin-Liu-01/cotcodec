@@ -28,7 +28,8 @@ def synthetic(p_osw: float, p_ga: float, seed: int, truncate_block2: bool = Fals
                         base = {
                             "schema": R.SCHEMA, "job": f"A1-{z}-{s}", "size": z, "session": s,
                             "task_id": t, "harness": h, "rerun": r, "extension_block": ext,
-                            "attempt": 1, "steps": 10, "truncated_steps": 1,
+                            "attempt": 1, "steps": 10, "truncated_steps": 2,
+                            "truncated_no_tool_call_steps": 1,
                             "checker_input_sha256": f"{t}-{h}",
                         }  # fmt: skip
                         if truncate_block2 and ext == 2 and s == "S2":
@@ -54,7 +55,9 @@ def test_report_structure_and_sets():
                  "session_shift_9B", "D_b_same_block", "D_b_cross_block"):  # fmt: skip
         assert set(est[name]) == {"estimate", "ci95", "one_sided_95"}
     assert set(rep["predictions"]) == {"P1", "P2", "P3", "P4", "P5"}
+    # Section 15's label reads the cap hits without a complete tool call (A0a's gate).
     assert rep["truncation"]["share"]["9B/H-GA"] == pytest.approx(0.1)
+    assert rep["truncation"]["share_any_cap_hit"]["9B/H-GA"] == pytest.approx(0.2)
     assert rep["checker_noise"]["discordant_pairs_identical_checker_inputs"] > 0
     assert rep["primary"]["DR5"]["share"] == "pi_small"
     json.dumps(rep)  # the report serialises
