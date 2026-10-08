@@ -256,6 +256,7 @@ later change to a file listed in section 1 (from `git log 29b056e..`):
 | `34f79e4` | `suite.py`, `runner.py`, `driver.py`, `manifest.py` | Decision D30, recorded in `program/decisions.md` before the freeze in answer to run 622's restart, not to any scored outcome. The tap and the probe start in their own transient systemd scopes (`SCOPE_LAUNCHER`), so a guest-server restart leaves them running; each session records the server's unit and its `NRestarts` counter at its start and end, and `session_restarts` and `accessibility_calls` count a session's restarts and calls; the development-only hook `kill_guest_server_during_seq` kills the server inside an entry before its post guard (the runner's `kill_guest_server` moved to `suite.py`); the driver plans A7 and adds the counts to its session summary; `manifest.py` admits A7 (G, 360 repetitions, accessibility setting, at N*). Run 694 at this commit killed the server inside the tenth trial and after the twentieth of each of its two sessions: the probe and the tap ran on in their scopes (no relaunch, one tap segment each, mapping checks clean), the trial killed inside failed with `guest_server_restart` alone, the trial after the second kill failed as decision 39 charges it, and the other 26 trials of each session passed. |
 | `34f79e4` | `acceptance.py` | Decision D30: A4 does not count a trial whose only failure is a guest-server restart (`restart_only`; it is reported), A7 judges restarts per accessibility call on the exact one-sided 95% Poisson bound, and `load` reads each session's restart and call counts. No scored data exists; `tests/test_q2_acceptance_analysis.py` drives both rules on synthetic campaigns, and the loader read runs 694 and 703 (two restarts and, in the accessibility session, 38 calls per session; the two trials killed inside counted as restart-only, the two after a kill between entries not). |
 | `7653799` | `manifest.py`, `suite.py` | `manifest.py` refuses an A7 campaign under a repair attempt (main section 11); `suite.py`'s comment states what run 694 measured. Jobs 703-708 ran at this commit (executor addendum, section 9); 695-699, the same campaigns at `34f79e4`, were cancelled while booting when this change was made. |
+| `13ad91e` | `acceptance.py` | After the review of `13c6790`, before any freeze and with no scored data: A7 divides the restarts of every attempt by the accessibility calls of the counting attempts only, so cancelling a failing run and rerunning it cannot raise its chance of passing (main design decision 41), and refuses an attempt other than 1; an undelivered reset observation is charged to the first trial as a reason as well as an infrastructure type, and `restart_only` checks both, so a restart-only trial that also lost its reset observation is counted; a restart across the reset observation that left only its tree undelivered is excused on A4's terms (`reset_restart`, main section 6.1); the restart report names each hit trial's session and every session whose restarts hit no trial. `tests/test_q2_acceptance_analysis.py` drives each rule; the loader read runs 694 and 703-707 again with the same restart counts and restart-only trials. No file a campaign executes changed. |
 
 The probe change makes the no-action entry's screenshot start from a settled
 screen, the canary changes make the read-back report what the app holds, and
@@ -270,7 +271,10 @@ answer to the review of the registration, not to any trial's outcome. The D30
 changes (`34f79e4`, `7653799`) apply decision D30 on run 622's
 restart: the scopes change how much a restart costs, not how a trial is
 judged, and A4's restart exclusion and A7 change only how A4 counts and what
-else is bounded (section 6). No scored campaign has run.
+else is bounded (section 6). `13ad91e` answers the review of `13c6790`: it
+narrows A4's exclusion where it was too wide, adds the reset observation's
+restart on the same terms, and closes A7 to cancel-and-rerun; it changes no
+trial verdict. No scored campaign has run.
 
 ## 6. A decision before the freeze: guest-server restarts and A4
 
@@ -279,8 +283,9 @@ in the 8,114 `/accessibility` calls of runs 484-622 (8,117 attempts with
 retries; the first count, 7,969, missed some calls; its tree walk runs on a
 thread pool), and its systemd unit then stopped every process the server had
 launched. A crash is an infrastructure failure (main section 6.1), and A4
-needs zero failures over 36,550 accessibility calls (36,016 steps and 534
-reset observations in its screenshot-plus-accessibility sessions): about 4.5
+needs zero failures over 36,515 accessibility calls (35,981 steps and 534
+reset observations in its screenshot-plus-accessibility sessions; first given
+as 36,550 and 36,016, corrected after the review of `13c6790`): about 4.5
 expected crashes at that rate, so A4 would pass with probability about 0.01.
 That rate rests on a single event. The exact Poisson 95% interval for one
 event (0.025 to 5.57 events) puts the expected number of crashes in A4

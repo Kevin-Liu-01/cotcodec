@@ -632,3 +632,30 @@ Append-only. Newest entries at the bottom.
 - Left unchanged on purpose: A1-A3 and the ladder still fail on a restart;
   at the development rate their 16,639 accessibility calls see none with
   probability about 0.13. Kevin's call before the freeze.
+
+## 2026-10-07 — Review fixes on the D30 branch (not frozen)
+
+- An independent review of `stage0/q2-action-path-d30` at `13c6790` found it
+  not ready to freeze; dispositions are in main preregistration section 19.
+- Fixed in `acceptance.py` (`13ad91e`; the only code changed, and no
+  campaign executes it, so the byte-identity check against `7653799` still
+  holds): A7 sums the
+  restarts of every attempt but divides by the counting attempts' calls only
+  (pooling had let a cancel-and-rerun raise the pass probability at the bound
+  from 0.048 to about 0.071 in simulation) and refuses an attempt other than
+  1; the undelivered reset observation is charged as a reason as well as a
+  type, and `restart_only` checks both; a restart across the reset
+  observation that left only its tree undelivered is excused on A4's terms;
+  the restart report names each hit trial's session and every session whose
+  restarts hit no trial.
+- Registered: A7 runs at attempt 1's N* after attempt 1's full ladder and is
+  not re-judged when a later attempt's N* differs; A4's exclusion covers only
+  restarts the observation retries absorb (about 10 s against a measured
+  5.6-6.0 s), and the remainder is not sized.
+- Corrected: A4 has 36,515 accessibility calls, not 36,550 (an earlier
+  2026-10-07 entry and the inputs addendum gave 36,550); the probabilities
+  do not change at the precision given. The boot-time restart precedes every
+  session's first counter read in all 34 development sessions (the boot's
+  facts read named the session's server process); its cause is not recorded.
+- Still open for Kevin before the freeze: whether D30's exclusion extends to
+  A1-A3 and the ladder.

@@ -46,7 +46,16 @@ GPU-hours spent by the program are in `program/state.json`
   runs 694 and 703-708, seed 42, CPU only); Stage 1 counts restarts per
   episode as infrastructure failures. Open for Kevin before the freeze: A1-A3
   and the ladder still fail on a restart (no restart in their 16,639 calls has
-  probability about 0.13 at the development rate).
+  probability about 0.13 at the development rate). The review of `13c6790`
+  (main preregistration section 19) is fixed in `acceptance.py` and the text:
+  A7 divides the restarts of every attempt by the counting attempts' calls
+  only (cancelling and rerunning cannot help), runs under attempt 1 at
+  attempt 1's N*; the reset-observation charge is a reason, so `restart_only`
+  no longer excuses a trial that also lost it; a restart across the reset
+  observation that lost only its tree is excused like one inside an entry.
+  Not ready to freeze until Kevin decides the A1-A3 and ladder question (A4's
+  unsized remainder, restarts outside an observation call or slower than the
+  retries, is part of it).
 - `stage0/q1-gates`: gates, audit, mutator and substrates integrated; GPU
   smoke and pilot cost card next. Projected Stage 0 total 9-10 GPU-h.
 - `stage0/q2-evaluator-mutation`: faithful-save harness, blind specs for 205
