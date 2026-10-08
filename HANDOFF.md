@@ -5,7 +5,7 @@
 The restarted program is in Stage 0. Everything runs through frozen
 preregistrations in `program/preregistrations/ledger.jsonl` (hash-chained;
 `uv run python scripts/preregister.py check-chain`). Decisions taken on
-Kevin's behalf are D1-D25 in `program/decisions.md`. Results so far:
+Kevin's behalf are D1-D34 in `program/decisions.md`. Results so far:
 
 | Registration | Outcome | Evidence |
 |---|---|---|
@@ -15,7 +15,7 @@ Kevin's behalf are D1-D25 in `program/decisions.md`. Results so far:
 | `q3-k1-localization-screen-v1` | Stopped at its smoke gate: projected main job 98.8 min vs a 30-min limit. No verdict; the successor keeps the design with batched engineering (D20) | `program/evidence/2026-10-07/q3-k1/` |
 
 GPU-hours spent by the program are in `program/state.json`
-(`gpu_hours_ledger`); 2.78 so far (recomputed from the ledger rows), the Q1 pilot pass (0.899, branch `stage0/q1-gates`) included.
+(`gpu_hours_ledger`); 3.01 so far (recomputed from the ledger rows), the Q1 pilot pass (0.899, branch `stage0/q1-gates`) included.
 
 ## In progress (branches, not yet merged)
 
@@ -42,19 +42,27 @@ GPU-hours spent by the program are in `program/state.json`
   smoke and pilot cost card next. Projected Stage 0 total 9-10 GPU-h.
 - `stage0/q2-evaluator-mutation`: faithful-save harness, blind specs for 205
   tasks, operator catalog, campaign driver, rater runner and registered
-  analysis. Fifth draft of `q2-evaluator-mutation-v1` answers the third
-  review of the fourth draft (56/100) under D27: the pptx z-order and delete
-  operators restricted (dev rebuild `dev-mutants-v8`); the open-weight rater
-  is Qwen3.6-35B-A3B, which rated all 133 items of the rebuilt dev audit in
-  one clean 7-minute job (0.128 GPU-h) but accepted 19 of 26 violation
-  mutants, so κ projects to 0.27-0.34, below 0.6: under D27 the design
-  returns to review unless the isolated Claude answers differ greatly. The
-  isolated per-item Claude protocol is implemented (`export-isolated` /
-  `ingest-isolated`); the 133 dev items are exported to the session
-  scratchpad (`q2m-iso/`, manifest `q2m-iso-manifest.json` beside it) and
-  await one agent each. The rerate's sample, the open-weight calls and the
-  v8 export are held on the host until that ingest
-  (`scratch/held-after-isolated-ingest/`, digests committed).
+  analysis. The fourth review of the fifth draft (57/100) found D27's
+  consequence fired: dev κ 0.270 with the isolated Claude rater and the
+  thinking-off Qwen3.6-35B-A3B. D34 allows one retry; the sixth draft
+  implements it: gold shams for every K3 task with a gold-defect rule,
+  concordant label contradictions in Kevin's blind adjudication pool,
+  text-level differences for new-file end states, a 0.02 mm save-drift
+  rule, an off-slide rule for `pptx.viol.delete_bound_shape`, a
+  transcript audit tied to each item, salted item ids, the committed agent
+  prompt template (`harness/q2_mutation/templates/isolated_rater_prompt.txt`,
+  SHA-256 `0e9d4eb6...`), and the open-weight rater with thinking on
+  (`max_tokens` 8,192). Dev rebuild `dev-mutants-v9`, audit `dev-audit-v4`
+  (142 items) rated by the thinking-on rater in one clean 13-minute job
+  (0.228 GPU-h): violations 14 accept / 12 reject, κ 0.578 if Claude matched
+  every label, 0.486 projected from the D27 Claude answers. The 142 items
+  are exported to the session scratchpad (`q2m-iso-v5/`, manifest outside)
+  and await one isolated Claude agent each; if dev κ stays below 0.6, P2-P5
+  leave the confirmatory headline (D34). The audit's sample, the
+  open-weight calls and the v9 export are held on the host
+  (`scratch/held-after-isolated-ingest-v4/`, digests committed); the salt
+  is in `scratch/audit-salts/dev-audit-v4/` (mode 600), revealed after the
+  ingest. Confirm rater cap re-registered at 3.0 GPU-h.
 - `stage0/q3-dense-precheck`: draft `q3-dense-headroom-precheck-v1` (D26),
   dense only on the K1 bundle's development partition, Qwen3-0.6B-Base and
   Qwen3.5-4B-Base, caps 0.15 + 0.35 GPU-h; code, lane templates and CPU doctor
@@ -79,7 +87,11 @@ GPU-hours spent by the program are in `program/state.json`
    in when Slurm has forgotten a job.
 3. Run the Q1 pilot cost card; trim under 8 GPU-h with a registered rule or
    run the gauntlet.
-4. Freeze and run the checker-mutation campaign.
+4. Checker-mutation (D34): run one isolated Claude agent per exported dev item
+   (`q2m-iso-v5/`, registered prompt template), ingest, reveal the salt,
+   release the held files, `audit summarize`; if dev κ < 0.6, P2-P5 leave the
+   confirmatory headline. Then a fifth review, Kevin's sign-offs, re-merge
+   main and freeze.
 5. Rescope Q2 Stage 1 from the measured cost card (more VMs per engine,
    fewer rungs or cells) and take it through the gauntlet.
 

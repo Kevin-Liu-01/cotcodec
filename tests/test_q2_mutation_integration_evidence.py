@@ -259,3 +259,61 @@ def test_isolated_claude_ingest_evidence_is_intact_and_carries_no_document_text(
     registered = json.loads((ISOLATED / "audit-summary" / "audit-summary.json").read_text())
     assert summary["registered"]["kappa"] == registered["kappa"]
     assert summary["registered"]["kappa_fires"] == (registered["kappa"] < 0.6)
+
+
+RERATE_V4 = INTEGRATION / "rater-rerate-dev-v4"
+
+
+def test_d34_rerate_evidence_is_intact_and_holds_no_item_label_or_answer() -> None:
+    """The D34 rerate commits aggregates, the salt's digest and the export manifest only."""
+    from harness.q2_mutation import rater_runner
+
+    sums = {}
+    for line in (RERATE_V4 / "SHA256SUMS").read_text(encoding="utf-8").splitlines():
+        digest, name = line.split(maxsplit=1)
+        sums[name.removeprefix("./")] = digest
+    files = {
+        str(p.relative_to(RERATE_V4))
+        for p in RERATE_V4.rglob("*")
+        if p.is_file() and p.name != "SHA256SUMS"
+    }
+    assert set(sums) == files
+    for name, digest in sums.items():
+        assert hashlib.sha256((RERATE_V4 / name).read_bytes()).hexdigest() == digest, name
+    assert not list(RERATE_V4.rglob("sample.jsonl")) and not list(RERATE_V4.rglob("calls.jsonl"))
+    manifest = json.loads((RERATE_V4 / "isolated-export" / "iso-manifest.json").read_text())
+    items = set(manifest["items"])
+    assert len(items) == 142 and sorted(manifest["order"]) == sorted(items)
+    assert manifest["prompt_template_sha256"] == rater_runner.ISOLATED_PROMPT_TEMPLATE_SHA256
+    for item, entry in manifest["items"].items():
+        rendered = rater_runner.render_isolated_prompt(f"{manifest['iso_root']}/{item}", item)
+        assert entry["prompt_sha256"] == hashlib.sha256(rendered.encode()).hexdigest()
+    for path in RERATE_V4.rglob("*"):
+        if not path.is_file() or path.suffix not in {".json", ".jsonl", ".txt", ".md", ".yaml"}:
+            continue
+        text = path.read_text(encoding="utf-8")
+        assert "data_b64" not in text, path
+        assert not re.search(r"__[a-z]+\.(eq|alt|viol|extra)\.[a-z_]+__[0-9a-f]{12}", text), path
+        if "isolated-export" not in str(path) and path.name != "SHA256SUMS":
+            assert not any(item in text for item in items), path
+    text = json.dumps(manifest)
+    for word in ("should_", "verdict", "label", "operator", "mutant", "sham"):
+        assert word not in text
+    sample_summary = json.loads((RERATE_V4 / "audit" / "sample-summary.json").read_text())
+    assert re.fullmatch(r"[0-9a-f]{64}", sample_summary["salt_sha256"])
+    assert sample_summary["shams"] == {"gold": 15, "do_nothing": 6}
+    receipt = json.loads((RERATE_V4 / "open-weight" / "receipt.json").read_text())
+    assert receipt["params"]["enable_thinking"] is True and receipt["params"]["max_tokens"] == 8192
+    assert receipt["result"]["unrated"] == [] and receipt["result"]["rated_now"] == 142
+    summary = json.loads((RERATE_V4 / "summary.json").read_text())
+    assert summary["rated"] == 142 and summary["unrated"] == 0
+    termination = (RERATE_V4 / "open-weight" / "lane" / "termination.env").read_text()
+    assert "reason=completed" in termination and "exit_code=0" in termination
+    ledger = [
+        json.loads(line)
+        for line in (RERATE_V4 / "manifests" / "gpu-ledger.jsonl").read_text().splitlines()
+    ]
+    assert sum(row["max_gpu_hours"] for row in ledger if row["audit_id"] == "dev-rerate-v4") <= 0.5
+    held = (RERATE_V4 / "held" / "SHA256SUMS").read_text(encoding="utf-8")
+    for name in ("dev-audit-v4/sample.jsonl", "open-weight/calls.jsonl"):
+        assert name in held

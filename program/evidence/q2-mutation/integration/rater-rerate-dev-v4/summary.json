@@ -1,0 +1,292 @@
+{
+ "answers": {
+  "accept": 113,
+  "reject": 28,
+  "unsure": 1
+ },
+ "answers_by_label_class": {
+  "p1_flip": {
+   "accept": 1
+  },
+  "sham_do_nothing": {
+   "reject": 6
+  },
+  "sham_gold": {
+   "accept": 14,
+   "reject": 1
+  },
+  "should_fail_extra_change": {
+   "reject": 6
+  },
+  "should_fail_violation": {
+   "accept": 14,
+   "reject": 12
+  },
+  "should_pass_alt_solution": {
+   "accept": 27,
+   "reject": 1
+  },
+  "should_pass_equiv": {
+   "accept": 57,
+   "reject": 2,
+   "unsure": 1
+  }
+ },
+ "answers_by_operator": {
+  "docx.alt.char_style_for_direct": {
+   "accept": 3
+  },
+  "docx.alt.highlight_as_shading": {
+   "accept": 3
+  },
+  "docx.alt.para_direct_for_style": {
+   "reject": 1
+  },
+  "docx.eq.view_zoom": {
+   "accept": 10,
+   "reject": 2
+  },
+  "docx.viol.delete_bound_paragraph": {
+   "accept": 4,
+   "reject": 4
+  },
+  "docx.viol.drop_char_format": {
+   "accept": 3
+  },
+  "docx.viol.text_edit": {
+   "accept": 3,
+   "reject": 6
+  },
+  "pptx.eq.subvisible_nudge": {
+   "accept": 11,
+   "unsure": 1
+  },
+  "pptx.eq.zorder_nonoverlap": {
+   "accept": 9
+  },
+  "pptx.extra.add_textbox": {
+   "reject": 3
+  },
+  "pptx.viol.delete_bound_shape": {
+   "accept": 4,
+   "reject": 2
+  },
+  "xlsx.alt.absolute_refs": {
+   "accept": 6
+  },
+  "xlsx.alt.literal_for_formula": {
+   "accept": 6
+  },
+  "xlsx.alt.named_style_for_direct": {
+   "accept": 6
+  },
+  "xlsx.alt.plus_chain_to_sum": {
+   "accept": 3
+  },
+  "xlsx.eq.active_sheet": {
+   "accept": 1
+  },
+  "xlsx.eq.view_selection": {
+   "accept": 18
+  },
+  "xlsx.eq.view_zoom": {
+   "accept": 8
+  },
+  "xlsx.extra.edit_unrelated_value": {
+   "reject": 3
+  }
+ },
+ "contradicts_label_by_class": {
+  "should_fail_violation": 14,
+  "should_pass_alt_solution": 1,
+  "should_pass_equiv": 2
+ },
+ "if_anthropic_agreed_with_every_label": {
+  "adjudication": {
+   "adjudicated": 0,
+   "adjudicated_by_reason": {},
+   "pending": 19,
+   "pool": 19,
+   "pool_by_reason": {
+    "concordant_contradicts_label": 0,
+    "gold_sham_split": 1,
+    "split": 18
+   }
+  },
+  "gold_defect_equivalence_items": 0,
+  "gold_defect_tasks": 0,
+  "k3_fires": {
+   "should_fail_violation": true,
+   "should_pass_equiv": true
+  },
+  "k3_items": {
+   "should_fail_violation": 26,
+   "should_pass_equiv": 60
+  },
+  "k4_fires": false,
+  "kappa": 0.5777433113609928,
+  "kappa_fires": true,
+  "label_error": {
+   "should_fail_violation": 0.5384615384615384,
+   "should_pass_equiv": 0.05
+  },
+  "real_items": 121,
+  "split_items": 18
+ },
+ "items": 142,
+ "outcomes": {
+  "ok": 141,
+  "thinking_unfinished": 1
+ },
+ "packets": {
+  "baselines": {
+   "items": {
+    "none": 36,
+    "saved": 106
+   },
+   "jobs": 12,
+   "saved": 12
+  },
+  "fit": {
+   "budget_tokens": 129024,
+   "image_cell_px": 32,
+   "images_dropped": 0,
+   "lines_dropped": 1933,
+   "max_estimated_tokens_after": 128957,
+   "max_estimated_tokens_before": 143292,
+   "not_fitting": [],
+   "packets_shortened": 16,
+   "text_tokens_per_byte": 0.55
+  },
+  "shards": [
+   {
+    "bytes": 455094511,
+    "items": 142,
+    "sha256": "5598e755b3ef30d3814a363212aa2b4c818a260d1b67f575bea92871fd128475"
+   }
+  ]
+ },
+ "projection_with_d27_isolated_claude_answers": {
+  "claude_d27_vs_qwen_thinking_off_same_items": {
+   "items": 119,
+   "kappa": 0.2893165228931655,
+   "pairs": {
+    "accept/accept": 84,
+    "accept/reject": 2,
+    "reject/accept": 24,
+    "reject/reject": 8,
+    "unsure/reject": 1
+   },
+   "raw_agreement": 0.773109243697479
+  },
+  "claude_d27_vs_qwen_thinking_on": {
+   "items": 119,
+   "kappa": 0.48586017282010996,
+   "pairs": {
+    "accept/accept": 81,
+    "accept/reject": 4,
+    "accept/unsure": 1,
+    "reject/accept": 16,
+    "reject/reject": 16,
+    "unsure/accept": 1
+   },
+   "raw_agreement": 0.8151260504201681
+  },
+  "matched_items": 131,
+  "matched_real_items": 119,
+  "note": "the D27 Claude answers were given on the D27 packets; the D34 packets add text differences for new files and count save drift, so this is a projection only",
+  "qwen_thinking_off_vs_on": {
+   "items": 119,
+   "kappa": 0.29103366100685146,
+   "pairs": {
+    "accept/accept": 93,
+    "accept/reject": 14,
+    "accept/unsure": 1,
+    "reject/accept": 5,
+    "reject/reject": 6
+   },
+   "raw_agreement": 0.8319327731092437
+  },
+  "registered_summary_on_matched_items": {
+   "adjudication": {
+    "adjudicated": 0,
+    "adjudicated_by_reason": {},
+    "pending": 24,
+    "pool": 24,
+    "pool_by_reason": {
+     "concordant_contradicts_label": 2,
+     "gold_sham_split": 0,
+     "split": 22
+    }
+   },
+   "gold_defect_equivalence_items": 0,
+   "gold_defect_tasks": 0,
+   "k3_fires": {
+    "should_fail_violation": true,
+    "should_pass_equiv": true
+   },
+   "k3_items": {
+    "should_fail_violation": 24,
+    "should_pass_equiv": 60
+   },
+   "k4_fires": true,
+   "kappa": 0.48586017282010996,
+   "kappa_fires": true,
+   "label_error": {
+    "should_fail_violation": 0.625,
+    "should_pass_equiv": 0.13333333333333333
+   },
+   "real_items": 119,
+   "split_items": 22
+  }
+ },
+ "rated": 142,
+ "real_items": 121,
+ "sham_accuracy": {
+  "do_nothing": {
+   "correct": 6,
+   "shams": 6
+  },
+  "gold": {
+   "correct": 14,
+   "shams": 15
+  }
+ },
+ "shams": {
+  "do_nothing": 6,
+  "gold": 15
+ },
+ "split_share_if_anthropic_agreed_with_every_label": 0.1487603305785124,
+ "statuses": {
+  "ok": 141,
+  "thinking_unfinished": 1
+ },
+ "throughput": {
+  "completion_tokens_max": 8192,
+  "completion_tokens_median": 1042.0,
+  "completion_tokens_p90": 2822,
+  "completion_tokens_per_second": 334.6847457627119,
+  "completion_tokens_total": 197464,
+  "cut_at_max_tokens": 1,
+  "engine_ready_s": [
+   115.0
+  ],
+  "engine_stop_s": [
+   1.2
+  ],
+  "items_per_minute": 14.440677966101694,
+  "prompt_tokens_max": 102944,
+  "prompt_tokens_median": 57747.5,
+  "prompt_tokens_per_second": 13685.050847457627,
+  "prompt_tokens_total": 8074180,
+  "rating_seconds": 590.0,
+  "retries": 0,
+  "seconds_per_call_max": 134.101,
+  "seconds_per_call_median": 27.98,
+  "thinking_unfinished": 1
+ },
+ "unrated": 0,
+ "unsure_by_class": {
+  "should_pass_equiv": 1
+ }
+}

@@ -742,9 +742,9 @@ def test_render_rater_manifest_passes_the_lane_validator(tmp_path: Path) -> None
             [
                 *base,
                 "--minutes",
-                "60",
+                "240",
                 "--max-gpu-hours",
-                "1.5",
+                "4.0",
                 "--kind",
                 "audit",
                 "--out",
@@ -1004,17 +1004,19 @@ def test_rater_manifest_cap_reads_earlier_shards_from_the_ledger(tmp_path: Path)
             ]
         )
 
-    assert render("shard-0", 36, 0.6) == 0
+    # Decision D34: the confirmatory audit's cap is 3.0 GPU-h.
+    assert render_rater_manifest.AUDIT_GPU_HOURS == 3.0
+    assert render("shard-0", 150, 2.5) == 0
     rows = render_rater_manifest.read_ledger(ledger)
     assert [(r["name"], r["max_gpu_hours"], r["prior_gpu_hours"]) for r in rows] == [
-        ("shard-0", 0.6, 0.0)
+        ("shard-0", 2.5, 0.0)
     ]
     # The rerun's cap is checked against what the ledger already holds.
-    with pytest.raises(SystemExit, match=r"ledger \(0.6000 GPU-h\).*exceed the audit cap"):
-        render("rerun-1", 30, 0.5)
+    with pytest.raises(SystemExit, match=r"ledger \(2.5000 GPU-h\).*exceed the audit cap"):
+        render("rerun-1", 36, 0.6)
     assert render("rerun-1", 24, 0.4) == 0
     with pytest.raises(SystemExit, match="exceed the audit cap"):
-        render("rerun-2", 1, 0.02)
+        render("rerun-2", 12, 0.2)
     # Another audit has its own total; a name is rendered once.
     assert render("other-0", 24, 0.4, audit_id="other-audit") == 0
     with pytest.raises(SystemExit, match="already has a job named"):

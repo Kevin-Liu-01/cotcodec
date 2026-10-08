@@ -34,9 +34,10 @@ scores it. Runbook: `README.md` in this directory.
   baselines, packets fitted to the token budget and the summary (one calls
   file per shard and rater); `rater_runner.py` makes the model calls (one per
   rater per item, hashed receipts), runs the open-weight rater
-  (Qwen3.6-35B-A3B, D27) and exports/ingests the agent-harness Claude rater
-  one item per directory with a transcript audit (D25, D27); `analysis.py`
-  is the registered headline.
+  (Qwen3.6-35B-A3B, D27, thinking on since D34) and exports/ingests the
+  agent-harness Claude rater one item per directory with a transcript audit
+  tied to the registered prompt template `templates/isolated_rater_prompt.txt`
+  (D25, D27, D34); `analysis.py` is the registered headline.
 
 ## Patterns to follow / invariants
 <!-- agent-docs:fill:patterns -->
@@ -75,4 +76,8 @@ scores it. Runbook: `README.md` in this directory.
   rate, and read the GPU cap from the ledger (`render_rater_manifest.py
   --gpu-ledger`), never by hand.
 - Isolated Claude rater: never put an index, label, sample or other item
-  under the isolation root; the manifest lives outside it.
+  under the isolation root; the manifest lives outside it. Start each agent
+  with the registered template rendered for its item, verbatim (the audit
+  compares the transcript's first prompt with it).
+- Audit salts (D34) live only on the host (`scratch/audit-salts/<audit>/`,
+  mode 600); commit the SHA-256 and reveal the salt only after the ingest.
