@@ -7,12 +7,16 @@ import json
 from pathlib import Path
 
 import pytest
+import yaml
 
 from harness import dense_headroom_data as dhd
+from scripts import fill_dense_headroom_precheck_manifests as filler
 from scripts import preregister
+from scripts import submit_docker_research_job as submitter
 from scripts import summarise_dense_headroom_precheck as summary
 
 GIT, SOURCE = "b" * 40, "c" * 64
+IMAGE = "sha256:" + "a" * 64
 SMALL, LARGE = "qwen3-0.6b-base", "qwen3.5-4b-base"
 
 
@@ -37,11 +41,44 @@ def _env(path: Path, fields: dict) -> None:
     path.write_text("".join(f"{k}={v}\n" for k, v in fields.items()), encoding="utf-8")
 
 
+def _manifest_and_claim(run_root: Path, lane: str, predecessor: str, claim: bool,
+                        resubmit: Path | None, path: Path, minutes: int | None) -> None:
+    """The job's ``manifest.json`` (as the submitter writes it) for the lane's next
+    slot and the filler's claim of that slot; with ``resubmit``, that earlier
+    job's filled manifest again, unclaimed. Tiny lanes are not filled."""
+
+    if resubmit is not None:
+        (path / "manifest.json").write_bytes((resubmit / "manifest.json").read_bytes())
+        return
+    if lane not in dhd.LANES:
+        return
+    slot = sum(1 for p in run_root.glob("*") if filler.JOB_RE.fullmatch(p.name)) - 1
+    registered = dhd.LANES[lane]
+    text = (filler.TEMPLATE_DIR / filler.TEMPLATES[lane]).read_text(encoding="utf-8")
+    for key, value in {"FILL-image-id": IMAGE, "FILL-image-git-sha": GIT,
+                       "FILL-image-source-tar-sha256": SOURCE,
+                       "FILL-preregistration-sha256": "d" * 64}.items():
+        text = text.replace(key, value)
+    manifest = yaml.safe_load(text)
+    kind = "first" if slot == 0 else "continuation" if predecessor != "none" else "re-run"
+    plan = filler.NextJob(kind, minutes or registered.minutes, slot,
+                          None if predecessor == "none" else predecessor, 0)
+    if kind != "first":
+        manifest = filler.later_job_manifest(manifest, plan)
+    (path / "manifest.json").write_text(json.dumps(
+        submitter.validate_manifest(manifest, verify_claim_files=False), sort_keys=True))
+    if claim:
+        filler.claim_slot(run_root, registered, plan, yaml.safe_dump(manifest, sort_keys=False),
+                          IMAGE)
+
+
 def _job(runs: Path, lane: str, job_id: int, *, seconds: int = 240, reason: str = "completed",
          exit_code: str = "0", predecessor: str = "none", checkpoint: bool = False,
-         provenance: str = "PASS", git: str = GIT) -> Path:
+         provenance: str = "PASS", git: str = GIT, claim: bool = True,
+         resubmit: Path | None = None, minutes: int | None = None) -> Path:
     path = runs / lane / str(job_id)
     path.mkdir(parents=True)
+    _manifest_and_claim(runs / lane, lane, predecessor, claim, resubmit, path, minutes)
     _env(path / "job.env", {"job_id": job_id, "predecessor_job_id": predecessor,
                             "git_sha": git, "source_sha256": SOURCE,
                             "started_at": "2026-10-08T10:00:00Z"})
@@ -201,3 +238,42 @@ def test_a_single_lane_is_incomplete(frozen, tmp_path) -> None:
     read = json.loads(output.read_text())
     assert read["combined"]["design"] == "INCOMPLETE"
     assert read["gpu_usage"][LARGE]["gpu_hours_used"] == pytest.approx(120 / 3600)
+
+
+def test_a_filled_manifest_submitted_twice_voids_the_lane(frozen, tmp_path) -> None:
+    # The second pre-freeze audit's case: the first job is void after 2 minutes,
+    # and the first filled manifest is sbatched again. Together the two jobs ran
+    # 6 of the lane's 9 minutes, so only the claim rule voids the lane.
+    root, ledger, sha = frozen
+    runs = tmp_path / "runs"
+    first = _job(runs, SMALL, 70, seconds=120, reason="workload_failed", exit_code="3")
+    again = _receipt(_job(runs, SMALL, 71, seconds=240, resubmit=first), SMALL,
+                     "GO_ONLY_CAPABLE", sha)
+    logs = [_orx(tmp_path, 71)]
+    with pytest.raises(summary.SummaryError, match="one fill claim"):
+        summary.load_receipts([again], logs)
+    assert _main([again], tmp_path / "out.json", root, ledger, logs) == 2
+    usage = summary.lane_usage(dhd.LANES[SMALL], runs / SMALL, strict=False)
+    assert usage["within_cap"] and len(usage["claim_problems"]) == 1
+
+
+@pytest.mark.parametrize("defect", ["unclaimed", "no-manifest", "over-claim"])
+def test_jobs_off_their_claims_void_the_lane(frozen, tmp_path, defect) -> None:
+    root, ledger, sha = frozen
+    runs = tmp_path / "runs"
+    if defect == "over-claim":
+        # A re-run claimed for the 6 minutes left that ran 6 min 30 s; with the
+        # first job's 2 minutes the lane stays within its 9.
+        _job(runs, SMALL, 80, seconds=120, reason="workload_failed", exit_code="3")
+        plan = filler.plan_next_job(dhd.LANES[SMALL], runs / SMALL, None)
+        assert plan.minutes == 6
+        job = _job(runs, SMALL, 81, seconds=390, minutes=plan.minutes)
+    else:
+        job = _job(runs, SMALL, 80, claim=defect != "unclaimed")
+        if defect == "no-manifest":
+            (job / "manifest.json").unlink()
+    receipt = _receipt(job, SMALL, "NOT_VIABLE", sha)
+    logs = [_orx(tmp_path, int(job.name))]
+    message = "more than its claim" if defect == "over-claim" else "no fill claim"
+    with pytest.raises(summary.SummaryError, match=message):
+        summary.load_receipts([receipt], logs)

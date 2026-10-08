@@ -458,6 +458,23 @@ def null_block(prompts: Sequence[Mapping[str, Any]], results: Results, seeds: Se
     return out
 
 
+def reaching_sigmas(per_sigma: Mapping[str, Any]) -> list[str]:
+    """The reach rule (decision 8): noise scales whose null passes V1 at every
+    seed and whose seed-mean English ML loss is at least 2.5 points, half of
+    V1's tolerance, i.e. realistically imperfect V1-adequate copies of the
+    target rather than near-exact ones. Shared by ``null_verdict`` and the floor
+    candidate's condition (c) (``floor_block``, decision 10 as amended in D32)."""
+
+    reaching = []
+    for sigma, block in per_sigma.items():
+        english = block["english_ml"]
+        loss = english.get("loss_seed_mean")
+        if (english["v1_pass"] and loss is not None and math.isfinite(loss)
+                and loss >= NULL_REACH_POINTS):
+            reaching.append(sigma)
+    return reaching
+
+
 def null_verdict(per_sigma: Mapping[str, Any]) -> dict[str, Any]:
     """CENTRED: at every noise scale whose null passes V1 at every seed, |xi| <= 2
     points and |xi_rel| <= 0.10 (seed-mean points), and at least one of those
@@ -482,8 +499,7 @@ def null_verdict(per_sigma: Mapping[str, Any]) -> dict[str, Any]:
                     "adequate_sigmas": adequate, "english_ml_loss": losses}
         worst_xi = max(worst_xi, abs(float(xi)))
         worst_rel = max(worst_rel, abs(float(rel["point"])))
-    reaching = [s for s in adequate if losses[s] is not None and math.isfinite(losses[s])
-                and losses[s] >= NULL_REACH_POINTS]
+    reaching = reaching_sigmas(per_sigma)
     read = {"adequate_sigmas": adequate, "reaching_sigmas": reaching,
             "english_ml_loss": losses, "max_abs_xi": worst_xi, "max_abs_xi_rel": worst_rel}
     if worst_xi > NULL_XI_POINTS or worst_rel > NULL_XI_REL:
@@ -600,10 +616,13 @@ def floor_block(prompts: Sequence[Mapping[str, Any]], results: Results,
     VIABLE when (a) the target's controlled-MN headroom is at least 10 points,
     (b) the literal selector's controlled G(MN) point is below 0.5 (a
     literal-only selector fails the floor, with its point and not only its
-    lower bound below it) and (c) some noise scale whose null passes V1 has a
-    controlled G(MN) whose 99 percent lower bound is at least 0.5: a V1-adequate
+    lower bound below it) and (c) some noise scale that meets decision 8's
+    reach rule (``reaching_sigmas``: its null passes V1 and its seed-mean
+    English ML loss is at least 2.5 points) has a controlled G(MN) whose 99
+    percent lower bound is at least 0.5: a realistically imperfect, V1-adequate
     noisy copy of the target passes the floor exactly as an indexer would be
-    judged. Points and bounds of every reference are reported.
+    judged, not only the near-exact copy at the smallest scale (decision 10 as
+    amended in D32). Points and bounds of every reference are reported.
     """
 
     controlled = question_sets(features)["controlled"]
@@ -626,17 +645,22 @@ def floor_block(prompts: Sequence[Mapping[str, Any]], results: Results,
     elif lex["point"] >= FLOOR_G:
         reasons.append("the literal selector passes the floor")
     sigmas = null[target]["sigmas"]
-    adequate_pass = [s for s, block in sigmas.items() if block["english_ml"]["v1_pass"]
-                     and block["g_mn_controlled"].get("evaluable")
-                     and block["g_mn_controlled"]["lower"] >= FLOOR_G]
+    reaching = reaching_sigmas(sigmas)
+    adequate_pass = [s for s in reaching if sigmas[s]["g_mn_controlled"].get("evaluable")
+                     and sigmas[s]["g_mn_controlled"]["lower"] >= FLOOR_G]
     if not adequate_pass:
-        reasons.append("no V1-adequate null's 99 percent lower bound of G(MN) reaches 0.5")
+        reasons.append(f"no V1-adequate null that loses at least {NULL_REACH_POINTS:g} points "
+                       "of English ML recall has a 99 percent lower bound of G(MN) of at "
+                       "least 0.5")
     nulls = {s: {key: block["g_mn_controlled"].get(key)
                  for key in ("evaluable", "point", "lower", "upper")}
-             | {"v1_pass": block["english_ml"]["v1_pass"]} for s, block in sigmas.items()}
+             | {"v1_pass": block["english_ml"]["v1_pass"],
+                "english_ml_loss": block["english_ml"].get("loss_seed_mean")}
+             for s, block in sigmas.items()}
     return {"candidate_g": FLOOR_G, "target": target,
             "controlled_mn_headroom": headroom, "references": references,
             "null_g_mn_controlled": nulls,
+            "reaching_sigmas": reaching,
             "adequate_nulls_passing": adequate_pass,
             "verdict": "VIABLE" if not reasons else "NOT_VIABLE", "reasons": reasons}
 
@@ -940,6 +964,7 @@ __all__ = [
     "h2_status",
     "null_names",
     "null_verdict",
+    "reaching_sigmas",
     "retention_interval",
     "selector_names",
     "wilson",

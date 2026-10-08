@@ -16,7 +16,12 @@ each receipt, from the files beside it:
 * every job in the lane's run root has ended and exactly one holds a receipt;
   a continuation's predecessor ended with a confirmed signal checkpoint (exit
   75) and the receipt records that predecessor;
-* the lane's jobs together ran no longer than the lane's minutes.
+* the lane's jobs together ran no longer than the lane's minutes;
+* every job of the lane, the first included, ran on its own fill claim
+  (``<run_root>/fill-claims``, matched by the job's ``manifest.json``) and no
+  longer than the claim's minutes, and no claim carries two jobs. This is the
+  backstop against a filled manifest submitted twice: the entry point cannot
+  see the run root from inside its container, so it cannot refuse one.
 
 The combined read applies the registered rule
 (``harness.dense_headroom_stats.combined_recommendation``): INVALID when a
@@ -68,19 +73,25 @@ def orx_results(logs: list[Path]) -> set[str]:
 def lane_usage(lane: dhd.Lane, run_root: Path, *, strict: bool = True) -> dict[str, Any]:
     """Every job of the lane in its run root, with the GPU time it used. A lane
     read (``strict``) is void when its jobs together ran longer than its
-    minutes; a lane without a receipt only reports it."""
+    minutes, or under the claim rule (``filler.claim_problems``): a job without
+    a fill claim, a job that ran longer than its claim's minutes, or two jobs on
+    one claim. A lane without a receipt only reports both."""
 
     try:
         jobs = filler.lane_jobs(run_root)
-    except filler.FillError as exc:
+        claims = filler.read_claims(run_root)
+    except (filler.FillError, OSError, ValueError) as exc:
         raise SummaryError(f"{lane.lane_id}: {exc}") from exc
     elapsed = sum(job.elapsed_seconds for job in jobs)
     within = elapsed <= lane.minutes * 60
     if strict and not within:
         raise SummaryError(f"{lane.lane_id}: its jobs ran {elapsed:.0f} s, more than the "
                            f"lane's {lane.minutes} minutes")
+    problems = filler.claim_problems(jobs, claims)
+    if strict and problems:
+        raise SummaryError(f"{lane.lane_id} is void: {'; '.join(problems)}")
     return {"jobs": [job.as_dict() for job in jobs], "elapsed_seconds": elapsed,
-            "within_cap": within,
+            "within_cap": within, "claim_problems": problems,
             "gpu_hours_used": lane.gpus * elapsed / 3600.0,
             "charged_minutes": filler.lane_charge(jobs), "cap_minutes": lane.minutes,
             "cap_gpu_hours": lane.cap_gpu_hours}
