@@ -40,6 +40,7 @@ INFRASTRUCTURE_TYPES = (
     "executor_device",
     "transport",
     "runner_crash",
+    "offline_network",
 )
 REQUIRED = (
     "schema",

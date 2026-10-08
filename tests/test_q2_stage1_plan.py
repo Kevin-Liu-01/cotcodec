@@ -342,3 +342,74 @@ def test_a0a_gates_from_a_lane_run_directory(tmp_path):
     done = subprocess.run(script, capture_output=True, text=True, cwd=ROOT)
     assert done.returncode == 0, done.stderr
     assert json.loads(done.stdout)["steps_timed"] == 2
+
+
+# --------------------------------------------------------------------------- offline setup
+# Section 5.4's offline-setup exclusion, registered before G0 item 5's second pass ran.
+
+ARGV = {
+    "26150609": ["pip", "install", "pygame"],
+    "e2b5e914": ["code", "--install-extension", "ms-python.python"],
+    "53ad5833": ["/bin/bash", "-c", "cd /home/user/Downloads && unzip -q vscodeEvalExtension.zip "
+                 "&& code --install-extension vscodeEvalExtension/eval-0.0.1.vsix && rm -rf x"],
+    "d38192b0": ["pip", "install", "/home/user/cssselect-1.3.0-py3-none-any.whl"],
+}  # fmt: skip
+
+
+def test_install_targets_tell_network_installs_from_local_ones():
+    assert P.install_targets(ARGV["26150609"]) == [("pip", "pygame", True)]
+    assert P.install_targets(ARGV["e2b5e914"]) == [("code", "ms-python.python", True)]
+    assert P.install_targets(ARGV["53ad5833"]) == [
+        ("code", "vscodeEvalExtension/eval-0.0.1.vsix", False)]  # fmt: skip
+    assert P.install_targets(ARGV["d38192b0"]) == [
+        ("pip", "/home/user/cssselect-1.3.0-py3-none-any.whl", False)]  # fmt: skip
+    assert P.install_targets("sudo apt-get install -y curl") == [("apt-get", "curl", True)]
+    assert P.install_targets(["python3", "-m", "pip", "install", "x"]) == [("pip", "x", True)]
+    for argv in (["mkdir", "-p", "/x"], ["tar", "-xzv", "-f", "a.tar.gz"], "pkill vlc", None):
+        assert P.install_targets(argv) == []
+
+
+def setup_row(task: str, *, status="setup_ok", setup_steps=(), probe_steps=(), probe_replies=(),
+              failures=(), diagnostics=None, attempt=1, probe=True) -> dict:  # fmt: skip
+    row = {"task_id": task, "attempt": attempt, "status": status,
+           "setup": {"config_steps": list(setup_steps), "failures": list(failures)}}  # fmt: skip
+    if probe:
+        row["postconfig_probe"] = {"config_steps": list(probe_steps),
+                                   "replies": list(probe_replies)}  # fmt: skip
+    if diagnostics is not None:
+        row["diagnostics"] = diagnostics
+    return row
+
+
+def test_offline_exclusion_rules():
+    step = lambda i, argv: {"step": i, "type": "command", "argv": argv}  # noqa: E731
+    rows = [
+        setup_row("clean", setup_steps=[step(1, ["mkdir", "-p", "/x"])]),
+        setup_row("net", setup_steps=[step(2, ARGV["26150609"])]),
+        setup_row("market", setup_steps=[step(1, ARGV["e2b5e914"])],
+                  diagnostics=[{"argv": ["code"], "expect": "ms-python", "found": False}]),
+        setup_row("vsix", setup_steps=[step(2, ARGV["53ad5833"])],
+                  diagnostics=[{"argv": ["code"], "expect": "eval", "found": True}]),
+        setup_row("vsix-missing", setup_steps=[step(2, ARGV["53ad5833"])],
+                  diagnostics=[{"argv": ["code"], "expect": "eval", "found": False}]),
+        setup_row("wheel-ok", probe_steps=[step(2, ARGV["d38192b0"])],
+                  probe_replies=[{"step": 2, "status": 200, "returncode": 0}]),
+        setup_row("wheel-bad", probe_steps=[step(2, ARGV["d38192b0"])],
+                  probe_replies=[{"step": 2, "status": 200, "returncode": 1}]),
+        setup_row("agent-state", probe_steps=[step(1, ["ls", "-R", "/home/user/x"])],
+                  probe_replies=[{"step": 1, "status": 200, "returncode": 2}]),
+        setup_row("failed", status="setup_failed", failures=["setup step 1 (execute): rc=1"]),
+        setup_row("flaky", status="setup_failed"),
+        setup_row("flaky", attempt=2),
+        setup_row("unprobed", probe=False),
+    ]  # fmt: skip
+    tasks = sorted({r["task_id"] for r in rows} | {"absent"})
+    out = P.offline_exclusions(rows, tasks)
+    assert sorted(out) == ["absent", "failed", "market", "net", "unprobed", "vsix-missing",
+                           "wheel-bad"]  # fmt: skip
+    assert out["net"] == ["(a) setup step 2: pip install pygame"]
+    assert out["market"][0].startswith("(a)") and out["market"][1].startswith("(b) diagnostic")
+    assert out["wheel-bad"][0].startswith("(c) postconfig step 2 install failed")
+    assert out["absent"] == ["(b) no setup-check-v2 record"]
+    pool = P.eligible_pool(["0a0faba3-x", "b", "c"], {"c": ["(a)"]})
+    assert pool == ["b"]

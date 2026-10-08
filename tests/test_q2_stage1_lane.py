@@ -394,3 +394,45 @@ def test_registered_purposes_pin_the_prompt_date(tmp_path):
     make_lane(tmp_path, m, docker).run()
     out = Path(next(v.split(":")[0] for v in docker.episodes[0] if v.endswith(":/out")))
     assert json.loads((out / "config.json").read_text())["date"] == "2026-10-08"
+
+
+def test_setup_check_v2_probes_the_postconfig_and_runs_the_diagnostics(tmp_path):
+    """G0 item 5's second pass: the postconfig probe and the registered diagnostics reach the
+    episode config of a setup-check slot, and no other purpose may ask for the probe."""
+    from harness.q2_stage1 import plan
+
+    m = json.loads((ROOT / "experiments/manifests/q2-stage1/setup-check-v2.json").read_text())
+    assert lane.validate_manifest(m, ROOT)["postconfig_probe"] is True
+    assert lane.check_slurm(m, host_load_cpus=8)["cpus"] == 8
+    assert len(m["slots"]) == 148 and "requeue" not in m  # a failed slot is re-queued once
+    vscode = next(s for s in m["slots"] if s["task_id"].startswith("53ad5833"))
+    small = {**m, "slots": [vscode, m["slots"][0]]}
+    docker = FakeDocker({})
+    the_lane = make_lane(tmp_path, small, docker)
+    the_lane.run()
+    outs = [Path(next(v.split(":")[0] for v in argv if v.endswith(":/out"))) for argv in
+            docker.episodes]  # fmt: skip
+    configs = [json.loads((out / "config.json").read_text()) for out in outs]
+    assert all(c["postconfig_probe"] is True and c["mode"] == "setup-only" for c in configs)
+    expected = [dict(d) for d in plan.SETUP_DIAGNOSTICS[vscode["task_id"]]]
+    assert configs[0]["diagnostics"] == expected
+    assert configs[1]["diagnostics"] == []
+    with pytest.raises(lane.LaneError, match="postconfig_probe belongs to a setup check"):
+        lane.validate_manifest(manifest(postconfig_probe=True), ROOT)
+
+
+def test_a_gpu_device_in_an_episode_container_stops_the_lane(tmp_path):
+    class GpuDocker(FakeDocker):
+        def run_episode(self, argv, name, timeout, stop, log):
+            rc = super().run_episode(argv, name, timeout, stop, log)
+            out = Path(next(v.split(":")[0] for v in argv if v.endswith(":/out")))
+            record = json.loads((out / "episode.json").read_text())
+            record.update(status="infrastructure", infrastructure_type="runner_crash",
+                          score=None, gpu_devices=["/dev/nvidia0"])  # fmt: skip
+            (out / "episode.json").write_text(json.dumps(record))
+            return rc
+
+    docker = GpuDocker({})
+    slots = [slot(i, DEV[i]) for i in range(3)]
+    receipt = make_lane(tmp_path, manifest(slots=slots), docker).run()
+    assert "D12" in receipt["error"] and len(docker.episodes) == 1
