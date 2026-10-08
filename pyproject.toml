@@ -62,6 +62,8 @@ dev = [
     # The corpus check renders through the Qwen3.5 chat template (tests/test_q2_suite.py).
     "jinja2",
     "pytest",
+    # The S1a comparator tests build decks with python-pptx (tests/test_q2_stage1_zinv.py).
+    "python-pptx",
     "pytest-asyncio",
     "ruff",
 ]

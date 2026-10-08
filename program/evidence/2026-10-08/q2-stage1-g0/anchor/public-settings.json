@@ -1,0 +1,200 @@
+{
+ "archive": {
+  "lfs_sha256": "b642e1212d3ebb87e88addc0c55525b12d1ce8b9b253306fa7706908778e9688",
+  "path": "opencua_agent-opencua_7b-cot_l2-action_history-3image-Ubuntu-15steps.zip",
+  "repo": "xlangai/ubuntu_osworld_verified_trajs",
+  "revision": "5473c39e42a538a187a9b2c2b499db59d560fd8c",
+  "size": 7920092071
+ },
+ "args": {
+  "turn_1": {
+   "action_space": "pyautogui",
+   "client_password": "",
+   "coordinate_type": "qwen25",
+   "cot_level": "l2",
+   "domain": "all",
+   "headless": true,
+   "history_type": "action_history",
+   "log_level": "INFO",
+   "max_image_history_length": 3,
+   "max_steps": 15,
+   "max_tokens": 2048,
+   "model": "opencua-7b-15step-2",
+   "num_envs": 30,
+   "observation_type": "screenshot",
+   "path_to_vm": null,
+   "provider_name": "aws",
+   "region": "us-east-1",
+   "result_dir": "./results",
+   "screen_height": 1080,
+   "screen_width": 1920,
+   "sleep_after_execution": 3.0,
+   "stop_token": null,
+   "temperature": 0,
+   "test_all_meta_path": "evaluation_examples/test_nogdrive.json",
+   "test_config_base_dir": "evaluation_examples",
+   "top_p": 0.9
+  },
+  "turn_2": {
+   "action_space": "pyautogui",
+   "client_password": "",
+   "coordinate_type": "qwen25",
+   "cot_level": "l2",
+   "domain": "all",
+   "headless": true,
+   "history_type": "action_history",
+   "log_level": "INFO",
+   "max_image_history_length": 3,
+   "max_steps": 15,
+   "max_tokens": 2048,
+   "model": "opencua-7b-15step-3",
+   "num_envs": 30,
+   "observation_type": "screenshot",
+   "path_to_vm": null,
+   "provider_name": "aws",
+   "region": "us-east-1",
+   "result_dir": "./results",
+   "screen_height": 1080,
+   "screen_width": 1920,
+   "sleep_after_execution": 3.0,
+   "stop_token": null,
+   "temperature": 0,
+   "test_all_meta_path": "evaluation_examples/test_nogdrive.json",
+   "test_config_base_dir": "evaluation_examples",
+   "top_p": 0.9
+  },
+  "turn_3": {
+   "action_space": "pyautogui",
+   "client_password": "",
+   "coordinate_type": "qwen25",
+   "cot_level": "l2",
+   "domain": "all",
+   "headless": true,
+   "history_type": "action_history",
+   "log_level": "INFO",
+   "max_image_history_length": 3,
+   "max_steps": 15,
+   "max_tokens": 2048,
+   "model": "opencua-7b-15step-4",
+   "num_envs": 30,
+   "observation_type": "screenshot",
+   "path_to_vm": null,
+   "provider_name": "aws",
+   "region": "us-east-1",
+   "result_dir": "./results",
+   "screen_height": 1080,
+   "screen_width": 1920,
+   "sleep_after_execution": 3.0,
+   "stop_token": null,
+   "temperature": 0,
+   "test_all_meta_path": "evaluation_examples/test_nogdrive.json",
+   "test_config_base_dir": "evaluation_examples",
+   "top_p": 0.9
+  }
+ },
+ "args_sha256": {
+  "turn_1/args.json": "79a59ab928bbd680316206acfc3c5955c81ac0be5c781bdbf098f80d2e78266d",
+  "turn_2/args.json": "770fbbc1c41a5676ad2302bbfed04d372983956d38f56304471570190cafb9bc",
+  "turn_3/args.json": "7ead0aabb571dcf2f6b14b65f066b840754291135b0ed96f53b85e779f1ea456"
+ },
+ "disagreements": {},
+ "members": 16503,
+ "result_txt_members": 1079,
+ "run_window": {
+  "turn_1": {
+   "first": "20250729@094736",
+   "last": "20250729@110334",
+   "steps": 4101
+  },
+  "turn_2": {
+   "first": "20250730@034825",
+   "last": "20250730@050257",
+   "steps": 4102
+  },
+  "turn_3": {
+   "first": "20250730@012215",
+   "last": "20250730@023854",
+   "steps": 4159
+  }
+ },
+ "served_model_names": {
+  "turn_1": "opencua-7b-15step-2",
+  "turn_2": "opencua-7b-15step-3",
+  "turn_3": "opencua-7b-15step-4"
+ },
+ "settings": {
+  "coordinate_type": {
+   "source": "archive args.json",
+   "value": "qwen25"
+  },
+  "cot_level": {
+   "source": "archive args.json",
+   "value": "l2"
+  },
+  "history_type": {
+   "source": "archive args.json",
+   "value": "action_history"
+  },
+  "max_image_history_length": {
+   "source": "archive args.json",
+   "value": 3
+  },
+  "max_steps": {
+   "source": "archive args.json",
+   "value": 15
+  },
+  "max_tokens": {
+   "source": "archive args.json",
+   "value": 2048
+  },
+  "provider_name": {
+   "source": "archive args.json",
+   "value": "aws"
+  },
+  "screen_height": {
+   "source": "archive args.json",
+   "value": 1080
+  },
+  "screen_width": {
+   "source": "archive args.json",
+   "value": 1920
+  },
+  "sleep_after_execution": {
+   "source": "archive args.json",
+   "value": 3.0
+  },
+  "stop_token": {
+   "source": "archive args.json",
+   "value": null
+  },
+  "temperature": {
+   "source": "archive args.json",
+   "value": 0
+  },
+  "test_all_meta_path": {
+   "source": "archive args.json",
+   "value": "evaluation_examples/test_nogdrive.json"
+  },
+  "top_p": {
+   "source": "archive args.json",
+   "value": 0.9
+  },
+  "use_old_sys_prompt": {
+   "source": "pinned runner default (not recorded)",
+   "value": false
+  }
+ },
+ "unrecorded_keys_in_archive": [
+  "action_space",
+  "client_password",
+  "domain",
+  "headless",
+  "log_level",
+  "num_envs",
+  "observation_type",
+  "path_to_vm",
+  "region",
+  "result_dir",
+  "test_config_base_dir"
+ ]
+}

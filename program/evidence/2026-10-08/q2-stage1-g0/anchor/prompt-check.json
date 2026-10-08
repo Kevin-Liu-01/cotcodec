@@ -1,0 +1,30 @@
+{
+ "L1": {
+  "old_option_equal": true,
+  "old_option_sha256": "a6e530c7da1e96fc5c5c3662f1078eeae44f9018ad1007ffc99005f34687b0e1",
+  "public_sha256": "a6e530c7da1e96fc5c5c3662f1078eeae44f9018ad1007ffc99005f34687b0e1"
+ },
+ "L2": {
+  "diff": [
+   "--- ",
+   "+++ ",
+   "@@ -1 +1 @@",
+   "-You are a GUI agent. You are given a task and a screenshot of the screen. You need to perform a series of pyautogui actions to complete the task.",
+   "+You are a GUI agent. You are given a task and a screenshot of the screen. You need to perform a series of pyautogui actions to complete the task. The password of the computer is \"osworld-public-evaluation\". If the task is not possible to do, output the action computer.terminate(status='failure').",
+   "@@ -34 +34 @@",
+   "-- {\"name\": \"computer.terminate\", \"description\": \"Terminate the current task and report its completion status\", \"parameters\": {\"type\": \"object\", \"properties\": {\"status\": {\"type\": \"string\", \"enum\": [\"success\", \"fail\"], \"description\": \"The status of the task\"}}, \"required\": [\"status\"]}}",
+   "+- {\"name\": \"computer.terminate\", \"description\": \"Terminate the current task and report its completion status\", \"parameters\": {\"type\": \"object\", \"properties\": {\"status\": {\"type\": \"string\", \"enum\": [\"success\", \"failure\"], \"description\": \"The status of the task\"}}, \"required\": [\"status\"]}}"
+  ],
+  "old_option_equal": false,
+  "old_option_sha256": "e2f338f604aef084f19a56f5618048f05f65b9dc2a4af5a03249ea9015781032",
+  "public_sha256": "193560de50599b7925e7b978c2ed56c66d3b7d00e9f0da15961aba3c4145a055"
+ },
+ "L3": {
+  "old_option_equal": true,
+  "old_option_sha256": "1b790c61d3afa3847534948ef783c32ccf586ce4e62d2d62539c9ce4bfdc4cb2",
+  "public_sha256": "1b790c61d3afa3847534948ef783c32ccf586ce4e62d2d62539c9ce4bfdc4cb2"
+ },
+ "agent_revision": "bfd62bdc5a3319809a236dc90ddbbaf3cb4b7e06",
+ "default_is_v2_family": true,
+ "public_revision": "00804f811874ea34ddfdd2e6b3a2fe307311f57c"
+}

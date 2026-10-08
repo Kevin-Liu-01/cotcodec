@@ -1,0 +1,213 @@
+"""``compare_pptx_files_zinv`` on decks built with python-pptx (registration G0 item 8).
+
+The real ``compare_pptx_files`` lives in the pinned OSWorld tree; here an order-sensitive
+stand-in (shape by shape in document order, as the original zips them) shows what the
+realignment changes and what it leaves alone. The validation on the stored confirm mutants
+and golds runs with the pinned comparator on the host (``zinv_validate``).
+"""
+
+from __future__ import annotations
+
+import types
+from pathlib import Path
+
+import pytest
+
+pptx = pytest.importorskip("pptx")
+from pptx.util import Emu  # noqa: E402
+
+from harness.q2_stage1 import zinv  # noqa: E402
+
+CM = 360_000
+
+
+def deck(path: Path, shapes: list[tuple[str, int, int, int, int]], rot: dict[str, float] | None
+         = None) -> Path:  # fmt: skip
+    prs = pptx.Presentation()
+    slide = prs.slides.add_slide(prs.slide_layouts[6])  # blank
+    for text, left, top, width, height in shapes:
+        box = slide.shapes.add_textbox(Emu(left), Emu(top), Emu(width), Emu(height))
+        box.text_frame.text = text
+        if rot and text in rot:
+            box.rotation = rot[text]
+    prs.save(path)
+    return path
+
+
+def order_sensitive(file1: str, file2: str, **_: object) -> int:
+    """Stand-in for compare_pptx_files: shapes zipped in document order."""
+    a, b = pptx.Presentation(file1), pptx.Presentation(file2)
+    for s1, s2 in zip(a.slides, b.slides, strict=True):
+        if len(s1.shapes) != len(s2.shapes):
+            return 0
+        for x, y in zip(s1.shapes, s2.shapes, strict=True):
+            if (x.text_frame.text, x.left, x.top, x.width, x.height) != (
+                y.text_frame.text, y.left, y.top, y.width, y.height):  # fmt: skip
+                return 0
+    return 1
+
+
+A = ("A", 1 * CM, 1 * CM, 4 * CM, 2 * CM)
+B = ("B", 12 * CM, 1 * CM, 4 * CM, 2 * CM)  # far from A
+C = ("C", 2 * CM, 2 * CM, 4 * CM, 2 * CM)  # overlaps A
+NEAR = ("N", 5 * CM + 50_000, 1 * CM, 4 * CM, 2 * CM)  # 0.14 cm from A: inside the clearance
+
+
+def test_swap_of_apart_shapes_is_ignored(tmp_path):
+    ref = deck(tmp_path / "ref.pptx", [A, B, C])
+    agent = deck(tmp_path / "agent.pptx", [B, A, C])
+    assert order_sensitive(str(agent), str(ref)) == 0
+    assert zinv.compare_pptx_files_zinv(str(agent), str(ref), _original=order_sensitive) == 1
+
+
+def test_swap_across_an_overlapping_shape_still_fails(tmp_path):
+    ref = deck(tmp_path / "ref.pptx", [A, B, C])
+    agent = deck(tmp_path / "agent.pptx", [C, B, A])  # A moves past C, which it overlaps
+    assert zinv.compare_pptx_files_zinv(str(agent), str(ref), _original=order_sensitive) == 0
+
+
+def test_shapes_within_two_millimetres_are_not_apart(tmp_path):
+    ref = deck(tmp_path / "ref.pptx", [A, NEAR])
+    agent = deck(tmp_path / "agent.pptx", [NEAR, A])
+    assert zinv.compare_pptx_files_zinv(str(agent), str(ref), _original=order_sensitive) == 0
+
+
+def test_rotation_widens_the_box(tmp_path):
+    long_a = ("A", 1 * CM, 5 * CM, 12 * CM, 1 * CM)
+    below = ("B", 6 * CM, 8 * CM, 2 * CM, 1 * CM)  # 2 cm below A's frame, inside its rotation
+    ref = deck(tmp_path / "ref.pptx", [long_a, below], rot={"A": 45.0})
+    agent = deck(tmp_path / "agent.pptx", [below, long_a], rot={"A": 45.0})
+    keys = [zinv.shape_key(s) for s in pptx.Presentation(ref).slides[0].shapes]
+    assert not zinv.apart(*keys)
+    assert zinv.compare_pptx_files_zinv(str(agent), str(ref), _original=order_sensitive) == 0
+    ref2 = deck(tmp_path / "ref2.pptx", [long_a, below])
+    agent2 = deck(tmp_path / "agent2.pptx", [below, long_a])
+    assert zinv.compare_pptx_files_zinv(str(agent2), str(ref2), _original=order_sensitive) == 1
+
+
+def test_unchanged_order_runs_the_original_on_the_original_file(tmp_path):
+    ref = deck(tmp_path / "ref.pptx", [A, B])
+    agent = deck(tmp_path / "agent.pptx", [A, B])
+    seen = []
+
+    def spy(file1: str, file2: str, **options: object) -> str:
+        seen.append((file1, file2, options))
+        return "original-verdict"
+
+    out = zinv.compare_pptx_files_zinv(str(agent), str(ref), _original=spy, examine_shape=False)
+    assert out == "original-verdict"
+    assert seen == [(str(agent), str(ref), {"examine_shape": False})]
+
+
+def test_a_changed_shape_is_not_realigned(tmp_path):
+    ref = deck(tmp_path / "ref.pptx", [A, B])
+    moved_b = ("B", 12 * CM, 3 * CM, 4 * CM, 2 * CM)
+    agent = deck(tmp_path / "agent.pptx", [moved_b, A])
+    assert zinv.aligned_deck(str(agent), str(ref)) is None
+    edited_b = ("B2", 12 * CM, 1 * CM, 4 * CM, 2 * CM)
+    agent = deck(tmp_path / "agent2.pptx", [edited_b, A])
+    assert zinv.aligned_deck(str(agent), str(ref)) is None
+
+
+def test_a_save_rounding_of_the_geometry_still_matches(tmp_path):
+    """LibreOffice rounds to 1/100 mm (360 EMU): widths 720 EMU apart are the same shape."""
+    ref = deck(tmp_path / "ref.pptx", [A, B, C])
+    rounded = [(t, x, y, w + 720, h + 360) for t, x, y, w, h in (B, A, C)]
+    agent = deck(tmp_path / "agent.pptx", rounded)
+    assert zinv.aligned_deck(str(agent), str(ref)) is not None
+    tight = zinv.aligned_deck(str(agent), str(ref), 0.0)
+    assert tight is None
+
+
+def test_matching_follows_what_the_task_examines(tmp_path):
+    """With examine_shape false (an auto-fit changed a text box's height), shapes still pair."""
+    ref = deck(tmp_path / "ref.pptx", [A, B, C])
+    taller = [(t, x, y, w, h * 2) for t, x, y, w, h in (B, A, C)]
+    agent = deck(tmp_path / "agent.pptx", taller)
+    assert zinv.aligned_deck(str(agent), str(ref)) is None
+    loose = zinv.Matching.from_options({"examine_shape": False})
+    assert zinv.aligned_deck(str(agent), str(ref), loose) is not None
+    seen = []
+    zinv.compare_pptx_files_zinv(
+        str(agent), str(ref), _original=lambda f1, f2, **o: seen.append((f1, o)),
+        examine_shape=False,
+    )  # fmt: skip
+    assert seen[0][0] != str(agent) and seen[0][1] == {"examine_shape": False}
+
+
+def test_geometry_breaks_ties_when_the_task_does_not_examine_it():
+    rule = zinv.Matching.from_options({"examine_shape": False})
+    left = zinv.ShapeKey(("pic", 13, ""), (0, 0, 10, 10), (0, 0, 10, 10))
+    right = zinv.ShapeKey(("pic", 13, ""), (10**7, 0, 10, 10), (10**7, 0, 10**7 + 10, 10))
+    assert zinv.align_order([right, left], [left, right], rule) == [1, 0]
+    moved = zinv.ShapeKey(
+        ("pic", 13, ""), (5 * 10**6, 0, 10, 10), (5 * 10**6, 0, 5 * 10**6 + 10, 10)
+    )
+    assert zinv.align_order([moved, left], [left, right], rule) == [1, 0]
+
+
+def test_other_geometry_options_count_as_examining_geometry():
+    rule = zinv.Matching.from_options({"examine_shape": False, "examine_modify_height": True})
+    assert rule.geometry is True
+
+
+def test_empty_and_absent_text_are_the_same_text(tmp_path):
+    ref = deck(tmp_path / "ref.pptx", [("", 1 * CM, 1 * CM, 2 * CM, 2 * CM), B])
+    agent = deck(tmp_path / "agent.pptx", [B, ("", 1 * CM, 1 * CM, 2 * CM, 2 * CM)])
+    prs = pptx.Presentation(agent)
+    assert zinv.shape_key(prs.slides[0].shapes[1]).signature[2] == ""
+    assert zinv.aligned_deck(str(agent), str(ref)) is not None
+
+
+def test_approximate_equality_is_the_comparators():
+    assert zinv.approximately_equal(1000, 1004) and not zinv.approximately_equal(1000, 1006)
+    assert zinv.approximately_equal(0, 0) and not zinv.approximately_equal(0, 1)
+
+
+def test_placeholder_without_its_own_frame_never_moves(tmp_path):
+    prs = pptx.Presentation()
+    slide = prs.slides.add_slide(prs.slide_layouts[0])  # title placeholder inherits its frame
+    title = slide.shapes.title
+    assert zinv.shape_box(title._element) is None
+    key = zinv.shape_key(title)
+    other = zinv.ShapeKey(signature=("sp", 1, "x"), geometry=(0, 0, 1, 1), box=(0, 0, 1, 1))
+    assert not zinv.apart(key, other)
+
+
+def test_align_order_keeps_identical_shapes_in_order():
+    k = zinv.ShapeKey(signature=("sp", 1, "same"), geometry=(0, 0, 10, 10), box=(0, 0, 10, 10))
+    far = zinv.ShapeKey(
+        signature=("sp", 1, "far"), geometry=(10**7, 0, 10, 10), box=(10**7, 0, 10**7 + 10, 10)
+    )
+    assert zinv.align_order([k, k, far], [k, k, far]) == [0, 1, 2]
+    assert zinv.align_order([far, k], [k, far]) == [1, 0]
+    assert zinv.align_order([k], [k, far]) is None
+
+
+def test_none_paths_pass_through():
+    seen = []
+    zinv.compare_pptx_files_zinv(None, "ref", _original=lambda *a, **k: seen.append(a))
+    assert seen == [(None, "ref")]
+
+
+def test_install_replaces_only_the_metrics_namespace_entry():
+    def original(*a, **k):
+        return "orig"
+
+    slides = types.SimpleNamespace(compare_pptx_files=original)
+
+    def tolerant(f1, f2, **options):
+        return slides.compare_pptx_files(f1, f2, **options)
+
+    metrics = types.SimpleNamespace(
+        compare_pptx_files=original, compare_pptx_files_tolerant=tolerant
+    )
+    assert zinv.install(metrics) is original
+    assert metrics.compare_pptx_files is zinv.compare_pptx_files_zinv
+    assert metrics.compare_pptx_files_tolerant("a", "b") == "orig"  # not corrected
+
+
+def test_clearance_matches_the_mutation_operator():
+    from harness.q2_mutation.operators import pptx as operator
+
+    assert zinv.CLEARANCE_EMU == operator.CLEARANCE_EMU
