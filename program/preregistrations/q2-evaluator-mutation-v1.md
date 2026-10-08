@@ -1,8 +1,9 @@
 # q2-evaluator-mutation-v1: OSWorld-Verified checker mutation audit
 
-**Status: DRAFT (ninth draft, with its narrow re-check's minor items
-fixed), not frozen: a pre-specified descriptive
-protocol under decisions D35 and D38.** Every pin below is filled from the integration
+**Status: frozen in `program/preregistrations/ledger.jsonl`; see the ledger
+row for the freeze time and `git_head_at_freeze`. A pre-specified descriptive
+protocol under decisions D35 and D38 (ninth draft, with its narrow re-check's
+minor items fixed).** Every pin below is filled from the integration
 branch `stage0/q2-evaluator-mutation`, and no value is left open. Six
 adversarial reviews have read the earlier drafts (scores 55, 62, 56, 57, 64 and
 80), and a narrow re-check read this one (90, no blocking defect; the review
@@ -140,8 +141,11 @@ from earlier drafts.
 
 The registered analysis is code (`harness/q2_mutation/analysis.py`), so no
 choice is left to make after a result is read. The narrow re-check of this
-draft found no blocking defect; after Kevin's sign-offs (section 17), merge
-main once more (so the ledger does not fork) and freeze with
+draft found no blocking defect. The owner-level design choices were decided
+on Kevin's behalf in decisions D23-D38, which he reviews (section 17); the
+items that stay his (adjudicating the pool, the human spot check, the outward
+actions, the release of the specs) come after the freeze. Main was merged once
+more, so the ledger does not fork, and the file is frozen with
 
 ```bash
 uv run python scripts/preregister.py freeze q2-evaluator-mutation-v1 \
