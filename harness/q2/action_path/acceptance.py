@@ -21,16 +21,25 @@ Rules that apply to every criterion:
   included (section 6.1); a session whose ``DesktopEnv.reset`` observation was not
   delivered charges its first trial (``reset_observation``, an infrastructure type and a
   reason of that trial); an entry is PASS only at k of k repetitions, and an entry that
-  is PASS in one observation setting and not the other fails (section 5). One exception,
-  A4's count (decision D30): a trial whose only failure is a guest-server restart is
-  reported and not counted (``restart_only``);
+  is PASS in one observation setting and not the other fails (section 5). One exception
+  (decisions D30 and D33): in A1-A4 and the concurrency ladder a trial whose only
+  failure is a guest-server restart during an observation call, with the tree it left
+  undelivered, is excused: reported and not counted (``restart_only``). A1-A3 judge an
+  entry on its counted repetitions and fail it on a second excused trial in that entry,
+  over both observation settings and every attempt (A1: both seeds; ``RESTART_LIMIT``);
+  a ladder rung with more than two excused trials does not qualify; A4 has no such
+  limit;
 * the observation service has its own bound (A7, decision D30): guest-server restarts
   per ``/accessibility`` call, judged on the exact one-sided 95% Poisson upper bound,
-  with the restarts of every attempt and the calls of the counting attempts only;
+  with the restarts of every attempt and the calls of the counting attempts only, capped
+  at the plan's 39,036 calls (decision D33);
 * reruns (section 6.1): a campaign may be rerun once, as a new attempt with a new
   output path, and only when the earlier attempt did not count (a ladder rung also when
   it aborted on foreign load); every trial of every attempt is reported, and a failed
-  trial in an earlier attempt counts against the criterion (an aborted rung's do not);
+  trial in an earlier attempt counts against the criterion exactly as if that attempt
+  had counted: on the cells the criterion judges, less the trials it excuses (an aborted
+  rung's do not count at all); excused trials count toward A1-A3's and the ladder's
+  limits over every attempt, so a rerun never resets them;
 * the trials a criterion runs must be exactly the realized order its manifest
   declares (``order.plan`` or ``volume.sessions``), so a campaign cut short cannot pass,
   and every campaign of a criterion runs one source tree (git SHA, tree digest and
@@ -79,19 +88,30 @@ BATCH_END = re.compile(r"^driver_exit=(\d+) labelled_containers_left=(\d+)$", re
 C2_EXCUSED = ("marker ",)
 C2_RDEV = "R-dev projection differs"
 STATE_BITS = (("Shift", 1), ("Control", 4), ("Mod1", 8), ("Mod4", 64))
-# Decision D30. A4 does not count a trial whose only failure is a guest-server restart
-# (with the accessibility tree that restart left undelivered); A7 bounds the restarts per
-# /accessibility call at OBSERVATION_BOUND, judged on the exact one-sided upper bound at
-# level 1 - OBSERVATION_ALPHA. The development rate (one restart in 8,114 calls, runs
-# 484-622) is reported with A4 and A7 with its exact two-sided 95% interval.
+# Decisions D30 and D33. A1-A4 and the ladder do not count a trial whose only failure is a
+# guest-server restart (with the accessibility tree that restart left undelivered); A7
+# bounds the restarts per /accessibility call at OBSERVATION_BOUND, judged on the exact
+# one-sided upper bound at level 1 - OBSERVATION_ALPHA. The development rate (one restart
+# in 8,114 calls, runs 484-622) is reported with A4 and A7 with its exact two-sided 95%
+# interval.
 RESTART = "guest_server_restart"
 RESET = "reset_observation"
 # The infrastructure types a restart excuses: a restart during the entry excuses itself
 # and the tree it left undelivered; a restart across the session's reset observation
 # (``reset_restart``) excuses that observation when its tree alone was not delivered.
 RESTART_EXCUSED = (RESTART, "accessibility")
+# Decision D33: an A1-A3 entry may lose at most one of its repetitions (both observation
+# settings, every attempt; in A1 both seeds) to an excused trial (a second one fails the
+# entry: ``RESTART_LIMIT``, never FLAKY), and a ladder rung at most two trials in all (a
+# third leaves the rung unqualified).
+MAX_EXCUSED_PER_ENTRY = 1
+MAX_EXCUSED_PER_RUNG = 2
+RESTART_LIMIT = "RESTART_LIMIT"
 OBSERVATION_BOUND = 5e-4
 OBSERVATION_ALPHA = 0.05
+# Section 7, A7: the plan's accessibility calls (516 reset observations and 38,520 step
+# observations); A7's n is the counting attempts' calls capped here (decision D33).
+OBSERVATION_PLAN_CALLS = 39036
 DEVELOPMENT_RESTARTS, DEVELOPMENT_CALLS = 1, 8114
 
 
@@ -312,27 +332,34 @@ def counting_problems(campaign: dict[str, Any]) -> list[str]:
 
 
 def failed_trials(
-    campaign: dict[str, Any], excused: Callable[[dict[str, Any]], bool] | None = None
+    campaign: dict[str, Any],
+    excused: Callable[[dict[str, Any]], bool] | None = None,
+    judged: set[str] | None = None,
 ) -> list[tuple[str, int, str]]:
-    """(setting, seq, cell) of every failed trial, less those ``excused`` (A4's restarts)."""
+    """(setting, seq, cell) of every failed trial, less those ``excused`` (restart-only
+    trials, decisions D30 and D33), on the cells in ``judged`` (every cell when None)."""
     return [
         (session["setting"], trial["seq"], trial["cell"])
         for session in campaign["sessions"]
         for trial in session["trials"]
-        if not trial["pass"] and not (excused and excused(trial))
+        if not trial["pass"]
+        and not (excused and excused(trial))
+        and (judged is None or trial["cell"] in judged)
     ]
 
 
 def restart_only(trial: dict[str, Any]) -> bool:
-    """Decision D30: a failed trial whose only failure is a guest-server restart.
+    """Decisions D30 and D33: a failed trial whose only failure is a guest-server restart.
 
     Either a restart during the entry (``guest_server_restart``) with, at most, an
     ``/accessibility`` failure (the tree the restart left undelivered), or, for a session's
     first trial, a restart across the reset observation that left only its tree
-    undelivered (``reset_restart``), or both. A4 reports such a trial and does not count it;
-    any other reason in the same trial (an event, text, marker or guard difference, or an
-    infrastructure failure of any other type, an undelivered reset screenshot included)
-    counts as usual. Both the infrastructure types and the reasons are checked.
+    undelivered (``reset_restart``), or both. A1-A4 and the ladder report such a trial and
+    do not count it (it is excused); any other reason in the same trial (an event, text,
+    marker or guard difference, or an infrastructure failure of any other type: an
+    ``execute`` or ``guard_script`` failure from a restart during ``/execute`` or a guard,
+    or an undelivered reset screenshot) counts as usual. Both the infrastructure types and
+    the reasons are checked.
     """
     if trial["pass"]:
         return False
@@ -356,14 +383,18 @@ def campaign_problems(
     rerun_allowed: Callable[[dict[str, Any]], bool] | None = None,
     earlier_failures_count: Callable[[dict[str, Any]], bool] | None = None,
     excused: Callable[[dict[str, Any]], bool] | None = None,
+    judged: set[str] | None = None,
 ) -> list[str]:
     """Why a campaign cannot count at all (empty when it can), its reruns included.
 
     Section 6.1: at most ``MAX_ATTEMPTS`` attempts; an earlier attempt may be rerun only
     when it did not count (``rerun_allowed``; the ladder also admits a foreign-load
-    abort), and its failed trials count against the criterion unless
-    ``earlier_failures_count`` says otherwise (an aborted rung's do not) or the criterion
-    ``excused`` them (A4's restart-only trials).
+    abort), and its failed trials count against the criterion exactly as if it had
+    counted: unless ``earlier_failures_count`` says otherwise (an aborted rung's do not),
+    the criterion ``excused`` them (restart-only trials in A1-A4 and the ladder) or they
+    are on cells the criterion does not judge (``judged``: G for A1 and the ladder, the
+    in-spec cells for A2; every cell when None). Excused trials of every attempt count
+    toward A1-A3's and the ladder's limits; those are checked by the criterion.
     """
     rerun_allowed = rerun_allowed or (lambda prev: bool(counting_problems(prev)))
     earlier_failures_count = earlier_failures_count or (lambda prev: True)
@@ -376,7 +407,7 @@ def campaign_problems(
             out.append(
                 f"job {campaign['job']}: earlier attempt {previous['job']} counted and was rerun"
             )
-        failed = failed_trials(previous, excused)
+        failed = failed_trials(previous, excused, judged)
         if failed and earlier_failures_count(previous):
             out.append(
                 f"job {campaign['job']}: earlier attempt {previous['job']} has "
@@ -413,24 +444,81 @@ def expected(sessions: list[dict[str, Any]]) -> list[tuple[str, int, str]]:
     return [(s["setting"], seq, cell) for s in sessions for seq, cell in s["trials"]]
 
 
-def outcomes(campaigns: Iterable[dict[str, Any]]) -> dict[str, dict[str, list[bool]]]:
-    """cell -> setting -> pass flags, over every trial of the campaigns."""
+def outcomes(
+    campaigns: Iterable[dict[str, Any]],
+    excused: Callable[[dict[str, Any]], bool] | None = None,
+) -> dict[str, dict[str, list[bool]]]:
+    """cell -> setting -> pass flags of the counted trials of the campaigns: every trial,
+    less those ``excused`` (restart-only trials in A1-A3 and the ladder, decision D33)."""
     out: dict[str, dict[str, list[bool]]] = {}
     for campaign in campaigns:
         for session in campaign["sessions"]:
             for trial in session["trials"]:
+                if excused and excused(trial):
+                    continue
                 out.setdefault(trial["cell"], {}).setdefault(session["setting"], []).append(
                     trial["pass"]
                 )
     return out
 
 
-def entry_status(flags_by_setting: dict[str, list[bool]]) -> str:
-    """PASS only when every repetition in every setting passed; FAIL when none did."""
+def every_attempt(campaigns: Iterable[dict[str, Any]]) -> list[dict[str, Any]]:
+    """Every attempt of the campaigns, earlier ones first (section 6.1)."""
+    return [a for c in campaigns for a in [*(c.get("earlier") or []), c]]
+
+
+def excused_trials(
+    campaigns: Iterable[dict[str, Any]],
+    excused: Callable[[dict[str, Any]], bool] | None = None,
+) -> dict[str, int]:
+    """cell -> number of excused (restart-only) trials in the given attempts, over both
+    observation settings."""
+    excused = excused or restart_only
+    out: dict[str, int] = {}
+    for campaign in campaigns:
+        for session in campaign["sessions"]:
+            for trial in session["trials"]:
+                if excused(trial):
+                    out[trial["cell"]] = out.get(trial["cell"], 0) + 1
+    return out
+
+
+def _excused_total(campaigns: Iterable[dict[str, Any]]) -> int:
+    return sum(excused_trials(campaigns).values())
+
+
+def entry_status(flags_by_setting: dict[str, list[bool]], excused: int = 0) -> str:
+    """Section 5 over an entry's counted repetitions.
+
+    PASS only when every counted repetition in every setting passed; FLAKY when they are
+    mixed; FAIL when none passed. Excused trials (``excused``: the entry's restart-only
+    trials, left out of ``flags_by_setting``, over both settings and every attempt;
+    decision D33) never make an entry FLAKY or FAIL; an entry with more than
+    ``MAX_EXCUSED_PER_ENTRY`` of them (D33: "a second excused trial in one entry counts as
+    a failure"), or with no counted repetition at all, is ``RESTART_LIMIT``, a failure of
+    the entry.
+    """
     flags = [f for values in flags_by_setting.values() for f in values]
-    if flags and all(flags):
-        return "PASS"
-    return "FAIL" if not any(flags) else "FLAKY"
+    if flags and not all(flags):
+        return "FLAKY" if any(flags) else "FAIL"
+    if excused > MAX_EXCUSED_PER_ENTRY or (not flags and excused):
+        return RESTART_LIMIT
+    return "PASS" if flags else "FAIL"
+
+
+def entry_table(
+    campaigns: list[dict[str, Any]], excused: dict[str, int] | None = None
+) -> dict[str, str]:
+    """A1-A3 (decision D33): each entry judged on the counted repetitions of the counting
+    attempts, with its excused trials counted over every attempt (a rerun never resets
+    them; section 6.1). ``excused`` gives those counts when they are pooled over more than
+    these campaigns (A1: both seeds' shuffles); by default they are these campaigns'."""
+    flags = outcomes(campaigns, restart_only)
+    dropped = excused_trials(every_attempt(campaigns)) if excused is None else excused
+    return {
+        cell: entry_status(flags.get(cell, {}), dropped.get(cell, 0))
+        for cell in sorted(set(flags) | set(dropped))
+    }
 
 
 def _gating() -> set[str]:
@@ -463,74 +551,106 @@ def _layer_ids(layer: str) -> list[str]:
 # --- A1-A6 ------------------------------------------------------------------------------------
 
 
+def _judge_entries(
+    campaigns: list[dict[str, Any]],
+    judged: set[str],
+    what: str,
+    problems: list[str],
+    excused: dict[str, int] | None = None,
+) -> tuple[dict[str, str], dict[str, Any]]:
+    """A1-A3's shared rules (section 5, decisions D30 and D33) over one seed's (A1) or one
+    layer's (A2, A3) campaigns: which count, each entry's status on its counted
+    repetitions, the judged entries not PASS, and the restart report.
+
+    A restart-only trial is excused: left out of its entry's k of k and listed in the
+    restart report. A second excused trial in one entry, over both observation settings
+    and every attempt (and, for A1, both seeds' shuffles: ``excused``), fails the entry
+    (``RESTART_LIMIT``). An earlier attempt's failed trials count on the judged cells,
+    less its excused ones (section 6.1).
+    """
+    for c in campaigns:
+        problems += campaign_problems(c, excused=restart_only, judged=judged)
+    status = entry_table(campaigns, excused)
+    failing = sorted(cell for cell in judged if status.get(cell) != "PASS")
+    if failing:
+        problems.append(f"{what} not PASS: {failing}")
+    limit = sorted(cell for cell in judged if status.get(cell) == RESTART_LIMIT)
+    report = _restart_report(campaigns)
+    report["excused_trials"] = _excused_total(every_attempt(campaigns))
+    report["entries_over_restart_limit"] = limit
+    return status, report
+
+
 def a1(by_seed: dict[int, list[dict[str, Any]]]) -> dict[str, Any]:
-    """L0-fixed passes 100% of G at 5 repetitions, seeds 43 and 44, both settings, N = 1."""
+    """L0-fixed passes 100% of G at 5 repetitions, seeds 43 and 44, both settings, N = 1.
+
+    Each gating entry is judged per seed on its counted repetitions (decision D33); its
+    excused trials are counted over both seeds' shuffles, so an entry loses at most one of
+    its 20 repetitions in A1 to a restart.
+    """
     problems: list[str] = []
     gating = _gating()
     ids = _layer_ids("L0-fixed")
-    table = {}
+    pooled = excused_trials(every_attempt(c for seed in (43, 44) for c in by_seed.get(seed) or []))
+    table, reports = {}, {}
     for seed in (43, 44):
         campaigns = by_seed.get(seed) or []
         if not campaigns:
             problems.append(f"no seed-{seed} campaign")
             continue
         for c in campaigns:
-            problems += campaign_problems(c)
             if c["manifest"]["vm"]["concurrency"] != 1:
                 problems.append(f"job {c['job']}: A1 runs at N = 1")
         plan = order.plan(ids, seed, 5, list(SETTINGS), acceptance=True)
         problems += _check_plan(campaigns, expected(plan), f"A1 seed {seed}")
-        status = {cell: entry_status(v) for cell, v in outcomes(campaigns).items()}
-        table[seed] = status
-        failing = sorted(cell for cell in gating if status.get(cell) != "PASS")
-        if failing:
-            problems.append(f"seed {seed}: gating entries not PASS: {failing}")
-    return _verdict(problems, {"entries": table})
+        table[seed], reports[seed] = _judge_entries(
+            campaigns, gating, f"seed {seed}: gating entries", problems, pooled
+        )
+    return _verdict(problems, {"entries": table, "guest_server": reports})
 
 
 def a2(by_layer: dict[str, list[dict[str, Any]]]) -> dict[str, Any]:
-    """Each Stage-1 harness passes its gating and declared cells, 5 repetitions, both settings."""
+    """Each Stage-1 harness passes its gating and declared cells, 5 repetitions, both settings.
+
+    Each in-spec cell is judged on its counted repetitions per layer (decision D33).
+    """
     problems: list[str] = []
     cells = _cells()
-    table = {}
+    table, reports = {}, {}
     for layer in ("H-OSW-fixed", "H-GA"):
         campaigns = by_layer.get(layer) or []
         if not campaigns:
             problems.append(f"no {layer} campaign")
             continue
-        for c in campaigns:
-            problems += campaign_problems(c)
         plan = order.plan(_layer_ids(layer), 43, 5, list(SETTINGS), acceptance=True)
         problems += _check_plan(campaigns, expected(plan), f"A2 {layer}")
-        status = {cell: entry_status(v) for cell, v in outcomes(campaigns).items()}
-        table[layer] = status
-        scored = [c["id"] for c in cells["layers"][layer] if c["status"] in ("gating", "declared")]
-        failing = sorted(cell for cell in scored if status.get(cell) != "PASS")
-        if failing:
-            problems.append(f"{layer}: in-spec cells not PASS: {failing}")
-    return _verdict(problems, {"cells": table})
+        scored = {c["id"] for c in cells["layers"][layer] if c["status"] in ("gating", "declared")}
+        table[layer], reports[layer] = _judge_entries(
+            campaigns, scored, f"{layer}: in-spec cells", problems
+        )
+    return _verdict(problems, {"cells": table, "guest_server": reports})
 
 
 def a3(by_layer: dict[str, list[dict[str, Any]]]) -> dict[str, Any]:
-    """30 stress entries, 60 repetitions (30 per setting), zero failures, on each layer."""
+    """30 stress entries, 60 repetitions (30 per setting), zero failures, on each layer.
+
+    Zero failures among the counted trials; each entry judged on its counted repetitions
+    per layer (decision D33).
+    """
     problems: list[str] = []
-    table = {}
+    table, reports = {}, {}
     for layer in ("L0-fixed", "H-OSW-fixed", "H-GA"):
         campaigns = by_layer.get(layer) or []
         if not campaigns:
             problems.append(f"no {layer} campaign")
             continue
-        for c in campaigns:
-            problems += campaign_problems(c)
         ids = [i for i in _layer_ids(layer) if i in order.STRESS_ENTRIES]
         plan = order.plan(ids, 43, 30, list(SETTINGS), acceptance=True)
         problems += _check_plan(campaigns, expected(plan), f"A3 {layer}")
-        status = {cell: entry_status(v) for cell, v in outcomes(campaigns).items()}
-        table[layer] = status
-        failing = sorted(cell for cell, s in status.items() if s != "PASS")
-        if failing:
-            problems.append(f"{layer}: stress entries with a failure: {failing}")
-    return _verdict(problems, {"entries": table})
+        table[layer], reports[layer] = _judge_entries(
+            campaigns, set(ids), f"{layer}: stress entries", problems
+        )
+    return _verdict(problems, {"entries": table, "guest_server": reports})
 
 
 def _restart_report(campaigns: list[dict[str, Any]]) -> dict[str, Any]:
@@ -538,13 +658,15 @@ def _restart_report(campaigns: list[dict[str, Any]]) -> dict[str, Any]:
 
     Section 12: each trial a restart hit, with its job, session (``cycle``), whether the
     restart came during the entry or across the reset observation, its reasons and
-    whether A4's rule counts it; and every session whose restart count exceeds the
-    restarts attributed to its trials (a restart that hit no trial: during the session's
-    start, or between entries when the next pre guard already met the new server).
-    ``accessibility_calls`` is over every attempt; ``accessibility_calls_counting`` over
-    the counting attempts only (A7's denominator).
+    whether it counts (``counted`` is false for an excused, restart-only trial: A1-A4 and
+    the ladder leave it out, decisions D30 and D33; A7 judges no trial); and every session
+    whose restart count exceeds the restarts attributed to its trials (a restart that hit
+    no trial: during the session's start, or between entries when the next pre guard
+    already met the new server). ``accessibility_calls`` is over every attempt;
+    ``accessibility_calls_counting`` over the counting attempts only (A7's denominator,
+    before its cap).
     """
-    every = [a for c in campaigns for a in [*c.get("earlier", []), c]]
+    every = every_attempt(campaigns)
     hit, unattributed = [], []
     for a in every:
         for s in a["sessions"]:
@@ -608,7 +730,8 @@ def a4(campaigns: list[dict[str, Any]], n_star: int) -> dict[str, Any]:
     count toward the class bounds: the action path was judged on that trial and showed no
     difference. A restart outside an observation call (during ``/execute`` or a guard), or
     one slower than ``DesktopEnv``'s retries, leaves another failure in the trial it hits,
-    and that trial counts (design decision 40).
+    and that trial counts (design decision 40). Unlike A1-A3 and the ladder (decision D33),
+    A4 sets no limit on excused trials: A7 bounds the restarts themselves.
     """
     from harness.q2.action_path import volume
 
@@ -724,6 +847,25 @@ def observation_plan() -> list[dict[str, Any]]:
     return order.plan(gating, 43, OBSERVATION_REPS, ["screenshot+a11y"], acceptance=True)
 
 
+def observation_plan_calls() -> int:
+    """The accessibility calls A7's plan makes: one per session (the reset observation) and
+    one per executed action of each trial (``OBSERVATION_PLAN_CALLS``, section 7)."""
+    cells = {c["id"]: c for c in _cells()["layers"]["L0-fixed"]}
+
+    def steps(actions: list[dict[str, Any]]) -> int:
+        count = 0
+        for action in actions:
+            if action["op"] == "terminate":
+                break
+            count += 1
+        return count
+
+    plan = observation_plan()
+    return len(plan) + sum(
+        steps(cells[cell]["actions"]) for session in plan for _, cell in session["trials"]
+    )
+
+
 def a7(campaigns: list[dict[str, Any]], n_star: int) -> dict[str, Any]:
     """Guest-server restarts per accessibility call: exact 95% upper bound <= 5 x 10^-4.
 
@@ -735,7 +877,9 @@ def a7(campaigns: list[dict[str, Any]], n_star: int) -> dict[str, Any]:
     attempt that did not count keeps its restarts); the calls n only over the counting
     attempts, so an attempt that was cancelled or did not count adds its restarts and not
     its calls, and stopping a run and rerunning it can never raise A7's chance of passing.
-    Trial verdicts are reported, not judged: A1-A4 judge the action path.
+    n is capped at the plan's ``OBSERVATION_PLAN_CALLS`` (decision D33), so no record can
+    divide by more calls than the plan makes. Trial verdicts are reported, not judged:
+    A1-A4 judge the action path.
     """
     problems: list[str] = []
     full = observation_plan()
@@ -749,13 +893,14 @@ def a7(campaigns: list[dict[str, Any]], n_star: int) -> dict[str, Any]:
     ordered = _tiled(campaigns, len(full), "A7", problems)
     problems += _check_plan(ordered, expected(full), "A7")
     report = _restart_report(campaigns)
-    restarts, calls = report["restarts"], report["accessibility_calls_counting"]
+    restarts = report["restarts"]
+    calls = min(report["accessibility_calls_counting"], OBSERVATION_PLAN_CALLS)
     upper = poisson_upper(restarts) / calls if calls else None
     counting = [s for c in campaigns for s in c["sessions"]]
     # Reported, not judged: two development faults cannot show whether restarts cluster at
     # a session's start, which a per-call bound would hide (section 9). Same rule: the
     # restarts of every attempt over the sessions of the counting attempts.
-    every = [s for c in campaigns for a in [*c.get("earlier", []), c] for s in a["sessions"]]
+    every = [s for a in every_attempt(campaigns) for s in a["sessions"]]
     per_session = {
         "sessions": len(counting),
         "sessions_with_restart": sum(1 for s in every if s.get("restarts")),
@@ -772,7 +917,9 @@ def a7(campaigns: list[dict[str, Any]], n_star: int) -> dict[str, Any]:
         {
             "restarts": restarts,
             "accessibility_calls": calls,
+            "accessibility_calls_counting": report["accessibility_calls_counting"],
             "accessibility_calls_every_attempt": report["accessibility_calls"],
+            "plan_calls": OBSERVATION_PLAN_CALLS,
             "rate": restarts / calls if calls else None,
             "upper_95": upper,
             "bound": OBSERVATION_BOUND,
@@ -1116,20 +1263,32 @@ def foreign_abort(campaign: dict[str, Any]) -> list[str]:
 
 
 def rung(campaigns: list[dict[str, Any]], step_p95_n1: float) -> dict[str, Any]:
-    """Whether one ladder rung qualifies (section 9), with its measurements."""
+    """Whether one ladder rung qualifies (section 9), with its measurements.
+
+    Decision D33: "every gating trial passes" reads over the rung's counted gating trials
+    (a restart-only trial is excused and listed in the restart report), and a rung with
+    more than ``MAX_EXCUSED_PER_RUNG`` excused trials, gating or not, over its attempts
+    (an aborted attempt aside, section 9) does not qualify. Excused trials' steps stay in
+    the step p95, and the foreign-load abort is unchanged.
+    """
     from harness.q2.vm.manifest import ladder_reps
 
     problems: list[str] = []
     n = campaigns[0]["manifest"]["vm"]["concurrency"]
+    gating = _gating()
 
     def rerun_allowed(previous: dict[str, Any]) -> bool:
         # Section 9: an aborted rung (or one that did not count) is rerun once.
         return bool(counting_problems(previous)) or bool(foreign_abort(previous))
 
+    def not_aborted(previous: dict[str, Any]) -> bool:
+        # Section 9: an aborted attempt's trials are reported and never counted.
+        return not foreign_abort(previous)
+
     earlier = []
     for c in campaigns:
         problems += campaign_problems(
-            c, rerun_allowed, earlier_failures_count=lambda prev: not foreign_abort(prev)
+            c, rerun_allowed, not_aborted, excused=restart_only, judged=gating
         )
         if c["manifest"]["vm"]["concurrency"] != n:
             problems.append("a rung's campaigns run at one concurrency")
@@ -1139,12 +1298,14 @@ def rung(campaigns: list[dict[str, Any]], step_p95_n1: float) -> dict[str, Any]:
                     "job": previous["job"],
                     "abort_reasons": foreign_abort(previous),
                     "failed_trials": len(failed_trials(previous)),
+                    "excused_trials": _excused_total([previous]),
                 }
             )
     aborts = sorted({r for c in campaigns for r in foreign_abort(c)})
     plan = order.plan(_layer_ids("L0-fixed"), 43, ladder_reps(n), list(SETTINGS), acceptance=True)
     problems += _check_plan(campaigns, expected(plan), f"rung N={n}")
     boots = [s["boot_s"] for c in campaigns for s in c["sessions"] if s["boot_s"] is not None]
+    # Every trial's steps, excused ones included (decision D33).
     steps = [x for c in campaigns for s in c["sessions"] for t in s["trials"] for x in t["steps_s"]]
     boot_p95, step_p95 = quantile(boots, 0.95), quantile(steps, 0.95)
     if len(boots) < MIN_RUNG_BOOTS:
@@ -1153,11 +1314,14 @@ def rung(campaigns: list[dict[str, Any]], step_p95_n1: float) -> dict[str, Any]:
         problems.append(f"boot p95 {boot_p95} s > {BOOT_P95_MAX_S} s")
     if step_p95 is None or step_p95 > STEP_P95_FACTOR * step_p95_n1:
         problems.append(f"step p95 {step_p95} s > {STEP_P95_FACTOR} x {step_p95_n1} s")
-    gating = _gating()
-    status = {cell: entry_status(v) for cell, v in outcomes(campaigns).items()}
+    status = {cell: entry_status(v) for cell, v in outcomes(campaigns, restart_only).items()}
     failing = sorted(cell for cell in gating if status.get(cell) != "PASS")
     if failing:
         problems.append(f"gating entries not PASS: {failing}")
+    counted_earlier = [p for c in campaigns for p in c.get("earlier") or [] if not_aborted(p)]
+    excused = _excused_total([*counted_earlier, *campaigns])
+    if excused > MAX_EXCUSED_PER_RUNG:
+        problems.append(f"{excused} excused trials (at most {MAX_EXCUSED_PER_RUNG})")
     return {
         "n": n,
         "aborted": bool(aborts),
@@ -1167,12 +1331,17 @@ def rung(campaigns: list[dict[str, Any]], step_p95_n1: float) -> dict[str, Any]:
         "boots": len(boots),
         "boot_p95_s": boot_p95,
         "step_p95_s": step_p95,
+        "excused_trials": excused,
+        "guest_server": _restart_report(campaigns),
         "earlier_attempts": earlier,
     }
 
 
 def n_star(a1_campaigns: list[dict[str, Any]], rungs: dict[int, list[dict[str, Any]]]) -> dict:
-    """N*: the largest rung that qualifies; 1 when none does (A1 gates N = 1 itself)."""
+    """N*: the largest rung that qualifies; 1 when none does (A1 gates N = 1 itself).
+
+    A1's step p95 pools every trial's steps, excused ones included (decision D33).
+    """
     steps = [
         x for c in a1_campaigns for s in c["sessions"] for t in s["trials"] for x in t["steps_s"]
     ]
