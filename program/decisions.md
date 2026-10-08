@@ -306,3 +306,109 @@ otherwise it waits on the gauntlet (D24). D14's audit policy stays as
 registered: the TF32 convolution tolerance above 1 on two pilot problems is
 reported as a limitation, and any audit change follows D28's data-motivated
 rule.
+
+**D32. Q3 dense pre-check design decisions: accepted, four amended.** The
+second fresh pre-freeze audit of `q3-dense-headroom-precheck-v1`
+(`program/evidence/2026-10-07/q3-dense-headroom-precheck/prefreeze-audit-2.json`)
+found one blocker (the status line would have been frozen as a draft) and
+recommended four amendments. Decisions 2-9, 11, 14 and 15 are accepted as
+drafted, including decision 5's explicit H2 relaxation: H2 gates a lane only
+on FAIL, and any K1 v3 re-tests H2 under K1's bounds whenever the chosen
+base's H2 is not PASS. Amended: 1, both lanes run unless the 0.6B smoke
+reproduction fails, and the 4B lane never depends on the 0.6B headroom; 10,
+the floor's condition (c) passes only on a V1-adequate sigma whose seed-mean
+English ML loss is at least 2.5 points, the same reach rule as decision 8;
+12, every job, the first included, takes an exclusive filler claim, each
+filled manifest is submitted once, the summariser voids a lane with an
+unclaimed or over-claim job, the effective window is the limit minus the
+3-minute USR1 lead, and the smallest grant leaves 2 useful minutes; 13, only
+Triton's cache moves to the run directory. The status line is rewritten
+before the freeze.
+
+**D33. Action-path restarts: D30's exclusion extends to A1-A3 and the ladder.**
+A1-A3 and the ladder certify the action path, as A4 does. A guest-server
+restart during an observation call is an observation-service fault, and A7
+now bounds it on its own. Under the strict rule, one such restart (about 87%
+likely across A1-A3 and the ladder at the development rate) would fail the
+suite for a construct those criteria do not measure. So the narrow
+restart-only rule of D30 applies to them too: a trial whose only failures
+are a guest-server restart during an observation call and the accessibility
+tree that restart left undelivered is excused and reported; any other failure
+in that trial counts. A restart during an action (`/execute`) or a guard
+still counts, because the same server delivers actions. An A1-A3 entry is
+judged on its counted repetitions and needs all but at most one of its
+repetitions counted: a second excused trial in one entry counts as a failure.
+A ladder rung's "every gating trial passes" reads over its counted gating
+trials, and a rung with more than two excused trials does not qualify.
+Excused trials' steps stay in the step p95. Also decided before the freeze,
+from the review of `13c6790`: A7 sums restarts over every attempt but takes
+its call count from the counting attempt only, capped at the plan's 39,036
+calls, so cancelling and rerunning cannot raise its pass chance; A7 runs
+under attempt 1 at that attempt's N* and is not re-judged when a later
+attempt changes N*; a restart during the reset observation is excused the
+same way; and the remaining exposure (restarts outside an observation call,
+or slower than DesktopEnv's retry window of about 10 s, still count, and a
+post-guard restart can cost two entries) is stated with A4 and accepted.
+
+**D34. Checker-mutation audit: D27's consequence fired; one rater retry,
+then an honest exit.** With the upgraded open-weight rater (Qwen3.6-35B-A3B,
+thinking off, job 702) and the isolated Claude rater (133 items, no voids),
+development kappa is 0.27 against the registered 0.6, and the fourth review
+(score 57) projects P(kappa >= 0.6) near 0 at confirm scale. The open-weight
+rater accepts 19 of 26 violation mutants, often answering one word. As D27
+requires, the design went back to review; the kappa rule and its consequence
+stay as registered. Decided: (i) the open-weight rater runs once more, with
+thinking on (max_tokens at least 4,096), one configuration only; the
+development audit is rebuilt and rerated by both raters under the isolated
+protocol, within D27's 0.5 GPU-h. If development kappa is still below 0.6, no
+other rater is tried: the predictions that need audited labels (P2-P5) leave
+the confirmatory headline before the confirm campaign runs, and the campaign
+reports P1 and the checker false-negative candidates descriptively. (ii) Gold
+defects: every task with an audited K3 item gets a gold sham; when a task's
+gold sham is decided reject, its equivalence items leave the equivalence K3
+group and are reported as gold defects; labels stay relative to the gold.
+(iii) Violation misses: concordant answers that contradict a K3 label join
+the blind adjudication pool, mixed with the splits and disclosed; new-file
+end states get a text-level difference in the packet; and
+`pptx.viol.delete_bound_shape` skips shapes whose frame lies mostly off the
+slide. (iv) Audit integrity: the registered transcript audit ties each
+transcript to its item (the prompt names it, the answer's item id matches,
+the packet was read) and the final-text fallback needs an exact answer
+token; opaque ids use a secret per-audit salt, committed as a hash and
+revealed after ingest; the rater prompt template is committed and
+registered; and the context the agent harness injects is disclosed in
+section 9. (v) The rater GPU cap is re-measured with thinking on and
+registered so the 807-item maximum fits; the experiment's total stays under
+8 GPU-h, or it goes to the gauntlet (D24). Adjudication of the pool stays
+Kevin's.
+
+**D35. Checker-mutation study: D34's exit fired; freeze it as a descriptive
+protocol.** Development kappa after the thinking-on rerate is 0.066 under
+the registered ingest and 0.575 with the workflow harness's relay turn
+excepted (a sensitivity: after a session restart the harness put a
+byte-identical relay of the session request before every resumed rater's
+task, and the registered first-prompt rule voided those 110 otherwise clean
+transcripts). Both are below 0.6, so D34 (i) applies: no other rater is
+tried, and P2-P5 leave the confirmatory headline; the registered 0.066 stays
+as recorded. The fifth review (score 64; scores 55, 62, 56, 57, 64) judged
+the study still worth running as a pre-specified descriptive protocol,
+because the catalog, blind labels, sampler and analysis can be locked before
+any confirm mutant exists. Decided: (i) the analysis code encodes the exit
+(P2-P5 always excluded from the confirmatory headline, K6's adequacy claim
+retired, K6b and K7 descriptive, K4 reported but no longer a stop); (ii) the
+descriptive outputs are pre-specified: P1 (replication only, as before), the
+checker false-negative candidates (evaluable should-pass mutants, equivalence
+outside probe cells and alternative solutions, that the checker fails) and
+false-positive candidates (evaluable should-fail mutants it passes), each
+listed with its audit decision, with per-family and per-operator counts and
+task-equal shares with intervals, and S1-S7; (iii) the confirm audit covers
+every candidate event, every P1 flip, the audit gates and the shams (a census
+of what is reported, not a random sample of all mutants), within the
+registered 3.0 GPU-h rater cap, and Kevin adjudicates its pool; (iv) the
+transcript audit checks every user turn: exactly one equals the rendered
+template, and the only other turn allowed is the harness relay frame, which
+must precede the task turn, be byte-identical across the run, name no item
+and be hashed into the receipt; every transcript of an item, interrupted ones
+included, is ingested and audited, and at most one may answer; (v) packets
+put the difference section before the file listings, a label-blind format
+change disclosed with the dev results it postdates.
