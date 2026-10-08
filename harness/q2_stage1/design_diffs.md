@@ -20,7 +20,6 @@ design decision 35 of action-path v2), so they are here. Upstream: H-OSW is OSWo
 | H-GA's context variants `(100,20,10)`, `(60,12,6)`, `(24,8,4)`, `(8,4,2)`, tried in order each turn | `agents.HGa.act` |
 | A turn with no action: H-OSW-fixed calls the model again on the same observation (`run_single_example` keeps `obs`); H-GA captures a fresh one (`env.step([])`) | `driver.Runner.loop` |
 | Step counting: one model turn is one step for both; `terminate` ends the episode; evaluation follows the 20 s settle | `driver.Runner.loop` |
-| Today's date in the system prompt (`datetime.today()`), recorded per episode (`date_line`) | `agents.HarnessClient` |
 
 ## Matched for both harnesses (registered runtime, sections 5.2-5.3)
 
@@ -33,6 +32,7 @@ design decision 35 of action-path v2), so they are here. Upstream: H-OSW is OSWo
 | Transport | PyAutoGUI strings through `DesktopEnv.step` | gym-anything's own action API | the certified IR through L0-fixed and `DesktopEnv.step` with `pause = 0.0` (`harness/q2/vm/desktop.py`), one IR action per step, a screenshot after each (as `DesktopEnv.step`); the last one is the next observation. H-GA upstream observes once after an action group |
 | `terminate(failure)` | `DONE` upstream (an own-spec bug, fixed in H-OSW-fixed) | reported in `metadata.status` | `FAIL` in OSWorld's action history for both, so `DesktopEnv.evaluate()` scores it 0, OSWorld's own convention; the checker's verdict on the state is still captured and rescored offline (`raw_state`) |
 | Guard warm-up | none | none | once per boot after setup (action-path v2 design decision 31) |
+| Date in the system prompt | today (`datetime.today()`) | today | pinned: `plan.PROMPT_DATE` (Thursday, October 08, 2026) for every A0a, A0b, ANC and A1 episode, through the lane manifest's `date` (`lane.validate_manifest` requires it); recorded per episode (`date_line`). The guest's own clock is not pinned |
 
 ## Classification (section 7.2)
 

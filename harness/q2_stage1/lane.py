@@ -154,6 +154,13 @@ def validate_manifest(raw: Mapping[str, Any], source_dir: Path) -> dict[str, Any
             if "{gpu_job_id}" in str(engine["bridge_dir"]):
                 _require(str(engine.get("gpu_job_id_file", "")).startswith(RUN_ROOT),
                          "engine.gpu_job_id_file is required with {gpu_job_id}")  # fmt: skip
+    from harness.q2_stage1.plan import PINNED_DATE_PURPOSES, PROMPT_DATE
+
+    if purpose in PINNED_DATE_PURPOSES:
+        pinned = f"date must be the pinned prompt date {PROMPT_DATE} (plan.PROMPT_DATE)"
+        _require(m.get("date") == PROMPT_DATE, pinned)
+    elif m.get("date") is not None:
+        _require(bool(re.fullmatch(r"\d{4}-\d{2}-\d{2}", str(m["date"]))), "date: YYYY-MM-DD")
     _require(m.get("step_cap", STEP_CAP) == STEP_CAP, "step_cap is 15 (section 5.3)")
     _require(m.get("settle_after_reset_s", 60) == SETTLE_AFTER_RESET_S, "settle after reset 60 s")
     _require(m.get("settle_before_eval_s", 20) == SETTLE_BEFORE_EVAL_S, "settle before eval 20 s")
