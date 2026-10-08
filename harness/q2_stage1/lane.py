@@ -140,9 +140,12 @@ def validate_manifest(raw: Mapping[str, Any], source_dir: Path) -> dict[str, Any
              "file_cache.host_dir outside the run root")  # fmt: skip
     mode = m.get("mode")
     engine = m.get("engine") or {}
+    _require(purpose == "setup-check" or "postconfig_probe" not in m,
+             "postconfig_probe belongs to a setup check (G0 item 5)")  # fmt: skip
     if purpose == "setup-check":
         _require(mode == "setup-only", "a setup check runs mode setup-only")
         _require(engine.get("kind") == "none", "a setup check runs no engine")
+        _require(isinstance(m.get("postconfig_probe", False), bool), "postconfig_probe: bool")
     else:
         _require(mode == "episode", "this purpose runs mode episode")
         _require(engine.get("kind") in ("fake", "bridge"), "engine.kind must be fake or bridge")
@@ -472,6 +475,7 @@ class Lane:
         self.first_dispatch: float | None = None
         self.fill_log: list[dict[str, Any]] = []
         self.snapshots: list[dict[str, Any]] = []
+        self.d12_violation: list[str] | None = None
         self.seen_blocks: set[str] = set()
         self.cycle = -1
         self.cycle_lock = threading.Lock()
@@ -548,8 +552,19 @@ class Lane:
             "osworld_dir": "/inputs/OSWorld", "file_cache_dir": "/inputs/file_cache/files",
             "engine_socket": "/engine/engine.sock", "mode": self.m["mode"],
             "certified_keysyms": self.certified, "t_vm_start": t_vm_start,
-            "date": self.m.get("date"),
+            "date": self.m.get("date"), **self.setup_check_config(data["task_id"]),
         }  # fmt: skip
+
+    def setup_check_config(self, task_id: str) -> dict[str, Any]:
+        """G0 item 5's second pass: the postconfig probe and the registered diagnostics."""
+        if self.m["mode"] != "setup-only":
+            return {}
+        from harness.q2_stage1.plan import SETUP_DIAGNOSTICS
+
+        return {
+            "postconfig_probe": bool(self.m.get("postconfig_probe")),
+            "diagnostics": [dict(d) for d in SETUP_DIAGNOSTICS.get(task_id, ())],
+        }
 
     def run_slot(self, slot: Slot, worker: int, cycle: int) -> dict[str, Any]:
         from harness.q2.vm.driver import vm_name, vm_run_argv
@@ -700,6 +715,11 @@ class Lane:
                     self.loss(slot, "runner_crash", f"lane: {type(exc).__name__}: {exc}"),
                     {"t_dispatch": self.clock()}, self.clock(),
                 )  # fmt: skip
+            if record.get("gpu_devices"):
+                # D12: an episode container saw a GPU device; nothing more is dispatched.
+                self.d12_violation = list(record["gpu_devices"])
+                self.stop.set()
+                break
             infra = record.get("status") in ("infrastructure", "setup_failed")
             if infra and slot.attempt == 1 and self.m.get("requeue", True):
                 self.dispatcher.requeue(slot)
@@ -733,6 +753,10 @@ class Lane:
                 self.finish_slot(self.truncated(slot, "never dispatched"), {}, self.clock())
             self.stop_engine()
             self.snapshots.append({"block": "end", **self.snapshot(self.cfg.job_id)})
+        if self.d12_violation:
+            receipt["error"] = (
+                f"D12: GPU device files visible in an episode container: {self.d12_violation}"[:500]
+            )
         receipt.update(
             t_end=self.clock(), stopped=self.stop.is_set(), dispatched=self.dispatcher.dispatched,
             records=len(self.records), fill=self.fill_log, snapshots=self.snapshots,

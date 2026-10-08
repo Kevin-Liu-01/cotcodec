@@ -20,16 +20,23 @@ episode of section 7.1 and writes its record:
    ``terminate(failure)``, OSWorld's own convention, for both harnesses);
 8. the capture sweep, the final-state capture and the restart check once more.
 
-Classification follows section 7.2 (``records.INFRASTRUCTURE_TYPES``): a failed boot or setup,
+Classification follows section 7.2 (``records.INFRASTRUCTURE_TYPES``): a failed boot or setup
+(a setup step that raises, or whose guest reply is not HTTP 200 or carries a non-zero
+``returncode``, ``osworld_live.setup_reply_failed``: the pinned code goes on after either),
 an engine request that fails after the client's retries, H-GA's context fallback for any
 reason but a context-length rejection, a step whose ``/execute`` or screenshot fails
 (``desktop.infra_failures``) or whose executor exits non-zero, a failed warm-up, a guest-
 server restart (at the check after the 20 s settle or at the one after the capture) and a
 checker getter or postconfig step that loses its transport (``osworld_live``: any guest
 request of the evaluation or the sweep that failed in transport, even one the pinned code
-swallowed) are infrastructure losses. A restart check that cannot reach the guest server is
-a transport loss: the episode cannot be shown restart-free. A reply that yields no valid IR
-(``IRError`` or a parser exception) is handled under the harness's rule and counted
+swallowed) are infrastructure losses, and so is a checker that asks for a URL the offline
+run cannot serve (``offline_network``). A failed postconfig reply during ``evaluate()`` is
+recorded (``postconfig_failures``), not a loss: postconfig steps act on the agent's final
+state. The episode container must see no GPU device (D12): a visible ``/dev/nvidia*`` ends
+the episode before the boot wait, and the lane stops dispatching. A restart check that
+cannot reach the guest server is a transport loss: the episode cannot be shown
+restart-free. A reply that yields no valid IR (``IRError`` or a parser exception) is
+handled under the harness's rule and counted
 (``ir_errors``); a checker metric that raises scores 0 (``metric_exception``). The record
 follows ``records.SCHEMA``; the step log, raw replies and capture stay under the episode's
 output directory on the host.
@@ -39,8 +46,10 @@ from __future__ import annotations
 
 import argparse
 import contextlib
+import glob
 import hashlib
 import json
+import re
 import time
 import traceback
 from collections.abc import Callable, Mapping
@@ -56,6 +65,8 @@ STEP_CAP = 15
 SETTLE_AFTER_RESET_S = 60.0
 SETTLE_BEFORE_EVAL_S = 20.0
 BOOT_TIMEOUT_S = 300.0
+GPU_DEVICE_GLOB = "/dev/nvidia*"  # D12: none may be visible in the episode container
+DIAGNOSTIC_TIMEOUT_S = 130.0
 # Run through /execute, so the guest server is the script's parent process.
 SERVER_PID_SCRIPT = "import json, os\nprint(json.dumps({'server_pid': os.getppid()}))\n"
 
@@ -98,6 +109,10 @@ class EpisodeConfig:
     boot_timeout_s: float = BOOT_TIMEOUT_S
     certified_keysyms: list[str] = field(default_factory=list)
     mode: str = "episode"  # or "setup-only" (G0 item 5)
+    # G0 item 5's second pass (setup-only mode only): run the postconfig on the untouched
+    # initial state, and the registered diagnostics (plan.SETUP_DIAGNOSTICS) after setup.
+    postconfig_probe: bool = False
+    diagnostics: list[dict[str, Any]] = field(default_factory=list)
     t_vm_start: float | None = None
     date: str | None = None  # YYYY-MM-DD for tests and replays; None keeps today's date
 
@@ -244,6 +259,7 @@ class Runner:
         steps_log = (self.out / "steps.jsonl").open("w", encoding="utf-8")
         replies_log = (self.out / "replies.jsonl").open("w", encoding="utf-8")
         try:
+            self.check_no_gpu()
             self.wait_for_boot()
             t = self.clock()
             try:
@@ -254,10 +270,19 @@ class Runner:
             except Exception as exc:  # noqa: BLE001 - any setup failure is a setup loss
                 raise agents.InfraLoss("task_setup", f"{type(exc).__name__}: {exc}") from exc
             self.timings["setup_s"] = round(self.clock() - t, 3)
+            setup = self.record["setup"] if isinstance(self.record["setup"], dict) else {}
+            failures = list(setup.get("failures") or [])
             if self.cfg.mode == "setup-only":
                 self.record["server_start"] = self.server_identity()
+                self.setup_check_extras(session)
+                if failures:
+                    raise agents.InfraLoss("task_setup", f"failed in the guest: {failures[0]}")
                 self.record.update(status="setup_ok", infrastructure_type=None, ended="setup-only")
                 return self.finish(t0)
+            if failures:
+                # The pinned code goes on after a step that failed in the guest (a reply that
+                # is not 200, or a non-zero returncode); the task is then not set up (7.2).
+                raise agents.InfraLoss("task_setup", f"failed in the guest: {failures[0]}")
             self.warm_up()
             t = self.clock()
             self.sleep(self.cfg.settle_after_reset_s)
@@ -303,6 +328,47 @@ class Runner:
             json.dumps(self.record, indent=1, sort_keys=True), encoding="utf-8"
         )
         return self.record
+
+    def check_no_gpu(self) -> None:
+        """D12: the episode container is GPU-less; a visible device ends the episode."""
+        devices = sorted(glob.glob(GPU_DEVICE_GLOB))
+        self.record["gpu_devices"] = devices
+        if devices:
+            raise agents.InfraLoss("runner_crash", f"D12: GPU device files visible: {devices}")
+
+    def setup_check_extras(self, session: Session) -> None:
+        """G0 item 5's second pass: the registered diagnostics after setup (each argv's
+        output and whether it shows the step's product, ``expect``), then the postconfig on
+        the untouched initial state (``probe_postconfig``: no getter, no metric)."""
+        rows = []
+        for item in self.cfg.diagnostics:
+            argv, expect = list(item["argv"]), item.get("expect")
+            row: dict[str, Any] = {"argv": argv, "expect": expect}
+            try:
+                result = self.guest.execute(argv, DIAGNOSTIC_TIMEOUT_S)
+                output = str(result.get("output", ""))
+                row.update(
+                    http_status=result.get("http_status"), returncode=result.get("returncode"),
+                    output_tail=output[-2000:], error_tail=str(result.get("error", ""))[-300:],
+                    found=bool(expect) and re.search(expect, output) is not None,
+                )  # fmt: skip
+            except Exception as exc:  # noqa: BLE001 - recorded; the rule reads found=False
+                row.update(error=f"{type(exc).__name__}: {str(exc)[:200]}", found=False)
+            rows.append(row)
+        if rows:
+            self.record["diagnostics"] = rows
+        if self.cfg.postconfig_probe:
+            from harness.q2_stage1.osworld_live import is_transport_error
+
+            probe = getattr(session, "probe_postconfig", None)
+            if probe is None:
+                raise RuntimeError("this session cannot probe the postconfig")
+            try:
+                self.record["postconfig_probe"] = probe()
+            except Exception as exc:  # noqa: BLE001 - a lost transport is a transport loss
+                if is_transport_error(exc):
+                    raise agents.InfraLoss("transport", f"postconfig probe: {exc}") from exc
+                raise
 
     def warm_up(self) -> None:
         from harness.q2.vm.suite import guest_source
@@ -476,17 +542,26 @@ class Runner:
         return last_action
 
     def evaluate(self, session: Session, last_action: str | None) -> None:
-        from harness.q2_stage1.osworld_live import is_transport_error
+        from harness.q2_stage1.osworld_live import (
+            is_offline_refusal,
+            is_transport_error,
+            setup_reply_failed,
+        )
 
         t = self.clock()
         try:
             score = session.evaluate(last_action)
         except Exception as exc:  # noqa: BLE001 - classified below
+            self.record_postconfig(session, setup_reply_failed)
             if is_transport_error(exc):
                 raise agents.InfraLoss("transport", f"evaluate: {exc}") from exc
+            if is_offline_refusal(exc):
+                raise agents.InfraLoss("offline_network", f"evaluate: {exc}") from exc
             error = f"{type(exc).__name__}: {exc}"[:500]
             self.record.update(metric_exception=True, metric_error=error)
             score = 0.0
+        else:
+            self.record_postconfig(session, setup_reply_failed)
         if score is None:
             self.record.update(metric_exception=True, metric_error="evaluate() returned None")
             score = 0.0
@@ -514,6 +589,15 @@ class Runner:
             checker_input_sha256=manifest.get("vm_files", {}),
             state_sha256=manifest.get("state_sha256"),
         )
+
+    def record_postconfig(self, session: Session, failed: Callable[[Any], bool]) -> None:
+        """The postconfig's guest replies during ``evaluate()``: recorded and counted, not a
+        loss (section 7.2)."""
+        replies = getattr(session, "evaluate_replies", None)
+        if replies is None:
+            return
+        self.record["postconfig_replies"] = list(replies)
+        self.record["postconfig_failures"] = sum(1 for r in replies if failed(r))
 
 
 def run_from_config(config_path: Path) -> dict[str, Any]:

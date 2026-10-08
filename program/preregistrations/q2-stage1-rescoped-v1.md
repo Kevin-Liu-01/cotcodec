@@ -166,23 +166,49 @@ S1a does **not** answer:
    remaining exposure: any process of the research account on the host can connect to the
    socket (mode 0600) while it exists; the host is single-user (D13).
 5. **Offline task setup, setup only.** For every one of the 116 pool tasks and
-   every one of the 32 dev-split tasks, the task's setup is run once on one VM
+   every one of the 32 dev-split tasks, the task's setup is run on one VM
    from the pinned file cache (the mutation study's `file-cache-receipts.tsv`,
-   447 files with SHA-256), with no model call and no checker run. This is the
-   only contact any job has with a confirm task before the freeze. A pool task
-   whose setup fails offline is reported; a base task among them sends the
-   draft back to review. Built: `driver.py` `mode: setup-only` through the lane
-   (`experiments/manifests/q2-stage1/setup-check-v1.json`, one attempt per task, no
-   re-queue). Ran as job 982 (2026-10-08, CPU only, one VM at a time, source `ac6c7cd`,
-   79 minutes): **148 of 148 setups completed offline** (116 pool, 32 dev; cold boot median
-   18.3 s; setup median 11.4 s including OSWorld's import, longest 120 s, task `26150609`;
-   slot median 31 s); no model call, no agent action, no checker run, no container left.
-   In base task `26150609` one step (`pip install pygame`) failed offline and OSWorld went
-   on, as upstream would; section 22 ("Found while fixing") leaves that to the audit.
-   Records: `program/evidence/2026-10-08/q2-stage1-g0/setup-check/setup.jsonl` (SHA-256
-   `51fa959aa74fa94ae807f5fb7882c1e6ef7760e832025658c16abdfdaec5b16e`). With every dev
-   task passing, A0a's dev tasks are the first V/4 of the seeded dev order: `6a33f9b9`,
-   `bf4e9888`, `d681960f`, `4172ea6e` and, at V = 20, `12382c62`.
+   447 files with SHA-256), with no model call, no agent action and no checker
+   verdict. This is the only contact any job has with a confirm task before the
+   freeze. Built: `driver.py` `mode: setup-only` through the lane.
+   - **First pass** (`experiments/manifests/q2-stage1/setup-check-v1.json`, one attempt
+     per task, no re-queue). Ran as job 982 (2026-10-08, CPU only, one VM at a time,
+     source `ac6c7cd`, 79 minutes): 148 of 148 setups raised no error (116 pool, 32 dev;
+     cold boot median 18.3 s; setup median 11.4 s including OSWorld's import, longest
+     120 s, task `26150609`; slot median 31 s); no model call, no agent action, no checker
+     run, no container left. Records:
+     `program/evidence/2026-10-08/q2-stage1-g0/setup-check/setup.jsonl` (SHA-256
+     `51fa959aa74fa94ae807f5fb7882c1e6ef7760e832025658c16abdfdaec5b16e`). **What it could
+     not see:** the guest server answers `/setup/execute` with HTTP 200 and the command's
+     `returncode` for any command that finishes, the pinned `_execute_setup`,
+     `_launch_setup` and `_activate_window_setup` only log a reply that is not 200, and the
+     records kept no per-step result, so "raised no error" is all it shows. Its container
+     logs show one failure: base task `26150609`'s second step, `pip install pygame`, timed
+     out after 120 s (HTTP 500), and OSWorld went on, as it would upstream. The configs show
+     three more install steps never checked offline: `e2b5e914` (pool, extension block 4)
+     runs `code --install-extension ms-python.python`, a Marketplace install that needs the
+     network; base task `53ad5833` installs a local `.vsix` its checker depends on
+     (`vscode_config` through the extension's `OpenProject` command); and `d38192b0`'s
+     postconfig runs `pip install` of a wheel the file cache supplies, which no live VM has
+     run.
+   - **Second pass** (`experiments/manifests/q2-stage1/setup-check-v2.json`, amended after
+     the pre-freeze audit): the same 148 setups with every guest `/setup/*` reply recorded
+     per step (HTTP status, `returncode`, stderr tail; `osworld_live`), the registered
+     diagnostics after setup (`plan.SETUP_DIAGNOSTICS`: `code --list-extensions` for
+     `53ad5833` and `e2b5e914`), and each task's postconfig steps on the untouched initial
+     state (no getter and no metric runs, so no verdict exists); a slot that fails is
+     re-queued once. Result: TBD (submitted after this rule was committed).
+   - **Exclusion.** Section 5.4's offline-setup exclusion (rules (a)-(c)), registered and
+     committed before the second pass ran, is applied once to its records, before any GPU
+     episode and before the draw (`plan.offline_exclusions`; `plan.OFFLINE_EXCLUDED`).
+     Excluded: TBD (from the second pass).
+   - **Decision on `26150609` (the audit's option (b)).** The question the first draft left
+     open is decided by the rule, not by judgment: its setup installs a package from the
+     network (rule (a)), so it leaves the pool before the draw, and the base is re-drawn by
+     the registered seeded procedure (section 5.4). Option (a), keeping it under a rule that
+     a step failing the same way in every episode counts as completed when the checker does
+     not read its product, is not taken: the agent's VM would lack the pygame the upstream
+     setup installs, a task different from upstream. Kevin's sign-off: section 18.
 6. **Final-state capture and offline rescoring.** After the checker runs, the
    files the checker read are copied off the VM and hashed, and a CPU tool
    rescores a captured state with the raw and the corrected checker, so every
@@ -434,12 +460,36 @@ The full list is `harness/q2/action_path/harness_design_diffs.md`.
 
 ### 5.4 Tasks
 
-- **Eligible pool (116 tasks).** The 120-task confirm split of
+- **Pool (116 tasks).** The 120-task confirm split of
   `splits.json` (seed 42, stratified by domain x checker class) minus the four
   K1 raw-gold failures of the checker-mutation study (`0a0faba3`, `15aece23`,
   `ac1b39ff`, `ed43c15f`). Their checkers fail their own gold. Pool by domain:
   gimp 8, calc 28, impress 24, writer 12, multi_apps 24, thunderbird 7, vlc 6,
   vs_code 7.
+- **Offline-setup exclusion** (`plan.offline_exclusions`; registered after the
+  pre-freeze audit and before G0 item 5's second pass ran; applied once, before
+  any GPU episode and before the draw). It reads only the task configs, as the
+  setup-check records keep them, and the setup-only records; no agent has acted
+  and no checker has produced a verdict, so it is outcome-blind. A pool or dev
+  task leaves the eligible set if
+  - (a) a setup or postconfig step installs software from the network: a
+    `pip install` of a package name (not a local file), a
+    `code --install-extension` of a Marketplace id (not a local `.vsix`), or any
+    apt, apt-get or snap install. The VMs run with `--network none`, so the step
+    fails in every episode;
+  - (b) in the second setup-only pass the task's setup did not complete
+    cleanly: a setup step's guest reply was not HTTP 200 or carried a non-zero
+    `returncode`, a step raised, the slot was lost on its final attempt, or a
+    registered diagnostic did not show the step's product (`code
+    --list-extensions` lacks the extension the step installs);
+  - (c) a postconfig step that installs software (any of (a)'s installers,
+    local or not) failed on the untouched initial state in that pass.
+
+  Other postconfig steps are not judged on the initial state: they act on the
+  agent's final state (a window the agent must open, a file it must write), so
+  their failure there can be the agent's. **Eligible pool:** TBD (from the second pass).
+  The draw below runs on the eligible pool; the 32-task floor (section 6.2) is
+  unchanged.
 - **Base set (K_base = 24 or 32, by the rule of section 6.2).**
   - Allocation: plain largest-remainder apportionment over domains, ties
     broken by domain name. At K = 32: gimp 2, calc 8, impress 7, writer 3,
@@ -745,7 +795,17 @@ An anchor episode runs the upstream OpenCUA runner instead of steps 3-6
 
 An episode is **lost to infrastructure** if any of these occurs:
 
-- VM boot or task setup fails;
+- VM boot or task setup fails. Task setup fails when a setup step raises, or
+  when any guest reply to a setup step is not HTTP 200 or carries a non-zero
+  `returncode` (`osworld_live.setup_reply_failed`; every reply is recorded per
+  step, `setup.replies`): the pinned code goes on after either, and the task
+  would then run without its setup. The offline-setup exclusion (section 5.4)
+  removes every task whose setup fails this way offline in G0 item 5's second
+  pass, so no remaining task fails deterministically, and no deterministic
+  offline failure is tolerated or disclosed in its place. A postconfig reply
+  that fails during `DesktopEnv.evaluate()` is recorded
+  (`postconfig_replies`, `postconfig_failures`, reported per (size, harness))
+  and is not a loss: postconfig steps act on the agent's final state;
 - the guest server restarts during the episode (its `NRestarts` counter
   changes or a different server process answers; D30, D33);
 - an engine request fails after the client's retries, or times out at 600 s;
@@ -1382,9 +1442,9 @@ row (the test fails otherwise), and the freeze pins them.
 |---|---|
 | `harness/q2_stage1/__init__.py` | `0e2190149cf640fac07dab26332a26f696374ff4400c23aab82e8cf766f3b334` |
 | `harness/q2_stage1/estimators.py` | `b43334b0511d17505a24893d65ce79cd55a58351a2a056075ed5b002007d36b3` |
-| `harness/q2_stage1/records.py` | `b15d1931c06bdffa6166dac6ff2f3dc828103cad87002773a228f8d32f9ce228` |
+| `harness/q2_stage1/records.py` | `c2e1c71b97e439f9f6e4f5098f860e03ea297f0d440265978b5c97785484f445` |
 | `harness/q2_stage1/rules.py` | `a671d2c3871bc18d255af8e8efe86f823aa7e54640c5c75cf9d95c39b587a225` |
-| `harness/q2_stage1/plan.py` | `f5921ab68f96983feceeb69e30342ef7db5e10aba1898f978f49bf422c0604e3` |
+| `harness/q2_stage1/plan.py` | `72c338cad90b95fc584bf637961d2ba1e03dfb9a2294aaf4cd1286dba4cce04c` |
 | `harness/q2_stage1/analysis.py` | `f5b1ce8f3c6bf7366f3114180696859e3226bde6d405df7ce2b3122861cde401` |
 | `scripts/render_q2_stage1_manifest.py` | `f33335c9d7ccd486a2b0b85b124c088f07c2271f65ce9a22329f778cb2a4dc07` |
 | `scripts/render_q2_stage1_plan.py` | `3c9ef228e5df0b8a6b5e7f927f37689cc5d9a41b6ce8294737a39674089fbfac` |
@@ -1394,13 +1454,13 @@ row (the test fails otherwise), and the freeze pins them.
 | `program/proposals/evidence/2026-10-08-q2-stage1-rescoped/analysis/cost_s1a.json` | `843a123b2d8e98e34d9f20388edc132e673ba9c93b01645c7668c98d2d80e144` |
 | `program/proposals/evidence/2026-10-08-q2-stage1-rescoped/analysis/sim_s1a_v2.py` | `19574910a06026b0b042aaf251e0988a72ed0484fa5833a8ca7597e3ba646a4c` |
 | `program/proposals/evidence/2026-10-08-q2-stage1-rescoped/analysis/sim_s1a_v2.json` | `e3c52beb5c6160e5e364ef307fb3c6353c226ffb7b762d9cc534f8fc86239d9e` |
-| `harness/q2_stage1/driver.py` | `6709d0d2280cf82a3aa7b257430aeb9f35790f1a63653b0408674759ae2d9d17` |
+| `harness/q2_stage1/driver.py` | `46a036fffa84635fdba25bc2ae71c985315bde3e1fd995a083ad122aa43e19f4` |
 | `harness/q2_stage1/agents.py` | `8e72acbd79645b45ccd95cd213d5f8564d7114af538561e28219c12cf0eb0ba1` |
 | `harness/q2_stage1/engine.py` | `3e0942349a8fc5b2aef5294a28c029ca318acff88f4cd897df274bb6e3b51bf9` |
 | `harness/q2_stage1/bridge.py` | `dceacda3d6882223b0f0cfe54dd28f1674d1bf99527083420c0f29976a68692d` |
 | `harness/q2_stage1/fake_engine.py` | `02e0b66e7b67b3647dc853c4069de21ce3e6234ed01ec4e3842afbd42cd89a00` |
-| `harness/q2_stage1/osworld_live.py` | `18511ebbf19ab36cb2060228355ea1cd7387dce7023835965341871228205f4f` |
-| `harness/q2_stage1/lane.py` | `0ec9d57654034ee8ee5dd7050334e853b9a4f0648ad861a95616f783ddafedea` |
+| `harness/q2_stage1/osworld_live.py` | `dacf6336a02c6a69a5f097be50385b7b31d389d5818abc8ecef4612e95153e12` |
+| `harness/q2_stage1/lane.py` | `61f836c2aed5de189cf91dd4baa409fe79a2a4de8019a1cc37e5fbd61b7976dc` |
 | `harness/q2_stage1/rescore.py` | `d240db03e969c8aa5bb97403c5005cd4c9e96016599a78f70e97850415893737` |
 | `harness/q2_stage1/zinv.py` | `64899d5056f4791008c2a10c38a7b0fbb94fbe912d20a702ec74851a0ca7f655` |
 | `harness/q2_stage1/anchor.py` | `6c0a31cf1abb261a3522573847ee6dc1798925143b286cf9c02a3550f1c93b7a` |

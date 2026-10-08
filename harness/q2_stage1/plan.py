@@ -13,6 +13,8 @@ import hashlib
 import json
 import math
 import random
+import re
+import shlex
 from collections import Counter
 from collections.abc import Iterable, Mapping, Sequence
 from dataclasses import dataclass
@@ -385,7 +387,158 @@ def freeze_constants(
 
 
 def task_pool(confirm_ids: Sequence[str]) -> list[str]:
+    """The confirm split minus the four K1 raw-gold failures (116 tasks)."""
     return sorted(t for t in confirm_ids if t[:8] not in K1_RAW_GOLD_FAILURES)
+
+
+# ---- Offline-setup exclusion (section 5.4, G0 item 5) ------------------------------ #
+# Registered before G0 item 5's second pass ran and applied once, before any GPU episode and
+# before the draw. It reads only the task configs (as the setup-check records keep them) and
+# the setup-only records: no agent acted and no checker produced a verdict, so it is
+# outcome-blind. A pool or dev task leaves the eligible set if
+#   (a) a setup or postconfig step installs software from the network: a ``pip install`` of
+#       a package name (not a local file), a ``code --install-extension`` of a Marketplace id
+#       (not a local ``.vsix``), or any apt, apt-get or snap install. The VMs run with
+#       ``--network none``, so the step fails in every episode;
+#   (b) in the second setup-only pass the task's setup did not complete cleanly: a setup
+#       step's guest reply was not HTTP 200 or carried a non-zero returncode, a step raised,
+#       the slot was lost, or a registered diagnostic did not show the step's product
+#       (``SETUP_DIAGNOSTICS``: ``code --list-extensions`` lacks the installed extension);
+#   (c) a postconfig step that installs software (any of (a)'s installers, local or not)
+#       failed on the untouched initial state in that pass.
+# Other postconfig steps are not judged on the initial state: they act on the agent's final
+# state (a window the agent must open, a file it must write), so a failure there can be the
+# agent's. ``offline_exclusions`` computes the set; ``OFFLINE_EXCLUDED`` holds it.
+
+_SHELLS = ("bash", "sh", "/bin/bash", "/bin/sh")
+_SEPARATORS = ("&&", "||", ";", "|")
+_LOCAL_PIP = re.compile(r"^(/|\./|~/|\.\./)|\.(whl|tar\.gz|zip)$")
+
+
+def _commands(argv: Any) -> list[list[str]]:
+    """The simple commands in a step's argv (a list, a shell string, or ``bash -c``)."""
+    if isinstance(argv, list) and len(argv) >= 3 and argv[0] in _SHELLS and argv[1] == "-c":
+        argv = argv[2]
+    if isinstance(argv, str):
+        try:
+            tokens = shlex.split(argv)
+        except ValueError:
+            tokens = argv.split()
+    else:
+        tokens = [str(a) for a in (argv or [])]
+    out: list[list[str]] = [[]]
+    for token in tokens:
+        if token in _SEPARATORS:
+            out.append([])
+        else:
+            out[-1].append(token)
+    return [c for c in out if c]
+
+
+def install_targets(argv: Any) -> list[tuple[str, str, bool]]:
+    """(installer, target, from the network) for each software install in a step's argv."""
+    found: list[tuple[str, str, bool]] = []
+    for cmd in _commands(argv):
+        names = [Path(t).name for t in cmd]
+        for i, name in enumerate(names):
+            pip = name in ("pip", "pip3") or (
+                name in ("python", "python3") and cmd[i + 1 : i + 3] == ["-m", "pip"]
+            )
+            if pip:
+                rest = cmd[i + 1 :]
+                if rest[:2] == ["-m", "pip"]:
+                    rest = rest[2:]
+                if rest[:1] == ["install"]:
+                    for target in (t for t in rest[1:] if not t.startswith("-")):
+                        found.append(("pip", target, not _LOCAL_PIP.search(target)))
+                break
+            if name == "code" and "--install-extension" in cmd[i:]:
+                j = cmd.index("--install-extension", i)
+                if j + 1 < len(cmd):
+                    target = cmd[j + 1]
+                    found.append(("code", target, not target.endswith(".vsix")))
+                break
+            if name in ("apt", "apt-get", "snap") and "install" in cmd[i:]:
+                for target in (
+                    t for t in cmd[cmd.index("install", i) + 1 :] if not t.startswith("-")
+                ):
+                    found.append((name, target, True))
+                break
+    return found
+
+
+def final_setup_records(rows: Iterable[Mapping[str, Any]]) -> dict[str, dict[str, Any]]:
+    """The last attempt of each task in a setup-check record file."""
+    out: dict[str, dict[str, Any]] = {}
+    for row in rows:
+        task = str(row["task_id"])
+        if task not in out or int(row.get("attempt", 1)) >= int(out[task].get("attempt", 1)):
+            out[task] = dict(row)
+    return out
+
+
+def offline_exclusion_reasons(record: Mapping[str, Any]) -> list[str]:
+    """Rules (a)-(c) for one task's final setup-check-v2 record (see above)."""
+    reasons: list[str] = []
+    setup = record.get("setup") if isinstance(record.get("setup"), dict) else {}
+    probe = (
+        record.get("postconfig_probe") if isinstance(record.get("postconfig_probe"), dict) else {}
+    )
+    for phase, block in (("setup", setup), ("postconfig", probe)):
+        for step in block.get("config_steps") or []:
+            for installer, target, network in install_targets(step.get("argv")):
+                if network:
+                    reasons.append(f"(a) {phase} step {step['step']}: {installer} install {target}")
+    if record.get("status") != "setup_ok":
+        detail = record.get("infrastructure_detail") or record.get("infrastructure_type")
+        reasons.append(f"(b) setup {record.get('status')}: {str(detail)[:200]}")
+    for failure in setup.get("failures") or []:
+        reasons.append(f"(b) {str(failure)[:200]}")
+    for item in record.get("diagnostics") or []:
+        if item.get("expect") and not item.get("found"):
+            reasons.append(f"(b) diagnostic {' '.join(item['argv'])} lacks {item['expect']}")
+    if record.get("status") == "setup_ok" and not probe:
+        reasons.append("(c) postconfig not probed")
+    installs = {
+        int(step["step"])
+        for step in probe.get("config_steps") or []
+        if install_targets(step.get("argv"))
+    }
+    for reply in probe.get("replies") or []:
+        failed = reply.get("status") != 200 or reply.get("returncode") not in (None, 0)
+        if failed and reply.get("step") in installs:
+            reasons.append(
+                f"(c) postconfig step {reply['step']} install failed on the initial state: "
+                f"HTTP {reply.get('status')} rc={reply.get('returncode')}"
+            )
+    return list(dict.fromkeys(reasons))
+
+
+def offline_exclusions(
+    rows: Iterable[Mapping[str, Any]], tasks: Sequence[str]
+) -> dict[str, list[str]]:
+    """The offline-setup exclusion of section 5.4 over ``tasks`` (pool and dev) from G0
+    item 5's second-pass records; a task with no record is excluded."""
+    finals = final_setup_records(rows)
+    out: dict[str, list[str]] = {}
+    for task in sorted(tasks):
+        record = finals.get(task)
+        reasons = (
+            ["(b) no setup-check-v2 record"]
+            if record is None
+            else (offline_exclusion_reasons(record))
+        )
+        if reasons:
+            out[task] = reasons
+    return out
+
+
+def eligible_pool(
+    confirm_ids: Sequence[str], excluded: Mapping[str, Any] | Iterable[str] = ()
+) -> list[str]:
+    """The pool the base is drawn from: ``task_pool`` minus the offline-setup exclusions."""
+    drop = set(excluded)
+    return [t for t in task_pool(confirm_ids) if t not in drop]
 
 
 def apportion(k: int, counts: Mapping[str, int]) -> dict[str, int]:
@@ -508,6 +661,18 @@ A0A_SIZE = "9B"
 A0A_SESSION = "S1"
 FILL_BLOCK_EPISODES = 32  # section 5.6: 8 tasks x 2 harnesses x 2 reruns
 SETUP_CHECK_RECORDS = "program/evidence/2026-10-08/q2-stage1-g0/setup-check/setup.jsonl"
+# G0 item 5's second pass (setup-check-v2): diagnostics run in the guest after a task's setup.
+# ``expect`` is the pattern the output must show for the step's product to count as present
+# (rule (b) of section 5.4): the two VS Code tasks whose setup installs an extension.
+SETUP_DIAGNOSTICS: dict[str, tuple[dict[str, Any], ...]] = {
+    "53ad5833-3455-407b-bbc6-45b4c79ab8fb": (
+        {"argv": ["code", "--list-extensions", "--show-versions"], "expect": r"(?im)^\S*eval\S*@"},
+    ),
+    "e2b5e914-ffe1-44d2-8e92-58f8c5d92bb2": (
+        {"argv": ["code", "--list-extensions", "--show-versions"],
+         "expect": r"(?im)^ms-python\.python@"},
+    ),
+}  # fmt: skip
 
 
 def a1_job(size: str, session: str) -> str:

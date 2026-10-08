@@ -37,6 +37,17 @@ setup, after ``evaluate()`` and after the capture sweep ``LiveTask`` raises
 phase got no answer on every attempt, whatever the pinned code did with the error.
 ``is_transport_error`` reads the whole ``__cause__``/``__context__`` chain.
 
+The pinned code also cannot see a setup step that fails *inside* the guest: the guest
+server's ``/setup/execute`` answers HTTP 200 with the command's ``returncode`` for any command
+that finishes, and ``_execute_setup``, ``_launch_setup`` and ``_activate_window_setup`` only log
+a reply that is not 200. So the shim records every guest ``/setup/*`` reply (HTTP status,
+``returncode``, the tail of stderr or of the error message, the tail of stdout) with the setup
+step it answers (``LiveTask.setup_replies``; the step index and type come from wrapping the
+``SetupController``'s ``_<type>_setup`` methods, which the pinned ``setup`` calls by name).
+``setup_reply_failed`` is the registered reading of a reply (section 7.2): not HTTP 200, or a
+non-zero ``returncode``. A failed task-setup step is a ``task_setup`` loss (driver); a failed
+postconfig step during ``evaluate()`` is recorded, not a loss (it acts on the agent's state).
+
 After evaluation a capture sweep calls every result getter once more, so the captured state
 holds every file every metric reads even when ``and`` stopped early or the agent's ``FAIL``
 returned 0 before any getter ran; ``rescore.py`` scores it offline with the raw and the
@@ -45,6 +56,7 @@ corrected checker.
 
 from __future__ import annotations
 
+import contextlib
 import hashlib
 import json
 import os
@@ -62,6 +74,10 @@ UPSTREAM_CLIENT_PASSWORD = "password"
 SCREEN = (1920, 1080)
 GET_FILE_ATTEMPTS = 3
 GET_FILE_INTERVAL_S = 5.0
+SETUP_PATH_PREFIX = "/setup/"
+REPLY_TAIL = 300
+# Setup step types whose argv the records keep (rule (a) of section 5.4 reads them).
+ARGV_STEP_TYPES = ("execute", "command", "launch", "execute_with_verification")
 
 
 class OfflineNetworkRefused(RuntimeError):
@@ -85,17 +101,64 @@ def import_osworld(osworld_dir: str) -> None:
         sys.path.insert(0, osworld_dir)
 
 
+def setup_reply_summary(response: Any, streamed: bool = False) -> dict[str, Any]:
+    """What the records keep of one guest ``/setup/*`` reply: the HTTP status and, from the
+    guest server's JSON (``/setup/execute``: ``output``, ``error``, ``returncode``; a failure:
+    ``status: error`` and ``message``), the ``returncode`` and the tails of stderr or the error
+    message and of stdout; a text reply (``/setup/launch``, ``/setup/activate_window``, ...)
+    keeps its tail."""
+    out: dict[str, Any] = {"status": getattr(response, "status_code", None)}
+    if streamed:
+        return out
+    try:
+        body = response.json()
+    except Exception:  # noqa: BLE001 - a text reply
+        body = None
+    if isinstance(body, dict):
+        if "returncode" in body:
+            out["returncode"] = body["returncode"]
+        for key in ("error", "message"):
+            if body.get(key):
+                out["error_tail"] = str(body[key])[-REPLY_TAIL:]
+                break
+        if body.get("output"):
+            out["output_tail"] = str(body["output"])[-REPLY_TAIL:]
+    else:
+        with contextlib.suppress(Exception):  # nothing readable
+            out["text_tail"] = str(response.text)[-REPLY_TAIL:]
+    return out
+
+
+def setup_reply_failed(reply: Mapping[str, Any]) -> bool:
+    """The registered reading of one ``/setup/*`` reply (section 7.2): the step failed in the
+    guest when the reply is not HTTP 200 or carries a non-zero ``returncode``."""
+    return reply.get("status") != 200 or reply.get("returncode") not in (None, 0)
+
+
+def describe_reply(reply: Mapping[str, Any]) -> str:
+    where = f"{reply.get('phase')} step {reply.get('step')} ({reply.get('type')})"
+    detail = reply.get("error_tail") or reply.get("text_tail") or ""
+    return (
+        f"{where}: {reply.get('path')} HTTP {reply.get('status')} "
+        f"rc={reply.get('returncode')} {str(detail)[-160:]}"
+    ).strip()
+
+
 def install_network_shim(
     guest_base: str,
     file_cache: Path,
     fetched: list[str],
     guest_errors: list[dict[str, Any]] | None = None,
+    guest_replies: list[dict[str, Any]] | None = None,
+    context: Callable[[], dict[str, Any]] | None = None,
 ) -> Callable[[], None]:
     """Route ``requests.get``/``post`` (guest passes, file cache served locally, rest refused).
 
     A guest-bound call that raises a ``requests`` exception (connection refused or reset, a
     timeout, a broken chunked body) is appended to ``guest_errors`` and re-raised, so a
     caller that swallows it (the pinned OSWorld code does, in many places) cannot hide it.
+    Every guest ``/setup/*`` reply is appended to ``guest_replies`` (``setup_reply_summary``)
+    with ``context()``, the setup phase and step it answers.
     """
     import requests
 
@@ -105,20 +168,35 @@ def install_network_shim(
     real_get, real_post = requests.get, requests.post
     offline_get = make_offline_get(file_cache, fetched)
     errors = guest_errors if guest_errors is not None else []
+    where = context or dict
 
     def guest_call(method: str, call: Callable[..., Any], url: str, *args: Any, **kwargs: Any):
+        path = str(url)[len(guest_base) :]
         try:
-            return call(url, *args, **kwargs)
+            response = call(url, *args, **kwargs)
         except requests.exceptions.RequestException as exc:
             errors.append(
                 {
                     "method": method,
-                    "path": str(url)[len(guest_base) :][:200],
+                    "path": path[:200],
                     "error": f"{type(exc).__name__}: {str(exc)[:200]}",
                     "t": time.time(),
+                    **where(),
                 }
             )
             raise
+        if guest_replies is not None and path.startswith(SETUP_PATH_PREFIX):
+            summary = setup_reply_summary(response, streamed=bool(kwargs.get("stream")))
+            guest_replies.append(
+                {
+                    "method": method,
+                    "path": path.split("?")[0][:200],
+                    **summary,
+                    "t": time.time(),
+                    **where(),
+                }  # fmt: skip
+            )
+        return response
 
     def get(url: str, *args: Any, **kwargs: Any) -> Any:
         if str(url).startswith(guest_base):
@@ -199,11 +277,14 @@ class LiveTask:
         self.task = dict(task)
         self.fetched: list[str] = []
         self.guest_errors: list[dict[str, Any]] = []
+        self.setup_replies: list[dict[str, Any]] = []
         self.transport: dict[str, list[str]] = {}
+        self.step_state: dict[str, Any] = {"phase": None, "step": 0, "type": None, "depth": 0}
         self.guest_base = f"http://{guest_ip}:{server_port}"
         self.restore = install_network_shim(
-            self.guest_base, file_cache, self.fetched, self.guest_errors
-        )
+            self.guest_base, file_cache, self.fetched, self.guest_errors,
+            self.setup_replies, self.step_context,
+        )  # fmt: skip
         env = DesktopEnv.__new__(DesktopEnv)
         env.provider_name = "docker"
         env.enable_proxy = False
@@ -233,7 +314,47 @@ class LiveTask:
             screen_width=SCREEN[0],
             screen_height=SCREEN[1],
         )
+        self.track_steps(env.setup_controller)
         self.env = env
+
+    # ---------------------------------------------------------------- setup steps (7.2)
+    def step_context(self) -> dict[str, Any]:
+        state = self.step_state
+        return {"phase": state["phase"], "step": state["step"] or None, "type": state["type"]}
+
+    def track_steps(self, controller: Any) -> None:
+        """Wrap the controller's ``_<type>_setup`` methods (instance attributes, which the
+        pinned ``setup`` reaches through ``getattr(self, name)``) so each guest reply is
+        labelled with the step it answers; nested calls (``_command_setup`` calls
+        ``_execute_setup``) stay in their outer step. Nothing else changes."""
+        state = self.step_state
+
+        def wrap(name: str, method: Callable[..., Any]) -> Callable[..., Any]:
+            def wrapped(*args: Any, **kwargs: Any) -> Any:
+                if state["depth"] == 0:
+                    state["step"] += 1
+                    state["type"] = name[1 : -len("_setup")]
+                state["depth"] += 1
+                try:
+                    return method(*args, **kwargs)
+                finally:
+                    state["depth"] -= 1
+
+            return wrapped
+
+        for name in dir(type(controller)):
+            if not (name.startswith("_") and not name.startswith("__") and name.endswith("_setup")):
+                continue
+            method = getattr(controller, name)
+            if callable(method):
+                setattr(controller, name, wrap(name, method))
+
+    def begin_phase(self, phase: str) -> int:
+        self.step_state.update(phase=phase, step=0, type=None, depth=0)
+        return len(self.setup_replies)
+
+    def replies_since(self, start: int) -> list[dict[str, Any]]:
+        return [dict(r) for r in self.setup_replies[start:]]
 
     # ---------------------------------------------------------------- transport (7.2)
     def mark(self) -> tuple[int, int]:
@@ -261,37 +382,84 @@ class LiveTask:
 
     # ---------------------------------------------------------------- phases
     def setup(self) -> dict[str, Any]:
-        """``DesktopEnv.reset``'s task part on a clean VM; raises on a failed step."""
+        """``DesktopEnv.reset``'s task part on a clean VM; raises on a step that raises.
+
+        Returns the step count, every guest ``/setup/*`` reply (``replies``), the replies
+        that failed in the guest (``failures``, ``setup_reply_failed``) and the task's setup
+        steps (``config_steps``: type, and argv for command steps). Whether a failure loses
+        the episode is the driver's call (section 7.2).
+        """
         env = self.env
         started = time.monotonic()
         env._set_task_info(self.task)
         env.setup_controller.reset_cache_dir(env.cache_dir)
         mark = self.mark()
+        first = self.begin_phase("setup")
         try:
             ok = env.setup_controller.setup(env.config, False)
         except Exception as exc:
             self.check_transport("setup", mark, exc)
             raise
+        finally:
+            self.step_state["phase"] = None
         self.check_transport("setup", mark)
         if not ok:
             raise RuntimeError("setup controller could not reach the guest server")
         if env.config:
             env.is_environment_used = True
-        return {"seconds": round(time.monotonic() - started, 3), "steps": len(env.config)}
+        replies = self.replies_since(first)
+        return {
+            "seconds": round(time.monotonic() - started, 3),
+            "steps": len(env.config),
+            "config_steps": config_steps(env.config),
+            "replies": replies,
+            "failures": [describe_reply(r) for r in replies if setup_reply_failed(r)],
+        }
+
+    def probe_postconfig(self) -> dict[str, Any]:
+        """G0 item 5's second pass only: the task's postconfig steps on the untouched initial
+        state, with every reply recorded. No getter and no metric runs, so no verdict exists.
+        A step that raises is recorded, not raised; a transport failure raises."""
+        env = self.env
+        postconfig = list((env.evaluator or {}).get("postconfig", []))
+        started = time.monotonic()
+        mark = self.mark()
+        first = self.begin_phase("postconfig_probe")
+        out: dict[str, Any] = {"steps": len(postconfig), "config_steps": config_steps(postconfig)}
+        try:
+            env.setup_controller.setup(postconfig, False)
+        except Exception as exc:  # noqa: BLE001 - recorded; a transport failure raises below
+            self.check_transport("postconfig_probe", mark, exc)
+            out["error"] = f"{type(exc).__name__}: {exc}"[:500]
+        finally:
+            self.step_state["phase"] = None
+        self.check_transport("postconfig_probe", mark)
+        replies = self.replies_since(first)
+        out.update(
+            seconds=round(time.monotonic() - started, 3),
+            replies=replies,
+            failures=[describe_reply(r) for r in replies if setup_reply_failed(r)],
+        )
+        return out
 
     def evaluate(self, last_action: str | None) -> Any:
         """The pinned ``DesktopEnv.evaluate()`` with the episode's last action in history.
 
         Raises ``TransportFailure`` when any guest request of the evaluation (postconfig,
-        getters) failed in transport, whatever ``evaluate()`` returned or raised.
+        getters) failed in transport, whatever ``evaluate()`` returned or raised. The
+        postconfig's ``/setup/*`` replies are kept in ``evaluate_replies``.
         """
         self.env.action_history = [last_action] if last_action is not None else []
         mark = self.mark()
+        first = self.begin_phase("evaluate")
         try:
             score = self.env.evaluate()
         except Exception as exc:
             self.check_transport("evaluate", mark, exc)
             raise
+        finally:
+            self.step_state["phase"] = None
+            self.evaluate_replies = self.replies_since(first)
         self.check_transport("evaluate", mark)
         return score
 
@@ -349,6 +517,7 @@ class LiveTask:
             "file_cache_urls": sorted(set(self.fetched)),
             "action_history": list(self.env.action_history),
             "guest_request_errors": list(self.guest_errors),
+            "setup_replies": list(self.setup_replies),
         }
         manifest["state_sha256"] = hashlib.sha256(
             json.dumps({"vm": files, "cache": cache}, sort_keys=True).encode()
@@ -360,6 +529,26 @@ class LiveTask:
 
     def close(self) -> None:
         self.restore()
+
+
+def config_steps(steps: Any) -> list[dict[str, Any]]:
+    """Each setup or postconfig step's type and, for command steps, its argv (truncated):
+    what rule (a) of section 5.4 (a software install from the network) reads."""
+    out = []
+    for index, step in enumerate(steps or [], start=1):
+        kind = str((step or {}).get("type"))
+        row: dict[str, Any] = {"step": index, "type": kind}
+        params = (step or {}).get("parameters") or {}
+        if kind in ARGV_STEP_TYPES and "command" in params:
+            command = params["command"]
+            row["argv"] = (
+                [str(a)[:300] for a in command][:40]
+                if isinstance(command, list)
+                else str(command)[:600]
+            )
+            row["shell"] = bool(params.get("shell"))
+        out.append(row)
+    return out
 
 
 def is_transport_error(exc: BaseException) -> bool:
@@ -388,6 +577,22 @@ def is_transport_error(exc: BaseException) -> bool:
             continue
         seen.add(id(current))
         if isinstance(current, transport):
+            return True
+        stack += [e for e in (current.__cause__, current.__context__) if e is not None]
+    return False
+
+
+def is_offline_refusal(exc: BaseException) -> bool:
+    """Whether a checker asked for a URL the offline run cannot serve (neither the guest nor
+    the pinned file cache): an ``OfflineNetworkRefused`` anywhere in the exception chain."""
+    seen: set[int] = set()
+    stack: list[BaseException] = [exc]
+    while stack:
+        current = stack.pop()
+        if id(current) in seen:
+            continue
+        seen.add(id(current))
+        if type(current).__name__ == "OfflineNetworkRefused":
             return True
         stack += [e for e in (current.__cause__, current.__context__) if e is not None]
     return False
