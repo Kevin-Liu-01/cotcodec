@@ -99,7 +99,7 @@ image built from `a369e6d` passed the CPU doctor (7/7).
   NOT_EVALUABLE, null calibration NOT_EVALUABLE, floor NOT_VIABLE, fertility
   association STRONG. Half of the 20 development questions are
   entity-anchored.
-- Qwen3.5-4B-Base lane (job 730): no receipt. It evaluated 18 of 73
+- Qwen3.5-4B-Base lane (job 730): no receipt. It evaluated 18 of 74
   chunks at about 61 s each (GPU idle when sampled, one CPU core busy) and reached
   its 21-minute limit; it did not act on SIGUSR1 and was killed by the hard
   stop. No minutes remain under the id, so the lane is INCOMPLETE.

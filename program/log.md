@@ -676,7 +676,7 @@ Append-only. Newest entries at the bottom.
 - Step 4, Qwen3.5-4B-Base: filled with `--small-lane-receipt` (slot-0
   claim), dry-run and test-only passed, submitted once by orx node
   `51d32d53` (commit `c84c9aa`) as Slurm 730: FAILED 137:0 at its 21-minute
-  limit. It evaluated 18 of 73 chunks at about 61 s each (GPU idle when
+  limit. It evaluated 18 of 74 chunks at about 61 s each (GPU idle when
   sampled, one CPU core busy), did not act on SIGUSR1 (two chunks saved after
   it, no marker) and was killed by the hard stop
   (`signal_USR1_checkpoint_timeout`). The filler refused a re-run (-1 of 21
@@ -690,7 +690,7 @@ Append-only. Newest entries at the bottom.
   (the 4B lane has no receipt); it was not written, and no base, K1 v3 design
   or stop is read.
 - GPU time: 0.4189 GPU-h used (727 0.0772, 730 0.3417), 0.4667 charged under
-  the registration's rule; ledger rows use the charged figures. Jobs 723 and
+  the registration's rule; ledger rows use the physical figures, as earlier rows do, with the charged figures noted. Jobs 723 and
   724 CPU only.
 - Decision for Kevin (pending in `program/state.json`): whether and how a
   successor id runs. It would need the receipt's Slurm job id bound, the 4B

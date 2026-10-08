@@ -68,7 +68,7 @@
       "doc": "program/questions/q3-cross-script-indexer.md",
       "dossier_key": "E6-d21-translation-supervised-indexer",
       "status": "stage-0-precheck-incomplete",
-      "next_action": "Kevin decides how Q3 continues after q3-dense-headroom-precheck-v1 ended INCOMPLETE (no combined read): any successor takes a new experiment id and must bind the receipt's Slurm job id (the summariser's check fails on the null field), size the 4B lane from the measured rate (about 61 s per 16-unit stage-A chunk, 73 chunks, GPU idle and one CPU core busy) and make the 4B workload honour SIGUSR1; the 0.6B receipt (smoke 452 REPRODUCED; lane NOT_VIABLE: H1_CX 12.25, H2b -3.93) stays as evidence",
+      "next_action": "Kevin decides how Q3 continues after q3-dense-headroom-precheck-v1 ended INCOMPLETE (no combined read): any successor takes a new experiment id and must bind the receipt's Slurm job id (the summariser's check fails on the null field), size the 4B lane from the measured rate (about 61 s per 16-unit stage-A chunk, 74 chunks, GPU idle and one CPU core busy) and make the 4B workload honour SIGUSR1; the 0.6B receipt (smoke 452 REPRODUCED; lane NOT_VIABLE: H1_CX 12.25, H2b -3.93) stays as evidence",
       "first_gpu_experiment": {
         "name": "dense headroom pre-check",
         "registration": "q3-dense-headroom-precheck-v1 (frozen 2026-10-08, D32; operated 2026-10-08: 0.6B lane complete with smoke 452 REPRODUCED, 4B lane void, read INCOMPLETE)",
@@ -101,7 +101,7 @@
     "Review decisions D28 (Q1 pilot exposure: exposed units stay primary with a sensitivity analysis; D14's precondition can no longer be met) and D29 (KernelBench adversarial kernels and unmodified upstream fidelity code admitted on GPUs under D7)",
     "Q3 dense pre-check (q3-dense-headroom-precheck-v1) ended INCOMPLETE with no combined read (program/evidence/2026-10-08/q3-dense-headroom-precheck/README.md): decide whether and how a successor id runs. Its defects: the frozen summariser requires the receipt's slurm_job_id, which the batch script never passes into the container; the 4B lane needs several times its 21-minute limit and did not act on SIGUSR1. The 0.6B lane reproduced K1 smoke 452 and reads NOT_VIABLE; the 4B lane has no receipt. No budget amendment is possible under the id"
   ],
-  "gpu_hours_spent_this_program": 2.9035,
+  "gpu_hours_spent_this_program": 2.8557,
   "frozen_registrations": [
     "q3-k1-localization-screen-v1",
     "q2-holo3-rerun-audit-v1-posthoc",
@@ -204,23 +204,23 @@
     },
     {
       "experiment": "q3-dense-headroom-precheck-v1, Qwen3-0.6B-Base lane",
-      "gpu_hours": 0.1,
+      "gpu_hours": 0.0772,
       "jobs": [
         "723 image build (CPU)",
         "724 CPU doctor in the image (CPU)",
         "727 qwen3-0.6b-base lane"
       ],
       "outcome": "PRECHECK_COMPLETE; K1 smoke 452 REPRODUCED; lane NOT_VIABLE (H1_CX 12.25, lower 8.98; h2_status FAIL); 278 s used (0.0772 GPU-h)",
-      "basis": "charged under the registration's rule: elapsed minutes from job.env started_at to termination.env finished_at, rounded up, plus one"
+      "basis": "physical (job.env start to termination.env finish, 278 s); charged under the registration rule 6 minutes (0.1000 GPU-h)"
     },
     {
       "experiment": "q3-dense-headroom-precheck-v1, Qwen3.5-4B-Base lane",
-      "gpu_hours": 0.3667,
+      "gpu_hours": 0.3417,
       "jobs": [
         "730 qwen3.5-4b-base lane (FAILED 137:0 at its 21-minute limit)"
       ],
-      "outcome": "no receipt: 18 of 73 chunks at about 61 s each, SIGUSR1 not acted on, hard stop; lane void and INCOMPLETE (no minutes left under the id); 1,230 s used (0.3417 GPU-h), charged 22 minutes",
-      "basis": "charged under the registration's rule: elapsed minutes from job.env started_at to termination.env finished_at, rounded up, plus one"
+      "outcome": "no receipt: 18 of 74 chunks at about 61 s each, SIGUSR1 not acted on, hard stop; lane void and INCOMPLETE (no minutes left under the id); 1,230 s used (0.3417 GPU-h), charged 22 minutes",
+      "basis": "physical (1,230 s); charged under the registration rule 22 minutes (0.3667 GPU-h), one minute over the lane's 21 because of the +1 rule"
     }
   ],
   "results": [
