@@ -47,7 +47,7 @@ def test_development_at_seed_42_is_admitted():
     validate_manifest(development())
 
 
-@pytest.mark.parametrize("seeds", [[43], [44], [42, 43], [7]])
+@pytest.mark.parametrize("seeds", [[43], [44], [45], [42, 43], [42, 45], [7]])
 def test_other_seeds_are_refused(seeds):
     manifest = development()
     manifest["randomness"]["seeds"] = seeds
@@ -55,10 +55,21 @@ def test_other_seeds_are_refused(seeds):
         validate_manifest(manifest)
 
 
-@pytest.mark.parametrize("layer", ["L0-raw", "H-OSW-up", "H-GA-buggy", "H-OSW"])
-def test_controls_never_run_in_development(layer):
+@pytest.mark.parametrize("layer", ["H-OSW-up", "H-GA-buggy", "H-OSW"])
+def test_detection_controls_never_run_in_development(layer):
     with pytest.raises(ManifestError):
         validate_manifest(development(layer=layer))
+
+
+def test_l0_raw_runs_in_development_at_seed_42_only():
+    """Decision D40: development may characterise the mechanism of v1's C2 failure (seed 42
+    only); v2's C2 runs its own seed, 45, which development may not use."""
+    validate_manifest(development(layer="L0-raw"))
+    for seeds in ([45], [43]):
+        manifest = development(layer="L0-raw")
+        manifest["randomness"]["seeds"] = seeds
+        with pytest.raises(ManifestError):
+            validate_manifest(manifest)
 
 
 def test_acceptance_is_refused_even_with_a_frozen_preregistration():

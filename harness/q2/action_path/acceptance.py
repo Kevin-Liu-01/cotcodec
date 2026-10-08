@@ -1,7 +1,8 @@
-"""Acceptance analysis of q2-action-path-v1: A1-A7, C1-C4 and the concurrency N*.
+"""Acceptance analysis of q2-action-path-v2: A1-A7, C1-C4 and the concurrency N*.
 
 This module restates the preregistration's decision rules (sections 5-9 of
-``program/preregistrations/q2-action-path-v1.md``) as code, frozen with the inputs
+``program/preregistrations/q2-action-path-v2.md``, which keeps v1's rules; decision D40
+changes only C2's prediction file and order seed) as code, frozen with the inputs
 addendum (and pinned again by the executor addendum) before any scored campaign runs,
 C2 included, so the verdicts are computed the way the text says and nothing is chosen
 after the data. It reads campaign run directories as the VM lane writes them
@@ -78,7 +79,10 @@ ROOT = Path(__file__).resolve().parents[3]
 CELLS = ROOT / "harness/q2/action_path/suite_cells.json"
 GATING = ROOT / "harness/q2/action_path/gating_set.json"
 VOLUME_PLAN = ROOT / "harness/q2/action_path/volume_plan.json"
-PREDICTION = ROOT / "harness/q2/action_path/l0_raw_prediction.yaml"
+# q2-action-path-v2 (decision D40): C2 reads v2's prediction (v1's, with chord_super_d moved
+# to the predicted failures) on its own order seed.
+PREDICTION = ROOT / "harness/q2/action_path/l0_raw_prediction_v2.yaml"
+C2_SEED = order.C2_SEED
 OPERATORS = ROOT / "harness/q2/action_path/mutation_operators.yaml"
 LADDER_RUNGS = (8, 16, 24, 32, 40)
 BOOT_P95_MAX_S = 180.0
@@ -1283,7 +1287,7 @@ def c2(campaigns: list[dict[str, Any]]) -> dict[str, Any]:
 
     for c in campaigns:
         problems += campaign_problems(c, excused=read_as_pass, judged=set(cells) - predicted)
-    plan = order.plan(_layer_ids("L0-raw"), 42, 5, ["screenshot"])
+    plan = order.plan(_layer_ids("L0-raw"), C2_SEED, 5, ["screenshot"], criterion="C2")
     problems += _check_plan(campaigns, expected(plan), "C2")
     flags: dict[str, dict[str, list[bool]]] = {}
     for c in campaigns:

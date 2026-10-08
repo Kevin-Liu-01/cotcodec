@@ -186,9 +186,18 @@ def test_order_is_seeded_and_refuses_acceptance_seeds_in_development():
     ids = [f"e{i}" for i in range(100)]
     first = order.shuffle_order(ids, 42, 5)
     assert first == order.shuffle_order(ids, 42, 5) and len(first) == 500
-    for seed in (43, 44, 7):
+    for seed in (43, 44, 45, 7):
         with pytest.raises(order.OrderError):
             order.shuffle_order(ids, seed, 1)
+    # Decision D40: seed 45 is C2's order, for C2 only.
+    assert order.C2_SEED == 45
+    assert len(order.shuffle_order(ids, 45, 5, criterion="C2")) == 500
+    for criterion in ("A1", "C1", "C3", None):
+        with pytest.raises(order.OrderError):
+            order.shuffle_order(ids, 45, 1, acceptance=True, criterion=criterion)
+    for seed in (42, 43):
+        with pytest.raises(order.OrderError):
+            order.shuffle_order(ids, seed, 1, acceptance=seed == 42, criterion="C2")
     sessions = order.plan(ids, 42, 5, ["screenshot", "screenshot+a11y"])
     assert len(sessions) == 18 and all(len(s["trials"]) <= 60 for s in sessions)
     sizes = {len(s["trials"]) for s in sessions}

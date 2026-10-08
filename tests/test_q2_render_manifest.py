@@ -1,5 +1,9 @@
 """The scored-campaign manifest renderer refuses before the freeze and renders admissible
-manifests after it (here against a scratch ledger frozen with scripts/preregister.py)."""
+manifests after it (here against a scratch ledger frozen with scripts/preregister.py).
+
+Since q2-action-path-v2 (decision D40) the operator names the host run root: there is no
+default, and the development root v1's renderer hard-coded is refused.
+"""
 
 from __future__ import annotations
 
@@ -15,6 +19,7 @@ from tests.test_q2_acceptance_admission import export_tree
 
 ROOT = Path(__file__).resolve().parents[1]
 SHA = "b" * 40
+HOST_ROOT = "/home/kevin/cotcodec-runs/q2-action-path-v2"
 
 
 @pytest.fixture()
@@ -26,6 +31,7 @@ def export(tmp_path: Path) -> Path:
 def _render(export: Path, tmp_path: Path, *argv: str) -> dict:
     out = tmp_path / "m.yaml"
     code = render.main([*argv, "--source-dir", str(export), "--git-sha", SHA,
+                        "--host-root", HOST_ROOT,
                         "--campaign-id", "q2ap-accept-test", "--out", str(out)])  # fmt: skip
     assert code == 0
     return yaml.safe_load(out.read_text())
@@ -43,6 +49,8 @@ def test_refused_before_the_freeze(tmp_path):
             str(tmp_path),
             "--git-sha",
             SHA,
+            "--host-root",
+            HOST_ROOT,
             "--campaign-id",
             "q2ap-x",
             "--out",
@@ -67,7 +75,7 @@ def test_renders_admissible_scored_campaigns(export, tmp_path):
         (("A7", "--session-range", "0", "30"), 30, None),
         (("A6",), 5, 300),
         (("C1", "--seed", "42", "--layer", "H-OSW-up"), 2, 70),
-        (("C2", "--seed", "42", "--layer", "L0-raw"), 9, 500),
+        (("C2", "--seed", "45", "--layer", "L0-raw"), 9, 500),
         (
             ("C3", "--seed", "42", "--layer", "H-GA", "--mutant", "M24-grid-1000-instead-of-999"),
             2,
@@ -95,6 +103,8 @@ def test_a4_on_one_vm_must_be_split(export, tmp_path):
             str(export),
             "--git-sha",
             SHA,
+            "--host-root",
+            HOST_ROOT,
             "--campaign-id",
             "q2ap-x",
             "--out",
@@ -109,7 +119,8 @@ def test_runner_cpus_follow_the_registered_rule(export, tmp_path):
     assert rung["runner"]["cpus"] == 20 and rung["slurm"]["cpus"] == 40 * 4 + 20
     out = str(tmp_path / "m.yaml")
     argv = ["ladder", "--concurrency", "8", "--runner-cpus", "1", "--source-dir", str(export),
-            "--git-sha", SHA, "--campaign-id", "q2ap-x", "--out", out]  # fmt: skip
+            "--git-sha", SHA, "--host-root", HOST_ROOT, "--campaign-id", "q2ap-x",
+            "--out", out]  # fmt: skip
     assert render.main(argv) == 2
 
 
@@ -117,9 +128,44 @@ def test_c2_renders_between_the_inputs_and_the_executor_freeze(tmp_path):
     from harness.q2.vm.manifest import ADDENDA_IDS, PREREG_ID
 
     tree = export_tree(tmp_path / "export", freeze=(PREREG_ID, ADDENDA_IDS["inputs"]))
-    c2 = _render(tree, tmp_path, "C2", "--seed", "42", "--layer", "L0-raw")
+    c2 = _render(tree, tmp_path, "C2", "--seed", "45", "--layer", "L0-raw")
     assert set(c2["addenda"]) == {"inputs"} and c2["workload"]["trials"] == 500
     out = str(tmp_path / "a1.yaml")
-    argv = ["A1", "--source-dir", str(tree), "--git-sha", SHA, "--campaign-id", "q2ap-x",
+    argv = ["A1", "--source-dir", str(tree), "--git-sha", SHA, "--host-root", HOST_ROOT,
+            "--campaign-id", "q2ap-x", "--out", out]  # fmt: skip
+    assert render.main(argv) == 2
+    # v1's C2 order (seed 42) is not v2's C2.
+    argv = ["C2", "--seed", "42", "--layer", "L0-raw", "--source-dir", str(tree),
+            "--git-sha", SHA, "--host-root", HOST_ROOT, "--campaign-id", "q2ap-x",
             "--out", out]  # fmt: skip
     assert render.main(argv) == 2
+
+
+def test_the_operator_names_the_host_run_root(export, tmp_path, capsys):
+    """Decision D40: the run root is a parameter with no default, never the development root;
+    the export is named under ROOT/src and the run directories go under ROOT/runs."""
+    out = tmp_path / "m.yaml"
+    base = ["C2", "--seed", "45", "--layer", "L0-raw", "--source-dir", str(export),
+            "--git-sha", SHA, "--campaign-id", "q2ap-accept-test", "--out", str(out)]  # fmt: skip
+    assert render.main(base) == 2 and not out.exists()
+    assert "--host-root" in capsys.readouterr().err
+    for refused in (
+        render.DEVELOPMENT_ROOT,
+        render.DEVELOPMENT_ROOT + "/",
+        render.DEVELOPMENT_ROOT + "/v2",
+    ):
+        assert render.main([*base, "--host-root", refused]) == 2 and not out.exists()
+    # A root the lane refuses (outside ~/cotcodec-runs) is refused by the manifest check.
+    assert render.main([*base, "--host-root", "/tmp/q2"]) == 2 and not out.exists()
+    manifest = _render(export, tmp_path, "C2", "--seed", "45", "--layer", "L0-raw")
+    assert manifest["source"]["host_dir"] == f"{HOST_ROOT}/src/{SHA}"
+    assert manifest["run_root"] == f"{HOST_ROOT}/runs"
+    other = "/home/kevin/cotcodec-runs/elsewhere"
+    assert render.main([*base, "--host-root", other + "/"]) == 0
+    moved = yaml.safe_load(out.read_text())
+    assert moved["source"]["host_dir"] == f"{other}/src/{SHA}"
+    assert moved["run_root"] == f"{other}/runs"
+    # Nothing else depends on the root.
+    for key in moved:
+        if key not in ("source", "run_root"):
+            assert moved[key] == manifest[key], key

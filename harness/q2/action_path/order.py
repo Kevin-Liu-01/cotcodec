@@ -10,7 +10,9 @@ observation setting.
 Seed 42 is development (never evidence); seeds 43 and 44 are acceptance and
 are refused here unless the caller passes ``acceptance=True``, which only the
 acceptance workloads may do once ``manifest.py`` admits them (it refuses them
-before the freeze). Standard library only.
+before the freeze). Seed 45 is C2's own order in q2-action-path-v2 (decision D40:
+C2 is a reproduction test on an order seed no v1 campaign or development run used);
+it is refused unless the caller names ``criterion="C2"``. Standard library only.
 """
 
 from __future__ import annotations
@@ -24,6 +26,8 @@ from typing import Any
 SESSION_TRIALS = 60
 DEVELOPMENT_SEED = 42
 ACCEPTANCE_SEEDS = (43, 44)
+# q2-action-path-v2 (decision D40): validity control C2's order seed, for C2 only.
+C2_SEED = 45
 SETTINGS = ("screenshot", "screenshot+a11y")
 # A3's 30 timing- and state-sensitive entries (preregistration section 7, A3).
 STRESS_ENTRIES = (
@@ -41,18 +45,23 @@ class OrderError(ValueError):
     """A run order that the preregistration does not allow."""
 
 
-def check_seed(seed: int, acceptance: bool = False) -> None:
+def check_seed(seed: int, acceptance: bool = False, criterion: str | None = None) -> None:
     if seed == DEVELOPMENT_SEED and not acceptance:
         return
     if seed in ACCEPTANCE_SEEDS and acceptance:
         return
+    if seed == C2_SEED and criterion == "C2":
+        return
     raise OrderError(
         f"seed {seed} is not allowed for {'acceptance' if acceptance else 'development'}"
+        + (f" ({criterion})" if criterion else "")
     )
 
 
-def shuffle_order(ids: list[str], seed: int, reps: int, acceptance: bool = False) -> list[str]:
-    check_seed(seed, acceptance)
+def shuffle_order(
+    ids: list[str], seed: int, reps: int, acceptance: bool = False, criterion: str | None = None
+) -> list[str]:
+    check_seed(seed, acceptance, criterion)
     rng = random.Random(seed)
     out: list[str] = []
     for _ in range(reps):
@@ -82,12 +91,13 @@ def plan(
     settings: list[str],
     max_trials: int = SESSION_TRIALS,
     acceptance: bool = False,
+    criterion: str | None = None,
 ) -> list[dict[str, Any]]:
     """Sessions in run order: every setting runs the same shuffle, screenshot first."""
     for setting in settings:
         if setting not in SETTINGS:
             raise OrderError(f"unknown observation setting {setting!r}")
-    order = shuffle_order(ids, seed, reps, acceptance)
+    order = shuffle_order(ids, seed, reps, acceptance, criterion)
     sessions = []
     for setting in settings:
         for index, chunk in enumerate(cut_sessions(order, max_trials)):

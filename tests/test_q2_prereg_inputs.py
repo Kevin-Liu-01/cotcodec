@@ -1,4 +1,9 @@
-"""q2-action-path-v1 and its two addenda: the inputs they pin match the repository."""
+"""q2-action-path-v2 and its two addenda: the inputs they pin match the repository.
+
+v1 (q2-action-path-v1 and its addenda) is frozen in the ledger and invalid on C2 (decision
+D40); its files must stay as frozen, and v2's tables must equal v1's except for the rows
+v2's section 24 names.
+"""
 
 from __future__ import annotations
 
@@ -13,10 +18,32 @@ from harness.q2.action_path import catalog as cat
 from harness.q2.action_path import corpus
 
 ROOT = Path(__file__).resolve().parents[1]
-PREREG = ROOT / "program/preregistrations/q2-action-path-v1.md"
-INPUTS = ROOT / "program/preregistrations/q2-action-path-v1-inputs.md"
-EXECUTOR = ROOT / "program/preregistrations/q2-action-path-v1-executor.md"
+PREREG = ROOT / "program/preregistrations/q2-action-path-v2.md"
+INPUTS = ROOT / "program/preregistrations/q2-action-path-v2-inputs.md"
+EXECUTOR = ROOT / "program/preregistrations/q2-action-path-v2-executor.md"
 DOCS = (PREREG, INPUTS, EXECUTOR)
+V1 = {
+    "q2-action-path-v1": ROOT / "program/preregistrations/q2-action-path-v1.md",
+    "q2-action-path-v1-inputs": ROOT / "program/preregistrations/q2-action-path-v1-inputs.md",
+    "q2-action-path-v1-executor": ROOT / "program/preregistrations/q2-action-path-v1-executor.md",
+}
+# The rows of v2's frozen tables that decision D40 changes (main section 24, item 7);
+# every other row must equal v1's.
+D40_ROWS = {
+    PREREG: {"harness/q2/action_path/l0_raw_prediction_v2.yaml"},
+    INPUTS: {
+        "harness/q2/action_path/order.py",
+        "harness/q2/vm/manifest.py",
+        "harness/q2/vm/driver.py",
+        "harness/q2/action_path/acceptance.py",
+    },
+    EXECUTOR: {
+        "harness/q2/action_path/acceptance.py",
+        "scripts/render_q2_action_path_manifest.py",
+        "harness/q2/vm/driver.py",
+        "harness/q2/vm/manifest.py",
+    },
+}
 ROW = re.compile(r"^\| `([^`]+)` \| `([0-9a-f]{64})` \|$")
 LINT = re.compile(r"\bTBD\b|<[A-Za-z_ -]+>")  # scripts/preregister.py's freeze rule
 
@@ -45,7 +72,7 @@ FROZEN_STATUS = (
     "**Status: frozen in `program/preregistrations/ledger.jsonl`; see the ledger\n"
     "row for the freeze time and `git_head_at_freeze`.**"
 )
-FREEZE_ORDER = ("`q2-action-path-v1`", "`q2-action-path-v1-inputs`", "`q2-action-path-v1-executor`")
+FREEZE_ORDER = ("`q2-action-path-v2`", "`q2-action-path-v2-inputs`", "`q2-action-path-v2-executor`")
 
 
 @pytest.mark.parametrize("doc", DOCS, ids=lambda d: d.stem)
@@ -64,6 +91,38 @@ def test_drafts_pass_the_freeze_lint_with_the_frozen_status(doc):
     assert "No acceptance trial" in status and "may run before this row exists" in status
     controls = "no C1 or C3" if doc == EXECUTOR else "no C2, C1 or C3"
     assert controls in status
+    assert "q2-action-path-v1" not in status
+
+
+def test_v1_stays_as_frozen_in_the_ledger():
+    """v1's three registrations are unchanged since their ledger rows (decision D40)."""
+    from scripts import preregister
+
+    for experiment, path in V1.items():
+        row = preregister.verify(experiment)
+        assert row["path"] == path.relative_to(ROOT).as_posix()
+
+
+@pytest.mark.parametrize("doc", DOCS, ids=lambda d: d.stem)
+def test_v2_tables_are_v1s_except_the_rows_d40_changes(doc):
+    v1 = _pinned(V1[doc.stem.replace("-v2", "-v1")])
+    v2 = _pinned(doc)
+    assert set(v1) <= set(v2)
+    differ = {path for path, digest in v2.items() if v1.get(path) != digest}
+    assert differ == D40_ROWS[doc], sorted(differ ^ D40_ROWS[doc])
+
+
+def test_v2_names_its_changes_from_v1_and_v1s_outcome():
+    for doc in DOCS:
+        text = doc.read_text(encoding="utf-8")
+        assert "Changes from v1 (D40)" in text, doc.name
+        for path in D40_ROWS[doc]:
+            assert path.split("/")[-1] in " ".join(text.split("Changes from v1 (D40)", 1)[1].split())
+    main = " ".join(PREREG.read_text(encoding="utf-8").split())
+    assert "program/evidence/2026-10-08/q2-action-path-acceptance/" in main
+    assert "not an a-priori prediction test" in main
+    assert "one unpredicted failure" in main and "verified real at the X event level" in main
+    assert "seed-45 shuffle" in main
 
 
 CODE = {"ir.py", "vocab.py", "catalog.py", "rdev.py", "l0_raw.py", "volume.py"}
