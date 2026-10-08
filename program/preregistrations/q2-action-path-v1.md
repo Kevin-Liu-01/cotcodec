@@ -369,8 +369,15 @@ running and costs at most the entry it hits. That entry still fails with
 trial whose only reasons are `guest_server_restart` and, from the same
 restart, an undelivered accessibility tree (`accessibility`) is reported and
 not counted (`acceptance.restart_only`). That reason set is how a trial's
-record shows a restart during an observation call that `DesktopEnv`'s
-retries absorbed. Any other reason in that trial counts as usual: a restart
+record shows a restart during or after the entry's observation calls,
+before its post guard, that cost the entry no action: one during an
+observation call that `DesktopEnv`'s retries absorbed, or one after the
+entry's last observation call that only the post guard sees. Excusing the
+second kind is harmless: every action of the entry had completed, and been
+observed, before the restart, and the trial shows no other failure, so the
+action path was judged in full and showed no difference (the reason A4
+counts such a trial's actions, section 9). Any other reason in that trial
+counts as usual: a restart
 during an `/execute` call or a guard, or one slower than the retries, leaves
 an `execute`, `screenshot` or `guard_script` failure (or a missing probe, tap
 window or marker) in the trial it hits, and that trial counts (design
@@ -383,16 +390,23 @@ A1-A3 judge an entry on its counted repetitions (section 5), and an entry
 needs all but at most one of its repetitions counted: a second excused
 trial in one entry fails that entry (`RESTART_LIMIT`, reported as such and
 never as FLAKY; decision D33). The count runs over all of the entry's
-repetitions in the criterion: both observation settings, every attempt
-(below) and, in A1, both shuffles. An A1 entry can therefore lose at most
-one of its 20 repetitions, an A2 cell one of its 10 and an A3 entry one of
-its 60 on each layer (design decision 44 gives the reason for this reading).
-A ladder rung reads "every gating trial passes" (section 9) over its counted
-gating trials and does not qualify with more than two excused trials, gating
-or not, over its attempts (an aborted attempt's trials never count); an
-excused trial's steps stay in the rung's step p95, and in A1's. A4 sets no
-limit on excused trials: A7 bounds the restarts. Every excused trial is
-listed in its criterion's restart report beside A4's and A7's (section 12).
+repetitions in the criterion: both observation settings, every rerun
+(below; a campaign's first run and its rerun, within one repair attempt,
+section 11) and, in A1, both shuffles. An A1 entry can therefore lose at
+most one of its 20 repetitions, an A2 cell one of its 10 and an A3 entry
+one of its 60 on each layer (design decision 44 gives the reason for this
+reading, which is the one D33 means). That limit is A1's at N = 1: A1 at
+the operating concurrency N* > 1 is read from the ladder rung N* (section
+7) under the rung's rule, which allows two excused trials in the rung,
+even in one entry. A ladder rung reads "every gating trial passes" (section
+9) over its counted gating trials and does not qualify with more than two
+excused trials, gating or not, over every rerun (an aborted rung's trials
+never count); an excused trial's steps stay in the rung's step p95, and in
+A1's. A4 sets no limit on excused trials: A7 bounds the restarts, and
+under a repair attempt, which A7 does not judge again, A4 reports its own
+restarts per accessibility call against A7's bound (section 11). Every
+excused trial is listed in its criterion's restart report beside A4's and
+A7's (section 12).
 
 An undelivered reset observation is charged to the session's first trial as
 an infrastructure type and a reason of that trial (`reset_observation`), so
@@ -420,7 +434,17 @@ node failure never writes it) and, when the operator or a watcher read it in
 time, from `scontrol show job`; when both exist they must agree. A campaign
 that does not count may be rerun once, as a new attempt with a new output
 path; a campaign that counted is never rerun, and no campaign has a third
-attempt. Every trial of every attempt is reported, and a failed trial in an
+attempt. In this section an attempt of a campaign is one of its runs, the
+first or its rerun (the earlier attempt and the counting attempt), always
+under one executor: a repair attempt (section 11) is a new executor
+version, never a rerun, and every rule here, D33's limits included, runs
+within one repair attempt. A job killed before its driver wrote its
+receipt (the driver writes it last) is still an attempt: the analysis reads
+it from its manifest, its batch record and the sessions it finished
+(`acceptance.load`), and it does not count; a session the kill cut short
+left only unjudged trial records (the runner judges a session's trials at
+its end, against the tap's stream), so its trials are reported as not run.
+Every trial of every attempt is reported, and a failed trial in an
 earlier attempt counts against its criterion exactly as if the attempt had
 counted: cancelling or rerunning a campaign never removes a failure. Like a
 counting attempt's trials, it counts on the cells the criterion judges (G
@@ -449,7 +473,13 @@ for A7's count of restarts, which sums the restarts of every attempt but
 divides by the accessibility calls of the counting attempts only, capped at
 the plan's 39,036 calls: an attempt that was cancelled or did not count adds
 its restarts and none of its calls, so stopping a run and rerunning it can
-never raise A7's chance of passing (section 7, design decision 41).
+never raise A7's chance of passing (section 7, design decision 41). A5 is
+judged on the counting attempts' receipts only: a killed job can leave
+labelled containers by design (a kill or a node failure can skip the batch
+script's cleanup) and writes no receipt, so judging an earlier attempt's
+receipt would let one killed job fail A5 with no repair. Each earlier
+attempt's receipt (or its absence) is reported with A5 (`acceptance.a5`,
+`earlier_attempts`), and that attempt, which did not count, is read above.
 
 ### 6.2 Entry guard
 
@@ -493,6 +523,9 @@ one VM at a time (N = 1) except the concurrency ladder, A4 and A7 (section 9);
   for a guest-server restart is left out of its entry's repetitions, and an
   entry with a second excused trial over its 20 repetitions (both shuffles
   and settings) fails (section 6.1). The same holds for A2 and A3 below.
+  That limit is A1's at N = 1. At N* > 1 the seed-43 shuffle is read from
+  the rung N* under the rung's rule (section 9): at most two excused trials
+  in the rung, which may both fall in one entry.
 - **A2 (harness layer).** H-OSW-fixed and H-GA each pass 100% of their
   expressible entries (85 and 79) and of their gating and declared-deviation R
   cells, 5 repetitions, judged against their own spec, under both observation
@@ -868,6 +901,22 @@ attempt cannot show that no abort occurred, so it does not count for its
 rung: it does not qualify and may be rerun once. It is not an abort, so its
 failed and excused trials count under section 6.1
 (`acceptance.snapshot_problems`; design decision 45).
+A known limitation: the driver takes each snapshot's Slurm queue with
+`squeue` without checking its exit status, and records only the other
+jobs' rows (`squeue_foreign`). A `squeue` that exits non-zero with no
+output therefore records no foreign job, which reads as no foreign load
+(fail-open). The analysis cannot detect it: a snapshot keeps neither
+`squeue`'s exit status nor the job's own row, which a successful `squeue`
+always lists, so such a snapshot is indistinguishable from an idle queue
+(checked on the snapshots of development runs 694 and 703-708, which hold
+only the time, the load average, `squeue_foreign` and two container
+counts). The driver is a file the campaigns execute and stays
+byte-identical to `7653799` (executor addendum, section 9), so this is not
+changed before the freeze. A `squeue` that times out or is missing raises
+in the driver, and that job does not count. What guards against foreign
+load in that case is the operator's rule above (no Slurm job is submitted
+while a rung runs) and the snapshots' load averages and container counts,
+which are reported, not judged.
 VMs are pinned to CPUs from their Slurm allocation; the ladder never exceeds
 160 vCPUs. The N runners of a rung (and of A4 and A7 at N*) share
 `manifest.runner_cpus(N)` CPUs, half a CPU per runner rounded up, at most 20
@@ -951,7 +1000,14 @@ and never loads more than 18 VMs, so no rung above N = 1 could have qualified
   neither reruns nor re-judges it, and the report gives both values. Its
   call count is the counting attempt's, capped at the plan's 39,036
   (decision D33, which confirms these A7 rules). Stage 1 counts restarts per
-  episode at its own concurrency in any case (section 7).
+  episode at its own concurrency in any case (section 7). Because A7 is not
+  judged again and A4 sets no limit on excused trials, a repair attempt's
+  A4 report also gives A4's own restarts per accessibility call against
+  A7's bound, on A7's rule (the restarts of every rerun, every session
+  included, over the calls of the counting attempts, exact one-sided 95%
+  bound): reported, not judged (`acceptance.repair_restart_rate`). An
+  executor that itself caused restarts during observation calls would show
+  there.
 - If the reset sentinel fails, it is debugged before any concurrency work.
 - A finding that a harness "bug" is a design difference goes into
   `harness_design_diffs.md` and never relaxes a verdict after the fact.
@@ -983,8 +1039,13 @@ entry it hit (inside the entry or across the session's reset observation),
 its session, any probe or tap relaunch and, in A1-A4 and the ladder,
 whether the trial counted or was excused (decisions D30 and D33), so every
 excused trial is listed in its criterion's restart report; per criterion
-and per rung, the number of excused trials over every attempt, and in A1-A3
-each entry over its limit (`RESTART_LIMIT`) with its excused repetitions;
+and per rung, the number of excused trials over every rerun (A4's as well,
+beside those of its counting attempts), and in A1-A3 every entry with two
+or more excused trials, whatever its status (a counted failure makes it
+FLAKY or FAIL first) and whether or not the criterion judges it, with its
+excused repetitions (`entries_over_restart_limit`); under a repair
+attempt, A4's restarts per accessibility call against A7's bound (section
+11); each earlier attempt's receipt, or its absence, with A5 (section 6.1);
 every session whose restarts exceed those attributed to its trials
 (a restart that hit no trial); restarts and accessibility calls per session
 and per campaign; A7's restarts, calls (of the counting attempts before and
@@ -1367,8 +1428,10 @@ here with its reason.
     entry over both observation settings, while section 9 counts A1's 20
     repetitions per entry over both shuffles. So the limit counts excused
     trials over all of an entry's repetitions in the criterion: both
-    settings, every attempt and, in A1, both shuffles. A reading that
-    allowed one excused trial per setting and per campaign would let an A1
+    settings, every rerun and, in A1, both shuffles. D33's author confirmed
+    before the freeze that this per-entry reading is the one D33 means. A
+    reading that allowed one excused trial per setting and per campaign
+    would let an A1
     entry lose up to 4 of its 20 repetitions (2 shuffles x 2 settings),
     which D33's text rules out; it was not adopted (it would lower the
     probability that some A1-A3 entry reaches its limit by about 8 x 10^-5
@@ -1403,6 +1466,20 @@ here with its reason.
     the gating failure or the excused trials of an attempt that otherwise
     counted. Such an attempt now counts its trials, does not qualify and may
     be rerun (`acceptance.snapshot_problems`).
+46. **A killed attempt is read, and what an earlier attempt adds is
+    reported** (section 22). The driver writes a campaign's receipt last,
+    so a job ended by a signal, a time limit or a node failure, the usual
+    reason for a rerun, has none (development runs 695-699). The analysis
+    had opened the receipt unconditionally and could not have read such an
+    attempt at all, which would have left any criterion with a killed
+    earlier attempt without a verdict and the frozen analysis without a
+    repair. Such an attempt is now read from its manifest, its batch record
+    (whose `job_id=` line names the job) and its finished sessions, and it
+    does not count. A5 judges the counting attempts' receipts only and
+    reports the earlier attempts' (a killed job can leave labelled
+    containers by design and has no receipt), and under a repair attempt A4
+    reports its own restarts per accessibility call against A7's bound,
+    because A7 is not judged again (section 11). Neither report is judged.
 
 ## 15. Changes after the 2026-10-07 review
 
@@ -1708,21 +1785,21 @@ item 5, before the freeze. Applied on branch `stage0/q2-action-path-d30`:
 2. **A1-A3's limit.** An entry is judged on its counted repetitions, an
    excused trial alone never makes it FLAKY, and a second excused trial in
    one entry fails it (`RESTART_LIMIT`), counted over both observation
-   settings, every attempt and, in A1, both shuffles. The working brief for
-   this pass read the limit "per setting, per campaign"; D33's text ("needs
-   all but at most one of its repetitions counted: a second excused trial
-   in one entry counts as a failure") and section 5's entry over both
-   settings rule that reading out, so the registered limit is per entry
-   (design decision 44). Should the owner have meant the wider reading, D33
-   is amended before the freeze; under it the probability that some A1-A3
-   entry reaches its limit would be lower by about 8 x 10^-5 at the
-   development rate, 3 x 10^-4 at half A7's bound and 1.2 x 10^-3 at the
-   bound, with the rung probabilities unchanged (section 9; first given
-   here as less than 10^-4, which holds at the development rate only;
-   section 21).
+   settings, every rerun and, in A1, both shuffles. This per-entry reading
+   is the one D33 means: D33's text says an entry "needs all but at most
+   one of its repetitions counted: a second excused trial in one entry
+   counts as a failure", section 5 judges one entry over both settings,
+   and D33's author confirmed the reading before the freeze (section 22;
+   design decision 44). The working brief for this pass had read the limit
+   "per setting, per campaign"; that reading is not registered. It would
+   have lowered the probability that some A1-A3 entry reaches its limit by
+   about 8 x 10^-5 at the development rate, 3 x 10^-4 at half A7's bound
+   and 1.2 x 10^-3 at the bound, with the rung probabilities unchanged
+   (section 9; first given here as less than 10^-4, which holds at the
+   development rate only; section 21).
 3. **The ladder.** "Every gating trial passes" reads over a rung's counted
    gating trials; a rung with more than two excused trials, gating or not,
-   over its attempts (an aborted attempt aside) does not qualify; excused
+   over every rerun (an aborted rung aside) does not qualify; excused
    trials' steps stay in the step p95 (the rung's and A1's); the
    foreign-load abort is unchanged.
 4. **Reporting.** Every excused trial in A1-A3 and the ladder is listed in
@@ -1842,3 +1919,94 @@ third defect; all are fixed before the freeze with no scored data (code in
    its earlier attempt fared, or an earlier reference failure on the only
    killing cell, and an earlier A1 attempt's C4 mismatch counting. Each
    new test fails on the `acceptance.py` before it.
+
+## 22. Wording and reporting closed before the freeze (2026-10-07)
+
+The two reviews of the D33 pass left non-blocking notes; each is closed
+here before the freeze, with no scored data (code in `acceptance.py`, with
+`tests/test_q2_acceptance_analysis.py`, commit `2518241`):
+
+1. **What the excused reason set shows** (section 6.1). The text said the
+   set {`guest_server_restart`, `accessibility`} shows a restart during an
+   observation call. It shows a restart during or after the entry's
+   observation calls, before its post guard: a restart after the entry's
+   last observation call that only the post guard sees leaves the same set.
+   Excusing it is harmless, because every action of the entry had completed
+   and been observed and the trial shows no other failure.
+2. **The reading of D33's limit** (section 20, item 2; design decision 44).
+   Section 20 had left a conditional ("Should the owner have meant the
+   wider reading, D33 is amended before the freeze"). D33's author
+   confirmed that the per-entry reading is the one D33 means, so the text
+   states it plainly, and the pending item for it is removed from
+   `program/state.json`.
+3. **"Attempt"** (sections 6.1, 12, 20 and design decision 44). Where those
+   sections mean a campaign's first run and its rerun they now say "every
+   rerun", and section 6.1 defines an attempt of a campaign as one of its
+   runs under one executor: a repair attempt (section 11) is never a rerun,
+   and every rule of section 6.1, D33's limits included, runs within one
+   repair attempt, as section 11 already said. The code and the earlier
+   text keep "earlier attempt" and "counting attempt" in that sense.
+4. **A1 at N\*** (sections 6.1 and 7). A1 at N* > 1 is read from the ladder
+   rung N* under the rung's rule (two excused trials in the rung, which may
+   both fall in one entry), while A1 at N = 1 allows one per entry. This
+   was D33's text, but no section said it.
+5. **Reporting** (section 12; `acceptance.py`). `entries_over_restart_limit`
+   listed only entries whose status was `RESTART_LIMIT`, by name: an entry
+   with two excused trials and also a counted failure (FLAKY or FAIL) was
+   left off. It now lists every entry with two or more excused trials,
+   whatever its status and whether or not the criterion judges it, with
+   each excused repetition (job, session, setting, sequence number; in A1
+   over both seeds). A4's `restart_only_trials` counted the counting
+   attempts only; it now counts every rerun, with the counting attempts'
+   count beside it. Under a repair attempt, A4 reports its own restarts per
+   accessibility call against A7's bound on A7's rule (section 11,
+   `acceptance.repair_restart_rate`), reported and not judged: A7 runs
+   under attempt 1 only, and A4 excuses restart-only trials without a
+   limit, so an executor that itself caused restarts would otherwise go
+   unmeasured.
+6. **A5 and earlier attempts** (section 6.1). A5 stays judged on the
+   counting attempts' receipts only, because a killed job can leave
+   labelled containers by design; each earlier attempt's receipt, or its
+   absence, is reported with A5 (`earlier_attempts`).
+7. **A failed `squeue` in a host snapshot** (section 9). The driver's
+   snapshot reads a `squeue` that fails with no output as no foreign load.
+   The driver cannot change (executor addendum, section 9), and the
+   analysis cannot detect such a snapshot: the snapshot keeps neither
+   `squeue`'s exit status nor the job's own row (checked on the snapshots
+   of runs 694 and 703-708). Section 9 states it as a known limitation.
+8. **A killed attempt could not be read** (section 6.1, design decision
+   46; found while closing item 6). `acceptance.load` opened `receipt.json`
+   unconditionally, and the driver writes it last, so the attempt that most
+   often makes a rerun (a job ended by a signal, a time limit or a node
+   failure; development runs 695-699 have no receipt) could not be read,
+   and a criterion with such an earlier attempt would have had no verdict.
+   Such an attempt is now read from its manifest, its batch record (whose
+   `job_id=` line, written before the driver starts, names the job; the
+   run directory's name otherwise) and its finished sessions, and it does
+   not count. A session the kill cut short left only unjudged trial
+   records (`cycle-NN.trials.jsonl`; the runner judges a session's trials
+   at its end, against the tap's stream), so its trials are reported as
+   not run, which section 6.1 now says.
+9. **Code, tests and checks.** `acceptance.py` is still the only code file
+   changed since `7653799`, and no campaign executes it, so the executor
+   addendum's byte-identity check lists only `harness/q2/README.md` and
+   `acceptance.py` and the development runs at `7653799` stand; both
+   addenda pin its new digest. New tests drive the list of entries over the
+   limit (FLAKY with two excused trials, a non-gating entry, one excused
+   trial in each seed, one excused trial not listed), A4's excused trials
+   over every rerun, A4's rate against A7's bound under a repair attempt
+   (absent under attempt 1, within and over the bound, never judged), A5's
+   report of earlier receipts with its counting receipt still judged, and
+   loading an attempt without a receipt (from its preflight record, as an
+   earlier attempt whose gating failure counts, and with no finished
+   session). Each fails on the `acceptance.py` before it. The final loader
+   read development runs 694 and 703-708 again, next to the loader before
+   it (`ced21d32`): restarts, accessibility calls, the trials each restart
+   hit, every entry's status, the rung reading (`chord_ctrl_c` and
+   `drag_short` not PASS in 694 and 703), the snapshots and the abort
+   reading are unchanged. The only difference is the new list:
+   `chord_ctrl_c` in 694 and 703 is listed over the limit with status
+   `RESTART_LIMIT` and its two excused repetitions, where the old list gave
+   its name. The cancelled runs 695-699, which the old loader could not
+   read (no `receipt.json`), now read as attempts with no finished session,
+   Slurm state CANCELLED 143:0 and no batch end, which cannot count.
