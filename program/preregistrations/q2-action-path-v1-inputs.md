@@ -8,8 +8,9 @@ Validity control C2 may be scored only after this ledger entry exists.
 - Experiment id: `q2-action-path-v1-inputs`, an addendum to `q2-action-path-v1`
   (`program/preregistrations/q2-action-path-v1.md`, section 2.2). It changes no
   rule of that file; it pins the components that file says are frozen here.
-- Drafted: 2026-10-07, on branch `stage0/q2-action-path`; decision D30 applied
-  before the freeze on branch `stage0/q2-action-path-d30` (sections 5 and 6).
+- Drafted: 2026-10-07, on branch `stage0/q2-action-path`; decisions D30 and
+  D33 applied before the freeze on branch `stage0/q2-action-path-d30`
+  (sections 5 and 6).
 - What it freezes: the guest probe (event log, text buffer, marker block,
   entry delimiters), the marker decoder, the entry guard (including the
   pointer park and the side-effect restorations), the canary driver (app
@@ -62,7 +63,7 @@ Frozen with this file (SHA-256 of the committed bytes):
 | `harness/q2/action_path/upstream/PROVENANCE.json` | `5bef93df835c560b1f8dc6e8cfe7d6c207ba7fbe2e26c861541878563062744d` |
 | `infra/slurm/host-single-node/vm-campaign.sbatch` | `3d86820d176e3a9f0699814a19f62154cde00f88da1777a33c804e884288ac8a` |
 | `scripts/submit_vm_campaign.py` | `f08aafc8bc693cd6eb6850ff972a3401f3bddc99f3c14e03187b4d313fcc5917` |
-| `harness/q2/action_path/acceptance.py` | `a29b4035488d1e7359a904125f2a74fa90b61d549af70ce028d71437a27ebf24` |
+| `harness/q2/action_path/acceptance.py` | `cb38018d40d7961f2ceb881402b3b05c9eb6b71930eda765342004f6959e8361` |
 | `harness/__init__.py` | `17dac2704be26050e324aa36aba6d2c855abbd592e4d72f750b9b6e9c4399fec` |
 | `harness/q2/__init__.py` | `0932bda132c1dab03f40e460874a6827c4609424815e65eedcfefd3cd0b943a1` |
 | `harness/q2/action_path/__init__.py` | `8ce4d0afdd20f6b09dbb4e9d40d24acead2fc1992fccebd1ddf3891ec402613f` |
@@ -179,9 +180,12 @@ file equals it), so freezing the catalog fixes them.
   sections 5-9 as code (its design decision 32): end states from the batch
   script's own record and, when read, Slurm; the rerun rules; an undelivered
   reset observation charged to the session's first trial; the realized order
-  and one source tree per criterion; A1-A6, with A4 not counting a trial whose
-  only failure is a guest-server restart (decision D30); A7, the restarts per
-  accessibility call on the exact one-sided 95% Poisson bound; C1; C2's
+  and one source tree per criterion; A1-A6, with A1-A4 and the ladder not
+  counting a trial whose only failure is a guest-server restart (decisions
+  D30 and D33), A1-A3 judging an entry on its counted repetitions and failing
+  it on a second excused trial, and a ladder rung not qualifying with more
+  than two; A7, the restarts per accessibility call on the exact one-sided
+  95% Poisson bound, its calls capped at the plan's 39,036; C1; C2's
   reading of L0-raw trials (main section 8, decision 34); C3's clean kills
   (decision 36); C4; and the ladder's N* with the foreign-load abort and its
   rerun cap.
@@ -257,6 +261,7 @@ later change to a file listed in section 1 (from `git log 29b056e..`):
 | `34f79e4` | `acceptance.py` | Decision D30: A4 does not count a trial whose only failure is a guest-server restart (`restart_only`; it is reported), A7 judges restarts per accessibility call on the exact one-sided 95% Poisson bound, and `load` reads each session's restart and call counts. No scored data exists; `tests/test_q2_acceptance_analysis.py` drives both rules on synthetic campaigns, and the loader read runs 694 and 703 (two restarts and, in the accessibility session, 38 calls per session; the two trials killed inside counted as restart-only, the two after a kill between entries not). |
 | `7653799` | `manifest.py`, `suite.py` | `manifest.py` refuses an A7 campaign under a repair attempt (main section 11); `suite.py`'s comment states what run 694 measured. Jobs 703-708 ran at this commit (executor addendum, section 9); 695-699, the same campaigns at `34f79e4`, were cancelled while booting when this change was made. |
 | `13ad91e` | `acceptance.py` | After the review of `13c6790`, before any freeze and with no scored data: A7 divides the restarts of every attempt by the accessibility calls of the counting attempts only, so cancelling a failing run and rerunning it cannot raise its chance of passing (main design decision 41), and refuses an attempt other than 1; an undelivered reset observation is charged to the first trial as a reason as well as an infrastructure type, and `restart_only` checks both, so a restart-only trial that also lost its reset observation is counted; a restart across the reset observation that left only its tree undelivered is excused on A4's terms (`reset_restart`, main section 6.1); the restart report names each hit trial's session and every session whose restarts hit no trial. `tests/test_q2_acceptance_analysis.py` drives each rule; the loader read runs 694 and 703-707 again with the same restart counts and restart-only trials. No file a campaign executes changed. |
+| `3ad255a` | `acceptance.py` | Decision D33, recorded in `program/decisions.md` before the freeze and with no scored data: A1-A3 and the ladder excuse a restart-only trial as A4 does; A1-A3 judge an entry on its counted repetitions and fail it on a second excused trial over both settings, every attempt and, in A1, both shuffles (`RESTART_LIMIT`, never FLAKY); a ladder rung does not qualify with more than two excused trials over its attempts (an aborted attempt aside), and excused trials' steps stay in the step p95; an earlier attempt's failed trials count only on the cells the criterion judges, less its excused ones (an outside-spec R cell's expected failure in an earlier A2 attempt had failed every rerun); A7 caps its calls at the plan's 39,036; each criterion's restart report lists its excused trials. `tests/test_q2_acceptance_analysis.py` drives each rule; the loader read runs 694 and 703-708 again (main section 20). No file a campaign executes changed. |
 
 The probe change makes the no-action entry's screenshot start from a settled
 screen, the canary changes make the read-back report what the app holds, and
@@ -274,7 +279,10 @@ judged, and A4's restart exclusion and A7 change only how A4 counts and what
 else is bounded (section 6). `13ad91e` answers the review of `13c6790`: it
 narrows A4's exclusion where it was too wide, adds the reset observation's
 restart on the same terms, and closes A7 to cancel-and-rerun; it changes no
-trial verdict. No scored campaign has run.
+trial verdict. `3ad255a` applies decision D33, which the owner took before
+the freeze on the exposure main section 18 stated, not on any scored
+outcome: it changes how A1-A3 and the ladder count a restart-only trial,
+never how a trial is judged. No scored campaign has run.
 
 ## 6. A decision before the freeze: guest-server restarts and A4
 
@@ -345,5 +353,17 @@ section 5). Stage 1 counts restarts per episode as infrastructure failures
 (main section 7). The single-event uncertainty is reported with A4 and A7.
 D30 rejects option 2 because patching the server would make the runtime
 differ from the one the leaderboard uses; option 5 is not taken because the
-one crash on record came after two delivered calls. Every other rule is unchanged; main
-section 18 states what that leaves exposed.
+one crash on record came after two delivered calls. Every other rule was
+left unchanged; main section 18 states what that left exposed.
+
+**Extended (D33, 2026-10-07).** The owner extended the exclusion to A1-A3
+and the concurrency ladder before the freeze: a trial whose only failures
+are a guest-server restart during an observation call and the tree it left
+undelivered is excused and reported there too, while a restart during
+`/execute` or a guard still counts. An A1-A3 entry is judged on its counted
+repetitions and fails on a second excused trial; a ladder rung with more
+than two excused trials does not qualify, and excused trials' steps stay in
+the step p95. A7's call count is the counting attempt's, capped at the
+plan's 39,036. The remaining exposure (restarts outside an observation
+call or slower than the retries, and a post-guard restart that costs two
+entries) is stated with A4 and accepted (main sections 6.1, 9 and 20).

@@ -27,10 +27,18 @@ rater, branch `stage0/q2-evaluator-mutation`) not yet merged.
   says whether a K1 v3 can register a NEGATIVE, on which base, and with which
   controls. Any K1 v3 takes a new id and the gauntlet.
 - **Q2 action path** (`stage0/q2-action-path-d30`): D30 (A4 restart exclusion,
-  A7 observation-service bound, scoped probe and tap) and the review fixes are
-  done; D33 (the exclusion extends to A1-A3 and the ladder, A7 call cap) is
-  being applied. Then merge, freeze v1, `-inputs`, `-executor`, and run the
-  CPU-only acceptance campaigns (98.4 VM-hours; the ladder needs a quiet host).
+  A7 observation-service bound, scoped probe and tap), the review fixes and
+  D33 are done (main preregistration section 20; code `3ad255a`, only
+  `acceptance.py`, which no campaign executes, so the development runs at
+  `7653799` stand). A1-A3 and the ladder now excuse restart-only trials: an
+  A1-A3 entry fails on a second excused trial over all its repetitions in
+  the criterion (read per entry, as D33's text says; the per-setting,
+  per-campaign reading of the working brief was not adopted, design
+  decision 44), a rung on a third; A7's calls are capped at the plan's
+  39,036. Host suite and the freeze lint of all three drafts pass (log
+  2026-10-07, "D33 applied"). Then merge, freeze v1, `-inputs`,
+  `-executor`, and run the CPU-only acceptance campaigns (98.4 VM-hours;
+  the ladder needs a quiet host).
 - **Q2 checker mutation** (`stage0/q2-evaluator-mutation`): D27's kappa rule
   fired (dev kappa 0.27 with Qwen3.6-35B-A3B, thinking off). Fix 5 under D34:
   gold shams per task, concordant contradictions to adjudication, packet text

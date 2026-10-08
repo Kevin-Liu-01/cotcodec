@@ -11,8 +11,8 @@ No acceptance trial may run before that ledger entry exists.
   100% of the gating set G defined in section 4.
 - Drafted: 2026-10-07, on branch `stage0/q2-action-path`. Revised the same day
   after an independent review (section 15 lists what changed and why), and
-  again to apply decision D30 on guest-server restarts before the freeze
-  (branch `stage0/q2-action-path-d30`; section 18).
+  again to apply decisions D30 and D33 on guest-server restarts before the
+  freeze (branch `stage0/q2-action-path-d30`; sections 18 and 20).
 - Reviewed plan this follows: the Stage-0 workflow's reviewed plan
   `q2-action-path-and-vm`, corrected order (catalog and expectations before any
   executor; independent device reference; mutation testing of the suite; one
@@ -322,7 +322,10 @@ An entry passes a pass at k of k repetitions. Any mixed result is FLAKY and
 counts as a failure. An entry that is PASS in one setting and not another is
 a failure of that setting. Validity control C2 reads L0-raw trials under its
 own rule (section 8, design decision 34); every other criterion uses this
-section as written.
+section as written, except that A1-A4 and the concurrency ladder leave out a
+trial excused for a guest-server restart (decisions D30 and D33, section
+6.1): A1-A3 judge an entry's k of k on its counted repetitions, and an
+excused trial alone never makes an entry FLAKY.
 
 ## 6. Infrastructure failures and the guard
 
@@ -355,25 +358,51 @@ accessibility calls over runs 484-541), and each session now takes
 
 Infrastructure failures are **not excluded** from any gating verdict: an entry
 that hits one fails that repetition. They are counted and reported separately.
-The one exception is A4's count of guest-server restarts, below.
+The one exception is a trial excused for a guest-server restart in A1-A4 and
+the concurrency ladder, below.
 
-**Guest-server restarts** (decision D30, decided before the freeze). The probe
-and the tap run in their own systemd scope, outside the guest server's unit
-(design decision 42), so a restart of the server leaves both running and costs
-at most the entry it hits. That entry still fails with `guest_server_restart`,
-and every other criterion that judges trials counts it as written above. A4's
-zero-failure count excludes the restart: an A4 trial whose only reasons are
-`guest_server_restart` and, from the same restart, an undelivered accessibility
-tree (`accessibility`) is reported and not counted (`acceptance.restart_only`);
-any other reason in that trial counts as usual (design decision 40). An
-undelivered reset observation is charged to the session's first trial as an
-infrastructure type and a reason of that trial (`reset_observation`), so it
-is never excused along with a restart during that entry. The one exception
-is the same fault at the reset observation: when the server restarted across
-it (the server process the warm-up's report names differs from the one the
-first trial's pre guard names) and only its tree was not delivered, the first
-trial is excused on the same terms (`acceptance.reset_restart`). A lost reset
-screenshot, or a first pre guard that could not run, still counts. The
+**Guest-server restarts** (decisions D30 and D33, decided before the freeze).
+The probe and the tap run in their own systemd scope, outside the guest
+server's unit (design decision 42), so a restart of the server leaves both
+running and costs at most the entry it hits. That entry still fails with
+`guest_server_restart`. A1-A4 and the concurrency ladder **excuse** it: a
+trial whose only reasons are `guest_server_restart` and, from the same
+restart, an undelivered accessibility tree (`accessibility`) is reported and
+not counted (`acceptance.restart_only`). That reason set is how a trial's
+record shows a restart during an observation call that `DesktopEnv`'s
+retries absorbed. Any other reason in that trial counts as usual: a restart
+during an `/execute` call or a guard, or one slower than the retries, leaves
+an `execute`, `screenshot` or `guard_script` failure (or a missing probe, tap
+window or marker) in the trial it hits, and that trial counts (design
+decision 40); the same server delivers the actions. A6 and C1-C3 run the
+screenshot setting, which makes no accessibility call, and excuse nothing
+(a restart there is an infrastructure failure under their own rules); A5
+judges no trial, and A7 judges the restarts themselves.
+
+A1-A3 judge an entry on its counted repetitions (section 5), and an entry
+needs all but at most one of its repetitions counted: a second excused
+trial in one entry fails that entry (`RESTART_LIMIT`, reported as such and
+never as FLAKY; decision D33). The count runs over all of the entry's
+repetitions in the criterion: both observation settings, every attempt
+(below) and, in A1, both shuffles. An A1 entry can therefore lose at most
+one of its 20 repetitions, an A2 cell one of its 10 and an A3 entry one of
+its 60 on each layer (design decision 44 gives the reason for this reading).
+A ladder rung reads "every gating trial passes" (section 9) over its counted
+gating trials and does not qualify with more than two excused trials, gating
+or not, over its attempts (an aborted attempt's trials never count); an
+excused trial's steps stay in the rung's step p95, and in A1's. A4 sets no
+limit on excused trials: A7 bounds the restarts. Every excused trial is
+listed in its criterion's restart report beside A4's and A7's (section 12).
+
+An undelivered reset observation is charged to the session's first trial as
+an infrastructure type and a reason of that trial (`reset_observation`), so
+it is never excused along with a restart during that entry. The one
+exception is the same fault at the reset observation: when the server
+restarted across it (the server process the warm-up's report names differs
+from the one the first trial's pre guard names) and only its tree was not
+delivered, the first trial is excused on the same terms
+(`acceptance.reset_restart`), in every criterion that excuses trials. A lost
+reset screenshot, or a first pre guard that could not run, still counts. The
 observation service that restarts gets its own bound, A7 (section 7). Each
 session records the server's unit and its `NRestarts` counter at its start and
 end; a session's restart count is the larger of that counter's difference and
@@ -393,13 +422,18 @@ that does not count may be rerun once, as a new attempt with a new output
 path; a campaign that counted is never rerun, and no campaign has a third
 attempt. Every trial of every attempt is reported, and a failed trial in an
 earlier attempt counts against its criterion exactly as if the attempt had
-counted: cancelling or rerunning a campaign never removes a failure. The
-only exception is a concurrency-ladder rung aborted on foreign load (section
-9). The same holds for A7's count of restarts, which sums the restarts of
-every attempt but divides by the accessibility calls of the counting
-attempts only: an attempt that was cancelled or did not count adds its
-restarts and none of its calls, so stopping a run and rerunning it can never
-raise A7's chance of passing (section 7, design decision 41).
+counted: cancelling or rerunning a campaign never removes a failure. Like a
+counting attempt's trials, it counts on the cells the criterion judges (G
+for A1 and the ladder, the in-spec cells for A2, the stress entries for A3,
+every trial for A4) and not when the criterion excuses it, and an earlier
+attempt's excused trials count toward A1-A3's and the ladder's limits above,
+so a rerun never resets them (decision D33). The only exception is a
+concurrency-ladder rung aborted on foreign load (section 9). The same holds
+for A7's count of restarts, which sums the restarts of every attempt but
+divides by the accessibility calls of the counting attempts only, capped at
+the plan's 39,036 calls: an attempt that was cancelled or did not count adds
+its restarts and none of its calls, so stopping a run and rerunning it can
+never raise A7's chance of passing (section 7, design decision 41).
 
 ### 6.2 Entry guard
 
@@ -439,12 +473,16 @@ one VM at a time (N = 1) except the concurrency ladder, A4 and A7 (section 9);
   settings at the operating concurrency N*, which the ladder rung N* shows (its
   first five repetitions are that shuffle; section 9). All 100 entries run; G
   gates. Trials at N = 1: 100 x 5 x 2 x 2 = 2,000 in 36 sessions (gating
-  trials 1,720).
+  trials 1,720). Decided before the freeze (decision D33): a trial excused
+  for a guest-server restart is left out of its entry's repetitions, and an
+  entry with a second excused trial over its 20 repetitions (both shuffles
+  and settings) fails (section 6.1). The same holds for A2 and A3 below.
 - **A2 (harness layer).** H-OSW-fixed and H-GA each pass 100% of their
   expressible entries (85 and 79) and of their gating and declared-deviation R
   cells, 5 repetitions, judged against their own spec, under both observation
   settings: 990 trials in 18 sessions (H-OSW-fixed, 99 cells) and 930 in 16
-  (H-GA, 93 cells).
+  (H-GA, 93 cells). A cell is judged on its counted repetitions and fails on
+  a second excused trial among its 10 (decision D33, section 6.1).
 - **A3 (stress).** 30 timing- and state-sensitive entries, 60 repetitions
   each, zero failures, on L0-fixed and on each Stage-1 harness where the entry
   is expressible: `click_double_left`, `click_triple_left`, `click_ctrl_left`,
@@ -458,7 +496,9 @@ one VM at a time (N = 1) except the concurrency ladder, A4 and A7 (section 9);
   `type_combining`, `type_long_500`, `type_with_correction`, `seq_long_mixed`.
   Repetitions are split evenly between the two observation settings: 1,800
   trials in 30 sessions on L0-fixed, 1,740 in 30 on H-OSW-fixed (29 entries
-  expressible) and 1,440 in 24 on H-GA (24 expressible).
+  expressible) and 1,440 in 24 on H-GA (24 expressible). "Zero failures" is
+  read over the counted trials: an entry fails on a second excused trial
+  among its 60 on a layer (decision D33, section 6.1).
 - **A4 (volume).** L0-fixed runs `volume_plan.json` (built by `volume.py`)
   with zero failures: 64,028 trials over the 86 G entries, each entry's
   repetitions split evenly between the observation settings, in 1,068
@@ -471,7 +511,8 @@ one VM at a time (N = 1) except the concurrency ladder, A4 and A7 (section 9);
   Decided before the freeze (decision D30): a trial whose only failure is a
   guest-server restart does not count against A4's zero failures (section
   6.1); it is reported with every restart, and the development rate's
-  single-event uncertainty (section 16, item 9) is reported with A4.
+  single-event uncertainty (section 16, item 9) is reported with A4, with
+  the exposure that remains (section 9; decision D33 states and accepts it).
 - **A5 (reset and hygiene).** A boot-reset campaign at the frozen source SHA
   shows 20 of 20 pristine reset-sentinel checks; every acceptance campaign's
   receipt shows `System.qcow2` unchanged and zero leaked labelled containers
@@ -525,10 +566,12 @@ one VM at a time (N = 1) except the concurrency ladder, A4 and A7 (section 9);
   39,036 accessibility calls: 516 reset observations and 38,520 step
   observations (an observation that `DesktopEnv` retries is one call). k is
   the sum of the sessions' restart counts over every attempt (section 6.1),
-  and n the calls the records of the counting attempts show: an attempt that
-  was cancelled or did not count adds its restarts and not its calls, so
-  cancelling a run and rerunning it never helps (design decision 41). Trial
-  verdicts are reported, not judged: A1-A4 judge the action path. A7 has no
+  and n the calls the records of the counting attempts show, capped at the
+  plan's 39,036 (decision D33), so no record can divide by more calls than
+  the plan makes: an attempt that was cancelled or did not count adds its
+  restarts and not its calls, so cancelling a run and rerunning it never
+  helps (design decision 41). Trial verdicts are reported, not judged: A1-A4
+  and the ladder judge the action path. A7 has no
   repair attempt (section 11). A7 gates the screenshot-plus-accessibility
   setting only: if it fails, no Stage-1
   episode uses that setting under this suite, and whether Stage 1 then runs
@@ -700,7 +743,8 @@ the true rate is half the bound, about twice the development point estimate.
 would allow only 11 restarts and pass with probability 0.75 at that rate. At
 the bound itself a pass has probability at most 0.05, by the construction of
 the exact bound, and no rerun strategy can raise it: n counts only the
-counting attempts' calls (section 7). Had the calls of a cancelled attempt
+counting attempts' calls, capped at the plan's 39,036 (section 7). Had the
+calls of a cancelled attempt
 been pooled, an operator who cancelled a run at its 13th restart and reran
 the plan would pass at the bound with probability 0.071 instead of 0.048
 (0.36 instead of 0.22 at 4 x 10^-4; simulation, 20,000 runs per rate); under
@@ -714,11 +758,36 @@ What A7 does not bound: the guest server under Stage-1 task applications,
 whose accessibility trees are larger than the probe's desktop; Stage 1
 measures that rate itself by counting restarts per episode (section 7).
 
+**Restarts in A1-A3 and the ladder (decision D33).** A1-A3 and the five
+ladder rungs make 16,639 accessibility calls (A1 1,298, A2 1,452, A3 4,422,
+the rungs 9,467, from 778 at N = 8 to 3,112 at N = 40). At the development
+rate (1 in 8,114 calls) they see no restart with probability 0.13 (A1-A3
+alone 0.41), and under the strict rule any restart would have failed its
+criterion or left its rung unqualified. Since D33 that is no longer a pass
+condition. What remains, with every restart taken to land in an
+observation call (the excused case) and Poisson in the calls, are the
+limits of section 6.1: an A1-A3 entry fails on a second excused trial,
+which needs two restarts among one entry's accessibility calls (at most 80
+per entry in A1, 50 in A2 and 300 in A3 on one layer, all
+`seq_long_mixed`), and a rung on a third. The probability that some A1-A3
+entry reaches its limit is 0.004 at the development rate, 0.015 at half A7's
+bound (2.5 x 10^-4) and 0.057 at the bound; that some rung exceeds two
+excused trials, 0.013, 0.083 and 0.37; and that the N = 40 rung does, which
+alone keeps N* below 40 (concurrency rule below), 0.007, 0.044 and 0.21.
+Not sized, as for A4 (design decision 40): a restart outside an observation
+call, or one slower than `DesktopEnv`'s retries (about 10 s against a
+measured 5.6 to 6.0 s), still counts in the trial it hits, and one during a
+post guard can cost the next entry too. D33 states this remainder and
+accepts it. Counting the limit per observation setting and per shuffle
+instead (design decision 44) would change these probabilities by less than
+10^-4, because only the accessibility setting calls the service.
+
 **Other sizes.** Gym-anything PR #53 reports intermittent entries failing
 4-20% of the time that 5 repetitions missed; the 60-repetition stress subset
 (A3) detects a 5% failure rate with probability 1 − 0.95^60 = 95.4%, and the
 20 A1 repetitions per entry detect a 10% rate with probability 1 − 0.9^20 =
-87.8%.
+87.8%. With one repetition excused (decision D33) an entry keeps 59 and 19
+counted repetitions: 95.2% and 86.5%.
 
 **Cost.** Sized in `vm_hours.json` (`vm_hours.py`, design decision 33) from
 the measured times of the final development runs at the candidate executor
@@ -752,9 +821,11 @@ order of `order.py` is built repetition by repetition from one generator). N*
 is the largest rung N that qualifies, and 1 when none does (A1 gates N = 1
 itself). A rung qualifies when: at least 20 cold boots were measured; boot p95
 (container start to first valid `/screenshot`) ≤ 180 s; step p95 (one
-`DesktopEnv.step`, both settings pooled) ≤ 2 x A1's step p95 (both shuffles
-pooled); every gating trial passes (non-gating entries are reported); its
-campaigns count under section 6.1; and no foreign-load abort occurred. A rung
+`DesktopEnv.step`, both settings pooled, excused trials included) ≤ 2 x A1's
+step p95 (both shuffles pooled, excused trials included); every counted
+gating trial passes (non-gating entries are reported); at most two of its
+trials were excused for a guest-server restart (decision D33, section 6.1);
+its campaigns count under section 6.1; and no foreign-load abort occurred. A rung
 aborts if, at any of the host snapshots the driver takes before and after
 every session, a Slurm job other than the rung's own is running that was not
 running at the rung's first snapshot (a foreign job started), or the running
@@ -763,8 +834,9 @@ snapshots go into the receipt. The abort is decided by `acceptance.foreign_abort
 from those snapshots alone, never by the operator, and while a rung runs the
 operator submits no Slurm job of any kind. An aborted rung is rerun once as a
 new attempt and both attempts are reported; the aborted attempt neither
-qualifies nor disqualifies its N, and its failed trials are reported but not
-counted (the one exception to section 6.1's rule). A rung that aborts twice,
+qualifies nor disqualifies its N, and its failed and excused trials are
+reported but not counted (the one exception to section 6.1's rule; D33 left
+the abort rule unchanged). A rung that aborts twice,
 or a rung that ran without aborting and is rerun anyway, does not qualify.
 VMs are pinned to CPUs from their Slurm allocation; the ladder never exceeds
 160 vCPUs. The N runners of a rung (and of A4 and A7 at N*) share
@@ -819,7 +891,16 @@ and never loads more than 18 VMs, so no rung above N = 1 could have qualified
   addendum's components (probe, guard, judge, analysis and lane): a repair
   that needs one of them changed is a new preregistration. A repair attempt
   is not a rerun (section 6.1): it changes the executor, and every earlier
-  attempt is reported.
+  attempt is reported. A repair attempt is judged on its own campaigns and
+  their reruns: neither the failed nor the excused trials of an earlier
+  repair attempt carry over to it (decision D33's limits count within one
+  repair attempt, over its reruns, section 6.1).
+- An entry that fails only on D33's limit (`RESTART_LIMIT`: a second
+  trial excused for a guest-server restart) fails its criterion like any
+  other failure. It is reported as an observation-service fault, which no
+  executor change addresses; a counted campaign is never rerun (section
+  6.1), so only a repair attempt runs that criterion again, and its report
+  says the earlier attempt failed on that limit alone.
 - If any gating entry still fails at the third attempt, the affected layer is
   not admitted and Stage 1 does not start.
 - A failed validity control (C1-C4) is not repaired within v1; the suite is
@@ -837,8 +918,10 @@ and never loads more than 18 VMs, so no rung above N = 1 could have qualified
   session-range jobs as A4 does). If attempt 1 is repaired before A7 has run,
   A7 still runs from an export of the attempt-1 source at that N*. A7 is
   judged once, at that N*: a repair attempt whose ladder gives another N*
-  neither reruns nor re-judges it, and the report gives both values. Stage 1
-  counts restarts per episode at its own concurrency in any case (section 7).
+  neither reruns nor re-judges it, and the report gives both values. Its
+  call count is the counting attempt's, capped at the plan's 39,036
+  (decision D33, which confirms these A7 rules). Stage 1 counts restarts per
+  episode at its own concurrency in any case (section 7).
 - If the reset sentinel fails, it is debugged before any concurrency work.
 - A finding that a harness "bug" is a design difference goes into
   `harness_design_diffs.md` and never relaxes a verdict after the fact.
@@ -864,12 +947,17 @@ charged for an undelivered reset observation; every attempt of every
 campaign, rerun or repaired, with its end state (batch record and, when read,
 Slurm state) and its failed trials; every guest-server restart with the
 entry it hit (inside the entry or across the session's reset observation),
-its session, any probe or tap relaunch and, in A4, whether the trial
-counted; every session whose restarts exceed those attributed to its trials
+its session, any probe or tap relaunch and, in A1-A4 and the ladder,
+whether the trial counted or was excused (decisions D30 and D33), so every
+excused trial is listed in its criterion's restart report; per criterion
+and per rung, the number of excused trials over every attempt, and in A1-A3
+each entry over its limit (`RESTART_LIMIT`) with its excused repetitions;
+every session whose restarts exceed those attributed to its trials
 (a restart that hit no trial); restarts and accessibility calls per session
-and per campaign; A7's restarts, calls (of the counting attempts, and of
-every attempt), rate, upper bound and restarts per session, and the N* it
-ran at next to any later attempt's N*;
+and per campaign; A7's restarts, calls (of the counting attempts before and
+after the cap at the plan's 39,036, and of every attempt), rate, upper
+bound and restarts per session, and the N* it ran at next to any later
+attempt's N*;
 the development restart rate with its exact interval; every design
 difference per harness; every non-gating entry's results; and the certified
 keysym set.
@@ -948,7 +1036,9 @@ here with its reason.
    in this guest (xmodmap, job 374) and b138d348 excludes `<` from its Linux
    shift set.
 10. **Infrastructure failures count as failures** for gating and are
-    reported separately, never excluded.
+    reported separately, never excluded, with one exception decided before
+    the freeze: a trial excused for a guest-server restart in A1-A4 and the
+    ladder (decisions D30 and D33; design decisions 40 and 44).
 11. **Pointer entries keep a self-specified oracle, labelled as such.** An
     R-dev reference through HMP cannot reproduce them: `mouse_move` is
     relative and passes through the guest's pointer acceleration, so HMP
@@ -1172,9 +1262,10 @@ here with its reason.
     reasons are the restart and, from that restart, an undelivered tree
     (its own, or the session's reset observation's when the server restarted
     across that observation; section 6.1); every other failure in that trial
-    still counts, every restart is reported, and every other criterion that
-    judges trials keeps counting restarts (section 18 states what that
-    costs). It also covers only a restart that `DesktopEnv`'s retries absorb.
+    still counts and every restart is reported. Decision D33 extends the
+    same exclusion to A1-A3 and the ladder (design decision 44); A6 and
+    C1-C3 still count restarts. It also covers only a restart that
+    `DesktopEnv`'s retries absorb.
     A restart inside an `/accessibility` call is excused when the server
     answers again before the entry's next call to it, which in practice
     means within the observation's own retries: they come about 5 s and 10 s
@@ -1187,6 +1278,8 @@ here with its reason.
     guard meets the restarting server), and A4 counts it. That remaining
     exposure is not sized: the one crash on record (run 622) came inside
     `/accessibility`, and the retry after the restart delivered the tree.
+    Decision D33 states this remainder and accepts it, for A4 and for the
+    criteria it extends the exclusion to.
     The development hook (`kill_guest_server_during_seq`) kills the server
     after an entry's last observation and waits for it before the post
     guard, so it shows that the scopes keep the oracle channels and that the
@@ -1203,10 +1296,11 @@ here with its reason.
     repair attempt, because no executor repair changes the service; it runs
     at attempt 1's N* and is not re-judged when a later attempt's N* differs
     (section 11). Its k sums the restarts of every attempt and its n the
-    calls of the counting attempts only, so cancelling a run heading for
-    failure and rerunning it cannot help (decision 37's principle; pooling
-    the calls would have raised the pass probability at the bound from 0.048
-    to about 0.071, section 9).
+    calls of the counting attempts only, capped at the plan's 39,036 calls
+    (decision D33), so cancelling a run heading for failure and rerunning it
+    cannot help (decision 37's principle; pooling the calls would have raised
+    the pass probability at the bound from 0.048 to about 0.071, section 9),
+    and no record can divide by more calls than the plan makes.
 42. **The probe and the tap run in their own systemd scope** (decision D30).
     The guest server's unit restarts on failure with the default
     `KillMode=control-group`, which stops every process the server launched,
@@ -1224,6 +1318,30 @@ here with its reason.
     (decision D30). The Stage-1 harness reads the guest server's restart
     counter around each episode, as the suite does around each session, so
     A7's bound and Stage 1's own count are measured the same way (section 7).
+44. **A1-A3 and the ladder excuse restarts too, within limits** (decision
+    D33). They certify the action path, as A4 does, and A7 now bounds the
+    observation service on its own; under the strict rule one restart (no
+    restart in their 16,639 accessibility calls has probability about 0.13
+    at the development rate) would have failed the suite for a construct
+    those criteria do not measure. The exclusion is A4's (design decision
+    40, `acceptance.restart_only`), with limits A4 does not need: an A1-A3
+    entry is judged on its counted repetitions and fails on a second
+    excused trial, and a ladder rung with more than two excused trials does
+    not qualify; excused trials' steps stay in the step p95, and the
+    foreign-load abort is unchanged. An excused trial alone never makes an
+    entry FLAKY. The limit's reading follows D33's text: an entry "needs all
+    but at most one of its repetitions counted", and section 5 judges one
+    entry over both observation settings, while section 9 counts A1's 20
+    repetitions per entry over both shuffles. So the limit counts excused
+    trials over all of an entry's repetitions in the criterion: both
+    settings, every attempt and, in A1, both shuffles. A reading that
+    allowed one excused trial per setting and per campaign would let an A1
+    entry lose up to 4 of its 20 repetitions (2 shuffles x 2 settings),
+    which D33's text rules out; it was not adopted (it changes the pass
+    probabilities by less than 10^-4, section 9). An earlier attempt's
+    failed trials now count only on the cells the criterion judges, as a
+    counting attempt's would (section 6.1): before, an expected failure of
+    an outside-spec R cell in an earlier A2 attempt failed every rerun.
 
 ## 15. Changes after the 2026-10-07 review
 
@@ -1429,21 +1547,22 @@ item 9 before the freeze. Applied on branch `stage0/q2-action-path-d30`:
    accessibility calls (executor addendum, section 9).
 4. **Stage 1 counts restarts per episode as infrastructure failures**
    (section 7, design decision 43).
-5. **Every other rule is unchanged.** Section 6.1 still types a restart during
-   an entry as an infrastructure failure, and A1-A3 and the ladder still fail
-   a trial it hits (A6 and C1-C3 run the screenshot setting, which makes no
-   accessibility call). That is a real exposure, stated here so it is decided
-   rather than discovered: at the development rate, A1-A3 and the five ladder
-   rungs make 16,639 accessibility calls among them (A1 1,298, A2 1,452, A3
-   4,422, the rungs 9,467) and see no restart with probability about 0.13
-   (A1-A3 alone, 7,172 calls: 0.41). A restart there fails that criterion, or
-   leaves that rung unqualified. Whether D30's exclusion should extend to
-   them is the owner's decision before the freeze (`program/state.json`,
-   pending decisions). A4's own exclusion has a remainder too (design
-   decision 40): a restart outside an observation call, or one slower than
-   `DesktopEnv`'s retries (about 10 s against a measured 5.6 to 6.0 s), still
-   fails A4; it is not sized, because the one crash on record came inside
-   `/accessibility` and its retry delivered. The owner's decision covers both.
+5. **Every other rule was left unchanged by D30.** Section 6.1 still typed a
+   restart during an entry as an infrastructure failure, and A1-A3 and the
+   ladder still failed a trial it hit (A6 and C1-C3 run the screenshot
+   setting, which makes no accessibility call). That was a real exposure,
+   stated here so it was decided rather than discovered: at the development
+   rate, A1-A3 and the five ladder rungs make 16,639 accessibility calls
+   among them (A1 1,298, A2 1,452, A3 4,422, the rungs 9,467) and see no
+   restart with probability about 0.13 (A1-A3 alone, 7,172 calls: 0.41). A
+   restart there would have failed that criterion, or left that rung
+   unqualified. A4's own exclusion has a remainder too (design decision 40):
+   a restart outside an observation call, or one slower than `DesktopEnv`'s
+   retries (about 10 s against a measured 5.6 to 6.0 s), still fails A4; it
+   is not sized, because the one crash on record came inside
+   `/accessibility` and its retry delivered. The owner decided both before
+   the freeze as D33 (section 20): the exclusion extends to A1-A3 and the
+   ladder, within limits, and the remainder is stated and accepted.
 6. The frozen tables of all three registrations carry the digests of the
    changed files, and the executor addendum's byte-identity check names
    `7653799` (executor addendum, section 9).
@@ -1453,13 +1572,13 @@ item 9 before the freeze. Applied on branch `stage0/q2-action-path-d30`:
 An independent review of the D30 branch at `13c6790` found it not ready to
 freeze. Each finding and its disposition:
 
-1. The owner has not decided whether D30's exclusion extends to A1-A3 and
-   the ladder (section 18, item 5). Confirmed and still open: it is the
-   owner's decision, not one this branch can make. `program/state.json` no longer
-   calls the suite ready to freeze, and its pending decision states both
-   options and A4's remaining exposure (item 4 below). Nothing is frozen
-   until the decision is recorded in `program/decisions.md` and sections
-   6.1, 7 and 18 follow it.
+1. The owner had not decided whether D30's exclusion extends to A1-A3 and
+   the ladder (section 18, item 5). Confirmed: it was the owner's decision,
+   not one this branch could make, so the branch was not called ready to
+   freeze until it was taken. Decided before the freeze as D33
+   (`program/decisions.md`) and applied in section 20: the exclusion
+   extends to A1-A3 and the ladder within limits, and A4's remaining
+   exposure (item 4 below) is stated and accepted.
 2. A7 pooled the accessibility calls of every attempt, so cancelling a
    failing run and rerunning it raised A7's pass probability at the bound
    from 0.048 to about 0.071 (reproduced: 20,000 simulated runs per rate).
@@ -1480,16 +1599,18 @@ freeze. Each finding and its disposition:
 4. A4's exclusion covers only a restart inside an observation call that
    `DesktopEnv`'s retries absorb, and the development hook waits for the
    server before the post guard. Stated in design decision 40 and section
-   18, item 5, and added to the owner's decision. The optional development
-   job that would kill the server inside a middle step's `/accessibility`
-   call is not run: it needs a new hook in `suite.py`, a file campaigns
+   18, item 5, and put to the owner, who accepted it in D33. The optional
+   development job that would kill the server inside a middle step's
+   `/accessibility` call is not run: it needs a new hook in `suite.py`, a file campaigns
    execute, and the executor addendum's rule (section 9 there) would then
    require new final development runs before the freeze; run 622 is the one
    observed instance of that path.
 5. How A7 meets repair attempts and N* was not stated. Registered (section
    11): A7 runs under attempt 1 at attempt 1's N*, after attempt 1's full
    ladder, and is not rerun or re-judged when a later attempt's N* differs;
-   `acceptance.a7` also refuses an A7 attempt other than 1.
+   `acceptance.a7` also refuses an A7 attempt other than 1. D33 confirms
+   items 2, 3 and 5 as written here and adds the cap of A7's calls at the
+   plan's 39,036 (section 20).
 6. The restart report lacked each hit trial's session and the restarts that
    hit no trial. Fixed: each row carries its session (`cycle`) and where the
    restart came (entry or reset observation), and the report lists every
@@ -1510,3 +1631,82 @@ restarts and two hit trials per fault-injection session (the trial killed
 inside restart-only, the one after the kill between entries counted), no
 restart elsewhere, no undelivered reset observation and no restart that hit
 no trial.
+
+## 20. Changes applying decision D33 (2026-10-07)
+
+Decision D33 (`program/decisions.md`) settled the question of section 18,
+item 5, before the freeze. Applied on branch `stage0/q2-action-path-d30`:
+
+1. **A1-A3 and the ladder excuse restart-only trials** (sections 5, 6.1, 7
+   and 9; design decisions 10, 40 and 44; `acceptance.restart_only`, `a1`,
+   `a2`, `a3`, `rung`). The rule is A4's: a trial whose only failures are a
+   guest-server restart during an observation call and the tree that
+   restart left undelivered, or the same fault across the session's reset
+   observation, is excused and reported. Any other failure in that trial
+   counts, including one a restart during `/execute` or a guard leaves.
+2. **A1-A3's limit.** An entry is judged on its counted repetitions, an
+   excused trial alone never makes it FLAKY, and a second excused trial in
+   one entry fails it (`RESTART_LIMIT`), counted over both observation
+   settings, every attempt and, in A1, both shuffles. The working brief for
+   this pass read the limit "per setting, per campaign"; D33's text ("needs
+   all but at most one of its repetitions counted: a second excused trial
+   in one entry counts as a failure") and section 5's entry over both
+   settings rule that reading out, so the registered limit is per entry
+   (design decision 44). Should the owner have meant the wider reading, D33
+   is amended before the freeze; the pass probabilities differ by less than
+   10^-4 (section 9).
+3. **The ladder.** "Every gating trial passes" reads over a rung's counted
+   gating trials; a rung with more than two excused trials, gating or not,
+   over its attempts (an aborted attempt aside) does not qualify; excused
+   trials' steps stay in the step p95 (the rung's and A1's); the
+   foreign-load abort is unchanged.
+4. **Reporting.** Every excused trial in A1-A3 and the ladder is listed in
+   its criterion's restart report beside A4's and A7's, with the excused
+   trials per criterion and rung and each entry over its limit (section
+   12).
+5. **A7.** The rules fixed at `13ad91e` (section 19) match D33's wording:
+   restarts from every attempt, calls from the counting attempt only, A7 run
+   under attempt 1 at attempt 1's N* and not re-judged. Added: n is capped
+   at the plan's 39,036 calls (`acceptance.OBSERVATION_PLAN_CALLS`, which a
+   test checks against the plan through `observation_plan_calls`), so a
+   record showing more calls than the plan makes cannot lower the bound.
+6. **Earlier attempts' failures** (found while applying D33). An earlier
+   attempt's failed trials were counted on every cell, so an outside-spec R
+   cell's expected failure in an earlier A2 attempt (R03 fails on both
+   harnesses by design) would have failed every rerun of A2. They now count
+   on the cells the criterion judges, less its excused trials, as a
+   counting attempt's would (section 6.1).
+7. **Exposure.** No restart in A1-A3 and the ladder (probability about 0.13
+   at the development rate) is no longer a pass condition. What remains is
+   in section 9: some A1-A3 entry reaches its limit with probability 0.004
+   at the development rate (0.015 at half A7's bound, 0.057 at the bound),
+   some rung exceeds two excused trials with probability 0.013 (0.083,
+   0.37), and the N = 40 rung 0.007 (0.044, 0.21). The unsized remainder,
+   restarts outside an observation call or slower than the retries and a
+   post-guard restart that costs two entries, is stated with A4 (design
+   decision 40) and accepted by D33.
+8. **Code, tests and checks.** The only code changed is `acceptance.py`
+   (commit `3ad255a`, with `tests/test_q2_acceptance_analysis.py`), which
+   no campaign executes (no file of the lane imports it); the executor
+   addendum's byte-identity check against `7653799` still lists only
+   `harness/q2/README.md` and `acceptance.py`, and the frozen tables of both
+   addenda carry its new digest. The tests drive each rule: an excused
+   trial left out of its entry's k of k and never FLAKY; a second excused
+   trial failing the entry in one setting, across the settings, across
+   A1's shuffles and across a rerun, while one each in two entries passes;
+   a restart during `/execute`, during a guard, slower than the retries or
+   with an event difference still counting in A1, A3 and the ladder; a
+   rung allowing two excused trials and refusing a third, counting a
+   non-aborted earlier attempt's and not an aborted one's, and keeping
+   excused steps in its step p95; an earlier attempt's failures counted
+   only on judged cells; and A7's cap. The D33 loader read development runs
+   694 and 703-708 (seed 42) again: the restart counts and hit trials are as
+   before (two restarts per fault-injection session; the trial killed inside
+   each session restart-only, now excused, and the trial after the kill
+   between entries counted), with no restart in 704-708, no undelivered
+   reset observation and no restart that hit no trial. The only status that
+   changed is `chord_ctrl_c` in runs 694 and 703, killed inside in both of
+   each run's sessions: FAIL becomes `RESTART_LIMIT` (two excused trials and
+   no counted repetition, still a failure); read as a rung, its gating
+   failures drop from `chord_ctrl_c` and `drag_short` to `drag_short`.
+   Every other entry's status in 694 and 703-708 is unchanged.

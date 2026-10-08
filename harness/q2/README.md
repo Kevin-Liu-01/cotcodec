@@ -51,7 +51,7 @@ settings; and a volume certification split from development runs.
 | `action_path/corpus.py`, `build_suite.py`, `suite_cells.json`, `qwen35_chat_template.jinja` | Qwen3.5 template corpus and every cell the runner executes (executor addendum) |
 | `action_path/verdict.py`, `action_path/order.py` | Trial verdicts (sections 4.3, 5, 6) and seeded run orders and sessions |
 | `action_path/mutants.py` | Suite-mutation kit: the 44 scored mutants of `mutation_operators.yaml` as anchored patches |
-| `action_path/acceptance.py` | The acceptance analysis: A1-A7 (A4's restart exclusion and A7's observation-service bound, decision D30), C1-C4 and the ladder's N* from campaign receipts (inputs and executor addenda) |
+| `action_path/acceptance.py` | The acceptance analysis: A1-A7 (the restart exclusion of A1-A4 and the ladder, with its limits, and A7's observation-service bound; decisions D30 and D33), C1-C4 and the ladder's N* from campaign receipts (inputs and executor addenda) |
 | `action_path/vm_hours.py`, `trial_times.json`, `vm_hours.json` | VM-hour sizing of every scored campaign from measured development trial times (executor addendum) |
 | `action_path/harness_design_diffs.md` | Every design difference of each Stage-1 harness |
 | `../../infra/slurm/host-single-node/vm-campaign.sbatch` | CPU-only Slurm entry point for VM work |

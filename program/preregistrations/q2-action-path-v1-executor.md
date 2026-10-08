@@ -3,14 +3,15 @@
 **Status: DRAFT. Not frozen.** The program owner freezes it when development
 ends, after `q2-action-path-v1` and `q2-action-path-v1-inputs`, with
 `uv run python scripts/preregister.py freeze q2-action-path-v1-executor program/preregistrations/q2-action-path-v1-executor.md`.
-The scored C1 and C3 runs and every acceptance trial (A1-A6, the concurrency
+The scored C1 and C3 runs and every acceptance trial (A1-A7, the concurrency
 ladder) wait for this ledger entry.
 
 - Experiment id: `q2-action-path-v1-executor`, an addendum to
   `q2-action-path-v1` (section 2.2). It changes no rule of that file; it pins
   what that file says is frozen when development ends.
-- Drafted: 2026-10-07, on branch `stage0/q2-action-path`; decision D30 applied
-  before the freeze on branch `stage0/q2-action-path-d30` (section 9). The
+- Drafted: 2026-10-07, on branch `stage0/q2-action-path`; decisions D30 and
+  D33 applied before the freeze on branch `stage0/q2-action-path-d30`
+  (sections 7 and 9). The
   ledger row's `git_head_at_freeze` is the executor SHA every scored campaign
   must run from (its receipt records the exported tree's digest).
 
@@ -36,7 +37,7 @@ Frozen with this file (SHA-256 of the committed bytes):
 | `harness/q2/action_path/vm_hours.py` | `58b7379377ae87a72c85076ee87441fbb2da12042a15e9ae4aa62f67365074b1` |
 | `harness/q2/action_path/trial_times.json` | `a33ca2e024d6f24a31a60ff62053be1fb197af48c996ae99fb75aff4d20217e5` |
 | `harness/q2/action_path/vm_hours.json` | `5fc0617303a2782c02e67888be4584261239e5f90268e4e39d7524aff625636e` |
-| `harness/q2/action_path/acceptance.py` | `a29b4035488d1e7359a904125f2a74fa90b61d549af70ce028d71437a27ebf24` |
+| `harness/q2/action_path/acceptance.py` | `cb38018d40d7961f2ceb881402b3b05c9eb6b71930eda765342004f6959e8361` |
 | `scripts/render_q2_action_path_manifest.py` | `8c0e17ac68ed30455faf45232fa160711078990a1c4532a38d45d532c58fbe98` |
 | `experiments/manifests/q2-action-path/dev-l0-fixed-v10.yaml` | `0a4f908e67631483687740cfba3266b829f3c5d2577b08b676a5fa022186ad92` |
 | `harness/q2/vm/guest/probe.py` | `ba5c0f1d364c80d5f8190f3c357b915cd504d754891285c3772ba959a804efeb` |
@@ -173,13 +174,16 @@ The decision rules of the main preregistration's sections 5-9 as code (design
 decision 32): which campaigns count (COMPLETED 0:0 from the batch script's own
 record or Slurm, infrastructure gates, `System.qcow2` unchanged, nothing
 leaked), the rerun rules, that each criterion ran exactly its realized order
-from one source tree, A1-A7 (A4 not counting a trial whose only failure is a
-guest-server restart, during the entry or across the session's reset
-observation, and A7's restarts of every attempt per accessibility call of the
-counting attempts on the exact one-sided 95% Poisson bound, under attempt 1
-only, decision D30), C1-C4 with C2's reading of L0-raw
-trials and C3's clean-kill and equivalence rules, and the ladder's N* with the
-foreign-load abort and its rerun cap. Its verdicts are the ones reported;
+from one source tree, A1-A7 (A1-A4 and the ladder not counting a trial whose
+only failure is a guest-server restart, during the entry or across the
+session's reset observation, decisions D30 and D33; A1-A3 judging an entry
+on its counted repetitions and failing it on a second excused trial, and a
+rung not qualifying with more than two; A7's restarts of every attempt per
+accessibility call of the counting attempts, capped at the plan's 39,036, on
+the exact one-sided 95% Poisson bound, under attempt 1 only), C1-C4 with
+C2's reading of L0-raw trials and C3's clean-kill and equivalence rules, and
+the ladder's N* with the foreign-load abort and its rerun cap. Its verdicts
+are the ones reported;
 `tests/test_q2_acceptance_analysis.py` drives every rule on synthetic
 campaigns. It is frozen in the inputs addendum (before C2 is scored) and
 pinned again here.
@@ -243,5 +247,8 @@ commit to `7653799`: run there,
 may list only files no campaign executes: the analysis and sizing files
 (`acceptance.py`, `vm_hours.py`, `trial_times.json`, `vm_hours.json`) and
 Markdown files. Anything else needs new development runs before the freeze.
-On `stage0/q2-action-path-d30`, after the D30 text, it lists
-`harness/q2/README.md` and `harness/q2/action_path/acceptance.py` only.
+On `stage0/q2-action-path-d30`, after the D33 change (`3ad255a`), it still
+lists `harness/q2/README.md` and `harness/q2/action_path/acceptance.py`
+only: `acceptance.py` is the only code file changed since `7653799`, and no
+campaign executes it (no file of the lane imports it; it reads the run
+directories afterwards), so the development runs at `7653799` stand.
