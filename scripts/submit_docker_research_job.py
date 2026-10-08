@@ -1060,6 +1060,8 @@ def sbatch_argv(manifest: dict[str, Any], test_only: bool) -> list[str]:
         f"--mem={manifest['memory_gb']}G",
         f"--time={hours:02d}:{minutes:02d}:00",
         "--signal=B:USR1@180",
+        # One run directory per attempt: the batch script refuses a reused one.
+        "--no-requeue",
         f"--output={manifest['run_root']}/slurm-%j.out",
         f"--export={export_argument}",
     ]

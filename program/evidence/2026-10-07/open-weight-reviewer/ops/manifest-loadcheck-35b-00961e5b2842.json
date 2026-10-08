@@ -1,0 +1,5 @@
+{
+  "gpu_hours_cap": 0.15,
+  "name": "owr-loadcheck-35b-00961e5",
+  "output": "/home/kevin/cotcodec-runs/stage0/open-weight-reviewer/manifests/loadcheck-35b-00961e5b2842.yaml"
+}

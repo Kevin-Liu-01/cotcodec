@@ -1,0 +1,13 @@
+sync=0
+All checks passed!
+ruff=0
+........................................................................ [ 92%]
+........................................................................ [ 98%]
+......................                                                   [100%]
+1234 passed, 22 skipped in 149.93s (0:02:29)
+pytest=0
+PASS experiments/architectures/translation-supervised-sparse-indexer-k1-screen.yaml (contract, BLOCKED)
+PASS experiments/architectures/translation-supervised-sparse-indexer.yaml (contract, BLOCKED)
+arch=0
+provider model registry PASS: 7 models, 5 providers
+prov=0
