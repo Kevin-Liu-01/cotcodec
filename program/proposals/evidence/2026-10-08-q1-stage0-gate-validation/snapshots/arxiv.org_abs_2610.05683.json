@@ -1,0 +1,30 @@
+{
+ "url": "https://arxiv.org/abs/2610.05683",
+ "fetched_at": "2026-10-08T07:31:57Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 44046,
+ "raw_sha256": "db702e1bbad3b95253f7a5f4c295bb2a0c1a31c72c46570840bf3dc4b36b4210",
+ "raw_stored": false,
+ "extract": {
+  "title": "RESOLVE: Language-Agnostic Validation of GPU Kernels Through Testing, Reduction, and Proof",
+  "authors": [
+   "Gargary, Ashkan Vedadi",
+   "Martínez, Guido",
+   "Burckhardt, Sebastian",
+   "Ebner, Gabriel",
+   "Jangda, Abhinav",
+   "Musuvathi, Madan",
+   "Sorensen, Tyler"
+  ],
+  "citation_date": "2026/10/05",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Mon, 5 Oct 2026 01:51:04 UTC"
+   }
+  ],
+  "abstract": "AI systems can now write and optimize production GPU kernels, but validating them remains an important challenge. Evaluating the kernel on a few random inputs and checking that its outputs match a trusted reference kernel within numeric tolerances is not sufficient: races can cause nondeterministic behavior that fails to manifest in tests, and numeric tolerances can hide bugs and cause false positives even after extensive calibration. To address this challenge, we present RESOLVE, which combines testing and formal verification to build a comprehensive kernel validation pipeline. It operates in three steps: First, it tests for nondeterminism using binary instrumentation that perturbs execution timing to expose races. Second, an agent rewrites the candidate and reference kernels to obtain \"reduced-concurrency\" versions that are simpler to analyze but still produce bitwise-identical outputs in all tests. Third, the reduced kernels are formally analyzed in the F*/Pulse framework and prove that they perform the same computation on real numbers. This sidesteps the need for numeric tolerances. We show that RESOLVE can validate a broad selection of kernels using KernelBench, and prove equivalence across fused GEMMs in three state-of-the-art frameworks and languages: CUTLASS, Triton, and Gluon. It also analyzes mega-kernels, notoriously difficult to validate, and finds four previously unreported issues, including two clear bugs. We show that agents can use RESOLVE to repair the issues, with minimal performance impact, highlighting that agents can optimize aggressively when they can rigorously check their results.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}

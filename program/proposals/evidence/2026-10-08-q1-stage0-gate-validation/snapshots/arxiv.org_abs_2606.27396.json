@@ -1,0 +1,24 @@
+{
+ "url": "https://arxiv.org/abs/2606.27396",
+ "fetched_at": "2026-10-08T07:31:00Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 42153,
+ "raw_sha256": "50330f289181a746b25ca71e946961ab7b0fa0f79e8f38a981b39c19b123da08",
+ "raw_stored": false,
+ "extract": {
+  "title": "Test-Input Generation for Tensor Programs: What Actually Finds Kernel Bugs",
+  "authors": [
+   "Sarkar, Dipankar"
+  ],
+  "citation_date": "2026/06/23",
+  "submission_history": [
+   {
+    "version": "v2",
+    "date": "Tue, 21 Jul 2026 19:22:13 UTC"
+   }
+  ],
+  "abstract": "Test-input generation for tensor kernels is folkloric. Most projects pick a representative shape and dtype, run a fixed-shape allclose-style check, and ship. We make the choices explicit and measure them. Using the gpuemu op-schema-aware seeded fuzzer ( arXiv:2606.20128 ), we evaluate seven test-generation strategies across a 26-op corpus (16 correct controls and 10 LLM-style buggy variants seeded with documented transcription patterns) on an RTX 3060 GPU instance. Strategies vary the shape candidate set, the dtype mix, and the input value distribution. We report each strategy on two axes: bug recall and control false-positive (FP) rate. Boundary-only shape sampling is the operationally safe winner: 78% recall on the 10 buggy kernels with 0% FP on the 16 controls. Adversarial value sampling reaches higher recall (99%) but inflates control FP to 94% because the strategy injects NaN and Inf inputs and the validator's NaN check fires on every kernel that propagates them, not only on buggy kernels. On the two softmax tail-mask bugs the \"regular\" strategy (no boundary shapes) catches 0%, while boundary raises recall to 100% and 62% respectively. That gap is the clearest single signal in the data. The corpus result is about which seeded bug patterns each strategy catches, not about the bug rate of any specific deployed LLM.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}
