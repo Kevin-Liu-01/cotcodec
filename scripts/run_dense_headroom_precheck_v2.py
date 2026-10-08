@@ -44,8 +44,10 @@ from __future__ import annotations
 import signal as _signal
 
 # First, before any import that can start a thread: every thread inherits this
-# mask, so SIGUSR1 and SIGTERM stay pending until the guard consumes them.
-if hasattr(_signal, "pthread_sigmask"):
+# mask, so SIGUSR1 and SIGTERM stay pending until the guard consumes them. Only
+# when this file runs as the program (also through runpy with run_name
+# "__main__"); importing it, as the tests and the doctor do, changes nothing.
+if __name__ == "__main__" and hasattr(_signal, "pthread_sigmask"):
     _signal.pthread_sigmask(_signal.SIG_BLOCK, {_signal.SIGUSR1, _signal.SIGTERM})
 
 import argparse  # noqa: E402

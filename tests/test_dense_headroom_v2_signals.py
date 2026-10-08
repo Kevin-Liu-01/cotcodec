@@ -128,3 +128,16 @@ def test_the_entry_point_blocks_the_signals_before_any_import() -> None:
     lines = [line for line in body[:first_import].splitlines()
              if line.startswith(("import ", "from "))]
     assert lines == ["from __future__ import annotations", "import signal as _signal"]
+    assert 'if __name__ == "__main__" and hasattr(_signal, "pthread_sigmask"):' in body
+
+
+def test_importing_the_entry_point_leaves_the_signal_mask_alone() -> None:
+    code = (f"import signal, sys; sys.path.insert(0, {str(PROJECT_ROOT)!r}); "
+            "import scripts.run_dense_headroom_precheck_v2; "
+            "print(sorted(int(s) for s in signal.pthread_sigmask(signal.SIG_BLOCK, set())))")
+    if not hasattr(signal, "pthread_sigmask"):
+        pytest.skip("POSIX signals")
+    out = subprocess.run([sys.executable, "-c", code], capture_output=True, text=True,
+                         check=True).stdout
+    blocked = set(json.loads(out))
+    assert int(signal.SIGUSR1) not in blocked and int(signal.SIGTERM) not in blocked
