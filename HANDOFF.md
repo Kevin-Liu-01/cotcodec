@@ -5,10 +5,10 @@
 The restarted program is in Stage 0. Everything runs through frozen
 preregistrations in `program/preregistrations/ledger.jsonl` (hash-chained;
 `uv run python scripts/preregister.py check-chain`, 7 rows). Decisions taken on
-Kevin's behalf are D1-D34 in `program/decisions.md`. GPU-hours are in
+Kevin's behalf are D1-D38 in `program/decisions.md`. GPU-hours are in
 `program/state.json` (`gpu_hours_ledger`): 2.44 on main; 2.77 on branch
 `stage0/q1-engineering-d31` (main merged in, plus the Q1 re-pilot's 0.33);
-the checker-mutation rater's 0.13 (branch `stage0/q2-evaluator-mutation`) and
+the checker-mutation dev raters' 0.57 (branch `stage0/q2-evaluator-mutation`) and
 the Q3 dense pre-check lanes (`ops/q3-dense`) are not yet merged.
 
 | Registration | Outcome | Evidence |
@@ -44,9 +44,18 @@ the Q3 dense pre-check lanes (`ops/q3-dense`) are not yet merged.
   of about 205 items, a transcript audit of every user turn and transcript
   with the relay frame and the harness entry and attachment types registered,
   difference-first packets). The sixth review scored the eighth draft 80; D38
-  accepted it and has the review's minor items fixed before the freeze; that
-  pass is being applied. The registered dev result (kappa 0.066) stays as
-  recorded.
+  accepted its choices, and the ninth draft fixes the review's minor items
+  (fallback at the largest budget that fits; a registered transcript
+  collector, `rater_runner collect-transcripts`, whose manifest the ingest
+  checks; relay frames checked across calls files and recorded verbatim; one
+  workflow session with one fresh, answer-blind re-rate of relay-voided
+  items; concordant contradictions of every candidate kind to Kevin's pool;
+  interrupted attempts answer only through a structured answer). Code-tree
+  pin `50edcc45`; the scratch freeze-lint passes (registration SHA-256
+  `0a01f424...`). Next: a narrow re-check, Kevin's remaining items (the
+  pool, the spot check, outward actions, carried-over sign-offs; prereg
+  section 17), re-merge main, freeze. The registered dev result (kappa
+  0.066) stays as recorded. Branch GPU ledger rows sum to 3.76 with main's.
 - **Q1 Stage 0** (`stage0/q1-engineering-d31`): not admitted under D31; waits
   on the gauntlet (D24) or Kevin. The D31 review's fix pass is done (section
   18.9, no GPU): memory-aware execution `q1-stage0-exec/2`, a health check that
