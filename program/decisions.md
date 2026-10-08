@@ -659,3 +659,22 @@ Q1 is revived: Kevin rules on D14 (is TF32 truncation admissible), rule /2
 is the audit design, an S1-cal-only GPU pilot of about 1.2 GPU-h tests it on
 real kernels first, and any reduced Stage 0 takes a new id and a fresh
 gauntlet.
+
+**D47. Q2 Stage 1 is split: S1a within 8 GPU-h now, the scale ladder only on
+S1a's GO.** Q2 Stage 1 as designed projects to 431.5 GPU-h. A design panel
+(three independent designs, two judges, branch `stage0/q2-stage1-rescope`)
+found that both certified harnesses (OSWorld's qwen35vl agent and
+gym-anything's, which the action-path suite certifies) fold a long history,
+think by default and read screenshots only, so the cost card's cheap profile
+priced neither and the accessibility-tree arm needs harness code that does not
+exist upstream. Decided: Stage 1 becomes S1a, `q2-stage1-rescoped-v1`
+(Qwen3.5-4B and 9B, the two certified harnesses, screenshot only, thinking on
+with 2,048 output tokens, 15 steps, two serving sessions per size at least
+12 h apart with two reruns each, at least 32 confirm tasks with a cost-only
+fill rule, and an OpenCUA-7B runtime anchor; registered caps 7.97 GPU-h, so no
+gauntlet), measuring the between-session noise floor, the harness effect and a
+task-by-harness screen, with the first real per-episode cost card. The
+observation factor and the 27B and 35B rungs move to S1b, which runs only if
+S1a's preregistered GO rule holds and then goes through the gauntlet (D24).
+S1a, like every GPU episode, runs only after the action-path suite passes; its
+draft gets an adversarial pre-freeze review first.
