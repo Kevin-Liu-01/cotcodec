@@ -1698,8 +1698,10 @@ item 5, before the freeze. Applied on branch `stage0/q2-action-path-d30`:
    with an event difference still counting in A1, A3 and the ladder; a
    rung allowing two excused trials and refusing a third, counting a
    non-aborted earlier attempt's and not an aborted one's, and keeping
-   excused steps in its step p95; an earlier attempt's failures counted
-   only on judged cells; and A7's cap. The D33 loader read development runs
+   excused steps in its step p95; a restart across the reset observation
+   excused in A1 and the ladder, and the same lost tree without a restart
+   across it counted; an earlier attempt's failures counted only on judged
+   cells; and A7's cap. The D33 loader read development runs
    694 and 703-708 (seed 42) again: the restart counts and hit trials are as
    before (two restarts per fault-injection session; the trial killed inside
    each session restart-only, now excused, and the trial after the kill
@@ -1707,6 +1709,11 @@ item 5, before the freeze. Applied on branch `stage0/q2-action-path-d30`:
    reset observation and no restart that hit no trial. The only status that
    changed is `chord_ctrl_c` in runs 694 and 703, killed inside in both of
    each run's sessions: FAIL becomes `RESTART_LIMIT` (two excused trials and
-   no counted repetition, still a failure); read as a rung, its gating
-   failures drop from `chord_ctrl_c` and `drag_short` to `drag_short`.
-   Every other entry's status in 694 and 703-708 is unchanged.
+   no counted repetition, still a failure). Read under the rung rule
+   (`acceptance.rung`), 694's and 703's gating entries not PASS stay
+   `chord_ctrl_c` and `drag_short`: the rung rule does not read a gating
+   entry with no counted trial as passing, and `chord_ctrl_c` has none left
+   (its two excused trials are within a rung's limit of two). A scored rung
+   cannot reach that case: each entry runs at least 12 trials there
+   (r_N >= 6 per setting) and at most two may be excused. Every other
+   entry's status in 694 and 703-708 is unchanged.
