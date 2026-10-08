@@ -130,7 +130,7 @@ differ from the pins:
 {
  "q2m_pins": 1,
  "experiment_id": "q2-evaluator-mutation-v1",
- "code_tree_sha256": "c4dec7ad84fe945968a16daef4902126b44297caa5bd4511317f8b3d2a17e6b5",
+ "code_tree_sha256": "7b537f919709ee55b3c0196e39ff6e2d3f035ed3c9fdab6e0897baf2006a2446",
  "operator_catalog_sha256": "3a5ff94953f7b672059b0f6b063064b97a438de166fd664903e239a12f65b46f",
  "operator_catalog_version": "q2-mut-operators-v1",
  "operators": 64,
@@ -696,8 +696,9 @@ A checker exception is not an infrastructure failure; it is verdict `error`.
         the agent's final text, which must hold exactly one of the words
         accept, reject and unsure as a standalone word, the record's answer;
         a final text that names two answer words matches neither), and every
-        item with a relay frame when the relay frames of the ingest are not
-        all byte-identical. The model id of every record is the one the
+        item with a relay frame when the relay frames of the ingest (those
+        in the transcripts of unanswered items included) are not all
+        byte-identical. The model id of every record is the one the
         harness recorded on the agent's turns, not one the agent reports; a
         transcript that names any model other than `claude-opus-5-5` refuses
         the whole ingest. Each call record keeps the SHA-256 and size of

@@ -1662,6 +1662,7 @@ def audit_transcript(
         "task_turns": len(task_turns),
         "other_user_turns": len(other_turns),
         "relay_frame_sha256": relay_shas[0] if len(relay_shas) == 1 else None,
+        "relay_frames_sha256": relay_shas,
         "relay_frames": len(relay_turns),
         "prompt_matches_template": (
             None if expected_prompt is None else len(task_turns) == 1 and not other_turns
@@ -1804,8 +1805,7 @@ def ingest_isolated(
                     f"not {ANTHROPIC['model']!r}"
                 )
             audited.append((path, data, result))
-            if result["relay_frame_sha256"]:
-                relay_frames[result["relay_frame_sha256"]] += 1
+            relay_frames.update(result["relay_frames_sha256"])
         answering = [a for a in audited if a[2]["answers"]]
         primary = answering[0] if answering else (audited[0] if len(audited) == 1 else None)
         if not audited:
@@ -1848,11 +1848,27 @@ def ingest_isolated(
                 "expected": expected,
             }
         )
+    # Transcripts of items without an answer give no call, but their relay
+    # frames are part of the run whose frames must be byte-identical.
+    unanswered = 0
+    for item in sorted(set(exported) - seen):
+        entry = exported[item]
+        expected = render_isolated_prompt(f"{manifest['iso_root']}/{entry['dir']}", item)
+        for path in item_transcripts(directories, item):
+            result = audit_transcript(
+                path.read_bytes(),
+                iso_root / entry["dir"],
+                item_id=item,
+                expected_prompt=expected,
+                item_ids=exported,
+            )
+            unanswered += 1
+            relay_frames.update(result["relay_frames_sha256"])
     calls: list[dict[str, Any]] = []
     responses: dict[str, bytes] = {}
     for row in staged:
         void = row["void"]
-        shas = sorted({a[2]["relay_frame_sha256"] for a in row["audited"]} - {None})
+        shas = sorted({sha for a in row["audited"] for sha in a[2]["relay_frames_sha256"]})
         if shas and len(relay_frames) > 1:
             void.append("the harness relay frames differ across the run")
         item, entry, rec, audit = row["item"], row["entry"], row["rec"], row["audit"]
@@ -1953,6 +1969,7 @@ def ingest_isolated(
         "statuses": dict(Counter(c["status"] for c in calls)),
         "models_returned": dict(Counter(str(c["model_returned"]) for c in calls)),
         "transcripts": sum(len(row["audited"]) for row in staged),
+        "transcripts_of_unrated_items": unanswered,
         "relay_frames": dict(sorted(relay_frames.items())),
         "transcripts_not_exported": sorted(on_disk - named),
         "root_entries_not_exported": sorted(set(root_entries) - set(exported)),
