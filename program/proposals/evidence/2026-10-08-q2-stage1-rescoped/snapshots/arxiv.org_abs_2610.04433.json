@@ -1,0 +1,26 @@
+{
+ "url": "https://arxiv.org/abs/2610.04433",
+ "fetched_at": "2026-10-08T14:39:50Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 43160,
+ "raw_sha256": "c0d4562539b1215b137cbbb4ad850269441a19a2aaee2e2e527aef50d17ed5ef",
+ "raw_stored": false,
+ "extract": {
+  "html_title": "[2610.04433] What Does a Harness Buy? Tokens, Mostly",
+  "title": "What Does a Harness Buy? Tokens, Mostly",
+  "authors": [
+   "Liu, Yangze",
+   "Han, Zhongyi"
+  ],
+  "citation_date": "2026/10/03",
+  "submission_history": [
+   [
+    "v1",
+    "Sat, 3 Oct 2026 10:47:10 UTC "
+   ]
+  ],
+  "abstract": "A coding agent is a language model wrapped in a harness: the system prompt, the tool set, and the context management that turn a chat model into something that can work inside a repository. Production harnesses ship releases daily, vendors advertise pass-rate gains from harness changes, and leaderboards mix harnesses freely. What is rarely measured is how much the harness itself moves the score when the model is held fixed. We run five models through three production harnesses, Claude Code, mini-SWE-agent, and OpenCode, on SWE-bench Verified, and rerun the same configurations to calibrate how much a score moves when nothing changes but the run. On 447 tasks and the two models we ran there, Claude Code and mini-SWE-agent, the heaviest and the lightest harness, are equivalent within five points. On a 45-task hard subset and five models, swapping the harness flips as many tasks as rerunning the same harness, 13% in both cases, and the tasks a harness wins in one run are not the tasks it wins in the next. The one harness effect that clears the noise is a loss, not a gain: OpenCode trails by up to 9 points on the large pool, and on one model half of that gap sits in runs its output cap cut short. What the harness does decide is the bill. With the same model, the same tasks, and one price list, cost per task differs by up to 3x across harnesses. The gap is set at the first call, by the preamble of system prompt and tool schemas each harness sends with every step, and scaled by the number of steps; per-step growth and per-call tool output differ far less. The provider's price for cached input scales the bill and does not reorder it. The rerun data also give the resolution a harness comparison needs: at the discordance we observe, 45 tasks catch a 13-point gap only half the time and no gap with 80% power, and 447 tasks resolve 5 points, still coarser than the gains many harness changes claim.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}

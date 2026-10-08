@@ -1,0 +1,32 @@
+{
+ "url": "https://arxiv.org/abs/2607.28367",
+ "fetched_at": "2026-10-08T14:39:50Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 41117,
+ "raw_sha256": "f85084949452c9491a1d16aef2df73b38b67d0b1d5819c85745d91558e315ee3",
+ "raw_stored": false,
+ "extract": {
+  "html_title": "[2607.28367] How Benchmarks Mis-Score Computer-Use Agents",
+  "title": "How Benchmarks Mis-Score Computer-Use Agents",
+  "authors": [
+   "Dong, Zihan",
+   "Ma, Zhiyuan",
+   "Wang, Zekun",
+   "Li, Yunqing",
+   "Liu, Zirou",
+   "Deng, Ruixuan",
+   "Zhan, Qishi",
+   "Qian, Rui"
+  ],
+  "citation_date": "2026/07/30",
+  "submission_history": [
+   [
+    "v1",
+    "Thu, 30 Jul 2026 15:29:42 UTC "
+   ]
+  ],
+  "abstract": "Computer-use agents (CUA) are being deployed to browse the web and operate desktop software, yet their benchmark scores are still commonly produced by brittle scripted oracles. A score is the output of a pipeline in which tasks can be stale, trajectories can omit decisive visual evidence, evaluators can reject valid alternatives, and aggregate reports can hide the cause of failure. We organize these problems into a reliability framework spanning task construction, trajectory observation, scoring, and reporting. We then audit 150 public failure-scored trajectories from five web, enterprise-workflow, and desktop-control benchmarks, find that 15.3\\% of FAIL verdicts are wrong: 10.7\\% are evaluator false negatives and 4.7\\% are broken tasks. For genuine failures, a three-tier diagnostic taxonomy shows that verification/feedback and planning failures dominate execution/grounding errors, while a single scalar success rate can not explain. We connect these findings to newer long-horizon CUA benchmarks and derive stage-specific design rules for CUA evaluation.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}

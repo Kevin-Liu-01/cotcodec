@@ -1,0 +1,12 @@
+{
+ "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_verified_trajs",
+ "fetched_at": "2026-10-08T14:39:52Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 134457,
+ "raw_sha256": "163e5c0c2f7c12831e5dd90e37d5ce5a41d4b1660e9a465452df6a878a9c8f70",
+ "raw_stored": false,
+ "extract": {
+  "html_title": "xlangai/ubuntu_osworld_verified_trajs · Datasets at Hugging Face"
+ }
+}

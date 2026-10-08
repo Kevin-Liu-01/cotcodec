@@ -1,0 +1,33 @@
+{
+ "url": "https://arxiv.org/abs/2609.09218",
+ "fetched_at": "2026-10-08T14:39:51Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 44179,
+ "raw_sha256": "38cdcdea5d4cb666696128ad3b13345bee4db0d7e413a643d0d8f66db58ac80b",
+ "raw_stored": false,
+ "extract": {
+  "html_title": "[2609.09218] The Double Measurement Confound in Agent Benchmarks: De-Scaffolding, Ground-Truth Scoring, and Reliability Beyond the Mean",
+  "title": "The Double Measurement Confound in Agent Benchmarks: De-Scaffolding, Ground-Truth Scoring, and Reliability Beyond the Mean",
+  "authors": [
+   "Zhang, Yonghong",
+   "Motaali, Shadi",
+   "Dinh, Vu Phong",
+   "Piroutiniya, Avin",
+   "de Vergara, Jorge E. López",
+   "de Pedro, Luis",
+   "Correia, Ricardo",
+   "Parra, Isabel M.",
+   "Xie, Yong"
+  ],
+  "citation_date": "2026/09/06",
+  "submission_history": [
+   [
+    "v1",
+    "Sun, 6 Sep 2026 21:23:11 UTC "
+   ]
+  ],
+  "abstract": "Agent benchmarks are increasingly used to compare large language models (LLMs) and guide deployment decisions, yet benchmark scores are meaningful only if they measure model capability rather than properties of the evaluation pipeline. We identify a double measurement confound: execution-critical decisions are performed by a fixed scaffold instead of the model, while the scorer evaluates outputs using criteria that may not reflect task correctness. We unify these issues within a measurement-theoretic framework that characterizes when benchmark scores can be interpreted as evidence of model capability, and instantiate it with an audit-and-repair protocol that (i) transfers execution-critical decisions from the scaffold to the model, (ii) replaces shape-based evaluation with seeded ground-truth scoring, and (iii) reports reliability beyond the mean through worst-case and tail-risk metrics. Experiments on ComtradeBench show that the joint intervention transforms a nearly flat leaderboard into a reliability spectrum that distinguishes both average performance and robustness across seeds. Applying the audit to existing benchmarks further shows that scorer validity is benchmark-specific, whereas scaffold ownership is an uncontrolled axis wherever we probed it. Our results suggest that benchmark scores should be interpreted together with their scaffolding level, scoring criterion, and reliability profile, providing a practical framework for more valid evaluation of LLM agents.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}

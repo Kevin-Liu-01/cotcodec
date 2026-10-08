@@ -1,0 +1,9 @@
+{
+ "doctor": "Novelty",
+ "status": "FAIL",
+ "pass_condition": "Bounded novelty statement with listed queries, closest priors read in full, blind discrimination and novelty refuter run",
+ "evidence": "Bounded wording with 10 listed orx queries (107 distinct ids returned); three new closest priors read in full; inherited priors from the 2026-10-06 dossier not re-read in full; blind discrimination and novelty refuter not run",
+ "remediation": "Run the blind discrimination against 2610.01618 and 2609.40284 and the novelty refuter; expand coverage (OpenReview, citation graph)",
+ "evaluated_on": "2026-10-08",
+ "evaluated_by": "wave-0 single synthesis owner (Claude agent); not an independent review"
+}

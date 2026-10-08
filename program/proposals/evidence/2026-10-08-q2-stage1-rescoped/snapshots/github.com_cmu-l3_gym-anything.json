@@ -1,0 +1,12 @@
+{
+ "url": "https://github.com/cmu-l3/gym-anything",
+ "fetched_at": "2026-10-08T14:39:54Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 309087,
+ "raw_sha256": "0a55f700e25bdc9380343799ca44a3fad7ce1a80392655fedce3b4ff8dab0f4d",
+ "raw_stored": false,
+ "extract": {
+  "html_title": "GitHub - cmu-l3/gym-anything: Gym-Anything: Turn any Software into an Agent Environment · GitHub"
+ }
+}

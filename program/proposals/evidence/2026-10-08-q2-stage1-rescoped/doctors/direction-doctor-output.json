@@ -1,0 +1,50 @@
+{
+  "acceptedScore": 0,
+  "doctorStatus": {
+    "Citation": "PASS",
+    "Compute": "FAIL",
+    "Design": "PASS",
+    "Novelty": "FAIL",
+    "Safety": "PASS",
+    "Source": "PASS"
+  },
+  "evidenceBundleLoaded": true,
+  "hardCaps": [
+    89
+  ],
+  "issues": [
+    "Novelty doctor lacks PASS plus concrete evidence",
+    "Compute doctor lacks PASS plus concrete evidence",
+    "Reviewer A lacks structured PASS attestation",
+    "Reviewer B lacks structured PASS attestation",
+    "evidence bundle requires exactly two review artifacts",
+    "protected external trust store is not configured; set COTCODEC_TRUSTED_ATTESTORS_PATH in trusted CI",
+    "reviewers must use different providers; degraded review cannot score 100",
+    "reviewers must have distinct nonempty run IDs",
+    "two distinct trusted reviewer signatures are required for 100",
+    "compute attestation says the real model loop is not executable",
+    "compute attestation lacks a non-stub benchmark adapter",
+    "compute benchmark_adapter path does not exist",
+    "repository real model loop is still a stub",
+    "compute lacks a hashed Slurm manifest",
+    "compute lacks container_smoke attestation",
+    "compute lacks slurm_test attestation",
+    "compute lacks provenance_verification attestation",
+    "doctor artifact 2 did not pass",
+    "doctor artifact 4 did not pass",
+    "evidence bundle lacks audit_log artifact"
+  ],
+  "path": "/Users/kevinliu/repos/cotcodec-wt-q2-stage1/program/proposals/2026-10-08-q2-stage1-rescoped.md",
+  "remediation": [
+    "Novelty doctor lacks PASS plus concrete evidence"
+  ],
+  "reviewerTotals": {
+    "A": 0,
+    "B": 0
+  },
+  "sourceCounts": {
+    "allUrls": 20,
+    "recognizedPrimaryUrls": 20
+  },
+  "status": "FAIL"
+}
