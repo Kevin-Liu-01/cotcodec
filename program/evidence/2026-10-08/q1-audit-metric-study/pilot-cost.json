@@ -1,0 +1,625 @@
+{
+ "first_pass_stated_fallback_upper_bound": {
+  "first_pass_plan_gpu_h": 1.0253611111111112,
+  "revised_plan_gpu_h": 1.6925833333333333,
+  "revised_plus_L1_47_plan_gpu_h": 2.4979722222222223,
+  "rule": "every consumer item of the calibration-only and unmeasured problems at the largest measured item of any problem"
+ },
+ "largest_measured_consumer_item_gpu_s": 76.60799980163574,
+ "measured_ratios": {
+  "A2_or_A3_over_A1_max_over_repilot_same_regime": 2.0933808299917978,
+  "reference_over_consumer_max_over_repilot": 2.026504788043939,
+  "same_regime_problems": [
+   "L1/10",
+   "L1/18",
+   "L2/95",
+   "L2/77",
+   "L2/100",
+   "L2/87",
+   "L2/46"
+  ]
+ },
+ "method": "per problem: the largest charged A1 item and the largest charged A2/A3 item (any attempt, any arm, jobs 713 and 752), the largest charged ref_A1-A3 item; A2/A3 and reference items of calibration-only problems from the measured ratios; L1/94 from L1/47; GPU-s = kernels x 3 x max(A1 item, A2/A3 item) + 3 x reference item",
+ "notes": [
+  "first-pass figure: 0.28 GPU-h (0.20 for the 8 re-pilot problems), from wall x units / 12 on the failed shared attempt of L2/59's items",
+  "job 752 measured 2.4x its exec/2 model; these per-item costs are measurements, so no model factor applies, but exec/2 runs large items with more units than 713's exec/1, so 713-measured items may be low",
+  "the non-matmul problems have 4.3-8.6 GB native inputs and run alone; they dominate the revised plan"
+ ],
+ "per_problem_item_costs": {
+  "L1/10": {
+   "A1_item_gpu_s": 0.7517803058479771,
+   "A2_A3_item_gpu_s": 1.1307151480154558,
+   "alone_run_items": 0,
+   "basis": "measured (713, 752)",
+   "measured_items": 21,
+   "measured_reference_items": 6,
+   "reference_item_gpu_s": 1.2506439360705288
+  },
+  "L1/15": {
+   "A1_item_gpu_s": 3.3926666975021362,
+   "A2_A3_item_gpu_s": 7.102143427102553,
+   "alone_run_items": 0,
+   "basis": "A1 measured (job 518 calibration); A2/A3 = A1 x 2.09; reference items = consumer x 2.03",
+   "measured_items": 1,
+   "measured_reference_items": 0,
+   "reference_item_gpu_s": 14.392527660398114
+  },
+  "L1/18": {
+   "A1_item_gpu_s": 0.9283939473556749,
+   "A2_A3_item_gpu_s": 1.4788560578317356,
+   "alone_run_items": 0,
+   "basis": "measured (713, 752)",
+   "measured_items": 18,
+   "measured_reference_items": 6,
+   "reference_item_gpu_s": 2.9969088820237966
+  },
+  "L1/47": {
+   "A1_item_gpu_s": 76.60799980163574,
+   "A2_A3_item_gpu_s": 160.3697182087597,
+   "alone_run_items": 1,
+   "basis": "A1 measured (job 518 calibration); A2/A3 = A1 x 2.09; reference items = consumer x 2.03",
+   "measured_items": 1,
+   "measured_reference_items": 0,
+   "reference_item_gpu_s": 324.99000180730883
+  },
+  "L2/100": {
+   "A1_item_gpu_s": 5.893837876314726,
+   "A2_A3_item_gpu_s": 10.59398531317711,
+   "alone_run_items": 0,
+   "basis": "measured (713, 752)",
+   "measured_items": 18,
+   "measured_reference_items": 3,
+   "reference_item_gpu_s": 13.454914368342873
+  },
+  "L2/18": {
+   "A1_item_gpu_s": 1.3105909065766768,
+   "A2_A3_item_gpu_s": 1.5854403907602486,
+   "alone_run_items": 0,
+   "basis": "never measured: the costs of L2/95 (same size class), measured (713, 752)",
+   "measured_items": 21,
+   "measured_reference_items": 6,
+   "reference_item_gpu_s": 3.1707166524848556
+  },
+  "L2/46": {
+   "A1_item_gpu_s": 3.3258333433242075,
+   "A2_A3_item_gpu_s": 6.9622357646624256,
+   "alone_run_items": 0,
+   "basis": "measured (713, 752); reference items = consumer x 2.03",
+   "measured_items": 5,
+   "measured_reference_items": 0,
+   "reference_item_gpu_s": 14.10900411257916
+  },
+  "L2/52": {
+   "A1_item_gpu_s": 7.367166638374329,
+   "A2_A3_item_gpu_s": 15.422285412127934,
+   "alone_run_items": 0,
+   "basis": "A1 measured (job 518 calibration); A2/A3 = A1 x 2.09; reference items = consumer x 2.03",
+   "measured_items": 1,
+   "measured_reference_items": 0,
+   "reference_item_gpu_s": 31.253335230257452
+  },
+  "L2/56": {
+   "A1_item_gpu_s": 1.3105909065766768,
+   "A2_A3_item_gpu_s": 1.5854403907602486,
+   "alone_run_items": 0,
+   "basis": "never measured: the costs of L2/95 (same size class), measured (713, 752)",
+   "measured_items": 21,
+   "measured_reference_items": 6,
+   "reference_item_gpu_s": 3.1707166524848556
+  },
+  "L2/59": {
+   "A1_item_gpu_s": 3.104567174478011,
+   "A2_A3_item_gpu_s": 35.44799995422363,
+   "alone_run_items": 3,
+   "basis": "measured (713, 752)",
+   "measured_items": 21,
+   "measured_reference_items": 4,
+   "reference_item_gpu_s": 23.217000007629395
+  },
+  "L2/60": {
+   "A1_item_gpu_s": 9.626166582107544,
+   "A2_A3_item_gpu_s": 20.1512325892916,
+   "alone_run_items": 0,
+   "basis": "A1 measured (job 518 calibration); A2/A3 = A1 x 2.09; reference items = consumer x 2.03",
+   "measured_items": 1,
+   "measured_reference_items": 0,
+   "reference_item_gpu_s": 40.83656932718649
+  },
+  "L2/77": {
+   "A1_item_gpu_s": 2.512229295692058,
+   "A2_A3_item_gpu_s": 3.0501909082586107,
+   "alone_run_items": 0,
+   "basis": "measured (713, 752)",
+   "measured_items": 21,
+   "measured_reference_items": 6,
+   "reference_item_gpu_s": 2.766918169368396
+  },
+  "L2/87": {
+   "A1_item_gpu_s": 5.57618808803104,
+   "A2_A3_item_gpu_s": 7.618283329123543,
+   "alone_run_items": 0,
+   "basis": "measured (713, 752)",
+   "measured_items": 18,
+   "measured_reference_items": 3,
+   "reference_item_gpu_s": 5.74793888746746
+  },
+  "L2/95": {
+   "A1_item_gpu_s": 1.3105909065766768,
+   "A2_A3_item_gpu_s": 1.5854403907602486,
+   "alone_run_items": 0,
+   "basis": "measured (713, 752)",
+   "measured_items": 21,
+   "measured_reference_items": 6,
+   "reference_item_gpu_s": 3.1707166524848556
+  }
+ },
+ "plans": {
+  "first_pass": {
+   "consumer_items": 138,
+   "kernels": 46,
+   "per_problem": {
+    "L1/10": {
+     "consumer_items": 15,
+     "gpu_s": 20.7,
+     "kernels": [
+      "substrate",
+      "identity",
+      "decoy-bundle",
+      "mutant",
+      "tl.dot-control"
+     ],
+     "reference_items": 3
+    },
+    "L1/15": {
+     "consumer_items": 12,
+     "gpu_s": 128.4,
+     "kernels": [
+      "substrate",
+      "identity",
+      "decoy-bundle",
+      "tl.dot-control"
+     ],
+     "reference_items": 3
+    },
+    "L1/18": {
+     "consumer_items": 15,
+     "gpu_s": 31.2,
+     "kernels": [
+      "substrate",
+      "identity",
+      "decoy-bundle",
+      "mutant",
+      "tl.dot-control"
+     ],
+     "reference_items": 3
+    },
+    "L2/100": {
+     "consumer_items": 12,
+     "gpu_s": 167.5,
+     "kernels": [
+      "substrate",
+      "identity",
+      "decoy-bundle",
+      "mutant"
+     ],
+     "reference_items": 3
+    },
+    "L2/46": {
+     "consumer_items": 12,
+     "gpu_s": 125.9,
+     "kernels": [
+      "substrate",
+      "identity",
+      "decoy-bundle",
+      "mutant"
+     ],
+     "reference_items": 3
+    },
+    "L2/52": {
+     "consumer_items": 9,
+     "gpu_s": 232.6,
+     "kernels": [
+      "substrate",
+      "identity",
+      "decoy-bundle"
+     ],
+     "reference_items": 3
+    },
+    "L2/59": {
+     "consumer_items": 15,
+     "gpu_s": 601.4,
+     "kernels": [
+      "substrate",
+      "identity",
+      "decoy-bundle",
+      "mutant",
+      "tl.dot-control"
+     ],
+     "reference_items": 3
+    },
+    "L2/60": {
+     "consumer_items": 9,
+     "gpu_s": 303.9,
+     "kernels": [
+      "substrate",
+      "identity",
+      "decoy-bundle"
+     ],
+     "reference_items": 3
+    },
+    "L2/77": {
+     "consumer_items": 12,
+     "gpu_s": 44.9,
+     "kernels": [
+      "substrate",
+      "identity",
+      "decoy-bundle",
+      "mutant"
+     ],
+     "reference_items": 3
+    },
+    "L2/87": {
+     "consumer_items": 12,
+     "gpu_s": 108.7,
+     "kernels": [
+      "substrate",
+      "identity",
+      "decoy-bundle",
+      "mutant"
+     ],
+     "reference_items": 3
+    },
+    "L2/95": {
+     "consumer_items": 15,
+     "gpu_s": 33.3,
+     "kernels": [
+      "substrate",
+      "identity",
+      "decoy-bundle",
+      "mutant",
+      "tl.dot-control"
+     ],
+     "reference_items": 3
+    }
+   },
+   "reference_items": 33,
+   "repilot_8_problems_gpu_h": 0.3148888888888889,
+   "total_gpu_h": 0.4995833333333333,
+   "total_with_2x_margin_gpu_h": 0.9991666666666666
+  },
+  "revised": {
+   "consumer_items": 180,
+   "kernels": 60,
+   "per_problem": {
+    "L1/10": {
+     "consumer_items": 15,
+     "gpu_s": 20.7,
+     "kernels": [
+      "substrate",
+      "identity",
+      "decoy-bundle",
+      "inductor-triton-template",
+      "mutant"
+     ],
+     "reference_items": 3
+    },
+    "L1/15": {
+     "consumer_items": 12,
+     "gpu_s": 128.4,
+     "kernels": [
+      "substrate",
+      "identity",
+      "decoy-bundle",
+      "inductor-triton-template"
+     ],
+     "reference_items": 3
+    },
+    "L1/18": {
+     "consumer_items": 15,
+     "gpu_s": 31.2,
+     "kernels": [
+      "substrate",
+      "identity",
+      "decoy-bundle",
+      "inductor-triton-template",
+      "mutant"
+     ],
+     "reference_items": 3
+    },
+    "L2/100": {
+     "consumer_items": 15,
+     "gpu_s": 199.3,
+     "kernels": [
+      "substrate",
+      "identity",
+      "decoy-bundle",
+      "cudnn-benchmark",
+      "mutant"
+     ],
+     "reference_items": 3
+    },
+    "L2/18": {
+     "consumer_items": 12,
+     "gpu_s": 28.5,
+     "kernels": [
+      "substrate",
+      "identity",
+      "decoy-bundle",
+      "inductor-reduction-variant"
+     ],
+     "reference_items": 3
+    },
+    "L2/46": {
+     "consumer_items": 15,
+     "gpu_s": 146.8,
+     "kernels": [
+      "substrate",
+      "identity",
+      "decoy-bundle",
+      "cudnn-benchmark",
+      "mutant"
+     ],
+     "reference_items": 3
+    },
+    "L2/52": {
+     "consumer_items": 12,
+     "gpu_s": 278.8,
+     "kernels": [
+      "substrate",
+      "identity",
+      "decoy-bundle",
+      "cudnn-benchmark"
+     ],
+     "reference_items": 3
+    },
+    "L2/56": {
+     "consumer_items": 12,
+     "gpu_s": 28.5,
+     "kernels": [
+      "substrate",
+      "identity",
+      "decoy-bundle",
+      "inductor-reduction-variant"
+     ],
+     "reference_items": 3
+    },
+    "L2/59": {
+     "consumer_items": 15,
+     "gpu_s": 601.4,
+     "kernels": [
+      "substrate",
+      "identity",
+      "decoy-bundle",
+      "inductor-triton-template",
+      "mutant"
+     ],
+     "reference_items": 3
+    },
+    "L2/60": {
+     "consumer_items": 12,
+     "gpu_s": 364.3,
+     "kernels": [
+      "substrate",
+      "identity",
+      "decoy-bundle",
+      "cudnn-benchmark"
+     ],
+     "reference_items": 3
+    },
+    "L2/77": {
+     "consumer_items": 15,
+     "gpu_s": 54.1,
+     "kernels": [
+      "substrate",
+      "identity",
+      "decoy-bundle",
+      "cudnn-benchmark",
+      "mutant"
+     ],
+     "reference_items": 3
+    },
+    "L2/87": {
+     "consumer_items": 15,
+     "gpu_s": 131.5,
+     "kernels": [
+      "substrate",
+      "identity",
+      "decoy-bundle",
+      "cudnn-benchmark",
+      "mutant"
+     ],
+     "reference_items": 3
+    },
+    "L2/95": {
+     "consumer_items": 15,
+     "gpu_s": 33.3,
+     "kernels": [
+      "substrate",
+      "identity",
+      "decoy-bundle",
+      "inductor-triton-template",
+      "mutant"
+     ],
+     "reference_items": 3
+    }
+   },
+   "reference_items": 39,
+   "repilot_8_problems_gpu_h": 0.33841666666666664,
+   "total_gpu_h": 0.5685555555555556,
+   "total_with_2x_margin_gpu_h": 1.1371111111111112
+  },
+  "revised_plus_L1_47": {
+   "consumer_items": 192,
+   "kernels": 64,
+   "per_problem": {
+    "L1/10": {
+     "consumer_items": 15,
+     "gpu_s": 20.7,
+     "kernels": [
+      "substrate",
+      "identity",
+      "decoy-bundle",
+      "inductor-triton-template",
+      "mutant"
+     ],
+     "reference_items": 3
+    },
+    "L1/15": {
+     "consumer_items": 12,
+     "gpu_s": 128.4,
+     "kernels": [
+      "substrate",
+      "identity",
+      "decoy-bundle",
+      "inductor-triton-template"
+     ],
+     "reference_items": 3
+    },
+    "L1/18": {
+     "consumer_items": 15,
+     "gpu_s": 31.2,
+     "kernels": [
+      "substrate",
+      "identity",
+      "decoy-bundle",
+      "inductor-triton-template",
+      "mutant"
+     ],
+     "reference_items": 3
+    },
+    "L1/47": {
+     "consumer_items": 12,
+     "gpu_s": 2899.4,
+     "kernels": [
+      "substrate",
+      "identity",
+      "decoy-bundle",
+      "inductor-reduction-variant"
+     ],
+     "reference_items": 3
+    },
+    "L2/100": {
+     "consumer_items": 15,
+     "gpu_s": 199.3,
+     "kernels": [
+      "substrate",
+      "identity",
+      "decoy-bundle",
+      "cudnn-benchmark",
+      "mutant"
+     ],
+     "reference_items": 3
+    },
+    "L2/18": {
+     "consumer_items": 12,
+     "gpu_s": 28.5,
+     "kernels": [
+      "substrate",
+      "identity",
+      "decoy-bundle",
+      "inductor-reduction-variant"
+     ],
+     "reference_items": 3
+    },
+    "L2/46": {
+     "consumer_items": 15,
+     "gpu_s": 146.8,
+     "kernels": [
+      "substrate",
+      "identity",
+      "decoy-bundle",
+      "cudnn-benchmark",
+      "mutant"
+     ],
+     "reference_items": 3
+    },
+    "L2/52": {
+     "consumer_items": 12,
+     "gpu_s": 278.8,
+     "kernels": [
+      "substrate",
+      "identity",
+      "decoy-bundle",
+      "cudnn-benchmark"
+     ],
+     "reference_items": 3
+    },
+    "L2/56": {
+     "consumer_items": 12,
+     "gpu_s": 28.5,
+     "kernels": [
+      "substrate",
+      "identity",
+      "decoy-bundle",
+      "inductor-reduction-variant"
+     ],
+     "reference_items": 3
+    },
+    "L2/59": {
+     "consumer_items": 15,
+     "gpu_s": 601.4,
+     "kernels": [
+      "substrate",
+      "identity",
+      "decoy-bundle",
+      "inductor-triton-template",
+      "mutant"
+     ],
+     "reference_items": 3
+    },
+    "L2/60": {
+     "consumer_items": 12,
+     "gpu_s": 364.3,
+     "kernels": [
+      "substrate",
+      "identity",
+      "decoy-bundle",
+      "cudnn-benchmark"
+     ],
+     "reference_items": 3
+    },
+    "L2/77": {
+     "consumer_items": 15,
+     "gpu_s": 54.1,
+     "kernels": [
+      "substrate",
+      "identity",
+      "decoy-bundle",
+      "cudnn-benchmark",
+      "mutant"
+     ],
+     "reference_items": 3
+    },
+    "L2/87": {
+     "consumer_items": 15,
+     "gpu_s": 131.5,
+     "kernels": [
+      "substrate",
+      "identity",
+      "decoy-bundle",
+      "cudnn-benchmark",
+      "mutant"
+     ],
+     "reference_items": 3
+    },
+    "L2/95": {
+     "consumer_items": 15,
+     "gpu_s": 33.3,
+     "kernels": [
+      "substrate",
+      "identity",
+      "decoy-bundle",
+      "inductor-triton-template",
+      "mutant"
+     ],
+     "reference_items": 3
+    }
+   },
+   "reference_items": 42,
+   "repilot_8_problems_gpu_h": 0.33841666666666664,
+   "total_gpu_h": 1.3739444444444444,
+   "total_with_2x_margin_gpu_h": 2.747888888888889
+  }
+ },
+ "schema": "q1-audit-metric-study/pilot-cost/2"
+}
