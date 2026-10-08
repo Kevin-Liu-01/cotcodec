@@ -775,3 +775,52 @@ Append-only. Newest entries at the bottom.
   entry above); a fresh freeze of all three drafts into a scratch copy of
   the ledger verified with the chain intact, and the repository ledger is
   unchanged (7 rows). No code changed.
+
+## 2026-10-07 — Fixes after the review of the D33 pass (not frozen)
+
+- The review of the D33 pass (head `59bd551`) found two defects in
+  `acceptance.py` and one wrong number; fixing them found a third defect.
+  All are fixed before the freeze with no scored data (main preregistration
+  section 21, design decision 45).
+- Validity controls after a rerun: C1-C3 counted every failed trial of an
+  earlier attempt, so the by-design failures of C1's known-defect cells,
+  C2's predicted set and each mutant's kills made any rerun of a C1-C3
+  campaign fail its control (the mechanism D33's pass fixed for A2). Each
+  control now reads an earlier attempt by its own rule: C1 counts a
+  known-defect cell that passed in any attempt, never its failures; C2
+  counts an earlier failure only outside the predicted set, read by
+  `c2_trial_pass`; C3 reads kills and equivalence from the counting attempt,
+  reports each earlier attempt, and a cell the reference did not pass
+  cleanly in any attempt cannot kill (`a3ee335`).
+- Rung without host snapshots: `foreign_abort` returned "no host snapshots"
+  and `rung` read it as a foreign-load abort, dropping that attempt's gating
+  failures and excused trials and allowing a rerun that could qualify.
+  Section 9 registers two abort reasons only. Now an attempt missing any
+  session's snapshots does not qualify and may be rerun, and its trials
+  count (`snapshot_problems`, `a3ee335`).
+- Found while fixing: C4 read the counting A1 attempts only, though it
+  judges the tap's stream, which A1 does not judge for probe-observed
+  entries; it now reads every attempt (`c9b4771`).
+- Corrected number: the per-setting, per-shuffle reading of D33's limit was
+  said to change the pass probabilities by less than 10^-4 (also in the D33
+  entry above). Recomputed independently, it lowers the probability that
+  some A1-A3 entry reaches its limit by 8.1 x 10^-5 at the development
+  rate, 3.3 x 10^-4 at half A7's bound and 1.25 x 10^-3 at the bound (A1
+  only; rungs unchanged). Section 9, design decision 44, section 20 item 2
+  and state.json now say this.
+- No issue rejected; the two control findings were the same defect.
+- Checks at `4619666`: each new test fails on the `acceptance.py` before it;
+  the reviewers' probes now give the registered outcomes. Q2 tests on the
+  Mac, 284 passed. On the host, from an rsync of the worktree into a fresh
+  `~/cotcodec-scratch/` directory (`uv sync --locked --extra dev`), ruff
+  check clean and the whole suite 1,851 passed, 34 skipped. The loader read
+  development runs 694 and 703-708 read-only: every session has its host
+  snapshots, so the snapshot change alters nothing there (each still reads
+  as foreign load, as before: the host ran other campaigns and users' jobs).
+  `acceptance.py` is still the only code file changed since `7653799`
+  besides `harness/q2/README.md`; no lane file imports it. Both addenda pin
+  its digest `ced21d32`. Freezing the three drafts into a scratch copy of
+  the ledger verified with the chain intact (SHA-256 v1 `4e41abe0`, inputs
+  `aaceb3e8`, executor `ef074616`); the repository ledger is unchanged (7
+  rows).
+- Nothing is frozen and nothing is pushed. No GPU, no VM job.
