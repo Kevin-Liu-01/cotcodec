@@ -2433,3 +2433,42 @@ they say so.)
   7.21 central, 9.79 high). The Q3 pending-decision line in
   `program/state.json` was left unchanged to avoid merge conflicts; update it
   at merge.
+
+## 2026-10-08 — K1 v3 repair under D48, before a fresh gauntlet run (branch `gauntlet/k1-v3`, not merged)
+
+- Single-owner repair of the DRAFT `program/preregistrations/q3-k1-localization-screen-v3.md`
+  and the proposal `program/proposals/2026-10-08-q3-k1-v3-qwen35-4b.md` (new
+  section "Changes after wave 1"), with fresh run budgets: queries 60,
+  wall_minutes 600, tokens 8,000,000, dollars 150, waves 1, gpu_hours 0.3. The
+  repair used 6 counted queries (RP-Q1 to RP-Q6, one Japanese and one Korean)
+  and no GPU. Not frozen, not admitted, not pushed.
+- Literal check: two literal-free statistics become conditions of both
+  verdicts (LF: evidence and candidates exclude every block within two blocks
+  of an exact or near-literal match; PRE: passage text before the first
+  match, spill-free by causality), with a kernel-literal positive control
+  (LEXk) and a literal-leaning null family. Block-level simulation S1 (18
+  scenarios, 42 tilts): wave 1's LEX check reads negative in every scenario;
+  LF's literal bias stays within −0.26 to +1.11 points and PRE's within
+  −0.57 to +0.16 for one-block spill (xi^M: −8.65 to +3.61); with an evenly
+  spread excess a NEGATIVE implies an excess of at most 5.3 points (7.9 at
+  three-block spill) and a GO at least about 4.7.
+- NEGATIVE is two-sided (xi^M, xi_rel with limits scaled to the development
+  masked headroom, both literal-free statistics, both directions with the
+  English-needle direction gated, the seen comparator, a per-layer
+  co-statistic veto on layers with at least 3 points of masked headroom).
+  Seed variance: a layer-resolved seed term (df up to 16) and a sealed
+  development seed read before the audit read (sigma_star 2.0). CS legs
+  dropped; caps 6.94 GPU-h central, 9.46 high (wave 1 7.21 / 9.79).
+- Decision simulation S2 (both targets, xi_rel; validated against the K1
+  statistics module to 7e-15): given both gates, P(NEGATIVE | no excess) 0.81 to 0.91 at seed SD up to 1,
+  0.53 to 0.64 at seed SD 2 and at most 0.08 at 3 (five seeds: 0.45 to 0.60
+  at 3); P(GO) 0.31 to 0.61 at an input excess of 12 (realised 9 to 10) and
+  0.89 to 0.99 at 15; in the false-kill scenarios 0.00 to 0.12, and 0.34 for a failure
+  confined to layer 3, against wave 1's rules' 0.03 to 0.87 on the same draws. With the predictive H2 gate (0.42 to 0.57) and a
+  judged pre-step pass of 0.6 to 0.8, unconditional P(GO or NEGATIVE) is about
+  0.1 to 0.3.
+- Doctor: FAIL as expected (Novelty, Design and Compute FAIL; trust store;
+  the integer budget parser reads `gpu_hours=0.3` as 0).
+- Next: this run's blind critic (fresh packets including Lost in
+  Compression), refute-first triad and two reviewers, then the recorder.
+  Admission stays Kevin's under D24.
