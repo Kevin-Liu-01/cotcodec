@@ -1,12 +1,18 @@
 # Q3 K1 localization screen v3 on Qwen3.5-4B-Base (q3-k1-localization-screen-v3)
 
-Status: DRAFT. Not frozen, not admitted, no ledger row. Written on 2026-10-08
-by the single synthesis owner of the K1 v3 research gauntlet (program decisions
-D24 and D26) on branch `gauntlet/k1-v3`. Its design decisions (47 to 73 below)
-need the program owner's acceptance, and its projected caps (7.21 GPU-h
-central, 9.79 high, before the 4B throughput probe exists) put admission with
-Kevin under D24. No GPU job of this experiment may run before a freeze. The
-gauntlet proposal that argues and attacks this design is
+Status: DRAFT, repaired under program decision D48. Not frozen, not admitted,
+no ledger row. Written on 2026-10-08 by the single synthesis owner of the K1 v3
+research gauntlet (D24, D26) on branch `gauntlet/k1-v3`; wave 1 scored 51
+(reviews 51 and 55; refute-first triad 3 of 3 refuted;
+`program/gauntlet/2026-10-08-q3-k1-v3-qwen35-4b.jsonl`). The repair pass, by
+the same single owner on the same day, changes the literal check, the NEGATIVE
+region, the vetoes and the seed term, and drops the CS legs; the section
+"Repair under D48" at the end lists every change against the wave-1 draft
+(registration sha256 `f4ce9a00...`). Its design decisions (47 to 85 below) need
+the program owner's acceptance, and its projected caps (6.94 GPU-h central,
+9.46 high, before the 4B throughput probe exists) put admission with Kevin
+under D24 at the high projection. No GPU job of this experiment may run before
+a freeze. The gauntlet proposal that argues and attacks this design is
 `program/proposals/2026-10-08-q3-k1-v3-qwen35-4b.md`.
 
 ## Relation to K1 v1, K1 v2 and the dense pre-check
@@ -176,6 +182,22 @@ minimum; an exact tie goes to the lower rate. The record and its SHA-256 are
 written before any audit prompt is read, and non-selected rates are never
 evaluated on the audit partition.
 
+Sealed development seed read (decision 80), inside the main job, after the
+learning-rate freeze and before any audit prompt is read: the frozen-rate
+indexers (three seeds, both targets) select on the development partition's
+controlled families of the 14 unseen pairs (CX and MN legs, 440 selection
+units). The job computes, per target, the layer-resolved seed SD of xi^M
+(the SD of the eight-layer-average per-seed xi implied by V_seed), its df
+and its one-sided 80 percent upper bound, and writes them with a digest to
+the receipt. The development xi point is neither computed into the receipt
+nor logged. If the upper bound exceeds the stated bound sigma_star = 2.0
+points (the seed SD at which the repair simulation puts P(NEGATIVE | no
+excess) near 0.5 at a masked headroom of 30), the receipt declares
+NEGATIVE_REACHABILITY_LOW before the audit read; the rules do not change, but
+an INCONCLUSIVE cannot afterwards be read as a near-negative. Owner option
+(decision 81, not adopted): on that declaration, two more seeds at the frozen
+rate are trained in the same job before the audit read.
+
 ## Evaluation
 
 Partitions: K1's `split_passage_ids(seed=42)` over Belebele links,
@@ -201,42 +223,105 @@ Legs and families (audit):
 | CX and MN, seen stratum | the same for X in th, hi, km: 6 pairs | 1,380 CX + 690 MN | registered comparator (decision 48) |
 | ML literal ceiling | 100 English-needle and 100 X-needle prompts (10 per non-English needle language) | 200 | V1 and V2 use the 100 English ones |
 | TR, transliterated needle | for X in bn, hi: the X family's context with the passage replaced by its human Latin transliteration, queried by the X question and by the English question | 920 | descriptive script-only contrast (decision 57) |
-| CS, same-script cross-language | K1's five Latin pairs (id, tr, sw, nl, it) both directions, plus their MN legs | 3,450 | descriptive cross-language contrast |
+| CS, same-script cross-language | not run (owner option, decision 69 as revised): K1's five Latin pairs both directions | (3,450) | none; the CROSS_SCRIPT label is dropped |
 | H2 cells | 2,000 unseen-stratum CX cells (SHA-256 order) with needle present and with needle absent | 4,000 multiple-choice units | H2 gate (decision 61) |
 
 All 230 audit questions appear in every pair (crossed design). MN and CX of a
 family share haystack, needle and position. English-needle contexts are
 shared by all English-needle pairs. Multiple choice is K1's acc_norm; the
-unnormalised and per-character variants are reported beside it.
+unnormalised and per-character variants are reported beside it. The
+literal-free and pre-literal statistics (next section) reuse the captured
+block scores of the same units; they add no prompt.
+
+Directions. The seven English-needle pairs (needle and haystack English,
+question English on MN and in the unseen script on CX) and the seven X-needle
+pairs (needle and haystack in the unseen script, question in that script on
+MN and English on CX) are read separately as well as together (decision 77).
 
 Development pre-step units (development partition, 20 questions, dense only):
 the 20 pairs' CX legs with multiple choice, their MN legs, ML for every needle
 language, TR, needle-absent twins and no-haystack references for the CX
 cells.
 
-## Masking, the controlled set and the literal check
+## Masking, the controlled set and the literal checks
 
-- Content tokens: LEX's rule from the dense pre-check (not among the 100 most
-  frequent token ids of the development haystack of the needle language or the
-  query language, and decoding to text with a letter or digit), in the
-  Qwen3.5 tokenizer.
-- Overlap mask, per family f: O_f is the set of content-token ids that the
-  needle shares with the MN question or with the CX question. Every needle
-  token in a 4-token block containing a token of O_f is masked. N^M_f is the
-  unmasked needle tokens; masked recall is |S ∩ N^M_f| / |N^M_f|. The same mask
-  applies to both legs of the family and to every selector. The masked random
-  baseline is the analytic expectation over N^M_f. A family with |N^M_f|
-  below 32 tokens is excluded and counted (decision 49).
+Literal rules (model-free, computed when the bundle is built):
+
+- Exact rule E (content tokens): LEX's rule from the dense pre-check (not
+  among the 100 most frequent token ids of the development haystack of the
+  needle language or the query language, and decoding to text with a letter
+  or digit), in the Qwen3.5 tokenizer.
+- Near rule F (decision 75): a token is a near-literal match to a question
+  when the word holding it shares a character n-gram with a content word of
+  the question but no content-token id: n is 4 code points in scripts written
+  with spaces between words and 2 in ja, ko, th, km and zh; n-grams made only
+  of digits or punctuation, and the 200 most frequent n-grams of the
+  development haystack of that language, do not count. It catches inflection,
+  different subword splits and close paraphrase that rule E misses (the
+  verifier's paraphrase caveat).
+- A block is a literal block of a leg when it holds an E or F match to that
+  leg's question. On CX legs there are almost none (E2: overlap 0.00 to 0.04).
+
+Evidence sets and the primary mask:
+
+- Overlap mask M (unchanged), per family f: O_f is the set of content-token
+  ids that the needle shares with the MN question or with the CX question.
+  Every needle token in a 4-token block containing a token of O_f is masked.
+  N^M_f is the unmasked needle tokens; masked recall is |S ∩ N^M_f| / |N^M_f|.
+  The same mask applies to both legs of the family and to every selector. The
+  masked random baseline is the analytic expectation over N^M_f. A family
+  with |N^M_f| below 32 tokens is excluded and counted (decision 49).
+- Literal-free instrument LF (decision 74), radius r = 2 blocks. Evidence
+  N^LF_f: needle tokens farther than r blocks from every needle block holding
+  an E or F match to either question. Candidates on each leg: every block
+  except the sink, the needle blocks within r of such a match, and every
+  context block within r of a literal block of that leg's question. Both
+  selectors (indexer and target) and every reference choose their top 256
+  blocks among the same candidates, so the competition for the budget by
+  literal blocks and their neighbours (displacement) and the literal identity
+  carried into the next blocks (local spill) are both outside xi^LF by
+  construction. The random baseline is the analytic expectation over the
+  candidates.
+- Pre-literal evidence PRE (decision 76). Evidence N^PRE_f: needle tokens
+  before the first needle block holding an E or F match to either question;
+  candidates as for LF. The question comes after the needle and the model is
+  causal, so no needle token's key can carry a needle literal match that
+  comes later in the passage; PRE is free of spill from the needle's own
+  literal matches at any range, which LF is not beyond r.
+- Evaluability. A family enters xi^LF (xi^PRE) when |N^LF_f| (|N^PRE_f|) is
+  at least 32 tokens. The shares of controlled unseen-stratum families that
+  qualify are bundle facts fixed before any model read: if fewer than 60
+  percent qualify for LF, r is set to 1 at the freeze; if fewer than 40
+  percent qualify for PRE, the PRE conditions below are removed at the freeze
+  and residual R7 (long-range spill) is stated in their place.
 - Entity-controlled set: a question is anchored when its English wording
   contains a capitalised word (not the first word, not "I") or a digit run
   that also occurs in the English passage (the dense pre-check's model-free
   rule). Controlled families are those of unanchored questions. The rule is
   applied to the audit text when the bundle is built, before any model read.
-- Literal check: LEX, the dense pre-check's literal selector, is evaluated on
-  every leg with and without the mask. It is a reference, not a gate on the
-  audit read; its development values gate the pre-step (below).
-- Dilated mask (descriptive): also masks the blocks adjacent to masked
-  blocks.
+
+Literal references (selectors evaluated on every leg, masked and unmasked):
+
+- LEX, the dense pre-check's literal selector (exact-rule count per block).
+  Because the mask uses the same rule, LEX scores zero on every block of N^M,
+  so its masked statistic can show only displacement and the target's own
+  gap (wave-1 identification refuter). It is descriptive: it reports the
+  displacement density d (the share of LEX's MN budget outside the needle).
+- LEXk, the kernel-literal selector, whose rule differs from the mask: a
+  block's E count plus 0.5 times that of the block before it and 0.25 times
+  that of the block two before. It scores unmasked needle blocks that follow
+  a literal match, so it carries a positive literal channel by construction.
+  It is the positive control of the literal check (pre-step item 3) and the
+  literal selector of the floor check (item 5).
+- The literal-leaning null family N_lambda: the top 256 blocks of the
+  target's natural-log block score plus lambda x s_row x LEXk, where s_row is
+  the SD of the target's natural-log block scores over the blocks of that
+  query row, for lambda in {0.25, 0.5, 1, 2, 4}; no noise, no seed. It is the target tilted toward
+  literal matches and the blocks after them, at increasing strength.
+- Spill profile (descriptive): masked recall of indexer, target, LEXk and
+  N_lambda on unmasked needle blocks binned by forward distance from the
+  nearest preceding literal block (PRE, 1 to 2, 3 to 5, 6 or more blocks), on
+  both legs. The wave-1 dilated mask is superseded by LF.
 
 ## Metrics
 
@@ -264,14 +349,49 @@ Comparator: xi^M_T,seen and xi_rel^M_T,seen, the same on the seen-stratum
 pairs that survive the pre-step. Attribution contrast:
 Delta_xi = xi^M_T − xi^M_T,seen.
 
-Interval: K1's combined interval. se_cluster is the SD of a passage-cluster
-bootstrap over the audit links that hold at least one controlled question
-(B = 10,000, NumPy seed 42, macro inside each replicate, seeds fixed); s_seed
-is the SD of the three per-seed values; the 99 percent interval is
-point ± t(0.995, df) x sqrt(se_cluster² + s_seed²/3) with Welch-Satterthwaite
-df (cluster term df = clusters − 1). The percentile interval, df and the
-per-seed values are reported. A CR2 cluster-robust interval with Satterthwaite
-df is reported beside it (descriptive).
+Directions and components (decision 77): xi^M_T,E and xi^M_T,X are the same
+statistic over the seven English-needle and the seven X-needle pairs, so
+xi^M_T = (xi_E + xi_X) / 2, and alpha_T = (xi_E − xi_X) / 2. Under an additive
+model of the indexer's excess loss, with gamma for a question in a different
+script from the passage, alpha for a question in an unseen script and beta
+for a passage in an unseen script, the English-needle direction reads
+alpha + gamma, the X-needle direction gamma − alpha, and beta cancels within
+every family. xi^M_T therefore estimates gamma (the H_loc estimand) and
+alpha_T the query-script component, which opposite-signed directions would
+otherwise cancel in the macro. The needle-script component beta is reported
+through G^M(MN) by direction (descriptive).
+
+Literal-free and pre-literal statistics (decisions 74 and 76): xi^LF_T and
+xi^PRE_T are xi^M_T recomputed on the LF and PRE evidence sets and candidates,
+over evaluable families, with the same interval.
+
+Per-layer co-statistic (decision 58 as revised): xi_rel^M_T,l = macro over
+unseen pairs of G_l(MN) − G_l(CX), where G_l uses layer l's recall and layer
+l's own target and random means. A layer is testable when its masked target
+headroom (macro over unseen pairs) is at least 3 points on both legs and
+every pair's is above 1 point; other layers are listed as UNTESTABLE.
+
+Interval: K1's combined interval with a layer-resolved seed term (decision
+78). se_cluster is the SD of a passage-cluster bootstrap over the audit links
+that hold at least one controlled question (B = 10,000, NumPy seed 42, macro
+inside each replicate, seeds fixed). Every registered statistic is linear in
+the per-layer recalls of each seed's indexer (xi_rel with its point
+denominators fixed), so it is the sum over the eight layers of per-layer,
+per-seed contributions c_l,s. Each layer's indexer starts from its own
+generator (SHA-256 of seed, layer and target) and is trained only on its own
+layer's KL against a frozen backbone, so seed deviations are independent
+across layers. The seed variance of the seed mean is
+V_seed = sum over l of var_s(c_l,s) / 3, with Satterthwaite degrees of freedom
+(sum of v_l)² / sum of (v_l² / 2), v_l = var_s(c_l,s) / 3: up to 16 instead of
+K1's 2. The 99 percent interval is point ± t(0.995, df) x
+sqrt(se_cluster² + V_seed) with Welch-Satterthwaite df (cluster term df =
+clusters − 1). K1's estimator (the SD of the three per-seed values, df 2), the
+percentile interval, df and the per-seed and per-layer values are reported
+beside it. For a per-layer statistic the seed variance is pooled over the
+eight layers (df 16) and scaled by that layer's headroom; this is the safe
+direction for a veto (a layer noisier than the pool fires more often, not
+less). A CR2 cluster-robust interval with Satterthwaite df is reported beside
+the decision interval (descriptive).
 
 Floor: G^M(MN) and the unmasked G(MN) on controlled unseen-stratum families,
 each with its 99 percent percentile cluster-bootstrap interval.
@@ -284,14 +404,16 @@ each with its 99 percent percentile cluster-bootstrap interval.
   difference R_ind − R_T(ML) has a 99 percent passage-cluster lower bound above
   +1 point. HOLD, terminal for this id (D16).
 - V3 integrity: K1's (finite values, selection at most 1,027 tokens, every
-  unit exactly once, digests verified), plus the mask and controlled-set
-  digests.
+  unit exactly once, digests verified), plus the mask, LF, PRE and
+  controlled-set digests, and the 24 initialisation generator digests per
+  target (8 layers x 3 seeds) all distinct (decision 78's independence
+  premise).
 - V4 null calibration on the audit read, per target: at every audit sigma
-  whose null passes V1 at every seed, seed-mean |xi^M| at most 2 points and
-  |xi_rel^M| at most 0.10 (the block-score null of the dense pre-check, on the
-  masked controlled statistic). A target that fails V4 can be neither GO nor
-  NEGATIVE; the verdict is then INCONCLUSIVE with the label NULL_OFF_CENTRE
-  (decision 59).
+  whose null passes V1 at every seed, seed-mean |xi^M| and |xi^LF| at most 2
+  points and |xi_rel^M| at most 0.10 (the block-score null of the dense
+  pre-check, on the masked controlled statistic). A target that fails V4 can
+  be neither GO nor NEGATIVE; the verdict is then INCONCLUSIVE with the label
+  NULL_OFF_CENTRE (decision 59).
 - H1^M: max over T of the macro over unseen-stratum pairs of
   [R^M_T(CX) − R^M_rand(CX)] on controlled families: at least 10 to interpret,
   at least 20 for a NEGATIVE.
@@ -308,72 +430,121 @@ ends this id; any successor takes a new id.
 
 1. Masked headroom: masked controlled unseen-stratum H1_CX point at least 20
    with 99 percent lower bound at least 10.
-2. Literal check, two-sided: on controlled unseen-stratum families, LEX
-   masked xi within ±2.5 points and masked xi_rel within ±0.05, for both
-   targets.
-3. Null calibration on the 17-sigma grid, masked and controlled: at every
+2. Literal check, specificity (replaces wave 1's LEX gate, decision 74): at
+   every reaching sigma of item 4, the block-score null's seed-mean
+   |xi^M − xi^LF| is at most 1.5 points and |xi^LF| at most 2, for both
+   targets. A noise-only selector must not look literal.
+3. Literal check, sensitivity (positive controls), on controlled
+   unseen-stratum families: (a) LEXk's MN recall of unmasked needle blocks one
+   or two blocks after a literal block exceeds its MN recall of PRE blocks by
+   at least 10 points (the spill profile sees a selector with a positive
+   literal channel); (b) LEXk's LF recall equals the LF random baseline within
+   1 point on both legs (LF holds no literal neighbourhood); (c) for both
+   targets, at every lambda at which the literal-leaning null N_lambda has
+   |xi^M| of at least 5, its |xi^M − xi^LF| is above 2.5 (the check sees a
+   literal channel large enough to matter). The largest |xi^M| of N_lambda
+   over lambda is reported as the development size of the literal channel. A
+   failure is an implementation fault or an instrument that cannot see the
+   channel; either stops the id.
+4. Null calibration on the 17-sigma grid, masked and controlled: at every
    sigma whose null passes V1 at every seed, seed-mean |xi^M| at most 2 and
-   |xi_rel^M| at most 0.10, and at least two such sigmas with a seed-mean
-   English ML loss between 2.5 and 5 points, for both targets.
-4. Floor viability: at two or more of those reaching sigmas, the null's
-   controlled G^M(MN) and G(MN) 99 percent lower bounds are at least 0.5; LEX's
-   controlled G^M(MN) point is below 0.5.
-5. Seen stratum: a seen language whose masked controlled CX headroom point
+   |xi_rel^M| at most 0.10, and at least two such sigmas (the reaching sigmas)
+   with a seed-mean English ML loss between 2.5 and 5 points, for both
+   targets.
+5. Floor viability: at two or more reaching sigmas, the null's controlled
+   G^M(MN) and G(MN) 99 percent lower bounds are at least 0.5; LEXk's
+   controlled G^M(MN) point is below 0.5 (wave 1 used LEX, whose masked G is
+   at most 0 by construction, so the check was vacuous).
+6. Seen stratum: a seen language whose masked controlled CX headroom point
    (hs) is below 20 is dropped from the stratum (both its pairs) and
    reported; at least two of th, hi and km must remain.
-6. Mask coverage: at most 25 percent of controlled unseen-stratum families
+7. Mask coverage: at most 25 percent of controlled unseen-stratum families
    excluded for |N^M| below 32 tokens.
-7. TR: a TR language whose masked TR headroom point is below 10 is dropped
+8. TR: a TR language whose masked TR headroom point is below 10 is dropped
    from the descriptive TR contrast (not a stop).
 
-Development H2a and H2b are reported, not gated (the combined read moved the
-H2 test to the audit read).
+Recorded at the pre-step, not gated:
+
+- H_ref,T, the masked controlled unseen-stratum H1_CX point of target T, which
+  sets that target's xi_rel NEGATIVE limits (decision 79);
+- per-layer masked target headroom on both legs, and the list of UNTESTABLE
+  layers for the per-layer veto (decision 58 as revised);
+- the masked headroom of the LF and PRE evidence (H1^LF, H1^PRE) and their
+  evaluable shares on the development partition;
+- development H2a and H2b (the combined read moved the H2 test to the audit
+  read).
 
 ## H2 gate (dense only, audit, before any indexer is trained)
 
 2,000 unseen-stratum CX cells, each scored with the needle present and with
 the needle absent (4,000 multiple-choice units). If H2a or H2b fails, the
 final verdict is UNINTERPRETABLE and no indexer is trained. Otherwise
-PROCEED_TO_K1. The audit read never recomputes H2 (decision 61).
+PROCEED_TO_K1. The audit read never recomputes H2 (decision 61). The pass
+probability is about 0.42 to 0.57 when the uncertainty of the development
+point is integrated (skeptical and flat priors), not the 0.69 plugged in at
+the development point in wave 1 (repair simulation `repair-h2-predictive`).
 
 ## Decision rules (main read)
 
 - GO: some target T with xi^M_T at least 10, the combined 99 percent lower
-  bounds of xi^M_T and xi_rel^M_T above 0, V1 to V4 passing for T, and H1^M at
-  least 10. Labels (descriptive, all reported):
+  bounds of xi^M_T and xi_rel^M_T above 0, the literal-free and pre-literal
+  points xi^LF_T and xi^PRE_T both at least 5 (decision 74), V1 to V4 passing
+  for T, and H1^M at least 10. A target whose xi^M_T would be GO but whose
+  xi^LF_T or xi^PRE_T is below 5 is INCONCLUSIVE with the label
+  LITERAL_CHANNEL. Labels (descriptive, all reported):
   - SEEN_TOO when the seen comparator's point is at least 5 for T;
   - UNSEEN_SPECIFIC when Delta_xi is at least 5 and the seen point is below 5;
-  - CROSS_SCRIPT when xi^M_T minus the CS stratum's masked xi is at least 5;
+    secondary test, read only after a GO: Delta_xi's 99 percent lower bound
+    above 0, for the three seen languages as fixed (decision 82);
+  - QUERY_SCRIPT when |alpha_T| is at least 5 (the excess depends on the
+    question's script more than on the mismatch);
   - SCRIPT_ONLY when the TR contrast's point is at least 5 (decision 57).
-- NEGATIVE: for both targets, xi^M_T at most 5 with the combined upper bound
-  below 10 and half-width at most 5, and xi_rel^M_T at most 0.1 with its upper
-  bound below 0.2; the floor (the 99 percent lower bounds of controlled
-  G^M(MN) and of controlled G(MN) both at least 0.5, per target); V1 to V4
-  passing for both; H1^M at least 20; and the robustness conditions:
-  - the seen comparator's point at most 5;
-  - each direction's point (macro over its seven pairs) at most 5;
-  - no layer whose xi^M point is at least 10 with a 99 percent lower bound
-    above 0 (decision 58).
-  If every NEGATIVE-region condition holds except a robustness condition, the
-  verdict is INCONCLUSIVE with the label SEEN_EXCESS, DIRECTION_CONCENTRATED
-  or LAYER_CONCENTRATED.
+- NEGATIVE (two-sided; decisions 58, 77 and 79): for both targets, all of
+  - xi^M_T inside the band: |point| at most 5, the combined 99 percent
+    interval inside (−10, 10) and half-width at most 5;
+  - xi_rel^M_T inside its band: |point| at most tau1_T and the 99 percent
+    interval inside (−tau2_T, tau2_T), with tau1_T = 5 / H_ref,T and
+    tau2_T = 10 / H_ref,T (decision 79);
+  - the floor: the 99 percent lower bounds of controlled G^M(MN) and of
+    controlled G(MN) both at least 0.5;
+  - the literal checks: |xi^LF_T| and |xi^PRE_T| each at most 5 (points);
+  - V1 to V4 passing; H1^M at least 20;
+  and the robustness conditions, all two-sided:
+  - directions: |xi_E| and |xi_X| each at most 5 (points), and the
+    English-needle direction (its MN leg wholly in seen text) with its own 99
+    percent interval inside (−10, 10);
+  - the seen comparator's |point| at most 5;
+  - no testable layer whose |xi_rel^M_T,l| is at least 0.2 with its 99
+    percent interval excluding 0 (UNTESTABLE layers are named in the
+    NEGATIVE's scope; a 95 percent veto was simulated and rejected, see
+    decision 58).
+  If every NEGATIVE-region condition holds except a robustness or literal
+  condition, the verdict is INCONCLUSIVE with the label QUERY_SCRIPT,
+  DIRECTION_OPPOSED, SEEN_EXCESS, LAYER_CONCENTRATED or LITERAL_CHANNEL; an
+  xi^M_T below −5 is labelled REVERSED.
 - UNINTERPRETABLE: H1^M below 10 on the audit read (H2 is decided by the H2
   gate).
 - HOLD: a V2 bug tell (decision 60). Terminal (D16).
 - VOID: a V3 integrity failure.
 - V1 extension: K1's rule (one registered extension, epochs 2 and 3, only the
   V1-failing targets, mandatory when called, INCONCLUSIVE if not run or void).
-  The extension re-reads only the decision legs (CX, MN, ML); the TR and CS
-  rows of re-read targets are not reported (decision 65).
+  The extension re-reads only the decision legs (CX, MN, ML, with the M, LF
+  and PRE evidence); the TR rows of re-read targets are not reported
+  (decision 65).
 - INCONCLUSIVE: everything else, including a disagreement between the xi and
   xi_rel classifications and any half-width above 5.
 - Order: VOID, HOLD, UNINTERPRETABLE, V1_EXTENSION_REQUIRED, GO, NEGATIVE,
   INCONCLUSIVE, as in K1; a target failing V4 is treated like a target in
   neither region.
 - Multiplicity: two targets at 99 percent each, as in K1. Strata, layers,
-  directions, CS, TR, dilated-mask, unmasked and covariate rows are
-  descriptive and uncorrected, except where a robustness condition uses them
-  as a veto.
+  directions, alpha, TR, LF, PRE, unmasked and covariate rows are descriptive
+  and uncorrected, except where a GO or NEGATIVE condition uses them; a
+  condition that can only block a verdict adds no false-positive risk to it.
+  The one secondary test (decision 82) is read only after a GO.
+- Scope of a NEGATIVE, stated in the verdict: weak alignment (haystack in the
+  needle's language, R5), Stage-1 KL-only indexers with bilingual exposure,
+  the testable layers only, and the needle-script component beta outside the
+  claim (reported).
 
 ## Reported regardless of outcome
 
@@ -392,7 +563,16 @@ PROCEED_TO_K1. The audit read never recomputes H2 (decision 61).
   same scores; the block-0 share of each selector's budget.
 - Per-family null recall CDFs on MN and CX and their Kolmogorov-Smirnov
   distance (descriptive check of the scale assumption, decision 59).
-- Seed SD per target, before any remedy arm.
+- Seed SD per target, before any remedy arm: the sealed development seed read
+  (decision 80), and on the audit read the layer-resolved and K1 estimators
+  with their df, the per-layer per-seed contributions and the correlation of
+  seed deviations across layers (a check of decision 78's premise).
+- The literal block: LEX, LEXk and N_lambda on every leg (M, LF, PRE), the
+  displacement density d, the spill profile, xi^M − xi^LF and xi^M − xi^PRE
+  with intervals.
+- Directions: xi_E, xi_X and alpha_T with intervals; G^M(MN) by direction
+  (the needle-script component beta).
+- Per-layer xi^M and xi_rel^M with intervals, testable or not.
 
 ## Seeds, sample sizes and sensitivity
 
@@ -403,24 +583,35 @@ PROCEED_TO_K1. The audit read never recomputes H2 (decision 61).
   over 122 links; about half are controlled on the development rate (0.50,
   Wilson 0.30 to 0.70), and the exact audit count is a bundle fact fixed
   before freeze.
-- Synthesis approximations (normal approximations and a seeded Monte Carlo of
-  the decision rule, not the registered simulation; 70 effective clusters,
-  masking inflating se_cluster by 1.12, seed SD 1):
-  - cluster-level SD of the family excess 10: median half-width 3.8;
-    P(NEGATIVE) 0.95 at a true xi of 0 and 0.48 at 5; P(GO) 0.25 / 0.50 / 0.76
-    / 0.91 at 9 / 10 / 11 / 12;
-  - cluster SD 13.4: half-width 4.9; P(NEGATIVE) 0.62 at 0;
-  - cluster SD 16: half-width 5.8; NEGATIVE unreachable.
-  The development LEX excess implies a cluster SD of about 5.9; K1's worked
-  case used 10.
-- H2b (development ICC 0.138): P(pass) at a true effect of 8.6 points is 0.24
-  with K1's 300 cells, 0.69 with this file's 2,000 cells, 0.78 with all 4,600
-  CX cells and 0.98 with 2,000 audit plus 2,000 primary cells.
-- Per-layer veto: with a layer SE 1.5 times the macro's, it fires with
-  probability below 0.001 when every layer's true xi is 0, and above 0.97 when
-  one layer's is 15.
-- The registered pre-freeze simulation (decision 62) replaces these figures
-  before the freeze.
+- Repair simulation S2 (`compute/repair-decision-sim.py` in the gauntlet
+  bundle; replaces wave 1's synthesis approximations until decision 62 runs
+  with the v3 code). Synthetic per-family, per-layer, per-seed recall for both
+  targets from the development per-pair and per-layer headroom, scaled to a
+  masked headroom H; statistics computed as the registered K1 module does
+  (validated to 7e-15); 2,000 reads per cell; cluster se of xi about 1.3
+  (the wave-1 cluster SD of 10) unless stated. P(verdict) over both targets,
+  with every repaired condition:
+  - no excess: P(NEGATIVE) 0.81 / 0.81 / 0.86 at masked headroom 20 / 30 / 40 and seed SD 1; 0.64 / 0.53 / 0.55 at seed SD 2; 0.08 / 0.02 / 0.02 at seed SD 3 (the half-width condition binds); this gives sigma_star = 2.0;
+  - an input excess of 12 (realised mean xi about 9 to 10, recall being bounded): P(GO) 0.31 / 0.55 / 0.61; of 15 (realised 11 to 12.5): 0.89 / 0.98 / 0.99;
+  - false-kill scenarios at H 30, seed SD 1 (P(NEGATIVE), repaired against wave 1): a question-script excess of 6 with no mismatch 0.12 against 0.45; a true excess of 10 hidden by a displacement of −8 0.00 against 0.47; a true excess of 7.5 under long-range anti-spill 0.00 against 0.40; a total failure at layer 3 only 0.34 against 0.73;
+  - false-GO scenarios (P(GO)): long-range spill of +10 with no excess 0.00 against 0.22; a true excess of 5 plus spill of +6 0.01 against 0.42;
+  - five seeds (owner option, decision 81): P(NEGATIVE | no excess) 0.76 / 0.73 / 0.79 at seed SD 2 and 0.60 / 0.45 / 0.45 at 3, so they move the reach from a seed SD of about 2 to about 3;
+  - variants on the same draws: K1's seed estimator gives P(NEGATIVE | no excess) 0.26 at seed SD 2 (layer-resolved 0.53); K1's fixed xi_rel limits give 0.07 at H 20 (scaled 0.81); a 95 percent layer veto gives 0.49 at H 20 and 0.06 under the layer-3 failure.
+- H2b (development ICC 0.138): plugged in at the development point of 8.6,
+  P(pass) is 0.24 with K1's 300 cells, 0.68 with this file's 2,000, 0.74 with
+  all 3,220 unseen CX cells and 0.98 with 2,000 audit plus 2,000 primary
+  cells; integrated over the development uncertainty it is 0.42 to 0.57,
+  0.45 to 0.59 and 0.61 to 0.69 (skeptical to flat prior;
+  `compute/repair-h2-predictive.py`).
+- The literal bound (simulation S1, `compute/repair-literal-channel-sim.py`):
+  across 18 scenarios and 42 literal tilts, xi^LF's literal bias lies within
+  −0.26 to +1.11 points and xi^PRE's within −0.57 to +0.16 when spill reaches
+  one block, and within −2.86 to +10.01 and −4.42 to +0.92 when it reaches
+  three; xi^M's within −8.65 to +11.52. With an evenly spread excess a
+  NEGATIVE therefore implies an excess of at most 5.3 points (one-block
+  spill) or 7.9 (three-block spill), and a GO at least about 4.7.
+- The registered pre-freeze simulation (decision 62 as revised) replaces
+  these figures before the freeze.
 
 ## Compute
 
@@ -432,21 +623,29 @@ GPU-h is Kevin's (D24).
 
 Synthesis projection before any probe (rates from K1 v2 probe 543 and lane
 862, scaled to 8 layers, hidden size 2,560 and native 8,192-token contexts;
-central / high):
+repair additions: +5 percent on every selection unit for LF and PRE, +3
+percent on the pre-step's selection units for LEXk and N_lambda, the sealed
+development seed read inside the main job, CS legs not run; central / high;
+`compute/repair-cost-model.py`, which reproduces the wave-1 7.21 / 9.79):
 
 | Job (1 GPU each) | Projected minutes | Limit (min) | Cap (GPU-h) |
 |---|---|---|---|
 | q3-k1-v3-throughput-probe-v1 | | 15 | 0.25 |
 | smoke | 7.8 / 9.6 | 14 / 17 | 0.24 / 0.29 |
-| development pre-step | 16.7 / 24.1 | 27 / 37 | 0.45 / 0.62 |
+| development pre-step | 17.3 / 25.0 | 27 / 38 | 0.45 / 0.64 |
 | H2 gate | 37.8 / 55.6 | 56 / 80 | 0.94 / 1.34 |
 | resume R0, R1, R2 | 9.4, 6.5, 7.0 / 12.1, 7.9, 8.5 | 16, 12, 13 / 20, 14, 15 | 0.69 / 0.83 |
-| main | 106.6 / 148.4 | 151 / 208 | 2.52 / 3.47 |
-| V1 extension (worst case) | 89.6 / 127.0 | 127 / 179 | 2.12 / 2.99 |
-| Total | | | 7.21 / 9.79 |
+| main (with the sealed seed read) | 93.1 / 130.8 | 132 / 184 | 2.20 / 3.07 |
+| V1 extension (worst case) | 91.5 / 129.5 | 130 / 182 | 2.17 / 3.04 |
+| Total | | | 6.94 / 9.46 |
 
-Expected use: about 0.5 to 0.7 GPU-h if the pre-step stops, 1.1 to 1.6 if the
-H2 gate stops, 3.3 to 4.5 without the extension, plus 1.5 to 2.1 with it.
+Expected use: about 0.5 to 0.7 GPU-h if the pre-step stops, 1.2 to 1.6 if the
+H2 gate stops, 3.1 to 4.3 without the extension, plus 1.5 to 2.2 with it.
+The central projection is under 8 GPU-h and the high one is not; the V1
+extension's worst case (2.17 / 3.04) is what crosses the line. Owner options
+and their caps: CS restored +0.44 / +0.57; five seeds +0.91 / +1.34; all
+3,220 unseen CX cells in the H2 gate +0.48 / +0.75; decision 64 (primary H2
+cells) about +0.8 / +1.2.
 
 The smoke also re-evaluates 48 units of the dense pre-check v2's 4B
 development artifact (`b5210f79...`, 24 selection plus multiple-choice and 24
@@ -476,6 +675,10 @@ recorded before the freeze, with no model run:
   of links with at least one controlled question;
 - per-question overlap on every leg, |N^M| / |N| per language, and the
   exclusion count under the 32-token rule;
+- the near rule's n-gram stop lists, and per family the E and F literal
+  blocks of each leg, |N^LF| and |N^PRE|, the evaluable shares that fix r
+  and the PRE conditions (decisions 74 to 76), and the MN haystack's literal
+  block count by language (the displacement exposure);
 - the TR alignment check: for every audit and development (link,
   question_number) of bn and hi, the Latin passage exists, its digit runs and
   sentence count equal the native passage's, and its question is never used
@@ -485,9 +688,10 @@ recorded before the freeze, with no model run:
 ## Freeze procedure
 
 1. Build the bundle and record its facts (CPU). Fix the fertility-matched
-   pairs (decision 56).
+   pairs (decision 56), r and the PRE conditions (decision 74 to 76).
 2. Run the registered pre-freeze simulations with the v3 statistics code
-   (decision 62) and replace the approximations above.
+   (decision 62 as revised) and replace the repair-pass figures above; the
+   repair simulation's generator and K1-code validation are the template.
 3. Freeze and run the 4B throughput probe under its own id; derive limits;
    record them in `program/decisions.md`.
 4. If the caps exceed 8 GPU-h, Kevin rules on admission (D24). Then commit
@@ -500,16 +704,20 @@ recorded before the freeze, with no model run:
 
 | Source | Requirement or caveat | Where met |
 |---|---|---|
-| Combined read 1 (D26) | a seen-script cross-script condition | seen stratum th, hi, km (Evaluation; decision 48); pre-step item 5; NEGATIVE robustness condition; GO labels |
+| Combined read 1 (D26) | a seen-script cross-script condition | seen stratum th, hi, km (Evaluation; decision 48); pre-step item 6; two-sided NEGATIVE robustness condition; GO labels and the secondary UNSEEN_SPECIFIC test |
 | Combined read 2 (D26) | an entity-controlled question set | controlled set (Masking); decision 53 |
 | Combined read 3 (D26) | a new experiment id and the research gauntlet | this id; the K1 v3 gauntlet |
 | Combined read 4 (D26) | the non-literal floor, controlled G(MN) 99 percent lower bound at least 0.5 | NEGATIVE floor, on unmasked G(MN) and on masked G^M(MN) |
 | Combined read 5 | GO and NEGATIVE computed on the entity-controlled set | primary statistic and floor are controlled-family statistics |
 | Combined read 6 | anchor masking or a lexical-overlap covariate | overlap mask (a superset of anchor masking); covariate reported, descriptive only (decision 63) |
 | Combined read 7 | H2 re-tested under K1's bounds on the audit read | H2 gate on 2,000 audit cells, K1's bounds (decision 61) |
-| Verifier caveat 1 | the lexical confound comes from same-language paraphrase | overlap mask on all shared content tokens, two-sided LEX check at the pre-step, TR leg with zero shared tokens, positivity report |
+| Verifier caveat 1 | the lexical confound comes from same-language paraphrase | overlap mask on all shared content tokens; near rule F for inflection and paraphrase; LF and PRE literal-free statistics as conditions of both verdicts; TR leg with zero shared tokens; positivity report (wave 1's two-sided LEX check is replaced, decision 74) |
 | Verifier caveat 2 | CENTRED and VIABLE passed by 0.019 to 0.067 points | 17-sigma grid, two reaching sigmas required, re-measured on the masked instrument at the pre-step, audit null as validity gate V4 for both GO and NEGATIVE |
 | Verifier caveat 3 | fertility follows needle language on both legs | native 8,192-token contexts remove context-length variation by language; fertility-matched seen-unseen contrasts; TR changes fertility at fixed language and content; claims at language level stay descriptive |
+| D48 (1) | a literal check that can see a positive literal channel, with its bound derived and simulated | LF and PRE statistics as GO and NEGATIVE conditions (decisions 74, 76); near rule (75); LEXk positive control, N_lambda family and the spill profile (Masking section; pre-step items 2 and 3); bound in the proposal's Mechanism section from simulation S1 |
+| D48 (2) | a two-sided NEGATIVE region; vetoes meaningful where headroom is small | NEGATIVE band on xi^M, xi_rel, xi^LF and xi^PRE; two-sided directions with the English-needle direction gated; seen comparator two-sided; per-layer co-statistic veto on testable layers (decisions 58 as revised, 77, 79) |
+| D48 (3) | seed variance handled | layer-resolved seed term (decision 78), sealed development seed read with sigma_star (decision 80), owner option of five seeds (81); simulated over seed SD 0.5 to 4 (S2) |
+| D48 (4) | the other wave-1 defects | CS dropped (69 revised), H2 stated predictively (85), mechanism statement corrected (84), xi_rel limits scaled to headroom (79), UNSEEN_SPECIFIC secondary test (82), LEXk in the floor check (54 revised), decision 62 widened |
 
 ## Design decisions (for the owner's acceptance)
 
@@ -552,7 +760,9 @@ carry over to the 4B bank with new tolerances fixed by the probe.
 54. Floor on both masked and unmasked controlled G(MN). Reason: requirement 4
     is stated on G(MN); the masked version makes a literal-only selector
     (masked G near 0) fail the floor decisively, answering the verifier's
-    "permissive floor" note.
+    "permissive floor" note. As revised under D48: the pre-step's literal
+    check of the floor uses LEXk, whose masked G can be positive; wave 1 used
+    LEX, whose masked G is at most 0 by construction (reviewer 1).
 55. tha, hin and khm FineWeb-2 test documents split by SHA-256 of their id
     into training and haystack pools. Reason: those splits are both K1's
     training source and the seen languages' only haystack source.
@@ -567,10 +777,22 @@ carry over to the 4B bank with new tolerances fixed by the probe.
     only the needle side gives a same-language, same-content, other-script
     condition. Descriptive; the Latin needle is a script island in a native
     haystack, which the indexer-minus-target difference only partly cancels.
-58. Per-layer and per-direction vetoes on NEGATIVE. Reason: the target's own
-    MN-minus-CX gap sits at layers 3 and 31 (4.37 and 5.07 points against
-    -0.86 to 0.96 in layers 15 to 23), and macro averaging halves a
-    one-direction effect.
+58. Per-layer and per-direction vetoes on NEGATIVE, two-sided (revised under
+    D48). Reason: the target's own MN-minus-CX gap sits at layers 3 and 31
+    (4.37 and 5.07 points against -0.86 to 0.96 in layers 15 to 23), and
+    macro averaging halves a one-direction effect. Wave 1's layer veto (xi^M
+    of at least 10 with a lower bound above 0) could not fire at layer 3,
+    whose CX headroom is 8.68 points; the revised veto reads the per-layer
+    co-statistic with the layer's own denominators, on layers with at least
+    3 points of masked headroom on both legs, at |point| 0.2 with a 99
+    percent interval excluding 0. In the repair simulation (S2, H 30, seed
+    SD 1) a total cross-script failure confined to layer 3 leaves
+    P(NEGATIVE) at 0.34 with this veto, against 0.73 under wave 1's rule; a
+    95 percent veto would cut it to 0.06 but costs P(NEGATIVE | no excess)
+    0.32 at H 20 and 0.20 at seed SD 2, so it was not chosen. Wave 1's
+    direction veto was one-sided;
+    the revised one bounds both directions' points and gates the
+    English-needle direction on its own interval (decision 77).
 59. Null grid at ratio 2^(1/4) on the pre-step, six audit sigmas, two reaching
     sigmas required; both scales (xi and xi_rel) must agree, with a
     distributional check. Reason: caveat 2; the sqrt(2) grid can place at most
@@ -583,10 +805,15 @@ carry over to the 4B bank with new tolerances fixed by the probe.
     about 1.1 to 1.6 GPU-h instead of the whole screen. 2,000 cells give
     P(pass) 0.69 at the development point; 4,600 would give 0.78 for about 1
     GPU-h more of caps.
-62. Pre-freeze simulations with the v3 statistics code at cluster SDs 6, 10
-    and 13.4 and the measured effective clusters, for GO, NEGATIVE with all
-    vetoes, HOLD under decision 60, and H2b; their results replace the
-    approximations in "Seeds, sample sizes and sensitivity".
+62. Pre-freeze simulations with the v3 statistics code (revised under D48):
+    cluster SDs 6, 10 and 13.4 and the measured effective clusters; seed SD
+    of xi 0.5, 1, 2, 3 and 4; masked headroom 20, 30 and 40 and the measured
+    H_ref; both targets with xi_rel; the direction components; the seen
+    comparator; per-layer vetoes on the measured per-layer headroom; the
+    literal channels at S1's tilts; HOLD under decision 60; H2b with the
+    predictive integration. They must reproduce the repair simulation's
+    validation against the K1 statistics module, and their results replace
+    the repair-pass figures in "Seeds, sample sizes and sensitivity".
 63. The lexical-overlap covariate is descriptive only, with a positivity
     report. Reason: no common support between legs (Miller and Chapman 2001;
     Crump et al. 2009).
@@ -595,7 +822,7 @@ carry over to the 4B bank with new tolerances fixed by the probe.
     0.69 to 0.98, caps +0.80 / +1.21 GPU-h. Cost: departs from K1's "primary
     never read" and from the letter of requirement 7.
 65. The V1 extension re-reads decision legs only. Reason: saves about 0.6 GPU-h
-    of worst-case cap; TR and CS are descriptive.
+    of worst-case cap; TR is descriptive (CS is not run, decision 69).
 66. A 4B throughput probe under its own id (cap 0.25) sets every limit, as K1
     v2's did. Reason: the 4B training path has never run; the synthesis
     projection's high and central step times differ by 1.65 times.
@@ -604,8 +831,13 @@ carry over to the 4B bank with new tolerances fixed by the probe.
     frozen as drafted.
 68. Learning-rate grid kept (D20). Single-rate fallback (caps 6.61 / 8.85) is
     not registered.
-69. CS kept as descriptive rows (caps +0.42 / +0.53). Reason: K1's
-    "cross-script" label needs a same-script cross-language comparator.
+69. CS not run (revised under D48; wave 1 kept them as descriptive rows).
+    Reason: the CROSS_SCRIPT label subtracted a stratum of five Latin-script,
+    low-fertility languages, so it mixed script with fertility and
+    familiarity (wave-1 reviewer 1 and identification refuter); the seen
+    stratum and TR carry the script attribution; dropping the legs saves
+    0.44 / 0.57 GPU-h of caps, which pays for the repair's additions. Owner
+    option to restore them at that cost.
 70. Anchors and overlap tokens stored as SHA-256 digests in receipts. Reason:
     the pre-check receipts committed short Belebele strings; the repository is
     public and Belebele is CC-BY-SA.
@@ -618,3 +850,92 @@ carry over to the 4B bank with new tolerances fixed by the probe.
     `program/decisions.md` holds an owner admission decision naming this id
     and the probe receipt's digest. Reason: K1 v2's filler refused above 8
     GPU-h with no admission path (K1 v2 feasibility refuter).
+
+Decisions added by the repair under D48 (same day, single owner; each answers
+a named wave-1 defect):
+
+74. Literal-free instrument LF (r = 2 blocks) as a condition of both
+    verdicts: GO needs xi^LF of at least 5, NEGATIVE |xi^LF| at most 5, with
+    the pre-step's specificity and positive-control items in place of wave
+    1's LEX gate. Reason: the mask and LEX share one token rule, so the wave-1
+    gate saw only displacement and the target's own gap, could not see a
+    positive channel, and could stop the id for reasons unrelated to the
+    indexer (identification refuter, reviewer 1, feasibility refuter). In the
+    block-level repair simulation (S1) LEX's masked xi is negative in all
+    eighteen scenarios (−0.85 to −5.65), while the literal bias of xi^LF stays
+    within −0.26 to +1.11 points for spill ranges up to one block, against
+    −8.65 to +3.61 for xi^M.
+75. Near rule F (character n-grams) beside the exact token rule. Reason: the
+    verifier's caveat 1 (same-language paraphrase); exact ids miss
+    inflection and different subword splits.
+76. Pre-literal evidence PRE as a condition of both verdicts (GO needs
+    xi^PRE of at least 5, NEGATIVE |xi^PRE| at most 5), with a coverage
+    fallback fixed at the bundle build. Reason: spill beyond r (S1, range 3
+    blocks) moves xi^M and xi^LF together by up to +10 points; causality
+    keeps PRE within −4.42 to +0.92 in every S1 scenario.
+77. Directions read separately; alpha = (xi_E − xi_X) / 2 reported; NEGATIVE
+    bounds both directions' points and the English-needle direction's
+    interval. Reason: a question-script deficit enters the two directions
+    with opposite signs and cancels in the macro (identification refuter);
+    under an additive model the macro is the mismatch component and alpha
+    the question-script component.
+78. Layer-resolved seed term in every interval (df up to 16), K1's estimator
+    reported beside it; V3 checks the generator digests. Reason: K1's df-2
+    seed term made NEGATIVE unreachable at a seed SD of xi of 2 (feasibility
+    refuter, reviewer 1); per-layer indexers are independently initialised
+    and trained on independent losses against a frozen backbone.
+79. xi_rel NEGATIVE limits tau1 = 5 / H_ref and tau2 = 10 / H_ref per target,
+    H_ref the development masked controlled H1_CX point recorded at the
+    pre-step. Reason: K1's 0.1 and 0.2 match its 5 and 10 points at a
+    headroom of 50; at masked headrooms of 20 to 40 they bind before xi
+    (feasibility refuter); the repair simulation (S2) puts P(NEGATIVE | no
+    excess) at H 20 at 0.07 to 0.11 with the fixed limits.
+80. Sealed development seed read inside the main job, before the audit read,
+    with the stated bound sigma_star = 2.0 points and the
+    NEGATIVE_REACHABILITY_LOW declaration. Reason: D48 (3); a measurement
+    before any verdict, at about 2 GPU-minutes.
+81. Owner option, not adopted: five seeds at every learning rate (+0.91 /
+    +1.34 GPU-h of caps), or a conditional two-seed extension at the frozen
+    rate triggered by the sealed seed read.
+82. UNSEEN_SPECIFIC becomes a secondary test after a GO (Delta_xi's 99
+    percent lower bound above 0, the three seen languages treated as fixed).
+    Reason: the wave-1 novelty refuter asked for a decision-bearing
+    identification device; it is read only after GO, so it adds no risk to
+    the primary verdicts.
+83. CS legs dropped (decision 69 as revised).
+84. The mechanism statement no longer says that literal matching cannot
+    favour either side; it says how the literal channels are measured.
+    Reason: reviewer 1 and the identification refuter.
+85. The H2 gate's pass probability is stated as a predictive range (0.42 to
+    0.57), not the plug-in 0.69. Reason: the development point was selected
+    (feasibility refuter, reviewers 1 and 2).
+
+## Repair under D48 (changes against the wave-1 draft)
+
+Wave-1 draft: sha256 `f4ce9a00f501f712247dd5ebb5964043c5f40d721c21db19c411475d3cce3b2c`
+(commit d911d21). Every change below is in this file; the proposal's section
+"Changes after wave 1" maps each to the reviewer or refuter who named the
+defect and to the simulation that sizes it.
+
+1. Masking section: near rule F; literal-free instrument LF; pre-literal
+   evidence PRE; evaluability rules; LEX demoted to descriptive; LEXk,
+   N_lambda and the spill profile added; dilated mask superseded.
+2. Metrics: direction components and alpha; LF and PRE statistics;
+   per-layer co-statistic; layer-resolved seed term.
+3. Validity gates: V3 checks LF, PRE and generator digests; V4 also bounds
+   the null's xi^LF.
+4. Pre-step: wave 1's two-sided LEX gate (item 2) replaced by the
+   specificity and positive-control items 2 and 3; the floor check uses
+   LEXk; H_ref, per-layer headroom and LF and PRE coverage recorded.
+5. Learning-rate freeze: the sealed development seed read.
+6. Decision rules: GO adds xi^LF and xi^PRE of at least 5; NEGATIVE is a
+   two-sided band on xi^M, xi_rel (limits scaled to H_ref), xi^LF and
+   xi^PRE, with two-sided direction, seen and per-layer conditions; labels
+   QUERY_SCRIPT, DIRECTION_OPPOSED, LITERAL_CHANNEL and REVERSED added;
+   CROSS_SCRIPT removed; UNSEEN_SPECIFIC secondary test after a GO.
+7. Legs: CS not run.
+8. Compute: caps 6.94 / 9.46 GPU-h (wave 1 7.21 / 9.79).
+9. Seeds, sample sizes and sensitivity: the repair simulation replaces the
+   wave-1 approximations until decision 62 runs with the v3 code.
+10. Decisions 54, 58, 62 and 69 revised; 74 to 85 added.
+

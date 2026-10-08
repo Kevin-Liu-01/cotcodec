@@ -2,8 +2,8 @@
  "doctor": "Source",
  "status": "PASS",
  "evaluated_on": "2026-10-08",
- "evaluated_by": "wave-1 single synthesis owner (Claude agent); not an independent review",
+ "evaluated_by": "repair pass under D48 by the single synthesis owner (Claude agent); not an independent review; supersedes the wave-1 record of the same name (wave-1 versions are in git history at 6969519)",
  "pass_condition": "Required backends reachable; cutoff and degraded coverage recorded",
- "evidence": "orx 0.2.2 (alphaXiv keyword and embedding, OpenAlex) reachable and used by all four discovery cells and by synthesis (148 counted queries); Semantic Scholar forward citations through the H100 host relay (frontier cell, 12 calls, no host address recorded); arXiv version histories of 38 ids; source cutoff 2026-10-08; degraded coverage recorded in the proposal header (orx outdated against 0.2.17; no OpenReview, ACL Anthology full text, code or model-card search, patents or social media; one Chinese query; no Japanese or Korean queries; title-level citation screen only); 42 cited primary pages fetched on 2026-10-08 with HTTP 200, raw-body SHA-256 recorded and a metadata extract hashed under snapshots/.",
- "remediation": "Update orx; search OpenReview, ACL Anthology full text and GitHub or Hugging Face code before a later wave."
+ "evidence": "orx 0.2.2 (alphaXiv keyword and embedding, OpenAlex) reachable on 2026-10-08 and used by the wave-1 cells and synthesis (148 counted queries), the wave-1 refuters and reviewer 1 (23), and this repair (6: RP-Q1 to RP-Q6, including one Japanese and one Korean keyword query, which returned nothing on topic because alphaXiv's full-text index holds few papers in those languages); Semantic Scholar forward citations through the H100 host relay in wave 1 only; source cutoff 2026-10-08; degraded coverage in the proposal header (orx outdated against 0.2.17; no OpenReview, ACL Anthology full text, code or model-card search, patents or social media; title-level citation screen only); 50 cited primary pages fetched with HTTP 200, raw-body SHA-256 recorded and a metadata extract hashed under snapshots/ (8 added by the repair).",
+ "remediation": "Update orx; search OpenReview, ACL Anthology full text and GitHub or Hugging Face code (the 2606.07703, 2606.22874, 2610.04635 and 2608.26175 repositories first) before a later wave."
 }

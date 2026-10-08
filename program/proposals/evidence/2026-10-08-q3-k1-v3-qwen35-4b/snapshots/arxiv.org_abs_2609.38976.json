@@ -1,0 +1,26 @@
+{
+ "url": "https://arxiv.org/abs/2609.38976",
+ "fetched_at": "2026-10-08T16:31:40Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 40948,
+ "raw_sha256": "86eaa8e0c136d55df0c894c33a00cfec8cf6609751d3aedcfb7096664f292dff",
+ "raw_stored": false,
+ "extract": {
+  "title": "Fairness Beyond a Single Run: Training-Seed Variability in Speech LLM Adaptation",
+  "authors": [
+   "Ginjala, Srishti",
+   "Fosler-Lussier, Eric",
+   "Parthasarathy, Srinivasan"
+  ],
+  "citation_date": "2026/09/30",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Wed, 30 Sep 2026 04:51:32 UTC"
+   }
+  ],
+  "abstract": "Demographic fairness gaps in automatic speech recognition are almost always reported from a single training run. We fine-tune the Q-former projector and LoRA adapters of a speech LLM at five audio compression factors and six random seeds, holding the encoder, base decoder, data and decoding fixed, and evaluate every run on Common Voice and Fair-Speech. At 460 h of clean LibriSpeech, the seed moves fairness metrics more than compression does on most demographic axes. A balanced 3x3 decomposition attributes 85.3% of the variation in Fair-Speech ethnicity normalized gap to the seed against 8.3% to compression (p = 0.009), though compression explains more on age and gender. Held-out LibriSpeech word error rate spreads by 0.04 points across those seeds while Common Voice spreads by 8.57, so these are not failed runs, and the effect survives controlling for accuracy and dropout. Scaling and diversifying the adaptation set to 960 h damps the effect but does not remove it. On Fair-Speech ethnicity, two single-run systems must differ by more than 0.30 in normalized gap to exceed seed variability.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}

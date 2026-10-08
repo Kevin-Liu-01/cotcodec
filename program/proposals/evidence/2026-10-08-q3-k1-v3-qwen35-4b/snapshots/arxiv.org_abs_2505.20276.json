@@ -1,0 +1,36 @@
+{
+ "url": "https://arxiv.org/abs/2505.20276",
+ "fetched_at": "2026-10-08T16:31:40Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 42241,
+ "raw_sha256": "c417090f56ec109eda93eec0228e8550efb7b341d316260cb1bdf09241c97acf",
+ "raw_stored": false,
+ "extract": {
+  "title": "Does quantization affect models' performance on long-context tasks?",
+  "authors": [
+   "Mekala, Anmol",
+   "Atmakuru, Anirudh",
+   "Song, Yixiao",
+   "Karpinska, Marzena",
+   "Iyyer, Mohit"
+  ],
+  "citation_date": "2025/05/26",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Mon, 26 May 2025 17:54:30 UTC"
+   },
+   {
+    "version": "v2",
+    "date": "Tue, 27 May 2025 12:33:43 UTC"
+   },
+   {
+    "version": "v3",
+    "date": "Sat, 20 Sep 2025 06:44:40 UTC"
+   }
+  ],
+  "abstract": "Large language models (LLMs) now support context windows exceeding 128K tokens, but this comes with significant memory requirements and high inference latency. Quantization can mitigate these costs, but may degrade performance. In this work, we present the first systematic evaluation of quantized LLMs on tasks with long inputs (>64K tokens) and long-form outputs. Our evaluation spans 9.7K test examples, five quantization methods (FP8, GPTQ-int8, AWQ-int4, GPTQ-int4, BNB-nf4), and five models (Llama-3.1 8B and 70B; Qwen-2.5 7B, 32B, and 72B). We find that, on average, 8-bit quantization preserves accuracy (~0.8% drop), whereas 4-bit methods lead to substantial losses, especially for tasks involving long-context inputs (drops of up to 59%). This degradation tends to worsen when the input is in a language other than English. Crucially, the effects of quantization depend heavily on the quantization method, model, and task. For instance, while Qwen-2.5 72B remains robust under BNB-nf4, Llama-3.1 70B experiences a 32% performance drop on the same task. These findings highlight the importance of a careful, task-specific evaluation before deploying quantized LLMs, particularly in long-context scenarios and for languages other than English.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}

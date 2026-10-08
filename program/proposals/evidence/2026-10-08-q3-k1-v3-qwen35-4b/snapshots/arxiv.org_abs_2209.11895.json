@@ -1,0 +1,49 @@
+{
+ "url": "https://arxiv.org/abs/2209.11895",
+ "fetched_at": "2026-10-08T16:31:40Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 44291,
+ "raw_sha256": "36f2e97a34d0f3d0a77df3f1d40373735d27e4fa0dd6d431af2822cd0efe3dc2",
+ "raw_stored": false,
+ "extract": {
+  "title": "In-context Learning and Induction Heads",
+  "authors": [
+   "Olsson, Catherine",
+   "Elhage, Nelson",
+   "Nanda, Neel",
+   "Joseph, Nicholas",
+   "DasSarma, Nova",
+   "Henighan, Tom",
+   "Mann, Ben",
+   "Askell, Amanda",
+   "Bai, Yuntao",
+   "Chen, Anna",
+   "Conerly, Tom",
+   "Drain, Dawn",
+   "Ganguli, Deep",
+   "Hatfield-Dodds, Zac",
+   "Hernandez, Danny",
+   "Johnston, Scott",
+   "Jones, Andy",
+   "Kernion, Jackson",
+   "Lovitt, Liane",
+   "Ndousse, Kamal",
+   "Amodei, Dario",
+   "Brown, Tom",
+   "Clark, Jack",
+   "Kaplan, Jared",
+   "McCandlish, Sam",
+   "Olah, Chris"
+  ],
+  "citation_date": "2022/09/24",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Sat, 24 Sep 2022 00:43:19 UTC"
+   }
+  ],
+  "abstract": "\"Induction heads\" are attention heads that implement a simple algorithm to complete token sequences like [A][B] ... [A] -> [B]. In this work, we present preliminary and indirect evidence for a hypothesis that induction heads might constitute the mechanism for the majority of all \"in-context learning\" in large transformer models (i.e. decreasing loss at increasing token indices). We find that induction heads develop at precisely the same point as a sudden sharp increase in in-context learning ability, visible as a bump in the training loss. We present six complementary lines of evidence, arguing that induction heads may be the mechanistic source of general in-context learning in transformer models of any size. For small attention-only models, we present strong, causal evidence; for larger models with MLPs, we present correlational evidence.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}

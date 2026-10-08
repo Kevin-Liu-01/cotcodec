@@ -1,0 +1,28 @@
+{
+ "url": "https://arxiv.org/abs/2607.15555",
+ "fetched_at": "2026-10-08T16:31:40Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 43724,
+ "raw_sha256": "2de2ec7f5cfd620f9752f23e13062aeb48f79b21a3b50e0b8a695c76b332b6eb",
+ "raw_stored": false,
+ "extract": {
+  "title": "LLMs Encode Relevance as a Layer-Wise Cross-Lingual Signal",
+  "authors": [
+   "Bernardelle, Pietro",
+   "Mohtadi, Samaneh",
+   "Civelli, Stefano",
+   "Mackenzie, Joel",
+   "Demartini, Gianluca"
+  ],
+  "citation_date": "2026/07/17",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Fri, 17 Jul 2026 01:54:45 UTC"
+   }
+  ],
+  "abstract": "Large language models (LLMs) are increasingly used in information retrieval (IR) pipelines as relevance judges and re-rankers. Yet most analyses remain output-centric, evaluating generated labels or scores while offering limited insight into how relevance is represented inside the model. In this work, we study whether query-document (q-d) relevance is linearly decodable from residual-stream activations in instruction-tuned LLMs, how this signal compares with generated relevance judgments, and whether it transfers across languages. Using the TREC DL20 and MIRACL evaluation collections, we guide medium-scale LLMs (4-9B parameters) with UMBRELA-style relevance judgment prompts, extract last-token activations from every transformer layer, and train linear probes to predict relevance labels. We compare probe predictions with generated judgments and use TREC DL20 to test whether probe-derived pseudo-labels preserve system rankings against human judgments. Our results suggest that q-d relevance is encoded as a depth-dependent signal: probe performance is weak in early layers and strongest in middle-to-late layers, indicating that relevance becomes more linearly accessible after contextual integration. Most importantly, in several models, validation-selected probes match or outperform generated judgments and better preserve system rankings, revealing a separation between internal relevance representation and external expression. Multilingual experiments suggest partial cross-language portability, although transfer remains weaker than within-language decoding. Overall, this work provides a representation-level perspective on LLM-based relevance assessment. Layer-wise probing can help diagnose where relevance emerges, when generated judgments fail to reflect internally available evidence, and how relevance representations vary across languages, datasets, and model families.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}
