@@ -1,0 +1,20 @@
+{
+ "skipped": {
+  "derived by a postconfig conversion (mutate its source instead)": 5,
+  "no complete gold": 43,
+  "no operator family for this file type": 11
+ },
+ "source": "runs/confirm-mutants-v1/prep/targets.report.json (held on the host; skipped_detail omitted here)",
+ "source_sha256": "d016094e597f3358f4b2c08592d19b92638e70c100c4a5a71061d6851713945b",
+ "split": "confirm",
+ "targets": 68,
+ "targets_by_family": {
+  "docx": 13,
+  "pptx": 22,
+  "text": 1,
+  "xlsx": 32
+ },
+ "targets_without_initial": 6,
+ "tasks": 120,
+ "tasks_with_target": 67
+}

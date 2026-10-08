@@ -1,0 +1,12 @@
+{
+ "commit": "65bc2e2bf7bbe4027e6751ff22840ecdf8e40fa1",
+ "archive": "git archive --format=tar 65bc2e2bf7bbe4027e6751ff22840ecdf8e40fa1 (4194 entries, 3744 files)",
+ "archive_sha256": "59ea4ce593a867cecbf89921d56435dc1842092d10dfa2d47f4c52e804572f18",
+ "host_path": "~/cotcodec-runs/stage0/q2-evaluator-mutation/src/65bc2e2bf7bbe4027e6751ff22840ecdf8e40fa1 (with .git_sha naming the commit)",
+ "file_list_digest_rule": "sha256 of the sorted 'sha256  ./path' lines of every file except .git_sha and __pycache__",
+ "host_file_list_digest": "a68ba4f4cb95398ecde2fea3c4815bd813830f9275d9d8af48c64be24a3441eb",
+ "local_export_file_list_digest": "a68ba4f4cb95398ecde2fea3c4815bd813830f9275d9d8af48c64be24a3441eb",
+ "host_files": 3744,
+ "local_files": 3744,
+ "bytecode_caches": "two __pycache__ directories (harness/ and harness/q2_mutation/, cpython-310) written at 08:29:53Z by the host python3 that submit_controls.sh runs check_frozen.py with; outside every pin (campaign.code_tree_sha256 skips __pycache__ and .pyc)"
+}

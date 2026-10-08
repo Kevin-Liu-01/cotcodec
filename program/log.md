@@ -1682,7 +1682,13 @@ Append-only. Newest entries at the bottom.
   suite on the host from a fresh scratch directory (2210 passed, 38
   skipped). Nothing frozen, pushed or merged to main. No GPU.
 
-## 2026-10-08 — Q2 action path v2: D40's stated cause corrected (D42), review fixes
+## 2026-10-08 — Q2 action path v2: D40's stated cause corrected (D43), review fixes
+
+(The branch first numbered its draft decision with the number main then gave to
+Q3's dense pre-check; main recorded this correction as D43, which supersedes the draft:
+D43 corrects D40's cause the same way but changes the judge instead of accepting the
+exposure. The references below read D43; where they describe the draft's own choices
+they say so.)
 
 - Review blocker 1: v2's main registration said in section 8 (C2), section
   24 item 2 and section 25 that v1's C2 failure was "verified real at the X
@@ -1691,26 +1697,26 @@ Append-only. Newest entries at the bottom.
   without Mod4, in every repetition) and that section 26 shows this is how
   RECORD reports a key event queued during the shell's synchronous grab,
   and that the shell received Super+d. Section 24 gains item 9, section 26's
-  closing paragraph says what D42 decides and leaves, and section 4.4 says
+  closing paragraph says what the decision decides and leaves, and section 4.4 says
   why the limit can fail a delivered chord and never makes a trial pass (on
   the four shell-grabbed chords every reference event after the
   grab-activating key has a modifier state that is not empty). No rule,
   number or frozen file changed; every pinned digest is unchanged, and the
   main file's own digest (its ledger row at the freeze) is new.
 - Review blocker 2: D40's premise ("a genuine transport defect") is
-  contradicted by the branch's evidence. D42, recorded on this branch under
-  a new 2026-10-08 heading, states the corrected cause and decides that
+  contradicted by the branch's evidence. The draft of D43, recorded on this
+  branch under a new 2026-10-08 heading, states the corrected cause and decides that
   D40's three changes and L0-raw's development admission stand, that v2
   keeps the oracle's reading of events queued under a grab, and that the
   remaining L0-fixed exposure (127/127, 2.3% bound per trial; A1, A2, A4 and
   the ladder) is accepted, with reasons and a reversal; D40 carries a
-  pointer to it. D40's author confirms or overrules D42 at the merge, and v2
+  pointer to it. D40's author confirms or overrules the draft at the merge, and v2
   is not frozen before then. HANDOFF's v1 row no longer says the loss is
   real at the X event level; `state.json` and the pending decision for
-  Kevin now name D42 and leave him the later-registration question.
+  Kevin now name D43 and leave him the later-registration question.
 - Tests: `tests/test_q2_prereg_inputs.py` checks the corrected wording in
   sections 8, 24 and 25, that no v2 registration or the v2 prediction file
-  calls the failure real at the X event level, that D42 exists, keeps D40's
+  calls the failure real at the X event level, that D43 exists, keeps D40's
   changes and is cited, and that the four shell-grabbed chords' reference
   states after the grab key are never empty. No VM job, no GPU, nothing
   frozen, pushed or merged to main.
@@ -1724,3 +1730,46 @@ Append-only. Newest entries at the bottom.
   `-executor`, with every negative case refused). The repository ledger is
   unchanged (11 rows). Q2 tests 610 passed, 21 skipped; full suite 2167
   passed, 84 skipped; ruff clean.
+
+## 2026-10-08 — Q2 evaluator-mutation: confirm campaign stage A1 (K1, P1, confirm mutants; CPU only)
+
+- Operator run of the frozen `q2-evaluator-mutation-v1` (ledger row 11,
+  frozen on main at `65bc2e2`), branch `ops/q2-mutation-confirm`, evidence
+  `program/evidence/2026-10-08/q2-mutation-confirm/`. Source: a `git archive`
+  of `65bc2e2` staged under the Q2 run root; every pin of the frozen block
+  matches it locally and on the host (code tree `58bee019`, catalog
+  `3a5ff949`, the mounted OSWorld tree and VM baseline), and
+  `check_frozen.py` and `campaign guard` passed in every run.
+- K1 (first step after the freeze; `confirm-controls-v1`, Slurm 781-783):
+  70/74 under the lock-exact venv (94.6%, 90% required): PASS. The four
+  misses are raw-gold failures (three `compare_pptx_files`, one
+  `check_tabstops`). Unemulated tasks with a gold: 2a729ded and e8172110 as
+  registered, plus 5df7b33a (a postconfig shell `zip` writes the checked
+  archive), which the registered rule excludes but the pre-freeze count did
+  not name; its gold is a zip, so only K1's denominator moves (75 to 74).
+- P1 (`reserve-controls-v1`, Slurm 791-793, with the confirm run): raw flips
+  3/67 confirm and 1/25 reserve, 4/92 together (4.35%, Clopper-Pearson
+  1.2-10.8%), on the registered 92 golds; replication only, audit-confirmed
+  share pending. The headless scoping round trip had flipped 7/63 and 1/26.
+- Confirm mutants (`confirm-mutants-v1`, Slurm 794-796, 16 workers, apply
+  to gold): 68 targets on 67 tasks as counted before the freeze; 1,289
+  planned, 1,232 admitted (495 equivalence, 93 alternative, 290 violation,
+  138 extra change, 216 ambiguous), 1,300 saves all written (96 slower than
+  0.5 s, slowest 1.20 s), no save, scoring or infrastructure failure, no
+  nondeterministic scoring, no venv disagreement (S1 empty), 23 normalized
+  (S3; no K5 finding), 7 of 68 null mutants not passing (S7; K9 not fired).
+  Evaluable 888 (444 outside probe-touched cells, 60 tasks). The census
+  preview holds 134 real items on 33 tasks (36 equivalence mutants the
+  checker fails, 5 violations it passes, 93 alternative solutions it passes)
+  plus shams and the 4 P1 flips, far under the 1,139-item capacity. K2
+  sample drawn (80 jobs, 4 domains, 41 tasks); no K2 executor yet.
+- Held on the host until the isolated ingest (digests committed): the run's
+  `campaign export` (labels, outcomes, verdicts), the per-task control
+  summaries, the P1 flip list and the K2 sample. Committed: receipts,
+  scontrol records, submissions and aggregates only.
+- GPU: none (0.0 GPU-h row added to the ledger; total unchanged at 3.9261).
+  Nothing pushed or merged.
+- Next: stage A2, the audit (fresh salt, `submit_audit.sh` with the reserve
+  control run, the overlay and the open-weight rater within the 3.0 GPU-h
+  cap, the isolated Claude rating as one workflow session, collector,
+  ingest, summary), then the registered analysis and Kevin's pool.

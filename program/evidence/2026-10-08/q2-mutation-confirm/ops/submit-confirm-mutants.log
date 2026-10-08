@@ -1,0 +1,8 @@
+== confirm mutants preflight 2026-10-08T09:01:56Z
+ 09:01:56 up 68 days,  9:47, 61 users,  load average: 4.14, 10.98, 11.93
+{"frozen": true, "ledger_hash": "dc39bfa2f68e0fd57a213e0972266a4db60428e00d6c4e6bca8e576f35ec6439", "split": "confirm"}
+{"run": "confirm-mutants-v1", "split": "confirm", "git_sha": "65bc2e2bf7bbe4027e6751ff22840ecdf8e40fa1", "apply_to": "gold", "jobs": [794, 795, 796]}
+submitted 2026-10-08T09:01:56Z
+794 cotcodec-q2-mutation-cpu PENDING 0:00 30:00 (null)
+795 cotcodec-q2-mutation-cpu PENDING 0:00 4:00:00 afterok:794(unfulfilled)
+796 cotcodec-q2-mutation-cpu PENDING 0:00 4:00:00 afterok:795(unfulfilled)
