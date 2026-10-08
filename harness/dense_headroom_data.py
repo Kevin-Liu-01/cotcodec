@@ -136,12 +136,17 @@ REGISTERED_ORDER = ("qwen3-0.6b-base", "qwen3.5-4b-base")
 # Jobs of a registered lane. Every job of a lane (its first job, a re-run of a
 # void job, its one continuation) counts against that lane's own minutes: the
 # filler charges each ended job its elapsed minutes rounded up plus one, and a
-# later job gets what is left, at least MIN_JOB_MINUTES. A continuation follows
-# a predecessor that used at least one minute and was charged one more, so its
-# limit is at most the lane's minutes minus CONTINUATION_MIN_CHARGE.
+# later job gets what is left, at least MIN_JOB_MINUTES. Slurm sends SIGUSR1
+# USR1_LEAD_MINUTES before a job's limit and the job ends there, so its useful
+# time is its limit minus that lead; MIN_JOB_MINUTES leaves every granted job
+# at least MIN_USEFUL_MINUTES of it (D32). A continuation follows a predecessor
+# that used at least one minute and was charged one more, so its limit is at
+# most the lane's minutes minus CONTINUATION_MIN_CHARGE.
 OUTPUT_SUBDIR = "dense-precheck"
 RESUME_SUBPATH = f"{OUTPUT_SUBDIR}/checkpoints"
-MIN_JOB_MINUTES = 3
+USR1_LEAD_MINUTES = 3
+MIN_USEFUL_MINUTES = 2
+MIN_JOB_MINUTES = USR1_LEAD_MINUTES + MIN_USEFUL_MINUTES  # 5
 CONTINUATION_MIN_CHARGE = 2
 
 
@@ -927,6 +932,7 @@ __all__ = [
     "EXPERIMENT_ID",
     "LANES",
     "MIN_JOB_MINUTES",
+    "MIN_USEFUL_MINUTES",
     "OUTPUT_SUBDIR",
     "REGISTERED_ORDER",
     "RESUME_SUBPATH",
@@ -936,6 +942,7 @@ __all__ = [
     "STAGES",
     "TINY_LANES",
     "TOTAL_CAP_GPU_HOURS",
+    "USR1_LEAD_MINUTES",
     "ByteLevelCodec",
     "ContentFilter",
     "DenseDataError",
