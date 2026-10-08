@@ -137,6 +137,15 @@ def test_length_finish_and_stream_errors(tmp_path):
             client.chat(second, SAMPLING)
 
 
+def test_a_stream_cut_before_done_is_retried_then_a_transport_failure(tmp_path):
+    sock = str(short_dir(tmp_path) / "e.sock")
+    with FakeEngine(sock, {"replies": [{"cut_stream": True}]}) as fake:
+        client = engine.EngineClient(sock, "m", sleep=lambda s: None)
+        with pytest.raises(engine.EngineError) as info:
+            client.chat(MESSAGES, SAMPLING)
+    assert info.value.kind == "transport" and len(fake.requests) == engine.ATTEMPTS
+
+
 def test_fake_engine_walks_its_script_by_assistant_turns(tmp_path):
     sock = str(short_dir(tmp_path) / "e.sock")
     with FakeEngine(sock, {"replies": ["one", "two"]}):

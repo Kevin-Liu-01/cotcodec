@@ -134,6 +134,7 @@ def parse_stream(lines: Any, clock: Callable[[], float], started: float) -> dict
         "prompt_token_ids": None,
         "t_first": None,
         "t_last": None,
+        "done": False,
     }
     for raw in lines:
         line = raw.decode("utf-8", errors="replace").strip() if isinstance(raw, bytes) else raw
@@ -141,6 +142,7 @@ def parse_stream(lines: Any, clock: Callable[[], float], started: float) -> dict
             continue
         data = line[5:].strip()
         if data == "[DONE]":
+            out["done"] = True
             break
         try:
             chunk = json.loads(data)
@@ -239,6 +241,8 @@ class EngineClient:
                 raise EngineError(f"stream stalled past {self.timeout_s} s", "timeout") from exc
             except (OSError, http.client.HTTPException) as exc:
                 raise _Retryable(f"stream transport: {type(exc).__name__}: {exc}") from exc
+            if not parsed["done"]:
+                raise _Retryable("the stream ended before [DONE]")
             parsed["started"] = started
             parsed["finished"] = self.clock()
             return parsed
