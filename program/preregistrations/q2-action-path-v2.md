@@ -2976,14 +2976,23 @@ Jobs 849-854 repeat 834-839, and so v1's final development runs 703-708.
 | 853 | `q2ap-v2-d45-hga-v1` | 838 (707: H-GA) | 186 | 178 of 186, as 838: R02, R04, R06 and R10 (outside spec) |
 | 854 | `q2ap-v2-d45-canary-v1` | 839 (708: the canary) | 60 | 60 of 60 |
 
-What they show. Every cell's PASS count, failure reasons and events read
-without their state equal those of the D43 job it repeats, but for one trial
-of job 851. Under L0-raw (845) each of the 108 events read without its state
-follows a processed press in its window, 0-3 ms after it: the press of the
-chord's grab key, except in one `chord_super_d` trial whose `d` press was
-processed, with Mod4 and Mod2, 1 ms after Super_L, so that only its two
-releases were queued and read without their state (the `d` press, recorded
-with its state, was judged on it). No key event without Mod2 lacked a
+What they show. Every cell's PASS count, failure reasons and number of trials
+with an event read without its state equal those of the D43 job it repeats,
+but for one trial of job 851. The number of events read without their state
+is not equal in every cell, since it counts the events of each trial that the
+shell's grab held queued: job 845 read 108, as job 830 did, but per entry 29
+in `chord_super_d`, 19 in `chord_alt_f4`, 20 in `chord_alt_tab` and 40 in
+`chord_ctrl_alt_shift_r` (830: 30, 18, 20 and 40), in all ten trials of each.
+Under L0-raw (845) each of the 108 events read without its state follows a
+processed press in its window, 0-3 ms after it: the press of the chord's grab
+key, except in one `chord_super_d` trial whose `d` press was processed, with
+Mod4 and Mod2, 1 ms after Super_L, so that only its two releases were queued
+and read without their state (the `d` press, recorded with its state, was
+judged on it; every other `chord_super_d` trial of 830 and 845 had three
+events queued). In every `chord_alt_f4` trial of 830 and 845 the F4 release
+was queued, and so was the Alt_L release except in one trial of 845 and two
+of 830, where it was recorded with its state (Mod1 and Mod2) and judged on
+it. No key event without Mod2 lacked a
 preceding processed press in any job: section 12's report, run with the
 analysis at `c74eae0` over v1's C2 and every v2 run (`section12-report.json`),
 reads 54 events without their state in job 768, 110 in 784, 108 in 830 and 108

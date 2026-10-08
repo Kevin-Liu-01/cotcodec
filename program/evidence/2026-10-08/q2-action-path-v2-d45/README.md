@@ -37,13 +37,31 @@ rule. D43's own bundle is `../q2-action-path-v2-d43/`.
    832/833 and 847/848) still fail.
 3. **Development repeated at `c74eae0`** (jobs 845-854, all COMPLETED 0:0,
    gates passed, `System.qcow2` unchanged, no GPU, 2.4 VM-hours): every
-   cell's PASS count, failure reasons and events read without state equal
-   those of the D43 job it repeats (830-839), except one trial of job 851:
+   cell's PASS count, failure reasons and number of trials with an event
+   read without state equal those of the D43 job it repeats (830-839),
+   except one trial of job 851. The number of events read without state is
+   not equal in every cell (it counts each trial's events the shell's grab
+   held queued); see the first item below.
    - L0-raw sample (845): 151 of 180, as 830; 108 events read without state
-     in the four shell chords, each 0-3 ms after a processed press of its own
-     chord (the grab key's, except one `chord_super_d` trial whose `d` press
-     was processed with Mod4 1 ms after Super_L and only its two releases
-     were queued).
+     in the four shell chords, as 830, in all ten trials of each chord,
+     every one 0-3 ms after a processed press of its own chord (the grab
+     key's, except one `chord_super_d` trial whose `d` press was processed
+     with Mod4 1 ms after Super_L and only its two releases were queued).
+     Per entry (`section12-report.json`, `by_entry`):
+
+     | Entry | 830 events | 845 events | Trials (each) |
+     |---|---:|---:|---:|
+     | `chord_super_d` | 30 | 29 | 10 |
+     | `chord_alt_f4` | 18 | 19 | 10 |
+     | `chord_alt_tab` | 20 | 20 | 10 |
+     | `chord_ctrl_alt_shift_r` | 40 | 40 | 10 |
+     | all four | 108 | 108 | 40 |
+
+     `chord_super_d`: three events queued per trial (the `d` press and
+     release, the Super_L release) but in 845's one trial above, which had
+     two. `chord_alt_f4`: the F4 release queued in every trial, and the
+     Alt_L release too except in one trial of 845 and two of 830, where it
+     was recorded with its state (Mod1 and Mod2) and judged on it.
    - L0-fixed sample on 8 VMs (846): 180 of 180, nothing read without state.
    - Negative case (847 `omit`, 848 `release_first`): 0 of 140, nothing read
      without state, C4 disagrees in all 140; 848 repeats 833's 22 lost-focus
