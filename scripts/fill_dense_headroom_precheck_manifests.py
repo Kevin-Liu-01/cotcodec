@@ -22,22 +22,34 @@ ledger row). The filler refuses unless
   (``started_at`` to ``finished_at``) rounded up, plus one for the Slurm
   prolog before ``job.env`` and the epilogue after ``termination.env``. The
   first job gets the lane's minutes; a later job gets the minutes left, at
-  least 3, or is refused;
+  least 5 (``MIN_JOB_MINUTES``: the 3-minute SIGUSR1 lead plus 2 useful
+  minutes), or is refused;
 * a later job is a continuation (``--continuation-of JOB``) or a re-run of a
   void job. A continuation resumes ``dense-precheck/checkpoints`` of JOB, which
   must be the lane's latest job and have ended with a confirmed signal
   checkpoint (exit code 75); its limit is at most the lane's minutes minus two,
   and the lane has at most one continuation ever (no job in the run root names
   a predecessor and no slot was claimed for one);
-* a later job claims its slot before its manifest is written:
-  ``<run_root>/fill-claims/after-<N>.json``, created exclusively, where N is
-  the number of the lane's ended jobs. Filling the same slot again is refused
-  unless the manifest is byte-identical, so no ``--output`` choice can fill two
-  later jobs (or two continuations) for one slot.
+* every job, the first included, claims its slot before its manifest is
+  written: ``<run_root>/fill-claims/after-<N>.json``, created exclusively,
+  where N is the number of the lane's ended jobs (0 for the first job). Filling
+  the same slot again is refused unless the manifest is byte-identical, so no
+  ``--output`` choice can fill two jobs (or two continuations) for one slot.
+  Each filled manifest is submitted once. A job is matched to its claim by its
+  ``manifest.json`` (name, minutes, image and predecessor); a lane with a job
+  that has no claim, a job that ran longer than its claim's minutes, or two
+  jobs on one claim (a filled manifest submitted again) is void, and the filler
+  fills no further job of it (``claim_problems``; the summariser voids the
+  lane on the same rule). The entry point cannot check claims: only its own job
+  directory is mounted in the container, not the lane's run root;
+* the Qwen3.5-4B-Base lane is filled only with ``--small-lane-receipt``, the
+  Qwen3-0.6B-Base lane's completed receipt of this registration whose
+  ``smoke_452_reproduction`` status is REPRODUCED (decisions 1 and 11).
 
-Because Slurm sends SIGUSR1 three minutes before the limit, a job interrupted
-at its time limit has used at least its limit minus three minutes and leaves
-at most two: a continuation fits only after an earlier interruption (a
+Because Slurm sends SIGUSR1 three minutes before the limit and the job ends
+there wherever the signal lands, a job's useful time is its limit minus three
+minutes, and a job interrupted at its time limit leaves at most two minutes
+of the lane: a continuation fits only after an earlier interruption (a
 SIGTERM from the operator or the node, or a SIGUSR1 sent by hand).
 
 Exit codes: 0 filled, 2 an input is missing or inconsistent.
@@ -196,6 +208,10 @@ class LaneJob:
     predecessor_job_id: str | None
     elapsed_seconds: float
     has_receipt: bool
+    # From the job's manifest.json (the submitter's manifest, written by the
+    # batch script before job.env): what the job was submitted as, matched
+    # against the fill claims. None when the file is missing or unreadable.
+    manifest_key: tuple[Any, ...] | None = None
 
     @property
     def charged_minutes(self) -> int:
@@ -212,7 +228,33 @@ class LaneJob:
                 "checkpoint_ready": self.checkpoint_ready,
                 "predecessor_job_id": self.predecessor_job_id,
                 "elapsed_seconds": self.elapsed_seconds,
-                "charged_minutes": self.charged_minutes, "has_receipt": self.has_receipt}
+                "charged_minutes": self.charged_minutes, "has_receipt": self.has_receipt,
+                "manifest": (dict(zip(MANIFEST_KEY_FIELDS, self.manifest_key, strict=True))
+                             if self.manifest_key is not None else None)}
+
+
+# The manifest fields that identify a filled job: its name (the template's for
+# the first job, ``-rerun-<N>`` or ``-cont`` for a later one), its limit, its
+# image and its predecessor.
+MANIFEST_KEY_FIELDS = ("name", "minutes", "image_id", "predecessor_job_id")
+
+
+def manifest_key(name: Any, minutes: Any, image_id: Any, predecessor: Any) -> tuple[Any, ...]:
+    return (name, minutes, image_id, None if predecessor in (None, "", "none")
+            else str(predecessor))
+
+
+def job_manifest_key(path: Path) -> tuple[Any, ...] | None:
+    """The key of the manifest a job directory was submitted with, or None."""
+
+    try:
+        manifest = json.loads((path / "manifest.json").read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        return None
+    if not isinstance(manifest, dict):
+        return None
+    return manifest_key(manifest.get("name"), manifest.get("minutes"),
+                        manifest.get("image_id"), manifest.get("resume_from_job_id"))
 
 
 def lane_jobs(run_root: Path) -> list[LaneJob]:
@@ -245,7 +287,8 @@ def lane_jobs(run_root: Path) -> list[LaneJob]:
             exit_code=end.get("exit_code", ""),
             checkpoint_ready=end.get("checkpoint_ready") == "true",
             predecessor_job_id=None if predecessor in ("", "none") else predecessor,
-            elapsed_seconds=elapsed, has_receipt=(path / RECEIPT).exists()))
+            elapsed_seconds=elapsed, has_receipt=(path / RECEIPT).exists(),
+            manifest_key=job_manifest_key(path)))
     return sorted(jobs, key=lambda j: int(j.job_id))
 
 
@@ -259,6 +302,40 @@ def read_claims(run_root: Path) -> list[dict[str, Any]]:
         return []
     return [json.loads(path.read_text(encoding="utf-8"))
             for path in sorted(claims.glob("after-*.json"))]
+
+
+def claim_problems(jobs: list[LaneJob], claims: list[dict[str, Any]]) -> list[str]:
+    """Why the lane's jobs void it under the claim rule (decision 12 as amended
+    in D32), or nothing. Every job must match one fill claim by its manifest
+    (name, minutes, image, predecessor), no job may run longer than its claim's
+    minutes, and no claim may carry two jobs (a filled manifest submitted
+    again)."""
+
+    by_key: dict[tuple[Any, ...], list[dict[str, Any]]] = {}
+    for claim in claims:
+        key = manifest_key(claim.get("manifest_name"), claim.get("minutes"),
+                           claim.get("image_id"), claim.get("predecessor_job_id"))
+        by_key.setdefault(key, []).append(claim)
+    problems: list[str] = []
+    holders: dict[tuple[Any, ...], list[str]] = {}
+    for job in jobs:
+        matches = by_key.get(job.manifest_key, []) if job.manifest_key is not None else []
+        if len(matches) != 1:
+            problems.append(f"job {job.job_id} has no fill claim" if not matches else
+                            f"job {job.job_id} matches {len(matches)} fill claims")
+            continue
+        holders.setdefault(job.manifest_key, []).append(job.job_id)
+        minutes = matches[0].get("minutes")
+        if (not isinstance(minutes, int) or isinstance(minutes, bool)
+                or job.elapsed_seconds > minutes * 60):
+            problems.append(f"job {job.job_id} ran {job.elapsed_seconds:.0f} s, more than its "
+                            f"claim's {minutes} minutes")
+    for key, job_ids in holders.items():
+        if len(job_ids) > 1:
+            problems.append(f"jobs {job_ids} ran on one fill claim (slot "
+                            f"{by_key[key][0].get('slot')}): a filled manifest was submitted "
+                            "more than once")
+    return problems
 
 
 @dataclass(frozen=True)
@@ -277,6 +354,10 @@ def plan_next_job(lane: dhd.Lane, run_root: Path, continuation_of: str | None) -
     if any(job.has_receipt for job in jobs):
         raise FillError(f"{lane.lane_id} already has a lane receipt; no further job runs under "
                         "this id")
+    problems = claim_problems(jobs, read_claims(run_root))
+    if problems:
+        raise FillError(f"{lane.lane_id} is void ({'; '.join(problems)}); no further job of it "
+                        "is filled, and the lane is INCOMPLETE")
     charged = lane_charge(jobs)
     remaining = lane.minutes - charged
     # A continuation claimed for an earlier slot counts as the lane's one
@@ -327,8 +408,15 @@ def later_job_manifest(manifest: dict[str, Any], plan: NextJob) -> dict[str, Any
 
 def claim_slot(run_root: Path, lane: dhd.Lane, plan: NextJob, text: str,
                image_id: str) -> Path:
-    """Claim the lane's slot ``plan.slot`` for this later job, once."""
+    """Claim the lane's slot ``plan.slot`` for this job (the first included), once."""
 
+    manifest = yaml.safe_load(text)
+    if (not isinstance(manifest, dict)
+            or manifest_key(manifest.get("name"), (manifest.get("resources") or {}).get("minutes"),
+                            manifest.get("image_id"), manifest.get("resume_from_job_id"))
+            != manifest_key(manifest.get("name"), plan.minutes, image_id,
+                            plan.predecessor_job_id)):
+        raise FillError("the manifest is not the planned job's")
     claims = run_root / CLAIMS_DIR
     claims.mkdir(parents=True, exist_ok=True)
     path = claims / f"after-{plan.slot}.json"
@@ -336,6 +424,7 @@ def claim_slot(run_root: Path, lane: dhd.Lane, plan: NextJob, text: str,
                           "minutes": plan.minutes,
                           "predecessor_job_id": plan.predecessor_job_id,
                           "charged_minutes": plan.charged_minutes, "image_id": image_id,
+                          "manifest_name": manifest["name"],
                           "manifest_sha256": hashlib.sha256(text.encode()).hexdigest()},
                          indent=2, sort_keys=True) + "\n"
     try:
@@ -351,13 +440,53 @@ def claim_slot(run_root: Path, lane: dhd.Lane, plan: NextJob, text: str,
 
 
 # --------------------------------------------------------------------------- #
+# The 4B lane waits on the 0.6B lane's smoke reproduction
+# --------------------------------------------------------------------------- #
+
+
+GATED_LANE, GATING_LANE = "qwen3.5-4b-base", "qwen3-0.6b-base"
+
+
+def check_small_lane_receipt(path: Path | None, preregistration_sha256: str) -> dict[str, Any]:
+    """The 4B lane is filled only after the 0.6B lane's completed receipt of this
+    registration reports the K1 smoke reproduction REPRODUCED (decisions 1 and
+    11, Freeze procedure step 4). It never depends on the 0.6B headroom read."""
+
+    if path is None:
+        raise FillError(f"{GATED_LANE} is filled only with --small-lane-receipt, the "
+                        f"{GATING_LANE} lane's receipt whose smoke_452_reproduction is "
+                        "REPRODUCED")
+    try:
+        receipt = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, ValueError) as exc:
+        raise FillError(f"the {GATING_LANE} receipt is unreadable: {exc}") from exc
+    if not isinstance(receipt, dict):
+        raise FillError(f"the {GATING_LANE} receipt is not a JSON object")
+    hashes = receipt.get("hashes") or {}
+    lane = (receipt.get("lane") or {}).get("lane_id")
+    if (receipt.get("experiment_id"), lane, receipt.get("profile"),
+            receipt.get("status")) != (dhd.EXPERIMENT_ID, GATING_LANE, "registered",
+                                       "PRECHECK_COMPLETE"):
+        raise FillError(f"{path} is not a completed {GATING_LANE} receipt of "
+                        f"{dhd.EXPERIMENT_ID}")
+    if hashes.get("preregistration_sha256") != preregistration_sha256:
+        raise FillError(f"{path} was read against another preregistration")
+    reproduction = (receipt.get("report") or {}).get("smoke_452_reproduction") or {}
+    if reproduction.get("status") != "REPRODUCED":
+        raise FillError(f"the {GATING_LANE} lane's K1 smoke reproduction is "
+                        f"{reproduction.get('status')}: the combined read is INVALID and "
+                        f"{GATED_LANE} is not run")
+    return {"slurm_job_id": receipt.get("slurm_job_id"), "status": "REPRODUCED"}
+
+
+# --------------------------------------------------------------------------- #
 # Filling
 # --------------------------------------------------------------------------- #
 
 
 def fill(lane_id: str, image_receipt: Path, repo_root: Path, output: Path, *,
          template_dir: Path = TEMPLATE_DIR, continuation_of: str | None = None,
-         run_root: Path | None = None) -> Path:
+         run_root: Path | None = None, small_lane_receipt: Path | None = None) -> Path:
     if lane_id not in dhd.LANES:
         raise FillError(f"unknown registered lane {lane_id!r}")
     lane = dhd.LANES[lane_id]
@@ -375,6 +504,8 @@ def fill(lane_id: str, image_receipt: Path, repo_root: Path, output: Path, *,
                              ledger=repo_root / "program" / "preregistrations" / "ledger.jsonl",
                              root=repo_root)
     values["FILL-preregistration-sha256"] = str(row["sha256"])
+    if lane_id == GATED_LANE:
+        check_small_lane_receipt(small_lane_receipt, str(row["sha256"]))
     table = dict(IDENTITY_ROW_RE.findall(
         (repo_root / str(row["path"])).read_text(encoding="utf-8")))
     missing = [path for path in BOUND_PATHS if path not in table]
@@ -409,8 +540,7 @@ def fill(lane_id: str, image_receipt: Path, repo_root: Path, output: Path, *,
     target = output / name
     if target.exists() and target.read_text(encoding="utf-8") != text:
         raise FillError(f"{target} exists with different content; never overwrite")
-    if plan.kind != "first":
-        claim_slot(run_root, lane, plan, text, values["FILL-image-id"])
+    claim_slot(run_root, lane, plan, text, values["FILL-image-id"])  # every job, slot 0 too
     target.write_text(text, encoding="utf-8")
     return target
 
@@ -424,10 +554,14 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--continuation-of", default=None)
     parser.add_argument("--run-root", type=Path, default=None,
                         help="the lane's run root (default: the template's run_root)")
+    parser.add_argument("--small-lane-receipt", type=Path, default=None,
+                        help=f"for {GATED_LANE}: the {GATING_LANE} lane's receipt.json, whose "
+                             "smoke_452_reproduction must be REPRODUCED")
     args = parser.parse_args(argv)
     try:
         target = fill(args.lane, args.image_receipt, args.repo_root, args.output,
-                      continuation_of=args.continuation_of, run_root=args.run_root)
+                      continuation_of=args.continuation_of, run_root=args.run_root,
+                      small_lane_receipt=args.small_lane_receipt)
     except (OSError, KeyError, ValueError, json.JSONDecodeError,
             preregister.PreregistrationError) as exc:
         print(f"FAIL: {exc}", file=sys.stderr)
