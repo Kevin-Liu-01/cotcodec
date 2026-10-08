@@ -40,7 +40,8 @@ Rules that apply to every criterion:
   version, and every rule below, D33's limits included, runs within one repair attempt.
   A job killed before its driver wrote ``receipt.json`` is still an attempt: it is read
   from its manifest, its batch record and the sessions it finished, and cannot count.
-  Every trial of every attempt is
+  A cycle, record or receipt file that does not parse (a write cut short) reads as
+  missing, and its attempt cannot count (decision D39). Every trial of every attempt is
   reported, and a failed trial in an earlier attempt counts against the criterion
   exactly as if that attempt had counted: on the cells the criterion judges, less the
   trials it excuses (only a rung aborted on foreign load has none that count; a rung
@@ -48,8 +49,9 @@ Rules that apply to every criterion:
   and the ladder's limits over every attempt, so a rerun never resets them; C1-C3 judge
   an earlier attempt's trials by their own rules (C1: a known-defect cell must fail in
   every attempt; C2: an earlier failure counts outside the predicted set only; C3: kills
-  and equivalence from the counting attempt, while a cell the reference did not pass
-  cleanly in any attempt cannot kill);
+  from the counting attempt, equivalence only if every attempt's stream matches the
+  reference's on the cells it ran without an infrastructure failure, decision D39, and
+  a cell the reference did not pass cleanly in any attempt cannot kill);
 * the trials a criterion runs must be exactly the realized order its manifest
   declares (``order.plan`` or ``volume.sessions``), so a campaign cut short cannot pass,
   and every campaign of a criterion runs one source tree (git SHA, tree digest and
@@ -133,6 +135,26 @@ def _read(path: str) -> Any:
         return json.load(handle)
 
 
+def _read_object(run_dir: str, path: str, unreadable: list[str]) -> dict[str, Any] | None:
+    """A run file's JSON object; None when it is missing or does not parse.
+
+    Decision D39: the driver and the runner write these files whole but not atomically,
+    so a kill during a write can leave one cut short. Such a file reads as missing (its
+    path within the run directory is added to ``unreadable``, and the attempt cannot
+    count: ``counting_problems``), so it never blocks a verdict.
+    """
+    if not os.path.exists(path):
+        return None
+    try:
+        value = _read(path)
+    except ValueError:  # json.JSONDecodeError and UnicodeDecodeError are ValueErrors
+        value = None
+    if not isinstance(value, dict):
+        unreadable.append(os.path.relpath(path, run_dir))
+        return None
+    return value
+
+
 def batch_end(run_dir: str) -> dict[str, int] | None:
     """The batch script's own last record, or None when it never reached its end."""
     path = os.path.join(run_dir, "preflight.txt")
@@ -198,10 +220,15 @@ def load(
     read. A session the kill cut short has no ``cycle-NN.json``; the runner keeps its
     trials unjudged in ``cycle-NN.trials.jsonl`` (no verdict without the session's tap
     stream), so they are not read.
+
+    Decision D39: a ``receipt.json``, ``cycle-NN.json`` or ``record-NN.json`` that does
+    not parse (a write the kill cut short) reads as missing: an empty receipt, a session
+    not run, or a session without host snapshots. Each such file is listed under
+    ``unreadable``, and the attempt cannot count (``counting_problems``).
     """
     manifest = _read(os.path.join(run_dir, "manifest.json"))
-    receipt_path = os.path.join(run_dir, "receipt.json")
-    receipt = _read(receipt_path) if os.path.exists(receipt_path) else {}
+    unreadable: list[str] = []
+    receipt = _read_object(run_dir, os.path.join(run_dir, "receipt.json"), unreadable) or {}
     job = str(receipt.get("job_id") or preflight_job(run_dir))
     if slurm is None:
         slurm = recorded_slurm_state(run_dir, job)
@@ -209,9 +236,11 @@ def load(
     paths = glob.glob(os.path.join(run_dir, "cycles", "cycle-[0-9][0-9]*.json"))
     # Cycle numbers are plan indices; sort them as numbers (cycle-100 after cycle-99).
     for path in sorted(paths, key=lambda p: int(os.path.basename(p)[6:-5])):
-        cycle = _read(path)
+        cycle = _read_object(run_dir, path, unreadable)
+        if cycle is None:
+            continue  # cut short: the session is reported as not run
         record_path = path.replace("cycle-", "record-")
-        record = _read(record_path) if os.path.exists(record_path) else {}
+        record = _read_object(run_dir, record_path, unreadable) or {}
         trials = [_trial(t, cycle.get("setting")) for t in cycle.get("trials") or []]
         reset = reset_observation(cycle.get("reset_observation"), cycle.get("setting"))
         if reset is not None and not reset["delivered"] and trials:
@@ -247,6 +276,7 @@ def load(
         "slurm": slurm,
         "batch": batch_end(run_dir),
         "sessions": sessions,
+        "unreadable": unreadable,
         "earlier": list(earlier or []),
     }
 
@@ -361,6 +391,9 @@ def counting_problems(campaign: dict[str, Any]) -> list[str]:
         out.append(f"job {campaign['job']}: System.qcow2 changed or unchecked")
     if receipt.get("labelled_containers_left") or summary.get("leaked_volumes"):
         out.append(f"job {campaign['job']}: labelled containers or volumes left")
+    if campaign.get("unreadable"):
+        # Decision D39: a run file cut short reads as missing, and its attempt cannot count.
+        out.append(f"job {campaign['job']}: unreadable run files {campaign['unreadable']}")
     return out
 
 
@@ -1285,6 +1318,37 @@ def _signature(campaigns: list[dict[str, Any]]) -> dict[str, list[Any]]:
     return out
 
 
+def _stream_differences(
+    attempt: dict[str, Any], reference: dict[str, list[Any]]
+) -> tuple[list[str], list[str]]:
+    """An attempt's cells whose stream differs from the reference's, and those not compared.
+
+    Decision D39, for an earlier attempt of a C3 mutant: each trial the attempt ran
+    without an infrastructure failure is compared with the reference's trial of the
+    same cell and repetition (the device events without timestamps, the text buffer
+    and the terminal action, as ``_signature``); a trial with an infrastructure failure
+    is not compared (its stream may differ for reasons that say nothing about the
+    mutant), and a cell the attempt did not reach is not compared either. Returns the
+    differing cells and the cells left out for an infrastructure failure.
+    """
+    differing: set[str] = set()
+    infra: set[str] = set()
+    seen: dict[str, int] = {}
+    for session in attempt["sessions"]:
+        for trial in session["trials"]:
+            cell = trial["cell"]
+            index = seen.get(cell, 0)
+            seen[cell] = index + 1
+            if trial["infra"]:
+                infra.add(cell)
+                continue
+            expected_streams = reference.get(cell) or []
+            stream = [trial["events"], trial["text"], trial["terminal"]]
+            if index >= len(expected_streams) or expected_streams[index] != stream:
+                differing.add(cell)
+    return sorted(differing), sorted(infra)
+
+
 def _cell_results(campaigns: list[dict[str, Any]]) -> dict[str, dict[str, Any]]:
     """Per cell: its status over the repetitions and whether any trial had an infra failure."""
     out: dict[str, dict[str, Any]] = {}
@@ -1311,11 +1375,17 @@ def c3(
     survives.
 
     Earlier attempts (section 6.1) are read by C3's own rule. A mutant's failures are its
-    kills, never failures against C3: its kills and its equivalence are read from the
-    counting attempt, and each earlier attempt is reported with its failed cells and
-    whether its signature matched the reference's on the cells it ran. The reference's
-    failures are what keep a cell from killing: a cell the reference failed, or failed
-    with an infrastructure failure, in any of its attempts cannot kill.
+    kills, never failures against C3: its kills are read from the counting attempt only.
+    Equivalence fails closed (decision D39): a mutant is equivalent only if the counting
+    attempt's signature equals the reference's on every cell and every earlier attempt's
+    stream equals the reference's on each cell it ran without an infrastructure failure
+    (``_stream_differences``), so cancelling and rerunning cannot turn a survivor into an
+    equivalent mutant. Each earlier attempt is reported with its failed cells, whether its
+    signature matched the reference's on the cells it ran, the cells whose stream differed
+    without an infrastructure failure (any keeps the mutant from being equivalent) and the
+    cells not compared for an infrastructure failure. The reference's failures are what
+    keep a cell from killing: a cell the reference failed, or failed with an
+    infrastructure failure, in any of its attempts cannot kill.
     """
     import yaml
 
@@ -1376,28 +1446,38 @@ def c3(
                 continue
             killers.append(cell)
         signature = reference_signatures.get(layer) or {}
+        earlier = []
+        for c in campaigns:
+            for previous in c.get("earlier") or []:
+                differing, not_compared = _stream_differences(previous, signature)
+                earlier.append(
+                    {
+                        "job": previous["job"],
+                        "failed_cells": sorted({cell for _, _, cell in failed_trials(previous)}),
+                        "signature_matches_reference": all(
+                            signature.get(cell) == values
+                            for cell, values in _signature([previous]).items()
+                        ),
+                        # Decision D39: any of these keeps the mutant from being equivalent.
+                        "differing_cells": differing,
+                        "infra_cells_not_compared": not_compared,
+                    }
+                )
         entry = {
             "killers": killers,
             "predicted_killers": predicted_cells.get((operator, layer), []),
             "infra_cells": infra_cells,
             "reference_not_clean": reference_not_clean,
-            # Reported, not judged (section 6.1).
-            "earlier_attempts": [
-                {
-                    "job": previous["job"],
-                    "failed_cells": sorted({cell for _, _, cell in failed_trials(previous)}),
-                    "signature_matches_reference": all(
-                        signature.get(cell) == values
-                        for cell, values in _signature([previous]).items()
-                    ),
-                }
-                for c in campaigns
-                for previous in c.get("earlier") or []
-            ],
+            # Kills are the counting attempt's; earlier attempts decide equivalence only.
+            "earlier_attempts": earlier,
         }
         if killers:
             entry["outcome"] = "killed"
-        elif references.get(layer) and _signature(campaigns) == signature:
+        elif (
+            references.get(layer)
+            and _signature(campaigns) == signature
+            and not any(row["differing_cells"] for row in earlier)
+        ):
             entry["outcome"] = "equivalent"
         else:
             entry["outcome"] = "survived"

@@ -1405,9 +1405,10 @@ def test_c2_reads_an_earlier_attempt_as_it_reads_the_counting_one():
 
 def test_c3_reads_kills_from_the_counting_attempt_and_the_reference_over_every_attempt():
     """A mutant's failures are its kills, so an earlier attempt's never count against C3;
-    its kills and equivalence come from the counting attempt and the earlier attempt is
-    reported. A cell the reference failed in any attempt cannot kill, while a by-design
-    outside-spec failure in an earlier reference attempt costs nothing."""
+    its kills come from the counting attempt and the earlier attempt is reported (its
+    streams decide equivalence only, decision D39). A cell the reference failed in any
+    attempt cannot kill, while a by-design outside-spec failure in an earlier reference
+    attempt costs nothing."""
     import yaml
 
     from harness.q2.action_path import mutants as kit
@@ -1428,7 +1429,13 @@ def test_c3_reads_kills_from_the_counting_attempt_and_the_reference_over_every_a
     entry = result["mutants"][key]
     assert entry["outcome"] == "killed" and entry["killers"] == ["R14", "key_enter"]
     assert entry["earlier_attempts"] == [
-        {"job": "e3", "failed_cells": ["R14", "key_enter"], "signature_matches_reference": True}
+        {
+            "job": "e3",
+            "failed_cells": ["R14", "key_enter"],
+            "signature_matches_reference": True,
+            "differing_cells": [],
+            "infra_cells_not_compared": [],
+        }
     ]  # the synthetic failures keep the reference's events and text
     # An earlier attempt's kills do not count: a counting attempt that kills nothing and
     # differs from the reference survives.
@@ -1624,3 +1631,170 @@ def test_load_reads_an_attempt_killed_before_its_driver_wrote_a_receipt(tmp_path
     loaded = acc.load(str(booting))
     assert loaded["job"] == "696" and loaded["sessions"] == []  # named after its directory
     assert acc.counting_problems(loaded)
+
+
+# --- decision D39: C3 equivalence fails closed; unparseable run files (main section 23) ---------
+
+
+def _c3_setup() -> tuple[dict, dict, tuple[str, str], dict]:
+    """Every scored mutant killed, the L0-fixed references and one L0-fixed operator."""
+    import yaml
+
+    from harness.q2.action_path import mutants as kit
+
+    operators = yaml.safe_load(
+        (ROOT / "harness/q2/action_path/mutation_operators.yaml").read_text()
+    )
+    pairs = kit.scored_pairs(operators)
+    plans = {layer: order.plan(ids(layer), 42, 1, ["screenshot"]) for layer in acc.C3_LAYERS}
+    references = {layer: [campaign(plans[layer], job=f"ref-{layer}")] for layer in acc.C3_LAYERS}
+    runs = {(op, layer): [campaign(plans[layer], fail={"R14", "key_enter"})] for op, layer in pairs}
+    op = next(p for p in pairs if p[1] == "L0-fixed")
+    return runs, references, op, plans
+
+
+def _timed_out(run: dict, job: str) -> dict:
+    """``run`` as an earlier attempt that hit its time limit (it did not count)."""
+    earlier = copy.deepcopy(run)
+    earlier["job"], earlier["batch"] = job, None
+    earlier["slurm"] = {"state": "TIMEOUT", "exit_code": "0:15"}
+    return earlier
+
+
+def test_c3_equivalence_needs_every_attempts_stream_to_match_the_reference():
+    """Decision D39: a mutant is equivalent only if its counting attempt's signature equals
+    the reference's and so does every earlier attempt's stream on each cell it ran
+    without an infrastructure failure. Kills stay the counting attempt's, so cancelling
+    and rerunning cannot turn a survivor (or an earlier-only kill) into an equivalent
+    mutant, while an earlier difference on a cell that had an infrastructure failure
+    says nothing about the mutant and does not count."""
+    runs, references, op, plans = _c3_setup()
+    key = f"{op[0]} L0-fixed"
+    same = campaign(plans["L0-fixed"], job="mut-same")  # the reference's streams, no kill
+    alone = acc.c3({**runs, op: [same]}, references)
+    assert alone["pass"] and alone["mutants"][key]["outcome"] == "equivalent"
+    # The final verifier's probe: an earlier TIMEOUT attempt in which type_plain passed
+    # with different text. Before D39 this read as equivalent and C3 passed.
+    earlier = _timed_out(same, "mut-early")
+    _nth(earlier, SHOT, "type_plain", 0)["text"] = "TYPED-DIFFERENTLY"
+    result = acc.c3({**runs, op: [dict(copy.deepcopy(same), earlier=[earlier])]}, references)
+    entry = result["mutants"][key]
+    assert not result["pass"] and entry["outcome"] == "survived" and entry["killers"] == []
+    assert f"{op[0]} on L0-fixed survived and is not equivalent" in result["problems"]
+    assert entry["earlier_attempts"] == [
+        {
+            "job": "mut-early",
+            "failed_cells": [],
+            "signature_matches_reference": False,
+            "differing_cells": ["type_plain"],
+            "infra_cells_not_compared": [],
+        }
+    ]
+    # The outcome the same stream gets as the counting attempt: survived.
+    single = dict(copy.deepcopy(earlier), job="mut-single", batch=same["batch"])
+    single["slurm"] = same["slurm"]
+    result = acc.c3({**runs, op: [single]}, references)
+    assert not result["pass"] and result["mutants"][key]["outcome"] == "survived"
+    # An earlier-only clean kill (key_enter fails without an infrastructure failure, its
+    # stream differs) next to a counting attempt identical to the reference: not killed
+    # (kills are the counting attempt's) and not equivalent, so it survives.
+    killed_once = _timed_out(same, "mut-kill")
+    trial = _nth(killed_once, SHOT, "key_enter", 0)
+    trial["pass"], trial["reasons"], trial["events"] = False, ["events differ"], []
+    result = acc.c3({**runs, op: [dict(copy.deepcopy(same), earlier=[killed_once])]}, references)
+    entry = result["mutants"][key]
+    assert not result["pass"] and entry["outcome"] == "survived" and entry["killers"] == []
+    (row,) = entry["earlier_attempts"]
+    assert row["failed_cells"] == ["key_enter"] and row["differing_cells"] == ["key_enter"]
+    # An earlier attempt whose only differences are on cells with an infrastructure
+    # failure (a lost tap window, a screenshot not delivered): still equivalent.
+    lost = _timed_out(same, "mut-infra")
+    for cell, kind in (("type_plain", "screenshot"), ("key_enter", "tap_window")):
+        trial = _nth(lost, SHOT, cell, 0)
+        trial["pass"], trial["infra"], trial["reasons"] = False, [kind], [f"infra: {kind}"]
+        trial["events"], trial["text"] = [], "lost"
+    result = acc.c3({**runs, op: [dict(copy.deepcopy(same), earlier=[lost])]}, references)
+    entry = result["mutants"][key]
+    assert result["pass"], result["problems"]
+    assert entry["outcome"] == "equivalent"
+    (row,) = entry["earlier_attempts"]
+    assert row["differing_cells"] == [] and row["signature_matches_reference"] is False
+    assert row["infra_cells_not_compared"] == ["key_enter", "type_plain"]
+    # The same infrastructure failure next to a clean difference elsewhere: not equivalent.
+    _nth(lost, SHOT, "click_right", 0)["text"] = "b"
+    result = acc.c3({**runs, op: [dict(copy.deepcopy(same), earlier=[lost])]}, references)
+    assert not result["pass"] and result["mutants"][key]["outcome"] == "survived"
+    # An earlier attempt cut short compares only the cells it reached.
+    short = _timed_out(same, "mut-short")
+    short["sessions"] = short["sessions"][:1]
+    short["sessions"][0]["trials"] = short["sessions"][0]["trials"][:5]
+    result = acc.c3({**runs, op: [dict(copy.deepcopy(same), earlier=[short])]}, references)
+    assert result["pass"] and result["mutants"][key]["outcome"] == "equivalent"
+    # Kills are unchanged: a counting attempt that kills passes whatever its earlier
+    # attempt's streams were.
+    killer = runs[op][0]
+    rerun = dict(copy.deepcopy(killer), earlier=[_timed_out(earlier, "mut-early-2")])
+    result = acc.c3({**runs, op: [rerun]}, references)
+    assert result["pass"] and result["mutants"][key]["outcome"] == "killed"
+
+
+def test_load_reads_an_unparseable_run_file_as_missing(tmp_path):
+    """Decision D39: a receipt, cycle or record file a kill cut short (the driver and the
+    runner write them whole but not atomically) reads as missing instead of stopping the
+    analysis: an empty receipt, a session not run, a session without host snapshots. The
+    attempt cannot count, may be rerun, and its readable sessions' failures count."""
+    failing = {"pass": False, "infra": [], "reasons": ["text 'a' != 'b'"]}
+    passing = {"pass": True, "infra": [], "reasons": []}
+    cycle = {
+        "cycle": 0,
+        "setting": "screenshot",
+        "boot": {"t_screenshot_200": 20.0},
+        "trials": [{"seq": 0, "cell": "key_enter", "verdict": failing}],
+    }
+    run = _write_run(tmp_path, cycle, "job_id=701\ndriver_exit=0 labelled_containers_left=0\n")
+    receipt = {
+        "job_id": "701",
+        "summary": {"infra_gates_pass": True, "leaked_volumes": []},
+        "qcow2_unchanged": True,
+        "labelled_containers_left": [],
+    }
+    (Path(run) / "receipt.json").write_text(json.dumps(receipt))
+    cycles = Path(run) / "cycles"
+    snapshot = {"t": 1.0, "squeue_foreign": []}
+    (cycles / "record-00.json").write_text(
+        json.dumps({"host_before": snapshot, "host_after": dict(snapshot, t=2.0)})
+    )
+    intact = acc.load(run)
+    assert intact["unreadable"] == [] and not acc.counting_problems(intact)
+    assert intact["sessions"][0]["snapshots"][0] == snapshot
+    # A record cut inside a multi-byte character: the session loads without snapshots.
+    (cycles / "record-00.json").write_bytes(b'{"host_before": {"note": "\xc3')
+    loaded = acc.load(run)
+    assert loaded["unreadable"] == [os.path.join("cycles", "record-00.json")]
+    assert loaded["sessions"][0]["snapshots"] == [None, None]
+    assert any("unreadable run files" in p for p in acc.counting_problems(loaded))
+    # A second session whose cycle file was cut short, and an empty receipt file.
+    later = dict(cycle, cycle=1, trials=[{"seq": 0, "cell": "type_plain", "verdict": passing}])
+    (cycles / "cycle-01.json").write_text(json.dumps(later)[:40])
+    (cycles / "record-01.json").write_text(json.dumps({"host_before": snapshot}))
+    (Path(run) / "receipt.json").write_text("")
+    loaded = acc.load(run)
+    assert loaded["job"] == "701" and loaded["receipt"] == {}
+    assert [s["cycle"] for s in loaded["sessions"]] == [0]  # session 1 is reported as not run
+    assert sorted(loaded["unreadable"]) == sorted(
+        ["receipt.json", os.path.join("cycles", "cycle-01.json"),
+         os.path.join("cycles", "record-00.json")]
+    )  # fmt: skip
+    problems = acc.counting_problems(loaded)
+    assert any("infra_gates_pass is not true" in p for p in problems)
+    assert any("unreadable run files" in p for p in problems)
+    assert acc.failed_trials(loaded) == [("screenshot", 0, "key_enter")]
+    # As an earlier attempt it may be rerun, and its readable gating failure counts.
+    rerun = dict(campaign(a1_plan(43), job="709"), earlier=[loaded])
+    result = acc.a1({43: [rerun], 44: [campaign(a1_plan(44), job="710")]})
+    assert not result["pass"]
+    assert any("earlier attempt 701 has 1 failed" in p for p in result["problems"])
+    assert not any("counted and was rerun" in p for p in result["problems"])
+    # A receipt that parses but is not an object reads as missing too.
+    (Path(run) / "receipt.json").write_text("[]")
+    assert "receipt.json" in acc.load(run)["unreadable"]
