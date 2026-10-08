@@ -246,6 +246,63 @@ def test_section_27_records_d43_d45_and_their_development():
         assert phrase in section, phrase
 
 
+D43_BUNDLE = ROOT / "program/evidence/2026-10-08/q2-action-path-v2-d43"
+D45_BUNDLE = ROOT / "program/evidence/2026-10-08/q2-action-path-v2-d45"
+SHELL_CHORDS = ("chord_super_d", "chord_alt_f4", "chord_alt_tab", "chord_ctrl_alt_shift_r")
+
+
+def test_section_27_states_what_the_d45_repeat_equals_and_what_it_does_not():
+    """Decision D45's repeat (jobs 845-854) equals the D43 job it repeats (830-839) cell by
+    cell in PASS count, failure reasons and the number of trials with an event read without
+    its state (the bundles' ``*-development-runs.json``), but for one trial of job 851; it
+    does not in the number of events read without state, which counts each trial's events
+    the shell's grab held queued: section 12's report (``by_entry``) has 845 at 29 and 19 in
+    `chord_super_d` and `chord_alt_f4` against 830's 30 and 18. Section 27 (frozen) and the
+    bundle's README state the equality at the trial level and give the per-entry counts."""
+    d43 = json.loads((D43_BUNDLE / "d43-development-runs.json").read_text(encoding="utf-8"))
+    d45 = json.loads((D45_BUNDLE / "d45-development-runs.json").read_text(encoding="utf-8"))
+    differ = []
+    for old, new in zip(d43["runs"], d45["runs"], strict=True):
+        assert int(new["job"]) == int(old["job"]) + 15
+        assert set(old["cells"]) == set(new["cells"])
+        for cell, row in old["cells"].items():
+            for key in ("trials", "pass", "reasons", "state_not_observed"):
+                if row[key] != new["cells"][cell][key]:
+                    differ.append((new["job"], cell, key))
+    assert differ == [("851", "drag_vertical", "pass"), ("851", "drag_vertical", "reasons")]
+
+    report = json.loads((D45_BUNDLE / "section12-report.json").read_text(encoding="utf-8"))
+    entries = {job: report["jobs"][job]["by_entry"] for job in ("830", "845")}
+    events = {job: [entries[job][c]["events_read_without_state"] for c in SHELL_CHORDS]
+              for job in entries}  # fmt: skip
+    for job in entries:
+        assert [entries[job][c]["trials_read_without_state"] for c in SHELL_CHORDS] == [10] * 4
+        assert sum(events[job]) == 108
+    assert events["830"] != events["845"]
+
+    text = PREREG.read_text(encoding="utf-8")
+    section = " ".join(text.split(SECTION_27, 1)[1].split())
+    shown = section.split("**Development repeated at `c74eae0`**", 1)[1]
+    shown = shown.split("What they show. ", 1)[1].split("**What D43 and D45 leave.**", 1)[0]
+    assert shown.startswith(
+        "Every cell's PASS count, failure reasons and number of trials with an event read "
+        "without its state equal those of the D43 job it repeats, but for one trial of job 851."
+    )
+    a, b, c, d = events["845"]
+    stated = (
+        f"job 845 read {sum(events['845'])}, as job 830 did, but per entry {a} in "
+        f"`chord_super_d`, {b} in `chord_alt_f4`, {c} in `chord_alt_tab` and {d} in "
+        "`chord_ctrl_alt_shift_r` (830: {}, {}, {} and {}), in all ten trials of each."
+    ).format(*events["830"])
+    assert stated in shown
+    readme = (D45_BUNDLE / "README.md").read_text(encoding="utf-8")
+    for doc in (section, " ".join(readme.split())):
+        assert "failure reasons and events read without" not in doc
+    for cell, old, new in zip(SHELL_CHORDS, events["830"], events["845"], strict=True):
+        assert f"| `{cell}` | {old} | {new} | 10 |" in readme, cell
+    assert "| all four | 108 | 108 | 40 |" in readme
+
+
 # A run of eight words repeated inside one prose paragraph is how a botched edit shows: the
 # D43 pass (31942e8) left a stub and a duplicated tail in section 26 ("...(none) neither
 # would. A slow answer would fail an L0-fixed trial whose chord (none) neither would. Under

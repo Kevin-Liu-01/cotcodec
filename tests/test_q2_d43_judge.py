@@ -773,3 +773,38 @@ def test_section_12_reports_every_event_read_without_its_state(job):
         for cell, n in Counter(cell for cell, _ in events).items()
     }  # fmt: skip
     assert set(report["by_entry"]) == set(SHELL_GRAB_KEY)
+
+
+def test_the_committed_section_12_report_is_the_analysis_on_the_records():
+    """``section12-report.json`` (the analysis run on the host over the raw run directories)
+    holds, for jobs 830 and 845, what the analysis computes from the extracted records: the same
+    per-entry counts and the same events in the same entries. Job 845 repeats 830 in the trials
+    with an event read without its state (all ten of each shell chord) but not in the events:
+    29 in `chord_super_d` and 19 in `chord_alt_f4` against 30 and 18, 108 in both, as section
+    27 and the bundle's README state."""
+    committed = json.loads(
+        (ROOT / "program/evidence/2026-10-08/q2-action-path-v2-d45/section12-report.json")
+        .read_text(encoding="utf-8")
+    )["jobs"]  # fmt: skip
+
+    def events(trials: list[dict]) -> list[str]:
+        return sorted(json.dumps([t["cell"], t["events"]], sort_keys=True) for t in trials)
+
+    by_entry = {}
+    for job in ("830", "845"):
+        report = acceptance.state_not_observed_report(
+            [_c3_attempt(r, r["window"]) for r in _dev(job)]
+        )
+        assert report["by_entry"] == committed[job]["by_entry"], job
+        assert events(report["read_without_state"]) == events(committed[job]["read_without_state"])
+        assert committed[job]["no_processed_press_before"] == []
+        by_entry[job] = report["by_entry"]
+    for job in ("830", "845"):
+        trials = {cell: e["trials_read_without_state"] for cell, e in by_entry[job].items()}
+        assert trials == dict.fromkeys(SHELL_GRAB_KEY, 10)
+        assert sum(e["events_read_without_state"] for e in by_entry[job].values()) == 108
+    differ = {c: (by_entry["830"][c]["events_read_without_state"],
+                  by_entry["845"][c]["events_read_without_state"])
+              for c in SHELL_GRAB_KEY
+              if by_entry["830"][c] != by_entry["845"][c]}  # fmt: skip
+    assert differ == {"chord_super_d": (30, 29), "chord_alt_f4": (18, 19)}
