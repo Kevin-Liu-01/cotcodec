@@ -125,6 +125,20 @@ class EpisodeConfig:
         return cls(**known)
 
 
+def strip_stdout(replies: Any) -> list[dict[str, Any]]:
+    """Guest setup replies as the episode record keeps them: status, returncode and stderr
+    tail, without the stdout tail, which can print task fixtures' stored credentials (a
+    postconfig decrypts a Thunderbird test profile); the capture on the host keeps it
+    (section 16)."""
+    return [{k: v for k, v in dict(r).items() if k != "output_tail"} for r in replies or []]
+
+
+def for_record(block: Any) -> Any:
+    if isinstance(block, dict) and "replies" in block:
+        return {**block, "replies": strip_stdout(block["replies"])}
+    return block
+
+
 def sha256_json(value: Any) -> str:
     return hashlib.sha256(
         json.dumps(value, sort_keys=True, separators=(",", ":"), ensure_ascii=False).encode()
@@ -264,7 +278,7 @@ class Runner:
             t = self.clock()
             try:
                 session = self.session_factory(self.cfg, self.task)
-                self.record["setup"] = session.setup()
+                self.record["setup"] = for_record(session.setup())
             except agents.InfraLoss:
                 raise
             except Exception as exc:  # noqa: BLE001 - any setup failure is a setup loss
@@ -364,7 +378,7 @@ class Runner:
             if probe is None:
                 raise RuntimeError("this session cannot probe the postconfig")
             try:
-                self.record["postconfig_probe"] = probe()
+                self.record["postconfig_probe"] = for_record(probe())
             except Exception as exc:  # noqa: BLE001 - a lost transport is a transport loss
                 if is_transport_error(exc):
                     raise agents.InfraLoss("transport", f"postconfig probe: {exc}") from exc
@@ -596,7 +610,7 @@ class Runner:
         replies = getattr(session, "evaluate_replies", None)
         if replies is None:
             return
-        self.record["postconfig_replies"] = list(replies)
+        self.record["postconfig_replies"] = strip_stdout(replies)
         self.record["postconfig_failures"] = sum(1 for r in replies if failed(r))
 
 

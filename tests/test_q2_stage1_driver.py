@@ -801,6 +801,9 @@ def test_setup_replies_are_recorded_per_step(guest, osworld, tmp_path):
     ]
     capture = json.loads((out / "capture" / "capture.json").read_text())
     assert len(capture["setup_replies"]) == 3
+    # stdout tails stay in the capture on the host, never in the episode record (section 16)
+    assert all("output_tail" not in r for r in replies + record["postconfig_replies"])
+    assert all(r["output_tail"] == "ok\n" for r in capture["setup_replies"])
 
 
 @pytest.mark.parametrize(("status", "rc", "shown"), [(500, None, "HTTP 500"), (200, 1, "rc=1")])

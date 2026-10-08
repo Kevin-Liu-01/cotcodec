@@ -597,11 +597,12 @@ def offline_exclusion_reasons(record: Mapping[str, Any]) -> list[str]:
             for installer, target, network in install_targets(step.get("argv")):
                 if network:
                     reasons.append(f"(a) {phase} step {step['step']}: {installer} install {target}")
-    if record.get("status") != "setup_ok":
+    failures = list(setup.get("failures") or [])
+    for failure in failures:
+        reasons.append(f"(b) {str(failure)[:200]}")
+    if record.get("status") != "setup_ok" and not failures:
         detail = record.get("infrastructure_detail") or record.get("infrastructure_type")
         reasons.append(f"(b) setup {record.get('status')}: {str(detail)[:200]}")
-    for failure in setup.get("failures") or []:
-        reasons.append(f"(b) {str(failure)[:200]}")
     for item in record.get("diagnostics") or []:
         if item.get("expect") and not item.get("found"):
             reasons.append(f"(b) diagnostic {' '.join(item['argv'])} lacks {item['expect']}")
@@ -643,7 +644,25 @@ def offline_exclusions(
 
 #: The offline-setup exclusion's result (section 5.4): task id -> reasons, computed by
 #: ``offline_exclusions`` from G0 item 5's second-pass records (a test recomputes it).
-OFFLINE_EXCLUDED: dict[str, tuple[str, ...]] = {}
+OFFLINE_EXCLUDED: dict[str, tuple[str, ...]] = {
+    '26150609-0da3-4a7d-8868-0faf9c5f01bb': (
+        '(a) setup step 2: pip install pygame',
+        "(b) setup step 2 (command): /setup/execute HTTP 500 rc=None Command '['p"
+        "ip', 'install', 'pygame']' timed out after 120 seconds",
+    ),
+    '982d12a5-beab-424f-8d38-d2a48429e511': (
+        '(b) setup step 1 (command): /setup/execute HTTP 200 rc=127 /bin/sh: 1: j'
+        'q: not found',
+    ),
+    'e2b5e914-ffe1-44d2-8e92-58f8c5d92bb2': (
+        '(a) setup step 1: code install ms-python.python',
+        '(b) setup step 1 (command): /setup/execute HTTP 200 rc=1 Error while ins'
+        'talling extensions: getaddrinfo EAI_AGAIN marketplace.visualstudio.com\ng'
+        'etaddrinfo EAI_AGAIN marketplace.visualstudio.com',
+        '(b) diagnostic code --list-extensions --show-versions lacks (?im)^ms-pyt'
+        'hon\\.python@',
+    ),
+}  # fmt: skip
 
 
 def eligible_pool(
@@ -775,8 +794,8 @@ A0A_SESSION = "S1"
 FILL_BLOCK_EPISODES = 32  # section 5.6: 8 tasks x 2 harnesses x 2 reruns
 # G0 item 5's records that decide the offline-setup exclusion and the dev tasks, and their
 # SHA-256 as the registration states it; ``load_setup_check`` refuses any other file.
-SETUP_CHECK_RECORDS = "program/evidence/2026-10-08/q2-stage1-g0/setup-check/setup.jsonl"
-SETUP_CHECK_SHA256 = "51fa959aa74fa94ae807f5fb7882c1e6ef7760e832025658c16abdfdaec5b16e"
+SETUP_CHECK_RECORDS = "program/evidence/2026-10-08/q2-stage1-g0/setup-check-v2/setup.jsonl"
+SETUP_CHECK_SHA256 = "97e792f72a52ff3a380f74dd52ca57c85ed0e496d0e0faf90d685d9d8a94a4ca"
 # G0 item 5's second pass (setup-check-v2): diagnostics run in the guest after a task's setup.
 # ``expect`` is the pattern the output must show for the step's product to count as present
 # (rule (b) of section 5.4): the two VS Code tasks whose setup installs an extension.

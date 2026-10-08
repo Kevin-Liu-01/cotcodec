@@ -205,11 +205,47 @@ S1a does **not** answer:
      diagnostics after setup (`plan.SETUP_DIAGNOSTICS`: `code --list-extensions` for
      `53ad5833` and `e2b5e914`), and each task's postconfig steps on the untouched initial
      state (no getter and no metric runs, so no verdict exists); a slot that fails is
-     re-queued once. Result: TBD (submitted after this rule was committed).
+     re-queued once. Ran as job 1011 (2026-10-08, after the rule was committed; CPU only,
+     8 CPUs, one VM at a time, source `8b4a874`, 87 minutes): 148 tasks in 151 slots (the 3
+     that failed were re-queued and failed again the same way); 145 setups clean; 439 setup
+     and 241 postconfig replies recorded; cold boot median 18.3 s, setup median 11.4 s
+     (longest 129 s, `26150609`), slot median 32 s; no model call, no agent action, no
+     verdict, no container left. Records:
+     `program/evidence/2026-10-08/q2-stage1-g0/setup-check-v2/setup.jsonl` (SHA-256
+     `97e792f72a52ff3a380f74dd52ca57c85ed0e496d0e0faf90d685d9d8a94a4ca`,
+     `plan.SETUP_CHECK_SHA256`; the lane and both renderers refuse any other file). The
+     committed copy drops the replies' stdout tails, because one postconfig prints the
+     Thunderbird test profile's stored credentials; the host's original keeps them (SHA-256
+     `da37184134df2d06ff19693c4a6f5411972762b6d22d9f25199fd672cb62b0c6`), and the exclusion
+     rule reads none of them. Findings:
+     - `26150609` (base before the re-draw): step 2, `pip install pygame`, HTTP 500 (timed
+       out after 120 s) on both attempts;
+     - `e2b5e914`: step 1, `code --install-extension ms-python.python`, HTTP 200 with
+       returncode 1 (`getaddrinfo EAI_AGAIN marketplace.visualstudio.com`), and `code
+       --list-extensions` lacks the extension;
+     - `982d12a5` (base before the re-draw; new): step 1 sets VS Code's colour theme through
+       `jq`, which the guest image lacks (`/bin/sh: 1: jq: not found`, returncode 127, both
+       attempts), so the task would start without its initial theme. The first pass could
+       not see this;
+     - `53ad5833`: the local `.vsix` installs offline (`undefined_publisher.eval@0.0.1` is
+       listed) and its setup is clean;
+     - `d38192b0`: its postconfig `pip install` of the cached wheel succeeds offline
+       (returncode 0); its next postconfig step, the attachment check, exits 2 on the initial
+       state ("Attachment not detected!"), which is the agent's part;
+     - postconfig steps that fail on the initial state because they read what the agent must
+       produce, reported and not judged: `415ef462` (dev; `diff` of a file the agent must
+       save), `9bc3cc16` (`ls` of a backup the agent must make) and `d38192b0` (above).
+
+     Every one of the 32 dev tasks completes cleanly, so A0a's dev tasks are unchanged: the
+     first V/4 of the seeded dev order, `6a33f9b9`, `bf4e9888`, `d681960f`, `4172ea6e` and, at
+     V = 20, `12382c62`.
    - **Exclusion.** Section 5.4's offline-setup exclusion (rules (a)-(c)), registered and
      committed before the second pass ran, is applied once to its records, before any GPU
      episode and before the draw (`plan.offline_exclusions`; `plan.OFFLINE_EXCLUDED`).
-     Excluded: TBD (from the second pass).
+     **Excluded: `26150609` (rules (a), (b)), `982d12a5` (rule (b)) and `e2b5e914` (rules
+     (a), (b)),** all pool tasks; no dev task. Two of them were in the K = 32 base, so the
+     base is re-drawn on the eligible pool of 113 tasks (section 5.4); K_base's floor of 32 is
+     unchanged.
    - **Decision on `26150609` (the audit's option (b)).** The question the first draft left
      open is decided by the rule, not by judgment: its setup installs a package from the
      network (rule (a)), so it leaves the pool before the draw, and the base is re-drawn by
@@ -327,8 +363,8 @@ S1a does **not** answer:
 10. **Plan file.** `scripts/render_q2_stage1_plan.py` (committed and tested,
     section 20) writes the draw, the seeded orders, the anchor order, the
     engine and sampling arguments and, at the freeze, the constants and the job
-    list. Draft plan SHA-256 (K = 32, no constants):
-    `7d13e439f93f1d556f4cdfd6fd8d95f846766ebae67e6c467986ea0b2654da03`. Frozen plan SHA-256: TBD.
+    list. Draft plan SHA-256 (K = 32 on the eligible pool, no constants):
+    `4679ac954847e3eab13973300993befd1af1f46938a89b714706ea792fb1bd21`. Frozen plan SHA-256: TBD.
     Every registered VM job's lane manifest is rendered from the plan by
     `scripts/render_q2_stage1_manifest.py` (section 5.5), and the lane refuses one
     whose slots differ.
@@ -497,15 +533,17 @@ The full list is `harness/q2/action_path/harness_design_diffs.md`.
 
   Other postconfig steps are not judged on the initial state: they act on the
   agent's final state (a window the agent must open, a file it must write), so
-  their failure there can be the agent's. **Eligible pool:** TBD (from the second pass).
-  The draw below runs on the eligible pool; the 32-task floor (section 6.2) is
-  unchanged.
+  their failure there can be the agent's. **Eligible pool (113 tasks):** the pool
+  minus `26150609`, `982d12a5` and `e2b5e914` (G0 item 5): gimp 8, calc 28,
+  impress 24, writer 12, multi_apps 23, thunderbird 7, vlc 6, vs_code 5. The draw
+  below runs on the eligible pool; the 32-task floor (section 6.2) is unchanged.
 - **Base set (K_base = 24 or 32, by the rule of section 6.2).**
   - Allocation: plain largest-remainder apportionment over domains, ties
-    broken by domain name. At K = 32: gimp 2, calc 8, impress 7, writer 3,
-    multi_apps 6, thunderbird 2, vlc 2, vs_code 2.
-  - Draw: within each domain, the first n_d ids of `sorted(ids)` shuffled by
-    `random.Random(f"q2-stage1a:base:42:{domain}")` (`plan.draw_tasks`).
+    broken by domain name. At K = 32 on the eligible pool: gimp 2, calc 8,
+    impress 7, writer 3, multi_apps 7, thunderbird 2, vlc 2, vs_code 1.
+  - Draw: within each domain, the first n_d ids of the eligible pool's
+    `sorted(ids)` shuffled by `random.Random(f"q2-stage1a:base:42:{domain}")`
+    (`plan.draw_tasks`).
   - The K = 24 and K = 16 bases are nested in the K = 32 base.
   - **The base is fixed at the freeze and is the primary analysis set for
     every estimand and every decision rule.**
@@ -513,12 +551,17 @@ The full list is `harness/q2/action_path/harness_design_diffs.md`.
   `random.Random("q2-stage1a:ext:42")`, are cut into blocks of 8; the last
   block may be shorter. Extension blocks enter only the registered secondary
   analysis set (section 5.6).
-  - K = 32 base: `035f41ba 0a211154 0bf05a7d 185f29bd 26150609 2cd43775 358aa0a7 3a93cae4 4188d3a4 4f07fbe9 53ad5833 5df7b33a 66399b0d 70bca0cc 72b810ef 7a4deb26 7efeb4b1 881deb30 982d12a5 9b7bc335 9cf05d24 a01fbce3 c59742c0 d06f0d4d dfac9ee8 e2dd0213 e8172110 ecb0df7a edb61b14 f178a4a9 f9584479 fba2c100`;
-    84 extension tasks in 10 blocks of 8 and one of 4. The K = 24 base is the
-    bundle's `analysis/task-draw-K24.json`.
+  - K = 32 base: `02ce9a50 035f41ba 0a211154 0bf05a7d 185f29bd 2cd43775 358aa0a7 4188d3a4 47f7c0ce 4f07fbe9 5df7b33a 66399b0d 6ed0a554 70bca0cc 72b810ef 7a4deb26 7efeb4b1 81c425f5 9b7bc335 9cf05d24 a01fbce3 c59742c0 d06f0d4d dfac9ee8 e2dd0213 e8172110 eb303e01 ecb0df7a edb61b14 f178a4a9 f9584479 fba2c100`;
+    81 extension tasks in 10 blocks of 8 and one of 1. The re-draw replaced
+    `26150609`, `3a93cae4`, `53ad5833`, `881deb30` and `982d12a5` with `02ce9a50`,
+    `47f7c0ce`, `6ed0a554`, `81c425f5` and `eb303e01` (two exclusions change the
+    multi_apps and vs_code lists the seeded shuffles run on). The K = 24 and K = 16
+    bases nest in it. The proposal bundle's `analysis/task-draw-K*.json` are the
+    same procedure on the 116-task pool, before the exclusion.
 - **Dev tasks.** The dev split (`splits.json`, 32 tasks), sorted, shuffled by
   `random.Random("q2-stage1a:dev:42")`, **filtered** to tasks whose setup
-  completes offline (G0 item 5), **then** the first V/4 taken for A0a (5 at
+  completes offline and that the offline-setup exclusion keeps (G0 item 5's
+  second pass; all 32 do), **then** the first V/4 taken for A0a (5 at
   V = 20, 4 at V = 16) and the first 4 for A0b (`plan.dev_tasks`).
 
 ### 5.5 Sessions, blocks, reruns, order, concurrency
@@ -1388,6 +1431,10 @@ sessions x 2 reruns is justified by power (section 10), not by habit.
 - Final-state captures (files from the third-party file cache), screenshots,
   raw model replies and step logs stay on the host's persistent run root (or,
   copied, in the program's private archive), never in `program/evidence/`.
+- Episode records keep each guest setup and postconfig reply's status,
+  `returncode` and stderr tail, never its stdout tail: one task's postconfig
+  prints the stored credentials of a Thunderbird test profile from the file
+  cache. The stdout tails stay in the capture on the host.
 - `program/evidence/` receives metadata, verdicts, counts, hashes, receipts and
   the analysis reports.
 - NVML samples keep the GPU index; the GPU UUID is replaced by its SHA-256
@@ -1427,7 +1474,8 @@ floor.
 7. Greedy decoding (temperature 0.0, top_p 0.9, top_k −1) for both, imposed
    on H-GA.
 8. Engine settings exactly the cost card's; the anchor's variant of section 4.
-9. Pool: confirm split minus the four K1 raw-gold failures (116 tasks). Base
+9. Pool: confirm split minus the four K1 raw-gold failures (116 tasks), minus the
+   offline-setup exclusions of item 27 (113 eligible tasks). Base
    by the A0 rule (24 or 32; its floor is item 18), drawn by proportional
    largest-remainder apportionment.
 10. Two sessions per size, at least 12 h apart, each with 2 within-session
@@ -1482,9 +1530,9 @@ ruling); an open one keeps the freeze guard refusing this file.
   S1a is read without the D11 runtime check (the anchor is UNAVAILABLE by G0 item 9.6, so
   A1 runs with every output labelled "not externally anchored" and nothing replaces the
   question file's Holo3 kill criterion): TBD
-- Kevin: G0 item 5's decisions on the offline setup: base task `26150609` and pool task
-  `e2b5e914` leave the pool by rule (a) (option (b) of the audit for `26150609`), and the
-  second pass's outcome for `53ad5833` and `d38192b0` (section 5.4): TBD
+- Kevin: G0 item 5's decisions on the offline setup: `26150609` (option (b) of the
+  audit), `982d12a5` and `e2b5e914` leave the pool by the offline-setup exclusion, and
+  `53ad5833` and `d38192b0` stay (section 5.4; the base re-drawn on 113 tasks): TBD
 - Program sign-off of items 1-16 and 19-27 (decision id): TBD
 
 ## 19. Disclosures and known limitations
@@ -1543,7 +1591,7 @@ ruling); an open one keeps the freeze guard refusing this file.
   purpose, runs offline where the public runs were online, and needs a
   remote-code decision. It runs only at N* >= 24.
 - **Task overlap and generality.** The tasks overlap the mutation study, on
-  purpose. Results cover 24-116 web-free tasks and one interface.
+  purpose. Results cover 32-113 web-free tasks that run offline, and one interface.
 - **Recorded IDs.** No host address is recorded; GPU UUIDs are hashed
   (section 16).
 
@@ -1561,7 +1609,7 @@ row (the test fails otherwise), and the freeze pins them.
 | `harness/q2_stage1/estimators.py` | `b43334b0511d17505a24893d65ce79cd55a58351a2a056075ed5b002007d36b3` |
 | `harness/q2_stage1/records.py` | `468bff7150d5d462376cbabf12af8f558b9326e8297f2ef52031cc10b28679e4` |
 | `harness/q2_stage1/rules.py` | `63ed09b0362595e85ac65c9bd29b090dc8b1a3a5e4ab3ace559243a82389d8b0` |
-| `harness/q2_stage1/plan.py` | `bd15b07b40295de56adc985f6df317fc73e82eeeedff73f08d189e34649e785a` |
+| `harness/q2_stage1/plan.py` | `1f9c77f758ed590d99597488219cc49fae0e0f3c53567d628d14382346fc2187` |
 | `harness/q2_stage1/analysis.py` | `4a33aea8dbda09b759faa5f2745e32a60a06a0e75d9aceadc5f64c2380f5a7fb` |
 | `scripts/render_q2_stage1_manifest.py` | `50344cba078d2d8129b26b43d313c0c29a2ebcb64bf0657faba9b6d63f6ee632` |
 | `scripts/render_q2_stage1_plan.py` | `44825c58dfed70f60f37d7afb55de5c59de486c4d000000f05c1261adf902341` |
@@ -1571,7 +1619,7 @@ row (the test fails otherwise), and the freeze pins them.
 | `program/proposals/evidence/2026-10-08-q2-stage1-rescoped/analysis/cost_s1a.json` | `843a123b2d8e98e34d9f20388edc132e673ba9c93b01645c7668c98d2d80e144` |
 | `program/proposals/evidence/2026-10-08-q2-stage1-rescoped/analysis/sim_s1a_v2.py` | `19574910a06026b0b042aaf251e0988a72ed0484fa5833a8ca7597e3ba646a4c` |
 | `program/proposals/evidence/2026-10-08-q2-stage1-rescoped/analysis/sim_s1a_v2.json` | `e3c52beb5c6160e5e364ef307fb3c6353c226ffb7b762d9cc534f8fc86239d9e` |
-| `harness/q2_stage1/driver.py` | `46a036fffa84635fdba25bc2ae71c985315bde3e1fd995a083ad122aa43e19f4` |
+| `harness/q2_stage1/driver.py` | `3376678eb020c9a947f9c4fd71e333ae9b6ed9d8bac830ef5d7bcb85757fa9c2` |
 | `harness/q2_stage1/agents.py` | `8e72acbd79645b45ccd95cd213d5f8564d7114af538561e28219c12cf0eb0ba1` |
 | `harness/q2_stage1/engine.py` | `3e0942349a8fc5b2aef5294a28c029ca318acff88f4cd897df274bb6e3b51bf9` |
 | `harness/q2_stage1/bridge.py` | `7083f728511477e8f32ed90a026290e6982ae04c9d5f8f61274112f5724d0550` |
@@ -1783,7 +1831,7 @@ Everything is CPU-only; no GPU job and no GPU episode ran.
 
 | Item | Finding (short) | Disposition | Where |
 |---|---|---|---|
-| A-B1 | The setup check cannot see a step that fails inside the guest (the guest answers `/setup/execute` with HTTP 200 and a `returncode`; the pinned code only logs a reply that is not 200; `setup.jsonl` kept no per-step result). `e2b5e914` needs the network; `53ad5833`'s `.vsix` install and `d38192b0`'s postconfig `pip install` were never checked; "task setup fails" was undefined for an in-guest failure; section 22 said no other task needs the network | Fixed: `osworld_live` records every guest `/setup/*` reply per step (status, `returncode`, stderr tail) in the episode record (`setup.replies`, `postconfig_replies`) and the capture; section 7.2 defines a failed task setup (a step that raises, or a reply that is not 200 or carries a non-zero `returncode`) as a `task_setup` loss, with no deterministic offline failure tolerated in its place; a failed postconfig reply is recorded, not a loss. Section 5.4's offline-setup exclusion (rules (a)-(c)) was registered and committed (`8b4a874`) before G0 item 5's second pass ran (job 1011, with the postconfig on the initial state and `code --list-extensions` for `53ad5833` and `e2b5e914`); the wrong sentence is corrected. The code landed before A0a, so no A0 repeat is owed | 3.1 item 5, 5.4, 7.2, 7.3, 22; `osworld_live.py`, `driver.py`, `lane.py`, `plan.py` |
+| A-B1 | The setup check cannot see a step that fails inside the guest (the guest answers `/setup/execute` with HTTP 200 and a `returncode`; the pinned code only logs a reply that is not 200; `setup.jsonl` kept no per-step result). `e2b5e914` needs the network; `53ad5833`'s `.vsix` install and `d38192b0`'s postconfig `pip install` were never checked; "task setup fails" was undefined for an in-guest failure; section 22 said no other task needs the network | Fixed: `osworld_live` records every guest `/setup/*` reply per step (status, `returncode`, stderr tail) in the episode record (`setup.replies`, `postconfig_replies`; stdout tails only in the capture on the host, section 16); section 7.2 defines a failed task setup (a step that raises, or a reply that is not 200 or carries a non-zero `returncode`) as a `task_setup` loss, with no deterministic offline failure tolerated in its place; a failed postconfig reply is recorded, not a loss. Section 5.4's offline-setup exclusion (rules (a)-(c)) was registered and committed (`8b4a874`) before G0 item 5's second pass ran (job 1011, with the postconfig on the initial state and `code --list-extensions` for `53ad5833` and `e2b5e914`): it confirms `26150609` and `e2b5e914`, finds base task `982d12a5`'s setup failing for want of `jq` in the guest, and clears `53ad5833` and `d38192b0`; the rule excludes the first three and the base is re-drawn on 113 tasks. The wrong sentence is corrected. The code landed before A0a, so no A0 repeat is owed | 3.1 item 5, 5.4, 7.2, 7.3, 22; `osworld_live.py`, `driver.py`, `lane.py`, `plan.py` |
 | A-B2 | Base task `26150609`'s offline failure left open, and the freeze guard could not see it | Fixed, the audit's option (b), by rule rather than judgment: rule (a) removes it before the draw (its setup installs `pygame` from the network); the base is re-drawn by the registered seeded procedure on the eligible pool; Kevin's sign-off is a slot in section 18 | 3.1 item 5, 5.4, 18 |
 | A-B3 | DR2 checked the Near-equivalent bound on the two-size mean of pi when DR1 drops 4B (half of pi_9B when 4B is at the floor) | Fixed: `analysis.analyse_array` applies section 9 item 4's rule, so DR2's bound, DR5's share and the reported pi_small are pi_9B's when DR1 drops 4B (`pi_mean_4B_9B` beside it); a test with 4B at the floor checks the bound DR2 receives | 9, 11; `analysis.py` |
 | A-B4 | A0a's inputs to K_base and the freeze typed by hand; L_A0a undefined; only scored A0a episodes counted, which drops the longest | Fixed: `plan.a0a_measurements` derives every input from A0a's lane run directory and its GPU job's bridge directory (slot occupancy of all V slots, L_A0a, both gates over the same V episodes, the files' digests); the lane records the GPU job's Slurm start (`scontrol`) and its first dispatch, the bridge its first forwarded request; L_A0a runs from the Slurm start to the first dispatch (the slot already holds the first boot, setup and settle); any cut or undispatched A0a slot, or fewer than V completed, sends the draft back to review; the plan renderer's freeze mode reads the records (its hand-typed `--constants` is gone) | 3.2, 6.2; `plan.py`, `bridge.py`, `lane.py`, `render_q2_stage1_plan.py` |
@@ -1817,5 +1865,5 @@ Non-blocking items:
 Open slots until the freeze (each carries the placeholder the guard refuses): the status
 line; G0 item 1 (accepted attempt) and item 10 (frozen plan); section 4's executor row;
 section 6.2's constants other than the anchor branch; section 18's three sign-offs; section
-21's v2 acceptance evidence; G0 item 5's second-pass result and exclusions, and section 5.4's eligible pool.
+21's v2 acceptance evidence.
 
