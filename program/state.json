@@ -330,7 +330,10 @@
     "serving-throughput-probe-v1",
     "serving-throughput-probe-v2",
     "q3-k1-throughput-probe-v1",
-    "q3-dense-headroom-precheck-v1"
+    "q3-dense-headroom-precheck-v1",
+    "q2-action-path-v1",
+    "q2-action-path-v1-inputs",
+    "q2-action-path-v1-executor"
   ],
   "infrastructure": {
     "serving_probe": "v1 and v2 done (1.15 GPU-h): cu129 vLLM works on R570; Q1 sampling within cap; Q2 ladder needs rescoping",
@@ -486,6 +489,27 @@
       "date": "2026-10-07",
       "outcome": "X1 pass; Q2 rescope-before-gauntlet (431.5 GPU-h projected); per-cell 9B H1 screenshot 0.75, a11y 1.13, H2 thinking 24.1/29.3 GPU-h",
       "evidence": "program/evidence/2026-10-07/serving-throughput-probe-v2/README.md"
+    },
+    {
+      "registration": "q3-dense-headroom-precheck-v1",
+      "date": "2026-10-08",
+      "label": "INCOMPLETE",
+      "outcome": "no combined read: the summariser rejects every receipt (null Slurm job id) and the 4B lane (job 730) ran CPU-bound, ignored SIGUSR1 and was void; the 0.6B lane (job 727) is valid: smoke 452 REPRODUCED, NOT_VIABLE (H1_CX 12.25, 99% interval 8.98-15.59; H2 FAIL); successor v2 under D36",
+      "evidence": "program/evidence/2026-10-08/q3-dense-headroom-precheck/README.md"
+    },
+    {
+      "registration": "q2-action-path-v1",
+      "date": "2026-10-08",
+      "label": "INVALID (C2)",
+      "outcome": "C2 (job 768, L0-raw, 500 trials, counted) failed: chord_super_d predicted to pass, failed 5/5 (d press without Mod4 within 1 ms of Super_L); 99 of 100 entries as predicted; C1, C3 and A1-A7 not run; successor v2 under D40",
+      "evidence": "program/evidence/2026-10-08/q2-action-path-acceptance/README.md"
+    },
+    {
+      "registration": "q1-stage0-gate-validation (gauntlet wave 1, not a registration)",
+      "date": "2026-10-08",
+      "label": "HONEST EXIT",
+      "outcome": "score 45 (47 and 45); 3/3 refuters refuted; fatal defect F1: the TF32-admissible audit metric cannot separate correct TF32 matmul/conv outputs from destroyed ones on most L2 problems; Stage 0 withdrawn (D41)",
+      "evidence": "program/gauntlet/2026-10-08-q1-stage0-gate-validation.jsonl"
     }
   ]
 }
