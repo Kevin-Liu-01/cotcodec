@@ -756,3 +756,22 @@ Append-only. Newest entries at the bottom.
   `9d885227`, inputs `5d257de7`, executor `2c26e7b4`); the repository ledger
   is unchanged (7 rows).
 - Nothing is frozen and nothing is pushed. No GPU, no VM job.
+
+## 2026-10-07 — Correction to the D33 entry's re-read of runs 694 and 703 (not frozen)
+
+- The entry above says that, read as a ladder rung, the gating failures of
+  development runs 694 and 703 drop to `drag_short` alone. They do not. The
+  re-read script skipped entries with no counted trial, but the rung rule
+  (`acceptance.rung`) does not read a gating entry with no counted trial as
+  passing. Both of `chord_ctrl_c`'s trials in each run are excused, so the
+  gating entries not PASS stay `chord_ctrl_c` and `drag_short` (recomputed on
+  the host with `rung`'s own reading at `acceptance.py` `cb38018d`). Its two
+  excused trials are within a rung's limit. A scored rung cannot reach that
+  case: each entry runs at least 12 trials and at most two may be excused.
+  Main preregistration section 20, item 8, now says this, and lists the
+  reset-observation test of `4831a87` among the tests. Every other re-read
+  result stands.
+- The main draft's SHA-256 is now `683626ec` (it was `9d885227` in the
+  entry above); a fresh freeze of all three drafts into a scratch copy of
+  the ledger verified with the chain intact, and the repository ledger is
+  unchanged (7 rows). No code changed.
