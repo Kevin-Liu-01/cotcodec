@@ -1,0 +1,10 @@
+overlay job 566 submitted 2026-10-07T19:25:17Z git=ba840b4
+args-doctor job 573 (CPU) 2026-10-07T19:27:14Z
+open rater dev smoke job 582 submitted 2026-10-07T19:29:19Z image=6bc53f50 git=ba840b4
+overlay job 646 submitted 2026-10-07T21:48:43Z git=4b9b45d
+args-doctor job 647 (CPU) 2026-10-07T21:49:56Z image=0fe3f452 git=4b9b45d
+open rater dev smoke v2 job 650 submitted 2026-10-07T21:52:36Z image=0fe3f452 git=4b9b45d
+overlay job 686 submitted 2026-10-07T23:36:48Z git=84f23e0
+args-doctor job 687 (CPU) 2026-10-07T23:38:22Z image=33fb48b7 git=84f23e0 model-dir=qwen36-meta
+dev-mutants-v7 scoring job 683 cancelled 2026-10-07T23:39:57Z: build 682 lost 2 of 17 targets (af23762e, e4ef0baf) to a UNO bridge DisposedException in the initial save; rerun as dev-mutants-v8
+open rater dev rerate v3 job 702 submitted 2026-10-08T00:00Z image=33fb48b7 git=84f23e0 packets=4a56ba5e (dev-audit-smoke-v3) minutes=20 cap=0.334

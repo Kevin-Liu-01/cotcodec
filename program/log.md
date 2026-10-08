@@ -396,3 +396,37 @@ Append-only. Newest entries at the bottom.
   vLLM teardown and overran its 0.1 GPU-h cap (0.11 by Slurm); a fix exists
   but is validated on CPU only. The lane leaves a container alive if Slurm
   kills the batch script at the time limit; to be fixed.
+
+## 2026-10-07 — Q2 evaluator-mutation: third review of the fourth draft answered under D27 (fifth draft, not frozen)
+
+- Review 3 of the fourth draft (56/100) found three blocking defects; D27
+  answered them without relaxing the κ rule. On `stage0/q2-evaluator-mutation`
+  (main's D26/D27 merged first):
+  - `pptx.eq.zorder_nonoverlap` swaps a pair only when neither shape comes
+    within 2 mm of the other or of any shape stacked between them (rotated
+    frames widened, frameless shapes refused); `pptx.viol.delete_bound_shape`
+    skips a shape 90% or more under the shapes above it. Synthetic
+    revalidation (Slurm 684) as job 431; catalog `07e50a6f`; code tree
+    `37ae60f0`. Dev rebuild `dev-mutants-v8` (Slurm 688-690; v7 lost two
+    targets to a UNO bridge fault): all 17 targets, 275 / 271, clean save
+    stage. The restricted swaps still fail `compare_pptx_files` on 8 of 9
+    evaluable mutants (candidate checker false negatives, unaudited).
+  - Open-weight rater upgraded to Qwen3.6-35B-A3B (image input confirmed on
+    CPU with vLLM's own processor, Slurm 685/687); `rater_runner open` stops
+    cleanly on the lane's signals and leaves with `os._exit`. Dev rerate
+    (overlay 686, lane job 702): all 133 items of the new dev audit (Slurm 700)
+    rated in one 6 min 56 s job that ended on its own; 0.128 GPU-h with the
+    overlay. Shams 12/12, equivalence 57/60 accepted, but 19 of 26 violation
+    mutants accepted: κ 0.27 if Claude matched every label, 0.34 against the
+    earlier non-blind Claude answers. Unless the isolated Claude answers
+    differ greatly, κ stays under 0.6 and the design returns to review (D27).
+  - Isolated Claude rater: `export-isolated` / `ingest-isolated` (one
+    directory per item, manifest outside, re-hash, model id and transcript
+    audit from the harness transcript); the 133 dev items are exported
+    outside the repository; their answers are pending. The label-bearing
+    files of the rerate are held on the host until that ingest.
+  - Minor items: K6 needs P5 in the headline and no K4 stop; the answers
+    wrapper is accepted; duplicate or anonymous call records are refused; the
+    rater GPU cap is read from a ledger; stale text fixed.
+- GPU time 0.1284 GPU-h (program total 1.7558). Evidence:
+  `program/evidence/q2-mutation/integration/rater-rerate-dev-v3/`. Not frozen.

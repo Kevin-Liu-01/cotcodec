@@ -27,21 +27,19 @@ GPU-hours spent by the program are in `program/state.json`
   smoke and pilot cost card next. Projected Stage 0 total 9-10 GPU-h.
 - `stage0/q2-evaluator-mutation`: faithful-save harness, blind specs for 205
   tasks, operator catalog, campaign driver, rater runner and registered
-  analysis. Fourth draft of `q2-evaluator-mutation-v1` answers the third
-  review (62/100): packets compare with the starting file saved through the
-  same LibreOffice steps; violations audited as a census (K3 operating
-  characteristics simulated, `integration/audit-design-v1/`); P1/K6 over
-  confirm plus reserve control runs; per-shard call files merged; token
-  budget per packet; malformed-body and receipt hardening; K2 drop
-  recomputation; S1/S5 rule; the D25 agent-harness Claude rater path
-  (`rater_runner export-harness` / `ingest-harness`). Second open-weight
-  smoke (0.095 GPU-h, 90 of 133 dev items rated before the lane's checkpoint
-  signal): the saved start removes save noise but the 9B rater still
-  disagrees with labels on 24% of items, mostly by rejecting golds, so the
-  kappa rule is expected to fire unless the Claude rater's dev answers say
-  otherwise. Dev packets for the Claude rater are exported (outside the
-  repo); its answers, a fourth review and Kevin's sign-offs (prereg section
-  17) are pending.
+  analysis. Fifth draft of `q2-evaluator-mutation-v1` answers the third
+  review of the fourth draft (56/100) under D27: the pptx z-order and delete
+  operators restricted (dev rebuild `dev-mutants-v8`); the open-weight rater
+  is Qwen3.6-35B-A3B, which rated all 133 items of the rebuilt dev audit in
+  one clean 7-minute job (0.128 GPU-h) but accepted 19 of 26 violation
+  mutants, so κ projects to 0.27-0.34, below 0.6: under D27 the design
+  returns to review unless the isolated Claude answers differ greatly. The
+  isolated per-item Claude protocol is implemented (`export-isolated` /
+  `ingest-isolated`); the 133 dev items are exported to the session
+  scratchpad (`q2m-iso/`, manifest `q2m-iso-manifest.json` beside it) and
+  await one agent each. The rerate's sample, the open-weight calls and the
+  v8 export are held on the host until that ingest
+  (`scratch/held-after-isolated-ingest/`, digests committed).
 
 ## Next actions
 
