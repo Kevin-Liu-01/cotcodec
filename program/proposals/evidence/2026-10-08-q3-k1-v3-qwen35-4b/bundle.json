@@ -1,0 +1,598 @@
+{
+ "schema_version": 1,
+ "proposal": "program/proposals/2026-10-08-q3-k1-v3-qwen35-4b.md",
+ "proposal_sha256": "752df4ad3ca5c3ece02e39b1921fa82901737e464bc1cc279c56736cf78e2739",
+ "draft_registration": {
+  "path": "program/preregistrations/q3-k1-localization-screen-v3.md",
+  "sha256": "f4ce9a00f501f712247dd5ebb5964043c5f40d721c21db19c411475d3cce3b2c",
+  "status": "DRAFT, not frozen"
+ },
+ "source_snapshots": [
+  {
+   "url": "https://arxiv.org/abs/1208.2301",
+   "http_status": 200,
+   "fetched_at": "2026-10-08T15:17:04Z",
+   "raw_sha256": "fda12b14309243b47acdbaec5c494006c7dc60fa666c286b229be54993809911",
+   "raw_bytes": 43334,
+   "artifact": "snapshots/arxiv.org_abs_1208.2301.json",
+   "sha256": "30010ec1719538f325fd6fbf7ea70d7e42421f427ef0ee78d4e0dbf96203f064"
+  },
+  {
+   "url": "https://arxiv.org/abs/1506.03340",
+   "http_status": 200,
+   "fetched_at": "2026-10-08T15:17:05Z",
+   "raw_sha256": "e34c5de920253ea57ccbc7098cf951c956b521dea39e2e34775e4949ca23eb82",
+   "raw_bytes": 41939,
+   "artifact": "snapshots/arxiv.org_abs_1506.03340.json",
+   "sha256": "e4078843566366cf8eb4b17778e60fa3326f7dc85c2ffde1fdf07634d34862d6"
+  },
+  {
+   "url": "https://arxiv.org/abs/1601.01981",
+   "http_status": 200,
+   "fetched_at": "2026-10-08T15:17:06Z",
+   "raw_sha256": "094d208dc5432b336e4bf2b596901f7c1b752e5344e7537f0bc98c21d1c03a6e",
+   "raw_bytes": 43340,
+   "artifact": "snapshots/arxiv.org_abs_1601.01981.json",
+   "sha256": "3274e682d3d2be7798e25e64cd3f0c40e9e3f7e02eddf4a098248fe688ead3ef"
+  },
+  {
+   "url": "https://arxiv.org/abs/1902.01007",
+   "http_status": 200,
+   "fetched_at": "2026-10-08T15:17:07Z",
+   "raw_sha256": "05941c01895a073701b77810634881a458324f619965fbe86ecf90a121cd6190",
+   "raw_bytes": 41938,
+   "artifact": "snapshots/arxiv.org_abs_1902.01007.json",
+   "sha256": "556f81a01be20ff8c631986058efc841638007d9f98e9f937aa520696bbb57a4"
+  },
+  {
+   "url": "https://arxiv.org/abs/1904.01130",
+   "http_status": 200,
+   "fetched_at": "2026-10-08T15:17:08Z",
+   "raw_sha256": "a40ac743357dd3922748a1dedaaf18ada769ce49d1ffaa60a03183c23e52c469",
+   "raw_bytes": 41180,
+   "artifact": "snapshots/arxiv.org_abs_1904.01130.json",
+   "sha256": "3bc4ca6b0e4673aabcd046fb88f7ab74069f1e010e750cd80b230ea81c283b8e"
+  },
+  {
+   "url": "https://arxiv.org/abs/1906.00300",
+   "http_status": 200,
+   "fetched_at": "2026-10-08T15:17:09Z",
+   "raw_sha256": "08973fbc95f01b5c512362b53a68a4e80d3077c7224df5fdb83abadeab2f1080",
+   "raw_bytes": 41511,
+   "artifact": "snapshots/arxiv.org_abs_1906.00300.json",
+   "sha256": "e9246cfa3b821a7f245ef4a4a3822c634b3718f5921a4239d1d3ecee0d050432"
+  },
+  {
+   "url": "https://arxiv.org/abs/2003.05002",
+   "http_status": 200,
+   "fetched_at": "2026-10-08T15:17:10Z",
+   "raw_sha256": "9ffde4aa47fb1c61ed80c60b4723474b8238d97345cb78490a374641ca74001e",
+   "raw_bytes": 42006,
+   "artifact": "snapshots/arxiv.org_abs_2003.05002.json",
+   "sha256": "8689471bccc2b65c4cb0b964b979263bf0967e7843da722088a9e254caa6f4dd"
+  },
+  {
+   "url": "https://arxiv.org/abs/2010.04814",
+   "http_status": 200,
+   "fetched_at": "2026-10-08T15:17:11Z",
+   "raw_sha256": "9f9612f6d3a022fcd11761684d1282b958f9ba010dbf6e121b49c30c014e8a1d",
+   "raw_bytes": 40429,
+   "artifact": "snapshots/arxiv.org_abs_2010.04814.json",
+   "sha256": "3ee70ebca5520c8a36461240fbf4cbe6e01986a96a852158dd85cb65ccce8c20"
+  },
+  {
+   "url": "https://arxiv.org/abs/2010.11856",
+   "http_status": 200,
+   "fetched_at": "2026-10-08T15:17:13Z",
+   "raw_sha256": "43e19fc2c69bbf83cc1a7d629b9e62208b37235e2c1f88b0ae36bffc1a86f311",
+   "raw_bytes": 43127,
+   "artifact": "snapshots/arxiv.org_abs_2010.11856.json",
+   "sha256": "019d79df95a31bbc161669f2a4d0a3e073b26a51d341785016d3e35daba4b50e"
+  },
+  {
+   "url": "https://arxiv.org/abs/2010.12858",
+   "http_status": 200,
+   "fetched_at": "2026-10-08T15:17:14Z",
+   "raw_sha256": "57f13f470aa3b2c614f844dcd3506fcce3a1fa8d314e7d6942da703c111bba30",
+   "raw_bytes": 42356,
+   "artifact": "snapshots/arxiv.org_abs_2010.12858.json",
+   "sha256": "237d410ccdd91e34dfcc875f3d5b1137209b028dbdaea416f439fe1ec43361bc"
+  },
+  {
+   "url": "https://arxiv.org/abs/2308.16884",
+   "http_status": 200,
+   "fetched_at": "2026-10-08T15:17:15Z",
+   "raw_sha256": "e0c4b5efe9650f88d6de6852080d2e08b15905cab5f5ae17840cc605770535fb",
+   "raw_bytes": 45562,
+   "artifact": "snapshots/arxiv.org_abs_2308.16884.json",
+   "sha256": "fd17fde57ceef7b7b84f7f5a49050de352d61e4d3ff5a72bd70c3f4b640d7b22"
+  },
+  {
+   "url": "https://arxiv.org/abs/2410.13276",
+   "http_status": 200,
+   "fetched_at": "2026-10-08T15:17:16Z",
+   "raw_sha256": "07cd846046530d54bffc64edf9dc147bf8147a1d0217aafb82ea08188f05c2f8",
+   "raw_bytes": 43749,
+   "artifact": "snapshots/arxiv.org_abs_2410.13276.json",
+   "sha256": "6dc6bdd06e677d2aca409c839488b08989355a500fbd163f7bc7cacacdab247e"
+  },
+  {
+   "url": "https://arxiv.org/abs/2411.00640",
+   "http_status": 200,
+   "fetched_at": "2026-10-08T15:17:17Z",
+   "raw_sha256": "951cac93eacd8adf7e184896a3ca3fb203e337e5d010dc18a915e1f72e2ac3d2",
+   "raw_bytes": 39830,
+   "artifact": "snapshots/arxiv.org_abs_2411.00640.json",
+   "sha256": "21ec36c7b53a8759f13e4c7467be4acf630f5f964c40e25f4234769ba46553c5"
+  },
+  {
+   "url": "https://arxiv.org/abs/2502.05167",
+   "http_status": 200,
+   "fetched_at": "2026-10-08T15:17:18Z",
+   "raw_sha256": "a01bf52dae11d8f9946194d6ecb977fd1aed9ed83f14ad6352bac548681e9e74",
+   "raw_bytes": 43460,
+   "artifact": "snapshots/arxiv.org_abs_2502.05167.json",
+   "sha256": "e83a729af2bffff51abaabf665355fe55c5e78d382e2686ba5a16b203e1a57df"
+  },
+  {
+   "url": "https://arxiv.org/abs/2503.01747",
+   "http_status": 200,
+   "fetched_at": "2026-10-08T15:17:19Z",
+   "raw_sha256": "8d27bdd2e2f22d8e6b575cbf5c18a6c402f09b9473edba20aa9958648f22cc06",
+   "raw_bytes": 41778,
+   "artifact": "snapshots/arxiv.org_abs_2503.01747.json",
+   "sha256": "883a44b3d01df24eb5541e97d6804001f2b666673dc155857b23115431a3b7fd"
+  },
+  {
+   "url": "https://arxiv.org/abs/2504.10906",
+   "http_status": 200,
+   "fetched_at": "2026-10-08T15:17:20Z",
+   "raw_sha256": "051c48f5570eb56d84933df9cf1efb6b6a34a81ecc6b834bc091a11161144618",
+   "raw_bytes": 42598,
+   "artifact": "snapshots/arxiv.org_abs_2504.10906.json",
+   "sha256": "4ce980e4f560933b9f8d5a63abd85b4eea311c389102fecad7ae21a044803495"
+  },
+  {
+   "url": "https://arxiv.org/abs/2512.02556",
+   "http_status": 200,
+   "fetched_at": "2026-10-08T15:17:21Z",
+   "raw_sha256": "4d11e57dc6f620ff9b1ff8f79fa96a074152b8a0de7170dd23e444bae60bf786",
+   "raw_bytes": 83552,
+   "artifact": "snapshots/arxiv.org_abs_2512.02556.json",
+   "sha256": "73fba20994317ccd93aa20656b2903212a9a0de5683e82360669268a92cf94a9"
+  },
+  {
+   "url": "https://arxiv.org/abs/2601.02872",
+   "http_status": 200,
+   "fetched_at": "2026-10-08T15:17:22Z",
+   "raw_sha256": "d666ca43d80635e6a990eb2e38edf9022bace72c2d6ba351097ea355db3f8205",
+   "raw_bytes": 43426,
+   "artifact": "snapshots/arxiv.org_abs_2601.02872.json",
+   "sha256": "50ba208886212bb85ba0ffcf96a3d4053f011bad2201af11dc699dc6ee367f6c"
+  },
+  {
+   "url": "https://arxiv.org/abs/2601.18886",
+   "http_status": 200,
+   "fetched_at": "2026-10-08T15:17:23Z",
+   "raw_sha256": "8ed997d8df0b3390b8508705a5db2e5ebcc4b2a6ee0dda575b4a9714323dd0b5",
+   "raw_bytes": 40411,
+   "artifact": "snapshots/arxiv.org_abs_2601.18886.json",
+   "sha256": "c9259bb68e4b893792f871787b1af0edfc0c17b89e3327042a0fe22d5f830d27"
+  },
+  {
+   "url": "https://arxiv.org/abs/2603.02227",
+   "http_status": 200,
+   "fetched_at": "2026-10-08T15:17:24Z",
+   "raw_sha256": "708d65bb924c0085e143a703972a1eca31378db23ee4df453f4f79bf44763a52",
+   "raw_bytes": 43405,
+   "artifact": "snapshots/arxiv.org_abs_2603.02227.json",
+   "sha256": "b26eeeb19c2d08c2556533af51ab8f50c695dd3a224ab0884810b41a2066cf84"
+  },
+  {
+   "url": "https://arxiv.org/abs/2605.07249",
+   "http_status": 200,
+   "fetched_at": "2026-10-08T15:17:25Z",
+   "raw_sha256": "247a1b0aa83b597e23e4642d1932eaefd3398ed0e0d756e8e823f89df33ab46a",
+   "raw_bytes": 42319,
+   "artifact": "snapshots/arxiv.org_abs_2605.07249.json",
+   "sha256": "f809750bc9b52a0a3aa5e8d1ce82c3680fe07c2ae9ec1bb96f9f3b858ec57394"
+  },
+  {
+   "url": "https://arxiv.org/abs/2605.31363",
+   "http_status": 200,
+   "fetched_at": "2026-10-08T15:17:26Z",
+   "raw_sha256": "831292bc4cd98898dcf21ca95c2b0c5c1538e124acacc6b576eacf53c0ade013",
+   "raw_bytes": 42777,
+   "artifact": "snapshots/arxiv.org_abs_2605.31363.json",
+   "sha256": "8e4bc443861a447932eb005c09f8468ef4a9fbb62c402e6c7fec34aa2a021c88"
+  },
+  {
+   "url": "https://arxiv.org/abs/2606.07703",
+   "http_status": 200,
+   "fetched_at": "2026-10-08T15:17:28Z",
+   "raw_sha256": "f9337d65b52b4f48616bfccd3ce8a3980182c64d2c6fb4602f1f51ecaac65d4a",
+   "raw_bytes": 44882,
+   "artifact": "snapshots/arxiv.org_abs_2606.07703.json",
+   "sha256": "9f9b113ce12b26557cba6ae8f53a90de55d105ae2e4aebcfe9832b4dd15151ac"
+  },
+  {
+   "url": "https://arxiv.org/abs/2606.22874",
+   "http_status": 200,
+   "fetched_at": "2026-10-08T15:17:29Z",
+   "raw_sha256": "68b5db54ba64828f305aaa1965fd25021f088a6117153cc8a462bfc22c5dc63f",
+   "raw_bytes": 41843,
+   "artifact": "snapshots/arxiv.org_abs_2606.22874.json",
+   "sha256": "1299f99f3bcf339fe32dc1599d73f130078746a4efa76a632184b93f9715c316"
+  },
+  {
+   "url": "https://arxiv.org/abs/2608.06506",
+   "http_status": 200,
+   "fetched_at": "2026-10-08T15:17:30Z",
+   "raw_sha256": "6ac9decbac089a92580c7ae7756d9b988960b23bf8993222939e9018c96075c2",
+   "raw_bytes": 44624,
+   "artifact": "snapshots/arxiv.org_abs_2608.06506.json",
+   "sha256": "812380564513300839213a9ab0e4bfa432c1d1b7bb66d13efac3bb90b4fdd081"
+  },
+  {
+   "url": "https://arxiv.org/abs/2608.14681",
+   "http_status": 200,
+   "fetched_at": "2026-10-08T15:17:31Z",
+   "raw_sha256": "a3f872117ea74984f054e3d33b4685fae782abdff7c65cb183fd20aa78e16e1d",
+   "raw_bytes": 41930,
+   "artifact": "snapshots/arxiv.org_abs_2608.14681.json",
+   "sha256": "65d5e6268b46d888753da9ab521fa8a49cb5dd0b96034a4858638507fb1c42ba"
+  },
+  {
+   "url": "https://arxiv.org/abs/2608.25089",
+   "http_status": 200,
+   "fetched_at": "2026-10-08T15:17:32Z",
+   "raw_sha256": "95e855dd75f6e328e8e9ec440852d6b07c0dcbd3ca2eb60523b00112192d80a7",
+   "raw_bytes": 40982,
+   "artifact": "snapshots/arxiv.org_abs_2608.25089.json",
+   "sha256": "444044700110e1d8293539b39d726c67651ae283d191fd420f538e38fdc7da90"
+  },
+  {
+   "url": "https://arxiv.org/abs/2608.26175",
+   "http_status": 200,
+   "fetched_at": "2026-10-08T15:17:33Z",
+   "raw_sha256": "546b51751b7a8f8f749e501a0738aa187d5ff7d1134a69acad25cdc04d3c9d64",
+   "raw_bytes": 43427,
+   "artifact": "snapshots/arxiv.org_abs_2608.26175.json",
+   "sha256": "6c680533c1579d047e25fb60eb2a573ded381273af3ee3eca8b9a2e5bf4d9c7e"
+  },
+  {
+   "url": "https://arxiv.org/abs/2608.30320",
+   "http_status": 200,
+   "fetched_at": "2026-10-08T15:17:34Z",
+   "raw_sha256": "cd4b5126bfb85540bbbb56870accd488b62c8514567503487be5d9cea107c3fc",
+   "raw_bytes": 48017,
+   "artifact": "snapshots/arxiv.org_abs_2608.30320.json",
+   "sha256": "7306317dda36736bd0f432061077a01e72ec49139c142c2c0f5eca6435fd2344"
+  },
+  {
+   "url": "https://arxiv.org/abs/2609.04434",
+   "http_status": 200,
+   "fetched_at": "2026-10-08T15:17:35Z",
+   "raw_sha256": "6f08276dc080a838eebbd1ffe17454987ab1246889920291c1358ef93a08df56",
+   "raw_bytes": 41432,
+   "artifact": "snapshots/arxiv.org_abs_2609.04434.json",
+   "sha256": "35b42a2b948c65711a4f00998eeb47c1784643425bd99875a7f497a47fefe2b8"
+  },
+  {
+   "url": "https://arxiv.org/abs/2609.35378",
+   "http_status": 200,
+   "fetched_at": "2026-10-08T15:17:36Z",
+   "raw_sha256": "bbe7e17ead5ff8f0f3f9d584c5d6c5d712108937570d039d98b8c57614026009",
+   "raw_bytes": 41664,
+   "artifact": "snapshots/arxiv.org_abs_2609.35378.json",
+   "sha256": "774cff7a7eff8032a9bb5c34712cadd081a6015ea39e0d1b0cc6862112a5e2b7"
+  },
+  {
+   "url": "https://arxiv.org/abs/2610.01139",
+   "http_status": 200,
+   "fetched_at": "2026-10-08T15:17:37Z",
+   "raw_sha256": "b2f75884397643cd862d1ca16d2367d0a7619b21002e5b6cfc562e8c989c5a0e",
+   "raw_bytes": 41691,
+   "artifact": "snapshots/arxiv.org_abs_2610.01139.json",
+   "sha256": "6f8c62b858391bba4a8a0ae3d3a8ead9263fe0c0bce30833bc46f67365c24abb"
+  },
+  {
+   "url": "https://arxiv.org/abs/2610.01921",
+   "http_status": 200,
+   "fetched_at": "2026-10-08T15:17:38Z",
+   "raw_sha256": "95688119052e44a770d808342a574b2228af2d9f2cedc056979e89107b20a4ff",
+   "raw_bytes": 41655,
+   "artifact": "snapshots/arxiv.org_abs_2610.01921.json",
+   "sha256": "c58bd2b88fda316509fbdcdda2eaad7ca0b8cc00391862acc8a6737f612b11c7"
+  },
+  {
+   "url": "https://arxiv.org/abs/2610.04635",
+   "http_status": 200,
+   "fetched_at": "2026-10-08T15:17:39Z",
+   "raw_sha256": "904c705b2f46b1453f79c37ac759efa8e69eb1fddddc51f4eb45e4895fccb541",
+   "raw_bytes": 42528,
+   "artifact": "snapshots/arxiv.org_abs_2610.04635.json",
+   "sha256": "d9afbc9ae0923164e54d9172742e16caf0357a8ec7a62090f2faee3758999a6b"
+  },
+  {
+   "url": "https://arxiv.org/abs/2610.09025",
+   "http_status": 200,
+   "fetched_at": "2026-10-08T15:17:40Z",
+   "raw_sha256": "7f66e6db3ecf8b627d70dfc67ca19be52e15ad99b696a6379003fb3cdd7bae08",
+   "raw_bytes": 42784,
+   "artifact": "snapshots/arxiv.org_abs_2610.09025.json",
+   "sha256": "46ddda459221a0a82cab1cab05916d71a3408636d84e998423427028635380ac"
+  },
+  {
+   "url": "https://arxiv.org/abs/2610.09272",
+   "http_status": 200,
+   "fetched_at": "2026-10-08T15:17:41Z",
+   "raw_sha256": "ee1483ac64e20cc0cf546996c8ef613e9b077ab6acd8d1a1e0a799ac96a3589b",
+   "raw_bytes": 41732,
+   "artifact": "snapshots/arxiv.org_abs_2610.09272.json",
+   "sha256": "fe6bad20a0d573ea903c5f5c455fa87cf46b059f32d492c435e5df6c223e89e3"
+  },
+  {
+   "url": "https://arxiv.org/abs/2610.09733",
+   "http_status": 200,
+   "fetched_at": "2026-10-08T15:17:42Z",
+   "raw_sha256": "eaae3bc8ac83b15127848fea7413bc68fdac43afa8f026d35caa0607ac42df38",
+   "raw_bytes": 41300,
+   "artifact": "snapshots/arxiv.org_abs_2610.09733.json",
+   "sha256": "b49414a64da70378557b89a6da0612d1322fd9a7dc1034977e414b7ef75cbb2d"
+  },
+  {
+   "url": "https://huggingface.co/Qwen/Qwen3.5-4B-Base/tree/1001bb4d826a52d1f399e183466143f4da7b741b",
+   "http_status": 200,
+   "fetched_at": "2026-10-08T15:17:44Z",
+   "raw_sha256": "8f236f9c11c33815e745597c310d8cfc1ed3cc2d3e17bee1c52e80d504dfca15",
+   "raw_bytes": 227459,
+   "artifact": "snapshots/huggingface.co_Qwen_Qwen3.5-4B-Base_tree_1001bb4d826a52d1f399e183466143f4da7b741b.json",
+   "sha256": "2a283a0520b41fbf69b428368fa5330e909f189976e57b341595263a6c7ba715"
+  },
+  {
+   "url": "https://huggingface.co/datasets/HuggingFaceFW/fineweb-2/tree/af9c13333eb981300149d5ca60a8e9d659b276b9",
+   "http_status": 200,
+   "fetched_at": "2026-10-08T15:17:45Z",
+   "raw_sha256": "e73d890972d3cfab3a93ee73a904c2db65e104a41ea6da34241f2c16413a516e",
+   "raw_bytes": 1671994,
+   "artifact": "snapshots/huggingface.co_datasets_HuggingFaceFW_fineweb-2_tree_af9c13333eb981300149d5ca60a8e9d659b276b9.json",
+   "sha256": "955edf5af9c2da5cb7bb11d942eca85fa3322cf68ad2bc9490bf4ae4a4bae5df"
+  },
+  {
+   "url": "https://huggingface.co/datasets/HuggingFaceFW/fineweb/tree/9bb295ddab0e05d785b879661af7260fed5140fc",
+   "http_status": 200,
+   "fetched_at": "2026-10-08T15:17:47Z",
+   "raw_sha256": "ef67a0412f1d98202aadb42b858b4ca3fa17486aab2264c014bc5bfe6631bea6",
+   "raw_bytes": 166983,
+   "artifact": "snapshots/huggingface.co_datasets_HuggingFaceFW_fineweb_tree_9bb295ddab0e05d785b879661af7260fed5140fc.json",
+   "sha256": "b6dc966486c2e3da56bd1566f87bd34b44e4b7995a98b231cacaa3dabae53e3c"
+  },
+  {
+   "url": "https://huggingface.co/datasets/facebook/belebele/tree/7899cdfa4e1e0d733fd77c848e2c273cb1d32be2",
+   "http_status": 200,
+   "fetched_at": "2026-10-08T15:17:48Z",
+   "raw_sha256": "8d0ec564223b6f6af5e871db8eda01df7ddabff625c3067a9c51f17feec22ede",
+   "raw_bytes": 228392,
+   "artifact": "snapshots/huggingface.co_datasets_facebook_belebele_tree_7899cdfa4e1e0d733fd77c848e2c273cb1d32be2.json",
+   "sha256": "f9c5e856884f7e69193406976c8a75658ca647dfd0ca36940e411f062db60278"
+  },
+  {
+   "url": "https://huggingface.co/datasets/jhu-clsp/paradocs/tree/f80095affa44545d18d0d64a574f9b8679017196",
+   "http_status": 200,
+   "fetched_at": "2026-10-08T15:17:49Z",
+   "raw_sha256": "728876a5828059be83da7e2aa7bffb838e6b08c2216701f75446cc0ab51584ce",
+   "raw_bytes": 99207,
+   "artifact": "snapshots/huggingface.co_datasets_jhu-clsp_paradocs_tree_f80095affa44545d18d0d64a574f9b8679017196.json",
+   "sha256": "0434edca9a865842de3761e5b986aa5c115c9cd59576a098c4e5a7279ee8eb32"
+  }
+ ],
+ "query_log": {
+  "artifact": "query-log.json",
+  "sha256": "5d0ab7718782c02b00e1b7038083c086cce49e80165a902e7e98d83a3021e9c5",
+  "queries_against_budget": 148
+ },
+ "reviews": [],
+ "reviews_status": "NOT_RUN in wave 1: blind discrimination, refute-first triad and two provider-distinct reviews come after synthesis. No Ed25519 trust store exists (D24).",
+ "compute": {
+  "scope": "q3-k1-localization-screen-v3 is a DRAFT; it has no compute attestation of its own (compute/v3-attestations-not-run.md). The image, manifest and supplementary attestations are those of the dense pre-check v2 Qwen3.5-4B-Base lane (Slurm 862), which ran the 4B dense evaluation path v3 extends.",
+  "image_digest": "127.0.0.1:5000/cotcodec-research@sha256:13a9de831cff50461d8ecee3c2794f0c6d6bcffe9d602968fe2ee06e5a1096e9",
+  "image_scope": "dense pre-check v2 image, build 855, commit ed5d5a93dffc3e8cf777c1933330ef7229eda5d6, image id sha256:500f3b027173a2d772b7d6ea00ea667dbe1bc956df51e3c2c4455d9c08a2714b; v3 images A3 and B3 do not exist",
+  "real_model_loop": false,
+  "real_model_loop_scope": "Not attested for v3: the v3 code (4B indexer bank, training loop through the hybrid teacher, masked evaluation) does not exist and no 4B indexer has been trained. Supplementary: lane 862 ran the real Qwen3.5-4B-Base teacher on 1,160 real development units (dense selection and multiple choice) on an H100.",
+  "benchmark_adapter": "harness/dense_headroom_v2_lanes.py",
+  "benchmark_adapter_scope": "the 4B lane adapter of the dense pre-check v2 (supplementary); v3 adapter not written",
+  "manifest": {
+   "artifact": "compute/lane862-filled-manifest.yaml",
+   "sha256": "e3653d19256c2964b4dede81b85202cf63e849500f5ad96d0a0baa017c2e41fd",
+   "note": "Executed Docker-lane manifest of lane 862 (runtime docker-single-node-discovery-v1, image_id field); not a v3 manifest."
+  },
+  "container_smoke": {
+   "label": "container_smoke",
+   "status": "NOT_RUN",
+   "return_code": null,
+   "artifact": "compute/v3-attestations-not-run.md",
+   "sha256": "1bd142e04acfa2a4fc05edea268daf556da496e2341ec70cfe93582c4cd5855c",
+   "note": "No v3 smoke exists."
+  },
+  "slurm_test": {
+   "label": "slurm_test",
+   "status": "NOT_RUN",
+   "return_code": null,
+   "artifact": "compute/v3-attestations-not-run.md",
+   "sha256": "1bd142e04acfa2a4fc05edea268daf556da496e2341ec70cfe93582c4cd5855c",
+   "note": "No v3 manifest exists to dry-run."
+  },
+  "provenance_verification": {
+   "label": "provenance_verification",
+   "status": "NOT_RUN",
+   "return_code": null,
+   "artifact": "compute/v3-attestations-not-run.md",
+   "sha256": "1bd142e04acfa2a4fc05edea268daf556da496e2341ec70cfe93582c4cd5855c",
+   "note": "Image B3 does not exist."
+  },
+  "supplementary_attestations": [
+   {
+    "label": "lane 862 submitter dry-run (sbatch argv); test-only exit 0 per the operator log",
+    "status": "PASS",
+    "return_code": 0,
+    "artifact": "compute/lane862-submitter-dry-run.json",
+    "sha256": "6d6c4b8a0af7659651d4225bf445310fc838fb148452f2f8d7499e13616f63ae"
+   },
+   {
+    "label": "lane 862 provenance verification",
+    "status": "PASS",
+    "return_code": 0,
+    "artifact": "compute/lane862-provenance-verification.txt",
+    "sha256": "0930a78d24916868f789c598ae3f0cf7ac2d05d65e35acefcc5166a9f5e3ce1b",
+    "note": "git ed5d5a93, source 53458dd1"
+   },
+   {
+    "label": "lane 862 container doctor",
+    "status": "PASS",
+    "return_code": 0,
+    "artifact": "compute/lane862-container-doctor.txt",
+    "sha256": "ebfdcfce3de46fbe6629f255a8ad3cf91957c5b51babb085e76d96500e282198"
+   },
+   {
+    "label": "lane 862 orx run log",
+    "status": "PASS",
+    "return_code": 0,
+    "artifact": "compute/lane862-orx-run.log",
+    "sha256": "23ee25c048367645fbe5385354e05c549e1fe32dbee956a1c673be82ea2db67c",
+    "note": "ORX_SLURM_TERMINAL 862 state=COMPLETED exit_code=0:0; ORX_RESULT exit=0"
+   },
+   {
+    "label": "image 855 CPU doctor (Slurm 856)",
+    "status": "PASS",
+    "return_code": 0,
+    "artifact": "compute/image855-cpu-doctor.json",
+    "sha256": "0240cfe36533242edfc77bdda48b6756a0b67829f6f4fd04c0f9ba4c796887fc",
+    "note": "DENSE_V2_DOCTOR_PASS 12/12"
+   },
+   {
+    "label": "image 855 build receipt",
+    "status": "INFO",
+    "return_code": 0,
+    "artifact": "compute/image855-build-receipt.json",
+    "sha256": "60c96e821c53bfee5b93ece41c104cebe73cad1ea628023087f017233b5c87de"
+   },
+   {
+    "label": "dense pre-check v2 combined read",
+    "status": "INFO",
+    "return_code": 0,
+    "artifact": "compute/precheck-v2-combined-read.json",
+    "sha256": "d656d29f4ef4fd9b64e39d25ebac99cf1d6d26ea4d6940eeb760c0d5d5f0b221",
+    "note": "NEGATIVE_CAPABLE_V3 on qwen3.5-4b-base, seven requirements"
+   },
+   {
+    "label": "synthesis cost model (not a measurement)",
+    "status": "INFO",
+    "return_code": null,
+    "artifact": "compute/synthesis-cost-model.py",
+    "sha256": "339de1e7459551780d24c06dc6b302accfd217325ffca17849de470a5fb9f4c0",
+    "note": "caps 7.21 central, 9.79 high GPU-h"
+   },
+   {
+    "label": "synthesis power approximations (not the registered simulation)",
+    "status": "INFO",
+    "return_code": null,
+    "artifact": "compute/synthesis-power-approximations.py",
+    "sha256": "672bd0c4f27fb6b840905672319680af961fb7e28a7af9b70e710ca7e2f24e08",
+    "note": "numpy seed 42"
+   }
+  ],
+  "pilot_gpu_hours_projection": {
+   "central_caps": 7.21,
+   "high_caps": 9.79,
+   "ceiling_stated": 10,
+   "over_8_gpu_h": "at the high end; admission is Kevin's (D24)"
+  }
+ },
+ "doctors": [
+  {
+   "name": "Source",
+   "status": "PASS",
+   "artifact": "doctors/source.json",
+   "sha256": "3512f00321feb56d5cc5d0e017f539c5c0410fcbcac68a4548d5350fbeba9e23"
+  },
+  {
+   "name": "Citation",
+   "status": "PASS",
+   "artifact": "doctors/citation.json",
+   "sha256": "d8dc8a7e8bfa895b0dce9fe29d6a2b0e3e9ceab31b50d68ddb3563c8df8c245e"
+  },
+  {
+   "name": "Novelty",
+   "status": "FAIL",
+   "artifact": "doctors/novelty.json",
+   "sha256": "cf6b2be7fbd754790eae47a340623942bccc7bce838e39551d14ccf0eeee25d1"
+  },
+  {
+   "name": "Design",
+   "status": "FAIL",
+   "artifact": "doctors/design.json",
+   "sha256": "93f8eeee44348fb6e23a4a2c70548ecd273d1fd283405a2346cfdcc4b1c1878d"
+  },
+  {
+   "name": "Compute",
+   "status": "FAIL",
+   "artifact": "doctors/compute.json",
+   "sha256": "ca71e25119453ee4b8c16af5b453bfbd2e5534792fc9a5b83ea91dfb042517c1"
+  },
+  {
+   "name": "Safety",
+   "status": "PASS",
+   "artifact": "doctors/safety.json",
+   "sha256": "66a48477a8e31fc0500e49aa1d11304fa8c062cf357ad4a27610fb39dc681e81"
+  }
+ ],
+ "audit_log": null,
+ "audit_log_status": "Not written in synthesis. The wave-1 row is appended to program/gauntlet/ with scripts/research_gauntlet_record.py after the reviewers score.",
+ "budget_ledger": {
+  "declared": {
+   "queries": 150,
+   "wall_minutes": 600,
+   "tokens": 8000000,
+   "dollars": 150,
+   "waves": 3,
+   "gpu_hours": 0.5
+  },
+  "used_through_synthesis": {
+   "queries": 148,
+   "queries_note": "146 by the four discovery cells (frontier 52, kill-shot 34, cross-domain 53, cost 7) and 2 by synthesis; 2 remain",
+   "wall_minutes_estimate": "cells about 25 to 50 each in parallel (self-reported); synthesis about 110; not metered",
+   "tokens_estimate": "not metered in this wave; the recorder meters from transcripts",
+   "dollars": "no external API spend; model inference not priced here",
+   "gpu_hours": 0.0,
+   "waves": "1 (in progress)"
+  }
+ },
+ "blind_discrimination_packet": {
+  "proposal": {
+   "artifact": "blind/paragraph-e942c63a.txt",
+   "sha256": "f0e5a25e20a876d537b04b3978c4426076336586a7dc85f3785399ad479c7b3b",
+   "text_sha256": "e942c63abf9bf947b831deac102b00c089341bb6723796a242c1bd26c410e5a5"
+  },
+  "closest_prior": {
+   "artifact": "blind/paragraph-38ab2fa1.txt",
+   "sha256": "dea50bcd381f1fde3e3975e01fd4014cf50cd899a19c375f81f51d38d458292e",
+   "text_sha256": "38ab2fa1dd57e0844bbb3c97337e82d04fa31d047f572c335483c5e528e15257"
+  },
+  "closest_prior_id": "arXiv:2606.07703 (How Much Dense Attention is Necessary? Oracle-Guided Sparse Prefill for Full/GQA Layers in Hybrid Long-Context Models, Wang et al., v1 2026-06-05)",
+  "supplementary_prior": {
+   "artifact": "blind/paragraph-91fa8475.txt",
+   "sha256": "51061f5a26e5ef4df9c069adcbe12d8f91785374ff98051860e4c60a6d0296b7",
+   "text_sha256": "91fa8475fe52f77d2d219d236e573caa90d44816715ecc507974ed48476e916e"
+  },
+  "supplementary_prior_id": "arXiv:2606.22874 (SpotAttention: Plug-In Block-Sparse Routing for Pretrained Long-Context Transformers, Ahmad and Yun, v1 2026-06-22), the direct apparatus prior on Qwen3.5-4B",
+  "note": "File names carry no role. The critic receives two texts in randomized order without this mapping; the mapping here is for the record."
+ },
+ "evidence_root_sha256": "b8f67975ac7d59d0a1d0eac8e55889bfdf95e41f6170d8e4a288b8bf45fee734",
+ "direction_doctor_run": {
+  "artifact": "doctors/research-direction-doctor-output.json",
+  "sha256": "c827a7e2e712041b1bea29805aa499a3a907f33a117540fd805c0560e01d18ce",
+  "command": "uv run python scripts/research_direction_doctor.py program/proposals/2026-10-08-q3-k1-v3-qwen35-4b.md",
+  "note": "Outside evidence_root by design: the doctor output depends on this bundle."
+ }
+}

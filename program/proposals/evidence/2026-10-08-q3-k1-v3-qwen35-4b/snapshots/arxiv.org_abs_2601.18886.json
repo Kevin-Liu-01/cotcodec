@@ -1,0 +1,27 @@
+{
+ "url": "https://arxiv.org/abs/2601.18886",
+ "fetched_at": "2026-10-08T15:17:23Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 40411,
+ "raw_sha256": "8ed997d8df0b3390b8508705a5db2e5ebcc4b2a6ee0dda575b4a9714323dd0b5",
+ "raw_stored": false,
+ "extract": {
+  "title": "XProvence: Zero-Cost Multilingual Context Pruning for Retrieval-Augmented Generation",
+  "authors": [
+   "Mohamed, Youssef",
+   "Elhoseiny, Mohamed",
+   "Formal, Thibault",
+   "Chirkova, Nadezhda"
+  ],
+  "citation_date": "2026/01/26",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Mon, 26 Jan 2026 19:00:11 UTC"
+   }
+  ],
+  "abstract": "This paper introduces XProvence, a multilingual zero-cost context pruning model for retrieval-augmented generation (RAG), trained on 16 languages and supporting 100+ languages through effective cross-lingual transfer. Motivated by the growing use of RAG systems across diverse languages, we explore several strategies to generalize the Provence framework-which first integrated efficient zero-cost context pruning directly into the re-ranking model-beyond English. Across four multilingual question answering benchmarks, we show how XProvence can prune RAG contexts with minimal-to-no performance degradation and outperforms strong baselines. Our model is available at https://huggingface.co/naver/xprovence-reranker-bgem3-v2.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}

@@ -1,0 +1,37 @@
+{
+ "url": "https://arxiv.org/abs/2010.11856",
+ "fetched_at": "2026-10-08T15:17:13Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 43127,
+ "raw_sha256": "43e19fc2c69bbf83cc1a7d629b9e62208b37235e2c1f88b0ae36bffc1a86f311",
+ "raw_stored": false,
+ "extract": {
+  "title": "XOR QA: Cross-lingual Open-Retrieval Question Answering",
+  "authors": [
+   "Asai, Akari",
+   "Kasai, Jungo",
+   "Clark, Jonathan H.",
+   "Lee, Kenton",
+   "Choi, Eunsol",
+   "Hajishirzi, Hannaneh"
+  ],
+  "citation_date": "2020/10/22",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Thu, 22 Oct 2020 16:47:17 UTC"
+   },
+   {
+    "version": "v2",
+    "date": "Sat, 24 Oct 2020 10:00:22 UTC"
+   },
+   {
+    "version": "v3",
+    "date": "Tue, 13 Apr 2021 05:22:01 UTC"
+   }
+  ],
+  "abstract": "Multilingual question answering tasks typically assume answers exist in the same language as the question. Yet in practice, many languages face both information scarcity -- where languages have few reference articles -- and information asymmetry -- where questions reference concepts from other cultures. This work extends open-retrieval question answering to a cross-lingual setting enabling questions from one language to be answered via answer content from another language. We construct a large-scale dataset built on questions from TyDi QA lacking same-language answers. Our task formulation, called Cross-lingual Open Retrieval Question Answering (XOR QA), includes 40k information-seeking questions from across 7 diverse non-English languages. Based on this dataset, we introduce three new tasks that involve cross-lingual document retrieval using multi-lingual and English resources. We establish baselines with state-of-the-art machine translation systems and cross-lingual pretrained models. Experimental results suggest that XOR QA is a challenging task that will facilitate the development of novel techniques for multilingual question answering. Our data and code are available at https://nlp.cs.washington.edu/xorqa.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}

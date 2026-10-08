@@ -1,0 +1,27 @@
+{
+ "url": "https://arxiv.org/abs/2610.09733",
+ "fetched_at": "2026-10-08T15:17:42Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 41300,
+ "raw_sha256": "eaae3bc8ac83b15127848fea7413bc68fdac43afa8f026d35caa0607ac42df38",
+ "raw_stored": false,
+ "extract": {
+  "title": "Bridge Routing Heads: Where Multilingual Multi-hop Reasoning Lives in LLMs",
+  "authors": [
+   "Kim, Seunghan",
+   "Choe, Minyeong",
+   "Kim, Hyunil",
+   "Cho, Haehyun"
+  ],
+  "citation_date": "2026/10/07",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Wed, 7 Oct 2026 09:28:25 UTC"
+   }
+  ],
+  "abstract": "Multilingual LLMs answer the same multi-hop reasoning question across languages, but we lack a mechanistic account of whether they share an internal circuit. We identify Bridge Routing Heads (BRH) in two large multilingual LLMs through a three-stage pipeline. The resulting language-specific head sets exhibit near-complete mutual exclusivity across the five languages, with a mean Jaccard similarity of only 0.017 for Llama 3.1 70B and 0.057 for Qwen 2.5 72B, revealing language-idiosyncratic circuits. Ablating general BRH increases two-hop Negative Log-Likelihood (NLL) by 39-89x the random-head baseline, providing direct causal evidence of their role. Amplifying these heads in a failing target-language pass rescues up to 51.7% of cross-lingual failures, with no training. The two models share this dual-circuit pattern but allocate heads differently: Llama concentrates chaining in a large general pool, while Qwen leans on larger language-specific pools. Together these results show that activation-level intervention alone can recover correct answers from cross-lingual reasoning failures.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}

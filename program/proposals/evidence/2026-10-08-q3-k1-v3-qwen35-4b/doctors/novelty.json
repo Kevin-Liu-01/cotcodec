@@ -1,0 +1,9 @@
+{
+ "doctor": "Novelty",
+ "status": "FAIL",
+ "evaluated_on": "2026-10-08",
+ "evaluated_by": "wave-1 single synthesis owner (Claude agent); not an independent review",
+ "pass_condition": "Synonyms, component pairs, citation graph, code, and adjacent fields searched",
+ "evidence": "No direct prior found by any cell (merged NARROWED, core measurement STILL_OPEN). Blind closest-prior discrimination (blind/, closest prior Oracle-Guided 2606.07703, supplementary SpotAttention 2606.22874) and the novelty refuter have not run. The trivial-recombination argument of the K1 v2 novelty refuter (about 0.6) is stronger on a Qwen3.5 base, where SpotAttention and Oracle-Guided already distil frozen indexers. Coverage gaps: OpenReview, ACL Anthology full text, code content, backward citations, Japanese and Korean queries; forward citations screened by title only.",
+ "remediation": "Run the blind critic on both packets and the novelty refuter; this needs query budget beyond the 2 remaining of the declared 150."
+}

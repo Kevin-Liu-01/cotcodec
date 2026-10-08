@@ -1,0 +1,28 @@
+{
+ "url": "https://arxiv.org/abs/2603.02227",
+ "fetched_at": "2026-10-08T15:17:24Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 43405,
+ "raw_sha256": "708d65bb924c0085e143a703972a1eca31378db23ee4df453f4f79bf44763a52",
+ "raw_stored": false,
+ "extract": {
+  "title": "Routing Absorption in Sparse Attention: Why Random Gates Are Hard to Beat",
+  "authors": [
+   "Aquino-Michaels, Keston"
+  ],
+  "citation_date": "2026/02/11",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Wed, 11 Feb 2026 15:06:44 UTC"
+   },
+   {
+    "version": "v2",
+    "date": "Mon, 14 Sep 2026 18:33:49 UTC"
+   }
+  ],
+  "abstract": "Learned gates can approximate sparse attention patterns on frozen transformers, yet provide limited benefit over random gates when trained jointly with the model. We investigate this difference in a controlled 31M-parameter transformer and attribute it to routing absorption: model representations co-adapt to the imposed mask, reducing the incremental benefit of learned routing. Four experiments characterize the phenomenon. Differentiable soft gating yields perplexities of 48.73 plus or minus 0.60 with learned gates and 49.83 plus or minus 0.04 with frozen random gates over three seeds. Hard top-k masking provides no gradient path to the gate scores in the tested implementation. Gates distilled onto co-adapted and dense-trained Q/K/V both achieve high F1 against oracle masks, but hard-mask deployment yields perplexities of 601.6 and 48.6, respectively. Stochastic mask training also leaves a substantial deployment penalty: dense evaluation yields 78.2 perplexity, compared with 37.3 for the dense baseline. Experiments on Qwen3-1.7B show that increasing the number of trainable attention layers reduces the gap between learned and random gates. We relate these results to co-adaptation in Mixture-of-Experts and propose parameter asymmetry between the gate and the model as a contributing mechanism. For the tested per-query, token-level gates, freezing the model provides stable routing targets and enables effective post-hoc sparsification. The results motivate random-routing controls and separate evaluation of routing quality and model adaptation in sparse attention methods.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}
