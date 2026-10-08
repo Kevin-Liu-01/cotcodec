@@ -412,3 +412,29 @@ and be hashed into the receipt; every transcript of an item, interrupted ones
 included, is ingested and audited, and at most one may answer; (v) packets
 put the difference section before the file listings, a label-blind format
 change disclosed with the dev results it postdates.
+
+**D36. Q3 dense pre-check: v1 ended INCOMPLETE on two code defects; a v2
+with the same design.** `q3-dense-headroom-precheck-v1` ran (jobs 727 and
+730, 0.42 GPU-h) and gave no combined read. The 0.6B lane's receipt is valid
+(K1 smoke 452 reproduced to 1e-6 points), but every receipt the frozen code
+can write has a null Slurm job id, which the summariser rejects; and the 4B
+lane ran CPU-bound (GPU idle, one core busy, about 61 s per 16-unit chunk
+against an 11-minute estimate for the lane) and ignored SIGUSR1, so it was
+void. Neither is a design question, and the 4B lane is the informative one:
+on 0.6B a NEGATIVE-capable K1 v3 already looks excluded descriptively (H1_CX
+12.25, 99% upper bound 15.6) and H2 fails because the model barely answers
+cross-script questions. Decided: a successor `q3-dense-headroom-precheck-v2`
+keeps v1's data, statistics, decision rules, thresholds and D32's
+amendments unchanged. Its code (i) binds each receipt to its Slurm job, with
+an end-to-end test that feeds a batch-produced receipt to the summariser;
+(ii) honours SIGUSR1 on the 4B path, with a test that loads the 4B
+dependencies and runs the entry point as the container's PID 1; and (iii)
+removes the CPU bottleneck without changing any computed quantity, shown by
+bit-level tests on small inputs and by a registered validity gate: v2's 0.6B
+lane must reproduce v1's job-727 statistics (to 1e-6) as well as smoke 452.
+Before the freeze, one development timing job of at most 0.1 GPU-h measures
+the fixed 4B path; the 4B lane's limit is then at least twice the measured
+time plus start-up, with the one continuation kept. Both lanes run under
+v2; v1's 0.6B receipt is reported beside v2's. The v2 cap is 1.5 GPU-h,
+timing job included, which with v1 stays far below 8 GPU-h. Any K1 v3 still
+needs a new id and the gauntlet (D26).
