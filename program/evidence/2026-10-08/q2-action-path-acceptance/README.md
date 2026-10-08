@@ -63,7 +63,7 @@ C2's rule leaves out the modifier state of key releases only; a press keeps
 it. So this is a counted failure in every repetition. Each of the nine
 sessions ran the guard's keyboard warm-up (keycode 230, the shell then
 reporting idle) before its first trial (`start.warmup` in every cycle
-record). `chord_super_d` was trial 15, 20, 7, 45 and 33 of its
+record). `chord_super_d` was at zero-based position 15, 20, 7, 45 and 33 of its
 sessions, never a session's first trial. No further investigation was run.
 A corrected prediction, or a C2 rule that also covers press timing, can
 only enter a new preregistration (section 8).

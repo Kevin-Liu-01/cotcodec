@@ -1076,7 +1076,7 @@ Append-only. Newest entries at the bottom.
   `pyautogui.hotkey('winleft', 'd')`. C2's rule leaves out the modifier
   state of key releases only, not of presses. Section 5 as written would
   also have failed `chord_alt_f4`, `chord_alt_tab` and
-  `chord_ctrl_alt_shift_r` (release state) and marked three typing entries
+  `chord_ctrl_alt_shift_r` (release state) and marked two typing entries and one sequence entry
   FLAKY (stale markers); C2's rule excuses both, as registered.
 - Under sections 8 and 11 the suite is invalid for `q2-action-path-v1`. A
   failed validity control is not repaired within v1, and the campaign
