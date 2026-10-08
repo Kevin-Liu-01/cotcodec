@@ -1,0 +1,35 @@
+Slurm records for q3-dense-headroom-precheck-v1 operations (scontrol show job -o, captured by wait-job.sh while each job was
+still in slurmctld memory: scontrol-<job>.txt; sacct accounting is off on this host). GPU-hours = allocated GPUs x elapsed.
+
+723 cotcodec-build-arch-image (image build from the fresh clone at a369e6d2; infra/slurm/host-single-node/build-architecture-image.sbatch)
+   JobState=COMPLETED ExitCode=0:0 RunTime=00:10:26 TimeLimit=03:00:00 StartTime=2026-10-08T03:46:38 EndTime=2026-10-08T03:57:04
+   TRES=cpu=16,mem=64G,node=1,billing=16 (no GPU)  -> 0 GPU-h
+724 dense-cpu-doctor-a369e6d (srun step: docker run --network none, no GPU, image 60e8d442..., the dense CPU doctor)
+   JobState=COMPLETED ExitCode=0:0 RunTime=00:01:37 TimeLimit=00:50:00 StartTime=2026-10-08T04:11:41 EndTime=2026-10-08T04:13:18
+   TRES=cpu=32,mem=96G,node=1,billing=32 (no GPU)  -> 0 GPU-h
+727 q3-dense-headroom-0p6b (orx run 088c0112-7cb5-42ba-bc4c-b47c34d7a46e, node commit 38cf069, manifest q3-dense-headroom-0p6b,
+    --gres=gpu:h100:1, --time=00:09:00, --mem=64G)
+   JobState=COMPLETED ExitCode=0:0 RunTime=00:04:40 TimeLimit=00:09:00 StartTime=2026-10-08T04:21:41 EndTime=2026-10-08T04:26:21
+   TRES=cpu=16,mem=64G,node=1,billing=16; gpu-prolog: gpu_devices=0, foreign_compute_processes=0, decision=exclusive
+   termination.env: reason=completed exit_code=0 checkpoint_ready=false container_killed_by=none
+   job.env started_at 04:21:43Z to termination.env finished_at 04:26:21Z: 278 s
+   -> 1 GPU x 278 s = 0.0772 GPU-h used (Slurm RunTime 280 s = 0.0778); charged under the registration's rule
+      ceil(278/60) + 1 = 6 minutes = 0.1000 GPU-h (lane cap 9 minutes, 0.15 GPU-h)
+730 q3-dense-headroom-4b (orx run ce8de722-e02c-49dd-b30b-eb8608ed7208, node commit c84c9aa, manifest q3-dense-headroom-4b,
+    --gres=gpu:h100:1, --time=00:21:00, --mem=96G, profile large-cpu-mem)
+   JobState=FAILED Reason=NonZeroExitCode ExitCode=137:0 RunTime=00:20:31 TimeLimit=00:21:00 StartTime=2026-10-08T04:29:43
+   EndTime=2026-10-08T04:50:14 TRES=cpu=16,mem=96G,node=1,billing=16; gpu-prolog: gpu_devices=0, foreign_compute_processes=0,
+   decision=exclusive
+   termination.env: reason=signal_USR1_checkpoint_timeout exit_code=137 checkpoint_ready=false checkpoint_marker_present=false
+   container_killed_by=hard_stop container_killed_at=04:50:13Z; hard-stop.env cause=time_limit
+   job.env started_at 04:29:44Z to termination.env finished_at 04:50:14Z: 1,230 s
+   -> 1 GPU x 1,230 s = 0.3417 GPU-h used (Slurm RunTime 1,231 s = 0.3419), within the 21-minute Slurm limit and the 0.35 GPU-h cap;
+      charged under the registration's rule ceil(1230/60) + 1 = 22 minutes = 0.3667 GPU-h, one minute over the lane's 21 (the
+      rule's extra minute covers the prolog and epilogue; no GPU time beyond the Slurm limit was used)
+
+Slurm ids 725, 726, 728 and 729 are not this experiment's: no submission of this session returned them, and their records were
+already purged when checked at 04:53Z. Other sessions' jobs (for example 731 and 732, rv3-q1d31-*, CPU only) ran on the host in the
+same period; the GPU prologs of 727 and 730 found no foreign process on their GPU.
+
+GPU-hours used by this experiment: 0.4189 (727 0.0772, 730 0.3417; Slurm RunTime basis 0.4197). Charged under the registration's
+rule: 0.4667 (727 0.1000, 730 0.3667). Jobs 723 and 724 were CPU only.
