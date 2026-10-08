@@ -1,0 +1,212 @@
+{
+ "consequence": "No evaluation unit was scored. The S1 calibration substrates of these eight problems now have known verdicts under the full stack at replicate 42; Stage 0's audit calibration (section 6.1) runs on S1-cal substrates, so its report lists these eight as re-pilot-exposed. Mutants of S1-cal parents stay unscored in Stage 0 (sections 3.3 and 3.5).",
+ "items_sha256": "4113549fc94933317b274da872b97a9737b185779ebb3a697595ff887437a36d",
+ "job": 713,
+ "kernels": [
+  {
+   "in_pilot_exposed": false,
+   "kernel_id": "ctl-identity-L1-10_3D_tensor_matrix_multiplication",
+   "problem_has_identity_control_in_frame": false,
+   "problem_has_s2_substrate": false,
+   "problem_id": "L1/10_3D_tensor_matrix_multiplication",
+   "s1_half": "calibration"
+  },
+  {
+   "in_pilot_exposed": false,
+   "kernel_id": "ctl-identity-L1-18_Matmul_with_transposed_both",
+   "problem_has_identity_control_in_frame": false,
+   "problem_has_s2_substrate": false,
+   "problem_id": "L1/18_Matmul_with_transposed_both",
+   "s1_half": "calibration"
+  },
+  {
+   "in_pilot_exposed": false,
+   "kernel_id": "ctl-identity-L2-100_ConvTranspose3d_Clamp_Min_Divide",
+   "problem_has_identity_control_in_frame": false,
+   "problem_has_s2_substrate": false,
+   "problem_id": "L2/100_ConvTranspose3d_Clamp_Min_Divide",
+   "s1_half": "calibration"
+  },
+  {
+   "in_pilot_exposed": false,
+   "kernel_id": "ctl-identity-L2-46_Conv2d_Subtract_Tanh_Subtract_AvgPool",
+   "problem_has_identity_control_in_frame": false,
+   "problem_has_s2_substrate": false,
+   "problem_id": "L2/46_Conv2d_Subtract_Tanh_Subtract_AvgPool",
+   "s1_half": "calibration"
+  },
+  {
+   "in_pilot_exposed": false,
+   "kernel_id": "ctl-identity-L2-59_Matmul_Swish_Scaling",
+   "problem_has_identity_control_in_frame": false,
+   "problem_has_s2_substrate": false,
+   "problem_id": "L2/59_Matmul_Swish_Scaling",
+   "s1_half": "calibration"
+  },
+  {
+   "in_pilot_exposed": false,
+   "kernel_id": "ctl-identity-L2-77_ConvTranspose3d_Scale_BatchNorm_GlobalAvgPool",
+   "problem_has_identity_control_in_frame": false,
+   "problem_has_s2_substrate": false,
+   "problem_id": "L2/77_ConvTranspose3d_Scale_BatchNorm_GlobalAvgPool",
+   "s1_half": "calibration"
+  },
+  {
+   "in_pilot_exposed": false,
+   "kernel_id": "ctl-identity-L2-87_Conv2d_Subtract_Subtract_Mish",
+   "problem_has_identity_control_in_frame": false,
+   "problem_has_s2_substrate": false,
+   "problem_id": "L2/87_Conv2d_Subtract_Subtract_Mish",
+   "s1_half": "calibration"
+  },
+  {
+   "in_pilot_exposed": false,
+   "kernel_id": "ctl-identity-L2-95_Matmul_Add_Swish_Tanh_GELU_Hardtanh",
+   "problem_has_identity_control_in_frame": false,
+   "problem_has_s2_substrate": false,
+   "problem_id": "L2/95_Matmul_Add_Swish_Tanh_GELU_Hardtanh",
+   "s1_half": "calibration"
+  },
+  {
+   "in_pilot_exposed": false,
+   "kernel_id": "s1-inductor-L1-10_3D_tensor_matrix_multiplication",
+   "problem_has_identity_control_in_frame": false,
+   "problem_has_s2_substrate": false,
+   "problem_id": "L1/10_3D_tensor_matrix_multiplication",
+   "s1_half": "calibration"
+  },
+  {
+   "in_pilot_exposed": false,
+   "kernel_id": "s1-inductor-L1-10_3D_tensor_matrix_multiplication.acc-minus.L114C8",
+   "problem_has_identity_control_in_frame": false,
+   "problem_has_s2_substrate": false,
+   "problem_id": "L1/10_3D_tensor_matrix_multiplication",
+   "s1_half": "calibration"
+  },
+  {
+   "in_pilot_exposed": false,
+   "kernel_id": "s1-inductor-L1-18_Matmul_with_transposed_both",
+   "problem_has_identity_control_in_frame": false,
+   "problem_has_s2_substrate": false,
+   "problem_id": "L1/18_Matmul_with_transposed_both",
+   "s1_half": "calibration"
+  },
+  {
+   "in_pilot_exposed": false,
+   "kernel_id": "s1-inductor-L1-18_Matmul_with_transposed_both.load-offset-off1.L109C20",
+   "problem_has_identity_control_in_frame": false,
+   "problem_has_s2_substrate": false,
+   "problem_id": "L1/18_Matmul_with_transposed_both",
+   "s1_half": "calibration"
+  },
+  {
+   "in_pilot_exposed": false,
+   "kernel_id": "s1-inductor-L2-100_ConvTranspose3d_Clamp_Min_Divide",
+   "problem_has_identity_control_in_frame": false,
+   "problem_has_s2_substrate": false,
+   "problem_id": "L2/100_ConvTranspose3d_Clamp_Min_Divide",
+   "s1_half": "calibration"
+  },
+  {
+   "in_pilot_exposed": false,
+   "kernel_id": "s1-inductor-L2-100_ConvTranspose3d_Clamp_Min_Divide.plus2minus.L67C13",
+   "problem_has_identity_control_in_frame": false,
+   "problem_has_s2_substrate": false,
+   "problem_id": "L2/100_ConvTranspose3d_Clamp_Min_Divide",
+   "s1_half": "calibration"
+  },
+  {
+   "in_pilot_exposed": false,
+   "kernel_id": "s1-inductor-L2-46_Conv2d_Subtract_Tanh_Subtract_AvgPool",
+   "problem_has_identity_control_in_frame": false,
+   "problem_has_s2_substrate": false,
+   "problem_id": "L2/46_Conv2d_Subtract_Tanh_Subtract_AvgPool",
+   "s1_half": "calibration"
+  },
+  {
+   "in_pilot_exposed": false,
+   "kernel_id": "s1-inductor-L2-46_Conv2d_Subtract_Tanh_Subtract_AvgPool.lt2gt.L88C21",
+   "problem_has_identity_control_in_frame": false,
+   "problem_has_s2_substrate": false,
+   "problem_id": "L2/46_Conv2d_Subtract_Tanh_Subtract_AvgPool",
+   "s1_half": "calibration"
+  },
+  {
+   "in_pilot_exposed": false,
+   "kernel_id": "s1-inductor-L2-59_Matmul_Swish_Scaling",
+   "problem_has_identity_control_in_frame": false,
+   "problem_has_s2_substrate": false,
+   "problem_id": "L2/59_Matmul_Swish_Scaling",
+   "s1_half": "calibration"
+  },
+  {
+   "in_pilot_exposed": false,
+   "kernel_id": "s1-inductor-L2-59_Matmul_Swish_Scaling.mask-bound-minus1.L123C20",
+   "problem_has_identity_control_in_frame": false,
+   "problem_has_s2_substrate": false,
+   "problem_id": "L2/59_Matmul_Swish_Scaling",
+   "s1_half": "calibration"
+  },
+  {
+   "in_pilot_exposed": false,
+   "kernel_id": "s1-inductor-L2-77_ConvTranspose3d_Scale_BatchNorm_GlobalAvgPool",
+   "problem_has_identity_control_in_frame": false,
+   "problem_has_s2_substrate": false,
+   "problem_id": "L2/77_ConvTranspose3d_Scale_BatchNorm_GlobalAvgPool",
+   "s1_half": "calibration"
+  },
+  {
+   "in_pilot_exposed": false,
+   "kernel_id": "s1-inductor-L2-77_ConvTranspose3d_Scale_BatchNorm_GlobalAvgPool.const0to1.L87C37",
+   "problem_has_identity_control_in_frame": false,
+   "problem_has_s2_substrate": false,
+   "problem_id": "L2/77_ConvTranspose3d_Scale_BatchNorm_GlobalAvgPool",
+   "s1_half": "calibration"
+  },
+  {
+   "in_pilot_exposed": false,
+   "kernel_id": "s1-inductor-L2-87_Conv2d_Subtract_Subtract_Mish",
+   "problem_has_identity_control_in_frame": false,
+   "problem_has_s2_substrate": false,
+   "problem_id": "L2/87_Conv2d_Subtract_Subtract_Mish",
+   "s1_half": "calibration"
+  },
+  {
+   "in_pilot_exposed": false,
+   "kernel_id": "s1-inductor-L2-87_Conv2d_Subtract_Subtract_Mish.mul2plus.L61C39",
+   "problem_has_identity_control_in_frame": false,
+   "problem_has_s2_substrate": false,
+   "problem_id": "L2/87_Conv2d_Subtract_Subtract_Mish",
+   "s1_half": "calibration"
+  },
+  {
+   "in_pilot_exposed": false,
+   "kernel_id": "s1-inductor-L2-95_Matmul_Add_Swish_Tanh_GELU_Hardtanh",
+   "problem_has_identity_control_in_frame": false,
+   "problem_has_s2_substrate": false,
+   "problem_id": "L2/95_Matmul_Add_Swish_Tanh_GELU_Hardtanh",
+   "s1_half": "calibration"
+  },
+  {
+   "in_pilot_exposed": false,
+   "kernel_id": "s1-inductor-L2-95_Matmul_Add_Swish_Tanh_GELU_Hardtanh.plus2minus.L78C14",
+   "problem_has_identity_control_in_frame": false,
+   "problem_has_s2_substrate": false,
+   "problem_id": "L2/95_Matmul_Add_Swish_Tanh_GELU_Hardtanh",
+   "s1_half": "calibration"
+  }
+ ],
+ "replicate": 42,
+ "rule": "q1-repilot/1",
+ "s1_split_sha256": "b773f218f174e3bb8ab4fcde4f4e6318d870ef020e6b86bce807362c5292a0b2",
+ "schema": "q1-exposure-ledger-entry/1",
+ "summary": {
+  "in_pilot_exposed": 0,
+  "kernels": 24,
+  "problems": 8,
+  "s1_calibration": 24,
+  "s1_evaluation": 0,
+  "with_s2_substrate": 0
+ },
+ "what": "every scoring gate and audit channel, inline and through the reference store"
+}
