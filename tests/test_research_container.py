@@ -524,9 +524,28 @@ case "$1" in
       echo '[]'
     fi
     exit 0 ;;
-  create) echo created > "${state}/status"; echo fake-container-id; exit 0 ;;
+  create)
+    if [[ -n "${FAKE_CREATE_STATUS:-}" ]]; then
+      echo "Error response from daemon: Conflict. The container name is already in use" >&2
+      exit "${FAKE_CREATE_STATUS}"
+    fi
+    if [[ -n "${FAKE_CREATE_DELAY:-}" ]]; then
+      # dockerd finishes a create even when the CLI that asked for it is killed.
+      setsid bash -c 'sleep "$1"; echo created > "$2/status"; touch "$2/create-finished"' \
+        _ "${FAKE_CREATE_DELAY}" "${state}" &
+      touch "${state}/create-started"
+      while [[ ! -e "${state}/create-finished" ]]; do sleep 0.05; done
+    else
+      echo created > "${state}/status"
+    fi
+    echo fake-container-id; exit 0 ;;
   inspect)
-    status="$(cat "${state}/status" 2>/dev/null || echo missing)"
+    if [[ ! -f "${state}/status" ]]; then
+      [[ "$2" == --format ]] || echo '[]'
+      echo "Error: No such object: ${!#}" >&2
+      exit 1
+    fi
+    status="$(cat "${state}/status")"
     if [[ "$2" == --format ]]; then
       case "$3" in
         '{{.State.Running}}')
@@ -547,6 +566,12 @@ case "$1" in
   start) exec bash "${FAKE_WORKLOAD}" ;;
   kill)
     printf '%s %s\n' "$(date +%s.%N)" "$3" >> "${state}/kill-times"
+    if [[ "$3" == TERM && "${FAKE_TERM_RACE:-false}" == true ]]; then
+      # A TERM proxied by the attached client a moment earlier ends the
+      # container before this kill reaches dockerd.
+      kill -s TERM "$(cat "${state}/workload.pid")" 2>/dev/null || true
+      while [[ "$(cat "${state}/status" 2>/dev/null)" == running ]]; do sleep 0.05; done
+    fi
     if [[ "$(cat "${state}/status" 2>/dev/null)" != running ]]; then
       echo "Error response from daemon: container $4 is not running" >&2
       exit 1
@@ -561,8 +586,8 @@ case "$1" in
     if [[ "$(cat "${state}/status" 2>/dev/null)" == running ]]; then
       kill -9 "$(cat "${state}/workload.pid")" 2>/dev/null || true
       echo 137 > "${state}/exit_code"
-      echo exited > "${state}/status"
     fi
+    rm -f "${state}/status"
     exit 0 ;;
   logs) exit 0 ;;
 esac
@@ -603,6 +628,12 @@ on_term() {
   echo TERM >> "${state}/workload-signals"
   case "${FAKE_WORKLOAD_MODE}" in
     checkpoint-on-term) write_marker trigger=SIGTERM step=term-checkpoint; finish 75 ;;
+    checkpoint-on-term-then-finish)
+      # Work after the marker (a receipt, log flushes, an engine shutdown).
+      write_marker trigger=SIGTERM step=term-checkpoint
+      sleep 1.5
+      touch "${state}/post-marker-work"
+      finish 75 ;;
   esac
   finish 143
 }
@@ -721,17 +752,26 @@ class StubbedRun:
             }
         )
         self.process: subprocess.Popen[bytes] | None = None
+        self.new_session = False
 
-    def start(self) -> None:
+    def start(self, *, new_session: bool = False) -> None:
+        """Run the script; new_session gives it its own process group, as a job has."""
         self.stdout = (self.root / "stdout.txt").open("wb")
         self.stderr_path = self.root / "stderr.txt"
         self.stderr = self.stderr_path.open("wb")
+        self.new_session = new_session
         self.process = subprocess.Popen(
             ["bash", str(BATCH_SCRIPT)],
             env=self.env,
             stdout=self.stdout,
             stderr=self.stderr,
+            start_new_session=new_session,
         )
+
+    def signal_job(self, signum: int) -> None:
+        """Signal every process of the job, as Slurm does when it ends one."""
+        assert self.process is not None and self.new_session
+        os.killpg(self.process.pid, signum)
 
     def wait_for_workload(self, timeout: float = 30) -> None:
         deadline = time.monotonic() + timeout
@@ -751,6 +791,9 @@ class StubbedRun:
             if pid_file.exists():
                 with contextlib.suppress(ProcessLookupError, ValueError):
                     os.kill(int(pid_file.read_text()), signal.SIGKILL)
+            if self.new_session:
+                with contextlib.suppress(ProcessLookupError, PermissionError):
+                    os.killpg(self.process.pid, signal.SIGKILL)
             self.stdout.close()
             self.stderr.close()
 
@@ -783,6 +826,24 @@ class StubbedRun:
             return []
         rows = [line.split() for line in path.read_text(encoding="utf-8").splitlines()]
         return [(float(stamp), name) for stamp, name in rows]
+
+    def script_processes(self) -> list[int]:
+        """Live processes running this run's batch script: the shell or a subshell of it."""
+        script = str(BATCH_SCRIPT).encode()
+        marker = f"FAKE_DOCKER_STATE={self.state}".encode()
+        found = []
+        for entry in Path("/proc").iterdir():
+            if not entry.name.isdigit():
+                continue
+            try:
+                cmdline = (entry / "cmdline").read_bytes().split(b"\0")
+                environ = (entry / "environ").read_bytes().split(b"\0")
+                stat = (entry / "stat").read_text(encoding="utf-8")
+            except OSError:
+                continue
+            if script in cmdline and marker in environ and stat.rsplit(")", 1)[1].split()[0] != "Z":
+                found.append(int(entry.name))
+        return found
 
     def workload_alive(self) -> bool:
         """Whether the fake container's process still runs (a zombie counts as dead)."""
@@ -1227,6 +1288,211 @@ def test_term_grace_fits_inside_slurm_kill_wait(
     assert args[args.index("--stop-timeout") + 1] == grace
 
 
+@RUNTIME_SKIP
+@pytest.mark.skipif(
+    sys.platform.startswith("linux") and os.geteuid() == 0,
+    reason="root writes through the read-only run directory",
+)
+def test_hard_stop_kills_even_when_its_record_cannot_be_written(lane_root: Path) -> None:
+    # A full, over-quota or failing run directory (ENOSPC, EDQUOT, EIO) must not
+    # stop the hard stop: the record is best-effort, the kill is not.
+    run = StubbedRun(
+        lane_root, _seeded_raw(), FAKE_WORKLOAD_MODE="ignore-signals", FAKE_TIME_LEFT="0:36"
+    )
+    started = time.time()
+    job_end = started + 36
+    run.start()
+    run.wait_for_workload()
+    run.run_dir.chmod(0o500)
+    try:
+        code = _wait_for_exit(run, timeout=60)
+        ended = time.time()
+        alive = run.workload_alive()
+    finally:
+        run.run_dir.chmod(0o700)
+        run.finish()
+    assert code != 0, run.stderr_text()
+    assert not alive
+    assert ended < job_end
+    kill_at = next(stamp for stamp, name in run.kills() if name == "KILL")
+    assert started + 5 <= kill_at < job_end
+    assert not (run.run_dir / "hard-stop.env").exists()
+
+
+@RUNTIME_SKIP
+def test_an_orphaned_hard_stop_timer_kills_the_container_and_ends(lane_root: Path) -> None:
+    # The OOM killer or `scancel --batch --signal=KILL` can end the batch shell
+    # alone. Slurm then counts the job as over and its GPUs as free, and no trap
+    # runs, so the timer (now orphaned) must end the container and then itself.
+    run = StubbedRun(lane_root, _seeded_raw(), FAKE_WORKLOAD_MODE="ignore-signals")
+    run.start(new_session=True)
+    run.wait_for_workload()
+    assert run.process is not None
+    shell_killed_at = time.time()
+    run.process.kill()
+    run.process.wait(timeout=10)
+    deadline = time.monotonic() + 20
+    try:
+        while (run.workload_alive() or run.script_processes()) and time.monotonic() < deadline:
+            time.sleep(0.1)
+        alive = run.workload_alive()
+        leftovers = run.script_processes()
+    finally:
+        run.finish()
+    assert not alive
+    assert leftovers == []
+    kill_at = next(stamp for stamp, name in run.kills() if name == "KILL")
+    assert kill_at - shell_killed_at < 8
+    record = run.env_file("hard-stop.env")
+    assert record["cause"] == "batch_script_gone"
+    assert record["hard_stop_at"] == run.env_file("job.env")["hard_stop_at"]
+
+
+@RUNTIME_SKIP
+def test_hard_stop_timer_ends_after_its_kill(lane_root: Path) -> None:
+    run = StubbedRun(
+        lane_root, _seeded_raw(), FAKE_WORKLOAD_MODE="ignore-signals", FAKE_TIME_LEFT="0:36"
+    )
+    run.start(new_session=True)
+    run.wait_for_workload()
+    assert run.process is not None
+    # Keep the batch shell inside a foreground command past the hard stop, so
+    # only the timer's own exit condition can end it.
+    run.process.send_signal(signal.SIGSTOP)
+    deadline = time.monotonic() + 30
+    try:
+        while run.workload_alive() and time.monotonic() < deadline:
+            time.sleep(0.1)
+        alive = run.workload_alive()
+        time.sleep(3)
+        shell = run.process.pid
+        timers = [pid for pid in run.script_processes() if pid != shell]
+    finally:
+        run.process.send_signal(signal.SIGCONT)
+        code = _wait_for_exit(run, timeout=30)
+        run.finish()
+    assert not alive
+    assert timers == []
+    assert code == 137, run.stderr_text()
+    assert run.env_file("termination.env")["reason"] == "hard_stop"
+    assert run.env_file("hard-stop.env")["cause"] == "time_limit"
+
+
+@RUNTIME_SKIP
+def test_a_run_directory_from_an_earlier_attempt_is_refused(lane_root: Path) -> None:
+    # A requeued job, or a job id reused after a Slurm state reset, finds an
+    # earlier attempt's records; they stay untouched and nothing starts.
+    run = StubbedRun(lane_root, _seeded_raw())
+    run.run_dir.mkdir(parents=True)
+    earlier = {
+        "job.env": "job_id=4242\n",
+        "hard-stop.env": "hard_stop_at=2026-10-07T00:00:00Z\nkilled_at=2026-10-07T00:00:01Z\n",
+        "container-id.txt": "earlier-container-id\n",
+        "termination.env": "reason=hard_stop\nexit_code=137\n",
+    }
+    for name, text in earlier.items():
+        (run.run_dir / name).write_text(text, encoding="utf-8")
+    assert run.run() == 2, run.stderr_text()
+    assert "already exists" in run.stderr_text()
+    assert run.calls("create") == []
+    assert sorted(path.name for path in run.run_dir.iterdir()) == sorted(earlier)
+    for name, text in earlier.items():
+        assert (run.run_dir / name).read_text(encoding="utf-8") == text
+
+
+@RUNTIME_SKIP
+def test_term_during_docker_create_removes_the_container_dockerd_finishes(
+    lane_root: Path,
+) -> None:
+    # Slurm's TERM reaches the docker CLI too and kills it mid-create, before it
+    # prints the container ID; dockerd still finishes the create afterwards.
+    run = StubbedRun(lane_root, _seeded_raw(), FAKE_CREATE_DELAY="2")
+    run.start(new_session=True)
+    deadline = time.monotonic() + 30
+    while not (run.state / "create-started").exists():
+        assert run.process is not None and run.process.poll() is None, run.stderr_text()
+        assert time.monotonic() < deadline, "docker create never ran"
+        time.sleep(0.05)
+    run.signal_job(signal.SIGTERM)
+    code = run.finish()
+    deadline = time.monotonic() + 10
+    while not (run.state / "create-finished").exists() and time.monotonic() < deadline:
+        time.sleep(0.05)
+    assert (run.state / "create-finished").exists()
+    assert code == 143, run.stderr_text()
+    assert not (run.run_dir / "container-id.txt").read_text(encoding="utf-8").strip()
+    assert ["rm", "--force", "cotcodec-4242"] in run.calls("rm")
+    assert run.calls("start") == []
+    # The created container is gone: the stub's state file goes with docker rm.
+    assert not (run.state / "status").exists()
+    assert run.env_file("termination.env")["reason"] == "signal_TERM_not_forwarded"
+
+
+@RUNTIME_SKIP
+def test_a_failed_docker_create_leaves_a_same_named_container_alone(lane_root: Path) -> None:
+    # Only a create that a signal interrupted is watched for; a plain failure
+    # (here a name conflict with a leftover container) adopts nothing.
+    run = StubbedRun(lane_root, _seeded_raw(), FAKE_CREATE_STATUS="125")
+    (run.state / "status").write_text("exited\n", encoding="utf-8")
+    assert run.run() == 125, run.stderr_text()
+    assert "docker create failed with status 125" in run.stderr_text()
+    assert run.calls("rm") == []
+    assert run.calls("kill") == []
+    assert (run.state / "status").read_text(encoding="utf-8") == "exited\n"
+    assert not (run.run_dir / "container.log").exists()
+
+
+@RUNTIME_SKIP
+def test_term_to_the_whole_job_confirms_a_term_triggered_checkpoint(lane_root: Path) -> None:
+    # Slurm sends TERM to every process of the job. The attached docker client
+    # proxies it to the container at once, so a fast workload can write its
+    # trigger=SIGTERM marker before the batch script's TERM trap runs.
+    run = StubbedRun(lane_root, _seeded_raw(), FAKE_WORKLOAD_MODE="checkpoint-on-term")
+    run.start(new_session=True)
+    run.wait_for_workload()
+    run.signal_job(signal.SIGTERM)
+    assert run.finish() == 75, run.stderr_text()
+    termination = run.env_file("termination.env")
+    assert termination["reason"] == "signal_TERM_checkpoint_confirmed"
+    assert termination["exit_code"] == "75"
+    assert termination["checkpoint_ready"] == "true"
+    assert termination["container_killed_by"] == "none"
+
+
+@RUNTIME_SKIP
+def test_term_confirms_a_checkpoint_when_the_container_exits_before_the_forward(
+    lane_root: Path,
+) -> None:
+    run = StubbedRun(
+        lane_root, _seeded_raw(), FAKE_WORKLOAD_MODE="checkpoint-on-term", FAKE_TERM_RACE="true"
+    )
+    run.start()
+    run.wait_for_workload()
+    assert run.process is not None
+    run.process.send_signal(signal.SIGTERM)
+    assert run.finish() == 75, run.stderr_text()
+    termination = run.env_file("termination.env")
+    assert termination["reason"] == "signal_TERM_checkpoint_confirmed"
+    assert termination["checkpoint_ready"] == "true"
+
+
+@RUNTIME_SKIP
+def test_term_lets_a_confirmed_workload_finish_inside_the_grace(lane_root: Path) -> None:
+    run = StubbedRun(lane_root, _seeded_raw(), FAKE_WORKLOAD_MODE="checkpoint-on-term-then-finish")
+    run.start()
+    run.wait_for_workload()
+    assert run.process is not None
+    run.process.send_signal(signal.SIGTERM)
+    assert run.finish() == 75, run.stderr_text()
+    assert (run.state / "post-marker-work").exists()
+    assert [name for _stamp, name in run.kills()] == ["TERM"]
+    termination = run.env_file("termination.env")
+    assert termination["reason"] == "signal_TERM_checkpoint_confirmed"
+    assert termination["exit_code"] == "75"
+    assert termination["checkpoint_ready"] == "true"
+    assert termination["container_killed_by"] == "none"
+
+
 def _script_constant(content: str, name: str) -> int:
     match = re.search(rf"^{name}=([0-9]+)$", content, re.MULTILINE)
     assert match is not None, name
@@ -1250,6 +1516,9 @@ def test_hard_stop_falls_after_the_usr1_checkpoint_window() -> None:
     poll = int(re.search(r"container_exit_code ([0-9]+)", on_term).group(1))
     assert reserve >= poll + 5
     assert "trap on_term TERM" in content
+    # One run directory per attempt: Slurm never requeues a lane job.
+    assert "--no-requeue" in argv
+    assert "#SBATCH --no-requeue" in content
     assert "docker stop" not in content.replace("`docker stop`", "")
     create = content.split("docker create \\\n", 1)[1].split("container-id.txt", 1)[0]
     assert '--stop-timeout "${term_grace_seconds}"' in create
