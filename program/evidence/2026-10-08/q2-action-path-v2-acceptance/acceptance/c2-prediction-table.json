@@ -1,0 +1,189 @@
+{
+ "v2_pass": true,
+ "v2_problems": [],
+ "v1_pass": false,
+ "v1_problems": [
+  "L0-raw failing set deviates: unpredicted failures ['chord_super_d'], predicted but passing []"
+ ],
+ "rows": [
+  {
+   "entry": "chord_alt_f4",
+   "predicted": "PASS",
+   "v2_c2_rule": "PASS",
+   "v2_section5": "PASS",
+   "v2_section5_pass": "5/5",
+   "v2_failure_reasons": [],
+   "v1_c2_rule": "PASS",
+   "v1_section5": "FAIL"
+  },
+  {
+   "entry": "chord_alt_tab",
+   "predicted": "PASS",
+   "v2_c2_rule": "PASS",
+   "v2_section5": "PASS",
+   "v2_section5_pass": "5/5",
+   "v2_failure_reasons": [],
+   "v1_c2_rule": "PASS",
+   "v1_section5": "FAIL"
+  },
+  {
+   "entry": "chord_ctrl_alt_shift_r",
+   "predicted": "PASS",
+   "v2_c2_rule": "PASS",
+   "v2_section5": "PASS",
+   "v2_section5_pass": "5/5",
+   "v2_failure_reasons": [],
+   "v1_c2_rule": "PASS",
+   "v1_section5": "FAIL"
+  },
+  {
+   "entry": "chord_super_d",
+   "predicted": "PASS",
+   "v2_c2_rule": "PASS",
+   "v2_section5": "PASS",
+   "v2_section5_pass": "5/5",
+   "v2_failure_reasons": [],
+   "v1_c2_rule": "FAIL",
+   "v1_section5": "FAIL"
+  },
+  {
+   "entry": "click_button_back",
+   "predicted": "FAIL",
+   "v2_c2_rule": "FAIL",
+   "v2_section5": "FAIL",
+   "v2_section5_pass": "0/5",
+   "v2_failure_reasons": [
+    "error: executor rc=1: ib/python3.10/site-packages/pyautogui/__init__.py\", line 9",
+    "events differ: expected [['ButtonPress', 8, 960, 540], ['ButtonRelease', 8, 960,"
+   ],
+   "v1_c2_rule": "FAIL",
+   "v1_section5": "FAIL"
+  },
+  {
+   "entry": "click_button_forward",
+   "predicted": "FAIL",
+   "v2_c2_rule": "FAIL",
+   "v2_section5": "FAIL",
+   "v2_section5_pass": "0/5",
+   "v2_failure_reasons": [
+    "error: executor rc=1: ib/python3.10/site-packages/pyautogui/__init__.py\", line 9",
+    "events differ: expected [['ButtonPress', 9, 960, 540], ['ButtonRelease', 9, 960,"
+   ],
+   "v1_c2_rule": "FAIL",
+   "v1_section5": "FAIL"
+  },
+  {
+   "entry": "key_kp_enter",
+   "predicted": "FAIL",
+   "v2_c2_rule": "FAIL",
+   "v2_section5": "FAIL",
+   "v2_section5_pass": "0/5",
+   "v2_failure_reasons": [
+    "R-dev projection differs: [] != [['KeyPress', 'KP_Enter', []], ['KeyRelease', 'K"
+   ],
+   "v1_c2_rule": "FAIL",
+   "v1_section5": "FAIL"
+  },
+  {
+   "entry": "seq_type_chord_type",
+   "predicted": "PASS",
+   "v2_c2_rule": "PASS",
+   "v2_section5": "FLAKY",
+   "v2_section5_pass": "2/5",
+   "v2_failure_reasons": [
+    "marker [0, 62356] != probe final [0, 54837]",
+    "marker [45, 62356] != probe final [45, 54837]",
+    "marker [8, 62356] != probe final [8, 54837]"
+   ],
+   "v1_c2_rule": "PASS",
+   "v1_section5": "FLAKY"
+  },
+  {
+   "entry": "type_combining",
+   "predicted": "FAIL",
+   "v2_c2_rule": "FAIL",
+   "v2_section5": "FAIL",
+   "v2_section5_pass": "0/5",
+   "v2_failure_reasons": [
+    "text 'e a n' != 'e\u0301 a\u0308 n\u0303'"
+   ],
+   "v1_c2_rule": "FAIL",
+   "v1_section5": "FAIL"
+  },
+  {
+   "entry": "type_emoji",
+   "predicted": "FAIL",
+   "v2_c2_rule": "FAIL",
+   "v2_section5": "FAIL",
+   "v2_section5_pass": "0/5",
+   "v2_failure_reasons": [
+    "text 'ok  done ' != 'ok \ud83d\ude80 done \ud83c\udf89'"
+   ],
+   "v1_c2_rule": "FAIL",
+   "v1_section5": "FAIL"
+  },
+  {
+   "entry": "type_emoji_zwj",
+   "predicted": "FAIL",
+   "v2_c2_rule": "FAIL",
+   "v2_section5": "FAIL",
+   "v2_section5_pass": "0/5",
+   "v2_failure_reasons": [
+    "text ' ' != '\ud83d\udc69\\u200d\ud83d\udcbb \ud83d\udc68\\u200d\ud83d\udc69\\u200d\ud83d\udc67'"
+   ],
+   "v1_c2_rule": "FAIL",
+   "v1_section5": "FAIL"
+  },
+  {
+   "entry": "type_rtl",
+   "predicted": "FAIL",
+   "v2_c2_rule": "FAIL",
+   "v2_section5": "FAIL",
+   "v2_section5_pass": "0/5",
+   "v2_failure_reasons": [
+    "marker [35, 50578] != probe final [35, 16267]",
+    "text '  ' != '\u05e9\u05dc\u05d5\u05dd \u05e2\u05d5\u05dc\u05dd \u0645\u0631\u062d\u0628\u0627'"
+   ],
+   "v1_c2_rule": "FAIL",
+   "v1_section5": "FAIL"
+  },
+  {
+   "entry": "type_shell_hostile",
+   "predicted": "PASS",
+   "v2_c2_rule": "PASS",
+   "v2_section5": "FLAKY",
+   "v2_section5_pass": "3/5",
+   "v2_failure_reasons": [
+    "marker [23, 51830] != probe final [23, 14917]",
+    "marker [6, 51830] != probe final [6, 14917]"
+   ],
+   "v1_c2_rule": "PASS",
+   "v1_section5": "FLAKY"
+  },
+  {
+   "entry": "type_symbols_shifted",
+   "predicted": "PASS",
+   "v2_c2_rule": "PASS",
+   "v2_section5": "FLAKY",
+   "v2_section5_pass": "4/5",
+   "v2_failure_reasons": [
+    "marker [32, 57590] != probe final [32, 40487]"
+   ],
+   "v1_c2_rule": "PASS",
+   "v1_section5": "FLAKY"
+  },
+  {
+   "entry": "type_unicode_bmp",
+   "predicted": "FAIL",
+   "v2_c2_rule": "FAIL",
+   "v2_section5": "FAIL",
+   "v2_section5_pass": "0/5",
+   "v2_failure_reasons": [
+    "text 'crme brle, r, , , ' != 'cr\u00e8me br\u00fbl\u00e9e, \u00c6r\u00f8, \u03a9\u03bc\u03ad\u03b3\u03b1, \u0416\u0443\u043a, \u65e5\u672c\u8a9e'"
+   ],
+   "v1_c2_rule": "FAIL",
+   "v1_section5": "FAIL"
+  }
+ ],
+ "other_entries_pass_under_both_readings_in_both_runs": 85
+}

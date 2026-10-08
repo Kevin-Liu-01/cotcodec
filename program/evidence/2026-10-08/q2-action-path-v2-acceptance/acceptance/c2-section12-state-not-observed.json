@@ -1,0 +1,709 @@
+{
+  "by_entry": {
+    "chord_alt_f4": {
+      "events_no_processed_press_before": 0,
+      "events_read_without_state": 8,
+      "trials_no_processed_press_before": 0,
+      "trials_read_without_state": 5
+    },
+    "chord_alt_tab": {
+      "events_no_processed_press_before": 0,
+      "events_read_without_state": 10,
+      "trials_no_processed_press_before": 0,
+      "trials_read_without_state": 5
+    },
+    "chord_ctrl_alt_shift_r": {
+      "events_no_processed_press_before": 0,
+      "events_read_without_state": 20,
+      "trials_no_processed_press_before": 0,
+      "trials_read_without_state": 5
+    },
+    "chord_super_d": {
+      "events_no_processed_press_before": 0,
+      "events_read_without_state": 15,
+      "trials_no_processed_press_before": 0,
+      "trials_read_without_state": 5
+    }
+  },
+  "no_processed_press_before": [],
+  "read_without_state": [
+    {
+      "cell": "chord_alt_tab",
+      "cycle": 0,
+      "events": [
+        {
+          "after_press_ms": 0,
+          "in_verdict": true,
+          "key_index": 2,
+          "keysym": "Tab",
+          "kind": "KeyRelease",
+          "press_keysym": "Tab",
+          "state": 0
+        },
+        {
+          "after_press_ms": 0,
+          "in_verdict": true,
+          "key_index": 3,
+          "keysym": "Alt_L",
+          "kind": "KeyRelease",
+          "press_keysym": "Tab",
+          "state": 0
+        }
+      ],
+      "job": "864",
+      "pass": true,
+      "seq": 22,
+      "setting": "screenshot"
+    },
+    {
+      "cell": "chord_ctrl_alt_shift_r",
+      "cycle": 0,
+      "events": [
+        {
+          "after_press_ms": 0,
+          "in_verdict": true,
+          "key_index": 4,
+          "keysym": "r",
+          "kind": "KeyRelease",
+          "press_keysym": "r",
+          "state": 0
+        },
+        {
+          "after_press_ms": 1,
+          "in_verdict": true,
+          "key_index": 5,
+          "keysym": "Shift_L",
+          "kind": "KeyRelease",
+          "press_keysym": "r",
+          "state": 0
+        },
+        {
+          "after_press_ms": 1,
+          "in_verdict": true,
+          "key_index": 6,
+          "keysym": "Alt_L",
+          "kind": "KeyRelease",
+          "press_keysym": "r",
+          "state": 0
+        },
+        {
+          "after_press_ms": 1,
+          "in_verdict": true,
+          "key_index": 7,
+          "keysym": "Control_L",
+          "kind": "KeyRelease",
+          "press_keysym": "r",
+          "state": 0
+        }
+      ],
+      "job": "864",
+      "pass": true,
+      "seq": 48,
+      "setting": "screenshot"
+    },
+    {
+      "cell": "chord_alt_f4",
+      "cycle": 1,
+      "events": [
+        {
+          "after_press_ms": 0,
+          "in_verdict": true,
+          "key_index": 2,
+          "keysym": "F4",
+          "kind": "KeyRelease",
+          "press_keysym": "F4",
+          "state": 0
+        },
+        {
+          "after_press_ms": 0,
+          "in_verdict": true,
+          "key_index": 3,
+          "keysym": "Alt_L",
+          "kind": "KeyRelease",
+          "press_keysym": "F4",
+          "state": 0
+        }
+      ],
+      "job": "864",
+      "pass": true,
+      "seq": 0,
+      "setting": "screenshot"
+    },
+    {
+      "cell": "chord_super_d",
+      "cycle": 1,
+      "events": [
+        {
+          "after_press_ms": 0,
+          "in_verdict": true,
+          "key_index": 1,
+          "keysym": "d",
+          "kind": "KeyPress",
+          "press_keysym": "Super_L",
+          "state": 0
+        },
+        {
+          "after_press_ms": 1,
+          "in_verdict": true,
+          "key_index": 2,
+          "keysym": "d",
+          "kind": "KeyRelease",
+          "press_keysym": "Super_L",
+          "state": 0
+        },
+        {
+          "after_press_ms": 1,
+          "in_verdict": true,
+          "key_index": 3,
+          "keysym": "Super_L",
+          "kind": "KeyRelease",
+          "press_keysym": "Super_L",
+          "state": 0
+        }
+      ],
+      "job": "864",
+      "pass": true,
+      "seq": 11,
+      "setting": "screenshot"
+    },
+    {
+      "cell": "chord_super_d",
+      "cycle": 2,
+      "events": [
+        {
+          "after_press_ms": 1,
+          "in_verdict": true,
+          "key_index": 1,
+          "keysym": "d",
+          "kind": "KeyPress",
+          "press_keysym": "Super_L",
+          "state": 0
+        },
+        {
+          "after_press_ms": 1,
+          "in_verdict": true,
+          "key_index": 2,
+          "keysym": "d",
+          "kind": "KeyRelease",
+          "press_keysym": "Super_L",
+          "state": 0
+        },
+        {
+          "after_press_ms": 1,
+          "in_verdict": true,
+          "key_index": 3,
+          "keysym": "Super_L",
+          "kind": "KeyRelease",
+          "press_keysym": "Super_L",
+          "state": 0
+        }
+      ],
+      "job": "864",
+      "pass": true,
+      "seq": 34,
+      "setting": "screenshot"
+    },
+    {
+      "cell": "chord_alt_f4",
+      "cycle": 2,
+      "events": [
+        {
+          "after_press_ms": 1,
+          "in_verdict": true,
+          "key_index": 2,
+          "keysym": "F4",
+          "kind": "KeyRelease",
+          "press_keysym": "F4",
+          "state": 0
+        }
+      ],
+      "job": "864",
+      "pass": true,
+      "seq": 45,
+      "setting": "screenshot"
+    },
+    {
+      "cell": "chord_alt_tab",
+      "cycle": 3,
+      "events": [
+        {
+          "after_press_ms": 1,
+          "in_verdict": true,
+          "key_index": 2,
+          "keysym": "Tab",
+          "kind": "KeyRelease",
+          "press_keysym": "Tab",
+          "state": 0
+        },
+        {
+          "after_press_ms": 1,
+          "in_verdict": true,
+          "key_index": 3,
+          "keysym": "Alt_L",
+          "kind": "KeyRelease",
+          "press_keysym": "Tab",
+          "state": 0
+        }
+      ],
+      "job": "864",
+      "pass": true,
+      "seq": 2,
+      "setting": "screenshot"
+    },
+    {
+      "cell": "chord_ctrl_alt_shift_r",
+      "cycle": 3,
+      "events": [
+        {
+          "after_press_ms": 1,
+          "in_verdict": true,
+          "key_index": 4,
+          "keysym": "r",
+          "kind": "KeyRelease",
+          "press_keysym": "r",
+          "state": 0
+        },
+        {
+          "after_press_ms": 1,
+          "in_verdict": true,
+          "key_index": 5,
+          "keysym": "Shift_L",
+          "kind": "KeyRelease",
+          "press_keysym": "r",
+          "state": 0
+        },
+        {
+          "after_press_ms": 1,
+          "in_verdict": true,
+          "key_index": 6,
+          "keysym": "Alt_L",
+          "kind": "KeyRelease",
+          "press_keysym": "r",
+          "state": 0
+        },
+        {
+          "after_press_ms": 1,
+          "in_verdict": true,
+          "key_index": 7,
+          "keysym": "Control_L",
+          "kind": "KeyRelease",
+          "press_keysym": "r",
+          "state": 0
+        }
+      ],
+      "job": "864",
+      "pass": true,
+      "seq": 30,
+      "setting": "screenshot"
+    },
+    {
+      "cell": "chord_alt_tab",
+      "cycle": 3,
+      "events": [
+        {
+          "after_press_ms": 0,
+          "in_verdict": true,
+          "key_index": 2,
+          "keysym": "Tab",
+          "kind": "KeyRelease",
+          "press_keysym": "Tab",
+          "state": 0
+        },
+        {
+          "after_press_ms": 1,
+          "in_verdict": true,
+          "key_index": 3,
+          "keysym": "Alt_L",
+          "kind": "KeyRelease",
+          "press_keysym": "Tab",
+          "state": 0
+        }
+      ],
+      "job": "864",
+      "pass": true,
+      "seq": 38,
+      "setting": "screenshot"
+    },
+    {
+      "cell": "chord_ctrl_alt_shift_r",
+      "cycle": 3,
+      "events": [
+        {
+          "after_press_ms": 0,
+          "in_verdict": true,
+          "key_index": 4,
+          "keysym": "r",
+          "kind": "KeyRelease",
+          "press_keysym": "r",
+          "state": 0
+        },
+        {
+          "after_press_ms": 0,
+          "in_verdict": true,
+          "key_index": 5,
+          "keysym": "Shift_L",
+          "kind": "KeyRelease",
+          "press_keysym": "r",
+          "state": 0
+        },
+        {
+          "after_press_ms": 0,
+          "in_verdict": true,
+          "key_index": 6,
+          "keysym": "Alt_L",
+          "kind": "KeyRelease",
+          "press_keysym": "r",
+          "state": 0
+        },
+        {
+          "after_press_ms": 0,
+          "in_verdict": true,
+          "key_index": 7,
+          "keysym": "Control_L",
+          "kind": "KeyRelease",
+          "press_keysym": "r",
+          "state": 0
+        }
+      ],
+      "job": "864",
+      "pass": true,
+      "seq": 45,
+      "setting": "screenshot"
+    },
+    {
+      "cell": "chord_alt_f4",
+      "cycle": 3,
+      "events": [
+        {
+          "after_press_ms": 0,
+          "in_verdict": true,
+          "key_index": 2,
+          "keysym": "F4",
+          "kind": "KeyRelease",
+          "press_keysym": "F4",
+          "state": 0
+        },
+        {
+          "after_press_ms": 1,
+          "in_verdict": true,
+          "key_index": 3,
+          "keysym": "Alt_L",
+          "kind": "KeyRelease",
+          "press_keysym": "F4",
+          "state": 0
+        }
+      ],
+      "job": "864",
+      "pass": true,
+      "seq": 48,
+      "setting": "screenshot"
+    },
+    {
+      "cell": "chord_super_d",
+      "cycle": 3,
+      "events": [
+        {
+          "after_press_ms": 1,
+          "in_verdict": true,
+          "key_index": 1,
+          "keysym": "d",
+          "kind": "KeyPress",
+          "press_keysym": "Super_L",
+          "state": 0
+        },
+        {
+          "after_press_ms": 1,
+          "in_verdict": true,
+          "key_index": 2,
+          "keysym": "d",
+          "kind": "KeyRelease",
+          "press_keysym": "Super_L",
+          "state": 0
+        },
+        {
+          "after_press_ms": 1,
+          "in_verdict": true,
+          "key_index": 3,
+          "keysym": "Super_L",
+          "kind": "KeyRelease",
+          "press_keysym": "Super_L",
+          "state": 0
+        }
+      ],
+      "job": "864",
+      "pass": true,
+      "seq": 50,
+      "setting": "screenshot"
+    },
+    {
+      "cell": "chord_alt_f4",
+      "cycle": 5,
+      "events": [
+        {
+          "after_press_ms": 1,
+          "in_verdict": true,
+          "key_index": 2,
+          "keysym": "F4",
+          "kind": "KeyRelease",
+          "press_keysym": "F4",
+          "state": 0
+        }
+      ],
+      "job": "864",
+      "pass": true,
+      "seq": 39,
+      "setting": "screenshot"
+    },
+    {
+      "cell": "chord_super_d",
+      "cycle": 6,
+      "events": [
+        {
+          "after_press_ms": 1,
+          "in_verdict": true,
+          "key_index": 1,
+          "keysym": "d",
+          "kind": "KeyPress",
+          "press_keysym": "Super_L",
+          "state": 0
+        },
+        {
+          "after_press_ms": 2,
+          "in_verdict": true,
+          "key_index": 2,
+          "keysym": "d",
+          "kind": "KeyRelease",
+          "press_keysym": "Super_L",
+          "state": 0
+        },
+        {
+          "after_press_ms": 2,
+          "in_verdict": true,
+          "key_index": 3,
+          "keysym": "Super_L",
+          "kind": "KeyRelease",
+          "press_keysym": "Super_L",
+          "state": 0
+        }
+      ],
+      "job": "864",
+      "pass": true,
+      "seq": 22,
+      "setting": "screenshot"
+    },
+    {
+      "cell": "chord_ctrl_alt_shift_r",
+      "cycle": 6,
+      "events": [
+        {
+          "after_press_ms": 0,
+          "in_verdict": true,
+          "key_index": 4,
+          "keysym": "r",
+          "kind": "KeyRelease",
+          "press_keysym": "r",
+          "state": 0
+        },
+        {
+          "after_press_ms": 0,
+          "in_verdict": true,
+          "key_index": 5,
+          "keysym": "Shift_L",
+          "kind": "KeyRelease",
+          "press_keysym": "r",
+          "state": 0
+        },
+        {
+          "after_press_ms": 0,
+          "in_verdict": true,
+          "key_index": 6,
+          "keysym": "Alt_L",
+          "kind": "KeyRelease",
+          "press_keysym": "r",
+          "state": 0
+        },
+        {
+          "after_press_ms": 0,
+          "in_verdict": true,
+          "key_index": 7,
+          "keysym": "Control_L",
+          "kind": "KeyRelease",
+          "press_keysym": "r",
+          "state": 0
+        }
+      ],
+      "job": "864",
+      "pass": true,
+      "seq": 28,
+      "setting": "screenshot"
+    },
+    {
+      "cell": "chord_alt_tab",
+      "cycle": 6,
+      "events": [
+        {
+          "after_press_ms": 1,
+          "in_verdict": true,
+          "key_index": 2,
+          "keysym": "Tab",
+          "kind": "KeyRelease",
+          "press_keysym": "Tab",
+          "state": 0
+        },
+        {
+          "after_press_ms": 1,
+          "in_verdict": true,
+          "key_index": 3,
+          "keysym": "Alt_L",
+          "kind": "KeyRelease",
+          "press_keysym": "Tab",
+          "state": 0
+        }
+      ],
+      "job": "864",
+      "pass": true,
+      "seq": 29,
+      "setting": "screenshot"
+    },
+    {
+      "cell": "chord_alt_f4",
+      "cycle": 7,
+      "events": [
+        {
+          "after_press_ms": 0,
+          "in_verdict": true,
+          "key_index": 2,
+          "keysym": "F4",
+          "kind": "KeyRelease",
+          "press_keysym": "F4",
+          "state": 0
+        },
+        {
+          "after_press_ms": 0,
+          "in_verdict": true,
+          "key_index": 3,
+          "keysym": "Alt_L",
+          "kind": "KeyRelease",
+          "press_keysym": "F4",
+          "state": 0
+        }
+      ],
+      "job": "864",
+      "pass": true,
+      "seq": 30,
+      "setting": "screenshot"
+    },
+    {
+      "cell": "chord_ctrl_alt_shift_r",
+      "cycle": 7,
+      "events": [
+        {
+          "after_press_ms": 0,
+          "in_verdict": true,
+          "key_index": 4,
+          "keysym": "r",
+          "kind": "KeyRelease",
+          "press_keysym": "r",
+          "state": 0
+        },
+        {
+          "after_press_ms": 0,
+          "in_verdict": true,
+          "key_index": 5,
+          "keysym": "Shift_L",
+          "kind": "KeyRelease",
+          "press_keysym": "r",
+          "state": 0
+        },
+        {
+          "after_press_ms": 0,
+          "in_verdict": true,
+          "key_index": 6,
+          "keysym": "Alt_L",
+          "kind": "KeyRelease",
+          "press_keysym": "r",
+          "state": 0
+        },
+        {
+          "after_press_ms": 0,
+          "in_verdict": true,
+          "key_index": 7,
+          "keysym": "Control_L",
+          "kind": "KeyRelease",
+          "press_keysym": "r",
+          "state": 0
+        }
+      ],
+      "job": "864",
+      "pass": true,
+      "seq": 49,
+      "setting": "screenshot"
+    },
+    {
+      "cell": "chord_super_d",
+      "cycle": 8,
+      "events": [
+        {
+          "after_press_ms": 1,
+          "in_verdict": true,
+          "key_index": 1,
+          "keysym": "d",
+          "kind": "KeyPress",
+          "press_keysym": "Super_L",
+          "state": 0
+        },
+        {
+          "after_press_ms": 1,
+          "in_verdict": true,
+          "key_index": 2,
+          "keysym": "d",
+          "kind": "KeyRelease",
+          "press_keysym": "Super_L",
+          "state": 0
+        },
+        {
+          "after_press_ms": 1,
+          "in_verdict": true,
+          "key_index": 3,
+          "keysym": "Super_L",
+          "kind": "KeyRelease",
+          "press_keysym": "Super_L",
+          "state": 0
+        }
+      ],
+      "job": "864",
+      "pass": true,
+      "seq": 38,
+      "setting": "screenshot"
+    },
+    {
+      "cell": "chord_alt_tab",
+      "cycle": 8,
+      "events": [
+        {
+          "after_press_ms": 0,
+          "in_verdict": true,
+          "key_index": 2,
+          "keysym": "Tab",
+          "kind": "KeyRelease",
+          "press_keysym": "Tab",
+          "state": 0
+        },
+        {
+          "after_press_ms": 0,
+          "in_verdict": true,
+          "key_index": 3,
+          "keysym": "Alt_L",
+          "kind": "KeyRelease",
+          "press_keysym": "Tab",
+          "state": 0
+        }
+      ],
+      "job": "864",
+      "pass": true,
+      "seq": 45,
+      "setting": "screenshot"
+    }
+  ],
+  "trials": 500
+}

@@ -1,0 +1,44 @@
+{
+  "cells": {
+    "H-GA-buggy": {
+      "R01": "FAIL",
+      "R02": "FAIL",
+      "R03": "FAIL",
+      "R04": "FAIL",
+      "R05": "FAIL",
+      "R06": "FAIL",
+      "R07": "FAIL",
+      "R08": "PASS",
+      "R09": "FAIL",
+      "R10": "FAIL",
+      "R11": "PASS",
+      "R12": "PASS",
+      "R13": "PASS",
+      "R14": "FAIL"
+    },
+    "H-OSW-up": {
+      "R01": "PASS",
+      "R02": "PASS",
+      "R03": "FAIL",
+      "R04": "PASS",
+      "R05": "PASS",
+      "R06": "PASS",
+      "R07": "PASS",
+      "R08": "FAIL",
+      "R09": "FAIL",
+      "R10": "FAIL",
+      "R11": "FAIL",
+      "R12": "PASS",
+      "R13": "FAIL",
+      "R14": "PASS"
+    }
+  },
+  "pass": true,
+  "problems": [],
+  "state_not_observed": {
+    "by_entry": {},
+    "no_processed_press_before": [],
+    "read_without_state": [],
+    "trials": 140
+  }
+}

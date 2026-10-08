@@ -1,0 +1,951 @@
+[
+  {
+    "accessibility_calls": 0,
+    "attempt": 1,
+    "batch": {
+      "driver_exit": 0,
+      "labelled_containers_left": 0
+    },
+    "boot_s": [
+      17.898,
+      17.273
+    ],
+    "campaign_id": "q2ap-v2-c1-hgabuggy-a1",
+    "concurrency": 1,
+    "counting_problems": [],
+    "criterion": "C1",
+    "earlier_attempts": [],
+    "failed_trials": [
+      {
+        "cell": "R09",
+        "cycle": 0,
+        "infra": [],
+        "reasons": [
+          "events differ: expected [['ButtonPress', 5, 1345, 324], ['ButtonRelease', 5, 1345, 324], ['ButtonPress', 5, 1345, 324], ['ButtonRelease', 5, 1345, 324], ['ButtonPress', 5, 1345, 324], ['ButtonRelease', 5, 1345, 324]], observed [['ButtonPress', 4, 1344, 324], ['ButtonRelease', 4, 1344, 324], ['ButtonPress', 4, 1344, 324], ['ButtonRelease', 4, 1344, 324], ['ButtonPress', 4, 1344, 324], ['ButtonRelease', 4, 1344, 324]]"
+        ],
+        "seq": 0,
+        "setting": "screenshot"
+      },
+      {
+        "cell": "R07",
+        "cycle": 0,
+        "infra": [],
+        "reasons": [
+          "text '' != 'r7 ok\\n'"
+        ],
+        "seq": 3,
+        "setting": "screenshot"
+      },
+      {
+        "cell": "R14",
+        "cycle": 0,
+        "infra": [],
+        "reasons": [
+          "events differ: expected [['ButtonPress', 1, 1919, 1079], ['ButtonRelease', 1, 1919, 1079]], observed [['ButtonPress', 1, 1918, 1078], ['ButtonRelease', 1, 1918, 1078]]"
+        ],
+        "seq": 4,
+        "setting": "screenshot"
+      },
+      {
+        "cell": "R06",
+        "cycle": 0,
+        "infra": [],
+        "reasons": [
+          "events differ: expected [['ButtonPress', 1, 480, 756], ['ButtonRelease', 1, 768, 810]], observed []",
+          "1 motion events < 3",
+          "final pointer [480, 756] != [768, 810]"
+        ],
+        "seq": 6,
+        "setting": "screenshot"
+      },
+      {
+        "cell": "R03",
+        "cycle": 0,
+        "infra": [],
+        "reasons": [
+          "events differ: expected [['KeyPress', 'Control_L'], ['ButtonPress', 1, 576, 324], ['ButtonRelease', 1, 576, 324], ['KeyRelease', 'Control_L']], observed [['ButtonPress', 1, 576, 324], ['ButtonRelease', 1, 576, 324]]"
+        ],
+        "seq": 7,
+        "setting": "screenshot"
+      },
+      {
+        "cell": "R10",
+        "cycle": 0,
+        "infra": [],
+        "reasons": [
+          "events differ: expected [['ButtonPress', 6, 999, 562], ['ButtonRelease', 6, 999, 562], ['ButtonPress', 6, 999, 562], ['ButtonRelease', 6, 999, 562], ['ButtonPress', 6, 999, 562], ['ButtonRelease', 6, 999, 562]], observed [['ButtonPress', 4, 998, 561], ['ButtonRelease', 4, 998, 561], ['ButtonPress', 4, 998, 561], ['ButtonRelease', 4, 998, 561], ['ButtonPress', 4, 998, 561], ['ButtonRelease', 4, 998, 561]]"
+        ],
+        "seq": 8,
+        "setting": "screenshot"
+      },
+      {
+        "cell": "R04",
+        "cycle": 0,
+        "infra": [],
+        "reasons": [
+          "events differ: expected [['KeyPress', 'Shift_L'], ['ButtonPress', 1, 672, 378], ['ButtonRelease', 1, 672, 378], ['KeyRelease', 'Shift_L'], ['KeyPress', 'Alt_L'], ['ButtonPress', 1, 768, 378], ['ButtonRelease', 1, 768, 378], ['KeyRelease', 'Alt_L'], ['KeyPress', 'Control_L'], ['KeyPress', 'Shift_L'], ['ButtonPress', 1, 864, 378], ['ButtonRelease', 1, 864, 378], ['KeyRelease', 'Shift_L'], ['KeyRelease', 'Control_L']], observed [['KeyPress', 'Shift_L', []], ['KeyRelease', 'Shift_L', ['Shift']], ['ButtonPress', 1, 672, 378], ['ButtonRelease', 1, 672, 378], ['KeyPress', 'Alt_L', []], ['KeyRelease', 'Alt_L', ['Mod1']], ['ButtonPress', 1, 768, 378], ['ButtonRelease', 1, 768, 378], ['KeyPress', 'Control_L', []], ['KeyPress', 'Shift_L', ['Control']], ['KeyRelease', 'Shift_L', ['Shift', 'Control']], ['KeyRelease', 'Control_L', ['Control']], ['ButtonPress', 1, 864, 378], ['ButtonRelease', 1, 864, 378]]"
+        ],
+        "seq": 9,
+        "setting": "screenshot"
+      },
+      {
+        "cell": "R05",
+        "cycle": 0,
+        "infra": [],
+        "reasons": [
+          "events differ: expected [['ButtonPress', 5, 922, 648], ['ButtonRelease', 5, 922, 648], ['ButtonPress', 5, 922, 648], ['ButtonRelease', 5, 922, 648]], observed []"
+        ],
+        "seq": 10,
+        "setting": "screenshot"
+      },
+      {
+        "cell": "R01",
+        "cycle": 0,
+        "infra": [],
+        "reasons": [
+          "events differ: expected [['ButtonPress', 2, 1153, 432], ['ButtonRelease', 2, 1153, 432]], observed []"
+        ],
+        "seq": 11,
+        "setting": "screenshot"
+      },
+      {
+        "cell": "R02",
+        "cycle": 0,
+        "infra": [],
+        "reasons": [
+          "events differ: expected [['KeyPress', 'Control_L'], ['ButtonPress', 1, 576, 270], ['ButtonRelease', 1, 576, 270], ['KeyRelease', 'Control_L']], observed [['KeyPress', 'Control_L', []], ['KeyRelease', 'Control_L', ['Control']], ['ButtonPress', 1, 576, 270], ['ButtonRelease', 1, 576, 270]]"
+        ],
+        "seq": 12,
+        "setting": "screenshot"
+      },
+      {
+        "cell": "R03",
+        "cycle": 0,
+        "infra": [],
+        "reasons": [
+          "events differ: expected [['KeyPress', 'Control_L'], ['ButtonPress', 1, 576, 324], ['ButtonRelease', 1, 576, 324], ['KeyRelease', 'Control_L']], observed [['ButtonPress', 1, 576, 324], ['ButtonRelease', 1, 576, 324]]"
+        ],
+        "seq": 14,
+        "setting": "screenshot"
+      },
+      {
+        "cell": "R06",
+        "cycle": 0,
+        "infra": [],
+        "reasons": [
+          "events differ: expected [['ButtonPress', 1, 480, 756], ['ButtonRelease', 1, 768, 810]], observed []",
+          "1 motion events < 3",
+          "final pointer [480, 756] != [768, 810]"
+        ],
+        "seq": 15,
+        "setting": "screenshot"
+      },
+      {
+        "cell": "R10",
+        "cycle": 0,
+        "infra": [],
+        "reasons": [
+          "events differ: expected [['ButtonPress', 6, 999, 562], ['ButtonRelease', 6, 999, 562], ['ButtonPress', 6, 999, 562], ['ButtonRelease', 6, 999, 562], ['ButtonPress', 6, 999, 562], ['ButtonRelease', 6, 999, 562]], observed [['ButtonPress', 4, 998, 561], ['ButtonRelease', 4, 998, 561], ['ButtonPress', 4, 998, 561], ['ButtonRelease', 4, 998, 561], ['ButtonPress', 4, 998, 561], ['ButtonRelease', 4, 998, 561]]"
+        ],
+        "seq": 17,
+        "setting": "screenshot"
+      },
+      {
+        "cell": "R07",
+        "cycle": 0,
+        "infra": [],
+        "reasons": [
+          "text '' != 'r7 ok\\n'"
+        ],
+        "seq": 18,
+        "setting": "screenshot"
+      },
+      {
+        "cell": "R05",
+        "cycle": 0,
+        "infra": [],
+        "reasons": [
+          "events differ: expected [['ButtonPress', 5, 922, 648], ['ButtonRelease', 5, 922, 648], ['ButtonPress', 5, 922, 648], ['ButtonRelease', 5, 922, 648]], observed []"
+        ],
+        "seq": 20,
+        "setting": "screenshot"
+      },
+      {
+        "cell": "R09",
+        "cycle": 0,
+        "infra": [],
+        "reasons": [
+          "events differ: expected [['ButtonPress', 5, 1345, 324], ['ButtonRelease', 5, 1345, 324], ['ButtonPress', 5, 1345, 324], ['ButtonRelease', 5, 1345, 324], ['ButtonPress', 5, 1345, 324], ['ButtonRelease', 5, 1345, 324]], observed [['ButtonPress', 4, 1344, 324], ['ButtonRelease', 4, 1344, 324], ['ButtonPress', 4, 1344, 324], ['ButtonRelease', 4, 1344, 324], ['ButtonPress', 4, 1344, 324], ['ButtonRelease', 4, 1344, 324]]"
+        ],
+        "seq": 22,
+        "setting": "screenshot"
+      },
+      {
+        "cell": "R04",
+        "cycle": 0,
+        "infra": [],
+        "reasons": [
+          "events differ: expected [['KeyPress', 'Shift_L'], ['ButtonPress', 1, 672, 378], ['ButtonRelease', 1, 672, 378], ['KeyRelease', 'Shift_L'], ['KeyPress', 'Alt_L'], ['ButtonPress', 1, 768, 378], ['ButtonRelease', 1, 768, 378], ['KeyRelease', 'Alt_L'], ['KeyPress', 'Control_L'], ['KeyPress', 'Shift_L'], ['ButtonPress', 1, 864, 378], ['ButtonRelease', 1, 864, 378], ['KeyRelease', 'Shift_L'], ['KeyRelease', 'Control_L']], observed [['KeyPress', 'Shift_L', []], ['KeyRelease', 'Shift_L', ['Shift']], ['ButtonPress', 1, 672, 378], ['ButtonRelease', 1, 672, 378], ['KeyPress', 'Alt_L', []], ['KeyRelease', 'Alt_L', ['Mod1']], ['ButtonPress', 1, 768, 378], ['ButtonRelease', 1, 768, 378], ['KeyPress', 'Control_L', []], ['KeyPress', 'Shift_L', ['Control']], ['KeyRelease', 'Shift_L', ['Shift', 'Control']], ['KeyRelease', 'Control_L', ['Control']], ['ButtonPress', 1, 864, 378], ['ButtonRelease', 1, 864, 378]]"
+        ],
+        "seq": 24,
+        "setting": "screenshot"
+      },
+      {
+        "cell": "R02",
+        "cycle": 0,
+        "infra": [],
+        "reasons": [
+          "events differ: expected [['KeyPress', 'Control_L'], ['ButtonPress', 1, 576, 270], ['ButtonRelease', 1, 576, 270], ['KeyRelease', 'Control_L']], observed [['KeyPress', 'Control_L', []], ['KeyRelease', 'Control_L', ['Control']], ['ButtonPress', 1, 576, 270], ['ButtonRelease', 1, 576, 270]]"
+        ],
+        "seq": 25,
+        "setting": "screenshot"
+      },
+      {
+        "cell": "R14",
+        "cycle": 0,
+        "infra": [],
+        "reasons": [
+          "events differ: expected [['ButtonPress', 1, 1919, 1079], ['ButtonRelease', 1, 1919, 1079]], observed [['ButtonPress', 1, 1918, 1078], ['ButtonRelease', 1, 1918, 1078]]"
+        ],
+        "seq": 26,
+        "setting": "screenshot"
+      },
+      {
+        "cell": "R01",
+        "cycle": 0,
+        "infra": [],
+        "reasons": [
+          "events differ: expected [['ButtonPress', 2, 1153, 432], ['ButtonRelease', 2, 1153, 432]], observed []"
+        ],
+        "seq": 27,
+        "setting": "screenshot"
+      },
+      {
+        "cell": "R09",
+        "cycle": 0,
+        "infra": [],
+        "reasons": [
+          "events differ: expected [['ButtonPress', 5, 1345, 324], ['ButtonRelease', 5, 1345, 324], ['ButtonPress', 5, 1345, 324], ['ButtonRelease', 5, 1345, 324], ['ButtonPress', 5, 1345, 324], ['ButtonRelease', 5, 1345, 324]], observed [['ButtonPress', 4, 1344, 324], ['ButtonRelease', 4, 1344, 324], ['ButtonPress', 4, 1344, 324], ['ButtonRelease', 4, 1344, 324], ['ButtonPress', 4, 1344, 324], ['ButtonRelease', 4, 1344, 324]]"
+        ],
+        "seq": 29,
+        "setting": "screenshot"
+      },
+      {
+        "cell": "R04",
+        "cycle": 0,
+        "infra": [],
+        "reasons": [
+          "events differ: expected [['KeyPress', 'Shift_L'], ['ButtonPress', 1, 672, 378], ['ButtonRelease', 1, 672, 378], ['KeyRelease', 'Shift_L'], ['KeyPress', 'Alt_L'], ['ButtonPress', 1, 768, 378], ['ButtonRelease', 1, 768, 378], ['KeyRelease', 'Alt_L'], ['KeyPress', 'Control_L'], ['KeyPress', 'Shift_L'], ['ButtonPress', 1, 864, 378], ['ButtonRelease', 1, 864, 378], ['KeyRelease', 'Shift_L'], ['KeyRelease', 'Control_L']], observed [['KeyPress', 'Shift_L', []], ['KeyRelease', 'Shift_L', ['Shift']], ['ButtonPress', 1, 672, 378], ['ButtonRelease', 1, 672, 378], ['KeyPress', 'Alt_L', []], ['KeyRelease', 'Alt_L', ['Mod1']], ['ButtonPress', 1, 768, 378], ['ButtonRelease', 1, 768, 378], ['KeyPress', 'Control_L', []], ['KeyPress', 'Shift_L', ['Control']], ['KeyRelease', 'Shift_L', ['Shift', 'Control']], ['KeyRelease', 'Control_L', ['Control']], ['ButtonPress', 1, 864, 378], ['ButtonRelease', 1, 864, 378]]"
+        ],
+        "seq": 30,
+        "setting": "screenshot"
+      },
+      {
+        "cell": "R14",
+        "cycle": 0,
+        "infra": [],
+        "reasons": [
+          "events differ: expected [['ButtonPress', 1, 1919, 1079], ['ButtonRelease', 1, 1919, 1079]], observed [['ButtonPress', 1, 1918, 1078], ['ButtonRelease', 1, 1918, 1078]]"
+        ],
+        "seq": 33,
+        "setting": "screenshot"
+      },
+      {
+        "cell": "R02",
+        "cycle": 0,
+        "infra": [],
+        "reasons": [
+          "events differ: expected [['KeyPress', 'Control_L'], ['ButtonPress', 1, 576, 270], ['ButtonRelease', 1, 576, 270], ['KeyRelease', 'Control_L']], observed [['KeyPress', 'Control_L', []], ['KeyRelease', 'Control_L', ['Control']], ['ButtonPress', 1, 576, 270], ['ButtonRelease', 1, 576, 270]]"
+        ],
+        "seq": 34,
+        "setting": "screenshot"
+      },
+      {
+        "cell": "R06",
+        "cycle": 1,
+        "infra": [],
+        "reasons": [
+          "events differ: expected [['ButtonPress', 1, 480, 756], ['ButtonRelease', 1, 768, 810]], observed []",
+          "1 motion events < 3",
+          "final pointer [480, 756] != [768, 810]"
+        ],
+        "seq": 1,
+        "setting": "screenshot"
+      },
+      {
+        "cell": "R07",
+        "cycle": 1,
+        "infra": [],
+        "reasons": [
+          "text '' != 'r7 ok\\n'"
+        ],
+        "seq": 2,
+        "setting": "screenshot"
+      },
+      {
+        "cell": "R03",
+        "cycle": 1,
+        "infra": [],
+        "reasons": [
+          "events differ: expected [['KeyPress', 'Control_L'], ['ButtonPress', 1, 576, 324], ['ButtonRelease', 1, 576, 324], ['KeyRelease', 'Control_L']], observed [['ButtonPress', 1, 576, 324], ['ButtonRelease', 1, 576, 324]]"
+        ],
+        "seq": 3,
+        "setting": "screenshot"
+      },
+      {
+        "cell": "R01",
+        "cycle": 1,
+        "infra": [],
+        "reasons": [
+          "events differ: expected [['ButtonPress', 2, 1153, 432], ['ButtonRelease', 2, 1153, 432]], observed []"
+        ],
+        "seq": 4,
+        "setting": "screenshot"
+      },
+      {
+        "cell": "R05",
+        "cycle": 1,
+        "infra": [],
+        "reasons": [
+          "events differ: expected [['ButtonPress', 5, 922, 648], ['ButtonRelease', 5, 922, 648], ['ButtonPress', 5, 922, 648], ['ButtonRelease', 5, 922, 648]], observed []"
+        ],
+        "seq": 5,
+        "setting": "screenshot"
+      },
+      {
+        "cell": "R10",
+        "cycle": 1,
+        "infra": [],
+        "reasons": [
+          "events differ: expected [['ButtonPress', 6, 999, 562], ['ButtonRelease', 6, 999, 562], ['ButtonPress', 6, 999, 562], ['ButtonRelease', 6, 999, 562], ['ButtonPress', 6, 999, 562], ['ButtonRelease', 6, 999, 562]], observed [['ButtonPress', 4, 998, 561], ['ButtonRelease', 4, 998, 561], ['ButtonPress', 4, 998, 561], ['ButtonRelease', 4, 998, 561], ['ButtonPress', 4, 998, 561], ['ButtonRelease', 4, 998, 561]]"
+        ],
+        "seq": 6,
+        "setting": "screenshot"
+      },
+      {
+        "cell": "R07",
+        "cycle": 1,
+        "infra": [],
+        "reasons": [
+          "text '' != 'r7 ok\\n'"
+        ],
+        "seq": 7,
+        "setting": "screenshot"
+      },
+      {
+        "cell": "R14",
+        "cycle": 1,
+        "infra": [],
+        "reasons": [
+          "events differ: expected [['ButtonPress', 1, 1919, 1079], ['ButtonRelease', 1, 1919, 1079]], observed [['ButtonPress', 1, 1918, 1078], ['ButtonRelease', 1, 1918, 1078]]"
+        ],
+        "seq": 8,
+        "setting": "screenshot"
+      },
+      {
+        "cell": "R03",
+        "cycle": 1,
+        "infra": [],
+        "reasons": [
+          "events differ: expected [['KeyPress', 'Control_L'], ['ButtonPress', 1, 576, 324], ['ButtonRelease', 1, 576, 324], ['KeyRelease', 'Control_L']], observed [['ButtonPress', 1, 576, 324], ['ButtonRelease', 1, 576, 324]]"
+        ],
+        "seq": 9,
+        "setting": "screenshot"
+      },
+      {
+        "cell": "R04",
+        "cycle": 1,
+        "infra": [],
+        "reasons": [
+          "events differ: expected [['KeyPress', 'Shift_L'], ['ButtonPress', 1, 672, 378], ['ButtonRelease', 1, 672, 378], ['KeyRelease', 'Shift_L'], ['KeyPress', 'Alt_L'], ['ButtonPress', 1, 768, 378], ['ButtonRelease', 1, 768, 378], ['KeyRelease', 'Alt_L'], ['KeyPress', 'Control_L'], ['KeyPress', 'Shift_L'], ['ButtonPress', 1, 864, 378], ['ButtonRelease', 1, 864, 378], ['KeyRelease', 'Shift_L'], ['KeyRelease', 'Control_L']], observed [['KeyPress', 'Shift_L', []], ['KeyRelease', 'Shift_L', ['Shift']], ['ButtonPress', 1, 672, 378], ['ButtonRelease', 1, 672, 378], ['KeyPress', 'Alt_L', []], ['KeyRelease', 'Alt_L', ['Mod1']], ['ButtonPress', 1, 768, 378], ['ButtonRelease', 1, 768, 378], ['KeyPress', 'Control_L', []], ['KeyPress', 'Shift_L', ['Control']], ['KeyRelease', 'Shift_L', ['Shift', 'Control']], ['KeyRelease', 'Control_L', ['Control']], ['ButtonPress', 1, 864, 378], ['ButtonRelease', 1, 864, 378]]"
+        ],
+        "seq": 11,
+        "setting": "screenshot"
+      },
+      {
+        "cell": "R09",
+        "cycle": 1,
+        "infra": [],
+        "reasons": [
+          "events differ: expected [['ButtonPress', 5, 1345, 324], ['ButtonRelease', 5, 1345, 324], ['ButtonPress', 5, 1345, 324], ['ButtonRelease', 5, 1345, 324], ['ButtonPress', 5, 1345, 324], ['ButtonRelease', 5, 1345, 324]], observed [['ButtonPress', 4, 1344, 324], ['ButtonRelease', 4, 1344, 324], ['ButtonPress', 4, 1344, 324], ['ButtonRelease', 4, 1344, 324], ['ButtonPress', 4, 1344, 324], ['ButtonRelease', 4, 1344, 324]]"
+        ],
+        "seq": 12,
+        "setting": "screenshot"
+      },
+      {
+        "cell": "R01",
+        "cycle": 1,
+        "infra": [],
+        "reasons": [
+          "events differ: expected [['ButtonPress', 2, 1153, 432], ['ButtonRelease', 2, 1153, 432]], observed []"
+        ],
+        "seq": 15,
+        "setting": "screenshot"
+      },
+      {
+        "cell": "R05",
+        "cycle": 1,
+        "infra": [],
+        "reasons": [
+          "events differ: expected [['ButtonPress', 5, 922, 648], ['ButtonRelease', 5, 922, 648], ['ButtonPress', 5, 922, 648], ['ButtonRelease', 5, 922, 648]], observed []"
+        ],
+        "seq": 16,
+        "setting": "screenshot"
+      },
+      {
+        "cell": "R10",
+        "cycle": 1,
+        "infra": [],
+        "reasons": [
+          "events differ: expected [['ButtonPress', 6, 999, 562], ['ButtonRelease', 6, 999, 562], ['ButtonPress', 6, 999, 562], ['ButtonRelease', 6, 999, 562], ['ButtonPress', 6, 999, 562], ['ButtonRelease', 6, 999, 562]], observed [['ButtonPress', 4, 998, 561], ['ButtonRelease', 4, 998, 561], ['ButtonPress', 4, 998, 561], ['ButtonRelease', 4, 998, 561], ['ButtonPress', 4, 998, 561], ['ButtonRelease', 4, 998, 561]]"
+        ],
+        "seq": 17,
+        "setting": "screenshot"
+      },
+      {
+        "cell": "R06",
+        "cycle": 1,
+        "infra": [],
+        "reasons": [
+          "events differ: expected [['ButtonPress', 1, 480, 756], ['ButtonRelease', 1, 768, 810]], observed []",
+          "1 motion events < 3",
+          "final pointer [480, 756] != [768, 810]"
+        ],
+        "seq": 19,
+        "setting": "screenshot"
+      },
+      {
+        "cell": "R02",
+        "cycle": 1,
+        "infra": [],
+        "reasons": [
+          "events differ: expected [['KeyPress', 'Control_L'], ['ButtonPress', 1, 576, 270], ['ButtonRelease', 1, 576, 270], ['KeyRelease', 'Control_L']], observed [['KeyPress', 'Control_L', []], ['KeyRelease', 'Control_L', ['Control']], ['ButtonPress', 1, 576, 270], ['ButtonRelease', 1, 576, 270]]"
+        ],
+        "seq": 20,
+        "setting": "screenshot"
+      },
+      {
+        "cell": "R05",
+        "cycle": 1,
+        "infra": [],
+        "reasons": [
+          "events differ: expected [['ButtonPress', 5, 922, 648], ['ButtonRelease', 5, 922, 648], ['ButtonPress', 5, 922, 648], ['ButtonRelease', 5, 922, 648]], observed []"
+        ],
+        "seq": 21,
+        "setting": "screenshot"
+      },
+      {
+        "cell": "R09",
+        "cycle": 1,
+        "infra": [],
+        "reasons": [
+          "events differ: expected [['ButtonPress', 5, 1345, 324], ['ButtonRelease', 5, 1345, 324], ['ButtonPress', 5, 1345, 324], ['ButtonRelease', 5, 1345, 324], ['ButtonPress', 5, 1345, 324], ['ButtonRelease', 5, 1345, 324]], observed [['ButtonPress', 4, 1344, 324], ['ButtonRelease', 4, 1344, 324], ['ButtonPress', 4, 1344, 324], ['ButtonRelease', 4, 1344, 324], ['ButtonPress', 4, 1344, 324], ['ButtonRelease', 4, 1344, 324]]"
+        ],
+        "seq": 22,
+        "setting": "screenshot"
+      },
+      {
+        "cell": "R07",
+        "cycle": 1,
+        "infra": [],
+        "reasons": [
+          "text '' != 'r7 ok\\n'"
+        ],
+        "seq": 23,
+        "setting": "screenshot"
+      },
+      {
+        "cell": "R03",
+        "cycle": 1,
+        "infra": [],
+        "reasons": [
+          "events differ: expected [['KeyPress', 'Control_L'], ['ButtonPress', 1, 576, 324], ['ButtonRelease', 1, 576, 324], ['KeyRelease', 'Control_L']], observed [['ButtonPress', 1, 576, 324], ['ButtonRelease', 1, 576, 324]]"
+        ],
+        "seq": 24,
+        "setting": "screenshot"
+      },
+      {
+        "cell": "R01",
+        "cycle": 1,
+        "infra": [],
+        "reasons": [
+          "events differ: expected [['ButtonPress', 2, 1153, 432], ['ButtonRelease', 2, 1153, 432]], observed []"
+        ],
+        "seq": 27,
+        "setting": "screenshot"
+      },
+      {
+        "cell": "R02",
+        "cycle": 1,
+        "infra": [],
+        "reasons": [
+          "events differ: expected [['KeyPress', 'Control_L'], ['ButtonPress', 1, 576, 270], ['ButtonRelease', 1, 576, 270], ['KeyRelease', 'Control_L']], observed [['KeyPress', 'Control_L', []], ['KeyRelease', 'Control_L', ['Control']], ['ButtonPress', 1, 576, 270], ['ButtonRelease', 1, 576, 270]]"
+        ],
+        "seq": 28,
+        "setting": "screenshot"
+      },
+      {
+        "cell": "R04",
+        "cycle": 1,
+        "infra": [],
+        "reasons": [
+          "events differ: expected [['KeyPress', 'Shift_L'], ['ButtonPress', 1, 672, 378], ['ButtonRelease', 1, 672, 378], ['KeyRelease', 'Shift_L'], ['KeyPress', 'Alt_L'], ['ButtonPress', 1, 768, 378], ['ButtonRelease', 1, 768, 378], ['KeyRelease', 'Alt_L'], ['KeyPress', 'Control_L'], ['KeyPress', 'Shift_L'], ['ButtonPress', 1, 864, 378], ['ButtonRelease', 1, 864, 378], ['KeyRelease', 'Shift_L'], ['KeyRelease', 'Control_L']], observed [['KeyPress', 'Shift_L', []], ['KeyRelease', 'Shift_L', ['Shift']], ['ButtonPress', 1, 672, 378], ['ButtonRelease', 1, 672, 378], ['KeyPress', 'Alt_L', []], ['KeyRelease', 'Alt_L', ['Mod1']], ['ButtonPress', 1, 768, 378], ['ButtonRelease', 1, 768, 378], ['KeyPress', 'Control_L', []], ['KeyPress', 'Shift_L', ['Control']], ['KeyRelease', 'Shift_L', ['Shift', 'Control']], ['KeyRelease', 'Control_L', ['Control']], ['ButtonPress', 1, 864, 378], ['ButtonRelease', 1, 864, 378]]"
+        ],
+        "seq": 29,
+        "setting": "screenshot"
+      },
+      {
+        "cell": "R06",
+        "cycle": 1,
+        "infra": [],
+        "reasons": [
+          "events differ: expected [['ButtonPress', 1, 480, 756], ['ButtonRelease', 1, 768, 810]], observed []",
+          "1 motion events < 3",
+          "final pointer [480, 756] != [768, 810]"
+        ],
+        "seq": 31,
+        "setting": "screenshot"
+      },
+      {
+        "cell": "R10",
+        "cycle": 1,
+        "infra": [],
+        "reasons": [
+          "events differ: expected [['ButtonPress', 6, 999, 562], ['ButtonRelease', 6, 999, 562], ['ButtonPress', 6, 999, 562], ['ButtonRelease', 6, 999, 562], ['ButtonPress', 6, 999, 562], ['ButtonRelease', 6, 999, 562]], observed [['ButtonPress', 4, 998, 561], ['ButtonRelease', 4, 998, 561], ['ButtonPress', 4, 998, 561], ['ButtonRelease', 4, 998, 561], ['ButtonPress', 4, 998, 561], ['ButtonRelease', 4, 998, 561]]"
+        ],
+        "seq": 32,
+        "setting": "screenshot"
+      },
+      {
+        "cell": "R14",
+        "cycle": 1,
+        "infra": [],
+        "reasons": [
+          "events differ: expected [['ButtonPress', 1, 1919, 1079], ['ButtonRelease', 1, 1919, 1079]], observed [['ButtonPress', 1, 1918, 1078], ['ButtonRelease', 1, 1918, 1078]]"
+        ],
+        "seq": 34,
+        "setting": "screenshot"
+      }
+    ],
+    "finished_at": 1791470663.083006,
+    "git_sha": "bf99a645c3782b2c59a75b6f463461b2515d0d97",
+    "infra_gates_pass": true,
+    "infra_types": {},
+    "job": "868",
+    "jobs": [
+      "868"
+    ],
+    "labelled_containers_left": [],
+    "layer": "H-GA-buggy",
+    "manifest_json_sha256": "34456e0c7562140ebf45940e974e5c39a64608b60f3cd0f5a0a68ed5e304f7ae",
+    "mutant": null,
+    "no_gpu_all": true,
+    "observation_retries": {},
+    "qcow2_unchanged": true,
+    "receipt_sha256": "1717b7ffcffe8bba59652096518a86235f3148e8311205685a73689fff680f10",
+    "reset_observations": [
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      }
+    ],
+    "restarts": 0,
+    "seed": [
+      42
+    ],
+    "session_errors": [],
+    "sessions": 2,
+    "slurm": {
+      "exit_code": "0:0",
+      "state": "COMPLETED"
+    },
+    "started_at": 1791470476.5734732,
+    "step_s": {
+      "n": 130,
+      "p50": 0.5787,
+      "p95": 1.3301
+    },
+    "tree_sha256": "abbbfe6cb74c4573856ac1e6cd906f8332f48836e636c53aac4c65fa634dbf23",
+    "trials": 70,
+    "trials_pass": 20,
+    "unreadable": []
+  },
+  {
+    "accessibility_calls": 0,
+    "attempt": 1,
+    "batch": {
+      "driver_exit": 0,
+      "labelled_containers_left": 0
+    },
+    "boot_s": [
+      17.264,
+      17.432
+    ],
+    "campaign_id": "q2ap-v2-c1-hoswup-a1",
+    "concurrency": 1,
+    "counting_problems": [],
+    "criterion": "C1",
+    "earlier_attempts": [],
+    "failed_trials": [
+      {
+        "cell": "R09",
+        "cycle": 0,
+        "infra": [],
+        "reasons": [
+          "events differ: expected [['ButtonPress', 5, 1345, 324], ['ButtonRelease', 5, 1345, 324], ['ButtonPress', 5, 1345, 324], ['ButtonRelease', 5, 1345, 324], ['ButtonPress', 5, 1345, 324], ['ButtonRelease', 5, 1345, 324]], observed [['ButtonPress', 5, 1234, 777], ['ButtonRelease', 5, 1234, 777], ['ButtonPress', 5, 1234, 777], ['ButtonRelease', 5, 1234, 777], ['ButtonPress', 5, 1234, 777], ['ButtonRelease', 5, 1234, 777]]",
+          "final pointer [1234, 777] != [1345, 324]"
+        ],
+        "seq": 0,
+        "setting": "screenshot"
+      },
+      {
+        "cell": "R13",
+        "cycle": 0,
+        "infra": [],
+        "reasons": [
+          "events differ: expected [['KeyPress', 'KP_Enter'], ['KeyRelease', 'KP_Enter'], ['KeyPress', 'Menu'], ['KeyRelease', 'Menu'], ['KeyPress', 'Super_L'], ['KeyRelease', 'Super_L']], observed []"
+        ],
+        "seq": 1,
+        "setting": "screenshot"
+      },
+      {
+        "cell": "R08",
+        "cycle": 0,
+        "infra": [],
+        "reasons": [
+          "events differ: expected [['ButtonPress', 1, 1076, 702], ['ButtonRelease', 1, 1076, 702], ['ButtonPress', 1, 1076, 702], ['ButtonRelease', 1, 1076, 702], ['ButtonPress', 1, 1076, 702], ['ButtonRelease', 1, 1076, 702]], observed [['ButtonPress', 1, 1076, 702], ['ButtonRelease', 1, 1076, 702], ['ButtonPress', 1, 1076, 702], ['ButtonRelease', 1, 1076, 702]]"
+        ],
+        "seq": 2,
+        "setting": "screenshot"
+      },
+      {
+        "cell": "R03",
+        "cycle": 0,
+        "infra": [],
+        "reasons": [
+          "events differ: expected [['KeyPress', 'Control_L'], ['ButtonPress', 1, 576, 324], ['ButtonRelease', 1, 576, 324], ['KeyRelease', 'Control_L']], observed [['ButtonPress', 1, 576, 324], ['ButtonRelease', 1, 576, 324]]"
+        ],
+        "seq": 7,
+        "setting": "screenshot"
+      },
+      {
+        "cell": "R10",
+        "cycle": 0,
+        "infra": [],
+        "reasons": [
+          "events differ: expected [['ButtonPress', 6, 999, 562], ['ButtonRelease', 6, 999, 562], ['ButtonPress', 6, 999, 562], ['ButtonRelease', 6, 999, 562], ['ButtonPress', 6, 999, 562], ['ButtonRelease', 6, 999, 562]], observed [['ButtonPress', 5, 999, 562], ['ButtonRelease', 5, 999, 562], ['ButtonPress', 5, 999, 562], ['ButtonRelease', 5, 999, 562], ['ButtonPress', 5, 999, 562], ['ButtonRelease', 5, 999, 562]]"
+        ],
+        "seq": 8,
+        "setting": "screenshot"
+      },
+      {
+        "cell": "R11",
+        "cycle": 0,
+        "infra": [],
+        "reasons": [
+          "terminal success != failure"
+        ],
+        "seq": 13,
+        "setting": "screenshot"
+      },
+      {
+        "cell": "R03",
+        "cycle": 0,
+        "infra": [],
+        "reasons": [
+          "events differ: expected [['KeyPress', 'Control_L'], ['ButtonPress', 1, 576, 324], ['ButtonRelease', 1, 576, 324], ['KeyRelease', 'Control_L']], observed [['ButtonPress', 1, 576, 324], ['ButtonRelease', 1, 576, 324]]"
+        ],
+        "seq": 14,
+        "setting": "screenshot"
+      },
+      {
+        "cell": "R08",
+        "cycle": 0,
+        "infra": [],
+        "reasons": [
+          "events differ: expected [['ButtonPress', 1, 1076, 702], ['ButtonRelease', 1, 1076, 702], ['ButtonPress', 1, 1076, 702], ['ButtonRelease', 1, 1076, 702], ['ButtonPress', 1, 1076, 702], ['ButtonRelease', 1, 1076, 702]], observed [['ButtonPress', 1, 1076, 702], ['ButtonRelease', 1, 1076, 702], ['ButtonPress', 1, 1076, 702], ['ButtonRelease', 1, 1076, 702]]"
+        ],
+        "seq": 16,
+        "setting": "screenshot"
+      },
+      {
+        "cell": "R10",
+        "cycle": 0,
+        "infra": [],
+        "reasons": [
+          "events differ: expected [['ButtonPress', 6, 999, 562], ['ButtonRelease', 6, 999, 562], ['ButtonPress', 6, 999, 562], ['ButtonRelease', 6, 999, 562], ['ButtonPress', 6, 999, 562], ['ButtonRelease', 6, 999, 562]], observed [['ButtonPress', 5, 999, 562], ['ButtonRelease', 5, 999, 562], ['ButtonPress', 5, 999, 562], ['ButtonRelease', 5, 999, 562], ['ButtonPress', 5, 999, 562], ['ButtonRelease', 5, 999, 562]]"
+        ],
+        "seq": 17,
+        "setting": "screenshot"
+      },
+      {
+        "cell": "R13",
+        "cycle": 0,
+        "infra": [],
+        "reasons": [
+          "events differ: expected [['KeyPress', 'KP_Enter'], ['KeyRelease', 'KP_Enter'], ['KeyPress', 'Menu'], ['KeyRelease', 'Menu'], ['KeyPress', 'Super_L'], ['KeyRelease', 'Super_L']], observed []"
+        ],
+        "seq": 21,
+        "setting": "screenshot"
+      },
+      {
+        "cell": "R09",
+        "cycle": 0,
+        "infra": [],
+        "reasons": [
+          "events differ: expected [['ButtonPress', 5, 1345, 324], ['ButtonRelease', 5, 1345, 324], ['ButtonPress', 5, 1345, 324], ['ButtonRelease', 5, 1345, 324], ['ButtonPress', 5, 1345, 324], ['ButtonRelease', 5, 1345, 324]], observed [['ButtonPress', 5, 1234, 777], ['ButtonRelease', 5, 1234, 777], ['ButtonPress', 5, 1234, 777], ['ButtonRelease', 5, 1234, 777], ['ButtonPress', 5, 1234, 777], ['ButtonRelease', 5, 1234, 777]]",
+          "final pointer [1234, 777] != [1345, 324]"
+        ],
+        "seq": 22,
+        "setting": "screenshot"
+      },
+      {
+        "cell": "R11",
+        "cycle": 0,
+        "infra": [],
+        "reasons": [
+          "terminal success != failure"
+        ],
+        "seq": 23,
+        "setting": "screenshot"
+      },
+      {
+        "cell": "R08",
+        "cycle": 0,
+        "infra": [],
+        "reasons": [
+          "events differ: expected [['ButtonPress', 1, 1076, 702], ['ButtonRelease', 1, 1076, 702], ['ButtonPress', 1, 1076, 702], ['ButtonRelease', 1, 1076, 702], ['ButtonPress', 1, 1076, 702], ['ButtonRelease', 1, 1076, 702]], observed [['ButtonPress', 1, 1076, 702], ['ButtonRelease', 1, 1076, 702], ['ButtonPress', 1, 1076, 702], ['ButtonRelease', 1, 1076, 702]]"
+        ],
+        "seq": 28,
+        "setting": "screenshot"
+      },
+      {
+        "cell": "R09",
+        "cycle": 0,
+        "infra": [],
+        "reasons": [
+          "events differ: expected [['ButtonPress', 5, 1345, 324], ['ButtonRelease', 5, 1345, 324], ['ButtonPress', 5, 1345, 324], ['ButtonRelease', 5, 1345, 324], ['ButtonPress', 5, 1345, 324], ['ButtonRelease', 5, 1345, 324]], observed [['ButtonPress', 5, 1234, 777], ['ButtonRelease', 5, 1234, 777], ['ButtonPress', 5, 1234, 777], ['ButtonRelease', 5, 1234, 777], ['ButtonPress', 5, 1234, 777], ['ButtonRelease', 5, 1234, 777]]",
+          "final pointer [1234, 777] != [1345, 324]"
+        ],
+        "seq": 29,
+        "setting": "screenshot"
+      },
+      {
+        "cell": "R11",
+        "cycle": 0,
+        "infra": [],
+        "reasons": [
+          "terminal success != failure"
+        ],
+        "seq": 32,
+        "setting": "screenshot"
+      },
+      {
+        "cell": "R13",
+        "cycle": 1,
+        "infra": [],
+        "reasons": [
+          "events differ: expected [['KeyPress', 'KP_Enter'], ['KeyRelease', 'KP_Enter'], ['KeyPress', 'Menu'], ['KeyRelease', 'Menu'], ['KeyPress', 'Super_L'], ['KeyRelease', 'Super_L']], observed []"
+        ],
+        "seq": 0,
+        "setting": "screenshot"
+      },
+      {
+        "cell": "R03",
+        "cycle": 1,
+        "infra": [],
+        "reasons": [
+          "events differ: expected [['KeyPress', 'Control_L'], ['ButtonPress', 1, 576, 324], ['ButtonRelease', 1, 576, 324], ['KeyRelease', 'Control_L']], observed [['ButtonPress', 1, 576, 324], ['ButtonRelease', 1, 576, 324]]"
+        ],
+        "seq": 3,
+        "setting": "screenshot"
+      },
+      {
+        "cell": "R10",
+        "cycle": 1,
+        "infra": [],
+        "reasons": [
+          "events differ: expected [['ButtonPress', 6, 999, 562], ['ButtonRelease', 6, 999, 562], ['ButtonPress', 6, 999, 562], ['ButtonRelease', 6, 999, 562], ['ButtonPress', 6, 999, 562], ['ButtonRelease', 6, 999, 562]], observed [['ButtonPress', 5, 999, 562], ['ButtonRelease', 5, 999, 562], ['ButtonPress', 5, 999, 562], ['ButtonRelease', 5, 999, 562], ['ButtonPress', 5, 999, 562], ['ButtonRelease', 5, 999, 562]]"
+        ],
+        "seq": 6,
+        "setting": "screenshot"
+      },
+      {
+        "cell": "R03",
+        "cycle": 1,
+        "infra": [],
+        "reasons": [
+          "events differ: expected [['KeyPress', 'Control_L'], ['ButtonPress', 1, 576, 324], ['ButtonRelease', 1, 576, 324], ['KeyRelease', 'Control_L']], observed [['ButtonPress', 1, 576, 324], ['ButtonRelease', 1, 576, 324]]"
+        ],
+        "seq": 9,
+        "setting": "screenshot"
+      },
+      {
+        "cell": "R09",
+        "cycle": 1,
+        "infra": [],
+        "reasons": [
+          "events differ: expected [['ButtonPress', 5, 1345, 324], ['ButtonRelease', 5, 1345, 324], ['ButtonPress', 5, 1345, 324], ['ButtonRelease', 5, 1345, 324], ['ButtonPress', 5, 1345, 324], ['ButtonRelease', 5, 1345, 324]], observed [['ButtonPress', 5, 1234, 777], ['ButtonRelease', 5, 1234, 777], ['ButtonPress', 5, 1234, 777], ['ButtonRelease', 5, 1234, 777], ['ButtonPress', 5, 1234, 777], ['ButtonRelease', 5, 1234, 777]]",
+          "final pointer [1234, 777] != [1345, 324]"
+        ],
+        "seq": 12,
+        "setting": "screenshot"
+      },
+      {
+        "cell": "R11",
+        "cycle": 1,
+        "infra": [],
+        "reasons": [
+          "terminal success != failure"
+        ],
+        "seq": 13,
+        "setting": "screenshot"
+      },
+      {
+        "cell": "R08",
+        "cycle": 1,
+        "infra": [],
+        "reasons": [
+          "events differ: expected [['ButtonPress', 1, 1076, 702], ['ButtonRelease', 1, 1076, 702], ['ButtonPress', 1, 1076, 702], ['ButtonRelease', 1, 1076, 702], ['ButtonPress', 1, 1076, 702], ['ButtonRelease', 1, 1076, 702]], observed [['ButtonPress', 1, 1076, 702], ['ButtonRelease', 1, 1076, 702], ['ButtonPress', 1, 1076, 702], ['ButtonRelease', 1, 1076, 702]]"
+        ],
+        "seq": 14,
+        "setting": "screenshot"
+      },
+      {
+        "cell": "R10",
+        "cycle": 1,
+        "infra": [],
+        "reasons": [
+          "events differ: expected [['ButtonPress', 6, 999, 562], ['ButtonRelease', 6, 999, 562], ['ButtonPress', 6, 999, 562], ['ButtonRelease', 6, 999, 562], ['ButtonPress', 6, 999, 562], ['ButtonRelease', 6, 999, 562]], observed [['ButtonPress', 5, 999, 562], ['ButtonRelease', 5, 999, 562], ['ButtonPress', 5, 999, 562], ['ButtonRelease', 5, 999, 562], ['ButtonPress', 5, 999, 562], ['ButtonRelease', 5, 999, 562]]"
+        ],
+        "seq": 17,
+        "setting": "screenshot"
+      },
+      {
+        "cell": "R13",
+        "cycle": 1,
+        "infra": [],
+        "reasons": [
+          "events differ: expected [['KeyPress', 'KP_Enter'], ['KeyRelease', 'KP_Enter'], ['KeyPress', 'Menu'], ['KeyRelease', 'Menu'], ['KeyPress', 'Super_L'], ['KeyRelease', 'Super_L']], observed []"
+        ],
+        "seq": 18,
+        "setting": "screenshot"
+      },
+      {
+        "cell": "R09",
+        "cycle": 1,
+        "infra": [],
+        "reasons": [
+          "events differ: expected [['ButtonPress', 5, 1345, 324], ['ButtonRelease', 5, 1345, 324], ['ButtonPress', 5, 1345, 324], ['ButtonRelease', 5, 1345, 324], ['ButtonPress', 5, 1345, 324], ['ButtonRelease', 5, 1345, 324]], observed [['ButtonPress', 5, 1234, 777], ['ButtonRelease', 5, 1234, 777], ['ButtonPress', 5, 1234, 777], ['ButtonRelease', 5, 1234, 777], ['ButtonPress', 5, 1234, 777], ['ButtonRelease', 5, 1234, 777]]",
+          "final pointer [1234, 777] != [1345, 324]"
+        ],
+        "seq": 22,
+        "setting": "screenshot"
+      },
+      {
+        "cell": "R03",
+        "cycle": 1,
+        "infra": [],
+        "reasons": [
+          "events differ: expected [['KeyPress', 'Control_L'], ['ButtonPress', 1, 576, 324], ['ButtonRelease', 1, 576, 324], ['KeyRelease', 'Control_L']], observed [['ButtonPress', 1, 576, 324], ['ButtonRelease', 1, 576, 324]]"
+        ],
+        "seq": 24,
+        "setting": "screenshot"
+      },
+      {
+        "cell": "R08",
+        "cycle": 1,
+        "infra": [],
+        "reasons": [
+          "events differ: expected [['ButtonPress', 1, 1076, 702], ['ButtonRelease', 1, 1076, 702], ['ButtonPress', 1, 1076, 702], ['ButtonRelease', 1, 1076, 702], ['ButtonPress', 1, 1076, 702], ['ButtonRelease', 1, 1076, 702]], observed [['ButtonPress', 1, 1076, 702], ['ButtonRelease', 1, 1076, 702], ['ButtonPress', 1, 1076, 702], ['ButtonRelease', 1, 1076, 702]]"
+        ],
+        "seq": 25,
+        "setting": "screenshot"
+      },
+      {
+        "cell": "R13",
+        "cycle": 1,
+        "infra": [],
+        "reasons": [
+          "events differ: expected [['KeyPress', 'KP_Enter'], ['KeyRelease', 'KP_Enter'], ['KeyPress', 'Menu'], ['KeyRelease', 'Menu'], ['KeyPress', 'Super_L'], ['KeyRelease', 'Super_L']], observed []"
+        ],
+        "seq": 26,
+        "setting": "screenshot"
+      },
+      {
+        "cell": "R10",
+        "cycle": 1,
+        "infra": [],
+        "reasons": [
+          "events differ: expected [['ButtonPress', 6, 999, 562], ['ButtonRelease', 6, 999, 562], ['ButtonPress', 6, 999, 562], ['ButtonRelease', 6, 999, 562], ['ButtonPress', 6, 999, 562], ['ButtonRelease', 6, 999, 562]], observed [['ButtonPress', 5, 999, 562], ['ButtonRelease', 5, 999, 562], ['ButtonPress', 5, 999, 562], ['ButtonRelease', 5, 999, 562], ['ButtonPress', 5, 999, 562], ['ButtonRelease', 5, 999, 562]]"
+        ],
+        "seq": 32,
+        "setting": "screenshot"
+      },
+      {
+        "cell": "R11",
+        "cycle": 1,
+        "infra": [],
+        "reasons": [
+          "terminal success != failure"
+        ],
+        "seq": 33,
+        "setting": "screenshot"
+      }
+    ],
+    "finished_at": 1791470675.8490448,
+    "git_sha": "bf99a645c3782b2c59a75b6f463461b2515d0d97",
+    "infra_gates_pass": true,
+    "infra_types": {},
+    "job": "866",
+    "jobs": [
+      "866"
+    ],
+    "labelled_containers_left": [],
+    "layer": "H-OSW-up",
+    "manifest_json_sha256": "99715071a78c1af1446a6e7480a9984b19764e5bed217a67a207bacff4538054",
+    "mutant": null,
+    "no_gpu_all": true,
+    "observation_retries": {},
+    "qcow2_unchanged": true,
+    "receipt_sha256": "27de7a04b51d6e5282c0fa327b644ff5fb0cf7cc9158b1decd77574fb75249b8",
+    "reset_observations": [
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      }
+    ],
+    "restarts": 0,
+    "seed": [
+      42
+    ],
+    "session_errors": [],
+    "sessions": 2,
+    "slurm": {
+      "exit_code": "0:0",
+      "state": "COMPLETED"
+    },
+    "started_at": 1791470473.566794,
+    "step_s": {
+      "n": 165,
+      "p50": 0.5444,
+      "p95": 1.261
+    },
+    "tree_sha256": "abbbfe6cb74c4573856ac1e6cd906f8332f48836e636c53aac4c65fa634dbf23",
+    "trials": 70,
+    "trials_pass": 40,
+    "unreadable": []
+  }
+]
