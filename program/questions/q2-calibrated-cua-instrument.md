@@ -58,7 +58,9 @@ Drafts on branch `stage0/q2-stage1-rescope`:
 - Gauntlet proposal: [`program/proposals/2026-10-08-q2-stage1-rescoped.md`](../proposals/2026-10-08-q2-stage1-rescoped.md)
 - Draft preregistration of the first stage: [`program/preregistrations/q2-stage1-rescoped-v1.md`](../preregistrations/q2-stage1-rescoped-v1.md)
 
-Status: DRAFT; gauntlet wave 0 (synthesis only).
+Status: DRAFT; gauntlet wave 0 (synthesis only), revised after three
+adversarial pre-freeze reviews of the S1a draft (2026-10-08; every blocking
+item fixed, preregistration section 22).
 
 Why the original design was rescoped:
 
@@ -68,31 +70,38 @@ Why the original design was rescoped:
   earlier budgets used therefore prices neither harness, and the
   accessibility-tree arm cannot run on them.
 
-**S1a: runs without the gauntlet; registered caps 7.967 GPU-h.**
+**S1a: runs without the gauntlet; registered caps at most 7.967 GPU-h in
+every branch.**
 
 - Qwen3.5-4B and 9B x H-OSW-fixed and H-GA. Screenshot only, thinking on with
   2,048 output tokens, T = 15, greedy decoding.
-- A base of 32 of the 116 usable confirm tasks, plus an outcome-blind fill
-  rule.
-- Two serving sessions per size, at least 12 h apart, with 2 reruns each.
+- A base of 24 or 32 of the 116 usable confirm tasks (an A0-derived rule; 24
+  when the anchor runs), plus a cost-based fill rule whose extension blocks
+  enter only a secondary analysis set.
+- Two serving sessions per size, at least 12 h apart, with 2 reruns each;
+  every estimand is stated for the realized sessions.
 - An OpenCUA-7B 15-step anchor against its three public runs (D11), read
-  before the factorial.
+  before the factorial, sized from its smoke run (64-96 tasks at N* >= 32).
 - Outputs: the between- and within-session noise floor, the harness main
-  effect and harness share, the first real per-episode cost card, and a
-  GO/NO-GO for the scale ladder (DR5).
+  effect, the mean squared per-task harness effect and harness share, the
+  first real per-episode cost card, P1-P5, and a GO/NO-GO for the scale ladder
+  (DR5, with the ladder's detectable share frozen at 0.13).
 - Gated on:
-  - the action-path v2 acceptance and its N*;
+  - the action-path v2 acceptance (C1-C4, A1-A6 on one attempt) and an N*
+    of at least 16;
   - the CPU-only G0 items;
   - a decision admitting the pre-freeze development jobs;
-  - a D29-style decision on OpenCUA's `--trust-remote-code`.
+  - a D29-style decision on OpenCUA's `--trust-remote-code`;
+  - Kevin's sign-off on three items: D47's task floor (24 when the anchor
+    runs), DR1 in place of the 122B-A10B swap, and DR5 in place of the 7-8 pp
+    line.
 
-**S1b: over 8 GPU-h; gauntlet and D24.** A replay-only serving probe v3 comes
-first. Then one of two studies, depending on S1a:
-
-- the harness scale ladder with 27B-FP8 and 35B-A3B-FP8 added: 32 GPU-h
-  central, 41 high, at the card's unmeasured multipliers;
-- an observation study on a certified harness variant that reads the
-  accessibility tree.
+**S1b: over 8 GPU-h; only on S1a's DR5 GO (D47); gauntlet and D24.** A
+replay-only serving probe v3 comes first, then the harness scale ladder with
+27B-FP8 and 35B-A3B-FP8 added (32 GPU-h central, 41 high, at the card's
+unmeasured multipliers). After NO-GO or INCONCLUSIVE no S1b runs; an
+observation study on a certified harness variant that reads the accessibility
+tree, or more sessions at 4B and 9B, would each be a new proposal.
 
 The proposal also asks to restate the "paired MDE about 7-8 pp" kill line
 below in share units, as DR5 does. The kill criteria are unchanged until
