@@ -2379,3 +2379,56 @@ they say so.)
 - Decision for Kevin (pending in `program/state.json`): whether to open a K1
   v3 on Qwen3.5-4B-Base under a new id and the gauntlet. Nothing pushed; the
   orx node branches are local.
+
+## 2026-10-08 — Q2 action-path v2 validity controls operated (branch `ops/q2-action-path-v2`): C2, C1 and C3 PASS
+
+- Ran from a read-only `git archive` export of `bf99a64`, the commit
+  recording ledger row 15, extracted to
+  `~/cotcodec-runs/q2-action-path-v2/src/` on the host. Its tree digest is
+  `abbbfe6c`.
+  - A local export of the same commit passed `check-chain` (15 rows),
+    `verify` of all three registrations and the pin and admission tests
+    (51 passed).
+  - The frozen renderer took the host root as a parameter (D40), so no
+    manifest field was moved. All 50 manifests reproduce byte for byte
+    locally.
+  - Every job checked the ledger, the pinned files and the closed world at
+    submission and again inside the job.
+- C2 (job 864) is a reproduction test on its own seed (45) and is not
+  a-priori. It ran L0-raw, 100 entries x 5, screenshot setting, N = 1.
+  - End state: `COMPLETED` 0:0 by the watcher and the batch record. The
+    campaign counts, with no infrastructure failure, retry or restart.
+  - `acceptance.c2` gives PASS: the failing set is exactly the predicted 8.
+  - `chord_super_d` passed 5 of 5. Under D45's rule its queued `d` press,
+    `d` release and Super_L release were read without their state, each
+    0-2 ms after the processed Super_L press.
+  - Section 12: 53 events in 20 trials were read without their state, all
+    in the four shell chords and all after a processed press of the chord's
+    grab key. No event lacked Mod2 without a preceding processed press.
+  - Under section 5 as written, 454 of 500 trials passed. The four shell
+    chords now pass too. Three entries were FLAKY on stale markers only.
+  - v1's a-priori result (job 768, one unpredicted failure) is reported
+    beside it.
+- C1 (jobs 866 and 868): H-OSW-up failed R08-R11 and H-GA-buggy failed R01,
+  R02 and R05-R07, each in 5 of 5. PASS.
+- C3 (jobs 870-962, 47 campaigns, 4,617 trials): PASS.
+  - 42 of 44 scored mutants were killed. M12 and M13 on H-OSW-fixed came
+    out equivalent, as predicted.
+  - The reference runs failed only outside-spec R cells.
+  - No infrastructure failure, and no event was read without its state.
+  - Three predicted killers did not kill, the same three as in development
+    (M01 on H-OSW-fixed `scroll_ctrl_down_3`, M21 `mixed_gesture_state`,
+    M26 `seq_long_mixed`). Each of those mutants was killed by other cells.
+  - C3 repeated development's conditions.
+- Every campaign was attempt 1 and counted, so no rerun and no repair.
+  - Each manifest is N = 1. C1's two campaigns and up to six C3 campaigns
+    ran as concurrent separate jobs, as the development mutant runs did.
+  - The verdicts reproduce byte for byte on the host and locally from the
+    raw records.
+  - 2.95 VM-hours, CPU only (C2 0.17, C1 0.11, C3 2.68), and no GPU.
+- Evidence: `program/evidence/2026-10-08/q2-action-path-v2-acceptance/`.
+  It holds the manifests, the batch, receipt and Slurm records, the verdicts
+  with their section-12 reports, the per-campaign summaries, the
+  prediction table, the checks, the raw SHA-256 lists and the operator
+  scripts.
+- A1-A7, the ladder and A5 did not run. Nothing pushed or merged.

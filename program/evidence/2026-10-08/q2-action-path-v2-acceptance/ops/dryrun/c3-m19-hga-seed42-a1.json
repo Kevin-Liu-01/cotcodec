@@ -1,0 +1,27 @@
+{
+  "argv": [
+    "sbatch",
+    "--parsable",
+    "--partition=research",
+    "--nodes=1",
+    "--ntasks=1",
+    "--job-name=q2ap-v2-c3",
+    "--cpus-per-task=5",
+    "--mem=12G",
+    "--time=01:20:00",
+    "--signal=B:USR1@120",
+    "--output=/home/kevin/cotcodec-runs/q2-action-path-v2/runs/slurm-%j.out",
+    "--export=<6 variables>",
+    "/home/kevin/cotcodec-runs/q2-action-path-v2/src/bf99a645c3782b2c59a75b6f463461b2515d0d97/infra/slurm/host-single-node/vm-campaign.sbatch"
+  ],
+  "runtime": "vm-campaign-cpu-only-v1",
+  "host": {
+    "source_tree_sha256": "abbbfe6cb74c4573856ac1e6cd906f8332f48836e636c53aac4c65fa634dbf23",
+    "images": {
+      "vm": "sha256:fe8d9a5e5ad6c593d059887ea2c790481b3f32dd42fa961f2441cdbbe2c70cf4",
+      "runner": "sha256:ac2b5815bcc2ed193116aa2d4bdee773b5a457c545453a6c91956768634a6002"
+    }
+  },
+  "manifest_sha256": "5e953a8ada3d8dffc440b64a98815cbc2601d064dec7cd5184a6053ebc698f8f",
+  "batch_sha256": "3d86820d176e3a9f0699814a19f62154cde00f88da1777a33c804e884288ac8a"
+}

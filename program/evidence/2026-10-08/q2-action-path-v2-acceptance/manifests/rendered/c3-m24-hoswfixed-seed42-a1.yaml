@@ -1,0 +1,78 @@
+# q2-action-path-v2 C3 (seed 42, attempt 1), rendered by scripts/render_q2_action_path_manifest.py
+schema: cotcodec-vm-campaign-v1
+name: q2ap-v2-c3
+campaign_id: q2ap-v2-c3-m24-hoswfixed-a1
+experiment_id: q2-action-path-v2
+purpose: acceptance
+preregistration:
+  path: program/preregistrations/q2-action-path-v2.md
+  status: frozen
+  sha256: 6f690bb53b0986f8c6381e477f30aa717c0548dd25b4adfe0e8b6283c49b998f
+git_sha: bf99a645c3782b2c59a75b6f463461b2515d0d97
+source:
+  host_dir: /home/kevin/cotcodec-runs/q2-action-path-v2/src/bf99a645c3782b2c59a75b6f463461b2515d0d97
+  tree_sha256: abbbfe6cb74c4573856ac1e6cd906f8332f48836e636c53aac4c65fa634dbf23
+run_root: /home/kevin/cotcodec-runs/q2-action-path-v2/runs
+slurm:
+  cpus: 5
+  memory_gb: 12
+  minutes: 80
+container_profile: default
+model:
+  kind: none
+  reason: scored action-path campaigns run the executor and harness parsers, no model
+randomness:
+  contract: seeded
+  seeds:
+  - 42
+  seed_binding:
+    flag: --seed
+vm:
+  image: happysixd/osworld-docker@sha256:0e6497a9295647cf05bf2b2af522fdd79bdeba2737595259cab310a3bcf6baa9
+  image_id: sha256:fe8d9a5e5ad6c593d059887ea2c790481b3f32dd42fa961f2441cdbbe2c70cf4
+  qcow2:
+    host_path: /home/kevin/cotcodec-runs/stage0/q2-action-path/vm/Ubuntu.qcow2
+    sha256: 6bf667a852b3c307f61d9f09c42559351f45e0607e428b4997becf534cf4d313
+    size_bytes: 24460197888
+    source_url: https://huggingface.co/datasets/xlangai/ubuntu_osworld/resolve/a5d9c3eaae98eebf6e3a0beb84e7e47cf72ae133/Ubuntu.qcow2.zip
+    archive_sha256: b795b6cd4c69b252c1b4f10150a347795555032501b60fd031751ed09b896712
+    revision: a5d9c3eaae98eebf6e3a0beb84e7e47cf72ae133
+    license: apache-2.0
+  ram_size: 4G
+  cpu_cores: 4
+  disk_size: 32G
+  memory_gb: 6
+  network: none-netns
+  guest_ip: 20.20.20.21
+  server_port: 5000
+  hmp_port: 7100
+  concurrency: 1
+runner:
+  image_id: sha256:ac2b5815bcc2ed193116aa2d4bdee773b5a457c545453a6c91956768634a6002
+  memory_gb: 1
+  cpus: 1
+addenda:
+  inputs:
+    path: program/preregistrations/q2-action-path-v2-inputs.md
+    sha256: efa182d009e5af64299d05784add3a4610c8d855a02061528e40114377629f22
+  executor:
+    path: program/preregistrations/q2-action-path-v2-executor.md
+    sha256: cef0cbc603fc5da7c4e88205e738ef4b659ec367f85d8573328951f57e247b08
+workload:
+  kind: suite-acceptance
+  criterion: C3
+  layer: H-OSW-fixed
+  reps: 1
+  settings:
+  - screenshot
+  cells: all
+  mutant: M24-grid-1000-instead-of-999
+  session_range: null
+  attempt: 1
+  session_trials: 60
+  boot_timeout_s: 300
+  settle_timeout_s: 60
+  cells_sha256: a79073a2f5e6e7d7e109b14d50fb4c1e2791f856504c32cd855911e726a95c95
+  max_trial_s: 30
+  sessions: 2
+  trials: 99
