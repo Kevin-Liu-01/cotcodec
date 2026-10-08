@@ -1330,7 +1330,7 @@ row (the test fails otherwise), and the freeze pins them.
 | `program/proposals/evidence/2026-10-08-q2-stage1-rescoped/analysis/cost_s1a.json` | `843a123b2d8e98e34d9f20388edc132e673ba9c93b01645c7668c98d2d80e144` |
 | `program/proposals/evidence/2026-10-08-q2-stage1-rescoped/analysis/sim_s1a_v2.py` | `19574910a06026b0b042aaf251e0988a72ed0484fa5833a8ca7597e3ba646a4c` |
 | `program/proposals/evidence/2026-10-08-q2-stage1-rescoped/analysis/sim_s1a_v2.json` | `e3c52beb5c6160e5e364ef307fb3c6353c226ffb7b762d9cc534f8fc86239d9e` |
-| `harness/q2_stage1/driver.py` | `a635c2f619d1221ae68f9f86db6a33f67978d7007c16af5fa1ae6a06503ef6d3` |
+| `harness/q2_stage1/driver.py` | `7131925d7001a97430f3f2fd4a3282c465d642c2479bc29037476e88e2aaa5ce` |
 | `harness/q2_stage1/agents.py` | `35dad1f17b581c3555dd8f82f50a5f475f94b1bf4506d141c26c04fdf3430a05` |
 | `harness/q2_stage1/engine.py` | `03c0a23c37d4bad40bf2c257aca4992277117d1e4780eaee318ecdd5d0767814` |
 | `harness/q2_stage1/bridge.py` | `dceacda3d6882223b0f0cfe54dd28f1674d1bf99527083420c0f29976a68692d` |
@@ -1342,7 +1342,7 @@ row (the test fails otherwise), and the freeze pins them.
 | `harness/q2_stage1/anchor.py` | `6c0a31cf1abb261a3522573847ee6dc1798925143b286cf9c02a3550f1c93b7a` |
 | `harness/q2_stage1/glmm.py` | `73e4d0f9100262eb0efe828a14308d2b45c17a3c827b476392b5045dfe1377e8` |
 | `harness/q2_stage1/glmm.R` | `e3ea337c77bf6a8b9289047b62cfc51053a5f666fe51795071a1ae317f36681d` |
-| `harness/q2_stage1/design_diffs.md` | `4598ce232e4eecd4312564032f4a947d4e99c7449ebcf1590fbfb5891ac88800` |
+| `harness/q2_stage1/design_diffs.md` | `47c48da9ac8f724352ba8553ef1922c513870b456e111d083256c2ef22f3e746` |
 | `infra/slurm/host-single-node/s1a-vm.sbatch` | `53fcd31d87678c6f5b4c929e6d843e5bc3177cac122842876f563e5191b09d45` |
 | `infra/slurm/host-single-node/s1a-cpu.sbatch` | `3880d337ad5bb0dc3c0edfc39f41811028118ef574c75efb08faa023dc6dee33` |
 | `infra/slurm/host-single-node/fetch-model-cpu.sbatch` | `22685e5e4dc9f88cd9d6ba7aec7189a89500a4f80d2464b8df86e08e76e33c6d` |

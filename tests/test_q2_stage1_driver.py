@@ -298,6 +298,17 @@ def test_guest_server_restart_voids_the_episode(guest):
     assert session.last_action == "unset"
 
 
+def test_transport_loss_behind_a_server_restart_counts_as_a_restart(guest):
+    import requests
+
+    session = FakeSession(evaluate_error=requests.exceptions.ConnectionError("reset"))
+    # The check before evaluation sees the same server; after the failure, another one answers.
+    guest.pids = [4242, 4243]
+    record, _, _ = run(guest, [DONE], session=session)
+    assert record["infrastructure_type"] == "guest_server_restart"
+    assert record["server_end"]["server_pid"] == 4243
+
+
 def test_metric_exception_scores_zero_but_transport_is_a_loss(guest):
     record, _, _ = run(guest, [DONE], session=FakeSession(evaluate_error=KeyError("sheet")))
     assert record["status"] == "scored" and record["score"] == 0.0
