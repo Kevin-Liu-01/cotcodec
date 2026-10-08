@@ -187,12 +187,16 @@ file equals it), so freezing the catalog fixes them.
   a new scope, before relaunching the probe, and `segment_check` judges each
   tap's records against that tap's own keymap. `verdict.py` applies sections
   4.3 and 5: on the XRecord stream a key event recorded without Mod2, the
-  lock bit the guard guarantees, was recorded while queued under a shell
-  grab and is judged on its kind, keycode (through its keysym) and order,
-  not its modifier state (decision D43, `modifier_state_observable`); every
-  other event, and every event on the probe's channel, is judged as before,
-  and each verdict reports the key events read without their state
-  (`state_not_observed`). C4 (`rdev_agreement`) reads the tap the same way.
+  lock bit the guard guarantees, is read as recorded while queued under a
+  synchronous grab (in development, always a shell grab its entry's own
+  press of the grab key activated; main section 27, case 6, states what
+  neither the judge nor the guard checks) and is judged on its kind,
+  keycode (through its keysym) and order, not its modifier state (decision
+  D43, `modifier_state_observable`); every other event, and every event on
+  the probe's channel, is judged as before, and each verdict reports the key
+  events read without their state (`state_not_observed`). C4
+  (`rdev_agreement`) reads the tap the same way; C3's equivalence comparison
+  in `acceptance.py` does not (main section 27).
 - **Acceptance analysis** (`acceptance.py`). The main preregistration's
   sections 5-9 as code (its design decision 32): end states from the batch
   script's own record and, when read, Slurm; the rerun rules; an undelivered

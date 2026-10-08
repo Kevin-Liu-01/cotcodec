@@ -10,6 +10,7 @@ from __future__ import annotations
 import hashlib
 import json
 import re
+from collections import Counter
 from pathlib import Path
 
 import pytest
@@ -231,6 +232,130 @@ def test_section_27_records_d43_and_its_development():
         "| 833 | `q2ap-v2-d43-drop-release-first-v1` |",
     ):
         assert phrase in section, phrase
+
+
+# A run of eight words repeated inside one prose paragraph is how a botched edit shows: the
+# D43 pass (31942e8) left a stub and a duplicated tail in section 26 ("...(none) neither
+# would. A slow answer would fail an L0-fixed trial whose chord (none) neither would. Under
+# v1's judge a slow answer would fail an L0-fixed trial whose chord..."). Tables are left
+# out and each list item is its own paragraph. The one repeat allowed is v1's own wording
+# (section 9, decision D33), which v2 keeps.
+REPEATS_ALLOWED = ("the probability that some a1-a3 entry reaches its limit",)
+ITEM = re.compile(r"^\s*(\d+\.|-) ")
+
+
+def _prose_paragraphs(text: str) -> list[str]:
+    out: list[str] = []
+    current: list[str] = []
+    for line in text.splitlines():
+        table = line.lstrip().startswith("|")
+        if not line.strip() or table or line.startswith("#") or ITEM.match(line):
+            if current:
+                out.append(" ".join(current))
+            current = [line] if ITEM.match(line) else []
+            continue
+        current.append(line)
+    if current:
+        out.append(" ".join(current))
+    return out
+
+
+def _repeated_runs(text: str, n: int = 8) -> set[str]:
+    repeated = set()
+    for paragraph in _prose_paragraphs(text):
+        words = paragraph.lower().split()
+        runs = Counter(" ".join(words[i : i + n]) for i in range(len(words) - n + 1))
+        repeated |= {run for run, count in runs.items() if count > 1}
+    return repeated
+
+
+@pytest.mark.parametrize("doc", DOCS, ids=lambda d: d.stem)
+def test_no_prose_paragraph_repeats_a_run_of_eight_words(doc):
+    repeated = _repeated_runs(doc.read_text(encoding="utf-8"))
+    assert {run for run in repeated if not any(run in ok for ok in REPEATS_ALLOWED)} == set()
+
+
+def test_the_repeat_check_catches_the_garbled_section_26_sentence():
+    garbled = (
+        "probability up to 0.38 and A4's 276 almost surely, and at the observed rate\n"
+        "(none) neither would. A slow answer would fail an L0-fixed trial whose chord\n"
+        "(none) neither would. Under v1's judge a slow answer would fail an L0-fixed\n"
+        "trial whose chord the shell received correctly, and the failure would count\n"
+    )
+    assert "a slow answer would fail an l0-fixed trial" in _repeated_runs(garbled)
+    text = PREREG.read_text(encoding="utf-8")
+    section26 = " ".join(text.split("## 26.", 1)[1].split("## 27.", 1)[0].split())
+    assert "(none) neither would. Under v1's judge a slow answer" in section26
+    assert section26.count("(none) neither would") == 1
+
+
+def test_v2s_changes_and_what_they_leave_are_stated_consistently():
+    """The header and section 15 name the same sections as v2's, the last of which is 27;
+    section 24's lists of what is unchanged name D43's reading of the tap as the exception,
+    and C3's equivalence comparison as what D43 leaves (sections 8, 26 and 27)."""
+    text = PREREG.read_text(encoding="utf-8")
+    flat = " ".join(text.split())
+    last = max(int(n) for n in re.findall(r"^## (\d+)\. ", text, flags=re.M))
+    assert last == 27
+    assert f"sections 24-{last} are v2's" in flat
+    assert f"v2's changes are in sections 24-{last}." in flat
+    item6 = _between(text, "6. **Text added without a rule change.**", "7. **Frozen tables.**")
+    item8 = _between(text, "8. **What does not change.**", "9. **The cause D40 stated")
+    for item in (item6, item8):
+        assert "apart from D43's reading of the tap (item 9 and section 27" in item, item
+    assert "every other criterion are unchanged." not in item6
+    assert "C3's equivalence comparison is unchanged and still reads the recorded state" in item8
+    c3 = _between(text, "- **C3 (mutation score).**", "- **C4 (R-dev agreement).**")
+    assert "decision D43 leaves this comparison unchanged" in c3
+    section26 = " ".join(text.split("## 26.", 1)[1].split("## 27.", 1)[0].split())
+    assert "One comparison still reads the recorded state: C3's equivalence test" in section26
+    section27 = " ".join(text.split("## 27.", 1)[1].split())
+    assert "**What the rule does not reach: C3's equivalence test.**" in section27
+    assert "up to 6.7%" in section27 and "whether D43 covers it stays with Kevin" in section27
+    # 1 - (1 - 0.023)^3: the three `chord_super_d` trials of C3's H-OSW-fixed reference run
+    # and M12's and M13's runs, at section 26's bound per trial.
+    assert round(1 - (1 - 0.023) ** 3, 3) == 0.067
+
+
+def test_the_rules_precondition_is_stated_as_observed_not_checked():
+    """D43's rule reads every key event without Mod2 as queued under a grab its entry's own
+    grab key activated. That held for every development event but is a property of this
+    guest's clients, which neither the judge nor the guard checks: sections 4.4 and 27 and
+    design decision 47 say so, and section 27 lists a grab already active before the entry
+    as a sixth case (tests/test_q2_d43_judge.py checks the numbers)."""
+    text = PREREG.read_text(encoding="utf-8")
+    section44 = _between(text, "### 4.4 The XRecord oracle channel", "### 4.5")
+    assert "That is a property of this guest's clients, not of the X server" in section44
+    assert "neither the judge nor the guard checks it" in section44
+    assert "each of the 280 key events recorded without Mod2 in development" in section44
+    decision47 = _between(text, "47. **The judge does not read a modifier state", "48. **")
+    assert "which neither the judge nor the guard checks" in decision47
+    assert "(section 27, case 6)" in decision47
+    section27 = " ".join(text.split("## 27.", 1)[1].split())
+    assert "Among this guest's clients, as development observed them" in section27
+    case6_start = "6. A synchronous grab already active when the entry's first key arrives."
+    assert case6_start in section27
+    case6 = section27.split(case6_start, 1)[1].split("**The prediction.**", 1)[0]
+    for phrase in (
+        "`GetInputFocus`",
+        "`QueryKeymap`",
+        "Job 833",
+        "seq 3-21",
+        "280",
+        "whether to adopt it stays with Kevin",
+        "byte-identical to `126ff8b`",
+    ):
+        assert phrase in case6, phrase
+    for stale in (
+        "A key event is queued only while a shell grab holds the keyboard, and a grab",
+        "recorded without Mod2 was recorded while queued under a shell grab",
+        "A queued event needs an active shell grab",
+    ):
+        assert stale not in " ".join(text.split()), stale
+    for path in (INPUTS, ROOT / "harness/q2/action_path/l0_raw_prediction_v2.yaml"):
+        flat = " ".join(path.read_text(encoding="utf-8").split())
+        assert "was recorded while queued under a shell grab" not in flat, path.name
+        assert "section 27, case 6" in flat, path.name
 
 
 def test_shell_grabbed_chords_have_modifier_state_after_the_grab_key():
