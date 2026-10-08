@@ -414,6 +414,16 @@ def file_sha256(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
+def _first_attr(modules: Iterable[str], name: str) -> Any:
+    """``name`` from the first of ``modules`` that has it (vLLM moves things between releases)."""
+    for module in modules:
+        try:
+            return getattr(__import__(module, fromlist=[name]), name)
+        except (ImportError, AttributeError):
+            continue
+    raise ImportError(f"{name} is in none of {list(modules)}")
+
+
 def check_vllm(model_dir: str) -> dict[str, Any]:
     """Inside the serving image, CPU only: registry, AutoConfig/AutoTokenizer, ModelConfig."""
     from harness.q2_stage1 import plan
@@ -452,11 +462,28 @@ def check_vllm(model_dir: str) -> dict[str, Any]:
         checks["tokenizer_roundtrip"] = tokenizer.decode(sample) == "Click the OK button."
     except Exception as exc:  # noqa: BLE001 - recorded
         checks["hf_error"] = f"{type(exc).__name__}: {exc}"[:400]
+    for module in ("vllm.tokenizers", "vllm.transformers_utils.tokenizer"):
+        try:
+            get_tokenizer = __import__(module, fromlist=["get_tokenizer"]).get_tokenizer
+        except (ImportError, AttributeError):
+            continue
+        try:
+            engine_tokenizer = get_tokenizer(model_dir, trust_remote_code=True)
+            checks["vllm_tokenizer_class"] = type(engine_tokenizer).__name__
+        except Exception as exc:  # noqa: BLE001 - recorded
+            checks["vllm_tokenizer_error"] = f"{type(exc).__name__}: {exc}"[:400]
+        checks["vllm_tokenizer_loader"] = module
+        break
     try:
         from vllm.engine.arg_utils import EngineArgs
-        from vllm.entrypoints.openai.cli_args import make_arg_parser
-        from vllm.utils import FlexibleArgumentParser
 
+        make_arg_parser = _first_attr(
+            ("vllm.entrypoints.openai.cli_args", "vllm.entrypoints.launchers.cli_args"),
+            "make_arg_parser",
+        )
+        FlexibleArgumentParser = _first_attr(  # noqa: N806 - vLLM's class
+            ("vllm.utils", "vllm.utils.argparse_utils"), "FlexibleArgumentParser"
+        )
         argv = plan.engine_argv(model_dir, plan.SERVED_NAME, anchor=True)
         parser = make_arg_parser(FlexibleArgumentParser())
         args = parser.parse_args(argv[2:])  # drop "vllm serve"; the model is positional
@@ -472,6 +499,7 @@ def check_vllm(model_dir: str) -> dict[str, Any]:
     out["ok"] = bool(
         checks.get("registry_lists_opencua")
         and checks.get("tokenizer_roundtrip")
+        and "vllm_tokenizer_error" not in checks
         and checks.get("model_config_max_model_len") == plan.ANCHOR_MAX_MODEL_LEN
         and checks.get("model_config_trust_remote_code") is True
     )

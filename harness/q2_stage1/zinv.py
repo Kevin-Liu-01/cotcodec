@@ -16,9 +16,14 @@ only that, with the operator's own notion of "cannot paint the same pixel"
   the other; an unknown box is never apart from anything.
 
 For each slide pair (by index), the agent's deck (``file1``) is aligned to the reference
-(``file2``): for each reference shape in order, the first not-yet-placed agent shape with
-the same signature (element kind, shape type, frame, every text run) is taken, and it may
-move ahead of the agent shapes it skips only if it is apart from each of them. So the
+(``file2``): for each reference shape in order, the first not-yet-placed agent shape that
+is the same shape as far as the comparator looks (element kind and shape type equal; every
+text run equal unless the task sets ``examine_text`` false; left, top, width and height
+equal within the comparator's own ``approximately_tolerance``, 0.5% by default, unless the
+task sets ``examine_shape`` false, so a LibreOffice save's rounding or auto-fit does not hide
+it) is taken, and it may move ahead of the agent shapes it skips only if it is apart from
+each of them. Matching only proposes an order: the original comparator, with the task's
+options, still decides every attribute of every pair. So the
 alignment changes the relative order of a pair only when the pair is apart, which is exactly
 the swaps the operator calls equivalent; overlapping shapes keep their order and a visible
 stacking change still fails. If any reference shape finds no such agent shape, that slide is
@@ -48,12 +53,59 @@ CLEARANCE_EMU = 72_000  # 2 mm, as harness.q2_mutation.operators.pptx.CLEARANCE_
 Box = tuple[int, int, int, int]
 
 
+TOLERANCE = 0.005  # compare_pptx_files' approximately_tolerance default
+
+
 @dataclass(frozen=True)
 class ShapeKey:
-    """What identifies a shape across the two decks, and its box (EMU) if known."""
+    """What identifies a shape across the two decks: kind and text exactly, the geometry the
+    comparator reads (left, top, width, height) approximately; and its box (EMU) if known."""
 
     signature: tuple[Any, ...]
+    geometry: tuple[int, int, int, int] | None
     box: Box | None
+
+
+def approximately_equal(a: int, b: int, tolerance: float = TOLERANCE) -> bool:
+    """``compare_pptx_files``' ``is_approximately_equal``."""
+    if a == b:
+        return True
+    if a == 0 or b == 0:
+        return False
+    return abs(a - b) / max(abs(a), abs(b)) <= tolerance
+
+
+@dataclass(frozen=True)
+class Matching:
+    """What the comparator examines, from the task's options."""
+
+    tolerance: float = TOLERANCE
+    text: bool = True
+    geometry: bool = True
+
+    @classmethod
+    def from_options(cls, options: dict[str, Any]) -> Matching:
+        return cls(
+            tolerance=float(options.get("approximately_tolerance", TOLERANCE)),
+            text=bool(options.get("examine_text", True)),
+            geometry=bool(options.get("examine_shape", True)),
+        )
+
+
+def same_shape(a: ShapeKey, b: ShapeKey, rule: Matching | float = TOLERANCE) -> bool:
+    rule = rule if isinstance(rule, Matching) else Matching(tolerance=rule)
+    if a.signature[:2] != b.signature[:2]:
+        return False
+    if rule.text and a.signature[2:] != b.signature[2:]:
+        return False
+    if not rule.geometry:
+        return True
+    if a.geometry is None or b.geometry is None:
+        return a.geometry is None and b.geometry is None
+    return all(
+        approximately_equal(x, y, rule.tolerance)
+        for x, y in zip(a.geometry, b.geometry, strict=True)
+    )
 
 
 _XFRM_PATHS = {
@@ -114,11 +166,17 @@ def shape_key(shape: Any) -> ShapeKey:
         kind = int(shape.shape_type) if shape.shape_type is not None else None
     except Exception:  # noqa: BLE001 - unrecognized graphic frames raise NotImplementedError
         kind = None
-    box = shape_box(element)
-    return ShapeKey(signature=(tag, kind, box, texts), box=box)
+    try:
+        values = (shape.left, shape.top, shape.width, shape.height)
+        geometry = None if None in values else tuple(int(v) for v in values)
+    except Exception:  # noqa: BLE001 - python-pptx raises for odd elements
+        geometry = None
+    return ShapeKey(signature=(tag, kind, texts), geometry=geometry, box=shape_box(element))
 
 
-def align_order(source: Sequence[ShapeKey], target: Sequence[ShapeKey]) -> list[int] | None:
+def align_order(
+    source: Sequence[ShapeKey], target: Sequence[ShapeKey], rule: Matching | float = TOLERANCE
+) -> list[int] | None:
     """The permutation (indices into ``source``) that puts ``source`` in ``target``'s order,
     moving a shape only past shapes it is apart from; None when there is none."""
     if len(source) != len(target):
@@ -128,7 +186,7 @@ def align_order(source: Sequence[ShapeKey], target: Sequence[ShapeKey]) -> list[
     for want in target:
         pick = None
         for position, index in enumerate(remaining):
-            if source[index].signature != want.signature:
+            if not same_shape(source[index], want, rule):
                 continue
             skipped = remaining[:position]
             if all(apart(source[index], source[other]) for other in skipped):
@@ -151,7 +209,9 @@ def _reorder_slide(slide: Any, order: Sequence[int]) -> None:
         tree.insert(slot, elements[index])
 
 
-def aligned_deck(file1_path: str, file2_path: str) -> tuple[Any, list[dict[str, Any]]] | None:
+def aligned_deck(
+    file1_path: str, file2_path: str, rule: Matching | float = TOLERANCE
+) -> tuple[Any, list[dict[str, Any]]] | None:
     """The agent deck with its apart shapes put in the reference's order, and a per-slide
     report; None when no slide changes (or the decks cannot be read)."""
     from pptx import Presentation
@@ -166,7 +226,7 @@ def aligned_deck(file1_path: str, file2_path: str) -> tuple[Any, list[dict[str, 
     for index, (slide1, slide2) in enumerate(zip(prs1.slides, prs2.slides, strict=False), 1):
         source = [shape_key(shape) for shape in slide1.shapes]
         target = [shape_key(shape) for shape in slide2.shapes]
-        order = align_order(source, target)
+        order = align_order(source, target, rule)
         if order is None:
             report.append({"slide": index, "aligned": False})
             continue
@@ -197,7 +257,7 @@ def compare_pptx_files_zinv(
     if file1_path is None or file2_path is None:
         return original(file1_path, file2_path, **options)
     try:
-        aligned = aligned_deck(file1_path, file2_path)
+        aligned = aligned_deck(file1_path, file2_path, Matching.from_options(options))
     except Exception:  # noqa: BLE001 - alignment never decides a verdict on its own
         aligned = None
     if aligned is None:
