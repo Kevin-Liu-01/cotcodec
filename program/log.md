@@ -1056,3 +1056,36 @@ Append-only. Newest entries at the bottom.
   after v1, C2 after `-inputs`, and every scored campaign after `-executor`
   except A7 under attempt 2. The repository ledger is unchanged (7 rows).
 - Nothing is frozen and nothing is pushed. No GPU, no VM job.
+
+## 2026-10-08 — Q2 action-path validity controls operated (branch `ops/q2-action-path`): C2 FAIL, suite invalid for v1
+
+- Scored from a `git archive` export of `a9948ee` (the commit recording
+  ledger rows 8-10; tree digest `dec80447`), extracted read-only to
+  `~/cotcodec-runs/q2-action-path-v1/src/` on the host. The manifest came
+  from the frozen renderer and was then moved to the v1 host root: only
+  `source.host_dir` and `run_root` changed, and it was re-validated with the
+  ledger. The renderer hard-codes the development root; this is recorded
+  as a deviation in the evidence README.
+- C2 (job 768): L0-raw, 100 entries x 5, seed 42, screenshot setting,
+  N = 1, CPU-only. It ended `COMPLETED` 0:0 by the watcher and the batch
+  record alike and counts: gates passed, `System.qcow2` unchanged, nothing
+  left, no infrastructure failure, retry or restart. `acceptance.c2`
+  (frozen, `39c59210`) gives FAIL: every one of the 8 predicted entries
+  failed 5 of 5, and `chord_super_d` failed 5 of 5 unpredicted. Its `d`
+  press reached X without Mod4, within 1 ms of the Super_L press sent by
+  `pyautogui.hotkey('winleft', 'd')`. C2's rule leaves out the modifier
+  state of key releases only, not of presses. Section 5 as written would
+  also have failed `chord_alt_f4`, `chord_alt_tab` and
+  `chord_ctrl_alt_shift_r` (release state) and marked three typing entries
+  FLAKY (stale markers); C2's rule excuses both, as registered.
+- Under sections 8 and 11 the suite is invalid for `q2-action-path-v1`. A
+  failed validity control is not repaired within v1, and the campaign
+  counted, so it cannot be rerun. C1 and C3 were not run: their 49
+  manifests were rendered on the host and never submitted. No acceptance
+  campaign ran. A corrected prediction or C2 rule can only enter a new
+  preregistration.
+- Evidence: `program/evidence/2026-10-08/q2-action-path-acceptance/`
+  (manifests as rendered and as submitted, receipt, batch and Slurm
+  records, the verdict JSON, the campaign summary, the SHA-256 of the 49
+  raw files left on the host, and the operator scripts). 0.17 VM-hours, no
+  GPU. Nothing pushed or merged.
