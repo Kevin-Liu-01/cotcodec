@@ -18,7 +18,13 @@ modules are imported byte for byte), and three repairs:
    container's ``/outputs``, before the container starts); under the batch
    script a job without it exits 2 before any work.
 3. The evaluation runs ``harness/dense_headroom_torch_v2.py`` (equal to v1's
-   on every computed quantity).
+   on every computed quantity). On the hybrid lane (Qwen3.5-4B-Base) torch's
+   cuDNN attention is disabled: it built a new cuDNN graph for every new
+   query and key length, about 0.7 s of CPU per forward with the GPU idle,
+   which is why v1's 4B job ran CPU-bound. PyTorch's flash and
+   memory-efficient kernels compute the same attention without a per-shape
+   build; the receipt reports the largest difference on the lane's first unit
+   between them and cuDNN (``attention_backend_check``).
 
 Profiles: ``registered`` (the lanes; the frozen preregistration and its code
 table are verified at start-up), ``tiny`` (the CPU doctor) and ``timing``
@@ -409,6 +415,7 @@ class Job:
         self.hashes: dict[str, Any] = {}
         self.guard = dv2.SignalGuard()
         self.lane: dhd.Lane | None = None
+        self.attention_backends: dict[str, Any] = {}
 
     def receipt(self, name: str, payload: dict[str, Any]) -> str:
         job = self.hashes.get("job", {})
@@ -478,6 +485,14 @@ class Job:
             # raising on an op that has none (v1's decision 9, unchanged).
             torch.use_deterministic_algorithms(True, warn_only=True)
             determinism = "warn_only"
+            # Qwen3.5's attention (head dimension 256) goes to cuDNN's SDPA by
+            # default, which builds a new cuDNN graph for every new query and
+            # key length: about 0.7 s of CPU per forward, with the GPU idle (the
+            # timing job, Slurm 766; v1's job 730 ran at that rate). Every unit
+            # has new lengths. PyTorch's flash and memory-efficient kernels have
+            # no per-shape build (decision 18). The 0.6B lane is not touched.
+            torch.backends.cuda.enable_cudnn_sdp(False)
+        self.attention_backends = attention_backends()
         self.timings["model_load"] = time.perf_counter() - started
         self.guard.poll("after-model-load")
         return model, device, layers, hybrid, determinism, dht2.scaling_of(config), dht2
@@ -521,6 +536,10 @@ class Job:
         content = dhd.ContentFilter(lane_codec, artifact["stop_ids"])
         eval_dir = self.ckpt / "eval"
         chunk_seconds: dict[str, list[float]] = {}
+        backend_check = None
+        if hybrid:
+            backend_check = self.attention_backend_check(view, units, content, model, device,
+                                                         layers, scaling, names, dht2)
         for stage in dhd.STAGES:
             stage_units = [u for u in units if u.stage == stage]
             started = time.perf_counter()
@@ -568,12 +587,46 @@ class Job:
             "attention_layers": layers,
             "hybrid": hybrid,
             "determinism": determinism,
+            "attention_backends": self.attention_backends,
+            "attention_backend_check": backend_check,
             "selectors": names,
             "versions": {"torch": torch.__version__, "transformers": transformers.__version__,
                          "device": (torch.cuda.get_device_name(0) if device.type == "cuda"
                                     else "cpu")},
         })
         return EXIT_OK
+
+    def attention_backend_check(self, view: Any, units: list[Any], content: Any, model: Any,
+                                device: Any, layers: list[int], scaling: float,
+                                names: list[str], dht2: Any) -> dict[str, Any]:
+        """The lane's first unit through cuDNN's SDPA (v1's default backend) and
+        through the lane's backends: the largest difference per receipt field.
+        Reported, not gated (decision 18); the unit is evaluated again in the
+        loop, so nothing here enters a statistic."""
+
+        import torch
+
+        unit = next(u for u in units if u.select and u.mc)
+        inputs = self.unit_inputs(view, unit, content)
+        started = time.perf_counter()
+        torch.backends.cuda.enable_cudnn_sdp(True)
+        try:
+            v1_backend = dict(dht2.unit_record(self.evaluate(
+                dht2, model, unit, inputs, layers, scaling, names, True, device)))
+        finally:
+            torch.backends.cuda.enable_cudnn_sdp(False)
+        lane_backend = dict(dht2.unit_record(self.evaluate(
+            dht2, model, unit, inputs, layers, scaling, names, True, device)))
+        gaps = {}
+        for key in ("recall", "mc_scores"):
+            a = np.asarray(v1_backend[key], dtype=np.float64)
+            b = np.asarray(lane_backend[key], dtype=np.float64)
+            finite = np.isfinite(a) & np.isfinite(b)
+            gaps[key] = float(np.max(np.abs(a[finite] - b[finite]))) if finite.any() else 0.0
+        return {"unit": unit.unit_id, "max_abs_difference": gaps,
+                "same_fields": {k: _records_equal({k: v1_backend[k]}, {k: lane_backend[k]})
+                                for k in v1_backend},
+                "seconds": time.perf_counter() - started}
 
     def interrupt(self, units: list[dhd.Unit], eval_dir: Path, names: list[str],
                   marker: Any) -> None:
@@ -731,6 +784,16 @@ class Job:
             raise
         finish("TIMING_COMPLETE")
         return EXIT_OK
+
+
+def attention_backends() -> dict[str, Any]:
+    """Which scaled-dot-product-attention backends torch may use in this process."""
+
+    import torch
+
+    flags = torch.backends.cuda
+    return {"flash": flags.flash_sdp_enabled(), "mem_efficient": flags.mem_efficient_sdp_enabled(),
+            "math": flags.math_sdp_enabled(), "cudnn": flags.cudnn_sdp_enabled()}
 
 
 def thread_ticks() -> dict[str, tuple[str, int]]:

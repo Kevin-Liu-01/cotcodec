@@ -278,6 +278,13 @@ def case_end_to_end(tmp: Path) -> dict[str, Any]:
                f"{lane_id}: receipt job {receipt['slurm_job_id']}", failures)
         _check(receipt["experiment_id"] == dv2.EXPERIMENT_ID, f"{lane_id}: experiment id",
                failures)
+        hybrid = lane_id == "tiny-hybrid"
+        _check(receipt["attention_backends"].get("cudnn") is (not hybrid),
+               f"{lane_id}: cuDNN SDPA enabled={receipt['attention_backends']}", failures)
+        check = receipt.get("attention_backend_check")
+        _check((check is not None) == hybrid and (not hybrid or all(
+            check["same_fields"].values())),  # on CPU both runs use one backend
+               f"{lane_id}: attention backend check {check}", failures)
         # v1's entry point on the same lane, inputs and models.
         v1_dir = tmp / "v1" / lane_id
         v1_dir.mkdir(parents=True)
