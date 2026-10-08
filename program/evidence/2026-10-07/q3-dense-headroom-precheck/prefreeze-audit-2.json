@@ -1,0 +1,222 @@
+{
+ "ready_to_freeze": false,
+ "blocking_defects": [
+  {
+   "issue": "Freezing the file as it stands would permanently record it as an unfrozen draft whose design decisions are still open.",
+   "evidence": "program/preregistrations/q3-dense-headroom-precheck-v1.md line 3 reads 'Status: DRAFT, not frozen.', lines 7-8 say 'The design decisions at the end are left to the program owner.', and line 487 says 'all are open for the program owner.' Steps 1-2 of the Freeze procedure never say to rewrite these lines. I froze a copy into a scratch ledger with scripts/preregister.py freeze and it succeeded, leaving line 3 unchanged (prefreeze-q3-dense/sim_combined.py). tests/test_dense_headroom_prereg.py::test_not_frozen_without_the_owners_acceptance only checks that decisions.md names the id once the file is frozen. While the file is unfrozen, the same test requires the DRAFT wording, so an edit made just before freezing fails the suite until the freeze lands. A frozen file cannot be edited: any edit breaks verify(), and every GPU job then exits 2. A wrong status line would therefore be permanent. K1 v1 (commit 64972dd) and K1 v2 both rewrote their status lines to 'Status: frozen in program/preregistrations/ledger.jsonl; see the ledger row...' before they were frozen.",
+   "minimal_fix": "Before freeze step 2, replace lines 3-8 with the K1 wording ('Status: frozen in program/preregistrations/ledger.jsonl; see the ledger row for the freeze time and git_head_at_freeze; design decisions accepted (as amended) in D<n>; no GPU job runs before the freeze; every job verifies this file's digest against its ledger row'). Change the Design decisions lead-in from 'all are open for the program owner' to 'accepted in D<n>'. Add this edit to Freeze procedure step 1. In the test's frozen branch, assert TEXT.splitlines()[2].startswith('Status: frozen'). While unfrozen, let the test accept either wording so the edit can be tested before the freeze. Then recompute nothing else: the code table is unaffected."
+  }
+ ],
+ "rule_code_consistency": [
+  {
+   "rule": "Lane class: INVALID if the smoke reproduction fails; NEGATIVE_CAPABLE if H1_CX >= 20, its 99% lower bound >= 10 and H2 is not FAIL; GO_ONLY_CAPABLE if H1_CX >= 10 and H2 is not FAIL; otherwise NOT_VIABLE",
+   "code_location": "harness/dense_headroom_stats.py:785-804 classify_lane",
+   "consistent": true,
+   "note": "Boundaries simulated (20/10, 20/9.99, 19.99, 10, 9.99, H2a point exactly 30, H2b 4.99, NOT_REPRODUCED): all as registered."
+  },
+  {
+   "rule": "h2_status: PASS under K1 v1's H2a and H2b bounds; POINT_ONLY when both points meet the thresholds but a bound does not; otherwise FAIL",
+   "code_location": "harness/dense_headroom_stats.py:292-305",
+   "consistent": true,
+   "note": "H2a and H2b are built the same way as K1 v1's summarise_headroom (harness/sparse_indexer_k1_runtime.py:1096-1129)."
+  },
+  {
+   "rule": "H1 per leg is the macro over pairs of R_T - R_rand; H1_CX is the larger of the hs and mp points, read with that target's interval; Delta_T",
+   "code_location": "harness/dense_headroom_stats.py:221-253",
+   "consistent": true
+  },
+  {
+   "rule": "K1 v1's development pre-step is reported unchanged",
+   "code_location": "harness/dense_headroom_stats.py:308-317",
+   "consistent": true
+  },
+  {
+   "rule": "lexical_confound: PRESENT / ABSENT / NOT_EVALUABLE",
+   "code_location": "harness/dense_headroom_stats.py:558-591 entity_flags",
+   "consistent": true,
+   "note": "Order of checks: if one target's xi_rel is not evaluable, the code returns NOT_EVALUABLE even when the other target is at least 0.10. The text could also be read as PRESENT. Either way the combined read adds the same requirement."
+  },
+  {
+   "rule": "entity_control: SUFFICIENT when at least 30% of questions are unanchored and the literal selector's controlled xi_rel is below 0.10 for both targets",
+   "code_location": "harness/dense_headroom_stats.py:583-589",
+   "consistent": true,
+   "note": "Order of checks: NOT_EVALUABLE takes precedence over INSUFFICIENT. No effect downstream."
+  },
+  {
+   "rule": "null_calibration: CENTRED / NOT_CENTRED / NOT_EVALUABLE, with the 2.5-point reach rule",
+   "code_location": "harness/dense_headroom_stats.py:461-495 null_verdict",
+   "consistent": true,
+   "note": "If one adequate sigma has a non-evaluable xi_rel, the code returns NOT_EVALUABLE before testing NOT_CENTRED. Both are non-CENTRED and add the same requirement."
+  },
+  {
+   "rule": "floor_candidate: VIABLE needs controlled MN headroom >= 10, the literal selector's controlled G(MN) point below 0.5, and some V1-adequate null with a 99% lower bound of G(MN) >= 0.5",
+   "code_location": "harness/dense_headroom_stats.py:594-641",
+   "consistent": true
+  },
+  {
+   "rule": "fertility_association: STRONG when |Spearman| between needle fertility and CX headroom is >= 0.75 over the 7 held-out languages",
+   "code_location": "harness/dense_headroom_stats.py:650-718",
+   "consistent": true
+  },
+  {
+   "rule": "K1 smoke 452 reproduction: same 20 units; T:hs, T:mp, T:hm and rand each within 0.5 points",
+   "code_location": "harness/dense_headroom_data.py:471-478; harness/dense_headroom_stats.py:55-59,763-782",
+   "consistent": true,
+   "note": "The unit choice equals scripts/run_sparse_indexer_phase0a.py:550 (plan_units keys sorted, dev role, first 20). The constants equal the smoke-452 receipt's recall_smoke."
+  },
+  {
+   "rule": "Combined read: INVALID first, then INCOMPLETE, then the base in registered order; D26's four requirements always required; flags only add requirements",
+   "code_location": "harness/dense_headroom_stats.py:851-922; scripts/summarise_dense_headroom_precheck.py",
+   "consistent": true,
+   "note": "Checked over 3,240 combinations of lane classes and flags, and end to end through summarise main on synthetic receipts."
+  },
+  {
+   "rule": "Development partition only: every prompt, context and query must carry a development link, or exit 3",
+   "code_location": "harness/dense_headroom_data.py:481-723",
+   "consistent": true,
+   "note": "An instrumented trace on a bundle built by the real K1 builder read 144 of 306 contexts, all development, with no non-development query, option or offset reads. The whole bundle is parsed and its arrays decoded, which the registration states."
+  },
+  {
+   "rule": "Matched budget k = floor(floor(L*1024/8192)/4); LEX content filter with both languages' top-100 stop ids; English entity-anchor rule; development literal sentence rule",
+   "code_location": "harness/dense_headroom_data.py:159-168, 355-431, 650-677, 878-893",
+   "consistent": true,
+   "note": "The literal sentence rule matches scripts/build_sparse_indexer_k1_bundle.py:889-895."
+  },
+  {
+   "rule": "Integrity: every unit evaluated once, scores finite, no selection above 4*max(k,256)+3; otherwise exit 3",
+   "code_location": "harness/dense_headroom_stats.py:108-130; scripts/run_dense_headroom_precheck.py:335-352,473-478",
+   "consistent": true
+  },
+  {
+   "rule": "Code identity: every file the job runs is in the table; the filler binds the templates and preregister.py",
+   "code_location": "scripts/run_dense_headroom_precheck.py:68-81,196-200; scripts/fill_dense_headroom_precheck_manifests.py:378-400",
+   "consistent": true,
+   "note": "All 17 table digests match HEAD. The 7 imported rows equal the frozen K1 v1 and throughput-probe tables. The project-import closure of the entry point is exactly CODE_FILES."
+  },
+  {
+   "rule": "Budget: each ended job is charged ceil(elapsed)+1 minutes; a later job gets what remains, at least 3; a continuation gets at most the lane's minutes minus 2, at most once, with exclusive slot claims; the entry point refuses more GPUs or minutes than the lane's",
+   "code_location": "scripts/fill_dense_headroom_precheck_manifests.py:200-350; scripts/run_dense_headroom_precheck.py:258-307",
+   "consistent": true,
+   "note": "Holds on the filler path. Re-sbatching an already-filled manifest is not refused (see notes)."
+  },
+  {
+   "rule": "Void rules: reason=completed with exit 0, provenance PASS, an ORX_RESULT line, exactly one receipt holder, a checkpointed predecessor, and the lane within its minutes",
+   "code_location": "scripts/summarise_dense_headroom_precheck.py:68-139",
+   "consistent": true,
+   "note": "The formats match scripts/verify_compute_provenance.py:29 and scripts/orx_run.py:235."
+  },
+  {
+   "rule": "Block-score null noise is seeded from SHA-256 of (seed, unit, layer), so its law is identical on every leg",
+   "code_location": "harness/dense_headroom_torch.py:114-118,160-166",
+   "consistent": true
+  },
+  {
+   "rule": "Freeze step 4 and decision 11: the 4B lane is submitted only after the 0.6B receipt is REPRODUCED",
+   "code_location": "no code (procedure); scripts/fill_dense_headroom_precheck_manifests.py does not check",
+   "consistent": true,
+   "note": "The registration states this as procedure only. The combined read is INVALID whichever order the lanes ran in, so the gate costs GPU time only, inside the 4B lane's own cap."
+  },
+  {
+   "rule": "Decision 13: the entry point points Triton's and TorchInductor's caches at the run directory",
+   "code_location": "scripts/run_dense_headroom_precheck.py:138-148 vs infra/slurm/host-single-node/docker-research.sbatch (--env TORCHINDUCTOR_CACHE_DIR=/tmp/torchinductor)",
+   "consistent": false,
+   "note": "The entry point uses os.environ.setdefault, so the batch script's TORCHINDUCTOR_CACHE_DIR wins. Only Triton's cache moves to the run directory. This is harmless: nothing here calls torch.compile, and /tmp is exec under large-cpu-mem. The text needs fixing, not the code."
+  },
+  {
+   "rule": "Status line reads correctly once frozen",
+   "code_location": "program/preregistrations/q3-dense-headroom-precheck-v1.md:3-8,487; tests/test_dense_headroom_prereg.py:89-98",
+   "consistent": false,
+   "note": "This is the blocking defect above."
+  }
+ ],
+ "design_decision_recommendations": [
+  {
+   "decision": "1. Two lanes, both always run",
+   "recommendation": "amend",
+   "reason": "'Both always run' contradicts decision 11 and Freeze step 4, under which the 4B lane is not submitted unless the 0.6B smoke reproduction is REPRODUCED. Reword to: both run unless the 0.6B smoke reproduction fails, and the 4B lane does not depend on the 0.6B headroom result. Enforcing this in the filler is optional, because the combined read is INVALID in either order."
+  },
+  {
+   "decision": "2. Development partition only, from the K1 bundle only",
+   "recommendation": "accept",
+   "reason": "This is D26's scope. The read trace touched only development rows. The stated consequences are honest: no seen-script pair can be measured, and the anchor share rests on 20 questions."
+  },
+  {
+   "decision": "3. Development literal (ML) prompts built with the K1 builder's sentence rule",
+   "recommendation": "accept",
+   "reason": "H1 on ML and the null's V1 adequacy both need ML prompts. The rule is the builder's own, and verbatim containment is checked."
+  },
+  {
+   "decision": "4. Re-tokenization for 4B, segment by segment, with the budget matched at 12.5%",
+   "recommendation": "accept",
+   "reason": "Needle spans stay exact, only the builder's cut tail may drop at most 3 bytes, the fraction-matched budget keeps K1's 12.5%, and the fixed 256-block rows are reported beside it."
+  },
+  {
+   "decision": "5. NEGATIVE_CAPABLE needs H1_CX >= 20 with lower bound >= 10; GO_ONLY needs >= 10; H2 gates only on FAIL",
+   "recommendation": "accept",
+   "reason": "The thresholds are D26's inherited ones, and the lower bound guards against cluster noise. The H2 relaxation is explicit and adds an audit re-test requirement whenever H2 is not PASS. The owner should record that acceptance explicitly, as the decision asks. Boundary simulations behave as registered."
+  },
+  {
+   "decision": "6. English-side entity-anchor rule",
+   "recommendation": "accept",
+   "reason": "It is deterministic and model-free, with known false positives and negatives visible per question. It only defines descriptive subsets and the entity_control flag, which can add requirements but never remove one."
+  },
+  {
+   "decision": "7. Literal selector LEX decides lexical_confound against 0.10",
+   "recommendation": "accept",
+   "reason": "It is correctly named for lexical overlap, not entities. Stop ids are script-neutral, and removing both languages' stop ids fixes the earlier function-word leak. It never removes a D26 requirement."
+  },
+  {
+   "decision": "8. Block-score null on natural-log scores, sigma 0.25-4 at a ratio of about 1.4, with the reach rule",
+   "recommendation": "accept",
+   "reason": "The reach rule (a V1-adequate sigma must lose at least 2.5 points of English ML recall) stops CENTRED from resting only on near-exact copies. The grid ratio guarantees a scale inside V1's band for a smoothly growing loss."
+  },
+  {
+   "decision": "9. Warn-only determinism on Qwen3.5-4B",
+   "recommendation": "accept",
+   "reason": "The gated-delta Triton kernels are outside torch's deterministic registry. The receipt records the mode, and no decision depends on bitwise reproducibility."
+  },
+  {
+   "decision": "10. Floor candidate: lower bound of G(MN) >= 0.5 on entity-controlled families",
+   "recommendation": "amend",
+   "reason": "Condition (c) asks only that some V1-adequate sigma pass. The near-exact copy at sigma 0.25 passes it whenever (a) and (b) hold (it passed in every synthetic sweep), so VIABLE effectively reduces to the headroom and literal-selector conditions. Mirror decision 8: require the passing sigma to be one whose seed-mean English ML loss is at least 2.5 points, so the floor is shown to admit a realistically imperfect, V1-adequate selector."
+  },
+  {
+   "decision": "11. K1 smoke reproduction as a validity gate for the 0.6B lane",
+   "recommendation": "accept",
+   "reason": "Same tokens, the same capture path and the frozen, equivalence-tested bank. The unit choice reproduces smoke 452's. Runtime dependencies in uv.lock are unchanged since smoke 452's source revision (only the dev dependency jinja2 was added), so a library drift is unlikely to confound the gate."
+  },
+  {
+   "decision": "12. Caps of 0.15 and 0.35 GPU-h; every job charged against its lane; no amendment",
+   "recommendation": "amend",
+   "reason": "Accounting through the filler holds: in 3,000 synthetic job walks per lane, worst physical use was 8.52 of 9 and 20.52 of 21 minutes. Three amendments are needed. (i) Re-sbatching an already-filled manifest bypasses the filler. After a 2-minute void first job, the entry point accepts the first manifest again as a fresh 9-minute job (12 of 9 minutes of limits), and only the summariser's void rule catches it, after the GPU time is spent. Have the filler claim slot 0 too, have the summariser void a lane with a job that lacks a claim or exceeds its claim's minutes, and state that each filled manifest is submitted once. (ii) State the effective window: USR1 arrives 3 minutes before the limit and voids the lane whether it lands in the eval loop or in the statistics phase. That leaves 6 and 18 minutes, about 1.5x and 1.6x the estimates, not 2x. (iii) MIN_JOB_MINUTES = 3 lets the filler grant a later job that receives USR1 almost at once."
+  },
+  {
+   "decision": "13. Container profiles default and large-cpu-mem; caches moved to the run directory",
+   "recommendation": "amend",
+   "reason": "The profiles are right. The text overstates the cache change: TorchInductor's cache stays at the batch script's /tmp/torchinductor because the entry point uses setdefault. This is harmless, but should be worded accurately."
+  },
+  {
+   "decision": "14. CPU doctor with tiny models, stand-in tokenizers and the batch environment",
+   "recommendation": "accept",
+   "reason": "It is scoped to executability and gate semantics, uses the real K1 builder for the synthetic bundle, and the continuation path runs with its resume receipt."
+  },
+  {
+   "decision": "15. D26's four requirements always required",
+   "recommendation": "accept",
+   "reason": "Verified: across all 3,240 combinations, whenever a base is chosen the requirements include a seen-script condition, an entity-controlled set, a new id with the gauntlet, and a floor (registered or redesigned). Flags only add requirements."
+  }
+ ],
+ "simulations": "All simulations were CPU only on synthetic data, with scripts in <session scratchpad>/prefreeze-q3-dense/. (1) sim_combined.py ran combined_recommendation over every lane-class pair, including missing lanes, times 162 flag sets: 3,240 cases with 0 problems. Every outcome was reached: INVALID, INCOMPLETE, NEGATIVE_CAPABLE_V3 on each base, GO_ONLY_V3 on each base, and NO_K1_V3. D26's four requirements were present whenever a base was chosen, and each conditional requirement was gated exactly by its flag. classify_lane boundary cases all behaved as registered. End to end, summarise main on synthetic job directories (job.env, termination.env, provenance, ORX logs, receipts) gave the expected design and base in all 9 scenarios: INVALID with the 0.6B lane alone, INVALID with both lanes, INCOMPLETE with one lane, INCOMPLETE with no lanes, the four base and design combinations, and NO_K1_V3. A lane whose job overran its minutes exited 2. Freezing a copy of the draft into a scratch ledger succeeded with 'Status: DRAFT, not frozen.' unchanged. (2) sim_budget.py ran 3,000 random filler walks per lane (void, checkpoint and receipt outcomes, 1-20 s prologs, the 30 s hard stop). Worst physical use was 8.52 of 9 minutes and 20.52 of 21. A re-run after a 2-minute void job is granted 6 minutes, but check_batch_manifest accepts the resubmitted first manifest as a fresh 9-minute job. The byte-identical re-run claim can be refilled. A job directory left without job.env blocks the lane. (3) sim_reads.py instrumented derive_dev_artifact on a bundle built by the real K1 builder. Both tiny lanes read 144 of 306 contexts (all development), with 0 non-development context, query, option or offset reads and no artifact cluster outside development. (4) sim_fullsize_stats.py ran analyse at registered size (560/280/280/160 prompts, 1,160 units, 28 layers, 63 selector columns, 10,000 replicates) in 12.9 s on one CPU process. Sweeps reached NOT_VIABLE, GO_ONLY_CAPABLE, NEGATIVE_CAPABLE, and an H2 FAIL case. (5) sim_floor.py showed that the floor's condition (c) is met by sigma 0.25 in every sweep. The repo's dense test files pass locally: 84 passed, 4 skipped.",
+ "notes": [
+  "Not blocking, but freeze step 1 is still pending: program/decisions.md has no decision accepting q3-dense-headroom-precheck-v1's design decisions. The test's frozen branch requires one.",
+  "All 17 code-table digests match HEAD. The 7 imported rows equal the frozen K1 v1 and throughput-probe tables. The doctor fix1 receipt's code_sha256 equals the table for the 5 files it records. preregister's placeholder regex finds nothing.",
+  "Lane-lifetime merge (031982f/a7d4a1d): compatible. Container paths, manifest keys (gpus, minutes, seeds, model.receipt_sha256, study_artifact.sha256), the marker contract (trigger=SIGUSR1/SIGTERM), the 75 exit code and the checkpoint reasons all line up with the entry point, filler and summariser. --no-requeue and the refusal of an existing run_dir change nothing for the dense path. The batch script is not tabled, so its digest change has no effect on freezing; a continuation must, however, run under the same batch digest as its predecessor, or it exits 2 before job.env. Its time-left check (left <= manifest minutes) and the 30 s hard stop are consistent with 9 and 21 minutes. The image build is CPU-only (no gres), so it costs no GPU time against D26.",
+  "Re-submission gap (non-blocking; see decision 12): re-sbatching a filled manifest bypasses the filler. The summariser's elapsed-sum check voids an over-cap lane after the fact, so no valid read can come from an over-cap lane, but spending beyond D26's 0.5 GPU-h is possible through operator error. The worst case is about one extra lane-length job per resubmission.",
+  "Fail-closed edges that match the registration but are worth knowing: (a) any batch exit between mkdir run_dir and writing job.env (time-left query, GPU check, a continuation's provenance mismatch) leaves a job directory the filler cannot charge, and the lane is then permanently INCOMPLETE. (b) A USR1 arriving during the about-13 s statistics phase leaves a complete receipt with reason signal_USR1_checkpoint_missing. That job is void, and its receipt blocks any re-run. (c) With a 10 s TERM grace when KillWait is 30, an operator TERM on the 4B lane may not reach a chunk boundary, so a USR1 sent by hand is the practical route to a continuation.",
+  "The timing basis is plausible: the K1 v2 probe measured 0.14 to 0.25 s per unit on 0.6B (eval arm of probe 543), which fits the 4-minute estimate. Margins against the effective window (limit minus the 3-minute USR1 lead) are 1.5x and 1.6x.",
+  "The gauntlet's suggested measurements of needle-block score-margin distributions and retrieval-row headroom are not reported as such. D26 does not require them; the block-score null on measured score shapes and the per-layer tables cover the identification concern.",
+  "The host was not needed and was not touched; no real K1 bundle, model or Belebele content was read."
+ ],
+ "audited_commit": "9c9caeb",
+ "audit_date": "2026-10-07"
+}
