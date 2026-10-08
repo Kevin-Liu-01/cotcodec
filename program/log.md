@@ -653,3 +653,45 @@ Append-only. Newest entries at the bottom.
   untouched. No GPU time, no host access.
 - Next: freeze (steps 2-5). The binding doctor run is still the one in the
   image built from the freeze commit.
+
+## 2026-10-08 — Q3 dense headroom pre-check operated (freeze steps 3-5, branch `ops/q3-dense`): INCOMPLETE, no combined read
+
+- Registration `q3-dense-headroom-precheck-v1` (ledger row `94520a99`,
+  freeze commit `a369e6d`). Evidence:
+  `program/evidence/2026-10-08/q3-dense-headroom-precheck/` (README, operator
+  log, receipts, claims, orx logs, Slurm records, summariser output).
+- Step 3: a fresh clone of main at `a369e6d` on the host passed
+  `preregister.py verify` and `check-chain`, and all 17 tabled digests. Image
+  build Slurm 723 (CPU only): `sha256:60e8d442...`, source tar `fc386fae...`.
+  CPU doctor Slurm 724 in that image (`--network none`, no GPU, the image's
+  baked source): DENSE_DOCTOR_PASS, 7/7, code digests equal the table.
+- Step 4, Qwen3-0.6B-Base: filled on the host (slot-0 claim), dry-run and
+  test-only passed, submitted once by orx node `7c344837` (commit `38cf069`,
+  ssh backend) as Slurm 727: COMPLETED 0:0 in 278 s, provenance PASS,
+  ORX_RESULT exit 0. Receipt `PRECHECK_COMPLETE`; K1 smoke 452 REPRODUCED
+  (gaps below 1e-6 points). Lane NOT_VIABLE: H1_CX 12.25 (99% lower bound
+  8.98), H2a 31.43, H2b -3.93 (`h2_status` FAIL); lexical confound, entity
+  control and null calibration NOT_EVALUABLE; floor NOT_VIABLE; fertility
+  STRONG.
+- Step 4, Qwen3.5-4B-Base: filled with `--small-lane-receipt` (slot-0
+  claim), dry-run and test-only passed, submitted once by orx node
+  `51d32d53` (commit `c84c9aa`) as Slurm 730: FAILED 137:0 at its 21-minute
+  limit. It evaluated 18 of 74 chunks at about 61 s each (GPU idle when
+  sampled, one CPU core busy), did not act on SIGUSR1 (two chunks saved after
+  it, no marker) and was killed by the hard stop
+  (`signal_USR1_checkpoint_timeout`). The filler refused a re-run (-1 of 21
+  minutes left; the job is charged 22) and a continuation (no confirmed
+  checkpoint). The lane is void and INCOMPLETE.
+- Step 5: the registered summariser exited 2 on the 0.6B receipt ("the
+  receipt's Slurm job is not its job directory"): the entry point records
+  `SLURM_JOB_ID` from inside the container, the batch script never passes it,
+  and the summariser requires the field. Not a registered void rule; no code
+  was edited. Under the registration's rule the combined read is INCOMPLETE
+  (the 4B lane has no receipt); it was not written, and no base, K1 v3 design
+  or stop is read.
+- GPU time: 0.4189 GPU-h used (727 0.0772, 730 0.3417), 0.4667 charged under
+  the registration's rule; ledger rows use the physical figures, as earlier rows do, with the charged figures noted. Jobs 723 and
+  724 CPU only.
+- Decision for Kevin (pending in `program/state.json`): whether and how a
+  successor id runs. It would need the receipt's Slurm job id bound, the 4B
+  lane sized from the measured rate, and SIGUSR1 handled on the 4B path.

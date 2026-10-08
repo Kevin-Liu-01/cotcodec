@@ -1,0 +1,14 @@
+## pre-fill 4B 2026-10-08T04:28:54Z
+JOBID NAME STATE TIME TRES_PER_NODE
+index, utilization.gpu [%], memory.used [MiB]
+0, 0 %, 0 MiB
+1, 0 %, 0 MiB
+2, 0 %, 0 MiB
+3, 0 %, 0 MiB
+4, 0 %, 0 MiB
+5, 0 %, 0 MiB
+6, 0 %, 0 MiB
+7, 0 %, 0 MiB
+compute-apps:
+gpu_uuid, pid, used_gpu_memory [MiB]
+ls: cannot access '/home/kevin/cotcodec-runs/q3-dense-headroom-precheck-v1/qwen3.5-4b-base': No such file or directory
