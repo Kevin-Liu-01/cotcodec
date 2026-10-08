@@ -15,11 +15,17 @@ adapter (``audit_harness.py``):
 A reference that raises on a perturbed input makes that check not
 applicable (``na``); a candidate that raises fails it.
 
+A check that is ``na`` records why in ``na_reasons`` (the reference's exception
+type and message), so a resource failure in a reference call is visible to the
+runner's contention rule (D31 review, finding 1).
+
 Reference store (decision D31): every reference call A5 makes depends only on
 the reference, its weights and the drawn inputs, so a reference item computes
 them once per problem and replicate (:func:`reference_results`, in the same
-order on the same module) and the checks read them through ``refs`` instead of
-calling the reference (``refs=None`` is the inline path).
+order on the same module) and the checks read them through ``refs`` (a mapping,
+or a callable that may return ``None`` to make that and every later reference
+call inline) instead of calling the reference (``refs=None`` is the inline
+path). An entry is written only when no reference call raised.
 """
 
 from __future__ import annotations
@@ -73,8 +79,6 @@ def _pair(
             ref_out = _run(reference, ref_inputs, device)
         except Exception as exc:
             return "na", None, None, _reference_raised(exc)
-    elif stored[0] == "na":
-        return "na", None, None, stored[1]
     else:
         ref_out = stored[1]
     try:
@@ -89,7 +93,7 @@ def _pair(
 
 
 def _reference_raised(exc: BaseException) -> str:
-    return f"reference raised {type(exc).__name__}"
+    return f"reference raised {type(exc).__name__}: {str(exc)[:200]}"
 
 
 EXC01_VALUES = (("nan", math.nan), ("pos_inf", math.inf), ("neg_inf", -math.inf))
@@ -128,18 +132,22 @@ def _rounded_reference(reference: torch.nn.Module, dtype: torch.dtype) -> torch.
 
 
 def _stored(refs: Any, tag: str) -> tuple[str, Any] | None:
-    return None if refs is None else refs[tag]
+    if refs is None:
+        return None
+    return refs(tag) if callable(refs) else refs[tag]
 
 
 def exc_01(reference, candidate, inputs, device, refs=None) -> dict[str, Any]:  # noqa: ANN001
     """NaN, +Inf and -Inf scattered into every float input; masks must agree."""
-    failures, statuses = [], []
+    failures, statuses, na = [], [], []
     for label, value in EXC01_VALUES:
         perturbed = _replace(inputs, _scatter(value))
         status, ref_out, cand_out, why = _pair(
             reference, candidate, perturbed, perturbed, device, _stored(refs, f"EXC-01/{label}")
         )
         statuses.append(status)
+        if status == "na":
+            na.append(f"{label}: {why}")
         if status == "fail":
             failures.append(f"{label}: {why}")
         elif status == "ok":
@@ -153,7 +161,7 @@ def exc_01(reference, candidate, inputs, device, refs=None) -> dict[str, Any]:  
                 ):
                     if not torch.equal(fn(r).cpu(), fn(c).cpu()):
                         failures.append(f"{label}: {name} mask mismatch")
-    return _status("EXC-01", statuses, failures)
+    return _status("EXC-01", statuses, failures, na)
 
 
 def exc_02(reference, candidate, inputs, device, atol: float = 1e-4, refs=None) -> dict[str, Any]:  # noqa: ANN001
@@ -163,6 +171,7 @@ def exc_02(reference, candidate, inputs, device, atol: float = 1e-4, refs=None) 
         reference, candidate, perturbed, perturbed, device, _stored(refs, "EXC-02")
     )
     failures = [why] if status == "fail" else []
+    na = [why] if status == "na" else []
     if status == "ok":
         for r, c in zip(ref_out, cand_out, strict=True):
             r64, c64 = r.detach().cpu().double(), c.detach().cpu().double()
@@ -175,23 +184,26 @@ def exc_02(reference, candidate, inputs, device, atol: float = 1e-4, refs=None) 
                 err = float((r64[keep] - c64[keep]).abs().max())
                 if not math.isfinite(err) or err > atol:
                     failures.append(f"subnormal values differ by {err:.3e}")
-    return _status("EXC-02", [status], failures)
+    return _status("EXC-02", [status], failures, na)
 
 
 def prc_01(reference, candidate, inputs, device, refs=None) -> dict[str, Any]:  # noqa: ANN001
     """fp16 and bf16 regimes: candidate in the low dtype vs fp32 reference on rounded values."""
-    failures, statuses = [], []
+    failures, statuses, na = [], [], []
     for dtype, tol in PRC01_DTYPES:
+        stored = _stored(refs, f"PRC-01/{dtype}")
         ref_model = ref_inputs = None
-        if refs is None:
+        if stored is None:
             ref_model = _rounded_reference(reference, dtype)
             ref_inputs = _replace(inputs, lambda t, d=dtype: t.to(d).float())
         cand_model = copy.deepcopy(candidate).to(dtype)
         cand_inputs = _replace(inputs, lambda t, d=dtype: t.to(d))
         status, ref_out, cand_out, why = _pair(
-            ref_model, cand_model, ref_inputs, cand_inputs, device, _stored(refs, f"PRC-01/{dtype}")
+            ref_model, cand_model, ref_inputs, cand_inputs, device, stored
         )
         statuses.append(status)
+        if status == "na":
+            na.append(f"{dtype}: {why}")
         if status == "fail":
             failures.append(f"{dtype}: {why}")
         elif status == "ok":
@@ -200,7 +212,7 @@ def prc_01(reference, candidate, inputs, device, refs=None) -> dict[str, Any]:  
                 atol = tol * _scale(r_low)
                 if not torch.allclose(c.float(), r_low, atol=atol, rtol=tol, equal_nan=True):
                     failures.append(f"{dtype}: beyond atol={atol:.2e}")
-    return _status("PRC-01", statuses, failures)
+    return _status("PRC-01", statuses, failures, na)
 
 
 def prc_02(reference, candidate, inputs, device, atol: float = 2e-2, refs=None) -> dict[str, Any]:  # noqa: ANN001
@@ -211,6 +223,7 @@ def prc_02(reference, candidate, inputs, device, atol: float = 2e-2, refs=None) 
         reference, cand_model, inputs, cand_inputs, device, _stored(refs, "PRC-02")
     )
     failures = [why] if status == "fail" else []
+    na = [why] if status == "na" else []
     if status == "ok":
         for r, c in zip(ref_out, cand_out, strict=True):
             r32, c32 = r.detach().float(), c.detach().float()
@@ -219,17 +232,22 @@ def prc_02(reference, candidate, inputs, device, atol: float = 2e-2, refs=None) 
             within = (diff <= effective) | (torch.isnan(c32) & torch.isnan(r32)) | (c32 == r32)
             if not bool(within.all()):
                 failures.append(f"max_err={float(diff[~within].max()):.3e} > {effective:.3e}")
-    return _status("PRC-02", [status], failures)
+    return _status("PRC-02", [status], failures, na)
 
 
-def _status(name: str, statuses: Sequence[str], failures: Sequence[str]) -> dict[str, Any]:
+def _status(
+    name: str, statuses: Sequence[str], failures: Sequence[str], na: Sequence[str] = ()
+) -> dict[str, Any]:
     if failures:
         verdict = "fail"
     elif statuses and all(s == "na" for s in statuses):
         verdict = "na"
     else:
         verdict = "pass"
-    return {"check": name, "status": verdict, "failures": list(failures)[:10]}
+    out = {"check": name, "status": verdict, "failures": list(failures)[:10]}
+    if na:
+        out["na_reasons"] = list(na)[:10]
+    return out
 
 
 def run_a5(
@@ -274,10 +292,11 @@ def reference_results(
 ) -> tuple[dict[str, tuple[str, Any]], list[str]]:
     """Every reference call of :func:`run_a5`, in its order, on the same module.
 
-    Returns tag -> ``("ok", outputs)`` or ``("na", message)`` and the problems
-    that make the result unusable (a reference call that changed its inputs or
-    the RNG state, an output that is not storable or aliases an input, a CUDA
-    resource failure, an exception outside a reference call)."""
+    Returns tag -> ``("ok", outputs)`` and the problems that make the result
+    unusable (a reference call that raised, changed its inputs or the RNG state, an
+    output that is not storable or aliases an input, an exception outside a
+    reference call). A resource failure raises ``refstore.ResourceFailure`` (no
+    entry is written)."""
     from harness.q1 import refstore
 
     results: dict[str, tuple[str, Any]] = {}
@@ -288,9 +307,8 @@ def reference_results(
         try:
             out = _run(model, ref_inputs, device)
         except Exception as exc:
-            if refstore.resource_failure(exc):
-                problems.append(f"{tag}: resource failure")
-            results[tag] = ("na", _reference_raised(exc))
+            refstore.reraise_resource(tag, exc)
+            problems.append(f"{tag}: {_reference_raised(exc)}")
             return
         problems.extend(f"{tag}: {p}" for p in probe.changes())
         if refstore.aliases(out, list(ref_inputs)):
@@ -309,6 +327,9 @@ def reference_results(
             ref_inputs = _replace(inputs, lambda t, d=dtype: t.to(d).float())
             call(f"PRC-01/{dtype}", ref_model, ref_inputs)
         call("PRC-02", reference, inputs)
+    except refstore.ResourceFailure:
+        raise
     except Exception as exc:  # outside a reference call: inline, the check would error
+        refstore.reraise_resource("A5 reference side", exc)
         problems.append(f"reference side raised {type(exc).__name__}")
     return results, problems

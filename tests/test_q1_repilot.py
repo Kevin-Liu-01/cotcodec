@@ -68,7 +68,8 @@ def test_items_pair_twins_and_place_references_first() -> None:
         assert left["gate"] == right["gate"] and not left["requires"]
         assert (right["gate"] in refstore.CHANNEL_OF) == bool(right["requires"])
     first_ref = items.index(refs[0])
-    assert items[first_ref + 1]["kernel_id"] == "sub" and items[0]["gate"] == "ref_a"
+    assert items[first_ref + 1]["kernel_id"] == "sub" and refs[0]["gate"] == "ref_c"
+    assert items[0]["gate"] == "a" and not items[1]["requires"]  # gate (a) is inline
     assert all(i["units"] == trim.concurrency_units(problem) for i in items)
     assert consumers[0]["timeouts"] == pilot.watchdog_limits(problem)
 

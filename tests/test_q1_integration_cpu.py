@@ -476,7 +476,7 @@ def test_trim_plan_driver_and_report_on_the_cpu_journal(run: dict, tmp_path: Pat
         "--expected-plan-sha256",
         driver_plan["plan_sha256"],
         "--stage0-spent-gpu-hours",
-        "0.899",
+        "1.229",
         "--job-cap-gpu-hours",
         "7.0",
         "--reserve-gpu-hours",
@@ -487,6 +487,12 @@ def test_trim_plan_driver_and_report_on_the_cpu_journal(run: dict, tmp_path: Pat
     assert run_q1_stage0.main([*argv, *budget]) == 2
     assert not json.loads((out / "budget.json").read_text())["ok"]
     assert not (out / "journal.jsonl").exists()
+    # A spent value below the GPU ledger's Stage 0 entries is refused before the budget.
+    (out / "budget.json").unlink()
+    low = [*argv, *budget]
+    low[low.index("--stage0-spent-gpu-hours") + 1] = "0.899"
+    assert run_q1_stage0.main(low) == 2
+    assert not (out / "budget.json").exists()
     wrong = [*argv, *budget]
     wrong[wrong.index("--expected-plan-sha256") + 1] = "0" * 64
     assert run_q1_stage0.main(wrong) == 2
@@ -549,10 +555,10 @@ def test_reference_store_rows_equal_inline_rows(run: dict) -> None:
         for e in refschedule.with_references([asdict(i) for i in run["items"]], root=str(store))
     ]
     refs = [i for i in scheduled if refstore.is_reference_gate(i.gate)]
-    # ReLU and softmax, each with substrates, mutants and controls: every channel
-    # their items use (a, c, A1, A2, A3; no a_head or A5 items here)
+    # ReLU and softmax, each with substrates, mutants and controls: every store
+    # channel their items use (c, A1, A2, A3; no A5 items here; gate (a) is inline)
     assert {(i.problem_id, i.gate) for i in refs} == {
-        (p, g) for p in PROBLEM_IDS for g in ("ref_a", "ref_c", "ref_A1", "ref_A2", "ref_A3")
+        (p, g) for p in PROBLEM_IDS for g in ("ref_c", "ref_A1", "ref_A2", "ref_A3")
     }
     (base / "items-store").mkdir()
     config = RunnerConfig(

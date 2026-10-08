@@ -669,7 +669,8 @@ def main(argv: list[str] | None = None) -> int:
         rp = cc.load_job(args.repilot_job / "q1")
         pairs = cc.repilot_pairs(rp["items"])
         refs = [dict(r) for r in cc.reference_items(rp["items"])]
-        store_model = cc.fit_store_model(pairs, refs)
+        # The store as job 713 ran it (gate (a) a consumer), as pre-specified.
+        store_model = cc.fit_store_model(pairs, refs, consumers=cc.STORE_CONSUMER_GATES_REPILOT)
         store_inputs = (pairs, refs)
         rows = Journal(args.repilot_job / "q1" / "repilot" / "journal.jsonl").final_rows()
         repilot = {
@@ -680,7 +681,7 @@ def main(argv: list[str] | None = None) -> int:
                 "ratio_fits": store_model.ratio_fits,
                 "reference_fits": store_model.reference_fits,
                 "constant_ratios_same_mode_pairs": cc.fit_store_model(
-                    pairs, refs, ratio_mode="constant"
+                    pairs, refs, ratio_mode="constant", consumers=cc.STORE_CONSUMER_GATES_REPILOT
                 ).constant_ratios,
                 "pairs_same_mode": sum(1 for p in pairs if p["same_mode"]),
             },
@@ -710,12 +711,21 @@ def main(argv: list[str] | None = None) -> int:
             True,
         ),
     )
+    repilot_consumers = {"consumers": cc.STORE_CONSUMER_GATES_REPILOT}
     store_variants: dict[str, dict[str, Any]] = {
         # written before the re-pilot ran
-        "store": {"ratio_mode": "linear"},
-        # after: one ratio per gate over same-mode pairs; and the bound of any store design
-        "store-constant": {"ratio_mode": "constant"},
-        "store-free-references": {"ratio_mode": "constant", "free_references": True},
+        "store": {"ratio_mode": "linear", **repilot_consumers},
+        # after: one ratio per gate over same-mode pairs; and the references-free bound
+        # (post hoc ratio)
+        "store-constant": {"ratio_mode": "constant", **repilot_consumers},
+        "store-free-references": {
+            "ratio_mode": "constant",
+            "free_references": True,
+            **repilot_consumers,
+        },
+        # D31 review fix pass: gate (a) is not a consumer (section 18.9)
+        "store-no-a": {"ratio_mode": "linear"},
+        "store-no-a-constant": {"ratio_mode": "constant"},
     }
     if store_model is not None:
         for variant in store_variants:
@@ -725,10 +735,14 @@ def main(argv: list[str] | None = None) -> int:
                 scenarios_trim += (
                     (f"trim2-{variant}-{mode}-paired-concurrency", cc.TRIM_RULE, factors, True),
                 )
+    # D31 review fix pass: the memory-aware execution policy (section 18.9; model-based).
+    scenarios_trim += (("trim2-exec2-paired-concurrency", cc.TRIM_RULE, factors, True),)
     for label, rule, fac, corrected in scenarios_trim:
         if label.endswith("paired-concurrency") and not factors:
             continue
         extra = {"anchors": anchors, "exposed": exposed} if corrected else {}
+        if "-exec2" in label:
+            extra["units_of"] = lambda problem, gate: trim.item_units(problem, gate)[0]
         boot_store = None
         if "-store" in label:
             variant = label.removeprefix("trim2-").split("-per-")[0]

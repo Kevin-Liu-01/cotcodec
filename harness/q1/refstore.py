@@ -1,23 +1,41 @@
 """Reference store (decision D31): reference-side work once per problem, replicate and draw.
 
-Gates (a) and (c) and audit channels A1, A2, A3 and A5 compare a candidate with
-reference outputs computed on the candidate's own inputs: KernelBench's fp32
-device reference, gate (c)'s validity gate (an fp64 replay and a CPU fp32
-reference), and the audit's fp64 oracle with its device, TF32 and CPU fp32
-references. None of these depends on the candidate. Before this pass every
-item recomputed them, so a problem with ``k`` scored kernels paid for them ``k``
-times per gate (and the three gate (a) variants that share KernelBench's inputs
-three times more).
+Gate (c) and audit channels A1, A2, A3 and A5 compare a candidate with reference
+outputs computed on the candidate's own inputs: gate (c)'s validity gate (an
+fp64 replay and a CPU fp32 reference), and the audit's fp64 oracle with its
+device, TF32 and CPU fp32 references. None of these depends on the candidate.
+Before D31 every item recomputed them, so a problem with ``k`` scored kernels
+paid for them ``k`` times per channel.
 
 A **reference item** (gate ``ref_<channel>``) computes them once per problem,
 replicate and channel, in its own process, with exactly the code the inline
-path runs (the reference-side functions of ``gate_a``, ``gate_c``,
-``audit.run`` and ``audit.lethe_contracts``), and writes an **entry** here. A
-**consumer** item (the candidate's gate or channel item) draws its inputs as
-before, loads the entry instead of recomputing, runs the candidate and
-compares exactly as before. The store is an optimisation only: whenever an
-entry is missing, unreadable, made under other conditions or marked unusable,
-the consumer computes inline (the code path every pilot verdict came from).
+path runs (the reference-side functions of ``gate_c``, ``audit.run`` and
+``audit.lethe_contracts``), and writes an **entry** here. A **consumer** item
+(the candidate's gate or channel item) draws its inputs as before, loads the
+entry instead of recomputing, runs the candidate and compares exactly as
+before. Whenever an entry is missing, unreadable, made under other conditions
+or marked unusable, the consumer computes inline (the code path every pilot
+verdict came from).
+
+**Gate (a) is not a consumer** (D31 review, finding 3): upstream KernelBench
+computes the reference in the candidate's process after the candidate's module
+is imported, and gate (a) is our transcription of that, so it always computes
+inline. (Its store/inline cost ratios were 0.96-1.03 in the re-pilot.)
+
+**What the store reproduces.** A consumer's rows equal the inline rows for
+kernels with defined behaviour that do not touch process-global state
+(``tests/test_q1_refstore_equivalence.py``). They can differ for (i) kernels
+that read memory they never wrote or past their inputs (their rows follow
+allocator history, which the store changes; A4 flags them in both arms), and
+(ii) candidates that change process-global state the inline reference would
+then see, for example by replacing a torch function when their module is
+imported: the store's reference is computed in a clean process. The consumer
+detects and falls back inline (computing that draw and every later one itself)
+when the TF32/cuDNN switches or default dtype changed, and when its inputs no
+longer match the entry's fingerprint of the reference's inputs (a candidate
+that changed the RNG or input generation, or A5's integer inputs written in
+place between checks); gate (c) then first replays the reference forwards the
+store skipped, so a stateful reference reaches the state it would have inline.
 
 An entry is usable only when the reference side cannot have influenced the
 candidate's run except through the values stored. The reference item checks,
@@ -31,14 +49,24 @@ for every reference call, that
 - no stored output shares storage with an input (a stored copy would not
   follow a later in-place write);
 - every output is a tensor or a tuple or list of tensors (what is stored);
+- the reference did not raise (D31 review, finding 4: a raise is recomputed
+  inline, which costs nothing when it is deterministic, rather than turned into
+  an error for every consumer);
 
 and the key binds the problem source, the replicate, the channel's
 configuration, the device type, torch's version, the TF32/cuDNN switches and
-default dtype in force, and the gate or audit code hash. The consumer
-re-checks the switches before every draw and computes the remaining draws
-inline if a candidate changed them. With those conditions the consumer's rows
-equal the inline rows whenever the inline path is itself reproducible
-(``tests/test_q1_refstore_equivalence.py``); timing fields differ.
+default dtype in force, and the gate or audit code hash. A reference call that
+meets a GPU resource failure (``harness.q1.faults``) writes **no** entry: the
+reference item returns an ``error`` row with the failure text, the runner
+retries it alone when it ran shared (its consumers keep waiting), and alone a
+second failure leaves the consumers to compute inline. An unusable entry keeps
+no tensors.
+
+Disk (D31 review, finding 5): an entry is written only if the tensors already in
+the store plus its own fit ``cap_bytes`` (``STORE_CAP_BYTES``, registered in
+section 18.9); otherwise it is unusable with ``store-cap``. The Stage 0 driver
+deletes an entry's tensors once its last consumer has left the queue
+(``delete_draws``), and every stored tensor when the job ends.
 
 Layout: ``ROOT/<channel>/<key>/entry.json`` and one ``draw-NNN.pt`` per stored
 draw (``torch.save``; loaded with ``mmap=True, weights_only=True``). An entry
@@ -60,11 +88,11 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any
 
-STORE_SCHEMA = "q1-refstore/1"
-#: Reference gate id -> channel.
+from harness.q1 import faults
+
+STORE_SCHEMA = "q1-refstore/2"
+#: Reference gate id -> channel. Gate (a) is never a consumer (module docstring).
 REFERENCE_GATES: dict[str, str] = {
-    "ref_a": "a",
-    "ref_a_head": "a_head",
     "ref_c": "c",
     "ref_A1": "A1",
     "ref_A2": "A2",
@@ -74,8 +102,6 @@ REFERENCE_GATES: dict[str, str] = {
 CHANNEL_GATE = {channel: gate for gate, channel in REFERENCE_GATES.items()}
 #: Channel -> the consumer gates that read its entries.
 CONSUMERS: dict[str, tuple[str, ...]] = {
-    "a": ("a", "a_1e-3", "a_static"),
-    "a_head": ("a_head_1e-4", "a_head_1e-2"),
     "c": ("c",),
     "A1": ("A1",),
     "A2": ("A2",),
@@ -88,6 +114,10 @@ AUDIT_CHANNELS = ("A1", "A2", "A3", "A5")
 REFERENCE_JOURNAL = "references.jsonl"
 #: Item-option key naming the store root on a consumer or reference item.
 OPTION = "reference_store"
+#: Item-option key of a reference item's disk cap (bytes of stored tensors in the store).
+CAP_OPTION = "reference_store_cap_bytes"
+#: Registered cap on the tensors one job's store may hold at once (section 18.9).
+STORE_CAP_BYTES = 400_000_000_000
 
 
 def is_reference_gate(gate: str) -> bool:
@@ -271,21 +301,98 @@ def to_device(value: Any, device: Any) -> Any:
     return value
 
 
-#: Text of a CUDA or host resource failure. Such an exception depends on what else
-#: holds memory, so a reference item that meets one never stores it as the
-#: reference's outcome: the entry is unusable and consumers compute inline.
-RESOURCE_MARKERS = (
-    "outofmemoryerror",
-    "out of memory",
-    "cudaerrormemoryallocation",
-    "cuda_error_out_of_memory",
-    "cannot allocate memory",
-)
+#: Text of a GPU or host resource failure: one list with the runner's
+#: (``harness.q1.faults``). Such an exception depends on what else holds memory, so a
+#: reference item that meets one writes no entry (:class:`ResourceFailure`).
+RESOURCE_MARKERS = faults.RESOURCE_MARKERS
 
 
 def resource_failure(exc: BaseException) -> bool:
-    text = f"{type(exc).__name__}: {exc}".lower()
-    return isinstance(exc, MemoryError) or any(marker in text for marker in RESOURCE_MARKERS)
+    return faults.is_resource_exception(exc)
+
+
+class ResourceFailure(RuntimeError):
+    """A reference call met a resource failure: no entry is written (module docstring)."""
+
+    def __init__(self, where: str, exc: BaseException) -> None:
+        super().__init__(f"{where}: {type(exc).__name__}: {str(exc)[:500]}")
+        self.where = where
+
+
+def reraise_resource(where: str, exc: BaseException) -> None:
+    """Raise :class:`ResourceFailure` when ``exc`` is a resource failure."""
+    if resource_failure(exc):
+        raise ResourceFailure(where, exc) from exc
+
+
+# --- input fingerprints -------------------------------------------------------------
+
+#: Elements per row of the fingerprint's weighted sums (each row sum fits in int64).
+_FP_ROW = 1 << 16
+#: Rows per device step (bounds the int64 temporary to 2^24 elements, 128 MiB).
+_FP_BLOCK_ROWS = 256
+
+
+def _tensor_fingerprint(t: Any, digest: Any) -> None:
+    import torch
+
+    flat = t.detach().reshape(-1)
+    if not flat.is_contiguous() or (flat.storage_offset() * flat.element_size()) % 8:
+        flat = flat.clone()  # a fresh, aligned buffer for the integer view below
+    raw = flat.view(torch.uint8) if flat.numel() else flat.new_empty(0, dtype=torch.uint8)
+    main = (raw.numel() // 4) * 4
+    if raw.numel() - main:
+        digest.update(bytes(raw[main:].cpu().tolist()))
+    words = raw[:main].view(torch.int32)
+    n = words.numel()
+    full = (n // _FP_ROW) * _FP_ROW
+    if full:
+        grid = words[:full].view(-1, _FP_ROW)
+        weights = torch.arange(_FP_ROW, device=words.device, dtype=torch.int64) * 40503 % 65521 + 1
+        for start in range(0, grid.shape[0], _FP_BLOCK_ROWS):
+            block = grid[start : start + _FP_BLOCK_ROWS].to(torch.int64)
+            sums = (block * weights).sum(dim=1)
+            digest.update(sums.cpu().numpy().tobytes())
+    if n - full:
+        tail = words[full:].to(torch.int64)
+        weights = torch.arange(tail.numel(), device=words.device, dtype=torch.int64)
+        total = int((tail * (weights * 40503 % 65521 + 1)).sum())
+        digest.update(total.to_bytes(8, "little", signed=True))
+
+
+def fingerprint(values: Any) -> str:
+    """A digest of a draw's inputs: every tensor's dtype, shape and bytes (weighted
+    int64 sums over 64 Ki-element rows, computed on the tensor's device, then
+    SHA-256), and the ``repr`` of every other value. Cheap on the GPU; equal inputs
+    give equal digests, and a changed draw (another RNG state, an in-place write)
+    gives another digest with overwhelming probability."""
+    import torch
+
+    digest = hashlib.sha256(b"q1-refstore-inputs/1")
+
+    def walk(value: Any) -> None:
+        if isinstance(value, torch.Tensor):
+            digest.update(f"T|{value.dtype}|{tuple(value.shape)}|".encode())
+            _tensor_fingerprint(value, digest)
+        elif isinstance(value, list | tuple):
+            digest.update(f"S|{type(value).__name__}|{len(value)}|".encode())
+            for item in value:
+                walk(item)
+        else:
+            digest.update(f"V|{value!r}|".encode())
+
+    walk(values)
+    return digest.hexdigest()
+
+
+def safe_fingerprint(values: Any) -> str | None:
+    """:func:`fingerprint`, or ``None`` when it cannot be computed (never equal to a
+    recorded fingerprint, so a consumer computes inline and a reference item's entry
+    is unusable)."""
+    try:
+        return fingerprint(values)
+    except Exception:
+        return None
 
 
 def checked_call(
@@ -330,9 +437,38 @@ def entry_dir(root: Path, channel: str, key: str) -> Path:
     return Path(root) / channel / key
 
 
-def write_entry(root: Path, payload: Mapping[str, Any], built: Built) -> dict[str, Any]:
+def _payload_bytes(value: Any) -> int:
+    return sum(int(t.numel()) * int(t.element_size()) for t in _tensors_deep(value))
+
+
+def _tensors_deep(value: Any) -> list[Any]:
+    import torch
+
+    if isinstance(value, torch.Tensor):
+        return [value]
+    if isinstance(value, list | tuple):
+        return [t for item in value for t in _tensors_deep(item)]
+    if isinstance(value, dict):
+        return [t for item in value.values() for t in _tensors_deep(item)]
+    return []
+
+
+def live_bytes(root: Path) -> int:
+    """Bytes of stored tensors currently in the store (every channel)."""
+    total = 0
+    for path in Path(root).glob("*/*/draw-*.pt"):
+        with contextlib.suppress(OSError):
+            total += path.stat().st_size
+    return total
+
+
+def write_entry(
+    root: Path, payload: Mapping[str, Any], built: Built, *, cap_bytes: int | None = None
+) -> dict[str, Any]:
     """Write an entry atomically; returns its manifest. An existing complete entry
-    for the same key is kept (a concurrent or earlier writer won)."""
+    for the same key is kept (a concurrent or earlier writer won). An unusable entry
+    keeps no tensors; an entry whose tensors would take the store past ``cap_bytes``
+    is written unusable (``store-cap``) without them."""
     import torch
 
     channel = payload["channel"]
@@ -340,6 +476,10 @@ def write_entry(root: Path, payload: Mapping[str, Any], built: Built) -> dict[st
     final = entry_dir(root, channel, key)
     if (final / "entry.json").exists():
         return json.loads((final / "entry.json").read_text(encoding="utf-8"))
+    problems = list(built.problems)
+    planned = sum(_payload_bytes(d.payload) for d in built.draws if d.payload is not None)
+    if not problems and cap_bytes is not None and live_bytes(root) + planned > cap_bytes:
+        problems.append(f"store-cap: {planned} bytes over the {cap_bytes}-byte cap")
     final.parent.mkdir(parents=True, exist_ok=True)
     temp = final.parent / f".{key}.{os.getpid()}.{time.time_ns()}.tmp"
     temp.mkdir()
@@ -348,7 +488,7 @@ def write_entry(root: Path, payload: Mapping[str, Any], built: Built) -> dict[st
     try:
         for index, draw in enumerate(built.draws):
             meta = dict(draw.meta)
-            if draw.payload is not None:
+            if draw.payload is not None and not problems:
                 name = f"draw-{index:03d}.pt"
                 torch.save(draw.payload, temp / name)
                 size = (temp / name).stat().st_size
@@ -360,11 +500,12 @@ def write_entry(root: Path, payload: Mapping[str, Any], built: Built) -> dict[st
             "schema": STORE_SCHEMA,
             "key": key,
             "payload": dict(payload),
-            "usable": not built.problems,
-            "problems": list(built.problems),
+            "usable": not problems,
+            "problems": problems,
             "facts": dict(built.facts),
             "draws": draws,
             "bytes": total,
+            "bytes_planned": planned,
             "written_at": round(time.time(), 3),
         }
         (temp / "entry.json").write_text(json.dumps(manifest, sort_keys=True), encoding="utf-8")
@@ -381,25 +522,35 @@ def write_entry(root: Path, payload: Mapping[str, Any], built: Built) -> dict[st
     return manifest
 
 
+def delete_draws(path: Path) -> int:
+    """Delete an entry's stored tensors (its manifest stays; a later lookup finds
+    the entry incomplete and computes inline). Returns the bytes freed."""
+    freed = 0
+    for file in Path(path).glob("draw-*.pt"):
+        with contextlib.suppress(OSError):
+            freed += file.stat().st_size
+            file.unlink()
+    return freed
+
+
 # --- reading -------------------------------------------------------------------------
 
 
 @dataclass
 class Taken:
-    """One draw read from an entry: ``kind`` is ``ok`` (``value`` on the device) or
-    ``raised`` (``error`` holds the reference's ``exception_details``)."""
+    """One draw read from an entry: ``value`` on the device, ``meta`` its record."""
 
     kind: str
     meta: dict[str, Any]
     value: Any = None
-    error: dict[str, str] = field(default_factory=dict)
 
 
 class Entry:
-    """A verified, usable entry. ``take(i, device)`` returns draw ``i`` or ``None``,
-    after which the consumer computes this and every later draw inline: the
-    switches changed since the entry was written (a candidate set them), or the
-    draw could not be read. A store fault is therefore never a verdict."""
+    """A verified, usable entry. ``take(i, device, inputs)`` returns draw ``i`` or
+    ``None``, after which the consumer computes this and every later draw inline:
+    the switches changed since the entry was written (a candidate set them), the
+    consumer's inputs differ from the reference's (``inputs_fp``), or the draw could
+    not be read. A store fault is therefore never a verdict."""
 
     def __init__(self, path: Path, manifest: Mapping[str, Any]) -> None:
         self.path = path
@@ -408,6 +559,10 @@ class Entry:
 
     def facts_hold(self) -> bool:
         return environment_facts() == self.manifest["facts"]
+
+    def inputs_match(self, index: int, inputs: Any) -> bool:
+        expected = self.draws[index].get("inputs_fp")
+        return expected is None or safe_fingerprint(inputs) == expected
 
     def load(self, index: int, device: Any) -> Any:
         import torch
@@ -419,14 +574,15 @@ class Entry:
         value = torch.load(file, map_location="cpu", mmap=True, weights_only=True)
         return to_device(value, device)
 
-    def take(self, index: int, device: Any) -> Taken | None:
+    def take(self, index: int, device: Any, inputs: Any = None) -> Taken | None:
         if not self.facts_hold():
             note(inline_from_draw=index, inline_reason="switches-changed")
             return None
+        if inputs is not None and not self.inputs_match(index, inputs):
+            note(inline_from_draw=index, inline_reason="inputs-differ")
+            return None
         try:
             meta = self.draws[index]
-            if meta["kind"] == "raised":
-                return Taken("raised", meta, error=dict(meta["error"]))
             value = self.load(index, device) if "file" in meta else None
         except Exception as exc:  # a store fault: compute inline from here on
             note(inline_from_draw=index, inline_reason=f"read-failed: {type(exc).__name__}")
@@ -438,16 +594,12 @@ class Entry:
 USES: list[dict[str, Any]] = []
 
 
-def _complete(
-    manifest: Mapping[str, Any], path: Path, draws: int | None, ends_at_raise: bool
-) -> bool:
+def _complete(manifest: Mapping[str, Any], path: Path, draws: int | None) -> bool:
     listed = list(manifest.get("draws", []))
-    if draws is not None:
-        short = ends_at_raise and listed and listed[-1].get("kind") == "raised"
-        if not (len(listed) == draws or (short and len(listed) < draws)):
-            return False
+    if draws is not None and len(listed) != draws:
+        return False
     for meta in listed:
-        if meta.get("kind") not in {"ok", "raised"}:
+        if meta.get("kind") != "ok":
             return False
         if "file" in meta:
             try:
@@ -463,12 +615,10 @@ def lookup(
     payload: Mapping[str, Any],
     *,
     draws: int | None = None,
-    ends_at_raise: bool = False,
 ) -> Entry | None:
     """The usable entry for ``payload`` under ``root``, or ``None`` (compute inline).
 
-    ``draws`` is the number of draws the consumer will take; ``ends_at_raise``
-    allows fewer when the last one raised (gate (a) stops at a raised trial)."""
+    ``draws`` is the number of draws the consumer will take."""
     if not root:
         return None
     key = key_of(payload)
@@ -490,7 +640,7 @@ def lookup(
         record["used"], record["reason"] = False, "entry-unusable"
         record["problems"] = list(manifest.get("problems", []))
         return None
-    if not _complete(manifest, path, draws, ends_at_raise):
+    if not _complete(manifest, path, draws):
         record["used"], record["reason"] = False, "entry-incomplete"
         return None
     entry = Entry(path, manifest)
@@ -545,7 +695,10 @@ def reference_outcome(item: Mapping[str, Any]) -> list[Any]:
     """Run a reference item (worker entry point): compute and write the entry.
 
     No candidate code runs here. The single row's verdict is ``accept`` when a
-    usable entry exists afterwards and ``error`` otherwise (with the reasons)."""
+    usable entry exists afterwards and ``error`` otherwise (with the reasons). A
+    resource failure writes no entry and puts its text in the row
+    (``reason: reference-resource-failure``), so the runner's contention rule
+    retries a shared reference item alone while its consumers wait."""
     from harness.q1 import problems as problem_lib
     from harness.q1.gates.common import GateOutcome, exception_details, resolve_device
 
@@ -557,6 +710,7 @@ def reference_outcome(item: Mapping[str, Any]) -> list[Any]:
     root = options.get(OPTION)
     if not root:
         raise ValueError(f"{gate} needs options.{OPTION}")
+    cap = options.get(CAP_OPTION)
     device = resolve_device(item.get("device"))
     problem_id = item["problem_id"]
     details: dict[str, Any] = {"channel": channel, "store_root": str(root)}
@@ -568,6 +722,7 @@ def reference_outcome(item: Mapping[str, Any]) -> list[Any]:
         payload, compute = _channel(channel, item, problem_id, problem_source, seed, device)
         key = key_of(payload)
         details["key"] = key
+        details["entry_dir"] = str(entry_dir(Path(root), channel, key))
         existing = entry_dir(Path(root), channel, key) / "entry.json"
         if existing.exists():
             manifest = json.loads(existing.read_text(encoding="utf-8"))
@@ -578,7 +733,9 @@ def reference_outcome(item: Mapping[str, Any]) -> list[Any]:
             built.facts = facts
             if environment_facts() != facts:
                 built.problems.append("switches-changed-during-reference")
-            manifest = write_entry(Path(root), payload, built)
+            manifest = write_entry(
+                Path(root), payload, built, cap_bytes=None if cap is None else int(cap)
+            )
             details["existing"] = False
         details.update(
             {
@@ -586,11 +743,17 @@ def reference_outcome(item: Mapping[str, Any]) -> list[Any]:
                 "problems": list(manifest["problems"]),
                 "draws": len(manifest["draws"]),
                 "bytes": int(manifest["bytes"]),
+                "bytes_planned": int(manifest.get("bytes_planned", manifest["bytes"])),
             }
         )
         verdict = "accept" if manifest["usable"] else "error"
         if not manifest["usable"]:
             details["reason"] = "entry-unusable"
+    except ResourceFailure as exc:
+        verdict = "error"
+        details.update(
+            {"reason": "reference-resource-failure", "where": exc.where, **exception_details(exc)}
+        )
     except Exception as exc:
         verdict = "error"
         details.update({"reason": "reference-item-failed", **exception_details(exc)})
@@ -616,22 +779,6 @@ def _channel(
     """(key payload, compute function) for a reference item, from the same helpers
     the consumers use."""
     options = dict(item.get("options", {}))
-    if channel in {"a", "a_head"}:
-        from harness.q1.gates import gate_a
-
-        variant = "a" if channel == "a" else "a_head_1e-4"
-        num_trials = int(options.get("num_trials", 5))
-        payload = gate_a.reference_payload(
-            problem_id,
-            problem_source,
-            variant=variant,
-            seed=seed,
-            num_trials=num_trials,
-            device=device,
-        )
-        return payload, lambda: gate_a.reference_trials(
-            problem_source, variant=variant, seed=seed, num_trials=num_trials, device=device
-        )
     if channel == "c":
         from harness.q1.gates import gate_c
 
@@ -675,6 +822,7 @@ def _manifest(options: Mapping[str, Any]) -> Mapping[str, Any]:
 __all__ = [
     "AUDIT_CHANNELS",
     "Built",
+    "CAP_OPTION",
     "CHANNEL_GATE",
     "CHANNEL_OF",
     "CONSUMERS",
@@ -684,20 +832,28 @@ __all__ = [
     "Probe",
     "REFERENCE_GATES",
     "REFERENCE_JOURNAL",
+    "RESOURCE_MARKERS",
+    "ResourceFailure",
+    "STORE_CAP_BYTES",
     "STORE_SCHEMA",
     "Taken",
     "USES",
     "aliases",
     "checked_call",
+    "delete_draws",
     "entry_dir",
     "environment_facts",
+    "fingerprint",
     "is_reference_gate",
+    "safe_fingerprint",
     "key_of",
     "key_payload",
+    "live_bytes",
     "lookup",
     "note",
     "read_uses",
     "reference_kernel_id",
+    "reraise_resource",
     "resource_failure",
     "reference_outcome",
     "rng_state",

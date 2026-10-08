@@ -15,8 +15,8 @@
       "title": "Kernel correctness-gate strength",
       "doc": "program/questions/q1-kernel-gate-strength.md",
       "dossier_key": "C2-kernel-verification-rl",
-      "status": "stage-0",
-      "next_action": "Stage 0 is not admitted under D31: after the engineering pass (references once per problem and draw, identical verdict rows) and the non-evaluation re-pilot (Slurm 713, 0.330 GPU-h), the high estimate of q1-stage0-trim/2 through P3 is 8.81-9.85 GPU-h with the store and 9.03 without it (8.56 at the bound of any store design). Kevin decides between the gauntlet (D24 trust store or admission ruling) and a registered scope reduction; whichever path, fix the 12-per-GPU execution first (the re-pilot ran out of GPU memory on 3 of 8 in-scope-sized problems and retired 5 slots on failed health checks). The D14 findings and D28/D29 reviews remain open.",
+      "status": "stage-0: not admitted under D31; waiting on the gauntlet (D24)",
+      "next_action": "Stage 0 is not admitted under D31 and waits on the gauntlet (D24: the trust store or Kevin's admission ruling), or on Kevin choosing a scope reduction that acts on buckets P1-P3 (test quota, FRR core, hack fraction, control replicates; dropping the FRR margin acts on P4 only). The D31 review's fix pass (preregistration section 18.9, no GPU used) registers the memory-aware execution policy q1-stage0-exec/2 and a health check that never retires a slot on memory contention, takes gate (a) out of the reference store and tightens the store; under q1-stage0-exec/2 the model-based estimate through P3 is 10.46 GPU-h central and 12.31 high without the store (11.10 high at the references-free bound, post hoc ratio), so no correction brings the high estimate within 8. Before any Stage 0 job: Kevin signs off q1-stage0-exec/2 (it amends trim/2 item 6) and the store policy, and a re-measurement under q1-stage0-exec/2 replaces the model. The D14 findings (18.3 items 6-8) and the D28/D29 reviews remain open.",
       "first_gpu_experiment": {
         "name": "on-policy false-accept audit",
         "estimated_gpu_hours": 12,
@@ -66,17 +66,54 @@
             9.16
           ]
         },
-        "through_P3_bound_any_store_design": {
-          "central": 7.56,
-          "high": 8.56
-        },
         "through_P7_store_prespecified_high": [
           14.14,
           14.33
         ],
         "cap": 8.0,
         "admitted_under_D31": false,
-        "lower_bounds_because": "12-per-GPU execution ran out of GPU memory on 3 of 8 re-pilot problems"
+        "lower_bounds_because": "every row assumes q1-stage0-exec/1 (12 per GPU), which ran out of GPU memory on 3 of 8 re-pilot problems, and the pilot size model under-predicts the re-pilot's own final inline items by x1.72 (x0.95 without those 3 problems)",
+        "through_P3_references_free_bound_post_hoc_ratio": {
+          "central": 7.56,
+          "high": 8.56
+        },
+        "through_P3_references_free_bound_prespecified_ratio_high": 9.08,
+        "registration_status": "store linear ratio and per-bucket/per-job modes written before job 713 (commit 864de8d); constant ratio and the references-free bound added after the data (post hoc)",
+        "execution_policy_of_these_rows": "q1-stage0-exec/1 (not safe; superseded)"
+      },
+      "stage0_d31_review_fix_pass_evidence": "program/evidence/2026-10-07/q1-engineering-d31/fixpass/projection-fixpass.json",
+      "stage0_d31_fix_pass_projection_gpu_hours": {
+        "execution_policy": "q1-stage0-exec/2 (memory-aware units; model-based, no job has run under it)",
+        "through_P3_without_store": {
+          "central": 10.46,
+          "high": 12.31
+        },
+        "through_P3_store_without_gate_a_prespecified_linear": {
+          "central": 10.66,
+          "high": 12.58
+        },
+        "through_P3_store_without_gate_a_constant_post_hoc": {
+          "central": 9.71,
+          "high": 11.3
+        },
+        "through_P3_references_free_bound_without_gate_a_post_hoc_ratio": {
+          "central": 9.53,
+          "high": 11.1
+        },
+        "exec1_store_without_gate_a_prespecified_linear_high": 9.15,
+        "exec2_model_measured_over_predicted_on_repilot_items": 0.81,
+        "cap": 8.0,
+        "admitted_under_D31": false,
+        "scope_reductions_through_P3_exec2": {
+          "q30_test_quota": {
+            "central": 9.1,
+            "high": 10.51
+          },
+          "no_frr_margin_acts_on_P4_only": {
+            "central": 10.42,
+            "high": 12.83
+          }
+        }
       }
     },
     {
@@ -134,7 +171,7 @@
     "The ANTHROPIC_API_KEY on this machine is invalid (HTTP 401); supply a valid key if the Claude rater and gauntlet reviews should use the API rather than the agent harness (D25)",
     "Review and freeze the integrated Q1 Stage 0 preregistration (q1-stage0-gate-validation on stage0/q1-gates), including the integration decisions in its section 15 and the review fix-pass decisions in its section 16",
     "Decide whether to ask the KernelGYM authors for a licence: gate_b.py was rewritten from the spec after the review found a transliteration (stage0/q1-gates, never pushed); a licence would remove the residual risk",
-    "Q1 Stage 0 budget after D31: the engineering pass (reference store, stage0/q1-engineering-d31) keeps every verdict row and the non-evaluation re-pilot (Slurm 713, 0.330 GPU-h) measured it: q1-stage0-trim/2's high estimate through P3 is 8.81-9.85 GPU-h with the store, 9.03 without, and 8.56 at the bound of any store design, so Stage 0 is not admitted under D31 (preregistration section 18.8). Choose the gauntlet (blocked by D24 until the trust store exists or you rule on admission) or a registered scope reduction (fewer test-quota mutants, no FRR margin, fewer controls). Either way the 12-per-GPU execution needs a memory-aware rule first: the re-pilot ran out of GPU memory on 3 of 8 in-scope-sized problems",
+    "Q1 Stage 0 after D31 and its review: not admitted (preregistration sections 18.8-18.9). Under the corrected, memory-aware execution q1-stage0-exec/2 the model-based estimate through P3 is 10.46 GPU-h central and 12.31 high without the store (11.10 high at the references-free bound, post hoc ratio). Choose: the gauntlet (blocked by D24 until the trust store exists or you rule on admission), a scope reduction that acts on P1-P3 (test quota, FRR core, hack fraction, control replicates; a 30-per-family quota still projects 9.10 central, 10.51 high), or a new engineering pass and re-pilot beyond D31 (for example one process per kernel for its gates). Before any Stage 0 job: sign off q1-stage0-exec/2 (it amends trim/2 item 6) and the store policy (on or off for c and A1-A5; L2/77's shared realization of a nondeterministic cuDNN reference; a GPU check of the three KernelBench adversarial controls under the store), and fund a re-measurement under q1-stage0-exec/2",
     "Q1 audit policy (D14), preregistration section 18.3 items 6-8: the TF32-admissible threshold rejects the TF32 tutorial matmul at every held-out shape; A5 counts S1 dtype refusals as failures; the TF32-admissible tolerance exceeds 1 on convolution problems (L2/3 T = 2.67). Any change is data-motivated under D26 (validated off the evaluation set; the affected units leave the primary analysis)",
     "Review decisions D28 (Q1 pilot exposure: exposed units stay primary with a sensitivity analysis; D14's precondition can no longer be met) and D29 (KernelBench adversarial kernels and unmodified upstream fidelity code admitted on GPUs under D7)",
     "Accept or amend design decisions 1-15 of the draft q3-dense-headroom-precheck-v1 (program/preregistrations/q3-dense-headroom-precheck-v1.md): two lanes, development partition only, caps 0.15 + 0.35 GPU-h (D26's 0.5) with every job of a lane charged to its cap and no amendment under the id, the entity-anchor rule, the lexical-overlap selector, the block-score null with its 2.5-point reach rule, the floor judged on a null's lower bound, H2 gating only on FAIL (decision 5), and D26's K1 v3 requirements kept unconditionally"

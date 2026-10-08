@@ -31,7 +31,7 @@ import math
 import random
 import statistics
 from collections import Counter, defaultdict
-from collections.abc import Iterable, Mapping, Sequence
+from collections.abc import Callable, Iterable, Mapping, Sequence
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
@@ -721,6 +721,22 @@ def _unit(row: Mapping[str, Any]) -> str:
     )
 
 
+def concurrency_multiplier(units: int, factor_12: float, capacity: int = 12) -> float:
+    """GPU-seconds of an item at ``floor(capacity / units)`` items per GPU, relative to
+    the size model (measured at 4 per GPU, job 518), given the paired factor measured
+    at 12 per GPU (job 548). Between 4 and 12 per GPU the multiplier is interpolated
+    linearly in ``1 / k``; below 4 it is ``4 / k``, an upper bound (an item's wall time
+    does not grow when fewer items share its GPU). Execution policy ``q1-stage0-exec/2``
+    (``harness.q1.memory``); no paired measurement at 1-3 or 5-11 per GPU exists."""
+    k = max(1, int(capacity) // max(1, int(units)))
+    if k >= 12:
+        return float(factor_12)
+    if k >= 4:
+        weight = (1.0 / k - 1.0 / 12) / (1.0 / 4 - 1.0 / 12)
+        return float(factor_12) + (1.0 - float(factor_12)) * weight
+    return 4.0 / k
+
+
 def kernel_replicate_seconds(
     fits: Mapping[str, Mapping[str, Any]],
     problem_id: str,
@@ -729,6 +745,8 @@ def kernel_replicate_seconds(
     gates: Sequence[str] = SCORING_GATES,
     factor_below_bytes: int = CONCURRENCY_BELOW_BYTES,
     store: StoreModel | None = None,
+    units_of: Callable[[str, str], int] | None = None,
+    size_gb: Callable[[str], float] | None = None,
 ) -> float:
     """Size-model GPU-seconds of one kernel at one replicate (every scoring gate).
 
@@ -740,18 +758,27 @@ def kernel_replicate_seconds(
     concurrency (the largest problem in that re-run had 0.54 GB of inputs);
     larger shared problems keep the measured 4-per-GPU cost and exclusive
     problems run alone.
+
+    ``units_of`` (``(problem, gate) -> capacity units``; the memory-aware execution
+    policy ``q1-stage0-exec/2``) replaces that 12-per-GPU factor by
+    :func:`concurrency_multiplier` at the item's own items per GPU. ``size_gb``
+    replaces the size the model is evaluated at (default: native input GB).
     """
     from harness.q1 import pilot
 
     shared = (pilot.native_input_bytes(problem_id) or 0) < factor_below_bytes
     gb = _gigabytes(problem_id)
+    x = size_gb(problem_id) if size_gb is not None else gb
     total = 0.0
     for gate in gates:
         fit = fits.get(gate)
         if fit is None:
             continue
-        seconds = fit["alpha"] + fit["beta"] * gb
-        if shared and factors and gate in factors:
+        seconds = fit["alpha"] + fit["beta"] * x
+        if units_of is not None and factors and gate in factors:
+            if shared:
+                seconds *= concurrency_multiplier(units_of(problem_id, gate), factors[gate])
+        elif shared and factors and gate in factors:
             seconds *= factors[gate]
         if store is not None:
             seconds *= store.ratio(gate, gb)
@@ -942,6 +969,8 @@ def project_trimmed(
     exposed: Mapping[str, Any] | None = None,
     store: StoreModel | None = None,
     store_mode: str = "per-bucket",
+    units_of: Callable[[str, str], int] | None = None,
+    size_gb: Callable[[str], float] | None = None,
 ) -> dict[str, Any]:
     """Scoring GPU-hours, kernel counts and precision under the trimming rule
     (``harness.q1.trim``; buckets P1-P8).
@@ -964,6 +993,8 @@ def project_trimmed(
     - **Cost.** The size model, with the paired concurrency ``factors`` for
       problems below 0.6 GB, and ``anchors`` (``large_problem_anchors``) for
       problems of 1 GB or more when given (the larger of the two is used).
+      ``units_of`` and ``size_gb`` pass to :func:`kernel_replicate_seconds` (the
+      memory-aware execution policy and a memory-sized model).
     - **Reference store** (decision D31; ``store``, a :class:`StoreModel` from the
       re-pilot). Kernels are counted per (bucket, problem, replicate); a group of
       at least two kernels reads one reference entry per channel: each kernel's
@@ -983,7 +1014,9 @@ def project_trimmed(
         return int(row.get("native_input_bytes") or 0)
 
     def cost(problem_id: str, store: StoreModel | None = None) -> float:
-        model = kernel_replicate_seconds(fits, problem_id, factors=factors, store=store)
+        model = kernel_replicate_seconds(
+            fits, problem_id, factors=factors, store=store, units_of=units_of, size_gb=size_gb
+        )
         gb = _gigabytes(problem_id)
         if anchors is not None and gb * 1e9 >= scope:
             return max(model, anchored_seconds(gb, anchors))
@@ -1159,8 +1192,12 @@ def project_trimmed(
 # --- the reference store's re-pilot (decision D31) ------------------------------------
 
 #: Consumer gates of the reference store (``refstore.CONSUMERS``); the other scoring
-#: gates read no reference and keep ratio 1 in the projection.
-STORE_CONSUMER_GATES = (
+#: gates read no reference and keep ratio 1 in the projection. Gate (a) left the store
+#: in the D31 review's fix pass (its variants compute inline, as upstream does).
+STORE_CONSUMER_GATES = ("c", "A1", "A2", "A3", "A5")
+#: The consumer gates of the store as the D31 re-pilot (Slurm 713) ran it, for
+#: recomputing that job's registered card.
+STORE_CONSUMER_GATES_REPILOT = (
     "a",
     "a_1e-3",
     "a_static",
@@ -1234,6 +1271,7 @@ def fit_store_model(
     *,
     ratio_mode: str = "linear",
     free_references: bool = False,
+    consumers: Sequence[str] = STORE_CONSUMER_GATES,
 ) -> StoreModel:
     """Per consumer gate, size models of both arms; per reference channel, one model.
 
@@ -1243,11 +1281,17 @@ def fit_store_model(
     problem slopes are, and labelled so) uses one ratio per gate, summed GPU-seconds
     of the store arm over the inline arm, over the pairs whose twins ran in the same
     mode. ``free_references`` prices reference items at zero: the bound of any store
-    design."""
+    design (with the ratio mode given; the registered table labels the constant ratio
+    post hoc). ``consumers`` limits the model to those gates and their channels'
+    reference items (``STORE_CONSUMER_GATES_REPILOT`` recomputes job 713's card)."""
     if ratio_mode not in {"linear", "constant"}:
         raise ValueError("ratio_mode must be linear or constant")
+    from harness.q1 import refstore
+
+    channels = {refstore.CHANNEL_OF.get(g) or ("a_head" if "head" in g else "a") for g in consumers}
+    references = [r for r in references if r["gate"].removeprefix("ref_") in channels]
     ratio_fits: dict[str, dict[str, dict[str, float]]] = {}
-    for gate in STORE_CONSUMER_GATES:
+    for gate in consumers:
         rows = [p for p in pairs if p["gate"] == gate]
         if not rows:
             continue
@@ -1258,7 +1302,7 @@ def fit_store_model(
     constant = None
     if ratio_mode == "constant":
         constant = {}
-        for gate in STORE_CONSUMER_GATES:
+        for gate in consumers:
             rows = [p for p in pairs if p["gate"] == gate and p.get("same_mode", True)]
             inline = sum(p["inline"] for p in rows)
             if inline > 0:

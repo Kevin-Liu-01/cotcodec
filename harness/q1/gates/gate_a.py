@@ -87,15 +87,8 @@ def run_gate_a(
     num_trials: int = 5,
     device: str | torch.device | None = None,
     config_id: str | None = None,
-    problem_id: str | None = None,
-    reference_store: str | None = None,
 ) -> GateOutcome:
-    """Run one gate (a) variant on a candidate in this process.
-
-    With ``reference_store`` (and ``problem_id``), the reference outputs of the five
-    trials are read from the store entry a reference item wrote for this problem,
-    replicate and variant family (``harness.q1.refstore``, decision D31) instead of
-    being recomputed; without a usable entry they are computed here as always."""
+    """Run one gate (a) variant on a candidate in this process."""
     spec = VARIANTS[variant]
     dev = resolve_device(device)
     config_id = config_id or f"native/trials-{num_trials}/seed-{seed}"
@@ -162,23 +155,6 @@ def run_gate_a(
                     **exception_details(exc),
                 },
             )
-        stored = None
-        if reference_store and problem_id:
-            from harness.q1 import refstore
-
-            stored = refstore.lookup(
-                reference_store,
-                reference_payload(
-                    problem_id,
-                    problem_source,
-                    variant=variant,
-                    seed=seed,
-                    num_trials=num_trials,
-                    device=dev,
-                ),
-                draws=num_trials,
-                ends_at_raise=True,
-            )
         return _trials(
             original,
             custom,
@@ -189,7 +165,6 @@ def run_gate_a(
             device=dev,
             model_dtype=model_dtype,
             outcome=outcome,
-            stored=stored,
         )
     finally:
         loaded.cleanup()
@@ -206,7 +181,6 @@ def _trials(
     device: torch.device,
     model_dtype: torch.dtype | None,
     outcome: Any,
-    stored: Any = None,
 ) -> GateOutcome:
     trial_seeds = kernelbench_trial_seeds(seed, num_trials)
     passes = 0
@@ -221,18 +195,20 @@ def _trials(
             model = original.to(device=device, dtype=model_dtype)
             set_seed(trial_seed)
             model_new = custom.to(device=device, dtype=model_dtype)
-            record = stored.take(trial, device) if stored is not None else None
-            if record is None:
-                stored = None
-                try:
-                    output = model(*inputs)
-                    synchronize(device)
-                except Exception as exc:
-                    return _reference_raised(outcome, trial, trial_seeds, exception_details(exc))
-            elif record.kind == "raised":
-                return _reference_raised(outcome, trial, trial_seeds, record.error)
-            else:
-                output = record.value
+            try:
+                output = model(*inputs)
+                synchronize(device)
+            except Exception as exc:
+                return outcome(
+                    "error",
+                    details={
+                        "reason": "reference-raised",
+                        "upstream_equivalent": "reject",
+                        "trial": trial,
+                        "trial_seeds": trial_seeds,
+                        **exception_details(exc),
+                    },
+                )
             try:
                 output_new = model_new(*inputs)
                 synchronize(device)
@@ -277,113 +253,6 @@ def _trials(
             "reason": "" if verdict == "accept" else "output-mismatch",
         },
     )
-
-
-def _reference_raised(
-    outcome: Any, trial: int, trial_seeds: list[int], error: dict[str, str]
-) -> GateOutcome:
-    return outcome(
-        "error",
-        details={
-            "reason": "reference-raised",
-            "upstream_equivalent": "reject",
-            "trial": trial,
-            "trial_seeds": trial_seeds,
-            **error,
-        },
-    )
-
-
-# --- reference store (decision D31) ---------------------------------------------------
-
-
-def reference_channel(variant: str) -> str:
-    """Store channel of a variant: ``a`` (44130946 semantics, no cast; ``a``,
-    ``a_1e-3``, ``a_static``) or ``a_head`` (423217d9, fp32 cast; both HEAD variants)."""
-    return "a_head" if VARIANTS[variant].cast_models_to_fp32 else "a"
-
-
-def reference_payload(
-    problem_id: str,
-    problem_source: str,
-    *,
-    variant: str,
-    seed: int,
-    num_trials: int,
-    device: torch.device,
-) -> dict[str, Any]:
-    from harness.q1 import refstore
-
-    spec = VARIANTS[variant]
-    return refstore.key_payload(
-        reference_channel(variant),
-        problem_id=problem_id,
-        problem_source=problem_source,
-        seed=seed,
-        device_type=device.type,
-        params={
-            "cast_mode": spec.cast_mode,
-            "cast_models_to_fp32": spec.cast_models_to_fp32,
-            "num_trials": int(num_trials),
-        },
-    )
-
-
-def reference_trials(
-    problem_source: str,
-    *,
-    variant: str,
-    seed: int,
-    num_trials: int,
-    device: torch.device,
-) -> Any:
-    """The reference side of :func:`run_gate_a` and ``_trials``, without a candidate:
-    the same construction (``set_seed(seed)`` before the inputs and the model), the
-    same move, and per trial the same seeds, draw and reference call. A trial
-    whose reference raises is stored as raised and ends the list, as it ends the
-    gate."""
-    from harness.q1 import refstore
-
-    spec = VARIANTS[variant]
-    model_dtype = torch.float32 if spec.cast_models_to_fp32 else None
-    Model, get_init_inputs, get_inputs = load_reference(problem_source)
-    set_seed(seed)
-    init_inputs = process_inputs(get_init_inputs(), device, spec.cast_mode)
-    with torch.no_grad():
-        set_seed(seed)
-        original = Model(*init_inputs)
-        original = original.to(device=device, dtype=model_dtype)
-        synchronize(device)
-    built = refstore.Built(draws=[])
-    trial_seeds = kernelbench_trial_seeds(seed, num_trials)
-    with torch.no_grad():
-        for trial, trial_seed in enumerate(trial_seeds):
-            set_seed(trial_seed)
-            inputs = process_inputs(get_inputs(), device, spec.cast_mode)
-            set_seed(trial_seed)
-            model = original.to(device=device, dtype=model_dtype)
-            set_seed(trial_seed)
-
-            def call(model: Any = model, inputs: list[Any] = inputs) -> Any:
-                out = model(*inputs)
-                synchronize(device)
-                return out
-
-            try:
-                output = refstore.checked_call(call, inputs, device, built.problems)
-            except Exception as exc:
-                if refstore.resource_failure(exc):
-                    built.problems.append(f"trial {trial}: resource failure")
-                built.draws.append(
-                    refstore.Draw(
-                        {"kind": "raised", "trial": trial, "error": exception_details(exc)}
-                    )
-                )
-                break
-            built.draws.append(
-                refstore.Draw({"kind": "ok", "trial": trial}, refstore.to_cpu(output))
-            )
-    return built
 
 
 def upstream_gate_a(
