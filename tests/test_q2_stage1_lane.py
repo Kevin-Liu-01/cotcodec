@@ -59,7 +59,14 @@ def test_a_development_manifest_is_valid():
     "change, message",
     [
         ({"slots": [slot(0, CONFIRM[0])]}, "not a dev-split task"),
-        ({"purpose": "a0a"}, "fake engine is for development only"),
+        (
+            {
+                "purpose": "a0a",
+                "episode_image_id": lane.EPISODE_IMAGE_ID,
+                "engine": {"kind": "fake", "bridge_dir": "{gpu_job_id}"},
+            },
+            "fake engine is for development only",
+        ),
         ({"purpose": "a1"}, "runs only after the freeze"),
         ({"purpose": "anc"}, "runs only after the freeze"),
         ({"mode": "setup-only"}, "runs mode episode"),
@@ -380,9 +387,10 @@ def test_registered_purposes_pin_the_prompt_date(tmp_path):
     between- and within-session pairs do not differ by a calendar change in the prompt."""
     from harness.q2_stage1 import plan
 
-    bridge = {"kind": "bridge", "gpu_cap_min": 25, "bridge_dir": f"{RUNS}/gpu/1/bridge"}
+    bridge = {"kind": "bridge", "gpu_cap_min": 25, "bridge_dir": f"{RUNS}/gpu/{{gpu_job_id}}/b",
+              "gpu_job_id_file": f"{RUNS}/pairs/a0a/gpu_job_id"}  # fmt: skip
     for date in (None, "2026-10-09"):
-        m = manifest(purpose="a0a", engine=bridge)
+        m = manifest(purpose="a0a", engine=bridge, episode_image_id=lane.EPISODE_IMAGE_ID)
         if date:
             m["date"] = date
         with pytest.raises(lane.LaneError, match="pinned prompt date 2026-10-08"):
@@ -436,3 +444,65 @@ def test_a_gpu_device_in_an_episode_container_stops_the_lane(tmp_path):
     slots = [slot(i, DEV[i]) for i in range(3)]
     receipt = make_lane(tmp_path, manifest(slots=slots), docker).run()
     assert "D12" in receipt["error"] and len(docker.episodes) == 1
+
+
+# --------------------------------------------------------------------------- the GPU half
+
+
+def test_parse_scontrol_reads_start_and_limit():
+    text = (
+        "JobId=1234 JobName=q2s1a-a0a JobState=RUNNING Reason=None TimeLimit=01:51:00 "
+        "SubmitTime=2026-10-08T20:00:00 StartTime=2026-10-08T21:30:00 EndTime=Unknown"
+    )
+    info = lane.parse_scontrol(text)
+    assert info["state"] == "RUNNING" and info["time_limit_min"] == 111
+    assert info["start_time"] == "2026-10-08T21:30:00" and isinstance(info["start_epoch"], float)
+    for value, minutes in (("25", 25), ("00:25:00", 25), ("1-00:00:00", 1440), ("25:30", 26),
+                           ("2-03", 51 * 60), ("UNLIMITED", None)):  # fmt: skip
+        assert lane.parse_time_limit(value) == minutes, value
+    assert lane.parse_scontrol("JobId=1 StartTime=Unknown")["start_epoch"] is None
+
+
+def registered_lane(tmp_path, *, argv_size="9B", limit=25, start=5000.0):
+    """An A0a lane whose GPU job's bridge is up: ready.json carries the engine argv of
+    ``argv_size``; scontrol reports ``limit`` minutes and the Slurm ``start``."""
+    from harness.q2_stage1 import plan
+
+    bridge = tmp_path / "gpu" / "77" / "bridge"
+    bridge.mkdir(parents=True)
+    argv = plan.engine_argv(plan.MODEL_DIRS[argv_size], plan.SERVED_NAME)
+    (bridge / "ready.json").write_text(json.dumps({"engine_argv": argv, "t_start": start + 40,
+                                                   "t_ready": start + 200}))  # fmt: skip
+    (tmp_path / "gpu_job_id").write_text("77\n")
+    m = manifest(purpose="a0a", episode_image_id=lane.EPISODE_IMAGE_ID,
+                 engine={"kind": "bridge", "gpu_cap_min": 25,
+                         "bridge_dir": str(tmp_path / "gpu" / "{gpu_job_id}" / "bridge"),
+                         "gpu_job_id_file": str(tmp_path / "gpu_job_id")})  # fmt: skip
+    cfg = lane.LaneConfig(m, "999", tmp_path / "run", ROOT)
+    cfg.run_dir.mkdir()
+    calls = []
+
+    def slurm(job_id):
+        calls.append(job_id)
+        return {"state": "RUNNING", "time_limit_min": limit, "start_epoch": start}
+
+    docker = FakeDocker({})
+    return lane.Lane(cfg, docker=docker, certified=["Return"], slurm_job=slurm,
+                     clock=lambda: start + 300), docker, calls  # fmt: skip
+
+
+def test_registered_job_dispatches_only_against_the_registered_engine(tmp_path):
+    the_lane, docker, calls = registered_lane(tmp_path / "ok")
+    receipt = the_lane.run()
+    assert "error" not in receipt and calls == ["77"] and docker.episodes
+    # USR1 comes 180 s before the GPU job's limit, counted from its Slurm start.
+    assert receipt["usr1_epoch"] == 5000.0 + 25 * 60 - 180
+    assert receipt["gpu_job"]["start_epoch"] == 5000.0 and receipt["first_dispatch"] == 5300.0
+    wrong_model, docker, _ = registered_lane(tmp_path / "4b", argv_size="4B")
+    receipt = wrong_model.run()
+    assert "not the registered 9B argv" in receipt["error"] and not docker.episodes
+    wrong_cap, docker, _ = registered_lane(tmp_path / "cap", limit=30)
+    receipt = wrong_cap.run()
+    assert "time limit is 30 minutes, not its cap of 25" in receipt["error"]
+    assert not docker.episodes and receipt["statuses"] == {"cap_truncated": 1}
+    assert (tmp_path / "cap" / "gpu" / "77" / "bridge" / "vm.done").exists()  # engine stopped

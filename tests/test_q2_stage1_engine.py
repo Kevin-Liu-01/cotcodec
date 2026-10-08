@@ -204,13 +204,19 @@ def test_serve_runs_engine_and_stops_on_vm_done(tmp_path):
         ready = json.loads((base / "bridge" / bridge.READY_NAME).read_text())
         assert ready["engine_bind"] == f"127.0.0.1:{port}" and ready["socket_mode"] == "0600"
         sock = str(base / "bridge" / bridge.SOCKET_NAME)
+        assert not (base / "bridge" / bridge.FIRST_REQUEST_NAME).exists()
+        before = time.time()
         assert engine.EngineClient(sock, "m").chat(MESSAGES, SAMPLING).content == "served"
+        first = json.loads((base / "bridge" / bridge.FIRST_REQUEST_NAME).read_text())
+        assert before <= first["t_first_request"] <= time.time()
+        engine.EngineClient(sock, "m").chat(MESSAGES, SAMPLING)  # a later request changes nothing
         (base / "bridge" / bridge.DONE_NAME).write_text("done")
         assert proc.wait(30) == 0
     finally:
         proc.kill()
     stopped = json.loads((base / "bridge" / "stopped.json").read_text())
     assert stopped["stop_reason"] == "vm_done" and stopped["connections"] >= 1
+    assert stopped["t_first_request"] == first["t_first_request"]
     assert not (base / "bridge" / bridge.SOCKET_NAME).exists()
 
 
@@ -253,3 +259,22 @@ def test_registered_engine_argv_binds_loopback_8000():
     argv = plan.engine_argv(plan.MODEL_DIRS["9B"], plan.SERVED_NAME)
     assert argv[argv.index("--host") + 1] == "127.0.0.1"
     assert argv[argv.index("--port") + 1] == str(bridge.ENGINE_PORT)
+
+
+def test_engine_counters_are_read_from_the_metrics_page():
+    page = "\n".join([
+        "# HELP vllm:prefix_cache_queries_total Prefix cache queries.",
+        'vllm:prefix_cache_queries_total{engine="0",model_name="s1a-model"} 1200.0',
+        'vllm:prefix_cache_hits_total{engine="0",model_name="s1a-model"} 900.0',
+        'vllm:request_queue_time_seconds_bucket{le="0.3",model_name="s1a-model"} 4.0',
+        'vllm:request_queue_time_seconds_sum{model_name="s1a-model"} 2.5',
+        'vllm:request_queue_time_seconds_count{model_name="s1a-model"} 10.0',
+        "vllm:num_requests_waiting 3.0",
+        "process_cpu_seconds_total 12.0",
+    ])  # fmt: skip
+    got = bridge.parse_metrics(page)
+    assert got == {"vllm:prefix_cache_queries": 1200.0, "vllm:prefix_cache_hits": 900.0,
+                   "vllm:request_queue_time_seconds_sum": 2.5,
+                   "vllm:request_queue_time_seconds_count": 10.0,
+                   "vllm:num_requests_waiting": 3.0}  # fmt: skip
+    assert bridge.engine_metrics(free_port(), timeout=0.5) is None  # nothing listens

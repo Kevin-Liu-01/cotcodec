@@ -122,6 +122,16 @@ def test_first_divergence_and_uncertified_exposure():
     assert R.first_divergence(a, c) == {"kind": "serving", "step": 1}
     assert R.first_divergence(a, a[:1]) == {"kind": "length", "step": 2}
     assert R.first_divergence(a, a)["kind"] == "identical"
+    # With screenshots: the prompt token ids are image placeholders, so two different screens
+    # of one size share them; the processed screenshot's digest tells them apart.
+    shot = lambda obs, msg, ir: {"prompt_sha256": "same", "processed_sha256": obs,  # noqa: E731
+                                 "messages_sha256": msg, "ir_sha256": ir}  # fmt: skip
+    one = [shot("s1", "m1", "i1"), shot("s2", "m2", "i2")]
+    assert R.first_divergence(one, [shot("s1", "m1", "i1"), shot("sX", "mX", "i2")]) == {
+        "kind": "environment", "step": 2}  # fmt: skip
+    assert R.first_divergence(one, [shot("s1", "m1", "i1"), shot("s2", "mX", "i2")]) == {
+        "kind": "serving", "step": 2}  # an earlier reply's text differed, same IR  # fmt: skip
+    assert R.first_divergence(one, [shot("s1", "m1", "iX")]) == {"kind": "serving", "step": 1}
     certified = R.certified_keysym_set()
     assert len(certified) == 33 and "Control_L" in certified and "F2" not in certified
     actions = [

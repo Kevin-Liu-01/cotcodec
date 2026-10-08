@@ -36,6 +36,7 @@ import argparse
 import collections
 import hashlib
 import json
+import math
 import os
 import re
 import signal
@@ -53,6 +54,14 @@ EXPERIMENT_ID = "q2-stage1-rescoped-v1"
 PURPOSES = ("development", "setup-check", "a0a", "a0b", "anc", "a1")
 PRE_FREEZE_PURPOSES = ("development", "setup-check", "a0a", "a0b")
 DEV_ONLY_PURPOSES = ("development", "a0a", "a0b")
+# Registered model jobs (the anchor's are refused while it is UNAVAILABLE): their episode
+# image, re-queue rule and episode timeout are the registration's, never a manifest's.
+REGISTERED_PURPOSES = ("a0a", "a1")
+# Section 4, "Episode container": the checker-mutation study's metric image (Pillow does the
+# harness clients' screenshot resizing, so the image is part of the measurement).
+EPISODE_IMAGE_ID = "sha256:2006c1a9247e4911a82508cd22e9d9a7efc5c13e35a20e8a03baac7112876230"
+EPISODE_TIMEOUT_S = 3600.0
+FIXED_KEYS = ("requeue", "episode_timeout_s", "episode_python")
 OSWORLD_COMMIT = "b138d348256078fa634fc3b73567a7337c793e6b"
 SPLITS = "program/evidence/q2-mutation/splits.json"
 LEDGER = "program/preregistrations/ledger.jsonl"
@@ -140,6 +149,15 @@ def validate_manifest(raw: Mapping[str, Any], source_dir: Path) -> dict[str, Any
              "file_cache.host_dir outside the run root")  # fmt: skip
     mode = m.get("mode")
     engine = m.get("engine") or {}
+    if purpose in REGISTERED_PURPOSES:
+        _require(m.get("episode_image_id") == EPISODE_IMAGE_ID,
+                 f"episode_image_id must be the registered metric image {EPISODE_IMAGE_ID} "
+                 "(section 4)")  # fmt: skip
+        for key in FIXED_KEYS:
+            _require(key not in m, f"{key} is fixed for a registered job (sections 7.2, 14)")
+        _require("{gpu_job_id}" in str(engine.get("bridge_dir", "")),
+                 "a registered job names its GPU job through bridge_dir's {gpu_job_id} "
+                 "(the lane checks that job's engine and limit)")  # fmt: skip
     _require(purpose == "setup-check" or "postconfig_probe" not in m,
              "postconfig_probe belongs to a setup check (G0 item 5)")  # fmt: skip
     if purpose == "setup-check":
@@ -214,12 +232,17 @@ def check_plan_slots(m: Mapping[str, Any], source_dir: Path) -> None:
         _require(isinstance(n_star, int) and not isinstance(n_star, bool), "n_star is required")
         v = P.a1_concurrency(n_star)
         _require(v is not None, "N* < 16: S1a does not start (G0 item 1)")
+        _require(n_star >= P.A0A_MIN_NSTAR,
+                 "N* = 16: K_base 32 is out of reach at V = 16, so the draft goes back to "
+                 "review before A0a (section 5.5)")  # fmt: skip
         _require(m["vm"]["concurrency"] == v, f"A0a runs one wave at A1's V = {v}")
         _require(engine.get("gpu_cap_min") == P.CAP_MINUTES["A0a"], "A0a's GPU cap is 25")
         splits = json.loads((source_dir / SPLITS).read_text(encoding="utf-8"))
-        lines = (source_dir / P.SETUP_CHECK_RECORDS).read_text(encoding="utf-8").splitlines()
-        rows = [json.loads(line) for line in lines if line.strip()]
-        expected = P.a0a_slots(splits["dev"], P.setup_ok_from_records(rows), v)
+        try:
+            rows = P.load_setup_check(source_dir)  # the registered records, by SHA-256
+        except P.PlanError as exc:
+            raise LaneError(str(exc)) from exc
+        expected = P.a0a_slots(splits["dev"], P.dev_setup_ok(rows), v)
         _require(m["slots"] == expected, "A0a's slots differ from plan.a0a_slots")
         _require(m.get("fill") is None, "A0a does not fill")
         return
@@ -232,9 +255,11 @@ def check_plan_slots(m: Mapping[str, Any], source_dir: Path) -> None:
     _require(m["vm"]["concurrency"] == constants["a1_v"], f"A1 runs at V = {constants['a1_v']}")
     cap = constants["a1_cap_min"]
     _require(engine.get("gpu_cap_min") == cap, f"A1's GPU cap is T_A1 = {cap}")
+    _require(size in P.SIZES and session in ("S1", "S2"), "a1.size and a1.session")
+    prior = check_prior_jobs(a1, plan, P.a1_job(size, session))
     s2_blocks = None
     if session == "S2":
-        s2_blocks = session_two_blocks(a1, plan)
+        s2_blocks = session_two_blocks(a1, plan, prior)
     try:
         slots, fill = P.a1_slots(plan, size, session, s2_blocks)
     except P.PlanError as exc:
@@ -262,28 +287,82 @@ def load_frozen_plan(m: Mapping[str, Any], source_dir: Path) -> dict[str, Any]:
     return data
 
 
-def session_two_blocks(a1: Mapping[str, Any], plan: Mapping[str, Any]) -> list[int]:
+PriorJobs = dict[str, tuple[list[dict[str, Any]], dict[str, Any]]]
+
+
+def check_prior_jobs(a1: Mapping[str, Any], plan: Mapping[str, Any], job: str) -> PriorJobs:
+    """Every earlier A1 job, in the registered order (``plan.a1_job_order``: 9B then 4B,
+    session 1 then session 2), must be named with its lane record file and receipt by
+    SHA-256, and none may have fired DR0 (section 11: when it fires, no further job starts).
+    Returns each earlier job's (records, receipt)."""
+    from harness.q2_stage1 import plan as P
+    from harness.q2_stage1 import rules
+
+    order = P.a1_job_order()
+    earlier = order[: order.index(job)]
+    items = a1.get("prior_jobs")
+    _require(isinstance(items, list), "a1.prior_jobs lists the earlier A1 jobs (may be empty)")
+    named = [item.get("job") for item in items]
+    _require(named == earlier, f"a1.prior_jobs must be {earlier}, the A1 jobs before {job} "
+                               "in the registered order")  # fmt: skip
+    out: PriorJobs = {}
+    for item in items:
+        loaded = []
+        for key in ("records", "receipt"):
+            ref = item.get(key) or {}
+            path = Path(str(ref.get("path", "")))
+            _require(str(path).startswith(RUN_ROOT), f"{item['job']} {key} outside the run root")
+            _require(path.is_file() and sha256_file(path) == ref.get("sha256"),
+                     f"{path} does not match its digest")  # fmt: skip
+            loaded.append(path.read_text(encoding="utf-8"))
+        rows = [json.loads(x) for x in loaded[0].splitlines() if x.strip()]
+        _require(bool(rows) and all(r.get("job") == item["job"] for r in rows),
+                 f"{item['job']}'s record file must hold that job's records only")  # fmt: skip
+        receipt = json.loads(loaded[1])
+        _, size, session = item["job"].split("-")
+        verdict = rules.job_dr0(rows, job=item["job"], size=size, session=session,
+                                base=plan["base"], receipt=receipt)  # fmt: skip
+        reasons = "; ".join(verdict["reasons"])
+        fired = f"DR0 fired for {item['job']} ({reasons}): no further job starts (section 11)"
+        _require(not verdict["fires"], fired)
+        _require(
+            isinstance(receipt.get("t_end"), int | float), f"{item['job']}'s receipt has no t_end"
+        )
+        out[item["job"]] = (rows, receipt)
+    return out
+
+
+def session_two_blocks(a1: Mapping[str, Any], plan: Mapping[str, Any], prior: PriorJobs) -> list:
     """The extension blocks both session-1 jobs completed (section 5.6), recomputed from
-    their record files, which must hold the declared list."""
+    their record files (``a1.prior_jobs``); the manifest must declare the same list."""
     from harness.q2_stage1 import plan as P
     from harness.q2_stage1.records import completed_extension_blocks
 
-    files = a1.get("s1_records") or []
-    _require(isinstance(files, list) and files, "a session-2 job names the S1 record files")
-    rows: list[dict[str, Any]] = []
-    for item in files:
-        path = Path(str(item.get("path", "")))
-        _require(str(path).startswith(RUN_ROOT), "s1_records outside the run root")
-        _require(sha256_file(path) == item.get("sha256"), f"{path} does not match its digest")
-        rows += [json.loads(x) for x in path.read_text(encoding="utf-8").splitlines() if x.strip()]
-    jobs = {P.a1_job(size, "S1") for size in P.SIZES}
-    s1 = [r for r in rows if r.get("job") in jobs]
-    _require({r["job"] for r in s1} == jobs, f"s1_records must hold both S1 jobs {sorted(jobs)}")
+    jobs = [P.a1_job(size, "S1") for size in P.size_order()]
+    s1 = [r for job in jobs for r in prior[job][0]]
     planned = {int(k): v for k, v in plan["extension_blocks"].items()}
     blocks = completed_extension_blocks(s1, planned, sessions=("S1",))
     declared = f"s2_extension_blocks must be {blocks}, the blocks both S1 jobs completed"
     _require(a1.get("s2_extension_blocks") == blocks, declared)
     return blocks
+
+
+def earliest_start(m: Mapping[str, Any]) -> float | None:
+    """A session-2 A1 job starts at least 12 hours after the later session-1 job ends
+    (section 5.5): the later S1 lane receipt's ``t_end`` plus ``plan.S2_GAP_H``. The receipts
+    are the ones ``check_prior_jobs`` verified by digest."""
+    from harness.q2_stage1 import plan as P
+
+    a1 = m.get("a1") or {}
+    if m.get("purpose") != "a1" or a1.get("session") != "S2":
+        return None
+    ends = []
+    for item in a1.get("prior_jobs") or []:
+        if str(item.get("job", "")).endswith("-S1"):
+            receipt = json.loads(Path(item["receipt"]["path"]).read_text(encoding="utf-8"))
+            ends.append(float(receipt["t_end"]))
+    _require(len(ends) == len(P.SIZES), "a session-2 job needs both session-1 receipts")
+    return max(ends) + P.S2_GAP_H * 3600
 
 
 # --------------------------------------------------------------------------- queue
@@ -456,8 +535,13 @@ class Lane:
         cpusets: Sequence[dict[str, Any]] | None = None,
         snapshot: Callable[[str], dict[str, Any]] | None = None,
         certified: Sequence[str] | None = None,
+        slurm_job: Callable[[str], dict[str, Any]] | None = None,
     ):
         self.cfg = cfg
+        self.slurm_job = slurm_job or slurm_job_info
+        self.gpu_job_id: str | None = None
+        self.gpu_job: dict[str, Any] | None = None
+        self.engine_ready: dict[str, Any] | None = None
         self.m = cfg.manifest
         self.docker = docker or DockerOps()
         self.clock = clock
@@ -505,7 +589,37 @@ class Lane:
         ready = self.engine_dir / "ready.json"
         self._wait_for(ready, float(engine.get("ready_timeout_s", 1800)))
         status = json.loads(ready.read_text(encoding="utf-8"))
-        self.usr1_epoch = float(status["t_start"]) + engine["gpu_cap_min"] * 60 - 180
+        self.engine_ready = {k: status.get(k) for k in ("t_start", "t_ready", "engine_argv_sha256")}
+        if self.gpu_job_id is not None:
+            try:
+                self.gpu_job = {"job_id": self.gpu_job_id, **self.slurm_job(self.gpu_job_id)}
+            except Exception as exc:  # noqa: BLE001 - a registered job refuses below
+                self.gpu_job = {"job_id": self.gpu_job_id, "error": f"{exc}"[:300]}
+        if self.m["purpose"] in REGISTERED_PURPOSES:
+            self.check_registered_engine(status)
+        # The GPU job's USR1 comes 180 s before its Slurm limit, counted from its Slurm start
+        # (the bridge's own start is later, by the container's start-up).
+        start = (self.gpu_job or {}).get("start_epoch")
+        base = float(start) if isinstance(start, int | float) else float(status["t_start"])
+        self.usr1_epoch = base + engine["gpu_cap_min"] * 60 - 180
+
+    def check_registered_engine(self, status: Mapping[str, Any]) -> None:
+        """A0a and A1 dispatch only against the registered engine: the GPU job's argv is
+        ``plan.engine_argv`` for this job's size (model and flags) and its Slurm time limit
+        is the job's GPU cap, the minutes D22 counts (sections 4, 6.1)."""
+        from harness.q2_stage1 import plan as P
+
+        size = P.A0A_SIZE if self.m["purpose"] == "a0a" else (self.m.get("a1") or {}).get("size")
+        expected = P.engine_argv(P.MODEL_DIRS[str(size)], P.SERVED_NAME)
+        if status.get("engine_argv") != expected:
+            raise LaneError(f"the GPU job's engine argv is not the registered {size} argv")
+        info = self.gpu_job or {}
+        cap = int(self.m["engine"]["gpu_cap_min"])
+        if info.get("time_limit_min") != cap:
+            raise LaneError(f"the GPU job's Slurm time limit is {info.get('time_limit_min')} "
+                            f"minutes, not its cap of {cap} ({info.get('error', '')})")  # fmt: skip
+        if not isinstance(info.get("start_epoch"), int | float):
+            raise LaneError("the GPU job's Slurm start time is unknown")
 
     def resolve_bridge_dir(self, engine: Mapping[str, Any]) -> Path:
         """The GPU job's bridge directory. The VM job is submitted first, so the GPU job's id
@@ -519,6 +633,7 @@ class Lane:
         job = id_file.read_text(encoding="utf-8").strip()
         if not re.fullmatch(r"[1-9][0-9]{0,19}", job):
             raise LaneError(f"{id_file} does not hold a Slurm job id")
+        self.gpu_job_id = job
         return Path(template.replace("{gpu_job_id}", job))
 
     def _wait_for(self, path: Path, seconds: float) -> None:
@@ -606,7 +721,7 @@ class Lane:
         config = self.episode_config(slot, out_dir, t_vm)
         (out_dir / "config.json").write_text(json.dumps(config, indent=1), encoding="utf-8")
         argv = episode_argv(self.cfg, episode_name, vm, out_dir, self.engine_dir, cpus["runner"])
-        timeout = float(self.m.get("episode_timeout_s", 3600))
+        timeout = float(self.m.get("episode_timeout_s", EPISODE_TIMEOUT_S))
         rc = self.docker.run_episode(argv, episode_name, timeout, self.stop,
                                      out_dir / "container.log")  # fmt: skip
         host["episode_rc"] = rc
@@ -731,6 +846,10 @@ class Lane:
                                    "job_id": self.cfg.job_id, "name": self.m["name"],
                                    "purpose": self.m["purpose"], "t_start": started}  # fmt: skip
         try:
+            not_before = earliest_start(self.m)
+            if not_before is not None and self.clock() < not_before:
+                raise LaneError(f"a session-2 job starts at least 12 h after the later "
+                                f"session-1 job ends: not before {not_before:.0f}")  # fmt: skip
             self.start_engine()
             if self.m["mode"] == "episode" and not self.certified:
                 raise LaneError("the certified keysym set is unavailable; exposure is required")
@@ -758,6 +877,10 @@ class Lane:
                 f"D12: GPU device files visible in an episode container: {self.d12_violation}"[:500]
             )
         receipt.update(
+            gpu_job=self.gpu_job, engine_ready=self.engine_ready,
+            first_dispatch=self.first_dispatch, usr1_epoch=self.usr1_epoch,
+        )  # fmt: skip
+        receipt.update(
             t_end=self.clock(), stopped=self.stop.is_set(), dispatched=self.dispatcher.dispatched,
             records=len(self.records), fill=self.fill_log, snapshots=self.snapshots,
             statuses=dict(collections.Counter(r.get("status") for r in self.records)),
@@ -766,6 +889,47 @@ class Lane:
             json.dumps(receipt, indent=1, sort_keys=True), encoding="utf-8"
         )
         return receipt
+
+
+def parse_time_limit(value: str) -> int | None:
+    """Slurm's ``TimeLimit`` ([days-]hours:minutes:seconds, minutes:seconds or minutes) in
+    whole minutes; None for UNLIMITED or anything else."""
+    match = re.fullmatch(r"(?:(\d+)-)?(\d+)(?::(\d+))?(?::(\d+))?", value.strip())
+    if not match:
+        return None
+    days, a, b, c = match.groups()
+    if c is not None:
+        hours, minutes, seconds = int(a), int(b), int(c)
+    elif b is not None:
+        hours, minutes, seconds = (int(a), int(b), 0) if days else (0, int(a), int(b))
+    else:
+        hours, minutes, seconds = (int(a), 0, 0) if days else (0, int(a), 0)
+    return int(days or 0) * 1440 + hours * 60 + minutes + (1 if seconds else 0)
+
+
+def parse_scontrol(text: str) -> dict[str, Any]:
+    """The fields the lane reads from ``scontrol show job -o``: state, Slurm start time (the
+    host's local time, as an epoch) and time limit in minutes."""
+    fields = dict(
+        token.split("=", 1) for token in text.split() if "=" in token and not token.startswith("=")
+    )
+    out: dict[str, Any] = {"state": fields.get("JobState"), "time_limit_min": None,
+                           "start_epoch": None}  # fmt: skip
+    if fields.get("TimeLimit"):
+        out["time_limit_min"] = parse_time_limit(fields["TimeLimit"])
+    start = fields.get("StartTime", "")
+    if re.fullmatch(r"\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}", start):
+        out["start_epoch"] = time.mktime(time.strptime(start, "%Y-%m-%dT%H:%M:%S"))
+        out["start_time"] = start
+    return out
+
+
+def slurm_job_info(job_id: str) -> dict[str, Any]:
+    if not re.fullmatch(r"[1-9][0-9]{0,19}", str(job_id)):
+        raise LaneError("not a Slurm job id")
+    done = subprocess.run(["scontrol", "show", "job", "-o", str(job_id)],
+                          capture_output=True, text=True, timeout=60, check=True)  # fmt: skip
+    return parse_scontrol(done.stdout)
 
 
 def certified_keysyms() -> list[str]:
@@ -903,9 +1067,14 @@ def submit(
     }
     hours, mins = divmod(minutes, 60)
     argv = ["sbatch", "--parsable", f"--cpus-per-task={cpus}", f"--mem={memory}G",
-            f"--time={hours:02d}:{mins:02d}:00", f"--job-name=s1a-{m['name']}"[:60],
-            "--export=ALL," + ",".join(f"{k}={v}" for k, v in env.items()),
-            str(batch)]  # fmt: skip
+            f"--time={hours:02d}:{mins:02d}:00", f"--job-name=s1a-{m['name']}"[:60]]  # fmt: skip
+    not_before = earliest_start(m)
+    if not_before is not None:
+        # Slurm holds a session-2 VM job (and so its GPU job) until the 12 h gap has passed;
+        # the lane checks the gap again before it starts the engine wait.
+        begin = time.strftime("%Y-%m-%dT%H:%M:%S", time.localtime(math.ceil(not_before)))
+        argv.append(f"--begin={begin}")
+    argv += ["--export=ALL," + ",".join(f"{k}={v}" for k, v in env.items()), str(batch)]
     out = {"manifest_sha256": digest, "manifest": str(stored), "host": host, "argv": argv}
     if not dry_run:
         done = subprocess.run(argv, capture_output=True, text=True, timeout=60, check=True)
