@@ -824,3 +824,57 @@ Append-only. Newest entries at the bottom.
   `aaceb3e8`, executor `ef074616`); the repository ledger is unchanged (7
   rows).
 - Nothing is frozen and nothing is pushed. No GPU, no VM job.
+
+## 2026-10-07 — The D33 reviews' remaining notes closed before the freeze (not frozen)
+
+- Merged main (D34, D35) into `stage0/q2-action-path-d30` (`6c5915d`); the
+  branch's ledger and decision log equal main's (7 rows, chain PASS).
+  Main had not changed `state.json`'s Q3 entries, so this branch leaves them
+  alone.
+- Wording (main preregistration section 22): the excused reason set shows a
+  restart during or after the entry's observation calls, before its post
+  guard, and excusing the latter is harmless because every action had
+  completed (section 6.1); "every rerun" where sections 6.1, 12, 20 and
+  design decision 44 mean reruns, with section 6.1 defining an attempt as a
+  run within one repair attempt; A1 at N* is read from the rung under the
+  rung's rule (two excused trials per rung), A1 at N = 1 allows one per
+  entry (sections 6.1, 7); section 20 item 2 states D33's per-entry reading
+  plainly, as D33's author confirmed, and the pending item for it is gone
+  from `state.json`; A5 stays judged on the counting attempts' receipts,
+  with earlier ones reported (a killed job can leave labelled containers by
+  design); a failed `squeue` in a host snapshot reads as no foreign load and
+  cannot be detected (the snapshot keeps neither the exit status nor the
+  job's own row; checked on runs 694 and 703-708), stated in section 9 as a
+  known limitation.
+- `acceptance.py` (`2518241`): reports, not judged, per section 12:
+  `entries_over_restart_limit` lists every entry with two or more excused
+  trials whatever its status, with its excused repetitions; A4's
+  `restart_only_trials` counts every rerun; under a repair attempt A4 gives
+  its restarts per accessibility call against A7's bound
+  (`repair_restart_rate`); A5 lists earlier attempts' receipts. Found while
+  closing the A5 note: `load` opened `receipt.json` unconditionally, but
+  the driver writes it last, so a killed attempt (runs 695-699 have none)
+  could not be read at all. It is now read from its manifest, its batch
+  record (`job_id=`) and its finished sessions, and does not count (design
+  decision 46).
+- Checks at `56b0738`: each new test fails on the `acceptance.py` before
+  it. On the Mac, the Q2 tests with the preregistration, VM-campaign and
+  Holo3 tests, 349 passed; ruff check and format clean on the changed
+  files. On the host, from an rsync of the worktree into a fresh
+  `~/cotcodec-scratch/` directory (`uv sync --locked --extra dev`), ruff
+  check clean and the whole suite 1,856 passed, 34 skipped. The final
+  loader re-read runs 694 and 703-708 read-only next to the previous one
+  (`ced21d32`): nothing changed but the
+  new list's form (`chord_ctrl_c` in 694 and 703 listed with status
+  `RESTART_LIMIT` and its two excused repetitions); runs 695-699, which the
+  old loader could not read, read as CANCELLED attempts with no finished
+  session. `acceptance.py` is still the only code file changed since
+  `7653799` besides `harness/q2/README.md`; no lane file imports it. Both
+  addenda pin its digest `0f476864`, and all 85 frozen-table digests match.
+  Freezing the three drafts into a scratch copy of the ledger verified with
+  the chain intact (10 rows; SHA-256 v1 `1001591d`, inputs `98a4bc53`,
+  executor `05829878`); the repository ledger is unchanged (7 rows).
+- Open for the orchestrator: the three drafts' status lines still read
+  "DRAFT. Not frozen." (D32 had the Q3 draft's line rewritten before its
+  freeze).
+- Nothing is frozen and nothing is pushed. No GPU, no VM job.
