@@ -1670,7 +1670,14 @@ Append-only. Newest entries at the bottom.
   across v1 and v2 development (upper 95% bound 2.3% per trial); its only
   failures were runs 549 and 574 before the warm-up, the same artifact.
   Raised with Kevin as a pending decision (state.json); no rule changed.
-- Freeze-linted v2, then `-inputs`, then `-executor` against a scratch copy
-  of the ledger (chain intact); the repository ledger is unchanged.
-  Q2 tests pass locally and the full suite on the host. Nothing frozen,
-  pushed or merged. No GPU.
+- Merged main (112 commits since `124573a`, including ledger row 11,
+  `q2-evaluator-mutation-v1`); no file a v2 table pins changed there.
+  Freeze-linted v2, then `-inputs`, then `-executor` against a scratch copy
+  of the merged ledger: the three rows chain onto row 11, the chain checks at
+  14 rows, and every Q2 registration verifies. In a scratch tree frozen step
+  by step, A5 is admitted after v2, C2 at seed 45 after `-inputs`, and C1,
+  C3, A1, the ladder and A7 after `-executor`; C2 at seed 42 and a repair
+  attempt without its addendum never are. The repository ledger is
+  unchanged. Q2 tests pass locally (603 passed, 1 skipped) and the full
+  suite on the host from a fresh scratch directory (2210 passed, 38
+  skipped). Nothing frozen, pushed or merged to main. No GPU.

@@ -2297,9 +2297,9 @@ Evidence: `program/evidence/2026-10-08/q2-action-path-acceptance/` (README,
 
 - **What ran.** `q2-action-path-v1`, `-inputs` and `-executor` were frozen on
   2026-10-08 (ledger rows 8-10). C2 ran once, as registered: job 768, L0-raw,
-  the 100 entries in the seed-42 shuffle, 5 repetitions, screenshot setting, N
-  = 1, attempt 1, from a content-checked export of `a9948ee`; 500 trials in 9
-  cold boots, CPU only, 0.17 VM-hours. The campaign counted (COMPLETED 0:0
+  the 100 entries in the seed-42 shuffle, 5 repetitions, screenshot setting,
+  N = 1, attempt 1, from a content-checked export of `a9948ee`; 500 trials in
+  9 cold boots, CPU only, 0.17 VM-hours. The campaign counted (COMPLETED 0:0
   from the batch record and Slurm, gates passed, `System.qcow2` unchanged,
   nothing leaked), with no infrastructure failure, observation retry or
   guest-server restart.
@@ -2313,13 +2313,14 @@ Evidence: `program/evidence/2026-10-08/q2-action-path-acceptance/` (README,
   prediction: one unpredicted failure, `chord_super_d` (predicted to pass
   because `'winleft'` maps to Super_L), in 5 of 5 repetitions. It was verified
   real at the X event level: in every repetition the tap recorded the right
-  four key events on the right keycodes, but the `d` press, 0 to 1 ms after
-  the Super_L press (server time), with core state 0, without Mod4 (and
+  four key events on the right keycodes, and recorded the `d` press, 0 to 1 ms
+  after the Super_L press (server time), with core state 0, without Mod4 (and
   without Mod2, the NumLock bit the Super_L press carried), where the R-dev
-  reference has Mod4; C2 compares key presses with their state. An independent
-  verifier reproduced the verdict byte for byte from the frozen code and the
-  raw records. `chord_super_d` was never a session's first trial, and every
-  session ran the keyboard warm-up.
+  reference has Mod4; C2 compares key presses with their state. (Section 26
+  adds what development found: the shell still received Super+d.) An
+  independent verifier reproduced the verdict byte for byte from the frozen
+  code and the raw records. `chord_super_d` was never a session's first trial,
+  and every session ran the keyboard warm-up.
 - **Reported, not judged.** Under section 5 as written, 435 of 500 trials
   passed: the three other shell chords (`chord_alt_f4`, `chord_alt_tab`,
   `chord_ctrl_alt_shift_r`) failed on key-release states only, which C2's rule
