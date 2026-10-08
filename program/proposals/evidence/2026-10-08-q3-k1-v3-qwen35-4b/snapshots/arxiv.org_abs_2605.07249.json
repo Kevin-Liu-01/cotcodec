@@ -1,0 +1,27 @@
+{
+ "url": "https://arxiv.org/abs/2605.07249",
+ "fetched_at": "2026-10-08T15:17:25Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 42319,
+ "raw_sha256": "247a1b0aa83b597e23e4642d1932eaefd3398ed0e0d756e8e823f89df33ab46a",
+ "raw_stored": false,
+ "extract": {
+  "title": "MLAIRE: Multilingual Language-Aware Information Retrieval Evaluation Protocal",
+  "authors": [
+   "Jang, Youngjoon",
+   "Hong, Seongtae",
+   "Moon, Hyeonseok",
+   "Lim, Heuiseok"
+  ],
+  "citation_date": "2026/05/08",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Fri, 8 May 2026 05:10:05 UTC"
+   }
+  ],
+  "abstract": "Multilingual Information Retrieval is increasingly important in real-world search settings, where users issue queries over mixed-language corpora. Existing evaluations mainly reward language-agnostic semantic relevance, treating relevant passages equally regardless of language. Yet retrieval utility also depends on the language of the retrieved passages: users may prefer results they can read and verify in the query language, and query--passage language mismatch can complicate downstream grounding and answer verification in Retrieval-Augmented Generation systems. To evaluate this language-aware dimension, we introduce MLAIRE, a Multilingual Language-Aware Information Retrieval Evaluation protocol that disentangles cross-lingual semantic retrieval from query-language preference. MLAIRE constructs controlled pools with parallel passages across languages, enabling measurement of semantic retrieval accuracy and query-language preference when equivalent translations are available. We propose language-aware metrics, including Language Preference Rate (LPR) and Lang-nDCG, together with a 4-way decomposition separating semantic and query-language preference failures. Evaluating 31 dense, sparse, and late-interaction retrievers, we show that standard metrics obscure distinct behaviors: semantically strong retrievers may return correct content in a non-query language, while retrievers with stronger query-language preference may retrieve less semantically relevant passages.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}

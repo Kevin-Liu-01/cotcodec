@@ -1,0 +1,25 @@
+{
+ "url": "https://arxiv.org/abs/2610.01139",
+ "fetched_at": "2026-10-08T15:17:37Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 41691,
+ "raw_sha256": "b2f75884397643cd862d1ca16d2367d0a7619b21002e5b6cfc562e8c989c5a0e",
+ "raw_stored": false,
+ "extract": {
+  "title": "Do Multilingual Encoders Produce Language-Consistent Semantic IDs?",
+  "authors": [
+   "Bohra, Abhinav",
+   "Bohra, Anuj"
+  ],
+  "citation_date": "2026/10/01",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Thu, 1 Oct 2026 06:18:27 UTC"
+   }
+  ],
+  "abstract": "Semantic IDs (SIDs) compress item embeddings into discrete code sequences used in generative retrieval. We ask whether a multilingual encoder is sufficient for different-language renderings of the same product to receive language-consistent SIDs. Using Amazon ESCI listings rendered in English, Spanish, and Japanese, we test whether translations remain close to their English source, whether residual quantization is unusually sensitive to translation-induced movement, and whether multilingual or language-balanced quantizer fitting improves SID agreement. Multilingual E5 places translations measurably apart: under an English-heavy fit, a Japanese translation preserves the first SID code of its English counterpart in only 7.7% of cases, compared with 89.0% for an English rewording. Distance-matched product-directed controls produce nearly the same full-SID mismatch as translation, providing no evidence that the quantizer selectively amplifies language directions. Balancing the fitting mixture makes codebook use more uniform but further reduces cross-lingual prefix agreement: Spanish first-code consistency falls from 28.3% to 6.6%, while an English-only fit preserves it for 67.6% of Spanish translations. These results show that multilingual exposure and balanced codebook use alone do not guarantee language-consistent SIDs.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}

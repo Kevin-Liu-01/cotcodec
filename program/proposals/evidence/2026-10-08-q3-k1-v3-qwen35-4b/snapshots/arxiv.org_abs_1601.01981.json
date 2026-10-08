@@ -1,0 +1,29 @@
+{
+ "url": "https://arxiv.org/abs/1601.01981",
+ "fetched_at": "2026-10-08T15:17:06Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 43340,
+ "raw_sha256": "094d208dc5432b336e4bf2b596901f7c1b752e5344e7537f0bc98c21d1c03a6e",
+ "raw_stored": false,
+ "extract": {
+  "title": "Small sample methods for cluster-robust variance estimation and hypothesis testing in fixed effects models",
+  "authors": [
+   "Pustejovsky, James E.",
+   "Tipton, Elizabeth"
+  ],
+  "citation_date": "2016/01/08",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Fri, 8 Jan 2016 19:20:29 UTC"
+   },
+   {
+    "version": "v2",
+    "date": "Sun, 6 Nov 2022 18:46:34 UTC"
+   }
+  ],
+  "abstract": "In longitudinal panels and other regression models with unobserved effects, fixed effects estimation is often paired with cluster-robust variance estimation (CRVE) in order to account for heteroskedasticity and un-modeled dependence among the errors. CRVE is asymptotically consistent as the number of independent clusters increases, but can be biased downward for sample sizes often found in applied work, leading to hypothesis tests with overly liberal rejection rates. One solution is to use bias-reduced linearization (BRL), which corrects the CRVE so that it is unbiased under a working model, and t-tests with Satterthwaite degrees of freedom. We propose a generalization of BRL that can be applied in models with arbitrary sets of fixed effects, where the original BRL method is undefined, and describe how to apply the method when the regression is estimated after absorbing the fixed effects. We also propose a small-sample test for multiple-parameter hypotheses, which generalizes the Satterthwaite approximation for t-tests. In simulations covering a variety of study designs, we find that conventional cluster-robust Wald tests can severely under-reject while the proposed small-sample test maintains Type I error very close to nominal levels.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}

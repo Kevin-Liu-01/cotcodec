@@ -1,0 +1,9 @@
+{
+ "doctor": "Safety",
+ "status": "PASS",
+ "evaluated_on": "2026-10-08",
+ "evaluated_by": "wave-1 single synthesis owner (Claude agent); not an independent review",
+ "pass_condition": "Safety, monitorability, data rights, and project red lines addressed",
+ "evidence": "Licences stated per source (Belebele CC-BY-SA-4.0 including romanized files, FineWeb-2 and FineWeb ODC-By-1.0, ParaDocs Apache-2.0 packaging, Qwen3.5-4B-Base apache-2.0); TED2020, NLLB and unverified XOR QA translations excluded; no dataset or paper text committed; anchors and overlap tokens stored as digests (decision 70); no employer or private data; no host address; monitorability, red lines and the seven-mode integrity gate stated.",
+ "remediation": "Open and record the Common Crawl terms of use."
+}

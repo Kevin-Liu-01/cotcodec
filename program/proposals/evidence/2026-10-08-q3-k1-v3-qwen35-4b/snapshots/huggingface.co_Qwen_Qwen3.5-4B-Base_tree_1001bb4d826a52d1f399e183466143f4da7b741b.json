@@ -1,0 +1,12 @@
+{
+ "url": "https://huggingface.co/Qwen/Qwen3.5-4B-Base/tree/1001bb4d826a52d1f399e183466143f4da7b741b",
+ "fetched_at": "2026-10-08T15:17:44Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 227459,
+ "raw_sha256": "8f236f9c11c33815e745597c310d8cfc1ed3cc2d3e17bee1c52e80d504dfca15",
+ "raw_stored": false,
+ "extract": {
+  "html_title": "Qwen/Qwen3.5-4B-Base at 1001bb4d826a52d1f399e183466143f4da7b741b"
+ }
+}

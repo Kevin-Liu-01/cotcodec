@@ -1,0 +1,27 @@
+{
+ "url": "https://arxiv.org/abs/2609.04434",
+ "fetched_at": "2026-10-08T15:17:35Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 41432,
+ "raw_sha256": "6f08276dc080a838eebbd1ffe17454987ab1246889920291c1358ef93a08df56",
+ "raw_stored": false,
+ "extract": {
+  "title": "What Attention Recalls and Recurrence Controls in Hybrid Language Models",
+  "authors": [
+   "Afendulev, Kirill",
+   "Dontsov, Alexey",
+   "Tutubalina, Elena",
+   "Korznikov, Anton"
+  ],
+  "citation_date": "2026/09/03",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Thu, 3 Sep 2026 19:56:26 UTC"
+   }
+  ],
+  "abstract": "Hybrid language models combine attention with a fixed-size recurrent state, but the role of each channel remains unclear. We introduce two cache-level interventions. Split-prefill keeps only the KV cache or only the recurrent state from a prefilled context, then generates an answer. State-swap pairs the KV cache from one context with the recurrent state from another in a single forward pass. On Qwen3.5 and Falcon-H1, the two channels split sharply by function. Exact retrieval survives only through attention (64-98% of full accuracy) and collapses to zero through recurrence. Output language and persona reverse the pattern: both survive recurrence (70-80% and 3-5x) while KV-only drops to ~1% language accuracy. State-swap confirms this causally: the answer takes its value from the KV side and its language from the recurrent side. Recurrent-only generation also accepts words that were never in the context but share meaning or parts with seen items. Attention provides a lookup over what was said; the recurrent state shapes how the model says it next.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}
