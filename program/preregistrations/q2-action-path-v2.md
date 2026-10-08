@@ -10,16 +10,21 @@ No acceptance trial and no C2, C1 or C3 run may run before this row exists.
 - Experiment id: `q2-action-path-v2`, the successor of `q2-action-path-v1`
   (decision D40). v1's first scored campaign, C2 (job 768), failed, so v1 is
   invalid and no v1 acceptance criterion may be claimed. v2 keeps v1's
-  catalog, oracles, guard, executor, acceptance rules and development
-  evidence, and changes three things (section 24): the L0-raw prediction
-  lists `chord_super_d` as a failure, informed by v1's C2 run; C2 is read as
-  a reproduction test on a new order seed (45), with v1's C2 reported as the
+  catalog, oracles, executor, acceptance rules and development evidence, and
+  changes three things (section 24): the L0-raw prediction's entry for
+  `chord_super_d` is disclosed as informed by v1's C2 run; C2 is read as a
+  reproduction test on a new order seed (45), with v1's C2 reported as the
   a-priori result (section 25); and the manifest renderer takes the host run
   root as a parameter. Section 26 reports the development (seed 42) that
   characterised v1's C2 failure: it is in the tap's record of a key event
   queued during the shell's keyboard grab, not in the chord's delivery,
-  which corrects the cause D40 stated (decision D42, which changes no rule
-  and keeps D40's three changes). No v1 data enters a v2 verdict.
+  which corrects the cause D40 stated (decision D43). D43 also changes the
+  judge: a key event the XRecord tap records without the lock bit the entry
+  guard guarantees (Mod2, Num Lock) is judged on its kind, keycode, keysym
+  and order, not its modifier state, and the guard now checks that bit
+  (sections 4.4, 5, 6.2 and 27); under that rule `chord_super_d` is
+  predicted to pass L0-raw, as v1 predicted, for a reason informed by v1's
+  C2. No v1 data enters a v2 verdict.
 - Question: Q2 (calibrated computer-use instrument), Stage 0b. Program kill
   criterion it implements: "No GPU episodes until the action-path suite passes
   100%" (`program/questions/q2-calibrated-cua-instrument.md`), read here as
@@ -30,7 +35,7 @@ No acceptance trial and no C2, C1 or C3 run may run before this row exists.
   (section 15), and again to apply decisions D30 and D33 on guest-server
   restarts and D39's freeze details before its freeze (branch
   `stage0/q2-action-path-d30`; sections 18, 20 and 23). Sections 15-23 are
-  v1's history as v1 froze it; sections 24-26 are v2's.
+  v1's history as v1 froze it; sections 24-27 are v2's.
 - Reviewed plan this follows: the Stage-0 workflow's reviewed plan
   `q2-action-path-and-vm`, corrected order (catalog and expectations before any
   executor; independent device reference; mutation testing of the suite; one
@@ -122,7 +127,7 @@ Frozen with this file (SHA-256 of the committed bytes):
 | `harness/q2/action_path/volume_plan.json` | `9567d257b769273788153c4193981f1c7eb1e8664b4d1ef36389b4fbd211802a` |
 | `harness/q2/action_path/mutation_operators.yaml` | `429cbc389238404b1b6c345b883db9ada5b470ebad3594a8895187aa377e1259` |
 | `harness/q2/action_path/l0_raw_prediction.yaml` | `8b947acafeae1d2bf4fda5a715888556d9ca672e57d488a4c31dadc420f9302a` |
-| `harness/q2/action_path/l0_raw_prediction_v2.yaml` | `130a6e6beeb7ce64165142aab08d80e93b54ed304f1d4c186b9c81ebccee6daa` |
+| `harness/q2/action_path/l0_raw_prediction_v2.yaml` | `4fcf1d83c902c2da007e280d40e09145f46b7cb54412d59b1d9d2037dbb95c66` |
 | `harness/q2/action_path/canary.yaml` | `16e15b6a48a6a560958500b1e6507e1be7368fd0fff2348cb5ed7188e66881ff` |
 | `harness/q2/action_path/keysyms.json` | `a1ea436d9bd4ae8d9fbc8305772f7dca776858b023092ce1cea059a693924acb` |
 | `harness/q2/action_path/ir.py` | `33dc24771b823597eef453a4994faf730d0364bd090488aa13e9de5e3498d305` |
@@ -303,17 +308,33 @@ rules (`core_groups`): the server re-sends the whole keymap when the master
 keyboard switches between the PS/2 and the XTest device, in XKB's
 four-column core form. Otherwise the range is unverified (section 6.1).
 
-Development for v2 found one limit of this channel (section 26), which no
-rule here changes (decisions D40 and D42): a device event that arrives while a
-synchronous grab has frozen the keyboard (GNOME Shell grabs its overlay key
-and every keybinding that way) is recorded when the X server queues it,
-before its state is computed, so its core state reads 0; the server delivers
-it later from the queue with its state, and RECORD does not report it again.
-Such an event is recorded in the order it arrived. On the catalog's four
-shell-grabbed chords every event after the grab-activating key has a
-reference modifier state that is not empty, so an event recorded this way
-always fails its trial: the limit can fail a trial whose chord was
-delivered, and never makes a trial pass (decision D42).
+Development for v2 found one limit of this channel (section 26), and
+decision D43 changes how the judge reads it (section 27). A device event that
+arrives while a synchronous grab has frozen the keyboard (GNOME Shell grabs
+its overlay key and every keybinding that way) is recorded when the X server
+queues it, before its state is computed, so its core state reads 0; the
+server delivers it later from the queue with its state, and RECORD does not
+report it again. Such an event is recorded in the order it arrived and on
+its keycode, so its kind, keycode, keysym and position are observed and its
+modifier state is not. Every key event the server processes inside an entry
+carries the locked Mod2 bit, because the entry guard requires Num Lock
+locked before and after every entry (section 6.2, conditions b and f) and no
+catalog entry presses Num_Lock; development found exactly that in every
+record of the lane (424 sessions: 172 of 519,344 tap key events lacked Mod2,
+every one after the press that activates a shell grab and every one with
+state 0; none of 517,032 probe key events and 1,550 QEMU-monitor key events
+did). So the judge treats the modifier state of a key event the tap recorded
+without Mod2 as unobservable and judges that event on its kind, keycode
+(through the keysym the tap resolves from it) and order only
+(`verdict.modifier_state_observable`); every other event, and every event on
+the probe's channel, which receives events after their state is computed, is
+judged as before. A queued event needs an active shell grab, and a grab
+activates only on the press of its grab key with the modifiers its
+keybinding needs (Super_L, the overlay key, needs none), so a chord whose
+grab never activates, because its grab key was never pressed or was pressed
+without those modifiers (as when a modifier is dropped), is processed event
+by event and judged on its state. Section 27 states the rule for an event
+that lacks Mod2 for any other reason.
 
 ### 4.5 Certified keysyms
 
@@ -340,6 +361,11 @@ only if all of these hold:
    both channels runs from the probe's begin delimiter to its end delimiter
    (two core `ChangeKeyboardMapping` requests on a reserved spare keycode,
    which both channels see in the X server's own order; design decision 19).
+   On the XRecord stream a key event recorded without the lock bit the guard
+   guarantees (Mod2) is matched on its kind, keycode, keysym and order, not
+   its modifier state (decision D43, section 4.4); each verdict reports the
+   key events it read that way (`state_not_observed`), which is never a
+   failure.
 3. For `observable: app` entries, the screenshot returned by the
    `DesktopEnv.step` of the entry's last action decodes to the probe's final
    marker (sequence number and CRC-16 of the text buffer). The screenshot
@@ -532,7 +558,12 @@ Before and after every entry: (a) `XQueryKeymap` shows no pressed key and the
 pointer shows no pressed button; (b) the LED mask equals the session baseline;
 (c) the probe window is mapped, focused and covers 1920x1080 at (0, 0); (d) no
 GNOME screen recording is running (no file in `~/Videos/Screencasts` is
-growing); (e) before the entry, outside its window, the pointer is moved to
+growing); (f) Mod2, the modifier Num_Lock is mapped to, is in the logical
+modifier state (`QueryPointer`'s mask; decision D43): with (a) and (b), whose
+baseline has the Num Lock LED on in every development session, Num Lock is
+locked, so every key event the server processes inside the entry carries
+Mod2, which the judge relies on (section 4.4); (e) before the entry, outside
+its window, the pointer is moved to
 the catalog's `guard.park_pointer` (1234, 777), a point no entry uses (a test
 checks it), so an entry that moves the pointer always produces motion:
 `move_only` ends where `drag_vertical` ends, and without the park it would see
@@ -703,34 +734,40 @@ Each control is scored once, at the point named, and only on frozen code.
 - **C2 (L0-raw failing set, a reproduction test in v2).** L0-raw fails
   exactly the set in `l0_raw_prediction_v2.yaml`: `type_unicode_bmp`,
   `type_emoji`, `type_rtl`, `type_combining`, `type_emoji_zwj`,
-  `key_kp_enter`, `click_button_back`, `click_button_forward` and
-  `chord_super_d`; every other entry passes, notably every click, drag and
-  hold on buttons 1-3, `type_shell_hostile` and `type_symbols_shifted`. The
-  first eight are v1's prediction, written from code reading before any
-  L0-raw trial existed. `chord_super_d` is not predicted a priori: v1
-  predicted it to pass, it failed 5 of 5 in v1's C2 (job 768), and v2 lists
-  it as a failure because of that run, with its mechanism (a synchronous
-  shell keyboard grab on a Super chord sent without key holds, during which
-  the tap records the queued `d` press without its state; the prediction
-  file and section 26). **In v2, C2 is therefore a reproduction test of the
-  L0-raw failing set on a new order seed, not an a-priori prediction test.**
-  The a-priori result is v1's: one unpredicted failure, `chord_super_d`,
+  `key_kp_enter`, `click_button_back` and `click_button_forward`; every other
+  entry passes, notably every click, drag and hold on buttons 1-3,
+  `type_shell_hostile`, `type_symbols_shifted` and `chord_super_d`. The
+  failing set is v1's prediction, written from code reading before any
+  L0-raw trial existed. `chord_super_d`'s pass is not predicted a priori: v1
+  predicted it to pass, it failed 5 of 5 in v1's C2 (job 768), and v2
+  predicts it to pass because of decision D43, taken after that run. Under
+  L0-raw the tap records the `d` press, the `d` release and the Super_L
+  release while they are queued during the shell's synchronous grab, without
+  their state (section 4.4), and D43's judge reads them on kind, keycode,
+  keysym and order, which the tap records correctly (the prediction file and
+  section 27). **In v2, C2 is therefore a reproduction test of the L0-raw
+  failing set on a new order seed, not an a-priori prediction test.** The
+  a-priori result is v1's: one unpredicted failure, `chord_super_d`,
   recorded in the XRecord stream (the tap's `d` press has core state 0,
   without Mod4, in every repetition), and every other entry as predicted
   (section 25). Section 26 shows that this is how RECORD reports a key event
   queued during the shell's synchronous grab, and that the shell received
   Super+d: what failed is the oracle channel's record of a delivered chord
-  (section 4.4), not the transport. Decision D42 corrects D40's statement
-  that the failure was a genuine transport defect; it changes no rule, and
-  the entry stays a predicted failure because C2 judges the recorded stream.
+  (section 4.4), not the transport. Decision D43 corrects D40's statement
+  that the failure was a genuine transport defect and has the judge stop
+  reading the state of such an event; v1's verdict, judged by v1's rules,
+  stands (section 25).
   An entry fails unless it is PASS in 5 of 5 repetitions, where an L0-raw
   trial is judged on the event and text channels (design decision 34): it is
   PASS under section 5's conditions 1, 2, 4 and 5 and the infrastructure rule
   of section 6.1, with two differences. Condition 3 (the marker in the last
   step's screenshot) is reported but not judged, and an R-dev projection is
   compared with the modifier state of every key release left out (key
-  presses keep theirs). Both are timing effects of the transport, not of the
-  key and button names C2 predicts: L0-raw has none of L0-fixed's settling
+  presses keep theirs, except that on the XRecord stream a key press
+  recorded without the guard's lock bit is compared without its state, as
+  section 5 already reads it; decision D43). Both are timing effects of the
+  transport, not of the key and button names C2 predicts: L0-raw has none of
+  L0-fixed's settling
   (no key hold, no repaint request, no quiet-screen wait; PyAutoGUI's own
   0.1 s pause only), and development showed what that does to L0-fixed
   (job 486, with no settle and no hold: `chord_ctrl_alt_shift_r`'s four
@@ -790,7 +827,10 @@ Each control is scored once, at the point named, and only on frozen code.
   rule (a no-op mutant must come out equivalent, never killed).
 - **C4 (R-dev agreement).** For every key, chord and Caps Lock entry with a
   reference, L0-fixed's projected stream equals the reference, in every A1
-  trial of every attempt (section 6.1). Entries without a stable reference
+  trial of every attempt (section 6.1), read as section 5 reads the XRecord
+  stream (decision D43: a key event recorded without the guard's lock bit is
+  compared on kind, keycode, keysym and order, not its state;
+  `verdict.rdev_agreement`). Entries without a stable reference
   are listed as self-specified in every report.
 
 ## 9. Sample sizes, power and concurrency
@@ -1015,7 +1055,8 @@ and never loads more than 18 VMs, so no rung above N = 1 could have qualified
   v1 refused L0-raw in development too, so that its C2 prediction stayed a
   priori; v2's C2 is a reproduction test (section 8), and decision D40 lets
   development characterise the mechanism of v1's C2 failure, at seed 42
-  only (section 26). The inputs addendum lists every change to its
+  only (section 26), where decision D43's judge rule was also developed
+  and checked (section 27). The inputs addendum lists every change to its
   components made after an L0-fixed development run. C2 is scored once at
   seed 45 after the inputs addendum; C1 and C3 are scored once at seed 42
   after the executor addendum (section 8). Seeds 43 and 44 are refused for
@@ -1108,7 +1149,11 @@ D39) and the cells left out for an infrastructure failure; the statement that
 C3 repeated development's conditions; the L0-raw prediction table against the
 observed results under C2's rule and under section 5 as written, with v1's C2
 a-priori result (job 768, section 25) beside it and the statement that v2's
-C2 is a reproduction test, not an a-priori one (decision D40); the R-dev
+C2 is a reproduction test, not an a-priori one (decisions D40 and D43); every
+trial, in every criterion and control, whose verdict read a key event
+without its modifier state (decision D43; each verdict's
+`state_not_observed`), by entry, with the event's offset from the key that
+activated the shell's grab; the R-dev
 reference stability per entry; which entries rest on a self-specified oracle;
 per-app canary results; the A4 per-class action counts and bounds, per-entry
 bounds and per-session results; the concurrency table (boot p50/p95, step
@@ -1586,6 +1631,34 @@ here with its reason.
     containers by design and has no receipt), and under a repair attempt A4
     reports its own restarts per accessibility call against A7's bound,
     because A7 is not judged again (section 11). Neither report is judged.
+47. **The judge does not read a modifier state the tap could not observe**
+    (decision D43, v2; sections 4.4, 5 and 27). RECORD reports a key event
+    that arrives while a synchronous shell grab has frozen the keyboard
+    before the X server computes its state, so the tap's record of it reads
+    state 0 although the shell received the chord. Keeping v1's reading
+    would fail a trial whose chord was delivered whenever the shell answered
+    later than the executor's next key: every L0-raw Super chord, and, at
+    the development bound, a fraction of L0-fixed's A1, A2, A4 and ladder
+    trials, after which the suite could fail on an artifact of its own
+    oracle. The rule is narrow: it applies to key events on the tap's
+    channel whose state lacks the one bit the guard guarantees in every
+    processed event, it leaves kind, keycode, keysym and order judged, and
+    the probe's channel, which receives events after their state is
+    computed, keeps every check. An alternative, observing the shell's side
+    of a grabbed chord directly, would need a new oracle channel and its own
+    development; whether a later registration should add one stays with
+    Kevin.
+48. **The guard guarantees the bit the judge relies on** (decision D43, v2).
+    v1's guard checked the LED mask, which on this guest follows the locked
+    Num Lock but is not the modifier state itself. Condition (f) requires
+    Mod2 in the logical modifier state before and after every entry; with
+    (a) and (b) that is a locked Num Lock. A session whose baseline lacks it
+    fails every trial at its guard rather than widening the judge's rule,
+    and no development session did (424 of 424 had the Num Lock LED on and
+    Mod2 set). A development-only executor fault that drops a chord's
+    modifiers (`fault_drop_modifier`, admitted for L0-fixed suite
+    development at seed 42 only) gives the rule its negative case
+    (section 27).
 
 ## 15. Changes after the 2026-10-07 review
 
@@ -2222,22 +2295,26 @@ the freeze, with no scored data (code in `acceptance.py`, with
 ## 24. Changes from v1 (D40)
 
 Decision D40 (`program/decisions.md`; D30, D33 and D39 carry over) makes v2 v1
-with three changes; decision D42 corrects the cause D40 stated for v1's C2
-failure and keeps the changes (item 9). Each change, and each file it
-touches, is listed here; every other rule, number and file is v1's (the
-frozen tables of the three v2 registrations equal v1's except for the rows
-this section names, and `tests/test_q2_prereg_inputs.py` checks that). v1
-itself (ledger rows 8-10) is unchanged.
+with three changes; decision D43, recorded after v2's development (section
+26), corrects the cause D40 stated for v1's C2 failure and changes how the
+judge reads the XRecord stream, which changes what D40's first item predicts
+(item 9; section 27 lists D43's changes). Each change, and each file it
+touches, is listed here or in section 27; every other rule, number and file
+is v1's (the frozen tables of the three v2 registrations equal v1's except
+for the rows item 7 names, and `tests/test_q2_prereg_inputs.py` checks
+that). v1 itself (ledger rows 8-10) is unchanged.
 
-1. **The L0-raw prediction lists `chord_super_d` as a failure** (D40 i).
-   `harness/q2/action_path/l0_raw_prediction_v2.yaml` is v1's prediction file
-   with `chord_super_d` moved from the predicted passes to the predicted
-   failures, its reason replaced by the mechanism (the shell's synchronous
-   keyboard grab on Super_L, its overlay key, when the chord is sent without
-   key holds or a gap between the presses), and two basis notes (v1's C2
-   result and the grab). The file says plainly that this entry is informed by
-   v1's C2 run (job 768) and by seed-42 development, not predicted a priori;
-   every other line is v1's. v1's file, `l0_raw_prediction.yaml`, is kept
+1. **The L0-raw prediction's entry for `chord_super_d` is disclosed as
+   informed by v1's C2** (D40 i, as decision D43 changes it).
+   `harness/q2/action_path/l0_raw_prediction_v2.yaml` is v1's prediction
+   file with v1's failing set and predicted passes, `chord_super_d`'s reason
+   replaced and three basis notes added (v1's C2 result, the shell's grab
+   and D43's judge rule). D40 had moved `chord_super_d` to the predicted
+   failures, because v1's judge reads the state of the queued `d` press;
+   under D43's judge that state is not read and the entry is predicted to
+   pass (section 27). The file says plainly that this entry is informed by
+   v1's C2 run (job 768), by D43 and by seed-42 development, not predicted
+   a priori; every other line is v1's. v1's file, `l0_raw_prediction.yaml`, is kept
    unchanged as v1's record; no v2 code reads it, and it stays in this file's
    table only so that every file under `harness/q2/` is pinned (design
    decision 35). `acceptance.c2` reads the v2 file (`acceptance.PREDICTION`).
@@ -2250,7 +2327,7 @@ itself (ledger rows 8-10) is unchanged.
    every repetition; section 25), and section 12 reports v1's result beside
    v2's. Section 26 shows that this is how RECORD reports a key event queued
    during the shell's synchronous grab, and that the shell received Super+d
-   (item 9).
+   (item 9); under D43's judge the same records pass (section 27).
    C2 runs the 100 entries in the seed-45 shuffle, an order seed no v1
    campaign and no development run used (section 10): v1's C2 ran seed 42,
    whose order v1's development also used. Code: `order.py` adds
@@ -2276,8 +2353,9 @@ itself (ledger rows 8-10) is unchanged.
    development run (section 10; the detection controls stay refused), and
    `driver.session_plan` gives an L0-raw development run the L0-fixed cells,
    as `acceptance_plan` and the runner already did for C2. Section 26 reports
-   the runs; they are development evidence only and change no rule. A1 then
-   tests L0-fixed on `chord_super_d` as registered.
+   the runs; they are development evidence only and change no rule by
+   themselves, and D43's rule was developed and checked there (section 27).
+   A1 then tests L0-fixed on `chord_super_d` as registered.
 5. **Ids, paths and cross-references.** The three registrations are
    `q2-action-path-v2`, `q2-action-path-v2-inputs` and
    `q2-action-path-v2-executor` (repair attempts `-executor-a2`, `-a3`);
@@ -2294,13 +2372,18 @@ itself (ledger rows 8-10) is unchanged.
    every other criterion are unchanged.
 7. **Frozen tables.** Rows that differ from v1's: here,
    `l0_raw_prediction_v2.yaml` (added); in the inputs addendum, `order.py`,
-   `manifest.py`, `driver.py` and `acceptance.py`; in the executor addendum,
+   `manifest.py`, `driver.py` and `acceptance.py` (D40), and `verdict.py`,
+   `guest/guard.py`, `suite.py` and `runner.py` (D43, which also changes
+   `manifest.py`, `driver.py` and `acceptance.py`); in the executor addendum,
    `acceptance.py`, `scripts/render_q2_action_path_manifest.py`, `driver.py`
-   and `manifest.py`. Three of these are files a campaign executes
-   (`order.py`, `manifest.py`, `driver.py`); the executor addendum's
-   byte-identity rule names them and why (its section 9).
-8. **What does not change.** The catalog, R-dev reference and every oracle;
-   the guard, probe, tap and judge; L0-fixed, the adapters and the corpus; G
+   and `manifest.py` (D40), and `guest/guard.py`, `suite.py` and `runner.py`
+   (D43). All but `acceptance.py`, the renderer and the prediction file are
+   files a campaign executes; the executor addendum's byte-identity rule
+   names each and why, and the commit of the development runs they must
+   equal (its section 9).
+8. **What does not change.** The catalog, R-dev reference and every oracle's
+   expectation; the probe, tap and marker; L0-fixed, the adapters and the
+   corpus; G
    (86 entries), the volume plan, the canary; the session, concurrency and
    ladder rules; A1-A7, C1, C3 and C4 with their seeds; the infrastructure,
    restart and rerun rules of decisions D30, D33 and D39; the VM-hour sizing
@@ -2308,18 +2391,23 @@ itself (ledger rows 8-10) is unchanged.
    9 sessions); and v1's development evidence, which v2 keeps. No v1 data
    enters a v2 verdict: v2's C2, C1, C3 and A1-A7 run afresh from v2's frozen
    code.
-9. **The cause D40 stated is corrected; the changes stand** (decision D42).
-   D40 read the X event record as showing a real press-state loss, and so a
-   genuine transport defect. Section 26 shows that the shell received
-   Super+d and that the tap recorded the queued `d` press before the X
-   server computed its state: the failure is in the oracle channel's record,
-   not in delivery, and v1's a-priori prediction (pass) was right about
-   delivery and wrong about the record C2 judges. D42 keeps items 1-4 as
-   drafted, keeps the oracle's reading of events queued under a grab in v2
-   (on the catalog's shell-grabbed chords it can fail a delivered chord and
-   never makes a trial pass; section 4.4), and accepts the exposure section
-   26 states for L0-fixed. It changes no rule, number or frozen file; whether
-   a later registration should read such events differently is Kevin's.
+9. **The cause D40 stated is corrected, and the judge stops reading what
+   the tap cannot observe** (decision D43). D40 read the X event record as
+   showing a real press-state loss, and so a genuine transport defect.
+   Section 26 shows that the shell received Super+d and that the tap
+   recorded the queued `d` press before the X server computed its state:
+   the failure is in the oracle channel's record, not in delivery, and v1's
+   a-priori prediction (pass) was right about delivery and wrong about the
+   record C2 judges. A draft decision on this branch kept the oracle's
+   reading of events queued under a grab and accepted the exposure section
+   26 states for L0-fixed (a slow shell answer would fail a delivered chord
+   in A1, A2, A4 or the ladder, and the suite could then fail, after three
+   repair attempts, on an artifact of its oracle). D43 decides instead that
+   v2's judge reads a key event the tap recorded without the guard's lock
+   bit on kind, keycode, keysym and order only, and that the guard checks
+   that bit (section 27). Items 2-4 stand as drafted; item 1's prediction
+   follows from the new rule. Whether a later registration should observe
+   the shell's side of a grabbed chord directly is Kevin's.
 
 ## 25. v1's outcome (C2, job 768)
 
@@ -2351,10 +2439,14 @@ Evidence: `program/evidence/2026-10-08/q2-action-path-acceptance/` (README,
   shows that this is how RECORD reports a key event queued during the
   shell's synchronous grab, and that the shell received Super+d: the chord
   was delivered, so v1's prediction was right about delivery and wrong about
-  the record C2 judges, and decision D42 corrects D40's reading of it as a
-  genuine transport defect. v1's verdict stands as its section 8 gives it. An
-  independent verifier reproduced the verdict byte for byte from the frozen
-  code and the raw records. `chord_super_d` was never a session's first trial,
+  the record C2 judges, and decision D43 corrects D40's reading of it as a
+  genuine transport defect. v1's verdict stands as its section 8 gives it:
+  v1's judge reads the queued press's state. An independent verifier
+  reproduced the verdict byte for byte from the frozen code and the raw
+  records. Re-judged with v2's judge (decision D43, section 27), the five
+  trials pass, so v1's a-priori prediction would have held under v2's rule;
+  that is said after the rule was chosen with these records in view, and no
+  v1 data enters a v2 verdict. `chord_super_d` was never a session's first trial,
   and every session ran the keyboard warm-up.
 - **Reported, not judged.** Under section 5 as written, 435 of 500 trials
   passed: the three other shell chords (`chord_alt_f4`, `chord_alt_tab`,
@@ -2367,10 +2459,10 @@ Evidence: `program/evidence/2026-10-08/q2-action-path-acceptance/` (README,
 
 ## 26. Development characterisation of v1's C2 failure (seed 42, D40)
 
-Development evidence only. It changes no rule (decisions D40 and D42): it
-informs the mechanism text of `chord_super_d` in `l0_raw_prediction_v2.yaml`
-and the correction of D40's stated cause that D42 records, and it is
-reported with v2's C2. Summaries, the scripts that made them and each run's
+Development evidence only. It changes no rule by itself: it informs the
+mechanism text of `chord_super_d` in `l0_raw_prediction_v2.yaml`, and the
+correction of D40's stated cause and the judge rule that decision D43
+records (section 27), and it is reported with v2's C2. Summaries, the scripts that made them and each run's
 records: `program/evidence/2026-10-08/q2-action-path-v2-development/`; the
 manifests: `experiments/manifests/q2-action-path-v2/`.
 
@@ -2434,7 +2526,7 @@ to the probe, which logs every key it receives. So the press-state loss that
 decision D40 read as a genuine transport defect is in the X event record
 only, not on the way to the shell: the chord was delivered, and C2 failed on
 what the tap records for an event queued during the shell's grab (decision
-D42 corrects D40's stated cause accordingly). (For Alt+Tab and
+D43 corrects D40's stated cause accordingly). (For Alt+Tab and
 Ctrl+Alt+Shift+R the shell's response does differ between the executors: under
 L0-raw the releases arrive before the window switcher or the screen recorder
 takes its own grab, so the probe saw one more key release. C2 leaves release
@@ -2479,21 +2571,190 @@ when `chord_super_d` was not a session's first key event (0 of 109; one-sided
 at the 2.3% bound A1's 20 `chord_super_d` trials would meet one with
 probability up to 0.38 and A4's 276 almost surely, and at the observed rate
 (none) neither would. A slow answer would fail an L0-fixed trial whose chord
-the shell received correctly, and the failure would count; D40 keeps that and
-D42 accepts the exposure: A1, A2, A4 and the ladder test the L0-fixed path on
-`chord_super_d` as registered. Such a failure would fail its criterion and
-call for a repair attempt (section 11); it could never make a criterion pass.
-Its report says whether the failed trial shows this signature (the `d` press
-recorded with state 0 and without Mod2, no key at the probe, the probe
-unfocused). Only `chord_super_d` sends a key that soon after a grab
-activates: the other shell chords release their keys 0.1 s after the key
-that activates the grab, and passed 30 of 30 each in jobs 785-787.
+(none) neither would. Under v1's judge a slow answer would fail an L0-fixed
+trial whose chord the shell received correctly, and the failure would count
+against A1, A2, A4 or the ladder and call for a repair attempt (section 11).
+Under D43's judge (section 27) such a trial is read on the kind, keycode,
+keysym and order of its key events, which the tap records correctly, and
+passes when they match, so the exposure is gone; each verdict reports the key
+events it read without their state (`state_not_observed`), and section 12
+reports every such trial. A1, A2, A4 and the ladder test the L0-fixed path
+on `chord_super_d` as registered. Only `chord_super_d` sends a key that soon
+after a grab activates: the other shell chords release their keys 0.1 s
+after the key that activates the grab, and passed 30 of 30 each in jobs
+785-787.
 
-**What D42 decides, and what it leaves.** D40 keeps the oracle and C2's
-rule; D42 corrects D40's stated cause, keeps the oracle's reading of events
-queued under a grab in v2 (on the catalog's shell-grabbed chords it can fail
-a delivered chord and never makes a trial pass; section 4.4) and accepts the
-exposure above. Whether a later registration should read a key event queued
-during a shell grab differently (its recorded state is not the state the
-server delivered) is Kevin's (`program/state.json`, pending decisions); the
-answer could only enter a later registration.
+**What D43 decides, and what it leaves.** D43 corrects D40's stated cause,
+keeps D40's other changes and C2's rule, and has the judge read a key event
+the tap recorded without the guard's lock bit on kind, keycode, keysym and
+order only, with the guard checking that bit (section 27). Whether a later
+registration should observe the shell's side of a grabbed chord directly
+(the tap records what the shell's grab held back, not what the shell
+received) is Kevin's (`program/state.json`, pending decisions); the answer
+could only enter a later registration.
+
+## 27. Changes for decision D43 (2026-10-08)
+
+Decision D43 (`program/decisions.md`), recorded after v2's development
+(section 26) and before v2's freeze, corrects the cause D40 stated for v1's
+C2 failure and has v2's judge stop reading a modifier state the XRecord tap
+cannot observe. This section lists what D43 changes, the bit the rule rests
+on, the rule for an event that lacks that bit for any other reason, the
+prediction that follows, and the seed-42 development at `126ff8b`, the
+commit that holds every changed file a campaign executes. Evidence, with the
+scripts that made each summary: `program/evidence/2026-10-08/q2-action-path-v2-d43/`.
+
+**The bit the guard guarantees.** v1's guard checked the LED mask against the
+session's baseline (condition b) and not the modifier state. Every session
+the lane ran (a read-only scan of every run directory: v1's development runs,
+job 768 and jobs 784-787; 424 sessions) started with the Num Lock LED on and
+Caps Lock off (LED mask 2), Num_Lock on Mod2 (the probe's `numlock_mask` 16)
+and Mod2 in the modifier state; every one of 36,251 guard checks with no key
+pressed read LED mask 2 and modifier state Mod2 (two checks with a key still
+pressed read Control and Mod2, and six with the probe absent read no state).
+So the bit is Mod2, and Lock is not one (Caps Lock is off at the baseline and
+`caps_lock_roundtrip` toggles it inside its entry). The guard now checks it
+directly: condition (f) requires Mod2 in the logical modifier state
+(`QueryPointer`'s mask) before and after every entry (section 6.2); with (a)
+and (b) that is a locked Num Lock. No catalog entry presses Num_Lock, so every
+key event the X server processes inside an entry carries Mod2.
+
+**The rule.** `verdict.modifier_state_observable`: a key event the tap
+recorded without Mod2 was recorded while queued under a shell grab, so its
+modifier state is unobservable, and the judge reads it on its kind, its
+keycode (through the keysym at index 0 the tap resolves from it with the
+keymap then in force) and its order only. Every other event is judged as
+before. The rule reads the tap's channel only: the judge's channel for
+`raw-only` entries (the four shell chords and R13; R13's expectation has no
+state), C4's stream (`rdev_agreement`) and C2's reading of the tap window
+(`acceptance.c2_projection`); the probe receives events after the server has
+computed their state, and its channel keeps every check. Each verdict lists
+the key events it read without their state (`state_not_observed`), which is
+never a failure and never makes a trial pass by itself: kind, keycode,
+keysym, order, the text, the marker, the guard and the infrastructure rules
+still decide. The scan bears the reading out: of 519,344 tap key events, 172
+lacked Mod2, every one after the press that activates the shell's grab on one
+of the four shell-grabbed chords (L0-raw in jobs 768 and 784, and L0-fixed
+in runs 486, 549 and 574, before the key hold and the warm-up existed), and
+every one with state 0; none of 517,032 probe key events and none of 1,550
+QEMU-monitor key events lacked it.
+
+**Why a dropped modifier still fails.** A key event is queued only while a
+shell grab holds the keyboard, and a grab activates only when its grab key is
+pressed: the overlay key Super_L, or a keybinding's key with its modifiers
+held. A chord whose grab key is never pressed, or whose modifier is released
+before its key, is processed event by event, every event carries Mod2, and
+its state is judged; an ungrabbed chord is never queued. The records show
+each case. Run 572 (mutant M11, Super_L dropped) and job 832 recorded
+`chord_super_d`'s `d` alone with Mod2 and without Mod4, and failed. Job 833
+pressed and released each chord's modifiers before its last key: every event
+was processed with Mod2, the last key's press lacked its modifier, and every
+trial failed. Under L0-raw, the nine chords the shell does not grab, sent as
+fast as the shell chords, kept every state in jobs 768, 784 and 830.
+
+**An event without Mod2 for another reason.** The rule is D43's as worded:
+any key event the tap recorded without Mod2 is read without its state. Other
+ways such an event could arise, and what the suite then does:
+
+1. Num Lock unlocked inside the entry by a key event. The Num_Lock press and
+   release are in the stream, and no catalog expectation contains them, so
+   the trial fails on its events whatever their states; a lasting change
+   also fails the post guard (b and f).
+2. Num Lock unlocked inside the entry by a client request, with no key event
+   the tap records, and locked again before the post guard. Events the server
+   processed in between would lack Mod2 and be read without their state. The
+   trial would still pass only if every event's kind, keycode, keysym and
+   order matched, and an event's modifier state follows from the modifier
+   keys recorded before it on the one XTest keyboard, so hiding a wrong state
+   would need a second, independent fault. Nothing in the session sends such
+   a request, and development saw no such event.
+3. A session whose baseline lacks Num Lock. Condition (f) fails before and
+   after every entry, so every trial fails at its guard; the rule is never
+   widened to a whole session. No development session did.
+4. A queued event recorded with some modifier bits but not Mod2. RECORD
+   reports a queued event before any state is computed, so this does not
+   arise; every one of the 172 was state 0. Under the rule as worded its
+   state would not be read either.
+5. Events from another device. The QEMU monitor's keyboard (the R-dev
+   reference and the inputs validation) is processed like any other, and
+   its events carried Mod2.
+
+**The prediction.** Under L0-raw, `chord_super_d`'s `d` press, `d` release
+and Super_L release are queued during the overlay-key grab and recorded
+without Mod2, so the judge reads them on kind, keycode, keysym and order,
+which the tap records correctly, and the entry passes; the three other shell
+chords already passed C2 and now also pass section 5. v2's prediction file
+therefore keeps v1's failing set and predicted passes, with `chord_super_d`'s
+reason replaced and disclosed as informed by v1's C2, D43 and development
+(section 24, item 1). The rule touches nothing else C2 judges: the eight
+predicted failures are entries the probe observes (or pointer entries), whose
+channel the rule never reads. v2's C2 stays a reproduction test of the
+L0-raw failing set on its own order seed (45), not an a-priori prediction
+test. Re-judged with this judge, v1's C2 records and job 784's pass
+`chord_super_d` 15 of 15, and v1's development runs 549 and 574 (before the
+warm-up) and 486 (before the key hold) pass the trials they failed this way;
+no other recorded chord verdict of jobs 768 and 784-787 changes
+(`tests/test_q2_d43_judge.py`), and no other entry's can, since the rule
+reads only `raw-only` entries and C4.
+
+**Files.** `verdict.py` (the rule and its report), `guest/guard.py`
+(condition f), `acceptance.py` (C2's reading of the tap window), `runner.py`,
+`driver.py` and `manifest.py` (a development-only executor fault,
+`fault_drop_modifier`, the rule's negative case: `omit` presses only a key
+action's last key, `release_first` presses and releases its other keys
+first; admitted for L0-fixed suite development at seed 42 only, never with a
+mutant or another fault and never in a scored campaign), `suite.py` (a stale
+docstring), `l0_raw_prediction_v2.yaml` (section 24, item 1) and the tests
+(`tests/test_q2_d43_judge.py` re-judges real records through the campaign's
+own `suite.observation`). The frozen tables change as section 24, item 7
+lists; the executor addendum's byte-identity rule names every file a campaign
+executes that differs from a development commit, and why (its section 9).
+
+**Development at `126ff8b`** (seed 42, never evidence). Ten CPU-only jobs
+through `vm-campaign.sbatch`, from a read-only export of `126ff8b` under
+`~/cotcodec-runs/q2-action-path-v2/dev/` on the host (tree digest
+`a303c1e2...`, the same locally and on the host), each COMPLETED 0:0 by the
+batch record and Slurm, with its infrastructure gates passed, `System.qcow2`
+unchanged, no GPU and nothing left behind; 2.4 VM-hours in all (run time
+times VMs). Jobs 834-839 repeat v1's final development runs 703-708 with
+their workloads and Slurm resources unchanged, because the judge, the guard
+and the lane are files a campaign executes.
+
+| Job | Campaign | What ran | Trials | Result |
+|---|---|---|---:|---|
+| 830 | `q2ap-v2-d43-l0raw-sample-v1` | L0-raw: the four shell chords, four ungrabbed chords, ten gating entries; 5 repetitions per setting, one VM | 180 | the eight chords pass 10 of 10, the shell chords with their queued events read without state (40 trials); `key_kp_enter` and `type_unicode_bmp` fail 10 of 10, as predicted; `seq_type_chord_type` passes 1 of 10 under section 5 on stale markers only, which C2 does not judge; the other gating entries pass |
+| 831 | `q2ap-v2-d43-l0fixed-sample-n8-v1` | L0-fixed: the same 18 entries, 10 trials per session on 8 VMs | 180 | 180 of 180; no event read without its state |
+| 832 | `q2ap-v2-d43-drop-omit-v1` | negative: L0-fixed with `fault_drop_modifier: omit` on the four shell chords and three ungrabbed chords | 70 | 0 of 70; no event read without its state |
+| 833 | `q2ap-v2-d43-drop-release-first-v1` | negative: the same with `release_first` | 70 | 0 of 70; no event read without its state |
+| 834 | `q2ap-v2-d43-l0-restart-v1` | as job 703: the guest-server fault injection | 56 | 52 of 56, as 703: the two trials each session's kills hit |
+| 835 | `q2ap-v2-d43-l0-fixed-v1` | as job 704: L0-fixed, all 100 entries, one VM | 400 | 400 of 400 |
+| 836 | `q2ap-v2-d43-l0-fixed-n8-v1` | as job 705: L0-fixed, all 100 entries, 8 VMs | 800 | 800 of 800 |
+| 837 | `q2ap-v2-d43-hosw-fixed-v1` | as job 706: H-OSW-fixed, every corpus cell | 198 | 194 of 198, as 706: R03 and R09 (outside spec) |
+| 838 | `q2ap-v2-d43-hga-v1` | as job 707: H-GA, every corpus cell | 186 | 178 of 186, as 707: R02, R04, R06 and R10 (outside spec) |
+| 839 | `q2ap-v2-d43-canary-v1` | as job 708: the canary, every app and entry | 60 | 60 of 60 |
+
+What they show. The positive case: under L0-raw every shell chord passes
+with its queued events (state 0, 0-3 ms after the grab key) read without
+their state, and the ungrabbed chords pass with every state read. The
+negative case: with a modifier dropped every chord fails, grabbed or not, and
+no event is read without its state. With `omit` the grab key is never
+pressed and `d` arrives alone with Mod2; with `release_first` every event is
+processed and the last key's press lacks its modifier. C4 disagrees in all
+140 negative trials, and in 22 of the 30 ungrabbed `release_first` trials the
+probe had lost the focus by the post guard (condition c, charged to the
+trial; the cause was not investigated). The repeated final runs: every in-spec cell of every
+layer passes in every repetition and setting, and the only failures are
+those of jobs 703, 706 and 707; no L0-fixed or harness trial read an event
+without its state; C4 agreed in 140 of 140 (835) and 280 of 280 (836) key,
+chord and Caps Lock trials; each session's restart count was 0 except the
+four injected restarts of job 834; the accessibility calls (260 and 519)
+equal 704's and 705's; step p95 2.71 s on one VM and 2.76 s on 8 (704: 2.92
+s, 705: 3.02 s). Across all ten jobs, 4,394 guard checks read Mod2, and the
+only guard violations were the 22 above. The runner's recorded verdicts of
+the 300 chord trials of jobs 830-833 equal the judge's on their records
+(`tests/test_q2_d43_judge.py`).
+
+**What D43 leaves.** Whether a later registration should observe the shell's
+side of a grabbed chord directly (for example from the shell's own record of
+the keybindings it ran) is Kevin's; the answer could only enter a later
+registration.

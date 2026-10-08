@@ -2,7 +2,7 @@
 
 v1 (q2-action-path-v1 and its addenda) is frozen in the ledger and invalid on C2 (decision
 D40); its files must stay as frozen, and v2's tables must equal v1's except for the rows
-v2's section 24 names.
+v2's sections 24 and 27 name (decisions D40 and D43).
 """
 
 from __future__ import annotations
@@ -27,8 +27,8 @@ V1 = {
     "q2-action-path-v1-inputs": ROOT / "program/preregistrations/q2-action-path-v1-inputs.md",
     "q2-action-path-v1-executor": ROOT / "program/preregistrations/q2-action-path-v1-executor.md",
 }
-# The rows of v2's frozen tables that decision D40 changes (main section 24, item 7);
-# every other row must equal v1's.
+# The rows of v2's frozen tables that decisions D40 and D43 change (main section 24, item 7,
+# and section 27); every other row must equal v1's.
 D40_ROWS = {
     PREREG: {"harness/q2/action_path/l0_raw_prediction_v2.yaml"},
     INPUTS: {
@@ -42,6 +42,20 @@ D40_ROWS = {
         "scripts/render_q2_action_path_manifest.py",
         "harness/q2/vm/driver.py",
         "harness/q2/vm/manifest.py",
+    },
+}
+D43_ROWS = {
+    PREREG: set(),
+    INPUTS: {
+        "harness/q2/action_path/verdict.py",
+        "harness/q2/vm/guest/guard.py",
+        "harness/q2/vm/runner.py",
+        "harness/q2/vm/suite.py",
+    },
+    EXECUTOR: {
+        "harness/q2/vm/guest/guard.py",
+        "harness/q2/vm/runner.py",
+        "harness/q2/vm/suite.py",
     },
 }
 ROW = re.compile(r"^\| `([^`]+)` \| `([0-9a-f]{64})` \|$")
@@ -104,12 +118,13 @@ def test_v1_stays_as_frozen_in_the_ledger():
 
 
 @pytest.mark.parametrize("doc", DOCS, ids=lambda d: d.stem)
-def test_v2_tables_are_v1s_except_the_rows_d40_changes(doc):
+def test_v2_tables_are_v1s_except_the_rows_d40_and_d43_change(doc):
     v1 = _pinned(V1[doc.stem.replace("-v2", "-v1")])
     v2 = _pinned(doc)
     assert set(v1) <= set(v2)
     differ = {path for path, digest in v2.items() if v1.get(path) != digest}
-    assert differ == D40_ROWS[doc], sorted(differ ^ D40_ROWS[doc])
+    expected = D40_ROWS[doc] | D43_ROWS[doc]
+    assert differ == expected, sorted(differ ^ expected)
 
 
 def test_v2_names_its_changes_from_v1_and_v1s_outcome():
@@ -117,7 +132,7 @@ def test_v2_names_its_changes_from_v1_and_v1s_outcome():
         text = doc.read_text(encoding="utf-8")
         assert "Changes from v1 (D40)" in text, doc.name
         changes = " ".join(text.split("Changes from v1 (D40)", 1)[1].split())
-        for path in D40_ROWS[doc]:
+        for path in D40_ROWS[doc] | D43_ROWS[doc]:
             assert path.split("/")[-1] in changes, (doc.name, path)
     main = " ".join(PREREG.read_text(encoding="utf-8").split())
     assert "program/evidence/2026-10-08/q2-action-path-acceptance/" in main
@@ -133,21 +148,21 @@ def _between(text: str, start: str, end: str) -> str:
     return " ".join(part.split(end, 1)[0].split())
 
 
-# Decision D42: v1's C2 failure is in the tap's record of a key event queued during the
+# Decision D43: v1's C2 failure is in the tap's record of a key event queued during the
 # shell's synchronous grab, and the shell received Super+d; D40 called it a transport defect.
 STALE_CAUSE = ("verified real", "real at the X event level", "real in the X event record")
 CORRECTED = ("queued during the shell's synchronous grab", "the shell received Super+d")
 
 
 def test_v1s_c2_failure_is_stated_as_the_taps_record_not_delivery():
-    """Sections 8 (C2), 24 (item 2) and 25 state the cause D42 corrected, and no part of the
+    """Sections 8 (C2), 24 (item 2) and 25 state the cause D43 corrected, and no part of the
     three registrations or v2's prediction file calls the failure real at the X event level."""
     prediction = ROOT / "harness/q2/action_path/l0_raw_prediction_v2.yaml"
     for path in (*DOCS, prediction):
         flat = " ".join(path.read_text(encoding="utf-8").split())
         for stale in STALE_CAUSE:
             assert stale not in flat, (path.name, stale)
-        # "genuine transport defect" may appear only as the D40 reading that D42 corrects.
+        # "genuine transport defect" may appear only as the D40 reading that D43 corrects.
         for hit in re.finditer("genuine transport defect", flat):
             assert "D40" in flat[max(0, hit.start() - 120) : hit.start()], (path.name, hit)
     text = PREREG.read_text(encoding="utf-8")
@@ -163,48 +178,66 @@ def test_v1s_c2_failure_is_stated_as_the_taps_record_not_delivery():
             assert phrase in part, (name, phrase)
     assert "recorded in the XRecord stream" in parts["section 8, C2"]
     assert "core state 0, without Mod4, in every repetition" in parts["section 8, C2"]
-    assert "Decision D42 corrects D40's statement" in parts["section 8, C2"]
+    assert "Decision D43 corrects D40's statement" in parts["section 8, C2"]
     assert "not the transport" in parts["section 8, C2"]
-    assert "decision D42 corrects D40's reading" in parts["section 25"]
+    assert "decision D43 corrects D40's reading" in parts["section 25"]
+    assert "Re-judged with v2's judge" in parts["section 25"]
     item9 = _between(text, "9. **The cause D40 stated is corrected", "## 25.")
-    assert "D42 keeps items 1-4 as drafted" in item9 and "accepts the exposure" in item9
-    assert "changes no rule, number or frozen file" in item9
-    section26 = " ".join(text.split("## 26.", 1)[1].split())
-    assert "**What D42 decides, and what it leaves.**" in section26
-    assert "D42 accepts the exposure" in section26
+    assert "D43 decides instead" in item9 and "kind, keycode, keysym and order" in item9
+    assert "Items 2-4 stand as drafted" in item9
+    section26 = " ".join(text.split("## 26.", 1)[1].split("## 27.", 1)[0].split())
+    assert "**What D43 decides, and what it leaves.**" in section26
+    assert "so the exposure is gone" in section26
 
 
-def test_the_correction_is_a_dated_decision_that_keeps_d40s_changes():
-    """D42 exists in the decision log, corrects D40's cause and keeps its changes, and D40
-    points to it; the registration cites the same decision."""
+def test_d43_is_main_s_decision_and_the_branch_s_draft_does_not_survive():
+    """D43 (main) corrects D40's cause and changes the judge; D40 is unedited; no decision on
+    the action path is numbered D42 (that number is Q3's); the registrations cite D43."""
     log = (ROOT / "program/decisions.md").read_text(encoding="utf-8")
     d40 = " ".join(log.split("**D40. ", 1)[1].split("**D41. ", 1)[0].split())
-    assert "D42 corrects the cause stated here" in d40
-    head, d42 = log.split("**D42. ", 1)
-    assert head.rstrip().endswith("## 2026-10-08")
-    d42 = " ".join(d42.split("\n**D4", 1)[0].split())
+    assert "D42" not in d40 and "D43" not in d40
+    d42 = " ".join(log.split("**D42. ", 1)[1].split("**D43. ", 1)[0].split())
+    assert d42.startswith("Q3 dense pre-check v2")
+    d43 = " ".join(log.split("**D43. ", 1)[1].split("\n**D4", 1)[0].split())
     for phrase in (
         "D40's stated cause is corrected",
-        "XIGrabModeSync",
-        "the shell received Super+d",
-        "not in delivery",
-        "D40's three changes, and L0-raw's admission as a development layer at seed 42, "
-        "stand as drafted",
-        "v2 keeps the oracle's reading of events queued under a grab",
-        "never makes a trial pass",
-        "The remaining exposure is accepted",
-        "127 of 127",
-        "D40's author confirms or overrules it",
+        "the shell did receive Super+d",
+        "treats the modifier state of a key event recorded without the guard-guaranteed "
+        "locked lock bits as unobservable",
+        "judges it on kind, keycode, keysym and order only",
+        "every other event is judged as before",
+        "v2's C2 stays a reproduction test",
     ):
-        assert phrase in d42, phrase
-    assert "genuine transport defect" not in d42.split("Corrected cause:", 1)[1]
-    assert "decision D42" in PREREG.read_text(encoding="utf-8")
+        assert phrase in d43, phrase
+    for doc in (*DOCS, ROOT / "harness/q2/action_path/l0_raw_prediction_v2.yaml"):
+        text = doc.read_text(encoding="utf-8")
+        assert "D42" not in text, doc.name
+        assert "D43" in text, doc.name
+
+
+def test_section_27_records_d43_and_its_development():
+    text = PREREG.read_text(encoding="utf-8")
+    assert text.count("## 27. Changes for decision D43") == 1
+    section = " ".join(text.split("## 27. Changes for decision D43", 1)[1].split())
+    for phrase in (
+        "modifier_state_observable",
+        "condition (f)",
+        "424 sessions",
+        "for any other reason",
+        "fault_drop_modifier",
+        "126ff8b",
+        "Jobs 834-839 repeat v1's final development runs 703-708",
+        "| 832 | `q2ap-v2-d43-drop-omit-v1` |",
+        "| 833 | `q2ap-v2-d43-drop-release-first-v1` |",
+    ):
+        assert phrase in section, phrase
 
 
 def test_shell_grabbed_chords_have_modifier_state_after_the_grab_key():
-    """Section 4.4 and D42: on the four chords GNOME Shell grabs, every reference event after
-    the grab-activating key has a modifier state that is not empty, so an event the tap
-    records with state 0 while it is queued under the grab can only fail its trial."""
+    """Section 4.4: on the four chords GNOME Shell grabs, every reference event after the
+    grab-activating key has a modifier state that is not empty, so v1's judge failed every
+    event the tap records with state 0 while it is queued under the grab; D43's judge reads
+    those events without their state (tests/test_q2_d43_judge.py)."""
     reference = json.loads(
         (ROOT / "harness/q2/action_path/rdev_reference.json").read_text(encoding="utf-8")
     )["entries"]

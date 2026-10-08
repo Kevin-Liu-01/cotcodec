@@ -145,13 +145,14 @@ def test_c2_requires_the_exact_predicted_failing_set():
     import yaml
 
     predicted = frozenset(yaml.safe_load(acc.PREDICTION.read_text())["predicted_fail"])
-    assert "chord_super_d" in predicted  # v2's prediction (decision D40)
+    # v2's prediction (decisions D40 and D43): v1's failing set; chord_super_d passes.
+    assert "chord_super_d" not in predicted and len(predicted) == 8
     plan = _c2_plan()
     assert acc.c2([campaign(plan, fail=predicted)])["pass"]
     assert not acc.c2([campaign(plan, fail=predicted | {"key_enter"})])["pass"]
     assert not acc.c2([campaign(plan, fail=predicted - {"type_emoji"})])["pass"]
-    # chord_super_d passing, as v1 predicted, fails v2's C2.
-    assert not acc.c2([campaign(plan, fail=predicted - {"chord_super_d"})])["pass"]
+    # chord_super_d failing, as in v1's C2 under v1's judge, fails v2's C2.
+    assert not acc.c2([campaign(plan, fail=predicted | {"chord_super_d"})])["pass"]
 
 
 def test_c2_runs_v2s_own_order_seed():

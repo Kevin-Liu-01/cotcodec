@@ -1,0 +1,342 @@
+{
+  "campaign_id": "q2ap-v2-d43-drop-release-first-v1",
+  "cpusets": {
+    "allocated": "48-53",
+    "runner": "52",
+    "vm": "48-51",
+    "vm_mems": "0",
+    "vm_numa_nodes": [
+      0
+    ]
+  },
+  "dangling_volumes_after": 0,
+  "dangling_volumes_before": 0,
+  "docker": {
+    "cgroup_version": "2",
+    "default_runtime": "runc",
+    "runtimes": [
+      "io.containerd.runc.v2",
+      "runc"
+    ],
+    "server_version": "28.3.1"
+  },
+  "driver_python": "3.10.12",
+  "finished_at": 1791458256.6515281,
+  "git_sha": "126ff8bf9c407e9bdf419f4051c0b36f40392dd3",
+  "host_end": {
+    "containers_ours": 0,
+    "containers_running_total": 11,
+    "loadavg": [
+      "16.20",
+      "15.10",
+      "8.33"
+    ],
+    "squeue_foreign": [
+      [
+        "830",
+        "kevin",
+        "RUNNING",
+        "6",
+        "N/A",
+        "q2ap-v2-d43"
+      ],
+      [
+        "835",
+        "kevin",
+        "RUNNING",
+        "8",
+        "N/A",
+        "q2ap-v2-d43-final"
+      ],
+      [
+        "836",
+        "kevin",
+        "RUNNING",
+        "36",
+        "N/A",
+        "q2ap-v2-d43-final"
+      ],
+      [
+        "837",
+        "kevin",
+        "RUNNING",
+        "8",
+        "N/A",
+        "q2ap-v2-d43-final"
+      ],
+      [
+        "838",
+        "kevin",
+        "RUNNING",
+        "8",
+        "N/A",
+        "q2ap-v2-d43-final"
+      ],
+      [
+        "839",
+        "kevin",
+        "RUNNING",
+        "8",
+        "N/A",
+        "q2ap-v2-d43-final"
+      ]
+    ],
+    "t": 1791458256.6241446
+  },
+  "host_start": {
+    "containers_ours": 0,
+    "containers_running_total": 35,
+    "loadavg": [
+      "3.00",
+      "1.06",
+      "1.76"
+    ],
+    "squeue_foreign": [
+      [
+        "830",
+        "kevin",
+        "RUNNING",
+        "6",
+        "N/A",
+        "q2ap-v2-d43"
+      ],
+      [
+        "831",
+        "kevin",
+        "RUNNING",
+        "36",
+        "N/A",
+        "q2ap-v2-d43"
+      ],
+      [
+        "832",
+        "kevin",
+        "RUNNING",
+        "6",
+        "N/A",
+        "q2ap-v2-d43"
+      ],
+      [
+        "834",
+        "kevin",
+        "RUNNING",
+        "8",
+        "N/A",
+        "q2ap-v2-d43-final"
+      ],
+      [
+        "835",
+        "kevin",
+        "RUNNING",
+        "8",
+        "N/A",
+        "q2ap-v2-d43-final"
+      ],
+      [
+        "836",
+        "kevin",
+        "RUNNING",
+        "36",
+        "N/A",
+        "q2ap-v2-d43-final"
+      ],
+      [
+        "837",
+        "kevin",
+        "RUNNING",
+        "8",
+        "N/A",
+        "q2ap-v2-d43-final"
+      ],
+      [
+        "838",
+        "kevin",
+        "RUNNING",
+        "8",
+        "N/A",
+        "q2ap-v2-d43-final"
+      ],
+      [
+        "839",
+        "kevin",
+        "RUNNING",
+        "8",
+        "N/A",
+        "q2ap-v2-d43-final"
+      ]
+    ],
+    "t": 1791457921.764331
+  },
+  "job_id": "833",
+  "labelled_containers_left": [],
+  "manifest_sha256": "2d7113022d37d3198feefa63f66dbe42912c31f280da3516923c9ebc31248afa",
+  "qcow2_info": {
+    "actual-size": 24460201984,
+    "format": "qcow2",
+    "virtual-size": 53687091200
+  },
+  "qcow2_sha256_after": "6bf667a852b3c307f61d9f09c42559351f45e0607e428b4997becf534cf4d313",
+  "qcow2_sha256_before": "6bf667a852b3c307f61d9f09c42559351f45e0607e428b4997becf534cf4d313",
+  "qcow2_unchanged": true,
+  "schema": "cotcodec-vm-campaign-receipt-v1",
+  "session_plan_sha256": "6e1e45d209081111653c498b0a7a568e60680bc3986e50eb2fc79a358a741330",
+  "source_tree_sha256": "a303c1e213b01ad7187a6d4e33a46b1a19cfd30304ff326e993c0ea18b1d86c3",
+  "started_at": 1791457902.4218328,
+  "summary": {
+    "boot_s": {
+      "max": 20.195,
+      "n": 2,
+      "p50": 18.326,
+      "p95": 20.195
+    },
+    "boots_ok": 2,
+    "containers_removed_all": true,
+    "cycles": 2,
+    "distinct_boot_ids": 2,
+    "errors": [],
+    "hmp_cycles_all_ok": 0,
+    "hmp_step_pass_counts": {},
+    "infra_gates_pass": true,
+    "latency_s": {
+      "accessibility_s": {
+        "n": 0,
+        "p50": null,
+        "p95": null
+      },
+      "execute_noop_s": {
+        "n": 0,
+        "p50": null,
+        "p95": null
+      },
+      "screenshot_s": {
+        "n": 0,
+        "p50": null,
+        "p95": null
+      }
+    },
+    "leaked_volumes": [],
+    "nat_modes": [
+      "nat"
+    ],
+    "no_gpu_all": true,
+    "no_published_ports_all": true,
+    "sentinel_pristine": 1,
+    "sentinel_readback_dconf": 0,
+    "sentinel_readback_file": 0,
+    "sentinel_readback_gsettings": 0,
+    "sentinel_reset_checks": 1,
+    "sessions": {
+      "accessibility_calls": 36,
+      "cell_counts": {
+        "FAIL": 14,
+        "FLAKY": 0,
+        "PASS": 0
+      },
+      "cells": {
+        "screenshot+a11y|chord_alt_f4": "FAIL",
+        "screenshot+a11y|chord_alt_tab": "FAIL",
+        "screenshot+a11y|chord_ctrl_alt_shift_r": "FAIL",
+        "screenshot+a11y|chord_ctrl_c": "FAIL",
+        "screenshot+a11y|chord_ctrl_shift_t": "FAIL",
+        "screenshot+a11y|chord_shift_tab": "FAIL",
+        "screenshot+a11y|chord_super_d": "FAIL",
+        "screenshot|chord_alt_f4": "FAIL",
+        "screenshot|chord_alt_tab": "FAIL",
+        "screenshot|chord_ctrl_alt_shift_r": "FAIL",
+        "screenshot|chord_ctrl_c": "FAIL",
+        "screenshot|chord_ctrl_shift_t": "FAIL",
+        "screenshot|chord_shift_tab": "FAIL",
+        "screenshot|chord_super_d": "FAIL"
+      },
+      "guest_server_restarts": 0,
+      "infra_failures": {},
+      "observation_retries": {},
+      "runner_errors": [],
+      "sessions": [
+        {
+          "accessibility_calls": 0,
+          "cycle": 0,
+          "guest_server_restarts": 0,
+          "passed": 0,
+          "probe_relaunches": 0,
+          "setting": "screenshot",
+          "tap_relaunches": 0,
+          "trials": 35,
+          "wall_s": 129.19
+        },
+        {
+          "accessibility_calls": 36,
+          "cycle": 1,
+          "guest_server_restarts": 0,
+          "passed": 0,
+          "probe_relaunches": 0,
+          "setting": "screenshot+a11y",
+          "tap_relaunches": 0,
+          "trials": 35,
+          "wall_s": 187.03
+        }
+      ],
+      "step_s": {
+        "n": 70,
+        "p50": 1.16,
+        "p95": 2.9056
+      },
+      "trial_s": {
+        "n": 70,
+        "p50": 3.6818,
+        "p95": 5.665,
+        "sum": 264.29
+      }
+    },
+    "settled_s": {
+      "n": 2,
+      "p50": 21.501,
+      "p95": 26.236
+    },
+    "tap_selftest_ok": 0
+  },
+  "verdicts": [
+    {
+      "boot_id": "85c8a64f-fb8c-4e5c-ab91-1f079d7cb6d3",
+      "boot_s": 20.195,
+      "booted": true,
+      "container_removed": true,
+      "cycle": 0,
+      "error": null,
+      "hmp_ok": null,
+      "hmp_steps": {},
+      "leaked_volumes": [],
+      "nat_mode": "nat",
+      "no_gpu": true,
+      "no_published_ports": true,
+      "sentinel_leftovers": [],
+      "sentinel_pristine": true,
+      "sentinel_readback_dconf": false,
+      "sentinel_readback_file": false,
+      "sentinel_readback_gsettings": false,
+      "settled_s": 26.236,
+      "tap_selftest_ok": null
+    },
+    {
+      "boot_id": "ebb88a4c-a76f-4af5-b38a-824e71563e4b",
+      "boot_s": 18.326,
+      "booted": true,
+      "container_removed": true,
+      "cycle": 1,
+      "error": null,
+      "hmp_ok": null,
+      "hmp_steps": {},
+      "leaked_volumes": [],
+      "nat_mode": "nat",
+      "no_gpu": true,
+      "no_published_ports": true,
+      "sentinel_leftovers": [],
+      "sentinel_pristine": true,
+      "sentinel_readback_dconf": false,
+      "sentinel_readback_file": false,
+      "sentinel_readback_gsettings": false,
+      "settled_s": 21.501,
+      "tap_selftest_ok": null
+    }
+  ]
+}

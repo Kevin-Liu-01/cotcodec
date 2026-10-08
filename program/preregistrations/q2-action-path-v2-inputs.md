@@ -12,7 +12,7 @@ No acceptance trial and no C2, C1 or C3 run may run before this row exists
   (`program/preregistrations/q2-action-path-v2.md`, section 2.2). It changes no
   rule of that file; it pins the components that file says are frozen here.
   It is v1's inputs addendum (`q2-action-path-v1-inputs`, ledger row 9) with
-  the changes decision D40 makes (section 7).
+  the changes decisions D40 and D43 make (section 7).
 - Drafted: 2026-10-08, on branch `stage0/q2-action-path-v2`, from v1's frozen
   text. v1's addendum was drafted on 2026-10-07 on branch
   `stage0/q2-action-path`, with decisions D30, D33 and D39 applied before its
@@ -114,7 +114,10 @@ file equals it), so freezing the catalog fixes them.
 - **Entry guard** (`guest/guard.py`). Before and after every entry it checks
   (a) no pressed key or button, (b) the LED mask equals the session baseline,
   (c) the probe is mapped, focused and covers the screen, (d) no screencast
-  file grows over 0.4 s; before the entry it parks the pointer at the
+  file grows over 0.4 s, (f) Mod2, Num Lock's modifier, is in the logical
+  modifier state (decision D43: with (a) and (b), Num Lock is locked, so
+  every key event processed inside the entry carries Mod2, the bit the judge
+  reads; main section 4.4); before the entry it parks the pointer at the
   catalog's `guard.park_pointer` (1234, 777). After an entry with a declared
   side effect it first restores: screencast, the chord again while a file
   grows (at most three times) and then Escape; hot corner (also used for
@@ -183,7 +186,13 @@ file equals it), so freezing the catalog fixes them.
   process is gone too, it still relaunches the tap into a new file, each in
   a new scope, before relaunching the probe, and `segment_check` judges each
   tap's records against that tap's own keymap. `verdict.py` applies sections
-  4.3 and 5.
+  4.3 and 5: on the XRecord stream a key event recorded without Mod2, the
+  lock bit the guard guarantees, was recorded while queued under a shell
+  grab and is judged on its kind, keycode (through its keysym) and order,
+  not its modifier state (decision D43, `modifier_state_observable`); every
+  other event, and every event on the probe's channel, is judged as before,
+  and each verdict reports the key events read without their state
+  (`state_not_observed`). C4 (`rdev_agreement`) reads the tap the same way.
 - **Acceptance analysis** (`acceptance.py`). The main preregistration's
   sections 5-9 as code (its design decision 32): end states from the batch
   script's own record and, when read, Slurm; the rerun rules; an undelivered
@@ -194,7 +203,9 @@ file equals it), so freezing the catalog fixes them.
   it on a second excused trial, and a ladder rung not qualifying with more
   than two; A7, the restarts per accessibility call on the exact one-sided
   95% Poisson bound, its calls capped at the plan's 39,036; C1; C2's
-  reading of L0-raw trials (main section 8, decision 34); C3's clean kills
+  reading of L0-raw trials (main section 8, decision 34, with the judge's
+  reading of key events the tap recorded without the guard's lock bit,
+  decision D43); C3's clean kills
   (decision 36) and its equivalence, which needs the counting attempt's
   streams to match the reference's on every cell and each earlier
   attempt's on the cells it ran without an infrastructure failure
@@ -226,7 +237,12 @@ file equals it), so freezing the catalog fixes them.
   manifests may name a trial after which the runner
   SIGKILLs the guest server (`kill_guest_server_after_seq`) or a trial inside
   which it does so before the post guard (`kill_guest_server_during_seq`), to
-  exercise the restart handling; no scored campaign can.
+  exercise the restart handling, or (decision D43) an executor fault that
+  drops a chord's modifiers (`fault_drop_modifier`: `omit` presses only a
+  key action's last key, `release_first` presses and releases its other
+  keys before it; `runner.drop_modifier_source`), for L0-fixed suite
+  development only and never with a mutant or another fault, the negative
+  case of the judge's rule; no scored campaign can.
 
 ## 3. Validation before this freeze (infrastructure only)
 
@@ -266,7 +282,8 @@ results.
 
 The first L0-fixed development run (job 486) ran at commit `29b056e`. Every
 later change to a file listed in section 1 (from `git log 29b056e..`); the
-rows up to `280ccbf` are v1's, the rows after it v2's (decision D40):
+rows up to `280ccbf` are v1's, the rows after it v2's (decisions D40 and
+D43):
 
 | Commit | File | Change and reason |
 |---|---|---|
@@ -296,6 +313,11 @@ rows up to `280ccbf` are v1's, the rows after it v2's (decision D40):
 | `e66bf16` | `manifest.py` | Decision D40: the registrations it admits are `q2-action-path-v2`, `-inputs` and `-executor` (repair attempts `-executor-a2`, `-a3`); C2 runs seed 45 (`CRITERIA`), and seed 45 joins 43 and 44 among the seeds only a scored campaign may declare (`RESERVED_SEEDS`); L0-raw is admitted as a development layer at seed 42, to characterise the mechanism of v1's C2 failure (main section 26); the detection controls stay refused in development. No other admission rule changed. |
 | `e66bf16` | `driver.py` | Decision D40: `session_plan` gives an L0-raw development run the L0-fixed cells, as `acceptance_plan` and the runner already did for C2, and `acceptance_plan` passes the criterion to the order (so seed 45 builds only for C2). Every other plan is v1's. |
 | `e66bf16` | `acceptance.py` | Decision D40: `c2` reads `l0_raw_prediction_v2.yaml` (`PREDICTION`) and checks the realized order against the seed-45 plan (`C2_SEED`); the docstring names v2. No rule changed; `tests/test_q2_acceptance_analysis.py` drives C2 on the seed-45 order and refuses a campaign that ran v1's seed-42 order. No file a campaign executes reads it. |
+| `126ff8b` | `verdict.py` | Decision D43, recorded after v1's C2 (job 768) and v2's development (jobs 784-787), before v2's freeze: on the XRecord stream a key event recorded without Mod2 is judged on kind, keycode (through its keysym) and order, not its modifier state (`modifier_state_observable`, `rdev_matches`, used by `judge` and by `rdev_agreement` for C4), and each verdict reports those events (`state_not_observed`, never a failure). The probe's channel is judged as before. `tests/test_q2_d43_judge.py` re-judges real development records through `suite.observation`: the 15 L0-raw `chord_super_d` trials of jobs 768 and 784 pass, every other v2 development verdict is unchanged, a grabbed chord without its grab key (run 572) and an ungrabbed chord with a dropped modifier still fail. |
+| `126ff8b` | `guest/guard.py` | Decision D43: condition (f), Mod2 in the logical modifier state (`QueryPointer`'s mask, reported as `mods`). The guard had checked the LED mask only; every one of the 424 development sessions had the Num Lock LED on and Mod2 set, and every guard check with no key pressed saw Mod2 (main section 27), so no development verdict changes. |
+| `126ff8b` | `runner.py`, `driver.py`, `manifest.py` | Decision D43: the development-only executor fault `fault_drop_modifier` (section 2, lane), passed through by the driver and admitted by `manifest.py` for L0-fixed suite development at seed 42 only, never with a mutant or another fault, and never in a scored campaign (its fixed workload keys refuse it). No other admission or plan changed. |
+| `126ff8b` | `suite.py` | `run_actions`' docstring said that no L0-raw development run is admitted, which D40 made untrue; corrected with the D43 runs, since every file a campaign executes was to be re-baselined at this commit anyway. No code changed. |
+| `126ff8b` | `acceptance.py` | Decision D43: C2's reading of an L0-raw trial (`c2_projection`, `c2_matches`) leaves out the state of a key press the tap recorded without the guard's lock bit, as `verdict.judge` does; the docstrings name D43. `tests/test_q2_d43_judge.py` and `tests/test_q2_acceptance_analysis.py` drive it. No file a campaign executes reads it. |
 
 The probe change makes the no-action entry's screenshot start from a settled
 screen, the canary changes make the read-back report what the app holds, and
@@ -330,7 +352,14 @@ had run. v2's rows (decision D40) give C2 its own order seed and v2's
 prediction, admit L0-raw in development at seed 42 and name v2's
 registrations; they change no trial verdict and no rule but C2's prediction
 and seed, which D40 changes after v1's C2 (job 768), and they are written in
-answer to that run (main preregistration, sections 24 and 25).
+answer to that run (main preregistration, sections 24 and 25). D43's rows
+(`126ff8b`) change how a trial is judged, and they too answer v1's C2 and
+v2's development (main sections 26 and 27): a key event the tap recorded
+while the shell's grab held it is no longer judged on the state the tap
+could not observe, and the guard now guarantees the bit that tells such an
+event apart. Because the judge, the guard and the lane changed, the final
+development runs were repeated at `126ff8b` (executor addendum, section 9;
+main section 27).
 
 ## 6. A decision before the freeze: guest-server restarts and A4
 
@@ -419,7 +448,8 @@ entries) is stated with A4 and accepted (main sections 6.1, 9 and 20).
 ## 7. Changes from v1 (D40)
 
 Decision D40 changes three things in the main preregistration (its section
-24). In this addendum:
+24), and decision D43 changes the judge and the guard (its section 27). In
+this addendum:
 
 1. **Ids and paths.** This file is `q2-action-path-v2-inputs`, an addendum to
    `q2-action-path-v2`, frozen after it and before
@@ -429,16 +459,23 @@ Decision D40 changes three things in the main preregistration (its section
    for C2), `harness/q2/vm/manifest.py` (v2's ids, C2's seed, L0-raw in
    development at seed 42), `harness/q2/vm/driver.py` (the L0-raw development
    plan, the criterion passed to the order) and
-   `harness/q2/action_path/acceptance.py` (C2 reads v2's prediction and seed).
-   Every other row is v1's digest. Of the four, `order.py`, `manifest.py` and
-   `driver.py` are files a campaign executes; the executor addendum's
-   byte-identity rule names them (its section 9).
+   `harness/q2/action_path/acceptance.py` (C2 reads v2's prediction and seed);
+   and, for D43, `harness/q2/action_path/verdict.py` (the judge's reading of
+   the tap), `harness/q2/vm/guest/guard.py` (condition f),
+   `harness/q2/vm/runner.py` (the development fault), `harness/q2/vm/suite.py`
+   (a docstring), with `manifest.py`, `driver.py` and `acceptance.py` changed
+   again. Every other row is v1's digest. All but `acceptance.py` are files a
+   campaign executes; the executor addendum's byte-identity rule names them
+   (its section 9).
 3. **Text.** Section 2's lane paragraph states the seed-45 and L0-raw
-   development rules; section 5 adds v2's rows after v1's.
+   development rules and the development fault; its guard, judging and
+   acceptance paragraphs state D43's changes; section 5 adds v2's rows after
+   v1's.
 4. **Unchanged.** The probe, the entry delimiters, the marker decoder, the
-   guard (pointer park, side-effect restorations, warm-up), the canary driver,
-   the detection-control translators and their vendored parsers, the judging
-   code and the acceptance analysis's rules, apart from C2's prediction file
-   and seed. v1's validation before its freeze (section 3, job 484) and its
+   guard's other conditions (pointer park, side-effect restorations,
+   warm-up), the canary driver, the detection-control translators and their
+   vendored parsers, the judging of every event D43 does not name, and the
+   acceptance analysis's rules, apart from C2's prediction file and seed and
+   D43's reading of the tap. v1's validation before its freeze (section 3, job 484) and its
    decision record on guest-server restarts (section 6, decisions D30 and D33)
    carry over unchanged.

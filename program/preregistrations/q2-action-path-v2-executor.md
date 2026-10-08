@@ -12,7 +12,7 @@ run may run before this row exists; C2 needs only the inputs addendum.
   `q2-action-path-v2` (section 2.2). It changes no rule of that file; it pins
   what that file says is frozen when development ends. It is v1's executor
   addendum (`q2-action-path-v1-executor`, ledger row 10) with the changes
-  decision D40 makes (section 10).
+  decisions D40 and D43 make (section 10).
 - Drafted: 2026-10-08, on branch `stage0/q2-action-path-v2`, from v1's frozen
   text. v1's addendum was drafted on 2026-10-07 on branch
   `stage0/q2-action-path`, with decisions D30, D33 and D39 applied before its
@@ -186,7 +186,9 @@ A1-A3 judging an entry on its counted repetitions and failing it on a second
 excused trial, and a rung not qualifying with more than two; A7's restarts
 of every attempt per accessibility call of the counting attempts, capped at
 the plan's 39,036, on the exact one-sided 95% Poisson bound, under attempt 1
-only), C1-C4 with C2's reading of L0-raw trials and C3's clean-kill and
+only), C1-C4 with C2's reading of L0-raw trials (including the judge's
+reading of key events the tap recorded without the guard's lock bit, decision
+D43) and C3's clean-kill and
 equivalence rules (a mutant is equivalent only if the counting attempt's
 streams match the reference's on every cell and each earlier attempt's on
 the cells it ran without an infrastructure failure, decision D39), each control reading an earlier attempt by its own
@@ -240,7 +242,7 @@ v1; its seed-45 order runs the same 500 trials in the same 9 sessions, so its
 ## 9. Development record (seed 42, never evidence)
 
 The first paragraph is v1's record, kept; the second states v1's rule; the
-rest is v2's rule (decision D40).
+rest is v2's rule (decisions D40 and D43).
 
 Listed in `program/evidence/2026-10-07/q2-action-path-stage0b/README.md`
 with every job's outcome, and per job in `development-runs.json` there. The
@@ -274,51 +276,70 @@ v1's freeze commit to `7653799`; the `git diff --stat` below listed only
 campaign executes `acceptance.py`; no file of the lane imports it), so the
 development runs at `7653799` stood.
 
-v2's rule (decision D40). Every file a VM campaign executes must be
-byte-identical at v2's freeze commit to `7653799`, the commit of v1's final
-development runs (jobs 703-708), except three files D40 changed, which must be
-byte-identical to `e66bf16` instead:
+v2's rule (decisions D40 and D43). Every file a VM campaign executes must be byte-identical at v2's freeze commit to `126ff8b`, the commit of v2's
+final development runs (jobs 830-839; main section 27). Run at the freeze
+commit,
 
-- `harness/q2/action_path/order.py`: C2's own order seed, 45, built only for
-  criterion C2;
-- `harness/q2/vm/manifest.py`: v2's registration ids, C2's seed, seed 45
-  reserved like 43 and 44, and L0-raw admitted in development at seed 42;
-- `harness/q2/vm/driver.py`: the L0-raw development plan (the L0-fixed cells)
-  and the criterion passed to the order.
+`git diff --stat 126ff8b HEAD -- harness/q2 infra/slurm/host-single-node/vm-campaign.sbatch scripts/submit_vm_campaign.py`
 
-Their changes decide which manifests are admitted and which order C2 runs;
-they execute and judge no trial differently, and every other campaign's
-realized order is v1's byte for byte (`tests/test_q2_v2_changes.py` checks the
-order digests against v1's code's). v2's development runs (main section 26,
-jobs 784-787) ran at `e66bf16` through all three: job 784 through L0-raw's
-development admission and plan, jobs 785-787 through L0-fixed's. Only C2
-builds the seed-45 order, so no VM run took that path before C2; the tests
-cover it. Run at the freeze commit,
+may list only the analysis and sizing files (`acceptance.py`, `vm_hours.py`,
+`trial_times.json`, `vm_hours.json`), the prediction files (which only
+`acceptance.py` reads) and Markdown files. Anything else needs new
+development runs before the freeze. On `stage0/q2-action-path-v2` it lists
+exactly `harness/q2/action_path/l0_raw_prediction_v2.yaml` (section 24, item
+1 of the main registration: `chord_super_d`'s reason and the basis notes,
+written after the runs).
 
-`git diff --stat 7653799 HEAD -- harness/q2 infra/slurm/host-single-node/vm-campaign.sbatch scripts/submit_vm_campaign.py`
+Why the final development runs were repeated. Against `7653799`, the commit
+of v1's final development runs (jobs 703-708), the files a campaign executes
+that differ at `126ff8b`, each with its reason, are:
 
-may list only those three files, the analysis and sizing files
-(`acceptance.py`, `vm_hours.py`, `trial_times.json`, `vm_hours.json`), the
-prediction files (`l0_raw_prediction_v2.yaml`, which only `acceptance.py`
-reads) and Markdown files, and
+- `harness/q2/action_path/order.py` (D40): C2's own order seed, 45, built
+  only for criterion C2;
+- `harness/q2/vm/manifest.py` (D40, D43): v2's registration ids, C2's seed,
+  seed 45 reserved like 43 and 44, L0-raw admitted in development at seed
+  42, and the development-only fault `fault_drop_modifier`;
+- `harness/q2/vm/driver.py` (D40, D43): the L0-raw development plan (the
+  L0-fixed cells), the criterion passed to the order, and the fault passed to
+  the runner;
+- `harness/q2/action_path/verdict.py` (D43): a key event the XRecord tap
+  recorded without Mod2 is judged on kind, keycode, keysym and order, not
+  its state (the trial verdict and C4), and each verdict reports those
+  events;
+- `harness/q2/vm/guest/guard.py` (D43): condition (f), Mod2 in the logical
+  modifier state, and the `mods` field of each check;
+- `harness/q2/vm/runner.py` (D43): the development-only fault, applied as an
+  anchored patch of `l0_fixed.py`'s `key` method in the session's process,
+  only when a development manifest names it;
+- `harness/q2/vm/suite.py`: a docstring D40 had made untrue (no code).
 
-`git diff --stat e66bf16 HEAD -- harness/q2/action_path/order.py harness/q2/vm/manifest.py harness/q2/vm/driver.py`
-
-must list nothing. Anything else needs new development runs before the freeze.
-On `stage0/q2-action-path-v2` the first lists exactly `harness/q2/README.md`,
-`harness/q2/action_path/acceptance.py`,
-`harness/q2/action_path/l0_raw_prediction_v2.yaml`,
-`harness/q2/action_path/order.py`, `harness/q2/vm/driver.py` and
-`harness/q2/vm/manifest.py`, and the second nothing. `suite.py`'s docstring
-still says that no L0-raw development run is admitted; it is left as v1 froze
-it, because a change to a file the campaigns execute would need new
-development runs. The renderer (`scripts/render_q2_action_path_manifest.py`)
-is run by the operator before submission, not by a campaign.
+Against `e66bf16`, where v2's first development runs ran (jobs 784-787), the
+same D43 files differ (`verdict.py`, `guard.py`, `runner.py`, `driver.py`,
+`manifest.py`, `suite.py`). `verdict.py` and `guard.py` judge every trial
+and run before and after every entry, so the runs at `7653799` and
+`e66bf16` no longer stand for the code the campaigns will execute. Jobs
+834-839 repeat 703-708 at `126ff8b` with their workloads and Slurm resources
+unchanged: the guest-server fault injection (834: 52 of 56, the two trials
+each session's kills hit, as 703), L0-fixed on one VM and on 8 (835: 400 of
+400; 836: 800 of 800), H-OSW-fixed (837: 194 of 198, R03 and R09 outside
+spec) and H-GA (838: 178 of 186, R02, R04, R06 and R10 outside spec), and
+the canary (839: 60 of 60). Every in-spec cell passed in every repetition
+and setting, the only failures are 703-708's, no trial of those layers read
+an event without its state, C4 agreed in 140 of 140 and 280 of 280 key,
+chord and Caps Lock trials, every guard check read Mod2, and step p95 was
+2.71 s on one VM and 2.76 s on 8 (704: 2.92 s, 705: 3.02 s). Jobs 830-833
+ran the L0-raw and L0-fixed samples and the negative case D43 asked for
+(main section 27). The executor, the adapters, the corpus and the other guest
+code are identical at `7653799`, `e66bf16` and `126ff8b`, so the VM-hour
+sizing measured at `82af567` (section 8) stands. The renderer
+(`scripts/render_q2_action_path_manifest.py`) is run by the operator before
+submission, not by a campaign.
 
 ## 10. Changes from v1 (D40)
 
 Decision D40 changes three things in the main preregistration (its section
-24). In this addendum:
+24), and decision D43 changes the judge and the guard (its section 27). In
+this addendum:
 
 1. **Ids and paths.** This file is `q2-action-path-v2-executor`, an addendum
    to `q2-action-path-v2`, frozen after `q2-action-path-v2-inputs`; a repair
@@ -327,14 +348,18 @@ Decision D40 changes three things in the main preregistration (its section
    `harness/q2/action_path/acceptance.py` (C2 reads v2's prediction and seed),
    `scripts/render_q2_action_path_manifest.py` (the host run root as a
    parameter, v2's paths), `harness/q2/vm/driver.py` and
-   `harness/q2/vm/manifest.py` (as in the inputs addendum, section 5). Every
-   other row is v1's digest: L0-fixed, the adapters, the vendored parsers, the
+   `harness/q2/vm/manifest.py` (as in the inputs addendum, section 5); for
+   D43, `harness/q2/vm/guest/guard.py` (condition f), `harness/q2/vm/runner.py`
+   (the development fault) and `harness/q2/vm/suite.py` (a docstring), with
+   `driver.py`, `manifest.py` and `acceptance.py` changed again. Every other
+   row is v1's digest: L0-fixed, the adapters, the vendored parsers, the
    corpus, the mutation kit, the design differences, the canary targets and
    the VM-hour sizing are unchanged.
-3. **The byte-identity rule** (section 9) names the three files a campaign
-   executes that D40 changed (`order.py`, `manifest.py`, `driver.py`), why,
-   and the commit they must equal (`e66bf16`), where v2's development runs ran;
-   every other file a campaign executes must still equal `7653799`.
+3. **The byte-identity rule** (section 9) names every file a campaign
+   executes that differs from v1's final development commit (`7653799`) or
+   v2's first (`e66bf16`), why, and the commit they must all equal now
+   (`126ff8b`), where v2's final development runs (jobs 830-839, repeating
+   703-708) ran.
 4. **Text.** Section 7 describes the renderer's host-root parameter and
    corrects what v1 said about the addenda C2's manifest pins (the renderer
    pins every addendum the ledger holds, as v1's evidence for job 768
