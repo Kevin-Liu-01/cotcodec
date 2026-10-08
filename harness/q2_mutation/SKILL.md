@@ -28,7 +28,9 @@ scores it. Runbook: `README.md` in this directory.
   `offline_eval.py` scores; `report.py` summarizes control runs (K1, P1).
 - `operators/` is the 64-operator catalog with its stdlib snapshot, diff and
   purity oracle; its sources are hashed into `catalog_sha256`.
-- `raters.py`, `packets.py` and `stats.py` hold the D9/D23 audit: sample, blind
+- `raters.py`, `packets.py` and `stats.py` hold the D9/D23 audit: the D35
+  census of the checker candidates and P2's gate (stratified fallback above
+  the GPU cap's capacity), blind
   packet (built from the operators' snapshot), answer rule, consensus,
   adjudication and the K3 bound; `audit.py` builds samples, saved-start
   baselines, packets fitted to the token budget and the summary (one calls
@@ -37,7 +39,10 @@ scores it. Runbook: `README.md` in this directory.
   (Qwen3.6-35B-A3B, D27, thinking on since D34) and exports/ingests the
   agent-harness Claude rater one item per directory with a transcript audit
   tied to the registered prompt template `templates/isolated_rater_prompt.txt`
-  (D25, D27, D34); `analysis.py` is the registered headline.
+  (D25, D27, D34) that checks every user turn and every transcript of an item
+  (D35); `analysis.py` is the registered analysis, descriptive since D35
+  (`D34_DEV_EXIT` keeps P2-P5 out of the confirmatory headline;
+  `checker_candidates` is the descriptive output).
 
 ## Patterns to follow / invariants
 <!-- agent-docs:fill:patterns -->
@@ -78,6 +83,8 @@ scores it. Runbook: `README.md` in this directory.
 - Isolated Claude rater: never put an index, label, sample or other item
   under the isolation root; the manifest lives outside it. Start each agent
   with the registered template rendered for its item, verbatim (the audit
-  compares the transcript's first prompt with it).
+  needs exactly one user turn equal to it; the only other turn allowed is the
+  harness relay frame of a resumed run). Keep every agent's transcript, the
+  interrupted ones as `<item>.<agent id>.jsonl`: all are audited (D35).
 - Audit salts (D34) live only on the host (`scratch/audit-salts/<audit>/`,
   mode 600); commit the SHA-256 and reveal the salt only after the ingest.

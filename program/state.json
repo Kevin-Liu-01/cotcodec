@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-10-07",
+  "updated": "2026-10-08",
   "program": "Checker adequacy and calibrated measurement for verifiable machine work",
   "program_doc": "program/PROGRAM.md",
   "stage": "stage-0",
@@ -44,7 +44,7 @@
       "doc": "program/questions/q2-calibrated-cua-instrument.md",
       "dossier_key": "S1-calibrated-cua-instrument",
       "status": "stage-0-running",
-      "next_action": "Kevin decides how A4 treats guest-server restarts (inputs addendum section 6); then the owner freezes q2-action-path-v1, -inputs and -executor (development complete on stage0/q2-action-path) and runs C2, C1 and C3, A1-A6 and the ladder. Rescope Stage 1 from the measured cost card (closed-loop VM time dominates); the checker-mutation kit continues",
+      "next_action": "Kevin decides how A4 treats guest-server restarts (inputs addendum section 6); then the owner freezes q2-action-path-v1, -inputs and -executor (development complete on stage0/q2-action-path) and runs C2, C1 and C3, A1-A6 and the ladder. Rescope Stage 1 from the measured cost card (closed-loop VM time dominates); the checker-mutation study continues as a descriptive protocol (D35): a fresh review of its seventh draft, Kevin's sign-offs, then freeze",
       "first_gpu_experiment": {
         "name": "Qwen3.5 ladder (as dossier-designed)",
         "measured_projection_gpu_hours": 431.5,
@@ -89,7 +89,7 @@
     "Decide whether to purge the old host address and the internal corpus inventory from public git history (requires a force-push)",
     "Spot-check a sample of the Q2 checker-mutation audit as the human rater (decision D9)",
     "Moonshot (Kimi) account is suspended for insufficient balance; recharge it if a Kimi model should be a rater or reviewer (rotate the exposed key at the same time)",
-    "Q2 checker-mutation (q2-evaluator-mutation-v1, sixth draft, D34): the fourth review (57/100) found D27's consequence fired (dev kappa 0.270); D34's one retry is implemented on stage0/q2-evaluator-mutation: the thinking-on Qwen3.6-35B-A3B rated all 142 items of the rebuilt dev audit (dev-audit-v4, 0.228 GPU-h; kappa 0.578 if Claude matched every label, 0.486 projected from the D27 Claude answers), and the 142 items are exported for the isolated Claude rater with the registered prompt template. Pending: the isolated Claude ratings and ingest (if dev kappa < 0.6, P2-P5 leave the confirmatory headline, no other rater), the salt release, a fifth review, and Kevin's sign-offs: the D23/D25/D27/D34 rater lineup (thinking-on sampling, harness-injected context, unfixed Claude sampling, public OSWorld files to the Claude model), the gold-defect rule, the concordant-contradiction adjudication pool (about 70-175 confirm items, 3.5-15 h), the new-file text difference, the save-drift rule, the off-slide rule, the 3.0 GPU-h confirm rater cap, and the spot-check owner",
+    "Q2 checker-mutation (q2-evaluator-mutation-v1, seventh draft, D35): D34 (i) fired after the one rater retry (dev kappa 0.066 under the registered ingest, where the resumed harness's relay turn voided 110 Claude answers, and 0.575 with that turn excepted; fifth review 64/100), so no other rater is tried and P2-P5 are out of the confirmatory headline. D35 makes the study a pre-specified descriptive protocol, implemented on stage0/q2-evaluator-mutation: the exit in code (P2-P5 exploratory, K6 retired, K4 reported only, K6b and K7 descriptive), the checker false-negative and false-positive candidates with their audit decisions as the descriptive output, a census audit of every candidate event, P2's gate, the shams and the P1 flips within the 3.0 GPU-h rater cap (stratified fallback above 1,139 items; about 205 items expected), a transcript audit of every user turn and every transcript with the harness relay frame registered, and difference-first packets. Pending: a fresh review of the seventh draft; Kevin's sign-offs (prereg section 17: the D35 protocol and relay rule, the D34 rules as implemented, the D23/D25/D27 rater lineup with unfixed Claude sampling and public OSWorld files sent to the Claude model, the adjudication workload of about 16 pool items, 10-40, 0.5-3.5 h, and the spot-check owner, about 35 items); then re-merge main and freeze",
     "Before freezing q2-action-path-v1: decide how A4 treats OSWorld guest-server restarts inside /accessibility (1 crash in 8,114 calls in development, a single event: A4 as registered passes with probability about 0.01, 95% range 0.89 to 0); options 1-5 in program/preregistrations/q2-action-path-v1-inputs.md section 6",
     "The ANTHROPIC_API_KEY on this machine is invalid (HTTP 401); supply a valid key if the Claude rater and gauntlet reviews should use the API rather than the agent harness (D25)",
     "Review and freeze the integrated Q1 Stage 0 preregistration (q1-stage0-gate-validation on stage0/q1-gates), including the integration decisions in its section 15 and the review fix-pass decisions in its section 16",
@@ -233,7 +233,7 @@
         "718 overlay build",
         "722 open-weight rater Qwen3.6-35B-A3B, thinking on (142 dev items, all rated)"
       ],
-      "outcome": "every dev item rated in one 12 min 57 s job that ended on its own (0.216 GPU-h rater + 0.012 overlay, inside D34's 0.5); 14.4 items per minute; shams 20/21; violations 14 accept / 12 reject (thinking off 19 / 7); kappa 0.578 if Claude matched every label, 0.486 against the D27 isolated Claude answers on 119 matched items; the isolated Claude ratings of the new packets are pending"
+      "outcome": "every dev item rated in one 12 min 57 s job that ended on its own (0.216 GPU-h rater + 0.012 overlay, inside D34's 0.5); 14.4 items per minute; shams 20/21; violations 14 accept / 12 reject (thinking off 19 / 7); kappa 0.578 if Claude matched every label, 0.486 against the D27 isolated Claude answers on 119 matched items; with the isolated Claude ratings of the new packets, dev kappa 0.066 under the registered ingest (110 relay-turn voids) and 0.575 with the relay turn excepted: D34 (i) fired (D35)"
     }
   ],
   "results": [

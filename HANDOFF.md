@@ -5,7 +5,7 @@
 The restarted program is in Stage 0. Everything runs through frozen
 preregistrations in `program/preregistrations/ledger.jsonl` (hash-chained;
 `uv run python scripts/preregister.py check-chain`, 7 rows). Decisions taken on
-Kevin's behalf are D1-D34 in `program/decisions.md`. GPU-hours are in
+Kevin's behalf are D1-D35 in `program/decisions.md`. GPU-hours are in
 `program/state.json` (`gpu_hours_ledger`): 2.44 on main, plus 0.33 (Q1
 re-pilot, branch `stage0/q1-engineering-d31`) and 0.57 (four checker-mutation
 dev rater rows, branch `stage0/q2-evaluator-mutation`, where the ledger rows
@@ -38,8 +38,15 @@ sum to 3.01) not yet merged.
   diffs, a registered prompt template and transcript audit tied to items, a
   secret id salt, one thinking-on rerate) gave dev kappa 0.066 under the
   registered ingest and 0.575 with the harness relay turn excepted, so D34 (i)
-  fired: no other rater, P2-P5 out of the confirmatory headline. D35 makes the
-  study a descriptive protocol; being applied on the branch.
+  fired: no other rater, P2-P5 out of the confirmatory headline. D35 is
+  applied in the seventh draft: the exit in `analysis.D34_DEV_EXIT`, the
+  checker false-negative and false-positive candidates as the descriptive
+  output, a census audit (candidates, P2's gate, shams, P1 flips; about 205
+  items, 0.62 GPU-h planned; stratified fallback above 1,139), a transcript
+  audit of every user turn and transcript with the relay frame registered,
+  difference-first packets, and the lane memory per model. Next: a fresh
+  review of the seventh draft, Kevin's sign-offs (section 17), re-merge main,
+  freeze. The registered dev result (κ 0.066) stays as recorded.
 - **Q1 Stage 0** (`stage0/q1-engineering-d31`): the reference store gives the
   same verdicts but saves little; the high projection is 8.56-9.66 GPU-h, so
   under D31 Stage 0 is not admitted and waits on the gauntlet (D24). The
@@ -55,7 +62,7 @@ See `pending_decisions_for_kevin` in `program/state.json`. The ones that
 block work: the gauntlet trust store or an admission ruling (D24: blocks Q1
 Stage 0, Q2 Stage 1 and any K1 v3), the R580 driver upgrade or written risk
 acceptance (Q1 Stage 1 scoring), adjudication of the checker-mutation pool
-and the human spot check (D9), and review of D28-D34. Outward actions
+and the human spot check (D9), and review of D28-D35. Outward actions
 (disclosures to Letta and xlang-ai, licence requests, a history purge, key
 rotation) stay his.
 

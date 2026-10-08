@@ -16,10 +16,10 @@ Branches: harness `stage0/q2-mut-harness` (this code), specs
 | `reachability.py` | LO-VM image (Python 3.10, stdlib) | GUI-faithful LibreOffice save: Xvfb + openbox, the VM's LibreOffice and profile, postconfig replay, pyautogui keys |
 | `offline_eval.py` | metric image, per venv | The pinned `DesktopEnv.evaluate()` with a stub VM; fresh processes, repeat scoring, `error` verdicts |
 | `stats.py` | anywhere | Task-cluster bootstrap, Wilson and Clopper-Pearson intervals, zero-event bounds, MDE, Hajek audit weights, the K3 label-error bound (exact at the Kish effective size), κ |
-| `raters.py` | anywhere | D9/D23 model-rater audit: candidate pool, sample (violation census, shams with a gold sham for every K3 task, P1 flips), salted opaque item ids, blind packets, first-token answer rule (after the last `</think>` for the thinking rater), consensus, Kevin's blind adjudication pool (splits, concordant K3 contradictions, split gold shams), gold defects, K3/K4 on the ungated label classes, S6 per label class |
-| `rater_runner.py` | Anthropic API (local) / agent harness (D25, D27, D34) / vLLM lane (H100) | One call per rater per item (a calls file with a second record for an item is refused), transport-only retries (at most 3), malformed bodies `unsure`, request and response hashes, receipts; shard merge for the summary; `export-isolated` / `ingest-isolated` for the Claude rater through the agent harness, one agent per item in its own directory with a transcript audit (`export-harness` / `ingest-harness` is the earlier shared-directory form); the open-weight rater serves Qwen3.6-35B-A3B (D27; thinking on since D34) with vLLM in the cu129 overlay, stops cleanly on the lane's signals and leaves with `os._exit`; `templates/isolated_rater_prompt.txt` is the registered task prompt of each isolated rater agent |
+| `raters.py` | anywhere | D9/D23 model-rater audit: candidate pool, D35 census (every checker candidate event and P2's audit gate, shams with a gold sham for every audited task, P1 flips; a seeded stratified fallback over candidate type x checker family above the 3.0 GPU-h cap's capacity, `audit_capacity` 1,139 items), salted opaque item ids, blind packets, first-token answer rule (after the last `</think>` for the thinking rater), consensus, Kevin's blind adjudication pool (splits, concordant K3 contradictions, split gold shams), gold defects, K3/K4 on the ungated label classes, S6 per label class |
+| `rater_runner.py` | Anthropic API (local) / agent harness (D25, D27, D34) / vLLM lane (H100) | One call per rater per item (a calls file with a second record for an item is refused), transport-only retries (at most 3), malformed bodies `unsure`, request and response hashes, receipts; shard merge for the summary; `export-isolated` / `ingest-isolated` for the Claude rater through the agent harness, one agent per item in its own directory with a transcript audit of every user turn and every transcript of the item (D35: the registered template once, and only the harness relay frame besides it) (`export-harness` / `ingest-harness` is the earlier shared-directory form); the open-weight rater serves Qwen3.6-35B-A3B (D27; thinking on since D34) with vLLM in the cu129 overlay, stops cleanly on the lane's signals and leaves with `os._exit`; `templates/isolated_rater_prompt.txt` is the registered task prompt of each isolated rater agent |
 | `audit.py` | anywhere / LO-VM image | Audit sample and items from a scored run, saved-start baseline jobs, blind packets with 100-dpi renders fitted to the registered token budget (sharded), audit summary over per-shard call files and decisions |
-| `analysis.py` | anywhere | Registered headline: P1 (replication, confirm plus reserve control runs), P2-P5 with the audit gates, family floor, K2 (recomputed without dropped families) and K3 consequences, K5, K6, K6b, K7, K9 |
+| `analysis.py` | anywhere | Registered analysis, a descriptive protocol since D35: P1 (replication, confirm plus reserve control runs), the checker false-negative and false-positive candidates with their audit decisions, counts and task-equal shares; P2-P5 (exploratory: `D34_DEV_EXIT` always keeps them out of the confirmatory headline) with the audit gates, family floor, K2 (recomputed without dropped families), K3 and K4 reported, K5, K6 retired (blocked), K6b and K7 descriptive, K9 |
 | `dependency_flips.py` | metric image | S1: venv flip candidates from the repeat-2 scorings, confirmed only at five agreeing fresh-process scorings per venv |
 | `packets.py` | anywhere (stdlib) | Rater packet artifacts: listing and structural difference from the operators' snapshot (save drift of at most 0.02 mm counted, not listed), a text-level difference for new-file end states, render commands (100 dpi) |
 | `vm_injection.py` | anywhere | Corrected in-VM injection plan for the fidelity gate (executed later on the VM runtime): opens agent-created outputs, agent-equivalent saves, save path per target |
@@ -143,7 +143,8 @@ audit alike). Render each job's manifest on the host with
 --gpu-ledger <q2 root>/raters/gpu-ledger.jsonl`: the renderer sums the caps
 already in the ledger for that audit, refuses a job that would pass the
 audit's cap (3.0 GPU-h confirm since D34, 0.5 GPU-h per dev smoke) and appends its own
-row. Size `--minutes` as 4 minutes of start (container, model check, engine) plus
+row. The lane memory is the rater model's (160 GiB for Qwen3.6-35B-A3B, as the
+reviewer lane). Size `--minutes` as 4 minutes of start (container, model check, engine) plus
 the shard's items at 10 per minute (thinking on; 14.4 measured) plus the
 lane's USR1 lead (up to 240 s); a job stopped early leaves the rest `unrated`, which a
 rerun on a shard of those items rates. Check image input first with the CPU
@@ -165,16 +166,21 @@ uv run python -m harness.q2_mutation.rater_runner export-isolated \
 # 2. One subagent per item. Its task prompt is templates/isolated_rater_prompt.txt
 #    with {ITEM_DIR} = <root>/<item> (the manifest's iso_root, no trailing slash)
 #    and {ITEM_ID} = <item>, verbatim; keep its answer as <answers>/<item>.json
-#    ({item_id, answer, reason}) and its harness transcript as <transcripts>/<item>.jsonl.
-# 3. Ingest: re-hash every item directory, model id and audit from the transcript.
+#    ({item_id, answer, reason}), the answering agent's harness transcript as
+#    <transcripts>/<item>.jsonl and every other attempt's (interrupted or repeated
+#    agents) as <transcripts>/<item>.<agent id>.jsonl (D35).
+# 3. Ingest: re-hash every item directory, model id and audit from every transcript.
 uv run python -m harness.q2_mutation.rater_runner ingest-isolated \
   --packets packets-000.jsonl --manifest <outside>/iso-manifest.json --iso-root <root> \
-  --answers <answers> --transcripts <transcripts> --out <calls dir>
+  --answers <answers> --transcripts <transcripts> [<more dirs>] --out <calls dir>
 ```
 
-The transcript audit voids an item's answer (`isolation_void`, `unsure`) on
-a first prompt that is not the template rendered for that item (bare or in
-the workflow harness's wrapper), a StructuredOutput naming another item, a
+The transcript audit voids an item's answer (`isolation_void`, `unsure`)
+unless, in every transcript of the item, exactly one user turn is the template
+rendered for that item (bare or in the workflow harness's wrapper) and any
+other user turn is the harness relay frame (`RELAY_PREAMBLE`, once, before the
+task turn, naming no item id, byte-identical across the run; D35). It also
+voids on two transcripts that answer, a StructuredOutput naming another item, a
 packet.txt never read, a shell call, a tool other than Read (and the
 path-free StructuredOutput, ToolSearch, TodoWrite), a path outside the item
 directory, a changed item directory, a missing transcript or model id, or an
