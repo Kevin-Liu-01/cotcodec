@@ -827,10 +827,12 @@ Append-only. Newest entries at the bottom.
 
 ## 2026-10-07 — The D33 reviews' remaining notes closed before the freeze (not frozen)
 
-- Merged main (D34, D35) into `stage0/q2-action-path-d30` (`6c5915d`); the
-  branch's ledger and decision log equal main's (7 rows, chain PASS).
-  Main had not changed `state.json`'s Q3 entries, so this branch leaves them
-  alone.
+- Merged main (D34, D35) into `stage0/q2-action-path-d30` (`6c5915d`), and
+  again after main moved on (D36 and the Q3 pre-check's operation,
+  `e643aec`, below this entry); the branch's ledger and decision log equal
+  main's (7 rows, chain PASS). The Q3 entries of `state.json` are main's:
+  this branch changed none of them, and the second merge brought main's
+  update of them.
 - Wording (main preregistration section 22): the excused reason set shows a
   restart during or after the entry's observation calls, before its post
   guard, and excusing the latter is harmless because every action had
@@ -862,7 +864,8 @@ Append-only. Newest entries at the bottom.
   Holo3 tests, 349 passed; ruff check and format clean on the changed
   files. On the host, from an rsync of the worktree into a fresh
   `~/cotcodec-scratch/` directory (`uv sync --locked --extra dev`), ruff
-  check clean and the whole suite 1,856 passed, 34 skipped. The final
+  check clean and the whole suite 1,856 passed, 34 skipped, at `56b0738`
+  and again at the merge `e643aec` (another fresh directory). The final
   loader re-read runs 694 and 703-708 read-only next to the previous one
   (`ced21d32`): nothing changed but the
   new list's form (`chord_ctrl_c` in 694 and 703 listed with status
@@ -871,9 +874,10 @@ Append-only. Newest entries at the bottom.
   session. `acceptance.py` is still the only code file changed since
   `7653799` besides `harness/q2/README.md`; no lane file imports it. Both
   addenda pin its digest `0f476864`, and all 85 frozen-table digests match.
-  Freezing the three drafts into a scratch copy of the ledger verified with
-  the chain intact (10 rows; SHA-256 v1 `1001591d`, inputs `98a4bc53`,
-  executor `05829878`); the repository ledger is unchanged (7 rows).
+  Freezing the three drafts into a scratch copy of the ledger, at
+  `56b0738` and again at `e643aec`, verified with the chain intact (10
+  rows; SHA-256 v1 `1001591d`, inputs `98a4bc53`, executor `05829878`, the
+  same at both); the repository ledger is unchanged (7 rows).
 - Open for the orchestrator: the three drafts' status lines still read
   "DRAFT. Not frozen." (D32 had the Q3 draft's line rewritten before its
   freeze).
