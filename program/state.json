@@ -407,7 +407,7 @@
     "Q2 action path: q2-action-path-v2 (+ -inputs, -executor) is frozen (2026-10-08, ledger rows 13-15) under D40, D43 and D45. v1's C2 failure of chord_super_d was in the XRecord tap's record of key events queued during GNOME Shell's synchronous grab, not in delivery; v2's judge reads such an event without its state only after a processed press in its window. Still open for you: whether a later registration should observe the shell's side of a grabbed chord directly, and the job 851 unprovoked guest-server restart (the lane's second) beside the D30 development rate",
     "Q3: q3-dense-headroom-precheck-v2 read NEGATIVE_CAPABLE_V3 on Qwen3.5-4B-Base (development partition; program/evidence/2026-10-08/q3-dense-headroom-precheck-v2/README.md). Decide whether to open a K1 v3 on that base (new experiment id and the research gauntlet, D26), with the read's requirements: a seen-script cross-script condition, an entity-controlled question set, the non-literal floor (99% lower bound of G(MN) on controlled families at least 0.5), GO and NEGATIVE statistics computed on the entity-controlled set, anchor masking or a lexical-overlap covariate, and H2 re-tested under K1's bounds on the audit read"
   ],
-  "gpu_hours_spent_this_program": 4.6247,
+  "gpu_hours_spent_this_program": 4.6816,
   "frozen_registrations": [
     "q3-k1-localization-screen-v1",
     "q2-holo3-rerun-audit-v1-posthoc",
@@ -690,6 +690,15 @@
       ],
       "outcome": "PRECHECK_COMPLETE, receipt bound to job 862 from job.env; 1,160 units at 0.26-0.53 s per unit by stage; NEGATIVE_CAPABLE (H1_CX 42.15, lower 35.76; h2_status POINT_ONLY); combined read NEGATIVE_CAPABLE_V3 on qwen3.5-4b-base",
       "basis": "physical (job.env start 13:41:32 to termination.env finish 13:50:47, 555 s on 1 H100); charged under the registration rule 11 minutes (0.1833 GPU-h) of 32"
+    },
+    {
+      "experiment": "K1 v3 gauntlet wave 1 open-weight review (D24)",
+      "gpu_hours": 0.0569,
+      "jobs": [
+        "966 qwen3.6-35b-a3b review"
+      ],
+      "outcome": "review PARSED on attempt 1, total 55, replicates token-identical; wave score 51 (lower of 51 and 55); honest exit (query budget 171 of 150, triad 3/3 refuted); reviewer inference only, not K1 v3 screen work",
+      "basis": "physical (scontrol RunTime 00:03:25 on 1 H100; 0.25 GPU-h cap; no leftover container, GPUs at 0 MiB after the job)"
     }
   ],
   "results": [
