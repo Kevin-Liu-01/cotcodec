@@ -231,3 +231,36 @@ def test_prereg_lists_the_registered_transcript_entry_and_attachment_types() -> 
     for kind in rater_runner.HARNESS_ATTACHMENT_TYPES:
         assert f"`{kind}`" in text, kind
     assert "`queued_command`" in text and "3,304 attachments" in flat
+
+
+def test_prereg_records_d38_and_its_fixes() -> None:
+    """Decision D38: the minor items of the sixth review are fixed and written down."""
+    from harness.q2_mutation import rater_runner
+
+    text = _text()
+    flat = " ".join(text.split())
+    assert "decisions D35 and D38" in flat.split("## 1.")[0]
+    # The fallback is a search for the largest budget, with the review's numbers.
+    assert "found by search" in flat and "251, 462 and 672" in flat
+    # The registered collector, its manifest check, and the relay rules.
+    for needed in (
+        "`rater_runner collect-transcripts`",
+        "`--collection`",
+        "`rater_runner.check_relay_frames`",
+        "`rerate.json`",
+        "--rerate-list rerate.json",
+        "answer-blind",
+        "one workflow session",
+        "an interrupted attempt (no result) answers only through a `StructuredOutput` call",
+        "its text verbatim",
+    ):
+        assert needed in flat, needed
+    assert rater_runner.RERATE_SCHEMA == "q2m-relay-rerate-v1"
+    # Every candidate kind's concordant contradictions go to Kevin's pool.
+    assert "`fn_equiv`, `fn_alt`, `alt_gate`, `fp_violation`, `fp_extra`), on which both" in flat
+    # Stale text is gone: K6 no longer reads P5, and no D38 item is left open.
+    assert "K6 reads the recomputed P5" not in flat
+    assert "K6 no longer reads P5" in flat
+    assert "minor items stay open" not in flat and "are not changed in this draft" not in flat
+    section17 = flat.split("## 17. Freeze checklist")[1]
+    assert "[x] Decision D38" in section17 and "Kevin's remaining items (D38)" in section17
