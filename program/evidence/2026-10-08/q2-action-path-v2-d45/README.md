@@ -124,7 +124,7 @@ end state (`slurm-state/`).
 | `ops/make_dev_manifests.py` | writes and validates the ten manifests (D43's, retargeted to `c74eae0`) |
 | `ops/summarize.py` | D43's summary with D45's two reports added |
 | `ops/submissions.log` | the submission log |
-| `checks/` | the checks at the commit that records this bundle |
+| `checks/` | the checks at the commit that recorded this bundle (`checks-e09e362.json`) and at the commit that corrected section 27's and item 3's wording on the events read without state (`checks-50f3861.json`) |
 
 The summary, extraction and report scripts ran on the host with the system
 Python (the report from the read-only export, so it is the analysis's own
