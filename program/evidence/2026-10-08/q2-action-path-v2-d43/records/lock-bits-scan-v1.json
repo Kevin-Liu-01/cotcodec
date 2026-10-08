@@ -1,0 +1,6416 @@
+{
+ "baseline": {
+  "{\"baseline_check_led\": 2, \"led_mask\": 2, \"numlock_mask\": 16, \"pointer_mods\": 16, \"tap_ready_led\": 2}": 424
+ },
+ "capture_baselines": {
+  "2": 3
+ },
+ "capture_key_events": 1550,
+ "capture_without_mod2": [],
+ "guard_checks": {
+  "[2, 16, false, false]": 36251,
+  "[2, 20, true, false]": 2,
+  "[2, null, false, true]": 6
+ },
+ "probe_key_events": 517032,
+ "probe_without_mod2": [],
+ "runs": [
+  {
+   "git_sha": "f755a09e72e464057423eaa89cdcb9af68814e85",
+   "job": "369",
+   "kind": "boot-reset-validation",
+   "layer": null,
+   "mutant": null
+  },
+  {
+   "git_sha": "d2d63b920da92453dc0907c88f0da92a8adc0a2e",
+   "job": "372",
+   "kind": "boot-reset-validation",
+   "layer": null,
+   "mutant": null
+  },
+  {
+   "git_sha": "d2d63b920da92453dc0907c88f0da92a8adc0a2e",
+   "job": "374",
+   "kind": "boot-reset-validation",
+   "layer": null,
+   "mutant": null
+  },
+  {
+   "git_sha": "d7fb1100b6d45ce42a3814bff1e2b24d3d567a71",
+   "job": "387",
+   "kind": "rdev-capture",
+   "layer": null,
+   "mutant": null
+  },
+  {
+   "git_sha": "5cb9056d2a496b297e58ab7262b87d687fc300b8",
+   "job": "393",
+   "kind": "rdev-capture",
+   "layer": null,
+   "mutant": null
+  },
+  {
+   "git_sha": "a1aade376cba407cca7c75f286807587b96f92a4",
+   "job": "467",
+   "kind": "boot-reset-validation",
+   "layer": null,
+   "mutant": null
+  },
+  {
+   "git_sha": "a1aade376cba407cca7c75f286807587b96f92a4",
+   "job": "468",
+   "kind": "rdev-capture",
+   "layer": null,
+   "mutant": null
+  },
+  {
+   "git_sha": "2b612a028d28b65b417d74c4bb1714cdae6b28eb",
+   "job": "469",
+   "kind": "boot-reset-validation",
+   "layer": null,
+   "mutant": null
+  },
+  {
+   "git_sha": "f03e0e48ffde764c2f02faee7b7d7f2d593ab868",
+   "job": "470",
+   "kind": "boot-reset-validation",
+   "layer": null,
+   "mutant": null
+  },
+  {
+   "git_sha": "54317d6f03531217016dbaa25c41446d34223591",
+   "job": "471",
+   "kind": "boot-reset-validation",
+   "layer": null,
+   "mutant": null
+  },
+  {
+   "git_sha": "7ec94d2c987f8f965ea05f343429535e343f4cdb",
+   "job": "482",
+   "kind": "inputs-validation",
+   "layer": null,
+   "mutant": null
+  },
+  {
+   "git_sha": "bd1002d9bacb2bb8ba1c092d4464ccf03d5125f5",
+   "job": "484",
+   "kind": "inputs-validation",
+   "layer": null,
+   "mutant": null
+  },
+  {
+   "git_sha": "29b056e2b993fdc1de1dd9e2d86c0bc89aecdc80",
+   "job": "486",
+   "kind": "suite-development",
+   "layer": "L0-fixed",
+   "mutant": null
+  },
+  {
+   "git_sha": "e026893a9cdea50b47c26ba3d840008988cc5ed1",
+   "job": "489",
+   "kind": "suite-development",
+   "layer": "L0-fixed",
+   "mutant": null
+  },
+  {
+   "git_sha": "e026893a9cdea50b47c26ba3d840008988cc5ed1",
+   "job": "491",
+   "kind": "suite-development",
+   "layer": "H-OSW-fixed",
+   "mutant": null
+  },
+  {
+   "git_sha": "e026893a9cdea50b47c26ba3d840008988cc5ed1",
+   "job": "493",
+   "kind": "suite-development",
+   "layer": "H-GA",
+   "mutant": null
+  },
+  {
+   "git_sha": "7c1bb02a1072814caf044ba7bdec81c68daac9bc",
+   "job": "495",
+   "kind": "suite-development",
+   "layer": "L0-fixed",
+   "mutant": null
+  },
+  {
+   "git_sha": "7c1bb02a1072814caf044ba7bdec81c68daac9bc",
+   "job": "497",
+   "kind": "suite-development",
+   "layer": "H-OSW-fixed",
+   "mutant": null
+  },
+  {
+   "git_sha": "7c1bb02a1072814caf044ba7bdec81c68daac9bc",
+   "job": "499",
+   "kind": "suite-development",
+   "layer": "H-GA",
+   "mutant": null
+  },
+  {
+   "git_sha": "7c1bb02a1072814caf044ba7bdec81c68daac9bc",
+   "job": "501",
+   "kind": "canary-development",
+   "layer": null,
+   "mutant": null
+  },
+  {
+   "git_sha": "1ce92a631a33f3281cfcdc1a1352e75c7ca4d7b2",
+   "job": "504",
+   "kind": "suite-development",
+   "layer": "L0-fixed",
+   "mutant": null
+  },
+  {
+   "git_sha": "1ce92a631a33f3281cfcdc1a1352e75c7ca4d7b2",
+   "job": "506",
+   "kind": "canary-development",
+   "layer": null,
+   "mutant": null
+  },
+  {
+   "git_sha": "44a30dde88d3761bb595b04f5943fcf1d3341b6c",
+   "job": "509",
+   "kind": "suite-development",
+   "layer": "L0-fixed",
+   "mutant": null
+  },
+  {
+   "git_sha": "44a30dde88d3761bb595b04f5943fcf1d3341b6c",
+   "job": "511",
+   "kind": "suite-development",
+   "layer": "H-OSW-fixed",
+   "mutant": null
+  },
+  {
+   "git_sha": "44a30dde88d3761bb595b04f5943fcf1d3341b6c",
+   "job": "513",
+   "kind": "suite-development",
+   "layer": "H-GA",
+   "mutant": null
+  },
+  {
+   "git_sha": "44a30dde88d3761bb595b04f5943fcf1d3341b6c",
+   "job": "515",
+   "kind": "canary-development",
+   "layer": null,
+   "mutant": null
+  },
+  {
+   "git_sha": "fe92765ba6af26a1cc1ba09c1c4d2b7b9a68c45f",
+   "job": "520",
+   "kind": "suite-development",
+   "layer": "L0-fixed",
+   "mutant": null
+  },
+  {
+   "git_sha": "fe92765ba6af26a1cc1ba09c1c4d2b7b9a68c45f",
+   "job": "522",
+   "kind": "canary-development",
+   "layer": null,
+   "mutant": null
+  },
+  {
+   "git_sha": "1cebeb097fdcd980c6c6e28ea6ac32a96980a827",
+   "job": "524",
+   "kind": "suite-development",
+   "layer": "L0-fixed",
+   "mutant": null
+  },
+  {
+   "git_sha": "1cebeb097fdcd980c6c6e28ea6ac32a96980a827",
+   "job": "526",
+   "kind": "suite-development",
+   "layer": "L0-fixed",
+   "mutant": null
+  },
+  {
+   "git_sha": "1cebeb097fdcd980c6c6e28ea6ac32a96980a827",
+   "job": "528",
+   "kind": "suite-development",
+   "layer": "L0-fixed",
+   "mutant": "M02-button-swap-left-right"
+  },
+  {
+   "git_sha": "1cebeb097fdcd980c6c6e28ea6ac32a96980a827",
+   "job": "530",
+   "kind": "suite-development",
+   "layer": "H-OSW-fixed",
+   "mutant": "M18-first-tool-call-only"
+  },
+  {
+   "git_sha": "1cebeb097fdcd980c6c6e28ea6ac32a96980a827",
+   "job": "532",
+   "kind": "suite-development",
+   "layer": "H-GA",
+   "mutant": "M24-grid-1000-instead-of-999"
+  },
+  {
+   "git_sha": "bde1f82a0c59507fed425dd9ba820467394fbe10",
+   "job": "537",
+   "kind": "suite-development",
+   "layer": "L0-fixed",
+   "mutant": null
+  },
+  {
+   "git_sha": "bde1f82a0c59507fed425dd9ba820467394fbe10",
+   "job": "538",
+   "kind": "suite-development",
+   "layer": "L0-fixed",
+   "mutant": null
+  },
+  {
+   "git_sha": "bde1f82a0c59507fed425dd9ba820467394fbe10",
+   "job": "539",
+   "kind": "canary-development",
+   "layer": null,
+   "mutant": null
+  },
+  {
+   "git_sha": "bde1f82a0c59507fed425dd9ba820467394fbe10",
+   "job": "540",
+   "kind": "suite-development",
+   "layer": "H-OSW-fixed",
+   "mutant": null
+  },
+  {
+   "git_sha": "bde1f82a0c59507fed425dd9ba820467394fbe10",
+   "job": "541",
+   "kind": "suite-development",
+   "layer": "H-GA",
+   "mutant": null
+  },
+  {
+   "git_sha": "a1d7e10ede3cdbbc34d649211f78ceada342d9af",
+   "job": "545",
+   "kind": "suite-development",
+   "layer": "L0-fixed",
+   "mutant": null
+  },
+  {
+   "git_sha": "a1d7e10ede3cdbbc34d649211f78ceada342d9af",
+   "job": "546",
+   "kind": "suite-development",
+   "layer": "L0-fixed",
+   "mutant": null
+  },
+  {
+   "git_sha": "b6033475baa436f1384cb06c8b18267246900693",
+   "job": "549",
+   "kind": "suite-development",
+   "layer": "L0-fixed",
+   "mutant": null
+  },
+  {
+   "git_sha": "b6033475baa436f1384cb06c8b18267246900693",
+   "job": "550",
+   "kind": "suite-development",
+   "layer": "H-OSW-fixed",
+   "mutant": null
+  },
+  {
+   "git_sha": "b6033475baa436f1384cb06c8b18267246900693",
+   "job": "551",
+   "kind": "suite-development",
+   "layer": "H-GA",
+   "mutant": null
+  },
+  {
+   "git_sha": "b6033475baa436f1384cb06c8b18267246900693",
+   "job": "552",
+   "kind": "canary-development",
+   "layer": null,
+   "mutant": null
+  },
+  {
+   "git_sha": "b6033475baa436f1384cb06c8b18267246900693",
+   "job": "553",
+   "kind": "suite-development",
+   "layer": "H-OSW-fixed",
+   "mutant": "M01-modifier-released-early"
+  },
+  {
+   "git_sha": "b6033475baa436f1384cb06c8b18267246900693",
+   "job": "554",
+   "kind": "suite-development",
+   "layer": "L0-fixed",
+   "mutant": "M01-modifier-released-early"
+  },
+  {
+   "git_sha": "b6033475baa436f1384cb06c8b18267246900693",
+   "job": "555",
+   "kind": "suite-development",
+   "layer": "L0-fixed",
+   "mutant": "M02-button-swap-left-right"
+  },
+  {
+   "git_sha": "b6033475baa436f1384cb06c8b18267246900693",
+   "job": "556",
+   "kind": "suite-development",
+   "layer": "H-GA",
+   "mutant": "M03-middle-click-noop"
+  },
+  {
+   "git_sha": "b6033475baa436f1384cb06c8b18267246900693",
+   "job": "557",
+   "kind": "suite-development",
+   "layer": "H-OSW-fixed",
+   "mutant": "M03-middle-click-noop"
+  },
+  {
+   "git_sha": "b6033475baa436f1384cb06c8b18267246900693",
+   "job": "558",
+   "kind": "suite-development",
+   "layer": "L0-fixed",
+   "mutant": "M03-middle-click-noop"
+  },
+  {
+   "git_sha": "b6033475baa436f1384cb06c8b18267246900693",
+   "job": "560",
+   "kind": "suite-development",
+   "layer": "L0-fixed",
+   "mutant": "M04-coordinate-shift-5px"
+  },
+  {
+   "git_sha": "b6033475baa436f1384cb06c8b18267246900693",
+   "job": "561",
+   "kind": "suite-development",
+   "layer": "H-GA",
+   "mutant": "M05-scroll-sign-flip"
+  },
+  {
+   "git_sha": "b6033475baa436f1384cb06c8b18267246900693",
+   "job": "562",
+   "kind": "suite-development",
+   "layer": "H-OSW-fixed",
+   "mutant": "M05-scroll-sign-flip"
+  },
+  {
+   "git_sha": "b6033475baa436f1384cb06c8b18267246900693",
+   "job": "563",
+   "kind": "suite-development",
+   "layer": "L0-fixed",
+   "mutant": "M05-scroll-sign-flip"
+  },
+  {
+   "git_sha": "b6033475baa436f1384cb06c8b18267246900693",
+   "job": "564",
+   "kind": "suite-development",
+   "layer": "L0-fixed",
+   "mutant": "M06-scroll-ticks-doubled"
+  },
+  {
+   "git_sha": "b6033475baa436f1384cb06c8b18267246900693",
+   "job": "565",
+   "kind": "suite-development",
+   "layer": "L0-fixed",
+   "mutant": "M07-text-drop-last-char"
+  },
+  {
+   "git_sha": "b6033475baa436f1384cb06c8b18267246900693",
+   "job": "567",
+   "kind": "suite-development",
+   "layer": "L0-fixed",
+   "mutant": "M08-text-nfc-normalize"
+  },
+  {
+   "git_sha": "b6033475baa436f1384cb06c8b18267246900693",
+   "job": "568",
+   "kind": "suite-development",
+   "layer": "L0-fixed",
+   "mutant": "M09-text-drop-non-ascii"
+  },
+  {
+   "git_sha": "b6033475baa436f1384cb06c8b18267246900693",
+   "job": "569",
+   "kind": "suite-development",
+   "layer": "L0-fixed",
+   "mutant": "M10-less-to-greater"
+  },
+  {
+   "git_sha": "b6033475baa436f1384cb06c8b18267246900693",
+   "job": "570",
+   "kind": "suite-development",
+   "layer": "H-GA",
+   "mutant": "M11-unknown-key-dropped"
+  },
+  {
+   "git_sha": "b6033475baa436f1384cb06c8b18267246900693",
+   "job": "571",
+   "kind": "suite-development",
+   "layer": "H-OSW-fixed",
+   "mutant": "M11-unknown-key-dropped"
+  },
+  {
+   "git_sha": "b6033475baa436f1384cb06c8b18267246900693",
+   "job": "572",
+   "kind": "suite-development",
+   "layer": "L0-fixed",
+   "mutant": "M11-unknown-key-dropped"
+  },
+  {
+   "git_sha": "dba0580467dfa920d0d68028d89a2924aeec962e",
+   "job": "574",
+   "kind": "suite-development",
+   "layer": "L0-fixed",
+   "mutant": null
+  },
+  {
+   "git_sha": "b6033475baa436f1384cb06c8b18267246900693",
+   "job": "575",
+   "kind": "suite-development",
+   "layer": "H-GA",
+   "mutant": "M12-triple-to-double"
+  },
+  {
+   "git_sha": "b6033475baa436f1384cb06c8b18267246900693",
+   "job": "576",
+   "kind": "suite-development",
+   "layer": "H-OSW-fixed",
+   "mutant": "M12-triple-to-double"
+  },
+  {
+   "git_sha": "b6033475baa436f1384cb06c8b18267246900693",
+   "job": "577",
+   "kind": "suite-development",
+   "layer": "L0-fixed",
+   "mutant": "M12-triple-to-double"
+  },
+  {
+   "git_sha": "b6033475baa436f1384cb06c8b18267246900693",
+   "job": "578",
+   "kind": "suite-development",
+   "layer": "H-OSW-fixed",
+   "mutant": "M13-hscroll-to-vscroll"
+  },
+  {
+   "git_sha": "b6033475baa436f1384cb06c8b18267246900693",
+   "job": "579",
+   "kind": "suite-development",
+   "layer": "L0-fixed",
+   "mutant": "M13-hscroll-to-vscroll"
+  },
+  {
+   "git_sha": "b6033475baa436f1384cb06c8b18267246900693",
+   "job": "580",
+   "kind": "suite-development",
+   "layer": "L0-fixed",
+   "mutant": "M14-chord-release-order"
+  },
+  {
+   "git_sha": "b6033475baa436f1384cb06c8b18267246900693",
+   "job": "583",
+   "kind": "suite-development",
+   "layer": "L0-fixed",
+   "mutant": "M15-duplicate-click"
+  },
+  {
+   "git_sha": "b6033475baa436f1384cb06c8b18267246900693",
+   "job": "584",
+   "kind": "suite-development",
+   "layer": "L0-fixed",
+   "mutant": "M16-double-click-interval-600ms"
+  },
+  {
+   "git_sha": "b6033475baa436f1384cb06c8b18267246900693",
+   "job": "585",
+   "kind": "suite-development",
+   "layer": "L0-fixed",
+   "mutant": "M17-drag-teleport"
+  },
+  {
+   "git_sha": "b6033475baa436f1384cb06c8b18267246900693",
+   "job": "586",
+   "kind": "suite-development",
+   "layer": "H-GA",
+   "mutant": "M18-first-tool-call-only"
+  },
+  {
+   "git_sha": "b6033475baa436f1384cb06c8b18267246900693",
+   "job": "587",
+   "kind": "suite-development",
+   "layer": "H-OSW-fixed",
+   "mutant": "M18-first-tool-call-only"
+  },
+  {
+   "git_sha": "b6033475baa436f1384cb06c8b18267246900693",
+   "job": "588",
+   "kind": "suite-development",
+   "layer": "H-GA",
+   "mutant": "M19-last-tool-call-only"
+  },
+  {
+   "git_sha": "b6033475baa436f1384cb06c8b18267246900693",
+   "job": "589",
+   "kind": "suite-development",
+   "layer": "H-OSW-fixed",
+   "mutant": "M19-last-tool-call-only"
+  },
+  {
+   "git_sha": "b6033475baa436f1384cb06c8b18267246900693",
+   "job": "590",
+   "kind": "suite-development",
+   "layer": "H-GA",
+   "mutant": "M20-terminate-failure-to-done"
+  },
+  {
+   "git_sha": "b6033475baa436f1384cb06c8b18267246900693",
+   "job": "591",
+   "kind": "suite-development",
+   "layer": "H-OSW-fixed",
+   "mutant": "M20-terminate-failure-to-done"
+  },
+  {
+   "git_sha": "b6033475baa436f1384cb06c8b18267246900693",
+   "job": "592",
+   "kind": "suite-development",
+   "layer": "L0-fixed",
+   "mutant": "M21-hold-not-released"
+  },
+  {
+   "git_sha": "b6033475baa436f1384cb06c8b18267246900693",
+   "job": "593",
+   "kind": "suite-development",
+   "layer": "H-GA",
+   "mutant": "M22-keypad-to-main"
+  },
+  {
+   "git_sha": "b6033475baa436f1384cb06c8b18267246900693",
+   "job": "594",
+   "kind": "suite-development",
+   "layer": "H-OSW-fixed",
+   "mutant": "M22-keypad-to-main"
+  },
+  {
+   "git_sha": "b6033475baa436f1384cb06c8b18267246900693",
+   "job": "595",
+   "kind": "suite-development",
+   "layer": "L0-fixed",
+   "mutant": "M22-keypad-to-main"
+  },
+  {
+   "git_sha": "b6033475baa436f1384cb06c8b18267246900693",
+   "job": "596",
+   "kind": "suite-development",
+   "layer": "L0-fixed",
+   "mutant": "M23-caps-lock-dropped"
+  },
+  {
+   "git_sha": "b6033475baa436f1384cb06c8b18267246900693",
+   "job": "597",
+   "kind": "suite-development",
+   "layer": "H-GA",
+   "mutant": "M24-grid-1000-instead-of-999"
+  },
+  {
+   "git_sha": "b6033475baa436f1384cb06c8b18267246900693",
+   "job": "598",
+   "kind": "suite-development",
+   "layer": "H-OSW-fixed",
+   "mutant": "M24-grid-1000-instead-of-999"
+  },
+  {
+   "git_sha": "b6033475baa436f1384cb06c8b18267246900693",
+   "job": "599",
+   "kind": "suite-development",
+   "layer": "L0-fixed",
+   "mutant": "M25-shell-expansion"
+  },
+  {
+   "git_sha": "b6033475baa436f1384cb06c8b18267246900693",
+   "job": "600",
+   "kind": "suite-development",
+   "layer": "L0-fixed",
+   "mutant": "M26-newline-dropped"
+  },
+  {
+   "git_sha": "b6033475baa436f1384cb06c8b18267246900693",
+   "job": "601",
+   "kind": "suite-development",
+   "layer": "L0-fixed",
+   "mutant": "M27-extra-buttons-dropped"
+  },
+  {
+   "git_sha": "b6033475baa436f1384cb06c8b18267246900693",
+   "job": "602",
+   "kind": "suite-development",
+   "layer": "H-OSW-fixed",
+   "mutant": "M28-modifier-text-ignored"
+  },
+  {
+   "git_sha": "81fd5f3e73adb76c5d7243806b9073c953463ab1",
+   "job": "609",
+   "kind": "suite-development",
+   "layer": "L0-fixed",
+   "mutant": null
+  },
+  {
+   "git_sha": "81fd5f3e73adb76c5d7243806b9073c953463ab1",
+   "job": "610",
+   "kind": "suite-development",
+   "layer": "L0-fixed",
+   "mutant": null
+  },
+  {
+   "git_sha": "81fd5f3e73adb76c5d7243806b9073c953463ab1",
+   "job": "611",
+   "kind": "suite-development",
+   "layer": "H-OSW-fixed",
+   "mutant": null
+  },
+  {
+   "git_sha": "81fd5f3e73adb76c5d7243806b9073c953463ab1",
+   "job": "612",
+   "kind": "suite-development",
+   "layer": "H-GA",
+   "mutant": null
+  },
+  {
+   "git_sha": "81fd5f3e73adb76c5d7243806b9073c953463ab1",
+   "job": "613",
+   "kind": "canary-development",
+   "layer": null,
+   "mutant": null
+  },
+  {
+   "git_sha": "81fd5f3e73adb76c5d7243806b9073c953463ab1",
+   "job": "618",
+   "kind": "suite-development",
+   "layer": "L0-fixed",
+   "mutant": null
+  },
+  {
+   "git_sha": "81fd5f3e73adb76c5d7243806b9073c953463ab1",
+   "job": "619",
+   "kind": "suite-development",
+   "layer": "L0-fixed",
+   "mutant": null
+  },
+  {
+   "git_sha": "091b33e9209f14274cf3d254a56aeff4f433718f",
+   "job": "620",
+   "kind": "canary-development",
+   "layer": null,
+   "mutant": null
+  },
+  {
+   "git_sha": "81fd5f3e73adb76c5d7243806b9073c953463ab1",
+   "job": "621",
+   "kind": "suite-development",
+   "layer": "L0-fixed",
+   "mutant": null
+  },
+  {
+   "git_sha": "81fd5f3e73adb76c5d7243806b9073c953463ab1",
+   "job": "622",
+   "kind": "suite-development",
+   "layer": "L0-fixed",
+   "mutant": null
+  },
+  {
+   "git_sha": "091b33e9209f14274cf3d254a56aeff4f433718f",
+   "job": "631",
+   "kind": "canary-development",
+   "layer": null,
+   "mutant": null
+  },
+  {
+   "git_sha": "091b33e9209f14274cf3d254a56aeff4f433718f",
+   "job": "632",
+   "kind": "canary-development",
+   "layer": null,
+   "mutant": null
+  },
+  {
+   "git_sha": "82af56779ff29a89b17f93c6e12d481fa1621584",
+   "job": "633",
+   "kind": "suite-development",
+   "layer": "L0-fixed",
+   "mutant": null
+  },
+  {
+   "git_sha": "82af56779ff29a89b17f93c6e12d481fa1621584",
+   "job": "634",
+   "kind": "suite-development",
+   "layer": "L0-fixed",
+   "mutant": null
+  },
+  {
+   "git_sha": "82af56779ff29a89b17f93c6e12d481fa1621584",
+   "job": "635",
+   "kind": "suite-development",
+   "layer": "H-OSW-fixed",
+   "mutant": null
+  },
+  {
+   "git_sha": "82af56779ff29a89b17f93c6e12d481fa1621584",
+   "job": "636",
+   "kind": "suite-development",
+   "layer": "H-GA",
+   "mutant": null
+  },
+  {
+   "git_sha": "82af56779ff29a89b17f93c6e12d481fa1621584",
+   "job": "637",
+   "kind": "canary-development",
+   "layer": null,
+   "mutant": null
+  },
+  {
+   "git_sha": "30d8c7fd50be11a718abb3bc0c05bb486c34b594",
+   "job": "662",
+   "kind": "suite-development",
+   "layer": "L0-fixed",
+   "mutant": null
+  },
+  {
+   "git_sha": "30d8c7fd50be11a718abb3bc0c05bb486c34b594",
+   "job": "663",
+   "kind": "suite-development",
+   "layer": "L0-fixed",
+   "mutant": null
+  },
+  {
+   "git_sha": "30d8c7fd50be11a718abb3bc0c05bb486c34b594",
+   "job": "664",
+   "kind": "suite-development",
+   "layer": "L0-fixed",
+   "mutant": null
+  },
+  {
+   "git_sha": "30d8c7fd50be11a718abb3bc0c05bb486c34b594",
+   "job": "665",
+   "kind": "suite-development",
+   "layer": "H-OSW-fixed",
+   "mutant": null
+  },
+  {
+   "git_sha": "30d8c7fd50be11a718abb3bc0c05bb486c34b594",
+   "job": "666",
+   "kind": "suite-development",
+   "layer": "H-GA",
+   "mutant": null
+  },
+  {
+   "git_sha": "30d8c7fd50be11a718abb3bc0c05bb486c34b594",
+   "job": "667",
+   "kind": "canary-development",
+   "layer": null,
+   "mutant": null
+  },
+  {
+   "git_sha": "34f79e42a9bdab4b2e00304d6248f0228942d5e2",
+   "job": "694",
+   "kind": "suite-development",
+   "layer": "L0-fixed",
+   "mutant": null
+  },
+  {
+   "git_sha": "34f79e42a9bdab4b2e00304d6248f0228942d5e2",
+   "job": "695",
+   "kind": "suite-development",
+   "layer": "L0-fixed",
+   "mutant": null
+  },
+  {
+   "git_sha": "34f79e42a9bdab4b2e00304d6248f0228942d5e2",
+   "job": "696",
+   "kind": "suite-development",
+   "layer": "L0-fixed",
+   "mutant": null
+  },
+  {
+   "git_sha": "34f79e42a9bdab4b2e00304d6248f0228942d5e2",
+   "job": "697",
+   "kind": "suite-development",
+   "layer": "H-OSW-fixed",
+   "mutant": null
+  },
+  {
+   "git_sha": "34f79e42a9bdab4b2e00304d6248f0228942d5e2",
+   "job": "698",
+   "kind": "suite-development",
+   "layer": "H-GA",
+   "mutant": null
+  },
+  {
+   "git_sha": "34f79e42a9bdab4b2e00304d6248f0228942d5e2",
+   "job": "699",
+   "kind": "canary-development",
+   "layer": null,
+   "mutant": null
+  },
+  {
+   "git_sha": "7653799bd89ec2d44ee19064da23081c7bb66236",
+   "job": "703",
+   "kind": "suite-development",
+   "layer": "L0-fixed",
+   "mutant": null
+  },
+  {
+   "git_sha": "7653799bd89ec2d44ee19064da23081c7bb66236",
+   "job": "704",
+   "kind": "suite-development",
+   "layer": "L0-fixed",
+   "mutant": null
+  },
+  {
+   "git_sha": "7653799bd89ec2d44ee19064da23081c7bb66236",
+   "job": "705",
+   "kind": "suite-development",
+   "layer": "L0-fixed",
+   "mutant": null
+  },
+  {
+   "git_sha": "7653799bd89ec2d44ee19064da23081c7bb66236",
+   "job": "706",
+   "kind": "suite-development",
+   "layer": "H-OSW-fixed",
+   "mutant": null
+  },
+  {
+   "git_sha": "7653799bd89ec2d44ee19064da23081c7bb66236",
+   "job": "707",
+   "kind": "suite-development",
+   "layer": "H-GA",
+   "mutant": null
+  },
+  {
+   "git_sha": "7653799bd89ec2d44ee19064da23081c7bb66236",
+   "job": "708",
+   "kind": "canary-development",
+   "layer": null,
+   "mutant": null
+  },
+  {
+   "git_sha": "a9948ee3d5093fed3ed7e948a58cf3492310140d",
+   "job": "768",
+   "kind": "suite-acceptance",
+   "layer": "L0-raw",
+   "mutant": null
+  },
+  {
+   "git_sha": "e66bf1665ee9484e9c95bc6f4509780311234da4",
+   "job": "784",
+   "kind": "suite-development",
+   "layer": "L0-raw",
+   "mutant": null
+  },
+  {
+   "git_sha": "e66bf1665ee9484e9c95bc6f4509780311234da4",
+   "job": "785",
+   "kind": "suite-development",
+   "layer": "L0-fixed",
+   "mutant": null
+  },
+  {
+   "git_sha": "e66bf1665ee9484e9c95bc6f4509780311234da4",
+   "job": "786",
+   "kind": "suite-development",
+   "layer": "L0-fixed",
+   "mutant": null
+  },
+  {
+   "git_sha": "e66bf1665ee9484e9c95bc6f4509780311234da4",
+   "job": "787",
+   "kind": "suite-development",
+   "layer": "L0-fixed",
+   "mutant": null
+  }
+ ],
+ "sessions": 424,
+ "sessions_without_probe_ready": 0,
+ "summary": {
+  "tap_without_mod2_by_cell_layer": {
+   "chord_alt_f4 L0-raw mutant=None": 29,
+   "chord_alt_tab L0-raw mutant=None": 30,
+   "chord_ctrl_alt_shift_r L0-fixed mutant=None": 4,
+   "chord_ctrl_alt_shift_r L0-raw mutant=None": 60,
+   "chord_super_d L0-fixed mutant=None": 4,
+   "chord_super_d L0-raw mutant=None": 45
+  },
+  "tap_without_mod2_jobs": [
+   "486",
+   "549",
+   "574",
+   "768",
+   "784"
+  ],
+  "tap_without_mod2_not_after_grab_key": []
+ },
+ "tap_key_events": 519344,
+ "tap_without_mod2": [
+  {
+   "after_grab_key_press": true,
+   "cell": "chord_ctrl_alt_shift_r",
+   "cycle": "00",
+   "index": 4,
+   "job": "486",
+   "keycode": 27,
+   "keys_before": [
+    [
+     "KeyPress",
+     65507
+    ],
+    [
+     "KeyPress",
+     65513
+    ],
+    [
+     "KeyPress",
+     65505
+    ],
+    [
+     "KeyPress",
+     114
+    ]
+   ],
+   "keysym0": 114,
+   "kind": "KeyRelease",
+   "layer": "L0-fixed",
+   "mutant": null,
+   "pass": false,
+   "seq": 13,
+   "setting": "screenshot",
+   "state": 0
+  },
+  {
+   "after_grab_key_press": true,
+   "cell": "chord_ctrl_alt_shift_r",
+   "cycle": "00",
+   "index": 5,
+   "job": "486",
+   "keycode": 50,
+   "keys_before": [
+    [
+     "KeyPress",
+     65507
+    ],
+    [
+     "KeyPress",
+     65513
+    ],
+    [
+     "KeyPress",
+     65505
+    ],
+    [
+     "KeyPress",
+     114
+    ],
+    [
+     "KeyRelease",
+     114
+    ]
+   ],
+   "keysym0": 65505,
+   "kind": "KeyRelease",
+   "layer": "L0-fixed",
+   "mutant": null,
+   "pass": false,
+   "seq": 13,
+   "setting": "screenshot",
+   "state": 0
+  },
+  {
+   "after_grab_key_press": true,
+   "cell": "chord_ctrl_alt_shift_r",
+   "cycle": "00",
+   "index": 6,
+   "job": "486",
+   "keycode": 64,
+   "keys_before": [
+    [
+     "KeyPress",
+     65507
+    ],
+    [
+     "KeyPress",
+     65513
+    ],
+    [
+     "KeyPress",
+     65505
+    ],
+    [
+     "KeyPress",
+     114
+    ],
+    [
+     "KeyRelease",
+     114
+    ],
+    [
+     "KeyRelease",
+     65505
+    ]
+   ],
+   "keysym0": 65513,
+   "kind": "KeyRelease",
+   "layer": "L0-fixed",
+   "mutant": null,
+   "pass": false,
+   "seq": 13,
+   "setting": "screenshot",
+   "state": 0
+  },
+  {
+   "after_grab_key_press": true,
+   "cell": "chord_ctrl_alt_shift_r",
+   "cycle": "00",
+   "index": 7,
+   "job": "486",
+   "keycode": 37,
+   "keys_before": [
+    [
+     "KeyPress",
+     65507
+    ],
+    [
+     "KeyPress",
+     65513
+    ],
+    [
+     "KeyPress",
+     65505
+    ],
+    [
+     "KeyPress",
+     114
+    ],
+    [
+     "KeyRelease",
+     114
+    ],
+    [
+     "KeyRelease",
+     65505
+    ],
+    [
+     "KeyRelease",
+     65513
+    ]
+   ],
+   "keysym0": 65507,
+   "kind": "KeyRelease",
+   "layer": "L0-fixed",
+   "mutant": null,
+   "pass": false,
+   "seq": 13,
+   "setting": "screenshot",
+   "state": 0
+  },
+  {
+   "after_grab_key_press": true,
+   "cell": "chord_super_d",
+   "cycle": "04",
+   "index": 1,
+   "job": "549",
+   "keycode": 40,
+   "keys_before": [
+    [
+     "KeyPress",
+     65515
+    ]
+   ],
+   "keysym0": 100,
+   "kind": "KeyPress",
+   "layer": "L0-fixed",
+   "mutant": null,
+   "pass": false,
+   "seq": 2,
+   "setting": "screenshot",
+   "state": 0
+  },
+  {
+   "after_grab_key_press": true,
+   "cell": "chord_super_d",
+   "cycle": "11",
+   "index": 1,
+   "job": "549",
+   "keycode": 40,
+   "keys_before": [
+    [
+     "KeyPress",
+     65515
+    ]
+   ],
+   "keysym0": 100,
+   "kind": "KeyPress",
+   "layer": "L0-fixed",
+   "mutant": null,
+   "pass": false,
+   "seq": 2,
+   "setting": "screenshot+a11y",
+   "state": 0
+  },
+  {
+   "after_grab_key_press": true,
+   "cell": "chord_super_d",
+   "cycle": "04",
+   "index": 1,
+   "job": "574",
+   "keycode": 40,
+   "keys_before": [
+    [
+     "KeyPress",
+     65515
+    ]
+   ],
+   "keysym0": 100,
+   "kind": "KeyPress",
+   "layer": "L0-fixed",
+   "mutant": null,
+   "pass": false,
+   "seq": 2,
+   "setting": "screenshot",
+   "state": 0
+  },
+  {
+   "after_grab_key_press": true,
+   "cell": "chord_super_d",
+   "cycle": "11",
+   "index": 1,
+   "job": "574",
+   "keycode": 40,
+   "keys_before": [
+    [
+     "KeyPress",
+     65515
+    ]
+   ],
+   "keysym0": 100,
+   "kind": "KeyPress",
+   "layer": "L0-fixed",
+   "mutant": null,
+   "pass": false,
+   "seq": 2,
+   "setting": "screenshot+a11y",
+   "state": 0
+  },
+  {
+   "after_grab_key_press": true,
+   "cell": "chord_ctrl_alt_shift_r",
+   "cycle": "00",
+   "index": 4,
+   "job": "768",
+   "keycode": 27,
+   "keys_before": [
+    [
+     "KeyPress",
+     65507
+    ],
+    [
+     "KeyPress",
+     65513
+    ],
+    [
+     "KeyPress",
+     65505
+    ],
+    [
+     "KeyPress",
+     114
+    ]
+   ],
+   "keysym0": 114,
+   "kind": "KeyRelease",
+   "layer": "L0-raw",
+   "mutant": null,
+   "pass": false,
+   "seq": 13,
+   "setting": "screenshot",
+   "state": 0
+  },
+  {
+   "after_grab_key_press": true,
+   "cell": "chord_ctrl_alt_shift_r",
+   "cycle": "00",
+   "index": 5,
+   "job": "768",
+   "keycode": 50,
+   "keys_before": [
+    [
+     "KeyPress",
+     65507
+    ],
+    [
+     "KeyPress",
+     65513
+    ],
+    [
+     "KeyPress",
+     65505
+    ],
+    [
+     "KeyPress",
+     114
+    ],
+    [
+     "KeyRelease",
+     114
+    ]
+   ],
+   "keysym0": 65505,
+   "kind": "KeyRelease",
+   "layer": "L0-raw",
+   "mutant": null,
+   "pass": false,
+   "seq": 13,
+   "setting": "screenshot",
+   "state": 0
+  },
+  {
+   "after_grab_key_press": true,
+   "cell": "chord_ctrl_alt_shift_r",
+   "cycle": "00",
+   "index": 6,
+   "job": "768",
+   "keycode": 64,
+   "keys_before": [
+    [
+     "KeyPress",
+     65507
+    ],
+    [
+     "KeyPress",
+     65513
+    ],
+    [
+     "KeyPress",
+     65505
+    ],
+    [
+     "KeyPress",
+     114
+    ],
+    [
+     "KeyRelease",
+     114
+    ],
+    [
+     "KeyRelease",
+     65505
+    ]
+   ],
+   "keysym0": 65513,
+   "kind": "KeyRelease",
+   "layer": "L0-raw",
+   "mutant": null,
+   "pass": false,
+   "seq": 13,
+   "setting": "screenshot",
+   "state": 0
+  },
+  {
+   "after_grab_key_press": true,
+   "cell": "chord_ctrl_alt_shift_r",
+   "cycle": "00",
+   "index": 7,
+   "job": "768",
+   "keycode": 37,
+   "keys_before": [
+    [
+     "KeyPress",
+     65507
+    ],
+    [
+     "KeyPress",
+     65513
+    ],
+    [
+     "KeyPress",
+     65505
+    ],
+    [
+     "KeyPress",
+     114
+    ],
+    [
+     "KeyRelease",
+     114
+    ],
+    [
+     "KeyRelease",
+     65505
+    ],
+    [
+     "KeyRelease",
+     65513
+    ]
+   ],
+   "keysym0": 65507,
+   "kind": "KeyRelease",
+   "layer": "L0-raw",
+   "mutant": null,
+   "pass": false,
+   "seq": 13,
+   "setting": "screenshot",
+   "state": 0
+  },
+  {
+   "after_grab_key_press": true,
+   "cell": "chord_super_d",
+   "cycle": "00",
+   "index": 1,
+   "job": "768",
+   "keycode": 40,
+   "keys_before": [
+    [
+     "KeyPress",
+     65515
+    ]
+   ],
+   "keysym0": 100,
+   "kind": "KeyPress",
+   "layer": "L0-raw",
+   "mutant": null,
+   "pass": false,
+   "seq": 15,
+   "setting": "screenshot",
+   "state": 0
+  },
+  {
+   "after_grab_key_press": true,
+   "cell": "chord_super_d",
+   "cycle": "00",
+   "index": 2,
+   "job": "768",
+   "keycode": 40,
+   "keys_before": [
+    [
+     "KeyPress",
+     65515
+    ],
+    [
+     "KeyPress",
+     100
+    ]
+   ],
+   "keysym0": 100,
+   "kind": "KeyRelease",
+   "layer": "L0-raw",
+   "mutant": null,
+   "pass": false,
+   "seq": 15,
+   "setting": "screenshot",
+   "state": 0
+  },
+  {
+   "after_grab_key_press": true,
+   "cell": "chord_super_d",
+   "cycle": "00",
+   "index": 3,
+   "job": "768",
+   "keycode": 133,
+   "keys_before": [
+    [
+     "KeyPress",
+     65515
+    ],
+    [
+     "KeyPress",
+     100
+    ],
+    [
+     "KeyRelease",
+     100
+    ]
+   ],
+   "keysym0": 65515,
+   "kind": "KeyRelease",
+   "layer": "L0-raw",
+   "mutant": null,
+   "pass": false,
+   "seq": 15,
+   "setting": "screenshot",
+   "state": 0
+  },
+  {
+   "after_grab_key_press": true,
+   "cell": "chord_alt_f4",
+   "cycle": "00",
+   "index": 2,
+   "job": "768",
+   "keycode": 70,
+   "keys_before": [
+    [
+     "KeyPress",
+     65513
+    ],
+    [
+     "KeyPress",
+     65473
+    ]
+   ],
+   "keysym0": 65473,
+   "kind": "KeyRelease",
+   "layer": "L0-raw",
+   "mutant": null,
+   "pass": false,
+   "seq": 35,
+   "setting": "screenshot",
+   "state": 0
+  },
+  {
+   "after_grab_key_press": true,
+   "cell": "chord_alt_tab",
+   "cycle": "01",
+   "index": 2,
+   "job": "768",
+   "keycode": 23,
+   "keys_before": [
+    [
+     "KeyPress",
+     65513
+    ],
+    [
+     "KeyPress",
+     65289
+    ]
+   ],
+   "keysym0": 65289,
+   "kind": "KeyRelease",
+   "layer": "L0-raw",
+   "mutant": null,
+   "pass": false,
+   "seq": 16,
+   "setting": "screenshot",
+   "state": 0
+  },
+  {
+   "after_grab_key_press": true,
+   "cell": "chord_alt_tab",
+   "cycle": "01",
+   "index": 3,
+   "job": "768",
+   "keycode": 64,
+   "keys_before": [
+    [
+     "KeyPress",
+     65513
+    ],
+    [
+     "KeyPress",
+     65289
+    ],
+    [
+     "KeyRelease",
+     65289
+    ]
+   ],
+   "keysym0": 65513,
+   "kind": "KeyRelease",
+   "layer": "L0-raw",
+   "mutant": null,
+   "pass": false,
+   "seq": 16,
+   "setting": "screenshot",
+   "state": 0
+  },
+  {
+   "after_grab_key_press": true,
+   "cell": "chord_alt_tab",
+   "cycle": "01",
+   "index": 2,
+   "job": "768",
+   "keycode": 23,
+   "keys_before": [
+    [
+     "KeyPress",
+     65513
+    ],
+    [
+     "KeyPress",
+     65289
+    ]
+   ],
+   "keysym0": 65289,
+   "kind": "KeyRelease",
+   "layer": "L0-raw",
+   "mutant": null,
+   "pass": false,
+   "seq": 44,
+   "setting": "screenshot",
+   "state": 0
+  },
+  {
+   "after_grab_key_press": true,
+   "cell": "chord_alt_tab",
+   "cycle": "01",
+   "index": 3,
+   "job": "768",
+   "keycode": 64,
+   "keys_before": [
+    [
+     "KeyPress",
+     65513
+    ],
+    [
+     "KeyPress",
+     65289
+    ],
+    [
+     "KeyRelease",
+     65289
+    ]
+   ],
+   "keysym0": 65513,
+   "kind": "KeyRelease",
+   "layer": "L0-raw",
+   "mutant": null,
+   "pass": false,
+   "seq": 44,
+   "setting": "screenshot",
+   "state": 0
+  },
+  {
+   "after_grab_key_press": true,
+   "cell": "chord_alt_f4",
+   "cycle": "02",
+   "index": 2,
+   "job": "768",
+   "keycode": 70,
+   "keys_before": [
+    [
+     "KeyPress",
+     65513
+    ],
+    [
+     "KeyPress",
+     65473
+    ]
+   ],
+   "keysym0": 65473,
+   "kind": "KeyRelease",
+   "layer": "L0-raw",
+   "mutant": null,
+   "pass": false,
+   "seq": 1,
+   "setting": "screenshot",
+   "state": 0
+  },
+  {
+   "after_grab_key_press": true,
+   "cell": "chord_alt_f4",
+   "cycle": "02",
+   "index": 3,
+   "job": "768",
+   "keycode": 64,
+   "keys_before": [
+    [
+     "KeyPress",
+     65513
+    ],
+    [
+     "KeyPress",
+     65473
+    ],
+    [
+     "KeyRelease",
+     65473
+    ]
+   ],
+   "keysym0": 65513,
+   "kind": "KeyRelease",
+   "layer": "L0-raw",
+   "mutant": null,
+   "pass": false,
+   "seq": 1,
+   "setting": "screenshot",
+   "state": 0
+  },
+  {
+   "after_grab_key_press": true,
+   "cell": "chord_super_d",
+   "cycle": "02",
+   "index": 1,
+   "job": "768",
+   "keycode": 40,
+   "keys_before": [
+    [
+     "KeyPress",
+     65515
+    ]
+   ],
+   "keysym0": 100,
+   "kind": "KeyPress",
+   "layer": "L0-raw",
+   "mutant": null,
+   "pass": false,
+   "seq": 20,
+   "setting": "screenshot",
+   "state": 0
+  },
+  {
+   "after_grab_key_press": true,
+   "cell": "chord_super_d",
+   "cycle": "02",
+   "index": 2,
+   "job": "768",
+   "keycode": 40,
+   "keys_before": [
+    [
+     "KeyPress",
+     65515
+    ],
+    [
+     "KeyPress",
+     100
+    ]
+   ],
+   "keysym0": 100,
+   "kind": "KeyRelease",
+   "layer": "L0-raw",
+   "mutant": null,
+   "pass": false,
+   "seq": 20,
+   "setting": "screenshot",
+   "state": 0
+  },
+  {
+   "after_grab_key_press": true,
+   "cell": "chord_super_d",
+   "cycle": "02",
+   "index": 3,
+   "job": "768",
+   "keycode": 133,
+   "keys_before": [
+    [
+     "KeyPress",
+     65515
+    ],
+    [
+     "KeyPress",
+     100
+    ],
+    [
+     "KeyRelease",
+     100
+    ]
+   ],
+   "keysym0": 65515,
+   "kind": "KeyRelease",
+   "layer": "L0-raw",
+   "mutant": null,
+   "pass": false,
+   "seq": 20,
+   "setting": "screenshot",
+   "state": 0
+  },
+  {
+   "after_grab_key_press": true,
+   "cell": "chord_ctrl_alt_shift_r",
+   "cycle": "02",
+   "index": 4,
+   "job": "768",
+   "keycode": 27,
+   "keys_before": [
+    [
+     "KeyPress",
+     65507
+    ],
+    [
+     "KeyPress",
+     65513
+    ],
+    [
+     "KeyPress",
+     65505
+    ],
+    [
+     "KeyPress",
+     114
+    ]
+   ],
+   "keysym0": 114,
+   "kind": "KeyRelease",
+   "layer": "L0-raw",
+   "mutant": null,
+   "pass": false,
+   "seq": 36,
+   "setting": "screenshot",
+   "state": 0
+  },
+  {
+   "after_grab_key_press": true,
+   "cell": "chord_ctrl_alt_shift_r",
+   "cycle": "02",
+   "index": 5,
+   "job": "768",
+   "keycode": 50,
+   "keys_before": [
+    [
+     "KeyPress",
+     65507
+    ],
+    [
+     "KeyPress",
+     65513
+    ],
+    [
+     "KeyPress",
+     65505
+    ],
+    [
+     "KeyPress",
+     114
+    ],
+    [
+     "KeyRelease",
+     114
+    ]
+   ],
+   "keysym0": 65505,
+   "kind": "KeyRelease",
+   "layer": "L0-raw",
+   "mutant": null,
+   "pass": false,
+   "seq": 36,
+   "setting": "screenshot",
+   "state": 0
+  },
+  {
+   "after_grab_key_press": true,
+   "cell": "chord_ctrl_alt_shift_r",
+   "cycle": "02",
+   "index": 6,
+   "job": "768",
+   "keycode": 64,
+   "keys_before": [
+    [
+     "KeyPress",
+     65507
+    ],
+    [
+     "KeyPress",
+     65513
+    ],
+    [
+     "KeyPress",
+     65505
+    ],
+    [
+     "KeyPress",
+     114
+    ],
+    [
+     "KeyRelease",
+     114
+    ],
+    [
+     "KeyRelease",
+     65505
+    ]
+   ],
+   "keysym0": 65513,
+   "kind": "KeyRelease",
+   "layer": "L0-raw",
+   "mutant": null,
+   "pass": false,
+   "seq": 36,
+   "setting": "screenshot",
+   "state": 0
+  },
+  {
+   "after_grab_key_press": true,
+   "cell": "chord_ctrl_alt_shift_r",
+   "cycle": "02",
+   "index": 7,
+   "job": "768",
+   "keycode": 37,
+   "keys_before": [
+    [
+     "KeyPress",
+     65507
+    ],
+    [
+     "KeyPress",
+     65513
+    ],
+    [
+     "KeyPress",
+     65505
+    ],
+    [
+     "KeyPress",
+     114
+    ],
+    [
+     "KeyRelease",
+     114
+    ],
+    [
+     "KeyRelease",
+     65505
+    ],
+    [
+     "KeyRelease",
+     65513
+    ]
+   ],
+   "keysym0": 65507,
+   "kind": "KeyRelease",
+   "layer": "L0-raw",
+   "mutant": null,
+   "pass": false,
+   "seq": 36,
+   "setting": "screenshot",
+   "state": 0
+  },
+  {
+   "after_grab_key_press": true,
+   "cell": "chord_super_d",
+   "cycle": "04",
+   "index": 1,
+   "job": "768",
+   "keycode": 40,
+   "keys_before": [
+    [
+     "KeyPress",
+     65515
+    ]
+   ],
+   "keysym0": 100,
+   "kind": "KeyPress",
+   "layer": "L0-raw",
+   "mutant": null,
+   "pass": false,
+   "seq": 7,
+   "setting": "screenshot",
+   "state": 0
+  },
+  {
+   "after_grab_key_press": true,
+   "cell": "chord_super_d",
+   "cycle": "04",
+   "index": 2,
+   "job": "768",
+   "keycode": 40,
+   "keys_before": [
+    [
+     "KeyPress",
+     65515
+    ],
+    [
+     "KeyPress",
+     100
+    ]
+   ],
+   "keysym0": 100,
+   "kind": "KeyRelease",
+   "layer": "L0-raw",
+   "mutant": null,
+   "pass": false,
+   "seq": 7,
+   "setting": "screenshot",
+   "state": 0
+  },
+  {
+   "after_grab_key_press": true,
+   "cell": "chord_super_d",
+   "cycle": "04",
+   "index": 3,
+   "job": "768",
+   "keycode": 133,
+   "keys_before": [
+    [
+     "KeyPress",
+     65515
+    ],
+    [
+     "KeyPress",
+     100
+    ],
+    [
+     "KeyRelease",
+     100
+    ]
+   ],
+   "keysym0": 65515,
+   "kind": "KeyRelease",
+   "layer": "L0-raw",
+   "mutant": null,
+   "pass": false,
+   "seq": 7,
+   "setting": "screenshot",
+   "state": 0
+  },
+  {
+   "after_grab_key_press": true,
+   "cell": "chord_alt_f4",
+   "cycle": "04",
+   "index": 2,
+   "job": "768",
+   "keycode": 70,
+   "keys_before": [
+    [
+     "KeyPress",
+     65513
+    ],
+    [
+     "KeyPress",
+     65473
+    ]
+   ],
+   "keysym0": 65473,
+   "kind": "KeyRelease",
+   "layer": "L0-raw",
+   "mutant": null,
+   "pass": false,
+   "seq": 10,
+   "setting": "screenshot",
+   "state": 0
+  },
+  {
+   "after_grab_key_press": true,
+   "cell": "chord_alt_f4",
+   "cycle": "04",
+   "index": 3,
+   "job": "768",
+   "keycode": 64,
+   "keys_before": [
+    [
+     "KeyPress",
+     65513
+    ],
+    [
+     "KeyPress",
+     65473
+    ],
+    [
+     "KeyRelease",
+     65473
+    ]
+   ],
+   "keysym0": 65513,
+   "kind": "KeyRelease",
+   "layer": "L0-raw",
+   "mutant": null,
+   "pass": false,
+   "seq": 10,
+   "setting": "screenshot",
+   "state": 0
+  },
+  {
+   "after_grab_key_press": true,
+   "cell": "chord_alt_tab",
+   "cycle": "05",
+   "index": 2,
+   "job": "768",
+   "keycode": 23,
+   "keys_before": [
+    [
+     "KeyPress",
+     65513
+    ],
+    [
+     "KeyPress",
+     65289
+    ]
+   ],
+   "keysym0": 65289,
+   "kind": "KeyRelease",
+   "layer": "L0-raw",
+   "mutant": null,
+   "pass": false,
+   "seq": 17,
+   "setting": "screenshot",
+   "state": 0
+  },
+  {
+   "after_grab_key_press": true,
+   "cell": "chord_alt_tab",
+   "cycle": "05",
+   "index": 3,
+   "job": "768",
+   "keycode": 64,
+   "keys_before": [
+    [
+     "KeyPress",
+     65513
+    ],
+    [
+     "KeyPress",
+     65289
+    ],
+    [
+     "KeyRelease",
+     65289
+    ]
+   ],
+   "keysym0": 65513,
+   "kind": "KeyRelease",
+   "layer": "L0-raw",
+   "mutant": null,
+   "pass": false,
+   "seq": 17,
+   "setting": "screenshot",
+   "state": 0
+  },
+  {
+   "after_grab_key_press": true,
+   "cell": "chord_ctrl_alt_shift_r",
+   "cycle": "05",
+   "index": 4,
+   "job": "768",
+   "keycode": 27,
+   "keys_before": [
+    [
+     "KeyPress",
+     65507
+    ],
+    [
+     "KeyPress",
+     65513
+    ],
+    [
+     "KeyPress",
+     65505
+    ],
+    [
+     "KeyPress",
+     114
+    ]
+   ],
+   "keysym0": 114,
+   "kind": "KeyRelease",
+   "layer": "L0-raw",
+   "mutant": null,
+   "pass": false,
+   "seq": 19,
+   "setting": "screenshot",
+   "state": 0
+  },
+  {
+   "after_grab_key_press": true,
+   "cell": "chord_ctrl_alt_shift_r",
+   "cycle": "05",
+   "index": 5,
+   "job": "768",
+   "keycode": 50,
+   "keys_before": [
+    [
+     "KeyPress",
+     65507
+    ],
+    [
+     "KeyPress",
+     65513
+    ],
+    [
+     "KeyPress",
+     65505
+    ],
+    [
+     "KeyPress",
+     114
+    ],
+    [
+     "KeyRelease",
+     114
+    ]
+   ],
+   "keysym0": 65505,
+   "kind": "KeyRelease",
+   "layer": "L0-raw",
+   "mutant": null,
+   "pass": false,
+   "seq": 19,
+   "setting": "screenshot",
+   "state": 0
+  },
+  {
+   "after_grab_key_press": true,
+   "cell": "chord_ctrl_alt_shift_r",
+   "cycle": "05",
+   "index": 6,
+   "job": "768",
+   "keycode": 64,
+   "keys_before": [
+    [
+     "KeyPress",
+     65507
+    ],
+    [
+     "KeyPress",
+     65513
+    ],
+    [
+     "KeyPress",
+     65505
+    ],
+    [
+     "KeyPress",
+     114
+    ],
+    [
+     "KeyRelease",
+     114
+    ],
+    [
+     "KeyRelease",
+     65505
+    ]
+   ],
+   "keysym0": 65513,
+   "kind": "KeyRelease",
+   "layer": "L0-raw",
+   "mutant": null,
+   "pass": false,
+   "seq": 19,
+   "setting": "screenshot",
+   "state": 0
+  },
+  {
+   "after_grab_key_press": true,
+   "cell": "chord_ctrl_alt_shift_r",
+   "cycle": "05",
+   "index": 7,
+   "job": "768",
+   "keycode": 37,
+   "keys_before": [
+    [
+     "KeyPress",
+     65507
+    ],
+    [
+     "KeyPress",
+     65513
+    ],
+    [
+     "KeyPress",
+     65505
+    ],
+    [
+     "KeyPress",
+     114
+    ],
+    [
+     "KeyRelease",
+     114
+    ],
+    [
+     "KeyRelease",
+     65505
+    ],
+    [
+     "KeyRelease",
+     65513
+    ]
+   ],
+   "keysym0": 65507,
+   "kind": "KeyRelease",
+   "layer": "L0-raw",
+   "mutant": null,
+   "pass": false,
+   "seq": 19,
+   "setting": "screenshot",
+   "state": 0
+  },
+  {
+   "after_grab_key_press": true,
+   "cell": "chord_ctrl_alt_shift_r",
+   "cycle": "05",
+   "index": 4,
+   "job": "768",
+   "keycode": 27,
+   "keys_before": [
+    [
+     "KeyPress",
+     65507
+    ],
+    [
+     "KeyPress",
+     65513
+    ],
+    [
+     "KeyPress",
+     65505
+    ],
+    [
+     "KeyPress",
+     114
+    ]
+   ],
+   "keysym0": 114,
+   "kind": "KeyRelease",
+   "layer": "L0-raw",
+   "mutant": null,
+   "pass": false,
+   "seq": 20,
+   "setting": "screenshot",
+   "state": 0
+  },
+  {
+   "after_grab_key_press": true,
+   "cell": "chord_ctrl_alt_shift_r",
+   "cycle": "05",
+   "index": 5,
+   "job": "768",
+   "keycode": 50,
+   "keys_before": [
+    [
+     "KeyPress",
+     65507
+    ],
+    [
+     "KeyPress",
+     65513
+    ],
+    [
+     "KeyPress",
+     65505
+    ],
+    [
+     "KeyPress",
+     114
+    ],
+    [
+     "KeyRelease",
+     114
+    ]
+   ],
+   "keysym0": 65505,
+   "kind": "KeyRelease",
+   "layer": "L0-raw",
+   "mutant": null,
+   "pass": false,
+   "seq": 20,
+   "setting": "screenshot",
+   "state": 0
+  },
+  {
+   "after_grab_key_press": true,
+   "cell": "chord_ctrl_alt_shift_r",
+   "cycle": "05",
+   "index": 6,
+   "job": "768",
+   "keycode": 64,
+   "keys_before": [
+    [
+     "KeyPress",
+     65507
+    ],
+    [
+     "KeyPress",
+     65513
+    ],
+    [
+     "KeyPress",
+     65505
+    ],
+    [
+     "KeyPress",
+     114
+    ],
+    [
+     "KeyRelease",
+     114
+    ],
+    [
+     "KeyRelease",
+     65505
+    ]
+   ],
+   "keysym0": 65513,
+   "kind": "KeyRelease",
+   "layer": "L0-raw",
+   "mutant": null,
+   "pass": false,
+   "seq": 20,
+   "setting": "screenshot",
+   "state": 0
+  },
+  {
+   "after_grab_key_press": true,
+   "cell": "chord_ctrl_alt_shift_r",
+   "cycle": "05",
+   "index": 7,
+   "job": "768",
+   "keycode": 37,
+   "keys_before": [
+    [
+     "KeyPress",
+     65507
+    ],
+    [
+     "KeyPress",
+     65513
+    ],
+    [
+     "KeyPress",
+     65505
+    ],
+    [
+     "KeyPress",
+     114
+    ],
+    [
+     "KeyRelease",
+     114
+    ],
+    [
+     "KeyRelease",
+     65505
+    ],
+    [
+     "KeyRelease",
+     65513
+    ]
+   ],
+   "keysym0": 65507,
+   "kind": "KeyRelease",
+   "layer": "L0-raw",
+   "mutant": null,
+   "pass": false,
+   "seq": 20,
+   "setting": "screenshot",
+   "state": 0
+  },
+  {
+   "after_grab_key_press": true,
+   "cell": "chord_alt_f4",
+   "cycle": "05",
+   "index": 2,
+   "job": "768",
+   "keycode": 70,
+   "keys_before": [
+    [
+     "KeyPress",
+     65513
+    ],
+    [
+     "KeyPress",
+     65473
+    ]
+   ],
+   "keysym0": 65473,
+   "kind": "KeyRelease",
+   "layer": "L0-raw",
+   "mutant": null,
+   "pass": false,
+   "seq": 36,
+   "setting": "screenshot",
+   "state": 0
+  },
+  {
+   "after_grab_key_press": true,
+   "cell": "chord_alt_f4",
+   "cycle": "05",
+   "index": 3,
+   "job": "768",
+   "keycode": 64,
+   "keys_before": [
+    [
+     "KeyPress",
+     65513
+    ],
+    [
+     "KeyPress",
+     65473
+    ],
+    [
+     "KeyRelease",
+     65473
+    ]
+   ],
+   "keysym0": 65513,
+   "kind": "KeyRelease",
+   "layer": "L0-raw",
+   "mutant": null,
+   "pass": false,
+   "seq": 36,
+   "setting": "screenshot",
+   "state": 0
+  },
+  {
+   "after_grab_key_press": true,
+   "cell": "chord_super_d",
+   "cycle": "05",
+   "index": 1,
+   "job": "768",
+   "keycode": 40,
+   "keys_before": [
+    [
+     "KeyPress",
+     65515
+    ]
+   ],
+   "keysym0": 100,
+   "kind": "KeyPress",
+   "layer": "L0-raw",
+   "mutant": null,
+   "pass": false,
+   "seq": 45,
+   "setting": "screenshot",
+   "state": 0
+  },
+  {
+   "after_grab_key_press": true,
+   "cell": "chord_super_d",
+   "cycle": "05",
+   "index": 2,
+   "job": "768",
+   "keycode": 40,
+   "keys_before": [
+    [
+     "KeyPress",
+     65515
+    ],
+    [
+     "KeyPress",
+     100
+    ]
+   ],
+   "keysym0": 100,
+   "kind": "KeyRelease",
+   "layer": "L0-raw",
+   "mutant": null,
+   "pass": false,
+   "seq": 45,
+   "setting": "screenshot",
+   "state": 0
+  },
+  {
+   "after_grab_key_press": true,
+   "cell": "chord_super_d",
+   "cycle": "05",
+   "index": 3,
+   "job": "768",
+   "keycode": 133,
+   "keys_before": [
+    [
+     "KeyPress",
+     65515
+    ],
+    [
+     "KeyPress",
+     100
+    ],
+    [
+     "KeyRelease",
+     100
+    ]
+   ],
+   "keysym0": 65515,
+   "kind": "KeyRelease",
+   "layer": "L0-raw",
+   "mutant": null,
+   "pass": false,
+   "seq": 45,
+   "setting": "screenshot",
+   "state": 0
+  },
+  {
+   "after_grab_key_press": true,
+   "cell": "chord_alt_tab",
+   "cycle": "06",
+   "index": 2,
+   "job": "768",
+   "keycode": 23,
+   "keys_before": [
+    [
+     "KeyPress",
+     65513
+    ],
+    [
+     "KeyPress",
+     65289
+    ]
+   ],
+   "keysym0": 65289,
+   "kind": "KeyRelease",
+   "layer": "L0-raw",
+   "mutant": null,
+   "pass": false,
+   "seq": 1,
+   "setting": "screenshot",
+   "state": 0
+  },
+  {
+   "after_grab_key_press": true,
+   "cell": "chord_alt_tab",
+   "cycle": "06",
+   "index": 3,
+   "job": "768",
+   "keycode": 64,
+   "keys_before": [
+    [
+     "KeyPress",
+     65513
+    ],
+    [
+     "KeyPress",
+     65289
+    ],
+    [
+     "KeyRelease",
+     65289
+    ]
+   ],
+   "keysym0": 65513,
+   "kind": "KeyRelease",
+   "layer": "L0-raw",
+   "mutant": null,
+   "pass": false,
+   "seq": 1,
+   "setting": "screenshot",
+   "state": 0
+  },
+  {
+   "after_grab_key_press": true,
+   "cell": "chord_alt_tab",
+   "cycle": "07",
+   "index": 2,
+   "job": "768",
+   "keycode": 23,
+   "keys_before": [
+    [
+     "KeyPress",
+     65513
+    ],
+    [
+     "KeyPress",
+     65289
+    ]
+   ],
+   "keysym0": 65289,
+   "kind": "KeyRelease",
+   "layer": "L0-raw",
+   "mutant": null,
+   "pass": false,
+   "seq": 22,
+   "setting": "screenshot",
+   "state": 0
+  },
+  {
+   "after_grab_key_press": true,
+   "cell": "chord_alt_tab",
+   "cycle": "07",
+   "index": 3,
+   "job": "768",
+   "keycode": 64,
+   "keys_before": [
+    [
+     "KeyPress",
+     65513
+    ],
+    [
+     "KeyPress",
+     65289
+    ],
+    [
+     "KeyRelease",
+     65289
+    ]
+   ],
+   "keysym0": 65513,
+   "kind": "KeyRelease",
+   "layer": "L0-raw",
+   "mutant": null,
+   "pass": false,
+   "seq": 22,
+   "setting": "screenshot",
+   "state": 0
+  },
+  {
+   "after_grab_key_press": true,
+   "cell": "chord_ctrl_alt_shift_r",
+   "cycle": "07",
+   "index": 4,
+   "job": "768",
+   "keycode": 27,
+   "keys_before": [
+    [
+     "KeyPress",
+     65507
+    ],
+    [
+     "KeyPress",
+     65513
+    ],
+    [
+     "KeyPress",
+     65505
+    ],
+    [
+     "KeyPress",
+     114
+    ]
+   ],
+   "keysym0": 114,
+   "kind": "KeyRelease",
+   "layer": "L0-raw",
+   "mutant": null,
+   "pass": false,
+   "seq": 47,
+   "setting": "screenshot",
+   "state": 0
+  },
+  {
+   "after_grab_key_press": true,
+   "cell": "chord_ctrl_alt_shift_r",
+   "cycle": "07",
+   "index": 5,
+   "job": "768",
+   "keycode": 50,
+   "keys_before": [
+    [
+     "KeyPress",
+     65507
+    ],
+    [
+     "KeyPress",
+     65513
+    ],
+    [
+     "KeyPress",
+     65505
+    ],
+    [
+     "KeyPress",
+     114
+    ],
+    [
+     "KeyRelease",
+     114
+    ]
+   ],
+   "keysym0": 65505,
+   "kind": "KeyRelease",
+   "layer": "L0-raw",
+   "mutant": null,
+   "pass": false,
+   "seq": 47,
+   "setting": "screenshot",
+   "state": 0
+  },
+  {
+   "after_grab_key_press": true,
+   "cell": "chord_ctrl_alt_shift_r",
+   "cycle": "07",
+   "index": 6,
+   "job": "768",
+   "keycode": 64,
+   "keys_before": [
+    [
+     "KeyPress",
+     65507
+    ],
+    [
+     "KeyPress",
+     65513
+    ],
+    [
+     "KeyPress",
+     65505
+    ],
+    [
+     "KeyPress",
+     114
+    ],
+    [
+     "KeyRelease",
+     114
+    ],
+    [
+     "KeyRelease",
+     65505
+    ]
+   ],
+   "keysym0": 65513,
+   "kind": "KeyRelease",
+   "layer": "L0-raw",
+   "mutant": null,
+   "pass": false,
+   "seq": 47,
+   "setting": "screenshot",
+   "state": 0
+  },
+  {
+   "after_grab_key_press": true,
+   "cell": "chord_ctrl_alt_shift_r",
+   "cycle": "07",
+   "index": 7,
+   "job": "768",
+   "keycode": 37,
+   "keys_before": [
+    [
+     "KeyPress",
+     65507
+    ],
+    [
+     "KeyPress",
+     65513
+    ],
+    [
+     "KeyPress",
+     65505
+    ],
+    [
+     "KeyPress",
+     114
+    ],
+    [
+     "KeyRelease",
+     114
+    ],
+    [
+     "KeyRelease",
+     65505
+    ],
+    [
+     "KeyRelease",
+     65513
+    ]
+   ],
+   "keysym0": 65507,
+   "kind": "KeyRelease",
+   "layer": "L0-raw",
+   "mutant": null,
+   "pass": false,
+   "seq": 47,
+   "setting": "screenshot",
+   "state": 0
+  },
+  {
+   "after_grab_key_press": true,
+   "cell": "chord_alt_f4",
+   "cycle": "08",
+   "index": 2,
+   "job": "768",
+   "keycode": 70,
+   "keys_before": [
+    [
+     "KeyPress",
+     65513
+    ],
+    [
+     "KeyPress",
+     65473
+    ]
+   ],
+   "keysym0": 65473,
+   "kind": "KeyRelease",
+   "layer": "L0-raw",
+   "mutant": null,
+   "pass": false,
+   "seq": 8,
+   "setting": "screenshot",
+   "state": 0
+  },
+  {
+   "after_grab_key_press": true,
+   "cell": "chord_alt_f4",
+   "cycle": "08",
+   "index": 3,
+   "job": "768",
+   "keycode": 64,
+   "keys_before": [
+    [
+     "KeyPress",
+     65513
+    ],
+    [
+     "KeyPress",
+     65473
+    ],
+    [
+     "KeyRelease",
+     65473
+    ]
+   ],
+   "keysym0": 65513,
+   "kind": "KeyRelease",
+   "layer": "L0-raw",
+   "mutant": null,
+   "pass": false,
+   "seq": 8,
+   "setting": "screenshot",
+   "state": 0
+  },
+  {
+   "after_grab_key_press": true,
+   "cell": "chord_super_d",
+   "cycle": "08",
+   "index": 1,
+   "job": "768",
+   "keycode": 40,
+   "keys_before": [
+    [
+     "KeyPress",
+     65515
+    ]
+   ],
+   "keysym0": 100,
+   "kind": "KeyPress",
+   "layer": "L0-raw",
+   "mutant": null,
+   "pass": false,
+   "seq": 33,
+   "setting": "screenshot",
+   "state": 0
+  },
+  {
+   "after_grab_key_press": true,
+   "cell": "chord_super_d",
+   "cycle": "08",
+   "index": 2,
+   "job": "768",
+   "keycode": 40,
+   "keys_before": [
+    [
+     "KeyPress",
+     65515
+    ],
+    [
+     "KeyPress",
+     100
+    ]
+   ],
+   "keysym0": 100,
+   "kind": "KeyRelease",
+   "layer": "L0-raw",
+   "mutant": null,
+   "pass": false,
+   "seq": 33,
+   "setting": "screenshot",
+   "state": 0
+  },
+  {
+   "after_grab_key_press": true,
+   "cell": "chord_super_d",
+   "cycle": "08",
+   "index": 3,
+   "job": "768",
+   "keycode": 133,
+   "keys_before": [
+    [
+     "KeyPress",
+     65515
+    ],
+    [
+     "KeyPress",
+     100
+    ],
+    [
+     "KeyRelease",
+     100
+    ]
+   ],
+   "keysym0": 65515,
+   "kind": "KeyRelease",
+   "layer": "L0-raw",
+   "mutant": null,
+   "pass": false,
+   "seq": 33,
+   "setting": "screenshot",
+   "state": 0
+  },
+  {
+   "after_grab_key_press": true,
+   "cell": "chord_super_d",
+   "cycle": "00",
+   "index": 1,
+   "job": "784",
+   "keycode": 40,
+   "keys_before": [
+    [
+     "KeyPress",
+     65515
+    ]
+   ],
+   "keysym0": 100,
+   "kind": "KeyPress",
+   "layer": "L0-raw",
+   "mutant": null,
+   "pass": false,
+   "seq": 1,
+   "setting": "screenshot",
+   "state": 0
+  },
+  {
+   "after_grab_key_press": true,
+   "cell": "chord_super_d",
+   "cycle": "00",
+   "index": 2,
+   "job": "784",
+   "keycode": 40,
+   "keys_before": [
+    [
+     "KeyPress",
+     65515
+    ],
+    [
+     "KeyPress",
+     100
+    ]
+   ],
+   "keysym0": 100,
+   "kind": "KeyRelease",
+   "layer": "L0-raw",
+   "mutant": null,
+   "pass": false,
+   "seq": 1,
+   "setting": "screenshot",
+   "state": 0
+  },
+  {
+   "after_grab_key_press": true,
+   "cell": "chord_super_d",
+   "cycle": "00",
+   "index": 3,
+   "job": "784",
+   "keycode": 133,
+   "keys_before": [
+    [
+     "KeyPress",
+     65515
+    ],
+    [
+     "KeyPress",
+     100
+    ],
+    [
+     "KeyRelease",
+     100
+    ]
+   ],
+   "keysym0": 65515,
+   "kind": "KeyRelease",
+   "layer": "L0-raw",
+   "mutant": null,
+   "pass": false,
+   "seq": 1,
+   "setting": "screenshot",
+   "state": 0
+  },
+  {
+   "after_grab_key_press": true,
+   "cell": "chord_ctrl_alt_shift_r",
+   "cycle": "00",
+   "index": 4,
+   "job": "784",
+   "keycode": 27,
+   "keys_before": [
+    [
+     "KeyPress",
+     65507
+    ],
+    [
+     "KeyPress",
+     65513
+    ],
+    [
+     "KeyPress",
+     65505
+    ],
+    [
+     "KeyPress",
+     114
+    ]
+   ],
+   "keysym0": 114,
+   "kind": "KeyRelease",
+   "layer": "L0-raw",
+   "mutant": null,
+   "pass": false,
+   "seq": 3,
+   "setting": "screenshot",
+   "state": 0
+  },
+  {
+   "after_grab_key_press": true,
+   "cell": "chord_ctrl_alt_shift_r",
+   "cycle": "00",
+   "index": 5,
+   "job": "784",
+   "keycode": 50,
+   "keys_before": [
+    [
+     "KeyPress",
+     65507
+    ],
+    [
+     "KeyPress",
+     65513
+    ],
+    [
+     "KeyPress",
+     65505
+    ],
+    [
+     "KeyPress",
+     114
+    ],
+    [
+     "KeyRelease",
+     114
+    ]
+   ],
+   "keysym0": 65505,
+   "kind": "KeyRelease",
+   "layer": "L0-raw",
+   "mutant": null,
+   "pass": false,
+   "seq": 3,
+   "setting": "screenshot",
+   "state": 0
+  },
+  {
+   "after_grab_key_press": true,
+   "cell": "chord_ctrl_alt_shift_r",
+   "cycle": "00",
+   "index": 6,
+   "job": "784",
+   "keycode": 64,
+   "keys_before": [
+    [
+     "KeyPress",
+     65507
+    ],
+    [
+     "KeyPress",
+     65513
+    ],
+    [
+     "KeyPress",
+     65505
+    ],
+    [
+     "KeyPress",
+     114
+    ],
+    [
+     "KeyRelease",
+     114
+    ],
+    [
+     "KeyRelease",
+     65505
+    ]
+   ],
+   "keysym0": 65513,
+   "kind": "KeyRelease",
+   "layer": "L0-raw",
+   "mutant": null,
+   "pass": false,
+   "seq": 3,
+   "setting": "screenshot",
+   "state": 0
+  },
+  {
+   "after_grab_key_press": true,
+   "cell": "chord_ctrl_alt_shift_r",
+   "cycle": "00",
+   "index": 7,
+   "job": "784",
+   "keycode": 37,
+   "keys_before": [
+    [
+     "KeyPress",
+     65507
+    ],
+    [
+     "KeyPress",
+     65513
+    ],
+    [
+     "KeyPress",
+     65505
+    ],
+    [
+     "KeyPress",
+     114
+    ],
+    [
+     "KeyRelease",
+     114
+    ],
+    [
+     "KeyRelease",
+     65505
+    ],
+    [
+     "KeyRelease",
+     65513
+    ]
+   ],
+   "keysym0": 65507,
+   "kind": "KeyRelease",
+   "layer": "L0-raw",
+   "mutant": null,
+   "pass": false,
+   "seq": 3,
+   "setting": "screenshot",
+   "state": 0
+  },
+  {
+   "after_grab_key_press": true,
+   "cell": "chord_alt_f4",
+   "cycle": "00",
+   "index": 2,
+   "job": "784",
+   "keycode": 70,
+   "keys_before": [
+    [
+     "KeyPress",
+     65513
+    ],
+    [
+     "KeyPress",
+     65473
+    ]
+   ],
+   "keysym0": 65473,
+   "kind": "KeyRelease",
+   "layer": "L0-raw",
+   "mutant": null,
+   "pass": false,
+   "seq": 5,
+   "setting": "screenshot",
+   "state": 0
+  },
+  {
+   "after_grab_key_press": true,
+   "cell": "chord_alt_f4",
+   "cycle": "00",
+   "index": 3,
+   "job": "784",
+   "keycode": 64,
+   "keys_before": [
+    [
+     "KeyPress",
+     65513
+    ],
+    [
+     "KeyPress",
+     65473
+    ],
+    [
+     "KeyRelease",
+     65473
+    ]
+   ],
+   "keysym0": 65513,
+   "kind": "KeyRelease",
+   "layer": "L0-raw",
+   "mutant": null,
+   "pass": false,
+   "seq": 5,
+   "setting": "screenshot",
+   "state": 0
+  },
+  {
+   "after_grab_key_press": true,
+   "cell": "chord_alt_tab",
+   "cycle": "00",
+   "index": 2,
+   "job": "784",
+   "keycode": 23,
+   "keys_before": [
+    [
+     "KeyPress",
+     65513
+    ],
+    [
+     "KeyPress",
+     65289
+    ]
+   ],
+   "keysym0": 65289,
+   "kind": "KeyRelease",
+   "layer": "L0-raw",
+   "mutant": null,
+   "pass": false,
+   "seq": 12,
+   "setting": "screenshot",
+   "state": 0
+  },
+  {
+   "after_grab_key_press": true,
+   "cell": "chord_alt_tab",
+   "cycle": "00",
+   "index": 3,
+   "job": "784",
+   "keycode": 64,
+   "keys_before": [
+    [
+     "KeyPress",
+     65513
+    ],
+    [
+     "KeyPress",
+     65289
+    ],
+    [
+     "KeyRelease",
+     65289
+    ]
+   ],
+   "keysym0": 65513,
+   "kind": "KeyRelease",
+   "layer": "L0-raw",
+   "mutant": null,
+   "pass": false,
+   "seq": 12,
+   "setting": "screenshot",
+   "state": 0
+  },
+  {
+   "after_grab_key_press": true,
+   "cell": "chord_alt_f4",
+   "cycle": "00",
+   "index": 2,
+   "job": "784",
+   "keycode": 70,
+   "keys_before": [
+    [
+     "KeyPress",
+     65513
+    ],
+    [
+     "KeyPress",
+     65473
+    ]
+   ],
+   "keysym0": 65473,
+   "kind": "KeyRelease",
+   "layer": "L0-raw",
+   "mutant": null,
+   "pass": false,
+   "seq": 14,
+   "setting": "screenshot",
+   "state": 0
+  },
+  {
+   "after_grab_key_press": true,
+   "cell": "chord_alt_f4",
+   "cycle": "00",
+   "index": 3,
+   "job": "784",
+   "keycode": 64,
+   "keys_before": [
+    [
+     "KeyPress",
+     65513
+    ],
+    [
+     "KeyPress",
+     65473
+    ],
+    [
+     "KeyRelease",
+     65473
+    ]
+   ],
+   "keysym0": 65513,
+   "kind": "KeyRelease",
+   "layer": "L0-raw",
+   "mutant": null,
+   "pass": false,
+   "seq": 14,
+   "setting": "screenshot",
+   "state": 0
+  },
+  {
+   "after_grab_key_press": true,
+   "cell": "chord_super_d",
+   "cycle": "00",
+   "index": 1,
+   "job": "784",
+   "keycode": 40,
+   "keys_before": [
+    [
+     "KeyPress",
+     65515
+    ]
+   ],
+   "keysym0": 100,
+   "kind": "KeyPress",
+   "layer": "L0-raw",
+   "mutant": null,
+   "pass": false,
+   "seq": 17,
+   "setting": "screenshot",
+   "state": 0
+  },
+  {
+   "after_grab_key_press": true,
+   "cell": "chord_super_d",
+   "cycle": "00",
+   "index": 2,
+   "job": "784",
+   "keycode": 40,
+   "keys_before": [
+    [
+     "KeyPress",
+     65515
+    ],
+    [
+     "KeyPress",
+     100
+    ]
+   ],
+   "keysym0": 100,
+   "kind": "KeyRelease",
+   "layer": "L0-raw",
+   "mutant": null,
+   "pass": false,
+   "seq": 17,
+   "setting": "screenshot",
+   "state": 0
+  },
+  {
+   "after_grab_key_press": true,
+   "cell": "chord_super_d",
+   "cycle": "00",
+   "index": 3,
+   "job": "784",
+   "keycode": 133,
+   "keys_before": [
+    [
+     "KeyPress",
+     65515
+    ],
+    [
+     "KeyPress",
+     100
+    ],
+    [
+     "KeyRelease",
+     100
+    ]
+   ],
+   "keysym0": 65515,
+   "kind": "KeyRelease",
+   "layer": "L0-raw",
+   "mutant": null,
+   "pass": false,
+   "seq": 17,
+   "setting": "screenshot",
+   "state": 0
+  },
+  {
+   "after_grab_key_press": true,
+   "cell": "chord_alt_tab",
+   "cycle": "00",
+   "index": 2,
+   "job": "784",
+   "keycode": 23,
+   "keys_before": [
+    [
+     "KeyPress",
+     65513
+    ],
+    [
+     "KeyPress",
+     65289
+    ]
+   ],
+   "keysym0": 65289,
+   "kind": "KeyRelease",
+   "layer": "L0-raw",
+   "mutant": null,
+   "pass": false,
+   "seq": 18,
+   "setting": "screenshot",
+   "state": 0
+  },
+  {
+   "after_grab_key_press": true,
+   "cell": "chord_alt_tab",
+   "cycle": "00",
+   "index": 3,
+   "job": "784",
+   "keycode": 64,
+   "keys_before": [
+    [
+     "KeyPress",
+     65513
+    ],
+    [
+     "KeyPress",
+     65289
+    ],
+    [
+     "KeyRelease",
+     65289
+    ]
+   ],
+   "keysym0": 65513,
+   "kind": "KeyRelease",
+   "layer": "L0-raw",
+   "mutant": null,
+   "pass": false,
+   "seq": 18,
+   "setting": "screenshot",
+   "state": 0
+  },
+  {
+   "after_grab_key_press": true,
+   "cell": "chord_ctrl_alt_shift_r",
+   "cycle": "00",
+   "index": 4,
+   "job": "784",
+   "keycode": 27,
+   "keys_before": [
+    [
+     "KeyPress",
+     65507
+    ],
+    [
+     "KeyPress",
+     65513
+    ],
+    [
+     "KeyPress",
+     65505
+    ],
+    [
+     "KeyPress",
+     114
+    ]
+   ],
+   "keysym0": 114,
+   "kind": "KeyRelease",
+   "layer": "L0-raw",
+   "mutant": null,
+   "pass": false,
+   "seq": 21,
+   "setting": "screenshot",
+   "state": 0
+  },
+  {
+   "after_grab_key_press": true,
+   "cell": "chord_ctrl_alt_shift_r",
+   "cycle": "00",
+   "index": 5,
+   "job": "784",
+   "keycode": 50,
+   "keys_before": [
+    [
+     "KeyPress",
+     65507
+    ],
+    [
+     "KeyPress",
+     65513
+    ],
+    [
+     "KeyPress",
+     65505
+    ],
+    [
+     "KeyPress",
+     114
+    ],
+    [
+     "KeyRelease",
+     114
+    ]
+   ],
+   "keysym0": 65505,
+   "kind": "KeyRelease",
+   "layer": "L0-raw",
+   "mutant": null,
+   "pass": false,
+   "seq": 21,
+   "setting": "screenshot",
+   "state": 0
+  },
+  {
+   "after_grab_key_press": true,
+   "cell": "chord_ctrl_alt_shift_r",
+   "cycle": "00",
+   "index": 6,
+   "job": "784",
+   "keycode": 64,
+   "keys_before": [
+    [
+     "KeyPress",
+     65507
+    ],
+    [
+     "KeyPress",
+     65513
+    ],
+    [
+     "KeyPress",
+     65505
+    ],
+    [
+     "KeyPress",
+     114
+    ],
+    [
+     "KeyRelease",
+     114
+    ],
+    [
+     "KeyRelease",
+     65505
+    ]
+   ],
+   "keysym0": 65513,
+   "kind": "KeyRelease",
+   "layer": "L0-raw",
+   "mutant": null,
+   "pass": false,
+   "seq": 21,
+   "setting": "screenshot",
+   "state": 0
+  },
+  {
+   "after_grab_key_press": true,
+   "cell": "chord_ctrl_alt_shift_r",
+   "cycle": "00",
+   "index": 7,
+   "job": "784",
+   "keycode": 37,
+   "keys_before": [
+    [
+     "KeyPress",
+     65507
+    ],
+    [
+     "KeyPress",
+     65513
+    ],
+    [
+     "KeyPress",
+     65505
+    ],
+    [
+     "KeyPress",
+     114
+    ],
+    [
+     "KeyRelease",
+     114
+    ],
+    [
+     "KeyRelease",
+     65505
+    ],
+    [
+     "KeyRelease",
+     65513
+    ]
+   ],
+   "keysym0": 65507,
+   "kind": "KeyRelease",
+   "layer": "L0-raw",
+   "mutant": null,
+   "pass": false,
+   "seq": 21,
+   "setting": "screenshot",
+   "state": 0
+  },
+  {
+   "after_grab_key_press": true,
+   "cell": "chord_alt_tab",
+   "cycle": "00",
+   "index": 2,
+   "job": "784",
+   "keycode": 23,
+   "keys_before": [
+    [
+     "KeyPress",
+     65513
+    ],
+    [
+     "KeyPress",
+     65289
+    ]
+   ],
+   "keysym0": 65289,
+   "kind": "KeyRelease",
+   "layer": "L0-raw",
+   "mutant": null,
+   "pass": false,
+   "seq": 28,
+   "setting": "screenshot",
+   "state": 0
+  },
+  {
+   "after_grab_key_press": true,
+   "cell": "chord_alt_tab",
+   "cycle": "00",
+   "index": 3,
+   "job": "784",
+   "keycode": 64,
+   "keys_before": [
+    [
+     "KeyPress",
+     65513
+    ],
+    [
+     "KeyPress",
+     65289
+    ],
+    [
+     "KeyRelease",
+     65289
+    ]
+   ],
+   "keysym0": 65513,
+   "kind": "KeyRelease",
+   "layer": "L0-raw",
+   "mutant": null,
+   "pass": false,
+   "seq": 28,
+   "setting": "screenshot",
+   "state": 0
+  },
+  {
+   "after_grab_key_press": true,
+   "cell": "chord_alt_f4",
+   "cycle": "01",
+   "index": 2,
+   "job": "784",
+   "keycode": 70,
+   "keys_before": [
+    [
+     "KeyPress",
+     65513
+    ],
+    [
+     "KeyPress",
+     65473
+    ]
+   ],
+   "keysym0": 65473,
+   "kind": "KeyRelease",
+   "layer": "L0-raw",
+   "mutant": null,
+   "pass": false,
+   "seq": 0,
+   "setting": "screenshot",
+   "state": 0
+  },
+  {
+   "after_grab_key_press": true,
+   "cell": "chord_alt_f4",
+   "cycle": "01",
+   "index": 3,
+   "job": "784",
+   "keycode": 64,
+   "keys_before": [
+    [
+     "KeyPress",
+     65513
+    ],
+    [
+     "KeyPress",
+     65473
+    ],
+    [
+     "KeyRelease",
+     65473
+    ]
+   ],
+   "keysym0": 65513,
+   "kind": "KeyRelease",
+   "layer": "L0-raw",
+   "mutant": null,
+   "pass": false,
+   "seq": 0,
+   "setting": "screenshot",
+   "state": 0
+  },
+  {
+   "after_grab_key_press": true,
+   "cell": "chord_super_d",
+   "cycle": "01",
+   "index": 1,
+   "job": "784",
+   "keycode": 40,
+   "keys_before": [
+    [
+     "KeyPress",
+     65515
+    ]
+   ],
+   "keysym0": 100,
+   "kind": "KeyPress",
+   "layer": "L0-raw",
+   "mutant": null,
+   "pass": false,
+   "seq": 1,
+   "setting": "screenshot",
+   "state": 0
+  },
+  {
+   "after_grab_key_press": true,
+   "cell": "chord_super_d",
+   "cycle": "01",
+   "index": 2,
+   "job": "784",
+   "keycode": 40,
+   "keys_before": [
+    [
+     "KeyPress",
+     65515
+    ],
+    [
+     "KeyPress",
+     100
+    ]
+   ],
+   "keysym0": 100,
+   "kind": "KeyRelease",
+   "layer": "L0-raw",
+   "mutant": null,
+   "pass": false,
+   "seq": 1,
+   "setting": "screenshot",
+   "state": 0
+  },
+  {
+   "after_grab_key_press": true,
+   "cell": "chord_super_d",
+   "cycle": "01",
+   "index": 3,
+   "job": "784",
+   "keycode": 133,
+   "keys_before": [
+    [
+     "KeyPress",
+     65515
+    ],
+    [
+     "KeyPress",
+     100
+    ],
+    [
+     "KeyRelease",
+     100
+    ]
+   ],
+   "keysym0": 65515,
+   "kind": "KeyRelease",
+   "layer": "L0-raw",
+   "mutant": null,
+   "pass": false,
+   "seq": 1,
+   "setting": "screenshot",
+   "state": 0
+  },
+  {
+   "after_grab_key_press": true,
+   "cell": "chord_ctrl_alt_shift_r",
+   "cycle": "01",
+   "index": 4,
+   "job": "784",
+   "keycode": 27,
+   "keys_before": [
+    [
+     "KeyPress",
+     65507
+    ],
+    [
+     "KeyPress",
+     65513
+    ],
+    [
+     "KeyPress",
+     65505
+    ],
+    [
+     "KeyPress",
+     114
+    ]
+   ],
+   "keysym0": 114,
+   "kind": "KeyRelease",
+   "layer": "L0-raw",
+   "mutant": null,
+   "pass": false,
+   "seq": 5,
+   "setting": "screenshot",
+   "state": 0
+  },
+  {
+   "after_grab_key_press": true,
+   "cell": "chord_ctrl_alt_shift_r",
+   "cycle": "01",
+   "index": 5,
+   "job": "784",
+   "keycode": 50,
+   "keys_before": [
+    [
+     "KeyPress",
+     65507
+    ],
+    [
+     "KeyPress",
+     65513
+    ],
+    [
+     "KeyPress",
+     65505
+    ],
+    [
+     "KeyPress",
+     114
+    ],
+    [
+     "KeyRelease",
+     114
+    ]
+   ],
+   "keysym0": 65505,
+   "kind": "KeyRelease",
+   "layer": "L0-raw",
+   "mutant": null,
+   "pass": false,
+   "seq": 5,
+   "setting": "screenshot",
+   "state": 0
+  },
+  {
+   "after_grab_key_press": true,
+   "cell": "chord_ctrl_alt_shift_r",
+   "cycle": "01",
+   "index": 6,
+   "job": "784",
+   "keycode": 64,
+   "keys_before": [
+    [
+     "KeyPress",
+     65507
+    ],
+    [
+     "KeyPress",
+     65513
+    ],
+    [
+     "KeyPress",
+     65505
+    ],
+    [
+     "KeyPress",
+     114
+    ],
+    [
+     "KeyRelease",
+     114
+    ],
+    [
+     "KeyRelease",
+     65505
+    ]
+   ],
+   "keysym0": 65513,
+   "kind": "KeyRelease",
+   "layer": "L0-raw",
+   "mutant": null,
+   "pass": false,
+   "seq": 5,
+   "setting": "screenshot",
+   "state": 0
+  },
+  {
+   "after_grab_key_press": true,
+   "cell": "chord_ctrl_alt_shift_r",
+   "cycle": "01",
+   "index": 7,
+   "job": "784",
+   "keycode": 37,
+   "keys_before": [
+    [
+     "KeyPress",
+     65507
+    ],
+    [
+     "KeyPress",
+     65513
+    ],
+    [
+     "KeyPress",
+     65505
+    ],
+    [
+     "KeyPress",
+     114
+    ],
+    [
+     "KeyRelease",
+     114
+    ],
+    [
+     "KeyRelease",
+     65505
+    ],
+    [
+     "KeyRelease",
+     65513
+    ]
+   ],
+   "keysym0": 65507,
+   "kind": "KeyRelease",
+   "layer": "L0-raw",
+   "mutant": null,
+   "pass": false,
+   "seq": 5,
+   "setting": "screenshot",
+   "state": 0
+  },
+  {
+   "after_grab_key_press": true,
+   "cell": "chord_ctrl_alt_shift_r",
+   "cycle": "01",
+   "index": 4,
+   "job": "784",
+   "keycode": 27,
+   "keys_before": [
+    [
+     "KeyPress",
+     65507
+    ],
+    [
+     "KeyPress",
+     65513
+    ],
+    [
+     "KeyPress",
+     65505
+    ],
+    [
+     "KeyPress",
+     114
+    ]
+   ],
+   "keysym0": 114,
+   "kind": "KeyRelease",
+   "layer": "L0-raw",
+   "mutant": null,
+   "pass": false,
+   "seq": 12,
+   "setting": "screenshot",
+   "state": 0
+  },
+  {
+   "after_grab_key_press": true,
+   "cell": "chord_ctrl_alt_shift_r",
+   "cycle": "01",
+   "index": 5,
+   "job": "784",
+   "keycode": 50,
+   "keys_before": [
+    [
+     "KeyPress",
+     65507
+    ],
+    [
+     "KeyPress",
+     65513
+    ],
+    [
+     "KeyPress",
+     65505
+    ],
+    [
+     "KeyPress",
+     114
+    ],
+    [
+     "KeyRelease",
+     114
+    ]
+   ],
+   "keysym0": 65505,
+   "kind": "KeyRelease",
+   "layer": "L0-raw",
+   "mutant": null,
+   "pass": false,
+   "seq": 12,
+   "setting": "screenshot",
+   "state": 0
+  },
+  {
+   "after_grab_key_press": true,
+   "cell": "chord_ctrl_alt_shift_r",
+   "cycle": "01",
+   "index": 6,
+   "job": "784",
+   "keycode": 64,
+   "keys_before": [
+    [
+     "KeyPress",
+     65507
+    ],
+    [
+     "KeyPress",
+     65513
+    ],
+    [
+     "KeyPress",
+     65505
+    ],
+    [
+     "KeyPress",
+     114
+    ],
+    [
+     "KeyRelease",
+     114
+    ],
+    [
+     "KeyRelease",
+     65505
+    ]
+   ],
+   "keysym0": 65513,
+   "kind": "KeyRelease",
+   "layer": "L0-raw",
+   "mutant": null,
+   "pass": false,
+   "seq": 12,
+   "setting": "screenshot",
+   "state": 0
+  },
+  {
+   "after_grab_key_press": true,
+   "cell": "chord_ctrl_alt_shift_r",
+   "cycle": "01",
+   "index": 7,
+   "job": "784",
+   "keycode": 37,
+   "keys_before": [
+    [
+     "KeyPress",
+     65507
+    ],
+    [
+     "KeyPress",
+     65513
+    ],
+    [
+     "KeyPress",
+     65505
+    ],
+    [
+     "KeyPress",
+     114
+    ],
+    [
+     "KeyRelease",
+     114
+    ],
+    [
+     "KeyRelease",
+     65505
+    ],
+    [
+     "KeyRelease",
+     65513
+    ]
+   ],
+   "keysym0": 65507,
+   "kind": "KeyRelease",
+   "layer": "L0-raw",
+   "mutant": null,
+   "pass": false,
+   "seq": 12,
+   "setting": "screenshot",
+   "state": 0
+  },
+  {
+   "after_grab_key_press": true,
+   "cell": "chord_alt_tab",
+   "cycle": "01",
+   "index": 2,
+   "job": "784",
+   "keycode": 23,
+   "keys_before": [
+    [
+     "KeyPress",
+     65513
+    ],
+    [
+     "KeyPress",
+     65289
+    ]
+   ],
+   "keysym0": 65289,
+   "kind": "KeyRelease",
+   "layer": "L0-raw",
+   "mutant": null,
+   "pass": false,
+   "seq": 15,
+   "setting": "screenshot",
+   "state": 0
+  },
+  {
+   "after_grab_key_press": true,
+   "cell": "chord_alt_tab",
+   "cycle": "01",
+   "index": 3,
+   "job": "784",
+   "keycode": 64,
+   "keys_before": [
+    [
+     "KeyPress",
+     65513
+    ],
+    [
+     "KeyPress",
+     65289
+    ],
+    [
+     "KeyRelease",
+     65289
+    ]
+   ],
+   "keysym0": 65513,
+   "kind": "KeyRelease",
+   "layer": "L0-raw",
+   "mutant": null,
+   "pass": false,
+   "seq": 15,
+   "setting": "screenshot",
+   "state": 0
+  },
+  {
+   "after_grab_key_press": true,
+   "cell": "chord_alt_f4",
+   "cycle": "01",
+   "index": 2,
+   "job": "784",
+   "keycode": 70,
+   "keys_before": [
+    [
+     "KeyPress",
+     65513
+    ],
+    [
+     "KeyPress",
+     65473
+    ]
+   ],
+   "keysym0": 65473,
+   "kind": "KeyRelease",
+   "layer": "L0-raw",
+   "mutant": null,
+   "pass": false,
+   "seq": 16,
+   "setting": "screenshot",
+   "state": 0
+  },
+  {
+   "after_grab_key_press": true,
+   "cell": "chord_alt_f4",
+   "cycle": "01",
+   "index": 3,
+   "job": "784",
+   "keycode": 64,
+   "keys_before": [
+    [
+     "KeyPress",
+     65513
+    ],
+    [
+     "KeyPress",
+     65473
+    ],
+    [
+     "KeyRelease",
+     65473
+    ]
+   ],
+   "keysym0": 65513,
+   "kind": "KeyRelease",
+   "layer": "L0-raw",
+   "mutant": null,
+   "pass": false,
+   "seq": 16,
+   "setting": "screenshot",
+   "state": 0
+  },
+  {
+   "after_grab_key_press": true,
+   "cell": "chord_super_d",
+   "cycle": "01",
+   "index": 1,
+   "job": "784",
+   "keycode": 40,
+   "keys_before": [
+    [
+     "KeyPress",
+     65515
+    ]
+   ],
+   "keysym0": 100,
+   "kind": "KeyPress",
+   "layer": "L0-raw",
+   "mutant": null,
+   "pass": false,
+   "seq": 18,
+   "setting": "screenshot",
+   "state": 0
+  },
+  {
+   "after_grab_key_press": true,
+   "cell": "chord_super_d",
+   "cycle": "01",
+   "index": 2,
+   "job": "784",
+   "keycode": 40,
+   "keys_before": [
+    [
+     "KeyPress",
+     65515
+    ],
+    [
+     "KeyPress",
+     100
+    ]
+   ],
+   "keysym0": 100,
+   "kind": "KeyRelease",
+   "layer": "L0-raw",
+   "mutant": null,
+   "pass": false,
+   "seq": 18,
+   "setting": "screenshot",
+   "state": 0
+  },
+  {
+   "after_grab_key_press": true,
+   "cell": "chord_super_d",
+   "cycle": "01",
+   "index": 3,
+   "job": "784",
+   "keycode": 133,
+   "keys_before": [
+    [
+     "KeyPress",
+     65515
+    ],
+    [
+     "KeyPress",
+     100
+    ],
+    [
+     "KeyRelease",
+     100
+    ]
+   ],
+   "keysym0": 65515,
+   "kind": "KeyRelease",
+   "layer": "L0-raw",
+   "mutant": null,
+   "pass": false,
+   "seq": 18,
+   "setting": "screenshot",
+   "state": 0
+  },
+  {
+   "after_grab_key_press": true,
+   "cell": "chord_super_d",
+   "cycle": "01",
+   "index": 1,
+   "job": "784",
+   "keycode": 40,
+   "keys_before": [
+    [
+     "KeyPress",
+     65515
+    ]
+   ],
+   "keysym0": 100,
+   "kind": "KeyPress",
+   "layer": "L0-raw",
+   "mutant": null,
+   "pass": false,
+   "seq": 23,
+   "setting": "screenshot",
+   "state": 0
+  },
+  {
+   "after_grab_key_press": true,
+   "cell": "chord_super_d",
+   "cycle": "01",
+   "index": 2,
+   "job": "784",
+   "keycode": 40,
+   "keys_before": [
+    [
+     "KeyPress",
+     65515
+    ],
+    [
+     "KeyPress",
+     100
+    ]
+   ],
+   "keysym0": 100,
+   "kind": "KeyRelease",
+   "layer": "L0-raw",
+   "mutant": null,
+   "pass": false,
+   "seq": 23,
+   "setting": "screenshot",
+   "state": 0
+  },
+  {
+   "after_grab_key_press": true,
+   "cell": "chord_super_d",
+   "cycle": "01",
+   "index": 3,
+   "job": "784",
+   "keycode": 133,
+   "keys_before": [
+    [
+     "KeyPress",
+     65515
+    ],
+    [
+     "KeyPress",
+     100
+    ],
+    [
+     "KeyRelease",
+     100
+    ]
+   ],
+   "keysym0": 65515,
+   "kind": "KeyRelease",
+   "layer": "L0-raw",
+   "mutant": null,
+   "pass": false,
+   "seq": 23,
+   "setting": "screenshot",
+   "state": 0
+  },
+  {
+   "after_grab_key_press": true,
+   "cell": "chord_alt_f4",
+   "cycle": "01",
+   "index": 2,
+   "job": "784",
+   "keycode": 70,
+   "keys_before": [
+    [
+     "KeyPress",
+     65513
+    ],
+    [
+     "KeyPress",
+     65473
+    ]
+   ],
+   "keysym0": 65473,
+   "kind": "KeyRelease",
+   "layer": "L0-raw",
+   "mutant": null,
+   "pass": false,
+   "seq": 27,
+   "setting": "screenshot",
+   "state": 0
+  },
+  {
+   "after_grab_key_press": true,
+   "cell": "chord_alt_f4",
+   "cycle": "01",
+   "index": 3,
+   "job": "784",
+   "keycode": 64,
+   "keys_before": [
+    [
+     "KeyPress",
+     65513
+    ],
+    [
+     "KeyPress",
+     65473
+    ],
+    [
+     "KeyRelease",
+     65473
+    ]
+   ],
+   "keysym0": 65513,
+   "kind": "KeyRelease",
+   "layer": "L0-raw",
+   "mutant": null,
+   "pass": false,
+   "seq": 27,
+   "setting": "screenshot",
+   "state": 0
+  },
+  {
+   "after_grab_key_press": true,
+   "cell": "chord_ctrl_alt_shift_r",
+   "cycle": "01",
+   "index": 4,
+   "job": "784",
+   "keycode": 27,
+   "keys_before": [
+    [
+     "KeyPress",
+     65507
+    ],
+    [
+     "KeyPress",
+     65513
+    ],
+    [
+     "KeyPress",
+     65505
+    ],
+    [
+     "KeyPress",
+     114
+    ]
+   ],
+   "keysym0": 114,
+   "kind": "KeyRelease",
+   "layer": "L0-raw",
+   "mutant": null,
+   "pass": false,
+   "seq": 28,
+   "setting": "screenshot",
+   "state": 0
+  },
+  {
+   "after_grab_key_press": true,
+   "cell": "chord_ctrl_alt_shift_r",
+   "cycle": "01",
+   "index": 5,
+   "job": "784",
+   "keycode": 50,
+   "keys_before": [
+    [
+     "KeyPress",
+     65507
+    ],
+    [
+     "KeyPress",
+     65513
+    ],
+    [
+     "KeyPress",
+     65505
+    ],
+    [
+     "KeyPress",
+     114
+    ],
+    [
+     "KeyRelease",
+     114
+    ]
+   ],
+   "keysym0": 65505,
+   "kind": "KeyRelease",
+   "layer": "L0-raw",
+   "mutant": null,
+   "pass": false,
+   "seq": 28,
+   "setting": "screenshot",
+   "state": 0
+  },
+  {
+   "after_grab_key_press": true,
+   "cell": "chord_ctrl_alt_shift_r",
+   "cycle": "01",
+   "index": 6,
+   "job": "784",
+   "keycode": 64,
+   "keys_before": [
+    [
+     "KeyPress",
+     65507
+    ],
+    [
+     "KeyPress",
+     65513
+    ],
+    [
+     "KeyPress",
+     65505
+    ],
+    [
+     "KeyPress",
+     114
+    ],
+    [
+     "KeyRelease",
+     114
+    ],
+    [
+     "KeyRelease",
+     65505
+    ]
+   ],
+   "keysym0": 65513,
+   "kind": "KeyRelease",
+   "layer": "L0-raw",
+   "mutant": null,
+   "pass": false,
+   "seq": 28,
+   "setting": "screenshot",
+   "state": 0
+  },
+  {
+   "after_grab_key_press": true,
+   "cell": "chord_ctrl_alt_shift_r",
+   "cycle": "01",
+   "index": 7,
+   "job": "784",
+   "keycode": 37,
+   "keys_before": [
+    [
+     "KeyPress",
+     65507
+    ],
+    [
+     "KeyPress",
+     65513
+    ],
+    [
+     "KeyPress",
+     65505
+    ],
+    [
+     "KeyPress",
+     114
+    ],
+    [
+     "KeyRelease",
+     114
+    ],
+    [
+     "KeyRelease",
+     65505
+    ],
+    [
+     "KeyRelease",
+     65513
+    ]
+   ],
+   "keysym0": 65507,
+   "kind": "KeyRelease",
+   "layer": "L0-raw",
+   "mutant": null,
+   "pass": false,
+   "seq": 28,
+   "setting": "screenshot",
+   "state": 0
+  },
+  {
+   "after_grab_key_press": true,
+   "cell": "chord_alt_tab",
+   "cycle": "01",
+   "index": 2,
+   "job": "784",
+   "keycode": 23,
+   "keys_before": [
+    [
+     "KeyPress",
+     65513
+    ],
+    [
+     "KeyPress",
+     65289
+    ]
+   ],
+   "keysym0": 65289,
+   "kind": "KeyRelease",
+   "layer": "L0-raw",
+   "mutant": null,
+   "pass": false,
+   "seq": 29,
+   "setting": "screenshot",
+   "state": 0
+  },
+  {
+   "after_grab_key_press": true,
+   "cell": "chord_alt_tab",
+   "cycle": "01",
+   "index": 3,
+   "job": "784",
+   "keycode": 64,
+   "keys_before": [
+    [
+     "KeyPress",
+     65513
+    ],
+    [
+     "KeyPress",
+     65289
+    ],
+    [
+     "KeyRelease",
+     65289
+    ]
+   ],
+   "keysym0": 65513,
+   "kind": "KeyRelease",
+   "layer": "L0-raw",
+   "mutant": null,
+   "pass": false,
+   "seq": 29,
+   "setting": "screenshot",
+   "state": 0
+  },
+  {
+   "after_grab_key_press": true,
+   "cell": "chord_super_d",
+   "cycle": "02",
+   "index": 1,
+   "job": "784",
+   "keycode": 40,
+   "keys_before": [
+    [
+     "KeyPress",
+     65515
+    ]
+   ],
+   "keysym0": 100,
+   "kind": "KeyPress",
+   "layer": "L0-raw",
+   "mutant": null,
+   "pass": false,
+   "seq": 1,
+   "setting": "screenshot+a11y",
+   "state": 0
+  },
+  {
+   "after_grab_key_press": true,
+   "cell": "chord_super_d",
+   "cycle": "02",
+   "index": 2,
+   "job": "784",
+   "keycode": 40,
+   "keys_before": [
+    [
+     "KeyPress",
+     65515
+    ],
+    [
+     "KeyPress",
+     100
+    ]
+   ],
+   "keysym0": 100,
+   "kind": "KeyRelease",
+   "layer": "L0-raw",
+   "mutant": null,
+   "pass": false,
+   "seq": 1,
+   "setting": "screenshot+a11y",
+   "state": 0
+  },
+  {
+   "after_grab_key_press": true,
+   "cell": "chord_super_d",
+   "cycle": "02",
+   "index": 3,
+   "job": "784",
+   "keycode": 133,
+   "keys_before": [
+    [
+     "KeyPress",
+     65515
+    ],
+    [
+     "KeyPress",
+     100
+    ],
+    [
+     "KeyRelease",
+     100
+    ]
+   ],
+   "keysym0": 65515,
+   "kind": "KeyRelease",
+   "layer": "L0-raw",
+   "mutant": null,
+   "pass": false,
+   "seq": 1,
+   "setting": "screenshot+a11y",
+   "state": 0
+  },
+  {
+   "after_grab_key_press": true,
+   "cell": "chord_ctrl_alt_shift_r",
+   "cycle": "02",
+   "index": 4,
+   "job": "784",
+   "keycode": 27,
+   "keys_before": [
+    [
+     "KeyPress",
+     65507
+    ],
+    [
+     "KeyPress",
+     65513
+    ],
+    [
+     "KeyPress",
+     65505
+    ],
+    [
+     "KeyPress",
+     114
+    ]
+   ],
+   "keysym0": 114,
+   "kind": "KeyRelease",
+   "layer": "L0-raw",
+   "mutant": null,
+   "pass": false,
+   "seq": 3,
+   "setting": "screenshot+a11y",
+   "state": 0
+  },
+  {
+   "after_grab_key_press": true,
+   "cell": "chord_ctrl_alt_shift_r",
+   "cycle": "02",
+   "index": 5,
+   "job": "784",
+   "keycode": 50,
+   "keys_before": [
+    [
+     "KeyPress",
+     65507
+    ],
+    [
+     "KeyPress",
+     65513
+    ],
+    [
+     "KeyPress",
+     65505
+    ],
+    [
+     "KeyPress",
+     114
+    ],
+    [
+     "KeyRelease",
+     114
+    ]
+   ],
+   "keysym0": 65505,
+   "kind": "KeyRelease",
+   "layer": "L0-raw",
+   "mutant": null,
+   "pass": false,
+   "seq": 3,
+   "setting": "screenshot+a11y",
+   "state": 0
+  },
+  {
+   "after_grab_key_press": true,
+   "cell": "chord_ctrl_alt_shift_r",
+   "cycle": "02",
+   "index": 6,
+   "job": "784",
+   "keycode": 64,
+   "keys_before": [
+    [
+     "KeyPress",
+     65507
+    ],
+    [
+     "KeyPress",
+     65513
+    ],
+    [
+     "KeyPress",
+     65505
+    ],
+    [
+     "KeyPress",
+     114
+    ],
+    [
+     "KeyRelease",
+     114
+    ],
+    [
+     "KeyRelease",
+     65505
+    ]
+   ],
+   "keysym0": 65513,
+   "kind": "KeyRelease",
+   "layer": "L0-raw",
+   "mutant": null,
+   "pass": false,
+   "seq": 3,
+   "setting": "screenshot+a11y",
+   "state": 0
+  },
+  {
+   "after_grab_key_press": true,
+   "cell": "chord_ctrl_alt_shift_r",
+   "cycle": "02",
+   "index": 7,
+   "job": "784",
+   "keycode": 37,
+   "keys_before": [
+    [
+     "KeyPress",
+     65507
+    ],
+    [
+     "KeyPress",
+     65513
+    ],
+    [
+     "KeyPress",
+     65505
+    ],
+    [
+     "KeyPress",
+     114
+    ],
+    [
+     "KeyRelease",
+     114
+    ],
+    [
+     "KeyRelease",
+     65505
+    ],
+    [
+     "KeyRelease",
+     65513
+    ]
+   ],
+   "keysym0": 65507,
+   "kind": "KeyRelease",
+   "layer": "L0-raw",
+   "mutant": null,
+   "pass": false,
+   "seq": 3,
+   "setting": "screenshot+a11y",
+   "state": 0
+  },
+  {
+   "after_grab_key_press": true,
+   "cell": "chord_alt_f4",
+   "cycle": "02",
+   "index": 2,
+   "job": "784",
+   "keycode": 70,
+   "keys_before": [
+    [
+     "KeyPress",
+     65513
+    ],
+    [
+     "KeyPress",
+     65473
+    ]
+   ],
+   "keysym0": 65473,
+   "kind": "KeyRelease",
+   "layer": "L0-raw",
+   "mutant": null,
+   "pass": false,
+   "seq": 5,
+   "setting": "screenshot+a11y",
+   "state": 0
+  },
+  {
+   "after_grab_key_press": true,
+   "cell": "chord_alt_f4",
+   "cycle": "02",
+   "index": 3,
+   "job": "784",
+   "keycode": 64,
+   "keys_before": [
+    [
+     "KeyPress",
+     65513
+    ],
+    [
+     "KeyPress",
+     65473
+    ],
+    [
+     "KeyRelease",
+     65473
+    ]
+   ],
+   "keysym0": 65513,
+   "kind": "KeyRelease",
+   "layer": "L0-raw",
+   "mutant": null,
+   "pass": false,
+   "seq": 5,
+   "setting": "screenshot+a11y",
+   "state": 0
+  },
+  {
+   "after_grab_key_press": true,
+   "cell": "chord_alt_tab",
+   "cycle": "02",
+   "index": 2,
+   "job": "784",
+   "keycode": 23,
+   "keys_before": [
+    [
+     "KeyPress",
+     65513
+    ],
+    [
+     "KeyPress",
+     65289
+    ]
+   ],
+   "keysym0": 65289,
+   "kind": "KeyRelease",
+   "layer": "L0-raw",
+   "mutant": null,
+   "pass": false,
+   "seq": 12,
+   "setting": "screenshot+a11y",
+   "state": 0
+  },
+  {
+   "after_grab_key_press": true,
+   "cell": "chord_alt_tab",
+   "cycle": "02",
+   "index": 3,
+   "job": "784",
+   "keycode": 64,
+   "keys_before": [
+    [
+     "KeyPress",
+     65513
+    ],
+    [
+     "KeyPress",
+     65289
+    ],
+    [
+     "KeyRelease",
+     65289
+    ]
+   ],
+   "keysym0": 65513,
+   "kind": "KeyRelease",
+   "layer": "L0-raw",
+   "mutant": null,
+   "pass": false,
+   "seq": 12,
+   "setting": "screenshot+a11y",
+   "state": 0
+  },
+  {
+   "after_grab_key_press": true,
+   "cell": "chord_alt_f4",
+   "cycle": "02",
+   "index": 2,
+   "job": "784",
+   "keycode": 70,
+   "keys_before": [
+    [
+     "KeyPress",
+     65513
+    ],
+    [
+     "KeyPress",
+     65473
+    ]
+   ],
+   "keysym0": 65473,
+   "kind": "KeyRelease",
+   "layer": "L0-raw",
+   "mutant": null,
+   "pass": false,
+   "seq": 14,
+   "setting": "screenshot+a11y",
+   "state": 0
+  },
+  {
+   "after_grab_key_press": true,
+   "cell": "chord_alt_f4",
+   "cycle": "02",
+   "index": 3,
+   "job": "784",
+   "keycode": 64,
+   "keys_before": [
+    [
+     "KeyPress",
+     65513
+    ],
+    [
+     "KeyPress",
+     65473
+    ],
+    [
+     "KeyRelease",
+     65473
+    ]
+   ],
+   "keysym0": 65513,
+   "kind": "KeyRelease",
+   "layer": "L0-raw",
+   "mutant": null,
+   "pass": false,
+   "seq": 14,
+   "setting": "screenshot+a11y",
+   "state": 0
+  },
+  {
+   "after_grab_key_press": true,
+   "cell": "chord_super_d",
+   "cycle": "02",
+   "index": 1,
+   "job": "784",
+   "keycode": 40,
+   "keys_before": [
+    [
+     "KeyPress",
+     65515
+    ]
+   ],
+   "keysym0": 100,
+   "kind": "KeyPress",
+   "layer": "L0-raw",
+   "mutant": null,
+   "pass": false,
+   "seq": 17,
+   "setting": "screenshot+a11y",
+   "state": 0
+  },
+  {
+   "after_grab_key_press": true,
+   "cell": "chord_super_d",
+   "cycle": "02",
+   "index": 2,
+   "job": "784",
+   "keycode": 40,
+   "keys_before": [
+    [
+     "KeyPress",
+     65515
+    ],
+    [
+     "KeyPress",
+     100
+    ]
+   ],
+   "keysym0": 100,
+   "kind": "KeyRelease",
+   "layer": "L0-raw",
+   "mutant": null,
+   "pass": false,
+   "seq": 17,
+   "setting": "screenshot+a11y",
+   "state": 0
+  },
+  {
+   "after_grab_key_press": true,
+   "cell": "chord_super_d",
+   "cycle": "02",
+   "index": 3,
+   "job": "784",
+   "keycode": 133,
+   "keys_before": [
+    [
+     "KeyPress",
+     65515
+    ],
+    [
+     "KeyPress",
+     100
+    ],
+    [
+     "KeyRelease",
+     100
+    ]
+   ],
+   "keysym0": 65515,
+   "kind": "KeyRelease",
+   "layer": "L0-raw",
+   "mutant": null,
+   "pass": false,
+   "seq": 17,
+   "setting": "screenshot+a11y",
+   "state": 0
+  },
+  {
+   "after_grab_key_press": true,
+   "cell": "chord_alt_tab",
+   "cycle": "02",
+   "index": 2,
+   "job": "784",
+   "keycode": 23,
+   "keys_before": [
+    [
+     "KeyPress",
+     65513
+    ],
+    [
+     "KeyPress",
+     65289
+    ]
+   ],
+   "keysym0": 65289,
+   "kind": "KeyRelease",
+   "layer": "L0-raw",
+   "mutant": null,
+   "pass": false,
+   "seq": 18,
+   "setting": "screenshot+a11y",
+   "state": 0
+  },
+  {
+   "after_grab_key_press": true,
+   "cell": "chord_alt_tab",
+   "cycle": "02",
+   "index": 3,
+   "job": "784",
+   "keycode": 64,
+   "keys_before": [
+    [
+     "KeyPress",
+     65513
+    ],
+    [
+     "KeyPress",
+     65289
+    ],
+    [
+     "KeyRelease",
+     65289
+    ]
+   ],
+   "keysym0": 65513,
+   "kind": "KeyRelease",
+   "layer": "L0-raw",
+   "mutant": null,
+   "pass": false,
+   "seq": 18,
+   "setting": "screenshot+a11y",
+   "state": 0
+  },
+  {
+   "after_grab_key_press": true,
+   "cell": "chord_ctrl_alt_shift_r",
+   "cycle": "02",
+   "index": 4,
+   "job": "784",
+   "keycode": 27,
+   "keys_before": [
+    [
+     "KeyPress",
+     65507
+    ],
+    [
+     "KeyPress",
+     65513
+    ],
+    [
+     "KeyPress",
+     65505
+    ],
+    [
+     "KeyPress",
+     114
+    ]
+   ],
+   "keysym0": 114,
+   "kind": "KeyRelease",
+   "layer": "L0-raw",
+   "mutant": null,
+   "pass": false,
+   "seq": 21,
+   "setting": "screenshot+a11y",
+   "state": 0
+  },
+  {
+   "after_grab_key_press": true,
+   "cell": "chord_ctrl_alt_shift_r",
+   "cycle": "02",
+   "index": 5,
+   "job": "784",
+   "keycode": 50,
+   "keys_before": [
+    [
+     "KeyPress",
+     65507
+    ],
+    [
+     "KeyPress",
+     65513
+    ],
+    [
+     "KeyPress",
+     65505
+    ],
+    [
+     "KeyPress",
+     114
+    ],
+    [
+     "KeyRelease",
+     114
+    ]
+   ],
+   "keysym0": 65505,
+   "kind": "KeyRelease",
+   "layer": "L0-raw",
+   "mutant": null,
+   "pass": false,
+   "seq": 21,
+   "setting": "screenshot+a11y",
+   "state": 0
+  },
+  {
+   "after_grab_key_press": true,
+   "cell": "chord_ctrl_alt_shift_r",
+   "cycle": "02",
+   "index": 6,
+   "job": "784",
+   "keycode": 64,
+   "keys_before": [
+    [
+     "KeyPress",
+     65507
+    ],
+    [
+     "KeyPress",
+     65513
+    ],
+    [
+     "KeyPress",
+     65505
+    ],
+    [
+     "KeyPress",
+     114
+    ],
+    [
+     "KeyRelease",
+     114
+    ],
+    [
+     "KeyRelease",
+     65505
+    ]
+   ],
+   "keysym0": 65513,
+   "kind": "KeyRelease",
+   "layer": "L0-raw",
+   "mutant": null,
+   "pass": false,
+   "seq": 21,
+   "setting": "screenshot+a11y",
+   "state": 0
+  },
+  {
+   "after_grab_key_press": true,
+   "cell": "chord_ctrl_alt_shift_r",
+   "cycle": "02",
+   "index": 7,
+   "job": "784",
+   "keycode": 37,
+   "keys_before": [
+    [
+     "KeyPress",
+     65507
+    ],
+    [
+     "KeyPress",
+     65513
+    ],
+    [
+     "KeyPress",
+     65505
+    ],
+    [
+     "KeyPress",
+     114
+    ],
+    [
+     "KeyRelease",
+     114
+    ],
+    [
+     "KeyRelease",
+     65505
+    ],
+    [
+     "KeyRelease",
+     65513
+    ]
+   ],
+   "keysym0": 65507,
+   "kind": "KeyRelease",
+   "layer": "L0-raw",
+   "mutant": null,
+   "pass": false,
+   "seq": 21,
+   "setting": "screenshot+a11y",
+   "state": 0
+  },
+  {
+   "after_grab_key_press": true,
+   "cell": "chord_alt_tab",
+   "cycle": "02",
+   "index": 2,
+   "job": "784",
+   "keycode": 23,
+   "keys_before": [
+    [
+     "KeyPress",
+     65513
+    ],
+    [
+     "KeyPress",
+     65289
+    ]
+   ],
+   "keysym0": 65289,
+   "kind": "KeyRelease",
+   "layer": "L0-raw",
+   "mutant": null,
+   "pass": false,
+   "seq": 28,
+   "setting": "screenshot+a11y",
+   "state": 0
+  },
+  {
+   "after_grab_key_press": true,
+   "cell": "chord_alt_tab",
+   "cycle": "02",
+   "index": 3,
+   "job": "784",
+   "keycode": 64,
+   "keys_before": [
+    [
+     "KeyPress",
+     65513
+    ],
+    [
+     "KeyPress",
+     65289
+    ],
+    [
+     "KeyRelease",
+     65289
+    ]
+   ],
+   "keysym0": 65513,
+   "kind": "KeyRelease",
+   "layer": "L0-raw",
+   "mutant": null,
+   "pass": false,
+   "seq": 28,
+   "setting": "screenshot+a11y",
+   "state": 0
+  },
+  {
+   "after_grab_key_press": true,
+   "cell": "chord_alt_f4",
+   "cycle": "03",
+   "index": 2,
+   "job": "784",
+   "keycode": 70,
+   "keys_before": [
+    [
+     "KeyPress",
+     65513
+    ],
+    [
+     "KeyPress",
+     65473
+    ]
+   ],
+   "keysym0": 65473,
+   "kind": "KeyRelease",
+   "layer": "L0-raw",
+   "mutant": null,
+   "pass": false,
+   "seq": 0,
+   "setting": "screenshot+a11y",
+   "state": 0
+  },
+  {
+   "after_grab_key_press": true,
+   "cell": "chord_alt_f4",
+   "cycle": "03",
+   "index": 3,
+   "job": "784",
+   "keycode": 64,
+   "keys_before": [
+    [
+     "KeyPress",
+     65513
+    ],
+    [
+     "KeyPress",
+     65473
+    ],
+    [
+     "KeyRelease",
+     65473
+    ]
+   ],
+   "keysym0": 65513,
+   "kind": "KeyRelease",
+   "layer": "L0-raw",
+   "mutant": null,
+   "pass": false,
+   "seq": 0,
+   "setting": "screenshot+a11y",
+   "state": 0
+  },
+  {
+   "after_grab_key_press": true,
+   "cell": "chord_super_d",
+   "cycle": "03",
+   "index": 1,
+   "job": "784",
+   "keycode": 40,
+   "keys_before": [
+    [
+     "KeyPress",
+     65515
+    ]
+   ],
+   "keysym0": 100,
+   "kind": "KeyPress",
+   "layer": "L0-raw",
+   "mutant": null,
+   "pass": false,
+   "seq": 1,
+   "setting": "screenshot+a11y",
+   "state": 0
+  },
+  {
+   "after_grab_key_press": true,
+   "cell": "chord_super_d",
+   "cycle": "03",
+   "index": 2,
+   "job": "784",
+   "keycode": 40,
+   "keys_before": [
+    [
+     "KeyPress",
+     65515
+    ],
+    [
+     "KeyPress",
+     100
+    ]
+   ],
+   "keysym0": 100,
+   "kind": "KeyRelease",
+   "layer": "L0-raw",
+   "mutant": null,
+   "pass": false,
+   "seq": 1,
+   "setting": "screenshot+a11y",
+   "state": 0
+  },
+  {
+   "after_grab_key_press": true,
+   "cell": "chord_super_d",
+   "cycle": "03",
+   "index": 3,
+   "job": "784",
+   "keycode": 133,
+   "keys_before": [
+    [
+     "KeyPress",
+     65515
+    ],
+    [
+     "KeyPress",
+     100
+    ],
+    [
+     "KeyRelease",
+     100
+    ]
+   ],
+   "keysym0": 65515,
+   "kind": "KeyRelease",
+   "layer": "L0-raw",
+   "mutant": null,
+   "pass": false,
+   "seq": 1,
+   "setting": "screenshot+a11y",
+   "state": 0
+  },
+  {
+   "after_grab_key_press": true,
+   "cell": "chord_ctrl_alt_shift_r",
+   "cycle": "03",
+   "index": 4,
+   "job": "784",
+   "keycode": 27,
+   "keys_before": [
+    [
+     "KeyPress",
+     65507
+    ],
+    [
+     "KeyPress",
+     65513
+    ],
+    [
+     "KeyPress",
+     65505
+    ],
+    [
+     "KeyPress",
+     114
+    ]
+   ],
+   "keysym0": 114,
+   "kind": "KeyRelease",
+   "layer": "L0-raw",
+   "mutant": null,
+   "pass": false,
+   "seq": 5,
+   "setting": "screenshot+a11y",
+   "state": 0
+  },
+  {
+   "after_grab_key_press": true,
+   "cell": "chord_ctrl_alt_shift_r",
+   "cycle": "03",
+   "index": 5,
+   "job": "784",
+   "keycode": 50,
+   "keys_before": [
+    [
+     "KeyPress",
+     65507
+    ],
+    [
+     "KeyPress",
+     65513
+    ],
+    [
+     "KeyPress",
+     65505
+    ],
+    [
+     "KeyPress",
+     114
+    ],
+    [
+     "KeyRelease",
+     114
+    ]
+   ],
+   "keysym0": 65505,
+   "kind": "KeyRelease",
+   "layer": "L0-raw",
+   "mutant": null,
+   "pass": false,
+   "seq": 5,
+   "setting": "screenshot+a11y",
+   "state": 0
+  },
+  {
+   "after_grab_key_press": true,
+   "cell": "chord_ctrl_alt_shift_r",
+   "cycle": "03",
+   "index": 6,
+   "job": "784",
+   "keycode": 64,
+   "keys_before": [
+    [
+     "KeyPress",
+     65507
+    ],
+    [
+     "KeyPress",
+     65513
+    ],
+    [
+     "KeyPress",
+     65505
+    ],
+    [
+     "KeyPress",
+     114
+    ],
+    [
+     "KeyRelease",
+     114
+    ],
+    [
+     "KeyRelease",
+     65505
+    ]
+   ],
+   "keysym0": 65513,
+   "kind": "KeyRelease",
+   "layer": "L0-raw",
+   "mutant": null,
+   "pass": false,
+   "seq": 5,
+   "setting": "screenshot+a11y",
+   "state": 0
+  },
+  {
+   "after_grab_key_press": true,
+   "cell": "chord_ctrl_alt_shift_r",
+   "cycle": "03",
+   "index": 7,
+   "job": "784",
+   "keycode": 37,
+   "keys_before": [
+    [
+     "KeyPress",
+     65507
+    ],
+    [
+     "KeyPress",
+     65513
+    ],
+    [
+     "KeyPress",
+     65505
+    ],
+    [
+     "KeyPress",
+     114
+    ],
+    [
+     "KeyRelease",
+     114
+    ],
+    [
+     "KeyRelease",
+     65505
+    ],
+    [
+     "KeyRelease",
+     65513
+    ]
+   ],
+   "keysym0": 65507,
+   "kind": "KeyRelease",
+   "layer": "L0-raw",
+   "mutant": null,
+   "pass": false,
+   "seq": 5,
+   "setting": "screenshot+a11y",
+   "state": 0
+  },
+  {
+   "after_grab_key_press": true,
+   "cell": "chord_ctrl_alt_shift_r",
+   "cycle": "03",
+   "index": 4,
+   "job": "784",
+   "keycode": 27,
+   "keys_before": [
+    [
+     "KeyPress",
+     65507
+    ],
+    [
+     "KeyPress",
+     65513
+    ],
+    [
+     "KeyPress",
+     65505
+    ],
+    [
+     "KeyPress",
+     114
+    ]
+   ],
+   "keysym0": 114,
+   "kind": "KeyRelease",
+   "layer": "L0-raw",
+   "mutant": null,
+   "pass": false,
+   "seq": 12,
+   "setting": "screenshot+a11y",
+   "state": 0
+  },
+  {
+   "after_grab_key_press": true,
+   "cell": "chord_ctrl_alt_shift_r",
+   "cycle": "03",
+   "index": 5,
+   "job": "784",
+   "keycode": 50,
+   "keys_before": [
+    [
+     "KeyPress",
+     65507
+    ],
+    [
+     "KeyPress",
+     65513
+    ],
+    [
+     "KeyPress",
+     65505
+    ],
+    [
+     "KeyPress",
+     114
+    ],
+    [
+     "KeyRelease",
+     114
+    ]
+   ],
+   "keysym0": 65505,
+   "kind": "KeyRelease",
+   "layer": "L0-raw",
+   "mutant": null,
+   "pass": false,
+   "seq": 12,
+   "setting": "screenshot+a11y",
+   "state": 0
+  },
+  {
+   "after_grab_key_press": true,
+   "cell": "chord_ctrl_alt_shift_r",
+   "cycle": "03",
+   "index": 6,
+   "job": "784",
+   "keycode": 64,
+   "keys_before": [
+    [
+     "KeyPress",
+     65507
+    ],
+    [
+     "KeyPress",
+     65513
+    ],
+    [
+     "KeyPress",
+     65505
+    ],
+    [
+     "KeyPress",
+     114
+    ],
+    [
+     "KeyRelease",
+     114
+    ],
+    [
+     "KeyRelease",
+     65505
+    ]
+   ],
+   "keysym0": 65513,
+   "kind": "KeyRelease",
+   "layer": "L0-raw",
+   "mutant": null,
+   "pass": false,
+   "seq": 12,
+   "setting": "screenshot+a11y",
+   "state": 0
+  },
+  {
+   "after_grab_key_press": true,
+   "cell": "chord_ctrl_alt_shift_r",
+   "cycle": "03",
+   "index": 7,
+   "job": "784",
+   "keycode": 37,
+   "keys_before": [
+    [
+     "KeyPress",
+     65507
+    ],
+    [
+     "KeyPress",
+     65513
+    ],
+    [
+     "KeyPress",
+     65505
+    ],
+    [
+     "KeyPress",
+     114
+    ],
+    [
+     "KeyRelease",
+     114
+    ],
+    [
+     "KeyRelease",
+     65505
+    ],
+    [
+     "KeyRelease",
+     65513
+    ]
+   ],
+   "keysym0": 65507,
+   "kind": "KeyRelease",
+   "layer": "L0-raw",
+   "mutant": null,
+   "pass": false,
+   "seq": 12,
+   "setting": "screenshot+a11y",
+   "state": 0
+  },
+  {
+   "after_grab_key_press": true,
+   "cell": "chord_alt_tab",
+   "cycle": "03",
+   "index": 2,
+   "job": "784",
+   "keycode": 23,
+   "keys_before": [
+    [
+     "KeyPress",
+     65513
+    ],
+    [
+     "KeyPress",
+     65289
+    ]
+   ],
+   "keysym0": 65289,
+   "kind": "KeyRelease",
+   "layer": "L0-raw",
+   "mutant": null,
+   "pass": false,
+   "seq": 15,
+   "setting": "screenshot+a11y",
+   "state": 0
+  },
+  {
+   "after_grab_key_press": true,
+   "cell": "chord_alt_tab",
+   "cycle": "03",
+   "index": 3,
+   "job": "784",
+   "keycode": 64,
+   "keys_before": [
+    [
+     "KeyPress",
+     65513
+    ],
+    [
+     "KeyPress",
+     65289
+    ],
+    [
+     "KeyRelease",
+     65289
+    ]
+   ],
+   "keysym0": 65513,
+   "kind": "KeyRelease",
+   "layer": "L0-raw",
+   "mutant": null,
+   "pass": false,
+   "seq": 15,
+   "setting": "screenshot+a11y",
+   "state": 0
+  },
+  {
+   "after_grab_key_press": true,
+   "cell": "chord_alt_f4",
+   "cycle": "03",
+   "index": 2,
+   "job": "784",
+   "keycode": 70,
+   "keys_before": [
+    [
+     "KeyPress",
+     65513
+    ],
+    [
+     "KeyPress",
+     65473
+    ]
+   ],
+   "keysym0": 65473,
+   "kind": "KeyRelease",
+   "layer": "L0-raw",
+   "mutant": null,
+   "pass": false,
+   "seq": 16,
+   "setting": "screenshot+a11y",
+   "state": 0
+  },
+  {
+   "after_grab_key_press": true,
+   "cell": "chord_alt_f4",
+   "cycle": "03",
+   "index": 3,
+   "job": "784",
+   "keycode": 64,
+   "keys_before": [
+    [
+     "KeyPress",
+     65513
+    ],
+    [
+     "KeyPress",
+     65473
+    ],
+    [
+     "KeyRelease",
+     65473
+    ]
+   ],
+   "keysym0": 65513,
+   "kind": "KeyRelease",
+   "layer": "L0-raw",
+   "mutant": null,
+   "pass": false,
+   "seq": 16,
+   "setting": "screenshot+a11y",
+   "state": 0
+  },
+  {
+   "after_grab_key_press": true,
+   "cell": "chord_super_d",
+   "cycle": "03",
+   "index": 1,
+   "job": "784",
+   "keycode": 40,
+   "keys_before": [
+    [
+     "KeyPress",
+     65515
+    ]
+   ],
+   "keysym0": 100,
+   "kind": "KeyPress",
+   "layer": "L0-raw",
+   "mutant": null,
+   "pass": false,
+   "seq": 18,
+   "setting": "screenshot+a11y",
+   "state": 0
+  },
+  {
+   "after_grab_key_press": true,
+   "cell": "chord_super_d",
+   "cycle": "03",
+   "index": 2,
+   "job": "784",
+   "keycode": 40,
+   "keys_before": [
+    [
+     "KeyPress",
+     65515
+    ],
+    [
+     "KeyPress",
+     100
+    ]
+   ],
+   "keysym0": 100,
+   "kind": "KeyRelease",
+   "layer": "L0-raw",
+   "mutant": null,
+   "pass": false,
+   "seq": 18,
+   "setting": "screenshot+a11y",
+   "state": 0
+  },
+  {
+   "after_grab_key_press": true,
+   "cell": "chord_super_d",
+   "cycle": "03",
+   "index": 3,
+   "job": "784",
+   "keycode": 133,
+   "keys_before": [
+    [
+     "KeyPress",
+     65515
+    ],
+    [
+     "KeyPress",
+     100
+    ],
+    [
+     "KeyRelease",
+     100
+    ]
+   ],
+   "keysym0": 65515,
+   "kind": "KeyRelease",
+   "layer": "L0-raw",
+   "mutant": null,
+   "pass": false,
+   "seq": 18,
+   "setting": "screenshot+a11y",
+   "state": 0
+  },
+  {
+   "after_grab_key_press": true,
+   "cell": "chord_super_d",
+   "cycle": "03",
+   "index": 1,
+   "job": "784",
+   "keycode": 40,
+   "keys_before": [
+    [
+     "KeyPress",
+     65515
+    ]
+   ],
+   "keysym0": 100,
+   "kind": "KeyPress",
+   "layer": "L0-raw",
+   "mutant": null,
+   "pass": false,
+   "seq": 23,
+   "setting": "screenshot+a11y",
+   "state": 0
+  },
+  {
+   "after_grab_key_press": true,
+   "cell": "chord_super_d",
+   "cycle": "03",
+   "index": 2,
+   "job": "784",
+   "keycode": 40,
+   "keys_before": [
+    [
+     "KeyPress",
+     65515
+    ],
+    [
+     "KeyPress",
+     100
+    ]
+   ],
+   "keysym0": 100,
+   "kind": "KeyRelease",
+   "layer": "L0-raw",
+   "mutant": null,
+   "pass": false,
+   "seq": 23,
+   "setting": "screenshot+a11y",
+   "state": 0
+  },
+  {
+   "after_grab_key_press": true,
+   "cell": "chord_super_d",
+   "cycle": "03",
+   "index": 3,
+   "job": "784",
+   "keycode": 133,
+   "keys_before": [
+    [
+     "KeyPress",
+     65515
+    ],
+    [
+     "KeyPress",
+     100
+    ],
+    [
+     "KeyRelease",
+     100
+    ]
+   ],
+   "keysym0": 65515,
+   "kind": "KeyRelease",
+   "layer": "L0-raw",
+   "mutant": null,
+   "pass": false,
+   "seq": 23,
+   "setting": "screenshot+a11y",
+   "state": 0
+  },
+  {
+   "after_grab_key_press": true,
+   "cell": "chord_alt_f4",
+   "cycle": "03",
+   "index": 2,
+   "job": "784",
+   "keycode": 70,
+   "keys_before": [
+    [
+     "KeyPress",
+     65513
+    ],
+    [
+     "KeyPress",
+     65473
+    ]
+   ],
+   "keysym0": 65473,
+   "kind": "KeyRelease",
+   "layer": "L0-raw",
+   "mutant": null,
+   "pass": false,
+   "seq": 27,
+   "setting": "screenshot+a11y",
+   "state": 0
+  },
+  {
+   "after_grab_key_press": true,
+   "cell": "chord_alt_f4",
+   "cycle": "03",
+   "index": 3,
+   "job": "784",
+   "keycode": 64,
+   "keys_before": [
+    [
+     "KeyPress",
+     65513
+    ],
+    [
+     "KeyPress",
+     65473
+    ],
+    [
+     "KeyRelease",
+     65473
+    ]
+   ],
+   "keysym0": 65513,
+   "kind": "KeyRelease",
+   "layer": "L0-raw",
+   "mutant": null,
+   "pass": false,
+   "seq": 27,
+   "setting": "screenshot+a11y",
+   "state": 0
+  },
+  {
+   "after_grab_key_press": true,
+   "cell": "chord_ctrl_alt_shift_r",
+   "cycle": "03",
+   "index": 4,
+   "job": "784",
+   "keycode": 27,
+   "keys_before": [
+    [
+     "KeyPress",
+     65507
+    ],
+    [
+     "KeyPress",
+     65513
+    ],
+    [
+     "KeyPress",
+     65505
+    ],
+    [
+     "KeyPress",
+     114
+    ]
+   ],
+   "keysym0": 114,
+   "kind": "KeyRelease",
+   "layer": "L0-raw",
+   "mutant": null,
+   "pass": false,
+   "seq": 28,
+   "setting": "screenshot+a11y",
+   "state": 0
+  },
+  {
+   "after_grab_key_press": true,
+   "cell": "chord_ctrl_alt_shift_r",
+   "cycle": "03",
+   "index": 5,
+   "job": "784",
+   "keycode": 50,
+   "keys_before": [
+    [
+     "KeyPress",
+     65507
+    ],
+    [
+     "KeyPress",
+     65513
+    ],
+    [
+     "KeyPress",
+     65505
+    ],
+    [
+     "KeyPress",
+     114
+    ],
+    [
+     "KeyRelease",
+     114
+    ]
+   ],
+   "keysym0": 65505,
+   "kind": "KeyRelease",
+   "layer": "L0-raw",
+   "mutant": null,
+   "pass": false,
+   "seq": 28,
+   "setting": "screenshot+a11y",
+   "state": 0
+  },
+  {
+   "after_grab_key_press": true,
+   "cell": "chord_ctrl_alt_shift_r",
+   "cycle": "03",
+   "index": 6,
+   "job": "784",
+   "keycode": 64,
+   "keys_before": [
+    [
+     "KeyPress",
+     65507
+    ],
+    [
+     "KeyPress",
+     65513
+    ],
+    [
+     "KeyPress",
+     65505
+    ],
+    [
+     "KeyPress",
+     114
+    ],
+    [
+     "KeyRelease",
+     114
+    ],
+    [
+     "KeyRelease",
+     65505
+    ]
+   ],
+   "keysym0": 65513,
+   "kind": "KeyRelease",
+   "layer": "L0-raw",
+   "mutant": null,
+   "pass": false,
+   "seq": 28,
+   "setting": "screenshot+a11y",
+   "state": 0
+  },
+  {
+   "after_grab_key_press": true,
+   "cell": "chord_ctrl_alt_shift_r",
+   "cycle": "03",
+   "index": 7,
+   "job": "784",
+   "keycode": 37,
+   "keys_before": [
+    [
+     "KeyPress",
+     65507
+    ],
+    [
+     "KeyPress",
+     65513
+    ],
+    [
+     "KeyPress",
+     65505
+    ],
+    [
+     "KeyPress",
+     114
+    ],
+    [
+     "KeyRelease",
+     114
+    ],
+    [
+     "KeyRelease",
+     65505
+    ],
+    [
+     "KeyRelease",
+     65513
+    ]
+   ],
+   "keysym0": 65507,
+   "kind": "KeyRelease",
+   "layer": "L0-raw",
+   "mutant": null,
+   "pass": false,
+   "seq": 28,
+   "setting": "screenshot+a11y",
+   "state": 0
+  },
+  {
+   "after_grab_key_press": true,
+   "cell": "chord_alt_tab",
+   "cycle": "03",
+   "index": 2,
+   "job": "784",
+   "keycode": 23,
+   "keys_before": [
+    [
+     "KeyPress",
+     65513
+    ],
+    [
+     "KeyPress",
+     65289
+    ]
+   ],
+   "keysym0": 65289,
+   "kind": "KeyRelease",
+   "layer": "L0-raw",
+   "mutant": null,
+   "pass": false,
+   "seq": 29,
+   "setting": "screenshot+a11y",
+   "state": 0
+  },
+  {
+   "after_grab_key_press": true,
+   "cell": "chord_alt_tab",
+   "cycle": "03",
+   "index": 3,
+   "job": "784",
+   "keycode": 64,
+   "keys_before": [
+    [
+     "KeyPress",
+     65513
+    ],
+    [
+     "KeyPress",
+     65289
+    ],
+    [
+     "KeyRelease",
+     65289
+    ]
+   ],
+   "keysym0": 65513,
+   "kind": "KeyRelease",
+   "layer": "L0-raw",
+   "mutant": null,
+   "pass": false,
+   "seq": 29,
+   "setting": "screenshot+a11y",
+   "state": 0
+  }
+ ],
+ "trials": 18130,
+ "trials_without_tap_window": 0,
+ "unreadable": []
+}

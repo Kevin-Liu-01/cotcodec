@@ -1,0 +1,71 @@
+{
+ "commit": "50f3861",
+ "code_commit": "c74eae0 (D45's executed files; unchanged here, so development jobs 845-854 stand)",
+ "change": "section 27 and the bundle README: D45's repeat equals the D43 job it repeats cell by cell in PASS count, failure reasons and the number of trials with an event read without its state, not in the number of events (845: chord_super_d 29, chord_alt_f4 19, chord_alt_tab 20, chord_ctrl_alt_shift_r 40; 830: 30, 18, 20, 40; 108 in both); two tests. Text and tests only.",
+ "freeze_lint": {
+  "check_chain": {
+   "rows": 15,
+   "status": "PASS"
+  },
+  "ledger": "scratch copy of program/preregistrations/ledger.jsonl at 50f3861 (12 rows, main's, SHA-256 b3d4a33b31173ae268a4e4a15aeb0124f149aaa4ea3d6e016be55e3b0fbbdd0b, unchanged after the lint)",
+  "order": [
+   "q2-action-path-v2",
+   "q2-action-path-v2-inputs",
+   "q2-action-path-v2-executor"
+  ],
+  "rows": [
+   {
+    "experiment_id": "q2-action-path-v2",
+    "path": "program/preregistrations/q2-action-path-v2.md",
+    "sha256": "6f690bb53b0986f8c6381e477f30aa717c0548dd25b4adfe0e8b6283c49b998f",
+    "git_head_at_freeze": "50f3861514398524fc7d1f4fcc5013340d8b98b1",
+    "previous_hash": "a68af989bfadb17ddb540ff0fa1c4dc64f62357812158580e1d25ddc5a41a2e1"
+   },
+   {
+    "experiment_id": "q2-action-path-v2-inputs",
+    "path": "program/preregistrations/q2-action-path-v2-inputs.md",
+    "sha256": "efa182d009e5af64299d05784add3a4610c8d855a02061528e40114377629f22",
+    "git_head_at_freeze": "50f3861514398524fc7d1f4fcc5013340d8b98b1",
+    "previous_hash": "3ab7b145e402165c6ba5f16155782c0120b5ab5806e4baab72ae72322463e56f"
+   },
+   {
+    "experiment_id": "q2-action-path-v2-executor",
+    "path": "program/preregistrations/q2-action-path-v2-executor.md",
+    "sha256": "cef0cbc603fc5da7c4e88205e738ef4b659ec367f85d8573328951f57e247b08",
+    "git_head_at_freeze": "50f3861514398524fc7d1f4fcc5013340d8b98b1",
+    "previous_hash": "e0f88e5a0a8950062c4b245704b66f2b42d317818eeb5a6aa1ab0b257193a5a1"
+   }
+  ],
+  "verify": {
+   "q2-action-path-v1": "PASS",
+   "q2-action-path-v1-inputs": "PASS",
+   "q2-action-path-v1-executor": "PASS",
+   "q2-evaluator-mutation-v1": "PASS",
+   "q3-dense-headroom-precheck-v2": "PASS",
+   "q2-action-path-v2": "PASS",
+   "q2-action-path-v2-inputs": "PASS",
+   "q2-action-path-v2-executor": "PASS"
+  },
+  "digests_against_e09e362": "q2-action-path-v2.md e28569522b39686f4d2ac7699b86bde881af12022918a9277bda640e1823ed17 -> 6f690bb53b0986f8c6381e477f30aa717c0548dd25b4adfe0e8b6283c49b998f (section 27's wording); -inputs and -executor unchanged"
+ },
+ "local": {
+  "q2_tests": "647 passed, 1 skipped (uv run pytest -q tests/test_q2_*.py) at 50f3861",
+  "new_tests": [
+   "tests/test_q2_prereg_inputs.py::test_section_27_states_what_the_d45_repeat_equals_and_what_it_does_not",
+   "tests/test_q2_d43_judge.py::test_the_committed_section_12_report_is_the_analysis_on_the_records"
+  ],
+  "new_test_fails_on_old_text": "test_section_27_states_what_the_d45_repeat_equals_and_what_it_does_not fails with section 27 and the README at e94015f",
+  "ruff_check": "All checks passed",
+  "ruff_format_changed_tests": "2 files already formatted",
+  "validate_architecture_experiments": "PASS",
+  "validate_provider_models": "PASS: 7 models, 5 providers",
+  "byte_identity": "git diff --stat c74eae0 HEAD -- harness/q2 infra/slurm/host-single-node/vm-campaign.sbatch scripts/submit_vm_campaign.py lists nothing",
+  "v1_and_decisions": "git diff main -- the three q2-action-path-v1 registrations, program/decisions.md and the ledger is empty",
+  "repository_ledger": "unchanged (12 rows, main's)"
+ },
+ "host": {
+  "full_suite_50f3861": "2283 passed, 40 skipped in 258.04s (uv run --locked pytest -q tests), exit 0",
+  "scratch_dir_50f3861": "~/cotcodec-scratch/q2ap-v2-d45-50f3861 (fresh; git archive of 50f3861; uv sync --locked --extra dev)"
+ },
+ "runs": "none repeated: no campaign-executed file changed"
+}

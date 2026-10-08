@@ -1641,6 +1641,96 @@ Append-only. Newest entries at the bottom.
   No GPU, nothing pushed or frozen.
 - Next: Kevin's remaining items (section 17), re-merge main, freeze.
 
+## 2026-10-08 — Q2 action path v2 drafted under D40 (branch `stage0/q2-action-path-v2`)
+
+- `q2-action-path-v2`, `-inputs` and `-executor` are generated from v1's
+  frozen text with D40's three changes and nothing else (main section 24;
+  v2's frozen tables equal v1's except the rows it names, and a test checks
+  it): `l0_raw_prediction_v2.yaml` lists `chord_super_d` as a failure and
+  says it is informed by v1's C2 (job 768); C2 is a reproduction test on its
+  own order seed, 45, which no v1 campaign or development run used
+  (`order.py` builds it and `manifest.py` admits it for C2 only), and v1's C2
+  is reported as the a-priori result (section 25); the manifest renderer
+  takes `--host-root`, with no default and the development root refused.
+  Every other realized order equals v1's code's, digest for digest. L0-raw
+  is admitted in development at seed 42 so the mechanism can be
+  characterised. v1's ledger rows and files are unchanged.
+- Development (seed 42, CPU-only `vm-campaign.sbatch`, jobs 784-787 at
+  `e66bf16`, 1.0 VM-h, all COMPLETED 0:0 with gates passed): L0-raw failed
+  `chord_super_d` 10/10, the `d` press 1-2 ms after Super_L recorded with
+  state 0. Only the four chords GNOME Shell grabs failed (each event after
+  the grab-activating key recorded with state 0, without even NumLock's
+  Mod2); the nine others, at the same speed, passed 10/10 with every state
+  right. mutter 42.9 grabs synchronously, so the X server queues the next
+  key, and RECORD reports a queued event before its state is computed. The
+  shell still received Super+d: under L0-raw the desktop was shown and no key
+  reached the probe in 15/15 trials, as under L0-fixed in 30/30. So the
+  failure D40 records is in the tap's record, not in delivery. L0-fixed
+  (10 ms between presses) passed `chord_super_d` 127/127 with the warm-up
+  across v1 and v2 development (upper 95% bound 2.3% per trial); its only
+  failures were runs 549 and 574 before the warm-up, the same artifact.
+  Raised with Kevin as a pending decision (state.json); no rule changed.
+- Merged main (112 commits since `124573a`, including ledger row 11,
+  `q2-evaluator-mutation-v1`); no file a v2 table pins changed there.
+  Freeze-linted v2, then `-inputs`, then `-executor` against a scratch copy
+  of the merged ledger: the three rows chain onto row 11, the chain checks at
+  14 rows, and every Q2 registration verifies. In a scratch tree frozen step
+  by step, A5 is admitted after v2, C2 at seed 45 after `-inputs`, and C1,
+  C3, A1, the ladder and A7 after `-executor`; C2 at seed 42 and a repair
+  attempt without its addendum never are. The repository ledger is
+  unchanged. Q2 tests pass locally (603 passed, 1 skipped) and the full
+  suite on the host from a fresh scratch directory (2210 passed, 38
+  skipped). Nothing frozen, pushed or merged to main. No GPU.
+
+## 2026-10-08 — Q2 action path v2: D40's stated cause corrected (D43), review fixes
+
+(The branch first numbered its draft decision with the number main then gave to
+Q3's dense pre-check; main recorded this correction as D43, which supersedes the draft:
+D43 corrects D40's cause the same way but changes the judge instead of accepting the
+exposure. The references below read D43; where they describe the draft's own choices
+they say so.)
+
+- Review blocker 1: v2's main registration said in section 8 (C2), section
+  24 item 2 and section 25 that v1's C2 failure was "verified real at the X
+  event level", which its own sections 4.4 and 26 contradict. Those three
+  places now say what was recorded (the tap's `d` press at core state 0,
+  without Mod4, in every repetition) and that section 26 shows this is how
+  RECORD reports a key event queued during the shell's synchronous grab,
+  and that the shell received Super+d. Section 24 gains item 9, section 26's
+  closing paragraph says what the decision decides and leaves, and section 4.4 says
+  why the limit can fail a delivered chord and never makes a trial pass (on
+  the four shell-grabbed chords every reference event after the
+  grab-activating key has a modifier state that is not empty). No rule,
+  number or frozen file changed; every pinned digest is unchanged, and the
+  main file's own digest (its ledger row at the freeze) is new.
+- Review blocker 2: D40's premise ("a genuine transport defect") is
+  contradicted by the branch's evidence. The draft of D43, recorded on this
+  branch under a new 2026-10-08 heading, states the corrected cause and decides that
+  D40's three changes and L0-raw's development admission stand, that v2
+  keeps the oracle's reading of events queued under a grab, and that the
+  remaining L0-fixed exposure (127/127, 2.3% bound per trial; A1, A2, A4 and
+  the ladder) is accepted, with reasons and a reversal; D40 carries a
+  pointer to it. D40's author confirms or overrules the draft at the merge, and v2
+  is not frozen before then. HANDOFF's v1 row no longer says the loss is
+  real at the X event level; `state.json` and the pending decision for
+  Kevin now name D43 and leave him the later-registration question.
+- Tests: `tests/test_q2_prereg_inputs.py` checks the corrected wording in
+  sections 8, 24 and 25, that no v2 registration or the v2 prediction file
+  calls the failure real at the X event level, that D43 exists, keeps D40's
+  changes and is cited, and that the four shell-grabbed chords' reference
+  states after the grab key are never empty. No VM job, no GPU, nothing
+  frozen, pushed or merged to main.
+- Checks at `32d083c`: freeze-linted v2, then `-inputs`, then `-executor`
+  against a scratch copy of the ledger (main file `a39d1b4d...`, inputs
+  `14466f5e...` and executor `b624d20e...` unchanged); the three rows chain
+  onto row 11, the chain checks at 14 rows, and v1's and v2's rows verify.
+  The step-by-step admission simulation on an export of `32d083c` admits
+  the same campaigns at every stage as before (nothing before the freeze;
+  A5 after v2; C2 at seed 45 after `-inputs`; 72 of 83 cases after
+  `-executor`, with every negative case refused). The repository ledger is
+  unchanged (11 rows). Q2 tests 610 passed, 21 skipped; full suite 2167
+  passed, 84 skipped; ruff clean.
+
 ## 2026-10-08 — Q3 dense pre-check v2 built and timed (D36; branch `stage0/q3-dense-v2`, draft, not frozen)
 
 - Registration `program/preregistrations/q3-dense-headroom-precheck-v2.md`
@@ -1773,6 +1863,98 @@ Append-only. Newest entries at the bottom.
   control run, the overlay and the open-weight rater within the 3.0 GPU-h
   cap, the isolated Claude rating as one workflow session, collector,
   ingest, summary), then the registered analysis and Kevin's pool.
+
+## 2026-10-08 — Q2 action path v2: D43's judge rule implemented and developed (branch `stage0/q2-action-path-v2`)
+
+- Merged main (D41-D43 and the checker-mutation confirm stage A1) at
+  `c450d79`. `program/decisions.md` is main's file exactly (D40 unedited;
+  D42 is Q3's); the branch's own draft decision, superseded by D43, does not
+  survive, and every action-path reference to it on the branch now names
+  D43. `state.json` is main's plus the branch's Q2 entries; the GPU total
+  stays 3.9261 (a 0.0 GPU-h row for the CPU-only v2 development added).
+- The bit: a read-only scan of every run directory of the lane (424
+  sessions; `program/evidence/2026-10-08/q2-action-path-v2-d43/`) found the
+  Num Lock LED on, Num_Lock on Mod2 and Mod2 set at every session's start
+  and in every guard check with no key pressed; of 519,344 tap key events
+  172 lacked Mod2, every one after a shell grab key, every one with state 0;
+  no probe or QEMU-monitor key event lacked it. The guard checked only the
+  LED; condition (f) now requires Mod2.
+- The rule (`126ff8b`): `verdict.modifier_state_observable` reads a key
+  event the tap recorded without Mod2 on kind, keycode, keysym and order
+  only (trial verdict and C4; C2's reading of the tap window too); every
+  other event and the probe's channel as before; each verdict reports
+  `state_not_observed`. A development-only executor fault
+  (`fault_drop_modifier`) gives the negative case. Re-judged real records:
+  v1's C2 and job 784's 15 L0-raw `chord_super_d` trials pass, the
+  ungrabbed chords and jobs 785-787 are unchanged, run 572 (Super_L
+  dropped) still fails. The L0-raw prediction keeps v1's failing set;
+  `chord_super_d`'s pass is disclosed as informed by v1's C2 and D43, and
+  C2 stays a reproduction test on seed 45.
+- Development at `126ff8b` (seed 42, CPU only, jobs 830-839, 2.4 VM-h, all
+  COMPLETED 0:0 with gates passed): L0-raw sample 151/180 (the four shell
+  chords pass with queued events read without state; only the predicted
+  `key_kp_enter` and `type_unicode_bmp` and the marker-only
+  `seq_type_chord_type` fail); L0-fixed sample on 8 VMs 180/180; negative
+  case (`omit`, `release_first`) 0/140 with nothing read without state; v1's
+  final runs 703-708 repeated as 834-839 with the same outcomes (52/56,
+  400/400, 800/800, 194/198, 178/186, 60/60). Registrations: sections 4.4,
+  5, 6.2, 8, 10, 12 and 24-26 restated, design decisions 47-48, new section
+  27; the executor addendum's byte-identity rule now requires every executed
+  file to equal `126ff8b` and names each file that differs from `7653799`
+  and `e66bf16`, and why.
+- Checks at `31942e8`: ruff clean; Q2 tests 625 passed, 1 skipped; full
+  suite on the host from a fresh `~/cotcodec-scratch/` copy 2232 passed, 38
+  skipped. Freeze-linted v2, then `-inputs`, then `-executor` against a
+  scratch copy of the ledger: the rows chain onto row 11, the chain checks
+  at 14 rows, v1's, the checker-mutation and v2's rows verify; the
+  repository ledger is unchanged (11 rows). Nothing frozen, pushed or merged
+  to main. No GPU.
+- Next: review of D43's implementation, then freeze v2, `-inputs`,
+  `-executor`, and run C2 (seed 45), C1, C3, A1-A6, the ladder on a quiet
+  host, A4 and A7.
+
+## 2026-10-08 — Q2 action path v2: review of D43's implementation (branch `stage0/q2-action-path-v2`)
+
+- Reviewers' blocking findings on `65267b7`, fixed at `932c8cb` in the
+  registration text before any freeze; no file a campaign executes changed
+  (`git diff --stat 126ff8b` over the lane still lists only
+  `l0_raw_prediction_v2.yaml`), so the development at `126ff8b` stands.
+- Section 26's garbled duplicate sentence (left by `31942e8`) is removed; a
+  new test fails any prose paragraph of the three registrations that
+  repeats a run of eight words, and catches the old text. Section 15 and the
+  header both name sections 24-27; section 24's items 6 and 8 name D43's
+  reading of the tap as the exception to "unchanged".
+- D43's precondition is stated as observed, not checked (sections 4.4 and
+  27, design decision 47, the inputs addendum, the prediction file's
+  `d43_judge` note): all 280 development key events without Mod2 (172 in
+  the scan, 108 in job 830) have state 0 and follow their grab key's
+  processed press, but any client's synchronous grab freezes the keyboard
+  and an active grab needs no key press. Section 27's new case 6: a
+  synchronous grab already active before an entry would have every event
+  read without its state and pass a raw-only shell chord, and the guard
+  cannot see a grab (job 833 shows it blind to the overview a lone Super_L
+  opened: no key reached the probe in seq 3-21 and 28-34 of both sessions,
+  every pre check clean). Section 12 now reports any event read without its
+  state that no key press with Mod2 preceded. The narrower rule (read
+  without state only after such a press) is not D43's wording and would
+  change `verdict.py` and `acceptance.py` and so the final development runs;
+  left to Kevin.
+- C3's equivalence test still compares the recorded state byte for byte
+  (D43 names the judge); disclosed in sections 8, 26 and 27 and design
+  decision 47 with its bound (up to 6.7% over the three `chord_super_d`
+  trials of C3's H-OSW-fixed reference, M12 and M13 runs at the 2.3% bound;
+  it can only fail C3, never pass a criterion; none observed). Whether D43
+  covers it is left to Kevin (an `acceptance.py`-only change, no rerun).
+- Tests pin each disclosed limit on real records (`tests/test_q2_d43_judge.py`)
+  and the text (`tests/test_q2_prereg_inputs.py`). Checks at `932c8cb`
+  (`program/evidence/2026-10-08/q2-action-path-v2-d43/checks/checks-932c8cb.json`):
+  ruff clean; Q2 tests 635 passed, 1 skipped; full suite on the host from a
+  fresh `~/cotcodec-scratch/` export 2242 passed, 38 skipped; validators
+  PASS; freeze lint
+  of v2, `-inputs`, `-executor` in order on a scratch copy of the ledger:
+  14 rows, chain PASS, v1's, the checker-mutation and v2's rows verify; the
+  repository ledger is unchanged (11 rows). Nothing frozen, pushed or
+  merged. No GPU, no VM job.
 
 ## 2026-10-08 — Q2 evaluator-mutation: confirm campaign stage A2 (audit census, open-weight rater, isolated export)
 
@@ -2051,3 +2233,87 @@ Append-only. Newest entries at the bottom.
   rewritten to the frozen wording naming D42 and D44, image from the frozen
   commit, doctor, the 0.6B lane (job 727 to 1e-6 and smoke 452), then the 4B
   lane (32 minutes), and the combined read.
+
+## 2026-10-08 — Q2 action path v2: D45 implemented, development repeated at `c74eae0` (branch `stage0/q2-action-path-v2`)
+
+- Merged main twice (at `26067a7`: D44, D45 and the checker-mutation confirm
+  stages A2 and B; at `e09e362`: D46 and the frozen
+  `q3-dense-headroom-precheck-v2`, ledger row 12). `program/decisions.md` is
+  main's file exactly; `state.json` is main's plus the branch's Q2 entries,
+  the GPU total recomputed (4.393, unchanged by this branch's 0.0 GPU-h
+  rows). v1's files are unchanged.
+- D45 (i)-(iii) at `c74eae0`: `verdict.py` reads a key event the tap
+  recorded without Mod2 without its state only when a key press recorded
+  with Mod2 comes before it in the same window (`modifier_state_observable`,
+  `state_not_observed`, `rdev_matches`, `match_events`); its docstrings state
+  that a grab already active before an entry's first key is now judged on
+  the recorded state, and that a grab activating inside an entry after a
+  processed press is still taken to be the shell's. `acceptance.py`: C2's
+  reading (`c2_projection`, `c2_matches`) and C3's stream signature and
+  earlier-attempt comparison (`_stream`, `_events_equal`) read the state by
+  the same rule; every criterion returns `state_not_observed_report` (each
+  event read without its state with its offset from the preceding processed
+  press; each event without Mod2 no processed press preceded). Prediction
+  file notes name D45; frozen-table digests refreshed.
+- Tests on real records: the 280 development events still read without
+  state (and only they); job 785's `chord_super_d` with every key state 0
+  (case 6) now fails, with C4 and C2's reading; the C3 slow-answer probe
+  leaves M12 and M13 equivalent and C3 passing (counting attempt, earlier
+  attempt or reference), a processed `d` press without Mod4 still makes M12
+  survive; the dropped-modifier records (832/833, 847/848) still fail.
+- Development at `c74eae0` (seed 42, CPU only, `vm-campaign.sbatch`, jobs
+  845-854 repeating 830-839 with unchanged workloads, all COMPLETED 0:0,
+  gates passed, 2.4 VM-h): every cell as in the D43 job it repeats, except
+  one trial of 851 (L0-fixed, 8 VMs) that failed with `guest_server_restart`
+  alone: an unprovoked guest-server restart during an `/accessibility` call
+  (restart-only, excused in A1-A4 and the ladder; the lane's second after
+  run 622; one in the 2,726 non-injected calls of 830-839 and 845-854). 845:
+  151/180 with 108 events read without state, each 0-3 ms after a processed
+  press; 846: 180/180; 847-848: 0/140, nothing read without state; 849-854:
+  52/56, 400/400, 799/800, 194/198, 178/186, 60/60. Section 12's report from
+  the analysis over job 768 and every v2 run: no event without Mod2 lacks a
+  preceding processed press.
+- Registrations: sections 4.4, 5, 8 (C2, C3, C4), 10, 12, 24, 26 and 27
+  (now D43's and D45's), design decisions 47 and 48 updated and 49 added;
+  inputs addendum rows for `c74eae0`; the executor addendum's byte-identity
+  rule names `c74eae0` (`git diff --stat c74eae0` over the lane lists
+  nothing). Evidence: `program/evidence/2026-10-08/q2-action-path-v2-d45/`.
+- Checks at `e09e362` (`checks/checks-e09e362.json`): ruff clean; Q2 tests
+  645 passed, 1 skipped; validators PASS; full suite on the host from a
+  fresh `~/cotcodec-scratch/` export 2281 passed, 40 skipped; freeze lint of
+  v2, `-inputs`, `-executor` in order on a scratch copy of main's 12-row
+  ledger: 15 rows, chain PASS, every row verifies; the repository ledger is
+  unchanged. Nothing frozen or pushed. No GPU.
+- Next: review of D45's implementation, then freeze v2, `-inputs`,
+  `-executor` and run C2 (seed 45), C1, C3, A1-A6, the ladder on a quiet
+  host, A4 and A7.
+
+## 2026-10-08 — Q2 action path v2: section 27's claim on D45's repeat corrected (branch `stage0/q2-action-path-v2`)
+
+- Review finding: section 27 (to be frozen) and the D45 bundle's README
+  item 3 said every cell's events read without their state equal those of
+  the D43 job it repeats. They do not: section 12's report (`by_entry`) has
+  job 845 at 29 in `chord_super_d`, 19 in `chord_alt_f4`, 20 in
+  `chord_alt_tab` and 40 in `chord_ctrl_alt_shift_r`, job 830 at 30, 18, 20
+  and 40 (108 in both). What is equal per cell is the number of trials with
+  an event read without its state (10 of 10 in each shell chord), as
+  `d45-development-runs.json` counts it. The earlier entry's "every cell as
+  in the D43 job it repeats" holds in that sense only.
+- Fix at `50f3861` (text and tests): section 27 and the README state the
+  trial-level equality and both jobs' per-entry event counts, and why they
+  differ (one 845 `chord_super_d` trial queued two events, not three; the
+  `chord_alt_f4` Alt_L release was recorded with its state, Mod1 and Mod2,
+  in one trial of 845 and two of 830). New tests: the committed
+  `section12-report.json` equals the analysis on the records for jobs 830
+  and 845, per entry and per event; section 27 and the README state the
+  trial-level equality and the report's per-entry counts (the test fails on
+  the old wording). No campaign-executed file changed (`git diff --stat
+  c74eae0` over the lane lists nothing), so no run was repeated.
+- Checks (`checks/checks-50f3861.json`): ruff clean; Q2 tests 647 passed, 1
+  skipped; validators PASS; full suite on the host from a fresh
+  `~/cotcodec-scratch/` export 2283 passed, 40 skipped; freeze lint of v2,
+  `-inputs`, `-executor` in order on a scratch copy of main's 12-row
+  ledger: 15 rows, chain PASS, every row verifies; main registration digest
+  `6f690bb5...` (was `e2856952...`), the addenda's unchanged. The
+  repository ledger is unchanged. Nothing frozen or pushed. No GPU.
+- Next: as before (review, then freeze v2, `-inputs`, `-executor`).

@@ -1,4 +1,10 @@
-"""Q2 L0-raw control: the frozen translator and its predicted failing set (control C2)."""
+"""Q2 L0-raw control: the frozen translator and its predicted failing set (control C2).
+
+v1's prediction (``l0_raw_prediction.yaml``) is kept as frozen; v2's
+(``l0_raw_prediction_v2.yaml``, decisions D40 and D43) has v1's failing set and predicted
+passes, with ``chord_super_d``'s reason replaced: it passes under D43's judge rule, which was
+decided after v1's C2 run (job 768), so the entry is disclosed as informed by that run.
+"""
 
 from __future__ import annotations
 
@@ -15,9 +21,16 @@ from harness.q2.action_path.ir import parse_action, parse_sequence
 HERE = Path(cat.__file__).resolve().parent
 
 
-@pytest.fixture(scope="module")
-def prediction():
-    return yaml.safe_load((HERE / "l0_raw_prediction.yaml").read_text(encoding="utf-8"))
+PREDICTIONS = {"v1": "l0_raw_prediction.yaml", "v2": "l0_raw_prediction_v2.yaml"}
+
+
+def _load(version):
+    return yaml.safe_load((HERE / PREDICTIONS[version]).read_text(encoding="utf-8"))
+
+
+@pytest.fixture(scope="module", params=sorted(PREDICTIONS))
+def prediction(request):
+    return _load(request.param)
 
 
 @pytest.fixture(scope="module")
@@ -59,8 +72,13 @@ def test_prediction_file_mirrors_the_translator(prediction):
     assert prediction["button_names"] == l0_raw.BUTTON_NAMES
 
 
-def test_predicted_failing_set_follows_the_stated_mechanisms(prediction, entries):
-    """Only non-ASCII text, KP_Enter and buttons 8/9 are predicted to fail."""
+@pytest.mark.parametrize("version", sorted(PREDICTIONS))
+def test_predicted_failing_set_follows_the_stated_mechanisms(version, entries):
+    """Only non-ASCII text, KP_Enter and buttons 8/9 are predicted to fail, in v1 and v2. The
+    one mechanism v1's C2 showed (a chord whose first key is Super_L, the shell's overlay key,
+    sent by ``pyautogui.hotkey`` with no interval or hold) adds no failure in v2: decision D43
+    has the judge read the events the tap records queued under the grab without their state."""
+    prediction = _load(version)
 
     # PyAutoGUI 0.9.54 knows every mapped name except 'kp_enter', and single characters.
     known = set(l0_raw.KEY_NAMES.values()) - {"kp_enter"}
@@ -112,3 +130,36 @@ def test_translation_details(entries):
     assert l0_raw.translate(parse_action({"op": "wait", "ms": 600})) == "time.sleep(0.6)"
     with pytest.raises(l0_raw.L0RawError):
         l0_raw.translate(parse_action({"op": "terminate", "status": "success"}))
+
+
+def test_v2_prediction_keeps_v1s_sets_and_discloses_chord_super_d():
+    """Decisions D40 and D43: v2's predicted sets are v1's; only chord_super_d's reason, the
+    status and three basis notes change, and the header discloses that the entry is informed
+    by v1's C2 run (job 768); the translator, names and every other entry are v1's."""
+    v1, v2 = _load("v1"), _load("v2")
+    assert v2["predicted_fail"] == v1["predicted_fail"]
+    assert "chord_super_d" not in v2["predicted_fail"]
+    assert v2["predicted_pass_notable"] == v1["predicted_pass_notable"]
+    assert "chord_super_d" in v2["predicted_pass_notable"]
+    for key in ("schema", "translation", "button_names", "key_names", "predicted_unsupported"):
+        assert v2[key] == v1[key], key
+    notes = ("v1_c2", "shell_grab", "d43_judge")
+    assert {k: v for k, v in v2["basis"].items() if k not in notes} == v1["basis"]
+    assert {k: v for k, v in v2["reasons"].items() if k != "chord_super_d"} == {
+        k: v for k, v in v1["reasons"].items() if k != "chord_super_d"
+    }
+    reason = " ".join(v2["reasons"]["chord_super_d"].split())
+    assert "Informed by v1's C2 (job 768), decision D43" in reason and "not a priori" in reason
+    assert "without Mod2" in reason and "15 of 15" in reason
+    assert "job 768" in v2["basis"]["v1_c2"] and "XIGrabModeSync" in v2["basis"]["shell_grab"]
+    assert "modifier_state_observable" in v2["basis"]["d43_judge"]
+    header = (HERE / PREDICTIONS["v2"]).read_text(encoding="utf-8").split("schema:", 1)[0]
+    flat = " ".join(line.lstrip("# ") for line in header.splitlines())
+    assert "its reason is NOT a priori" in flat and "reproduction test" in flat
+    assert "Decision D43, taken after that run" in flat
+
+
+def test_c2_reads_v2s_prediction():
+    from harness.q2.action_path import acceptance
+
+    assert HERE / PREDICTIONS["v2"] == acceptance.PREDICTION

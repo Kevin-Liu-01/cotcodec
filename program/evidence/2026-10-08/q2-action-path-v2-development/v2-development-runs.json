@@ -1,0 +1,167 @@
+[
+ {
+  "batch_end": {
+   "driver_exit": 0,
+   "labelled_left": 0
+  },
+  "campaign_id": "q2ap-v2-dev-l0raw-chords-v1",
+  "cells": {
+   "chord_alt_f4": "0/10",
+   "chord_alt_tab": "0/10",
+   "chord_ctrl_a": "10/10",
+   "chord_ctrl_alone": "10/10",
+   "chord_ctrl_alt_shift_r": "0/10",
+   "chord_ctrl_c": "10/10",
+   "chord_ctrl_home": "10/10",
+   "chord_ctrl_shift_arrow": "10/10",
+   "chord_ctrl_shift_t": "10/10",
+   "chord_shift_alone": "10/10",
+   "chord_shift_arrow_left": "10/10",
+   "chord_shift_tab": "10/10",
+   "chord_super_d": "0/10"
+  },
+  "concurrency": 1,
+  "git_sha": "e66bf1665ee9484e9c95bc6f4509780311234da4",
+  "infra_gates_pass": true,
+  "job": "784",
+  "labelled_containers_left": [],
+  "layer": "L0-raw",
+  "leaked_volumes": [],
+  "no_gpu_all": true,
+  "qcow2_unchanged": true,
+  "receipt_sha256": "80a2f6b1cf0c1aa4e9b8fab9a21200ca1de49c1a1c19de5b4b2cff0b371fbe50",
+  "seed": [
+   42
+  ],
+  "session_trials": 60,
+  "sessions_planned": 4,
+  "slurm": {
+   "exit_code": "0:0",
+   "run_time": "00:05:36",
+   "state": "COMPLETED"
+  },
+  "source_tree_sha256": "73e373a20c4a974e0ee81dce212360b3877df2abfa1c3b8cba8fbc50b0f0e4be",
+  "trials_planned": 130,
+  "trials_run": 130
+ },
+ {
+  "batch_end": {
+   "driver_exit": 0,
+   "labelled_left": 0
+  },
+  "campaign_id": "q2ap-v2-dev-l0fixed-superd-n8-v1",
+  "cells": {
+   "chord_alt_f4": "10/10",
+   "chord_alt_tab": "10/10",
+   "chord_ctrl_alt_shift_r": "10/10",
+   "chord_super_d": "10/10",
+   "key_menu": "10/10",
+   "type_emoji": "10/10",
+   "type_plain": "10/10",
+   "type_unicode_bmp": "10/10"
+  },
+  "concurrency": 8,
+  "git_sha": "e66bf1665ee9484e9c95bc6f4509780311234da4",
+  "infra_gates_pass": true,
+  "job": "785",
+  "labelled_containers_left": [],
+  "layer": "L0-fixed",
+  "leaked_volumes": [],
+  "no_gpu_all": true,
+  "qcow2_unchanged": true,
+  "receipt_sha256": "527705983b54bc4af9ad7442606d84ed213317a72f636d48f8707f0941db3e64",
+  "seed": [
+   42
+  ],
+  "session_trials": 10,
+  "sessions_planned": 8,
+  "slurm": {
+   "exit_code": "0:0",
+   "run_time": "00:01:42",
+   "state": "COMPLETED"
+  },
+  "source_tree_sha256": "73e373a20c4a974e0ee81dce212360b3877df2abfa1c3b8cba8fbc50b0f0e4be",
+  "trials_planned": 80,
+  "trials_run": 80
+ },
+ {
+  "batch_end": {
+   "driver_exit": 0,
+   "labelled_left": 0
+  },
+  "campaign_id": "q2ap-v2-dev-l0fixed-superd-n16-v1",
+  "cells": {
+   "chord_alt_f4": "10/10",
+   "chord_alt_tab": "10/10",
+   "chord_ctrl_alt_shift_r": "10/10",
+   "chord_super_d": "10/10",
+   "key_menu": "10/10",
+   "type_emoji": "10/10",
+   "type_plain": "10/10",
+   "type_unicode_bmp": "10/10"
+  },
+  "concurrency": 16,
+  "git_sha": "e66bf1665ee9484e9c95bc6f4509780311234da4",
+  "infra_gates_pass": true,
+  "job": "786",
+  "labelled_containers_left": [],
+  "layer": "L0-fixed",
+  "leaked_volumes": [],
+  "no_gpu_all": true,
+  "qcow2_unchanged": true,
+  "receipt_sha256": "177452038f7f13c4830d4c41ca6c8225370880289b8eb91a920e6256b16e70d6",
+  "seed": [
+   42
+  ],
+  "session_trials": 5,
+  "sessions_planned": 16,
+  "slurm": {
+   "exit_code": "0:0",
+   "run_time": "00:01:27",
+   "state": "COMPLETED"
+  },
+  "source_tree_sha256": "73e373a20c4a974e0ee81dce212360b3877df2abfa1c3b8cba8fbc50b0f0e4be",
+  "trials_planned": 80,
+  "trials_run": 80
+ },
+ {
+  "batch_end": {
+   "driver_exit": 0,
+   "labelled_left": 0
+  },
+  "campaign_id": "q2ap-v2-dev-l0fixed-superd-n8-v2",
+  "cells": {
+   "chord_alt_f4": "10/10",
+   "chord_alt_tab": "10/10",
+   "chord_ctrl_alt_shift_r": "10/10",
+   "chord_super_d": "10/10",
+   "key_menu": "10/10",
+   "type_emoji": "10/10",
+   "type_plain": "10/10",
+   "type_unicode_bmp": "10/10"
+  },
+  "concurrency": 8,
+  "git_sha": "e66bf1665ee9484e9c95bc6f4509780311234da4",
+  "infra_gates_pass": true,
+  "job": "787",
+  "labelled_containers_left": [],
+  "layer": "L0-fixed",
+  "leaked_volumes": [],
+  "no_gpu_all": true,
+  "qcow2_unchanged": true,
+  "receipt_sha256": "efcbbb6ab9e73c94eae283e7a090ace9eb0a3e98da24ae5bcc89d436d55cb44d",
+  "seed": [
+   42
+  ],
+  "session_trials": 8,
+  "sessions_planned": 10,
+  "slurm": {
+   "exit_code": "0:0",
+   "run_time": "00:02:08",
+   "state": "COMPLETED"
+  },
+  "source_tree_sha256": "73e373a20c4a974e0ee81dce212360b3877df2abfa1c3b8cba8fbc50b0f0e4be",
+  "trials_planned": 80,
+  "trials_run": 80
+ }
+]

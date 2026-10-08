@@ -1,0 +1,90 @@
+{
+  "campaign_id": "q2ap-v2-dev-l0fixed-superd-n16-v1",
+  "container_profile": "default",
+  "experiment_id": "q2-action-path-v2",
+  "git_sha": "e66bf1665ee9484e9c95bc6f4509780311234da4",
+  "model": {
+    "kind": "none",
+    "reason": "development runs of the action-path executor and controls load no model"
+  },
+  "name": "q2ap-v2-dev-superd",
+  "preregistration": {
+    "path": "program/preregistrations/q2-action-path-v2.md",
+    "sha256": "81a809a1c2423770b7590e1777005043c74cca3a70ff23bd677e0520a5cb18ad",
+    "status": "draft"
+  },
+  "purpose": "development",
+  "randomness": {
+    "contract": "seeded",
+    "seed_binding": {
+      "flag": "--seed"
+    },
+    "seeds": [
+      42
+    ]
+  },
+  "run_root": "/home/kevin/cotcodec-runs/q2-action-path-v2/dev/runs",
+  "runner": {
+    "cpus": 8,
+    "image_id": "sha256:ac2b5815bcc2ed193116aa2d4bdee773b5a457c545453a6c91956768634a6002",
+    "memory_gb": 1
+  },
+  "schema": "cotcodec-vm-campaign-v1",
+  "slurm": {
+    "cpus": 72,
+    "memory_gb": 114,
+    "minutes": 250
+  },
+  "source": {
+    "host_dir": "/home/kevin/cotcodec-runs/q2-action-path-v2/dev/src/e66bf1665ee9484e9c95bc6f4509780311234da4",
+    "tree_sha256": "73e373a20c4a974e0ee81dce212360b3877df2abfa1c3b8cba8fbc50b0f0e4be"
+  },
+  "vm": {
+    "concurrency": 16,
+    "cpu_cores": 4,
+    "disk_size": "32G",
+    "guest_ip": "20.20.20.21",
+    "hmp_port": 7100,
+    "image": "happysixd/osworld-docker@sha256:0e6497a9295647cf05bf2b2af522fdd79bdeba2737595259cab310a3bcf6baa9",
+    "image_id": "sha256:fe8d9a5e5ad6c593d059887ea2c790481b3f32dd42fa961f2441cdbbe2c70cf4",
+    "memory_gb": 6,
+    "network": "none-netns",
+    "qcow2": {
+      "archive_sha256": "b795b6cd4c69b252c1b4f10150a347795555032501b60fd031751ed09b896712",
+      "host_path": "/home/kevin/cotcodec-runs/stage0/q2-action-path/vm/Ubuntu.qcow2",
+      "license": "apache-2.0",
+      "revision": "a5d9c3eaae98eebf6e3a0beb84e7e47cf72ae133",
+      "sha256": "6bf667a852b3c307f61d9f09c42559351f45e0607e428b4997becf534cf4d313",
+      "size_bytes": 24460197888,
+      "source_url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld/resolve/a5d9c3eaae98eebf6e3a0beb84e7e47cf72ae133/Ubuntu.qcow2.zip"
+    },
+    "ram_size": "4G",
+    "server_port": 5000
+  },
+  "workload": {
+    "boot_timeout_s": 300,
+    "cells": [
+      "chord_super_d",
+      "chord_alt_f4",
+      "chord_alt_tab",
+      "chord_ctrl_alt_shift_r",
+      "type_unicode_bmp",
+      "type_emoji",
+      "key_menu",
+      "type_plain"
+    ],
+    "cells_sha256": "a79073a2f5e6e7d7e109b14d50fb4c1e2791f856504c32cd855911e726a95c95",
+    "kind": "suite-development",
+    "layer": "L0-fixed",
+    "max_trial_s": 60,
+    "reps": 5,
+    "session_trials": 5,
+    "sessions": 16,
+    "settings": [
+      "screenshot",
+      "screenshot+a11y"
+    ],
+    "settle_timeout_s": 60,
+    "trials": 80
+  }
+}

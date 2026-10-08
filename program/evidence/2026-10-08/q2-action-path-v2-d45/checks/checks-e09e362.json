@@ -1,0 +1,64 @@
+{
+ "commit": "e09e362",
+ "code_commit": "c74eae0 (D45's executed files; development jobs 845-854 ran its export)",
+ "freeze_lint": {
+  "check_chain": {
+   "rows": 15,
+   "status": "PASS"
+  },
+  "ledger": "scratch copy of program/preregistrations/ledger.jsonl at e09e362 (12 rows, main's after q3-dense-headroom-precheck-v2's freeze, SHA-256 b3d4a33b31173ae268a4e4a15aeb0124f149aaa4ea3d6e016be55e3b0fbbdd0b, unchanged after the lint)",
+  "order": [
+   "q2-action-path-v2",
+   "q2-action-path-v2-inputs",
+   "q2-action-path-v2-executor"
+  ],
+  "rows": [
+   {
+    "experiment_id": "q2-action-path-v2",
+    "path": "program/preregistrations/q2-action-path-v2.md",
+    "sha256": "e28569522b39686f4d2ac7699b86bde881af12022918a9277bda640e1823ed17",
+    "git_head_at_freeze": "e09e3627fe957a21ad119f910b84d6b46e092971",
+    "previous_hash": "a68af989bfadb17ddb540ff0fa1c4dc64f62357812158580e1d25ddc5a41a2e1"
+   },
+   {
+    "experiment_id": "q2-action-path-v2-inputs",
+    "path": "program/preregistrations/q2-action-path-v2-inputs.md",
+    "sha256": "efa182d009e5af64299d05784add3a4610c8d855a02061528e40114377629f22",
+    "git_head_at_freeze": "e09e3627fe957a21ad119f910b84d6b46e092971",
+    "previous_hash": "21fa1a357b5c321449354a3103faa4020620a77ac5b8a0ef47ad1ff62bd31950"
+   },
+   {
+    "experiment_id": "q2-action-path-v2-executor",
+    "path": "program/preregistrations/q2-action-path-v2-executor.md",
+    "sha256": "cef0cbc603fc5da7c4e88205e738ef4b659ec367f85d8573328951f57e247b08",
+    "git_head_at_freeze": "e09e3627fe957a21ad119f910b84d6b46e092971",
+    "previous_hash": "46dc04afaef4954101f2876fac4c4ac88e7ed879d2e9b74e7732a77e9de53ca1"
+   }
+  ],
+  "verify": {
+   "q2-action-path-v1": "PASS",
+   "q2-action-path-v1-inputs": "PASS",
+   "q2-action-path-v1-executor": "PASS",
+   "q2-evaluator-mutation-v1": "PASS",
+   "q3-dense-headroom-precheck-v2": "PASS",
+   "q2-action-path-v2": "PASS",
+   "q2-action-path-v2-inputs": "PASS",
+   "q2-action-path-v2-executor": "PASS"
+  },
+  "earlier_lint_at_549073a": "before the second merge of main: the same three registration digests chained onto the 11-row ledger, 14 rows, chain PASS, every row verified"
+ },
+ "local": {
+  "q2_tests": "645 passed, 1 skipped (uv run pytest -q tests/test_q2_*.py), at 549073a and again at e09e362",
+  "ruff_check": "All checks passed",
+  "validate_architecture_experiments": "PASS",
+  "validate_provider_models": "PASS: 7 models, 5 providers",
+  "byte_identity": "git diff --stat c74eae0 HEAD -- harness/q2 infra/slurm/host-single-node/vm-campaign.sbatch scripts/submit_vm_campaign.py lists nothing",
+  "decisions_md": "identical to main's (git diff main -- program/decisions.md is empty)",
+  "repository_ledger": "unchanged (12 rows, main's)"
+ },
+ "host": {
+  "full_suite_e09e362": "2281 passed, 40 skipped in 256.78s (uv run --locked pytest -q tests), exit 0",
+  "scratch_dir_e09e362": "~/cotcodec-scratch/q2ap-v2-d45-e09e362 (fresh; git archive of e09e362; uv sync --locked --extra dev)",
+  "full_suite_549073a": "2252 passed, 38 skipped in 256.56s, exit 0 (~/cotcodec-scratch/q2ap-v2-d45-549073a, fresh git archive, before the second merge of main)"
+ }
+}

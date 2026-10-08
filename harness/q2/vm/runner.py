@@ -124,6 +124,34 @@ def _guest_script(name: str) -> str:
     return (GUEST_DIR / name).read_text(encoding="utf-8")
 
 
+# Development only (decision D43): an L0-fixed executor that drops a chord's modifiers, the
+# negative case of the judge's reading of key events the tap records without the guard's
+# lock bit. ``omit``: a key action of two or more keys presses only its last key (the grab
+# key of a shell chord is then never pressed); ``release_first``: it presses and releases
+# its other keys (in order, the executor's 10 ms apart) before pressing the last one. A key
+# action of one key is unchanged. The manifest admits it for L0-fixed suite development only.
+DROP_MODIFIER_ANCHOR = "    def key(self, keysyms):\n        pressed = []\n"
+DROP_MODIFIER_FAULTS = {
+    "omit": "        keysyms = list(keysyms)[-1:]  # development fault: modifiers omitted\n",
+    "release_first": (
+        "        if len(keysyms) > 1:  # development fault: modifiers released first\n"
+        "            self.release_keys(self.press_keys(list(keysyms)[:-1]))\n"
+        "            keysyms = list(keysyms)[-1:]\n"
+    ),
+}
+
+
+def drop_modifier_source(mode: str) -> str:
+    """The L0-fixed executor's source with the development fault ``mode`` applied."""
+    source = _guest_script("l0_fixed.py")
+    if source.count(DROP_MODIFIER_ANCHOR) != 1:
+        raise ValueError("drop-modifier anchor not found exactly once in l0_fixed.py")
+    fault = DROP_MODIFIER_ANCHOR + DROP_MODIFIER_FAULTS[mode]
+    patched = source.replace(DROP_MODIFIER_ANCHOR, fault)
+    compile(patched, "l0_fixed.py", "exec")
+    return patched
+
+
 def wait_for_boot(client: GuestClient, t0: float, timeout: float) -> dict[str, Any]:
     """Poll until the guest serves a valid PNG screenshot; times are seconds after t0."""
     record: dict[str, Any] = {"t_tcp_open": None, "t_screenshot_200": None, "polls": 0}
@@ -722,6 +750,11 @@ def session_cycle(config: dict[str, Any]) -> dict[str, Any]:
         loaded = mutants.load_layer(layer, mutants.build(mutant, layer))
         source = loaded if isinstance(loaded, str) else None
         result["mutant"] = mutant
+    fault = config.get("fault_drop_modifier")
+    if fault is not None:
+        # Development only (decision D43): the executor drops chord modifiers (see above).
+        source = drop_modifier_source(fault)
+        result["fault_injection"] = {"drop_modifier": fault}
     kill_after = config.get("kill_guest_server_after_seq")
     for seq, cell_id in config["trials"]:
         trial = session.run_cell(by_id[cell_id], layer, seq, a11y, source)

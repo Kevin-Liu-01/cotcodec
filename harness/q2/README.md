@@ -1,8 +1,11 @@
 # Q2 Stage 0b: action-path suite and nested-KVM desktop runtime
 
-Status: Stage 0 infrastructure. Nothing here is a result. The preregistration
-`program/preregistrations/q2-action-path-v1.md` is a **draft**; acceptance
-trials wait for the program owner to freeze it.
+Status: Stage 0 infrastructure. Nothing here is a result. The first
+preregistration, `program/preregistrations/q2-action-path-v1.md` (with its
+`-inputs` and `-executor` addenda), is frozen and invalid: its validity control
+C2 failed (job 768; decision D40). Its successor,
+`program/preregistrations/q2-action-path-v2.md` (with `-inputs` and
+`-executor`), is a **draft**; acceptance trials wait for its freeze.
 
 The suite checks that what a computer-use harness asks for is what the
 desktop receives, before any Stage-1 GPU episode is spent on it. It follows the

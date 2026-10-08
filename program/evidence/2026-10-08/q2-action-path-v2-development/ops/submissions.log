@@ -1,0 +1,5 @@
+2026-10-08T08:34:33Z dev-l0raw-chords-v1 job=
+2026-10-08T08:34:34Z dev-l0fixed-superd-n8-v1 job=
+2026-10-08T08:34:34Z dev-l0fixed-superd-n16-v1 job=
+2026-10-08T08:34:34Z dev-l0fixed-superd-n8-v2 job=
+# correction: the four lines above lost their job ids (the submitter prints the id alone); in order they are 784, 785, 786, 787

@@ -1,0 +1,58 @@
+{
+ "commit": "932c8cb",
+ "freeze_lint": {
+  "check_chain": {
+   "rows": 14,
+   "status": "PASS"
+  },
+  "ledger": "scratch copy of program/preregistrations/ledger.jsonl (11 rows, SHA-256 1052d58b5b6648ddc10a1d4752a03de9e5218578dd30bc6f5b3a278059031c35, unchanged after the lint)",
+  "order": [
+   "q2-action-path-v2",
+   "q2-action-path-v2-inputs",
+   "q2-action-path-v2-executor"
+  ],
+  "rows": [
+   {
+    "experiment_id": "q2-action-path-v2",
+    "path": "program/preregistrations/q2-action-path-v2.md",
+    "sha256": "0f3bd782b44f1684ef3885c320417b2b363d44f0c79263d6be3d323d82550695",
+    "git_head_at_freeze": "932c8cb638d9e9264019dd70102768ab21433e58",
+    "previous_hash": "dc39bfa2f68e0fd57a213e0972266a4db60428e00d6c4e6bca8e576f35ec6439"
+   },
+   {
+    "experiment_id": "q2-action-path-v2-inputs",
+    "path": "program/preregistrations/q2-action-path-v2-inputs.md",
+    "sha256": "55777fab666ce89bfdfea6b3f9f0e9ac5417421b7698d60fad2d28a077c2d1b2",
+    "git_head_at_freeze": "932c8cb638d9e9264019dd70102768ab21433e58",
+    "previous_hash": "0287160646ad9b225fe49b355a6967229f776c5230a5d7ab766c9cb788513950"
+   },
+   {
+    "experiment_id": "q2-action-path-v2-executor",
+    "path": "program/preregistrations/q2-action-path-v2-executor.md",
+    "sha256": "2c0793fe8c128f422d199e55d9bc677c6474ba17b1804c2cb1fc7b91182a1c39",
+    "git_head_at_freeze": "932c8cb638d9e9264019dd70102768ab21433e58",
+    "previous_hash": "cb2ca4d6216d6eb6c68c99fbc3e954587169be41f80dfd9ffcc12160ee9972f7"
+   }
+  ],
+  "verify": {
+   "q2-action-path-v1": "PASS",
+   "q2-action-path-v1-inputs": "PASS",
+   "q2-action-path-v1-executor": "PASS",
+   "q2-action-path-v2": "PASS",
+   "q2-action-path-v2-inputs": "PASS",
+   "q2-action-path-v2-executor": "PASS",
+   "q2-evaluator-mutation-v1": "PASS"
+  }
+ },
+ "local": {
+  "q2_tests": "635 passed, 1 skipped (uv run pytest -q tests/test_q2_*.py)",
+  "ruff_check": "All checks passed",
+  "validate_architecture_experiments": "PASS",
+  "validate_provider_models": "PASS: 7 models, 5 providers",
+  "byte_identity": "git diff --stat 126ff8b HEAD -- harness/q2 infra/slurm/host-single-node/vm-campaign.sbatch scripts/submit_vm_campaign.py lists only harness/q2/action_path/l0_raw_prediction_v2.yaml"
+ },
+ "host": {
+  "full_suite": "2242 passed, 38 skipped in 245.23s (uv run --locked pytest -q tests)",
+  "scratch_dir": "~/cotcodec-scratch/q2ap-v2-review-932c8cb (fresh; git archive of 932c8cb; uv sync --locked --extra dev)"
+ }
+}
