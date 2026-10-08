@@ -30,6 +30,10 @@ FAKE = {"FILL-image-id": "sha256:" + "a" * 64, "FILL-image-git-sha": "b" * 40,
 IP = re.compile(r"\b\d{1,3}(?:\.\d{1,3}){3}\b")
 TIMING_2_EVIDENCE = (PROJECT_ROOT / "program" / "evidence" / "2026-10-08"
                      / "q3-dense-headroom-precheck-v2-build" / "timing-2" / "timing-810")
+LIMIT_RECHECK = TIMING_2_EVIDENCE.parent / "limit-recheck" / "estimator-sensitivity.json"
+# D44's three estimates of the 4B lane, in increasing order, and the analyses' names for them.
+ESTIMATES = {"stage_mean_scaling": "registered", "line_fit": "line_fit_compiles_as_registered",
+             "per_stage_larger": "larger_of_the_two_per_stage"}
 
 
 def _filled(path: Path) -> dict:
@@ -131,38 +135,72 @@ def test_each_timing_job_is_filled_once(tmp_path: Path, job: int) -> None:
 def test_limits_follow_d36_and_fit_the_cap() -> None:
     filler.check_budget()
     assert lanes.TOTAL_CAP_GPU_HOURS == 1.5
-    assert lanes.registered_caps_total() == pytest.approx(0.90)
+    assert lanes.registered_caps_total() == pytest.approx(0.2 + 32 / 60 + 0.2, abs=1e-6)
+    assert round(lanes.registered_caps_total(), 3) == 0.933
     assert lanes.registered_caps_total() <= 1.5 + 1e-9
     measured = lanes.SMALL_LANE_MEASURED
     assert lanes.LANES["qwen3-0.6b-base"].minutes >= (
         2 * measured["evaluation_and_statistics_s"] + measured["start_up_s"]) / 60 + 3
     assert lanes.LANES["qwen3-0.6b-base"].minutes == 12
     # The 4B lane's evaluation time is measured on the fixed path by the second
-    # timing job (Slurm 810, D42 (ii)) and enters D36's arithmetic once.
+    # timing job (Slurm 810, D42 (ii)); D44: three estimates are computed from it
+    # and the limit is the largest of their minutes.
     large = lanes.LARGE_LANE_MEASURED
     assert large["measured"] is True and large["timing_job"] == lanes.LARGE_LANE_TIMING_JOB == "810"
-    assert large["evaluation_and_statistics_s"] == pytest.approx(
-        sum(s["units"] * s["measured_unit_s"] * s["length_ratio"]
-            for s in lanes.LARGE_LANE_STAGES.values())
-        + large["compile_allowance_s"] + large["statistics_bound_s"])
     assert large["units"] == 1160 and all(s["length_ratio"] >= 1.0
                                           for s in lanes.LARGE_LANE_STAGES.values())
-    assert lanes.LANES["qwen3.5-4b-base"].minutes >= (
-        2 * large["evaluation_and_statistics_s"] + large["start_up_s"]) / 60 + 3
-    assert lanes.LANES["qwen3.5-4b-base"].minutes == 30
-    assert lanes.LANES["qwen3.5-4b-base"].cap_gpu_hours == 0.5
-    # The useful window holds the lane at up to about 1.3 s per unit, three
-    # times the slowest stage's measured mean.
+    stages = lanes.LARGE_LANE_STAGES
+    scaled = {name: s["measured_unit_s"] * s["length_ratio"] for name, s in stages.items()}
+    line = {name: s["line_fit_unit_s"] for name, s in stages.items()}
+    assert all(line[name] >= s["measured_unit_s"] for name, s in stages.items())
+    unit_s = {"stage_mean_scaling": scaled, "line_fit": line,
+              "per_stage_larger": {name: max(scaled[name], line[name]) for name in stages}}
+    estimates = lanes.LARGE_LANE_ESTIMATES
+    assert list(estimates) == list(ESTIMATES) and large["estimates"] is estimates
+    extra = large["compile_allowance_s"] + large["statistics_bound_s"]
+    for name, per_unit in unit_s.items():
+        total = sum(stages[stage]["units"] * per_unit[stage] for stage in stages) + extra
+        assert estimates[name]["evaluation_and_statistics_s"] == pytest.approx(total)
+        assert estimates[name]["minutes"] == lanes.limit_minutes(total, large["start_up_s"])
+        # D36's "at least twice the measured time plus start-up" under every estimate.
+        assert lanes.LANES["qwen3.5-4b-base"].minutes >= (
+            2 * total + large["start_up_s"]) / 60 + 3
+    assert [e["minutes"] for e in estimates.values()] == [30, 31, 32]
+    assert lanes.LARGE_LANE_MINUTES == max(e["minutes"] for e in estimates.values()) == 32
+    assert lanes.LARGE_LANE_LIMIT_ESTIMATE == large["limit_estimate"] == "per_stage_larger"
+    assert large["evaluation_and_statistics_s"] == max(
+        e["evaluation_and_statistics_s"] for e in estimates.values())
+    assert lanes.LANES["qwen3.5-4b-base"].minutes == 32
+    assert lanes.LANES["qwen3.5-4b-base"].cap_gpu_hours == 32 / 60
+    # The useful window holds the lane at up to about 1.4 s per unit, more than
+    # three times the slowest stage's measured mean.
     break_even = lanes.large_lane_break_even_unit_s()
-    assert break_even == pytest.approx((27 * 60 - large["start_up_s"] - 5) / 1160)
+    assert break_even == pytest.approx((29 * 60 - large["start_up_s"] - 5) / 1160)
     assert 3 * max(s["measured_unit_s"] for s in lanes.LARGE_LANE_STAGES.values()) <= break_even
     for lane in lanes.LANES.values():
-        assert lane.cap_gpu_hours == pytest.approx(lane.minutes / 60, abs=1e-4)
+        assert lane.cap_gpu_hours == lane.minutes / 60
         assert lane.minutes - dhd.USR1_LEAD_MINUTES >= dhd.MIN_USEFUL_MINUTES
         v1_lane = dhd.LANES[lane.lane_id]
         assert {k: v for k, v in lane.as_dict().items() if k not in ("minutes", "cap_gpu_hours")
                 } == {k: v for k, v in v1_lane.as_dict().items()
                       if k not in ("minutes", "cap_gpu_hours")}
+
+
+def test_the_4b_cap_is_its_minutes_exactly() -> None:
+    """D44's cap is 32/60 GPU-h. A cap rounded to 0.5333 would be refused by the
+    submitter (1 x 32 minutes is 0.53333 GPU-h) and by the filler's budget check."""
+
+    lane = lanes.LANES["qwen3.5-4b-base"]
+    manifest = _filled(TEMPLATES["qwen3.5-4b-base"])
+    assert manifest["budget"]["max_gpu_hours"] == lane.cap_gpu_hours == 32 / 60
+    assert submitter.validate_manifest(manifest, verify_claim_files=False)["max_gpu_hours"] == (
+        32 / 60)
+    rounded = copy.deepcopy(manifest)
+    rounded["budget"]["max_gpu_hours"] = round(32 / 60, 4)
+    with pytest.raises(ValueError, match="above budget"):
+        submitter.validate_manifest(rounded, verify_claim_files=False)
+    with pytest.raises(v1f.FillError, match="cap must be"):
+        v1f.check_resources(rounded, lane, lane.minutes)
 
 
 def test_the_4b_measurement_is_the_second_timing_jobs() -> None:
@@ -179,10 +217,26 @@ def test_the_4b_measurement_is_the_second_timing_jobs() -> None:
     assert large["compile_allowance_s"] == pytest.approx(analysis["compiles"]["allowance_s"],
                                                          abs=0.05)
     assert large["start_up_s"] == pytest.approx(analysis["rule"]["start_up_s"], abs=0.05)
-    assert large["evaluation_and_statistics_s"] == pytest.approx(
+    # The analysis's rule is the stage-mean scaling estimate (30 minutes); D44
+    # sets the limit at the largest of the three (limit-recheck/, 32 minutes).
+    scaling = lanes.LARGE_LANE_ESTIMATES["stage_mean_scaling"]
+    assert scaling["evaluation_and_statistics_s"] == pytest.approx(
         analysis["rule"]["evaluation_and_statistics_s"], abs=0.5)
-    assert analysis["rule"]["minutes"] == lanes.LARGE_LANE_MINUTES
+    assert analysis["rule"]["minutes"] == scaling["minutes"] == 30
     assert analysis["rule"]["every_stage_measured"] is True
+    recheck = json.loads(LIMIT_RECHECK.read_text(encoding="utf-8"))
+    for stage, figures in lanes.LARGE_LANE_STAGES.items():
+        assert figures["line_fit_unit_s"] == pytest.approx(recheck["rows"][stage]["line_unit_s"],
+                                                           abs=5e-5)
+    for name, key in ESTIMATES.items():
+        row = recheck["estimators"][key]
+        estimate = lanes.LARGE_LANE_ESTIMATES[name]
+        assert estimate["stages_s"] == pytest.approx(row["stages_s"], abs=0.5)
+        assert estimate["evaluation_and_statistics_s"] == pytest.approx(
+            row["evaluation_and_statistics_s"], abs=0.5)
+        assert estimate["minutes"] == row["minutes"]
+    assert lanes.LARGE_LANE_MINUTES == max(recheck["estimators"][k]["minutes"]
+                                           for k in ESTIMATES.values()) == 32
     receipt = json.loads((TIMING_2_EVIDENCE / "dense-precheck_timing-receipt.json"
                           ).read_text(encoding="utf-8"))
     timing = receipt["timing"]
@@ -201,15 +255,17 @@ def test_the_4b_measurement_is_the_second_timing_jobs() -> None:
 
 
 def test_the_4b_limits_estimator_sensitivity_is_disclosed() -> None:
-    """The registered estimator (proportional scaling) gives 30 minutes; the first
-    analysis pass's line fit, with the compiles treated as registered, gives 31.
-    The registration says so, and says the passes differ in more than the compiles."""
+    """Recomputed from Slurm 810's receipt: stage-mean scaling gives 30 minutes,
+    the first analysis pass's line fit (compiles treated as registered) 31 and the
+    larger of the two in every stage 32. D44 sets the limit at the largest. The
+    registration says so, and says how the passes differ and when the scaling
+    was chosen."""
 
     analysis = json.loads((TIMING_2_EVIDENCE / "analysis.json").read_text(encoding="utf-8"))
     timing = json.loads((TIMING_2_EVIDENCE / "dense-precheck_timing-receipt.json"
                          ).read_text(encoding="utf-8"))["timing"]
     check_unit = timing["attention_backend_check"]["unit"]
-    proportional = line_fit = 0.0
+    proportional = line_fit = larger = 0.0
     spans = {}
     for stage in dhd.STAGES:
         units = [u for u in timing["units"] if u["stage"] == stage and u["unit"] != check_unit]
@@ -221,14 +277,21 @@ def test_the_4b_limits_estimator_sensitivity_is_disclosed() -> None:
         sxx = sum((v - mx) ** 2 for v in x)
         slope = max(0.0, sum((a - mx) * (b - my) for a, b in zip(x, y, strict=True)) / sxx)
         row = analysis["per_stage"][stage]
-        proportional += my * max(1.0, row["lane_tokens_mean"] / mx) * row["lane_units"]
-        line_fit += max(my, my + slope * (row["lane_tokens_mean"] - mx)) * row["lane_units"]
+        scaled = my * max(1.0, row["lane_tokens_mean"] / mx)
+        line = max(my, my + slope * (row["lane_tokens_mean"] - mx))
+        proportional += scaled * row["lane_units"]
+        line_fit += line * row["lane_units"]
+        larger += max(scaled, line) * row["lane_units"]
         spans[stage] = (min(x), max(x), slope)
     extra = analysis["compiles"]["allowance_s"] + 5.0
     start_up = analysis["rule"]["start_up_s"]
     assert proportional == pytest.approx(analysis["cross_checks"]["scaled_without_compiles_s"])
-    assert lanes.limit_minutes(proportional + extra, start_up) == lanes.LARGE_LANE_MINUTES == 30
-    assert lanes.limit_minutes(line_fit + extra, start_up) == 31
+    minutes = [lanes.limit_minutes(s + extra, start_up) for s in (proportional, line_fit, larger)]
+    assert minutes == [e["minutes"] for e in lanes.LARGE_LANE_ESTIMATES.values()] == [30, 31, 32]
+    assert lanes.LARGE_LANE_MINUTES == max(minutes) == 32
+    for estimate, stages_s in zip(lanes.LARGE_LANE_ESTIMATES.values(),
+                                  (proportional, line_fit, larger), strict=True):
+        assert estimate["stages_s"] == pytest.approx(stages_s, abs=0.5)
     assert (spans["A-main"][0], spans["A-main"][1]) == (3614, 3825)
     assert spans["A-main"][2] == pytest.approx(0.160e-3, abs=5e-7)
     assert spans["B-absent"][2] == pytest.approx(0.048e-3, abs=5e-7)
@@ -237,13 +300,25 @@ def test_the_4b_limits_estimator_sensitivity_is_disclosed() -> None:
     compute = " ".join(text[text.index("## Compute"):text.index("### The development timing jobs")
                             ].split())
     assert "differ only in how the two compiles are treated" not in compute
-    assert "differed from this one in two ways" in compute
-    assert f"gives {line_fit:.0f} s instead of {proportional:.0f} s" in compute
+    assert "That pass differed from it in two ways" in compute
+    assert f"the line gives {line_fit:.0f} s instead of {proportional:.0f} s" in compute
     assert "so 31 minutes, not 30" in compute and "only 211 tokens (3,614 to 3,825)" in compute
-    assert "chosen after that pass came out over the cap" in compute
+    assert "chosen after a first analysis pass, kept in the evidence, came out over D36's cap" in (
+        compute)
+    assert (f"{proportional:.0f} s over the stages and {proportional + extra:.0f} s of evaluation "
+            "and statistics: 30 minutes") in compute
+    assert f"{line_fit:.0f} s and {line_fit + extra:.0f} s: 31 minutes" in compute
+    assert f"{larger:.0f} s and {larger + extra:.0f} s: 32 minutes" in compute
+    assert "The 4B limit is the largest, 32 minutes (D44)" in compute
+    assert "2 x 824 + 79 s is 29 minutes rounded up; with the 3-minute lead, 32 minutes" in compute
     decision_20 = " ".join(text[text.index("\n20. Limits"):text.index("\n21. ")].split())
     assert "is the conservative choice" not in decision_20
-    assert "gives 31 minutes" in decision_20 and "came out over D36's cap" in decision_20
+    assert "the line fit gives 31 minutes" in decision_20
+    assert "came out over D36's cap" in decision_20
+    for estimate in lanes.LARGE_LANE_ESTIMATES.values():
+        assert (f"{estimate['evaluation_and_statistics_s']:.0f} s ({estimate['minutes']} minutes)"
+                in decision_20)
+    assert "D44 sets the limit at the largest, 32 minutes" in decision_20
 
 
 def _small_receipt() -> dict:

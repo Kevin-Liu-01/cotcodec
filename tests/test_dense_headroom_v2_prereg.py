@@ -84,16 +84,23 @@ def _log_entry(number: int) -> str | None:
     return _flat(match.group(0)) if match else None
 
 
-def _accepting_decisions(paragraph: str) -> list[int]:
-    """Decisions cited in ``paragraph`` that the log holds, that come after D36,
-    and that name this experiment and amend D36 (iii) (Freeze procedure, step 1)."""
+def _naming_decisions(paragraph: str) -> list[int]:
+    """Decisions cited in ``paragraph`` that the log holds, that come after D36
+    and that name this experiment."""
 
     found = []
     for number in sorted({int(n) for n in re.findall(r"\bD(\d+)\b", paragraph)}):
         entry = _log_entry(number)
-        if number > 36 and entry and dv2.EXPERIMENT_ID in entry and "D36 (iii)" in entry:
+        if number > 36 and entry and dv2.EXPERIMENT_ID in entry:
             found.append(number)
     return found
+
+
+def _accepting_decisions(paragraph: str) -> list[int]:
+    """Decisions cited in ``paragraph`` that the log holds, that come after D36,
+    and that name this experiment and amend D36 (iii) (Freeze procedure, step 1)."""
+
+    return [n for n in _naming_decisions(paragraph) if "D36 (iii)" in (_log_entry(n) or "")]
 
 
 def test_draft_can_be_frozen() -> None:
@@ -153,6 +160,9 @@ def test_registered_numbers_appear_in_the_text() -> None:
         assert field in flat
     measured = lanes.LARGE_LANE_MEASURED
     assert f"{measured['evaluation_and_statistics_s']:,.0f} s" in flat
+    for estimate in lanes.LARGE_LANE_ESTIMATES.values():  # D44: all three, and their minutes
+        assert (f"{estimate['evaluation_and_statistics_s']:,.0f} s ({estimate['minutes']} minutes)"
+                in flat)
     assert f"{measured['start_up_s']:.0f} s of start-up" in flat
     assert f"about {lanes.large_lane_break_even_unit_s():.1f} s per unit" in flat
     for phrase in ("Changes from v1 (D36)", "INCOMPLETE", "bfe4a7c3", "Slurm 766", "Slurm 810",
@@ -168,27 +178,33 @@ def test_status_and_decisions() -> None:
     status = _paragraph(TEXT, "Status: ")
     lead_in = _paragraph(TEXT, "Each states the choice and why.")
     # Both name D42, the decision that accepts decisions 16-21 and amends D36
-    # (iii) for the 4B lane (decision 18), draft and frozen alike.
-    assert 42 in _accepting_decisions(status), "the status does not name D42"
-    assert 42 in _accepting_decisions(lead_in), "the lead-in does not name D42"
+    # (iii) for the 4B lane (decision 18), and D44, which closed D42's narrow
+    # re-check, set the 4B limit at the largest estimate (decision 20) and
+    # accepts decisions 16-21 as amended by D42 and D44; draft and frozen alike.
+    d44 = _log_entry(44)
+    assert d44 and dv2.EXPERIMENT_ID in d44 and "32 minutes" in d44 and "largest" in d44
+    assert lanes.LARGE_LANE_MINUTES == 32
+    for name, paragraph in (("status", status), ("lead-in", lead_in)):
+        assert 42 in _accepting_decisions(paragraph), f"the {name} does not name D42"
+        assert 44 in _naming_decisions(paragraph), f"the {name} does not name D44"
     if _frozen():
         # Freeze procedure, step 1: the status paragraph and the lead-in of the
-        # design decisions were rewritten to the frozen wording.
+        # design decisions were rewritten to the frozen wording, naming D42 and D44.
         assert status.startswith("Status: frozen")
         flat = _flat(TEXT)
         for draft in ("DRAFT", "wait for the program owner", "waits for the program owner",
                       "still to be done"):
             assert draft not in flat, f"the frozen file still says {draft!r}"
-        accepting = _accepting_decisions(status)
-        assert set(accepting) & set(_accepting_decisions(lead_in)), (
-            "the frozen lead-in of the design decisions does not name the accepting decision")
+        for name, paragraph in (("status", status), ("lead-in", lead_in)):
+            assert "to the frozen wording" not in _flat(paragraph), (
+                f"the frozen {name} still says it is to be rewritten to the frozen wording")
     else:
         assert status.startswith("Status: DRAFT, not frozen.")
         flat_status = _flat(status)
-        for phrase in ("D42", "D36 (iii)", "narrow re-check", "Slurm 810", "before the fix",
-                       "rewritten to the frozen wording"):
+        for phrase in ("D42", "D44", "D36 (iii)", "narrow re-check", "Slurm 810", "before the fix",
+                       "rewritten to the frozen wording, naming D42 and D44"):
             assert phrase in flat_status, phrase
-        assert "still to be done" in _flat(lead_in)
+        assert "to the frozen wording, naming D42 and D44, is still to be done" in _flat(lead_in)
     section = TEXT[TEXT.index("## Design decisions"):]
     numbers = [int(m.group(1)) for m in re.finditer(r"^(\d+)\. ", section, re.M)]
     assert numbers == list(range(1, 22))
@@ -197,7 +213,9 @@ def test_status_and_decisions() -> None:
     for phrase in ("the status paragraph at the top of this file is rewritten",
                    "and so is the lead-in of the design decisions",
                    "amends D36 (iii) for that lane", "D36's timing rule",
-                   "authorises a timing job of the fixed path", "D42 is that decision"):
+                   "authorises a timing job of the fixed path", "D42 is that decision",
+                   "D44 closed that re-check", "both name D42 and D44",
+                   "do not both name D42 and D44"):
         assert phrase in step_1, phrase
 
 
@@ -225,7 +243,8 @@ def test_d36_iii_is_amended_for_the_4b_lane_and_its_limit_is_measured() -> None:
     assert "code head" in d21
     compute = _flat(_section(TEXT, "## Compute", "### The development timing jobs"))
     assert "Every input is measured" in compute and "projected, not measured" not in compute
-    assert "| Qwen3.5-4B-Base lane | 1 x 30 | 0.50 |" in compute
+    assert "| Qwen3.5-4B-Base lane | 1 x 32 | 0.53 |" in compute
+    assert "The 4B limit is the largest of the three estimates" in compute
     assert "projected, not measured" not in flat
     changes = _flat(_section(TEXT, "## Changes from v1 (D36)", "## Identity"))
     assert "departs from D36 (iii)" in changes and "D42 (i) amends D36 (iii)" in changes
