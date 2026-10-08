@@ -1,0 +1,214 @@
+{
+ "method": "per item: the largest measured A1-A3 item of the problem (713 inline, 752 store); reference items: the largest measured ref_A1-A3 item, else 3x the consumer item; unmeasured problems take the largest measured item of any problem",
+ "minimal_variant": {
+  "gpu_hours": 0.20324168289850714,
+  "problems": [
+   "L1/10",
+   "L1/18",
+   "L2/59",
+   "L2/95",
+   "L2/77",
+   "L2/100",
+   "L2/87",
+   "L2/46"
+  ],
+  "what_it_drops": "the three 518-calibration problems (no measured A2/A3 items; L2/52 and L2/60 are the batch- and group-norm cases)"
+ },
+ "notes": [
+  "job 752 measured 2.4x its exec/2 model; the per-item costs here are measured values, so no model factor is applied",
+  "L2/59 (4.3 GB of parameters) dominates; L2/87, L2/100 and L2/46 consumer items under exec/2 were never measured (job 752 did not reach them)"
+ ],
+ "per_problem": {
+  "L1/10": {
+   "assumed_consumer_item_gpu_s": 1.1211666666666666,
+   "assumed_reference_item_gpu_s": 1.2506439360705288,
+   "consumer_item_gpu_s_measured": {
+    "max": 1.1211666666666666,
+    "median": 0.7413749999999999,
+    "n": 12
+   },
+   "consumer_items": 15,
+   "gpu_s": 20.569431808211586,
+   "kernels": 5,
+   "reference_item_gpu_s_measured": {
+    "max": 1.2506439360705288,
+    "n": 6
+   },
+   "unmeasured": false
+  },
+  "L1/15": {
+   "assumed_consumer_item_gpu_s": 5.0112499999999995,
+   "assumed_reference_item_gpu_s": 15.033749999999998,
+   "consumer_item_gpu_s_measured": {
+    "max": null,
+    "median": null,
+    "n": 0
+   },
+   "consumer_items": 12,
+   "gpu_s": 105.23624999999998,
+   "kernels": 4,
+   "reference_item_gpu_s_measured": {
+    "max": null,
+    "n": 0
+   },
+   "unmeasured": true
+  },
+  "L1/18": {
+   "assumed_consumer_item_gpu_s": 1.474,
+   "assumed_reference_item_gpu_s": 2.9969088820237966,
+   "consumer_item_gpu_s_measured": {
+    "max": 1.474,
+    "median": 0.854,
+    "n": 9
+   },
+   "consumer_items": 15,
+   "gpu_s": 31.10072664607139,
+   "kernels": 5,
+   "reference_item_gpu_s_measured": {
+    "max": 2.9969088820237966,
+    "n": 6
+   },
+   "unmeasured": false
+  },
+  "L2/100": {
+   "assumed_consumer_item_gpu_s": 5.0112499999999995,
+   "assumed_reference_item_gpu_s": 10.439166666666667,
+   "consumer_item_gpu_s_measured": {
+    "max": 5.0112499999999995,
+    "median": 1.5060833333333334,
+    "n": 9
+   },
+   "consumer_items": 12,
+   "gpu_s": 91.45249999999999,
+   "kernels": 4,
+   "reference_item_gpu_s_measured": {
+    "max": 10.439166666666667,
+    "n": 3
+   },
+   "unmeasured": false
+  },
+  "L2/46": {
+   "assumed_consumer_item_gpu_s": 3.1140833333333333,
+   "assumed_reference_item_gpu_s": 9.34225,
+   "consumer_item_gpu_s_measured": {
+    "max": 3.1140833333333333,
+    "median": 1.7040833333333334,
+    "n": 3
+   },
+   "consumer_items": 12,
+   "gpu_s": 65.39574999999999,
+   "kernels": 4,
+   "reference_item_gpu_s_measured": {
+    "max": null,
+    "n": 0
+   },
+   "unmeasured": false
+  },
+  "L2/52": {
+   "assumed_consumer_item_gpu_s": 5.0112499999999995,
+   "assumed_reference_item_gpu_s": 15.033749999999998,
+   "consumer_item_gpu_s_measured": {
+    "max": null,
+    "median": null,
+    "n": 0
+   },
+   "consumer_items": 9,
+   "gpu_s": 90.20249999999999,
+   "kernels": 3,
+   "reference_item_gpu_s_measured": {
+    "max": null,
+    "n": 0
+   },
+   "unmeasured": true
+  },
+  "L2/59": {
+   "assumed_consumer_item_gpu_s": 21.333333333333332,
+   "assumed_reference_item_gpu_s": 23.217000007629395,
+   "consumer_item_gpu_s_measured": {
+    "max": 2.9796666666666667,
+    "median": 1.4740833333333334,
+    "n": 9
+   },
+   "consumer_items": 15,
+   "gpu_s": 389.6510000228882,
+   "kernels": 5,
+   "reference_item_gpu_s_measured": {
+    "max": 23.217000007629395,
+    "n": 4
+   },
+   "unmeasured": false
+  },
+  "L2/60": {
+   "assumed_consumer_item_gpu_s": 5.0112499999999995,
+   "assumed_reference_item_gpu_s": 15.033749999999998,
+   "consumer_item_gpu_s_measured": {
+    "max": null,
+    "median": null,
+    "n": 0
+   },
+   "consumer_items": 9,
+   "gpu_s": 90.20249999999999,
+   "kernels": 3,
+   "reference_item_gpu_s_measured": {
+    "max": null,
+    "n": 0
+   },
+   "unmeasured": true
+  },
+  "L2/77": {
+   "assumed_consumer_item_gpu_s": 2.7763333333333335,
+   "assumed_reference_item_gpu_s": 2.5204166666666667,
+   "consumer_item_gpu_s_measured": {
+    "max": 2.7763333333333335,
+    "median": 1.6729166666666666,
+    "n": 12
+   },
+   "consumer_items": 12,
+   "gpu_s": 40.877250000000004,
+   "kernels": 4,
+   "reference_item_gpu_s_measured": {
+    "max": 2.5204166666666667,
+    "n": 6
+   },
+   "unmeasured": false
+  },
+  "L2/87": {
+   "assumed_consumer_item_gpu_s": 4.2515833333333335,
+   "assumed_reference_item_gpu_s": 3.466583333333333,
+   "consumer_item_gpu_s_measured": {
+    "max": 4.2515833333333335,
+    "median": 1.1438333333333335,
+    "n": 9
+   },
+   "consumer_items": 12,
+   "gpu_s": 61.41875,
+   "kernels": 4,
+   "reference_item_gpu_s_measured": {
+    "max": 3.466583333333333,
+    "n": 3
+   },
+   "unmeasured": false
+  },
+  "L2/95": {
+   "assumed_consumer_item_gpu_s": 1.4461666666666666,
+   "assumed_reference_item_gpu_s": 3.1707166524848556,
+   "consumer_item_gpu_s_measured": {
+    "max": 1.4461666666666666,
+    "median": 1.1105999968991132,
+    "n": 12
+   },
+   "consumer_items": 15,
+   "gpu_s": 31.204649957454563,
+   "kernels": 5,
+   "reference_item_gpu_s_measured": {
+    "max": 3.1707166524848556,
+    "n": 6
+   },
+   "unmeasured": false
+  }
+ },
+ "schema": "q1-audit-metric-study/pilot-cost/1",
+ "total_gpu_hours": 0.2825864745651738,
+ "total_gpu_seconds": 1017.3113084346256,
+ "with_2x_safety_gpu_hours": 0.5651729491303475
+}

@@ -1640,3 +1640,44 @@ Append-only. Newest entries at the bottom.
   Records in `program/evidence/q2-mutation/integration/d38-recheck-fixes/`.
   No GPU, nothing pushed or frozen.
 - Next: Kevin's remaining items (section 17), re-merge main, freeze.
+
+## 2026-10-08 — Q1 audit-metric study under D41 (ii): F1 characterised, a replacement metric designed (branch `stage0/q1-audit-metric`, CPU only, not merged)
+
+- Scope: D41 (ii), on stored rows and CPU recomputation only; no GPU job, no
+  evaluation unit (D28). Evidence and scripts in
+  `program/evidence/2026-10-08/q1-audit-metric-study/` (README is the report). The
+  draft registration is not edited.
+- Data: journals of jobs 474, 518, 548, 713 (`ddbfbbf6...`) and 752, copied from the
+  host. Kept 2,570 rows: S1-cal problems without an S2 substrate, plus 752's
+  adversarial controls on L1/1 as stored rows only. Dropped 1,908: all of 518/548
+  scoring, 518 and 474 smoke (evaluation units, S1-eval problems, or problems
+  hosting S2 units). CPU recomputation of 139 registered A1/A2/A3 draws on the 12
+  tier-1 problems (3.4 CPU-h): `torch.rand` inputs match 752's stored fingerprints
+  bitwise, and four batch-independent problems were evaluated on leading batch
+  slices.
+- F1: e(0) = 1/(1+kappa) and e(-r) = 2/(1+kappa) exactly. The TF32-admissible T
+  reaches 1 whenever the TF32 reference's error at a near-zero output exceeds about
+  kappa ||r||_inf / 16. That holds for every matmul or convolution with sign-mixed
+  weights (all L2 problems) and for the sign-mixed A2 draws of the L1 matmuls.
+  Stored inline rows: no admissible draw rejects zeros on L2/46, L2/52, L2/59 or
+  L2/60. On L2/77, L2/95 and L2/100 only one or two draws do, the latter two where
+  the device happened not to use TF32. L2/87 escapes only because cuDNN did not use
+  TF32. Strict fp32 is never vacuous but rejects 95 rows of correct cuDNN-TF32
+  kernels. Restricting the registered audit to determinate draws (zeros fail by 4x)
+  leaves six of eight L2 problems unauditable.
+- A CPU TF32 emulation (operands rounded to TF32, fp32 accumulation) reproduces the
+  stored device TF32 error: median ratio 0.996, 64 of 71 within 1.5x. The outlier is
+  L1/18, where cuBLAS is 3.6x the emulation. cuDNN TF32 rounds to nearest.
+- Candidates evaluated: registered e, M1 l2, M1 max-abs, M2 blockwise, M3 Higham
+  gauge and M6 gauge-floored e. The registered e, M6 and M3 stay vacuous or fragile:
+  520, 325 and 745 of 1,015 gross escapes under the RNE yardstick, and M3 breaks at
+  kinks and under BN plus pooling. Recommended: reject if rho_inf > 4 or
+  rho_block > 8 (strict: 4 and 16). The yardstick is device fp32, device TF32 and
+  emulated TF32-RNE, plus emulated truncation for `tl.dot` candidates, and a decoy
+  determinacy gate replaces the validity gate. On the 139 draws: 0 false rejects, 0
+  of 1,111 gross escapes, 0 indeterminate; residual escapes are faults within 3.1x
+  of TF32 noise.
+- Next (Kevin): D14's admissibility of truncation; an allowance for an S1-cal-only
+  GPU pilot of the rule (0.28 GPU-h, 0.20 for the 8 re-pilot problems, 0.57 with a
+  2x margin; pass rule in README section 5); then a new Stage 0 id and gauntlet.
+  F2 (cost) is unchanged. No GPU used; nothing pushed or merged.
