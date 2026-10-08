@@ -187,8 +187,10 @@ file equals it), so freezing the catalog fixes them.
   than two; A7, the restarts per accessibility call on the exact one-sided
   95% Poisson bound, its calls capped at the plan's 39,036; C1; C2's
   reading of L0-raw trials (main section 8, decision 34); C3's clean kills
-  (decision 36); C4; and the ladder's N* with the foreign-load abort and its
-  rerun cap.
+  (decision 36); C4; each control reading an earlier attempt by its own rule
+  (main design decision 45); and the ladder's N* with the foreign-load abort
+  and its rerun cap, a rung attempt without host snapshots not qualifying
+  but counting its trials.
 - **Lane** (`runner.py`, `driver.py`, `manifest.py`, the batch script and
   the submitter). Every campaign runs as a CPU-only Slurm job (decisions
   D12, D13). `manifest.py` admits an acceptance or scored-control campaign
@@ -262,6 +264,8 @@ later change to a file listed in section 1 (from `git log 29b056e..`):
 | `7653799` | `manifest.py`, `suite.py` | `manifest.py` refuses an A7 campaign under a repair attempt (main section 11); `suite.py`'s comment states what run 694 measured. Jobs 703-708 ran at this commit (executor addendum, section 9); 695-699, the same campaigns at `34f79e4`, were cancelled while booting when this change was made. |
 | `13ad91e` | `acceptance.py` | After the review of `13c6790`, before any freeze and with no scored data: A7 divides the restarts of every attempt by the accessibility calls of the counting attempts only, so cancelling a failing run and rerunning it cannot raise its chance of passing (main design decision 41), and refuses an attempt other than 1; an undelivered reset observation is charged to the first trial as a reason as well as an infrastructure type, and `restart_only` checks both, so a restart-only trial that also lost its reset observation is counted; a restart across the reset observation that left only its tree undelivered is excused on A4's terms (`reset_restart`, main section 6.1); the restart report names each hit trial's session and every session whose restarts hit no trial. `tests/test_q2_acceptance_analysis.py` drives each rule; the loader read runs 694 and 703-707 again with the same restart counts and restart-only trials. No file a campaign executes changed. |
 | `3ad255a` | `acceptance.py` | Decision D33, recorded in `program/decisions.md` before the freeze and with no scored data: A1-A3 and the ladder excuse a restart-only trial as A4 does; A1-A3 judge an entry on its counted repetitions and fail it on a second excused trial over both settings, every attempt and, in A1, both shuffles (`RESTART_LIMIT`, never FLAKY); a ladder rung does not qualify with more than two excused trials over its attempts (an aborted attempt aside), and excused trials' steps stay in the step p95; an earlier attempt's failed trials count only on the cells the criterion judges, less its excused ones (an outside-spec R cell's expected failure in an earlier A2 attempt had failed every rerun); A7 caps its calls at the plan's 39,036; each criterion's restart report lists its excused trials. `tests/test_q2_acceptance_analysis.py` drives each rule; the loader read runs 694 and 703-708 again (main section 20). No file a campaign executes changed. |
+| `a3ee335` | `acceptance.py` | After the review of the D33 pass, before any freeze and with no scored data (main section 21, design decision 45): C1-C3 counted every failed trial of an earlier attempt, so the by-design failures of C1's known-defect cells, C2's predicted set and each mutant's kills made any rerun of a C1-C3 campaign fail its control; each control now reads an earlier attempt by its own rule (C1: a known-defect cell that passed counts, its failures never; C2: an earlier failure counts only outside the predicted set, read by `c2_trial_pass`; C3: kills and equivalence from the counting attempt, earlier attempts reported, a cell the reference did not pass cleanly in any attempt cannot kill). A rung attempt with no host snapshots had been read as a foreign-load abort, dropping its gating failures and excused trials; only the two registered reasons abort now, and an attempt missing snapshots does not qualify, may be rerun and counts its trials (`snapshot_problems`). `tests/test_q2_acceptance_analysis.py` drives each case. No file a campaign executes changed. |
+| `c9b4771` | `acceptance.py` | Found while fixing the above: C4 read the counting A1 attempts only, though it judges the tap's stream, which A1 does not judge for an entry the probe observes; it now reads every attempt (main section 21). A test drives it. No file a campaign executes changed. |
 
 The probe change makes the no-action entry's screenshot start from a settled
 screen, the canary changes make the read-back report what the app holds, and
@@ -282,6 +286,8 @@ restart on the same terms, and closes A7 to cancel-and-rerun; it changes no
 trial verdict. `3ad255a` applies decision D33, which the owner took before
 the freeze on the exposure main section 18 stated, not on any scored
 outcome: it changes how A1-A3 and the ladder count a restart-only trial,
+never how a trial is judged. `a3ee335` and `c9b4771` answer the review of
+the D33 pass: they change how C1-C4 and a rung read an earlier attempt,
 never how a trial is judged. No scored campaign has run.
 
 ## 6. A decision before the freeze: guest-server restarts and A4
