@@ -1356,7 +1356,7 @@ row (the test fails otherwise), and the freeze pins them.
 | `infra/slurm/host-single-node/s1a-cpu.sbatch` | `3880d337ad5bb0dc3c0edfc39f41811028118ef574c75efb08faa023dc6dee33` |
 | `infra/slurm/host-single-node/fetch-model-cpu.sbatch` | `22685e5e4dc9f88cd9d6ba7aec7189a89500a4f80d2464b8df86e08e76e33c6d` |
 | `infra/q2-stage1/glmm/Dockerfile` | `e4a09458264a58a783ec91fed91b8e500c83a91c826fbaaa10b9ceb998df86b4` |
-| `experiments/manifests/q2-stage1/gpu-engine.template.yaml` | `7c42ef3c381744b96d9cc69d436874a7d159562b0740e9800a6693f8dac0c91f` |
+| `experiments/manifests/q2-stage1/gpu-engine.template.yaml` | `4b1140d53232db46f4a8be02e4f85b0e47fbdf87ce9f3a94a28b2e5fe789fe66` |
 | `scripts/q2_stage1_upstream_fixture.py` | `bea62922d74f09b559d0fd8a3a16387df4862a532a2c62ffc6697271bedb9e89` |
 | `tests/fixtures/q2_stage1/upstream_messages.json` | `0e10574ba44b4ae2e28b1c580faa80783060f5a16b013f360a10871d4198ba03` |
 
@@ -1469,6 +1469,7 @@ the fresh audit D49 (iv) requires.
 |---|---|---|---|
 | C1 | Transport failures in the checker scored as agent outcomes: OSWorld's `get_vm_file` swallows `TransportFailure` (155 of 173 result getters over the pool and dev tasks), postconfig steps swallow or re-wrap a `ConnectionError`, `is_transport_error` read only the top-level type, and nothing re-checked the guest server after evaluation | Fixed: every guest-bound request that raises is recorded; setup, `evaluate()` and the capture sweep end in a transport loss when any of theirs failed; the exception chain is read; the restart check runs again after the capture, and an identity check that cannot reach the server is a transport loss. Tests drive the real `LiveTask` against a guest that resets connections, with a stand-in package that follows the pinned code's error handling | 7.1, 7.2; `osworld_live.py`, `driver.py`, `design_diffs.md` |
 | C2 | Control characters in typed text (a `\r` from CRLF line ends, ESC, C1 controls) pass the IR, make the guest executor exit non-zero and were recorded as `executor_device` losses, re-queued and, under greedy decoding, lost again, counting toward DR0 | Fixed: a `type` action whose text holds a code point L0-fixed refuses is an `IRError` from model output, handled by the harness's unparseable-reply rule and counted in `ir_errors`; a test checks the rule equals the guest's `char_keysym` | 7.2; `agents.py`, `design_diffs.md` |
+| C4 | The pinned GPU-engine template declared `randomness_contract: deterministic` with `seeds: [42]`, which the docker submitter refuses once the `FILL_*` slots are filled, so no GPU half of a pair could be submitted | Fixed: `seeds: []` (the engine seed reaches vLLM through `plan.CARD_ENGINE_FLAGS`, `--seed 42`); hex fields quoted so YAML cannot read one as a number; a test fills the template for 9B, 4B and the anchor and passes it through the submitter's `validate_manifest` and `sbatch_argv` (`--gres=gpu:h100:1`, 32 CPUs, `--signal=B:USR1@180`, `--dependency=after:<VM job>`) | `gpu-engine.template.yaml` |
 
 Slots read TBD until the freeze: the status line; G0 item 1 (accepted attempt); item 10
 (frozen plan); section 4's executor row; section 6.2's constants; section 21's v2
