@@ -122,8 +122,104 @@ def test_v2_names_its_changes_from_v1_and_v1s_outcome():
     main = " ".join(PREREG.read_text(encoding="utf-8").split())
     assert "program/evidence/2026-10-08/q2-action-path-acceptance/" in main
     assert "not an a-priori prediction test" in main
-    assert "one unpredicted failure" in main and "verified real at the X event level" in main
+    assert "one unpredicted failure" in main
     assert "seed-45 shuffle" in main
+
+
+def _between(text: str, start: str, end: str) -> str:
+    assert text.count(start) == 1, start
+    part = text.split(start, 1)[1]
+    assert end in part, end
+    return " ".join(part.split(end, 1)[0].split())
+
+
+# Decision D42: v1's C2 failure is in the tap's record of a key event queued during the
+# shell's synchronous grab, and the shell received Super+d; D40 called it a transport defect.
+STALE_CAUSE = ("verified real", "real at the X event level", "real in the X event record")
+CORRECTED = ("queued during the shell's synchronous grab", "the shell received Super+d")
+
+
+def test_v1s_c2_failure_is_stated_as_the_taps_record_not_delivery():
+    """Sections 8 (C2), 24 (item 2) and 25 state the cause D42 corrected, and no part of the
+    three registrations or v2's prediction file calls the failure real at the X event level."""
+    prediction = ROOT / "harness/q2/action_path/l0_raw_prediction_v2.yaml"
+    for path in (*DOCS, prediction):
+        flat = " ".join(path.read_text(encoding="utf-8").split())
+        for stale in STALE_CAUSE:
+            assert stale not in flat, (path.name, stale)
+        # "genuine transport defect" may appear only as the D40 reading that D42 corrects.
+        for hit in re.finditer("genuine transport defect", flat):
+            assert "D40" in flat[max(0, hit.start() - 120) : hit.start()], (path.name, hit)
+    text = PREREG.read_text(encoding="utf-8")
+    parts = {
+        "section 8, C2": _between(text, "- **C2 (L0-raw failing set", "- **C3 (mutation score)"),
+        "section 24, item 2": _between(
+            text, "2. **C2 is a reproduction test", "3. **The manifest renderer"
+        ),
+        "section 25": _between(text, "- **The a-priori result.**", "- **Reported, not judged.**"),
+    }
+    for name, part in parts.items():
+        for phrase in CORRECTED:
+            assert phrase in part, (name, phrase)
+    assert "recorded in the XRecord stream" in parts["section 8, C2"]
+    assert "core state 0, without Mod4, in every repetition" in parts["section 8, C2"]
+    assert "Decision D42 corrects D40's statement" in parts["section 8, C2"]
+    assert "not the transport" in parts["section 8, C2"]
+    assert "decision D42 corrects D40's reading" in parts["section 25"]
+    item9 = _between(text, "9. **The cause D40 stated is corrected", "## 25.")
+    assert "D42 keeps items 1-4 as drafted" in item9 and "accepts the exposure" in item9
+    assert "changes no rule, number or frozen file" in item9
+    section26 = " ".join(text.split("## 26.", 1)[1].split())
+    assert "**What D42 decides, and what it leaves.**" in section26
+    assert "D42 accepts the exposure" in section26
+
+
+def test_the_correction_is_a_dated_decision_that_keeps_d40s_changes():
+    """D42 exists in the decision log, corrects D40's cause and keeps its changes, and D40
+    points to it; the registration cites the same decision."""
+    log = (ROOT / "program/decisions.md").read_text(encoding="utf-8")
+    d40 = " ".join(log.split("**D40. ", 1)[1].split("**D41. ", 1)[0].split())
+    assert "D42 corrects the cause stated here" in d40
+    head, d42 = log.split("**D42. ", 1)
+    assert head.rstrip().endswith("## 2026-10-08")
+    d42 = " ".join(d42.split("\n**D4", 1)[0].split())
+    for phrase in (
+        "D40's stated cause is corrected",
+        "XIGrabModeSync",
+        "the shell received Super+d",
+        "not in delivery",
+        "D40's three changes, and L0-raw's admission as a development layer at seed 42, "
+        "stand as drafted",
+        "v2 keeps the oracle's reading of events queued under a grab",
+        "never makes a trial pass",
+        "The remaining exposure is accepted",
+        "127 of 127",
+        "D40's author confirms or overrules it",
+    ):
+        assert phrase in d42, phrase
+    assert "genuine transport defect" not in d42.split("Corrected cause:", 1)[1]
+    assert "decision D42" in PREREG.read_text(encoding="utf-8")
+
+
+def test_shell_grabbed_chords_have_modifier_state_after_the_grab_key():
+    """Section 4.4 and D42: on the four chords GNOME Shell grabs, every reference event after
+    the grab-activating key has a modifier state that is not empty, so an event the tap
+    records with state 0 while it is queued under the grab can only fail its trial."""
+    reference = json.loads(
+        (ROOT / "harness/q2/action_path/rdev_reference.json").read_text(encoding="utf-8")
+    )["entries"]
+    grab_key = {
+        "chord_super_d": "Super_L",
+        "chord_alt_f4": "F4",
+        "chord_alt_tab": "Tab",
+        "chord_ctrl_alt_shift_r": "r",
+    }
+    for entry, key in grab_key.items():
+        events = reference[entry]["events"]
+        kinds = [(kind, keysym) for kind, keysym, _ in events]
+        first = kinds.index(("KeyPress", key))
+        after = events[first + 1 :]
+        assert after and all(state for _, _, state in after), (entry, after)
 
 
 CODE = {"ir.py", "vocab.py", "catalog.py", "rdev.py", "l0_raw.py", "volume.py"}

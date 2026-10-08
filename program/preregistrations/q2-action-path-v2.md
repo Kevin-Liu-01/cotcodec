@@ -16,7 +16,10 @@ No acceptance trial and no C2, C1 or C3 run may run before this row exists.
   a reproduction test on a new order seed (45), with v1's C2 reported as the
   a-priori result (section 25); and the manifest renderer takes the host run
   root as a parameter. Section 26 reports the development (seed 42) that
-  characterised v1's C2 failure. No v1 data enters a v2 verdict.
+  characterised v1's C2 failure: it is in the tap's record of a key event
+  queued during the shell's keyboard grab, not in the chord's delivery,
+  which corrects the cause D40 stated (decision D42, which changes no rule
+  and keeps D40's three changes). No v1 data enters a v2 verdict.
 - Question: Q2 (calibrated computer-use instrument), Stage 0b. Program kill
   criterion it implements: "No GPU episodes until the action-path suite passes
   100%" (`program/questions/q2-calibrated-cua-instrument.md`), read here as
@@ -301,12 +304,16 @@ keyboard switches between the PS/2 and the XTest device, in XKB's
 four-column core form. Otherwise the range is unverified (section 6.1).
 
 Development for v2 found one limit of this channel (section 26), which no
-rule here changes (decision D40): a device event that arrives while a
+rule here changes (decisions D40 and D42): a device event that arrives while a
 synchronous grab has frozen the keyboard (GNOME Shell grabs its overlay key
 and every keybinding that way) is recorded when the X server queues it,
 before its state is computed, so its core state reads 0; the server delivers
 it later from the queue with its state, and RECORD does not report it again.
-Such an event is recorded in the order it arrived.
+Such an event is recorded in the order it arrived. On the catalog's four
+shell-grabbed chords every event after the grab-activating key has a
+reference modifier state that is not empty, so an event recorded this way
+always fails its trial: the limit can fail a trial whose chord was
+delivered, and never makes a trial pass (decision D42).
 
 ### 4.5 Certified keysyms
 
@@ -703,13 +710,19 @@ Each control is scored once, at the point named, and only on frozen code.
   L0-raw trial existed. `chord_super_d` is not predicted a priori: v1
   predicted it to pass, it failed 5 of 5 in v1's C2 (job 768), and v2 lists
   it as a failure because of that run, with its mechanism (a synchronous
-  shell keyboard grab on a Super chord sent without key holds; the prediction
+  shell keyboard grab on a Super chord sent without key holds, during which
+  the tap records the queued `d` press without its state; the prediction
   file and section 26). **In v2, C2 is therefore a reproduction test of the
   L0-raw failing set on a new order seed, not an a-priori prediction test.**
   The a-priori result is v1's: one unpredicted failure, `chord_super_d`,
-  verified real at the X event level (the XRecord stream shows its `d` press
-  without Mod4 in every repetition), and every other entry as predicted
-  (section 25). Section 26 adds what development found about that failure.
+  recorded in the XRecord stream (the tap's `d` press has core state 0,
+  without Mod4, in every repetition), and every other entry as predicted
+  (section 25). Section 26 shows that this is how RECORD reports a key event
+  queued during the shell's synchronous grab, and that the shell received
+  Super+d: what failed is the oracle channel's record of a delivered chord
+  (section 4.4), not the transport. Decision D42 corrects D40's statement
+  that the failure was a genuine transport defect; it changes no rule, and
+  the entry stays a predicted failure because C2 judges the recorded stream.
   An entry fails unless it is PASS in 5 of 5 repetitions, where an L0-raw
   trial is judged on the event and text channels (design decision 34): it is
   PASS under section 5's conditions 1, 2, 4 and 5 and the infrastructure rule
@@ -2209,11 +2222,12 @@ the freeze, with no scored data (code in `acceptance.py`, with
 ## 24. Changes from v1 (D40)
 
 Decision D40 (`program/decisions.md`; D30, D33 and D39 carry over) makes v2 v1
-with three changes. Each change, and each file it touches, is listed here;
-every other rule, number and file is v1's (the frozen tables of the three v2
-registrations equal v1's except for the rows this section names, and
-`tests/test_q2_prereg_inputs.py` checks that). v1 itself (ledger rows 8-10) is
-unchanged.
+with three changes; decision D42 corrects the cause D40 stated for v1's C2
+failure and keeps the changes (item 9). Each change, and each file it
+touches, is listed here; every other rule, number and file is v1's (the
+frozen tables of the three v2 registrations equal v1's except for the rows
+this section names, and `tests/test_q2_prereg_inputs.py` checks that). v1
+itself (ledger rows 8-10) is unchanged.
 
 1. **The L0-raw prediction lists `chord_super_d` as a failure** (D40 i).
    `harness/q2/action_path/l0_raw_prediction_v2.yaml` is v1's prediction file
@@ -2231,8 +2245,12 @@ unchanged.
    file).
 2. **C2 is a reproduction test on its own order seed** (D40 ii). Section 8
    states that v2's C2 is not an a-priori prediction test and reports v1's C2
-   as the a-priori result (one unpredicted failure, verified real at the X
-   event level; section 25), and section 12 reports v1's result beside v2's.
+   as the a-priori result (one unpredicted failure, `chord_super_d`, recorded
+   in the XRecord stream with its `d` press at core state 0, without Mod4, in
+   every repetition; section 25), and section 12 reports v1's result beside
+   v2's. Section 26 shows that this is how RECORD reports a key event queued
+   during the shell's synchronous grab, and that the shell received Super+d
+   (item 9).
    C2 runs the 100 entries in the seed-45 shuffle, an order seed no v1
    campaign and no development run used (section 10): v1's C2 ran seed 42,
    whose order v1's development also used. Code: `order.py` adds
@@ -2271,7 +2289,8 @@ unchanged.
 6. **Text added without a rule change.** Section 4.4 states the limit of the
    XRecord channel that development found (section 26), design decision 31
    notes what runs 549 and 574 show when reread, and design decisions 14, 26
-   and 45 name v2. The oracle, the C2 judging rule (design decision 34) and
+   and 45 name v2. Sections 4.4, 8, 25 and 26 and item 2 state the corrected
+   cause (item 9). The oracle, the C2 judging rule (design decision 34) and
    every other criterion are unchanged.
 7. **Frozen tables.** Rows that differ from v1's: here,
    `l0_raw_prediction_v2.yaml` (added); in the inputs addendum, `order.py`,
@@ -2289,6 +2308,18 @@ unchanged.
    9 sessions); and v1's development evidence, which v2 keeps. No v1 data
    enters a v2 verdict: v2's C2, C1, C3 and A1-A7 run afresh from v2's frozen
    code.
+9. **The cause D40 stated is corrected; the changes stand** (decision D42).
+   D40 read the X event record as showing a real press-state loss, and so a
+   genuine transport defect. Section 26 shows that the shell received
+   Super+d and that the tap recorded the queued `d` press before the X
+   server computed its state: the failure is in the oracle channel's record,
+   not in delivery, and v1's a-priori prediction (pass) was right about
+   delivery and wrong about the record C2 judges. D42 keeps items 1-4 as
+   drafted, keeps the oracle's reading of events queued under a grab in v2
+   (on the catalog's shell-grabbed chords it can fail a delivered chord and
+   never makes a trial pass; section 4.4), and accepts the exposure section
+   26 states for L0-fixed. It changes no rule, number or frozen file; whether
+   a later registration should read such events differently is Kevin's.
 
 ## 25. v1's outcome (C2, job 768)
 
@@ -2311,13 +2342,17 @@ Evidence: `program/evidence/2026-10-08/q2-action-path-acceptance/` (README,
   C3 and A1-A7 did not run, and no v1 campaign will.
 - **The a-priori result.** This is the only a-priori test of the L0-raw
   prediction: one unpredicted failure, `chord_super_d` (predicted to pass
-  because `'winleft'` maps to Super_L), in 5 of 5 repetitions. It was verified
-  real at the X event level: in every repetition the tap recorded the right
-  four key events on the right keycodes, and recorded the `d` press, 0 to 1 ms
+  because `'winleft'` maps to Super_L), in 5 of 5 repetitions. The failure is
+  in the tap's record: in every repetition the tap recorded the right four
+  key events on the right keycodes, and recorded the `d` press, 0 to 1 ms
   after the Super_L press (server time), with core state 0, without Mod4 (and
   without Mod2, the NumLock bit the Super_L press carried), where the R-dev
-  reference has Mod4; C2 compares key presses with their state. (Section 26
-  adds what development found: the shell still received Super+d.) An
+  reference has Mod4; C2 compares key presses with their state. Section 26
+  shows that this is how RECORD reports a key event queued during the
+  shell's synchronous grab, and that the shell received Super+d: the chord
+  was delivered, so v1's prediction was right about delivery and wrong about
+  the record C2 judges, and decision D42 corrects D40's reading of it as a
+  genuine transport defect. v1's verdict stands as its section 8 gives it. An
   independent verifier reproduced the verdict byte for byte from the frozen
   code and the raw records. `chord_super_d` was never a session's first trial,
   and every session ran the keyboard warm-up.
@@ -2332,8 +2367,9 @@ Evidence: `program/evidence/2026-10-08/q2-action-path-acceptance/` (README,
 
 ## 26. Development characterisation of v1's C2 failure (seed 42, D40)
 
-Development evidence only. It changes no rule (decision D40): it informs the
-mechanism text of `chord_super_d` in `l0_raw_prediction_v2.yaml`, and it is
+Development evidence only. It changes no rule (decisions D40 and D42): it
+informs the mechanism text of `chord_super_d` in `l0_raw_prediction_v2.yaml`
+and the correction of D40's stated cause that D42 records, and it is
 reported with v2's C2. Summaries, the scripts that made them and each run's
 records: `program/evidence/2026-10-08/q2-action-path-v2-development/`; the
 manifests: `experiments/manifests/q2-action-path-v2/`.
@@ -2395,9 +2431,10 @@ screenshot) in 15 of 15 trials (jobs 768 and 784), exactly as under L0-fixed
 in 30 of 30 (jobs 785-787), where the `d` press carries Mod4. Had the shell
 received `d` without Mod4, it would have found no keybinding and replayed `d`
 to the probe, which logs every key it receives. So the press-state loss that
-decision D40 records is real in the X event record and is not a loss on the
-way to the shell: the chord was delivered, and C2 failed on what the tap
-records for an event queued during the shell's grab. (For Alt+Tab and
+decision D40 read as a genuine transport defect is in the X event record
+only, not on the way to the shell: the chord was delivered, and C2 failed on
+what the tap records for an event queued during the shell's grab (decision
+D42 corrects D40's stated cause accordingly). (For Alt+Tab and
 Ctrl+Alt+Shift+R the shell's response does differ between the executors: under
 L0-raw the releases arrive before the window switcher or the screen recorder
 takes its own grab, so the probe saw one more key release. C2 leaves release
@@ -2442,14 +2479,21 @@ when `chord_super_d` was not a session's first key event (0 of 109; one-sided
 at the 2.3% bound A1's 20 `chord_super_d` trials would meet one with
 probability up to 0.38 and A4's 276 almost surely, and at the observed rate
 (none) neither would. A slow answer would fail an L0-fixed trial whose chord
-the shell received correctly, and the failure would count; D40 keeps that: A1
-tests L0-fixed on `chord_super_d` as registered. Only `chord_super_d` sends a
-key that soon after a grab activates: the other shell chords release their
-keys 0.1 s after the key that activates the grab, and passed 30 of 30 each in
-jobs 785-787.
+the shell received correctly, and the failure would count; D40 keeps that and
+D42 accepts the exposure: A1, A2, A4 and the ladder test the L0-fixed path on
+`chord_super_d` as registered. Such a failure would fail its criterion and
+call for a repair attempt (section 11); it could never make a criterion pass.
+Its report says whether the failed trial shows this signature (the `d` press
+recorded with state 0 and without Mod2, no key at the probe, the probe
+unfocused). Only `chord_super_d` sends a key that soon after a grab
+activates: the other shell chords release their keys 0.1 s after the key
+that activates the grab, and passed 30 of 30 each in jobs 785-787.
 
-**What this does not decide.** Whether the oracle should read a key event
-queued during a shell grab differently (its recorded state is not the state
-the server delivered) is not decided here: D40 keeps the oracle and C2's rule,
-and the question goes to the owner (`program/state.json`, pending decisions).
-The answer could only enter a later registration.
+**What D42 decides, and what it leaves.** D40 keeps the oracle and C2's
+rule; D42 corrects D40's stated cause, keeps the oracle's reading of events
+queued under a grab in v2 (on the catalog's shell-grabbed chords it can fail
+a delivered chord and never makes a trial pass; section 4.4) and accepts the
+exposure above. Whether a later registration should read a key event queued
+during a shell grab differently (its recorded state is not the state the
+server delivered) is Kevin's (`program/state.json`, pending decisions); the
+answer could only enter a later registration.

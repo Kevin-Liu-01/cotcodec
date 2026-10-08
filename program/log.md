@@ -1681,3 +1681,36 @@ Append-only. Newest entries at the bottom.
   unchanged. Q2 tests pass locally (603 passed, 1 skipped) and the full
   suite on the host from a fresh scratch directory (2210 passed, 38
   skipped). Nothing frozen, pushed or merged to main. No GPU.
+
+## 2026-10-08 — Q2 action path v2: D40's stated cause corrected (D42), review fixes
+
+- Review blocker 1: v2's main registration said in section 8 (C2), section
+  24 item 2 and section 25 that v1's C2 failure was "verified real at the X
+  event level", which its own sections 4.4 and 26 contradict. Those three
+  places now say what was recorded (the tap's `d` press at core state 0,
+  without Mod4, in every repetition) and that section 26 shows this is how
+  RECORD reports a key event queued during the shell's synchronous grab,
+  and that the shell received Super+d. Section 24 gains item 9, section 26's
+  closing paragraph says what D42 decides and leaves, and section 4.4 says
+  why the limit can fail a delivered chord and never makes a trial pass (on
+  the four shell-grabbed chords every reference event after the
+  grab-activating key has a modifier state that is not empty). No rule,
+  number or frozen file changed; every pinned digest is unchanged, and the
+  main file's own digest (its ledger row at the freeze) is new.
+- Review blocker 2: D40's premise ("a genuine transport defect") is
+  contradicted by the branch's evidence. D42, recorded on this branch under
+  a new 2026-10-08 heading, states the corrected cause and decides that
+  D40's three changes and L0-raw's development admission stand, that v2
+  keeps the oracle's reading of events queued under a grab, and that the
+  remaining L0-fixed exposure (127/127, 2.3% bound per trial; A1, A2, A4 and
+  the ladder) is accepted, with reasons and a reversal; D40 carries a
+  pointer to it. D40's author confirms or overrules D42 at the merge, and v2
+  is not frozen before then. HANDOFF's v1 row no longer says the loss is
+  real at the X event level; `state.json` and the pending decision for
+  Kevin now name D42 and leave him the later-registration question.
+- Tests: `tests/test_q2_prereg_inputs.py` checks the corrected wording in
+  sections 8, 24 and 25, that no v2 registration or the v2 prediction file
+  calls the failure real at the X event level, that D42 exists, keeps D40's
+  changes and is cited, and that the four shell-grabbed chords' reference
+  states after the grab key are never empty. No VM job, no GPU, nothing
+  frozen, pushed or merged to main.
