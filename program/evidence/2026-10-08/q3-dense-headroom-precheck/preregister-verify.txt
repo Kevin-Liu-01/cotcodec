@@ -1,0 +1,37 @@
+## preregister verify 2026-10-08T03:46:24Z HEAD=a369e6d2265fd2f4bbb85d4483a240289a7eaee1
+Using CPython 3.14.6
+Creating virtual environment at: .venv
+Installed 50 packages in 54ms
+{
+  "experiment_id": "q3-dense-headroom-precheck-v1",
+  "frozen_at": "2026-10-08T03:29:46.706876+00:00",
+  "git_head_at_freeze": "c2768e17de6f7115925634920014fe91557c9bf7",
+  "hash": "0533bf7f73a8d6785b2cc57edbf15f68e2087b517e6e79dc986f787ad391c708",
+  "path": "program/preregistrations/q3-dense-headroom-precheck-v1.md",
+  "previous_hash": "c9b45f00bb607b0fcf761cc831ab44779ae7aabd16dab5f0ef2617b2c207790d",
+  "sha256": "94520a997df8eef7a90f313881744a964cf74359f238e1dd1b1bca31546a3efb"
+}
+verify_exit=0
+{"rows": 7, "status": "PASS"}
+check_chain_exit=0
+94520a997df8eef7a90f313881744a964cf74359f238e1dd1b1bca31546a3efb  program/preregistrations/q3-dense-headroom-precheck-v1.md
+## tabled digests
+scripts/run_dense_headroom_precheck.py: OK
+harness/dense_headroom_data.py: OK
+harness/dense_headroom_stats.py: OK
+harness/dense_headroom_torch.py: OK
+scripts/run_dense_headroom_precheck_doctor.py: OK
+scripts/fill_dense_headroom_precheck_manifests.py: OK
+scripts/summarise_dense_headroom_precheck.py: OK
+scripts/preregister.py: OK
+experiments/manifests/q3-dense-headroom-precheck-v1/q3-dense-headroom-0p6b.yaml: OK
+experiments/manifests/q3-dense-headroom-precheck-v1/q3-dense-headroom-4b.yaml: OK
+harness/sparse_indexer_torch.py: OK
+harness/sparse_indexer_bank.py: OK
+harness/sparse_indexer_k1_runtime.py: OK
+harness/sparse_indexer_k1_marker.py: OK
+harness/sparse_indexer_k1_stats.py: OK
+harness/sparse_indexer_data.py: OK
+harness/translation_supervised_indexer.py: OK
+digest_check_exit=0
+porcelain_lines=0

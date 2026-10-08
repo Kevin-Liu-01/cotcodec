@@ -1,0 +1,20 @@
+Job 730 (Qwen3.5-4B-Base lane): read-only observations of its run directory and the host during the run (UTC). Descriptive only.
+
+Start-up: job.env started_at 04:29:44Z; dense-precheck/checkpoints/dev-artifact.sha256 written 04:30:02Z (artifact derived,
+re-tokenized), dense-precheck/cache/triton created 04:30:07Z.
+
+Stage A-main chunk files (16 units each; stage A has 28 chunks, 440 units; the lane has 73 chunks, 1,160 units), by mtime:
+  04:31:59 04:33:02 04:34:00 04:35:06 04:36:04 04:37:10 04:38:17 04:39:25 04:40:32
+  04:41:33 04:42:31 04:43:20 04:44:19 04:45:19 04:46:02 04:47:18 04:48:19 04:49:23
+  18 chunks (288 of 440 stage-A units; 288 of 1,160 units), about 61 s per chunk after the first. No B, C or D chunk.
+  Stage A alone would have needed about 28.5 minutes from 04:31Z; the job's useful window (limit minus the 3-minute SIGUSR1 lead)
+  was 18 minutes.
+
+Signal: Slurm's SIGUSR1 (--signal=B:USR1@180) was due at about 04:47:43Z (time left 1,259 s at 04:29:44Z). Chunks were still written
+  at 04:48:19Z and 04:49:23Z, after it; the entry point checks its signal flag before it starts each chunk, so the flag was not set
+  at the two chunk boundaries that followed those saves (both after the signal). No receipt-interrupted.json and no checkpoint.ready were written. termination.env:
+  reason=signal_USR1_checkpoint_timeout, exit_code=137, container_killed_by=hard_stop at 04:50:13Z. Why the workload did not see the
+  signal was not investigated (outside the registration); see the README.
+
+Host samples at 04:38-04:39Z: GPU 0 utilisation 0 % in 10 samples 2 s apart (10.9 GB resident); the job's python process at 94-98 %
+  of one CPU core (34 threads).
