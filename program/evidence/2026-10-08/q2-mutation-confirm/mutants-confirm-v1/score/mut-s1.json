@@ -1,0 +1,6 @@
+{
+ "candidates": [],
+ "confirmed": [],
+ "rule": "verdicts differ between venvs and 5 fresh-process scorings agree within each venv",
+ "unstable": []
+}

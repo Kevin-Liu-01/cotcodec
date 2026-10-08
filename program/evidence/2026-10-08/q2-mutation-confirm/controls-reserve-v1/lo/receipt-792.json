@@ -1,0 +1,15 @@
+{
+  "job_id": "792",
+  "mode": "run",
+  "image_id": "sha256:f5b4c40eefd2b92f846652910ba34db35e1ae7bf90fa474595cc745cc5895361",
+  "argv_json_hex_sha256": "a3ad07a44d063cac45d472d4f67d3e43422f5dbb7cc41af4f8b643681edb698e",
+  "argv_json_hex": "5b227368222c20222d63222c20222f7372632f696e6672612f71322d6d75746174696f6e2f72756e2f72656163682e7368202f726f2f7261772f6a6f62732e6a736f6e6c202f6f7574203136225d",
+  "mounts": "/home/kevin/cotcodec-runs/stage0/q2-evaluator-mutation/src/65bc2e2bf7bbe4027e6751ff22840ecdf8e40fa1:/src:ro /home/kevin/cotcodec-runs/stage0/q2-evaluator-mutation/runs/reserve-controls-v1/lo:/out:rw /home/kevin/cotcodec-runs/stage0/q2-evaluator-mutation/inputs:/inputs:ro /home/kevin/cotcodec-runs/stage0/q2-evaluator-mutation/runs/reserve-controls-v1/raw:/ro/raw:ro",
+  "network": "none",
+  "gpus_requested": 0,
+  "container_dev_nvidia": [],
+  "batch_sha256": "f97d3af96418fb4fa806f39456e4117f306cbf04b14e08533d77a95349b37443",
+  "exit_status": 0,
+  "started_at": "2026-10-08T08:55:54Z",
+  "finished_at": "2026-10-08T08:56:34Z"
+}

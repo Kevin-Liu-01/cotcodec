@@ -1,0 +1,103 @@
+{
+ "aggregate": {
+  "dependency_flips": [],
+  "excluded_unemulated": [
+   "2373b66a-092d-44cb-bfd7-82e86e7a3b4d",
+   "734d6579-c07d-47a8-9ae2-13339795476b",
+   "82e3c869-49f6-4305-a7ce-f3e64a0618e7",
+   "d16c99dc-2a1e-46f2-b350-d97c86c85c15",
+   "f723c744-e62c-4ae6-98d1-750d3cd7d79d"
+  ],
+  "lock": {
+   "do_nothing_saved_passes": 0,
+   "gold_fixed_point_flip_clopper_pearson95": [
+    0.0010121996993108784,
+    0.20351691392241394
+   ],
+   "gold_fixed_point_flips": 1,
+   "gold_fixed_point_n": 25,
+   "gold_fixed_point_not_counted": [],
+   "gold_fixed_point_not_exposed": [
+    "0ed39f63-6049-43d4-ba4d-5fa2fe04a951",
+    "3aaa4e37-dc91-482e-99af-132a612d40f3",
+    "4bcb1253-a636-4df4-8cb0-a35c04dfef31",
+    "8f080098-ddb1-424c-b438-4e96e5e4786e",
+    "91190194-f406-4cd6-b3f9-c43fac942b22",
+    "d68204bf-11c1-4b13-b48b-d303c73d4bf6",
+    "f918266a-b3e0-4914-865d-4faa564f1aef"
+   ],
+   "gold_raw_verdicts": {
+    "fail": 1,
+    "pass": 31
+   },
+   "gold_save_failed": [],
+   "gold_saved_verdicts": {
+    "fail": 2,
+    "pass": 23
+   },
+   "k1_gold_pass_and_do_nothing_fail": "31/32",
+   "k1_infra_excluded": 0,
+   "tasks_with_gold": 32,
+   "tasks_with_initial": 48
+  },
+  "s1": {
+   "raw": {
+    "candidates": [],
+    "confirmed": [],
+    "rule": "verdicts differ between venvs and 5 fresh-process scorings agree within each venv",
+    "unstable": []
+   },
+   "saved": {
+    "candidates": [],
+    "confirmed": [],
+    "rule": "verdicts differ between venvs and 5 fresh-process scorings agree within each venv",
+    "unstable": []
+   }
+  },
+  "s5_unstable_at_repeat_5": [],
+  "save_infra_errors": [],
+  "saves": {
+   "changed_bytes": 52,
+   "n": 52,
+   "slower_than_0_5s": 0,
+   "with_dialog": 0,
+   "written": 52
+  },
+  "scout": {
+   "do_nothing_saved_passes": 0,
+   "gold_fixed_point_flip_clopper_pearson95": [
+    0.0010121996993108784,
+    0.20351691392241394
+   ],
+   "gold_fixed_point_flips": 1,
+   "gold_fixed_point_n": 25,
+   "gold_fixed_point_not_counted": [],
+   "gold_fixed_point_not_exposed": [
+    "0ed39f63-6049-43d4-ba4d-5fa2fe04a951",
+    "3aaa4e37-dc91-482e-99af-132a612d40f3",
+    "4bcb1253-a636-4df4-8cb0-a35c04dfef31",
+    "8f080098-ddb1-424c-b438-4e96e5e4786e",
+    "91190194-f406-4cd6-b3f9-c43fac942b22",
+    "d68204bf-11c1-4b13-b48b-d303c73d4bf6",
+    "f918266a-b3e0-4914-865d-4faa564f1aef"
+   ],
+   "gold_raw_verdicts": {
+    "fail": 1,
+    "pass": 31
+   },
+   "gold_save_failed": [],
+   "gold_saved_verdicts": {
+    "fail": 2,
+    "pass": 23
+   },
+   "k1_gold_pass_and_do_nothing_fail": "31/32",
+   "k1_infra_excluded": 0,
+   "tasks_with_gold": 32,
+   "tasks_with_initial": 48
+  },
+  "venv_differences_from_nondeterministic_checkers": []
+ },
+ "source": "runs/reserve-controls-v1/summary.json (harness.q2_mutation.report at 65bc2e2; held on the host)",
+ "summary_sha256": "1da426424339678c35847380f63ba9bae9983cc4a88beaed19171b118c55bb9b",
+ "tasks": 53
+}
