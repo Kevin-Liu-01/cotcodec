@@ -38,13 +38,16 @@ honest exit: all three refuters refuted, query budget spent).
   v1's C2 failure is in the tap's record, not in delivery (D43 corrects the
   cause D40 and the v1 row above state): GNOME Shell grabs Super_L
   synchronously, the next key is queued and RECORD reports it with state 0,
-  while the shell still shows the desktop. D43 has v2's judge treat the
-  modifier state of a key event recorded without the guard-guaranteed lock
-  bits as unobservable (kind, keycode, keysym and order still judged); its
-  implementation and seed-42 development (positive and negative cases) are
-  on the branch, then review, freeze, and run C2, C1, C3, A1-A6, the ladder on
-  a quiet host (no other Slurm job may start during a rung), A4 and A7 (about
-  98 VM-hours, CPU only).
+  while the shell still shows the desktop. D43 is implemented at `126ff8b`
+  (v2 section 27): the judge reads a key event the tap recorded without the
+  guard-guaranteed Mod2 (Num Lock) on kind, keycode, keysym and order only,
+  and the guard now checks Mod2 (condition f); C2's prediction keeps v1's
+  failing set. Development at `126ff8b` (jobs 830-839, 2.4 VM-h, CPU only)
+  passed the shell chords under L0-raw, failed all 140 chords with a dropped
+  modifier, and repeated v1's final runs 703-708 with the same outcomes.
+  Next: review D43's implementation, then freeze v2, `-inputs`, `-executor`
+  and run C2, C1, C3, A1-A6, the ladder on a quiet host (no other Slurm job
+  may start during a rung), A4 and A7 (about 98 VM-hours, CPU only).
 - **Q2 checker mutation** (D34, D35, D38): the study is now a descriptive
   protocol (development kappa 0.066 registered, 0.575 relay-excepted, below
   0.6, so P2-P5 left the confirmatory headline). Ninth draft re-checked at 90;

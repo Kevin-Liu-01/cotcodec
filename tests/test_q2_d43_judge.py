@@ -359,3 +359,87 @@ def test_the_fault_is_admitted_for_l0_fixed_development_only(tmp_path):
     manifest_mod.validate_manifest(scored, view)
     with pytest.raises(manifest_mod.ManifestError, match="unknown keys.*fault_drop_modifier"):
         manifest_mod.validate_manifest(acceptance_manifest(fault_drop_modifier="omit"), view)
+
+
+D43_DEV = _trials("trials-d43-dev.json")
+
+
+def _dev(job: str, cell: str | None = None) -> list[dict]:
+    return [r for r in D43_DEV if r["job"] == job and (cell is None or r["trial"]["cell"] == cell)]
+
+
+def test_d43_development_runs_judge_as_the_runner_did_at_the_development_commit():
+    """Jobs 830-833 ran at 126ff8b, whose judge is this one: every chord trial's recorded
+    verdict and C4 value is what the judge gives again from its records."""
+    assert len(D43_DEV) == 300
+    for row in D43_DEV:
+        new = _judge(row)
+        old = row["runner_verdict"]
+        assert (new["pass"], new["reasons"], new["state_not_observed"]) == (
+            old["pass"], old["reasons"], old["state_not_observed"],
+        )  # fmt: skip
+        assert new["c4"] == row["runner_c4"]
+
+
+def test_d43_l0_raw_shell_chords_pass_with_queued_events_and_l0_fixed_has_none():
+    """Job 830 (L0-raw): the four shell-grabbed chords pass 10 of 10, every event read without
+    its state comes after the grab key; the four ungrabbed chords pass with every state read.
+    Job 831 (L0-fixed, 8 VMs): every chord passes and no event is read without its state."""
+    for cell, key in SHELL_GRAB_KEY.items():
+        rows = _dev("830", cell)
+        assert len(rows) == 10
+        for row in rows:
+            verdict_ = row["runner_verdict"]
+            assert verdict_["pass"] and verdict_["state_not_observed"]
+            keys = _keys(row["window"])
+            presses = [_name(k) if k["kind"] == "KeyPress" else None for k in keys]
+            grab = presses.index(key)
+            assert all(i > grab for i in verdict_["state_not_observed"])
+            assert all(keys[i]["state"] == 0 for i in verdict_["state_not_observed"])
+    for cell in ("chord_ctrl_c", "chord_shift_tab", "chord_ctrl_shift_t", "chord_ctrl_alone"):
+        for row in _dev("830", cell):
+            assert row["runner_verdict"]["pass"]
+            assert row["runner_verdict"]["state_not_observed"] == []
+            assert all(k["state"] & MOD2 for k in _keys(row["window"]))
+    rows = _dev("831")
+    assert len(rows) == 80
+    assert all(r["runner_verdict"]["pass"] and not r["runner_verdict"]["state_not_observed"]
+               for r in rows)  # fmt: skip
+
+
+@pytest.mark.parametrize("job", ["832", "833"])
+def test_d43_negative_case_every_chord_with_a_dropped_modifier_fails(job):
+    """Jobs 832 (``omit``) and 833 (``release_first``): every chord, grabbed or not, fails in
+    10 of 10 trials, C4 disagrees, and no key event is read without its state: with the
+    modifier dropped the shell's grab never holds a key back."""
+    rows = _dev(job)
+    assert len(rows) == 70
+    assert {r["fault"] for r in rows} == {"omit" if job == "832" else "release_first"}
+    for row in rows:
+        verdict_ = row["runner_verdict"]
+        assert not verdict_["pass"] and verdict_["state_not_observed"] == []
+        assert row["runner_c4"] is False
+        assert all(k["state"] & MOD2 for k in _keys(row["window"]))
+    super_d = _dev(job, "chord_super_d")
+    if job == "832":
+        # The grab key is never pressed: `d` alone, processed with Mod2 and without Mod4.
+        for row in super_d:
+            assert [(k["kind"], _name(k), k["state"]) for k in _keys(row["window"])] == [
+                ("KeyPress", "d", MOD2), ("KeyRelease", "d", MOD2),
+            ]  # fmt: skip
+    else:
+        # Super_L pressed and released first: every event processed, the `d` press without
+        # Mod4, and the order differs from the reference.
+        for row in super_d:
+            keys = _keys(row["window"])
+            assert [(k["kind"], _name(k)) for k in keys] == [
+                ("KeyPress", "Super_L"), ("KeyRelease", "Super_L"),
+                ("KeyPress", "d"), ("KeyRelease", "d"),
+            ]  # fmt: skip
+            assert keys[2]["state"] == MOD2
+        # The ungrabbed chord: the `c` press is processed with Mod2 and without Control, so
+        # its state is judged (C4 fails on it as well as on the order).
+        for row in _dev(job, "chord_ctrl_c"):
+            press = next(k for k in _keys(row["window"])
+                         if k["kind"] == "KeyPress" and _name(k) == "c")  # fmt: skip
+            assert press["state"] == MOD2

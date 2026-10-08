@@ -153,3 +153,36 @@ def test_v2_development_manifests_are_seed_42_development():
         assert manifest["workload"]["trials"] == sum(len(s["trials"]) for s in plan)
         layers.append(manifest["workload"]["layer"])
     assert sorted(layers) == ["L0-fixed", "L0-fixed", "L0-fixed", "L0-raw"]
+
+
+def test_d43_development_manifests_are_seed_42_development_at_126ff8b():
+    """The ten D43 development runs (main section 27, jobs 830-839) as submitted: seed 42,
+    development, at 126ff8b; the two negative runs name the fault on L0-fixed; jobs 834-839
+    repeat v1's final runs 703-708 with their workloads and Slurm resources unchanged."""
+    import yaml
+
+    from harness.q2.vm.manifest import validate_manifest
+
+    folder = ROOT / "experiments/manifests/q2-action-path-v2"
+    manifests = {p.stem: yaml.safe_load(p.read_text(encoding="utf-8"))
+                 for p in sorted(folder.glob("d43-*.yaml"))}  # fmt: skip
+    assert len(manifests) == 10
+    for stem, manifest in manifests.items():
+        validate_manifest(manifest)
+        assert manifest["purpose"] == "development", stem
+        assert manifest["randomness"]["seeds"] == [42], stem
+        assert manifest["git_sha"].startswith("126ff8b"), stem
+        assert manifest["run_root"] == "/home/kevin/cotcodec-runs/q2-action-path-v2/dev/runs"
+    faults = {s: m["workload"].get("fault_drop_modifier") for s, m in manifests.items()}
+    assert {s: f for s, f in faults.items() if f} == {
+        "d43-drop-omit-v1": "omit", "d43-drop-release-first-v1": "release_first",
+    }  # fmt: skip
+    v1 = ROOT / "experiments/manifests/q2-action-path"
+    for stem, v1_stem in (
+        ("d43-l0-restart-v1", "dev-l0-restart-v3"), ("d43-l0-fixed-v1", "dev-l0-fixed-v14"),
+        ("d43-l0-fixed-n8-v1", "dev-l0-fixed-n8-v6"), ("d43-hosw-fixed-v1", "dev-hosw-fixed-v10"),
+        ("d43-hga-v1", "dev-hga-v10"), ("d43-canary-v1", "dev-canary-v12"),
+    ):  # fmt: skip
+        old = yaml.safe_load((v1 / f"{v1_stem}.yaml").read_text(encoding="utf-8"))
+        for key in ("workload", "slurm", "vm", "runner"):
+            assert manifests[stem][key] == old[key], (stem, key)

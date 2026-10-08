@@ -1,8 +1,9 @@
 """Q2 L0-raw control: the frozen translator and its predicted failing set (control C2).
 
 v1's prediction (``l0_raw_prediction.yaml``) is kept as frozen; v2's
-(``l0_raw_prediction_v2.yaml``, decision D40) is v1's with ``chord_super_d`` moved to the
-predicted failures, informed by v1's C2 run (job 768).
+(``l0_raw_prediction_v2.yaml``, decisions D40 and D43) has v1's failing set and predicted
+passes, with ``chord_super_d``'s reason replaced: it passes under D43's judge rule, which was
+decided after v1's C2 run (job 768), so the entry is disclosed as informed by that run.
 """
 
 from __future__ import annotations
@@ -73,9 +74,10 @@ def test_prediction_file_mirrors_the_translator(prediction):
 
 @pytest.mark.parametrize("version", sorted(PREDICTIONS))
 def test_predicted_failing_set_follows_the_stated_mechanisms(version, entries):
-    """v1: only non-ASCII text, KP_Enter and buttons 8/9 are predicted to fail. v2 adds the
-    one mechanism v1's C2 showed (decision D40): a chord whose first key is Super_L, the
-    shell's overlay key, sent by ``pyautogui.hotkey`` with no interval or hold."""
+    """Only non-ASCII text, KP_Enter and buttons 8/9 are predicted to fail, in v1 and v2. The
+    one mechanism v1's C2 showed (a chord whose first key is Super_L, the shell's overlay key,
+    sent by ``pyautogui.hotkey`` with no interval or hold) adds no failure in v2: decision D43
+    has the judge read the events the tap records queued under the grab without their state."""
     prediction = _load(version)
 
     # PyAutoGUI 0.9.54 knows every mapped name except 'kp_enter', and single characters.
@@ -91,9 +93,6 @@ def test_predicted_failing_set_follows_the_stated_mechanisms(version, entries):
             if any(len(name) > 1 and name not in known for name in names):
                 return True
             if action.button in (8, 9):
-                return True
-            chord = action.op == "key" and len(action.keys or ()) > 1
-            if version == "v2" and chord and action.keys[0] == "Super_L":
                 return True
         return False
 
@@ -133,26 +132,31 @@ def test_translation_details(entries):
         l0_raw.translate(parse_action({"op": "terminate", "status": "success"}))
 
 
-def test_v2_prediction_is_v1s_plus_chord_super_d():
-    """Decision D40: the only change is chord_super_d, a predicted failure informed by v1's
-    C2 run (job 768); the translator, names, basis and every other entry are v1's."""
+def test_v2_prediction_keeps_v1s_sets_and_discloses_chord_super_d():
+    """Decisions D40 and D43: v2's predicted sets are v1's; only chord_super_d's reason, the
+    status and three basis notes change, and the header discloses that the entry is informed
+    by v1's C2 run (job 768); the translator, names and every other entry are v1's."""
     v1, v2 = _load("v1"), _load("v2")
-    assert set(v2["predicted_fail"]) == set(v1["predicted_fail"]) | {"chord_super_d"}
-    assert "chord_super_d" in v1["predicted_pass_notable"]
-    assert set(v2["predicted_pass_notable"]) == set(v1["predicted_pass_notable"]) - {
-        "chord_super_d"
-    }
+    assert v2["predicted_fail"] == v1["predicted_fail"]
+    assert "chord_super_d" not in v2["predicted_fail"]
+    assert v2["predicted_pass_notable"] == v1["predicted_pass_notable"]
+    assert "chord_super_d" in v2["predicted_pass_notable"]
     for key in ("schema", "translation", "button_names", "key_names", "predicted_unsupported"):
         assert v2[key] == v1[key], key
-    assert {k: v for k, v in v2["basis"].items() if k not in ("v1_c2", "shell_grab")} == v1["basis"]
+    notes = ("v1_c2", "shell_grab", "d43_judge")
+    assert {k: v for k, v in v2["basis"].items() if k not in notes} == v1["basis"]
     assert {k: v for k, v in v2["reasons"].items() if k != "chord_super_d"} == {
         k: v for k, v in v1["reasons"].items() if k != "chord_super_d"
     }
     reason = " ".join(v2["reasons"]["chord_super_d"].split())
-    assert "Informed by v1's C2 (job 768)" in reason and "not a priori" in reason
+    assert "Informed by v1's C2 (job 768), decision D43" in reason and "not a priori" in reason
+    assert "without Mod2" in reason and "15 of 15" in reason
     assert "job 768" in v2["basis"]["v1_c2"] and "XIGrabModeSync" in v2["basis"]["shell_grab"]
+    assert "modifier_state_observable" in v2["basis"]["d43_judge"]
     header = (HERE / PREDICTIONS["v2"]).read_text(encoding="utf-8").split("schema:", 1)[0]
-    assert "NOT predicted a priori" in header and "reproduction test" in header
+    flat = " ".join(line.lstrip("# ") for line in header.splitlines())
+    assert "its reason is NOT a priori" in flat and "reproduction test" in flat
+    assert "Decision D43, taken after that run" in flat
 
 
 def test_c2_reads_v2s_prediction():
