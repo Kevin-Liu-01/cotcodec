@@ -954,8 +954,11 @@ Append-only. Newest entries at the bottom.
   10, 13, 15 and 17, the status note, state.json (Q2 pending decision and
   next action, D34 ledger outcome) and HANDOFF refreshed; review log added.
 - Checks: ruff clean; local Q2 tests 349 passed, 17 skipped; host full suite
-  and the freeze-lint against a scratch ledger copy recorded in
-  `program/evidence/q2-mutation/integration/d35-protocol/`. No GPU, nothing
-  pushed or frozen.
+  at `1e42036` (fresh scratch copy, `uv sync --locked --extra dev`): ruff
+  clean, 2085 passed, 34 skipped; freeze-lint into a scratch copy of the
+  ledger (equal to main's): freeze, verify and check-chain (8 rows) pass,
+  registration SHA-256 `fe94a301215626c84da4bca0db97c92b404341abcf669a73c679643e018de56b`.
+  Records in `program/evidence/q2-mutation/integration/d35-protocol/`. No
+  GPU, nothing pushed or frozen.
 - Next: a fresh review of the seventh draft, Kevin's sign-offs (section 17),
   re-merge main, freeze.
