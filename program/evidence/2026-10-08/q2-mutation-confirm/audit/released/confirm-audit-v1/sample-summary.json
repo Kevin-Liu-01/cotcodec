@@ -1,0 +1,80 @@
+{
+ "audit_scope": {
+  "capacity_items": 1139,
+  "cells": {
+   "alt_gate|compare_docx_files": {
+    "pool": 3,
+    "sampled": 3
+   },
+   "alt_gate|compare_table": {
+    "pool": 90,
+    "sampled": 90
+   },
+   "fn_equiv|compare_pptx_files": {
+    "pool": 35,
+    "sampled": 35
+   },
+   "fn_equiv|compare_pptx_files_tolerant": {
+    "pool": 1,
+    "sampled": 1
+   },
+   "fp_violation|compare_docx_files": {
+    "pool": 1,
+    "sampled": 1
+   },
+   "fp_violation|compare_pptx_files": {
+    "pool": 3,
+    "sampled": 3
+   },
+   "fp_violation|compare_pptx_files_tolerant": {
+    "pool": 1,
+    "sampled": 1
+   }
+  },
+  "census_items": 178,
+  "gpu_hours_cap": 3.0,
+  "items": 178,
+  "planned_gpu_hours": 0.5833,
+  "rule": "decision D35: every checker false-negative and false-positive candidate, P2's audit gate, the shams and every P1 flip; a seeded stratified sample over (stratum, checker family) only if that census exceeds the capacity",
+  "scope": "census"
+ },
+ "baseline_jobs": 33,
+ "baseline_sources": {
+  "control_save_stage": 11,
+  "mutation_save_stage": 167
+ },
+ "files_sha256": {
+  "baseline-jobs.jsonl": "72a491a549de6f02b3c4d7ff483b2cd8ffa0dea65f1ef10098225ae3d49170db",
+  "items.jsonl": "5a6e38c54a34f6476ea3a07ff3f00c381075db71d19ccaaef01da25dcdde253e",
+  "sample.jsonl": "2723e87926d33a2268c49b29886e2486280fe23532c5ffb353d34566970ea21d",
+  "spot-check.jsonl": "d55c21798d529d07bd7cec4d13dff4bf855969d8b8e2bc19af64b62cf74d62ff"
+ },
+ "p1_flip_tasks": [
+  "30e3e107-1cfb-46ee-a755-2cd080d7ba6a",
+  "3a7c8185-25c1-4941-bd7b-96e823c9f21f",
+  "9ec204e4-f0a3-42f8-8458-b772a6797cab",
+  "b8adbc24-cef2-4b15-99d5-ecbe7ff445eb"
+ ],
+ "pool": 444,
+ "pool_by_label": {
+  "should_fail_extra_change": 5,
+  "should_fail_violation": 91,
+  "should_pass_alt_solution": 93,
+  "should_pass_equiv": 255
+ },
+ "primary": "lock",
+ "salt_sha256": "194ee66ccc11f93c16bffdc7cf54d0b0f5398f35cbdb3541bb9d9d511c40451e",
+ "seed": 42,
+ "shams": {
+  "do_nothing": 7,
+  "gold": 33
+ },
+ "spot_check": 25,
+ "strata": {
+  "alt_gate": 93,
+  "fn_equiv": 36,
+  "fp_violation": 5,
+  "p1_flip": 4,
+  "sham": 40
+ }
+}

@@ -1,0 +1,33 @@
+{
+ "agent_count": 178,
+ "default_model": "claude-opus-5-5",
+ "duration_ms": 532930,
+ "journal_lines": {
+  "launched": 1,
+  "result": 178,
+  "started": 178
+ },
+ "journal_sha256": "bb12d4bd10d7e305967c427c12455b81842bd049b533134753cc149a3538d51e",
+ "labels": "rate:0 .. rate:177, each started once and each with one journal result",
+ "note": "the run's own record (ratings with reasons omitted here: reasons quote document text); the per-item answer files given to ingest-isolated hold {item_id, answer, reason} from the returned ratings, item_id_returned dropped after the equality check (it is not a registered answer key)",
+ "phases": [
+  "Rate"
+ ],
+ "record_timestamp_utc": "2026-10-08T11:36:55.858Z",
+ "resumed": false,
+ "returned": {
+  "answered": 178,
+  "item_id_returned_equals_item_id": 178,
+  "n": 178
+ },
+ "run_id": "wf_138e30b5-c1a",
+ "schema": "q2m-confirm-rating-run-v1",
+ "script_equals_file": true,
+ "script_file_sha256": "659040bf597ea0ef639e8e5f255b1e2c4d86db9194dbcc161f43f703fc1a4d5a",
+ "script_sha256": "659040bf597ea0ef639e8e5f255b1e2c4d86db9194dbcc161f43f703fc1a4d5a",
+ "start_time_utc": "2026-10-08T11:28:02Z",
+ "status": "completed",
+ "total_tokens": 21100472,
+ "total_tool_calls": 2319,
+ "workflow_name": "q2m-confirm-claude-raters"
+}

@@ -1,0 +1,57 @@
+{
+ "audit_confirmed_flips": {
+  "events": 0,
+  "high": 0.039303287739518036,
+  "low": 0.0,
+  "n": 92,
+  "share": 0.0
+ },
+ "confirmed_tasks": [],
+ "flip_tasks": [
+  "30e3e107-1cfb-46ee-a755-2cd080d7ba6a",
+  "3a7c8185-25c1-4941-bd7b-96e823c9f21f",
+  "9ec204e4-f0a3-42f8-8458-b772a6797cab",
+  "b8adbc24-cef2-4b15-99d5-ecbe7ff445eb"
+ ],
+ "not_counted": [],
+ "not_exposed": [
+  "09a37c51-e625-49f4-a514-20a773797a8a",
+  "0ed39f63-6049-43d4-ba4d-5fa2fe04a951",
+  "2fe4b718-3bd7-46ec-bdce-b184f5653624",
+  "3aaa4e37-dc91-482e-99af-132a612d40f3",
+  "455d3c66-7dc6-4537-a39a-36d3e9119df7",
+  "4bcb1253-a636-4df4-8cb0-a35c04dfef31",
+  "8df7e444-8e06-4f93-8a1a-c5c974269d82",
+  "8f080098-ddb1-424c-b438-4e96e5e4786e",
+  "91190194-f406-4cd6-b3f9-c43fac942b22",
+  "a503b07f-9119-456b-b75d-f5146737d24f",
+  "d68204bf-11c1-4b13-b48b-d303c73d4bf6",
+  "ec71221e-ac43-46f9-89b8-ee7d80f7e1c5",
+  "f918266a-b3e0-4914-865d-4faa564f1aef",
+  "fba2c100-79e8-42df-ae74-b592418d54f4"
+ ],
+ "raw_flips": {
+  "events": 4,
+  "high": 0.10759345090975891,
+  "low": 0.011971594171927391,
+  "n": 92,
+  "share": 0.043478260869565216
+ },
+ "role": "pre-specified replication of the scoping round trip (no confirmatory part)",
+ "runs": {
+  "confirm": {
+   "flips": [
+    "30e3e107-1cfb-46ee-a755-2cd080d7ba6a",
+    "9ec204e4-f0a3-42f8-8458-b772a6797cab",
+    "b8adbc24-cef2-4b15-99d5-ecbe7ff445eb"
+   ],
+   "n": 67
+  },
+  "reserve": {
+   "flips": [
+    "3a7c8185-25c1-4941-bd7b-96e823c9f21f"
+   ],
+   "n": 25
+  }
+ }
+}
