@@ -48,10 +48,23 @@ design decision 35 of action-path v2), so they are here. Upstream: H-OSW is OSWo
   answers 200 after more than 30 s is recorded (`slow_execute`) and is not a loss: the
   action-path suite counts it, but under S1a a long `type` is agent behaviour.
 * A checker metric that raises, or returns nothing or a value outside [0, 1], scores 0
-  (`metric_exception`); a getter that loses its transport to the guest is a loss.
+  (`metric_exception`); a getter or postconfig step that loses its transport to the guest is
+  a loss. The pinned OSWorld code swallows most transport errors (`get_vm_file` catches any
+  exception from `get_file` and returns `None`; `_execute_setup` and `_activate_window_setup`
+  log a `RequestException` and go on; `setup` re-raises a failed step as a bare `Exception`;
+  `DesktopEnv.evaluate` ignores a failed postconfig), so the outcome of a call cannot tell
+  transport from agent state. `osworld_live` records every guest-bound `requests` call that
+  raises, and task setup, `evaluate()` and the capture sweep each end in a transport loss
+  when any of their guest requests raised, or a file read got no answer on any attempt,
+  whatever the pinned code returned (upstream would score such an episode, usually 0).
+  `is_transport_error` reads the whole exception chain. A transport failure in task setup is
+  recorded as `task_setup`.
 * A transport loss behind which the guest server restarted (its process id or its unit's
-  `NRestarts` changed since the warm-up) is recorded as `guest_server_restart` (D30); a
-  restart with no failed request is caught by the check after the 20 s settle.
+  `NRestarts` changed since the warm-up) is recorded as `guest_server_restart` (D30). The
+  restart check runs after the 20 s settle and again after the capture (a restart during
+  evaluation voids the episode even when no request failed), and a check that cannot reach
+  the guest server, here or at the warm-up, is a transport loss: the episode cannot be
+  shown restart-free.
 
 ## Runtime (registration section 4)
 

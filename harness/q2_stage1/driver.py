@@ -18,17 +18,21 @@ episode of section 7.1 and writes its record:
 6. the 20 s settle and the guest-server restart check (``NRestarts`` and the server's pid);
 7. ``DesktopEnv.evaluate()`` with the last action in its history (``FAIL`` after
    ``terminate(failure)``, OSWorld's own convention, for both harnesses);
-8. the capture sweep and the final-state capture.
+8. the capture sweep, the final-state capture and the restart check once more.
 
 Classification follows section 7.2 (``records.INFRASTRUCTURE_TYPES``): a failed boot or setup,
 an engine request that fails after the client's retries, H-GA's context fallback for any
 reason but a context-length rejection, a step whose ``/execute`` or screenshot fails
 (``desktop.infra_failures``) or whose executor exits non-zero, a failed warm-up, a guest-
-server restart and a checker getter that loses its transport are infrastructure losses. A
-reply that yields no valid IR (``IRError`` or a parser exception) is handled under the
-harness's rule and counted (``ir_errors``); a checker metric that raises scores 0
-(``metric_exception``). The record follows ``records.SCHEMA``; the step log, raw replies and
-capture stay under the episode's output directory on the host.
+server restart (at the check after the 20 s settle or at the one after the capture) and a
+checker getter or postconfig step that loses its transport (``osworld_live``: any guest
+request of the evaluation or the sweep that failed in transport, even one the pinned code
+swallowed) are infrastructure losses. A restart check that cannot reach the guest server is
+a transport loss: the episode cannot be shown restart-free. A reply that yields no valid IR
+(``IRError`` or a parser exception) is handled under the harness's rule and counted
+(``ir_errors``); a checker metric that raises scores 0 (``metric_exception``). The record
+follows ``records.SCHEMA``; the step log, raw replies and capture stay under the episode's
+output directory on the host.
 """
 
 from __future__ import annotations
@@ -316,39 +320,50 @@ class Runner:
             "keycode": result["keycode"],
             "shell_idle": (result.get("shell") or {}).get("idle"),
         }
-        self.record["server_start"] = self.server_identity(result.get("server_pid"))
+        start = self.server_identity(result.get("server_pid"))
+        self.record["server_start"] = start
+        if "error" in start:
+            # Without the starting identity no later restart could be seen (section 7.2).
+            raise agents.InfraLoss("transport", f"identity at warm-up: {start['error']}")
 
-    def restart_behind(self, loss: agents.InfraLoss) -> str:
-        """A transport loss behind which the guest server restarted is a restart (D30)."""
-        if loss.kind != "transport" or not self.record.get("server_start"):
-            return loss.kind
-        start, end = self.record["server_start"], self.server_identity()
-        self.record["server_end"] = end
-        pid_changed = (
-            isinstance(start.get("server_pid"), int)
-            and isinstance(end.get("server_pid"), int)
-            and start["server_pid"] != end["server_pid"]
-        )
-        n0, n1 = start.get("n_restarts"), end.get("n_restarts")
-        counted = isinstance(n0, int) and isinstance(n1, int) and n1 != n0
-        return "guest_server_restart" if pid_changed or counted else loss.kind
-
-    def check_restarts(self) -> None:
-        start = self.record.get("server_start") or {}
-        end = self.server_identity()
-        self.record["server_end"] = end
+    @staticmethod
+    def restarted(start: Mapping[str, Any], end: Mapping[str, Any]) -> tuple[bool, int]:
+        """Whether a different server process answers, or its unit's NRestarts moved; and
+        how many restarts that shows (D30, D33)."""
         changed_pid = (
             isinstance(start.get("server_pid"), int)
             and isinstance(end.get("server_pid"), int)
             and start["server_pid"] != end["server_pid"]
         )
         n0, n1 = start.get("n_restarts"), end.get("n_restarts")
-        restarted = isinstance(n0, int) and isinstance(n1, int) and n1 != n0
+        counted = isinstance(n0, int) and isinstance(n1, int) and n1 != n0
+        count = max(int(changed_pid), (n1 - n0) if counted else 0)
+        return changed_pid or counted, count
+
+    def restart_behind(self, loss: agents.InfraLoss) -> str:
+        """A transport loss behind which the guest server restarted is a restart (D30)."""
+        if loss.kind != "transport" or not self.record.get("server_start"):
+            return loss.kind
+        start, end = self.record["server_start"], self.server_identity()
+        self.record["server_after_loss"] = end
+        changed, _ = self.restarted(start, end)
+        return "guest_server_restart" if changed else loss.kind
+
+    def check_restarts(self, key: str = "server_end") -> None:
+        """Compare the guest server with the warm-up's (after the 20 s settle, ``server_end``,
+        and after the capture, ``server_final``). A check that cannot reach the server is a
+        transport loss; a different process or a moved NRestarts is a restart."""
+        start = self.record.get("server_start") or {}
+        end = self.server_identity()
+        self.record[key] = end
+        if "error" in end:
+            raise agents.InfraLoss("transport", f"identity at {key}: {end['error']}")
+        changed, count = self.restarted(start, end)
         self.record["guest_server_restarts"] = max(
-            int(changed_pid), (n1 - n0) if isinstance(n0, int) and isinstance(n1, int) else 0
+            count, int(self.record.get("guest_server_restarts") or 0)
         )
-        if changed_pid or restarted:
-            raise agents.InfraLoss("guest_server_restart", f"server {start} -> {end}")
+        if changed:
+            raise agents.InfraLoss("guest_server_restart", f"{key}: server {start} -> {end}")
 
     def loop(self, steps_log: Any, replies_log: Any) -> str | None:
         from harness.q2.action_path.executor import step_command
@@ -484,6 +499,9 @@ class Runner:
             self.record["capture_sweep_error"] = f"{type(exc).__name__}: {exc}"[:300]
         manifest = session.write_capture(self.out / "capture")
         self.timings["capture_s"] = round(self.clock() - t, 3)
+        # The pinned checker swallows many guest errors, and a restart during evaluation or
+        # the capture would go unseen by the check before it (section 7.2, D30).
+        self.check_restarts("server_final")
         self.record.update(
             status="scored",
             infrastructure_type=None,
