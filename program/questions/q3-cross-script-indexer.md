@@ -1,8 +1,11 @@
 # Q3: Cross-script sparse-indexer recall
 
-Status: Stage 0 (prerequisites). Role: preemptible backfill, first in the
-backfill queue. Dossier entry: `E6-d21-translation-supervised-indexer`, rank 3,
-BACKFILL. Carried over from direction D21; its premises all held.
+Status: Stage 0. The dense headroom pre-check
+(`q3-dense-headroom-precheck-v1`) ran on 2026-10-08 and ended INCOMPLETE with
+no combined read; the next step is the program owner's (see the last
+section). Role: preemptible backfill, first in the backfill queue. Dossier
+entry: `E6-d21-translation-supervised-indexer`, rank 3, BACKFILL. Carried
+over from direction D21; its premises all held.
 
 ## Question
 
@@ -74,10 +77,37 @@ against about 14 measured at 0.6B, a selector flat on both non-literal legs
 falls inside NEGATIVE, GO is confounded by literal anchors that Belebele keeps
 in same-language questions, and cross-script is collinear with unseen scripts
 and tokenizer fertility. Next is a dense-only headroom pre-check
-(`program/preregistrations/q3-dense-headroom-precheck-v1.md`, draft): the
+(`program/preregistrations/q3-dense-headroom-precheck-v1.md`; frozen
+2026-10-08 after D32): the
 development partition of the K1 bundle only, Qwen3-0.6B-Base and
 Qwen3.5-4B-Base, at most 0.5 GPU-h. Its combined read says whether any K1 v3
 can register a NEGATIVE, on which base, and which controls it needs beyond
 D26's, which always apply (an entity-controlled question set, a non-literal
 floor, a seen-script cross-script condition): for example a null-calibrated
 statistic or anchor masking. Any K1 v3 takes a new id and runs the gauntlet.
+
+## Dense pre-check operated (2026-10-08): INCOMPLETE
+
+Freeze steps 3-5 ran on branch `ops/q3-dense`
+(`program/evidence/2026-10-08/q3-dense-headroom-precheck/README.md`). The
+image built from `a369e6d` passed the CPU doctor (7/7).
+
+- Qwen3-0.6B-Base lane (job 727, 4.6 minutes): complete. K1 smoke 452
+  reproduced to within 1e-6 points (T:hs 26.45, T:mp 26.08, rand 12.48).
+  Lane decisions: NOT_VIABLE (H1_CX 12.25 points, 99 percent lower bound
+  8.98; H2b -3.93, so `h2_status` FAIL), lexical confound and entity control
+  NOT_EVALUABLE, null calibration NOT_EVALUABLE, floor NOT_VIABLE, fertility
+  association STRONG. Half of the 20 development questions are
+  entity-anchored.
+- Qwen3.5-4B-Base lane (job 730): no receipt. It evaluated 18 of 73
+  chunks at about 61 s each (GPU idle when sampled, one CPU core busy) and reached
+  its 21-minute limit; it did not act on SIGUSR1 and was killed by the hard
+  stop. No minutes remain under the id, so the lane is INCOMPLETE.
+- The registered summariser refused the 0.6B receipt: the receipt's
+  `slurm_job_id` is null because the batch script does not pass
+  `SLURM_JOB_ID` into the container, and the summariser requires it. Under
+  the registration's rule the combined read is INCOMPLETE; it was not
+  written. No base, design or stop is read.
+- GPU time: 0.419 GPU-h used, 0.467 charged under the registration's rule.
+
+Any successor takes a new experiment id and is the program owner's decision.

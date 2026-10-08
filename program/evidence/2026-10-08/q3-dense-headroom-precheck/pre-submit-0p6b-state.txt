@@ -1,0 +1,18 @@
+## pre-submit 0.6B 2026-10-08T04:20:07Z
+JOBID NAME STATE TIME TRES_PER_NODE
+index, utilization.gpu [%], memory.used [MiB]
+0, 0 %, 0 MiB
+1, 0 %, 0 MiB
+2, 0 %, 0 MiB
+3, 0 %, 0 MiB
+4, 0 %, 0 MiB
+5, 0 %, 0 MiB
+6, 0 %, 0 MiB
+7, 0 %, 0 MiB
+compute-apps:
+gpu_uuid, pid, used_gpu_memory [MiB]
+run root:
+total 12
+drwxrwxr-x 3 kevin kevin 4096 Oct  8 04:16 .
+drwxrwxr-x 3 kevin kevin 4096 Oct  8 04:16 ..
+drwxrwxr-x 2 kevin kevin 4096 Oct  8 04:16 fill-claims
