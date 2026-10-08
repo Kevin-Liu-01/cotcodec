@@ -1,20 +1,26 @@
 # q2-action-path-v1-inputs: inputs addendum to q2-action-path-v1
 
-**Status: DRAFT. Not frozen.** The program owner freezes it after
-`q2-action-path-v1` with
-`uv run python scripts/preregister.py freeze q2-action-path-v1-inputs program/preregistrations/q2-action-path-v1-inputs.md`.
-Validity control C2 may be scored only after this ledger entry exists.
+**Status: frozen in `program/preregistrations/ledger.jsonl`; see the ledger
+row for the freeze time and `git_head_at_freeze`.** The three registrations
+are frozen in this order, each with its own row: `q2-action-path-v1`, then
+`q2-action-path-v1-inputs` (this addendum), then `q2-action-path-v1-executor`
+(`uv run python scripts/preregister.py freeze` with each id and its path).
+No acceptance trial and no C2, C1 or C3 run may run before this row exists
+(C2 needs only this addendum and the main registration).
 
 - Experiment id: `q2-action-path-v1-inputs`, an addendum to `q2-action-path-v1`
   (`program/preregistrations/q2-action-path-v1.md`, section 2.2). It changes no
   rule of that file; it pins the components that file says are frozen here.
-- Drafted: 2026-10-07, on branch `stage0/q2-action-path`.
+- Drafted: 2026-10-07, on branch `stage0/q2-action-path`; decisions D30, D33
+  and D39 applied before the freeze on branch `stage0/q2-action-path-d30`
+  (sections 5 and 6).
 - What it freezes: the guest probe (event log, text buffer, marker block,
   entry delimiters), the marker decoder, the entry guard (including the
   pointer park and the side-effect restorations), the canary driver (app
   preparation, launch, wait, read-back, close), the two detection controls'
   translators with the unmodified upstream parsers they read, the code that
-  judges a trial, the acceptance analysis (`acceptance.py`, which decides C2
+  judges a trial (including the systemd scopes the probe and the tap run in,
+  decision D30), the acceptance analysis (`acceptance.py`, which decides C2
   and so must be fixed before C2 runs), and the VM lane that runs every
   scored campaign, with the package files it imports.
 
@@ -41,14 +47,14 @@ Frozen with this file (SHA-256 of the committed bytes):
 | `harness/q2/vm/guest/tap_selftest.py` | `7e051c0bcb45ba81c2b1fb855a9dc70115957fafa3ec7f333c8b3be5ab3bf835` |
 | `harness/q2/vm/marker.py` | `b786b347fc5573425f14090bd67621294ac5c84671bf67f47e663d693ab17fb9` |
 | `harness/q2/vm/canary_run.py` | `295bdd0916869adf79015bc6da6cba4aff2a0ab9f0dab089e4ed3a3565abb119` |
-| `harness/q2/vm/suite.py` | `bb6691e6f5adbdfa30614111c4229e91d5deeefb99713d1177e9d7a2de3d6488` |
+| `harness/q2/vm/suite.py` | `6d0831210e5efb41a94399c73fdd7b80b65a4208cef9721993882336b69cc924` |
 | `harness/q2/vm/desktop.py` | `67030d6b5d79753e2db65b33bc12af2b5faaee2eacbaa5e49b4eb2de0a31c188` |
 | `harness/q2/vm/validation.py` | `2ab5508e5a42269d447312e481b58c9f491d815d73e4977ba9c55d235231116f` |
 | `harness/q2/vm/guest_http.py` | `13e34f874c89b0b32f7f82ffae658682d2608bc9a0614a569742459d6b796ceb` |
 | `harness/q2/vm/hmp.py` | `34b10c2661c6cf40039ca172a704fb5613d0a805e60223acc729f040caf4776a` |
-| `harness/q2/vm/runner.py` | `fe055443652b5d58c654bcd5cb90dcc48d3a3dab6806bd3b2c7c7de1cb56b2ca` |
-| `harness/q2/vm/driver.py` | `05402b4405bd8e08debc61aa164b699b742e1aec9cccfb8f529da23debc7f142` |
-| `harness/q2/vm/manifest.py` | `075791bc9bb5c96db337a3d387d0f856c082477e58b41a85cb73ab3f4bebb5bb` |
+| `harness/q2/vm/runner.py` | `0b20f70d9681c7772223d0ecb4d449743a9be3260a1054a99bc9849241a82c9f` |
+| `harness/q2/vm/driver.py` | `7a4b1d685954fa42915259025bca6a66d3b5ba5070949ff46ccdba1512ae24b2` |
+| `harness/q2/vm/manifest.py` | `c927267716affd1d5b3fc72b94411b4111ce6e45c02507c2a11b5f19f2f391a6` |
 | `harness/q2/action_path/verdict.py` | `6cbcd5a3f32ab873bc1807c2d7d4bab8f16819d56b925918c9c696a3d6ea7d43` |
 | `harness/q2/action_path/order.py` | `346d47374aec1b088ebe5eee6cec33f634819228a32b0a6b71ca2cb9159778cb` |
 | `harness/q2/action_path/controls.py` | `d96e7b2acdecfef134c08c22f23113c8d78fae9d8a35d0e5ad826a2f0af9cc72` |
@@ -60,7 +66,7 @@ Frozen with this file (SHA-256 of the committed bytes):
 | `harness/q2/action_path/upstream/PROVENANCE.json` | `5bef93df835c560b1f8dc6e8cfe7d6c207ba7fbe2e26c861541878563062744d` |
 | `infra/slurm/host-single-node/vm-campaign.sbatch` | `3d86820d176e3a9f0699814a19f62154cde00f88da1777a33c804e884288ac8a` |
 | `scripts/submit_vm_campaign.py` | `f08aafc8bc693cd6eb6850ff972a3401f3bddc99f3c14e03187b4d313fcc5917` |
-| `harness/q2/action_path/acceptance.py` | `f8c8e8ea0cb1595d25a65cb40da8ab635b2b34274c048f591fa4cd63a656813b` |
+| `harness/q2/action_path/acceptance.py` | `39c59210db94a4d47da3ad9f32f235c4532dee8e2c31aa604acc175acc3e4d7e` |
 | `harness/__init__.py` | `17dac2704be26050e324aa36aba6d2c855abbd592e4d72f750b9b6e9c4399fec` |
 | `harness/q2/__init__.py` | `0932bda132c1dab03f40e460874a6827c4609424815e65eedcfefd3cd0b943a1` |
 | `harness/q2/action_path/__init__.py` | `8ce4d0afdd20f6b09dbb4e9d40d24acead2fc1992fccebd1ddf3891ec402613f` |
@@ -160,18 +166,45 @@ file equals it), so freezing the catalog fixes them.
   one seen. `suite.py` runs a session
   (tap, probe, the guard's warm-up, `DesktopEnv.reset`'s observation, whose
   delivery the runner records, pre and post guards, actions, marker) and
-  assembles each trial's observation; when the probe is gone after an entry
-  and the tap's process is gone too (a guest-server restart stops both), it
-  relaunches the tap into a new file before relaunching the probe, and
-  `segment_check` judges each tap's records against that tap's own keymap.
-  `verdict.py` applies sections 4.3 and 5.
+  assembles each trial's observation. It starts the tap and the probe each in
+  its own transient systemd scope (`SCOPE_LAUNCHER`: `systemd-run --user
+  --scope`, returning only once the process's control group is the scope's;
+  a launch that cannot reach its scope fails the session), so a guest-server
+  restart, which stops every process left in the server's unit, leaves both
+  running (decision D30). It records the server's unit and its `NRestarts`
+  counter at the session's start and end, and `session_restarts` and
+  `accessibility_calls` count a session's restarts and `/accessibility`
+  calls (criterion A7). When the probe is gone after an entry and the tap's
+  process is gone too, it still relaunches the tap into a new file, each in
+  a new scope, before relaunching the probe, and `segment_check` judges each
+  tap's records against that tap's own keymap. `verdict.py` applies sections
+  4.3 and 5.
 - **Acceptance analysis** (`acceptance.py`). The main preregistration's
   sections 5-9 as code (its design decision 32): end states from the batch
   script's own record and, when read, Slurm; the rerun rules; an undelivered
   reset observation charged to the session's first trial; the realized order
-  and one source tree per criterion; A1-A6; C1; C2's reading of L0-raw trials
-  (main section 8, decision 34); C3's clean kills (decision 36); C4; and the
-  ladder's N* with the foreign-load abort and its rerun cap.
+  and one source tree per criterion; A1-A6, with A1-A4 and the ladder not
+  counting a trial whose only failure is a guest-server restart (decisions
+  D30 and D33), A1-A3 judging an entry on its counted repetitions and failing
+  it on a second excused trial, and a ladder rung not qualifying with more
+  than two; A7, the restarts per accessibility call on the exact one-sided
+  95% Poisson bound, its calls capped at the plan's 39,036; C1; C2's
+  reading of L0-raw trials (main section 8, decision 34); C3's clean kills
+  (decision 36) and its equivalence, which needs the counting attempt's
+  streams to match the reference's on every cell and each earlier
+  attempt's on the cells it ran without an infrastructure failure
+  (decision D39); C4; each control reading an earlier attempt by
+  its own rule (main design decision 45); and the ladder's N* with the
+  foreign-load abort and its rerun cap, a rung attempt without host
+  snapshots not qualifying but counting its trials. An attempt killed
+  before its driver wrote a receipt is read from its manifest, batch record
+  and finished sessions and does not count (main design decision 46), and
+  a receipt, cycle or record file that does not parse reads as missing and
+  its attempt does not count (decision D39). Reported and not judged:
+  every A1-A3 entry with two or more excused trials and its excused
+  repetitions, A4's excused trials over every rerun and, under a repair
+  attempt, A4's restarts per accessibility call against A7's bound, and
+  each earlier attempt's receipt beside A5.
 - **Lane** (`runner.py`, `driver.py`, `manifest.py`, the batch script and
   the submitter). Every campaign runs as a CPU-only Slurm job (decisions
   D12, D13). `manifest.py` admits an acceptance or scored-control campaign
@@ -180,10 +213,11 @@ file equals it), so freezing the catalog fixes them.
   source tree, and, when the executor addendum is needed, no file under
   `harness/q2/` (Markdown aside) is unpinned; it names the executor addendum
   of each repair attempt, fixes the runner CPUs per concurrency, and refuses
-  seeds 43 and 44 for every other purpose. Development manifests may name a
-  trial after which the runner SIGKILLs the guest server
-  (`kill_guest_server_after_seq`), to exercise the restart handling; no
-  scored campaign can.
+  seeds 43 and 44 for every other purpose. It admits A7 at N* with no repair
+  attempt. Development manifests may name a trial after which the runner
+  SIGKILLs the guest server (`kill_guest_server_after_seq`) or a trial inside
+  which it does so before the post guard (`kill_guest_server_during_seq`), to
+  exercise the restart handling; no scored campaign can.
 
 ## 3. Validation before this freeze (infrastructure only)
 
@@ -239,6 +273,15 @@ later change to a file listed in section 1 (from `git log 29b056e..`):
 | `30d8c7f` | `suite.py`, `runner.py`, `driver.py` | After the review of `2b492cd`: when the probe is gone after an entry and the tap's process is gone too, the tap is relaunched into a new file before the probe, and each tap's records are checked against its own keymap; a restart between entries, when the guard before the next entry cannot run, is charged to that entry as `guest_server_restart`; the runner records whether `DesktopEnv.reset`'s observation was delivered; a development-only hook SIGKILLs the guest server after a given trial. Run 622 had charged 55 trials of one session to a single restart (its tap gone). Development run 662 (the hook after the tenth trial of each of its two sessions, one per setting) then failed only that next trial in each session, with `guest_server_restart` typed and the tap and probe relaunched; 27 of 28 trials passed in each session, every tap segment's mapping check clean. |
 | `30d8c7f` | `manifest.py` | After the review: admission checks every file the needed registrations' tables pin and, with the executor addendum, refuses any unpinned file under `harness/q2/` (main design decision 35); repair attempts name `q2-action-path-v1-executor-a2` or `-a3`, and C1-C3 have none; C2's manifest needs only the inputs addendum (it could not have been submitted before the executor freeze); the runner CPUs of a scored campaign are `runner_cpus(N)` (main decision 38); the development fault hook is admitted for suite development only. Development manifests are judged as before. |
 | `30d8c7f` | `acceptance.py` (pinned here from this commit on; it was in the executor addendum) | After the review (and, one commit later, reading the end state that `scripts/record_slurm_end_states.sh` records next to a run directory): C2's reading of L0-raw trials (main decision 34), C3's clean kills (decision 36), end states and reruns (decision 37), the reset-observation charge and one source tree per criterion. No scored data exists; every rule is driven on synthetic campaigns by `tests/test_q2_acceptance_analysis.py`. |
+| `34f79e4` | `suite.py`, `runner.py`, `driver.py`, `manifest.py` | Decision D30, recorded in `program/decisions.md` before the freeze in answer to run 622's restart, not to any scored outcome. The tap and the probe start in their own transient systemd scopes (`SCOPE_LAUNCHER`), so a guest-server restart leaves them running; each session records the server's unit and its `NRestarts` counter at its start and end, and `session_restarts` and `accessibility_calls` count a session's restarts and calls; the development-only hook `kill_guest_server_during_seq` kills the server inside an entry before its post guard (the runner's `kill_guest_server` moved to `suite.py`); the driver plans A7 and adds the counts to its session summary; `manifest.py` admits A7 (G, 360 repetitions, accessibility setting, at N*). Run 694 at this commit killed the server inside the tenth trial and after the twentieth of each of its two sessions: the probe and the tap ran on in their scopes (no relaunch, one tap segment each, mapping checks clean), the trial killed inside failed with `guest_server_restart` alone, the trial after the second kill failed as decision 39 charges it, and the other 26 trials of each session passed. |
+| `34f79e4` | `acceptance.py` | Decision D30: A4 does not count a trial whose only failure is a guest-server restart (`restart_only`; it is reported), A7 judges restarts per accessibility call on the exact one-sided 95% Poisson bound, and `load` reads each session's restart and call counts. No scored data exists; `tests/test_q2_acceptance_analysis.py` drives both rules on synthetic campaigns, and the loader read runs 694 and 703 (two restarts and, in the accessibility session, 38 calls per session; the two trials killed inside counted as restart-only, the two after a kill between entries not). |
+| `7653799` | `manifest.py`, `suite.py` | `manifest.py` refuses an A7 campaign under a repair attempt (main section 11); `suite.py`'s comment states what run 694 measured. Jobs 703-708 ran at this commit (executor addendum, section 9); 695-699, the same campaigns at `34f79e4`, were cancelled while booting when this change was made. |
+| `13ad91e` | `acceptance.py` | After the review of `13c6790`, before any freeze and with no scored data: A7 divides the restarts of every attempt by the accessibility calls of the counting attempts only, so cancelling a failing run and rerunning it cannot raise its chance of passing (main design decision 41), and refuses an attempt other than 1; an undelivered reset observation is charged to the first trial as a reason as well as an infrastructure type, and `restart_only` checks both, so a restart-only trial that also lost its reset observation is counted; a restart across the reset observation that left only its tree undelivered is excused on A4's terms (`reset_restart`, main section 6.1); the restart report names each hit trial's session and every session whose restarts hit no trial. `tests/test_q2_acceptance_analysis.py` drives each rule; the loader read runs 694 and 703-707 again with the same restart counts and restart-only trials. No file a campaign executes changed. |
+| `3ad255a` | `acceptance.py` | Decision D33, recorded in `program/decisions.md` before the freeze and with no scored data: A1-A3 and the ladder excuse a restart-only trial as A4 does; A1-A3 judge an entry on its counted repetitions and fail it on a second excused trial over both settings, every attempt and, in A1, both shuffles (`RESTART_LIMIT`, never FLAKY); a ladder rung does not qualify with more than two excused trials over its attempts (an aborted attempt aside), and excused trials' steps stay in the step p95; an earlier attempt's failed trials count only on the cells the criterion judges, less its excused ones (an outside-spec R cell's expected failure in an earlier A2 attempt had failed every rerun); A7 caps its calls at the plan's 39,036; each criterion's restart report lists its excused trials. `tests/test_q2_acceptance_analysis.py` drives each rule; the loader read runs 694 and 703-708 again (main section 20). No file a campaign executes changed. |
+| `a3ee335` | `acceptance.py` | After the review of the D33 pass, before any freeze and with no scored data (main section 21, design decision 45): C1-C3 counted every failed trial of an earlier attempt, so the by-design failures of C1's known-defect cells, C2's predicted set and each mutant's kills made any rerun of a C1-C3 campaign fail its control; each control now reads an earlier attempt by its own rule (C1: a known-defect cell that passed counts, its failures never; C2: an earlier failure counts only outside the predicted set, read by `c2_trial_pass`; C3: kills and equivalence from the counting attempt, earlier attempts reported, a cell the reference did not pass cleanly in any attempt cannot kill). A rung attempt with no host snapshots had been read as a foreign-load abort, dropping its gating failures and excused trials; only the two registered reasons abort now, and an attempt missing snapshots does not qualify, may be rerun and counts its trials (`snapshot_problems`). `tests/test_q2_acceptance_analysis.py` drives each case. No file a campaign executes changed. |
+| `c9b4771` | `acceptance.py` | Found while fixing the above: C4 read the counting A1 attempts only, though it judges the tap's stream, which A1 does not judge for an entry the probe observes; it now reads every attempt (main section 21). A test drives it. No file a campaign executes changed. |
+| `2518241` | `acceptance.py` | Closing the reviews' non-blocking notes before the freeze, with no scored data (main section 22, design decision 46). `load` opened `receipt.json` unconditionally, and the driver writes it last, so an attempt killed by a signal, a time limit or a node failure (development runs 695-699 have no receipt) could not be read; it is now read from its manifest, its batch record (`job_id=` in `preflight.txt`) and its finished sessions, and does not count. Reported, not judged: `entries_over_restart_limit` lists every entry with two or more excused trials whatever its status, with its excused repetitions (it had listed `RESTART_LIMIT` entries by name only); A4's `restart_only_trials` counts every rerun (it had counted the counting attempts only); under a repair attempt A4 gives its restarts per accessibility call against A7's bound (`repair_restart_rate`); A5 lists each earlier attempt's receipt and stays judged on the counting attempts. `foreign_abort` documents that a failed `squeue` in a host snapshot cannot be detected (main section 9). `tests/test_q2_acceptance_analysis.py` drives each case. No file a campaign executes changed. |
+| `280ccbf` | `acceptance.py` | Decision D39, recorded in `program/decisions.md` before the freeze on the final pre-freeze verifier's finding, with no scored data (main section 23). C3 read a mutant's equivalence from its counting attempt alone, so a mutant that survived in an attempt that did not count came out equivalent when its rerun matched the reference; a mutant is now equivalent only if its counting attempt's streams equal the reference's and every earlier attempt's do on each cell it ran without an infrastructure failure, and kills stay the counting attempt's. `load` raised on a receipt, cycle or record file a kill cut short (the driver and the runner write them non-atomically); such a file now reads as missing (`unreadable`), and the attempt does not count. `tests/test_q2_acceptance_analysis.py` drives both, with the verifier's probe; the final loader read runs 694, 695-699 and 703-708 again with nothing changed but the new, empty list. No file a campaign executes changed. |
 
 The probe change makes the no-action entry's screenshot start from a settled
 screen, the canary changes make the read-back report what the app holds, and
@@ -249,8 +292,26 @@ retry had been counted as a failure, which 6.1 did not say; the retries stay
 in every report), and the restart rule of `30d8c7f`, which types a restart
 between entries that the guard could not see before. The analysis rules of
 `30d8c7f` (C2, C3, end states, reruns, the reset observation) were written in
-answer to the review of the registration, not to any trial's outcome; no
-scored campaign has run.
+answer to the review of the registration, not to any trial's outcome. The D30
+changes (`34f79e4`, `7653799`) apply decision D30 on run 622's
+restart: the scopes change how much a restart costs, not how a trial is
+judged, and A4's restart exclusion and A7 change only how A4 counts and what
+else is bounded (section 6). `13ad91e` answers the review of `13c6790`: it
+narrows A4's exclusion where it was too wide, adds the reset observation's
+restart on the same terms, and closes A7 to cancel-and-rerun; it changes no
+trial verdict. `3ad255a` applies decision D33, which the owner took before
+the freeze on the exposure main section 18 stated, not on any scored
+outcome: it changes how A1-A3 and the ladder count a restart-only trial,
+never how a trial is judged. `a3ee335` and `c9b4771` answer the review of
+the D33 pass: they change how C1-C4 and a rung read an earlier attempt,
+never how a trial is judged. `2518241` closes the reviews' remaining notes:
+it lets the analysis read an attempt killed before its receipt (which it
+could not read at all) and adds reports that judge nothing; it changes no
+trial verdict and no criterion's rule. `280ccbf` applies decision D39 on
+the final pre-freeze verifier's finding: C3's equivalence now needs every
+attempt's streams to match the reference's (it can only make C3 stricter),
+and a run file a kill cut short reads as missing instead of stopping the
+analysis; it changes no trial verdict. No scored campaign has run.
 
 ## 6. A decision before the freeze: guest-server restarts and A4
 
@@ -259,8 +320,9 @@ in the 8,114 `/accessibility` calls of runs 484-622 (8,117 attempts with
 retries; the first count, 7,969, missed some calls; its tree walk runs on a
 thread pool), and its systemd unit then stopped every process the server had
 launched. A crash is an infrastructure failure (main section 6.1), and A4
-needs zero failures over 36,550 accessibility calls (36,016 steps and 534
-reset observations in its screenshot-plus-accessibility sessions): about 4.5
+needs zero failures over 36,515 accessibility calls (35,981 steps and 534
+reset observations in its screenshot-plus-accessibility sessions; first given
+as 36,550 and 36,016, corrected after the review of `13c6790`): about 4.5
 expected crashes at that rate, so A4 would pass with probability about 0.01.
 That rate rests on a single event. The exact Poisson 95% interval for one
 event (0.025 to 5.57 events) puts the expected number of crashes in A4
@@ -307,3 +369,30 @@ the freeze, each with its cost:
 Whichever is chosen, the decision and its reason go into
 `program/decisions.md` before `q2-action-path-v1` is frozen, and the
 single-event uncertainty above is reported with A4.
+
+**Decided (D30, 2026-10-07), options 3 and 4 together.** A4's zero-failure
+count excludes guest-server restarts, which are reported (a trial whose only
+failure is the restart, with the tree it left undelivered, is not counted;
+main section 6.1). The observation service gets its own registered bound, A7:
+at most 5 x 10^-4 restarts per accessibility call on the exact one-sided 95%
+Poisson upper bound, from a dedicated campaign of 39,036 planned calls (main
+sections 7 and 9). The probe and the tap start in their own systemd scope,
+so a restart costs at most the entry it hits (section 2; runs 694 and 703,
+section 5). Stage 1 counts restarts per episode as infrastructure failures
+(main section 7). The single-event uncertainty is reported with A4 and A7.
+D30 rejects option 2 because patching the server would make the runtime
+differ from the one the leaderboard uses; option 5 is not taken because the
+one crash on record came after two delivered calls. Every other rule was
+left unchanged; main section 18 states what that left exposed.
+
+**Extended (D33, 2026-10-07).** The owner extended the exclusion to A1-A3
+and the concurrency ladder before the freeze: a trial whose only failures
+are a guest-server restart during an observation call and the tree it left
+undelivered is excused and reported there too, while a restart during
+`/execute` or a guard still counts. An A1-A3 entry is judged on its counted
+repetitions and fails on a second excused trial; a ladder rung with more
+than two excused trials does not qualify, and excused trials' steps stay in
+the step p95. A7's call count is the counting attempt's, capped at the
+plan's 39,036. The remaining exposure (restarts outside an observation
+call or slower than the retries, and a post-guard restart that costs two
+entries) is stated with A4 and accepted (main sections 6.1, 9 and 20).

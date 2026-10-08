@@ -1,0 +1,10 @@
+{
+  "domain": "vlc",
+  "initial_files": [],
+  "instruction": "Enable VLC Minimal Interface in window mode so the bottom playback controls are hidden, and make sure the setting persists after restarting VLC. I often multitask on my computer, and the persistent toolbar in VLC is very distracting.",
+  "related_apps": [
+    "vlc"
+  ],
+  "snapshot": "chrome",
+  "task_id": "a5bbbcd5-b398-4c91-83d4-55e1e31bbb81"
+}

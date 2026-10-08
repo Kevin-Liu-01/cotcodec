@@ -1,0 +1,21 @@
+task_id: a669ef01-ded5-4099-9ea9-25e99b569840
+author: blind-model-author-v1
+requirements:
+  - req_id: R0
+    statement: (implicit) The presentation is saved in place at /home/user/Desktop/Writing-Outlines.pptx with 10 slides and unchanged texts.
+    check_kind: file_exists
+    observable: File loads; texts unchanged.
+  - req_id: R1
+    statement: On slide 3, the paragraph "continuation of the sub topics" has no bullet.
+    check_kind: paragraph_format
+    observable: That paragraph's pPr has a:buNone (or otherwise renders without a bullet character).
+  - req_id: R2
+    statement: Its text is indented the same as "Main idea" and "Sub topics" (text starts at the same x as their text).
+    check_kind: paragraph_format
+    observable: Paragraph stays at level 0 and its first-line text start (marL + indent, with no bullet) equals the text start of "Main idea" (marL 457200 EMU = 1.27 cm), tolerance 0.05 cm.
+  - req_id: R3
+    statement: (implicit) The other paragraphs keep their bullets and indents.
+    check_kind: paragraph_format
+    observable: '"Main idea", "Sub topics" and the two level-1 points keep buChar and their marL/indent.'
+allowed_variations:
+  - '[AMBIGUOUS] "indented the same" can also be read as keeping identical marL/indent values (457200/-431640) and only removing the bullet, which visually starts the text at the old bullet position (about 0.07 cm). Record which.'

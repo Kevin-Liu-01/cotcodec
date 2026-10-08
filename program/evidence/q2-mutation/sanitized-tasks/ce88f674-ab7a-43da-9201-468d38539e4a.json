@@ -1,0 +1,16 @@
+{
+  "domain": "libreoffice_impress",
+  "initial_files": [
+    {
+      "path_in_vm": "/home/user/Desktop/AM_Last_Page_Template.pptx",
+      "sha256": "c5945a6b459e337e984fe20cd653527f544acc5ee5784802386fb07198d6c4ac",
+      "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/1e112283c4ecb08d6fed8069bca7de74fa2f12aa/libreoffice_impress/ce88f674-ab7a-43da-9201-468d38539e4a/AM_Last_Page_Template.pptx"
+    }
+  ],
+  "instruction": "Please set my slides upright instead of sideways.",
+  "related_apps": [
+    "libreoffice_impress"
+  ],
+  "snapshot": "libreoffice_impress",
+  "task_id": "ce88f674-ab7a-43da-9201-468d38539e4a"
+}

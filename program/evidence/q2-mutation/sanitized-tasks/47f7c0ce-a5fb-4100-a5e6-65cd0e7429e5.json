@@ -1,0 +1,22 @@
+{
+  "domain": "multi_apps",
+  "initial_files": [
+    {
+      "path_in_vm": "/home/user/Desktop/landscape.mp4",
+      "sha256": "d39162e1d519e978261ad4ae824d4446f511936c80d5ce2e085cf617eae04c35",
+      "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/1e112283c4ecb08d6fed8069bca7de74fa2f12aa/multi_apps/47f7c0ce-a5fb-4100-a5e6-65cd0e7429e5/landscape.mp4"
+    },
+    {
+      "path_in_vm": "/home/user/Desktop/Robotic_Workshop_Infographics.pptx",
+      "sha256": "48860d92c6cd10e3492abad596fc15c5eb56a1d6d9508c886a75b8757bcad06d",
+      "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/1e112283c4ecb08d6fed8069bca7de74fa2f12aa/multi_apps/47f7c0ce-a5fb-4100-a5e6-65cd0e7429e5/Robotic_Workshop_Infographics.pptx"
+    }
+  ],
+  "instruction": "The landscape at 00:08 in this video is so beautiful. Please extract this frame and set it as the background of the second page of the opened slides.",
+  "related_apps": [
+    "libreoffice_impress",
+    "vlc"
+  ],
+  "snapshot": "vlc",
+  "task_id": "47f7c0ce-a5fb-4100-a5e6-65cd0e7429e5"
+}

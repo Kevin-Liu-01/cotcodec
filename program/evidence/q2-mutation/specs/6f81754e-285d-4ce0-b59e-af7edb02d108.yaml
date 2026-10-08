@@ -1,0 +1,18 @@
+task_id: 6f81754e-285d-4ce0-b59e-af7edb02d108
+author: blind-model-author-v1
+requirements:
+  - req_id: R0
+    statement: (implicit) The result is saved in place at /home/user/Desktop/HK_train_record.docx.
+    check_kind: file_exists
+    observable: File loads with python-docx.
+  - req_id: R1
+    statement: Lines with a duplicated train id are removed so that each train id appears on exactly one line.
+    check_kind: text_run
+    observable: Non-empty paragraphs parse as "HH:MM:SS,train_id,station_id,platform"; the set of train ids is {E201, E209, E221, E205, E213, E217, E225, E229} and each appears exactly once (8 lines).
+  - req_id: R2
+    statement: The kept line for each train is its first occurrence, in original order.
+    check_kind: text_run
+    observable: Remaining lines == "06:01:10,E201,SHS,1", "06:06:28,E209,SHS,1", "06:10:09,E221,SHS,1", "06:16:08,E205,SHS,1", "06:20:12,E213,SHS,1", "06:25:48,E217,SHS,1", then the first E225 and E229 lines ("06:31:01,E225,SHS,1", "06:36:32,E229,SHS,1").
+allowed_variations:
+  - '[AMBIGUOUS] Keeping the first occurrence (deduplicate) is the natural reading; reporting only the unique ids (e.g. a list of 8 ids) or a count is a different deliverable.'
+  - Trailing empty paragraph.

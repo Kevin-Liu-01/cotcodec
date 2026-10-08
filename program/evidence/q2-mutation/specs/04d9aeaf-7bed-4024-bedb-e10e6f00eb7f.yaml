@@ -1,0 +1,31 @@
+task_id: 04d9aeaf-7bed-4024-bedb-e10e6f00eb7f
+author: blind-model-author-v1
+requirements:
+  - req_id: R0
+    statement: (implicit) The workbook is persisted at /home/user/SmallBalanceSheet.xlsx with Sheet1 data unchanged.
+    check_kind: file_exists
+    observable: File loads; Sheet1 A1:I7 values equal the initial values.
+  - req_id: R1
+    statement: A new sheet named "Sheet2" exists.
+    check_kind: other
+    observable: Sheet names include "Sheet2".
+  - req_id: R2
+    statement: Sheet2 has the four headers "Year", "CA changes", "FA changes", "OA changes" in that order.
+    check_kind: cell_value
+    observable: Sheet2 A1:D1 == "Year", "CA changes", "FA changes", "OA changes".
+  - req_id: R3
+    statement: Sheet2 rows give years 2015..2019 and, per year, the change versus the previous year of Current Assets, Fixed Assets and Other Assets.
+    check_kind: cell_value
+    observable: >-
+      A2:A6 == 2015..2019. As fractions (value_y - value_{y-1}) / value_{y-1}:
+      2015: 0.101491, -0.049604, -0.016760; 2016: 0.072176, -0.055570, 0.058523;
+      2017: 0.134202, -0.059280, 0.076490; 2018: 0.064627, -0.066764, 0.004737;
+      2019: 0.065546, -0.074552, 0.014392 (tolerance 1e-4), or the same x100 (see R3-AMB).
+  - req_id: R3-AMB
+    statement: '[AMBIGUOUS] "percentage annual changes" does not fix whether cells hold fractions with a % format or percent points (x100), nor any rounding.'
+    check_kind: cell_format
+    observable: Accept either representation; record which one was used and whether values are rounded.
+allowed_variations:
+  - Values may be formulas referencing Sheet1 or constants.
+  - Number formats, rounding display and column widths are not constrained (beyond R3-AMB).
+  - Year cells may be numbers or text that reads 2015..2019.

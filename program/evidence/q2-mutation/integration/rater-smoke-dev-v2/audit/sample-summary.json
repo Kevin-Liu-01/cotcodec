@@ -1,0 +1,35 @@
+{
+ "baseline_jobs": 12,
+ "baseline_sources": {
+  "control_save_stage": 6,
+  "mutation_save_stage": 93,
+  "none": 34
+ },
+ "files_sha256": {
+  "baseline-jobs.jsonl": "3a42b01a54a42cc19151ad5cedebc7498f35adcf53e92598035368a33e5d5b69",
+  "items.jsonl": "2d6aeec7619868cb550854716b6b8737b7d164cd45a152c1a04c7121a8d9c7c1",
+  "sample.jsonl": "c81ab1b684005acf908d229537c8d433e2b831b227d7c95644ced41144613330",
+  "spot-check.jsonl": "2e74fe93cfd55967690951e948a54d6ff1a8233557036811a48605f5adc57186"
+ },
+ "p1_flip_tasks": [
+  "af23762e-2bfd-4a1d-aada-20fa8de9ce07"
+ ],
+ "pool": 120,
+ "pool_by_label": {
+  "should_fail_extra_change": 6,
+  "should_fail_violation": 26,
+  "should_pass_alt_solution": 28,
+  "should_pass_equiv": 60
+ },
+ "primary": "lock",
+ "seed": 42,
+ "spot_check": 26,
+ "strata": {
+  "agreement": 60,
+  "alt_solution": 28,
+  "disagreement": 6,
+  "p1_flip": 1,
+  "sham": 12,
+  "violation": 26
+ }
+}

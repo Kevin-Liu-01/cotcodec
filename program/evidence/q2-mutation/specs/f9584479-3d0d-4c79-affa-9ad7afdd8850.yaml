@@ -1,0 +1,18 @@
+task_id: f9584479-3d0d-4c79-affa-9ad7afdd8850
+author: blind-model-author-v1
+requirements:
+  - req_id: R0
+    statement: (implicit) The workbook is persisted at /home/user/Quarterly_Product_Sales_by_Zone.xlsx with existing values unchanged.
+    check_kind: file_exists
+    observable: File loads; all initially non-empty cells keep their values.
+  - req_id: R1
+    statement: Every product row's "Total" column (F) holds the sum of its Q1..Q4.
+    check_kind: cell_value
+    observable: F3:F5 == 14451, 10781, 11091; F10:F12 == 13363, 9960, 13296; F17:F19 == 11175, 16530, 15261.
+  - req_id: R2
+    statement: Every zone's "Total" row holds the per-quarter sums and the grand total.
+    check_kind: cell_value
+    observable: B6:F6 == 10063, 8224, 10265, 7771, 36323; B13:F13 == 10816, 11448, 7087, 7268, 36619; B20:F20 == 9791, 9836, 12509, 10830, 42966.
+allowed_variations:
+  - SUM formulas or constants.
+  - Number format of the new totals (currency like neighbours or general).

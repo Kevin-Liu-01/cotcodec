@@ -1,0 +1,17 @@
+task_id: 3ef2b351-8a84-4ff2-8724-d86eae9b842e
+author: blind-model-author-v1
+requirements:
+  - req_id: R0
+    statement: (implicit) The document is saved in place at /home/user/Desktop/Constitution_Template_With_Guidelines.docx with unchanged text and table.
+    check_kind: file_exists
+    observable: File loads; paragraph texts and the 18x3 table equal the initial ones.
+  - req_id: R1
+    statement: The heading "Guidelines on drawing up a Constitution" (first paragraph) is center-aligned.
+    check_kind: paragraph_format
+    observable: Paragraph 0 alignment == CENTER (w:jc val="center").
+  - req_id: R2
+    statement: (implicit) Other paragraphs keep their alignment.
+    check_kind: paragraph_format
+    observable: All other paragraphs' alignment equals the initial file.
+allowed_variations:
+  - Heading font/size unchanged in expectation, not constrained.

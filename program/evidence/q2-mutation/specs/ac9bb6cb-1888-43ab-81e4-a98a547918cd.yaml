@@ -1,0 +1,18 @@
+task_id: ac9bb6cb-1888-43ab-81e4-a98a547918cd
+author: blind-model-author-v1
+requirements:
+  - req_id: R0
+    statement: (implicit) The presentation is saved in place at /home/user/Desktop/saa-format-guide.pptx with 15 slides and unchanged texts.
+    check_kind: file_exists
+    observable: File loads; 15 slides.
+  - req_id: R1
+    statement: The slide number is shown in red on the slides.
+    check_kind: text_run
+    observable: For every slide that shows a slide-number placeholder, the effective color of its number field (slide-level rPr, else layout/master slide-number style) is FF0000.
+  - req_id: R2
+    statement: (implicit) Other text colors are unchanged.
+    check_kind: text_run
+    observable: Title/body run colors equal the initial file.
+allowed_variations:
+  - The change may be made on the master/layouts or on each slide's number placeholder.
+  - '[AMBIGUOUS] "red" read as palette Red #FF0000; darker reds are a gray zone.'

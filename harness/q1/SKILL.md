@@ -32,6 +32,11 @@ deterministic mutants. The draft preregistration is
   the FRR set with its margin, the control schedule, buckets P1-P8, the
   concurrency units and the budget check. `scripts/run_q1_stage0.py` runs its
   plan and nothing else; the report reads the same `plan.json`.
+- `memory.py` is the execution policy `q1-stage0-exec/2`: an item's capacity
+  units come from its estimated peak GPU memory (`memory_table.json`, rebuilt
+  with `scripts/q1_memory_table.py --write` whenever problems, the shape
+  manifest or the script change; `tests/test_q1_execution_policy.py` fails when
+  it is stale) or a measured peak, never below the old native-input rule.
 
 ## Patterns to follow / invariants
 <!-- agent-docs:fill:patterns -->
@@ -58,6 +63,17 @@ deterministic mutants. The draft preregistration is
 - Pilot-exposed kernels (`data/pilot_exposed.json`, hash-pinned in
   `trim.PILOT_EXPOSED_SHA256`) never enter a sampling frame; regenerate the file
   only with `scripts/q1_pilot_records.py` and update the pin (decision D28).
+- The reference store (`refstore.py`, decision D31) must never change a verdict
+  row of a kernel with defined behaviour that leaves process-global state
+  alone: reference-side code lives in one function per channel that both the
+  inline path and the reference item call; a consumer adds no row keys and
+  computes inline whenever an entry is missing, unusable or unreadable, or its
+  inputs or switches no longer match. Never make gate (a) a consumer. Rerun
+  `tests/test_q1_refstore_equivalence.py`, `tests/test_q1_refstore_semantics.py`
+  and the integration CPU test after any change to a gate's or channel's
+  reference side.
+- Resource-failure text lives in `faults.py` only; the runner and the store
+  must not keep their own lists.
 - An audit change chosen after seeing a pilot verdict is data-motivated: design
   and validate it on S1-cal and non-evaluation kernels only, and name the units
   it affects in `pilot_exposed.json["data_motivated_units"]`.
@@ -74,6 +90,7 @@ deterministic mutants. The draft preregistration is
 | Calibrate the audit (M, audit v1) | `scripts/q1_calibrate_audit.py --journal CAL --corpus C --output audit-v1.json` |
 | Adjudicate gate rejections of audit-accepted kernels | `scripts/q1_audit_hole_replay.py --journal J --corpus C --output O --multiplier M --seeds 42 43 44` |
 | Write the Stage 0 report | `scripts/report_q1_stage0.py --journal J --corpus C --replay-journal O/journal.jsonl --calibration audit-v1.json --plan PLAN.json --output R` |
+| Measure the reference store (re-pilot, D31) | `scripts/q1_prepare_repilot_corpus.py` (CPU), then `experiments/manifests/q1-core/q1-repilot-d31.template.yaml`, then `scripts/q1_pilot_cost_card.py ... --repilot-job RUNS/JOB` |
 | Plan Stage 0 (CPU) | `scripts/run_q1_stage0.py --corpus C ... --output OUT --seeds 42 43 44 --plan-only` (records `plan_sha256`) |
 | Run a Stage 0 job | `experiments/manifests/q1-core/q1-stage0-trim-job.template.yaml` (buckets, plan hash, spent GPU-h and caps filled from the ledger) |
 | Bind pilot run records / list exposure | `scripts/q1_pilot_records.py --job RUNS/474 --job RUNS/518 --job RUNS/548 --corpus ... --records R --exposed E` |
@@ -97,10 +114,15 @@ deterministic mutants. The draft preregistration is
   per GPU as at 4 with identical verdicts (pilot job 548); problems of 1 GB or
   more run alone and can take over 10 minutes per gate (c on L1/89).
 - A worker crash after the candidate loads is a rejection. Since the second
-  review a shared item's watchdog timeout or CUDA out-of-memory error is an
+  review a shared item's watchdog timeout or GPU resource failure is an
   infrastructure failure retried once alone (`runner.contention_failure`,
   `retry_alone` survives a resume); alone, the outcome stands. Existing tests
   that run a hanging kernel on two slots now see two timeouts.
+- A failed GPU health check never retires a slot under contention: the slot
+  drains its GPU and repeats the check alone (`Runner._recover`); only a check
+  that fails alone stops the GPU for the job (`gpu-health-fault`,
+  `gpu-memory-held`). The D31 re-pilot (Slurm 713) retired 5 of 12 slots under
+  the old rule.
 - The runner never journals an item it kills at the hard deadline; it records
   it in `cut.jsonl` with spawn and kill times, and `cost_card.censored_items`
   reads that (the pilot jobs predate it: mtimes, bound by

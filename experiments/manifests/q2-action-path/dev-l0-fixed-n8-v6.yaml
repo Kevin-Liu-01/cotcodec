@@ -1,0 +1,69 @@
+# Q2 Stage 0b development (seed 42, never evidence): L0-fixed, all 100 entries, four repetitions per
+# setting, on 8 concurrent VMs, at the same commit as dev-l0-fixed-v14 (7653799).
+schema: cotcodec-vm-campaign-v1
+name: q2ap-dev-l0-n8
+campaign_id: q2ap-dev-l0-fixed-n8-v6
+experiment_id: q2-action-path-v1
+purpose: development
+preregistration:
+  path: program/preregistrations/q2-action-path-v1.md
+  status: draft
+  sha256: fae3cc6ad5176bf15ccd40d1b644a740698edbe2bf35a11e204368dd56cd68f5
+git_sha: 7653799bd89ec2d44ee19064da23081c7bb66236
+source:
+  host_dir: /home/kevin/cotcodec-runs/stage0/q2-action-path/src/7653799bd89ec2d44ee19064da23081c7bb66236
+  tree_sha256: 95e2dc83cb4e04daac85761e907ed4dccbfd2bf6308bb02dc79e9d5a7cc6260b
+run_root: /home/kevin/cotcodec-runs/stage0/q2-action-path/runs
+slurm:
+  cpus: 36
+  memory_gb: 58
+  minutes: 950
+container_profile: default
+model:
+  kind: none
+  reason: development runs of the action-path executor and harness parsers load no model
+randomness:
+  contract: seeded
+  seeds:
+  - 42
+  seed_binding:
+    flag: --seed
+vm:
+  image: happysixd/osworld-docker@sha256:0e6497a9295647cf05bf2b2af522fdd79bdeba2737595259cab310a3bcf6baa9
+  image_id: sha256:fe8d9a5e5ad6c593d059887ea2c790481b3f32dd42fa961f2441cdbbe2c70cf4
+  qcow2:
+    host_path: /home/kevin/cotcodec-runs/stage0/q2-action-path/vm/Ubuntu.qcow2
+    sha256: 6bf667a852b3c307f61d9f09c42559351f45e0607e428b4997becf534cf4d313
+    size_bytes: 24460197888
+    source_url: https://huggingface.co/datasets/xlangai/ubuntu_osworld/resolve/a5d9c3eaae98eebf6e3a0beb84e7e47cf72ae133/Ubuntu.qcow2.zip
+    archive_sha256: b795b6cd4c69b252c1b4f10150a347795555032501b60fd031751ed09b896712
+    revision: a5d9c3eaae98eebf6e3a0beb84e7e47cf72ae133
+    license: apache-2.0
+  ram_size: 4G
+  cpu_cores: 4
+  disk_size: 32G
+  memory_gb: 6
+  network: none-netns
+  guest_ip: 20.20.20.21
+  server_port: 5000
+  hmp_port: 7100
+  concurrency: 8
+runner:
+  image_id: sha256:ac2b5815bcc2ed193116aa2d4bdee773b5a457c545453a6c91956768634a6002
+  memory_gb: 1
+  cpus: 4
+workload:
+  kind: suite-development
+  layer: L0-fixed
+  cells: all
+  reps: 4
+  settings:
+  - screenshot
+  - screenshot+a11y
+  session_trials: 60
+  boot_timeout_s: 300
+  settle_timeout_s: 60
+  cells_sha256: a79073a2f5e6e7d7e109b14d50fb4c1e2791f856504c32cd855911e726a95c95
+  sessions: 14
+  trials: 800
+  max_trial_s: 60

@@ -1,0 +1,29 @@
+{
+ "url": "https://arxiv.org/abs/2510.17891",
+ "fetched_at": "2026-10-08T07:30:26Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 41799,
+ "raw_sha256": "33dbb9514b5378398acb7bb9e46d55689c6ae267984f12b6364cf16745215911",
+ "raw_stored": false,
+ "extract": {
+  "title": "TritonRL: Training LLMs to Think and Code Triton Without Cheating",
+  "authors": [
+   "Woo, Jiin",
+   "Zhu, Shaowei",
+   "Nie, Allen",
+   "Jia, Zhen",
+   "Wang, Yida",
+   "Park, Youngsuk"
+  ],
+  "citation_date": "2025/10/18",
+  "submission_history": [
+   {
+    "version": "v2",
+    "date": "Mon, 9 Feb 2026 06:15:16 UTC"
+   }
+  ],
+  "abstract": "The rapid evolution of Large Language Models (LLMs) has driven a growing demand for automated, high-performance system kernels to accelerate machine learning workloads. We introduce TritonRL, a domain-specialized 8B-scale LLM for Triton programming, trained via a novel reinforcement learning (RL) framework. While Triton synthesis faces unique challenges, including data scarcity and a high susceptibility to reward hacking, our approach enables robust kernel generation through two primary innovations. First, we implement a multi-layered verification system that provides high-fidelity reward signals, ensuring that generated kernels are both syntactically and functionally valid. Second, we propose Hierarchical Reward Decomposition (HRD), which decouples reinforcement for high-level reasoning and low-level implementation to resolve the credit assignment problem in long-sequence generation. Comprehensive evaluations on KernelBench demonstrate that TritonRL achieves state-of-the-art correctness and runtime speedup, outperforming concurrent Triton-specific models and matching the performance of frontier models with over 100B parameters. Our results highlight the effectiveness of hardware-aware RL paradigms in specialized domain adaptation.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}

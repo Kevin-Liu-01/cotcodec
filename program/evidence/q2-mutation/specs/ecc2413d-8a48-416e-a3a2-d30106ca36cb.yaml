@@ -1,0 +1,18 @@
+task_id: ecc2413d-8a48-416e-a3a2-d30106ca36cb
+author: blind-model-author-v1
+requirements:
+  - req_id: R0
+    statement: (implicit) The document is saved in place at /home/user/Desktop/Sample_Statutory_Declaration.docx with all existing text unchanged.
+    check_kind: file_exists
+    observable: File loads; all non-empty paragraph and table texts equal the initial ones in order.
+  - req_id: R1
+    statement: A blank page is inserted directly after the current page.
+    check_kind: other
+    observable: Rendering to PDF yields one more page than the original, and the page directly after the current page contains no text.
+  - req_id: R2
+    statement: The current page is read as page 1 (cursor at document start when opened).
+    check_kind: other
+    observable: Page 2 of the rendered PDF is empty and the original page-2 content now starts on page 3.
+allowed_variations:
+  - '[AMBIGUOUS] "this one" depends on where the cursor/viewport was; the sanitized task does not show it. Page 1 is assumed; record which page received the blank page.'
+  - Mechanism (two page breaks, an empty paragraph with page-break-before, or a section break).

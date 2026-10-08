@@ -1,0 +1,9 @@
+{
+ "doctor": "Design",
+ "status": "FAIL",
+ "evaluated_on": "2026-10-08",
+ "evaluated_by": "wave-1 single synthesis owner (Claude agent); not an independent review",
+ "pass_condition": "Intervention, controls, falsifier, metrics, leakage, and statistics specified",
+ "evidence": "Intervention, controls, metrics, statistics and leakage handling are specified by the draft registration, but the ground truth is defective (F1): under the registered TF32-admissible policy the audit threshold T is at least 1 on admissible A1-A3 draws of L2/46, L2/59, L2/77, L2/95 and L2/100 in job 713 (2.01-13.24 on L2/46), so an all-zeros output passes the audit's numerical channels there, and the audit-hole replay would book real-fault rejections by stronger gates as false rejections; under strict-fp32 the L2/77 reference-identity control is rejected. 62 of the 69 in-scope substrates are matmul or convolution problems. Further: the nested ladder makes MS_b - MS_a uninformative on mutants; criterion 3 passes with probability 0.49 at a true FRR of 1% (n = 72, zero rejections allowed); the percentile bootstrap of a nested paired difference degenerates with few discordant pairs; adjudication runs in one direction only.",
+ "remediation": "Kevin's D14 decision first; then the decisive S1-cal threshold pilot (at most 0.1 GPU-h, non-evaluation kernels only, D28 iv) with all-zeros and negated wrapper controls; then the statistics additions listed in the proposal's Evaluation section, as a re-registration."
+}

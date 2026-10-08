@@ -1,0 +1,82 @@
+{
+ "schema": "q1-review-fix-pass/1",
+ "branch": "stage0/q1-engineering-d31",
+ "reviewed_head": "f7373aa",
+ "main_merged": "64591fd",
+ "gpu_hours_used": 0.0,
+ "verification_scripts": {
+  "projection": "fixpass/projection_fixpass.py -> fixpass/projection-fixpass.json",
+  "memory_calibration": "fixpass/memory_calibration.py -> fixpass/memory-calibration.json",
+  "exposure": "fixpass/repilot_exposure.py -> repilot-713-exposure.json",
+  "inputs_not_committed": "job 713's run directory (host ~/cotcodec-runs/stage0/q1-engineering-d31, and the store's uses records) and the host-only stage0-counts-v2.json (sha256 in projection-fixpass.json)"
+ },
+ "findings": [
+  {
+   "id": 1,
+   "severity": "high",
+   "claim": "12-per-GPU execution unsafe: input-byte units, health check retires slots under contention, A5 na drops OOM text, reference OOM leaves permanent unusable entries",
+   "verified": "97 shared OOM items, 93 never final, 5 slots retired (4 of the 5 crashed items' logs show OOM; the old runner kept no health-check output); L2/100 store twin A5 final error with every check na and empty failures; 13 failed reference items of 49 (10 final entry-unusable, 2 retried entry-unusable, 1 failed); 37 of 189 lookups inline (29 unusable, 8 no entry)",
+   "disposition": "fixed: q1-stage0-exec/2 (memory.py, memory_table.json), MemoryGuard, drain-and-retry health check, faults.py single list incl. cuBLAS/cuDNN, A5 na_reasons, ResourceFailure writes no entry and is retried alone while consumers wait; re-measurement under the new rule open (needs a GPU job and owner sign-off)"
+  },
+  {
+   "id": 2,
+   "severity": "high",
+   "claim": "pilot cost model under-predicts the re-pilot's inline items x1.72",
+   "verified": "292.4 predicted vs 502.5 measured GPU-s over 284 items (x1.718); x0.946 without L2/59, L2/87, L2/100; x3.415 on them; paired support per gate 0.537/0.268/0.201 GB (7 substrates, 27% of model cost above 0.268 GB)",
+   "disposition": "reported in 18.8 item 7 and 18.9; a memory-sized x-axis over-predicts x3.7 and is not adopted; memory enters through exec/2 units, whose model predicts the same items at x0.81 of measured"
+  },
+  {
+   "id": 3,
+   "severity": "medium",
+   "claim": "identical-rows claim overstated; gate (a) through the store breaks upstream fidelity",
+   "verified": "by code reading (gate (a) loads the candidate before computing the reference inline) and CPU tests reproducing the int-input and stateful-switch cases; GPU twin differences of memory-unsafe mutants and L2/77 confirmed in repilot-713-twins.json",
+   "disposition": "fixed: gate (a) out of the store (gate_a.py back to pre-D31), input fingerprints, A5 per-call check, gate (c) replay; documented: import-time global patching, memory-unsafe kernels, L2/77 shared realization, adversarial controls not run under the store on GPU; 18.8 header/items 1, 2, 4 reworded"
+  },
+  {
+   "id": 4,
+   "severity": "medium",
+   "claim": "transient non-OOM resource error stored as usable raised draw turns every consumer into error",
+   "verified": "by code reading: RESOURCE_MARKERS lacked cuBLAS/cuDNN text, raised draws were served",
+   "disposition": "fixed: any raised draw makes the entry unusable; cuBLAS/cuDNN allocation and internal markers in the shared list"
+  },
+  {
+   "id": 5,
+   "severity": "medium",
+   "claim": "projection rows not labelled by registration status; bound uses post hoc ratio",
+   "verified": "864de8d (01:25:46Z) predates job 713 (submitted 01:37:25Z) and has only linear, per-bucket and per-job; pre-specified ratio with free references gives 9.08 high; store slopes 8.68 vs 3.64 (c)",
+   "disposition": "fixed in header, 18.8 item 7 and state.json"
+  },
+  {
+   "id": 6,
+   "severity": "medium",
+   "claim": "store disk footprint unreported and unbounded",
+   "verified": "references.jsonl records 124.6 GB for 7 problems, L2/100 79.9 GB",
+   "disposition": "fixed: entry cap 50 GB (schedule), live cap 400 GB (write time), tensors deleted after the last consumer, none for unusable entries, footprint estimate per job"
+  },
+  {
+   "id": 7,
+   "severity": "low",
+   "claim": "offered scope reductions do not all act on P1-P3",
+   "verified": "no-margin 7.89/9.33 vs 9.03; q30 7.21/8.07 (exec/1), 9.10/10.51 (exec/2)",
+   "disposition": "fixed in 18.8 item 8 and state.json"
+  },
+  {
+   "id": 8,
+   "severity": "low",
+   "claim": "calibration-half exposure of the re-pilot not recorded",
+   "verified": "24 kernels, 8 problems, all S1 calibration half, none evaluation, none S2, none in pilot_exposed.json",
+   "disposition": "fixed: repilot-713-exposure.json, cited in 18.8 item 3"
+  },
+  {
+   "id": 9,
+   "severity": "low",
+   "claim": "housekeeping: merge conflicts, driver docstring 0.899, spent typed by operator",
+   "verified": "conflicts in HANDOFF.md and program/log.md",
+   "disposition": "fixed: merged main, docstring 1.229, scoring job refuses spent below the ledger's Stage 0 entries"
+  }
+ ],
+ "record_corrections": [
+  "L2/46 was cut after 21 items (10 twin pairs), not left unstarted (18.8 item 3)"
+ ],
+ "d31_verdict": "unchanged: not admitted; no correction brings the high estimate through P3 within 8 GPU-h (exec/1 store without gate (a) 9.15 pre-specified, 8.76 post hoc, bound 8.56; exec/2 12.31 without store, 11.10 bound)"
+}

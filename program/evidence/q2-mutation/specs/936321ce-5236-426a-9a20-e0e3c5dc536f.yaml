@@ -1,0 +1,24 @@
+task_id: 936321ce-5236-426a-9a20-e0e3c5dc536f
+author: blind-model-author-v1
+requirements:
+  - req_id: R0
+    statement: (implicit) The document is saved in place at /home/user/Desktop/Graphemes_Sound_Letter_Patterns.docx; other text and the 13 existing tables are unchanged.
+    check_kind: file_exists
+    observable: File loads; non-target paragraphs and the original tables' texts unchanged.
+  - req_id: R1
+    statement: The five comma-separated lines are converted into a table with one row per line and one column per comma-separated field (5 rows x 4 columns).
+    check_kind: table_cell
+    observable: A new table with 5 rows and 4 columns exists at the position of those lines (after "Graphemes can be a single letter ..." heading block, before "Consonant digraphs ...").
+  - req_id: R2
+    statement: Table cells hold the comma-separated values.
+    check_kind: table_cell
+    observable: >-
+      Cell texts (whitespace/nbsp-trimmed): [Sound-Letter Pattern, Grapheme, Example Grapheme, Example Word],
+      [1 letter making 1 sound, Graph, "b a", "rub cat"], [2 letters making 1 sound, Digraph, "ch oy", "chop soy"],
+      [3 letters making 1 sound, Trigraph, "dge ere", "ridge here"], [4 letters making 1 sound, Quadgraph, ough, "through though"].
+  - req_id: R3
+    statement: The original comma-separated text lines no longer appear as plain paragraphs.
+    check_kind: text_run
+    observable: No body paragraph outside tables contains "Sound-Letter Pattern,Grapheme".
+allowed_variations:
+  - Internal spacing (multiple nbsp) inside cells, character underline inside cells, table borders/style.

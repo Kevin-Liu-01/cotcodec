@@ -42,6 +42,14 @@ WORK_GATES = (
     "a_upstream_423217d9",
     "c1_kbv_compat",
     "c1_kbv_native",
+    # reference items (decision D31, ``harness.q1.refstore``): no candidate, rows go
+    # to the reference journal, never to a ladder gate or audit tier; gate (a) always
+    # computes its references inline (D31 review, finding 3)
+    "ref_c",
+    "ref_A1",
+    "ref_A2",
+    "ref_A3",
+    "ref_A5",
 )
 #: Fidelity gates whose rows never enter a ladder gate or audit tier.
 FIDELITY_GATES = (
@@ -66,6 +74,13 @@ def _outcomes_for(item: Mapping[str, Any]) -> tuple[list[Any], dict[int, str], A
     seed = int(item["seed"])
     options = dict(item.get("options", {}))
     device = resolve_device(item.get("device"))
+    if gate.startswith("ref_"):
+        from harness.q1 import refstore
+
+        # A reference item loads no candidate (it stays in the compile phase).
+        return refstore.reference_outcome(item), {0: "not-applicable"}, device
+    # Consumer items read reference entries from here when given (decision D31).
+    store = options.get("reference_store")
     kernel_source = Path(item["kernel_path"]).read_text(encoding="utf-8")
     problem_id = item["problem_id"]
     if item.get("problem_source_path"):
@@ -197,6 +212,7 @@ def _outcomes_for(item: Mapping[str, Any]) -> tuple[list[Any], dict[int, str], A
             device=device,
             validity=options.get("validity", "inline"),
             manifest=manifest,
+            reference_store=store,
         )
     elif gate in {"A1", "A2", "A3", "A4", "A5"}:
         from harness.q1.audit import run as audit
@@ -207,9 +223,9 @@ def _outcomes_for(item: Mapping[str, Any]) -> tuple[list[Any], dict[int, str], A
         multiplier = float(options.get("multiplier", 16))
         try:
             if gate == "A1":
-                outcomes = audit.run_a1(subject, multiplier=multiplier)
+                outcomes = audit.run_a1(subject, multiplier=multiplier, reference_store=store)
             elif gate == "A2":
-                outcomes = audit.run_a2(subject, multiplier=multiplier)
+                outcomes = audit.run_a2(subject, multiplier=multiplier, reference_store=store)
             elif gate == "A3":
                 from harness.q1.gates.gate_c import shape_manifest
 
@@ -222,11 +238,12 @@ def _outcomes_for(item: Mapping[str, Any]) -> tuple[list[Any], dict[int, str], A
                     subject,
                     manifest_entry=manifest["problems"].get(problem_id, {}),
                     multiplier=multiplier,
+                    reference_store=store,
                 )
             elif gate == "A4":
                 outcomes = audit.run_a4(subject)
             else:
-                outcomes = audit.run_a5(subject)
+                outcomes = audit.run_a5(subject, reference_store=store)
         finally:
             subject.cleanup()
         for index, outcome in enumerate(outcomes):
@@ -348,6 +365,12 @@ def main(argv: list[str] | None = None) -> int:
     # harness code: a failure there is an infrastructure failure, never a
     # candidate rejection, so it becomes one ``error`` row.
     outcomes, policy_of, device = _outcomes_for(item)
+    write_memory_record(item, device)  # best effort; never part of a row
+    store = dict(item.get("options", {})).get("reference_store")
+    if store and not str(item.get("gate", "")).startswith("ref_"):
+        from harness.q1 import refstore
+
+        refstore.write_uses(store, item)  # best effort; never part of a row
     try:
         text = "".join(
             dump_verdict_row(row) for row in _rows_from(item, outcomes, policy_of, device)
@@ -356,6 +379,23 @@ def main(argv: list[str] | None = None) -> int:
         text = dump_verdict_row(harness_failure_row(item, exc, outcomes=len(outcomes)))
     Path(args[1]).write_text(text, encoding="utf-8")
     return 0
+
+
+def write_memory_record(item: Mapping[str, Any], device: Any) -> None:
+    """This process's peak CUDA memory, for the runner's ``memory.jsonl``
+    (``harness.q1.memory``, measured peaks). Best effort; CPU items write nothing."""
+    if getattr(device, "type", None) != "cuda" or not item.get("workdir"):
+        return
+    try:
+        import torch
+
+        facts = {
+            "peak_reserved_bytes": int(torch.cuda.max_memory_reserved(device)),
+            "peak_allocated_bytes": int(torch.cuda.max_memory_allocated(device)),
+        }
+        Path(item["workdir"], "memory.json").write_text(json.dumps(facts), encoding="utf-8")
+    except Exception:  # noqa: BLE001 - never let a memory record fail an item
+        return
 
 
 def harness_failure_row(item: Mapping[str, Any], exc: BaseException, **facts: Any) -> dict:

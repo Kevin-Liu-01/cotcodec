@@ -1,0 +1,16 @@
+{
+  "domain": "libreoffice_impress",
+  "initial_files": [
+    {
+      "path_in_vm": "/home/user/Desktop/9_1.pptx",
+      "sha256": "af0ba4350a65bb9c0529f3f7489d8de7153325b46ecfcff0c7844290d7b8d9bc",
+      "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/1e112283c4ecb08d6fed8069bca7de74fa2f12aa/libreoffice_impress/af2d657a-e6b3-4c6a-9f67-9e3ed015974c/9_1.pptx"
+    }
+  ],
+  "instruction": "In the first slide, insert the title \"Happy Family\" and make the font style \"Microsoft JhengHei\".",
+  "related_apps": [
+    "libreoffice_impress"
+  ],
+  "snapshot": "libreoffice_impress",
+  "task_id": "af2d657a-e6b3-4c6a-9f67-9e3ed015974c"
+}

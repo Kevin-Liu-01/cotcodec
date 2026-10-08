@@ -1,0 +1,22 @@
+task_id: 3161d64e-3120-47b4-aaad-6a764a92493b
+author: blind-model-author-v1
+requirements:
+  - req_id: R0
+    statement: (implicit) The presentation is saved in place at /home/user/Desktop/45_1.pptx with 22 slides and unchanged texts.
+    check_kind: file_exists
+    observable: File loads; texts unchanged.
+  - req_id: R1
+    statement: On slide 14 the first text box ("Target audience") uses 60 pt font.
+    check_kind: text_run
+    observable: Every run of shape "Google Shape;306;p26" has size 60 pt.
+  - req_id: R2
+    statement: On slide 14 the second text box ("Elaborate on what you want to discuss.") uses 28 pt font.
+    check_kind: text_run
+    observable: Every run of shape "Google Shape;307;p26" has size 28 pt.
+  - req_id: R3
+    statement: (implicit) Other text sizes on slide 14 and on other slides are unchanged.
+    check_kind: text_run
+    observable: All other runs keep their initial sizes.
+allowed_variations:
+  - Box geometry may auto-grow; font family and color are not constrained.
+  - '[AMBIGUOUS] "first"/"second" coincide in both z-order and top-to-bottom order here (the only two text-bearing shapes), so the mapping is unambiguous.'

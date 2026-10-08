@@ -1,0 +1,31 @@
+{
+ "answer_only_reasons_dropped_for_interrupted_attempts": true,
+ "attachment_types": {
+  "auto_mode": 158,
+  "credential_org": 158,
+  "date": 158,
+  "deferred_tools_delta": 316,
+  "environment": 158,
+  "instructions": 158,
+  "mcp_instructions_delta": 158,
+  "model": 158,
+  "prompt_snapshot": 316,
+  "read_truncation_notice": 136,
+  "remote_session_change": 158,
+  "session_context": 158,
+  "skill_listing": 158,
+  "structured_output": 142,
+  "total_tokens_reminder": 814
+ },
+ "attachments": 3304,
+ "commit": "1242da722a7169e6730bc6982496f004279f9ca6",
+ "kind": "scratch-only rerun of the registered transcript audit (rater_runner.audit_transcript at 1242da7) over copies of the 158 D34 development transcripts (142 answering agents, 16 interrupted attempts); nothing ingested or written, the registered dev result (kappa 0.066) stays as recorded",
+ "registry_unseen": [],
+ "relay_frames": {
+  "8e7dbd00": 110
+ },
+ "script": "audit_dev_attachments.py",
+ "transcripts": 158,
+ "types_outside_registry": [],
+ "void_reasons": {}
+}

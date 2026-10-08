@@ -149,8 +149,14 @@ provenance.
   `q1-stage0-trim/2` (`harness/q1/trim.py`): `--plan-only` writes the plan and
   its `plan_sha256` on the CPU; a scoring job checks `--expected-plan-sha256`,
   refuses to start unless spent Stage 0 GPU-h + its cap + the reserve fit in
-  8.0, and scores only its `--buckets` (template
-  `experiments/manifests/q1-core/q1-stage0-trim-job.template.yaml`).
+  8.0 (and refuses a spent value below the ledger's Stage 0 entries), and
+  scores only its `--buckets` (template
+  `experiments/manifests/q1-core/q1-stage0-trim-job.template.yaml`). Items hold
+  capacity units from the memory-aware policy `q1-stage0-exec/2`
+  (`--measured-memory`, `--memory-guard`); with the reference store it records
+  the estimated disk footprint and deletes an entry's tensors after its last
+  consumer. `q1_memory_table.py --write|--check` rebuilds the policy's
+  meta-device memory table (`harness/q1/memory_table.json`).
   `q1_pilot_records.py` binds the pilot's run directories by hash and lists the
   pilot-exposed kernels (`harness/q1/data/pilot_exposed.json`).
 

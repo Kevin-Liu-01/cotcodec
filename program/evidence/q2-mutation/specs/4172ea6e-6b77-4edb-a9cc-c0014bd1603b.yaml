@@ -1,0 +1,22 @@
+task_id: 4172ea6e-6b77-4edb-a9cc-c0014bd1603b
+author: blind-model-author-v1
+requirements:
+  - req_id: R0
+    statement: (implicit) The workbook is persisted at /home/user/MaturityDate.xlsx with A1:B10 unchanged.
+    check_kind: file_exists
+    observable: File loads; A1:B10 equal initial values.
+  - req_id: R1
+    statement: A new column (C) has header "Maturity Date".
+    check_kind: cell_value
+    observable: C1 == "Maturity Date".
+  - req_id: R2
+    statement: Each loan's maturity date is the issue date plus the loan length in days.
+    check_kind: cell_value
+    observable: C2:C10 as dates == 2011-01-14, 2011-03-09, 2011-04-05, 2010-12-19, 2011-03-22, 2011-02-14, 2011-05-12, 2011-03-17, 2010-11-24.
+  - req_id: R3
+    statement: (implicit) The maturity values are displayed as dates, not raw serial numbers.
+    check_kind: cell_format
+    observable: C2:C10 carry a date number format (any date pattern).
+allowed_variations:
+  - Formula (=A2+B2) or constant dates.
+  - Specific date display pattern (mm-dd-yy, yyyy-mm-dd, ...) is not constrained.

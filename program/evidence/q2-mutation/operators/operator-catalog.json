@@ -1,0 +1,900 @@
+{
+  "catalog_sha256": "2e2f24069c833c54bba23650481edec6ffff97176d07377327019e3a7f51d1fe",
+  "catalog_version": "q2-mut-operators-v1",
+  "counts": {
+    "config": {
+      "should_fail_extra_change": 2,
+      "should_fail_violation": 2,
+      "should_pass_alt_solution": 1,
+      "should_pass_equiv": 4
+    },
+    "docx": {
+      "should_fail_extra_change": 4,
+      "should_fail_violation": 5,
+      "should_pass_alt_solution": 4,
+      "should_pass_equiv": 2
+    },
+    "pptx": {
+      "should_fail_extra_change": 4,
+      "should_fail_violation": 5,
+      "should_pass_alt_solution": 2,
+      "should_pass_equiv": 3
+    },
+    "text": {
+      "should_fail_extra_change": 2,
+      "should_fail_violation": 1,
+      "should_pass_equiv": 1
+    },
+    "xlsx": {
+      "should_fail_extra_change": 5,
+      "should_fail_violation": 5,
+      "should_pass_alt_solution": 8,
+      "should_pass_equiv": 4
+    }
+  },
+  "operators": [
+    {
+      "aspects": [
+        "metadata"
+      ],
+      "check_kinds": [],
+      "description": "Set the workbook's Title, Subject or Keywords property.",
+      "family": "xlsx",
+      "label_class": "should_pass_equiv",
+      "name": "xlsx.eq.doc_property",
+      "provenance": "principled",
+      "stratum": "document_model",
+      "target": "document"
+    },
+    {
+      "aspects": [
+        "zoom"
+      ],
+      "check_kinds": [],
+      "description": "Change one sheet's zoom level (view state saved in the file).",
+      "family": "xlsx",
+      "label_class": "should_pass_equiv",
+      "name": "xlsx.eq.view_zoom",
+      "provenance": "principled",
+      "stratum": "document_model",
+      "target": "document"
+    },
+    {
+      "aspects": [
+        "selection"
+      ],
+      "check_kinds": [],
+      "description": "Move the cell cursor to another cell of the active sheet.",
+      "family": "xlsx",
+      "label_class": "should_pass_equiv",
+      "name": "xlsx.eq.view_selection",
+      "provenance": "principled",
+      "stratum": "document_model",
+      "target": "document"
+    },
+    {
+      "aspects": [
+        "active_sheet"
+      ],
+      "check_kinds": [],
+      "description": "Leave a different sheet tab active when the file is saved.",
+      "family": "xlsx",
+      "label_class": "should_pass_equiv",
+      "name": "xlsx.eq.active_sheet",
+      "provenance": "principled",
+      "stratum": "document_model",
+      "target": "document"
+    },
+    {
+      "aspects": [],
+      "check_kinds": [
+        "cell_value"
+      ],
+      "description": "Replace a bound formula with the literal value it computes.",
+      "family": "xlsx",
+      "label_class": "should_pass_alt_solution",
+      "name": "xlsx.alt.literal_for_formula",
+      "provenance": "principled",
+      "stratum": "document_model",
+      "target": "requirement"
+    },
+    {
+      "aspects": [
+        "literal"
+      ],
+      "check_kinds": [
+        "cell_value"
+      ],
+      "description": "Replace a bound typed value with a reference to another cell holding the same value.",
+      "family": "xlsx",
+      "label_class": "should_pass_alt_solution",
+      "name": "xlsx.alt.reference_for_literal",
+      "provenance": "principled",
+      "stratum": "document_model",
+      "target": "requirement"
+    },
+    {
+      "aspects": [],
+      "check_kinds": [
+        "cell_value"
+      ],
+      "description": "Rewrite =SUM(A1:A3) as =A1+A2+A3 over a numeric range.",
+      "family": "xlsx",
+      "label_class": "should_pass_alt_solution",
+      "name": "xlsx.alt.sum_range_expand",
+      "provenance": "principled",
+      "stratum": "document_model",
+      "target": "requirement"
+    },
+    {
+      "aspects": [],
+      "check_kinds": [
+        "cell_value"
+      ],
+      "description": "Rewrite =A1+A2+A3 (a contiguous row or column) as =SUM(A1:A3).",
+      "family": "xlsx",
+      "label_class": "should_pass_alt_solution",
+      "name": "xlsx.alt.plus_chain_to_sum",
+      "provenance": "principled",
+      "stratum": "document_model",
+      "target": "requirement"
+    },
+    {
+      "aspects": [],
+      "check_kinds": [
+        "cell_value"
+      ],
+      "description": "Rewrite =AVERAGE(r) as =SUM(r)/COUNT(r).",
+      "family": "xlsx",
+      "label_class": "should_pass_alt_solution",
+      "name": "xlsx.alt.average_to_sum_count",
+      "provenance": "principled",
+      "stratum": "document_model",
+      "target": "requirement"
+    },
+    {
+      "aspects": [],
+      "check_kinds": [
+        "cell_value"
+      ],
+      "description": "Anchor every reference of a bound formula with $ (same value).",
+      "family": "xlsx",
+      "label_class": "should_pass_alt_solution",
+      "name": "xlsx.alt.absolute_refs",
+      "provenance": "principled",
+      "stratum": "document_model",
+      "target": "requirement"
+    },
+    {
+      "aspects": [],
+      "check_kinds": [
+        "cell_value"
+      ],
+      "description": "Rewrite =CONCATENATE(a,b,...) as =a&b&...",
+      "family": "xlsx",
+      "label_class": "should_pass_alt_solution",
+      "name": "xlsx.alt.concat_to_ampersand",
+      "provenance": "principled",
+      "stratum": "document_model",
+      "target": "requirement"
+    },
+    {
+      "aspects": [
+        "style"
+      ],
+      "check_kinds": [
+        "cell_format"
+      ],
+      "description": "Move a bound cell's direct formatting into a new named cell style with the same properties.",
+      "family": "xlsx",
+      "label_class": "should_pass_alt_solution",
+      "name": "xlsx.alt.named_style_for_direct",
+      "provenance": "principled",
+      "stratum": "document_model",
+      "target": "requirement"
+    },
+    {
+      "aspects": [],
+      "check_kinds": [
+        "cell_value"
+      ],
+      "description": "Change a bound typed value by a visible amount (or one letter of a string).",
+      "family": "xlsx",
+      "label_class": "should_fail_violation",
+      "name": "xlsx.viol.value_perturb",
+      "provenance": "principled",
+      "stratum": "document_model",
+      "target": "requirement"
+    },
+    {
+      "aspects": [],
+      "check_kinds": [
+        "cell_value"
+      ],
+      "description": "Shift one reference of a bound formula by one row (an off-by-one error).",
+      "family": "xlsx",
+      "label_class": "should_fail_violation",
+      "name": "xlsx.viol.formula_ref_shift",
+      "provenance": "principled",
+      "stratum": "document_model",
+      "target": "requirement"
+    },
+    {
+      "aspects": [],
+      "check_kinds": [
+        "cell_value"
+      ],
+      "description": "Clear the contents of a bound cell.",
+      "family": "xlsx",
+      "label_class": "should_fail_violation",
+      "name": "xlsx.viol.clear_bound_cell",
+      "provenance": "principled",
+      "stratum": "document_model",
+      "target": "requirement"
+    },
+    {
+      "aspects": [],
+      "check_kinds": [
+        "cell_format"
+      ],
+      "description": "Remove bold, italic, underline, font colour or fill from a bound cell.",
+      "family": "xlsx",
+      "label_class": "should_fail_violation",
+      "name": "xlsx.viol.drop_char_format",
+      "provenance": "principled",
+      "stratum": "document_model",
+      "target": "requirement"
+    },
+    {
+      "aspects": [],
+      "check_kinds": [
+        "cell_format"
+      ],
+      "description": "Change a bound cell's number format so its displayed value changes.",
+      "family": "xlsx",
+      "label_class": "should_fail_violation",
+      "name": "xlsx.viol.number_format_change",
+      "provenance": "principled",
+      "stratum": "document_model",
+      "target": "requirement"
+    },
+    {
+      "aspects": [],
+      "check_kinds": [],
+      "description": "Change a typed value that no requirement reads and the task did not touch.",
+      "family": "xlsx",
+      "label_class": "should_fail_extra_change",
+      "name": "xlsx.extra.edit_unrelated_value",
+      "provenance": "principled",
+      "stratum": "document_model",
+      "target": "outside"
+    },
+    {
+      "aspects": [],
+      "check_kinds": [],
+      "description": "Clear every typed value in a data row that no requirement reads.",
+      "family": "xlsx",
+      "label_class": "should_fail_extra_change",
+      "name": "xlsx.extra.clear_unrelated_row",
+      "provenance": "principled",
+      "stratum": "document_model",
+      "target": "outside"
+    },
+    {
+      "aspects": [
+        "sheet_name"
+      ],
+      "check_kinds": [],
+      "description": "Rename a sheet that no requirement mentions and no formula references.",
+      "family": "xlsx",
+      "label_class": "should_fail_extra_change",
+      "name": "xlsx.extra.rename_unrelated_sheet",
+      "provenance": "principled",
+      "stratum": "document_model",
+      "target": "outside"
+    },
+    {
+      "aspects": [
+        "sheet_set"
+      ],
+      "check_kinds": [],
+      "description": "Delete a non-empty sheet that no requirement reads.",
+      "family": "xlsx",
+      "label_class": "should_fail_extra_change",
+      "name": "xlsx.extra.delete_unrelated_sheet",
+      "provenance": "principled",
+      "stratum": "document_model",
+      "target": "outside"
+    },
+    {
+      "aspects": [
+        "bold",
+        "color"
+      ],
+      "check_kinds": [],
+      "description": "Make an unrelated non-empty cell bold and red.",
+      "family": "xlsx",
+      "label_class": "should_fail_extra_change",
+      "name": "xlsx.extra.format_unrelated_cell",
+      "provenance": "principled",
+      "stratum": "document_model",
+      "target": "outside"
+    },
+    {
+      "aspects": [
+        "metadata"
+      ],
+      "check_kinds": [],
+      "description": "Set the document's Title, Subject or Keywords property.",
+      "family": "docx",
+      "label_class": "should_pass_equiv",
+      "name": "docx.eq.doc_property",
+      "provenance": "principled",
+      "stratum": "document_model",
+      "target": "document"
+    },
+    {
+      "aspects": [
+        "zoom"
+      ],
+      "check_kinds": [],
+      "description": "Change the document zoom level saved in the settings part.",
+      "family": "docx",
+      "label_class": "should_pass_equiv",
+      "name": "docx.eq.view_zoom",
+      "provenance": "principled",
+      "stratum": "document_model",
+      "target": "document"
+    },
+    {
+      "aspects": [
+        "style"
+      ],
+      "check_kinds": [
+        "text_run"
+      ],
+      "description": "Move a bound run's direct bold/italic/underline/colour into a new character style.",
+      "family": "docx",
+      "label_class": "should_pass_alt_solution",
+      "name": "docx.alt.char_style_for_direct",
+      "provenance": "principled",
+      "stratum": "document_model",
+      "target": "requirement"
+    },
+    {
+      "aspects": [
+        "style"
+      ],
+      "check_kinds": [
+        "paragraph_format",
+        "text_run"
+      ],
+      "description": "Replace a bound paragraph's named style with the default style plus direct formatting that reproduces its appearance.",
+      "family": "docx",
+      "label_class": "should_pass_alt_solution",
+      "name": "docx.alt.para_direct_for_style",
+      "provenance": "principled",
+      "stratum": "document_model",
+      "target": "requirement"
+    },
+    {
+      "aspects": [
+        "highlight"
+      ],
+      "check_kinds": [
+        "text_run"
+      ],
+      "description": "Replace a bound run's highlighting with character shading of the same colour.",
+      "family": "docx",
+      "label_class": "should_pass_alt_solution",
+      "name": "docx.alt.highlight_as_shading",
+      "provenance": "principled",
+      "stratum": "document_model",
+      "target": "requirement"
+    },
+    {
+      "aspects": [
+        "case"
+      ],
+      "check_kinds": [
+        "text_run"
+      ],
+      "description": "Retype an upper-case run in lower case and apply the UPPERCASE case effect, so it renders the same.",
+      "family": "docx",
+      "label_class": "should_pass_alt_solution",
+      "name": "docx.alt.case_via_format",
+      "provenance": "principled",
+      "stratum": "document_model",
+      "target": "requirement"
+    },
+    {
+      "aspects": [],
+      "check_kinds": [
+        "text_run",
+        "paragraph_format",
+        "other"
+      ],
+      "description": "Change one letter of a word in a bound paragraph (preferring quoted text).",
+      "family": "docx",
+      "label_class": "should_fail_violation",
+      "name": "docx.viol.text_edit",
+      "provenance": "principled",
+      "stratum": "document_model",
+      "target": "requirement"
+    },
+    {
+      "aspects": [],
+      "check_kinds": [
+        "text_run"
+      ],
+      "description": "Remove bold, italic, underline, colour or highlight from a bound run.",
+      "family": "docx",
+      "label_class": "should_fail_violation",
+      "name": "docx.viol.drop_char_format",
+      "provenance": "principled",
+      "stratum": "document_model",
+      "target": "requirement"
+    },
+    {
+      "aspects": [],
+      "check_kinds": [
+        "paragraph_format"
+      ],
+      "description": "Change a bound paragraph's alignment.",
+      "family": "docx",
+      "label_class": "should_fail_violation",
+      "name": "docx.viol.para_align_change",
+      "provenance": "principled",
+      "stratum": "document_model",
+      "target": "requirement"
+    },
+    {
+      "aspects": [],
+      "check_kinds": [
+        "paragraph_format"
+      ],
+      "description": "Change a bound paragraph's proportional line spacing.",
+      "family": "docx",
+      "label_class": "should_fail_violation",
+      "name": "docx.viol.line_spacing_change",
+      "provenance": "principled",
+      "stratum": "document_model",
+      "target": "requirement"
+    },
+    {
+      "aspects": [],
+      "check_kinds": [
+        "text_run",
+        "paragraph_format"
+      ],
+      "description": "Delete a bound, non-empty top-level paragraph.",
+      "family": "docx",
+      "label_class": "should_fail_violation",
+      "name": "docx.viol.delete_bound_paragraph",
+      "provenance": "principled",
+      "stratum": "document_model",
+      "target": "requirement"
+    },
+    {
+      "aspects": [],
+      "check_kinds": [],
+      "description": "Change one letter of a word in a paragraph no requirement reads.",
+      "family": "docx",
+      "label_class": "should_fail_extra_change",
+      "name": "docx.extra.edit_unrelated_paragraph",
+      "provenance": "principled",
+      "stratum": "document_model",
+      "target": "outside"
+    },
+    {
+      "aspects": [],
+      "check_kinds": [],
+      "description": "Delete a non-empty paragraph no requirement reads.",
+      "family": "docx",
+      "label_class": "should_fail_extra_change",
+      "name": "docx.extra.delete_unrelated_paragraph",
+      "provenance": "principled",
+      "stratum": "document_model",
+      "target": "outside"
+    },
+    {
+      "aspects": [],
+      "check_kinds": [],
+      "description": "Change one letter of a word in a table cell no requirement reads.",
+      "family": "docx",
+      "label_class": "should_fail_extra_change",
+      "name": "docx.extra.edit_unrelated_table_cell",
+      "provenance": "probe_informed",
+      "stratum": "document_model",
+      "target": "outside"
+    },
+    {
+      "aspects": [
+        "bold"
+      ],
+      "check_kinds": [],
+      "description": "Make one word of an unrelated paragraph bold.",
+      "family": "docx",
+      "label_class": "should_fail_extra_change",
+      "name": "docx.extra.format_unrelated_run",
+      "provenance": "principled",
+      "stratum": "document_model",
+      "target": "outside"
+    },
+    {
+      "aspects": [
+        "metadata"
+      ],
+      "check_kinds": [],
+      "description": "Set the presentation's Title, Subject or Keywords property.",
+      "family": "pptx",
+      "label_class": "should_pass_equiv",
+      "name": "pptx.eq.doc_property",
+      "provenance": "principled",
+      "stratum": "document_model",
+      "target": "document"
+    },
+    {
+      "aspects": [
+        "exact_geometry"
+      ],
+      "check_kinds": [],
+      "description": "Move a shape by 0.01 mm, far below what a viewer can see.",
+      "family": "pptx",
+      "label_class": "should_pass_equiv",
+      "name": "pptx.eq.subvisible_nudge",
+      "provenance": "principled",
+      "stratum": "document_model",
+      "target": "document"
+    },
+    {
+      "aspects": [
+        "z_order"
+      ],
+      "check_kinds": [],
+      "description": "Swap the stacking order of two shapes that do not overlap.",
+      "family": "pptx",
+      "label_class": "should_pass_equiv",
+      "name": "pptx.eq.zorder_nonoverlap",
+      "provenance": "principled",
+      "stratum": "document_model",
+      "target": "document"
+    },
+    {
+      "aspects": [
+        "style"
+      ],
+      "check_kinds": [
+        "text_run",
+        "slide_object"
+      ],
+      "description": "Replace a bound text placeholder with a plain text box holding the same text at the same position, size and character formatting.",
+      "family": "pptx",
+      "label_class": "should_pass_alt_solution",
+      "name": "pptx.alt.textbox_for_placeholder",
+      "provenance": "principled",
+      "stratum": "document_model",
+      "target": "requirement"
+    },
+    {
+      "aspects": [
+        "case"
+      ],
+      "check_kinds": [
+        "text_run"
+      ],
+      "description": "Retype an upper-case run in lower case and apply the UPPERCASE case effect.",
+      "family": "pptx",
+      "label_class": "should_pass_alt_solution",
+      "name": "pptx.alt.case_via_format",
+      "provenance": "principled",
+      "stratum": "document_model",
+      "target": "requirement"
+    },
+    {
+      "aspects": [],
+      "check_kinds": [
+        "text_run",
+        "slide_object",
+        "other"
+      ],
+      "description": "Change one letter of a word in a bound shape (preferring quoted text).",
+      "family": "pptx",
+      "label_class": "should_fail_violation",
+      "name": "pptx.viol.text_edit",
+      "provenance": "principled",
+      "stratum": "document_model",
+      "target": "requirement"
+    },
+    {
+      "aspects": [],
+      "check_kinds": [
+        "table_cell",
+        "text_run",
+        "slide_object"
+      ],
+      "description": "Change one letter of a word in a bound table cell.",
+      "family": "pptx",
+      "label_class": "should_fail_violation",
+      "name": "pptx.viol.table_cell_text",
+      "provenance": "probe_informed",
+      "stratum": "document_model",
+      "target": "requirement"
+    },
+    {
+      "aspects": [],
+      "check_kinds": [
+        "text_run"
+      ],
+      "description": "Remove direct bold, italic, underline or colour from a bound run.",
+      "family": "pptx",
+      "label_class": "should_fail_violation",
+      "name": "pptx.viol.drop_char_format",
+      "provenance": "principled",
+      "stratum": "document_model",
+      "target": "requirement"
+    },
+    {
+      "aspects": [],
+      "check_kinds": [
+        "slide_object"
+      ],
+      "description": "Move a bound shape by 1.5 cm.",
+      "family": "pptx",
+      "label_class": "should_fail_violation",
+      "name": "pptx.viol.move_shape",
+      "provenance": "principled",
+      "stratum": "document_model",
+      "target": "requirement"
+    },
+    {
+      "aspects": [],
+      "check_kinds": [
+        "slide_object",
+        "text_run"
+      ],
+      "description": "Delete a bound shape.",
+      "family": "pptx",
+      "label_class": "should_fail_violation",
+      "name": "pptx.viol.delete_bound_shape",
+      "provenance": "principled",
+      "stratum": "document_model",
+      "target": "requirement"
+    },
+    {
+      "aspects": [],
+      "check_kinds": [],
+      "description": "Change one letter of a word in a shape no requirement reads.",
+      "family": "pptx",
+      "label_class": "should_fail_extra_change",
+      "name": "pptx.extra.edit_unrelated_text",
+      "provenance": "principled",
+      "stratum": "document_model",
+      "target": "outside"
+    },
+    {
+      "aspects": [
+        "slide_set"
+      ],
+      "check_kinds": [],
+      "description": "Delete a slide with content that no requirement reads.",
+      "family": "pptx",
+      "label_class": "should_fail_extra_change",
+      "name": "pptx.extra.delete_unrelated_slide",
+      "provenance": "principled",
+      "stratum": "document_model",
+      "target": "outside"
+    },
+    {
+      "aspects": [],
+      "check_kinds": [],
+      "description": "Add a stray text box with unrequested text to a slide.",
+      "family": "pptx",
+      "label_class": "should_fail_extra_change",
+      "name": "pptx.extra.add_textbox",
+      "provenance": "principled",
+      "stratum": "document_model",
+      "target": "outside"
+    },
+    {
+      "aspects": [
+        "notes"
+      ],
+      "check_kinds": [],
+      "description": "Change or add speaker notes on a slide no requirement reads.",
+      "family": "pptx",
+      "label_class": "should_fail_extra_change",
+      "name": "pptx.extra.edit_notes",
+      "provenance": "principled",
+      "stratum": "document_model",
+      "target": "outside"
+    },
+    {
+      "aspects": [
+        "newline"
+      ],
+      "check_kinds": [],
+      "description": "Add or remove the final newline.",
+      "family": "text",
+      "label_class": "should_pass_equiv",
+      "name": "text.eq.trailing_newline",
+      "provenance": "principled",
+      "stratum": "document_model",
+      "target": "document"
+    },
+    {
+      "aspects": [],
+      "check_kinds": [
+        "text_run",
+        "other",
+        "config_value"
+      ],
+      "description": "Change one letter of a word on a bound line (preferring quoted text).",
+      "family": "text",
+      "label_class": "should_fail_violation",
+      "name": "text.viol.line_edit",
+      "provenance": "principled",
+      "stratum": "document_model",
+      "target": "requirement"
+    },
+    {
+      "aspects": [],
+      "check_kinds": [],
+      "description": "Change one letter of a word on a line no requirement reads.",
+      "family": "text",
+      "label_class": "should_fail_extra_change",
+      "name": "text.extra.unrelated_line_edit",
+      "provenance": "principled",
+      "stratum": "document_model",
+      "target": "outside"
+    },
+    {
+      "aspects": [],
+      "check_kinds": [],
+      "description": "Delete a non-empty line no requirement reads.",
+      "family": "text",
+      "label_class": "should_fail_extra_change",
+      "name": "text.extra.unrelated_line_delete",
+      "provenance": "principled",
+      "stratum": "document_model",
+      "target": "outside"
+    },
+    {
+      "aspects": [
+        "newline"
+      ],
+      "check_kinds": [],
+      "description": "Add or remove the final newline.",
+      "family": "config",
+      "label_class": "should_pass_equiv",
+      "name": "config.eq.trailing_newline",
+      "provenance": "principled",
+      "stratum": "document_model",
+      "target": "document"
+    },
+    {
+      "aspects": [
+        "whitespace"
+      ],
+      "check_kinds": [],
+      "description": "Re-indent a JSON file (same keys, order and values).",
+      "family": "config",
+      "label_class": "should_pass_equiv",
+      "name": "config.eq.json_reformat",
+      "provenance": "principled",
+      "stratum": "document_model",
+      "target": "document"
+    },
+    {
+      "aspects": [
+        "key_order"
+      ],
+      "check_kinds": [],
+      "description": "Reverse the key order of one JSON object (objects are unordered).",
+      "family": "config",
+      "label_class": "should_pass_equiv",
+      "name": "config.eq.json_key_reorder",
+      "provenance": "principled",
+      "stratum": "document_model",
+      "target": "document"
+    },
+    {
+      "aspects": [
+        "whitespace"
+      ],
+      "check_kinds": [],
+      "description": "Toggle spaces around '=' in key = value lines of an INI-style file.",
+      "family": "config",
+      "label_class": "should_pass_equiv",
+      "name": "config.eq.ini_kv_spacing",
+      "provenance": "principled",
+      "stratum": "document_model",
+      "target": "document"
+    },
+    {
+      "aspects": [
+        "number_type"
+      ],
+      "check_kinds": [
+        "config_value"
+      ],
+      "description": "Write a bound integer value as the equal decimal (20 -> 20.0).",
+      "family": "config",
+      "label_class": "should_pass_alt_solution",
+      "name": "config.alt.json_number_repr",
+      "provenance": "principled",
+      "stratum": "document_model",
+      "target": "requirement"
+    },
+    {
+      "aspects": [],
+      "check_kinds": [
+        "config_value"
+      ],
+      "description": "Change a bound configuration value to a different value of the same type.",
+      "family": "config",
+      "label_class": "should_fail_violation",
+      "name": "config.viol.value_change",
+      "provenance": "principled",
+      "stratum": "document_model",
+      "target": "requirement"
+    },
+    {
+      "aspects": [],
+      "check_kinds": [
+        "config_value"
+      ],
+      "description": "Delete a bound configuration key.",
+      "family": "config",
+      "label_class": "should_fail_violation",
+      "name": "config.viol.key_delete",
+      "provenance": "principled",
+      "stratum": "document_model",
+      "target": "requirement"
+    },
+    {
+      "aspects": [],
+      "check_kinds": [],
+      "description": "Change a configuration value that no requirement reads.",
+      "family": "config",
+      "label_class": "should_fail_extra_change",
+      "name": "config.extra.unrelated_value_change",
+      "provenance": "principled",
+      "stratum": "document_model",
+      "target": "outside"
+    },
+    {
+      "aspects": [],
+      "check_kinds": [],
+      "description": "Delete a configuration key that no requirement reads.",
+      "family": "config",
+      "label_class": "should_fail_extra_change",
+      "name": "config.extra.unrelated_key_delete",
+      "provenance": "principled",
+      "stratum": "document_model",
+      "target": "outside"
+    }
+  ],
+  "sources": {
+    "__init__.py": "fce0a773a523e39bb41bd4188907b96f14b63fb552babc3fe7eca69faf0fa2cc",
+    "_base.py": "7c51c0d12246435809815bbb69d0629efa20b73f6acbac88bf0379db4fed239a",
+    "_common.py": "0722a4cf3c5b8c067e129e0191dc8ea46c3d2634e60ad3175f9598d10c4644a8",
+    "_diff.py": "6169f830cb10ac004c2cd1bcb982e932007596ccd0945f1e81fd8fae928d856f",
+    "_formula.py": "cde78b65ccd676ab7d091ef6cfdb160ae8494f09480297db1255f772ae57c3e4",
+    "_jsonspan.py": "09298b54b8b91ad27c4dfdf29c1c749cd47d42e9148870de78457f4b7534a285",
+    "_ooxml.py": "1f721787b78f5c457a8d004f801d71d84898ddc50ab1609370ffd519bf586583",
+    "_purity.py": "1da908164c27dbf1fa704ba795d3e96f46fdc013bf4a960c316424d159cecdea",
+    "_snapshot.py": "80602be58d6de32755f8d1615481caccb2ec8ba5c790bfae1c9ae03267ee3664",
+    "_spec.py": "7fe7ecef80c8c7fbcd9da904dfa4e60a1ca30161f6e0ebb0a353951fe818b61a",
+    "_textops.py": "836f6337985c15bf6d977f8a3f800c5cc7e34b60472e2d49378ca5a13e0a9e44",
+    "apply_text.py": "01dbb79fb27e9fa7ae0639839640bc0f1d37b5bf9ed94737546172482f9cc4e1",
+    "config.py": "96b70c7804734d1fc3f04409a2fd2494dd47a71472814a2c6975a427c683da27",
+    "docx.py": "553f1031605e79bb447318f0180b7c96f89bcef3c645f8087d0c189899a9625a",
+    "pipeline.py": "64f554bbb36a24533222f268996ed97d1a4d402c29d5c8286078419e83f31c75",
+    "pptx.py": "256065fa223f5bf7e693e99e5c9bfaad2116d4191388ddb9be19e43d5f805f26",
+    "text.py": "be0977a8fb1992050b251db0d6f556b4840f92c3009fe1f29bcdacaab6c1782e",
+    "uno_apply.py": "6d9afccabdcfa85472307de49cf0befdfd755010cf86b174cad5822edb6f9982",
+    "xlsx.py": "eaa63dd37ccffe451afc477aa06d5b9f3afb64b64ff2adf2dcf42fad0b99da84"
+  },
+  "total": 64
+}

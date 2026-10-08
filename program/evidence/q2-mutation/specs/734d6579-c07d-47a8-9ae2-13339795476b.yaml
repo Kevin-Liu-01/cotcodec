@@ -1,0 +1,14 @@
+task_id: 734d6579-c07d-47a8-9ae2-13339795476b
+author: blind-model-author-v1
+requirements:
+  - req_id: R1
+    statement: The background layer is filled with green.
+    check_kind: image_property
+    observable: In the saved result (white_background_with_object.xcf "Background" layer and/or the exported white_background_with_object.png), every pixel of the formerly white background is a uniform green (G dominant, e.g. 00FF00 or another pure green).
+  - req_id: R2
+    statement: The object layer (the black user-add icon) is unchanged.
+    check_kind: image_property
+    observable: Layer "user-add.png" (512x512 at offset 144,144) pixels unchanged; in the flattened PNG the black icon pixels remain black at the same positions.
+allowed_variations:
+  - '[AMBIGUOUS] Exact green value (GIMP default FG green, 00FF00, palette green) is not given.'
+  - '[AMBIGUOUS] Which file carries the result (XCF saved, PNG exported, or both) is not stated.'

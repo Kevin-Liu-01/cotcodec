@@ -1,0 +1,36 @@
+task_id: 0326d92d-d218-48a8-9ca1-981cd6d064c7
+author: blind-model-author-v1
+requirements:
+  - req_id: R0
+    statement: (implicit) The workbook is persisted at /home/user/SalesRep.xlsx in xlsx format with the original data in Sheet1 A1:G11 unchanged.
+    check_kind: file_exists
+    observable: File exists and loads; Sheet1 A1:G11 values equal the initial values.
+  - req_id: R1
+    statement: A row labeled "Total" is added directly underneath the data (row 12) with the column sum for each month Jan..Jun.
+    check_kind: cell_value
+    observable: A12 == "Total"; B12:G12 computed values == 4852, 4587, 3943, 3857, 4677, 4243.
+  - req_id: R2
+    statement: A further row labeled "Growth" holds month-on-month growth of the Total for Feb..Jun; Jan has no growth value.
+    check_kind: cell_value
+    observable: >-
+      A13 == "Growth" (the row after Total); C13:G13 computed values == (Total_m - Total_{m-1}) / Total_{m-1}
+      == -0.054617, -0.140397, -0.021811, 0.212600, -0.092795 (within 1e-4), or the same numbers x100 if stored as
+      percent points (see R2-AMB); B13 is empty.
+  - req_id: R2-AMB
+    statement: '[AMBIGUOUS] "growth percentage" does not say whether the stored value is a fraction displayed with a % format (-0.0546 shown as -5.46%) or a number already multiplied by 100 (-5.46).'
+    check_kind: cell_format
+    observable: Either C13:G13 hold fractions with a percent number format, or hold percent points; both are consistent with the instruction. Record which representation was used.
+  - req_id: R3
+    statement: A bar-type chart displays the monthly totals (six bars, Jan..Jun) and its title is "Total".
+    check_kind: other
+    observable: In xl/charts/*.xml a chart with c:barChart whose single series values reference Sheet1 B12:G12 (categories B1:G1 or equivalent Jan..Jun) and whose title text is exactly "Total".
+  - req_id: R4
+    statement: A line chart displays the Growth values for Feb..Jun only (Jan omitted) and its title is "Growth".
+    check_kind: other
+    observable: A chart with c:lineChart whose series values reference C13:G13 (5 points; categories Feb..Jun = C1:G1) and whose title text is exactly "Growth"; no data point for Jan.
+allowed_variations:
+  - Totals/growth may be formulas or constants if computed values match.
+  - Bars may be vertical columns or horizontal bars; the instruction only says "bars".
+  - Chart placement (anchor cell, size), colors, legend presence, axis titles and styles are not constrained.
+  - Number formatting / rounding display of the growth row is not constrained beyond R2-AMB.
+  - Charts may live on Sheet1 or another sheet; the instruction does not say where.

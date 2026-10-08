@@ -1,0 +1,2942 @@
+{
+ "schema": "q1-gauntlet-query-log/1",
+ "proposal": "program/proposals/2026-10-08-q1-stage0-gate-validation.md",
+ "tool": "orx 0.2.2 (alphaXiv keyword and embedding, OpenAlex); warns outdated against 0.2.17",
+ "index_state": "cells: alphaXiv/OpenAlex index on 2026-10-07; synthesis: 2026-10-08",
+ "counting_rule": "Against the 150-query budget: every orx discover call, failed calls included (the K1 v2 gauntlet's rule). orx paper reads, OpenAlex metadata reads, arXiv version checks, GitHub and Hugging Face API calls and snapshot fetches are listed but not counted.",
+ "cells": {
+  "frontier": {
+   "discover": [
+    {
+     "id": "F-k01",
+     "strategy": "keyword",
+     "query": "keyword Measuring the Checker --limit 10",
+     "returned_ids": [
+      "2609.22220",
+      "2609.07667",
+      "2609.33160",
+      "2607.01504",
+      "2609.09250",
+      "2608.24320",
+      "2608.01135",
+      "2605.25988",
+      "2603.28794",
+      "2609.36308"
+     ],
+     "failed": false
+    },
+    {
+     "id": "F-k04",
+     "strategy": "keyword",
+     "query": "keyword KernelZero --limit 12",
+     "returned_ids": [
+      "2609.33074",
+      "2504.06151",
+      "0906.2444"
+     ],
+     "failed": false
+    },
+    {
+     "id": "F-k07",
+     "strategy": "keyword",
+     "query": "keyword KernelGYM --limit 12",
+     "returned_ids": [
+      "2602.05885",
+      "2608.12700",
+      "2602.07670"
+     ],
+     "failed": false
+    },
+    {
+     "id": "F-k02",
+     "strategy": "keyword",
+     "query": "keyword KernelBench-Verified --limit 12",
+     "returned_ids": [
+      "2607.16241",
+      "2609.21058",
+      "2502.10517",
+      "2609.22220",
+      "2609.26779",
+      "2609.38384",
+      "2609.17439",
+      "2610.01788",
+      "2609.19352",
+      "2609.12488",
+      "2609.08149",
+      "2610.00760"
+     ],
+     "failed": false
+    },
+    {
+     "id": "F-k05",
+     "strategy": "keyword",
+     "query": "keyword Contract-Grade Verifier GPU kernels --limit 12",
+     "returned_ids": [
+      "2608.12700",
+      "2610.07541",
+      "2609.13585",
+      "2610.02808",
+      "2610.05683",
+      "2606.parallel-kernel-bench",
+      "2608.20711",
+      "2609.36800",
+      "2608.21157",
+      "2608.21227",
+      "2609.13612",
+      "2606.15991"
+     ],
+     "failed": false
+    },
+    {
+     "id": "F-k06",
+     "strategy": "keyword",
+     "query": "keyword robust-kbench --limit 12",
+     "returned_ids": [
+      "2509.14279",
+      "2605.29734",
+      "2603.12440",
+      "2609.31016",
+      "2602.02690",
+      "2608.00848",
+      "2606.22536",
+      "2606.11855",
+      "2606.08063",
+      "2606.11999",
+      "2605.18741",
+      "2602.11437"
+     ],
+     "failed": false
+    },
+    {
+     "id": "F-k03",
+     "strategy": "keyword",
+     "query": "keyword Dr. Kernel reinforcement learning done right Triton kernel --limit 12",
+     "returned_ids": [
+      "2602.05885",
+      "2608.12004",
+      "2608.17641",
+      "2608.hawkeye-hardware-aware-gpu-kernel-optimization",
+      "2609.12471",
+      "2607.23089",
+      "2609.33074",
+      "2606.16497",
+      "2609.36800",
+      "2609.30059",
+      "2603.28342",
+      "2603.21465"
+     ],
+     "failed": false
+    },
+    {
+     "id": "F-k12",
+     "strategy": "keyword",
+     "query": "keyword KernelPro --limit 10",
+     "returned_ids": [
+      "2606.26453",
+      "2608.20532",
+      "2609.12551",
+      "2510.09272"
+     ],
+     "failed": false
+    },
+    {
+     "id": "F-k13",
+     "strategy": "keyword",
+     "query": "keyword TritonBench --limit 12",
+     "returned_ids": [
+      "2502.14752",
+      "2609.12471",
+      "2610.02229",
+      "2609.29626",
+      "2606.20128",
+      "2511.18868",
+      "2511.20100",
+      "2507.05687",
+      "2609.29067",
+      "2609.10226",
+      "2609.36800",
+      "2609.33243"
+     ],
+     "failed": false
+    },
+    {
+     "id": "F-k08",
+     "strategy": "keyword",
+     "query": "keyword reward hacking GPU kernel generation --limit 15",
+     "returned_ids": [
+      "2609.33221",
+      "2609.19101",
+      "2609.28614",
+      "2609.39533",
+      "2609.36245",
+      "2606.04847",
+      "2608.17776",
+      "2610.03055",
+      "2609.14998",
+      "2609.00058",
+      "2608.30724",
+      "2609.33074",
+      "2608.hawkeye-hardware-aware-gpu-kernel-optimization",
+      "2609.00213",
+      "2610.03196"
+     ],
+     "failed": false
+    },
+    {
+     "id": "F-k10",
+     "strategy": "keyword",
+     "query": "keyword CUDA-Harness --limit 10",
+     "returned_ids": [
+      "2609.00058",
+      "2609.24974",
+      "2608.15071",
+      "2609.35738",
+      "2609.40330",
+      "2609.01481",
+      "2608.25593",
+      "2608.23552",
+      "2609.39982",
+      "2609.00196"
+     ],
+     "failed": false
+    },
+    {
+     "id": "F-k09",
+     "strategy": "keyword",
+     "query": "keyword mutation analysis kernel correctness oracle --limit 15",
+     "returned_ids": [
+      "2609.22220",
+      "2609.01775",
+      "2609.33160",
+      "2609.05879",
+      "2609.31596",
+      "2609.23218",
+      "2610.01799",
+      "2609.32996",
+      "2609.01865",
+      "2608.21962",
+      "2609.35841",
+      "2608.05917",
+      "2608.10551",
+      "2608.12635",
+      "2606.20128"
+     ],
+     "failed": false
+    },
+    {
+     "id": "F-k11",
+     "strategy": "keyword",
+     "query": "keyword CAKE CUDA kernel correctness --limit 10",
+     "returned_ids": [
+      "2608.12629",
+      "2609.00058",
+      "2602.24286",
+      "2609.33074",
+      "2607.20908",
+      "2606.16231",
+      "2606.26453",
+      "2608.25124",
+      "2609.12471",
+      "2609.13388"
+     ],
+     "failed": false
+    },
+    {
+     "id": "F-k17",
+     "strategy": "keyword",
+     "query": "keyword hidden test inputs shape variation kernel correctness --limit 15",
+     "returned_ids": [
+      "2608.12629",
+      "2608.30841",
+      "2609.00058",
+      "2608.13882",
+      "2609.22220",
+      "2609.36783",
+      "2608.14375",
+      "2610.05170",
+      "2610.03470",
+      "2610.04512",
+      "2608.11831",
+      "2606.20128",
+      "2609.33074",
+      "2608.22267",
+      "2608.12700"
+     ],
+     "failed": false
+    },
+    {
+     "id": "F-k16",
+     "strategy": "keyword",
+     "query": "keyword kernel correctness verifier strength reinforcement learning reward --limit 15",
+     "returned_ids": [
+      "2609.35677",
+      "2605.12474",
+      "2608.28128",
+      "2609.27572",
+      "2610.07212",
+      "2610.01729",
+      "2610.04469",
+      "2606.28436",
+      "2604.27505",
+      "2610.01207",
+      "2605.vista",
+      "2610.01800",
+      "2610.02545",
+      "2604.16004",
+      "2607.26656"
+     ],
+     "failed": false
+    },
+    {
+     "id": "F-k15",
+     "strategy": "keyword",
+     "query": "keyword false accept correctness check LLM-generated kernels --limit 15",
+     "returned_ids": [
+      "2606.20128",
+      "2608.12700",
+      "2609.21058",
+      "2610.03226",
+      "2609.26550",
+      "2607.16241",
+      "2608.21962",
+      "2609.31540",
+      "2609.39414",
+      "2608.10213",
+      "2609.24895",
+      "2610.00296",
+      "2609.24036",
+      "2605.04956",
+      "2609.25335"
+     ],
+     "failed": false
+    },
+    {
+     "id": "F-k14",
+     "strategy": "keyword",
+     "query": "keyword KernelBench-M --limit 10",
+     "returned_ids": [
+      "2607.16241",
+      "2502.10517",
+      "2609.22220",
+      "2609.26779",
+      "2609.21058",
+      "2608.21157",
+      "2602.24286",
+      "2609.33074",
+      "2610.05683",
+      "2609.30059"
+     ],
+     "failed": false
+    },
+    {
+     "id": "F-k18",
+     "strategy": "keyword",
+     "query": "keyword mutation testing floating-point numerical software tolerance oracle --limit 15",
+     "returned_ids": [
+      "2609.19735",
+      "2608.27100",
+      "2609.22220",
+      "2609.37322",
+      "2609.19352",
+      "2609.11721",
+      "2609.35841",
+      "2610.08808",
+      "2608.14315",
+      "2609.33160",
+      "2608.12635",
+      "2609.07492",
+      "2609.00381",
+      "2608.12970",
+      "2606.31308"
+     ],
+     "failed": false
+    },
+    {
+     "id": "F-k19",
+     "strategy": "keyword",
+     "query": "keyword Correctness Illusion GPU kernels --limit 10",
+     "returned_ids": [
+      "2606.20128",
+      "2609.13585",
+      "2610.03226",
+      "2606.parallel-kernel-bench",
+      "2608.20711",
+      "2607.14541",
+      "2609.11356",
+      "2610.05683",
+      "2609.21058",
+      "2609.33074"
+     ],
+     "failed": false
+    },
+    {
+     "id": "F-e02",
+     "strategy": "embedding",
+     "query": "embedding LLM reinforcement learning for GPU kernel generation exploits weak correctness checks; reward hacking where generated kernels pass tests without computing the right result --limit 15",
+     "returned_ids": [
+      "2609.28614",
+      "2609.39533",
+      "2608.30724",
+      "2608.12700",
+      "2609.22220",
+      "2605.12474",
+      "2608.02712",
+      "2606.04075",
+      "2608.08722",
+      "2607.09492",
+      "2606.04923",
+      "2607.16241",
+      "2605.25189",
+      "2606.15385",
+      "2606.01066"
+     ],
+     "failed": false
+    },
+    {
+     "id": "F-e01",
+     "strategy": "embedding",
+     "query": "embedding Validate GPU kernel correctness checkers by injecting deterministic mutants into compiler-generated and human-written Triton kernels, then measure each checker's false-accept and false-reject rates against an independent fp64 oracle audit and its cost in GPU-seconds --limit 15",
+     "returned_ids": [
+      "2610.05683",
+      "2609.11356",
+      "2610.09142",
+      "2609.29067",
+      "2610.02928",
+      "2609.18123",
+      "2609.33916",
+      "2609.33160",
+      "2609.22220",
+      "2608.12700",
+      "2609.08871",
+      "2608.22331",
+      "2607.17979",
+      "2608.13756",
+      "2608.14527"
+     ],
+     "failed": false
+    },
+    {
+     "id": "F-e04",
+     "strategy": "embedding",
+     "query": "embedding Robust evaluation of LLM-generated CUDA kernels with hidden inputs, multiple shapes, and tighter tolerances to detect incorrect kernels that pass the benchmark check --limit 15",
+     "returned_ids": [
+      "2610.05683",
+      "2608.17379",
+      "2609.00058",
+      "2609.22220",
+      "2609.08871",
+      "2608.12700",
+      "2608.12004",
+      "2608.02712",
+      "2608.09900",
+      "2607.20852",
+      "parallel-kernel-bench",
+      "2607.16241",
+      "2605.31464",
+      "2607.04058",
+      "2606.20128"
+     ],
+     "failed": false
+    },
+    {
+     "id": "F-e03",
+     "strategy": "embedding",
+     "query": "embedding Does training with a stronger verifier reward improve RL for code generation? Matched-budget comparison of strict versus lenient correctness checkers as the reward --limit 15",
+     "returned_ids": [
+      "2609.39533",
+      "2610.00890",
+      "2608.24135",
+      "2605.12474",
+      "2607.27271",
+      "2608.02867",
+      "2607.19226",
+      "2607.04332",
+      "2605.28751",
+      "2606.20881",
+      "2606.01066",
+      "2605.30478",
+      "2605.28022",
+      "2604.23488",
+      "2608.12337"
+     ],
+     "failed": false
+    },
+    {
+     "id": "F-e06",
+     "strategy": "embedding",
+     "query": "embedding Benchmark for LLM generated Triton kernels evaluating correctness and speedup --published-after 2026-01-01 --limit 15",
+     "returned_ids": [
+      "2609.36800",
+      "2609.30059",
+      "2609.29067",
+      "2610.03226",
+      "2609.12471",
+      "2608.25061",
+      "2608.17379",
+      "2609.21058",
+      "2606.jax-bench",
+      "2608.12004",
+      "2607.17979",
+      "2607.23089",
+      "2607.04454",
+      "2607.27231",
+      "parallel-kernel-bench"
+     ],
+     "failed": false
+    },
+    {
+     "id": "F-e05",
+     "strategy": "embedding",
+     "query": "embedding Mutation testing to measure the adequacy of test oracles for floating-point numerical code and tolerance-based comparisons --limit 15",
+     "returned_ids": [
+      "2609.09315",
+      "2609.33160",
+      "2609.35841",
+      "2609.22220",
+      "2606.26604",
+      "2605.17437",
+      "2605.13279",
+      "2604.19086",
+      "2601.19088",
+      "2512.16741",
+      "2511.14432",
+      "2510.03071",
+      "2506.02954",
+      "2404.09952",
+      "2507.11199"
+     ],
+     "failed": false
+    },
+    {
+     "id": "F-e08",
+     "strategy": "embedding",
+     "query": "embedding Independent audit of accepted GPU kernels finds many are wrong: tolerance-free contract checks, fp64 reference, unseen shapes and dtypes --limit 15",
+     "returned_ids": [
+      "2610.09142",
+      "2609.11356",
+      "2609.37315",
+      "2609.22991",
+      "2609.18123",
+      "2609.33532",
+      "2608.12700",
+      "2609.15015",
+      "2609.19844",
+      "2609.05881",
+      "2609.22220",
+      "2609.09696",
+      "2608.11693",
+      "2608.01715",
+      "2608.13067"
+     ],
+     "failed": false
+    },
+    {
+     "id": "F-k23",
+     "strategy": "keyword",
+     "query": "keyword test case strength reward code reinforcement learning false positive verifier --limit 15",
+     "returned_ids": [
+      "2610.05170",
+      "2608.24135",
+      "2609.35677",
+      "2609.09135",
+      "2609.32172",
+      "2609.03309",
+      "2610.04933",
+      "2605.12474",
+      "2608.28128",
+      "2609.03241",
+      "2609.03955",
+      "2604.16004",
+      "2607.11022",
+      "2609.01354",
+      "2610.01207"
+     ],
+     "failed": false
+    },
+    {
+     "id": "F-k21",
+     "strategy": "keyword",
+     "query": "keyword AI as a Compiler Triton kernels without the Triton compiler --limit 8",
+     "returned_ids": [
+      "2609.36800",
+      "2607.23089",
+      "2608.17641",
+      "2608.12004",
+      "2608.00325",
+      "2609.11356",
+      "2609.37241",
+      "2609.15311"
+     ],
+     "failed": false
+    },
+    {
+     "id": "F-e07",
+     "strategy": "embedding",
+     "query": "embedding Training a code generation policy with RL using verifiers of different strengths, measuring whether weaker unit tests cause the policy to learn incorrect solutions that pass tests --limit 15",
+     "returned_ids": [
+      "2609.39533",
+      "2610.03458",
+      "2609.33220",
+      "2609.09135",
+      "2609.03955",
+      "2608.24135",
+      "2605.12474",
+      "2607.20852",
+      "2607.27271",
+      "2607.11022",
+      "2607.04332",
+      "2605.28751",
+      "2606.16062",
+      "2606.01066",
+      "2603.15611"
+     ],
+     "failed": false
+    },
+    {
+     "id": "F-k22",
+     "strategy": "keyword",
+     "query": "keyword fuzzing RLVR verifiers --limit 12",
+     "returned_ids": [
+      "ERROR: error decoding response body"
+     ],
+     "failed": true
+    },
+    {
+     "id": "F-k20",
+     "strategy": "keyword",
+     "query": "keyword lazy optimization decoy kernel hacking check --limit 15",
+     "returned_ids": [
+      "2609.16204",
+      "2609.00058",
+      "2602.05885",
+      "2609.19101",
+      "2609.39533",
+      "2610.03222",
+      "2609.33221",
+      "2609.28614",
+      "2610.08410",
+      "2608.17776",
+      "2610.04581",
+      "2609.19239",
+      "2608.19412",
+      "2609.05372",
+      "2608.29993"
+     ],
+     "failed": false
+    },
+    {
+     "id": "F-k22b",
+     "strategy": "keyword",
+     "query": "keyword Fuzzing RLVR Verifiers --limit 12",
+     "returned_ids": [
+      "ERROR: error decoding response body"
+     ],
+     "failed": true
+    },
+    {
+     "id": "F-o01",
+     "strategy": "openalex",
+     "query": "openalex KernelBench GPU kernel LLM correctness --published-after 2025-01-01 --limit 15",
+     "returned_ids": [
+      "10.48550/arxiv.2502.10517",
+      "10.48550/arxiv.2607.16241",
+      "10.48550/arxiv.2606.20128",
+      "10.1609/aaai.v40i34.40155",
+      "10.48550/arxiv.2605.26118",
+      "10.48550/arxiv.2602.11000",
+      "10.48550/arxiv.2511.20100",
+      "W7106862774",
+      "10.1145/3819802.3820580",
+      "10.48550/arxiv.2606.04847",
+      "10.48550/arxiv.2607.17979",
+      "10.48550/arxiv.2606.16497",
+      "10.48550/arxiv.2609.22220",
+      "10.48550/arxiv.2605.04956",
+      "10.48550/arxiv.2609.30059"
+     ],
+     "failed": false
+    },
+    {
+     "id": "F-o04",
+     "strategy": "openalex",
+     "query": "openalex mutation testing floating point tolerance test oracle numerical --limit 15",
+     "returned_ids": [
+      "10.48550/arxiv.2609.22220",
+      "10.23940/ijpe.18.07.p11.14811486",
+      "10.5753/sast.2025.14183",
+      "10.18653/v1/2026.findings-acl.683",
+      "W7161916857",
+      "10.1145/3575693.3575707",
+      "10.48550/arxiv.1906.10742",
+      "10.48550/arxiv.2406.07944",
+      "W1583963926",
+      "W142920806",
+      "10.4230/lipics.ecoop.2020.22",
+      "W2598299391",
+      "10.25675/3.020419",
+      "10.48550/arxiv.2606.06747",
+      "W2248259933"
+     ],
+     "failed": false
+    },
+    {
+     "id": "F-o02",
+     "strategy": "openalex",
+     "query": "openalex mutation analysis GPU kernel benchmark oracle --limit 15",
+     "returned_ids": [
+      "10.48550/arxiv.2609.22220",
+      "10.48550/arxiv.2004.08140",
+      "10.1007/s00521-026-11909-3",
+      "10.3390/a18070385",
+      "10.1145/3728950",
+      "10.48550/arxiv.2608.12629",
+      "10.20944/preprints202505.0152.v1",
+      "10.1145/3783992",
+      "10.1002/pro.70334",
+      "10.48550/arxiv.2501.16165",
+      "10.48550/arxiv.2605.23931",
+      "10.65215/ltspreprints.2026.09.30.000357",
+      "10.48550/arxiv.2303.01557",
+      "10.1101/2025.04.29.651183",
+      "10.48550/arxiv.2607.29678"
+     ],
+     "failed": false
+    },
+    {
+     "id": "F-o05",
+     "strategy": "openalex",
+     "query": "openalex verifier false positives reinforcement learning verifiable rewards code --published-after 2025-06-01 --limit 15",
+     "returned_ids": [
+      "10.48550/arxiv.2510.00915",
+      "10.48550/arxiv.2601.04411",
+      "10.48550/arxiv.2602.00513",
+      "10.48550/arxiv.2605.08441",
+      "10.48550/arxiv.2506.14245",
+      "10.48550/arxiv.2605.30244",
+      "10.48550/arxiv.2605.28561",
+      "10.48550/arxiv.2603.16157",
+      "10.54097/mzt6hz16",
+      "10.48550/arxiv.2604.10110",
+      "10.48550/arxiv.2609.23457",
+      "10.48550/arxiv.2609.22347",
+      "10.48550/arxiv.2510.01167",
+      "10.1609/aaai.v40i38.40467",
+      "10.48550/arxiv.2604.05820"
+     ],
+     "failed": false
+    },
+    {
+     "id": "F-o03",
+     "strategy": "openalex",
+     "query": "openalex reward hacking kernel generation reinforcement learning --published-after 2025-01-01 --limit 15",
+     "returned_ids": [
+      "10.48550/arxiv.2602.05885",
+      "10.48550/arxiv.2609.33221",
+      "10.48550/arxiv.2605.13536",
+      "10.48550/arxiv.2603.02637",
+      "10.48550/arxiv.2609.27572",
+      "10.48550/arxiv.2606.04847",
+      "10.1007/978-3-032-36217-9_2",
+      "10.48550/arxiv.2608.08158",
+      "10.1145/3770855.3816468",
+      "10.48550/arxiv.2501.09620",
+      "10.48550/arxiv.2605.21384",
+      "10.48550/arxiv.2607.06175",
+      "10.48550/arxiv.2608.02951",
+      "10.48550/arxiv.2601.03525",
+      "10.48550/arxiv.2602.00424"
+     ],
+     "failed": false
+    },
+    {
+     "id": "F-k26",
+     "strategy": "keyword",
+     "query": "keyword AutoTriton rule-based reward --limit 10",
+     "returned_ids": [
+      "2507.05687",
+      "2610.00729",
+      "2609.33803",
+      "2609.27572",
+      "2609.38862",
+      "2608.06310",
+      "2610.04054",
+      "2609.33221",
+      "2609.31192",
+      "2605.12474"
+     ],
+     "failed": false
+    },
+    {
+     "id": "F-k25",
+     "strategy": "keyword",
+     "query": "keyword TritonRL robust verification cheating Triton --limit 10",
+     "returned_ids": [
+      "2510.17891",
+      "2609.36800",
+      "2608.12004",
+      "2608.17641",
+      "2609.39102",
+      "2609.why-are-ai-agents-lying-cheating-and-coordinating",
+      "2609.04170",
+      "2607.21763",
+      "2609.37280",
+      "2610.00689"
+     ],
+     "failed": false
+    },
+    {
+     "id": "F-e10",
+     "strategy": "embedding",
+     "query": "embedding mutation testing of GPU kernel test suites CUDA Triton fault injection to evaluate test adequacy --limit 15",
+     "returned_ids": [
+      "2609.35841",
+      "2609.25520",
+      "2609.08871",
+      "2609.22220",
+      "2607.04058",
+      "2607.05149",
+      "2607.03223",
+      "2606.20128",
+      "2606.26604",
+      "2605.15638",
+      "2605.00107",
+      "2603.12485",
+      "2602.10478",
+      "2601.19088",
+      "2512.16741"
+     ],
+     "failed": false
+    },
+    {
+     "id": "F-k24",
+     "strategy": "keyword",
+     "query": "keyword Kernel Contracts specification language ML kernel correctness --limit 10",
+     "returned_ids": [
+      "2604.22032",
+      "2610.kernel-autoresearch",
+      "2610.05014",
+      "2609.00058",
+      "2610.10394",
+      "2609.06052",
+      "2608.12629",
+      "2609.38248",
+      "2607.24382",
+      "2609.12471"
+     ],
+     "failed": false
+    },
+    {
+     "id": "F-e09",
+     "strategy": "embedding",
+     "query": "embedding correctness checker for GPU kernels used as reinforcement learning reward; comparing weak and strong checkers during kernel RL training; false accepts on policy samples --published-after 2026-08-01 --limit 20",
+     "returned_ids": [
+      "2609.group-batch-means-sampling-budget",
+      "2610.05683",
+      "2609.33074",
+      "2609.39533",
+      "2609.35677",
+      "2609.35140",
+      "2608.12629",
+      "2610.05014",
+      "2610.02911",
+      "2609.39813",
+      "2610.07043",
+      "2609.09250",
+      "2609.11356",
+      "2609.12471",
+      "2609.33220"
+     ],
+     "failed": false
+    },
+    {
+     "id": "F-k27",
+     "strategy": "keyword",
+     "query": "keyword Kevin multi-turn RL CUDA kernels reward hacking --limit 10",
+     "returned_ids": [
+      "2507.11948",
+      "2609.39533",
+      "2609.00058",
+      "2608.17776",
+      "2609.28614",
+      "2607.20908",
+      "2609.14998",
+      "2609.19101",
+      "2609.33221",
+      "2602.24286"
+     ],
+     "failed": false
+    },
+    {
+     "id": "F-e11",
+     "strategy": "embedding",
+     "query": "embedding systematic false positives of a verifier, unlike random reward noise, cause reinforcement learning collapse; controlled experiment injecting verifier errors --limit 15",
+     "returned_ids": [
+      "2609.35677",
+      "2609.39533",
+      "2609.33220",
+      "2609.17226",
+      "2609.01354",
+      "2609.27883",
+      "2607.11022",
+      "2607.20543",
+      "2607.07436",
+      "2606.01066",
+      "2605.25252",
+      "2605.14220",
+      "2606.05932",
+      "2605.02909",
+      "2603.16140"
+     ],
+     "failed": false
+    },
+    {
+     "id": "F-k28",
+     "strategy": "keyword",
+     "query": "keyword TorchInductor generated Triton kernels mutation --limit 12",
+     "returned_ids": [
+      "2609.36800",
+      "2608.00325",
+      "2608.17641",
+      "2608.12004",
+      "2609.11356",
+      "2609.37241",
+      "2608.03537",
+      "2610.05683",
+      "2607.16241",
+      "2608.20711",
+      "2606.20128",
+      "2607.23089"
+     ],
+     "failed": false
+    },
+    {
+     "id": "F-e13",
+     "strategy": "embedding",
+     "query": "embedding detecting kernels that do not launch any GPU kernel or branch on training mode; anti-hacking checks for generated kernels; launch hooks and profiler coverage --limit 15",
+     "returned_ids": [
+      "2610.09462",
+      "2609.23186",
+      "2608.12700",
+      "2609.00309",
+      "2608.21895",
+      "2607.13640",
+      "2606.28116",
+      "2607.01854",
+      "2606.19262",
+      "2606.20128",
+      "2606.15809",
+      "2606.07968",
+      "2606.11871",
+      "2605.24817",
+      "2609.00351"
+     ],
+     "failed": false
+    },
+    {
+     "id": "F-o07",
+     "strategy": "openalex",
+     "query": "openalex mutation testing CUDA GPU kernels test suite adequacy --limit 15",
+     "returned_ids": [
+      "10.48550/arxiv.2609.22220",
+      "10.1007/978-3-030-16722-6_19",
+      "10.1145/3366428.3380768",
+      "10.1007/s10710-016-9273-9",
+      "10.1016/j.jss.2019.110398",
+      "10.1007/s10664-020-09881-0",
+      "10.1016/j.jss.2019.110398",
+      "10.70675/5747c493z5931z462bz8c5az0f897179fd20",
+      "W3006875903",
+      "10.5281/zenodo.5055130",
+      "10.2172/3547206",
+      "10.22541/au.177067589.93635741/v1",
+      "W2749431997",
+      "10.1145/3611643.3616337",
+      "W592691557"
+     ],
+     "failed": false
+    },
+    {
+     "id": "F-e12",
+     "strategy": "embedding",
+     "query": "embedding use compiler-generated TorchInductor Triton kernels and human-written library kernels as correct substrates, inject faults, and test benchmark correctness checks --limit 15",
+     "returned_ids": [
+      "2610.05683",
+      "2609.29067",
+      "2609.12471",
+      "2609.19611",
+      "2609.18022",
+      "2609.22220",
+      "2608.12700",
+      "2608.02712",
+      "2608.14527",
+      "2608.11886",
+      "2607.04454",
+      "2607.27270",
+      "2607.27231",
+      "2607.20518",
+      "2606.20128"
+     ],
+     "failed": false
+    },
+    {
+     "id": "F-o06",
+     "strategy": "openalex",
+     "query": "openalex Triton kernel correctness verification large language model --published-after 2025-06-01 --limit 15",
+     "returned_ids": [
+      "10.1007/s11704-026-60308-3",
+      "10.48550/arxiv.2609.36800",
+      "10.48550/arxiv.2603.21465",
+      "10.48550/arxiv.2602.11715",
+      "10.48550/arxiv.2604.22032",
+      "10.48550/arxiv.2602.05885",
+      "10.48550/arxiv.2603.21851",
+      "10.48550/arxiv.2510.17891",
+      "10.48550/arxiv.2608.17641",
+      "10.48550/arxiv.2607.04454",
+      "10.48550/arxiv.2607.20475",
+      "10.48550/arxiv.2604.24927",
+      "10.48550/arxiv.2609.30059",
+      "10.48550/arxiv.2603.28342",
+      "10.26153/tsw/64443"
+     ],
+     "failed": false
+    },
+    {
+     "id": "F-o08",
+     "strategy": "openalex",
+     "query": "openalex KernelBench reward hacking verification --published-after 2026-01-01 --limit 15",
+     "returned_ids": [
+      "10.48550/arxiv.2607.16241",
+      "10.48550/arxiv.2606.08960",
+      "10.48550/arxiv.2605.21384",
+      "10.48550/arxiv.2603.02637",
+      "10.48550/arxiv.2604.28182",
+      "10.48550/arxiv.2606.04847",
+      "10.48550/arxiv.2602.05885",
+      "10.48550/arxiv.2609.00058",
+      "10.48550/arxiv.2608.20711",
+      "10.48550/arxiv.2605.12673",
+      "10.48550/arxiv.2607.20518",
+      "10.48550/arxiv.2605.16379",
+      "10.48550/arxiv.2603.19173",
+      "10.48550/arxiv.2609.26457",
+      "10.48550/arxiv.2604.22032"
+     ],
+     "failed": false
+    },
+    {
+     "id": "F-e14",
+     "strategy": "embedding",
+     "query": "embedding taxonomy of reward hacks in LLM-generated GPU kernels: returning cached output, skipping computation, calling PyTorch fallback, shape-specific shortcuts, timing exploits --limit 15",
+     "returned_ids": [
+      "2609.39533",
+      "2609.35587",
+      "2609.18123",
+      "2609.00058",
+      "2607.17979",
+      "2608.02712",
+      "2608.08722",
+      "2608.01804",
+      "2606.04075",
+      "parallel-kernel-bench",
+      "2607.16241",
+      "2605.31464",
+      "2605.23215",
+      "2605.25189",
+      "2606.20128"
+     ],
+     "failed": false
+    },
+    {
+     "id": "F-k29",
+     "strategy": "keyword",
+     "query": "keyword kernel generation verifier RL hidden inputs reward --published-after 2026-09-01 --limit 15",
+     "returned_ids": [
+      "2609.35677",
+      "2609.21208",
+      "2610.01066",
+      "2609.39533",
+      "2609.33399",
+      "2609.39436",
+      "2610.04469",
+      "2609.33126",
+      "2609.38847",
+      "2609.37200",
+      "2610.04928",
+      "2609.05028",
+      "2609.32665",
+      "2610.04006",
+      "2609.01354"
+     ],
+     "failed": false
+    },
+    {
+     "id": "F-k30",
+     "strategy": "keyword",
+     "query": "keyword on-policy false positive rate verifier audit --published-after 2026-06-01 --limit 12",
+     "returned_ids": [
+      "2609.03241",
+      "2609.33662",
+      "2608.16003",
+      "2608.00220",
+      "2610.04040",
+      "2610.02808",
+      "2610.06432",
+      "2609.01354",
+      "2609.08798",
+      "2609.15404",
+      "2609.26220",
+      "2609.35677"
+     ],
+     "failed": false
+    },
+    {
+     "id": "F-k31",
+     "strategy": "keyword",
+     "query": "keyword CUDA-L1 contrastive reinforcement learning reward hacking --limit 8",
+     "returned_ids": [
+      "2609.33221",
+      "2609.39533",
+      "2605.12474",
+      "2507.14111",
+      "2609.19101",
+      "2609.00213",
+      "2609.00058",
+      "2607.09492"
+     ],
+     "failed": false
+    },
+    {
+     "id": "F-e15",
+     "strategy": "embedding",
+     "query": "embedding stronger unit test reward during reinforcement learning for code improves held-out correctness under independent audit; matched compute comparison of reward strictness --published-after 2026-06-01 --limit 15",
+     "returned_ids": [
+      "2610.02163",
+      "2610.04011",
+      "2609.32577",
+      "2610.00890",
+      "2610.03984",
+      "2610.03055",
+      "2609.31995",
+      "2609.33875",
+      "2610.04364",
+      "2610.08514",
+      "2609.09133",
+      "2609.32228",
+      "2609.36587",
+      "2609.16604",
+      "2609.32482"
+     ],
+     "failed": false
+    }
+   ],
+   "other": [
+    {
+     "id": "F-P1",
+     "tool": "orx paper --full",
+     "note": "42 full-text reads listed by the cell (41 ids below plus 2606.01066 recovered by embedding)",
+     "ids": [
+      "2609.22220",
+      "2602.05885",
+      "2609.33074",
+      "2608.12700",
+      "2607.16241",
+      "2509.14279",
+      "2609.00058",
+      "2608.12629",
+      "2606.26453",
+      "2609.36800",
+      "2502.14752",
+      "2606.20128",
+      "2610.05683",
+      "2607.11022",
+      "2606.01066",
+      "2609.35677",
+      "2609.39533",
+      "2606.16062",
+      "2609.01354",
+      "2602.24286",
+      "2608.12635",
+      "2609.21058",
+      "2605.04956",
+      "2607.17979",
+      "2608.24135",
+      "2606.27396",
+      "2607.16228",
+      "2607.04454",
+      "2610.09142",
+      "2608.14527",
+      "2510.17891",
+      "2604.22032",
+      "2507.11948",
+      "2507.05687",
+      "2607.20908",
+      "2604.07666",
+      "2605.02909",
+      "2609.19611",
+      "2607.27231",
+      "2608.01804",
+      "2507.14111"
+     ]
+    },
+    {
+     "id": "F-P2",
+     "tool": "orx paper (OpenAlex metadata; no full text)",
+     "ids": [
+      "10.1145/3819802.3820580"
+     ]
+    },
+    {
+     "id": "F-V1",
+     "tool": "curl export.arxiv.org/abs (submission history)",
+     "ids": [
+      "2609.22220v1",
+      "2602.05885v2",
+      "2609.33074v1",
+      "2608.12700v2",
+      "2607.16241v1",
+      "2509.14279v1",
+      "2609.00058v1",
+      "2608.12629v1",
+      "2606.26453v2",
+      "2609.36800v1",
+      "2502.14752v1",
+      "2606.20128v2",
+      "2610.05683v1",
+      "2510.17891v2"
+     ]
+    },
+    {
+     "id": "F-G1",
+     "tool": "GitHub REST commits / HTTP status; Hugging Face datasets API",
+     "ids": [
+      "KernelGYM@3a84417f8c0e (2026-02-06)",
+      "lethe@eaff0bb6bd6d (2026-08-27)",
+      "kernel_bench_verified@3fdf6fec7372 (2026-07-13)",
+      "robust-kbench@078f5bab2993 (2025-11-22)",
+      "KernelBench@423217d9fda9 (2026-03-05)",
+      "KernelZero: HTTP 404",
+      "gpuemu-corpus: 200",
+      "rlvr-leaky-suite: 200",
+      "CATCH: 200",
+      "KernelBench-M@d04d6fc72504750804c4f4b45b4a8d7dc7c1880d (442 files, 191 witnesses/*.json, no licence)"
+     ]
+    }
+   ]
+  },
+  "kill-shot": {
+   "discover": [
+    {
+     "id": "K-1",
+     "strategy": "keyword",
+     "query": "kernel correctness checker mutation testing false accept KernelBench",
+     "flags": "",
+     "returned_ids": [
+      "2609.22220",
+      "2610.05683",
+      "2609.33074",
+      "2609.37322",
+      "2609.33160",
+      "2607.16241",
+      "2608.12635",
+      "2609.30059",
+      "2608.24250",
+      "2610.09142",
+      "2607.01504",
+      "2609.25520",
+      "2608.21157",
+      "2606.26758",
+      "2609.21058"
+     ],
+     "failed": false
+    },
+    {
+     "id": "K-2",
+     "strategy": "keyword",
+     "query": "Measuring the Checker",
+     "flags": "",
+     "returned_ids": [
+      "2609.22220",
+      "2609.07667",
+      "2609.33160",
+      "2607.01504",
+      "2609.09250",
+      "2608.24320",
+      "2608.01135",
+      "2605.25988",
+      "2603.28794",
+      "2609.36308"
+     ],
+     "failed": false
+    },
+    {
+     "id": "K-3",
+     "strategy": "keyword",
+     "query": "Contract-Grade Verifier GPU kernel",
+     "flags": "",
+     "returned_ids": [
+      "2608.12700",
+      "2610.07541",
+      "2608.21157",
+      "2610.02808",
+      "2608.hawkeye-hardware-aware-gpu-kernel-optimization",
+      "2610.05014",
+      "2608.12629",
+      "2609.33467",
+      "2609.28769",
+      "2606.04847"
+     ],
+     "failed": false
+    },
+    {
+     "id": "K-4",
+     "strategy": "keyword",
+     "query": "KernelBench-Verified hidden inputs",
+     "flags": "",
+     "returned_ids": [
+      "2607.16241",
+      "2609.22220",
+      "2609.08149",
+      "2609.21058",
+      "2502.10517",
+      "2610.05683",
+      "2609.17439",
+      "2609.26779",
+      "2609.35475",
+      "2610.01788"
+     ],
+     "failed": false
+    },
+    {
+     "id": "K-5",
+     "strategy": "keyword",
+     "query": "mutation score Triton kernel mutants verifier",
+     "flags": "",
+     "returned_ids": [
+      "2609.36800",
+      "2608.12004",
+      "2607.23089",
+      "2609.33160",
+      "2608.26183",
+      "2608.09318",
+      "2607.05149",
+      "2609.22220",
+      "2608.24250",
+      "2610.01799",
+      "2608.12635",
+      "2608.17641",
+      "2609.35841",
+      "2607.18582",
+      "2607.03223"
+     ],
+     "failed": false
+    },
+    {
+     "id": "K-6",
+     "strategy": "keyword",
+     "query": "reward hacking kernel generation correctness check RL",
+     "flags": "--published-after 2025-06-01",
+     "returned_ids": [
+      "2609.39533",
+      "2608.17776",
+      "2609.19101",
+      "2609.33221",
+      "2609.28614",
+      "2609.14998",
+      "2609.00058",
+      "2609.35677",
+      "2605.12474",
+      "2608.11669",
+      "2609.00213",
+      "2609.36245",
+      "2610.03055",
+      "2607.09492",
+      "2606.04923"
+     ],
+     "failed": false
+    },
+    {
+     "id": "K-7",
+     "strategy": "embedding",
+     "query": "Validate GPU kernel correctness checkers of increasing strength (KernelBench allclose check, anti-hacking launch check, hidden-value and shape-variation check) against an independent fp64 oracle audit, measuring each checker's false-accept rate on deterministic mutants of compiler-generated and human-written Triton kernels and its false-reject rate on correct kernels",
+     "flags": "",
+     "returned_ids": [
+      "2610.05683",
+      "2609.11356",
+      "2610.09142",
+      "2609.29067",
+      "2610.02928",
+      "2609.18123",
+      "2609.33160",
+      "2609.22220",
+      "2608.12700",
+      "2609.08871",
+      "2608.22331",
+      "2607.17979",
+      "2608.16003",
+      "2608.13756",
+      "2608.14527"
+     ],
+     "failed": false
+    },
+    {
+     "id": "K-8",
+     "strategy": "embedding",
+     "query": "Does training a kernel-generating LLM with RL against a stronger correctness verifier produce more kernels that are correct under independent audit and faster than PyTorch, at matched compute",
+     "flags": "",
+     "returned_ids": [
+      "2609.33074",
+      "2609.30059",
+      "2609.35140",
+      "2609.12471",
+      "2609.21058",
+      "2608.25061",
+      "2608.25460",
+      "2607.17979",
+      "2602.24286",
+      "2606.29082",
+      "2606.16497",
+      "2606.04847",
+      "2605.31464",
+      "2607.16241",
+      "2607.20501"
+     ],
+     "failed": false
+    },
+    {
+     "id": "K-9",
+     "strategy": "openalex",
+     "query": "mutation analysis GPU kernel benchmark oracle false negative",
+     "flags": "",
+     "returned_ids": [
+      "2609.22220",
+      "2608.12629",
+      "10.1002/pro.70334",
+      "10.1145/3783992",
+      "2501.16165",
+      "10.1145/3703920",
+      "2607.12363",
+      "2209.12487",
+      "2606.05570",
+      "2608.11341",
+      "10.1145/3729346",
+      "10.21203/rs.3.rs-10524158/v1",
+      "2605.12673",
+      "10.17877/de290r-7242",
+      "10.3390/books978-3-03936-141-0"
+     ],
+     "failed": false
+    },
+    {
+     "id": "K-10",
+     "strategy": "openalex",
+     "query": "are mutants a valid substitute for real faults",
+     "flags": "",
+     "returned_ids": [
+      "10.1145/2635868.2635929",
+      "10.1007/s10664-019-09778-7",
+      "1807.08823",
+      "10.1002/stvr.1509",
+      "2306.02319",
+      "10.5281/zenodo.5053074",
+      "10.1145/2931037.2931039",
+      "1910.11015",
+      "2011.10787",
+      "10.1109/tse.2023.3277564"
+     ],
+     "failed": false
+    },
+    {
+     "id": "K-11",
+     "strategy": "keyword",
+     "query": "RESOLVE GPU kernels testing reduction proof",
+     "flags": "",
+     "returned_ids": [
+      "2610.05683",
+      "2609.13585",
+      "2609.28862",
+      "2606.parallel-kernel-bench",
+      "2609.11356",
+      "2610.03226",
+      "2608.21227",
+      "parallel-kernel-bench",
+      "2608.17641",
+      "2609.13612"
+     ],
+     "failed": false
+    },
+    {
+     "id": "K-12",
+     "strategy": "keyword",
+     "query": "cheap verifier good enough erroneous rewards post-training",
+     "flags": "",
+     "returned_ids": [
+      "2609.33467",
+      "2604.07666",
+      "2610.06432",
+      "2610.02967",
+      "2610.01509",
+      "2607.10474",
+      "2609.29421",
+      "2608.24949",
+      "2609.21208",
+      "2607.05391"
+     ],
+     "failed": false
+    },
+    {
+     "id": "K-13",
+     "strategy": "keyword",
+     "query": "verifier false positive rate RLVR code reward imperfect verifier noise robustness",
+     "flags": "--published-after 2025-01-01",
+     "returned_ids": [
+      "2609.35677",
+      "2609.01354",
+      "2607.11022",
+      "2610.02808",
+      "2609.05221",
+      "2609.03241",
+      "2608.20362",
+      "2608.00220",
+      "2609.33662",
+      "2610.06432",
+      "2610.05170",
+      "2607.05391",
+      "2609.06386",
+      "2610.04928",
+      "2609.33467"
+     ],
+     "failed": false
+    },
+    {
+     "id": "K-14",
+     "strategy": "keyword",
+     "query": "KernelBench reward hacking false correctness LLM kernels audit",
+     "flags": "--published-after 2025-06-01",
+     "returned_ids": [
+      "2609.19101",
+      "2607.16241",
+      "2609.28614",
+      "2609.39533",
+      "2608.17776",
+      "2609.35677",
+      "2607.05904",
+      "2606.20128",
+      "2609.33221",
+      "2609.11028",
+      "2609.21058",
+      "2608.29460",
+      "2608.30724",
+      "2609.14998",
+      "2605.12474"
+     ],
+     "failed": false
+    },
+    {
+     "id": "K-15",
+     "strategy": "keyword",
+     "query": "TritonRL training LLMs Triton without cheating robust verification",
+     "flags": "",
+     "returned_ids": [
+      "2510.17891",
+      "2609.36800",
+      "2609.39102",
+      "2608.12004",
+      "2609.12471",
+      "2608.17641",
+      "2610.00689",
+      "2609.why-are-ai-agents-lying-cheating-and-coordinating",
+      "2608.25061",
+      "2609.33915"
+     ],
+     "failed": false
+    },
+    {
+     "id": "K-16",
+     "strategy": "keyword",
+     "query": "Dr. Kernel KernelGYM reward hacking lazy optimization",
+     "flags": "",
+     "returned_ids": [
+      "2602.05885",
+      "2609.33221",
+      "2609.19101",
+      "2609.28614",
+      "2609.39533",
+      "2609.36245",
+      "2608.17776",
+      "2609.14998",
+      "2609.36900",
+      "2608.11669"
+     ],
+     "failed": false
+    },
+    {
+     "id": "K-17",
+     "strategy": "keyword",
+     "query": "KernelZero correctness-aware GRPO",
+     "flags": "",
+     "returned_ids": [
+      "2609.33074",
+      "2608.14791",
+      "2608.27351",
+      "2609.21276",
+      "2609.28385",
+      "2609.36932",
+      "2609.21561",
+      "2609.32340",
+      "2608.03467",
+      "2608.22267"
+     ],
+     "failed": false
+    },
+    {
+     "id": "K-18",
+     "strategy": "keyword",
+     "query": "robust-kbench agentic CUDA kernel benchmarking verification",
+     "flags": "",
+     "returned_ids": [
+      "2509.14279",
+      "2609.00058",
+      "2602.24286",
+      "2609.34683",
+      "2609.04523",
+      "2608.25124",
+      "2610.00972",
+      "2608.20711",
+      "2603.12440",
+      "2609.12471"
+     ],
+     "failed": false
+    },
+    {
+     "id": "K-19",
+     "strategy": "openalex",
+     "query": "syntactic versus semantic similarity of artificial and real faults mutation testing",
+     "flags": "",
+     "returned_ids": [
+      "10.1109/tse.2023.3277564",
+      "2112.14508",
+      "1807.08823",
+      "W7161916857",
+      "10.1109/tse.2021.3107634",
+      "10.1016/j.scico.2016.01.003",
+      "W7167747163",
+      "10.11591/ijece.v16i4.pp2014-2030",
+      "10.1109/icstw64639.2025.10962508",
+      "10.1109/access.2019.2950171"
+     ],
+     "failed": false
+    },
+    {
+     "id": "K-20",
+     "strategy": "embedding",
+     "query": "Are artificial program mutants representative of the bugs that large language models make in generated code? Comparing LLM-introduced faults with mutation operators",
+     "flags": "",
+     "returned_ids": [
+      "2609.10123",
+      "2609.09315",
+      "2609.29410",
+      "2609.35841",
+      "2609.08681",
+      "2607.22880",
+      "2607.05149",
+      "2607.03223",
+      "2606.29088",
+      "2606.05408",
+      "2604.19086",
+      "2603.23443",
+      "2602.15761",
+      "2602.17838",
+      "2601.18949"
+     ],
+     "failed": false
+    },
+    {
+     "id": "K-21",
+     "strategy": "keyword",
+     "query": "TF32 tolerance correctness check matmul kernel benchmark baseline",
+     "flags": "--published-after 2025-06-01",
+     "returned_ids": [
+      "2609.22220",
+      "2609.30059",
+      "2607.04454",
+      "2604.22032",
+      "2607.16241",
+      "2610.05014",
+      "2606.jax-bench",
+      "2608.12700",
+      "2608.hawkeye-hardware-aware-gpu-kernel-optimization",
+      "2608.12004"
+     ],
+     "failed": false
+    },
+    {
+     "id": "K-22",
+     "strategy": "embedding",
+     "query": "Measure how often a kernel correctness gate accepts wrong kernels sampled from a language model policy, on-policy false accept rate of verifiers for GPU kernel reinforcement learning",
+     "flags": "--published-after 2026-01-01",
+     "returned_ids": [
+      "2610.05458",
+      "2609.35677",
+      "2610.05014",
+      "2609.09250",
+      "2610.02911",
+      "2609.33220",
+      "2609.18123",
+      "2610.00833",
+      "2608.12700",
+      "2609.21058",
+      "2609.10873",
+      "2610.00202",
+      "2609.22220",
+      "2609.05797",
+      "2609.14861"
+     ],
+     "failed": false
+    },
+    {
+     "id": "K-23",
+     "strategy": "keyword",
+     "query": "gate strength matched budget RL kernel correctness hidden-input multi-shape verifier",
+     "flags": "--published-after 2026-01-01",
+     "returned_ids": [
+      "2608.12629",
+      "2610.02808",
+      "2605.28751",
+      "2608.12700",
+      "2607.05391",
+      "2609.15404",
+      "2608.13179",
+      "2609.33052",
+      "2610.01069",
+      "2610.04469",
+      "2609.21208",
+      "2610.05014",
+      "2609.02417",
+      "2608.08709",
+      "2610.02828"
+     ],
+     "failed": false
+    },
+    {
+     "id": "K-24",
+     "strategy": "openalex",
+     "query": "LLM generated GPU kernel correctness verification benchmark",
+     "flags": "",
+     "returned_ids": [
+      "2605.04956",
+      "2606.20128",
+      "2607.16241",
+      "2608.17379",
+      "2603.02236",
+      "2607.14541",
+      "2609.22220",
+      "2608.05420",
+      "2605.04467",
+      "2608.12700",
+      "2609.21058",
+      "2608.04450",
+      "2605.23215",
+      "10.1609/aaai.v40i34.40155",
+      "10.1145/3839470"
+     ],
+     "failed": false
+    },
+    {
+     "id": "K-25",
+     "strategy": "keyword",
+     "query": "TF32 tolerance fp64 oracle correctness audit Triton tl.dot",
+     "flags": "",
+     "returned_ids": [
+      "2608.12700",
+      "2606.20128",
+      "2609.36800",
+      "2609.30059",
+      "2608.12004",
+      "2609.29067",
+      "2609.09702",
+      "2609.37693",
+      "2608.17641",
+      "2609.04663"
+     ],
+     "failed": false
+    },
+    {
+     "id": "K-26",
+     "strategy": "embedding",
+     "query": "Deterministic mutation operators applied to correct GPU kernels may not represent the errors a language model policy makes; validating a checker on artificial faults may not predict its false-accept rate on model-generated kernels",
+     "flags": "",
+     "returned_ids": [
+      "2610.10150",
+      "2610.02860",
+      "2609.33220",
+      "2609.33401",
+      "2609.25848",
+      "2609.19844",
+      "2608.12700",
+      "2609.22220",
+      "2609.14861",
+      "2609.09696",
+      "2608.23706",
+      "2608.08709",
+      "2607.12649",
+      "2608.08722",
+      "2608.08266"
+     ],
+     "failed": false
+    },
+    {
+     "id": "K-27",
+     "strategy": "keyword",
+     "query": "hardened tests versus original tests GRPO causal contrast verifier false positives",
+     "flags": "--published-after 2026-01-01",
+     "returned_ids": [
+      "2607.11022",
+      "2610.04928",
+      "2609.21208",
+      "2608.27351",
+      "2609.04535",
+      "2610.02808",
+      "2609.28385",
+      "2609.16201",
+      "2610.05170",
+      "2609.03241"
+     ],
+     "failed": false
+    }
+   ],
+   "other": [
+    {
+     "id": "K-P1",
+     "tool": "orx paper --full",
+     "note": "22 fetches; depth per id as the cell reported (full, by section, abstract or grep)",
+     "ids": [
+      "2609.22220",
+      "2610.05683",
+      "2606.20128",
+      "2607.11022",
+      "2609.33467",
+      "2604.07666",
+      "2609.35677",
+      "2609.01354",
+      "2608.12700",
+      "2510.17891",
+      "2602.05885",
+      "2607.16241",
+      "2609.08681",
+      "2609.09315",
+      "2609.35841",
+      "2607.04454",
+      "2609.21058",
+      "2609.33074",
+      "2610.03055",
+      "2609.39533"
+     ]
+    },
+    {
+     "id": "K-P2",
+     "tool": "orx paper (OpenAlex metadata)",
+     "ids": [
+      "10.1145/2635868.2635929",
+      "10.1109/tse.2023.3277564",
+      "10.1145/3839470",
+      "2607.14541"
+     ]
+    },
+    {
+     "id": "K-H1",
+     "tool": "read-only host read of job 713's re-pilot journal (S1-cal kernels only; no GPU)",
+     "ids": [
+      "~/cotcodec-runs/stage0/q1-engineering-d31/runs/713/q1/repilot/journal.jsonl"
+     ]
+    }
+   ]
+  },
+  "cross-domain": {
+   "discover": [
+    {
+     "id": "X-1",
+     "strategy": "openalex",
+     "query": "Is mutation an appropriate tool for testing experiments",
+     "flags": "--limit 8",
+     "returned_ids": [
+      "10.1145/1062455.1062530",
+      "10.1109/icse.2005.1553583",
+      "10.1007/s10664-017-9582-5",
+      "10.30630/joiv.6.2-2.1090",
+      "10.1016/j.infsof.2009.04.016",
+      "W2243749215",
+      "10.7287/peerj.preprints.2483v1",
+      "10.1002/stvr.1675"
+     ],
+     "failed": false
+    },
+    {
+     "id": "X-2",
+     "strategy": "openalex",
+     "query": "Are mutants a valid substitute for real faults in software testing",
+     "flags": "--limit 8",
+     "returned_ids": [
+      "10.1145/2635868.2635929",
+      "10.48550/arxiv.1807.08823",
+      "10.1007/s10664-019-09778-7",
+      "10.48550/arxiv.2306.02319",
+      "10.1145/3383219.3383236",
+      "W2468615444",
+      "10.1145/3510003.3510187",
+      "10.1145/3213846.3213875"
+     ],
+     "failed": false
+    },
+    {
+     "id": "X-3",
+     "strategy": "openalex",
+     "query": "trivial compiler equivalence equivalent mutants",
+     "flags": "--limit 8",
+     "returned_ids": [
+      "10.5555/2818754.2818867",
+      "10.1109/icse.2015.103",
+      "10.1109/tse.2017.2684805",
+      "10.5281/zenodo.268492",
+      "10.1145/3297280.3297499",
+      "10.1145/3650212.3680310",
+      "10.1109/icstw64639.2025.10962501",
+      "10.1007/978-3-319-68972-2_11"
+     ],
+     "failed": false
+    },
+    {
+     "id": "X-4",
+     "strategy": "openalex",
+     "query": "threats to the validity of mutation-based test assessment subsumed mutants",
+     "flags": "--limit 8",
+     "returned_ids": [
+      "10.1145/2931037.2931040",
+      "10.1002/stvr.1667",
+      "10.48550/arxiv.2005.11532",
+      "10.1109/tse.2022.3140510",
+      "10.1016/j.infsof.2009.04.016",
+      "10.5281/zenodo.5750688",
+      "10.1109/ast58925.2023.00008",
+      "10.1145/3368089.3409742"
+     ],
+     "failed": false
+    },
+    {
+     "id": "X-5",
+     "strategy": "openalex",
+     "query": "test oracle assessment and improvement mutation false positives false negatives",
+     "flags": "--limit 8",
+     "returned_ids": [
+      "10.1145/2931037.2931062",
+      "10.1145/3213846.3229503",
+      "10.1109/tse.2019.2934409",
+      "10.5281/zenodo.5053420",
+      "10.1145/3449726.3462722",
+      "10.5281/zenodo.5055072",
+      "10.5281/zenodo.5055747",
+      "10.48550/arxiv.2103.02901"
+     ],
+     "failed": false
+    },
+    {
+     "id": "X-6",
+     "strategy": "openalex",
+     "query": "mitigating the effects of flaky tests on mutation testing",
+     "flags": "--limit 8",
+     "returned_ids": [
+      "10.1145/3293882.3330568",
+      "10.6084/m9.figshare.8226332",
+      "10.1145/3744916.3773125",
+      "10.1109/icst53961.2022.00034",
+      "10.48550/arxiv.1912.03197",
+      "10.1145/3338906.3338925",
+      "10.48550/arxiv.2504.16777",
+      "10.1145/3468264.3468584"
+     ],
+     "failed": false
+    },
+    {
+     "id": "X-7",
+     "strategy": "keyword",
+     "query": "equivalent mutants mutation score real faults",
+     "flags": "--limit 12",
+     "returned_ids": [
+      "2608.09318",
+      "2607.05149",
+      "2609.35841",
+      "2607.03223",
+      "2608.24250",
+      "2605.13279",
+      "2609.37322",
+      "2608.12635",
+      "2609.33160",
+      "2606.26456",
+      "2604.15870",
+      "2606.05499"
+     ],
+     "failed": false
+    },
+    {
+     "id": "X-8",
+     "strategy": "embedding",
+     "query": "Validate correctness checkers for generated code by seeding deterministic single-site mutants into trusted reference programs and measuring how often each checker accepts a mutant that an independent high-precision oracle rejects, and how often it rejects a correct program, with cluster-aware confidence intervals over few independent programs.",
+     "flags": "--limit 15",
+     "returned_ids": [
+      "2610.09142",
+      "2610.02928",
+      "2609.33160",
+      "2609.22220",
+      "2608.26746",
+      "2608.19626",
+      "2608.22331",
+      "2607.28271",
+      "2608.17214",
+      "2607.26244",
+      "2607.23002",
+      "2607.05149",
+      "2607.03223",
+      "2606.20128",
+      "2606.26604"
+     ],
+     "failed": false
+    },
+    {
+     "id": "X-9",
+     "strategy": "keyword",
+     "query": "test case quality reinforcement learning code generation false positive rate verifier",
+     "flags": "--limit 12 --published-after 2024-06-01",
+     "returned_ids": [
+      "2610.05170",
+      "2609.09135",
+      "2609.03955",
+      "2609.03309",
+      "2608.24135",
+      "2609.34587",
+      "2609.32172",
+      "2607.22471",
+      "2610.04933",
+      "2609.21208",
+      "2607.20852",
+      "2610.05001"
+     ],
+     "failed": false
+    },
+    {
+     "id": "X-10",
+     "strategy": "keyword",
+     "query": "differential testing numerical libraries discrepancies floating-point",
+     "flags": "--limit 12",
+     "returned_ids": [
+      "2609.19735",
+      "2609.19352",
+      "2610.04436",
+      "2610.08808",
+      "2609.07492",
+      "2608.11886",
+      "2610.01743",
+      "2608.00085",
+      "2607.12915",
+      "2606.31308",
+      "2605.11546",
+      "2607.27270"
+     ],
+     "failed": false
+    },
+    {
+     "id": "X-11",
+     "strategy": "keyword",
+     "query": "metamorphic testing deep learning compiler",
+     "flags": "--limit 12",
+     "returned_ids": [
+      "2610.jevbench-metamorphic-coherence-testing",
+      "2609.19735",
+      "2608.07076",
+      "2609.17007",
+      "2607.25603",
+      "2607.26843",
+      "2610.00255",
+      "2607.04058",
+      "2607.22984",
+      "2606.06056",
+      "2608.07533",
+      "2606.28742"
+     ],
+     "failed": false
+    },
+    {
+     "id": "X-12",
+     "strategy": "keyword",
+     "query": "numerical behavior NVIDIA tensor cores rounding",
+     "flags": "--limit 12",
+     "returned_ids": [
+      "2607.06881",
+      "2609.14845",
+      "2609.11356",
+      "2610.rounding-error-in-flashattention-in-pictures",
+      "2610.flashattention-rounding-error-analysis",
+      "2610.09005",
+      "2608.10103",
+      "2609.24519",
+      "2608.06812",
+      "2609.09095",
+      "2608.20725",
+      "2605.17855"
+     ],
+     "failed": false
+    },
+    {
+     "id": "X-13",
+     "strategy": "openalex",
+     "query": "compiler validation via equivalence modulo inputs",
+     "flags": "--limit 6",
+     "returned_ids": [
+      "10.1145/2594291.2594334",
+      "10.1145/2666356.2594334",
+      "10.2991/msbda-19.2019.25",
+      "W7128648740",
+      "10.1145/2737924.2737986",
+      "10.1145/2813885.2737986"
+     ],
+     "failed": false
+    },
+    {
+     "id": "X-14",
+     "strategy": "openalex",
+     "query": "Finding and understanding bugs in C compilers",
+     "flags": "--limit 6",
+     "returned_ids": [
+      "10.1145/1993498.1993532",
+      "10.1145/1993316.1993532",
+      "10.1145/2345156.1993532",
+      "10.1145/2931037.2931074",
+      "10.1109/ase51524.2021.9678776",
+      "10.48550/arxiv.2607.07217"
+     ],
+     "failed": false
+    },
+    {
+     "id": "X-15",
+     "strategy": "openalex",
+     "query": "A new approach to probabilistic rounding error analysis",
+     "flags": "--limit 6",
+     "returned_ids": [
+      "10.1137/18m1226312",
+      "10.1137/24m1681458",
+      "10.1137/22m1514817",
+      "10.1137/22m1510819",
+      "10.1093/imanum/draf130",
+      "10.48550/arxiv.2501.14598"
+     ],
+     "failed": false
+    },
+    {
+     "id": "X-16",
+     "strategy": "openalex",
+     "query": "Numerical behavior of NVIDIA tensor cores",
+     "flags": "--limit 6",
+     "returned_ids": [
+      "10.7717/peerj-cs.330",
+      "10.7287/peerj-cs.330v0.2/reviews/1",
+      "10.7287/peerj-cs.330v0.2/reviews/2",
+      "10.7287/peerj-cs.330v0.1/reviews/2",
+      "10.7287/peerj-cs.330v0.1/reviews/1",
+      "10.7287/peerj-cs.330v0.1/reviews/3"
+     ],
+     "failed": false
+    },
+    {
+     "id": "X-17",
+     "strategy": "openalex",
+     "query": "diagnostic accuracy imperfect reference standard review of solutions",
+     "flags": "--limit 8",
+     "returned_ids": [
+      "10.1016/j.jclinepi.2009.02.005",
+      "10.1016/j.jdent.2018.04.022",
+      "10.3310/hta11500",
+      "W2167069878",
+      "10.1371/journal.pone.0012284",
+      "10.1371/journal.pone.0223832",
+      "10.1017/s0950268818001723",
+      "10.1136/bmj.f5605"
+     ],
+     "failed": false
+    },
+    {
+     "id": "X-18",
+     "strategy": "openalex",
+     "query": "comparison of correlated proportions for clustered data",
+     "flags": "--limit 8",
+     "returned_ids": [
+      "10.1002/(sici)1097-0258(19980715)17:13<1495::aid-sim863>3.0.co;2-i",
+      "10.1016/j.jspi.2009.06.005",
+      "10.1371/journal.pone.0007087",
+      "10.1093/bioinformatics/bts595",
+      "10.1197/aemj.9.4.330",
+      "10.1186/1471-2288-13-19",
+      "10.1007/s00357-015-9180-4",
+      "10.1007/s10994-011-5258-3"
+     ],
+     "failed": false
+    },
+    {
+     "id": "X-19",
+     "strategy": "openalex",
+     "query": "Estimating the probability of failure when testing reveals no failures",
+     "flags": "--limit 6",
+     "returned_ids": [
+      "10.1109/32.120314",
+      "W835915776",
+      "10.1109/12.980013",
+      "10.1155/2015/681232",
+      "10.1016/j.strusafe.2023.102380",
+      "10.1093/humrep/deg488"
+     ],
+     "failed": false
+    },
+    {
+     "id": "X-20",
+     "strategy": "openalex",
+     "query": "How hard does mutation analysis have to be, anyway",
+     "flags": "--limit 6",
+     "returned_ids": [
+      "10.1109/issre.2015.7381815",
+      "10.1093/jhered/esac023",
+      "10.48550/arxiv.2212.03075",
+      "10.1109/icse-companion55297.2022.9793738",
+      "10.1111/j.1365-2958.2009.06971.x",
+      "10.1109/tse.2022.3213041"
+     ],
+     "failed": false
+    },
+    {
+     "id": "X-21",
+     "strategy": "openalex",
+     "query": "capture-recapture software inspection defect content estimation",
+     "flags": "--limit 6",
+     "returned_ids": [
+      "10.1023/a:1009728205264",
+      "10.1109/issre.1998.730766",
+      "W2147925518",
+      "10.1016/s0164-1212(00)00032-7",
+      "10.1109/ccece.2006.277482",
+      "10.1109/tse.2006.1599417"
+     ],
+     "failed": false
+    },
+    {
+     "id": "X-22",
+     "strategy": "openalex",
+     "query": "Evaluating fuzz testing",
+     "flags": "--limit 6",
+     "returned_ids": [
+      "10.1145/3243734.3243804",
+      "10.48550/arxiv.1808.09700",
+      "10.48550/arxiv.2607.24577",
+      "10.5281/zenodo.19253442",
+      "W2885567964",
+      "10.1109/mines.2012.161"
+     ],
+     "failed": false
+    },
+    {
+     "id": "X-23",
+     "strategy": "openalex",
+     "query": "Bootstrap-based improvements for inference with clustered errors",
+     "flags": "--limit 5",
+     "returned_ids": [
+      "10.1162/rest.90.3.414",
+      "10.2139/ssrn.956890",
+      "10.3386/t0344",
+      "10.22004/ag.econ.274640",
+      "10.1016/j.jeconom.2019.04.035"
+     ],
+     "failed": false
+    },
+    {
+     "id": "X-24",
+     "strategy": "keyword",
+     "query": "HardTests synthesizing high-quality test cases LLM coding",
+     "flags": "--limit 8",
+     "returned_ids": [
+      "2505.24098",
+      "2605.14445",
+      "2609.30054",
+      "2609.09133",
+      "2609.30233",
+      "2608.18645",
+      "2609.39334",
+      "2610.05001"
+     ],
+     "failed": false
+    },
+    {
+     "id": "X-25",
+     "strategy": "keyword",
+     "query": "CodeContests+ test case generation quality true positive rate true negative rate",
+     "flags": "--limit 8",
+     "returned_ids": [
+      "2601.13682",
+      "2506.05817",
+      "2609.29300",
+      "2608.24135",
+      "2610.05001",
+      "2609.12757",
+      "2607.22471",
+      "2609.31795"
+     ],
+     "failed": false
+    },
+    {
+     "id": "X-26",
+     "strategy": "openalex",
+     "query": "a dynamic program analysis to find floating-point accuracy problems shadow",
+     "flags": "--limit 6",
+     "returned_ids": [
+      "10.1145/2884781.2884850",
+      "10.4230/dagrep.7.8.74",
+      "W2106097038",
+      "10.1109/arith.2016.31",
+      "10.1145/3563322",
+      "10.1145/3151032"
+     ],
+     "failed": false
+    },
+    {
+     "id": "X-27",
+     "strategy": "openalex",
+     "query": "empirical evaluation of mutation operators for deep learning systems statistical killing",
+     "flags": "--limit 6",
+     "returned_ids": [
+      "10.5281/zenodo.5053395",
+      "10.5281/zenodo.5082873",
+      "10.5753/reic.2026.8471",
+      "10.48550/arxiv.2301.05651",
+      "10.48550/arxiv.2604.22640",
+      "10.48550/arxiv.2501.09846"
+     ],
+     "failed": false
+    },
+    {
+     "id": "X-28",
+     "strategy": "keyword",
+     "query": "characteristics of code generation errors made by large language models",
+     "flags": "--limit 8",
+     "returned_ids": [
+      "2607.13820",
+      "2607.14816",
+      "2406.08731",
+      "2606.19988",
+      "2605.17029",
+      "2606.14113",
+      "2607.05868",
+      "2605.30394"
+     ],
+     "failed": false
+    },
+    {
+     "id": "X-29",
+     "strategy": "keyword",
+     "query": "large language models mutation testing mutants real bugs coupling",
+     "flags": "--limit 10",
+     "returned_ids": [
+      "2609.35841",
+      "2607.05149",
+      "2607.03223",
+      "2609.09315",
+      "2608.24250",
+      "2607.21193",
+      "2608.12635",
+      "2609.25520",
+      "2608.09318",
+      "2605.00107"
+     ],
+     "failed": false
+    },
+    {
+     "id": "X-30",
+     "strategy": "embedding",
+     "query": "Choose the floating-point tolerance for checking a GPU kernel's output against a reference from a priori rounding error bounds for dot products and reductions in reduced precision such as TF32, rather than from an empirical multiple of the reference implementation's own error.",
+     "flags": "--limit 12",
+     "returned_ids": [
+      "2609.11356",
+      "2610.09089",
+      "2609.39361",
+      "2610.02240",
+      "2609.22220",
+      "2609.00363",
+      "2608.28941",
+      "2608.13756",
+      "2607.18745",
+      "2607.27270",
+      "2606.25453",
+      "2606.06510"
+     ],
+     "failed": false
+    },
+    {
+     "id": "X-31",
+     "strategy": "keyword",
+     "query": "weak test cases reward hacking reinforcement learning code false positives stronger verifier",
+     "flags": "--limit 10 --published-after 2025-01-01",
+     "returned_ids": [
+      "2605.12474",
+      "2609.35677",
+      "2609.19101",
+      "2609.39533",
+      "2610.03055",
+      "2609.09135",
+      "2608.24135",
+      "2609.28614",
+      "2607.11022",
+      "2607.09492"
+     ],
+     "failed": false
+    },
+    {
+     "id": "X-32",
+     "strategy": "openalex",
+     "query": "A simple method for the analysis of clustered binary data",
+     "flags": "--limit 5",
+     "returned_ids": [
+      "10.2307/2532311",
+      "W2186265003",
+      "10.1002/(sici)1097-0258(19990615)18:11<1373::aid-sim133>3.0.co;2-f",
+      "10.22329/amr.v12i3.658",
+      "10.1371/journal.pone.0151984"
+     ],
+     "failed": false
+    },
+    {
+     "id": "X-33",
+     "strategy": "keyword",
+     "query": "many-core compiler fuzzing OpenCL equivalence modulo inputs GPU",
+     "flags": "--limit 8",
+     "returned_ids": [
+      "2609.29311",
+      "2609.11356",
+      "2610.06968",
+      "2607.15762",
+      "2609.36800",
+      "2609.22220",
+      "2609.16389",
+      "2608.11886"
+     ],
+     "failed": false
+    },
+    {
+     "id": "X-34",
+     "strategy": "embedding",
+     "query": "Audit the rigor of benchmark test suites for hardware or code generation by injecting mutations into reference solutions and counting how many mutants pass the official tests.",
+     "flags": "--limit 12",
+     "returned_ids": [
+      "2610.09142",
+      "2609.36635",
+      "2610.02928",
+      "2609.35841",
+      "2609.22220",
+      "2608.19626",
+      "2608.12635",
+      "2608.01715",
+      "2608.09318",
+      "2606.26604",
+      "2606.16062",
+      "2604.01518"
+     ],
+     "failed": false
+    },
+    {
+     "id": "X-35",
+     "strategy": "keyword",
+     "query": "flakiness induced by mutation test flimsiness",
+     "flags": "--limit 6",
+     "returned_ids": [
+      "2609.24842",
+      "2603.28452",
+      "2610.01891",
+      "2609.35841",
+      "2609.37322",
+      "2609.25528"
+     ],
+     "failed": false
+    },
+    {
+     "id": "X-36",
+     "strategy": "keyword",
+     "query": "floating-point mutation operators numerical programs tolerance oracle equivalent mutants",
+     "flags": "--limit 10",
+     "returned_ids": [
+      "2608.09318",
+      "2609.33160",
+      "2609.22220",
+      "2607.05149",
+      "2609.35841",
+      "2605.17437",
+      "2605.13279",
+      "2609.19735",
+      "2609.07492",
+      "2607.03223"
+     ],
+     "failed": false
+    },
+    {
+     "id": "X-37",
+     "strategy": "openalex",
+     "query": "interpreting zero numerators rule of three",
+     "flags": "--limit 5",
+     "returned_ids": [
+      "10.1111/anae.12980",
+      "10.6339/jds.2008.06(2).401",
+      "10.1097/ta.0000000000002914",
+      "10.6339/jds.2008.06(3).509",
+      "10.1111/1742-6723.14561"
+     ],
+     "failed": false
+    },
+    {
+     "id": "X-38",
+     "strategy": "openalex",
+     "query": "An empirical comparison of compiler testing techniques",
+     "flags": "--limit 5",
+     "returned_ids": [
+      "10.1145/2884781.2884878",
+      "10.1109/issre.2003.1251065",
+      "10.1109/tse.2018.2852744",
+      "10.1145/3133917",
+      "10.1016/j.jss.2021.111174"
+     ],
+     "failed": false
+    },
+    {
+     "id": "X-39",
+     "strategy": "keyword",
+     "query": "NNSmith generating diverse and valid test cases for deep learning compilers",
+     "flags": "--limit 6",
+     "returned_ids": [
+      "2207.13066",
+      "2610.06968",
+      "2606.06747",
+      "2511.18918",
+      "2610.04783",
+      "2608.21555"
+     ],
+     "failed": false
+    },
+    {
+     "id": "X-40",
+     "strategy": "openalex",
+     "query": "QUADAS-2 revised tool quality assessment diagnostic accuracy studies",
+     "flags": "--limit 4",
+     "returned_ids": [
+      "10.7326/0003-4819-155-8-201110180-00009",
+      "10.3760/cma.j.issn.0254-6450.2018.04.028",
+      "10.3410/f.714797871.790252869",
+      "10.1186/1471-2288-6-9"
+     ],
+     "failed": false
+    },
+    {
+     "id": "X-41",
+     "strategy": "embedding",
+     "query": "Estimate how many faulty program variants every independent checking channel misses by comparing overlaps between several imperfect detectors, as in capture-recapture or latent class models without a gold standard.",
+     "flags": "--limit 10",
+     "returned_ids": [
+      "2607.19734",
+      "2607.17061",
+      "2606.01932",
+      "2602.09911",
+      "2511.02977",
+      "2507.17093",
+      "2411.11032",
+      "2307.12365",
+      "2501.15825",
+      "2410.04390"
+     ],
+     "failed": false
+    },
+    {
+     "id": "X-42",
+     "strategy": "keyword",
+     "query": "semantics-preserving transformations kernel equivalence false rejection checker GPU Triton",
+     "flags": "--limit 10",
+     "returned_ids": [
+      "2609.11356",
+      "2609.36800",
+      "2608.hawkeye-hardware-aware-gpu-kernel-optimization",
+      "2608.20711",
+      "2608.17641",
+      "2609.33074",
+      "2609.30059",
+      "2609.12471",
+      "2608.12004",
+      "2610.05683"
+     ],
+     "failed": false
+    },
+    {
+     "id": "X-43",
+     "strategy": "openalex",
+     "query": "Investigations of the software testing coupling effect",
+     "flags": "--limit 5",
+     "returned_ids": [
+      "10.1145/125489.125473",
+      "10.1145/75308.75324",
+      "10.1145/75309.75324",
+      "10.1016/s0167-6423(03)00022-4",
+      "10.3390/ma14226856"
+     ],
+     "failed": false
+    },
+    {
+     "id": "X-44",
+     "strategy": "openalex",
+     "query": "Is operator-based mutant selection superior to random mutant selection",
+     "flags": "--limit 5",
+     "returned_ids": [
+      "10.1145/1806799.1806863",
+      "10.1109/icstw.2019.00037",
+      "10.1007/s10664-019-09778-7",
+      "10.48550/arxiv.2301.12284",
+      "10.48550/arxiv.1803.07901"
+     ],
+     "failed": false
+    },
+    {
+     "id": "X-45",
+     "strategy": "openalex",
+     "query": "theory of composite faults mutation coupling",
+     "flags": "--limit 5",
+     "returned_ids": [
+      "10.1109/access.2020.2966582",
+      "10.1155/2019/1564243",
+      "10.3390/s26092914",
+      "10.64972/jaat.2025v3.4",
+      "10.3390/e19110585"
+     ],
+     "failed": false
+    },
+    {
+     "id": "X-46",
+     "strategy": "openalex",
+     "query": "discrepant analysis bias diagnostic test evaluation resolving discordant results",
+     "flags": "--limit 6",
+     "returned_ids": [
+      "10.1016/s0140-6736(05)65784-4",
+      "10.3310/hta11500",
+      "10.1016/j.jmoldx.2016.06.008",
+      "W7140960881",
+      "10.1016/j.gimo.2026.104171",
+      "10.1097/ede.0b013e31823b5b5b"
+     ],
+     "failed": false
+    },
+    {
+     "id": "X-47",
+     "strategy": "openalex",
+     "query": "If nothing goes wrong, is everything all right? interpreting zero numerators",
+     "flags": "--limit 5",
+     "returned_ids": [
+      "ERROR: OpenAlex search failed (400 Bad Request)"
+     ],
+     "failed": true
+    }
+   ],
+   "other": [
+    {
+     "id": "X-P1",
+     "tool": "orx paper --full (alphaXiv)",
+     "ids": [
+      "2607.11022",
+      "2609.09315",
+      "2608.12635",
+      "2610.02240",
+      "2609.11356",
+      "2505.24098",
+      "2506.05817",
+      "2406.08731",
+      "2607.23002",
+      "2609.35677",
+      "2609.33160",
+      "2606.01066",
+      "2601.04411",
+      "2604.07666",
+      "2606.16062",
+      "2605.17437",
+      "2606.06747",
+      "2507.17093",
+      "2607.17061",
+      "2607.04058",
+      "2608.17214",
+      "2610.09142",
+      "2610.05683"
+     ]
+    },
+    {
+     "id": "X-P2",
+     "tool": "orx paper (OpenAlex metadata; 35 calls, 25 records, 10 HTTP 429 retried)",
+     "ids": [
+      "10.1109/issre.2015.7381815",
+      "10.1145/1062455.1062530",
+      "10.1145/2635868.2635929",
+      "10.1109/icse.2015.103",
+      "10.1145/2931037.2931040",
+      "10.1145/3293882.3330568",
+      "10.1145/2931037.2931062",
+      "10.1002/(sici)1097-0258(19980715)17:13<1495::aid-sim863>3.0.co;2-i",
+      "10.2307/2532311",
+      "10.1016/j.jclinepi.2009.02.005",
+      "10.1109/32.120314",
+      "10.1162/rest.90.3.414",
+      "10.1137/18m1226312",
+      "10.7717/peerj-cs.330",
+      "10.1145/2594291.2594334",
+      "10.1145/1993498.1993532",
+      "10.1145/2884781.2884878",
+      "10.1145/3744916.3773125",
+      "10.1016/j.infsof.2009.04.016",
+      "10.1145/3243734.3243804",
+      "10.1136/bmj.f5605",
+      "10.1145/125489.125473",
+      "10.1145/1806799.1806863",
+      "10.3310/hta11500",
+      "10.1016/s0140-6736(05)65784-4"
+     ]
+    }
+   ]
+  },
+  "synthesis": {
+   "discover": [
+    {
+     "id": "S-1",
+     "strategy": "embedding",
+     "flags": "--limit 15",
+     "query": "Three correctness checkers of increasing strength for GPU kernels (a five-input tolerance comparison against the reference, plus a launch-path check that a compiled kernel actually runs in inference and gradient modes, plus hidden values, shape variation and unaligned remainder shapes at a tighter tolerance) are validated on compiler-generated and human-written Triton kernels and deterministic rule-based mutants of them, against an independent audit no checker sees (float64 oracle with a threshold calibrated from the reference's own float32 error, held-out values and shapes, tolerance-free determinism, aliasing, poisoned-allocation and memory-sanitizer contracts), reporting false accepts on audit-rejected mutants, false rejects on correct kernels and GPU cost per checker before using them as reinforcement-learning rewards",
+     "returned_ids": [
+      "2610.05683",
+      "2609.11356",
+      "2610.09142",
+      "2609.09250",
+      "2610.07853",
+      "2609.12471",
+      "2610.02928",
+      "2609.33916",
+      "2609.33160",
+      "2608.12700",
+      "2609.22220",
+      "2608.25460",
+      "2609.13311",
+      "2609.02983",
+      "2608.24335"
+     ],
+     "failed": false,
+     "raw_output_sha256": "76c9fca8ad0dcf02905199c649312117d35ef7a330d37f831f62e88501e70879"
+    },
+    {
+     "id": "S-2",
+     "strategy": "keyword",
+     "flags": "--limit 10",
+     "query": "When the Reward Suite Is Leaky",
+     "returned_ids": [
+      "2607.11022",
+      "2609.37209",
+      "2609.33136",
+      "2610.01908",
+      "2610.03598",
+      "2609.07211",
+      "2608.30724",
+      "2608.27960",
+      "2608.27109",
+      "2608.09059"
+     ],
+     "failed": false,
+     "raw_output_sha256": "a332a87b894daf17902c1eca2bae127f2e8c434aea54dee2d0679cd72fd26ca6"
+    },
+    {
+     "id": "S-3",
+     "strategy": "keyword",
+     "flags": "--limit 12 --published-after 2026-01-01",
+     "query": "TF32 tolerance fp64 reference relative error near-zero denominator false accept zeros output",
+     "returned_ids": [
+      "2609.04663",
+      "2609.26550",
+      "2608.12700",
+      "2606.06510",
+      "2608.20607",
+      "2610.01005",
+      "2609.37693",
+      "2609.31291",
+      "2608.25327",
+      "2608.25654",
+      "2609.19758",
+      "2609.09095"
+     ],
+     "failed": false,
+     "raw_output_sha256": "2e4485ff0073f2e8f5ff4ad47ba0f5eb9c6375973f903dbaaf4fca11a33ec2fe"
+    },
+    {
+     "id": "S-4",
+     "strategy": "keyword",
+     "flags": "--limit 10",
+     "query": "Calibrating the Checksum ABFT bfloat16 false-positive bound",
+     "returned_ids": [
+      "2610.02240",
+      "2609.16742",
+      "2609.19758",
+      "2609.19743",
+      "2610.02925",
+      "2602.08043",
+      "2608.04035",
+      "2609.19433",
+      "2609.33671",
+      "2609.25581"
+     ],
+     "failed": false,
+     "raw_output_sha256": "9d42a0d88406afd114879301bdec49893b6616c2e705728d1a04ea34e7eff51f"
+    },
+    {
+     "id": "S-5",
+     "strategy": "openalex",
+     "flags": "--limit 12",
+     "query": "mutation testing tolerance-based numerical oracle false acceptance floating point kernels",
+     "returned_ids": [
+      "W7161916857",
+      "10.48550/arxiv.2607.04058",
+      "10.2172/3547206",
+      "10.34726/hss.2016.25320",
+      "10.32657/10356/14803",
+      "10.48550/arxiv.2608.17956",
+      "10.21236/ada610467",
+      "10.48550/arxiv.2608.16409",
+      "10.48550/arxiv.2609.40340",
+      "W7131963139"
+     ],
+     "failed": false,
+     "raw_output_sha256": "e69916ce0fab0aff4e4d046d7cd7c1b0e4349faa54249ae1c528c238dc51b348"
+    },
+    {
+     "id": "S-6",
+     "strategy": "keyword",
+     "flags": "--limit 10",
+     "query": "Oracles That Cannot Fail anchoring expectation moves with the fault",
+     "returned_ids": [
+      "2608.17214",
+      "2609.24230",
+      "2610.03695",
+      "2607.11342",
+      "2609.08681",
+      "2608.14320",
+      "2608.26272",
+      "2609.01283",
+      "2608.01464",
+      "2610.10490"
+     ],
+     "failed": false,
+     "raw_output_sha256": "9b272d860061ea75c67318a4e5c29042b909a8c556dbbac32edd09f87d2bb7c8"
+    },
+    {
+     "id": "S-7",
+     "strategy": "embedding",
+     "flags": "--limit 15 --published-after 2026-06-01",
+     "query": "Validate a numerical correctness oracle for reduced-precision matrix multiplication and convolution kernels: thresholds derived from the reference's own TF32 error become larger than one, so an all-zeros output passes; choose a cancellation-safe error normalizer",
+     "returned_ids": [
+      "2610.05683",
+      "2609.14845",
+      "2609.39813",
+      "2609.numerical-representation-invariance-language-models",
+      "2609.39816",
+      "2609.11356",
+      "2610.05488",
+      "2610.06095",
+      "2610.02240",
+      "2610.03321",
+      "2609.38785",
+      "2610.01907",
+      "2610.03228",
+      "2609.33003",
+      "2609.22991"
+     ],
+     "failed": false,
+     "raw_output_sha256": "82f96c954d5479ecd624cb766a01f26e8701bf69f254111079c26ef1cac45c0d"
+    }
+   ],
+   "other": [
+    {
+     "id": "S-P1",
+     "tool": "orx paper --full (read by synthesis before writing the delta rows)",
+     "reads": [
+      {
+       "id": "2602.05885",
+       "bytes": 79379,
+       "sha256": "4a2b1e0cf12f48d3793a5006c0dfab6404a67fb4a473e2c53dc9fe2c0246b6bf"
+      },
+      {
+       "id": "2606.20128",
+       "bytes": 25020,
+       "sha256": "f99a3ed8121d3ddfa88a5a6cf04705b25449bd4082f691b67be3dc891a5d4d12"
+      },
+      {
+       "id": "2607.11022",
+       "bytes": 151096,
+       "sha256": "2247e419d37cc96da34086a9e7a6abb140bed2a92f3d22a23e21f1ed32fd4562"
+      },
+      {
+       "id": "2607.16241",
+       "bytes": 105089,
+       "sha256": "322c3bc235358ac8be3217e0749a0fd3889f7ab827a8ec34779e56e2f0e6b887"
+      },
+      {
+       "id": "2608.12700",
+       "bytes": 78637,
+       "sha256": "18f9b8f09242a0cfbd867e351bf9b3fbea73842478c1724d67d9c6ffc46f5cc9"
+      },
+      {
+       "id": "2609.09315",
+       "bytes": 67373,
+       "sha256": "e2fab7730de5ee10efdd34882d32e27db447ac85fc7ae837037f0dbb8878f91d"
+      },
+      {
+       "id": "2609.22220",
+       "bytes": 60908,
+       "sha256": "84c774a9c14e726867effdf0dd9efcda835785a6761b217d5b22a5623ff0f839"
+      },
+      {
+       "id": "2610.02240",
+       "bytes": 46756,
+       "sha256": "26aa100e26daff85d27767350081ab210ee0af7aa7b647774e69c2bce7ed4751"
+      },
+      {
+       "id": "2610.05683",
+       "bytes": 75384,
+       "sha256": "733ad1d885a39a6d14ebaebb0d987f5a9afabcf56faf7d5463efd62bfe5ba2f7"
+      }
+     ]
+    },
+    {
+     "id": "S-H1",
+     "tool": "local byte copy of job 713's re-pilot journal (SHA-256 equals the committed record in program/evidence/2026-10-07/q1-engineering-d31/repilot-713.json); no host access by synthesis",
+     "ids": [
+      "ddbfbbf657445d1d7ede759474363a4d8dadc96f86cc3fd0c535830f29796bd2"
+     ]
+    }
+   ]
+  }
+ },
+ "queries_against_budget": 136,
+ "discover_counts": {
+  "frontier": 55,
+  "kill-shot": 27,
+  "cross-domain": 47,
+  "synthesis": 7
+ },
+ "failed_discover_counts": {
+  "frontier": 2,
+  "kill-shot": 0,
+  "cross-domain": 1,
+  "synthesis": 0
+ },
+ "discover_by_strategy": {
+  "keyword": 69,
+  "embedding": 26,
+  "openalex": 41
+ }
+}

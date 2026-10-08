@@ -1,0 +1,14 @@
+task_id: c867c42d-a52d-4a24-8ae3-f75d256b5618
+author: blind-model-author-v1
+requirements:
+  - req_id: R1
+    statement: The Personal Address Book is exported from Thunderbird to /home/user/Desktop/contacts.csv.
+    check_kind: file_exists
+    observable: contacts.csv exists, parses as CSV with a Thunderbird-style header (First Name, Last Name, Display Name, ..., Primary Email, ...) and 30 data rows, one per contact (e.g. Eric Nolan / eric.nolan@example.com ... Brittany Allen).
+  - req_id: R2
+    statement: The CSV is converted to an .xlsx with LibreOffice Calc.
+    check_kind: file_exists
+    observable: /home/user/Desktop/contacts.xlsx exists and its cell values equal the CSV rows (same header and 30 contacts).
+allowed_variations:
+  - Column set/order follows Thunderbird's export format; encoding of the CSV.
+  - '[AMBIGUOUS] xlsx file name assumed contacts.xlsx (same base name).'

@@ -1,0 +1,153 @@
+{
+ "recorded_at": "2026-10-07",
+ "note": "Every external input of the Q2 mutation harness, with revision, size, SHA-256 and licence. Run on the H100 host under ~/cotcodec-runs/stage0/q2-evaluator-mutation/.",
+ "sources": [
+  {
+   "name": "xlang-ai/OSWorld",
+   "url": "https://github.com/xlang-ai/OSWorld",
+   "revision": "b138d348256078fa634fc3b73567a7337c793e6b",
+   "evaluator_revision": "0514b9a262c5e49007a5724e3e6c84171566ae66",
+   "size": "151 MB clone",
+   "sha256": "git commit (content-addressed)",
+   "licence": "Apache-2.0",
+   "use": "task configs and the pinned evaluate()/metric code, run unmodified, never vendored"
+  },
+  {
+   "name": "HF xlangai/ubuntu_osworld_file_cache",
+   "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache",
+   "revision": "1e112283c4ecb08d6fed8069bca7de74fa2f12aa",
+   "files": 447,
+   "bytes": 659977579,
+   "lfs_files_verified_against_oid": 188,
+   "non_lfs_files_hashed_at_download": 259,
+   "receipts": "harness/file-cache-receipts.tsv",
+   "receipts_sha256": "9a3e06a48afe95c2286d0fa26d56edf947e1a5e0f121d414d565b58d30abe5fb",
+   "licence": "apache-2.0 (dataset card); documents carry third-party content, never redistributed",
+   "use": "initial, gold and auxiliary files of the 205 in-scope tasks plus fonts_20250608_fixed.zip"
+  },
+  {
+   "name": "HF xlangai/ubuntu_osworld Ubuntu.qcow2.zip",
+   "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld/resolve/a5d9c3eaae98eebf6e3a0beb84e7e47cf72ae133/Ubuntu.qcow2.zip",
+   "revision": "a5d9c3eaae98eebf6e3a0beb84e7e47cf72ae133",
+   "bytes": 12273896463,
+   "sha256": "b795b6cd4c69b252c1b4f10150a347795555032501b60fd031751ed09b896712",
+   "licence": "apache-2.0 dataset card; bundled software under its own licences",
+   "use": "fetched under D1 (fetch.log FETCH_OK); read-only"
+  },
+  {
+   "name": "Ubuntu.qcow2 (extracted by stage0/q2-action-path)",
+   "bytes": 24460197888,
+   "sha256": "6bf667a852b3c307f61d9f09c42559351f45e0607e428b4997becf534cf4d313",
+   "member_crc32": "bdc86269",
+   "use": "read-only; root partition copied with qemu-img dd (start sector 1054720, 61857792 sectors) and read with debugfs"
+  },
+  {
+   "name": "VM userland extracted for the LO-VM image",
+   "files": 205028,
+   "tree_sha256": "fceee6501ff0d1f1a33500b36663624c220f1598140fa271040b5e97a9de30bf",
+   "trees": [
+    "/usr",
+    "/etc",
+    "/var/lib/dpkg",
+    "/home/user/.config/libreoffice",
+    "/home/user/.local/lib"
+   ],
+   "libreoffice": "libreoffice-core 1:7.3.7-0ubuntu0.22.04.4, LibreOffice 7.3.7.2 30(Build:2), vendor 'The Document Foundation, Debian and Ubuntu' (versionrc)",
+   "libreoffice_licence": "MPL-2.0",
+   "registrymodifications_xcu_sha256": "6b5ec88d1570a8ad85932eb53a1a6f8370053d3ac60b30fe759c14135e902ef2",
+   "pyautogui": "PyAutoGUI 0.9.54, python-xlib 0.33 (BSD-3-Clause, LGPL-2.1+)",
+   "use": "local image only, never published"
+  },
+  {
+   "name": "VM config baselines (vlc, GIMP, Code)",
+   "files": 73,
+   "use": "overlaid on the initial state for 1C tasks; local only",
+   "list": "inputs/vm-baseline/baseline.sha256 on the host"
+  },
+  {
+   "name": "xvfb",
+   "url": "https://launchpad.net/ubuntu/+archive/primary/+files/xvfb_21.1.4-2ubuntu1.7~22.04.8_amd64.deb",
+   "version": "2:21.1.4-2ubuntu1.7~22.04.8",
+   "bytes": 863344,
+   "sha256": "f8c64bc652e3dc1a1041e85025267f574c27f86b00d7965545a8b3ec41a60cd4",
+   "licence": "MIT/X11 family (xorg-server)",
+   "use": "matches the VM's installed xserver-common; superseded in jammy-updates, so fetched from the Launchpad librarian"
+  },
+  {
+   "name": "openbox and dependencies (Ubuntu jammy universe)",
+   "packages": {
+    "openbox_3.6.1-10_amd64.deb": {
+     "bytes": 311342,
+     "sha256": "5652e92d1aaeef6902acd5613ef18c047a31d32c325bbad7399af1683255de9c"
+    },
+    "libobt2v5_3.6.1-10_amd64.deb": {
+     "bytes": 35540,
+     "sha256": "f197d86afa4896ef6288838bbde1cfd2f1c9321cb3e7bf842e62c527e334cd87"
+    },
+    "libobrender32v5_3.6.1-10_amd64.deb": {
+     "bytes": 42434,
+     "sha256": "4be4bfe3aa86a6dd1f024962872dc78461755d12bdc779b729f08e2456d3445a"
+    },
+    "libimlib2_1.7.4-1build1_amd64.deb": {
+     "bytes": 194548,
+     "sha256": "258a02ff38ebb54f6242a0271f7f3c9b941f03b6fa5c1230bf5397742ffd7232"
+    },
+    "libid3tag0_0.15.1b-14_amd64.deb": {
+     "bytes": 31252,
+     "sha256": "9f211f01eb0ed84246a7a44229fbee6cb02d003b4d0d4afa478cf59abbe94b76"
+    }
+   },
+   "verified": "sha256 equals the jammy Packages index entry",
+   "licence": "GPL-2.0+ (openbox, libid3tag); Imlib2 licence (imlib2)",
+   "use": "EWMH window manager so wmctrl -Fa works as under GNOME"
+  },
+  {
+   "name": "ubuntu:22.04",
+   "digest": "sha256:5ec03bb3441e8b0bf3b4f9cd4629a1ae763010dc3035bb8da3ae6cf026486401",
+   "licence": "Ubuntu archive licences",
+   "use": "base of the metric and vmprobe images"
+  },
+  {
+   "name": "uv",
+   "url": "https://github.com/astral-sh/uv/releases/download/0.11.30/uv-x86_64-unknown-linux-gnu.tar.gz",
+   "version": "0.11.30",
+   "sha256": "04bc7d180d6138bf6dc08387acf507a823f397a98fea55da36b0ccc7fbce3b68",
+   "licence": "Apache-2.0 or MIT"
+  },
+  {
+   "name": "CPython 3.12.13 (python-build-standalone via uv)",
+   "version": "3.12.13",
+   "licence": "PSF-2.0",
+   "use": "metric venvs"
+  },
+  {
+   "name": "PyPI packages, lock-exact venv",
+   "requirements": "infra/q2-mutation/metric/osworld-lock-export.txt",
+   "requirements_sha256": "3f463d6f3331a80c3054dfd8aced1dabb56adf8ee8b6fa7441e25435f626c2a3",
+   "installed_distributions": 264,
+   "record_fingerprint_sha256": "f2c9e208d2bdb888668e64143f0603ce92f56cee2fd1002f0211d2c2287db810",
+   "hashes": "every wheel checked with --require-hashes from OSWorld uv.lock",
+   "licence_flags": {
+    "pymupdf 1.27.1": "AGPL-3.0 or commercial",
+    "borb 2.1.25": "AGPL-3.0-or-later or commercial",
+    "mutagen 1.47.0": "GPL-2.0+",
+    "formulas 1.3.3": "EUPL-1.1+",
+    "odfpy 1.4.1": "Apache-2.0/GPL/LGPL"
+   },
+   "use": "run in the container, never vendored"
+  },
+  {
+   "name": "PyPI packages, scoping venv (sensitivity arm)",
+   "requirements": "infra/q2-mutation/metric/scout-venv-freeze.txt",
+   "requirements_sha256": "5ae07a7a527c22ff580a171692ccbc608f563e6c7264b0819a92ff1c41bd6fb7",
+   "installed_distributions": 129,
+   "record_fingerprint_sha256": "e591c8875c353ecbf6ec38b6c9c467e01b4164cc129744bd51e27c993310417a",
+   "hashes": "not pinned by hash (versions only, as read from the scoping venv); the RECORD fingerprint fixes the installed bytes",
+   "use": "dependency-sensitivity arm"
+  }
+ ],
+ "images": {
+  "cotcodec-q2-vmprobe:d975c7ca": "sha256:0cde2db147f4eefea82b1807ac2f4c4bfc725157eedf2d3e678fd2d3c969a1f9",
+  "cotcodec-q2-metric:98289020": "sha256:2006c1a9247e4911a82508cd22e9d9a7efc5c13e35a20e8a03baac7112876230"
+ }
+}

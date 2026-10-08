@@ -1,0 +1,21 @@
+task_id: 550ce7e7-747b-495f-b122-acdc4d0b8e54
+author: blind-model-author-v1
+requirements:
+  - req_id: R0
+    statement: (implicit) The presentation is saved in place at /home/user/Desktop/New_Club_Spring_2018_Training.pptx with 7 slides and unchanged texts.
+    check_kind: file_exists
+    observable: File loads; 7 slides; texts unchanged.
+  - req_id: R1
+    statement: The first two lines of the to-do list (slide 2 "Overview" body - "Introductions" and "Club Rights, Responsibilities & Resources") have strike-through.
+    check_kind: text_run
+    observable: All runs of body paragraphs 1 and 2 on slide 2 have strike set (a:rPr strike="sngStrike" or dblStrike).
+  - req_id: R2
+    statement: The remaining lines of the list are not struck through.
+    check_kind: text_run
+    observable: Body paragraphs 3-7 on slide 2 ("Policies and Procedures" ... "Important Resources & Links") have no strike.
+  - req_id: R3
+    statement: (implicit) No other text in the deck gains strike-through.
+    check_kind: text_run
+    observable: No run outside slide 2 paragraphs 1-2 has strike set.
+allowed_variations:
+  - '[AMBIGUOUS] The deck has no slide literally titled "to-do"; the Overview list on slide 2 is the only list that reads as a checklist. Single vs double strike style is not specified.'

@@ -1,0 +1,23 @@
+task_id: 7ae48c60-f143-4119-b659-15b8f485eb9a
+author: blind-model-author-v1
+requirements:
+  - req_id: R0
+    statement: (implicit) The presentation is saved in place at /home/user/Desktop/30_1.pptx with 6 slides.
+    check_kind: file_exists
+    observable: File loads; 6 slides.
+  - req_id: R1
+    statement: The picture on slide 3 has height 20 cm.
+    check_kind: image_property
+    observable: The main image on slide 3 (picture-filled shape "Google Shape;446;p18", initially 26.78 x 26.78 cm) has height 20.0 cm (+-0.05).
+  - req_id: R2
+    statement: The picture on slide 4 has height 30 cm.
+    check_kind: image_property
+    observable: Picture "Google Shape;466;p19" (initially 27.8 x 28.57 cm) has height 30.0 cm (+-0.05).
+  - req_id: R3
+    statement: The picture on slide 6 has height 25 cm.
+    check_kind: image_property
+    observable: Picture "Google Shape;684;p22" (initially 48.44 x 26.03 cm) has height 25.0 cm (+-0.05).
+allowed_variations:
+  - Width may stay or scale proportionally ("keep ratio" is not mentioned).
+  - Position after resizing is not constrained.
+  - '[AMBIGUOUS] Slide 3 also has seven 1.14 cm bullet icons (p:pic); the instruction speaks of one picture, read as the large image. Resizing the icons instead is a different reading.'

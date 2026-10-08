@@ -1,0 +1,17 @@
+{
+  "domain": "multi_apps",
+  "initial_files": [
+    {
+      "path_in_vm": "/home/user/Desktop/doc_proc.zip",
+      "sha256": "e4b50d678e8d79050c7969a299ab39f73d6d2d69480eed48ec9c719d984c28e9",
+      "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/1e112283c4ecb08d6fed8069bca7de74fa2f12aa/multi_apps/98e8e339-5f91-4ed2-b2b2-12647cb134f4/doc_proc.zip"
+    }
+  ],
+  "instruction": "Merge the contents of all .txt files from your vscode project into a single document \"concat.docx\" on Desktop with libreoffice writer. No merging separator is needed. Ensure to set the overall font size of the document to 10.",
+  "related_apps": [
+    "vs_code",
+    "libreoffice_writer"
+  ],
+  "snapshot": "vs_code",
+  "task_id": "98e8e339-5f91-4ed2-b2b2-12647cb134f4"
+}

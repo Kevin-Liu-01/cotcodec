@@ -1,0 +1,23 @@
+task_id: 0a0faba3-5580-44df-965d-f562a99b291c
+author: blind-model-author-v1
+requirements:
+  - req_id: R0
+    statement: (implicit) The document is saved in place at "/home/user/Desktop/04 CHIN9505 EBook Purchasing info 2021 Jan.docx"; the words of each sentence are unchanged and in order.
+    check_kind: file_exists
+    observable: For each non-empty paragraph, the whitespace-normalized text (tabs treated as spaces) equals the initial whitespace-normalized text.
+  - req_id: R1
+    statement: In every sentence (each of the 10 non-empty paragraphs), a tab separates the first three words from the rest.
+    check_kind: text_run
+    observable: Each non-empty paragraph's text contains exactly one tab, the text before it consists of exactly the first three words (e.g. "Please find the", "How to use", "Make payment for", "Use only on") and the text after it is the remainder.
+  - req_id: R2
+    statement: The remainder after the tab is right-aligned using a right tab stop at (or near) the right margin.
+    check_kind: paragraph_format
+    observable: Each such paragraph (or its style) has a tab stop with alignment RIGHT positioned within about 1 cm of the text-area right edge (page 21.59 cm minus margins 2.54 + 2.54 gives a 16.51 cm text width).
+  - req_id: R3
+    statement: The first three words remain left-aligned (paragraph alignment left/start, not right or justified).
+    check_kind: paragraph_format
+    observable: Paragraph alignment is LEFT or unset.
+allowed_variations:
+  - '[AMBIGUOUS] Paragraphs whose remainder is long ("Download and install Windows eBook Reader ...", "Download eBook and input ...") may wrap past the right tab stop; layout imperfection is not addressed by the instruction.'
+  - The space before/after the tab may be removed or kept.
+  - Applying the tab stop via a paragraph style rather than direct formatting.

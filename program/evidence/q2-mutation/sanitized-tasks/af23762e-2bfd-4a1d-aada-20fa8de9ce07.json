@@ -1,0 +1,16 @@
+{
+  "domain": "libreoffice_impress",
+  "initial_files": [
+    {
+      "path_in_vm": "/home/user/Desktop/Forests.pptx",
+      "sha256": "6e419bdad3125280c829383cce1da1fa248081f5f6ed6a18e1890a11d4b48e10",
+      "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/1e112283c4ecb08d6fed8069bca7de74fa2f12aa/libreoffice_impress/af23762e-2bfd-4a1d-aada-20fa8de9ce07/Forests.pptx"
+    }
+  ],
+  "instruction": "I am making PPT on LibreOffice Impress for presentation tomorrow. I need to summarize contents on one slide use Impress \"Summary Slide\" feature. Could you make that for me?",
+  "related_apps": [
+    "libreoffice_impress"
+  ],
+  "snapshot": "libreoffice_impress",
+  "task_id": "af23762e-2bfd-4a1d-aada-20fa8de9ce07"
+}

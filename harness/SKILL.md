@@ -58,6 +58,12 @@ attestation helpers. It starts small after the 2026-10-06 restart.
   growth against a largest-shape reservation), the launch-window ledger, the
   identified client with prebuilt replay history, and control X1 on identical
   prompt token sequences.
+- `q2_mutation/` is Q2's OSWorld checker-mutation harness: the binding
+  `schema.py`, task scope and sanitization, the GUI-faithful LibreOffice save
+  stage, the offline `evaluate()` scorer, clustered statistics, the D9
+  rater protocol, the operator catalog (`q2_mutation/operators/`) and the
+  campaign driver that joins specs, operators and scorer
+  (`q2_mutation/campaign.py`). Runbook: `q2_mutation/README.md`.
 - `q1/` is Q1's Stage 0 gate stack: shared `schema.py`, gates (a)-(c), the
   independent audit, runner/worker/journal, analysis, the mutator (`q1/mutate/`)
   and the substrate builders (`q1/substrates/`). `q1/README.md` maps it;

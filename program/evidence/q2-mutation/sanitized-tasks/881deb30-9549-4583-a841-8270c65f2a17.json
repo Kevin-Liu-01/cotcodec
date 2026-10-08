@@ -1,0 +1,112 @@
+{
+  "domain": "multi_apps",
+  "initial_files": [
+    {
+      "path_in_vm": "/home/user/Documents/Fundings/ecs/ecs15.pdf",
+      "sha256": "83f5aa554bb129b431733ac9157fb0024b3d17a0ccb193e557fd6b9deead3a7d",
+      "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/1e112283c4ecb08d6fed8069bca7de74fa2f12aa/multi_apps/881deb30-9549-4583-a841-8270c65f2a17/ecs15.pdf"
+    },
+    {
+      "path_in_vm": "/home/user/Documents/Fundings/ecs/ecs16.pdf",
+      "sha256": "b495e549d5920a7e01fd09ea1d73630442ba57a4686ffb2e5507658ad22a3cd4",
+      "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/1e112283c4ecb08d6fed8069bca7de74fa2f12aa/multi_apps/881deb30-9549-4583-a841-8270c65f2a17/ecs16.pdf"
+    },
+    {
+      "path_in_vm": "/home/user/Documents/Fundings/ecs/ecs17.pdf",
+      "sha256": "c069c5beae098968b894d2995230ef318efcf55646fe66b14fae69c347afa435",
+      "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/1e112283c4ecb08d6fed8069bca7de74fa2f12aa/multi_apps/881deb30-9549-4583-a841-8270c65f2a17/ecs17.pdf"
+    },
+    {
+      "path_in_vm": "/home/user/Documents/Fundings/ecs/ecs23.pdf",
+      "sha256": "813ccb13a3293f4506998b0c0041099b8d6827ec9090942adcdb61292dd2da07",
+      "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/1e112283c4ecb08d6fed8069bca7de74fa2f12aa/multi_apps/881deb30-9549-4583-a841-8270c65f2a17/ecs23.pdf"
+    },
+    {
+      "path_in_vm": "/home/user/Documents/Fundings/ecs/ecs22.pdf",
+      "sha256": "23f870f0d7844bf4e33d5e3e75be699d16d46d147273ee24cc5483fb41362b3b",
+      "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/1e112283c4ecb08d6fed8069bca7de74fa2f12aa/multi_apps/881deb30-9549-4583-a841-8270c65f2a17/ecs22.pdf"
+    },
+    {
+      "path_in_vm": "/home/user/Documents/Fundings/ecs/ecs21.pdf",
+      "sha256": "c31e5e282176184d3c89d89bd5ee301a668dd8d04eb993447b3fce06ed464ffd",
+      "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/1e112283c4ecb08d6fed8069bca7de74fa2f12aa/multi_apps/881deb30-9549-4583-a841-8270c65f2a17/ecs21.pdf"
+    },
+    {
+      "path_in_vm": "/home/user/Documents/Fundings/ecs/ecs20.pdf",
+      "sha256": "1235e7542c5d5f11e07f5091f9103d84094c56938880604d813d557a7358b013",
+      "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/1e112283c4ecb08d6fed8069bca7de74fa2f12aa/multi_apps/881deb30-9549-4583-a841-8270c65f2a17/ecs20.pdf"
+    },
+    {
+      "path_in_vm": "/home/user/Documents/Fundings/ecs/ecs19.pdf",
+      "sha256": "ee4a6059222c436a10fad59859f26086466f4c35fcf0e8ae8f1114b858603936",
+      "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/1e112283c4ecb08d6fed8069bca7de74fa2f12aa/multi_apps/881deb30-9549-4583-a841-8270c65f2a17/ecs19.pdf"
+    },
+    {
+      "path_in_vm": "/home/user/Documents/Fundings/ecs/ecs18.pdf",
+      "sha256": "ed32fe82f027b74f7f15ddba998c5fb9e596495823a071cecc8fa66395b54377",
+      "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/1e112283c4ecb08d6fed8069bca7de74fa2f12aa/multi_apps/881deb30-9549-4583-a841-8270c65f2a17/ecs18.pdf"
+    },
+    {
+      "path_in_vm": "/home/user/Documents/Fundings/grf/customer-information-sheet-for-inward-payments-to-hong-kong.pdf",
+      "sha256": "6917e48e10e0e97d681f821f7c3ec3556ff2917901bf14f5d49727c5bbc3a8b3",
+      "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/1e112283c4ecb08d6fed8069bca7de74fa2f12aa/multi_apps/881deb30-9549-4583-a841-8270c65f2a17/customer-information-sheet-for-inward-payments-to-hong-kong.pdf"
+    },
+    {
+      "path_in_vm": "/home/user/Documents/Fundings/grf/grf15.pdf",
+      "sha256": "8b261f7626f6a8ba9cc18d829353e5b179d377e7249dd72ac514ea068ce7bfae",
+      "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/1e112283c4ecb08d6fed8069bca7de74fa2f12aa/multi_apps/881deb30-9549-4583-a841-8270c65f2a17/grf15.pdf"
+    },
+    {
+      "path_in_vm": "/home/user/Documents/Fundings/grf/grf16.pdf",
+      "sha256": "8bae643fe33fba98aa467619d9278caa5d2693ffa5a19dda758714a700265253",
+      "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/1e112283c4ecb08d6fed8069bca7de74fa2f12aa/multi_apps/881deb30-9549-4583-a841-8270c65f2a17/grf16.pdf"
+    },
+    {
+      "path_in_vm": "/home/user/Documents/Fundings/grf/grf17.pdf",
+      "sha256": "fe9c5a6272791118a94386ecd70e0198a5b1daff7757816dbafafaf1e0a88d03",
+      "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/1e112283c4ecb08d6fed8069bca7de74fa2f12aa/multi_apps/881deb30-9549-4583-a841-8270c65f2a17/grf17.pdf"
+    },
+    {
+      "path_in_vm": "/home/user/Documents/Fundings/grf/grf18.pdf",
+      "sha256": "75aabf4ac6be1810f56e49c4b8ffe2e54cd242cab02c8cdcb7e178d63f79965f",
+      "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/1e112283c4ecb08d6fed8069bca7de74fa2f12aa/multi_apps/881deb30-9549-4583-a841-8270c65f2a17/grf18.pdf"
+    },
+    {
+      "path_in_vm": "/home/user/Documents/Fundings/grf/grf19.pdf",
+      "sha256": "f4259b1dd297d7402fa5b59c23216c91b5a3b93dd1fdf4eb16aedefb639fc904",
+      "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/1e112283c4ecb08d6fed8069bca7de74fa2f12aa/multi_apps/881deb30-9549-4583-a841-8270c65f2a17/grf19.pdf"
+    },
+    {
+      "path_in_vm": "/home/user/Documents/Fundings/grf/grf20.pdf",
+      "sha256": "992efbaf69d2a8215dbfd79d35a6351e81ffba93f498c6db2213c14ac568048d",
+      "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/1e112283c4ecb08d6fed8069bca7de74fa2f12aa/multi_apps/881deb30-9549-4583-a841-8270c65f2a17/grf20.pdf"
+    },
+    {
+      "path_in_vm": "/home/user/Documents/Fundings/grf/grf21.pdf",
+      "sha256": "c5f4561313fa63a1510a0b9f8aff3945626db5014022f7a4706ab29a721e4292",
+      "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/1e112283c4ecb08d6fed8069bca7de74fa2f12aa/multi_apps/881deb30-9549-4583-a841-8270c65f2a17/grf21.pdf"
+    },
+    {
+      "path_in_vm": "/home/user/Documents/Fundings/grf/grf22.pdf",
+      "sha256": "9dd404f1617523ba087fbc9fba6dbbbb1ed093b992072f22d197966e6ec4dab1",
+      "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/1e112283c4ecb08d6fed8069bca7de74fa2f12aa/multi_apps/881deb30-9549-4583-a841-8270c65f2a17/grf22.pdf"
+    },
+    {
+      "path_in_vm": "/home/user/Documents/Fundings/grf/grf23.pdf",
+      "sha256": "b41ae005ed3a09f73dc2a1cfb406a1e6b14423293e49f8c00729cc89cdf5bba5",
+      "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/1e112283c4ecb08d6fed8069bca7de74fa2f12aa/multi_apps/881deb30-9549-4583-a841-8270c65f2a17/grf23.pdf"
+    },
+    {
+      "path_in_vm": "/home/user/Documents/Fundings/supported_rate.xlsx",
+      "sha256": "f827b1b621e44d1be49e742766b0f20659bad1ae067ab6ee8c2d2f510b22576e",
+      "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/1e112283c4ecb08d6fed8069bca7de74fa2f12aa/multi_apps/881deb30-9549-4583-a841-8270c65f2a17/supported_rate.xlsx"
+    }
+  ],
+  "instruction": "I want to apply for a faculty position in Hong Kong and I'm comparing the Early Career Scheme (ECS) pass rates across universities. I have ECS result PDF files for years 2015-2023 in ~/Documents/Fundings/ecs/. The spreadsheet supported_rate.xlsx is already open in LibreOffice Calc with a table in Sheet1. The table has years (2015-2023) in column A and university abbreviations as column headers (CityU, HKBU, LU, CUHK, HKIEd/EduHK, PolyU, HKUST, HKU). Please extract the pass rate (number of supported proposals divided by total number of applications) for each university and each year from the ECS PDF files, and fill in the corresponding empty cells in Sheet1. Enter the values as decimals (e.g., enter 0.5 for a 50% pass rate).",
+  "related_apps": [
+    "libreoffice_calc",
+    "os"
+  ],
+  "snapshot": "libreoffice_calc",
+  "task_id": "881deb30-9549-4583-a841-8270c65f2a17"
+}

@@ -1,0 +1,50 @@
+{
+ "baselines": {
+  "failed": {},
+  "items": {
+   "none": 36,
+   "saved": 106
+  },
+  "jobs": 12,
+  "saved": 12
+ },
+ "fit": {
+  "budget_tokens": 129024,
+  "image_cell_px": 32,
+  "images_dropped": 0,
+  "lines_dropped": 1933,
+  "max_estimated_tokens_after": 128957,
+  "max_estimated_tokens_before": 143292,
+  "not_fitting": [],
+  "packets_shortened": 16,
+  "text_tokens_per_byte": 0.55
+ },
+ "images_per_file": {
+  "0": 44,
+  "1": 170,
+  "2": 7,
+  "3": 20,
+  "4": 15,
+  "5": 26,
+  "6": 49,
+  "12": 1,
+  "13": 1,
+  "19": 5,
+  "20": 19
+ },
+ "items": 142,
+ "render": {
+  "dpi": 100,
+  "images_per_packet": 40,
+  "pages_per_file": 20
+ },
+ "schema": "q2m-audit-packet-v1",
+ "shards": [
+  {
+   "bytes": 455094511,
+   "items": 142,
+   "path": "packets-000.jsonl",
+   "sha256": "5598e755b3ef30d3814a363212aa2b4c818a260d1b67f575bea92871fd128475"
+  }
+ ]
+}

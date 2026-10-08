@@ -1,0 +1,18 @@
+task_id: 21df9241-f8d7-4509-b7f1-37e501a823f7
+author: blind-model-author-v1
+requirements:
+  - req_id: R0
+    statement: (implicit) The workbook is persisted at /home/user/Represent_in_millions_billions.xlsx; column A (Parameter) and headers are unchanged.
+    check_kind: file_exists
+    observable: File loads; A1:A8 and B1, C1 equal the initial values.
+  - req_id: R1
+    statement: Column B shows each Parameter in millions, rounded to one decimal (half up), followed by a space and "M".
+    check_kind: cell_value
+    observable: Displayed B2:B8 == "0.0 M", "0.0 M", "0.0 M", "0.0 M", "1.5 M", "150.0 M", "15000.0 M".
+  - req_id: R2
+    statement: Column C shows each Parameter in billions, rounded to one decimal (half up), followed by a space and "B".
+    check_kind: cell_value
+    observable: Displayed C2:C8 == "0.0 B", "0.0 B", "0.0 B", "0.0 B", "0.0 B", "0.2 B", "15.0 B" (0.15 rounds half up to 0.2).
+allowed_variations:
+  - '[AMBIGUOUS] B/C may be text strings (e.g. =ROUND(A2/10^6;1)&" M" or TEXT()) or numeric cells with a custom number format; the instruction constrains only the shown representation. Note the half-up rule yields "0.2 B" for 150000000, which a binary-float round-half-even could miss.'
+  - Thousands separators are not mentioned; "15000.0 M" vs "15,000.0 M" is a gray zone (prefer no separator).

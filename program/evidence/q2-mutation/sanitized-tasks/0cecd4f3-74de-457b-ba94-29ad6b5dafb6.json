@@ -1,0 +1,16 @@
+{
+  "domain": "libreoffice_calc",
+  "initial_files": [
+    {
+      "path_in_vm": "/home/user/copy_sheet_insert.xlsx",
+      "sha256": "86d5618bbdc2ebbd7de484564fa39b905c7077129278ba9a3f50d2fa7454ee1f",
+      "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/1e112283c4ecb08d6fed8069bca7de74fa2f12aa/libreoffice_calc/0cecd4f3-74de-457b-ba94-29ad6b5dafb6/LARS_Science_Assessment_Resource_List_7-30-21.xlsx"
+    }
+  ],
+  "instruction": "Rename \"Sheet 1\" to \"LARS Resources\". Then make a copy of it. Place the copy before \"Sheet 2\" and rename it by appending a suffix \"(Backup)\", concatenated by a white space. And Also rename \"Sheet2\" to \"LARS Resources (Offline)\".",
+  "related_apps": [
+    "libreoffice_calc"
+  ],
+  "snapshot": "libreoffice_calc",
+  "task_id": "0cecd4f3-74de-457b-ba94-29ad6b5dafb6"
+}

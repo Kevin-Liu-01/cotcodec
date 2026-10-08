@@ -1,0 +1,18 @@
+task_id: 39be0d19-634d-4475-8768-09c130f5425d
+author: blind-model-author-v1
+requirements:
+  - req_id: R0
+    statement: (implicit) The presentation is saved in place at /home/user/Desktop/41_3.pptx with 3 slides; existing texts unchanged.
+    check_kind: file_exists
+    observable: File loads; 3 slides; titles "Product Overview" and "Features" unchanged.
+  - req_id: R1
+    statement: The "Features" slide (slide 3) contains a table with 5 rows and 2 columns.
+    check_kind: table_cell
+    observable: Slide 3 has a graphicFrame table with len(rows) == 5 and len(columns) == 2.
+  - req_id: R2
+    statement: (implicit) No table is added to other slides.
+    check_kind: slide_object
+    observable: Slides 1 and 2 contain no tables.
+allowed_variations:
+  - Table cells may be empty; table style, size and position are not constrained.
+  - The empty content placeholder on slide 3 may be replaced by the table or remain.

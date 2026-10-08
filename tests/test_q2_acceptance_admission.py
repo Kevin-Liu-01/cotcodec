@@ -127,14 +127,21 @@ def _ledger(tree: Path, manifest: dict) -> dict:
     return ledger_view(str(tree), ledger_paths(manifest))
 
 
-def test_the_repository_ledger_refuses_every_acceptance_campaign_before_the_freeze():
-    """Until the owner's freeze, the real ledger has no row for any q2 file."""
+def test_the_repository_ledger_admits_acceptance_only_after_the_freeze():
+    """Before the owner's freeze the real ledger refuses every acceptance
+    campaign; once the three registrations are frozen (2026-10-08, rows 8-10)
+    they are frozen together and the real ledger admits A1 at seeds 43 and 44."""
     rows = [json.loads(line) for line in (PREREGS / "ledger.jsonl").read_text().splitlines()]
-    assert not {row["experiment_id"] for row in rows} & set(FILES)
+    frozen = {row["experiment_id"] for row in rows} & set(FILES)
     for seed in (43, 44):
         manifest = acceptance(seed=seed)
-        with pytest.raises(ManifestError, match="not frozen in the ledger"):
-            validate_manifest(manifest, ledger_view(str(ROOT), ledger_paths(manifest)))
+        view = ledger_view(str(ROOT), ledger_paths(manifest))
+        if not frozen:
+            with pytest.raises(ManifestError, match="not frozen in the ledger"):
+                validate_manifest(manifest, view)
+        else:
+            assert frozen == set(FILES)
+            validate_manifest(manifest, view)
 
 
 def test_a_frozen_ledger_admits_a1_at_seeds_43_and_44(frozen_tree):
@@ -253,6 +260,51 @@ def test_acceptance_plans_match_the_preregistered_counts(frozen_tree):
     plan = driver.acceptance_plan(a3, CELLS, VOLUME)
     assert {cell for s in plan for _, cell in s["trials"]} == set(order.STRESS_ENTRIES)
     assert sum(len(s["trials"]) for s in plan) == 30 * 30 * 2
+
+
+def a7_manifest(**changes) -> dict:
+    """Criterion A7 (decision D30): G, 360 seed-43 shuffles, screenshot-plus-accessibility."""
+    from harness.q2.vm.manifest import OBSERVATION_REPS
+
+    workload = {
+        "reps": OBSERVATION_REPS,
+        "settings": ["screenshot+a11y"],
+        "cells": "gating",
+        "sessions": 516,
+        "trials": 30960,
+    }
+    workload.update(changes)
+    return acceptance("A7", concurrency=workload.pop("concurrency", 40), **workload)
+
+
+def test_the_observation_service_campaign_is_admitted_as_registered(frozen_tree):
+    from harness.q2.action_path import acceptance as analysis
+
+    manifest = a7_manifest()
+    validate_manifest(manifest, _ledger(frozen_tree, manifest))
+    plan = driver.acceptance_plan(manifest, CELLS, VOLUME)
+    assert plan == analysis.observation_plan()
+    calls = sum(
+        len([a for a in cell["actions"] if a["op"] != "terminate"])
+        for session in plan
+        for _, cell_id in session["trials"]
+        for cell in CELLS["layers"]["L0-fixed"]
+        if cell["id"] == cell_id
+    )
+    # Section 9: 38,520 step calls and 516 reset observations, 39,036 accessibility calls.
+    assert calls == 38520 and calls + len(plan) == 39036
+    one = a7_manifest(concurrency=1, session_range=[0, 20], sessions=20, trials=1200)
+    validate_manifest(one, _ledger(frozen_tree, one))
+    for changes, message in (
+        ({"settings": ["screenshot", "screenshot+a11y"]}, "settings"),
+        ({"cells": "all"}, "cells"),
+        ({"reps": 5}, "repetitions"),
+        ({"concurrency": 12}, "concurrency"),
+        ({"attempt": 2}, "A7 has no repair attempts"),
+    ):
+        bad = a7_manifest(**changes)
+        with pytest.raises(ManifestError, match=message):
+            validate_manifest(bad, _ledger(frozen_tree, bad))
 
 
 def test_development_may_run_concurrent_vms_only_for_the_suite():
@@ -386,9 +438,13 @@ def test_the_guest_server_fault_hook_is_development_only(frozen_tree):
         "kill_guest_server_after_seq": 0,
     }
     validate_manifest(manifest)
-    manifest["workload"]["kill_guest_server_after_seq"] = "0"
-    with pytest.raises(ManifestError, match="kill_guest_server_after_seq"):
-        validate_manifest(manifest)
-    a1 = acceptance(kill_guest_server_after_seq=0)
-    with pytest.raises(ManifestError, match="unknown"):
-        validate_manifest(a1, _ledger(frozen_tree, a1))
+    manifest["workload"]["kill_guest_server_during_seq"] = 1
+    validate_manifest(manifest)
+    for hook in ("kill_guest_server_after_seq", "kill_guest_server_during_seq"):
+        bad = copy.deepcopy(manifest)
+        bad["workload"][hook] = "0"
+        with pytest.raises(ManifestError, match=hook):
+            validate_manifest(bad)
+        a1 = acceptance(**{hook: 0})
+        with pytest.raises(ManifestError, match="unknown"):
+            validate_manifest(a1, _ledger(frozen_tree, a1))
