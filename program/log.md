@@ -2379,3 +2379,57 @@ they say so.)
 - Decision for Kevin (pending in `program/state.json`): whether to open a K1
   v3 on Qwen3.5-4B-Base under a new id and the gauntlet. Nothing pushed; the
   orx node branches are local.
+
+## 2026-10-08 — K1 v3 gauntlet wave 1 on Qwen3.5-4B-Base: score 51, honest exit (branch `gauntlet/k1-v3`, not merged)
+
+- Wave 1 (workflow `wf_3d0b843a-cdb`) on proposal
+  `program/proposals/2026-10-08-q3-k1-v3-qwen35-4b.md` (`752df4ad...`,
+  commit `d911d21`) and the DRAFT registration
+  `program/preregistrations/q3-k1-localization-screen-v3.md` (`f4ce9a00...`,
+  not frozen, not admitted). Audit row 1 appended to
+  `program/gauntlet/2026-10-08-q3-k1-v3-qwen35-4b.jsonl`, row hash
+  `fd00353ac209206a96ce0e5bfca5c0bfd08d2c3d9dd1ea29a6379d3b1e3bdb59`.
+- Reviews: 51 (claude-opus-5-5) and 55 (qwen3.6-35b-a3b, self-hosted, Slurm
+  966). Both totals equal their dimension sums and sit below every cap (74,
+  79, 89). Score 51, best 51. Neither review is signed (D24). Reviewer 2 did
+  not apply cap 74; its total is below 74, so the number is unaffected.
+- Blind discrimination passed under the rule: same mechanism, proposal judged
+  stronger (A = Oracle-Guided 2606.07703, B = the proposal). The SpotAttention
+  packet and a Lost in Compression packet were not judged. Refute-first triad:
+  3 of 3 refuted (novelty: trivial recombination of SpotAttention,
+  Oracle-Guided section 9.1 and Lost in Compression's audit form;
+  identification: one-sided safeguards; feasibility: decisiveness, not
+  hardware). The doctor gives FAIL as expected (Novelty, Design and Compute
+  FAIL; trust store; the known parser quirks, including `gpu_hours=0.5` read
+  as 0); the re-run at record time is byte-identical to the bundle copy.
+- Largest defect: NEGATIVE, the verdict that would stop Q3, is not identified
+  as drafted. The overlap mask and LEX share one content-token rule, so LEX
+  scores 0 on every unmasked needle block and the "two-sided" literal gate can
+  register only haystack displacement and the target's own masked gap. The
+  NEGATIVE region has no lower bound, so an MN-only displacement bias and a
+  direction-flipping unseen-script deficit can cancel into a kill. The layer
+  veto cannot fire at layer 3 (CX headroom 8.68 points against a 10-point
+  threshold). With xi_rel and both targets, P(NEGATIVE | xi = 0) falls from
+  0.90 at seed SD 1 to 0.34 at seed SD 2 (masked H 36), and no seed SD has
+  been measured. The recorder checked the registration lines, the LEX scorer,
+  the lane-862 per-layer values and re-ran reviewer 1's sensitivity script.
+  Unlike K1 v2, this is repairable in the DRAFT without a new id.
+- Honest exit. Queries: 171 counted discover calls against the declared 150
+  (148 before the triad; novelty refuter 10, feasibility refuter 7 including
+  one that failed to decode, reviewer 1 6), so no compliant wave 2 fits. The
+  triad also stopped the candidate. Tokens 4.60M of 8M (conservative
+  counter), $71.68 of $150 list-price equivalent, 91 of 600 minutes, 1 of 3
+  waves.
+- GPU: reviewer 2 job 966 used 0.0569 GPU-h (scontrol RunTime 00:03:25 on 1
+  H100, COMPLETED 0:0, no leftover container), added to the ledger as "K1 v3
+  gauntlet wave 1 open-weight review (D24)". Program total 4.6816. No screen
+  GPU work ran.
+- Waiting on Kevin: a successor gauntlet on a repaired v3 DRAFT with fresh
+  budgets (six queries per refuter and reviewer, the Novelty doctor's missing
+  coverage, a Lost in Compression blind packet); owner-approved CPU reads of
+  the lane-862 development chunk files (masked headroom, masked LEX, the count
+  of nonzero-LEX MN blocks); decision 64 or the letter of requirement 7;
+  admission under D24 if probe-measured caps stay above 8 GPU-h (projected
+  7.21 central, 9.79 high). The Q3 pending-decision line in
+  `program/state.json` was left unchanged to avoid merge conflicts; update it
+  at merge.
