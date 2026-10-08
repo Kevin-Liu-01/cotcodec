@@ -574,11 +574,32 @@ on the GPU (D42 (ii); below).
   280 units that is 658 s; the one-off compiles are added at their observed
   rate (2 in 159 units) over all 1,160 units at the larger one's extra cost,
   106 s; with a 5 s statistics bound (job 727's took 1.2 s), 769 s. (A first
-  analysis pass fitted a line in tokens per stage; the measured units of two
-  stages span only 3,600 to 3,950 tokens, so a single compile set the slope,
-  and it extrapolated 7.7 s per C-literal unit against 0.16 s measured, 73
-  minutes for the lane. It was discarded for that reason and is kept in the
-  evidence; the two passes differ only in how the two compiles are treated.) Start-up
+  analysis pass, kept in the evidence, differed from this one in two ways: it
+  fitted the two compiles into the per-stage figures, and it scaled to the
+  lane's lengths by a per-stage least-squares line in tokens (the larger of
+  the line at the lane's mean length and the stage's mean) instead of in
+  proportion to length. The measured units of A-main and C-literal span only
+  3,600 to 3,950 tokens, so C-literal's compile set that stage's slope, which
+  extrapolated 7.7 s per unit against 0.16 s measured: 73 minutes for the
+  lane, over D36's cap. The estimator above was chosen after that pass came
+  out over the cap, and its proportional scaling crosses a minute boundary of
+  D36's rule: the first pass's line fit with the compiles treated as above
+  (left out of the fits and added back as the same 106 s) gives 678 s instead
+  of 658 s for the stages and 27.62 instead of 26.95 minutes before rounding
+  up, so 31 minutes, not 30. The increase is all A-main's, which has no
+  compile (55 s more; the line gives B-absent and C-literal 35 s less): its
+  measured units span only 211 tokens (3,614 to 3,825), over which the line's
+  slope is 0.16 ms per token, 3.3 times B-absent's 0.048 ms per token over
+  3,551 to 8,313 tokens, and it gives 0.90 s per A-main unit against
+  proportional scaling's 0.77 s. Taking the larger of the two estimates in
+  every stage would give 32 minutes. Proportional scaling is registered
+  because on B-absent, the only stage with measured units at the lane's long
+  contexts, it over-predicts them: 0.78 s against 0.60 s measured at 8,310
+  tokens (under cProfile, which only slows them), where prefill went from
+  0.116 to 0.247 s and the whole unit from 0.38 to 0.60 s for 2.2 times the
+  tokens. At each of these estimates the lane's first job, run at that speed,
+  ends in about 14 to 15 of its 27 useful minutes; the minute boundaries lie
+  inside D36's doubled margin.) Start-up
   is everything before the first unit, 79 s: 2 s from Slurm's start to
   `job.env`, 9.7 s of the job outside the workload process (container creation
   and the epilogue, so this over-counts) and 67.0 s in the process: 19.6 s to
@@ -1076,10 +1097,15 @@ authorised (Freeze procedure, step 1).
     runs at its measured speed ends well inside its useful window and the one
     continuation stays possible after an early interruption: 12 and 30
     minutes. The 4B lane completes its first job if it averages at most about
-    1.3 s per unit against the 0.16 to 0.43 s measured by stage. The scaling
-    is the conservative choice: the registered subset's contexts are shorter
-    than the lane's, and time grown in proportion to length over-predicts the
-    longest measured units. An earlier draft set 45 minutes from a doubled
+    1.3 s per unit against the 0.16 to 0.43 s measured by stage. Scaling up
+    is conservative against the unscaled means (428 s for the stages against
+    658 s): the registered subset's contexts are shorter than the lane's, and
+    time grown in proportion to length over-predicts the longest measured
+    units. It is not the largest estimate the measurement allows, and it was
+    chosen after a first analysis pass came out over D36's cap: that pass's
+    per-stage line fit, with the compiles treated the same way, gives 31
+    minutes, all of the increase from A-main, whose measured units span only
+    211 tokens (Compute). An earlier draft set 45 minutes from a doubled
     projection of the first timing job's warm-shape units because the fixed
     path had not been timed; D42 (ii) replaced it with this measurement, so
     D36's rule for the 4B limit holds unamended (D42 (ii) adds only the second
