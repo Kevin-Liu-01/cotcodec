@@ -49,6 +49,9 @@ design decision 35 of action-path v2), so they are here. Upstream: H-OSW is OSWo
   action-path suite counts it, but under S1a a long `type` is agent behaviour.
 * A checker metric that raises, or returns nothing or a value outside [0, 1], scores 0
   (`metric_exception`); a getter that loses its transport to the guest is a loss.
+* A transport loss behind which the guest server restarted (its process id or its unit's
+  `NRestarts` changed since the warm-up) is recorded as `guest_server_restart` (D30); a
+  restart with no failed request is caught by the check after the 20 s settle.
 
 ## Runtime (registration section 4)
 

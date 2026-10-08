@@ -264,8 +264,9 @@ class Runner:
             self.check_restarts()
             self.evaluate(session, last_action)
         except agents.InfraLoss as loss:
+            kind = self.restart_behind(loss)
             self.record.update(
-                status="infrastructure", infrastructure_type=loss.kind, score=None,
+                status="infrastructure", infrastructure_type=kind, score=None,
                 infrastructure_detail=loss.detail[:500], ended=self.record["ended"] or "infra",
             )  # fmt: skip
             if self.cfg.mode == "setup-only":
@@ -316,6 +317,21 @@ class Runner:
             "shell_idle": (result.get("shell") or {}).get("idle"),
         }
         self.record["server_start"] = self.server_identity(result.get("server_pid"))
+
+    def restart_behind(self, loss: agents.InfraLoss) -> str:
+        """A transport loss behind which the guest server restarted is a restart (D30)."""
+        if loss.kind != "transport" or not self.record.get("server_start"):
+            return loss.kind
+        start, end = self.record["server_start"], self.server_identity()
+        self.record["server_end"] = end
+        pid_changed = (
+            isinstance(start.get("server_pid"), int)
+            and isinstance(end.get("server_pid"), int)
+            and start["server_pid"] != end["server_pid"]
+        )
+        n0, n1 = start.get("n_restarts"), end.get("n_restarts")
+        counted = isinstance(n0, int) and isinstance(n1, int) and n1 != n0
+        return "guest_server_restart" if pid_changed or counted else loss.kind
 
     def check_restarts(self) -> None:
         start = self.record.get("server_start") or {}
