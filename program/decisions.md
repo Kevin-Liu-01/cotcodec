@@ -637,7 +637,7 @@ new commit and the executor addendum's byte-identity statement names it.
 
 **D46. Q1 Stage 0 closes on the audit-metric study; Q1 GPU spend stops until
 Stage 1 can run.** The CPU-only study D41 ordered (branch
-`stage0/q1-audit-metric`, evidence under `program/evidence/2026-10-08/`,
+`stage0/q1-audit-metric`, evidence `program/evidence/2026-10-08/q1-audit-metric-study/`,
 replicated by an independent critic and attacked by an adversarial one, no
 evaluation unit touched) found the registered audit's failure analytic: its
 metric scores an all-zeros output at 1/(1+kappa) = 0.999 for any reference,
