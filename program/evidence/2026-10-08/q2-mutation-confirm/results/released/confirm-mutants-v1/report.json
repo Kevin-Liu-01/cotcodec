@@ -1,0 +1,770 @@
+{
+ "admitted": 1232,
+ "by_operator": {
+  "docx.alt.case_via_format": {
+   "ambiguous:null_not_pass:None": 1
+  },
+  "docx.alt.char_style_for_direct": {
+   "should_pass_alt_solution:evaluable:ok": 3
+  },
+  "docx.alt.para_direct_for_style": {
+   "should_pass_alt_solution:not_admitted:None": 5
+  },
+  "docx.eq.doc_property": {
+   "should_pass_equiv:evaluable:ok": 36,
+   "should_pass_equiv:null_not_pass:None": 3
+  },
+  "docx.eq.view_zoom": {
+   "should_pass_equiv:evaluable:ok": 36,
+   "should_pass_equiv:null_not_pass:None": 3
+  },
+  "docx.extra.delete_unrelated_paragraph": {
+   "should_fail_extra_change:evaluable:FP_F": 6,
+   "should_fail_extra_change:evaluable:ok": 7
+  },
+  "docx.extra.edit_unrelated_paragraph": {
+   "should_fail_extra_change:evaluable:FP_F": 6,
+   "should_fail_extra_change:evaluable:ok": 7
+  },
+  "docx.extra.edit_unrelated_table_cell": {
+   "should_fail_extra_change:evaluable:FP_F": 3
+  },
+  "docx.extra.format_unrelated_run": {
+   "ambiguous:ambiguous:None": 11,
+   "ambiguous:not_admitted:None": 1
+  },
+  "docx.viol.delete_bound_paragraph": {
+   "ambiguous:ambiguous:None": 2,
+   "ambiguous:not_admitted:None": 3,
+   "ambiguous:null_not_pass:None": 2,
+   "should_fail_violation:evaluable:ok": 14,
+   "should_fail_violation:null_not_pass:None": 1
+  },
+  "docx.viol.drop_char_format": {
+   "ambiguous:ambiguous:None": 3,
+   "ambiguous:null_not_pass:None": 2
+  },
+  "docx.viol.line_spacing_change": {
+   "ambiguous:ambiguous:None": 5,
+   "ambiguous:not_admitted:None": 1,
+   "ambiguous:null_not_pass:None": 2,
+   "should_fail_violation:evaluable:ok": 4
+  },
+  "docx.viol.para_align_change": {
+   "ambiguous:ambiguous:None": 9,
+   "ambiguous:null_not_pass:None": 3
+  },
+  "docx.viol.text_edit": {
+   "ambiguous:ambiguous:None": 9,
+   "ambiguous:null_not_pass:None": 2,
+   "should_fail_violation:evaluable:FP_R": 2,
+   "should_fail_violation:evaluable:ok": 13,
+   "should_fail_violation:null_not_pass:None": 1
+  },
+  "pptx.alt.case_via_format": {
+   "ambiguous:ambiguous:None": 10
+  },
+  "pptx.alt.textbox_for_placeholder": {
+   "ambiguous:ambiguous:None": 13,
+   "ambiguous:null_not_pass:None": 4,
+   "should_fail_violation:evaluable:FP_R": 2,
+   "should_fail_violation:evaluable:ok": 4,
+   "should_fail_violation:null_not_pass:None": 5
+  },
+  "pptx.eq.doc_property": {
+   "should_pass_equiv:evaluable:ok": 51,
+   "should_pass_equiv:null_not_pass:None": 15
+  },
+  "pptx.eq.subvisible_nudge": {
+   "ambiguous:ambiguous:None": 2,
+   "ambiguous:null_not_pass:None": 4,
+   "should_pass_equiv:evaluable:ok": 46,
+   "should_pass_equiv:not_admitted:None": 2,
+   "should_pass_equiv:null_not_pass:None": 11
+  },
+  "pptx.eq.zorder_nonoverlap": {
+   "ambiguous:ambiguous:None": 3,
+   "should_pass_equiv:evaluable:FN": 36,
+   "should_pass_equiv:evaluable:ok": 4,
+   "should_pass_equiv:not_admitted:None": 3,
+   "should_pass_equiv:null_not_pass:None": 13
+  },
+  "pptx.extra.add_textbox": {
+   "should_fail_extra_change:evaluable:ok": 44,
+   "should_fail_extra_change:not_admitted:None": 1,
+   "should_fail_extra_change:null_not_pass:None": 13
+  },
+  "pptx.extra.delete_unrelated_slide": {
+   "should_fail_extra_change:evaluable:ok": 3
+  },
+  "pptx.extra.edit_notes": {
+   "ambiguous:ambiguous:None": 3
+  },
+  "pptx.extra.edit_unrelated_text": {
+   "should_fail_extra_change:evaluable:ok": 3
+  },
+  "pptx.viol.delete_bound_shape": {
+   "ambiguous:ambiguous:None": 3,
+   "should_fail_violation:evaluable:ok": 34,
+   "should_fail_violation:not_admitted:None": 4,
+   "should_fail_violation:null_not_pass:None": 13
+  },
+  "pptx.viol.drop_char_format": {
+   "ambiguous:ambiguous:None": 19,
+   "ambiguous:normalized:None": 3,
+   "ambiguous:null_not_pass:None": 1,
+   "should_fail_violation:evaluable:FP_R": 2,
+   "should_fail_violation:evaluable:ok": 4,
+   "should_fail_violation:not_admitted:None": 1,
+   "should_fail_violation:null_not_pass:None": 2
+  },
+  "pptx.viol.move_shape": {
+   "ambiguous:ambiguous:None": 14,
+   "ambiguous:null_not_pass:None": 3,
+   "should_fail_violation:evaluable:ok": 2,
+   "should_fail_violation:null_not_pass:None": 10
+  },
+  "pptx.viol.table_cell_text": {
+   "ambiguous:ambiguous:None": 3
+  },
+  "pptx.viol.text_edit": {
+   "ambiguous:ambiguous:None": 12,
+   "ambiguous:null_not_pass:None": 3,
+   "should_fail_violation:evaluable:ok": 22,
+   "should_fail_violation:null_not_pass:None": 9
+  },
+  "text.eq.trailing_newline": {
+   "should_pass_equiv:evaluable:ok": 1
+  },
+  "xlsx.alt.absolute_refs": {
+   "ambiguous:ambiguous:None": 5,
+   "should_pass_alt_solution:evaluable:ok": 34
+  },
+  "xlsx.alt.literal_for_formula": {
+   "ambiguous:ambiguous:None": 3,
+   "should_pass_alt_solution:evaluable:ok": 39
+  },
+  "xlsx.alt.named_style_for_direct": {
+   "ambiguous:ambiguous:None": 3,
+   "should_pass_alt_solution:evaluable:ok": 6,
+   "should_pass_alt_solution:not_admitted:None": 9
+  },
+  "xlsx.alt.sum_range_expand": {
+   "should_pass_alt_solution:evaluable:ok": 11
+  },
+  "xlsx.eq.active_sheet": {
+   "should_pass_equiv:evaluable:ok": 10,
+   "should_pass_equiv:null_not_pass:None": 1
+  },
+  "xlsx.eq.doc_property": {
+   "should_pass_equiv:evaluable:ok": 93,
+   "should_pass_equiv:null_not_pass:None": 3
+  },
+  "xlsx.eq.view_selection": {
+   "should_pass_equiv:evaluable:ok": 85,
+   "should_pass_equiv:not_admitted:None": 8,
+   "should_pass_equiv:null_not_pass:None": 3
+  },
+  "xlsx.eq.view_zoom": {
+   "should_pass_equiv:evaluable:ok": 37,
+   "should_pass_equiv:not_admitted:None": 3,
+   "should_pass_equiv:null_not_pass:None": 2
+  },
+  "xlsx.extra.clear_unrelated_row": {
+   "should_fail_extra_change:evaluable:ok": 13,
+   "should_fail_extra_change:normalized:None": 6
+  },
+  "xlsx.extra.edit_unrelated_value": {
+   "should_fail_extra_change:evaluable:ok": 21,
+   "should_fail_extra_change:normalized:None": 6
+  },
+  "xlsx.extra.format_unrelated_cell": {
+   "ambiguous:ambiguous:None": 24,
+   "should_pass_equiv:evaluable:ok": 3,
+   "should_pass_equiv:normalized:None": 3
+  },
+  "xlsx.viol.clear_bound_cell": {
+   "ambiguous:ambiguous:None": 6,
+   "should_fail_violation:evaluable:FP_R": 1,
+   "should_fail_violation:evaluable:ok": 57,
+   "should_fail_violation:normalized:None": 3,
+   "should_fail_violation:not_admitted:None": 6
+  },
+  "xlsx.viol.drop_char_format": {
+   "ambiguous:not_admitted:None": 3,
+   "should_fail_violation:evaluable:FP_R": 3
+  },
+  "xlsx.viol.formula_ref_shift": {
+   "ambiguous:ambiguous:None": 5,
+   "ambiguous:not_admitted:None": 1,
+   "should_fail_violation:evaluable:ok": 25,
+   "should_fail_violation:normalized:None": 2,
+   "should_fail_violation:not_admitted:None": 6
+  },
+  "xlsx.viol.number_format_change": {
+   "ambiguous:ambiguous:None": 15,
+   "should_fail_violation:evaluable:ok": 6
+  },
+  "xlsx.viol.value_perturb": {
+   "ambiguous:ambiguous:None": 4,
+   "should_fail_violation:evaluable:FP_R": 8,
+   "should_fail_violation:evaluable:ok": 41
+  }
+ },
+ "icc_by_event": {
+  "FN": 0.18910605284957324,
+  "FN_alt": null,
+  "FP_F": null,
+  "FP_R": 0.19802268101192197
+ },
+ "icc_max_defined": 0.19802268101192197,
+ "labels_admitted": {
+  "ambiguous": 216,
+  "should_fail_extra_change": 138,
+  "should_fail_violation": 290,
+  "should_pass_alt_solution": 93,
+  "should_pass_equiv": 495
+ },
+ "mdr_reference": {
+  "13_tasks_icc_0.13": 0.1715,
+  "13_tasks_icc_0.5": 0.2087,
+  "13_tasks_icc_1.0": 0.2506,
+  "21_tasks_icc_0.13": 0.1423,
+  "21_tasks_icc_0.5": 0.1703,
+  "21_tasks_icc_1.0": 0.202,
+  "31_tasks_icc_0.13": 0.1241,
+  "31_tasks_icc_0.5": 0.1462,
+  "31_tasks_icc_1.0": 0.1714,
+  "59_tasks_icc_0.13": 0.1018,
+  "59_tasks_icc_0.5": 0.1169,
+  "59_tasks_icc_1.0": 0.134
+ },
+ "mean_evaluable_mutants_per_task": 7.4,
+ "normalization_by_operator": {
+  "docx.alt.case_via_format": {
+   "checked": 1,
+   "normalized": 0
+  },
+  "docx.alt.char_style_for_direct": {
+   "checked": 3,
+   "normalized": 0
+  },
+  "docx.eq.doc_property": {
+   "checked": 39,
+   "normalized": 0
+  },
+  "docx.eq.view_zoom": {
+   "checked": 39,
+   "normalized": 0
+  },
+  "docx.extra.delete_unrelated_paragraph": {
+   "checked": 13,
+   "normalized": 0
+  },
+  "docx.extra.edit_unrelated_paragraph": {
+   "checked": 13,
+   "normalized": 0
+  },
+  "docx.extra.edit_unrelated_table_cell": {
+   "checked": 3,
+   "normalized": 0
+  },
+  "docx.extra.format_unrelated_run": {
+   "checked": 11,
+   "normalized": 0
+  },
+  "docx.viol.delete_bound_paragraph": {
+   "checked": 19,
+   "normalized": 0
+  },
+  "docx.viol.drop_char_format": {
+   "checked": 5,
+   "normalized": 0
+  },
+  "docx.viol.line_spacing_change": {
+   "checked": 11,
+   "normalized": 0
+  },
+  "docx.viol.para_align_change": {
+   "checked": 12,
+   "normalized": 0
+  },
+  "docx.viol.text_edit": {
+   "checked": 27,
+   "normalized": 0
+  },
+  "pptx.alt.case_via_format": {
+   "checked": 10,
+   "normalized": 0
+  },
+  "pptx.alt.textbox_for_placeholder": {
+   "checked": 28,
+   "normalized": 0
+  },
+  "pptx.eq.doc_property": {
+   "checked": 66,
+   "normalized": 0
+  },
+  "pptx.eq.subvisible_nudge": {
+   "checked": 63,
+   "normalized": 0
+  },
+  "pptx.eq.zorder_nonoverlap": {
+   "checked": 56,
+   "normalized": 0
+  },
+  "pptx.extra.add_textbox": {
+   "checked": 57,
+   "normalized": 0
+  },
+  "pptx.extra.delete_unrelated_slide": {
+   "checked": 3,
+   "normalized": 0
+  },
+  "pptx.extra.edit_notes": {
+   "checked": 3,
+   "normalized": 0
+  },
+  "pptx.extra.edit_unrelated_text": {
+   "checked": 3,
+   "normalized": 0
+  },
+  "pptx.viol.delete_bound_shape": {
+   "checked": 50,
+   "normalized": 0
+  },
+  "pptx.viol.drop_char_format": {
+   "checked": 31,
+   "normalized": 3
+  },
+  "pptx.viol.move_shape": {
+   "checked": 29,
+   "normalized": 0
+  },
+  "pptx.viol.table_cell_text": {
+   "checked": 3,
+   "normalized": 0
+  },
+  "pptx.viol.text_edit": {
+   "checked": 46,
+   "normalized": 0
+  },
+  "text.eq.trailing_newline": {
+   "checked": 1,
+   "normalized": 0
+  },
+  "xlsx.alt.absolute_refs": {
+   "checked": 39,
+   "normalized": 0
+  },
+  "xlsx.alt.literal_for_formula": {
+   "checked": 42,
+   "normalized": 0
+  },
+  "xlsx.alt.named_style_for_direct": {
+   "checked": 9,
+   "normalized": 0
+  },
+  "xlsx.alt.sum_range_expand": {
+   "checked": 11,
+   "normalized": 0
+  },
+  "xlsx.eq.active_sheet": {
+   "checked": 11,
+   "normalized": 0
+  },
+  "xlsx.eq.doc_property": {
+   "checked": 96,
+   "normalized": 0
+  },
+  "xlsx.eq.view_selection": {
+   "checked": 88,
+   "normalized": 0
+  },
+  "xlsx.eq.view_zoom": {
+   "checked": 39,
+   "normalized": 0
+  },
+  "xlsx.extra.clear_unrelated_row": {
+   "checked": 19,
+   "normalized": 6
+  },
+  "xlsx.extra.edit_unrelated_value": {
+   "checked": 27,
+   "normalized": 6
+  },
+  "xlsx.extra.format_unrelated_cell": {
+   "checked": 30,
+   "normalized": 3
+  },
+  "xlsx.viol.clear_bound_cell": {
+   "checked": 67,
+   "normalized": 3
+  },
+  "xlsx.viol.drop_char_format": {
+   "checked": 3,
+   "normalized": 0
+  },
+  "xlsx.viol.formula_ref_shift": {
+   "checked": 32,
+   "normalized": 2
+  },
+  "xlsx.viol.number_format_change": {
+   "checked": 21,
+   "normalized": 0
+  },
+  "xlsx.viol.value_perturb": {
+   "checked": 53,
+   "normalized": 0
+  }
+ },
+ "null_verdicts": {
+  "lock": {
+   "0326d92d-d218-48a8-9ca1-981cd6d064c7__01c7d4d6": "pass",
+   "035f41ba-6653-43ab-aa63-c86d449d62e5__c90f92ae": "pass",
+   "04578141-1d42-4146-b9cf-6fab4ce5fd74__c5d3a897": "pass",
+   "04d9aeaf-7bed-4024-bedb-e10e6f00eb7f__088b65ba": "pass",
+   "0810415c-bde4-4443-9047-d5f70165a697__c63d04bb": "pass",
+   "08aced46-45a2-48d7-993b-ed3fb5b32302__64bfde40": "pass",
+   "0a0faba3-5580-44df-965d-f562a99b291c__8c60dc2c": "fail",
+   "0a211154-fda0-48d0-9274-eaac4ce5486d__7c6c69bc": "pass",
+   "0a2e43bf-b26c-4631-a966-af9dfa12c9e5__01c7d4d6": "pass",
+   "0bf05a7d-b28b-44d2-955a-50b41e24012a__223d92cb": "pass",
+   "1273e544-688f-496b-8d89-3e0f40aa0606__e42c1e48": "pass",
+   "1334ca3e-f9e3-4db8-9ca7-b4c653be7d17__abe2c630": "pass",
+   "15aece23-a215-4579-91b4-69eec72e18da__0e01f174": "fail",
+   "1e8df695-bd1b-45b3-b557-e7d599cf7597__898c28c7": "pass",
+   "1f18aa87-af6f-41ef-9853-cdb8f32ebdea__a52c0731": "pass",
+   "21ab7b40-77c2-4ae6-8321-e00d3a086c73__36382954": "pass",
+   "21df9241-f8d7-4509-b7f1-37e501a823f7__b25c8601": "pass",
+   "227d2f97-562b-4ccb-ae47-a5ec9e142fbb__64e5be09": "pass",
+   "26a8440e-c166-4c50-aef4-bfb77314b46b__01c7d4d6": "pass",
+   "30e3e107-1cfb-46ee-a755-2cd080d7ba6a__9baa95f0": "fail",
+   "3161d64e-3120-47b4-aaad-6a764a92493b__8beb513a": "pass",
+   "358aa0a7-6677-453f-ae35-e440f004c31e__2827039e": "pass",
+   "37608790-6147-45d0-9f20-1137bb35703d__93c777a4": "pass",
+   "3a93cae4-ad3e-403e-8c12-65303b271818__04833133": "pass",
+   "4188d3a4-077d-46b7-9c86-23e1a036f6c1__c7093daa": "pass",
+   "42e0a640-4f19-4b28-973d-729602b5a4a7__e42c1e48": "pass",
+   "4de54231-e4b5-49e3-b2ba-61a0bec721c0__ff4c6810": "pass",
+   "4f07fbe9-70de-4927-a4d5-bb28bc12c52c__b2ca289b": "pass",
+   "51719eea-10bc-4246-a428-ac7c433dd4b3__06c59713": "pass",
+   "51b11269-2ca8-4b2a-9163-f21758420e78__eb417d8f": "pass",
+   "51f5801c-18b3-4f25-b0c3-02f85507a078__1743d1ef": "pass",
+   "550ce7e7-747b-495f-b122-acdc4d0b8e54__a0f0d30b": "pass",
+   "57667013-ea97-417c-9dce-2713091e6e2a__60711c9d": "pass",
+   "5c1a6c3d-c1b3-47cb-9b01-8d1b7544ffa1__44e3374c": "pass",
+   "66399b0d-8fda-4618-95c4-bfc6191617e9__c067e895": "pass",
+   "6ada715d-3aae-4a32-a6a7-429b2e43fb93__60538994": "pass",
+   "70bca0cc-c117-427e-b0be-4df7299ebeb6__96faba4c": "pass",
+   "72b810ef-4156-4d09-8f08-a0cf57e7cefe__85eefb31": "pass",
+   "73c99fb9-f828-43ce-b87a-01dc07faa224__379d350c": "pass",
+   "7ae48c60-f143-4119-b659-15b8f485eb9a__508cfc5e": "pass",
+   "7e287123-70ca-47b9-8521-47db09b69b14__8b1eb50e": "pass",
+   "7e429b8d-a3f0-4ed0-9b58-08957d00b127__f8aed6d3": "pass",
+   "7efeb4b1-3d19-4762-b163-63328d66303b__2cf3a226": "pass",
+   "81c425f5-78f3-4771-afd6-3d2973825947__62ccc30c": "pass",
+   "881deb30-9549-4583-a841-8270c65f2a17__3dbd668c": "pass",
+   "88fe4b2d-3040-4c70-9a70-546a47764b48__937d4398": "pass",
+   "8b1ce5f2-59d2-4dcc-b0b0-666a714b9a14__893ff2df": "pass",
+   "8e116af7-7db7-4e35-a68b-b0939c066c78__81c2933c": "pass",
+   "9cf05d24-6bd9-4dae-8967-f67d88f5d38a__004f1795": "pass",
+   "9ec204e4-f0a3-42f8-8458-b772a6797cab__140b080c": "fail",
+   "a01fbce3-2793-461f-ab86-43680ccbae25__1d45ff14": "pass",
+   "a434992a-89df-4577-925c-0c58b747f0f4__4c6d3d66": "pass",
+   "a53f80cd-4a90-4490-8310-097b011433f6__ee327f2a": "pass",
+   "a9f325aa-8c05-4e4f-8341-9e4358565f4f__73a141cd": "pass",
+   "ac1b39ff-ee4d-4483-abce-c117e98942f0__55bc3a9a": "fail",
+   "adf5e2c3-64c7-4644-b7b6-d2f0167927e7__79467ac7": "pass",
+   "af2d657a-e6b3-4c6a-9f67-9e3ed015974c__2a45c8e1": "pass",
+   "b21acd93-60fd-4127-8a43-2f5178f4a830__6ec76a76": "pass",
+   "b8adbc24-cef2-4b15-99d5-ecbe7ff445eb__2e7fba4f": "fail",
+   "bc2b57f3-686d-4ec9-87ce-edf850b7e442__46e55e64": "pass",
+   "c867c42d-a52d-4a24-8ae3-f75d256b5618__22d508ab": "pass",
+   "c867c42d-a52d-4a24-8ae3-f75d256b5618__9ce2489d": "pass",
+   "d53ff5ee-3b1a-431e-b2be-30ed2673079b__5fcb45a7": "pass",
+   "eb303e01-261e-4972-8c07-c9b4e7a4922a__c5664e3a": "pass",
+   "ecb0df7a-4e8d-4a03-b162-053391d3afaf__d7675f7a": "pass",
+   "ed43c15f-00cb-4054-9c95-62c880865d68__0361efbc": "fail",
+   "edb61b14-a854-4bf5-a075-c8075c11293a__982fa5e4": "pass",
+   "f9584479-3d0d-4c79-affa-9ad7afdd8850__8b3c2f40": "pass"
+  },
+  "scout": {
+   "0326d92d-d218-48a8-9ca1-981cd6d064c7__01c7d4d6": "pass",
+   "035f41ba-6653-43ab-aa63-c86d449d62e5__c90f92ae": "pass",
+   "04578141-1d42-4146-b9cf-6fab4ce5fd74__c5d3a897": "pass",
+   "04d9aeaf-7bed-4024-bedb-e10e6f00eb7f__088b65ba": "pass",
+   "0810415c-bde4-4443-9047-d5f70165a697__c63d04bb": "pass",
+   "08aced46-45a2-48d7-993b-ed3fb5b32302__64bfde40": "pass",
+   "0a0faba3-5580-44df-965d-f562a99b291c__8c60dc2c": "fail",
+   "0a211154-fda0-48d0-9274-eaac4ce5486d__7c6c69bc": "pass",
+   "0a2e43bf-b26c-4631-a966-af9dfa12c9e5__01c7d4d6": "pass",
+   "0bf05a7d-b28b-44d2-955a-50b41e24012a__223d92cb": "pass",
+   "1273e544-688f-496b-8d89-3e0f40aa0606__e42c1e48": "pass",
+   "1334ca3e-f9e3-4db8-9ca7-b4c653be7d17__abe2c630": "pass",
+   "15aece23-a215-4579-91b4-69eec72e18da__0e01f174": "fail",
+   "1e8df695-bd1b-45b3-b557-e7d599cf7597__898c28c7": "pass",
+   "1f18aa87-af6f-41ef-9853-cdb8f32ebdea__a52c0731": "pass",
+   "21ab7b40-77c2-4ae6-8321-e00d3a086c73__36382954": "pass",
+   "21df9241-f8d7-4509-b7f1-37e501a823f7__b25c8601": "pass",
+   "227d2f97-562b-4ccb-ae47-a5ec9e142fbb__64e5be09": "pass",
+   "26a8440e-c166-4c50-aef4-bfb77314b46b__01c7d4d6": "pass",
+   "30e3e107-1cfb-46ee-a755-2cd080d7ba6a__9baa95f0": "fail",
+   "3161d64e-3120-47b4-aaad-6a764a92493b__8beb513a": "pass",
+   "358aa0a7-6677-453f-ae35-e440f004c31e__2827039e": "pass",
+   "37608790-6147-45d0-9f20-1137bb35703d__93c777a4": "pass",
+   "3a93cae4-ad3e-403e-8c12-65303b271818__04833133": "pass",
+   "4188d3a4-077d-46b7-9c86-23e1a036f6c1__c7093daa": "pass",
+   "42e0a640-4f19-4b28-973d-729602b5a4a7__e42c1e48": "pass",
+   "4de54231-e4b5-49e3-b2ba-61a0bec721c0__ff4c6810": "pass",
+   "4f07fbe9-70de-4927-a4d5-bb28bc12c52c__b2ca289b": "pass",
+   "51719eea-10bc-4246-a428-ac7c433dd4b3__06c59713": "pass",
+   "51b11269-2ca8-4b2a-9163-f21758420e78__eb417d8f": "pass",
+   "51f5801c-18b3-4f25-b0c3-02f85507a078__1743d1ef": "pass",
+   "550ce7e7-747b-495f-b122-acdc4d0b8e54__a0f0d30b": "pass",
+   "57667013-ea97-417c-9dce-2713091e6e2a__60711c9d": "pass",
+   "5c1a6c3d-c1b3-47cb-9b01-8d1b7544ffa1__44e3374c": "pass",
+   "66399b0d-8fda-4618-95c4-bfc6191617e9__c067e895": "pass",
+   "6ada715d-3aae-4a32-a6a7-429b2e43fb93__60538994": "pass",
+   "70bca0cc-c117-427e-b0be-4df7299ebeb6__96faba4c": "pass",
+   "72b810ef-4156-4d09-8f08-a0cf57e7cefe__85eefb31": "pass",
+   "73c99fb9-f828-43ce-b87a-01dc07faa224__379d350c": "pass",
+   "7ae48c60-f143-4119-b659-15b8f485eb9a__508cfc5e": "pass",
+   "7e287123-70ca-47b9-8521-47db09b69b14__8b1eb50e": "pass",
+   "7e429b8d-a3f0-4ed0-9b58-08957d00b127__f8aed6d3": "pass",
+   "7efeb4b1-3d19-4762-b163-63328d66303b__2cf3a226": "pass",
+   "81c425f5-78f3-4771-afd6-3d2973825947__62ccc30c": "pass",
+   "881deb30-9549-4583-a841-8270c65f2a17__3dbd668c": "pass",
+   "88fe4b2d-3040-4c70-9a70-546a47764b48__937d4398": "pass",
+   "8b1ce5f2-59d2-4dcc-b0b0-666a714b9a14__893ff2df": "pass",
+   "8e116af7-7db7-4e35-a68b-b0939c066c78__81c2933c": "pass",
+   "9cf05d24-6bd9-4dae-8967-f67d88f5d38a__004f1795": "pass",
+   "9ec204e4-f0a3-42f8-8458-b772a6797cab__140b080c": "fail",
+   "a01fbce3-2793-461f-ab86-43680ccbae25__1d45ff14": "pass",
+   "a434992a-89df-4577-925c-0c58b747f0f4__4c6d3d66": "pass",
+   "a53f80cd-4a90-4490-8310-097b011433f6__ee327f2a": "pass",
+   "a9f325aa-8c05-4e4f-8341-9e4358565f4f__73a141cd": "pass",
+   "ac1b39ff-ee4d-4483-abce-c117e98942f0__55bc3a9a": "fail",
+   "adf5e2c3-64c7-4644-b7b6-d2f0167927e7__79467ac7": "pass",
+   "af2d657a-e6b3-4c6a-9f67-9e3ed015974c__2a45c8e1": "pass",
+   "b21acd93-60fd-4127-8a43-2f5178f4a830__6ec76a76": "pass",
+   "b8adbc24-cef2-4b15-99d5-ecbe7ff445eb__2e7fba4f": "fail",
+   "bc2b57f3-686d-4ec9-87ce-edf850b7e442__46e55e64": "pass",
+   "c867c42d-a52d-4a24-8ae3-f75d256b5618__22d508ab": "pass",
+   "c867c42d-a52d-4a24-8ae3-f75d256b5618__9ce2489d": "pass",
+   "d53ff5ee-3b1a-431e-b2be-30ed2673079b__5fcb45a7": "pass",
+   "eb303e01-261e-4972-8c07-c9b4e7a4922a__c5664e3a": "pass",
+   "ecb0df7a-4e8d-4a03-b162-053391d3afaf__d7675f7a": "pass",
+   "ed43c15f-00cb-4054-9c95-62c880865d68__0361efbc": "fail",
+   "edb61b14-a854-4bf5-a075-c8075c11293a__982fa5e4": "pass",
+   "f9584479-3d0d-4c79-affa-9ad7afdd8850__8b3c2f40": "pass"
+  }
+ },
+ "planned": 1289,
+ "primary_dep_set": "lock",
+ "rates_exploratory": {
+  "FN": {
+   "by_checker": {
+    "compare_csv+compare_table": {
+     "high": 0.0,
+     "low": 0.0,
+     "mutants": 5,
+     "rate": 0.0,
+     "tasks": 1
+    },
+    "compare_docx_files": {
+     "high": 0.0,
+     "low": 0.0,
+     "mutants": 15,
+     "rate": 0.0,
+     "tasks": 5
+    },
+    "compare_docx_images": {
+     "high": 0.0,
+     "low": 0.0,
+     "mutants": 6,
+     "rate": 0.0,
+     "tasks": 2
+    },
+    "compare_docx_tables": {
+     "high": 0.0,
+     "low": 0.0,
+     "mutants": 6,
+     "rate": 0.0,
+     "tasks": 2
+    },
+    "compare_line_spacing": {
+     "high": 0.0,
+     "low": 0.0,
+     "mutants": 6,
+     "rate": 0.0,
+     "tasks": 2
+    },
+    "compare_pptx_files": {
+     "high": 0.4625,
+     "low": 0.3292,
+     "mutants": 85,
+     "rate": 0.4021,
+     "tasks": 16
+    },
+    "compare_pptx_files_tolerant": {
+     "high": 1.0,
+     "low": 1.0,
+     "mutants": 1,
+     "rate": 1.0,
+     "tasks": 1
+    },
+    "compare_table": {
+     "high": 0.0,
+     "low": 0.0,
+     "mutants": 128,
+     "rate": 0.0,
+     "tasks": 30
+    },
+    "evaluate_strike_through_last_paragraph": {
+     "high": 0.0,
+     "low": 0.0,
+     "mutants": 3,
+     "rate": 0.0,
+     "tasks": 1
+    }
+   },
+   "pooled": {
+    "high": 0.1828,
+    "low": 0.0717,
+    "mutants": 255,
+    "rate": 0.1239,
+    "tasks": 60
+   }
+  },
+  "FN_alt": {
+   "by_checker": {
+    "compare_docx_files": {
+     "high": 0.0,
+     "low": 0.0,
+     "mutants": 3,
+     "rate": 0.0,
+     "tasks": 1
+    },
+    "compare_table": {
+     "high": 0.0,
+     "low": 0.0,
+     "mutants": 90,
+     "rate": 0.0,
+     "tasks": 15
+    }
+   },
+   "pooled": {
+    "high": 0.0,
+    "low": 0.0,
+    "mutants": 93,
+    "rate": 0.0,
+    "tasks": 16
+   }
+  },
+  "FP_F": {
+   "by_checker": {
+    "compare_pptx_files": {
+     "high": 0.0,
+     "low": 0.0,
+     "mutants": 2,
+     "rate": 0.0,
+     "tasks": 1
+    },
+    "compare_table": {
+     "high": 0.0,
+     "low": 0.0,
+     "mutants": 3,
+     "rate": 0.0,
+     "tasks": 1
+    }
+   },
+   "pooled": {
+    "high": 0.0,
+    "low": 0.0,
+    "mutants": 5,
+    "rate": 0.0,
+    "tasks": 2
+   }
+  },
+  "FP_R": {
+   "by_checker": {
+    "compare_docx_files": {
+     "high": 0.15,
+     "low": 0.0,
+     "mutants": 17,
+     "rate": 0.05,
+     "tasks": 4
+    },
+    "compare_line_spacing": {
+     "high": 0.0,
+     "low": 0.0,
+     "mutants": 7,
+     "rate": 0.0,
+     "tasks": 2
+    },
+    "compare_pptx_files": {
+     "high": 0.1778,
+     "low": 0.0,
+     "mutants": 46,
+     "rate": 0.0667,
+     "tasks": 15
+    },
+    "compare_pptx_files_tolerant": {
+     "high": 0.3333,
+     "low": 0.3333,
+     "mutants": 3,
+     "rate": 0.3333,
+     "tasks": 1
+    },
+    "compare_table": {
+     "high": 0.0,
+     "low": 0.0,
+     "mutants": 18,
+     "rate": 0.0,
+     "tasks": 3
+    }
+   },
+   "pooled": {
+    "high": 0.1307,
+    "low": 0.008,
+    "mutants": 91,
+    "rate": 0.0613,
+    "tasks": 25
+   }
+  }
+ },
+ "s1": {
+  "candidates": [],
+  "confirmed": [],
+  "rule": "verdicts differ between venvs and 5 fresh-process scorings agree within each venv",
+  "unstable": []
+ },
+ "s5_unstable_at_repeat_5": {
+  "lock": [],
+  "scout": []
+ },
+ "save_stage_exclusions": [],
+ "status": {
+  "lock": {
+   "ambiguous": 186,
+   "evaluable": 888,
+   "normalized": 23,
+   "not_admitted": 57,
+   "null_not_pass": 135
+  },
+  "scout": {
+   "ambiguous": 186,
+   "evaluable": 888,
+   "normalized": 23,
+   "not_admitted": 57,
+   "null_not_pass": 135
+  }
+ },
+ "task_escape": {
+  "tasks": 60,
+  "with_escape": 17
+ },
+ "unemulated_tasks": [],
+ "venv_disagreements": []
+}

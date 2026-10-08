@@ -1,0 +1,31 @@
+{
+ "post_save_admitted": 1209,
+ "post_save_failed_by_operator": {
+  "pptx.viol.drop_char_format": {
+   "edit_landed": 3,
+   "survived_save": 3
+  },
+  "xlsx.extra.clear_unrelated_row": {
+   "edit_landed": 6,
+   "expected_values": 6
+  },
+  "xlsx.extra.edit_unrelated_value": {
+   "edit_landed": 6,
+   "expected_values": 6,
+   "survived_save": 6
+  },
+  "xlsx.extra.format_unrelated_cell": {
+   "edit_landed": 3
+  },
+  "xlsx.viol.clear_bound_cell": {
+   "no_collateral_change": 3
+  },
+  "xlsx.viol.formula_ref_shift": {
+   "no_collateral_change": 2
+  }
+ },
+ "rows": 1232,
+ "status": {
+  "checked": 1232
+ }
+}

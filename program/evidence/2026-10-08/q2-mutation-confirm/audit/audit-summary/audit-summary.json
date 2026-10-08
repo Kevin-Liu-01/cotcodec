@@ -1,0 +1,255 @@
+{
+ "adjudication": {
+  "adjudicated": 0,
+  "adjudicated_by_reason": {},
+  "pending": 34,
+  "pool": 34,
+  "pool_by_reason": {
+   "concordant_contradicts_label": 6,
+   "gold_sham_split": 4,
+   "split": 24
+  }
+ },
+ "answer_status": {
+  "model-rater-anthropic": {
+   "isolation_void": 1,
+   "ok": 177
+  },
+  "model-rater-open-weight": {
+   "ok": 172,
+   "thinking_unfinished": 6
+  }
+ },
+ "by_label_class": {
+  "should_fail_extra_change": {
+   "accept": 0,
+   "n": 0,
+   "reject": 0,
+   "unresolved": 0
+  },
+  "should_fail_violation": {
+   "accept": 3,
+   "agrees_with_label": 0.4,
+   "n": 5,
+   "reject": 2,
+   "unresolved": 0,
+   "unresolved_share": 0.0
+  },
+  "should_pass_alt_solution": {
+   "accept": 72,
+   "agrees_with_label": 0.7741935483870968,
+   "gate": "accept",
+   "gate_share": 0.7741935483870968,
+   "n": 93,
+   "reject": 3,
+   "unresolved": 18,
+   "unresolved_share": 0.1935483870967742
+  },
+  "should_pass_equiv": {
+   "accept": 30,
+   "agrees_with_label": 0.8333333333333334,
+   "n": 36,
+   "reject": 0,
+   "unresolved": 6,
+   "unresolved_share": 0.16666666666666666
+  }
+ },
+ "calls_files": {
+  "model-rater-anthropic": [
+   {
+    "path": "/private/tmp/claude-501/-Users-kevinliu-repos-cotcodec/122e47b9-8f46-4266-97af-e75214712991/scratchpad/q2m-confirm-b/claude-isolated/calls.jsonl",
+    "records": 178,
+    "relay_frames_sha256": [],
+    "sha256": "2120e6ce0e93b003135e555f73d2d9159355a4aeed31f83b41f7ed322eda0c04"
+   }
+  ],
+  "model-rater-open-weight": [
+   {
+    "path": "/private/tmp/claude-501/-Users-kevinliu-repos-cotcodec/122e47b9-8f46-4266-97af-e75214712991/scratchpad/q2m-confirm-b/held/open-weight/calls-s000.jsonl",
+    "records": 133,
+    "relay_frames_sha256": [],
+    "sha256": "8c8db1721edc3729e33fb5c6fae30d0ee3c3282b1d33b8563569c5851f2b4b43"
+   },
+   {
+    "path": "/private/tmp/claude-501/-Users-kevinliu-repos-cotcodec/122e47b9-8f46-4266-97af-e75214712991/scratchpad/q2m-confirm-b/held/open-weight/calls-s001.jsonl",
+    "records": 45,
+    "relay_frames_sha256": [],
+    "sha256": "52ba6865308392013c7e010c5e723a1a7b782d3b5de6143421c6936d0f24239f"
+   }
+  ]
+ },
+ "gold_defects": {
+  "equivalence_decisions": {},
+  "equivalence_items": 0,
+  "gold_shams": 33,
+  "items": {},
+  "rule": "a task whose gold sham is decided reject: its equivalence items leave the equivalence K3 group (decision D34); labels stay relative to the gold",
+  "tasks": []
+ },
+ "human_spot_check": "pending",
+ "k3": {
+  "should_fail_violation": {
+   "bootstrap_high": 1.0,
+   "estimate": 0.6,
+   "exact_high": 0.9235596085876712,
+   "kish_n": 5.0,
+   "n_items": 5,
+   "n_tasks": 4,
+   "sufficient": false,
+   "upper": 1.0
+  },
+  "should_pass_equiv": {
+   "bootstrap_high": 0.3142857142857143,
+   "estimate": 0.16666666666666666,
+   "exact_high": 0.30267742362657557,
+   "kish_n": 36.0,
+   "n_items": 36,
+   "n_tasks": 16,
+   "sufficient": true,
+   "upper": 0.3142857142857143
+  }
+ },
+ "k3_fires": {
+  "should_fail_violation": true,
+  "should_pass_equiv": true
+ },
+ "k4_fires": true,
+ "kappa": 0.3429875024796668,
+ "kappa_fires": true,
+ "label": "model raters (decisions D9, D23); the human spot check is pending",
+ "label_error": {
+  "should_fail_violation": {
+   "estimate": 0.6,
+   "high": 1.0,
+   "low": 0.0,
+   "method": "Hajek IPW, task-cluster bootstrap 10000, seed 42",
+   "n_clusters": 4,
+   "n_units": 5
+  },
+  "should_pass_equiv": {
+   "estimate": 0.16666666666666666,
+   "high": 0.35,
+   "low": 0.027777777777777776,
+   "method": "Hajek IPW, task-cluster bootstrap 10000, seed 42",
+   "n_clusters": 16,
+   "n_units": 36
+  }
+ },
+ "label_error_resolved_only": {
+  "should_fail_violation": {
+   "estimate": 0.6,
+   "high": 1.0,
+   "low": 0.0,
+   "method": "Hajek IPW, task-cluster bootstrap 10000, seed 42",
+   "n_clusters": 4,
+   "n_units": 5
+  },
+  "should_pass_equiv": {
+   "estimate": 0.0,
+   "high": 0.0,
+   "low": 0.0,
+   "method": "Hajek IPW, task-cluster bootstrap 10000, seed 42",
+   "n_clusters": 15,
+   "n_units": 30
+  }
+ },
+ "label_error_unresolved_as_wrong": {
+  "should_fail_violation": 0.6,
+  "should_pass_equiv": 0.16666666666666666
+ },
+ "n_adjudicated": 0,
+ "n_items": 138,
+ "n_unresolved": 24,
+ "p1_flips": {
+  "30e3e107-1cfb-46ee-a755-2cd080d7ba6a__p1_flip": "reject",
+  "3a7c8185-25c1-4941-bd7b-96e823c9f21f__p1_flip": "accept",
+  "9ec204e4-f0a3-42f8-8458-b772a6797cab__p1_flip": "accept",
+  "b8adbc24-cef2-4b15-99d5-ecbe7ff445eb__p1_flip": "accept"
+ },
+ "per_rater": {
+  "model-rater-anthropic": {
+   "should_fail_violation": {
+    "contradicts_label": 0.6,
+    "unsure": 0.0
+   },
+   "should_pass_equiv": {
+    "contradicts_label": 0.08333333333333333,
+    "unsure": 0.0
+   }
+  },
+  "model-rater-open-weight": {
+   "should_fail_violation": {
+    "contradicts_label": 0.6,
+    "unsure": 0.0
+   },
+   "should_pass_equiv": {
+    "contradicts_label": 0.08333333333333333,
+    "unsure": 0.0
+   }
+  }
+ },
+ "raters": [
+  {
+   "provider": "anthropic",
+   "rater_id": "model-rater-anthropic",
+   "registry_id": "claude-opus-5-5",
+   "role": "same provider as the spec author"
+  },
+  {
+   "provider": "qwen-open-weight-self-hosted",
+   "rater_id": "model-rater-open-weight",
+   "receipt_sha256": "18c2a12881bf613c7110439b8e765ff89a4c060a1fb60aee62bb7250890ce1f9",
+   "registry_id": "qwen3.6-35b-a3b",
+   "repo_id": "Qwen/Qwen3.6-35B-A3B",
+   "revision": "995ad96eacd98c81ed38be0c5b274b04031597b0",
+   "role": "independent"
+  }
+ ],
+ "relay_frames_sha256": {},
+ "sham_accuracy": {
+  "model-rater-anthropic": 0.9,
+  "model-rater-open-weight": 0.975
+ },
+ "sham_decisions": {
+  "0326d92d-d218-48a8-9ca1-981cd6d064c7__sham_do_nothing": "reject",
+  "0326d92d-d218-48a8-9ca1-981cd6d064c7__sham_gold": "accept",
+  "035f41ba-6653-43ab-aa63-c86d449d62e5__sham_do_nothing": "reject",
+  "035f41ba-6653-43ab-aa63-c86d449d62e5__sham_gold": "unresolved",
+  "04578141-1d42-4146-b9cf-6fab4ce5fd74__sham_do_nothing": "reject",
+  "04578141-1d42-4146-b9cf-6fab4ce5fd74__sham_gold": "accept",
+  "08aced46-45a2-48d7-993b-ed3fb5b32302__sham_do_nothing": "reject",
+  "08aced46-45a2-48d7-993b-ed3fb5b32302__sham_gold": "accept",
+  "0a211154-fda0-48d0-9274-eaac4ce5486d__sham_do_nothing": "reject",
+  "0a211154-fda0-48d0-9274-eaac4ce5486d__sham_gold": "accept",
+  "0a2e43bf-b26c-4631-a966-af9dfa12c9e5__sham_do_nothing": "reject",
+  "0a2e43bf-b26c-4631-a966-af9dfa12c9e5__sham_gold": "accept",
+  "1e8df695-bd1b-45b3-b557-e7d599cf7597__sham_do_nothing": "reject",
+  "1e8df695-bd1b-45b3-b557-e7d599cf7597__sham_gold": "accept",
+  "21ab7b40-77c2-4ae6-8321-e00d3a086c73__sham_gold": "accept",
+  "358aa0a7-6677-453f-ae35-e440f004c31e__sham_gold": "accept",
+  "42e0a640-4f19-4b28-973d-729602b5a4a7__sham_gold": "accept",
+  "4de54231-e4b5-49e3-b2ba-61a0bec721c0__sham_gold": "accept",
+  "4f07fbe9-70de-4927-a4d5-bb28bc12c52c__sham_gold": "accept",
+  "51719eea-10bc-4246-a428-ac7c433dd4b3__sham_gold": "accept",
+  "550ce7e7-747b-495f-b122-acdc4d0b8e54__sham_gold": "accept",
+  "57667013-ea97-417c-9dce-2713091e6e2a__sham_gold": "accept",
+  "5c1a6c3d-c1b3-47cb-9b01-8d1b7544ffa1__sham_gold": "unresolved",
+  "70bca0cc-c117-427e-b0be-4df7299ebeb6__sham_gold": "accept",
+  "73c99fb9-f828-43ce-b87a-01dc07faa224__sham_gold": "accept",
+  "7ae48c60-f143-4119-b659-15b8f485eb9a__sham_gold": "accept",
+  "7e429b8d-a3f0-4ed0-9b58-08957d00b127__sham_gold": "accept",
+  "881deb30-9549-4583-a841-8270c65f2a17__sham_gold": "unresolved",
+  "8e116af7-7db7-4e35-a68b-b0939c066c78__sham_gold": "unresolved",
+  "9cf05d24-6bd9-4dae-8967-f67d88f5d38a__sham_gold": "accept",
+  "a01fbce3-2793-461f-ab86-43680ccbae25__sham_gold": "accept",
+  "a434992a-89df-4577-925c-0c58b747f0f4__sham_gold": "accept",
+  "a53f80cd-4a90-4490-8310-097b011433f6__sham_gold": "accept",
+  "a9f325aa-8c05-4e4f-8341-9e4358565f4f__sham_gold": "accept",
+  "adf5e2c3-64c7-4644-b7b6-d2f0167927e7__sham_gold": "accept",
+  "af2d657a-e6b3-4c6a-9f67-9e3ed015974c__sham_gold": "accept",
+  "d53ff5ee-3b1a-431e-b2be-30ed2673079b__sham_gold": "accept",
+  "eb303e01-261e-4972-8c07-c9b4e7a4922a__sham_gold": "accept",
+  "edb61b14-a854-4bf5-a075-c8075c11293a__sham_gold": "accept",
+  "f9584479-3d0d-4c79-affa-9ad7afdd8850__sham_gold": "accept"
+ }
+}
