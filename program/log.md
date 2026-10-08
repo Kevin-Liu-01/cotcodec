@@ -820,3 +820,44 @@ Append-only. Newest entries at the bottom.
   host: sample, items, open-weight calls, v9 export (`held/SHA256SUMS`).
   Evidence: `program/evidence/q2-mutation/integration/rater-rerate-dev-v4/`.
   GPU 0.2281 GPU-h (program total 3.0108). Not frozen.
+
+## 2026-10-07 — Q2 evaluator-mutation: isolated Claude ratings ingested on the D34 dev rerate (κ below 0.6; D34 (i) fires)
+
+- 142 isolated Claude agents, one per dev item (workflow run
+  `wf_65ce9899-24a`, labels `rate5:*`), started with the registered prompt
+  template (`0e9d4eb6...`). The session ended once mid-run and the workflow
+  was resumed: 16 labels have an interrupted agent and a completed rerun; the
+  rating is the completed agent's. A strict transcript audit of all 158
+  agents found 0 voids: 1,789 Read calls by completed agents and 165 by
+  interrupted ones, all inside the agent's own item directory; 142
+  StructuredOutput answers, each naming its item; no other tool; only
+  claude-opus-5-5; every computed-task turn byte-identical to the rendered
+  template in the fixed wrapper; no other item's id in any transcript; every
+  item tree unchanged; answers equal to the journal results and the
+  handed-over list. 40 of 142 agents were not shown every line of
+  `packet.txt` (lowest 56%); all opened every page image.
+- The registered `ingest-isolated` (`b29034e`) gave 32 `ok` and 110
+  `isolation_void`: after the resume the workflow harness put a relay of the
+  session user's request ("continue all work.") before each new agent's task,
+  so the first user turn is not the rendered template. The registered rule
+  is unchanged; registering the relay turn or requiring unresumed rating runs
+  is open for Kevin before the freeze. A sensitivity ingest that does not
+  count that one byte-identical turn as a prompt gave 142 `ok`.
+- After the ingest the dev-audit-v4 salt was revealed (its SHA-256 matches
+  the committed `1660a49d...`; all 142 item ids recompute from it) and the
+  held files were released; all 18 match `held/SHA256SUMS`.
+- Registered summary with both raters: κ 0.066 (driven by the voids). With
+  the relay turn excepted: κ 0.575 (raw agreement 0.843), shams Claude 19/21
+  and Qwen 20/21, P1 flip accepted by both; one gold defect (task
+  `e528b65e`, 3 equivalence items out of the equivalence group); label error
+  equivalence 0.070 (K3 bound 0.179 on 57 items) and violation 0.577 (5
+  tasks, too few for the bound), so both K3 groups fire and K4 does not; 20
+  of 121 real items unresolved (16.5%; 16 of the splits Claude reject / Qwen
+  accept); adjudication pool 24 (20 splits, 3 concordant contradictions, 1
+  split gold sham), 48 items with the spot check.
+- D34 (i): development κ is below 0.6 either way, so no other rater is
+  tried; P2-P5 leave the confirmatory headline before the confirm campaign
+  runs, and the campaign reports P1 and the checker false-negative candidates
+  descriptively. Evidence:
+  `program/evidence/q2-mutation/integration/rater-isolated-dev-v4/` and
+  `dev-mutants-v9/`. No GPU used. Not frozen.
