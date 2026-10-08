@@ -191,6 +191,7 @@ class Runner:
             "metric_exception": False,
             "steps": 0,
             "truncated_steps": 0,
+            "truncated_no_tool_call_steps": 0,
             "ir_errors": 0,
             "uncertified_key_actions": 0,
             "context_fallbacks": 0,
@@ -392,6 +393,10 @@ class Runner:
             tokens["prompt"] += completion.get("prompt_tokens") or 0
             tokens["completion"] += completion.get("completion_tokens") or 0
             self.record["truncated_steps"] += int(turn.truncated)
+            # Section 6.2's and 15's truncation: the cap hit without a complete tool call.
+            self.record["truncated_no_tool_call_steps"] += int(
+                turn.truncated and not turn.complete_tool_call
+            )
             self.record["ir_errors"] += int(turn.parse_error is not None)
             self.record["context_fallbacks"] += turn.context_fallbacks
             exposure = uncertified(turn.ir, certified)

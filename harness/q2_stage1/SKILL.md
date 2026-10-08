@@ -75,7 +75,7 @@ rescoring, the corrected comparator, the anchor's CPU checks and the GLMM.
 |---|---|
 | Change an estimator, rule or the plan | Run `uv run pytest -q tests/test_q2_stage1_*.py`, then update section 20 of the registration |
 | Re-run operating characteristics | `program/proposals/evidence/2026-10-08-q2-stage1-rescoped/analysis/sim_s1a_v2.py` (sections in parallel, then `merge`) |
-| Fill the freeze constants | `scripts/render_q2_stage1_plan.py --constants a0.json --dev-setup dev.json --out plan.json` |
+| Fill the freeze constants | On the host, `python3 -m harness.q2_stage1.plan a0a-gates --run-dir <A0a run> --action-path-step-p95 <accepted attempt's step_p95_n1_s>` gives `a0a_gates`; then `scripts/render_q2_stage1_plan.py --constants a0.json --dev-setup dev.json --out plan.json` |
 | Run a VM job (dev smoke, setup check, A0, A1) | Write a lane manifest (`experiments/manifests/q2-stage1/`), check `squeue`, then on the host from the exported tree `python3 -E -s -m harness.q2_stage1.lane submit MANIFEST --source-dir .` |
 | Rescore captures / validate the comparator | `s1a-cpu.sbatch` run mode, metric image: `python -m harness.q2_stage1.rescore capture|merge|validate-zinv` |
 | Change a harness client | Regenerate nothing: `tests/test_q2_stage1_agents.py` must still match the upstream fixture; record any intended difference in `design_diffs.md` |

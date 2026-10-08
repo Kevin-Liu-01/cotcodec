@@ -14,8 +14,9 @@ import json
 import math
 import random
 from collections import Counter
-from collections.abc import Mapping, Sequence
+from collections.abc import Iterable, Mapping, Sequence
 from dataclasses import dataclass
+from pathlib import Path
 from typing import Any
 
 from harness.q2.vm.manifest import HOST_CPUS, runner_cpus
@@ -44,6 +45,10 @@ EPISODES_PER_TASK_PER_JOB = 4  # 2 harnesses x 2 within-session reruns
 ANCHOR_MIN_TASKS = 58
 ANCHOR_POOL = 116
 ANCHOR_DISPATCH_MARGIN = 1.25
+# A0a's gates (section 6.2): the share of model turns that end at 2,048 tokens without a
+# complete tool call, per harness, and DesktopEnv.step's p95 against the action path's.
+TRUNCATION_GATE = 0.20
+STEP_P95_FACTOR = 2.0
 
 # ---- Prices, GPU-h per episode (cost_s1a.json, key "s1a_v2_prices") --------------- #
 # T = 15, H2-thinking-screenshot profile, slot = steps + setup (central 90 s, high 180 s)
@@ -188,6 +193,102 @@ def fill_allowed(c_job_h: float, minutes_to_usr1: float, block_episodes: int = 3
     return 1.5 * c_job_h * 60 * block_episodes <= minutes_to_usr1 - 10
 
 
+def quantile(values: Sequence[float], q: float) -> float | None:
+    """The action path's quantile (``acceptance.quantile``): the ceil(q n)-th smallest."""
+    if not values:
+        return None
+    ordered = sorted(values)
+    return ordered[max(1, math.ceil(q * len(ordered))) - 1]
+
+
+def a0a_gates(
+    episodes: Iterable[Mapping[str, Any]], action_path_step_p95_s: float
+) -> dict[str, Any]:
+    """A0a's truncation and concurrency gates (section 6.2) from its step logs.
+
+    ``episodes`` holds A0a's completed (scored) episodes, as for c_A0a, each
+    ``{"harness": ..., "steps": [rows of its steps.jsonl]}``. Per harness, the truncation
+    share is the model turns whose reply hit the token cap without a complete tool call
+    (``truncated`` and not ``complete_tool_call``) over all its model turns. The step p95
+    is the action path's statistic (``quantile`` at 0.95 of every ``DesktopEnv.step``'s
+    ``timing_s.total``, harnesses pooled), the one the accepted attempt's A1 step p95
+    (``action_path_step_p95_s``, its ``step_p95_n1_s``) uses. A gate that cannot be read
+    (no turn under a harness, no timed step) does not hold.
+    """
+    if not (isinstance(action_path_step_p95_s, int | float) and action_path_step_p95_s > 0):
+        raise PlanError("the action path's A1 step p95 must be a positive number of seconds")
+    turns = dict.fromkeys(HARNESSES, 0)
+    cut = dict.fromkeys(HARNESSES, 0)
+    times: list[float] = []
+    for episode in episodes:
+        harness = episode["harness"]
+        if harness not in turns:
+            raise PlanError(f"unknown harness {harness}")
+        for row in episode["steps"]:
+            turns[harness] += 1
+            cut[harness] += int(bool(row.get("truncated")) and not row.get("complete_tool_call"))
+            for executed in row.get("executed") or []:
+                total = (executed.get("timing_s") or {}).get("total")
+                if isinstance(total, int | float) and not isinstance(total, bool):
+                    times.append(float(total))
+    share = {h: (cut[h] / turns[h] if turns[h] else None) for h in HARNESSES}
+    p95 = quantile(times, 0.95)
+    out = {
+        "turns": turns,
+        "truncated_without_tool_call": cut,
+        "truncation_share": share,
+        "truncation_gate": TRUNCATION_GATE,
+        "steps_timed": len(times),
+        "step_p95_s": p95,
+        "action_path_step_p95_s": float(action_path_step_p95_s),
+        "step_p95_limit_s": STEP_P95_FACTOR * float(action_path_step_p95_s),
+    }
+    out["problems"] = a0a_gate_problems(out)
+    return out
+
+
+def a0a_gate_problems(gates: Mapping[str, Any]) -> list[str]:
+    """What fails in an ``a0a_gates`` result, re-read from its numbers."""
+    problems = []
+    share = gates.get("truncation_share") or {}
+    for harness in HARNESSES:
+        value = share.get(harness)
+        if not isinstance(value, int | float):
+            problems.append(f"truncation gate: no {harness} turn in A0a")
+        elif value > TRUNCATION_GATE:
+            problems.append(
+                f"truncation gate: {value:.3f} of {harness}'s turns hit the token cap without "
+                f"a complete tool call (above {TRUNCATION_GATE})"
+            )
+    p95, reference = gates.get("step_p95_s"), gates.get("action_path_step_p95_s")
+    if not isinstance(p95, int | float) or not isinstance(reference, int | float):
+        problems.append("concurrency gate: no timed DesktopEnv.step or no action-path p95")
+    elif p95 > STEP_P95_FACTOR * reference:
+        problems.append(
+            f"concurrency gate: DesktopEnv.step p95 {p95:.3f} s above {STEP_P95_FACTOR} x "
+            f"the action path's {reference:.3f} s"
+        )
+    return problems
+
+
+def load_a0a_episodes(run_dir: Path) -> list[dict[str, Any]]:
+    """A0a's completed episodes and their step logs from a lane run directory (the host's
+    ``episodes.jsonl`` and ``episodes/<slot>.a<attempt>/steps.jsonl``)."""
+    out = []
+    lines = (run_dir / "episodes.jsonl").read_text(encoding="utf-8").splitlines()
+    for line in lines:
+        if not line.strip():
+            continue
+        record = json.loads(line)
+        if record.get("status") != "scored":
+            continue
+        name = f"{str(record['slot']).replace(':', '_')}.a{record['attempt']}"
+        steps = run_dir / "episodes" / name / "steps.jsonl"
+        rows = [json.loads(x) for x in steps.read_text(encoding="utf-8").splitlines() if x.strip()]
+        out.append({"harness": record["harness"], "slot": record["slot"], "steps": rows})
+    return out
+
+
 @dataclass(frozen=True)
 class FreezeConstants:
     """What section 3.2 writes into the registration before the freeze."""
@@ -203,6 +304,9 @@ class FreezeConstants:
     anchor_tasks: int
     anchor_runs: bool
     total_cap_min: int
+    truncation_share: dict[str, float]
+    a0a_step_p95_s: float
+    action_path_step_p95_s: float
 
     def as_dict(self) -> dict[str, Any]:
         return {k: getattr(self, k) for k in self.__dataclass_fields__}
@@ -215,6 +319,7 @@ def freeze_constants(
     launch_a0a_min: float,
     prefreeze_caps: Sequence[int],
     anchor_available: bool,
+    a0a_gates: Mapping[str, Any],
     launch_a0b_min: float | None = None,
     longest_a0b_slot_min: float | None = None,
     k_floor: int = K_MAX,
@@ -224,10 +329,14 @@ def freeze_constants(
     The floor follows the branch (section 6.2; D47, D49 (i)): 32 when the anchor does not
     run, whatever ``k_floor`` says; 24 only when the anchor runs and ``k_floor=24`` is
     passed, which needs the item 18 amendment (section 18). K_base below the floor sends the
-    draft back to review.
+    draft back to review. ``a0a_gates`` is ``a0a_gates(...)``'s result; a failed truncation
+    or concurrency gate stops the freeze too.
     """
     if k_floor not in (K_FLOOR, K_MAX):
         raise PlanError("the floor is 24 (anchor running, item 18 signed) or 32")
+    problems = a0a_gate_problems(a0a_gates)
+    if problems:
+        raise PlanError("A0a's gates do not hold, not frozen: " + "; ".join(problems))
     v = a1_concurrency(n_star)
     if v is None:
         raise PlanError("N* < 16: S1a does not start")
@@ -258,6 +367,9 @@ def freeze_constants(
         anchor_tasks=n_anchor if runs else 0,
         anchor_runs=runs,
         total_cap_min=total,
+        truncation_share={h: round(float(v), 6) for h, v in a0a_gates["truncation_share"].items()},
+        a0a_step_p95_s=float(a0a_gates["step_p95_s"]),
+        action_path_step_p95_s=float(a0a_gates["action_path_step_p95_s"]),
     )
 
 
@@ -532,3 +644,26 @@ def render_plan(
             plan["dev_tasks_a0a"] = dev_tasks(dev_ids, dev_setup_ok, constants.a1_v // 4)
     plan["plan_sha256"] = digest(plan)
     return plan
+
+
+# --------------------------------------------------------------------------- command line
+
+
+def main(argv: list[str] | None = None) -> int:
+    """``a0a-gates``: A0a's gates from its lane run directory (on the host), as the
+    ``a0a_gates`` input of the freeze constants (``scripts/render_q2_stage1_plan.py``)."""
+    import argparse
+
+    parser = argparse.ArgumentParser(description="S1a plan tools")
+    sub = parser.add_subparsers(dest="command", required=True)
+    gates = sub.add_parser("a0a-gates", help="A0a's truncation and concurrency gates")
+    gates.add_argument("--run-dir", type=Path, required=True)
+    gates.add_argument("--action-path-step-p95", type=float, required=True)
+    args = parser.parse_args(argv)
+    result = a0a_gates(load_a0a_episodes(args.run_dir), args.action_path_step_p95)
+    print(json.dumps(result, indent=1, sort_keys=True))
+    return 3 if result["problems"] else 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

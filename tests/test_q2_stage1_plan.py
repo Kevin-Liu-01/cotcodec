@@ -21,6 +21,14 @@ sys.path.insert(0, str(ROOT / "scripts"))
 import render_q2_stage1_plan as renderer  # noqa: E402
 
 
+def turn(truncated: bool = False, tool_call: bool = True, *step_s: float) -> dict:
+    return {"truncated": truncated, "complete_tool_call": tool_call,
+            "executed": [{"op": "click", "timing_s": {"total": t}} for t in step_s]}  # fmt: skip
+
+
+GATES = P.a0a_gates([{"harness": h, "steps": [turn(False, True, 2.0)]} for h in P.HARNESSES], 2.71)
+
+
 @pytest.fixture(scope="module")
 def inputs():
     return renderer.load_inputs(ROOT)
@@ -95,12 +103,14 @@ def test_freeze_constants_branches():
     slots = [640.0] * 20
     pre = [3, 25, 26]
     fc = P.freeze_constants(
+            a0a_gates=GATES,
         n_star=40, a0a_slot_seconds=slots, launch_a0a_min=4, prefreeze_caps=pre,
         anchor_available=True, launch_a0b_min=5, longest_a0b_slot_min=10.0, k_floor=24,
     )  # fmt: skip
     assert fc.anchor_runs and fc.anchor_tasks == 96 and fc.a1_cap_min == 91 and fc.k_base == 24
     assert fc.total_cap_min <= 478 and fc.k_floor == 24
     off = P.freeze_constants(
+            a0a_gates=GATES,
         n_star=40, a0a_slot_seconds=slots, launch_a0a_min=4, prefreeze_caps=[3, 25],
         anchor_available=False,
     )  # fmt: skip
@@ -108,11 +118,13 @@ def test_freeze_constants_branches():
     assert off.k_floor == 32
     with pytest.raises(P.PlanError, match="floor 32"):  # the default: item 18 not signed
         P.freeze_constants(
+            a0a_gates=GATES,
             n_star=40, a0a_slot_seconds=slots, launch_a0a_min=4, prefreeze_caps=pre,
             anchor_available=True, launch_a0b_min=5, longest_a0b_slot_min=10.0,
         )  # fmt: skip
     with pytest.raises(P.PlanError, match="floor is 24"):
         P.freeze_constants(
+            a0a_gates=GATES,
             n_star=40, a0a_slot_seconds=slots, launch_a0a_min=4, prefreeze_caps=[3, 25],
             anchor_available=False, k_floor=16,
         )  # fmt: skip
@@ -121,17 +133,20 @@ def test_freeze_constants_branches():
     for floor in (24, 32):
         with pytest.raises(P.PlanError, match="floor 32 .the anchor does not run"):
             P.freeze_constants(
+            a0a_gates=GATES,
                 n_star=16, a0a_slot_seconds=[700.0] * 16, launch_a0a_min=4, prefreeze_caps=pre,
                 anchor_available=True, launch_a0b_min=5, longest_a0b_slot_min=10.0,
                 k_floor=floor,
             )  # fmt: skip
     with pytest.raises(P.PlanError, match="floor"):
         P.freeze_constants(
+            a0a_gates=GATES,
             n_star=40, a0a_slot_seconds=[1100.0] * 20, launch_a0a_min=6, prefreeze_caps=pre,
             anchor_available=True, launch_a0b_min=5, longest_a0b_slot_min=10.0, k_floor=24,
         )  # fmt: skip
     with pytest.raises(P.PlanError, match="N"):
         P.freeze_constants(
+            a0a_gates=GATES,
             n_star=8, a0a_slot_seconds=slots, launch_a0a_min=4, prefreeze_caps=pre,
             anchor_available=False,
         )  # fmt: skip
@@ -141,7 +156,8 @@ def test_unanchored_floor_is_32_at_the_cards_high_slot():
     """The branch S1a is in (anchor unavailable before A0b, T_A1 = 111): an A0a slot at the
     card's high value (743.12 s at V = 20) prices K_base at 24, below the floor of 32, so the
     draft goes back to review; K = 32 needs a mean A0a slot of at most about 728 s."""
-    common = dict(n_star=40, launch_a0a_min=6, prefreeze_caps=[3, 25], anchor_available=False)
+    common = dict(n_star=40, launch_a0a_min=6, prefreeze_caps=[3, 25], anchor_available=False,
+                  a0a_gates=GATES)  # fmt: skip
     for floor in (24, 32):  # no k_floor lowers the unanchored floor
         with pytest.raises(P.PlanError, match="K_base 24 is below the floor 32"):
             P.freeze_constants(a0a_slot_seconds=[743.12] * 20, k_floor=floor, **common)
@@ -249,6 +265,7 @@ def test_renderer_draft_and_freeze_modes(tmp_path):
                 "n_star": 40, "a0a_slot_seconds": [640.0] * 20, "launch_a0a_min": 4,
                 "prefreeze_caps": [3, 25, 26], "anchor_available": True,
                 "launch_a0b_min": 5, "longest_a0b_slot_min": 10.0, "k_floor": 24,
+                "a0a_gates": GATES,
             }
         )
     )  # fmt: skip
@@ -265,3 +282,63 @@ def test_renderer_draft_and_freeze_modes(tmp_path):
     assert len(plan["anchor_tasks"]) == 96 and len(plan["dev_tasks_a0a"]) == 5
     assert set(plan["dev_tasks_a0b"]) <= set(plan["dev_tasks_a0a"])
     assert all(t in plan["anchor_order"] for t in plan["flagged_tasks"])
+
+
+def test_a0a_gates_read_the_step_logs():
+    """Section 6.2: per harness, model turns at the cap without a complete tool call over all
+    its turns; the action path's step p95 over every DesktopEnv.step."""
+    from harness.q2.action_path.acceptance import quantile
+
+    osw = [turn(False, True, 2.0, 2.5)] * 4 + [turn(True, True, 3.0)]  # a cap hit with a call
+    ga = [turn(False, True, 1.0)] * 4 + [turn(True, False)]  # one in five without a call
+    gates = P.a0a_gates([{"harness": "H-OSW-fixed", "steps": osw},
+                         {"harness": "H-GA", "steps": ga}], 2.71)  # fmt: skip
+    assert gates["truncation_share"] == {"H-OSW-fixed": 0.0, "H-GA": 0.2}
+    times = [2.0, 2.5] * 4 + [3.0] + [1.0] * 4
+    assert gates["step_p95_s"] == quantile(times, 0.95) == P.quantile(times, 0.95) == 3.0
+    assert gates["problems"] == [] and gates["step_p95_limit_s"] == pytest.approx(5.42)
+    worse = P.a0a_gates([{"harness": "H-OSW-fixed", "steps": osw},
+                         {"harness": "H-GA", "steps": ga + [turn(True, False)]}], 1.4)  # fmt: skip
+    assert any("truncation gate" in p and "H-GA" in p for p in worse["problems"])
+    assert any("concurrency gate" in p for p in worse["problems"])  # 3.0 s > 2 x 1.4 s
+    one = P.a0a_gates([{"harness": "H-GA", "steps": ga}], 2.71)
+    assert one["problems"] == ["truncation gate: no H-OSW-fixed turn in A0a"]
+    for values in ([], [1.0], list(range(1, 21)), [5.0, 1.0, 3.0]):
+        assert P.quantile(values, 0.95) == quantile(values, 0.95)
+
+
+def test_freeze_constants_enforce_a0a_gates():
+    common = dict(n_star=40, a0a_slot_seconds=[640.0] * 20, launch_a0a_min=4,
+                  prefreeze_caps=[3, 25], anchor_available=False)  # fmt: skip
+    fc = P.freeze_constants(a0a_gates=GATES, **common)
+    assert fc.truncation_share == {"H-OSW-fixed": 0.0, "H-GA": 0.0}
+    assert fc.a0a_step_p95_s == 2.0 and fc.action_path_step_p95_s == 2.71
+    truncated = dict(GATES, truncation_share={"H-OSW-fixed": 0.0, "H-GA": 0.25})
+    with pytest.raises(P.PlanError, match="truncation gate"):
+        P.freeze_constants(a0a_gates=truncated, **common)
+    slow = dict(GATES, step_p95_s=5.5)  # above 2 x 2.71 s
+    with pytest.raises(P.PlanError, match="concurrency gate"):
+        P.freeze_constants(a0a_gates=slow, **common)
+    with pytest.raises(TypeError):
+        P.freeze_constants(**common)  # the gates are a required input
+
+
+def test_a0a_gates_from_a_lane_run_directory(tmp_path):
+    run = tmp_path / "run"
+    rows = {"A0a:a0a.1:000": ("H-GA", "scored"), "A0a:a0a.1:001": ("H-OSW-fixed", "scored"),
+            "A0a:a0a.2:000": ("H-GA", "infrastructure")}  # fmt: skip
+    run.mkdir()
+    with (run / "episodes.jsonl").open("w") as handle:
+        for slot, (harness, status) in rows.items():
+            handle.write(json.dumps({"slot": slot, "attempt": 1, "harness": harness,
+                                     "status": status}) + "\n")  # fmt: skip
+            out = run / "episodes" / f"{slot.replace(':', '_')}.a1"
+            out.mkdir(parents=True)
+            (out / "steps.jsonl").write_text(json.dumps(turn(False, True, 2.0)) + "\n")
+    episodes = P.load_a0a_episodes(run)
+    assert sorted(e["harness"] for e in episodes) == ["H-GA", "H-OSW-fixed"]  # scored only
+    script = [sys.executable, "-m", "harness.q2_stage1.plan", "a0a-gates", "--run-dir",
+              str(run), "--action-path-step-p95", "2.71"]  # fmt: skip
+    done = subprocess.run(script, capture_output=True, text=True, cwd=ROOT)
+    assert done.returncode == 0, done.stderr
+    assert json.loads(done.stdout)["steps_timed"] == 2

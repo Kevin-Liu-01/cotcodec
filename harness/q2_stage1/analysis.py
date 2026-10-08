@@ -172,18 +172,30 @@ def _flags_counts(finals: Mapping[R.SlotKey, Mapping[str, Any]]) -> dict[str, An
 
 
 def truncation_labels(finals: Mapping[R.SlotKey, Mapping[str, Any]]) -> dict[str, Any]:
-    """Share of steps ending at 2,048 tokens without a complete tool call, per (size,
-    harness); a size whose share exceeds 20% under either harness has its delta labelled
-    truncation-confounded."""
+    """Per (size, harness): ``share``, the steps ending at 2,048 tokens without a complete
+    tool call (``truncated_no_tool_call_steps``, A0a's gate definition, section 6.2), and
+    ``share_any_cap_hit``, every step that hit the cap (the truncation rate). A size whose
+    ``share`` exceeds 20% under either harness has its delta labelled
+    truncation-confounded (section 15)."""
     steps: dict[tuple[str, str], int] = defaultdict(int)
     trunc: dict[tuple[str, str], int] = defaultdict(int)
+    hit: dict[tuple[str, str], int] = defaultdict(int)
     for (z, _s, _t, h, _r), rec in finals.items():
         steps[(z, h)] += int(rec.get("steps", 0))
-        trunc[(z, h)] += int(rec.get("truncated_steps", 0))
-    share = {f"{z}/{h}": (trunc[(z, h)] / steps[(z, h)] if steps[(z, h)] else None)
-             for (z, h) in sorted(steps)}  # fmt: skip
+        trunc[(z, h)] += int(rec.get("truncated_no_tool_call_steps", 0))
+        hit[(z, h)] += int(rec.get("truncated_steps", 0))
+
+    def share_of(counts: Mapping[tuple[str, str], int]) -> dict[str, float | None]:
+        return {f"{z}/{h}": (counts[(z, h)] / steps[(z, h)] if steps[(z, h)] else None)
+                for (z, h) in sorted(steps)}  # fmt: skip
+
+    share = share_of(trunc)
     labelled = sorted({k.split("/")[0] for k, v in share.items() if v is not None and v > 0.20})
-    return {"share": share, "truncation_confounded_sizes": labelled}
+    return {
+        "share": share,
+        "share_any_cap_hit": share_of(hit),
+        "truncation_confounded_sizes": labelled,
+    }
 
 
 def exposure_strata(

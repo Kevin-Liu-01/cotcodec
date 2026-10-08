@@ -645,10 +645,20 @@ The rules, applied by `plan.freeze_constants` to the A0 records only:
   alone gives 24 unless L_A0a is under 4 minutes.
 - **Truncation gate.** If more than 20% of A0a's steps under either harness
   end at 2,048 tokens without a complete tool call, the draft is not frozen.
-  The gate is measured on 9B only; 4B's truncation is reported per cell
-  (section 15).
+  Per harness, the share is A0a's model turns whose reply hit the cap and held
+  no complete `<tool_call>` block (`truncated` and not `complete_tool_call` in
+  the step log) over all its model turns, in A0a's completed episodes (those
+  c_A0a counts). The gate is measured on 9B only; 4B's truncation is reported
+  per cell (section 15), by the same definition.
 - **Concurrency gate.** If A0a's `DesktopEnv.step` p95 exceeds twice the
-  action-path A1 step p95, the draft is not frozen.
+  action-path A1 step p95, the draft is not frozen. Both are the action path's
+  statistic: the ceil(0.95 n)-th smallest `timing_s.total` of every
+  `DesktopEnv.step` (A0a: every executed action of its completed episodes,
+  harnesses pooled; the action path: the accepted attempt's `step_p95_n1_s`).
+- Both gates are computed by `plan.a0a_gates` from A0a's step logs
+  (`python -m harness.q2_stage1.plan a0a-gates` on the host), and
+  `plan.freeze_constants` refuses to set the constants when either fails or
+  cannot be read.
 - **Anchor size** n by section 5.7.
 - **Plumbing and repeats.** A defect A0a or A0b shows in the driver, bridge or
   checker path is fixed before the freeze. Any change after A0 to the engine
@@ -771,7 +781,8 @@ Per episode:
 
 - boot, setup, warm-up, evaluation and teardown times, and the slot
   occupancy from dispatch to teardown;
-- steps used and how the episode ended;
+- steps used and how the episode ended; steps whose reply hit 2,048 tokens,
+  and of those the ones without a complete tool call;
 - the checker score, and whether the metric raised;
 - the hashes of the checker's input files;
 - guest-server restart counts;
@@ -1179,10 +1190,13 @@ sessions x 2 reruns is justified by power (section 10), not by habit.
   metric-exception-missing sensitivity.
 - The cost card of section 9 item 10, against the card's central and high
   prices.
-- Truncation rates per cell. A size whose truncation share exceeds 20% under
-  either harness has its δ labelled truncation-confounded. δ on episodes
-  without truncation is reported as a description of a mediator (truncation
-  follows the harness), not as a de-confounded effect.
+- Truncation rates per cell: the share of steps whose reply hit 2,048 tokens,
+  and the share that hit it without a complete tool call. A size whose share of
+  steps ending at 2,048 tokens without a complete tool call (A0a's gate
+  definition, section 6.2) exceeds 20% under either harness has its δ labelled
+  truncation-confounded (`analysis.truncation_labels`). δ on episodes without
+  truncation is reported as a description of a mediator (truncation follows the
+  harness), not as a de-confounded effect.
 - Uncertified action-path exposure per episode and per harness, and δ by
   exposure stratum (descriptive).
 - First divergence, checker-input-hash discordance and offline rescoring
@@ -1337,24 +1351,24 @@ row (the test fails otherwise), and the freeze pins them.
 |---|---|
 | `harness/q2_stage1/__init__.py` | `0e2190149cf640fac07dab26332a26f696374ff4400c23aab82e8cf766f3b334` |
 | `harness/q2_stage1/estimators.py` | `b43334b0511d17505a24893d65ce79cd55a58351a2a056075ed5b002007d36b3` |
-| `harness/q2_stage1/records.py` | `90cb3cb023892ef5f63e9e53631b9f3b196ade4875689c4f0cc7421cd50c91b8` |
+| `harness/q2_stage1/records.py` | `8605320d5968d671cebbd9f6212adf89244c76ec74566ab92c470930886fd614` |
 | `harness/q2_stage1/rules.py` | `a671d2c3871bc18d255af8e8efe86f823aa7e54640c5c75cf9d95c39b587a225` |
-| `harness/q2_stage1/plan.py` | `8c97582d842552025eaa60ba2d7602aa9296783f2cfd525b3518467be1811e5a` |
-| `harness/q2_stage1/analysis.py` | `c56ff404c31d36f68aa43e97d1cfa3b8d10bff250524b6baa07c882cf5647cfb` |
-| `scripts/render_q2_stage1_plan.py` | `7f4b828c69449ec1caa32b7659309c78776bf3a1ec844ce83d327cd5f7e4e30f` |
+| `harness/q2_stage1/plan.py` | `ddd6e7fe7aa7cde432c521ff3339c643e2ec2821dacf86507033676ee8c921a1` |
+| `harness/q2_stage1/analysis.py` | `f5b1ce8f3c6bf7366f3114180696859e3226bde6d405df7ce2b3122861cde401` |
+| `scripts/render_q2_stage1_plan.py` | `3c9ef228e5df0b8a6b5e7f927f37689cc5d9a41b6ce8294737a39674089fbfac` |
 | `scripts/submit_docker_research_job.py` | `660271655aa22ebd387a023e25d21e6a809c22699ec6314d9d535be74e17a994` |
 | `harness/q2/vm/manifest.py` | `f238f12bdb8470919c8892eff46fe8b721e1e0c83ad08a60c0293ed8da3b9e2e` |
 | `program/proposals/evidence/2026-10-08-q2-stage1-rescoped/analysis/cost_s1a.py` | `704cae408ff536ccb0c3f1415adad8f54037a4fcf3fc9d23684e40c71f7e4e35` |
 | `program/proposals/evidence/2026-10-08-q2-stage1-rescoped/analysis/cost_s1a.json` | `843a123b2d8e98e34d9f20388edc132e673ba9c93b01645c7668c98d2d80e144` |
 | `program/proposals/evidence/2026-10-08-q2-stage1-rescoped/analysis/sim_s1a_v2.py` | `19574910a06026b0b042aaf251e0988a72ed0484fa5833a8ca7597e3ba646a4c` |
 | `program/proposals/evidence/2026-10-08-q2-stage1-rescoped/analysis/sim_s1a_v2.json` | `e3c52beb5c6160e5e364ef307fb3c6353c226ffb7b762d9cc534f8fc86239d9e` |
-| `harness/q2_stage1/driver.py` | `5f78131f10f8fb50a7cd3ae5f39a7ae22dacc86f39d56649163e957729bb006e` |
+| `harness/q2_stage1/driver.py` | `6709d0d2280cf82a3aa7b257430aeb9f35790f1a63653b0408674759ae2d9d17` |
 | `harness/q2_stage1/agents.py` | `8e72acbd79645b45ccd95cd213d5f8564d7114af538561e28219c12cf0eb0ba1` |
 | `harness/q2_stage1/engine.py` | `3e0942349a8fc5b2aef5294a28c029ca318acff88f4cd897df274bb6e3b51bf9` |
 | `harness/q2_stage1/bridge.py` | `dceacda3d6882223b0f0cfe54dd28f1674d1bf99527083420c0f29976a68692d` |
 | `harness/q2_stage1/fake_engine.py` | `02e0b66e7b67b3647dc853c4069de21ce3e6234ed01ec4e3842afbd42cd89a00` |
 | `harness/q2_stage1/osworld_live.py` | `18511ebbf19ab36cb2060228355ea1cd7387dce7023835965341871228205f4f` |
-| `harness/q2_stage1/lane.py` | `2dfeb6ab3858b74567798002bb212732ac9331d7ad1d048ad222d7eb7f39f07e` |
+| `harness/q2_stage1/lane.py` | `1606821a0656de76e8e97d646cd0d470438bc08f3408fe8764a504e89719873c` |
 | `harness/q2_stage1/rescore.py` | `d240db03e969c8aa5bb97403c5005cd4c9e96016599a78f70e97850415893737` |
 | `harness/q2_stage1/zinv.py` | `64899d5056f4791008c2a10c38a7b0fbb94fbe912d20a702ec74851a0ca7f655` |
 | `harness/q2_stage1/anchor.py` | `6c0a31cf1abb261a3522573847ee6dc1798925143b286cf9c02a3550f1c93b7a` |
@@ -1480,6 +1494,7 @@ the fresh audit D49 (iv) requires.
 | C2 | Control characters in typed text (a `\r` from CRLF line ends, ESC, C1 controls) pass the IR, make the guest executor exit non-zero and were recorded as `executor_device` losses, re-queued and, under greedy decoding, lost again, counting toward DR0 | Fixed: a `type` action whose text holds a code point L0-fixed refuses is an `IRError` from model output, handled by the harness's unparseable-reply rule and counted in `ir_errors`; a test checks the rule equals the guest's `char_keysym` | 7.2; `agents.py`, `design_diffs.md` |
 | C4 | The pinned GPU-engine template declared `randomness_contract: deterministic` with `seeds: [42]`, which the docker submitter refuses once the `FILL_*` slots are filled, so no GPU half of a pair could be submitted | Fixed: `seeds: []` (the engine seed reaches vLLM through `plan.CARD_ENGINE_FLAGS`, `--seed 42`); hex fields quoted so YAML cannot read one as a number; a test fills the template for 9B, 4B and the anchor and passes it through the submitter's `validate_manifest` and `sbatch_argv` (`--gres=gpu:h100:1`, 32 CPUs, `--signal=B:USR1@180`, `--dependency=after:<VM job>`) | `gpu-engine.template.yaml` |
 | C5 | The K_base floor in the branch S1a is in (anchor unavailable before A0b) was 24 in code (`freeze_constants` defaulted to `K_FLOOR`), 32 in D49 (i), and ambiguous in section 6.2 and item 18's note, so the documented procedure would have frozen K = 24 without the anchor | Fixed: the floor follows the branch (32 without the anchor, whatever is signed; 24 only with the anchor running and `k_floor=24` passed after item 18); `freeze_constants` defaults to 32 and records the floor applied; section 6.2, item 18 and section 19 state D49 (i) and that K = 32 needs a mean A0a slot of at most about 728 s, below the card's high slot of 743 s, so going back to review after A0a is a live outcome; a test runs the issue's case | 6.2, 18, 19; `plan.py` |
+| C6 | The truncation and concurrency gates of section 6.2 existed only as text: `freeze_constants` read neither, episode records could not tell a cap hit without a tool call, and section 15's label counted any cap hit | Fixed: `plan.a0a_gates` computes both from A0a's step logs (per-harness share of turns at the cap without a complete tool call; the action path's p95 statistic over every `DesktopEnv.step`), `freeze_constants` requires the result and refuses a failed or unreadable gate; records gain `truncated_no_tool_call_steps`, and section 15's label uses the gate's definition beside the plain cap-hit rate; a CLI reads the host run directory | 6.2, 7.3, 15; `plan.py`, `driver.py`, `records.py`, `analysis.py`, `lane.py` |
 
 Slots read TBD until the freeze: the status line; G0 item 1 (accepted attempt); item 10
 (frozen plan); section 4's executor row; section 6.2's constants; section 21's v2
