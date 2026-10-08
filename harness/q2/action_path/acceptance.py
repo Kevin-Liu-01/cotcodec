@@ -19,12 +19,14 @@ Rules that apply to every criterion:
   time, in which case both must agree;
 * a trial is PASS only as ``verdict.judge`` judged it, infrastructure failures
   included (section 6.1); a session whose ``DesktopEnv.reset`` observation was not
-  delivered charges its first trial (``reset_observation``); an entry is PASS only at k
-  of k repetitions, and an entry that is PASS in one observation setting and not the
-  other fails (section 5). One exception, A4's count (decision D30): a trial whose only
-  failure is a guest-server restart is reported and not counted (``restart_only``);
+  delivered charges its first trial (``reset_observation``, an infrastructure type and a
+  reason of that trial); an entry is PASS only at k of k repetitions, and an entry that
+  is PASS in one observation setting and not the other fails (section 5). One exception,
+  A4's count (decision D30): a trial whose only failure is a guest-server restart is
+  reported and not counted (``restart_only``);
 * the observation service has its own bound (A7, decision D30): guest-server restarts
-  per ``/accessibility`` call, judged on the exact one-sided 95% Poisson upper bound;
+  per ``/accessibility`` call, judged on the exact one-sided 95% Poisson upper bound,
+  with the restarts of every attempt and the calls of the counting attempts only;
 * reruns (section 6.1): a campaign may be rerun once, as a new attempt with a new
   output path, and only when the earlier attempt did not count (a ladder rung also when
   it aborted on foreign load); every trial of every attempt is reported, and a failed
@@ -83,7 +85,11 @@ STATE_BITS = (("Shift", 1), ("Control", 4), ("Mod1", 8), ("Mod4", 64))
 # level 1 - OBSERVATION_ALPHA. The development rate (one restart in 8,114 calls, runs
 # 484-622) is reported with A4 and A7 with its exact two-sided 95% interval.
 RESTART = "guest_server_restart"
-RESTART_EXCUSED = ("infra: guest_server_restart", "infra: accessibility")
+RESET = "reset_observation"
+# The infrastructure types a restart excuses: a restart during the entry excuses itself
+# and the tree it left undelivered; a restart across the session's reset observation
+# (``reset_restart``) excuses that observation when its tree alone was not delivered.
+RESTART_EXCUSED = (RESTART, "accessibility")
 OBSERVATION_BOUND = 5e-4
 OBSERVATION_ALPHA = 0.05
 DEVELOPMENT_RESTARTS, DEVELOPMENT_CALLS = 1, 8114
@@ -157,9 +163,16 @@ def load(
         reset = reset_observation(cycle.get("reset_observation"), cycle.get("setting"))
         if reset is not None and not reset["delivered"] and trials:
             # Section 6.1: a reset observation DesktopEnv's retries did not deliver is an
-            # infrastructure failure of the boot, charged to the session's first trial.
-            trials[0]["pass"] = False
-            trials[0]["infra"] = sorted({*trials[0]["infra"], "reset_observation"})
+            # infrastructure failure of the boot, charged to the session's first trial as
+            # an infrastructure type and a reason, like every other one (verdict.judge).
+            first = trials[0]
+            first["pass"] = False
+            first["infra"] = sorted({*first["infra"], RESET})
+            if isinstance(first["reasons"], list) and f"infra: {RESET}" not in first["reasons"]:
+                first["reasons"] = [*first["reasons"], f"infra: {RESET}"]
+            # Decision D30 (design decision 40): only its tree was missing and the server
+            # restarted across it, so the restart left it undelivered.
+            first["reset_restart"] = reset["failed"] == ["accessibility"] and reset_restart(cycle)
         sessions.append(
             {
                 "cycle": cycle.get("cycle"),
@@ -186,7 +199,8 @@ def load(
 
 
 def reset_observation(raw: dict[str, Any] | None, setting: str | None) -> dict[str, Any] | None:
-    """Whether ``DesktopEnv.reset``'s observation was delivered, and which parts retried."""
+    """Whether ``DesktopEnv.reset``'s observation was delivered, which parts retried and
+    which parts were not delivered (``failed``)."""
     if not raw:
         return None
 
@@ -197,15 +211,37 @@ def reset_observation(raw: dict[str, Any] | None, setting: str | None) -> dict[s
         return bool(attempts) and attempts[-1].get("status") == 200
 
     shots = raw.get("screenshot_attempts") or []
-    ok = delivered(shots, raw.get("screenshot_ok"))
-    retried = ["screenshot"] if ok and len(shots) > 1 else []
+    shot_ok = delivered(shots, raw.get("screenshot_ok"))
+    failed = [] if shot_ok else ["screenshot"]
+    retried = ["screenshot"] if shot_ok and len(shots) > 1 else []
     if setting == "screenshot+a11y":
         trees = raw.get("accessibility_attempts") or []
         tree_ok = delivered(trees, raw.get("accessibility_ok"))
-        ok = ok and tree_ok
-        if tree_ok and len(trees) > 1:
+        if not tree_ok:
+            failed.append("accessibility")
+        elif len(trees) > 1:
             retried.append("accessibility")
-    return {"delivered": ok, "retried": retried}
+    return {"delivered": not failed, "retried": retried, "failed": failed}
+
+
+def reset_restart(cycle: dict[str, Any]) -> bool:
+    """Whether the guest server restarted across the session's reset observation.
+
+    The reset observation is taken between the session's start (the baseline check and
+    the warm-up, each of whose reports names the server process) and the first trial's
+    pre guard; a different server process in that guard's report is a restart in between.
+    Both ids must be known: when the pre guard could not run, the restart is the first
+    trial's own (``guest_server_restart``, design decision 39) and nothing is excused here.
+    """
+    start = cycle.get("start") or {}
+    ids = [
+        report["server_pid"]
+        for report in (start.get("baseline_check"), start.get("warmup"))
+        if isinstance((report or {}).get("server_pid"), int)
+    ]
+    trials = cycle.get("trials") or []
+    pre = ((trials[0].get("pre") or {}).get("server_pid")) if trials else None
+    return bool(ids) and isinstance(pre, int) and pre != ids[-1]
 
 
 def _trial(raw: dict[str, Any], setting: str | None) -> dict[str, Any]:
@@ -290,17 +326,28 @@ def failed_trials(
 def restart_only(trial: dict[str, Any]) -> bool:
     """Decision D30: a failed trial whose only failure is a guest-server restart.
 
-    Its reasons are the restart itself and, at most, an ``/accessibility`` failure (the
-    tree the restart left undelivered). A4 reports such a trial and does not count it; any
-    other reason in the same trial (an event, text, marker or guard difference, or an
-    infrastructure failure of any other type) counts as usual.
+    Either a restart during the entry (``guest_server_restart``) with, at most, an
+    ``/accessibility`` failure (the tree the restart left undelivered), or, for a session's
+    first trial, a restart across the reset observation that left only its tree
+    undelivered (``reset_restart``), or both. A4 reports such a trial and does not count it;
+    any other reason in the same trial (an event, text, marker or guard difference, or an
+    infrastructure failure of any other type, an undelivered reset screenshot included)
+    counts as usual. Both the infrastructure types and the reasons are checked.
     """
+    if trial["pass"]:
+        return False
+    infra = set(trial.get("infra") or [])
+    excused: set[str] = set()
+    if RESTART in infra:
+        excused.update(RESTART_EXCUSED)
+    if trial.get("reset_restart"):
+        excused.add(RESET)
     reasons = trial.get("reasons")
     return (
-        not trial["pass"]
-        and RESTART in (trial.get("infra") or [])
+        bool(excused)
         and reasons is not None
-        and set(reasons) <= set(RESTART_EXCUSED)
+        and infra <= excused
+        and set(reasons) <= {f"infra: {kind}" for kind in excused}
     )
 
 
@@ -487,28 +534,65 @@ def a3(by_layer: dict[str, list[dict[str, Any]]]) -> dict[str, Any]:
 
 
 def _restart_report(campaigns: list[dict[str, Any]]) -> dict[str, Any]:
-    """Restarts, accessibility calls and every trial a restart hit, over every attempt."""
+    """Restarts, accessibility calls and every trial a restart hit, over every attempt.
+
+    Section 12: each trial a restart hit, with its job, session (``cycle``), whether the
+    restart came during the entry or across the reset observation, its reasons and
+    whether A4's rule counts it; and every session whose restart count exceeds the
+    restarts attributed to its trials (a restart that hit no trial: during the session's
+    start, or between entries when the next pre guard already met the new server).
+    ``accessibility_calls`` is over every attempt; ``accessibility_calls_counting`` over
+    the counting attempts only (A7's denominator).
+    """
     every = [a for c in campaigns for a in [*c.get("earlier", []), c]]
-    hit = [
-        {
-            "job": a["job"],
-            "setting": s["setting"],
-            "seq": t["seq"],
-            "cell": t["cell"],
-            "reasons": t.get("reasons"),
-            "counted": not restart_only(t),
-        }
-        for a in every
-        for s in a["sessions"]
-        for t in s["trials"]
-        if RESTART in (t.get("infra") or [])
-    ]
+    hit, unattributed = [], []
+    for a in every:
+        for s in a["sessions"]:
+            attributed = 0
+            for t in s["trials"]:
+                where = [
+                    name
+                    for name, flag in (
+                        ("reset_observation", t.get("reset_restart")),
+                        ("entry", RESTART in (t.get("infra") or [])),
+                    )
+                    if flag
+                ]
+                if not where:
+                    continue
+                attributed += len(where)
+                hit.append(
+                    {
+                        "job": a["job"],
+                        "cycle": s.get("cycle"),
+                        "setting": s["setting"],
+                        "seq": t["seq"],
+                        "cell": t["cell"],
+                        "where": where,
+                        "reasons": t.get("reasons"),
+                        "counted": not restart_only(t),
+                    }
+                )
+            if (s.get("restarts") or 0) > attributed:
+                unattributed.append(
+                    {
+                        "job": a["job"],
+                        "cycle": s.get("cycle"),
+                        "setting": s["setting"],
+                        "restarts": s.get("restarts"),
+                        "attributed": attributed,
+                    }
+                )
     return {
         "restarts": sum(s.get("restarts") or 0 for a in every for s in a["sessions"]),
         "accessibility_calls": sum(
             s.get("accessibility_calls") or 0 for a in every for s in a["sessions"]
         ),
+        "accessibility_calls_counting": sum(
+            s.get("accessibility_calls") or 0 for c in campaigns for s in c["sessions"]
+        ),
         "trials_hit": hit,
+        "sessions_with_unattributed_restarts": unattributed,
         "development_rate": development_rate(),
     }
 
@@ -516,11 +600,15 @@ def _restart_report(campaigns: list[dict[str, Any]]) -> dict[str, Any]:
 def a4(campaigns: list[dict[str, Any]], n_star: int) -> dict[str, Any]:
     """The volume plan, zero failures, over the N* VMs; its session slices tile the plan.
 
-    Decision D30: a trial whose only failure is a guest-server restart (``restart_only``)
-    is not counted; every trial a restart hit is reported with its reasons, together with
-    the restarts and accessibility calls of every attempt and the development rate's
-    single-event uncertainty. Its device actions still count toward the class bounds: the
-    action path was judged on that trial and showed no difference.
+    Decision D30: a trial whose only failure is a guest-server restart (``restart_only``:
+    during the entry, or across the session's reset observation) is not counted; every
+    trial a restart hit is reported with its session and reasons, together with the
+    restarts and accessibility calls of every attempt, the sessions whose restarts hit no
+    trial and the development rate's single-event uncertainty. Its device actions still
+    count toward the class bounds: the action path was judged on that trial and showed no
+    difference. A restart outside an observation call (during ``/execute`` or a guard), or
+    one slower than ``DesktopEnv``'s retries, leaves another failure in the trial it hits,
+    and that trial counts (design decision 40).
     """
     from harness.q2.action_path import volume
 
@@ -640,10 +728,14 @@ def a7(campaigns: list[dict[str, Any]], n_star: int) -> dict[str, Any]:
     """Guest-server restarts per accessibility call: exact 95% upper bound <= 5 x 10^-4.
 
     The campaign runs L0-fixed over G in the screenshot-plus-accessibility setting
-    (``observation_plan``) at N*, its session slices tiling the plan. Restarts and calls
-    are summed over every attempt of every campaign (section 6.1: an attempt that did not
-    count keeps its restarts). Trial verdicts are reported, not judged: A1-A4 judge the
-    action path.
+    (``observation_plan``) under attempt 1, at attempt 1's N* (the ``n_star`` argument:
+    ``n_star()`` over attempt 1's A1 campaigns and its full ladder; section 11), its
+    session slices tiling the plan; a later attempt's N* neither reruns nor re-judges it.
+    The restarts k are summed over every attempt of every campaign (section 6.1: an
+    attempt that did not count keeps its restarts); the calls n only over the counting
+    attempts, so an attempt that was cancelled or did not count adds its restarts and not
+    its calls, and stopping a run and rerunning it can never raise A7's chance of passing.
+    Trial verdicts are reported, not judged: A1-A4 judge the action path.
     """
     problems: list[str] = []
     full = observation_plan()
@@ -651,19 +743,24 @@ def a7(campaigns: list[dict[str, Any]], n_star: int) -> dict[str, Any]:
         problems += campaign_problems(c, earlier_failures_count=lambda prev: False)
         if c["manifest"]["vm"]["concurrency"] != n_star:
             problems.append(f"job {c['job']}: A7 runs at N* = {n_star}")
+        for attempt in [*c.get("earlier", []), c]:
+            if int((attempt["manifest"].get("workload") or {}).get("attempt") or 1) != 1:
+                problems.append(f"job {attempt['job']}: A7 runs under attempt 1 only")
     ordered = _tiled(campaigns, len(full), "A7", problems)
     problems += _check_plan(ordered, expected(full), "A7")
     report = _restart_report(campaigns)
-    restarts, calls = report["restarts"], report["accessibility_calls"]
+    restarts, calls = report["restarts"], report["accessibility_calls_counting"]
     upper = poisson_upper(restarts) / calls if calls else None
-    every = [s for c in campaigns for a in [*c.get("earlier", []), c] for s in a["sessions"]]
+    counting = [s for c in campaigns for s in c["sessions"]]
     # Reported, not judged: two development faults cannot show whether restarts cluster at
-    # a session's start, which a per-call bound would hide (section 9).
+    # a session's start, which a per-call bound would hide (section 9). Same rule: the
+    # restarts of every attempt over the sessions of the counting attempts.
+    every = [s for c in campaigns for a in [*c.get("earlier", []), c] for s in a["sessions"]]
     per_session = {
-        "sessions": len(every),
+        "sessions": len(counting),
         "sessions_with_restart": sum(1 for s in every if s.get("restarts")),
-        "rate": restarts / len(every) if every else None,
-        "upper_95": poisson_upper(restarts) / len(every) if every else None,
+        "rate": restarts / len(counting) if counting else None,
+        "upper_95": poisson_upper(restarts) / len(counting) if counting else None,
     }
     if upper is None or upper > OBSERVATION_BOUND:
         problems.append(
@@ -675,6 +772,7 @@ def a7(campaigns: list[dict[str, Any]], n_star: int) -> dict[str, Any]:
         {
             "restarts": restarts,
             "accessibility_calls": calls,
+            "accessibility_calls_every_attempt": report["accessibility_calls"],
             "rate": restarts / calls if calls else None,
             "upper_95": upper,
             "bound": OBSERVATION_BOUND,
