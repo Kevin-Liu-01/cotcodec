@@ -1893,3 +1893,47 @@ Append-only. Newest entries at the bottom.
   skipped. Real ledger unchanged.
 - Next: close the narrow re-check (D42 (iii)); then merge and freeze naming
   D42.
+
+## 2026-10-08 — Q3 dense pre-check v2: D44 implemented, the 4B limit 32 minutes (branch `stage0/q3-dense-v2`, draft, not frozen)
+
+- Main (`1a45703`, D44; Q2 confirm stage A2) merged in (`cb9fc68`):
+  `program/log.md` both sides in time order, `program/state.json` main's
+  entries and this branch's Q3 entries; the GPU total recomputed from the 22
+  ledger rows is 4.393. Main changed no tabled file and not the ledger.
+- D44 implemented at `da31db7` (no GPU job): the lanes module records all
+  three estimates of the 4B lane from Slurm 810 (stage-mean scaling 769 s,
+  30 minutes; line fit 789 s, 31; the larger of the two per stage 824 s, 32)
+  and sets the limit at their maximum, 32 minutes (useful window 29 minutes,
+  break-even 1.43 s per unit). A lane's cap is now its minutes / 60 exactly:
+  32/60 GPU-h for the 4B lane, because a cap rounded to 0.5333 is below 1 x
+  32 / 60 and the submitter and the filler's budget check would refuse it;
+  the filler's check is unchanged. Registered caps 0.933 of D36's 1.5 GPU-h.
+  4B template 32 minutes, `max_gpu_hours` 32/60. Registration: Changes 6 and
+  10, Compute (the three estimates and D44's choice; table 1 x 32, 0.53,
+  total 0.93), decisions 12 and 20, freeze step 1 (the status paragraph and
+  the lead-in name D42 and D44 at the freeze; the frozen-mode test refuses
+  them otherwise); the draft status and lead-in say D44 closed the re-check
+  and keep their draft wording until the freeze; code table re-rendered
+  (only the lanes module and the 4B template changed). Tests bind the three
+  estimates to the receipt, the module and `estimator-sensitivity.json`,
+  check the exact cap and the refusal of a rounded one, and require the
+  status and the lead-in to name D42 and D44 in draft and frozen mode.
+- Checks at `da31db7`: ruff clean; local dense, preregister and v2 tests 186
+  passed, 15 skipped; host suite (Slurm 841, fresh scratch clone) 2,218
+  passed, 40 skipped, 0 failed; in image 825 with the new head's code
+  mounted (CPU, network none) the torch-dependent dense tests 57 passed
+  (Slurm 842) and the v2 CPU doctor 12/12 (Slurm 843).
+- Freeze simulated on scratch clones of `da31db7` with the frozen wording
+  naming D42 and D44: check-chain 12 rows PASS, frozen-mode tests 31 passed,
+  code table matches, 0.6B and 4B fills as registered, dry runs 0.2 and
+  0.5333 GPU-h (`--time=00:12:00`, `--time=00:32:00`); full suite in the
+  frozen clone 2,171 passed, 87 skipped. The lead-in left in draft, D41 in
+  place of D42, and the wording naming D42 only each fail the frozen-mode
+  test. Real ledger `1052d58b...` before and after.
+- GPU: none. Nothing pushed. Evidence
+  `program/evidence/2026-10-08/q3-dense-headroom-precheck-v2-build/timing-2/README.md`
+  ("D44") and `timing-2/d44/`.
+- Next: freeze with the status paragraph and the design-decision lead-in
+  rewritten to the frozen wording naming D42 and D44, image from the frozen
+  commit, doctor, the 0.6B lane (job 727 to 1e-6 and smoke 452), then the 4B
+  lane (32 minutes), and the combined read.

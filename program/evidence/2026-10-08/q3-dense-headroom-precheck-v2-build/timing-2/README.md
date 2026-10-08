@@ -345,3 +345,40 @@ What changed (`d44/`):
   minutes) in draft and frozen mode alike, and in frozen mode no draft
   wording, including "to the frozen wording" in either paragraph.
 
+Checks at `da31db7` (`d44/`; operations in `d44/operator-log.txt`):
+
+- Local (macOS `.venv`): ruff clean; the dense, preregister and v2 tests 186
+  passed, 15 skipped; `validate_architecture_experiments.py` and
+  `validate_provider_models.py` PASS.
+- Host suite, fresh `~/cotcodec-scratch` clone of a bundle of `da31db7`
+  (Slurm 841, CPU, `tests/host-suite.sh`): **2,218 passed, 40 skipped, 0
+  failed** (`d44/tests/host-suite-da31db7/`).
+- In image 825 (`8c3f076`, the latest image; no rebuild) with the clone's
+  `harness/`, `scripts/`, `tests/`, `experiments/` and `program/` mounted
+  read-only over `/workspace/cotcodec` (CPU, network none;
+  `d44/tests/image-tests-mounted.sh`): the torch-dependent dense tests **57
+  passed** (Slurm 842; 55 at `8c3f076` plus the two manifests tests added
+  since), and the v2 CPU doctor **`DENSE_V2_DOCTOR_PASS`, 12/12** (Slurm 843).
+  The PID-1 SIGUSR1 test was not re-run: it runs the image's own entry point,
+  and D44 changed nothing on the signal path.
+- Freeze simulation (`d44/freeze-simulation/`, scripts `simulate.sh`,
+  `rewrite.py`, `lanes-after-freeze.sh`; local scratch clones of `da31db7`
+  chaining onto the 11-row ledger ending at `q2-evaluator-mutation-v1`,
+  `dc39bfa2...`; the real ledger `1052d58b...` before and after every run):
+  - `full` (status and lead-in rewritten to the frozen wording naming D42 and
+    D44): freeze, verify and check-chain exit 0 (12 rows PASS); no "DRAFT",
+    "wait for the program owner" or "still to be done" left; frozen-mode
+    tests (v2 and v1 prereg, v2 manifests, preregister) **31 passed**; the
+    entry point's code table matches (no differing file); 0.6B fill exit 0,
+    dry run 0.2 GPU-h (`--time=00:12:00`); 4B fill exit 2 without the 0.6B
+    receipt and 0 with a stand-in one, dry run 0.5333 GPU-h (32/60,
+    `--time=00:32:00`); the filled manifests differ from the templates only
+    in the `FILL-*` values. The full suite in the frozen clone (macOS):
+    **2,171 passed, 87 skipped, 0 failed**.
+  - `status-only` (lead-in left in draft): the frozen-mode test fails ("the
+    frozen file still says 'still to be done'").
+  - `wrong-dec` (D41 in place of D42, with D44): it fails ("the status does
+    not name D42").
+  - `d42-only` (the frozen wording used before D44, naming D42 only): it
+    fails ("the status does not name D44").
+

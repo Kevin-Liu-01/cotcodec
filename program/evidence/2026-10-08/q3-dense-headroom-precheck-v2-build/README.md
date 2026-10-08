@@ -221,7 +221,11 @@ then found that the registered estimator's proportional scaling, chosen after
 a first analysis pass came out over the cap, crosses a minute boundary: the
 first pass's line fit with the compiles treated as registered gives 31
 minutes. The registration now discloses it (`ddb3d02`, text only; the limit
-stays 30 minutes; `timing-2/README.md`, "Limit re-check").
+stays 30 minutes; `timing-2/README.md`, "Limit re-check"). D44 closed the
+re-check: the 4B limit is 32 minutes (cap 32/60 GPU-h), the largest of the
+three estimates (30, 31, 32); caps 0.933 of 1.5 GPU-h; implemented at
+`da31db7`, checks and freeze simulations naming D42 and D44 in
+`timing-2/d44/` (`timing-2/README.md`, "D44").
 
 ## Files
 
