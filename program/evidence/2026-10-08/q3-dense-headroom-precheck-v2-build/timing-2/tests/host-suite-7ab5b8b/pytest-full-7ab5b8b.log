@@ -1,0 +1,9 @@
+start=2026-10-08T10:29:09Z head=7ab5b8bf7f9a42652396b1553f304b1760ee767d dirty=0
+........................................................................ [  3%]
+.....s...........s..........................s........................... [  6%]
+srun: Force Terminated job 814
+srun: Job step aborted: Waiting up to 32 seconds for job step to finish.
+slurmstepd-fal-h100-01: error: *** STEP 814.0 ON fal-h100-01 CANCELLED AT 2026-10-08T10:44:43 ***
+...................................srun: error: fal-h100-01: task 0: Killed
+exit=137
+end=2026-10-08T10:45:13Z
