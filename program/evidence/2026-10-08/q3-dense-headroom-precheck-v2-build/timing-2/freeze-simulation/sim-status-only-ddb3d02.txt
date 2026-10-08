@@ -1,0 +1,26 @@
+real ledger before: 1052d58b5b6648dd
+clone of ddb3d02a50afb16642c9b13e76c7d8317d2bdd0c mode=status-only
+ledger rows before:       11 head q2-evaluator-mutation-v1 dc39bfa2f68e0fd5
+status-only rewritten with D42
+{
+  "experiment_id": "q3-dense-headroom-precheck-v2",
+  "frozen_at": "2026-10-08T11:49:33.156835+00:00",
+  "git_head_at_freeze": "d076c24d8783f74c534bf7a80a9625c02eab1f3e",
+  "hash": "cad70e37681a976b2d83062479041647191bde7924c10de298803f8795d5bd87",
+  "path": "program/preregistrations/q3-dense-headroom-precheck-v2.md",
+  "previous_hash": "dc39bfa2f68e0fd57a213e0972266a4db60428e00d6c4e6bca8e576f35ec6439",
+  "sha256": "678640fededb1ba80a794ccbdb7b0369842a3e869e9e284292e2a0fccd3a9f31"
+}
+freeze exit=0
+verify exit=0
+{"rows": 12, "status": "PASS"}
+check-chain exit=0
+simulated freeze commit 05fafb586aabed955cf2f3724f1f0fe6cfe2a7ac
+frozen file contains 'DRAFT': False
+frozen file contains 'wait for the program owner': False
+frozen file contains 'still to be done': True
+E               AssertionError: the frozen file still says 'still to be done'
+FAILED tests/test_dense_headroom_v2_prereg.py::test_status_and_decisions - As...
+1 failed, 29 passed in 21.77s
+pytest exit=1
+real ledger after: 1052d58b5b6648dd

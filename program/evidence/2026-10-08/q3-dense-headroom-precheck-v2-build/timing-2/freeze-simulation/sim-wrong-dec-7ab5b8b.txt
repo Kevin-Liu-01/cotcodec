@@ -1,0 +1,26 @@
+real ledger before: 1052d58b5b6648dd
+clone of 7ab5b8bf7f9a42652396b1553f304b1760ee767d mode=wrong-dec
+ledger rows before:       11 head q2-evaluator-mutation-v1 dc39bfa2f68e0fd5
+wrong-dec rewritten with D41
+{
+  "experiment_id": "q3-dense-headroom-precheck-v2",
+  "frozen_at": "2026-10-08T10:31:49.046123+00:00",
+  "git_head_at_freeze": "bc377aa2b44e0be37581ca7046516b6113c0045f",
+  "hash": "d9b28ece91fda4081da20710be5573f18dafc51b34ac16b7093ef52e8f24df95",
+  "path": "program/preregistrations/q3-dense-headroom-precheck-v2.md",
+  "previous_hash": "dc39bfa2f68e0fd57a213e0972266a4db60428e00d6c4e6bca8e576f35ec6439",
+  "sha256": "4005664534737643998822690f0bb5867810bc0c1b8fd464065f204845869883"
+}
+freeze exit=0
+verify exit=0
+{"rows": 12, "status": "PASS"}
+check-chain exit=0
+simulated freeze commit 1646bae6b2687f6ff7099dc09eeca302ca38a998
+frozen file contains 'DRAFT': False
+frozen file contains 'wait for the program owner': False
+frozen file contains 'still to be done': False
+E       AssertionError: the status does not name D42
+FAILED tests/test_dense_headroom_v2_prereg.py::test_status_and_decisions - As...
+1 failed, 28 passed in 19.93s
+pytest exit=1
+real ledger after: 1052d58b5b6648dd

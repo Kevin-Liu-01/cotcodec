@@ -1,0 +1,13 @@
+kernels package: False
+causal_conv1d package: False
+flash_qla: False
+/workspace/cotcodec/.venv/lib/python3.12/site-packages/fla/utils/_device.py:100: UserWarning: Triton is not supported on current platform, roll back to CPU.
+  _cpu_device_warning()
+import fla: ok /workspace/cotcodec/.venv/lib/python3.12/site-packages/fla/__init__.py
+torch_chunk_gated_delta_rule ['fla.ops.gated_delta_rule.chunk.chunk_gated_delta_rule', '  -> fla.ops.gated_delta_rule.chunk.chunk_gated_delta_rule', '  -> torch._dynamo.eval_frame.?']
+torch_recurrent_gated_delta_rule ['transformers.models.qwen3_5.modeling_qwen3_5.torch_recurrent_gated_delta_rule']
+causal_conv1d_fn ['transformers.models.qwen3_5.modeling_qwen3_5.causal_conv1d_fn']
+causal_conv1d_update ['transformers.models.qwen3_5.modeling_qwen3_5.causal_conv1d_update']
+Qwen3_5GatedDeltaNet.forward from /workspace/cotcodec/.venv/lib/python3.12/site-packages/transformers/integrations/accelerate.py
+RMSNormGated: <class 'transformers.models.qwen3_5.modeling_qwen3_5.Qwen3_5RMSNormGated'> transformers.models.qwen3_5.modeling_qwen3_5
+done in 10.5s

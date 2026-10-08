@@ -1,0 +1,4 @@
+trigger=SIGUSR1
+token=1791454526-1
+written_at=2026-10-08T10:15:26Z
+acks={"timing_units":160}

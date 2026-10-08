@@ -1,0 +1,57 @@
+pid=1 python_handler_addr=0x6e79b0 term=0x6e79b0
+start                                    usr1_os=0x6e79b0 same=True term_same=True cgt=1 ign=0 blk_main=0 threads=1 threads_blocking_usr1=0 py_getsignal=ours
+import torch (2.2s) ok                   usr1_os=0x6e79b0 same=True term_same=True cgt=1 ign=0 blk_main=0 threads=64 threads_blocking_usr1=0 py_getsignal=ours
+import transformers (1.3s) ok            usr1_os=0x6e79b0 same=True term_same=True cgt=1 ign=0 blk_main=0 threads=64 threads_blocking_usr1=0 py_getsignal=ours
+import triton (0.1s) ok                  usr1_os=0x6e79b0 same=True term_same=True cgt=1 ign=0 blk_main=0 threads=64 threads_blocking_usr1=0 py_getsignal=ours
+import tilelang (1.2s) ok                usr1_os=0x6e79b0 same=True term_same=True cgt=1 ign=0 blk_main=0 threads=64 threads_blocking_usr1=0 py_getsignal=ours
+/workspace/cotcodec/.venv/lib/python3.12/site-packages/fla/utils/_device.py:100: UserWarning: Triton is not supported on current platform, roll back to CPU.
+  _cpu_device_warning()
+import fla (2.6s) FAILED KeyError: 'getp usr1_os=0x6e79b0 same=True term_same=True cgt=1 ign=0 blk_main=0 threads=64 threads_blocking_usr1=0 py_getsignal=ours
+    FAILED KeyError: 'getpwuid(): uid not found: 1004'
+import modeling_qwen3_5 (0.7s) FAILED As usr1_os=0x6e79b0 same=True term_same=True cgt=1 ign=0 blk_main=0 threads=64 threads_blocking_usr1=0 py_getsignal=ours
+    FAILED AssertionError: Artifact of type=precompile already registered in mega-cache artifact factory
+import torch._dynamo (0.0s) FAILED Asser usr1_os=0x6e79b0 same=True term_same=True cgt=1 ign=0 blk_main=0 threads=64 threads_blocking_usr1=0 py_getsignal=ours
+    FAILED AssertionError: Artifact of type=precompile already registered in mega-cache artifact factory
+triton.compile sm90 (no GPU) (0.4s) ok   usr1_os=0x70de345be7e0 same=False term_same=False cgt=1 ign=0 blk_main=0 threads=64 threads_blocking_usr1=0 py_getsignal=ours
+[06:09:28] : Warning: Unable to detect CUDA version, default to "-arch=sm_50" instead
+[06:09:28] : Warning: Unable to detect CUDA version, default to "-arch=sm_50" instead
+2026-10-08 06:09:28  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:131): TileLang begins to compile kernel `main` with `out_idx=None`
+nvcc warning : Support for offline compilation for architectures prior to '<compute/sm/lto>_75' will be removed in a future release (Use -Wno-deprecated-gpu-targets to suppress warning).
+/workspace/cotcodec/.venv/lib/python3.12/site-packages/tilelang/3rdparty/../src/tl_templates/cuda/common.h(199): error: no suitable user-defined conversion from "half" (aka "__half") to "cutlass::half_t" exists
+    return half_t(__hfma(x.to_half(), y.to_half(), z.to_half()));
+                         ^
+
+/workspace/cotcodec/.venv/lib/python3.12/site-packages/tilelang/3rdparty/../src/tl_templates/cuda/common.h(199): error: no suitable user-defined conversion from "half" (aka "__half") to "cutlass::half_t" exists
+    return half_t(__hfma(x.to_half(), y.to_half(), z.to_half()));
+                                      ^
+
+/workspace/cotcodec/.venv/lib/python3.12/site-packages/tilelang/3rdparty/../src/tl_templates/cuda/common.h(199): error: no suitable user-defined conversion from "half" (aka "__half") to "cutlass::half_t" exists
+    return half_t(__hfma(x.to_half(), y.to_half(), z.to_half()));
+                                                   ^
+
+/workspace/cotcodec/.venv/lib/python3.12/site-packages/tilelang/3rdparty/../src/tl_templates/cuda/common.h(1106): error: no instance of overloaded function "__hfma" matches the argument list
+            argument types are: (__half, __half, __half)
+    return __half2{__hfma(a.x, b.x, c.x), __hfma(a.y, b.y, c.y)};
+                   ^
+/workspace/cotcodec/.venv/lib/python3.12/site-packages/tilelang/3rdparty/../src/tl_templates/cuda/common.h(203): note #3326-D: function "__hfma(cutlass::bfloat16_t, cutlass::bfloat16_t, cutlass::bfloat16_t)" does not match because argument #1 does not match parameter
+   __inline__ __attribute__((always_inline)) __attribute__((device)) bfloat16_t __hfma(const bfloat16_t x, const bfloat16_t y,
+                                                                                ^
+/workspace/cotcodec/.venv/lib/python3.12/site-packages/tilelang/3rdparty/../src/tl_templates/cuda/common.h(197): note #3326-D: function "__hfma(cutlass::half_t, cutlass::half_t, cutlass::half_t)" does not match because argument #1 does not match parameter
+   __inline__ __attribute__((always_inline)) __attribute__((device)) half_t __hfma(const half_t x, const half_t y,
+                                                                            ^
+
+/workspace/cotcodec/.venv/lib/python3.12/site-packages/tilelang/3rdparty/../src/tl_templates/cuda/common.h(1106): error: no instance of overloaded function "__hfma" matches the argument list
+            argument types are: (__half, __half, __half)
+    return __half2{__hfma(a.x, b.x, c.x), __hfma(a.y, b.y, c.y)};
+                                          ^
+/workspace/cotcodec/.venv/lib/python3.12/site-packages/tilelang/3rdparty/../src/tl_templates/cuda/common.h(203): note #3326-D: function "__hfma(cutlass::bfloat16_t, cutlass::bfloat16_t, cutlass::bfloat16_t)" does not match because argument #1 does not match parameter
+   __inline__ __attribute__((always_inline)) __attribute__((device)) bfloat16_t __hfma(const bfloat16_t x, const bfloat16_t y,
+                                                                                ^
+/workspace/cotcodec/.venv/lib/python3.12/site-packages/tilelang/3rdparty/../src/tl_templates/cuda/common.h(197): note #3326-D: function "__hfma(cutlass::half_t, cutlass::half_t, cutlass::half_t)" does not match because argument #1 does not match parameter
+   __inline__ __attribute__((always_inline)) __attribute__((device)) half_t __hfma(const half_t x, const half_t y,
+                                                                            ^
+
+5 errors detected in the compilation of "/tmp/tmpdrphkk9m.cu".
+tilelang.jit compile cuda (no GPU) (1.8s usr1_os=0x70de345be7e0 same=False term_same=False cgt=1 ign=0 blk_main=0 threads=64 threads_blocking_usr1=0 py_getsignal=ours
+    FAILED RuntimeError: Compilation Failed! ['/usr/local/cuda/bin/nvcc', '-std=c++20', '-w', '-Xcudafe', '--diag_suppress=177', '-lineinfo', '--shared', '/tmp/tmpdrphkk9m.cu', '-L/usr/local/cuda/targets/x86_64-linux/lib', '-L/usr/local/cuda/targets/x86_64-linux/lib/stubs', '-L/usr/local/cuda/lib64', '-
+self-sent SIGUSR1 seen by python handler: False

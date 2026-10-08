@@ -1,0 +1,23 @@
+start=2026-10-08T09:43:48Z image=sha256:5281ac01b43cbc7d3b155d82f6f4ab160cbebb6066e2a3ea73fc30fe0b830a4b
+....................................................                     [100%]
+=============================== warnings summary ===============================
+../../pylib/_pytest/config/__init__.py:1464
+  /pylib/_pytest/config/__init__.py:1464: PytestConfigWarning: Unknown config option: asyncio_mode
+  
+    self._warn_or_fail_if_strict(f"Unknown config option: {key}\n")
+
+tests/test_dense_headroom_v2_signals.py::test_poll_restores_a_replaced_handler_and_records_it
+  /pylib/_pytest/unraisableexception.py:67: PytestUnraisableExceptionWarning: Exception ignored in: None
+  
+  Traceback (most recent call last):
+    File "/pylib/_pytest/capture.py", line 547, in suspend
+      os.dup2(self.targetfd_save, self.targetfd)
+  OSError: Signal 15 ignored due to race condition
+  
+  
+    warnings.warn(pytest.PytestUnraisableExceptionWarning(msg))
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+52 passed, 2 warnings in 120.16s (0:02:00)
+exit=0
+end=2026-10-08T09:45:50Z

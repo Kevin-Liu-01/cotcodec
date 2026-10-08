@@ -1,0 +1,608 @@
+{
+ "alternatives": {
+  "kblock_fp32": {
+   "bitwise_equal_to": [
+    "fp32",
+    "tf32_rne",
+    "tf32_rz"
+   ],
+   "calls": 1,
+   "correct_under": [
+    "strict",
+    "tf32_rne",
+    "tf32_ext"
+   ],
+   "finite": true,
+   "l2": 0.0,
+   "linf": 0.0,
+   "scores": {
+    "strict": {
+     "e_over_T": 0.0,
+     "floor_binds_block": true,
+     "floor_binds_inf": true,
+     "rho_block": 0.0,
+     "rho_block_nofloor": 0.0,
+     "rho_inf": 0.0,
+     "rho_inf_nofloor": 0.0
+    },
+    "tf32_ext": {
+     "e_over_T": 0.0,
+     "floor_binds_block": true,
+     "floor_binds_inf": true,
+     "rho_block": 0.0,
+     "rho_block_nofloor": 0.0,
+     "rho_inf": 0.0,
+     "rho_inf_nofloor": 0.0
+    },
+    "tf32_rne": {
+     "e_over_T": 0.0,
+     "floor_binds_block": true,
+     "floor_binds_inf": true,
+     "rho_block": 0.0,
+     "rho_block_nofloor": 0.0,
+     "rho_inf": 0.0,
+     "rho_inf_nofloor": 0.0
+    }
+   }
+  },
+  "kblock_tf32_rne": {
+   "bitwise_equal_to": [
+    "fp32",
+    "tf32_rne",
+    "tf32_rz"
+   ],
+   "calls": 1,
+   "correct_under": [
+    "tf32_rne",
+    "tf32_ext"
+   ],
+   "finite": true,
+   "l2": 0.0,
+   "linf": 0.0,
+   "scores": {
+    "strict": {
+     "e_over_T": 0.0,
+     "floor_binds_block": true,
+     "floor_binds_inf": true,
+     "rho_block": 0.0,
+     "rho_block_nofloor": 0.0,
+     "rho_inf": 0.0,
+     "rho_inf_nofloor": 0.0
+    },
+    "tf32_ext": {
+     "e_over_T": 0.0,
+     "floor_binds_block": true,
+     "floor_binds_inf": true,
+     "rho_block": 0.0,
+     "rho_block_nofloor": 0.0,
+     "rho_inf": 0.0,
+     "rho_inf_nofloor": 0.0
+    },
+    "tf32_rne": {
+     "e_over_T": 0.0,
+     "floor_binds_block": true,
+     "floor_binds_inf": true,
+     "rho_block": 0.0,
+     "rho_block_nofloor": 0.0,
+     "rho_inf": 0.0,
+     "rho_inf_nofloor": 0.0
+    }
+   }
+  },
+  "kblock_tf32_rz": {
+   "bitwise_equal_to": [
+    "fp32",
+    "tf32_rne",
+    "tf32_rz"
+   ],
+   "calls": 1,
+   "correct_under": [
+    "tf32_ext"
+   ],
+   "finite": true,
+   "l2": 0.0,
+   "linf": 0.0,
+   "scores": {
+    "strict": {
+     "e_over_T": 0.0,
+     "floor_binds_block": true,
+     "floor_binds_inf": true,
+     "rho_block": 0.0,
+     "rho_block_nofloor": 0.0,
+     "rho_inf": 0.0,
+     "rho_inf_nofloor": 0.0
+    },
+    "tf32_ext": {
+     "e_over_T": 0.0,
+     "floor_binds_block": true,
+     "floor_binds_inf": true,
+     "rho_block": 0.0,
+     "rho_block_nofloor": 0.0,
+     "rho_inf": 0.0,
+     "rho_inf_nofloor": 0.0
+    },
+    "tf32_rne": {
+     "e_over_T": 0.0,
+     "floor_binds_block": true,
+     "floor_binds_inf": true,
+     "rho_block": 0.0,
+     "rho_block_nofloor": 0.0,
+     "rho_inf": 0.0,
+     "rho_inf_nofloor": 0.0
+    }
+   }
+  },
+  "tf32_sr_s101": {
+   "bitwise_equal_to": [
+    "fp32",
+    "tf32_rne",
+    "tf32_rz"
+   ],
+   "calls": 1,
+   "correct_under": [
+    "tf32_rne",
+    "tf32_ext"
+   ],
+   "finite": true,
+   "l2": 0.0,
+   "linf": 0.0,
+   "scores": {
+    "strict": {
+     "e_over_T": 0.0,
+     "floor_binds_block": true,
+     "floor_binds_inf": true,
+     "rho_block": 0.0,
+     "rho_block_nofloor": 0.0,
+     "rho_inf": 0.0,
+     "rho_inf_nofloor": 0.0
+    },
+    "tf32_ext": {
+     "e_over_T": 0.0,
+     "floor_binds_block": true,
+     "floor_binds_inf": true,
+     "rho_block": 0.0,
+     "rho_block_nofloor": 0.0,
+     "rho_inf": 0.0,
+     "rho_inf_nofloor": 0.0
+    },
+    "tf32_rne": {
+     "e_over_T": 0.0,
+     "floor_binds_block": true,
+     "floor_binds_inf": true,
+     "rho_block": 0.0,
+     "rho_block_nofloor": 0.0,
+     "rho_inf": 0.0,
+     "rho_inf_nofloor": 0.0
+    }
+   }
+  },
+  "tf32_sr_s102": {
+   "bitwise_equal_to": [
+    "fp32",
+    "tf32_rne",
+    "tf32_rz"
+   ],
+   "calls": 1,
+   "correct_under": [
+    "tf32_rne",
+    "tf32_ext"
+   ],
+   "finite": true,
+   "l2": 0.0,
+   "linf": 0.0,
+   "scores": {
+    "strict": {
+     "e_over_T": 0.0,
+     "floor_binds_block": true,
+     "floor_binds_inf": true,
+     "rho_block": 0.0,
+     "rho_block_nofloor": 0.0,
+     "rho_inf": 0.0,
+     "rho_inf_nofloor": 0.0
+    },
+    "tf32_ext": {
+     "e_over_T": 0.0,
+     "floor_binds_block": true,
+     "floor_binds_inf": true,
+     "rho_block": 0.0,
+     "rho_block_nofloor": 0.0,
+     "rho_inf": 0.0,
+     "rho_inf_nofloor": 0.0
+    },
+    "tf32_rne": {
+     "e_over_T": 0.0,
+     "floor_binds_block": true,
+     "floor_binds_inf": true,
+     "rho_block": 0.0,
+     "rho_block_nofloor": 0.0,
+     "rho_inf": 0.0,
+     "rho_inf_nofloor": 0.0
+    }
+   }
+  },
+  "tf32_sr_s103": {
+   "bitwise_equal_to": [
+    "fp32",
+    "tf32_rne",
+    "tf32_rz"
+   ],
+   "calls": 1,
+   "correct_under": [
+    "tf32_rne",
+    "tf32_ext"
+   ],
+   "finite": true,
+   "l2": 0.0,
+   "linf": 0.0,
+   "scores": {
+    "strict": {
+     "e_over_T": 0.0,
+     "floor_binds_block": true,
+     "floor_binds_inf": true,
+     "rho_block": 0.0,
+     "rho_block_nofloor": 0.0,
+     "rho_inf": 0.0,
+     "rho_inf_nofloor": 0.0
+    },
+    "tf32_ext": {
+     "e_over_T": 0.0,
+     "floor_binds_block": true,
+     "floor_binds_inf": true,
+     "rho_block": 0.0,
+     "rho_block_nofloor": 0.0,
+     "rho_inf": 0.0,
+     "rho_inf_nofloor": 0.0
+    },
+    "tf32_rne": {
+     "e_over_T": 0.0,
+     "floor_binds_block": true,
+     "floor_binds_inf": true,
+     "rho_block": 0.0,
+     "rho_block_nofloor": 0.0,
+     "rho_inf": 0.0,
+     "rho_inf_nofloor": 0.0
+    }
+   }
+  },
+  "tf32_sr_s104": {
+   "bitwise_equal_to": [
+    "fp32",
+    "tf32_rne",
+    "tf32_rz"
+   ],
+   "calls": 1,
+   "correct_under": [
+    "tf32_rne",
+    "tf32_ext"
+   ],
+   "finite": true,
+   "l2": 0.0,
+   "linf": 0.0,
+   "scores": {
+    "strict": {
+     "e_over_T": 0.0,
+     "floor_binds_block": true,
+     "floor_binds_inf": true,
+     "rho_block": 0.0,
+     "rho_block_nofloor": 0.0,
+     "rho_inf": 0.0,
+     "rho_inf_nofloor": 0.0
+    },
+    "tf32_ext": {
+     "e_over_T": 0.0,
+     "floor_binds_block": true,
+     "floor_binds_inf": true,
+     "rho_block": 0.0,
+     "rho_block_nofloor": 0.0,
+     "rho_inf": 0.0,
+     "rho_inf_nofloor": 0.0
+    },
+    "tf32_rne": {
+     "e_over_T": 0.0,
+     "floor_binds_block": true,
+     "floor_binds_inf": true,
+     "rho_block": 0.0,
+     "rho_block_nofloor": 0.0,
+     "rho_inf": 0.0,
+     "rho_inf_nofloor": 0.0
+    }
+   }
+  }
+ },
+ "batch": {
+  "evaluated": 8192,
+  "full": 8192
+ },
+ "channel": "A2",
+ "code_sha256": {
+  "alt_algorithms.py": "4a8224bda72d1ac49adcd0bb6a8affc2bc240786c8318716a085497f48d2d316",
+  "cpu_study.py": "8703a55d6f72656dd4b1f54ce09db0cb182ebf51e79718552d5fd19ac6376927",
+  "tf32emu.py": "fdbec3c1eaab3b16754ea01e65c18dc4b6652213af8983561b5a1c241fdcede0"
+ },
+ "config_id": "A2/ties/seed-4046",
+ "decoys": {
+  "gain_1e-2": {
+   "l2": 13989.57901958949,
+   "linf": 25.533750000000055,
+   "scores": {
+    "strict": {
+     "e_over_T": 10475.284715284737,
+     "floor_binds_block": true,
+     "floor_binds_inf": true,
+     "rho_block": 174463.5842748107,
+     "rho_block_nofloor": Infinity,
+     "rho_inf": 167772.16000000035,
+     "rho_inf_nofloor": Infinity
+    },
+    "tf32_ext": {
+     "e_over_T": 10475.284715284737,
+     "floor_binds_block": true,
+     "floor_binds_inf": true,
+     "rho_block": 174463.5842748107,
+     "rho_block_nofloor": Infinity,
+     "rho_inf": 167772.16000000035,
+     "rho_inf_nofloor": Infinity
+    },
+    "tf32_rne": {
+     "e_over_T": 10475.284715284737,
+     "floor_binds_block": true,
+     "floor_binds_inf": true,
+     "rho_block": 174463.5842748107,
+     "rho_block_nofloor": Infinity,
+     "rho_inf": 167772.16000000035,
+     "rho_inf_nofloor": Infinity
+    }
+   }
+  },
+  "gain_1e-3": {
+   "l2": 1398.9579019587939,
+   "linf": 2.5533749999995052,
+   "scores": {
+    "strict": {
+     "e_over_T": 1047.5284715282685,
+     "floor_binds_block": true,
+     "floor_binds_inf": true,
+     "rho_block": 17446.358427479136,
+     "rho_block_nofloor": Infinity,
+     "rho_inf": 16777.215999996748,
+     "rho_inf_nofloor": Infinity
+    },
+    "tf32_ext": {
+     "e_over_T": 1047.5284715282685,
+     "floor_binds_block": true,
+     "floor_binds_inf": true,
+     "rho_block": 17446.358427479136,
+     "rho_block_nofloor": Infinity,
+     "rho_inf": 16777.215999996748,
+     "rho_inf_nofloor": Infinity
+    },
+    "tf32_rne": {
+     "e_over_T": 1047.5284715282685,
+     "floor_binds_block": true,
+     "floor_binds_inf": true,
+     "rho_block": 17446.358427479136,
+     "rho_block_nofloor": Infinity,
+     "rho_inf": 16777.215999996748,
+     "rho_inf_nofloor": Infinity
+    }
+   }
+  },
+  "negation": {
+   "l2": 2797915.8039178955,
+   "linf": 5106.75,
+   "scores": {
+    "strict": {
+     "e_over_T": 2095056.9430569431,
+     "floor_binds_block": true,
+     "floor_binds_inf": true,
+     "rho_block": 34892716.8549621,
+     "rho_block_nofloor": Infinity,
+     "rho_inf": 33554432.0,
+     "rho_inf_nofloor": Infinity
+    },
+    "tf32_ext": {
+     "e_over_T": 2095056.9430569431,
+     "floor_binds_block": true,
+     "floor_binds_inf": true,
+     "rho_block": 34892716.8549621,
+     "rho_block_nofloor": Infinity,
+     "rho_inf": 33554432.0,
+     "rho_inf_nofloor": Infinity
+    },
+    "tf32_rne": {
+     "e_over_T": 2095056.9430569431,
+     "floor_binds_block": true,
+     "floor_binds_inf": true,
+     "rho_block": 34892716.8549621,
+     "rho_block_nofloor": Infinity,
+     "rho_inf": 33554432.0,
+     "rho_inf_nofloor": Infinity
+    }
+   }
+  },
+  "noise_1e-2": {
+   "l2": 13992.045434013502,
+   "linf": 27.005425367710473,
+   "scores": {
+    "strict": {
+     "e_over_T": 7150463.14369483,
+     "floor_binds_block": true,
+     "floor_binds_inf": true,
+     "rho_block": 173404.33407542057,
+     "rho_block_nofloor": Infinity,
+     "rho_inf": 177441.9560644081,
+     "rho_inf_nofloor": Infinity
+    },
+    "tf32_ext": {
+     "e_over_T": 7150463.14369483,
+     "floor_binds_block": true,
+     "floor_binds_inf": true,
+     "rho_block": 173404.33407542057,
+     "rho_block_nofloor": Infinity,
+     "rho_inf": 177441.9560644081,
+     "rho_inf_nofloor": Infinity
+    },
+    "tf32_rne": {
+     "e_over_T": 7150463.14369483,
+     "floor_binds_block": true,
+     "floor_binds_inf": true,
+     "rho_block": 173404.33407542057,
+     "rho_block_nofloor": Infinity,
+     "rho_inf": 177441.9560644081,
+     "rho_inf_nofloor": Infinity
+    }
+   }
+  },
+  "single_max_zeroed": {
+   "l2": 2553.375,
+   "linf": 2553.375,
+   "scores": {
+    "strict": {
+     "e_over_T": 1047528.4715284716,
+     "floor_binds_block": true,
+     "floor_binds_inf": true,
+     "rho_block": 1385781.7202304031,
+     "rho_block_nofloor": Infinity,
+     "rho_inf": 16777216.0,
+     "rho_inf_nofloor": Infinity
+    },
+    "tf32_ext": {
+     "e_over_T": 1047528.4715284716,
+     "floor_binds_block": true,
+     "floor_binds_inf": true,
+     "rho_block": 1385781.7202304031,
+     "rho_block_nofloor": Infinity,
+     "rho_inf": 16777216.0,
+     "rho_inf_nofloor": Infinity
+    },
+    "tf32_rne": {
+     "e_over_T": 1047528.4715284716,
+     "floor_binds_block": true,
+     "floor_binds_inf": true,
+     "rho_block": 1385781.7202304031,
+     "rho_block_nofloor": Infinity,
+     "rho_inf": 16777216.0,
+     "rho_inf_nofloor": Infinity
+    }
+   }
+  },
+  "tile_missing_1of64": {
+   "l2": 174973.1274948495,
+   "linf": 2236.46875,
+   "scores": {
+    "strict": {
+     "e_over_T": 1047380.2066605304,
+     "floor_binds_block": true,
+     "floor_binds_inf": true,
+     "rho_block": 17435166.504051622,
+     "rho_block_nofloor": Infinity,
+     "rho_inf": 14694950.524697704,
+     "rho_inf_nofloor": Infinity
+    },
+    "tf32_ext": {
+     "e_over_T": 1047380.2066605304,
+     "floor_binds_block": true,
+     "floor_binds_inf": true,
+     "rho_block": 17435166.504051622,
+     "rho_block_nofloor": Infinity,
+     "rho_inf": 14694950.524697704,
+     "rho_inf_nofloor": Infinity
+    },
+    "tf32_rne": {
+     "e_over_T": 1047380.2066605304,
+     "floor_binds_block": true,
+     "floor_binds_inf": true,
+     "rho_block": 17435166.504051622,
+     "rho_block_nofloor": Infinity,
+     "rho_inf": 14694950.524697704,
+     "rho_inf_nofloor": Infinity
+    }
+   }
+  },
+  "zeros": {
+   "l2": 1398957.9019589478,
+   "linf": 2553.375,
+   "scores": {
+    "strict": {
+     "e_over_T": 1047528.4715284716,
+     "floor_binds_block": true,
+     "floor_binds_inf": true,
+     "rho_block": 17446358.42748105,
+     "rho_block_nofloor": Infinity,
+     "rho_inf": 16777216.0,
+     "rho_inf_nofloor": Infinity
+    },
+    "tf32_ext": {
+     "e_over_T": 1047528.4715284716,
+     "floor_binds_block": true,
+     "floor_binds_inf": true,
+     "rho_block": 17446358.42748105,
+     "rho_block_nofloor": Infinity,
+     "rho_inf": 16777216.0,
+     "rho_inf_nofloor": Infinity
+    },
+    "tf32_rne": {
+     "e_over_T": 1047528.4715284716,
+     "floor_binds_block": true,
+     "floor_binds_inf": true,
+     "rho_block": 17446358.42748105,
+     "rho_block_nofloor": Infinity,
+     "rho_inf": 16777216.0,
+     "rho_inf_nofloor": Infinity
+    }
+   }
+  }
+ },
+ "env": {
+  "platform": "macOS-26.4-arm64-arm-64bit",
+  "threads": 6,
+  "torch": "2.11.0"
+ },
+ "guard": {
+  "hosts_s2": false,
+  "s1_half": "calibration",
+  "split_sha256": "b773f218f174e3bb8ab4fcde4f4e6318d870ef020e6b86bce807362c5292a0b2"
+ },
+ "oracle": {
+  "numel": 8388608,
+  "r_block_rms": 30912.894345927416,
+  "r_inf": 2553.375
+ },
+ "problem": "L1/18",
+ "problem_id": "L1/18_Matmul_with_transposed_both",
+ "schema": "q1-audit-metric-study/alt-draw/1",
+ "timings": {
+  "fp32": 2.13096022605896,
+  "kblock_fp32": 3.895364999771118,
+  "kblock_tf32_rne": 4.135125637054443,
+  "kblock_tf32_rz": 3.788525104522705,
+  "tf32_rne": 2.650846004486084,
+  "tf32_rz": 2.300482988357544,
+  "tf32_sr_s101": 2.8656058311462402,
+  "tf32_sr_s102": 2.6493470668792725,
+  "tf32_sr_s103": 2.381403923034668,
+  "tf32_sr_s104": 2.225472927093506,
+  "total": 40.201480865478516
+ },
+ "winograd_selftest_fp64_max_abs": {
+  "wino23": 8.881784197001252e-15,
+  "wino43": 7.849276784099857e-14
+ },
+ "yardstick": {
+  "fp32": {
+   "e_reg": 0.0,
+   "l2": 0.0,
+   "linf": 0.0
+  },
+  "tf32_rne": {
+   "e_reg": 0.0,
+   "l2": 0.0,
+   "linf": 0.0
+  },
+  "tf32_rz": {
+   "e_reg": 0.0,
+   "l2": 0.0,
+   "linf": 0.0
+  }
+ }
+}
