@@ -1,0 +1,53 @@
+{
+ "baselines": {
+  "failed": {},
+  "items": {
+   "saved": 178
+  },
+  "jobs": 33,
+  "saved": 33
+ },
+ "fit": {
+  "budget_tokens": 129024,
+  "image_cell_px": 32,
+  "images_dropped": 0,
+  "lines_dropped": 13507,
+  "max_estimated_tokens_after": 128997,
+  "max_estimated_tokens_before": 178075,
+  "not_fitting": [],
+  "packets_shortened": 16,
+  "text_tokens_per_byte": 0.55
+ },
+ "images_per_file": {
+  "0": 10,
+  "1": 276,
+  "2": 111,
+  "3": 19,
+  "4": 27,
+  "5": 32,
+  "6": 16,
+  "7": 14,
+  "20": 22
+ },
+ "items": 178,
+ "render": {
+  "dpi": 100,
+  "images_per_packet": 40,
+  "pages_per_file": 20
+ },
+ "schema": "q2m-audit-packet-v1",
+ "shards": [
+  {
+   "bytes": 486306133,
+   "items": 133,
+   "path": "packets-000.jsonl",
+   "sha256": "47d17b52f48279e876480dd476b5e5a6f5aa780b931342846db1e3b118fb37b9"
+  },
+  {
+   "bytes": 111140718,
+   "items": 45,
+   "path": "packets-001.jsonl",
+   "sha256": "f91104b4257ee2087c75494a12d9ba7415a48a2370fcbffbd247c4931de07585"
+  }
+ ]
+}

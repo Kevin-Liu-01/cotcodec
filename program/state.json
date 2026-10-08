@@ -269,7 +269,7 @@
       "doc": "program/questions/q2-calibrated-cua-instrument.md",
       "dossier_key": "S1-calibrated-cua-instrument",
       "status": "stage-0-running",
-      "next_action": "D40: q2-action-path-v1 is invalid (C2 job 768: chord_super_d failed 5/5 under L0-raw, predicted to pass; press-state loss verified real at the X event level). Build q2-action-path-v2 (prediction corrected and disclosed, C2 read as a reproduction test on a new order seed, renderer run-root parameter), review, freeze, then C2, C1, C3, A1-A6, the ladder on a quiet host, A4 and A7. The checker-mutation study (q2-evaluator-mutation-v1, a descriptive protocol under D35 and D38) is frozen (ledger row 11, 65bc2e2) and its confirm campaign's CPU stage A1 ran (branch ops/q2-mutation-confirm): K1 70/74 PASS, P1 raw 4/92 flips, 1,232 confirm mutants admitted and scored (888 evaluable). Next: the audit (submit_audit.sh with a fresh salt, the overlay and the open-weight rater within 3.0 GPU-h, the isolated Claude rating as one workflow session, collect, ingest, summarize), then the registered analysis; Kevin adjudicates the pool and does the human spot check (D9). Stage 1 must be rescoped (431.5 GPU-h as designed) and go through the gauntlet (D24).",
+      "next_action": "D40: q2-action-path-v1 is invalid (C2 job 768: chord_super_d failed 5/5 under L0-raw, predicted to pass; press-state loss verified real at the X event level). Build q2-action-path-v2 (prediction corrected and disclosed, C2 read as a reproduction test on a new order seed, renderer run-root parameter), review, freeze, then C2, C1, C3, A1-A6, the ladder on a quiet host, A4 and A7. The checker-mutation study (q2-evaluator-mutation-v1, a descriptive protocol under D35 and D38) is frozen (ledger row 11, 65bc2e2) and its confirm campaign's CPU stage A1 ran (branch ops/q2-mutation-confirm): K1 70/74 PASS, P1 raw 4/92 flips, 1,232 confirm mutants admitted and scored (888 evaluable). Its audit stage A2 ran (census of 178 items with every P1 flip, open-weight rater 178/178 rated in 0.365 GPU-h physical, isolated export ready). Next: the isolated Claude rating as one workflow session of rater agents only, collect, ingest, summarize, then the registered analysis; Kevin adjudicates the pool and does the human spot check (D9). Stage 1 must be rescoped (431.5 GPU-h as designed) and go through the gauntlet (D24).",
       "first_gpu_experiment": {
         "name": "Qwen3.5 ladder (as dossier-designed)",
         "measured_projection_gpu_hours": 431.5,
@@ -315,7 +315,25 @@
           "held_until_ingest": "~/cotcodec-runs/stage0/q2-evaluator-mutation/scratch/held-after-isolated-ingest-confirm-v1/ (digests in held/SHA256SUMS)",
           "gpu_hours": 0.0
         },
-        "status": "stage A1 complete; audit not started"
+        "status": "stage A2 complete (audit sample, packets, open-weight rater, isolated export); the isolated Claude rating not started",
+        "stage_a2": {
+          "audit_id": "confirm-audit-v1",
+          "evidence": "program/evidence/2026-10-08/q2-mutation-confirm/audit/README.md",
+          "jobs": [
+            "815 sample/baselines/packets (CPU)",
+            "816 overlay (refused, 1 s)",
+            "817 overlay",
+            "819 doctor (CPU)",
+            "823-824 open-weight rater"
+          ],
+          "salt_sha256": "194ee66ccc11f93c16bffdc7cf54d0b0f5398f35cbdb3541bb9d9d511c40451e",
+          "scope": "census, 178 items (134 real on 33 tasks: 36 fn_equiv, 5 fp_violation, 93 alt_gate; 4 p1_flip; 40 shams: 33 gold, 7 do-nothing); capacity 1,139; no fallback",
+          "packets": "2 shards: 133 items 47d17b52..., 45 items f91104b4...; 16 shortened, none over budget",
+          "overlay_image": "sha256:7d4595f98601d50f7393c447a1d0618d55cda1b7cf60e2d016ab5c6f47cc872e (capsule a8559f89...)",
+          "open_weight": "178/178 rated: 172 ok, 6 thinking_unfinished (unsure), 0 unrated; clean exits; calls held on the host (8c8db172..., 52ba6865...)",
+          "isolated_export": "178 items, manifest f9c91d57... outside the root; template 0e9d4eb6...",
+          "gpu_hours": 0.365
+        }
       }
     },
     {
@@ -357,13 +375,13 @@
     "Decide whether to purge the old host address and the internal corpus inventory from public git history (requires a force-push)",
     "Spot-check a sample of the Q2 checker-mutation audit as the human rater (decision D9)",
     "Moonshot (Kimi) account is suspended for insufficient balance; recharge it if a Kimi model should be a rater or reviewer (rotate the exposed key at the same time)",
-    "Q2 checker-mutation (q2-evaluator-mutation-v1, ninth draft, D35 and D38): D34 (i) fired after the one rater retry (dev kappa 0.066 under the registered ingest, 0.575 with the resumed harness's relay turn excepted), so the study is a pre-specified descriptive protocol (D35) implemented on stage0/q2-evaluator-mutation. The sixth review scored the eighth draft 80/100; D38 accepted its choices (census audit with seeded stratified fallback, gold shams for every audited task, the relay frame registered under D35's constraints, difference-first packets, the registered transcript entry and attachment types) and had its minor items fixed in the ninth draft (fallback at the largest budget that fits; a registered collector of every rating transcript; relay frames checked across calls files and recorded verbatim; one workflow session with one fresh, answer-blind re-rate of relay-voided items, both results reported; concordant contradictions of every candidate kind to the pool; interrupted attempts answer only through a structured answer). Kevin's remaining items (prereg section 17): adjudicate the pool (about 16 items, 10-40, 0.5-3.5 h; if a resume brings a different relay frame, every relay-voided item joins it, 113 against 24 on the development analogue), the human spot check (about 35 items, D9), the outward actions, and the carried-over sign-offs (the D23/D25/D27 rater lineup with unfixed Claude sampling and public OSWorld files sent to the Claude model, P1 with reserve-split golds, the spec release, the D34 rules as implemented). The narrow re-check scored the ninth draft 90 (ready to freeze, no blocking defect); it was frozen on main at 65bc2e2 (ledger row 11), and the confirm campaign's CPU stage ran (K1 70/74 PASS, P1 raw 4/92, 1,232 mutants admitted, census preview 134 real items on 33 tasks); Kevin's items above follow the audit",
+    "Q2 checker-mutation (q2-evaluator-mutation-v1, ninth draft, D35 and D38): D34 (i) fired after the one rater retry (dev kappa 0.066 under the registered ingest, 0.575 with the resumed harness's relay turn excepted), so the study is a pre-specified descriptive protocol (D35) implemented on stage0/q2-evaluator-mutation. The sixth review scored the eighth draft 80/100; D38 accepted its choices (census audit with seeded stratified fallback, gold shams for every audited task, the relay frame registered under D35's constraints, difference-first packets, the registered transcript entry and attachment types) and had its minor items fixed in the ninth draft (fallback at the largest budget that fits; a registered collector of every rating transcript; relay frames checked across calls files and recorded verbatim; one workflow session with one fresh, answer-blind re-rate of relay-voided items, both results reported; concordant contradictions of every candidate kind to the pool; interrupted attempts answer only through a structured answer). Kevin's remaining items (prereg section 17): adjudicate the pool (about 16 items, 10-40, 0.5-3.5 h; if a resume brings a different relay frame, every relay-voided item joins it, 113 against 24 on the development analogue), the human spot check (about 35 items, D9), the outward actions, and the carried-over sign-offs (the D23/D25/D27 rater lineup with unfixed Claude sampling and public OSWorld files sent to the Claude model, P1 with reserve-split golds, the spec release, the D34 rules as implemented). The narrow re-check scored the ninth draft 90 (ready to freeze, no blocking defect); it was frozen on main at 65bc2e2 (ledger row 11), and the confirm campaign's CPU stage ran (K1 70/74 PASS, P1 raw 4/92, 1,232 mutants admitted, census preview 134 real items on 33 tasks), and its audit stage A2 (178-item census, open-weight rater 178/178, isolated export); Kevin's items above follow the isolated Claude rating and the ingest",
     "The ANTHROPIC_API_KEY on this machine is invalid (HTTP 401); supply a valid key if the Claude rater and gauntlet reviews should use the API rather than the agent harness (D25)",
     "Decide whether to ask the KernelGYM authors for a licence: gate_b.py was rewritten from the spec after the review found a transliteration (stage0/q1-gates, never pushed); a licence would remove the residual risk",
     "Q1 after D41: Stage 0 as drafted is withdrawn (gauntlet wave 1 honest exit at 45; the TF32-admissible audit metric cannot separate correct TF32 matmul/conv outputs from destroyed ones; projected 20-25 GPU-h high under the safe execution policy). A CPU-only audit-metric study on stored non-evaluation data is running; its recommendation, a small S1-cal GPU pilot and any successor Stage 0 (new id, fresh gauntlet, D24) are yours to approve. Stage 1 also needs the R580 driver upgrade or risk acceptance",
     "Review the decisions taken on your behalf since the restart, D1-D41 in program/decisions.md; the recent ones are D28 (Q1 pilot exposure), D29 (upstream test code on GPUs), D30, D33, D39 and D40 (action path: guest-server restarts, freeze details, v1 invalid on C2 and its v2), D31, D37 and D41 (Q1 Stage 0 budget path and withdrawal), D32 and D36 (Q3 dense pre-check and its v2), D34, D35 and D38 (checker-mutation raters; the study became descriptive)"
   ],
-  "gpu_hours_spent_this_program": 4.028,
+  "gpu_hours_spent_this_program": 4.393,
   "frozen_registrations": [
     "q3-k1-localization-screen-v1",
     "q2-holo3-rerun-audit-v1-posthoc",
@@ -590,6 +608,20 @@
       ],
       "outcome": "K1 70/74 PASS; P1 raw 4/92; 1,289 planned, 1,232 admitted, 888 evaluable (444 outside probe cells); no save, scoring or infrastructure failure; no S1 candidate",
       "basis": "physical: CPU-only Slurm lane (D12), no GPU requested, no /dev/nvidia* in any receipt"
+    },
+    {
+      "experiment": "q2-evaluator-mutation-v1 confirm campaign stage A2 (audit census, overlay, open-weight rater; isolated export)",
+      "gpu_hours": 0.365,
+      "jobs": [
+        "815 confirm-audit-v1 sample, baselines, packets (CPU)",
+        "816 overlay build (refused by the extractor before any build, 1 s)",
+        "817 overlay build (43 s)",
+        "819 args and image-input doctor (CPU)",
+        "823 open-weight rater shard 000 (14 min 49 s)",
+        "824 open-weight rater shard 001 (6 min 21 s)"
+      ],
+      "outcome": "census 178 items (36 fn_equiv, 5 fp_violation, 93 alt_gate, 4 P1 flips, 40 shams); Qwen3.6-35B-A3B thinking on rated 178/178 (172 ok, 6 thinking_unfinished, 0 unrated), both jobs ended on their own (reason=completed, exit 0); 0.584 of the 3.0 GPU-h rater cap allocated in the ledger; isolated export of 178 items ready for the Claude rating",
+      "basis": "physical (scontrol RunTime x 1 H100: 1 + 43 + 889 + 381 s = 1,314 s); rater 0.3528 of 3.0, overlay 0.0122 of 0.167"
     }
   ],
   "results": [

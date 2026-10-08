@@ -1,0 +1,109 @@
+{
+ "all": {
+  "call_seconds": {
+   "max": 149.5,
+   "median": 30.2,
+   "p90": 69.9
+  },
+  "calls": 178,
+  "calls_with_retry": 0,
+  "completion_tokens": {
+   "max": 8192,
+   "median": 901.5,
+   "p90": 4122,
+   "total": 277091
+  },
+  "http_status": {
+   "200": 178
+  },
+  "models_returned": {
+   "q2m-rater": 178
+  },
+  "outcomes": {
+   "ok": 172,
+   "thinking_unfinished": 6
+  },
+  "prompt_tokens": {
+   "max": 119294,
+   "median": 61898.5,
+   "total": 10826209
+  },
+  "stop_reasons": {
+   "length": 6,
+   "stop": 172
+  },
+  "unique_items": 178
+ },
+ "note": "aggregates over the held call records only (no item id, answer or reason)",
+ "schema": "q2m-confirm-open-weight-call-stats-v1",
+ "shards": {
+  "s000": {
+   "call_seconds": {
+    "max": 149.5,
+    "median": 30.6,
+    "p90": 71.4
+   },
+   "calls": 133,
+   "calls_with_retry": 0,
+   "completion_tokens": {
+    "max": 8192,
+    "median": 931,
+    "p90": 4122,
+    "total": 220720
+   },
+   "http_status": {
+    "200": 133
+   },
+   "models_returned": {
+    "q2m-rater": 133
+   },
+   "outcomes": {
+    "ok": 127,
+    "thinking_unfinished": 6
+   },
+   "prompt_tokens": {
+    "max": 119294,
+    "median": 64801,
+    "total": 8246774
+   },
+   "stop_reasons": {
+    "length": 6,
+    "stop": 127
+   },
+   "unique_items": 133
+  },
+  "s001": {
+   "call_seconds": {
+    "max": 99.2,
+    "median": 25.8,
+    "p90": 56.4
+   },
+   "calls": 45,
+   "calls_with_retry": 0,
+   "completion_tokens": {
+    "max": 5537,
+    "median": 736,
+    "p90": 2921,
+    "total": 56371
+   },
+   "http_status": {
+    "200": 45
+   },
+   "models_returned": {
+    "q2m-rater": 45
+   },
+   "outcomes": {
+    "ok": 45
+   },
+   "prompt_tokens": {
+    "max": 108185,
+    "median": 59015,
+    "total": 2579435
+   },
+   "stop_reasons": {
+    "stop": 45
+   },
+   "unique_items": 45
+  }
+ }
+}

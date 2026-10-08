@@ -1,0 +1,33 @@
+{
+ "argv": [
+  "vllm",
+  "serve",
+  "/model-cache/cotcodec-models/qwen3.6-35b-a3b",
+  "--served-model-name",
+  "q2m-rater",
+  "--host",
+  "127.0.0.1",
+  "--port",
+  "8000",
+  "--disable-uvicorn-access-log",
+  "--dtype",
+  "bfloat16",
+  "--seed",
+  "42",
+  "--tensor-parallel-size",
+  "1",
+  "--max-model-len",
+  "139264",
+  "--gpu-memory-utilization",
+  "0.95",
+  "--max-num-seqs",
+  "8",
+  "--no-enable-prefix-caching",
+  "--generation-config",
+  "vllm",
+  "--limit-mm-per-prompt",
+  "{\"image\":{\"count\":40,\"height\":2200,\"width\":1700},\"video\":0}"
+ ],
+ "pass": true,
+ "problems": []
+}
