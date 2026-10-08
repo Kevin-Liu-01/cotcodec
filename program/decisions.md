@@ -548,3 +548,25 @@ destroyed ones, or else to restrict the audit to problems and draws where it
 can; (iii) the per-item process overhead that dominates cost is designed
 for, not yet built; (iv) Q1 Stage 1 still needs the R580 driver upgrade or
 written risk acceptance.
+
+**D42. Q3 dense pre-check v2: the 4B attention backend, and a second timing
+job.** Building `q3-dense-headroom-precheck-v2` found the 4B lane's real
+bottleneck: torch routes Qwen3.5's head-dimension-256 attention to cuDNN,
+which builds a new graph for every new sequence shape (about 0.7 s of CPU per
+forward, GPU idle). Turning cuDNN attention off on that lane removes it, but
+the flash or memory-efficient backend that replaces it is not bit-equal, so it
+departs from D36 (iii), and the one timing job D36 allowed (Slurm 766) ran
+before the fix, so the 45-minute 4B limit is a projection. The rest of v2 is
+bit-equal to v1, shown on CPU and on two real 4B units. Decided: (i) D36 (iii)
+is amended for q3-dense-headroom-precheck-v2's 4B lane only: PyTorch's
+flash, memory-efficient or math attention replaces cuDNN; the change is
+disclosed, its effect is reported by the descriptive `attention_backend_check`,
+and no v1 4B number exists for it to depart from; the 0.6B lane stays gated
+on reproducing job 727 to 1e-6. (ii) A second timing job of at most 0.1 GPU-h,
+in a fresh timing run root and at the code head, times the fixed 4B path,
+starting with one `attention_backend_check` so the lane's exact start-up runs
+on the GPU; the 4B limit is then set by D36's rule from that measurement,
+not from the projection. The v2 cap stays 1.5 GPU-h. (iii) Decisions 16-21 of
+the v2 registration are accepted as amended by this decision, after a narrow
+re-check of the measured limits; the status line and the decisions' lead-in
+name D42 when frozen.
