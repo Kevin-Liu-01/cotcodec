@@ -4,19 +4,21 @@ Status: DRAFT, not frozen. The design is v1's (`q3-dense-headroom-precheck-v1`,
 frozen 2026-10-08 after D32), kept unchanged by program decision D36
 (`program/decisions.md`). Program decision D42 accepts the repairs and limits
 listed under "Changes from v1 (D36)" and design decisions 16-21 as amended by
-it, after a narrow re-check of the measured limits, which is still to be
-done. D42 amends D36 (iii) for the Qwen3.5-4B-Base lane (decision 18:
-PyTorch's flash, memory-efficient or math attention in place of cuDNN's, not
-bit-equal, its effect reported by the descriptive `attention_backend_check`)
-and authorised a second development timing job of the fixed 4B path, whose
-measurement (Slurm 810) sets the 4B limit by D36's rule (decisions 20 and
-21). No lane job of this experiment runs before the freeze; every lane job
-verifies this file's digest against its ledger row at start-up and refuses
-code whose SHA-256 differs from the table below. Both development timing jobs
-ran before the freeze (Compute): Slurm 766 on the 4B path as it was before
-the fix (cuDNN's attention on) and Slurm 810 on the fixed path (cuDNN's
-attention off). At the freeze this paragraph and the lead-in of the design
-decisions are rewritten to the frozen wording, naming D42 (Freeze procedure,
+it, after a narrow re-check of the measured limits. D42 amends D36 (iii) for
+the Qwen3.5-4B-Base lane (decision 18: PyTorch's flash, memory-efficient or
+math attention in place of cuDNN's, not bit-equal, its effect reported by the
+descriptive `attention_backend_check`) and authorised a second development
+timing job of the fixed 4B path, whose measurement (Slurm 810) sets the 4B
+limit by D36's rule (decisions 20 and 21). D44 closed the re-check: the 4B
+limit is 32 minutes, the largest of the estimates computed from that
+measurement, and decisions 16-21 are accepted as amended by D42 and D44. No
+lane job of this experiment runs before the freeze; every lane job verifies
+this file's digest against its ledger row at start-up and refuses code whose
+SHA-256 differs from the table below. Both development timing jobs ran before
+the freeze (Compute): Slurm 766 on the 4B path as it was before the fix
+(cuDNN's attention on) and Slurm 810 on the fixed path (cuDNN's attention
+off). At the freeze this paragraph and the lead-in of the design decisions
+are rewritten to the frozen wording, naming D42 and D44 (Freeze procedure,
 step 1).
 
 ## Purpose and claim level
@@ -104,12 +106,13 @@ caps changed.
    receipt statistics to 1e-6 as well as smoke 452 (0.5 points); otherwise
    the read is INVALID and the 4B lane does not run (filler and summariser).
    Why: D36 ties the repaired code path to the one valid v1 measurement.
-6. Limits and caps (D36, D42, decision 20). Both measured: 0.6B lane 12
-   minutes (0.20 GPU-h, from job 727's measured 278 s); 4B lane 30 minutes
-   (0.50 GPU-h, from the second timing job's measurement of the fixed path,
-   Slurm 810, by D36's rule; it replaces the 45 minutes, 0.75 GPU-h, that an
+6. Limits and caps (D36, D42, D44, decision 20). Both measured: 0.6B lane 12
+   minutes (0.20 GPU-h, from job 727's measured 278 s); 4B lane 32 minutes
+   (32/60 GPU-h, 0.5333, from the second timing job's measurement of the
+   fixed path, Slurm 810, by D36's rule at the largest of the three estimates
+   computed from it, D44; it replaces the 45 minutes, 0.75 GPU-h, that an
    earlier draft had projected from the first timing job's warm-shape units);
-   two timing jobs of 6 minutes (0.10 GPU-h each); total 0.90 GPU-h within
+   two timing jobs of 6 minutes (0.10 GPU-h each); total 0.933 GPU-h within
    D36's 1.5. v1 had 9 and 21 minutes (0.15 and 0.35 GPU-h, D26's 0.5) from
    estimates; the 4B lane needed several times its 21 minutes.
 7. The development timing jobs (D36, D42 (ii), decision 21; Compute). New in
@@ -139,9 +142,11 @@ caps changed.
     timing template (D42 (ii): a fresh run root), and this file. Files changed
     after the second timing job (Slurm 810, the image built from `87242fa`):
     only `harness/dense_headroom_v2_lanes.py` and the 4B template (the
-    measured 4B limit and cap, 30 minutes and 0.50 GPU-h, and their comments)
-    and this file; every other tabled file it ran has the digest tabled here.
-    Each timing job's code digests are in its receipt.
+    measured 4B limit and cap, first 30 minutes and 0.50 GPU-h from the
+    stage-mean scaling, then 32 minutes and 32/60 GPU-h from the largest of
+    the three estimates, D44, and their comments) and this file; every other
+    tabled file it ran has the digest tabled here. Each timing job's code
+    digests are in its receipt.
 
 ## Identity
 
@@ -168,7 +173,7 @@ v2's), doctor, filler and summariser by `q3-dense-headroom-precheck-v1`,
 |---|---|
 | scripts/run_dense_headroom_precheck_v2.py | e36e021b70834a2ede73ab7542ab8f5e45ace2c5c554d7e489d2a3a7bf8ae2ba |
 | harness/dense_headroom_v2.py | 49f340ac46c80fa312d10e29bb3eaa45d95e574b9a598f47379b0e1effa5b5e1 |
-| harness/dense_headroom_v2_lanes.py | d72b378b88637400727cbe4546df31f97d4019116da8030593c273d0b234de66 |
+| harness/dense_headroom_v2_lanes.py | 7b75d305489e36386d1a11b654764954a08d1dbb6158ec4ba4b38202cccc8881 |
 | harness/dense_headroom_torch_v2.py | 34963c32746c9d6b4384cb32b9ab37b1a4966b4586923ba43da036bdc6da0cbe |
 | scripts/run_dense_headroom_precheck_v2_doctor.py | 52011a26dd2b318465a5aaddb9fcaad2bd8ea8b98599377fa7584d52f547d697 |
 | scripts/dense_headroom_v2_signal_shim.py | 40be0760437253ca7290b358245d8ce61ff5c9886e930a833a3768765c620fa1 |
@@ -176,7 +181,7 @@ v2's), doctor, filler and summariser by `q3-dense-headroom-precheck-v1`,
 | scripts/summarise_dense_headroom_precheck_v2.py | cd5b6af45a93cf1b04faaffe1dfd72b82d9a7cb3ffcfed2e512de04a8ce2deae |
 | scripts/preregister.py | 21fc3ef0ed0958b1600ce742c3b4f8d557d0a298635acb20342710eb814b2c0d |
 | experiments/manifests/q3-dense-headroom-precheck-v2/q3-dense-headroom-v2-0p6b.yaml | bf28d0b75d13d4b0ea825b481f3c9f8d17026dae8ce0d24b910c4d7f178c4cc1 |
-| experiments/manifests/q3-dense-headroom-precheck-v2/q3-dense-headroom-v2-4b.yaml | 277c2db368a2286bce7ff077a2d18640224f876dd347899aecc9e578f001f922 |
+| experiments/manifests/q3-dense-headroom-precheck-v2/q3-dense-headroom-v2-4b.yaml | c34f4fdc5748edbb0c6b43e2eb4d1744d79ac074f6531fe193c2ad858cef267a |
 | experiments/manifests/q3-dense-headroom-precheck-v2/q3-dense-headroom-v2-timing-4b.yaml | 007b64f91a53eefcbadeaf0971a46701769210d7d1b34383a7f78f70af353c6c |
 | experiments/manifests/q3-dense-headroom-precheck-v2/q3-dense-headroom-v2-timing-2-4b.yaml | 3fc8874d0cdee6992aa937a00e8308d4d1b451c9625079314aaf6dca6b323093 |
 | harness/dense_headroom_data.py | ee78549e257631035aef0d52c5243f6bae969fd2c4f4a1e43bb8779bdf524003 |
@@ -538,17 +543,19 @@ answer.
 | Development timing job (D36; before the freeze; done, Slurm 766) | 1 x 6 | 0.10 |
 | Second development timing job (D42 (ii); before the freeze; done, Slurm 810) | 1 x 6 | 0.10 |
 | Qwen3-0.6B-Base lane | 1 x 12 | 0.20 |
-| Qwen3.5-4B-Base lane | 1 x 30 | 0.50 |
-| Total | | 0.90 |
+| Qwen3.5-4B-Base lane | 1 x 32 | 0.53 |
+| Total | | 0.93 |
 
-The total is the sum of the registered caps, D22's counting rule, within
-D36's v2 cap of 1.5 GPU-h (both timing jobs included, D42); with v1's 0.4189
-GPU-h the dense pre-check stays far below 8 GPU-h. The limits use D36's
-arithmetic: twice the measured full-lane evaluation (evaluation and
-statistics), plus start-up, plus the 3-minute SIGUSR1 lead, rounded up. Every
-input is measured: for the 0.6B lane by v1's job 727, for the 4B lane by the
-second timing job (Slurm 810), which ran the fixed 4B path at the code head
-on the GPU (D42 (ii); below).
+The 4B lane's cap is 32/60 GPU-h (0.5333) and the total 0.933 GPU-h; the
+table rounds them to two decimals. The total is the sum of the registered
+caps, D22's counting rule, within D36's v2 cap of 1.5 GPU-h (both timing jobs
+included, D42); with v1's 0.4189 GPU-h the dense pre-check stays far below 8
+GPU-h. The limits use D36's arithmetic: twice the measured full-lane
+evaluation (evaluation and statistics), plus start-up, plus the 3-minute
+SIGUSR1 lead, rounded up. Every input is measured: for the 0.6B lane by v1's
+job 727, for the 4B lane by the second timing job (Slurm 810), which ran the
+fixed 4B path at the code head on the GPU (D42 (ii); below). The 4B limit is
+the largest of the three estimates computed from that measurement (D44).
 
 - Qwen3-0.6B-Base: job 727 used 278 s from `job.env` to `termination.env`,
   of which 262 s were evaluation and statistics (stage walls 132.5, 52.6,
@@ -567,59 +574,65 @@ on the GPU (D42 (ii); below).
   tokens, 7.6 s), is 0.43, 0.42, 0.16 and 0.34 s for A-main, B-absent,
   C-literal and D-nohaystack. The subset's contexts are shorter than the
   lane's (3,723 against 6,607 tokens on average in A-main), so each stage's
-  mean is scaled up by the ratio of the lane's mean token length in that stage
-  to the measured units' (1.77, 1.58, 1.59 and 1, never below 1; time grown in
-  proportion to length over-predicts the measured long units: 0.78 s predicted
-  against 0.60 s measured at 8,310 tokens). Over the stages' 440, 280, 160 and
-  280 units that is 658 s; the one-off compiles are added at their observed
-  rate (2 in 159 units) over all 1,160 units at the larger one's extra cost,
-  106 s; with a 5 s statistics bound (job 727's took 1.2 s), 769 s. (A first
-  analysis pass, kept in the evidence, differed from this one in two ways: it
-  fitted the two compiles into the per-stage figures, and it scaled to the
-  lane's lengths by a per-stage least-squares line in tokens (the larger of
-  the line at the lane's mean length and the stage's mean) instead of in
-  proportion to length. The measured units of A-main and C-literal span only
-  3,600 to 3,950 tokens, so C-literal's compile set that stage's slope, which
-  extrapolated 7.7 s per unit against 0.16 s measured: 73 minutes for the
-  lane, over D36's cap. The estimator above was chosen after that pass came
-  out over the cap, and its proportional scaling crosses a minute boundary of
-  D36's rule: the first pass's line fit with the compiles treated as above
-  (left out of the fits and added back as the same 106 s) gives 678 s instead
-  of 658 s for the stages and 27.62 instead of 26.95 minutes before rounding
-  up, so 31 minutes, not 30. The increase is all A-main's, which has no
-  compile (55 s more; the line gives B-absent and C-literal 35 s less): its
-  measured units span only 211 tokens (3,614 to 3,825), over which the line's
-  slope is 0.16 ms per token, 3.3 times B-absent's 0.048 ms per token over
-  3,551 to 8,313 tokens, and it gives 0.90 s per A-main unit against
-  proportional scaling's 0.77 s. Taking the larger of the two estimates in
-  every stage would give 32 minutes. Proportional scaling is registered
-  because on B-absent, the only stage with measured units at the lane's long
-  contexts, it over-predicts them: 0.78 s against 0.60 s measured at 8,310
-  tokens (under cProfile, which only slows them), where prefill went from
-  0.116 to 0.247 s and the whole unit from 0.38 to 0.60 s for 2.2 times the
-  tokens. At each of these estimates the lane's first job, run at that speed,
-  ends in about 14 to 15 of its 27 useful minutes; the minute boundaries lie
-  inside D36's doubled margin.) Start-up
-  is everything before the first unit, 79 s: 2 s from Slurm's start to
-  `job.env`, 9.7 s of the job outside the workload process (container creation
-  and the epilogue, so this over-counts) and 67.0 s in the process: 19.6 s to
-  the loaded model (start-up checks, imports, derivation 4.6 s, model load 7.1
-  s) and the lane's `attention_backend_check`, 47.4 s, which carries the
-  first-use compiles. 2 x 769 + 79 s is 27 minutes rounded up; with the
-  3-minute lead, 30 minutes. The lane's first job finishes its 1,160 units
-  inside its 27 useful minutes if it averages at most about 1.3 s per unit
-  (after the 79 s start-up and the 5 s statistics bound), against the 0.16 to
-  0.43 s measured. The first timing job (Slurm 766) had timed the path before
-  the fix at 3.6 to 4.1 s per cold unit, at which the lane would need about 75
-  minutes; an earlier draft set 45 minutes from a doubled projection of its
-  warm-shape units, which D42 (ii) replaced with this measurement.
+  mean is carried to the lane's mean length in that stage. Three estimates
+  were computed (D44; `LARGE_LANE_ESTIMATES` in
+  `harness/dense_headroom_v2_lanes.py`), each over the stages' 440, 280, 160
+  and 280 units, with the one-off compiles added at their observed rate (2 in
+  159 units) over all 1,160 units at the larger one's extra cost, 106 s, and a
+  5 s statistics bound (job 727's took 1.2 s). Stage-mean scaling: each
+  stage's mean scaled up by the ratio of the lane's mean token length in that
+  stage to the measured units' (1.77, 1.58, 1.59 and 1, never below 1), 0.77,
+  0.66, 0.25 and 0.34 s per unit, 658 s over the stages and 769 s of
+  evaluation and statistics: 30 minutes by D36's rule. Line fit: per stage, a
+  least-squares line in tokens through the same units, at the lane's mean
+  length and never below the stage's mean, 0.90, 0.54, 0.24 and 0.34 s per
+  unit, 678 s and 789 s: 31 minutes. The larger of the two in every stage:
+  0.90, 0.66, 0.25 and 0.34 s per unit, 713 s and 824 s: 32 minutes. The 4B
+  limit is the largest, 32 minutes (D44), so D36's "at least twice the
+  measured time plus start-up" holds under each of the three. (The stage-mean
+  scaling was chosen after a first analysis pass, kept in the evidence, came
+  out over D36's cap. That pass differed from it in two ways: it fitted the
+  two compiles into the per-stage figures, and it scaled to the lane's lengths
+  by the line (the larger of the line at the lane's mean length and the
+  stage's mean) instead of in proportion to length. The measured units of
+  A-main and C-literal span only 3,600 to 3,950 tokens, so C-literal's compile
+  set that stage's slope, which extrapolated 7.7 s per unit against 0.16 s
+  measured: 73 minutes for the lane, over D36's cap. With the compiles treated
+  as above (left out of the fits and added back as the same 106 s), the line
+  gives 678 s instead of 658 s for the stages and 27.62 instead of 26.95
+  minutes before rounding up, so 31 minutes, not 30. The increase is all
+  A-main's, which has no compile (55 s more; the line gives B-absent and
+  C-literal 35 s less): its measured units span only 211 tokens (3,614 to
+  3,825), over which the line's slope is 0.16 ms per token, 3.3 times
+  B-absent's 0.048 ms per token over 3,551 to 8,313 tokens, and it gives 0.90
+  s per A-main unit against proportional scaling's 0.77 s. On B-absent, the
+  only stage with measured units at the lane's long contexts, proportional
+  scaling over-predicts them: 0.78 s against 0.60 s measured at 8,310 tokens
+  (under cProfile, which only slows them), where prefill went from 0.116 to
+  0.247 s and the whole unit from 0.38 to 0.60 s for 2.2 times the tokens. At
+  each of the three estimates the lane's first job, run at that speed, ends in
+  about 14 to 15 of its 29 useful minutes.) Start-up is everything before the
+  first unit, 79 s: 2 s from Slurm's start to `job.env`, 9.7 s of the job
+  outside the workload process (container creation and the epilogue, so this
+  over-counts) and 67.0 s in the process: 19.6 s to the loaded model (start-up
+  checks, imports, derivation 4.6 s, model load 7.1 s) and the lane's
+  `attention_backend_check`, 47.4 s, which carries the first-use compiles. 2 x
+  824 + 79 s is 29 minutes rounded up; with the 3-minute lead, 32 minutes (2 x
+  769 + 79 s and 2 x 789 + 79 s give 27 and 28 minutes, so 30 and 31). The
+  lane's first job finishes its 1,160 units inside its 29 useful minutes if it
+  averages at most about 1.4 s per unit (after the 79 s start-up and the 5 s
+  statistics bound), against the 0.16 to 0.43 s measured. The first timing job
+  (Slurm 766) had timed the path before the fix at 3.6 to 4.1 s per cold unit,
+  at which the lane would need about 75 minutes; an earlier draft set 45
+  minutes from a doubled projection of its warm-shape units, which D42 (ii)
+  replaced with this measurement.
 
 Slurm sends SIGUSR1 three minutes before a job's limit. In v2 the signal is
 honoured at the next chunk boundary whatever the libraries did to the
 process's signal handlers (decision 17); the job then saves its completed
 chunks, writes `receipt-interrupted.json` and the marker, and exits 75. In the
 statistics phase it is not checked (as in v1). A job's useful time is its
-limit minus three minutes: 9 and 27 minutes for the two lanes' first
+limit minus three minutes: 9 and 29 minutes for the two lanes' first
 jobs, each covering twice the measured evaluation time plus start-up.
 
 Every job of a lane counts against that lane's own minutes: its first job, a
@@ -757,7 +770,7 @@ three-minute lead; in Slurm 766 it came 8 s early) and was answered at the
 next chunk boundary: marker
 `trigger=SIGUSR1`, exit 75, `signal_USR1_checkpoint_confirmed`, the timing
 receipt bound to job 810 from `job.env`. The 4B limit above is set from this
-job.
+job, at the largest of the estimates computed from it (D44).
 
 ## Infrastructure failures and exclusions
 
@@ -818,16 +831,21 @@ INVALID.
    decision: it amends D36 (iii) for the 4B lane, authorises a timing job of
    the fixed path (Slurm 810, whose measurement set the 4B limit by D36's rule,
    so D36's rule for the limit stands), and accepts decisions 16-21 as amended by it
-   after a narrow re-check of the measured limits. Before step 2 the status
-   paragraph at the top of this file is rewritten to the frozen wording
-   (frozen in the ledger; decisions accepted in D42, which amends D36 (iii) for
-   the 4B lane; the 4B limit measured by the second timing job), and so is the
-   lead-in of the design decisions (decisions 16-21 accepted in D42, as
-   amended by it), because a frozen file cannot be edited. In frozen mode
+   after a narrow re-check of the measured limits. D44 closed that re-check:
+   it sets the 4B limit at 32 minutes, the largest of the estimates computed
+   from Slurm 810's measurement (decision 20), and accepts decisions 16-21 as
+   amended by D42 and D44. Before step 2 the status paragraph at the top of
+   this file is rewritten to the frozen wording (frozen in the ledger;
+   decisions accepted in D42 and D44; D42 amends D36 (iii) for the 4B lane;
+   the 4B limit measured by the second timing job and set at the largest
+   estimate in D44), and so is the lead-in of the design decisions (decisions
+   16-21 accepted in D42 and D44, as amended by them), because a frozen file
+   cannot be edited: both name D42 and D44. In frozen mode
    `tests/test_dense_headroom_v2_prereg.py` refuses a file that still holds
-   draft wording, or whose status paragraph and lead-in do not name a
-   decision in `program/decisions.md` that names this experiment and amends
-   D36 (iii). The code table above is recomputed from the final code;
+   draft wording, or whose status paragraph and lead-in do not both name D42
+   and D44, decisions in `program/decisions.md` that name this experiment
+   (D42 amends D36 (iii); D44 sets the 4B limit at 32 minutes). The code
+   table above is recomputed from the final code;
    `tests/test_dense_headroom_v2_prereg.py` binds it to the working tree.
 2. This file is frozen with
    `uv run python scripts/preregister.py freeze q3-dense-headroom-precheck-v2 program/preregistrations/q3-dense-headroom-precheck-v2.md`
@@ -857,12 +875,15 @@ INVALID.
 
 Each states the choice and why. Decisions 1-15 are v1's, accepted in D32
 (`program/decisions.md`; 1, 10, 12 and 13 were amended there and are
-stated as amended), carried unchanged except decision 12's caps (D36).
+stated as amended), carried unchanged except decision 12's caps (D36, D44).
 Decisions 16-21 are v2's (D36). D42 accepts them as amended by it, after a
-narrow re-check of the measured limits that is still to be done: decision
-18's switch departs from D36 (iii) on the 4B lane, which D42 (i) amends, and
-decisions 20 and 21 set the 4B limit from the second timing job that D42 (ii)
-authorised (Freeze procedure, step 1).
+narrow re-check of the measured limits: decision 18's switch departs from D36
+(iii) on the 4B lane, which D42 (i) amends, and decisions 20 and 21 set the
+4B limit from the second timing job that D42 (ii) authorised. D44 closed the
+re-check, setting that limit at the largest of the estimates computed from
+the job (decision 20), and accepts decisions 16-21 as amended by D42 and D44.
+Rewriting this lead-in and the status paragraph to the frozen wording, naming
+D42 and D44, is still to be done (Freeze procedure, step 1).
 
 1. Two lanes, both run unless the 0.6B smoke reproduction fails or the 0.6B
    lane ends without a receipt (amended in D32). The 4B lane is filled and
@@ -942,13 +963,14 @@ authorised (Freeze procedure, step 1).
     A failure means the new code path does not reproduce K1 v1's measurement;
     the 4B lane runs the same path, so the combined read is INVALID and the 4B
     lane is not submitted.
-12. Caps 0.20 and 0.50 GPU-h (12 and 30 minutes on one GPU), with the two
-    timing jobs' 0.10 each summing to 0.90 GPU-h within D36's 1.5
+12. Caps 0.20 and 0.5333 GPU-h (12 and 32 minutes on one GPU; the 4B cap is
+    32/60 GPU-h, D44), with the two timing jobs' 0.10 each summing to 0.933
+    GPU-h within D36's 1.5
     (caps amended in D36; v1's 0.15 and 0.35 GPU-h summed to D26's 0.5, as
     amended in D32). SIGUSR1
     arrives three minutes before the limit and ends the job at the next chunk
     boundary, so the useful window is the limit minus three minutes: 9 and
-    27 minutes, each covering twice the measured evaluation time plus
+    29 minutes, each covering twice the measured evaluation time plus
     start-up (decision 20). Every job of a lane
     (re-runs and its one continuation included) is charged against the lane's
     own minutes from the run root's timestamps, gets at least 5 minutes (2
@@ -1085,32 +1107,36 @@ authorised (Freeze procedure, step 1).
     not cover the 4B lane's attention backend (decision 18): the 0.6B lane
     never switches it, and there `attention_backend_check`, which is
     descriptive, is the only check.
-20. Limits with D36's arithmetic, both lanes' measured. The 0.6B lane's
-    minutes come from job 727's measured 278 s (262 s of evaluation and
+20. Limits with D36's arithmetic, both lanes' measured; the 4B lane's at the
+    largest of the estimates computed from its measurement (D44). The 0.6B
+    lane's minutes come from job 727's measured 278 s (262 s of evaluation and
     statistics, 16 s of start-up), the 4B lane's from the second timing job's
-    measurement of the fixed path (Slurm 810, D42 (ii)): 769 s of evaluation
-    and statistics for the lane's 1,160 units (per-stage means of 159 measured
-    units, scaled to the lane's context lengths, with an allowance for one-off
-    compiles and a 5 s statistics bound) and 79 s of start-up with the lane's
-    `attention_backend_check` (Compute). Each limit is twice the measured
-    evaluation plus start-up plus the 3-minute SIGUSR1 lead, so a lane that
-    runs at its measured speed ends well inside its useful window and the one
-    continuation stays possible after an early interruption: 12 and 30
-    minutes. The 4B lane completes its first job if it averages at most about
-    1.3 s per unit against the 0.16 to 0.43 s measured by stage. Scaling up
-    is conservative against the unscaled means (428 s for the stages against
-    658 s): the registered subset's contexts are shorter than the lane's, and
-    time grown in proportion to length over-predicts the longest measured
-    units. It is not the largest estimate the measurement allows, and it was
-    chosen after a first analysis pass came out over D36's cap: that pass's
-    per-stage line fit, with the compiles treated the same way, gives 31
-    minutes, all of the increase from A-main, whose measured units span only
-    211 tokens (Compute). An earlier draft set 45 minutes from a doubled
+    measurement of the fixed path (Slurm 810, D42 (ii)): per-stage means of
+    159 measured units carried to the lane's context lengths, with an
+    allowance for one-off compiles and a 5 s statistics bound, and 79 s of
+    start-up with the lane's `attention_backend_check` (Compute). Each limit
+    is twice the measured evaluation plus start-up plus the 3-minute SIGUSR1
+    lead, so a lane that runs at its measured speed ends well inside its
+    useful window and the one continuation stays possible after an early
+    interruption: 12 and 32 minutes. Three estimates of the 4B lane's
+    evaluation and statistics were computed from the measurement: the stage
+    means scaled in proportion to length, 769 s (30 minutes); a per-stage line
+    in tokens, 789 s (31 minutes); and the larger of the two in every stage,
+    824 s (32 minutes). The proportional scaling was chosen after a first
+    analysis pass came out over D36's cap; the line fit gives 31 minutes, all
+    of the increase from A-main, whose measured units span only 211 tokens,
+    while on B-absent, the one stage measured at the lane's long contexts,
+    proportional scaling over-predicts (Compute). D44 sets the limit at the
+    largest, 32 minutes, so that it is at least twice the measured time plus
+    start-up (D36) under each of the three. The 4B lane completes its first
+    job if it averages at most about 1.4 s per unit against the 0.16 to 0.43 s
+    measured by stage. An earlier draft set 45 minutes from a doubled
     projection of the first timing job's warm-shape units because the fixed
     path had not been timed; D42 (ii) replaced it with this measurement, so
     D36's rule for the 4B limit holds unamended (D42 (ii) adds only the second
-    timing job). The caps sum with both timing jobs' to 0.90 GPU-h, within
-    D36's 1.5.
+    timing job, and D44 chooses among estimates of the same measurement). The
+    caps, 0.20 and 32/60 GPU-h, sum with both timing jobs' to 0.933 GPU-h,
+    within D36's 1.5.
 21. Two development timing jobs before the freeze (D36, D42 (ii)), each in
     its own run root with its own template and claim, with component timings
     and profiles so that they show where the time goes, a bit-for-bit

@@ -5,7 +5,9 @@ Registration `program/preregistrations/q3-dense-headroom-precheck-v2.md`:
 DRAFT, not frozen. Nothing here was frozen against the real ledger (SHA-256
 `1052d58b...` before and after every simulation) and nothing was pushed. GPU
 use: one job, Slurm 810, 162 s on one H100 (0.045 GPU-h physical). Every
-other host job was CPU only.
+other host job was CPU only. D44 (main `1a45703`) later set the 4B limit at
+32 minutes, the largest of the three estimates in "The 4B limit by D36's
+rule" (section "D44" at the end).
 
 ## What D42 asked for and what was done
 
@@ -17,7 +19,7 @@ other host job was CPU only.
 | v2 CPU doctor in that image | `DENSE_V2_DOCTOR_PASS`, 12/12 (srun CPU step, `--network none`, 186.6 s, ended 10:12:05) | `doctor/` |
 | ONE timing job, at most 0.1 GPU-h, 6 minutes, registered subset, code head, through the lane | filled once (claim slot 0), dry run (0.1 GPU-h, `--time=00:06:00`, `--signal=B:USR1@180`), `--test-only`, submitted once: Slurm 810 | `ops/`, `timing-810/` |
 | per-stage per-unit times (cold and warm), start-up, GPU utilisation, the check's output, physical GPU-h | below | `timing-810/analysis.txt`, `analysis.json`, `observe-810.txt`, receipt |
-| 4B minutes by D36's rule from this measurement; 0.6B stays 12 | 4B 30 minutes (0.50 GPU-h); caps with both timing jobs 0.90 of 1.5 | `harness/dense_headroom_v2_lanes.py`, registration Compute |
+| 4B minutes by D36's rule from this measurement; 0.6B stays 12 | 4B 30 minutes (0.50 GPU-h); caps with both timing jobs 0.90 of 1.5. After D44: 32 minutes (32/60 GPU-h), caps 0.933 | `harness/dense_headroom_v2_lanes.py`, registration Compute |
 
 ## Slurm 810
 
@@ -118,7 +120,9 @@ and 18 s (810) early, which would trim the useful window by well under the
 margin. The 0.6B lane stays 12 minutes (job 727). Caps: 0.10 + 0.10 (timing
 jobs) + 0.20 + 0.50 = **0.90 GPU-h** of D36's 1.5. The fixed path did not
 fail on the GPU and its rate fits well inside the cap, so the design is
-unchanged.
+unchanged. (Superseded by D44: the limit is the largest of the three
+estimates in the table below, 32 minutes, cap 32/60 GPU-h, useful window 29
+minutes, break-even 1.43 s per unit; caps 0.933 GPU-h.)
 
 `analysis-first-pass.txt` (and its script) is an earlier pass, kept as run,
 that fitted a per-stage line in tokens and used the larger of that line's
@@ -164,7 +168,8 @@ job, run at that speed, ends 14.1, 14.5 or 15.0 minutes after Slurm's start
 (start-up included), of its 27 useful minutes; the minute boundaries lie
 inside D36's doubled margin. The registration's Compute section and decision
 20 disclose this (Limit re-check, below); the 4B limit stays 30 minutes, the
-registered estimator's.
+registered estimator's. D44 then set it at 32 minutes, the largest of the
+three rows above (section "D44" at the end).
 
 ## Registration and code after the job
 
@@ -291,3 +296,52 @@ Checks at `ddb3d02`:
   - `status-only`: the frozen-mode test fails ("the frozen file still says
     'still to be done'"); `wrong-dec`: it fails ("the status does not name
     D42").
+
+## D44: the 4B limit at the largest estimate (32 minutes)
+
+D44 (`program/decisions.md`, main `1a45703`, merged into the branch at
+`cb9fc68`) closed D42's narrow re-check: the 4B lane's limit is 32 minutes,
+the largest of the estimates computed from Slurm 810's measurement (stage-mean
+scaling 30, line fit 31, the larger of the two in every stage 32; the first
+three rows of the table above), so D36's "at least twice the measured time
+plus start-up" holds under each of them; decisions 16-21 are accepted as
+amended by D42 and D44; the status paragraph and the design decisions'
+lead-in name D42 and D44 when the registration is frozen. No GPU job ran for
+it; nothing was frozen against the real ledger.
+
+What changed (`d44/`):
+
+- `harness/dense_headroom_v2_lanes.py`: `LARGE_LANE_STAGES` gains each
+  stage's line-fit seconds per unit (from `limit-recheck/estimator-sensitivity.json`);
+  `LARGE_LANE_ESTIMATES` holds all three estimates (seconds per unit by
+  stage, stages, evaluation and statistics, minutes: 769 s / 30, 789 s / 31,
+  824 s / 32); `LARGE_LANE_MINUTES` is their maximum, 32, and
+  `LARGE_LANE_LIMIT_ESTIMATE` names the estimate that sets it
+  (`per_stage_larger`). A lane's cap is now its minutes in GPU-hours exactly
+  (`minutes / 60`, no rounding): 0.2 for the 0.6B lane as before and 32/60
+  for the 4B lane, because a cap rounded to 0.5333 is below 1 x 32 / 60 =
+  0.53333 and the submitter refuses it (`allocation requests 0.53 GPU-hours,
+  above budget 0.5333`), as would the filler's budget check. The filler's cap
+  check is unchanged: with the exact cap it passes. Registered caps 0.2 +
+  32/60 + 2 x 0.1 = 0.933 GPU-h of D36's 1.5; useful window 29 minutes;
+  break-even 1.43 s per unit.
+- The 4B template: 32 minutes, `max_gpu_hours: 0.5333333333333333` (the
+  float 32/60), comment listing the three estimates.
+- The registration: the status paragraph (still DRAFT) and the design
+  decisions' lead-in now say that D44 closed the re-check and that the
+  frozen wording names D42 and D44; freeze step 1 says both name D42 and
+  D44 and that the frozen-mode test refuses a file whose status and lead-in
+  do not; Changes 6 and 10; Compute (table 1 x 32, 0.53, total 0.93; the
+  three estimates and D44's choice; useful windows 9 and 29 minutes; the
+  second job's result); decisions 12 and 20; the code table (only the lanes
+  module and the 4B template changed among the tabled files).
+- Tests: `tests/test_dense_headroom_v2_manifests.py` recomputes the three
+  estimates from the receipt and binds them, the module and
+  `estimator-sensitivity.json` (30, 31, 32; limit 32), checks the cap is
+  32/60 exactly and that a rounded cap is refused by the submitter and the
+  filler; `tests/test_dense_headroom_v2_prereg.py` requires the status and
+  the lead-in to name D42 (a decision naming this experiment and amending
+  D36 (iii)) and D44 (naming this experiment; its log entry gives 32
+  minutes) in draft and frozen mode alike, and in frozen mode no draft
+  wording, including "to the frozen wording" in either paragraph.
+
