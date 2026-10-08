@@ -184,9 +184,9 @@ excused trial, and a rung not qualifying with more than two; A7's restarts
 of every attempt per accessibility call of the counting attempts, capped at
 the plan's 39,036, on the exact one-sided 95% Poisson bound, under attempt 1
 only), C1-C4 with C2's reading of L0-raw trials and C3's clean-kill and
-equivalence rules (a mutant is equivalent only if every attempt's streams
-match the reference's on the cells each ran without an infrastructure
-failure, decision D39), each control reading an earlier attempt by its own
+equivalence rules (a mutant is equivalent only if the counting attempt's
+streams match the reference's on every cell and each earlier attempt's on
+the cells it ran without an infrastructure failure, decision D39), each control reading an earlier attempt by its own
 rule (main design decision 45), and the ladder's N* with the foreign-load
 abort and its rerun cap, a rung attempt without host snapshots not
 qualifying but counting its trials. It reads an attempt killed before its

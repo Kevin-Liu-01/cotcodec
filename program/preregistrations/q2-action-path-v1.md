@@ -457,7 +457,10 @@ file as a session without host snapshots. The analysis lists each one
 never leave a criterion without a verdict. Every trial of every attempt is
 reported, and a failed trial in an earlier attempt counts against its
 criterion exactly as if the attempt had counted: cancelling or rerunning a
-campaign never removes a failure. Like a counting attempt's trials, it
+campaign never removes a failure, with one registered exception: C2 judges
+its predicted cells on the counting attempt only (below), so an earlier
+attempt's pass of a predicted cell is reported, not counted (the predicted
+failures are deterministic mapping gaps). Like a counting attempt's trials, it
 counts on the cells the criterion judges (G for A1 and the ladder, the
 in-spec cells for A2, the stress entries for A3, every trial for A4 and A6)
 and not when the criterion excuses it, and an earlier attempt's excused
@@ -2096,8 +2099,8 @@ the freeze, with no scored data (code in `acceptance.py`, with
    such an attempt would have had no verdict, and the frozen analysis no
    repair (the concern of design decision 46, in a narrower window). Such
    a file now reads as missing: a receipt as no receipt, a cycle file as a
-   session not run (its trials and restarts are not read, as for a session
-   the kill cut short), a record file as a session without host snapshots.
+   session not run (its trials, restarts, C3 stream differences and C4
+   flags are not read, as for a session the kill cut short), a record file as a session without host snapshots.
    The analysis lists each one with its attempt (`unreadable`), and the
    attempt does not count, whatever its end state, so it may be rerun.
 3. **Status lines** (all three registrations; `tests/test_q2_prereg_inputs.py`).

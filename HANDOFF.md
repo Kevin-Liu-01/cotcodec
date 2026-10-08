@@ -33,8 +33,9 @@ the Q3 dense pre-check lanes (`ops/q3-dense`) are not yet merged.
   call cap) and the fixes after their reviews are done in `acceptance.py` and
   the text (main preregistration sections 18-22). D39 is applied too
   (section 23, `acceptance.py` at `280ccbf`): a C3 mutant is equivalent only
-  if every attempt's streams match the reference's on the cells each ran
-  without an infrastructure failure, an unparseable receipt, cycle or record
+  if the counting attempt's streams match the reference's on every cell and
+  each earlier attempt's on the cells it ran without an infrastructure
+  failure, an unparseable receipt, cycle or record
   file reads as missing and its attempt does not count, and the three status
   lines carry the frozen wording. Nothing is frozen. Next: merge to main,
   freeze v1, then `-inputs`, then `-executor`, and run the CPU-only
