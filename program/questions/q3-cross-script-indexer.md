@@ -65,3 +65,19 @@ against captured dense attention. Under 8 GPU-h, so no gauntlet for K1.
 - Dense cross-script baseline near floor: the shortfall is uninterpretable.
   Move to Qwen3.5-4B-Base at 3-5x cost, or stop.
 - Report seed SD before any parallel-loss arm runs.
+
+## Status after the K1 v2 gauntlet (D26)
+
+K1 v1 stopped at its smoke gate; K1 v2 ended at an honest gauntlet exit
+(score 45, triad 3 of 3 refuted): NEGATIVE needs 20 points of dense headroom
+against about 14 measured at 0.6B, a selector flat on both non-literal legs
+falls inside NEGATIVE, GO is confounded by literal anchors that Belebele keeps
+in same-language questions, and cross-script is collinear with unseen scripts
+and tokenizer fertility. Next is a dense-only headroom pre-check
+(`program/preregistrations/q3-dense-headroom-precheck-v1.md`, draft): the
+development partition of the K1 bundle only, Qwen3-0.6B-Base and
+Qwen3.5-4B-Base, at most 0.5 GPU-h. Its combined read says whether any K1 v3
+can register a NEGATIVE, on which base, and which controls it needs beyond
+D26's, which always apply (an entity-controlled question set, a non-literal
+floor, a seen-script cross-script condition): for example a null-calibrated
+statistic or anchor masking. Any K1 v3 takes a new id and runs the gauntlet.
