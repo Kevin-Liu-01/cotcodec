@@ -2379,3 +2379,43 @@ they say so.)
 - Decision for Kevin (pending in `program/state.json`): whether to open a K1
   v3 on Qwen3.5-4B-Base under a new id and the gauntlet. Nothing pushed; the
   orx node branches are local.
+
+## 2026-10-08 — Q2 Stage 1a draft revised after three pre-freeze reviews (branch `stage0/q2-stage1-rescope`, draft, not frozen)
+
+- Three adversarial reviews of `q2-stage1-rescoped-v1` at `392e0ce`
+  (identification and statistics; compute and feasibility; protocol) each
+  said "not ready to freeze": 21 blocking items, 19 distinct. All are fixed;
+  the registration's section 22 maps each to its change. CPU only; no host,
+  GPU or VM job.
+- Statistics: the X and session tests are now sign-flip tests, which hold
+  their size under session excesses of 0-16 pp (the draft's permutations
+  reached 0.157 and 0.224); X is named the mean squared per-task harness
+  effect, with X_c its task-specific part; every estimand is stated for the
+  realized sessions; DR2 uses Holm; P1-P5 are registered; DR5's M is frozen
+  at 0.13 (0.18 when DR1 drops 4B) on the estimator's own scale, the largest
+  value over six planning cells.
+- Compute: sizes run one after the other (two at once need 244 of 208 CPUs);
+  each GPU job waits for its VM job (`start_after_job_id` added to the docker
+  submitter); the slot now holds VM setup and OSWorld's 80 s of settle, now
+  matched for both harnesses; the K-rule counts the USR1 lead, launch and
+  re-queues; A1 caps follow a remainder rule (at most 478 minutes in every
+  branch). With the anchor running the base is 24 tasks, 32 without it.
+- Anchor: its own engine argv (`max_model_len` 32,768 and
+  `--trust-remote-code`; vLLM refuses 131,072 for OpenCUA-7B), a CPU
+  load-and-validate check after O1, size set from A0b (64 or 96 tasks at
+  N* >= 32), read on the longest completed prefix; ANC cap 52 minutes.
+- Protocol: unfilled slots read TBD so the freeze guard refuses; G0 item 1
+  is action-path v2's own verdict (C1-C4, A1-A6 on one attempt); the guard
+  warm-up and uncertified keysym exposure are in; agent-caused `IRError`s and
+  metric exceptions are no longer infrastructure loss; H-GA's sampling
+  override is disclosed; checker-correction counts fixed and seven tasks
+  flagged; DR5 now matches D47 (only GO leads to S1b).
+- Code built and tested on CPU: `harness/q2_stage1/` (estimators, records,
+  rules, plan, analysis), `scripts/render_q2_stage1_plan.py`, 51 new tests plus one for the submitter;
+  the operating characteristics re-run with the registered estimators
+  (`analysis/sim_s1a_v2.py`). The package sits outside `harness/q2/` so the
+  action-path suite's closed-world admission is untouched.
+- Waiting on Kevin: sign-offs on the 24-task floor (amends D47) and on DR1 and
+  DR5 replacing the question file's kill lines (pending in
+  `program/state.json`). The program must still admit O1, A0a and A0b and
+  decide on OpenCUA's remote code; the action-path acceptance must pass first.

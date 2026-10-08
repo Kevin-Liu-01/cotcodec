@@ -2,7 +2,7 @@
  "doctor": "Compute",
  "status": "FAIL",
  "pass_condition": "Real model loop, non-stub benchmark adapter, container smoke, Slurm dry-run and an executable orx pilot attested",
- "evidence": "S1a caps 7.967 GPU-h derived from the cost card with the frozen budget module (analysis/cost_s1a.json); no S1a image, manifest, dry-run, container smoke or orx node exists; the episode driver and engine bridge (G0) are not built; action-path v2 acceptance and N* pending",
+ "evidence": "S1a caps at most 7.967 GPU-h in every branch (remainder rule), derived from the cost card with the frozen budget module (analysis/cost_s1a.json, key s1a_v2), with VM setup, settle, USR1 lead, launch and re-queues priced and CPU feasibility checked against 208 host CPUs; the plan renderer, analysis and decision rules (harness/q2_stage1/, scripts/render_q2_stage1_plan.py) exist and are tested on CPU; no S1a image, manifest, dry-run, container smoke or orx node exists; the episode driver and engine bridge (G0) are not built; action-path v2 acceptance and N* pending",
  "remediation": "Build the G0 items; run A0a as an orx slurm-manifest node with dry-run, test-only and provenance attested",
  "evaluated_on": "2026-10-08",
  "evaluated_by": "wave-0 single synthesis owner (Claude agent); not an independent review"

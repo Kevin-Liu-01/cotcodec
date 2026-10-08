@@ -1,4 +1,4 @@
-"""Assemble bundle.json for the q2-stage1-rescoped gauntlet proposal (wave 0).
+"""Assemble bundle.json for the q2-stage1-rescoped gauntlet proposal (wave 0, revised).
 
 Hashes every artifact, binds the proposal by SHA-256 and computes evidence_root_sha256 exactly as
 scripts/research_direction_doctor.py does. Usage (from the bundle directory):
@@ -43,7 +43,7 @@ compute = {
     ),
     "real_model_loop": False,
     "real_model_loop_scope": (
-        "The S1a episode driver (harness/q2/stage1/) is a G0 item and does not exist yet."
+        "The S1a episode driver (harness/q2_stage1/) is a G0 item and does not exist yet."
     ),
     "benchmark_adapter": None,
     "note": art("compute/s1a-attestations-not-run.md"),
@@ -57,6 +57,8 @@ analyses = [
         "analysis/sim_s1a.json",
         "analysis/sim_signflip.py",
         "analysis/sim_signflip.json",
+        "analysis/sim_s1a_v2.py",
+        "analysis/sim_s1a_v2.json",
         "analysis/task_draw.py",
         "analysis/task-draw-K32.json",
         "analysis/task-draw-K24.json",

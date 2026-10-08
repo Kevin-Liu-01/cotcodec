@@ -1,7 +1,7 @@
 {
  "schema_version": 1,
  "proposal": "program/proposals/2026-10-08-q2-stage1-rescoped.md",
- "proposal_sha256": "9d8d52d600182d4c7798f111b2c204a0160b226ed02b8f4e7b8eb2268aad059a",
+ "proposal_sha256": "d36e8e1c64d4f8b635d0c8957c7189edaedbe42a237d354483df9cbce34f555d",
  "source_snapshots": [
   {
    "url": "https://arxiv.org/abs/2609.40284",
@@ -250,7 +250,7 @@
   "scope": "No S1a job has run (compute/s1a-attestations-not-run.md). The engine image named is the cost card's base image; the S1a overlay, manifest, dry-run, smoke and orx node do not exist.",
   "image_digest": "docker.io/vllm/vllm-openai@sha256:b18abb2df97b8f798e81862bd93f872ea18613372e2c3adc0cc2ac21e66ac12f",
   "real_model_loop": false,
-  "real_model_loop_scope": "The S1a episode driver (harness/q2/stage1/) is a G0 item and does not exist yet.",
+  "real_model_loop_scope": "The S1a episode driver (harness/q2_stage1/) is a G0 item and does not exist yet.",
   "benchmark_adapter": null,
   "note": {
    "artifact": "compute/s1a-attestations-not-run.md",
@@ -280,13 +280,13 @@
    "name": "Design",
    "status": "PASS",
    "artifact": "doctors/design.json",
-   "sha256": "2e7c3d396ec6cb658f86d9981ad0df03c7c99a7485d18b7b93b8bbef7c57312a"
+   "sha256": "14f0f5808ff5b84f202eb3af06d33d0853f495045a79282ae4096b2d85ab09f8"
   },
   {
    "name": "Compute",
    "status": "FAIL",
    "artifact": "doctors/compute.json",
-   "sha256": "844d599450330740bf01db8b52cef5574c4b5840bf460f951dc57835e40ecb01"
+   "sha256": "fd1bdb34d5e25c5092a83adbe78eff2df7b1d39bb29e03c542f18b3f61b54ebc"
   },
   {
    "name": "Safety",
@@ -300,11 +300,11 @@
  "synthesis_analyses": [
   {
    "artifact": "analysis/cost_s1a.py",
-   "sha256": "409532f71de775b00fdd0dc86c6ca8378e5ce9e7913ae340ef64e45c1422f4b9"
+   "sha256": "704cae408ff536ccb0c3f1415adad8f54037a4fcf3fc9d23684e40c71f7e4e35"
   },
   {
    "artifact": "analysis/cost_s1a.json",
-   "sha256": "f38d44a8accfbb81d26b8bb900a99578cf267751419c6ba68ce601bc76a6dc26"
+   "sha256": "843a123b2d8e98e34d9f20388edc132e673ba9c93b01645c7668c98d2d80e144"
   },
   {
    "artifact": "analysis/sim_s1a.py",
@@ -321,6 +321,14 @@
   {
    "artifact": "analysis/sim_signflip.json",
    "sha256": "b20f32a4357d66f21a197d2260ebcee6989ed77eaa66feaac7edc8c76cc03c04"
+  },
+  {
+   "artifact": "analysis/sim_s1a_v2.py",
+   "sha256": "19574910a06026b0b042aaf251e0988a72ed0484fa5833a8ca7597e3ba646a4c"
+  },
+  {
+   "artifact": "analysis/sim_s1a_v2.json",
+   "sha256": "e3c52beb5c6160e5e364ef307fb3c6353c226ffb7b762d9cc534f8fc86239d9e"
   },
   {
    "artifact": "analysis/task_draw.py",
@@ -348,12 +356,12 @@
   },
   {
    "artifact": "analysis/build_bundle.py",
-   "sha256": "6e7fd706162a259697dda43591385d1c11693d5f96e4fe3caf9a627d03b8f063"
+   "sha256": "e019bb686457916e970c7890905fb009e30ea92384d19080487dd909180f253f"
   }
  ],
  "direction_doctor_run": {
   "artifact": "doctors/direction-doctor-output.json",
   "sha256": "f36f25da4ce353f784008f255166d9a485c55b85be7a626bdda5ca1f1af89285"
  },
- "evidence_root_sha256": "dfd073f53e044a65b864a178df5a661e9e3bd726cefc70b3da8d655f81f0f957"
+ "evidence_root_sha256": "83c3b1c961614590dd6448391ee79a165f5f88d62c64acdcbd0231032a423d29"
 }
