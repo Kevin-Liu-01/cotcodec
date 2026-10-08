@@ -511,8 +511,8 @@ class Lane:
             "session": d["session"], "task_id": d["task_id"], "harness": d["harness"],
             "rerun": d["rerun"], "extension_block": d.get("extension_block"),
             "attempt": slot.attempt, "block": d["block"], "slot": slot.id, "score": None,
-            "steps": 0, "truncated_steps": 0, "ir_errors": 0, "uncertified_key_actions": 0,
-            "context_fallbacks": 0,
+            "steps": 0, "truncated_steps": 0, "truncated_no_tool_call_steps": 0, "ir_errors": 0,
+            "uncertified_key_actions": 0, "context_fallbacks": 0,
         }  # fmt: skip
 
     def loss(self, slot: Slot, kind: str, detail: str) -> dict[str, Any]:

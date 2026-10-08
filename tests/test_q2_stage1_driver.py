@@ -298,6 +298,7 @@ def test_ir_errors_truncation_and_exposure_are_counted(guest):
     truncated = {"text": "<think>loop", "finish_reason": "length", "completion_tokens": 2048}
     record, _, _ = run(guest, [bad_key, truncated, enter, DONE])
     assert record["ir_errors"] == 1 and record["truncated_steps"] == 1
+    assert record["truncated_no_tool_call_steps"] == 1  # "<think>loop" holds no tool call
     assert record["uncertified_key_actions"] == 1  # Control_L and s are outside {"Return"}
     assert record["status"] == "scored"
 

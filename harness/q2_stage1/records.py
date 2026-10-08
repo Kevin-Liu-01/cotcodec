@@ -56,6 +56,7 @@ REQUIRED = (
 COUNTS = (
     "steps",
     "truncated_steps",
+    "truncated_no_tool_call_steps",
     "ir_errors",
     "uncertified_key_actions",
     "context_fallbacks",
