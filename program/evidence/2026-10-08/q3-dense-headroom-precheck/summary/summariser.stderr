@@ -1,0 +1,1 @@
+FAIL: /home/kevin/cotcodec-runs/q3-dense-headroom-precheck-v1/qwen3-0.6b-base/727/dense-precheck/receipt.json: the receipt's Slurm job is not its job directory
