@@ -1,0 +1,13 @@
+task_id: dfac9ee8-9bc4-4cdc-b465-4a4bfcd2f397
+author: blind-model-author-v1
+requirements:
+  - req_id: R1
+    statement: The account anonym-x2024@outlook.com is removed from Thunderbird.
+    check_kind: config_value
+    observable: prefs.js mail.accountmanager.accounts no longer lists account1 (the IMAP account for anonym-x2024@outlook.com); no remaining server pref with userName "anonym-x2024@outlook.com" is referenced by an account.
+  - req_id: R2
+    statement: (implicit) Local Folders remain.
+    check_kind: config_value
+    observable: account2 (Local Folders) is still listed and its mail directory intact.
+allowed_variations:
+  - Whether the account's local message data is deleted from disk.

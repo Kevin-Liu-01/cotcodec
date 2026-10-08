@@ -1,0 +1,25 @@
+task_id: b21acd93-60fd-4127-8a43-2f5178f4a830
+author: blind-model-author-v1
+requirements:
+  - req_id: R0
+    statement: (implicit) The document is saved in place at /home/user/Desktop/CCHU9045_Course_Outline_2019-20.docx with its three paragraphs' text unchanged.
+    check_kind: file_exists
+    observable: File loads; the three paragraph texts equal the initial ones.
+  - req_id: R1
+    statement: The introduction (first paragraph) is single-spaced.
+    check_kind: paragraph_format
+    observable: Paragraph 0 line spacing == 1.0 (single).
+  - req_id: R2
+    statement: The body (second paragraph) is double-spaced.
+    check_kind: paragraph_format
+    observable: Paragraph 1 line spacing == 2.0 (line="480" auto).
+  - req_id: R3
+    statement: The conclusion (third paragraph) is one-and-a-half spaced.
+    check_kind: paragraph_format
+    observable: Paragraph 2 line spacing == 1.5 (line="360" auto).
+  - req_id: R4
+    statement: The essay's font size is 12 pt.
+    check_kind: text_run
+    observable: All non-empty runs have size 12 pt.
+allowed_variations:
+  - Font family and alignment.

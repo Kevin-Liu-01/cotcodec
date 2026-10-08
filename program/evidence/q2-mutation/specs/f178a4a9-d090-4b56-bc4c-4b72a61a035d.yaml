@@ -1,0 +1,14 @@
+task_id: f178a4a9-d090-4b56-bc4c-4b72a61a035d
+author: blind-model-author-v1
+requirements:
+  - req_id: R0
+    statement: (implicit) The document /home/user/Desktop/loa-one-time-submission-sealand.docx keeps its text.
+    check_kind: file_exists
+    observable: File loads; texts unchanged.
+  - req_id: R1
+    statement: Times New Roman is the default font.
+    check_kind: config_value
+    observable: Either the document's default paragraph style (Normal / Default Paragraph Style, currently Arial) or docDefaults uses Times New Roman so text without direct font formatting renders in Times New Roman; or the LibreOffice Writer Basic Fonts (Western) "Default" option in registrymodifications.xcu is Times New Roman.
+allowed_variations:
+  - '[AMBIGUOUS] "default font" can mean the document default (style) or the application default for new documents (Tools > Options > Writer > Basic Fonts). Only the document route is visible in the saved file; record which.'
+  - Existing text with direct font formatting may keep it.

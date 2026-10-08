@@ -1,0 +1,18 @@
+task_id: 7f35355e-02a6-45b5-b140-f0be698bcf85
+author: blind-model-author-v1
+requirements:
+  - req_id: R1
+    statement: The table in stock.xlsx is exported to a CSV file.
+    check_kind: file_exists
+    observable: A CSV export of the sheet exists (expected /home/user/Desktop/stock.csv) whose rows equal the sheet's 61 rows (header Symbol, Company, Stock Price, Revenue, Market Cap).
+  - req_id: R2
+    statement: The median Stock Price after filling the 12 empty Stock Price cells with the average of the 48 present prices (39.20125) is saved alone in result.txt.
+    check_kind: other
+    observable: result.txt (expected /home/user/Desktop/result.txt) contains only the number 25.27 (whitespace/newline tolerated; numeric equality within 1e-6).
+  - req_id: R3
+    statement: Code was written to compute it (as requested).
+    check_kind: file_exists
+    observable: A script file (e.g. .py) exists that reads the CSV and computes the median; its output equals result.txt.
+allowed_variations:
+  - '[AMBIGUOUS] File names/locations of the CSV and script are not specified; Desktop next to stock.xlsx is assumed for CSV and result.txt.'
+  - Formatting "25.27" vs "25.270" (numeric equality).

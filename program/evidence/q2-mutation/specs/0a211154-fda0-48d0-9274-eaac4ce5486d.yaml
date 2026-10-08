@@ -1,0 +1,28 @@
+task_id: 0a211154-fda0-48d0-9274-eaac4ce5486d
+author: blind-model-author-v1
+requirements:
+  - req_id: R0
+    statement: (implicit) The presentation is saved in place at /home/user/Desktop/13_0.pptx with 6 slides.
+    check_kind: file_exists
+    observable: File loads; 6 slides; pictures unchanged.
+  - req_id: R1
+    statement: Slides containing photographs of real people (slide 3 - woman portrait; slide 4 - three portraits) get a yellow background.
+    check_kind: slide_object
+    observable: Slides 3 and 4 have a solid background fill FFFF00.
+  - req_id: R2
+    statement: >-
+      Slides without photos of real people (1, 2, 5, 6 - only illustrations: mermaids, shells, coral) keep their backgrounds.
+    check_kind: slide_object
+    observable: Slide 1 and 2 background stays 5F77BB, slide 5 stays E6D7F4, slide 6 stays 5F77BB.
+  - req_id: R3
+    statement: Slide 2's title text becomes "Let's start".
+    check_kind: text_run
+    observable: The title-like text shape on slide 2 (largest text, initially "Introduction") reads exactly "Let's start" (straight or typographic apostrophe, see allowed variations).
+  - req_id: R4
+    statement: (implicit) Other text on slide 2 and other slides is unchanged.
+    check_kind: text_run
+    observable: All other shape texts equal the initial file.
+allowed_variations:
+  - '[AMBIGUOUS] Slide 2 has no title placeholder; the title is the "Introduction" text shape. Autocorrect may turn the apostrophe into a typographic one (U+2019).'
+  - '[AMBIGUOUS] Mermaid illustrations depict people-like characters but are not real people; treating them as real people would add slides 1, 5, 6.'
+  - Exact yellow is the LibreOffice palette "Yellow" (#FFFF00); other yellows are a gray zone.

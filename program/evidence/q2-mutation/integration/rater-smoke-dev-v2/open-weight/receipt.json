@@ -1,0 +1,157 @@
+{
+ "answer_line_sha256": "7ab894f2f3f42459d6855b1844a4b3d7d98510f5b4569034f8867a7ad89eff1a",
+ "calls_sha256": "fc7ea1b57c61e50478963d0e15949fb9af4a9058ad16585bebcc9414c16b3128",
+ "code_sha256": {
+  "rater_runner.py": "2b484905429fcbd38aabd7047398448f8fdddfa8fc9eb60fe06df40233f162a5",
+  "raters.py": "52358b4c67c1420d9e798f060bd7ddc53127abef7989bfa93464686d612d5d8e"
+ },
+ "engine": {
+  "argv": [
+   "vllm",
+   "serve",
+   "/model-cache/cotcodec-models/qwen3.5-9b",
+   "--served-model-name",
+   "q2m-rater",
+   "--host",
+   "127.0.0.1",
+   "--port",
+   "8000",
+   "--disable-uvicorn-access-log",
+   "--dtype",
+   "bfloat16",
+   "--seed",
+   "42",
+   "--tensor-parallel-size",
+   "1",
+   "--max-model-len",
+   "131072",
+   "--gpu-memory-utilization",
+   "0.9",
+   "--max-num-seqs",
+   "16",
+   "--no-enable-prefix-caching",
+   "--generation-config",
+   "vllm",
+   "--limit-mm-per-prompt",
+   "{\"image\":{\"count\":40,\"height\":2200,\"width\":1700},\"video\":0}"
+  ],
+  "env": {
+   "DO_NOT_TRACK": "1",
+   "HF_HUB_OFFLINE": "1",
+   "PYTHONUNBUFFERED": "1",
+   "TRANSFORMERS_OFFLINE": "1",
+   "VLLM_DO_NOT_TRACK": "1",
+   "VLLM_ENABLE_CUDA_COMPATIBILITY": "0",
+   "VLLM_HOST_IP": "127.0.0.1",
+   "VLLM_LOGGING_LEVEL": "INFO",
+   "VLLM_NO_USAGE_STATS": "1"
+  },
+  "exit_code": 0,
+  "models": [
+   "q2m-rater"
+  ],
+  "models_response_sha256": "c0aeb6f7a71d7f8b41b6ee75410142bba11e8c5996ebe53f3018c9bb3c9c6ba3",
+  "ready": true,
+  "ready_s": 88.8,
+  "vllm_version": "0.31.0"
+ },
+ "finished_at": "2026-10-07T21:57:32Z",
+ "git_sha": "4b9b45defbdbbc81e100026dbf2b42d60fd95173",
+ "lane_model_id": "qwen3.5-9b",
+ "model": {
+  "artifact_root_sha256": "9845026dbe255e24b105224eebbb5436d315713b9a5c53c434137896b160c5b1",
+  "model_id": "qwen3.5-9b",
+  "receipt_sha256": "0a9e052d561b017c505adf5a1c6fcdc048522660a0db134486b84edbf3de5cb3",
+  "repo_id": "Qwen/Qwen3.5-9B",
+  "revision": "c202236235762e1c871ad0ccb60c8ee5ba337b9a"
+ },
+ "packets": {
+  "items": 133,
+  "path": "/inputs/study-artifact.json",
+  "sha256": "fa3305cd0a0f65e9bee8f6c45c4864b2a3ad6dfd1a46edffe8e647ad1145ccd7"
+ },
+ "params": {
+  "enable_thinking": false,
+  "max_tokens": 256,
+  "seed": 42,
+  "temperature": 0.0,
+  "timeout_s": 600.0,
+  "top_p": 1.0,
+  "workers": 8
+ },
+ "prompt_sha256": "c4cf81c995533be83e14c5ce04f772d11fbaaa951d86f7ba6444027cfb9dfa55",
+ "rater": {
+  "provider": "qwen-open-weight-self-hosted",
+  "rater_id": "model-rater-open-weight",
+  "receipt_sha256": "0a9e052d561b017c505adf5a1c6fcdc048522660a0db134486b84edbf3de5cb3",
+  "registry_id": "qwen3.5-9b",
+  "repo_id": "Qwen/Qwen3.5-9B",
+  "revision": "c202236235762e1c871ad0ccb60c8ee5ba337b9a",
+  "role": "independent"
+ },
+ "result": {
+  "answers": {
+   "accept": 51,
+   "reject": 39
+  },
+  "fatal": null,
+  "items": 133,
+  "models_returned": {
+   "q2m-rater": 90
+  },
+  "outcomes": {
+   "ok": 90
+  },
+  "rated_before": 0,
+  "rated_now": 90,
+  "stopped": true,
+  "unrated": [
+   "07a339c26813dd75",
+   "0e06070f26402150",
+   "1b282f32be3615a6",
+   "1c709a259c12dd68",
+   "1eb0aa7f89312707",
+   "203772839bdb4c42",
+   "25e081cd3955ecb7",
+   "26d65bf075caf589",
+   "3a7bdc1510a2afc0",
+   "3be28a785a7cf771",
+   "4301179b8f5e1277",
+   "499413cf269f5702",
+   "49c9a78676d9bb1d",
+   "4b2999875772b5a2",
+   "4d5509f315ee9128",
+   "4f757803ea6f7654",
+   "5391253e933e63fc",
+   "55b7a7d8aee1808a",
+   "57d7476ed763139d",
+   "5b613e02c0fab365",
+   "5bb2730acf7837fd",
+   "5bcbcb86b6752e1f",
+   "65eb4f10aea6e11e",
+   "68dbf8150312787e",
+   "7375f2181b1f08c9",
+   "8456e71900ec78f2",
+   "8ae06058e71a1402",
+   "9e45513bd1775824",
+   "9f7a83b28e1d67e7",
+   "a6bf9aef6177e405",
+   "b6468863fdb152e2",
+   "ba07d347b4e63fa7",
+   "c909eb804878647c",
+   "ca6b6953c3026c3e",
+   "cccfd35ddf9addbe",
+   "d061c5ac3c496091",
+   "d5f75db8d4840951",
+   "d6a4644445bee5ec",
+   "d7359dce553b54b4",
+   "e022446f17353bdd",
+   "f2e3e259bb68b9c3",
+   "f928f15ea05323bb",
+   "fa19e92ac7b98cfe"
+  ]
+ },
+ "runner_version": "q2m-rater-runner-v1",
+ "schema": "q2m-rater-receipt-v1",
+ "started_at": "2026-10-07T21:53:02Z"
+}

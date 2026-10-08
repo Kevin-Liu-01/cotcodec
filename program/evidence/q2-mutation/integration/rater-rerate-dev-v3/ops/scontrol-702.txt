@@ -1,0 +1,29 @@
+JobId=702 JobName=q2m-rater-dev-rerate-v3
+   UserId=kevin(1004) GroupId=kevin(1004) MCS_label=N/A
+   Priority=4294901058 Nice=0 Account=(null) QOS=(null)
+   JobState=COMPLETED Reason=None Dependency=(null)
+   Requeue=1 Restarts=0 BatchFlag=1 Reboot=0 ExitCode=0:0
+   RunTime=00:06:56 TimeLimit=00:20:00 TimeMin=N/A
+   SubmitTime=2026-10-07T23:59:42 EligibleTime=2026-10-07T23:59:42
+   AccrueTime=2026-10-07T23:59:42
+   StartTime=2026-10-07T23:59:43 EndTime=2026-10-08T00:06:39 Deadline=N/A
+   SuspendTime=None SecsPreSuspend=0 LastSchedEval=2026-10-07T23:59:43 Scheduler=Main
+   Partition=research AllocNode:Sid=fal-h100-01:1814342
+   ReqNodeList=(null) ExcNodeList=(null)
+   NodeList=fal-h100-01
+   BatchHost=fal-h100-01
+   NumNodes=1 NumCPUs=16 NumTasks=1 CPUs/Task=16 ReqB:S:C:T=0:0:*:*
+   TRES=cpu=16,mem=128G,node=1,billing=16
+   Socks/Node=* NtasksPerN:B:S:C=0:0:*:* CoreSpec=*
+   MinCPUsNode=16 MinMemoryNode=128G MinTmpDiskNode=0
+   Features=(null) DelayBoot=00:00:00
+   OverSubscribe=OK Contiguous=0 Licenses=(null) Network=(null)
+   Command=/home/kevin/cotcodec-runs/stage0/q2-evaluator-mutation/raters/checkout-84f23e0/infra/slurm/host-single-node/docker-research.sbatch
+   WorkDir=/home/kevin/cotcodec-runs/stage0/q2-evaluator-mutation/raters/checkout-84f23e0
+   StdErr=/home/kevin/cotcodec-runs/stage0/q2-evaluator-mutation/raters/dev-rerate-v3/slurm-702.out
+   StdIn=/dev/null
+   StdOut=/home/kevin/cotcodec-runs/stage0/q2-evaluator-mutation/raters/dev-rerate-v3/slurm-702.out
+   Power=
+   TresPerNode=gres:gpu:h100:1
+   
+

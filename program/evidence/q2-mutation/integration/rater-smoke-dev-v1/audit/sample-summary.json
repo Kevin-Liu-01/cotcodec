@@ -1,0 +1,27 @@
+{
+ "files_sha256": {
+  "items.jsonl": "770092dd0197a79c2398dd370ff9aba3fd20cb5fa00577edecb6b98a8be387f3",
+  "sample.jsonl": "df7d5b4637c8516ab175754324bc19590b83ba6c59e1a886c3591931bf556fef",
+  "spot-check.jsonl": "4d5ef0302ccca076f4f533acf662b082162264699d964414bd51fd989e0d93b4"
+ },
+ "p1_flip_tasks": [
+  "af23762e-2bfd-4a1d-aada-20fa8de9ce07"
+ ],
+ "pool": 120,
+ "pool_by_label": {
+  "should_fail_extra_change": 6,
+  "should_fail_violation": 26,
+  "should_pass_alt_solution": 28,
+  "should_pass_equiv": 60
+ },
+ "primary": "lock",
+ "seed": 42,
+ "spot_check": 24,
+ "strata": {
+  "agreement": 83,
+  "alt_solution": 28,
+  "disagreement": 9,
+  "p1_flip": 1,
+  "sham": 12
+ }
+}

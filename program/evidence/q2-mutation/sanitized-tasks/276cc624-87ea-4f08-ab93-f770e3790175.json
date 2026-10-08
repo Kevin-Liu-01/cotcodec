@@ -1,0 +1,10 @@
+{
+  "domain": "vs_code",
+  "initial_files": [],
+  "instruction": "Please help me set the current user's line length for code wrapping to 50 characters in VS Code.",
+  "related_apps": [
+    "vscode"
+  ],
+  "snapshot": "vscode",
+  "task_id": "276cc624-87ea-4f08-ab93-f770e3790175"
+}

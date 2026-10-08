@@ -1,0 +1,5 @@
+host full suite at 1e42036f34da267de9407abd52e8847d3fa9b85a (worktree rsynced to a fresh ~/cotcodec-scratch/q2m-d35-1e42036-20261008053609, .venv and .git excluded; uv sync --locked --extra dev)
+$ uv run --locked ruff check .
+All checks passed!
+$ uv run --locked pytest -q -p no:cacheprovider tests
+2085 passed, 34 skipped in 229.44s (0:03:49)

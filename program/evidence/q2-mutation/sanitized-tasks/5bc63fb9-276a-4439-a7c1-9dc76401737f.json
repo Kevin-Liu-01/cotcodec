@@ -1,0 +1,16 @@
+{
+  "domain": "multi_apps",
+  "initial_files": [
+    {
+      "path_in_vm": "/home/user/Desktop/llm_answers.json",
+      "sha256": "e3a0583d6458487e37ea5351fc3a11b18f093c5c0d0be4a488338f0f402a3784",
+      "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/1e112283c4ecb08d6fed8069bca7de74fa2f12aa/multi_apps/5bc63fb9-276a-4439-a7c1-9dc76401737f/LLM%20results.json"
+    }
+  ],
+  "instruction": "I have a JSON-formatted data file opened now that stores the responses of several large language models on a specific dataset. Now, I want to filter out all the responses from Gemini and specifically look at the sentences in the responses that contain \"Iliad\". Please copy all of Gemini's responses(values) from the JSON file, paste them into a Word document named \"gemini_results.docx\" under Desktop. Each response should be a new paragraph and sepreated by a new line. Highlight the all the \"Iliad\" word.",
+  "related_apps": [
+    "libreoffice_writer"
+  ],
+  "snapshot": "multiapps",
+  "task_id": "5bc63fb9-276a-4439-a7c1-9dc76401737f"
+}

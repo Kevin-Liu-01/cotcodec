@@ -1,0 +1,3 @@
+overlay job 718 submitted 2026-10-08T02:14:05Z git=34046e0
+args-doctor job 719 (CPU) 2026-10-08T02:19:03Z image=d5fd5cd7 git=34046e0 model-dir=qwen36-meta
+open rater dev rerate v4 job 722 submitted 2026-10-08T02:32:17Z image=d5fd5cd7 git=34046e0 packets=5598e755 (dev-audit-v4) minutes=28 cap=0.467 thinking=on

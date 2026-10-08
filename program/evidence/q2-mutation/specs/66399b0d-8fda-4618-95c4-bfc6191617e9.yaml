@@ -1,0 +1,18 @@
+task_id: 66399b0d-8fda-4618-95c4-bfc6191617e9
+author: blind-model-author-v1
+requirements:
+  - req_id: R0
+    statement: (implicit) The document is saved in place at /home/user/Desktop/Table_Of_Work_Effort_Instructions.docx; existing text and the existing 11x7 table are unchanged.
+    check_kind: file_exists
+    observable: File loads; paragraph texts and the original table contents unchanged.
+  - req_id: R1
+    statement: A new empty table with 7 columns and 5 rows is inserted.
+    check_kind: table_cell
+    observable: The document has 2 tables; the new one has len(rows) == 5 and len(columns) == 7, and every cell text is empty.
+  - req_id: R2
+    statement: The table is inserted at the cursor position.
+    check_kind: other
+    observable: The new table's position in the body equals the cursor location at task start (for a freshly opened document, the start of the document, i.e. before "TABLE OF WORK EFFORT - INSTRUCTIONS").
+allowed_variations:
+  - '[AMBIGUOUS] The cursor position is not visible in the sanitized task; with a freshly opened document it is the document start. Record where the table landed.'
+  - Table borders/style and column widths.

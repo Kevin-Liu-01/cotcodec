@@ -1,0 +1,26 @@
+task_id: 1d17d234-e39d-4ed7-b46f-4417922a4e7c
+author: blind-model-author-v1
+requirements:
+  - req_id: R0
+    statement: (implicit) The workbook is persisted at /home/user/FutureValue.xlsx with Sheet1 unchanged.
+    check_kind: file_exists
+    observable: File loads; Sheet1 A1:E5 equal initial values.
+  - req_id: R1
+    statement: A new sheet named "Sheet2" exists.
+    check_kind: other
+    observable: Sheet names include "Sheet2".
+  - req_id: R2
+    statement: On Sheet2, A1:C1 is merged and contains "Investment Summary".
+    check_kind: cell_format
+    observable: Sheet2 merged ranges include A1:C1; A1 value == "Investment Summary".
+  - req_id: R3
+    statement: On Sheet2, A2:B2 is merged and contains "High Interest Rate".
+    check_kind: cell_format
+    observable: Merged ranges include A2:B2; A2 value == "High Interest Rate".
+  - req_id: R4
+    statement: On Sheet2, C2:D2 is merged and contains "Low Interest Rate".
+    check_kind: cell_format
+    observable: Merged ranges include C2:D2; C2 value == "Low Interest Rate".
+allowed_variations:
+  - Alignment (centered or not), font and borders of the merged headers are not constrained.
+  - Position of Sheet2 in the tab order is not constrained.

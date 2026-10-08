@@ -1,0 +1,14 @@
+task_id: 72f83cdc-bf76-4531-9a1b-eb893a13f8aa
+author: blind-model-author-v1
+requirements:
+  - req_id: R1
+    statement: The image is mirrored horizontally (left-right flip) and saved to /home/user/Desktop/berry.png.
+    check_kind: image_property
+    observable: The saved image is the left-right mirror of the original (PIL ImageOps.mirror(original)); mean absolute difference to the mirrored original is small (< 5 per channel, allowing JPEG re-encoding), while the difference to the unflipped original is large.
+  - req_id: R2
+    statement: (implicit) No other transformation (no vertical flip, no rotation, same size 1280 x 851).
+    check_kind: image_property
+    observable: Size == 1280 x 851.
+allowed_variations:
+  - File encoding (the input is JPEG data named .png; overwriting keeps either JPEG or PNG encoding).
+  - '[AMBIGUOUS] "rotate my figure to mirror it" mixes rotate and mirror; the horizontal mirror is the explicit target.'

@@ -1,0 +1,18 @@
+task_id: 2b94c692-6abb-48ae-ab0b-b3e8a19cb340
+author: blind-model-author-v1
+requirements:
+  - req_id: R0
+    statement: (implicit) The presentation is saved in place at /home/user/Desktop/201_6.pptx with 2 slides; texts unchanged.
+    check_kind: file_exists
+    observable: File loads; texts unchanged.
+  - req_id: R1
+    statement: The image on slide 2 is moved to the right side of the slide.
+    check_kind: slide_object
+    observable: The picture (initially left 1.75 cm, 6x6 cm on a 25.4 cm wide slide) has its horizontal center right of the slide midline (left + width/2 > 12.7 cm) and stays within the slide (left + width <= 25.4 cm).
+  - req_id: R2
+    statement: (implicit) The image is moved, not resized or replaced.
+    check_kind: image_property
+    observable: Picture width and height remain 6.0 x 6.0 cm and the image blob is identical.
+allowed_variations:
+  - Exact horizontal offset and any vertical position change.
+  - Overlap with the body text placeholder (it spans the slide width) is not addressed by the instruction.

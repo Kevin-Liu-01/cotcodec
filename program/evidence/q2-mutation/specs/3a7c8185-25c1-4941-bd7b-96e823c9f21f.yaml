@@ -1,0 +1,23 @@
+task_id: 3a7c8185-25c1-4941-bd7b-96e823c9f21f
+author: blind-model-author-v1
+requirements:
+  - req_id: R0
+    statement: (implicit) The workbook is persisted at /home/user/BoomerangSales.xlsx; the "Retail Price" sheet is unchanged.
+    check_kind: file_exists
+    observable: File loads; "Retail Price" A1:B23 equal initial values.
+  - req_id: R1
+    statement: The data rows of Sheet1 (rows 2-36) are sorted by column A (Date Time) ascending, with whole records moved together and the header kept in row 1.
+    check_kind: cell_value
+    observable: A2:A36 non-decreasing; the multiset of row tuples (A,B,C,E,F) equals the initial one; A2 == 2014-12-06 17:46:01.92 (Fun Fly, qty 1) and A36 == 2015-12-20 12:34:59.52 (Fun Fly, qty 35); row 1 headers unchanged.
+  - req_id: R2
+    statement: The Type column (D) still reflects each row's own quantity after sorting.
+    check_kind: cell_value
+    observable: For every row, D == "Retail" if E < 10 else "Wholesale".
+  - req_id: R3
+    statement: A line chart plots Quantity on the Y axis against Date Time on the X axis.
+    check_kind: other
+    observable: A c:lineChart (or a date-axis line) whose series values reference E2:E36 and categories reference A2:A36 of Sheet1.
+allowed_variations:
+  - Chart title, legend, placement and size are not constrained.
+  - Date axis formatting is not constrained.
+  - '[AMBIGUOUS] A scatter chart with lines (c:scatterChart) also plots Y against date X; the instruction says "line chart", so lineChart is the strict reading.'

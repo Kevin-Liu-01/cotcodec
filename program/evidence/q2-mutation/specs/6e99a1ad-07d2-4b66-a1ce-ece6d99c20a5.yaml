@@ -1,0 +1,18 @@
+task_id: 6e99a1ad-07d2-4b66-a1ce-ece6d99c20a5
+author: blind-model-author-v1
+requirements:
+  - req_id: R0
+    statement: (implicit) The workbook is persisted at /home/user/Keep_Two_decimal_points.xlsx.
+    check_kind: file_exists
+    observable: File exists and loads.
+  - req_id: R1
+    statement: The "Spent ($)" column values display with exactly two decimal places.
+    check_kind: cell_format
+    observable: C2:C8 number format yields two decimals (e.g. "0.00", "#,##0.00" or a currency format with 2 decimals); displayed values 40.00, 50.54, 60.00, 30.75, 25.50, 45.90, 35.40.
+  - req_id: R2
+    statement: The underlying values are unchanged.
+    check_kind: cell_value
+    observable: C2:C8 numeric values == 40, 50.54, 60, 30.75, 25.5, 45.9, 35.4; all other cells unchanged.
+allowed_variations:
+  - Whether the header cell C1 also gets the format.
+  - '[AMBIGUOUS] A currency-symbol format with two decimals also "keeps two decimal points"; plain 0.00 is the minimal reading.'

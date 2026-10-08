@@ -1,0 +1,17 @@
+task_id: 0b17a146-2934-46c7-8727-73ff6b6483e8
+author: blind-model-author-v1
+requirements:
+  - req_id: R0
+    statement: (implicit) The document is saved in place at /home/user/Desktop/H2O_Factsheet_WA.docx with unchanged text.
+    check_kind: file_exists
+    observable: File loads; paragraph texts equal the initial ones.
+  - req_id: R1
+    statement: The "2" in every occurrence of "H2O" is subscript.
+    check_kind: text_run
+    observable: For all 8 occurrences of "H2O" (title, and body paragraphs 2, 3, 4, 6, 7 (x2), 8), the run holding "2" has vertAlign="subscript"; "H" and "O" are not subscript.
+  - req_id: R2
+    statement: No other characters become subscript.
+    check_kind: text_run
+    observable: Only those eight "2" characters carry vertAlign subscript (initially there is none).
+allowed_variations:
+  - '[AMBIGUOUS] The instruction may be read as a single occurrence; subscripting every H2O is the natural reading for a fact sheet. Record which occurrences changed.'

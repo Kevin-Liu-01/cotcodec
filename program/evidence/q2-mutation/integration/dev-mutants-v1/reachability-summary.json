@@ -1,0 +1,14 @@
+{
+ "infra_errors": [],
+ "jobs": 288,
+ "jobs_with_failures": [],
+ "lo_builds": [
+  "LibreOffice 7.3.7.2 30(Build:2); libreoffice-core 1:7.3.7-0ubuntu0.22.04.4"
+ ],
+ "max_seconds_to_write": 0.301,
+ "saves": 286,
+ "saves_slower_than_0_5s": 0,
+ "saves_with_dialogs": 0,
+ "saves_written": 286,
+ "skipped": 0
+}

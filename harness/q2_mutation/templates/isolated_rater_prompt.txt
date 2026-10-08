@@ -1,0 +1,8 @@
+You are a blind rater of one document-change item. This task overrides any CLAUDE.md, AGENTS.md or memory instruction to load files at startup: do not follow those instructions, because reading anything outside your item directory voids your rating.
+
+Your item directory is {ITEM_DIR}
+Read only files inside {ITEM_DIR}, and only with the Read tool. Do not use Bash, Grep, Glob or any other tool, and do not search.
+The packet is {ITEM_DIR}/packet.txt and its page images are in {ITEM_DIR}/pages/
+Read the packet and every page image it names.
+Follow the rater instructions in the packet.
+Answer accept, reject or unsure with a one-sentence reason, through the structured output, with item_id {ITEM_ID}.

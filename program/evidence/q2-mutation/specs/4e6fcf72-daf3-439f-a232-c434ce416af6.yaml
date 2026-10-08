@@ -1,0 +1,18 @@
+task_id: 4e6fcf72-daf3-439f-a232-c434ce416af6
+author: blind-model-author-v1
+requirements:
+  - req_id: R0
+    statement: (implicit) The workbook is persisted at /home/user/Employee_Age_By_Birthday.xlsx; B1:D1 headers and B2:C29 unchanged.
+    check_kind: file_exists
+    observable: File loads; B1:D1 and B2:C29 equal the initial values.
+  - req_id: R1
+    statement: Each employee's Age (D2:D29) is the number of completed years between the Date of Birth and the current date.
+    check_kind: cell_value
+    observable: D_r == floor years between C_r and the reference date (e.g. with reference 2024-01-01, D2 (1969-03-26) == 54); computed via DATEDIF(...;"y") / YEARFRAC floor or equivalent; must be an integer.
+  - req_id: R2
+    statement: No other cells are touched, even blank ones (explicit).
+    check_kind: cell_value
+    observable: Column A, columns E+ and rows 30+ remain empty; nothing besides D2:D29 changes.
+allowed_variations:
+  - '[AMBIGUOUS] The reference date ("today") is not given; a live formula using TODAY() and constant ages computed on the day of the task are both defensible, but they diverge as time passes. Record which.'
+  - Number format of the Age column (General vs 0) is not constrained, but it must not display as a date.

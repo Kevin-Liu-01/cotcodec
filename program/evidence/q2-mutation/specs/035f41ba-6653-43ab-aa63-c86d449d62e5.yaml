@@ -1,0 +1,24 @@
+task_id: 035f41ba-6653-43ab-aa63-c86d449d62e5
+author: blind-model-author-v1
+requirements:
+  - req_id: R0
+    statement: (implicit) The workbook is persisted at /home/user/IncomeStatement2.xlsx (xlsx) and the original input columns of Sheet1 are unchanged.
+    check_kind: file_exists
+    observable: File loads; Sheet1 A1:D10 and F1:H10 equal the initial values.
+  - req_id: R1
+    statement: The "Gross Profit" column (J) of Sheet1 is filled for every year as Sales - Sales Return - Discounts and Allowances - Materials - Labor - Overhead.
+    check_kind: cell_value
+    observable: J2:J10 computed values == 55000, 47662, 53451, 60819, 62864, 57924, 59634, 50852, 43649 (years 2015..2023); J1 still "Gross Profit".
+  - req_id: R2
+    statement: A new sheet named "Sheet2" exists.
+    check_kind: other
+    observable: Workbook sheet names include exactly "Sheet2" (in addition to Sheet1).
+  - req_id: R3
+    statement: Sheet2 column A has header "Year_Profit" and, for each Sheet1 row, the text "<Year>_<integer part of Gross Profit>".
+    check_kind: cell_value
+    observable: Sheet2 A1 == "Year_Profit"; A2:A10 computed string values == "2015_55000", "2016_47662", "2017_53451", "2018_60819", "2019_62864", "2020_57924", "2021_59634", "2022_50852", "2023_43649" in Sheet1 row order.
+allowed_variations:
+  - J and Sheet2 cells may be formulas or constants if computed values match.
+  - Number format of J2:J10 (currency or plain) is not constrained.
+  - '[AMBIGUOUS] Whether the empty helper columns "Net Sales" (E) and "Total Cost of Goods Sold" (I) may also be filled is not stated; filling them with consistent values (E = B - C; I = F + G + H) is neither requested nor forbidden.'
+  - Position of Sheet2 in the tab order is not constrained.

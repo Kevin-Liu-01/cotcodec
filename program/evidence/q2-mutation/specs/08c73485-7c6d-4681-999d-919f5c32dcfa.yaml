@@ -1,0 +1,13 @@
+task_id: 08c73485-7c6d-4681-999d-919f5c32dcfa
+author: blind-model-author-v1
+requirements:
+  - req_id: R1
+    statement: Incoming message filters are applied automatically to subfolders (not only the Inbox).
+    check_kind: config_value
+    observable: The Thunderbird profile prefs.js (~/.thunderbird/t5q2a5hp.default-release/prefs.js) sets mail.server.default.applyIncomingFilters = true (global), or mail.server.server1.applyIncomingFilters = true for the IMAP account, persisted after Thunderbird exits.
+  - req_id: R2
+    statement: (implicit) Existing accounts, folders and filters are unchanged.
+    check_kind: config_value
+    observable: mail.accountmanager.accounts still "account1,account2"; msgFilterRules.dat files unchanged.
+allowed_variations:
+  - '[AMBIGUOUS] Per-folder alternatives (folder property "check this folder for new messages") are a different mechanism; the global hidden preference is the standard answer. Record which.'

@@ -1,0 +1,14 @@
+task_id: 554785e9-4523-4e7a-b8e1-8016f565f56a
+author: blind-model-author-v1
+requirements:
+  - req_id: R1
+    statement: The photo's color vibrancy (saturation) is increased and the result is saved to /home/user/Desktop/woman_sitting_by_the_tree2.png.
+    check_kind: image_property
+    observable: Mean HSV saturation (PIL HSV, S channel) of the saved image is clearly higher than the original value of about 96.9 (e.g. +5% relative or more), measured over all pixels.
+  - req_id: R2
+    statement: (implicit) The picture is otherwise the same photo (no crop/resize/geometry change).
+    check_kind: image_property
+    observable: Size remains 1099 x 730; structural similarity to the original (grayscale) stays high (e.g. SSIM > 0.8).
+allowed_variations:
+  - Tool used (Hue-Saturation, Saturation, Vibrance-like curves) and amount, as long as saturation increases noticeably without destroying the image.
+  - '[AMBIGUOUS] Output location not stated; overwriting the source is assumed.'

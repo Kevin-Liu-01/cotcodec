@@ -1,0 +1,21 @@
+{
+  "domain": "gimp",
+  "initial_files": [
+    {
+      "path_in_vm": "/home/user/Desktop/white_background_with_object.xcf",
+      "sha256": "d353c8899bbb85f6aa8fd4038dab453e46f731532d92451567022f9671f4e08a",
+      "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/1e112283c4ecb08d6fed8069bca7de74fa2f12aa/gimp/734d6579-c07d-47a8-9ae2-13339795476b/white_background_with_object.xcf"
+    },
+    {
+      "path_in_vm": "/home/user/Desktop/white_background_with_object.png",
+      "sha256": "ffa7c94ac7307394e62a6c7a37c9d6718a9b24bd05d31e519250bb9609f2b806",
+      "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/1e112283c4ecb08d6fed8069bca7de74fa2f12aa/gimp/734d6579-c07d-47a8-9ae2-13339795476b/white_background_with_object.png"
+    }
+  ],
+  "instruction": "Could you fill the background layer with green color, leaving the object layer as is?",
+  "related_apps": [
+    "gimp"
+  ],
+  "snapshot": "gimp",
+  "task_id": "734d6579-c07d-47a8-9ae2-13339795476b"
+}

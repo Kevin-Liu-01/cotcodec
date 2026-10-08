@@ -1,0 +1,18 @@
+task_id: 15aece23-a215-4579-91b4-69eec72e18da
+author: blind-model-author-v1
+requirements:
+  - req_id: R0
+    statement: (implicit) The presentation is saved in place at /home/user/Desktop/134_2.pptx with 2 slides; content unchanged.
+    check_kind: file_exists
+    observable: File loads; texts and table contents unchanged.
+  - req_id: R1
+    statement: The title of slide 2 ("Product Comparison") is moved to the bottom of the slide.
+    check_kind: slide_object
+    observable: The title placeholder's top is below every other object on slide 2 (table spans 5.07-10.21 cm) and its bottom edge (top + height) is within the slide and near its lower edge (slide height 19.05 cm), e.g. top >= 12 cm and top + height <= 19.05 cm.
+  - req_id: R2
+    statement: (implicit) Only the title moves; the table and content placeholder stay where they were.
+    check_kind: slide_object
+    observable: Table and other shapes keep their initial positions and sizes.
+allowed_variations:
+  - Exact vertical position within the bottom band, horizontal position and title size.
+  - Title text alignment and font.

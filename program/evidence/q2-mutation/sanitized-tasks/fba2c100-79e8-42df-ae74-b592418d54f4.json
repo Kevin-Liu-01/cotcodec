@@ -1,0 +1,16 @@
+{
+  "domain": "vlc",
+  "initial_files": [
+    {
+      "path_in_vm": "/home/user/Desktop/Interstellar Movie - Official Trailer.mp4",
+      "sha256": "5171ffecaeaafd363e0c0f858006ab57d7bc08ce109abd2b89c6748be137e1fe",
+      "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/1e112283c4ecb08d6fed8069bca7de74fa2f12aa/vlc/fba2c100-79e8-42df-ae74-b592418d54f4/Interstellar%20Movie%20-%20Official%20Trailer.mp4"
+    }
+  ],
+  "instruction": "Snap a photo of the current video scene, save it as 'interstellar.png', and put it on the Desktop, please.",
+  "related_apps": [
+    "vlc"
+  ],
+  "snapshot": "base_setup",
+  "task_id": "fba2c100-79e8-42df-ae74-b592418d54f4"
+}

@@ -1,0 +1,935 @@
+{
+  "catalog_sha256": "2e2f24069c833c54bba23650481edec6ffff97176d07377327019e3a7f51d1fe",
+  "command": "python3 -m harness.q2_mutation.operators.validate --out /out/validate --profile-template /home/user/.config/libreoffice/4/user",
+  "fixed_point_first_resave": {
+    "docx": [
+      {
+        "after": {
+          "attrs": {
+            "val": "true"
+          }
+        },
+        "before": null,
+        "kind": "format",
+        "loc": "styles/para/Normal/ppr/suppressAutoHyphens",
+        "op": "added"
+      }
+    ],
+    "pptx": [
+      {
+        "after": [
+          8228880,
+          1142280
+        ],
+        "before": [
+          8229240,
+          1142640
+        ],
+        "kind": "layout",
+        "loc": "slides/0/shapes/0/ext",
+        "op": "changed"
+      },
+      {
+        "after": [
+          4114080,
+          913680
+        ],
+        "before": [
+          4114440,
+          914040
+        ],
+        "kind": "layout",
+        "loc": "slides/0/shapes/1/ext",
+        "op": "changed"
+      },
+      {
+        "after": [
+          [
+            "Revenue rose in the ",
+            {
+              "b": false,
+              "color": "rgb:000000",
+              "latin": "Arial",
+              "spc": "-1",
+              "strike": "noStrike",
+              "sz": "1800"
+            }
+          ],
+          [
+            "north",
+            {
+              "b": true,
+              "color": "rgb:000000",
+              "latin": "Arial",
+              "spc": "-1",
+              "strike": "noStrike",
+              "sz": "1800"
+            }
+          ],
+          [
+            " region",
+            {
+              "b": false,
+              "color": "rgb:000000",
+              "latin": "Arial",
+              "spc": "-1",
+              "strike": "noStrike",
+              "sz": "1800"
+            }
+          ]
+        ],
+        "before": [
+          [
+            "Revenue rose in the ",
+            {
+              "b": false,
+              "latin": "Arial",
+              "spc": "-1",
+              "strike": "noStrike",
+              "sz": "1800"
+            }
+          ],
+          [
+            "north",
+            {
+              "b": true,
+              "latin": "Arial",
+              "spc": "-1",
+              "strike": "noStrike",
+              "sz": "1800"
+            }
+          ],
+          [
+            " region",
+            {
+              "b": false,
+              "latin": "Arial",
+              "spc": "-1",
+              "strike": "noStrike",
+              "sz": "1800"
+            }
+          ]
+        ],
+        "kind": "format",
+        "loc": "slides/0/shapes/1/paras/0/spans",
+        "op": "changed"
+      },
+      {
+        "after": [
+          4114440,
+          739800
+        ],
+        "before": [
+          4114440,
+          740160
+        ],
+        "kind": "layout",
+        "loc": "slides/0/shapes/2/ext",
+        "op": "changed"
+      },
+      {
+        "after": [
+          3656880,
+          913680
+        ],
+        "before": [
+          3657240,
+          914040
+        ],
+        "kind": "layout",
+        "loc": "slides/0/shapes/3/ext",
+        "op": "changed"
+      },
+      {
+        "after": [
+          [
+            "Outlook remains positive",
+            {
+              "b": false,
+              "color": "rgb:000000",
+              "latin": "Arial",
+              "spc": "-1",
+              "strike": "noStrike",
+              "sz": "1800"
+            }
+          ]
+        ],
+        "before": [
+          [
+            "Outlook remains positive",
+            {
+              "b": false,
+              "latin": "Arial",
+              "spc": "-1",
+              "strike": "noStrike",
+              "sz": "1800"
+            }
+          ]
+        ],
+        "kind": "format",
+        "loc": "slides/0/shapes/3/paras/0/spans",
+        "op": "changed"
+      },
+      {
+        "after": [
+          8228880,
+          913680
+        ],
+        "before": [
+          8229240,
+          914040
+        ],
+        "kind": "layout",
+        "loc": "slides/1/shapes/0/ext",
+        "op": "changed"
+      },
+      {
+        "after": [
+          [
+            "Backup material for questions",
+            {
+              "b": false,
+              "color": "rgb:000000",
+              "latin": "Arial",
+              "spc": "-1",
+              "strike": "noStrike",
+              "sz": "1800"
+            }
+          ]
+        ],
+        "before": [
+          [
+            "Backup material for questions",
+            {
+              "b": false,
+              "latin": "Arial",
+              "spc": "-1",
+              "strike": "noStrike",
+              "sz": "1800"
+            }
+          ]
+        ],
+        "kind": "format",
+        "loc": "slides/1/shapes/0/paras/0/spans",
+        "op": "changed"
+      },
+      {
+        "after": [
+          2742480,
+          1370880
+        ],
+        "before": [
+          2742840,
+          1371240
+        ],
+        "kind": "layout",
+        "loc": "slides/1/shapes/1/ext",
+        "op": "changed"
+      }
+    ],
+    "xlsx": []
+  },
+  "fixed_point_second_resave": {
+    "docx": [],
+    "pptx": [
+      {
+        "after": [
+          8228520,
+          1141920
+        ],
+        "before": [
+          8228880,
+          1142280
+        ],
+        "kind": "layout",
+        "loc": "slides/0/shapes/0/ext",
+        "op": "changed"
+      },
+      {
+        "after": [
+          4113720,
+          913320
+        ],
+        "before": [
+          4114080,
+          913680
+        ],
+        "kind": "layout",
+        "loc": "slides/0/shapes/1/ext",
+        "op": "changed"
+      },
+      {
+        "after": [
+          3656520,
+          913320
+        ],
+        "before": [
+          3656880,
+          913680
+        ],
+        "kind": "layout",
+        "loc": "slides/0/shapes/3/ext",
+        "op": "changed"
+      },
+      {
+        "after": [
+          8228520,
+          913320
+        ],
+        "before": [
+          8228880,
+          913680
+        ],
+        "kind": "layout",
+        "loc": "slides/1/shapes/0/ext",
+        "op": "changed"
+      },
+      {
+        "after": [
+          2742120,
+          1370520
+        ],
+        "before": [
+          2742480,
+          1370880
+        ],
+        "kind": "layout",
+        "loc": "slides/1/shapes/1/ext",
+        "op": "changed"
+      }
+    ],
+    "xlsx": []
+  },
+  "image_id": "sha256:894b2623dceb43e8468a2adbd6e03a532ea9683d4b7754cd79fa0d58a331f909",
+  "lo_build": "LibreOffice 7.3.7.2 30(Build:2)",
+  "operators": {
+    "config.alt.json_number_repr": {
+      "admitted": 1,
+      "applied": 1,
+      "failed_checks": {},
+      "labels": {
+        "should_pass_alt_solution": 1
+      },
+      "planned": 1
+    },
+    "config.eq.ini_kv_spacing": {
+      "admitted": 1,
+      "applied": 1,
+      "failed_checks": {},
+      "labels": {
+        "should_pass_equiv": 1
+      },
+      "planned": 1
+    },
+    "config.eq.json_key_reorder": {
+      "admitted": 2,
+      "applied": 2,
+      "failed_checks": {},
+      "labels": {
+        "should_pass_equiv": 2
+      },
+      "planned": 2
+    },
+    "config.eq.json_reformat": {
+      "admitted": 1,
+      "applied": 1,
+      "failed_checks": {},
+      "labels": {
+        "should_pass_equiv": 1
+      },
+      "planned": 1
+    },
+    "config.eq.trailing_newline": {
+      "admitted": 2,
+      "applied": 2,
+      "failed_checks": {},
+      "labels": {
+        "should_pass_equiv": 2
+      },
+      "planned": 2
+    },
+    "config.extra.unrelated_key_delete": {
+      "admitted": 6,
+      "applied": 6,
+      "failed_checks": {},
+      "labels": {
+        "should_fail_extra_change": 6
+      },
+      "planned": 6
+    },
+    "config.extra.unrelated_value_change": {
+      "admitted": 6,
+      "applied": 6,
+      "failed_checks": {},
+      "labels": {
+        "should_fail_extra_change": 6
+      },
+      "planned": 6
+    },
+    "config.viol.key_delete": {
+      "admitted": 2,
+      "applied": 2,
+      "failed_checks": {},
+      "labels": {
+        "should_fail_violation": 2
+      },
+      "planned": 2
+    },
+    "config.viol.value_change": {
+      "admitted": 2,
+      "applied": 2,
+      "failed_checks": {},
+      "labels": {
+        "should_fail_violation": 2
+      },
+      "planned": 2
+    },
+    "docx.alt.case_via_format": {
+      "admitted": 1,
+      "applied": 1,
+      "failed_checks": {},
+      "labels": {
+        "ambiguous": 1
+      },
+      "planned": 1
+    },
+    "docx.alt.char_style_for_direct": {
+      "admitted": 1,
+      "applied": 1,
+      "failed_checks": {},
+      "labels": {
+        "should_pass_alt_solution": 1
+      },
+      "planned": 1
+    },
+    "docx.alt.highlight_as_shading": {
+      "admitted": 1,
+      "applied": 1,
+      "failed_checks": {},
+      "labels": {
+        "ambiguous": 1
+      },
+      "planned": 1
+    },
+    "docx.alt.para_direct_for_style": {
+      "admitted": 1,
+      "applied": 1,
+      "failed_checks": {},
+      "labels": {
+        "should_pass_alt_solution": 1
+      },
+      "planned": 1
+    },
+    "docx.eq.doc_property": {
+      "admitted": 3,
+      "applied": 3,
+      "failed_checks": {},
+      "labels": {
+        "should_pass_equiv": 3
+      },
+      "planned": 3
+    },
+    "docx.eq.view_zoom": {
+      "admitted": 3,
+      "applied": 3,
+      "failed_checks": {},
+      "labels": {
+        "should_pass_equiv": 3
+      },
+      "planned": 3
+    },
+    "docx.extra.delete_unrelated_paragraph": {
+      "admitted": 2,
+      "applied": 2,
+      "failed_checks": {},
+      "labels": {
+        "should_fail_extra_change": 2
+      },
+      "planned": 2
+    },
+    "docx.extra.edit_unrelated_paragraph": {
+      "admitted": 2,
+      "applied": 2,
+      "failed_checks": {},
+      "labels": {
+        "should_fail_extra_change": 2
+      },
+      "planned": 2
+    },
+    "docx.extra.edit_unrelated_table_cell": {
+      "admitted": 3,
+      "applied": 3,
+      "failed_checks": {},
+      "labels": {
+        "should_fail_extra_change": 3
+      },
+      "planned": 3
+    },
+    "docx.extra.format_unrelated_run": {
+      "admitted": 2,
+      "applied": 2,
+      "failed_checks": {},
+      "labels": {
+        "ambiguous": 2
+      },
+      "planned": 2
+    },
+    "docx.viol.delete_bound_paragraph": {
+      "admitted": 3,
+      "applied": 3,
+      "failed_checks": {},
+      "labels": {
+        "should_fail_violation": 3
+      },
+      "planned": 3
+    },
+    "docx.viol.drop_char_format": {
+      "admitted": 3,
+      "applied": 3,
+      "failed_checks": {},
+      "labels": {
+        "ambiguous": 1,
+        "should_fail_violation": 2
+      },
+      "planned": 3
+    },
+    "docx.viol.line_spacing_change": {
+      "admitted": 1,
+      "applied": 1,
+      "failed_checks": {},
+      "labels": {
+        "ambiguous": 1
+      },
+      "planned": 1
+    },
+    "docx.viol.para_align_change": {
+      "admitted": 1,
+      "applied": 1,
+      "failed_checks": {},
+      "labels": {
+        "should_fail_violation": 1
+      },
+      "planned": 1
+    },
+    "docx.viol.text_edit": {
+      "admitted": 3,
+      "applied": 3,
+      "failed_checks": {},
+      "labels": {
+        "should_fail_violation": 3
+      },
+      "planned": 3
+    },
+    "pptx.alt.case_via_format": {
+      "admitted": 1,
+      "applied": 1,
+      "failed_checks": {},
+      "labels": {
+        "ambiguous": 1
+      },
+      "planned": 1
+    },
+    "pptx.alt.textbox_for_placeholder": {
+      "admitted": 1,
+      "applied": 1,
+      "failed_checks": {},
+      "labels": {
+        "should_fail_violation": 1
+      },
+      "planned": 1
+    },
+    "pptx.eq.doc_property": {
+      "admitted": 3,
+      "applied": 3,
+      "failed_checks": {},
+      "labels": {
+        "should_pass_equiv": 3
+      },
+      "planned": 3
+    },
+    "pptx.eq.subvisible_nudge": {
+      "admitted": 3,
+      "applied": 3,
+      "failed_checks": {},
+      "labels": {
+        "should_pass_equiv": 3
+      },
+      "planned": 3
+    },
+    "pptx.eq.zorder_nonoverlap": {
+      "admitted": 3,
+      "applied": 3,
+      "failed_checks": {},
+      "labels": {
+        "should_pass_equiv": 3
+      },
+      "planned": 3
+    },
+    "pptx.extra.add_textbox": {
+      "admitted": 1,
+      "applied": 1,
+      "failed_checks": {},
+      "labels": {
+        "should_fail_extra_change": 1
+      },
+      "planned": 1
+    },
+    "pptx.extra.delete_unrelated_slide": {
+      "admitted": 1,
+      "applied": 1,
+      "failed_checks": {},
+      "labels": {
+        "should_fail_extra_change": 1
+      },
+      "planned": 1
+    },
+    "pptx.extra.edit_notes": {
+      "admitted": 1,
+      "applied": 1,
+      "failed_checks": {},
+      "labels": {
+        "ambiguous": 1
+      },
+      "planned": 1
+    },
+    "pptx.extra.edit_unrelated_text": {
+      "admitted": 2,
+      "applied": 2,
+      "failed_checks": {},
+      "labels": {
+        "should_fail_extra_change": 2
+      },
+      "planned": 2
+    },
+    "pptx.viol.delete_bound_shape": {
+      "admitted": 2,
+      "applied": 2,
+      "failed_checks": {},
+      "labels": {
+        "should_fail_violation": 2
+      },
+      "planned": 2
+    },
+    "pptx.viol.drop_char_format": {
+      "admitted": 1,
+      "applied": 1,
+      "failed_checks": {},
+      "labels": {
+        "should_fail_violation": 1
+      },
+      "planned": 1
+    },
+    "pptx.viol.move_shape": {
+      "admitted": 1,
+      "applied": 1,
+      "failed_checks": {},
+      "labels": {
+        "should_fail_violation": 1
+      },
+      "planned": 1
+    },
+    "pptx.viol.table_cell_text": {
+      "admitted": 1,
+      "applied": 1,
+      "failed_checks": {},
+      "labels": {
+        "should_fail_violation": 1
+      },
+      "planned": 1
+    },
+    "pptx.viol.text_edit": {
+      "admitted": 2,
+      "applied": 2,
+      "failed_checks": {},
+      "labels": {
+        "should_fail_violation": 2
+      },
+      "planned": 2
+    },
+    "text.eq.trailing_newline": {
+      "admitted": 1,
+      "applied": 1,
+      "failed_checks": {},
+      "labels": {
+        "should_pass_equiv": 1
+      },
+      "planned": 1
+    },
+    "text.extra.unrelated_line_delete": {
+      "admitted": 3,
+      "applied": 3,
+      "failed_checks": {},
+      "labels": {
+        "should_fail_extra_change": 3
+      },
+      "planned": 3
+    },
+    "text.extra.unrelated_line_edit": {
+      "admitted": 3,
+      "applied": 3,
+      "failed_checks": {},
+      "labels": {
+        "should_fail_extra_change": 3
+      },
+      "planned": 3
+    },
+    "text.viol.line_edit": {
+      "admitted": 1,
+      "applied": 1,
+      "failed_checks": {},
+      "labels": {
+        "should_fail_violation": 1
+      },
+      "planned": 1
+    },
+    "xlsx.alt.absolute_refs": {
+      "admitted": 3,
+      "applied": 3,
+      "failed_checks": {},
+      "labels": {
+        "should_pass_alt_solution": 3
+      },
+      "planned": 3
+    },
+    "xlsx.alt.average_to_sum_count": {
+      "admitted": 1,
+      "applied": 1,
+      "failed_checks": {},
+      "labels": {
+        "should_pass_alt_solution": 1
+      },
+      "planned": 1
+    },
+    "xlsx.alt.concat_to_ampersand": {
+      "admitted": 1,
+      "applied": 1,
+      "failed_checks": {},
+      "labels": {
+        "should_pass_alt_solution": 1
+      },
+      "planned": 1
+    },
+    "xlsx.alt.literal_for_formula": {
+      "admitted": 3,
+      "applied": 3,
+      "failed_checks": {},
+      "labels": {
+        "should_pass_alt_solution": 3
+      },
+      "planned": 3
+    },
+    "xlsx.alt.named_style_for_direct": {
+      "admitted": 3,
+      "applied": 3,
+      "failed_checks": {},
+      "labels": {
+        "should_pass_alt_solution": 3
+      },
+      "planned": 3
+    },
+    "xlsx.alt.plus_chain_to_sum": {
+      "admitted": 1,
+      "applied": 1,
+      "failed_checks": {},
+      "labels": {
+        "should_pass_alt_solution": 1
+      },
+      "planned": 1
+    },
+    "xlsx.alt.reference_for_literal": {
+      "admitted": 1,
+      "applied": 1,
+      "failed_checks": {},
+      "labels": {
+        "should_pass_alt_solution": 1
+      },
+      "planned": 1
+    },
+    "xlsx.alt.sum_range_expand": {
+      "admitted": 1,
+      "applied": 1,
+      "failed_checks": {},
+      "labels": {
+        "should_pass_alt_solution": 1
+      },
+      "planned": 1
+    },
+    "xlsx.eq.active_sheet": {
+      "admitted": 1,
+      "applied": 1,
+      "failed_checks": {},
+      "labels": {
+        "should_pass_equiv": 1
+      },
+      "planned": 1
+    },
+    "xlsx.eq.doc_property": {
+      "admitted": 3,
+      "applied": 3,
+      "failed_checks": {},
+      "labels": {
+        "should_pass_equiv": 3
+      },
+      "planned": 3
+    },
+    "xlsx.eq.view_selection": {
+      "admitted": 3,
+      "applied": 3,
+      "failed_checks": {},
+      "labels": {
+        "should_pass_equiv": 3
+      },
+      "planned": 3
+    },
+    "xlsx.eq.view_zoom": {
+      "admitted": 2,
+      "applied": 2,
+      "failed_checks": {},
+      "labels": {
+        "should_pass_equiv": 2
+      },
+      "planned": 2
+    },
+    "xlsx.extra.clear_unrelated_row": {
+      "admitted": 3,
+      "applied": 3,
+      "failed_checks": {},
+      "labels": {
+        "should_fail_extra_change": 3
+      },
+      "planned": 3
+    },
+    "xlsx.extra.delete_unrelated_sheet": {
+      "admitted": 1,
+      "applied": 1,
+      "failed_checks": {},
+      "labels": {
+        "should_fail_extra_change": 1
+      },
+      "planned": 1
+    },
+    "xlsx.extra.edit_unrelated_value": {
+      "admitted": 3,
+      "applied": 3,
+      "failed_checks": {},
+      "labels": {
+        "should_fail_extra_change": 3
+      },
+      "planned": 3
+    },
+    "xlsx.extra.format_unrelated_cell": {
+      "admitted": 3,
+      "applied": 3,
+      "failed_checks": {},
+      "labels": {
+        "ambiguous": 3
+      },
+      "planned": 3
+    },
+    "xlsx.extra.rename_unrelated_sheet": {
+      "admitted": 1,
+      "applied": 1,
+      "failed_checks": {},
+      "labels": {
+        "should_fail_extra_change": 1
+      },
+      "planned": 1
+    },
+    "xlsx.viol.clear_bound_cell": {
+      "admitted": 3,
+      "applied": 3,
+      "failed_checks": {},
+      "labels": {
+        "should_fail_violation": 3
+      },
+      "planned": 3
+    },
+    "xlsx.viol.drop_char_format": {
+      "admitted": 3,
+      "applied": 3,
+      "failed_checks": {},
+      "labels": {
+        "should_fail_violation": 3
+      },
+      "planned": 3
+    },
+    "xlsx.viol.formula_ref_shift": {
+      "admitted": 2,
+      "applied": 3,
+      "failed_checks": {
+        "edit_landed": 1
+      },
+      "labels": {
+        "should_fail_violation": 3
+      },
+      "planned": 3
+    },
+    "xlsx.viol.number_format_change": {
+      "admitted": 3,
+      "applied": 3,
+      "failed_checks": {},
+      "labels": {
+        "should_fail_violation": 3
+      },
+      "planned": 3
+    },
+    "xlsx.viol.value_perturb": {
+      "admitted": 1,
+      "applied": 1,
+      "failed_checks": {},
+      "labels": {
+        "should_fail_violation": 1
+      },
+      "planned": 1
+    }
+  },
+  "receipt": {
+    "argv_json_hex": "5b22707974686f6e33222c20222d6d222c20226861726e6573732e71325f6d75746174696f6e2e6f70657261746f72732e76616c6964617465222c20222d2d6f7574222c20222f6f75742f76616c6964617465222c20222d2d70726f66696c652d74656d706c617465222c20222f686f6d652f757365722f2e636f6e6669672f6c696272656f66666963652f342f75736572225d",
+    "argv_json_hex_sha256": "383726a7bba36976095406dd38f0d7d9ac928d6d5718f157e7f6f4c4d4d5ddfa",
+    "batch_sha256": "6aa4e91bc958819a6b2a4718f568a7faee947a4db32dc282b05d4e7174de1bc1",
+    "container_dev_nvidia": [],
+    "exit_status": 0,
+    "finished_at": "2026-10-07T08:17:49Z",
+    "gpus_requested": 0,
+    "image_id": "sha256:894b2623dceb43e8468a2adbd6e03a532ea9683d4b7754cd79fa0d58a331f909",
+    "job_id": "431",
+    "mode": "run",
+    "mounts": "/home/kevin/cotcodec-runs/stage0/q2-evaluator-mutation/operators/src/7c429bcb793369649bc7970ccad0fba290ad2772:/src:ro /home/kevin/cotcodec-runs/stage0/q2-evaluator-mutation/operators/runs/validate-7c429bcb-v1:/out:rw",
+    "network": "none",
+    "started_at": "2026-10-07T08:16:48Z"
+  },
+  "resave": {
+    "base-docx": {
+      "error": null,
+      "status": "ok"
+    },
+    "base-pptx": {
+      "error": null,
+      "status": "ok"
+    },
+    "base-xlsx": {
+      "error": null,
+      "status": "ok"
+    },
+    "initial-docx": {
+      "error": null,
+      "status": "ok"
+    },
+    "initial-pptx": {
+      "error": null,
+      "status": "ok"
+    },
+    "initial-xlsx": {
+      "error": null,
+      "status": "ok"
+    }
+  },
+  "slurm_job": "431",
+  "source_revision": "7c429bcb793369649bc7970ccad0fba290ad2772",
+  "totals": {
+    "admitted": 130,
+    "applied": 131,
+    "planned": 131
+  },
+  "what": "Operator validation doctor on synthetic documents written from scratch (no OSWorld content): every operator planned against synthetic specs, applied through uno_apply.py (UNO edits + .uno:Save, VM LibreOffice profile) in the LO-VM image, and checked for purity against the null mutant. No checker ran."
+}

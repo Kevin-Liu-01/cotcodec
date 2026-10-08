@@ -1,0 +1,25 @@
+task_id: 6054afcb-5bab-4702-90a0-b259b5d3217c
+author: blind-model-author-v1
+requirements:
+  - req_id: R0
+    statement: (implicit) The workbook is persisted at /home/user/Date_Budget_Variance_HideNA.xlsx.
+    check_kind: file_exists
+    observable: File exists and loads.
+  - req_id: R1
+    statement: Every row whose Actual value is N/A (#N/A) is hidden.
+    check_kind: cell_format
+    observable: Rows 3, 6, 8, 9, 12, 14, 18, 19, 20, 24, 27, 32, 33 have row_dimensions hidden == true.
+  - req_id: R2
+    statement: Rows with real data stay visible.
+    check_kind: cell_format
+    observable: Every other row from 1 to 36 is not hidden.
+  - req_id: R3
+    statement: No cells are deleted or changed (explicit "do not delete any cells").
+    check_kind: cell_value
+    observable: B1:E36 values and formulas equal the initial file (same row positions).
+  - req_id: R4
+    statement: No AutoFilter/standard filter is used (explicit "filter is not needed").
+    check_kind: other
+    observable: Sheet XML has no autoFilter element and no filter database range is defined.
+allowed_variations:
+  - Hiding may be done row-by-row or with a multi-selection; grouping/outline is a gray zone if the rows end up hidden.

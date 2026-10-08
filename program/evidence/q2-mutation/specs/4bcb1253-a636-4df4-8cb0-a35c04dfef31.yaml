@@ -1,0 +1,17 @@
+task_id: 4bcb1253-a636-4df4-8cb0-a35c04dfef31
+author: blind-model-author-v1
+requirements:
+  - req_id: R1
+    statement: A PDF export of the document exists with the same base name, next to the source.
+    check_kind: file_exists
+    observable: /home/user/Desktop/View_Person_Organizational_Summary.pdf exists and is a valid PDF.
+  - req_id: R2
+    statement: The PDF contains the document's content.
+    check_kind: other
+    observable: pdftotext output contains "Use this task to view all current organizational relationships for a person", "Person Organizational Summary" and the step table text (e.g. "Step", "Action").
+  - req_id: R3
+    statement: (implicit) The source .docx is left in place.
+    check_kind: file_exists
+    observable: /home/user/Desktop/View_Person_Organizational_Summary.docx still exists.
+allowed_variations:
+  - PDF export options (default settings expected).
