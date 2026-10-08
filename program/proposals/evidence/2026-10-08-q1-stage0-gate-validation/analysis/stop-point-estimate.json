@@ -1,0 +1,52 @@
+{
+ "room_for_scoring_gpu_h": 3.706,
+ "split_share": {
+  "P1": 0.49,
+  "P2": 0.379,
+  "P3": 0.131
+ },
+ "rows": {
+  "A model, no store": {
+   "P1": 3.08,
+   "P2": 2.38,
+   "P3": 0.82,
+   "stop_falls_in": "P2, 26% through"
+  },
+  "B model, store": {
+   "P1": 3.17,
+   "P2": 2.45,
+   "P3": 0.84,
+   "stop_falls_in": "P2, 22% through"
+  },
+  "C primary (B x R=2.425)": {
+   "P1": 7.69,
+   "P2": 5.95,
+   "P3": 2.05,
+   "stop_falls_in": "P1, 48% through"
+  },
+  "C at R 2.5% (1.140)": {
+   "P1": 3.62,
+   "P2": 2.8,
+   "P3": 0.96,
+   "stop_falls_in": "P2, 3% through"
+  },
+  "C at R 97.5% (4.837)": {
+   "P1": 15.35,
+   "P2": 11.87,
+   "P3": 4.09,
+   "stop_falls_in": "P1, 24% through"
+  },
+  "D per-gate scales": {
+   "P1": 6.79,
+   "P2": 5.25,
+   "P3": 1.81,
+   "stop_falls_in": "P1, 55% through"
+  },
+  "E store-independent ratio": {
+   "P1": 10.7,
+   "P2": 8.27,
+   "P3": 2.85,
+   "stop_falls_in": "P1, 35% through"
+  }
+ }
+}

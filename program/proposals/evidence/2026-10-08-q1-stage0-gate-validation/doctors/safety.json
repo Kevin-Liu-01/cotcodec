@@ -1,0 +1,9 @@
+{
+ "doctor": "Safety",
+ "status": "PASS",
+ "evaluated_on": "2026-10-08",
+ "evaluated_by": "wave-1 single synthesis owner (Claude agent); not an independent review",
+ "pass_condition": "Safety, monitorability, data rights, and project red lines addressed",
+ "evidence": "D3, D7 and D29 applied: no model-written kernel runs on a GPU; the corpus is TorchInductor output, pre-2025 human-written kernels and harness-derived mutants and controls; the three KernelBench adversarial kernels and the unmodified upstream fidelity code are hash-pinned trusted inputs; Stage 1 waits on R580 or written risk acceptance (D2). Licences stated per source (KernelBench, kernel_bench_verified, lethe MIT; FlagGems Apache-2.0; Liger-Kernel BSD-2-Clause with Unsloth Apache-2.0; Triton tutorials MIT; KernelGYM unlicensed and reimplemented from a spec, D6; KernelBench-M unlicensed, read-only; Dr. Kernel-8B unlicensed, D5). No host address, secret, employer or private data in the repository or bundle; the bundle stores metadata extracts and hashes, not full texts. Integrity gate answered for seven failure modes.",
+ "remediation": "Fix the shared load_inline name (fast_matmul) by chaining the adversarial controls or a per-item TORCH_EXTENSIONS_DIR before their rows are trusted; obtain a licence ruling before any use of KernelBench-M suites."
+}
