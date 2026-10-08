@@ -2526,3 +2526,46 @@ they say so.)
   `--exclude` replaced ruff's defaults; rerun with `--extend-exclude`.
 - Not done: no freeze, no push, no GPU job. Next: the fresh pre-freeze audit (D49 iv), then
   O1 and A0a after the action-path suite passes.
+
+## 2026-10-08 — Q2 S1a G0 build: correctness and readiness review fixed (branch `stage0/q2-stage1-rescope`, draft, not frozen)
+
+- A further review of the G0 build returned eight blocking items; each is fixed with tests
+  (registration section 22, "Correctness and readiness review", C1-C8), none rejected:
+  - C1 (`61d02d9`): transport failures the pinned OSWorld checker swallows (`get_vm_file`
+    returns `None`; postconfig steps log or re-wrap a `ConnectionError`) were scored as the
+    agent's outcome. Every guest request that raises is now recorded, and setup,
+    `evaluate()` and the capture sweep end in a transport loss when any of theirs failed;
+    `is_transport_error` reads the exception chain; the restart check runs again after the
+    capture, and an identity check that cannot reach the server is a transport loss.
+    Job 1010 (CPU only, no VM, metric image) ran the pinned code on 13 pool tasks against a
+    dead and a half-dead guest: the old rule scored 26 of 26 runs, the fix records 26 of
+    26 as transport losses.
+  - C2 (`483b3c0`): `type` text with a control character L0-fixed cannot type (a CRLF `\r`,
+    ESC, C1) is an agent-caused `IRError`, not an `executor_device` loss.
+  - C3 (`7929fae`): registered VM jobs take section 5.5's CPUs (90 at V = 20) and a limit
+    of the GPU cap plus 10 minutes; the 8-CPU host-load cap is an operator flag for
+    development and setup checks only.
+  - C4 (`6d20be1`): the GPU-engine template's `seeds: []` (the submitter refused
+    `deterministic` with seeds); a filled template passes the submitter for 9B, 4B and the
+    anchor.
+  - C5 (`2b9100d`): the K floor follows the anchor branch (32 without the anchor whatever
+    item 18 says, D49 i); K = 32 needs a mean A0a slot of at most about 728 s at V = 20,
+    below the card's high slot of 743 s, so going back to review after A0a is a live
+    outcome.
+  - C6 (`de4f80f`): A0a's truncation and concurrency gates computed by `plan.a0a_gates`
+    and enforced by `freeze_constants`; section 15's label uses the gate's definition.
+  - C7 (`e43549d`): every registered VM job's slots rendered from the plan
+    (`plan.a0a_slots`, `plan.a1_slots`, `scripts/render_q2_stage1_manifest.py`) and the
+    lane refuses any that differ; session 2's blocks recomputed from the session-1 records.
+  - C8 (`0e2d192`): the system-prompt date is pinned to 2026-10-08 for every registered
+    episode (option a), so the session excess is not confounded with a calendar change.
+- Found and left for the audit (`ee531b6`): base task `26150609`'s setup step `pip install
+  pygame` cannot succeed offline (OSWorld logs it and goes on, as upstream); scoring is
+  unaffected, but the agent's VM lacks pygame. Whether that is a setup failure (which for a
+  base task sends the draft back to review) is the audit's and Kevin's call.
+- Tests on `e43549d`: S1a 237 passed, 1 skipped locally (45 new); the host full suite in a
+  fresh `~/cotcodec-scratch/` export under `srun -c 8` (no GRES): 2,521 passed, 41 skipped;
+  ruff clean on the S1a code, scripts and tests. Jobs: 1010 (the transport check) and the
+  test run; at most one of mine at a time, beside the action-path acceptance job.
+- Not done: no freeze, no push, no GPU job. Next: the fresh pre-freeze audit (D49 iv), then
+  O1 and A0a after the action-path suite passes.
