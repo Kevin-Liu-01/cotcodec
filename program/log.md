@@ -301,3 +301,28 @@ Append-only. Newest entries at the bottom.
 - `vm-campaign.sbatch` (branch `stage0/q2-action-path`, not on main) does not
   have this gap: its USR1/TERM handler kills the driver and force-removes every
   job-labelled container without waiting on them.
+
+## 2026-10-07 — Lane: container lifetime review fixes
+
+- An independent review of the lifetime fix found one fail-open path and six
+  smaller defects, all reproduced with stub-docker tests before fixing:
+  - the hard-stop timer inherited `set -e`, so a failed `hard-stop.env` write
+    (full or failing disk) ended it before its kill; it now runs `set +e` and
+    the record is best-effort;
+  - the timer looped forever after its kill, and outlived a batch shell killed
+    alone; it now ends after its kill, and if the shell is gone it SIGKILLs the
+    container at once (`cause=batch_script_gone`) and exits;
+  - a requeued job reused its run directory and read the earlier attempt's
+    records; the submitter passes `--no-requeue` and the batch script refuses
+    an existing run directory (exit 2);
+  - a TERM that killed the `docker create` client before it printed the ID
+    leaked the container dockerd still created; the exit trap watches 5 s;
+  - a TERM sent to the whole job reached the container through the attached
+    client before the trap's marker record, so a TERM checkpoint never
+    confirmed (also on main); the TERM record is now taken at container start;
+  - a confirmed TERM checkpoint was SIGKILLed at once; it now gets the grace;
+  - `docs/operations.md` overstated the hard stop: a workload must exit within
+    150 s of USR1, and the hard stop does not follow `TimeLimit` changes.
+- The q2 evaluator-mutation draft preregistration (other branch) sizes its
+  rater stop on the 180 s USR1 lead; it needs a note on the 150 s bound before
+  it is frozen. No GPU time used.
