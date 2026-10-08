@@ -1730,3 +1730,50 @@ Append-only. Newest entries at the bottom.
   either amends D36's timing rule for the 4B lane or authorises a second
   timing job of the fixed path (at most 0.1 GPU-h, a fresh timing run root);
   then freeze with that decision named in the status and the lead-in.
+
+## 2026-10-08 — Q3 dense pre-check v2: second timing job of the fixed 4B path (D42; branch `stage0/q3-dense-v2`, draft, not frozen)
+
+- Main (`18fe252`, D42) merged in (`175d35e`); only `program/decisions.md`
+  had changed on main. GPU total recomputed from the ledger rows.
+- D42 (ii) implemented at `87242fa`: the timing profile starts with the
+  lane's own `attention_backend_check` (cuDNN on, then off) before any unit;
+  a second timing template with a fresh run root (`timing-2-qwen3.5-4b-base`),
+  filler `--timing 2`; the caps count both timing jobs.
+- Image 806 (CPU-only build from a fresh clone of `87242fa`); v2 CPU doctor
+  12/12 in it. One timing job, filled once, dry run, `--test-only`, submitted
+  once: Slurm 810, 162 s, 0.045 GPU-h physical (4 minutes charged), exit 75
+  on Slurm's SIGUSR1 at a chunk boundary, receipt bound to job 810.
+- The fixed path runs on the GPU. Start-up 78.7 s to the first unit, of which
+  the backend check 47.4 s with the first-use compiles; on `c320-q0` cuDNN's
+  attention and the lane's differ by at most 1.15 recall points and 0.011 in
+  an option score, same answer; memory-efficient attention in the torch
+  profiles. First evaluations: medians 0.42 (A-main), 0.39 (B-absent), 0.16
+  (C-literal), 0.35 s (D-nohaystack) per unit; re-evaluated units the same
+  (no per-shape cost left); two one-off compiles of 7.4 and 7.6 s. The same
+  chunks took 6 s against 54-108 s in Slurm 766. One Python thread busy; GPU
+  0-95 percent, mean 31 percent. v1's path bit-equal on five units (every
+  stage).
+- 4B limit by D36's rule: 769 s evaluation and statistics (per-stage means
+  scaled up to the lane's context lengths, a compile allowance, 5 s
+  statistics) and 79 s start-up give 30 minutes (0.50 GPU-h); 0.6B stays 12.
+  Caps with both timing jobs 0.90 of D36's 1.5. A first analysis pass with
+  per-stage token fits, whose slopes the two compiles set (measured lengths
+  span only 3,600-3,950 tokens in two stages), gave 73 minutes; it was
+  discarded for that reason and is kept in the evidence. Lanes module (a measurement
+  again, bound by a test to the committed analysis), 4B template,
+  registration (status and lead-in name D42; Compute; decisions 12, 18, 20,
+  21; Changes; both timing jobs' results) and code table updated (`7ab5b8b`).
+- Host suite at `7ab5b8b` hung in the in-process guard test (a
+  process-directed signal can be taken by another pytest thread between the
+  guard's sigpending and sigwait); the test now sends thread-directed
+  signals (`8c3f076`; no tabled file changed). At `8c3f076`: host suite
+  2,216 passed, 40 skipped, 0 failed; image 825, doctor 12/12, torch tests in
+  the image 55 passed, PID-1 test passed. Freeze simulated on scratch clones
+  naming the real D42: check-chain 12 rows PASS, frozen-mode tests pass, 0.6B
+  and 4B fills and dry runs (0.2 and 0.5 GPU-h) ok; status-only and a wrong
+  decision fail the test; full suite in the frozen clone 2,169 passed, 87
+  skipped. Real ledger unchanged.
+- State: ledger row 0.045 GPU-h; program total 4.028; v2 used 0.1019 GPU-h.
+  Evidence `program/evidence/2026-10-08/q3-dense-headroom-precheck-v2-build/timing-2/README.md`.
+- Next: the narrow re-check of the measured limits (D42 (iii)), then merge
+  and freeze naming D42.

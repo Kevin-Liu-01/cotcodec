@@ -2,10 +2,10 @@
 
 Status: Stage 0. The dense headroom pre-check
 (`q3-dense-headroom-precheck-v1`) ran on 2026-10-08 and ended INCOMPLETE with
-no combined read. Its successor `q3-dense-headroom-precheck-v2` (D36) is a
-draft on branch `stage0/q3-dense-v2`, built and timed but not frozen; the
-program owner accepts its decisions 16-21 and limits next (see the last
-section). Role: preemptible backfill, first in the backfill queue. Dossier
+no combined read. Its successor `q3-dense-headroom-precheck-v2` (D36, D42) is
+a draft on branch `stage0/q3-dense-v2`, built and timed but not frozen: D42
+accepts its decisions 16-21 after a narrow re-check of the limits, now
+measured on the fixed 4B path (see the last section). Role: preemptible backfill, first in the backfill queue. Dossier
 entry: `E6-d21-translation-supervised-indexer`, rank 3, BACKFILL. Carried
 over from direction D21; its premises all held.
 
@@ -138,13 +138,23 @@ Branch `stage0/q3-dense-v2`; registration
   3.6-4.1 s; a reused prefill length 0.11 s against 0.8 s; units re-evaluated
   with cached graphs 0.51 s. v2 turns cuDNN's attention off on the 4B lane
   (not bit-equal to cuDNN; the receipt reports the difference on the first
-  unit). The fixed path was not timed: the 4B limit (45 minutes) applies D36's
-  rule to twice the warm-unit projection.
+  unit), a departure from D36 (iii) that D42 (i) accepts.
+- Second timing job (D42 (ii); Slurm 810, 0.045 GPU-h, image from `87242fa`):
+  the fixed path runs on the GPU, starting with the lane's
+  `attention_backend_check` (47.4 s with the first-use compiles; recall within
+  1.15 points and option scores within 0.011 of cuDNN's on the first unit,
+  same answer); memory-efficient attention; first evaluations 0.16-0.43 s per
+  unit by stage (the same chunks took 6 s against 54-108 s in Slurm 766);
+  v1's path bit-equal on five units; SIGUSR1 answered at a chunk boundary.
 - Validity gate: v2's 0.6B lane must reproduce job 727's receipt statistics to
   1e-6 (every numeric leaf of report, decisions, coverage, counts) and smoke
   452; the 0.6B code path is unchanged.
-- Limits and caps: 0.6B 12 minutes, 4B 45 minutes, timing job 6; 1.05 GPU-h
-  of D36's 1.5.
+- Limits and caps by D36's rule, both measured: 0.6B 12 minutes (job 727), 4B
+  30 minutes (Slurm 810: 769 s evaluation with length scaling and a compile
+  allowance, 79 s start-up; completes at up to 1.3 s per unit), two timing
+  jobs of 6; 0.90 GPU-h of D36's 1.5. v2 used 0.102 GPU-h physical so far.
 
-Next: the program owner accepts or amends decisions 16-21 and the limits
-(including whether to time the fixed 4B path first), then freeze steps 2-5.
+Next: the narrow re-check of the measured limits (D42 (iii)), then merge and
+freeze with the status and lead-in naming D42 (simulated on a scratch clone:
+check-chain PASS, frozen-mode tests pass), image from the frozen commit,
+doctor, the 0.6B lane, then the 4B lane.

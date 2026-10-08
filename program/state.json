@@ -293,22 +293,27 @@
       "doc": "program/questions/q3-cross-script-indexer.md",
       "dossier_key": "E6-d21-translation-supervised-indexer",
       "status": "stage-0-precheck-v2-draft",
-      "next_action": "Kevin decides on q3-dense-headroom-precheck-v2 (draft on stage0/q3-dense-v2): accept or amend decisions 16-21 and the limits (0.6B 12 min, 4B 45 min, timing job 6; 1.05 of D36's 1.5 GPU-h), and rule on the 4B lane's two departures from D36: (a) decision 18 turns cuDNN's attention off, which changes computed quantities (D36 (iii) allows none; only the descriptive attention_backend_check covers it, and the job-727 gate does not), so amend D36 (iii) for the 4B lane or require another fix; (b) the 4B limit doubles a warm-shape projection because the fixed path (cuDNN off) was never timed or run on a GPU (job 766 ran the path before the fix), so amend D36's timing rule for the 4B lane (the lane completes only at 2.1 s per unit or less) or authorise a second timing job of the fixed path (at most 0.1 GPU-h, 1.15 of 1.5; it needs a fresh timing run root, since the filler refuses a second job in timing-qwen3.5-4b-base, and its measurement then replaces the projection before the freeze). Then merge and freeze with the status paragraph and the design-decision lead-in naming that decision (freeze step 1; the frozen-mode test refuses draft wording), image from the frozen commit, doctor, run the 0.6B lane (must reproduce v1 job 727 to 1e-6 and smoke 452), then the 4B lane, and the combined read. v1 ended INCOMPLETE; its 0.6B receipt stays as evidence.",
+      "next_action": "q3-dense-headroom-precheck-v2 (draft on stage0/q3-dense-v2): D42 accepted decisions 16-21 as amended by it, after a narrow re-check of the measured limits, amended D36 (iii) for the 4B lane and authorised a second timing job of the fixed 4B path. That job ran (Slurm 810, 0.045 GPU-h, image from 87242fa): the fixed path runs on the GPU from the lane's own start-up (attention_backend_check 47.4 s; recall within 1.15 points, option scores within 0.011 of cuDNN's, same answer), memory-efficient attention, 0.16-0.43 s per unit by stage, v1's path bit-equal on five units, SIGUSR1 answered. By D36's rule the 4B lane is now 30 minutes (0.50 GPU-h; 769 s evaluation and statistics, 79 s start-up), the 0.6B lane 12; caps with both timing jobs 0.90 of 1.5 GPU-h. Next: the narrow re-check of the measured limits (D42 (iii)); then merge and freeze with the status paragraph and the design-decision lead-in rewritten to name D42 (freeze step 1; simulated on a scratch clone), image from the frozen commit, doctor, run the 0.6B lane (must reproduce v1 job 727 to 1e-6 and smoke 452), then the 4B lane, and the combined read. v1 ended INCOMPLETE; its 0.6B receipt stays as evidence.",
       "first_gpu_experiment": {
         "name": "dense headroom pre-check",
-        "registration": "q3-dense-headroom-precheck-v2 (DRAFT, not frozen; D36; branch stage0/q3-dense-v2), successor of q3-dense-headroom-precheck-v1 (frozen 2026-10-08, D32; operated 2026-10-08: 0.6B lane complete with smoke 452 REPRODUCED, 4B lane void, read INCOMPLETE)",
+        "registration": "q3-dense-headroom-precheck-v2 (DRAFT, not frozen; D36, D42; branch stage0/q3-dense-v2), successor of q3-dense-headroom-precheck-v1 (frozen 2026-10-08, D32; operated 2026-10-08: 0.6B lane complete with smoke 452 REPRODUCED, 4B lane void, read INCOMPLETE)",
         "cap_gpu_hours": 1.5,
-        "registered_caps_gpu_hours": 1.05,
+        "registered_caps_gpu_hours": 0.9,
         "gauntlet_required": false,
-        "gpu_hours_used": 0.0569,
-        "gpu_hours_charged": 0.0833,
+        "gpu_hours_used": 0.1019,
+        "gpu_hours_charged": 0.15,
         "v1_gpu_hours_used": 0.4189,
         "v1_gpu_hours_charged": 0.4667,
         "evidence": "program/evidence/2026-10-08/q3-dense-headroom-precheck-v2-build/README.md",
-        "v1_evidence": "program/evidence/2026-10-08/q3-dense-headroom-precheck/README.md"
+        "v1_evidence": "program/evidence/2026-10-08/q3-dense-headroom-precheck/README.md",
+        "timing_jobs": [
+          "766 (D36; the 4B path before the fix; 0.0569 GPU-h physical, 5 min charged)",
+          "810 (D42 (ii); the fixed 4B path at 87242fa; 0.045 GPU-h physical, 4 min charged)"
+        ],
+        "evidence_timing_2": "program/evidence/2026-10-08/q3-dense-headroom-precheck-v2-build/timing-2/README.md"
       },
       "blocked_by": [
-        "a program-owner decision on q3-dense-headroom-precheck-v2 that accepts or amends decisions 16-21 and the limits and amends D36 (iii) and D36's timing rule for the 4B lane (cuDNN's attention off is not bit-equal; the 4B limit is projected, not measured, and the fixed path has not run on a GPU), or requires another fix or a timing job of the fixed path"
+        "the narrow re-check of the measured limits that D42 (iii) requires before the freeze (4B 30 min from Slurm 810's measurement of the fixed path; 0.6B 12 min from job 727; caps 0.90 of 1.5 GPU-h)"
       ]
     }
   ],
@@ -325,10 +330,9 @@
     "The ANTHROPIC_API_KEY on this machine is invalid (HTTP 401); supply a valid key if the Claude rater and gauntlet reviews should use the API rather than the agent harness (D25)",
     "Decide whether to ask the KernelGYM authors for a licence: gate_b.py was rewritten from the spec after the review found a transliteration (stage0/q1-gates, never pushed); a licence would remove the residual risk",
     "Q1 after D41: Stage 0 as drafted is withdrawn (gauntlet wave 1 honest exit at 45; the TF32-admissible audit metric cannot separate correct TF32 matmul/conv outputs from destroyed ones; projected 20-25 GPU-h high under the safe execution policy). A CPU-only audit-metric study on stored non-evaluation data is running; its recommendation, a small S1-cal GPU pilot and any successor Stage 0 (new id, fresh gauntlet, D24) are yours to approve. Stage 1 also needs the R580 driver upgrade or risk acceptance",
-    "Review the decisions taken on your behalf since the restart, D1-D41 in program/decisions.md; the recent ones are D28 (Q1 pilot exposure), D29 (upstream test code on GPUs), D30, D33, D39 and D40 (action path: guest-server restarts, freeze details, v1 invalid on C2 and its v2), D31, D37 and D41 (Q1 Stage 0 budget path and withdrawal), D32 and D36 (Q3 dense pre-check and its v2), D34, D35 and D38 (checker-mutation raters; the study became descriptive)",
-    "Q3 dense pre-check v2 (q3-dense-headroom-precheck-v2, draft on stage0/q3-dense-v2; program/evidence/2026-10-08/q3-dense-headroom-precheck-v2-build/README.md): one decision in program/decisions.md that (1) accepts or amends decisions 16-21 (receipts bound to their Slurm job from job.env; SIGUSR1/SIGTERM blocked from process start and consumed at chunk boundaries; cuDNN attention off on the 4B lane; the job-727 reproduction gate at 1e-6 plus smoke 452; the limits; the timing job) and the limits (0.6B 12 min, 4B 45 min; 1.05 of 1.5 GPU-h); (2) amends D36 (iii) for the 4B lane, because turning cuDNN's attention off changes computed quantities (bf16 accumulation order; a recall can move by a block) and only the descriptive attention_backend_check covers it, or requires another fix; (3) amends D36's timing rule for the 4B lane, or authorises a second timing job: Slurm 766 (0.057 GPU-h, 5 of its 6 minutes charged) ran the path before the fix (cuDNN on, cold units 3.6-4.1 s, about 75 min for the lane), so the fixed path has never run on a GPU and its 45-minute limit doubles a warm-shape projection (608 s, doubled to 1,216 s); the lane completes only if the fixed path averages 2.1 s per unit or less, and otherwise ends INCOMPLETE with no amendment possible under the id. A second timing job of at most 0.1 GPU-h (1.15 of the 1.5) would need a fresh timing run root and would replace the projection with a measurement before the freeze; nothing is left of the first job's allowance for it (1 minute, under the 5 any job needs)"
+    "Review the decisions taken on your behalf since the restart, D1-D41 in program/decisions.md; the recent ones are D28 (Q1 pilot exposure), D29 (upstream test code on GPUs), D30, D33, D39 and D40 (action path: guest-server restarts, freeze details, v1 invalid on C2 and its v2), D31, D37 and D41 (Q1 Stage 0 budget path and withdrawal), D32 and D36 (Q3 dense pre-check and its v2), D34, D35 and D38 (checker-mutation raters; the study became descriptive)"
   ],
-  "gpu_hours_spent_this_program": 3.983,
+  "gpu_hours_spent_this_program": 4.028,
   "frozen_registrations": [
     "q3-k1-localization-screen-v1",
     "q2-holo3-rerun-audit-v1-posthoc",
@@ -529,6 +533,20 @@
       ],
       "outcome": "TIMING_INTERRUPTED by Slurm's SIGUSR1 three minutes before the 6-minute limit, checkpoint confirmed, exit 75, receipt bound to job 766 from job.env; 2 of 8 subset chunks (A-main 108 s, B-absent 54 s; cold units 3.6-4.1 s); cost located: a cuDNN attention graph per new sequence length (about 0.7 s of CPU per forward); v1-path reference units bit-equal",
       "basis": "physical (job.env start 07:32:07 to termination.env finish 07:35:32, 205 s on 1 H100); charged under v1's rule 5 minutes (0.0833 GPU-h)"
+    },
+    {
+      "experiment": "q3-dense-headroom-precheck-v2 second development timing job (D42 (ii))",
+      "gpu_hours": 0.045,
+      "jobs": [
+        "806 image build (CPU)",
+        "810 timing job, qwen3.5-4b-base (the fixed path)",
+        "813 image build (CPU)",
+        "825 image build (CPU)",
+        "814 and 826 host suites (CPU)",
+        "CPU doctor, analysis and test steps (srun, CPU)"
+      ],
+      "outcome": "TIMING_INTERRUPTED by Slurm's SIGUSR1, checkpoint confirmed, exit 75, receipt bound to job 810 from job.env; the lane's start-up with attention_backend_check ran on the GPU (47.4 s; cuDNN left off); subset complete plus two chunks; first evaluations 0.16-0.43 s per unit by stage (memory-efficient attention); v1-path reference units bit-equal; 4B limit by D36's rule 30 minutes",
+      "basis": "physical (job.env start 10:12:46 to termination.env finish 10:15:28, 162 s on 1 H100); charged under the run-root rule 4 minutes (0.0667 GPU-h)"
     }
   ],
   "results": [

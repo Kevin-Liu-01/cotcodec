@@ -1,0 +1,50 @@
+q3-dense-headroom-precheck-v2, D42 (ii): host operations on fal-h100-01 (UTC, 2026-10-08)
+All runs from fresh clones of bundles under ~/cotcodec-runs/stage0/q3-dense-v2/ (timing2-repo at
+87242fa, final2-repo at 7ab5b8b, final3-repo at 8c3f076) or fresh ~/cotcodec-scratch/ clones;
+~/cotcodec untouched; no sudo; nothing pushed; the real preregistration ledger untouched.
+Other sessions' Slurm jobs ran beside these (796, 815, 817, 823, 824: CPU and q2 rater jobs).
+
+09:5x         main (18fe252, D42) merged into the branch locally (175d35e); code change for
+              D42 (ii) committed (87242fa).
+09:58         bundle of 87242fa copied; fresh clone timing2-repo; pre-build state recorded
+              (no GPU job queued; 8 GPUs idle; CPU job 796 of another session running).
+09:58-10:08   Slurm 806: CPU-only image build from timing2-repo -> sha256:15514bd1...,
+              source tar b8bee28b... (images/).
+09:58-09:59   precheck: the doctor's timing_profile case with 87242fa's entry point, doctor
+              and lanes module mounted read-only over image 801 (srun CPU, network none):
+              PASS (precheck/).
+10:09-10:12   v2 CPU doctor in image 806 (srun CPU, network none): DENSE_V2_DOCTOR_PASS 12/12,
+              186.6 s (doctor/doctor-cpu-image-87242fa.*).
+~10:12        uv sync --locked --extra dev in timing2-repo; filler --timing 2 with image
+              receipt 806: one claim (slot 0) in the fresh run root
+              q3-dense-headroom-precheck-v2/timing-2-qwen3.5-4b-base; submitter --dry-run
+              (0.1 GPU-h, --time=00:06:00) and --test-only (ops/).
+10:12:43      pre-submit state recorded (no GPU job queued, 8 GPUs idle); the filled manifest
+              submitted once: Slurm 810. Observer started (2 s samples of the job's own GPU).
+10:12:44      Slurm 810 started (1 x H100, GPU 0; limit 6 minutes); job.env 10:12:46.
+10:15:28      Slurm 810 ended: exit 75, signal_USR1_checkpoint_confirmed (SIGUSR1 received
+              150.6 s into the process). 162 s from job.env to termination.env, 0.045 GPU-h.
+10:16-10:25   run directory collected (timing-810/); analysis in image 806 (srun CPU, network
+              none): a first pass with per-stage token fits (distorted by two one-off compiles;
+              kept as analysis-first-pass.*) replaced by the documented estimator
+              (analysis.txt/json): 4B limit 30 minutes.
+~10:27        lanes module, 4B template, registration, tests and evidence committed (7ab5b8b).
+~10:28        bundle of 7ab5b8b; Slurm 813 CPU image build from final2-repo
+              -> sha256:fb8d5684...; Slurm 814 host suite in a fresh scratch clone.
+10:29-10:44   Slurm 814 hung in test_poll_restores_a_replaced_handler_and_records_it (pytest's
+              main thread in sigwait for SIGUSR1, nothing pending); cancelled 10:44:43.
+              Reproduction attempts (srun CPU 818 and one more step): the signals tests alone
+              (6 runs) and the suite's first 183 tests passed; the race needs another thread
+              of the pytest process to take the process-directed signal.
+~10:46        test fixed (pthread_kill to the test's own thread; 8c3f076); bundle; Slurm 825
+              CPU image build from final3-repo -> sha256:2364f2da...; Slurm 826 host suite at
+              8c3f076: 2,216 passed, 40 skipped, 0 failed (10:47-10:51).
+10:57-11:00   in image 825 (srun CPU, network none): torch-dependent dense tests 55 passed;
+              PID-1 SIGUSR1 test from the scratch clone at 8c3f076: 1 passed.
+11:00-11:03   v2 CPU doctor in image 825: DENSE_V2_DOCTOR_PASS 12/12.
+local         freeze simulations (full, status-only, wrong-dec) on scratch clones of 7ab5b8b
+              and 8c3f076; full suite in the frozen clone of 8c3f076 (macOS) 2,169 passed,
+              87 skipped, 0 failed. Real ledger 1052d58b... before and after.
+
+GPU use: Slurm 810 only, 162 s physical on one GPU (0.045 GPU-h); charged 4 minutes under the
+run-root rule (0.0667 GPU-h). Every other job above was CPU only.

@@ -573,7 +573,12 @@ on the GPU (D42 (ii); below).
   against 0.60 s measured at 8,310 tokens). Over the stages' 440, 280, 160 and
   280 units that is 658 s; the one-off compiles are added at their observed
   rate (2 in 159 units) over all 1,160 units at the larger one's extra cost,
-  106 s; with a 5 s statistics bound (job 727's took 1.2 s), 769 s. Start-up
+  106 s; with a 5 s statistics bound (job 727's took 1.2 s), 769 s. (A first
+  analysis pass fitted a line in tokens per stage; the measured units of two
+  stages span only 3,600 to 3,950 tokens, so a single compile set the slope,
+  and it extrapolated 7.7 s per C-literal unit against 0.16 s measured, 73
+  minutes for the lane. It was discarded for that reason and is kept in the
+  evidence; the two passes differ only in how the two compiles are treated.) Start-up
   is everything before the first unit, 79 s: 2 s from Slurm's start to
   `job.env`, 9.7 s of the job outside the workload process (container creation
   and the epilogue, so this over-counts) and 67.0 s in the process: 19.6 s to

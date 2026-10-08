@@ -1,0 +1,12 @@
+{
+  "job_id": "813",
+  "git_sha": "7ab5b8bf7f9a42652396b1553f304b1760ee767d",
+  "git_tree": "f99d6a6e743e99b6291d7bd4ed0c7d3b4c0e8629",
+  "source_tar_sha256": "d1b1bea05138f38d5ef70693b2c912a58618a592de3c24a3faa663bd9b73119b",
+  "tag": "cotcodec-research:7ab5b8bf-architecture",
+  "image_id": "sha256:fb8d56844a45ca8ac594353e47f6fab12a104304c96d2b8994698d34d5c04632",
+  "repo_digest": "127.0.0.1:5000/cotcodec-research@sha256:46b410e51e6892255c00f0f3003e1fa0380acb21b0718c9b6ad5288489f7a376",
+  "uv_extra": "architecture",
+  "network_during_build": true,
+  "evidence_grade": "infrastructure-only"
+}

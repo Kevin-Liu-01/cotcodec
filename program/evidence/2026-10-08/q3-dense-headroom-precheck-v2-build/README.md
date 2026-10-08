@@ -5,7 +5,8 @@ at `30f9c7c` before the program-state update). Registration
 `program/preregistrations/q3-dense-headroom-precheck-v2.md`: DRAFT, not
 frozen. Nothing here was frozen against the real ledger and nothing was
 pushed. GPU use: one timing job, Slurm 766, 205 s on one H100 (0.0569 GPU-h
-physical). Every other host job was CPU only.
+physical), and after D42 a second, Slurm 810, 162 s (0.045 GPU-h; section
+"Second timing job" and `timing-2/`). Every other host job was CPU only.
 
 ## What D36 asked for and what was done
 
@@ -201,8 +202,28 @@ Checks at `b8977d9` (all CPU; the real ledger untouched, nothing pushed):
   but naming D41): `test_status_and_decisions` fails, "names no decision that
   accepts v2 and amends D36 (iii)".
 
+## Second timing job of the fixed 4B path (D42 (ii); code at `87242fa`, limits at `7ab5b8b`)
+
+D42 amended D36 (iii) for the 4B lane and authorised a second timing job of
+the fixed path, starting with the lane's `attention_backend_check`, in a
+fresh run root. Slurm 810 (image `15514bd1...` from `87242fa`, CPU-only
+build 806, doctor 12/12) ran 162 s, 0.045 GPU-h: the lane's start-up with
+the check (47.4 s; recall within 1.15 points and option scores within 0.011
+of cuDNN's on `c320-q0`; cuDNN left off), the registered subset and two more
+chunks at 0.16-0.43 s per unit by stage with memory-efficient attention,
+v1's path bit-equal on five units, SIGUSR1 answered at a chunk boundary. By
+D36's rule the 4B lane is now 30 minutes (0.50 GPU-h; 769 s of evaluation
+and statistics with length scaling and a compile allowance, 79 s of
+start-up); the 0.6B lane stays 12; caps with both timing jobs 0.90 of 1.5
+GPU-h. The earlier sections' 45-minute projection and "untimed fixed path"
+are superseded. Everything is in `timing-2/README.md`.
+
 ## Files
 
+- `timing-2/`: the second timing job (D42 (ii)): images 806, 813 and 825,
+  doctor runs, the fill, dry run, test-only and submit records, the run
+  directory of Slurm 810 with the analysis, the tests (host suites, torch
+  tests in image 825, PID-1) and the freeze simulations naming D42.
 - `diagnosis/`: probes (CPU) and their logs; CPU profiles.
 - `timing-766/`: the timing job's run-directory files, receipt, progress,
   observation and collection scripts, filler and submitter records.
