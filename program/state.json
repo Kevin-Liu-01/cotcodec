@@ -366,7 +366,9 @@
           "glmm": "glmm.R in image b15584f3... (R 4.4.2, glmmTMB 1.1.10); acceptance fit job 984 converged (200 refits)"
         },
         "consequence": "branch 'anchor unavailable before A0b': pre-freeze jobs O1 and A0a only; T_A1 111 min; K_base 32 at the card's high price, so D47's 32-task floor holds without the section 18 item 18 amendment",
-        "evidence": "program/evidence/2026-10-08/q2-stage1-g0/"
+        "evidence": "program/evidence/2026-10-08/q2-stage1-g0/",
+        "tests": "9837c54: 193 S1a tests (192 passed, 1 skipped locally); host full suite in a fresh ~/cotcodec-scratch export under srun -c 8, no GRES: 2476 passed, 41 skipped; ruff clean except the two pre-existing K1 v3 evidence scripts",
+        "head": "9837c54 (draft; not frozen, not pushed)"
       }
     },
     {
