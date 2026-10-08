@@ -179,8 +179,8 @@ receipt.
   **1 passed** (`tests/pid1-image-825/`).
 - Local (macOS `.venv`): ruff clean; the dense, preregister and Q1 policy
   tests 132 passed, 7 skipped.
-- Freeze simulation (`freeze-simulation/`; local scratch clones of
-  `8c3f076`, each chaining onto main's 11-row ledger ending at
+- Freeze simulation (`freeze-simulation/`; local scratch clones of the
+  final head `57f3cc2` (unsuffixed files), each chaining onto main's 11-row ledger ending at
   `q2-evaluator-mutation-v1`, `dc39bfa2...`; the real ledger `1052d58b...`
   before and after every run). D42 is the real decision in
   `program/decisions.md`; no stand-in decision was needed.
@@ -194,11 +194,12 @@ receipt.
     0.6B receipt and 0 with a stand-in one (v1 job 727's statistics bound to
     a stand-in job and the frozen digest); dry runs 0.2 GPU-h
     (`--time=00:12:00`) and 0.5 GPU-h (`--time=00:30:00`). The full suite
-    in that frozen clone (macOS): 2,169 passed, 87 skipped, 0 failed
-    (`pytest-frozen-clone-full.txt`).
+    in the frozen clone of `8c3f076` (macOS; the registration then lacked
+    only Compute's sentence on the discarded first pass): 2,169 passed, 87
+    skipped, 0 failed (`pytest-frozen-clone-full-8c3f076.txt`).
   - `status-only` (lead-in left in draft): the frozen-mode test fails ("the
     frozen file still says 'still to be done'").
   - `wrong-dec` (both naming D41): the frozen-mode test fails ("the status
     does not name D42").
-  The same three runs at `7ab5b8b` gave the same results (kept as
-  `*-7ab5b8b.txt`).
+  The same three runs at `7ab5b8b` and `8c3f076` gave the same results
+  (kept with those suffixes).

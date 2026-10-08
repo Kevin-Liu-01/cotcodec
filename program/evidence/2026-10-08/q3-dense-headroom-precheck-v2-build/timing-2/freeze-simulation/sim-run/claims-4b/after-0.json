@@ -4,7 +4,7 @@
   "kind": "first",
   "lane": "qwen3.5-4b-base",
   "manifest_name": "q3-dense-headroom-v2-4b",
-  "manifest_sha256": "ef19c432a7431aea82b4be4e5b2e9f0684f951946fa23da5a0a4065793cb42e0",
+  "manifest_sha256": "71b9dadc876c4d1ae18d643a87fafa39581142b4997bda91e78843ab004bbdf5",
   "minutes": 30,
   "predecessor_job_id": null,
   "slot": 0

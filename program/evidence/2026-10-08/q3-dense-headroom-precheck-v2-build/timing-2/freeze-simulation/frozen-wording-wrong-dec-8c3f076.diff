@@ -1,5 +1,5 @@
 diff --git a/program/preregistrations/q3-dense-headroom-precheck-v2.md b/program/preregistrations/q3-dense-headroom-precheck-v2.md
-index 90ae606..3612e05 100644
+index 017be16..31f2884 100644
 --- a/program/preregistrations/q3-dense-headroom-precheck-v2.md
 +++ b/program/preregistrations/q3-dense-headroom-precheck-v2.md
 @@ -3,18 +3,15 @@
@@ -36,7 +36,7 @@ index 90ae606..3612e05 100644
 +development timing jobs ran before the freeze (Compute): Slurm 766 on the 4B
 +path as it was before the fix (cuDNN's attention on) and Slurm 810 on the
 +fixed path (cuDNN's attention off).
-@@ -840,5 +837,4 @@ stated as amended), carried unchanged except decision 12's caps (D36).
+@@ -835,5 +832,4 @@ stated as amended), carried unchanged except decision 12's caps (D36).
 -Decisions 16-21 are v2's (D36). D42 accepts them as amended by it, after a
 -narrow re-check of the measured limits that is still to be done: decision
 -18's switch departs from D36 (iii) on the 4B lane, which D42 (i) amends, and
