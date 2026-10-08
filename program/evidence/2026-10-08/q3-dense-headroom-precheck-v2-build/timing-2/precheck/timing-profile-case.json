@@ -1,0 +1,59 @@
+{
+ "status": "PASS",
+ "failures": [],
+ "signal_sent": true,
+ "exit": 75,
+ "units": 160,
+ "reference": [
+  {
+   "bitwise_equal": true,
+   "stage": "A-main",
+   "unit": "c96-q0",
+   "v1_seconds": 0.100022885017097
+  },
+  {
+   "bitwise_equal": true,
+   "stage": "A-main",
+   "unit": "c96-q6",
+   "v1_seconds": 0.10436758119612932
+  },
+  {
+   "bitwise_equal": true,
+   "stage": "B-absent",
+   "unit": "c0-q0",
+   "v1_seconds": 0.055609446950256824
+  },
+  {
+   "bitwise_equal": true,
+   "stage": "C-literal",
+   "unit": "c96-q49",
+   "v1_seconds": 0.021171064116060734
+  },
+  {
+   "bitwise_equal": true,
+   "stage": "D-nohaystack",
+   "unit": "c48-q0",
+   "v1_seconds": 0.05541431996971369
+  }
+ ],
+ "attention_backend_check": {
+  "max_abs_difference": {
+   "mc_scores": 0.0,
+   "recall": 0.0
+  },
+  "same_fields": {
+   "k_blocks": true,
+   "max_selected": true,
+   "mc_correct": true,
+   "mc_scores": true,
+   "recall": true,
+   "ties": true
+  },
+  "seconds": 0.13262227457016706,
+  "unit": "c96-q0"
+ },
+ "torch_profiles": {
+  "v1": "ok",
+  "v2": "ok"
+ }
+}

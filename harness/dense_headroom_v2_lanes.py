@@ -1,26 +1,23 @@
-"""The lanes, limits and caps of q3-dense-headroom-precheck-v2 (D36).
+"""The lanes, limits and caps of q3-dense-headroom-precheck-v2 (D36, D42).
 
 The lane objects are v1's (``harness.dense_headroom_data.LANES``: same models,
 receipts, tokenizers, layers, profiles) with v2's minutes and caps.
 
-Limits. The arithmetic is D36's: twice the full-lane evaluation time, plus
-start-up, plus the 3-minute SIGUSR1 lead, rounded up to whole minutes. Only
-the Qwen3-0.6B-Base lane's evaluation time is measured (v1's job 727 ran the
-computation v2 reproduces). The Qwen3.5-4B-Base lane's is a projection, not a
-measurement: the development timing job (Slurm 766) ran the 4B path as it was
-before the fix (cuDNN's attention on), and the fixed path (cuDNN's attention
-off) has not run on a GPU. Its per-unit time is taken from the timing job's
-warm-shape units and the result is doubled again because it is unmeasured
-(``LARGE_LANE_PROJECTED``). That departs from D36's rule, which asks for a
-measurement of the fixed 4B path, so the decision that accepts the
-registration has to amend that rule for the 4B lane, or authorise a timing
-job of the fixed path whose measurement then replaces the projection here
-(registration decisions 20 and 21). The lane completes inside its useful
-window only if the fixed path averages at most about 2.1 s per unit
-(``large_lane_break_even_unit_s``); above that it ends INCOMPLETE. Every job
-of a lane (its first job, a re-run of a void job and its one continuation) is
-charged against the lane's minutes, as in v1. The v2 cap is 1.5 GPU-h in
-total, both development timing jobs included (D36, D42).
+Limits. The arithmetic is D36's: twice the measured full-lane evaluation
+time, plus start-up, plus the 3-minute SIGUSR1 lead, rounded up to whole
+minutes. Both lanes' inputs are measurements. The Qwen3-0.6B-Base lane's come
+from v1's job 727, which ran the computation v2 reproduces. The
+Qwen3.5-4B-Base lane's come from the second development timing job (Slurm
+810, D42 (ii)), which ran the fixed 4B path (cuDNN's attention off) at the
+code head on the GPU, starting with the lane's own start-up and its
+``attention_backend_check``. It replaces the projection that the first timing
+job (Slurm 766, the path before the fix) had left: 45 minutes from a doubled
+warm-shape projection. The lane completes inside its useful window if it
+averages at most about 1.3 s per unit (``large_lane_break_even_unit_s``)
+against the 0.16 to 0.43 s per unit measured. Every job of a lane (its first
+job, a re-run of a void job and its one continuation) is charged against the
+lane's minutes, as in v1. The v2 cap is 1.5 GPU-h in total, both development
+timing jobs included (D36, D42).
 """
 
 from __future__ import annotations
@@ -31,43 +28,59 @@ from typing import Any
 
 from harness import dense_headroom_data as dhd
 
-TOTAL_CAP_GPU_HOURS = 1.5  # D36: v2 in total, the timing job included
+TOTAL_CAP_GPU_HOURS = 1.5  # D36: v2 in total, both timing jobs included (D42)
 
 # The 0.6B lane's limit: measured (seconds).
 SMALL_LANE_V1_JOB = "727"
 SMALL_LANE_MEASURED = {"evaluation_and_statistics_s": 262.0, "start_up_s": 16.0,
                        "job_s": 278.0, "source": "v1 job 727 receipt timings and job.env/"
                                                 "termination.env (278 s)"}
-# The 4B lane's limit: projected, not measured (seconds). The development
-# timing job (Slurm 766) ran the 4B path before the fix, with cuDNN's attention
-# on (image from 71dc954), and located the cost: a new cuDNN graph per new
-# query/key length, about 0.7 s of CPU per forward (a unit reusing an earlier
-# prefill length took 0.11 s for its prefill instead of about 0.8 s); cold
-# units took 3.6 to 4.1 s, at which the lane needs about 75 minutes. The fixed
-# path (cuDNN's attention off on this lane) was not timed and has not run on a
-# GPU. Its per-unit time is projected from the two units the timing job
-# re-evaluated with every graph cached (0.511 and 0.517 s, v1's path under
-# cProfile), for all 1,160 units, plus a 5 s statistics bound (job 727: 1.2
-# s). Because that is a projection, the evaluation time entering D36's
-# arithmetic is twice it. Start-up was measured on the path before the fix:
-# the 8 s before the process, 19.4 s to the first unit and the first unit's
-# 47.2 s of compiles.
-LARGE_LANE_PROJECTED: dict[str, Any] = {
-    "measured": False, "timing_job": "766",
-    "timing_job_path": "before the fix: cuDNN's attention on (image from 71dc954)",
-    "warm_unit_s": 0.52, "units": 1160, "statistics_bound_s": 5.0,
-    "projected_evaluation_and_statistics_s": 0.52 * 1160 + 5.0,
-    "evaluation_entering_rule_s": 2.0 * (0.52 * 1160 + 5.0),
-    "start_up_s": 75.0,
-    "cold_unit_median_s_with_cudnn_attention": {"A-main": 4.08, "B-absent": 3.62},
-    "source": "development timing job, Slurm 766 (program/evidence/2026-10-08/"
-              "q3-dense-headroom-precheck-v2-build/)"}
+# The 4B lane's limit: measured on the fixed path (seconds), by the second
+# development timing job, Slurm 810 (image from 87242fa; cuDNN's attention off,
+# PyTorch's memory-efficient attention in the torch profiles). It ran 159
+# first evaluations of units in all four stages (the registered subset and one
+# further chunk of A-main and B-absent, the latter two under cProfile).
+# Per stage, the mean of those units, leaving out one-off first-use compiles
+# (a unit over five times its stage's median: the first selection-only prefill
+# and the first prefill above 8,192 tokens, 7.4 and 7.6 s), is scaled up by the
+# ratio of the lane's mean token length in that stage to the measured units'
+# (the subset's contexts are shorter than the lane's; never scaled down), times
+# the stage's units. The compiles are then added at their observed rate (2 in
+# 159 units) over all 1,160 units at the larger one's extra cost, plus a 5 s
+# statistics bound (job 727: 1.2 s). Start-up is everything before the first
+# unit: 2 s from Slurm's start to job.env, 9.7 s of the job outside the
+# workload process (container creation and the epilogue) and 67.0 s in the
+# process (start-up checks, derivation, model load and the 47.4 s
+# attention_backend_check with the first-use compiles).
+LARGE_LANE_TIMING_JOB = "810"
+LARGE_LANE_STAGES: dict[str, dict[str, float]] = {
+    # stage: units in the lane, measured mean seconds per unit (compiles left
+    # out), length ratio (lane mean tokens / measured mean tokens, at least 1)
+    "A-main": {"units": 440, "measured_unit_s": 0.4346, "length_ratio": 1.7744},
+    "B-absent": {"units": 280, "measured_unit_s": 0.4160, "length_ratio": 1.5805},
+    "C-literal": {"units": 160, "measured_unit_s": 0.1562, "length_ratio": 1.5918},
+    "D-nohaystack": {"units": 280, "measured_unit_s": 0.3387, "length_ratio": 1.0},
+}
+LARGE_LANE_MEASURED: dict[str, Any] = {
+    "measured": True, "timing_job": LARGE_LANE_TIMING_JOB,
+    "timing_job_path": "the fixed path: cuDNN's attention off (image from 87242fa)",
+    "units": sum(int(s["units"]) for s in LARGE_LANE_STAGES.values()),
+    "stage_evaluation_s": {name: s["units"] * s["measured_unit_s"] * s["length_ratio"]
+                           for name, s in LARGE_LANE_STAGES.items()},
+    "compile_allowance_s": 106.1, "statistics_bound_s": 5.0,
+    "start_up_s": 78.7,
+    "replaced_projection": {"timing_job": "766", "minutes": 45,
+                            "path": "before the fix: cuDNN's attention on (image from 71dc954)"},
+    "source": "second development timing job, Slurm 810 (program/evidence/2026-10-08/"
+              "q3-dense-headroom-precheck-v2-build/timing-2/timing-810/analysis.json)"}
+LARGE_LANE_MEASURED["evaluation_and_statistics_s"] = (
+    sum(LARGE_LANE_MEASURED["stage_evaluation_s"].values())
+    + LARGE_LANE_MEASURED["compile_allowance_s"] + LARGE_LANE_MEASURED["statistics_bound_s"])
 
 
 def limit_minutes(evaluation_s: float, start_up_s: float) -> int:
-    """D36's arithmetic: twice the full-lane evaluation time (measured for the
-    0.6B lane, a doubled projection for the 4B lane), plus start-up, plus the
-    3-minute SIGUSR1 lead, in whole minutes."""
+    """D36's arithmetic: twice the measured full-lane evaluation time, plus
+    start-up, plus the 3-minute SIGUSR1 lead, in whole minutes."""
 
     return math.ceil((2.0 * evaluation_s + start_up_s) / 60.0) + dhd.USR1_LEAD_MINUTES
 
@@ -79,8 +92,8 @@ def _lane(lane_id: str, minutes: int) -> dhd.Lane:
 
 SMALL_LANE_MINUTES = limit_minutes(SMALL_LANE_MEASURED["evaluation_and_statistics_s"],
                                    SMALL_LANE_MEASURED["start_up_s"])  # 12
-LARGE_LANE_MINUTES = limit_minutes(LARGE_LANE_PROJECTED["evaluation_entering_rule_s"],
-                                   LARGE_LANE_PROJECTED["start_up_s"])  # 45
+LARGE_LANE_MINUTES = limit_minutes(LARGE_LANE_MEASURED["evaluation_and_statistics_s"],
+                                   LARGE_LANE_MEASURED["start_up_s"])  # 30
 
 LANES: dict[str, dhd.Lane] = {
     "qwen3-0.6b-base": _lane("qwen3-0.6b-base", SMALL_LANE_MINUTES),
@@ -94,7 +107,7 @@ def large_lane_break_even_unit_s() -> float:
     finishes its 1,160 units inside its useful window (the limit minus the
     SIGUSR1 lead, minus the start-up and the statistics bound)."""
 
-    basis = LARGE_LANE_PROJECTED
+    basis = LARGE_LANE_MEASURED
     useful_s = (LARGE_LANE_MINUTES - dhd.USR1_LEAD_MINUTES) * 60.0
     return (useful_s - basis["start_up_s"] - basis["statistics_bound_s"]) / basis["units"]
 
@@ -123,8 +136,10 @@ def registered_caps_total() -> float:
 
 __all__ = [
     "LANES",
-    "LARGE_LANE_PROJECTED",
+    "LARGE_LANE_MEASURED",
     "LARGE_LANE_MINUTES",
+    "LARGE_LANE_STAGES",
+    "LARGE_LANE_TIMING_JOB",
     "REGISTERED_ORDER",
     "SMALL_LANE_MEASURED",
     "SMALL_LANE_MINUTES",
