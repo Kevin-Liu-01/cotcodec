@@ -633,10 +633,16 @@ The rules, applied by `plan.freeze_constants` to the A0 records only:
   where T_A1 is the A1 cap of section 6.1, 3 minutes is the USR1 lead, L_A0a is
   A0a's time from job start to its first request, 4 episodes per task per job,
   and 1.05 allows the re-queues DR0 tolerates.
-- **Floor.** If K_base < 24, the draft is not frozen and goes back to review.
-  D47 says "at least 32 confirm tasks"; the floor of 24 needs its amendment
-  (section 18, item 18), and until then the floor is 32
-  (`plan.freeze_constants(..., k_floor=32)`).
+- **Floor (D47; D49 (i)).** Without the anchor, the branch S1a is in since G0 item
+  9.6: If K_base < 32, the draft is not frozen and goes back to review; no amendment
+  lowers this floor. With the anchor running, the floor is 24 (K_base < 24 goes back to
+  review) once the item 18 amendment is signed (D49 (i) states it), and 32 until then.
+  `plan.freeze_constants` takes the floor from the branch: it defaults to 32 and applies
+  `k_floor=24` only when the anchor runs. In the unanchored branch (T_A1 = 111 minutes)
+  K_base = 32 needs c_A0a of at most about 0.01012 GPU-h, a mean A0a slot of at most
+  about 728 s at V = 20 and L_A0a = 6 minutes; the card's own high slot (743 s) gives 24,
+  so going back to review after A0a is a live outcome. At V = 16 the card's high price
+  alone gives 24 unless L_A0a is under 4 minutes.
 - **Truncation gate.** If more than 20% of A0a's steps under either harness
   end at 2,048 tokens without a complete tool call, the draft is not frozen.
   The gate is measured on 9B only; 4B's truncation is reported per cell
@@ -648,8 +654,8 @@ The rules, applied by `plan.freeze_constants` to the A0 records only:
   checker path is fixed before the freeze. Any change after A0 to the engine
   launcher, the episode driver, either harness client or the checker
   invocation requires that A0 job to be repeated; its cap enters the remainder
-  rule, and the constants are recomputed. If K_base falls below 24, the draft
-  goes back to review.
+  rule, and the constants are recomputed. If K_base falls below the floor, the
+  draft goes back to review.
 
 The constants (filled from the A0 records at the freeze):
 
@@ -1253,12 +1259,13 @@ floor.
     the kill criteria are unchanged until Kevin rules.
 18. **(Kevin)** D47 states "at least 32 confirm tasks". With the anchor
     running, the A0 rule gives 24 at the card's high price (section 6.1). The
-    proposed amendment: "a base of at least 24 confirm tasks by the A0 rule
-    (32 when the anchor is unavailable and the price allows)". Without it the
-    floor is 32, and S1a can freeze only when the anchor is unavailable.
-    (2026-10-08: G0 item 9.6 makes the anchor unavailable before any GPU job, so
-    the floor of 32 applies as D47 states and the amendment is not needed unless
-    A0a's price lowers K below 32.)
+    proposed amendment, as D49 (i) states it: "a base of at least 24 confirm tasks
+    with the anchor running, and at least 32 without it". Without the amendment the
+    floor is 32 in both branches, and S1a can freeze only when the anchor is
+    unavailable. (2026-10-08: G0 item 9.6 makes the anchor unavailable before any GPU
+    job, so the floor is 32 whether or not this item is signed. If A0a's price
+    lowers K_base below 32, the draft goes back to review; the amendment does not
+    apply without the anchor.)
 19. Caps of section 6.1 with the remainder rule, and the A0-derived K_base
     rule of section 6.2 (it can only lower K).
 20. The OpenCUA-7B anchor on the upstream action path, sized from A0b, read
@@ -1294,7 +1301,9 @@ floor.
   per episode, which the 2,048-token assumption on every step partly offsets;
   A0a measures the real cost on 9B only and in one wave.
 - **Base size.** When the anchor runs, the A0 rule gives 24 base tasks at the
-  card's high price; 32 needs the anchor's minutes.
+  card's high price; 32 needs the anchor's minutes. Without the anchor the floor is
+  32, and a mean A0a slot above about 728 s (the card's high slot is 743 s) sends the
+  draft back to review rather than to a smaller base.
 - **Upstream defaults lowered.** max_tokens 2,048 departs from H-OSW's
   upstream default, and greedy thinking can loop and truncate. Truncation is
   logged; the A0 gate covers 9B only.
@@ -1330,7 +1339,7 @@ row (the test fails otherwise), and the freeze pins them.
 | `harness/q2_stage1/estimators.py` | `b43334b0511d17505a24893d65ce79cd55a58351a2a056075ed5b002007d36b3` |
 | `harness/q2_stage1/records.py` | `90cb3cb023892ef5f63e9e53631b9f3b196ade4875689c4f0cc7421cd50c91b8` |
 | `harness/q2_stage1/rules.py` | `a671d2c3871bc18d255af8e8efe86f823aa7e54640c5c75cf9d95c39b587a225` |
-| `harness/q2_stage1/plan.py` | `63e88517faa38967922c3a7d727ad25396c96804ca57343d28dd7065e9c7bb79` |
+| `harness/q2_stage1/plan.py` | `8c97582d842552025eaa60ba2d7602aa9296783f2cfd525b3518467be1811e5a` |
 | `harness/q2_stage1/analysis.py` | `c56ff404c31d36f68aa43e97d1cfa3b8d10bff250524b6baa07c882cf5647cfb` |
 | `scripts/render_q2_stage1_plan.py` | `7f4b828c69449ec1caa32b7659309c78776bf3a1ec844ce83d327cd5f7e4e30f` |
 | `scripts/submit_docker_research_job.py` | `660271655aa22ebd387a023e25d21e6a809c22699ec6314d9d535be74e17a994` |
@@ -1470,6 +1479,7 @@ the fresh audit D49 (iv) requires.
 | C1 | Transport failures in the checker scored as agent outcomes: OSWorld's `get_vm_file` swallows `TransportFailure` (155 of 173 result getters over the pool and dev tasks), postconfig steps swallow or re-wrap a `ConnectionError`, `is_transport_error` read only the top-level type, and nothing re-checked the guest server after evaluation | Fixed: every guest-bound request that raises is recorded; setup, `evaluate()` and the capture sweep end in a transport loss when any of theirs failed; the exception chain is read; the restart check runs again after the capture, and an identity check that cannot reach the server is a transport loss. Tests drive the real `LiveTask` against a guest that resets connections, with a stand-in package that follows the pinned code's error handling | 7.1, 7.2; `osworld_live.py`, `driver.py`, `design_diffs.md` |
 | C2 | Control characters in typed text (a `\r` from CRLF line ends, ESC, C1 controls) pass the IR, make the guest executor exit non-zero and were recorded as `executor_device` losses, re-queued and, under greedy decoding, lost again, counting toward DR0 | Fixed: a `type` action whose text holds a code point L0-fixed refuses is an `IRError` from model output, handled by the harness's unparseable-reply rule and counted in `ir_errors`; a test checks the rule equals the guest's `char_keysym` | 7.2; `agents.py`, `design_diffs.md` |
 | C4 | The pinned GPU-engine template declared `randomness_contract: deterministic` with `seeds: [42]`, which the docker submitter refuses once the `FILL_*` slots are filled, so no GPU half of a pair could be submitted | Fixed: `seeds: []` (the engine seed reaches vLLM through `plan.CARD_ENGINE_FLAGS`, `--seed 42`); hex fields quoted so YAML cannot read one as a number; a test fills the template for 9B, 4B and the anchor and passes it through the submitter's `validate_manifest` and `sbatch_argv` (`--gres=gpu:h100:1`, 32 CPUs, `--signal=B:USR1@180`, `--dependency=after:<VM job>`) | `gpu-engine.template.yaml` |
+| C5 | The K_base floor in the branch S1a is in (anchor unavailable before A0b) was 24 in code (`freeze_constants` defaulted to `K_FLOOR`), 32 in D49 (i), and ambiguous in section 6.2 and item 18's note, so the documented procedure would have frozen K = 24 without the anchor | Fixed: the floor follows the branch (32 without the anchor, whatever is signed; 24 only with the anchor running and `k_floor=24` passed after item 18); `freeze_constants` defaults to 32 and records the floor applied; section 6.2, item 18 and section 19 state D49 (i) and that K = 32 needs a mean A0a slot of at most about 728 s, below the card's high slot of 743 s, so going back to review after A0a is a live outcome; a test runs the issue's case | 6.2, 18, 19; `plan.py` |
 
 Slots read TBD until the freeze: the status line; G0 item 1 (accepted attempt); item 10
 (frozen plan); section 4's executor row; section 6.2's constants; section 21's v2
