@@ -81,12 +81,14 @@ basis:
     queue is replayed, so the tap records it with core state 0.
   d43_judge: >-
     Decision D43 (after v1's C2): the entry guard guarantees Num Lock locked, Mod2 in every
-    processed key event (conditions b and f), so a key event the tap records without Mod2 was
-    recorded while queued under a shell grab; v2's judge (harness/q2/action_path/verdict.py,
-    modifier_state_observable) reads such an event on its kind, keycode, keysym and order
-    only, and C2's reading of the tap window leaves its state out too (acceptance.py,
-    c2_projection). Every other event, and every event on the probe's channel, is judged as
-    in v1.
+    processed key event (conditions b and f), so a key event the tap records without Mod2 is
+    read as recorded while queued under a synchronous grab (in development, always a shell
+    grab its entry's own press of the grab key activated; what neither the judge nor the
+    guard checks is in q2-action-path-v2, section 27, case 6); v2's judge
+    (harness/q2/action_path/verdict.py, modifier_state_observable) reads such an event on its
+    kind, keycode, keysym and order only, and C2's reading of the tap window leaves its state
+    out too (acceptance.py, c2_projection). Every other event, and every event on the probe's
+    channel, is judged as in v1.
 translation:
   module: harness/q2/action_path/l0_raw.py
   move: pyautogui.moveTo(x, y)

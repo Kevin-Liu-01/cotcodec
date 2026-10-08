@@ -443,3 +443,136 @@ def test_d43_negative_case_every_chord_with_a_dropped_modifier_fails(job):
             press = next(k for k in _keys(row["window"])
                          if k["kind"] == "KeyPress" and _name(k) == "c")  # fmt: skip
             assert press["state"] == MOD2
+
+
+def _without_mod2(rows: list[dict]) -> list[tuple[dict, int, list[dict]]]:
+    out = []
+    for row in rows:
+        keys = _keys(row["window"])
+        out += [(row, i, keys) for i, k in enumerate(keys) if not k["state"] & MOD2]
+    return out
+
+
+def test_every_event_without_mod2_follows_the_processed_press_of_its_grab_key():
+    """Section 27, case 6, and section 4.4: the 280 key events the tap recorded without Mod2
+    in development (the scan's 172 in jobs 486, 549, 574, 768 and 784, and 108 in job 830)
+    all have state 0 and follow, in their own window, the press of the key that activates the
+    shell's grab, recorded with Mod2 (processed). So a narrower rule, which reads an event
+    without its state only after a key press with Mod2 in its window, would change none of
+    them; D43's rule, as worded, does not require that press (case 6)."""
+    found = _without_mod2(V1_C2_AND_V2_DEV + V1_DEV + D43_DEV)
+    by_job: dict[str, int] = {}
+    for row, i, keys in found:
+        by_job[row["job"]] = by_job.get(row["job"], 0) + 1
+        assert keys[i]["state"] == 0
+        cell = row["trial"]["cell"]
+        grab = [j for j, k in enumerate(keys[:i])
+                if k["kind"] == "KeyPress" and _name(k) == SHELL_GRAB_KEY[cell]]  # fmt: skip
+        assert grab and keys[grab[0]]["state"] & MOD2, (row["job"], cell, i)
+    assert len(found) == 280
+    assert by_job.pop("830") == 108
+    scan: dict[str, int] = {}
+    for record in SCAN["tap_without_mod2"]:
+        scan[record["job"]] = scan.get(record["job"], 0) + 1
+    assert by_job == scan and sum(scan.values()) == 172
+
+
+def _job_785(cell: str) -> dict:
+    return next(r for r in V1_C2_AND_V2_DEV if r["job"] == "785" and r["trial"]["cell"] == cell)
+
+
+def test_a_grab_already_active_before_the_entry_would_go_unseen():
+    """Section 27, case 6 (stated, not fixed: D43's wording): were a synchronous grab already
+    active when an entry's first key arrives, every key event would be recorded without Mod2
+    and read without its state, including the grab key's own press, and a raw-only chord
+    would pass. Job 785's real L0-fixed records, changed only in their states: with every tap
+    key state 0, `chord_super_d` passes (C4 and C2's reading too); with the F4 press of
+    `chord_alt_f4` at state 0, its Mod1 is never judged."""
+    row = _job_785("chord_super_d")
+    window = copy.deepcopy(row["window"])
+    for record in _keys(window):
+        record["state"] = 0
+    new = _judge(row, window=window)
+    assert new["pass"] and new["state_not_observed"] == [0, 1, 2, 3] and new["c4"] is True
+    trial = {"events": [suite._compact_tap(r)[:-1] for r in _keys(window)]}
+    cell = L0["chord_super_d"]
+    projection = acceptance.c2_projection(trial, cell)
+    assert acceptance.c2_matches(projection, acceptance.c2_reference(cell))
+    row = _job_785("chord_alt_f4")
+    window = copy.deepcopy(row["window"])
+    f4 = next(k for k in _keys(window) if k["kind"] == "KeyPress" and _name(k) == "F4")
+    assert f4["state"] == MOD2 | 8  # Mod1 recorded on the processed F4 press
+    f4["state"] = 0
+    new = _judge(row, window=window)
+    assert new["pass"] and new["state_not_observed"] == [1]
+    # The guard reads no grab: a check with the probe mapped, focused and covering the screen,
+    # no key pressed and Mod2 set is clean whatever any client has grabbed.
+    clean = {"keys": [], "buttons": [], "led_mask": 2, "mods": 16,
+             "probe": {"mapped": True, "focused": True, "covers_screen": True},
+             "screencast": {"growing": False}}  # fmt: skip
+    assert guard.violations(clean, 2) == []
+
+
+def test_job_833_shows_the_guard_blind_to_a_grab_on_the_keyboard():
+    """Section 27, case 6: in both sessions of job 833 (`release_first`), after
+    `chord_super_d`'s Super_L was pressed and released alone (opening the shell's overview),
+    the probe received no key event in seq 3-21 and 28-34 while every pre check was clean;
+    the tap recorded every key event with Mod2 (that grab did not freeze the keyboard), every
+    trial failed, and the 22 lost-focus post checks all fall in those spans."""
+    rows = _dev("833")
+    spans = set(range(3, 22)) | set(range(28, 35))
+    for cycle in ("00", "01"):
+        session = sorted((r for r in rows if r["cycle"] == cycle), key=lambda r: r["trial"]["seq"])
+        assert [r["trial"]["seq"] for r in session] == list(range(35))
+        for row in session:
+            seq, trial = row["trial"]["seq"], row["trial"]
+            probe_keys = [e for e in trial["post"]["end"]["events"] if e[0] in verdict.KEY_KINDS]
+            assert trial["pre"]["violations"] == []
+            assert all(k["state"] & MOD2 for k in _keys(row["window"]))
+            assert not row["runner_verdict"]["pass"]
+            if seq in spans or trial["cell"] == "chord_super_d":
+                assert probe_keys == [], (cycle, seq)
+            else:
+                assert probe_keys, (cycle, seq)
+            if trial["post"]["violations"]:
+                assert trial["post"]["violations"] == ["c"] and seq in spans, (cycle, seq)
+        assert [r["trial"]["seq"] for r in session if r["trial"]["cell"] == "chord_super_d"] == [
+            2, 10, 16, 27, 34,
+        ]  # fmt: skip
+    lost_focus = [r for r in rows if r["trial"]["post"]["violations"]]
+    assert len(lost_focus) == 22
+    assert {r["trial"]["cell"] for r in lost_focus} <= {"chord_ctrl_c", "chord_shift_tab",
+                                                         "chord_ctrl_shift_t"}  # fmt: skip
+
+
+def _c3_attempt(row: dict, window: list[dict]) -> dict:
+    raw = dict(copy.deepcopy(row["trial"]), verdict=_judge(row, window=window),
+               tap_window=[suite._compact_tap(r) for r in window])  # fmt: skip
+    trial = acceptance._trial(raw, row["setting"])
+    return {"job": row["job"], "sessions": [{"setting": row["setting"], "trials": [trial]}]}
+
+
+def test_c3_equivalence_still_compares_the_state_the_judge_does_not_read():
+    """Section 27 (stated, not changed; whether D43 covers it stays with Kevin): C3's
+    equivalence test compares each cell's recorded stream byte for byte, state included. A
+    slow shell answer on a real `chord_super_d` record (job 785: the `d` press, the `d`
+    release and the Super_L release recorded with state 0) passes the judge and C4, and
+    still differs from the unchanged record, so a no-op mutant with it would not be
+    equivalent."""
+    row = _job_785("chord_super_d")
+    slow = copy.deepcopy(row["window"])
+    for record in _keys(slow)[1:]:
+        record["state"] = 0
+    new = _judge(row, window=slow)
+    assert new["pass"] and new["state_not_observed"] == [1, 2, 3] and new["c4"] is True
+    reference = _c3_attempt(row, row["window"])
+    assert acceptance._trial(dict(row["trial"], verdict=_judge(row)), row["setting"])["pass"]
+    mutant = _c3_attempt(row, slow)
+    assert mutant["sessions"][0]["trials"][0]["pass"]
+    signature = acceptance._signature([reference])
+    assert acceptance._signature([_c3_attempt(row, copy.deepcopy(row["window"]))]) == signature
+    assert acceptance._signature([mutant]) != signature
+    assert acceptance._stream_differences(mutant, signature) == (["chord_super_d"], [])
+    # Only the recorded states differ: kind, keycode and keysym are the same.
+    strip = [[e[0], e[1], e[3]] for e in mutant["sessions"][0]["trials"][0]["events"]]
+    assert strip == [[e[0], e[1], e[3]] for e in reference["sessions"][0]["trials"][0]["events"]]
