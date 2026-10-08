@@ -33,11 +33,20 @@ GPU-hours spent by the program are in `program/state.json`
   the event and text channels, C3 counts only clean kills, admission checks
   every pinned file, reruns and end states are rules, and a guest-server
   restart now costs one entry (tap relaunched; run 662 injected the fault).
-  Final development runs 662-667 at `30d8c7f` passed every in-spec cell. One
-  decision is Kevin's before the freeze: the OSWorld guest server crashed
-  once in 8,114 `/accessibility` calls, which would very likely fail A4 as
-  registered (options 1-5 in
-  `program/preregistrations/q2-action-path-v1-inputs.md`, section 6).
+  Final development runs 662-667 at `30d8c7f` passed every in-spec cell. The
+  OSWorld guest server crashed once in 8,114 `/accessibility` calls; decision
+  D30 settles it before the freeze.
+- `stage0/q2-action-path-d30`: D30 applied to the action-path registrations
+  and code (main preregistration section 18; nothing frozen). A4 does not
+  count a trial whose only failure is a guest-server restart; a dedicated
+  campaign A7 bounds restarts at 5 x 10^-4 per accessibility call (exact
+  one-sided 95% Poisson bound, 39,036 calls, 31.1 VM-hours; it gates the
+  screenshot-plus-accessibility setting); the probe and the tap run in their
+  own systemd scopes so a restart costs at most the entry it hits (development
+  runs 694 and 703-708, seed 42, CPU only); Stage 1 counts restarts per
+  episode as infrastructure failures. Open for Kevin before the freeze: A1-A3
+  and the ladder still fail on a restart (no restart in their 16,639 calls has
+  probability about 0.13 at the development rate).
 - `stage0/q1-gates`: gates, audit, mutator and substrates integrated; GPU
   smoke and pilot cost card next. Projected Stage 0 total 9-10 GPU-h.
 - `stage0/q2-evaluator-mutation`: faithful-save harness, blind specs for 205

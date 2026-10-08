@@ -8,13 +8,15 @@ Validity control C2 may be scored only after this ledger entry exists.
 - Experiment id: `q2-action-path-v1-inputs`, an addendum to `q2-action-path-v1`
   (`program/preregistrations/q2-action-path-v1.md`, section 2.2). It changes no
   rule of that file; it pins the components that file says are frozen here.
-- Drafted: 2026-10-07, on branch `stage0/q2-action-path`.
+- Drafted: 2026-10-07, on branch `stage0/q2-action-path`; decision D30 applied
+  before the freeze on branch `stage0/q2-action-path-d30` (sections 5 and 6).
 - What it freezes: the guest probe (event log, text buffer, marker block,
   entry delimiters), the marker decoder, the entry guard (including the
   pointer park and the side-effect restorations), the canary driver (app
   preparation, launch, wait, read-back, close), the two detection controls'
   translators with the unmodified upstream parsers they read, the code that
-  judges a trial, the acceptance analysis (`acceptance.py`, which decides C2
+  judges a trial (including the systemd scopes the probe and the tap run in,
+  decision D30), the acceptance analysis (`acceptance.py`, which decides C2
   and so must be fixed before C2 runs), and the VM lane that runs every
   scored campaign, with the package files it imports.
 
@@ -60,7 +62,7 @@ Frozen with this file (SHA-256 of the committed bytes):
 | `harness/q2/action_path/upstream/PROVENANCE.json` | `5bef93df835c560b1f8dc6e8cfe7d6c207ba7fbe2e26c861541878563062744d` |
 | `infra/slurm/host-single-node/vm-campaign.sbatch` | `3d86820d176e3a9f0699814a19f62154cde00f88da1777a33c804e884288ac8a` |
 | `scripts/submit_vm_campaign.py` | `f08aafc8bc693cd6eb6850ff972a3401f3bddc99f3c14e03187b4d313fcc5917` |
-| `harness/q2/action_path/acceptance.py` | `20338743f50a358fd37c473397d91c71fd3b2cbafb9a7ac40b035a05f61d0d0f` |
+| `harness/q2/action_path/acceptance.py` | `ddf13609ad850b8bac50b56d3b9ad55ea84998a5a6e8be7e198330081ec1ab47` |
 | `harness/__init__.py` | `17dac2704be26050e324aa36aba6d2c855abbd592e4d72f750b9b6e9c4399fec` |
 | `harness/q2/__init__.py` | `0932bda132c1dab03f40e460874a6827c4609424815e65eedcfefd3cd0b943a1` |
 | `harness/q2/action_path/__init__.py` | `8ce4d0afdd20f6b09dbb4e9d40d24acead2fc1992fccebd1ddf3891ec402613f` |
@@ -160,18 +162,29 @@ file equals it), so freezing the catalog fixes them.
   one seen. `suite.py` runs a session
   (tap, probe, the guard's warm-up, `DesktopEnv.reset`'s observation, whose
   delivery the runner records, pre and post guards, actions, marker) and
-  assembles each trial's observation; when the probe is gone after an entry
-  and the tap's process is gone too (a guest-server restart stops both), it
-  relaunches the tap into a new file before relaunching the probe, and
-  `segment_check` judges each tap's records against that tap's own keymap.
-  `verdict.py` applies sections 4.3 and 5.
+  assembles each trial's observation. It starts the tap and the probe each in
+  its own transient systemd scope (`SCOPE_LAUNCHER`: `systemd-run --user
+  --scope`, returning only once the process's control group is the scope's;
+  a launch that cannot reach its scope fails the session), so a guest-server
+  restart, which stops every process left in the server's unit, leaves both
+  running (decision D30). It records the server's unit and its `NRestarts`
+  counter at the session's start and end, and `session_restarts` and
+  `accessibility_calls` count a session's restarts and `/accessibility`
+  calls (criterion A7). When the probe is gone after an entry and the tap's
+  process is gone too, it still relaunches the tap into a new file, each in
+  a new scope, before relaunching the probe, and `segment_check` judges each
+  tap's records against that tap's own keymap. `verdict.py` applies sections
+  4.3 and 5.
 - **Acceptance analysis** (`acceptance.py`). The main preregistration's
   sections 5-9 as code (its design decision 32): end states from the batch
   script's own record and, when read, Slurm; the rerun rules; an undelivered
   reset observation charged to the session's first trial; the realized order
-  and one source tree per criterion; A1-A6; C1; C2's reading of L0-raw trials
-  (main section 8, decision 34); C3's clean kills (decision 36); C4; and the
-  ladder's N* with the foreign-load abort and its rerun cap.
+  and one source tree per criterion; A1-A6, with A4 not counting a trial whose
+  only failure is a guest-server restart (decision D30); A7, the restarts per
+  accessibility call on the exact one-sided 95% Poisson bound; C1; C2's
+  reading of L0-raw trials (main section 8, decision 34); C3's clean kills
+  (decision 36); C4; and the ladder's N* with the foreign-load abort and its
+  rerun cap.
 - **Lane** (`runner.py`, `driver.py`, `manifest.py`, the batch script and
   the submitter). Every campaign runs as a CPU-only Slurm job (decisions
   D12, D13). `manifest.py` admits an acceptance or scored-control campaign
@@ -180,10 +193,11 @@ file equals it), so freezing the catalog fixes them.
   source tree, and, when the executor addendum is needed, no file under
   `harness/q2/` (Markdown aside) is unpinned; it names the executor addendum
   of each repair attempt, fixes the runner CPUs per concurrency, and refuses
-  seeds 43 and 44 for every other purpose. Development manifests may name a
-  trial after which the runner SIGKILLs the guest server
-  (`kill_guest_server_after_seq`), to exercise the restart handling; no
-  scored campaign can.
+  seeds 43 and 44 for every other purpose. It admits A7 at N* with no repair
+  attempt. Development manifests may name a trial after which the runner
+  SIGKILLs the guest server (`kill_guest_server_after_seq`) or a trial inside
+  which it does so before the post guard (`kill_guest_server_during_seq`), to
+  exercise the restart handling; no scored campaign can.
 
 ## 3. Validation before this freeze (infrastructure only)
 
@@ -239,6 +253,9 @@ later change to a file listed in section 1 (from `git log 29b056e..`):
 | `30d8c7f` | `suite.py`, `runner.py`, `driver.py` | After the review of `2b492cd`: when the probe is gone after an entry and the tap's process is gone too, the tap is relaunched into a new file before the probe, and each tap's records are checked against its own keymap; a restart between entries, when the guard before the next entry cannot run, is charged to that entry as `guest_server_restart`; the runner records whether `DesktopEnv.reset`'s observation was delivered; a development-only hook SIGKILLs the guest server after a given trial. Run 622 had charged 55 trials of one session to a single restart (its tap gone). Development run 662 (the hook after the tenth trial of each of its two sessions, one per setting) then failed only that next trial in each session, with `guest_server_restart` typed and the tap and probe relaunched; 27 of 28 trials passed in each session, every tap segment's mapping check clean. |
 | `30d8c7f` | `manifest.py` | After the review: admission checks every file the needed registrations' tables pin and, with the executor addendum, refuses any unpinned file under `harness/q2/` (main design decision 35); repair attempts name `q2-action-path-v1-executor-a2` or `-a3`, and C1-C3 have none; C2's manifest needs only the inputs addendum (it could not have been submitted before the executor freeze); the runner CPUs of a scored campaign are `runner_cpus(N)` (main decision 38); the development fault hook is admitted for suite development only. Development manifests are judged as before. |
 | `30d8c7f` | `acceptance.py` (pinned here from this commit on; it was in the executor addendum) | After the review (and, one commit later, reading the end state that `scripts/record_slurm_end_states.sh` records next to a run directory): C2's reading of L0-raw trials (main decision 34), C3's clean kills (decision 36), end states and reruns (decision 37), the reset-observation charge and one source tree per criterion. No scored data exists; every rule is driven on synthetic campaigns by `tests/test_q2_acceptance_analysis.py`. |
+| `34f79e4` | `suite.py`, `runner.py`, `driver.py`, `manifest.py` | Decision D30, recorded in `program/decisions.md` before the freeze in answer to run 622's restart, not to any scored outcome. The tap and the probe start in their own transient systemd scopes (`SCOPE_LAUNCHER`), so a guest-server restart leaves them running; each session records the server's unit and its `NRestarts` counter at its start and end, and `session_restarts` and `accessibility_calls` count a session's restarts and calls; the development-only hook `kill_guest_server_during_seq` kills the server inside an entry before its post guard (the runner's `kill_guest_server` moved to `suite.py`); the driver plans A7 and adds the counts to its session summary; `manifest.py` admits A7 (G, 360 repetitions, accessibility setting, at N*). Run 694 at this commit killed the server inside the tenth trial and after the twentieth of each of its two sessions: the probe and the tap ran on in their scopes (no relaunch, one tap segment each, mapping checks clean), the trial killed inside failed with `guest_server_restart` alone, the trial after the second kill failed as decision 39 charges it, and the other 26 trials of each session passed. |
+| `34f79e4` | `acceptance.py` | Decision D30: A4 does not count a trial whose only failure is a guest-server restart (`restart_only`; it is reported), A7 judges restarts per accessibility call on the exact one-sided 95% Poisson bound, and `load` reads each session's restart and call counts. No scored data exists; `tests/test_q2_acceptance_analysis.py` drives both rules on synthetic campaigns, and the loader read runs 694 and 703 (two restarts and, in the accessibility session, 38 calls per session; the two trials killed inside counted as restart-only, the two after a kill between entries not). |
+| `7653799` | `manifest.py`, `suite.py` | `manifest.py` refuses an A7 campaign under a repair attempt (main section 11); `suite.py`'s comment states what run 694 measured. Jobs 703-708 ran at this commit (executor addendum, section 9); 695-699, the same campaigns at `34f79e4`, were cancelled while booting when this change was made. |
 
 The probe change makes the no-action entry's screenshot start from a settled
 screen, the canary changes make the read-back report what the app holds, and
@@ -249,8 +266,11 @@ retry had been counted as a failure, which 6.1 did not say; the retries stay
 in every report), and the restart rule of `30d8c7f`, which types a restart
 between entries that the guard could not see before. The analysis rules of
 `30d8c7f` (C2, C3, end states, reruns, the reset observation) were written in
-answer to the review of the registration, not to any trial's outcome; no
-scored campaign has run.
+answer to the review of the registration, not to any trial's outcome. The D30
+changes (`34f79e4`, `7653799`) apply decision D30 on run 622's
+restart: the scopes change how much a restart costs, not how a trial is
+judged, and A4's restart exclusion and A7 change only how A4 counts and what
+else is bounded (section 6). No scored campaign has run.
 
 ## 6. A decision before the freeze: guest-server restarts and A4
 
@@ -307,3 +327,18 @@ the freeze, each with its cost:
 Whichever is chosen, the decision and its reason go into
 `program/decisions.md` before `q2-action-path-v1` is frozen, and the
 single-event uncertainty above is reported with A4.
+
+**Decided (D30, 2026-10-07), options 3 and 4 together.** A4's zero-failure
+count excludes guest-server restarts, which are reported (a trial whose only
+failure is the restart, with the tree it left undelivered, is not counted;
+main section 6.1). The observation service gets its own registered bound, A7:
+at most 5 x 10^-4 restarts per accessibility call on the exact one-sided 95%
+Poisson upper bound, from a dedicated campaign of 39,036 planned calls (main
+sections 7 and 9). The probe and the tap start in their own systemd scope,
+so a restart costs at most the entry it hits (section 2; runs 694 and 703,
+section 5). Stage 1 counts restarts per episode as infrastructure failures
+(main section 7). The single-event uncertainty is reported with A4 and A7.
+D30 rejects option 2 because patching the server would make the runtime
+differ from the one the leaderboard uses; option 5 is not taken because the
+one crash on record came after two delivered calls. Every other rule is unchanged; main
+section 18 states what that leaves exposed.

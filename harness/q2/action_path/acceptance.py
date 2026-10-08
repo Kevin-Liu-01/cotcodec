@@ -656,6 +656,15 @@ def a7(campaigns: list[dict[str, Any]], n_star: int) -> dict[str, Any]:
     report = _restart_report(campaigns)
     restarts, calls = report["restarts"], report["accessibility_calls"]
     upper = poisson_upper(restarts) / calls if calls else None
+    every = [s for c in campaigns for a in [*c.get("earlier", []), c] for s in a["sessions"]]
+    # Reported, not judged: two development faults cannot show whether restarts cluster at
+    # a session's start, which a per-call bound would hide (section 9).
+    per_session = {
+        "sessions": len(every),
+        "sessions_with_restart": sum(1 for s in every if s.get("restarts")),
+        "rate": restarts / len(every) if every else None,
+        "upper_95": poisson_upper(restarts) / len(every) if every else None,
+    }
     if upper is None or upper > OBSERVATION_BOUND:
         problems.append(
             f"A7: {restarts} restarts in {calls} accessibility calls, upper 95% bound "
@@ -669,6 +678,7 @@ def a7(campaigns: list[dict[str, Any]], n_star: int) -> dict[str, Any]:
             "rate": restarts / calls if calls else None,
             "upper_95": upper,
             "bound": OBSERVATION_BOUND,
+            "per_session": per_session,
             "failed_trials": sum(len(failed_trials(c)) for c in campaigns),
             "guest_server": report,
         },

@@ -44,7 +44,7 @@
       "doc": "program/questions/q2-calibrated-cua-instrument.md",
       "dossier_key": "S1-calibrated-cua-instrument",
       "status": "stage-0-running",
-      "next_action": "Kevin decides how A4 treats guest-server restarts (inputs addendum section 6); then the owner freezes q2-action-path-v1, -inputs and -executor (development complete on stage0/q2-action-path) and runs C2, C1 and C3, A1-A6 and the ladder. Rescope Stage 1 from the measured cost card (closed-loop VM time dominates); the checker-mutation kit continues",
+      "next_action": "The owner reviews decision D30 as applied on stage0/q2-action-path-d30 (A4 does not count guest-server restarts, A7 bounds them, the probe and tap run in their own systemd scopes, Stage 1 counts restarts per episode) and freezes q2-action-path-v1, -inputs and -executor; then C2, C1 and C3, A1-A7 and the ladder. Rescope Stage 1 from the measured cost card (closed-loop VM time dominates); the checker-mutation kit continues",
       "first_gpu_experiment": {
         "name": "Qwen3.5 ladder (as dossier-designed)",
         "measured_projection_gpu_hours": 431.5,
@@ -57,9 +57,9 @@
       ],
       "action_path_suite": {
         "registration": "q2-action-path-v1 (+ -inputs, -executor addenda)",
-        "status": "development complete and review fixes applied (C2 judged on event and text channels, C3 clean kills, content-checked admission, rerun and end-state rules, tap relaunch after a guest-server restart); ready to freeze after the owner's A4 decision on guest-server restarts (nothing frozen)",
-        "branch": "stage0/q2-action-path",
-        "development_jobs": "482-637 and 662-667 (seed 42, CPU only, never evidence; 662-667 at the review-fix commit 30d8c7f)"
+        "status": "development complete, review fixes applied and decision D30 applied in code and text (A4 restart exclusion, A7 observation-service campaign of 39,036 accessibility calls, probe and tap in their own systemd scopes, validated in development); ready to freeze (nothing frozen)",
+        "branch": "stage0/q2-action-path-d30 (from main, which holds stage0/q2-action-path)",
+        "development_jobs": "482-637, 662-667 and 694-708 (seed 42, CPU only, never evidence; 703-708 at the D30 runtime commit 7653799, 694 at 34f79e4, 695-699 cancelled while booting)"
       }
     },
     {
@@ -88,7 +88,7 @@
     "Decide whether to purge the old host address and the internal corpus inventory from public git history (requires a force-push)",
     "Spot-check a sample of the Q2 checker-mutation audit as the human rater (decision D9)",
     "Moonshot (Kimi) account is suspended for insufficient balance; recharge it if a Kimi model should be a rater or reviewer (rotate the exposed key at the same time)",
-    "Before freezing q2-action-path-v1: decide how A4 treats OSWorld guest-server restarts inside /accessibility (1 crash in 8,114 calls in development, a single event: A4 as registered passes with probability about 0.01, 95% range 0.89 to 0); options 1-5 in program/preregistrations/q2-action-path-v1-inputs.md section 6",
+    "Review and freeze q2-action-path-v1, -inputs and -executor with decision D30 applied (branch stage0/q2-action-path-d30). D30 changes A4 only: A1-A3 still fail, and a ladder rung still does not qualify, on a trial a guest-server restart hits. At the development rate (1 in 8,114 calls) their 16,639 accessibility calls see no restart with probability about 0.13 (A1-A3 alone, 7,172 calls: 0.41); decide before the freeze whether D30's exclusion should extend to them (main preregistration section 18)",
     "The ANTHROPIC_API_KEY on this machine is invalid (HTTP 401); supply a valid key if the Claude rater and gauntlet reviews should use the API rather than the agent harness (D25)",
     "Review and freeze the integrated Q1 Stage 0 preregistration (q1-stage0-gate-validation on stage0/q1-gates), including the integration decisions in its section 15 and the review fix-pass decisions in its section 16",
     "Decide whether to ask the KernelGYM authors for a licence: gate_b.py was rewritten from the spec after the review found a transliteration (stage0/q1-gates, never pushed); a licence would remove the residual risk",

@@ -11,7 +11,7 @@ summaries extracted from the job receipts, with the receipt SHA-256 recorded.
 | `boot-reset-report.json` | Jobs 369 (smoke), 372 (bridge exposure) and 374 (22 cold boots): boot and settle times, reset sentinel, isolation, guest facts, HMP reachability |
 | `rdev-capture-report.json` | Jobs 387 (superseded) and 393 (reference): the R-dev capture of the 35 key, chord and Caps Lock entries, 5 repetitions each; job 468, the same plan re-captured with the rewritten tap |
 | `tap-selftest-report.json` | Jobs 467, 469, 470 and 471: the rewritten XRecord tap's oracle self-test after the review |
-| `development-runs.json` | Jobs 482-637 and 662-667: inputs validation and development (seed 42, never evidence), one row per job |
+| `development-runs.json` | Jobs 482-637, 662-667 and 694-708: inputs validation and development (seed 42, never evidence), one row per job |
 
 ## What the runs show
 
@@ -205,3 +205,62 @@ R-dev reference (what C4 will check in A1); and job 610's host snapshots
 show two foreign Slurm jobs starting and foreign jobs holding 72 CPUs, so a
 ladder rung run under those conditions would abort (section 9). The ladder
 needs a quiet host.
+
+## Decision D30 (jobs 694-708)
+
+Decision D30 put the probe and the tap in their own systemd scopes, outside
+the guest server's unit, and registered A4's restart exclusion and the
+observation-service bound A7 (preregistration section 18). These development
+runs (seed 42, never evidence) validate the scopes at the runtime commit
+`7653799` and repeat the final validation there. Every job ran as a CPU-only
+Slurm job through `vm-campaign.sbatch` (no GRES in its TRES; `no_gpu_all`
+true), with `System.qcow2` unchanged and no labelled container or volume
+left; every job that ran to its end finished `COMPLETED` 0:0 as the watcher
+recorded it, with driver exit 0 and `infra_gates_pass` true.
+
+| Job | Commit | Campaign | Trials | Cells PASS | Not PASS | Restarts | Accessibility calls |
+|---|---|---|---:|---:|---|---:|---:|
+| 694 | `34f79e4` | L0-fixed, 28 entries, 1 repetition per setting, the server SIGKILLed inside the tenth trial (before its post guard) and after the twentieth of each session | 56 | 52 of 56 | `chord_ctrl_c` and `drag_short` in both settings: the two trials each session's kills hit | 4 | 38 |
+| 695-699 | `34f79e4` | L0-fixed on 1 and 8 VMs, H-OSW-fixed, H-GA, canary | none | | cancelled while booting (`CANCELLED`) when `manifest.py`'s A7 repair refusal was added; rerun as 704-708 | | |
+| 703 | `7653799` | as 694 | 56 | 52 of 56 | as 694 | 4 | 38 |
+| 704 | `7653799` | L0-fixed, all 100 entries, 2 repetitions per setting, one VM | 400 | 200 of 200 | none | 0 | 260 |
+| 705 | `7653799` | L0-fixed, all 100 entries, 4 repetitions per setting, 8 VMs | 800 | 200 of 200 | none | 0 | 519 |
+| 706 | `7653799` | H-OSW-fixed, every corpus cell, 1 repetition per setting | 198 | 194 of 198 | R03 (outside spec), R09 (outside spec) | 0 | 152 |
+| 707 | `7653799` | H-GA, every corpus cell, 1 repetition per setting | 186 | 178 of 186 | R02, R04, R06, R10 (all outside spec) | 0 | 139 |
+| 708 | `7653799` | canary, every app and entry, 1 repetition | 60 | 60 of 60 | none | 0 | 0 |
+
+What the fault injections (694 and 703, four sessions) show:
+
+- The tap and the probe ran in scopes of the desktop user's manager
+  (`user@1000.service/app.slice/q2ap-tap-...scope` and `q2ap-probe-...scope`)
+  while the server ran in `system.slice/osworld.service`. Neither was
+  relaunched after either kill; each session's tap stream stayed one segment
+  and its mapping check was clean.
+- The server answered again 5.6 to 6.0 s after each kill inside an entry
+  (`DesktopEnv` retries an observation 5 s and 10 s after a failed attempt).
+- The trial killed inside (`chord_ctrl_c`, seq 9) failed with
+  `guest_server_restart` alone; the acceptance loader reads it as
+  restart-only, so A4 would not count it. The trial after the kill between
+  entries (`drag_short`, seq 20) failed with `guest_server_restart`,
+  `probe_absent`, `guard_script`, `execute`, `tap_window_missing` and
+  `channel_missing`: its pre guard met the restarting server, so its window
+  never opened (decision 39 charges it; A4 would count it). The other 26
+  trials of each session passed.
+- Every session counted two restarts, by the unit's `NRestarts` (1 at the
+  session's start, 3 at its end) and by the guard reports' server ids alike.
+  The counter read 1 at the start of every session of these jobs: the server
+  restarts once while the guest boots, before any session starts.
+
+The final validation at `7653799` (704-708) passed every in-spec cell; the
+only failures are the outside-spec R cells of each harness, as at `30d8c7f`.
+No session of 704-708 saw a restart (1,070 accessibility calls), and no probe
+or tap was relaunched. Across all 34 suite sessions of these jobs the unit's
+counter read 1 at the session's start. Step p95 2.92 s on one VM (704; 663:
+2.74 s) and 3.02 s on 8 VMs (705; 664: 2.79 s), boot p95 19.8 s and 19.6 s:
+6-8% slower steps while the host ran the other campaigns of this pass and
+other users' processes (load average up to 180 on 208 CPUs during 704's last
+session); the scopes act only when a session starts. The acceptance
+analysis's loader read every run directory (end state from the batch record
+and the watcher's Slurm record, both agreeing; restarts and calls as in the
+table), and C4's check passed in 140 of 140 (704) and 280 of 280 (705) key,
+chord and Caps Lock trials.

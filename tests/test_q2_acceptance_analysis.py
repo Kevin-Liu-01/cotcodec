@@ -310,6 +310,9 @@ def test_a7_judges_the_upper_95_bound_on_restarts_per_call():
     assert result["pass"] and result["restarts"] == 12 and result["accessibility_calls"] == 39216
     assert result["upper_95"] == pytest.approx(19.4426 / 39216, rel=1e-4)
     assert result["upper_95"] <= 5e-4
+    per_session = result["per_session"]
+    assert per_session["sessions"] == 516 and per_session["sessions_with_restart"] == 12
+    assert per_session["upper_95"] == pytest.approx(19.4426 / 516, rel=1e-4)
     thirteen = _a7({i: 1 for i in range(13)})
     assert not acc.a7(thirteen, 8)["pass"]
     assert acc.a7(_a7({}), 8)["upper_95"] == pytest.approx(2.9957 / 39216, rel=1e-4)

@@ -43,7 +43,7 @@ settings; and a volume certification split from development runs.
 | `vm/guest/canary.py`, `vm/canary_run.py` | Cross-app canary driver: fixtures, profiles, launch, wait, read-back, close (inputs addendum) |
 | `vm/guest/canary_targets.py` | Development tool: the canary's pointer targets from accessibility extents and screenshots |
 | `vm/desktop.py` | OSWorld `b138d348` `DesktopEnv.step` and controller calls on the standard library |
-| `vm/suite.py`, `vm/validation.py` | Session engine (tap, probe, guards, actions, marker, judging) and the HMP validation of the inputs components |
+| `vm/suite.py`, `vm/validation.py` | Session engine (tap and probe in their own systemd scopes, guards, actions, marker, judging, restart and accessibility-call counts) and the HMP validation of the inputs components |
 | `vm/guest/l0_fixed.py`, `action_path/executor.py` | L0-fixed: the XTest executor and its base64 `DesktopEnv.step` transport (executor addendum) |
 | `action_path/controls.py`, `action_path/keynames.py` | C1 detection-control translators (H-OSW-up, H-GA-buggy) and upstream key-name resolution (inputs addendum) |
 | `action_path/adapters.py` | Stage-1 harness layers to IR: H-OSW-fixed and H-GA (executor addendum) |
@@ -51,7 +51,7 @@ settings; and a volume certification split from development runs.
 | `action_path/corpus.py`, `build_suite.py`, `suite_cells.json`, `qwen35_chat_template.jinja` | Qwen3.5 template corpus and every cell the runner executes (executor addendum) |
 | `action_path/verdict.py`, `action_path/order.py` | Trial verdicts (sections 4.3, 5, 6) and seeded run orders and sessions |
 | `action_path/mutants.py` | Suite-mutation kit: the 44 scored mutants of `mutation_operators.yaml` as anchored patches |
-| `action_path/acceptance.py` | The acceptance analysis: A1-A6, C1-C4 and the ladder's N* from campaign receipts (executor addendum) |
+| `action_path/acceptance.py` | The acceptance analysis: A1-A7 (A4's restart exclusion and A7's observation-service bound, decision D30), C1-C4 and the ladder's N* from campaign receipts (inputs and executor addenda) |
 | `action_path/vm_hours.py`, `trial_times.json`, `vm_hours.json` | VM-hour sizing of every scored campaign from measured development trial times (executor addendum) |
 | `action_path/harness_design_diffs.md` | Every design difference of each Stage-1 harness |
 | `../../infra/slurm/host-single-node/vm-campaign.sbatch` | CPU-only Slurm entry point for VM work |
