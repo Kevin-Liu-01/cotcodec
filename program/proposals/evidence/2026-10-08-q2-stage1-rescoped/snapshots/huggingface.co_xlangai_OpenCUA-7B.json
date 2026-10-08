@@ -1,0 +1,12 @@
+{
+ "url": "https://huggingface.co/xlangai/OpenCUA-7B",
+ "fetched_at": "2026-10-08T14:39:52Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 257149,
+ "raw_sha256": "f33e39b8ee778e3837565e3f3837e3910ee6f09f16d8c38959d941faeb23c993",
+ "raw_stored": false,
+ "extract": {
+  "html_title": "xlangai/OpenCUA-7B · Hugging Face"
+ }
+}

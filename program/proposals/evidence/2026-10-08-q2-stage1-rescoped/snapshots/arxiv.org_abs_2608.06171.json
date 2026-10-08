@@ -1,0 +1,28 @@
+{
+ "url": "https://arxiv.org/abs/2608.06171",
+ "fetched_at": "2026-10-08T14:39:50Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 42864,
+ "raw_sha256": "70d894f329b45567f4aafd229a9824cb551bf48c497e9aefaf3476d55dabaa7d",
+ "raw_stored": false,
+ "extract": {
+  "html_title": "[2608.06171] Routing Is Least Learnable Where It Is Most Valuable: Bounds on Representation Routing for Web Agents",
+  "title": "Routing Is Least Learnable Where It Is Most Valuable: Bounds on Representation Routing for Web Agents",
+  "authors": [
+   "Wei, Jiaming",
+   "Wu, Zekun",
+   "Koshiyama, Adriano",
+   "Perez-Ortiz, Maria"
+  ],
+  "citation_date": "2026/08/06",
+  "submission_history": [
+   [
+    "v1",
+    "Thu, 6 Aug 2026 15:37:04 UTC "
+   ]
+  ],
+  "abstract": "Web agents observe a browser through text, pixels, or both, and the choice is usually fixed once for all tasks. We measure six observation modes across eight site-model combinations (cells) on VisualWebArena and WebArena and ask what choosing per task would buy. The modes are complementary: each solves tasks the others miss, they fail in structurally different ways, and the best choice reverses between task sets. The obvious prize, an oracle that picks a winning mode for every task, looks large but is inflated by run-to-run noise: rerunning the same mode on the same tasks changes 12-14% of outcomes, so a second run of a mode already in hand gains about as much as adding a new one. What survives is a cost bound: sending only the tasks no mode solves to the cheapest mode cuts cost by 9.5-30.6% in 8 of 8 cells at unchanged success. We then test five routing policies (picking the mode, deciding when to spend on the strong mode, a zero-cost rule read off the task text, a confidence cascade, and pooled cost tiers), and none robustly beats simply fixing one well-chosen mode; the one exception is a fragile result in our sparsest cell. The central obstruction is that routing supervision is produced at the agent's success rate: the weaker the agent, the fewer labels a router gets, exactly where routing would be most valuable. This limit belongs to today's agents rather than to routing itself. Label supply and routing opportunity rise together (correlation 0.95 across cells), so a stronger agent can overturn the result, and we report the rerun noise bands and the full measurement protocol.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}

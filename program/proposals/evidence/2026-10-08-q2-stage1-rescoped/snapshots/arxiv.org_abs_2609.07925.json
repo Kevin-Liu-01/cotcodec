@@ -1,0 +1,41 @@
+{
+ "url": "https://arxiv.org/abs/2609.07925",
+ "fetched_at": "2026-10-08T14:39:50Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 43326,
+ "raw_sha256": "aa2fe8fe809f4397cb5df74ce3f4ee73102582c12adc451ed7c93b62c913bcf7",
+ "raw_stored": false,
+ "extract": {
+  "html_title": "[2609.07925] FrogNano: Training a 4B Coding Agent via Online Task Synthesis",
+  "title": "FrogNano: Training a 4B Coding Agent via Online Task Synthesis",
+  "authors": [
+   "Kim, Minseon",
+   "Shi, Zhengyan",
+   "Penaloza, Emiliano",
+   "Cui, Christopher",
+   "Castanyer, Roger Creus",
+   "Hashemzadeh, Maryam",
+   "White, Isadora",
+   "Light, Jonathan",
+   "Kim, Jeonghye",
+   "Pereira, Matheus",
+   "Moldavskaya, Darya",
+   "Singh, Chinmay",
+   "Vera, Fabio",
+   "Peng, Baolin",
+   "Yuan, Xingdi",
+   "Côté, Marc-Alexandre",
+   "Sordoni, Alessandro"
+  ],
+  "citation_date": "2026/09/07",
+  "submission_history": [
+   [
+    "v5",
+    "Mon, 5 Oct 2026 18:00:17 UTC "
+   ]
+  ],
+  "abstract": "We present FrogNano, a 4B coding agent designed to tackle software engineering (SWE) tasks efficiently and effectively, even under resource-constrained environments. It is post-trained exclusively via RL on around 1,500 SWE environments with synthetic tasks. A key ingredient for improving performance is an online task synthesis pipeline that creates tasks calibrated to the frontier of learnability for the current checkpoint. This report provides evidence that competitive small coding agents can be trained with synthetic tasks alone, without traditional distillation from larger models, and that generating tasks at the learnability frontier of the current agent is important. We report details on the training methodology, evaluations across diverse environments, and in-depth analyses, serving as a foundation for our ongoing exploration of lightweight yet capable coding agents that can run on minimal hardware.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}

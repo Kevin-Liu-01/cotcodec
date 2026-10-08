@@ -1,0 +1,875 @@
+{
+ "tool": "orx 0.2.2 (orx discover, --no-telemetry)",
+ "run_on": "2026-10-08",
+ "run_by": "single synthesis owner (Claude agent)",
+ "budget_queries": 60,
+ "queries": [
+  {
+   "n": 1,
+   "strategy": "embedding",
+   "query": "rerun noise floor of computer-use agents on OSWorld: variance from harness, observation type and repeated runs, across model sizes",
+   "args": "--published-after 2026-09-15 --limit 15",
+   "exit": 0,
+   "returned": [
+    {
+     "id": "2609.22000",
+     "date": "2026-09-18",
+     "title": "RecreationWorld: Scalable and Verifiable Environments for Hybrid Computer-Use Agents"
+    },
+    {
+     "id": "2610.01618",
+     "date": "2026-10-01",
+     "title": "Agents Are Systems, Not Models: Rethinking Agentic Evaluation"
+    },
+    {
+     "id": "2610.00917",
+     "date": "2026-10-01",
+     "title": "Finding the Right Fit: Model-Harness Interactions across Agent Tasks"
+    },
+    {
+     "id": "2610.04433",
+     "date": "2026-10-03",
+     "title": "What Does a Harness Buy? Tokens, Mostly"
+    },
+    {
+     "id": "2610.00651",
+     "date": "2026-09-30",
+     "title": "Agent Evaluation Reliability: More Tasks Won't (Always) Fix An Agent Leaderboard"
+    },
+    {
+     "id": "2610.01833",
+     "date": "2026-10-01",
+     "title": "Continuous Process-Level Evaluation for Evolving Enterprise AI Agent Skills"
+    },
+    {
+     "id": "2609.36927",
+     "date": "2026-09-29",
+     "title": "Neuro-Symbolic Computer Use: Learning Reusable Policies for Reliable and Efficient Execution"
+    },
+    {
+     "id": "2610.00921",
+     "date": "2026-10-01",
+     "title": "In CEM, a World Model Is Also a Proposal Mechanism"
+    },
+    {
+     "id": "2610.06921",
+     "date": "2026-10-02",
+     "title": "Does a Learned Corrector Beat a Simple Retreat? Evidence from a Frozen VLA"
+    },
+    {
+     "id": "2610.05532",
+     "date": "2026-10-04",
+     "title": "DelegationBench: Measuring When AI Agents Should Ask Before Acting"
+    },
+    {
+     "id": "2610.06192",
+     "date": "2026-10-05",
+     "title": "Copies or Sources? Measuring How LLM Aggregators Count Restated Evidence in Multi-Agent Systems"
+    },
+    {
+     "id": "2610.06522",
+     "date": "2026-10-05",
+     "title": "Anatomy of LLM Sycophancy: What a Flip Rate Hides"
+    },
+    {
+     "id": "2609.34313",
+     "date": "2026-09-28",
+     "title": "ControlScope: Workflow Revision and Reliability in LLM Agents"
+    },
+    {
+     "id": "2609.38512",
+     "date": "2026-09-29",
+     "title": "VAmoS Part Deux: Harder, More Realistic Voice-Agent Simulation"
+    },
+    {
+     "id": "2610.10062",
+     "date": "2026-10-07",
+     "title": "Loud Failures, Quiet Failures: Fault Detection and Recovery in Tool-Using Language Model Agents"
+    }
+   ]
+  },
+  {
+   "n": 2,
+   "strategy": "keyword",
+   "query": "OSWorld harness rerun variance",
+   "args": "--published-after 2026-09-15 --limit 15",
+   "exit": 0,
+   "returned": [
+    {
+     "id": "2609.39903",
+     "date": "2026-09-30",
+     "title": "OSWorld-Science: A Benchmark of Computer Use Agents for Learning and Using Scientific Software"
+    },
+    {
+     "id": "2610.04433",
+     "date": "2026-10-03",
+     "title": "What Does a Harness Buy? Tokens, Mostly"
+    },
+    {
+     "id": "2610.00948",
+     "date": "2026-10-01",
+     "title": "GUI-HARVEST: Self-Improving GUI Agents through Evidence-Driven Harness Evolution"
+    },
+    {
+     "id": "2609.24974",
+     "date": "2026-09-21",
+     "title": "Harness-Zero: Harness Distillation via Agent-as-Harness"
+    },
+    {
+     "id": "2609.24890",
+     "date": "2026-09-21",
+     "title": "OSWorld-Pro: Process-based Evaluation for Computer Use Agents"
+    },
+    {
+     "id": "2609.40330",
+     "date": "2026-09-30",
+     "title": "Turbo Harness: Instance-Adaptive Harness Optimization"
+    },
+    {
+     "id": "2610.00917",
+     "date": "2026-10-01",
+     "title": "Finding the Right Fit: Model-Harness Interactions across Agent Tasks"
+    },
+    {
+     "id": "2610.03818",
+     "date": "2026-10-02",
+     "title": "Control OSWorld: An AI Control Environment for GUI Computer Use Agents"
+    },
+    {
+     "id": "2609.31490",
+     "date": "2026-09-25",
+     "title": "Authority at Commit Time: Reject-and-Rerun Semantics for Governed Agentic Systems"
+    },
+    {
+     "id": "2609.33439",
+     "date": "2026-09-27",
+     "title": "Raven: The Harness of Harnesses for Composable Agentic Intelligence"
+    },
+    {
+     "id": "2609.38372",
+     "date": "2026-09-29",
+     "title": "Self-Evolving Harness on Multiple Tasks with the Agent as Its Own Optimizer"
+    },
+    {
+     "id": "2609.39982",
+     "date": "2026-09-30",
+     "title": "Mid-Harness: Scaling Actions Between Model and Harness for Terminal Agents"
+    },
+    {
+     "id": "2610.02200",
+     "date": "2026-10-01",
+     "title": "VISTA: A Visual Harness for Reasoning in an Interactive World"
+    },
+    {
+     "id": "2609.35738",
+     "date": "2026-09-28",
+     "title": "Harness Learning Enables Generalizable Test-Time Adaptation"
+    },
+    {
+     "id": "2609.20519",
+     "date": "2026-09-17",
+     "title": "SoL-Pi: Recursively Scaling Auto-Research Loops for Efficient Agent Harness"
+    }
+   ]
+  },
+  {
+   "n": 3,
+   "strategy": "embedding",
+   "query": "variance decomposition of agent benchmark scores into scaffold, model and rerun components with repeated runs",
+   "args": "--published-after 2026-09-15 --limit 15",
+   "exit": 0,
+   "returned": [
+    {
+     "id": "2610.05622",
+     "date": "2026-10-04",
+     "title": "UndoBench: Separating Task Competence from Recovery Capability in Tool-Using AI Agents"
+    },
+    {
+     "id": "2610.01618",
+     "date": "2026-10-01",
+     "title": "Agents Are Systems, Not Models: Rethinking Agentic Evaluation"
+    },
+    {
+     "id": "2610.00651",
+     "date": "2026-09-30",
+     "title": "Agent Evaluation Reliability: More Tasks Won't (Always) Fix An Agent Leaderboard"
+    },
+    {
+     "id": "2610.01833",
+     "date": "2026-10-01",
+     "title": "Continuous Process-Level Evaluation for Evolving Enterprise AI Agent Skills"
+    },
+    {
+     "id": "2610.01787",
+     "date": "2026-10-01",
+     "title": "Not All Experience Belongs in the Weights: Component Routing for Self-Improving GUI Agents"
+    },
+    {
+     "id": "2610.04433",
+     "date": "2026-10-03",
+     "title": "What Does a Harness Buy? Tokens, Mostly"
+    },
+    {
+     "id": "2610.07447",
+     "date": "2026-10-05",
+     "title": "Fork-and-Flush: Escaping Idea Basins in Autoresearch Agents"
+    },
+    {
+     "id": "2610.07274",
+     "date": "2026-10-05",
+     "title": "A Trust Layer for Agent Evaluation"
+    },
+    {
+     "id": "2610.07782",
+     "date": "2026-10-06",
+     "title": "Persistent Memory in Multi-Agent LLM Inference: What It Costs, What It Buys, and When You Can Tell"
+    },
+    {
+     "id": "2610.05532",
+     "date": "2026-10-04",
+     "title": "DelegationBench: Measuring When AI Agents Should Ask Before Acting"
+    },
+    {
+     "id": "2610.06192",
+     "date": "2026-10-05",
+     "title": "Copies or Sources? Measuring How LLM Aggregators Count Restated Evidence in Multi-Agent Systems"
+    },
+    {
+     "id": "2610.01348",
+     "date": "2026-10-01",
+     "title": "Verify Claims, Not Scores: Evidence-Based Verification of Modular Agents"
+    },
+    {
+     "id": "2609.28850",
+     "date": "2026-09-23",
+     "title": "RECLAIM: Can Agents Reproduce the Claims of Machine Learning Papers?"
+    },
+    {
+     "id": "2610.09778",
+     "date": "2026-10-07",
+     "title": "Reproducible LLM Inference Benchmarking: A Sequential Isolation Protocol for Regression Testing"
+    },
+    {
+     "id": "2609.21267",
+     "date": "2026-09-18",
+     "title": "Efficient Benchmarking in Production: A Study of an Evolving LLM Agent"
+    }
+   ]
+  },
+  {
+   "n": 4,
+   "strategy": "keyword",
+   "query": "computer-use agent rerun noise",
+   "args": "--published-after 2026-09-01 --limit 15",
+   "exit": 0,
+   "returned": [
+    {
+     "id": "2609.36201",
+     "date": "2026-09-28",
+     "title": "SCOUT: Synergizing Reasoning and Tool-Use for Computer-Use Safety"
+    },
+    {
+     "id": "2609.16251",
+     "date": "2026-09-14",
+     "title": "CADWorld: Computer-Use Benchmark for Long-Horizon Computer-Aided Design"
+    },
+    {
+     "id": "2609.36927",
+     "date": "2026-09-29",
+     "title": "Neuro-Symbolic Computer Use: Learning Reusable Policies for Reliable and Efficient Execution"
+    },
+    {
+     "id": "2609.22000",
+     "date": "2026-09-18",
+     "title": "RecreationWorld: Scalable and Verifiable Environments for Hybrid Computer-Use Agents"
+    },
+    {
+     "id": "2609.32750",
+     "date": "2026-09-26",
+     "title": "CUA-Sandbox: Efficient Environments for Computer-Use Agent Reinforcement Learning"
+    },
+    {
+     "id": "2609.31490",
+     "date": "2026-09-25",
+     "title": "Authority at Commit Time: Reject-and-Rerun Semantics for Governed Agentic Systems"
+    },
+    {
+     "id": "2609.14239",
+     "date": "2026-09-13",
+     "title": "CoArena: Evaluating Computer-Use and Multi-Agent Systems in Real Time"
+    },
+    {
+     "id": "2609.40284",
+     "date": "2026-09-30",
+     "title": "cua-speedrun: Standardized Benchmarking of the Speed of Computer-Use Agents"
+    },
+    {
+     "id": "2609.15134",
+     "date": "2026-09-14",
+     "title": "HazardAuditor: From Executable Threats to Safer Computer-Use Agents"
+    },
+    {
+     "id": "2609.39903",
+     "date": "2026-09-30",
+     "title": "OSWorld-Science: A Benchmark of Computer Use Agents for Learning and Using Scientific Software"
+    },
+    {
+     "id": "2610.03818",
+     "date": "2026-10-02",
+     "title": "Control OSWorld: An AI Control Environment for GUI Computer Use Agents"
+    },
+    {
+     "id": "2609.17885",
+     "date": "2026-09-15",
+     "title": "ERPBench: A State-Grounded Evaluation Paradigm for Computer-Use Agents in Enterprise Software"
+    },
+    {
+     "id": "2610.03089",
+     "date": "2026-10-02",
+     "title": "Securing Computer-Use Agents Against Branch Steering Attacks"
+    },
+    {
+     "id": "2609.09212",
+     "date": "2026-09-06",
+     "title": "AgentHijack: Visual Patch Attacks on Multimodal Computer-Use Agents"
+    },
+    {
+     "id": "2609.38008",
+     "date": "2026-09-29",
+     "title": "HybridCUA: Learning to Orchestrate GUI and CLI for Computer-Use Agents"
+    }
+   ]
+  },
+  {
+   "n": 5,
+   "strategy": "keyword",
+   "query": "harness sensitivity model scale computer use",
+   "args": "--published-after 2026-09-01 --limit 15",
+   "exit": 0,
+   "returned": [
+    {
+     "id": "2609.24974",
+     "date": "2026-09-21",
+     "title": "Harness-Zero: Harness Distillation via Agent-as-Harness"
+    },
+    {
+     "id": "2609.39903",
+     "date": "2026-09-30",
+     "title": "OSWorld-Science: A Benchmark of Computer Use Agents for Learning and Using Scientific Software"
+    },
+    {
+     "id": "2609.32459",
+     "date": "2026-09-26",
+     "title": "Beyond the Model: Demystifying Harness Effects in Software Engineering Agents"
+    },
+    {
+     "id": "2609.39982",
+     "date": "2026-09-30",
+     "title": "Mid-Harness: Scaling Actions Between Model and Harness for Terminal Agents"
+    },
+    {
+     "id": "2609.22000",
+     "date": "2026-09-18",
+     "title": "RecreationWorld: Scalable and Verifiable Environments for Hybrid Computer-Use Agents"
+    },
+    {
+     "id": "2609.33439",
+     "date": "2026-09-27",
+     "title": "Raven: The Harness of Harnesses for Composable Agentic Intelligence"
+    },
+    {
+     "id": "2609.35738",
+     "date": "2026-09-28",
+     "title": "Harness Learning Enables Generalizable Test-Time Adaptation"
+    },
+    {
+     "id": "2610.00917",
+     "date": "2026-10-01",
+     "title": "Finding the Right Fit: Model-Harness Interactions across Agent Tasks"
+    },
+    {
+     "id": "2609.29389",
+     "date": "2026-09-24",
+     "title": "Robo-Harness K1: Harnessing Robot-Use Agents via Perception Augmentation"
+    },
+    {
+     "id": "2610.02858",
+     "date": "2026-10-02",
+     "title": "Harness-Aware Distillation for Small Language Model Agents"
+    },
+    {
+     "id": "2609.20519",
+     "date": "2026-09-17",
+     "title": "SoL-Pi: Recursively Scaling Auto-Research Loops for Efficient Agent Harness"
+    },
+    {
+     "id": "2609.40330",
+     "date": "2026-09-30",
+     "title": "Turbo Harness: Instance-Adaptive Harness Optimization"
+    },
+    {
+     "id": "2609.10522",
+     "date": "2026-09-09",
+     "title": "Show-Harness: Just a VLM Agent Can Play Robots"
+    },
+    {
+     "id": "2610.02200",
+     "date": "2026-10-01",
+     "title": "VISTA: A Visual Harness for Reasoning in an Interactive World"
+    },
+    {
+     "id": "2609.01481",
+     "date": "2026-09-01",
+     "title": "Harness-of-Harness: Multi-Day Autonomous Software Development with Continual Improvement"
+    }
+   ]
+  },
+  {
+   "n": 6,
+   "strategy": "embedding",
+   "query": "Does sensitivity to the agent harness shrink as the language model gets larger? small and large open-weight models under different scaffolds",
+   "args": "--published-after 2026-09-01 --limit 15",
+   "exit": 0,
+   "returned": [
+    {
+     "id": "2609.language-model-shape",
+     "date": "2026-09-26",
+     "title": "Language Model \"Shape\""
+    },
+    {
+     "id": "2609.01437",
+     "date": "2026-09-01",
+     "title": "HarnessDev: Can LLMs Create and Evolve Their Own Agent Harness?"
+    },
+    {
+     "id": "2610.00917",
+     "date": "2026-10-01",
+     "title": "Finding the Right Fit: Model-Harness Interactions across Agent Tasks"
+    },
+    {
+     "id": "2609.39578",
+     "date": "2026-09-30",
+     "title": "Thinking Outside the Box: Can Language Models Rely on External Guidance Selectively?"
+    },
+    {
+     "id": "2609.30909",
+     "date": "2026-09-25",
+     "title": "Machine Unlearning for Large Language Models: Foundations, Advances, and Agentic Extensions"
+    },
+    {
+     "id": "2610.04433",
+     "date": "2026-10-03",
+     "title": "What Does a Harness Buy? Tokens, Mostly"
+    },
+    {
+     "id": "2609.36892",
+     "date": "2026-09-29",
+     "title": "Harness Evolution as Learning: Approximation, Generalization, and Optimization Limits of Self-Improving Personal Agents"
+    },
+    {
+     "id": "2610.01235",
+     "date": "2026-10-01",
+     "title": "Harness Annealing: Learning to Act with Less External Control"
+    },
+    {
+     "id": "2610.10304",
+     "date": "2026-10-07",
+     "title": "SemanticFold: Latent Sequence Compression SeparatesLanguage Modeling, Decodability, and Reasoning"
+    },
+    {
+     "id": "2609.36365",
+     "date": "2026-09-28",
+     "title": "Engineering Simplicity: Simple Mechanism Interfaces Steer LLM Agents"
+    },
+    {
+     "id": "2610.06204",
+     "date": "2026-10-05",
+     "title": "Do Small Language Models Learn to Negotiate? A Controlled Scaling Study of RL-Trained Sellers"
+    },
+    {
+     "id": "2610.03095",
+     "date": "2026-10-02",
+     "title": "Peer Influence across Heterogeneous AI Models"
+    },
+    {
+     "id": "2610.06078",
+     "date": "2026-10-05",
+     "title": "Do VLAs Understand and Adapt to the Objects They Handle, or Simply Replay Learned Behaviors?"
+    },
+    {
+     "id": "2610.07509",
+     "date": "2026-10-05",
+     "title": "On Open-Ended Information Seeking for Information Elicitation Agents"
+    },
+    {
+     "id": "2610.09000",
+     "date": "2026-10-06",
+     "title": "How Fragile Is On-Device Language Model Safety? Localizing Safety-Critical Parameters for Sparse Fault Analysis"
+    }
+   ]
+  },
+  {
+   "n": 7,
+   "strategy": "keyword",
+   "query": "OSWorld-Verified reproducibility",
+   "args": "--published-after 2026-08-01 --limit 15",
+   "exit": 0,
+   "returned": [
+    {
+     "id": "2609.24890",
+     "date": "2026-09-21",
+     "title": "OSWorld-Pro: Process-based Evaluation for Computer Use Agents"
+    },
+    {
+     "id": "2610.03818",
+     "date": "2026-10-02",
+     "title": "Control OSWorld: An AI Control Environment for GUI Computer Use Agents"
+    },
+    {
+     "id": "2609.39903",
+     "date": "2026-09-30",
+     "title": "OSWorld-Science: A Benchmark of Computer Use Agents for Learning and Using Scientific Software"
+    },
+    {
+     "id": "2609.05374",
+     "date": "2026-09-04",
+     "title": "CUA-Universe: A Scalable and Dynamic Environment for Hybrid GUI+CLI Agents"
+    },
+    {
+     "id": "2609.36927",
+     "date": "2026-09-29",
+     "title": "Neuro-Symbolic Computer Use: Learning Reusable Policies for Reliable and Efficient Execution"
+    },
+    {
+     "id": "2609.22083",
+     "date": "2026-09-18",
+     "title": "MintAct: A Unified Visual Agent for Digital Environments"
+    },
+    {
+     "id": "2608.01964",
+     "date": "2026-08-03",
+     "title": "LongHorizon-Harness: Advancing Long-Horizon Agents for Real-World Tasks"
+    },
+    {
+     "id": "2609.22914",
+     "date": "2026-09-19",
+     "title": "Reproducibility Challenges in Computational Network Science: Evidence, Causes, and Recommendations"
+    },
+    {
+     "id": "2608.02352",
+     "date": "2026-08-03",
+     "title": "Qwen-CUA: Native Computer Use for (almost) Everything"
+    },
+    {
+     "id": "2609.38008",
+     "date": "2026-09-29",
+     "title": "HybridCUA: Learning to Orchestrate GUI and CLI for Computer-Use Agents"
+    },
+    {
+     "id": "2609.35854",
+     "date": "2026-09-25",
+     "title": "Position: Let's Strengthen Verifiability If We Can't Enforce Reproducibility"
+    },
+    {
+     "id": "2609.verified-zero-compensation-riemann-xi-function",
+     "date": "2026-09-29",
+     "title": "Verified-Zero Compensation Beyond Pairwise Height Barriers for the Square-Variable Riemann Xi Function"
+    },
+    {
+     "id": "2609.40253",
+     "date": "2026-09-30",
+     "title": "ComputerSD: Online Self-Distillation from Real-Time Feedback for Computer-Use Agents"
+    },
+    {
+     "id": "2609.04699",
+     "date": "2026-09-04",
+     "title": "Model Retirement Creates Reproducibility Risk in Biomedical AI Publications"
+    },
+    {
+     "id": "2609.19866",
+     "date": "2026-09-17",
+     "title": "Reproducibility is not construct validity: LLM measurement of institutionally situated communication"
+    }
+   ]
+  },
+  {
+   "n": 8,
+   "strategy": "keyword",
+   "query": "accessibility tree screenshot observation OSWorld Qwen3.5",
+   "args": "--published-after 2026-09-01 --limit 15",
+   "exit": 0,
+   "returned": [
+    {
+     "id": "2610.02320",
+     "date": "2026-10-01",
+     "title": "DeskForge: Dense Supervision from Desktop Environments for Computer-Use Agents"
+    },
+    {
+     "id": "2610.01215",
+     "date": "2026-10-01",
+     "title": "AutoGUIWorld: Image Generators as Visual World Models for GUI Agent"
+    },
+    {
+     "id": "2609.24890",
+     "date": "2026-09-21",
+     "title": "OSWorld-Pro: Process-based Evaluation for Computer Use Agents"
+    },
+    {
+     "id": "2610.03818",
+     "date": "2026-10-02",
+     "title": "Control OSWorld: An AI Control Environment for GUI Computer Use Agents"
+    },
+    {
+     "id": "2609.39903",
+     "date": "2026-09-30",
+     "title": "OSWorld-Science: A Benchmark of Computer Use Agents for Learning and Using Scientific Software"
+    },
+    {
+     "id": "2609.05374",
+     "date": "2026-09-04",
+     "title": "CUA-Universe: A Scalable and Dynamic Environment for Hybrid GUI+CLI Agents"
+    },
+    {
+     "id": "2609.36927",
+     "date": "2026-09-29",
+     "title": "Neuro-Symbolic Computer Use: Learning Reusable Policies for Reliable and Efficient Execution"
+    },
+    {
+     "id": "2609.09379",
+     "date": "2026-09-08",
+     "title": "Agentic Web Accessibility Auditing: A Criterion-Specific Framework for Translating WCAG Requirements into Assessments"
+    },
+    {
+     "id": "2609.40253",
+     "date": "2026-09-30",
+     "title": "ComputerSD: Online Self-Distillation from Real-Time Feedback for Computer-Use Agents"
+    },
+    {
+     "id": "2609.37386",
+     "date": "2026-09-29",
+     "title": "Anatomy-Aware Prediction of Bronchoscopic Accessibility from 3D CT"
+    },
+    {
+     "id": "2609.17653",
+     "date": "2026-09-15",
+     "title": "Reflect, Revise, Reuse: Training-Free Skill Evolution for GUI Agents"
+    },
+    {
+     "id": "2609.09556",
+     "date": "2026-09-09",
+     "title": "High-probability guarantees for linear accessibility in feature superposition"
+    },
+    {
+     "id": "2609.22083",
+     "date": "2026-09-18",
+     "title": "MintAct: A Unified Visual Agent for Digital Environments"
+    },
+    {
+     "id": "2609.38008",
+     "date": "2026-09-29",
+     "title": "HybridCUA: Learning to Orchestrate GUI and CLI for Computer-Use Agents"
+    },
+    {
+     "id": "2609.17959",
+     "date": "2026-09-16",
+     "title": "A11yLTLNav: Automatic Detection of Accessibility Navigation Failures"
+    }
+   ]
+  },
+  {
+   "n": 9,
+   "strategy": "openalex",
+   "query": "computer-use agent evaluation reliability rerun variance harness",
+   "args": "--limit 15",
+   "exit": 0,
+   "returned": [
+    {
+     "id": "10.48550/arxiv.2609.39958",
+     "date": "2026-09-30",
+     "title": "Better Deck or Different Judge? Evaluating Agentic Harness Gains in Corporate and Investment Banking"
+    },
+    {
+     "id": "10.48550/arxiv.2608.17597",
+     "date": "2026-08-18",
+     "title": "HarnessRisk: A Lifecycle-Oriented Benchmark for Agent Harness Safety"
+    },
+    {
+     "id": "10.48550/arxiv.2608.07545",
+     "date": "2026-07-31",
+     "title": "DarwinX: Evolving Agent Harnesses Through Natural Selection"
+    },
+    {
+     "id": "10.48550/arxiv.2605.00663",
+     "date": "2026-05-01",
+     "title": "Affordance Agent Harness: Verification-Gated Skill Orchestration"
+    },
+    {
+     "id": "10.48550/arxiv.2610.01618",
+     "date": "2026-10-01",
+     "title": "Agents Are Systems, Not Models: Rethinking Agentic Evaluation"
+    },
+    {
+     "id": "10.48550/arxiv.2610.00015",
+     "date": "2026-07-27",
+     "title": "From Proposal to Verified Effect: Praxa, an Evidence-Bound Harness for Governed AI Agent Execution"
+    },
+    {
+     "id": "10.48550/arxiv.2608.23041",
+     "date": "2026-08-24",
+     "title": "AutoSaddler: Automatic Harness Optimization with Durable Updates from Agent Execution Traces"
+    },
+    {
+     "id": "10.48550/arxiv.2311.06330",
+     "date": "2023-11-10",
+     "title": "Smart Agent-Based Modeling: On the Use of Large Language Models in Computer Simulations"
+    },
+    {
+     "id": "10.48550/arxiv.2609.09218",
+     "date": "2026-09-06",
+     "title": "The Double Measurement Confound in Agent Benchmarks: De-Scaffolding, Ground-Truth Scoring, and Reliability Beyond the Mean"
+    },
+    {
+     "id": "10.48550/arxiv.2606.17546",
+     "date": "2026-06-16",
+     "title": "SEAGym: An Evaluation Environment for Self-Evolving LLM Agents"
+    },
+    {
+     "id": "10.48550/arxiv.2602.09163",
+     "date": "2026-02-09",
+     "title": "FlyAOC: Evaluating Agentic Ontology Curation of Drosophila Scientific Knowledge Bases"
+    },
+    {
+     "id": "10.48550/arxiv.2607.28609",
+     "date": "2026-07-30",
+     "title": "OSReward: Instituting Standardized Evaluation for Cross-Platform Computer-Use Reward Models"
+    },
+    {
+     "id": "10.48550/arxiv.2607.25891",
+     "date": "2026-07-28",
+     "title": "Messier: A High-Resolution Corpus for Cross-Benchmark Agent Evaluation"
+    },
+    {
+     "id": "10.48550/arxiv.2608.13867",
+     "date": "2026-08-14",
+     "title": "Engineering Reliable Coding Agents: Evaluating and Operating the System Around the Model"
+    },
+    {
+     "id": "10.48550/arxiv.2605.19149",
+     "date": "2026-05-18",
+     "title": "Agent Meltdowns: The Road to Hell Is Paved with Helpful Agents"
+    }
+   ]
+  },
+  {
+   "n": 10,
+   "strategy": "keyword",
+   "query": "cua-speedrun",
+   "args": "--published-after 2026-09-29 --limit 15",
+   "exit": 0,
+   "returned": [
+    {
+     "id": "2609.40284",
+     "date": "2026-09-30",
+     "title": "cua-speedrun: Standardized Benchmarking of the Speed of Computer-Use Agents"
+    },
+    {
+     "id": "2610.09469",
+     "date": "2026-10-07",
+     "title": "Secure-CUA: Controlling Untrusted Influence in Computer-Use Agents"
+    },
+    {
+     "id": "2610.03089",
+     "date": "2026-10-02",
+     "title": "Securing Computer-Use Agents Against Branch Steering Attacks"
+    },
+    {
+     "id": "2609.40253",
+     "date": "2026-09-30",
+     "title": "ComputerSD: Online Self-Distillation from Real-Time Feedback for Computer-Use Agents"
+    },
+    {
+     "id": "2610.00450",
+     "date": "2026-09-30",
+     "title": "ZoneClaw: Mitigating Persistent Memory Attacks by Establishing Memory-Zoning in OpenClaw-Style Computer-Use Agents"
+    },
+    {
+     "id": "2610.a-call-for-an-open-tokenizer-benchmark",
+     "date": "2026-10-06",
+     "title": "A Call for an Open Tokenizer Benchmark"
+    },
+    {
+     "id": "2610.speedrunbench-llm-agents-speedrunning",
+     "date": "2026-10-03",
+     "title": "SPEEDRUNBENCH: Challenging LLM Agents With Video Game Speedrunning"
+    },
+    {
+     "id": "2610.02588",
+     "date": "2026-10-01",
+     "title": "Open-Endedness Bench: Measuring Epistemic Process from Agent Records"
+    },
+    {
+     "id": "2610.05597",
+     "date": "2026-10-04",
+     "title": "More Than Words: Compositional Tokenization for Efficient Language Models"
+    },
+    {
+     "id": "2610.08076",
+     "date": "2026-10-06",
+     "title": "SpeedrunBench: Challenging LLM Agents with Video Game Speedrunning"
+    },
+    {
+     "id": "2609.39903",
+     "date": "2026-09-30",
+     "title": "OSWorld-Science: A Benchmark of Computer Use Agents for Learning and Using Scientific Software"
+    },
+    {
+     "id": "2609.nanoproteinlm-hill-climbable-protein-models",
+     "date": "2026-09-30",
+     "title": "NanoProteinLM: Towards Hill-Climbable Protein Language Model Research"
+    },
+    {
+     "id": "2609.38008",
+     "date": "2026-09-29",
+     "title": "HybridCUA: Learning to Orchestrate GUI and CLI for Computer-Use Agents"
+    },
+    {
+     "id": "2610.07127",
+     "date": "2026-10-05",
+     "title": "PlaySuite: A Large-Scale Benchmark for Interactive Visual Intelligence"
+    },
+    {
+     "id": "2610.05002",
+     "date": "2026-10-04",
+     "title": "Multi-bit Ferroelectric-NAND for High-throughput Massive Database Search"
+    }
+   ]
+  }
+ ],
+ "full_text_reads": [
+  {
+   "id": "2610.01618",
+   "command": "orx paper 2610.01618 --full",
+   "bytes": 97454,
+   "sha256": "70f764778b2b68462c832411585459cbea7916c39faffe8c1172f73efbfdffb7",
+   "stored": false
+  },
+  {
+   "id": "2609.32459",
+   "command": "orx paper 2609.32459 --full",
+   "bytes": 70124,
+   "sha256": "cdc9cc7caca48d878afdf653c2a68d215107a9dbe796ba6b73b046553ee29ad7",
+   "stored": false
+  },
+  {
+   "id": "2610.00917",
+   "command": "orx paper 2610.00917 --full",
+   "bytes": 58074,
+   "sha256": "05c86298b597a176c720b6485b9a2ca6a742372909a4dfe4f7796a9d93dc8431",
+   "stored": false
+  }
+ ],
+ "counts": {
+  "discover_queries": 10,
+  "distinct_ids_returned": 107
+ }
+}

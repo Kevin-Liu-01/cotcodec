@@ -1,0 +1,12 @@
+{
+ "url": "https://raw.githubusercontent.com/xlang-ai/OSWorld/bfd62bdc5a3319809a236dc90ddbbaf3cb4b7e06/mm_agents/qwen35vl_agent.py",
+ "fetched_at": "2026-10-08T14:39:57Z",
+ "http_status": 200,
+ "content_type": "text/plain; charset=utf-8",
+ "raw_bytes": 28770,
+ "raw_sha256": "1f39be92cf5461d9671ab9307a69c05691abf0226aa6b53d2af332003a5096fe",
+ "raw_stored": false,
+ "extract": {
+  "html_title": null
+ }
+}

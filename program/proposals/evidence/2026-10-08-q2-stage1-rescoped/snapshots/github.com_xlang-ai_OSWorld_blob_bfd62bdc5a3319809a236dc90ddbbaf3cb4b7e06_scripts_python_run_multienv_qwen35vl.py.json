@@ -1,0 +1,12 @@
+{
+ "url": "https://github.com/xlang-ai/OSWorld/blob/bfd62bdc5a3319809a236dc90ddbbaf3cb4b7e06/scripts/python/run_multienv_qwen35vl.py",
+ "fetched_at": "2026-10-08T14:40:10Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 505040,
+ "raw_sha256": "c5f6b90c31d0875fff76fb213b52a965de273627c9089643787da4f3385a25cf",
+ "raw_stored": false,
+ "extract": {
+  "html_title": "OSWorld/scripts/python/run_multienv_qwen35vl.py at bfd62bdc5a3319809a236dc90ddbbaf3cb4b7e06 · xlang-ai/OSWorld · GitHub"
+ }
+}

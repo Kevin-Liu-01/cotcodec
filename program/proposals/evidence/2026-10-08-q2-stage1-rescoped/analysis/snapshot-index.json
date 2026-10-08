@@ -1,0 +1,236 @@
+[
+ {
+  "url": "https://arxiv.org/abs/2609.40284",
+  "http_status": 200,
+  "fetched_at": "2026-10-08T14:39:50Z",
+  "raw_sha256": "bf974e7ae01950d6c493a043a45d31dfc4994c2297d03f7e19316d3576b09c2a",
+  "raw_bytes": 44974,
+  "artifact": "snapshots/arxiv.org_abs_2609.40284.json",
+  "sha256": "84a111a94188045067996c0cd7f74e037313180199e07322510e1ca404ee7cef"
+ },
+ {
+  "url": "https://arxiv.org/abs/2608.06171",
+  "http_status": 200,
+  "fetched_at": "2026-10-08T14:39:50Z",
+  "raw_sha256": "70d894f329b45567f4aafd229a9824cb551bf48c497e9aefaf3476d55dabaa7d",
+  "raw_bytes": 42864,
+  "artifact": "snapshots/arxiv.org_abs_2608.06171.json",
+  "sha256": "b54b21a350c0fde5e50bce56d7a7814cf882a86344a03ed2a276d638a93d0de5"
+ },
+ {
+  "url": "https://arxiv.org/abs/2610.00651",
+  "http_status": 200,
+  "fetched_at": "2026-10-08T14:39:50Z",
+  "raw_sha256": "8d365fcdd7dcb0b16949f0965a8b799ad72798ca02e1df3120c5d3bbebc39c5e",
+  "raw_bytes": 43941,
+  "artifact": "snapshots/arxiv.org_abs_2610.00651.json",
+  "sha256": "622e6d093ebb605ac0d8a8c7ea0b1661ddd6e5f2fcd05ecd6a8dcd3699af89ef"
+ },
+ {
+  "url": "https://arxiv.org/abs/2607.28367",
+  "http_status": 200,
+  "fetched_at": "2026-10-08T14:39:50Z",
+  "raw_sha256": "f85084949452c9491a1d16aef2df73b38b67d0b1d5819c85745d91558e315ee3",
+  "raw_bytes": 41117,
+  "artifact": "snapshots/arxiv.org_abs_2607.28367.json",
+  "sha256": "7679cf3f010fdd391f323298c2249f4a061e955125a84c5841228680571eea58"
+ },
+ {
+  "url": "https://arxiv.org/abs/2610.04433",
+  "http_status": 200,
+  "fetched_at": "2026-10-08T14:39:50Z",
+  "raw_sha256": "c0d4562539b1215b137cbbb4ad850269441a19a2aaee2e2e527aef50d17ed5ef",
+  "raw_bytes": 43160,
+  "artifact": "snapshots/arxiv.org_abs_2610.04433.json",
+  "sha256": "8c30702585d6171b98ed350fa42e704b3b0c546998d80f0feb2fafe1d25d8b16"
+ },
+ {
+  "url": "https://arxiv.org/abs/2609.07925",
+  "http_status": 200,
+  "fetched_at": "2026-10-08T14:39:50Z",
+  "raw_sha256": "aa2fe8fe809f4397cb5df74ce3f4ee73102582c12adc451ed7c93b62c913bcf7",
+  "raw_bytes": 43326,
+  "artifact": "snapshots/arxiv.org_abs_2609.07925.json",
+  "sha256": "67145b8acb90389647b328974c0cff415e816a0ac3ee39a329b1c69efd28f834"
+ },
+ {
+  "url": "https://arxiv.org/abs/2609.22220",
+  "http_status": 200,
+  "fetched_at": "2026-10-08T14:39:50Z",
+  "raw_sha256": "5987affd4404a020529b58c562e56da3fc4b18803d58402f38e5adc86f465f1e",
+  "raw_bytes": 44267,
+  "artifact": "snapshots/arxiv.org_abs_2609.22220.json",
+  "sha256": "024fe65fbcc21bc18bcb4191870f865bded17efeb5ec1bd07b476ecd25482333"
+ },
+ {
+  "url": "https://arxiv.org/abs/2610.01618",
+  "http_status": 200,
+  "fetched_at": "2026-10-08T14:39:51Z",
+  "raw_sha256": "2b145f7cd1ba05c42e06af17b2ba87da3ec89744bfd20e9d5726f94571f332e5",
+  "raw_bytes": 42553,
+  "artifact": "snapshots/arxiv.org_abs_2610.01618.json",
+  "sha256": "6fb1ea8585ff0a0ecb8aae412845aae3e400cf2aae732e70be853a3c60956642"
+ },
+ {
+  "url": "https://arxiv.org/abs/2610.00917",
+  "http_status": 200,
+  "fetched_at": "2026-10-08T14:39:51Z",
+  "raw_sha256": "96a0c2ba67c3347b0eea692a7bcb2b326da6f9548ee366c0218328f17d1b85d2",
+  "raw_bytes": 43906,
+  "artifact": "snapshots/arxiv.org_abs_2610.00917.json",
+  "sha256": "a9605b50e2c330d1e95fd8904162b7f656f8f6f27c6971c995c09815972823a1"
+ },
+ {
+  "url": "https://arxiv.org/abs/2609.32459",
+  "http_status": 200,
+  "fetched_at": "2026-10-08T14:39:51Z",
+  "raw_sha256": "328efb66197f797eb25dba2ba1b9fdc2f618b1c5c6a957e4c74a61a030044d84",
+  "raw_bytes": 43925,
+  "artifact": "snapshots/arxiv.org_abs_2609.32459.json",
+  "sha256": "730603715524b2358a7f2a4bd72fb22c850e9b2ea585a066d0bf4bc7f912f797"
+ },
+ {
+  "url": "https://arxiv.org/abs/2609.09218",
+  "http_status": 200,
+  "fetched_at": "2026-10-08T14:39:51Z",
+  "raw_sha256": "38cdcdea5d4cb666696128ad3b13345bee4db0d7e413a643d0d8f66db58ac80b",
+  "raw_bytes": 44179,
+  "artifact": "snapshots/arxiv.org_abs_2609.09218.json",
+  "sha256": "cc61ebc86f3c8307a7b96cbb3cb9e093c0739a354da22e4346081a590a6057e6"
+ },
+ {
+  "url": "https://arxiv.org/abs/2508.09123",
+  "http_status": 200,
+  "fetched_at": "2026-10-08T14:39:51Z",
+  "raw_sha256": "55a3e15f21f3f160f4be09ba8328567b8e85c88a681d0b0466136e0c6a75be54",
+  "raw_bytes": 48463,
+  "artifact": "snapshots/arxiv.org_abs_2508.09123.json",
+  "sha256": "ffeb4f6bc3726e11aee299ccbc26d7736397292eb09dd75829205da510fa0377"
+ },
+ {
+  "url": "https://arxiv.org/abs/2404.07972",
+  "http_status": 200,
+  "fetched_at": "2026-10-08T14:39:51Z",
+  "raw_sha256": "b647fbf05a6cf37e69afee5ab99152ca57d1af31020cc33a65d1d27a2fe34ede",
+  "raw_bytes": 46117,
+  "artifact": "snapshots/arxiv.org_abs_2404.07972.json",
+  "sha256": "fee11db59550d2a93b2ddf13114fa9a3cadfb89f99e0311748faabda32a12418"
+ },
+ {
+  "url": "https://huggingface.co/Qwen/Qwen3.5-9B",
+  "http_status": 200,
+  "fetched_at": "2026-10-08T14:39:51Z",
+  "raw_sha256": "b7b531dacb26639f4f0b97148e33792e60c29168488fba24cb7eb9288e61310e",
+  "raw_bytes": 596649,
+  "artifact": "snapshots/huggingface.co_Qwen_Qwen3.5-9B.json",
+  "sha256": "328c1c26afafc15c0de0bdaa21133c17c14bb9aeff32609995f07ec2b999dcaf"
+ },
+ {
+  "url": "https://huggingface.co/Qwen/Qwen3.5-4B",
+  "http_status": 200,
+  "fetched_at": "2026-10-08T14:39:52Z",
+  "raw_sha256": "7c412df97e9974047ee9d4e334463c40445a11a9db295f13949746600210f4f9",
+  "raw_bytes": 499807,
+  "artifact": "snapshots/huggingface.co_Qwen_Qwen3.5-4B.json",
+  "sha256": "e101fc39769cb1f54498d21f6373693afea92ac51dc2cd2f4cd107be80ad095e"
+ },
+ {
+  "url": "https://huggingface.co/xlangai/OpenCUA-7B",
+  "http_status": 200,
+  "fetched_at": "2026-10-08T14:39:52Z",
+  "raw_sha256": "f33e39b8ee778e3837565e3f3837e3910ee6f09f16d8c38959d941faeb23c993",
+  "raw_bytes": 257149,
+  "artifact": "snapshots/huggingface.co_xlangai_OpenCUA-7B.json",
+  "sha256": "ec7372ad5f2387067d445ef44c33f5d942aa82752270c4780134b64394827e3c"
+ },
+ {
+  "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_verified_trajs",
+  "http_status": 200,
+  "fetched_at": "2026-10-08T14:39:52Z",
+  "raw_sha256": "163e5c0c2f7c12831e5dd90e37d5ce5a41d4b1660e9a465452df6a878a9c8f70",
+  "raw_bytes": 134457,
+  "artifact": "snapshots/huggingface.co_datasets_xlangai_ubuntu_osworld_verified_trajs.json",
+  "sha256": "b46cfe175784b429ddfe74e5f11737bc34b9a6c4ecb9fbf03c22fa8671216fc6"
+ },
+ {
+  "url": "https://github.com/xlang-ai/OSWorld",
+  "http_status": 200,
+  "fetched_at": "2026-10-08T14:39:53Z",
+  "raw_sha256": "ba2acb3ce859340470437078d4bc9811b753207503be122ad597cfe6c48fbfaf",
+  "raw_bytes": 416933,
+  "artifact": "snapshots/github.com_xlang-ai_OSWorld.json",
+  "sha256": "71a0f2b7b3ac88fefcdc9a527709008a83e44940e843f2450ef7845a19381c93"
+ },
+ {
+  "url": "https://github.com/cmu-l3/gym-anything",
+  "http_status": 200,
+  "fetched_at": "2026-10-08T14:39:54Z",
+  "raw_sha256": "0a55f700e25bdc9380343799ca44a3fad7ce1a80392655fedce3b4ff8dab0f4d",
+  "raw_bytes": 309087,
+  "artifact": "snapshots/github.com_cmu-l3_gym-anything.json",
+  "sha256": "b3970efcf080968527892dea9654875709b9f07a728c52fae619aa404df0e110"
+ },
+ {
+  "url": "https://github.com/vllm-project/vllm/releases/tag/v0.31.0",
+  "http_status": 200,
+  "fetched_at": "2026-10-08T14:39:55Z",
+  "raw_sha256": "7fe1b7dac83fadf547857158a4010702faca386b9c8d9ac9c1f48960f72d3f5d",
+  "raw_bytes": 595920,
+  "artifact": "snapshots/github.com_vllm-project_vllm_releases_tag_v0.31.0.json",
+  "sha256": "0683285b1042ffca9ba6d59dd0ae9d21df2c3666f0a3fb715170859d89f0fbaf"
+ },
+ {
+  "url": "https://github.com/xlang-ai/OSWorld/blob/bfd62bdc5a3319809a236dc90ddbbaf3cb4b7e06/mm_agents/qwen35vl_agent.py",
+  "http_status": 200,
+  "fetched_at": "2026-10-08T14:39:56Z",
+  "raw_sha256": "5fb36a847141444a5ce658622f96f122f041bb63fe71fc6b30fd44c7389ce363",
+  "raw_bytes": 657611,
+  "artifact": "snapshots/github.com_xlang-ai_OSWorld_blob_bfd62bdc5a3319809a236dc90ddbbaf3cb4b7e06_mm_agents_qwen35vl_agent.py.json",
+  "sha256": "d7b2d7c1f2684960014f2a22ace53630274d1840dd280a5b6ce6f637c33e9688"
+ },
+ {
+  "url": "https://github.com/cmu-l3/gym-anything/blob/aae6f7607e0f3d9d6306e1fefbad92bda99ca99a/agents/agents/qwen35vl.py",
+  "http_status": 200,
+  "fetched_at": "2026-10-08T14:39:57Z",
+  "raw_sha256": "3059489109fee61b7f8b5976afb1f56aa4141603c6f797d89679b28110fad325",
+  "raw_bytes": 710217,
+  "artifact": "snapshots/github.com_cmu-l3_gym-anything_blob_aae6f7607e0f3d9d6306e1fefbad92bda99ca99a_agents_agents_qwen35vl.py.json",
+  "sha256": "f7aadd12481683918d6a8b1b03f1d015bb1056b39a0d78ac6f7b2aa0872aba64"
+ },
+ {
+  "url": "https://raw.githubusercontent.com/xlang-ai/OSWorld/bfd62bdc5a3319809a236dc90ddbbaf3cb4b7e06/mm_agents/qwen35vl_agent.py",
+  "http_status": 200,
+  "fetched_at": "2026-10-08T14:39:57Z",
+  "raw_sha256": "1f39be92cf5461d9671ab9307a69c05691abf0226aa6b53d2af332003a5096fe",
+  "raw_bytes": 28770,
+  "artifact": "snapshots/raw.githubusercontent.com_xlang-ai_OSWorld_bfd62bdc5a3319809a236dc90ddbbaf3cb4b7e06_mm_agents_qwen35vl_agent.py.json",
+  "sha256": "f64fc218774dd2ad5413491eedcf6ad62de1c3084c9f1a2103679acfb18414c3"
+ },
+ {
+  "url": "https://raw.githubusercontent.com/cmu-l3/gym-anything/aae6f7607e0f3d9d6306e1fefbad92bda99ca99a/agents/agents/qwen35vl.py",
+  "http_status": 200,
+  "fetched_at": "2026-10-08T14:39:57Z",
+  "raw_sha256": "93666f2751d99dfee0034700f65385ca2db1544e3d9a0d194807050d2edea1a5",
+  "raw_bytes": 32925,
+  "artifact": "snapshots/raw.githubusercontent.com_cmu-l3_gym-anything_aae6f7607e0f3d9d6306e1fefbad92bda99ca99a_agents_agents_qwen35vl.py.json",
+  "sha256": "ea20b56f7b55f6a97fc4460c7afae6b064fee2f3ed7f9a2c1c6fefcd1359223b"
+ },
+ {
+  "url": "https://raw.githubusercontent.com/xlang-ai/OSWorld/bfd62bdc5a3319809a236dc90ddbbaf3cb4b7e06/scripts/python/run_multienv_qwen35vl.py",
+  "http_status": 200,
+  "fetched_at": "2026-10-08T14:40:09Z",
+  "raw_sha256": "a3bf2a6343f470d1c0b55b136ddea58b0d3bfe5970760025add39e8275ba6bb1",
+  "raw_bytes": 15974,
+  "artifact": "snapshots/raw.githubusercontent.com_xlang-ai_OSWorld_bfd62bdc5a3319809a236dc90ddbbaf3cb4b7e06_scripts_python_run_multienv_qwen35vl.py.json",
+  "sha256": "d7f4a4b3509005061625d4febb75707d72b9042e50bf16c333ea0791cd079e14"
+ },
+ {
+  "url": "https://github.com/xlang-ai/OSWorld/blob/bfd62bdc5a3319809a236dc90ddbbaf3cb4b7e06/scripts/python/run_multienv_qwen35vl.py",
+  "http_status": 200,
+  "fetched_at": "2026-10-08T14:40:10Z",
+  "raw_sha256": "c5f6b90c31d0875fff76fb213b52a965de273627c9089643787da4f3385a25cf",
+  "raw_bytes": 505040,
+  "artifact": "snapshots/github.com_xlang-ai_OSWorld_blob_bfd62bdc5a3319809a236dc90ddbbaf3cb4b7e06_scripts_python_run_multienv_qwen35vl.py.json",
+  "sha256": "f58c55adb843663aae0fba0ad8583f97c237941ce0af35828051dc0ca443231f"
+ }
+]
