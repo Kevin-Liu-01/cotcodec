@@ -1,0 +1,29 @@
+{
+ "check_chain_on_copy": {
+  "rows": 11,
+  "status": "PASS"
+ },
+ "check_chain_on_copy_before": {
+  "rows": 10,
+  "status": "PASS"
+ },
+ "command": "scripts/preregister.py --ledger <scratch copy of program/preregistrations/ledger.jsonl> freeze q2-evaluator-mutation-v1 program/preregistrations/q2-evaluator-mutation-v1.md, then verify and check-chain on the copy",
+ "commit": "88bd376eddea452d1e24d2c049c1f4d8c9f51a4e",
+ "freeze_exit": 0,
+ "kind": "freeze-lint (scratch ledger copy; not a freeze)",
+ "ledger_copy_equals_main": true,
+ "ledger_copy_rows_before": 10,
+ "ledger_sha256_before": "e7d20178e251d7f3bdc1fcdbf2ec693abef43bee7d69858a259938c9f8843cdd",
+ "main_at_check": "a9948ee3d5093fed3ed7e948a58cf3492310140d",
+ "real_ledger_untouched": true,
+ "scratch_row": {
+  "experiment_id": "q2-evaluator-mutation-v1",
+  "frozen_at": "2026-10-08T07:43:14.186124+00:00",
+  "git_head_at_freeze": "88bd376eddea452d1e24d2c049c1f4d8c9f51a4e",
+  "hash": "986f88b3847cc51f2d32b24fc71bf5738a39864d0a8dd3df839e3ac8ca0920d3",
+  "path": "program/preregistrations/q2-evaluator-mutation-v1.md",
+  "previous_hash": "be4fefcbb726776889f3f8e222ded2be78ccc780cf072b20b92be8290d28e19b",
+  "sha256": "f62362b8f49e20fdca161b55c8b37c861785bdd6711d853713eaabca701f78e5"
+ },
+ "verify_exit": 0
+}

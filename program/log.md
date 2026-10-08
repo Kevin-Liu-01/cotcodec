@@ -1471,3 +1471,51 @@ Append-only. Newest entries at the bottom.
   after v1, C2 after `-inputs`, and every scored campaign after `-executor`
   except A7 under attempt 2. The repository ledger is unchanged (7 rows).
 - Nothing is frozen and nothing is pushed. No GPU, no VM job.
+
+## 2026-10-08 — Q2 evaluator-mutation: the narrow re-check's minor items fixed (ninth draft; not frozen)
+
+- The narrow re-check of the ninth draft scored it 90/100, ready to freeze,
+  with no blocking defect (review log, prereg section 17; the lowest score
+  stays 55). Its minor items are fixed on `stage0/q2-evaluator-mutation`
+  without changing a registered choice.
+- Merges of main: `6c4160b` (D39 in `decisions.md` only) as `0c6fe4f`, then,
+  because main moved during the pass, `a9948ee` (the action-path branch
+  merged and q2-action-path-v1, -inputs and -executor frozen) as `88bd376`.
+  `log.md` keeps both sides; `state.json` takes main's action-path
+  next_action with the branch's checker-mutation sentence and keeps the
+  branch's GPU ledger (16 rows, 3.7597). The ledger equals main's (10 rows,
+  SHA-256 `e7d20178`). Nothing under the checker-mutation code-tree roots
+  changed on main.
+- Code (`de24e23`): `rater_runner.check_rerate_list` recomputes a re-rate
+  list's items from the calls file it names (the records whose only void
+  reason is the relay mismatch, `relay_rerate_items`, which the ingest uses
+  too) and refuses a list that differs; `audit summarize --rerate-list` uses
+  the Anthropic calls file the list belongs to, `export-isolated
+  --rerate-list` the `calls.jsonl` beside the list. `collect_transcripts`
+  copies into a staging directory beside the output and renames it into
+  place only when every copy checks, so a refusal leaves nothing behind.
+  New tests pin the "only void reason" rule (ingest, summary, export), the
+  journal's refusals (an agent started twice among them) and the staged
+  collector. The harness README's pool row now says concordant
+  contradictions of every label class (D38).
+- Registration (`a8ea642`): the status note records the re-check and its
+  fixes; section 9 registers the recompute check and says that a resume
+  with a different relay frame puts every relay-voided item in the
+  registered pool, on top of the normal pool (113 items against 24 on the
+  development analogue); section 17 checks the re-check, logs its score and
+  carries the same sentence in Kevin's item. Code-tree pin `58bee019`;
+  catalog unchanged.
+- Checks: ruff clean; the Q2 tests locally 358 passed, 20 skipped. Nine
+  targeted mutants of the fixes, each on a `git archive` copy of `88bd376`,
+  are all killed, the re-check's survivors M7 and M14 among them. Host,
+  fresh `~/cotcodec-scratch/` directories (rsync without `.venv` and
+  `.git`, `uv sync --locked --extra dev`): at `a8ea642` 2,126 passed, 37
+  skipped; at the merge head `88bd376` 2,181 passed, 37 skipped and 1
+  failed, main's own action-path test that still asserts no ledger row for
+  the registrations main has now frozen (it fails on main `a9948ee` too).
+  Freeze-lint on a scratch copy of main's ledger (10 rows): freeze, verify,
+  check-chain PASS (11 rows); registration SHA-256
+  `f62362b8f49e20fdca161b55c8b37c861785bdd6711d853713eaabca701f78e5`.
+  Records in `program/evidence/q2-mutation/integration/d38-recheck-fixes/`.
+  No GPU, nothing pushed or frozen.
+- Next: Kevin's remaining items (section 17), re-merge main, freeze.

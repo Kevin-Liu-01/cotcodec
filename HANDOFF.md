@@ -58,11 +58,17 @@ the Q3 dense pre-check lanes (`ops/q3-dense`) are not yet merged.
   checks; relay frames checked across calls files and recorded verbatim; one
   workflow session with one fresh, answer-blind re-rate of relay-voided
   items; concordant contradictions of every candidate kind to Kevin's pool;
-  interrupted attempts answer only through a structured answer). Code-tree
-  pin `50edcc45`; the scratch freeze-lint passes (registration SHA-256
-  `0a01f424...`). Next: a narrow re-check, Kevin's remaining items (the
-  pool, the spot check, outward actions, carried-over sign-offs; prereg
-  section 17), re-merge main, freeze. The registered dev result (kappa
+  interrupted attempts answer only through a structured answer). The
+  narrow re-check scored the ninth draft 90 (ready to freeze, no blocking
+  defect), and its minor items are fixed: the re-rate list is recomputed
+  from its calls file wherever it is read, tests kill the re-check's
+  surviving mutants (M7, M14), the collector stages its copies so a refusal
+  leaves nothing, and sections 9 and 17 say a resume with a different relay
+  frame puts every relay-voided item in Kevin's pool. Main (`a9948ee`, the
+  action-path freezes, ledger 10 rows) is merged; code-tree pin `58bee019`;
+  the scratch freeze-lint passes (registration SHA-256 `f62362b8...`).
+  Next: Kevin's remaining items (the pool, the spot check, outward actions,
+  carried-over sign-offs; prereg section 17), re-merge main, freeze. The registered dev result (kappa
   0.066) stays as recorded. Branch GPU ledger rows sum to 3.76 with main's.
 - **Q1 Stage 0** (`stage0/q1-engineering-d31`): not admitted under D31; waits
   on the gauntlet (D24) or Kevin. The D31 review's fix pass is done (section

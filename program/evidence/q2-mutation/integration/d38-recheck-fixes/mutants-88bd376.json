@@ -1,0 +1,94 @@
+{
+ "baseline": {
+  "id": "baseline",
+  "pytest_exit": 0,
+  "summary": "6 passed, 37 deselected in 4.27s",
+  "tests": "rerate or relay or journal or collector or collection"
+ },
+ "commit": "88bd376eddea452d1e24d2c049c1f4d8c9f51a4e",
+ "killed": 9,
+ "mutants": [
+  {
+   "file": "harness/q2_mutation/rater_runner.py",
+   "id": "M7",
+   "killed": true,
+   "pytest_exit": 1,
+   "summary": "3 failed, 40 deselected in 7.24s",
+   "tests": "rerate or relay",
+   "what": "re-rate filter: relay mismatch among the void reasons, not the only one"
+  },
+  {
+   "file": "harness/q2_mutation/rater_runner.py",
+   "id": "M14",
+   "killed": true,
+   "pytest_exit": 1,
+   "summary": "2 failed, 41 deselected in 3.85s",
+   "tests": "journal or collector",
+   "what": "read_journal accepts an agent started twice"
+  },
+  {
+   "file": "harness/q2_mutation/audit.py",
+   "id": "R1",
+   "killed": true,
+   "pytest_exit": 1,
+   "summary": "1 failed, 2 passed, 40 deselected in 5.02s",
+   "tests": "rerate or relay",
+   "what": "audit summarize takes the list's items without recomputing them"
+  },
+  {
+   "file": "harness/q2_mutation/rater_runner.py",
+   "id": "R2",
+   "killed": true,
+   "pytest_exit": 1,
+   "summary": "1 failed, 2 passed, 40 deselected in 4.21s",
+   "tests": "rerate or relay",
+   "what": "export-isolated takes the list's items without recomputing them"
+  },
+  {
+   "file": "harness/q2_mutation/rater_runner.py",
+   "id": "R3",
+   "killed": true,
+   "pytest_exit": 1,
+   "summary": "2 failed, 1 passed, 40 deselected in 4.02s",
+   "tests": "rerate or relay",
+   "what": "the recompute check accepts a list that is a subset of the recomputed items"
+  },
+  {
+   "file": "harness/q2_mutation/rater_runner.py",
+   "id": "R4",
+   "killed": true,
+   "pytest_exit": 1,
+   "summary": "1 failed, 2 passed, 40 deselected in 3.66s",
+   "tests": "rerate or relay",
+   "what": "the recompute check skips the calls file's digest"
+  },
+  {
+   "file": "harness/q2_mutation/rater_runner.py",
+   "id": "C1",
+   "killed": true,
+   "pytest_exit": 1,
+   "summary": "2 failed, 41 deselected in 3.91s",
+   "tests": "refused_collection or collector",
+   "what": "the collector copies straight into the output directory (no staging)"
+  },
+  {
+   "file": "harness/q2_mutation/rater_runner.py",
+   "id": "C2",
+   "killed": true,
+   "pytest_exit": 1,
+   "summary": "1 failed, 42 deselected in 3.51s",
+   "tests": "refused_collection",
+   "what": "a refused collection keeps its staging directory"
+  },
+  {
+   "file": "harness/q2_mutation/rater_runner.py",
+   "id": "C3",
+   "killed": true,
+   "pytest_exit": 1,
+   "summary": "1 failed, 42 deselected in 2.14s",
+   "tests": "refused_collection",
+   "what": "a refused collection keeps the directories it made for the output"
+  }
+ ],
+ "total": 9
+}
