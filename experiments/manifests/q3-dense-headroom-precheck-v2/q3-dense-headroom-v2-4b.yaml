@@ -1,0 +1,70 @@
+# q3-dense-headroom-precheck-v2, Qwen3.5-4B-Base lane (program decision D36).
+# v1's lane (same inputs, model, argv shape, CPUs, memory and profile) on v2's entry point.
+# Its limit is set from the development timing job (D36): at least twice the measured full-lane
+# evaluation, plus the measured start-up, plus the 3-minute SIGUSR1 lead, with the one
+# continuation kept inside the lane's minutes. v2's caps and the timing job sum to at most
+# 1.5 GPU-h (D36). The bundle's Qwen3 tokens are decoded with the bundle's receipted tokenizer
+# and re-encoded with the 4B tokenizer. container_profile large-cpu-mem gives an exec /tmp: the
+# gated-delta layers run flash-linear-attention's Triton kernels from the pinned image (library
+# code, compiled by Triton at first use; the entry point points Triton's cache at /outputs).
+# Template: every FILL-* value is written by scripts/fill_dense_headroom_precheck_v2_manifests.py
+# from measured artifacts. The submitter rejects every FILL-* value.
+runtime: docker-single-node-discovery-v1
+name: q3-dense-headroom-v2-4b
+image_id: FILL-image-id
+git_sha: FILL-image-git-sha
+source_sha256: FILL-image-source-tar-sha256
+container_profile: large-cpu-mem
+resources:
+  gpu_type: h100
+  gpus: 1
+  cpus: 16
+  memory_gb: 96
+  minutes: 60
+budget:
+  max_gpu_hours: 1.0
+randomness_contract: assignment-seed-matrix
+seeds: [42, 43, 44]
+seed_binding:
+  flag: "--seeds"
+run_root: /home/kevin/cotcodec-runs/q3-dense-headroom-precheck-v2/qwen3.5-4b-base
+model:
+  model_id: qwen3.5-4b-base
+  revision: 1001bb4d826a52d1f399e183466143f4da7b741b
+  cache_host_path: /home/kevin/cotcodec-runs/hf-cache
+  receipt_sha256: 253a14185bcff0762b8a43944635a550055d3346fe16c416d6bcfe4460793cfe
+  artifact_root_sha256: c7fbfd6bd1c73b9a0080decf794f5e4333c955f2704591affc61b0a9ac850e42
+study_artifact:
+  source_id: q3-k1-bundle-v1
+  revision: ec81fe3292d8559251adb273cb4e6ec5b070c162
+  license: LicenseRef-cotcodec-k1-bundle-v1
+  host_path: /home/kevin/cotcodec-runs/translation-supervised-sparse-indexer/inputs/k1-bundle-v1.json
+  sha256: 919d016b87ad862f8f156e9537c9a39e2864dab0e6c605307d100d25a199dd2d
+  size_bytes: 278818734
+command:
+  - python
+  - scripts/run_dense_headroom_precheck_v2.py
+  - "--lane"
+  - qwen3.5-4b-base
+  - "--output-dir"
+  - /outputs/dense-precheck
+  - "--evidence"
+  - /inputs/study-artifact.json
+  - "--expected-evidence-sha256"
+  - 919d016b87ad862f8f156e9537c9a39e2864dab0e6c605307d100d25a199dd2d
+  - "--source-tokenizer"
+  - /model-cache/cotcodec-models/qwen3-0.6b-base/tokenizer.json
+  - "--model-dir"
+  - /model-cache/cotcodec-models/qwen3.5-4b-base
+  - "--receipt"
+  - /model-cache/cotcodec-receipts/qwen3.5-4b-base.json
+  - "--expected-receipt-sha256"
+  - 253a14185bcff0762b8a43944635a550055d3346fe16c416d6bcfe4460793cfe
+  - "--preregistration"
+  - program/preregistrations/q3-dense-headroom-precheck-v2.md
+  - "--expected-preregistration-sha256"
+  - "FILL-preregistration-sha256"
+  - "--seeds"
+  - "42"
+  - "43"
+  - "44"
