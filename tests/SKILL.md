@@ -35,8 +35,9 @@ Each contract proves valid inputs pass and decision-bearing drift fails.
   Slurm-allocated GPU inside the image.
 - Dense headroom pre-check: `test_dense_headroom_data.py`,
   `test_dense_headroom_stats.py`, `test_dense_headroom_manifests.py` (the
-  filler's run-root accounting and slot claims, and a filled continuation
-  through the entry point's manifest check),
+  filler's run-root accounting and slot claims for every job, a filled
+  manifest submitted twice, the 4B lane's smoke-reproduction gate, and a
+  filled continuation through the entry point's manifest check),
   `test_dense_headroom_prereg.py` (binds the draft's code table to the tree
   until frozen) and `test_summarise_dense_headroom_precheck.py` run without
   torch; `test_dense_headroom_torch.py` and

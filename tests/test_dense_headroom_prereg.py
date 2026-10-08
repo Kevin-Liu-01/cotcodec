@@ -77,22 +77,55 @@ def test_registered_numbers_appear_in_the_text() -> None:
                    "No measurement here removes any of them",
                    "No budget amendment is possible under this id",
                    "Every job of a lane counts against that lane's own minutes",
-                   "within 0.5 points of the smoke receipt", "1,160 per lane"):
+                   "within 0.5 points of the smoke receipt", "1,160 per lane",
+                   "seed-mean English ML loss is at least 2.5 points",
+                   "the first job's included", "Each filled manifest is submitted once",
+                   "6 and 18 minutes", "at least 5", "or fall below 5",
+                   "Only Triton's cache moves to the run directory"):
         assert phrase in flat, phrase
     assert "anchor_confound" not in TEXT
     assert tuple(float(s) for s in (0.25, 0.35, 0.5, 0.7, 1, 1.4, 2, 2.8, 4)) == dhs.SIGMAS
-    assert dhs.NULL_REACH_POINTS == 2.5 and dhd.MIN_JOB_MINUTES == 3
+    assert dhs.NULL_REACH_POINTS == 2.5 and dhd.MIN_JOB_MINUTES == 5
+    assert dhd.USR1_LEAD_MINUTES == 3
+    for lane, useful in (("qwen3-0.6b-base", 6), ("qwen3.5-4b-base", 18)):
+        assert dhd.LANES[lane].minutes - dhd.USR1_LEAD_MINUTES == useful
     assert dhs.H1_NEGATIVE_POINTS == 20 and dhs.H1_NEGATIVE_LOWER_POINTS == 10
     assert dhs.NULL_XI_POINTS == 2 and dhs.NULL_XI_REL == 0.10 == dhs.LEX_XI_REL
     assert dhs.FLOOR_G == 0.5 and dhs.CONTROL_SHARE_MIN == 0.30
     assert dhs.SMOKE_452_TOLERANCE_POINTS == 0.5 and dhd.STOP_IDS_PER_LANGUAGE == 100
 
 
-def test_not_frozen_without_the_owners_acceptance() -> None:
-    # The draft is frozen only after the design decisions are accepted
-    # (a decision in program/decisions.md naming this experiment id).
+def _decision(number: str) -> str:
+    """The paragraph of program/decisions.md that starts with ``**<number>.``."""
+
     decisions = (PROJECT_ROOT / "program" / "decisions.md").read_text(encoding="utf-8")
+    for paragraph in decisions.split("\n\n"):
+        if paragraph.startswith(f"**{number}."):
+            return paragraph
+    return ""
+
+
+def test_not_frozen_without_the_owners_acceptance() -> None:
+    # The draft is frozen only after the design decisions are accepted (D32 in
+    # program/decisions.md, naming this experiment id), and its status line is
+    # rewritten to the frozen wording before the freeze, because a frozen file
+    # cannot be edited. Until the freeze either wording is accepted.
+    status = TEXT.splitlines()[2]
     if _frozen():
-        assert dhd.EXPERIMENT_ID in decisions
+        assert status.startswith("Status: frozen")
     else:
-        assert TEXT.splitlines()[2].startswith("Status: DRAFT, not frozen.")
+        assert status.startswith(("Status: DRAFT, not frozen.", "Status: frozen"))
+    if _frozen() or status.startswith("Status: frozen"):
+        assert dhd.EXPERIMENT_ID in _decision("D32")
+        assert "D32" in " ".join(TEXT.splitlines()[2:8])
+        assert "all are open for the program owner" not in TEXT
+
+
+def test_the_amended_decisions_are_marked() -> None:
+    section = TEXT[TEXT.index("## Design decisions"):]
+    items = {int(m.group(1)): " ".join(m.group(2).split())
+             for m in re.finditer(r"^(\d+)\. (.*?)(?=^\d+\. |\Z)", section, re.M | re.S)}
+    assert sorted(items) == list(range(1, 16))
+    amended = {n for n, text in items.items() if "(amended in D32)" in text[:120]}
+    assert amended == {1, 10, 12, 13}
+    assert " ".join(section.split()).count("(amended in D32)") == 4
