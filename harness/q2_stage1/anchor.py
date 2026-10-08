@@ -24,6 +24,7 @@ from __future__ import annotations
 
 import argparse
 import ast
+import collections
 import hashlib
 import json
 import re
@@ -227,6 +228,24 @@ def closure(show: Show, rev: str, package: str, module: str, name: str) -> dict[
     return seen
 
 
+def normalized(segment: str) -> str:
+    """The AST of a definition without docstrings, comments or layout (what can run)."""
+    if segment.startswith("<"):
+        return segment
+    try:
+        tree = ast.parse(segment)
+    except SyntaxError:
+        return segment
+    for node in ast.walk(tree):
+        body = getattr(node, "body", None)
+        if (isinstance(node, ast.FunctionDef | ast.AsyncFunctionDef | ast.ClassDef | ast.Module)
+                and body and isinstance(body[0], ast.Expr)
+                and isinstance(body[0].value, ast.Constant)
+                and isinstance(body[0].value.value, str)):  # fmt: skip
+            node.body = body[1:] or [ast.Pass()]
+    return ast.dump(tree, include_attributes=False)
+
+
 def task_functions(task: Mapping[str, Any]) -> list[tuple[str, str]]:
     """``(kind, name)`` of every metric and getter function a task's evaluator names."""
     evaluator = task["evaluator"]
@@ -269,8 +288,13 @@ def evaluator_diff(
     def sources(rev: str, kind: str, name: str) -> dict[str, str]:
         key = (rev, kind, name)
         if key not in cache:
-            cache[key] = function_sources(show, rev, kind, name)
+            raw = function_sources(show, rev, kind, name)
+            cache[key] = {k: normalized(v) for k, v in raw.items()}
         return cache[key]
+
+    def differing_parts(kind: str, name: str) -> list[str]:
+        a, b = sources(public, kind, name), sources(pinned, kind, name)
+        return sorted(k for k in set(a) | set(b) if a.get(k) != b.get(k))
 
     per_task: dict[str, Any] = {}
     for task_id in sorted(tasks):
@@ -279,14 +303,23 @@ def evaluator_diff(
         old = json.loads(old_text) if old_text is not None else None
         config_equal = old == tasks[task_id]
         differing = []
+        parts: dict[str, list[str]] = {}
         for kind, name in task_functions(tasks[task_id]):
-            if sources(public, kind, name) != sources(pinned, kind, name):
+            changed = differing_parts(kind, name)
+            if changed:
                 differing.append(f"{kind}.{name}")
+                parts[f"{kind}.{name}"] = changed
         per_task[task_id] = {
             "config_present_at_public": old is not None,
             "config_equal": config_equal,
             "functions": [f"{k}.{n}" for k, n in task_functions(tasks[task_id])],
             "functions_differing": differing,
+            "definitions_differing": parts,
+            "config_keys_differing": sorted(
+                k
+                for k in set(old or {}) | set(tasks[task_id])
+                if (old or {}).get(k) != tasks[task_id].get(k)
+            ),
             "excluded": (not config_equal) or bool(differing),
         }
     desktop = {rev: (show(rev, "desktop_env/desktop_env.py") or "") for rev in (public, pinned)}
@@ -297,16 +330,28 @@ def evaluator_diff(
         for node in ast.walk(tree) if tree else []:
             if isinstance(node, ast.FunctionDef) and node.name == "evaluate":
                 segment = ast.get_source_segment(text, node) or ""
-        evaluate_src[rev] = segment
+        evaluate_src[rev] = normalized(segment) if segment else ""
     excluded = sorted(t for t, row in per_task.items() if row["excluded"])
+    config_only = sorted(t for t, row in per_task.items() if not row["config_equal"])
+    metrics_or_config = sorted(
+        t for t, row in per_task.items()
+        if not row["config_equal"]
+        or any(f.startswith("metrics.") for f in row["functions_differing"])
+    )  # fmt: skip
+    counts = collections.Counter(f for row in per_task.values() for f in row["functions_differing"])
     return {
         "schema": "q2-stage1a-anchor-evaluator-diff-v1",
         "public_revision": public,
         "public_revision_basis": "not recorded in the archive; inferred from the run window",
         "pinned_revision": pinned,
         "tasks": len(per_task),
+        "rule": "a task leaves the anchor reading when its config or the AST (docstrings, "
+        "comments and layout removed) of any checker definition it reaches differs",
         "excluded": excluded,
         "excluded_count": len(excluded),
+        "config_differs": config_only,
+        "config_or_metric_differs": metrics_or_config,
+        "function_difference_counts": dict(counts.most_common()),
         "desktop_env_evaluate_equal": evaluate_src[public] == evaluate_src[pinned],
         "per_task": per_task,
     }

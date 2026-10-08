@@ -246,8 +246,9 @@ def validation_set(
     gold_verdicts: list[dict[str, Any]],
     candidates: list[dict[str, Any]],
 ) -> list[dict[str, Any]]:
-    """Every evaluable compare_pptx_files mutant and every compare_pptx_files gold, with its
-    stored verdict, operator, label and audit reading."""
+    """Every evaluable mutant, every gold and every do-nothing (``initial``) state of a task
+    whose every metric is ``compare_pptx_files``, with its stored verdict, operator, label
+    and audit reading."""
     verdicts = {v["mutant_id"]: v for v in mutant_verdicts}
     out_by_id = {o["mutant_id"]: o for o in outcomes}
     readings = {c["mutant_id"]: c.get("audit_reading") for c in candidates}
@@ -255,7 +256,11 @@ def validation_set(
     for job in mutant_jobs:
         mid = job["mutant_id"]
         verdict, outcome = verdicts.get(mid), out_by_id.get(mid)
-        if verdict is None or outcome is None or verdict.get("checker_funcs") != [FAMILY]:
+        if (
+            verdict is None
+            or outcome is None
+            or set(verdict.get("checker_funcs") or []) != {FAMILY}
+        ):
             continue
         if outcome.get("lock_status") != "evaluable":
             continue
@@ -265,12 +270,13 @@ def validation_set(
     gold_v = {v["mutant_id"]: v for v in gold_verdicts}
     for job in gold_jobs:
         verdict = gold_v.get(job["mutant_id"])
-        if verdict is None or verdict.get("checker_funcs") != [FAMILY]:
+        if verdict is None or set(verdict.get("checker_funcs") or []) != {FAMILY}:
             continue
-        if job.get("kind") not in (None, "gold"):
+        kind = job.get("kind") or "gold"
+        if kind not in ("gold", "initial"):
             continue
-        items.append({"kind": "gold", "job": job, "stored": verdict.get("score"),
-                      "operator": None, "label": "gold", "reading": None})  # fmt: skip
+        items.append({"kind": kind, "job": job, "stored": verdict.get("score"),
+                      "operator": None, "label": kind, "reading": None})  # fmt: skip
     return items
 
 
@@ -300,6 +306,7 @@ def judge_validation(rows: list[dict[str, Any]]) -> dict[str, Any]:
             for r in errors
         ],  # fmt: skip
         "golds": sum(r["kind"] == "gold" for r in rows),
+        "initial_states": sum(r["kind"] == "initial" for r in rows),
         "mutants": sum(r["kind"] == "mutant" for r in rows),
         "by_operator": dict(Counter(str(r["operator"]) for r in rows)),
     }

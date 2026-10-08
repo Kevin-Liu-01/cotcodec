@@ -189,12 +189,16 @@ def test_validation_set_selects_compare_pptx_files_evaluable_items():
     outcomes = [{"mutant_id": "m1", "lock_status": "evaluable", "operator": rescore.ZORDER,
                  "label": "should_pass_equiv"},
                 {"mutant_id": "m3", "lock_status": "save_failed"}]  # fmt: skip
-    golds = [{"mutant_id": "g1", "task_id": "t", "kind": "gold", "files": {}}]
-    gold_verdicts = [{"mutant_id": "g1", "checker_funcs": ["compare_pptx_files"], "score": 1.0}]
+    golds = [{"mutant_id": "g1", "task_id": "t", "kind": "gold", "files": {}},
+             {"mutant_id": "i1", "task_id": "t", "kind": "initial", "files": {}}]  # fmt: skip
+    gold_verdicts = [
+        {"mutant_id": "g1", "checker_funcs": ["compare_pptx_files"] * 2, "score": 1.0},
+        {"mutant_id": "i1", "checker_funcs": ["compare_pptx_files"], "score": 0.0},
+    ]
     candidates = [{"mutant_id": "m1", "audit_reading": "confirmed"}]
     items = rescore.validation_set(jobs, verdicts, outcomes, golds, gold_verdicts, candidates)
     assert [(i["kind"], i["job"]["mutant_id"], i["reading"]) for i in items] == [
-        ("mutant", "m1", "confirmed"), ("gold", "g1", None)]  # fmt: skip
+        ("mutant", "m1", "confirmed"), ("gold", "g1", None), ("initial", "i1", None)]  # fmt: skip
 
 
 def test_remap_paths():
