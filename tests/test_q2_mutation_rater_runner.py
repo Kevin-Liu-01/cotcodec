@@ -804,6 +804,30 @@ def test_audit_summarize_checks_one_relay_frame_and_reports_the_rerate(tmp_path:
     audit.write_jsonl(tmp_path / "rerated.jsonl", [_framed("i0", "reject", frame_a)])
     refused("fresh, unresumed", *rerate)
 
+    # The list is recomputed from its calls file (answer-blind): an edited list is refused.
+    audit.write_jsonl(tmp_path / "rerated.jsonl", [_framed("i0", "reject", None)])
+    for items in (["i0"], ["i0", "i1", "i2"], ["i1", "i0"]):
+        (tmp_path / "edited.json").write_text(
+            json.dumps({**listing, "items": items}), encoding="utf-8"
+        )
+        edited = ["--rerate-list", str(tmp_path / "edited.json"), *rerate[2:]]
+        refused("differs from the items its calls file voids for the relay mismatch", *edited)
+    # An item voided for the relay mismatch and another reason stays void: it is
+    # not on the re-rate list, and a list that names it is refused.
+    other = "the item directory differs from its export"
+    both = [*calls[:2], _framed("i2", "reject", frame_a, [*mismatch, other]), calls[3]]
+    assert rater_runner.relay_rerate_items(both) == ["i0", "i1"]
+    audit.write_jsonl(tmp_path / "both" / "calls.jsonl", both)
+    both_sha = rater_runner.sha256_file(tmp_path / "both" / "calls.jsonl")
+    listing = {**listing, "calls_sha256": both_sha}
+    (tmp_path / "rerate.json").write_text(json.dumps(listing), encoding="utf-8")
+    assert summarize(tmp_path / "both" / "calls.jsonl", out="o6", extra=tuple(rerate)) == 0
+    assert json.loads((tmp_path / "o6" / "audit-summary.json").read_text())["rerate"]["items"] == 2
+    (tmp_path / "rerate.json").write_text(
+        json.dumps({**listing, "items": ["i0", "i1", "i2"]}), encoding="utf-8"
+    )
+    refused("in the calls file only: \\[\\]", *rerate, calls_path=tmp_path / "both" / "calls.jsonl")
+
 
 def test_render_rater_manifest_passes_the_lane_validator(tmp_path: Path) -> None:
     sys.path.insert(0, str(ROOT / "scripts"))
@@ -1249,13 +1273,24 @@ def test_isolated_export_holds_one_item_per_directory(tmp_path: Path) -> None:
 
 
 def test_isolated_export_of_a_relay_rerate_holds_only_the_listed_items(tmp_path: Path) -> None:
-    """Decision D38: the relay-voided items are exported again for a fresh run."""
+    """Decision D38: the relay-voided items are exported again for a fresh run; the list is
+    recomputed from the ingest's calls file beside it, so an edited list is refused."""
     items = [_packet(f"i{n}") for n in range(4)]
     packets = tmp_path / "packets-000.jsonl"
     packets.write_text("".join(json.dumps(p) + "\n" for p in items), encoding="utf-8")
-    listing = {"schema": rater_runner.RERATE_SCHEMA, "calls_sha256": "c" * 64}
-    listing["items"] = ["i1", "i3"]
-    rerate = tmp_path / "rerate.json"
+    mismatch = [rater_runner.RELAY_MISMATCH]
+    other = "the item directory differs from its export"
+    calls = [
+        _framed("i0", "accept", None),
+        _framed("i1", "reject", "a" * 64, mismatch),
+        _framed("i2", "reject", "a" * 64, [*mismatch, other]),  # not re-rated
+        _framed("i3", "accept", "b" * 64, mismatch),
+    ]
+    ingest = tmp_path / "ingest"
+    audit.write_jsonl(ingest / "calls.jsonl", calls)
+    sha = rater_runner.sha256_file(ingest / "calls.jsonl")
+    listing = {"schema": rater_runner.RERATE_SCHEMA, "calls_sha256": sha, "items": ["i1", "i3"]}
+    rerate = ingest / "rerate.json"
     rerate.write_text(json.dumps(listing), encoding="utf-8")
     argv = ["export-isolated", "--packets", str(packets), "--rerate-list", str(rerate)]
     out = ["--iso-root", str(tmp_path / "iso"), "--manifest-out", str(tmp_path / "m.json")]
@@ -1264,16 +1299,40 @@ def test_isolated_export_of_a_relay_rerate_holds_only_the_listed_items(tmp_path:
     assert sorted(manifest["items"]) == ["i1", "i3"]
     assert sorted(p.name for p in (tmp_path / "iso").iterdir()) == ["i1", "i3"]
     assert manifest["rerate"] == {
-        "list_sha256": rater_runner.sha256_file(tmp_path / "rerate.json"),
-        "calls_sha256": "c" * 64,
+        "list_sha256": rater_runner.sha256_file(rerate),
+        "calls_sha256": sha,
         "items": ["i1", "i3"],
     }
-    for bad in ({**listing, "items": ["i9"]}, {**listing, "items": []}, {"items": ["i1"]}):
-        (tmp_path / "rerate.json").write_text(json.dumps(bad), encoding="utf-8")
-        with pytest.raises(SystemExit, match="re-rate list"):
+
+    def refused(match: str, bad: dict, path: Path = rerate) -> None:
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text(json.dumps(bad), encoding="utf-8")
+        args = ["export-isolated", "--packets", str(packets), "--rerate-list", str(path)]
+        with pytest.raises(SystemExit, match=match):
             rater_runner.main(
-                [*argv, "--iso-root", str(tmp_path / "x"), "--manifest-out", str(tmp_path / "y")]
+                [*args, "--iso-root", str(tmp_path / "x"), "--manifest-out", str(tmp_path / "y")]
             )
+        assert not (tmp_path / "x").exists() and not (tmp_path / "y").exists()
+
+    refused("not a q2m relay re-rate list", {"items": ["i1"]})
+    differs = "re-rate list differs from the items its calls file voids"
+    for wrong in (["i9"], [], ["i1"], ["i1", "i2", "i3"], ["i0", "i1", "i3"]):
+        refused(differs, {**listing, "items": wrong})
+    # A list of another calls file, or one moved away from its calls file.
+    other_file = {**listing, "calls_sha256": "c" * 64}
+    refused("not the calls file the re-rate list was written from", other_file)
+    refused("not the calls file the re-rate list", listing, tmp_path / "moved" / "rerate.json")
+    # A faithful list naming an item outside the packets, or no item at all.
+    nine = [_framed("i9", "accept", "a" * 64, mismatch)]
+    audit.write_jsonl(tmp_path / "i9" / "calls.jsonl", nine)
+    sha9 = rater_runner.sha256_file(tmp_path / "i9" / "calls.jsonl")
+    outside = "re-rate list names no item, or items outside the packets"
+    nine_list = {**listing, "calls_sha256": sha9, "items": ["i9"]}
+    refused(outside, nine_list, tmp_path / "i9" / "rerate.json")
+    audit.write_jsonl(tmp_path / "none" / "calls.jsonl", calls[:1])
+    sha0 = rater_runner.sha256_file(tmp_path / "none" / "calls.jsonl")
+    empty = {**listing, "calls_sha256": sha0, "items": []}
+    refused("re-rate list names no item", empty, tmp_path / "none" / "rerate.json")
 
 
 def _prompt_entry(text: str) -> dict:
@@ -1861,12 +1920,18 @@ def test_isolated_ingest_audits_every_transcript_and_the_relay_frame(tmp_path: P
 
     # Relay frames that differ across the run void every item that has one; the
     # items voided for that alone are the re-rate list (D38).
+    # i2, void already (its interrupted attempt read another packet), also carries a
+    # frame: it is void for the mismatch and another reason, so it is not re-rated.
     write(done / "i3.jsonl", "i3", answer("i3"), relay=_relay("continue the work."))
+    write(done / "i2.jsonl", "i2", answer("i2"), relay=_relay())
     result = ingest(tmp_path / "out2")
     calls = rater_runner.read_calls(tmp_path / "out2" / "calls.jsonl")
     for item in ("i0", "i3"):
         assert calls[item]["extra"]["void_reasons"] == [rater_runner.RELAY_MISMATCH]
+    reasons = calls["i2"]["extra"]["void_reasons"]
+    assert reasons[-1] == rater_runner.RELAY_MISMATCH and len(reasons) == 2, reasons
     assert len(result["relay_frames"]) == 2 and result["relay_rerate_items"] == ["i0", "i3"]
+    write(done / "i2.jsonl", "i2", answer("i2"))
     rerate = json.loads((tmp_path / "out2" / "rerate.json").read_text())
     assert rerate["schema"] == rater_runner.RERATE_SCHEMA and rerate["items"] == ["i0", "i3"]
     assert rerate["calls_sha256"] == rater_runner.sha256_file(tmp_path / "out2" / "calls.jsonl")
@@ -2070,11 +2135,99 @@ def test_transcript_collector_maps_every_agent_of_the_run_to_its_item(tmp_path: 
     (run2 / "agent-a07.jsonl").unlink()
     (run2 / "agent-a03.jsonl").unlink()
     refused(run2, "without a transcript: \\['a03'\\]")
+    # A journal that starts an agent twice.
+    journal = (run2 / "journal.jsonl").read_text(encoding="utf-8")
+    twice = json.dumps({"type": "started", "key": "a01", "agentId": "a01", "label": "i0"})
+    (run2 / "journal.jsonl").write_text(journal + twice + "\n", encoding="utf-8")
+    refused(run2, "agent a01 started twice")
     (run2 / "journal.jsonl").unlink()
     refused(run2, "journal is missing")
     # A collection into a directory that is not empty is refused.
     with pytest.raises(SystemExit, match="not empty"):
         rater_runner.collect_transcripts(tmp_path / "wf_ok", manifest, out)
+
+
+def test_the_run_journal_is_read_strictly(tmp_path: Path) -> None:
+    """Decision D38: the collector reads the run's journal one way or refuses it."""
+    journal = tmp_path / "journal.jsonl"
+
+    def lines(*rows: Any) -> Path:
+        text = "".join((r if isinstance(r, str) else json.dumps(r)) + "\n" for r in rows)
+        journal.write_text(text, encoding="utf-8")
+        return journal
+
+    def started(agent: str) -> dict:
+        return {"type": "started", "key": agent, "agentId": agent}
+
+    def result(agent: str) -> dict:
+        return {"type": "result", "key": agent, "agentId": agent, "result": {}}
+
+    read = rater_runner.read_journal(
+        lines({"type": "launched"}, started("a1"), started("a2"), "", result("a2"))
+    )
+    assert read == (["a1", "a2"], {"a2"})
+    for rows, match in (
+        ((started("a1"), result("a1"), started("a1")), "agent a1 started twice"),
+        ((started("a1"), result("a2")), "a result for agent a2, never started"),
+        (("{not json",), "not JSON"),
+        (("[1, 2]",), "not a journal entry"),
+        (({"type": "started"},), "a started line without an agentId"),
+        (({"type": "result", "agentId": ""},), "a result line without an agentId"),
+    ):
+        with pytest.raises(SystemExit, match=match):
+            rater_runner.read_journal(lines(*rows))
+
+
+def test_a_refused_collection_leaves_nothing_behind(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """Decision D38: the collector copies into a staging directory and renames it into
+    place only when every copy checks, so a refusal during the copy writes nothing."""
+    items = [_packet(f"i{n}") for n in range(3)]
+    root = tmp_path / "iso"
+    manifest = rater_runner.export_isolated(items, root)
+    answer = {"type": "text", "text": "accept"}
+    agents = {f"a{n}": (f"i{n}", [answer], None) for n in range(3)}
+    run = _run_dir(tmp_path, root, agents, set(agents))
+    before = sorted(p.name for p in tmp_path.iterdir())
+    original_read = Path.read_bytes
+    reads: dict[str, int] = {}
+
+    def changes_on_second_read(self: Path) -> bytes:
+        data = original_read(self)
+        if self.name == "agent-a2.jsonl":
+            reads[self.name] = reads.get(self.name, 0) + 1
+            return data + b"\n" if reads[self.name] > 1 else data
+        return data
+
+    # A transcript that changes after it was mapped (the third copy): refused, and the
+    # two copies already made are gone with their staging directory.
+    with monkeypatch.context() as patch:
+        patch.setattr(Path, "read_bytes", changes_on_second_read)
+        with pytest.raises(SystemExit, match="agent-a2.jsonl changed while it was collected"):
+            rater_runner.collect_transcripts(run, manifest, tmp_path / "out")
+    assert reads == {"agent-a2.jsonl": 2}
+    assert sorted(p.name for p in tmp_path.iterdir()) == before
+    # A copy that differs from its source: the same, and directories made for the
+    # output are removed again; an empty output directory that existed stays empty.
+    (tmp_path / "empty").mkdir()
+    before = sorted(p.name for p in tmp_path.iterdir())
+    for out in (tmp_path / "new" / "deeper" / "out", tmp_path / "empty"):
+        with monkeypatch.context() as patch:
+            patch.setattr(rater_runner, "sha256_file", lambda path: "0" * 64)
+            with pytest.raises(SystemExit, match="the copy differs from its source"):
+                rater_runner.collect_transcripts(run, manifest, out)
+        assert sorted(p.name for p in tmp_path.iterdir()) == before
+        assert list((tmp_path / "empty").iterdir()) == []
+    # Unpatched, the collection fills the empty directory in one rename.
+    collection = rater_runner.collect_transcripts(run, manifest, tmp_path / "empty")
+    assert sorted(p.name for p in (tmp_path / "empty").iterdir()) == [
+        "i0.jsonl",
+        "i1.jsonl",
+        "i2.jsonl",
+    ]
+    assert collection["transcripts"] == 3
+    assert sorted(p.name for p in tmp_path.iterdir()) == before
 
 
 def test_a_stop_signal_ends_the_run_inside_its_grace(tmp_path: Path) -> None:

@@ -45,8 +45,9 @@
     the pool's seeded order; ``raters.adjudication_pool``). The calls files
     must carry one harness relay frame between them (decision D38,
     ``rater_runner.check_relay_frames``). With ``--rerate-list`` (the
-    ``rerate.json`` of an ingest whose relay frames differed) and
-    ``--rerate-calls`` (the ingest of the fresh, unresumed re-rate of those
+    ``rerate.json`` of an ingest whose relay frames differed; its items are
+    recomputed from that ingest's calls file, ``rater_runner.check_rerate_list``)
+    and ``--rerate-calls`` (the ingest of the fresh, unresumed re-rate of those
     items), a second summary with the re-rated answers is written to
     ``rerate/`` beside the registered one (D38: both are reported).
 """
@@ -898,6 +899,7 @@ def cmd_summarize(args: argparse.Namespace) -> int:
         RERATE_SCHEMA,
         calls_files_record,
         check_relay_frames,
+        check_rerate_list,
         merge_calls,
         merged_answers,
         relay_digests,
@@ -923,10 +925,13 @@ def cmd_summarize(args: argparse.Namespace) -> int:
         listing = json.loads(listing_bytes)
         if not isinstance(listing, dict) or listing.get("schema") != RERATE_SCHEMA:
             raise SystemExit(f"{args.rerate_list}: not a q2m relay re-rate list")
-        own = {sha256_file(p) for p in shards[raters.RATER_IDS[0]] if p.is_file()}
+        own = {sha256_file(p): p for p in shards[raters.RATER_IDS[0]] if p.is_file()}
         if listing.get("calls_sha256") not in own:
             raise SystemExit("the re-rate list belongs to none of the Anthropic calls files")
-        wanted = [str(i) for i in listing["items"]]
+        # The items are recomputed from that calls file (answer-blind: the
+        # records whose only void reason is the relay mismatch); an edited
+        # list is refused.
+        wanted = check_rerate_list(listing, own[listing["calls_sha256"]])
         if set(wanted) - set(item_of.values()):
             raise SystemExit("the re-rate list names items outside the sample")
         paths = [Path(p) for p in args.rerate_calls]

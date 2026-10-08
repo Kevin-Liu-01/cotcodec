@@ -92,7 +92,10 @@ scores it. Runbook: `README.md` in this directory.
   `<item>.jsonl` and `<item>.<agent id>.jsonl` and the manifest
   `ingest-isolated --collection` checks; all are audited (D35). A resume
   with another session request voids every framed item; re-rate the
-  `rerate.json` items once in a fresh, unresumed session (D38).
+  `rerate.json` items once in a fresh, unresumed session (D38), from the
+  ingest's directory (`export-isolated` and `audit summarize` recompute the
+  list from the `calls.jsonl` beside it and refuse an edited one); every
+  relay-voided item then joins Kevin's pool.
   Never message a rater agent while it runs: the harness delivers the message
   as a `queued_command` attachment, which voids the item, as does any entry
   or attachment type outside `rater_runner.TRANSCRIPT_ENTRY_TYPES` and
