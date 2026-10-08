@@ -852,8 +852,15 @@ class StoreModel:
 
     ratio_fits: dict[str, dict[str, dict[str, float]]]
     reference_fits: dict[str, dict[str, float]]
+    #: When set, a constant store/inline ratio per gate (ratio of summed GPU-seconds over
+    #: the pairs) replaces the ratio of the two size models.
+    constant_ratios: dict[str, float] | None = None
+    #: The bound of any store design: references cost nothing.
+    free_references: bool = False
 
     def ratio(self, gate: str, gb: float) -> float:
+        if self.constant_ratios is not None:
+            return self.constant_ratios.get(gate, 1.0)
         fits = self.ratio_fits.get(gate)
         if fits is None:
             return 1.0
@@ -864,6 +871,8 @@ class StoreModel:
         return max(0.0, store) / inline
 
     def reference_seconds(self, gb: float) -> float:
+        if self.free_references:
+            return 0.0
         return sum(max(0.0, f["alpha"] + f["beta"] * gb) for f in self.reference_fits.values())
 
 
@@ -1202,6 +1211,10 @@ def repilot_pairs(items: Sequence[Mapping[str, Any]]) -> list[dict[str, Any]]:
                 "inline_wall": inline["wall"],
                 "store_wall": store["wall"],
                 "same_verdicts": dict(inline["verdicts"]) == dict(store["verdicts"]),
+                # both twins ran in the same mode (first attempt in a shared slot, or
+                # both retried alone): their cost difference is the store's, not a retry's
+                "same_mode": (inline["attempt"], bool(inline["exclusive"]))
+                == (store["attempt"], bool(store["exclusive"])),
             }
         )
     return pairs
@@ -1216,9 +1229,23 @@ def reference_items(items: Sequence[Mapping[str, Any]]) -> list[Mapping[str, Any
 
 
 def fit_store_model(
-    pairs: Sequence[Mapping[str, Any]], references: Sequence[Mapping[str, Any]]
+    pairs: Sequence[Mapping[str, Any]],
+    references: Sequence[Mapping[str, Any]],
+    *,
+    ratio_mode: str = "linear",
+    free_references: bool = False,
 ) -> StoreModel:
-    """Per consumer gate, size models of both arms; per reference channel, one model."""
+    """Per consumer gate, size models of both arms; per reference channel, one model.
+
+    ``ratio_mode="linear"`` (written before the re-pilot ran) divides the store arm's
+    size model by the inline arm's at each problem's size, over every pair final in
+    both arms. ``"constant"`` (added after the re-pilot showed how noisy two-point-per-
+    problem slopes are, and labelled so) uses one ratio per gate, summed GPU-seconds
+    of the store arm over the inline arm, over the pairs whose twins ran in the same
+    mode. ``free_references`` prices reference items at zero: the bound of any store
+    design."""
+    if ratio_mode not in {"linear", "constant"}:
+        raise ValueError("ratio_mode must be linear or constant")
     ratio_fits: dict[str, dict[str, dict[str, float]]] = {}
     for gate in STORE_CONSUMER_GATES:
         rows = [p for p in pairs if p["gate"] == gate]
@@ -1228,6 +1255,14 @@ def fit_store_model(
             arm: _linear_fit([(_gigabytes(p["problem_id"]), p[arm]) for p in rows])
             for arm in ("inline", "store")
         }
+    constant = None
+    if ratio_mode == "constant":
+        constant = {}
+        for gate in STORE_CONSUMER_GATES:
+            rows = [p for p in pairs if p["gate"] == gate and p.get("same_mode", True)]
+            inline = sum(p["inline"] for p in rows)
+            if inline > 0:
+                constant[gate] = sum(p["store"] for p in rows) / inline
     reference_fits: dict[str, dict[str, float]] = {}
     for gate in sorted({r["gate"] for r in references}):
         reference_fits[gate] = _linear_fit(
@@ -1237,7 +1272,12 @@ def fit_store_model(
                 if r["gate"] == gate
             ]
         )
-    return StoreModel(ratio_fits=ratio_fits, reference_fits=reference_fits)
+    return StoreModel(
+        ratio_fits=ratio_fits,
+        reference_fits=reference_fits,
+        constant_ratios=constant,
+        free_references=free_references,
+    )
 
 
 def repilot_summary(

@@ -1,0 +1,58 @@
+# Q1 Stage 0 re-pilot under decision D31 (scripts/run_q1_repilot.py; rule q1-repilot/1 in
+# harness/q1/repilot.py). Measures what the reference store (harness/q1/refstore.py) costs
+# against the inline path, item by item: 8 S1-cal problems with no evaluation unit
+# (2 level-1, 6 level-2, 0.017-0.537 GB of native inputs), 3 kernels each (the S1-cal
+# substrate, its reference-identity control, one mutant), all 15 scoring items at
+# replicate 42 in both arms (inline, and the store twin "<id>.store" reading one reference
+# entry per problem and channel), twins adjacent in the queue, 12 units on one GPU.
+# Replicates 43 and 44 are declared for the lane's seed binding and not scheduled.
+# Trusted code only (D3, D7, D29): TorchInductor output, KernelBench references and
+# harness-derived mutants; no evaluation unit (D28). Model kind none; one GPU for at most
+# 30 minutes (0.5 GPU-h, D31's cap); the driver's own time box ends items 4 minutes early.
+runtime: docker-single-node-discovery-v1
+name: q1-repilot-d31
+image_id: FILL-q1-gates-image-id
+git_sha: FILL-git-sha
+source_sha256: FILL-source-tar-sha256
+container_profile: large-cpu-mem
+resources:
+  gpu_type: h100
+  gpus: 1
+  cpus: 32
+  memory_gb: 256
+  minutes: 30
+budget:
+  max_gpu_hours: 0.5
+randomness_contract: assignment-seed-matrix
+seeds: [42, 43, 44]
+seed_binding:
+  flag: "--seeds"
+run_root: /home/kevin/cotcodec-runs/stage0/q1-engineering-d31/runs
+model:
+  kind: none
+  reason: "Q1 D31 re-pilot: paired inline and reference-store cost on S1-cal compiler kernels, controls and mutants; no checkpoint"
+study_artifact:
+  source_id: q1-repilot-inputs
+  revision: FILL-git-sha
+  license: LicenseRef-q1-mixed
+  host_path: FILL-artifact-host-path
+  sha256: FILL-artifact-sha256
+  size_bytes: FILL-artifact-bytes
+command:
+  - env
+  - TRITON_CACHE_DIR=/outputs/cache/triton
+  - TORCHINDUCTOR_CACHE_DIR=/outputs/cache/inductor
+  - python
+  - scripts/run_q1_repilot.py
+  - "--evidence"
+  - /inputs/study-artifact.json
+  - "--expected-evidence-sha256"
+  - FILL-artifact-sha256
+  - "--output"
+  - /outputs/q1
+  - "--budget-minutes"
+  - "26"
+  - "--seeds"
+  - "42"
+  - "43"
+  - "44"
