@@ -1,0 +1,33 @@
+         92700 function calls (81121 primitive calls) in 0.555 seconds
+
+   Ordered by: internal time
+   List reduced from 324 to 25 due to restriction <25>
+
+   ncalls  tottime  percall  cumtime  percall filename:lineno(function)
+     1245    0.219    0.000    0.219    0.000 {built-in method torch._C._nn.linear}
+      120    0.037    0.000    0.037    0.000 {built-in method torch.conv1d}
+      400    0.020    0.000    0.020    0.000 {built-in method torch._C._nn.silu}
+       40    0.016    0.000    0.016    0.000 {built-in method torch._C._nn.scaled_dot_product_attention}
+      993    0.013    0.000    0.013    0.000 {method 'to' of 'torch._C.TensorBase' objects}
+      366    0.012    0.000    0.012    0.000 {built-in method torch.cat}
+      240    0.012    0.000    0.012    0.000 {method 'repeat_interleave' of 'torch._C.TensorBase' objects}
+     1026    0.012    0.000    0.012    0.000 {method 'reshape' of 'torch._C.TensorBase' objects}
+     1217    0.011    0.000    0.011    0.000 {method 'float' of 'torch._C.TensorBase' objects}
+      575    0.010    0.000    0.010    0.000 {method 'mean' of 'torch._C.TensorBase' objects}
+      120    0.010    0.000    0.030    0.000 /workspace/cotcodec/.venv/lib/python3.12/site-packages/transformers/models/qwen3_5/modeling_qwen3_5.py:175(forward)
+      256    0.008    0.000    0.008    0.000 {method 'copy_' of 'torch._C.StorageBase' objects}
+      120    0.007    0.000    0.247    0.002 /workspace/cotcodec/.venv/lib/python3.12/site-packages/transformers/models/qwen3_5/modeling_qwen3_5.py:431(forward)
+      405    0.007    0.000    0.018    0.000 /workspace/cotcodec/.venv/lib/python3.12/site-packages/transformers/models/qwen3_5/modeling_qwen3_5.py:726(_norm)
+      240    0.006    0.000    0.006    0.000 {method 'copy_' of 'torch._C.TensorBase' objects}
+      258    0.006    0.000    0.006    0.000 {built-in method torch.zeros}
+      525    0.006    0.000    0.006    0.000 {method 'pow' of 'torch._C.TensorBase' objects}
+   4836/4    0.006    0.000    0.034    0.008 /usr/lib/python3.12/copy.py:118(deepcopy)
+   2670/5    0.005    0.000    0.480    0.096 /workspace/cotcodec/.venv/lib/python3.12/site-packages/torch/nn/modules/module.py:1783(_call_impl)
+       32    0.005    0.000    0.005    0.000 {built-in method torch.topk}
+      160    0.005    0.000    0.400    0.002 /workspace/cotcodec/.venv/lib/python3.12/site-packages/transformers/models/qwen3_5/modeling_qwen3_5.py:753(forward)
+      405    0.005    0.000    0.034    0.000 /workspace/cotcodec/.venv/lib/python3.12/site-packages/transformers/models/qwen3_5/modeling_qwen3_5.py:729(forward)
+     6433    0.004    0.000    0.004    0.000 /workspace/cotcodec/.venv/lib/python3.12/site-packages/torch/nn/modules/module.py:1955(__getattr__)
+       24    0.004    0.000    0.007    0.000 /workspace/cotcodec/.venv/lib/python3.12/site-packages/transformers/models/qwen3_5/modeling_qwen3_5.py:330(torch_recurrent_gated_delta_rule)
+      405    0.004    0.000    0.004    0.000 {method 'type_as' of 'torch._C.TensorBase' objects}
+
+

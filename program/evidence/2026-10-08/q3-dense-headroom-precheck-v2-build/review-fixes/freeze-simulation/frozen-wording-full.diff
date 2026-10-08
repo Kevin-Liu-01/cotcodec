@@ -1,0 +1,62 @@
+diff --git a/program/decisions.md b/program/decisions.md
+index f6aa1d5..a4a8d5c 100644
+--- a/program/decisions.md
++++ b/program/decisions.md
+@@ -548,3 +548,9 @@ destroyed ones, or else to restrict the audit to problems and draws where it
+ can; (iii) the per-item process overhead that dominates cost is designed
+ for, not yet built; (iv) Q1 Stage 1 still needs the R580 driver upgrade or
+ written risk acceptance.
++
++**D42. FREEZE SIMULATION ONLY (scratch clone; not a decision).** Stand-in
++text so that the frozen-mode test can find an accepting decision:
++`q3-dense-headroom-precheck-v2` decisions 16-21 and limits accepted; D36 (iii)
++amended for the Qwen3.5-4B-Base lane (decision 18) and D36's timing rule
++amended for it (decisions 20 and 21).
+diff --git a/program/preregistrations/q3-dense-headroom-precheck-v2.md b/program/preregistrations/q3-dense-headroom-precheck-v2.md
+index 829257c..ec507c0 100644
+--- a/program/preregistrations/q3-dense-headroom-precheck-v2.md
++++ b/program/preregistrations/q3-dense-headroom-precheck-v2.md
+@@ -1,20 +1,14 @@
+ # Q3 dense headroom pre-check v2 (q3-dense-headroom-precheck-v2)
+ 
+-Status: DRAFT, not frozen. The design is v1's (`q3-dense-headroom-precheck-v1`,
+-frozen 2026-10-08 after D32), kept unchanged by program decision D36
+-(`program/decisions.md`); the repairs and limits listed under "Changes from
+-v1 (D36)" and design decisions 16-21 wait for the program owner's decision
+-in `program/decisions.md` before the freeze. Two of them depart from D36 on
+-the Qwen3.5-4B-Base lane, so that decision has to amend D36 there or require
+-another fix: decision 18 turns cuDNN's attention off, which changes computed
+-quantities where D36 (iii) allows none, and decision 20's 4B limit doubles a
+-projection, because the fixed 4B path was neither timed nor run on a GPU
+-where D36's timing rule asks for a measurement of it (Freeze procedure, step
+-1). No lane job of this experiment runs before the freeze; every lane job
+-verifies this file's digest against its ledger row at start-up and refuses
+-code whose SHA-256 differs from the table below. The one development timing
+-job of D36 ran before the freeze, on the 4B path as it was before the fix
+-(cuDNN's attention on; Compute).
++Status: frozen in program/preregistrations/ledger.jsonl; see the ledger row
++for the freeze time and `git_head_at_freeze`. FREEZE SIMULATION ONLY (scratch
++clone): design decisions 16-21 and the limits accepted in D42
++(`program/decisions.md`), which amends D36 (iii) and D36's timing rule for the
++Qwen3.5-4B-Base lane (decisions 18, 20 and 21). No lane job of this experiment
++runs before the freeze; every lane job verifies this file's digest against its
++ledger row at start-up and refuses code whose SHA-256 differs from the table
++below. The one development timing job of D36 ran before the freeze, on the 4B
++path as it was before the fix (cuDNN's attention on; Compute).
+ 
+ ## Purpose and claim level
+ 
+@@ -759,10 +753,9 @@ INVALID.
+ Each states the choice and why. Decisions 1-15 are v1's, accepted in D32
+ (`program/decisions.md`; 1, 10, 12 and 13 were amended there and are
+ stated as amended), carried unchanged except decision 12's caps (D36).
+-Decisions 16-21 are v2's (D36) and wait for the program owner's
+-acceptance before the freeze. Decisions 18 and 20 depart from D36 on the 4B
+-lane (from D36 (iii) and from its timing rule), so the accepting decision
+-must amend D36 there (Freeze procedure, step 1).
++Decisions 16-21 are v2's (D36), accepted in D42 (FREEZE SIMULATION ONLY),
++which amends D36 (iii) (decision 18) and D36's timing rule (decisions 20
++and 21) for the 4B lane.
+ 
+ 1. Two lanes, both run unless the 0.6B smoke reproduction fails or the 0.6B
+    lane ends without a receipt (amended in D32). The 4B lane is filled and

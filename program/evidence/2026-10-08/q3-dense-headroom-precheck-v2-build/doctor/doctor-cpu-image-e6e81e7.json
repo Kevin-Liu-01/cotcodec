@@ -1,0 +1,328 @@
+{
+  "case_status": {
+    "codecs": "PASS",
+    "derive": "PASS",
+    "end_to_end": "PASS",
+    "equivalence": "PASS",
+    "features": "PASS",
+    "job_binding": "PASS",
+    "multiple_choice": "PASS",
+    "selectors": "PASS",
+    "statistics": "PASS",
+    "timing_profile": "PASS",
+    "usr1_displaced": "PASS",
+    "v1_gate": "PASS"
+  },
+  "cases": {
+    "codecs": {
+      "byte_level_codec": "checked",
+      "failures": [],
+      "seconds": 0.0,
+      "status": "PASS"
+    },
+    "derive": {
+      "failures": [],
+      "refused_context_partition": "DenseDataError",
+      "refused_prompt_cluster": "IndexerContractError",
+      "refused_query_link": "DenseDataError",
+      "seconds": 0.9,
+      "status": "PASS",
+      "tiny-attention": {
+        "anchored_questions": 1,
+        "context_length": {
+          "max": 128,
+          "min": 63
+        },
+        "questions": 6,
+        "sha256": "184fab69cff019a628c6bde5907a279bbb7ca6509a83ee126d07042ba12e9a96",
+        "units": 348
+      },
+      "tiny-hybrid": {
+        "anchored_questions": 1,
+        "context_length": {
+          "max": 87,
+          "min": 42
+        },
+        "questions": 6,
+        "sha256": "a750940200f8c549ce82aa1a5f7863f69687c1678f3f34926d29cbcf8625ecf7",
+        "units": 348
+      }
+    },
+    "end_to_end": {
+      "failures": [],
+      "run_root": "/tmp/dense-v2-doctor-d5qoxbr4/e2e/runs",
+      "seconds": 113.1,
+      "status": "PASS",
+      "tiny-attention": {
+        "decisions": {
+          "entity_control": "NOT_EVALUABLE",
+          "fertility_association": "WEAK",
+          "floor_candidate": "NOT_VIABLE",
+          "h1_cx_lower": -1.0568701154589655,
+          "h1_cx_points": -0.6333800823915573,
+          "h1_cx_target": "mp",
+          "h2_status": "FAIL",
+          "lane_class": "NOT_VIABLE",
+          "lexical_confound": "NOT_EVALUABLE",
+          "literal_xi_rel_all": [
+            null,
+            null
+          ],
+          "literal_xi_rel_controlled": [
+            null,
+            null
+          ],
+          "null_calibration": {
+            "hs": "NOT_EVALUABLE",
+            "mp": "NOT_EVALUABLE"
+          }
+        },
+        "dev_artifact_sha256": "184fab69cff019a628c6bde5907a279bbb7ca6509a83ee126d07042ba12e9a96",
+        "numeric_leaves": 1912,
+        "seconds": 15.1,
+        "signals": {
+          "blocked_in_every_thread_from_start": true,
+          "handler_replacement_count": 0,
+          "handler_replacements": [],
+          "polls": 374,
+          "received": null,
+          "received_after_s": null,
+          "via": null
+        },
+        "units": 348,
+        "v1_equal": "REPRODUCED"
+      },
+      "tiny-hybrid": {
+        "decisions": {
+          "entity_control": "NOT_EVALUABLE",
+          "fertility_association": "WEAK",
+          "floor_candidate": "NOT_VIABLE",
+          "h1_cx_lower": 0.018063938764943964,
+          "h1_cx_points": 0.15665282947676523,
+          "h1_cx_target": "mp",
+          "h2_status": "FAIL",
+          "lane_class": "NOT_VIABLE",
+          "lexical_confound": "NOT_EVALUABLE",
+          "literal_xi_rel_all": [
+            null,
+            null
+          ],
+          "literal_xi_rel_controlled": [
+            null,
+            null
+          ],
+          "null_calibration": {
+            "hs": "NOT_EVALUABLE",
+            "mp": "NOT_EVALUABLE"
+          }
+        },
+        "dev_artifact_sha256": "a750940200f8c549ce82aa1a5f7863f69687c1678f3f34926d29cbcf8625ecf7",
+        "numeric_leaves": 1895,
+        "seconds": 22.2,
+        "signals": {
+          "blocked_in_every_thread_from_start": true,
+          "handler_replacement_count": 0,
+          "handler_replacements": [],
+          "polls": 374,
+          "received": null,
+          "received_after_s": null,
+          "via": null
+        },
+        "units": 348,
+        "v1_equal": "REPRODUCED"
+      }
+    },
+    "equivalence": {
+      "failures": [],
+      "seconds": 0.8,
+      "status": "PASS",
+      "units_compared": 12
+    },
+    "features": {
+      "failures": [],
+      "seconds": 0.0,
+      "status": "PASS"
+    },
+    "job_binding": {
+      "accepted_job": "4242",
+      "failures": [],
+      "seconds": 0.0,
+      "status": "PASS"
+    },
+    "multiple_choice": {
+      "failures": [],
+      "max_abs_gap": {
+        "attention": 1.430511474609375e-06,
+        "hybrid": 4.76837158203125e-07
+      },
+      "seconds": 0.2,
+      "status": "PASS"
+    },
+    "selectors": {
+      "failures": [],
+      "seconds": 6.8,
+      "status": "PASS"
+    },
+    "statistics": {
+      "failures": [],
+      "reads": {
+        "flat": {
+          "floor": "NOT_VIABLE",
+          "h1": 2.902177713314776,
+          "lane_class": "NOT_VIABLE",
+          "lexical_confound": "PRESENT"
+        },
+        "narrow": {
+          "floor": "NOT_VIABLE",
+          "h1": 14.902177713314776,
+          "lane_class": "GO_ONLY_CAPABLE",
+          "lexical_confound": "ABSENT"
+        },
+        "wide": {
+          "floor": "NOT_VIABLE",
+          "h1": 27.902177713314778,
+          "lane_class": "NEGATIVE_CAPABLE",
+          "lexical_confound": "PRESENT"
+        }
+      },
+      "seconds": 0.2,
+      "status": "PASS"
+    },
+    "timing_profile": {
+      "exit": 75,
+      "failures": [],
+      "reference": [
+        {
+          "bitwise_equal": true,
+          "stage": "A-main",
+          "unit": "c96-q0",
+          "v1_seconds": 0.0522163612768054
+        },
+        {
+          "bitwise_equal": true,
+          "stage": "A-main",
+          "unit": "c96-q6",
+          "v1_seconds": 0.05843233410269022
+        },
+        {
+          "bitwise_equal": true,
+          "stage": "B-absent",
+          "unit": "c0-q0",
+          "v1_seconds": 0.04461953416466713
+        },
+        {
+          "bitwise_equal": true,
+          "stage": "C-literal",
+          "unit": "c96-q49",
+          "v1_seconds": 0.018978833220899105
+        },
+        {
+          "bitwise_equal": true,
+          "stage": "D-nohaystack",
+          "unit": "c48-q0",
+          "v1_seconds": 0.04374381434172392
+        }
+      ],
+      "seconds": 18.5,
+      "signal_sent": true,
+      "status": "PASS",
+      "torch_profiles": {
+        "v1": "ok",
+        "v2": "ok"
+      },
+      "units": 160
+    },
+    "usr1_displaced": {
+      "failures": [],
+      "mode": "triton",
+      "seconds": 33.8,
+      "status": "PASS",
+      "v1": {
+        "answered": false,
+        "exit": 0,
+        "shim": {
+          "after": {
+            "SIGTERM": "0x72beb76cb100",
+            "SIGUSR1": "0x72beb76c97e0"
+          },
+          "before": {
+            "SIGTERM": "0x6e79b0",
+            "SIGUSR1": "0x6e79b0"
+          },
+          "displaced": true,
+          "mode": "triton",
+          "pid": 157,
+          "python_getsignal_unchanged": true
+        },
+        "signal_sent": true
+      },
+      "v2": {
+        "answered": true,
+        "exit": 75,
+        "guard": {
+          "blocked_in_every_thread_from_start": true,
+          "handler_replacement_count": 2,
+          "handler_replacements": [
+            {
+              "found": "0x77c4acbc97e0",
+              "signal": "SIGUSR1",
+              "t": 7.269,
+              "where": "A-main:0"
+            },
+            {
+              "found": "0x77c4acbcb100",
+              "signal": "SIGTERM",
+              "t": 7.269,
+              "where": "A-main:0"
+            }
+          ],
+          "polls": 37,
+          "received": "SIGUSR1",
+          "received_after_s": 7.990015458315611,
+          "via": "pending"
+        },
+        "shim": {
+          "after": {
+            "SIGTERM": "0x77c4acbcb100",
+            "SIGUSR1": "0x77c4acbc97e0"
+          },
+          "before": {
+            "SIGTERM": "0x6e79b0",
+            "SIGUSR1": "0x6e79b0"
+          },
+          "displaced": true,
+          "mode": "triton",
+          "pid": 139,
+          "python_getsignal_unchanged": true
+        },
+        "signal_sent": true
+      }
+    },
+    "v1_gate": {
+      "failures": [],
+      "numeric_leaves": 3128,
+      "other_leaves": 1029,
+      "seconds": 0.1,
+      "status": "PASS"
+    }
+  },
+  "code_sha256": {
+    "harness/dense_headroom_data.py": "ee78549e257631035aef0d52c5243f6bae969fd2c4f4a1e43bb8779bdf524003",
+    "harness/dense_headroom_stats.py": "a94d1ceee80fe3e95f2f36af0cbda51644846594d5fc9ccf69fcb90c8215d195",
+    "harness/dense_headroom_torch.py": "6dd8ff1f9cbcbd7d3faaecd1c94ab7908c12e2aea16b480bc56735e4b27547be",
+    "harness/dense_headroom_torch_v2.py": "34963c32746c9d6b4384cb32b9ab37b1a4966b4586923ba43da036bdc6da0cbe",
+    "harness/dense_headroom_v2.py": "49f340ac46c80fa312d10e29bb3eaa45d95e574b9a598f47379b0e1effa5b5e1",
+    "harness/dense_headroom_v2_lanes.py": "375b8f426c1f42dc14cbd16fc1bec91a772860a8286a58f109de01ae1caca7e8",
+    "scripts/dense_headroom_v2_signal_shim.py": "40be0760437253ca7290b358245d8ce61ff5c9886e930a833a3768765c620fa1",
+    "scripts/run_dense_headroom_precheck_v2.py": "dadab67fa371835d80c7291dded84519371f2a6b889840b0ca4c24ae2ad27e31",
+    "scripts/run_dense_headroom_precheck_v2_doctor.py": "58b336c798cf2d640cdf27b456336d08b01fcca23af4f715e792788fb8f4e727",
+    "scripts/summarise_dense_headroom_precheck_v2.py": "cd5b6af45a93cf1b04faaffe1dfd72b82d9a7cb3ffcfed2e512de04a8ce2deae"
+  },
+  "doctor": "q3-dense-headroom-precheck-v2-cpu-doctor",
+  "evidence_grade": "EXECUTABILITY_AND_GATE_SEMANTICS_ONLY: tiny randomly initialised Qwen3 and Qwen3.5-style models, stand-in byte and pair tokenizers and a synthetic K1 bundle built by the real K1 builder. Nothing here touches Qwen3-0.6B-Base, Qwen3.5-4B-Base, Belebele or FineWeb.",
+  "experiment_id": "q3-dense-headroom-precheck-v2",
+  "numbers_are_synthetic": true,
+  "seconds": 174.5,
+  "status": "DENSE_V2_DOCTOR_PASS",
+  "triton_available": true
+}

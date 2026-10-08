@@ -1,0 +1,452 @@
+FFF..FF...FF...............................                              [100%]
+=================================== FAILURES ===================================
+_________________ test_every_unit_field_equals_v1_bit_for_bit __________________
+
+tmp_path = PosixPath('/tmp/pytest-of-unknown/pytest-0/test_every_unit_field_equals_v0')
+
+    def test_every_unit_field_equals_v1_bit_for_bit(tmp_path: Path) -> None:
+>       result = d2.case_equivalence(tmp_path)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_dense_headroom_v2_torch.py:24: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+scripts/run_dense_headroom_precheck_v2_doctor.py:212: in case_equivalence
+    model = sit.load_teacher(maker(tmp / label), "cpu")
+                             ^^^^^^^^^^^^^^^^^^
+scripts/run_dense_headroom_precheck_doctor.py:108: in make_tiny_attention
+    return make_tiny_model(directory, seed=seed, layers=TINY_LAYERS)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+scripts/run_sparse_indexer_k1_doctor.py:85: in make_tiny_model
+    from transformers import Qwen3Config, Qwen3ForCausalLM
+<frozen importlib._bootstrap>:1412: in _handle_fromlist
+    ???
+.venv/lib/python3.12/site-packages/transformers/utils/import_utils.py:2535: in __getattr__
+    module = self._get_module(self._class_to_module[name])
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/transformers/utils/import_utils.py:2769: in _get_module
+    raise e
+.venv/lib/python3.12/site-packages/transformers/utils/import_utils.py:2767: in _get_module
+    return importlib.import_module("." + module_name, self.__name__)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/usr/lib/python3.12/importlib/__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/transformers/models/qwen3/modeling_qwen3.py:32: in <module>
+    from ...modeling_layers import (
+.venv/lib/python3.12/site-packages/transformers/modeling_layers.py:35: in <module>
+    from .modeling_utils import LoadStateDictConfig, PreTrainedModel, _get_resolved_checkpoint_files
+.venv/lib/python3.12/site-packages/transformers/modeling_utils.py:75: in <module>
+    from .integrations.finegrained_fp8 import ALL_FP8_EXPERTS_FUNCTIONS
+.venv/lib/python3.12/site-packages/transformers/integrations/finegrained_fp8.py:31: in <module>
+    from .deepgemm import (
+.venv/lib/python3.12/site-packages/transformers/integrations/deepgemm.py:144: in <module>
+    @torch._dynamo.assume_constant_result
+     ^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/torch/__init__.py:2879: in __getattr__
+    return importlib.import_module(f".{name}", __name__)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/usr/lib/python3.12/importlib/__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/torch/_dynamo/__init__.py:13: in <module>
+    from . import (
+.venv/lib/python3.12/site-packages/torch/_dynamo/aot_compile.py:17: in <module>
+    from torch._dynamo.package import SystemInfo
+.venv/lib/python3.12/site-packages/torch/_dynamo/package.py:459: in <module>
+    @CacheArtifactFactory.register
+     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+cls = <class 'torch.compiler._cache.CacheArtifactFactory'>
+artifact_cls = <class 'torch._dynamo.package.PrecompileCacheArtifact'>
+
+    @classmethod
+    def register(cls, artifact_cls: type[CacheArtifact]) -> type[CacheArtifact]:
+        artifact_type_key = artifact_cls.type()
+        if artifact_cls.type() in cls._artifact_types:
+>           raise AssertionError(
+                f"Artifact of type={artifact_type_key} already registered in mega-cache artifact factory"
+            )
+E           AssertionError: Artifact of type=precompile already registered in mega-cache artifact factory
+
+.venv/lib/python3.12/site-packages/torch/compiler/_cache.py:74: AssertionError
+_____________ test_clone_cache_copies_every_tensor_and_shares_none _____________
+
+tmp_path = PosixPath('/tmp/pytest-of-unknown/pytest-0/test_clone_cache_copies_every_0')
+
+    def test_clone_cache_copies_every_tensor_and_shares_none(tmp_path: Path) -> None:
+        from transformers import DynamicCache
+    
+        from harness import sparse_indexer_torch as sit
+    
+>       model = sit.load_teacher(d1.make_tiny_hybrid(tmp_path / "hybrid"), "cpu")
+                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_dense_headroom_v2_torch.py:34: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+scripts/run_dense_headroom_precheck_doctor.py:119: in make_tiny_hybrid
+    from transformers import Qwen3_5Config, Qwen3_5ForConditionalGeneration
+<frozen importlib._bootstrap>:1412: in _handle_fromlist
+    ???
+.venv/lib/python3.12/site-packages/transformers/utils/import_utils.py:2535: in __getattr__
+    module = self._get_module(self._class_to_module[name])
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/transformers/utils/import_utils.py:2769: in _get_module
+    raise e
+.venv/lib/python3.12/site-packages/transformers/utils/import_utils.py:2767: in _get_module
+    return importlib.import_module("." + module_name, self.__name__)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/usr/lib/python3.12/importlib/__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/transformers/models/qwen3_5/modeling_qwen3_5.py:39: in <module>
+    from ...modeling_layers import (
+.venv/lib/python3.12/site-packages/transformers/modeling_layers.py:35: in <module>
+    from .modeling_utils import LoadStateDictConfig, PreTrainedModel, _get_resolved_checkpoint_files
+.venv/lib/python3.12/site-packages/transformers/modeling_utils.py:75: in <module>
+    from .integrations.finegrained_fp8 import ALL_FP8_EXPERTS_FUNCTIONS
+.venv/lib/python3.12/site-packages/transformers/integrations/finegrained_fp8.py:31: in <module>
+    from .deepgemm import (
+.venv/lib/python3.12/site-packages/transformers/integrations/deepgemm.py:144: in <module>
+    @torch._dynamo.assume_constant_result
+     ^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/torch/__init__.py:2879: in __getattr__
+    return importlib.import_module(f".{name}", __name__)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/usr/lib/python3.12/importlib/__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/torch/_dynamo/__init__.py:13: in <module>
+    from . import (
+.venv/lib/python3.12/site-packages/torch/_dynamo/aot_compile.py:17: in <module>
+    from torch._dynamo.package import SystemInfo
+.venv/lib/python3.12/site-packages/torch/_dynamo/package.py:459: in <module>
+    @CacheArtifactFactory.register
+     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+cls = <class 'torch.compiler._cache.CacheArtifactFactory'>
+artifact_cls = <class 'torch._dynamo.package.PrecompileCacheArtifact'>
+
+    @classmethod
+    def register(cls, artifact_cls: type[CacheArtifact]) -> type[CacheArtifact]:
+        artifact_type_key = artifact_cls.type()
+        if artifact_cls.type() in cls._artifact_types:
+>           raise AssertionError(
+                f"Artifact of type={artifact_type_key} already registered in mega-cache artifact factory"
+            )
+E           AssertionError: Artifact of type=precompile already registered in mega-cache artifact factory
+
+.venv/lib/python3.12/site-packages/torch/compiler/_cache.py:74: AssertionError
+__________ test_the_timer_records_components_without_changing_values ___________
+
+tmp_path = PosixPath('/tmp/pytest-of-unknown/pytest-0/test_the_timer_records_compone0')
+
+    def test_the_timer_records_components_without_changing_values(tmp_path: Path) -> None:
+        from harness import dense_headroom_stats as dhs
+        from harness import sparse_indexer_torch as sit
+    
+>       model = sit.load_teacher(d1.make_tiny_hybrid(tmp_path / "hybrid"), "cpu")
+                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_dense_headroom_v2_torch.py:71: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+scripts/run_dense_headroom_precheck_doctor.py:119: in make_tiny_hybrid
+    from transformers import Qwen3_5Config, Qwen3_5ForConditionalGeneration
+<frozen importlib._bootstrap>:1412: in _handle_fromlist
+    ???
+.venv/lib/python3.12/site-packages/transformers/utils/import_utils.py:2535: in __getattr__
+    module = self._get_module(self._class_to_module[name])
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/transformers/utils/import_utils.py:2769: in _get_module
+    raise e
+.venv/lib/python3.12/site-packages/transformers/utils/import_utils.py:2767: in _get_module
+    return importlib.import_module("." + module_name, self.__name__)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/usr/lib/python3.12/importlib/__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/transformers/models/qwen3_5/modeling_qwen3_5.py:39: in <module>
+    from ...modeling_layers import (
+.venv/lib/python3.12/site-packages/transformers/modeling_layers.py:35: in <module>
+    from .modeling_utils import LoadStateDictConfig, PreTrainedModel, _get_resolved_checkpoint_files
+.venv/lib/python3.12/site-packages/transformers/modeling_utils.py:75: in <module>
+    from .integrations.finegrained_fp8 import ALL_FP8_EXPERTS_FUNCTIONS
+.venv/lib/python3.12/site-packages/transformers/integrations/finegrained_fp8.py:31: in <module>
+    from .deepgemm import (
+.venv/lib/python3.12/site-packages/transformers/integrations/deepgemm.py:144: in <module>
+    @torch._dynamo.assume_constant_result
+     ^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/torch/__init__.py:2879: in __getattr__
+    return importlib.import_module(f".{name}", __name__)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/usr/lib/python3.12/importlib/__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/torch/_dynamo/__init__.py:13: in <module>
+    from . import (
+.venv/lib/python3.12/site-packages/torch/_dynamo/aot_compile.py:17: in <module>
+    from torch._dynamo.package import SystemInfo
+.venv/lib/python3.12/site-packages/torch/_dynamo/package.py:459: in <module>
+    @CacheArtifactFactory.register
+     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+cls = <class 'torch.compiler._cache.CacheArtifactFactory'>
+artifact_cls = <class 'torch._dynamo.package.PrecompileCacheArtifact'>
+
+    @classmethod
+    def register(cls, artifact_cls: type[CacheArtifact]) -> type[CacheArtifact]:
+        artifact_type_key = artifact_cls.type()
+        if artifact_cls.type() in cls._artifact_types:
+>           raise AssertionError(
+                f"Artifact of type={artifact_type_key} already registered in mega-cache artifact factory"
+            )
+E           AssertionError: Artifact of type=precompile already registered in mega-cache artifact factory
+
+.venv/lib/python3.12/site-packages/torch/compiler/_cache.py:74: AssertionError
+__________________________ test_selectors_match_k1_v1 __________________________
+
+tmp_path = PosixPath('/tmp/pytest-of-unknown/pytest-0/test_selectors_match_k1_v10')
+
+    def test_selectors_match_k1_v1(tmp_path) -> None:
+>       result = doctor.case_selectors(tmp_path)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_dense_headroom_torch.py:52: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+scripts/run_dense_headroom_precheck_doctor.py:429: in case_selectors
+    model_dir = make_tiny_attention(tmp / "attention")
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+scripts/run_dense_headroom_precheck_doctor.py:108: in make_tiny_attention
+    return make_tiny_model(directory, seed=seed, layers=TINY_LAYERS)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+scripts/run_sparse_indexer_k1_doctor.py:85: in make_tiny_model
+    from transformers import Qwen3Config, Qwen3ForCausalLM
+<frozen importlib._bootstrap>:1412: in _handle_fromlist
+    ???
+.venv/lib/python3.12/site-packages/transformers/utils/import_utils.py:2535: in __getattr__
+    module = self._get_module(self._class_to_module[name])
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/transformers/utils/import_utils.py:2769: in _get_module
+    raise e
+.venv/lib/python3.12/site-packages/transformers/utils/import_utils.py:2767: in _get_module
+    return importlib.import_module("." + module_name, self.__name__)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/usr/lib/python3.12/importlib/__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/transformers/models/qwen3/modeling_qwen3.py:32: in <module>
+    from ...modeling_layers import (
+.venv/lib/python3.12/site-packages/transformers/modeling_layers.py:35: in <module>
+    from .modeling_utils import LoadStateDictConfig, PreTrainedModel, _get_resolved_checkpoint_files
+.venv/lib/python3.12/site-packages/transformers/modeling_utils.py:75: in <module>
+    from .integrations.finegrained_fp8 import ALL_FP8_EXPERTS_FUNCTIONS
+.venv/lib/python3.12/site-packages/transformers/integrations/finegrained_fp8.py:31: in <module>
+    from .deepgemm import (
+.venv/lib/python3.12/site-packages/transformers/integrations/deepgemm.py:144: in <module>
+    @torch._dynamo.assume_constant_result
+     ^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/torch/__init__.py:2879: in __getattr__
+    return importlib.import_module(f".{name}", __name__)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/usr/lib/python3.12/importlib/__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/torch/_dynamo/__init__.py:13: in <module>
+    from . import (
+.venv/lib/python3.12/site-packages/torch/_dynamo/aot_compile.py:17: in <module>
+    from torch._dynamo.package import SystemInfo
+.venv/lib/python3.12/site-packages/torch/_dynamo/package.py:459: in <module>
+    @CacheArtifactFactory.register
+     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+cls = <class 'torch.compiler._cache.CacheArtifactFactory'>
+artifact_cls = <class 'torch._dynamo.package.PrecompileCacheArtifact'>
+
+    @classmethod
+    def register(cls, artifact_cls: type[CacheArtifact]) -> type[CacheArtifact]:
+        artifact_type_key = artifact_cls.type()
+        if artifact_cls.type() in cls._artifact_types:
+>           raise AssertionError(
+                f"Artifact of type={artifact_type_key} already registered in mega-cache artifact factory"
+            )
+E           AssertionError: Artifact of type=precompile already registered in mega-cache artifact factory
+
+.venv/lib/python3.12/site-packages/torch/compiler/_cache.py:74: AssertionError
+________________ test_cached_option_scores_equal_a_full_forward ________________
+
+tmp_path = PosixPath('/tmp/pytest-of-unknown/pytest-0/test_cached_option_scores_equa0')
+
+    def test_cached_option_scores_equal_a_full_forward(tmp_path) -> None:
+>       result = doctor.case_multiple_choice(tmp_path)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_dense_headroom_torch.py:57: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+scripts/run_dense_headroom_precheck_doctor.py:484: in case_multiple_choice
+    model = sit.load_teacher(maker(tmp / label), "cpu", dtype=torch.float32)
+                             ^^^^^^^^^^^^^^^^^^
+scripts/run_dense_headroom_precheck_doctor.py:108: in make_tiny_attention
+    return make_tiny_model(directory, seed=seed, layers=TINY_LAYERS)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+scripts/run_sparse_indexer_k1_doctor.py:85: in make_tiny_model
+    from transformers import Qwen3Config, Qwen3ForCausalLM
+<frozen importlib._bootstrap>:1412: in _handle_fromlist
+    ???
+.venv/lib/python3.12/site-packages/transformers/utils/import_utils.py:2535: in __getattr__
+    module = self._get_module(self._class_to_module[name])
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/transformers/utils/import_utils.py:2769: in _get_module
+    raise e
+.venv/lib/python3.12/site-packages/transformers/utils/import_utils.py:2767: in _get_module
+    return importlib.import_module("." + module_name, self.__name__)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/usr/lib/python3.12/importlib/__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/transformers/models/qwen3/modeling_qwen3.py:32: in <module>
+    from ...modeling_layers import (
+.venv/lib/python3.12/site-packages/transformers/modeling_layers.py:35: in <module>
+    from .modeling_utils import LoadStateDictConfig, PreTrainedModel, _get_resolved_checkpoint_files
+.venv/lib/python3.12/site-packages/transformers/modeling_utils.py:75: in <module>
+    from .integrations.finegrained_fp8 import ALL_FP8_EXPERTS_FUNCTIONS
+.venv/lib/python3.12/site-packages/transformers/integrations/finegrained_fp8.py:31: in <module>
+    from .deepgemm import (
+.venv/lib/python3.12/site-packages/transformers/integrations/deepgemm.py:144: in <module>
+    @torch._dynamo.assume_constant_result
+     ^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/torch/__init__.py:2879: in __getattr__
+    return importlib.import_module(f".{name}", __name__)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/usr/lib/python3.12/importlib/__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/torch/_dynamo/__init__.py:13: in <module>
+    from . import (
+.venv/lib/python3.12/site-packages/torch/_dynamo/aot_compile.py:17: in <module>
+    from torch._dynamo.package import SystemInfo
+.venv/lib/python3.12/site-packages/torch/_dynamo/package.py:459: in <module>
+    @CacheArtifactFactory.register
+     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+cls = <class 'torch.compiler._cache.CacheArtifactFactory'>
+artifact_cls = <class 'torch._dynamo.package.PrecompileCacheArtifact'>
+
+    @classmethod
+    def register(cls, artifact_cls: type[CacheArtifact]) -> type[CacheArtifact]:
+        artifact_type_key = artifact_cls.type()
+        if artifact_cls.type() in cls._artifact_types:
+>           raise AssertionError(
+                f"Artifact of type={artifact_type_key} already registered in mega-cache artifact factory"
+            )
+E           AssertionError: Artifact of type=precompile already registered in mega-cache artifact factory
+
+.venv/lib/python3.12/site-packages/torch/compiler/_cache.py:74: AssertionError
+____________________________ test_end_to_end_on_cpu ____________________________
+
+tmp_path = PosixPath('/tmp/pytest-of-unknown/pytest-0/test_end_to_end_on_cpu0')
+
+    def test_end_to_end_on_cpu(tmp_path) -> None:
+        pytest.importorskip("torch")
+        pytest.importorskip("transformers")
+        from scripts import run_dense_headroom_precheck_doctor as doctor
+    
+>       result = doctor.case_end_to_end(tmp_path)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_run_dense_headroom_precheck.py:47: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+scripts/run_dense_headroom_precheck_doctor.py:661: in case_end_to_end
+    run = TinyRun(tmp / "e2e")
+          ^^^^^^^^^^^^^^^^^^^^
+scripts/run_dense_headroom_precheck_doctor.py:174: in __init__
+    self.models = {"tiny-attention": make_tiny_attention(root / "model-attention"),
+                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+scripts/run_dense_headroom_precheck_doctor.py:108: in make_tiny_attention
+    return make_tiny_model(directory, seed=seed, layers=TINY_LAYERS)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+scripts/run_sparse_indexer_k1_doctor.py:85: in make_tiny_model
+    from transformers import Qwen3Config, Qwen3ForCausalLM
+<frozen importlib._bootstrap>:1412: in _handle_fromlist
+    ???
+.venv/lib/python3.12/site-packages/transformers/utils/import_utils.py:2535: in __getattr__
+    module = self._get_module(self._class_to_module[name])
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/transformers/utils/import_utils.py:2769: in _get_module
+    raise e
+.venv/lib/python3.12/site-packages/transformers/utils/import_utils.py:2767: in _get_module
+    return importlib.import_module("." + module_name, self.__name__)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/usr/lib/python3.12/importlib/__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/transformers/models/qwen3/modeling_qwen3.py:32: in <module>
+    from ...modeling_layers import (
+.venv/lib/python3.12/site-packages/transformers/modeling_layers.py:35: in <module>
+    from .modeling_utils import LoadStateDictConfig, PreTrainedModel, _get_resolved_checkpoint_files
+.venv/lib/python3.12/site-packages/transformers/modeling_utils.py:75: in <module>
+    from .integrations.finegrained_fp8 import ALL_FP8_EXPERTS_FUNCTIONS
+.venv/lib/python3.12/site-packages/transformers/integrations/finegrained_fp8.py:31: in <module>
+    from .deepgemm import (
+.venv/lib/python3.12/site-packages/transformers/integrations/deepgemm.py:144: in <module>
+    @torch._dynamo.assume_constant_result
+     ^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/torch/__init__.py:2879: in __getattr__
+    return importlib.import_module(f".{name}", __name__)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/usr/lib/python3.12/importlib/__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/torch/_dynamo/__init__.py:13: in <module>
+    from . import (
+.venv/lib/python3.12/site-packages/torch/_dynamo/aot_compile.py:17: in <module>
+    from torch._dynamo.package import SystemInfo
+.venv/lib/python3.12/site-packages/torch/_dynamo/package.py:459: in <module>
+    @CacheArtifactFactory.register
+     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+cls = <class 'torch.compiler._cache.CacheArtifactFactory'>
+artifact_cls = <class 'torch._dynamo.package.PrecompileCacheArtifact'>
+
+    @classmethod
+    def register(cls, artifact_cls: type[CacheArtifact]) -> type[CacheArtifact]:
+        artifact_type_key = artifact_cls.type()
+        if artifact_cls.type() in cls._artifact_types:
+>           raise AssertionError(
+                f"Artifact of type={artifact_type_key} already registered in mega-cache artifact factory"
+            )
+E           AssertionError: Artifact of type=precompile already registered in mega-cache artifact factory
+
+.venv/lib/python3.12/site-packages/torch/compiler/_cache.py:74: AssertionError
+_______________ test_doctor_unit_cases_pass_and_refuse_overwrite _______________
+
+tmp_path = PosixPath('/tmp/pytest-of-unknown/pytest-0/test_doctor_unit_cases_pass_an0')
+
+    def test_doctor_unit_cases_pass_and_refuse_overwrite(tmp_path) -> None:
+        pytest.importorskip("torch")
+        pytest.importorskip("transformers")
+        output = tmp_path / "doctor.json"
+        run = subprocess.run([sys.executable, str(DOCTOR), "--output", str(output),
+                              "--skip-end-to-end"], capture_output=True, text=True, timeout=1800,
+                             check=False)
+>       assert run.returncode == 0, run.stdout[-2000:] + run.stderr[-2000:]
+E       AssertionError: {"status": "DENSE_DOCTOR_FAIL", "case_status": {"codecs": "PASS", "features": "PASS", "derive": "PASS", "statistics": "PASS", "selectors": "FAIL", "multiple_choice": "FAIL"}}
+E         
+E       assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['/workspace/cotcodec/.venv/bin/python', '/workspace/cotcodec/scripts/run_dense_headroom_prechec...tures": "PASS", "derive": "PASS", "statistics": "PASS", "selectors": "FAIL", "multiple_choice": "FAIL"}}\n', stderr='').returncode
+
+tests/test_run_dense_headroom_precheck.py:60: AssertionError
+=============================== warnings summary ===============================
+../../pylib/_pytest/config/__init__.py:1464
+  /pylib/_pytest/config/__init__.py:1464: PytestConfigWarning: Unknown config option: asyncio_mode
+  
+    self._warn_or_fail_if_strict(f"Unknown config option: {key}\n")
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+7 failed, 36 passed, 1 warning in 29.42s
+srun: error: fal-h100-01: task 0: Exited with exit code 1
+exit=1

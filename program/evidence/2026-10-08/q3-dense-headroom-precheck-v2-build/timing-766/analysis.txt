@@ -1,0 +1,12 @@
+status TIMING_INTERRUPTED signals {"blocked_in_every_thread_from_start": true, "handler_replacement_count": 2, "handler_replacements": [{"found": "0x715e887a67e0", "signal": "SIGUSR1", "t": 65.604, "where": ""}, {"found": "0x715e887a8100", "signal": "SIGTERM", "t": 65.604, "where": ""}], "polls": 41, "received": "SIGUSR1", "received_after_s": 160.7509337477386, "via": "pending"}
+eval started after 19.4 process 195.4
+timings {'derive': 4.66, 'model_load': 7.14, 'process_to_startup': 1.53, 'startup': 3.38}
+artifact matches 730: True b5210f7935e87cc95cfb9fc56baa39d8e8162b81f8a501e49aac0c989fbfe82f
+('A-main', 'subset') n 16 median 4.081 mean 6.765 max 47.71 first 47.71
+   parts per unit (wall, cpu): {'inputs': (0.0, 0.0), 'mc_cache_copy': (0.005, 0.005), 'mc_option_forward': (4.174, 3.981), 'prefill_forward': (2.543, 2.206), 'select': (0.043, 0.043)}
+('B-absent', 'subset') n 16 median 3.615 mean 3.388 max 4.59 first 3.25
+   parts per unit (wall, cpu): {'inputs': (0.0, 0.0), 'mc_cache_copy': (0.006, 0.006), 'mc_option_forward': (2.569, 2.57), 'prefill_forward': (0.813, 0.813)}
+chunk A-main 0 subset  108.25 cpu 99.77 [('python', 9975), ('cuda-EvtHandlr', 3), ('python', 0)]
+chunk B-absent 0 subset  54.2 cpu 54.23 [('python', 5420), ('cuda-EvtHandlr', 2), ('python', 0)]
+reference [{'bitwise_equal': True, 'stage': 'A-main', 'unit': 'c320-q0', 'v1_seconds': 0.5106994304805994}, {'bitwise_equal': True, 'stage': 'A-main', 'unit': 'c320-q20', 'v1_seconds': 0.5174155524000525}]
+torch profiles {'v1': 'ok', 'v2': 'ok'}

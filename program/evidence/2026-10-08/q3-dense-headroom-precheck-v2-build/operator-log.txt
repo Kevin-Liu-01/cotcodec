@@ -1,0 +1,57 @@
+q3-dense-headroom-precheck-v2 build: host operations on fal-h100-01 (UTC, 2026-10-08)
+All runs from fresh clones or bundles under ~/cotcodec-runs/stage0/q3-dense-v2/ or fresh
+~/cotcodec-scratch/ directories; ~/cotcodec untouched; no sudo; nothing pushed; the real
+preregistration ledger untouched.
+
+06:00-07:15   CPU diagnosis (srun CPU steps, --network none, no GPU) in v1's lane image, the one
+              jobs 727 and 730 ran (Slurm 723 from a369e6d, sha256:60e8d442...): sigprobe
+              (06:09), implprobe, convprobe, threadprobe, structprobe, flawrap, profile_units
+              (diagnosis/).
+07:17         bundle of 71dc954 copied to the host.
+07:18:12      pre-build state recorded (no jobs queued, 8 GPUs idle).
+07:18-07:28   Slurm 763: CPU-only image build from a fresh clone of 71dc954
+              -> sha256:3f2cc537..., source tar 3b5a1fce...
+07:28         timing template filled (one claim), submitter --dry-run and --test-only.
+07:28:38      v2 CPU doctor in image 763 (srun step, --network none): DENSE_V2_DOCTOR_PASS 12/12.
+07:32:05      pre-submit state recorded (no jobs queued, 8 GPUs idle); timing job submitted.
+07:32:07      Slurm 766 started (1 x H100, limit 6 minutes).
+07:35:30      SIGUSR1 answered at a chunk boundary; marker written (trigger=SIGUSR1).
+07:35:32      Slurm 766 finished: exit 75, signal_USR1_checkpoint_confirmed. 205 s, 0.0569 GPU-h.
+07:47         bundle of de999f7 (cuDNN attention off on the hybrid lane, backend check).
+07:47-07:57   Slurm 770: CPU-only image build from de999f7 -> sha256:3426eca9...
+07:57:42      v2 CPU doctor in image 770: DENSE_V2_DOCTOR_PASS 12/12.
+07:59         PID-1 SIGUSR1 test against image 770: passed (tests/pid1-image-770/).
+~08:00        full suite at de999f7 on the host: 21 failures, all from the entry point blocking
+              SIGUSR1/SIGTERM at import inside pytest (children inherited the mask). Fixed in
+              8408bda (block only when the file runs as the program) with a test.
+08:12         bundle of e6e81e7.
+08:12-08:22   Slurm 776: CPU-only image build from e6e81e7 -> sha256:62e229be...
+08:22:58      v2 CPU doctor in image 776 (Slurm 778): DENSE_V2_DOCTOR_PASS 12/12, ended 08:25:55.
+~08:24        PID-1 SIGUSR1 test against image 776: passed (tests/pid1-image-776/).
+~08:25        full suite at e6e81e7 (fresh scratch, uv sync --locked --extra dev, srun CPU step):
+              1824 passed, 36 skipped, 1 failed (stub-sbatch binding test: workload program
+              indented). Fixed in 50153d0; the file passed on the host (3 passed).
+~08:33        main merged into the branch locally (30f9c7c); state, log and evidence committed
+              (f2510dd).
+08:35         freeze simulated on a local scratch clone of f2510dd (ledger copy of 11 rows):
+              check-chain 12 rows PASS (freeze-simulation/).
+08:37-08:41   full suite at f2510dd in a fresh scratch directory, Slurm 788 (CPU):
+              2212 passed, 40 skipped, 0 failed (tests/host-suite-final/).
+08:42-08:45   torch-dependent dense tests inside image 776 (srun CPU steps, --network none):
+              first attempt without USER/LOGNAME 7 failed (environment), then 43 passed
+              (tests/torch-in-image-776/).
+
+GPU use in this build: Slurm 766 only, 205 s physical on one GPU (0.0569 GPU-h).
+
+Review round (b8977d9; CPU only, no GPU job):
+~09:27-09:31  freeze simulated three times on fresh local scratch clones of b8977d9 (modes full,
+              status-only, wrong-dec; review-fixes/freeze-simulation/); the real ledger untouched.
+~09:31        bundle of b8977d9 copied to the host; fresh clone under ~/cotcodec-runs/stage0/q3-dense-v2/.
+~09:34-09:44  Slurm 801: CPU-only image build from that clone -> sha256:5281ac01...
+~09:35-09:40  full suite at b8977d9, fresh ~/cotcodec-scratch/ clone, Slurm 802 (CPU): 2213 passed,
+              40 skipped, 0 failed.
+09:43-09:47   in image 801 (srun CPU steps, --network none): v2 CPU doctor (Slurm 803)
+              DENSE_V2_DOCTOR_PASS 12/12; torch-dependent dense tests (Slurm 804) 52 passed; PID-1
+              SIGUSR1 test (Slurm 805) passed.
+
+GPU use in the review round: none.

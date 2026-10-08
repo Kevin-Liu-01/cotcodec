@@ -1,0 +1,12 @@
+start=2026-10-08T10:57:38Z image=sha256:2364f2da450d16b5882869eb79b950c964cf5295d7fe0ed9ab70df14dcf6d0ea build=825
+.......................................................                  [100%]
+=============================== warnings summary ===============================
+../../pylib/_pytest/config/__init__.py:1464
+  /pylib/_pytest/config/__init__.py:1464: PytestConfigWarning: Unknown config option: asyncio_mode
+  
+    self._warn_or_fail_if_strict(f"Unknown config option: {key}\n")
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+55 passed, 1 warning in 111.92s (0:01:51)
+exit=0
+end=2026-10-08T10:59:32Z

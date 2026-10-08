@@ -1,0 +1,34 @@
+diff --git a/program/preregistrations/q3-dense-headroom-precheck-v2.md b/program/preregistrations/q3-dense-headroom-precheck-v2.md
+index 829257c..44e204b 100644
+--- a/program/preregistrations/q3-dense-headroom-precheck-v2.md
++++ b/program/preregistrations/q3-dense-headroom-precheck-v2.md
+@@ -1,20 +1,14 @@
+ # Q3 dense headroom pre-check v2 (q3-dense-headroom-precheck-v2)
+ 
+-Status: DRAFT, not frozen. The design is v1's (`q3-dense-headroom-precheck-v1`,
+-frozen 2026-10-08 after D32), kept unchanged by program decision D36
+-(`program/decisions.md`); the repairs and limits listed under "Changes from
+-v1 (D36)" and design decisions 16-21 wait for the program owner's decision
+-in `program/decisions.md` before the freeze. Two of them depart from D36 on
+-the Qwen3.5-4B-Base lane, so that decision has to amend D36 there or require
+-another fix: decision 18 turns cuDNN's attention off, which changes computed
+-quantities where D36 (iii) allows none, and decision 20's 4B limit doubles a
+-projection, because the fixed 4B path was neither timed nor run on a GPU
+-where D36's timing rule asks for a measurement of it (Freeze procedure, step
+-1). No lane job of this experiment runs before the freeze; every lane job
+-verifies this file's digest against its ledger row at start-up and refuses
+-code whose SHA-256 differs from the table below. The one development timing
+-job of D36 ran before the freeze, on the 4B path as it was before the fix
+-(cuDNN's attention on; Compute).
++Status: frozen in program/preregistrations/ledger.jsonl; see the ledger row
++for the freeze time and `git_head_at_freeze`. FREEZE SIMULATION ONLY (scratch
++clone): design decisions 16-21 and the limits accepted in D42
++(`program/decisions.md`), which amends D36 (iii) and D36's timing rule for the
++Qwen3.5-4B-Base lane (decisions 18, 20 and 21). No lane job of this experiment
++runs before the freeze; every lane job verifies this file's digest against its
++ledger row at start-up and refuses code whose SHA-256 differs from the table
++below. The one development timing job of D36 ran before the freeze, on the 4B
++path as it was before the fix (cuDNN's attention on; Compute).
+ 
+ ## Purpose and claim level
+ 
