@@ -1,0 +1,18 @@
+<scratch>/export-65bc2e2/harness/q2_mutation/campaign.py
+{
+ "code_tree_sha256": "58bee0190c0c7eb5d44f36e27c0f1e0daab82c1c48716009a9066777c69a0721",
+ "experiment_id": "q2-evaluator-mutation-v1",
+ "file_cache_receipts_sha256": "9a3e06a48afe95c2286d0fa26d56edf947e1a5e0f121d414d565b58d30abe5fb",
+ "operator_catalog_sha256": "3a5ff94953f7b672059b0f6b063064b97a438de166fd664903e239a12f65b46f",
+ "operator_catalog_version": "q2-mut-operators-v1",
+ "operators": 64,
+ "probe_touched_sha256": "4115740770f6fa88c03742f455f7c9b373d73fe0424ae16540461d12860fa929",
+ "sanitized_manifest_sha256": "40ef4a459086b86f4971d3f938402df6c2749bd16a2acc2822f25261ebc70380",
+ "schema_sha256": "65d91703754b4026b15f6c53a4a6069da723b58d749730770da2910c1edf427d",
+ "spec_set_sha256": "05d4fb2074a7fa53046dff9f5d075b2b45ac014889eaae23d625c1894056de62",
+ "specs": 205,
+ "splits_sha256": "2099792e6fb86c69e4f79b1ce47d2839cc25623f5c4633698e95822553c007d9"
+}
+mismatch: []
+ledger row: q2-evaluator-mutation-v1 dc39bfa2f68e0fd57a213e0972266a4db60428e00d6c4e6bca8e576f35ec6439 57dc009261244cbdda6dabae2144843a5094dd3e5c31e7810d59c2f70d16c8a5 71fe02e42b34edd8ba2f710c31bdea164224d76e
+rows 11

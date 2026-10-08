@@ -1,0 +1,112 @@
+{
+ "aggregate": {
+  "dependency_flips": [],
+  "excluded_unemulated": [
+   "06ca5602-62ca-47f6-ad4f-da151cde54cc",
+   "26150609-0da3-4a7d-8868-0faf9c5f01bb",
+   "2a729ded-3296-423d-aec4-7dd55ed5fbb3",
+   "53ad5833-3455-407b-bbc6-45b4c79ab8fb",
+   "554785e9-4523-4e7a-b8e1-8016f565f56a",
+   "5ac2891a-eacd-4954-b339-98abba077adb",
+   "5df7b33a-9f77-4101-823e-02f863e1c1ae",
+   "7a4deb26-d57d-4ea9-9a73-630f66a7b568",
+   "982d12a5-beab-424f-8d38-d2a48429e511",
+   "d38192b0-17dc-4e1d-99c3-786d0117de77",
+   "dfac9ee8-9bc4-4cdc-b465-4a4bfcd2f397",
+   "e2b5e914-ffe1-44d2-8e92-58f8c5d92bb2",
+   "e2dd0213-26db-4349-abe5-d5667bfd725c",
+   "e8172110-ec08-421b-a6f5-842e6451911f"
+  ],
+  "lock": {
+   "do_nothing_saved_passes": 0,
+   "gold_fixed_point_flip_clopper_pearson95": [
+    0.009330843412757028,
+    0.1253270359939404
+   ],
+   "gold_fixed_point_flips": 3,
+   "gold_fixed_point_n": 67,
+   "gold_fixed_point_not_counted": [],
+   "gold_fixed_point_not_exposed": [
+    "09a37c51-e625-49f4-a514-20a773797a8a",
+    "2fe4b718-3bd7-46ec-bdce-b184f5653624",
+    "455d3c66-7dc6-4537-a39a-36d3e9119df7",
+    "8df7e444-8e06-4f93-8a1a-c5c974269d82",
+    "a503b07f-9119-456b-b75d-f5146737d24f",
+    "ec71221e-ac43-46f9-89b8-ee7d80f7e1c5",
+    "fba2c100-79e8-42df-ae74-b592418d54f4"
+   ],
+   "gold_raw_verdicts": {
+    "fail": 4,
+    "pass": 70
+   },
+   "gold_save_failed": [],
+   "gold_saved_verdicts": {
+    "fail": 7,
+    "pass": 60
+   },
+   "k1_gold_pass_and_do_nothing_fail": "70/74",
+   "k1_infra_excluded": 0,
+   "tasks_with_gold": 74,
+   "tasks_with_initial": 106
+  },
+  "s1": {
+   "raw": {
+    "candidates": [],
+    "confirmed": [],
+    "rule": "verdicts differ between venvs and 5 fresh-process scorings agree within each venv",
+    "unstable": []
+   },
+   "saved": {
+    "candidates": [],
+    "confirmed": [],
+    "rule": "verdicts differ between venvs and 5 fresh-process scorings agree within each venv",
+    "unstable": []
+   }
+  },
+  "s5_unstable_at_repeat_5": [],
+  "save_infra_errors": [],
+  "saves": {
+   "changed_bytes": 135,
+   "n": 135,
+   "slower_than_0_5s": 7,
+   "with_dialog": 0,
+   "written": 135
+  },
+  "scout": {
+   "do_nothing_saved_passes": 0,
+   "gold_fixed_point_flip_clopper_pearson95": [
+    0.009330843412757028,
+    0.1253270359939404
+   ],
+   "gold_fixed_point_flips": 3,
+   "gold_fixed_point_n": 67,
+   "gold_fixed_point_not_counted": [],
+   "gold_fixed_point_not_exposed": [
+    "09a37c51-e625-49f4-a514-20a773797a8a",
+    "2fe4b718-3bd7-46ec-bdce-b184f5653624",
+    "455d3c66-7dc6-4537-a39a-36d3e9119df7",
+    "8df7e444-8e06-4f93-8a1a-c5c974269d82",
+    "a503b07f-9119-456b-b75d-f5146737d24f",
+    "ec71221e-ac43-46f9-89b8-ee7d80f7e1c5",
+    "fba2c100-79e8-42df-ae74-b592418d54f4"
+   ],
+   "gold_raw_verdicts": {
+    "fail": 4,
+    "pass": 70
+   },
+   "gold_save_failed": [],
+   "gold_saved_verdicts": {
+    "fail": 7,
+    "pass": 60
+   },
+   "k1_gold_pass_and_do_nothing_fail": "70/74",
+   "k1_infra_excluded": 0,
+   "tasks_with_gold": 74,
+   "tasks_with_initial": 106
+  },
+  "venv_differences_from_nondeterministic_checkers": []
+ },
+ "source": "runs/confirm-controls-v1/summary.json (harness.q2_mutation.report at 65bc2e2; held on the host)",
+ "summary_sha256": "1ae206059607547bfc5704f41a47013d5dd1467b5c03baa268cb5bb5ff8a801f",
+ "tasks": 120
+}
