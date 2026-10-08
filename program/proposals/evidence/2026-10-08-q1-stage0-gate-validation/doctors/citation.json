@@ -1,0 +1,9 @@
+{
+ "doctor": "Citation",
+ "status": "PASS",
+ "evaluated_on": "2026-10-08",
+ "evaluated_by": "wave-1 single synthesis owner (Claude agent); not an independent review",
+ "pass_condition": "URLs, dates, authors, and quantitative claims verified in primary sources",
+ "evidence": "Claim registry C01-C48 in the proposal with locator, date and status. 15 claims verified by synthesis: 12 re-read in full text (orx paper --full; digests in query-log.json: 2609.22220, 2606.20128, 2608.12700, 2607.16241, 2602.05885, 2610.05683, 2607.11022, 2610.02240, 2609.09315) and 3 recomputed from hashed inputs (the TF32 threshold table and the L2/95 and L2/77 rows from job 713's journal, SHA-256 ddbfbbf6..., equal to the committed record; the criterion-3 operating characteristic). 5 from committed records or a hashed host file. The rest are CELL_READ, ABSTRACT_ONLY or ESTIMATE and labelled; the PAgE '26 paper is UNVERIFIABLE_ACCESS beyond its abstract. Dates taken from the hashed arXiv abstract-page snapshots (five registry dates corrected against them). One cell statement updated after job 752 (the exec/2 model is biased low). Structure follows the gauntlet rule's claim registry; the ARS protocol file itself was not opened.",
+ "remediation": "Independent line-by-line audit by a fresh reader; full-text reads of the abstract-only classic priors (C20-C24) through library access."
+}

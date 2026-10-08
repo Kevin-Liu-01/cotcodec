@@ -1,0 +1,9 @@
+{
+ "doctor": "Novelty",
+ "status": "FAIL",
+ "evaluated_on": "2026-10-08",
+ "evaluated_by": "wave-1 single synthesis owner (Claude agent); not an independent review",
+ "pass_condition": "Synonyms, component pairs, citation graph, code, and adjacent fields searched",
+ "evidence": "No cell found a direct prior for the combination (merged verdict NARROWED), but the mutant-metric part (gate (a) and c1 miss rates on deterministic mutants) is OCCUPIED by Measuring the Checker (2609.22220), whose rules Stage 0 ports. Coverage is incomplete: no forward or backward citation-graph expansion, no OpenReview, no code search beyond five repository HEADs. The blind closest-prior discrimination (paragraphs under blind/) and the novelty refuter have not run.",
+ "remediation": "Run the blind discrimination on the two paragraphs; expand forward citations of 2609.22220 and 2606.20128; decide whether an MtC-suite comparator gate belongs on the ladder (licence ruling needed for KernelBench-M)."
+}

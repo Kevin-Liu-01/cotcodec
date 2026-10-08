@@ -1,0 +1,39 @@
+{
+ "url": "https://arxiv.org/abs/2602.24286",
+ "fetched_at": "2026-10-08T07:30:40Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 44164,
+ "raw_sha256": "7fe88923f902d43e4546eff9aba52c562a1e609e2d75996c31f8a19d39284672",
+ "raw_stored": false,
+ "extract": {
+  "title": "CUDA Agent: Large-Scale Agentic RL for High-Performance CUDA Kernel Generation",
+  "authors": [
+   "Dai, Weinan",
+   "Wu, Hanlin",
+   "Yu, Qiying",
+   "Gao, Huan-ang",
+   "Li, Jiahao",
+   "Jiang, Chengquan",
+   "Lou, Weiqiang",
+   "Song, Yufan",
+   "Yu, Hongli",
+   "Chen, Jiaze",
+   "Ma, Wei-Ying",
+   "Zhang, Ya-Qin",
+   "Liu, Jingjing",
+   "Wang, Mingxuan",
+   "Liu, Xin",
+   "Zhou, Hao"
+  ],
+  "citation_date": "2026/02/27",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Fri, 27 Feb 2026 18:58:05 UTC"
+   }
+  ],
+  "abstract": "GPU kernel optimization is fundamental to modern deep learning but remains a highly specialized task requiring deep hardware expertise. Despite strong performance in general programming, large language models (LLMs) remain uncompetitive with compiler-based systems such as this http URL for CUDA kernel generation. Existing CUDA code generation approaches either rely on training-free refinement or fine-tune models within fixed multi-turn execution-feedback loops, but both paradigms fail to fundamentally improve the model's intrinsic CUDA optimization ability, resulting in limited performance gains. We present CUDA Agent, a large-scale agentic reinforcement learning system that develops CUDA kernel expertise through three components: a scalable data synthesis pipeline, a skill-augmented CUDA development environment with automated verification and profiling to provide reliable reward signals, and reinforcement learning algorithmic techniques enabling stable training. CUDA Agent achieves state-of-the-art results on KernelBench, delivering 100\\%, 100\\%, and 92\\% faster rate over this http URL on KernelBench Level-1, Level-2, and Level-3 splits, outperforming the strongest proprietary models such as Claude Opus 4.5 and Gemini 3 Pro by about 40\\% on the hardest Level-3 setting.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}

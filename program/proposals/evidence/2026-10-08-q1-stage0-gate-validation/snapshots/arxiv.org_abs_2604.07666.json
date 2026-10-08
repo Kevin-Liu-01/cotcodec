@@ -1,0 +1,26 @@
+{
+ "url": "https://arxiv.org/abs/2604.07666",
+ "fetched_at": "2026-10-08T07:30:43Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 42779,
+ "raw_sha256": "71afaacfd7cec7801c9fd535d80687c1343295b0b8fc2f7c37ce799508086893",
+ "raw_stored": false,
+ "extract": {
+  "title": "An Imperfect Verifier is Good Enough: Learning with Noisy Rewards",
+  "authors": [
+   "Plesner, Andreas",
+   "Guzmán, Francisco",
+   "Athalye, Anish"
+  ],
+  "citation_date": "2026/04/09",
+  "submission_history": [
+   {
+    "version": "v2",
+    "date": "Sun, 27 Sep 2026 12:55:10 UTC"
+   }
+  ],
+  "abstract": "Reinforcement Learning with Verifiable Rewards (RLVR) is widely used for post-training Large Language Models, but practical verifiers can make errors. We study how the rate and structure of reward noise affect RLVR in code generation, with a preliminary scientific-reasoning check. In multi-seed Qwen3 8B experiments on MBPP, mean validation reward over two fixed late evaluations is within 1 percentage point of the clean baseline at the tested resampled group-rollout noise rates through 20%, and within about 2 points at 30%. Confidence intervals allow larger losses; these point estimates do not establish a general tolerance threshold. We also examine full-program pass@k, four controlled noise structures, two model-based verifiers, and policy models from three families spanning 4B-9B parameters. We derive conditional advantage distributions for symmetric and asymmetric group noise, including retained format penalties, and show why clipping limits simple gradient-scaling arguments. The analysis identifies information preserved by whole-group corruption and limits on interpreting our asymmetric sweep as a precision-recall comparison. Overall, the results indicate that imperfect verification can support effective RLVR in the tested settings, while aggregate error rates alone do not characterize the learning signal.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}

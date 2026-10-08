@@ -1,0 +1,878 @@
+{
+ "input": {
+  "path_on_host": "~/cotcodec-runs/stage0/q1-engineering-d31/runs/713/q1/repilot/journal.jsonl",
+  "sha256": "ddbfbbf657445d1d7ede759474363a4d8dadc96f86cc3fd0c535830f29796bd2",
+  "bytes": 2549805,
+  "rows": 2084
+ },
+ "tf32_admissible_threshold_by_problem": {
+  "L1-10": {
+   "draw_rows": 49,
+   "rows_T_ge_1": 6,
+   "rows_T_ge_2": 6,
+   "strict_fp32_T_max": 0.01089,
+   "by_channel": {
+    "A1": {
+     "draw_rows": 15,
+     "T_min": 0.0008,
+     "T_max": 0.0009,
+     "rows_T_ge_1": 0,
+     "rows_T_ge_2": 0
+    },
+    "A2": {
+     "draw_rows": 21,
+     "T_min": 0.0,
+     "T_max": 3.4427,
+     "rows_T_ge_1": 6,
+     "rows_T_ge_2": 6
+    },
+    "A3": {
+     "draw_rows": 13,
+     "T_min": 0.0007,
+     "T_max": 0.0009,
+     "rows_T_ge_1": 0,
+     "rows_T_ge_2": 0
+    }
+   }
+  },
+  "L1-18": {
+   "draw_rows": 35,
+   "rows_T_ge_1": 2,
+   "rows_T_ge_2": 2,
+   "strict_fp32_T_max": 0.01435,
+   "by_channel": {
+    "A1": {
+     "draw_rows": 10,
+     "T_min": 0.0012,
+     "T_max": 0.0012,
+     "rows_T_ge_1": 0,
+     "rows_T_ge_2": 0
+    },
+    "A2": {
+     "draw_rows": 12,
+     "T_min": 0.0,
+     "T_max": 2.9049,
+     "rows_T_ge_1": 2,
+     "rows_T_ge_2": 2
+    },
+    "A3": {
+     "draw_rows": 13,
+     "T_min": 0.0,
+     "T_max": 0.0121,
+     "rows_T_ge_1": 0,
+     "rows_T_ge_2": 0
+    }
+   }
+  },
+  "L2-100": {
+   "draw_rows": 6,
+   "rows_T_ge_1": 5,
+   "rows_T_ge_2": 5,
+   "strict_fp32_T_max": 0.00667,
+   "by_channel": {
+    "A1": {
+     "draw_rows": 5,
+     "T_min": 3.4517,
+     "T_max": 3.73,
+     "rows_T_ge_1": 5,
+     "rows_T_ge_2": 5
+    },
+    "A2": {
+     "draw_rows": 1,
+     "T_min": 0.0047,
+     "T_max": 0.0047,
+     "rows_T_ge_1": 0,
+     "rows_T_ge_2": 0
+    }
+   }
+  },
+  "L2-46": {
+   "draw_rows": 13,
+   "rows_T_ge_1": 13,
+   "rows_T_ge_2": 13,
+   "strict_fp32_T_max": 0.01377,
+   "by_channel": {
+    "A1": {
+     "draw_rows": 5,
+     "T_min": 2.564,
+     "T_max": 3.195,
+     "rows_T_ge_1": 5,
+     "rows_T_ge_2": 5
+    },
+    "A2": {
+     "draw_rows": 5,
+     "T_min": 2.1379,
+     "T_max": 13.2398,
+     "rows_T_ge_1": 5,
+     "rows_T_ge_2": 5
+    },
+    "A3": {
+     "draw_rows": 3,
+     "T_min": 2.012,
+     "T_max": 3.0068,
+     "rows_T_ge_1": 3,
+     "rows_T_ge_2": 3
+    }
+   }
+  },
+  "L2-59": {
+   "draw_rows": 14,
+   "rows_T_ge_1": 14,
+   "rows_T_ge_2": 6,
+   "strict_fp32_T_max": 0.02583,
+   "by_channel": {
+    "A1": {
+     "draw_rows": 10,
+     "T_min": 1.8118,
+     "T_max": 2.138,
+     "rows_T_ge_1": 10,
+     "rows_T_ge_2": 6
+    },
+    "A2": {
+     "draw_rows": 3,
+     "T_min": 1.054,
+     "T_max": 1.4893,
+     "rows_T_ge_1": 3,
+     "rows_T_ge_2": 0
+    },
+    "A3": {
+     "draw_rows": 1,
+     "T_min": 1.7801,
+     "T_max": 1.7801,
+     "rows_T_ge_1": 1,
+     "rows_T_ge_2": 0
+    }
+   }
+  },
+  "L2-77": {
+   "draw_rows": 30,
+   "rows_T_ge_1": 27,
+   "rows_T_ge_2": 6,
+   "strict_fp32_T_max": 0.15045,
+   "by_channel": {
+    "A1": {
+     "draw_rows": 15,
+     "T_min": 1.0544,
+     "T_max": 3.836,
+     "rows_T_ge_1": 15,
+     "rows_T_ge_2": 6
+    },
+    "A2": {
+     "draw_rows": 15,
+     "T_min": 0.8805,
+     "T_max": 1.9743,
+     "rows_T_ge_1": 12,
+     "rows_T_ge_2": 0
+    }
+   }
+  },
+  "L2-87": {
+   "draw_rows": 25,
+   "rows_T_ge_1": 0,
+   "rows_T_ge_2": 0,
+   "strict_fp32_T_max": 0.00627,
+   "by_channel": {
+    "A1": {
+     "draw_rows": 10,
+     "T_min": 0.0053,
+     "T_max": 0.006,
+     "rows_T_ge_1": 0,
+     "rows_T_ge_2": 0
+    },
+    "A2": {
+     "draw_rows": 10,
+     "T_min": 0.0014,
+     "T_max": 0.0054,
+     "rows_T_ge_1": 0,
+     "rows_T_ge_2": 0
+    },
+    "A3": {
+     "draw_rows": 5,
+     "T_min": 0.004,
+     "T_max": 0.0063,
+     "rows_T_ge_1": 0,
+     "rows_T_ge_2": 0
+    }
+   }
+  },
+  "L2-95": {
+   "draw_rows": 25,
+   "rows_T_ge_1": 21,
+   "rows_T_ge_2": 0,
+   "strict_fp32_T_max": 0.01836,
+   "by_channel": {
+    "A1": {
+     "draw_rows": 15,
+     "T_min": 1.5346,
+     "T_max": 1.694,
+     "rows_T_ge_1": 15,
+     "rows_T_ge_2": 0
+    },
+    "A2": {
+     "draw_rows": 3,
+     "T_min": 1.5281,
+     "T_max": 1.5281,
+     "rows_T_ge_1": 3,
+     "rows_T_ge_2": 0
+    },
+    "A3": {
+     "draw_rows": 7,
+     "T_min": 0.0009,
+     "T_max": 1.4933,
+     "rows_T_ge_1": 3,
+     "rows_T_ge_2": 0
+    }
+   }
+  }
+ },
+ "l2_95_plus2minus_rows": [
+  {
+   "arm": "store",
+   "gate": "a",
+   "config_id": "native/trials-5/seed-42",
+   "tf32_policy": "torch-default",
+   "verdict": "reject",
+   "admissible": null,
+   "T_tf32_admissible": null,
+   "e_tf32_admissible": null,
+   "reason": "output-mismatch"
+  },
+  {
+   "arm": "inline",
+   "gate": "a",
+   "config_id": "native/trials-5/seed-42",
+   "tf32_policy": "torch-default",
+   "verdict": "reject",
+   "admissible": null,
+   "T_tf32_admissible": null,
+   "e_tf32_admissible": null,
+   "reason": "output-mismatch"
+  },
+  {
+   "arm": "inline",
+   "gate": "a_1e-3",
+   "config_id": "native/trials-5/seed-42",
+   "tf32_policy": "torch-default",
+   "verdict": "reject",
+   "admissible": null,
+   "T_tf32_admissible": null,
+   "e_tf32_admissible": null,
+   "reason": "output-mismatch"
+  },
+  {
+   "arm": "store",
+   "gate": "a_1e-3",
+   "config_id": "native/trials-5/seed-42",
+   "tf32_policy": "torch-default",
+   "verdict": "reject",
+   "admissible": null,
+   "T_tf32_admissible": null,
+   "e_tf32_admissible": null,
+   "reason": "output-mismatch"
+  },
+  {
+   "arm": "store",
+   "gate": "A1",
+   "config_id": "A1/native/seed-6042",
+   "tf32_policy": "tf32-admissible",
+   "verdict": "accept",
+   "admissible": true,
+   "T_tf32_admissible": 1.6940310129302532,
+   "e_tf32_admissible": 0.9989265344399332,
+   "reason": ""
+  },
+  {
+   "arm": "store",
+   "gate": "A1",
+   "config_id": "A1/native/seed-6043",
+   "tf32_policy": "tf32-admissible",
+   "verdict": "reject",
+   "admissible": true,
+   "T_tf32_admissible": 1.638748864127032,
+   "e_tf32_admissible": 1085.680352182416,
+   "reason": ""
+  },
+  {
+   "arm": "store",
+   "gate": "A1",
+   "config_id": "A1/native/seed-6044",
+   "tf32_policy": "tf32-admissible",
+   "verdict": "reject",
+   "admissible": true,
+   "T_tf32_admissible": 1.5778678879079204,
+   "e_tf32_admissible": 1083.7181152645483,
+   "reason": ""
+  },
+  {
+   "arm": "store",
+   "gate": "A1",
+   "config_id": "A1/native/seed-6045",
+   "tf32_policy": "tf32-admissible",
+   "verdict": "reject",
+   "admissible": true,
+   "T_tf32_admissible": 1.5346059887358934,
+   "e_tf32_admissible": 1176.6100080532985,
+   "reason": ""
+  },
+  {
+   "arm": "store",
+   "gate": "A1",
+   "config_id": "A1/native/seed-6046",
+   "tf32_policy": "tf32-admissible",
+   "verdict": "reject",
+   "admissible": true,
+   "T_tf32_admissible": 1.5654701051366369,
+   "e_tf32_admissible": 1096.31174897677,
+   "reason": ""
+  },
+  {
+   "arm": "store",
+   "gate": "A1",
+   "config_id": "aggregate",
+   "tf32_policy": "tf32-admissible",
+   "verdict": "reject",
+   "admissible": null,
+   "T_tf32_admissible": null,
+   "e_tf32_admissible": null,
+   "reason": ""
+  },
+  {
+   "arm": "store",
+   "gate": "A1",
+   "config_id": "aggregate",
+   "tf32_policy": "strict-fp32",
+   "verdict": "reject",
+   "admissible": null,
+   "T_tf32_admissible": null,
+   "e_tf32_admissible": null,
+   "reason": ""
+  },
+  {
+   "arm": "inline",
+   "gate": "A1",
+   "config_id": "A1/native/seed-6042",
+   "tf32_policy": "tf32-admissible",
+   "verdict": "accept",
+   "admissible": true,
+   "T_tf32_admissible": 1.6940310129302532,
+   "e_tf32_admissible": 0.9989265344399332,
+   "reason": ""
+  },
+  {
+   "arm": "inline",
+   "gate": "A1",
+   "config_id": "A1/native/seed-6043",
+   "tf32_policy": "tf32-admissible",
+   "verdict": "accept",
+   "admissible": true,
+   "T_tf32_admissible": 1.638748864127032,
+   "e_tf32_admissible": 0.9989256765213084,
+   "reason": ""
+  },
+  {
+   "arm": "inline",
+   "gate": "A1",
+   "config_id": "A1/native/seed-6044",
+   "tf32_policy": "tf32-admissible",
+   "verdict": "accept",
+   "admissible": true,
+   "T_tf32_admissible": 1.5778678879079204,
+   "e_tf32_admissible": 0.9989104326073008,
+   "reason": ""
+  },
+  {
+   "arm": "inline",
+   "gate": "A1",
+   "config_id": "A1/native/seed-6045",
+   "tf32_policy": "tf32-admissible",
+   "verdict": "accept",
+   "admissible": true,
+   "T_tf32_admissible": 1.5346059887358934,
+   "e_tf32_admissible": 0.9989194938382148,
+   "reason": ""
+  },
+  {
+   "arm": "inline",
+   "gate": "A1",
+   "config_id": "A1/native/seed-6046",
+   "tf32_policy": "tf32-admissible",
+   "verdict": "accept",
+   "admissible": true,
+   "T_tf32_admissible": 1.5654701051366369,
+   "e_tf32_admissible": 0.9989160972930733,
+   "reason": ""
+  },
+  {
+   "arm": "inline",
+   "gate": "A1",
+   "config_id": "aggregate",
+   "tf32_policy": "tf32-admissible",
+   "verdict": "accept",
+   "admissible": null,
+   "T_tf32_admissible": null,
+   "e_tf32_admissible": null,
+   "reason": ""
+  },
+  {
+   "arm": "inline",
+   "gate": "A1",
+   "config_id": "aggregate",
+   "tf32_policy": "strict-fp32",
+   "verdict": "reject",
+   "admissible": null,
+   "T_tf32_admissible": null,
+   "e_tf32_admissible": null,
+   "reason": ""
+  },
+  {
+   "arm": "store",
+   "gate": "A2",
+   "config_id": "A2/randn/seed-4042",
+   "tf32_policy": "tf32-admissible",
+   "verdict": "error",
+   "admissible": false,
+   "T_tf32_admissible": 3.2441893925146434,
+   "e_tf32_admissible": 0.9989985256741234,
+   "reason": ""
+  },
+  {
+   "arm": "store",
+   "gate": "A2",
+   "config_id": "A2/uniform8/seed-4043",
+   "tf32_policy": "tf32-admissible",
+   "verdict": "error",
+   "admissible": false,
+   "T_tf32_admissible": 11.624006937672283,
+   "e_tf32_admissible": 2379.7972695246067,
+   "reason": ""
+  },
+  {
+   "arm": "store",
+   "gate": "A2",
+   "config_id": "A2/samesign100/seed-4044",
+   "tf32_policy": "tf32-admissible",
+   "verdict": "error",
+   "admissible": false,
+   "T_tf32_admissible": 134.73053754824116,
+   "e_tf32_admissible": 9507.92423427483,
+   "reason": ""
+  },
+  {
+   "arm": "store",
+   "gate": "A2",
+   "config_id": "A2/spiky/seed-4045",
+   "tf32_policy": "tf32-admissible",
+   "verdict": "error",
+   "admissible": false,
+   "T_tf32_admissible": 45.50434689101573,
+   "e_tf32_admissible": 118852.67127443486,
+   "reason": ""
+  },
+  {
+   "arm": "store",
+   "gate": "A2",
+   "config_id": "A2/ties/seed-4046",
+   "tf32_policy": "tf32-admissible",
+   "verdict": "error",
+   "admissible": false,
+   "T_tf32_admissible": 4.643564560323585,
+   "e_tf32_admissible": 178117.2239969047,
+   "reason": ""
+  },
+  {
+   "arm": "store",
+   "gate": "A2",
+   "config_id": "A2/allneg/seed-4047",
+   "tf32_policy": "tf32-admissible",
+   "verdict": "reject",
+   "admissible": true,
+   "T_tf32_admissible": 1.5280795888514165,
+   "e_tf32_admissible": 4151.88252072242,
+   "reason": ""
+  },
+  {
+   "arm": "store",
+   "gate": "A2",
+   "config_id": "A2/constrows/seed-4048",
+   "tf32_policy": "tf32-admissible",
+   "verdict": "error",
+   "admissible": false,
+   "T_tf32_admissible": 4.375990240550307,
+   "e_tf32_admissible": 1020.1813102027234,
+   "reason": ""
+  },
+  {
+   "arm": "store",
+   "gate": "A2",
+   "config_id": "aggregate",
+   "tf32_policy": "tf32-admissible",
+   "verdict": "reject",
+   "admissible": null,
+   "T_tf32_admissible": null,
+   "e_tf32_admissible": null,
+   "reason": ""
+  },
+  {
+   "arm": "store",
+   "gate": "A2",
+   "config_id": "aggregate",
+   "tf32_policy": "strict-fp32",
+   "verdict": "reject",
+   "admissible": null,
+   "T_tf32_admissible": null,
+   "e_tf32_admissible": null,
+   "reason": ""
+  },
+  {
+   "arm": "inline",
+   "gate": "A3",
+   "config_id": "A3/lead1/seed-5042",
+   "tf32_policy": "tf32-admissible",
+   "verdict": "refuse",
+   "admissible": true,
+   "T_tf32_admissible": null,
+   "e_tf32_admissible": null,
+   "reason": ""
+  },
+  {
+   "arm": "inline",
+   "gate": "A3",
+   "config_id": "A3/lead5/seed-5043",
+   "tf32_policy": "tf32-admissible",
+   "verdict": "accept",
+   "admissible": true,
+   "T_tf32_admissible": 0.7750702728652498,
+   "e_tf32_admissible": 0.00043774906127217676,
+   "reason": ""
+  },
+  {
+   "arm": "inline",
+   "gate": "A3",
+   "config_id": "A3/inner37/seed-5044",
+   "tf32_policy": "tf32-admissible",
+   "verdict": "reject",
+   "admissible": true,
+   "T_tf32_admissible": 1.4933191465479154,
+   "e_tf32_admissible": 3.7694926539016496e+22,
+   "reason": ""
+  },
+  {
+   "arm": "inline",
+   "gate": "A3",
+   "config_id": "A3/inner137/seed-5045",
+   "tf32_policy": "tf32-admissible",
+   "verdict": "error",
+   "admissible": false,
+   "T_tf32_admissible": 1.520433596446585,
+   "e_tf32_admissible": 0.998940475839226,
+   "reason": ""
+  },
+  {
+   "arm": "inline",
+   "gate": "A3",
+   "config_id": "aggregate",
+   "tf32_policy": "tf32-admissible",
+   "verdict": "reject",
+   "admissible": null,
+   "T_tf32_admissible": null,
+   "e_tf32_admissible": null,
+   "reason": ""
+  },
+  {
+   "arm": "inline",
+   "gate": "A3",
+   "config_id": "aggregate",
+   "tf32_policy": "strict-fp32",
+   "verdict": "reject",
+   "admissible": null,
+   "T_tf32_admissible": null,
+   "e_tf32_admissible": null,
+   "reason": ""
+  },
+  {
+   "arm": "store",
+   "gate": "A3",
+   "config_id": "A3/lead1/seed-5042",
+   "tf32_policy": "tf32-admissible",
+   "verdict": "refuse",
+   "admissible": true,
+   "T_tf32_admissible": null,
+   "e_tf32_admissible": null,
+   "reason": ""
+  },
+  {
+   "arm": "store",
+   "gate": "A3",
+   "config_id": "A3/lead5/seed-5043",
+   "tf32_policy": "tf32-admissible",
+   "verdict": "accept",
+   "admissible": true,
+   "T_tf32_admissible": 0.7750702728652498,
+   "e_tf32_admissible": 0.00043774906127217676,
+   "reason": ""
+  },
+  {
+   "arm": "store",
+   "gate": "A3",
+   "config_id": "A3/inner37/seed-5044",
+   "tf32_policy": "tf32-admissible",
+   "verdict": "accept",
+   "admissible": true,
+   "T_tf32_admissible": 1.4933191465479154,
+   "e_tf32_admissible": 0.9989116797052608,
+   "reason": ""
+  },
+  {
+   "arm": "store",
+   "gate": "A3",
+   "config_id": "A3/inner137/seed-5045",
+   "tf32_policy": "tf32-admissible",
+   "verdict": "error",
+   "admissible": false,
+   "T_tf32_admissible": 1.520433596446585,
+   "e_tf32_admissible": 0.998940475839226,
+   "reason": ""
+  },
+  {
+   "arm": "store",
+   "gate": "A3",
+   "config_id": "aggregate",
+   "tf32_policy": "tf32-admissible",
+   "verdict": "refuse",
+   "admissible": null,
+   "T_tf32_admissible": null,
+   "e_tf32_admissible": null,
+   "reason": ""
+  },
+  {
+   "arm": "store",
+   "gate": "A3",
+   "config_id": "aggregate",
+   "tf32_policy": "strict-fp32",
+   "verdict": "reject",
+   "admissible": null,
+   "T_tf32_admissible": null,
+   "e_tf32_admissible": null,
+   "reason": ""
+  },
+  {
+   "arm": "inline",
+   "gate": "A4",
+   "config_id": "in-process",
+   "tf32_policy": "not-applicable",
+   "verdict": "reject",
+   "admissible": null,
+   "T_tf32_admissible": null,
+   "e_tf32_admissible": null,
+   "reason": ""
+  },
+  {
+   "arm": "inline",
+   "gate": "A2",
+   "config_id": "A2/randn/seed-4042",
+   "tf32_policy": "tf32-admissible",
+   "verdict": "error",
+   "admissible": false,
+   "T_tf32_admissible": 3.2441893925146434,
+   "e_tf32_admissible": 0.9989985256741234,
+   "reason": ""
+  },
+  {
+   "arm": "inline",
+   "gate": "A2",
+   "config_id": "A2/uniform8/seed-4043",
+   "tf32_policy": "tf32-admissible",
+   "verdict": "error",
+   "admissible": false,
+   "T_tf32_admissible": 11.624006937672283,
+   "e_tf32_admissible": 0.9990009990007926,
+   "reason": ""
+  },
+  {
+   "arm": "inline",
+   "gate": "A2",
+   "config_id": "A2/samesign100/seed-4044",
+   "tf32_policy": "tf32-admissible",
+   "verdict": "error",
+   "admissible": false,
+   "T_tf32_admissible": 134.73053754824116,
+   "e_tf32_admissible": 8.420658596765072,
+   "reason": ""
+  },
+  {
+   "arm": "inline",
+   "gate": "A2",
+   "config_id": "A2/spiky/seed-4045",
+   "tf32_policy": "tf32-admissible",
+   "verdict": "error",
+   "admissible": false,
+   "T_tf32_admissible": 45.50434689101573,
+   "e_tf32_admissible": 1.2073463665617667,
+   "reason": ""
+  },
+  {
+   "arm": "inline",
+   "gate": "A2",
+   "config_id": "A2/ties/seed-4046",
+   "tf32_policy": "tf32-admissible",
+   "verdict": "error",
+   "admissible": false,
+   "T_tf32_admissible": 4.643564560323585,
+   "e_tf32_admissible": 0.9990009930701346,
+   "reason": ""
+  },
+  {
+   "arm": "inline",
+   "gate": "A2",
+   "config_id": "A2/allneg/seed-4047",
+   "tf32_policy": "tf32-admissible",
+   "verdict": "accept",
+   "admissible": true,
+   "T_tf32_admissible": 1.5280795888514165,
+   "e_tf32_admissible": 0.9989809735830558,
+   "reason": ""
+  },
+  {
+   "arm": "inline",
+   "gate": "A2",
+   "config_id": "A2/constrows/seed-4048",
+   "tf32_policy": "tf32-admissible",
+   "verdict": "error",
+   "admissible": false,
+   "T_tf32_admissible": 4.375990240550307,
+   "e_tf32_admissible": 0.9990009980874791,
+   "reason": ""
+  },
+  {
+   "arm": "inline",
+   "gate": "A2",
+   "config_id": "aggregate",
+   "tf32_policy": "tf32-admissible",
+   "verdict": "accept",
+   "admissible": null,
+   "T_tf32_admissible": null,
+   "e_tf32_admissible": null,
+   "reason": ""
+  },
+  {
+   "arm": "inline",
+   "gate": "A2",
+   "config_id": "aggregate",
+   "tf32_policy": "strict-fp32",
+   "verdict": "reject",
+   "admissible": null,
+   "T_tf32_admissible": null,
+   "e_tf32_admissible": null,
+   "reason": ""
+  },
+  {
+   "arm": "store",
+   "gate": "A4",
+   "config_id": "in-process",
+   "tf32_policy": "not-applicable",
+   "verdict": "reject",
+   "admissible": null,
+   "T_tf32_admissible": null,
+   "e_tf32_admissible": null,
+   "reason": ""
+  },
+  {
+   "arm": "inline",
+   "gate": "A4",
+   "config_id": "compute-sanitizer",
+   "tf32_policy": "not-applicable",
+   "verdict": "accept",
+   "admissible": null,
+   "T_tf32_admissible": null,
+   "e_tf32_admissible": null,
+   "reason": ""
+  },
+  {
+   "arm": "store",
+   "gate": "A4",
+   "config_id": "compute-sanitizer",
+   "tf32_policy": "not-applicable",
+   "verdict": "accept",
+   "admissible": null,
+   "T_tf32_admissible": null,
+   "e_tf32_admissible": null,
+   "reason": ""
+  },
+  {
+   "arm": "inline",
+   "gate": "A4",
+   "config_id": "poison-allocator",
+   "tf32_policy": "not-applicable",
+   "verdict": "reject",
+   "admissible": null,
+   "T_tf32_admissible": null,
+   "e_tf32_admissible": null,
+   "reason": "output-depends-on-poison"
+  },
+  {
+   "arm": "store",
+   "gate": "A4",
+   "config_id": "poison-allocator",
+   "tf32_policy": "not-applicable",
+   "verdict": "reject",
+   "admissible": null,
+   "T_tf32_admissible": null,
+   "e_tf32_admissible": null,
+   "reason": "output-depends-on-poison"
+  }
+ ],
+ "identity_control_audit_aggregates": {
+  "L1-10": {
+   "A1/tf32-admissible": "accept",
+   "A1/strict-fp32": "accept",
+   "A3/tf32-admissible": "accept",
+   "A3/strict-fp32": "accept",
+   "A2/tf32-admissible": "accept",
+   "A2/strict-fp32": "accept"
+  },
+  "L1-18": {
+   "A1/tf32-admissible": "accept",
+   "A1/strict-fp32": "accept",
+   "A3/tf32-admissible": "accept",
+   "A3/strict-fp32": "accept",
+   "A2/tf32-admissible": "accept",
+   "A2/strict-fp32": "accept"
+  },
+  "L2-59": {
+   "A2/tf32-admissible": "error",
+   "A2/strict-fp32": "error",
+   "A1/tf32-admissible": "accept",
+   "A1/strict-fp32": "accept"
+  },
+  "L2-95": {
+   "A3/tf32-admissible": "accept",
+   "A3/strict-fp32": "accept",
+   "A1/tf32-admissible": "accept",
+   "A1/strict-fp32": "accept",
+   "A2/tf32-admissible": "accept",
+   "A2/strict-fp32": "accept"
+  },
+  "L2-77": {
+   "A3/tf32-admissible": "error",
+   "A3/strict-fp32": "error",
+   "A1/tf32-admissible": "accept",
+   "A1/strict-fp32": "reject",
+   "A2/tf32-admissible": "accept",
+   "A2/strict-fp32": "reject"
+  },
+  "L2-100": {
+   "A1/tf32-admissible": "error",
+   "A1/strict-fp32": "error",
+   "A2/tf32-admissible": "reject",
+   "A2/strict-fp32": "reject"
+  },
+  "L2-87": {
+   "A3/tf32-admissible": "accept",
+   "A3/strict-fp32": "accept",
+   "A1/tf32-admissible": "accept",
+   "A1/strict-fp32": "accept",
+   "A2/tf32-admissible": "accept",
+   "A2/strict-fp32": "accept"
+  }
+ }
+}

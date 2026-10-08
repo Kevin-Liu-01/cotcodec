@@ -1,0 +1,29 @@
+{
+ "url": "https://arxiv.org/abs/2605.02909",
+ "fetched_at": "2026-10-08T07:30:50Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 43788,
+ "raw_sha256": "5027c9d1f5a80ff544c9db494a39c65d5d819a069ac956e61af0c71e10fe03e5",
+ "raw_stored": false,
+ "extract": {
+  "title": "Delay, Plateau, or Collapse: Evaluating the Impact of Systematic Verification Error on RLVR",
+  "authors": [
+   "Egashira, Kazuki",
+   "Vero, Mark",
+   "Dekoninck, Jasper",
+   "Dorner, Florian E.",
+   "Staab, Robin",
+   "Vechev, Martin"
+  ],
+  "citation_date": "2026/04/06",
+  "submission_history": [
+   {
+    "version": "v2",
+    "date": "Mon, 17 Aug 2026 15:06:16 UTC"
+   }
+  ],
+  "abstract": "Reinforcement Learning with Verifiable Rewards (RLVR) has become a powerful approach for improving the reasoning capabilities of large language models (LLMs). While RLVR is designed for tasks with verifiable ground-truth answers, real-world verifiers (e.g., static code checkers) can introduce errors into the reward signal. Prior analyses have largely treated such errors as random and independent across samples, concluding that errors merely slow training with limited effect on final performance. However, practical verifiers tend to exhibit systematic errors. This introduces a risk of models learning unwanted consistent behavior from a structurally incorrect reward signal. In this work, we study the impact of such systematic verification errors on RLVR. Through controlled experiments on arithmetic tasks, we show that systematic false negatives lead to similar effects as random noise. On the other hand, systematic false positives can cause a wide range of behaviors from sub-optimal plateaus to performance collapse. Crucially, these outcomes are not determined by the overall error rate but by the specific pattern of introduced errors, making pre-hoc mitigation difficult. Our results show that, in contrast to prior conclusions, realistic verification errors can critically shape RLVR outcomes and that verifier quality has to be understood beyond its sample-level error rate.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}
