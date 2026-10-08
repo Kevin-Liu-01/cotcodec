@@ -706,3 +706,47 @@ Append-only. Newest entries at the bottom.
   untouched. No GPU time, no host access.
 - Next: freeze (steps 2-5). The binding doctor run is still the one in the
   image built from the freeze commit.
+
+## 2026-10-07 — D33 applied to the action-path registrations (not frozen)
+
+- Decision D33 (`program/decisions.md`, on main at `7229df1`) settles the
+  question D30 left open: A1-A3 and the concurrency ladder excuse a trial
+  whose only failures are a guest-server restart during an observation call
+  and the tree it left undelivered (or the same fault across the reset
+  observation), as A4 does; a restart during `/execute` or a guard still
+  counts. Applied on `stage0/q2-action-path-d30` (main preregistration
+  section 20, design decision 44).
+- A1-A3 judge an entry on its counted repetitions; an excused trial alone
+  never makes it FLAKY, and a second excused trial in one entry fails it
+  (`RESTART_LIMIT`). The limit is counted over both observation settings,
+  every attempt and, in A1, both shuffles, because D33 says an entry "needs
+  all but at most one of its repetitions counted"; the working brief's
+  "per setting, per campaign" reading would let an A1 entry lose 4 of its 20
+  repetitions and was not adopted. Flagged for the owner to confirm at the
+  freeze (state.json); the pass probabilities differ by under 10^-4.
+- A ladder rung reads "every gating trial passes" over its counted gating
+  trials and does not qualify with more than two excused trials over its
+  attempts (an aborted attempt aside); excused trials' steps stay in the
+  step p95; the foreign-load abort is unchanged. Every excused trial is
+  listed in its criterion's restart report.
+- A7's rules from `13ad91e` match D33; its call count is now capped at the
+  plan's 39,036. Found while applying D33: an earlier attempt's failures had
+  counted on every cell, so an outside-spec R cell's expected failure in an
+  earlier A2 attempt would have failed every rerun; they now count only on
+  judged cells, less excused trials.
+- Exposure (section 9): no restart is no longer a pass condition for A1-A3
+  and the ladder (it had probability about 0.13 at the development rate).
+  Some A1-A3 entry reaches its limit with probability 0.004 at the
+  development rate (0.015 at half A7's bound, 0.057 at the bound); some rung
+  exceeds two excused trials with 0.013 (0.083, 0.37), the N = 40 rung 0.007
+  (0.044, 0.21). Restarts outside an observation call or slower than the
+  retries stay unsized; D33 accepts them.
+- Code: `acceptance.py` only (`3ad255a`, with its tests), which no campaign
+  executes, so the byte-identity check against `7653799` still lists only
+  `harness/q2/README.md` and `acceptance.py`; both addenda carry its new
+  digest. The D33 loader re-read development runs 694 and 703-708: the only
+  status change is `chord_ctrl_c` in 694 and 703 (killed inside in both
+  sessions of each run), FAIL to `RESTART_LIMIT`, still a failure; read as a
+  rung, their gating failures drop to `drag_short` alone (the trial after
+  the between-entry kill). 704-708 are unchanged.
+- Nothing is frozen and nothing is pushed. No GPU, no VM job.
