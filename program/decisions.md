@@ -696,3 +696,22 @@ draft `q3-k1-localization-screen-v3` (a literal check that can see a positive
 channel, a two-sided NEGATIVE region, a measured or bounded seed SD, and the
 per-layer veto where headroom is small), then a fresh gauntlet run with newly
 declared budgets. Whatever it scores, admission stays Kevin's under D24.
+
+**D49. Q2 S1a: the four pre-freeze decisions its review left.** The
+adversarial pre-freeze review of `q2-stage1-rescoped-v1` (three lenses, 21
+blocking items, all fixed in the draft) left four decisions. (i) Task floor:
+with the OpenCUA-7B anchor funded, the corrected caps give 24 base tasks at
+the cost card's high price, so D47's "at least 32" becomes at least 24 with
+the anchor (32 without it); the registered power tables state what 24 buys.
+DR1 (the 4B floor rule) and DR5 (the S1b GO rule, M frozen at 0.13 for
+pi_small) replace the question file's 122B swap and its underived 7-8 pp line.
+(ii) The pre-freeze jobs O1, A0a and A0b are admitted within S1a's caps, and,
+like every GPU episode, run only after the action-path suite passes. (iii)
+OpenCUA-7B's `--trust-remote-code` is admitted under D29's conditions: the
+remote code is third-party serving code, not model-generated; its revision is
+pinned and its files hashed and read before use; it runs in the serving
+container with no network. (iv) The G0 components the draft still lists as TBD
+(episode driver and engine bridge, the fetch lane, receipts, the offline setup
+check, the final-state capture and rescoring tool, the compare_pptx_files
+order-invariant comparator, the GLMM script) are built and tested on CPU now,
+and a fresh independent audit reads the draft before any freeze.
