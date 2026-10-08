@@ -145,12 +145,59 @@ beside the A1 `SHA256SUMS`. Not committed (document content): packets,
 saved baselines, the isolated export, raw responses and engine logs (host
 run directories and this machine's scratchpad).
 
-## Next
+## Next (as written at stage A2; done in stage B below)
 
 The isolated Claude rating over the export as one workflow session of rater
 agents only (D38), `collect-transcripts`, `ingest-isolated`, `audit
 summarize` with the two open-weight calls files; then the salt and the held
 files are released, the registered analysis runs, and Kevin adjudicates the
 pool and does the spot check (D9).
+
+## Stage B: isolated Claude rating, collector, ingest, salt, summary
+
+Commands ran on this machine from a fresh `git archive` of `65bc2e2` (pins
+equal the frozen block), Python 3.13.14, standard library only, no GPU. The
+analysis is in `../results/README.md`.
+
+| Step | Record |
+|---|---|
+| Isolated Claude rating: workflow run `wf_138e30b5-c1a`, one session whose agents are the raters only, labels `rate:0`-`rate:177`, one agent per item started with the registered template rendered for it (`claude-isolated/q2m-confirm-raters.js`, SHA-256 `659040bf...`), 2026-10-08 11:28:02Z, 532.9 s; every agent answered, none was interrupted, the run was never resumed | `claude-isolated/rating-run.json`: journal `bb12d4bd...` (1 launched, 178 started, 178 results), 21,100,472 tokens, 2,319 tool calls; the returned list in `handed-over-answers.txt` (ids and answers: 141 accept, 37 reject), equal to the journal's 178 results, every returned `item_id` equal to its item |
+| Collector (D38): `rater_runner collect-transcripts` on the run directory with the export manifest `f9c91d57...` | `claude-isolated/collection.json` (`3a48f6f0...`): 178 transcripts mapped to 178 items by their rendered task turn, 178 answered, no unmappable agent, no exported item without a transcript, no second attempt (`collect-stdout.json`) |
+| Answers | the run's returned ratings as one `<item_id>.json` per item (`{item_id, answer, reason}`; the workflow's extra `item_id_returned` key, equal to `item_id` for all 178, is not a registered answer key and was dropped); kept outside the repository (reasons quote documents), each file's SHA-256 in `receipt.json` |
+| Ingest: `rater_runner ingest-isolated` with both packet copies (re-hashed `47d17b52...`, `f91104b4...`), the manifest, the isolation root (every item tree re-hashed), the answers, the collected transcripts and the collection | `claude-isolated/calls.jsonl` (`2120e6ce...`), `receipt.json`, `rerate.json`, `ingest-stdout.json`: **177 `ok`, 1 `isolation_void`**; answers 140 accept, 37 reject, 1 unsure; model `claude-opus-5-5` only; no relay frame (none expected: the run was never resumed), so `rerate.json` lists no item and there is no re-rate; attachment types are the 15 registered ones only (178 each of `auto_mode`, `credential_org`, `date`, `environment`, `instructions`, `mcp_instructions_delta`, `model`, `remote_session_change`, `session_context`, `skill_listing`, `structured_output`; 356 `deferred_tools_delta`, 356 `prompt_snapshot`, 888 `total_tokens_reminder`, 153 `read_truncation_notice`) |
+| Salt revealed (D34) | `salt.hex`; `salt-check.json` (`salt_check.py`): SHA-256 `194ee66c...` equals the committed digest, and all 178 sample item ids recompute from it with `raters.opaque_item_id`; the sample ids equal the exported ids |
+| Held files released (section 16) | `released/`: the A2 held set (sample, items, baseline jobs, spot-check list, full sample summary, both open-weight calls files), every file equal to `held/SHA256SUMS` (7 of 7), and the host's `SHA256SUMS.audit` byte-equal to it; the A1 set is in `../results/released/` |
+| Audit summary: `audit summarize` with the Claude calls and the two open-weight calls files (10,000 resamples, seed 42) | `audit-summary/` (`audit-summary.json`, `decisions.jsonl`, `adjudication-pool.jsonl`, `summarize-stdout.json`); no relay frame in any calls file |
+| Diligence aggregates (not a void condition) | `claude-isolated/transcript-stats.json` (`transcript_stats.py`) |
+
+**The one void.** Item `fd455942d783ba01` (order index 76): its agent read
+`packet.txt`, then issued one Read of a mistyped path outside its item
+directory (`<session root>/pages/p01.png`, the item directory left out),
+which does not exist and returned "File does not exist"; it then read its
+own page images and answered through the structured output. The registered
+audit counts a Read of any path outside the item directory, a missing path
+included, as a breach, so the item is `isolation_void` (`unsure`) as
+registered; its structured answer is not used. With the open-weight
+rater's accept it is a split item and is in Kevin's pool. The void
+stands; the re-rate of D38 covers only relay-frame voids.
+
+Diligence: 2,141 Read calls and 178 structured answers, no other tool; 3,192
+agent turns, all `claude-opus-5-5`; 1,453 of 1,457 exported page images
+read, 176 of 178 agents read every page image; 153 agents received a read
+truncation notice (a packet longer than one Read shows).
+
+Results (`audit-summary/audit-summary.json`): κ **0.343** on 138 real items
+(raw agreement 82.6%); sham accuracy Claude 0.90, Qwen 0.975; 24 of 138
+real items unresolved; no gold-defect task decided (4 gold shams split);
+P1 flips 3 accepted, 1 rejected by both raters; K3 fires for both groups and
+for κ, K4 fires (reported only, D35). **Adjudication pool: 34 items** (24
+splits, 6 concordant contradictions, 4 split gold shams), ids only in
+`adjudication-pool.jsonl`; **human spot check: 25 items**
+(`released/confirm-audit-v1/spot-check.jsonl`), 7 of them also in the pool.
+Both are Kevin's and pending. The released sample and decisions name labels
+and decisions: Kevin adjudicates from the blind packets before reading them.
+
+Not committed (document text): the transcripts, the answer files with
+reasons, the raw responses, the packets and the isolated export.
 
 `SHA256SUMS` covers every file here.

@@ -1,0 +1,194 @@
+{
+ "adjudication": {
+  "by_group": {
+   "alt_gate": 21,
+   "fn_equiv": 6,
+   "fp_violation": 3,
+   "sham_gold": 4
+  },
+  "by_reason": {
+   "concordant_contradicts_label": 6,
+   "gold_sham_split": 4,
+   "split": 24
+  },
+  "pool": 34,
+  "spot_check": 25,
+  "spot_check_also_in_pool": 7,
+  "spot_check_by_group": {
+   "alt_gate": 10,
+   "fn_equiv": 5,
+   "fp_violation": 5,
+   "sham_do_nothing": 1,
+   "sham_gold": 4
+  },
+  "union_items": 52
+ },
+ "ambiguous_by_witness_rule_and_lock_verdict": {
+  "W-A-FLAGGED|pass": 6,
+  "W-A-MENTIONED|pass": 5,
+  "W-A-REPRESENTATION|fail": 10,
+  "W-A-STRUCTURE|fail": 12,
+  "W-A-STRUCTURE|pass": 1,
+  "W-E-CONFLICT|pass": 2,
+  "W-E-FLAGGED|fail": 2,
+  "W-E-FLAGGED|pass": 1,
+  "W-F-COSMETIC|fail": 3,
+  "W-F-COSMETIC|pass": 35,
+  "W-R-FLAGGED|pass": 6,
+  "W-R-UNPINNED|fail": 36,
+  "W-R-UNPINNED|pass": 35,
+  "W-R-WEAK-BINDING|fail": 28,
+  "W-R-WEAK-BINDING|pass": 4
+ },
+ "answer_status": {
+  "model-rater-anthropic": {
+   "isolation_void": 1,
+   "ok": 177
+  },
+  "model-rater-open-weight": {
+   "ok": 172,
+   "thinking_unfinished": 6
+  }
+ },
+ "answers_by_rater_and_group": {
+  "anthropic": {
+   "alt_gate": {
+    "accept": 72,
+    "reject": 20,
+    "unsure": 1
+   },
+   "fn_equiv": {
+    "accept": 33,
+    "reject": 3
+   },
+   "fp_violation": {
+    "accept": 3,
+    "reject": 2
+   },
+   "p1_flip": {
+    "accept": 3,
+    "reject": 1
+   },
+   "sham_do_nothing": {
+    "reject": 7
+   },
+   "sham_gold": {
+    "accept": 29,
+    "reject": 4
+   }
+  },
+  "open_weight": {
+   "alt_gate": {
+    "accept": 85,
+    "reject": 3,
+    "unsure": 5
+   },
+   "fn_equiv": {
+    "accept": 33,
+    "reject": 3
+   },
+   "fp_violation": {
+    "accept": 3,
+    "reject": 2
+   },
+   "p1_flip": {
+    "accept": 3,
+    "reject": 1
+   },
+   "sham_do_nothing": {
+    "reject": 7
+   },
+   "sham_gold": {
+    "accept": 32,
+    "unsure": 1
+   }
+  }
+ },
+ "decisions_by_group": {
+  "alt_gate": {
+   "accept/accept -> accept": 72,
+   "reject/accept -> unresolved": 12,
+   "reject/reject -> reject": 3,
+   "reject/unsure -> unresolved": 5,
+   "unsure/accept -> unresolved": 1
+  },
+  "fn_equiv": {
+   "accept/accept -> accept": 30,
+   "accept/reject -> unresolved": 3,
+   "reject/accept -> unresolved": 3
+  },
+  "fp_violation": {
+   "accept/accept -> accept": 3,
+   "reject/reject -> reject": 2
+  },
+  "p1_flip": {
+   "accept/accept -> accept": 3,
+   "reject/reject -> reject": 1
+  },
+  "sham_do_nothing": {
+   "reject/reject -> reject": 7
+  },
+  "sham_gold": {
+   "accept/accept -> accept": 29,
+   "reject/accept -> unresolved": 3,
+   "reject/unsure -> unresolved": 1
+  }
+ },
+ "kappa_real_items": 0.3429875024796668,
+ "pending_ranges": {
+  "alt_solutions_entering_P2": {
+   "max": 93,
+   "min": 72,
+   "now": 72,
+   "of": 93
+  },
+  "false_negative_confirmed": {
+   "max": 36,
+   "min": 30,
+   "now": 30,
+   "of": 36
+  },
+  "false_positive_confirmed": {
+   "max": 5,
+   "min": 2,
+   "now": 2,
+   "of": 5
+  },
+  "gold_defect_tasks": {
+   "max": 4,
+   "now": 0
+  },
+  "k3_equivalence_label_error": {
+   "min": 0.0,
+   "note": "unresolved items count as errors until adjudicated; a gold-defect task's equivalence items leave the group",
+   "now": 0.16666666666666666
+  },
+  "k3_violation_label_error": {
+   "min": 0.0,
+   "now": 0.6
+  },
+  "rule": "each pool item answered accept or reject by Kevin (D34, D38); kappa never changes",
+  "unchanged_by_adjudication": [
+   "kappa",
+   "P1 (no P1 flip is in the pool)",
+   "P3, P5 (checker events, no audit gate)",
+   "P4 (no passed extra change outside probe-touched cells)",
+   "candidate shares (the confirmed shares change)"
+  ]
+ },
+ "raw_agreement_real_items": {
+  "agree": 114,
+  "n": 138,
+  "share": 0.8260869565217391
+ },
+ "role": "descriptive (D35); P2-P5 exploratory under D34 (i); the human spot check and Kevin's adjudication are pending",
+ "schema": "q2m-confirm-results-summary-v1",
+ "sham_accuracy": {
+  "model-rater-anthropic": 0.9,
+  "model-rater-open-weight": 0.975
+ },
+ "unresolved_real_items": {
+  "n": 24,
+  "of": 138
+ }
+}
