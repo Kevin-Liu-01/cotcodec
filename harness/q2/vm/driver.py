@@ -575,6 +575,9 @@ def acceptance_plan(
     ids = [c["id"] for c in cells["layers"][cell_layer]]
     if criterion == "A3":
         ids = [i for i in ids if i in run_order.STRESS_ENTRIES]
+    if criterion == "A7":
+        # The observation-service campaign runs the gating set G (decision D30).
+        ids = [c["id"] for c in cells["layers"][cell_layer] if c["status"] == "gating"]
     if criterion == "A4":
         realized = volume.sessions(volume_plan, seed)
         plan = []
@@ -663,6 +666,7 @@ def run_cycle(
                 criterion=workload.get("criterion"),
                 measure_targets=workload.get("measure_targets", False),
                 kill_guest_server_after_seq=workload.get("kill_guest_server_after_seq"),
+                kill_guest_server_during_seq=workload.get("kill_guest_server_during_seq"),
                 tap_duration_s=600
                 + (len(session["trials"]) + workload.get("reps", 0) * 40) * workload["max_trial_s"],
             )
@@ -830,6 +834,8 @@ def summarize(verdicts: list[dict[str, Any]], records: list[dict[str, Any]]) -> 
 
 def session_summary(records: list[dict[str, Any]]) -> dict[str, Any]:
     """Per-cell outcome over every session, infrastructure failures by type, and timings."""
+    from harness.q2.vm.suite import accessibility_calls, session_restarts
+
     by_cell: dict[str, list[bool]] = {}
     infra: dict[str, int] = {}
     retried: dict[str, int] = {}
@@ -856,6 +862,7 @@ def session_summary(records: list[dict[str, Any]]) -> dict[str, Any]:
                 steps += [float(v) for v in timing.get("steps") or []]
             elif isinstance(timing, int | float):
                 totals.append(float(timing))
+        stop = result.get("stop") or {}
         sessions.append(
             {
                 "cycle": record["cycle"],
@@ -863,6 +870,11 @@ def session_summary(records: list[dict[str, Any]]) -> dict[str, Any]:
                 "trials": len(session_trials),
                 "passed": sum(1 for t in session_trials if (t.get("verdict") or t).get("pass")),
                 "wall_s": result.get("session_wall_s"),
+                # Decision D30: restarts and accessibility calls (criterion A7's counts).
+                "guest_server_restarts": session_restarts(result),
+                "accessibility_calls": accessibility_calls(result),
+                "probe_relaunches": stop.get("probe_relaunches"),
+                "tap_relaunches": stop.get("tap_relaunches"),
             }
         )
     cells = {}
@@ -876,6 +888,8 @@ def session_summary(records: list[dict[str, Any]]) -> dict[str, Any]:
         },
         "infra_failures": infra,
         "observation_retries": retried,
+        "guest_server_restarts": sum(s["guest_server_restarts"] for s in sessions),
+        "accessibility_calls": sum(s["accessibility_calls"] for s in sessions),
         "trial_s": {
             "n": len(totals),
             "p50": percentile(totals, 50),

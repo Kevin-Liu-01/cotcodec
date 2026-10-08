@@ -63,6 +63,8 @@ def test_renders_admissible_scored_campaigns(export, tmp_path):
         (("ladder", "--concurrency", "8"), 20, 1200),
         (("A4", "--concurrency", "40"), 1068, 64028),
         (("A4", "--session-range", "0", "30"), 30, None),
+        (("A7", "--concurrency", "40"), 516, 30960),
+        (("A7", "--session-range", "0", "30"), 30, None),
         (("A6",), 5, 300),
         (("C1", "--seed", "42", "--layer", "H-OSW-up"), 2, 70),
         (("C2", "--seed", "42", "--layer", "L0-raw"), 9, 500),
