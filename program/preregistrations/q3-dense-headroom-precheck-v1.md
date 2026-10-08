@@ -424,7 +424,11 @@ is void and cannot be read under this id: the filler fills no further job of
 it, and the lane is INCOMPLETE. The entry point cannot refuse a manifest whose
 claim is missing or already used, because its container sees only its own job
 directory, not the lane's run root; the summariser's void rule is the
-backstop, applied after the GPU time is spent.
+backstop, applied after the GPU time is spent. The filler and the summariser
+run on the host against the lane's run root, whose `fill-claims` directory
+holds the claims; an evidence copy keeps that directory. A claim is never
+removed, so an image rebuilt after a manifest was filled means a new
+experiment id.
 
 The filler, which reads the run root, is the budget authority; the entry point
 refuses a registered-profile job outside the batch script, a continuation
@@ -516,14 +520,15 @@ Each states the choice and why. All were accepted in D32
 (`program/decisions.md`); decisions 1, 10, 12 and 13 were amended there and
 are stated here as amended.
 
-1. Two lanes, both run unless the 0.6B smoke reproduction fails (amended in
-   D32). The 4B lane is filled and submitted after the 0.6B lane's receipt
-   reports the K1 smoke reproduction REPRODUCED (the filler checks it; Freeze
-   procedure, step 4). If the reproduction fails, the 4B lane is not
-   submitted and the combined read is INVALID (decision 11). The 4B lane never
-   depends on the 0.6B lane's headroom result: D26 names both bases, a
-   NEGATIVE-capable v3 may exist on one and not the other, and the combined
-   rule needs both.
+1. Two lanes, both run unless the 0.6B smoke reproduction fails or the 0.6B
+   lane ends without a receipt (amended in D32). The 4B lane is filled and
+   submitted after the 0.6B lane's receipt reports the K1 smoke reproduction
+   REPRODUCED (the filler checks it; Freeze procedure, step 4). If the
+   reproduction fails, the 4B lane is not submitted and the combined read is
+   INVALID (decision 11); if the 0.6B lane ends without a receipt, the 4B lane
+   is not submitted and the read is INCOMPLETE. The 4B lane never depends on
+   the 0.6B lane's headroom result: D26 names both bases, a NEGATIVE-capable
+   v3 may exist on one and not the other, and the combined rule needs both.
 2. Development partition only, from the K1 bundle only (D26). The bundle's
    development prompts are K1 v1's 20 development questions; no new Belebele
    question, haystack or language is read. Consequence: no seen-script
@@ -546,8 +551,7 @@ are stated here as amended.
    can be NEGATIVE_CAPABLE or GO_ONLY_CAPABLE while that pre-step reads
    ESCALATE_OR_STOP. The relaxation is not silent: a chosen base whose
    h2_status is POINT_ONLY adds the requirement that the v3 re-test H2 under
-   K1's bounds on its audit read. The program owner accepts this explicitly
-   or makes H2 gate on PASS.
+   K1's bounds on its audit read. D32 accepts this explicitly.
 6. The entity-anchor rule is a deterministic English-side rule (capitalised
    words after the first, digit runs, both shared with the passage). Proper
    nouns cannot be detected by case in six of the eight languages; Belebele's
