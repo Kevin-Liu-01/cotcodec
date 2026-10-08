@@ -1,0 +1,57 @@
+{
+ "commit": "31942e8",
+ "freeze_lint": {
+  "check_chain": {
+   "rows": 14,
+   "status": "PASS"
+  },
+  "ledger": "scratch copy of program/preregistrations/ledger.jsonl (11 rows, SHA-256 1052d58b5b6648ddc10a1d4752a03de9e5218578dd30bc6f5b3a278059031c35, unchanged after the lint)",
+  "order": [
+   "q2-action-path-v2",
+   "q2-action-path-v2-inputs",
+   "q2-action-path-v2-executor"
+  ],
+  "rows": [
+   {
+    "experiment_id": "q2-action-path-v2",
+    "git_head_at_freeze": "31942e8ecf895613e62d018ddf9f53de96158d69",
+    "path": "program/preregistrations/q2-action-path-v2.md",
+    "previous_hash": "dc39bfa2f68e0fd57a213e0972266a4db60428e00d6c4e6bca8e576f35ec6439",
+    "sha256": "b593289c54ce1758df57e2d0bee2c9f3b5708042d8ddf4f95fb70865c4d11f91"
+   },
+   {
+    "experiment_id": "q2-action-path-v2-inputs",
+    "git_head_at_freeze": "31942e8ecf895613e62d018ddf9f53de96158d69",
+    "path": "program/preregistrations/q2-action-path-v2-inputs.md",
+    "previous_hash": "10a07426036fb0acd8197dd4432f100c1b945b4c6fb3279127e1815eb16c9348",
+    "sha256": "86e70999673ec22ec9b82467d153860621c13ae678209347bb062685ee1f5c24"
+   },
+   {
+    "experiment_id": "q2-action-path-v2-executor",
+    "git_head_at_freeze": "31942e8ecf895613e62d018ddf9f53de96158d69",
+    "path": "program/preregistrations/q2-action-path-v2-executor.md",
+    "previous_hash": "ca4453598b9741c9f39219df8506d88f12227ac7102fab962bdd791f1f33f714",
+    "sha256": "2c0793fe8c128f422d199e55d9bc677c6474ba17b1804c2cb1fc7b91182a1c39"
+   }
+  ],
+  "verify": {
+   "q2-action-path-v1": "PASS",
+   "q2-action-path-v1-executor": "PASS",
+   "q2-action-path-v1-inputs": "PASS",
+   "q2-action-path-v2": "PASS",
+   "q2-action-path-v2-executor": "PASS",
+   "q2-action-path-v2-inputs": "PASS",
+   "q2-evaluator-mutation-v1": "PASS"
+  }
+ },
+ "host": {
+  "full_suite": "2232 passed, 38 skipped in 244.78s (uv run --locked pytest -q tests)",
+  "scratch_dir": "~/cotcodec-scratch/q2ap-v2-d43-31942e8 (fresh; rsync without .venv and .git; uv sync --locked --extra dev)"
+ },
+ "local": {
+  "q2_tests": "625 passed, 1 skipped (uv run pytest -q tests/test_q2_*.py)",
+  "ruff_check": "All checks passed",
+  "validate_architecture_experiments": "PASS",
+  "validate_provider_models": "PASS: 7 models, 5 providers"
+ }
+}
