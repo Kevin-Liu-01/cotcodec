@@ -63,7 +63,9 @@ item, each confined to its own directory)
     transcript audit (``audit_transcript``) to each: a user turn other than
     the one registered template (``templates/isolated_rater_prompt.txt``)
     rendered for that item and the one harness relay frame before it (which
-    must name no item and be byte-identical across the run), an answer naming
+    must name no item and be byte-identical across the run), a transcript
+    entry or harness attachment of an unregistered type (a ``queued_command``
+    message sent mid-run among them), an answer naming
     another item, a packet that was never read, a shell call, a tool other
     than Read (and the path-free answer and bookkeeping tools), a path outside
     the item's directory, or two transcripts that answer voids that item's
@@ -1298,6 +1300,37 @@ NEUTRAL_TOOLS = frozenset({"StructuredOutput", "ToolSearch", "TodoWrite"})
 ANSWER_TOOL = "StructuredOutput"
 SHELL_MARKERS = ("bash", "shell", "terminal", "powershell")
 SYNTHETIC_MODELS = frozenset({"<synthetic>"})
+# Transcript entries (D35 (iv), sixth review). Besides the user and assistant
+# turns, the agent harness writes ``attachment`` entries, some of which it
+# delivers to the model; a user prompt or agent message sent while an agent
+# runs arrives as a ``queued_command`` attachment, and other harness channels
+# (``edited_text_file``, ``nested_memory``, ``file``, a ``queue-operation``
+# entry) carry file or message text. The audit registers the three entry types
+# and the fifteen attachment types that the 158 transcripts of the D34
+# development rating hold (the injected context of section 9, the token and
+# truncation notices and the echo of the structured answer); any other entry
+# type or attachment type voids the item, and any entry whose message has the
+# role ``user`` is a user turn whatever its entry type.
+TRANSCRIPT_ENTRY_TYPES = frozenset({"user", "assistant", "attachment"})
+HARNESS_ATTACHMENT_TYPES = frozenset(
+    {
+        "auto_mode",
+        "credential_org",
+        "date",
+        "deferred_tools_delta",
+        "environment",
+        "instructions",
+        "mcp_instructions_delta",
+        "model",
+        "prompt_snapshot",
+        "read_truncation_notice",
+        "remote_session_change",
+        "session_context",
+        "skill_listing",
+        "structured_output",
+        "total_tokens_reminder",
+    }
+)
 ISOLATED_ANSWER_KEYS = frozenset({"item_id", "answer", "reason", "model_id"})
 
 
@@ -1549,9 +1582,15 @@ def audit_transcript(
     the workflow wrapper), the only other one allowed is the harness relay
     frame (``is_relay_frame``), at most once, before the task turn and naming
     none of ``item_ids`` (the export's ids), and any other user turn voids the
-    item. The relay frame's SHA-256 is returned for the run-wide identity check
-    of ``ingest_isolated``. The model id is the one the harness recorded on the
-    agent's turns.
+    item. Every entry whose message has the role ``user`` is a user turn,
+    whatever its entry type. An entry of a type outside
+    ``TRANSCRIPT_ENTRY_TYPES``, an attachment of a type outside
+    ``HARNESS_ATTACHMENT_TYPES`` (a ``queued_command``, the harness's channel
+    for a message sent while the agent runs, among them), a line that is not an
+    entry object and a user entry without a message object void the item too
+    (sixth review). The relay frame's SHA-256 is returned for the run-wide
+    identity check of ``ingest_isolated``, with the count of every attachment
+    type. The model id is the one the harness recorded on the agent's turns.
     """
     tools: Counter[str] = Counter()
     models: Counter[str] = Counter()
@@ -1560,6 +1599,7 @@ def audit_transcript(
     answer_items: list[Any] = []
     final_texts: list[str] = []
     turns: list[tuple[str, bool]] = []
+    attachments: Counter[str] = Counter()
     packet_read = False
     packet = os.path.realpath(folder / ISOLATED_TEXT)
     lines = transcript.decode("utf-8", errors="replace").splitlines()
@@ -1571,11 +1611,30 @@ def audit_transcript(
         except ValueError:
             void.append(f"line {number}: not JSON")
             continue
-        message = entry.get("message") if isinstance(entry, Mapping) else None
-        if isinstance(message, Mapping) and entry.get("type") == "user":
+        if not isinstance(entry, Mapping):
+            void.append(f"a transcript line that is not an entry object (line {number})")
+            continue
+        kind = entry.get("type")
+        if kind not in TRANSCRIPT_ENTRY_TYPES:
+            void.append(f"transcript entry type {kind!r} is not registered (line {number})")
+        if kind == "attachment":
+            attachment = entry.get("attachment")
+            attached = attachment.get("type") if isinstance(attachment, Mapping) else None
+            attachments[str(attached)] += 1
+            if attached not in HARNESS_ATTACHMENT_TYPES:
+                mode = attachment.get("commandMode") if isinstance(attachment, Mapping) else None
+                detail = f" (commandMode {mode!r})" if isinstance(mode, str) else ""
+                void.append(
+                    f"attachment {attached!r}{detail} is not a registered harness attachment "
+                    f"type (line {number})"
+                )
+        message = entry.get("message")
+        if isinstance(message, Mapping) and (kind == "user" or message.get("role") == "user"):
             turn = _user_turn(message.get("content"))
             if turn is not None:
                 turns.append(turn)
+        elif kind == "user":
+            void.append(f"a user entry without a message object (line {number})")
         if isinstance(message, Mapping) and (
             entry.get("type") == "assistant" or message.get("role") == "assistant"
         ):
@@ -1659,6 +1718,7 @@ def audit_transcript(
         "final_text": final_text,
         "answers": bool(answers) or bool(_answer_words(final_text)),
         "user_turns": len(turns),
+        "attachment_types": dict(sorted(attachments.items())),
         "task_turns": len(task_turns),
         "other_user_turns": len(other_turns),
         "relay_frame_sha256": relay_shas[0] if len(relay_shas) == 1 else None,
@@ -1772,6 +1832,7 @@ def ingest_isolated(
     seen: set[str] = set()
     staged: list[dict[str, Any]] = []
     relay_frames: Counter[str] = Counter()
+    attachment_types: Counter[str] = Counter()
     for number, rec in enumerate(records):
         if not isinstance(rec, Mapping) or set(rec) - ISOLATED_ANSWER_KEYS or "item_id" not in rec:
             raise SystemExit(f"record {number}: keys must be within {sorted(ISOLATED_ANSWER_KEYS)}")
@@ -1806,6 +1867,7 @@ def ingest_isolated(
                 )
             audited.append((path, data, result))
             relay_frames.update(result["relay_frames_sha256"])
+            attachment_types.update(result["attachment_types"])
         answering = [a for a in audited if a[2]["answers"]]
         primary = answering[0] if answering else (audited[0] if len(audited) == 1 else None)
         if not audited:
@@ -1864,6 +1926,7 @@ def ingest_isolated(
             )
             unanswered += 1
             relay_frames.update(result["relay_frames_sha256"])
+            attachment_types.update(result["attachment_types"])
     calls: list[dict[str, Any]] = []
     responses: dict[str, bytes] = {}
     for row in staged:
@@ -1917,6 +1980,7 @@ def ingest_isolated(
                             "models": result["models"],
                             "tool_calls": result["tool_calls"],
                             "user_turns": result["user_turns"],
+                            "attachment_types": result["attachment_types"],
                             "task_turns": result["task_turns"],
                             "relay_frame_sha256": result["relay_frame_sha256"],
                             "answers": result["answers"],
@@ -1971,6 +2035,7 @@ def ingest_isolated(
         "transcripts": sum(len(row["audited"]) for row in staged),
         "transcripts_of_unrated_items": unanswered,
         "relay_frames": dict(sorted(relay_frames.items())),
+        "attachment_types": dict(sorted(attachment_types.items())),
         "transcripts_not_exported": sorted(on_disk - named),
         "root_entries_not_exported": sorted(set(root_entries) - set(exported)),
     }
@@ -2028,7 +2093,10 @@ def cmd_ingest_isolated(args: argparse.Namespace) -> int:
                     "transcript of the item is audited and at most one may answer; the audit "
                     "voids an answer unless exactly one user turn is the rendered template "
                     "and any other user turn is the one harness relay frame, before the task "
-                    "turn, naming no item and byte-identical across the run; it also voids an "
+                    "turn, naming no item and byte-identical across the run (any entry whose "
+                    "message has the role user is a user turn); a transcript entry or harness "
+                    "attachment of an unregistered type, a queued_command message among them, "
+                    "voids it; it also voids an "
                     "answer naming another item, an unread packet, a shell call, a tool other "
                     "than Read and the path-free answer tools, or a path outside the item "
                     "directory (decisions D27, D34, D35)"
@@ -2037,6 +2105,8 @@ def cmd_ingest_isolated(args: argparse.Namespace) -> int:
                 "relay_preamble_sha256": sha256_bytes(RELAY_PREAMBLE.encode("utf-8")),
                 "relay_frames_sha256": result["relay_frames"],
                 "transcript_dirs": [str(p) for p in args.transcripts],
+                "transcript_entry_types": sorted(TRANSCRIPT_ENTRY_TYPES),
+                "harness_attachment_types": sorted(HARNESS_ATTACHMENT_TYPES),
                 "read_tools": {k: list(v) for k, v in READ_TOOLS.items()},
                 "neutral_tools": sorted(NEUTRAL_TOOLS),
                 "iso_root": str(args.iso_root),

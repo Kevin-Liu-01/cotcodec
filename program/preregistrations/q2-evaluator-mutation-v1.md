@@ -1,10 +1,10 @@
 # q2-evaluator-mutation-v1: OSWorld-Verified checker mutation audit
 
-**Status: DRAFT (seventh draft), not frozen: a pre-specified descriptive
+**Status: DRAFT (eighth draft), not frozen: a pre-specified descriptive
 protocol under decision D35.** Every pin below is filled from the integration
-branch `stage0/q2-evaluator-mutation`, and no value is left open. Five
-adversarial reviews have read the earlier drafts (scores 55, 62, 56, 57 and 64;
-the review log is at the end of section 17). The fourth review found that D27's
+branch `stage0/q2-evaluator-mutation`, and no value is left open. Six
+adversarial reviews have read the earlier drafts (scores 55, 62, 56, 57, 64 and
+80; the review log is at the end of section 17). The fourth review found that D27's
 consequence had fired (development κ 0.270 against the registered 0.6), and
 decision D34 allowed one rater retry, then an honest exit: the open-weight
 rater thinks before it answers, and the development audit was rebuilt
@@ -50,7 +50,14 @@ the analysis can be locked before any confirm mutant exists. Decision D35
    turn, be byte-identical across the run and name no item id, and whose
    SHA-256 is recorded in every call record and in the receipt; any other user
    turn voids the item. Every transcript of an item (interrupted attempts
-   included) is ingested and audited, and at most one may answer.
+   included) is ingested and audited, and at most one may answer. Since the
+   eighth draft (the sixth review's blocking defect) every entry whose message
+   has the role user is a user turn whatever its entry type, and a
+   transcript entry or harness attachment of a type outside the registered
+   lists (the entry types and the fifteen attachment types of the
+   development rating) voids the item; a message sent to a running agent
+   arrives as a `queued_command` attachment, which the audit did not read
+   before.
 5. Packets (section 9): the difference section now comes before the file
    listings, a label-blind format change made after the development results
    and disclosed with them.
@@ -60,6 +67,17 @@ the census (section 9); stale text in sections 6, 10, 13, 15 and 17; the lane
 memory taken per rater model (160 GiB for Qwen3.6-35B-A3B, as the gauntlet
 reviewer lane gives it, instead of a fixed 128 GiB); and the review log
 (section 17).
+
+The sixth review (80/100) read the seventh draft and found one blocking
+defect: the transcript audit read only entries of type user, so a message
+sent to a rater while it ran, which the agent harness delivers as a
+`queued_command` attachment, passed the audit. This eighth draft registers
+the transcript's entry types and harness attachment types and voids any
+other (item 4 above, section 9: `rater_runner.TRANSCRIPT_ENTRY_TYPES` and
+`HARNESS_ATTACHMENT_TYPES`). Rerun over the 158 development transcript
+copies, the audit finds no void and no attachment type outside the list
+(3,304 attachments of the fifteen types). The sixth review's minor items are
+listed in section 17 and are not changed in this draft.
 
 The registered analysis is code (`harness/q2_mutation/analysis.py`), so no
 choice is left to make after a result is read. After a fresh review of this
@@ -130,7 +148,7 @@ differ from the pins:
 {
  "q2m_pins": 1,
  "experiment_id": "q2-evaluator-mutation-v1",
- "code_tree_sha256": "7b537f919709ee55b3c0196e39ff6e2d3f035ed3c9fdab6e0897baf2006a2446",
+ "code_tree_sha256": "d50be4df851f0d9d0946e84638493277bc69eac585068d64697fad67c7bfd717",
  "operator_catalog_sha256": "3a5ff94953f7b672059b0f6b063064b97a438de166fd664903e239a12f65b46f",
  "operator_catalog_version": "q2-mut-operators-v1",
  "operators": 64,
@@ -682,6 +700,22 @@ A checker exception is not an infrastructure failure; it is verdict `error`.
         at most once, before the task turn and naming no exported item id;
         any other user turn voids the item (the fifth review's probe, a later
         user turn naming the item's label, did not void under the D34 rule).
+        Every transcript entry whose message has the role `user` is a user
+        turn, whatever its entry type. The audit also registers the kinds of
+        entry a transcript may hold: the entry types user, assistant and
+        attachment (`rater_runner.TRANSCRIPT_ENTRY_TYPES`) and the fifteen
+        harness attachment types listed in the disclosure below
+        (`rater_runner.HARNESS_ATTACHMENT_TYPES`). An entry of any other type,
+        an attachment of any other type, a line that is not an entry object
+        and a user entry without a message each void the item, with a reason
+        naming the type. A message sent to an agent while it runs (a user
+        prompt, another agent's message or a task notification) reaches it as
+        a `queued_command` attachment and so voids the item, as do the
+        attachments that carry file text (`edited_text_file`, `nested_memory`,
+        `file`) and a `queue-operation` entry. Before this rule the sixth
+        review's probe, a queued prompt naming the item's label after the
+        packet read, did not void, because only entries of type user were
+        read as user turns (sixth review; D35 (iv)).
         Every `StructuredOutput` call must name the item's id, and the agent
         that answered must have read the item's `packet.txt`. Otherwise the
         item is void. Every transcript of the item is audited this way, and
@@ -702,12 +736,14 @@ A checker exception is not an infrastructure failure; it is verdict `error`.
         harness recorded on the agent's turns, not one the agent reports; a
         transcript that names any model other than `claude-opus-5-5` refuses
         the whole ingest. Each call record keeps the SHA-256 and size of
-        every transcript of the item with its tool calls, user turns and
-        relay-frame digest, the re-hashed directory digest and the void
-        reasons (request digest: the exported `packet.txt`; body digest: the
-        rebuilt request; response digest: the canonical answer record); the
-        receipt records the relay preamble's SHA-256, every relay frame's
-        SHA-256 with its count, and transcripts in the directories that
+        every transcript of the item with its tool calls, user turns,
+        attachment types and relay-frame digest, the re-hashed directory
+        digest and the void reasons (request digest: the exported
+        `packet.txt`; body digest: the rebuilt request; response digest: the
+        canonical answer record); the receipt records the relay preamble's
+        SHA-256, every relay frame's SHA-256 with its count, the registered
+        entry and attachment types, the count of every attachment type in
+        the run's transcripts, and transcripts in the directories that
         belong to no exported item. An exported item without an answer is
         `unrated` (`unsure`). Transcripts and reasons quote document text and
         are never committed.
@@ -755,7 +791,25 @@ A checker exception is not an infrastructure failure; it is verdict `error`.
         resumed run, the relay frame above (D35). None of it
         names an item, label, verdict or other rater's answer; the agent is
         not "given only its directory" in the sense of an empty context, but
-        the transcript audit shows what it read and ran. The shared-
+        the transcript audit shows what it read and ran. Apart from the user
+        turns, this context reaches the agent as harness attachment entries,
+        and the transcript audit allows exactly the fifteen attachment types
+        that the 158 transcripts of the D34 development rating hold (3,304
+        attachments, no other type): `auto_mode`, `credential_org`, `date`,
+        `deferred_tools_delta`, `environment`, `instructions` (the CLAUDE.md
+        files and the memory index), `mcp_instructions_delta`, `model`,
+        `prompt_snapshot`, `read_truncation_notice` (the harness's note that
+        a Read showed part of a file), `remote_session_change`,
+        `session_context` (the git status and account context),
+        `skill_listing`, `structured_output` (the harness's echo of the
+        agent's structured answer) and `total_tokens_reminder`. Any other
+        attachment type voids the item (the rule above). The allowed types
+        are checked by type only, not by content; they are the harness's
+        own context and notices, not a channel for messages sent while an
+        agent runs. A harness version that adds a new attachment type voids
+        every item that receives one (the audit fails closed), and those
+        voids stand; the list changes only by a registered amendment made
+        before the confirm rating starts. The shared-
         directory form of D25 (`export-harness` / `ingest-harness`, which
         now also accepts the rater workflow's wrapper `{rater, model_id,
         items}`) is kept for the record of the development smoke but is not
@@ -1934,8 +1988,28 @@ exported harness files and renders, and raw rater responses and reasons
       descriptive outputs undefined, the transcript audit's first-prompt
       rule) and its minor items are answered under D35 in this draft (status
       note).
-- [ ] A fresh adversarial review of this seventh draft; record its score in
-      the review log below and use the lowest.
+- [x] Sixth adversarial review (of the seventh draft, 80/100, not ready to
+      freeze): its one blocking defect (harness attachment entries, the
+      `queued_command` channel for a message sent to a running agent among
+      them, were outside the transcript audit) is answered in this eighth
+      draft (status note, section 9). Its minor items stay open for Kevin and
+      a later pass: the stratified fallback's budget is not the largest that
+      fits, as section 9 says (the fallback is not expected to run: about
+      205 items against 1,139); the copying of transcripts out of the
+      workflow directory is an unregistered step (an omitted interrupted
+      attempt cannot be detected); relay-frame identity is checked within
+      one ingest, not across several Anthropic calls files at `audit
+      summarize`, and the relayed request is recorded only as a hash; a
+      concordant contradiction goes to the pool only for the equivalence
+      and violation candidates (section 4 does not say so); a second resume
+      with another session request voids every item with a relay frame, and
+      an answer word in an interrupted attempt's final text counts as
+      answering; section 10's K2 consequence still mentions K6 reading the
+      recomputed P5.
+- [ ] A narrow re-check of this eighth draft (the sixth review's probe as a
+      test, the rerun over the 158 development transcripts, the pin refresh
+      and the freeze lint); record any new score in the review log below and
+      use the lowest.
 - [ ] Kevin's sign-offs: D2 (upstream defect reports and other outward
       disclosures stay unsent while this runs); the D23/D25/D27 rater lineup,
       including the agent-harness path with unfixed sampling, the isolation
@@ -1956,7 +2030,9 @@ exported harness files and renders, and raw rater responses and reasons
       and its registered stratified fallback, the relay-frame rule of the
       transcript audit (the harness relay frame registered under
       constraints, rather than requiring unresumed rating runs), every
-      transcript of an item audited, the difference-first packet, the
+      transcript of an item audited, the registered transcript entry types
+      and harness attachment types (any other type voids the item, so a
+      harness version that adds one voids every item that receives it), the difference-first packet, the
       adjudication workload (about 16 pool items, 10 to 40, roughly 0.5 to
       3.5 hours) and the ownership and size of the human spot check (about
       35 items at the expected census), whose result stays pending until
@@ -1977,8 +2053,9 @@ score is the one recorded):
 | Third review of the fourth draft (2026-10-07) | fourth | 56 | no | fifth draft (D27) |
 | Fourth adversarial review (2026-10-07) | fifth | 57 | no | sixth draft (D34) |
 | Fifth adversarial review (2026-10-08) | sixth | 64 | no | seventh draft (D35) |
+| Sixth adversarial review (2026-10-08) | seventh | 80 | no | eighth draft |
 
-Scores so far: 55, 62, 56, 57, 64; the lowest is 55.
+Scores so far: 55, 62, 56, 57, 64, 80; the lowest is 55.
 
 ## Appendix A. Operator catalog `q2-mut-operators-v1` (64 operators)
 

@@ -86,5 +86,9 @@ scores it. Runbook: `README.md` in this directory.
   needs exactly one user turn equal to it; the only other turn allowed is the
   harness relay frame of a resumed run). Keep every agent's transcript, the
   interrupted ones as `<item>.<agent id>.jsonl`: all are audited (D35).
+  Never message a rater agent while it runs: the harness delivers the message
+  as a `queued_command` attachment, which voids the item, as does any entry
+  or attachment type outside `rater_runner.TRANSCRIPT_ENTRY_TYPES` and
+  `HARNESS_ATTACHMENT_TYPES`.
 - Audit salts (D34) live only on the host (`scratch/audit-salts/<audit>/`,
   mode 600); commit the SHA-256 and reveal the salt only after the ingest.

@@ -214,4 +214,20 @@ def test_prereg_states_the_d35_protocol_its_relay_frame_and_its_review_log() -> 
     assert "8e7dbd00c14db448bb1272f7bbf2c908dbd8b4a39d83445792b7d5f8cb6fe5fa" in text
     # The census capacity and the scores of every review so far.
     assert f"{raters.audit_capacity():,} items" in flat
-    assert "Scores so far: 55, 62, 56, 57, 64; the lowest is 55." in text
+    assert "Scores so far: 55, 62, 56, 57, 64, 80; the lowest is 55." in text
+
+
+def test_prereg_lists_the_registered_transcript_entry_and_attachment_types() -> None:
+    """Sixth review: section 9 names every entry and attachment type the audit allows."""
+    from harness.q2_mutation import rater_runner
+
+    text = _text()
+    flat = " ".join(text.split())
+    assert "`rater_runner.TRANSCRIPT_ENTRY_TYPES`" in text
+    assert "`rater_runner.HARNESS_ATTACHMENT_TYPES`" in text
+    assert "the entry types user, assistant and attachment" in flat
+    assert sorted(rater_runner.TRANSCRIPT_ENTRY_TYPES) == ["assistant", "attachment", "user"]
+    assert len(rater_runner.HARNESS_ATTACHMENT_TYPES) == 15
+    for kind in rater_runner.HARNESS_ATTACHMENT_TYPES:
+        assert f"`{kind}`" in text, kind
+    assert "`queued_command`" in text and "3,304 attachments" in flat
