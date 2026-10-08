@@ -31,11 +31,14 @@ the Q3 dense pre-check lanes (`ops/q3-dense`) are not yet merged.
   A7 observation-service bound, scoped probe and tap), D33 (the exclusion
   extends to A1-A3 and the ladder within per-entry and per-rung limits, A7
   call cap) and the fixes after their reviews are done in `acceptance.py` and
-  the text (main preregistration sections 18-22). D39 (C3 equivalence fails
-  closed over earlier attempts, an unparseable record file reads as missing,
-  frozen status lines) is being applied. Then merge, freeze v1, `-inputs`,
-  `-executor`, and run the CPU-only acceptance campaigns (98.4 VM-hours; the
-  ladder needs a quiet host).
+  the text (main preregistration sections 18-22). D39 is applied too
+  (section 23, `acceptance.py` at `280ccbf`): a C3 mutant is equivalent only
+  if every attempt's streams match the reference's on the cells each ran
+  without an infrastructure failure, an unparseable receipt, cycle or record
+  file reads as missing and its attempt does not count, and the three status
+  lines carry the frozen wording. Nothing is frozen. Next: merge to main,
+  freeze v1, then `-inputs`, then `-executor`, and run the CPU-only
+  acceptance campaigns (98.4 VM-hours; the ladder needs a quiet host).
 - **Q2 checker mutation** (`stage0/q2-evaluator-mutation`): D27's kappa rule
   fired (dev kappa 0.27 with Qwen3.6-35B-A3B, thinking off). Fix 5 under D34:
   gold shams per task, concordant contradictions to adjudication, packet text
