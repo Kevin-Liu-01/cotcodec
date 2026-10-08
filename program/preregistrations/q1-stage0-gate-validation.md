@@ -2253,6 +2253,54 @@ recorded in the job's `plan.json`.
    scales; E, A scaled by the store-independent gates' ratio. C-E scale a model by a
    partial sample the order selected, and say so.
 
+**Results (job 752; evidence `program/evidence/2026-10-08/q1-exec2-validation/`).**
+
+6. **Run.** Image `cotcodec-q1-gates:23a87683` from CPU-only build 746 (fresh clone of
+   `23a8768`); a CPU-only check in that image reproduced the plan (433 items,
+   `items_sha256 633b2753...`, card hashes equal to section 2.1). Slurm 752: dry-run,
+   test-only, one submission; `COMPLETED 0:0`, 393 s on one H100, **0.1092 GPU-h**
+   (D31's 0.5 now holds 0.439). 122 items started and all became final, one reference
+   item was cut at the hard deadline and 310 never started. Reached: the adversarial
+   items, the substrates of L2/95, L2/77 and L1/10 (15 gates), L1/18's substrate (10
+   gates) and 10 non-consumer gates plus two reference items of L2/59's substrate. Not
+   reached: L2/87, L2/100, L2/46, L2/59's consumers, every identity control and mutant.
+7. **Safety where it ran.** No GPU resource failure (0 item attempts, shared or alone),
+   no contention retry, no failed health check, no slot or device retired, no memory-
+   guard wait, no A5 `na`; the largest concurrent sum of measured peaks was 24.2 GB
+   against the 68 GB guard budget; measured peaks reached at most 1.12 times their
+   estimate (gate c on L1/1 and L1/10, still inside one unit). 64 of 65 re-pilot items
+   that also ran in job 713 have identical verdict rows; the exception is L2/59's
+   substrate on `A4_poison`, a reject in 713 (`CUDA error: invalid argument` under the
+   poison allocator at 12 per GPU, text the resource-failure list does not contain)
+   and an accept here. A5 gives `error` on `non_default_stream` in both arms (PRC-01
+   and PRC-02 cannot copy a candidate holding a CUDA extension module). The policy is
+   validated at 12 and 2 items per GPU only; the 4-11-unit items that ran out of
+   memory in 713 were not reached.
+8. **Adversarial controls under the store.** All 15 consumer-gate aggregates agree with
+   the inline twins: `result_reuse` and `zero_out` are rejected by c, A1, A2, A3 and A5;
+   `non_default_stream` is accepted by c and A1-A3 and gets A5 `error`. Rows differ only
+   for `result_reuse` (an uninitialised `torch.empty` output, the allocator-history
+   exception of 18.8 item 4): inline, gate (c) accepted 7 of 16 configurations with
+   error 0.0 because the freed reference output was reused; through the store all 16
+   reject.
+9. **Cost and projection.** Over the 87 final re-pilot items the measured GPU-seconds
+   are R = 2.425 times the fix pass's `q1-stage0-exec/2` model with the pre-specified
+   store ratio (bootstrap over the five problems reached: 1.14-4.84): 1.96 on the
+   one-unit items of four light problems, which ran while the adversarial controls
+   compiled their CUDA extensions on the same CPUs, and 6.35 on L2/59's 6-unit items
+   (2 per GPU, run after that phase; its 4.3 GB of parameters set the process cost the
+   input-sized model misses). Projection with this job in the fixed part (central /
+   high, GPU-h): model rows A (no store) 10.57 / 12.41 through P3 and 15.16 / 18.35
+   through P7, B (store) 10.77 / 12.69 and 15.67 / 19.06; **primary C, B scaled by R:
+   19.99 / 24.66 through P3 and 31.89 / 40.10 through P7** (11.68 / 13.87 and
+   17.27 / 21.13 at R's lower bootstrap point); D (per-gate scales) 18.14 / 22.26 and
+   27.04 / 33.81; E (store-independent ratio 3.475) 26.11 / 32.51 and 42.05 / 53.13;
+   post hoc regime splits F and G 34-35 central through P3. No row is within 8 GPU-h
+   through P3. The exec/2 projection of 18.9 is biased low; **D31 verdict unchanged:
+   Stage 0 is not admitted**, and any further budget path needs a cost model that
+   prices per-process cost by parameter and output memory, and a measurement that
+   reaches the 4-11-unit problems.
+
 ## 19. References (accessed 2026-10-06 and 2026-10-07)
 
 - Measuring the Checker, arXiv 2609.22220 (16.9% missed, family miss rates):
