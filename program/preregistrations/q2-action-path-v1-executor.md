@@ -174,8 +174,10 @@ decision 32): which campaigns count (COMPLETED 0:0 from the batch script's own
 record or Slurm, infrastructure gates, `System.qcow2` unchanged, nothing
 leaked), the rerun rules, that each criterion ran exactly its realized order
 from one source tree, A1-A7 (A4 not counting a trial whose only failure is a
-guest-server restart, and A7's restarts per accessibility call on the exact
-one-sided 95% Poisson bound, decision D30), C1-C4 with C2's reading of L0-raw
+guest-server restart, during the entry or across the session's reset
+observation, and A7's restarts of every attempt per accessibility call of the
+counting attempts on the exact one-sided 95% Poisson bound, under attempt 1
+only, decision D30), C1-C4 with C2's reading of L0-raw
 trials and C3's clean-kill and equivalence rules, and the ladder's N* with the
 foreign-load abort and its rerun cap. Its verdicts are the ones reported;
 `tests/test_q2_acceptance_analysis.py` drives every rule on synthetic
@@ -188,8 +190,9 @@ source tree digest, the realized order's session and trial counts and a Slurm
 limit from the lane's worst-case budget (an A4 that would exceed 24 hours is
 split into session ranges). It validates the manifest with the ledger and
 refuses before the freeze. A7, like A4, runs at N* and is split into
-session ranges when one job's budget would exceed 24 hours. The VM and runner
-pins come from the last
+session ranges when one job's budget would exceed 24 hours; its N* is attempt
+1's, from attempt 1's A1 campaigns and full ladder (main section 11). The VM
+and runner pins come from the last
 development manifest at the candidate executor (`dev-l0-fixed-v10.yaml`),
 which carries the main preregistration's section 2.1 pins. The runner CPUs
 are `manifest.runner_cpus(N)` (main section 9), and a repair attempt k's
