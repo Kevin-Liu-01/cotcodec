@@ -1,0 +1,29 @@
+task_id: 21ab7b40-77c2-4ae6-8321-e00d3a086c73
+author: blind-model-author-v1
+requirements:
+  - req_id: R0
+    statement: (implicit) The workbook is persisted at /home/user/PeriodRate.xlsx with A1:B25 unchanged.
+    check_kind: file_exists
+    observable: File loads; A1:B25 equal initial values.
+  - req_id: R1
+    statement: A new column (C, next to the data) has header "Period Rate (%)".
+    check_kind: cell_value
+    observable: C1 == "Period Rate (%)".
+  - req_id: R2
+    statement: Each row's period rate equals Annual Rate (%) divided by Periods per year, expressed in percent like the source column.
+    check_kind: cell_value
+    observable: C2:C25 numeric values == A/B, e.g. C2 5.625, C3 1.296, C9 7.362, C20 14.724, C25 2.6549 (tolerance 1e-3).
+  - req_id: R3
+    statement: The results are numbers (number type), not text.
+    check_kind: cell_format
+    observable: C2:C25 are numeric cells (or numeric formula results), not strings.
+  - req_id: R4
+    statement: >-
+      The highest period rate (C20 = 14.724) is shown in green #00FF00 font.
+    check_kind: cell_format
+    observable: >-
+      C20 font color is FF00FF00 (direct formatting) or a conditional format rule that renders C20 in #00FF00; no other C cell is green.
+allowed_variations:
+  - '[AMBIGUOUS] "convert the results as number type" may mean only numeric storage or also a "Number" category format (e.g. 0.00); decimal places are not specified.'
+  - Green highlight may be direct formatting or conditional formatting.
+  - '[AMBIGUOUS] A reading that stores the rate as a fraction (0.05625) with % format conflicts with the "(%)" header convention used by the source column; treat as a different interpretation.'

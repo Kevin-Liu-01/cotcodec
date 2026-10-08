@@ -1,0 +1,32 @@
+{
+ "url": "https://arxiv.org/abs/2606.26453",
+ "fetched_at": "2026-10-08T07:30:56Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 45276,
+ "raw_sha256": "8c868a97b208ae79e4795f333f1b9fd347b2d1096558c4bd73610056efd767b3",
+ "raw_stored": false,
+ "extract": {
+  "title": "Optimizing CUDA like a Human: Micro-Profiling Tools as Expert Surrogates for LLM-Based GPU Kernel Optimization",
+  "authors": [
+   "Gai, Jiading",
+   "Zhang, Shuai",
+   "Bostrom, Kaj",
+   "Huang, Jin",
+   "Patil, Vihang",
+   "Fang, Haoyang",
+   "Wang, Bernie",
+   "Rangwala, Huzefa",
+   "Karypis, George"
+  ],
+  "citation_date": "2026/06/24",
+  "submission_history": [
+   {
+    "version": "v2",
+    "date": "Sat, 8 Aug 2026 19:47:03 UTC"
+   }
+  ],
+  "abstract": "We present KernelPro, a closed-loop multi-agent system that automatically generates, profiles, and iteratively optimizes GPU kernel code by integrating large language model (LLM) code generation with hardware profiler feedback and pluggable bottleneck detection tools. KernelPro introduces four contributions: (1) a semantic feedback operator that encodes expert heuristics as pluggable micro-profiling tools, transforming raw hardware metrics into actionable natural language guidance; (2) a two-stage tool invocation architecture where roofline-based bottleneck classification filters which specialized analysis tools execute, combining kernel-level (ncu), instruction-level (SASS), and system-level (nsys) profiling; (3) a domain-adapted MCTS with progressive widening, asymmetric branching, log-reward calibration, dead-end pruning, and search memory for cross-iteration learning; and (4) direct CuTe source-level code generation via autonomous code search over the CUTLASS/CuTe codebase. On KernelBench, KernelPro achieves geometric mean speedups of 2.42x/4.69x/5.30x on Levels 1/2/3, establishing state-of-the-art performance across all difficulty levels. On VeOmni's expert-optimized MoE training kernels, KernelPro achieves 1.23x over hand-tuned Triton by generating a from-scratch raw-CUDA+CuTe Hopper WGMMA kernel. Ablation studies demonstrate that each design component independently and significantly improves optimization quality: micro-profiling tools (p < 0.0001 vs raw metrics), MCTS search (26% higher geometric mean vs greedy, p = 0.004), and proactive tool orchestration (23% improvement, p = 0.035). Finally, KernelPro is the first CUDA kernel coding agent to optimize energy efficiency beyond the speed-only focus of prior systems, demonstrating an 11.6% measured energy reduction at matched speed.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}

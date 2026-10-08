@@ -1,0 +1,18 @@
+{
+  "domain": "multi_apps",
+  "initial_files": [
+    {
+      "path_in_vm": "/home/user/Desktop/QTdHniCqfJbBLJe3L3nijU-1200-80.xcf",
+      "sha256": "e57d953be79675263f3b0f5a4e4363ba0bc99604c18b83ec35a213a32c0e065e",
+      "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/1e112283c4ecb08d6fed8069bca7de74fa2f12aa/multi_apps/227d2f97-562b-4ccb-ae47-a5ec9e142fbb/QTdHniCqfJbBLJe3L3nijU-1200-80.xcf"
+    }
+  ],
+  "instruction": "I've stored my .xcf file on the Desktop. Can you assist me in copying the image and pasting it into a LibreOffice Writer document? Save the document as 'image.docx' on the Desktop, please.",
+  "related_apps": [
+    "libreoffice_writer",
+    "gimp",
+    "os"
+  ],
+  "snapshot": "gimp",
+  "task_id": "227d2f97-562b-4ccb-ae47-a5ec9e142fbb"
+}

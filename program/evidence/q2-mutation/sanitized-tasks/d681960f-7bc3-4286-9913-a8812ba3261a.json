@@ -1,0 +1,16 @@
+{
+  "domain": "libreoffice_calc",
+  "initial_files": [
+    {
+      "path_in_vm": "/home/user/Student_Grades_and_Remarks.xlsx",
+      "sha256": "014f9f32109a44669ec3fb4bc7d4becf93ea5622cfe208100a2783851d887aa0",
+      "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/1e112283c4ecb08d6fed8069bca7de74fa2f12aa/libreoffice_calc/d681960f-7bc3-4286-9913-a8812ba3261a/Student_Grades_and_Remarks.xlsx"
+    }
+  ],
+  "instruction": "According to the scale table shown above, calculate and give each student a grade in the table below. Finish the work and don't touch irrelevant regions, even if they are blank.",
+  "related_apps": [
+    "libreoffice calc"
+  ],
+  "snapshot": "libreoffice_calc",
+  "task_id": "d681960f-7bc3-4286-9913-a8812ba3261a"
+}

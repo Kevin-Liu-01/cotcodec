@@ -16,7 +16,7 @@
       "doc": "program/questions/q1-kernel-gate-strength.md",
       "dossier_key": "C2-kernel-verification-rl",
       "status": "stage-0: not admitted under D31; waiting on the gauntlet (D24)",
-      "next_action": "D37: the memory-aware execution policy q1-stage0-exec/2 replaces trim/2 item 6; one validation job under it (<=0.17 GPU-h, non-evaluation kernels and the KernelBench adversarial controls); a gauntlet wave on the Stage 0 design. Stage 0 stays not admitted under D31 and waits on the gauntlet (D24: Kevin's trust store or admission ruling). Stage 1 also needs the R580 driver upgrade or written risk acceptance.",
+      "next_action": "D37: the validation job under q1-stage0-exec/2 ran (Slurm 752, 0.109 GPU-h; branch stage0/q1-exec2-validation, not merged): no resource failure, health-check failure or slot retirement where it ran (12 and 2 items per GPU), but the time box did not reach L2/87, L2/100, L2/46 or any 4-11-unit item, and measured cost is 2.4x the exec/2 model (6.3x on L2/59), so Stage 0 through P3 projects to 19.99 central / 24.66 high (primary). Remaining under D37: a gauntlet wave on the Stage 0 design. Stage 0 stays not admitted under D31 and waits on the gauntlet (D24) or Kevin. Stage 1 also needs the R580 driver upgrade or written risk acceptance.",
       "first_gpu_experiment": {
         "name": "on-policy false-accept audit",
         "estimated_gpu_hours": 12,
@@ -114,6 +114,153 @@
             "high": 12.83
           }
         }
+      },
+      "stage0_exec2_validation_branch": "stage0/q1-exec2-validation",
+      "stage0_exec2_validation_evidence": "program/evidence/2026-10-08/q1-exec2-validation/README.md",
+      "stage0_exec2_validation": {
+        "job": "752",
+        "image_build": "746 (CPU-only)",
+        "gpu_hours_physical": 0.1092,
+        "d31_budget_used_of_0_5": 0.4392,
+        "items": {
+          "planned": 433,
+          "started": 122,
+          "final": 122,
+          "never_final": 0,
+          "cut_at_hard_deadline": 1,
+          "never_started": 310
+        },
+        "safety": {
+          "resource_failures": 0,
+          "contention_retries": 0,
+          "health_check_failures": 0,
+          "slots_retired": 0,
+          "a5_na": 0,
+          "memory_guard_waits": 0,
+          "largest_concurrent_measured_peak_gb": 24.2,
+          "peak_over_estimate_max": 1.12,
+          "regimes_covered_items_per_gpu": [
+            12,
+            2,
+            1
+          ],
+          "items_at_one_per_gpu": 1,
+          "not_reached": [
+            "L2/87",
+            "L2/100",
+            "L2/46",
+            "L2/59 consumers",
+            "identity controls",
+            "mutants"
+          ]
+        },
+        "adversarial_controls_store_vs_inline": "15 of 15 consumer-gate aggregates equal; rows differ only for result_reuse (allocator history): inline gate c accepted 7 of 16 configurations, store rejected all 16",
+        "cost_measured_over_exec2_model": {
+          "R_all": 2.425,
+          "R_bootstrap_2_5_97_5": [
+            1.14,
+            4.837
+          ],
+          "twelve_per_gpu": 1.955,
+          "two_per_gpu_L2_59": 6.349,
+          "references": 1.533,
+          "exec2_over_job713_exec1_same_items": 1.619
+        },
+        "projection_gpu_hours_fixed_includes_this_job": {
+          "A_exec2_no_store_model": {
+            "P3": [
+              10.57,
+              12.41
+            ],
+            "P7": [
+              15.16,
+              18.35
+            ]
+          },
+          "B_exec2_store_model": {
+            "P3": [
+              10.77,
+              12.69
+            ],
+            "P7": [
+              15.67,
+              19.06
+            ]
+          },
+          "C_primary_B_times_R": {
+            "P3": [
+              19.99,
+              24.66
+            ],
+            "P7": [
+              31.89,
+              40.1
+            ]
+          },
+          "C_at_R_2_5pct": {
+            "P3": [
+              11.68,
+              13.87
+            ],
+            "P7": [
+              17.27,
+              21.13
+            ]
+          },
+          "C_at_R_97_5pct": {
+            "P3": [
+              35.6,
+              44.92
+            ],
+            "P7": [
+              59.33,
+              75.71
+            ]
+          },
+          "D_per_gate": {
+            "P3": [
+              18.14,
+              22.26
+            ],
+            "P7": [
+              27.04,
+              33.81
+            ]
+          },
+          "E_store_independent": {
+            "P3": [
+              26.11,
+              32.51
+            ],
+            "P7": [
+              42.05,
+              53.13
+            ]
+          },
+          "F_post_hoc_regime_split": {
+            "P3": [
+              35.33,
+              44.56
+            ],
+            "P7": [
+              51.69,
+              65.79
+            ]
+          },
+          "G_post_hoc_low_regime_only": {
+            "P3": [
+              34.26,
+              43.17
+            ],
+            "P7": [
+              50.12,
+              63.75
+            ]
+          },
+          "format": "[central, high]",
+          "cap": 8.0,
+          "admitted_under_D31": false
+        }
       }
     },
     {
@@ -122,7 +269,7 @@
       "doc": "program/questions/q2-calibrated-cua-instrument.md",
       "dossier_key": "S1-calibrated-cua-instrument",
       "status": "stage-0-running",
-      "next_action": "D40: q2-action-path-v1 is invalid (C2 job 768: chord_super_d failed 5/5 under L0-raw, predicted to pass). q2-action-path-v2 (+ -inputs, -executor) is drafted on stage0/q2-action-path-v2 and freeze-linted against a scratch ledger: the prediction lists chord_super_d (informed by job 768), C2 is a reproduction test on its own seed 45, the renderer takes --host-root. Seed-42 development (jobs 784-787) reproduced the failure and found that the shell received Super+d: the tap records a key event queued during the shell's synchronous grab with state 0. Review and merge, freeze v2, then -inputs, then -executor; then C2 (seed 45), C1, C3, A1-A6, the ladder on a quiet host, A4 and A7. The checker-mutation descriptive protocol (D35, D38) is being finalised for its freeze. Stage 1 must be rescoped (431.5 GPU-h as designed) and go through the gauntlet (D24).",
+      "next_action": "D40: q2-action-path-v1 is invalid (C2 job 768: chord_super_d failed 5/5 under L0-raw, predicted to pass). q2-action-path-v2 (+ -inputs, -executor) is drafted on stage0/q2-action-path-v2 and freeze-linted against a scratch ledger: the prediction lists chord_super_d (informed by job 768), C2 is a reproduction test on its own seed 45, the renderer takes --host-root. Seed-42 development (jobs 784-787) reproduced the failure and found that the shell received Super+d: the tap records a key event queued during the shell's synchronous grab with state 0. Review and merge, freeze v2, then -inputs, then -executor; then C2 (seed 45), C1, C3, A1-A6, the ladder on a quiet host, A4 and A7. The checker-mutation study is a descriptive protocol (D34, D35, D38; reviews 55, 62, 56, 57, 64, 80, 90): freeze q2-evaluator-mutation-v1, then its confirm campaign, which needs Kevin's adjudication of the pool and the human spot check (D9). Stage 1 must be rescoped (431.5 GPU-h as designed) and go through the gauntlet (D24).",
       "first_gpu_experiment": {
         "name": "Qwen3.5 ladder (as dossier-designed)",
         "measured_projection_gpu_hours": 431.5,
@@ -136,7 +283,7 @@
       "action_path_suite": {
         "registration": "q2-action-path-v2 (+ -inputs, -executor addenda), successor of q2-action-path-v1 (D40)",
         "status": "v1 frozen 2026-10-08 (ledger rows 8-10) and invalid: C2 failed (job 768; chord_super_d unpredicted). v2 drafted under D40 (code e66bf16), freeze-linted in order against a scratch copy of the ledger; not frozen",
-        "branch": "stage0/q2-action-path-v2 (from main at 124573a)",
+        "branch": "stage0/q2-action-path-v2 (from main at 124573a; main merged in at 65bc2e2)",
         "development_jobs": "482-637, 662-667 and 694-708 (v1, seed 42, CPU only, never evidence; 703-708 at the D30 runtime commit 7653799, 694 at 34f79e4, 695-699 cancelled while booting); 784-787 (v2 development under D40 at e66bf16, seed 42, CPU only, 1.0 VM-h: L0-raw on the 13 chords, L0-fixed on chord_super_d at 8 and 16 VMs)"
       }
     },
@@ -170,13 +317,14 @@
     "Decide whether to purge the old host address and the internal corpus inventory from public git history (requires a force-push)",
     "Spot-check a sample of the Q2 checker-mutation audit as the human rater (decision D9)",
     "Moonshot (Kimi) account is suspended for insufficient balance; recharge it if a Kimi model should be a rater or reviewer (rotate the exposed key at the same time)",
+    "Q2 checker-mutation (q2-evaluator-mutation-v1, ninth draft, D35 and D38): D34 (i) fired after the one rater retry (dev kappa 0.066 under the registered ingest, 0.575 with the resumed harness's relay turn excepted), so the study is a pre-specified descriptive protocol (D35) implemented on stage0/q2-evaluator-mutation. The sixth review scored the eighth draft 80/100; D38 accepted its choices (census audit with seeded stratified fallback, gold shams for every audited task, the relay frame registered under D35's constraints, difference-first packets, the registered transcript entry and attachment types) and had its minor items fixed in the ninth draft (fallback at the largest budget that fits; a registered collector of every rating transcript; relay frames checked across calls files and recorded verbatim; one workflow session with one fresh, answer-blind re-rate of relay-voided items, both results reported; concordant contradictions of every candidate kind to the pool; interrupted attempts answer only through a structured answer). Kevin's remaining items (prereg section 17): adjudicate the pool (about 16 items, 10-40, 0.5-3.5 h; if a resume brings a different relay frame, every relay-voided item joins it, 113 against 24 on the development analogue), the human spot check (about 35 items, D9), the outward actions, and the carried-over sign-offs (the D23/D25/D27 rater lineup with unfixed Claude sampling and public OSWorld files sent to the Claude model, P1 with reserve-split golds, the spec release, the D34 rules as implemented). The narrow re-check scored the ninth draft 90 (ready to freeze, no blocking defect) and its minor items are fixed; then re-merge main and freeze",
     "The ANTHROPIC_API_KEY on this machine is invalid (HTTP 401); supply a valid key if the Claude rater and gauntlet reviews should use the API rather than the agent harness (D25)",
     "Decide whether to ask the KernelGYM authors for a licence: gate_b.py was rewritten from the spec after the review found a transliteration (stage0/q1-gates, never pushed); a licence would remove the residual risk",
-    "Q1 Stage 0 after D31 and its review: not admitted (preregistration sections 18.8-18.9). Under the corrected, memory-aware execution q1-stage0-exec/2 the model-based estimate through P3 is 10.46 GPU-h central and 12.31 high without the store (11.10 high at the references-free bound, post hoc ratio). Choose: the gauntlet (blocked by D24 until the trust store exists or you rule on admission), a scope reduction that acts on P1-P3 (test quota, FRR core, hack fraction, control replicates; a 30-per-family quota still projects 9.10 central, 10.51 high), or a new engineering pass and re-pilot beyond D31 (for example one process per kernel for its gates). Before any Stage 0 job: sign off q1-stage0-exec/2 (it amends trim/2 item 6) and the store policy (on or off for c and A1-A5; L2/77's shared realization of a nondeterministic cuDNN reference; a GPU check of the three KernelBench adversarial controls under the store), and fund a re-measurement under q1-stage0-exec/2",
-    "Review the decisions taken on your behalf since the restart, D1-D37 in program/decisions.md; the recent ones are D28 (Q1 pilot exposure), D29 (upstream test code on GPUs), D30 and D33 (action-path guest-server restarts), D31 and D37 (Q1 Stage 0 budget path), D32 and D36 (Q3 dense pre-check), D34 and D35 (checker-mutation raters; the study became descriptive)",
+    "Q1 after D41: Stage 0 as drafted is withdrawn (gauntlet wave 1 honest exit at 45; the TF32-admissible audit metric cannot separate correct TF32 matmul/conv outputs from destroyed ones; projected 20-25 GPU-h high under the safe execution policy). A CPU-only audit-metric study on stored non-evaluation data is running; its recommendation, a small S1-cal GPU pilot and any successor Stage 0 (new id, fresh gauntlet, D24) are yours to approve. Stage 1 also needs the R580 driver upgrade or risk acceptance",
+    "Review the decisions taken on your behalf since the restart, D1-D41 in program/decisions.md; the recent ones are D28 (Q1 pilot exposure), D29 (upstream test code on GPUs), D30, D33, D39 and D40 (action path: guest-server restarts, freeze details, v1 invalid on C2 and its v2), D31, D37 and D41 (Q1 Stage 0 budget path and withdrawal), D32 and D36 (Q3 dense pre-check and its v2), D34, D35 and D38 (checker-mutation raters; the study became descriptive)",
     "Q2 action path (D40 development, q2-action-path-v2 section 26): v1's C2 failure of chord_super_d is real in the XRecord record but not in delivery. GNOME Shell grabs Super_L and its keybindings synchronously, the X server queues the next key, and RECORD reports a queued event before its state is computed (state 0); the shell still showed the desktop in 15/15 L0-raw trials, as under L0-fixed. v2 keeps the oracle and C2's rule (D40). Decide whether D40's wording ('a genuine transport defect') should be corrected in the record, and whether a later registration should read events queued under a shell grab differently. L0-fixed was not exposed in development (127/127 with the warm-up), but A1/A4 could still fail chord_super_d on this artifact if the shell is ever slower than L0-fixed's 10 ms gap."
   ],
-  "gpu_hours_spent_this_program": 3.1857,
+  "gpu_hours_spent_this_program": 3.9261,
   "frozen_registrations": [
     "q3-k1-localization-screen-v1",
     "q2-holo3-rerun-audit-v1-posthoc",
@@ -184,7 +332,10 @@
     "serving-throughput-probe-v1",
     "serving-throughput-probe-v2",
     "q3-k1-throughput-probe-v1",
-    "q3-dense-headroom-precheck-v1"
+    "q3-dense-headroom-precheck-v1",
+    "q2-action-path-v1",
+    "q2-action-path-v1-inputs",
+    "q2-action-path-v1-executor"
   ],
   "infrastructure": {
     "serving_probe": "v1 and v2 done (1.15 GPU-h): cu129 vLLM works on R570; Q1 sampling within cap; Q2 ladder needs rescoping",
@@ -239,6 +390,24 @@
       "outcome": "PROBE_COMPLETE; v2 caps plus probe 8.05 GPU-h under D22: gauntlet applies"
     },
     {
+      "experiment": "q2-evaluator-mutation-v1 rater dev smoke (unregistered dev work, second-review fix)",
+      "gpu_hours": 0.1228,
+      "jobs": [
+        "566 overlay build",
+        "582 open-weight rater smoke (133 dev packets)"
+      ],
+      "outcome": "runner works end to end on dev packets: 133 calls, all parsed, 0.110 GPU-h of the 0.2 smoke cap; Anthropic arm blocked by an invalid API key"
+    },
+    {
+      "experiment": "q2-evaluator-mutation-v1 rater dev smoke v2 (unregistered dev work, third-review fix)",
+      "gpu_hours": 0.0947,
+      "jobs": [
+        "646 overlay build",
+        "650 open-weight rater smoke (133 dev packets, 90 rated)"
+      ],
+      "outcome": "saved-start packets built (Slurm 644, CPU); 90 of 133 items rated before the lane's USR1 checkpoint signal (8-min limit); 0.083 GPU-h rater + 0.012 overlay, inside the 0.15 allowance"
+    },
+    {
       "experiment": "open-weight reviewer tooling smoke (D23, D24)",
       "gpu_hours": 0.1589,
       "jobs": [
@@ -247,6 +416,15 @@
         "629 overlay build of the exit fix"
       ],
       "outcome": "review PARSED in 71 s; process hung at exit, smoke over its 0.1 GPU-h cap (0.132 physical); exit fix 37f4f2a CPU-validated as PID 1, GPU re-smoke not run"
+    },
+    {
+      "experiment": "q2-evaluator-mutation-v1 D27 dev rerate (unregistered dev work, third-review fix)",
+      "gpu_hours": 0.1284,
+      "jobs": [
+        "686 overlay build",
+        "702 open-weight rater Qwen3.6-35B-A3B (133 dev items, all rated)"
+      ],
+      "outcome": "every dev item rated in one 6 min 56 s job that ended on its own (0.116 GPU-h rater + 0.013 overlay, inside D27's 0.5); shams 12/12, but 19 of 26 violation mutants accepted: kappa 0.27 if Claude matched every label, 0.34 against the earlier non-blind Claude answers"
     },
     {
       "experiment": "q1-stage0 pilot pass (stage0/q1-gates)",
@@ -278,6 +456,15 @@
       "outcome": "clean exits on GPU; 35B verify 52 s, load 97 s"
     },
     {
+      "experiment": "q2-evaluator-mutation-v1 D34 dev rerate, thinking on (unregistered dev work, fourth-review fix)",
+      "gpu_hours": 0.2281,
+      "jobs": [
+        "718 overlay build",
+        "722 open-weight rater Qwen3.6-35B-A3B, thinking on (142 dev items, all rated)"
+      ],
+      "outcome": "every dev item rated in one 12 min 57 s job that ended on its own (0.216 GPU-h rater + 0.012 overlay, inside D34's 0.5); 14.4 items per minute; shams 20/21; violations 14 accept / 12 reject (thinking off 19 / 7); kappa 0.578 if Claude matched every label, 0.486 against the D27 isolated Claude answers on 119 matched items; with the isolated Claude ratings of the new packets, dev kappa 0.066 under the registered ingest (110 relay-turn voids) and 0.575 with the relay turn excepted: D34 (i) fired (D35)"
+    },
+    {
       "experiment": "q3-dense-headroom-precheck-v1, Qwen3-0.6B-Base lane",
       "gpu_hours": 0.0772,
       "jobs": [
@@ -306,6 +493,25 @@
         "713 q1-repilot-d31"
       ],
       "outcome": "COMPLETED 0:0 in 19 min 48 s of the 0.5 GPU-h cap; S1-cal and controls only (D28); 843 twin rows, 828 same verdict, every difference explained and none by the store; store saves c 42%, A1 25%, A2 17% but its reference items cost about as much at in-scope sizes; trim/2 high through P3 stays above 8 in every scenario; CUDA OOM on 3 of 8 problems at 12 per GPU"
+    },
+    {
+      "experiment": "q1-stage0 D37 exec/2 validation job (stage0/q1-exec2-validation)",
+      "gpu_hours": 0.1092,
+      "jobs": [
+        "746 image build (CPU)",
+        "752 q1-exec2-validation"
+      ],
+      "outcome": "COMPLETED 0:0 in 6 min 33 s (cap 10 min, 0.1667 GPU-h); 122 of 433 items, all final; no resource failure, health-check failure or retirement at 12 and 2 per GPU; L2/87, L2/100, L2/46 not reached; adversarial controls' store and inline aggregates equal; measured cost 2.4x the exec/2 model; Stage 0 through P3 19.99 central / 24.66 high (primary)",
+      "basis": "physical (job.env start to termination.env finish, 393 s)"
+    },
+    {
+      "experiment": "Q1 Stage 0 gauntlet wave 1 open-weight review (D24, D37)",
+      "gpu_hours": 0.0572,
+      "jobs": [
+        "775 qwen3.6-35b-a3b review"
+      ],
+      "outcome": "review PARSED on attempt 1, total 45, replicates token-identical; wave score 45 (lower of 47 and 45); honest exit (query budget, triad 3/3 refuted); reviewer inference only, not Stage 0 work",
+      "basis": "physical (scontrol RunTime 00:03:26 on 1 H100; 0.25 GPU-h cap)"
     }
   ],
   "results": [
@@ -321,6 +527,27 @@
       "date": "2026-10-07",
       "outcome": "X1 pass; Q2 rescope-before-gauntlet (431.5 GPU-h projected); per-cell 9B H1 screenshot 0.75, a11y 1.13, H2 thinking 24.1/29.3 GPU-h",
       "evidence": "program/evidence/2026-10-07/serving-throughput-probe-v2/README.md"
+    },
+    {
+      "registration": "q3-dense-headroom-precheck-v1",
+      "date": "2026-10-08",
+      "label": "INCOMPLETE",
+      "outcome": "no combined read: the summariser rejects every receipt (null Slurm job id) and the 4B lane (job 730) ran CPU-bound, ignored SIGUSR1 and was void; the 0.6B lane (job 727) is valid: smoke 452 REPRODUCED, NOT_VIABLE (H1_CX 12.25, 99% interval 8.98-15.59; H2 FAIL); successor v2 under D36",
+      "evidence": "program/evidence/2026-10-08/q3-dense-headroom-precheck/README.md"
+    },
+    {
+      "registration": "q2-action-path-v1",
+      "date": "2026-10-08",
+      "label": "INVALID (C2)",
+      "outcome": "C2 (job 768, L0-raw, 500 trials, counted) failed: chord_super_d predicted to pass, failed 5/5 (d press without Mod4 within 1 ms of Super_L); 99 of 100 entries as predicted; C1, C3 and A1-A7 not run; successor v2 under D40",
+      "evidence": "program/evidence/2026-10-08/q2-action-path-acceptance/README.md"
+    },
+    {
+      "registration": "q1-stage0-gate-validation (gauntlet wave 1, not a registration)",
+      "date": "2026-10-08",
+      "label": "HONEST EXIT",
+      "outcome": "score 45 (47 and 45); 3/3 refuters refuted; fatal defect F1: the TF32-admissible audit metric cannot separate correct TF32 matmul/conv outputs from destroyed ones on most L2 problems; Stage 0 withdrawn (D41)",
+      "evidence": "program/gauntlet/2026-10-08-q1-stage0-gate-validation.jsonl"
     }
   ]
 }

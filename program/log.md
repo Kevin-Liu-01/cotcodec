@@ -159,6 +159,29 @@ Append-only. Newest entries at the bottom.
   and reruns only job A's points that v1 lost. Full suite on the host: 1,029
   passed.
 
+## 2026-10-07 — Q2 evaluator-mutation kit integrated (dev split, exploratory)
+
+- Branch `stage0/q2-evaluator-mutation` merges the harness, the blind specs
+  and the operator catalog, and adds `harness/q2_mutation/campaign.py`: blind
+  spec -> operator -> mutant -> GUI-faithful LibreOffice save -> pinned
+  `evaluate()` -> VerdictRow, as three CPU-only Slurm jobs per run (no GPU, no
+  network, D12/D13).
+- Three end-to-end runs on the 17 dev targets (Slurm 453-455, 458-460,
+  461-463): 275 mutants planned from the blind specs, 271 admitted. Applying
+  recipes to the raw gold instead of the LibreOffice-saved base kept
+  5cfb9197, whose null mutant failed after three round trips; 215 mutants
+  were evaluable in v2 and in v3 (the pinned code), with identical outcomes.
+  Unaudited candidate checker errors: a z-order swap of non-overlapping
+  shapes fails `compare_pptx_files` (2 tasks), dropped highlight passes
+  `compare_docx_files_and_ignore_new_lines`, a deleted unrelated paragraph
+  passes `compare_docx_tables`. Exploratory; never pooled with the
+  confirmatory run.
+- Target counts (no specs or checkers): 67 of 120 confirm tasks have a
+  mutable gold file (68 targets). The preregistration draft
+  `q2-evaluator-mutation-v1` now pins code tree, catalog, specs, splits and
+  images, and K6 is resized to what 67 tasks allow. It awaits a second review
+  before freezing. No confirm-split mutant was planned, built or scored.
+
 ## 2026-10-07 — Action-path runtime and Q1 gate stack built (not frozen)
 
 - Q2 Stage 0b (branch `stage0/q2-action-path`): CPU-only VM lane
@@ -253,6 +276,30 @@ Append-only. Newest entries at the bottom.
   0.167). Serving probe total with v1: 1.151 GPU-h. Evidence:
   `program/evidence/2026-10-07/serving-throughput-probe-v2/`.
 
+## 2026-10-07 — Q2 evaluator-mutation: first review answered (dev split, exploratory)
+
+- The first adversarial review of `q2-evaluator-mutation-v1` found that an
+  office candidate whose GUI-faithful save never ran was still scored on its
+  pre-save bytes (and a gold could count for P1 unsaved). The merge now
+  excludes such jobs (`save_failed`), and `unemulated` and `infra_timeout`
+  are their own statuses. Also fixed: the rater packet is built from the
+  operators' snapshot (the checker libraries hid highlight, colour, fills
+  and spacing), the K3 bound is exact at the Kish effective size with a
+  minimum audited size, unresolved rater disagreements count as label
+  errors unless Kevin adjudicates them, the K2 plan opens agent-created
+  outputs, the control path has the same freeze, pin and image guards as
+  the mutation path, and the pins cover the probe map, file cache, OSWorld
+  tree and VM baseline.
+- Rerun at the new code (Slurm 475-480): `dev-mutants-v4` reproduces v3 on
+  all 275 mutants (admission, status, event, verdict, both venvs);
+  `dev-controls-v7` gives K1 19/19 and one P1 flip in 19.
+- The draft now states that K6 is very unlikely to fire, reports P1 on the
+  93 golds the headless probe saved as a replication, and restates power:
+  after the probe exclusion only about 9 (P3) and 5 (P4) confirm tasks are
+  expected, so P3 and P4 are pooled-only. The dependency-sensitivity arm is
+  disclosed as not leaderboard-era. Still not frozen: second review and
+  Kevin's D2/D9 confirmation pending.
+
 ## 2026-10-07 — K1 v2 throughput probe frozen
 
 - The K1 v2 batched-bank GPU equivalence pre-check passed on the H100 (Slurm
@@ -288,6 +335,74 @@ Append-only. Newest entries at the bottom.
   nor the v2 registration was edited.
 - GPU time: 0.055 GPU-h (D22 counts the probe at its 0.15 cap). Evidence:
   `program/evidence/2026-10-07/q3-k1-v2/probe/`.
+
+## 2026-10-07 — Q2 evaluator-mutation: second review answered (third draft, not frozen)
+
+- The second adversarial review of `q2-evaluator-mutation-v1` (55/100) found
+  seven blocking defects. Fixed on `stage0/q2-evaluator-mutation` (main's
+  six-row ledger and D1-D23 merged first): K3/K4 now use the two label
+  classes that enter the metrics without an audit gate, with one
+  consequence (the affected metrics leave the headline); a rater runner in
+  the pinned tree (`rater_runner.py`: D23 raters, one call per item,
+  transport-only retries, first-token rule, `unsure` for every non-answer,
+  hashed receipts) plus audit packets (`audit.py`) and the registered
+  headline analysis (`analysis.py`); a seeded K2 sample drawn before scoring,
+  a closed list of explanations and the "offline harness, VM fidelity
+  unverified" fallback; P3 counted at the code's cell-level rule (40 confirm
+  tasks, not 11; K7 power corrected by simulation: 80% needs about 19% at 31
+  tasks); the probe-informed operators probe-touched in code; P1 a
+  replication on 92 save-exposed golds.
+- Dev smoke of the open-weight rater (Qwen3.5-9B, vLLM cu129 overlay built
+  at `ba840b4`, Slurm 566 and 582): 133 dev packets rated once each, all
+  replies parsed, 0.110 GPU-h of its 0.2 cap (0.123 with the overlay
+  build). Exploratory answers: do-nothing shams 6/6 rejected, gold shams 4/6
+  accepted, equivalence mutants 35 accepted / 25 rejected, mostly over
+  save-stage changes visible in the packet difference, so K3 may fire on
+  confirm unless Kevin adjudicates. The Anthropic arm did not run: the API
+  key in the agent environment returns 401.
+- Dev reruns at the new code (`dev-mutants-v5`/`v6`, `dev-controls-v8`/`v9`,
+  CPU only) reproduce v4 except 1-2 mutants per run lost to a UNO bridge
+  fault (`applied`). v8 showed a spurious venv flip on a nondeterministic
+  checker (9219480b), so S1 now confirms candidates at five fresh-process
+  scorings per venv (`dependency_flips.py`).
+- Not frozen: a third review, a working Anthropic key and Kevin's D2/D23
+  sign-offs (prereg section 17) are pending. No confirm or reserve item was
+  sampled, packed, rated, built or scored.
+
+## 2026-10-07 — Q2 evaluator-mutation: third review answered (fourth draft, not frozen)
+
+- The re-audit of the third draft (62/100) closed the second review's seven
+  defects and found two blocking ones plus eight others. Fixed on
+  `stage0/q2-evaluator-mutation` after merging main (D24, D25, the K1 probe
+  ledger row): audit packets now compare an end state with the starting
+  file saved through the same LibreOffice steps (UNO save then the
+  GUI-faithful save stage for mutants and gold shams; the control run's
+  saved do-nothing for P1 flips and do-nothing shams); violations are a
+  census stratum, and the sampler and K3 rule were simulated at confirm
+  scale (`integration/audit-design-v1/`: the violation group at 17 tasks
+  fires with P 0.00 / 0.065 / 0.55 at 1 / 2 / 5% label error, against 0.60 /
+  0.72 / 0.91 before; raters each right 90% fire the kappa rule in 0.11-0.27
+  of replicates); P1/K6 over the confirm and reserve control runs in code,
+  K1 confirm-only; the summary merges one calls file per shard and rater;
+  a registered token budget fits packets to the 9B rater's window; non-JSON
+  200 bodies are `unsure` and hashed, and the Anthropic receipt is written in
+  `finally`; a K2-dropped family leaves P2-P5, which are recomputed; S1
+  candidates unstable at five scorings are S5 and leave P2-P5; the D25
+  agent-harness Claude rater path (`rater_runner export-harness` /
+  `ingest-harness`) is registered with its disclosure; adjudication
+  workload estimated at about 60-90 confirm items.
+- Dev rerun of the audit with saved-start packets (Slurm 644, CPU) and of
+  the open-weight rater (overlay 646, args doctor 647, lane job 650; 0.095
+  GPU-h of the 0.15 allowed): 90 of 133 items rated before the lane's USR1
+  checkpoint signal (180 s before the 8-minute limit). Save noise is gone
+  from the packets (difference lines 21,842 to 7,705), but the rater's
+  disagreement with labels barely moved (22 vs 24 of the 90 paired items);
+  it rejects golds, e.g. 01b269ae's gold carries a zh-CN language and CJK
+  default font that the saved start does not (a gold artifact, not the save
+  stage as the first smoke read it). If Claude agreed with every label,
+  kappa would be 0.48. Dev packets exported for the Claude rater (outside
+  the repository); its answers, a fourth review and Kevin's sign-offs are
+  pending. Not frozen.
 
 ## 2026-10-07 — Open-weight reviewer tooling: smoke reviewed, exit hung, fixed
 
@@ -607,6 +722,146 @@ Append-only. Newest entries at the bottom.
   and the saved orx logs and hashes receipts over their bytes.
 - Waiting on Kevin: the draft's design decisions 1-15.
 
+## 2026-10-07 — Q2 evaluator-mutation: third review of the fourth draft answered under D27 (fifth draft, not frozen)
+
+- Review 3 of the fourth draft (56/100) found three blocking defects; D27
+  answered them without relaxing the κ rule. On `stage0/q2-evaluator-mutation`
+  (main's D26/D27 merged first):
+  - `pptx.eq.zorder_nonoverlap` swaps a pair only when neither shape comes
+    within 2 mm of the other or of any shape stacked between them (rotated
+    frames widened, frameless shapes refused); `pptx.viol.delete_bound_shape`
+    skips a shape 90% or more under the shapes above it. Synthetic
+    revalidation (Slurm 684) as job 431; catalog `07e50a6f`; code tree
+    `37ae60f0`. Dev rebuild `dev-mutants-v8` (Slurm 688-690; v7 lost two
+    targets to a UNO bridge fault): all 17 targets, 275 / 271, clean save
+    stage. The restricted swaps still fail `compare_pptx_files` on 8 of 9
+    evaluable mutants (candidate checker false negatives, unaudited).
+  - Open-weight rater upgraded to Qwen3.6-35B-A3B (image input confirmed on
+    CPU with vLLM's own processor, Slurm 685/687); `rater_runner open` stops
+    cleanly on the lane's signals and leaves with `os._exit`. Dev rerate
+    (overlay 686, lane job 702): all 133 items of the new dev audit (Slurm 700)
+    rated in one 6 min 56 s job that ended on its own; 0.128 GPU-h with the
+    overlay. Shams 12/12, equivalence 57/60 accepted, but 19 of 26 violation
+    mutants accepted: κ 0.27 if Claude matched every label, 0.34 against the
+    earlier non-blind Claude answers. Unless the isolated Claude answers
+    differ greatly, κ stays under 0.6 and the design returns to review (D27).
+  - Isolated Claude rater: `export-isolated` / `ingest-isolated` (one
+    directory per item, manifest outside, re-hash, model id and transcript
+    audit from the harness transcript); the 133 dev items are exported
+    outside the repository; their answers are pending. The label-bearing
+    files of the rerate are held on the host until that ingest.
+  - Minor items: K6 needs P5 in the headline and no K4 stop; the answers
+    wrapper is accepted; duplicate or anonymous call records are refused; the
+    rater GPU cap is read from a ledger; stale text fixed.
+- GPU time 0.1284 GPU-h (program total 1.7558). Evidence:
+  `program/evidence/q2-mutation/integration/rater-rerate-dev-v3/`. Not frozen.
+
+## 2026-10-07 — Q2 evaluator-mutation: isolated Claude ratings ingested on the D27 dev rerate (κ 0.27, back to review under D27)
+
+- 133 isolated Claude agents, one per dev item (workflow run
+  `wf_2301520e-159`), each confined to its own directory under the isolation
+  root. A strict transcript audit found 1,711 Read calls, all inside the
+  agent's own item directory, and 133 StructuredOutput answers. No other
+  tool was called and only claude-opus-5-5 appears: 0 voids. The registered
+  `ingest-isolated` gave 133 `ok` and 0 `isolation_void`; every item tree
+  re-hashed equal to its export. After the ingest, the held label files were
+  released; their digests match the committed `held/SHA256SUMS`.
+- Registered dev summary with both raters (121 real items, 12 shams, 1 P1
+  flip): κ 0.270, below 0.6, so κ fires. Shams were 12/12 for each rater.
+  Label error, with unresolved items counted as errors: equivalence 0.133
+  (K3 bound 0.255) and violation 0.731 (5 tasks, too few for the bound).
+  Both K3 groups fire, and K4 fires. 29 split items (24%; 26 of them are
+  Claude reject / Qwen accept, mostly violation mutants), about 1.5-2.4 h of
+  blind adjudication; 51 items with the spot check. Claude agrees with the
+  labels on 112 of 121 real items, Qwen on 94. Isolated and earlier
+  non-blind Claude answers agree on 93.6% of 109 matched items (κ 0.84).
+- Under D27 the design goes back to review; the κ rule is unchanged.
+  Evidence: `program/evidence/q2-mutation/integration/rater-isolated-dev-v3/`
+  and `dev-mutants-v8/`. No GPU used. Not frozen.
+
+## 2026-10-07 — Q2 evaluator-mutation: D34 retry implemented (sixth draft, thinking-on dev rerate, not frozen)
+
+- Merged main (D28-D34, Q1 gates, action path, Q3 pre-check) into
+  `stage0/q2-evaluator-mutation`; log, state, HANDOFF and SKILL conflicts
+  kept both sides; GPU total recomputed from the ledger.
+- D34 rules in code (`34046e0`): a gold sham for every task with an audited K3
+  item and the gold-defect rule (a task whose gold sham is decided reject
+  leaves its equivalence items out of the equivalence K3 group; labels stay
+  relative to the gold; the analysis reports P2 without them as a
+  sensitivity); Kevin's blind adjudication pool now also holds K3 items both
+  raters decide against the label and split gold shams; new-file end states
+  get a text-level difference against the starting files' text; shape
+  position or size changes of at most 0.02 mm are counted, not listed;
+  `pptx.viol.delete_bound_shape` skips shapes at least 50% off the slide;
+  the registered transcript audit checks the rendered prompt, the answer's
+  item id and that the packet was read, and its final-text fallback needs one
+  exact answer word; item ids take a secret per-audit salt; the agent prompt
+  template is committed (`harness/q2_mutation/templates/isolated_rater_prompt.txt`,
+  SHA-256 `0e9d4eb6...`); the open-weight rater thinks (`max_tokens` 8,192,
+  the model card's thinking sampling, seed 42, `max_model_len` 139,264).
+- Dev rebuild `dev-mutants-v9` (Slurm 714-716) reproduced v8's counts (271
+  admitted, 215 evaluable); revalidation Slurm 717 as before. Audit
+  `dev-audit-v4` (Slurm 720): 142 items (15 gold shams, 9 added by D34), one
+  455 MB shard, 51 new-file text differences, 5,833 drift changes counted.
+- Thinking-on rater (overlay 718, doctor 719, lane job 722): all 142 items in
+  12 min 57 s, 14.4 items per minute, clean exit, 0.228 GPU-h with the
+  overlay. Violations 14 accept / 12 reject (thinking off 19 / 7); extra
+  change 0 / 6; shams 20/21. κ 0.578 if Claude matched every label; 0.486
+  against the D27 isolated Claude answers on 119 matched items (a
+  projection; the packets changed).
+- The off-slide rule does not reach the review's item afb440d9: it deleted
+  shape 19, which is wholly on the slide; the 78% figure matches shape 20,
+  now excluded. Shape 19 is deleted again in v9.
+- Confirm rater cap re-registered at 3.0 GPU-h (841-item maximum about 2.2
+  GPU-h at a 10 items/min planning rate); the experiment's total stays at
+  most 4.52 GPU-h, under 8, so no gauntlet.
+- 142 items exported for the isolated Claude rater (`q2m-iso-v5/`, manifest
+  outside); answers, ingest and the salt's release are pending. Held on the
+  host: sample, items, open-weight calls, v9 export (`held/SHA256SUMS`).
+  Evidence: `program/evidence/q2-mutation/integration/rater-rerate-dev-v4/`.
+  GPU 0.2281 GPU-h (program total 3.0108). Not frozen.
+
+## 2026-10-07 — Q2 evaluator-mutation: isolated Claude ratings ingested on the D34 dev rerate (κ below 0.6; D34 (i) fires)
+
+- 142 isolated Claude agents, one per dev item (workflow run
+  `wf_65ce9899-24a`, labels `rate5:*`), started with the registered prompt
+  template (`0e9d4eb6...`). The session ended once mid-run and the workflow
+  was resumed: 16 labels have an interrupted agent and a completed rerun; the
+  rating is the completed agent's. A strict transcript audit of all 158
+  agents found 0 voids: 1,789 Read calls by completed agents and 165 by
+  interrupted ones, all inside the agent's own item directory; 142
+  StructuredOutput answers, each naming its item; no other tool; only
+  claude-opus-5-5; every computed-task turn byte-identical to the rendered
+  template in the fixed wrapper; no other item's id in any transcript; every
+  item tree unchanged; answers equal to the journal results and the
+  handed-over list. 40 of 142 agents were not shown every line of
+  `packet.txt` (lowest 56%); all opened every page image.
+- The registered `ingest-isolated` (`b29034e`) gave 32 `ok` and 110
+  `isolation_void`: after the resume the workflow harness put a relay of the
+  session user's request ("continue all work.") before each new agent's task,
+  so the first user turn is not the rendered template. The registered rule
+  is unchanged; registering the relay turn or requiring unresumed rating runs
+  is open for Kevin before the freeze. A sensitivity ingest that does not
+  count that one byte-identical turn as a prompt gave 142 `ok`.
+- After the ingest the dev-audit-v4 salt was revealed (its SHA-256 matches
+  the committed `1660a49d...`; all 142 item ids recompute from it) and the
+  held files were released; all 18 match `held/SHA256SUMS`.
+- Registered summary with both raters: κ 0.066 (driven by the voids). With
+  the relay turn excepted: κ 0.575 (raw agreement 0.843), shams Claude 19/21
+  and Qwen 20/21, P1 flip accepted by both; one gold defect (task
+  `e528b65e`, 3 equivalence items out of the equivalence group); label error
+  equivalence 0.070 (K3 bound 0.179 on 57 items) and violation 0.577 (5
+  tasks, too few for the bound), so both K3 groups fire and K4 does not; 20
+  of 121 real items unresolved (16.5%; 16 of the splits Claude reject / Qwen
+  accept); adjudication pool 24 (20 splits, 3 concordant contradictions, 1
+  split gold sham), 48 items with the spot check.
+- D34 (i): development κ is below 0.6 either way, so no other rater is
+  tried; P2-P5 leave the confirmatory headline before the confirm campaign
+  runs, and the campaign reports P1 and the checker false-negative candidates
+  descriptively. Evidence:
+  `program/evidence/q2-mutation/integration/rater-isolated-dev-v4/` and
+  `dev-mutants-v9/`. No GPU used. Not frozen.
+
 ## 2026-10-07 — D30 applied to the action-path registrations (not frozen)
 
 - Branch `stage0/q2-action-path-d30` applies decision D30 before the freeze
@@ -734,6 +989,115 @@ Append-only. Newest entries at the bottom.
   untouched. No GPU time, no host access.
 - Next: freeze (steps 2-5). The binding doctor run is still the one in the
   image built from the freeze commit.
+
+## 2026-10-08 — Q2 evaluator-mutation: D35 applied (seventh draft, a descriptive protocol; not frozen)
+
+- Basis: the fifth review (64/100; scores 55, 62, 56, 57, 64) and decision
+  D35 on main (`64591fd`). Main merged first (`ba1e24e`): `log.md` kept both
+  sides, HANDOFF takes main's refresh with the checker-mutation bullet
+  updated, and the branch's `ledger.jsonl` equals main's (7 rows,
+  check-chain PASS). GPU total from the ledger rows: 3.0108 (unchanged).
+- (i) `analysis.D34_DEV_EXIT` always takes P2-P5 out of the confirmatory
+  headline ("D34 (i): development kappa below 0.6"); K6's adequacy claim is
+  retired (always blocked), K6b and K7 are descriptive, K4 is reported and
+  stops nothing. A test ties the constant to the recorded dev summary
+  (κ 0.0663 registered, 0.5752 relay excepted).
+- (ii) `analysis.checker_candidates`: false-negative candidates (evaluable
+  should_pass_equiv and should_pass_alt_solution mutants outside probe cells
+  that the checker fails) and false-positive candidates (evaluable
+  should-fail mutants it passes), each with its audit decision and reading
+  and its task's gold-defect flag; counts and task-equal shares with the
+  task-cluster bootstrap pooled, per label, family and operator; confirmed
+  shares when every candidate was audited.
+- (iii) `raters.draw_audit_sample` is a census of the candidate events, P2's
+  gate, the shams (a gold sham for every audited task) and the P1 flips;
+  above the 3.0 GPU-h cap's capacity at the planning rate
+  (`raters.audit_capacity`, 1,139 items) a seeded stratified sample over
+  candidate type × checker family (`raters.allocate`), disclosed in the
+  sample summary (`audit_scope`). Dev-scaled expectation: about 205 items,
+  0.62 GPU-h planned; adjudication pool about 16 items (10-40), 0.5-3.5 h.
+- (iv) `rater_runner.audit_transcript` checks every user turn: one rendered
+  template, and only the harness relay frame (`RELAY_PREAMBLE`, once, before
+  the task turn, no item id) besides it; `ingest-isolated` reads every
+  transcript of an item (`{item}.jsonl`, `{item}.<agent>.jsonl`, several
+  directories), allows one to answer, voids items with a relay frame when
+  the run's frames differ (unanswered items' transcripts included) and
+  records the relay digests in each call and the receipt. The fifth review's
+  probe (a later user turn naming the item's label) now voids. The relay
+  frame and its dev content are disclosed in section 9. Dev is not
+  re-ingested: the registered κ 0.066 stays as recorded. A scratch-only check
+  ran the new audit over the 158 dev transcript copies (format check, nothing
+  written): no void reason, one relay digest (`8e7dbd00`) in 110.
+- (v) `rater_runner.packet_parts` puts the differences before the listings
+  (label-blind, disclosed as postdating the dev results).
+- Minor: `render_rater_manifest` takes the lane memory per model (160 GiB for
+  Qwen3.6-35B-A3B) and the cap from `raters.AUDIT_GPU_HOURS`; sections 6, 9,
+  10, 13, 15 and 17, the status note, state.json (Q2 pending decision and
+  next action, D34 ledger outcome) and HANDOFF refreshed; review log added.
+- Checks: ruff clean; local Q2 tests 349 passed, 17 skipped; host full suite
+  at `1e42036` (fresh scratch copy, `uv sync --locked --extra dev`): ruff
+  clean, 2085 passed, 34 skipped; freeze-lint into a scratch copy of the
+  ledger (equal to main's): freeze, verify and check-chain (8 rows) pass,
+  registration SHA-256 `fe94a301215626c84da4bca0db97c92b404341abcf669a73c679643e018de56b`.
+  Records in `program/evidence/q2-mutation/integration/d35-protocol/`. No
+  GPU, nothing pushed or frozen.
+- Next: a fresh review of the seventh draft, Kevin's sign-offs (section 17),
+  re-merge main, freeze.
+
+## 2026-10-08 — Q2 evaluator-mutation: sixth review answered (eighth draft; not frozen)
+
+- Basis: the sixth review of the seventh draft (80/100, not ready to freeze;
+  scores 55, 62, 56, 57, 64, 80, lowest 55), one blocking defect. The
+  transcript audit read user turns only from entries of type `user`. The
+  agent harness also writes attachment entries, and a message sent to a
+  running agent (a user prompt, another agent's message, a task
+  notification) arrives as a `queued_command` attachment. The review's probe
+  (template, Read of `packet.txt`, a queued prompt naming the item's label,
+  `StructuredOutput`) returned no void reason, nor did an `edited_text_file`
+  attachment or a `system` or `progress` entry carrying a user message.
+- Fix (`1242da7`): `rater_runner.audit_transcript` treats any entry whose
+  message has the role user as a user turn, whatever its entry type, and
+  registers the entry types user, assistant and attachment
+  (`TRANSCRIPT_ENTRY_TYPES`) and the fifteen attachment types of the 158
+  D34 development transcripts (`HARNESS_ATTACHMENT_TYPES`). Any other entry
+  or attachment type (`queued_command`, `edited_text_file`, `nested_memory`,
+  `file`, a `queue-operation` entry and so on), a line that is not an entry
+  object and a user entry without a message void the item, with a reason
+  naming the type. The audit returns the count of every attachment type;
+  `ingest-isolated` records it per transcript and for the run, and the
+  receipt lists the registered types. Tests cover the probe and the other
+  channels, plus an ingest in which a queued prompt voids the answering
+  transcript; a prereg test checks that section 9 names every type.
+- Rerun over copies of the 158 dev transcripts (scratch only, nothing
+  ingested): no void reason, 3,304 attachments, all of the fifteen types,
+  none outside the list, one relay digest (`8e7dbd00`) in 110. The
+  registered dev result (κ 0.066) stays as recorded.
+- Registration (eighth draft): status note (item 4 and a sixth-review
+  paragraph), section 9 (the rule, and the fifteen types beside the D34
+  injected-context disclosure: checked by type only, fail closed if a
+  harness version adds a type), section 17 (the review's minor items listed
+  as open, the sign-off, the review log). Code-tree pin `d50be4df`. Harness
+  README and SKILL, HANDOFF and state.json updated.
+- Not changed (the review's minor items, open for Kevin and a later pass):
+  the stratified fallback's budget is not maximal as coded; transcript
+  collection from the workflow directory is unregistered; relay identity is
+  not checked across several calls files at `audit summarize`, and the
+  relayed text is kept only as a hash; concordant contradictions reach the
+  pool only for the K3 candidate kinds; a second resume with another
+  request voids every relay-frame item; stale K2 wording in section 10.
+- Checks: ruff clean; local Q2 tests 351 passed, 17 skipped;
+  validate_architecture_experiments, validate_provider_models and
+  check-chain pass; host full suite at `1242da7` (fresh scratch copy,
+  `uv sync --locked --extra dev`): ruff clean, 2087 passed, 34 skipped;
+  freeze-lint into a scratch copy of the ledger (equal to main's, 7 rows):
+  freeze, verify and check-chain (8 rows) pass,
+  registration SHA-256
+  `b8011fc9af23fcf96f6afe1b857154b09a1dd166523b050326275756b3e7de1f`.
+  Records in `program/evidence/q2-mutation/integration/d35-protocol/`. No
+  GPU, nothing pushed or frozen. Main has moved to `5e9e1f7` (D36, the Q3
+  pre-check operated); its ledger still equals the branch's.
+- Next: a narrow re-check of the eighth draft, Kevin's sign-offs (section
+  17), re-merge main, freeze.
 
 ## 2026-10-07 — D33 applied to the action-path registrations (not frozen)
 
@@ -1005,6 +1369,57 @@ Append-only. Newest entries at the bottom.
 - Waiting on Kevin: sign-off of `q1-stage0-exec/2` and the store policy, the
   budget path, D14 findings 18.3 items 6-8, D28/D29.
 
+## 2026-10-08 — Q2 evaluator-mutation: D38 applied (ninth draft; the sixth review's minor items fixed; not frozen)
+
+- Basis: decision D38 on main (`5231846`): the eighth draft's choices
+  accepted as implemented, the sixth review's minor items fixed before the
+  freeze. Main merged first (`f0e6d35`): `log.md` kept both sides,
+  `state.json` keeps main's entries for the other questions (the resolved A4
+  pending decision stays removed) and the branch's Q2 entries, and the GPU
+  total is recomputed from the 16 ledger rows (3.7597 = main's 3.1857 plus
+  the branch's four checker-mutation dev rows, 0.5740); HANDOFF takes main's
+  version with the checker-mutation bullet updated; the branch's
+  `ledger.jsonl` equals main's byte for byte (7 rows).
+- Code (`58435c3`): the stratified fallback searches for the largest mutant
+  budget that fits (`raters.stratified_sample`; the review's synthetic pool
+  fills 300, 500 and 700 exactly, budgets 227, 417 and 608, where one
+  subtraction stopped at 251, 462 and 672); concordant contradictions of
+  every stratum join Kevin's pool (the dev census pool stays 4 of 50, the
+  D34 audit's pools stay 24 and 113); `rater_runner collect-transcripts`
+  maps every `agent-*.jsonl` of the rating run to its item by its rendered
+  task turn, refuses one it cannot map, an unstarted agent and a started
+  agent without a transcript, copies byte-exact and writes a collection
+  manifest that `ingest-isolated --collection` checks (missing, changed or
+  unlisted transcripts refused); an attempt without a journal result answers
+  only through StructuredOutput; the receipt records each relay frame
+  verbatim (digest only if it names an item); `rerate.json` lists items voided
+  only for differing frames, `export-isolated --rerate-list` exports them
+  for one fresh, unresumed re-rate, and `audit summarize --rerate-list
+  --rerate-calls` writes the re-rated summary beside the registered one;
+  `audit summarize` refuses calls files with different relay frames. Tests
+  for each.
+- Registration (`e6cdbd7`, ninth draft): status note items 6-12, sections 4,
+  9, 10 (K2 no longer has K6 reading P5), 14, 16 and 17 (D38 checklist item;
+  Kevin's remaining items: the pool, the spot check, outward actions and the
+  carried-over sign-offs). Code-tree pin `50edcc45`; catalog unchanged.
+  `rater-isolated-dev-v4/README.md` no longer calls the relay question open
+  (its SHA256SUMS refreshed).
+- Checks: locally ruff clean and the Q2 tests 356 passed, 20 skipped
+  (module-level torch skips); on the host (fresh
+  `~/cotcodec-scratch/q2m-d38-e6cdbd7-20261008065436`, `uv sync --locked
+  --extra dev`) ruff clean and the full suite 2124 passed, 37 skipped. The
+  collector and audit over copies of the 158 dev transcripts (scratch only):
+  all 158 mapped, layout equal to the hand copies file for file, no void, 142
+  answering, one relay digest in 110; the whole run (with its non-rater
+  agents) is refused. Freeze-lint on a scratch ledger copy: freeze, verify,
+  check-chain PASS (8 rows); registration SHA-256
+  `0a01f424e9a83357b107c948e915c7b6448848cc9ea55175e1d52f24b34fd27c`.
+  Records in `program/evidence/q2-mutation/integration/d38-fixes/`. The older
+  host scratch directories `q2m-d35-*` are removed. No GPU, nothing pushed or
+  frozen.
+- Next: a narrow re-check of the ninth draft, Kevin's remaining items
+  (section 17), re-merge main, freeze.
+
 ## 2026-10-08 — D39 applied to the action-path registrations (not frozen)
 
 - Merged main (D37-D39, the Q1 D31 engineering pass) into
@@ -1089,6 +1504,142 @@ Append-only. Newest entries at the bottom.
   records, the verdict JSON, the campaign summary, the SHA-256 of the 49
   raw files left on the host, and the operator scripts). 0.17 VM-hours, no
   GPU. Nothing pushed or merged.
+
+## 2026-10-08 — Q1 D37 (iii): the validation job under `q1-stage0-exec/2` (branch `stage0/q1-exec2-validation`, not merged, not pushed)
+
+- Rule `q1-exec2-validation/1` registered before the job (preregistration 18.10,
+  commit `23a8768`; `harness/q1/exec2_validation.py`, driver
+  `scripts/run_q1_exec2_validation.py`, pre-specified analysis in the evidence
+  folder): the re-pilot's 24 S1-cal kernels (job 713's artifact, unchanged), all 15
+  gates through the store (gate (a) inline), and the three KernelBench adversarial
+  controls on the store's consumer gates with inline twins; adversarial first, then
+  the re-pilot kernels in rounds by ascending exec/2 model cost; 10-minute box, items
+  started until 330 s, killed at 390 s. Section 2.1 unchanged (the job ran the card's
+  gate, audit and driver code).
+- Finding before the job: the three adversarial kernels call
+  `load_inline(name="fast_matmul")` with different sources and share the container's
+  extension directory, so concurrent items can load each other's library; the rule
+  chains them. Stage 0's plan runs them concurrently and needs the same fix (owner's
+  call).
+- Image `cotcodec-q1-gates:23a87683` from CPU-only build 746 (fresh clone); CPU check
+  in the image reproduced the plan (433 items, `633b2753...`). Recorded `squeue` and
+  `nvidia-smi` (idle node), dry-run, test-only, one submission: Slurm 752
+  `COMPLETED 0:0`, 393 s, **0.1092 GPU-h** physical (cap 0.1667; D31's 0.5 now 0.439).
+- Safety where it ran (122 items, all final; 1 cut at the hard deadline; 310 never
+  started): no GPU resource failure, contention retry, failed health check, slot or
+  device retirement, memory-guard wait or A5 `na`; largest concurrent measured peak
+  24.2 GB; measured peaks at most 1.12x their estimate (gate c on L1/1 and L1/10).
+  Covered 12 and 2 items per GPU only: L2/87, L2/100, L2/46, L2/59's consumers,
+  identity controls and mutants not reached. 64 of 65 items also in job 713 kept
+  their verdict rows; L2/59 `A4_poison` went from a 713 reject (`CUDA error: invalid
+  argument` under the poison allocator, not in the resource-failure list) to accept.
+- Adversarial controls: all 15 consumer-gate aggregates equal through the store and
+  inline (`result_reuse`, `zero_out` rejected; `non_default_stream` accepted by c,
+  A1-A3, A5 `error` in both arms because A5 cannot copy a candidate holding an
+  extension module). Rows differ only for `result_reuse` (allocator history): inline,
+  gate c accepted 7 of 16 configurations by reusing the freed reference output; the
+  store arm rejected all 16.
+- Cost: measured GPU-seconds are 2.425x the exec/2 model over the 87 re-pilot items
+  (1.96 on one-unit items run during the adversarial CUDA compiles; 6.35 on L2/59 at 2
+  per GPU, whose 4.3 GB of parameters the input-sized model misses). Projection with
+  this job in the fixed part, central / high: model 10.57 / 12.41 (no store) and
+  10.77 / 12.69 (store) through P3; **primary (store model x R) 19.99 / 24.66 through
+  P3, 31.89 / 40.10 through P7**; 11.68 central through P3 at R's bootstrap lower
+  point. D31 verdict unchanged: Stage 0 not admitted.
+- GPU ledger row added (Stage 0 spent 1.3381); two tests that pin the ledger value
+  updated. The analysis script's adversarial grouping was fixed after the job (it
+  grouped by row gate and missed gate c's `c1`-`c3` rows); post hoc regime split and
+  exposure entry written after the data. Evidence:
+  `program/evidence/2026-10-08/q1-exec2-validation/`.
+
+## 2026-10-08 — Q1 Stage 0 gauntlet wave 1: score 45, honest exit (branch `gauntlet/q1-stage0`, not merged)
+
+- Wave 1 under D37 (workflow `wf_fcfd5ed9-8a8`) on proposal
+  `program/proposals/2026-10-08-q1-stage0-gate-validation.md` (`7f4d080b...`,
+  commit `7af2f57`). Audit row 1 appended to
+  `program/gauntlet/2026-10-08-q1-stage0-gate-validation.jsonl`, row hash
+  `836c7e7d3820736d0d24a48f56271adbced541e4a34757d208cfceef8eaf4d42`.
+- Reviews: 47 (claude-opus-5-5) and 45 (qwen3.6-35b-a3b, self-hosted, Slurm
+  775). Both totals equal their dimension sums and sit below every cap (74,
+  79, 89). Score 45, best 45. Neither review is signed (D24).
+- Blind discrimination passed under the rule: same mechanism, proposal judged
+  stronger. The pass is weak, because the proposal's paragraph omits the
+  registered TF32-admissible policy. Refute-first triad: 3 of 3 refuted
+  (novelty: trivial recombination of MtC, CGV and Correctness Illusion;
+  identification: execution-arm confound; feasibility: the 8 GPU-h stop falls
+  inside P1). The doctor gives FAIL as expected (Novelty, Design and Compute
+  FAIL; trust store; known parser quirks, including `gpu_hours=0.5` read as 0).
+- Largest defect (F1): the audit metric cannot separate a correct TF32 matmul
+  or convolution from a destroyed output. In job 713 the correct L2/46
+  Inductor conv substrate scores e = 0.8275 on admissible draw A2/uniform8,
+  equal to the reference's own TF32 error, against e = 0.999 for all zeros.
+  The recorder checked this against the journal. A threshold-only D14 fix is
+  therefore excluded on stored data.
+- Honest exit. The query budget is used: 149 of 150 discover calls (the
+  recorder recounted from transcripts; the feasibility refuter ran one
+  unrecorded duplicate). A compliant wave 2 needs at least 18 more. The triad
+  also stopped the candidate. Tokens 5.95M of 8M (conservative counter),
+  $87.16 of $150 list-price equivalent, 123 of 600 minutes.
+- GPU: reviewer 2 job 775 used 0.0572 GPU-h, added to the ledger as
+  "Q1 Stage 0 gauntlet wave 1 open-weight review". The name does not start
+  with `q1-stage0`, so the Stage 0 spend in `trim.stage0_spent_gpu_hours`
+  stays 1.2289 (ledger test passes). The validation job 752 (0.1092 GPU-h) is
+  on `stage0/q1-exec2-validation`. Merging both branches conflicts trivially
+  at the ledger end and the total; the resolved total is 3.3521 GPU-h.
+- Waiting on Kevin: D14 and the audit metric (normaliser); a GPU allowance for
+  an S1-cal repair pilot (at most 0.1 GPU-h, pass rule written first); a
+  successor gauntlet with fresh budgets (six queries per refuter and
+  reviewer); the Stage 0 cap or a re-scope with the FRR core first. The Q1
+  status line in `program/state.json` was left unchanged to avoid a merge
+  conflict with the validation branch; update it at merge.
+
+## 2026-10-08 — Q2 evaluator-mutation: the narrow re-check's minor items fixed (ninth draft; not frozen)
+
+- The narrow re-check of the ninth draft scored it 90/100, ready to freeze,
+  with no blocking defect (review log, prereg section 17; the lowest score
+  stays 55). Its minor items are fixed on `stage0/q2-evaluator-mutation`
+  without changing a registered choice.
+- Merges of main: `6c4160b` (D39 in `decisions.md` only) as `0c6fe4f`, then,
+  because main moved during the pass, `a9948ee` (the action-path branch
+  merged and q2-action-path-v1, -inputs and -executor frozen) as `88bd376`.
+  `log.md` keeps both sides; `state.json` takes main's action-path
+  next_action with the branch's checker-mutation sentence and keeps the
+  branch's GPU ledger (16 rows, 3.7597). The ledger equals main's (10 rows,
+  SHA-256 `e7d20178`). Nothing under the checker-mutation code-tree roots
+  changed on main.
+- Code (`de24e23`): `rater_runner.check_rerate_list` recomputes a re-rate
+  list's items from the calls file it names (the records whose only void
+  reason is the relay mismatch, `relay_rerate_items`, which the ingest uses
+  too) and refuses a list that differs; `audit summarize --rerate-list` uses
+  the Anthropic calls file the list belongs to, `export-isolated
+  --rerate-list` the `calls.jsonl` beside the list. `collect_transcripts`
+  copies into a staging directory beside the output and renames it into
+  place only when every copy checks, so a refusal leaves nothing behind.
+  New tests pin the "only void reason" rule (ingest, summary, export), the
+  journal's refusals (an agent started twice among them) and the staged
+  collector. The harness README's pool row now says concordant
+  contradictions of every label class (D38).
+- Registration (`a8ea642`): the status note records the re-check and its
+  fixes; section 9 registers the recompute check and says that a resume
+  with a different relay frame puts every relay-voided item in the
+  registered pool, on top of the normal pool (113 items against 24 on the
+  development analogue); section 17 checks the re-check, logs its score and
+  carries the same sentence in Kevin's item. Code-tree pin `58bee019`;
+  catalog unchanged.
+- Checks: ruff clean; the Q2 tests locally 358 passed, 20 skipped. Nine
+  targeted mutants of the fixes, each on a `git archive` copy of `88bd376`,
+  are all killed, the re-check's survivors M7 and M14 among them. Host,
+  fresh `~/cotcodec-scratch/` directories (rsync without `.venv` and
+  `.git`, `uv sync --locked --extra dev`): at `a8ea642` 2,126 passed, 37
+  skipped; at the merge head `88bd376` 2,181 passed, 37 skipped and 1
+  failed, main's own action-path test that still asserts no ledger row for
+  the registrations main has now frozen (it fails on main `a9948ee` too).
+  Freeze-lint on a scratch copy of main's ledger (10 rows): freeze, verify,
+  check-chain PASS (11 rows); registration SHA-256
+  `f62362b8f49e20fdca161b55c8b37c861785bdd6711d853713eaabca701f78e5`.
+  Records in `program/evidence/q2-mutation/integration/d38-recheck-fixes/`.
+  No GPU, nothing pushed or frozen.
+- Next: Kevin's remaining items (section 17), re-merge main, freeze.
 
 ## 2026-10-08 — Q2 action path v2 drafted under D40 (branch `stage0/q2-action-path-v2`)
 

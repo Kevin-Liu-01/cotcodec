@@ -1,0 +1,10 @@
+{
+  "domain": "vs_code",
+  "initial_files": [],
+  "instruction": "Please modify VS Code's settings to disable error reporting for Python missing imports.",
+  "related_apps": [
+    "vscode"
+  ],
+  "snapshot": "vscode",
+  "task_id": "e2b5e914-ffe1-44d2-8e92-58f8c5d92bb2"
+}

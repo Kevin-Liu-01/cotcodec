@@ -1,0 +1,22 @@
+task_id: e4ef0baf-4b52-4590-a47e-d4d464cca2d7
+author: blind-model-author-v1
+requirements:
+  - req_id: R0
+    statement: (implicit) The presentation is saved in place at /home/user/Desktop/42_2.pptx with 6 slides and unchanged texts.
+    check_kind: file_exists
+    observable: File loads; texts unchanged.
+  - req_id: R1
+    statement: The picture on slide 3 has height 20 cm.
+    check_kind: image_property
+    observable: The main picture on slide 3 has height 20.0 cm (+-0.05). Candidates are "Picture 7" (in a group, 21.12 x 14.08 cm, the central photo) and "Picture 5" (52.78 x 19.68 cm top band); see allowed variations.
+  - req_id: R2
+    statement: All text boxes on slide 6 use 40 pt font.
+    check_kind: text_run
+    observable: Every non-empty run on slide 6 ("Our Founder", "Name Surname", "Presentations are communication tools ...") has size 40 pt.
+  - req_id: R3
+    statement: (implicit) Text sizes on other slides are unchanged.
+    check_kind: text_run
+    observable: Run sizes on slides 1-5 equal the initial file.
+allowed_variations:
+  - '[AMBIGUOUS] Slide 3 has two pictures; the instruction says "picture" (singular). The central photo (Picture 7) is the natural target; resizing Picture 5 is a different reading. Record which.'
+  - Width may stay or scale proportionally; position after resizing is not constrained.

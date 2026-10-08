@@ -1,0 +1,16 @@
+{
+  "domain": "libreoffice_calc",
+  "initial_files": [
+    {
+      "path_in_vm": "/home/user/Multiply_Time_Number.xlsx",
+      "sha256": "a6f792dd99a2251bf7f2ed1f55896e3588718a4a53d291ecc5db25a5b3ac8b17",
+      "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/1e112283c4ecb08d6fed8069bca7de74fa2f12aa/libreoffice_calc/357ef137-7eeb-4c80-a3bb-0951f26a8aff/Multiply_Time_Number.xlsx"
+    }
+  ],
+  "instruction": "I have calculated the total work hours from the everday hours. And I have an hourly rate. Now I want to multiply the total hours with the hourly rate to get a total earned amount. However, I can't get a correct answer by directly multiply the two cells. Here the \"total hours\" is of time and \"hourly rate\" is just a number. How can I get the correct product of them? Help me fill in the cell the correct answer. Don't touch irrelevant blank regions.",
+  "related_apps": [
+    "libreoffice calc"
+  ],
+  "snapshot": "libreoffice_calc",
+  "task_id": "357ef137-7eeb-4c80-a3bb-0951f26a8aff"
+}

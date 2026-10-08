@@ -1,0 +1,20 @@
+{
+ "lock": {
+  "infra_failed": [],
+  "infra_timeouts": 0,
+  "jobs": 286,
+  "nondeterministic": [],
+  "postconfig_unemulated_jobs": 0,
+  "setup_unemulated_jobs": 0,
+  "unemulated_writing_jobs": 0
+ },
+ "scout": {
+  "infra_failed": [],
+  "infra_timeouts": 0,
+  "jobs": 286,
+  "nondeterministic": [],
+  "postconfig_unemulated_jobs": 0,
+  "setup_unemulated_jobs": 0,
+  "unemulated_writing_jobs": 0
+ }
+}

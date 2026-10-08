@@ -1,0 +1,12 @@
+[
+  "python",
+  "-m",
+  "harness.q2_mutation.rater_runner",
+  "open",
+  "--evidence",
+  "/inputs/study-artifact.json",
+  "--expected-evidence-sha256",
+  "4a56ba5e4fc91dfe9345708690d53ec71438e5a037855726d298931ddb665da7",
+  "--output-dir",
+  "/outputs/rater"
+]

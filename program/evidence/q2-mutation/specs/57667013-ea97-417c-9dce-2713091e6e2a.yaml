@@ -1,0 +1,17 @@
+task_id: 57667013-ea97-417c-9dce-2713091e6e2a
+author: blind-model-author-v1
+requirements:
+  - req_id: R0
+    statement: (implicit) The presentation is saved in place at /home/user/Desktop/1_2.pptx with 5 slides and unchanged texts.
+    check_kind: file_exists
+    observable: File loads; texts unchanged.
+  - req_id: R1
+    statement: All text in all text boxes on slide 5 is yellow (#FFFF00, LibreOffice palette "Yellow"; no light/dark variants).
+    check_kind: text_run
+    observable: Every non-empty run on slide 5 ("WRITE AN ORIGINAL / STATEMENT OR / INSPIRING QUOTE" and "Include a credit, citation, or supporting message") has color FFFF00.
+  - req_id: R2
+    statement: (implicit) Text on slides 1-4 keeps its colors.
+    check_kind: text_run
+    observable: Run colors on other slides equal the initial file.
+allowed_variations:
+  - Other run attributes (size, bold, font) are not constrained.

@@ -1,0 +1,26 @@
+task_id: 5c1a6c3d-c1b3-47cb-9b01-8d1b7544ffa1
+author: blind-model-author-v1
+requirements:
+  - req_id: R0
+    statement: (implicit) The presentation is saved in place at /home/user/Desktop/39_2.pptx with 5 slides and unchanged texts.
+    check_kind: file_exists
+    observable: File loads; texts unchanged.
+  - req_id: R1
+    statement: All text on slide 1 is bold.
+    check_kind: text_run
+    observable: Every non-empty run on slide 1 ("Business Infographic Template", "BUSINESS AND CORPORATE") has bold == true.
+  - req_id: R2
+    statement: The slide-1 title is 44 pt.
+    check_kind: text_run
+    observable: All runs of the title text box have size 44 pt. The title is read as "Business Infographic Template" (shape "TextBox 18", the prominent white heading at top-left in a render), see allowed variations.
+  - req_id: R3
+    statement: The slide-1 title is underlined.
+    check_kind: text_run
+    observable: All runs of the title text box have underline set.
+  - req_id: R4
+    statement: (implicit) Text on slides 2-5 is unchanged in formatting.
+    check_kind: text_run
+    observable: Bold/size/underline of runs on slides 2-5 equal the initial file.
+allowed_variations:
+  - '[AMBIGUOUS] Slide 1 has no title placeholder. "BUSINESS AND CORPORATE" (24 pt, low-contrast, bottom-left group) is the alternative candidate for "title"; record which shape got 44 pt + underline.'
+  - Box geometry changes caused by the larger font.

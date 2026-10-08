@@ -1,0 +1,16 @@
+{
+  "domain": "libreoffice_calc",
+  "initial_files": [
+    {
+      "path_in_vm": "/home/user/WeeklySales.xlsx",
+      "sha256": "5add57623a183f18267bd53129a9638ef30d5553665946395e8c5ee590e0ce51",
+      "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/1e112283c4ecb08d6fed8069bca7de74fa2f12aa/libreoffice_calc/1e8df695-bd1b-45b3-b557-e7d599cf7597/WeeklySales.xlsx"
+    }
+  ],
+  "instruction": "Create a clustered column chart showing the Sales and COGS data for each week in a new sheet named \"Sheet2\". Set the chart title as \"Sales & COGS\".",
+  "related_apps": [
+    "libreoffice_calc"
+  ],
+  "snapshot": "libreoffice_calc",
+  "task_id": "12382c62-0cd1-4bf2-bdc8-1d20bf9b2371"
+}

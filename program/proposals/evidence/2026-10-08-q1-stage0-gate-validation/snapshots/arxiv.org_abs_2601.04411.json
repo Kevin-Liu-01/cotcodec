@@ -1,0 +1,28 @@
+{
+ "url": "https://arxiv.org/abs/2601.04411",
+ "fetched_at": "2026-10-08T07:30:29Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 44127,
+ "raw_sha256": "cee5b0dd0d016fa2da0b17157ada6f478cf895e2233315cb557cb9d3aa495c3f",
+ "raw_stored": false,
+ "extract": {
+  "title": "Rate or Fate? RLV$^\\varepsilon$R: Reinforcement Learning with Verifiable Noisy Rewards",
+  "authors": [
+   "Rad, Ali",
+   "Filom, Khashayar",
+   "Keivan, Darioush",
+   "Esfahani, Peyman Mohajerin",
+   "Kamalinejad, Ehsan"
+  ],
+  "citation_date": "2026/01/07",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Wed, 7 Jan 2026 21:31:26 UTC"
+   }
+  ],
+  "abstract": "Reinforcement learning with verifiable rewards (RLVR) is a simple but powerful paradigm for training LLMs: sample a completion, verify it, and update. In practice, however, the verifier is almost never clean--unit tests probe only limited corner cases; human and synthetic labels are imperfect; and LLM judges (e.g., RLAIF) are noisy and can be exploited--and this problem worsens on harder domains (especially coding) where tests are sparse and increasingly model-generated. We ask a pragmatic question: does the verification noise merely slow down the learning (rate), or can it flip the outcome (fate)? To address this, we develop an analytically tractable multi-armed bandit view of RLVR dynamics, instantiated with GRPO and validated in controlled experiments. Modeling false positives and false negatives and grouping completions into recurring reasoning modes yields a replicator-style (natural-selection) flow on the probability simplex. The dynamics decouples into within-correct-mode competition and a one-dimensional evolution for the mass on incorrect modes, whose drift is determined solely by Youden's index J=TPR-FPR. This yields a sharp phase transition: when J>0, the incorrect mass is driven toward extinction (learning); when J=0, the process is neutral; and when J<0, incorrect modes amplify until they dominate (anti-learning and collapse). In the learning regime J>0, noise primarily rescales convergence time (\"rate, not fate\"). Experiments on verifiable programming tasks under synthetic noise reproduce the predicted J=0 boundary. Beyond noise, the framework offers a general lens for analyzing RLVR stability, convergence, and algorithmic interventions.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}

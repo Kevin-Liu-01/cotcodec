@@ -1,0 +1,59 @@
+# Q1 Stage 0 validation job under the execution policy q1-stage0-exec/2 (decision D37 iii;
+# scripts/run_q1_exec2_validation.py; rule q1-exec2-validation/1 in
+# harness/q1/exec2_validation.py). Measures the policy's safety and cost on the D31
+# re-pilot's 24 non-evaluation kernels (8 S1-cal problems: substrate, reference-identity
+# control, one mutant; all 15 scoring gates at replicate 42 through the reference store,
+# gate (a) inline) and on the three KernelBench adversarial controls (consumer gates c,
+# A1, A2, A3, A5 through the store, each with an inline twin). Memory-sized units on one
+# GPU, free-memory guard, contention-safe health check. Replicates 43 and 44 are declared
+# for the lane's seed binding and not scheduled. Trusted code only (D3, D7, D29); no
+# evaluation unit (D28). The study artifact is the re-pilot's own (job 713). Model kind
+# none; one GPU for at most 10 minutes (0.1667 GPU-h, inside the 0.17 GPU-h left of D31's
+# 0.5); the driver stops starting items at 330 s and kills what still runs at 390 s.
+runtime: docker-single-node-discovery-v1
+name: q1-exec2-validation
+image_id: FILL-q1-gates-image-id
+git_sha: FILL-git-sha
+source_sha256: FILL-source-tar-sha256
+container_profile: large-cpu-mem
+resources:
+  gpu_type: h100
+  gpus: 1
+  cpus: 32
+  memory_gb: 256
+  minutes: 10
+budget:
+  max_gpu_hours: 0.17
+randomness_contract: assignment-seed-matrix
+seeds: [42, 43, 44]
+seed_binding:
+  flag: "--seeds"
+run_root: /home/kevin/cotcodec-runs/stage0/q1-exec2-validation/runs
+model:
+  kind: none
+  reason: "Q1 D37 validation job: q1-stage0-exec/2 safety and cost on S1-cal compiler kernels, controls, mutants and KernelBench adversarial controls; no checkpoint"
+study_artifact:
+  source_id: q1-repilot-inputs
+  revision: 8e9d2574a3332114109e6b21bd0d041a9868b471
+  license: LicenseRef-q1-mixed
+  host_path: /home/kevin/cotcodec-runs/stage0/q1-engineering-d31/artifacts/repilot-corpus-8e9d2574/q1-repilot-inputs.json
+  sha256: 391d60f5b1dce56e1ee8d76d16ab581b073043000ddada9b714b3908f2d19a52
+  size_bytes: 1197701
+command:
+  - env
+  - TRITON_CACHE_DIR=/outputs/cache/triton
+  - TORCHINDUCTOR_CACHE_DIR=/outputs/cache/inductor
+  - python
+  - scripts/run_q1_exec2_validation.py
+  - "--evidence"
+  - /inputs/study-artifact.json
+  - "--expected-evidence-sha256"
+  - 391d60f5b1dce56e1ee8d76d16ab581b073043000ddada9b714b3908f2d19a52
+  - "--output"
+  - /outputs/q1
+  - "--budget-minutes"
+  - "10"
+  - "--seeds"
+  - "42"
+  - "43"
+  - "44"

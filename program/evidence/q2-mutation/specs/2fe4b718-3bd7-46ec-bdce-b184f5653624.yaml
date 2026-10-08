@@ -1,0 +1,14 @@
+task_id: 2fe4b718-3bd7-46ec-bdce-b184f5653624
+author: blind-model-author-v1
+requirements:
+  - req_id: R1
+    statement: An animated GIF named src_clip.gif is created (on the Desktop, next to src.mp4).
+    check_kind: file_exists
+    observable: /home/user/Desktop/src_clip.gif exists, PIL format "GIF", n_frames > 1.
+  - req_id: R2
+    statement: The GIF shows the 5-second clip of src.mp4 starting at 00:03 (i.e. 3 s to 8 s).
+    check_kind: image_property
+    observable: Total GIF duration (sum of frame durations) is about 5 s (4.5-5.5 s); its first frame matches the video frame near t = 3 s and its last frame matches the frame near t = 8 s (high similarity after resizing).
+allowed_variations:
+  - Frame rate, resolution and palette of the GIF.
+  - Tooling (VLC + GIMP as suggested, or other tools) is not part of the end state.

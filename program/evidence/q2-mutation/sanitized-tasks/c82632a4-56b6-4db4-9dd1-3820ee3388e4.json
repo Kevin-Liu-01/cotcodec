@@ -1,0 +1,21 @@
+{
+  "domain": "libreoffice_impress",
+  "initial_files": [
+    {
+      "path_in_vm": "/home/user/Desktop/31_2.pptx",
+      "sha256": "22a6e170a2bedded3118939afd829f61f4bc08d50d572753315572b70b03d691",
+      "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/1e112283c4ecb08d6fed8069bca7de74fa2f12aa/libreoffice_impress/c82632a4-56b6-4db4-9dd1-3820ee3388e4/31_2.pptx"
+    },
+    {
+      "path_in_vm": "/home/user/Desktop/none.png",
+      "sha256": "c2a40433f387436cf6b91738e84b03aba50975b9f0dbfccc5fff01bffc49345a",
+      "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/1e112283c4ecb08d6fed8069bca7de74fa2f12aa/libreoffice_impress/c82632a4-56b6-4db4-9dd1-3820ee3388e4/none.png"
+    }
+  ],
+  "instruction": "Add an image \"none.png\" on the Desktop to slide 2 with 1cm*1cm size.",
+  "related_apps": [
+    "libreoffice_impress"
+  ],
+  "snapshot": "libreoffice_impress",
+  "task_id": "c82632a4-56b6-4db4-9dd1-3820ee3388e4"
+}

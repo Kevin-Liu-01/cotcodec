@@ -1,0 +1,16 @@
+{
+  "domain": "libreoffice_calc",
+  "initial_files": [
+    {
+      "path_in_vm": "/home/user/SummerSales.xlsx",
+      "sha256": "712b3eab23eeb201e55f1dc02d8cd936f19ddfad5d746cb7270870d123bb94fb",
+      "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/1e112283c4ecb08d6fed8069bca7de74fa2f12aa/libreoffice_calc/535364ea-05bd-46ea-9937-9f55c68507e8/SummerSales.xlsx"
+    }
+  ],
+  "instruction": "Create two pivot tables in a new sheet named \"Sheet2\" showing the total revenue for each product and sales channel.",
+  "related_apps": [
+    "libreoffice_calc"
+  ],
+  "snapshot": "libreoffice_calc",
+  "task_id": "535364ea-05bd-46ea-9937-9f55c68507e8"
+}

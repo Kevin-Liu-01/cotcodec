@@ -1,0 +1,17 @@
+task_id: edb61b14-a854-4bf5-a075-c8075c11293a
+author: blind-model-author-v1
+requirements:
+  - req_id: R0
+    statement: (implicit) The presentation is saved in place at /home/user/Desktop/24_8.pptx with 5 slides and unchanged texts.
+    check_kind: file_exists
+    observable: File loads; texts unchanged.
+  - req_id: R1
+    statement: The text on the last slide (slide 5, title "Conclusion") uses Times New Roman.
+    check_kind: text_run
+    observable: Every non-empty run on slide 5 has latin typeface "Times New Roman".
+  - req_id: R2
+    statement: (implicit) Fonts on slides 1-4 are unchanged.
+    check_kind: text_run
+    observable: Slide 1 title remains "Microsoft JhengHei"; slides 2-4 titles remain Calibri.
+allowed_variations:
+  - The empty body placeholder on slide 5 may or may not get the font set.

@@ -1,0 +1,17 @@
+task_id: 9cf05d24-6bd9-4dae-8967-f67d88f5d38a
+author: blind-model-author-v1
+requirements:
+  - req_id: R0
+    statement: (implicit) The presentation is saved in place at /home/user/Desktop/214_9.pptx with 2 slides.
+    check_kind: file_exists
+    observable: File loads; 2 slides.
+  - req_id: R1
+    statement: Slide 1 has a green background.
+    check_kind: slide_object
+    observable: Slide 1 has a solid background fill that is green (see allowed variations).
+  - req_id: R2
+    statement: (implicit) Slide 2's background is unchanged.
+    check_kind: slide_object
+    observable: Slide 2 background equals the initial file (inherited, no explicit p:bg).
+allowed_variations:
+  - '[AMBIGUOUS] "green" has no hex value; LibreOffice palette "Green" is #00A933, pure RGB green #00FF00, CSS green #008000. A clearly green hue satisfies the plain reading; record the hex.'

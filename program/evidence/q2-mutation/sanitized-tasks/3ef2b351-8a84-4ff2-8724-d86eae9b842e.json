@@ -1,0 +1,16 @@
+{
+  "domain": "libreoffice_writer",
+  "initial_files": [
+    {
+      "path_in_vm": "/home/user/Desktop/Constitution_Template_With_Guidelines.docx",
+      "sha256": "29c478b49fbc9f460ad4a9c4d1b23b71513167c118f0ed5fec3de98c28ba5251",
+      "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/1e112283c4ecb08d6fed8069bca7de74fa2f12aa/libreoffice_writer/3ef2b351-8a84-4ff2-8724-d86eae9b842e/Constitution_Template_With_Guidelines.docx"
+    }
+  ],
+  "instruction": "Help me center align the heading in LibreOffice.",
+  "related_apps": [
+    "libreoffice_writer"
+  ],
+  "snapshot": "libreoffice_writer",
+  "task_id": "3ef2b351-8a84-4ff2-8724-d86eae9b842e"
+}

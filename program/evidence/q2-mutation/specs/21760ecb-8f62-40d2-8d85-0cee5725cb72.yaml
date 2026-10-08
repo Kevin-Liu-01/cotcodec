@@ -1,0 +1,17 @@
+task_id: 21760ecb-8f62-40d2-8d85-0cee5725cb72
+author: blind-model-author-v1
+requirements:
+  - req_id: R0
+    statement: (implicit) The presentation is saved in place at "/home/user/Desktop/Ch4 Video Effect.pptx" with 24 slides and unchanged content.
+    check_kind: file_exists
+    observable: File loads; 24 slides; texts unchanged.
+  - req_id: R1
+    statement: Slide 1 has a "dissolve" slide transition.
+    check_kind: slide_object
+    observable: ppt/slides/slide1.xml contains a p:transition whose effect child is p:dissolve (or the LibreOffice equivalent stored as a dissolve transition).
+  - req_id: R2
+    statement: (implicit) Other slides do not gain transitions.
+    check_kind: slide_object
+    observable: Slides 2-24 have no p:transition (as initially).
+allowed_variations:
+  - Transition speed/duration, sound and advance settings are not constrained.

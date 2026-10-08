@@ -1,0 +1,18 @@
+task_id: 51f5801c-18b3-4f25-b0c3-02f85507a078
+author: blind-model-author-v1
+requirements:
+  - req_id: R1
+    statement: A Word document /home/user/Desktop/notes.docx exists.
+    check_kind: file_exists
+    observable: The file exists and opens with python-docx.
+  - req_id: R2
+    statement: It contains the text of all presenter notes, in slide order, and nothing else.
+    check_kind: text_run
+    observable: >-
+      Non-empty paragraphs == "This is opening slide.", "Cover slide option #1", "Cover slide option #3", "This is a graph.", "This is a table.", "This is item lists.", "This is an inserted image.", "Blank ending slide" (slide 7 has no notes).
+  - req_id: R3
+    statement: No added formatting or page-number information.
+    check_kind: other
+    observable: No headers/footers with page fields, no slide-number labels like "Slide 1" in the text.
+allowed_variations:
+  - Blank lines between notes.

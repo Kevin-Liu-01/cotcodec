@@ -129,14 +129,23 @@ def _ledger(tree: Path, manifest: dict) -> dict:
     return ledger_view(str(tree), ledger_paths(manifest))
 
 
-def test_the_repository_ledger_refuses_every_acceptance_campaign_before_the_freeze():
-    """Until the owner's freeze, the real ledger has no row for any q2 file."""
+def test_the_repository_ledger_admits_acceptance_only_after_the_freeze():
+    """Before the owner's freeze the real ledger refuses every acceptance
+    campaign; once the three registrations are frozen (v1's were, 2026-10-08,
+    rows 8-10; this file now checks v2's, decision D40) they are frozen
+    together and the real ledger admits A1 at seeds 43 and 44. v1's frozen
+    rows admit no v2 campaign."""
     rows = [json.loads(line) for line in (PREREGS / "ledger.jsonl").read_text().splitlines()]
-    assert not {row["experiment_id"] for row in rows} & set(FILES)
+    frozen = {row["experiment_id"] for row in rows} & set(FILES)
     for seed in (43, 44):
         manifest = acceptance(seed=seed)
-        with pytest.raises(ManifestError, match="not frozen in the ledger"):
-            validate_manifest(manifest, ledger_view(str(ROOT), ledger_paths(manifest)))
+        view = ledger_view(str(ROOT), ledger_paths(manifest))
+        if not frozen:
+            with pytest.raises(ManifestError, match="not frozen in the ledger"):
+                validate_manifest(manifest, view)
+        else:
+            assert frozen == set(FILES)
+            validate_manifest(manifest, view)
 
 
 def test_a_frozen_ledger_admits_a1_at_seeds_43_and_44(frozen_tree):

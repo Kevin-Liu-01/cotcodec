@@ -1,0 +1,24 @@
+{
+ "url": "https://arxiv.org/abs/2604.22032",
+ "fetched_at": "2026-10-08T07:30:47Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 43138,
+ "raw_sha256": "6f26eea852317e75d00ed61e09800eacf1898c409715dfd94836aecd9c0fae8b",
+ "raw_stored": false,
+ "extract": {
+  "title": "Kernel Contracts: A Specification Language for ML Kernel Correctness Across Heterogeneous Silicon",
+  "authors": [
+   "Veit, Cooper"
+  ],
+  "citation_date": "2026/04/23",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Thu, 23 Apr 2026 19:46:52 UTC"
+   }
+  ],
+  "abstract": "Every ML kernel ships with an implicit contract about what it computes. People rarely write the contract down. When two kernels disagree -- when a matmul on AMD produces a different gradient than the same matmul on NVIDIA, when a fused attention kernel silently downcasts an accumulator, when an out-of-bounds access returns zero on one stack and garbage on another -- there is no formal artifact to arbitrate the dispute. Recent empirical work has measured the gap across silicon platforms, but none of it specifies the contract being violated. We present a specification language for kernel contracts. A contract has eight parts: identifier, scope, precondition, postcondition, tolerance, reference oracle, measurement protocol, and violation signature. We use it to state twelve contract classes covering precision, ordering, compiler-induced, and exceptional-value failure modes, each grounded in published empirical evidence. We require a three-state calibration: every contract must admit at least one reference-conforming implementation and at least one contract-violating implementation that passes basic functional tests. We apply the framework to three documented incidents -- Huawei Ascend silent precision coercion, Sakana AI CUDA Engineer reward hacking, AMD out-of-bounds silent acceptance -- and show that each informal diagnosis maps to a specific contract violation with a measurable signature. A kernel contract suite is a normative reference against which conformance can be graded, in the way that ISASecure grades industrial control systems against IEC 62443.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}

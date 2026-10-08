@@ -1,0 +1,16 @@
+{
+  "domain": "libreoffice_impress",
+  "initial_files": [
+    {
+      "path_in_vm": "/home/user/Desktop/24_8.pptx",
+      "sha256": "5b9ca291664615d8344293cdfba2fc5b9dfa472c0b3ac9afa3bb12475e4be546",
+      "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/1e112283c4ecb08d6fed8069bca7de74fa2f12aa/libreoffice_impress/edb61b14-a854-4bf5-a075-c8075c11293a/24_8.pptx"
+    }
+  ],
+  "instruction": "In the last slide, make the font style \"Times New Roman\"",
+  "related_apps": [
+    "libreoffice_impress"
+  ],
+  "snapshot": "libreoffice_impress",
+  "task_id": "edb61b14-a854-4bf5-a075-c8075c11293a"
+}

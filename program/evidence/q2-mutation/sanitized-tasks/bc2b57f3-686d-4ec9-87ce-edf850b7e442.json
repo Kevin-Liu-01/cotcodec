@@ -1,0 +1,22 @@
+{
+  "domain": "multi_apps",
+  "initial_files": [
+    {
+      "path_in_vm": "/home/user/Desktop/workbook-with-sample-database.xlsx",
+      "sha256": "8c5d033a72430d63d292963a322ab7a2161a665a60b9b433d9a44a9fb8c63bbd",
+      "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/1e112283c4ecb08d6fed8069bca7de74fa2f12aa/multi_apps/bc2b57f3-686d-4ec9-87ce-edf850b7e442/workbook-with-sample-database.xlsx"
+    },
+    {
+      "path_in_vm": "/home/user/Desktop/reminder.docx",
+      "sha256": "a54c0322f49bc48e742c28dd593cdd1a2b384f86eb9e3c60e3f9fa848f7cb032",
+      "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/1e112283c4ecb08d6fed8069bca7de74fa2f12aa/multi_apps/bc2b57f3-686d-4ec9-87ce-edf850b7e442/reminder.docx"
+    }
+  ],
+  "instruction": "The requirements of my data analysis assignment are listed in \"reminder.docx\" on the desktop. Help me modify my assignment opended accordingly.",
+  "related_apps": [
+    "libreoffice_calc",
+    "libreoffice_writer"
+  ],
+  "snapshot": "libreoffice_calc",
+  "task_id": "bc2b57f3-686d-4ec9-87ce-edf850b7e442"
+}

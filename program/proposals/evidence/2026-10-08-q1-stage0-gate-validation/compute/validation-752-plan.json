@@ -1,0 +1,83 @@
+{
+ "adversarial": [
+  "result_reuse",
+  "zero_out",
+  "non_default_stream"
+ ],
+ "adversarial_gates": [
+  "c",
+  "A1",
+  "A2",
+  "A3",
+  "A5"
+ ],
+ "audit_code_sha256": "b10a62f729108372cdde1c431196894cc5a4d12441a7f7433eba3e70443c214c",
+ "budget_minutes": 10.0,
+ "drain_seconds": 60.0,
+ "driver_sha256": "aa2f365d7ebdbbb1e8e2200e418bf27dcabc094951d46932fbc052fc4bb8e93f",
+ "end_margin_seconds": 210.0,
+ "execution_policy": "q1-stage0-exec/2",
+ "gate_code_sha256": "b5f4fa74e23c72fc48cb110d2f61a842611bb6fd89dac831f32802938f6757cb",
+ "guard_budget_bytes": 68000000000,
+ "items": 433,
+ "items_sha256": "633b2753a88df8d08eaac75023228f45d1f338b29456ce07b5a7a16216b51d08",
+ "memory_table_sha256": "07c45991f986fa41d9d5b082e1c113e92df3cb891d66b6b2c8b6f70a75e82f57",
+ "policy": {
+  "context_bytes": 1000000000,
+  "device_bytes": 85000000000,
+  "floor_exclusive_from_bytes": 1000000000,
+  "floor_small_below_bytes": 600000000,
+  "floor_units_medium": 3,
+  "floor_units_small": 1,
+  "measured_margin": 0.25,
+  "name": "q1-stage0-exec/2",
+  "profiles": {
+   "native-fp32": {
+    "k": [
+     4,
+     2,
+     2,
+     3
+    ],
+    "sizes": "native"
+   },
+   "variants-fp32": {
+    "k": [
+     4,
+     2,
+     2,
+     3
+    ],
+    "sizes": "all_configs"
+   },
+   "variants-fp64": {
+    "k": [
+     5,
+     3,
+     4,
+     4
+    ],
+    "sizes": "all_configs"
+   }
+  },
+  "reduction_bytes_max": 2500000000,
+  "reduction_per_activation_byte": 5,
+  "slot_capacity": 12,
+  "usable_fraction": 0.8
+ },
+ "problem_order": [
+  "L2/95_Matmul_Add_Swish_Tanh_GELU_Hardtanh",
+  "L2/77_ConvTranspose3d_Scale_BatchNorm_GlobalAvgPool",
+  "L1/10_3D_tensor_matrix_multiplication",
+  "L1/18_Matmul_with_transposed_both",
+  "L2/59_Matmul_Swish_Scaling",
+  "L2/46_Conv2d_Subtract_Tanh_Subtract_AvgPool",
+  "L2/100_ConvTranspose3d_Clamp_Min_Divide",
+  "L2/87_Conv2d_Subtract_Subtract_Mish"
+ ],
+ "rule": "q1-exec2-validation/1",
+ "validation_files_sha256": {
+  "harness/q1/exec2_validation.py": "7355e59a29ca1a5ddc1e127485516297be8e780d962b5daa13631dc0f03324c4",
+  "scripts/run_q1_exec2_validation.py": "73e4927ff1d46dd124f76c1ded740cb5ee67013a22f3436bdc2c173236f3ac78"
+ }
+}

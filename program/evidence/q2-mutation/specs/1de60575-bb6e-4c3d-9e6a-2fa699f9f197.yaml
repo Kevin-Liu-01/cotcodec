@@ -1,0 +1,21 @@
+task_id: 1de60575-bb6e-4c3d-9e6a-2fa699f9f197
+author: blind-model-author-v1
+requirements:
+  - req_id: R0
+    statement: (implicit) The workbook is persisted at /home/user/EntireSummerSales.xlsx with Sheet1 data (A1:G2001) unchanged.
+    check_kind: file_exists
+    observable: File loads; Sheet1 values equal initial values.
+  - req_id: R1
+    statement: A new sheet named "Sheet2" exists and holds a pivot table built with the Pivot Table feature.
+    check_kind: other
+    observable: A pivotTable part is located on Sheet2 and its cache source is Sheet1 data.
+  - req_id: R2
+    statement: The pivot uses Promotion as the column field (promotion names as column headers) and the sum of Revenue as the data field.
+    check_kind: other
+    observable: pivotTable colFields reference the "Promotion" cache field; dataField references "Revenue" with subtotal sum (default); no row field other than the data/values pseudo-field.
+  - req_id: R3
+    statement: The summarized totals are correct.
+    check_kind: cell_value
+    observable: Sheet2 shows promotion headers "Fall Kite Event", "Festival of Flight", "None" with sums 46190.74, 49433.40, 82215.01 respectively (grand total 177839.15 if present), tolerance 0.01.
+allowed_variations:
+  - Pivot anchor cell, grand total presence, sort order of the promotion columns and number format are not constrained.

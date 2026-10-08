@@ -1,0 +1,237 @@
+{
+ "adjudication": {
+  "adjudicated": 0,
+  "adjudicated_by_reason": {},
+  "pending": 113,
+  "pool": 113,
+  "pool_by_reason": {
+   "concordant_contradicts_label": 1,
+   "gold_sham_split": 12,
+   "split": 100
+  }
+ },
+ "answer_status": {
+  "model-rater-anthropic": {
+   "isolation_void": 110,
+   "ok": 32
+  },
+  "model-rater-open-weight": {
+   "ok": 141,
+   "thinking_unfinished": 1
+  }
+ },
+ "by_label_class": {
+  "should_fail_extra_change": {
+   "accept": 0,
+   "agrees_with_label": 0.5,
+   "gate": "reject",
+   "gate_share": 0.5,
+   "n": 6,
+   "reject": 3,
+   "unresolved": 3,
+   "unresolved_share": 0.5
+  },
+  "should_fail_violation": {
+   "accept": 0,
+   "agrees_with_label": 0.07692307692307693,
+   "n": 26,
+   "reject": 2,
+   "unresolved": 24,
+   "unresolved_share": 0.9230769230769231
+  },
+  "should_pass_alt_solution": {
+   "accept": 6,
+   "agrees_with_label": 0.21428571428571427,
+   "gate": "accept",
+   "gate_share": 0.21428571428571427,
+   "n": 28,
+   "reject": 0,
+   "unresolved": 22,
+   "unresolved_share": 0.7857142857142857
+  },
+  "should_pass_equiv": {
+   "accept": 9,
+   "agrees_with_label": 0.15,
+   "n": 60,
+   "reject": 1,
+   "unresolved": 50,
+   "unresolved_share": 0.8333333333333334
+  }
+ },
+ "calls_files": {
+  "model-rater-anthropic": [
+   {
+    "path": "/private/tmp/claude-501/-Users-kevinliu-repos-cotcodec/122e47b9-8f46-4266-97af-e75214712991/scratchpad/q2m-iso-v5-ingest/registered/calls.jsonl",
+    "records": 142,
+    "sha256": "896f3cdd6077e34b4ff5c8be76c85d494674133157cff54830c1999ae1e60538"
+   }
+  ],
+  "model-rater-open-weight": [
+   {
+    "path": "/private/tmp/claude-501/-Users-kevinliu-repos-cotcodec/122e47b9-8f46-4266-97af-e75214712991/scratchpad/q2m-iso-v5-ingest/held/open-weight/calls.jsonl",
+    "records": 142,
+    "sha256": "d1a3e00bbb70bec6d8f8e13e5226302fcbbe6f590a481e2d777ceb94c497074d"
+   }
+  ]
+ },
+ "gold_defects": {
+  "equivalence_decisions": {
+   "reject": 1,
+   "unresolved": 2
+  },
+  "equivalence_items": 3,
+  "gold_shams": 15,
+  "items": {
+   "e528b65e-1107-4b8c-8988-490e4fece599__docx.eq.view_zoom__c1db7f490e53": "unresolved",
+   "e528b65e-1107-4b8c-8988-490e4fece599__docx.eq.view_zoom__ed6d2905d3b6": "unresolved",
+   "e528b65e-1107-4b8c-8988-490e4fece599__docx.eq.view_zoom__fc9797c9a109": "reject"
+  },
+  "rule": "a task whose gold sham is decided reject: its equivalence items leave the equivalence K3 group (decision D34); labels stay relative to the gold",
+  "tasks": [
+   "e528b65e-1107-4b8c-8988-490e4fece599"
+  ]
+ },
+ "human_spot_check": "pending",
+ "k3": {
+  "should_fail_violation": {
+   "bootstrap_high": 1.0,
+   "estimate": 0.9230769230769231,
+   "exact_high": 0.9861579517873855,
+   "kish_n": 26.0,
+   "n_items": 26,
+   "n_tasks": 5,
+   "sufficient": false,
+   "upper": 1.0
+  },
+  "should_pass_equiv": {
+   "bootstrap_high": 0.9322033898305084,
+   "estimate": 0.8421052631578947,
+   "exact_high": 0.9150796178398646,
+   "kish_n": 57.0,
+   "n_items": 57,
+   "n_tasks": 14,
+   "sufficient": true,
+   "upper": 0.9322033898305084
+  }
+ },
+ "k3_fires": {
+  "should_fail_violation": true,
+  "should_pass_equiv": true
+ },
+ "k4_fires": true,
+ "kappa": 0.06632891660171472,
+ "kappa_fires": true,
+ "label": "model raters (decisions D9, D23); the human spot check is pending",
+ "label_error": {
+  "should_fail_violation": {
+   "estimate": 0.9230769230769231,
+   "high": 1.0,
+   "low": 0.7894736842105263,
+   "method": "Hajek IPW, task-cluster bootstrap 10000, seed 42",
+   "n_clusters": 5,
+   "n_units": 26
+  },
+  "should_pass_equiv": {
+   "estimate": 0.8421052631578947,
+   "high": 0.9473684210526315,
+   "low": 0.7115384615384616,
+   "method": "Hajek IPW, task-cluster bootstrap 10000, seed 42",
+   "n_clusters": 14,
+   "n_units": 57
+  }
+ },
+ "label_error_resolved_only": {
+  "should_fail_violation": {
+   "estimate": 0.0,
+   "high": 0.0,
+   "low": 0.0,
+   "method": "Hajek IPW, task-cluster bootstrap 10000, seed 42",
+   "n_clusters": 2,
+   "n_units": 2
+  },
+  "should_pass_equiv": {
+   "estimate": 0.0,
+   "high": 0.0,
+   "low": 0.0,
+   "method": "Hajek IPW, task-cluster bootstrap 10000, seed 42",
+   "n_clusters": 6,
+   "n_units": 9
+  }
+ },
+ "label_error_unresolved_as_wrong": {
+  "should_fail_violation": 0.9230769230769231,
+  "should_pass_equiv": 0.8421052631578947
+ },
+ "n_adjudicated": 0,
+ "n_items": 121,
+ "n_unresolved": 100,
+ "p1_flips": {
+  "af23762e-2bfd-4a1d-aada-20fa8de9ce07__p1_flip": "unresolved"
+ },
+ "per_rater": {
+  "model-rater-anthropic": {
+   "should_fail_violation": {
+    "contradicts_label": 0.0,
+    "unsure": 0.7692307692307693
+   },
+   "should_pass_equiv": {
+    "contradicts_label": 0.0,
+    "unsure": 0.8421052631578947
+   }
+  },
+  "model-rater-open-weight": {
+   "should_fail_violation": {
+    "contradicts_label": 0.5384615384615384,
+    "unsure": 0.0
+   },
+   "should_pass_equiv": {
+    "contradicts_label": 0.017543859649122806,
+    "unsure": 0.017543859649122806
+   }
+  }
+ },
+ "raters": [
+  {
+   "provider": "anthropic",
+   "rater_id": "model-rater-anthropic",
+   "registry_id": "claude-opus-5-5",
+   "role": "same provider as the spec author"
+  },
+  {
+   "provider": "qwen-open-weight-self-hosted",
+   "rater_id": "model-rater-open-weight",
+   "receipt_sha256": "18c2a12881bf613c7110439b8e765ff89a4c060a1fb60aee62bb7250890ce1f9",
+   "registry_id": "qwen3.6-35b-a3b",
+   "repo_id": "Qwen/Qwen3.6-35B-A3B",
+   "revision": "995ad96eacd98c81ed38be0c5b274b04031597b0",
+   "role": "independent"
+  }
+ ],
+ "sham_accuracy": {
+  "model-rater-anthropic": 0.23809523809523808,
+  "model-rater-open-weight": 0.9523809523809523
+ },
+ "sham_decisions": {
+  "01b269ae-2111-4a07-81fd-3fcd711993b0__sham_do_nothing": "unresolved",
+  "01b269ae-2111-4a07-81fd-3fcd711993b0__sham_gold": "unresolved",
+  "12382c62-0cd1-4bf2-bdc8-1d20bf9b2371__sham_do_nothing": "reject",
+  "12382c62-0cd1-4bf2-bdc8-1d20bf9b2371__sham_gold": "unresolved",
+  "347ef137-7eeb-4c80-a3bb-0951f26a8aff__sham_do_nothing": "reject",
+  "347ef137-7eeb-4c80-a3bb-0951f26a8aff__sham_gold": "unresolved",
+  "4172ea6e-6b77-4edb-a9cc-c0014bd1603b__sham_do_nothing": "unresolved",
+  "4172ea6e-6b77-4edb-a9cc-c0014bd1603b__sham_gold": "unresolved",
+  "4ed5abd0-8b5d-47bd-839f-cacfa15ca37a__sham_do_nothing": "unresolved",
+  "4ed5abd0-8b5d-47bd-839f-cacfa15ca37a__sham_gold": "accept",
+  "5bc63fb9-276a-4439-a7c1-9dc76401737f__sham_do_nothing": "reject",
+  "5bc63fb9-276a-4439-a7c1-9dc76401737f__sham_gold": "accept",
+  "5cfb9197-e72b-454b-900e-c06b0c802b40__sham_gold": "unresolved",
+  "6e99a1ad-07d2-4b66-a1ce-ece6d99c20a5__sham_gold": "unresolved",
+  "936321ce-5236-426a-9a20-e0e3c5dc536f__sham_gold": "unresolved",
+  "b5062e3e-641c-4e3a-907b-ac864d2e7652__sham_gold": "unresolved",
+  "bb83cab4-e5c7-42c7-a67b-e46068032b86__sham_gold": "unresolved",
+  "bf4e9888-f10f-47af-8dba-76413038b73c__sham_gold": "unresolved",
+  "d681960f-7bc3-4286-9913-a8812ba3261a__sham_gold": "unresolved",
+  "e4ef0baf-4b52-4590-a47e-d4d464cca2d7__sham_gold": "unresolved",
+  "e528b65e-1107-4b8c-8988-490e4fece599__sham_gold": "reject"
+ }
+}

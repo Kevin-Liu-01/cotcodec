@@ -1,0 +1,18 @@
+task_id: f23acfd2-c485-4b7c-a1e7-d4303ddfe864
+author: blind-model-author-v1
+requirements:
+  - req_id: R0
+    statement: (implicit) The presentation is saved in place at /home/user/Desktop/69_4.pptx (1 slide) with unchanged texts.
+    check_kind: file_exists
+    observable: File loads; title "The History of Art" and the body text unchanged.
+  - req_id: R1
+    statement: The content (body) paragraph(s) of the slide are formatted with a bullet.
+    check_kind: paragraph_format
+    observable: Body placeholder paragraphs no longer have a:buNone; they carry buChar/buAutoNum (or inherit a bullet) so a bullet renders.
+  - req_id: R2
+    statement: (implicit) The title does not get a bullet.
+    check_kind: paragraph_format
+    observable: Title paragraph keeps buNone.
+allowed_variations:
+  - Bullet character/style and indent.
+  - '[AMBIGUOUS] "Add a bullet point" could also be read as adding a new bulleted line of text; the minimal reading bullets the existing content.'

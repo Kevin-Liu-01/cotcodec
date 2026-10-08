@@ -1,0 +1,34 @@
+{
+ "url": "https://arxiv.org/abs/2609.33074",
+ "fetched_at": "2026-10-08T07:31:44Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 44363,
+ "raw_sha256": "eb350e64381625d234f29f15369a305e0267c891417936656cc8fc410111f1d0",
+ "raw_stored": false,
+ "extract": {
+  "title": "KernelZero: Co-Evolving Proposer and Coder for Continuously Improved GPU Kernel Generation",
+  "authors": [
+   "Ke, Changxin",
+   "Zhang, Rui",
+   "Fang, Zixiang",
+   "Li, Zhenghong",
+   "Wen, Yuanbo",
+   "Shen, Jiashuo",
+   "Wang, Shuo",
+   "Guo, Jiaming",
+   "Li, Ling",
+   "Guo, Qi",
+   "Chen, Yunji"
+  ],
+  "citation_date": "2026/09/27",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Sun, 27 Sep 2026 01:09:18 UTC"
+   }
+  ],
+  "abstract": "High-performance GPU kernels are essential to modern machine learning systems, yet automatically generating kernels that are both correct and efficient remains challenging. Existing LLM-based approaches face two major limitations: the scarcity of high-quality training data aligned with the model's current capabilities, and the inherent trade-off between kernel correctness and performance. To address these challenges, we propose KernelZero, a co-evolution framework that continuously improves GPU kernel generation through two specialized models: a Proposer that generates Torch modules from API sets and a Coder that translates them into CUDA or Triton kernels. KernelZero uses a frontier-driven module generation mechanism to continuously produce capability-aligned training modules based on the Coder's current weaknesses. It further introduces Correctness-Aware Group Relative Policy Optimization (CA-GRPO), which optimizes performance only after correctness becomes sufficiently reliable. By alternating the optimization of the Proposer and Coder, KernelZero forms an automatic curriculum that enables targeted and training-efficient capability improvement. Empirically, KernelZero-7B surpasses Claude-4.5-Sonnet on CUDA and DeepSeek-V4-Pro on Triton. On KernelBench Level 1 and 2, it achieves CUDA pass@1 scores of 75.8% and 69.6%, respectively, with pass@10 reaching 100% and 97%. On Triton, it achieves pass@1 scores of 77.2% and 72.5%, respectively.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}

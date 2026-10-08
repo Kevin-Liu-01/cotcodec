@@ -1,0 +1,29 @@
+{
+ "url": "https://arxiv.org/abs/2509.14279",
+ "fetched_at": "2026-10-08T07:30:23Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 43036,
+ "raw_sha256": "c97c16ca92229a15ff575526689cd8f535ba64e8a5d9b0d676ad0cda30b79df5",
+ "raw_stored": false,
+ "extract": {
+  "title": "Towards Robust Agentic CUDA Kernel Benchmarking, Verification, and Optimization",
+  "authors": [
+   "Lange, Robert Tjarko",
+   "Sun, Qi",
+   "Prasad, Aaditya",
+   "Faldor, Maxence",
+   "Tang, Yujin",
+   "Ha, David"
+  ],
+  "citation_date": "2025/09/16",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Tue, 16 Sep 2025 11:08:30 UTC"
+   }
+  ],
+  "abstract": "Recent advances in large language models (LLMs) demonstrate their effectiveness in scaling test-time compute for software engineering tasks. However, these approaches often focus on high-level solutions, with limited attention to optimizing low-level CUDA kernel implementations. Additionally, existing kernel generation benchmarks suffer from exploitable loopholes and insufficient diversity in testing conditions, hindering true generalization assessment. To address these limitations, we introduce robust-kbench, a new benchmark for rigorous evaluation of kernel performance and correctness across varied scenarios. Furthermore, we present a comprehensive agentic framework that automates CUDA kernel discovery, verification, and optimization. This pipeline enables frontier LLMs to translate torch code to CUDA kernels and iteratively improve their runtime within our robust evaluation setting. Our sequential workflow first translates PyTorch code into equivalent CUDA kernels. It then optimizes their runtime using a novel evolutionary meta-generation procedure tailored to the CUDA ecosystem, guided by LLM-based verifiers for correctness and efficient filtering. Evaluated on robust-kbench, our approach produces CUDA kernels outperforming torch implementations for practical applications, including forward and backward passes. It can fuse operations and deploy various runtime optimization strategies. The verifier workflow accurately classifies incorrect kernels, enhancing hardware verification efficiency.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}

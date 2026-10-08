@@ -1,0 +1,13 @@
+task_id: 10a730d5-d414-4b40-b479-684bed1ae522
+author: blind-model-author-v1
+requirements:
+  - req_id: R1
+    statement: Thunderbird uses its dark theme for the whole UI.
+    check_kind: config_value
+    observable: prefs.js has extensions.activeThemeID == "thunderbird-compact-dark@mozilla.org" (initially "default-theme@mozilla.org").
+  - req_id: R2
+    statement: '"Complete" dark mode also darkens message content where Thunderbird supports it.'
+    check_kind: config_value
+    observable: '[AMBIGUOUS] Optional - a message-content dark setting (e.g. a dark-reader style add-on or ui.systemUsesDarkTheme / browser.display.use_system_colors prefs) if present; not required for the plain reading.'
+allowed_variations:
+  - '[AMBIGUOUS] "complete dark mode" may mean only the built-in Dark theme; the instruction gives no concrete extra settings.'

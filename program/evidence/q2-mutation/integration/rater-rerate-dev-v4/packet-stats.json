@@ -1,0 +1,25 @@
+{
+ "schema": "q2m-d34-packet-stats-v1",
+ "packets_sha256": "5598e755b3ef30d3814a363212aa2b4c818a260d1b67f575bea92871fd128475",
+ "items": 142,
+ "new_file_end_state_entries": 51,
+ "new_file_entries_with_text_difference": 51,
+ "new_file_text_difference_lines_median": 123,
+ "new_file_text_difference_lines_max": 602,
+ "packets_with_save_drift_line": 28,
+ "save_drift_changes_counted_not_listed": 5833,
+ "difference_lines_total": 14110,
+ "difference_lines_max_per_packet": 602,
+ "packets_shortened": 16,
+ "cuts_by_section": {"starting file:structure": 16},
+ "d27_packets_position_and_size_changes": {
+  "packets_sha256": "4a56ba5e4fc91dfe9345708690d53ec71438e5a037855726d298931ddb665da7",
+  "at_most_360_emu": 5323,
+  "361_to_720_emu": 12,
+  "721_to_36000_emu": 0,
+  "over_36000_emu": 82,
+  "packets_with_drift": 26,
+  "max_drift_lines_in_one_packet": 335
+ },
+ "note": "computed from the packet files only (no label, verdict or rater answer); the D27 counts are the review's save-drift concern measured on the earlier packets"
+}

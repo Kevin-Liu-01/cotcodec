@@ -1,0 +1,24 @@
+task_id: b5062e3e-641c-4e3a-907b-ac864d2e7652
+author: blind-model-author-v1
+requirements:
+  - req_id: R1
+    statement: A spreadsheet ~/authors.xlsx is saved.
+    check_kind: file_exists
+    observable: /home/user/authors.xlsx exists and loads.
+  - req_id: R2
+    statement: It has a header row for name, e-mail and affiliation.
+    check_kind: cell_value
+    observable: Row 1 has three headers identifying Name, Email and Affiliation (e.g. "Name", "Email", "Affiliation").
+  - req_id: R3
+    statement: One row per paper with the first author's name, e-mail and affiliation.
+    check_kind: cell_value
+    observable: >-
+      Rows contain (Chi Zhang, johnczhang@tencent.com, Tencent), (Jing Yu Koh, jingyuk@cs.cmu.edu, Carnegie Mellon University),
+      (Runliang Niu, niurl19@mails.jlu.edu.cn, School of Artificial Intelligence, Jilin University), (Xiang Deng, deng.595@osu.edu, The Ohio State University).
+  - req_id: R4
+    statement: Rows are sorted alphabetically by full name.
+    check_kind: cell_value
+    observable: Name column order == Chi Zhang, Jing Yu Koh, Runliang Niu, Xiang Deng.
+allowed_variations:
+  - '[AMBIGUOUS] Affiliation granularity (e.g. "Jilin University" vs "School of Artificial Intelligence, Jilin University").'
+  - '[AMBIGUOUS] Sorting by surname would give Deng, Koh, Niu, Zhang; "full names" read as the name as written (given name first).'

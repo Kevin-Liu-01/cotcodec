@@ -1,0 +1,18 @@
+task_id: 3b27600c-3668-4abd-8f84-7bcdebbccbdb
+author: blind-model-author-v1
+requirements:
+  - req_id: R0
+    statement: (implicit) The presentation is saved in place at /home/user/Desktop/lec17-gui-events.pptx with 19 slides and unchanged text.
+    check_kind: file_exists
+    observable: File loads; 19 slides; texts unchanged.
+  - req_id: R1
+    statement: Every slide has a blue background.
+    check_kind: slide_object
+    observable: For each of the 19 slides, the effective background (slide p:bg, else layout, else master) is a solid fill whose color is blue (see R1-AMB).
+  - req_id: R1-AMB
+    statement: '[AMBIGUOUS] "blue" is not given as a hex value. Candidates are the LibreOffice palette "Blue" (#2A6099) and pure RGB blue (#0000FF); darker/lighter palette variants are a gray zone.'
+    check_kind: slide_object
+    observable: Record the hex value; a color whose hue is clearly blue (B dominant, R and G low) satisfies the plain reading.
+allowed_variations:
+  - Background may be set per slide or on the master(s).
+  - Text colors are not required to change for readability.

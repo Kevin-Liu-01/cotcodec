@@ -1,0 +1,13 @@
+task_id: 2cd43775-7085-45d8-89fa-9e35c0a915cf
+author: blind-model-author-v1
+requirements:
+  - req_id: R1
+    statement: LibreOffice automatic saving is enabled.
+    check_kind: config_value
+    observable: registrymodifications.xcu has /org.openoffice.Office.Common/Save/Document AutoSave = true (AutoRecovery) and, for real document saving, UserAutoSave = true.
+  - req_id: R2
+    statement: The auto-save interval is 3 minutes.
+    check_kind: config_value
+    observable: /org.openoffice.Office.Common/Save/Document AutoSaveTimeIntervall = 3.
+allowed_variations:
+  - '[AMBIGUOUS] "auto-save so I do not need ctrl-s" implies also ticking "Automatically save the document too" (UserAutoSave); the AutoRecovery-only setting (AutoSave + interval) is the weaker reading.'
