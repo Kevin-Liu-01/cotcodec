@@ -151,11 +151,11 @@ def test_registered_numbers_appear_in_the_text() -> None:
     for field in ("`report`", "`decisions`, `coverage`, `artifact_counts`, `selectors` and "
                   "`attention_layers`", "`hashes.dev_artifact_sha256`"):
         assert field in flat
-    projected = lanes.LARGE_LANE_PROJECTED
-    assert f"{projected['evaluation_entering_rule_s']:,.0f} s" in flat
-    assert f"{projected['projected_evaluation_and_statistics_s']:,.0f} s projected" in flat
+    measured = lanes.LARGE_LANE_MEASURED
+    assert f"{measured['evaluation_and_statistics_s']:,.0f} s" in flat
+    assert f"{measured['start_up_s']:.0f} s of start-up" in flat
     assert f"about {lanes.large_lane_break_even_unit_s():.1f} s per unit" in flat
-    for phrase in ("Changes from v1 (D36)", "INCOMPLETE", "bfe4a7c3", "Slurm 766",
+    for phrase in ("Changes from v1 (D36)", "INCOMPLETE", "bfe4a7c3", "Slurm 766", "Slurm 810",
                    "enable_cudnn_sdp(False)", "attention_backend_check", "job.env",
                    "No budget amendment is possible under this id",
                    "Every job of a lane counts against that lane's own minutes",
@@ -167,27 +167,28 @@ def test_registered_numbers_appear_in_the_text() -> None:
 def test_status_and_decisions() -> None:
     status = _paragraph(TEXT, "Status: ")
     lead_in = _paragraph(TEXT, "Each states the choice and why.")
+    # Both name D42, the decision that accepts decisions 16-21 and amends D36
+    # (iii) for the 4B lane (decision 18), draft and frozen alike.
+    assert 42 in _accepting_decisions(status), "the status does not name D42"
+    assert 42 in _accepting_decisions(lead_in), "the lead-in does not name D42"
     if _frozen():
         # Freeze procedure, step 1: the status paragraph and the lead-in of the
-        # design decisions were rewritten to the frozen wording, and both name
-        # the owner's decision that accepts decisions 16-21 and amends D36 (iii)
-        # for the 4B lane (decision 18) and its timing rule (decision 20).
+        # design decisions were rewritten to the frozen wording.
         assert status.startswith("Status: frozen")
         flat = _flat(TEXT)
         for draft in ("DRAFT", "wait for the program owner", "waits for the program owner",
-                      "wait for the program owner's"):
+                      "still to be done"):
             assert draft not in flat, f"the frozen file still says {draft!r}"
         accepting = _accepting_decisions(status)
-        assert accepting, "the frozen status names no decision that accepts v2 and amends D36 (iii)"
         assert set(accepting) & set(_accepting_decisions(lead_in)), (
             "the frozen lead-in of the design decisions does not name the accepting decision")
     else:
         assert status.startswith("Status: DRAFT, not frozen.")
         flat_status = _flat(status)
-        for phrase in ("wait for the program owner's decision", "D36 (iii)", "projection",
-                       "before the fix"):
+        for phrase in ("D42", "D36 (iii)", "narrow re-check", "Slurm 810", "before the fix",
+                       "rewritten to the frozen wording"):
             assert phrase in flat_status, phrase
-        assert "wait for the program owner's acceptance" in _flat(lead_in)
+        assert "still to be done" in _flat(lead_in)
     section = TEXT[TEXT.index("## Design decisions"):]
     numbers = [int(m.group(1)) for m in re.finditer(r"^(\d+)\. ", section, re.M)]
     assert numbers == list(range(1, 22))
@@ -196,38 +197,41 @@ def test_status_and_decisions() -> None:
     for phrase in ("the status paragraph at the top of this file is rewritten",
                    "and so is the lead-in of the design decisions",
                    "amends D36 (iii) for that lane", "D36's timing rule",
-                   "authorises a timing job of the fixed path"):
+                   "authorises a timing job of the fixed path", "D42 is that decision"):
         assert phrase in step_1, phrase
 
 
-def test_the_4b_departures_from_d36_are_stated() -> None:
-    """Decision 18 departs from D36 (iii) and decision 20 from D36's timing rule
-    on the 4B lane; the registration and the lanes module say so and never call
-    the 4B limit measured or the timing job's path the fixed one."""
+def test_d36_iii_is_amended_for_the_4b_lane_and_its_limit_is_measured() -> None:
+    """Decision 18 departs from D36 (iii) on the 4B lane, which D42 (i) amends;
+    decisions 20 and 21 set the 4B limit from the second timing job's
+    measurement of the fixed path (D42 (ii)), so D36's timing rule holds. The
+    registration and the lanes module say so and never call it a projection."""
 
     flat = _flat(TEXT)
     d18, d19, d20, d21 = (_flat(_decision_item(n)) for n in (18, 19, 20, 21))
     title_18 = d18[:d18.index(". v2's")]
-    assert "D36 (iii)" in title_18 and "departure" in title_18
+    assert "D36 (iii)" in title_18 and "departure" in title_18 and "D42 (i)" in title_18
     assert "equal to v1's" not in title_18
     for item in (d18, d19):
         assert "`attention_backend_check`" in item and "descriptive" in item
         assert "not cover" in item
     assert "a 0.6B pass says nothing about the 4B lane's attention" in d18
-    assert "projected" in d20 and "do not come from a measurement of its path" in d20
-    assert "D36's timing rule" in d20
-    assert "at its measured speed" in d20  # the 0.6B lane's sentence only
-    assert d20.count("measured speed") == 1
-    assert "before the fix (cuDNN's attention on)" in d21
-    assert "set the 4B lane's limit" not in d21
-    assert "on the fixed 4B path" not in flat
-    compute = _flat(_section(TEXT, "## Compute", "### The development timing job"))
-    assert "projected, not measured" in compute
-    assert "a lane's minutes are at least twice its measured" not in compute
+    assert "D42 (i) amends D36 (iii) for that lane only" in d18
+    assert "Slurm 810" in d18 and "aten::_efficient_attention_forward" in d18
+    assert "both lanes' measured" in d20 and "Slurm 810" in d20 and "D42 (ii)" in d20
+    assert "D36's rule for the 4B limit holds unamended" in d20
+    assert "at its measured speed" in d20 and "do not come from a measurement" not in d20
+    assert "before the fix (cuDNN's attention on)" in d21 and "Slurm 810" in d21
+    assert "code head" in d21
+    compute = _flat(_section(TEXT, "## Compute", "### The development timing jobs"))
+    assert "Every input is measured" in compute and "projected, not measured" not in compute
+    assert "| Qwen3.5-4B-Base lane | 1 x 30 | 0.50 |" in compute
+    assert "projected, not measured" not in flat
     changes = _flat(_section(TEXT, "## Changes from v1 (D36)", "## Identity"))
-    assert "projected, not measured" in changes and "departs from D36 (iii)" in changes
-    assert not hasattr(lanes, "LARGE_LANE_MEASURED")
-    assert lanes.LARGE_LANE_PROJECTED["measured"] is False
+    assert "departs from D36 (iii)" in changes and "D42 (i) amends D36 (iii)" in changes
+    assert "Both measured" in changes
+    assert not hasattr(lanes, "LARGE_LANE_PROJECTED")
+    assert lanes.LARGE_LANE_MEASURED["measured"] is True
     doc = _flat(lanes.__doc__ or "")
-    assert "is a projection, not a measurement" in doc
-    assert "measured full-lane" not in doc
+    assert "Both lanes' inputs are measurements" in doc and "Slurm 810" in doc
+    assert "is a projection, not a measurement" not in doc

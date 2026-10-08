@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import ast
 import copy
+import hashlib
 import json
 import re
 from pathlib import Path
@@ -26,6 +27,8 @@ TIMING_2 = filler.TEMPLATE_DIR / filler.TIMING_TEMPLATES[2]
 FAKE = {"FILL-image-id": "sha256:" + "a" * 64, "FILL-image-git-sha": "b" * 40,
         "FILL-image-source-tar-sha256": "c" * 64, "FILL-preregistration-sha256": "d" * 64}
 IP = re.compile(r"\b\d{1,3}(?:\.\d{1,3}){3}\b")
+TIMING_2_EVIDENCE = (PROJECT_ROOT / "program" / "evidence" / "2026-10-08"
+                     / "q3-dense-headroom-precheck-v2-build" / "timing-2" / "timing-810")
 
 
 def _filled(path: Path) -> dict:
@@ -127,29 +130,31 @@ def test_each_timing_job_is_filled_once(tmp_path: Path, job: int) -> None:
 def test_limits_follow_d36_and_fit_the_cap() -> None:
     filler.check_budget()
     assert lanes.TOTAL_CAP_GPU_HOURS == 1.5
+    assert lanes.registered_caps_total() == pytest.approx(0.90)
     assert lanes.registered_caps_total() <= 1.5 + 1e-9
     measured = lanes.SMALL_LANE_MEASURED
     assert lanes.LANES["qwen3-0.6b-base"].minutes >= (
         2 * measured["evaluation_and_statistics_s"] + measured["start_up_s"]) / 60 + 3
     assert lanes.LANES["qwen3-0.6b-base"].minutes == 12
-    # The 4B lane's evaluation time is a projection, not a measurement (the
-    # timing job ran the path before the fix); it enters D36's arithmetic
-    # doubled (registration decision 20).
-    large = lanes.LARGE_LANE_PROJECTED
-    assert large["measured"] is False
-    assert large["evaluation_entering_rule_s"] == pytest.approx(
-        2 * large["projected_evaluation_and_statistics_s"])
-    assert large["projected_evaluation_and_statistics_s"] == pytest.approx(
-        large["warm_unit_s"] * large["units"] + large["statistics_bound_s"])
+    # The 4B lane's evaluation time is measured on the fixed path by the second
+    # timing job (Slurm 810, D42 (ii)) and enters D36's arithmetic once.
+    large = lanes.LARGE_LANE_MEASURED
+    assert large["measured"] is True and large["timing_job"] == lanes.LARGE_LANE_TIMING_JOB == "810"
+    assert large["evaluation_and_statistics_s"] == pytest.approx(
+        sum(s["units"] * s["measured_unit_s"] * s["length_ratio"]
+            for s in lanes.LARGE_LANE_STAGES.values())
+        + large["compile_allowance_s"] + large["statistics_bound_s"])
+    assert large["units"] == 1160 and all(s["length_ratio"] >= 1.0
+                                          for s in lanes.LARGE_LANE_STAGES.values())
     assert lanes.LANES["qwen3.5-4b-base"].minutes >= (
-        2 * large["evaluation_entering_rule_s"] + large["start_up_s"]) / 60 + 3
-    assert lanes.LANES["qwen3.5-4b-base"].minutes == 45
-    # The useful window holds the lane at up to about 2.1 s per unit, about four
-    # times the warm-shape projection, and below the 3.6 s of the unfixed path.
+        2 * large["evaluation_and_statistics_s"] + large["start_up_s"]) / 60 + 3
+    assert lanes.LANES["qwen3.5-4b-base"].minutes == 30
+    assert lanes.LANES["qwen3.5-4b-base"].cap_gpu_hours == 0.5
+    # The useful window holds the lane at up to about 1.3 s per unit, three
+    # times the slowest stage's measured mean.
     break_even = lanes.large_lane_break_even_unit_s()
-    assert break_even == pytest.approx((42 * 60 - 75 - 5) / 1160)
-    assert 4 * large["warm_unit_s"] <= break_even
-    assert break_even < min(large["cold_unit_median_s_with_cudnn_attention"].values())
+    assert break_even == pytest.approx((27 * 60 - large["start_up_s"] - 5) / 1160)
+    assert 3 * max(s["measured_unit_s"] for s in lanes.LARGE_LANE_STAGES.values()) <= break_even
     for lane in lanes.LANES.values():
         assert lane.cap_gpu_hours == pytest.approx(lane.minutes / 60, abs=1e-4)
         assert lane.minutes - dhd.USR1_LEAD_MINUTES >= dhd.MIN_USEFUL_MINUTES
@@ -157,6 +162,41 @@ def test_limits_follow_d36_and_fit_the_cap() -> None:
         assert {k: v for k, v in lane.as_dict().items() if k not in ("minutes", "cap_gpu_hours")
                 } == {k: v for k, v in v1_lane.as_dict().items()
                       if k not in ("minutes", "cap_gpu_hours")}
+
+
+def test_the_4b_measurement_is_the_second_timing_jobs() -> None:
+    """The lanes module's 4B figures are the committed analysis of Slurm 810's
+    receipt, which ran the fixed path (cuDNN's attention off) at the code head."""
+
+    analysis = json.loads((TIMING_2_EVIDENCE / "analysis.json").read_text(encoding="utf-8"))
+    for stage, figures in lanes.LARGE_LANE_STAGES.items():
+        row = analysis["per_stage"][stage]
+        assert figures["units"] == row["lane_units"]
+        assert figures["measured_unit_s"] == pytest.approx(row["regular_mean_s"], abs=5e-5)
+        assert figures["length_ratio"] == pytest.approx(row["length_ratio"], abs=5e-5)
+    large = lanes.LARGE_LANE_MEASURED
+    assert large["compile_allowance_s"] == pytest.approx(analysis["compiles"]["allowance_s"],
+                                                         abs=0.05)
+    assert large["start_up_s"] == pytest.approx(analysis["rule"]["start_up_s"], abs=0.05)
+    assert large["evaluation_and_statistics_s"] == pytest.approx(
+        analysis["rule"]["evaluation_and_statistics_s"], abs=0.5)
+    assert analysis["rule"]["minutes"] == lanes.LARGE_LANE_MINUTES
+    assert analysis["rule"]["every_stage_measured"] is True
+    receipt = json.loads((TIMING_2_EVIDENCE / "dense-precheck_timing-receipt.json"
+                          ).read_text(encoding="utf-8"))
+    timing = receipt["timing"]
+    assert (receipt["slurm_job_id"], receipt["slurm_job_id_source"]) == ("810", "job.env")
+    assert receipt["profile"] == "timing" and timing["status"] == "TIMING_INTERRUPTED"
+    assert timing["attention_backends"]["cudnn"] is False
+    assert timing["attention_backends_after_check"]["cudnn"] is False
+    assert timing["attention_backend_check"]["unit"] == "c320-q0"
+    assert timing["backend_check_started_after_s"] < timing["evaluation_started_after_s"]
+    assert timing["subset_complete"] is True
+    assert len(timing["reference"]) == 5 and all(r["bitwise_equal"] for r in timing["reference"])
+    assert timing["dev_artifact_matches_v1_job_730"] is True
+    assert receipt["hashes"]["code"]["scripts/run_dense_headroom_precheck_v2.py"] == (
+        hashlib.sha256((PROJECT_ROOT / "scripts" / "run_dense_headroom_precheck_v2.py"
+                        ).read_bytes()).hexdigest())
 
 
 def _small_receipt() -> dict:
