@@ -673,7 +673,9 @@ def tree_sha256(source_dir: Path) -> str:
 
 
 BATCH = "infra/slurm/host-single-node/s1a-vm.sbatch"
-MAX_JOB_CPUS = 8  # while the action-path v2 acceptance campaigns run (host-load rule)
+# A temporary host-load limit (e.g. 8 CPUs while the action-path v2 acceptance campaigns
+# run) is an operator flag, never a registered rule: it applies to these purposes only.
+HOST_LOAD_PURPOSES = ("development", "setup-check")
 
 
 def canonical(manifest: Mapping[str, Any]) -> str:
@@ -705,15 +707,57 @@ def check_host(m: Mapping[str, Any]) -> dict[str, Any]:
     return {"qcow2_bytes": QCOW2_BYTES, "osworld_head": head}
 
 
-def submit(manifest_path: Path, source_dir: Path, dry_run: bool) -> dict[str, Any]:
-    m = validate_manifest(json.loads(manifest_path.read_text(encoding="utf-8")), source_dir)
+def check_slurm(m: Mapping[str, Any], host_load_cpus: int | None = None) -> dict[str, int]:
+    """The VM job's Slurm request against section 5.5 (raises ``LaneError``).
+
+    A registered job (A0a, A0b, ANC, A1) takes exactly ``plan.vm_job_cpus(V)`` CPUs (4V for
+    the VMs plus ``runner_cpus(V)``: 90 at V = 20, 72 at V = 16), which must fit beside its
+    GPU job (``plan.check_cpus``), and its limit is the GPU cap plus 10 minutes. A
+    development or setup-check job needs the VMs' CPUs and one more; ``host_load_cpus``
+    caps it (the operator's temporary host-load limit) and is refused for any other purpose.
+    """
+    from harness.q2_stage1 import plan
+
     slurm = m.get("slurm") or {}
     cpus, memory, minutes = slurm.get("cpus"), slurm.get("memory_gb"), slurm.get("minutes")
-    v, cores = m["vm"]["concurrency"], m["vm"]["cpu_cores"]
-    _require(isinstance(cpus, int) and v * cores + 1 <= cpus <= MAX_JOB_CPUS,
-             f"slurm.cpus must fit {v} VMs and the runners within {MAX_JOB_CPUS}")  # fmt: skip
+    v, cores, purpose = m["vm"]["concurrency"], m["vm"]["cpu_cores"], m["purpose"]
+    _require(isinstance(cpus, int) and not isinstance(cpus, bool), "slurm.cpus must be an int")
+    if host_load_cpus is not None:
+        _require(purpose in HOST_LOAD_PURPOSES,
+                 f"a host-load CPU limit applies to {HOST_LOAD_PURPOSES} only; a {purpose} "
+                 "job takes section 5.5's CPUs")  # fmt: skip
+        _require(isinstance(host_load_cpus, int) and host_load_cpus >= 1, "host-load limit")
+    if purpose in HOST_LOAD_PURPOSES:
+        fits = v * cores + 1 <= cpus <= plan.CPU_LIMIT
+        _require(fits, f"slurm.cpus must fit {v} VMs and a runner CPU, within {plan.CPU_LIMIT}")
+        if host_load_cpus is not None:
+            above = f"slurm.cpus {cpus} is above the host-load limit {host_load_cpus}"
+            _require(cpus <= host_load_cpus, above)
+    else:
+        need = plan.vm_job_cpus(v)
+        _require(cpus == need, f"slurm.cpus must be 4V + runner_cpus(V) = {need} at V = {v} "
+                               "(section 5.5)")  # fmt: skip
+        try:
+            plan.check_cpus([v], 1)
+        except plan.PlanError as exc:
+            raise LaneError(str(exc)) from exc
     _require(isinstance(memory, int) and memory >= 6 * v + 6, "slurm.memory_gb too small")
     _require(isinstance(minutes, int) and 1 <= minutes <= 720, "slurm.minutes 1-720")
+    engine = m.get("engine") or {}
+    if engine.get("kind") == "bridge":
+        limit = int(engine["gpu_cap_min"]) + plan.VM_JOB_EXTRA_MIN
+        _require(minutes == limit,
+                 f"slurm.minutes must be the GPU cap plus {plan.VM_JOB_EXTRA_MIN} = {limit} "
+                 "(sections 5.5, 14)")  # fmt: skip
+    return {"cpus": cpus, "memory_gb": memory, "minutes": minutes}
+
+
+def submit(
+    manifest_path: Path, source_dir: Path, dry_run: bool, host_load_cpus: int | None = None
+) -> dict[str, Any]:
+    m = validate_manifest(json.loads(manifest_path.read_text(encoding="utf-8")), source_dir)
+    request = check_slurm(m, host_load_cpus)
+    cpus, memory, minutes = request["cpus"], request["memory_gb"], request["minutes"]
     host = check_host(m)
     text = canonical(m)
     digest = hashlib.sha256(text.encode()).hexdigest()
@@ -758,9 +802,12 @@ def main(argv: list[str] | None = None) -> int:
     sbatch.add_argument("manifest", type=Path)
     sbatch.add_argument("--source-dir", type=Path, default=Path("."))
     sbatch.add_argument("--dry-run", action="store_true")
+    sbatch.add_argument("--host-load-max-cpus", type=int, default=None,
+                        help="temporary host-load CPU cap (development, setup-check)")  # fmt: skip
     args = parser.parse_args(argv)
     if args.command == "submit":
-        print(json.dumps(submit(args.manifest, args.source_dir, args.dry_run), indent=1))
+        out = submit(args.manifest, args.source_dir, args.dry_run, args.host_load_max_cpus)
+        print(json.dumps(out, indent=1))
         return 0
     if args.command == "validate":
         manifest = validate_manifest(json.loads(args.manifest.read_text()), args.source_dir)

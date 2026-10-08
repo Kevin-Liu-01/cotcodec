@@ -334,3 +334,42 @@ def test_filled_gpu_template_passes_the_docker_submitter(size, minutes):
     raw["seeds"] = [42]
     with pytest.raises(ValueError, match="deterministic jobs cannot declare seeds"):
         validate_gpu(raw)
+
+
+def slurm_view(purpose: str, v: int, cpus: int, minutes: int, gpu_cap: int | None = 25):
+    engine = {"kind": "bridge", "gpu_cap_min": gpu_cap} if gpu_cap else {"kind": "fake"}
+    return {"purpose": purpose, "vm": {"concurrency": v, "cpu_cores": 4}, "engine": engine,
+            "slurm": {"cpus": cpus, "memory_gb": 6 * v + 6, "minutes": minutes}}  # fmt: skip
+
+
+def test_registered_vm_jobs_take_section_5_5s_cpus():
+    """A0a and A1 at V = 20 take 4V + runner_cpus(V) = 90 CPUs (72 at V = 16), and the VM
+    job's limit is the GPU cap plus 10 minutes."""
+    assert lane.check_slurm(slurm_view("a0a", 20, 90, 35)) == {
+        "cpus": 90, "memory_gb": 126, "minutes": 35}  # fmt: skip
+    assert lane.check_slurm(slurm_view("a1", 20, 90, 121, gpu_cap=111))["cpus"] == 90
+    assert lane.check_slurm(slurm_view("a1", 16, 72, 114, gpu_cap=104))["cpus"] == 72
+    for bad, message in (
+        (slurm_view("a0a", 20, 8, 35), "must be 4V"),  # the old 8-CPU cap
+        (slurm_view("a0a", 20, 89, 35), "= 90 at V = 20"),
+        (slurm_view("a0a", 20, 90, 60), "GPU cap plus 10"),
+        (slurm_view("a1", 40, 180, 121, gpu_cap=111), "212 CPUs, above 200"),
+    ):
+        with pytest.raises(lane.LaneError, match=message):
+            lane.check_slurm(bad)
+    with pytest.raises(lane.LaneError, match="host-load CPU limit applies to"):
+        lane.check_slurm(slurm_view("a0a", 20, 90, 35), host_load_cpus=8)
+
+
+def test_host_load_limit_is_an_operator_flag_for_development_and_setup_checks():
+    dev = slurm_view("development", 1, 8, 45, gpu_cap=None)
+    assert lane.check_slurm(dev, host_load_cpus=8)["cpus"] == 8
+    assert lane.check_slurm(slurm_view("setup-check", 1, 5, 240, gpu_cap=None))["cpus"] == 5
+    with pytest.raises(lane.LaneError, match="above the host-load limit 8"):
+        lane.check_slurm(slurm_view("development", 2, 12, 45, gpu_cap=None), host_load_cpus=8)
+    with pytest.raises(lane.LaneError, match="fit 2 VMs"):
+        lane.check_slurm(slurm_view("development", 2, 8, 45, gpu_cap=None))
+    # The committed development and setup-check manifests still pass under the 8-CPU flag.
+    for name in ("dev-smoke-v1", "setup-check-v1"):
+        m = json.loads((ROOT / f"experiments/manifests/q2-stage1/{name}.json").read_text())
+        assert lane.check_slurm(m, host_load_cpus=8)["cpus"] == 8
