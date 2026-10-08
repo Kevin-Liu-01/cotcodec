@@ -1098,6 +1098,34 @@ def test_a1_to_a3_still_count_a_restart_outside_an_observation_call(reasons):
     assert not acc.a3(stress)["pass"]
 
 
+def test_a1_and_the_ladder_excuse_a_restart_across_the_reset_observation():
+    """D33: a restart during the reset observation that left only its tree undelivered is
+    excused the same way as one inside an entry (``reset_restart``); the same lost tree
+    with no restart across it still counts."""
+    good = _a1_good()
+    session = next(s for s in good[44][0]["sessions"] if s["setting"] == A11Y)
+    first = session["trials"][0]
+    _hit(first, "infra: reset_observation")
+    first["reset_restart"] = True
+    result = acc.a1(good)
+    assert result["pass"], result["problems"]
+    assert result["entries"][44][first["cell"]] == "PASS"
+    row = result["guest_server"][44]["trials_hit"][0]
+    assert row["where"] == ["reset_observation"] and row["counted"] is False
+    assert result["guest_server"][44]["excused_trials"] == 1
+    first["reset_restart"] = False  # the tree was lost without a restart across it
+    result = acc.a1(good)
+    assert not result["pass"] and result["entries"][44][first["cell"]] == "FLAKY"
+    a1 = [campaign(a1_plan(43)), campaign(a1_plan(44))]
+    run = _rung(8)
+    lead = next(s for s in run["sessions"] if s["setting"] == A11Y)["trials"][0]
+    _hit(lead, "infra: reset_observation")
+    lead["reset_restart"] = True
+    result = acc.n_star(a1, {8: [run]})
+    assert result["n_star"] == 8, result["rungs"][8]["problems"]
+    assert result["rungs"][8]["excused_trials"] == 1
+
+
 def test_a1_excused_trials_count_toward_the_limit_over_every_attempt():
     """A rerun never resets the count: an earlier attempt's excused trial and the counting
     attempt's in the same entry and setting make two (section 6.1)."""
