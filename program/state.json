@@ -98,7 +98,7 @@
     "Review decisions D28 (Q1 pilot exposure: exposed units stay primary with a sensitivity analysis; D14's precondition can no longer be met) and D29 (KernelBench adversarial kernels and unmodified upstream fidelity code admitted on GPUs under D7)",
     "Accept or amend design decisions 1-15 of the draft q3-dense-headroom-precheck-v1 (program/preregistrations/q3-dense-headroom-precheck-v1.md): two lanes, development partition only, caps 0.15 + 0.35 GPU-h (D26's 0.5) with every job of a lane charged to its cap and no amendment under the id, the entity-anchor rule, the lexical-overlap selector, the block-score null with its 2.5-point reach rule, the floor judged on a null's lower bound, H2 gating only on FAIL (decision 5), and D26's K1 v3 requirements kept unconditionally"
   ],
-  "gpu_hours_spent_this_program": 2.3621,
+  "gpu_hours_spent_this_program": 2.4368,
   "frozen_registrations": [
     "q3-k1-localization-screen-v1",
     "q2-holo3-rerun-audit-v1-posthoc",
@@ -109,7 +109,7 @@
   ],
   "infrastructure": {
     "serving_probe": "v1 and v2 done (1.15 GPU-h): cu129 vLLM works on R570; Q1 sampling within cap; Q2 ladder needs rescoping",
-    "lane": "hardened discovery lane merged 2026-10-07"
+    "lane": "hardened discovery lane; container lifetime bounded by a hard stop 30 s before the job limit (2026-10-07)"
   },
   "gpu_hours_ledger": [
     {
@@ -187,6 +187,16 @@
         "640 qwen3.6-35b-a3b review"
       ],
       "outcome": "review total 59 (reported); wave score 45; honest exit"
+    },
+    {
+      "experiment": "open-weight reviewer exit fix GPU check",
+      "gpu_hours": 0.0747,
+      "jobs": [
+        "651 overlay build",
+        "653 qwen3.5-9b smoke",
+        "655 qwen3.6-35b-a3b load check"
+      ],
+      "outcome": "clean exits on GPU; 35B verify 52 s, load 97 s"
     }
   ],
   "results": [
