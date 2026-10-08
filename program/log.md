@@ -1815,7 +1815,9 @@ Append-only. Newest entries at the bottom.
   naming the real D42: check-chain 12 rows PASS, frozen-mode tests pass, 0.6B
   and 4B fills and dry runs (0.2 and 0.5 GPU-h) ok; status-only and a wrong
   decision fail the test; full suite in the frozen clone 2,169 passed, 87
-  skipped. Real ledger unchanged.
+  skipped. Real ledger unchanged. Main (`692b83d`, D43) merged in again
+  (`436f038`): host suite 2,216 passed, 40 skipped; full freeze simulation
+  check-chain PASS.
 - State: ledger row 0.045 GPU-h; program total 4.028; v2 used 0.1019 GPU-h.
   Evidence `program/evidence/2026-10-08/q3-dense-headroom-precheck-v2-build/timing-2/README.md`.
 - Next: the narrow re-check of the measured limits (D42 (iii)), then merge

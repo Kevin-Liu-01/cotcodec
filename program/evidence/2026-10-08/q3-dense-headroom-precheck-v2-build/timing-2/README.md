@@ -172,6 +172,8 @@ receipt.
     thread exists, so every thread of a lane inherits the block, and both
     timing jobs and the PID-1 test answered SIGUSR1 through the guard.
   - at `8c3f076` (Slurm 826): **2,216 passed, 40 skipped, 0 failed**.
+  - at `436f038`, after main (`692b83d`, D43) was merged in again: **2,216
+    passed, 40 skipped, 0 failed**.
 - Torch-dependent dense tests inside image 825 (`8c3f076`; CPU, network
   none; pytest mounted read-only): **55 passed**
   (`tests/torch-in-image-825/`).
@@ -202,4 +204,6 @@ receipt.
   - `wrong-dec` (both naming D41): the frozen-mode test fails ("the status
     does not name D42").
   The same three runs at `7ab5b8b` and `8c3f076` gave the same results
-  (kept with those suffixes).
+  (kept with those suffixes), and the `full` run again at `436f038` after
+  the second merge of main (`sim-full-436f038.txt`: check-chain 12 rows
+  PASS, frozen-mode tests 29 passed).
