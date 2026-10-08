@@ -25,6 +25,15 @@ local         freeze simulations on scratch clones of da31db7 (d44/freeze-simula
               clone (code table matches; fills; dry runs 0.2 and 0.5333 GPU-h); the full suite in
               the frozen clone (macOS): 2,171 passed, 87 skipped, 0 failed. Real ledger 1052d58b...
               before and after.
+12:43         local: main (1d2cbe0: D45, Q2 confirm stage B; decisions, log, state and evidence
+              only) merged in again (85cf0f5; log.md in time order, state.json merged cleanly, GPU
+              total 4.393 = the 23 ledger rows); dense v2, v1 prereg, Q1 policy and preregister tests
+              62 passed, 3 skipped.
+12:43-12:48   bundle of 85cf0f5; fresh clone ~/cotcodec-scratch/q3v2-suite-85cf0f5; Slurm 844 host
+              suite: 2,218 passed, 40 skipped, 0 failed.
+local         full-mode freeze simulation on a scratch clone of 85cf0f5: check-chain 12 rows PASS,
+              frozen-mode tests 31 passed; frozen wording and frozen SHA-256 (2e76f5fa...) equal to
+              da31db7's; lanes-after-freeze as at da31db7. Real ledger 1052d58b... before and after.
 
 The PID-1 SIGUSR1 test was not re-run: it runs the image's own entry point (8c3f076), and D44
 changed no file on the signal path (only the lanes module's 4B figures and cap, the 4B template,

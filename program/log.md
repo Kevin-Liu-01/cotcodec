@@ -1964,6 +1964,12 @@ Append-only. Newest entries at the bottom.
   frozen clone 2,171 passed, 87 skipped. The lead-in left in draft, D41 in
   place of D42, and the wording naming D42 only each fail the frozen-mode
   test. Real ledger `1052d58b...` before and after.
+- Main moved to `1d2cbe0` (D45; Q2 confirm stage B: decisions, log, state
+  and evidence only) and was merged in again (`85cf0f5`; this log in time
+  order, state merged cleanly, GPU total 4.393 from the 23 ledger rows). At
+  `85cf0f5`: host suite (Slurm 844) 2,218 passed, 40 skipped; full-mode
+  freeze simulation check-chain PASS, frozen-mode tests 31 passed, the
+  frozen file's SHA-256 equal to `da31db7`'s.
 - GPU: none. Nothing pushed. Evidence
   `program/evidence/2026-10-08/q3-dense-headroom-precheck-v2-build/timing-2/README.md`
   ("D44") and `timing-2/d44/`.

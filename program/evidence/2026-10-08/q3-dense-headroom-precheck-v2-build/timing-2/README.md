@@ -382,3 +382,13 @@ Checks at `da31db7` (`d44/`; operations in `d44/operator-log.txt`):
   - `d42-only` (the frozen wording used before D44, naming D42 only): it
     fails ("the status does not name D44").
 
+After main (`1d2cbe0`: D45, Q2 confirm stage B; only `program/decisions.md`,
+log, state and evidence changed, no tabled file, code or test, not the
+ledger) was merged in again (`85cf0f5`): host suite in a fresh scratch clone
+(Slurm 844) **2,218 passed, 40 skipped, 0 failed**
+(`d44/tests/host-suite-85cf0f5/`); the `full` freeze simulation on a scratch
+clone of `85cf0f5`: check-chain 12 rows PASS, frozen-mode tests **31
+passed**, the frozen wording and the frozen file's SHA-256 (`2e76f5fa...`)
+equal to `da31db7`'s, code table matches, fills and dry runs as above
+(`*-85cf0f5.*`); the real ledger `1052d58b...` before and after.
+
