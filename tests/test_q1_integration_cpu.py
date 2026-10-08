@@ -527,3 +527,61 @@ def test_trim_plan_driver_and_report_on_the_cpu_journal(run: dict, tmp_path: Pat
     assert "criterion_3_FRR_c" in replicate["sensitivity_without_pilot_exposed"]
     assert "problems_at_or_above_threshold" in report["audit_tolerance"]
     assert "kernels_shifted" in replicate["sanitizer_shift"]
+
+
+def test_reference_store_rows_equal_inline_rows(run: dict) -> None:
+    """Decision D31 on the committed fixtures: the same items with the reference
+    store (one reference item per problem and channel; consumers read its entry)
+    give the same final verdict rows as the inline run, except timing and run-identity
+    fields (``tests/test_q1_refstore_equivalence.py`` does the same on the synthetic
+    corpus, and states the one exception: kernels that read unwritten memory)."""
+    from dataclasses import asdict
+
+    from harness.q1 import refschedule, refstore
+
+    sys.path.insert(0, str(ROOT))
+    from tests.test_q1_refstore_equivalence import describe, differences, fails_dual_poison
+
+    base = run["base"]
+    store = base / "refstore"
+    scheduled = [
+        WorkItem(**({**e, "journal": str(store / "references.jsonl")} if e.get("journal") else e))
+        for e in refschedule.with_references([asdict(i) for i in run["items"]], root=str(store))
+    ]
+    refs = [i for i in scheduled if refstore.is_reference_gate(i.gate)]
+    # ReLU and softmax, each with substrates, mutants and controls: every channel
+    # their items use (a, c, A1, A2, A3; no a_head or A5 items here)
+    assert {(i.problem_id, i.gate) for i in refs} == {
+        (p, g) for p in PROBLEM_IDS for g in ("ref_a", "ref_c", "ref_A1", "ref_A2", "ref_A3")
+    }
+    (base / "items-store").mkdir()
+    config = RunnerConfig(
+        journal_path=base / "journal-store.jsonl",
+        slots=["cpu"] * min(16, os.cpu_count() or 2),
+        timeouts={"compile": 300.0, "correctness": 900.0, "timing": 60.0},
+        extra_env={
+            "TRITON_INTERPRET": "1",
+            "Q1_TEST_INTERPRETER_SHIMS": "1",
+            "PYTHONPATH": str(base / "pyshim"),
+        },
+        health_check=False,
+        workdir=base / "items-store",
+    )
+    summary = Runner(config).run(scheduled)
+    assert summary["left_in_queue"] == 0 and summary["crashes"] == 0, summary
+    ref_rows = Journal(store / "references.jsonl").final_rows()
+    assert len(ref_rows) == len(refs) and all(r["verdict"] == "accept" for r in ref_rows), [
+        (r["kernel_id"], r["gate"], r["details"].get("problems")) for r in ref_rows
+    ]
+    stored = Journal(config.journal_path).final_rows()
+    assert not fails_dual_poison(run["rows"])
+    diff = differences(run["rows"], stored)
+    assert not diff, describe(diff)
+    assert len(stored) == len(run["rows"])
+    uses = refstore.read_uses(store)
+    lookups = [lookup for u in uses for lookup in u["lookups"]]
+    assert lookups and all(
+        lookup["used"] and lookup.get("inline_from_draw") is None for lookup in lookups
+    ), [lookup for lookup in lookups if not lookup["used"]][:5]
+    consumers = [i for i in scheduled if i.requires]
+    assert len({u["item_key"] for u in uses}) == len(consumers)

@@ -248,12 +248,18 @@ def bootstrap_trimmed(
     factors: dict[str, float] | None,
     args: argparse.Namespace,
     seed: int = 0,
+    store_inputs: tuple[list[dict[str, Any]], list[dict[str, Any]]] | None = None,
     **extra: Any,
-) -> dict[str, float | None]:
+) -> dict[str, Any]:
     """Cluster bootstrap of the trimmed scoring projection over pilot parents
     (each with its mutants and controls), refitting the size model each time (the
     large-problem anchors stay fixed: they are lower bounds from one measured and
-    one censored item)."""
+    one censored item).
+
+    With ``store_inputs`` (the re-pilot's pairs and reference items, decision D31)
+    each resample also draws the re-pilot's problems with replacement and refits
+    the store model, independently of the pilot draw. ``cumulative`` holds the
+    2.5% and 97.5% points of the scoring GPU-h through each bucket."""
     import random
     from collections import defaultdict
 
@@ -265,19 +271,42 @@ def bootstrap_trimmed(
     if len(keys) < 2:
         return {"low": None, "high": None}
     rng = random.Random(seed)
+    store_rng = random.Random(seed + 1)
+    problems: list[str] = []
+    if store_inputs is not None:
+        problems = sorted({p["problem_id"] for p in store_inputs[0]})
     totals = []
+    cumulative: dict[str, list[float]] = defaultdict(list)
     for _ in range(args.resamples):
         sample = [i for _ in keys for i in clusters[rng.choice(keys)]]
         fits = cc.fit_item_costs(sample)
-        totals.append(
-            cc.project_trimmed(
-                counts, fits, survival=survival, rule=rule, factors=factors, **extra
-            )["gpu_hours"]
+        options = dict(extra)
+        if store_inputs is not None:
+            drawn = [store_rng.choice(problems) for _ in problems]
+            pairs = [p for name in drawn for p in store_inputs[0] if p["problem_id"] == name]
+            refs = [r for name in drawn for r in store_inputs[1] if r["problem_id"] == name]
+            options["store"] = cc.fit_store_model(pairs, refs)
+        projection = cc.project_trimmed(
+            counts, fits, survival=survival, rule=rule, factors=factors, **options
         )
+        totals.append(projection["gpu_hours"])
+        running = 0.0
+        for bucket, hours in sorted(projection["gpu_hours_by_priority"].items()):
+            running += hours
+            cumulative[bucket].append(running)
     totals.sort()
+
+    def point(values: list[float], q: float) -> float:
+        ordered = sorted(values)
+        return round(ordered[int(round(q * (len(ordered) - 1)))], 3)
+
     return {
         "low": round(totals[int(0.025 * (len(totals) - 1))], 3),
         "high": round(totals[int(round(0.975 * (len(totals) - 1)))], 3),
+        "cumulative": {
+            bucket: {"low": point(values, 0.025), "high": point(values, 0.975)}
+            for bucket, values in sorted(cumulative.items())
+        },
     }
 
 
@@ -415,6 +444,12 @@ def main(argv: list[str] | None = None) -> int:
         type=Path,
         default=None,
         help="run-records JSON of the jobs (scripts/q1_pilot_records.py), bound by hash",
+    )
+    parser.add_argument(
+        "--repilot-job",
+        type=Path,
+        default=None,
+        help="the decision-D31 re-pilot (paired inline and reference-store arms)",
     )
     args = parser.parse_args(argv)
     smoke = cc.load_job(args.smoke_job / "q1")
@@ -624,6 +659,31 @@ def main(argv: list[str] | None = None) -> int:
             timing_phase_seconds = phase["seconds"] / ran
     exposed = trim.load_exposed(args.exposed)
     anchors = cc.large_problem_anchors(kernel_rows, censored)
+    repilot = None
+    store_model = None
+    store_inputs = None
+    if args.repilot_job is not None:
+        from harness.q1 import repilot as repilot_rule
+        from harness.q1.journal import Journal
+
+        rp = cc.load_job(args.repilot_job / "q1")
+        pairs = cc.repilot_pairs(rp["items"])
+        refs = [dict(r) for r in cc.reference_items(rp["items"])]
+        store_model = cc.fit_store_model(pairs, refs)
+        store_inputs = (pairs, refs)
+        rows = Journal(args.repilot_job / "q1" / "repilot" / "journal.jsonl").final_rows()
+        repilot = {
+            "job": str(args.repilot_job),
+            "phases": rp["phases"],
+            "summary": cc.repilot_summary(rp["items"], pairs),
+            "store_model": {
+                "ratio_fits": store_model.ratio_fits,
+                "reference_fits": store_model.reference_fits,
+            },
+            "per_gate_items": cc.gate_stats(rp["items"]),
+            "twin_rows": repilot_rule.compare_twins(rows),
+            "censored_items": cc.censored_items(args.repilot_job / "q1"),
+        }
     trimmed = []
     scenarios_trim = (
         # The pilot pass's proposal recomputed under /2's accounting of units and samples
@@ -646,10 +706,20 @@ def main(argv: list[str] | None = None) -> int:
             True,
         ),
     )
+    if store_model is not None:
+        scenarios_trim += (
+            ("trim2-store-per-bucket-paired-concurrency", cc.TRIM_RULE, factors, True),
+            ("trim2-store-per-job-paired-concurrency", cc.TRIM_RULE, factors, True),
+        )
     for label, rule, fac, corrected in scenarios_trim:
         if label.endswith("paired-concurrency") and not factors:
             continue
         extra = {"anchors": anchors, "exposed": exposed} if corrected else {}
+        boot_store = None
+        if "-store-" in label:
+            extra["store"] = store_model
+            extra["store_mode"] = "per-bucket" if "per-bucket" in label else "per-job"
+            boot_store = store_inputs
         projection = cc.project_trimmed(
             counts,
             fits,
@@ -672,8 +742,17 @@ def main(argv: list[str] | None = None) -> int:
             else timing_seconds,
             measured_charges=corrected,
         )
+        boot_extra = {k: v for k, v in extra.items() if k != "store"}
         interval = bootstrap_trimmed(
-            all_scored, kinds, counts, survival["survival"], rule, fac, args, **extra
+            all_scored,
+            kinds,
+            counts,
+            survival["survival"],
+            rule,
+            fac,
+            args,
+            store_inputs=boot_store,
+            **boot_extra,
         )
         buckets = projection["gpu_hours_by_priority"]
         extension_bucket = max(buckets) if buckets else None
@@ -689,6 +768,7 @@ def main(argv: list[str] | None = None) -> int:
         high = None if scale is None else round(fixed_sum + core * scale, 3)
         cumulative = []
         running = fixed_sum
+        direct = interval.get("cumulative", {})
         for bucket, hours in buckets.items():
             running += hours
             cumulative.append(
@@ -700,6 +780,11 @@ def main(argv: list[str] | None = None) -> int:
                     else round(
                         fixed_sum + scale * sum(v for k, v in buckets.items() if k <= bucket), 3
                     ),
+                    # The bootstrap's own 97.5% point of the scoring through this bucket
+                    # (not the uniform scale of the whole projection), plus the fixed part.
+                    "total_high_direct": None
+                    if bucket not in direct
+                    else round(fixed_sum + direct[bucket]["high"], 3),
                 }
             )
         trimmed.append(
@@ -719,6 +804,7 @@ def main(argv: list[str] | None = None) -> int:
         )
     card = {
         "schema": "q1-pilot-cost-card/2",
+        "repilot": repilot,
         "censored_items": censored,
         "large_problem_anchors": anchors,
         "timing_bias_identity_controls": timing_bias([pilot] + ([other] if args.pair_job else [])),

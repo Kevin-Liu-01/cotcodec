@@ -41,7 +41,15 @@
   final and is excluded and listed by the analysis.
 - **Journal.** Rows are appended to the append-only journal
   (``journal.py``); resume skips finished items and reruns the rest with the
-  next attempt number.
+  next attempt number. An item may name its own journal (``journal``: a path,
+  or a name beside the main journal); reference items (decision D31,
+  ``refstore``) use one so the scoring journal holds verdict rows only.
+- **Requirements.** An item with ``requires`` (item keys) starts only when none
+  of them is still queued or running in this run; until then a slot takes the
+  next item that is ready, so queue order is kept except around a running
+  requirement. A requirement that failed, was deferred or was cut counts as
+  done: the item runs anyway (a consumer without a usable reference entry
+  computes inline).
 - **Time boxes.** ``soft_deadline`` stops slots from taking new items;
   ``hard_deadline`` kills running children (not journaled, like a signal,
   but no checkpoint marker is written). With ``fit_deadline``, an item starts
@@ -66,7 +74,6 @@ import argparse
 import contextlib
 import json
 import os
-import queue
 import select
 import signal
 import subprocess
@@ -117,6 +124,11 @@ class WorkItem:
     timeouts: dict[str, float] | None = None
     #: Capacity units held on the device (``None``: one unit; ``exclusive``: all).
     units: int | None = None
+    #: Item keys that must leave the queue (finish, fail, be deferred) before this starts.
+    requires: list[str] = field(default_factory=list)
+    #: Journal for this item's rows (``None``: the main journal; a relative path is
+    #: resolved beside the main journal).
+    journal: str | None = None
 
     @property
     def key(self) -> str:
@@ -148,6 +160,47 @@ class RunnerConfig:
     hard_deadline: float | None = None
     #: Start an item only if its watchdog limits end before ``hard_deadline``.
     fit_deadline: bool = False
+
+
+class ReadyQueue:
+    """FIFO of (item, attempt) whose ``get`` returns the first entry whose
+    requirements are no longer pending, waiting while every entry is blocked."""
+
+    def __init__(self, pending: set[str], stopped: threading.Event) -> None:
+        self._entries: list[tuple[WorkItem, int]] = []
+        self._cond = threading.Condition()
+        self._pending = pending
+        self._stopped = stopped
+
+    def put(self, entry: tuple[WorkItem, int]) -> None:
+        with self._cond:
+            self._entries.append(entry)
+            self._cond.notify_all()
+
+    def qsize(self) -> int:
+        with self._cond:
+            return len(self._entries)
+
+    def keys(self) -> list[str]:
+        with self._cond:
+            return [item.key for item, _ in self._entries]
+
+    def notify(self) -> None:
+        with self._cond:
+            self._cond.notify_all()
+
+    def get(self, deadline: float | None = None) -> tuple[WorkItem, int] | None:
+        with self._cond:
+            while True:
+                if self._stopped.is_set() or not self._entries:
+                    return None
+                if deadline is not None and time.monotonic() >= deadline:
+                    return None
+                for index, (item, attempt) in enumerate(self._entries):
+                    if not any(key in self._pending for key in item.requires):
+                        del self._entries[index]
+                        return item, attempt
+                self._cond.wait(0.5)
 
 
 class DeviceShare:
@@ -235,6 +288,10 @@ class Runner:
     def __init__(self, config: RunnerConfig) -> None:
         self.config = config
         self.journal = Journal(config.journal_path)
+        self._journals: dict[str, Journal] = {}
+        #: Keys of this run's items that are queued or running (requirements).
+        self._pending: set[str] = set()
+        self._queues: list[ReadyQueue] = []
         self._lock = threading.Lock()
         self.summary: dict[str, int] = {"run": 0, "skipped": 0, "timeouts": 0, "crashes": 0}
         self.retired_slots: list[str] = []
@@ -301,10 +358,34 @@ class Runner:
         self._atomic_write(marker, "\n".join(lines) + "\n")
         return True
 
+    def journal_for(self, item: WorkItem) -> Journal:
+        if not item.journal:
+            return self.journal
+        path = Path(item.journal)
+        if not path.is_absolute():
+            path = self.config.journal_path.parent / path
+        key = str(path)
+        if key not in self._journals:
+            self._journals[key] = Journal(path)
+        return self._journals[key]
+
+    def _done(self, key: str) -> None:
+        """``key`` left the queue for good in this run: wake items that require it."""
+        with self._lock:
+            self._pending.discard(key)
+        for work in self._queues:
+            work.notify()
+
     # --- scheduling ---------------------------------------------------------
 
     def run(self, items: Iterable[WorkItem]) -> dict[str, Any]:
-        status = self.journal.status()
+        items = list(items)
+        status = dict(self.journal.status())
+        for item in items:
+            if item.journal:
+                journal = self.journal_for(item)
+                if journal is not self.journal and journal.path.exists():
+                    status.update({k: v for k, v in journal.status().items() if k not in status})
         pending: list[tuple[WorkItem, int]] = []
         for item in items:
             entry = status.get(item.key)
@@ -319,8 +400,10 @@ class Runner:
                 slot
             )
             self._shares.setdefault(slot, DeviceShare(capacity))
-        correctness: queue.Queue = queue.Queue()
-        timing: queue.Queue = queue.Queue()
+        self._pending = {item.key for item, _ in pending}
+        correctness = ReadyQueue(self._pending, self.stopped)
+        timing = ReadyQueue(self._pending, self.stopped)
+        self._queues = [correctness, timing]
         for item, attempt in pending:
             (timing if item.is_timing else correctness).put((item, attempt))
         threads = [
@@ -380,7 +463,7 @@ class Runner:
         with self._lock, self.cut_path.open("a", encoding="utf-8") as handle:
             handle.write(json.dumps(record, sort_keys=True) + "\n")
 
-    def _slot_loop(self, slot: str, work: queue.Queue) -> None:
+    def _slot_loop(self, slot: str, work: ReadyQueue) -> None:
         share = self._shares.setdefault(slot, DeviceShare())
         while not self.stopped.is_set():
             if (
@@ -388,13 +471,14 @@ class Runner:
                 and time.monotonic() >= self.config.soft_deadline
             ):
                 return
-            try:
-                item, attempt = work.get_nowait()
-            except queue.Empty:
+            entry = work.get(self.config.soft_deadline)
+            if entry is None:
                 return
+            item, attempt = entry
             if not self._fits(item):
                 with self._lock:
                     self.deferred.append(item.key)
+                self._done(item.key)
                 continue  # left for the next job (resume); never started and killed
             if not share.acquire(item.exclusive, self.stopped, item.units):
                 return  # stopped while waiting; the item reruns on resume
@@ -416,7 +500,7 @@ class Runner:
                         row["details"]["retry_alone"] = True
                         row["details"]["infra_failure_kind"] = f"infra_failure-{contention}"
             with self._lock:
-                self.journal.append(rows)
+                self.journal_for(item).append(rows)
                 self.summary["run"] += 1
                 if infra:
                     self.summary["infra_failures"] = self.summary.get("infra_failures", 0) + 1
@@ -426,6 +510,8 @@ class Runner:
                 self.write_progress()
             if retry:
                 work.put((replace(item, exclusive=True) if contention else item, attempt + 1))
+            else:
+                self._done(item.key)
             if not healthy:
                 with self._lock:
                     self.retired_slots.append(slot)

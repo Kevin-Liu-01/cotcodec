@@ -32,6 +32,7 @@ import random
 import statistics
 from collections import Counter, defaultdict
 from collections.abc import Iterable, Mapping, Sequence
+from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
@@ -99,7 +100,10 @@ def load_job(job_dir: Path) -> dict[str, Any]:
     root = Path(job_dir)
     phases = json.loads((root / "phases.json").read_text())
     items: dict[tuple[str, str, int], dict[str, Any]] = {}
-    for journal in sorted(root.glob("*/journal.jsonl")):
+    # Reference items (decision D31) share the GPU with the scoring items, so they are
+    # loaded beside them and charged in the same sweep.
+    journals = sorted([*root.glob("*/journal.jsonl"), *root.glob("*/references.jsonl")])
+    for journal in journals:
         phase = journal.parent.name
         problems = {}
         planned = journal.parent / "items.jsonl"
@@ -724,8 +728,12 @@ def kernel_replicate_seconds(
     factors: Mapping[str, float] | None = None,
     gates: Sequence[str] = SCORING_GATES,
     factor_below_bytes: int = CONCURRENCY_BELOW_BYTES,
+    store: StoreModel | None = None,
 ) -> float:
     """Size-model GPU-seconds of one kernel at one replicate (every scoring gate).
+
+    With ``store`` (decision D31), each gate is scaled by the measured store/inline
+    ratio at the problem's size (the consumer gates; others keep ratio 1).
 
     ``factors`` (per gate) scale problems whose native inputs are below
     ``factor_below_bytes`` only, as measured by a paired re-run at another
@@ -745,6 +753,8 @@ def kernel_replicate_seconds(
         seconds = fit["alpha"] + fit["beta"] * gb
         if shared and factors and gate in factors:
             seconds *= factors[gate]
+        if store is not None:
+            seconds *= store.ratio(gate, gb)
         total += seconds
     return total
 
@@ -829,6 +839,88 @@ def _hack_sample_count(
     return out
 
 
+@dataclass
+class StoreModel:
+    """The reference store's measured cost (decision D31; ``fit_store_model``).
+
+    ``ratio_fits[gate]`` holds linear size models (``alpha + beta * GB``
+    GPU-seconds) of the inline and store arms of the re-pilot's paired consumer
+    items; ``reference_fits[channel]`` one of its reference items. Both were
+    measured under the trimming rule's execution (12 units per GPU), so the
+    ratio multiplies the pilot's inline model at that concurrency and the
+    reference cost is added as measured."""
+
+    ratio_fits: dict[str, dict[str, dict[str, float]]]
+    reference_fits: dict[str, dict[str, float]]
+
+    def ratio(self, gate: str, gb: float) -> float:
+        fits = self.ratio_fits.get(gate)
+        if fits is None:
+            return 1.0
+        inline = fits["inline"]["alpha"] + fits["inline"]["beta"] * gb
+        store = fits["store"]["alpha"] + fits["store"]["beta"] * gb
+        if inline <= 0:
+            return 1.0
+        return max(0.0, store) / inline
+
+    def reference_seconds(self, gb: float) -> float:
+        return sum(max(0.0, f["alpha"] + f["beta"] * gb) for f in self.reference_fits.values())
+
+
+def _cost_entries(
+    entries: Sequence[tuple[str, str, str, int, float]],
+    cost: Any,
+    *,
+    store: StoreModel | None,
+    store_mode: str,
+    scope: int,
+) -> tuple[Counter[str], Counter[str], dict[str, Any] | None]:
+    """GPU-seconds per role and per bucket for the projection's kernel entries."""
+    seconds: Counter[str] = Counter()
+    priority: Counter[str] = Counter()
+    if store is None:
+        for bucket, role, problem_id, _seed, n in entries:
+            value = n * cost(problem_id)
+            seconds[role] += value
+            priority[bucket] += value
+        return seconds, priority, None
+    from harness.q1 import pilot
+
+    groups: dict[tuple[Any, ...], float] = defaultdict(float)
+    for bucket, _role, problem_id, seed, n in entries:
+        key = (bucket, problem_id, seed) if store_mode == "per-bucket" else (problem_id, seed)
+        groups[key] += n
+    charged: set[tuple[Any, ...]] = set()
+    facts: Counter[str] = Counter()
+    for bucket, role, problem_id, seed, n in entries:
+        key = (bucket, problem_id, seed) if store_mode == "per-bucket" else (problem_id, seed)
+        in_scope = (pilot.native_input_bytes(problem_id) or 0) < scope
+        if not in_scope or groups[key] < 2:
+            value = n * cost(problem_id)
+            facts["kernel_replicates_inline"] += n
+        else:
+            value = n * cost(problem_id, store=store)
+            facts["kernel_replicates_store"] += n
+            if key not in charged:
+                charged.add(key)
+                reference = store.reference_seconds(_gigabytes(problem_id))
+                facts["reference_groups"] += 1
+                seconds["reference-items"] += reference
+                priority[bucket] += reference
+        seconds[role] += value
+        priority[bucket] += value
+    return (
+        seconds,
+        priority,
+        {
+            "mode": store_mode,
+            "kernel_replicates_store": round(facts["kernel_replicates_store"], 1),
+            "kernel_replicates_inline": round(facts["kernel_replicates_inline"], 1),
+            "reference_groups": int(facts["reference_groups"]),
+        },
+    )
+
+
 def project_trimmed(
     counts: Mapping[str, Any],
     fits: Mapping[str, Mapping[str, Any]],
@@ -839,6 +931,8 @@ def project_trimmed(
     witness_rate: float = 0.5,
     anchors: Mapping[str, Any] | None = None,
     exposed: Mapping[str, Any] | None = None,
+    store: StoreModel | None = None,
+    store_mode: str = "per-bucket",
 ) -> dict[str, Any]:
     """Scoring GPU-hours, kernel counts and precision under the trimming rule
     (``harness.q1.trim``; buckets P1-P8).
@@ -861,15 +955,26 @@ def project_trimmed(
     - **Cost.** The size model, with the paired concurrency ``factors`` for
       problems below 0.6 GB, and ``anchors`` (``large_problem_anchors``) for
       problems of 1 GB or more when given (the larger of the two is used).
+    - **Reference store** (decision D31; ``store``, a :class:`StoreModel` from the
+      re-pilot). Kernels are counted per (bucket, problem, replicate); a group of
+      at least two kernels reads one reference entry per channel: each kernel's
+      consumer gates cost the measured store/inline ratio at the problem's size,
+      and the group pays the measured reference items once. ``store_mode``
+      ``per-bucket`` charges the references in every bucket the group appears in
+      (each bucket its own job: conservative); ``per-job`` charges them once, in
+      the group's first bucket (one scoring job runs every bucket). A group of one
+      kernel computes inline at the unchanged cost.
     """
+    if store_mode not in {"per-bucket", "per-job"}:
+        raise ValueError("store_mode must be per-bucket or per-job")
     scope = int(rule["scope_bytes"])
     rows = counts["evaluation_substrates"]
 
     def bytes_of(row: Mapping[str, Any]) -> int:
         return int(row.get("native_input_bytes") or 0)
 
-    def cost(problem_id: str) -> float:
-        model = kernel_replicate_seconds(fits, problem_id, factors=factors)
+    def cost(problem_id: str, store: StoreModel | None = None) -> float:
+        model = kernel_replicate_seconds(fits, problem_id, factors=factors, store=store)
         gb = _gigabytes(problem_id)
         if anchors is not None and gb * 1e9 >= scope:
             return max(model, anchored_seconds(gb, anchors))
@@ -890,24 +995,25 @@ def project_trimmed(
             continue
         (core if len(units) < target_core else margin).append(row)
         units.add(_unit(row))
-    seconds: Counter[str] = Counter()
-    priority: Counter[str] = Counter()
     kernels: Counter[str] = Counter()
+    #: (bucket, role, problem, replicate, expected kernels): every scored kernel-replicate.
+    entries: list[tuple[str, str, str, int, float]] = []
 
-    def add(role: str, bucket: str, value: float) -> None:
-        seconds[role] += value
-        priority[bucket] += value
+    def add(role: str, bucket: str, problem_id: str, n: float, replicates: Sequence[int]) -> None:
+        for seed in replicates:
+            if n:
+                entries.append((bucket, role, problem_id, seed, n))
 
-    extra_seeds = int(rule["substrate_seeds"]) - 1
+    later = list(trim.REPLICATE_SEEDS[: int(rule["substrate_seeds"]) - 1])
     for row in in_scope:
-        add("substrate", "P1", cost(row["problem_id"]))
-        add("substrate", "P5", extra_seeds * cost(row["problem_id"]))
+        add("substrate", "P1", row["problem_id"], 1, [42])
+        add("substrate", "P5", row["problem_id"], 1, later)
         kernels["substrate"] += 1
     for row in core:
-        add("frr-core-replicate-42", "P1", cost(row["problem_id"]))
+        add("frr-core-replicate-42", "P1", row["problem_id"], 1, [42])
         kernels["frr-core-replicate-42"] += 1
     for row in margin:
-        add("frr-margin-replicate-42", "P4", cost(row["problem_id"]))
+        add("frr-margin-replicate-42", "P4", row["problem_id"], 1, [42])
         kernels["frr-margin-replicate-42"] += 1
     # Mutant frame: each in-scope parent's capped allocation per family, half per split,
     # minus the pilot-exposed mutants of that family and split.
@@ -926,19 +1032,22 @@ def project_trimmed(
     per_family: dict[str, dict[str, Any]] = {}
     robustness = float(rule["mutant_robustness_fraction"])
     for family in MUTATION_FAMILIES:
-        entries = frame.get(family, [])
-        available = sum(k for _, k in entries)
+        members = frame.get(family, [])
+        available = sum(k for _, k in members)
         test_frame = max(0.0, available / 2 - removed[(family, "test")])
         dev_frame = max(0.0, available / 2 - removed[(family, "dev")])
         test = min(float(rule["family_quota_test"]), test_frame)
         dev = min(float(rule["family_quota_dev"]), dev_frame)
         robust = trim.sample_size(robustness, round(test)) if test else 0
-        mean_cost = sum(k * cost(p) for p, k in entries) / available if available else 0.0
         extra = max(0.0, min(float(rule.get("family_quota_test_max", 0)), test_frame) - test)
-        add("mutant", "P2", test * mean_cost)
-        add("mutant-robustness", "P6", 2 * robust * mean_cost)
-        add("mutant", "P7", dev * mean_cost)
-        add("mutant-extension", "P8", extra * mean_cost)
+        # Expected kernels per problem: a simple random sample from the frame, so each
+        # problem's share is its capped allocation over the frame.
+        for problem_id, k in members:
+            share = k / available if available else 0.0
+            add("mutant", "P2", problem_id, test * share, [42])
+            add("mutant-robustness", "P6", problem_id, robust * share, trim.REPLICATE_SEEDS)
+            add("mutant", "P7", problem_id, dev * share, [42])
+            add("mutant-extension", "P8", problem_id, extra * share, [42])
         kernels["mutant"] += test + dev
         kernels["mutant-extension"] += extra
         witnessed = test * witness_rate
@@ -957,19 +1066,34 @@ def project_trimmed(
     identity_seeds = int(rule["identity_seeds"])
     for row in counts["identity_controls"]:
         if not row["exclusive"]:
-            add("identity-control", "P1", cost(row["problem_id"]))
-            add("identity-control", "P3", (identity_seeds - 1) * cost(row["problem_id"]))
+            add("identity-control", "P1", row["problem_id"], 1, [42])
+            add(
+                "identity-control",
+                "P3",
+                row["problem_id"],
+                1,
+                trim.REPLICATE_SEEDS[: identity_seeds - 1],
+            )
             kernels["identity-control"] += 1
     hack_seeds = int(rule["hack_seeds"])
     for problem_id, n in _hack_sample_count(in_scope, float(rule["hack_fraction"])):
-        add("hack-control", "P1", n * cost(problem_id))
-        add("hack-control", "P3", n * (hack_seeds - 1) * cost(problem_id))
+        add("hack-control", "P1", problem_id, n, [42])
+        add("hack-control", "P3", problem_id, n, trim.REPLICATE_SEEDS[: hack_seeds - 1])
         kernels["hack-control"] += n
     adversarial = int(counts.get("adversarial_controls", 3))
-    adversarial_cost = adversarial * cost("L1/1_Square_matrix_multiplication_")
-    add("adversarial-control", "P1", adversarial_cost)
-    add("adversarial-control", "P3", (int(rule["adversarial_seeds"]) - 1) * adversarial_cost)
+    adversarial_problem = "L1/1_Square_matrix_multiplication_"
+    add("adversarial-control", "P1", adversarial_problem, adversarial, [42])
+    add(
+        "adversarial-control",
+        "P3",
+        adversarial_problem,
+        adversarial,
+        trim.REPLICATE_SEEDS[: int(rule["adversarial_seeds"]) - 1],
+    )
     kernels["adversarial-control"] += adversarial
+    seconds, priority, store_facts = _cost_entries(
+        entries, cost, store=store, store_mode=store_mode, scope=scope
+    )
     # Not scheduled: controls of out-of-scope problems, costed at replicate 42.
     unscheduled: Counter[str] = Counter()
     unscheduled_kernels: Counter[str] = Counter()
@@ -1015,10 +1139,152 @@ def project_trimmed(
         "gpu_hours_by_role": {k: round(v / 3600, 3) for k, v in seconds.items()},
         "gpu_hours_by_priority": {k: round(priority[k] / 3600, 3) for k in sorted(priority)},
         "gpu_hours": round(sum(seconds.values()) / 3600, 3),
+        "reference_store": store_facts,
         "unscheduled_controls_gpu_hours_at_replicate_42": {
             k: round(v / 3600, 3) for k, v in unscheduled.items()
         },
         "unscheduled_controls_kernels": dict(unscheduled_kernels),
+    }
+
+
+# --- the reference store's re-pilot (decision D31) ------------------------------------
+
+#: Consumer gates of the reference store (``refstore.CONSUMERS``); the other scoring
+#: gates read no reference and keep ratio 1 in the projection.
+STORE_CONSUMER_GATES = (
+    "a",
+    "a_1e-3",
+    "a_static",
+    "a_head_1e-4",
+    "a_head_1e-2",
+    "c",
+    "A1",
+    "A2",
+    "A3",
+    "A5",
+)
+STORE_SUFFIX = ".store"
+
+
+def _linear_fit(points: Sequence[tuple[float, float]]) -> dict[str, float]:
+    """``alpha + beta * x`` by least squares, with ``beta`` and ``alpha`` kept >= 0."""
+    if not points:
+        return {"alpha": 0.0, "beta": 0.0, "n": 0}
+    xs = [x for x, _ in points]
+    mx, my = statistics.fmean(xs), statistics.fmean(y for _, y in points)
+    sxx = sum((x - mx) ** 2 for x in xs)
+    beta = max(0.0, sum((x - mx) * (y - my) for x, y in points) / sxx) if sxx > 0 else 0.0
+    return {"alpha": max(0.0, my - beta * mx), "beta": beta, "n": len(points)}
+
+
+def repilot_pairs(items: Sequence[Mapping[str, Any]]) -> list[dict[str, Any]]:
+    """Paired inline/store items of the re-pilot (final in both arms, GPU-seconds known)."""
+    finals = {
+        (i["kernel_id"], i["gate"], i["seed"]): i
+        for i in items
+        if i["final"] and i["gpu_seconds"] is not None and i["gate"] in SCORING_GATES
+    }
+    pairs = []
+    for (kernel_id, gate, seed), store in finals.items():
+        if not kernel_id.endswith(STORE_SUFFIX):
+            continue
+        inline = finals.get((kernel_id[: -len(STORE_SUFFIX)], gate, seed))
+        if inline is None:
+            continue
+        pairs.append(
+            {
+                "kernel_id": inline["kernel_id"],
+                "gate": gate,
+                "seed": seed,
+                "problem_id": inline["problem_id"] or store["problem_id"],
+                "inline": inline["gpu_seconds"],
+                "store": store["gpu_seconds"],
+                "inline_wall": inline["wall"],
+                "store_wall": store["wall"],
+                "same_verdicts": dict(inline["verdicts"]) == dict(store["verdicts"]),
+            }
+        )
+    return pairs
+
+
+def reference_items(items: Sequence[Mapping[str, Any]]) -> list[Mapping[str, Any]]:
+    return [
+        i
+        for i in items
+        if i["gate"].startswith("ref_") and i["final"] and i["gpu_seconds"] is not None
+    ]
+
+
+def fit_store_model(
+    pairs: Sequence[Mapping[str, Any]], references: Sequence[Mapping[str, Any]]
+) -> StoreModel:
+    """Per consumer gate, size models of both arms; per reference channel, one model."""
+    ratio_fits: dict[str, dict[str, dict[str, float]]] = {}
+    for gate in STORE_CONSUMER_GATES:
+        rows = [p for p in pairs if p["gate"] == gate]
+        if not rows:
+            continue
+        ratio_fits[gate] = {
+            arm: _linear_fit([(_gigabytes(p["problem_id"]), p[arm]) for p in rows])
+            for arm in ("inline", "store")
+        }
+    reference_fits: dict[str, dict[str, float]] = {}
+    for gate in sorted({r["gate"] for r in references}):
+        reference_fits[gate] = _linear_fit(
+            [
+                (_gigabytes(r["problem_id"]), r["gpu_seconds"])
+                for r in references
+                if r["gate"] == gate
+            ]
+        )
+    return StoreModel(ratio_fits=ratio_fits, reference_fits=reference_fits)
+
+
+def repilot_summary(
+    items: Sequence[Mapping[str, Any]], pairs: Sequence[Mapping[str, Any]]
+) -> dict[str, Any]:
+    """Per gate: paired GPU-seconds of both arms (sums, ratio of sums, median of
+    per-item ratios) and verdict agreement; per reference channel: GPU-seconds."""
+    per_gate = {}
+    for gate in SCORING_GATES:
+        rows = [p for p in pairs if p["gate"] == gate]
+        if not rows:
+            continue
+        inline = sum(p["inline"] for p in rows)
+        store = sum(p["store"] for p in rows)
+        ratios = [p["store"] / p["inline"] for p in rows if p["inline"] > 0]
+        per_gate[gate] = {
+            "pairs": len(rows),
+            "consumer": gate in STORE_CONSUMER_GATES,
+            "inline_gpu_seconds": round(inline, 2),
+            "store_gpu_seconds": round(store, 2),
+            "ratio_of_sums": round(store / inline, 3) if inline else None,
+            "median_ratio": round(statistics.median(ratios), 3) if ratios else None,
+            "inline_median_gpu_seconds": round(statistics.median(p["inline"] for p in rows), 3),
+            "store_median_gpu_seconds": round(statistics.median(p["store"] for p in rows), 3),
+            "verdicts_identical": sum(1 for p in rows if p["same_verdicts"]),
+        }
+    refs = reference_items(items)
+    by_channel = {
+        gate: summarize([r["gpu_seconds"] for r in refs if r["gate"] == gate])
+        for gate in sorted({r["gate"] for r in refs})
+    }
+    consumers = [p for p in pairs if p["gate"] in STORE_CONSUMER_GATES]
+    every = [p for p in pairs]
+    inline_all = sum(p["inline"] for p in every)
+    store_all = sum(p["store"] for p in every) + sum(r["gpu_seconds"] for r in refs)
+    return {
+        "per_gate": per_gate,
+        "reference_items": by_channel,
+        "reference_gpu_seconds": round(sum(r["gpu_seconds"] for r in refs), 2),
+        "pairs": len(every),
+        "consumer_pairs": len(consumers),
+        "kernels_paired": len({p["kernel_id"] for p in every}),
+        "problems": sorted({p["problem_id"] for p in every if p["problem_id"]}),
+        "inline_gpu_seconds_all_pairs": round(inline_all, 2),
+        "store_gpu_seconds_all_pairs_with_references": round(store_all, 2),
+        "ratio_all_with_references": round(store_all / inline_all, 3) if inline_all else None,
+        "verdicts_identical": sum(1 for p in every if p["same_verdicts"]),
     }
 
 
@@ -1035,6 +1301,12 @@ def detectable_difference(n: int, design_effect: float = 2.0) -> float | None:
 
 
 __all__ = [
+    "STORE_CONSUMER_GATES",
+    "StoreModel",
+    "fit_store_model",
+    "reference_items",
+    "repilot_pairs",
+    "repilot_summary",
     "CAP_GPU_HOURS",
     "TRIM_RULE",
     "TRIM_RULE_V1",

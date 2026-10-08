@@ -49,6 +49,8 @@ AUDIT_FILES = (
     "audit/replay.py",
     # The audit's fp64 error metric and byte comparisons (shared numeric helpers).
     "gates/reductions.py",
+    # Reference entries computed once per problem, replicate and draw (decision D31).
+    "refstore.py",
 )
 
 
