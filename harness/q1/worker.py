@@ -42,6 +42,15 @@ WORK_GATES = (
     "a_upstream_423217d9",
     "c1_kbv_compat",
     "c1_kbv_native",
+    # reference items (decision D31, ``harness.q1.refstore``): no candidate, rows go
+    # to the reference journal, never to a ladder gate or audit tier
+    "ref_a",
+    "ref_a_head",
+    "ref_c",
+    "ref_A1",
+    "ref_A2",
+    "ref_A3",
+    "ref_A5",
 )
 #: Fidelity gates whose rows never enter a ladder gate or audit tier.
 FIDELITY_GATES = (
@@ -66,6 +75,13 @@ def _outcomes_for(item: Mapping[str, Any]) -> tuple[list[Any], dict[int, str], A
     seed = int(item["seed"])
     options = dict(item.get("options", {}))
     device = resolve_device(item.get("device"))
+    if gate.startswith("ref_"):
+        from harness.q1 import refstore
+
+        # A reference item loads no candidate (it stays in the compile phase).
+        return refstore.reference_outcome(item), {0: "not-applicable"}, device
+    # Consumer items read reference entries from here when given (decision D31).
+    store = options.get("reference_store")
     kernel_source = Path(item["kernel_path"]).read_text(encoding="utf-8")
     problem_id = item["problem_id"]
     if item.get("problem_source_path"):
@@ -90,6 +106,8 @@ def _outcomes_for(item: Mapping[str, Any]) -> tuple[list[Any], dict[int, str], A
                 seed=seed,
                 num_trials=int(options.get("num_trials", 5)),
                 device=device,
+                problem_id=problem_id,
+                reference_store=store,
             )
         ]
     elif gate in {"b1", "b2"}:
@@ -197,6 +215,7 @@ def _outcomes_for(item: Mapping[str, Any]) -> tuple[list[Any], dict[int, str], A
             device=device,
             validity=options.get("validity", "inline"),
             manifest=manifest,
+            reference_store=store,
         )
     elif gate in {"A1", "A2", "A3", "A4", "A5"}:
         from harness.q1.audit import run as audit
@@ -207,9 +226,9 @@ def _outcomes_for(item: Mapping[str, Any]) -> tuple[list[Any], dict[int, str], A
         multiplier = float(options.get("multiplier", 16))
         try:
             if gate == "A1":
-                outcomes = audit.run_a1(subject, multiplier=multiplier)
+                outcomes = audit.run_a1(subject, multiplier=multiplier, reference_store=store)
             elif gate == "A2":
-                outcomes = audit.run_a2(subject, multiplier=multiplier)
+                outcomes = audit.run_a2(subject, multiplier=multiplier, reference_store=store)
             elif gate == "A3":
                 from harness.q1.gates.gate_c import shape_manifest
 
@@ -222,11 +241,12 @@ def _outcomes_for(item: Mapping[str, Any]) -> tuple[list[Any], dict[int, str], A
                     subject,
                     manifest_entry=manifest["problems"].get(problem_id, {}),
                     multiplier=multiplier,
+                    reference_store=store,
                 )
             elif gate == "A4":
                 outcomes = audit.run_a4(subject)
             else:
-                outcomes = audit.run_a5(subject)
+                outcomes = audit.run_a5(subject, reference_store=store)
         finally:
             subject.cleanup()
         for index, outcome in enumerate(outcomes):
@@ -348,6 +368,11 @@ def main(argv: list[str] | None = None) -> int:
     # harness code: a failure there is an infrastructure failure, never a
     # candidate rejection, so it becomes one ``error`` row.
     outcomes, policy_of, device = _outcomes_for(item)
+    store = dict(item.get("options", {})).get("reference_store")
+    if store and not str(item.get("gate", "")).startswith("ref_"):
+        from harness.q1 import refstore
+
+        refstore.write_uses(store, item)  # best effort; never part of a row
     try:
         text = "".join(
             dump_verdict_row(row) for row in _rows_from(item, outcomes, policy_of, device)

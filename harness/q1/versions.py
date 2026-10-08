@@ -6,7 +6,7 @@ identifiers its own owner already records:
 
 - ``schema``: ``harness/q1/schema.py`` (binding on all components);
 - ``gate_code``: gates (a)-(c), problem access, shape rules, runner, worker,
-  journal and timing;
+  journal, timing and the reference store (``refstore.py``, decision D31);
 - ``gate_data``: the vendored KernelBench files, problem hashes, KBV
   configuration table and committed shape manifest;
 - ``audit_code``: :data:`harness.q1.audit.tiers.AUDIT_FILES`, the files
@@ -16,10 +16,12 @@ identifiers its own owner already records:
 - ``analysis``: the analysis module, the report script that computes every
   preregistered metric, and the audit-hole replay and calibration drivers;
 - ``driver``: what decides what Stage 0 scores and how it runs (second review):
-  the trimming rule and its sampler (``trim.py``), the pilot module whose size
-  rules it uses (``pilot.py``: watchdog limits, the exclusive class), the cost
-  card that projects it (``cost_card.py`` and its script), the Stage 0 and pilot
-  drivers, and the pilot-records script that lists the pilot-exposed kernels;
+  the trimming rule and its sampler (``trim.py``), the reference-item schedule
+  (``refschedule.py``, decision D31), the pilot module whose size rules it uses
+  (``pilot.py``: watchdog limits, the exclusive class), the cost card that
+  projects it (``cost_card.py`` and its script), the Stage 0, pilot and re-pilot
+  drivers with the re-pilot rule (``repilot.py``) and corpus script, and the
+  pilot-records script that lists the pilot-exposed kernels;
 - ``mutator``: the mutator's own ``package_sha256`` and operator
   ``registry_fingerprint`` (both recorded in every corpus manifest);
 - ``substrates``: the substrate package with its vendored S2 sources, the
@@ -54,6 +56,7 @@ GATE_CODE_PATHS = (
     "timing.py",
     "versions.py",
     "controls.py",
+    "refstore.py",
     "gates",
 )
 #: Data the gates read: vendored KernelBench, problem hashes, KBV and shape tables.
@@ -70,11 +73,15 @@ SUBSTRATE_PATHS = ("substrates",)
 #: The Stage 0 plan and execution (relative to the project root).
 DRIVER_PATHS = (
     "harness/q1/trim.py",
+    "harness/q1/refschedule.py",
     "harness/q1/pilot.py",
     "harness/q1/cost_card.py",
     "harness/q1/data/pilot_exposed.json",
     "scripts/run_q1_stage0.py",
     "scripts/run_q1_gpu_pilot.py",
+    "harness/q1/repilot.py",
+    "scripts/run_q1_repilot.py",
+    "scripts/q1_prepare_repilot_corpus.py",
     "scripts/q1_pilot_cost_card.py",
     "scripts/q1_pilot_records.py",
 )
@@ -123,9 +130,8 @@ def audit_code_sha256() -> str:
 def row_code_sha256(gate: str) -> str:
     """``code_sha256`` for a verdict row: audit code for audit channels and the
     audit-hole replay, else gate code."""
-    return (
-        audit_code_sha256() if gate.startswith("A") or gate == "audit_hole" else gate_code_sha256()
-    )
+    audit = gate.startswith(("A", "ref_A")) or gate == "audit_hole"
+    return audit_code_sha256() if audit else gate_code_sha256()
 
 
 def version_card() -> dict[str, Any]:

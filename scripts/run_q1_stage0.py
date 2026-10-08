@@ -18,6 +18,16 @@ else (preregistration section 18.7):
   watchdog limits on every item (``pilot.watchdog_limits``). A watchdog timeout
   or a CUDA out-of-memory error in a shared item is an infrastructure failure
   retried once alone (``runner``); alone, the outcome stands.
+- **Reference store** (decision D31, ``harness/q1/refstore.py``). Unless
+  ``--reference-store off``, every (problem, replicate, channel) that at least two
+  of the job's pending kernels read gets one reference item, run just before its
+  first consumer; consumers read the entry instead of recomputing the
+  references (fp32 device, fp32 CPU, fp64 and TF32 references, validity) and
+  compute inline whenever no usable entry exists. Verdict rows are the same
+  either way. The store and its reference journal live beside the output
+  (``OUTPUT-refstore``), so a resumed job recomputes what its pending items
+  need; the stored tensors are deleted when the job ends (entries' manifests,
+  the reference journal and the consumers' use records stay).
 - **Stop.** The job refuses to start unless the Stage 0 GPU-hours already
   spent (every finished Stage 0 job's Slurm allocation, the pilot's 0.899
   included), this job's cap and the reserve (timing floor and audit-hole replay)
@@ -88,6 +98,33 @@ def work_items(record: dict, buckets: list[str]) -> list[WorkItem]:
     ]
 
 
+def with_reference_store(
+    items: list[WorkItem], *, store: Path, journal: Path, final: set[str]
+) -> list[WorkItem]:
+    """The job's items with reference items for the groups its pending items share
+    (``harness.q1.refschedule``); already-final items do not count toward a group."""
+    from dataclasses import asdict
+
+    from harness.q1 import refschedule
+
+    pending = [asdict(item) for item in items if item.key not in final]
+    scheduled = refschedule.with_references(pending, root=str(store))
+    out = [
+        WorkItem(**({**entry, "journal": str(journal)} if entry.get("journal") else entry))
+        for entry in scheduled
+    ]
+    return [item for item in items if item.key in final] + out
+
+
+def drop_reference_tensors(store: Path) -> int:
+    """Delete stored tensors (``draw-*.pt``) after the job; manifests stay."""
+    removed = 0
+    for path in store.glob("*/*/draw-*.pt"):
+        path.unlink(missing_ok=True)
+        removed += 1
+    return removed
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0], allow_abbrev=False)
     parser.add_argument("--corpus", type=Path, action="append", required=True)
@@ -104,6 +141,13 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--reserve-gpu-hours", type=float, default=None)
     parser.add_argument("--budget-minutes", type=float, default=None)
     parser.add_argument("--gpu", default="cuda:0", help="the job's one GPU slot device")
+    parser.add_argument(
+        "--reference-store",
+        choices=("on", "off"),
+        default="on",
+        help="compute references once per problem, replicate and draw (decision D31)",
+    )
+    parser.add_argument("--keep-reference-tensors", action="store_true")
     args = parser.parse_args(argv)
     if sorted(args.seeds) != [42, 43, 44]:
         parser.error("Stage 0 declares replicates 42, 43 and 44")
@@ -186,6 +230,33 @@ def main(argv: list[str] | None = None) -> int:
     marker = os.environ.get("COTCODEC_CHECKPOINT_MARKER")
     workdir = args.output / "items"
     workdir.mkdir(exist_ok=True)
+    store = None
+    if args.reference_store == "on":
+        from harness.q1 import refschedule
+        from harness.q1.journal import Journal
+
+        # Beside the output, like the unpacked inputs: a resumed job copies the output
+        # directory only, so it recomputes the references its pending items need.
+        store = args.output.parent / f"{args.output.name}-refstore"
+        store.mkdir(parents=True, exist_ok=True)
+        status = Journal(args.output / "journal.jsonl").status()
+        final = {key for key, entry in status.items() if entry["final"]}
+        items = with_reference_store(
+            items, store=store, journal=store / "references.jsonl", final=final
+        )
+        (args.output / "items-run.jsonl").write_text(
+            "".join(json.dumps(item.__dict__, sort_keys=True) + "\n" for item in items)
+        )
+        (args.output / "reference-schedule.json").write_text(
+            json.dumps(
+                {
+                    "store": str(store),
+                    **refschedule.summary([item.__dict__ for item in items]),
+                },
+                indent=1,
+                sort_keys=True,
+            )
+        )
     config = RunnerConfig(
         journal_path=args.output / "journal.jsonl",
         slots=[args.gpu] * int(rule["slot_capacity"]),
@@ -206,9 +277,12 @@ def main(argv: list[str] | None = None) -> int:
             "plan_sha256": record["plan_sha256"],
             "buckets": buckets,
             "budget": budget,
+            "reference_store": None if store is None else str(store),
             "driver_seconds": round(time.monotonic() - started, 3),
         }
     )
+    if store is not None and not args.keep_reference_tensors:
+        summary["reference_tensors_deleted"] = drop_reference_tensors(store)
     (args.output / "summary.json").write_text(json.dumps(summary, indent=1, sort_keys=True))
     print(json.dumps(summary, sort_keys=True))
     return 75 if summary["interrupted"] else 0

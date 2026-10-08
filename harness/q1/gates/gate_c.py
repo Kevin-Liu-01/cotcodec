@@ -213,12 +213,19 @@ def run_gate_c(
     validity_table: Mapping[str, Mapping[str, Any]] | None = None,
     manifest: Mapping[str, Any] | None = None,
     kbv_compat: bool = False,
+    reference_store: str | None = None,
 ) -> list[GateOutcome]:
     """Run gate (c) families on one candidate. Returns per-config rows and aggregates.
 
     ``validity``: ``inline`` computes the validity gate here; ``table`` reads
     precomputed results from ``validity_table[config_id]``; ``off`` admits
     every config (used for ``kbv_compat``).
+
+    With ``reference_store`` (``validity="inline"``, not ``kbv_compat``), each
+    configuration's reference output and validity result are read from the entry
+    a reference item wrote for this problem and replicate (``harness.q1.refstore``,
+    decision D31; :func:`reference_configs`) instead of being recomputed; without
+    a usable entry they are computed here as always.
     """
     if validity not in {"inline", "table", "off"}:
         raise ValueError("validity must be inline, table or off")
@@ -248,6 +255,22 @@ def run_gate_c(
         variants: dict[tuple[tuple[str, int], ...], Any] = {(): native_get_inputs}
         if kbv_compat:
             raw_draws = _kbv_compat_draws(specs, native_get_inputs)
+        stored = None
+        if reference_store and validity == "inline" and not kbv_compat:
+            from harness.q1 import refstore
+
+            stored = refstore.lookup(
+                reference_store,
+                reference_payload(
+                    problem_id,
+                    problem_source,
+                    replicate_seed=replicate_seed,
+                    device=dev,
+                    specs=specs,
+                    tolerance=tolerance,
+                ),
+                draws=len(specs),
+            )
         for position, spec in enumerate(specs):
             start = time.perf_counter()
             key = tuple(sorted(spec.overrides.items()))
@@ -268,6 +291,9 @@ def run_gate_c(
                 "overrides": dict(spec.overrides),
                 "kbv_compat": kbv_compat,
             }
+            taken = stored.take(position, dev) if stored is not None else None
+            if taken is None:
+                stored = None
             rows.append(
                 _one_config(
                     spec,
@@ -281,6 +307,7 @@ def run_gate_c(
                     validity,
                     validity_table,
                     start,
+                    taken,
                 )
             )
     finally:
@@ -311,6 +338,7 @@ def _one_config(
     validity: str,
     validity_table: Mapping[str, Mapping[str, Any]] | None,
     start: float,
+    stored: Any = None,
 ) -> GateOutcome:
     def done(verdict: str, **extra: Any) -> GateOutcome:
         return GateOutcome(
@@ -323,22 +351,32 @@ def _one_config(
             **extra,
         )
 
+    def raised(error: Mapping[str, str]) -> GateOutcome:
+        details.update(
+            {
+                "admissible": False,
+                "reference_raised": True,
+                "validity_reasons": ["reference-raised"],
+                **error,
+            }
+        )
+        details["kbv_raw_pass"] = True  # KBV skips a config whose reference raises
+        return done("error")
+
     with torch.no_grad():
-        try:
-            ref_out = reference(*inputs)
-            synchronize(device)
-        except Exception as exc:
-            details.update(
-                {
-                    "admissible": False,
-                    "reference_raised": True,
-                    "validity_reasons": ["reference-raised"],
-                    **exception_details(exc),
-                }
-            )
-            details["kbv_raw_pass"] = True  # KBV skips a config whose reference raises
-            return done("error")
-        if validity == "inline":
+        if stored is None:
+            try:
+                ref_out = reference(*inputs)
+                synchronize(device)
+            except Exception as exc:
+                return raised(exception_details(exc))
+        elif stored.kind == "raised":
+            return raised(stored.error)
+        else:
+            ref_out = stored.value
+        if stored is not None:
+            check = dict(stored.meta["check"])
+        elif validity == "inline":
             check = validity_check(reference, inputs, ref_out, device=device, tolerance=tolerance)
         elif validity == "table":
             check = dict(
@@ -365,6 +403,118 @@ def _one_config(
     if max_abs is None:
         details["reason"] = "shape-mismatch"
     return done("accept" if passed else "reject", max_abs_err=max_abs, max_rel_err=max_rel)
+
+
+# --- reference store (decision D31) ---------------------------------------------------
+
+
+def reference_payload(
+    problem_id: str,
+    problem_source: str,
+    *,
+    replicate_seed: int,
+    device: torch.device,
+    specs: Sequence[ConfigSpec],
+    tolerance: float = PRIMARY_TOL,
+) -> dict[str, Any]:
+    from harness.q1 import refstore
+
+    return refstore.key_payload(
+        "c",
+        problem_id=problem_id,
+        problem_source=problem_source,
+        seed=replicate_seed,
+        device_type=device.type,
+        params={
+            "cast_mode": "preserve",
+            "validity": "inline",
+            "tolerance": tolerance,
+            "specs": [
+                {
+                    "family": s.family,
+                    "config_id": s.config_id,
+                    "draw": s.draw,
+                    "seed": s.seed,
+                    "overrides": dict(s.overrides),
+                }
+                for s in specs
+            ],
+        },
+    )
+
+
+def reference_configs(
+    problem_id: str,
+    problem_source: str,
+    *,
+    replicate_seed: int,
+    device: torch.device,
+    manifest: Mapping[str, Any] | None = None,
+    families: Sequence[str] = ("c1", "c2", "c3"),
+    tolerance: float = PRIMARY_TOL,
+) -> Any:
+    """The reference side of :func:`run_gate_c` without a candidate: the same model
+    construction and move, the same configurations, draws and transforms, and per
+    configuration the same reference call and validity gate, in the same order on
+    the same module. A configuration whose reference raises is stored as raised
+    (the gate records it and continues); a validity gate that raises leaves the
+    entry unusable (inline, that exception ends the item)."""
+    from harness.q1 import refstore
+
+    analysis = problem_lib.analyze_problem(problem_id, problem_source)
+    specs = c_configs(
+        problem_id, families=families, replicate_seed=replicate_seed, manifest=manifest
+    )
+    Model, get_init_inputs, native_get_inputs = load_reference(problem_source)
+    set_seed(replicate_seed)
+    init_inputs = process_inputs(get_init_inputs(), device, "preserve")
+    with torch.no_grad():
+        set_seed(replicate_seed)
+        reference = Model(*init_inputs)
+    reference = reference.to(device=device)
+    variants: dict[tuple[tuple[str, int], ...], Any] = {(): native_get_inputs}
+    built = refstore.Built(draws=[])
+    for spec in specs:
+        key = tuple(sorted(spec.overrides.items()))
+        if key not in variants:
+            variant_source = problem_lib.override_constants(
+                problem_source, analysis, spec.overrides
+            )
+            variants[key] = load_reference(variant_source)[2]
+        set_seed(spec.seed)
+        raw = transform_inputs(list(variants[key]()), spec.draw)
+        inputs = process_inputs(raw, device, "preserve")
+        meta: dict[str, Any] = {"config_id": spec.config_id}
+        with torch.no_grad():
+            probe = refstore.Probe(inputs, device)
+            try:
+                ref_out = reference(*inputs)
+                synchronize(device)
+            except Exception as exc:
+                # Inline, the configuration ends here (no candidate call), and the next
+                # one reseeds and redraws, so nothing the reference changed carries over.
+                if refstore.resource_failure(exc):
+                    built.problems.append(f"{spec.config_id}: resource failure")
+                built.draws.append(
+                    refstore.Draw({**meta, "kind": "raised", "error": exception_details(exc)})
+                )
+                continue
+            try:
+                check = validity_check(
+                    reference, inputs, ref_out, device=device, tolerance=tolerance
+                )
+            except Exception as exc:
+                built.problems.append(f"validity-raised: {type(exc).__name__}")
+                break
+            built.problems.extend(probe.changes())
+            if not refstore.storable(ref_out):
+                built.problems.append("reference-output-not-storable")
+            elif refstore.aliases(ref_out, inputs):
+                built.problems.append("reference-output-aliases-input")
+        built.draws.append(
+            refstore.Draw({**meta, "kind": "ok", "check": check}, refstore.to_cpu(ref_out))
+        )
+    return built
 
 
 def aggregate(

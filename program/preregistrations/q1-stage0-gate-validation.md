@@ -87,12 +87,12 @@ Version card (`python scripts/q1_version_card.py --markdown`):
 | `schema` | `q1-version-card/2` |
 | `schema_py_sha256` | `c9bae9d502f7b9c83332f95e24fd9934d91bfe6cede47de527f6d584838b3256` |
 | `schema_version` | `q1-schema/1` |
-| `gate_code_sha256` | `0f3fd3cdb324c0f05adf60fb0d9cebc2a010ecd2b1f334db995498be1137f7f1` |
+| `gate_code_sha256` | `0e3ecd3a49f39301b9a5231aefc59841327646c8a4ad3bdab1045a1676303a5e` |
 | `gate_data_sha256` | `c9f5ecfa38f5528f0bf13202496389d8039428b8683b821c03267719ba6da85a` |
 | `shape_manifest_sha256` | `29e693ee4d77bc86e3ecfdb1000307b3878c023c6c6224f87c4fcfae74a220cb` |
-| `audit_code_sha256` | `8ed89f1548d5003da9398b494d29d239afab97fb9f921f32c688541d16fc7100` |
+| `audit_code_sha256` | `71a30ddb3dbbbb96ccce92bb454995f5c02a6aed7a3f9f8e82fd57fb7c6b6a2b` |
 | `analysis_sha256` | `60d5371d199bb4ee288a9cb79fd4ef284539833214deb0d929106659460fca54` |
-| `driver_sha256` | `1d52945095f80690aada6c09b5e279c61e1f1c48c6fe9d72c7481a3e7c7fde30` |
+| `driver_sha256` | `1ac30989cfe28907a3c09712aed1ff12440b08389cb29c28befcae5c6ceba63b` |
 | `trim_rule` | `q1-stage0-trim/2` |
 | `mutator_package_sha256` | `f4aa6e93214126b1fcc82964654833a2da419ff98e7d7b9d27fa24dc2f595296` |
 | `mutator_registry_fingerprint` | `43a1f0a234ad1c4a4421626d740989e01890b878c5ce7f2dec5739e3d43922a6` |
