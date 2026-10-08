@@ -498,3 +498,48 @@ Append-only. Newest entries at the bottom.
 - D30: guest-server restarts are bounded separately from A4. D31: Q1 Stage 0
   gets an engineering pass and a non-evaluation re-pilot before admission.
 - Full suite on the host after the merges: 1,681 passed, 28 skipped.
+
+## 2026-10-07 — Lane: container lifetime bounded by the job
+
+- Fixed the lane gap found by the open-weight reviewer smoke (Slurm 617) on
+  branch `stage0/lane-container-lifetime`: `docker-research.sbatch` removed its
+  container only from its exit trap, so a workload that ignored TERM outlived a
+  timed-out job (Slurm's KILL, KillWait 30 s after TERM, skips every trap).
+- The batch script now reads the time left (`squeue -o %L`, exit 2 if not
+  finite or above the manifest minutes), SIGKILLs the container 30 s before the
+  limit from a background timer (after USR1's 120 s checkpoint window), and on
+  TERM waits at most KillWait minus 20 s (10 s here) for a `trigger=SIGTERM`
+  checkpoint before `docker kill` and removal. A TERM before start starts no
+  container; `docker create` gets `--stop-timeout`. `termination.env` adds
+  `hard_stop_at`, `container_killed_by` and `container_killed_at`.
+- Stub-docker tests: a container ignoring USR1 and TERM is killed before the
+  job's end (hard stop) and within KillWait (TERM); all 8 new runtime tests
+  fail against the previous script. No GPU time used.
+- `vm-campaign.sbatch` (branch `stage0/q2-action-path`, not on main) does not
+  have this gap: its USR1/TERM handler kills the driver and force-removes every
+  job-labelled container without waiting on them.
+
+## 2026-10-07 — Lane: container lifetime review fixes
+
+- An independent review of the lifetime fix found one fail-open path and six
+  smaller defects, all reproduced with stub-docker tests before fixing:
+  - the hard-stop timer inherited `set -e`, so a failed `hard-stop.env` write
+    (full or failing disk) ended it before its kill; it now runs `set +e` and
+    the record is best-effort;
+  - the timer looped forever after its kill, and outlived a batch shell killed
+    alone; it now ends after its kill, and if the shell is gone it SIGKILLs the
+    container at once (`cause=batch_script_gone`) and exits;
+  - a requeued job reused its run directory and read the earlier attempt's
+    records; the submitter passes `--no-requeue` and the batch script refuses
+    an existing run directory (exit 2);
+  - a TERM that killed the `docker create` client before it printed the ID
+    leaked the container dockerd still created; the exit trap watches 5 s;
+  - a TERM sent to the whole job reached the container through the attached
+    client before the trap's marker record, so a TERM checkpoint never
+    confirmed (also on main); the TERM record is now taken at container start;
+  - a confirmed TERM checkpoint was SIGKILLed at once; it now gets the grace;
+  - `docs/operations.md` overstated the hard stop: a workload must exit within
+    150 s of USR1, and the hard stop does not follow `TimeLimit` changes.
+- The q2 evaluator-mutation draft preregistration (other branch) sizes its
+  rater stop on the 180 s USR1 lead; it needs a note on the 150 s bound before
+  it is frozen. No GPU time used.
