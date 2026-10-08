@@ -1,0 +1,31 @@
+{
+ "capacity": 1139,
+ "census_real_items": 134,
+ "census_tasks": 33,
+ "evaluable_events": {
+  "probe_touched=False|FN": 36,
+  "probe_touched=False|FP_R": 5,
+  "probe_touched=False|ok": 403,
+  "probe_touched=True|FP_F": 15,
+  "probe_touched=True|FP_R": 13,
+  "probe_touched=True|ok": 416
+ },
+ "pool_evaluable_outside_probe": 444,
+ "pool_tasks": 60,
+ "role": "preview counts from the held outcomes (harness.q2_mutation.raters.audit_candidates and stratum_of at 65bc2e2, run on the host); the registered sample, its shams and its P1 flips are drawn by submit_audit.sh in the next stage",
+ "strata": {
+  "None": 310,
+  "alt_gate": 93,
+  "fn_equiv": 36,
+  "fp_violation": 5
+ },
+ "strata_by_family": {
+  "alt_gate|compare_docx_files": 3,
+  "alt_gate|compare_table": 90,
+  "fn_equiv|compare_pptx_files": 35,
+  "fn_equiv|compare_pptx_files_tolerant": 1,
+  "fp_violation|compare_docx_files": 1,
+  "fp_violation|compare_pptx_files": 3,
+  "fp_violation|compare_pptx_files_tolerant": 1
+ }
+}

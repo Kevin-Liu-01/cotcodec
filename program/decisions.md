@@ -521,9 +521,7 @@ renderer takes the run root as a parameter instead of hard-coding the
 development host root. Development may characterise the mechanism, and
 whether L0-fixed is exposed under Stage-1 conditions, on seed 42 only; A1
 then tests L0-fixed on `chord_super_d` as registered. No other rule
-changes, and no v1 data enters a v2 verdict. *(D42 corrects the cause
-stated here: the failure is in the tap's record of a key event queued during
-the shell's keyboard grab, and the shell received Super+d.)*
+changes, and no v1 data enters a v2 verdict.
 
 **D41. Q1 Stage 0 withdrawn after its gauntlet exit; the audit metric is the
 blocking problem.** Gauntlet wave 1 on the Stage 0 design ended at an honest
@@ -551,58 +549,53 @@ can; (iii) the per-item process overhead that dominates cost is designed
 for, not yet built; (iv) Q1 Stage 1 still needs the R580 driver upgrade or
 written risk acceptance.
 
-## 2026-10-08
+**D42. Q3 dense pre-check v2: the 4B attention backend, and a second timing
+job.** Building `q3-dense-headroom-precheck-v2` found the 4B lane's real
+bottleneck: torch routes Qwen3.5's head-dimension-256 attention to cuDNN,
+which builds a new graph for every new sequence shape (about 0.7 s of CPU per
+forward, GPU idle). Turning cuDNN attention off on that lane removes it, but
+the flash or memory-efficient backend that replaces it is not bit-equal, so it
+departs from D36 (iii), and the one timing job D36 allowed (Slurm 766) ran
+before the fix, so the 45-minute 4B limit is a projection. The rest of v2 is
+bit-equal to v1, shown on CPU and on two real 4B units. Decided: (i) D36 (iii)
+is amended for q3-dense-headroom-precheck-v2's 4B lane only: PyTorch's
+flash, memory-efficient or math attention replaces cuDNN; the change is
+disclosed, its effect is reported by the descriptive `attention_backend_check`,
+and no v1 4B number exists for it to depart from; the 0.6B lane stays gated
+on reproducing job 727 to 1e-6. (ii) A second timing job of at most 0.1 GPU-h,
+in a fresh timing run root and at the code head, times the fixed 4B path,
+starting with one `attention_backend_check` so the lane's exact start-up runs
+on the GPU; the 4B limit is then set by D36's rule from that measurement,
+not from the projection. The v2 cap stays 1.5 GPU-h. (iii) Decisions 16-21 of
+the v2 registration are accepted as amended by this decision, after a narrow
+re-check of the measured limits; the status line and the decisions' lead-in
+name D42 when frozen.
 
-**D42. Action-path v2: D40's stated cause is corrected; its changes stand
-and the remaining L0-fixed exposure is accepted.** (Recorded on branch
-`stage0/q2-action-path-v2` from the development D40 allowed, before v2's
-freeze; D40's author confirms or overrules it when the branch merges, and v2
-is not frozen before then.) D40 said the X event record shows that the
-`chord_super_d` press-state loss in v1's C2 (job 768) is real, so the oracle
-detected a genuine transport defect. The seed-42 development D40 allowed
-(jobs 784-787, 1.0 VM-h; `q2-action-path-v2.md` section 26) shows otherwise.
-GNOME Shell 42.9 (mutter) grabs its overlay key Super_L and every keybinding
-with `XIGrabKeycode` in `XIGrabModeSync`, so the X server freezes the
-keyboard when the grab activates and queues later key events until the shell
-calls `XIAllowEvents`; the RECORD extension reports a queued event when it
-is queued, before the server computes its state, and not again when the
-queue is replayed (read in the X server's source at its GitHub mirror; the
-guest's own records show the same behaviour). The tap therefore records the
-`d` press of a Super chord sent 0-2 ms after Super_L with core state 0
-(without Mod4, and without the locked NumLock bit that every processed event
-carries), while the shell received Super+d: in 15 of 15 L0-raw trials (jobs
-768 and 784) the desktop was shown and no key reached the probe, as in 30 of
-30 L0-fixed trials whose `d` press is recorded with Mod4. The other three
-shell-grabbed chords are recorded the same way after their grab-activating
-key, and the nine chords the shell does not grab, sent at the same speed,
-are recorded with every state right. Corrected cause: v1's C2 failure is in
-what the oracle channel records for a key event queued during a synchronous
-shell grab, not in delivery; v1's a-priori prediction (pass) was right about
-delivery and wrong about the record that C2 judges. v1 stays invalid under
-its own section 8, which judges the record, and that result stands as
-reported. Decided: (i) D40's three changes, and L0-raw's admission as a
-development layer at seed 42, stand as drafted; v2's prediction file already
-names the grab and says the failure is in the tap's record, not in delivery.
-(ii) v2 keeps the oracle's reading of events queued under a grab. On the
-catalog's four shell-grabbed chords every event after the grab-activating
-key has a reference modifier state that is not empty, so an event recorded
-with state 0 always fails its trial: the limit can fail a delivered chord
-and never makes a trial pass, and kind, keycode, keysym and order are
-recorded correctly. Changing the tap, the projection or the judge would
-change frozen components after C2's data was seen and would need its own
-development and review. (iii) The remaining exposure is accepted. On the
-L0-fixed path (10 ms between presses, held 0.1 s) `chord_super_d` passed 127
-of 127 warmed-up trials in development, 30 of them on 8 and 16 concurrent
-VMs with 32 running at once (one-sided 95% bound 2.3% per trial). A shell
-answer slower than the 10 ms gap would still fail an A1, A2, A4 or ladder
-trial whose chord was delivered, and that failure counts: at the bound, A1's
-20 such trials meet one with probability up to 0.38 and A4's 276 almost
-surely; at the observed rate, neither. Such a failure fails its criterion
-and calls for a repair attempt (v2 section 11); it never makes a criterion
-pass, and its report says whether the trial shows this signature. v2's main
-registration states the corrected cause (sections 4.4, 8, 24 item 9, 25 and
-26) and changes no rule, number or frozen file for it. Reversal: Kevin
-rules, before the freeze, that v2 should read events queued under a grab
-differently (a new draft with its own development) or that the exposure is
-not acceptable. Whether a later registration should read such events
-differently stays with Kevin.
+**D43. Action-path v2: D40's stated cause is corrected, and the judge stops
+reading a state the tap cannot observe.** The seed-42 development D40 allowed
+(jobs 784-787; `q2-action-path-v2.md` section 26, branch
+`stage0/q2-action-path-v2`) shows that D40's reading was wrong. GNOME Shell
+grabs its overlay key and keybindings synchronously, so the X server queues
+later key events until the shell answers, and the RECORD extension reports a
+queued event before the server computes its state. The tap therefore records
+the `d` press of a Super chord sent within a few milliseconds of Super_L with
+state 0, and without the locked NumLock bit that every processed event
+carries, while the shell did receive Super+d (15 of 15 L0-raw trials showed
+the desktop). v1's C2 failure is in what the oracle channel records, not in
+delivery; v1's a-priori prediction was right about delivery. v1 stays invalid
+under its own section 8, which judges the record, and that result stands as
+reported. The branch's draft decision accepted the remaining exposure (a slow
+shell answer would fail L0-fixed trials whose chord was delivered: at the
+bound of 2.3% per trial, A4's 276 such trials would almost surely meet one),
+which would let the suite fail, after three repair attempts, on an artifact
+of the oracle. Decided instead: v2's judge treats the modifier state of a key
+event recorded without the guard-guaranteed locked lock bits as unobservable
+(such an event was recorded while queued, which requires an active shell
+grab, which requires the grab key to have been pressed) and judges it on
+kind, keycode, keysym and order only; every other event is judged as before.
+The L0-raw prediction for `chord_super_d` follows from the new rule, and
+v2's C2 stays a reproduction test, disclosed as informed by v1's C2. The
+change is developed on seed 42 (positive and negative cases, including a
+dropped modifier on grabbed and ungrabbed chords) and reviewed before v2's
+freeze. Whether a later registration should observe the shell's side of a
+grabbed chord directly stays with Kevin.
