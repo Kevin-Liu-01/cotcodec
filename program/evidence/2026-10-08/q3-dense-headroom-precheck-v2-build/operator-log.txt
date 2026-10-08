@@ -42,3 +42,16 @@ preregistration ledger untouched.
               (tests/torch-in-image-776/).
 
 GPU use in this build: Slurm 766 only, 205 s physical on one GPU (0.0569 GPU-h).
+
+Review round (b8977d9; CPU only, no GPU job):
+~09:27-09:31  freeze simulated three times on fresh local scratch clones of b8977d9 (modes full,
+              status-only, wrong-dec; review-fixes/freeze-simulation/); the real ledger untouched.
+~09:31        bundle of b8977d9 copied to the host; fresh clone under ~/cotcodec-runs/stage0/q3-dense-v2/.
+~09:34-09:44  Slurm 801: CPU-only image build from that clone -> sha256:5281ac01...
+~09:35-09:40  full suite at b8977d9, fresh ~/cotcodec-scratch/ clone, Slurm 802 (CPU): 2213 passed,
+              40 skipped, 0 failed.
+09:43-09:47   in image 801 (srun CPU steps, --network none): v2 CPU doctor (Slurm 803)
+              DENSE_V2_DOCTOR_PASS 12/12; torch-dependent dense tests (Slurm 804) 52 passed; PID-1
+              SIGUSR1 test (Slurm 805) passed.
+
+GPU use in the review round: none.

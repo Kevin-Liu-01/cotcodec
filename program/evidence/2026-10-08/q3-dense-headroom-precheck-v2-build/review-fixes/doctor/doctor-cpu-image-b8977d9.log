@@ -1,0 +1,21 @@
+start=2026-10-08T09:43:38Z image=sha256:5281ac01b43cbc7d3b155d82f6f4ab160cbebb6066e2a3ea73fc30fe0b830a4b build_receipt=/home/kevin/cotcodec-runs/builds/b8977d9d-architecture-801/receipt.json
+Writing model shards:   0%|          | 0/1 [00:00<?, ?it/s]Writing model shards: 100%|██████████| 1/1 [00:00<00:00, 631.86it/s]
+Loading weights:   0%|          | 0/46 [00:00<?, ?it/s]Loading weights: 100%|██████████| 46/46 [00:00<00:00, 8063.27it/s]
+Writing model shards:   0%|          | 0/1 [00:00<?, ?it/s]Writing model shards: 100%|██████████| 1/1 [00:00<00:00, 664.71it/s]
+Loading weights:   0%|          | 0/46 [00:00<?, ?it/s]Loading weights: 100%|██████████| 46/46 [00:00<00:00, 8365.69it/s]
+[transformers] Calling `crop` with a positive value is deprecated and will be removed in version 5.18. Please use a negative integer to remove that number of tokens from the cache instead.
+Writing model shards:   0%|          | 0/1 [00:00<?, ?it/s]Writing model shards: 100%|██████████| 1/1 [00:00<00:00, 404.82it/s]
+Loading weights:   0%|          | 0/52 [00:00<?, ?it/s]Loading weights: 100%|██████████| 52/52 [00:00<00:00, 7929.03it/s]
+Writing model shards:   0%|          | 0/1 [00:00<?, ?it/s]Writing model shards: 100%|██████████| 1/1 [00:00<00:00, 812.38it/s]
+Loading weights:   0%|          | 0/46 [00:00<?, ?it/s]Loading weights: 100%|██████████| 46/46 [00:00<00:00, 7591.80it/s]
+Writing model shards:   0%|          | 0/1 [00:00<?, ?it/s]Writing model shards: 100%|██████████| 1/1 [00:00<00:00, 516.86it/s]
+Loading weights:   0%|          | 0/52 [00:00<?, ?it/s]Loading weights: 100%|██████████| 52/52 [00:00<00:00, 6894.17it/s]
+Writing model shards:   0%|          | 0/1 [00:00<?, ?it/s]Writing model shards: 100%|██████████| 1/1 [00:00<00:00, 870.37it/s]
+Writing model shards:   0%|          | 0/1 [00:00<?, ?it/s]Writing model shards: 100%|██████████| 1/1 [00:00<00:00, 554.51it/s]
+Writing model shards:   0%|          | 0/1 [00:00<?, ?it/s]Writing model shards: 100%|██████████| 1/1 [00:00<00:00, 812.69it/s]
+Writing model shards:   0%|          | 0/1 [00:00<?, ?it/s]Writing model shards: 100%|██████████| 1/1 [00:00<00:00, 506.44it/s]
+Writing model shards:   0%|          | 0/1 [00:00<?, ?it/s]Writing model shards: 100%|██████████| 1/1 [00:00<00:00, 836.02it/s]
+Writing model shards:   0%|          | 0/1 [00:00<?, ?it/s]Writing model shards: 100%|██████████| 1/1 [00:00<00:00, 524.35it/s]
+{"status": "DENSE_V2_DOCTOR_PASS", "case_status": {"codecs": "PASS", "features": "PASS", "derive": "PASS", "statistics": "PASS", "selectors": "PASS", "multiple_choice": "PASS", "equivalence": "PASS", "v1_gate": "PASS", "end_to_end": "PASS", "job_binding": "PASS", "usr1_displaced": "PASS", "timing_profile": "PASS"}}
+exit=0
+end=2026-10-08T09:46:48Z

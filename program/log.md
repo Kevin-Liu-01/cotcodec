@@ -1698,3 +1698,35 @@ Append-only. Newest entries at the bottom.
   `program/evidence/2026-10-08/q3-dense-headroom-precheck-v2-build/`.
 - Next: Kevin accepts or amends decisions 16-21 and the limits (and whether
   the fixed 4B path is timed first); then merge and freeze steps 2-5.
+
+## 2026-10-08 — Q3 dense pre-check v2: review fixes (branch `stage0/q3-dense-v2`, draft, not frozen)
+
+- A review found six blocking issues, all real, none needing a GPU job;
+  limits, caps and computed quantities unchanged. Fixed at `b8977d9`.
+- The 4B lane's cuDNN switch (decision 18) changes computed quantities, so it
+  departs from D36 (iii): decision 18 retitled; decisions 18 and 19 say the
+  job-727 gate and smoke 452 do not cover the 4B attention backend and the
+  descriptive `attention_backend_check` is the only check; v1's carried
+  "same code" wording is qualified in decision 18 (kept verbatim).
+- The 4B limit is projected, not measured: job 766 ran the path before the
+  fix (cuDNN on), and the fixed path has never run on a GPU. Decisions 20
+  and 21, Compute, Changes item 6, the lanes module (`LARGE_LANE_PROJECTED`,
+  `large_lane_break_even_unit_s`: about 2.1 s per unit) and the 4B template
+  say so. No GPU job: the timing allowance has 1 of its 6 minutes left
+  (766 charged 5), below the 5 any job needs.
+- Freeze step 1 now rewrites the design-decision lead-in as well as the
+  status; in frozen mode the prereg test refuses draft wording and requires
+  the status and lead-in to name a decision after D36 that names the
+  experiment and amends D36 (iii). Simulated on scratch clones: the
+  registered procedure passes (check-chain 12 rows PASS, 26 frozen-mode
+  tests, fills and dry run as before); the old status-only procedure and a
+  wrong decision both fail the test.
+- Checks at `b8977d9`: host suite 2,213 passed, 40 skipped, 0 failed; image
+  801 (CPU build), doctor 12/12, torch tests in the image 52 passed, PID-1
+  SIGUSR1 test passed. Evidence `program/evidence/2026-10-08/q3-dense-headroom-precheck-v2-build/README.md`
+  ("Review fixes").
+- Next (Kevin): one decision that accepts or amends decisions 16-21 and the
+  limits, amends D36 (iii) for the 4B lane (or requires another fix), and
+  either amends D36's timing rule for the 4B lane or authorises a second
+  timing job of the fixed path (at most 0.1 GPU-h, a fresh timing run root);
+  then freeze with that decision named in the status and the lead-in.
