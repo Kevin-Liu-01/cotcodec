@@ -498,3 +498,29 @@ Append-only. Newest entries at the bottom.
 - D30: guest-server restarts are bounded separately from A4. D31: Q1 Stage 0
   gets an engineering pass and a non-evaluation re-pilot before admission.
 - Full suite on the host after the merges: 1,681 passed, 28 skipped.
+
+## 2026-10-07 — D30 applied to the action-path registrations (not frozen)
+
+- Branch `stage0/q2-action-path-d30` applies decision D30 before the freeze
+  (main preregistration section 18). A4 does not count a trial whose only
+  failure is a guest-server restart (with the tree it left undelivered); it
+  reports every restart and the development rate (1 in 8,114 calls, exact
+  95% interval 3.1 x 10^-6 to 6.9 x 10^-4).
+- New criterion A7: at most 5 x 10^-4 restarts per accessibility call on the
+  exact one-sided 95% Poisson bound, from a dedicated campaign (L0-fixed on
+  G, 360 seed-43 repetitions, accessibility setting, 39,036 planned calls;
+  pass at 12 restarts or fewer: probability 0.999 at the development rate,
+  0.81 at half the bound, at most 0.05 at the bound). 31.1 VM-hours, CPU
+  only; scored campaigns now total 98.4 VM-hours. It gates the
+  screenshot-plus-accessibility setting and has no repair attempt.
+- The probe and the tap start in their own systemd scopes (`systemd-run
+  --user --scope`), outside `osworld.service`. Development (seed 42, CPU
+  only): runs 694 and 703 killed the server inside and between entries; the
+  probe and the tap ran on, only the entries hit failed, and the trial killed
+  inside showed the restart alone. Final validation at `7653799` (jobs
+  703-708) passed every in-spec cell, no restart in 1,070 calls
+  (`program/evidence/2026-10-07/q2-action-path-stage0b/README.md`).
+- Stage 1 counts restarts per episode as infrastructure failures.
+- Left unchanged on purpose: A1-A3 and the ladder still fail on a restart;
+  at the development rate their 16,639 accessibility calls see none with
+  probability about 0.13. Kevin's call before the freeze.
