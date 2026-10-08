@@ -254,3 +254,22 @@ def test_batch_script_holds_no_gpu_and_forwards_usr1():
     assert 'kill -USR1 "${lane_pid}"' in text
     assert "source_tree_sha256" in text and "manifest digest mismatch" in text
     assert "label=cotcodec.slurm_job=${SLURM_JOB_ID}" in text
+
+
+def test_bridge_dir_waits_for_the_gpu_job_id(tmp_path):
+    docker = FakeDocker({})
+    the_lane = make_lane(tmp_path, manifest(), docker)
+    id_file = tmp_path / "gpu_job_id"
+    id_file.write_text("1234\n")
+    engine = {
+        "bridge_dir": str(tmp_path / "gpu/{gpu_job_id}/bridge"),
+        "gpu_job_id_file": str(id_file),
+    }
+    assert the_lane.resolve_bridge_dir(engine) == tmp_path / "gpu/1234/bridge"
+    id_file.write_text("not-a-job")
+    with pytest.raises(lane.LaneError, match="Slurm job id"):
+        the_lane.resolve_bridge_dir(engine)
+    m = manifest(purpose="development", engine={"kind": "bridge", "gpu_cap_min": 25,
+                 "bridge_dir": f"{RUNS}/gpu/{{gpu_job_id}}/bridge"})  # fmt: skip
+    with pytest.raises(lane.LaneError, match="gpu_job_id_file"):
+        lane.validate_manifest(m, ROOT)
