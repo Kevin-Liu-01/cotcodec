@@ -248,5 +248,378 @@
    9.1,
    13.0
   ]
+ },
+ "s1a_v2": {
+  "jobs_v2": {
+   "anchor_runs_K24_V20_n96": {
+    "K": 24,
+    "V": 20,
+    "anchor_tasks": 96,
+    "jobs_central_high": {
+     "O1": [
+      0.012,
+      0.05
+     ],
+     "A0a": [
+      0.225,
+      0.306
+     ],
+     "A0b": [
+      0.238,
+      0.319
+     ],
+     "O2": [
+      0.012,
+      0.05
+     ],
+     "O2_retry": [
+      0.0,
+      0.05
+     ],
+     "ANC": [
+      0.615,
+      0.758
+     ],
+     "A1": [
+      3.664,
+      4.946
+     ]
+    },
+    "total_central_high": [
+     4.766,
+     6.479
+    ]
+   },
+   "anchor_unavailable_K32_V20": {
+    "K": 32,
+    "V": 20,
+    "anchor_tasks": 0,
+    "jobs_central_high": {
+     "O1": [
+      0.012,
+      0.05
+     ],
+     "A0a": [
+      0.225,
+      0.306
+     ],
+     "A0b": [
+      0.238,
+      0.319
+     ],
+     "O2": [
+      0.012,
+      0.05
+     ],
+     "O2_retry": [
+      0.0,
+      0.05
+     ],
+     "ANC": [
+      0.0,
+      0.0
+     ],
+     "A1": [
+      4.818,
+      6.461
+     ]
+    },
+    "total_central_high": [
+     5.305,
+     7.236
+    ]
+   }
+  },
+  "prices": {
+   "16": {
+    "V": 16,
+    "slot_central_s": 630.62,
+    "slot_high_s": 743.12,
+    "closed_central": 0.010948,
+    "closed_high": 0.012901,
+    "central": 0.010948,
+    "high": 0.012901
+   },
+   "20": {
+    "V": 20,
+    "slot_central_s": 630.62,
+    "slot_high_s": 743.12,
+    "closed_central": 0.008759,
+    "closed_high": 0.010321,
+    "central": 0.00902,
+    "high": 0.011274
+   }
+  },
+  "a0a_slot_high_min": 12.39,
+  "anchor_slot_min": {
+   "central": 11.29,
+   "high": 13.17
+  },
+  "a0_cap_need_min_L6": {
+   "A0a": 24.48,
+   "A0b": 25.46
+  },
+  "caps": {
+   "O1": 3,
+   "A0a": 25,
+   "A0b": 26,
+   "O2": 3,
+   "O2_retry": 3,
+   "ANC": 52
+  },
+  "remainder_rule": {
+   "anchor_runs": {
+    "A1_cap_min": 91,
+    "total_min": 476,
+    "total_gpu_h": 7.9333,
+    "K_rule": {
+     "V16_L3_c0.0": {
+      "tasks_raw": 26.15,
+      "K_base": 24
+     },
+     "V16_L3_c0.0129": {
+      "tasks_raw": 26.15,
+      "K_base": 24
+     },
+     "V16_L3_c0.0137": {
+      "tasks_raw": 24.62,
+      "K_base": 24
+     },
+     "V16_L6_c0.0": {
+      "tasks_raw": 25.22,
+      "K_base": 24
+     },
+     "V16_L6_c0.0129": {
+      "tasks_raw": 25.22,
+      "K_base": 24
+     },
+     "V16_L6_c0.0137": {
+      "tasks_raw": 23.75,
+      "K_base": 16
+     },
+     "V20_L3_c0.0": {
+      "tasks_raw": 29.92,
+      "K_base": 24
+     },
+     "V20_L3_c0.0129": {
+      "tasks_raw": 26.15,
+      "K_base": 24
+     },
+     "V20_L3_c0.0137": {
+      "tasks_raw": 24.62,
+      "K_base": 24
+     },
+     "V20_L6_c0.0": {
+      "tasks_raw": 28.86,
+      "K_base": 24
+     },
+     "V20_L6_c0.0129": {
+      "tasks_raw": 25.22,
+      "K_base": 24
+     },
+     "V20_L6_c0.0137": {
+      "tasks_raw": 23.75,
+      "K_base": 16
+     }
+    }
+   },
+   "anchor_unavailable_after_A0b": {
+    "A1_cap_min": 104,
+    "total_min": 476,
+    "total_gpu_h": 7.9333,
+    "K_rule": {
+     "V16_L3_c0.0": {
+      "tasks_raw": 30.14,
+      "K_base": 24
+     },
+     "V16_L3_c0.0129": {
+      "tasks_raw": 30.14,
+      "K_base": 24
+     },
+     "V16_L3_c0.0137": {
+      "tasks_raw": 28.39,
+      "K_base": 24
+     },
+     "V16_L6_c0.0": {
+      "tasks_raw": 29.22,
+      "K_base": 24
+     },
+     "V16_L6_c0.0129": {
+      "tasks_raw": 29.22,
+      "K_base": 24
+     },
+     "V16_L6_c0.0137": {
+      "tasks_raw": 27.52,
+      "K_base": 24
+     },
+     "V20_L3_c0.0": {
+      "tasks_raw": 34.49,
+      "K_base": 32
+     },
+     "V20_L3_c0.0129": {
+      "tasks_raw": 30.15,
+      "K_base": 24
+     },
+     "V20_L3_c0.0137": {
+      "tasks_raw": 28.39,
+      "K_base": 24
+     },
+     "V20_L6_c0.0": {
+      "tasks_raw": 33.44,
+      "K_base": 32
+     },
+     "V20_L6_c0.0129": {
+      "tasks_raw": 29.22,
+      "K_base": 24
+     },
+     "V20_L6_c0.0137": {
+      "tasks_raw": 27.52,
+      "K_base": 24
+     }
+    }
+   },
+   "anchor_unavailable_before_A0b": {
+    "A1_cap_min": 111,
+    "total_min": 478,
+    "total_gpu_h": 7.9667,
+    "K_rule": {
+     "V16_L3_c0.0": {
+      "tasks_raw": 32.3,
+      "K_base": 32
+     },
+     "V16_L3_c0.0129": {
+      "tasks_raw": 32.3,
+      "K_base": 32
+     },
+     "V16_L3_c0.0137": {
+      "tasks_raw": 30.41,
+      "K_base": 24
+     },
+     "V16_L6_c0.0": {
+      "tasks_raw": 31.37,
+      "K_base": 24
+     },
+     "V16_L6_c0.0129": {
+      "tasks_raw": 31.37,
+      "K_base": 24
+     },
+     "V16_L6_c0.0137": {
+      "tasks_raw": 29.54,
+      "K_base": 24
+     },
+     "V20_L3_c0.0": {
+      "tasks_raw": 36.96,
+      "K_base": 32
+     },
+     "V20_L3_c0.0129": {
+      "tasks_raw": 32.3,
+      "K_base": 32
+     },
+     "V20_L3_c0.0137": {
+      "tasks_raw": 30.41,
+      "K_base": 24
+     },
+     "V20_L6_c0.0": {
+      "tasks_raw": 35.9,
+      "K_base": 32
+     },
+     "V20_L6_c0.0129": {
+      "tasks_raw": 31.38,
+      "K_base": 24
+     },
+     "V20_L6_c0.0137": {
+      "tasks_raw": 29.54,
+      "K_base": 24
+     }
+    }
+   }
+  },
+  "anchor_n_examples": {
+   "V16_L4_d8.0": 48,
+   "V16_L4_d10.0": 48,
+   "V16_L4_d12.0": 48,
+   "V16_L4_d13.17": 32,
+   "V16_L6_d8.0": 48,
+   "V16_L6_d10.0": 48,
+   "V16_L6_d12.0": 32,
+   "V16_L6_d13.17": 32,
+   "V24_L4_d8.0": 72,
+   "V24_L4_d10.0": 72,
+   "V24_L4_d12.0": 72,
+   "V24_L4_d13.17": 48,
+   "V24_L6_d8.0": 72,
+   "V24_L6_d10.0": 72,
+   "V24_L6_d12.0": 48,
+   "V24_L6_d13.17": 48,
+   "V32_L4_d8.0": 96,
+   "V32_L4_d10.0": 96,
+   "V32_L4_d12.0": 96,
+   "V32_L4_d13.17": 64,
+   "V32_L6_d8.0": 96,
+   "V32_L6_d10.0": 96,
+   "V32_L6_d12.0": 64,
+   "V32_L6_d13.17": 64
+  },
+  "plans": {
+   "anchor_runs_K24_V20": {
+    "K": 24,
+    "V": 20,
+    "episodes": 384,
+    "central_gpu_h": 3.864,
+    "high_gpu_h": 4.996,
+    "per_job_high_min_incl_L6_usr1": 77.2,
+    "vm_h_central": 69.3,
+    "vm_h_high": 86.6,
+    "vm_h_reservation_bound": 134.7
+   },
+   "anchor_runs_K32_V20": {
+    "K": 32,
+    "V": 20,
+    "episodes": 512,
+    "central_gpu_h": 5.018,
+    "high_gpu_h": 6.439,
+    "per_job_high_min_incl_L6_usr1": 99.9,
+    "vm_h_central": 92.4,
+    "vm_h_high": 115.4,
+    "vm_h_reservation_bound": 134.7
+   },
+   "anchor_unavailable_K32_V20": {
+    "K": 32,
+    "V": 20,
+    "episodes": 512,
+    "central_gpu_h": 5.018,
+    "high_gpu_h": 6.439,
+    "per_job_high_min_incl_L6_usr1": 99.9,
+    "vm_h_central": 92.4,
+    "vm_h_high": 115.4,
+    "vm_h_reservation_bound": 161.3
+   },
+   "N16_K24_V16": {
+    "K": 24,
+    "V": 16,
+    "episodes": 384,
+    "central_gpu_h": 4.604,
+    "high_gpu_h": 5.621,
+    "per_job_high_min_incl_L6_usr1": 87.0,
+    "vm_h_central": 67.3,
+    "vm_h_high": 79.3,
+    "vm_h_reservation_bound": 121.6
+   }
+  },
+  "anchor_vm_h_reservation_bound_V32": 33.1,
+  "a1_c_a0a_for_K24_at_cap": {
+   "anchor_runs": 13.02,
+   "anchor_unavailable_after_A0b": 15.08,
+   "anchor_unavailable_before_A0b": 16.19
+  },
+  "cpus": {
+   "gpu_job": 32,
+   "vm_job_V16": 72,
+   "vm_job_V20": 90,
+   "vm_job_V32": 144,
+   "a1_V20_one_size": 122,
+   "anc_V32": 176,
+   "two_sizes_V20_concurrent": 244
+  }
  }
 }
