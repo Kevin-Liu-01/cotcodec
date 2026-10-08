@@ -67,16 +67,17 @@
       "title": "Cross-script sparse-indexer recall",
       "doc": "program/questions/q3-cross-script-indexer.md",
       "dossier_key": "E6-d21-translation-supervised-indexer",
-      "status": "stage-0-gauntlet",
-      "next_action": "Run the bounded research gauntlet for q3-k1-localization-screen-v2 (8.05 GPU-h under D22); admission waits on Kevin (D24)",
+      "status": "stage-0-precheck-draft",
+      "next_action": "Kevin accepts or amends the design decisions of the draft q3-dense-headroom-precheck-v1 (dense only, development partition of the K1 bundle, Qwen3-0.6B-Base and Qwen3.5-4B-Base, caps 0.15 + 0.35 = 0.5 GPU-h under D26); then freeze, build the image, run the CPU doctor in it, fill and submit the two lanes, and write the combined K1 v3 design read",
       "first_gpu_experiment": {
-        "name": "K1 localization screen",
-        "registration": "q3-k1-localization-screen-v1",
-        "cap_gpu_hours": 2.65,
-        "conditional_extension_gpu_hours": 1.5,
+        "name": "dense headroom pre-check",
+        "registration": "q3-dense-headroom-precheck-v1 (draft)",
+        "cap_gpu_hours": 0.5,
         "gauntlet_required": false
       },
-      "blocked_by": []
+      "blocked_by": [
+        "owner acceptance of the pre-check's design decisions (draft registration, branch stage0/q3-dense-precheck)"
+      ]
     }
   ],
   "pending_decisions_for_kevin": [
@@ -94,9 +95,10 @@
     "Decide whether to ask the KernelGYM authors for a licence: gate_b.py was rewritten from the spec after the review found a transliteration (stage0/q1-gates, never pushed); a licence would remove the residual risk",
     "Q1 Stage 0 budget: the drafted Stage 0 projects to about 1,056 GPU-h (cap 8). After the second review, the trimming rule q1-stage0-trim/2 (preregistration section 18.7, harness/q1/trim.py) projects 7.60 GPU-h through bucket P3 and 10.99 through P7 (8.70 and 13.09 at the high point), kept under 8 by job caps; it limits mutant metrics to problems below 1 GB (about 155 witnessed test mutants), leaves criterion 3 likely under-powered (about 73 admitted units) and does not schedule the KBV H.1 and hack-emulating mutant controls. Adopt it, fund an engineering pass (references once per problem and draw) and a new paired pilot, or take the gauntlet (blocked by D24)",
     "Q1 audit policy (D14), preregistration section 18.3 items 6-8: the TF32-admissible threshold rejects the TF32 tutorial matmul at every held-out shape; A5 counts S1 dtype refusals as failures; the TF32-admissible tolerance exceeds 1 on convolution problems (L2/3 T = 2.67). Any change is data-motivated under D26 (validated off the evaluation set; the affected units leave the primary analysis)",
-    "Review decisions D28 (Q1 pilot exposure: exposed units stay primary with a sensitivity analysis; D14's precondition can no longer be met) and D29 (KernelBench adversarial kernels and unmodified upstream fidelity code admitted on GPUs under D7)"
+    "Review decisions D28 (Q1 pilot exposure: exposed units stay primary with a sensitivity analysis; D14's precondition can no longer be met) and D29 (KernelBench adversarial kernels and unmodified upstream fidelity code admitted on GPUs under D7)",
+    "Accept or amend design decisions 1-15 of the draft q3-dense-headroom-precheck-v1 (program/preregistrations/q3-dense-headroom-precheck-v1.md): two lanes, development partition only, caps 0.15 + 0.35 GPU-h (D26's 0.5) with every job of a lane charged to its cap and no amendment under the id, the entity-anchor rule, the lexical-overlap selector, the block-score null with its 2.5-point reach rule, the floor judged on a null's lower bound, H2 gating only on FAIL (decision 5), and D26's K1 v3 requirements kept unconditionally"
   ],
-  "gpu_hours_spent_this_program": 2.3621,
+  "gpu_hours_spent_this_program": 2.4368,
   "frozen_registrations": [
     "q3-k1-localization-screen-v1",
     "q2-holo3-rerun-audit-v1-posthoc",
@@ -107,7 +109,7 @@
   ],
   "infrastructure": {
     "serving_probe": "v1 and v2 done (1.15 GPU-h): cu129 vLLM works on R570; Q1 sampling within cap; Q2 ladder needs rescoping",
-    "lane": "hardened discovery lane merged 2026-10-07"
+    "lane": "hardened discovery lane; container lifetime bounded by a hard stop 30 s before the job limit (2026-10-07)"
   },
   "gpu_hours_ledger": [
     {
@@ -185,6 +187,16 @@
         "640 qwen3.6-35b-a3b review"
       ],
       "outcome": "review total 59 (reported); wave score 45; honest exit"
+    },
+    {
+      "experiment": "open-weight reviewer exit fix GPU check",
+      "gpu_hours": 0.0747,
+      "jobs": [
+        "651 overlay build",
+        "653 qwen3.5-9b smoke",
+        "655 qwen3.6-35b-a3b load check"
+      ],
+      "outcome": "clean exits on GPU; 35B verify 52 s, load 97 s"
     }
   ],
   "results": [

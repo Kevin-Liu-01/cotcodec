@@ -498,3 +498,111 @@ Append-only. Newest entries at the bottom.
 - D30: guest-server restarts are bounded separately from A4. D31: Q1 Stage 0
   gets an engineering pass and a non-evaluation re-pilot before admission.
 - Full suite on the host after the merges: 1,681 passed, 28 skipped.
+
+## 2026-10-07 — Lane: container lifetime bounded by the job
+
+- Fixed the lane gap found by the open-weight reviewer smoke (Slurm 617) on
+  branch `stage0/lane-container-lifetime`: `docker-research.sbatch` removed its
+  container only from its exit trap, so a workload that ignored TERM outlived a
+  timed-out job (Slurm's KILL, KillWait 30 s after TERM, skips every trap).
+- The batch script now reads the time left (`squeue -o %L`, exit 2 if not
+  finite or above the manifest minutes), SIGKILLs the container 30 s before the
+  limit from a background timer (after USR1's 120 s checkpoint window), and on
+  TERM waits at most KillWait minus 20 s (10 s here) for a `trigger=SIGTERM`
+  checkpoint before `docker kill` and removal. A TERM before start starts no
+  container; `docker create` gets `--stop-timeout`. `termination.env` adds
+  `hard_stop_at`, `container_killed_by` and `container_killed_at`.
+- Stub-docker tests: a container ignoring USR1 and TERM is killed before the
+  job's end (hard stop) and within KillWait (TERM); all 8 new runtime tests
+  fail against the previous script. No GPU time used.
+- `vm-campaign.sbatch` (branch `stage0/q2-action-path`, not on main) does not
+  have this gap: its USR1/TERM handler kills the driver and force-removes every
+  job-labelled container without waiting on them.
+
+## 2026-10-07 — Lane: container lifetime review fixes
+
+- An independent review of the lifetime fix found one fail-open path and six
+  smaller defects, all reproduced with stub-docker tests before fixing:
+  - the hard-stop timer inherited `set -e`, so a failed `hard-stop.env` write
+    (full or failing disk) ended it before its kill; it now runs `set +e` and
+    the record is best-effort;
+  - the timer looped forever after its kill, and outlived a batch shell killed
+    alone; it now ends after its kill, and if the shell is gone it SIGKILLs the
+    container at once (`cause=batch_script_gone`) and exits;
+  - a requeued job reused its run directory and read the earlier attempt's
+    records; the submitter passes `--no-requeue` and the batch script refuses
+    an existing run directory (exit 2);
+  - a TERM that killed the `docker create` client before it printed the ID
+    leaked the container dockerd still created; the exit trap watches 5 s;
+  - a TERM sent to the whole job reached the container through the attached
+    client before the trap's marker record, so a TERM checkpoint never
+    confirmed (also on main); the TERM record is now taken at container start;
+  - a confirmed TERM checkpoint was SIGKILLed at once; it now gets the grace;
+  - `docs/operations.md` overstated the hard stop: a workload must exit within
+    150 s of USR1, and the hard stop does not follow `TimeLimit` changes.
+- The q2 evaluator-mutation draft preregistration (other branch) sizes its
+  rater stop on the 180 s USR1 lead; it needs a note on the 150 s bound before
+  it is frozen. No GPU time used.
+
+## 2026-10-07 — Q3 dense headroom pre-check built (D26), not run
+
+- Branch `stage0/q3-dense-precheck`: draft registration
+  `program/preregistrations/q3-dense-headroom-precheck-v1.md` (not frozen) and
+  its code. Dense only, no indexer; the development partition of the K1
+  bundle (`919d016b...`) only; two lanes, Qwen3-0.6B-Base (1 GPU x 9 min, cap
+  0.15) and Qwen3.5-4B-Base (1 GPU x 21 min, cap 0.35), caps summing to D26's
+  0.5 GPU-h. The 4B lane re-tokenizes the bundle's Qwen3 tokens segment by
+  segment (needle spans exact) and reads its 8 full-attention layers.
+- Measures H1 on MN, CX and ML (development literal prompts built with the K1
+  builder's rule), H2a and H2b, a non-literal floor candidate, English entity
+  anchors with the entity-controlled subset, a literal (lexical) selector and
+  a block-score null (target log-scores plus noise, seeds 42/43/44) read with
+  K1's xi and xi_rel, recall by tokenizer fertility, and a reproduction of K1
+  smoke 452's dense numbers on the 0.6B lane. Lane decisions
+  (NEGATIVE_CAPABLE needs H1_CX >= 20 with lower bound >= 10) and a combined
+  read say which K1 v3 designs are viable.
+- New modules beside the frozen K1 files (none edited):
+  `harness/dense_headroom_{data,stats,torch}.py`,
+  `scripts/run_dense_headroom_precheck{,_doctor}.py`,
+  `scripts/fill_dense_headroom_precheck_manifests.py`,
+  `scripts/summarise_dense_headroom_precheck.py`, lane templates in
+  `experiments/manifests/q3-dense-headroom-precheck-v1/`.
+- CPU doctor in the research image (`e59d9cc1`, network none, Slurm CPU
+  steps): DENSE_DOCTOR_PASS, including both tiny lanes end to end, a SIGUSR1
+  interrupt (exit 75 with the marker) and its continuation. No GPU time used.
+- Waiting on Kevin: the draft's design decisions 1-14.
+
+## 2026-10-07 — Q3 dense headroom pre-check: review fix pass (draft, not run)
+
+- An independent review of the draft (`stage0/q3-dense-precheck` at 9f9e735)
+  asked for changes before freeze; all nine findings were reproduced and
+  fixed, with regression tests. Still a draft, still no GPU time.
+- Continuations could never run: the entry point required the lane's full
+  minutes. It now checks the job's kind from `manifest.json`: a fresh job (at
+  most the lane's minutes, no checkpoints), or a continuation naming its
+  predecessor with the batch script's resume receipt and the predecessor's
+  pinned artifact (at most the lane's minutes minus two). A time-limit
+  interrupt still leaves no room for one (SIGUSR1 comes three minutes early),
+  so a lane that overruns ends INCOMPLETE; this is now stated.
+- The combined read failed open on an INVALID lane; any INVALID lane now
+  makes it INVALID, and the 4B lane is submitted only after the 0.6B smoke
+  reproduction is REPRODUCED.
+- D26's requirements of a K1 v3 (entity-controlled question set, non-literal
+  floor, seen-script cross-script condition, new id and gauntlet) are always
+  required; the measured flags only add. `anchor_confound` is renamed
+  `lexical_confound` (the literal selector reads all lexical overlap), and the
+  literal selector now drops the query language's stop ids as well as the
+  needle language's.
+- The floor candidate is VIABLE only when a V1-adequate null's 99 percent
+  lower bound of G(MN) reaches 0.5. The null is CENTRED only if an adequate
+  noise scale loses at least 2.5 points of English ML recall; the sigma grid
+  is now 0.25 to 4 in steps of about 1.4 (9 scales, 54 null columns).
+- Budget: every job of a lane (re-runs, the one continuation) is charged
+  against the lane's minutes from the run root's `job.env` and
+  `termination.env` timestamps; the filler claims each later job's slot in the
+  run root once; no budget amendment is possible under this id.
+- The lane templates and `scripts/preregister.py` are tabled; the filler
+  refuses a filled manifest that is not the template with only its `FILL-*`
+  values replaced. The summariser applies the void rules from each job's files
+  and the saved orx logs and hashes receipts over their bytes.
+- Waiting on Kevin: the draft's design decisions 1-15.
