@@ -497,3 +497,28 @@ infrastructure failure; kills stay read from the counting attempt. The three
 status lines are rewritten to the frozen wording before the freeze (as D32
 required for Q3), and the analysis treats an unparseable record file like a
 missing one, so a write cut short by a kill cannot block a verdict.
+
+**D40. Action-path suite: v1 is invalid on C2; a v2 that reports the miss
+and re-tests the prediction honestly.** `q2-action-path-v1`'s first scored
+campaign, C2 (job 768, L0-raw, 500 trials, counted), failed: `chord_super_d`
+was predicted to pass under raw PyAutoGUI and failed 5 of 5, because the `d`
+press reached X without the Super modifier within 1 ms of the Super press.
+The other 99 entries matched the prediction. The X event record shows the
+loss is real, so the oracle detected a genuine transport defect and the
+miss is in the authors' prediction, not in the oracle. Under sections 8 and
+11, v1 is invalid: no v1 acceptance criterion may be claimed, and C1, C3
+and A1-A7 did not run. This result is reported as it stands. Decided: a
+successor `q2-action-path-v2` (with its own `-inputs` and `-executor`)
+keeps v1's catalog, oracles, guard, executor, acceptance rules and
+development evidence. It changes three things: (i) the L0-raw prediction
+lists `chord_super_d` as a failure, with the mechanism (a shell keyboard
+grab on a Super chord sent without key holds), and says plainly that this
+entry is informed by v1's C2 run; (ii) v2's C2 is therefore read as a
+reproduction test of the L0-raw failing set on a new order seed, not as an
+a-priori prediction test, and v1's C2 outcome (one unpredicted failure,
+verified real) is reported as the a-priori result; (iii) the manifest
+renderer takes the run root as a parameter instead of hard-coding the
+development host root. Development may characterise the mechanism, and
+whether L0-fixed is exposed under Stage-1 conditions, on seed 42 only; A1
+then tests L0-fixed on `chord_super_d` as registered. No other rule
+changes, and no v1 data enters a v2 verdict.
