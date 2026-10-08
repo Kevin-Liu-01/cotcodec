@@ -1685,7 +1685,14 @@ Append-only. Newest entries at the bottom.
   778). Host suite at `e6e81e7`: 1,824 passed, 36 skipped, 1 failed (the
   Linux-only binding test's workload program did not start; fixed in
   `50153d0`, then passed). Main merged into the branch (`30f9c7c`; no tabled
-  file changed on main). Freeze simulated on a scratch clone only.
+  file changed on main). Host suite at `f2510dd` (Slurm 788, fresh scratch):
+  2,212 passed, 40 skipped, 0 failed; the torch-dependent dense tests inside
+  image 776 (CPU): 43 passed. Freeze simulated on a scratch clone of
+  `f2510dd` only: chained onto main's ledger head (`dc39bfa2...`),
+  check-chain 12 rows PASS, entry code table no differences, 0.6B fill ok,
+  4B fill refused without the small-lane receipt, dry run ok, full suite in
+  the frozen clone 2,165 passed, 87 skipped (macOS). The real ledger is
+  unchanged.
 - State: Q3 `stage-0-precheck-v2-draft`; ledger row 0.0569 GPU-h; program
   total 3.983. Evidence
   `program/evidence/2026-10-08/q3-dense-headroom-precheck-v2-build/`.
