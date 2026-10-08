@@ -36,15 +36,21 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[3]))
 
+from harness.q2_mutation import raters  # noqa: E402
 from harness.q2_mutation.rater_runner import OPEN_WEIGHT  # noqa: E402
 
 # Decision D34: re-measured with thinking on (dev rerate, Slurm 722: 14.4 items
 # per minute, 115 s engine start, 72 s of container start, model check and
-# stop). The largest confirmatory audit (841 items, six packet shards of at
-# most 480 MiB) needs about 2.2 GPU-h at a planning rate of 10 items per
-# minute with 4 minutes of start and the 4-minute USR1 lead per job; the cap
-# leaves room for a rerun of the rest (preregistration section 9).
-AUDIT_GPU_HOURS = 3.0
+# stop). Decision D35: the confirm audit is a census of the reported candidates,
+# the audit gates, the shams and the P1 flips; it must fit this cap at the
+# planning rate of 10 items per minute with 4 minutes of start and the 4-minute
+# USR1 lead per job (``raters.audit_capacity``: 1,139 items), or the sampler
+# draws its registered stratified sample instead (preregistration section 9).
+AUDIT_GPU_HOURS = raters.AUDIT_GPU_HOURS
+# Lane memory per rater model (GiB), as the gauntlet reviewer lane gives the
+# same checkpoint (``scripts/run_open_weight_review.REVIEWER_MODELS``): 160 for
+# Qwen3.6-35B-A3B. The dev rerates ran at 128 GiB.
+LANE_MEMORY_GB = {"qwen3.6-35b-a3b": 160}
 # Decisions D27 and D34: the development rerate of every dev item with the
 # 35B-A3B rater (thinking off, then on), all shards and reruns of one smoke
 # together (the earlier 9B smokes were capped at 0.2 and 0.15).
@@ -121,7 +127,7 @@ def manifest(args: argparse.Namespace, prior: float = 0.0) -> dict[str, object]:
             "gpu_type": "h100",
             "gpus": 1,
             "cpus": 16,
-            "memory_gb": 128,
+            "memory_gb": LANE_MEMORY_GB[str(OPEN_WEIGHT["model_id"])],
             "minutes": args.minutes,
         },
         "budget": {"max_gpu_hours": args.max_gpu_hours},

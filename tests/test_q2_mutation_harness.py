@@ -1,6 +1,7 @@
 import hashlib
 import io
 import json
+import sys
 import tarfile
 import zipfile
 from pathlib import Path
@@ -11,6 +12,7 @@ import pytest
 from harness.q2_mutation import controls, offline_eval, raters, reachability, stats, vm_injection
 from harness.q2_mutation.tasks import FILE_CACHE_REVISION
 
+ROOT = Path(__file__).resolve().parents[1]
 CACHE = "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/main"
 TASK = "4188d3a4-077d-46b7-9c86-23e1a036f6c1"
 CSV_FILTER = "csv:Text - txt - csv (StarCalc):44,34,UTF-8,,,,false,true,true,false,false,1"
@@ -396,49 +398,127 @@ def test_parse_execute_variants() -> None:
     assert reachability.window_title_for("/home/user/a.pptx") == "a.pptx - LibreOffice Impress"
 
 
-def test_audit_sample_strata_probabilities_and_shams() -> None:
+def test_audit_is_a_census_of_the_candidates_gates_shams_and_flips() -> None:
+    """Decision D35 (iii): every candidate event and P2's gate, at weight 1; no agreements."""
     cands = [
-        raters.Candidate(f"m{i}", f"t{i % 5}", "should_pass_equiv", "pass") for i in range(300)
+        raters.Candidate(f"m{i:03d}", f"t{i % 5}", "should_pass_equiv", "pass", "f")
+        for i in range(300)
     ]
     cands += [
-        raters.Candidate(f"d{i}", f"t{i % 5}", "should_pass_equiv", "fail") for i in range(10)
+        raters.Candidate(f"d{i}", f"t{i % 5}", "should_pass_equiv", "fail", "f") for i in range(10)
     ]
     cands += [raters.Candidate(f"a{i}", "t1", "should_pass_alt_solution", "pass") for i in range(3)]
+    cands += [raters.Candidate("af", "t2", "should_pass_alt_solution", "fail")]
     cands += [raters.Candidate("e0", "t1", "should_pass_equiv", "error")]
-    # Violations are a census whatever the verdict, up to the cap of 200.
+    cands += [raters.Candidate("amb", "t1", "ambiguous", "fail")]
     cands += [
         raters.Candidate(f"v{i}", f"t{i % 7}", "should_fail_violation", "pass" if i % 4 else "fail")
-        for i in range(250)
+        for i in range(40)
     ]
-    sample = raters.draw_audit_sample(cands, seed=42)
-    by = {}
+    cands += [raters.Candidate("x0", "t3", "should_fail_extra_change", "pass")]
+    cands += [raters.Candidate("x1", "t3", "should_fail_extra_change", "fail")]
+    sample = raters.draw_audit_sample(cands, seed=42, p1_flip_tasks=["t9"])
+    by: dict[str, list] = {}
     for item in sample:
         by.setdefault(item.stratum, []).append(item)
-    assert len(by["alt_solution"]) == 3 and by["alt_solution"][0].inclusion_probability == 1.0
-    assert len(by["violation"]) == 200
-    assert by["violation"][0].inclusion_probability == pytest.approx(200 / 250)
-    assert len(by["disagreement"]) == 10
-    assert len(by["agreement"]) == 100
-    assert by["agreement"][0].inclusion_probability == pytest.approx(100 / 300)
-    assert len(by["sham"]) == 14  # ceil(10% of 313) = 32, capped at 2 per task (7 tasks)
-    assert all(item.mutant_id != "e0" for item in sample)
-    assert raters.draw_audit_sample(cands, seed=42) == sample
+    assert {k: len(v) for k, v in by.items()} == {
+        "fn_equiv": 10,
+        "fn_alt": 1,
+        "alt_gate": 3,
+        "fp_violation": 30,
+        "fp_extra": 1,
+        "sham": 9,  # ceil(10% of 45) = 5 from the quota (t0-t2), then gold for t3-t6
+        "p1_flip": 1,
+    }
+    assert {s.inclusion_probability for s in sample} == {1.0}
+    sampled = {s.mutant_id for s in sample}
+    # Agreements (equivalence passed, should-fail failed), errors and ambiguous labels are out.
+    assert not sampled & {"m000", "e0", "amb", "x1", "v0"}
+    gold = sorted(s.task_id for s in by["sham"] if s.sham == "gold")
+    assert gold == [f"t{i}" for i in range(7)]
+    assert raters.draw_audit_sample(cands, seed=42, p1_flip_tasks=["t9"]) == sample
+    scope = raters.audit_scope(raters_pool(cands), sample)
+    assert scope["scope"] == "census" and scope["census_items"] == len(sample)
+    assert scope["capacity_items"] == raters.audit_capacity() == 1139
+    assert scope["cells"]["fp_violation|"] == {"pool": 30, "sampled": 30}
 
 
-def test_violation_census_weights_every_violation_once() -> None:
-    """At the expected confirm size every violation is audited at weight 1."""
-    verdicts = ["pass"] * 9 + ["fail"] * 79
-    cands = [
-        raters.Candidate(f"v{i}", f"t{i % 17}", "should_fail_violation", verdict)
-        for i, verdict in enumerate(verdicts)
-    ]
-    cands += [
-        raters.Candidate(f"e{i}", f"u{i % 59}", "should_pass_equiv", "pass") for i in range(236)
-    ]
-    sample = raters.draw_audit_sample(cands, seed=42)
-    violations = [s for s in sample if s.stratum == "violation"]
-    assert len(violations) == 88 and {s.inclusion_probability for s in violations} == {1.0}
-    assert not any(s.mutant_id.startswith("v") and s.stratum != "violation" for s in sample)
+def raters_pool(cands: list) -> list:
+    return [c for c in cands if raters.stratum_of(c) is not None]
+
+
+def test_capacity_is_the_registered_cap_at_the_planning_rate() -> None:
+    """Section 9: 841 items need 2.23 GPU-h; 1,139 is the most that fits 3.0 GPU-h."""
+    assert raters.planned_gpu_hours(0) == 0
+    assert raters.planned_gpu_hours(841) == pytest.approx(134 / 60)
+    assert raters.planned_gpu_hours(1139) == pytest.approx(3.0)
+    assert raters.planned_gpu_hours(1140) > 3.0
+    assert raters.audit_capacity() == 1139 and raters.audit_capacity(0.5) == 157
+    sys.path.insert(0, str(ROOT / "infra" / "q2-mutation" / "run"))
+    import render_rater_manifest
+
+    assert render_rater_manifest.AUDIT_GPU_HOURS == raters.AUDIT_GPU_HOURS == 3.0
+
+
+def test_census_over_capacity_becomes_a_seeded_stratified_sample() -> None:
+    """D35 (iii) fallback: strata are candidate type x checker family, disclosed."""
+    cands = []
+    for family, n_viol, n_equiv in (("big", 400, 60), ("mid", 40, 8), ("tiny", 2, 1)):
+        cands += [
+            raters.Candidate(f"{family}-v{i:03d}", f"{family}{i % 9}", "should_fail_violation",
+                             "pass", family)
+            for i in range(n_viol)
+        ]
+        cands += [
+            raters.Candidate(f"{family}-e{i:03d}", f"{family}{i % 9}", "should_pass_equiv",
+                             "fail", family)
+            for i in range(n_equiv)
+        ]
+    full = raters.draw_audit_sample(cands, seed=42, p1_flip_tasks=["p1", "p2"])
+    assert len(full) > 200
+    sample = raters.draw_audit_sample(cands, seed=42, p1_flip_tasks=["p1", "p2"], capacity=200)
+    assert len(sample) <= 200 and sample == raters.draw_audit_sample(
+        cands, seed=42, p1_flip_tasks=["p1", "p2"], capacity=200
+    )
+    # The P1 flips are always in, and every task with a sampled mutant has a gold sham.
+    assert {s.mutant_id for s in sample if s.stratum == "p1_flip"} == {
+        "p1__p1_flip",
+        "p2__p1_flip",
+    }
+    real = [s for s in sample if s.stratum in raters.STRATA]
+    gold = {s.task_id for s in sample if s.sham == "gold"}
+    assert {s.task_id for s in real} <= gold
+    cells: dict[tuple[str, str | None], list] = {}
+    for s in real:
+        cells.setdefault((s.stratum, s.family), []).append(s)
+    sizes = {("fp_violation", "big"): 400, ("fn_equiv", "big"): 60, ("fp_violation", "mid"): 40,
+             ("fn_equiv", "mid"): 8, ("fp_violation", "tiny"): 2, ("fn_equiv", "tiny"): 1}
+    for cell, size in sizes.items():
+        drawn = cells[cell]
+        # Every cell keeps at least min(size, 3); inclusion probability n / N.
+        assert len(drawn) >= min(size, raters.CELL_MINIMUM)
+        assert all(s.inclusion_probability == len(drawn) / size for s in drawn)
+    assert len(cells[("fp_violation", "big")]) > len(cells[("fp_violation", "mid")])
+    scope = raters.audit_scope(cands, sample, capacity=200)
+    assert scope["scope"] == "stratified_sample" and scope["census_items"] is None
+    assert scope["cells"]["fn_equiv|tiny"] == {"pool": 1, "sampled": 1}
+    assert raters.draw_audit_sample(cands, seed=43, capacity=200) != raters.draw_audit_sample(
+        cands, seed=42, capacity=200
+    )
+    with pytest.raises(ValueError, match="alone exceed"):
+        raters.draw_audit_sample(cands, p1_flip_tasks=[f"p{i}" for i in range(30)], capacity=20)
+
+
+def test_allocation_keeps_a_minimum_per_cell_and_shares_the_rest_in_proportion() -> None:
+    sizes = {("a", "x"): 100, ("a", "y"): 10, ("b", "x"): 2, ("b", "y"): 50}
+    assert raters.allocate(sizes, 500) == sizes
+    alloc = raters.allocate(sizes, 60)
+    assert alloc == {("a", "x"): 35, ("a", "y"): 5, ("b", "x"): 2, ("b", "y"): 18}
+    assert sum(alloc.values()) == 60
+    # Too small for three each: one each first.
+    assert raters.allocate(sizes, 5) == {("a", "x"): 2, ("a", "y"): 1, ("b", "x"): 1, ("b", "y"): 1}
+    with pytest.raises(ValueError, match="one item"):
+        raters.allocate(sizes, 3)
 
 
 SALT = "5a" * 32
@@ -556,21 +636,22 @@ def test_kappa_below_threshold_fires_both_groups() -> None:
     assert summary.kappa_fires and all(summary.k3_fires.values())
 
 
-def test_every_task_with_a_k3_item_gets_a_gold_sham() -> None:
-    """Decision D34: the quota's shams, then a gold sham for each K3 task without one."""
-    cands = [raters.Candidate(f"e{i}", f"t{i:02d}", "should_pass_equiv", "pass") for i in range(12)]
-    cands += [raters.Candidate("v0", "t20", "should_fail_violation", "fail")]
+def test_every_task_with_a_sampled_mutant_gets_a_gold_sham() -> None:
+    """Decisions D34 and D35: the quota's shams, then a gold sham for each audited task."""
+    cands = [raters.Candidate(f"e{i}", f"t{i:02d}", "should_pass_equiv", "fail") for i in range(12)]
+    cands += [raters.Candidate("v0", "t20", "should_fail_violation", "pass")]
     cands += [raters.Candidate("a0", "t30", "should_pass_alt_solution", "pass")]
-    cands += [raters.Candidate("x0", "t31", "should_fail_extra_change", "fail")]
+    cands += [raters.Candidate("x0", "t31", "should_fail_extra_change", "pass")]
+    cands += [raters.Candidate("q0", "t40", "should_pass_equiv", "pass")]  # not audited
     sample = raters.draw_audit_sample(cands, seed=42)
     shams = [s for s in sample if s.stratum == "sham"]
     # 15 real items: the quota is 2 shams (gold and do-nothing of t00).
     assert [(s.task_id, s.sham) for s in shams[:2]] == [("t00", "gold"), ("t00", "do_nothing")]
     gold = {s.task_id for s in shams if s.sham == "gold"}
-    assert gold == {f"t{i:02d}" for i in range(12)} | {"t20"}
-    # Alternative-solution and extra-change tasks are not K3 tasks.
-    assert "t30" not in gold and "t31" not in gold
-    assert len(shams) == 14 and raters.draw_audit_sample(cands, seed=42) == sample
+    # D35 widens D34's rule (K3 tasks) to every task whose items are reported.
+    assert gold == {f"t{i:02d}" for i in range(12)} | {"t20", "t30", "t31"}
+    assert "t40" not in gold
+    assert len(shams) == 16 and raters.draw_audit_sample(cands, seed=42) == sample
 
 
 def test_item_ids_need_the_audit_salt() -> None:
@@ -736,16 +817,14 @@ def test_audit_pool_and_sampler_add_p1_flips() -> None:
     ]
     pool = raters.audit_candidates(outcomes)
     assert [c.mutant_id for c in pool] == ["m1", "m4"]
+    assert [c.family for c in pool] == ["", ""]
     sample = raters.draw_audit_sample(pool, p1_flip_tasks=["t9", "t9"])
     strata = {s.mutant_id: s.stratum for s in sample}
-    assert strata["m1"] == "agreement" and strata["m4"] == "violation"
+    # m1 is a passed equivalence mutant (label and checker agree): not audited (D35).
+    assert "m1" not in strata and strata["m4"] == "fp_violation"
     assert strata["t9__p1_flip"] == "p1_flip"
-    # The 10% quota gives t1 a gold sham; t2 has a K3 (violation) item and gets
-    # one too (decision D34).
-    assert sorted(s.mutant_id for s in sample if s.stratum == "sham") == [
-        "t1__sham_gold",
-        "t2__sham_gold",
-    ]
+    # The 10% quota gives t2 a gold sham; t1 has no audited mutant.
+    assert sorted(s.mutant_id for s in sample if s.stratum == "sham") == ["t2__sham_gold"]
 
 
 def test_k3_bound_fires_without_observed_errors_when_the_sample_is_small() -> None:

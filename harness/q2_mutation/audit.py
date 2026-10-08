@@ -5,8 +5,10 @@
     ``prep/targets.jsonl``) and the control runs whose P1 flips are audited
     (``summary.json``, ``saved/jobs-saved.jsonl``; for the confirmatory audit
     the confirm and the reserve control runs): the candidate pool
-    (``raters.audit_candidates``), the stratified sample with shams and every P1
-    flip (``raters.draw_audit_sample``), Kevin's spot-check list, and one item
+    (``raters.audit_candidates``), the D35 census of the checker's candidate
+    events and P2's audit gate with shams and every P1 flip
+    (``raters.draw_audit_sample``; a stratified sample only if the census
+    exceeds the GPU cap's capacity), Kevin's spot-check list, and one item
     per sampled key with the files the packet shows. ``sample.jsonl`` carries
     the labels and verdicts and never reaches a rater; ``items.jsonl`` holds
     only an opaque item id, the task and file paths. Item ids are salted with
@@ -163,8 +165,13 @@ def build_sample(
     seed: int = 42,
     salt: str,
     build_root: str = "/ro/build/",
+    capacity: int | None = None,
 ) -> dict[str, Any]:
     """Sample rows, item rows, saved-baseline jobs and the spot-check list of one audit.
+
+    The sample is the D35 census (``raters.draw_audit_sample``) unless it
+    exceeds ``capacity`` (default: the registered GPU cap at the planning
+    rate); ``summary["audit_scope"]`` says which (``raters.audit_scope``).
 
     ``salt`` is the audit's secret salt (``raters.opaque_item_id``): item ids
     cannot be computed from public mutant or task ids without it.
@@ -191,7 +198,7 @@ def build_sample(
 
     pool = raters.audit_candidates(outcomes, primary)
     flips = p1_flip_tasks(controls_tasks, primary) if controls_tasks else []
-    sample = raters.draw_audit_sample(pool, seed=seed, p1_flip_tasks=flips)
+    sample = raters.draw_audit_sample(pool, seed=seed, p1_flip_tasks=flips, capacity=capacity)
     by_id = {r["mutant_id"]: r for r in outcomes}
     saved = {job["mutant_id"]: job for job in saved_jobs}
     nulls: dict[str, list[Mapping[str, Any]]] = {}
@@ -316,6 +323,7 @@ def build_sample(
             "pool": len(pool),
             "pool_by_label": dict(Counter(c.label for c in pool)),
             "strata": dict(Counter(s.stratum for s in sample)),
+            "audit_scope": raters.audit_scope(pool, sample, capacity),
             "p1_flip_tasks": flips,
             "spot_check": len(spot),
             "baseline_jobs": len(baseline_jobs),
@@ -806,6 +814,7 @@ def load_sample(path: Path) -> tuple[list[raters.Sampled], dict[str, str], dict[
                 row["stratum"],
                 row["inclusion_probability"],
                 row.get("sham"),
+                row.get("family"),
             )
         )
         if row.get("label"):
