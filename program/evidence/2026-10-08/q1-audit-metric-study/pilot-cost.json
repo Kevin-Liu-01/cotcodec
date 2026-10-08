@@ -1,214 +1,625 @@
 {
- "method": "per item: the largest measured A1-A3 item of the problem (713 inline, 752 store); reference items: the largest measured ref_A1-A3 item, else 3x the consumer item; unmeasured problems take the largest measured item of any problem",
- "minimal_variant": {
-  "gpu_hours": 0.20324168289850714,
-  "problems": [
+ "first_pass_stated_fallback_upper_bound": {
+  "first_pass_plan_gpu_h": 1.0253611111111112,
+  "revised_plan_gpu_h": 1.6925833333333333,
+  "revised_plus_L1_47_plan_gpu_h": 2.4979722222222223,
+  "rule": "every consumer item of the calibration-only and unmeasured problems at the largest measured item of any problem"
+ },
+ "largest_measured_consumer_item_gpu_s": 76.60799980163574,
+ "measured_ratios": {
+  "A2_or_A3_over_A1_max_over_repilot_same_regime": 2.0933808299917978,
+  "reference_over_consumer_max_over_repilot": 2.026504788043939,
+  "same_regime_problems": [
    "L1/10",
    "L1/18",
-   "L2/59",
    "L2/95",
    "L2/77",
    "L2/100",
    "L2/87",
    "L2/46"
-  ],
-  "what_it_drops": "the three 518-calibration problems (no measured A2/A3 items; L2/52 and L2/60 are the batch- and group-norm cases)"
+  ]
  },
+ "method": "per problem: the largest charged A1 item and the largest charged A2/A3 item (any attempt, any arm, jobs 713 and 752), the largest charged ref_A1-A3 item; A2/A3 and reference items of calibration-only problems from the measured ratios; L1/94 from L1/47; GPU-s = kernels x 3 x max(A1 item, A2/A3 item) + 3 x reference item",
  "notes": [
-  "job 752 measured 2.4x its exec/2 model; the per-item costs here are measured values, so no model factor is applied",
-  "L2/59 (4.3 GB of parameters) dominates; L2/87, L2/100 and L2/46 consumer items under exec/2 were never measured (job 752 did not reach them)"
+  "first-pass figure: 0.28 GPU-h (0.20 for the 8 re-pilot problems), from wall x units / 12 on the failed shared attempt of L2/59's items",
+  "job 752 measured 2.4x its exec/2 model; these per-item costs are measurements, so no model factor applies, but exec/2 runs large items with more units than 713's exec/1, so 713-measured items may be low",
+  "the non-matmul problems have 4.3-8.6 GB native inputs and run alone; they dominate the revised plan"
  ],
- "per_problem": {
+ "per_problem_item_costs": {
   "L1/10": {
-   "assumed_consumer_item_gpu_s": 1.1211666666666666,
-   "assumed_reference_item_gpu_s": 1.2506439360705288,
-   "consumer_item_gpu_s_measured": {
-    "max": 1.1211666666666666,
-    "median": 0.7413749999999999,
-    "n": 12
-   },
-   "consumer_items": 15,
-   "gpu_s": 20.569431808211586,
-   "kernels": 5,
-   "reference_item_gpu_s_measured": {
-    "max": 1.2506439360705288,
-    "n": 6
-   },
-   "unmeasured": false
+   "A1_item_gpu_s": 0.7517803058479771,
+   "A2_A3_item_gpu_s": 1.1307151480154558,
+   "alone_run_items": 0,
+   "basis": "measured (713, 752)",
+   "measured_items": 21,
+   "measured_reference_items": 6,
+   "reference_item_gpu_s": 1.2506439360705288
   },
   "L1/15": {
-   "assumed_consumer_item_gpu_s": 5.0112499999999995,
-   "assumed_reference_item_gpu_s": 15.033749999999998,
-   "consumer_item_gpu_s_measured": {
-    "max": null,
-    "median": null,
-    "n": 0
-   },
-   "consumer_items": 12,
-   "gpu_s": 105.23624999999998,
-   "kernels": 4,
-   "reference_item_gpu_s_measured": {
-    "max": null,
-    "n": 0
-   },
-   "unmeasured": true
+   "A1_item_gpu_s": 3.3926666975021362,
+   "A2_A3_item_gpu_s": 7.102143427102553,
+   "alone_run_items": 0,
+   "basis": "A1 measured (job 518 calibration); A2/A3 = A1 x 2.09; reference items = consumer x 2.03",
+   "measured_items": 1,
+   "measured_reference_items": 0,
+   "reference_item_gpu_s": 14.392527660398114
   },
   "L1/18": {
-   "assumed_consumer_item_gpu_s": 1.474,
-   "assumed_reference_item_gpu_s": 2.9969088820237966,
-   "consumer_item_gpu_s_measured": {
-    "max": 1.474,
-    "median": 0.854,
-    "n": 9
-   },
-   "consumer_items": 15,
-   "gpu_s": 31.10072664607139,
-   "kernels": 5,
-   "reference_item_gpu_s_measured": {
-    "max": 2.9969088820237966,
-    "n": 6
-   },
-   "unmeasured": false
+   "A1_item_gpu_s": 0.9283939473556749,
+   "A2_A3_item_gpu_s": 1.4788560578317356,
+   "alone_run_items": 0,
+   "basis": "measured (713, 752)",
+   "measured_items": 18,
+   "measured_reference_items": 6,
+   "reference_item_gpu_s": 2.9969088820237966
+  },
+  "L1/47": {
+   "A1_item_gpu_s": 76.60799980163574,
+   "A2_A3_item_gpu_s": 160.3697182087597,
+   "alone_run_items": 1,
+   "basis": "A1 measured (job 518 calibration); A2/A3 = A1 x 2.09; reference items = consumer x 2.03",
+   "measured_items": 1,
+   "measured_reference_items": 0,
+   "reference_item_gpu_s": 324.99000180730883
   },
   "L2/100": {
-   "assumed_consumer_item_gpu_s": 5.0112499999999995,
-   "assumed_reference_item_gpu_s": 10.439166666666667,
-   "consumer_item_gpu_s_measured": {
-    "max": 5.0112499999999995,
-    "median": 1.5060833333333334,
-    "n": 9
-   },
-   "consumer_items": 12,
-   "gpu_s": 91.45249999999999,
-   "kernels": 4,
-   "reference_item_gpu_s_measured": {
-    "max": 10.439166666666667,
-    "n": 3
-   },
-   "unmeasured": false
+   "A1_item_gpu_s": 5.893837876314726,
+   "A2_A3_item_gpu_s": 10.59398531317711,
+   "alone_run_items": 0,
+   "basis": "measured (713, 752)",
+   "measured_items": 18,
+   "measured_reference_items": 3,
+   "reference_item_gpu_s": 13.454914368342873
+  },
+  "L2/18": {
+   "A1_item_gpu_s": 1.3105909065766768,
+   "A2_A3_item_gpu_s": 1.5854403907602486,
+   "alone_run_items": 0,
+   "basis": "never measured: the costs of L2/95 (same size class), measured (713, 752)",
+   "measured_items": 21,
+   "measured_reference_items": 6,
+   "reference_item_gpu_s": 3.1707166524848556
   },
   "L2/46": {
-   "assumed_consumer_item_gpu_s": 3.1140833333333333,
-   "assumed_reference_item_gpu_s": 9.34225,
-   "consumer_item_gpu_s_measured": {
-    "max": 3.1140833333333333,
-    "median": 1.7040833333333334,
-    "n": 3
-   },
-   "consumer_items": 12,
-   "gpu_s": 65.39574999999999,
-   "kernels": 4,
-   "reference_item_gpu_s_measured": {
-    "max": null,
-    "n": 0
-   },
-   "unmeasured": false
+   "A1_item_gpu_s": 3.3258333433242075,
+   "A2_A3_item_gpu_s": 6.9622357646624256,
+   "alone_run_items": 0,
+   "basis": "measured (713, 752); reference items = consumer x 2.03",
+   "measured_items": 5,
+   "measured_reference_items": 0,
+   "reference_item_gpu_s": 14.10900411257916
   },
   "L2/52": {
-   "assumed_consumer_item_gpu_s": 5.0112499999999995,
-   "assumed_reference_item_gpu_s": 15.033749999999998,
-   "consumer_item_gpu_s_measured": {
-    "max": null,
-    "median": null,
-    "n": 0
-   },
-   "consumer_items": 9,
-   "gpu_s": 90.20249999999999,
-   "kernels": 3,
-   "reference_item_gpu_s_measured": {
-    "max": null,
-    "n": 0
-   },
-   "unmeasured": true
+   "A1_item_gpu_s": 7.367166638374329,
+   "A2_A3_item_gpu_s": 15.422285412127934,
+   "alone_run_items": 0,
+   "basis": "A1 measured (job 518 calibration); A2/A3 = A1 x 2.09; reference items = consumer x 2.03",
+   "measured_items": 1,
+   "measured_reference_items": 0,
+   "reference_item_gpu_s": 31.253335230257452
+  },
+  "L2/56": {
+   "A1_item_gpu_s": 1.3105909065766768,
+   "A2_A3_item_gpu_s": 1.5854403907602486,
+   "alone_run_items": 0,
+   "basis": "never measured: the costs of L2/95 (same size class), measured (713, 752)",
+   "measured_items": 21,
+   "measured_reference_items": 6,
+   "reference_item_gpu_s": 3.1707166524848556
   },
   "L2/59": {
-   "assumed_consumer_item_gpu_s": 21.333333333333332,
-   "assumed_reference_item_gpu_s": 23.217000007629395,
-   "consumer_item_gpu_s_measured": {
-    "max": 2.9796666666666667,
-    "median": 1.4740833333333334,
-    "n": 9
-   },
-   "consumer_items": 15,
-   "gpu_s": 389.6510000228882,
-   "kernels": 5,
-   "reference_item_gpu_s_measured": {
-    "max": 23.217000007629395,
-    "n": 4
-   },
-   "unmeasured": false
+   "A1_item_gpu_s": 3.104567174478011,
+   "A2_A3_item_gpu_s": 35.44799995422363,
+   "alone_run_items": 3,
+   "basis": "measured (713, 752)",
+   "measured_items": 21,
+   "measured_reference_items": 4,
+   "reference_item_gpu_s": 23.217000007629395
   },
   "L2/60": {
-   "assumed_consumer_item_gpu_s": 5.0112499999999995,
-   "assumed_reference_item_gpu_s": 15.033749999999998,
-   "consumer_item_gpu_s_measured": {
-    "max": null,
-    "median": null,
-    "n": 0
-   },
-   "consumer_items": 9,
-   "gpu_s": 90.20249999999999,
-   "kernels": 3,
-   "reference_item_gpu_s_measured": {
-    "max": null,
-    "n": 0
-   },
-   "unmeasured": true
+   "A1_item_gpu_s": 9.626166582107544,
+   "A2_A3_item_gpu_s": 20.1512325892916,
+   "alone_run_items": 0,
+   "basis": "A1 measured (job 518 calibration); A2/A3 = A1 x 2.09; reference items = consumer x 2.03",
+   "measured_items": 1,
+   "measured_reference_items": 0,
+   "reference_item_gpu_s": 40.83656932718649
   },
   "L2/77": {
-   "assumed_consumer_item_gpu_s": 2.7763333333333335,
-   "assumed_reference_item_gpu_s": 2.5204166666666667,
-   "consumer_item_gpu_s_measured": {
-    "max": 2.7763333333333335,
-    "median": 1.6729166666666666,
-    "n": 12
-   },
-   "consumer_items": 12,
-   "gpu_s": 40.877250000000004,
-   "kernels": 4,
-   "reference_item_gpu_s_measured": {
-    "max": 2.5204166666666667,
-    "n": 6
-   },
-   "unmeasured": false
+   "A1_item_gpu_s": 2.512229295692058,
+   "A2_A3_item_gpu_s": 3.0501909082586107,
+   "alone_run_items": 0,
+   "basis": "measured (713, 752)",
+   "measured_items": 21,
+   "measured_reference_items": 6,
+   "reference_item_gpu_s": 2.766918169368396
   },
   "L2/87": {
-   "assumed_consumer_item_gpu_s": 4.2515833333333335,
-   "assumed_reference_item_gpu_s": 3.466583333333333,
-   "consumer_item_gpu_s_measured": {
-    "max": 4.2515833333333335,
-    "median": 1.1438333333333335,
-    "n": 9
-   },
-   "consumer_items": 12,
-   "gpu_s": 61.41875,
-   "kernels": 4,
-   "reference_item_gpu_s_measured": {
-    "max": 3.466583333333333,
-    "n": 3
-   },
-   "unmeasured": false
+   "A1_item_gpu_s": 5.57618808803104,
+   "A2_A3_item_gpu_s": 7.618283329123543,
+   "alone_run_items": 0,
+   "basis": "measured (713, 752)",
+   "measured_items": 18,
+   "measured_reference_items": 3,
+   "reference_item_gpu_s": 5.74793888746746
   },
   "L2/95": {
-   "assumed_consumer_item_gpu_s": 1.4461666666666666,
-   "assumed_reference_item_gpu_s": 3.1707166524848556,
-   "consumer_item_gpu_s_measured": {
-    "max": 1.4461666666666666,
-    "median": 1.1105999968991132,
-    "n": 12
-   },
-   "consumer_items": 15,
-   "gpu_s": 31.204649957454563,
-   "kernels": 5,
-   "reference_item_gpu_s_measured": {
-    "max": 3.1707166524848556,
-    "n": 6
-   },
-   "unmeasured": false
+   "A1_item_gpu_s": 1.3105909065766768,
+   "A2_A3_item_gpu_s": 1.5854403907602486,
+   "alone_run_items": 0,
+   "basis": "measured (713, 752)",
+   "measured_items": 21,
+   "measured_reference_items": 6,
+   "reference_item_gpu_s": 3.1707166524848556
   }
  },
- "schema": "q1-audit-metric-study/pilot-cost/1",
- "total_gpu_hours": 0.2825864745651738,
- "total_gpu_seconds": 1017.3113084346256,
- "with_2x_safety_gpu_hours": 0.5651729491303475
+ "plans": {
+  "first_pass": {
+   "consumer_items": 138,
+   "kernels": 46,
+   "per_problem": {
+    "L1/10": {
+     "consumer_items": 15,
+     "gpu_s": 20.7,
+     "kernels": [
+      "substrate",
+      "identity",
+      "decoy-bundle",
+      "mutant",
+      "tl.dot-control"
+     ],
+     "reference_items": 3
+    },
+    "L1/15": {
+     "consumer_items": 12,
+     "gpu_s": 128.4,
+     "kernels": [
+      "substrate",
+      "identity",
+      "decoy-bundle",
+      "tl.dot-control"
+     ],
+     "reference_items": 3
+    },
+    "L1/18": {
+     "consumer_items": 15,
+     "gpu_s": 31.2,
+     "kernels": [
+      "substrate",
+      "identity",
+      "decoy-bundle",
+      "mutant",
+      "tl.dot-control"
+     ],
+     "reference_items": 3
+    },
+    "L2/100": {
+     "consumer_items": 12,
+     "gpu_s": 167.5,
+     "kernels": [
+      "substrate",
+      "identity",
+      "decoy-bundle",
+      "mutant"
+     ],
+     "reference_items": 3
+    },
+    "L2/46": {
+     "consumer_items": 12,
+     "gpu_s": 125.9,
+     "kernels": [
+      "substrate",
+      "identity",
+      "decoy-bundle",
+      "mutant"
+     ],
+     "reference_items": 3
+    },
+    "L2/52": {
+     "consumer_items": 9,
+     "gpu_s": 232.6,
+     "kernels": [
+      "substrate",
+      "identity",
+      "decoy-bundle"
+     ],
+     "reference_items": 3
+    },
+    "L2/59": {
+     "consumer_items": 15,
+     "gpu_s": 601.4,
+     "kernels": [
+      "substrate",
+      "identity",
+      "decoy-bundle",
+      "mutant",
+      "tl.dot-control"
+     ],
+     "reference_items": 3
+    },
+    "L2/60": {
+     "consumer_items": 9,
+     "gpu_s": 303.9,
+     "kernels": [
+      "substrate",
+      "identity",
+      "decoy-bundle"
+     ],
+     "reference_items": 3
+    },
+    "L2/77": {
+     "consumer_items": 12,
+     "gpu_s": 44.9,
+     "kernels": [
+      "substrate",
+      "identity",
+      "decoy-bundle",
+      "mutant"
+     ],
+     "reference_items": 3
+    },
+    "L2/87": {
+     "consumer_items": 12,
+     "gpu_s": 108.7,
+     "kernels": [
+      "substrate",
+      "identity",
+      "decoy-bundle",
+      "mutant"
+     ],
+     "reference_items": 3
+    },
+    "L2/95": {
+     "consumer_items": 15,
+     "gpu_s": 33.3,
+     "kernels": [
+      "substrate",
+      "identity",
+      "decoy-bundle",
+      "mutant",
+      "tl.dot-control"
+     ],
+     "reference_items": 3
+    }
+   },
+   "reference_items": 33,
+   "repilot_8_problems_gpu_h": 0.3148888888888889,
+   "total_gpu_h": 0.4995833333333333,
+   "total_with_2x_margin_gpu_h": 0.9991666666666666
+  },
+  "revised": {
+   "consumer_items": 180,
+   "kernels": 60,
+   "per_problem": {
+    "L1/10": {
+     "consumer_items": 15,
+     "gpu_s": 20.7,
+     "kernels": [
+      "substrate",
+      "identity",
+      "decoy-bundle",
+      "inductor-triton-template",
+      "mutant"
+     ],
+     "reference_items": 3
+    },
+    "L1/15": {
+     "consumer_items": 12,
+     "gpu_s": 128.4,
+     "kernels": [
+      "substrate",
+      "identity",
+      "decoy-bundle",
+      "inductor-triton-template"
+     ],
+     "reference_items": 3
+    },
+    "L1/18": {
+     "consumer_items": 15,
+     "gpu_s": 31.2,
+     "kernels": [
+      "substrate",
+      "identity",
+      "decoy-bundle",
+      "inductor-triton-template",
+      "mutant"
+     ],
+     "reference_items": 3
+    },
+    "L2/100": {
+     "consumer_items": 15,
+     "gpu_s": 199.3,
+     "kernels": [
+      "substrate",
+      "identity",
+      "decoy-bundle",
+      "cudnn-benchmark",
+      "mutant"
+     ],
+     "reference_items": 3
+    },
+    "L2/18": {
+     "consumer_items": 12,
+     "gpu_s": 28.5,
+     "kernels": [
+      "substrate",
+      "identity",
+      "decoy-bundle",
+      "inductor-reduction-variant"
+     ],
+     "reference_items": 3
+    },
+    "L2/46": {
+     "consumer_items": 15,
+     "gpu_s": 146.8,
+     "kernels": [
+      "substrate",
+      "identity",
+      "decoy-bundle",
+      "cudnn-benchmark",
+      "mutant"
+     ],
+     "reference_items": 3
+    },
+    "L2/52": {
+     "consumer_items": 12,
+     "gpu_s": 278.8,
+     "kernels": [
+      "substrate",
+      "identity",
+      "decoy-bundle",
+      "cudnn-benchmark"
+     ],
+     "reference_items": 3
+    },
+    "L2/56": {
+     "consumer_items": 12,
+     "gpu_s": 28.5,
+     "kernels": [
+      "substrate",
+      "identity",
+      "decoy-bundle",
+      "inductor-reduction-variant"
+     ],
+     "reference_items": 3
+    },
+    "L2/59": {
+     "consumer_items": 15,
+     "gpu_s": 601.4,
+     "kernels": [
+      "substrate",
+      "identity",
+      "decoy-bundle",
+      "inductor-triton-template",
+      "mutant"
+     ],
+     "reference_items": 3
+    },
+    "L2/60": {
+     "consumer_items": 12,
+     "gpu_s": 364.3,
+     "kernels": [
+      "substrate",
+      "identity",
+      "decoy-bundle",
+      "cudnn-benchmark"
+     ],
+     "reference_items": 3
+    },
+    "L2/77": {
+     "consumer_items": 15,
+     "gpu_s": 54.1,
+     "kernels": [
+      "substrate",
+      "identity",
+      "decoy-bundle",
+      "cudnn-benchmark",
+      "mutant"
+     ],
+     "reference_items": 3
+    },
+    "L2/87": {
+     "consumer_items": 15,
+     "gpu_s": 131.5,
+     "kernels": [
+      "substrate",
+      "identity",
+      "decoy-bundle",
+      "cudnn-benchmark",
+      "mutant"
+     ],
+     "reference_items": 3
+    },
+    "L2/95": {
+     "consumer_items": 15,
+     "gpu_s": 33.3,
+     "kernels": [
+      "substrate",
+      "identity",
+      "decoy-bundle",
+      "inductor-triton-template",
+      "mutant"
+     ],
+     "reference_items": 3
+    }
+   },
+   "reference_items": 39,
+   "repilot_8_problems_gpu_h": 0.33841666666666664,
+   "total_gpu_h": 0.5685555555555556,
+   "total_with_2x_margin_gpu_h": 1.1371111111111112
+  },
+  "revised_plus_L1_47": {
+   "consumer_items": 192,
+   "kernels": 64,
+   "per_problem": {
+    "L1/10": {
+     "consumer_items": 15,
+     "gpu_s": 20.7,
+     "kernels": [
+      "substrate",
+      "identity",
+      "decoy-bundle",
+      "inductor-triton-template",
+      "mutant"
+     ],
+     "reference_items": 3
+    },
+    "L1/15": {
+     "consumer_items": 12,
+     "gpu_s": 128.4,
+     "kernels": [
+      "substrate",
+      "identity",
+      "decoy-bundle",
+      "inductor-triton-template"
+     ],
+     "reference_items": 3
+    },
+    "L1/18": {
+     "consumer_items": 15,
+     "gpu_s": 31.2,
+     "kernels": [
+      "substrate",
+      "identity",
+      "decoy-bundle",
+      "inductor-triton-template",
+      "mutant"
+     ],
+     "reference_items": 3
+    },
+    "L1/47": {
+     "consumer_items": 12,
+     "gpu_s": 2899.4,
+     "kernels": [
+      "substrate",
+      "identity",
+      "decoy-bundle",
+      "inductor-reduction-variant"
+     ],
+     "reference_items": 3
+    },
+    "L2/100": {
+     "consumer_items": 15,
+     "gpu_s": 199.3,
+     "kernels": [
+      "substrate",
+      "identity",
+      "decoy-bundle",
+      "cudnn-benchmark",
+      "mutant"
+     ],
+     "reference_items": 3
+    },
+    "L2/18": {
+     "consumer_items": 12,
+     "gpu_s": 28.5,
+     "kernels": [
+      "substrate",
+      "identity",
+      "decoy-bundle",
+      "inductor-reduction-variant"
+     ],
+     "reference_items": 3
+    },
+    "L2/46": {
+     "consumer_items": 15,
+     "gpu_s": 146.8,
+     "kernels": [
+      "substrate",
+      "identity",
+      "decoy-bundle",
+      "cudnn-benchmark",
+      "mutant"
+     ],
+     "reference_items": 3
+    },
+    "L2/52": {
+     "consumer_items": 12,
+     "gpu_s": 278.8,
+     "kernels": [
+      "substrate",
+      "identity",
+      "decoy-bundle",
+      "cudnn-benchmark"
+     ],
+     "reference_items": 3
+    },
+    "L2/56": {
+     "consumer_items": 12,
+     "gpu_s": 28.5,
+     "kernels": [
+      "substrate",
+      "identity",
+      "decoy-bundle",
+      "inductor-reduction-variant"
+     ],
+     "reference_items": 3
+    },
+    "L2/59": {
+     "consumer_items": 15,
+     "gpu_s": 601.4,
+     "kernels": [
+      "substrate",
+      "identity",
+      "decoy-bundle",
+      "inductor-triton-template",
+      "mutant"
+     ],
+     "reference_items": 3
+    },
+    "L2/60": {
+     "consumer_items": 12,
+     "gpu_s": 364.3,
+     "kernels": [
+      "substrate",
+      "identity",
+      "decoy-bundle",
+      "cudnn-benchmark"
+     ],
+     "reference_items": 3
+    },
+    "L2/77": {
+     "consumer_items": 15,
+     "gpu_s": 54.1,
+     "kernels": [
+      "substrate",
+      "identity",
+      "decoy-bundle",
+      "cudnn-benchmark",
+      "mutant"
+     ],
+     "reference_items": 3
+    },
+    "L2/87": {
+     "consumer_items": 15,
+     "gpu_s": 131.5,
+     "kernels": [
+      "substrate",
+      "identity",
+      "decoy-bundle",
+      "cudnn-benchmark",
+      "mutant"
+     ],
+     "reference_items": 3
+    },
+    "L2/95": {
+     "consumer_items": 15,
+     "gpu_s": 33.3,
+     "kernels": [
+      "substrate",
+      "identity",
+      "decoy-bundle",
+      "inductor-triton-template",
+      "mutant"
+     ],
+     "reference_items": 3
+    }
+   },
+   "reference_items": 42,
+   "repilot_8_problems_gpu_h": 0.33841666666666664,
+   "total_gpu_h": 1.3739444444444444,
+   "total_with_2x_margin_gpu_h": 2.747888888888889
+  }
+ },
+ "schema": "q1-audit-metric-study/pilot-cost/2"
 }

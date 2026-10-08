@@ -14,6 +14,24 @@ Output: ``results.json`` with
    detection of every destroyed output class, per policy;
 4. ``restriction``: the registered metric restricted to determinate draws.
 
+Revision 2 (after the replication and the critique):
+
+* the emulation check compares with the stored realizations in which the device used
+  TF32 (at least twice the fp32 error), over every arm and job; the first pass took the
+  first stored realization and mislabelled three L2/100 draws;
+* ``held_out_informativeness``: how many held-out correct realizations differ from
+  every yardstick member at all (the first pass's "0 false rejects" was partly
+  by construction);
+* rule ``q1-audit-metric/1`` is re-evaluated with the absolute floor (2^-24 of the
+  oracle's max-abs and rms block norm), exactly for ``rho_inf`` and with conservative
+  bounds for ``rho_block`` where the floor binds;
+* ``alt_algorithms``: correct outputs of algorithms that are not yardstick members
+  (K-blocked sequential accumulation in fp32 and TF32, Winograd F(2x2,3x3) and
+  F(4x4,3x3), sequential sums, more stochastic-rounding seeds; ``alt_algorithms.py``),
+  scored with the oracle decoy battery on the same draws;
+* ``rule2``: the three-valued rule ``q1-audit-metric/2`` (accept, precision-ambiguous,
+  reject), evaluated on both record sets.
+
 All thresholds here are fitted on the same S1-cal draws they are evaluated on
 (the registered calibration does the same); the leave-one-problem-out check is
 the out-of-sample number.
@@ -336,10 +354,280 @@ def recommended_rule(records: list[dict[str, Any]]) -> dict[str, Any]:
     return out
 
 
+# --- revision 2 -----------------------------------------------------------------------------
+
+FLOOR_REL = 2.0**-24
+BLOCK = 4096
+
+
+def floor_terms(rec: dict[str, Any], policy: str) -> dict[str, float]:
+    """The absolute floor of rule q1-audit-metric/2 for one draw and policy: F_inf = 2^-24
+    ||r||_inf and F_b = 2^-24 (rms block norm of r), against the yardstick's max-abs error
+    and rms block noise."""
+    out, cond = rec["out"], rec["conditioning"]
+    ys = [y for y in YARDSTICKS[policy] if y in out["correct"]]
+    nblocks = -(-cond["numel"] // BLOCK)
+    return {
+        "ninf": max(out["correct"][y]["linf"] for y in ys),
+        "f_inf": FLOOR_REL * cond["r_inf"],
+        "rms": out["m2"][M2_SOURCE[policy]]["rms_block_noise_l2"],
+        "f_b": FLOOR_REL * cond["r_l2"] / math.sqrt(nblocks),
+    }
+
+
+def floored(rec: dict[str, Any], policy: str, group: str, name: str) -> tuple[float, float, bool]:
+    """(rho_inf, rho_block, exact) with the floor. rho_inf is exact. rho_block is exact where the
+    floor does not bind (rms block noise >= F_b); where it binds, a correct output gets its
+    unfloored value (an upper bound) and a destroyed output the lower bound M2 x rms / F_b."""
+    ft = floor_terms(rec, policy)
+    s = rec["out"][group][name]
+    rho_inf = s["linf"] / max(ft["ninf"], ft["f_inf"]) if max(ft["ninf"], ft["f_inf"]) > 0 else (0.0 if s["linf"] == 0 else math.inf)
+    if not s.get("finite", True):
+        rho_inf = math.inf
+    m2 = rec["out"]["m2"][M2_SOURCE[policy]][group].get(name, {}).get("phi_1.0", math.nan)
+    if ft["rms"] >= ft["f_b"]:
+        return rho_inf, m2, True
+    if group == "correct":
+        return rho_inf, m2, False
+    return rho_inf, (m2 * ft["rms"] / ft["f_b"]) if ft["rms"] > 0 else 0.0, False
+
+
+def recommended_rule_floored(records: list[dict[str, Any]]) -> dict[str, Any]:
+    """Rule q1-audit-metric/1 (thresholds as recommended) with the floor added."""
+    out: dict[str, Any] = {}
+    for policy, (t1, t2) in RECOMMENDED.items():
+        draws = indet = fr = 0
+        esc, cases = collections.Counter(), collections.Counter()
+        binding = set()
+        escaped: list[str] = []
+        for r in records:
+            draws += 1
+            ft = floor_terms(r, policy)
+            if ft["ninf"] < ft["f_inf"] or ft["rms"] < ft["f_b"]:
+                binding.add(f"{r['problem']} {r['config_id']}")
+
+            def sc(group: str, n: str) -> float:
+                ri, rb, _ = floored(r, policy, group, n)
+                return max(ri / t1, rb / t2)
+
+            if min(sc("destroyed", n) for n in BATTERY if n in r["out"]["destroyed"]) < 4:
+                indet += 1
+                continue
+            for n in HELD_OUT[policy] + YARDSTICKS[policy]:
+                if n in r["out"]["correct"] and physical(r, n) and sc("correct", n) > 1:
+                    fr += 1
+            for cls, names in CLASSES.items():
+                for n in names:
+                    if n not in r["out"]["destroyed"] or not effective(r, n):
+                        continue
+                    cases[cls] += 1
+                    if sc("destroyed", n) <= 1:
+                        esc[cls] += 1
+                        if cls != "precision_boundary":
+                            escaped.append(f"{r['problem']} {r['config_id']} {n}")
+        out[policy] = {"thetas": {"M1_linf": t1, "M2_phi1": t2}, "draws": draws, "indeterminate": indet, "false_rejects": fr,
+                       "escapes_by_class": dict(esc), "cases_by_class": dict(cases), "escaped_excluding_precision_boundary": escaped,
+                       "draws_where_floor_binds": sorted(binding)}
+    return out
+
+
+def held_out_informativeness(records: list[dict[str, Any]]) -> dict[str, Any]:
+    """Per policy: held-out correct realizations, and how many differ from every yardstick
+    member at all (same max-abs and L2 error = bitwise the same output, in practice)."""
+    out: dict[str, Any] = {}
+    for policy in ("strict", "tf32_rne_no_tl_dot", "tf32_ext"):
+        c = collections.defaultdict(lambda: {"cases": 0, "identical_to_a_yardstick_member": 0, "problems": set()})
+        for r in records:
+            ys = [r["out"]["correct"][y] for y in YARDSTICKS[policy] if y in r["out"]["correct"]]
+            for n in HELD_OUT[policy]:
+                if n not in r["out"]["correct"] or not physical(r, n):
+                    continue
+                s = r["out"]["correct"][n]
+                d = c[n]
+                d["cases"] += 1
+                d["problems"].add(r["problem"])
+                if any(s["linf"] == y["linf"] and s["l2"] == y["l2"] for y in ys):
+                    d["identical_to_a_yardstick_member"] += 1
+        out[policy] = {n: {**v, "problems": sorted(v["problems"])} for n, v in c.items()}
+    return out
+
+
+# --- rule q1-audit-metric/2 (three-valued) ------------------------------------------------
+
+#: policy -> yardstick key in the CPU records and alt records; thresholds
+#: (accept if rho_inf <= a_inf and rho_block <= a_blk; reject if rho_inf > R_inf or
+#: rho_block > R_blk; otherwise precision-ambiguous). The accept band is rule /1's. The
+#: reject thresholds were chosen after the critique's Winograd numbers and the first
+#: alternative-algorithm records were seen: in-sample, like every threshold in this study.
+RULE2: dict[str, dict[str, Any]] = {
+    "strict": {"cpu_yardstick": "strict", "alt_yardstick": "strict", "accept": (4.0, 16.0), "reject": (256.0, 256.0)},
+    "tf32": {"cpu_yardstick": "tf32_ext", "alt_yardstick": "tf32_ext", "accept": (4.0, 8.0), "reject": (64.0, 128.0)},
+    "tf32_rne_only": {"cpu_yardstick": "tf32_rne_no_tl_dot", "alt_yardstick": "tf32_rne", "accept": (4.0, 8.0), "reject": (64.0, 128.0)},
+    # sensitivity: reject thresholds doubled (2x margin over the worst valid algorithm seen)
+    "tf32_wide": {"cpu_yardstick": "tf32_ext", "alt_yardstick": "tf32_ext", "accept": (4.0, 8.0), "reject": (128.0, 256.0)},
+    "tf32_rne_only_wide": {"cpu_yardstick": "tf32_rne_no_tl_dot", "alt_yardstick": "tf32_rne", "accept": (4.0, 8.0), "reject": (128.0, 256.0)},
+}
+RULE2_GATE = 2.0  # a draw is determinate if every battery decoy scores >= 2x the reject threshold
+
+
+def verdict2(ri: float, rb: float, pol: dict[str, Any]) -> str:
+    (a1, a2), (r1, r2) = pol["accept"], pol["reject"]
+    if ri > r1 or rb > r2:
+        return "reject"
+    if ri <= a1 and rb <= a2:
+        return "accept"
+    return "ambiguous"
+
+
+def reject_score(ri: float, rb: float, pol: dict[str, Any]) -> float:
+    r1, r2 = pol["reject"]
+    return max(ri / r1, rb / r2)
+
+
+def rule2(records: list[dict[str, Any]], alt: list[dict[str, Any]]) -> dict[str, Any]:
+    out: dict[str, Any] = {}
+    for name, pol in RULE2.items():
+        ypol = pol["cpu_yardstick"]
+        corr_names = HELD_OUT[ypol] + YARDSTICKS[ypol]
+        res: dict[str, Any] = {"thresholds": {"accept": pol["accept"], "reject": pol["reject"], "gate": RULE2_GATE},
+                               "cpu_draws": 0, "cpu_indeterminate": [], "correct": collections.Counter(), "correct_not_accepted": [],
+                               "destroyed": collections.defaultdict(collections.Counter), "battery_min_reject_score": math.inf,
+                               "alt_draws": 0, "alt_indeterminate": [], "alt_correct": collections.defaultdict(collections.Counter),
+                               "alt_correct_not_accepted": [], "alt_decoys": collections.defaultdict(collections.Counter),
+                               "alt_max": collections.defaultdict(lambda: [0.0, 0.0])}
+        for r in records:
+            res["cpu_draws"] += 1
+            bat = []
+            for n in BATTERY:
+                if n in r["out"]["destroyed"]:
+                    ri, rb, _ = floored(r, ypol, "destroyed", n)
+                    bat.append(reject_score(ri, rb, pol))
+            bmin = min(bat)
+            res["battery_min_reject_score"] = min(res["battery_min_reject_score"], bmin)
+            if bmin < RULE2_GATE:
+                res["cpu_indeterminate"].append(f"{r['problem']} {r['config_id']} battery={bmin:.2f}")
+                continue
+            for n in corr_names:
+                if n in r["out"]["correct"] and physical(r, n):
+                    ri, rb, _ = floored(r, ypol, "correct", n)
+                    v = verdict2(ri, rb, pol)
+                    res["correct"][v] += 1
+                    if v != "accept":
+                        res["correct_not_accepted"].append(f"{r['problem']} {r['config_id']} {n} {v} rho_inf={ri:.2f} rho_block={rb:.2f}")
+            for cls, names in CLASSES.items():
+                for n in names:
+                    if n in r["out"]["destroyed"] and effective(r, n):
+                        ri, rb, _ = floored(r, ypol, "destroyed", n)
+                        res["destroyed"][cls][verdict2(ri, rb, pol)] += 1
+        for a in alt:
+            res["alt_draws"] += 1
+            ap = pol["alt_yardstick"]
+            bmin = min(reject_score(a["decoys"][n]["scores"][ap]["rho_inf"], a["decoys"][n]["scores"][ap]["rho_block"], pol) for n in BATTERY if n in a["decoys"])
+            if bmin < RULE2_GATE:
+                res["alt_indeterminate"].append(f"{a['problem']} {a['config_id']} battery={bmin:.2f}")
+                continue
+            for n, v in a["alternatives"].items():
+                if ap not in v["correct_under"] and not (name.startswith("tf32_rne_only") and "rz" in n):
+                    continue
+                if not alt_physical(a, n):
+                    continue
+                sc = v["scores"][ap]
+                vd = verdict2(sc["rho_inf"], sc["rho_block"], pol)
+                cls = alt_class(n)
+                res["alt_correct"][cls][vd] += 1
+                mx = res["alt_max"][cls]
+                mx[0], mx[1] = max(mx[0], sc["rho_inf"]), max(mx[1], sc["rho_block"])
+                if vd != "accept":
+                    res["alt_correct_not_accepted"].append(f"{a['problem']} {a['config_id']} {n} {vd} rho_inf={sc['rho_inf']:.2f} rho_block={sc['rho_block']:.2f}")
+            for n, v in a["decoys"].items():
+                sc = v["scores"][ap]
+                res["alt_decoys"][n][verdict2(sc["rho_inf"], sc["rho_block"], pol)] += 1
+        res["correct"] = dict(res["correct"])
+        res["destroyed"] = {k: dict(v) for k, v in res["destroyed"].items()}
+        res["alt_correct"] = {k: dict(v) for k, v in res["alt_correct"].items()}
+        res["alt_decoys"] = {k: dict(v) for k, v in res["alt_decoys"].items()}
+        res["alt_max"] = {k: {"rho_inf": v[0], "rho_block": v[1]} for k, v in res["alt_max"].items()}
+        out[name] = res
+    return out
+
+
+def alt_physical(a: dict[str, Any], name: str) -> bool:
+    """As ``physical``: stochastic rounding on A2/constrows is not a hardware TF32 mode."""
+    return not (name.startswith("tf32_sr") and "/constrows/" in a["config_id"])
+
+
+def alt_class(name: str) -> str:
+    for k in ("wino43", "wino23", "seq1", "kblock32", "kblock", "tf32_sr"):
+        if name.startswith(k):
+            return name.rsplit("_s", 1)[0] if k == "tf32_sr" else name
+    return name
+
+
+def alt_summary(alt: list[dict[str, Any]]) -> dict[str, Any]:
+    """Per yardstick and alternative: the largest rho_inf / rho_block of the valid alternative
+    algorithms, admissible draws and all draws, and how many exceed the q1-audit-metric/1
+    thresholds; and the decoy battery's smallest raw ratios on the same draws."""
+    out: dict[str, Any] = {}
+    for yp in ("strict", "tf32_rne", "tf32_ext"):
+        t1, t2 = (4.0, 16.0) if yp == "strict" else (4.0, 8.0)
+        per: dict[str, Any] = {}
+        for a in alt:
+            for n, v in a["alternatives"].items():
+                sc = v["scores"][yp]
+                if not alt_physical(a, n):
+                    d = per.setdefault("tf32_sr_on_constrows (excluded)", {}).setdefault("all", {"draws": 0, "max_rho_inf": 0.0, "max_rho_block": 0.0})
+                    d["draws"] += 1
+                    d["max_rho_inf"] = max(d["max_rho_inf"], sc["rho_inf"])
+                    d["max_rho_block"] = max(d["max_rho_block"], sc["rho_block"])
+                    continue
+                for sub in ("all", "admissible") if a.get("admissible") else ("all",):
+                    d = per.setdefault(n, {}).setdefault(sub, {"draws": 0, "max_rho_inf": 0.0, "max_rho_block": 0.0, "worst": None, "over_rule1": 0, "over_rule1_draws": [], "problems": set(), "correct_under_this_yardstick": yp in v["correct_under"]})
+                    d["draws"] += 1
+                    d["problems"].add(a["problem"])
+                    if sc["rho_inf"] > d["max_rho_inf"]:
+                        d["worst"] = f"{a['problem']} {a['config_id']}"
+                    d["max_rho_inf"] = max(d["max_rho_inf"], sc["rho_inf"])
+                    d["max_rho_block"] = max(d["max_rho_block"], sc["rho_block"])
+                    if sc["rho_inf"] > t1 or sc["rho_block"] > t2:
+                        d["over_rule1"] += 1
+                        d["over_rule1_draws"].append(f"{a['problem']} {a['config_id'].rsplit('/', 1)[0]} {sc['rho_inf']:.1f}/{sc['rho_block']:.1f}")
+        for n in per:
+            for sub in per[n]:
+                if "problems" in per[n][sub]:
+                    per[n][sub]["problems"] = sorted(per[n][sub]["problems"])
+        dec: dict[str, Any] = {}
+        for a in alt:
+            for n, v in a["decoys"].items():
+                sc = v["scores"][yp]
+                d = dec.setdefault(n, {"min_rho_inf": math.inf, "min_rho_block": math.inf, "min_max_over_rule1": math.inf, "at": None})
+                d["min_rho_inf"] = min(d["min_rho_inf"], sc["rho_inf"])
+                d["min_rho_block"] = min(d["min_rho_block"], sc["rho_block"])
+                m = max(sc["rho_inf"] / t1, sc["rho_block"] / t2)
+                if m < d["min_max_over_rule1"]:
+                    d["min_max_over_rule1"], d["at"] = m, f"{a['problem']} {a['config_id']}"
+        out[yp] = {"alternatives": per, "decoys": dec, "rule1_thresholds": [t1, t2]}
+    return out
+
+
+def load_alt(alt_dir: Path, stored: dict[tuple, dict[str, Any]], cpu_adm: dict[tuple, bool]) -> list[dict[str, Any]]:
+    recs = []
+    for f in sorted(glob.glob(str(alt_dir / "*.json"))):
+        a = json.loads(Path(f).read_text())
+        key = (a["problem"], a["config_id"])
+        if key in cpu_adm:
+            a["admissible"] = cpu_adm[key]
+        else:
+            st = stored.get((a["problem"], a["channel"], "/".join(a["config_id"].split("/")[:2]), int(a["config_id"].rsplit("seed-", 1)[1])))
+            a["admissible"] = bool(st["admissible"]) if st and st.get("admissible") is not None else a["channel"] == "A1"
+        recs.append(a)
+    return recs
+
+
 def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--stored", default=str(HERE / "stored-characterisation.json"))
     ap.add_argument("--cpu", required=True)
+    ap.add_argument("--alt", default=str(HERE / "alt"))
     ap.add_argument("--out", default=str(HERE / "results.json"))
     a = ap.parse_args()
     stored_doc = json.loads(Path(a.stored).read_text())
@@ -348,7 +636,7 @@ def main() -> None:
     for row in sorted(stored_doc["rows"], key=lambda x: (x["arm"] != "inline", x["job"])):
         key = (row["problem"], row["channel"], row["config"], row["seed"])
         st = stored.setdefault(key, {"realizations": [], "admissible_votes": []})
-        real = (row["e_dev"], row["e_cpu"], row["e_tf32"], row["arm"], row["job"])
+        real = (row["e_dev"], row["e_cpu"], row["e_tf32"], row["arm"], row["job"], row["device_used_tf32"])
         if real[:3] not in [x[:3] for x in st["realizations"]]:
             st["realizations"].append(real)
         if row["admissible"] is not None:
@@ -356,6 +644,10 @@ def main() -> None:
     for st in stored.values():
         st["admissible"] = (sum(st["admissible_votes"]) * 2 >= len(st["admissible_votes"])) if st["admissible_votes"] else None
         st["e_dev"], st["e_cpu"], st["e_tf32"] = st["realizations"][0][:3]
+        tf = sorted(x[2] for x in st["realizations"] if x[5])
+        st["tf32_realizations_e"] = tf
+        st["device_used_tf32"] = bool(tf)
+        st["e_tf32_used"] = tf[len(tf) // 2] if tf else None
     recs = load_cpu(Path(a.cpu))
     for r in recs:
         r["admissible"] = admissible_cpu(r, stored)
@@ -368,17 +660,20 @@ def main() -> None:
         if st is None or st.get("e_tf32") is None:
             continue
         c = r["out"]["correct"]
-        device_used_tf32 = st["e_tf32"] != st["e_dev"]
-        other_realizations = [{"e_dev": x[0], "e_cpu": x[1], "e_tf32": x[2], "arm": x[3], "job": x[4]} for x in st["realizations"][1:]]
+        # compare with the stored realizations in which the device used TF32 (median if
+        # several); a draw where no stored realization used TF32 is reported, not compared
+        device_used_tf32 = st["device_used_tf32"]
+        stored_e = st["e_tf32_used"] if device_used_tf32 else st["e_tf32"]
+        other_realizations = [{"e_dev": x[0], "e_cpu": x[1], "e_tf32": x[2], "arm": x[3], "job": x[4], "device_used_tf32": x[5]} for x in st["realizations"]]
         bitwise_inputs = not any(t in r["config_id"] for t in ("randn", "constrows"))
         val_rows.append({
             "problem": r["problem"], "config": r["config_id"], "bitwise_inputs": bitwise_inputs,
-            "device_used_tf32": device_used_tf32,
-            "stored_e_tf32": st["e_tf32"], "cpu_e_tf32_rne": c["tf32_rne"]["e_reg"], "cpu_e_tf32_rz": c["tf32_rz"]["e_reg"],
-            "rne_over_stored": c["tf32_rne"]["e_reg"] / st["e_tf32"] if st["e_tf32"] else None,
+            "device_used_tf32": device_used_tf32, "stored_tf32_realizations_e": st["tf32_realizations_e"],
+            "stored_e_tf32": stored_e, "cpu_e_tf32_rne": c["tf32_rne"]["e_reg"], "cpu_e_tf32_rz": c["tf32_rz"]["e_reg"],
+            "rne_over_stored": c["tf32_rne"]["e_reg"] / stored_e if stored_e else None,
             "stored_e_device": st["e_dev"], "stored_e_cpu_x86": st["e_cpu"], "cpu_e_fp32_arm": c["fp32"]["e_reg"],
             "fp32_arm_over_device": c["fp32"]["e_reg"] / st["e_dev"] if st["e_dev"] else None,
-            "batch": r.get("batch"), "other_stored_realizations": other_realizations,
+            "batch": r.get("batch"), "stored_realizations": other_realizations,
         })
     full = [v for v in val_rows if not v["batch"] or v["batch"]["evaluated"] == v["batch"]["full"]]
     used = [v["rne_over_stored"] for v in full if v["device_used_tf32"] and v["rne_over_stored"]]
@@ -433,6 +728,14 @@ def main() -> None:
     adm = [r for r in recs if r["admissible"]]
     cand = {"admissible_draws": eval_candidates(adm), "all_draws": eval_candidates(recs)}
     recommended = {"admissible_draws": recommended_rule(adm), "all_draws": recommended_rule(recs)}
+    recommended_floor = {"admissible_draws": recommended_rule_floored(adm), "all_draws": recommended_rule_floored(recs)}
+    informativeness = {"admissible_draws": held_out_informativeness(adm), "all_draws": held_out_informativeness(recs)}
+    cpu_adm = {(r["problem"], r["config_id"]): bool(r["admissible"]) for r in recs}
+    alt = load_alt(Path(a.alt), stored, cpu_adm)
+    alt_adm = [x for x in alt if x["admissible"]]
+    alt_res = {"records": len(alt), "admissible_records": len(alt_adm), "problems": dict(collections.Counter(x["problem"] for x in alt)),
+               "summary": alt_summary(alt)}
+    rule2_res = {"all_draws": rule2(recs, alt), "admissible_draws": rule2(adm, alt_adm)}
     # per-draw table of the main candidates (compact)
     table = []
     for r in adm:
@@ -455,20 +758,21 @@ def main() -> None:
     # 4. restriction of the registered metric (stored inline rows): a draw row is determinate
     # only if the all-zeros output fails it with margin m (T * m < e(0) = 1/(1+kappa))
     restriction: dict[str, Any] = {}
-    for margin in (1.0, 4.0):
-        per_problem: dict[str, Any] = {}
-        for row in stored_doc["rows"]:
-            if row["arm"] != "inline" or not row["admissible"] or row["tier"] != "tier1":
-                continue
-            for pol, t in row["T"].items():
-                if t is None:
+    for arm_sel in ("inline", "all_arms"):
+        for margin in (1.0, 4.0):
+            per_problem: dict[str, Any] = {}
+            for row in stored_doc["rows"]:
+                if (arm_sel == "inline" and row["arm"] != "inline") or not row["admissible"] or row["tier"] != "tier1":
                     continue
-                c = per_problem.setdefault(row["problem"], {}).setdefault(pol, collections.Counter())
-                c[f"{row['channel']}_rows"] += 1
-                c[f"{row['channel']}_determinate"] += t * margin < E_ZEROS
-        restriction[f"zeros_margin_{margin:g}"] = {p: {pol: dict(c) for pol, c in v.items()} for p, v in sorted(per_problem.items())}
+                for pol, t in row["T"].items():
+                    if t is None:
+                        continue
+                    c = per_problem.setdefault(row["problem"], {}).setdefault(pol, collections.Counter())
+                    c[f"{row['channel']}_rows"] += 1
+                    c[f"{row['channel']}_determinate"] += t * margin < E_ZEROS
+            restriction[f"{arm_sel}_zeros_margin_{margin:g}"] = {p: {pol: dict(c) for pol, c in v.items()} for p, v in sorted(per_problem.items())}
     result = {
-        "schema": "q1-audit-metric-study/results/1",
+        "schema": "q1-audit-metric-study/results/2",
         "inputs": {"stored": Path(a.stored).name, "cpu_records": len(recs), "cpu_admissible_records": len(adm),
                    "problems": sorted({r["problem"] for r in recs}),
                    "records_per_problem": dict(collections.Counter(r["problem"] for r in recs))},
@@ -476,6 +780,10 @@ def main() -> None:
         "characterisation": char,
         "candidates": cand,
         "recommended_rule": recommended,
+        "recommended_rule_with_floor": recommended_floor,
+        "held_out_informativeness": informativeness,
+        "alt_algorithms": alt_res,
+        "rule2": rule2_res,
         "per_draw_table": table,
         "restriction": restriction,
     }
@@ -485,7 +793,17 @@ def main() -> None:
     for subset, rr in recommended.items():
         for policy, x in rr.items():
             print("RECOMMENDED", subset, policy, x["thetas"], "draws", x["draws"], "indeterminate", x["indeterminate"], "FR", x["false_rejects"], "escapes", x["escapes_by_class"], "of", x["cases_by_class"])
+    for subset, rr in recommended_floor.items():
+        for policy, x in rr.items():
+            print("RULE1+FLOOR", subset, policy, "indeterminate", x["indeterminate"], "FR", x["false_rejects"], "escapes", x["escapes_by_class"], "floor binds on", len(x["draws_where_floor_binds"]))
     print("emulation rne/stored", emulation["rne_over_stored_tf32_where_device_used_tf32"])
+    print("emulation batch-subset", emulation["batch_subset_draws_rne_over_stored_full_batch"])
+    for pol, v in informativeness["admissible_draws"].items():
+        print("held-out informativeness", pol, {n: (d["cases"], d["identical_to_a_yardstick_member"]) for n, d in v.items()})
+    for subset, rr in rule2_res.items():
+        for name, x in rr.items():
+            print("RULE2", subset, name, "cpu draws", x["cpu_draws"], "indet", len(x["cpu_indeterminate"]), "correct", x["correct"], "| destroyed", x["destroyed"],
+                  "| battery min reject score %.2f" % x["battery_min_reject_score"], "| alt draws", x["alt_draws"], "indet", len(x["alt_indeterminate"]), "alt correct", x["alt_correct"])
     for subset, cs in cand.items():
         print("==", subset)
         for policy, pol in cs.items():
