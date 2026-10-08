@@ -1,0 +1,674 @@
+{
+ "wave-1 draft (reproduced by this file with LF=1, no seed read)": {
+  "central": {
+   "rows": {
+    "probe-4b": [
+     null,
+     15,
+     0.25
+    ],
+    "smoke": [
+     7.8,
+     14,
+     0.24
+    ],
+    "dev-prestep": [
+     16.7,
+     27,
+     0.45
+    ],
+    "h2-gate": [
+     37.8,
+     56,
+     0.94
+    ],
+    "R0": [
+     9.4,
+     16,
+     0.27
+    ],
+    "R1": [
+     6.5,
+     12,
+     0.2
+    ],
+    "R2": [
+     7.0,
+     13,
+     0.22
+    ],
+    "main": [
+     106.6,
+     151,
+     2.52
+    ],
+    "extension": [
+     89.6,
+     127,
+     2.12
+    ]
+   },
+   "total_caps": 7.21,
+   "expected_use_no_ext": 3.3,
+   "ext_use": 1.49,
+   "step": 3.06,
+   "use_if_dev_stop": 0.51,
+   "use_if_h2_stop": 1.14
+  },
+  "high": {
+   "rows": {
+    "probe-4b": [
+     null,
+     15,
+     0.25
+    ],
+    "smoke": [
+     9.6,
+     17,
+     0.29
+    ],
+    "dev-prestep": [
+     24.1,
+     37,
+     0.62
+    ],
+    "h2-gate": [
+     55.6,
+     80,
+     1.34
+    ],
+    "R0": [
+     12.1,
+     20,
+     0.34
+    ],
+    "R1": [
+     7.9,
+     14,
+     0.24
+    ],
+    "R2": [
+     8.5,
+     15,
+     0.25
+    ],
+    "main": [
+     148.4,
+     208,
+     3.47
+    ],
+    "extension": [
+     127.0,
+     179,
+     2.99
+    ]
+   },
+   "total_caps": 9.79,
+   "expected_use_no_ext": 4.54,
+   "ext_use": 2.12,
+   "step": 5.05,
+   "use_if_dev_stop": 0.66,
+   "use_if_h2_stop": 1.59
+  }
+ },
+ "repaired: 3 seeds, CS dropped (registered)": {
+  "central": {
+   "rows": {
+    "probe-4b": [
+     null,
+     15,
+     0.25
+    ],
+    "smoke": [
+     7.8,
+     14,
+     0.24
+    ],
+    "dev-prestep": [
+     17.3,
+     27,
+     0.45
+    ],
+    "h2-gate": [
+     37.8,
+     56,
+     0.94
+    ],
+    "R0": [
+     9.4,
+     16,
+     0.27
+    ],
+    "R1": [
+     6.5,
+     12,
+     0.2
+    ],
+    "R2": [
+     7.0,
+     13,
+     0.22
+    ],
+    "main": [
+     93.1,
+     132,
+     2.2
+    ],
+    "extension": [
+     91.5,
+     130,
+     2.17
+    ]
+   },
+   "total_caps": 6.94,
+   "expected_use_no_ext": 3.08,
+   "ext_use": 1.53,
+   "step": 3.06,
+   "use_if_dev_stop": 0.52,
+   "use_if_h2_stop": 1.15
+  },
+  "high": {
+   "rows": {
+    "probe-4b": [
+     null,
+     15,
+     0.25
+    ],
+    "smoke": [
+     9.6,
+     17,
+     0.29
+    ],
+    "dev-prestep": [
+     25.0,
+     38,
+     0.64
+    ],
+    "h2-gate": [
+     55.6,
+     80,
+     1.34
+    ],
+    "R0": [
+     12.1,
+     20,
+     0.34
+    ],
+    "R1": [
+     7.9,
+     14,
+     0.24
+    ],
+    "R2": [
+     8.5,
+     15,
+     0.25
+    ],
+    "main": [
+     130.8,
+     184,
+     3.07
+    ],
+    "extension": [
+     129.5,
+     182,
+     3.04
+    ]
+   },
+   "total_caps": 9.46,
+   "expected_use_no_ext": 4.26,
+   "ext_use": 2.16,
+   "step": 5.05,
+   "use_if_dev_stop": 0.68,
+   "use_if_h2_stop": 1.6
+  }
+ },
+ "repaired: 3 seeds, CS kept": {
+  "central": {
+   "rows": {
+    "probe-4b": [
+     null,
+     15,
+     0.25
+    ],
+    "smoke": [
+     7.8,
+     14,
+     0.24
+    ],
+    "dev-prestep": [
+     17.3,
+     27,
+     0.45
+    ],
+    "h2-gate": [
+     37.8,
+     56,
+     0.94
+    ],
+    "R0": [
+     9.4,
+     16,
+     0.27
+    ],
+    "R1": [
+     6.5,
+     12,
+     0.2
+    ],
+    "R2": [
+     7.0,
+     13,
+     0.22
+    ],
+    "main": [
+     112.1,
+     158,
+     2.64
+    ],
+    "extension": [
+     91.5,
+     130,
+     2.17
+    ]
+   },
+   "total_caps": 7.38,
+   "expected_use_no_ext": 3.4,
+   "ext_use": 1.53,
+   "step": 3.06,
+   "use_if_dev_stop": 0.52,
+   "use_if_h2_stop": 1.15
+  },
+  "high": {
+   "rows": {
+    "probe-4b": [
+     null,
+     15,
+     0.25
+    ],
+    "smoke": [
+     9.6,
+     17,
+     0.29
+    ],
+    "dev-prestep": [
+     25.0,
+     38,
+     0.64
+    ],
+    "h2-gate": [
+     55.6,
+     80,
+     1.34
+    ],
+    "R0": [
+     12.1,
+     20,
+     0.34
+    ],
+    "R1": [
+     7.9,
+     14,
+     0.24
+    ],
+    "R2": [
+     8.5,
+     15,
+     0.25
+    ],
+    "main": [
+     155.5,
+     218,
+     3.64
+    ],
+    "extension": [
+     129.5,
+     182,
+     3.04
+    ]
+   },
+   "total_caps": 10.03,
+   "expected_use_no_ext": 4.67,
+   "ext_use": 2.16,
+   "step": 5.05,
+   "use_if_dev_stop": 0.68,
+   "use_if_h2_stop": 1.6
+  }
+ },
+ "repaired: 5 seeds, CS dropped (owner option)": {
+  "central": {
+   "rows": {
+    "probe-4b": [
+     null,
+     15,
+     0.25
+    ],
+    "smoke": [
+     9.5,
+     17,
+     0.29
+    ],
+    "dev-prestep": [
+     17.3,
+     27,
+     0.45
+    ],
+    "h2-gate": [
+     37.8,
+     56,
+     0.94
+    ],
+    "R0": [
+     13.1,
+     22,
+     0.37
+    ],
+    "R1": [
+     8.4,
+     15,
+     0.25
+    ],
+    "R2": [
+     9.5,
+     17,
+     0.29
+    ],
+    "main": [
+     109.9,
+     155,
+     2.59
+    ],
+    "extension": [
+     102.7,
+     145,
+     2.42
+    ]
+   },
+   "total_caps": 7.85,
+   "expected_use_no_ext": 3.52,
+   "ext_use": 1.71,
+   "step": 4.14,
+   "use_if_dev_stop": 0.55,
+   "use_if_h2_stop": 1.18
+  },
+  "high": {
+   "rows": {
+    "probe-4b": [
+     null,
+     15,
+     0.25
+    ],
+    "smoke": [
+     11.9,
+     20,
+     0.34
+    ],
+    "dev-prestep": [
+     25.0,
+     38,
+     0.64
+    ],
+    "h2-gate": [
+     55.6,
+     80,
+     1.34
+    ],
+    "R0": [
+     17.1,
+     27,
+     0.45
+    ],
+    "R1": [
+     10.6,
+     18,
+     0.3
+    ],
+    "R2": [
+     11.8,
+     20,
+     0.34
+    ],
+    "main": [
+     157.6,
+     221,
+     3.69
+    ],
+    "extension": [
+     147.3,
+     207,
+     3.45
+    ]
+   },
+   "total_caps": 10.8,
+   "expected_use_no_ext": 4.93,
+   "ext_use": 2.45,
+   "step": 6.94,
+   "use_if_dev_stop": 0.71,
+   "use_if_h2_stop": 1.64
+  }
+ },
+ "repaired: 5 seeds, CS kept": {
+  "central": {
+   "rows": {
+    "probe-4b": [
+     null,
+     15,
+     0.25
+    ],
+    "smoke": [
+     9.5,
+     17,
+     0.29
+    ],
+    "dev-prestep": [
+     17.3,
+     27,
+     0.45
+    ],
+    "h2-gate": [
+     37.8,
+     56,
+     0.94
+    ],
+    "R0": [
+     13.1,
+     22,
+     0.37
+    ],
+    "R1": [
+     8.4,
+     15,
+     0.25
+    ],
+    "R2": [
+     9.5,
+     17,
+     0.29
+    ],
+    "main": [
+     128.9,
+     181,
+     3.02
+    ],
+    "extension": [
+     102.7,
+     145,
+     2.42
+    ]
+   },
+   "total_caps": 8.28,
+   "expected_use_no_ext": 3.84,
+   "ext_use": 1.71,
+   "step": 4.14,
+   "use_if_dev_stop": 0.55,
+   "use_if_h2_stop": 1.18
+  },
+  "high": {
+   "rows": {
+    "probe-4b": [
+     null,
+     15,
+     0.25
+    ],
+    "smoke": [
+     11.9,
+     20,
+     0.34
+    ],
+    "dev-prestep": [
+     25.0,
+     38,
+     0.64
+    ],
+    "h2-gate": [
+     55.6,
+     80,
+     1.34
+    ],
+    "R0": [
+     17.1,
+     27,
+     0.45
+    ],
+    "R1": [
+     10.6,
+     18,
+     0.3
+    ],
+    "R2": [
+     11.8,
+     20,
+     0.34
+    ],
+    "main": [
+     182.2,
+     255,
+     4.25
+    ],
+    "extension": [
+     147.3,
+     207,
+     3.45
+    ]
+   },
+   "total_caps": 11.36,
+   "expected_use_no_ext": 5.34,
+   "ext_use": 2.45,
+   "step": 6.94,
+   "use_if_dev_stop": 0.71,
+   "use_if_h2_stop": 1.64
+  }
+ },
+ "repaired: 3 seeds, CS dropped, 3,220 H2 cells (all unseen CX)": {
+  "central": {
+   "rows": {
+    "probe-4b": [
+     null,
+     15,
+     0.25
+    ],
+    "smoke": [
+     7.8,
+     14,
+     0.24
+    ],
+    "dev-prestep": [
+     17.3,
+     27,
+     0.45
+    ],
+    "h2-gate": [
+     59.2,
+     85,
+     1.42
+    ],
+    "R0": [
+     9.4,
+     16,
+     0.27
+    ],
+    "R1": [
+     6.5,
+     12,
+     0.2
+    ],
+    "R2": [
+     7.0,
+     13,
+     0.22
+    ],
+    "main": [
+     93.1,
+     132,
+     2.2
+    ],
+    "extension": [
+     91.5,
+     130,
+     2.17
+    ]
+   },
+   "total_caps": 7.42,
+   "expected_use_no_ext": 3.44,
+   "ext_use": 1.53,
+   "step": 3.06,
+   "use_if_dev_stop": 0.52,
+   "use_if_h2_stop": 1.5
+  },
+  "high": {
+   "rows": {
+    "probe-4b": [
+     null,
+     15,
+     0.25
+    ],
+    "smoke": [
+     9.6,
+     17,
+     0.29
+    ],
+    "dev-prestep": [
+     25.0,
+     38,
+     0.64
+    ],
+    "h2-gate": [
+     87.8,
+     125,
+     2.09
+    ],
+    "R0": [
+     12.1,
+     20,
+     0.34
+    ],
+    "R1": [
+     7.9,
+     14,
+     0.24
+    ],
+    "R2": [
+     8.5,
+     15,
+     0.25
+    ],
+    "main": [
+     130.8,
+     184,
+     3.07
+    ],
+    "extension": [
+     129.5,
+     182,
+     3.04
+    ]
+   },
+   "total_caps": 10.21,
+   "expected_use_no_ext": 4.79,
+   "ext_use": 2.16,
+   "step": 5.05,
+   "use_if_dev_stop": 0.68,
+   "use_if_h2_stop": 2.14
+  }
+ }
+}

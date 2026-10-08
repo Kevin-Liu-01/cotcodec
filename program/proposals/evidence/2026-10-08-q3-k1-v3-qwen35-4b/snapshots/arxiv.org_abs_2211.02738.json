@@ -1,0 +1,33 @@
+{
+ "url": "https://arxiv.org/abs/2211.02738",
+ "fetched_at": "2026-10-08T16:31:40Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 43063,
+ "raw_sha256": "302803f61f8d2e3c698be69b21ae7f07ab624e8e99390a2bd2ce201b9b79f2a9",
+ "raw_stored": false,
+ "extract": {
+  "title": "Intriguing Properties of Compression on Multilingual Models",
+  "authors": [
+   "Ogueji, Kelechi",
+   "Ahia, Orevaoghene",
+   "Onilude, Gbemileke",
+   "Gehrmann, Sebastian",
+   "Hooker, Sara",
+   "Kreutzer, Julia"
+  ],
+  "citation_date": "2022/11/04",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Fri, 4 Nov 2022 20:28:01 UTC"
+   },
+   {
+    "version": "v2",
+    "date": "Sat, 26 Nov 2022 02:15:47 UTC"
+   }
+  ],
+  "abstract": "Multilingual models are often particularly dependent on scaling to generalize to a growing number of languages. Compression techniques are widely relied upon to reconcile the growth in model size with real world resource constraints, but compression can have a disparate effect on model performance for low-resource languages. It is thus crucial to understand the trade-offs between scale, multilingualism, and compression. In this work, we propose an experimental framework to characterize the impact of sparsifying multilingual pre-trained language models during fine-tuning. Applying this framework to mBERT named entity recognition models across 40 languages, we find that compression confers several intriguing and previously unknown generalization properties. In contrast to prior findings, we find that compression may improve model robustness over dense models. We additionally observe that under certain sparsification regimes compression may aid, rather than disproportionately impact the performance of low-resource languages.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}
