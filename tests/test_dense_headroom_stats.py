@@ -221,27 +221,81 @@ def test_an_invalid_lane_invalidates_the_combined_read(classes) -> None:
     assert (read["design"], read["base"], read["requirements"]) == ("INVALID", None, [])
 
 
-def test_the_floor_is_judged_on_the_nulls_lower_bound() -> None:
+def _floor_case() -> tuple[dict, dhs.Results, dict]:
+    """A lane whose floor conditions (a) and (b) hold, with its null block."""
+
     levels = {"T:MN": 45, "T:CX": 40, "T:ML": 80, "rand": 12, "LEX:MN": 15,
               "acc:CX": 0.95, "acc:absent": 0.1, "acc:MN": 0.95}
     artifact, results = doctor._results_fixture(levels, SEEDS)
-    features = artifact["features"]
-    controlled = dhs.question_sets(features)["controlled"]
+    controlled = dhs.question_sets(artifact["features"])["controlled"]
     null = dhs.null_block(artifact["prompts"], results, SEEDS, 200, controlled)
-    for block in null["hs"]["sigmas"].values():
-        block["english_ml"]["v1_pass"] = True
-        block["g_mn_controlled"] = {"evaluable": True, "point": 0.55, "lower": 0.05,
-                                    "upper": 0.9}
-    wide = dhs.floor_block(artifact["prompts"], results, features, null, "hs", 200)
+    return artifact, results, null
+
+
+def _set_nulls(null: dict, **sigmas: tuple[bool, float, float]) -> None:
+    """Every null of target hs: (v1_pass, seed-mean English ML loss, lower bound of
+    the controlled G(MN)); scales not named fail V1."""
+
+    for name, block in null["hs"]["sigmas"].items():
+        v1, loss, lower = sigmas.get("s" + name.replace(".", "_"), (False, 9.0, 0.9))
+        block["english_ml"]["v1_pass"] = v1
+        block["english_ml"]["loss_seed_mean"] = loss
+        block["g_mn_controlled"] = {"evaluable": True, "point": lower + 0.1, "lower": lower,
+                                    "upper": lower + 0.2}
+
+
+def _floor(artifact: dict, results: dhs.Results, null: dict) -> dict:
+    return dhs.floor_block(artifact["prompts"], results, artifact["features"], null, "hs", 200)
+
+
+def test_the_floor_is_judged_on_the_nulls_lower_bound() -> None:
+    artifact, results, null = _floor_case()
+    _set_nulls(null, s0_5=(True, 3.0, 0.05), s0_7=(True, 4.0, 0.05))
+    wide = _floor(artifact, results, null)
     assert wide["verdict"] == "NOT_VIABLE" and wide["adequate_nulls_passing"] == []
     assert any("lower bound" in reason for reason in wide["reasons"])
-    assert wide["null_g_mn_controlled"]["0.25"]["lower"] == 0.05
-    for block in null["hs"]["sigmas"].values():
-        block["g_mn_controlled"]["lower"] = 0.5
-    tight = dhs.floor_block(artifact["prompts"], results, features, null, "hs", 200)
+    assert wide["null_g_mn_controlled"]["0.5"]["lower"] == 0.05
+    assert wide["null_g_mn_controlled"]["0.5"]["english_ml_loss"] == 3.0
+    _set_nulls(null, s0_5=(True, 3.0, 0.5), s0_7=(True, 4.0, 0.05))
+    tight = _floor(artifact, results, null)
     assert tight["verdict"] == "VIABLE", tight["reasons"]
+    assert tight["adequate_nulls_passing"] == ["0.5"]
     lex = tight["references"]["LEX"]["controlled"]
     assert lex["point"] < 0.5 and "upper" in lex and "lower" in lex
+
+
+def test_a_floor_passed_only_by_the_near_copy_is_not_viable() -> None:
+    # D32: condition (c) counts only nulls that meet decision 8's reach rule. The
+    # near-exact copy at sigma 0.25 (loss 0.3) passes the floor; the reaching,
+    # V1-adequate scales do not, so the floor is not shown to admit an imperfect
+    # selector.
+    artifact, results, null = _floor_case()
+    _set_nulls(null, s0_25=(True, 0.3, 0.8), s0_35=(True, 1.2, 0.6),
+               s0_5=(True, 2.6, 0.3), s0_7=(True, 4.5, 0.1))
+    read = _floor(artifact, results, null)
+    assert read["verdict"] == "NOT_VIABLE"
+    assert read["reaching_sigmas"] == ["0.5", "0.7"] and read["adequate_nulls_passing"] == []
+    assert read["reasons"] == [
+        "no V1-adequate null that loses at least 2.5 points of English ML recall has a 99 "
+        "percent lower bound of G(MN) of at least 0.5"]
+    # The reach rule is the null verdict's own.
+    assert read["reaching_sigmas"] == dhs.reaching_sigmas(null["hs"]["sigmas"])
+    assert dhs.null_verdict(null["hs"]["sigmas"])["reaching_sigmas"] == read["reaching_sigmas"]
+    # A reach-qualified scale that passes keeps the floor VIABLE.
+    _set_nulls(null, s0_25=(True, 0.3, 0.8), s0_5=(True, 2.6, 0.3), s0_7=(True, 4.5, 0.55))
+    assert _floor(artifact, results, null)["adequate_nulls_passing"] == ["0.7"]
+    assert _floor(artifact, results, null)["verdict"] == "VIABLE"
+    # A large loss does not count without V1.
+    _set_nulls(null, s0_25=(True, 0.3, 0.8), s1=(False, 6.0, 0.7))
+    assert _floor(artifact, results, null)["verdict"] == "NOT_VIABLE"
+
+
+@pytest.mark.parametrize(("loss", "expected"), [(2.5, "VIABLE"), (2.4999, "NOT_VIABLE"),
+                                                (math.nan, "NOT_VIABLE")])
+def test_the_floors_reach_boundary(loss, expected) -> None:
+    artifact, results, null = _floor_case()
+    _set_nulls(null, s0_25=(True, 0.2, 0.9), s0_5=(True, loss, 0.5))
+    assert _floor(artifact, results, null)["verdict"] == expected
 
 
 def test_smoke_reproduction_tolerance() -> None:
