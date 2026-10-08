@@ -724,3 +724,14 @@ def test_a_restart_check_that_cannot_reach_the_server_is_a_transport_loss(guest)
     record, _, _ = run(guest, [DONE])
     assert record["infrastructure_type"] == "transport"
     assert "identity at warm-up" in record["infrastructure_detail"]
+
+
+def test_untypeable_text_is_an_ir_error_not_an_executor_loss(guest):
+    """A control character the L0-fixed executor refuses (it would exit non-zero with
+    "cannot be typed", an executor_device loss) is the harness's unparseable reply."""
+    guest.executor_rc, guest.executor_error = 1, "ValueError: control character U+000D"
+    record, out, _ = run(guest, [call("type", text="a\rb"), DONE])
+    assert record["status"] == "scored" and record["ir_errors"] == 1
+    assert not guest.executor_commands()  # nothing reached the executor
+    steps = [json.loads(line) for line in (out / "steps.jsonl").read_text().splitlines()]
+    assert "U+000D" in steps[0]["parse_error"] and steps[0]["ir"] == []

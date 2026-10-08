@@ -246,3 +246,44 @@ def test_hosw_engine_failure_is_an_infrastructure_loss():
         with pytest.raises(agents.InfraLoss) as info:
             client.act()
     assert info.value.kind == "engine_request"
+
+
+def test_untypeable_is_the_guest_executors_rule():
+    """``agents.untypeable`` refuses exactly the code points L0-fixed's ``char_keysym``
+    raises for (``harness/q2/vm/guest/l0_fixed.py``, frozen with the action path)."""
+    import importlib.util
+
+    path = Path(__file__).resolve().parents[1] / "harness/q2/vm/guest/l0_fixed.py"
+    spec = importlib.util.spec_from_file_location("l0_fixed_rule", path)
+    l0 = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(l0)
+
+    def refused(ch: str) -> bool:
+        try:
+            l0.char_keysym(ch)
+        except ValueError:
+            return True
+        return False
+
+    points = [*range(0x0, 0x800), 0x2028, 0xFEFF, 0xFFFD, 0x1F600, 0x10FFFF]
+    for cp in points:
+        assert bool(agents.untypeable(chr(cp))) == refused(chr(cp)), hex(cp)
+
+
+CRLF_REPLY = (
+    "<think>\nok\n</think>\n\nAction: type the table.\n<tool_call>\n<function=computer_use>\n"
+    "<parameter=action>\ntype\n</parameter>\n"
+    "<parameter=text>\r\nName,Age\r\nBob,3\r\n</parameter>\n</function>\n</tool_call>"
+)
+
+
+@pytest.mark.parametrize("harness", ["H-OSW-fixed", "H-GA"])
+def test_control_characters_in_typed_text_are_the_harness_unparseable_reply(harness):
+    lines = tool_call("type", text="Name,Age\nBob,3\tok")
+    crlf, escape, fine = run_turns(harness, [CRLF_REPLY, tool_call("type", text="a\x1bb"), lines])
+    unparseable = [] if harness == "H-OSW-fixed" else [{"op": "wait", "ms": 1000}]
+    assert crlf.ir == unparseable and "IRError" in crlf.parse_error
+    assert "U+000D" in crlf.parse_error
+    assert escape.ir == unparseable and "U+001B" in escape.parse_error
+    typed = [a for a in fine.ir if a["op"] == "type"]
+    assert fine.parse_error is None and typed and "\n" in typed[0]["text"]

@@ -39,7 +39,13 @@ design decision 35 of action-path v2), so they are here. Upstream: H-OSW is OSWo
 * A reply whose parse raises (an `IRError`, or any exception from the parser or the IR
   validation) is the harness's unparseable reply: no action for H-OSW-fixed, a one-second
   wait for H-GA; counted in `ir_errors`. This includes a `wait` longer than 10 s, which the
-  certified IR refuses (`ir.MAX_WAIT_MS`); upstream would wait.
+  certified IR refuses (`ir.MAX_WAIT_MS`); upstream would wait. It also includes `type`
+  text holding a code point the certified L0-fixed executor refuses to type (a C0 control
+  other than newline and tab, DEL, or a C1 control: `l0_fixed.char_keysym`), such as the
+  `\r` of a reply written with CRLF line ends: the IR accepts any 1-2,000 characters, so
+  without this check the guest would exit non-zero and the turn would be recorded as an
+  `executor_device` loss, re-queued and, under greedy decoding, usually lost again
+  (`agents.check_typeable`). Upstream would pass the text to PyAutoGUI or xdotool.
 * H-GA's context fallback is kept only for a context-length rejection; any other failure of
   the call is an infrastructure loss (`engine_context_fallback`). An engine failure under
   H-OSW-fixed is `engine_request`.

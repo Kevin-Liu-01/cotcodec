@@ -22,7 +22,8 @@ the action-path v2 executor addendum) to canonical IR.
 Both harnesses send the registered sampling (``plan.sampling``) and keep their own parser
 rule for a reply that does not yield valid IR: H-OSW-fixed takes no action that step, H-GA
 waits one second (section 7.2). A parser or IR exception raised by model output is such a
-reply, counted per turn (``parse_error``), never an infrastructure loss.
+reply, counted per turn (``parse_error``), never an infrastructure loss; so is ``type`` text
+holding a control character the certified executor cannot type (``check_typeable``).
 
 The prompt strings below are copied from the two upstream files: OSWorld (Apache-2.0,
 Copyright the OSWorld authors; http://www.apache.org/licenses/LICENSE-2.0) and gym-anything
@@ -410,6 +411,30 @@ def complete_tool_call(text: str) -> bool:
     return bool(TOOL_CALL.search(text or ""))
 
 
+def untypeable(text: str) -> list[str]:
+    """Code points the certified L0-fixed executor refuses to type, as ``U+XXXX``.
+
+    ``harness/q2/vm/guest/l0_fixed.char_keysym`` raises for a C0 control other than newline
+    and tab, for DEL and for the C1 controls (U+0000-U+001F, U+007F-U+009F); the canonical IR
+    accepts any 1-2,000 characters, so such text would reach the guest and fail there as an
+    executor error. It is the model's text, so it is refused here as invalid IR instead.
+    """
+    bad = {ch for ch in text if (ord(ch) < 0x20 and ch not in "\n\t") or 0x7F <= ord(ch) < 0xA0}
+    return [f"U+{ord(ch):04X}" for ch in sorted(bad)]
+
+
+def check_typeable(ir: Sequence[Mapping[str, Any]]) -> None:
+    """Raise ``IRError`` for a ``type`` action the executor cannot type (section 7.2: any
+    invalid translated action is the harness's unparseable reply, counted in ``ir_errors``)."""
+    from harness.q2.action_path.ir import IRError
+
+    for action in ir:
+        if action.get("op") == "type":
+            bad = untypeable(str(action.get("text", "")))
+            if bad:
+                raise IRError(f"type text holds code points the executor cannot type: {bad}")
+
+
 def hit_token_cap(completion: Completion, max_tokens: int) -> bool:
     return completion.finish_reason == "length" or (completion.completion_tokens or 0) >= max_tokens
 
@@ -462,6 +487,7 @@ class HarnessClient:
         try:
             low_level, raw = self.parse(response)
             ir = [action.to_dict() for action in controls.to_ir(raw)]
+            check_typeable(ir)
         except Exception as exc:  # noqa: BLE001 - a reply that yields no valid IR (section 7.2)
             parse_error = f"{type(exc).__name__}: {str(exc)[:300]}"
             low_level, ir = "", self.on_parse_error()

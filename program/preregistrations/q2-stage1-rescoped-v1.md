@@ -736,7 +736,8 @@ These are the `INFRASTRUCTURE_TYPES` of `records.py`. Handling:
 **Agent-caused events are not infrastructure** and never count toward DR0:
 
 - An `IRError` raised from model output (an unknown key name, a non-modifier
-  key with a click, any invalid translated action) is handled in the episode
+  key with a click, `type` text holding a control character the certified
+  executor cannot type, any invalid translated action) is handled in the episode
   under that harness's rule for an unparseable reply: no action that step for
   H-OSW-fixed, a one-second wait for H-GA. The whole turn's actions are
   dropped. Counted per episode (`ir_errors`) and reported per (size, harness).
@@ -1339,7 +1340,7 @@ row (the test fails otherwise), and the freeze pins them.
 | `program/proposals/evidence/2026-10-08-q2-stage1-rescoped/analysis/sim_s1a_v2.py` | `19574910a06026b0b042aaf251e0988a72ed0484fa5833a8ca7597e3ba646a4c` |
 | `program/proposals/evidence/2026-10-08-q2-stage1-rescoped/analysis/sim_s1a_v2.json` | `e3c52beb5c6160e5e364ef307fb3c6353c226ffb7b762d9cc534f8fc86239d9e` |
 | `harness/q2_stage1/driver.py` | `5f78131f10f8fb50a7cd3ae5f39a7ae22dacc86f39d56649163e957729bb006e` |
-| `harness/q2_stage1/agents.py` | `35dad1f17b581c3555dd8f82f50a5f475f94b1bf4506d141c26c04fdf3430a05` |
+| `harness/q2_stage1/agents.py` | `8e72acbd79645b45ccd95cd213d5f8564d7114af538561e28219c12cf0eb0ba1` |
 | `harness/q2_stage1/engine.py` | `3e0942349a8fc5b2aef5294a28c029ca318acff88f4cd897df274bb6e3b51bf9` |
 | `harness/q2_stage1/bridge.py` | `dceacda3d6882223b0f0cfe54dd28f1674d1bf99527083420c0f29976a68692d` |
 | `harness/q2_stage1/fake_engine.py` | `02e0b66e7b67b3647dc853c4069de21ce3e6234ed01ec4e3842afbd42cd89a00` |
@@ -1350,7 +1351,7 @@ row (the test fails otherwise), and the freeze pins them.
 | `harness/q2_stage1/anchor.py` | `6c0a31cf1abb261a3522573847ee6dc1798925143b286cf9c02a3550f1c93b7a` |
 | `harness/q2_stage1/glmm.py` | `73e4d0f9100262eb0efe828a14308d2b45c17a3c827b476392b5045dfe1377e8` |
 | `harness/q2_stage1/glmm.R` | `e3ea337c77bf6a8b9289047b62cfc51053a5f666fe51795071a1ae317f36681d` |
-| `harness/q2_stage1/design_diffs.md` | `e79c3766e9e09a8dbc0a0bad8a20dd9c0a639871dbbadd440522982f124c9bb6` |
+| `harness/q2_stage1/design_diffs.md` | `0663e4e8bbbe33947d76e3d3a584eb228b462ce13e111b3d78a3f6f5696eb2f0` |
 | `infra/slurm/host-single-node/s1a-vm.sbatch` | `53fcd31d87678c6f5b4c929e6d843e5bc3177cac122842876f563e5191b09d45` |
 | `infra/slurm/host-single-node/s1a-cpu.sbatch` | `3880d337ad5bb0dc3c0edfc39f41811028118ef574c75efb08faa023dc6dee33` |
 | `infra/slurm/host-single-node/fetch-model-cpu.sbatch` | `22685e5e4dc9f88cd9d6ba7aec7189a89500a4f80d2464b8df86e08e76e33c6d` |
@@ -1467,6 +1468,7 @@ the fresh audit D49 (iv) requires.
 | Item | Finding (short) | Disposition | Where |
 |---|---|---|---|
 | C1 | Transport failures in the checker scored as agent outcomes: OSWorld's `get_vm_file` swallows `TransportFailure` (155 of 173 result getters over the pool and dev tasks), postconfig steps swallow or re-wrap a `ConnectionError`, `is_transport_error` read only the top-level type, and nothing re-checked the guest server after evaluation | Fixed: every guest-bound request that raises is recorded; setup, `evaluate()` and the capture sweep end in a transport loss when any of theirs failed; the exception chain is read; the restart check runs again after the capture, and an identity check that cannot reach the server is a transport loss. Tests drive the real `LiveTask` against a guest that resets connections, with a stand-in package that follows the pinned code's error handling | 7.1, 7.2; `osworld_live.py`, `driver.py`, `design_diffs.md` |
+| C2 | Control characters in typed text (a `\r` from CRLF line ends, ESC, C1 controls) pass the IR, make the guest executor exit non-zero and were recorded as `executor_device` losses, re-queued and, under greedy decoding, lost again, counting toward DR0 | Fixed: a `type` action whose text holds a code point L0-fixed refuses is an `IRError` from model output, handled by the harness's unparseable-reply rule and counted in `ir_errors`; a test checks the rule equals the guest's `char_keysym` | 7.2; `agents.py`, `design_diffs.md` |
 
 Slots read TBD until the freeze: the status line; G0 item 1 (accepted attempt); item 10
 (frozen plan); section 4's executor row; section 6.2's constants; section 21's v2
