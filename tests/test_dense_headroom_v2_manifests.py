@@ -107,10 +107,24 @@ def test_limits_follow_d36_and_fit_the_cap() -> None:
     assert lanes.LANES["qwen3-0.6b-base"].minutes >= (
         2 * measured["evaluation_and_statistics_s"] + measured["start_up_s"]) / 60 + 3
     assert lanes.LANES["qwen3-0.6b-base"].minutes == 12
-    large = lanes.LARGE_LANE_MEASURED
-    if large["evaluation_and_statistics_s"] is not None:
-        assert lanes.LANES["qwen3.5-4b-base"].minutes >= (
-            2 * large["evaluation_and_statistics_s"] + large["start_up_s"]) / 60 + 3
+    # The 4B lane's evaluation time is a projection, not a measurement (the
+    # timing job ran the path before the fix); it enters D36's arithmetic
+    # doubled (registration decision 20).
+    large = lanes.LARGE_LANE_PROJECTED
+    assert large["measured"] is False
+    assert large["evaluation_entering_rule_s"] == pytest.approx(
+        2 * large["projected_evaluation_and_statistics_s"])
+    assert large["projected_evaluation_and_statistics_s"] == pytest.approx(
+        large["warm_unit_s"] * large["units"] + large["statistics_bound_s"])
+    assert lanes.LANES["qwen3.5-4b-base"].minutes >= (
+        2 * large["evaluation_entering_rule_s"] + large["start_up_s"]) / 60 + 3
+    assert lanes.LANES["qwen3.5-4b-base"].minutes == 45
+    # The useful window holds the lane at up to about 2.1 s per unit, about four
+    # times the warm-shape projection, and below the 3.6 s of the unfixed path.
+    break_even = lanes.large_lane_break_even_unit_s()
+    assert break_even == pytest.approx((42 * 60 - 75 - 5) / 1160)
+    assert 4 * large["warm_unit_s"] <= break_even
+    assert break_even < min(large["cold_unit_median_s_with_cudnn_attention"].values())
     for lane in lanes.LANES.values():
         assert lane.cap_gpu_hours == pytest.approx(lane.minutes / 60, abs=1e-4)
         assert lane.minutes - dhd.USR1_LEAD_MINUTES >= dhd.MIN_USEFUL_MINUTES

@@ -1,9 +1,11 @@
 # q3-dense-headroom-precheck-v2, Qwen3.5-4B-Base lane (program decision D36).
 # v1's lane (same inputs, model, argv shape, CPUs, memory and profile) on v2's entry point,
-# 1 GPU x 45 minutes under a 0.75 GPU-h cap, from the development timing job (Slurm 766, D36):
-# twice an evaluation bound of 1,216 s (twice the 608 s projected from the timing job's
-# warm-shape units), plus 75 s of measured start-up, plus the 3-minute SIGUSR1 lead; the one
-# continuation is kept inside the lane's minutes. v2's caps and the timing job sum to 1.05 GPU-h,
+# 1 GPU x 45 minutes under a 0.75 GPU-h cap, from a projection, not a measurement: the
+# development timing job (Slurm 766, D36) ran this lane's path before the fix (cuDNN's
+# attention on), and the fixed path has not run on a GPU (registration decisions 20 and 21).
+# Twice an evaluation bound of 1,216 s (twice the 608 s projected from the timing job's
+# warm-shape units), plus 75 s of start-up measured on the path before the fix, plus the
+# 3-minute SIGUSR1 lead; the one continuation is kept inside the lane's minutes. v2's caps and the timing job sum to 1.05 GPU-h,
 # within D36's 1.5. The bundle's Qwen3 tokens are decoded with the bundle's receipted tokenizer
 # and re-encoded with the 4B tokenizer. container_profile large-cpu-mem gives an exec /tmp: the
 # gated-delta layers run flash-linear-attention's Triton kernels from the pinned image (library
