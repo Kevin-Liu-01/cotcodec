@@ -135,6 +135,30 @@ def test_matching_follows_what_the_task_examines(tmp_path):
     assert seen[0][0] != str(agent) and seen[0][1] == {"examine_shape": False}
 
 
+def test_geometry_breaks_ties_when_the_task_does_not_examine_it():
+    rule = zinv.Matching.from_options({"examine_shape": False})
+    left = zinv.ShapeKey(("pic", 13, ""), (0, 0, 10, 10), (0, 0, 10, 10))
+    right = zinv.ShapeKey(("pic", 13, ""), (10**7, 0, 10, 10), (10**7, 0, 10**7 + 10, 10))
+    assert zinv.align_order([right, left], [left, right], rule) == [1, 0]
+    moved = zinv.ShapeKey(
+        ("pic", 13, ""), (5 * 10**6, 0, 10, 10), (5 * 10**6, 0, 5 * 10**6 + 10, 10)
+    )
+    assert zinv.align_order([moved, left], [left, right], rule) == [1, 0]
+
+
+def test_other_geometry_options_count_as_examining_geometry():
+    rule = zinv.Matching.from_options({"examine_shape": False, "examine_modify_height": True})
+    assert rule.geometry is True
+
+
+def test_empty_and_absent_text_are_the_same_text(tmp_path):
+    ref = deck(tmp_path / "ref.pptx", [("", 1 * CM, 1 * CM, 2 * CM, 2 * CM), B])
+    agent = deck(tmp_path / "agent.pptx", [B, ("", 1 * CM, 1 * CM, 2 * CM, 2 * CM)])
+    prs = pptx.Presentation(agent)
+    assert zinv.shape_key(prs.slides[0].shapes[1]).signature[2] == ""
+    assert zinv.aligned_deck(str(agent), str(ref)) is not None
+
+
 def test_approximate_equality_is_the_comparators():
     assert zinv.approximately_equal(1000, 1004) and not zinv.approximately_equal(1000, 1006)
     assert zinv.approximately_equal(0, 0) and not zinv.approximately_equal(0, 1)
@@ -146,14 +170,14 @@ def test_placeholder_without_its_own_frame_never_moves(tmp_path):
     title = slide.shapes.title
     assert zinv.shape_box(title._element) is None
     key = zinv.shape_key(title)
-    other = zinv.ShapeKey(signature=("x",), geometry=(0, 0, 1, 1), box=(0, 0, 1, 1))
+    other = zinv.ShapeKey(signature=("sp", 1, "x"), geometry=(0, 0, 1, 1), box=(0, 0, 1, 1))
     assert not zinv.apart(key, other)
 
 
 def test_align_order_keeps_identical_shapes_in_order():
-    k = zinv.ShapeKey(signature=("same",), geometry=(0, 0, 10, 10), box=(0, 0, 10, 10))
+    k = zinv.ShapeKey(signature=("sp", 1, "same"), geometry=(0, 0, 10, 10), box=(0, 0, 10, 10))
     far = zinv.ShapeKey(
-        signature=("far",), geometry=(10**7, 0, 10, 10), box=(10**7, 0, 10**7 + 10, 10)
+        signature=("sp", 1, "far"), geometry=(10**7, 0, 10, 10), box=(10**7, 0, 10**7 + 10, 10)
     )
     assert zinv.align_order([k, k, far], [k, k, far]) == [0, 1, 2]
     assert zinv.align_order([far, k], [k, far]) == [1, 0]
